@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="EntryPoint.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="EntryPoint.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu\DLL\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="ScriptPortal.Vegas">
+      <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 17.0\ScriptPortal.Vegas.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
