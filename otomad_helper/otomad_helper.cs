@@ -12,6 +12,7 @@
  *
  * 新版脚本由 淅琳雨 Otomad 重新编写。
  * 仓库地址：https://github.com/otomad/VegasScripts
+ * 说明文档：http://www.bilibili.com/read/cv13335178
  *
  * 修订日期：2021 年 9 月 25 日
  **/
@@ -4915,6 +4916,9 @@ namespace VegasScript {
 
 		private void AboutBtn_Click(object sender, EventArgs e) {
 			MessageBox.Show(
+				"脚本作者：淅琳雨\n" +
+				"说明文档：http://www.bilibili.com/read/cv13335178\n" +
+				"仓库地址：https://github.com/otomad/VegasScripts\n\n" +
 				"脚本原作者：Chaosinism\n" +
 				"说明文档：" + aboutHelpLink + "\n" +
 				"疑难解答：https://www.bilibili.com/read/cv495309\n" +
