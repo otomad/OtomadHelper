@@ -1,4 +1,4 @@
-# VegasScript
+# VegasScripts
 Various scripts for MAGIX Vegas **(v14 and above)**.
 * Tested on v17.0
 
