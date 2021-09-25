@@ -5,13 +5,13 @@
  * https://github.com/evankale/VegasScripts
  * https://github.com/naudio/NAudio
  *
- * 原仓库地址：https://github.com/Chaosinism/vegas_script
+ * 原仓库地址：https://github.com/Chaosinism/vegas_scripts
  * 说明文档（B 站）：https://www.bilibili.com/read/cv392013
  * 说明文档（B 碗）：https://bowlroll.net/user/261124
  * 疑难解答：https://www.bilibili.com/read/cv495309
  *
  * 新版脚本由 淅琳雨 Otomad 重新编写。
- * 仓库地址：https://github.com/otomad/VegasScript
+ * 仓库地址：https://github.com/otomad/VegasScripts
  *
  * 修订日期：2021 年 9 月 25 日
  **/
@@ -4918,7 +4918,7 @@ namespace VegasScript {
 				"脚本原作者：Chaosinism\n" +
 				"说明文档：" + aboutHelpLink + "\n" +
 				"疑难解答：https://www.bilibili.com/read/cv495309\n" +
-				"仓库地址：https://github.com/Chaosinism/vegas_script\n",
+				"仓库地址：https://github.com/Chaosinism/vegas_scripts\n",
 				"关于"
 			);
 		}
