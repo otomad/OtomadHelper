@@ -10,6 +10,7 @@ namespace VegasScript {
 		public IntegerTrackWithBox() {
 			InitializeComponent();
 			Track.MouseClick += new MouseEventHandler(Track_Reset);
+			Numeric.MouseWheel += AutoLayoutTracksGridForm.NumericUpDown_MouseWheel;
 		}
 
 		private void Track_Scroll(object sender, EventArgs e) {
@@ -98,5 +99,13 @@ namespace VegasScript {
 				Value = (int)def;
 			} else Value = value;
 		}
+
+
+		/*[Browsable(false)]
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		private override Font Font {
+			get { return base.Font; }
+			//set { base.Font = value; }
+		}*/
 	}
 }

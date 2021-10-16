@@ -77,7 +77,7 @@ namespace VegasScript {
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-			this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(3);
+			this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(6);
 			this.tableLayoutPanel2.RowCount = 3;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
@@ -89,13 +89,13 @@ namespace VegasScript {
 			// 
 			this.InfoLabel.AutoSize = true;
 			this.InfoLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.InfoLabel.Location = new System.Drawing.Point(8, 63);
+			this.InfoLabel.Location = new System.Drawing.Point(11, 64);
 			this.InfoLabel.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.InfoLabel.Name = "InfoLabel";
 			this.InfoLabel.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-			this.InfoLabel.Size = new System.Drawing.Size(455, 33);
+			this.InfoLabel.Size = new System.Drawing.Size(449, 32);
 			this.InfoLabel.TabIndex = 0;
-			this.InfoLabel.Text = "正在生成音 MAD...";
+			this.InfoLabel.Text = "正在生成音 MAD / YTPMV⋯⋯";
 			this.InfoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// PercentLabel
@@ -103,10 +103,10 @@ namespace VegasScript {
 			this.PercentLabel.AutoSize = true;
 			this.PercentLabel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PercentLabel.Font = new System.Drawing.Font("Segoe UI", 24F);
-			this.PercentLabel.Location = new System.Drawing.Point(3, 3);
+			this.PercentLabel.Location = new System.Drawing.Point(6, 6);
 			this.PercentLabel.Margin = new System.Windows.Forms.Padding(0);
 			this.PercentLabel.Name = "PercentLabel";
-			this.PercentLabel.Size = new System.Drawing.Size(465, 60);
+			this.PercentLabel.Size = new System.Drawing.Size(459, 58);
 			this.PercentLabel.TabIndex = 1;
 			this.PercentLabel.Text = "0%";
 			this.PercentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -114,10 +114,10 @@ namespace VegasScript {
 			// ProgressBar
 			// 
 			this.ProgressBar.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ProgressBar.Location = new System.Drawing.Point(11, 99);
+			this.ProgressBar.Location = new System.Drawing.Point(14, 99);
 			this.ProgressBar.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
 			this.ProgressBar.Name = "ProgressBar";
-			this.ProgressBar.Size = new System.Drawing.Size(449, 23);
+			this.ProgressBar.Size = new System.Drawing.Size(443, 23);
 			this.ProgressBar.Step = 1;
 			this.ProgressBar.TabIndex = 2;
 			this.ProgressBar.UseWaitCursor = true;
@@ -127,12 +127,14 @@ namespace VegasScript {
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.CancelButton = this.CancelBtn;
 			this.ClientSize = new System.Drawing.Size(471, 183);
+			this.ControlBox = false;
 			this.Controls.Add(this.tableLayoutPanel2);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "ProgressForm";
@@ -140,7 +142,6 @@ namespace VegasScript {
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "正在处理它";
-			this.TopMost = true;
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel2.PerformLayout();
@@ -152,9 +153,9 @@ namespace VegasScript {
 
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		public System.Windows.Forms.Button CancelBtn;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-		private System.Windows.Forms.Label InfoLabel;
-		private System.Windows.Forms.Label PercentLabel;
-		private System.Windows.Forms.ProgressBar ProgressBar;
+		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+		public System.Windows.Forms.Label InfoLabel;
+		public System.Windows.Forms.Label PercentLabel;
+		public System.Windows.Forms.ProgressBar ProgressBar;
 	}
 }

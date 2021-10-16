@@ -17,48 +17,70 @@ namespace VegasScript {
 	public partial class ConfigForm : Form {
 
 		public bool AcceptConfig = false;
+		public static Icon icon;
 		#if VEGAS_ENVIRONMENT
-		public IniFile configIni { get { return parent.configIni; } set { parent.configIni = value; } }
-		public readonly EntryPoint parent;
-		private Vegas vegas { get { return parent.vegas; } }
+		// public IniFile configIni { get { return parent.configIni; } set { parent.configIni = value; } }
+		// public readonly EntryPoint parent;
+		// private Vegas vegas { get { return parent.vegas; } }
 		#endif
 
 		/// <summary>
 		/// ConfigForm 脚本对话框窗体的入口方法。
 		/// </summary>
 		/// <param name="entryPoint">调用本对象的父对象，也就是 Vegas 脚本的入口类</param>
-		public ConfigForm(/*EntryPoint entryPoint*/) {
+		public ConfigForm(/* EntryPoint entryPoint */) {
 			InitializeComponent();
-			MidiCustomBpmCheck.CheckedChanged += (sender, e) => { MidiCustomBpmBox.Enabled = MidiCustomBpmCheck.Checked; };
 			#if VEGAS_ENVIRONMENT
 			parent = entryPoint;
 
 			#region MIDI 速度控制点击事件
+			MidiCustomBpmCheck.CheckedChanged += (sender, e) => { MidiCustomBpmBox.Enabled = MidiCustomBpmCheck.Checked; };
 			MidiProjectBpmCheck.Text = "项目速度：" + ProcessBpmDouble(parent.ProjectBpm);
 			MidiCustomBpmBox.Value = (decimal)Math.Max(parent.ProjectBpm, (double)MidiCustomBpmBox.Minimum);
+			GenerateAtBeginRadio.Text = "项目开始处：" + Timecode.FromMilliseconds(0).ToPositionString();
+			GenerateAtCursorRadio.Text = "光标处：" + vegas.Transport.CursorPosition.ToPositionString();
 			#endregion
 
 			#region 浏览并打开媒体文件
 			ChooseMidiBtn.Click += (sender, e) => parent.SelectMidiFile();
 			ChooseSourceBtn.Click += (sender, e) => parent.SelectVideoClip();
 			parent.AudioVideoEnabledTable_Init();
-			if (parent.disabledSelectIntervalPart) DisabledSelectIntervalPart();
+			if (parent.audioVideoEnabledTable.SelectNoEvents) DisabledSelectIntervalPart();
 			ChooseSourceCombo_SelectedIndexChanged(null, null);
 			#endregion
 			#endif
+			
+			#region 菜单选项
+			saveConfigToolStripMenuItem.Click += (sender, e) => { SaveIni(); };
+			resetConfigToolStripMenuItem.Click += (sender, e) => {
+				// configIni.Delete(true);
+				Close();
+				MessageBox.Show("重置完成，请重新启动脚本。", "重置用户配置", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			};
+			exitToolStripMenuItem.Click += new EventHandler(CancelBtn_Click);
+			aboutToolStripMenuItem.Click += new EventHandler(AboutBtn_Click);
+			userHelpToolStripMenuItem.Click += (sender, e) => { OpenLink(aboutHelpLink); };
+			troubleShootingToolStripMenuItem.Click += (sender, e) => { OpenLink(troubleShootingLink); };
+			updateInfoToolStripMenuItem.Click += (sender, e) => { OpenLink(updateInfoLink); };
+			githubToolStripMenuItem.Click += (sender, e) => { OpenLink(githubLink); };
+			GetSystemLanguage();
+			#endregion
 
 			#region 复选框设置、下拉菜单默认值
 			EventHandler setCheckedEnabled = new EventHandler(SetCheckedEnabled);
 			VideoConfigCheck.CheckedChanged += setCheckedEnabled;
 			AudioConfigCheck.CheckedChanged += setCheckedEnabled;
 			StaffVisualizerConfigCheck.CheckedChanged += setCheckedEnabled;
+			StaffGenerateCheck.CheckedChanged += setCheckedEnabled;
 			AudioTuneMethodCombo.SelectedIndexChanged += setCheckedEnabled;
 			VideoEffectCombo.SelectedIndexChanged += setCheckedEnabled;
 			Tabs.SelectedIndexChanged += setCheckedEnabled;
+			AudioMainKeyCombo.MouseWheel += AudioMainKeyCombo_MouseWheel;
+			for (int i = 0; i < YtpEffectsCheckList.Items.Count; i++)
+				YtpEffectsCheckList.SetItemChecked(i, true);
 			#if VEGAS_ENVIRONMENT
 			string configIniName = "otomad_helper.ini";
 			configIni = new IniFile(Path.r(vegas.GetApplicationDataPath(Environment.SpecialFolder.ApplicationData), configIniName).FullPath, this);
-			VideoEndSizeCurveCombo.SelectedIndex = 0;
 			ReadIni();
 			#endif
 			#endregion
@@ -68,15 +90,9 @@ namespace VegasScript {
 			string iconName = "otomad_helper.ico";
 			try {
 				Icon = Icon.ExtractAssociatedIcon(Path.r(vegas.InstallationDirectory, "Script Menu", iconName).FullPath);
+				icon = Icon;
 			} catch (Exception) { } // 如果路径不存在则不受影响
 			#endif
-			#endregion
-
-			#region 裁切时间输入框的验证合法性
-			//MidiStartSecondBox.ValueChanged += (sender, e) => MidiTrimTime_ValueChanged(0);
-			//MidiEndSecondBox.ValueChanged += (sender, e) => MidiTrimTime_ValueChanged(1);
-			//SourceStartTimeText.Leave += (sender, e) => ClipTrimTime_TextChanged(1);
-			//SourceEndTimeText.Leave += (sender, e) => ClipTrimTime_TextChanged(1);
 			#endregion
 		}
 
@@ -86,38 +102,48 @@ namespace VegasScript {
 		public void ReadIni() {
 			#if VEGAS_ENVIRONMENT
 			try {
-			#region 音频配置
+				#region 音频配置
 				configIni.StartSection("Audio");
 				AudioScratchCheck.Checked = configIni.ReadBool("Scratch", false);
 				AudioLoopCheck.Checked = configIni.ReadBool("Loop", false);
 				AudioNormalizeCheck.Checked = configIni.ReadBool("Normalize", false);
-				SetTrackBarValue(AudioFadeInTrack, AudioFadeInBox, configIni.ReadInt("FadeIn", 0), 0);
-				SetTrackBarValue(AudioFadeOutTrack, AudioFadeOutBox, configIni.ReadInt("FadeOut", 0), 0);
+				AudioFadeInBox.SetValue(configIni.ReadInt("FadeIn", 0), 0);
+				AudioFadeOutBox.SetValue(configIni.ReadInt("FadeOut", 0), 0);
 				SetComboIndex(AudioFadeInCurveCombo, configIni.ReadInt("FadeInCurve", 1), 1);
 				SetComboIndex(AudioFadeOutCurveCombo, configIni.ReadInt("FadeOutCurve", 2), 2);
 				SetBasePitchCombo(configIni.Read("BasePitch", "C5"));
 				SetComboIndex(AudioTuneMethodCombo, configIni.ReadInt("TuneMethod", 3), 3);
 				configIni.EndSection();
-			#endregion
+				#endregion
 
-			#region 视频配置
+				#region 视频配置
 				configIni.StartSection("Video");
 				SetComboIndex(VideoEffectCombo, configIni.ReadInt("AnimationEffect", 1), 1);
 				VideoScratchCheck.Checked = configIni.ReadBool("Scratch", false);
 				VideoLoopCheck.Checked = configIni.ReadBool("Loop", true);
 				VideoFreezeFirstFrameCheck.Checked = configIni.ReadBool("FreezeFirstFrame", false);
-				SetTrackBarValue(VideoStartSizeTrack, VideoStartSizeBox, configIni.ReadInt("StartSize", 100), 100);
-				SetTrackBarValue(VideoEndSizeTrack, VideoEndSizeBox, configIni.ReadInt("EndSize", 100), 100);
-				SetTrackBarValue(VideoFadeInTrack, VideoFadeInBox, configIni.ReadInt("FadeIn", 0), 0);
-				SetTrackBarValue(VideoFadeOutTrack, VideoFadeOutBox, configIni.ReadInt("FadeOut", 0), 0);
+				VideoFreezeLastFrameCheck.Checked = configIni.ReadBool("FreezeLastFrame", false);
+				VideoLegatoCheck.Checked = configIni.ReadBool("Legato", false);
+				VideoFadeInBox.SetValue(configIni.ReadInt("FadeIn", 0), 0);
+				VideoFadeOutBox.SetValue(configIni.ReadInt("FadeOut", 0), 0);
+				VideoStartSizeBox.SetValue(configIni.ReadInt("StartSize", 100), 100);
+				VideoEndSizeBox.SetValue(configIni.ReadInt("EndSize", 100), 100);
+				VideoStartRotationBox.SetValue(configIni.ReadInt("StartRotation", 0), 0);
+				VideoEndRotationBox.SetValue(configIni.ReadInt("EndRotation", 0), 0);
+				VideoStartHorizontalTransBox.SetValue(configIni.ReadInt("StartHorizontalTrans", 0), 0);
+				VideoEndHorizontalTransBox.SetValue(configIni.ReadInt("EndHorizontalTrans", 0), 0);
+				VideoStartVerticalTransBox.SetValue(configIni.ReadInt("StartVerticalTrans", 0), 0);
+				VideoEndVerticalTransBox.SetValue(configIni.ReadInt("EndVerticalTrans", 0), 0);
 				SetComboIndex(VideoStartSizeCurveCombo, configIni.ReadInt("StartSizeCurve", 1), 1);
 				SetComboIndex(VideoFadeInCurveCombo, configIni.ReadInt("FadeInCurve", 3), 3);
 				SetComboIndex(VideoFadeOutCurveCombo, configIni.ReadInt("FadeOutCurve", 3), 3);
 				configIni.EndSection();
-			#endregion
+				#endregion
 
-			#region 素材配置
+				#region 素材配置
 				configIni.StartSection("Source");
+				if (configIni.ReadBool("GenerateAtCursor", false)) GenerateAtCursorRadio.Checked = true;
+				else GenerateAtBeginRadio.Checked = true;
 				if (parent.SuggestSelectedSourceFrom == MediaSourceFrom.LAST_USER_PREFERENCE || parent.SuggestSelectedSourceFrom == MediaSourceFrom.NOTHING_SELECTED) {
 					int lastMediaSourceFrom = configIni.ReadInt("LastMediaSourceFrom", 2);
 					if (lastMediaSourceFrom == 0 || lastMediaSourceFrom == 1) ChooseSourceCombo.SelectedIndex = lastMediaSourceFrom;
@@ -128,29 +154,35 @@ namespace VegasScript {
 					SetComboIndex(MidiChannelCombo, configIni.ReadInt("LastMidiChannel", -1), -1);
 				else RemoveLastMidiConfig();
 				configIni.EndSection();
-			#endregion
+				#endregion
 
-			#region 五线谱配置
+				#region 五线谱配置
 				configIni.StartSection("Staff");
 				SetComboIndex(MidiBeatCombo, configIni.ReadInt("Beat", 4) - 2, 4 - 2);
 				StaffVisualizerConfigCheck.Checked = configIni.ReadBool("Enable", false);
 				StaffGenerateCheck.Checked = configIni.ReadBool("GenerateStaff", false);
+				StaffRelativeValueCheck.Checked = configIni.ReadBool("RelativeValue", false);
 				SetComboIndex(StaffClefCombo, configIni.ReadInt("Clef", 0), 0);
 				SetNumericValue(StaffLineSpacingBox, configIni.ReadInt("Gap", 44), 44); // 45
 				SetNumericValue(StaffSurfaceWidthBox, configIni.ReadInt("Width", 1500), 1500); // 1000
-				SetNumericValue(StaffSurfacePositionBox, configIni.ReadInt("Position", -225), -225); // 0
-				SetNumericValue(StaffLineThicknessBox, configIni.ReadDouble("Thickness", 0.2), 0.2);
-				ReadStaffLineColor(configIni.Read("Color", "#000000"));
+				SetNumericValue(StaffSurfacePositionBox, configIni.ReadInt("Position", 225), 225); // 0
+				SetNumericValue(StaffLineThicknessBox, configIni.ReadInt("Thickness", 50), 50);
+				ReadStaffLineColor(configIni.Read("Color", "#ffffff"));
 				configIni.EndSection();
-			#endregion
+				#endregion
 
-			#region 间隔选择配置
+				#region 间隔选择配置
 				configIni.StartSection("SelectInterval");
 				SetNumericValue(SelectOneEveryFewBox, configIni.ReadInt("SelectOneEveryFew", 2), 2);
 				SetNumericValue(SelectWhichEachGroupBox, configIni.ReadInt("SelectWhichEachGroup", 1), 1);
 				configIni.EndSection();
-			#endregion
-
+				#endregion
+			
+				#region 个性化配置
+				configIni.StartSection("Personalize");
+				Language = configIni.Read("Language", "");
+				configIni.EndSection();
+				#endregion
 			} catch (Exception e) {
 				parent.ShowError(new Exceptions.ReadConfigFailException(), e);
 				configIni.Delete(true);
@@ -170,8 +202,8 @@ namespace VegasScript {
 			configIni.Write("Scratch", AudioScratchCheck.Checked);
 			configIni.Write("Loop", AudioLoopCheck.Checked);
 			configIni.Write("Normalize", AudioNormalizeCheck.Checked);
-			configIni.Write("FadeIn", AudioFadeInTrack.Value);
-			configIni.Write("FadeOut", AudioFadeOutTrack.Value);
+			configIni.Write("FadeIn", AudioFadeInBox.Value);
+			configIni.Write("FadeOut", AudioFadeOutBox.Value);
 			configIni.Write("FadeInCurve", AudioFadeInCurveCombo.SelectedIndex);
 			configIni.Write("FadeOutCurve", AudioFadeOutCurveCombo.SelectedIndex);
 			configIni.Write("BasePitch", AudioMainKeyCombo.SelectedItem.ToString() + AudioMainOctaveCombo.SelectedItem.ToString());
@@ -185,10 +217,18 @@ namespace VegasScript {
 			configIni.Write("Scratch", VideoScratchCheck.Checked);
 			configIni.Write("Loop", VideoLoopCheck.Checked);
 			configIni.Write("FreezeFirstFrame", VideoFreezeFirstFrameCheck.Checked);
-			configIni.Write("StartSize", VideoStartSizeTrack.Value);
-			configIni.Write("EndSize", VideoEndSizeTrack.Value);
-			configIni.Write("FadeIn", VideoFadeInTrack.Value);
-			configIni.Write("FadeOut", VideoFadeOutTrack.Value);
+			configIni.Write("FreezeLastFrame", VideoFreezeLastFrameCheck.Checked);
+			configIni.Write("Legato", VideoLegatoCheck.Checked);
+			configIni.Write("FadeIn", VideoFadeInBox.Value);
+			configIni.Write("FadeOut", VideoFadeOutBox.Value);
+			configIni.Write("StartSize", VideoStartSizeBox.Value);
+			configIni.Write("EndSize", VideoEndSizeBox.Value);
+			configIni.Write("StartRotation", VideoStartRotationBox.Value);
+			configIni.Write("EndRotation", VideoEndRotationBox.Value);
+			configIni.Write("StartHorizontalTrans", VideoStartHorizontalTransBox.Value);
+			configIni.Write("EndHorizontalTrans", VideoEndHorizontalTransBox.Value);
+			configIni.Write("StartVerticalTrans", VideoStartVerticalTransBox.Value);
+			configIni.Write("EndVerticalTrans", VideoEndVerticalTransBox.Value);
 			configIni.Write("StartSizeCurve", VideoStartSizeCurveCombo.SelectedIndex);
 			configIni.Write("FadeInCurve", VideoFadeInCurveCombo.SelectedIndex);
 			configIni.Write("FadeOutCurve", VideoFadeOutCurveCombo.SelectedIndex);
@@ -197,7 +237,8 @@ namespace VegasScript {
 
 			#region 素材配置
 			configIni.StartSection("Source");
-			configIni.Write("LastMediaSourceFrom", ChooseSourceCombo.SelectedIndex);
+			configIni.Write("GenerateAtCursor", GenerateAtCursorRadio.Checked);
+			if (AcceptConfig) configIni.Write("LastMediaSourceFrom", ChooseSourceCombo.SelectedIndex);
 			if (ChooseMidiText.Text != "<未选择 MIDI 文件>") {
 				configIni.Write("LastMidiFile", ChooseMidiText.Text);
 				configIni.Write("LastMidiChannel", MidiChannelCombo.SelectedIndex);
@@ -210,6 +251,7 @@ namespace VegasScript {
 			configIni.Write("Beat", MidiBeatCombo.SelectedIndex + 2);
 			configIni.Write("Enable", StaffVisualizerConfigCheck.Checked);
 			configIni.Write("GenerateStaff", StaffGenerateCheck.Checked);
+			configIni.Write("RelativeValue", StaffRelativeValueCheck.Checked);
 			configIni.Write("Clef", StaffClefCombo.SelectedIndex);
 			configIni.Write("Gap", StaffLineSpacingBox.Value);
 			configIni.Write("Width", StaffSurfaceWidthBox.Value);
@@ -225,6 +267,12 @@ namespace VegasScript {
 			configIni.Write("SelectWhichEachGroup", SelectWhichEachGroupBox.Value);
 			configIni.EndSection();
 			#endregion
+			
+			#region 个性化配置
+			configIni.StartSection("Personalize");
+			configIni.Write("Language", Language);
+			configIni.EndSection();
+			#endregion
 			#endif
 		}
 
@@ -233,6 +281,29 @@ namespace VegasScript {
 			configIni.DeleteKey("LastMidiFile");
 			configIni.DeleteKey("LastMidiChannel");
 			#endif
+		}
+		
+		private string GetSystemLanguage() {
+			string lang = System.Globalization.CultureInfo.InstalledUICulture.Name;
+			Language = lang;
+			return lang;
+		}
+		
+		private string Language {
+			get {
+				if (chineseToolStripMenuItem.Checked) return "zh";
+				else if (japaneseToolStripMenuItem.Checked) return "ja";
+				else if (russianToolStripMenuItem.Checked) return "ru";
+				else return "en";
+			}
+			set {
+				if (value == "") return;
+				string lang = value.ToLower();
+				if (lang.StartsWith("zh")) chineseToolStripMenuItem.Checked = true;
+				else if (lang.StartsWith("ja")) japaneseToolStripMenuItem.Checked = true;
+				else if (lang.StartsWith("ru")) russianToolStripMenuItem.Checked = true;
+				else englishToolStripMenuItem.Checked = true;
+			}
 		}
 
 		/// <summary>
@@ -261,11 +332,9 @@ namespace VegasScript {
 			AcceptConfig = false;
 			SaveIni();
 			Close();
-			// Environment.Exit(0);
+			// Environment.Exit(0); // 可以顺带一块ㄦ把 Vegas 干掉。
 			#if VEGAS_ENVIRONMENT
 			parent.RemoveLastUnusedMedia();
-			#else
-			new ProgressForm().Show();
 			#endif
 		}
 
@@ -276,6 +345,7 @@ namespace VegasScript {
 			if (StaffVisualizerConfigCheck.Checked && StaffVisualizerConfigCheck.Enabled) {
 				VideoEffectCombo.SelectedIndex = 0;
 				VideoScratchCheck.Checked = false;
+				VideoLegatoCheck.Checked = false;
 			}
 			if (!StaffGenerateCheck.Enabled) StaffGenerateCheck.Checked = false;
 			Close();
@@ -293,7 +363,7 @@ namespace VegasScript {
 				VideoScratchCheck.Checked = true;
 				VideoScratchCheck.Enabled = false;
 			} else {
-				if (!VideoScratchCheck.Enabled) VideoScratchCheck.Checked = false;
+				if (!VideoScratchCheck.Enabled && VideoConfigCheck.Enabled) VideoScratchCheck.Checked = false;
 				VideoScratchCheck.Enabled = isVConfigOn;
 			}
 
@@ -311,8 +381,12 @@ namespace VegasScript {
 
 			bool isSheetConfigOn = StaffVisualizerConfigCheck.Checked;
 			if (isSheetConfigOn)
-				VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled = VideoScratchCheck.Checked = VideoScratchCheck.Enabled = false;
+				VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled =
+				VideoLegatoCheck.Enabled =
+				VideoScratchCheck.Checked = VideoScratchCheck.Enabled = false;
 			SetEnabled(SheetTab, isSheetConfigOn, new Control[] { StaffVisualizerConfigCheck, SheetConfigInfoLabel });
+			if (!StaffGenerateCheck.Checked)
+				StaffLineThicknessBox.Enabled = StaffLineColorBtn.Enabled = false;
 		}
 
 		/// <summary>
@@ -322,8 +396,14 @@ namespace VegasScript {
 		/// <param name="enabled">启用还是禁用</param>
 		/// <param name="excepts">例外列表，位于列表内的控件不受影响</param>
 		private void SetEnabled(Control container, bool enabled, Control[] excepts = null) {
+			var contains = new Func<Control[], Control, bool>((list, item) => {
+				foreach (Control control in list)
+					if (control == item)
+						return true;
+				return false;
+			});
 			foreach (Control control in container.Controls) {
-				if (excepts != null && excepts.Contains(control)) continue;
+				if (excepts != null && contains(excepts, control)) continue;
 				if (!(control is FlowLayoutPanel)) control.Enabled = enabled;
 				if (control.Controls.Count != 0) SetEnabled(control, enabled, excepts);
 			}
@@ -363,18 +443,28 @@ namespace VegasScript {
 		}
 
 		public const string aboutHelpLink = "https://www.bilibili.com/read/cv392013";
+		public const string troubleShootingLink = "https://www.bilibili.com/read/cv495309";
+		public const string updateInfoLink = "http://www.bilibili.com/read/cv13335178";
+		public const string githubLink = "https://github.com/otomad/VegasScripts";
 		private void UserHelpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			System.Diagnostics.Process.Start("explorer.exe", aboutHelpLink);
+			OpenLink(aboutHelpLink);
+		}
+		
+		public void OpenLink(string link) {
+			System.Diagnostics.Process.Start("explorer.exe", link);
 		}
 
 		private void AboutBtn_Click(object sender, EventArgs e) {
 			MessageBox.Show(
+				"脚本作者：淅琳雨\n" +
+				"说明文档：" + updateInfoLink + "\n" +
+				"仓库地址：" + githubLink + "\n\n" +
 				"脚本原作者：Chaosinism\n" +
 				"说明文档：" + aboutHelpLink + "\n" +
-				"疑难解答：https://www.bilibili.com/read/cv495309\n" +
-				"仓库地址：https://github.com/Chaosinism/vegas_script\n",
-				"关于"
-			);
+				"疑难解答：" + troubleShootingLink + "\n" +
+				"仓库地址：https://github.com/Chaosinism/vegas_scripts\n",
+				"关于",
+				MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 
 		private void TrimTime_ValueChanged(object sender, EventArgs e) {
@@ -390,8 +480,6 @@ namespace VegasScript {
 		}
 
 		public VideoAnimFx VideoEffect { get { return (VideoAnimFx)VideoEffectCombo.SelectedIndex; } }
-		//public double SourceStartTimeValue = 0;
-		//public double SourceEndTimeValue = 0;
 
 		public void ChooseSourceCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			#if VEGAS_ENVIRONMENT
@@ -401,6 +489,9 @@ namespace VegasScript {
 						SourceConfigFrom == 1 ? table.FromSelectedClip : table.FromBrowseFile;
 			AudioConfigCheck.Enabled = AudioConfigCheck.Checked = group.AudioEnabled;
 			VideoConfigCheck.Enabled = VideoConfigCheck.Checked = group.VideoEnabled;
+			WarningInfoLabel.Text =
+				SourceConfigFrom == 0 && parent.audioVideoEnabledTable.SelectNoMedia ? "警告：您没有在项目媒体窗口中选中任何有效媒体素材！" :
+				SourceConfigFrom == 1 && parent.audioVideoEnabledTable.SelectNoEvents ? "警告：您没有在轨道窗口中选中任何剪辑片段！" : "";
 			#endif
 		}
 
@@ -469,22 +560,24 @@ namespace VegasScript {
 			SetComboIndex(AudioMainOctaveCombo, oct, 5);
 		}
 
-		private void SelectOneEveryFewBox_ValueChanged(object sender, EventArgs e) {
-			int divisor = (int)SelectOneEveryFewBox.Value, remainder = (int)SelectWhichEachGroupBox.Value;
-			if (remainder > divisor) SelectWhichEachGroupBox.Value = remainder = divisor;
-			SelectWhichEachGroupBox.Maximum = new decimal(new int[] { divisor, 0, 0, 0 });
-		}
-
 		private void QuickSelectIntervalBtn_Click(object sender, EventArgs e) {
 			CancelBtn_Click(sender, null);
+			new SelectIntervalForm().Show();
 			#if VEGAS_ENVIRONMENT
 			parent.SelectInterval((int)SelectOneEveryFewBox.Value, (int)SelectWhichEachGroupBox.Value);
 			#endif
 		}
 
+		/*private void SelectOneEveryFewBox_ValueChanged(object sender, EventArgs e) {
+			int divisor = (int)SelectOneEveryFewBox.Value, remainder = (int)SelectWhichEachGroupBox.Value;
+			if (remainder > divisor) SelectWhichEachGroupBox.Value = remainder = divisor;
+			SelectWhichEachGroupBox.Maximum = new decimal(new int[] { divisor, 0, 0, 0 });
+		}
+
 		internal void DisabledSelectIntervalPart() {
 			SelectOneEveryFewBox.Enabled = SelectWhichEachGroupBox.Enabled = QuickSelectIntervalBtn.Enabled = false;
-		}
+			HelperTab.Parent = null; // 隐藏选项卡
+		}*/
 
 		private void StaffLineColorBtn_Click(object sender, EventArgs e) {
 			DialogResult dr = StaffLineColorDialog.ShowDialog();
@@ -508,6 +601,119 @@ namespace VegasScript {
 			Color c = Color.FromArgb(r, g, b);
 			StaffLineColorDialog.Color = c;
 			Update_StaffLineColorBtn_Color();
+		}
+
+		private void ReplaceClipsBtn_Click(object sender, EventArgs e) {
+			CancelBtn_Click(sender, null);
+			new ReplaceClipsForm().Show();
+		}
+
+		private void AutoLayoutTracksGridBtn_Click(object sender, EventArgs e) {
+			//CancelBtn_Click(sender, null);
+			Hide();
+			new AutoLayoutTracksGridForm().Show();
+		}
+
+		private void AutoLayoutTracksBox3dBtn_Click(object sender, EventArgs e) {
+			CancelBtn_Click(sender, null);
+			new AutoLayoutTracksBox3dForm().Show();
+		}
+
+		private void AudioMainKeyCombo_MouseWheel(object sender, MouseEventArgs e) {
+
+		}
+
+		private void AudioLegatoCheck_Or_AudioFreezeLastFrameCheck_CheckedChanged(object sender, EventArgs e) {
+			CheckBox check = sender as CheckBox;
+			CheckBox[] checks = { AudioLegatoCheck, AudioFreezeLastFrameCheck };
+			foreach (CheckBox checkBox in checks) {
+				if (checkBox == check) continue;
+				checkBox.Checked = false;
+			}
+		}
+
+		private void ClearTrackMotionBtn_Click(object sender, EventArgs e) {
+			ClearTrackMotionBtn.Enabled = false;
+		}
+
+		private void ClearTrackEffectBtn_Click(object sender, EventArgs e) {
+			ClearTrackEffectBtn.Enabled = false;
+		}
+
+		private void GradientTracksBtn_Click(object sender, EventArgs e) {
+			CancelBtn_Click(sender, null);
+			new GradientTracksForm().Show();
+		}
+
+		private void PreviewAudioBtn_Click(object sender, EventArgs e) {
+			Console.Beep();
+		}
+
+		private void ConfigForm_FormClosing(object sender, FormClosingEventArgs e) {
+			AcceptConfig = false;
+		}
+
+		private void PreviewBasePitchBtn_MouseDown(object sender, MouseEventArgs e) {
+			Console.Beep();
+		}
+
+		private void exitDiscardingChangesToolStripMenuItem_Click(object sender, EventArgs e) {
+			Close();
+		}
+
+		private void resetConfigToolStripMenuItem_Click(object sender, EventArgs e) {
+			Close();
+		}
+
+		private void YtpLenBox_ValueChanged(object sender, EventArgs e) {
+			NumericUpDown min = YtpMinLenBox, max = YtpMaxLenBox, cur = sender as NumericUpDown;
+			if (min.Value > max.Value) {
+				if (cur == min) min.Value = max.Value;
+				else max.Value = min.Value;
+			}
+		}
+
+		private void ConfigForm_MouseClick(object sender, MouseEventArgs e) {
+
+		}
+
+		private void YtpEnableAllEffectsCheck_CheckedChanged(object sender, EventArgs e) {
+			CheckBox check = sender as CheckBox;
+			if (check.CheckState != CheckState.Indeterminate)
+				for (int i = 0; i < YtpEffectsCheckList.Items.Count; i++)
+					YtpEffectsCheckList.SetItemChecked(i, check.Checked);
+		}
+
+		int[] selectedYtpEffects;
+		private void YtpEffectsCheckList_SelectedIndexChanged(object sender, EventArgs e) {
+			CheckState? state = null;
+			List<int> selected = new List<int>();
+			for (int i = 0; i < YtpEffectsCheckList.Items.Count; i++) {
+				bool isChecked = YtpEffectsCheckList.GetItemChecked(i);
+				if (isChecked) selected.Add(i);
+				if (isChecked && (state == null || state == CheckState.Checked)) state = CheckState.Checked;
+				else if (!isChecked && (state == null || state == CheckState.Unchecked)) state = CheckState.Unchecked;
+				else state = CheckState.Indeterminate;
+			}
+			selectedYtpEffects = selected.ToArray();
+			if (state == null) return;
+			YtpEnableAllEffectsCheck.CheckState = (CheckState)state;
+		}
+
+		private void ChangeTuneMethodBtn_Click(object sender, EventArgs e) {
+			CancelBtn_Click(sender, null);
+			new ChangeTuneMethodForm().Show();
+		}
+
+		private void ConfigForm_Resize(object sender, EventArgs e) {
+			int tabWidth = Tabs.SelectedTab.Size.Width;
+			const int MARGIN = 6;
+			int maxWidth = tabWidth - MARGIN;
+			SheetConfigInfoLabel.MaximumSize = YtpLbl.MaximumSize = new Size(maxWidth, 0);
+		}
+
+		private void PreviewBasePitchBtn_MouseDown(object sender, EventArgs e) {
+			const int MARGIN = 6;
 		}
 	}
 

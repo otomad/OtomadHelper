@@ -78,7 +78,7 @@ namespace VegasScript {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.tableLayoutPanel);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.Margin = new System.Windows.Forms.Padding(4);
+			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.Name = "IntegerTrackWithBox";
 			this.Size = new System.Drawing.Size(377, 39);
 			this.tableLayoutPanel.ResumeLayout(false);
