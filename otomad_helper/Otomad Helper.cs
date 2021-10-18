@@ -10764,6 +10764,7 @@ namespace VegasScript {
 			if (check.CheckState != CheckState.Indeterminate)
 				for (int i = 0; i < YtpEffectsCheckList.Items.Count; i++)
 					YtpEffectsCheckList.SetItemChecked(i, check.Checked);
+			YtpEffectsCheckList_SelectedIndexChanged(null, null);
 		}
 
 		public YtpEffectType[] selectedYtpEffects;
