@@ -341,7 +341,7 @@ namespace VegasScript {
 			if (progressForm != null) progressForm.Close();
 			if (state == ShowErrorState.NORMAL) {
 				if (configForm != null) configForm.FocusOn(null, null);
-				//configIni.Delete(true);
+				configIni.Delete(true);
 			}
 		}
 
