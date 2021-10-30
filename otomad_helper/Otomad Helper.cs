@@ -14,15 +14,18 @@
  * 仓库地址：https://github.com/otomad/VegasScripts
  * 说明文档：http://www.bilibili.com/read/cv13335178
  *
- * 修订日期：2021 年 10 月 17 日
+ * 开工时间：‎公元 ‎2021‎ 年 ‎9 ‎月 ‎5‎ 日 ‎星期日，上午 ‏‎4:14:26
  **/
 
 #define VEGAS_ENVIRONMENT
+#define INTERNATIONALIZED
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -30,14 +33,17 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-
 using Microsoft.Win32;
 using NAudio.Midi;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using ScriptPortal.Vegas;
 
 namespace VegasScript {
 
 	public class EntryPoint {
+		public static readonly Version VERSION = new Version(4, 10, 31, 0); // 版本号
+		public static readonly DateTime REVISION_DATE = new DateTime(2021, 10, 31); // 修订日期
 
 		// 配置参数变量
 		#region 视频属性
@@ -78,29 +84,23 @@ namespace VegasScript {
 		/* 渐　　出 */ private int AConfigFadeout { get { return configForm.AudioFadeOutBox.Value; } }
 		/* 渐入曲线 */ private CurveType AConfigFadeinCurve { get { return GetCurveType(configForm.AudioFadeInCurveCombo.SelectedIndex); } }
 		/* 渐出曲线 */ private CurveType AConfigFadeoutCurve { get { return GetCurveType(configForm.AudioFadeOutCurveCombo.SelectedIndex); } }
-		/* 原始音高 */ private int AConfigBasePitch {
-			get {
-				return PitchMap(
-					configForm.AudioMainKeyCombo.SelectedItem.ToString() ?? "C",
-					configForm.AudioMainOctaveCombo.SelectedItem.ToString() ?? "5"
-				);
-			}
-		}
+		/* 原始音高 */ private int AConfigBasePitch { get { return configForm.BasePitch; } }
 		/* 调音方法 */ private AudioTuneMethod AConfigMethod { get { return (AudioTuneMethod)configForm.AudioTuneMethodCombo.SelectedIndex; } }
 		/* 弹性属性 */ private ElastiqueStretchAttributes? AConfigElastiqueAttr { get { return AConfigMethod == AudioTuneMethod.ELASTIQUE ?
 			(ElastiqueStretchAttributes?)configForm.AudioStretchAttrCombo.SelectedIndex : null; } }
+		/* 古典属性 */ private ClassicStretchAttributes? AConfigClassicAttr { get { return AConfigMethod == AudioTuneMethod.CLASSIC ?
+			(ClassicStretchAttributes?)configForm.AudioStretchAttrCombo.SelectedIndex : null; } }
 		/* 伸缩变调 */ private bool AConfigLockStretchPitch { get { return configForm.AudioLockStretchPitchCheck.Checked; } }
 		/* 保留共振 */ private bool AConfigReserveFormant { get { return configForm.AudioReserveFormantCheck.Checked; } }
 		#endregion
 
 		#region 迷笛属性
-		/* 音　　轨 */ private int MidiConfigTrack { get { return configForm.MidiChannelCombo.SelectedIndex; } }
+		/* 音　　轨 */ private MIDI.TrackInfo MidiConfigTrack { get { return configForm.MidiChannelCombo.SelectedItem as MIDI.TrackInfo; } }
 		/* 起始时间 */ private double MidiConfigStartTime { get { return configForm.MidiStartSecondBox.DoubleValue; } }
 		/* 终止时间 */ private double MidiConfigEndTime { get { return configForm.MidiEndSecondBox.DoubleValue; } }
 		/* 迷笛速度 */ private bool MidiUseMidiBpm { get { return configForm.MidiMidiBpmCheck.Checked; } }
 		/* 项目速度 */ private bool MidiUseProjectBpm { get { return configForm.MidiProjectBpmCheck.Checked; } }
 		/* 自拟速度 */ private bool MidiUseCustomBpm { get { return configForm.MidiCustomBpmCheck.Checked; } }
-		/* 节　　拍 */ private int MidiConfigBeat { get { return configForm.MidiBeatCombo.SelectedIndex + 2; } }
 		#endregion
 
 		#region 媒体属性
@@ -145,6 +145,7 @@ namespace VegasScript {
 		public Vegas vegas;
 		public ConfigIni configIni;
 		private ProgressForm progressForm;
+		internal static EntryPoint instance;
 
 		// 媒体 / MIDI 参数变量
 		internal MIDI midi = null;
@@ -219,17 +220,22 @@ namespace VegasScript {
 				if (!inSilence) ShowError(new Exceptions.NotAMidiFileException(), e);
 				return false;
 			}
+			if (_midi.TrackInfos.Length == 0) {
+				ShowError2(new Exceptions.NoTrackInfoException().Message);
+				return false;
+			}
 			midi = _midi;
 
 			#region 生成每个 MIDI 音轨的统计信息
 			ComboBox combo = configForm.MidiChannelCombo;
 			combo.Items.Clear();
 			foreach (MIDI.TrackInfo info in midi.TrackInfos)
-				combo.Items.Add(info.ToString());
-			combo.SelectedIndex = midi.SuggestSelectedIndex ?? 0;
+				combo.Items.Add(info);
+			combo.SelectedIndex = 0;
 			configForm.ChooseMidiText.Text = filePath;
 			configForm.UpdateMidiBpm(midi.Bpm);
-			if (configForm.AudioConfigCheck.Checked || configForm.VideoConfigCheck.Checked) configForm.OkBtn_Enabled = true;
+			configForm.MidiBeatTxt.Text = midi.TimeSignature;
+			configForm.SetCheckedEnabled(null, null);
 			#endregion
 			return true;
 		}
@@ -312,16 +318,16 @@ namespace VegasScript {
 		/// <summary>
 		/// 显示报错信息。
 		/// </summary>
-		public void ShowError(string str, ShowErrorState state = ShowErrorState.NORMAL) {
-			vegas.ShowError(str);
+		public static void ShowError(string str, ShowErrorState state = ShowErrorState.NORMAL) {
+			instance.vegas.ShowError(str);
 			DoingAfterShowError(state);
 		}
-		public void ShowError(Exception e, ShowErrorState state = ShowErrorState.NORMAL) {
-			vegas.ShowError(e.Message);
+		public static void ShowError(Exception e, ShowErrorState state = ShowErrorState.NORMAL) {
+			instance.vegas.ShowError(e.Message);
 			DoingAfterShowError(state);
 		}
-		public void ShowError(Exception e1, Exception e2, ShowErrorState state = ShowErrorState.NORMAL) {
-			vegas.ShowError(e1.Message, e2.ToString());
+		public static void ShowError(Exception e1, Exception e2, ShowErrorState state = ShowErrorState.NORMAL) {
+			instance.vegas.ShowError(e1.Message, e2.ToString());
 			DoingAfterShowError(state);
 		}
 		public static void ShowError2(string str) {
@@ -336,12 +342,12 @@ namespace VegasScript {
 		private string GetExceptionInfo(Exception e) {
 			return e.Message + "\n" + e.StackTrace + "\n" + e.ToString();
 		}
-		private void DoingAfterShowError(ShowErrorState state) {
+		private static void DoingAfterShowError(ShowErrorState state) {
 			if (state == ShowErrorState.SILENCE) return;
-			if (progressForm != null) progressForm.Close();
+			if (instance.progressForm != null) instance.progressForm.Close();
 			if (state == ShowErrorState.NORMAL) {
-				if (configForm != null) configForm.FocusOn(null, null);
-				configIni.Delete(true);
+				if (instance.configForm != null) instance.configForm.FocusOn(null, null);
+				instance.configIni.Delete(true);
 			}
 		}
 
@@ -400,16 +406,8 @@ namespace VegasScript {
 		public class EventSet {
 			public AudioEvent audioEvent = null;
 			public VideoEvent videoEvent = null;
-			public double audioLength {
-				get {
-					return audioEvent == null ? 0 : audioEvent.Length.ToMilliseconds();
-				}
-			}
-			public double videoLength {
-				get {
-					return videoEvent == null ? 0 : videoEvent.Length.ToMilliseconds();
-				}
-			}
+			public double audioLength { get { return audioEvent == null ? 0 : audioEvent.Length.ToMilliseconds(); } }
+			public double videoLength { get { return videoEvent == null ? 0 : videoEvent.Length.ToMilliseconds(); } }
 			public Subclip audioReverse = null;
 			public Subclip videoReverse = null;
 			public EventSet() { }
@@ -421,7 +419,7 @@ namespace VegasScript {
 				this.audioReverse = audioReverse;
 				this.videoReverse = videoReverse;
 			}
-			public override bool Equals(Object obj) {
+			public override bool Equals(object obj) {
 				if (object.ReferenceEquals(this, obj)) return true;
 				if (obj == null || !(obj is EventSet)) return false;
 				EventSet other = obj as EventSet;
@@ -444,7 +442,7 @@ namespace VegasScript {
 					}
 					if (!same) sets.Add(current);
 				}
-				if (sets.Count == 0) p.ShowError(new Exceptions.YtpEliminateDuplicatesFinallyNullException(), ShowErrorState.RESUME_NEXT);
+				if (sets.Count == 0) ShowError(new Exceptions.YtpEliminateDuplicatesFinallyNullException(), ShowErrorState.RESUME_NEXT);
 				return eventSets = sets.ToArray();
 			}
 		}
@@ -494,6 +492,10 @@ namespace VegasScript {
 		}
 		public Track[] GetSelectedTracks() {
 			return GetSelectedTracks<Track>();
+		}
+
+		public Media[] GetSelectedMedia() {
+			return vegas.Project.MediaPool.GetSelectedMedia();
 		}
 
 		private EventSet GetSelectedEventSet() {
@@ -620,13 +622,6 @@ namespace VegasScript {
 			if (AConfigNormalize) audioEventSample.Normalize = true;
 			return true;
 		}
-		
-		public static void FlipVideoAllKeyframe(VideoEvent videoEvent, bool hFlip, bool vFlip) {
-			foreach (VideoMotionKeyframe key in videoEvent.VideoMotion.Keyframes) {
-				bool isXFlip = key.TopLeft.X > key.TopRight.X, isYFlip = key.TopRight.Y > key.BottomRight.Y;
-				key.ScaleBy(new VideoMotionVertex(isXFlip == hFlip ? 1 : -1, isYFlip == vFlip ? 1 : -1));
-			}
-		}
 
 		/// <summary>
 		/// 生成音 MAD / YouTube Poop Music Video。
@@ -655,7 +650,7 @@ namespace VegasScript {
 			#endregion
 
 			#region 开始处理 MIDI
-			string name = midi.TrackInfos[MidiConfigTrack].Name; // 所选 MIDI 轨道名称。如果没有则为空串。
+			string name = MidiConfigTrack.Name; // 所选 MIDI 轨道名称。如果没有则为空串。
 
 			#region 视频操作
 			const int MAX_VIDEO_TRACK_SIZE = 100;
@@ -698,10 +693,11 @@ namespace VegasScript {
 			#endregion
 
 			#region 五线谱操作
+			const int DEFAULT_MIDI_CONFIG_BEAT = 4;
 			int vTrackCount = -1; // 视频轨道计数，用于新建视频轨道。仅在启用五线谱效果时使用。
 			int trackPointer = 0; // 视频轨道指针
 			double barStartTime = 0;
-			double barLength = midi.MsPerQuarter * MidiConfigBeat;
+			double barLength = midi.MsPerQuarter * DEFAULT_MIDI_CONFIG_BEAT;
 			bool sliceComposition = MidiConfigStartTime < MidiConfigEndTime;
 			int projWidth = SheetConfigRelative ? 1920 : vegas.Project.Video.Width;
 			int projHeight = SheetConfigRelative ? 1080 : vegas.Project.Video.Height;
@@ -729,9 +725,10 @@ namespace VegasScript {
 			}
 			#endregion
 
-			for (int i = 0; i < midi.Events[MidiConfigTrack].Count; i++) {
-				MidiEvent midiEvent = midi.Events[MidiConfigTrack][i];
-				int statusProgress = (int)Math.Round(100.0 * i / midi.Events[MidiConfigTrack].Count);
+			for (int i = 0; i < MidiConfigTrack.Events.Count; i++) {
+				MidiEvent midiEvent = MidiConfigTrack.Events[i];
+				if (!(midiEvent is NoteOnEvent)) continue;
+				int statusProgress = (int)Math.Round(100.0 * i / MidiConfigTrack.Events.Count);
 				long curTime = DateTime.Now.Ticks;
 				if (!requestShowProgress && curTime - startMakingTime > MUST_SHOW_PROGRESS_WAITING_TIME)
 					requestShowProgress = true; // 超过规定等待的时间，则还是会显示进度条
@@ -740,7 +737,12 @@ namespace VegasScript {
 					// vegas.UpdateUI(); // 取消注释可以让 Vegas 实时更新 UI，但是会更慢。
 				}
 				if (progressForm.RequestAbort) break;
-				if (!(midiEvent is NoteOnEvent)) continue;
+				foreach (MidiEvent _midiEvent in midi.TimeSignatureTrack)
+					if (_midiEvent is TimeSignatureEvent) {
+						TimeSignatureEvent timeSignatureEvent = _midiEvent as TimeSignatureEvent;
+						if (midiEvent.AbsoluteTime >= timeSignatureEvent.AbsoluteTime)
+							barLength = midi.MsPerQuarter * timeSignatureEvent.Numerator;
+					}
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 				double startTime = midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
@@ -761,7 +763,7 @@ namespace VegasScript {
 
 				#region 生成音频事件
 				if (AConfig) {
-					while (Math.Ceiling(startTime) < aTrackPositions[trackIndex]) // 如果音频是多轨则放到新建的轨道，虽然有时候判断不准确，但问题不大
+					while (Math.Ceiling(startTime) < aTrackPositions[trackIndex]) // 如果音频是多轨则放到新建的轨道，虽然有时候判断不准确，但问题不大。 // 后来改用整数加以限制，效果就好很多了。
 						if (++trackIndex == aTrackCount) {
 							aTrackCount++;
 							vegas.Project.Tracks.Add(aTracks[trackIndex] = new AudioTrack(vegas.Project, tTrackCount++, name));
@@ -771,12 +773,11 @@ namespace VegasScript {
 					if (AConfigFreezeLastFrame && !AConfigScratch && duration > audioLength) audioEvent.Length = Timecode.FromMilliseconds(audioLength);
 					aTrackPositions[trackIndex] = startTime + duration;
 					try {
-						audioEvent.Method = TimeStretchPitchShift.Elastique; // 这个操作没有在 Vegas 文档中写到。
+						audioEvent.Method = AConfigMethod == AudioTuneMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique; // 这个操作没有在 Vegas 文档中写到。
 						audioEvent.PitchLock = false;
 					} catch (Exception e) {
-						if (AConfigMethod == AudioTuneMethod.ELASTIQUE) {
-							ShowError(new Exceptions.NoTimeStretchPitchShiftException(), e);
-							return;
+						if (AConfigMethod == AudioTuneMethod.ELASTIQUE || AConfigMethod == AudioTuneMethod.CLASSIC) {
+							ShowError(new Exceptions.NoTimeStretchPitchShiftException(), e); return;
 						}
 					}
 					if (adjustTime) AdjustDeviation(audioEvent, sourceStartTime, sourceEndTime);
@@ -804,9 +805,12 @@ namespace VegasScript {
 							} catch (Exception e) { ShowError(new Exceptions.NoPluginPresetsException(), e); return; }
 							pitchDelta -= pitchDeltaTimes;
 						}
-					} else if (AConfigMethod == AudioTuneMethod.ELASTIQUE) {
-						audioEvent.ElastiqueAttribute = (ElastiqueStretchAttributes)AConfigElastiqueAttr;
-						if (AConfigElastiqueAttr == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = AConfigReserveFormant;
+					} else if (AConfigMethod == AudioTuneMethod.ELASTIQUE || AConfigMethod == AudioTuneMethod.CLASSIC) {
+						if (AConfigMethod == AudioTuneMethod.ELASTIQUE) {
+							audioEvent.ElastiqueAttribute = (ElastiqueStretchAttributes)AConfigElastiqueAttr;
+							if (AConfigElastiqueAttr == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = AConfigReserveFormant;
+						} else if (AConfigMethod == AudioTuneMethod.CLASSIC)
+							audioEvent.ClassicAttribute = (ClassicStretchAttributes)AConfigClassicAttr;
 						if (!AConfigLockStretchPitch) audioEvent.PitchSemis += pitchDelta;
 						else {
 							double origPitch = audioEvent.PitchSemis;
@@ -872,7 +876,7 @@ namespace VegasScript {
 						key1.RotateBy(VConfigEndRotation + anim.RotationDeg);
 					}
 					// 单独对所有关键帧处理翻转
-					FlipVideoAllKeyframe(videoEvent, anim.HorizontalFlip, anim.VerticalFlip);
+					videoEvent.FlipAllKeyframe(anim.HorizontalFlip, anim.VerticalFlip);
 					// 动画效果生成
 					if (VConfigGlow != 0) if (Plugin.contrast != null) Plugin.ForVideoEvents.Glow(videoEvent, VConfigGlow, VConfigGlowCurve, VConfigGlowBright);
 						else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return; }
@@ -1410,6 +1414,8 @@ namespace VegasScript {
 		/// <param name="myVegas">Vegas 软件</param>
 		public void FromVegas(Vegas myVegas) {
 			vegas = myVegas;
+			if (instance != null) return;
+			instance = this;
 			do {
 				if (!ShowConfigForm()) return;
 				GenerateOtomad();
@@ -1426,7 +1432,125 @@ namespace VegasScript {
 		#region 以下方法仅供测试使用
 		public static object s { set { MessageBox.Show(value == null ? "null" : value.ToString()); } }
 		public static void test() { s = "Super Idol 的笑容都没你的甜！"; }
+		public static void update() { EntryPoint.instance.vegas.UpdateUI(); test(); }
 		#endregion
+	}
+	
+	/// <summary>
+	/// 扩展类方法<br/>
+	/// C# 的 this 参数，就是 JavaScript 的 prototype。
+	/// </summary>
+	public static class Extensions {
+		/// <summary>
+		/// 给老娘展示内容！
+		/// </summary>
+		/// <param name="value">内容</param>
+		public static string s(this object value) { string str = value == null ? "null" : value.ToString(); MessageBox.Show(str); return str; }
+		
+		/// <summary>
+		/// 在视频事件平移/裁切中将其所有关键帧进行翻转操作。
+		/// 注意将会覆盖原有翻转设置，而不是相对于原有值进行修改。
+		/// </summary>
+		/// <param name="videoEvent">视频事件</param>
+		/// <param name="hFlip">水平翻转？</param>
+		/// <param name="vFlip">垂直翻转？</param>
+		public static void FlipAllKeyframe(this VideoEvent videoEvent, bool hFlip, bool vFlip) {
+			foreach (VideoMotionKeyframe key in videoEvent.VideoMotion.Keyframes) {
+				bool isXFlip = key.TopLeft.X > key.TopRight.X, isYFlip = key.TopRight.Y > key.BottomRight.Y;
+				key.ScaleBy(new VideoMotionVertex(isXFlip == hFlip ? 1 : -1, isYFlip == vFlip ? 1 : -1));
+			}
+		}
+		
+		/// <summary>
+		/// 若给定的时间码没有量化为帧，则将进位到下一帧所对应的时间码，而不是默认的舍去回上一帧的时间码。
+		/// </summary>
+		/// <param name="timecode">给定的时间码</param>
+		public static Timecode FixToFrame(this Timecode timecode) {
+			long frame = timecode.FrameCount;
+			if (Timecode.FromFrames(frame) < timecode) timecode = Timecode.FromFrames(frame + 1);
+			return timecode;
+		}
+
+		/// <summary>
+		/// 设定下拉菜单选择的编号，避免设定的编号超出下拉菜单的项目数量。
+		/// </summary>
+		/// <param name="combo">下拉菜单</param>
+		/// <param name="index">设定选项序号</param>
+		/// <param name="def">设定如果设定失败的默认值，如果为 -1 或留空表示不设定</param>
+		public static void SetIndex(this ComboBox combo, int index, int def = -1) {
+			int length = combo.Items.Count;
+			if (length == 0) return;
+			if (index >= length || index < 0) {
+				if (def >= length || def < 0) return; // 你特么故意找茬是吧？
+				combo.SelectedIndex = def;
+			} else combo.SelectedIndex = index;
+		}
+
+		/// <summary>
+		/// 设定数值上下调节框的值，避免指定的数值超出控件的最小值或最大值。
+		/// </summary>
+		/// <typeparam name="T">接收数字的类型</typeparam>
+		/// <param name="numeric">数值上下调节框</param>
+		/// <param name="value">设定值</param>
+		/// <param name="def">设定如果设定失败的默认值，如果为 null 或留空表示不设定</param>
+		public static void SetValue(this NumericUpDown numeric, decimal value, decimal? def = null) {
+			decimal min = numeric.Minimum, max = numeric.Maximum;
+			if (value < min || value > max) {
+				if (def == null || def < min || def > max) return;
+				numeric.Value = (decimal)def;
+			} else numeric.Value = value;
+		}
+
+		/// <summary>
+		/// 批量设置复选框列表的值。
+		/// </summary>
+		/// <param name="checks">复选框列表</param>
+		/// <param name="value">一个字符序列依次表示各个复选框的值，用 1 表示 true，0 表示 false。</param>
+		public static void BatchSet(this CheckedListBox checks, string value) {
+			value = new Regex(@"\s").Replace(value.Trim(), "");
+			value = new Regex(@"[^0]").Replace(value, "1");
+			for (int i = 0; i < Math.Min(checks.Items.Count, value.Length); i++)
+				checks.SetItemChecked(i, value.Substring(i, 1) != "0");
+		}
+		/// <summary>
+		/// 批量获取复选框列表的值。
+		/// </summary>
+		/// <param name="checks">复选框列表</param>
+		/// <returns>一个字符序列依次表示各个复选框的值，用 1 表示 true，0 表示 false。</returns>
+		public static string BatchGet(this CheckedListBox checks) {
+			StringBuilder value = new StringBuilder();
+			for (int i = 0; i < checks.Items.Count; i++)
+				value.Append(checks.GetItemChecked(i) ? 1 : 0);
+			return value.ToString();
+		}
+		
+		/// <summary>
+		/// 数组截取。
+		/// 实际上使用时不必给定泛型 T。
+		/// </summary>
+		/// <typeparam name="T">数组成员类型</typeparam>
+		/// <param name="array">数组</param>
+		/// <param name="from">开始截取下标</param>
+		/// <param name="length">截取长度。若为 -1 或留空表示持续到结尾。</param>
+		/// <returns>截取后的数组</returns>
+		public static T[] Slice<T>(this T[] array, int from, int length = -1) {
+			List<T> list = new List<T>();
+			if (length < 0 || from + length > array.Length) length = array.Length - from;
+			for (int i = from; i < from + length; i++)
+				list.Add(array[i]);
+			return list.ToArray();
+		}
+		
+		/// <summary>
+		/// 对时间码对象扩展乘法运算。
+		/// 但是为什么不允许使用 <c>operator *</c> 呢？
+		/// </summary>
+		/// <param name="self">原始时间码对象</param>
+		/// <param name="ratio">乘以的倍数</param>
+		/// <returns>求得的新时间码</returns>
+		public static Timecode Multiply(this Timecode self, double ratio) {
+			return Timecode.FromMilliseconds(self.ToMilliseconds() * ratio);
+		}
 	}
 	
 	public enum ShowErrorState {
@@ -1499,6 +1623,7 @@ namespace VegasScript {
 		MIRROR,
 		HIGH_CONTRAST, // attach audio Loud
 		OVERSATURATION, // Probably attach audio High Pitch
+		EMPHASIZE_THRICE, // attach video Enlarge Focus, Probably attach video Monochrome if Speed Down
 	}
 
 	/// <summary>
@@ -1891,7 +2016,7 @@ namespace VegasScript {
 				param.SetValueAtTime(videoEvent.Length, 1);
 			}
 			/// <summary>
-			/// 应用放大效果。
+			/// 应用放大动画效果。
 			/// </summary>
 			/// <param name="videoEvent">视频事件</param>
 			public static void Enlarge(VideoEvent videoEvent) {
@@ -1905,12 +2030,9 @@ namespace VegasScript {
 				float newWidth = FINAL_SIZE, newHeight = FINAL_SIZE;
 				if (width <= height) newWidth = newHeight / height * width;
 				else newHeight = newWidth / width * height;
-				float randX = (float)RandomDoubleBetween(0, width - newWidth);
-				float randY = (float)RandomDoubleBetween(0, height - newHeight);
-				final.Bounds = new VideoMotionBounds(
-					randX, randY, randX + newWidth, randY,
-					randX + newWidth, randY + newHeight, randX, randY + newHeight
-				);
+				float randX = RandomFloatBetween(0, width - newWidth);
+				float randY = RandomFloatBetween(0, height - newHeight);
+				final.Bounds = GetARectangleBounds(randX, randY, newWidth, newHeight);
 			}
 			/// <summary>
 			/// 应用球面化效果。
@@ -1939,6 +2061,32 @@ namespace VegasScript {
 			public static void Saturate(VideoEvent videoEvent, double saturation = 2) {
 				Effect effect = videoEvent.Effects.AddEffect(hslAdjust);
 				(effect.OFXEffect.FindParameterByName("Saturation") as OFXDoubleParameter).Value = saturation;
+			}
+			/// <summary>
+			/// 应用放大并突出重点效果。
+			/// </summary>
+			/// <param name="videoEvents">视频事件列表</param>
+			public static void Focus(List<VideoEvent> videoEvents) {
+				int length;
+				if (videoEvents == null || (length = videoEvents.Count) == 0) return;
+				VideoMotionKeyframe firstFrame = videoEvents[0].VideoMotion.Keyframes[0];
+				float width = firstFrame.BottomRight.X - firstFrame.BottomLeft.X,
+					height = firstFrame.BottomRight.Y - firstFrame.TopRight.Y,
+					topLeftX = firstFrame.TopLeft.X, topLeftY = firstFrame.TopLeft.Y;
+				float finalRatio = RandomFloatBetween(0.5f, 0.75f);
+				float finalWidth = width * finalRatio, finalHeight = height * finalRatio,
+					finalTopLeftX = RandomFloatBetween(0, width - finalWidth) + topLeftX,
+					finalTopLeftY = RandomFloatBetween(0, height - finalHeight) + topLeftY;
+				for (int i = 1; i < length; i++) {
+					VideoMotionKeyframe frame = videoEvents[i].VideoMotion.Keyframes[0];
+					double progress = (double)i / (length - 1);
+					frame.Bounds = GetARectangleBounds(
+						GetPercentageInRange(topLeftX, finalTopLeftX, progress),
+						GetPercentageInRange(topLeftY, finalTopLeftY, progress),
+						GetPercentageInRange(width, finalWidth, progress),
+						GetPercentageInRange(height, finalHeight, progress)
+					);
+				}
 			}
 		}
 		
@@ -2085,7 +2233,7 @@ namespace VegasScript {
 				if (effects == null) effect = GetRandomYtpEffectType();
 				else effect = GetRandomYtpEffectType(effects);
 				if (effect == null) return;
-				bool probably = random.Next(2) == 1; // 如果有可能的话。
+				bool probably = RandomBool(); // 如果有可能的话。
 				switch (effect) {
 					// 为什么 case 里面也打花括号？因为下面会出现一个在不同 case 里面定义相同标识符变量，结果报了重名错误的奇葩问题。
 					case YtpEffectType.CHORUS: {
@@ -2104,7 +2252,7 @@ namespace VegasScript {
 					} break;
 					case YtpEffectType.VIBRATO: {
 						if (aConfig) {
-							PlugInNode vibrato = random.Next(3) == 2 ? vibrato1 : vibrato2;
+							PlugInNode vibrato = random.Next(3) == 2 ? vibrato1 : vibrato2; // 有俩颤音插件，随便选一个。
 							if (vibrato == null) WarningMissingPlugin(Lang.str.vibrato);
 							else ForAudioEvents.Vibrato(aEvent, vibrato);
 						}
@@ -2217,7 +2365,7 @@ namespace VegasScript {
 									if (repeatClips != null) p.GroupTrackEvents(clip, repeatClips[i]);
 								}
 								bool hFlip = i % 2 == 0;
-								EntryPoint.FlipVideoAllKeyframe(clip, hFlip, false);
+								clip.FlipAllKeyframe(hFlip, false);
 							}
 						}
 					} break;
@@ -2265,6 +2413,44 @@ namespace VegasScript {
 							aEvent.AdjustPlaybackRate(2, true);
 						}
 					} break;
+					case YtpEffectType.EMPHASIZE_THRICE: {
+						Repeat3State state = GetRandomRepeat3State(); // 去掉了 1.5 倍减速这种情况。
+						bool isSpeedUp = state != Repeat3State.SPEED_DOWN_MULTIPLY, isMultiply = state != Repeat3State.SPEED_UP_1_5_TIMES;
+						int count = isMultiply ? 3 : 6;
+						var getRate = new Func<int, double>(index => {
+							if (!(index >= 0 && (isMultiply && index < 3 || !isMultiply && index < 6))) throw new ArgumentOutOfRangeException();
+							double[] rates2 = { 1, 2, 4 }, rates1_5 = { 1, 1.25, 1.5, 2, 3, 4 };
+							return Math.Pow((isMultiply ? rates2 : rates1_5)[index], isSpeedUp ? 1 : -1);
+						});
+						AudioEvent[] repeatClips = null;
+						if (aConfig) {
+							repeatClips = new AudioEvent[count];
+							aEvent.Method = TimeStretchPitchShift.Elastique;
+							aEvent.PitchLock = true;
+							for (int i = 1; i < count; i++) {
+								AudioEvent clip = aEvent.Copy(aEvent.Track, aEvent.Track.Length) as AudioEvent;
+								repeatClips[i] = clip;
+								double rate = getRate(i);
+								clip.AdjustPlaybackRate(rate, true);
+								clip.Length = clip.Length.Multiply(1 / rate);
+							}
+						}
+						if (vConfig) {
+							if (blackAndWhite == null) WarningMissingPlugin(Lang.str.black_and_white);
+							List<VideoEvent> videoEvents = new List<VideoEvent>();
+							videoEvents.Add(vEvent);
+							for (int i = 1; i < count; i++) {
+								VideoEvent clip = vEvent.Copy(vEvent.Track, vEvent.Track.Length) as VideoEvent;
+								if (repeatClips != null) p.GroupTrackEvents(clip, repeatClips[i]);
+								if (probably && !isSpeedUp) ForVideoEvents.Grey(clip);
+								double rate = getRate(i);
+								clip.AdjustPlaybackRate(rate, true);
+								clip.Length = clip.Length.Multiply(1 / rate);
+								videoEvents.Add(clip);
+							}
+							ForVideoEvents.Focus(videoEvents);
+						}
+					} break;
 					default:
 						break;
 				}
@@ -2275,7 +2461,7 @@ namespace VegasScript {
 			/// <returns>随机选择的效果</returns>
 			/// <exception cref="null">如果 YTP 效果枚举中没有任何效果，将会返回 null。</exception>
 			private static YtpEffectType? GetRandomYtpEffectType() {
-				int count = System.Enum.GetNames(new YtpEffectType().GetType()).Length;
+				int count = Enum.GetNames(new YtpEffectType().GetType()).Length;
 				if (count == 0) return null;
 				int rand = random.Next(count);
 				return (YtpEffectType)rand;
@@ -2298,10 +2484,26 @@ namespace VegasScript {
 			private const int MAX_HIGH_FREQ_REPEAT = 20;
 			private const int MIN_TONE_PITCH_CHANGE = -9;
 			private const int MAX_TONE_PITCH_CHANGE = 9;
-			private static void WarningMissingPlugin(string pluginName) {
+			private static void WarningMissingPlugin(string pluginName) { // 遇到缺少插件时不报错，而是仅仅弹出一个警告，点击确定后可以跳过。
 				MessageBox.Show(string.Format(Lang.str.warning_missing_plugin, pluginName), "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			}
-			
+			/// <summary>
+			/// 重要的事情说三遍效果的状态枚举。
+			/// </summary>
+			public enum Repeat3State {
+				SPEED_UP_MULTIPLY,
+				SPEED_UP_1_5_TIMES,
+				SPEED_DOWN_MULTIPLY,
+			}
+			/// <summary>
+			/// 获取一个随机的重要的事情说三遍效果状态。
+			/// </summary>
+			/// <returns>随机选取的重说三状态</returns>
+			private static Repeat3State GetRandomRepeat3State() {
+				int count = Enum.GetNames(new Repeat3State().GetType()).Length;
+				int rand = random.Next(count);
+				return (Repeat3State)rand;
+			}
 			/// <summary>
 			/// 指定插件效果应用随机预设。
 			/// </summary>
@@ -2328,8 +2530,11 @@ namespace VegasScript {
 		/// <param name="min">最小值</param>
 		/// <param name="max">最大值</param>
 		/// <returns>随机的双精度浮点值。且一定不会恰好等于最大值。</returns>
-		private static double RandomDoubleBetween(double min, double max) {
+		public static double RandomDoubleBetween(double min, double max) {
 			return random.NextDouble() * (max - min) + min;
+		}
+		public static float RandomFloatBetween(float min, float max) {
+			return (float)RandomDoubleBetween(min, max);
 		}
 		/// <summary>
 		/// 一个数学函数。
@@ -2341,6 +2546,44 @@ namespace VegasScript {
 		private static double ExtremeFunction(double x) {
 			if (x >= 0) return Math.Sqrt(x);
 			else return -Math.Sqrt(-x);
+		}
+		/// <summary>
+		/// 获取一个随机的布尔值（真假的概率相等）。
+		/// </summary>
+		/// <returns>随机的布尔值</returns>
+		public static bool RandomBool() {
+			return random.Next(2) == 1;
+		}
+		/// <summary>
+		/// 在指定初始值和最终值的范围内获得一个指定完成进度的值。
+		/// 指定的进度的取值范围必须在 0 ~ 1 内。
+		/// </summary>
+		/// <param name="begin">初始值</param>
+		/// <param name="final">最终值</param>
+		/// <param name="progress">进度 ∈ [0 ~ 1]</param>
+		/// <returns>指定范围内完成进度的值</returns>
+		public static double GetPercentageInRange(double begin, double final, double progress) {
+			if (progress < 0) progress = 0;
+			if (progress > 1) progress = 1;
+			return (final - begin) * progress + begin;
+		}
+		public static float GetPercentageInRange(float begin, float final, double progress) {
+			return (float)GetPercentageInRange((double)begin, (double)final, progress);
+		}
+		/// <summary>
+		/// 获得一个表示视频运动关键帧中使用的矩形，而不是不规则四边形。<br/>
+		/// “bounds” 用复数形式表示“边界”含义，然后又用 “get a” 表示获得一个。真搞不懂英文怎么命名的。
+		/// </summary>
+		/// <param name="x">矩形左上角的点的横坐标</param>
+		/// <param name="y">矩形左上角的点的纵坐标</param>
+		/// <param name="width">矩形宽度</param>
+		/// <param name="height">矩形高度</param>
+		/// <returns>矩形</returns>
+		public static VideoMotionBounds GetARectangleBounds(float x, float y, float width, float height) {
+			return new VideoMotionBounds(
+				x, y, x + width, y,
+				x + width, y + height, x, y + height
+			);
 		}
 	}
 
@@ -2355,51 +2598,63 @@ namespace VegasScript {
 			get { return 6e4 / MsPerQuarter; }
 			set { MsPerQuarter = 6e4 / value; }
 		}
+		public string TimeSignature = "";
+		public IList<MidiEvent> TimeSignatureTrack;
 		public string Path;
-		public int? SuggestSelectedIndex = null; // 第一个不是零音符的音轨
 		public class TrackInfo {
 			public int Index;
 			public string Name = "";
+			public string Instrument = "";
 			public int NotesCount = 0;
 			public string BeginNote = "";
 			public bool HasName { get { return Name.Length != 0; } }
+			public bool HasInstrument { get { return Instrument.Length != 0; } }
 			public override string ToString() {
-				List<string> info = new List<string>(new string[] {
-					Lang.str.midi_channel + ' ' + Index,
-					Lang.str.midi_notes_count + Lang.str.colon + NotesCount,
-					Lang.str.midi_begin_note + ' ' + BeginNote
-				});
-				if (HasName) info[0] += Lang.str.colon + Name;
-				if (NotesCount == 0) info.RemoveAt(2);
+				List<string> info = new List<string>();
+				info.Add(Lang.str.midi_channel + ' ' + Index + (HasName ? Lang.str.colon + Name : ""));
+				if (HasInstrument) info.Add(Lang.str.instrument + Lang.str.colon + Instrument);
+				info.Add(Lang.str.midi_notes_count + Lang.str.colon + NotesCount);
+				if (NotesCount != 0) info.Add(Lang.str.midi_begin_note + ' ' + BeginNote);
 				return string.Join(Lang.str.semicolon, info);
 			}
+			public IList<MidiEvent> Events;
 		}
 		public MIDI(string path) : base(path) {
 			Path = path;
-			TrackInfos = new TrackInfo[Events.Tracks];
+			List<TrackInfo> trackInfos = new List<TrackInfo>();
 			TicksPerQuarter = DeltaTicksPerQuarterNote;
 			MsPerQuarter = 0; // 毫秒每拍
 			for (int i = 0; i < Events.Tracks; i++) {
-				TrackInfo info = TrackInfos[i] = new TrackInfo();
-				info.Index = i;
-				foreach (MidiEvent midiEvent in Events[i]) {
+				TrackInfo info = new TrackInfo { Index = i, Events = Events[i] };
+				foreach (MidiEvent midiEvent in info.Events) {
 					if ((midiEvent is NoteEvent) && !(midiEvent is NoteOnEvent)) {
 						NoteEvent noteEvent = midiEvent as NoteEvent;
 						if (info.NotesCount++ == 0) info.BeginNote = noteEvent.NoteName; // 起音判断
 					}
-					if ((midiEvent is PatchChangeEvent) && !info.HasName) {
+					if ((midiEvent is PatchChangeEvent) && !info.HasInstrument) {
 						PatchChangeEvent patchEvent = midiEvent as PatchChangeEvent;
-						for (int j = 4; j < patchEvent.ToString().Split(' ').Length; j++)
-							info.Name += patchEvent.ToString().Split(' ')[j]; // 音轨名称
+						info.Instrument = string.Join(" ", patchEvent.ToString().Split(' ').Slice(4)); // 乐器名称
+						info.Index = patchEvent.Channel;
 					}
 					if ((midiEvent is TempoEvent) && MsPerQuarter == 0) {
 						TempoEvent tempoEvent = midiEvent as TempoEvent;
 						MsPerQuarter = Convert.ToDouble(tempoEvent.MicrosecondsPerQuarterNote) / 1000; // 每四分音符多少毫秒
 						// MessageBox.Show(tempoEvent.Tempo.ToString()); // 用 Tempo 表示 BPM
 					}
+					if ((midiEvent is TextEvent) && !info.HasName) {
+						TextEvent textEvent = midiEvent as TextEvent;
+						info.Name = textEvent.Text; // 乐轨名称
+					}
+					if ((midiEvent is TimeSignatureEvent) && TimeSignature.Length == 0) {
+						TimeSignatureEvent timeSignatureEvent = midiEvent as TimeSignatureEvent;
+						TimeSignature = timeSignatureEvent.TimeSignature; // 初始节拍
+						TimeSignatureTrack = Events[i];
+						// timeSignatureEvent.Numerator.s();
+					}
 				}
-				if (info.NotesCount != 0) SuggestSelectedIndex = SuggestSelectedIndex ?? i;
+				if (info.NotesCount != 0) trackInfos.Add(info);
 			}
+			TrackInfos = trackInfos.ToArray();
 		}
 	}
 
@@ -2432,14 +2687,14 @@ namespace VegasScript {
 			/// <summary>
 			/// 无法调用移调插件报错。
 			/// </summary>
-			public NoPluginPitchShiftException() : base(string.Format(Lang.str.no_plugin_pitch_shift_exception, ConfigForm.aboutHelpLink)) { }
+			public NoPluginPitchShiftException() : base(string.Format(Lang.str.no_plugin_pitch_shift_exception, ConfigForm.ABOUT_HELP_LINK)) { }
 		}
 
 		public class NoPluginPresetsException : Exception {
 			/// <summary>
 			/// 无法调用移调插件的预设效果报错。
 			/// </summary>
-			public NoPluginPresetsException() : base(string.Format(Lang.str.no_plugin_presets_exception, ConfigForm.aboutHelpLink)) { }
+			public NoPluginPresetsException() : base(string.Format(Lang.str.no_plugin_presets_exception, ConfigForm.ABOUT_HELP_LINK)) { }
 		}
 
 		public class NoPluginNameException : Exception {
@@ -2473,7 +2728,7 @@ namespace VegasScript {
 
 		public class NotAMidiFileException : Exception {
 			/// <summary>
-			/// 无法调用移调插件的预设效果报错。
+			/// 无法读取 MIDI 文件报错。
 			/// </summary>
 			public NotAMidiFileException() : base(Lang.str.not_a_midi_file_exception) { }
 		}
@@ -2776,7 +3031,7 @@ namespace VegasScript {
 			if (value is string && (string)value == "") value = null;
 			if (WritePrivateProfileString(section, key, value == null ? null : value.ToString(), filePath) == 0) {
 				int errCode = ErrCode;
-				form.parent.ShowError(Lang.str.error_code + errCode + "\n\n" + GetSysErrMsg(errCode));
+				EntryPoint.ShowError(Lang.str.error_code + errCode + "\n\n" + GetSysErrMsg(errCode));
 				return false;
 			} else return true;
 		}
@@ -2815,21 +3070,6 @@ namespace VegasScript {
 			currentSection = null;
 		}
 
-		public int ReadInt(string key, int def, string section = null) {
-			string result = Read(key, def.ToString(), section);
-			int value;
-			return int.TryParse(result, out value) ? value : def;
-		}
-		public double ReadDouble(string key, double def, string section = null) {
-			string result = Read(key, def.ToString(), section);
-			double value;
-			return double.TryParse(result, out value) ? value : def;
-		}
-		public bool ReadBool(string key, bool def, string section = null) {
-			string result = Read(key, def ? "1" : "0", section).Trim().ToLower();
-			return result != "0" && result != "false";
-		}
-
 		/// <summary>
 		/// 删除 INI 文件。
 		/// 补充：后面改成了删除文件后重新创建文件，相当于清空配置设置。
@@ -2840,6 +3080,48 @@ namespace VegasScript {
 			File.Delete(filePath);
 			// File.Create(filePath);
 			// filePath = null;
+		}
+
+		/// <summary>
+		/// 读取 INI 文件。
+		/// </summary>
+		/// <typeparam name="T">读取数据的类型</typeparam>
+		/// <param name="key">键名</param>
+		/// <param name="def">没有查到的话返回的默认值</param>
+		/// <param name="section">节点名</param>
+		/// <returns>指定类型的参数值</returns>
+		public T Read<T>(string key, T def, string section = null) where T : IConvertible {
+			string def_str = def.ToString();
+			if ((def is bool || def is bool?) && def != null) def_str = (bool)(def as bool?) ? "1" : "0";
+			string result = Read(key, def_str, section);
+			if (typeof(T) == typeof(string)) return (T)(object)result;
+			else if (typeof(T) == typeof(bool)) { string r = result.Trim().ToLower(); return (T)(object)(r != "0" && r != "false"); }
+			else if (typeof(T) == typeof(int)) { int value; return int.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(double)) { double value; return double.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(byte)) { byte value; return byte.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(char)) { char value; return char.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(decimal)) { decimal value; return decimal.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(float)) { float value; return float.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(long)) { long value; return long.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(sbyte)) { sbyte value; return sbyte.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(short)) { short value; return short.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(uint)) { uint value; return uint.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(ulong)) { ulong value; return ulong.TryParse(result, out value) ? (T)(object)value : def; }
+			else if (typeof(T) == typeof(ushort)) { ushort value; return ushort.TryParse(result, out value) ? (T)(object)value : def; }
+			else throw new TypeLoadException("Unsupported Type!");
+		}
+
+		/// <summary>
+		/// 读取 INI 文件。
+		/// </summary>
+		/// <typeparam name="T">读取数据的类型</typeparam>
+		/// <param name="key">键名</param>
+		/// <param name="result">返回并输出的指定类型的参数值</param>
+		/// <param name="def">没有查到的话返回的默认值</param>
+		/// <param name="section">节点名</param>
+		/// <returns>指定类型的参数值</returns>
+		public T Read<T>(string key, out T result, T def, string section = null) where T : IConvertible {
+			return result = Read(key, def, section);
 		}
 	}
 
@@ -3787,7 +4069,7 @@ namespace VegasScript {
 			Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
 			events = parent.GetSelectedEvents();
 			if (!FindReplacer() || validTracks.Count == 0) {
-				parent.ShowError(new Exceptions.FailToSelectClipsException());
+				EntryPoint.ShowError(new Exceptions.FailToSelectClipsException());
 				Close();
 			}
 		}
@@ -3943,7 +4225,7 @@ namespace VegasScript {
 			ValidTrack track = validTracks[index];
 			ReplacedLbl.Text = string.Format(Lang.str.replaced_info, CountRemainEvents(track));
 			SelectSpecifiedEvents(track);
-			vegas.Transport.CursorPosition = FixTimecodeToFrame(track.LastSelectedEvent.Start);
+			vegas.Transport.CursorPosition = track.LastSelectedEvent.Start.FixToFrame();
 			vegas.Transport.ViewCursor(true);
 			vegas.UpdateUI();
 		}
@@ -3955,12 +4237,6 @@ namespace VegasScript {
 				remainEvents.Add(trackEvent);
 			}
 			return remainEvents.Count;
-		}
-
-		private static Timecode FixTimecodeToFrame(Timecode timecode) {
-			long frame = timecode.FrameCount;
-			if (Timecode.FromFrames(frame) < timecode) timecode = Timecode.FromFrames(frame + 1);
-			return timecode;
 		}
 
 		public void Translate() {
@@ -4302,7 +4578,7 @@ namespace VegasScript {
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
 			Translate();
-			Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
+			Height = table.Height + dock.Height + MARGIN;
 			SubmitSelectBtn_Click(null, null);
 			foreach (Control control in table.Controls)
 				if (control is NumericUpDown)
@@ -4796,9 +5072,10 @@ namespace VegasScript {
 		private System.Windows.Forms.NumericUpDown PaddingBox;
 	}
 
-	public partial class AutoLayoutTracksGridForm : Form, IAutoLayoutTracks, IInterpret {
+	public partial class AutoLayoutTracksGridForm : Form, IAutoLayoutTracks, IConfigIniUser, IInterpret {
 		private readonly EntryPoint parent;
 		private Vegas vegas { get { return parent.vegas; } }
+		private ConfigIni configIni { get { return parent.configIni; } }
 		private readonly VideoTrack[] tracks;
 		private int Count {
 			get {
@@ -4815,7 +5092,7 @@ namespace VegasScript {
 			CustomGroup.Enabled = false;
 			tracks = parent.GetSelectedVideoTracks();
 			if (Count == 0) {
-				parent.ShowError(new Exceptions.FailToSelectTracksException());
+				EntryPoint.ShowError(new Exceptions.FailToSelectTracksException());
 				Close();
 			} else if (Count > 100) {
 				MessageBox.Show(string.Format(Lang.str.selected_tracks_too_much, Count),
@@ -4823,8 +5100,10 @@ namespace VegasScript {
 				Close();
 			}
 			ColumnCountBox.Maximum = Math.Min(Count, 100);
+			ReadIni();
 			CustomRadio_CheckedChanged(null, null);
 			ColumnCountBox.MouseWheel += NumericUpDown_MouseWheel;
+			FormClosing += (sender, e) => SaveIni();
 		}
 
 		public static void NumericUpDown_MouseWheel(object sender, MouseEventArgs e) {
@@ -4895,7 +5174,7 @@ namespace VegasScript {
 				frame.Height = newHeight * padding;
 				if (IsCustom && IsFill) {
 					Plugin.Init(vegas);
-					if (Plugin.crop == null) { parent.ShowError(new Exceptions.NoPluginNameException(Lang.str.crop)); return; }
+					if (Plugin.crop == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.crop)); return; }
 					Effect effect = track.Effects.AddEffect(Plugin.crop);
 					(effect.OFXEffect.FindParameterByName("XScale") as OFXDoubleParameter).Value = width / newWidth;
 					(effect.OFXEffect.FindParameterByName("YScale") as OFXDoubleParameter).Value = height / newHeight;
@@ -4917,6 +5196,31 @@ namespace VegasScript {
 			ReverseTracksCheck.Text = str.reverse_tracks;
 			PaddingLbl.Text = str.increase_padding;
 			Text = str.auto_layout_tracks + " - " + str.grid_layout;
+		}
+		
+		public void ReadIni() {
+			configIni.StartSection("AutoLayoutTracksGrid");
+			ReverseTracksCheck.Checked = configIni.Read("ReverseTracks", true);
+			PaddingBox.SetValue(configIni.Read("Padding", 0), 0);
+			bool isSquare = configIni.Read("IsSquare", true);
+			if (isSquare) SquareRadio.Checked = true;
+			else {
+				CustomRadio.Checked = true;
+				if (configIni.Read("IsFill", true)) FillRadio.Checked = true;
+				else AdaptRadio.Checked = true;
+				ColumnCountBox.SetValue(configIni.Read("ColumnCount", -1), null);
+			}
+			configIni.EndSection();
+		}
+
+		public void SaveIni() {
+			configIni.StartSection("AutoLayoutTracksGrid");
+			configIni.Write("IsSquare", SquareRadio.Checked);
+			configIni.Write("IsFill", FillRadio.Checked);
+			configIni.Write("ReverseTracks", ReverseTracksCheck.Checked);
+			configIni.Write("ColumnCount", ColumnCountBox.Value);
+			configIni.Write("Padding", PaddingBox.Value);
+			configIni.EndSection();
 		}
 	}
 
@@ -5293,7 +5597,7 @@ namespace VegasScript {
 			tracks = new List<VideoTrack> { null };
 			VideoTrack[] _ = parent.GetSelectedVideoTracks();
 			if (_.Length == 0) {
-				parent.ShowError(new Exceptions.FailToSelectTracksException());
+				EntryPoint.ShowError(new Exceptions.FailToSelectTracksException());
 				Close();
 			}
 			tracks.AddRange(_);
@@ -5330,8 +5634,8 @@ namespace VegasScript {
 
 		public void ReadIni() {
 			configIni.StartSection("AutoLayoutTracksBox3d");
-			DelOrigTrackCheck.Checked = configIni.ReadBool("DeleteOriginalTracks", true);
-			UseVideoLongerSideCheck.Checked = configIni.ReadBool("UseVideoLongerSide", false);
+			DelOrigTrackCheck.Checked = configIni.Read("DeleteOriginalTracks", true);
+			UseVideoLongerSideCheck.Checked = configIni.Read("UseVideoLongerSide", false);
 			configIni.EndSection();
 		}
 
@@ -5669,27 +5973,27 @@ namespace VegasScript {
 			bool isReversed = ReverseCheck.Checked;
 			switch (effect) {
 				case VideoTrackGradientEffectType.RAINBOW:
-					if (Plugin.hslAdjust == null) { parent.ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return; }
+					if (Plugin.hslAdjust == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return; }
 					Plugin.ForVideoTracks.Rainbow(tracks, isReversed);
 					break;
 				case VideoTrackGradientEffectType.GRADUALLY_SATURATED:
-					if (Plugin.hslAdjust == null) { parent.ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return; }
+					if (Plugin.hslAdjust == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return; }
 					Plugin.ForVideoTracks.Saturated(tracks, isReversed);
 					break;
 				case VideoTrackGradientEffectType.GRADUALLY_CONTRASTED:
-					if (Plugin.contrast == null) { parent.ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return; }
+					if (Plugin.contrast == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return; }
 					Plugin.ForVideoTracks.Contrasted(tracks, isReversed);
 					break;
 				case VideoTrackGradientEffectType.THRESHOLD:
-					if (Plugin.contrast == null) { parent.ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return; }
+					if (Plugin.contrast == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return; }
 					Plugin.ForVideoTracks.Threshold(tracks, isReversed);
 					break;
 				case VideoTrackGradientEffectType.ALTERNATELY_CHROMATIC:
-					if (Plugin.blackAndWhite == null) { parent.ShowError(new Exceptions.NoPluginNameException(Lang.str.black_and_white)); return; }
+					if (Plugin.blackAndWhite == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.black_and_white)); return; }
 					Plugin.ForVideoTracks.Chromatic(tracks, isReversed);
 					break;
 				case VideoTrackGradientEffectType.ALTERNATELY_NEGATIVE:
-					if (Plugin.invert == null) { parent.ShowError(new Exceptions.NoPluginNameException(Lang.str.invert)); return; }
+					if (Plugin.invert == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.invert)); return; }
 					Plugin.ForVideoTracks.Negative(tracks, isReversed);
 					break;
 				default:
@@ -5879,7 +6183,7 @@ namespace VegasScript {
 			this.FormantLockCheck.Name = "FormantLockCheck";
 			this.FormantLockCheck.Size = new System.Drawing.Size(409, 23);
 			this.FormantLockCheck.TabIndex = 7;
-			this.FormantLockCheck.Text = "保留共振峰";
+			this.FormantLockCheck.Text = "保持共振峰";
 			this.FormantLockCheck.UseVisualStyleBackColor = true;
 			// 
 			// StretchAttrCombo
@@ -6022,16 +6326,6 @@ namespace VegasScript {
 			Icon = ConfigForm.icon;
 			Translate();
 			Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
-			Lang str = Lang.str;
-			elastiqueAttrArray = new string[] {
-				str.elastique_pro, str.elastique_efficient, str.elastique_soloist_monophonic, str.elastique_soloist_speech
-			};
-			classicAttrArray = new string[] {
-				str.classic_a01, str.classic_a02, str.classic_a03, str.classic_a04, str.classic_a05, str.classic_a06,
-				str.classic_a07, str.classic_a08, str.classic_a09, str.classic_a10, str.classic_a11, str.classic_a12,
-				str.classic_a13, str.classic_a14, str.classic_a15, str.classic_a16, str.classic_a17, str.classic_a18,
-				str.classic_a19,
-			};
 			MethodCombo.SelectedIndex = 1;
 			MethodCombo_SelectedIndexChanged(null, null);
 		}
@@ -6084,10 +6378,10 @@ namespace VegasScript {
 				lastMethod = method;
 				StretchAttrCombo.Items.Clear();
 				if (method == TimeStretchPitchShift.Elastique) {
-					StretchAttrCombo.Items.AddRange(elastiqueAttrArray);
+					StretchAttrCombo.Items.AddRange(ElastiqueAttrArray);
 					StretchAttrCombo.SelectedIndex = 1;
 				} else if (method == TimeStretchPitchShift.Classic) {
-					StretchAttrCombo.Items.AddRange(classicAttrArray);
+					StretchAttrCombo.Items.AddRange(ClassicAttrArray);
 					StretchAttrCombo.SelectedIndex = 0;
 				}
 			}
@@ -6099,8 +6393,25 @@ namespace VegasScript {
 			if (PitchLockCheck.Checked) StretchAttrCombo.Enabled = FormantLockCheck.Enabled = false;
 		}
 
-		private static string[] elastiqueAttrArray;
-		private static string[] classicAttrArray;
+		public static string[] ElastiqueAttrArray {
+			get {
+				Lang str = Lang.str;
+				return new string[] {
+					str.elastique_pro, str.elastique_efficient, str.elastique_soloist_monophonic, str.elastique_soloist_speech
+				};
+			}
+		}
+		public static string[] ClassicAttrArray {
+			get {
+				Lang str = Lang.str;
+				return new string[] {
+					str.classic_a01, str.classic_a02, str.classic_a03, str.classic_a04, str.classic_a05, str.classic_a06,
+					str.classic_a07, str.classic_a08, str.classic_a09, str.classic_a10, str.classic_a11, str.classic_a12,
+					str.classic_a13, str.classic_a14, str.classic_a15, str.classic_a16, str.classic_a17, str.classic_a18,
+					str.classic_a19,
+				};
+			}
+		}
 		private TimeStretchPitchShift? lastMethod = null;
 
 		public void Translate() {
@@ -6123,6 +6434,109 @@ namespace VegasScript {
 			PitchLockCheck.Text = str.pitch_lock;
 			Text = str.change_tune_method;
 		}
+	}
+
+	public class Windows10StyledContextMenuStripRenderer : ToolStripProfessionalRenderer {
+		public Windows10StyledContextMenuStripRenderer() : base(new Windows10StyledContextMenuStripColorTable()) { }
+		protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e) {
+			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			var r = new Rectangle(e.ArrowRectangle.Location, e.ArrowRectangle.Size);
+			r.Inflate(-2, -6);
+			e.Graphics.DrawLines(Pens.Black, new Point[] {
+				new Point(r.Left, r.Top),
+				new Point(r.Right, r.Top + r.Height / 2),
+				new Point(r.Left, r.Top+ r.Height)
+			});
+		}
+		protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e) {
+			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			var r = new Rectangle(e.ImageRectangle.Location, e.ImageRectangle.Size);
+			r.Inflate(-4, -6);
+			e.Graphics.DrawLines(Pens.Black, new Point[] {
+				new Point(r.Left, r.Bottom - r.Height / 2),
+				new Point(r.Left + r.Width / 3, r.Bottom),
+				new Point(r.Right, r.Top)
+			});
+		}
+	}
+
+	public class Windows10StyledContextMenuStripColorTable : ProfessionalColorTable {
+		public override Color MenuItemBorder { get { return Color.WhiteSmoke; } }
+		public override Color MenuItemSelected { get { return Color.WhiteSmoke; } }
+		public override Color ToolStripDropDownBackground { get { return Color.White; } }
+		public override Color ImageMarginGradientBegin { get { return Color.White; } }
+		public override Color ImageMarginGradientMiddle { get { return Color.White; } }
+		public override Color ImageMarginGradientEnd { get { return Color.White; } }
+	}
+
+	public class CommandLinkButton : Button {
+		private bool _commandLink = false;
+		private string _commandLinkNote = "";
+
+		public CommandLinkButton() : base() {
+			// Set default property values on the base class to avoid the Obsolete warning
+			base.FlatStyle = FlatStyle.System;
+		}
+
+		[Category("Appearance"), DefaultValue(false), Description("Specifies this button should use the command link style. (Only applies under Windows Vista and later.)")]
+		public bool CommandLink {
+			get {
+				return _commandLink;
+			}
+			set {
+				if (_commandLink != value) {
+					_commandLink = value;
+					UpdateCommandLink();
+				}
+			}
+		}
+
+		[Category("Appearance"), DefaultValue(""), Description("Sets the description text for a command link button. (Only applies under Windows Vista and later.)"),
+			Editor("System.ComponentModel.Design.MultilineStringEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(System.Drawing.Design.UITypeEditor))]
+		public string CommandLinkNote {
+			get {
+				return _commandLinkNote;
+			}
+			set {
+				if (_commandLinkNote != value) {
+					_commandLinkNote = value;
+					UpdateCommandLink();
+				}
+			}
+		}
+
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("This property is not supported on the CommandLinkButton control."), DefaultValue(typeof(FlatStyle), "System")]
+		public new FlatStyle FlatStyle {
+			// Set the default flat style to "System", and hide this property because
+			// none of the custom properties will work without it set to "System"
+			get {
+				return base.FlatStyle;
+			}
+			set {
+				base.FlatStyle = value;
+			}
+		}
+
+		#region P/Invoke Stuff
+		private const int BS_COMMANDLINK = 0xE;
+		private const int BCM_SETNOTE = 0x1609;
+
+		[DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = false)]
+		private extern static IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+
+		private void UpdateCommandLink() {
+			RecreateHandle();
+			SendMessage(Handle, BCM_SETNOTE, IntPtr.Zero, _commandLinkNote);
+		}
+
+		protected override CreateParams CreateParams {
+			get {
+				CreateParams cp = base.CreateParams;
+				if (CommandLink) cp.Style |= BS_COMMANDLINK;
+				return cp;
+			}
+		}
+		#endregion
 	}
 	#endregion
 
@@ -6159,13 +6573,7 @@ namespace VegasScript {
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.StaffLineColorDialog = new System.Windows.Forms.ColorDialog();
 			this.Balloon = new System.Windows.Forms.ToolTip(this.components);
-			this.MidiBeatCombo = new System.Windows.Forms.ComboBox();
 			this.AudioTuneMethodCombo = new System.Windows.Forms.ComboBox();
-			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
-			this.MidiStartSecondBox = new VegasScript.TimecodeBox();
-			this.MidiEndSecondBox = new VegasScript.TimecodeBox();
-			this.SourceStartTimeText = new VegasScript.TimecodeBox();
-			this.SourceEndTimeText = new VegasScript.TimecodeBox();
 			this.AudioLockStretchPitchCheck = new System.Windows.Forms.CheckBox();
 			this.YtpMaxLenBox = new System.Windows.Forms.NumericUpDown();
 			this.YtpMinLenBox = new System.Windows.Forms.NumericUpDown();
@@ -6173,6 +6581,13 @@ namespace VegasScript {
 			this.StaffSurfacePositionBox = new System.Windows.Forms.NumericUpDown();
 			this.StaffSurfaceWidthBox = new System.Windows.Forms.NumericUpDown();
 			this.StaffLineSpacingBox = new System.Windows.Forms.NumericUpDown();
+			this.PreviewBeepDurationBox = new System.Windows.Forms.NumericUpDown();
+			this.PreviewTuneAudioCheck = new System.Windows.Forms.CheckBox();
+			this.MidiStartSecondBox = new VegasScript.TimecodeBox();
+			this.MidiEndSecondBox = new VegasScript.TimecodeBox();
+			this.SourceStartTimeText = new VegasScript.TimecodeBox();
+			this.SourceEndTimeText = new VegasScript.TimecodeBox();
+			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
 			this.AudioStretchAttrCombo = new System.Windows.Forms.ComboBox();
 			this.menu = new System.Windows.Forms.MenuStrip();
 			this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -6182,11 +6597,14 @@ namespace VegasScript {
 			this.exitDiscardingChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.versionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.whyOkBtnIsDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+			this.checkUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.updateInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.userHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.troubleShootingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.updateInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.githubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.languageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.chineseToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
@@ -6208,6 +6626,7 @@ namespace VegasScript {
 			this.MidiChannelCombo = new System.Windows.Forms.ComboBox();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
 			this.MidiBeatLbl = new System.Windows.Forms.Label();
+			this.MidiBeatTxt = new System.Windows.Forms.TextBox();
 			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			this.MidiStartSecondLbl = new System.Windows.Forms.Label();
 			this.MidiEndSecondLbl = new System.Windows.Forms.Label();
@@ -6253,6 +6672,10 @@ namespace VegasScript {
 			this.AudioPreviewLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
 			this.PreviewAudioBtn = new System.Windows.Forms.Button();
+			this.AudioPreviewAttrLbl = new System.Windows.Forms.Label();
+			this.AudioPreviewAttrLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.PreviewBeepWaveFormCombo = new System.Windows.Forms.ComboBox();
+			this.PreviewBeepDurationUnitLbl = new System.Windows.Forms.Label();
 			this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioConfigCheck = new System.Windows.Forms.CheckBox();
 			this.AudioScratchCheck = new System.Windows.Forms.CheckBox();
@@ -6332,19 +6755,13 @@ namespace VegasScript {
 			this.YtpEffectsGroup = new System.Windows.Forms.GroupBox();
 			this.YtpEnableAllEffectsCheck = new System.Windows.Forms.CheckBox();
 			this.YtpEffectsCheckList = new System.Windows.Forms.CheckedListBox();
+			this.YtpSelectInfo = new System.Windows.Forms.Label();
 			this.YtpLbl = new System.Windows.Forms.Label();
 			this.HelperTab = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
-			this.SelectIntervalGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
-			this.SelectIntervalLbl = new System.Windows.Forms.Label();
-			this.SelectIntervalSelectInfo = new System.Windows.Forms.Label();
-			this.QuickSelectIntervalBtn = new System.Windows.Forms.Button();
-			this.ReplaceClipsGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
-			this.ReplaceClipsLbl = new System.Windows.Forms.Label();
-			this.ReplaceClipsSelectInfo = new System.Windows.Forms.Label();
-			this.ReplaceClipsBtn = new System.Windows.Forms.Button();
+			this.QuickSelectIntervalBtn = new VegasScript.CommandLinkButton();
+			this.ReplaceClipsBtn = new VegasScript.CommandLinkButton();
+			this.ChangeTuneMethodBtn = new VegasScript.CommandLinkButton();
 			this.AutoLayoutTracksGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
 			this.AutoLayoutTracksLbl = new System.Windows.Forms.Label();
@@ -6356,11 +6773,6 @@ namespace VegasScript {
 			this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
 			this.ClearTrackMotionBtn = new System.Windows.Forms.Button();
 			this.ClearTrackEffectBtn = new System.Windows.Forms.Button();
-			this.ChangeTuneMethodGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel18 = new System.Windows.Forms.TableLayoutPanel();
-			this.ChangeTuneMethodLbl = new System.Windows.Forms.Label();
-			this.ChangeTuneMethodSelectInfo = new System.Windows.Forms.Label();
-			this.ChangeTuneMethodBtn = new System.Windows.Forms.Button();
 			this.tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
 			this.HelperLbl = new System.Windows.Forms.Label();
 			this.HelperWarningLbl = new System.Windows.Forms.Label();
@@ -6370,6 +6782,7 @@ namespace VegasScript {
 			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffSurfaceWidthBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			this.menu.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.Tabs.SuspendLayout();
@@ -6394,6 +6807,7 @@ namespace VegasScript {
 			this.flowLayoutPanel10.SuspendLayout();
 			this.flowLayoutPanel6.SuspendLayout();
 			this.tableLayoutPanel17.SuspendLayout();
+			this.AudioPreviewAttrLayoutPanel.SuspendLayout();
 			this.flowLayoutPanel5.SuspendLayout();
 			this.VideoTab.SuspendLayout();
 			this.VideoParamsGroup.SuspendLayout();
@@ -6414,16 +6828,10 @@ namespace VegasScript {
 			this.YtpEffectsGroup.SuspendLayout();
 			this.HelperTab.SuspendLayout();
 			this.tableLayoutPanel11.SuspendLayout();
-			this.SelectIntervalGroup.SuspendLayout();
-			this.tableLayoutPanel12.SuspendLayout();
-			this.ReplaceClipsGroup.SuspendLayout();
-			this.tableLayoutPanel13.SuspendLayout();
 			this.AutoLayoutTracksGroup.SuspendLayout();
 			this.tableLayoutPanel14.SuspendLayout();
 			this.AutoLayoutTracksButtons.SuspendLayout();
 			this.tableLayoutPanel15.SuspendLayout();
-			this.ChangeTuneMethodGroup.SuspendLayout();
-			this.tableLayoutPanel18.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -6519,25 +6927,6 @@ namespace VegasScript {
 			this.Balloon.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.Balloon.ToolTipTitle = "填写说明";
 			// 
-			// MidiBeatCombo
-			// 
-			this.MidiBeatCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.MidiBeatCombo.Enabled = false;
-			this.MidiBeatCombo.FormattingEnabled = true;
-			this.MidiBeatCombo.Items.AddRange(new object[] {
-			"2∕4",
-			"3∕4",
-			"4∕4",
-			"5∕4",
-			"6∕4",
-			"7∕4",
-			"8∕4"});
-			this.MidiBeatCombo.Location = new System.Drawing.Point(61, 3);
-			this.MidiBeatCombo.Name = "MidiBeatCombo";
-			this.MidiBeatCombo.Size = new System.Drawing.Size(85, 23);
-			this.MidiBeatCombo.TabIndex = 1;
-			this.Balloon.SetToolTip(this.MidiBeatCombo, "目前仅用于五线谱的分页功能。\r\n暂时无法通过 MIDI 文件自动推测。");
-			// 
 			// AudioTuneMethodCombo
 			// 
 			this.AudioTuneMethodCombo.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -6546,71 +6935,15 @@ namespace VegasScript {
 			this.AudioTuneMethodCombo.Items.AddRange(new object[] {
 			"不调音",
 			"移调效果插件",
-			"弹性音调更改"});
+			"弹性音调更改",
+			"古典音调更改"});
 			this.AudioTuneMethodCombo.Location = new System.Drawing.Point(64, 3);
 			this.AudioTuneMethodCombo.Name = "AudioTuneMethodCombo";
 			this.AudioTuneMethodCombo.Size = new System.Drawing.Size(453, 23);
 			this.AudioTuneMethodCombo.TabIndex = 2;
 			this.Balloon.SetToolTip(this.AudioTuneMethodCombo, "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\r\n“弹性音调更改”表示使用“Élastique”拉伸方式改变音调，也就是键盘上" +
 		" +、- 键直接改变音调，\r\n有音高范围限制。");
-			// 
-			// PreviewBasePitchBtn
-			// 
-			this.PreviewBasePitchBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PreviewBasePitchBtn.Location = new System.Drawing.Point(2, 3);
-			this.PreviewBasePitchBtn.Margin = new System.Windows.Forms.Padding(2, 3, 3, 3);
-			this.PreviewBasePitchBtn.Name = "PreviewBasePitchBtn";
-			this.PreviewBasePitchBtn.Size = new System.Drawing.Size(224, 23);
-			this.PreviewBasePitchBtn.TabIndex = 1;
-			this.PreviewBasePitchBtn.Text = "预听标准音高(&B)";
-			this.Balloon.SetToolTip(this.PreviewBasePitchBtn, "请确保开启声音并且未将声音方案设置为无声。\r\n如果仍没有声音，请重启系统。");
-			this.PreviewBasePitchBtn.UseVisualStyleBackColor = true;
-			this.PreviewBasePitchBtn.Click += new System.EventHandler(this.PreviewBasePitchBtn_MouseDown);
-			// 
-			// MidiStartSecondBox
-			// 
-			this.MidiStartSecondBox.DoubleValue = 0D;
-			this.MidiStartSecondBox.Enabled = false;
-			this.MidiStartSecondBox.Location = new System.Drawing.Point(61, 3);
-			this.MidiStartSecondBox.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
-			this.MidiStartSecondBox.Name = "MidiStartSecondBox";
-			this.MidiStartSecondBox.Size = new System.Drawing.Size(85, 23);
-			this.MidiStartSecondBox.TabIndex = 3;
-			this.Balloon.SetToolTip(this.MidiStartSecondBox, "用于截取 MIDI 音乐的一部分。\r\n单位：秒。");
-			this.MidiStartSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			// 
-			// MidiEndSecondBox
-			// 
-			this.MidiEndSecondBox.DoubleValue = 0D;
-			this.MidiEndSecondBox.Enabled = false;
-			this.MidiEndSecondBox.Location = new System.Drawing.Point(222, 3);
-			this.MidiEndSecondBox.Name = "MidiEndSecondBox";
-			this.MidiEndSecondBox.Size = new System.Drawing.Size(85, 23);
-			this.MidiEndSecondBox.TabIndex = 4;
-			this.Balloon.SetToolTip(this.MidiEndSecondBox, "此处填写需要读取 MIDI 文件的时间长度。\r\n注意如果填写的值过小，将截去多余时间部分的音符。\r\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时" +
-		"长末尾。\r\n单位：秒。");
-			this.MidiEndSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			// 
-			// SourceStartTimeText
-			// 
-			this.SourceStartTimeText.DoubleValue = 0D;
-			this.SourceStartTimeText.Location = new System.Drawing.Point(61, 3);
-			this.SourceStartTimeText.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
-			this.SourceStartTimeText.Name = "SourceStartTimeText";
-			this.SourceStartTimeText.Size = new System.Drawing.Size(85, 23);
-			this.SourceStartTimeText.TabIndex = 4;
-			this.Balloon.SetToolTip(this.SourceStartTimeText, "此处填写媒体素材裁剪的开始时间。\r\n单位：秒。");
-			this.SourceStartTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			// 
-			// SourceEndTimeText
-			// 
-			this.SourceEndTimeText.DoubleValue = 0D;
-			this.SourceEndTimeText.Location = new System.Drawing.Point(222, 3);
-			this.SourceEndTimeText.Name = "SourceEndTimeText";
-			this.SourceEndTimeText.Size = new System.Drawing.Size(85, 23);
-			this.SourceEndTimeText.TabIndex = 5;
-			this.Balloon.SetToolTip(this.SourceEndTimeText, "注意如果此处填写的数值比入点秒数小或相等，则始终表示持续到素材时间末尾。\r\n单位：秒。");
-			this.SourceEndTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			this.AudioTuneMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioTuneMethodCombo_SelectedIndexChanged);
 			// 
 			// AudioLockStretchPitchCheck
 			// 
@@ -6751,16 +7084,103 @@ namespace VegasScript {
 			0,
 			0});
 			// 
+			// PreviewBeepDurationBox
+			// 
+			this.PreviewBeepDurationBox.Location = new System.Drawing.Point(109, 3);
+			this.PreviewBeepDurationBox.Maximum = new decimal(new int[] {
+			2000,
+			0,
+			0,
+			0});
+			this.PreviewBeepDurationBox.Minimum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.PreviewBeepDurationBox.Name = "PreviewBeepDurationBox";
+			this.PreviewBeepDurationBox.Size = new System.Drawing.Size(70, 23);
+			this.PreviewBeepDurationBox.TabIndex = 5;
+			this.Balloon.SetToolTip(this.PreviewBeepDurationBox, "预听标准音高所持续的时间。\r\n单位：毫秒。");
+			this.PreviewBeepDurationBox.Value = new decimal(new int[] {
+			800,
+			0,
+			0,
+			0});
+			// 
+			// PreviewTuneAudioCheck
+			// 
+			this.PreviewTuneAudioCheck.AutoSize = true;
+			this.PreviewTuneAudioCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PreviewTuneAudioCheck.Location = new System.Drawing.Point(214, 3);
+			this.PreviewTuneAudioCheck.Name = "PreviewTuneAudioCheck";
+			this.PreviewTuneAudioCheck.Size = new System.Drawing.Size(134, 23);
+			this.PreviewTuneAudioCheck.TabIndex = 7;
+			this.PreviewTuneAudioCheck.Text = "使音频调整到主音高";
+			this.Balloon.SetToolTip(this.PreviewTuneAudioCheck, "勾选后，预听音频时会将音频素材调整到主音高中央 C。\r\n否则，预听标准音高将会播放原始音高所设定的音高。");
+			this.PreviewTuneAudioCheck.UseVisualStyleBackColor = true;
+			// 
+			// MidiStartSecondBox
+			// 
+			this.MidiStartSecondBox.DoubleValue = 0D;
+			this.MidiStartSecondBox.Enabled = false;
+			this.MidiStartSecondBox.Location = new System.Drawing.Point(61, 3);
+			this.MidiStartSecondBox.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
+			this.MidiStartSecondBox.Name = "MidiStartSecondBox";
+			this.MidiStartSecondBox.Size = new System.Drawing.Size(85, 23);
+			this.MidiStartSecondBox.TabIndex = 3;
+			this.Balloon.SetToolTip(this.MidiStartSecondBox, "用于截取 MIDI 音乐的一部分。\r\n单位：秒。");
+			this.MidiStartSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// MidiEndSecondBox
+			// 
+			this.MidiEndSecondBox.DoubleValue = 0D;
+			this.MidiEndSecondBox.Enabled = false;
+			this.MidiEndSecondBox.Location = new System.Drawing.Point(222, 3);
+			this.MidiEndSecondBox.Name = "MidiEndSecondBox";
+			this.MidiEndSecondBox.Size = new System.Drawing.Size(85, 23);
+			this.MidiEndSecondBox.TabIndex = 4;
+			this.Balloon.SetToolTip(this.MidiEndSecondBox, "此处填写需要读取 MIDI 文件的时间长度。\r\n注意如果填写的值过小，将截去多余时间部分的音符。\r\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时" +
+		"长末尾。\r\n单位：秒。");
+			this.MidiEndSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// SourceStartTimeText
+			// 
+			this.SourceStartTimeText.DoubleValue = 0D;
+			this.SourceStartTimeText.Location = new System.Drawing.Point(61, 3);
+			this.SourceStartTimeText.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
+			this.SourceStartTimeText.Name = "SourceStartTimeText";
+			this.SourceStartTimeText.Size = new System.Drawing.Size(85, 23);
+			this.SourceStartTimeText.TabIndex = 4;
+			this.Balloon.SetToolTip(this.SourceStartTimeText, "此处填写媒体素材裁剪的开始时间。\r\n单位：秒。");
+			this.SourceStartTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// SourceEndTimeText
+			// 
+			this.SourceEndTimeText.DoubleValue = 0D;
+			this.SourceEndTimeText.Location = new System.Drawing.Point(222, 3);
+			this.SourceEndTimeText.Name = "SourceEndTimeText";
+			this.SourceEndTimeText.Size = new System.Drawing.Size(85, 23);
+			this.SourceEndTimeText.TabIndex = 5;
+			this.Balloon.SetToolTip(this.SourceEndTimeText, "注意如果此处填写的数值比入点秒数小或相等，则始终表示持续到素材时间末尾。\r\n单位：秒。");
+			this.SourceEndTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// PreviewBasePitchBtn
+			// 
+			this.PreviewBasePitchBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PreviewBasePitchBtn.Location = new System.Drawing.Point(2, 3);
+			this.PreviewBasePitchBtn.Margin = new System.Windows.Forms.Padding(2, 3, 3, 3);
+			this.PreviewBasePitchBtn.Name = "PreviewBasePitchBtn";
+			this.PreviewBasePitchBtn.Size = new System.Drawing.Size(224, 23);
+			this.PreviewBasePitchBtn.TabIndex = 1;
+			this.PreviewBasePitchBtn.Text = "预听标准音高(&B)";
+			this.PreviewBasePitchBtn.UseVisualStyleBackColor = true;
+			this.PreviewBasePitchBtn.Click += new System.EventHandler(this.PreviewBasePitchBtn_MouseDown);
+			// 
 			// AudioStretchAttrCombo
 			// 
 			this.AudioStretchAttrCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioStretchAttrCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.AudioStretchAttrCombo.FormattingEnabled = true;
-			this.AudioStretchAttrCombo.Items.AddRange(new object[] {
-			"专业",
-			"高效",
-			"独奏（单声道）",
-			"独奏（语音）"});
 			this.AudioStretchAttrCombo.Location = new System.Drawing.Point(64, 32);
 			this.AudioStretchAttrCombo.Name = "AudioStretchAttrCombo";
 			this.AudioStretchAttrCombo.Size = new System.Drawing.Size(453, 23);
@@ -6795,25 +7215,27 @@ namespace VegasScript {
 			// saveConfigToolStripMenuItem
 			// 
 			this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
-			this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.saveConfigToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+			this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
 			this.saveConfigToolStripMenuItem.Text = "保存用户配置(&S)";
 			// 
 			// resetConfigToolStripMenuItem
 			// 
 			this.resetConfigToolStripMenuItem.Name = "resetConfigToolStripMenuItem";
-			this.resetConfigToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.resetConfigToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
 			this.resetConfigToolStripMenuItem.Text = "重置用户配置(&R)";
 			this.resetConfigToolStripMenuItem.Click += new System.EventHandler(this.resetConfigToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(171, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(213, 6);
 			// 
 			// exitDiscardingChangesToolStripMenuItem
 			// 
 			this.exitDiscardingChangesToolStripMenuItem.Name = "exitDiscardingChangesToolStripMenuItem";
-			this.exitDiscardingChangesToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.exitDiscardingChangesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+			this.exitDiscardingChangesToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
 			this.exitDiscardingChangesToolStripMenuItem.Text = "放弃更改并退出(&D)";
 			this.exitDiscardingChangesToolStripMenuItem.Click += new System.EventHandler(this.exitDiscardingChangesToolStripMenuItem_Click);
 			// 
@@ -6821,56 +7243,80 @@ namespace VegasScript {
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
 			this.exitToolStripMenuItem.ShortcutKeyDisplayString = "Esc";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
 			this.exitToolStripMenuItem.Text = "退出(&X)";
 			// 
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.versionToolStripMenuItem,
 			this.aboutToolStripMenuItem,
+			this.whyOkBtnIsDisabledToolStripMenuItem,
 			this.toolStripMenuItem2,
+			this.checkUpdateToolStripMenuItem,
+			this.updateInfoToolStripMenuItem,
 			this.userHelpToolStripMenuItem,
 			this.troubleShootingToolStripMenuItem,
-			this.updateInfoToolStripMenuItem,
 			this.githubToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(60, 19);
 			this.helpToolStripMenuItem.Text = "帮助(&H)";
 			// 
+			// versionToolStripMenuItem
+			// 
+			this.versionToolStripMenuItem.Enabled = false;
+			this.versionToolStripMenuItem.Name = "versionToolStripMenuItem";
+			this.versionToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.versionToolStripMenuItem.Text = "版本号";
+			// 
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
 			this.aboutToolStripMenuItem.ShortcutKeyDisplayString = "Alt+A";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
 			this.aboutToolStripMenuItem.Text = "关于(&A)";
+			// 
+			// whyOkBtnIsDisabledToolStripMenuItem
+			// 
+			this.whyOkBtnIsDisabledToolStripMenuItem.Name = "whyOkBtnIsDisabledToolStripMenuItem";
+			this.whyOkBtnIsDisabledToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.whyOkBtnIsDisabledToolStripMenuItem.Text = "为什么无法点击完成按钮？";
+			this.whyOkBtnIsDisabledToolStripMenuItem.Visible = false;
+			this.whyOkBtnIsDisabledToolStripMenuItem.Click += new System.EventHandler(this.WhyOkBtnIsDisabledToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(215, 6);
+			// 
+			// checkUpdateToolStripMenuItem
+			// 
+			this.checkUpdateToolStripMenuItem.Name = "checkUpdateToolStripMenuItem";
+			this.checkUpdateToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.checkUpdateToolStripMenuItem.Text = "检查更新(&U)";
+			// 
+			// updateInfoToolStripMenuItem
+			// 
+			this.updateInfoToolStripMenuItem.Name = "updateInfoToolStripMenuItem";
+			this.updateInfoToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.updateInfoToolStripMenuItem.Text = "更新说明";
 			// 
 			// userHelpToolStripMenuItem
 			// 
 			this.userHelpToolStripMenuItem.Name = "userHelpToolStripMenuItem";
-			this.userHelpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.userHelpToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
 			this.userHelpToolStripMenuItem.Text = "使用说明";
 			// 
 			// troubleShootingToolStripMenuItem
 			// 
 			this.troubleShootingToolStripMenuItem.Name = "troubleShootingToolStripMenuItem";
-			this.troubleShootingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.troubleShootingToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
 			this.troubleShootingToolStripMenuItem.Text = "疑难解答";
-			// 
-			// updateInfoToolStripMenuItem
-			// 
-			this.updateInfoToolStripMenuItem.Name = "updateInfoToolStripMenuItem";
-			this.updateInfoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.updateInfoToolStripMenuItem.Text = "更新说明";
 			// 
 			// githubToolStripMenuItem
 			// 
 			this.githubToolStripMenuItem.Name = "githubToolStripMenuItem";
-			this.githubToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.githubToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
 			this.githubToolStripMenuItem.Text = "仓库地址";
 			// 
 			// languageToolStripMenuItem
@@ -6947,7 +7393,7 @@ namespace VegasScript {
 			this.Tabs.Controls.Add(this.HelperTab);
 			this.Tabs.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Tabs.Location = new System.Drawing.Point(8, 0);
-			this.Tabs.Margin = new System.Windows.Forms.Padding(4);
+			this.Tabs.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
@@ -6957,6 +7403,7 @@ namespace VegasScript {
 			// SourceTab
 			// 
 			this.SourceTab.AutoScroll = true;
+			this.SourceTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.SourceTab.Controls.Add(this.WarningInfoLabel);
 			this.SourceTab.Controls.Add(this.MidiConfigGroup);
 			this.SourceTab.Controls.Add(this.SourceConfigGroup);
@@ -6966,7 +7413,6 @@ namespace VegasScript {
 			this.SourceTab.Size = new System.Drawing.Size(540, 552);
 			this.SourceTab.TabIndex = 0;
 			this.SourceTab.Text = "媒体";
-			this.SourceTab.UseVisualStyleBackColor = true;
 			// 
 			// WarningInfoLabel
 			// 
@@ -6974,7 +7420,8 @@ namespace VegasScript {
 			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
 			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(5, 417);
+			this.WarningInfoLabel.Location = new System.Drawing.Point(5, 414);
+			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(540, 0);
 			this.WarningInfoLabel.Name = "WarningInfoLabel";
 			this.WarningInfoLabel.Padding = new System.Windows.Forms.Padding(3);
 			this.WarningInfoLabel.Size = new System.Drawing.Size(6, 26);
@@ -6988,7 +7435,7 @@ namespace VegasScript {
 			this.MidiConfigGroup.Location = new System.Drawing.Point(5, 165);
 			this.MidiConfigGroup.Name = "MidiConfigGroup";
 			this.MidiConfigGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.MidiConfigGroup.Size = new System.Drawing.Size(530, 252);
+			this.MidiConfigGroup.Size = new System.Drawing.Size(530, 249);
 			this.MidiConfigGroup.TabIndex = 2;
 			this.MidiConfigGroup.TabStop = false;
 			this.MidiConfigGroup.Text = "MIDI 属性";
@@ -7018,7 +7465,7 @@ namespace VegasScript {
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel5.Size = new System.Drawing.Size(520, 226);
+			this.tableLayoutPanel5.Size = new System.Drawing.Size(520, 223);
 			this.tableLayoutPanel5.TabIndex = 1;
 			// 
 			// ChooseMidiLbl
@@ -7073,8 +7520,8 @@ namespace VegasScript {
 			// 
 			this.MidiChannelLbl.AutoSize = true;
 			this.MidiChannelLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MidiChannelLbl.Location = new System.Drawing.Point(3, 53);
-			this.MidiChannelLbl.Margin = new System.Windows.Forms.Padding(3, 9, 3, 0);
+			this.MidiChannelLbl.Location = new System.Drawing.Point(3, 50);
+			this.MidiChannelLbl.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
 			this.MidiChannelLbl.Name = "MidiChannelLbl";
 			this.MidiChannelLbl.Size = new System.Drawing.Size(514, 15);
 			this.MidiChannelLbl.TabIndex = 3;
@@ -7087,7 +7534,7 @@ namespace VegasScript {
 			this.MidiChannelCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.MidiChannelCombo.Enabled = false;
 			this.MidiChannelCombo.FormattingEnabled = true;
-			this.MidiChannelCombo.Location = new System.Drawing.Point(3, 71);
+			this.MidiChannelCombo.Location = new System.Drawing.Point(3, 68);
 			this.MidiChannelCombo.Name = "MidiChannelCombo";
 			this.MidiChannelCombo.Size = new System.Drawing.Size(514, 23);
 			this.MidiChannelCombo.TabIndex = 4;
@@ -7096,9 +7543,9 @@ namespace VegasScript {
 			// 
 			this.flowLayoutPanel2.AutoSize = true;
 			this.flowLayoutPanel2.Controls.Add(this.MidiBeatLbl);
-			this.flowLayoutPanel2.Controls.Add(this.MidiBeatCombo);
+			this.flowLayoutPanel2.Controls.Add(this.MidiBeatTxt);
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 100);
+			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 97);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
 			this.flowLayoutPanel2.Size = new System.Drawing.Size(514, 29);
 			this.flowLayoutPanel2.TabIndex = 5;
@@ -7115,6 +7562,15 @@ namespace VegasScript {
 			this.MidiBeatLbl.Text = "节拍　　";
 			this.MidiBeatLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
+			// MidiBeatTxt
+			// 
+			this.MidiBeatTxt.Enabled = false;
+			this.MidiBeatTxt.Location = new System.Drawing.Point(61, 3);
+			this.MidiBeatTxt.Name = "MidiBeatTxt";
+			this.MidiBeatTxt.ReadOnly = true;
+			this.MidiBeatTxt.Size = new System.Drawing.Size(85, 23);
+			this.MidiBeatTxt.TabIndex = 2;
+			// 
 			// flowLayoutPanel3
 			// 
 			this.flowLayoutPanel3.AutoSize = true;
@@ -7123,7 +7579,7 @@ namespace VegasScript {
 			this.flowLayoutPanel3.Controls.Add(this.MidiEndSecondLbl);
 			this.flowLayoutPanel3.Controls.Add(this.MidiEndSecondBox);
 			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 135);
+			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 132);
 			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
 			this.flowLayoutPanel3.Size = new System.Drawing.Size(514, 29);
 			this.flowLayoutPanel3.TabIndex = 9;
@@ -7155,11 +7611,11 @@ namespace VegasScript {
 			// 
 			this.MidiBpmLbl.AutoSize = true;
 			this.MidiBpmLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MidiBpmLbl.Location = new System.Drawing.Point(3, 176);
+			this.MidiBpmLbl.Location = new System.Drawing.Point(3, 173);
 			this.MidiBpmLbl.Margin = new System.Windows.Forms.Padding(3, 9, 3, 0);
 			this.MidiBpmLbl.Name = "MidiBpmLbl";
 			this.MidiBpmLbl.Size = new System.Drawing.Size(514, 15);
-			this.MidiBpmLbl.TabIndex = 7;
+			this.MidiBpmLbl.TabIndex = 10;
 			this.MidiBpmLbl.Text = "设定 BPM 速度为";
 			this.MidiBpmLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
@@ -7171,10 +7627,10 @@ namespace VegasScript {
 			this.flowLayoutPanel4.Controls.Add(this.MidiCustomBpmCheck);
 			this.flowLayoutPanel4.Controls.Add(this.MidiCustomBpmBox);
 			this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 194);
+			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 191);
 			this.flowLayoutPanel4.Name = "flowLayoutPanel4";
 			this.flowLayoutPanel4.Size = new System.Drawing.Size(514, 29);
-			this.flowLayoutPanel4.TabIndex = 8;
+			this.flowLayoutPanel4.TabIndex = 12;
 			// 
 			// MidiMidiBpmCheck
 			// 
@@ -7413,6 +7869,7 @@ namespace VegasScript {
 			// AudioTab
 			// 
 			this.AudioTab.AutoScroll = true;
+			this.AudioTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.AudioTab.Controls.Add(this.AudioParamsGroup);
 			this.AudioTab.Controls.Add(this.AudioTuneGroup);
 			this.AudioTab.Controls.Add(this.flowLayoutPanel5);
@@ -7422,14 +7879,13 @@ namespace VegasScript {
 			this.AudioTab.Size = new System.Drawing.Size(540, 552);
 			this.AudioTab.TabIndex = 1;
 			this.AudioTab.Text = "音频";
-			this.AudioTab.UseVisualStyleBackColor = true;
 			// 
 			// AudioParamsGroup
 			// 
 			this.AudioParamsGroup.AutoSize = true;
 			this.AudioParamsGroup.Controls.Add(this.tableLayoutPanel2);
 			this.AudioParamsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AudioParamsGroup.Location = new System.Drawing.Point(5, 203);
+			this.AudioParamsGroup.Location = new System.Drawing.Point(5, 232);
 			this.AudioParamsGroup.Name = "AudioParamsGroup";
 			this.AudioParamsGroup.Padding = new System.Windows.Forms.Padding(5);
 			this.AudioParamsGroup.Size = new System.Drawing.Size(530, 104);
@@ -7546,7 +8002,7 @@ namespace VegasScript {
 			this.AudioTuneGroup.Location = new System.Drawing.Point(5, 36);
 			this.AudioTuneGroup.Name = "AudioTuneGroup";
 			this.AudioTuneGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.AudioTuneGroup.Size = new System.Drawing.Size(530, 167);
+			this.AudioTuneGroup.Size = new System.Drawing.Size(530, 196);
 			this.AudioTuneGroup.TabIndex = 1;
 			this.AudioTuneGroup.TabStop = false;
 			this.AudioTuneGroup.Text = "调音";
@@ -7568,17 +8024,20 @@ namespace VegasScript {
 			this.tableLayoutPanel7.Controls.Add(this.flowLayoutPanel6, 1, 3);
 			this.tableLayoutPanel7.Controls.Add(this.AudioPreviewLbl, 0, 4);
 			this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel17, 1, 4);
+			this.tableLayoutPanel7.Controls.Add(this.AudioPreviewAttrLbl, 0, 5);
+			this.tableLayoutPanel7.Controls.Add(this.AudioPreviewAttrLayoutPanel, 1, 5);
 			this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel7.Location = new System.Drawing.Point(5, 21);
 			this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-			this.tableLayoutPanel7.RowCount = 5;
+			this.tableLayoutPanel7.RowCount = 6;
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel7.Size = new System.Drawing.Size(520, 141);
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel7.Size = new System.Drawing.Size(520, 170);
 			this.tableLayoutPanel7.TabIndex = 2;
 			// 
 			// AudioTuneMethodLbl
@@ -7633,7 +8092,7 @@ namespace VegasScript {
 			this.AudioReserveFormantCheck.Name = "AudioReserveFormantCheck";
 			this.AudioReserveFormantCheck.Size = new System.Drawing.Size(86, 19);
 			this.AudioReserveFormantCheck.TabIndex = 1;
-			this.AudioReserveFormantCheck.Text = "保留共振峰";
+			this.AudioReserveFormantCheck.Text = "保持共振峰";
 			this.AudioReserveFormantCheck.UseVisualStyleBackColor = true;
 			// 
 			// AudioBasePitchLbl
@@ -7737,10 +8196,61 @@ namespace VegasScript {
 			this.PreviewAudioBtn.Margin = new System.Windows.Forms.Padding(3, 3, 2, 3);
 			this.PreviewAudioBtn.Name = "PreviewAudioBtn";
 			this.PreviewAudioBtn.Size = new System.Drawing.Size(225, 23);
-			this.PreviewAudioBtn.TabIndex = 0;
+			this.PreviewAudioBtn.TabIndex = 2;
 			this.PreviewAudioBtn.Text = "预听音频(&P)";
 			this.PreviewAudioBtn.UseVisualStyleBackColor = true;
 			this.PreviewAudioBtn.Click += new System.EventHandler(this.PreviewAudioBtn_Click);
+			// 
+			// AudioPreviewAttrLbl
+			// 
+			this.AudioPreviewAttrLbl.AutoSize = true;
+			this.AudioPreviewAttrLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioPreviewAttrLbl.Location = new System.Drawing.Point(3, 141);
+			this.AudioPreviewAttrLbl.Name = "AudioPreviewAttrLbl";
+			this.AudioPreviewAttrLbl.Size = new System.Drawing.Size(55, 29);
+			this.AudioPreviewAttrLbl.TabIndex = 10;
+			this.AudioPreviewAttrLbl.Text = "预听属性";
+			this.AudioPreviewAttrLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// AudioPreviewAttrLayoutPanel
+			// 
+			this.AudioPreviewAttrLayoutPanel.AutoSize = true;
+			this.AudioPreviewAttrLayoutPanel.Controls.Add(this.PreviewBeepWaveFormCombo);
+			this.AudioPreviewAttrLayoutPanel.Controls.Add(this.PreviewBeepDurationBox);
+			this.AudioPreviewAttrLayoutPanel.Controls.Add(this.PreviewBeepDurationUnitLbl);
+			this.AudioPreviewAttrLayoutPanel.Controls.Add(this.PreviewTuneAudioCheck);
+			this.AudioPreviewAttrLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioPreviewAttrLayoutPanel.Location = new System.Drawing.Point(61, 141);
+			this.AudioPreviewAttrLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.AudioPreviewAttrLayoutPanel.Name = "AudioPreviewAttrLayoutPanel";
+			this.AudioPreviewAttrLayoutPanel.Size = new System.Drawing.Size(459, 29);
+			this.AudioPreviewAttrLayoutPanel.TabIndex = 7;
+			// 
+			// PreviewBeepWaveFormCombo
+			// 
+			this.PreviewBeepWaveFormCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.PreviewBeepWaveFormCombo.FormattingEnabled = true;
+			this.PreviewBeepWaveFormCombo.Items.AddRange(new object[] {
+			"正弦波",
+			"三角波",
+			"方波",
+			"锯齿波"});
+			this.PreviewBeepWaveFormCombo.Location = new System.Drawing.Point(3, 3);
+			this.PreviewBeepWaveFormCombo.Name = "PreviewBeepWaveFormCombo";
+			this.PreviewBeepWaveFormCombo.Size = new System.Drawing.Size(100, 23);
+			this.PreviewBeepWaveFormCombo.TabIndex = 3;
+			// 
+			// PreviewBeepDurationUnitLbl
+			// 
+			this.PreviewBeepDurationUnitLbl.AutoSize = true;
+			this.PreviewBeepDurationUnitLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PreviewBeepDurationUnitLbl.Location = new System.Drawing.Point(182, 0);
+			this.PreviewBeepDurationUnitLbl.Margin = new System.Windows.Forms.Padding(0, 0, 6, 0);
+			this.PreviewBeepDurationUnitLbl.Name = "PreviewBeepDurationUnitLbl";
+			this.PreviewBeepDurationUnitLbl.Size = new System.Drawing.Size(23, 29);
+			this.PreviewBeepDurationUnitLbl.TabIndex = 6;
+			this.PreviewBeepDurationUnitLbl.Text = "ms";
+			this.PreviewBeepDurationUnitLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// flowLayoutPanel5
 			// 
@@ -7827,6 +8337,7 @@ namespace VegasScript {
 			// VideoTab
 			// 
 			this.VideoTab.AutoScroll = true;
+			this.VideoTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.VideoTab.Controls.Add(this.VideoParamsGroup);
 			this.VideoTab.Controls.Add(this.VideoEffectsGroup);
 			this.VideoTab.Controls.Add(this.flowLayoutPanel7);
@@ -7836,7 +8347,6 @@ namespace VegasScript {
 			this.VideoTab.Size = new System.Drawing.Size(540, 552);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "视频";
-			this.VideoTab.UseVisualStyleBackColor = true;
 			// 
 			// VideoParamsGroup
 			// 
@@ -8005,7 +8515,7 @@ namespace VegasScript {
 			this.VideoGlowBox.Name = "VideoGlowBox";
 			this.VideoGlowBox.NumericUpDownWidth = 65;
 			this.VideoGlowBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoGlowBox.TabIndex = 12;
+			this.VideoGlowBox.TabIndex = 10;
 			// 
 			// VideoGlowCurveCombo
 			// 
@@ -8022,7 +8532,7 @@ namespace VegasScript {
 			this.VideoGlowCurveCombo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.VideoGlowCurveCombo.Name = "VideoGlowCurveCombo";
 			this.VideoGlowCurveCombo.Size = new System.Drawing.Size(65, 23);
-			this.VideoGlowCurveCombo.TabIndex = 13;
+			this.VideoGlowCurveCombo.TabIndex = 11;
 			// 
 			// VideoGlowBrightLbl
 			// 
@@ -8046,7 +8556,7 @@ namespace VegasScript {
 			this.VideoGlowBrightBox.Name = "VideoGlowBrightBox";
 			this.VideoGlowBrightBox.NumericUpDownWidth = 65;
 			this.VideoGlowBrightBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoGlowBrightBox.TabIndex = 25;
+			this.VideoGlowBrightBox.TabIndex = 12;
 			this.VideoGlowBrightBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			this.VideoGlowBrightBox.Value = 100;
 			// 
@@ -8447,6 +8957,7 @@ namespace VegasScript {
 			// SheetTab
 			// 
 			this.SheetTab.AutoScroll = true;
+			this.SheetTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.SheetTab.Controls.Add(this.StaffParamsGroup);
 			this.SheetTab.Controls.Add(this.flowLayoutPanel8);
 			this.SheetTab.Controls.Add(this.SheetConfigInfoLabel);
@@ -8456,7 +8967,6 @@ namespace VegasScript {
 			this.SheetTab.Size = new System.Drawing.Size(540, 552);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
-			this.SheetTab.UseVisualStyleBackColor = true;
 			// 
 			// StaffParamsGroup
 			// 
@@ -8704,8 +9214,10 @@ namespace VegasScript {
 			// YtpTab
 			// 
 			this.YtpTab.AutoScroll = true;
+			this.YtpTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.YtpTab.Controls.Add(this.YtpParamsGroup);
 			this.YtpTab.Controls.Add(this.YtpEffectsGroup);
+			this.YtpTab.Controls.Add(this.YtpSelectInfo);
 			this.YtpTab.Controls.Add(this.YtpLbl);
 			this.YtpTab.Location = new System.Drawing.Point(4, 24);
 			this.YtpTab.Name = "YtpTab";
@@ -8713,14 +9225,13 @@ namespace VegasScript {
 			this.YtpTab.Size = new System.Drawing.Size(540, 552);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
-			this.YtpTab.UseVisualStyleBackColor = true;
 			// 
 			// YtpParamsGroup
 			// 
 			this.YtpParamsGroup.AutoSize = true;
 			this.YtpParamsGroup.Controls.Add(this.tableLayoutPanel16);
 			this.YtpParamsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.YtpParamsGroup.Location = new System.Drawing.Point(5, 182);
+			this.YtpParamsGroup.Location = new System.Drawing.Point(5, 200);
 			this.YtpParamsGroup.Name = "YtpParamsGroup";
 			this.YtpParamsGroup.Padding = new System.Windows.Forms.Padding(5);
 			this.YtpParamsGroup.Size = new System.Drawing.Size(530, 84);
@@ -8813,7 +9324,7 @@ namespace VegasScript {
 			this.YtpEffectsGroup.Controls.Add(this.YtpEnableAllEffectsCheck);
 			this.YtpEffectsGroup.Controls.Add(this.YtpEffectsCheckList);
 			this.YtpEffectsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.YtpEffectsGroup.Location = new System.Drawing.Point(5, 48);
+			this.YtpEffectsGroup.Location = new System.Drawing.Point(5, 66);
 			this.YtpEffectsGroup.Name = "YtpEffectsGroup";
 			this.YtpEffectsGroup.Padding = new System.Windows.Forms.Padding(9, 3, 6, 6);
 			this.YtpEffectsGroup.Size = new System.Drawing.Size(530, 134);
@@ -8831,12 +9342,13 @@ namespace VegasScript {
 			this.YtpEnableAllEffectsCheck.Name = "YtpEnableAllEffectsCheck";
 			this.YtpEnableAllEffectsCheck.Padding = new System.Windows.Forms.Padding(1, 0, 0, 0);
 			this.YtpEnableAllEffectsCheck.Size = new System.Drawing.Size(515, 19);
-			this.YtpEnableAllEffectsCheck.TabIndex = 1;
+			this.YtpEnableAllEffectsCheck.TabIndex = 0;
 			this.YtpEnableAllEffectsCheck.Text = "开启所有效果";
 			this.YtpEnableAllEffectsCheck.CheckedChanged += new System.EventHandler(this.YtpEnableAllEffectsCheck_CheckedChanged);
 			// 
 			// YtpEffectsCheckList
 			// 
+			this.YtpEffectsCheckList.BackColor = System.Drawing.SystemColors.Window;
 			this.YtpEffectsCheckList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.YtpEffectsCheckList.CheckOnClick = true;
 			this.YtpEffectsCheckList.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -8859,12 +9371,26 @@ namespace VegasScript {
 			"球面化",
 			"镜像",
 			"高对比（附加增加音量）",
-			"过饱和（概率性附加升调效果）"});
+			"过饱和（概率性附加升调效果）",
+			"重说三（附加放大聚焦效果）"});
 			this.YtpEffectsCheckList.Location = new System.Drawing.Point(9, 38);
 			this.YtpEffectsCheckList.Name = "YtpEffectsCheckList";
 			this.YtpEffectsCheckList.Size = new System.Drawing.Size(515, 90);
-			this.YtpEffectsCheckList.TabIndex = 0;
+			this.YtpEffectsCheckList.TabIndex = 1;
 			this.YtpEffectsCheckList.SelectedIndexChanged += new System.EventHandler(this.YtpEffectsCheckList_SelectedIndexChanged);
+			// 
+			// YtpSelectInfo
+			// 
+			this.YtpSelectInfo.AutoSize = true;
+			this.YtpSelectInfo.Dock = System.Windows.Forms.DockStyle.Top;
+			this.YtpSelectInfo.Location = new System.Drawing.Point(5, 43);
+			this.YtpSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
+			this.YtpSelectInfo.Name = "YtpSelectInfo";
+			this.YtpSelectInfo.Padding = new System.Windows.Forms.Padding(0, 0, 0, 8);
+			this.YtpSelectInfo.Size = new System.Drawing.Size(127, 23);
+			this.YtpSelectInfo.TabIndex = 13;
+			this.YtpSelectInfo.Text = "已选中 0 项媒体素材。";
+			this.YtpSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// YtpLbl
 			// 
@@ -8873,197 +9399,93 @@ namespace VegasScript {
 			this.YtpLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
 			this.YtpLbl.Location = new System.Drawing.Point(5, 5);
 			this.YtpLbl.Name = "YtpLbl";
-			this.YtpLbl.Padding = new System.Windows.Forms.Padding(0, 5, 0, 8);
-			this.YtpLbl.Size = new System.Drawing.Size(414, 43);
+			this.YtpLbl.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
+			this.YtpLbl.Size = new System.Drawing.Size(414, 38);
 			this.YtpLbl.TabIndex = 10;
 			this.YtpLbl.Text = "在当前选项卡下单击“完成”按钮，将会生成 YTP 而不是音 MAD / YTPMV。\r\n除“生成音频”“生成视频”外其它的参数设置并不会在 YTP 中使用。";
 			// 
 			// HelperTab
 			// 
 			this.HelperTab.AutoScroll = true;
+			this.HelperTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.HelperTab.Controls.Add(this.tableLayoutPanel11);
 			this.HelperTab.Controls.Add(this.tableLayoutPanel19);
 			this.HelperTab.Location = new System.Drawing.Point(4, 24);
 			this.HelperTab.Name = "HelperTab";
-			this.HelperTab.Padding = new System.Windows.Forms.Padding(5);
+			this.HelperTab.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.HelperTab.Size = new System.Drawing.Size(540, 552);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "辅助功能";
-			this.HelperTab.UseVisualStyleBackColor = true;
 			// 
 			// tableLayoutPanel11
 			// 
 			this.tableLayoutPanel11.AutoSize = true;
 			this.tableLayoutPanel11.ColumnCount = 1;
 			this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel11.Controls.Add(this.SelectIntervalGroup, 0, 0);
-			this.tableLayoutPanel11.Controls.Add(this.ReplaceClipsGroup, 0, 1);
-			this.tableLayoutPanel11.Controls.Add(this.AutoLayoutTracksGroup, 0, 2);
-			this.tableLayoutPanel11.Controls.Add(this.ChangeTuneMethodGroup, 0, 3);
+			this.tableLayoutPanel11.Controls.Add(this.QuickSelectIntervalBtn, 0, 0);
+			this.tableLayoutPanel11.Controls.Add(this.ReplaceClipsBtn, 0, 1);
+			this.tableLayoutPanel11.Controls.Add(this.ChangeTuneMethodBtn, 0, 2);
+			this.tableLayoutPanel11.Controls.Add(this.AutoLayoutTracksGroup, 0, 3);
 			this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel11.Location = new System.Drawing.Point(5, 46);
+			this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 45);
 			this.tableLayoutPanel11.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel11.Name = "tableLayoutPanel11";
 			this.tableLayoutPanel11.RowCount = 4;
+			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(530, 427);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(534, 400);
 			this.tableLayoutPanel11.TabIndex = 8;
-			// 
-			// SelectIntervalGroup
-			// 
-			this.SelectIntervalGroup.AutoSize = true;
-			this.SelectIntervalGroup.Controls.Add(this.tableLayoutPanel12);
-			this.SelectIntervalGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.SelectIntervalGroup.Location = new System.Drawing.Point(3, 3);
-			this.SelectIntervalGroup.Name = "SelectIntervalGroup";
-			this.SelectIntervalGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.SelectIntervalGroup.Size = new System.Drawing.Size(524, 93);
-			this.SelectIntervalGroup.TabIndex = 4;
-			this.SelectIntervalGroup.TabStop = false;
-			this.SelectIntervalGroup.Text = "间隔选择";
-			// 
-			// tableLayoutPanel12
-			// 
-			this.tableLayoutPanel12.AutoSize = true;
-			this.tableLayoutPanel12.ColumnCount = 1;
-			this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel12.Controls.Add(this.SelectIntervalLbl, 0, 0);
-			this.tableLayoutPanel12.Controls.Add(this.SelectIntervalSelectInfo, 0, 1);
-			this.tableLayoutPanel12.Controls.Add(this.QuickSelectIntervalBtn, 0, 2);
-			this.tableLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel12.Location = new System.Drawing.Point(5, 21);
-			this.tableLayoutPanel12.Name = "tableLayoutPanel12";
-			this.tableLayoutPanel12.RowCount = 3;
-			this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel12.Size = new System.Drawing.Size(514, 67);
-			this.tableLayoutPanel12.TabIndex = 0;
-			// 
-			// SelectIntervalLbl
-			// 
-			this.SelectIntervalLbl.AutoSize = true;
-			this.SelectIntervalLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SelectIntervalLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.SelectIntervalLbl.Location = new System.Drawing.Point(3, 0);
-			this.SelectIntervalLbl.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.SelectIntervalLbl.MaximumSize = new System.Drawing.Size(518, 0);
-			this.SelectIntervalLbl.Name = "SelectIntervalLbl";
-			this.SelectIntervalLbl.Size = new System.Drawing.Size(508, 15);
-			this.SelectIntervalLbl.TabIndex = 5;
-			this.SelectIntervalLbl.Text = "本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴视频事件”等操作。";
-			this.SelectIntervalLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// SelectIntervalSelectInfo
-			// 
-			this.SelectIntervalSelectInfo.AutoSize = true;
-			this.tableLayoutPanel12.SetColumnSpan(this.SelectIntervalSelectInfo, 2);
-			this.SelectIntervalSelectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SelectIntervalSelectInfo.Location = new System.Drawing.Point(3, 18);
-			this.SelectIntervalSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.SelectIntervalSelectInfo.Name = "SelectIntervalSelectInfo";
-			this.SelectIntervalSelectInfo.Size = new System.Drawing.Size(508, 15);
-			this.SelectIntervalSelectInfo.TabIndex = 8;
-			this.SelectIntervalSelectInfo.Text = "已选中 0 个轨道剪辑。";
-			this.SelectIntervalSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// QuickSelectIntervalBtn
 			// 
-			this.QuickSelectIntervalBtn.AutoSize = true;
-			this.QuickSelectIntervalBtn.Dock = System.Windows.Forms.DockStyle.Left;
-			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(3, 39);
-			this.QuickSelectIntervalBtn.MaximumSize = new System.Drawing.Size(0, 25);
-			this.QuickSelectIntervalBtn.MinimumSize = new System.Drawing.Size(100, 0);
+			this.QuickSelectIntervalBtn.CommandLink = true;
+			this.QuickSelectIntervalBtn.CommandLinkNote = "本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴视频事件”等操作。\r\n已选中 0 个轨道剪辑。";
+			this.QuickSelectIntervalBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(3, 3);
 			this.QuickSelectIntervalBtn.Name = "QuickSelectIntervalBtn";
-			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(100, 25);
-			this.QuickSelectIntervalBtn.TabIndex = 4;
-			this.QuickSelectIntervalBtn.Text = "快速间隔选择...";
+			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(528, 84);
+			this.QuickSelectIntervalBtn.TabIndex = 1;
+			this.QuickSelectIntervalBtn.Text = "快速间隔选择";
 			this.QuickSelectIntervalBtn.UseVisualStyleBackColor = true;
 			this.QuickSelectIntervalBtn.Click += new System.EventHandler(this.QuickSelectIntervalBtn_Click);
 			// 
-			// ReplaceClipsGroup
-			// 
-			this.ReplaceClipsGroup.AutoSize = true;
-			this.ReplaceClipsGroup.Controls.Add(this.tableLayoutPanel13);
-			this.ReplaceClipsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ReplaceClipsGroup.Location = new System.Drawing.Point(3, 102);
-			this.ReplaceClipsGroup.Name = "ReplaceClipsGroup";
-			this.ReplaceClipsGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.ReplaceClipsGroup.Size = new System.Drawing.Size(524, 93);
-			this.ReplaceClipsGroup.TabIndex = 5;
-			this.ReplaceClipsGroup.TabStop = false;
-			this.ReplaceClipsGroup.Text = "替换轨道素材";
-			// 
-			// tableLayoutPanel13
-			// 
-			this.tableLayoutPanel13.AutoSize = true;
-			this.tableLayoutPanel13.ColumnCount = 1;
-			this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel13.Controls.Add(this.ReplaceClipsLbl, 0, 0);
-			this.tableLayoutPanel13.Controls.Add(this.ReplaceClipsSelectInfo, 0, 1);
-			this.tableLayoutPanel13.Controls.Add(this.ReplaceClipsBtn, 0, 2);
-			this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel13.Location = new System.Drawing.Point(5, 21);
-			this.tableLayoutPanel13.Name = "tableLayoutPanel13";
-			this.tableLayoutPanel13.RowCount = 3;
-			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel13.Size = new System.Drawing.Size(514, 67);
-			this.tableLayoutPanel13.TabIndex = 1;
-			// 
-			// ReplaceClipsLbl
-			// 
-			this.ReplaceClipsLbl.AutoSize = true;
-			this.ReplaceClipsLbl.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ReplaceClipsLbl.Location = new System.Drawing.Point(3, 0);
-			this.ReplaceClipsLbl.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.ReplaceClipsLbl.Name = "ReplaceClipsLbl";
-			this.ReplaceClipsLbl.Size = new System.Drawing.Size(508, 15);
-			this.ReplaceClipsLbl.TabIndex = 1;
-			this.ReplaceClipsLbl.Text = "将多个轨道剪辑替换为指定的新轨道剪辑。";
-			this.ReplaceClipsLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// ReplaceClipsSelectInfo
-			// 
-			this.ReplaceClipsSelectInfo.AutoSize = true;
-			this.tableLayoutPanel13.SetColumnSpan(this.ReplaceClipsSelectInfo, 2);
-			this.ReplaceClipsSelectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ReplaceClipsSelectInfo.Location = new System.Drawing.Point(3, 18);
-			this.ReplaceClipsSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.ReplaceClipsSelectInfo.Name = "ReplaceClipsSelectInfo";
-			this.ReplaceClipsSelectInfo.Size = new System.Drawing.Size(508, 15);
-			this.ReplaceClipsSelectInfo.TabIndex = 9;
-			this.ReplaceClipsSelectInfo.Text = "已选中 0 个轨道剪辑。";
-			this.ReplaceClipsSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// ReplaceClipsBtn
 			// 
-			this.ReplaceClipsBtn.AutoSize = true;
-			this.ReplaceClipsBtn.Dock = System.Windows.Forms.DockStyle.Left;
-			this.ReplaceClipsBtn.Location = new System.Drawing.Point(3, 39);
-			this.ReplaceClipsBtn.MaximumSize = new System.Drawing.Size(0, 25);
-			this.ReplaceClipsBtn.MinimumSize = new System.Drawing.Size(100, 0);
+			this.ReplaceClipsBtn.CommandLink = true;
+			this.ReplaceClipsBtn.CommandLinkNote = "将多个轨道剪辑替换为指定的新轨道剪辑。\r\n已选中 0 个轨道剪辑。";
+			this.ReplaceClipsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ReplaceClipsBtn.Location = new System.Drawing.Point(3, 93);
 			this.ReplaceClipsBtn.Name = "ReplaceClipsBtn";
-			this.ReplaceClipsBtn.Size = new System.Drawing.Size(100, 25);
+			this.ReplaceClipsBtn.Size = new System.Drawing.Size(528, 84);
 			this.ReplaceClipsBtn.TabIndex = 2;
-			this.ReplaceClipsBtn.Text = "替换轨道素材...";
+			this.ReplaceClipsBtn.Text = "替换轨道素材";
 			this.ReplaceClipsBtn.UseVisualStyleBackColor = true;
 			this.ReplaceClipsBtn.Click += new System.EventHandler(this.ReplaceClipsBtn_Click);
+			// 
+			// ChangeTuneMethodBtn
+			// 
+			this.ChangeTuneMethodBtn.CommandLink = true;
+			this.ChangeTuneMethodBtn.CommandLinkNote = "将多个音频轨道剪辑统一更改为指定的调音算法。\r\n已选中 0 个音频轨道剪辑。";
+			this.ChangeTuneMethodBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(3, 183);
+			this.ChangeTuneMethodBtn.Name = "ChangeTuneMethodBtn";
+			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(528, 84);
+			this.ChangeTuneMethodBtn.TabIndex = 3;
+			this.ChangeTuneMethodBtn.Text = "更改调音算法";
+			this.ChangeTuneMethodBtn.UseVisualStyleBackColor = true;
+			this.ChangeTuneMethodBtn.Click += new System.EventHandler(this.ChangeTuneMethodBtn_Click);
 			// 
 			// AutoLayoutTracksGroup
 			// 
 			this.AutoLayoutTracksGroup.AutoSize = true;
 			this.AutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel14);
 			this.AutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AutoLayoutTracksGroup.Location = new System.Drawing.Point(3, 201);
+			this.AutoLayoutTracksGroup.Location = new System.Drawing.Point(3, 273);
 			this.AutoLayoutTracksGroup.Name = "AutoLayoutTracksGroup";
 			this.AutoLayoutTracksGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.AutoLayoutTracksGroup.Size = new System.Drawing.Size(524, 124);
+			this.AutoLayoutTracksGroup.Size = new System.Drawing.Size(528, 124);
 			this.AutoLayoutTracksGroup.TabIndex = 6;
 			this.AutoLayoutTracksGroup.TabStop = false;
 			this.AutoLayoutTracksGroup.Text = "自动布局轨道";
@@ -9085,7 +9507,7 @@ namespace VegasScript {
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel14.Size = new System.Drawing.Size(514, 98);
+			this.tableLayoutPanel14.Size = new System.Drawing.Size(518, 98);
 			this.tableLayoutPanel14.TabIndex = 2;
 			// 
 			// AutoLayoutTracksLbl
@@ -9095,7 +9517,7 @@ namespace VegasScript {
 			this.AutoLayoutTracksLbl.Location = new System.Drawing.Point(3, 0);
 			this.AutoLayoutTracksLbl.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.AutoLayoutTracksLbl.Name = "AutoLayoutTracksLbl";
-			this.AutoLayoutTracksLbl.Size = new System.Drawing.Size(508, 15);
+			this.AutoLayoutTracksLbl.Size = new System.Drawing.Size(512, 15);
 			this.AutoLayoutTracksLbl.TabIndex = 1;
 			this.AutoLayoutTracksLbl.Text = "类 YTPMV 风格自动布局选中的轨道。";
 			this.AutoLayoutTracksLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -9108,7 +9530,7 @@ namespace VegasScript {
 			this.AutoLayoutTracksSelectInfo.Location = new System.Drawing.Point(3, 18);
 			this.AutoLayoutTracksSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.AutoLayoutTracksSelectInfo.Name = "AutoLayoutTracksSelectInfo";
-			this.AutoLayoutTracksSelectInfo.Size = new System.Drawing.Size(508, 15);
+			this.AutoLayoutTracksSelectInfo.Size = new System.Drawing.Size(512, 15);
 			this.AutoLayoutTracksSelectInfo.TabIndex = 7;
 			this.AutoLayoutTracksSelectInfo.Text = "已选中 0 个视频轨道。";
 			this.AutoLayoutTracksSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -9130,7 +9552,7 @@ namespace VegasScript {
 			this.AutoLayoutTracksButtons.Name = "AutoLayoutTracksButtons";
 			this.AutoLayoutTracksButtons.RowCount = 1;
 			this.AutoLayoutTracksButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.AutoLayoutTracksButtons.Size = new System.Drawing.Size(514, 31);
+			this.AutoLayoutTracksButtons.Size = new System.Drawing.Size(518, 31);
 			this.AutoLayoutTracksButtons.TabIndex = 8;
 			// 
 			// GradientTracksBtn
@@ -9190,7 +9612,7 @@ namespace VegasScript {
 			this.tableLayoutPanel15.Name = "tableLayoutPanel15";
 			this.tableLayoutPanel15.RowCount = 1;
 			this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel15.Size = new System.Drawing.Size(514, 31);
+			this.tableLayoutPanel15.Size = new System.Drawing.Size(518, 31);
 			this.tableLayoutPanel15.TabIndex = 9;
 			// 
 			// ClearTrackMotionBtn
@@ -9223,76 +9645,6 @@ namespace VegasScript {
 			this.ClearTrackEffectBtn.UseVisualStyleBackColor = true;
 			this.ClearTrackEffectBtn.Click += new System.EventHandler(this.ClearTrackEffectBtn_Click);
 			// 
-			// ChangeTuneMethodGroup
-			// 
-			this.ChangeTuneMethodGroup.AutoSize = true;
-			this.ChangeTuneMethodGroup.Controls.Add(this.tableLayoutPanel18);
-			this.ChangeTuneMethodGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ChangeTuneMethodGroup.Location = new System.Drawing.Point(3, 331);
-			this.ChangeTuneMethodGroup.Name = "ChangeTuneMethodGroup";
-			this.ChangeTuneMethodGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.ChangeTuneMethodGroup.Size = new System.Drawing.Size(524, 93);
-			this.ChangeTuneMethodGroup.TabIndex = 7;
-			this.ChangeTuneMethodGroup.TabStop = false;
-			this.ChangeTuneMethodGroup.Text = "更改调音算法";
-			// 
-			// tableLayoutPanel18
-			// 
-			this.tableLayoutPanel18.AutoSize = true;
-			this.tableLayoutPanel18.ColumnCount = 1;
-			this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel18.Controls.Add(this.ChangeTuneMethodLbl, 0, 0);
-			this.tableLayoutPanel18.Controls.Add(this.ChangeTuneMethodSelectInfo, 0, 1);
-			this.tableLayoutPanel18.Controls.Add(this.ChangeTuneMethodBtn, 0, 2);
-			this.tableLayoutPanel18.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel18.Location = new System.Drawing.Point(5, 21);
-			this.tableLayoutPanel18.Name = "tableLayoutPanel18";
-			this.tableLayoutPanel18.RowCount = 3;
-			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel18.Size = new System.Drawing.Size(514, 67);
-			this.tableLayoutPanel18.TabIndex = 1;
-			// 
-			// ChangeTuneMethodLbl
-			// 
-			this.ChangeTuneMethodLbl.AutoSize = true;
-			this.ChangeTuneMethodLbl.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ChangeTuneMethodLbl.Location = new System.Drawing.Point(3, 0);
-			this.ChangeTuneMethodLbl.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.ChangeTuneMethodLbl.Name = "ChangeTuneMethodLbl";
-			this.ChangeTuneMethodLbl.Size = new System.Drawing.Size(508, 15);
-			this.ChangeTuneMethodLbl.TabIndex = 1;
-			this.ChangeTuneMethodLbl.Text = "将多个音频轨道剪辑统一更改为指定的调音算法。";
-			this.ChangeTuneMethodLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// ChangeTuneMethodSelectInfo
-			// 
-			this.ChangeTuneMethodSelectInfo.AutoSize = true;
-			this.tableLayoutPanel18.SetColumnSpan(this.ChangeTuneMethodSelectInfo, 2);
-			this.ChangeTuneMethodSelectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ChangeTuneMethodSelectInfo.Location = new System.Drawing.Point(3, 18);
-			this.ChangeTuneMethodSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.ChangeTuneMethodSelectInfo.Name = "ChangeTuneMethodSelectInfo";
-			this.ChangeTuneMethodSelectInfo.Size = new System.Drawing.Size(508, 15);
-			this.ChangeTuneMethodSelectInfo.TabIndex = 9;
-			this.ChangeTuneMethodSelectInfo.Text = "已选中 0 个音频轨道剪辑。";
-			this.ChangeTuneMethodSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// ChangeTuneMethodBtn
-			// 
-			this.ChangeTuneMethodBtn.AutoSize = true;
-			this.ChangeTuneMethodBtn.Dock = System.Windows.Forms.DockStyle.Left;
-			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(3, 39);
-			this.ChangeTuneMethodBtn.MaximumSize = new System.Drawing.Size(0, 25);
-			this.ChangeTuneMethodBtn.MinimumSize = new System.Drawing.Size(100, 0);
-			this.ChangeTuneMethodBtn.Name = "ChangeTuneMethodBtn";
-			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(100, 25);
-			this.ChangeTuneMethodBtn.TabIndex = 2;
-			this.ChangeTuneMethodBtn.Text = "更改调音算法...";
-			this.ChangeTuneMethodBtn.UseVisualStyleBackColor = true;
-			this.ChangeTuneMethodBtn.Click += new System.EventHandler(this.ChangeTuneMethodBtn_Click);
-			// 
 			// tableLayoutPanel19
 			// 
 			this.tableLayoutPanel19.AutoSize = true;
@@ -9301,12 +9653,12 @@ namespace VegasScript {
 			this.tableLayoutPanel19.Controls.Add(this.HelperLbl, 0, 0);
 			this.tableLayoutPanel19.Controls.Add(this.HelperWarningLbl, 0, 1);
 			this.tableLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel19.Location = new System.Drawing.Point(5, 5);
+			this.tableLayoutPanel19.Location = new System.Drawing.Point(3, 4);
 			this.tableLayoutPanel19.Name = "tableLayoutPanel19";
 			this.tableLayoutPanel19.RowCount = 2;
 			this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel19.Size = new System.Drawing.Size(530, 41);
+			this.tableLayoutPanel19.Size = new System.Drawing.Size(534, 41);
 			this.tableLayoutPanel19.TabIndex = 7;
 			// 
 			// HelperLbl
@@ -9317,7 +9669,7 @@ namespace VegasScript {
 			this.HelperLbl.Location = new System.Drawing.Point(3, 0);
 			this.HelperLbl.Name = "HelperLbl";
 			this.HelperLbl.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-			this.HelperLbl.Size = new System.Drawing.Size(524, 20);
+			this.HelperLbl.Size = new System.Drawing.Size(528, 20);
 			this.HelperLbl.TabIndex = 2;
 			this.HelperLbl.Text = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。";
 			// 
@@ -9330,7 +9682,7 @@ namespace VegasScript {
 			this.HelperWarningLbl.Location = new System.Drawing.Point(3, 20);
 			this.HelperWarningLbl.Name = "HelperWarningLbl";
 			this.HelperWarningLbl.Padding = new System.Windows.Forms.Padding(0, 0, 0, 5);
-			this.HelperWarningLbl.Size = new System.Drawing.Size(524, 21);
+			this.HelperWarningLbl.Size = new System.Drawing.Size(528, 21);
 			this.HelperWarningLbl.TabIndex = 4;
 			this.HelperWarningLbl.Text = "注意：操作之后将会关闭本对话框，您可以稍后再重新打开，部分您未保存的更改可能会丢失！";
 			this.HelperWarningLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -9365,6 +9717,7 @@ namespace VegasScript {
 			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffSurfaceWidthBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).EndInit();
 			this.menu.ResumeLayout(false);
 			this.menu.PerformLayout();
 			this.panel1.ResumeLayout(false);
@@ -9407,6 +9760,8 @@ namespace VegasScript {
 			this.flowLayoutPanel10.PerformLayout();
 			this.flowLayoutPanel6.ResumeLayout(false);
 			this.tableLayoutPanel17.ResumeLayout(false);
+			this.AudioPreviewAttrLayoutPanel.ResumeLayout(false);
+			this.AudioPreviewAttrLayoutPanel.PerformLayout();
 			this.flowLayoutPanel5.ResumeLayout(false);
 			this.flowLayoutPanel5.PerformLayout();
 			this.VideoTab.ResumeLayout(false);
@@ -9444,14 +9799,6 @@ namespace VegasScript {
 			this.HelperTab.PerformLayout();
 			this.tableLayoutPanel11.ResumeLayout(false);
 			this.tableLayoutPanel11.PerformLayout();
-			this.SelectIntervalGroup.ResumeLayout(false);
-			this.SelectIntervalGroup.PerformLayout();
-			this.tableLayoutPanel12.ResumeLayout(false);
-			this.tableLayoutPanel12.PerformLayout();
-			this.ReplaceClipsGroup.ResumeLayout(false);
-			this.ReplaceClipsGroup.PerformLayout();
-			this.tableLayoutPanel13.ResumeLayout(false);
-			this.tableLayoutPanel13.PerformLayout();
 			this.AutoLayoutTracksGroup.ResumeLayout(false);
 			this.AutoLayoutTracksGroup.PerformLayout();
 			this.tableLayoutPanel14.ResumeLayout(false);
@@ -9460,10 +9807,6 @@ namespace VegasScript {
 			this.AutoLayoutTracksButtons.PerformLayout();
 			this.tableLayoutPanel15.ResumeLayout(false);
 			this.tableLayoutPanel15.PerformLayout();
-			this.ChangeTuneMethodGroup.ResumeLayout(false);
-			this.ChangeTuneMethodGroup.PerformLayout();
-			this.tableLayoutPanel18.ResumeLayout(false);
-			this.tableLayoutPanel18.PerformLayout();
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.ResumeLayout(false);
@@ -9507,7 +9850,6 @@ namespace VegasScript {
 		public System.Windows.Forms.Label MidiBpmLbl;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
 		public System.Windows.Forms.Label MidiBeatLbl;
-		public System.Windows.Forms.ComboBox MidiBeatCombo;
 		public System.Windows.Forms.Label MidiChannelLbl;
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
 		public System.Windows.Forms.Button ChooseMidiBtn;
@@ -9623,16 +9965,6 @@ namespace VegasScript {
 		public System.Windows.Forms.Label AudioPreviewLbl;
 		public System.Windows.Forms.Label AudioLockAttrLbl;
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
-		public System.Windows.Forms.GroupBox SelectIntervalGroup;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
-		public System.Windows.Forms.Label SelectIntervalSelectInfo;
-		public System.Windows.Forms.Button QuickSelectIntervalBtn;
-		public System.Windows.Forms.Label SelectIntervalLbl;
-		public System.Windows.Forms.GroupBox ReplaceClipsGroup;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel13;
-		public System.Windows.Forms.Label ReplaceClipsSelectInfo;
-		public System.Windows.Forms.Label ReplaceClipsLbl;
-		public System.Windows.Forms.Button ReplaceClipsBtn;
 		public System.Windows.Forms.GroupBox AutoLayoutTracksGroup;
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel14;
 		public System.Windows.Forms.Label AutoLayoutTracksSelectInfo;
@@ -9644,11 +9976,6 @@ namespace VegasScript {
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel15;
 		public System.Windows.Forms.Button ClearTrackMotionBtn;
 		public System.Windows.Forms.Button ClearTrackEffectBtn;
-		public System.Windows.Forms.GroupBox ChangeTuneMethodGroup;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel18;
-		public System.Windows.Forms.Label ChangeTuneMethodSelectInfo;
-		public System.Windows.Forms.Label ChangeTuneMethodLbl;
-		public System.Windows.Forms.Button ChangeTuneMethodBtn;
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel19;
 		public System.Windows.Forms.Label HelperWarningLbl;
 		public System.Windows.Forms.Label HelperLbl;
@@ -9685,6 +10012,20 @@ namespace VegasScript {
 		public System.Windows.Forms.CheckBox StaffGenerateCheck;
 		public System.Windows.Forms.CheckBox StaffRelativeValueCheck;
 		public System.Windows.Forms.Label SheetConfigInfoLabel;
+		public System.Windows.Forms.TextBox MidiBeatTxt;
+		public System.Windows.Forms.FlowLayoutPanel AudioPreviewAttrLayoutPanel;
+		public System.Windows.Forms.ComboBox PreviewBeepWaveFormCombo;
+		public System.Windows.Forms.NumericUpDown PreviewBeepDurationBox;
+		public System.Windows.Forms.Label PreviewBeepDurationUnitLbl;
+		public System.Windows.Forms.CheckBox PreviewTuneAudioCheck;
+		public System.Windows.Forms.Label AudioPreviewAttrLbl;
+		public CommandLinkButton QuickSelectIntervalBtn;
+		public CommandLinkButton ReplaceClipsBtn;
+		public CommandLinkButton ChangeTuneMethodBtn;
+		public System.Windows.Forms.ToolStripMenuItem whyOkBtnIsDisabledToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem checkUpdateToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem versionToolStripMenuItem;
+		public System.Windows.Forms.Label YtpSelectInfo;
 	}
 	#endregion
 
@@ -9721,7 +10062,9 @@ namespace VegasScript {
 			try {
 				Language = configIni.Read("Language", "", "Personalize");
 			} catch (Exception) { }
+			#if INTERNATIONALIZED
 			Translate();
+			#endif
 			#endregion
 
 			#region MIDI 速度控制点击事件
@@ -9746,25 +10089,29 @@ namespace VegasScript {
 			saveConfigToolStripMenuItem.Click += (sender, e) => { SaveIni(); };
 			exitToolStripMenuItem.Click += new EventHandler(CancelBtn_Click);
 			aboutToolStripMenuItem.Click += new EventHandler(AboutBtn_Click);
-			userHelpToolStripMenuItem.Click += (sender, e) => { OpenLink(aboutHelpLink); };
-			troubleShootingToolStripMenuItem.Click += (sender, e) => { OpenLink(troubleShootingLink); };
-			updateInfoToolStripMenuItem.Click += (sender, e) => { OpenLink(updateInfoLink); };
-			githubToolStripMenuItem.Click += (sender, e) => { OpenLink(githubLink); };
+			userHelpToolStripMenuItem.Click += (sender, e) => { OpenLink(ABOUT_HELP_LINK); };
+			troubleShootingToolStripMenuItem.Click += (sender, e) => { OpenLink(TROUBLE_SHOOTING_LINK); };
+			updateInfoToolStripMenuItem.Click += (sender, e) => { OpenLink(UPDATE_INFO_LINK); };
+			githubToolStripMenuItem.Click += (sender, e) => { OpenLink(REPOSITORY_LINK); };
+			checkUpdateToolStripMenuItem.Click += (sender, e) => { OpenLink(GITHUB_LATEST_RELEASE_PAGE); };
 			foreach (ToolStripItem item in languageToolStripMenuItem.DropDownItems)
 				item.Click += new EventHandler(LanguageStripMenuItem_Click);
+			menu.Renderer = new Windows10StyledContextMenuStripRenderer();
 			#endregion
 
 			#region 复选框设置、下拉菜单默认值
-			EventHandler setCheckedEnabled = new EventHandler(SetCheckedEnabled);
-			VideoConfigCheck.CheckedChanged += setCheckedEnabled;
-			AudioConfigCheck.CheckedChanged += setCheckedEnabled;
-			StaffVisualizerConfigCheck.CheckedChanged += setCheckedEnabled;
-			StaffGenerateCheck.CheckedChanged += setCheckedEnabled;
-			AudioTuneMethodCombo.SelectedIndexChanged += setCheckedEnabled;
-			AudioStretchAttrCombo.SelectedIndexChanged += setCheckedEnabled;
-			AudioLockStretchPitchCheck.CheckedChanged += setCheckedEnabled;
-			VideoEffectCombo.SelectedIndexChanged += setCheckedEnabled;
-			Tabs.SelectedIndexChanged += setCheckedEnabled;
+			{
+				EventHandler e = new EventHandler(SetCheckedEnabled);
+				VideoConfigCheck.CheckedChanged += e;
+				AudioConfigCheck.CheckedChanged += e;
+				StaffVisualizerConfigCheck.CheckedChanged += e;
+				StaffGenerateCheck.CheckedChanged += e;
+				AudioTuneMethodCombo.SelectedIndexChanged += e;
+				AudioStretchAttrCombo.SelectedIndexChanged += e;
+				AudioLockStretchPitchCheck.CheckedChanged += e;
+				VideoEffectCombo.SelectedIndexChanged += e;
+				Tabs.SelectedIndexChanged += e;
+			}
 			AudioMainKeyCombo.MouseWheel += AudioMainKeyCombo_MouseWheel;
 			for (int i = 0; i < YtpEffectsCheckList.Items.Count; i++)
 				YtpEffectsCheckList.SetItemChecked(i, true);
@@ -9788,93 +10135,100 @@ namespace VegasScript {
 			try {
 				#region 音频配置
 				configIni.StartSection("Audio");
-				AudioScratchCheck.Checked = configIni.ReadBool("Scratch", false);
-				AudioLoopCheck.Checked = configIni.ReadBool("Loop", false);
-				AudioNormalizeCheck.Checked = configIni.ReadBool("Normalize", true);
-				AudioFreezeLastFrameCheck.Checked = configIni.ReadBool("FreezeLastFrame", false);
-				AudioLegatoCheck.Checked = configIni.ReadBool("Legato", false);
-				AudioFadeInBox.SetValue(configIni.ReadInt("FadeIn", 0), 0);
-				AudioFadeOutBox.SetValue(configIni.ReadInt("FadeOut", 0), 0);
-				SetComboIndex(AudioFadeInCurveCombo, configIni.ReadInt("FadeInCurve", 1), 1);
-				SetComboIndex(AudioFadeOutCurveCombo, configIni.ReadInt("FadeOutCurve", 2), 2);
+				AudioScratchCheck.Checked = configIni.Read("Scratch", false);
+				AudioLoopCheck.Checked = configIni.Read("Loop", false);
+				AudioNormalizeCheck.Checked = configIni.Read("Normalize", true);
+				AudioFreezeLastFrameCheck.Checked = configIni.Read("FreezeLastFrame", false);
+				AudioLegatoCheck.Checked = configIni.Read("Legato", false);
+				AudioFadeInBox.SetValue(configIni.Read("FadeIn", 0), 0);
+				AudioFadeOutBox.SetValue(configIni.Read("FadeOut", 0), 0);
+				AudioFadeInCurveCombo.SetIndex(configIni.Read("FadeInCurve", 1), 1);
+				AudioFadeOutCurveCombo.SetIndex(configIni.Read("FadeOutCurve", 2), 2);
 				SetBasePitchCombo(configIni.Read("BasePitch", "C5"));
-				SetComboIndex(AudioTuneMethodCombo, configIni.ReadInt("TuneMethod", 2), 2);
-				SetComboIndex(AudioStretchAttrCombo, configIni.ReadInt("StretchAttr", 1), 1);
-				AudioLockStretchPitchCheck.Checked = configIni.ReadBool("LockStretchPitch", false);
-				AudioReserveFormantCheck.Checked = configIni.ReadBool("ReserveFormant", false);
+				AudioTuneMethodCombo.SetIndex(configIni.Read("TuneMethod", 2), 2);
+				AudioStretchAttrCombo.SetIndex(configIni.Read("StretchAttr", 1), 1);
+				AudioLockStretchPitchCheck.Checked = configIni.Read("LockStretchPitch", false);
+				AudioReserveFormantCheck.Checked = configIni.Read("ReserveFormant", false);
 				configIni.EndSection();
 				#endregion
 
 				#region 视频配置
 				configIni.StartSection("Video");
-				SetComboIndex(VideoEffectCombo, configIni.ReadInt("VisualEffect", 1), 1);
-				VideoScratchCheck.Checked = configIni.ReadBool("Scratch", false);
-				VideoLoopCheck.Checked = configIni.ReadBool("Loop", true);
-				VideoFreezeFirstFrameCheck.Checked = configIni.ReadBool("FreezeFirstFrame", false);
-				VideoFreezeLastFrameCheck.Checked = configIni.ReadBool("FreezeLastFrame", false);
-				VideoLegatoCheck.Checked = configIni.ReadBool("Legato", true);
-				VideoFadeInBox.SetValue(configIni.ReadInt("FadeIn", 0), 0);
-				VideoFadeOutBox.SetValue(configIni.ReadInt("FadeOut", 0), 0);
-				VideoGlowBox.SetValue(configIni.ReadInt("Glow", 0), 0);
-				VideoGlowBrightBox.SetValue(configIni.ReadInt("GlowBrightness", 100), 100);
-				VideoStartSizeBox.SetValue(configIni.ReadInt("StartSize", 100), 100);
-				VideoEndSizeBox.SetValue(configIni.ReadInt("EndSize", 100), 100);
-				VideoStartRotationBox.SetValue(configIni.ReadInt("StartRotation", 0), 0);
-				VideoEndRotationBox.SetValue(configIni.ReadInt("EndRotation", 0), 0);
-				VideoStartHorizontalTransBox.SetValue(configIni.ReadInt("StartHorizontalTrans", 0), 0);
-				VideoEndHorizontalTransBox.SetValue(configIni.ReadInt("EndHorizontalTrans", 0), 0);
-				VideoStartVerticalTransBox.SetValue(configIni.ReadInt("StartVerticalTrans", 0), 0);
-				VideoEndVerticalTransBox.SetValue(configIni.ReadInt("EndVerticalTrans", 0), 0);
-				SetComboIndex(VideoStartSizeCurveCombo, configIni.ReadInt("StartSizeCurve", 1), 1);
-				SetComboIndex(VideoFadeInCurveCombo, configIni.ReadInt("FadeInCurve", 3), 3);
-				SetComboIndex(VideoFadeOutCurveCombo, configIni.ReadInt("FadeOutCurve", 3), 3);
-				SetComboIndex(VideoGlowCurveCombo, configIni.ReadInt("GlowCurve", 1), 1);
+				VideoEffectCombo.SetIndex(configIni.Read("VisualEffect", 1), 1);
+				VideoScratchCheck.Checked = configIni.Read("Scratch", false);
+				VideoLoopCheck.Checked = configIni.Read("Loop", true);
+				VideoFreezeFirstFrameCheck.Checked = configIni.Read("FreezeFirstFrame", false);
+				VideoFreezeLastFrameCheck.Checked = configIni.Read("FreezeLastFrame", false);
+				VideoLegatoCheck.Checked = configIni.Read("Legato", true);
+				VideoFadeInBox.SetValue(configIni.Read("FadeIn", 0), 0);
+				VideoFadeOutBox.SetValue(configIni.Read("FadeOut", 0), 0);
+				VideoGlowBox.SetValue(configIni.Read("Glow", 0), 0);
+				VideoGlowBrightBox.SetValue(configIni.Read("GlowBrightness", 100), 100);
+				VideoStartSizeBox.SetValue(configIni.Read("StartSize", 100), 100);
+				VideoEndSizeBox.SetValue(configIni.Read("EndSize", 100), 100);
+				VideoStartRotationBox.SetValue(configIni.Read("StartRotation", 0), 0);
+				VideoEndRotationBox.SetValue(configIni.Read("EndRotation", 0), 0);
+				VideoStartHorizontalTransBox.SetValue(configIni.Read("StartHorizontalTrans", 0), 0);
+				VideoEndHorizontalTransBox.SetValue(configIni.Read("EndHorizontalTrans", 0), 0);
+				VideoStartVerticalTransBox.SetValue(configIni.Read("StartVerticalTrans", 0), 0);
+				VideoEndVerticalTransBox.SetValue(configIni.Read("EndVerticalTrans", 0), 0);
+				VideoStartSizeCurveCombo.SetIndex(configIni.Read("StartSizeCurve", 1), 1);
+				VideoFadeInCurveCombo.SetIndex(configIni.Read("FadeInCurve", 3), 3);
+				VideoFadeOutCurveCombo.SetIndex(configIni.Read("FadeOutCurve", 3), 3);
+				VideoGlowCurveCombo.SetIndex(configIni.Read("GlowCurve", 1), 1);
 				configIni.EndSection();
 				#endregion
 
 				#region 素材配置
 				configIni.StartSection("Source");
-				if (configIni.ReadBool("GenerateAtCursor", false)) GenerateAtCursorRadio.Checked = true;
+				if (configIni.Read("GenerateAtCursor", false)) GenerateAtCursorRadio.Checked = true;
 				else GenerateAtBeginRadio.Checked = true;
 				if (parent.SuggestSelectedSourceFrom == MediaSourceFrom.LAST_USER_PREFERENCE || parent.SuggestSelectedSourceFrom == MediaSourceFrom.NOTHING_SELECTED) {
-					int lastMediaSourceFrom = configIni.ReadInt("LastMediaSourceFrom", 2);
+					int lastMediaSourceFrom = configIni.Read("LastMediaSourceFrom", 2);
 					if (lastMediaSourceFrom == 0 || lastMediaSourceFrom == 1) ChooseSourceCombo.SelectedIndex = lastMediaSourceFrom;
 					else if (parent.SuggestSelectedSourceFrom != MediaSourceFrom.NOTHING_SELECTED) ChooseSourceCombo.SelectedIndex = (int)MediaSourceFrom.SELECTED_CLIP;
 					else ChooseSourceCombo.SelectedIndex = (int)MediaSourceFrom.SELECTED_CLIP; //SELECTED_MEDIA;
 				} else ChooseSourceCombo.SelectedIndex = (int)parent.SuggestSelectedSourceFrom;
 				if (parent.OpenMidiFile(configIni.Read("LastMidiFile", null), this, true))
-					SetComboIndex(MidiChannelCombo, configIni.ReadInt("LastMidiChannel", -1), -1);
+					MidiChannelCombo.SetIndex(configIni.Read("LastMidiChannel", -1), -1);
 				else RemoveLastMidiConfig();
 				configIni.EndSection();
 				#endregion
 
 				#region 五线谱配置
 				configIni.StartSection("Staff");
-				SetComboIndex(MidiBeatCombo, configIni.ReadInt("Beat", 4) - 2, 4 - 2);
-				StaffVisualizerConfigCheck.Checked = configIni.ReadBool("Enable", false);
-				StaffGenerateCheck.Checked = configIni.ReadBool("GenerateStaff", true);
-				StaffRelativeValueCheck.Checked = configIni.ReadBool("RelativeValue", true);
-				SetComboIndex(StaffClefCombo, configIni.ReadInt("Clef", 0), 0);
-				SetNumericValue(StaffLineSpacingBox, configIni.ReadInt("Gap", 44), 44); // 45
-				SetNumericValue(StaffSurfaceWidthBox, configIni.ReadInt("Width", 1500), 1500); // 1000
-				SetNumericValue(StaffSurfacePositionBox, configIni.ReadInt("Position", 225), 225); // 0
-				SetNumericValue(StaffLineThicknessBox, configIni.ReadInt("Thickness", 50), 50);
+				StaffVisualizerConfigCheck.Checked = configIni.Read("Enable", false);
+				StaffGenerateCheck.Checked = configIni.Read("GenerateStaff", true);
+				StaffRelativeValueCheck.Checked = configIni.Read("RelativeValue", true);
+				StaffClefCombo.SetIndex(configIni.Read("Clef", 0), 0);
+				StaffLineSpacingBox.SetValue(configIni.Read("Gap", 44), 44); // 45
+				StaffSurfaceWidthBox.SetValue(configIni.Read("Width", 1500), 1500); // 1000
+				StaffSurfacePositionBox.SetValue(configIni.Read("Position", 225), 225); // 0
+				StaffLineThicknessBox.SetValue(configIni.Read("Thickness", 50), 50);
+				StaffNotesShiftBox.SetValue(configIni.Read("Shift", 0), 0);
 				GetStaffLineColor(configIni.Read("Color", "#FFFFFF"));
-				SetNumericValue(StaffNotesShiftBox, configIni.ReadInt("Shift", 0), 0);
 				configIni.EndSection();
 				#endregion
 
 				#region YTP 配置
 				configIni.StartSection("YTP");
-				SetNumericValue(YtpMinLenBox, configIni.ReadInt("MinLength", 10), 10);
-				SetNumericValue(YtpMaxLenBox, configIni.ReadInt("MaxLength", 5000), 5000);
-				SetNumericValue(YtpClipsCountBox, configIni.ReadInt("ClipsCount", 30), 30);
-				BatchSetCheckedListBox(YtpEffectsCheckList, configIni.Read("Effects", ""));
+				YtpMinLenBox.SetValue(configIni.Read("MinLength", 10), 10);
+				YtpMaxLenBox.SetValue(configIni.Read("MaxLength", 5000), 5000);
+				YtpClipsCountBox.SetValue(configIni.Read("ClipsCount", 30), 30);
+				YtpEffectsCheckList.BatchSet(configIni.Read("Effects", ""));
 				YtpEffectsCheckList_SelectedIndexChanged(null, null);
 				configIni.EndSection();
 				#endregion
+
+				#region 音频预览配置
+				configIni.StartSection("PreviewAudio");
+				PreviewBeepWaveFormCombo.SetIndex(configIni.Read("BeepWaveForm", 0), 0);
+				PreviewBeepDurationBox.SetValue(configIni.Read("BeepDuration", 800), 800);
+				PreviewTuneAudioCheck.Checked = configIni.Read("IsTuneAudio", false);
+				configIni.EndSection();
+				#endregion
 			} catch (Exception e) {
-				parent.ShowError(new Exceptions.ReadConfigFailException(), e);
+				EntryPoint.ShowError(new Exceptions.ReadConfigFailException(), e);
 				configIni.Delete(true);
 				//AcceptConfig = false;
 				//Close();
@@ -9943,7 +10297,6 @@ namespace VegasScript {
 
 			#region 五线谱配置
 			configIni.StartSection("Staff");
-			configIni.Write("Beat", MidiBeatCombo.SelectedIndex + 2);
 			configIni.Write("Enable", StaffVisualizerConfigCheck.Checked);
 			configIni.Write("GenerateStaff", StaffGenerateCheck.Checked);
 			configIni.Write("RelativeValue", StaffRelativeValueCheck.Checked);
@@ -9962,7 +10315,15 @@ namespace VegasScript {
 			configIni.Write("MinLength", YtpMinLenBox.Value);
 			configIni.Write("MaxLength", YtpMaxLenBox.Value);
 			configIni.Write("ClipsCount", YtpClipsCountBox.Value);
-			configIni.Write("Effects", BatchGetCheckedListBox(YtpEffectsCheckList));
+			configIni.Write("Effects", YtpEffectsCheckList.BatchGet());
+			configIni.EndSection();
+			#endregion
+
+			#region 音频预览配置
+			configIni.StartSection("PreviewAudio");
+			configIni.Write("BeepWaveForm", PreviewBeepWaveFormCombo.SelectedIndex);
+			configIni.Write("BeepDuration", PreviewBeepDurationBox.Value);
+			configIni.Write("IsTuneAudio", PreviewTuneAudioCheck.Checked);
 			configIni.EndSection();
 			#endregion
 
@@ -10018,30 +10379,32 @@ namespace VegasScript {
 
 		public void Translate() {
 			Lang str = Lang.str;
-			Font = new System.Drawing.Font(str.ui_font, 9F);
-			WarningInfoLabel.Font = new System.Drawing.Font(str.info_label_font, 11F, System.Drawing.FontStyle.Bold);
-			HelperWarningLbl.Font = new System.Drawing.Font(str.info_label_font, 9F, System.Drawing.FontStyle.Bold);
-			Label[] infoLabels = {
-				SheetConfigInfoLabel, YtpLbl, SelectIntervalLbl, HelperLbl
-			};
+			menu.Font = Font = new Font(str.ui_font, 9F);
+			WarningInfoLabel.Font = new Font(str.info_label_font, 11F, FontStyle.Bold);
+			HelperWarningLbl.Font = new Font(str.info_label_font, 9F, FontStyle.Bold);
+			Label[] infoLabels = { SheetConfigInfoLabel, YtpLbl, HelperLbl };
 			foreach (Label label in infoLabels)
-				label.Font = new System.Drawing.Font(str.info_label_font, 9F);
+				label.Font = new Font(str.info_label_font, 9F);
+			versionToolStripMenuItem.Text = Lang.str.version_number + Lang.str.colon + EntryPoint.VERSION;
 			OkBtn.Text = str.complete;
 			CancelBtn.Text = str.cancel;
 			AboutBtn.Text = str.about;
 			UserHelpLink.Text = str.user_help + str.dialog_sign;
 			Balloon.ToolTipTitle = str.balloon_title;
-			Balloon.SetToolTip(MidiBeatCombo, str.midi_beat_conbo_tooltip);
 			Balloon.SetToolTip(StaffSurfacePositionBox, str.sheet_position_tooltip);
 			Balloon.SetToolTip(StaffSurfaceWidthBox, str.sheet_width_tooltip);
 			Balloon.SetToolTip(StaffLineSpacingBox, str.sheet_gap_tooltip);
 			Balloon.SetToolTip(StaffRelativeValueCheck, str.sheet_relative_tooltip);
-			StaffRelativeValueCheck.Text = str.sheet_relative;
 			Balloon.SetToolTip(AudioTuneMethodCombo, str.tune_method_tooltip);
+			StaffRelativeValueCheck.Text = str.sheet_relative;
 			AudioTuneMethodCombo.Items[0] = str.no_tune;
 			AudioTuneMethodCombo.Items[1] = str.pitch_shift_plugin;
 			AudioTuneMethodCombo.Items[2] = str.elastique_method;
-			Balloon.SetToolTip(PreviewBasePitchBtn, str.preview_base_pitch_tooltip);
+			AudioTuneMethodCombo.Items[3] = str.classic_method;
+			PreviewBeepWaveFormCombo.Items[0] = str.sine_wave;
+			PreviewBeepWaveFormCombo.Items[1] = str.triangle_wave;
+			PreviewBeepWaveFormCombo.Items[2] = str.square_wave;
+			PreviewBeepWaveFormCombo.Items[3] = str.sawtooth_wave;
 			PreviewBasePitchBtn.Text = str.preview_base_pitch;
 			Balloon.SetToolTip(YtpMaxLenBox, str.ytp_max_length_tooltip);
 			Balloon.SetToolTip(YtpMinLenBox, str.ytp_min_length_tooltip);
@@ -10050,8 +10413,9 @@ namespace VegasScript {
 			Balloon.SetToolTip(SourceStartTimeText, str.source_start_time_tooltip);
 			Balloon.SetToolTip(SourceEndTimeText, str.source_end_time_tooltip);
 			Balloon.SetToolTip(AudioLockStretchPitchCheck, str.audio_lock_stretch_pitch_tooltip);
+			Balloon.SetToolTip(PreviewBeepDurationBox, str.preview_beep_duration_tooltip);
+			Balloon.SetToolTip(PreviewTuneAudioCheck, str.preview_tune_audio_tooltip);
 			AudioLockStretchPitchCheck.Text = str.audio_lock_stretch_pitch;
-			QuickSelectIntervalBtn.Text = str.quick_select_interval + str.dialog_sign;
 			fileMenuItem.Text = str.file;
 			saveConfigToolStripMenuItem.Text = str.save_config;
 			resetConfigToolStripMenuItem.Text = str.reset_config;
@@ -10063,6 +10427,8 @@ namespace VegasScript {
 			troubleShootingToolStripMenuItem.Text = str.trouble_shooting;
 			updateInfoToolStripMenuItem.Text = str.update_info;
 			githubToolStripMenuItem.Text = str.repository_link;
+			checkUpdateToolStripMenuItem.Text = str.check_update;
+			whyOkBtnIsDisabledToolStripMenuItem.Text = str.why_ok_btn_is_disabled;
 			MidiConfigGroup.Text = str.midi_settings;
 			MidiStartSecondLbl.Text = str.midi_start_time;
 			MidiEndSecondLbl.Text = str.midi_end_time;
@@ -10096,16 +10462,13 @@ namespace VegasScript {
 					str.linear, str.fast, str.slow, str.smooth, str.sharp
 				});
 			}
-			AudioStretchAttrCombo.Items.Clear();
-			AudioStretchAttrCombo.Items.AddRange(new string[] {
-				str.elastique_pro, str.elastique_efficient,
-				str.elastique_soloist_monophonic, str.elastique_soloist_speech
-			});
 			AudioFadeInLbl.Text = VideoFadeInLbl.Text = str.fade_in;
 			AudioFadeOutLbl.Text = VideoFadeOutLbl.Text = str.fade_out;
 			AudioTuneGroup.Text = str.tune;
 			AudioPreviewLbl.Text = str.preview_listen;
 			AudioLockAttrLbl.Text = str.lock_attr;
+			AudioPreviewAttrLbl.Text = str.preview_listen_attr;
+			PreviewTuneAudioCheck.Text = str.preview_tune_audio;
 			AudioReserveFormantCheck.Text = str.reserve_formant;
 			AudioTuneMethodLbl.Text = str.tune_method;
 			AudioBasePitchLbl.Text = str.base_pitch;
@@ -10175,16 +10538,17 @@ namespace VegasScript {
 				str.ytp_delay, str.ytp_speed_change, str.ytp_hue_change, str.ytp_hue_rotate,
 				str.ytp_monochrome, str.ytp_negative, str.ytp_high_freq_repeat, str.ytp_random_tone,
 				str.ytp_enlarge, str.ytp_spherize, str.ytp_mirror, str.ytp_high_contrast,
-				str.ytp_oversaturation
+				str.ytp_oversaturation, str.ytp_emphasize_thrice,
 			});
 			YtpLbl.Text = str.ytp_info;
+			YtpSelectInfo.Text = str.select_source_count_info;
 			HelperTab.Text = str.helper;
-			SelectIntervalGroup.Text = str.select_interval;
-			SelectIntervalSelectInfo.Text = ReplaceClipsSelectInfo.Text = str.select_events_count_info;
-			SelectIntervalLbl.Text = str.select_interval_configform_info;
-			ReplaceClipsGroup.Text = str.replace_clips;
-			ReplaceClipsLbl.Text = str.replace_clips_configform_info;
-			ReplaceClipsBtn.Text = str.replace_clips + str.dialog_sign;
+			QuickSelectIntervalBtn.Text = str.quick_select_interval;
+			QuickSelectIntervalBtn.CommandLinkNote = str.select_interval_configform_info + '\n' + str.select_events_count_info;
+			ReplaceClipsBtn.Text = str.replace_clips;
+			ReplaceClipsBtn.CommandLinkNote = str.replace_clips_configform_info + '\n' + str.select_events_count_info;
+			ChangeTuneMethodBtn.Text = str.change_tune_method;
+			ChangeTuneMethodBtn.CommandLinkNote = str.change_tune_method_configform_info + '\n' + str.select_audioevents_count_info;
 			AutoLayoutTracksGroup.Text = str.auto_layout_tracks;
 			AutoLayoutTracksSelectInfo.Text = str.select_videotracks_count_info;
 			AutoLayoutTracksLbl.Text = str.auto_layout_tracks_configform_info;
@@ -10193,10 +10557,6 @@ namespace VegasScript {
 			AutoLayoutTracksBox3dBtn.Text = str.box_3d_layout + str.dialog_sign;
 			ClearTrackMotionBtn.Text = str.clear_tracks_motion;
 			ClearTrackEffectBtn.Text = str.clear_tracks_effect;
-			ChangeTuneMethodGroup.Text = str.change_tune_method;
-			ChangeTuneMethodSelectInfo.Text = str.select_audioevents_count_info;
-			ChangeTuneMethodLbl.Text = str.change_tune_method_configform_info;
-			ChangeTuneMethodBtn.Text = str.change_tune_method + str.dialog_sign;
 			HelperLbl.Text = str.helper_info;
 			HelperWarningLbl.Text = str.helper_info_warning;
 			Text = str.otomad_helper_config;
@@ -10256,7 +10616,7 @@ namespace VegasScript {
 			Close();
 		}
 		private void ConfigForm_FormClosing(object sender, FormClosingEventArgs e) {
-			BeforeCloseDoing();
+			DoingBeforeClose();
 			if (!AcceptConfig && NeedSaveIni) SaveIni();
 			// Environment.Exit(0); // 可以顺带一块ㄦ把 Vegas 干掉。
 			#if VEGAS_ENVIRONMENT
@@ -10264,7 +10624,7 @@ namespace VegasScript {
 			#endif
 		}
 
-		private void BeforeCloseDoing() {
+		private void DoingBeforeClose() {
 			if (IsPreviewingAudio) PreviewAudioBtn_Click(false);
 		}
 
@@ -10282,7 +10642,7 @@ namespace VegasScript {
 		/// <summary>
 		/// 控件的使能和失能控制。
 		/// </summary>
-		private void SetCheckedEnabled(object sender, EventArgs e) {
+		internal void SetCheckedEnabled(object sender, EventArgs e) {
 			bool isVConfigOn = VideoConfigCheck.Checked;
 			SetEnabled(VideoTab, isVConfigOn, new Control[] { VideoConfigCheck, VideoScratchCheck });
 			StaffVisualizerConfigCheck.Enabled = isVConfigOn;
@@ -10298,11 +10658,15 @@ namespace VegasScript {
 			bool isAConfigOn = AudioConfigCheck.Checked;
 			SetEnabled(AudioTab, isAConfigOn, new Control[] { AudioConfigCheck });
 			AudioTuneMethod method = (AudioTuneMethod)AudioTuneMethodCombo.SelectedIndex;
-			AudioLockStretchPitchCheck.Enabled = AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = isAConfigOn && method != AudioTuneMethod.NO_TUNE;
-			AudioStretchAttrCombo.Enabled = method == AudioTuneMethod.ELASTIQUE;
+			AudioLockStretchPitchCheck.Enabled = AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled
+				= PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled
+				= isAConfigOn && method != AudioTuneMethod.NO_TUNE;
+			bool isPitchChangeMethod = method == AudioTuneMethod.ELASTIQUE || method == AudioTuneMethod.CLASSIC;
+			AudioStretchAttrCombo.Enabled = isPitchChangeMethod;
 			AudioReserveFormantCheck.Enabled = false;
+			if (isPitchChangeMethod && AudioLockStretchPitchCheck.Checked)
+				AudioScratchCheck.Checked = AudioScratchCheck.Enabled = false;
 			if (method == AudioTuneMethod.ELASTIQUE) {
-				if (AudioLockStretchPitchCheck.Checked) AudioScratchCheck.Checked = AudioScratchCheck.Enabled = false;
 				ElastiqueStretchAttributes attr = (ElastiqueStretchAttributes)AudioStretchAttrCombo.SelectedIndex;
 				if (attr == ElastiqueStretchAttributes.Pro) AudioReserveFormantCheck.Enabled = true;
 				else if (attr == ElastiqueStretchAttributes.Soloist_Monophonic) AudioReserveFormantCheck.Checked = true;
@@ -10358,7 +10722,8 @@ namespace VegasScript {
 			get { return OkBtn.Enabled; }
 			set {
 				OkBtn.Enabled = value;
-				//balloon.SetToolTip(OkBtn, !value ? "请确保媒体、MIDI 均已正确选择，至少选择生成音频或视频任意一个，方可开始生成。" : "");
+				whyOkBtnIsDisabledToolStripMenuItem.Visible = !value;
+				//balloon.SetToolTip(OkBtn, !value ? "请确保媒体、MIDI 均已正确选择，并且至少选择生成音频或视频任意一个，方可开始生成。" : "");
 			}
 		}
 
@@ -10384,18 +10749,21 @@ namespace VegasScript {
 				= MidiProjectBpmCheck.Enabled
 				= MidiCustomBpmCheck.Enabled
 				= MidiChannelCombo.Enabled
-				= MidiBeatCombo.Enabled
+				= MidiBeatTxt.Enabled
 				= true;
 			MidiMidiBpmCheck.Text = Lang.str.midi_midi_bpm + Lang.str.colon + ProcessBpmDouble(bpm);
 		}
 
-		public const string aboutHelpLink = "https://www.bilibili.com/read/cv392013";
-		public const string troubleShootingLink = "https://www.bilibili.com/read/cv495309";
-		public const string updateInfoLink = "http://www.bilibili.com/read/cv13335178";
-		public const string githubLink = "https://github.com/otomad/VegasScripts";
-		public const string githubOrigLink = "https://github.com/Chaosinism/vegas_scripts";
+		public const string
+			ABOUT_HELP_LINK = "https://www.bilibili.com/read/cv392013",
+			TROUBLE_SHOOTING_LINK = "https://www.bilibili.com/read/cv495309",
+			UPDATE_INFO_LINK = "http://www.bilibili.com/read/cv13335178",
+			REPOSITORY_LINK = "https://github.com/otomad/VegasScripts",
+			REPOSITORY_ORIG_LINK = "https://github.com/Chaosinism/vegas_scripts",
+			GITHUB_LATEST_RELEASE_PAGE = "https://github.com/otomad/VegasScripts/releases/latest";
+
 		private void UserHelpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			OpenLink(aboutHelpLink);
+			OpenLink(ABOUT_HELP_LINK);
 		}
 
 		public void OpenLink(string link) {
@@ -10403,16 +10771,27 @@ namespace VegasScript {
 		}
 
 		private void AboutBtn_Click(object sender, EventArgs e) {
-			MessageBox.Show(
-				Lang.str.script_author + Lang.str.colon + "淅琳雨\n" +
-				Lang.str.documentation + Lang.str.colon + updateInfoLink + "\n" +
-				Lang.str.repository_link + Lang.str.colon + githubLink + "\n\n" +
-				Lang.str.script_original_author + Lang.str.colon + "Chaosinism\n" +
-				Lang.str.documentation + Lang.str.colon + aboutHelpLink + "\n" +
-				Lang.str.trouble_shooting + Lang.str.colon + troubleShootingLink + "\n" +
-				Lang.str.repository_link + Lang.str.colon + githubOrigLink + "\n",
-				Lang.str.about_title,
-				MessageBoxButtons.OK, MessageBoxIcon.Information);
+			Lang str = Lang.str;
+			string[,] pairs = new string[,] {
+				{ str.version_number, EntryPoint.VERSION.ToString() },
+				{ str.revision_date, EntryPoint.REVISION_DATE.ToString("D") },
+				{ "", "" },
+				{ str.script_author, "淅琳雨" },
+				{ str.documentation , UPDATE_INFO_LINK },
+				{ str.repository_link , REPOSITORY_LINK },
+				{ "", "" },
+				{ str.script_original_author , "Chaosinism" },
+				{ str.documentation, ABOUT_HELP_LINK },
+				{ str.trouble_shooting,  TROUBLE_SHOOTING_LINK },
+				{ str.repository_link, REPOSITORY_ORIG_LINK }
+			};
+			StringBuilder text = new StringBuilder();
+			for (int i = 0; i < pairs.GetLength(0); i++) {
+				string key = pairs[i, 0], value = pairs[i, 1];
+				if (string.IsNullOrWhiteSpace(value)) text.AppendLine();
+				else text.AppendLine(key + str.colon + value);
+			}
+			MessageBox.Show(text.ToString(), str.about_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 
 		private void TrimTime_ValueChanged(object sender, EventArgs e) {
@@ -10431,21 +10810,27 @@ namespace VegasScript {
 
 		public void ChooseSourceCombo_InitSourceNames() {
 			EntryPoint.AudioVideoEnabledTable table = parent.audioVideoEnabledTable;
-			if (!string.IsNullOrWhiteSpace(table.SelectMediaName)) ChooseSourceCombo.Items[0] += "：" + table.SelectMediaName;
-			if (!string.IsNullOrWhiteSpace(table.SelectClipName)) ChooseSourceCombo.Items[1] += "：" + table.SelectClipName;
+			if (!string.IsNullOrWhiteSpace(table.SelectMediaName)) ChooseSourceCombo.Items[0] += Lang.str.colon + table.SelectMediaName;
+			if (!string.IsNullOrWhiteSpace(table.SelectClipName)) ChooseSourceCombo.Items[1] += Lang.str.colon + table.SelectClipName;
 		}
 
+		private bool isValidSource = true;
 		public void ChooseSourceCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			#if VEGAS_ENVIRONMENT
-			int SourceConfigFrom = ChooseSourceCombo.SelectedIndex;
+			MediaSourceFrom SourceConfigFrom = (MediaSourceFrom)ChooseSourceCombo.SelectedIndex;
 			var table = parent.audioVideoEnabledTable;
-			var group = SourceConfigFrom == 0 ? table.FromSelectedMedia :
-						SourceConfigFrom == 1 ? table.FromSelectedClip : table.FromBrowseFile;
+			var group = SourceConfigFrom == MediaSourceFrom.SELECTED_MEDIA ? table.FromSelectedMedia :
+						SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP ? table.FromSelectedClip : table.FromBrowseFile;
 			AudioConfigCheck.Enabled = AudioConfigCheck.Checked = group.AudioEnabled;
 			VideoConfigCheck.Enabled = VideoConfigCheck.Checked = group.VideoEnabled;
 			WarningInfoLabel.Text =
-				SourceConfigFrom == 0 && parent.audioVideoEnabledTable.SelectNoMedia ? Lang.str.no_selected_media_warning :
-				SourceConfigFrom == 1 && parent.audioVideoEnabledTable.SelectNoEvents ? Lang.str.no_selected_clip_warning : "";
+				SourceConfigFrom == MediaSourceFrom.SELECTED_MEDIA && parent.audioVideoEnabledTable.SelectNoMedia ? Lang.str.no_selected_media_warning :
+				SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP && parent.audioVideoEnabledTable.SelectNoEvents ? Lang.str.no_selected_clip_warning : "";
+			isValidSource = string.IsNullOrWhiteSpace(WarningInfoLabel.Text);
+			int selectSourceCountForYtp =
+				SourceConfigFrom == MediaSourceFrom.SELECTED_MEDIA ? parent.GetSelectedMedia().Length :
+				SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP ? parent.GetSelectedEvents().Length : 1;
+			YtpSelectInfo.Text = string.Format(Lang.str.select_source_count_info, selectSourceCountForYtp);
 			#endif
 		}
 
@@ -10459,42 +10844,12 @@ namespace VegasScript {
 			#endif
 		}
 
-		/// <summary>
-		/// 设定下拉菜单选择的编号。避免设定的编号超出下拉菜单的项目数量
-		/// </summary>
-		/// <param name="combo">下拉菜单</param>
-		/// <param name="index">设定选项序号</param>
-		/// <param name="def">设定如果设定失败的默认值，如果为 -1 表示不设定</param>
-		public void SetComboIndex(ComboBox combo, int index, int def = -1) {
-			int length = combo.Items.Count;
-			if (length == 0) return;
-			if (index >= length || index < 0) {
-				if (def >= length || def < 0) return; // 你特么故意找茬是吧？
-				combo.SelectedIndex = def;
-			} else combo.SelectedIndex = index;
-		}
-
-		public void SetTrackBarValue(TrackBar track, NumericUpDown numeric, int value, int def = -1) {
+		public static void SetTrackBarValue(TrackBar track, NumericUpDown numeric, int value, int def = -1) {
 			int min = track.Minimum, max = track.Maximum;
 			if (value < min || value > max) {
 				if (def < min || def > max) return;
 				numeric.Value = track.Value = def;
 			} else numeric.Value = track.Value = value;
-		}
-
-		public void SetNumericValue(NumericUpDown numeric, int value, int? def = null) {
-			int min = (int)numeric.Minimum, max = (int)numeric.Maximum;
-			if (value < min || value > max) {
-				if (def < min || def > max || def == null) return;
-				numeric.Value = (decimal)def;
-			} else numeric.Value = value;
-		}
-		public void SetNumericValue(NumericUpDown numeric, double value, double? def = null) {
-			double min = (double)numeric.Minimum, max = (double)numeric.Maximum;
-			if (value < min || value > max) {
-				if (def < min || def > max || def == null) return;
-				numeric.Value = (decimal)def;
-			} else numeric.Value = (decimal)value;
 		}
 
 		public void SetBasePitchCombo(string basePitch) {
@@ -10511,19 +10866,23 @@ namespace VegasScript {
 			if (!isSet) AudioMainKeyCombo.SelectedIndex = 0;
 			matches = Regex.Matches(basePitch, @"\d+$");
 			int oct = matches.Count != 0 ? int.Parse(matches[0].ToString()) : 5;
-			SetComboIndex(AudioMainOctaveCombo, oct, 5);
+			AudioMainOctaveCombo.SetIndex(oct, 5);
 		}
 
 		private void HelperSelectedCount() {
+			Lang str = Lang.str;
 			#region 选中剪辑
 			int selectedClipsCount = parent.GetSelectedEvents().Length;
-			SelectIntervalSelectInfo.Text = ReplaceClipsSelectInfo.Text = string.Format(Lang.str.select_events_count_info, selectedClipsCount);
+			string selectInfo = string.Format(str.select_events_count_info, selectedClipsCount);
+			QuickSelectIntervalBtn.CommandLinkNote = str.select_interval_configform_info + '\n' + selectInfo;
+			ReplaceClipsBtn.CommandLinkNote = str.replace_clips_configform_info + '\n' + selectInfo;
 			if (selectedClipsCount == 0)
 				ReplaceClipsBtn.Enabled = QuickSelectIntervalBtn.Enabled = false;
 			#endregion
 			#region 选中音频剪辑
 			int selectedAudioClipsCount = parent.GetSelectedAudioEvents().Length;
-			ChangeTuneMethodSelectInfo.Text = string.Format(Lang.str.select_audioevents_count_info, selectedAudioClipsCount);
+			ChangeTuneMethodBtn.CommandLinkNote = str.change_tune_method_configform_info + '\n' +
+				string.Format(str.select_audioevents_count_info, selectedAudioClipsCount);
 			if (selectedAudioClipsCount == 0)
 				ChangeTuneMethodBtn.Enabled = false;
 			#endregion
@@ -10533,7 +10892,7 @@ namespace VegasScript {
 			#endregion
 			#region 选中视频轨道
 			int selectedVideoTracksCount = parent.GetSelectedVideoTracks().Length;
-			AutoLayoutTracksSelectInfo.Text = string.Format(Lang.str.select_videotracks_count_info, selectedVideoTracksCount);
+			AutoLayoutTracksSelectInfo.Text = string.Format(str.select_videotracks_count_info, selectedVideoTracksCount);
 			if (selectedVideoTracksCount == 0)
 				AutoLayoutTracksButtons.Enabled = ClearTrackMotionBtn.Enabled = false;
 			#endregion
@@ -10694,32 +11053,36 @@ namespace VegasScript {
 		}
 
 		private void PreviewBasePitchBtn_MouseDown(object sender, EventArgs e) {
-			int semitone = EntryPoint.PitchMap(
-				AudioMainKeyCombo.SelectedItem.ToString(),
-				AudioMainOctaveCombo.SelectedItem.ToString()
-			) - EntryPoint.PitchMap("A", "4");
+			int semitone = (!PreviewTuneAudioCheck.Checked ? BasePitch : REFERENCE_PITCH) - EntryPoint.PitchMap("A", "4");
 			int freq = (int)Semitone2Freq(semitone);
 			if (freq < 37 || freq > 32767) { // 频率超出 37~32767 Hz 这个范围会崩溃，反正这个频率你也不一定听得到。
 				Asterisk.Play();
 				return;
 			}
-			if (CONSOLE_BEEP_IN_POWERSHELL)
-				WinExec(string.Format("powershell [Console]::Beep({0:D},{1:D})", freq, PREVIEW_BASE_PITCH_BEEP_DURATION), 0);
-			else {
-				Thread thread = new Thread(() => Console.Beep(freq, PREVIEW_BASE_PITCH_BEEP_DURATION));
-				thread.Start();
-			}
+			if (USE_NAUDIO_BEEP)
+				NAudioBeep(freq, PreviewBasePitchBeepDuration);
+			else if (CONSOLE_BEEP_IN_POWERSHELL)
+				WinExec(string.Format("powershell [Console]::Beep({0:D},{1:D})", freq, PreviewBasePitchBeepDuration), 0);
+			else
+				new Thread(() => Console.Beep(freq, PreviewBasePitchBeepDuration)).Start();
 		}
 		public System.Media.SystemSound Asterisk = System.Media.SystemSounds.Asterisk;
-		private const int PREVIEW_BASE_PITCH_BEEP_DURATION = 800;
+		private int PreviewBasePitchBeepDuration { get { return (int)PreviewBeepDurationBox.Value; } }
 		public bool IsPreviewingAudio = false;
 		private AudioTrack previewAudioTrack;
-		private void PreviewAudioBtn_Click(object sender, EventArgs e) {
-			PreviewAudioBtn_Click(null);
-		}
-		//private const string PREVIEW_AUDIO_TRACK_NAME = "Preview Audio Track (Should be DELETED!)";
+		private void PreviewAudioBtn_Click(object sender, EventArgs e) { PreviewAudioBtn_Click(null); }
 		private readonly bool CONSOLE_BEEP_IN_POWERSHELL = false;
+		private readonly bool USE_NAUDIO_BEEP = true;
 		private readonly bool DEBUG_PREVIEW_AUDIO_TRACK_SHOW = true;
+		public static readonly int REFERENCE_PITCH = EntryPoint.PitchMap("C", "6");
+		public int BasePitch {
+			get {
+				return EntryPoint.PitchMap(
+					AudioMainKeyCombo.SelectedItem.ToString() ?? "C",
+					AudioMainOctaveCombo.SelectedItem.ToString() ?? "5"
+				);
+			}
+		}
 		private void PreviewAudioBtn_Click(bool? requestPlaying) {
 			IsPreviewingAudio = !IsPreviewingAudio;
 			if (requestPlaying != null) IsPreviewingAudio = (bool)requestPlaying;
@@ -10728,12 +11091,14 @@ namespace VegasScript {
 				vegas.Transport.LoopMode = false;
 				previewAudioTrack = new AudioTrack(vegas.Project, 0, Lang.str.preview_audio_track_name);
 				vegas.Project.Tracks.Add(previewAudioTrack);
-				bool putOk = parent.PutPreviewAudioEvent(previewAudioTrack, endPosition);
+				AudioEvent previewAudio;
+				bool putOk = parent.PutPreviewAudioEvent(previewAudioTrack, endPosition, out previewAudio);
 				if (!putOk) {
 					IsPreviewingAudio = false;
 					Asterisk.Play();
 					return;
 				}
+				if (PreviewTuneAudioCheck.Checked) ApplyTuningToAudioEvent(previewAudio);
 				vegas.Transport.CursorPosition = endPosition;
 				vegas.Transport.Play();
 			} else {
@@ -10749,6 +11114,26 @@ namespace VegasScript {
 			}
 			PreviewAudioBtn.Text = IsPreviewingAudio ? Lang.str.stop_preview_audio : Lang.str.preview_audio;
 			if (DEBUG_PREVIEW_AUDIO_TRACK_SHOW) vegas.UpdateUI();
+		}
+		
+		private void ApplyTuningToAudioEvent(AudioEvent @event) {
+			AudioTuneMethod method = (AudioTuneMethod)AudioTuneMethodCombo.SelectedIndex;
+			if (method == AudioTuneMethod.NO_TUNE) return;
+			@event.Method = method == AudioTuneMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique;
+			if (method == AudioTuneMethod.ELASTIQUE) {
+				ElastiqueStretchAttributes elastiqueAttr = @event.ElastiqueAttribute = (ElastiqueStretchAttributes)AudioStretchAttrCombo.SelectedIndex;
+				if (elastiqueAttr == ElastiqueStretchAttributes.Pro) @event.FormantLock = AudioReserveFormantCheck.Checked;
+			} else if (method == AudioTuneMethod.CLASSIC)
+				@event.ClassicAttribute = (ClassicStretchAttributes)AudioStretchAttrCombo.SelectedIndex;
+			int pitchDelta = REFERENCE_PITCH - BasePitch;
+			if (!AudioLockStretchPitchCheck.Checked) @event.PitchSemis += pitchDelta;
+			else {
+				double origPitch = @event.PitchSemis;
+				@event.PitchLock = true;
+				double rate = EntryPoint.Pitch2Stretch(origPitch + pitchDelta);
+				@event.AdjustPlaybackRate(rate, true);
+				@event.Length = @event.Length.Multiply(1 / rate);
+			}
 		}
 
 		private void YtpLenBox_ValueChanged(object sender, EventArgs e) {
@@ -10791,26 +11176,56 @@ namespace VegasScript {
 		private void ConfigForm_Resize(object sender, EventArgs e) {
 			const int MARGIN = 6;
 			SheetConfigInfoLabel.MaximumSize = YtpLbl.MaximumSize = new Size(Tabs.SelectedTab.Size.Width - MARGIN, 0);
-			SelectIntervalLbl.MaximumSize = new Size(SelectIntervalGroup.Size.Width - MARGIN, 0);
+			WarningInfoLabel.MaximumSize = new Size(Tabs.SelectedTab.Size.Width - MARGIN, 0);
+		}
+
+		private AudioTuneMethod previousAudioTuneMethod = new AudioTuneMethod();
+		private void AudioTuneMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			ComboBox attrs = AudioStretchAttrCombo;
+			AudioTuneMethod method = (AudioTuneMethod)AudioTuneMethodCombo.SelectedIndex;
+			if (method == previousAudioTuneMethod) return;
+			else previousAudioTuneMethod = method;
+			attrs.Items.Clear();
+			if (method == AudioTuneMethod.ELASTIQUE) {
+				attrs.Items.AddRange(ChangeTuneMethodForm.ElastiqueAttrArray);
+				attrs.SelectedIndex = 1;
+			} else if (method == AudioTuneMethod.CLASSIC) {
+				attrs.Items.AddRange(ChangeTuneMethodForm.ClassicAttrArray);
+				attrs.SelectedIndex = 2;
+			}
+		}
+
+		private void WhyOkBtnIsDisabledToolStripMenuItem_Click(object sender, EventArgs e) {
+			Lang str = Lang.str;
+			List<string> reasons = new List<string>();
+			if (Tabs.SelectedTab == HelperTab) reasons.Add(str.why_ok_btn_is_disabled_in_helper_tab);
+			if (!AudioConfigCheck.Checked && !VideoConfigCheck.Checked)
+				reasons.Add(isValidSource ? str.why_ok_btn_is_disabled_no_audio_and_video_enabled : str.why_ok_btn_is_disabled_no_media_take);
+			if (parent.midi == null && Tabs.SelectedTab != YtpTab) reasons.Add(str.why_ok_btn_is_disabled_no_midi_select);
+			String resultInfo = str.why_ok_btn_is_disabled_unknown_problem;
+			if (reasons.Count != 0) {
+				StringBuilder reason = new StringBuilder(str.why_ok_btn_is_disabled_info + "\n\n");
+				for (int i = 0; i < reasons.Count; i++)
+					reason.AppendLine(i + 1 + ". " + reasons[i]);
+				resultInfo = reason.ToString();
+			}
+			MessageBox.Show(resultInfo, str.why_ok_btn_is_disabled, MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 		
-		/// <summary>
-		/// 批量设置复选框列表的值。
-		/// </summary>
-		/// <param name="checks">复选框列表</param>
-		/// <param name="value">一个字符序列依次表示各个复选框的值，用 1 表示 true，0 表示 false。</param>
-		public static void BatchSetCheckedListBox(CheckedListBox checks, string value) {
-			value = new Regex(@"\s").Replace(value.Trim(), "");
-			value = new Regex(@"[^0]").Replace(value, "1");
-			for (int i = 0; i < Math.Min(checks.Items.Count, value.Length); i++)
-				checks.SetItemChecked(i, value.Substring(i, 1) != "0");
-		}
-		
-		public static string BatchGetCheckedListBox(CheckedListBox checks) {
-			StringBuilder value = new StringBuilder();
-			for (int i = 0; i < checks.Items.Count; i++)
-				value.Append(checks.GetItemChecked(i) ? 1 : 0);
-			return value.ToString();
+		public void NAudioBeep(int freq, int duration) {
+			PreviewBasePitchBtn.Enabled = false;
+			SignalGeneratorType type = new SignalGeneratorType[] {
+				SignalGeneratorType.Sin, SignalGeneratorType.Triangle, SignalGeneratorType.Square, SignalGeneratorType.SawTooth
+			}[PreviewBeepWaveFormCombo.SelectedIndex];
+			ISampleProvider beep = new SignalGenerator() {
+				Gain = 0.2, // 保护听力用
+				Frequency = freq,
+				Type = type
+			}.Take(TimeSpan.FromMilliseconds(duration));
+			WaveOutEvent waveOut = new WaveOutEvent();
+			waveOut.Init(beep);
+			waveOut.Play();
+			waveOut.PlaybackStopped += (sender, e) => { PreviewBasePitchBtn.Enabled = true; };
 		}
 	}
 
@@ -10855,6 +11270,8 @@ namespace VegasScript {
 			info_label_font = "Microsoft Yahei",
 			ui_font = "Microsoft YaHei UI",
 			restart_to_effect_language = "重新启动以使语言生效？",
+			version_number = "版本号",
+			revision_date = "最后修订日期",
 			midi_file_name = "MIDI 序列",
 			all_files = "所有文件",
 			choose_a_midi_file = "请选择一个 MIDI 文件",
@@ -10905,6 +11322,7 @@ namespace VegasScript {
 			midi_channel = "通道",
 			midi_notes_count = "音符数",
 			midi_begin_note = "起音",
+			instrument = "乐器",
 			error_code = "错误代码：",
 			processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
 			processing_ytp = "正在生成 YTP⋯⋯",
@@ -10924,6 +11342,7 @@ namespace VegasScript {
 			select_events_count_info = "已选中 {0} 个轨道剪辑。",
 			select_videotracks_count_info = "已选中 {0} 个视频轨道。",
 			select_audioevents_count_info = "已选中 {0} 个音频轨道剪辑。",
+			select_source_count_info = "已选中 {0} 项媒体素材。",
 			square = "平方",
 			custom = "自定义",
 			row_count = "行数",
@@ -11004,8 +11423,15 @@ namespace VegasScript {
 			no_tune = "不调音",
 			pitch_shift_plugin = "移调效果插件",
 			elastique_method = "弹性音调更改",
+			classic_method = "古典音调更改",
+			sine_wave = "正弦波",
+			triangle_wave = "三角波",
+			square_wave = "方波",
+			sawtooth_wave = "锯齿波",
 			tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\r\n“弹性音调更改”表示使用“Élastique”拉伸方式改变音调，也就是键盘上 +、- 键直接改变音调，\r\n有音高范围限制。",
 			audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。如果使用的是“弹性音调\r\n更改”方法，那么将会禁用拉伸音频功能。",
+			preview_beep_duration_tooltip = "预听标准音高所持续的时间。\n单位：毫秒。",
+			preview_tune_audio_tooltip = "勾选后，预听音频时会将音频素材调整到主音高中央 C。\n否则，预听标准音高将会播放原始音高处所设定的音高。",
 			sheet_position_tooltip = "五线谱中间第三根线到屏幕中心的距离，上正下负。\r\n单位：像素。",
 			sheet_width_tooltip = "将在屏幕中间所填的宽度内显示音符，用于左右留白，给左侧的谱号留间距。\r\n单位：像素。",
 			sheet_gap_tooltip = "五线谱线与线之间的间距。\r\n单位：像素。",
@@ -11024,6 +11450,8 @@ namespace VegasScript {
 			trouble_shooting = "疑难解答",
 			update_info = "更新说明",
 			repository_link = "仓库地址",
+			check_update = "检查更新(&U)",
+			why_ok_btn_is_disabled = "为什么无法点击完成按钮？",
 			media = "媒体",
 			audio = "音频",
 			video = "视频",
@@ -11069,7 +11497,9 @@ namespace VegasScript {
 			preview_audio = "预听音频(&P)",
 			stop_preview_audio = "停止预听(&P)",
 			lock_attr = "锁定属性",
-			reserve_formant = "保留共振峰",
+			preview_listen_attr = "预听属性",
+			preview_tune_audio = "使音频调整到主音高",
+			reserve_formant = "保持共振峰",
 			stretch_attr = "拉伸属性",
 			aconfig = "生成音频",
 			audio_stretch = "拉伸音频",
@@ -11145,6 +11575,7 @@ namespace VegasScript {
 			ytp_mirror = "镜像",
 			ytp_high_contrast = "高对比（附加增加音量）",
 			ytp_oversaturation = "过饱和（概率性附加升调效果）",
+			ytp_emphasize_thrice = "重说三（附加放大聚焦效果）",
 			ytp_info = "在当前选项卡下单击“完成”按钮，将会生成 YTP 而不是音 MAD / YTPMV。\r\n除“生成音频”“生成视频”外其它的参数设置并不会在 YTP 中使用。",
 			select_interval = "间隔选择",
 			select_interval_configform_info = "本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴视频事件”等操作。",
@@ -11162,6 +11593,12 @@ namespace VegasScript {
 			script_author = "脚本作者",
 			script_original_author = "脚本原作者",
 			documentation = "说明文档",
+			why_ok_btn_is_disabled_info = "请按照下列步骤依次检查问题：",
+			why_ok_btn_is_disabled_no_audio_and_video_enabled = "“生成音频”与“生成视频”被同时取消勾选。请至少勾选生成其中一项。",
+			why_ok_btn_is_disabled_no_media_take = "所选的媒体素材来源不包含任何有效媒体资源。",
+			why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / YTPMV，请先选择一个 MIDI 序列文件。",
+			why_ok_btn_is_disabled_in_helper_tab = "为避免误操作，切勿在“辅助功能”选项卡下进行提交生成操作。",
+			why_ok_btn_is_disabled_unknown_problem = "未知原因。",
 			no_selected_media_warning = "警告：您没有在项目媒体窗口中选中任何有效媒体素材！",
 			no_selected_clip_warning = "警告：您没有在轨道窗口中选中任何剪辑片段！",
 			preview_audio_track_name = "预听音频轨道（应该被删除！）",
@@ -11194,6 +11631,8 @@ namespace VegasScript {
 				info_label_font = "Segoe UI",
 				ui_font = "Segoe UI",
 				restart_to_effect_language = "Restart for language to take effect?",
+				version_number = "Version",
+				revision_date = "Last Revision Date",
 				midi_file_name = "MIDI Sequence",
 				all_files = "All Files",
 				choose_a_midi_file = "Please select a MIDI file",
@@ -11244,6 +11683,7 @@ namespace VegasScript {
 				midi_channel = "Channel",
 				midi_notes_count = "Notes Count",
 				midi_begin_note = "Begin Note",
+				instrument = "Instrument",
 				error_code = "Error Code:",
 				processing_otomad = "Generating Otomad/YTPMV...",
 				processing_ytp = "Generating YTP...",
@@ -11263,6 +11703,7 @@ namespace VegasScript {
 				select_events_count_info = "{0} track events have been selected.",
 				select_videotracks_count_info = "{0} video tracks have been selected.",
 				select_audioevents_count_info = "{0} audio track events have been selected.",
+				select_source_count_info = "{0} media sources has been selected.",
 				square = "Square",
 				custom = "Customize",
 				row_count = "Number of Rows",
@@ -11342,8 +11783,15 @@ namespace VegasScript {
 				no_tune = "No Tuning",
 				pitch_shift_plugin = "Pitch Shift Audio Effect Plug-in",
 				elastique_method = "Elastic Pitch Change",
+				classic_method = "Classic Pitch Change",
+				sine_wave = "Sinusoid",
+				triangle_wave = "Triangle",
+				square_wave = "Square",
+				sawtooth_wave = "Sawtooth",
 				tune_method_tooltip = "\"Pitch Shift Audio Effect Plug-in\" means to use the \"Pitch Shift\" effect plug-in in \"Audio FX\" to change the pitch, and the presets needs to be configured.\r\n\"Elastic Pitch Change\" means to use the \"Élastique\" stretching method to change the pitch, that is, the + and-keys on the keyboard directly change the pitch, and the pitch range is limited.",
 				audio_lock_stretch_pitch_tooltip = "Use resampling to change pitch as speed changes. Stretch audio will be disabled if the \"Elastic Pitch Change\" method is used.",
+				preview_beep_duration_tooltip = "The duration of pre-listening to the base pitch.\nUnit: milliseconds.",
+				preview_tune_audio_tooltip = "If checked, the audio source will be tuned to the tonic central C when pre-listening the audio.\nOtherwise, the tone which set by the base pitch will be produced when pre-listening the base pitch.",
 				sheet_position_tooltip = "The distance from the third line in the middle of the staff to the center of the screen. Up plus down minus.\nUnit: pixel.",
 				sheet_width_tooltip = "The notes will be displayed in the width filled in the middle of the screen, used for left and right white space, and left space for the clef on the left.\nUnit: pixel.",
 				sheet_gap_tooltip = "The distance between the lines in the staff.\nUnit: pixel.",
@@ -11355,13 +11803,15 @@ namespace VegasScript {
 				file = "&File",
 				save_config = "&Save User Configuration",
 				reset_config = "&Reset User Configuration",
-				exit_discarding_changes = "&Discard changes and exit",
+				exit_discarding_changes = "&Discard Changes and Exit",
 				exit = "E&xit",
 				help = "&Help",
 				user_help = "Instructions",
 				trouble_shooting = "Troubleshoot",
 				update_info = "Release Notes",
 				repository_link = "Repository Link",
+				check_update = "Check for &Updates",
+				why_ok_btn_is_disabled = "Why is the Complete Button Disabled?",
 				media = "Media",
 				audio = "Audio",
 				video = "Video",
@@ -11407,6 +11857,8 @@ namespace VegasScript {
 				preview_audio = "&Preview Audio",
 				stop_preview_audio = "Stop &Previewing",
 				lock_attr = "Lock Attrs",
+				preview_listen_attr = "Preview Attrs",
+				preview_tune_audio = "Adjust Audio to Main Pitch",
 				reserve_formant = "Reserve Formant",
 				stretch_attr = "Stretch Attrs",
 				aconfig = "Enabled",
@@ -11483,6 +11935,7 @@ namespace VegasScript {
 				ytp_mirror = "Mirroring",
 				ytp_high_contrast = "High Contrast (attach loud)",
 				ytp_oversaturation = "Oversaturation (probabily attach pitch-up effect)",
+				ytp_emphasize_thrice = "Thrice to Emphasize (attach enlarge focus effect)",
 				ytp_info = "Click the \"Complete\" button under the current tab, the YTP will be generated instead of Otomad/YTPMV.\nThe parameter settings other than \"Enabled Audio\" and \"Enabled Video\" will not effective in YTP.",
 				select_interval = "Select Interval",
 				select_interval_configform_info = "This function is designed to assist the user to select clips every one or more few, and then perform operations such as \"Paste Video Events\".",
@@ -11500,6 +11953,12 @@ namespace VegasScript {
 				script_author = "Author",
 				script_original_author = "Original Author",
 				documentation = "Documentation",
+				why_ok_btn_is_disabled_info = "Please follow these steps to check the problem in turn:",
+				why_ok_btn_is_disabled_no_audio_and_video_enabled = "Enabled Audio and Enabled Video are both unchecked. Please check to enable at least one of them.",
+				why_ok_btn_is_disabled_no_media_take = "The selected media sources does not contain any valid media takes.",
+				why_ok_btn_is_disabled_no_midi_select = "To generate Otomad/YTPMV, select a MIDI sequence file first.",
+				why_ok_btn_is_disabled_in_helper_tab = "To avoid misoperation, do not submit a build under the Accessibility tab.",
+				why_ok_btn_is_disabled_unknown_problem = "Unknown reason.",
 				no_selected_media_warning = "Warning: You have not selected any valid media in the project media window!",
 				no_selected_clip_warning = "Warning: You have not selected any clips in the track window!",
 				preview_audio_track_name = "Preview Audio Track (Should be DELETED!)",
@@ -11530,6 +11989,8 @@ namespace VegasScript {
 				info_label_font = "Microsoft JhengHei",
 				ui_font = "Microsoft JhengHei UI",
 				restart_to_effect_language = "重新啟動以使語言生效？",
+				version_number = "版本號",
+				revision_date = "最後修訂日期",
 				midi_file_name = "MIDI 序列",
 				all_files = "所有檔案",
 				choose_a_midi_file = "請選擇一個 MIDI 檔案",
@@ -11580,6 +12041,7 @@ namespace VegasScript {
 				midi_channel = "通道",
 				midi_notes_count = "音符數",
 				midi_begin_note = "起音",
+				instrument = "樂器",
 				error_code = "錯誤代碼：",
 				processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
 				processing_ytp = "正在生成 YTP⋯⋯",
@@ -11599,6 +12061,7 @@ namespace VegasScript {
 				select_events_count_info = "已選中 {0} 個軌道剪輯。",
 				select_videotracks_count_info = "已選中 {0} 個視頻軌道。",
 				select_audioevents_count_info = "已选中 {0} 個音訊軌道剪輯。",
+				select_source_count_info = "已選中 {0} 項媒體素材。",
 				square = "平方",
 				custom = "自定義",
 				row_count = "行數",
@@ -11678,8 +12141,15 @@ namespace VegasScript {
 				no_tune = "不調音",
 				pitch_shift_plugin = "移調效果挿件",
 				elastique_method = "彈性音調更改",
+				classic_method = "古典音調更改",
+				sine_wave = "正弦波",
+				triangle_wave = "三角波",
+				square_wave = "方波",
+				sawtooth_wave = "鋸齒波",
 				tune_method_tooltip = "「移調效果挿件」表示使用「音訊FX」中的「移調」效果挿件改變音調，需要配寘預設。\n「彈性音調更改」表示使用“Élastique”拉伸管道改變音調，也就是鍵盤上 +、- 鍵直接改變音調，\n有音高範圍限制。",
 				audio_lock_stretch_pitch_tooltip = "採用重採樣管道，隨著速度變化而改變音高。如果使用的是「彈性音調\n更改」方法，那麼將會禁用拉伸音訊功能。",
+				preview_beep_duration_tooltip = "預聽標準音高所持續的時間。\n單位：毫秒。",
+				preview_tune_audio_tooltip = "勾選後，預聽音訊時會將音訊素材調整到主音高中央 C。\n否則，預聽標準音高將會播放原始音高處所設定的音高。",
 				sheet_position_tooltip = "五線譜中間第三根線到荧幕中心的距離，上正下負。\n單位：點數。",
 				sheet_width_tooltip = "將在荧幕中間所填的寬度內顯示音符，用於左右留白，給左側的譜號留間距。\n單位：點數。",
 				sheet_gap_tooltip = "五線譜線與線之間的間距。\n單位：點數。",
@@ -11698,6 +12168,8 @@ namespace VegasScript {
 				trouble_shooting = "疑難排解",
 				update_info = "更新說明",
 				repository_link = "倉庫地址",
+				check_update = "檢查更新(&U)",
+				why_ok_btn_is_disabled = "為什麼無法點擊完成按鈕？",
 				media = "媒體",
 				audio = "音訊",
 				video = "視頻",
@@ -11743,6 +12215,8 @@ namespace VegasScript {
 				preview_audio = "預聽音訊(&P)",
 				stop_preview_audio = "停止預聽(&P)",
 				lock_attr = "鎖定內容",
+				preview_listen_attr = "預聽内容",
+				preview_tune_audio = "使音訊調整到主音高",
 				reserve_formant = "保留共振峰",
 				stretch_attr = "拉伸內容",
 				aconfig = "生成音訊",
@@ -11819,6 +12293,7 @@ namespace VegasScript {
 				ytp_mirror = "鏡像",
 				ytp_high_contrast = "高對比（附加增大音量）",
 				ytp_oversaturation = "過飽和（概率性附加升調效果）",
+				ytp_emphasize_thrice = "重說三（附加放大聚焦效果）",
 				ytp_info = "在當前選項卡下按一下「完成」按鈕，將會生成 YTP 而不是音 MAD / YTPMV。\n除「生成音訊」「生成視頻」外其它的參數設置並不會在 YTP 中使用。",
 				select_interval = "間隔選擇",
 				select_interval_configform_info = "本功能旨在輔助用戶每隔一個或幾個選中一個素材，然後可以執行「粘貼視頻事件」等操作。",
@@ -11836,6 +12311,12 @@ namespace VegasScript {
 				script_author = "腳本作者",
 				script_original_author = "腳本原作者",
 				documentation = "說明檔案",
+				why_ok_btn_is_disabled_info = "請按照下列步驟依次檢查問題：",
+				why_ok_btn_is_disabled_no_audio_and_video_enabled = "“生成音訊”與“生成視頻”被同時取消勾選。請至少勾選生成其中一項。",
+				why_ok_btn_is_disabled_no_media_take = "所選的媒體素材來源不包含任何有效媒體資源。",
+				why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / YTPMV，請先選擇一個 MIDI 序列檔案。",
+				why_ok_btn_is_disabled_in_helper_tab = "為避免誤操作，切勿在“協助工具”選項卡下進行提交生成操作。",
+				why_ok_btn_is_disabled_unknown_problem = "未知原因。",
 				no_selected_media_warning = "警告：您沒有在項目媒體視窗中選中任何有效媒體素材！",
 				no_selected_clip_warning = "警告：您沒有在軌道視窗中選中任何剪輯片段！",
 				preview_audio_track_name = "預聽音訊軌道（應該被删除！）",
@@ -11866,6 +12347,8 @@ namespace VegasScript {
 				info_label_font = "Yu Gothic",
 				ui_font = "Yu Gothic UI",
 				restart_to_effect_language = "言語を有効にするために再起動しますか？",
+				version_number = "バージョン番号",
+				revision_date = "最終改訂日",
 				midi_file_name = "MIDIシーケンス",
 				all_files = "すべてのファイル",
 				choose_a_midi_file = "MIDIファイルを選択してください",
@@ -11916,6 +12399,7 @@ namespace VegasScript {
 				midi_channel = "チャネル",
 				midi_notes_count = "ノートカウント",
 				midi_begin_note = "開始メモ",
+				instrument = "樂器",
 				error_code = "エラーコード：",
 				processing_otomad = "音MAD/YTPMVを生成中...",
 				processing_ytp = "YTPを生成中...",
@@ -11935,6 +12419,7 @@ namespace VegasScript {
 				select_events_count_info = "{0}トラックイベントが選択されました。",
 				select_videotracks_count_info = "{0}ビデオトラックが選択されました。",
 				select_audioevents_count_info = "{0}オーディオトラックイベントが選択されました。",
+				select_source_count_info = "{0}メディア素材が選択されました。",
 				square = "四角",
 				custom = "カスタマイズ",
 				row_count = "行の数",
@@ -12015,8 +12500,15 @@ namespace VegasScript {
 				no_tune = "チューニングなし",
 				pitch_shift_plugin = "ピッチシフトオーディオエフェクトプラグイン",
 				elastique_method = "弾性ピッチ変化",
+				classic_method = "古典ピッチ変化",
+				sine_wave = "正弦波",
+				triangle_wave = "三角波",
+				square_wave = "方形波",
+				sawtooth_wave = "鋸歯状波",
 				tune_method_tooltip = "「ピッチシフトオーディオエフェクトプラグイン」とは、「オーディオFX」の「ピッチシフト」エフェクトプラグインを使用してピッチを変更することを意味し、プリセットを設定する必要があります。\n「エラスティックピッチチェンジ」とは、「エラスティック」ストレッチ方式でピッチを変更することを意味します。つまり、キーボードの+キーと-キーで直接ピッチを変更し、ピッチ範囲を制限します。",
 				audio_lock_stretch_pitch_tooltip = "速度の変化に応じてピッチを変更するためにリサンプリング方式を採用していることを意味します。「エラスティックピッチチェンジ」を使用している場合、\nストレッチオーディオオプションは無効になります。",
+				preview_beep_duration_tooltip = "ベースピッチにプレビューの持続時間。\n単位：ミリ秒。",
+				preview_tune_audio_tooltip = "チェックを付けると、オーディオの予聴時に、オーディオ素材を主音の高い中央Cに調整します。\n標準音の高さを予聴すると、元の音の高さに設定された音の高さが再生されます。",
 				sheet_position_tooltip = "スタッフ中央の3行目から画面中央までの距離。アッププラスダウンマイナス。\n単位：ピクセル。",
 				sheet_width_tooltip = "メモは、画面の中央に入力された幅で表示され、左右の空白に使用され、左側の音部記号の左側のスペースに使用されます。\n単位：ピクセル。",
 				sheet_gap_tooltip = "スタッフの線の間の距離。\n単位：ピクセル。",
@@ -12035,6 +12527,8 @@ namespace VegasScript {
 				trouble_shooting = "トラブルシューティング",
 				update_info = "リリースノート",
 				repository_link = "リポジトリリンク",
+				check_update = "更新を確認(&U)",
+				why_ok_btn_is_disabled = "なぜ［完了］ボタンをクリックできないですか？",
 				media = "メディア",
 				audio = "オーディオ",
 				video = "ビデオ",
@@ -12080,6 +12574,8 @@ namespace VegasScript {
 				preview_audio = "音声のプレビュー(&P)",
 				stop_preview_audio = "プレビューを停止(&P)",
 				lock_attr = "ロック属性",
+				preview_listen_attr = "プレビュー属性",
+				preview_tune_audio = "オーディオを主音の高さに調整する",
 				reserve_formant = "フォルマントを保持",
 				stretch_attr = "引張り属性",
 				aconfig = "オーディオを有効",
@@ -12156,6 +12652,7 @@ namespace VegasScript {
 				ytp_mirror = "鏡像",
 				ytp_high_contrast = "ハイコントラスト（大声で添付）",
 				ytp_oversaturation = "過飽和（おそらくピッチアップ効果を付ける）",
+				ytp_emphasize_thrice = "三回強調する（焦点を拡大効果を付ける）",
 				ytp_info = "現在のタブの下にある［完了］ボタンをクリックすると、音MAD/YTPMVの代わりにYTPが生成されます。\n「オーディオを有効」と「ビデオを有効」以外のパラメータ設定は、YTPでは有効になりません。",
 				select_interval = "間隔を選択",
 				select_interval_configform_info = "この機能は、ユーザーが1つまたは複数のクリップごとにクリップを選択し、「ビデオイベントの貼り付け」などの操作を実行できるように設計されています。",
@@ -12173,6 +12670,12 @@ namespace VegasScript {
 				script_author = "著者",
 				script_original_author = "原著者",
 				documentation = "説明文書",
+				why_ok_btn_is_disabled_info = "次の手順に従って順番に問題を確認してください：",
+				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「オーディオを有効」と「ビデオを有効」は同時にチェックアウトされます。少なくとも一つを有効にしてください。",
+				why_ok_btn_is_disabled_no_media_take = "選択されたメディア素材のソースには、有効なメディアリソースが含まれていません。",
+				why_ok_btn_is_disabled_no_midi_select = "音MAD/YTPMVを生成するには、まずMIDIシーケンスファイルを選択してください。",
+				why_ok_btn_is_disabled_in_helper_tab = "誤操作を避けるためには、「アクセシビリティ」タブで作成操作を提出しないでください。",
+				why_ok_btn_is_disabled_unknown_problem = "原因は不明です。",
 				no_selected_media_warning = "警告：プロジェクトメディアウィンドウで有効なメディアを選択していません！",
 				no_selected_clip_warning = "警告：トラックウィンドウでクリップを選択していません！",
 				preview_audio_track_name = "オーディオトラックのプレビュー（削除する必要があります！）",
@@ -12203,6 +12706,8 @@ namespace VegasScript {
 				info_label_font = "Segoe UI",
 				ui_font = "Segoe UI",
 				restart_to_effect_language = "Перезагрузить, чтобы язык вступил в силу?",
+				version_number = "номер версии",
+				revision_date = "Дата последнего изменения",
 				midi_file_name = "MIDI последовательность",
 				all_files = "Все файлы",
 				choose_a_midi_file = "Пожалуйста, выберите файл MIDI",
@@ -12253,6 +12758,7 @@ namespace VegasScript {
 				midi_channel = "Канал",
 				midi_notes_count = "Количество нот",
 				midi_begin_note = "Начать заметку",
+				instrument = "Инструмент",
 				error_code = "Код ошибки:",
 				processing_otomad = "Создание Отомад / УТРМѴ ...",
 				processing_ytp = "Создание УТР ...",
@@ -12272,6 +12778,7 @@ namespace VegasScript {
 				select_events_count_info = "Выбрано событий отслеживания {0}.",
 				select_videotracks_count_info = "Выбрано {0} видеодорожек.",
 				select_audioevents_count_info = "Выбран набор дорожек для аудио {0}.",
+				select_source_count_info = "Выделен материал для медиа {0}.",
 				square = "Квадрат",
 				custom = "Настроить",
 				row_count = "Количество рядов",
@@ -12351,7 +12858,12 @@ namespace VegasScript {
 				source_end_time_tooltip = "Обратите внимание: если введенное здесь значение меньше или равно количеству стартовых секунд, это всегда означает, что оно длится до конца медиа-времени.\nЕдиница: секунды.",
 				no_tune = "Нет настройки",
 				pitch_shift_plugin = "Плагин звукового эффекта Pitch Shift",
-				elastique_method = "Упругое изменение шага",
+				elastique_method = "Эластик изменение шага",
+				classic_method = "Классический изменение шага",
+				sine_wave = "синусоидальная",
+				triangle_wave = "треугольная",
+				square_wave = "прямоугольная",
+				sawtooth_wave = "пилообразная",
 				tune_method_tooltip = "«Подключаемый модуль звукового эффекта« Pitch Shift »» означает использование подключаемого модуля эффекта «Pitch Shift» в «Audio FX» для изменения высоты звука, а предустановки должны быть настроены.\n«Эластичное изменение высоты звука» означает использование метода растяжения «Élastique» для изменения высоты звука, то есть клавиши + и -на клавиатуре напрямую изменяют высоту звука, а диапазон высоты звука ограничен.",
 				audio_lock_stretch_pitch = "Что используется метод повторной выборки для изменения высоты звука при изменении скорости. Если вы используете «Эластичное изменение высоты тона»,\nопция растягивания звука будет отключена.",
 				sheet_position_tooltip = "Расстояние от третьей строки посередине нотоносца до центра экрана. Вверх плюс вниз минус.\nЕдиница: пиксель.",
@@ -12372,6 +12884,8 @@ namespace VegasScript {
 				trouble_shooting = "Устранение неполадок",
 				update_info = "Примечания к выпуску",
 				repository_link = "Ссылка на репозиторий",
+				check_update = "Проверять &Обновление",
+				why_ok_btn_is_disabled = "Почему невозможно нажать кнопку завершения?",
 				media = "СМИ",
 				audio = "Аудио",
 				video = "видео",
@@ -12417,6 +12931,8 @@ namespace VegasScript {
 				preview_audio = "&Предварительный просмотр аудио",
 				stop_preview_audio = "Остановить &предварительный просмотр",
 				lock_attr = "Заблокировать атрибут",
+				preview_listen_attr = "Свойства подслушивания",
+				preview_tune_audio = "Настройка звука на громкость",
 				reserve_formant = "зарезервированный резонансный пик",
 				stretch_attr = "Свойства растяжения",
 				aconfig = "Включено",
@@ -12424,6 +12940,8 @@ namespace VegasScript {
 				audio_loop = "Петля",
 				audio_normalize = "Нормализовать",
 				audio_lock_stretch_pitch_tooltip = "Заблокировать расширение и тональность",
+				preview_beep_duration_tooltip = "время ожидания стандартного фонетического сигнала.\nв миллисекундах.",
+				preview_tune_audio_tooltip = "после включения, при предварительном прослушивании аудио материал будет скорректирован на основной звук средней школы с.\nВ противном случае стандартная высота звука будет воспроизвести заданную высота звука.",
 				video_glow_bright = "Яркость свечения",
 				video_glow = "Светиться",
 				video_start_size = "Начальный размер",
@@ -12493,6 +13011,7 @@ namespace VegasScript {
 				ytp_mirror = "Зеркальное отображение",
 				ytp_high_contrast = "Высокая контрастность (добавляйте громко)",
 				ytp_oversaturation = "Перенасыщение (возможно, добавление эффекта тангажа)",
+				ytp_emphasize_thrice = "тройной акцент (дополнительный эффект усиления)",
 				ytp_info = "Нажмите кнопку «Завершить» под текущей вкладкой, YTP будет создан вместо Otomad / YTPMV.\nНастройки параметров, отличные от «Enabled Audio» и «Enabled Video», не будут действовать в YTP.",
 				select_interval = "Выберите интервал",
 				select_interval_configform_info = "Эта функция разработана, чтобы помочь пользователю выбирать клипы каждые несколько или несколько, а затем выполнять такие операции, как «вставка видео-события».",
@@ -12510,6 +13029,12 @@ namespace VegasScript {
 				script_author = "Автор",
 				script_original_author = "Автор оригинала",
 				documentation = "Описание документа",
+				why_ok_btn_is_disabled_info = "Пожалуйста, проверьте вопрос по порядку:",
+				why_ok_btn_is_disabled_no_audio_and_video_enabled = "создание аудио и создание видео были отменены одновременно. Выберите хотя бы один из них.",
+				why_ok_btn_is_disabled_no_media_take = "выбранный источник материалов для СМИ не содержит никаких эффективных средств массовой информации.",
+				why_ok_btn_is_disabled_no_midi_select = "для создания Otomad/YTPMV Выберите файл последовательности MIDI.",
+				why_ok_btn_is_disabled_in_helper_tab = "во избежание неправильной операции не следует представлять генерирующие операции на вкладке \"дополнительные функции\".",
+				why_ok_btn_is_disabled_unknown_problem = "Неизвестная причина.",
 				no_selected_media_warning = "Предупреждение: Вы не выбрали ни одного допустимого носителя в окне мультимедиа проекта!",
 				no_selected_clip_warning = "Предупреждение: Вы не выбрали ни одного клипа в окне трека!",
 				preview_audio_track_name = "Предварительный просмотр аудиодорожки (УДАЛЕНО!)",
