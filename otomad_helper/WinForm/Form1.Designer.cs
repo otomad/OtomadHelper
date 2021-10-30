@@ -32,13 +32,7 @@ namespace VegasScript {
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.StaffLineColorDialog = new System.Windows.Forms.ColorDialog();
 			this.Balloon = new System.Windows.Forms.ToolTip(this.components);
-			this.MidiBeatCombo = new System.Windows.Forms.ComboBox();
 			this.AudioTuneMethodCombo = new System.Windows.Forms.ComboBox();
-			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
-			this.MidiStartSecondBox = new VegasScript.TimecodeBox();
-			this.MidiEndSecondBox = new VegasScript.TimecodeBox();
-			this.SourceStartTimeText = new VegasScript.TimecodeBox();
-			this.SourceEndTimeText = new VegasScript.TimecodeBox();
 			this.AudioLockStretchPitchCheck = new System.Windows.Forms.CheckBox();
 			this.YtpMaxLenBox = new System.Windows.Forms.NumericUpDown();
 			this.YtpMinLenBox = new System.Windows.Forms.NumericUpDown();
@@ -46,6 +40,13 @@ namespace VegasScript {
 			this.StaffSurfacePositionBox = new System.Windows.Forms.NumericUpDown();
 			this.StaffSurfaceWidthBox = new System.Windows.Forms.NumericUpDown();
 			this.StaffLineSpacingBox = new System.Windows.Forms.NumericUpDown();
+			this.PreviewBeepDurationBox = new System.Windows.Forms.NumericUpDown();
+			this.PreviewTuneAudioCheck = new System.Windows.Forms.CheckBox();
+			this.MidiStartSecondBox = new VegasScript.TimecodeBox();
+			this.MidiEndSecondBox = new VegasScript.TimecodeBox();
+			this.SourceStartTimeText = new VegasScript.TimecodeBox();
+			this.SourceEndTimeText = new VegasScript.TimecodeBox();
+			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
 			this.AudioStretchAttrCombo = new System.Windows.Forms.ComboBox();
 			this.menu = new System.Windows.Forms.MenuStrip();
 			this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,11 +56,14 @@ namespace VegasScript {
 			this.exitDiscardingChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.versionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.whyOkBtnIsDisabledToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+			this.checkUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.updateInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.userHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.troubleShootingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.updateInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.githubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.languageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.chineseToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
@@ -81,6 +85,7 @@ namespace VegasScript {
 			this.MidiChannelCombo = new System.Windows.Forms.ComboBox();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
 			this.MidiBeatLbl = new System.Windows.Forms.Label();
+			this.MidiBeatTxt = new System.Windows.Forms.TextBox();
 			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			this.MidiStartSecondLbl = new System.Windows.Forms.Label();
 			this.MidiEndSecondLbl = new System.Windows.Forms.Label();
@@ -126,6 +131,10 @@ namespace VegasScript {
 			this.AudioPreviewLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
 			this.PreviewAudioBtn = new System.Windows.Forms.Button();
+			this.AudioPreviewAttrLbl = new System.Windows.Forms.Label();
+			this.AudioPreviewAttrLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.PreviewBeepWaveFormCombo = new System.Windows.Forms.ComboBox();
+			this.PreviewBeepDurationUnitLbl = new System.Windows.Forms.Label();
 			this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioConfigCheck = new System.Windows.Forms.CheckBox();
 			this.AudioScratchCheck = new System.Windows.Forms.CheckBox();
@@ -205,19 +214,13 @@ namespace VegasScript {
 			this.YtpEffectsGroup = new System.Windows.Forms.GroupBox();
 			this.YtpEnableAllEffectsCheck = new System.Windows.Forms.CheckBox();
 			this.YtpEffectsCheckList = new System.Windows.Forms.CheckedListBox();
+			this.YtpSelectInfo = new System.Windows.Forms.Label();
 			this.YtpLbl = new System.Windows.Forms.Label();
 			this.HelperTab = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
-			this.SelectIntervalGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
-			this.SelectIntervalLbl = new System.Windows.Forms.Label();
-			this.SelectIntervalSelectInfo = new System.Windows.Forms.Label();
-			this.QuickSelectIntervalBtn = new System.Windows.Forms.Button();
-			this.ReplaceClipsGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
-			this.ReplaceClipsLbl = new System.Windows.Forms.Label();
-			this.ReplaceClipsSelectInfo = new System.Windows.Forms.Label();
-			this.ReplaceClipsBtn = new System.Windows.Forms.Button();
+			this.QuickSelectIntervalBtn = new VegasScript.CommandLinkButton();
+			this.ReplaceClipsBtn = new VegasScript.CommandLinkButton();
+			this.ChangeTuneMethodBtn = new VegasScript.CommandLinkButton();
 			this.AutoLayoutTracksGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
 			this.AutoLayoutTracksLbl = new System.Windows.Forms.Label();
@@ -229,11 +232,6 @@ namespace VegasScript {
 			this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
 			this.ClearTrackMotionBtn = new System.Windows.Forms.Button();
 			this.ClearTrackEffectBtn = new System.Windows.Forms.Button();
-			this.ChangeTuneMethodGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel18 = new System.Windows.Forms.TableLayoutPanel();
-			this.ChangeTuneMethodLbl = new System.Windows.Forms.Label();
-			this.ChangeTuneMethodSelectInfo = new System.Windows.Forms.Label();
-			this.ChangeTuneMethodBtn = new System.Windows.Forms.Button();
 			this.tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
 			this.HelperLbl = new System.Windows.Forms.Label();
 			this.HelperWarningLbl = new System.Windows.Forms.Label();
@@ -243,6 +241,7 @@ namespace VegasScript {
 			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffSurfaceWidthBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			this.menu.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.Tabs.SuspendLayout();
@@ -267,6 +266,7 @@ namespace VegasScript {
 			this.flowLayoutPanel10.SuspendLayout();
 			this.flowLayoutPanel6.SuspendLayout();
 			this.tableLayoutPanel17.SuspendLayout();
+			this.AudioPreviewAttrLayoutPanel.SuspendLayout();
 			this.flowLayoutPanel5.SuspendLayout();
 			this.VideoTab.SuspendLayout();
 			this.VideoParamsGroup.SuspendLayout();
@@ -287,16 +287,10 @@ namespace VegasScript {
 			this.YtpEffectsGroup.SuspendLayout();
 			this.HelperTab.SuspendLayout();
 			this.tableLayoutPanel11.SuspendLayout();
-			this.SelectIntervalGroup.SuspendLayout();
-			this.tableLayoutPanel12.SuspendLayout();
-			this.ReplaceClipsGroup.SuspendLayout();
-			this.tableLayoutPanel13.SuspendLayout();
 			this.AutoLayoutTracksGroup.SuspendLayout();
 			this.tableLayoutPanel14.SuspendLayout();
 			this.AutoLayoutTracksButtons.SuspendLayout();
 			this.tableLayoutPanel15.SuspendLayout();
-			this.ChangeTuneMethodGroup.SuspendLayout();
-			this.tableLayoutPanel18.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -392,25 +386,6 @@ namespace VegasScript {
 			this.Balloon.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.Balloon.ToolTipTitle = "填写说明";
 			// 
-			// MidiBeatCombo
-			// 
-			this.MidiBeatCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.MidiBeatCombo.Enabled = false;
-			this.MidiBeatCombo.FormattingEnabled = true;
-			this.MidiBeatCombo.Items.AddRange(new object[] {
-            "2∕4",
-            "3∕4",
-            "4∕4",
-            "5∕4",
-            "6∕4",
-            "7∕4",
-            "8∕4"});
-			this.MidiBeatCombo.Location = new System.Drawing.Point(61, 3);
-			this.MidiBeatCombo.Name = "MidiBeatCombo";
-			this.MidiBeatCombo.Size = new System.Drawing.Size(85, 23);
-			this.MidiBeatCombo.TabIndex = 1;
-			this.Balloon.SetToolTip(this.MidiBeatCombo, "目前仅用于五线谱的分页功能。\r\n暂时无法通过 MIDI 文件自动推测。");
-			// 
 			// AudioTuneMethodCombo
 			// 
 			this.AudioTuneMethodCombo.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -419,71 +394,15 @@ namespace VegasScript {
 			this.AudioTuneMethodCombo.Items.AddRange(new object[] {
             "不调音",
             "移调效果插件",
-            "弹性音调更改"});
+            "弹性音调更改",
+            "古典音调更改"});
 			this.AudioTuneMethodCombo.Location = new System.Drawing.Point(64, 3);
 			this.AudioTuneMethodCombo.Name = "AudioTuneMethodCombo";
 			this.AudioTuneMethodCombo.Size = new System.Drawing.Size(453, 23);
 			this.AudioTuneMethodCombo.TabIndex = 2;
 			this.Balloon.SetToolTip(this.AudioTuneMethodCombo, "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\r\n“弹性音调更改”表示使用“Élastique”拉伸方式改变音调，也就是键盘上" +
         " +、- 键直接改变音调，\r\n有音高范围限制。");
-			// 
-			// PreviewBasePitchBtn
-			// 
-			this.PreviewBasePitchBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PreviewBasePitchBtn.Location = new System.Drawing.Point(2, 3);
-			this.PreviewBasePitchBtn.Margin = new System.Windows.Forms.Padding(2, 3, 3, 3);
-			this.PreviewBasePitchBtn.Name = "PreviewBasePitchBtn";
-			this.PreviewBasePitchBtn.Size = new System.Drawing.Size(224, 23);
-			this.PreviewBasePitchBtn.TabIndex = 1;
-			this.PreviewBasePitchBtn.Text = "预听标准音高(&B)";
-			this.Balloon.SetToolTip(this.PreviewBasePitchBtn, "请确保开启声音并且未将声音方案设置为无声。\r\n如果仍没有声音，请重启系统。");
-			this.PreviewBasePitchBtn.UseVisualStyleBackColor = true;
-			this.PreviewBasePitchBtn.Click += new System.EventHandler(this.PreviewBasePitchBtn_MouseDown);
-			// 
-			// MidiStartSecondBox
-			// 
-			this.MidiStartSecondBox.DoubleValue = 0D;
-			this.MidiStartSecondBox.Enabled = false;
-			this.MidiStartSecondBox.Location = new System.Drawing.Point(61, 3);
-			this.MidiStartSecondBox.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
-			this.MidiStartSecondBox.Name = "MidiStartSecondBox";
-			this.MidiStartSecondBox.Size = new System.Drawing.Size(85, 23);
-			this.MidiStartSecondBox.TabIndex = 3;
-			this.Balloon.SetToolTip(this.MidiStartSecondBox, "用于截取 MIDI 音乐的一部分。\r\n单位：秒。");
-			this.MidiStartSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			// 
-			// MidiEndSecondBox
-			// 
-			this.MidiEndSecondBox.DoubleValue = 0D;
-			this.MidiEndSecondBox.Enabled = false;
-			this.MidiEndSecondBox.Location = new System.Drawing.Point(222, 3);
-			this.MidiEndSecondBox.Name = "MidiEndSecondBox";
-			this.MidiEndSecondBox.Size = new System.Drawing.Size(85, 23);
-			this.MidiEndSecondBox.TabIndex = 4;
-			this.Balloon.SetToolTip(this.MidiEndSecondBox, "此处填写需要读取 MIDI 文件的时间长度。\r\n注意如果填写的值过小，将截去多余时间部分的音符。\r\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时" +
-        "长末尾。\r\n单位：秒。");
-			this.MidiEndSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			// 
-			// SourceStartTimeText
-			// 
-			this.SourceStartTimeText.DoubleValue = 0D;
-			this.SourceStartTimeText.Location = new System.Drawing.Point(61, 3);
-			this.SourceStartTimeText.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
-			this.SourceStartTimeText.Name = "SourceStartTimeText";
-			this.SourceStartTimeText.Size = new System.Drawing.Size(85, 23);
-			this.SourceStartTimeText.TabIndex = 4;
-			this.Balloon.SetToolTip(this.SourceStartTimeText, "此处填写媒体素材裁剪的开始时间。\r\n单位：秒。");
-			this.SourceStartTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			// 
-			// SourceEndTimeText
-			// 
-			this.SourceEndTimeText.DoubleValue = 0D;
-			this.SourceEndTimeText.Location = new System.Drawing.Point(222, 3);
-			this.SourceEndTimeText.Name = "SourceEndTimeText";
-			this.SourceEndTimeText.Size = new System.Drawing.Size(85, 23);
-			this.SourceEndTimeText.TabIndex = 5;
-			this.Balloon.SetToolTip(this.SourceEndTimeText, "注意如果此处填写的数值比入点秒数小或相等，则始终表示持续到素材时间末尾。\r\n单位：秒。");
-			this.SourceEndTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			this.AudioTuneMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioTuneMethodCombo_SelectedIndexChanged);
 			// 
 			// AudioLockStretchPitchCheck
 			// 
@@ -624,16 +543,103 @@ namespace VegasScript {
             0,
             0});
 			// 
+			// PreviewBeepDurationBox
+			// 
+			this.PreviewBeepDurationBox.Location = new System.Drawing.Point(109, 3);
+			this.PreviewBeepDurationBox.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+			this.PreviewBeepDurationBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.PreviewBeepDurationBox.Name = "PreviewBeepDurationBox";
+			this.PreviewBeepDurationBox.Size = new System.Drawing.Size(70, 23);
+			this.PreviewBeepDurationBox.TabIndex = 5;
+			this.Balloon.SetToolTip(this.PreviewBeepDurationBox, "预听标准音高所持续的时间。\r\n单位：毫秒。");
+			this.PreviewBeepDurationBox.Value = new decimal(new int[] {
+            800,
+            0,
+            0,
+            0});
+			// 
+			// PreviewTuneAudioCheck
+			// 
+			this.PreviewTuneAudioCheck.AutoSize = true;
+			this.PreviewTuneAudioCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PreviewTuneAudioCheck.Location = new System.Drawing.Point(214, 3);
+			this.PreviewTuneAudioCheck.Name = "PreviewTuneAudioCheck";
+			this.PreviewTuneAudioCheck.Size = new System.Drawing.Size(134, 23);
+			this.PreviewTuneAudioCheck.TabIndex = 7;
+			this.PreviewTuneAudioCheck.Text = "使音频调整到主音高";
+			this.Balloon.SetToolTip(this.PreviewTuneAudioCheck, "勾选后，预听音频时会将音频素材调整到主音高中央 C。\r\n否则，预听标准音高将会播放原始音高所设定的音高。");
+			this.PreviewTuneAudioCheck.UseVisualStyleBackColor = true;
+			// 
+			// MidiStartSecondBox
+			// 
+			this.MidiStartSecondBox.DoubleValue = 0D;
+			this.MidiStartSecondBox.Enabled = false;
+			this.MidiStartSecondBox.Location = new System.Drawing.Point(61, 3);
+			this.MidiStartSecondBox.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
+			this.MidiStartSecondBox.Name = "MidiStartSecondBox";
+			this.MidiStartSecondBox.Size = new System.Drawing.Size(85, 23);
+			this.MidiStartSecondBox.TabIndex = 3;
+			this.Balloon.SetToolTip(this.MidiStartSecondBox, "用于截取 MIDI 音乐的一部分。\r\n单位：秒。");
+			this.MidiStartSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// MidiEndSecondBox
+			// 
+			this.MidiEndSecondBox.DoubleValue = 0D;
+			this.MidiEndSecondBox.Enabled = false;
+			this.MidiEndSecondBox.Location = new System.Drawing.Point(222, 3);
+			this.MidiEndSecondBox.Name = "MidiEndSecondBox";
+			this.MidiEndSecondBox.Size = new System.Drawing.Size(85, 23);
+			this.MidiEndSecondBox.TabIndex = 4;
+			this.Balloon.SetToolTip(this.MidiEndSecondBox, "此处填写需要读取 MIDI 文件的时间长度。\r\n注意如果填写的值过小，将截去多余时间部分的音符。\r\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时" +
+        "长末尾。\r\n单位：秒。");
+			this.MidiEndSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// SourceStartTimeText
+			// 
+			this.SourceStartTimeText.DoubleValue = 0D;
+			this.SourceStartTimeText.Location = new System.Drawing.Point(61, 3);
+			this.SourceStartTimeText.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
+			this.SourceStartTimeText.Name = "SourceStartTimeText";
+			this.SourceStartTimeText.Size = new System.Drawing.Size(85, 23);
+			this.SourceStartTimeText.TabIndex = 4;
+			this.Balloon.SetToolTip(this.SourceStartTimeText, "此处填写媒体素材裁剪的开始时间。\r\n单位：秒。");
+			this.SourceStartTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// SourceEndTimeText
+			// 
+			this.SourceEndTimeText.DoubleValue = 0D;
+			this.SourceEndTimeText.Location = new System.Drawing.Point(222, 3);
+			this.SourceEndTimeText.Name = "SourceEndTimeText";
+			this.SourceEndTimeText.Size = new System.Drawing.Size(85, 23);
+			this.SourceEndTimeText.TabIndex = 5;
+			this.Balloon.SetToolTip(this.SourceEndTimeText, "注意如果此处填写的数值比入点秒数小或相等，则始终表示持续到素材时间末尾。\r\n单位：秒。");
+			this.SourceEndTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// PreviewBasePitchBtn
+			// 
+			this.PreviewBasePitchBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PreviewBasePitchBtn.Location = new System.Drawing.Point(2, 3);
+			this.PreviewBasePitchBtn.Margin = new System.Windows.Forms.Padding(2, 3, 3, 3);
+			this.PreviewBasePitchBtn.Name = "PreviewBasePitchBtn";
+			this.PreviewBasePitchBtn.Size = new System.Drawing.Size(224, 23);
+			this.PreviewBasePitchBtn.TabIndex = 1;
+			this.PreviewBasePitchBtn.Text = "预听标准音高(&B)";
+			this.PreviewBasePitchBtn.UseVisualStyleBackColor = true;
+			this.PreviewBasePitchBtn.Click += new System.EventHandler(this.PreviewBasePitchBtn_MouseDown);
+			// 
 			// AudioStretchAttrCombo
 			// 
 			this.AudioStretchAttrCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioStretchAttrCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.AudioStretchAttrCombo.FormattingEnabled = true;
-			this.AudioStretchAttrCombo.Items.AddRange(new object[] {
-            "专业",
-            "高效",
-            "独奏（单声道）",
-            "独奏（语音）"});
 			this.AudioStretchAttrCombo.Location = new System.Drawing.Point(64, 32);
 			this.AudioStretchAttrCombo.Name = "AudioStretchAttrCombo";
 			this.AudioStretchAttrCombo.Size = new System.Drawing.Size(453, 23);
@@ -668,25 +674,27 @@ namespace VegasScript {
 			// saveConfigToolStripMenuItem
 			// 
 			this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
-			this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.saveConfigToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+			this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
 			this.saveConfigToolStripMenuItem.Text = "保存用户配置(&S)";
 			// 
 			// resetConfigToolStripMenuItem
 			// 
 			this.resetConfigToolStripMenuItem.Name = "resetConfigToolStripMenuItem";
-			this.resetConfigToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.resetConfigToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
 			this.resetConfigToolStripMenuItem.Text = "重置用户配置(&R)";
 			this.resetConfigToolStripMenuItem.Click += new System.EventHandler(this.resetConfigToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(171, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(213, 6);
 			// 
 			// exitDiscardingChangesToolStripMenuItem
 			// 
 			this.exitDiscardingChangesToolStripMenuItem.Name = "exitDiscardingChangesToolStripMenuItem";
-			this.exitDiscardingChangesToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.exitDiscardingChangesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+			this.exitDiscardingChangesToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
 			this.exitDiscardingChangesToolStripMenuItem.Text = "放弃更改并退出(&D)";
 			this.exitDiscardingChangesToolStripMenuItem.Click += new System.EventHandler(this.exitDiscardingChangesToolStripMenuItem_Click);
 			// 
@@ -694,56 +702,80 @@ namespace VegasScript {
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
 			this.exitToolStripMenuItem.ShortcutKeyDisplayString = "Esc";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
 			this.exitToolStripMenuItem.Text = "退出(&X)";
 			// 
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.versionToolStripMenuItem,
             this.aboutToolStripMenuItem,
+            this.whyOkBtnIsDisabledToolStripMenuItem,
             this.toolStripMenuItem2,
+            this.checkUpdateToolStripMenuItem,
+            this.updateInfoToolStripMenuItem,
             this.userHelpToolStripMenuItem,
             this.troubleShootingToolStripMenuItem,
-            this.updateInfoToolStripMenuItem,
             this.githubToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(60, 19);
 			this.helpToolStripMenuItem.Text = "帮助(&H)";
 			// 
+			// versionToolStripMenuItem
+			// 
+			this.versionToolStripMenuItem.Enabled = false;
+			this.versionToolStripMenuItem.Name = "versionToolStripMenuItem";
+			this.versionToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.versionToolStripMenuItem.Text = "版本号";
+			// 
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
 			this.aboutToolStripMenuItem.ShortcutKeyDisplayString = "Alt+A";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
 			this.aboutToolStripMenuItem.Text = "关于(&A)";
+			// 
+			// whyOkBtnIsDisabledToolStripMenuItem
+			// 
+			this.whyOkBtnIsDisabledToolStripMenuItem.Name = "whyOkBtnIsDisabledToolStripMenuItem";
+			this.whyOkBtnIsDisabledToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.whyOkBtnIsDisabledToolStripMenuItem.Text = "为什么无法点击完成按钮？";
+			this.whyOkBtnIsDisabledToolStripMenuItem.Visible = false;
+			this.whyOkBtnIsDisabledToolStripMenuItem.Click += new System.EventHandler(this.WhyOkBtnIsDisabledToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(215, 6);
+			// 
+			// checkUpdateToolStripMenuItem
+			// 
+			this.checkUpdateToolStripMenuItem.Name = "checkUpdateToolStripMenuItem";
+			this.checkUpdateToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.checkUpdateToolStripMenuItem.Text = "检查更新(&U)";
+			// 
+			// updateInfoToolStripMenuItem
+			// 
+			this.updateInfoToolStripMenuItem.Name = "updateInfoToolStripMenuItem";
+			this.updateInfoToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
+			this.updateInfoToolStripMenuItem.Text = "更新说明";
 			// 
 			// userHelpToolStripMenuItem
 			// 
 			this.userHelpToolStripMenuItem.Name = "userHelpToolStripMenuItem";
-			this.userHelpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.userHelpToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
 			this.userHelpToolStripMenuItem.Text = "使用说明";
 			// 
 			// troubleShootingToolStripMenuItem
 			// 
 			this.troubleShootingToolStripMenuItem.Name = "troubleShootingToolStripMenuItem";
-			this.troubleShootingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.troubleShootingToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
 			this.troubleShootingToolStripMenuItem.Text = "疑难解答";
-			// 
-			// updateInfoToolStripMenuItem
-			// 
-			this.updateInfoToolStripMenuItem.Name = "updateInfoToolStripMenuItem";
-			this.updateInfoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.updateInfoToolStripMenuItem.Text = "更新说明";
 			// 
 			// githubToolStripMenuItem
 			// 
 			this.githubToolStripMenuItem.Name = "githubToolStripMenuItem";
-			this.githubToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.githubToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
 			this.githubToolStripMenuItem.Text = "仓库地址";
 			// 
 			// languageToolStripMenuItem
@@ -820,7 +852,7 @@ namespace VegasScript {
 			this.Tabs.Controls.Add(this.HelperTab);
 			this.Tabs.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Tabs.Location = new System.Drawing.Point(8, 0);
-			this.Tabs.Margin = new System.Windows.Forms.Padding(4);
+			this.Tabs.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
@@ -830,6 +862,7 @@ namespace VegasScript {
 			// SourceTab
 			// 
 			this.SourceTab.AutoScroll = true;
+			this.SourceTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.SourceTab.Controls.Add(this.WarningInfoLabel);
 			this.SourceTab.Controls.Add(this.MidiConfigGroup);
 			this.SourceTab.Controls.Add(this.SourceConfigGroup);
@@ -839,7 +872,6 @@ namespace VegasScript {
 			this.SourceTab.Size = new System.Drawing.Size(540, 552);
 			this.SourceTab.TabIndex = 0;
 			this.SourceTab.Text = "媒体";
-			this.SourceTab.UseVisualStyleBackColor = true;
 			// 
 			// WarningInfoLabel
 			// 
@@ -847,7 +879,8 @@ namespace VegasScript {
 			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
 			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(5, 417);
+			this.WarningInfoLabel.Location = new System.Drawing.Point(5, 414);
+			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(540, 0);
 			this.WarningInfoLabel.Name = "WarningInfoLabel";
 			this.WarningInfoLabel.Padding = new System.Windows.Forms.Padding(3);
 			this.WarningInfoLabel.Size = new System.Drawing.Size(6, 26);
@@ -861,7 +894,7 @@ namespace VegasScript {
 			this.MidiConfigGroup.Location = new System.Drawing.Point(5, 165);
 			this.MidiConfigGroup.Name = "MidiConfigGroup";
 			this.MidiConfigGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.MidiConfigGroup.Size = new System.Drawing.Size(530, 252);
+			this.MidiConfigGroup.Size = new System.Drawing.Size(530, 249);
 			this.MidiConfigGroup.TabIndex = 2;
 			this.MidiConfigGroup.TabStop = false;
 			this.MidiConfigGroup.Text = "MIDI 属性";
@@ -891,7 +924,7 @@ namespace VegasScript {
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel5.Size = new System.Drawing.Size(520, 226);
+			this.tableLayoutPanel5.Size = new System.Drawing.Size(520, 223);
 			this.tableLayoutPanel5.TabIndex = 1;
 			// 
 			// ChooseMidiLbl
@@ -946,8 +979,8 @@ namespace VegasScript {
 			// 
 			this.MidiChannelLbl.AutoSize = true;
 			this.MidiChannelLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MidiChannelLbl.Location = new System.Drawing.Point(3, 53);
-			this.MidiChannelLbl.Margin = new System.Windows.Forms.Padding(3, 9, 3, 0);
+			this.MidiChannelLbl.Location = new System.Drawing.Point(3, 50);
+			this.MidiChannelLbl.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
 			this.MidiChannelLbl.Name = "MidiChannelLbl";
 			this.MidiChannelLbl.Size = new System.Drawing.Size(514, 15);
 			this.MidiChannelLbl.TabIndex = 3;
@@ -960,7 +993,7 @@ namespace VegasScript {
 			this.MidiChannelCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.MidiChannelCombo.Enabled = false;
 			this.MidiChannelCombo.FormattingEnabled = true;
-			this.MidiChannelCombo.Location = new System.Drawing.Point(3, 71);
+			this.MidiChannelCombo.Location = new System.Drawing.Point(3, 68);
 			this.MidiChannelCombo.Name = "MidiChannelCombo";
 			this.MidiChannelCombo.Size = new System.Drawing.Size(514, 23);
 			this.MidiChannelCombo.TabIndex = 4;
@@ -969,9 +1002,9 @@ namespace VegasScript {
 			// 
 			this.flowLayoutPanel2.AutoSize = true;
 			this.flowLayoutPanel2.Controls.Add(this.MidiBeatLbl);
-			this.flowLayoutPanel2.Controls.Add(this.MidiBeatCombo);
+			this.flowLayoutPanel2.Controls.Add(this.MidiBeatTxt);
 			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 100);
+			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 97);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
 			this.flowLayoutPanel2.Size = new System.Drawing.Size(514, 29);
 			this.flowLayoutPanel2.TabIndex = 5;
@@ -988,6 +1021,15 @@ namespace VegasScript {
 			this.MidiBeatLbl.Text = "节拍　　";
 			this.MidiBeatLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
+			// MidiBeatTxt
+			// 
+			this.MidiBeatTxt.Enabled = false;
+			this.MidiBeatTxt.Location = new System.Drawing.Point(61, 3);
+			this.MidiBeatTxt.Name = "MidiBeatTxt";
+			this.MidiBeatTxt.ReadOnly = true;
+			this.MidiBeatTxt.Size = new System.Drawing.Size(85, 23);
+			this.MidiBeatTxt.TabIndex = 2;
+			// 
 			// flowLayoutPanel3
 			// 
 			this.flowLayoutPanel3.AutoSize = true;
@@ -996,7 +1038,7 @@ namespace VegasScript {
 			this.flowLayoutPanel3.Controls.Add(this.MidiEndSecondLbl);
 			this.flowLayoutPanel3.Controls.Add(this.MidiEndSecondBox);
 			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 135);
+			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 132);
 			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
 			this.flowLayoutPanel3.Size = new System.Drawing.Size(514, 29);
 			this.flowLayoutPanel3.TabIndex = 9;
@@ -1028,11 +1070,11 @@ namespace VegasScript {
 			// 
 			this.MidiBpmLbl.AutoSize = true;
 			this.MidiBpmLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MidiBpmLbl.Location = new System.Drawing.Point(3, 176);
+			this.MidiBpmLbl.Location = new System.Drawing.Point(3, 173);
 			this.MidiBpmLbl.Margin = new System.Windows.Forms.Padding(3, 9, 3, 0);
 			this.MidiBpmLbl.Name = "MidiBpmLbl";
 			this.MidiBpmLbl.Size = new System.Drawing.Size(514, 15);
-			this.MidiBpmLbl.TabIndex = 7;
+			this.MidiBpmLbl.TabIndex = 10;
 			this.MidiBpmLbl.Text = "设定 BPM 速度为";
 			this.MidiBpmLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
@@ -1044,10 +1086,10 @@ namespace VegasScript {
 			this.flowLayoutPanel4.Controls.Add(this.MidiCustomBpmCheck);
 			this.flowLayoutPanel4.Controls.Add(this.MidiCustomBpmBox);
 			this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 194);
+			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 191);
 			this.flowLayoutPanel4.Name = "flowLayoutPanel4";
 			this.flowLayoutPanel4.Size = new System.Drawing.Size(514, 29);
-			this.flowLayoutPanel4.TabIndex = 8;
+			this.flowLayoutPanel4.TabIndex = 12;
 			// 
 			// MidiMidiBpmCheck
 			// 
@@ -1286,6 +1328,7 @@ namespace VegasScript {
 			// AudioTab
 			// 
 			this.AudioTab.AutoScroll = true;
+			this.AudioTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.AudioTab.Controls.Add(this.AudioParamsGroup);
 			this.AudioTab.Controls.Add(this.AudioTuneGroup);
 			this.AudioTab.Controls.Add(this.flowLayoutPanel5);
@@ -1295,14 +1338,13 @@ namespace VegasScript {
 			this.AudioTab.Size = new System.Drawing.Size(540, 552);
 			this.AudioTab.TabIndex = 1;
 			this.AudioTab.Text = "音频";
-			this.AudioTab.UseVisualStyleBackColor = true;
 			// 
 			// AudioParamsGroup
 			// 
 			this.AudioParamsGroup.AutoSize = true;
 			this.AudioParamsGroup.Controls.Add(this.tableLayoutPanel2);
 			this.AudioParamsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AudioParamsGroup.Location = new System.Drawing.Point(5, 203);
+			this.AudioParamsGroup.Location = new System.Drawing.Point(5, 232);
 			this.AudioParamsGroup.Name = "AudioParamsGroup";
 			this.AudioParamsGroup.Padding = new System.Windows.Forms.Padding(5);
 			this.AudioParamsGroup.Size = new System.Drawing.Size(530, 104);
@@ -1419,7 +1461,7 @@ namespace VegasScript {
 			this.AudioTuneGroup.Location = new System.Drawing.Point(5, 36);
 			this.AudioTuneGroup.Name = "AudioTuneGroup";
 			this.AudioTuneGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.AudioTuneGroup.Size = new System.Drawing.Size(530, 167);
+			this.AudioTuneGroup.Size = new System.Drawing.Size(530, 196);
 			this.AudioTuneGroup.TabIndex = 1;
 			this.AudioTuneGroup.TabStop = false;
 			this.AudioTuneGroup.Text = "调音";
@@ -1441,17 +1483,20 @@ namespace VegasScript {
 			this.tableLayoutPanel7.Controls.Add(this.flowLayoutPanel6, 1, 3);
 			this.tableLayoutPanel7.Controls.Add(this.AudioPreviewLbl, 0, 4);
 			this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel17, 1, 4);
+			this.tableLayoutPanel7.Controls.Add(this.AudioPreviewAttrLbl, 0, 5);
+			this.tableLayoutPanel7.Controls.Add(this.AudioPreviewAttrLayoutPanel, 1, 5);
 			this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel7.Location = new System.Drawing.Point(5, 21);
 			this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-			this.tableLayoutPanel7.RowCount = 5;
+			this.tableLayoutPanel7.RowCount = 6;
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel7.Size = new System.Drawing.Size(520, 141);
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel7.Size = new System.Drawing.Size(520, 170);
 			this.tableLayoutPanel7.TabIndex = 2;
 			// 
 			// AudioTuneMethodLbl
@@ -1506,7 +1551,7 @@ namespace VegasScript {
 			this.AudioReserveFormantCheck.Name = "AudioReserveFormantCheck";
 			this.AudioReserveFormantCheck.Size = new System.Drawing.Size(86, 19);
 			this.AudioReserveFormantCheck.TabIndex = 1;
-			this.AudioReserveFormantCheck.Text = "保留共振峰";
+			this.AudioReserveFormantCheck.Text = "保持共振峰";
 			this.AudioReserveFormantCheck.UseVisualStyleBackColor = true;
 			// 
 			// AudioBasePitchLbl
@@ -1610,10 +1655,61 @@ namespace VegasScript {
 			this.PreviewAudioBtn.Margin = new System.Windows.Forms.Padding(3, 3, 2, 3);
 			this.PreviewAudioBtn.Name = "PreviewAudioBtn";
 			this.PreviewAudioBtn.Size = new System.Drawing.Size(225, 23);
-			this.PreviewAudioBtn.TabIndex = 0;
+			this.PreviewAudioBtn.TabIndex = 2;
 			this.PreviewAudioBtn.Text = "预听音频(&P)";
 			this.PreviewAudioBtn.UseVisualStyleBackColor = true;
 			this.PreviewAudioBtn.Click += new System.EventHandler(this.PreviewAudioBtn_Click);
+			// 
+			// AudioPreviewAttrLbl
+			// 
+			this.AudioPreviewAttrLbl.AutoSize = true;
+			this.AudioPreviewAttrLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioPreviewAttrLbl.Location = new System.Drawing.Point(3, 141);
+			this.AudioPreviewAttrLbl.Name = "AudioPreviewAttrLbl";
+			this.AudioPreviewAttrLbl.Size = new System.Drawing.Size(55, 29);
+			this.AudioPreviewAttrLbl.TabIndex = 10;
+			this.AudioPreviewAttrLbl.Text = "预听属性";
+			this.AudioPreviewAttrLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// AudioPreviewAttrLayoutPanel
+			// 
+			this.AudioPreviewAttrLayoutPanel.AutoSize = true;
+			this.AudioPreviewAttrLayoutPanel.Controls.Add(this.PreviewBeepWaveFormCombo);
+			this.AudioPreviewAttrLayoutPanel.Controls.Add(this.PreviewBeepDurationBox);
+			this.AudioPreviewAttrLayoutPanel.Controls.Add(this.PreviewBeepDurationUnitLbl);
+			this.AudioPreviewAttrLayoutPanel.Controls.Add(this.PreviewTuneAudioCheck);
+			this.AudioPreviewAttrLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioPreviewAttrLayoutPanel.Location = new System.Drawing.Point(61, 141);
+			this.AudioPreviewAttrLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.AudioPreviewAttrLayoutPanel.Name = "AudioPreviewAttrLayoutPanel";
+			this.AudioPreviewAttrLayoutPanel.Size = new System.Drawing.Size(459, 29);
+			this.AudioPreviewAttrLayoutPanel.TabIndex = 7;
+			// 
+			// PreviewBeepWaveFormCombo
+			// 
+			this.PreviewBeepWaveFormCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.PreviewBeepWaveFormCombo.FormattingEnabled = true;
+			this.PreviewBeepWaveFormCombo.Items.AddRange(new object[] {
+            "正弦波",
+            "三角波",
+            "方波",
+            "锯齿波"});
+			this.PreviewBeepWaveFormCombo.Location = new System.Drawing.Point(3, 3);
+			this.PreviewBeepWaveFormCombo.Name = "PreviewBeepWaveFormCombo";
+			this.PreviewBeepWaveFormCombo.Size = new System.Drawing.Size(100, 23);
+			this.PreviewBeepWaveFormCombo.TabIndex = 3;
+			// 
+			// PreviewBeepDurationUnitLbl
+			// 
+			this.PreviewBeepDurationUnitLbl.AutoSize = true;
+			this.PreviewBeepDurationUnitLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PreviewBeepDurationUnitLbl.Location = new System.Drawing.Point(182, 0);
+			this.PreviewBeepDurationUnitLbl.Margin = new System.Windows.Forms.Padding(0, 0, 6, 0);
+			this.PreviewBeepDurationUnitLbl.Name = "PreviewBeepDurationUnitLbl";
+			this.PreviewBeepDurationUnitLbl.Size = new System.Drawing.Size(23, 29);
+			this.PreviewBeepDurationUnitLbl.TabIndex = 6;
+			this.PreviewBeepDurationUnitLbl.Text = "ms";
+			this.PreviewBeepDurationUnitLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// flowLayoutPanel5
 			// 
@@ -1700,6 +1796,7 @@ namespace VegasScript {
 			// VideoTab
 			// 
 			this.VideoTab.AutoScroll = true;
+			this.VideoTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.VideoTab.Controls.Add(this.VideoParamsGroup);
 			this.VideoTab.Controls.Add(this.VideoEffectsGroup);
 			this.VideoTab.Controls.Add(this.flowLayoutPanel7);
@@ -1709,7 +1806,6 @@ namespace VegasScript {
 			this.VideoTab.Size = new System.Drawing.Size(540, 552);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "视频";
-			this.VideoTab.UseVisualStyleBackColor = true;
 			// 
 			// VideoParamsGroup
 			// 
@@ -1878,7 +1974,7 @@ namespace VegasScript {
 			this.VideoGlowBox.Name = "VideoGlowBox";
 			this.VideoGlowBox.NumericUpDownWidth = 65;
 			this.VideoGlowBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoGlowBox.TabIndex = 12;
+			this.VideoGlowBox.TabIndex = 10;
 			// 
 			// VideoGlowCurveCombo
 			// 
@@ -1895,7 +1991,7 @@ namespace VegasScript {
 			this.VideoGlowCurveCombo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.VideoGlowCurveCombo.Name = "VideoGlowCurveCombo";
 			this.VideoGlowCurveCombo.Size = new System.Drawing.Size(65, 23);
-			this.VideoGlowCurveCombo.TabIndex = 13;
+			this.VideoGlowCurveCombo.TabIndex = 11;
 			// 
 			// VideoGlowBrightLbl
 			// 
@@ -1919,7 +2015,7 @@ namespace VegasScript {
 			this.VideoGlowBrightBox.Name = "VideoGlowBrightBox";
 			this.VideoGlowBrightBox.NumericUpDownWidth = 65;
 			this.VideoGlowBrightBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoGlowBrightBox.TabIndex = 25;
+			this.VideoGlowBrightBox.TabIndex = 12;
 			this.VideoGlowBrightBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			this.VideoGlowBrightBox.Value = 100;
 			// 
@@ -2320,6 +2416,7 @@ namespace VegasScript {
 			// SheetTab
 			// 
 			this.SheetTab.AutoScroll = true;
+			this.SheetTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.SheetTab.Controls.Add(this.StaffParamsGroup);
 			this.SheetTab.Controls.Add(this.flowLayoutPanel8);
 			this.SheetTab.Controls.Add(this.SheetConfigInfoLabel);
@@ -2329,7 +2426,6 @@ namespace VegasScript {
 			this.SheetTab.Size = new System.Drawing.Size(540, 552);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
-			this.SheetTab.UseVisualStyleBackColor = true;
 			// 
 			// StaffParamsGroup
 			// 
@@ -2577,8 +2673,10 @@ namespace VegasScript {
 			// YtpTab
 			// 
 			this.YtpTab.AutoScroll = true;
+			this.YtpTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.YtpTab.Controls.Add(this.YtpParamsGroup);
 			this.YtpTab.Controls.Add(this.YtpEffectsGroup);
+			this.YtpTab.Controls.Add(this.YtpSelectInfo);
 			this.YtpTab.Controls.Add(this.YtpLbl);
 			this.YtpTab.Location = new System.Drawing.Point(4, 24);
 			this.YtpTab.Name = "YtpTab";
@@ -2586,14 +2684,13 @@ namespace VegasScript {
 			this.YtpTab.Size = new System.Drawing.Size(540, 552);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
-			this.YtpTab.UseVisualStyleBackColor = true;
 			// 
 			// YtpParamsGroup
 			// 
 			this.YtpParamsGroup.AutoSize = true;
 			this.YtpParamsGroup.Controls.Add(this.tableLayoutPanel16);
 			this.YtpParamsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.YtpParamsGroup.Location = new System.Drawing.Point(5, 182);
+			this.YtpParamsGroup.Location = new System.Drawing.Point(5, 200);
 			this.YtpParamsGroup.Name = "YtpParamsGroup";
 			this.YtpParamsGroup.Padding = new System.Windows.Forms.Padding(5);
 			this.YtpParamsGroup.Size = new System.Drawing.Size(530, 84);
@@ -2686,7 +2783,7 @@ namespace VegasScript {
 			this.YtpEffectsGroup.Controls.Add(this.YtpEnableAllEffectsCheck);
 			this.YtpEffectsGroup.Controls.Add(this.YtpEffectsCheckList);
 			this.YtpEffectsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.YtpEffectsGroup.Location = new System.Drawing.Point(5, 48);
+			this.YtpEffectsGroup.Location = new System.Drawing.Point(5, 66);
 			this.YtpEffectsGroup.Name = "YtpEffectsGroup";
 			this.YtpEffectsGroup.Padding = new System.Windows.Forms.Padding(9, 3, 6, 6);
 			this.YtpEffectsGroup.Size = new System.Drawing.Size(530, 134);
@@ -2704,12 +2801,13 @@ namespace VegasScript {
 			this.YtpEnableAllEffectsCheck.Name = "YtpEnableAllEffectsCheck";
 			this.YtpEnableAllEffectsCheck.Padding = new System.Windows.Forms.Padding(1, 0, 0, 0);
 			this.YtpEnableAllEffectsCheck.Size = new System.Drawing.Size(515, 19);
-			this.YtpEnableAllEffectsCheck.TabIndex = 1;
+			this.YtpEnableAllEffectsCheck.TabIndex = 0;
 			this.YtpEnableAllEffectsCheck.Text = "开启所有效果";
 			this.YtpEnableAllEffectsCheck.CheckedChanged += new System.EventHandler(this.YtpEnableAllEffectsCheck_CheckedChanged);
 			// 
 			// YtpEffectsCheckList
 			// 
+			this.YtpEffectsCheckList.BackColor = System.Drawing.SystemColors.Window;
 			this.YtpEffectsCheckList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.YtpEffectsCheckList.CheckOnClick = true;
 			this.YtpEffectsCheckList.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -2732,12 +2830,26 @@ namespace VegasScript {
             "球面化",
             "镜像",
             "高对比（附加增加音量）",
-            "过饱和（概率性附加升调效果）"});
+            "过饱和（概率性附加升调效果）",
+            "重说三（附加放大聚焦效果）"});
 			this.YtpEffectsCheckList.Location = new System.Drawing.Point(9, 38);
 			this.YtpEffectsCheckList.Name = "YtpEffectsCheckList";
 			this.YtpEffectsCheckList.Size = new System.Drawing.Size(515, 90);
-			this.YtpEffectsCheckList.TabIndex = 0;
+			this.YtpEffectsCheckList.TabIndex = 1;
 			this.YtpEffectsCheckList.SelectedIndexChanged += new System.EventHandler(this.YtpEffectsCheckList_SelectedIndexChanged);
+			// 
+			// YtpSelectInfo
+			// 
+			this.YtpSelectInfo.AutoSize = true;
+			this.YtpSelectInfo.Dock = System.Windows.Forms.DockStyle.Top;
+			this.YtpSelectInfo.Location = new System.Drawing.Point(5, 43);
+			this.YtpSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
+			this.YtpSelectInfo.Name = "YtpSelectInfo";
+			this.YtpSelectInfo.Padding = new System.Windows.Forms.Padding(0, 0, 0, 8);
+			this.YtpSelectInfo.Size = new System.Drawing.Size(127, 23);
+			this.YtpSelectInfo.TabIndex = 13;
+			this.YtpSelectInfo.Text = "已选中 0 项媒体素材。";
+			this.YtpSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// YtpLbl
 			// 
@@ -2746,197 +2858,93 @@ namespace VegasScript {
 			this.YtpLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
 			this.YtpLbl.Location = new System.Drawing.Point(5, 5);
 			this.YtpLbl.Name = "YtpLbl";
-			this.YtpLbl.Padding = new System.Windows.Forms.Padding(0, 5, 0, 8);
-			this.YtpLbl.Size = new System.Drawing.Size(414, 43);
+			this.YtpLbl.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
+			this.YtpLbl.Size = new System.Drawing.Size(414, 38);
 			this.YtpLbl.TabIndex = 10;
 			this.YtpLbl.Text = "在当前选项卡下单击“完成”按钮，将会生成 YTP 而不是音 MAD / YTPMV。\r\n除“生成音频”“生成视频”外其它的参数设置并不会在 YTP 中使用。";
 			// 
 			// HelperTab
 			// 
 			this.HelperTab.AutoScroll = true;
+			this.HelperTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.HelperTab.Controls.Add(this.tableLayoutPanel11);
 			this.HelperTab.Controls.Add(this.tableLayoutPanel19);
 			this.HelperTab.Location = new System.Drawing.Point(4, 24);
 			this.HelperTab.Name = "HelperTab";
-			this.HelperTab.Padding = new System.Windows.Forms.Padding(5);
+			this.HelperTab.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.HelperTab.Size = new System.Drawing.Size(540, 552);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "辅助功能";
-			this.HelperTab.UseVisualStyleBackColor = true;
 			// 
 			// tableLayoutPanel11
 			// 
 			this.tableLayoutPanel11.AutoSize = true;
 			this.tableLayoutPanel11.ColumnCount = 1;
 			this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel11.Controls.Add(this.SelectIntervalGroup, 0, 0);
-			this.tableLayoutPanel11.Controls.Add(this.ReplaceClipsGroup, 0, 1);
-			this.tableLayoutPanel11.Controls.Add(this.AutoLayoutTracksGroup, 0, 2);
-			this.tableLayoutPanel11.Controls.Add(this.ChangeTuneMethodGroup, 0, 3);
+			this.tableLayoutPanel11.Controls.Add(this.QuickSelectIntervalBtn, 0, 0);
+			this.tableLayoutPanel11.Controls.Add(this.ReplaceClipsBtn, 0, 1);
+			this.tableLayoutPanel11.Controls.Add(this.ChangeTuneMethodBtn, 0, 2);
+			this.tableLayoutPanel11.Controls.Add(this.AutoLayoutTracksGroup, 0, 3);
 			this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel11.Location = new System.Drawing.Point(5, 46);
+			this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 45);
 			this.tableLayoutPanel11.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel11.Name = "tableLayoutPanel11";
 			this.tableLayoutPanel11.RowCount = 4;
+			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(530, 427);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(534, 400);
 			this.tableLayoutPanel11.TabIndex = 8;
-			// 
-			// SelectIntervalGroup
-			// 
-			this.SelectIntervalGroup.AutoSize = true;
-			this.SelectIntervalGroup.Controls.Add(this.tableLayoutPanel12);
-			this.SelectIntervalGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.SelectIntervalGroup.Location = new System.Drawing.Point(3, 3);
-			this.SelectIntervalGroup.Name = "SelectIntervalGroup";
-			this.SelectIntervalGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.SelectIntervalGroup.Size = new System.Drawing.Size(524, 93);
-			this.SelectIntervalGroup.TabIndex = 4;
-			this.SelectIntervalGroup.TabStop = false;
-			this.SelectIntervalGroup.Text = "间隔选择";
-			// 
-			// tableLayoutPanel12
-			// 
-			this.tableLayoutPanel12.AutoSize = true;
-			this.tableLayoutPanel12.ColumnCount = 1;
-			this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel12.Controls.Add(this.SelectIntervalLbl, 0, 0);
-			this.tableLayoutPanel12.Controls.Add(this.SelectIntervalSelectInfo, 0, 1);
-			this.tableLayoutPanel12.Controls.Add(this.QuickSelectIntervalBtn, 0, 2);
-			this.tableLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel12.Location = new System.Drawing.Point(5, 21);
-			this.tableLayoutPanel12.Name = "tableLayoutPanel12";
-			this.tableLayoutPanel12.RowCount = 3;
-			this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel12.Size = new System.Drawing.Size(514, 67);
-			this.tableLayoutPanel12.TabIndex = 0;
-			// 
-			// SelectIntervalLbl
-			// 
-			this.SelectIntervalLbl.AutoSize = true;
-			this.SelectIntervalLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SelectIntervalLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.SelectIntervalLbl.Location = new System.Drawing.Point(3, 0);
-			this.SelectIntervalLbl.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.SelectIntervalLbl.MaximumSize = new System.Drawing.Size(518, 0);
-			this.SelectIntervalLbl.Name = "SelectIntervalLbl";
-			this.SelectIntervalLbl.Size = new System.Drawing.Size(508, 15);
-			this.SelectIntervalLbl.TabIndex = 5;
-			this.SelectIntervalLbl.Text = "本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴视频事件”等操作。";
-			this.SelectIntervalLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// SelectIntervalSelectInfo
-			// 
-			this.SelectIntervalSelectInfo.AutoSize = true;
-			this.tableLayoutPanel12.SetColumnSpan(this.SelectIntervalSelectInfo, 2);
-			this.SelectIntervalSelectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SelectIntervalSelectInfo.Location = new System.Drawing.Point(3, 18);
-			this.SelectIntervalSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.SelectIntervalSelectInfo.Name = "SelectIntervalSelectInfo";
-			this.SelectIntervalSelectInfo.Size = new System.Drawing.Size(508, 15);
-			this.SelectIntervalSelectInfo.TabIndex = 8;
-			this.SelectIntervalSelectInfo.Text = "已选中 0 个轨道剪辑。";
-			this.SelectIntervalSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// QuickSelectIntervalBtn
 			// 
-			this.QuickSelectIntervalBtn.AutoSize = true;
-			this.QuickSelectIntervalBtn.Dock = System.Windows.Forms.DockStyle.Left;
-			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(3, 39);
-			this.QuickSelectIntervalBtn.MaximumSize = new System.Drawing.Size(0, 25);
-			this.QuickSelectIntervalBtn.MinimumSize = new System.Drawing.Size(100, 0);
+			this.QuickSelectIntervalBtn.CommandLink = true;
+			this.QuickSelectIntervalBtn.CommandLinkNote = "本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴视频事件”等操作。\r\n已选中 0 个轨道剪辑。";
+			this.QuickSelectIntervalBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(3, 3);
 			this.QuickSelectIntervalBtn.Name = "QuickSelectIntervalBtn";
-			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(100, 25);
-			this.QuickSelectIntervalBtn.TabIndex = 4;
-			this.QuickSelectIntervalBtn.Text = "快速间隔选择...";
+			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(528, 84);
+			this.QuickSelectIntervalBtn.TabIndex = 1;
+			this.QuickSelectIntervalBtn.Text = "快速间隔选择";
 			this.QuickSelectIntervalBtn.UseVisualStyleBackColor = true;
 			this.QuickSelectIntervalBtn.Click += new System.EventHandler(this.QuickSelectIntervalBtn_Click);
 			// 
-			// ReplaceClipsGroup
-			// 
-			this.ReplaceClipsGroup.AutoSize = true;
-			this.ReplaceClipsGroup.Controls.Add(this.tableLayoutPanel13);
-			this.ReplaceClipsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ReplaceClipsGroup.Location = new System.Drawing.Point(3, 102);
-			this.ReplaceClipsGroup.Name = "ReplaceClipsGroup";
-			this.ReplaceClipsGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.ReplaceClipsGroup.Size = new System.Drawing.Size(524, 93);
-			this.ReplaceClipsGroup.TabIndex = 5;
-			this.ReplaceClipsGroup.TabStop = false;
-			this.ReplaceClipsGroup.Text = "替换轨道素材";
-			// 
-			// tableLayoutPanel13
-			// 
-			this.tableLayoutPanel13.AutoSize = true;
-			this.tableLayoutPanel13.ColumnCount = 1;
-			this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel13.Controls.Add(this.ReplaceClipsLbl, 0, 0);
-			this.tableLayoutPanel13.Controls.Add(this.ReplaceClipsSelectInfo, 0, 1);
-			this.tableLayoutPanel13.Controls.Add(this.ReplaceClipsBtn, 0, 2);
-			this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel13.Location = new System.Drawing.Point(5, 21);
-			this.tableLayoutPanel13.Name = "tableLayoutPanel13";
-			this.tableLayoutPanel13.RowCount = 3;
-			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel13.Size = new System.Drawing.Size(514, 67);
-			this.tableLayoutPanel13.TabIndex = 1;
-			// 
-			// ReplaceClipsLbl
-			// 
-			this.ReplaceClipsLbl.AutoSize = true;
-			this.ReplaceClipsLbl.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ReplaceClipsLbl.Location = new System.Drawing.Point(3, 0);
-			this.ReplaceClipsLbl.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.ReplaceClipsLbl.Name = "ReplaceClipsLbl";
-			this.ReplaceClipsLbl.Size = new System.Drawing.Size(508, 15);
-			this.ReplaceClipsLbl.TabIndex = 1;
-			this.ReplaceClipsLbl.Text = "将多个轨道剪辑替换为指定的新轨道剪辑。";
-			this.ReplaceClipsLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// ReplaceClipsSelectInfo
-			// 
-			this.ReplaceClipsSelectInfo.AutoSize = true;
-			this.tableLayoutPanel13.SetColumnSpan(this.ReplaceClipsSelectInfo, 2);
-			this.ReplaceClipsSelectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ReplaceClipsSelectInfo.Location = new System.Drawing.Point(3, 18);
-			this.ReplaceClipsSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.ReplaceClipsSelectInfo.Name = "ReplaceClipsSelectInfo";
-			this.ReplaceClipsSelectInfo.Size = new System.Drawing.Size(508, 15);
-			this.ReplaceClipsSelectInfo.TabIndex = 9;
-			this.ReplaceClipsSelectInfo.Text = "已选中 0 个轨道剪辑。";
-			this.ReplaceClipsSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// ReplaceClipsBtn
 			// 
-			this.ReplaceClipsBtn.AutoSize = true;
-			this.ReplaceClipsBtn.Dock = System.Windows.Forms.DockStyle.Left;
-			this.ReplaceClipsBtn.Location = new System.Drawing.Point(3, 39);
-			this.ReplaceClipsBtn.MaximumSize = new System.Drawing.Size(0, 25);
-			this.ReplaceClipsBtn.MinimumSize = new System.Drawing.Size(100, 0);
+			this.ReplaceClipsBtn.CommandLink = true;
+			this.ReplaceClipsBtn.CommandLinkNote = "将多个轨道剪辑替换为指定的新轨道剪辑。\r\n已选中 0 个轨道剪辑。";
+			this.ReplaceClipsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ReplaceClipsBtn.Location = new System.Drawing.Point(3, 93);
 			this.ReplaceClipsBtn.Name = "ReplaceClipsBtn";
-			this.ReplaceClipsBtn.Size = new System.Drawing.Size(100, 25);
+			this.ReplaceClipsBtn.Size = new System.Drawing.Size(528, 84);
 			this.ReplaceClipsBtn.TabIndex = 2;
-			this.ReplaceClipsBtn.Text = "替换轨道素材...";
+			this.ReplaceClipsBtn.Text = "替换轨道素材";
 			this.ReplaceClipsBtn.UseVisualStyleBackColor = true;
 			this.ReplaceClipsBtn.Click += new System.EventHandler(this.ReplaceClipsBtn_Click);
+			// 
+			// ChangeTuneMethodBtn
+			// 
+			this.ChangeTuneMethodBtn.CommandLink = true;
+			this.ChangeTuneMethodBtn.CommandLinkNote = "将多个音频轨道剪辑统一更改为指定的调音算法。\r\n已选中 0 个音频轨道剪辑。";
+			this.ChangeTuneMethodBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(3, 183);
+			this.ChangeTuneMethodBtn.Name = "ChangeTuneMethodBtn";
+			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(528, 84);
+			this.ChangeTuneMethodBtn.TabIndex = 3;
+			this.ChangeTuneMethodBtn.Text = "更改调音算法";
+			this.ChangeTuneMethodBtn.UseVisualStyleBackColor = true;
+			this.ChangeTuneMethodBtn.Click += new System.EventHandler(this.ChangeTuneMethodBtn_Click);
 			// 
 			// AutoLayoutTracksGroup
 			// 
 			this.AutoLayoutTracksGroup.AutoSize = true;
 			this.AutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel14);
 			this.AutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AutoLayoutTracksGroup.Location = new System.Drawing.Point(3, 201);
+			this.AutoLayoutTracksGroup.Location = new System.Drawing.Point(3, 273);
 			this.AutoLayoutTracksGroup.Name = "AutoLayoutTracksGroup";
 			this.AutoLayoutTracksGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.AutoLayoutTracksGroup.Size = new System.Drawing.Size(524, 124);
+			this.AutoLayoutTracksGroup.Size = new System.Drawing.Size(528, 124);
 			this.AutoLayoutTracksGroup.TabIndex = 6;
 			this.AutoLayoutTracksGroup.TabStop = false;
 			this.AutoLayoutTracksGroup.Text = "自动布局轨道";
@@ -2958,7 +2966,7 @@ namespace VegasScript {
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel14.Size = new System.Drawing.Size(514, 98);
+			this.tableLayoutPanel14.Size = new System.Drawing.Size(518, 98);
 			this.tableLayoutPanel14.TabIndex = 2;
 			// 
 			// AutoLayoutTracksLbl
@@ -2968,7 +2976,7 @@ namespace VegasScript {
 			this.AutoLayoutTracksLbl.Location = new System.Drawing.Point(3, 0);
 			this.AutoLayoutTracksLbl.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.AutoLayoutTracksLbl.Name = "AutoLayoutTracksLbl";
-			this.AutoLayoutTracksLbl.Size = new System.Drawing.Size(508, 15);
+			this.AutoLayoutTracksLbl.Size = new System.Drawing.Size(512, 15);
 			this.AutoLayoutTracksLbl.TabIndex = 1;
 			this.AutoLayoutTracksLbl.Text = "类 YTPMV 风格自动布局选中的轨道。";
 			this.AutoLayoutTracksLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -2981,7 +2989,7 @@ namespace VegasScript {
 			this.AutoLayoutTracksSelectInfo.Location = new System.Drawing.Point(3, 18);
 			this.AutoLayoutTracksSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.AutoLayoutTracksSelectInfo.Name = "AutoLayoutTracksSelectInfo";
-			this.AutoLayoutTracksSelectInfo.Size = new System.Drawing.Size(508, 15);
+			this.AutoLayoutTracksSelectInfo.Size = new System.Drawing.Size(512, 15);
 			this.AutoLayoutTracksSelectInfo.TabIndex = 7;
 			this.AutoLayoutTracksSelectInfo.Text = "已选中 0 个视频轨道。";
 			this.AutoLayoutTracksSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3003,7 +3011,7 @@ namespace VegasScript {
 			this.AutoLayoutTracksButtons.Name = "AutoLayoutTracksButtons";
 			this.AutoLayoutTracksButtons.RowCount = 1;
 			this.AutoLayoutTracksButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.AutoLayoutTracksButtons.Size = new System.Drawing.Size(514, 31);
+			this.AutoLayoutTracksButtons.Size = new System.Drawing.Size(518, 31);
 			this.AutoLayoutTracksButtons.TabIndex = 8;
 			// 
 			// GradientTracksBtn
@@ -3063,7 +3071,7 @@ namespace VegasScript {
 			this.tableLayoutPanel15.Name = "tableLayoutPanel15";
 			this.tableLayoutPanel15.RowCount = 1;
 			this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel15.Size = new System.Drawing.Size(514, 31);
+			this.tableLayoutPanel15.Size = new System.Drawing.Size(518, 31);
 			this.tableLayoutPanel15.TabIndex = 9;
 			// 
 			// ClearTrackMotionBtn
@@ -3096,76 +3104,6 @@ namespace VegasScript {
 			this.ClearTrackEffectBtn.UseVisualStyleBackColor = true;
 			this.ClearTrackEffectBtn.Click += new System.EventHandler(this.ClearTrackEffectBtn_Click);
 			// 
-			// ChangeTuneMethodGroup
-			// 
-			this.ChangeTuneMethodGroup.AutoSize = true;
-			this.ChangeTuneMethodGroup.Controls.Add(this.tableLayoutPanel18);
-			this.ChangeTuneMethodGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ChangeTuneMethodGroup.Location = new System.Drawing.Point(3, 331);
-			this.ChangeTuneMethodGroup.Name = "ChangeTuneMethodGroup";
-			this.ChangeTuneMethodGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.ChangeTuneMethodGroup.Size = new System.Drawing.Size(524, 93);
-			this.ChangeTuneMethodGroup.TabIndex = 7;
-			this.ChangeTuneMethodGroup.TabStop = false;
-			this.ChangeTuneMethodGroup.Text = "更改调音算法";
-			// 
-			// tableLayoutPanel18
-			// 
-			this.tableLayoutPanel18.AutoSize = true;
-			this.tableLayoutPanel18.ColumnCount = 1;
-			this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel18.Controls.Add(this.ChangeTuneMethodLbl, 0, 0);
-			this.tableLayoutPanel18.Controls.Add(this.ChangeTuneMethodSelectInfo, 0, 1);
-			this.tableLayoutPanel18.Controls.Add(this.ChangeTuneMethodBtn, 0, 2);
-			this.tableLayoutPanel18.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel18.Location = new System.Drawing.Point(5, 21);
-			this.tableLayoutPanel18.Name = "tableLayoutPanel18";
-			this.tableLayoutPanel18.RowCount = 3;
-			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel18.Size = new System.Drawing.Size(514, 67);
-			this.tableLayoutPanel18.TabIndex = 1;
-			// 
-			// ChangeTuneMethodLbl
-			// 
-			this.ChangeTuneMethodLbl.AutoSize = true;
-			this.ChangeTuneMethodLbl.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ChangeTuneMethodLbl.Location = new System.Drawing.Point(3, 0);
-			this.ChangeTuneMethodLbl.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.ChangeTuneMethodLbl.Name = "ChangeTuneMethodLbl";
-			this.ChangeTuneMethodLbl.Size = new System.Drawing.Size(508, 15);
-			this.ChangeTuneMethodLbl.TabIndex = 1;
-			this.ChangeTuneMethodLbl.Text = "将多个音频轨道剪辑统一更改为指定的调音算法。";
-			this.ChangeTuneMethodLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// ChangeTuneMethodSelectInfo
-			// 
-			this.ChangeTuneMethodSelectInfo.AutoSize = true;
-			this.tableLayoutPanel18.SetColumnSpan(this.ChangeTuneMethodSelectInfo, 2);
-			this.ChangeTuneMethodSelectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ChangeTuneMethodSelectInfo.Location = new System.Drawing.Point(3, 18);
-			this.ChangeTuneMethodSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-			this.ChangeTuneMethodSelectInfo.Name = "ChangeTuneMethodSelectInfo";
-			this.ChangeTuneMethodSelectInfo.Size = new System.Drawing.Size(508, 15);
-			this.ChangeTuneMethodSelectInfo.TabIndex = 9;
-			this.ChangeTuneMethodSelectInfo.Text = "已选中 0 个音频轨道剪辑。";
-			this.ChangeTuneMethodSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// ChangeTuneMethodBtn
-			// 
-			this.ChangeTuneMethodBtn.AutoSize = true;
-			this.ChangeTuneMethodBtn.Dock = System.Windows.Forms.DockStyle.Left;
-			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(3, 39);
-			this.ChangeTuneMethodBtn.MaximumSize = new System.Drawing.Size(0, 25);
-			this.ChangeTuneMethodBtn.MinimumSize = new System.Drawing.Size(100, 0);
-			this.ChangeTuneMethodBtn.Name = "ChangeTuneMethodBtn";
-			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(100, 25);
-			this.ChangeTuneMethodBtn.TabIndex = 2;
-			this.ChangeTuneMethodBtn.Text = "更改调音算法...";
-			this.ChangeTuneMethodBtn.UseVisualStyleBackColor = true;
-			this.ChangeTuneMethodBtn.Click += new System.EventHandler(this.ChangeTuneMethodBtn_Click);
-			// 
 			// tableLayoutPanel19
 			// 
 			this.tableLayoutPanel19.AutoSize = true;
@@ -3174,12 +3112,12 @@ namespace VegasScript {
 			this.tableLayoutPanel19.Controls.Add(this.HelperLbl, 0, 0);
 			this.tableLayoutPanel19.Controls.Add(this.HelperWarningLbl, 0, 1);
 			this.tableLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel19.Location = new System.Drawing.Point(5, 5);
+			this.tableLayoutPanel19.Location = new System.Drawing.Point(3, 4);
 			this.tableLayoutPanel19.Name = "tableLayoutPanel19";
 			this.tableLayoutPanel19.RowCount = 2;
 			this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel19.Size = new System.Drawing.Size(530, 41);
+			this.tableLayoutPanel19.Size = new System.Drawing.Size(534, 41);
 			this.tableLayoutPanel19.TabIndex = 7;
 			// 
 			// HelperLbl
@@ -3190,7 +3128,7 @@ namespace VegasScript {
 			this.HelperLbl.Location = new System.Drawing.Point(3, 0);
 			this.HelperLbl.Name = "HelperLbl";
 			this.HelperLbl.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-			this.HelperLbl.Size = new System.Drawing.Size(524, 20);
+			this.HelperLbl.Size = new System.Drawing.Size(528, 20);
 			this.HelperLbl.TabIndex = 2;
 			this.HelperLbl.Text = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。";
 			// 
@@ -3203,7 +3141,7 @@ namespace VegasScript {
 			this.HelperWarningLbl.Location = new System.Drawing.Point(3, 20);
 			this.HelperWarningLbl.Name = "HelperWarningLbl";
 			this.HelperWarningLbl.Padding = new System.Windows.Forms.Padding(0, 0, 0, 5);
-			this.HelperWarningLbl.Size = new System.Drawing.Size(524, 21);
+			this.HelperWarningLbl.Size = new System.Drawing.Size(528, 21);
 			this.HelperWarningLbl.TabIndex = 4;
 			this.HelperWarningLbl.Text = "注意：操作之后将会关闭本对话框，您可以稍后再重新打开，部分您未保存的更改可能会丢失！";
 			this.HelperWarningLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3238,6 +3176,7 @@ namespace VegasScript {
 			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffSurfaceWidthBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).EndInit();
 			this.menu.ResumeLayout(false);
 			this.menu.PerformLayout();
 			this.panel1.ResumeLayout(false);
@@ -3280,6 +3219,8 @@ namespace VegasScript {
 			this.flowLayoutPanel10.PerformLayout();
 			this.flowLayoutPanel6.ResumeLayout(false);
 			this.tableLayoutPanel17.ResumeLayout(false);
+			this.AudioPreviewAttrLayoutPanel.ResumeLayout(false);
+			this.AudioPreviewAttrLayoutPanel.PerformLayout();
 			this.flowLayoutPanel5.ResumeLayout(false);
 			this.flowLayoutPanel5.PerformLayout();
 			this.VideoTab.ResumeLayout(false);
@@ -3317,14 +3258,6 @@ namespace VegasScript {
 			this.HelperTab.PerformLayout();
 			this.tableLayoutPanel11.ResumeLayout(false);
 			this.tableLayoutPanel11.PerformLayout();
-			this.SelectIntervalGroup.ResumeLayout(false);
-			this.SelectIntervalGroup.PerformLayout();
-			this.tableLayoutPanel12.ResumeLayout(false);
-			this.tableLayoutPanel12.PerformLayout();
-			this.ReplaceClipsGroup.ResumeLayout(false);
-			this.ReplaceClipsGroup.PerformLayout();
-			this.tableLayoutPanel13.ResumeLayout(false);
-			this.tableLayoutPanel13.PerformLayout();
 			this.AutoLayoutTracksGroup.ResumeLayout(false);
 			this.AutoLayoutTracksGroup.PerformLayout();
 			this.tableLayoutPanel14.ResumeLayout(false);
@@ -3333,10 +3266,6 @@ namespace VegasScript {
 			this.AutoLayoutTracksButtons.PerformLayout();
 			this.tableLayoutPanel15.ResumeLayout(false);
 			this.tableLayoutPanel15.PerformLayout();
-			this.ChangeTuneMethodGroup.ResumeLayout(false);
-			this.ChangeTuneMethodGroup.PerformLayout();
-			this.tableLayoutPanel18.ResumeLayout(false);
-			this.tableLayoutPanel18.PerformLayout();
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.ResumeLayout(false);
@@ -3380,7 +3309,6 @@ namespace VegasScript {
 		public System.Windows.Forms.Label MidiBpmLbl;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
 		public System.Windows.Forms.Label MidiBeatLbl;
-		public System.Windows.Forms.ComboBox MidiBeatCombo;
 		public System.Windows.Forms.Label MidiChannelLbl;
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
 		public System.Windows.Forms.Button ChooseMidiBtn;
@@ -3496,16 +3424,6 @@ namespace VegasScript {
 		public System.Windows.Forms.Label AudioPreviewLbl;
 		public System.Windows.Forms.Label AudioLockAttrLbl;
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
-		public System.Windows.Forms.GroupBox SelectIntervalGroup;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
-		public System.Windows.Forms.Label SelectIntervalSelectInfo;
-		public System.Windows.Forms.Button QuickSelectIntervalBtn;
-		public System.Windows.Forms.Label SelectIntervalLbl;
-		public System.Windows.Forms.GroupBox ReplaceClipsGroup;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel13;
-		public System.Windows.Forms.Label ReplaceClipsSelectInfo;
-		public System.Windows.Forms.Label ReplaceClipsLbl;
-		public System.Windows.Forms.Button ReplaceClipsBtn;
 		public System.Windows.Forms.GroupBox AutoLayoutTracksGroup;
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel14;
 		public System.Windows.Forms.Label AutoLayoutTracksSelectInfo;
@@ -3517,11 +3435,6 @@ namespace VegasScript {
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel15;
 		public System.Windows.Forms.Button ClearTrackMotionBtn;
 		public System.Windows.Forms.Button ClearTrackEffectBtn;
-		public System.Windows.Forms.GroupBox ChangeTuneMethodGroup;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel18;
-		public System.Windows.Forms.Label ChangeTuneMethodSelectInfo;
-		public System.Windows.Forms.Label ChangeTuneMethodLbl;
-		public System.Windows.Forms.Button ChangeTuneMethodBtn;
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel19;
 		public System.Windows.Forms.Label HelperWarningLbl;
 		public System.Windows.Forms.Label HelperLbl;
@@ -3558,6 +3471,20 @@ namespace VegasScript {
 		public System.Windows.Forms.CheckBox StaffGenerateCheck;
 		public System.Windows.Forms.CheckBox StaffRelativeValueCheck;
 		public System.Windows.Forms.Label SheetConfigInfoLabel;
+		public System.Windows.Forms.TextBox MidiBeatTxt;
+		public System.Windows.Forms.FlowLayoutPanel AudioPreviewAttrLayoutPanel;
+		public System.Windows.Forms.ComboBox PreviewBeepWaveFormCombo;
+		public System.Windows.Forms.NumericUpDown PreviewBeepDurationBox;
+		public System.Windows.Forms.Label PreviewBeepDurationUnitLbl;
+		public System.Windows.Forms.CheckBox PreviewTuneAudioCheck;
+		public System.Windows.Forms.Label AudioPreviewAttrLbl;
+		public CommandLinkButton QuickSelectIntervalBtn;
+		public CommandLinkButton ReplaceClipsBtn;
+		public CommandLinkButton ChangeTuneMethodBtn;
+		public System.Windows.Forms.ToolStripMenuItem whyOkBtnIsDisabledToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem checkUpdateToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem versionToolStripMenuItem;
+		public System.Windows.Forms.Label YtpSelectInfo;
 	}
 }
 

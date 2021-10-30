@@ -64,6 +64,7 @@ namespace VegasScript {
 			updateInfoToolStripMenuItem.Click += (sender, e) => { OpenLink(updateInfoLink); };
 			githubToolStripMenuItem.Click += (sender, e) => { OpenLink(githubLink); };
 			GetSystemLanguage();
+			menu.Renderer = new Windows10StyledContextMenuStripRenderer();
 			#endregion
 
 			#region 复选框设置、下拉菜单默认值
@@ -713,7 +714,16 @@ namespace VegasScript {
 		}
 
 		private void PreviewBasePitchBtn_MouseDown(object sender, EventArgs e) {
-			const int MARGIN = 6;
+			//const int MARGIN = 6;
+			Close();
+		}
+
+		private void AudioTuneMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			AudioStretchAttrCombo.Items.Clear();
+		}
+
+		private void WhyOkBtnIsDisabledToolStripMenuItem_Click(object sender, EventArgs e) {
+			MessageBox.Show("sb");
 		}
 	}
 

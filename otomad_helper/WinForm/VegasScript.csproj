@@ -95,6 +95,9 @@
     <Compile Include="ChangeTuneMethodForm.Designer.cs">
       <DependentUpon>ChangeTuneMethodForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandLinkButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,6 +142,7 @@
     <Compile Include="ToolStripRadioButtonMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Windows10StyledContextMenuStripRenderer.cs" />
     <EmbeddedResource Include="AutoLayoutTracksBox3dForm.resx">
       <DependentUpon>AutoLayoutTracksBox3dForm.cs</DependentUpon>
     </EmbeddedResource>

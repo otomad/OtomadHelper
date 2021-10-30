@@ -166,7 +166,7 @@ namespace VegasScript {
 			this.FormantLockCheck.Name = "FormantLockCheck";
 			this.FormantLockCheck.Size = new System.Drawing.Size(449, 23);
 			this.FormantLockCheck.TabIndex = 7;
-			this.FormantLockCheck.Text = "保留共振峰";
+			this.FormantLockCheck.Text = "保持共振峰";
 			this.FormantLockCheck.UseVisualStyleBackColor = true;
 			// 
 			// StretchAttrCombo
