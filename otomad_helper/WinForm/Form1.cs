@@ -604,22 +604,6 @@ namespace VegasScript {
 			Update_StaffLineColorBtn_Color();
 		}
 
-		private void ReplaceClipsBtn_Click(object sender, EventArgs e) {
-			CancelBtn_Click(sender, null);
-			new ReplaceClipsForm().Show();
-		}
-
-		private void AutoLayoutTracksGridBtn_Click(object sender, EventArgs e) {
-			//CancelBtn_Click(sender, null);
-			Hide();
-			new AutoLayoutTracksGridForm().Show();
-		}
-
-		private void AutoLayoutTracksBox3dBtn_Click(object sender, EventArgs e) {
-			CancelBtn_Click(sender, null);
-			new AutoLayoutTracksBox3dForm().Show();
-		}
-
 		private void AudioMainKeyCombo_MouseWheel(object sender, MouseEventArgs e) {
 
 		}
@@ -639,11 +623,6 @@ namespace VegasScript {
 
 		private void ClearTrackEffectBtn_Click(object sender, EventArgs e) {
 			ClearTrackEffectBtn.Enabled = false;
-		}
-
-		private void GradientTracksBtn_Click(object sender, EventArgs e) {
-			CancelBtn_Click(sender, null);
-			new GradientTracksForm().Show();
 		}
 
 		private void PreviewAudioBtn_Click(object sender, EventArgs e) {
@@ -701,11 +680,6 @@ namespace VegasScript {
 			YtpEnableAllEffectsCheck.CheckState = (CheckState)state;
 		}
 
-		private void ChangeTuneMethodBtn_Click(object sender, EventArgs e) {
-			CancelBtn_Click(sender, null);
-			new ChangeTuneMethodForm().Show();
-		}
-
 		private void ConfigForm_Resize(object sender, EventArgs e) {
 			int tabWidth = Tabs.SelectedTab.Size.Width;
 			const int MARGIN = 6;
@@ -724,6 +698,15 @@ namespace VegasScript {
 
 		private void WhyOkBtnIsDisabledToolStripMenuItem_Click(object sender, EventArgs e) {
 			MessageBox.Show("sb");
+		}
+
+		private void ReadyToShowHelperDialog(object sender, EventArgs e) {
+			CancelBtn_Click(sender, null);
+			new GradientTracksForm().Show();
+		}
+
+		private void GenerateAtCustomText_Leave(object sender, EventArgs e) {
+			GenerateAtCustomText.Text = "00000";
 		}
 	}
 

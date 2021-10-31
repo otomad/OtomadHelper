@@ -116,6 +116,9 @@
     <Compile Include="IntegerTrackWithBox.Designer.cs">
       <DependentUpon>IntegerTrackWithBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="NumericUpDownWithUnit.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ProcessForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -192,6 +195,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CommandLinkButton.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

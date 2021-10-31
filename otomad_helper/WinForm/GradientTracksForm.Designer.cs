@@ -77,7 +77,7 @@ namespace VegasScript {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.table.Size = new System.Drawing.Size(484, 106);
+			this.table.Size = new System.Drawing.Size(484, 103);
 			this.table.TabIndex = 14;
 			// 
 			// InfoLbl
@@ -85,7 +85,7 @@ namespace VegasScript {
 			this.InfoLbl.AutoSize = true;
 			this.InfoLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.InfoLbl.Location = new System.Drawing.Point(10, 17);
-			this.InfoLbl.Margin = new System.Windows.Forms.Padding(0, 6, 0, 6);
+			this.InfoLbl.Margin = new System.Windows.Forms.Padding(0, 6, 0, 3);
 			this.InfoLbl.Name = "InfoLbl";
 			this.InfoLbl.Size = new System.Drawing.Size(464, 15);
 			this.InfoLbl.TabIndex = 0;
@@ -104,7 +104,7 @@ namespace VegasScript {
             "阈值",
             "彩灰交替",
             "正负交替"});
-			this.EffectsCombo.Location = new System.Drawing.Point(13, 41);
+			this.EffectsCombo.Location = new System.Drawing.Point(13, 38);
 			this.EffectsCombo.Name = "EffectsCombo";
 			this.EffectsCombo.Size = new System.Drawing.Size(458, 23);
 			this.EffectsCombo.TabIndex = 1;
@@ -112,7 +112,7 @@ namespace VegasScript {
 			// ReverseCheck
 			// 
 			this.ReverseCheck.AutoSize = true;
-			this.ReverseCheck.Location = new System.Drawing.Point(13, 73);
+			this.ReverseCheck.Location = new System.Drawing.Point(13, 70);
 			this.ReverseCheck.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
 			this.ReverseCheck.Name = "ReverseCheck";
 			this.ReverseCheck.Size = new System.Drawing.Size(74, 19);

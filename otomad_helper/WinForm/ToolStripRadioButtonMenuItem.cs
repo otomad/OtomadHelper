@@ -54,7 +54,7 @@ namespace VegasScript {
 			this.ShortcutKeys = shortcutKeys;
 		}
 
-		// Called by all constructors to initialize CheckOnClick.
+		// 由所有构造函数调用以初始化“选中时单击”。
 		private void Initialize() {
 			CheckOnClick = true;
 		}
@@ -62,52 +62,45 @@ namespace VegasScript {
 		protected override void OnCheckedChanged(EventArgs e) {
 			base.OnCheckedChanged(e);
 
-			// If this item is no longer in the checked state or if its
-			// parent has not yet been initialized, do nothing.
+			// 如果此项不再处于选中状态或其父项尚未初始化，则不执行任何操作。
 			if (!Checked || this.Parent == null) return;
 
-			// Clear the checked state for all siblings.
+			// 清除所有同级的选中状态。
 			foreach (ToolStripItem item in Parent.Items) {
 				ToolStripRadioButtonMenuItem radioItem =
 					item as ToolStripRadioButtonMenuItem;
 				if (radioItem != null && radioItem != this && radioItem.Checked) {
 					radioItem.Checked = false;
 
-					// Only one item can be selected at a time,
-					// so there is no need to continue.
+					// 一次只能选择一个项目，因此无需继续。
 					return;
 				}
 			}
 		}
 
 		protected override void OnClick(EventArgs e) {
-			// If the item is already in the checked state, do not call
-			// the base method, which would toggle the value.
+			// 如果该项已处于选中状态，则不要调用基方法，这样会切换该值。
 			if (Checked) return;
 
 			base.OnClick(e);
 		}
 
-		// Let the item paint itself, and then paint the RadioButton
-		// where the check mark is normally displayed.
+		// 让项目自行绘制，然后绘制通常显示为复选标记的单选按钮。
 		protected override void OnPaint(PaintEventArgs e) {
 			if (Image != null) {
-				// If the client sets the Image property, the selection behavior
-				// remains unchanged, but the RadioButton is not displayed and the
-				// selection is indicated only by the selection rectangle.
+				// 如果客户端设置“图像”属性，则选择行为保持不变，但不显示单选按钮，并且选择仅由选择矩形指示。
 				base.OnPaint(e);
 				return;
 			} else {
-				// If the Image property is not set, call the base OnPaint method
-				// with the CheckState property temporarily cleared to prevent
-				// the check mark from being painted.
+				// 如果未设置“图像”属性，请在暂时清除“选中状态”属性的情况下调用基类 OnPaint
+				// 方法，以防止绘制复选标记。
 				CheckState currentState = this.CheckState;
 				this.CheckState = CheckState.Unchecked;
 				base.OnPaint(e);
 				this.CheckState = currentState;
 			}
 
-			// Determine the correct state of the RadioButton.
+			// 确定单选按钮的正确状态。
 			RadioButtonState buttonState = RadioButtonState.UncheckedNormal;
 			if (Enabled) {
 				if (mouseDownState) {
@@ -124,7 +117,7 @@ namespace VegasScript {
 				else buttonState = RadioButtonState.UncheckedDisabled;
 			}
 
-			// Calculate the position at which to display the RadioButton.
+			// 计算显示单选按钮的位置。
 			Int32 offset = (ContentRectangle.Height -
 				RadioButtonRenderer.GetGlyphSize(
 				e.Graphics, buttonState).Height) / 2;
@@ -132,7 +125,7 @@ namespace VegasScript {
 				ContentRectangle.Location.X + 4,
 				ContentRectangle.Location.Y + offset);
 
-			// Paint the RadioButton.
+			// 绘制单选按钮。
 			RadioButtonRenderer.DrawRadioButton(
 				e.Graphics, imageLocation, buttonState);
 		}
@@ -142,7 +135,7 @@ namespace VegasScript {
 		protected override void OnMouseEnter(EventArgs e) {
 			mouseHoverState = true;
 
-			// Force the item to repaint with the new RadioButton state.
+			// 强制项目使用新的单选按钮状态重新绘制。
 			Invalidate();
 
 			base.OnMouseEnter(e);
@@ -158,7 +151,7 @@ namespace VegasScript {
 		protected override void OnMouseDown(MouseEventArgs e) {
 			mouseDownState = true;
 
-			// Force the item to repaint with the new RadioButton state.
+			// 强制项目使用新的单选按钮状态重新绘制。
 			Invalidate();
 
 			base.OnMouseDown(e);
@@ -169,15 +162,13 @@ namespace VegasScript {
 			base.OnMouseUp(e);
 		}
 
-		// Enable the item only if its parent item is in the checked state
-		// and its Enabled property has not been explicitly set to false.
+		// 仅当其父项处于选中状态且其“启用”属性未显式设置为 false 时，才启用该项。
 		public override bool Enabled {
 			get {
 				ToolStripMenuItem ownerMenuItem =
 					OwnerItem as ToolStripMenuItem;
 
-				// Use the base value in design mode to prevent the designer
-				// from setting the base value to the calculated value.
+				// 在设计模式中使用基准值可防止设计者将基准值设置为计算值。
 				if (!DesignMode &&
 					ownerMenuItem != null && ownerMenuItem.CheckOnClick) {
 					return base.Enabled && ownerMenuItem.Checked;
@@ -190,9 +181,8 @@ namespace VegasScript {
 			}
 		}
 
-		// When OwnerItem becomes available, if it is a ToolStripMenuItem
-		// with a CheckOnClick property value of true, subscribe to its
-		// CheckedChanged event.
+		// 当“父项”可用时，如果它是一个工具条菜单项，且“选中时单击”属性值为 true，
+		// 则订阅其“选中状态更改”事件。
 		protected override void OnOwnerChanged(EventArgs e) {
 			ToolStripMenuItem ownerMenuItem =
 				OwnerItem as ToolStripMenuItem;
@@ -203,8 +193,7 @@ namespace VegasScript {
 			base.OnOwnerChanged(e);
 		}
 
-		// When the checked state of the parent item changes,
-		// repaint the item so that the new Enabled state is displayed.
+		// 当父项的选中状态更改时，请重新绘制该项，以便显示新的启用状态。
 		private void OwnerMenuItem_CheckedChanged(
 			object sender, EventArgs e) {
 			Invalidate();
