@@ -708,6 +708,10 @@ namespace VegasScript {
 		private void GenerateAtCustomText_Leave(object sender, EventArgs e) {
 			GenerateAtCustomText.Text = "00000";
 		}
+
+		private void TrackLegatoBtn_Click(object sender, EventArgs e) {
+			(sender as Button).Enabled = false;
+		}
 	}
 
 	/// <summary>
