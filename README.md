@@ -1,7 +1,7 @@
 # VegasScripts
 
 ![Badge](https://img.shields.io/badge/STATE-STABLE-green?style=flat-square)
-![Badge](https://img.shields.io/badge/VERSION-4.11.1.0-orange?style=flat-square)
+![Badge](https://img.shields.io/badge/VERSION-4.11.5.0-orange?style=flat-square)
 
 Various scripts for MAGIX Vegas **(v14 and above)**.
 * Tested on v17.0
