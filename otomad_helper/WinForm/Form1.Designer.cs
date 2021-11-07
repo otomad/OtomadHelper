@@ -36,16 +36,6 @@ namespace VegasScript {
 			this.AudioLockStretchPitchCheck = new System.Windows.Forms.CheckBox();
 			this.StaffRelativeValueCheck = new System.Windows.Forms.CheckBox();
 			this.PreviewTuneAudioCheck = new System.Windows.Forms.CheckBox();
-			this.MidiStartSecondBox = new VegasScript.TimecodeBox();
-			this.MidiEndSecondBox = new VegasScript.TimecodeBox();
-			this.SourceStartTimeText = new VegasScript.TimecodeBox();
-			this.SourceEndTimeText = new VegasScript.TimecodeBox();
-			this.PreviewBeepDurationBox = new VegasScript.NumericUpDownWithUnit();
-			this.StaffLineSpacingBox = new VegasScript.NumericUpDownWithUnit();
-			this.StaffSurfacePositionBox = new VegasScript.NumericUpDownWithUnit();
-			this.StaffSurfaceWidthBox = new VegasScript.NumericUpDownWithUnit();
-			this.YtpMinLenBox = new VegasScript.NumericUpDownWithUnit();
-			this.YtpMaxLenBox = new VegasScript.NumericUpDownWithUnit();
 			this.PreviewBasePitchBtn = new System.Windows.Forms.Button();
 			this.AudioStretchAttrCombo = new System.Windows.Forms.ComboBox();
 			this.menu = new System.Windows.Forms.MenuStrip();
@@ -66,11 +56,6 @@ namespace VegasScript {
 			this.troubleShootingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.githubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.languageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.chineseToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
-			this.tchineseToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
-			this.englishToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
-			this.japaneseToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
-			this.russianToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.Tabs = new System.Windows.Forms.TabControl();
 			this.SourceTab = new System.Windows.Forms.TabPage();
@@ -94,7 +79,6 @@ namespace VegasScript {
 			this.MidiMidiBpmCheck = new System.Windows.Forms.RadioButton();
 			this.MidiProjectBpmCheck = new System.Windows.Forms.RadioButton();
 			this.MidiCustomBpmCheck = new System.Windows.Forms.RadioButton();
-			this.MidiCustomBpmBox = new VegasScript.NumericUpDownWithUnit();
 			this.SourceConfigGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.ChooseSourceLbl = new System.Windows.Forms.Label();
@@ -114,10 +98,8 @@ namespace VegasScript {
 			this.AudioParamsGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.AudioFadeInLbl = new System.Windows.Forms.Label();
-			this.AudioFadeInBox = new VegasScript.IntegerTrackWithBox();
 			this.AudioFadeInCurveCombo = new System.Windows.Forms.ComboBox();
 			this.AudioFadeOutLbl = new System.Windows.Forms.Label();
-			this.AudioFadeOutBox = new VegasScript.IntegerTrackWithBox();
 			this.AudioFadeOutCurveCombo = new System.Windows.Forms.ComboBox();
 			this.AudioTuneGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
@@ -147,33 +129,21 @@ namespace VegasScript {
 			this.VideoParamsGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
 			this.VideoFadeInLbl = new System.Windows.Forms.Label();
-			this.VideoFadeInBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoFadeInCurveCombo = new System.Windows.Forms.ComboBox();
 			this.VideoFadeOutLbl = new System.Windows.Forms.Label();
-			this.VideoFadeOutBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoFadeOutCurveCombo = new System.Windows.Forms.ComboBox();
 			this.VideoGlowLbl = new System.Windows.Forms.Label();
-			this.VideoGlowBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoGlowCurveCombo = new System.Windows.Forms.ComboBox();
 			this.VideoGlowBrightLbl = new System.Windows.Forms.Label();
-			this.VideoGlowBrightBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoStartSizeLbl = new System.Windows.Forms.Label();
-			this.VideoStartSizeBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoStartSizeCurveCombo = new System.Windows.Forms.ComboBox();
 			this.VideoEndSizeLbl = new System.Windows.Forms.Label();
-			this.VideoEndSizeBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoStartRotationLbl = new System.Windows.Forms.Label();
-			this.VideoStartRotationBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoEndRotationLbl = new System.Windows.Forms.Label();
-			this.VideoEndRotationBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoStartHorizontalTransLbl = new System.Windows.Forms.Label();
-			this.VideoStartHorizontalTransBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoEndHorizontalTransLbl = new System.Windows.Forms.Label();
-			this.VideoEndHorizontalTransBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoStartVerticalTransLbl = new System.Windows.Forms.Label();
-			this.VideoStartVerticalTransBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoEndVerticalTransLbl = new System.Windows.Forms.Label();
-			this.VideoEndVerticalTransBox = new VegasScript.IntegerTrackWithBox();
 			this.VideoEffectsGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
 			this.VideoEffectLbl = new System.Windows.Forms.Label();
@@ -196,11 +166,9 @@ namespace VegasScript {
 			this.StaffSurfaceWidthLbl = new System.Windows.Forms.Label();
 			this.StaffSurfacePositionLbl = new System.Windows.Forms.Label();
 			this.StaffLineThicknessLbl = new System.Windows.Forms.Label();
-			this.StaffLineThicknessBox = new VegasScript.NumericUpDownWithUnit();
 			this.StaffLineColorLbl = new System.Windows.Forms.Label();
 			this.StaffLineColorBtn = new System.Windows.Forms.Button();
 			this.StaffNotesShiftLbl = new System.Windows.Forms.Label();
-			this.StaffNotesShiftBox = new VegasScript.NumericUpDownWithUnit();
 			this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
 			this.StaffVisualizerConfigCheck = new System.Windows.Forms.CheckBox();
 			this.StaffGenerateCheck = new System.Windows.Forms.CheckBox();
@@ -210,7 +178,6 @@ namespace VegasScript {
 			this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
 			this.YtpMinLenLbl = new System.Windows.Forms.Label();
 			this.YtpClipsCountLbl = new System.Windows.Forms.Label();
-			this.YtpClipsCountBox = new VegasScript.NumericUpDownWithUnit();
 			this.YtpMaxLenLbl = new System.Windows.Forms.Label();
 			this.YtpEffectsGroup = new System.Windows.Forms.GroupBox();
 			this.YtpEnableAllEffectsCheck = new System.Windows.Forms.CheckBox();
@@ -219,9 +186,6 @@ namespace VegasScript {
 			this.YtpLbl = new System.Windows.Forms.Label();
 			this.HelperTab = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
-			this.QuickSelectIntervalBtn = new VegasScript.CommandLinkButton();
-			this.ReplaceClipsBtn = new VegasScript.CommandLinkButton();
-			this.ChangeTuneMethodBtn = new VegasScript.CommandLinkButton();
 			this.AutoLayoutTracksGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
 			this.AutoLayoutTracksLbl = new System.Windows.Forms.Label();
@@ -231,19 +195,54 @@ namespace VegasScript {
 			this.AutoLayoutTracksBox3dBtn = new System.Windows.Forms.Button();
 			this.AutoLayoutTracksGridBtn = new System.Windows.Forms.Button();
 			this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
+			this.TrackLegatoBtn = new System.Windows.Forms.Button();
 			this.ClearTrackMotionBtn = new System.Windows.Forms.Button();
 			this.ClearTrackEffectBtn = new System.Windows.Forms.Button();
 			this.CloseAfterOpenHelperCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
 			this.HelperLbl = new System.Windows.Forms.Label();
-			this.TrackLegatoBtn = new System.Windows.Forms.Button();
+			this.TrackLegatoMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.stackingTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.limitStretchLegatoTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.stretchLegatoTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lengthenLegatoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.MidiStartSecondBox = new VegasScript.TimecodeBox();
+			this.MidiEndSecondBox = new VegasScript.TimecodeBox();
+			this.MidiCustomBpmBox = new VegasScript.NumericUpDownWithUnit();
+			this.SourceStartTimeText = new VegasScript.TimecodeBox();
+			this.SourceEndTimeText = new VegasScript.TimecodeBox();
+			this.AudioFadeInBox = new VegasScript.IntegerTrackWithBox();
+			this.AudioFadeOutBox = new VegasScript.IntegerTrackWithBox();
+			this.PreviewBeepDurationBox = new VegasScript.NumericUpDownWithUnit();
+			this.VideoFadeInBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoFadeOutBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoGlowBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoGlowBrightBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoStartSizeBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoEndSizeBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoStartRotationBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoEndRotationBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoStartHorizontalTransBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoEndHorizontalTransBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoStartVerticalTransBox = new VegasScript.IntegerTrackWithBox();
+			this.VideoEndVerticalTransBox = new VegasScript.IntegerTrackWithBox();
+			this.StaffLineSpacingBox = new VegasScript.NumericUpDownWithUnit();
+			this.StaffSurfacePositionBox = new VegasScript.NumericUpDownWithUnit();
+			this.StaffSurfaceWidthBox = new VegasScript.NumericUpDownWithUnit();
+			this.StaffLineThicknessBox = new VegasScript.NumericUpDownWithUnit();
+			this.StaffNotesShiftBox = new VegasScript.NumericUpDownWithUnit();
+			this.YtpClipsCountBox = new VegasScript.NumericUpDownWithUnit();
+			this.YtpMinLenBox = new VegasScript.NumericUpDownWithUnit();
+			this.YtpMaxLenBox = new VegasScript.NumericUpDownWithUnit();
+			this.QuickSelectIntervalBtn = new VegasScript.CommandLinkButton();
+			this.ReplaceClipsBtn = new VegasScript.CommandLinkButton();
+			this.ChangeTuneMethodBtn = new VegasScript.CommandLinkButton();
+			this.chineseToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
+			this.tchineseToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
+			this.englishToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
+			this.japaneseToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
+			this.russianToolStripMenuItem = new VegasScript.ToolStripRadioButtonMenuItem();
 			this.tableLayoutPanel1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffSurfaceWidthBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.YtpMinLenBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.YtpMaxLenBox)).BeginInit();
 			this.menu.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.Tabs.SuspendLayout();
@@ -254,7 +253,6 @@ namespace VegasScript {
 			this.flowLayoutPanel2.SuspendLayout();
 			this.flowLayoutPanel3.SuspendLayout();
 			this.flowLayoutPanel4.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.MidiCustomBpmBox)).BeginInit();
 			this.SourceConfigGroup.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
 			this.tableLayoutPanel4.SuspendLayout();
@@ -279,13 +277,10 @@ namespace VegasScript {
 			this.SheetTab.SuspendLayout();
 			this.StaffParamsGroup.SuspendLayout();
 			this.tableLayoutPanel10.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffNotesShiftBox)).BeginInit();
 			this.flowLayoutPanel8.SuspendLayout();
 			this.YtpTab.SuspendLayout();
 			this.YtpParamsGroup.SuspendLayout();
 			this.tableLayoutPanel16.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.YtpClipsCountBox)).BeginInit();
 			this.YtpEffectsGroup.SuspendLayout();
 			this.HelperTab.SuspendLayout();
 			this.tableLayoutPanel11.SuspendLayout();
@@ -294,6 +289,17 @@ namespace VegasScript {
 			this.AutoLayoutTracksButtons.SuspendLayout();
 			this.tableLayoutPanel15.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
+			this.TrackLegatoMenu.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.MidiCustomBpmBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffSurfaceWidthBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffNotesShiftBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.YtpClipsCountBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.YtpMinLenBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.YtpMaxLenBox)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -442,231 +448,6 @@ namespace VegasScript {
 			this.PreviewTuneAudioCheck.Text = "使音频调整到主音高";
 			this.Balloon.SetToolTip(this.PreviewTuneAudioCheck, "勾选后，预听音频时会将音频素材调整到主音高中央 C。\r\n否则，预听标准音高将会播放原始音高所设定的音高。");
 			this.PreviewTuneAudioCheck.UseVisualStyleBackColor = true;
-			// 
-			// MidiStartSecondBox
-			// 
-			this.MidiStartSecondBox.DoubleValue = 0D;
-			this.MidiStartSecondBox.Enabled = false;
-			this.MidiStartSecondBox.Location = new System.Drawing.Point(61, 3);
-			this.MidiStartSecondBox.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
-			this.MidiStartSecondBox.Name = "MidiStartSecondBox";
-			this.MidiStartSecondBox.Size = new System.Drawing.Size(85, 23);
-			this.MidiStartSecondBox.TabIndex = 3;
-			this.Balloon.SetToolTip(this.MidiStartSecondBox, "用于截取 MIDI 音乐的一部分。\r\n单位：秒。");
-			this.MidiStartSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			// 
-			// MidiEndSecondBox
-			// 
-			this.MidiEndSecondBox.DoubleValue = 0D;
-			this.MidiEndSecondBox.Enabled = false;
-			this.MidiEndSecondBox.Location = new System.Drawing.Point(222, 3);
-			this.MidiEndSecondBox.Name = "MidiEndSecondBox";
-			this.MidiEndSecondBox.Size = new System.Drawing.Size(85, 23);
-			this.MidiEndSecondBox.TabIndex = 4;
-			this.Balloon.SetToolTip(this.MidiEndSecondBox, "此处填写需要读取 MIDI 文件的时间长度。\r\n注意如果填写的值过小，将截去多余时间部分的音符。\r\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时" +
-        "长末尾。\r\n单位：秒。");
-			this.MidiEndSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			// 
-			// SourceStartTimeText
-			// 
-			this.SourceStartTimeText.DoubleValue = 0D;
-			this.SourceStartTimeText.Location = new System.Drawing.Point(61, 3);
-			this.SourceStartTimeText.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
-			this.SourceStartTimeText.Name = "SourceStartTimeText";
-			this.SourceStartTimeText.Size = new System.Drawing.Size(85, 23);
-			this.SourceStartTimeText.TabIndex = 4;
-			this.Balloon.SetToolTip(this.SourceStartTimeText, "此处填写媒体素材裁剪的开始时间。\r\n单位：秒。");
-			this.SourceStartTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			// 
-			// SourceEndTimeText
-			// 
-			this.SourceEndTimeText.DoubleValue = 0D;
-			this.SourceEndTimeText.Location = new System.Drawing.Point(222, 3);
-			this.SourceEndTimeText.Name = "SourceEndTimeText";
-			this.SourceEndTimeText.Size = new System.Drawing.Size(85, 23);
-			this.SourceEndTimeText.TabIndex = 5;
-			this.Balloon.SetToolTip(this.SourceEndTimeText, "注意如果此处填写的数值比入点秒数小或相等，则始终表示持续到素材时间末尾。\r\n单位：秒。");
-			this.SourceEndTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
-			// 
-			// PreviewBeepDurationBox
-			// 
-			this.PreviewBeepDurationBox.Constrain = new decimal(new int[] {
-            800,
-            0,
-            0,
-            0});
-			this.PreviewBeepDurationBox.EnableDecimalPlaces = true;
-			this.PreviewBeepDurationBox.Location = new System.Drawing.Point(109, 3);
-			this.PreviewBeepDurationBox.Maximum = new decimal(new int[] {
-            2000,
-            0,
-            0,
-            0});
-			this.PreviewBeepDurationBox.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.PreviewBeepDurationBox.Name = "PreviewBeepDurationBox";
-			this.PreviewBeepDurationBox.Size = new System.Drawing.Size(70, 23);
-			this.PreviewBeepDurationBox.Suffix = "ms";
-			this.PreviewBeepDurationBox.TabIndex = 5;
-			this.Balloon.SetToolTip(this.PreviewBeepDurationBox, "预听标准音高所持续的时间。\r\n单位：毫秒。");
-			this.PreviewBeepDurationBox.Value = new decimal(new int[] {
-            800,
-            0,
-            0,
-            0});
-			// 
-			// StaffLineSpacingBox
-			// 
-			this.StaffLineSpacingBox.Constrain = new decimal(new int[] {
-            44,
-            0,
-            0,
-            0});
-			this.StaffLineSpacingBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffLineSpacingBox.Enabled = false;
-			this.StaffLineSpacingBox.EnableDecimalPlaces = true;
-			this.StaffLineSpacingBox.Location = new System.Drawing.Point(324, 3);
-			this.StaffLineSpacingBox.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
-			this.StaffLineSpacingBox.Name = "StaffLineSpacingBox";
-			this.StaffLineSpacingBox.Size = new System.Drawing.Size(193, 23);
-			this.StaffLineSpacingBox.Suffix = "px";
-			this.StaffLineSpacingBox.TabIndex = 7;
-			this.Balloon.SetToolTip(this.StaffLineSpacingBox, "五线谱线与线之间的间距。\r\n单位：像素。");
-			this.StaffLineSpacingBox.Value = new decimal(new int[] {
-            44,
-            0,
-            0,
-            0});
-			// 
-			// StaffSurfacePositionBox
-			// 
-			this.StaffSurfacePositionBox.Constrain = new decimal(new int[] {
-            225,
-            0,
-            0,
-            0});
-			this.StaffSurfacePositionBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffSurfacePositionBox.Enabled = false;
-			this.StaffSurfacePositionBox.EnableDecimalPlaces = true;
-			this.StaffSurfacePositionBox.Location = new System.Drawing.Point(324, 32);
-			this.StaffSurfacePositionBox.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
-			this.StaffSurfacePositionBox.Minimum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            -2147483648});
-			this.StaffSurfacePositionBox.Name = "StaffSurfacePositionBox";
-			this.StaffSurfacePositionBox.Size = new System.Drawing.Size(193, 23);
-			this.StaffSurfacePositionBox.Suffix = "px";
-			this.StaffSurfacePositionBox.TabIndex = 9;
-			this.Balloon.SetToolTip(this.StaffSurfacePositionBox, "五线谱中间第三根线到屏幕中心的距离，上正下负。\r\n单位：像素。");
-			this.StaffSurfacePositionBox.Value = new decimal(new int[] {
-            225,
-            0,
-            0,
-            0});
-			// 
-			// StaffSurfaceWidthBox
-			// 
-			this.StaffSurfaceWidthBox.Constrain = new decimal(new int[] {
-            1500,
-            0,
-            0,
-            0});
-			this.StaffSurfaceWidthBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffSurfaceWidthBox.Enabled = false;
-			this.StaffSurfaceWidthBox.EnableDecimalPlaces = true;
-			this.StaffSurfaceWidthBox.Location = new System.Drawing.Point(64, 32);
-			this.StaffSurfaceWidthBox.Maximum = new decimal(new int[] {
-            65536,
-            0,
-            0,
-            0});
-			this.StaffSurfaceWidthBox.Name = "StaffSurfaceWidthBox";
-			this.StaffSurfaceWidthBox.Size = new System.Drawing.Size(193, 23);
-			this.StaffSurfaceWidthBox.Suffix = "px";
-			this.StaffSurfaceWidthBox.TabIndex = 8;
-			this.Balloon.SetToolTip(this.StaffSurfaceWidthBox, "将在屏幕中间所填的宽度内显示音符，用于左右留白，给左侧的谱号留间距。\r\n单位：像素。");
-			this.StaffSurfaceWidthBox.Value = new decimal(new int[] {
-            1500,
-            0,
-            0,
-            0});
-			// 
-			// YtpMinLenBox
-			// 
-			this.YtpMinLenBox.Constrain = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-			this.YtpMinLenBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.YtpMinLenBox.EnableDecimalPlaces = true;
-			this.YtpMinLenBox.Location = new System.Drawing.Point(64, 3);
-			this.YtpMinLenBox.Maximum = new decimal(new int[] {
-            30000,
-            0,
-            0,
-            0});
-			this.YtpMinLenBox.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-			this.YtpMinLenBox.Name = "YtpMinLenBox";
-			this.YtpMinLenBox.Size = new System.Drawing.Size(193, 23);
-			this.YtpMinLenBox.Suffix = "ms";
-			this.YtpMinLenBox.TabIndex = 8;
-			this.Balloon.SetToolTip(this.YtpMinLenBox, "指定单个轨道剪辑的最小长度。\r\n单位：毫秒。");
-			this.YtpMinLenBox.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-			this.YtpMinLenBox.ValueChanged += new System.EventHandler(this.YtpLenBox_ValueChanged);
-			// 
-			// YtpMaxLenBox
-			// 
-			this.YtpMaxLenBox.Constrain = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-			this.YtpMaxLenBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.YtpMaxLenBox.EnableDecimalPlaces = true;
-			this.YtpMaxLenBox.Location = new System.Drawing.Point(324, 3);
-			this.YtpMaxLenBox.Maximum = new decimal(new int[] {
-            30000,
-            0,
-            0,
-            0});
-			this.YtpMaxLenBox.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-			this.YtpMaxLenBox.Name = "YtpMaxLenBox";
-			this.YtpMaxLenBox.Size = new System.Drawing.Size(193, 23);
-			this.YtpMaxLenBox.Suffix = "ms";
-			this.YtpMaxLenBox.TabIndex = 9;
-			this.Balloon.SetToolTip(this.YtpMaxLenBox, "指定单个轨道剪辑的最大长度。\r\n单位：毫秒。");
-			this.YtpMaxLenBox.Value = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-			this.YtpMaxLenBox.ValueChanged += new System.EventHandler(this.YtpLenBox_ValueChanged);
 			// 
 			// PreviewBasePitchBtn
 			// 
@@ -834,48 +615,6 @@ namespace VegasScript {
 			this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
 			this.languageToolStripMenuItem.Size = new System.Drawing.Size(71, 19);
 			this.languageToolStripMenuItem.Text = "&Language";
-			// 
-			// chineseToolStripMenuItem
-			// 
-			this.chineseToolStripMenuItem.Checked = true;
-			this.chineseToolStripMenuItem.CheckOnClick = true;
-			this.chineseToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.chineseToolStripMenuItem.Name = "chineseToolStripMenuItem";
-			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
-			this.chineseToolStripMenuItem.Text = "简体中文";
-			// 
-			// tchineseToolStripMenuItem
-			// 
-			this.tchineseToolStripMenuItem.CheckOnClick = true;
-			this.tchineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tchineseToolStripMenuItem.Name = "tchineseToolStripMenuItem";
-			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
-			this.tchineseToolStripMenuItem.Text = "繁體中文";
-			// 
-			// englishToolStripMenuItem
-			// 
-			this.englishToolStripMenuItem.CheckOnClick = true;
-			this.englishToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-			this.englishToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
-			this.englishToolStripMenuItem.Text = "English";
-			// 
-			// japaneseToolStripMenuItem
-			// 
-			this.japaneseToolStripMenuItem.CheckOnClick = true;
-			this.japaneseToolStripMenuItem.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.japaneseToolStripMenuItem.Name = "japaneseToolStripMenuItem";
-			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
-			this.japaneseToolStripMenuItem.Text = "日本語";
-			// 
-			// russianToolStripMenuItem
-			// 
-			this.russianToolStripMenuItem.CheckOnClick = true;
-			this.russianToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
-			this.russianToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
-			this.russianToolStripMenuItem.Text = "Русский";
 			// 
 			// panel1
 			// 
@@ -1175,37 +914,6 @@ namespace VegasScript {
 			this.MidiCustomBpmCheck.Text = "自定义";
 			this.MidiCustomBpmCheck.UseVisualStyleBackColor = true;
 			// 
-			// MidiCustomBpmBox
-			// 
-			this.MidiCustomBpmBox.Constrain = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
-			this.MidiCustomBpmBox.DecimalPlaces = 3;
-			this.MidiCustomBpmBox.Enabled = false;
-			this.MidiCustomBpmBox.Location = new System.Drawing.Point(226, 3);
-			this.MidiCustomBpmBox.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
-			this.MidiCustomBpmBox.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-			this.MidiCustomBpmBox.Minimum = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-			this.MidiCustomBpmBox.Name = "MidiCustomBpmBox";
-			this.MidiCustomBpmBox.Size = new System.Drawing.Size(95, 23);
-			this.MidiCustomBpmBox.Suffix = "BPM";
-			this.MidiCustomBpmBox.TabIndex = 3;
-			this.MidiCustomBpmBox.Value = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
-			// 
 			// SourceConfigGroup
 			// 
 			this.SourceConfigGroup.AutoSize = true;
@@ -1460,17 +1168,6 @@ namespace VegasScript {
 			this.AudioFadeInLbl.Text = "渐入　　";
 			this.AudioFadeInLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// AudioFadeInBox
-			// 
-			this.AudioFadeInBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioFadeInBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.AudioFadeInBox.Location = new System.Drawing.Point(65, 4);
-			this.AudioFadeInBox.Margin = new System.Windows.Forms.Padding(4);
-			this.AudioFadeInBox.Name = "AudioFadeInBox";
-			this.AudioFadeInBox.NumericUpDownWidth = 65;
-			this.AudioFadeInBox.Size = new System.Drawing.Size(380, 31);
-			this.AudioFadeInBox.TabIndex = 2;
-			// 
 			// AudioFadeInCurveCombo
 			// 
 			this.AudioFadeInCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1498,18 +1195,6 @@ namespace VegasScript {
 			this.AudioFadeOutLbl.TabIndex = 1;
 			this.AudioFadeOutLbl.Text = "渐出　　";
 			this.AudioFadeOutLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// AudioFadeOutBox
-			// 
-			this.AudioFadeOutBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioFadeOutBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.AudioFadeOutBox.Location = new System.Drawing.Point(65, 43);
-			this.AudioFadeOutBox.Margin = new System.Windows.Forms.Padding(4);
-			this.AudioFadeOutBox.Name = "AudioFadeOutBox";
-			this.AudioFadeOutBox.NumericUpDownWidth = 65;
-			this.AudioFadeOutBox.Size = new System.Drawing.Size(380, 31);
-			this.AudioFadeOutBox.TabIndex = 4;
-			this.AudioFadeOutBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			// 
 			// AudioFadeOutCurveCombo
 			// 
@@ -1947,17 +1632,6 @@ namespace VegasScript {
 			this.VideoFadeInLbl.Text = "渐入　　";
 			this.VideoFadeInLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// VideoFadeInBox
-			// 
-			this.VideoFadeInBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeInBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoFadeInBox.Location = new System.Drawing.Point(65, 4);
-			this.VideoFadeInBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoFadeInBox.Name = "VideoFadeInBox";
-			this.VideoFadeInBox.NumericUpDownWidth = 65;
-			this.VideoFadeInBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoFadeInBox.TabIndex = 2;
-			// 
 			// VideoFadeInCurveCombo
 			// 
 			this.VideoFadeInCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1985,18 +1659,6 @@ namespace VegasScript {
 			this.VideoFadeOutLbl.TabIndex = 1;
 			this.VideoFadeOutLbl.Text = "渐出　　";
 			this.VideoFadeOutLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoFadeOutBox
-			// 
-			this.VideoFadeOutBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoFadeOutBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoFadeOutBox.Location = new System.Drawing.Point(65, 43);
-			this.VideoFadeOutBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoFadeOutBox.Name = "VideoFadeOutBox";
-			this.VideoFadeOutBox.NumericUpDownWidth = 65;
-			this.VideoFadeOutBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoFadeOutBox.TabIndex = 4;
-			this.VideoFadeOutBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			// 
 			// VideoFadeOutCurveCombo
 			// 
@@ -2026,18 +1688,6 @@ namespace VegasScript {
 			this.VideoGlowLbl.Text = "发光";
 			this.VideoGlowLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// VideoGlowBox
-			// 
-			this.VideoGlowBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoGlowBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoGlowBox.Location = new System.Drawing.Point(65, 82);
-			this.VideoGlowBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoGlowBox.Minimum = -100;
-			this.VideoGlowBox.Name = "VideoGlowBox";
-			this.VideoGlowBox.NumericUpDownWidth = 65;
-			this.VideoGlowBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoGlowBox.TabIndex = 10;
-			// 
 			// VideoGlowCurveCombo
 			// 
 			this.VideoGlowCurveCombo.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -2066,21 +1716,6 @@ namespace VegasScript {
 			this.VideoGlowBrightLbl.Text = "发光亮度";
 			this.VideoGlowBrightLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// VideoGlowBrightBox
-			// 
-			this.VideoGlowBrightBox.DefaultValue = 100;
-			this.VideoGlowBrightBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoGlowBrightBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoGlowBrightBox.Location = new System.Drawing.Point(65, 121);
-			this.VideoGlowBrightBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoGlowBrightBox.Minimum = -100;
-			this.VideoGlowBrightBox.Name = "VideoGlowBrightBox";
-			this.VideoGlowBrightBox.NumericUpDownWidth = 65;
-			this.VideoGlowBrightBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoGlowBrightBox.TabIndex = 12;
-			this.VideoGlowBrightBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoGlowBrightBox.Value = 100;
-			// 
 			// VideoStartSizeLbl
 			// 
 			this.VideoStartSizeLbl.AutoSize = true;
@@ -2091,20 +1726,6 @@ namespace VegasScript {
 			this.VideoStartSizeLbl.TabIndex = 6;
 			this.VideoStartSizeLbl.Text = "起始尺寸";
 			this.VideoStartSizeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartSizeBox
-			// 
-			this.VideoStartSizeBox.DefaultValue = 100;
-			this.VideoStartSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartSizeBox.Location = new System.Drawing.Point(65, 160);
-			this.VideoStartSizeBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoStartSizeBox.Maximum = 200;
-			this.VideoStartSizeBox.Name = "VideoStartSizeBox";
-			this.VideoStartSizeBox.NumericUpDownWidth = 65;
-			this.VideoStartSizeBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoStartSizeBox.TabIndex = 14;
-			this.VideoStartSizeBox.Value = 100;
 			// 
 			// VideoStartSizeCurveCombo
 			// 
@@ -2134,21 +1755,6 @@ namespace VegasScript {
 			this.VideoEndSizeLbl.Text = "终止尺寸";
 			this.VideoEndSizeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// VideoEndSizeBox
-			// 
-			this.VideoEndSizeBox.DefaultValue = 100;
-			this.VideoEndSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndSizeBox.Location = new System.Drawing.Point(65, 199);
-			this.VideoEndSizeBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoEndSizeBox.Maximum = 200;
-			this.VideoEndSizeBox.Name = "VideoEndSizeBox";
-			this.VideoEndSizeBox.NumericUpDownWidth = 65;
-			this.VideoEndSizeBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoEndSizeBox.TabIndex = 16;
-			this.VideoEndSizeBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndSizeBox.Value = 100;
-			// 
 			// VideoStartRotationLbl
 			// 
 			this.VideoStartRotationLbl.AutoSize = true;
@@ -2159,19 +1765,6 @@ namespace VegasScript {
 			this.VideoStartRotationLbl.TabIndex = 8;
 			this.VideoStartRotationLbl.Text = "起始旋转";
 			this.VideoStartRotationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartRotationBox
-			// 
-			this.VideoStartRotationBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartRotationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartRotationBox.Location = new System.Drawing.Point(65, 238);
-			this.VideoStartRotationBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoStartRotationBox.Maximum = 360;
-			this.VideoStartRotationBox.Minimum = -360;
-			this.VideoStartRotationBox.Name = "VideoStartRotationBox";
-			this.VideoStartRotationBox.NumericUpDownWidth = 65;
-			this.VideoStartRotationBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoStartRotationBox.TabIndex = 17;
 			// 
 			// VideoEndRotationLbl
 			// 
@@ -2184,20 +1777,6 @@ namespace VegasScript {
 			this.VideoEndRotationLbl.Text = "终止旋转";
 			this.VideoEndRotationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// VideoEndRotationBox
-			// 
-			this.VideoEndRotationBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndRotationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndRotationBox.Location = new System.Drawing.Point(65, 277);
-			this.VideoEndRotationBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoEndRotationBox.Maximum = 360;
-			this.VideoEndRotationBox.Minimum = -360;
-			this.VideoEndRotationBox.Name = "VideoEndRotationBox";
-			this.VideoEndRotationBox.NumericUpDownWidth = 65;
-			this.VideoEndRotationBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoEndRotationBox.TabIndex = 18;
-			this.VideoEndRotationBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			// 
 			// VideoStartHorizontalTransLbl
 			// 
 			this.VideoStartHorizontalTransLbl.AutoSize = true;
@@ -2208,18 +1787,6 @@ namespace VegasScript {
 			this.VideoStartHorizontalTransLbl.TabIndex = 12;
 			this.VideoStartHorizontalTransLbl.Text = "起始平移";
 			this.VideoStartHorizontalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoStartHorizontalTransBox
-			// 
-			this.VideoStartHorizontalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartHorizontalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartHorizontalTransBox.Location = new System.Drawing.Point(65, 316);
-			this.VideoStartHorizontalTransBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoStartHorizontalTransBox.Minimum = -100;
-			this.VideoStartHorizontalTransBox.Name = "VideoStartHorizontalTransBox";
-			this.VideoStartHorizontalTransBox.NumericUpDownWidth = 65;
-			this.VideoStartHorizontalTransBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoStartHorizontalTransBox.TabIndex = 19;
 			// 
 			// VideoEndHorizontalTransLbl
 			// 
@@ -2232,19 +1799,6 @@ namespace VegasScript {
 			this.VideoEndHorizontalTransLbl.Text = "终止平移";
 			this.VideoEndHorizontalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// VideoEndHorizontalTransBox
-			// 
-			this.VideoEndHorizontalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndHorizontalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndHorizontalTransBox.Location = new System.Drawing.Point(65, 355);
-			this.VideoEndHorizontalTransBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoEndHorizontalTransBox.Minimum = -100;
-			this.VideoEndHorizontalTransBox.Name = "VideoEndHorizontalTransBox";
-			this.VideoEndHorizontalTransBox.NumericUpDownWidth = 65;
-			this.VideoEndHorizontalTransBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoEndHorizontalTransBox.TabIndex = 20;
-			this.VideoEndHorizontalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			// 
 			// VideoStartVerticalTransLbl
 			// 
 			this.VideoStartVerticalTransLbl.AutoSize = true;
@@ -2256,18 +1810,6 @@ namespace VegasScript {
 			this.VideoStartVerticalTransLbl.Text = "起始直移";
 			this.VideoStartVerticalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// VideoStartVerticalTransBox
-			// 
-			this.VideoStartVerticalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoStartVerticalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoStartVerticalTransBox.Location = new System.Drawing.Point(65, 394);
-			this.VideoStartVerticalTransBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoStartVerticalTransBox.Minimum = -100;
-			this.VideoStartVerticalTransBox.Name = "VideoStartVerticalTransBox";
-			this.VideoStartVerticalTransBox.NumericUpDownWidth = 65;
-			this.VideoStartVerticalTransBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoStartVerticalTransBox.TabIndex = 21;
-			// 
 			// VideoEndVerticalTransLbl
 			// 
 			this.VideoEndVerticalTransLbl.AutoSize = true;
@@ -2278,19 +1820,6 @@ namespace VegasScript {
 			this.VideoEndVerticalTransLbl.TabIndex = 13;
 			this.VideoEndVerticalTransLbl.Text = "终止直移";
 			this.VideoEndVerticalTransLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// VideoEndVerticalTransBox
-			// 
-			this.VideoEndVerticalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoEndVerticalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.VideoEndVerticalTransBox.Location = new System.Drawing.Point(65, 433);
-			this.VideoEndVerticalTransBox.Margin = new System.Windows.Forms.Padding(4);
-			this.VideoEndVerticalTransBox.Minimum = -100;
-			this.VideoEndVerticalTransBox.Name = "VideoEndVerticalTransBox";
-			this.VideoEndVerticalTransBox.NumericUpDownWidth = 65;
-			this.VideoEndVerticalTransBox.Size = new System.Drawing.Size(363, 31);
-			this.VideoEndVerticalTransBox.TabIndex = 22;
-			this.VideoEndVerticalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			// 
 			// VideoEffectsGroup
 			// 
@@ -2604,36 +2133,6 @@ namespace VegasScript {
 			this.StaffLineThicknessLbl.Text = "谱线粗细";
 			this.StaffLineThicknessLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// StaffLineThicknessBox
-			// 
-			this.StaffLineThicknessBox.Constrain = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-			this.StaffLineThicknessBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffLineThicknessBox.Enabled = false;
-			this.StaffLineThicknessBox.EnableDecimalPlaces = true;
-			this.StaffLineThicknessBox.Location = new System.Drawing.Point(64, 61);
-			this.StaffLineThicknessBox.Maximum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-			this.StaffLineThicknessBox.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-			this.StaffLineThicknessBox.Name = "StaffLineThicknessBox";
-			this.StaffLineThicknessBox.Size = new System.Drawing.Size(193, 23);
-			this.StaffLineThicknessBox.TabIndex = 10;
-			this.StaffLineThicknessBox.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-			// 
 			// StaffLineColorLbl
 			// 
 			this.StaffLineColorLbl.AutoSize = true;
@@ -2669,32 +2168,6 @@ namespace VegasScript {
 			this.StaffNotesShiftLbl.TabIndex = 12;
 			this.StaffNotesShiftLbl.Text = "音符偏移";
 			this.StaffNotesShiftLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// StaffNotesShiftBox
-			// 
-			this.StaffNotesShiftBox.Constrain = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-			this.StaffNotesShiftBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffNotesShiftBox.Enabled = false;
-			this.StaffNotesShiftBox.EnableDecimalPlaces = true;
-			this.StaffNotesShiftBox.Location = new System.Drawing.Point(64, 90);
-			this.StaffNotesShiftBox.Maximum = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
-			this.StaffNotesShiftBox.Minimum = new decimal(new int[] {
-            120,
-            0,
-            0,
-            -2147483648});
-			this.StaffNotesShiftBox.Name = "StaffNotesShiftBox";
-			this.StaffNotesShiftBox.Size = new System.Drawing.Size(193, 23);
-			this.StaffNotesShiftBox.Suffix = "key";
-			this.StaffNotesShiftBox.TabIndex = 13;
 			// 
 			// flowLayoutPanel8
 			// 
@@ -2818,35 +2291,6 @@ namespace VegasScript {
 			this.YtpClipsCountLbl.Text = "剪辑数目";
 			this.YtpClipsCountLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// YtpClipsCountBox
-			// 
-			this.YtpClipsCountBox.Constrain = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-			this.YtpClipsCountBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.YtpClipsCountBox.EnableDecimalPlaces = true;
-			this.YtpClipsCountBox.Location = new System.Drawing.Point(64, 32);
-			this.YtpClipsCountBox.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-			this.YtpClipsCountBox.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.YtpClipsCountBox.Name = "YtpClipsCountBox";
-			this.YtpClipsCountBox.Size = new System.Drawing.Size(193, 23);
-			this.YtpClipsCountBox.TabIndex = 11;
-			this.YtpClipsCountBox.Value = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-			// 
 			// YtpMaxLenLbl
 			// 
 			this.YtpMaxLenLbl.AutoSize = true;
@@ -2917,7 +2361,9 @@ namespace VegasScript {
 			this.YtpEffectsCheckList.Name = "YtpEffectsCheckList";
 			this.YtpEffectsCheckList.Size = new System.Drawing.Size(515, 90);
 			this.YtpEffectsCheckList.TabIndex = 1;
+			this.YtpEffectsCheckList.Click += new System.EventHandler(this.YtpEffectsCheckList_SelectedIndexChanged);
 			this.YtpEffectsCheckList.SelectedIndexChanged += new System.EventHandler(this.YtpEffectsCheckList_SelectedIndexChanged);
+			this.YtpEffectsCheckList.DoubleClick += new System.EventHandler(this.YtpEffectsCheckList_SelectedIndexChanged);
 			// 
 			// YtpSelectInfo
 			// 
@@ -2979,45 +2425,6 @@ namespace VegasScript {
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.Size = new System.Drawing.Size(534, 433);
 			this.tableLayoutPanel11.TabIndex = 8;
-			// 
-			// QuickSelectIntervalBtn
-			// 
-			this.QuickSelectIntervalBtn.CommandLink = true;
-			this.QuickSelectIntervalBtn.CommandLinkNote = "本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴视频事件”等操作。\r\n已选中 0 个轨道剪辑。";
-			this.QuickSelectIntervalBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(3, 36);
-			this.QuickSelectIntervalBtn.Name = "QuickSelectIntervalBtn";
-			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(528, 84);
-			this.QuickSelectIntervalBtn.TabIndex = 1;
-			this.QuickSelectIntervalBtn.Text = "快速间隔选择";
-			this.QuickSelectIntervalBtn.UseVisualStyleBackColor = true;
-			this.QuickSelectIntervalBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
-			// 
-			// ReplaceClipsBtn
-			// 
-			this.ReplaceClipsBtn.CommandLink = true;
-			this.ReplaceClipsBtn.CommandLinkNote = "将多个轨道剪辑替换为指定的新轨道剪辑。\r\n已选中 0 个轨道剪辑。";
-			this.ReplaceClipsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ReplaceClipsBtn.Location = new System.Drawing.Point(3, 126);
-			this.ReplaceClipsBtn.Name = "ReplaceClipsBtn";
-			this.ReplaceClipsBtn.Size = new System.Drawing.Size(528, 84);
-			this.ReplaceClipsBtn.TabIndex = 2;
-			this.ReplaceClipsBtn.Text = "替换轨道素材";
-			this.ReplaceClipsBtn.UseVisualStyleBackColor = true;
-			this.ReplaceClipsBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
-			// 
-			// ChangeTuneMethodBtn
-			// 
-			this.ChangeTuneMethodBtn.CommandLink = true;
-			this.ChangeTuneMethodBtn.CommandLinkNote = "将多个音频轨道剪辑统一更改为指定的调音算法。\r\n已选中 0 个音频轨道剪辑。";
-			this.ChangeTuneMethodBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(3, 216);
-			this.ChangeTuneMethodBtn.Name = "ChangeTuneMethodBtn";
-			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(528, 84);
-			this.ChangeTuneMethodBtn.TabIndex = 3;
-			this.ChangeTuneMethodBtn.Text = "更改调音算法";
-			this.ChangeTuneMethodBtn.UseVisualStyleBackColor = true;
-			this.ChangeTuneMethodBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
 			// 
 			// AutoLayoutTracksGroup
 			// 
@@ -3159,6 +2566,21 @@ namespace VegasScript {
 			this.tableLayoutPanel15.Size = new System.Drawing.Size(518, 31);
 			this.tableLayoutPanel15.TabIndex = 9;
 			// 
+			// TrackLegatoBtn
+			// 
+			this.TrackLegatoBtn.AutoSize = true;
+			this.TrackLegatoBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TrackLegatoBtn.ForeColor = System.Drawing.Color.Red;
+			this.TrackLegatoBtn.Location = new System.Drawing.Point(215, 3);
+			this.TrackLegatoBtn.MaximumSize = new System.Drawing.Size(0, 25);
+			this.TrackLegatoBtn.MinimumSize = new System.Drawing.Size(100, 0);
+			this.TrackLegatoBtn.Name = "TrackLegatoBtn";
+			this.TrackLegatoBtn.Size = new System.Drawing.Size(100, 25);
+			this.TrackLegatoBtn.TabIndex = 2;
+			this.TrackLegatoBtn.Text = "填补轨道间隙▾";
+			this.TrackLegatoBtn.UseVisualStyleBackColor = true;
+			this.TrackLegatoBtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TrackLegatoBtn_MouseDown);
+			// 
 			// ClearTrackMotionBtn
 			// 
 			this.ClearTrackMotionBtn.AutoSize = true;
@@ -3230,20 +2652,644 @@ namespace VegasScript {
 			this.HelperLbl.TabIndex = 2;
 			this.HelperLbl.Text = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。";
 			// 
-			// TrackLegatoBtn
+			// TrackLegatoMenu
 			// 
-			this.TrackLegatoBtn.AutoSize = true;
-			this.TrackLegatoBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TrackLegatoBtn.ForeColor = System.Drawing.Color.Red;
-			this.TrackLegatoBtn.Location = new System.Drawing.Point(215, 3);
-			this.TrackLegatoBtn.MaximumSize = new System.Drawing.Size(0, 25);
-			this.TrackLegatoBtn.MinimumSize = new System.Drawing.Size(100, 0);
-			this.TrackLegatoBtn.Name = "TrackLegatoBtn";
-			this.TrackLegatoBtn.Size = new System.Drawing.Size(100, 25);
-			this.TrackLegatoBtn.TabIndex = 2;
-			this.TrackLegatoBtn.Text = "填补轨道间隙";
-			this.TrackLegatoBtn.UseVisualStyleBackColor = true;
-			this.TrackLegatoBtn.Click += new System.EventHandler(this.TrackLegatoBtn_Click);
+			this.TrackLegatoMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stackingTracksToolStripMenuItem,
+            this.limitStretchLegatoTracksToolStripMenuItem,
+            this.stretchLegatoTracksToolStripMenuItem,
+            this.lengthenLegatoToolStripMenuItem});
+			this.TrackLegatoMenu.Name = "TrackLegatoMenu";
+			this.TrackLegatoMenu.Size = new System.Drawing.Size(279, 92);
+			// 
+			// stackingTracksToolStripMenuItem
+			// 
+			this.stackingTracksToolStripMenuItem.Name = "stackingTracksToolStripMenuItem";
+			this.stackingTracksToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
+			this.stackingTracksToolStripMenuItem.Text = "堆积素材";
+			this.stackingTracksToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
+			// 
+			// limitStretchLegatoTracksToolStripMenuItem
+			// 
+			this.limitStretchLegatoTracksToolStripMenuItem.Name = "limitStretchLegatoTracksToolStripMenuItem";
+			this.limitStretchLegatoTracksToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
+			this.limitStretchLegatoTracksToolStripMenuItem.Text = "拉伸素材（限制在拉伸极限范围之内）";
+			this.limitStretchLegatoTracksToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
+			// 
+			// stretchLegatoTracksToolStripMenuItem
+			// 
+			this.stretchLegatoTracksToolStripMenuItem.Name = "stretchLegatoTracksToolStripMenuItem";
+			this.stretchLegatoTracksToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
+			this.stretchLegatoTracksToolStripMenuItem.Text = "拉伸素材";
+			this.stretchLegatoTracksToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
+			// 
+			// lengthenLegatoToolStripMenuItem
+			// 
+			this.lengthenLegatoToolStripMenuItem.Name = "lengthenLegatoToolStripMenuItem";
+			this.lengthenLegatoToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
+			this.lengthenLegatoToolStripMenuItem.Text = "改变素材持续时间";
+			this.lengthenLegatoToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
+			// 
+			// MidiStartSecondBox
+			// 
+			this.MidiStartSecondBox.DoubleValue = 0D;
+			this.MidiStartSecondBox.Enabled = false;
+			this.MidiStartSecondBox.Location = new System.Drawing.Point(61, 3);
+			this.MidiStartSecondBox.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
+			this.MidiStartSecondBox.Name = "MidiStartSecondBox";
+			this.MidiStartSecondBox.Size = new System.Drawing.Size(85, 23);
+			this.MidiStartSecondBox.TabIndex = 3;
+			this.Balloon.SetToolTip(this.MidiStartSecondBox, "用于截取 MIDI 音乐的一部分。\r\n单位：秒。");
+			this.MidiStartSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// MidiEndSecondBox
+			// 
+			this.MidiEndSecondBox.DoubleValue = 0D;
+			this.MidiEndSecondBox.Enabled = false;
+			this.MidiEndSecondBox.Location = new System.Drawing.Point(222, 3);
+			this.MidiEndSecondBox.Name = "MidiEndSecondBox";
+			this.MidiEndSecondBox.Size = new System.Drawing.Size(85, 23);
+			this.MidiEndSecondBox.TabIndex = 4;
+			this.Balloon.SetToolTip(this.MidiEndSecondBox, "此处填写需要读取 MIDI 文件的时间长度。\r\n注意如果填写的值过小，将截去多余时间部分的音符。\r\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时" +
+        "长末尾。\r\n单位：秒。");
+			this.MidiEndSecondBox.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// MidiCustomBpmBox
+			// 
+			this.MidiCustomBpmBox.Constrain = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
+			this.MidiCustomBpmBox.DecimalPlaces = 3;
+			this.MidiCustomBpmBox.Enabled = false;
+			this.MidiCustomBpmBox.Location = new System.Drawing.Point(226, 3);
+			this.MidiCustomBpmBox.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+			this.MidiCustomBpmBox.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+			this.MidiCustomBpmBox.Minimum = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+			this.MidiCustomBpmBox.Name = "MidiCustomBpmBox";
+			this.MidiCustomBpmBox.Size = new System.Drawing.Size(95, 23);
+			this.MidiCustomBpmBox.Suffix = "BPM";
+			this.MidiCustomBpmBox.TabIndex = 3;
+			this.MidiCustomBpmBox.Value = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
+			// 
+			// SourceStartTimeText
+			// 
+			this.SourceStartTimeText.DoubleValue = 0D;
+			this.SourceStartTimeText.Location = new System.Drawing.Point(61, 3);
+			this.SourceStartTimeText.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
+			this.SourceStartTimeText.Name = "SourceStartTimeText";
+			this.SourceStartTimeText.Size = new System.Drawing.Size(85, 23);
+			this.SourceStartTimeText.TabIndex = 4;
+			this.Balloon.SetToolTip(this.SourceStartTimeText, "此处填写媒体素材裁剪的开始时间。\r\n单位：秒。");
+			this.SourceStartTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// SourceEndTimeText
+			// 
+			this.SourceEndTimeText.DoubleValue = 0D;
+			this.SourceEndTimeText.Location = new System.Drawing.Point(222, 3);
+			this.SourceEndTimeText.Name = "SourceEndTimeText";
+			this.SourceEndTimeText.Size = new System.Drawing.Size(85, 23);
+			this.SourceEndTimeText.TabIndex = 5;
+			this.Balloon.SetToolTip(this.SourceEndTimeText, "注意如果此处填写的数值比入点秒数小或相等，则始终表示持续到素材时间末尾。\r\n单位：秒。");
+			this.SourceEndTimeText.Leave += new System.EventHandler(this.TrimTime_ValueChanged);
+			// 
+			// AudioFadeInBox
+			// 
+			this.AudioFadeInBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioFadeInBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.AudioFadeInBox.Location = new System.Drawing.Point(65, 4);
+			this.AudioFadeInBox.Margin = new System.Windows.Forms.Padding(4);
+			this.AudioFadeInBox.Name = "AudioFadeInBox";
+			this.AudioFadeInBox.NumericUpDownWidth = 65;
+			this.AudioFadeInBox.Size = new System.Drawing.Size(380, 31);
+			this.AudioFadeInBox.TabIndex = 2;
+			// 
+			// AudioFadeOutBox
+			// 
+			this.AudioFadeOutBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioFadeOutBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.AudioFadeOutBox.Location = new System.Drawing.Point(65, 43);
+			this.AudioFadeOutBox.Margin = new System.Windows.Forms.Padding(4);
+			this.AudioFadeOutBox.Name = "AudioFadeOutBox";
+			this.AudioFadeOutBox.NumericUpDownWidth = 65;
+			this.AudioFadeOutBox.Size = new System.Drawing.Size(380, 31);
+			this.AudioFadeOutBox.TabIndex = 4;
+			this.AudioFadeOutBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			// 
+			// PreviewBeepDurationBox
+			// 
+			this.PreviewBeepDurationBox.Constrain = new decimal(new int[] {
+            800,
+            0,
+            0,
+            0});
+			this.PreviewBeepDurationBox.EnableDecimalPlaces = true;
+			this.PreviewBeepDurationBox.Location = new System.Drawing.Point(109, 3);
+			this.PreviewBeepDurationBox.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+			this.PreviewBeepDurationBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.PreviewBeepDurationBox.Name = "PreviewBeepDurationBox";
+			this.PreviewBeepDurationBox.Size = new System.Drawing.Size(70, 23);
+			this.PreviewBeepDurationBox.Suffix = "ms";
+			this.PreviewBeepDurationBox.TabIndex = 5;
+			this.Balloon.SetToolTip(this.PreviewBeepDurationBox, "预听标准音高所持续的时间。\r\n单位：毫秒。");
+			this.PreviewBeepDurationBox.Value = new decimal(new int[] {
+            800,
+            0,
+            0,
+            0});
+			// 
+			// VideoFadeInBox
+			// 
+			this.VideoFadeInBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeInBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoFadeInBox.Location = new System.Drawing.Point(65, 4);
+			this.VideoFadeInBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoFadeInBox.Name = "VideoFadeInBox";
+			this.VideoFadeInBox.NumericUpDownWidth = 65;
+			this.VideoFadeInBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoFadeInBox.TabIndex = 2;
+			// 
+			// VideoFadeOutBox
+			// 
+			this.VideoFadeOutBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoFadeOutBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoFadeOutBox.Location = new System.Drawing.Point(65, 43);
+			this.VideoFadeOutBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoFadeOutBox.Name = "VideoFadeOutBox";
+			this.VideoFadeOutBox.NumericUpDownWidth = 65;
+			this.VideoFadeOutBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoFadeOutBox.TabIndex = 4;
+			this.VideoFadeOutBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			// 
+			// VideoGlowBox
+			// 
+			this.VideoGlowBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoGlowBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoGlowBox.Location = new System.Drawing.Point(65, 82);
+			this.VideoGlowBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoGlowBox.Minimum = -100;
+			this.VideoGlowBox.Name = "VideoGlowBox";
+			this.VideoGlowBox.NumericUpDownWidth = 65;
+			this.VideoGlowBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoGlowBox.TabIndex = 10;
+			// 
+			// VideoGlowBrightBox
+			// 
+			this.VideoGlowBrightBox.DefaultValue = 100;
+			this.VideoGlowBrightBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoGlowBrightBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoGlowBrightBox.Location = new System.Drawing.Point(65, 121);
+			this.VideoGlowBrightBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoGlowBrightBox.Minimum = -100;
+			this.VideoGlowBrightBox.Name = "VideoGlowBrightBox";
+			this.VideoGlowBrightBox.NumericUpDownWidth = 65;
+			this.VideoGlowBrightBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoGlowBrightBox.TabIndex = 12;
+			this.VideoGlowBrightBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoGlowBrightBox.Value = 100;
+			// 
+			// VideoStartSizeBox
+			// 
+			this.VideoStartSizeBox.DefaultValue = 100;
+			this.VideoStartSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartSizeBox.Location = new System.Drawing.Point(65, 160);
+			this.VideoStartSizeBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoStartSizeBox.Maximum = 200;
+			this.VideoStartSizeBox.Name = "VideoStartSizeBox";
+			this.VideoStartSizeBox.NumericUpDownWidth = 65;
+			this.VideoStartSizeBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoStartSizeBox.TabIndex = 14;
+			this.VideoStartSizeBox.Value = 100;
+			// 
+			// VideoEndSizeBox
+			// 
+			this.VideoEndSizeBox.DefaultValue = 100;
+			this.VideoEndSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndSizeBox.Location = new System.Drawing.Point(65, 199);
+			this.VideoEndSizeBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoEndSizeBox.Maximum = 200;
+			this.VideoEndSizeBox.Name = "VideoEndSizeBox";
+			this.VideoEndSizeBox.NumericUpDownWidth = 65;
+			this.VideoEndSizeBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoEndSizeBox.TabIndex = 16;
+			this.VideoEndSizeBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndSizeBox.Value = 100;
+			// 
+			// VideoStartRotationBox
+			// 
+			this.VideoStartRotationBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartRotationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartRotationBox.Location = new System.Drawing.Point(65, 238);
+			this.VideoStartRotationBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoStartRotationBox.Maximum = 360;
+			this.VideoStartRotationBox.Minimum = -360;
+			this.VideoStartRotationBox.Name = "VideoStartRotationBox";
+			this.VideoStartRotationBox.NumericUpDownWidth = 65;
+			this.VideoStartRotationBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoStartRotationBox.TabIndex = 17;
+			// 
+			// VideoEndRotationBox
+			// 
+			this.VideoEndRotationBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndRotationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndRotationBox.Location = new System.Drawing.Point(65, 277);
+			this.VideoEndRotationBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoEndRotationBox.Maximum = 360;
+			this.VideoEndRotationBox.Minimum = -360;
+			this.VideoEndRotationBox.Name = "VideoEndRotationBox";
+			this.VideoEndRotationBox.NumericUpDownWidth = 65;
+			this.VideoEndRotationBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoEndRotationBox.TabIndex = 18;
+			this.VideoEndRotationBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			// 
+			// VideoStartHorizontalTransBox
+			// 
+			this.VideoStartHorizontalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartHorizontalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartHorizontalTransBox.Location = new System.Drawing.Point(65, 316);
+			this.VideoStartHorizontalTransBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoStartHorizontalTransBox.Minimum = -100;
+			this.VideoStartHorizontalTransBox.Name = "VideoStartHorizontalTransBox";
+			this.VideoStartHorizontalTransBox.NumericUpDownWidth = 65;
+			this.VideoStartHorizontalTransBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoStartHorizontalTransBox.TabIndex = 19;
+			// 
+			// VideoEndHorizontalTransBox
+			// 
+			this.VideoEndHorizontalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndHorizontalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndHorizontalTransBox.Location = new System.Drawing.Point(65, 355);
+			this.VideoEndHorizontalTransBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoEndHorizontalTransBox.Minimum = -100;
+			this.VideoEndHorizontalTransBox.Name = "VideoEndHorizontalTransBox";
+			this.VideoEndHorizontalTransBox.NumericUpDownWidth = 65;
+			this.VideoEndHorizontalTransBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoEndHorizontalTransBox.TabIndex = 20;
+			this.VideoEndHorizontalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			// 
+			// VideoStartVerticalTransBox
+			// 
+			this.VideoStartVerticalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoStartVerticalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoStartVerticalTransBox.Location = new System.Drawing.Point(65, 394);
+			this.VideoStartVerticalTransBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoStartVerticalTransBox.Minimum = -100;
+			this.VideoStartVerticalTransBox.Name = "VideoStartVerticalTransBox";
+			this.VideoStartVerticalTransBox.NumericUpDownWidth = 65;
+			this.VideoStartVerticalTransBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoStartVerticalTransBox.TabIndex = 21;
+			// 
+			// VideoEndVerticalTransBox
+			// 
+			this.VideoEndVerticalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoEndVerticalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.VideoEndVerticalTransBox.Location = new System.Drawing.Point(65, 433);
+			this.VideoEndVerticalTransBox.Margin = new System.Windows.Forms.Padding(4);
+			this.VideoEndVerticalTransBox.Minimum = -100;
+			this.VideoEndVerticalTransBox.Name = "VideoEndVerticalTransBox";
+			this.VideoEndVerticalTransBox.NumericUpDownWidth = 65;
+			this.VideoEndVerticalTransBox.Size = new System.Drawing.Size(363, 31);
+			this.VideoEndVerticalTransBox.TabIndex = 22;
+			this.VideoEndVerticalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			// 
+			// StaffLineSpacingBox
+			// 
+			this.StaffLineSpacingBox.Constrain = new decimal(new int[] {
+            44,
+            0,
+            0,
+            0});
+			this.StaffLineSpacingBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffLineSpacingBox.Enabled = false;
+			this.StaffLineSpacingBox.EnableDecimalPlaces = true;
+			this.StaffLineSpacingBox.Location = new System.Drawing.Point(324, 3);
+			this.StaffLineSpacingBox.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+			this.StaffLineSpacingBox.Name = "StaffLineSpacingBox";
+			this.StaffLineSpacingBox.Size = new System.Drawing.Size(193, 23);
+			this.StaffLineSpacingBox.Suffix = "px";
+			this.StaffLineSpacingBox.TabIndex = 7;
+			this.Balloon.SetToolTip(this.StaffLineSpacingBox, "五线谱线与线之间的间距。\r\n单位：像素。");
+			this.StaffLineSpacingBox.Value = new decimal(new int[] {
+            44,
+            0,
+            0,
+            0});
+			// 
+			// StaffSurfacePositionBox
+			// 
+			this.StaffSurfacePositionBox.Constrain = new decimal(new int[] {
+            225,
+            0,
+            0,
+            0});
+			this.StaffSurfacePositionBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffSurfacePositionBox.Enabled = false;
+			this.StaffSurfacePositionBox.EnableDecimalPlaces = true;
+			this.StaffSurfacePositionBox.Location = new System.Drawing.Point(324, 32);
+			this.StaffSurfacePositionBox.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+			this.StaffSurfacePositionBox.Minimum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            -2147483648});
+			this.StaffSurfacePositionBox.Name = "StaffSurfacePositionBox";
+			this.StaffSurfacePositionBox.Size = new System.Drawing.Size(193, 23);
+			this.StaffSurfacePositionBox.Suffix = "px";
+			this.StaffSurfacePositionBox.TabIndex = 9;
+			this.Balloon.SetToolTip(this.StaffSurfacePositionBox, "五线谱中间第三根线到屏幕中心的距离，上正下负。\r\n单位：像素。");
+			this.StaffSurfacePositionBox.Value = new decimal(new int[] {
+            225,
+            0,
+            0,
+            0});
+			// 
+			// StaffSurfaceWidthBox
+			// 
+			this.StaffSurfaceWidthBox.Constrain = new decimal(new int[] {
+            1500,
+            0,
+            0,
+            0});
+			this.StaffSurfaceWidthBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffSurfaceWidthBox.Enabled = false;
+			this.StaffSurfaceWidthBox.EnableDecimalPlaces = true;
+			this.StaffSurfaceWidthBox.Location = new System.Drawing.Point(64, 32);
+			this.StaffSurfaceWidthBox.Maximum = new decimal(new int[] {
+            65536,
+            0,
+            0,
+            0});
+			this.StaffSurfaceWidthBox.Name = "StaffSurfaceWidthBox";
+			this.StaffSurfaceWidthBox.Size = new System.Drawing.Size(193, 23);
+			this.StaffSurfaceWidthBox.Suffix = "px";
+			this.StaffSurfaceWidthBox.TabIndex = 8;
+			this.Balloon.SetToolTip(this.StaffSurfaceWidthBox, "将在屏幕中间所填的宽度内显示音符，用于左右留白，给左侧的谱号留间距。\r\n单位：像素。");
+			this.StaffSurfaceWidthBox.Value = new decimal(new int[] {
+            1500,
+            0,
+            0,
+            0});
+			// 
+			// StaffLineThicknessBox
+			// 
+			this.StaffLineThicknessBox.Constrain = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+			this.StaffLineThicknessBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffLineThicknessBox.Enabled = false;
+			this.StaffLineThicknessBox.EnableDecimalPlaces = true;
+			this.StaffLineThicknessBox.Location = new System.Drawing.Point(64, 61);
+			this.StaffLineThicknessBox.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+			this.StaffLineThicknessBox.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+			this.StaffLineThicknessBox.Name = "StaffLineThicknessBox";
+			this.StaffLineThicknessBox.Size = new System.Drawing.Size(193, 23);
+			this.StaffLineThicknessBox.TabIndex = 10;
+			this.StaffLineThicknessBox.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+			// 
+			// StaffNotesShiftBox
+			// 
+			this.StaffNotesShiftBox.Constrain = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+			this.StaffNotesShiftBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StaffNotesShiftBox.Enabled = false;
+			this.StaffNotesShiftBox.EnableDecimalPlaces = true;
+			this.StaffNotesShiftBox.Location = new System.Drawing.Point(64, 90);
+			this.StaffNotesShiftBox.Maximum = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
+			this.StaffNotesShiftBox.Minimum = new decimal(new int[] {
+            120,
+            0,
+            0,
+            -2147483648});
+			this.StaffNotesShiftBox.Name = "StaffNotesShiftBox";
+			this.StaffNotesShiftBox.Size = new System.Drawing.Size(193, 23);
+			this.StaffNotesShiftBox.Suffix = "key";
+			this.StaffNotesShiftBox.TabIndex = 13;
+			// 
+			// YtpClipsCountBox
+			// 
+			this.YtpClipsCountBox.Constrain = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+			this.YtpClipsCountBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.YtpClipsCountBox.EnableDecimalPlaces = true;
+			this.YtpClipsCountBox.Location = new System.Drawing.Point(64, 32);
+			this.YtpClipsCountBox.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+			this.YtpClipsCountBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.YtpClipsCountBox.Name = "YtpClipsCountBox";
+			this.YtpClipsCountBox.Size = new System.Drawing.Size(193, 23);
+			this.YtpClipsCountBox.TabIndex = 11;
+			this.YtpClipsCountBox.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+			// 
+			// YtpMinLenBox
+			// 
+			this.YtpMinLenBox.Constrain = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+			this.YtpMinLenBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.YtpMinLenBox.EnableDecimalPlaces = true;
+			this.YtpMinLenBox.Location = new System.Drawing.Point(64, 3);
+			this.YtpMinLenBox.Maximum = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
+			this.YtpMinLenBox.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+			this.YtpMinLenBox.Name = "YtpMinLenBox";
+			this.YtpMinLenBox.Size = new System.Drawing.Size(193, 23);
+			this.YtpMinLenBox.Suffix = "ms";
+			this.YtpMinLenBox.TabIndex = 8;
+			this.Balloon.SetToolTip(this.YtpMinLenBox, "指定单个轨道剪辑的最小长度。\r\n单位：毫秒。");
+			this.YtpMinLenBox.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+			this.YtpMinLenBox.ValueChanged += new System.EventHandler(this.YtpLenBox_ValueChanged);
+			// 
+			// YtpMaxLenBox
+			// 
+			this.YtpMaxLenBox.Constrain = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+			this.YtpMaxLenBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.YtpMaxLenBox.EnableDecimalPlaces = true;
+			this.YtpMaxLenBox.Location = new System.Drawing.Point(324, 3);
+			this.YtpMaxLenBox.Maximum = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
+			this.YtpMaxLenBox.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+			this.YtpMaxLenBox.Name = "YtpMaxLenBox";
+			this.YtpMaxLenBox.Size = new System.Drawing.Size(193, 23);
+			this.YtpMaxLenBox.Suffix = "ms";
+			this.YtpMaxLenBox.TabIndex = 9;
+			this.Balloon.SetToolTip(this.YtpMaxLenBox, "指定单个轨道剪辑的最大长度。\r\n单位：毫秒。");
+			this.YtpMaxLenBox.Value = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+			this.YtpMaxLenBox.ValueChanged += new System.EventHandler(this.YtpLenBox_ValueChanged);
+			// 
+			// QuickSelectIntervalBtn
+			// 
+			this.QuickSelectIntervalBtn.CommandLink = true;
+			this.QuickSelectIntervalBtn.CommandLinkNote = "本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴视频事件”等操作。\r\n已选中 0 个轨道剪辑。";
+			this.QuickSelectIntervalBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(3, 36);
+			this.QuickSelectIntervalBtn.Name = "QuickSelectIntervalBtn";
+			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(528, 84);
+			this.QuickSelectIntervalBtn.TabIndex = 1;
+			this.QuickSelectIntervalBtn.Text = "快速间隔选择";
+			this.QuickSelectIntervalBtn.UseVisualStyleBackColor = true;
+			this.QuickSelectIntervalBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
+			// 
+			// ReplaceClipsBtn
+			// 
+			this.ReplaceClipsBtn.CommandLink = true;
+			this.ReplaceClipsBtn.CommandLinkNote = "将多个轨道剪辑替换为指定的新轨道剪辑。\r\n已选中 0 个轨道剪辑。";
+			this.ReplaceClipsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ReplaceClipsBtn.Location = new System.Drawing.Point(3, 126);
+			this.ReplaceClipsBtn.Name = "ReplaceClipsBtn";
+			this.ReplaceClipsBtn.Size = new System.Drawing.Size(528, 84);
+			this.ReplaceClipsBtn.TabIndex = 2;
+			this.ReplaceClipsBtn.Text = "替换轨道素材";
+			this.ReplaceClipsBtn.UseVisualStyleBackColor = true;
+			this.ReplaceClipsBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
+			// 
+			// ChangeTuneMethodBtn
+			// 
+			this.ChangeTuneMethodBtn.CommandLink = true;
+			this.ChangeTuneMethodBtn.CommandLinkNote = "将多个音频轨道剪辑统一更改为指定的调音算法。\r\n已选中 0 个音频轨道剪辑。";
+			this.ChangeTuneMethodBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(3, 216);
+			this.ChangeTuneMethodBtn.Name = "ChangeTuneMethodBtn";
+			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(528, 84);
+			this.ChangeTuneMethodBtn.TabIndex = 3;
+			this.ChangeTuneMethodBtn.Text = "更改调音算法";
+			this.ChangeTuneMethodBtn.UseVisualStyleBackColor = true;
+			this.ChangeTuneMethodBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
+			// 
+			// chineseToolStripMenuItem
+			// 
+			this.chineseToolStripMenuItem.Checked = true;
+			this.chineseToolStripMenuItem.CheckOnClick = true;
+			this.chineseToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.chineseToolStripMenuItem.Name = "chineseToolStripMenuItem";
+			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.chineseToolStripMenuItem.Text = "简体中文";
+			// 
+			// tchineseToolStripMenuItem
+			// 
+			this.tchineseToolStripMenuItem.CheckOnClick = true;
+			this.tchineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tchineseToolStripMenuItem.Name = "tchineseToolStripMenuItem";
+			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.tchineseToolStripMenuItem.Text = "繁體中文";
+			// 
+			// englishToolStripMenuItem
+			// 
+			this.englishToolStripMenuItem.CheckOnClick = true;
+			this.englishToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
+			this.englishToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.englishToolStripMenuItem.Text = "English";
+			// 
+			// japaneseToolStripMenuItem
+			// 
+			this.japaneseToolStripMenuItem.CheckOnClick = true;
+			this.japaneseToolStripMenuItem.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.japaneseToolStripMenuItem.Name = "japaneseToolStripMenuItem";
+			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.japaneseToolStripMenuItem.Text = "日本語";
+			// 
+			// russianToolStripMenuItem
+			// 
+			this.russianToolStripMenuItem.CheckOnClick = true;
+			this.russianToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
+			this.russianToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.russianToolStripMenuItem.Text = "Русский";
 			// 
 			// ConfigForm
 			// 
@@ -3270,12 +3316,6 @@ namespace VegasScript {
 			this.Resize += new System.EventHandler(this.ConfigForm_Resize);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffSurfaceWidthBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.YtpMinLenBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.YtpMaxLenBox)).EndInit();
 			this.menu.ResumeLayout(false);
 			this.menu.PerformLayout();
 			this.panel1.ResumeLayout(false);
@@ -3294,7 +3334,6 @@ namespace VegasScript {
 			this.flowLayoutPanel3.PerformLayout();
 			this.flowLayoutPanel4.ResumeLayout(false);
 			this.flowLayoutPanel4.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.MidiCustomBpmBox)).EndInit();
 			this.SourceConfigGroup.ResumeLayout(false);
 			this.SourceConfigGroup.PerformLayout();
 			this.tableLayoutPanel3.ResumeLayout(false);
@@ -3340,8 +3379,6 @@ namespace VegasScript {
 			this.StaffParamsGroup.PerformLayout();
 			this.tableLayoutPanel10.ResumeLayout(false);
 			this.tableLayoutPanel10.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.StaffNotesShiftBox)).EndInit();
 			this.flowLayoutPanel8.ResumeLayout(false);
 			this.flowLayoutPanel8.PerformLayout();
 			this.YtpTab.ResumeLayout(false);
@@ -3350,7 +3387,6 @@ namespace VegasScript {
 			this.YtpParamsGroup.PerformLayout();
 			this.tableLayoutPanel16.ResumeLayout(false);
 			this.tableLayoutPanel16.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.YtpClipsCountBox)).EndInit();
 			this.YtpEffectsGroup.ResumeLayout(false);
 			this.YtpEffectsGroup.PerformLayout();
 			this.HelperTab.ResumeLayout(false);
@@ -3367,6 +3403,17 @@ namespace VegasScript {
 			this.tableLayoutPanel15.PerformLayout();
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
+			this.TrackLegatoMenu.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.MidiCustomBpmBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePositionBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffSurfaceWidthBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.StaffNotesShiftBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.YtpClipsCountBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.YtpMinLenBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.YtpMaxLenBox)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -3586,6 +3633,11 @@ namespace VegasScript {
 		public System.Windows.Forms.RadioButton GenerateAtCustomRadio;
 		public System.Windows.Forms.TextBox GenerateAtCustomText;
 		public System.Windows.Forms.Button TrackLegatoBtn;
+		public System.Windows.Forms.ContextMenuStrip TrackLegatoMenu;
+		public System.Windows.Forms.ToolStripMenuItem stackingTracksToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem limitStretchLegatoTracksToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem stretchLegatoTracksToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem lengthenLegatoToolStripMenuItem;
 	}
 }
 

@@ -64,7 +64,7 @@ namespace VegasScript {
 			updateInfoToolStripMenuItem.Click += (sender, e) => { OpenLink(updateInfoLink); };
 			githubToolStripMenuItem.Click += (sender, e) => { OpenLink(githubLink); };
 			GetSystemLanguage();
-			menu.Renderer = new Windows10StyledContextMenuStripRenderer();
+			TrackLegatoMenu.Renderer = menu.Renderer = new Windows10StyledContextMenuStripRenderer();
 			#endregion
 
 			#region 复选框设置、下拉菜单默认值
@@ -709,8 +709,15 @@ namespace VegasScript {
 			GenerateAtCustomText.Text = "00000";
 		}
 
-		private void TrackLegatoBtn_Click(object sender, EventArgs e) {
-			(sender as Button).Enabled = false;
+		private void TrackLegatoBtn_MouseDown(object sender, MouseEventArgs e) {
+			if (e.Button == MouseButtons.Left) {
+				Button button = sender as Button;
+				TrackLegatoMenu.Show(button, new Point(0, button.Height));
+			}
+		}
+
+		private void TrackLegatoMenuItems_Click(object sender, EventArgs e) {
+			TrackLegatoBtn.Enabled = false;
 		}
 	}
 
