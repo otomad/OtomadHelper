@@ -83,17 +83,27 @@ namespace VegasScript {
 			string configIniName = "otomad_helper.ini";
 			configIni = new IniFile(Path.r(vegas.GetApplicationDataPath(Environment.SpecialFolder.ApplicationData), configIniName).FullPath, this);
 			ReadIni();
+			#else
+			VideoEffectLbl.Click += (sender, e) => {
+				StaffVisualizerConfigCheck.Checked = !StaffVisualizerConfigCheck.Checked;
+				bool isStaff = StaffVisualizerConfigCheck.Checked;
+				VideoEffectInitialValueCombo.Visible = VideoEffectInitialValueLbl.Visible = !isStaff;
+				VideoEffectCombo.DropDownStyle = isStaff ? ComboBoxStyle.DropDown : ComboBoxStyle.DropDownList;
+				if (isStaff) VideoEffectCombo.Text = "五线谱";
+				VideoEffectCombo.Enabled = !isStaff;
+			};
 			#endif
+
 			#endregion
 
 			#region 程序图标
-			#if VEGAS_ENVIRONMENT
+#if VEGAS_ENVIRONMENT
 			string iconName = "otomad_helper.ico";
 			try {
 				Icon = Icon.ExtractAssociatedIcon(Path.r(vegas.InstallationDirectory, "Script Menu", iconName).FullPath);
 				icon = Icon;
 			} catch (Exception) { } // 如果路径不存在则不受影响
-			#endif
+#endif
 			#endregion
 		}
 
@@ -718,6 +728,52 @@ namespace VegasScript {
 
 		private void TrackLegatoMenuItems_Click(object sender, EventArgs e) {
 			TrackLegatoBtn.Enabled = false;
+		}
+
+		/*[StructLayout(LayoutKind.Sequential)]
+		public struct CompositionMargins {
+			public int Left;
+			public int Right;
+			public int Top;
+			public int Bottom;
+		}
+
+		[DllImport("dwmapi.dll", PreserveSig = false)]
+		static extern void DwmExtendFrameIntoClientArea(IntPtr hwnd, ref CompositionMargins margins);
+
+		[DllImport("dwmapi.dll", PreserveSig = false)]
+		static extern bool DwmIsCompositionEnabled();
+
+		protected override void OnLoad(EventArgs e) {
+			if (DwmIsCompositionEnabled()) {
+				CompositionMargins margins = new CompositionMargins();
+				margins.Right = margins.Left = margins.Top = margins.Bottom = Width + Height;
+				DwmExtendFrameIntoClientArea(Handle, ref margins);
+			}
+			base.OnLoad(e);
+		}
+
+		protected override void OnPaintBackground(PaintEventArgs e) {
+			base.OnPaintBackground(e);
+			if (DwmIsCompositionEnabled())
+				e.Graphics.Clear(Color.Black);
+		}*/
+
+		/*protected override void OnHandleCreated(EventArgs e) {
+			// Use e.g. Color.FromArgb(128, Color.Lime) for a 50% opacity green tint.
+			WindowUtils.EnableAcrylic(this, Color.Transparent);
+			base.OnHandleCreated(e);
+		}
+
+		protected override void OnPaintBackground(PaintEventArgs e) {
+			e.Graphics.Clear(Color.Transparent);
+		}*/
+
+		[DllImport("dwmapi.dll")]
+		private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, int[] attrValue, int attrSize);
+
+		protected override void OnHandleCreated(EventArgs e) {
+			DwmSetWindowAttribute(Handle, 20, new[] { 1 }, 4);
 		}
 	}
 

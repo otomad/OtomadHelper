@@ -618,6 +618,7 @@ namespace VegasScript {
 			// 
 			// panel1
 			// 
+			this.panel1.BackColor = System.Drawing.Color.Transparent;
 			this.panel1.Controls.Add(this.Tabs);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(0, 25);
@@ -646,7 +647,7 @@ namespace VegasScript {
 			// SourceTab
 			// 
 			this.SourceTab.AutoScroll = true;
-			this.SourceTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.SourceTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.SourceTab.Controls.Add(this.WarningInfoLabel);
 			this.SourceTab.Controls.Add(this.MidiConfigGroup);
 			this.SourceTab.Controls.Add(this.SourceConfigGroup);
@@ -1111,7 +1112,7 @@ namespace VegasScript {
 			// AudioTab
 			// 
 			this.AudioTab.AutoScroll = true;
-			this.AudioTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.AudioTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.AudioTab.Controls.Add(this.AudioParamsGroup);
 			this.AudioTab.Controls.Add(this.AudioTuneGroup);
 			this.AudioTab.Controls.Add(this.flowLayoutPanel5);
@@ -1543,7 +1544,7 @@ namespace VegasScript {
 			// VideoTab
 			// 
 			this.VideoTab.AutoScroll = true;
-			this.VideoTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.VideoTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.VideoTab.Controls.Add(this.VideoParamsGroup);
 			this.VideoTab.Controls.Add(this.VideoEffectsGroup);
 			this.VideoTab.Controls.Add(this.flowLayoutPanel7);
@@ -2007,7 +2008,7 @@ namespace VegasScript {
 			// SheetTab
 			// 
 			this.SheetTab.AutoScroll = true;
-			this.SheetTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.SheetTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.SheetTab.Controls.Add(this.StaffParamsGroup);
 			this.SheetTab.Controls.Add(this.flowLayoutPanel8);
 			this.SheetTab.Controls.Add(this.SheetConfigInfoLabel);
@@ -2221,7 +2222,7 @@ namespace VegasScript {
 			// YtpTab
 			// 
 			this.YtpTab.AutoScroll = true;
-			this.YtpTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.YtpTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.YtpTab.Controls.Add(this.YtpParamsGroup);
 			this.YtpTab.Controls.Add(this.YtpEffectsGroup);
 			this.YtpTab.Controls.Add(this.YtpSelectInfo);
@@ -2332,7 +2333,7 @@ namespace VegasScript {
 			// 
 			// YtpEffectsCheckList
 			// 
-			this.YtpEffectsCheckList.BackColor = System.Drawing.SystemColors.Window;
+			this.YtpEffectsCheckList.BackColor = System.Drawing.SystemColors.Menu;
 			this.YtpEffectsCheckList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.YtpEffectsCheckList.CheckOnClick = true;
 			this.YtpEffectsCheckList.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -2393,7 +2394,7 @@ namespace VegasScript {
 			// HelperTab
 			// 
 			this.HelperTab.AutoScroll = true;
-			this.HelperTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.HelperTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.HelperTab.Controls.Add(this.tableLayoutPanel11);
 			this.HelperTab.Controls.Add(this.tableLayoutPanel19);
 			this.HelperTab.Location = new System.Drawing.Point(4, 24);
@@ -2678,6 +2679,7 @@ namespace VegasScript {
 			// 
 			// stretchLegatoTracksToolStripMenuItem
 			// 
+			this.stretchLegatoTracksToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold);
 			this.stretchLegatoTracksToolStripMenuItem.Name = "stretchLegatoTracksToolStripMenuItem";
 			this.stretchLegatoTracksToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
 			this.stretchLegatoTracksToolStripMenuItem.Text = "拉伸素材";
@@ -2792,7 +2794,7 @@ namespace VegasScript {
 			// PreviewBeepDurationBox
 			// 
 			this.PreviewBeepDurationBox.Constrain = new decimal(new int[] {
-            800,
+            500,
             0,
             0,
             0});
@@ -2814,7 +2816,7 @@ namespace VegasScript {
 			this.PreviewBeepDurationBox.TabIndex = 5;
 			this.Balloon.SetToolTip(this.PreviewBeepDurationBox, "预听标准音高所持续的时间。\r\n单位：毫秒。");
 			this.PreviewBeepDurationBox.Value = new decimal(new int[] {
-            800,
+            500,
             0,
             0,
             0});
@@ -2871,7 +2873,7 @@ namespace VegasScript {
 			// 
 			// VideoStartSizeBox
 			// 
-			this.VideoStartSizeBox.DefaultValue = 100;
+			this.VideoStartSizeBox.DefaultValue = 90;
 			this.VideoStartSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoStartSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoStartSizeBox.Location = new System.Drawing.Point(65, 160);
@@ -2881,7 +2883,7 @@ namespace VegasScript {
 			this.VideoStartSizeBox.NumericUpDownWidth = 65;
 			this.VideoStartSizeBox.Size = new System.Drawing.Size(363, 31);
 			this.VideoStartSizeBox.TabIndex = 14;
-			this.VideoStartSizeBox.Value = 100;
+			this.VideoStartSizeBox.Value = 90;
 			// 
 			// VideoEndSizeBox
 			// 
@@ -3256,7 +3258,7 @@ namespace VegasScript {
 			this.chineseToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.chineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.chineseToolStripMenuItem.Name = "chineseToolStripMenuItem";
-			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.chineseToolStripMenuItem.Text = "简体中文";
 			// 
 			// tchineseToolStripMenuItem
@@ -3264,7 +3266,7 @@ namespace VegasScript {
 			this.tchineseToolStripMenuItem.CheckOnClick = true;
 			this.tchineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tchineseToolStripMenuItem.Name = "tchineseToolStripMenuItem";
-			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.tchineseToolStripMenuItem.Text = "繁體中文";
 			// 
 			// englishToolStripMenuItem
@@ -3272,7 +3274,7 @@ namespace VegasScript {
 			this.englishToolStripMenuItem.CheckOnClick = true;
 			this.englishToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-			this.englishToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.englishToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.englishToolStripMenuItem.Text = "English";
 			// 
 			// japaneseToolStripMenuItem
@@ -3280,7 +3282,7 @@ namespace VegasScript {
 			this.japaneseToolStripMenuItem.CheckOnClick = true;
 			this.japaneseToolStripMenuItem.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.japaneseToolStripMenuItem.Name = "japaneseToolStripMenuItem";
-			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.japaneseToolStripMenuItem.Text = "日本語";
 			// 
 			// russianToolStripMenuItem
@@ -3288,7 +3290,7 @@ namespace VegasScript {
 			this.russianToolStripMenuItem.CheckOnClick = true;
 			this.russianToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
-			this.russianToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.russianToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.russianToolStripMenuItem.Text = "Русский";
 			// 
 			// ConfigForm

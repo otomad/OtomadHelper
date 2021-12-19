@@ -50,7 +50,7 @@ namespace VegasScript {
 			// 
 			// Track
 			// 
-			this.Track.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.Track.BackColor = System.Drawing.SystemColors.Menu;
 			this.Track.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Track.Location = new System.Drawing.Point(0, 0);
 			this.Track.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
@@ -78,7 +78,7 @@ namespace VegasScript {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.tableLayoutPanel);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "IntegerTrackWithBox";
 			this.Size = new System.Drawing.Size(377, 39);
 			this.tableLayoutPanel.ResumeLayout(false);
