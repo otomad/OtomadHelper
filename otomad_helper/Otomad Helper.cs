@@ -1,20 +1,33 @@
 /**
- * 本脚本基于原作者 Chaosinism 的开源代码二次开发，使用了 NAudio.Midi 库。
+ * 音 MAD 助手，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
+ * 支持 Vegas 14 及以上的版本。（如 Vegas 13 需要在下面手动修改一行代码。）
+ * 将本脚本及其它所有附属文件放置在您 Vegas 安装目录下的 Script Menu 文件夹中。
+ * 具体说明请参见下方的说明文档链接。
+ * 本脚本基于原作者 Chaosinism 的开源代码二次开发，此外使用了 NAudio 库。
+ * 
+ * 新版脚本由 淅琳雨 Otomad 重新编写。
+ * 在此处获取最新版：https://github.com/otomad/VegasScripts/releases/latest
+ * 仓库地址：https://github.com/otomad/VegasScripts
+ * 说明文档：http://www.bilibili.com/read/cv13335178
  *
- * 原作者的原参考与致谢：
- * https://github.com/evankale/VegasScripts
- * https://github.com/naudio/NAudio
- *
+ * 参考与致谢：
  * 原仓库地址：https://github.com/Chaosinism/vegas_scripts
  * 说明文档（B 站）：https://www.bilibili.com/read/cv392013
  * 说明文档（B 碗）：https://bowlroll.net/user/261124
  * 疑难解答：https://www.bilibili.com/read/cv495309
- *
- * 新版脚本由 淅琳雨 Otomad 重新编写。
- * 仓库地址：https://github.com/otomad/VegasScripts
- * 说明文档：http://www.bilibili.com/read/cv13335178
+ * https://github.com/evankale/VegasScripts
+ * https://github.com/naudio/NAudio
+ * https://www.jetdv.com/
  *
  * 开工时间：‎公元 ‎2021‎ 年 ‎9 ‎月 ‎5‎ 日 ‎星期日，上午 ‏‎4:14:26
+ * Copyright (c) 2021，淅琳雨
+ * 
+ * 本程序是一个自由的软件，你可以重新分发它，可以魔改它，但要遵守 GPL 3.0 版本或者后续其它版本。
+ * 我们希望本程序是有用的，但是我们不保证它能用，不保证它好用，我们不提供任何保证。
+ * 更多请见 GPL 全文，如果理解不了，找人话版看看：https://zhuanlan.zhihu.com/p/185628074
+ * 按道理你在得到本软件时，应该已经得到了一份 GPL，如果你没找到，写信给自由软件基金会 (FSF)：
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * 要是嫌运费或漫游费太贵就点击这里吧：https://www.gnu.org/licenses/
  **/
 
 #define VEGAS_ENVIRONMENT
@@ -38,13 +51,15 @@ using Microsoft.Win32;
 using NAudio.Midi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
-using ScriptPortal.Vegas;
+using ScriptPortal.Vegas; // 注意：如果您使用的是 Vegas 13，请将本行修改为 using Sony.Vegas;
 
 namespace Otomad.VegasScript {
 
 	public class EntryPoint {
-		public static readonly Version VERSION = new Version(4, 11, 8, 0); // 版本号
-		public static readonly DateTime REVISION_DATE = new DateTime(2021, 11, 8); // 修订日期
+		/// <summary> 版本号 </summary>
+		public static readonly Version VERSION = new Version(4, 12, 20, 0);
+		/// <summary> 修订日期 </summary>
+		public static readonly DateTime REVISION_DATE = new DateTime(2021, 12, 20);
 
 		// 配置参数变量
 		#region 视频属性
@@ -480,6 +495,7 @@ namespace Otomad.VegasScript {
 		/// <summary>
 		/// 获取所有选中的轨道。
 		/// </summary>
+		/// <typeparam name="T">轨道种类</typeparam>
 		/// <returns>选中的轨道</returns>
 		public T[] GetSelectedTracks<T>() where T : Track {
 			List<T> selectedList = new List<T>();
@@ -1975,49 +1991,81 @@ namespace Otomad.VegasScript {
 		/// <param name="vegas">Vegas 软件</param>
 		public static void Init(Vegas vegas) {
 			if (isInit) return;
+
+			#region 音频 FX
 			pitchShift = vegas.AudioFX.FindChildByName("移调")
 				?? vegas.AudioFX.FindChildByName("Pitch Shift")
 				?? vegas.AudioFX.FindChildByUniqueID("{ED1B4100-93BE-11D0-AEBC-00A0C9053912}");
-			invert = vegas.VideoFX.FindChildByName("VEGAS 反转")
-				?? vegas.VideoFX.FindChildByName("VEGAS Invert")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:invert}");
-			hslAdjust = vegas.VideoFX.FindChildByName("VEGAS HSL 调整")
-				?? vegas.VideoFX.FindChildByName("VEGAS HSL Adjust")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:hsladjust}");
-			labAdjust = vegas.VideoFX.FindChildByName("VEGAS LAB 调整")
-				?? vegas.VideoFX.FindChildByName("VEGAS LAB Adjust")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:labadjust}");
-			blackAndWhite = vegas.VideoFX.FindChildByName("VEGAS 黑白")
-				?? vegas.VideoFX.FindChildByName("VEGAS Black And White")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:blackandwhite}");
-			mirror = vegas.VideoFX.FindChildByName("VEGAS 镜像")
-				?? vegas.VideoFX.FindChildByName("VEGAS Mirror")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:mirror}");
-			picInPic = vegas.VideoFX.FindChildByName("VEGAS 画中画")
-				?? vegas.VideoFX.FindChildByName("VEGAS Picture In Picture")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:pictureinpicture}");
-			crop = vegas.VideoFX.FindChildByName("VEGAS 修剪")
-				?? vegas.VideoFX.FindChildByName("VEGAS Crop")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:crop}");
-			solidColor = vegas.Generators.FindChildByName("VEGAS 纯色")
-				?? vegas.VideoFX.FindChildByName("VEGAS Solid Color")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:solidcolor}");
-			contrast = vegas.Generators.FindChildByName("VEGAS 亮度和对比度")
-				?? vegas.VideoFX.FindChildByName("VEGAS Brightness And Contrast")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:brightnessandcontrast}");
 			chorus = vegas.AudioFX.FindChildByName("合唱")
 				?? vegas.AudioFX.FindChildByName("Chorus")
 				?? vegas.AudioFX.FindChildByUniqueID("{28D9F1E0-6ECC-11D0-AEBC-00A0C9053912}");
-			vibrato1 = vegas.AudioFX.FindChildByUniqueID("{3F901A20-79BE-11D0-AEBC-00A0C9053912}");
-			vibrato2 = vegas.AudioFX.FindChildByUniqueID("{D6802BA0-A056-11D0-AEBC-00A0C9053912}");
-			wave = vegas.VideoFX.FindChildByName("VEGAS 波浪")
-				?? vegas.VideoFX.FindChildByName("VEGAS Wave")
-				?? vegas.VideoFX.FindChildByUniqueID("{EC1A2314-0C38-11D2-9AAC-00A0C99B12C5}");
 			delay = vegas.AudioFX.FindChildByName("延迟")
 				?? vegas.AudioFX.FindChildByUniqueID("{7298A3E0-78EE-11D0-AEBC-00A0C9053912}");
-			spherize = vegas.VideoFX.FindChildByName("VEGAS 球面化")
+			#endregion
+
+			#region 视频 FX
+			invert = vegas.VideoFX.FindChildByName("反转")
+				?? vegas.VideoFX.FindChildByName("Invert")
+				?? vegas.VideoFX.FindChildByName("VEGAS 反转")
+				?? vegas.VideoFX.FindChildByName("VEGAS Invert")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:invert}");
+			hslAdjust = vegas.VideoFX.FindChildByName("HSL 调整")
+				?? vegas.VideoFX.FindChildByName("HSL Adjust")
+				?? vegas.VideoFX.FindChildByName("VEGAS HSL 调整")
+				?? vegas.VideoFX.FindChildByName("VEGAS HSL Adjust")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:hsladjust}");
+			labAdjust = vegas.VideoFX.FindChildByName("LAB 调整")
+				?? vegas.VideoFX.FindChildByName("LAB Adjust")
+				?? vegas.VideoFX.FindChildByName("VEGAS LAB 调整")
+				?? vegas.VideoFX.FindChildByName("VEGAS LAB Adjust")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:labadjust}");
+			blackAndWhite = vegas.VideoFX.FindChildByName("黑白")
+				?? vegas.VideoFX.FindChildByName("Black And White")
+				?? vegas.VideoFX.FindChildByName("VEGAS 黑白")
+				?? vegas.VideoFX.FindChildByName("VEGAS Black And White")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:blackandwhite}");
+			mirror = vegas.VideoFX.FindChildByName("镜像")
+				?? vegas.VideoFX.FindChildByName("Mirror")
+				?? vegas.VideoFX.FindChildByName("VEGAS 镜像")
+				?? vegas.VideoFX.FindChildByName("VEGAS Mirror")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:mirror}");
+			picInPic = vegas.VideoFX.FindChildByName("画中画")
+				?? vegas.VideoFX.FindChildByName("Picture In Picture")
+				?? vegas.VideoFX.FindChildByName("VEGAS 画中画")
+				?? vegas.VideoFX.FindChildByName("VEGAS Picture In Picture")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:pictureinpicture}");
+			crop = vegas.VideoFX.FindChildByName("修剪")
+				?? vegas.VideoFX.FindChildByName("Crop")
+				?? vegas.VideoFX.FindChildByName("VEGAS 修剪")
+				?? vegas.VideoFX.FindChildByName("VEGAS Crop")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:crop}");
+			contrast = vegas.VideoFX.FindChildByName("亮度和对比度")
+				?? vegas.VideoFX.FindChildByName("Brightness And Contrast")
+				?? vegas.VideoFX.FindChildByName("VEGAS 亮度和对比度")
+				?? vegas.VideoFX.FindChildByName("VEGAS Brightness And Contrast")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:brightnessandcontrast}");
+			vibrato1 = vegas.AudioFX.FindChildByUniqueID("{3F901A20-79BE-11D0-AEBC-00A0C9053912}");
+			vibrato2 = vegas.AudioFX.FindChildByUniqueID("{D6802BA0-A056-11D0-AEBC-00A0C9053912}");
+			wave = vegas.VideoFX.FindChildByName("波浪")
+				?? vegas.VideoFX.FindChildByName("Wave")
+				?? vegas.VideoFX.FindChildByName("VEGAS 波浪")
+				?? vegas.VideoFX.FindChildByName("VEGAS Wave")
+				?? vegas.VideoFX.FindChildByUniqueID("{EC1A2314-0C38-11D2-9AAC-00A0C99B12C5}");
+			spherize = vegas.VideoFX.FindChildByName("球面化")
+				?? vegas.VideoFX.FindChildByName("Spherize")
+				?? vegas.VideoFX.FindChildByName("VEGAS 球面化")
 				?? vegas.VideoFX.FindChildByName("VEGAS Spherize")
 				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:spherize}");
+			#endregion
+
+			#region 媒体发生器
+			solidColor = vegas.Generators.FindChildByName("纯色")
+				?? vegas.Generators.FindChildByName("Solid Color")
+				?? vegas.Generators.FindChildByName("VEGAS 纯色")
+				?? vegas.Generators.FindChildByName("VEGAS Solid Color")
+				?? vegas.Generators.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:solidcolor}");
+			#endregion
+
 			isInit = true;
 		}
 		private static bool isInit = false;
@@ -7410,6 +7458,7 @@ namespace Otomad.VegasScript {
 			// 
 			// panel1
 			// 
+			this.panel1.BackColor = System.Drawing.Color.Transparent;
 			this.panel1.Controls.Add(this.Tabs);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(0, 25);
@@ -7438,7 +7487,7 @@ namespace Otomad.VegasScript {
 			// SourceTab
 			// 
 			this.SourceTab.AutoScroll = true;
-			this.SourceTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.SourceTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.SourceTab.Controls.Add(this.WarningInfoLabel);
 			this.SourceTab.Controls.Add(this.MidiConfigGroup);
 			this.SourceTab.Controls.Add(this.SourceConfigGroup);
@@ -7903,7 +7952,7 @@ namespace Otomad.VegasScript {
 			// AudioTab
 			// 
 			this.AudioTab.AutoScroll = true;
-			this.AudioTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.AudioTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.AudioTab.Controls.Add(this.AudioParamsGroup);
 			this.AudioTab.Controls.Add(this.AudioTuneGroup);
 			this.AudioTab.Controls.Add(this.flowLayoutPanel5);
@@ -8335,7 +8384,7 @@ namespace Otomad.VegasScript {
 			// VideoTab
 			// 
 			this.VideoTab.AutoScroll = true;
-			this.VideoTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.VideoTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.VideoTab.Controls.Add(this.VideoParamsGroup);
 			this.VideoTab.Controls.Add(this.VideoEffectsGroup);
 			this.VideoTab.Controls.Add(this.flowLayoutPanel7);
@@ -8799,7 +8848,7 @@ namespace Otomad.VegasScript {
 			// SheetTab
 			// 
 			this.SheetTab.AutoScroll = true;
-			this.SheetTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.SheetTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.SheetTab.Controls.Add(this.StaffParamsGroup);
 			this.SheetTab.Controls.Add(this.flowLayoutPanel8);
 			this.SheetTab.Controls.Add(this.SheetConfigInfoLabel);
@@ -9013,7 +9062,7 @@ namespace Otomad.VegasScript {
 			// YtpTab
 			// 
 			this.YtpTab.AutoScroll = true;
-			this.YtpTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.YtpTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.YtpTab.Controls.Add(this.YtpParamsGroup);
 			this.YtpTab.Controls.Add(this.YtpEffectsGroup);
 			this.YtpTab.Controls.Add(this.YtpSelectInfo);
@@ -9124,7 +9173,7 @@ namespace Otomad.VegasScript {
 			// 
 			// YtpEffectsCheckList
 			// 
-			this.YtpEffectsCheckList.BackColor = System.Drawing.SystemColors.Window;
+			this.YtpEffectsCheckList.BackColor = System.Drawing.SystemColors.Menu;
 			this.YtpEffectsCheckList.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.YtpEffectsCheckList.CheckOnClick = true;
 			this.YtpEffectsCheckList.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -9185,7 +9234,7 @@ namespace Otomad.VegasScript {
 			// HelperTab
 			// 
 			this.HelperTab.AutoScroll = true;
-			this.HelperTab.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.HelperTab.BackColor = System.Drawing.SystemColors.Menu;
 			this.HelperTab.Controls.Add(this.tableLayoutPanel11);
 			this.HelperTab.Controls.Add(this.tableLayoutPanel19);
 			this.HelperTab.Location = new System.Drawing.Point(4, 24);
@@ -9470,6 +9519,7 @@ namespace Otomad.VegasScript {
 			// 
 			// stretchLegatoTracksToolStripMenuItem
 			// 
+			this.stretchLegatoTracksToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold);
 			this.stretchLegatoTracksToolStripMenuItem.Name = "stretchLegatoTracksToolStripMenuItem";
 			this.stretchLegatoTracksToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
 			this.stretchLegatoTracksToolStripMenuItem.Text = "拉伸素材";
@@ -9584,7 +9634,7 @@ namespace Otomad.VegasScript {
 			// PreviewBeepDurationBox
 			// 
 			this.PreviewBeepDurationBox.Constrain = new decimal(new int[] {
-			800,
+			500,
 			0,
 			0,
 			0});
@@ -9606,7 +9656,7 @@ namespace Otomad.VegasScript {
 			this.PreviewBeepDurationBox.TabIndex = 5;
 			this.Balloon.SetToolTip(this.PreviewBeepDurationBox, "预听标准音高所持续的时间。\r\n单位：毫秒。");
 			this.PreviewBeepDurationBox.Value = new decimal(new int[] {
-			800,
+			500,
 			0,
 			0,
 			0});
@@ -9663,7 +9713,7 @@ namespace Otomad.VegasScript {
 			// 
 			// VideoStartSizeBox
 			// 
-			this.VideoStartSizeBox.DefaultValue = 100;
+			this.VideoStartSizeBox.DefaultValue = 90;
 			this.VideoStartSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoStartSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoStartSizeBox.Location = new System.Drawing.Point(65, 160);
@@ -9673,7 +9723,7 @@ namespace Otomad.VegasScript {
 			this.VideoStartSizeBox.NumericUpDownWidth = 65;
 			this.VideoStartSizeBox.Size = new System.Drawing.Size(363, 31);
 			this.VideoStartSizeBox.TabIndex = 14;
-			this.VideoStartSizeBox.Value = 100;
+			this.VideoStartSizeBox.Value = 90;
 			// 
 			// VideoEndSizeBox
 			// 
@@ -10048,7 +10098,7 @@ namespace Otomad.VegasScript {
 			this.chineseToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.chineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.chineseToolStripMenuItem.Name = "chineseToolStripMenuItem";
-			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.chineseToolStripMenuItem.Text = "简体中文";
 			// 
 			// tchineseToolStripMenuItem
@@ -10056,7 +10106,7 @@ namespace Otomad.VegasScript {
 			this.tchineseToolStripMenuItem.CheckOnClick = true;
 			this.tchineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tchineseToolStripMenuItem.Name = "tchineseToolStripMenuItem";
-			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.tchineseToolStripMenuItem.Text = "繁體中文";
 			// 
 			// englishToolStripMenuItem
@@ -10064,7 +10114,7 @@ namespace Otomad.VegasScript {
 			this.englishToolStripMenuItem.CheckOnClick = true;
 			this.englishToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-			this.englishToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.englishToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.englishToolStripMenuItem.Text = "English";
 			// 
 			// japaneseToolStripMenuItem
@@ -10072,7 +10122,7 @@ namespace Otomad.VegasScript {
 			this.japaneseToolStripMenuItem.CheckOnClick = true;
 			this.japaneseToolStripMenuItem.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.japaneseToolStripMenuItem.Name = "japaneseToolStripMenuItem";
-			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.japaneseToolStripMenuItem.Text = "日本語";
 			// 
 			// russianToolStripMenuItem
@@ -10080,7 +10130,7 @@ namespace Otomad.VegasScript {
 			this.russianToolStripMenuItem.CheckOnClick = true;
 			this.russianToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
-			this.russianToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.russianToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
 			this.russianToolStripMenuItem.Text = "Русский";
 			// 
 			// ConfigForm
@@ -10567,7 +10617,7 @@ namespace Otomad.VegasScript {
 				VideoFadeOutBox.SetValue(configIni.Read("FadeOut", 0), 0);
 				VideoGlowBox.SetValue(configIni.Read("Glow", 0), 0);
 				VideoGlowBrightBox.SetValue(configIni.Read("GlowBrightness", 100), 100);
-				VideoStartSizeBox.SetValue(configIni.Read("StartSize", 100), 100);
+				VideoStartSizeBox.SetValue(configIni.Read("StartSize", 90), 90);
 				VideoEndSizeBox.SetValue(configIni.Read("EndSize", 100), 100);
 				VideoStartRotationBox.SetValue(configIni.Read("StartRotation", 0), 0);
 				VideoEndRotationBox.SetValue(configIni.Read("EndRotation", 0), 0);
@@ -10626,7 +10676,7 @@ namespace Otomad.VegasScript {
 				#region 音频预览配置
 				configIni.StartSection("PreviewAudio");
 				PreviewBeepWaveFormCombo.SetIndex(configIni.Read("BeepWaveForm", 0), 0);
-				PreviewBeepDurationBox.SetValue(configIni.Read("BeepDuration", 800), 800);
+				PreviewBeepDurationBox.SetValue(configIni.Read("BeepDuration", 500), 500);
 				PreviewTuneAudioCheck.Checked = configIni.Read("IsTuneAudio", false);
 				configIni.EndSection();
 				#endregion
@@ -10795,6 +10845,7 @@ namespace Otomad.VegasScript {
 			Label[] infoLabels = { SheetConfigInfoLabel, YtpLbl, HelperLbl };
 			foreach (Label label in infoLabels)
 				label.Font = new Font(str.info_label_font, 9F);
+			stretchLegatoTracksToolStripMenuItem.Font = new Font(str.ui_font, 9F, FontStyle.Bold);
 			versionToolStripMenuItem.Text = Lang.str.version_number + Lang.str.colon + EntryPoint.VERSION;
 			OkBtn.Text = str.complete;
 			CancelBtn.Text = str.cancel;
@@ -11103,10 +11154,13 @@ namespace Otomad.VegasScript {
 			#endif
 
 			bool isSheetConfigOn = StaffVisualizerConfigCheck.Checked;
-			if (isSheetConfigOn)
-				VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled =
-				VideoLegatoCheck.Enabled =
+			VideoEffectInitialValueCombo.Visible = VideoEffectInitialValueLbl.Visible = !isSheetConfigOn;
+			VideoEffectCombo.DropDownStyle = isSheetConfigOn ? ComboBoxStyle.DropDown : ComboBoxStyle.DropDownList;
+			if (isSheetConfigOn) {
+				VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled = VideoLegatoCheck.Enabled =
 				VideoScratchCheck.Checked = VideoScratchCheck.Enabled = false;
+				VideoEffectCombo.Text = Lang.str.staff;
+			}
 			SetEnabled(SheetTab, isSheetConfigOn, new Control[] { StaffVisualizerConfigCheck, SheetConfigInfoLabel });
 			if (!StaffGenerateCheck.Checked)
 				StaffLineThicknessBox.Enabled = StaffLineColorBtn.Enabled = false;
