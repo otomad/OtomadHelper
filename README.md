@@ -1,7 +1,7 @@
 # VegasScripts
 
 ![Badge](https://img.shields.io/badge/STATE-STABLE-green?style=flat-square)
-![Badge](https://img.shields.io/badge/VERSION-4.11.8.0-orange?style=flat-square)
+![Badge](https://img.shields.io/badge/VERSION-4.12.20.0-orange?style=flat-square)
 
 Various scripts for MAGIX Vegas **(v14 and above)**.
 * Tested on v17.0
@@ -22,3 +22,4 @@ Compilation note for Sony Vegas **(v13 and under)**:
 * https://github.com/Chaosinism/vegas_scripts
 * https://github.com/evankale/VegasScripts
 * https://github.com/naudio/NAudio
+* https://www.jetdv.com/
