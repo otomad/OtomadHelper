@@ -19,7 +19,7 @@
  * https://github.com/naudio/NAudio
  * https://www.jetdv.com/
  *
- * 开工时间：‎公元 ‎2021‎ 年 ‎9 ‎月 ‎5‎ 日 ‎星期日，上午 ‏‎4:14:26
+ * 开工时间：公元 2021 年 9 月 5 日 星期日，上午 4:14:26
  * Copyright (c) 2021，淅琳雨
  * 
  * 本程序是一个自由的软件，你可以重新分发它，可以魔改它，但要遵守 GPL 3.0 版本或者后续其它版本。
@@ -57,9 +57,9 @@ namespace Otomad.VegasScript {
 
 	public class EntryPoint {
 		/// <summary> 版本号 </summary>
-		public static readonly Version VERSION = new Version(4, 12, 20, 0);
+		public static readonly Version VERSION = new Version(4, 13, 20, 0);
 		/// <summary> 修订日期 </summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2021, 12, 20);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 1, 20);
 
 		// 配置参数变量
 		#region 视频属性
@@ -766,15 +766,17 @@ namespace Otomad.VegasScript {
 					requestShowProgress = true; // 超过规定等待的时间，则还是会显示进度条
 				if (AConfig && AConfigMethod == AudioTuneMethod.PITCH_SHIFT || requestShowProgress) { // 如果不是使用“移调”效果插件，就不要刷进度条，否则还会额外拖延时间。
 					progressForm.ReportProgress(statusProgress); // 说明：只有在使用“移调”效果插件时才会生成得很慢，其它情况下都是非常快的。
-					// vegas.UpdateUI(); // 取消注释可以让 Vegas 实时更新 UI，但是会更慢。
+					if (progressForm.RealTimeUpdateCheck.Checked)
+						vegas.UpdateUI(); // 可以让 Vegas 实时更新 UI，但是会更慢。
 				}
 				if (progressForm.RequestAbort) break;
-				foreach (MidiEvent _midiEvent in midi.TimeSignatureTrack)
-					if (_midiEvent is TimeSignatureEvent) {
-						TimeSignatureEvent timeSignatureEvent = _midiEvent as TimeSignatureEvent;
-						if (midiEvent.AbsoluteTime >= timeSignatureEvent.AbsoluteTime)
-							barLength = midi.MsPerQuarter * timeSignatureEvent.Numerator;
-					}
+				if (SheetConfig)
+					foreach (MidiEvent _midiEvent in midi.TimeSignatureTrack)
+						if (_midiEvent is TimeSignatureEvent) {
+							TimeSignatureEvent timeSignatureEvent = _midiEvent as TimeSignatureEvent;
+							if (midiEvent.AbsoluteTime >= timeSignatureEvent.AbsoluteTime)
+								barLength = midi.MsPerQuarter * timeSignatureEvent.Numerator;
+						}
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
 				double startTime = midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
@@ -1465,6 +1467,8 @@ namespace Otomad.VegasScript {
 				// int statusProgress = (int)Math.Round(100.0 * i / (YtpConfigClipsCount - 1.0));
 				// progressForm.ReportProgress(statusProgress);
 				progressForm.ReportProgress(i + 1, YtpConfigClipsCount);
+				if (progressForm.RealTimeUpdateCheck.Checked)
+					vegas.UpdateUI();
 				if (progressForm.RequestAbort) break;
 				EventSet randClip = eventSets[rand.Next(eventSets.Length)];
 				double randLen = rand.Next(YtpConfigMinLen, YtpConfigMaxLen + 1);
@@ -1768,8 +1772,8 @@ namespace Otomad.VegasScript {
 		CCW_MIRROR,
 		CW_MIRROR,
 		NEGATIVE,
-		INVERT_LUMIN,
-		INVERT_HUE,
+		LUMIN_INVERT,
+		HUE_INVERT,
 		STEP_3_CHANGE_HUE,
 		STEP_4_CHANGE_HUE,
 		STEP_5_CHANGE_HUE,
@@ -1778,7 +1782,7 @@ namespace Otomad.VegasScript {
 		STEP_8_CHANGE_HUE,
 		GREY,
 		PINGPONG,
-		UNLIMITED, // PERPETUAL_MOTION
+		WHIRL, // PERPETUAL_MOTION / UNLIMITED
 	}
 
 	/// <summary>
@@ -1847,7 +1851,7 @@ namespace Otomad.VegasScript {
 			animFx = fx;
 			step = initStep;
 			duration = InitialValues[(int)fx].Length;
-			if (fx >= VideoVisualEffectType.INVERT_HUE && fx <= VideoVisualEffectType.STEP_8_CHANGE_HUE) enableHueAdjust = true;
+			if (fx >= VideoVisualEffectType.HUE_INVERT && fx <= VideoVisualEffectType.STEP_8_CHANGE_HUE) enableHueAdjust = true;
 			Update();
 		}
 		private void NextStep() {
@@ -1902,13 +1906,13 @@ namespace Otomad.VegasScript {
 					horizontalMirrored = (step == 0 || step == 3) ? 1 : 2;
 					verticalMirrored = (step == 0 || step == 1) ? 1 : 2;
 					break;
-				case VideoVisualEffectType.INVERT_LUMIN:
+				case VideoVisualEffectType.LUMIN_INVERT:
 					isInvertLumin = step == 1;
 					break;
 				case VideoVisualEffectType.GREY:
 					isGrey = step == 1;
 					break;
-				case VideoVisualEffectType.UNLIMITED:
+				case VideoVisualEffectType.WHIRL:
 					horizontalFlip = isReverse = step == 1;
 					break;
 				default:
@@ -2755,6 +2759,7 @@ namespace Otomad.VegasScript {
 			get { return 6e4 / MsPerQuarter; }
 			set { MsPerQuarter = 6e4 / value; }
 		}
+		public IList<MidiEvent> MsPerQuarterTrack;
 		public string TimeSignature = "";
 		public IList<MidiEvent> TimeSignatureTrack;
 		public string Path;
@@ -2797,6 +2802,7 @@ namespace Otomad.VegasScript {
 						TempoEvent tempoEvent = midiEvent as TempoEvent;
 						MsPerQuarter = Convert.ToDouble(tempoEvent.MicrosecondsPerQuarterNote) / 1000; // 每四分音符多少毫秒
 						// MessageBox.Show(tempoEvent.Tempo.ToString()); // 用 Tempo 表示 BPM
+						MsPerQuarterTrack = Events[i];
 					}
 					if ((midiEvent is TextEvent) && !info.HasName) {
 						TextEvent textEvent = midiEvent as TextEvent;
@@ -3655,6 +3661,7 @@ namespace Otomad.VegasScript {
 			this.InfoLabel = new System.Windows.Forms.Label();
 			this.PercentLabel = new System.Windows.Forms.Label();
 			this.ProgressBar = new System.Windows.Forms.ProgressBar();
+			this.RealTimeUpdateCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
@@ -3696,17 +3703,19 @@ namespace Otomad.VegasScript {
 			//
 			this.tableLayoutPanel2.ColumnCount = 1;
 			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel2.Controls.Add(this.InfoLabel, 0, 1);
 			this.tableLayoutPanel2.Controls.Add(this.PercentLabel, 0, 0);
+			this.tableLayoutPanel2.Controls.Add(this.InfoLabel, 0, 1);
 			this.tableLayoutPanel2.Controls.Add(this.ProgressBar, 0, 2);
+			this.tableLayoutPanel2.Controls.Add(this.RealTimeUpdateCheck, 0, 3);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(6);
-			this.tableLayoutPanel2.RowCount = 3;
+			this.tableLayoutPanel2.RowCount = 4;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
 			this.tableLayoutPanel2.Size = new System.Drawing.Size(471, 141);
 			this.tableLayoutPanel2.TabIndex = 2;
 			//
@@ -3747,13 +3756,24 @@ namespace Otomad.VegasScript {
 			this.ProgressBar.TabIndex = 2;
 			this.ProgressBar.UseWaitCursor = true;
 			//
+			// RealTimeUpdateCheck
+			//
+			this.RealTimeUpdateCheck.AutoSize = true;
+			this.RealTimeUpdateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RealTimeUpdateCheck.Location = new System.Drawing.Point(14, 182);
+			this.RealTimeUpdateCheck.Name = "ReverseTracksCheck";
+			this.RealTimeUpdateCheck.Size = new System.Drawing.Size(449, 32);
+			this.RealTimeUpdateCheck.TabIndex = 3;
+			this.RealTimeUpdateCheck.Text = "实时显示当前进度";
+			this.RealTimeUpdateCheck.UseVisualStyleBackColor = true;
+			//
 			// ProgressForm
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(471, 183);
+			this.ClientSize = new System.Drawing.Size(471, 200);
 			this.ControlBox = false;
 			this.Controls.Add(this.tableLayoutPanel2);
 			this.Controls.Add(this.tableLayoutPanel1);
@@ -3782,6 +3802,7 @@ namespace Otomad.VegasScript {
 		public System.Windows.Forms.Label InfoLabel;
 		public System.Windows.Forms.Label PercentLabel;
 		public System.Windows.Forms.ProgressBar ProgressBar;
+		public System.Windows.Forms.CheckBox RealTimeUpdateCheck;
 	}
 
 	public partial class ProgressForm : Form, IInterpret {
@@ -3853,6 +3874,7 @@ namespace Otomad.VegasScript {
 			CancelBtn.Text = str.cancel;
 			Text = str.processing_it;
 			InfoLabel.Text = Lang.str.processing_otomad;
+			RealTimeUpdateCheck.Text = Lang.str.real_time_update;
 		}
 	}
 
@@ -10962,14 +10984,14 @@ namespace Otomad.VegasScript {
 				str.ccw_rotate, str.cw_rotate, str.turned,
 				str.h_mirror, str.v_mirror,
 				str.ccw_mirror, str.cw_mirror,
-				str.negative, str.invert_lumin, str.invert_hue,
+				str.negative, str.lumin_invert, str.hue_invert,
 				string.Format(str.step_change_hue, 3),
 				string.Format(str.step_change_hue, 4),
 				string.Format(str.step_change_hue, 5),
 				string.Format(str.step_change_hue, 6),
 				string.Format(str.step_change_hue, 7),
 				string.Format(str.step_change_hue, 8),
-				str.black_and_white, str.pingpong, str.unlimited
+				str.black_and_white, str.pingpong, str.whirl
 			});
 			VideoConfigCheck.Text = str.vconfig;
 			VideoScratchCheck.Text = str.video_stretch;
@@ -11114,7 +11136,7 @@ namespace Otomad.VegasScript {
 			SetEnabled(VideoTab, isVConfigOn, new Control[] { VideoConfigCheck, VideoScratchCheck });
 			StaffVisualizerConfigCheck.Enabled = isVConfigOn;
 			if (!isVConfigOn) StaffVisualizerConfigCheck.Checked = false;
-			if (VideoEffect == VideoVisualEffectType.PINGPONG || VideoEffect == VideoVisualEffectType.UNLIMITED) {
+			if (VideoEffect == VideoVisualEffectType.PINGPONG || VideoEffect == VideoVisualEffectType.WHIRL) {
 				VideoScratchCheck.Checked = true;
 				VideoScratchCheck.Enabled = false;
 			} else {
@@ -11838,6 +11860,7 @@ namespace Otomad.VegasScript {
 			processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
 			processing_ytp = "正在生成 YTP⋯⋯",
 			processing_it = "正在处理它",
+			real_time_update = "实时显示当前进度",
 			replacer_is = "指定的替换项为",
 			replacer_info = "请先在轨道窗口中选中替换与被替换的素材，然后指定一个素材为替换的素材，剩余素材均为被替换素材。\r\n由于脚本功能限制，无法单独分离指定替换素材。请先将替换素材的音视频创建分组，并确保替换素材不与其它被替换素材位于同一轨道并且尽量放置在时间靠后的位置。",
 			replace_clips = "替换轨道素材",
@@ -12042,12 +12065,12 @@ namespace Otomad.VegasScript {
 			v_mirror = "垂直镜像",
 			ccw_mirror = "逆时针镜像",
 			cw_mirror = "顺时针镜像",
-			negative = "反转颜色",
-			invert_lumin = "反转亮度",
-			invert_hue = "反转色相",
+			negative = "颜色反转",
+			lumin_invert = "亮度反转",
+			hue_invert = "色相反转",
 			step_change_hue = "逐步变色（{0} 步）",
 			pingpong = "乒乓效应",
-			unlimited = "永动机",
+			whirl = "爱的魔力转圈圈",
 			vconfig = "生成视频",
 			video_stretch = "拉伸视频",
 			video_loop = "循环视频",
@@ -12206,6 +12229,7 @@ namespace Otomad.VegasScript {
 				processing_otomad = "Generating Otomad/YTPMV...",
 				processing_ytp = "Generating YTP...",
 				processing_it = "Processing it",
+				real_time_update = "Real time display of current progress",
 				replacer_is = "The specified replacement is",
 				replacer_info = "Please select the clips which to be replaced and replaced in the track window first, and then specify a clip as the replacement clip, and the remaining clips are all replaced clips.\nDue to the limitation of the script function, it's troublesome to separate and specify the replacement clips separately. Please create a group of the audio and video events of the replacement clip first, and make sure that the replacement clip is not in the same track as the other replaced clips and placed as far back in time as possible.",
 				replace_clips = "Replace Track Events",
@@ -12410,11 +12434,11 @@ namespace Otomad.VegasScript {
 				ccw_mirror = "Counterclockwise Mirror",
 				cw_mirror = "Clockwise Mirror",
 				negative = "Negative",
-				invert_lumin = "Invert Luminance",
-				invert_hue = "Invert Hue",
+				lumin_invert = "Luminance Invert",
+				hue_invert = "Hue Invert",
 				step_change_hue = "Gradually Change Color ({0} Steps)",
 				pingpong = "Ping-pong Effect",
-				unlimited = "Unlimited",
+				whirl = "Whirl",
 				vconfig = "Enabled",
 				video_stretch = "Stretch",
 				video_loop = "Loop",
@@ -12571,6 +12595,7 @@ namespace Otomad.VegasScript {
 				processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
 				processing_ytp = "正在生成 YTP⋯⋯",
 				processing_it = "正在處理它",
+				real_time_update = "實时顯示當前進度",
 				replacer_is = "指定的替換項為",
 				replacer_info = "請先在軌道視窗中選中替換與被替換的素材，然後指定一個素材為替換的素材，剩餘素材均為被替換素材。\n由於腳本功能限制，無法單獨分離指定替換素材。請先將替換素材的音視頻創建分組，並確保替換素材不與其它被替換素材位於同一軌道並且儘量放置在時間靠後的位置。",
 				replace_clips = "替換軌道素材",
@@ -12774,12 +12799,12 @@ namespace Otomad.VegasScript {
 				v_mirror = "垂直鏡像",
 				ccw_mirror = "逆時針鏡像",
 				cw_mirror = "順時針鏡像",
-				negative = "反轉顏色",
-				invert_lumin = "反轉亮度",
-				invert_hue = "反轉色相",
+				negative = "顏色反轉",
+				lumin_invert = "亮度反轉",
+				hue_invert = "色相反轉",
 				step_change_hue = "逐步變色（{0} 步）",
 				pingpong = "桌球效應",
-				unlimited = "永動機",
+				whirl = "愛的魔力轉圈圈",
 				vconfig = "生成視頻",
 				video_stretch = "拉伸視頻",
 				video_loop = "迴圈視頻",
@@ -12936,6 +12961,7 @@ namespace Otomad.VegasScript {
 				processing_otomad = "音MAD/YTPMVを生成中...",
 				processing_ytp = "YTPを生成中...",
 				processing_it = "それを処理する",
+				real_time_update = "現在の進捗状況をリアルタイムで表示",
 				replacer_is = "指定された代替品は",
 				replacer_info = "最初にトラックウィンドウで交換および交換するクリップを選択してから、交換用クリップとしてクリップを指定してください。残りのクリップはすべて交換済みクリップです。\nスクリプト機能の制限により、交換用クリップを個別に分けて指定するのは面倒です。最初に交換用クリップのオーディオイベントとビデオイベントのグループを作成し、交換用クリップが他の交換済みクリップと同じトラックになく、可能な限り過去にさかのぼって配置されていることを確認してください。",
 				replace_clips = "トラックイベントを置き換える",
@@ -13141,11 +13167,11 @@ namespace Otomad.VegasScript {
 				ccw_mirror = "反時計回りの鏡像",
 				cw_mirror = "時計回りの鏡像",
 				negative = "色を反転",
-				invert_lumin = "輝度を反転",
-				invert_hue = "色相を反転",
+				lumin_invert = "輝度を反転",
+				hue_invert = "色相を反転",
 				step_change_hue = "徐々に色を変える（{0}歩）",
 				pingpong = "ピンポン効果",
-				unlimited = "無制限",
+				whirl = "愛の魔力が輪回し",
 				vconfig = "ビデオを有効",
 				video_stretch = "ストレッチ",
 				video_loop = "ループ",
@@ -13302,6 +13328,7 @@ namespace Otomad.VegasScript {
 				processing_otomad = "Создание Отомад / УТРМѴ ...",
 				processing_ytp = "Создание УТР ...",
 				processing_it = "Обработка его",
+				real_time_update = "Показывать текущий ход в реальном времени",
 				replacer_is = "Указанная замена",
 				replacer_info = "Сначала выберите клипы, которые нужно заменить и заменить, в окне дорожки, затем укажите клип в качестве клипа для замены, а все остальные клипы будут заменены клипами.\nИз-за ограничений функции скрипта сложно разделить и указать заменяющие клипы отдельно. Сначала создайте группу аудио- и видеособытий замещающего клипа и убедитесь, что замещающий клип не находится на той же дорожке, что и другие замененные клипы, и помещен как можно дальше назад во времени.",
 				replace_clips = "Заменить отслеживание событий",
@@ -13507,11 +13534,11 @@ namespace Otomad.VegasScript {
 				ccw_mirror = "Зеркало против часовой стрелки",
 				cw_mirror = "Зеркало по часовой стрелке",
 				negative = "Отрицательный",
-				invert_lumin = "Инвертировать яркость",
-				invert_hue = "Инвертировать оттенок",
+				lumin_invert = "Инвертировать яркость",
+				hue_invert = "Инвертировать оттенок",
 				step_change_hue = "Постепенно изменить цвет ({0} шаги)",
 				pingpong = "Эффект пинг-понга",
-				unlimited = "Безлимитный",
+				whirl = "Вращение",
 				vconfig = "Включено",
 				video_stretch = "Потягиваться",
 				video_loop = "Петля",
