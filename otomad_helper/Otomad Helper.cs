@@ -56,10 +56,10 @@ using ScriptPortal.Vegas; // 注意：如果您使用的是 Vegas 13，请将本
 namespace Otomad.VegasScript {
 
 	public class EntryPoint {
-		/// <summary> 版本号 </summary>
-		public static readonly Version VERSION = new Version(4, 13, 20, 0);
-		/// <summary> 修订日期 </summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 1, 20);
+		/// <summary>版本号</summary>
+		public static readonly Version VERSION = new Version(4, 13, 21, 0);
+		/// <summary>修订日期</summary>
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 1, 21);
 
 		// 配置参数变量
 		#region 视频属性
@@ -756,6 +756,11 @@ namespace Otomad.VegasScript {
 				}
 			}
 			#endregion
+			
+			#region 动态 BPM 处理
+			DynamicBpmIntegrator integrator = null;
+			if (MidiUseMidiBpm) integrator = new DynamicBpmIntegrator(midi);
+			#endregion
 
 			for (int i = 0; i < MidiConfigTrack.Events.Count; i++) {
 				MidiEvent midiEvent = MidiConfigTrack.Events[i];
@@ -774,13 +779,22 @@ namespace Otomad.VegasScript {
 					foreach (MidiEvent _midiEvent in midi.TimeSignatureTrack)
 						if (_midiEvent is TimeSignatureEvent) {
 							TimeSignatureEvent timeSignatureEvent = _midiEvent as TimeSignatureEvent;
-							if (midiEvent.AbsoluteTime >= timeSignatureEvent.AbsoluteTime)
-								barLength = midi.MsPerQuarter * timeSignatureEvent.Numerator;
+							if (midiEvent.AbsoluteTime >= timeSignatureEvent.AbsoluteTime) {
+								if (!MidiUseMidiBpm) barLength = midi.MsPerQuarter * timeSignatureEvent.Numerator;
+								else barLength = getActualTime(timeSignatureEvent.Numerator); // * midi.TicksPerQuarter (???)
+							}
 						}
 				NoteEvent noteEvent = midiEvent as NoteEvent;
 				NoteOnEvent noteOnEvent = midiEvent as NoteOnEvent;
-				double startTime = midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
-				double duration = noteOnEvent.NoteLength * midi.MsPerQuarter / midi.TicksPerQuarter;
+				double startTime, duration;
+				if (!MidiUseMidiBpm) {
+					startTime = midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
+					duration = noteOnEvent.NoteLength * midi.MsPerQuarter / midi.TicksPerQuarter;
+				} else {
+					Tuple<double, double> _ = getActualTime(midiEvent.AbsoluteTime, noteOnEvent.NoteLength);
+					startTime = _.Item1;
+					duration = _.Item2;
+				}
 				int pitch = noteEvent.NoteNumber;
 				int _pitch = pitch + SheetConfigShift;
 				int trackIndex = 0;
@@ -2818,6 +2832,64 @@ namespace Otomad.VegasScript {
 				if (info.NotesCount != 0) trackInfos.Add(info);
 			}
 			TrackInfos = trackInfos.ToArray();
+		}
+	}
+	
+	/// <summary>
+	/// 动态 BPM 积分器。
+	/// </summary>
+	public class DynamicBpmIntegrator {
+		private MIDI midi;
+		private IList<MidiEvent> msPerQuarterTrack;
+		private List<BpmKeysData> bpmKeysDatas = new List<BpmKeysData>();
+		
+		public DynamicBpmIntegrator(MIDI midi) {
+			this.midi = midi;
+			msPerQuarterTrack = midi.MsPerQuarterTrack;
+			double totalTime = 0;
+			BpmKeysData? previousData = null;
+			foreach (MidiEvent midiEvent in msPerQuarterTrack)
+				if (midiEvent is TempoEvent) {
+					TempoEvent tempoEvent = midiEvent as TempoEvent;
+					double msPerQuarter = (double)tempoEvent.MicrosecondsPerQuarterNote / 1000;
+					double startPosition = tempoEvent.AbsoluteTime;
+					if (previousData != null)
+						totalTime += (msPerQuarter + previousData.msPerQuarter) * (startPosition - previousData.startPosition) / 2;
+					bpmKeysDatas.Add(previousData = new BpmKeysData(msPerQuarter[], startPosition, totalTime));
+				}
+		}
+		
+		private struct BpmKeysData {
+			public readonly double msPerQuarter;
+			public readonly double startPosition;
+			public readonly double previousMs;
+			public BpmKeysData(msPerQuarter, startPosition, previousMs) {
+				this.msPerQuarter = msPerQuarter;
+				this.startPosition = startPosition;
+				this.previousMs = previousMs;
+			}
+		}
+		
+		public double getActualTime(double absoluteTime) {
+			for (int i = 0; i < bpmKeysDatas.Count; i++) {
+				BpmKeysData curData = bpmKeysDatas[i], nextData = null;
+				if (i + 1 < bpmKeysDatas.Count) nextData = bpmKeysDatas[i + 1];
+				double curTime;
+				if (nextData == null) {
+					curTime = (absoluteTime - curData.startPosition) * curData.msPerQuarter / midi.TicksPerQuarter;
+				} else {
+					double curPosition = absoluteTime - curData.startPosition;
+					double curProportion = curPosition / (nextData.startPosition - curData.startPosition);
+					curTime = curData.msPerQuarter * (1 - curProportion) + nextData.msPerQuarter * curProportion;
+				}
+				return curTime / midi.TicksPerQuarter + curData.previousMs;
+			}
+		}
+		
+		public Tuple<double, double> getActualTime(double absoluteStart, double absoluteDuration) {
+			double start = getActualTime(absoluteStart);
+			double duration = getActualTime(absoluteStart + absoluteDuration) - start;
+			return new Tuple<double, double>(start, duration);
 		}
 	}
 
