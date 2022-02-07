@@ -18,15 +18,17 @@
 
 **So It's actually works on Vegas Pro 17 and above.**
 
-* Tested fine on Vegas Pro 17 and 19.
+* Tested **fine** on Vegas Pro 17 and 19.
 
 ### Reference
-* https://github.com/Chaosinism/vegas_scripts
-* https://github.com/evankale/VegasScripts
-* https://github.com/naudio/NAudio
-* https://www.jetdv.com/
+* [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
+* [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
+* [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
+* [https://www.jetdv.com/](https://www.jetdv.com/)
 
-## General Instructions (for all scripts)
+---
+
+## General Instructions (for commonly all scripts)
 
 ### Tips
 Various scripts for MAGIX Vegas **(v14 and above)**.
