@@ -30,6 +30,7 @@ namespace VegasScript {
 			this.InfoLabel = new System.Windows.Forms.Label();
 			this.PercentLabel = new System.Windows.Forms.Label();
 			this.ProgressBar = new System.Windows.Forms.ProgressBar();
+			this.RealTimeUpdateCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
@@ -45,7 +46,7 @@ namespace VegasScript {
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel1.Controls.Add(this.CancelBtn, 1, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 141);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 174);
 			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
@@ -74,26 +75,28 @@ namespace VegasScript {
 			this.tableLayoutPanel2.Controls.Add(this.InfoLabel, 0, 1);
 			this.tableLayoutPanel2.Controls.Add(this.PercentLabel, 0, 0);
 			this.tableLayoutPanel2.Controls.Add(this.ProgressBar, 0, 2);
+			this.tableLayoutPanel2.Controls.Add(this.RealTimeUpdateCheck, 0, 3);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(6);
-			this.tableLayoutPanel2.RowCount = 3;
+			this.tableLayoutPanel2.RowCount = 4;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(471, 141);
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(471, 174);
 			this.tableLayoutPanel2.TabIndex = 2;
 			// 
 			// InfoLabel
 			// 
 			this.InfoLabel.AutoSize = true;
 			this.InfoLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.InfoLabel.Location = new System.Drawing.Point(11, 64);
+			this.InfoLabel.Location = new System.Drawing.Point(11, 65);
 			this.InfoLabel.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.InfoLabel.Name = "InfoLabel";
 			this.InfoLabel.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-			this.InfoLabel.Size = new System.Drawing.Size(449, 32);
+			this.InfoLabel.Size = new System.Drawing.Size(449, 33);
 			this.InfoLabel.TabIndex = 0;
 			this.InfoLabel.Text = "正在生成音 MAD / YTPMV⋯⋯";
 			this.InfoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -106,7 +109,7 @@ namespace VegasScript {
 			this.PercentLabel.Location = new System.Drawing.Point(6, 6);
 			this.PercentLabel.Margin = new System.Windows.Forms.Padding(0);
 			this.PercentLabel.Name = "PercentLabel";
-			this.PercentLabel.Size = new System.Drawing.Size(459, 58);
+			this.PercentLabel.Size = new System.Drawing.Size(459, 59);
 			this.PercentLabel.TabIndex = 1;
 			this.PercentLabel.Text = "0%";
 			this.PercentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -114,7 +117,7 @@ namespace VegasScript {
 			// ProgressBar
 			// 
 			this.ProgressBar.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ProgressBar.Location = new System.Drawing.Point(14, 99);
+			this.ProgressBar.Location = new System.Drawing.Point(14, 101);
 			this.ProgressBar.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
 			this.ProgressBar.Name = "ProgressBar";
 			this.ProgressBar.Size = new System.Drawing.Size(443, 23);
@@ -122,13 +125,25 @@ namespace VegasScript {
 			this.ProgressBar.TabIndex = 2;
 			this.ProgressBar.UseWaitCursor = true;
 			// 
+			// RealTimeUpdateCheck
+			// 
+			this.RealTimeUpdateCheck.AutoSize = true;
+			this.RealTimeUpdateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RealTimeUpdateCheck.Location = new System.Drawing.Point(9, 140);
+			this.RealTimeUpdateCheck.Name = "RealTimeUpdateCheck";
+			this.RealTimeUpdateCheck.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+			this.RealTimeUpdateCheck.Size = new System.Drawing.Size(453, 25);
+			this.RealTimeUpdateCheck.TabIndex = 3;
+			this.RealTimeUpdateCheck.Text = "实时更新轨道 UI（会减慢生成速度）";
+			this.RealTimeUpdateCheck.UseVisualStyleBackColor = true;
+			// 
 			// ProgressForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(471, 183);
+			this.ClientSize = new System.Drawing.Size(471, 216);
 			this.ControlBox = false;
 			this.Controls.Add(this.tableLayoutPanel2);
 			this.Controls.Add(this.tableLayoutPanel1);
@@ -157,5 +172,6 @@ namespace VegasScript {
 		public System.Windows.Forms.Label InfoLabel;
 		public System.Windows.Forms.Label PercentLabel;
 		public System.Windows.Forms.ProgressBar ProgressBar;
+		public System.Windows.Forms.CheckBox RealTimeUpdateCheck;
 	}
 }

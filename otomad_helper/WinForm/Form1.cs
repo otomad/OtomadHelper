@@ -92,7 +92,7 @@ namespace VegasScript {
 				if (isStaff) VideoEffectCombo.Text = "五线谱";
 				VideoEffectCombo.Enabled = !isStaff;
 			};
-			#endif
+#endif
 
 			#endregion
 
@@ -105,6 +105,22 @@ namespace VegasScript {
 			} catch (Exception) { } // 如果路径不存在则不受影响
 #endif
 			#endregion
+
+			int trueValue = 0x01, falseValue = 0x00;
+			SetWindowTheme(this.Handle, "DarkMode_Explorer", null);
+			DwmSetWindowAttribute(this.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue, Marshal.SizeOf(typeof(int)));
+			DwmSetWindowAttribute(this.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue, Marshal.SizeOf(typeof(int)));
+		}
+
+		[DllImport("uxtheme.dll", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
+
+		public static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+		[DllImport("dwmapi.dll")]
+		public static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
+		[Flags]
+		public enum DwmWindowAttribute : uint {
+			DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
+			DWMWA_MICA_EFFECT = 1029
 		}
 
 		/// <summary>
@@ -774,6 +790,14 @@ namespace VegasScript {
 
 		protected override void OnHandleCreated(EventArgs e) {
 			DwmSetWindowAttribute(Handle, 20, new[] { 1 }, 4);
+		}
+
+		private void ChooseSourceBtn_Click(object sender, EventArgs e) {
+			ChooseSourceCombo.SelectedIndex = 2;
+		}
+
+		private void ChooseMidiBtn_Click(object sender, EventArgs e) {
+			ChooseSourceCombo.SelectedIndex = 2;
 		}
 	}
 
