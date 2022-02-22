@@ -58,7 +58,7 @@ namespace Otomad.VegasScript {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 14, 23, 0);
+		public static readonly Version VERSION = new Version(4, 14, 23, 1);
 		/// <summary>修订日期</summary>
 		public static readonly DateTime REVISION_DATE = new DateTime(2022, 2, 23);
 
@@ -12359,7 +12359,7 @@ namespace Otomad.VegasScript {
 			helper_info = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。",
 			helper_info_warning = "注意：操作之后将会关闭本对话框，您可以稍后再重新打开，部分您未保存的更改可能会丢失！",
 			close_after_open_helper = "操作完成之后关闭本对话框",
-			otomad_helper_config = "音 MAD 助手 - 配置",
+			otomad_helper_config = "音 MAD 助手 Vegas - 配置",
 			reset_config_successful = "重置完成，请重新启动脚本。",
 			reset_config_successful_title = "重置用户配置",
 			about_title = "关于",
@@ -12731,7 +12731,7 @@ namespace Otomad.VegasScript {
 				helper_info = "The following functions are just some independent auxiliary functions, and have nothing to do with other parameters that generate audio and video.",
 				helper_info_warning = "Note: This dialog box will be closed after the operation, you can reopen it later, and some unsaved changes may be lost!\n",
 				close_after_open_helper = "Close this Dialog after the Operation Completed",
-				otomad_helper_config = "Otomad Helper - Config",
+				otomad_helper_config = "Otomad Helper for Vegas - Config",
 				reset_config_successful = "The reset is complete, please restart the script.",
 				reset_config_successful_title = "Reset User Configuration",
 				about_title = "About",
@@ -13101,7 +13101,7 @@ namespace Otomad.VegasScript {
 				helper_info = "以下功能只是一些獨立的協助工具，與其它生成音視頻的參數無關。",
 				helper_info_warning = "注意：操作之後將會關閉本對話方塊，您可以稍後再重新啟動，部分您未保存的更改可能會遺失！\n",
 				close_after_open_helper = "操作完成之後關閉本對話方塊",
-				otomad_helper_config = "音 MAD 助手 - 配寘",
+				otomad_helper_config = "音 MAD 助手 Vegas - 配寘",
 				reset_config_successful = "重置完成，請重新啟動腳本。",
 				reset_config_successful_title = "重置用戶配寘",
 				about_title = "關於",
@@ -13472,7 +13472,7 @@ namespace Otomad.VegasScript {
 				helper_info = "以下の機能は、いくつかの独立した補助機能であり、オーディオとビデオを生成する他のパラメーターとは関係ありません。",
 				helper_info_warning = "注：このダイアログボックスは操作後に閉じられます。後で再度開くことができ、保存されていない変更の一部が失われる可能性があります。\n",
 				close_after_open_helper = "操作後にこのダイアログを閉じます",
-				otomad_helper_config = "音MADヘルパー - 設定",
+				otomad_helper_config = "Vegasの音MADヘルパー - 設定",
 				reset_config_successful = "リセットが完了しました。スクリプトを再起動してください。",
 				reset_config_successful_title = "ユーザ設定のリセット",
 				about_title = "だいたい",
@@ -13843,7 +13843,7 @@ namespace Otomad.VegasScript {
 				helper_info = "Следующие ниже функции являются лишь некоторыми независимыми вспомогательными функциями и не имеют ничего общего с другими параметрами, генерирующими аудио и видео.",
 				helper_info_warning = "Примечание: это диалоговое окно будет закрыто после операции, вы можете открыть его позже, и некоторые несохраненные изменения могут быть потеряны!\n",
 				close_after_open_helper = "Закрыть диалог после завершения операции",
-				otomad_helper_config = "Отомад Помощник - Конфигурация",
+				otomad_helper_config = "Отомад Помощник для Вегаса - Конфигурация",
 				reset_config_successful = "Сброс завершен, перезапустите скрипт.",
 				reset_config_successful_title = "Сбросить конфигурацию пользователя",
 				about_title = "О",
