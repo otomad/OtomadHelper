@@ -1,7 +1,7 @@
 # VegasScripts
 
 ![Badge](https://img.shields.io/badge/STATE-STABLE-green?style=flat-square)
-![Badge](https://img.shields.io/badge/VERSION-4.14.23.0-orange?style=flat-square)
+![Badge](https://img.shields.io/badge/VERSION-4.14.23.1-orange?style=flat-square)
 
 ## Otomad Helper
 [Get download link now!](https://github.com/otomad/VegasScripts/releases/latest)
