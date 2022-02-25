@@ -1,5 +1,5 @@
 ﻿
-namespace VegasScript {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 	partial class SelectIntervalForm {
 		/// <summary>
 		/// Required designer variable.

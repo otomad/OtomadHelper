@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ScriptPortal.Vegas;
 
-namespace VegasScript {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 	public partial class ChangeTuneMethodForm : Form {
 		public ChangeTuneMethodForm() {
 			InitializeComponent();

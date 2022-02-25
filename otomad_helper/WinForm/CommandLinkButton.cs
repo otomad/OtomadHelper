@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace VegasScript {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class CommandLinkButton : Button {
 		private bool _commandLink = false;

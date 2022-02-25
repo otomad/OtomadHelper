@@ -1,5 +1,5 @@
 ﻿
-namespace VegasScript {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 	partial class AutoLayoutTracksBox3dForm {
 		/// <summary>
 		/// Required designer variable.

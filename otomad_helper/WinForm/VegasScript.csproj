@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{396AB8FE-122A-4CE8-8426-28AB46006EA3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>VegasScript</RootNamespace>
+    <RootNamespace>Otomad.VegasScript.OtomadHelper.V4</RootNamespace>
     <AssemblyName>VegasScript</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -35,7 +35,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>VegasScript.Program</StartupObject>
+    <StartupObject>Otomad.VegasScript.OtomadHelper.V4.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -59,10 +59,17 @@
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Otomad Helper.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="NAudio">
       <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu\DLL\NAudio.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="ScriptPortal.Vegas">
       <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 17.0\ScriptPortal.Vegas.dll</HintPath>
     </Reference>
@@ -102,11 +109,11 @@
     <Compile Include="CommandLinkButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ConfigForm.Designer.cs">
+      <DependentUpon>ConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GradientTracksForm.cs">
       <SubType>Form</SubType>
@@ -114,20 +121,24 @@
     <Compile Include="GradientTracksForm.Designer.cs">
       <DependentUpon>GradientTracksForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GroupedRadioButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="IntegerTrackWithBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="IntegerTrackWithBox.Designer.cs">
       <DependentUpon>IntegerTrackWithBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="MessageBoxEx.cs" />
     <Compile Include="NumericUpDownWithUnit.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ProcessForm.cs">
+    <Compile Include="ProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProcessForm.Designer.cs">
-      <DependentUpon>ProcessForm.cs</DependentUpon>
+    <Compile Include="ProgressForm.Designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -160,8 +171,8 @@
     <EmbeddedResource Include="ChangeTuneMethodForm.resx">
       <DependentUpon>ChangeTuneMethodForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="ConfigForm.resx">
+      <DependentUpon>ConfigForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GradientTracksForm.resx">
       <DependentUpon>GradientTracksForm.cs</DependentUpon>
@@ -169,8 +180,8 @@
     <EmbeddedResource Include="IntegerTrackWithBox.resx">
       <DependentUpon>IntegerTrackWithBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProcessForm.resx">
-      <DependentUpon>ProcessForm.cs</DependentUpon>
+    <EmbeddedResource Include="ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -180,6 +191,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="ReplaceClipsForm.resx">
       <DependentUpon>ReplaceClipsForm.cs</DependentUpon>
@@ -188,6 +200,7 @@
       <DependentUpon>SelectIntervalForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include=".editorconfig" />
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -203,6 +216,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CommandLinkButton.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Otomad Helper.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace VegasScript {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	//[ToolboxBitmap(typeof(TrackBar))]
 	public partial class IntegerTrackWithBox : UserControl {

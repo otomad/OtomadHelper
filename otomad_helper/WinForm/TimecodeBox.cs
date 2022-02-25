@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace VegasScript {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	//[ToolboxBitmap(typeof(TextBox))]
 	public class TimecodeBox : TextBox {

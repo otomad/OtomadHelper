@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace VegasScript {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 	public partial class AutoLayoutTracksBox3dForm : Form {
 		public AutoLayoutTracksBox3dForm() {
 			InitializeComponent();

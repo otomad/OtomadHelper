@@ -1,5 +1,5 @@
 ﻿
-namespace VegasScript {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 	partial class IntegerTrackWithBox {
 		/// <summary> 
 		/// 必需的设计器变量。
@@ -34,6 +34,7 @@ namespace VegasScript {
 			// 
 			// tableLayoutPanel
 			// 
+			this.tableLayoutPanel.BackColor = System.Drawing.Color.Transparent;
 			this.tableLayoutPanel.ColumnCount = 2;
 			this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -50,7 +51,7 @@ namespace VegasScript {
 			// 
 			// Track
 			// 
-			this.Track.BackColor = System.Drawing.SystemColors.Menu;
+			this.Track.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
 			this.Track.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Track.Location = new System.Drawing.Point(0, 0);
 			this.Track.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
@@ -68,14 +69,15 @@ namespace VegasScript {
 			this.Numeric.Location = new System.Drawing.Point(302, 0);
 			this.Numeric.Margin = new System.Windows.Forms.Padding(4, 0, 0, 0);
 			this.Numeric.Name = "Numeric";
-			this.Numeric.Size = new System.Drawing.Size(75, 23);
+			this.Numeric.Size = new System.Drawing.Size(75, 27);
 			this.Numeric.TabIndex = 1;
 			this.Numeric.ValueChanged += new System.EventHandler(this.Numeric_ValueChanged);
 			// 
 			// IntegerTrackWithBox
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.Color.Transparent;
 			this.Controls.Add(this.tableLayoutPanel);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.Margin = new System.Windows.Forms.Padding(4);

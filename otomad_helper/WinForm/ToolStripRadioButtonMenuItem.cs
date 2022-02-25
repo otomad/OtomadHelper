@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
-namespace VegasScript {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 	public class ToolStripRadioButtonMenuItem : ToolStripMenuItem {
 		public ToolStripRadioButtonMenuItem()
 			: base() {
