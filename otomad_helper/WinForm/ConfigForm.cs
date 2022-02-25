@@ -100,14 +100,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			#region 程序图标
 			#if VEGAS_ENVIRONMENT
-			string iconName = "otomad_helper.ico";
 			try {
-				//Icon = Icon.ExtractAssociatedIcon(Path.r(vegas.InstallationDirectory, "Script Menu", iconName).FullPath);
-				Icon = new Icon(Path.r(vegas.InstallationDirectory, "Script Menu", iconName).FullPath, new Size(16, 16))
-				icon = Icon;
+				//icon = Icon = Icon.ExtractAssociatedIcon(System.IO.Path.ChangeExtension(ScriptPath, "ico"));
+				icon = Icon = new Icon(System.IO.Path.ChangeExtension(ScriptPath, "ico"), new Size(16, 16));
 			} catch (Exception) { } // 如果路径不存在则不受影响
 			#else
-			Icon = Properties.Resources.Otomad_Helper;
+			icon = Icon = Properties.Resources.Otomad_Helper;
 			#endif
 			#endregion
 
