@@ -12238,10 +12238,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#region 程序图标
 			#if VEGAS_ENVIRONMENT
 			try {
-				icon = Icon = Icon.ExtractAssociatedIcon(System.IO.Path.ChangeExtension(ScriptPath, "ico"));
+				//icon = Icon = Icon.ExtractAssociatedIcon(System.IO.Path.ChangeExtension(ScriptPath, "ico"));
+				icon = Icon = new Icon(System.IO.Path.ChangeExtension(ScriptPath, "ico"), new Size(16, 16));
 			} catch (Exception) { } // 如果路径不存在则不受影响
-			ConfigForm_Resize(null, null);
+			#else
+			icon = Icon = Properties.Resources.Otomad_Helper;
 			#endif
+			ConfigForm_Resize(null, null);
 			#endregion
 
 			#region 直接进入替换轨道素材页面
@@ -14451,7 +14454,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_selected_media_exception = "Error: No media is selected in the project media window.\n\nPlease select a media in the project media window, then reopen the configuration dialog, and select \"selected media file\" in the source settings.\n\n",
 				no_selected_clip_exception = "Error: No clips are selected in the track.\n\nPlease select a clip in the track, then reopen the configuration dialog, and select \"selected track clips\" in the source settings.\n\n",
 				no_time_stretch_pitch_shift_exception = "Error: The pitch conversion method of the selected clip is set to no tuning.\n\nMost likely you are using \"selected track clips\". You are not to blame for this error, but for the brain-dead design of Vegas.\n\nSolution: Please reselect your track clips, right-click the audio part, and select \"Properties\" at the bottom. Set the \"Method\" of \"Time Stretch/Pitch Conversion\" to \"élastique\".\nThen click OK.\n\nSupplementary note: If an audio event has not been transposed and its properties are opened, then the “Method” of “Time Stretch/Pitch Conversion” in its properties will be\nautomatically modified to “None”, and click OK. Take effect. At this time, you will find that the + and-key tuning operations on the keyboard are invalid. At this time, you must reopen the properties of the audio event,\nset the \"Method\" of \"Time Stretch/Pitch Conversion\" to \"élastique\", you don't need to set \"Pitch Change\", just click OK.",
-				read_config_fail_exception = "Error: Failed to read the parameter configuration file.\n\nUnfortunately you encountered this unforeseen error. We will clear the user configuration settings and restore them to default settings ​​in order to solve the problem.\nIt is recommended to tell the author of this error in order to solve the problem quickly.\nThis script will be exited, and then I will bother you to reopen it manually.",
+				read_config_fail_exception = "Error: Failed to read the parameter configuration file.\n\nUnfortunately you encountered this unforeseen error. We will clear the user configuration settings and restore them to default settings in order to solve the problem.\nIt is recommended to tell the author of this error in order to solve the problem quickly.\nThis script will be exited, and then I will bother you to reopen it manually.",
 				fail_to_select_clips_exception = "Error: Error selecting track clips.\n\nPlease select some track clips in the track window first.",
 				fail_to_select_tracks_exception = "Error: Error selecting tracks.\n\nPlease select some video tracks in the track window first.",
 				ytp_over_length_exception = "Error: The specified YTP minimum length exceeds the media length.\n\nThe specified YTP minimum length is too large, please try a smaller value. Or the length of the selected media is too small.",
@@ -15462,7 +15465,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				sheet_gap_tooltip = "Расстояние между строками в кадре.\nЕдиница: пиксель.",
 				sheet_relative_tooltip = "После проверки пиксельная единица параметров, заполненных ниже, будет расположена относительно размера 1920 × 1080;\nв противном случае он будет размещен в зависимости от размера проекта.",
 				sheet_relative = "Использование относительных значений",
-				preview_base_pitch_tooltip = "Убедитесь, что звук включен и звуковая схема не установлена ​​на беззвучный режим.\nЕсли по-прежнему нет работы, перезагрузите систему.",
+				preview_base_pitch_tooltip = "Убедитесь, что звук включен и звуковая схема не установлена на беззвучный режим.\nЕсли по-прежнему нет работы, перезагрузите систему.",
 				ytp_max_length_tooltip = "Укажите максимальную длину клипа на одну дорожку.\nЕдиница: миллисекунды.",
 				ytp_min_length_tooltip = "Укажите минимальную длину клипа на одну дорожку.\nЕдиница: миллисекунды.",
 				file = "&Файл",
