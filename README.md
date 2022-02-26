@@ -4,11 +4,13 @@
 
 ![Badge](https://img.shields.io/badge/STATE-STABLE-green?style=flat-square)
 ![Badge](https://img.shields.io/badge/VERSION-4.14.26.0-orange?style=flat-square)
+
 </div>
 <h2 align="center">Otomad Helper</h2>
 <div align="center">
 
 [Get download link now!](https://github.com/otomad/VegasScripts/releases/latest)
+
 </div>
 
 ### Install
