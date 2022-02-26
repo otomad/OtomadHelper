@@ -1,10 +1,15 @@
-# VegasScripts
+![VegasScripts](https://github.com/otomad/VegasScripts/blob/winform/banner.png?raw=true)
+<h1 align="center">VegasScripts</h1>
+<div align="center">
 
 ![Badge](https://img.shields.io/badge/STATE-STABLE-green?style=flat-square)
 ![Badge](https://img.shields.io/badge/VERSION-4.14.26.0-orange?style=flat-square)
+</div>
+<h2 align="center">Otomad Helper</h2>
+<div align="center">
 
-## Otomad Helper
 [Get download link now!](https://github.com/otomad/VegasScripts/releases/latest)
+</div>
 
 ### Install
 1. [Download](https://github.com/otomad/VegasScripts/releases/latest) the latest version of this script.
@@ -28,7 +33,8 @@
 
 ---
 
-## General Instructions (for commonly all scripts)
+<br />
+<h2 align="center">General Instructions (for commonly all scripts)</h2>
 
 ### Tips
 Various scripts for MAGIX Vegas **(v14 and above)**.
