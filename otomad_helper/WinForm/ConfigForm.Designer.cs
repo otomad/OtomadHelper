@@ -81,7 +81,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SourceTab = new System.Windows.Forms.TabPage();
 			this.WarningInfoLabel = new System.Windows.Forms.Label();
 			this.MidiConfigGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+			this.MidiConfigTablePanel = new System.Windows.Forms.TableLayoutPanel();
 			this.ChooseMidiLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
 			this.ChooseMidiText = new System.Windows.Forms.TextBox();
@@ -92,7 +92,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiStartSecondLbl = new System.Windows.Forms.Label();
 			this.MidiEndSecondLbl = new System.Windows.Forms.Label();
 			this.MidiBpmLbl = new System.Windows.Forms.Label();
-			this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+			this.MidiBpmFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.MidiDynamicTempoFlow = new System.Windows.Forms.FlowLayoutPanel();
 			this.MidiDynamicMidiBpmCheck = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
 			this.MidiDynamicMidiBpmFormCombo = new System.Windows.Forms.ComboBox();
@@ -130,7 +130,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioFadeOutBox = new Otomad.VegasScript.OtomadHelper.V4.IntegerTrackWithBox();
 			this.AudioFadeOutCurveCombo = new System.Windows.Forms.ComboBox();
 			this.AudioTuneGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+			this.AudioTuneTablePanel = new System.Windows.Forms.TableLayoutPanel();
 			this.AudioTuneMethodLbl = new System.Windows.Forms.Label();
 			this.AudioStretchAttrLbl = new System.Windows.Forms.Label();
 			this.AudioLockAttrLbl = new System.Windows.Forms.Label();
@@ -154,6 +154,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioNormalizeCheck = new System.Windows.Forms.CheckBox();
 			this.AudioFreezeLastFrameCheck = new System.Windows.Forms.CheckBox();
 			this.AudioLegatoCheck = new System.Windows.Forms.CheckBox();
+			this.CreateEventGroupCheck = new System.Windows.Forms.CheckBox();
 			this.VideoTab = new System.Windows.Forms.TabPage();
 			this.VideoParamsGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
@@ -253,6 +254,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.limitStretchLegatoTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stretchLegatoTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lengthenLegatoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.BatchSubtitleGenerationBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).BeginInit();
@@ -265,10 +267,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Tabs.SuspendLayout();
 			this.SourceTab.SuspendLayout();
 			this.MidiConfigGroup.SuspendLayout();
-			this.tableLayoutPanel5.SuspendLayout();
+			this.MidiConfigTablePanel.SuspendLayout();
 			this.tableLayoutPanel6.SuspendLayout();
 			this.flowLayoutPanel3.SuspendLayout();
-			this.flowLayoutPanel4.SuspendLayout();
+			this.MidiBpmFlowPanel.SuspendLayout();
 			this.MidiDynamicTempoFlow.SuspendLayout();
 			this.flowLayoutPanel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MidiCustomBpmBox)).BeginInit();
@@ -283,7 +285,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioParamsGroup.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.AudioTuneGroup.SuspendLayout();
-			this.tableLayoutPanel7.SuspendLayout();
+			this.AudioTuneTablePanel.SuspendLayout();
 			this.flowLayoutPanel10.SuspendLayout();
 			this.flowLayoutPanel6.SuspendLayout();
 			this.tableLayoutPanel17.SuspendLayout();
@@ -336,7 +338,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(5, 5, 5, 2);
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(643, 42);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(650, 42);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
 			// UserHelpLink
@@ -344,7 +346,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.UserHelpLink.AutoSize = true;
 			this.UserHelpLink.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.UserHelpLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(95)))), ((int)(((byte)(184)))));
-			this.UserHelpLink.Location = new System.Drawing.Point(307, 5);
+			this.UserHelpLink.Location = new System.Drawing.Point(314, 5);
 			this.UserHelpLink.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.UserHelpLink.Name = "UserHelpLink";
 			this.UserHelpLink.Size = new System.Drawing.Size(78, 35);
@@ -356,8 +358,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			// AboutBtn
 			// 
+			this.AboutBtn.AutoSize = true;
 			this.AboutBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AboutBtn.Location = new System.Drawing.Point(393, 9);
+			this.AboutBtn.Location = new System.Drawing.Point(400, 9);
 			this.AboutBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.AboutBtn.Name = "AboutBtn";
 			this.AboutBtn.Size = new System.Drawing.Size(75, 27);
@@ -368,9 +371,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			// OkBtn
 			// 
+			this.OkBtn.AutoSize = true;
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(476, 9);
+			this.OkBtn.Location = new System.Drawing.Point(483, 9);
 			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(75, 27);
@@ -381,9 +385,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			// CancelBtn
 			// 
+			this.CancelBtn.AutoSize = true;
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(559, 9);
+			this.CancelBtn.Location = new System.Drawing.Point(566, 9);
 			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(75, 27);
@@ -418,10 +423,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "不调音",
             "移调效果插件",
             "弹性音调更改",
-            "古典音调更改"});
+            "古典音调更改",
+            "瞎调音"});
 			this.AudioTuneMethodCombo.Location = new System.Drawing.Point(78, 3);
 			this.AudioTuneMethodCombo.Name = "AudioTuneMethodCombo";
-			this.AudioTuneMethodCombo.Size = new System.Drawing.Size(518, 28);
+			this.AudioTuneMethodCombo.Size = new System.Drawing.Size(525, 28);
 			this.AudioTuneMethodCombo.TabIndex = 2;
 			this.Balloon.SetToolTip(this.AudioTuneMethodCombo, "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\r\n“弹性音调更改”表示使用“Élastique”拉伸方式改变音调，也就是键盘上" +
         " +、- 键直接改变音调，\r\n有音高范围限制。");
@@ -549,14 +555,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StaffLineSpacingBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.StaffLineSpacingBox.Enabled = false;
 			this.StaffLineSpacingBox.EnableDecimalPlaces = true;
-			this.StaffLineSpacingBox.Location = new System.Drawing.Point(377, 3);
+			this.StaffLineSpacingBox.Location = new System.Drawing.Point(381, 3);
 			this.StaffLineSpacingBox.Maximum = new decimal(new int[] {
             65536,
             0,
             0,
             0});
 			this.StaffLineSpacingBox.Name = "StaffLineSpacingBox";
-			this.StaffLineSpacingBox.Size = new System.Drawing.Size(219, 27);
+			this.StaffLineSpacingBox.Size = new System.Drawing.Size(222, 27);
 			this.StaffLineSpacingBox.Suffix = "px";
 			this.StaffLineSpacingBox.TabIndex = 7;
 			this.Balloon.SetToolTip(this.StaffLineSpacingBox, "五线谱线与线之间的间距。\r\n单位：像素。");
@@ -576,7 +582,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StaffSurfacePositionBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.StaffSurfacePositionBox.Enabled = false;
 			this.StaffSurfacePositionBox.EnableDecimalPlaces = true;
-			this.StaffSurfacePositionBox.Location = new System.Drawing.Point(377, 37);
+			this.StaffSurfacePositionBox.Location = new System.Drawing.Point(381, 37);
 			this.StaffSurfacePositionBox.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -588,7 +594,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0,
             -2147483648});
 			this.StaffSurfacePositionBox.Name = "StaffSurfacePositionBox";
-			this.StaffSurfacePositionBox.Size = new System.Drawing.Size(219, 27);
+			this.StaffSurfacePositionBox.Size = new System.Drawing.Size(222, 27);
 			this.StaffSurfacePositionBox.Suffix = "px";
 			this.StaffSurfacePositionBox.TabIndex = 9;
 			this.Balloon.SetToolTip(this.StaffSurfacePositionBox, "五线谱中间第三根线到屏幕中心的距离，上正下负。\r\n单位：像素。");
@@ -615,7 +621,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0,
             0});
 			this.StaffSurfaceWidthBox.Name = "StaffSurfaceWidthBox";
-			this.StaffSurfaceWidthBox.Size = new System.Drawing.Size(218, 27);
+			this.StaffSurfaceWidthBox.Size = new System.Drawing.Size(222, 27);
 			this.StaffSurfaceWidthBox.Suffix = "px";
 			this.StaffSurfaceWidthBox.TabIndex = 8;
 			this.Balloon.SetToolTip(this.StaffSurfaceWidthBox, "将在屏幕中间所填的宽度内显示音符，用于左右留白，给左侧的谱号留间距。\r\n单位：像素。");
@@ -646,7 +652,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0,
             0});
 			this.YtpMinLenBox.Name = "YtpMinLenBox";
-			this.YtpMinLenBox.Size = new System.Drawing.Size(218, 27);
+			this.YtpMinLenBox.Size = new System.Drawing.Size(222, 27);
 			this.YtpMinLenBox.Suffix = "ms";
 			this.YtpMinLenBox.TabIndex = 8;
 			this.Balloon.SetToolTip(this.YtpMinLenBox, "指定单个轨道剪辑的最小长度。\r\n单位：毫秒。");
@@ -666,7 +672,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0});
 			this.YtpMaxLenBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.YtpMaxLenBox.EnableDecimalPlaces = true;
-			this.YtpMaxLenBox.Location = new System.Drawing.Point(377, 3);
+			this.YtpMaxLenBox.Location = new System.Drawing.Point(381, 3);
 			this.YtpMaxLenBox.Maximum = new decimal(new int[] {
             30000,
             0,
@@ -678,7 +684,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0,
             0});
 			this.YtpMaxLenBox.Name = "YtpMaxLenBox";
-			this.YtpMaxLenBox.Size = new System.Drawing.Size(219, 27);
+			this.YtpMaxLenBox.Size = new System.Drawing.Size(222, 27);
 			this.YtpMaxLenBox.Suffix = "ms";
 			this.YtpMaxLenBox.TabIndex = 9;
 			this.Balloon.SetToolTip(this.YtpMaxLenBox, "指定单个轨道剪辑的最大长度。\r\n单位：毫秒。");
@@ -695,7 +701,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PreviewBasePitchBtn.Location = new System.Drawing.Point(2, 3);
 			this.PreviewBasePitchBtn.Margin = new System.Windows.Forms.Padding(2, 3, 3, 3);
 			this.PreviewBasePitchBtn.Name = "PreviewBasePitchBtn";
-			this.PreviewBasePitchBtn.Size = new System.Drawing.Size(258, 29);
+			this.PreviewBasePitchBtn.Size = new System.Drawing.Size(261, 29);
 			this.PreviewBasePitchBtn.TabIndex = 1;
 			this.PreviewBasePitchBtn.Text = "预听标准音高(&B)";
 			this.PreviewBasePitchBtn.UseVisualStyleBackColor = true;
@@ -708,7 +714,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioStretchAttrCombo.FormattingEnabled = true;
 			this.AudioStretchAttrCombo.Location = new System.Drawing.Point(78, 37);
 			this.AudioStretchAttrCombo.Name = "AudioStretchAttrCombo";
-			this.AudioStretchAttrCombo.Size = new System.Drawing.Size(518, 28);
+			this.AudioStretchAttrCombo.Size = new System.Drawing.Size(525, 28);
 			this.AudioStretchAttrCombo.TabIndex = 3;
 			// 
 			// menu
@@ -722,7 +728,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.menu.Location = new System.Drawing.Point(0, 0);
 			this.menu.Name = "menu";
 			this.menu.Padding = new System.Windows.Forms.Padding(6, 2, 0, 4);
-			this.menu.Size = new System.Drawing.Size(643, 30);
+			this.menu.Size = new System.Drawing.Size(650, 30);
 			this.menu.TabIndex = 2;
 			this.menu.Text = "menuStrip1";
 			// 
@@ -945,7 +951,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.panel1.Location = new System.Drawing.Point(0, 30);
 			this.panel1.Name = "panel1";
 			this.panel1.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
-			this.panel1.Size = new System.Drawing.Size(643, 630);
+			this.panel1.Size = new System.Drawing.Size(650, 630);
 			this.panel1.TabIndex = 3;
 			// 
 			// Tabs
@@ -962,7 +968,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
-			this.Tabs.Size = new System.Drawing.Size(627, 630);
+			this.Tabs.Size = new System.Drawing.Size(634, 630);
 			this.Tabs.TabIndex = 2;
 			// 
 			// SourceTab
@@ -975,7 +981,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SourceTab.Location = new System.Drawing.Point(4, 29);
 			this.SourceTab.Name = "SourceTab";
 			this.SourceTab.Padding = new System.Windows.Forms.Padding(5);
-			this.SourceTab.Size = new System.Drawing.Size(619, 597);
+			this.SourceTab.Size = new System.Drawing.Size(626, 597);
 			this.SourceTab.TabIndex = 0;
 			this.SourceTab.Text = "媒体";
 			this.SourceTab.UseVisualStyleBackColor = true;
@@ -996,12 +1002,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// MidiConfigGroup
 			// 
 			this.MidiConfigGroup.AutoSize = true;
-			this.MidiConfigGroup.Controls.Add(this.tableLayoutPanel5);
+			this.MidiConfigGroup.Controls.Add(this.MidiConfigTablePanel);
 			this.MidiConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
 			this.MidiConfigGroup.Location = new System.Drawing.Point(5, 196);
 			this.MidiConfigGroup.Name = "MidiConfigGroup";
 			this.MidiConfigGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.MidiConfigGroup.Size = new System.Drawing.Size(609, 286);
+			this.MidiConfigGroup.Size = new System.Drawing.Size(616, 286);
 			this.MidiConfigGroup.TabIndex = 2;
 			this.MidiConfigGroup.TabStop = false;
 			this.MidiConfigGroup.Text = "MIDI 属性";
@@ -1009,33 +1015,33 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiConfigGroup.DragEnter += new System.Windows.Forms.DragEventHandler(this.OnDragEnter);
 			this.MidiConfigGroup.DragLeave += new System.EventHandler(this.OnDragLeave);
 			// 
-			// tableLayoutPanel5
+			// MidiConfigTablePanel
 			// 
-			this.tableLayoutPanel5.AutoSize = true;
-			this.tableLayoutPanel5.ColumnCount = 1;
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel5.Controls.Add(this.ChooseMidiLbl, 0, 0);
-			this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel6, 0, 1);
-			this.tableLayoutPanel5.Controls.Add(this.MidiChannelLbl, 0, 2);
-			this.tableLayoutPanel5.Controls.Add(this.MidiChannelCombo, 0, 3);
-			this.tableLayoutPanel5.Controls.Add(this.flowLayoutPanel3, 0, 5);
-			this.tableLayoutPanel5.Controls.Add(this.MidiBpmLbl, 0, 6);
-			this.tableLayoutPanel5.Controls.Add(this.flowLayoutPanel4, 0, 7);
-			this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel12, 0, 4);
-			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel5.Location = new System.Drawing.Point(5, 25);
-			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-			this.tableLayoutPanel5.RowCount = 8;
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel5.Size = new System.Drawing.Size(599, 256);
-			this.tableLayoutPanel5.TabIndex = 1;
+			this.MidiConfigTablePanel.AutoSize = true;
+			this.MidiConfigTablePanel.ColumnCount = 1;
+			this.MidiConfigTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.MidiConfigTablePanel.Controls.Add(this.ChooseMidiLbl, 0, 0);
+			this.MidiConfigTablePanel.Controls.Add(this.tableLayoutPanel6, 0, 1);
+			this.MidiConfigTablePanel.Controls.Add(this.MidiChannelLbl, 0, 2);
+			this.MidiConfigTablePanel.Controls.Add(this.MidiChannelCombo, 0, 3);
+			this.MidiConfigTablePanel.Controls.Add(this.flowLayoutPanel3, 0, 5);
+			this.MidiConfigTablePanel.Controls.Add(this.MidiBpmLbl, 0, 6);
+			this.MidiConfigTablePanel.Controls.Add(this.MidiBpmFlowPanel, 0, 7);
+			this.MidiConfigTablePanel.Controls.Add(this.tableLayoutPanel12, 0, 4);
+			this.MidiConfigTablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MidiConfigTablePanel.Location = new System.Drawing.Point(5, 25);
+			this.MidiConfigTablePanel.Name = "MidiConfigTablePanel";
+			this.MidiConfigTablePanel.RowCount = 8;
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.Size = new System.Drawing.Size(606, 256);
+			this.MidiConfigTablePanel.TabIndex = 1;
 			// 
 			// ChooseMidiLbl
 			// 
@@ -1043,7 +1049,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ChooseMidiLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ChooseMidiLbl.Location = new System.Drawing.Point(3, 0);
 			this.ChooseMidiLbl.Name = "ChooseMidiLbl";
-			this.ChooseMidiLbl.Size = new System.Drawing.Size(593, 20);
+			this.ChooseMidiLbl.Size = new System.Drawing.Size(600, 20);
 			this.ChooseMidiLbl.TabIndex = 0;
 			this.ChooseMidiLbl.Text = "选择 MIDI 文件";
 			this.ChooseMidiLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -1062,7 +1068,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel6.Name = "tableLayoutPanel6";
 			this.tableLayoutPanel6.RowCount = 1;
 			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel6.Size = new System.Drawing.Size(599, 33);
+			this.tableLayoutPanel6.Size = new System.Drawing.Size(606, 33);
 			this.tableLayoutPanel6.TabIndex = 2;
 			// 
 			// ChooseMidiText
@@ -1071,14 +1077,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ChooseMidiText.Location = new System.Drawing.Point(3, 3);
 			this.ChooseMidiText.Name = "ChooseMidiText";
 			this.ChooseMidiText.ReadOnly = true;
-			this.ChooseMidiText.Size = new System.Drawing.Size(512, 27);
+			this.ChooseMidiText.Size = new System.Drawing.Size(519, 27);
 			this.ChooseMidiText.TabIndex = 2;
 			this.ChooseMidiText.Text = "<未选择 MIDI 文件>";
 			// 
 			// ChooseMidiBtn
 			// 
 			this.ChooseMidiBtn.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ChooseMidiBtn.Location = new System.Drawing.Point(521, 3);
+			this.ChooseMidiBtn.Location = new System.Drawing.Point(528, 3);
 			this.ChooseMidiBtn.Name = "ChooseMidiBtn";
 			this.ChooseMidiBtn.Size = new System.Drawing.Size(75, 27);
 			this.ChooseMidiBtn.TabIndex = 3;
@@ -1093,7 +1099,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiChannelLbl.Location = new System.Drawing.Point(3, 59);
 			this.MidiChannelLbl.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
 			this.MidiChannelLbl.Name = "MidiChannelLbl";
-			this.MidiChannelLbl.Size = new System.Drawing.Size(593, 20);
+			this.MidiChannelLbl.Size = new System.Drawing.Size(600, 20);
 			this.MidiChannelLbl.TabIndex = 3;
 			this.MidiChannelLbl.Text = "使用 MIDI 通道";
 			this.MidiChannelLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -1106,7 +1112,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiChannelCombo.FormattingEnabled = true;
 			this.MidiChannelCombo.Location = new System.Drawing.Point(3, 82);
 			this.MidiChannelCombo.Name = "MidiChannelCombo";
-			this.MidiChannelCombo.Size = new System.Drawing.Size(593, 28);
+			this.MidiChannelCombo.Size = new System.Drawing.Size(600, 28);
 			this.MidiChannelCombo.TabIndex = 4;
 			// 
 			// flowLayoutPanel3
@@ -1119,7 +1125,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 152);
 			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-			this.flowLayoutPanel3.Size = new System.Drawing.Size(593, 33);
+			this.flowLayoutPanel3.Size = new System.Drawing.Size(600, 33);
 			this.flowLayoutPanel3.TabIndex = 9;
 			// 
 			// MidiStartSecondLbl
@@ -1152,23 +1158,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiBpmLbl.Location = new System.Drawing.Point(3, 197);
 			this.MidiBpmLbl.Margin = new System.Windows.Forms.Padding(3, 9, 3, 0);
 			this.MidiBpmLbl.Name = "MidiBpmLbl";
-			this.MidiBpmLbl.Size = new System.Drawing.Size(593, 20);
+			this.MidiBpmLbl.Size = new System.Drawing.Size(600, 20);
 			this.MidiBpmLbl.TabIndex = 10;
 			this.MidiBpmLbl.Text = "设定 BPM 速度为";
 			this.MidiBpmLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			// 
-			// flowLayoutPanel4
+			// MidiBpmFlowPanel
 			// 
-			this.flowLayoutPanel4.AutoSize = true;
-			this.flowLayoutPanel4.Controls.Add(this.MidiDynamicTempoFlow);
-			this.flowLayoutPanel4.Controls.Add(this.MidiMidiBpmCheck);
-			this.flowLayoutPanel4.Controls.Add(this.MidiProjectBpmCheck);
-			this.flowLayoutPanel4.Controls.Add(this.flowLayoutPanel2);
-			this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 220);
-			this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-			this.flowLayoutPanel4.Size = new System.Drawing.Size(593, 33);
-			this.flowLayoutPanel4.TabIndex = 12;
+			this.MidiBpmFlowPanel.AutoSize = true;
+			this.MidiBpmFlowPanel.Controls.Add(this.MidiDynamicTempoFlow);
+			this.MidiBpmFlowPanel.Controls.Add(this.MidiMidiBpmCheck);
+			this.MidiBpmFlowPanel.Controls.Add(this.MidiProjectBpmCheck);
+			this.MidiBpmFlowPanel.Controls.Add(this.flowLayoutPanel2);
+			this.MidiBpmFlowPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.MidiBpmFlowPanel.Location = new System.Drawing.Point(3, 220);
+			this.MidiBpmFlowPanel.Name = "MidiBpmFlowPanel";
+			this.MidiBpmFlowPanel.Size = new System.Drawing.Size(600, 33);
+			this.MidiBpmFlowPanel.TabIndex = 12;
 			// 
 			// MidiDynamicTempoFlow
 			// 
@@ -1182,6 +1188,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiDynamicTempoFlow.Size = new System.Drawing.Size(205, 33);
 			this.MidiDynamicTempoFlow.TabIndex = 10;
 			this.MidiDynamicTempoFlow.Visible = false;
+			this.MidiDynamicTempoFlow.WrapContents = false;
 			// 
 			// MidiDynamicMidiBpmCheck
 			// 
@@ -1249,6 +1256,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
 			this.flowLayoutPanel2.Size = new System.Drawing.Size(181, 33);
 			this.flowLayoutPanel2.TabIndex = 9;
+			this.flowLayoutPanel2.WrapContents = false;
 			// 
 			// MidiCustomBpmCheck
 			// 
@@ -1309,7 +1317,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel12.Name = "tableLayoutPanel12";
 			this.tableLayoutPanel12.RowCount = 1;
 			this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel12.Size = new System.Drawing.Size(593, 20);
+			this.tableLayoutPanel12.Size = new System.Drawing.Size(600, 20);
 			this.tableLayoutPanel12.TabIndex = 13;
 			// 
 			// MidiBeatLbl
@@ -1330,7 +1338,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiBeatTxt.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MidiBeatTxt.Location = new System.Drawing.Point(75, 0);
 			this.MidiBeatTxt.Name = "MidiBeatTxt";
-			this.MidiBeatTxt.Size = new System.Drawing.Size(515, 20);
+			this.MidiBeatTxt.Size = new System.Drawing.Size(522, 20);
 			this.MidiBeatTxt.TabIndex = 5;
 			this.MidiBeatTxt.Text = "无";
 			this.MidiBeatTxt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1343,7 +1351,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SourceConfigGroup.Location = new System.Drawing.Point(5, 5);
 			this.SourceConfigGroup.Name = "SourceConfigGroup";
 			this.SourceConfigGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.SourceConfigGroup.Size = new System.Drawing.Size(609, 191);
+			this.SourceConfigGroup.Size = new System.Drawing.Size(616, 191);
 			this.SourceConfigGroup.TabIndex = 1;
 			this.SourceConfigGroup.TabStop = false;
 			this.SourceConfigGroup.Text = "素材属性";
@@ -1370,7 +1378,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(599, 161);
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(606, 161);
 			this.tableLayoutPanel3.TabIndex = 1;
 			// 
 			// ChooseSourceLbl
@@ -1379,7 +1387,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ChooseSourceLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ChooseSourceLbl.Location = new System.Drawing.Point(3, 0);
 			this.ChooseSourceLbl.Name = "ChooseSourceLbl";
-			this.ChooseSourceLbl.Size = new System.Drawing.Size(593, 20);
+			this.ChooseSourceLbl.Size = new System.Drawing.Size(600, 20);
 			this.ChooseSourceLbl.TabIndex = 0;
 			this.ChooseSourceLbl.Text = "选择媒体素材";
 			this.ChooseSourceLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -1398,7 +1406,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
 			this.tableLayoutPanel4.RowCount = 1;
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(599, 34);
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(606, 34);
 			this.tableLayoutPanel4.TabIndex = 1;
 			// 
 			// ChooseSourceCombo
@@ -1411,14 +1419,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "选中的轨道素材"});
 			this.ChooseSourceCombo.Location = new System.Drawing.Point(3, 3);
 			this.ChooseSourceCombo.Name = "ChooseSourceCombo";
-			this.ChooseSourceCombo.Size = new System.Drawing.Size(512, 28);
+			this.ChooseSourceCombo.Size = new System.Drawing.Size(519, 28);
 			this.ChooseSourceCombo.TabIndex = 0;
 			this.ChooseSourceCombo.SelectedIndexChanged += new System.EventHandler(this.ChooseSourceCombo_SelectedIndexChanged);
 			// 
 			// ChooseSourceBtn
 			// 
 			this.ChooseSourceBtn.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ChooseSourceBtn.Location = new System.Drawing.Point(521, 3);
+			this.ChooseSourceBtn.Location = new System.Drawing.Point(528, 3);
 			this.ChooseSourceBtn.Name = "ChooseSourceBtn";
 			this.ChooseSourceBtn.Size = new System.Drawing.Size(75, 27);
 			this.ChooseSourceBtn.TabIndex = 1;
@@ -1436,7 +1444,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 57);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(593, 33);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(600, 33);
 			this.flowLayoutPanel1.TabIndex = 2;
 			// 
 			// SourceStartTimeLbl
@@ -1469,7 +1477,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.GenerateAtLbl.Location = new System.Drawing.Point(3, 102);
 			this.GenerateAtLbl.Margin = new System.Windows.Forms.Padding(3, 9, 3, 0);
 			this.GenerateAtLbl.Name = "GenerateAtLbl";
-			this.GenerateAtLbl.Size = new System.Drawing.Size(593, 20);
+			this.GenerateAtLbl.Size = new System.Drawing.Size(600, 20);
 			this.GenerateAtLbl.TabIndex = 8;
 			this.GenerateAtLbl.Text = "设定生成开始位置";
 			this.GenerateAtLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -1483,7 +1491,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel9.Location = new System.Drawing.Point(3, 125);
 			this.flowLayoutPanel9.Name = "flowLayoutPanel9";
-			this.flowLayoutPanel9.Size = new System.Drawing.Size(593, 33);
+			this.flowLayoutPanel9.Size = new System.Drawing.Size(600, 33);
 			this.flowLayoutPanel9.TabIndex = 9;
 			// 
 			// GenerateAtBeginRadio
@@ -1523,6 +1531,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel11.Name = "flowLayoutPanel11";
 			this.flowLayoutPanel11.Size = new System.Drawing.Size(206, 33);
 			this.flowLayoutPanel11.TabIndex = 5;
+			this.flowLayoutPanel11.WrapContents = false;
 			// 
 			// GenerateAtCustomRadio
 			// 
@@ -1556,7 +1565,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioTab.Location = new System.Drawing.Point(4, 29);
 			this.AudioTab.Name = "AudioTab";
 			this.AudioTab.Padding = new System.Windows.Forms.Padding(5);
-			this.AudioTab.Size = new System.Drawing.Size(619, 597);
+			this.AudioTab.Size = new System.Drawing.Size(626, 597);
 			this.AudioTab.TabIndex = 1;
 			this.AudioTab.Text = "音频";
 			this.AudioTab.UseVisualStyleBackColor = true;
@@ -1566,10 +1575,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioParamsGroup.AutoSize = true;
 			this.AudioParamsGroup.Controls.Add(this.tableLayoutPanel2);
 			this.AudioParamsGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AudioParamsGroup.Location = new System.Drawing.Point(5, 272);
+			this.AudioParamsGroup.Location = new System.Drawing.Point(5, 302);
 			this.AudioParamsGroup.Name = "AudioParamsGroup";
 			this.AudioParamsGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.AudioParamsGroup.Size = new System.Drawing.Size(609, 108);
+			this.AudioParamsGroup.Size = new System.Drawing.Size(616, 108);
 			this.AudioParamsGroup.TabIndex = 2;
 			this.AudioParamsGroup.TabStop = false;
 			this.AudioParamsGroup.Text = "参数";
@@ -1593,7 +1602,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel2.RowCount = 2;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(599, 78);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(606, 78);
 			this.tableLayoutPanel2.TabIndex = 0;
 			// 
 			// AudioFadeInLbl
@@ -1616,7 +1625,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioFadeInBox.Margin = new System.Windows.Forms.Padding(4);
 			this.AudioFadeInBox.Name = "AudioFadeInBox";
 			this.AudioFadeInBox.NumericUpDownWidth = 65;
-			this.AudioFadeInBox.Size = new System.Drawing.Size(445, 31);
+			this.AudioFadeInBox.Size = new System.Drawing.Size(452, 31);
 			this.AudioFadeInBox.TabIndex = 2;
 			// 
 			// AudioFadeInCurveCombo
@@ -1630,7 +1639,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "慢速",
             "平滑",
             "急剧"});
-			this.AudioFadeInCurveCombo.Location = new System.Drawing.Point(531, 4);
+			this.AudioFadeInCurveCombo.Location = new System.Drawing.Point(538, 4);
 			this.AudioFadeInCurveCombo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.AudioFadeInCurveCombo.Name = "AudioFadeInCurveCombo";
 			this.AudioFadeInCurveCombo.Size = new System.Drawing.Size(65, 28);
@@ -1656,7 +1665,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioFadeOutBox.Margin = new System.Windows.Forms.Padding(4);
 			this.AudioFadeOutBox.Name = "AudioFadeOutBox";
 			this.AudioFadeOutBox.NumericUpDownWidth = 65;
-			this.AudioFadeOutBox.Size = new System.Drawing.Size(445, 31);
+			this.AudioFadeOutBox.Size = new System.Drawing.Size(452, 31);
 			this.AudioFadeOutBox.TabIndex = 4;
 			this.AudioFadeOutBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			// 
@@ -1671,7 +1680,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "慢速",
             "平滑",
             "急剧"});
-			this.AudioFadeOutCurveCombo.Location = new System.Drawing.Point(531, 43);
+			this.AudioFadeOutCurveCombo.Location = new System.Drawing.Point(538, 43);
 			this.AudioFadeOutCurveCombo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.AudioFadeOutCurveCombo.Name = "AudioFadeOutCurveCombo";
 			this.AudioFadeOutCurveCombo.Size = new System.Drawing.Size(65, 28);
@@ -1680,48 +1689,47 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// AudioTuneGroup
 			// 
 			this.AudioTuneGroup.AutoSize = true;
-			this.AudioTuneGroup.Controls.Add(this.tableLayoutPanel7);
+			this.AudioTuneGroup.Controls.Add(this.AudioTuneTablePanel);
 			this.AudioTuneGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AudioTuneGroup.Location = new System.Drawing.Point(5, 41);
+			this.AudioTuneGroup.Location = new System.Drawing.Point(5, 71);
 			this.AudioTuneGroup.Name = "AudioTuneGroup";
 			this.AudioTuneGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.AudioTuneGroup.Size = new System.Drawing.Size(609, 231);
+			this.AudioTuneGroup.Size = new System.Drawing.Size(616, 231);
 			this.AudioTuneGroup.TabIndex = 1;
 			this.AudioTuneGroup.TabStop = false;
 			this.AudioTuneGroup.Text = "调音";
 			// 
-			// tableLayoutPanel7
+			// AudioTuneTablePanel
 			// 
-			this.tableLayoutPanel7.AutoSize = true;
-			this.tableLayoutPanel7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.tableLayoutPanel7.ColumnCount = 2;
-			this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel7.Controls.Add(this.AudioTuneMethodLbl, 0, 0);
-			this.tableLayoutPanel7.Controls.Add(this.AudioTuneMethodCombo, 1, 0);
-			this.tableLayoutPanel7.Controls.Add(this.AudioStretchAttrLbl, 0, 1);
-			this.tableLayoutPanel7.Controls.Add(this.AudioStretchAttrCombo, 1, 1);
-			this.tableLayoutPanel7.Controls.Add(this.AudioLockAttrLbl, 0, 2);
-			this.tableLayoutPanel7.Controls.Add(this.flowLayoutPanel10, 1, 2);
-			this.tableLayoutPanel7.Controls.Add(this.AudioBasePitchLbl, 0, 3);
-			this.tableLayoutPanel7.Controls.Add(this.flowLayoutPanel6, 1, 3);
-			this.tableLayoutPanel7.Controls.Add(this.AudioPreviewLbl, 0, 4);
-			this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel17, 1, 4);
-			this.tableLayoutPanel7.Controls.Add(this.AudioPreviewAttrLbl, 0, 5);
-			this.tableLayoutPanel7.Controls.Add(this.AudioPreviewAttrLayoutPanel, 1, 5);
-			this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel7.Location = new System.Drawing.Point(5, 25);
-			this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(4);
-			this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-			this.tableLayoutPanel7.RowCount = 6;
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel7.Size = new System.Drawing.Size(599, 201);
-			this.tableLayoutPanel7.TabIndex = 2;
+			this.AudioTuneTablePanel.AutoSize = true;
+			this.AudioTuneTablePanel.ColumnCount = 2;
+			this.AudioTuneTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.AudioTuneTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.AudioTuneTablePanel.Controls.Add(this.AudioTuneMethodLbl, 0, 0);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioTuneMethodCombo, 1, 0);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchAttrLbl, 0, 1);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioStretchAttrCombo, 1, 1);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioLockAttrLbl, 0, 2);
+			this.AudioTuneTablePanel.Controls.Add(this.flowLayoutPanel10, 1, 2);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioBasePitchLbl, 0, 3);
+			this.AudioTuneTablePanel.Controls.Add(this.flowLayoutPanel6, 1, 3);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioPreviewLbl, 0, 4);
+			this.AudioTuneTablePanel.Controls.Add(this.tableLayoutPanel17, 1, 4);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioPreviewAttrLbl, 0, 5);
+			this.AudioTuneTablePanel.Controls.Add(this.AudioPreviewAttrLayoutPanel, 1, 5);
+			this.AudioTuneTablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioTuneTablePanel.Location = new System.Drawing.Point(5, 25);
+			this.AudioTuneTablePanel.Margin = new System.Windows.Forms.Padding(4);
+			this.AudioTuneTablePanel.Name = "AudioTuneTablePanel";
+			this.AudioTuneTablePanel.RowCount = 6;
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.AudioTuneTablePanel.Size = new System.Drawing.Size(606, 201);
+			this.AudioTuneTablePanel.TabIndex = 2;
 			// 
 			// AudioTuneMethodLbl
 			// 
@@ -1765,7 +1773,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel10.Location = new System.Drawing.Point(75, 68);
 			this.flowLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel10.Name = "flowLayoutPanel10";
-			this.flowLayoutPanel10.Size = new System.Drawing.Size(524, 30);
+			this.flowLayoutPanel10.Size = new System.Drawing.Size(531, 30);
 			this.flowLayoutPanel10.TabIndex = 4;
 			// 
 			// AudioReserveFormantCheck
@@ -1798,7 +1806,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel6.Location = new System.Drawing.Point(75, 98);
 			this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel6.Name = "flowLayoutPanel6";
-			this.flowLayoutPanel6.Size = new System.Drawing.Size(524, 34);
+			this.flowLayoutPanel6.Size = new System.Drawing.Size(531, 34);
 			this.flowLayoutPanel6.TabIndex = 5;
 			// 
 			// AudioMainKeyCombo
@@ -1869,17 +1877,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel17.Name = "tableLayoutPanel17";
 			this.tableLayoutPanel17.RowCount = 1;
 			this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel17.Size = new System.Drawing.Size(524, 35);
+			this.tableLayoutPanel17.Size = new System.Drawing.Size(531, 35);
 			this.tableLayoutPanel17.TabIndex = 6;
 			// 
 			// PreviewAudioBtn
 			// 
 			this.PreviewAudioBtn.AutoSize = true;
 			this.PreviewAudioBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PreviewAudioBtn.Location = new System.Drawing.Point(266, 3);
+			this.PreviewAudioBtn.Location = new System.Drawing.Point(269, 3);
 			this.PreviewAudioBtn.Margin = new System.Windows.Forms.Padding(3, 3, 2, 3);
 			this.PreviewAudioBtn.Name = "PreviewAudioBtn";
-			this.PreviewAudioBtn.Size = new System.Drawing.Size(256, 29);
+			this.PreviewAudioBtn.Size = new System.Drawing.Size(260, 29);
 			this.PreviewAudioBtn.TabIndex = 2;
 			this.PreviewAudioBtn.Text = "预听音频(&P)";
 			this.PreviewAudioBtn.UseVisualStyleBackColor = true;
@@ -1907,7 +1915,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioPreviewAttrLayoutPanel.Location = new System.Drawing.Point(75, 167);
 			this.AudioPreviewAttrLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.AudioPreviewAttrLayoutPanel.Name = "AudioPreviewAttrLayoutPanel";
-			this.AudioPreviewAttrLayoutPanel.Size = new System.Drawing.Size(524, 34);
+			this.AudioPreviewAttrLayoutPanel.Size = new System.Drawing.Size(531, 34);
 			this.AudioPreviewAttrLayoutPanel.TabIndex = 7;
 			// 
 			// PreviewBeepEngineCombo
@@ -1947,11 +1955,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel5.Controls.Add(this.AudioNormalizeCheck);
 			this.flowLayoutPanel5.Controls.Add(this.AudioFreezeLastFrameCheck);
 			this.flowLayoutPanel5.Controls.Add(this.AudioLegatoCheck);
+			this.flowLayoutPanel5.Controls.Add(this.CreateEventGroupCheck);
 			this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel5.Location = new System.Drawing.Point(5, 5);
 			this.flowLayoutPanel5.Name = "flowLayoutPanel5";
 			this.flowLayoutPanel5.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.flowLayoutPanel5.Size = new System.Drawing.Size(609, 36);
+			this.flowLayoutPanel5.Size = new System.Drawing.Size(616, 66);
 			this.flowLayoutPanel5.TabIndex = 0;
 			// 
 			// AudioConfigCheck
@@ -2020,6 +2029,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioLegatoCheck.UseVisualStyleBackColor = true;
 			this.AudioLegatoCheck.CheckedChanged += new System.EventHandler(this.AudioLegatoCheck_Or_AudioFreezeLastFrameCheck_CheckedChanged);
 			// 
+			// CreateEventGroupCheck
+			// 
+			this.CreateEventGroupCheck.AutoSize = true;
+			this.CreateEventGroupCheck.Location = new System.Drawing.Point(3, 36);
+			this.CreateEventGroupCheck.Name = "CreateEventGroupCheck";
+			this.CreateEventGroupCheck.Size = new System.Drawing.Size(91, 24);
+			this.CreateEventGroupCheck.TabIndex = 8;
+			this.CreateEventGroupCheck.Text = "创建分组";
+			this.CreateEventGroupCheck.UseVisualStyleBackColor = true;
+			// 
 			// VideoTab
 			// 
 			this.VideoTab.AutoScroll = true;
@@ -2030,7 +2049,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoTab.Location = new System.Drawing.Point(4, 29);
 			this.VideoTab.Name = "VideoTab";
 			this.VideoTab.Padding = new System.Windows.Forms.Padding(5);
-			this.VideoTab.Size = new System.Drawing.Size(619, 597);
+			this.VideoTab.Size = new System.Drawing.Size(626, 597);
 			this.VideoTab.TabIndex = 2;
 			this.VideoTab.Text = "视频";
 			this.VideoTab.UseVisualStyleBackColor = true;
@@ -2043,7 +2062,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoParamsGroup.Location = new System.Drawing.Point(5, 139);
 			this.VideoParamsGroup.Name = "VideoParamsGroup";
 			this.VideoParamsGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.VideoParamsGroup.Size = new System.Drawing.Size(588, 498);
+			this.VideoParamsGroup.Size = new System.Drawing.Size(595, 498);
 			this.VideoParamsGroup.TabIndex = 3;
 			this.VideoParamsGroup.TabStop = false;
 			this.VideoParamsGroup.Text = "参数";
@@ -2099,7 +2118,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel9.Size = new System.Drawing.Size(578, 468);
+			this.tableLayoutPanel9.Size = new System.Drawing.Size(585, 468);
 			this.tableLayoutPanel9.TabIndex = 0;
 			// 
 			// VideoFadeInLbl
@@ -2122,7 +2141,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoFadeInBox.Margin = new System.Windows.Forms.Padding(4);
 			this.VideoFadeInBox.Name = "VideoFadeInBox";
 			this.VideoFadeInBox.NumericUpDownWidth = 65;
-			this.VideoFadeInBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoFadeInBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoFadeInBox.TabIndex = 2;
 			// 
 			// VideoFadeInCurveCombo
@@ -2136,7 +2155,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "慢速",
             "平滑",
             "急剧"});
-			this.VideoFadeInCurveCombo.Location = new System.Drawing.Point(510, 4);
+			this.VideoFadeInCurveCombo.Location = new System.Drawing.Point(517, 4);
 			this.VideoFadeInCurveCombo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.VideoFadeInCurveCombo.Name = "VideoFadeInCurveCombo";
 			this.VideoFadeInCurveCombo.Size = new System.Drawing.Size(65, 28);
@@ -2162,7 +2181,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoFadeOutBox.Margin = new System.Windows.Forms.Padding(4);
 			this.VideoFadeOutBox.Name = "VideoFadeOutBox";
 			this.VideoFadeOutBox.NumericUpDownWidth = 65;
-			this.VideoFadeOutBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoFadeOutBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoFadeOutBox.TabIndex = 4;
 			this.VideoFadeOutBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			// 
@@ -2177,7 +2196,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "慢速",
             "平滑",
             "急剧"});
-			this.VideoFadeOutCurveCombo.Location = new System.Drawing.Point(510, 43);
+			this.VideoFadeOutCurveCombo.Location = new System.Drawing.Point(517, 43);
 			this.VideoFadeOutCurveCombo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.VideoFadeOutCurveCombo.Name = "VideoFadeOutCurveCombo";
 			this.VideoFadeOutCurveCombo.Size = new System.Drawing.Size(65, 28);
@@ -2204,7 +2223,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoGlowBox.Minimum = -100;
 			this.VideoGlowBox.Name = "VideoGlowBox";
 			this.VideoGlowBox.NumericUpDownWidth = 65;
-			this.VideoGlowBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoGlowBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoGlowBox.TabIndex = 10;
 			// 
 			// VideoGlowCurveCombo
@@ -2218,7 +2237,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "慢速",
             "平滑",
             "急剧"});
-			this.VideoGlowCurveCombo.Location = new System.Drawing.Point(510, 82);
+			this.VideoGlowCurveCombo.Location = new System.Drawing.Point(517, 82);
 			this.VideoGlowCurveCombo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.VideoGlowCurveCombo.Name = "VideoGlowCurveCombo";
 			this.VideoGlowCurveCombo.Size = new System.Drawing.Size(65, 28);
@@ -2246,7 +2265,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoGlowBrightBox.Minimum = -100;
 			this.VideoGlowBrightBox.Name = "VideoGlowBrightBox";
 			this.VideoGlowBrightBox.NumericUpDownWidth = 65;
-			this.VideoGlowBrightBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoGlowBrightBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoGlowBrightBox.TabIndex = 12;
 			this.VideoGlowBrightBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			this.VideoGlowBrightBox.Value = 100;
@@ -2273,7 +2292,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoStartSizeBox.Maximum = 200;
 			this.VideoStartSizeBox.Name = "VideoStartSizeBox";
 			this.VideoStartSizeBox.NumericUpDownWidth = 65;
-			this.VideoStartSizeBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoStartSizeBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoStartSizeBox.TabIndex = 14;
 			this.VideoStartSizeBox.Value = 90;
 			// 
@@ -2288,7 +2307,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "慢速",
             "平滑",
             "急剧"});
-			this.VideoStartSizeCurveCombo.Location = new System.Drawing.Point(510, 160);
+			this.VideoStartSizeCurveCombo.Location = new System.Drawing.Point(517, 160);
 			this.VideoStartSizeCurveCombo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.VideoStartSizeCurveCombo.Name = "VideoStartSizeCurveCombo";
 			this.VideoStartSizeCurveCombo.Size = new System.Drawing.Size(65, 28);
@@ -2316,7 +2335,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoEndSizeBox.Maximum = 200;
 			this.VideoEndSizeBox.Name = "VideoEndSizeBox";
 			this.VideoEndSizeBox.NumericUpDownWidth = 65;
-			this.VideoEndSizeBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoEndSizeBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoEndSizeBox.TabIndex = 16;
 			this.VideoEndSizeBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			this.VideoEndSizeBox.Value = 100;
@@ -2343,7 +2362,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoStartRotationBox.Minimum = -360;
 			this.VideoStartRotationBox.Name = "VideoStartRotationBox";
 			this.VideoStartRotationBox.NumericUpDownWidth = 65;
-			this.VideoStartRotationBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoStartRotationBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoStartRotationBox.TabIndex = 17;
 			// 
 			// VideoEndRotationLbl
@@ -2368,7 +2387,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoEndRotationBox.Minimum = -360;
 			this.VideoEndRotationBox.Name = "VideoEndRotationBox";
 			this.VideoEndRotationBox.NumericUpDownWidth = 65;
-			this.VideoEndRotationBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoEndRotationBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoEndRotationBox.TabIndex = 18;
 			this.VideoEndRotationBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			// 
@@ -2393,7 +2412,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoStartHorizontalTransBox.Minimum = -100;
 			this.VideoStartHorizontalTransBox.Name = "VideoStartHorizontalTransBox";
 			this.VideoStartHorizontalTransBox.NumericUpDownWidth = 65;
-			this.VideoStartHorizontalTransBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoStartHorizontalTransBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoStartHorizontalTransBox.TabIndex = 19;
 			// 
 			// VideoEndHorizontalTransLbl
@@ -2417,7 +2436,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoEndHorizontalTransBox.Minimum = -100;
 			this.VideoEndHorizontalTransBox.Name = "VideoEndHorizontalTransBox";
 			this.VideoEndHorizontalTransBox.NumericUpDownWidth = 65;
-			this.VideoEndHorizontalTransBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoEndHorizontalTransBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoEndHorizontalTransBox.TabIndex = 20;
 			this.VideoEndHorizontalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			// 
@@ -2442,7 +2461,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoStartVerticalTransBox.Minimum = -100;
 			this.VideoStartVerticalTransBox.Name = "VideoStartVerticalTransBox";
 			this.VideoStartVerticalTransBox.NumericUpDownWidth = 65;
-			this.VideoStartVerticalTransBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoStartVerticalTransBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoStartVerticalTransBox.TabIndex = 21;
 			// 
 			// VideoEndVerticalTransLbl
@@ -2466,7 +2485,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoEndVerticalTransBox.Minimum = -100;
 			this.VideoEndVerticalTransBox.Name = "VideoEndVerticalTransBox";
 			this.VideoEndVerticalTransBox.NumericUpDownWidth = 65;
-			this.VideoEndVerticalTransBox.Size = new System.Drawing.Size(424, 31);
+			this.VideoEndVerticalTransBox.Size = new System.Drawing.Size(431, 31);
 			this.VideoEndVerticalTransBox.TabIndex = 22;
 			this.VideoEndVerticalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			// 
@@ -2478,7 +2497,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoEffectsGroup.Location = new System.Drawing.Point(5, 41);
 			this.VideoEffectsGroup.Name = "VideoEffectsGroup";
 			this.VideoEffectsGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.VideoEffectsGroup.Size = new System.Drawing.Size(588, 98);
+			this.VideoEffectsGroup.Size = new System.Drawing.Size(595, 98);
 			this.VideoEffectsGroup.TabIndex = 2;
 			this.VideoEffectsGroup.TabStop = false;
 			this.VideoEffectsGroup.Text = "效果";
@@ -2501,7 +2520,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel8.Size = new System.Drawing.Size(578, 68);
+			this.tableLayoutPanel8.Size = new System.Drawing.Size(585, 68);
 			this.tableLayoutPanel8.TabIndex = 1;
 			// 
 			// VideoEffectLbl
@@ -2567,7 +2586,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "径向模糊"});
 			this.VideoEffectCombo.Location = new System.Drawing.Point(78, 3);
 			this.VideoEffectCombo.Name = "VideoEffectCombo";
-			this.VideoEffectCombo.Size = new System.Drawing.Size(497, 28);
+			this.VideoEffectCombo.Size = new System.Drawing.Size(504, 28);
 			this.VideoEffectCombo.TabIndex = 2;
 			this.VideoEffectCombo.SelectedIndexChanged += new System.EventHandler(this.VideoEffectCombo_SelectedIndexChanged);
 			// 
@@ -2593,7 +2612,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel7.Location = new System.Drawing.Point(5, 5);
 			this.flowLayoutPanel7.Name = "flowLayoutPanel7";
 			this.flowLayoutPanel7.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.flowLayoutPanel7.Size = new System.Drawing.Size(588, 36);
+			this.flowLayoutPanel7.Size = new System.Drawing.Size(595, 36);
 			this.flowLayoutPanel7.TabIndex = 1;
 			// 
 			// VideoConfigCheck
@@ -2672,7 +2691,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SheetTab.Location = new System.Drawing.Point(4, 29);
 			this.SheetTab.Name = "SheetTab";
 			this.SheetTab.Padding = new System.Windows.Forms.Padding(5);
-			this.SheetTab.Size = new System.Drawing.Size(619, 597);
+			this.SheetTab.Size = new System.Drawing.Size(626, 597);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
 			this.SheetTab.UseVisualStyleBackColor = true;
@@ -2685,7 +2704,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StaffParamsGroup.Location = new System.Drawing.Point(5, 91);
 			this.StaffParamsGroup.Name = "StaffParamsGroup";
 			this.StaffParamsGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.StaffParamsGroup.Size = new System.Drawing.Size(609, 166);
+			this.StaffParamsGroup.Size = new System.Drawing.Size(616, 166);
 			this.StaffParamsGroup.TabIndex = 6;
 			this.StaffParamsGroup.TabStop = false;
 			this.StaffParamsGroup.Text = "参数";
@@ -2720,7 +2739,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
 			this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
 			this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel10.Size = new System.Drawing.Size(599, 136);
+			this.tableLayoutPanel10.Size = new System.Drawing.Size(606, 136);
 			this.tableLayoutPanel10.TabIndex = 0;
 			// 
 			// StaffClefLbl
@@ -2745,14 +2764,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "低音"});
 			this.StaffClefCombo.Location = new System.Drawing.Point(78, 3);
 			this.StaffClefCombo.Name = "StaffClefCombo";
-			this.StaffClefCombo.Size = new System.Drawing.Size(218, 28);
+			this.StaffClefCombo.Size = new System.Drawing.Size(222, 28);
 			this.StaffClefCombo.TabIndex = 6;
 			// 
 			// StaffLineSpacingLbl
 			// 
 			this.StaffLineSpacingLbl.AutoSize = true;
 			this.StaffLineSpacingLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffLineSpacingLbl.Location = new System.Drawing.Point(302, 0);
+			this.StaffLineSpacingLbl.Location = new System.Drawing.Point(306, 0);
 			this.StaffLineSpacingLbl.Name = "StaffLineSpacingLbl";
 			this.StaffLineSpacingLbl.Size = new System.Drawing.Size(69, 34);
 			this.StaffLineSpacingLbl.TabIndex = 1;
@@ -2774,7 +2793,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.StaffSurfacePositionLbl.AutoSize = true;
 			this.StaffSurfacePositionLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffSurfacePositionLbl.Location = new System.Drawing.Point(302, 34);
+			this.StaffSurfacePositionLbl.Location = new System.Drawing.Point(306, 34);
 			this.StaffSurfacePositionLbl.Name = "StaffSurfacePositionLbl";
 			this.StaffSurfacePositionLbl.Size = new System.Drawing.Size(69, 34);
 			this.StaffSurfacePositionLbl.TabIndex = 2;
@@ -2814,7 +2833,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0,
             0});
 			this.StaffLineThicknessBox.Name = "StaffLineThicknessBox";
-			this.StaffLineThicknessBox.Size = new System.Drawing.Size(218, 27);
+			this.StaffLineThicknessBox.Size = new System.Drawing.Size(222, 27);
 			this.StaffLineThicknessBox.TabIndex = 10;
 			this.StaffLineThicknessBox.Value = new decimal(new int[] {
             50,
@@ -2826,7 +2845,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.StaffLineColorLbl.AutoSize = true;
 			this.StaffLineColorLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StaffLineColorLbl.Location = new System.Drawing.Point(302, 68);
+			this.StaffLineColorLbl.Location = new System.Drawing.Point(306, 68);
 			this.StaffLineColorLbl.Name = "StaffLineColorLbl";
 			this.StaffLineColorLbl.Size = new System.Drawing.Size(69, 34);
 			this.StaffLineColorLbl.TabIndex = 3;
@@ -2839,9 +2858,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StaffLineColorBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.StaffLineColorBtn.Enabled = false;
 			this.StaffLineColorBtn.ForeColor = System.Drawing.Color.Black;
-			this.StaffLineColorBtn.Location = new System.Drawing.Point(377, 71);
+			this.StaffLineColorBtn.Location = new System.Drawing.Point(381, 71);
 			this.StaffLineColorBtn.Name = "StaffLineColorBtn";
-			this.StaffLineColorBtn.Size = new System.Drawing.Size(219, 28);
+			this.StaffLineColorBtn.Size = new System.Drawing.Size(222, 28);
 			this.StaffLineColorBtn.TabIndex = 11;
 			this.StaffLineColorBtn.Text = "#FFFFFF";
 			this.StaffLineColorBtn.UseVisualStyleBackColor = false;
@@ -2880,7 +2899,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0,
             -2147483648});
 			this.StaffNotesShiftBox.Name = "StaffNotesShiftBox";
-			this.StaffNotesShiftBox.Size = new System.Drawing.Size(218, 27);
+			this.StaffNotesShiftBox.Size = new System.Drawing.Size(222, 27);
 			this.StaffNotesShiftBox.Suffix = "key";
 			this.StaffNotesShiftBox.TabIndex = 13;
 			// 
@@ -2894,7 +2913,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel8.Location = new System.Drawing.Point(5, 55);
 			this.flowLayoutPanel8.Name = "flowLayoutPanel8";
 			this.flowLayoutPanel8.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.flowLayoutPanel8.Size = new System.Drawing.Size(609, 36);
+			this.flowLayoutPanel8.Size = new System.Drawing.Size(616, 36);
 			this.flowLayoutPanel8.TabIndex = 5;
 			// 
 			// StaffVisualizerConfigCheck
@@ -2944,7 +2963,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.YtpTab.Location = new System.Drawing.Point(4, 29);
 			this.YtpTab.Name = "YtpTab";
 			this.YtpTab.Padding = new System.Windows.Forms.Padding(5);
-			this.YtpTab.Size = new System.Drawing.Size(619, 597);
+			this.YtpTab.Size = new System.Drawing.Size(626, 597);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
 			this.YtpTab.UseVisualStyleBackColor = true;
@@ -2957,7 +2976,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.YtpParamsGroup.Location = new System.Drawing.Point(5, 244);
 			this.YtpParamsGroup.Name = "YtpParamsGroup";
 			this.YtpParamsGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.YtpParamsGroup.Size = new System.Drawing.Size(609, 96);
+			this.YtpParamsGroup.Size = new System.Drawing.Size(616, 96);
 			this.YtpParamsGroup.TabIndex = 12;
 			this.YtpParamsGroup.TabStop = false;
 			this.YtpParamsGroup.Text = "参数";
@@ -2982,7 +3001,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel16.RowCount = 2;
 			this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel16.Size = new System.Drawing.Size(599, 66);
+			this.tableLayoutPanel16.Size = new System.Drawing.Size(606, 66);
 			this.tableLayoutPanel16.TabIndex = 0;
 			// 
 			// YtpMinLenLbl
@@ -3028,7 +3047,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0,
             0});
 			this.YtpClipsCountBox.Name = "YtpClipsCountBox";
-			this.YtpClipsCountBox.Size = new System.Drawing.Size(218, 27);
+			this.YtpClipsCountBox.Size = new System.Drawing.Size(222, 27);
 			this.YtpClipsCountBox.TabIndex = 11;
 			this.YtpClipsCountBox.Value = new decimal(new int[] {
             30,
@@ -3040,7 +3059,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.YtpMaxLenLbl.AutoSize = true;
 			this.YtpMaxLenLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.YtpMaxLenLbl.Location = new System.Drawing.Point(302, 0);
+			this.YtpMaxLenLbl.Location = new System.Drawing.Point(306, 0);
 			this.YtpMaxLenLbl.Name = "YtpMaxLenLbl";
 			this.YtpMaxLenLbl.Size = new System.Drawing.Size(69, 33);
 			this.YtpMaxLenLbl.TabIndex = 2;
@@ -3056,7 +3075,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.YtpEffectsGroup.Location = new System.Drawing.Point(5, 81);
 			this.YtpEffectsGroup.Name = "YtpEffectsGroup";
 			this.YtpEffectsGroup.Padding = new System.Windows.Forms.Padding(9, 3, 6, 6);
-			this.YtpEffectsGroup.Size = new System.Drawing.Size(609, 163);
+			this.YtpEffectsGroup.Size = new System.Drawing.Size(616, 163);
 			this.YtpEffectsGroup.TabIndex = 11;
 			this.YtpEffectsGroup.TabStop = false;
 			this.YtpEffectsGroup.Text = "效果";
@@ -3070,7 +3089,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.YtpEnableAllEffectsCheck.Location = new System.Drawing.Point(9, 23);
 			this.YtpEnableAllEffectsCheck.Name = "YtpEnableAllEffectsCheck";
 			this.YtpEnableAllEffectsCheck.Padding = new System.Windows.Forms.Padding(1, 0, 0, 0);
-			this.YtpEnableAllEffectsCheck.Size = new System.Drawing.Size(594, 24);
+			this.YtpEnableAllEffectsCheck.Size = new System.Drawing.Size(601, 24);
 			this.YtpEnableAllEffectsCheck.TabIndex = 0;
 			this.YtpEnableAllEffectsCheck.Text = "开启所有效果";
 			this.YtpEnableAllEffectsCheck.CheckedChanged += new System.EventHandler(this.YtpEnableAllEffectsCheck_CheckedChanged);
@@ -3104,7 +3123,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "重说三（附加放大聚焦效果）"});
 			this.YtpEffectsCheckList.Location = new System.Drawing.Point(9, 47);
 			this.YtpEffectsCheckList.Name = "YtpEffectsCheckList";
-			this.YtpEffectsCheckList.Size = new System.Drawing.Size(594, 110);
+			this.YtpEffectsCheckList.Size = new System.Drawing.Size(601, 110);
 			this.YtpEffectsCheckList.TabIndex = 1;
 			this.YtpEffectsCheckList.Click += new System.EventHandler(this.YtpEffectsCheckList_SelectedIndexChanged);
 			this.YtpEffectsCheckList.SelectedIndexChanged += new System.EventHandler(this.YtpEffectsCheckList_SelectedIndexChanged);
@@ -3144,7 +3163,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HelperTab.Location = new System.Drawing.Point(4, 29);
 			this.HelperTab.Name = "HelperTab";
 			this.HelperTab.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.HelperTab.Size = new System.Drawing.Size(619, 597);
+			this.HelperTab.Size = new System.Drawing.Size(626, 597);
 			this.HelperTab.TabIndex = 4;
 			this.HelperTab.Text = "工具";
 			this.HelperTab.UseVisualStyleBackColor = true;
@@ -3154,22 +3173,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel11.AutoSize = true;
 			this.tableLayoutPanel11.ColumnCount = 1;
 			this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel11.Controls.Add(this.QuickSelectIntervalBtn, 0, 1);
-			this.tableLayoutPanel11.Controls.Add(this.ReplaceClipsBtn, 0, 2);
-			this.tableLayoutPanel11.Controls.Add(this.ChangeTuneMethodBtn, 0, 3);
-			this.tableLayoutPanel11.Controls.Add(this.AutoLayoutTracksGroup, 0, 4);
+			this.tableLayoutPanel11.Controls.Add(this.QuickSelectIntervalBtn, 0, 2);
+			this.tableLayoutPanel11.Controls.Add(this.ReplaceClipsBtn, 0, 3);
+			this.tableLayoutPanel11.Controls.Add(this.ChangeTuneMethodBtn, 0, 4);
+			this.tableLayoutPanel11.Controls.Add(this.AutoLayoutTracksGroup, 0, 1);
 			this.tableLayoutPanel11.Controls.Add(this.CloseAfterOpenHelperCheck, 0, 0);
+			this.tableLayoutPanel11.Controls.Add(this.BatchSubtitleGenerationBtn, 0, 5);
 			this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 29);
 			this.tableLayoutPanel11.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel11.Name = "tableLayoutPanel11";
-			this.tableLayoutPanel11.RowCount = 5;
+			this.tableLayoutPanel11.RowCount = 6;
+			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
-			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(613, 512);
+			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(599, 622);
 			this.tableLayoutPanel11.TabIndex = 8;
 			// 
 			// QuickSelectIntervalBtn
@@ -3177,10 +3199,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.QuickSelectIntervalBtn.CommandLink = true;
 			this.QuickSelectIntervalBtn.CommandLinkNote = "本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴视频事件”等操作。\r\n已选中 0 个轨道剪辑。";
 			this.QuickSelectIntervalBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(3, 41);
+			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(3, 185);
 			this.QuickSelectIntervalBtn.Name = "QuickSelectIntervalBtn";
-			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(607, 104);
-			this.QuickSelectIntervalBtn.TabIndex = 1;
+			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(593, 104);
+			this.QuickSelectIntervalBtn.TabIndex = 11;
 			this.QuickSelectIntervalBtn.Text = "快速间隔选择";
 			this.QuickSelectIntervalBtn.UseVisualStyleBackColor = true;
 			this.QuickSelectIntervalBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
@@ -3190,10 +3212,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReplaceClipsBtn.CommandLink = true;
 			this.ReplaceClipsBtn.CommandLinkNote = "将多个轨道剪辑替换为指定的新轨道剪辑。\r\n已选中 0 个轨道剪辑。";
 			this.ReplaceClipsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ReplaceClipsBtn.Location = new System.Drawing.Point(3, 151);
+			this.ReplaceClipsBtn.Location = new System.Drawing.Point(3, 295);
 			this.ReplaceClipsBtn.Name = "ReplaceClipsBtn";
-			this.ReplaceClipsBtn.Size = new System.Drawing.Size(607, 104);
-			this.ReplaceClipsBtn.TabIndex = 2;
+			this.ReplaceClipsBtn.Size = new System.Drawing.Size(593, 104);
+			this.ReplaceClipsBtn.TabIndex = 12;
 			this.ReplaceClipsBtn.Text = "替换轨道素材";
 			this.ReplaceClipsBtn.UseVisualStyleBackColor = true;
 			this.ReplaceClipsBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
@@ -3203,10 +3225,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ChangeTuneMethodBtn.CommandLink = true;
 			this.ChangeTuneMethodBtn.CommandLinkNote = "将多个音频轨道剪辑统一更改为指定的调音算法。\r\n已选中 0 个音频轨道剪辑。";
 			this.ChangeTuneMethodBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(3, 261);
+			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(3, 405);
 			this.ChangeTuneMethodBtn.Name = "ChangeTuneMethodBtn";
-			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(607, 104);
-			this.ChangeTuneMethodBtn.TabIndex = 3;
+			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(593, 104);
+			this.ChangeTuneMethodBtn.TabIndex = 13;
 			this.ChangeTuneMethodBtn.Text = "更改调音算法";
 			this.ChangeTuneMethodBtn.UseVisualStyleBackColor = true;
 			this.ChangeTuneMethodBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
@@ -3216,10 +3238,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksGroup.AutoSize = true;
 			this.AutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel14);
 			this.AutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AutoLayoutTracksGroup.Location = new System.Drawing.Point(3, 371);
+			this.AutoLayoutTracksGroup.Location = new System.Drawing.Point(3, 41);
 			this.AutoLayoutTracksGroup.Name = "AutoLayoutTracksGroup";
 			this.AutoLayoutTracksGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.AutoLayoutTracksGroup.Size = new System.Drawing.Size(607, 138);
+			this.AutoLayoutTracksGroup.Size = new System.Drawing.Size(593, 138);
 			this.AutoLayoutTracksGroup.TabIndex = 6;
 			this.AutoLayoutTracksGroup.TabStop = false;
 			this.AutoLayoutTracksGroup.Text = "自动布局轨道";
@@ -3241,7 +3263,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel14.Size = new System.Drawing.Size(597, 108);
+			this.tableLayoutPanel14.Size = new System.Drawing.Size(583, 108);
 			this.tableLayoutPanel14.TabIndex = 2;
 			// 
 			// AutoLayoutTracksLbl
@@ -3251,7 +3273,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksLbl.Location = new System.Drawing.Point(3, 0);
 			this.AutoLayoutTracksLbl.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.AutoLayoutTracksLbl.Name = "AutoLayoutTracksLbl";
-			this.AutoLayoutTracksLbl.Size = new System.Drawing.Size(591, 20);
+			this.AutoLayoutTracksLbl.Size = new System.Drawing.Size(577, 20);
 			this.AutoLayoutTracksLbl.TabIndex = 1;
 			this.AutoLayoutTracksLbl.Text = "类 YTPMV 风格自动布局选中的轨道。";
 			this.AutoLayoutTracksLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3264,7 +3286,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksSelectInfo.Location = new System.Drawing.Point(3, 23);
 			this.AutoLayoutTracksSelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.AutoLayoutTracksSelectInfo.Name = "AutoLayoutTracksSelectInfo";
-			this.AutoLayoutTracksSelectInfo.Size = new System.Drawing.Size(591, 20);
+			this.AutoLayoutTracksSelectInfo.Size = new System.Drawing.Size(577, 20);
 			this.AutoLayoutTracksSelectInfo.TabIndex = 7;
 			this.AutoLayoutTracksSelectInfo.Text = "已选中 0 个视频轨道。";
 			this.AutoLayoutTracksSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3286,7 +3308,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksButtons.Name = "AutoLayoutTracksButtons";
 			this.AutoLayoutTracksButtons.RowCount = 1;
 			this.AutoLayoutTracksButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.AutoLayoutTracksButtons.Size = new System.Drawing.Size(597, 31);
+			this.AutoLayoutTracksButtons.Size = new System.Drawing.Size(583, 31);
 			this.AutoLayoutTracksButtons.TabIndex = 8;
 			// 
 			// GradientTracksBtn
@@ -3348,7 +3370,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel15.Name = "tableLayoutPanel15";
 			this.tableLayoutPanel15.RowCount = 1;
 			this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel15.Size = new System.Drawing.Size(597, 31);
+			this.tableLayoutPanel15.Size = new System.Drawing.Size(583, 31);
 			this.tableLayoutPanel15.TabIndex = 9;
 			// 
 			// TrackLegatoBtn
@@ -3407,7 +3429,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CloseAfterOpenHelperCheck.Location = new System.Drawing.Point(7, 7);
 			this.CloseAfterOpenHelperCheck.Margin = new System.Windows.Forms.Padding(7);
 			this.CloseAfterOpenHelperCheck.Name = "CloseAfterOpenHelperCheck";
-			this.CloseAfterOpenHelperCheck.Size = new System.Drawing.Size(599, 24);
+			this.CloseAfterOpenHelperCheck.Size = new System.Drawing.Size(585, 24);
 			this.CloseAfterOpenHelperCheck.TabIndex = 0;
 			this.CloseAfterOpenHelperCheck.Text = "操作完成之后关闭本对话框";
 			this.CloseAfterOpenHelperCheck.UseVisualStyleBackColor = true;
@@ -3424,7 +3446,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel19.RowCount = 1;
 			this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.tableLayoutPanel19.Size = new System.Drawing.Size(613, 25);
+			this.tableLayoutPanel19.Size = new System.Drawing.Size(599, 25);
 			this.tableLayoutPanel19.TabIndex = 7;
 			// 
 			// HelperLbl
@@ -3435,7 +3457,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HelperLbl.Location = new System.Drawing.Point(3, 0);
 			this.HelperLbl.Name = "HelperLbl";
 			this.HelperLbl.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-			this.HelperLbl.Size = new System.Drawing.Size(607, 25);
+			this.HelperLbl.Size = new System.Drawing.Size(593, 25);
 			this.HelperLbl.TabIndex = 2;
 			this.HelperLbl.Text = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。";
 			// 
@@ -3479,13 +3501,26 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.lengthenLegatoToolStripMenuItem.Text = "改变素材持续时间";
 			this.lengthenLegatoToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
 			// 
+			// BatchSubtitleGenerationBtn
+			// 
+			this.BatchSubtitleGenerationBtn.CommandLink = true;
+			this.BatchSubtitleGenerationBtn.CommandLinkNote = "预先设定好“字幕和文字”的预设，然后在此添加多行文本。";
+			this.BatchSubtitleGenerationBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.BatchSubtitleGenerationBtn.Location = new System.Drawing.Point(3, 515);
+			this.BatchSubtitleGenerationBtn.Name = "BatchSubtitleGenerationBtn";
+			this.BatchSubtitleGenerationBtn.Size = new System.Drawing.Size(593, 104);
+			this.BatchSubtitleGenerationBtn.TabIndex = 14;
+			this.BatchSubtitleGenerationBtn.Text = "批量生成字幕";
+			this.BatchSubtitleGenerationBtn.UseVisualStyleBackColor = true;
+			this.BatchSubtitleGenerationBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
+			// 
 			// ConfigForm
 			// 
 			this.AcceptButton = this.OkBtn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(643, 706);
+			this.ClientSize = new System.Drawing.Size(650, 706);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.menu);
@@ -3518,14 +3553,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SourceTab.PerformLayout();
 			this.MidiConfigGroup.ResumeLayout(false);
 			this.MidiConfigGroup.PerformLayout();
-			this.tableLayoutPanel5.ResumeLayout(false);
-			this.tableLayoutPanel5.PerformLayout();
+			this.MidiConfigTablePanel.ResumeLayout(false);
+			this.MidiConfigTablePanel.PerformLayout();
 			this.tableLayoutPanel6.ResumeLayout(false);
 			this.tableLayoutPanel6.PerformLayout();
 			this.flowLayoutPanel3.ResumeLayout(false);
 			this.flowLayoutPanel3.PerformLayout();
-			this.flowLayoutPanel4.ResumeLayout(false);
-			this.flowLayoutPanel4.PerformLayout();
+			this.MidiBpmFlowPanel.ResumeLayout(false);
+			this.MidiBpmFlowPanel.PerformLayout();
 			this.MidiDynamicTempoFlow.ResumeLayout(false);
 			this.MidiDynamicTempoFlow.PerformLayout();
 			this.flowLayoutPanel2.ResumeLayout(false);
@@ -3552,8 +3587,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel2.PerformLayout();
 			this.AudioTuneGroup.ResumeLayout(false);
 			this.AudioTuneGroup.PerformLayout();
-			this.tableLayoutPanel7.ResumeLayout(false);
-			this.tableLayoutPanel7.PerformLayout();
+			this.AudioTuneTablePanel.ResumeLayout(false);
+			this.AudioTuneTablePanel.PerformLayout();
 			this.flowLayoutPanel10.ResumeLayout(false);
 			this.flowLayoutPanel10.PerformLayout();
 			this.flowLayoutPanel6.ResumeLayout(false);
@@ -3641,7 +3676,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.TabPage SourceTab;
 		public System.Windows.Forms.Label WarningInfoLabel;
 		public System.Windows.Forms.GroupBox MidiConfigGroup;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+		public System.Windows.Forms.TableLayoutPanel MidiConfigTablePanel;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
 		public System.Windows.Forms.Label MidiStartSecondLbl;
 		public TimecodeBox MidiStartSecondBox;
@@ -3654,7 +3689,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.TextBox ChooseMidiText;
 		public System.Windows.Forms.Label ChooseMidiLbl;
 		public System.Windows.Forms.ComboBox MidiChannelCombo;
-		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+		public System.Windows.Forms.FlowLayoutPanel MidiBpmFlowPanel;
 		public Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton MidiMidiBpmCheck;
 		public Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton MidiProjectBpmCheck;
 		public System.Windows.Forms.GroupBox SourceConfigGroup;
@@ -3736,7 +3771,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public ToolStripRadioButtonMenuItem tchineseToolStripMenuItem;
 		public System.Windows.Forms.CheckBox AudioFreezeLastFrameCheck;
 		public System.Windows.Forms.CheckBox AudioLegatoCheck;
-		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+		public System.Windows.Forms.TableLayoutPanel AudioTuneTablePanel;
 		public System.Windows.Forms.Label AudioTuneMethodLbl;
 		public System.Windows.Forms.Label AudioBasePitchLbl;
 		public System.Windows.Forms.ComboBox AudioTuneMethodCombo;
@@ -3840,10 +3875,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public GroupedRadioButton MidiDynamicMidiBpmCheck;
 		public System.Windows.Forms.ComboBox MidiDynamicMidiBpmFormCombo;
 		public System.Windows.Forms.ToolStripMenuItem pitchShiftPresetMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem loadPresetsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem unloadPresetsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-		private System.Windows.Forms.ToolStripMenuItem rememberFormSizeToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem loadPresetsToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem unloadPresetsToolStripMenuItem;
+		public System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		public System.Windows.Forms.ToolStripMenuItem rememberFormSizeToolStripMenuItem;
+		public System.Windows.Forms.CheckBox CreateEventGroupCheck;
+		public CommandLinkButton BatchSubtitleGenerationBtn;
 	}
 }
 

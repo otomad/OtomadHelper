@@ -714,6 +714,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			const int MARGIN = 6;
 			int maxWidth = tabWidth - MARGIN;
 			SheetConfigInfoLabel.MaximumSize = YtpLbl.MaximumSize = new Size(maxWidth, 0);
+
+			// 处理 FlowLayoutPanel 的换行问题。
+			AudioTuneTablePanel.RowStyles[AudioTuneTablePanel.GetRow(AudioPreviewAttrLayoutPanel)] = new RowStyle();
+			AudioTuneTablePanel.RowStyles[AudioTuneTablePanel.GetRow(AudioPreviewAttrLayoutPanel)] = new RowStyle(SizeType.Absolute, AudioPreviewAttrLayoutPanel.Height);
+			MidiConfigTablePanel.RowStyles[MidiConfigTablePanel.GetRow(MidiBpmFlowPanel)] = new RowStyle();
+			MidiConfigTablePanel.RowStyles[MidiConfigTablePanel.GetRow(MidiBpmFlowPanel)] = new RowStyle(SizeType.Absolute, MidiBpmFlowPanel.Height);
 		}
 
 		private void PreviewBasePitchBtn_MouseDown(object sender, EventArgs e) {
