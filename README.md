@@ -1,16 +1,12 @@
 ![VegasScripts](https://github.com/otomad/VegasScripts/blob/winform/banner.png?raw=true)
 <h1 align="center">VegasScripts</h1>
 <div align="center">
-
-![Badge](https://img.shields.io/badge/STATE-STABLE-green?style=flat-square)
-![Badge](https://img.shields.io/badge/VERSION-4.14.26.0-orange?style=flat-square)
-
+	<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="Badge" />
+	<img src="https://img.shields.io/badge/VERSION-4.15.8.0-orange?style=flat-square" alt="Badge" />
 </div>
 <h2 align="center">Otomad Helper</h2>
 <div align="center">
-
-[Get download link now!](https://github.com/otomad/VegasScripts/releases/latest)
-
+	<a href="https://github.com/otomad/VegasScripts/releases/latest">Get download link now!</a>
 </div>
 
 ### Install
@@ -21,11 +17,12 @@
 4. Open the Vegas Pro to launch it.
 
 ### **Attention**
-**According to users test, the software does not work properly on the Vegas Pro older versions (v15 and under). And not tested on v16.**
-
-**So It's actually works on Vegas Pro 17 and above.**
-
-* Tested **fine** on Vegas Pro 17 and 19.
+**Vegas Pro 16+ supported.**
+> **According to users test, the software does not work properly on the Vegas Pro older versions (v15 and under).**
+> 
+> **So It's actually works on Vegas Pro 16 and above.**
+> 
+> * Tested **fine** on Vegas Pro 17 and 19.
 
 ### Reference
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
