@@ -231,6 +231,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.YtpLbl = new System.Windows.Forms.Label();
 			this.HelperTab = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
+			this.FindClipsBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.QuickSelectIntervalBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.ReplaceClipsBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.ChangeTuneMethodBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
@@ -247,6 +248,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ClearTrackMotionBtn = new System.Windows.Forms.Button();
 			this.ClearTrackEffectBtn = new System.Windows.Forms.Button();
 			this.CloseAfterOpenHelperCheck = new System.Windows.Forms.CheckBox();
+			this.BatchSubtitleGenerationBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
 			this.HelperLbl = new System.Windows.Forms.Label();
 			this.TrackLegatoMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -254,7 +256,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.limitStretchLegatoTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stretchLegatoTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lengthenLegatoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.BatchSubtitleGenerationBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineSpacingBox)).BeginInit();
@@ -3173,6 +3174,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel11.AutoSize = true;
 			this.tableLayoutPanel11.ColumnCount = 1;
 			this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel11.Controls.Add(this.FindClipsBtn, 0, 6);
 			this.tableLayoutPanel11.Controls.Add(this.QuickSelectIntervalBtn, 0, 2);
 			this.tableLayoutPanel11.Controls.Add(this.ReplaceClipsBtn, 0, 3);
 			this.tableLayoutPanel11.Controls.Add(this.ChangeTuneMethodBtn, 0, 4);
@@ -3183,16 +3185,29 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 29);
 			this.tableLayoutPanel11.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel11.Name = "tableLayoutPanel11";
-			this.tableLayoutPanel11.RowCount = 6;
+			this.tableLayoutPanel11.RowCount = 7;
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
-			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(599, 622);
+			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(599, 732);
 			this.tableLayoutPanel11.TabIndex = 8;
+			// 
+			// FindClipsBtn
+			// 
+			this.FindClipsBtn.CommandLink = true;
+			this.FindClipsBtn.CommandLinkNote = "根据指定的条件（如剪辑名称、与选中剪辑相同的素材等）选中符合条件的所有轨道剪辑。";
+			this.FindClipsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.FindClipsBtn.Location = new System.Drawing.Point(3, 625);
+			this.FindClipsBtn.Name = "FindClipsBtn";
+			this.FindClipsBtn.Size = new System.Drawing.Size(593, 104);
+			this.FindClipsBtn.TabIndex = 15;
+			this.FindClipsBtn.Text = "查找轨道素材";
+			this.FindClipsBtn.UseVisualStyleBackColor = true;
+			this.FindClipsBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
 			// 
 			// QuickSelectIntervalBtn
 			// 
@@ -3434,6 +3449,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CloseAfterOpenHelperCheck.Text = "操作完成之后关闭本对话框";
 			this.CloseAfterOpenHelperCheck.UseVisualStyleBackColor = true;
 			// 
+			// BatchSubtitleGenerationBtn
+			// 
+			this.BatchSubtitleGenerationBtn.CommandLink = true;
+			this.BatchSubtitleGenerationBtn.CommandLinkNote = "预先设定好“字幕和文字”的预设，然后在此添加多行文本。";
+			this.BatchSubtitleGenerationBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.BatchSubtitleGenerationBtn.Location = new System.Drawing.Point(3, 515);
+			this.BatchSubtitleGenerationBtn.Name = "BatchSubtitleGenerationBtn";
+			this.BatchSubtitleGenerationBtn.Size = new System.Drawing.Size(593, 104);
+			this.BatchSubtitleGenerationBtn.TabIndex = 14;
+			this.BatchSubtitleGenerationBtn.Text = "批量生成字幕";
+			this.BatchSubtitleGenerationBtn.UseVisualStyleBackColor = true;
+			this.BatchSubtitleGenerationBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
+			// 
 			// tableLayoutPanel19
 			// 
 			this.tableLayoutPanel19.AutoSize = true;
@@ -3500,19 +3528,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.lengthenLegatoToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
 			this.lengthenLegatoToolStripMenuItem.Text = "改变素材持续时间";
 			this.lengthenLegatoToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
-			// 
-			// BatchSubtitleGenerationBtn
-			// 
-			this.BatchSubtitleGenerationBtn.CommandLink = true;
-			this.BatchSubtitleGenerationBtn.CommandLinkNote = "预先设定好“字幕和文字”的预设，然后在此添加多行文本。";
-			this.BatchSubtitleGenerationBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BatchSubtitleGenerationBtn.Location = new System.Drawing.Point(3, 515);
-			this.BatchSubtitleGenerationBtn.Name = "BatchSubtitleGenerationBtn";
-			this.BatchSubtitleGenerationBtn.Size = new System.Drawing.Size(593, 104);
-			this.BatchSubtitleGenerationBtn.TabIndex = 14;
-			this.BatchSubtitleGenerationBtn.Text = "批量生成字幕";
-			this.BatchSubtitleGenerationBtn.UseVisualStyleBackColor = true;
-			this.BatchSubtitleGenerationBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
 			// 
 			// ConfigForm
 			// 
@@ -3881,6 +3896,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.ToolStripMenuItem rememberFormSizeToolStripMenuItem;
 		public System.Windows.Forms.CheckBox CreateEventGroupCheck;
 		public CommandLinkButton BatchSubtitleGenerationBtn;
+		public CommandLinkButton FindClipsBtn;
 	}
 }
 
