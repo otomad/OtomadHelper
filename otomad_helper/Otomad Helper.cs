@@ -58,9 +58,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 15, 21, 0);
+		public static readonly Version VERSION = new Version(4, 16, 4, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 3, 21);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 4, 4);
 
 		// 配置参数变量
 		#region 视频属性
@@ -1618,7 +1618,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			private Timecode startTime;
 			private List<TrackEvent> events = new List<TrackEvent>();
 			private readonly EntryPoint parent;
-			private bool Enabled { get { return parent.ConfigCreateEventGroup; } }
+			private bool Enabled { get { return parent.ConfigCreateEventGroup && parent.AConfig; } }
 			public TempEventGroup(EntryPoint parent) { this.parent = parent; }
 			public void Add(TrackEvent trackEvent) {
 				if (!Enabled) return;
@@ -2496,19 +2496,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (duration == 0) return;
 				double length = videoEvent.Length.ToMilliseconds(), dur, bright = brightness / 100.0;
 				Effect effect = videoEvent.Effects.AddEffect(contrast);
-				OFXDoubleParameter param = effect.OFXEffect.FindParameterByName("Brightness") as OFXDoubleParameter;
-				param.IsAnimated = true;
-				if (duration > 0) {
-					dur = duration / 100.0 * length;
-					param.SetValueAtTime(Timecode.FromMilliseconds(0), bright);
-					param.SetValueAtTime(Timecode.FromMilliseconds(dur), 0);
-					param.Keyframes[0].Interpolation = curve;
-				} else {
-					dur = (1.0 + duration / 100.0) * length;
-					param.SetValueAtTime(Timecode.FromMilliseconds(0), 0);
-					param.SetValueAtTime(Timecode.FromMilliseconds(dur), 0);
-					param.SetValueAtTime(Timecode.FromMilliseconds(length), bright);
-					param.Keyframes[0 != dur ? 1 : 0].Interpolation = curve;
+				OFXDoubleParameter
+					brightnessParam = effect.OFXEffect.FindParameterByName("Brightness") as OFXDoubleParameter,
+					contrastParam = effect.OFXEffect.FindParameterByName("Contrast") as OFXDoubleParameter;
+				List<OFXDoubleParameter> @params = new List<OFXDoubleParameter> { brightnessParam };
+				if (brightness > 0) @params.Add(contrastParam);
+				foreach (OFXDoubleParameter param in @params) {
+					param.IsAnimated = true;
+					if (duration > 0) {
+						dur = duration / 100.0 * length;
+						param.SetValueAtTime(Timecode.FromMilliseconds(0), bright);
+						param.SetValueAtTime(Timecode.FromMilliseconds(dur), 0);
+						param.Keyframes[0].Interpolation = curve;
+					} else {
+						dur = (1.0 + duration / 100.0) * length;
+						param.SetValueAtTime(Timecode.FromMilliseconds(0), 0);
+						param.SetValueAtTime(Timecode.FromMilliseconds(dur), 0);
+						param.SetValueAtTime(Timecode.FromMilliseconds(length), bright);
+						param.Keyframes[0 != dur ? 1 : 0].Interpolation = curve;
+					}
 				}
 			}
 			/// <summary>
