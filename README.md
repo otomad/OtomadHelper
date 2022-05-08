@@ -34,6 +34,11 @@
 * [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
 * [https://www.jetdv.com/](https://www.jetdv.com/)
 
+### Logo
+Inspired by:
+* [@uid13084550](https://space.bilibili.com/13084550)
+* [@uid8569439](https://space.bilibili.com/8569439)
+
 ---
 
 <br />
