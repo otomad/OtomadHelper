@@ -21,12 +21,11 @@
 4. Open the Vegas Pro to launch it. Select menu *Tools > Scripting > Otomad Helper* to open.
 
 ### **Attention**
-**Vegas Pro 16+ supported.**
-> **According to users test, the software does not work properly on the Vegas Pro older versions (v15 and under).**
-> 
-> **So It's actually works on Vegas Pro 16 and above.**
-> 
-> * Tested **fine** on Vegas Pro 17 and 19.
+Vegas Pro 13+ supported.
+
+Vegas 16 and above support all features, and Vegas 13 ~ 15 are compatible to run (some features are missing). The correct version must be installed though.
+
+Tested **fine** on Vegas Pro 17 and 19.
 
 ### Reference
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
