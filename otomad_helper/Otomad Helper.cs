@@ -15579,7 +15579,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				stop_preview_audio = "Stop &previewing",
 				lock_attr = "Lock attrs",
 				preview_listen_attr = "Preview attrs",
-				preview_tune_audio = "Adjust audio to main pitch",
+				preview_tune_audio = "Adjust audio to base pitch",
 				reserve_formant = "Reserve formant",
 				stretch_attr = "Stretch attrs",
 				create_event_group = "Create groups",
