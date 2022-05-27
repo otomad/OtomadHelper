@@ -28,6 +28,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.UseTrackEventGroupCheck = new System.Windows.Forms.CheckBox();
+			this.ReserveOriginalNameCheck = new System.Windows.Forms.CheckBox();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.ClassicTab = new System.Windows.Forms.TabPage();
@@ -57,7 +58,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ViewSelectReplacedRadio = new System.Windows.Forms.RadioButton();
 			this.ViewSelectReplacerRadio = new System.Windows.Forms.RadioButton();
 			this.ViewSelectOriginalRadio = new System.Windows.Forms.RadioButton();
-			this.ReserveOriginalNameCheck = new System.Windows.Forms.CheckBox();
 			this.dock.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.tabs.SuspendLayout();
@@ -133,6 +133,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.UseTrackEventGroupCheck.TabIndex = 0;
 			this.UseTrackEventGroupCheck.Text = "同时替换分组内其它剪辑";
 			this.UseTrackEventGroupCheck.UseVisualStyleBackColor = true;
+			// 
+			// ReserveOriginalNameCheck
+			// 
+			this.ReserveOriginalNameCheck.AutoSize = true;
+			this.ReserveOriginalNameCheck.Location = new System.Drawing.Point(211, 8);
+			this.ReserveOriginalNameCheck.Name = "ReserveOriginalNameCheck";
+			this.ReserveOriginalNameCheck.Size = new System.Drawing.Size(136, 24);
+			this.ReserveOriginalNameCheck.TabIndex = 3;
+			this.ReserveOriginalNameCheck.Text = "保留原剪辑名称";
+			this.ReserveOriginalNameCheck.UseVisualStyleBackColor = true;
 			// 
 			// panel1
 			// 
@@ -505,16 +515,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ViewSelectOriginalRadio.UseVisualStyleBackColor = true;
 			this.ViewSelectOriginalRadio.CheckedChanged += new System.EventHandler(this.ReplacerCombo_SelectedIndexChanged);
 			// 
-			// ReserveOriginalNameCheck
-			// 
-			this.ReserveOriginalNameCheck.AutoSize = true;
-			this.ReserveOriginalNameCheck.Location = new System.Drawing.Point(211, 8);
-			this.ReserveOriginalNameCheck.Name = "ReserveOriginalNameCheck";
-			this.ReserveOriginalNameCheck.Size = new System.Drawing.Size(136, 24);
-			this.ReserveOriginalNameCheck.TabIndex = 3;
-			this.ReserveOriginalNameCheck.Text = "保留原剪辑名称";
-			this.ReserveOriginalNameCheck.UseVisualStyleBackColor = true;
-			// 
 			// ReplaceClipsForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -525,11 +525,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Location = new System.Drawing.Point(60, 60);
 			this.Margin = new System.Windows.Forms.Padding(4);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(712, 487);
 			this.Name = "ReplaceClipsForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
