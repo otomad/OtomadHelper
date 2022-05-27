@@ -86,9 +86,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 17, 25, 0);
+		public static readonly Version VERSION = new Version(4, 17, 27, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 5, 25);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 5, 27);
 
 		// 配置参数变量
 		#region 视频属性
@@ -185,7 +185,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		#endregion
 
 		#region YTP 属性
-		/* 启　　用 */ private bool YtpConfig { get { return configForm.IsGenerateYtp; } }
+		/* 启　　用 */
+				   private bool YtpConfig { get { return configForm.IsGenerateYtp; } }
 		/* 最小长度 */ private int YtpConfigMinLen { get { return (int)configForm.YtpMinLenBox.Value; } }
 		/* 最大长度 */ private int YtpConfigMaxLen { get { return (int)configForm.YtpMaxLenBox.Value; } }
 		/* 剪辑数目 */ private int YtpConfigClipsCount { get { return (int)configForm.YtpClipsCountBox.Value; } }
@@ -869,7 +870,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		/// <summary>
-		/// 生成音 MAD / YouTube Poop Music Video。
+		/// 生成音声 Music Anime Dōga / YouTube Poop Music Video。
 		/// </summary>
 		private void GenerateOtomad() {
 			#region 验证数据合法
@@ -888,12 +889,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Plugin.Init(vegas);
 			bool requestShowProgress = false;
 			long startMakingTime = DateTime.Now.Ticks; // 单位：100 纳秒
-			const long MUST_SHOW_PROGRESS_WAITING_TIME = (long)1e7; // 1 秒
+			const long MUST_SHOW_PROGRESS_WAITING_TIME = 10000000L; // 1 秒
 			if (progressForm.IsDisposed) // 这里有一个特别蛇皮的 bug，就是如果手动打开一个不受 Vegas 支持的媒体文件，触发打不开媒体文件的报错。然后再打开一个 Vegas 支持的媒体文件，最后点击生成。这竟然会导致进度条对话框被销毁且不为 null 的奇葩问题，而且因果毫无任何关系。反正这样可以解决问题就行了。
 				progressForm = new ProgressForm();
 			progressForm.Show();
 			if (YtpConfig) { GenerateYtp(); return; }
-			if (AConfigMethod == AudioTuneMethod.PITCH_SHIFT) if (!ExaminePitchShiftPresetsExist()) return;
+			if (AConfig && AConfigMethod == AudioTuneMethod.PITCH_SHIFT) if (!ExaminePitchShiftPresetsExist()) return;
 			progressForm.Info = "";
 			#endregion
 			#region 开始处理 MIDI
@@ -909,6 +910,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				VConfigStartHTrans != VConfigEndHTrans ||
 				VConfigStartVTrans != VConfigEndVTrans;
 			PvVisualEffect anim = new PvVisualEffect(VConfigEffect, VConfigInitialValue);
+			#if !VER_GEQ_16
+			if (anim.fx >= PvVisualEffectType.VERTICAL_EXPANSION && anim.fx <= PvVisualEffectType.PUYO_PUYO) {
+				ShowError(new Exceptions.UsePicInPicOnUnsupportedVegasException(), ShowErrorState.RESUME_NEXT);
+				return;
+			}
+			#endif
 			double lastStartTime = -1;
 			if (VConfig && !SheetConfig) vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, tTrackCount++, name));
 			else if (SheetConfig) vTracks = new VideoTrack[MAX_VIDEO_TRACK_SIZE];
@@ -1039,8 +1046,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (AConfigFreezeLastFrame && !AConfigScratch && duration > audioLength) audioEvent.Length = Timecode.FromMilliseconds(audioLength);
 					aTrackPositions[trackIndex] = startTime + duration;
 					try {
-						audioEvent.Method = AConfigMethod == AudioTuneMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique; // 这个操作没有在 Vegas 文档中写到。
-						audioEvent.PitchLock = false;
+						#if VER_GEQ_16
+							audioEvent.Method = AConfigMethod == AudioTuneMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique; // 这个操作没有在 Vegas 文档中写到。
+							audioEvent.PitchLock = false;
+						#endif
 					} catch (Exception e) {
 						if (AConfigMethod == AudioTuneMethod.ELASTIQUE || AConfigMethod == AudioTuneMethod.CLASSIC) {
 							ShowError(new Exceptions.NoTimeStretchPitchShiftException(), e); return;
@@ -1058,7 +1067,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 					#region 应用变调
 					int pitchDelta = pitch - AConfigBasePitch;
-					if (AConfigMethod == AudioTuneMethod.PITCH_SHIFT) {
+					if (AConfigMethod == AudioTuneMethod.PITCH_SHIFT) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
 						if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return; }
 						double _stretchRate = Pitch2Stretch(pitchDelta);
 						if (AConfigLockStretchPitch && AConfigFreezeLastFrame && !AConfigScratch && duration > audioLength / _stretchRate)
@@ -1079,20 +1088,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 								if (AConfigElastiqueAttr == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = AConfigReserveFormant;
 							} else if (AConfigMethod == AudioTuneMethod.CLASSIC)
 								audioEvent.ClassicAttribute = (ClassicStretchAttributes)AConfigClassicAttr;
+							if (!AConfigLockStretchPitch) audioEvent.PitchSemis += pitchDelta;
+							else {
+								double origPitch = audioEvent.PitchSemis;
+								audioEvent.PitchLock = true;
+								audioEvent.AdjustPlaybackRate(Pitch2Stretch(origPitch + pitchDelta), true);
+								if (AConfigFreezeLastFrame && !AConfigScratch && duration > audioLength / audioEvent.PlaybackRate)
+									audioEvent.Length = Timecode.FromMilliseconds(audioLength / audioEvent.PlaybackRate);
+							}
 						#endif
-						if (!AConfigLockStretchPitch) audioEvent.PitchSemis += pitchDelta;
-						else {
-							double origPitch = audioEvent.PitchSemis;
-							audioEvent.PitchLock = true;
-							audioEvent.AdjustPlaybackRate(Pitch2Stretch(origPitch + pitchDelta), true);
-							if (AConfigFreezeLastFrame && !AConfigScratch && duration > audioLength / audioEvent.PlaybackRate)
-								audioEvent.Length = Timecode.FromMilliseconds(audioLength / audioEvent.PlaybackRate);
-						}
 					} else if (AConfigMethod == AudioTuneMethod.FOOL_TUNING) {
 						#if VER_GEQ_16
 							audioEvent.ElastiqueAttribute = ElastiqueStretchAttributes.Efficient;
+							audioEvent.PitchLock = true;
 						#endif
-						audioEvent.PitchLock = true;
 					}
 					#endregion
 				}
@@ -1186,8 +1195,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							Effect picInPic = videoEvent.Effects.AddEffect(Plugin.picInPic);
 							OFXDoubleParameter scale = picInPic.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter;
 							scale.Value = SheetConfigGap * 2.0 / projHeight;
-							OFXDoubleParameter scaleY = picInPic.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter;
-							scaleY.Value = scale.Value;
+							OFXDoubleParameter scaleY = picInPic.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter; // Vegas 15 及以下版本不支持。
+							if (scaleY != null) scaleY.Value = scale.Value;
 							OFXDouble2DParameter location = picInPic.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter;
 							double positionX = -SheetConfigWidth / 2 + SheetConfigWidth / barLength * (startTime - barStartTime);
 							int octave = _pitch / 12;
@@ -1230,11 +1239,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Effect effect4 = videoEvent.Effects.AddEffect(Plugin.mirror);
 				(effect4.OFXEffect.FindParameterByName("Angle") as OFXDoubleParameter).Value = 180;
 				Effect effect5 = videoEvent.Effects.AddEffect(Plugin.picInPic);
-				(effect5.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter).Value = new OFXDouble2D { X = 0.5, Y = (double)SheetConfigPosition / projHeight + 0.5 };
-				(effect5.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter).Value = 1.0;
-				(effect5.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter).Value = 1.25 / projHeight * SheetConfigGap * 4;
-				OFXChoiceParameter proportion = effect5.OFXEffect.FindParameterByName("KeepProportions") as OFXChoiceParameter;
-				proportion.Value = proportion.Choices[1]; // 固定平行四边形
+				double transformScaleY = 1.25 / projHeight * SheetConfigGap * 4;
+				double transformPositionY = (double)SheetConfigPosition / projHeight + 0.5;
+				OFXDoubleParameter scaleY = effect5.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter;
+				if (scaleY != null) {
+					scaleY.Value = transformScaleY;
+					(effect5.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter).Value = 1.0;
+					(effect5.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter).Value = new OFXDouble2D { X = 0.5, Y = transformPositionY };
+					OFXChoiceParameter proportion = effect5.OFXEffect.FindParameterByName("KeepProportions") as OFXChoiceParameter;
+					proportion.Value = proportion.Choices[1]; // 固定平行四边形
+				} else { // 如果是旧版本 Vegas 不支持“缩放高度”参数。
+					videoEvent.Effects.Remove(effect5);
+					TrackMotionKeyframe keyFrame = sheetTrack.TrackMotion.MotionKeyframes[0];
+					keyFrame.Type = VideoKeyframeType.Hold;
+					keyFrame.Height = transformScaleY * vegas.Project.Video.Height;
+					keyFrame.PositionY = (transformPositionY - 0.5) * vegas.Project.Video.Height;
+				}
 				// 本来还想来自动生成谱号的，奈何脚本不支持蒙版锚点的编辑。
 			}
 			#endregion
@@ -2054,15 +2074,27 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 	}
 
+	/// <summary>
+	/// 显示错误警告之后的处理操作状态。
+	/// </summary>
 	public enum ShowErrorState {
+		/// <summary>警告之后自动删除用户配置文件，并且关闭进度条对话框。</summary>
 		NORMAL,
+		/// <summary>不执行任何操作。</summary>
 		SILENCE,
+		/// <summary>仅关闭进度条对话框。</summary>
 		RESUME_NEXT,
 	}
 
+	/// <summary>
+	/// 支持 Vegas 版本号情况状态。
+	/// </summary>
 	public enum SupportVegasVersionState {
+		/// <summary>未知。</summary>
 		UNDEFINED = -1,
+		/// <summary>不支持。</summary>
 		UNSUPPORTED,
+		/// <summary>支持。</summary>
 		SUPPORTED,
 	}
 
@@ -2070,10 +2102,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// 选中媒体的素材来源。
 	/// </summary>
 	public enum MediaSourceFrom {
+		/// <summary>在项目媒体窗口中选中的媒体文件。</summary>
 		SELECTED_MEDIA,
+		/// <summary>在时间线窗口选中的轨道素材剪辑事件。</summary>
 		SELECTED_CLIP,
+		/// <summary>从脚本对话框中浏览的媒体文件。</summary>
 		BROWSE_FILE,
+		/// <summary>上一次用户的选择。</summary>
 		LAST_USER_PREFERENCE,
+		/// <summary>没有选中任何素材。</summary>
 		NOTHING_SELECTED,
 	}
 
@@ -2081,8 +2118,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// 设定生成开始位置枚举。
 	/// </summary>
 	public enum GenerateAt {
+		/// <summary>项目开始处。</summary>
 		BEGIN,
+		/// <summary>光标处。</summary>
 		CURSOR,
+		/// <summary>自定义。</summary>
 		CUSTOM,
 	}
 
@@ -2090,11 +2130,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// 调音方式算法枚举。
 	/// </summary>
 	public enum AudioTuneMethod {
+		/// <summary>不调音。</summary>
 		NO_TUNE,
+		/// <summary>移调效果插件。</summary>
 		PITCH_SHIFT,
+		/// <summary>弹性音调更改。</summary>
 		ELASTIQUE,
+		/// <summary>古典音调更改。</summary>
 		CLASSIC,
+		/// <summary>瞎调音。</summary>
 		FOOL_TUNING,
+		/// <summary>酸性风格调音。（包含在 API 中但任何地方均不引用，使用后会报错。）</summary>
 		ACID_STYLE = 20,
 	}
 
@@ -2102,7 +2148,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// 自动布局轨道的布局方式。
 	/// </summary>
 	public enum AutoLayoutTracksType {
+		/// <summary>网格布局。</summary>
 		GRID,
+		/// <summary>3D 方盒布局。</summary>
 		BOX_3D,
 	}
 
@@ -2110,11 +2158,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// 视频轨道的渐变效果枚举。
 	/// </summary>
 	public enum VideoTrackGradientEffectType {
+		/// <summary>彩虹色。</summary>
 		RAINBOW,
+		/// <summary>逐渐饱和。</summary>
 		GRADUALLY_SATURATED,
+		/// <summary>逐渐对比。</summary>
 		GRADUALLY_CONTRASTED,
+		/// <summary>阈值。</summary>
 		THRESHOLD,
+		/// <summary>彩灰交替。</summary>
 		ALTERNATELY_CHROMATIC,
+		/// <summary>正负交替。</summary>
 		ALTERNATELY_NEGATIVE,
 	}
 
@@ -2676,7 +2730,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// 垂直扩缩效果。
 			/// </summary>
 			/// <param name="videoEvent">视频事件。</param>
-			/// <param name="type">所选的 PV 节奏视觉效果。必须是垂直扩缩效果中的效果才可使用。</param>
+			/// <param name="type">所选的 PV 节奏视觉效果。必须是垂直扩缩类中的效果才可使用。</param>
 			/// <param name="scale">缩小比例。<br /><strong>V4 (WinForm) 版本暂不支持修改。</strong></param>
 			public static void Expansion(VideoEvent videoEvent, PvVisualEffectType type, double scale = 0.8) {
 				if (type < PvVisualEffectType.VERTICAL_EXPANSION || type > PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND) return;
@@ -2986,6 +3040,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				else effect = GetRandomYtpEffectType(effects);
 				if (effect == null) return;
 				bool probably = RandomBool(); // 如果有可能的话。
+				Action RestoreAudioEventMethod = new Action(() => {
+					#if VER_GEQ_16
+						aEvent.Method = TimeStretchPitchShift.Elastique;
+						try {
+							aEvent.PitchLock = aEvent.PitchLock;
+						} catch (Exception e) {
+							EntryPoint.ShowError(new Exceptions.NoTimeStretchPitchShiftException(), e);
+						}
+					#endif
+				});
 				switch (effect) {
 					// 为什么 case 里面也打花括号？因为下面会出现一个在不同 case 里面定义相同标识符变量，结果报了重名错误的奇葩问题。
 					case YtpEffectType.CHORUS: {
@@ -2998,8 +3062,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						if (aConfig) {
 							int randomPitch = random.Next(-12, 12 + 1);
 							randomPitch = (int)ExtremeFunction(randomPitch);
-							aEvent.Method = TimeStretchPitchShift.Elastique;
-							aEvent.PitchSemis = randomPitch;
+							RestoreAudioEventMethod();
+							#if VER_GEQ_16
+								aEvent.PitchSemis = randomPitch;
+							#else
+								SetPitchSemis_ForVersionsBelow16(aEvent, randomPitch);
+							#endif
 						}
 					} break;
 					case YtpEffectType.VIBRATO: {
@@ -3067,8 +3135,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							if (probably) vEvent.AdjustPlaybackRate(0.5, true);
 						}
 						if (aConfig && probably) {
-							aEvent.Method = TimeStretchPitchShift.Elastique;
-							aEvent.PitchLock = true;
+							RestoreAudioEventMethod();
+							#if VER_GEQ_16
+								aEvent.PitchLock = true;
+							#endif
 							aEvent.AdjustPlaybackRate(0.5, true);
 						}
 					} break;
@@ -3097,7 +3167,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						if (aConfig) {
 							repeatClips = new AudioEvent[count];
 							if (aEvent.Length > MAX_LENGTH) aEvent.Length = shorterLength;
-							aEvent.Method = TimeStretchPitchShift.Elastique;
+							RestoreAudioEventMethod();
 							for (int i = 0; i < count; i++) {
 								AudioEvent clip = aEvent;
 								if (i != 0) {
@@ -3105,7 +3175,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 									repeatClips[i] = clip;
 								}
 								int randomPitch = random.Next(MIN_TONE_PITCH_CHANGE, MAX_TONE_PITCH_CHANGE + 1);
-								clip.PitchSemis = randomPitch;
+								#if VER_GEQ_16
+									clip.PitchSemis = randomPitch;
+								#else
+									SetPitchSemis_ForVersionsBelow16(clip, randomPitch);
+								#endif
 							}
 						}
 						if (vConfig) {
@@ -3160,8 +3234,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							if (probably) vEvent.AdjustPlaybackRate(2, true);
 						}
 						if (aConfig && probably) {
-							aEvent.Method = TimeStretchPitchShift.Elastique;
-							aEvent.PitchLock = true;
+							RestoreAudioEventMethod();
+							#if VER_GEQ_16
+								aEvent.PitchLock = true;
+							#endif
 							aEvent.AdjustPlaybackRate(2, true);
 						}
 					} break;
@@ -3177,8 +3253,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						AudioEvent[] repeatClips = null;
 						if (aConfig) {
 							repeatClips = new AudioEvent[count];
-							aEvent.Method = TimeStretchPitchShift.Elastique;
-							aEvent.PitchLock = true;
+							RestoreAudioEventMethod();
+							#if VER_GEQ_16
+								aEvent.PitchLock = true;
+							#endif
 							for (int i = 1; i < count; i++) {
 								AudioEvent clip = aEvent.Copy(aEvent.Track, aEvent.Track.Length) as AudioEvent;
 								repeatClips[i] = clip;
@@ -3274,6 +3352,24 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect.Preset = randomPreset;
 			}
 			private const string DEFAULT_PARAMETER = "[Sys] Default all parameters";
+			/// <summary>
+			/// 针对 Vegas 15 及以下版本兼容而使用的传统移调插件调音方式。
+			/// </summary>
+			/// <param name="audioEvent">音频轨道事件。</param>
+			/// <param name="pitchDelta">移调值。</param>
+			public static void SetPitchSemis_ForVersionsBelow16(AudioEvent audioEvent, int pitchDelta) {
+				if (pitchShift == null) { WarningMissingPlugin(Lang.str.no_plugin_pitch_shift_exception); return; }
+				int pitchDeltaTimes = pitchDelta > 0 ? 12 : -12;
+				const bool lockStretchPitch = false;
+				while (pitchDeltaTimes * pitchDelta > 0) { // pitchDeltaTimes > 0 ? pitchDelta > 0 : pitchDelta < 0
+					Effect effect = audioEvent.Effects.AddEffect(pitchShift);
+					try {
+						effect.Preset = (Math.Abs(pitchDelta) <= 12 ? pitchDelta : pitchDeltaTimes).ToString()
+							+ (lockStretchPitch ? "~" : "");
+					} catch (Exception) { WarningMissingPlugin(Lang.str.no_plugin_presets_exception); return; }
+					pitchDelta -= pitchDeltaTimes;
+				}
+			}
 		}
 		private static readonly Random random = new Random();
 		/// <summary>
@@ -3652,14 +3748,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		public class YtpOverLengthException : Exception {
 			/// <summary>
-			/// 指定的 YTP 最小长度超过了媒体长度出错。
+			/// 指定的 YTP 最小长度超过了媒体长度报错。
 			/// </summary>
 			public YtpOverLengthException() : base(Lang.str.ytp_over_length_exception) { }
 		}
 
 		public class YtpInMediaGeneratorException : Exception {
 			/// <summary>
-			/// 对媒体生成器产生的媒体应用 YTP 出错。
+			/// 对媒体生成器产生的媒体应用 YTP 报错。
 			/// </summary>
 			public YtpInMediaGeneratorException() : base(Lang.str.ytp_in_media_generator_exception) { }
 		}
@@ -3676,6 +3772,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// 未知异常。
 			/// </summary>
 			public UnknownException() : base(Lang.str.unknown_exception) { }
+		}
+
+		public class UsePicInPicOnUnsupportedVegasException : Exception {
+			/// <summary>
+			/// 在低版本 Vegas 的画中画插件中使用不支持的操作报错。
+			/// </summary>
+			public UsePicInPicOnUnsupportedVegasException() : base(Lang.str.use_pic_in_pic_on_unsupported_vegas_exception) { }
 		}
 	}
 
@@ -4826,6 +4929,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.UseTrackEventGroupCheck = new System.Windows.Forms.CheckBox();
+			this.ReserveOriginalNameCheck = new System.Windows.Forms.CheckBox();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.ClassicTab = new System.Windows.Forms.TabPage();
@@ -4855,7 +4959,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ViewSelectReplacedRadio = new System.Windows.Forms.RadioButton();
 			this.ViewSelectReplacerRadio = new System.Windows.Forms.RadioButton();
 			this.ViewSelectOriginalRadio = new System.Windows.Forms.RadioButton();
-			this.ReserveOriginalNameCheck = new System.Windows.Forms.CheckBox();
 			this.dock.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.tabs.SuspendLayout();
@@ -4871,9 +4974,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel4.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
-			//
+			// 
 			// dock
-			//
+			// 
 			this.dock.BackColor = System.Drawing.SystemColors.Control;
 			this.dock.ColumnCount = 5;
 			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -4894,9 +4997,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.dock.Size = new System.Drawing.Size(694, 42);
 			this.dock.TabIndex = 3;
-			//
+			// 
 			// OkBtn
-			//
+			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.OkBtn.Location = new System.Drawing.Point(529, 8);
@@ -4906,9 +5009,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OkBtn.Text = "替换(&R)";
 			this.OkBtn.UseVisualStyleBackColor = true;
 			this.OkBtn.Click += new System.EventHandler(this.OkBtn_Click);
-			//
+			// 
 			// CancelBtn
-			//
+			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.CancelBtn.Location = new System.Drawing.Point(610, 8);
@@ -4918,9 +5021,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CancelBtn.Text = "关闭(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
 			this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
-			//
+			// 
 			// UseTrackEventGroupCheck
-			//
+			// 
 			this.UseTrackEventGroupCheck.AutoSize = true;
 			this.UseTrackEventGroupCheck.Checked = true;
 			this.UseTrackEventGroupCheck.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -4931,9 +5034,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.UseTrackEventGroupCheck.TabIndex = 0;
 			this.UseTrackEventGroupCheck.Text = "同时替换分组内其它剪辑";
 			this.UseTrackEventGroupCheck.UseVisualStyleBackColor = true;
-			//
+			// 
+			// ReserveOriginalNameCheck
+			// 
+			this.ReserveOriginalNameCheck.AutoSize = true;
+			this.ReserveOriginalNameCheck.Location = new System.Drawing.Point(211, 8);
+			this.ReserveOriginalNameCheck.Name = "ReserveOriginalNameCheck";
+			this.ReserveOriginalNameCheck.Size = new System.Drawing.Size(136, 24);
+			this.ReserveOriginalNameCheck.TabIndex = 3;
+			this.ReserveOriginalNameCheck.Text = "保留原剪辑名称";
+			this.ReserveOriginalNameCheck.UseVisualStyleBackColor = true;
+			// 
 			// panel1
-			//
+			// 
 			this.panel1.BackColor = System.Drawing.Color.Transparent;
 			this.panel1.Controls.Add(this.tabs);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -4942,9 +5055,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.panel1.Padding = new System.Windows.Forms.Padding(8, 8, 8, 0);
 			this.panel1.Size = new System.Drawing.Size(694, 398);
 			this.panel1.TabIndex = 4;
-			//
+			// 
 			// tabs
-			//
+			// 
 			this.tabs.Controls.Add(this.ClassicTab);
 			this.tabs.Controls.Add(this.SeparationTab);
 			this.tabs.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -4954,9 +5067,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tabs.Size = new System.Drawing.Size(678, 390);
 			this.tabs.TabIndex = 0;
 			this.tabs.SelectedIndexChanged += new System.EventHandler(this.ReplacerCombo_SelectedIndexChanged);
-			//
+			// 
 			// ClassicTab
-			//
+			// 
 			this.ClassicTab.Controls.Add(this.table);
 			this.ClassicTab.Location = new System.Drawing.Point(4, 29);
 			this.ClassicTab.Name = "ClassicTab";
@@ -4965,9 +5078,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ClassicTab.TabIndex = 0;
 			this.ClassicTab.Text = "同时指定";
 			this.ClassicTab.UseVisualStyleBackColor = true;
-			//
+			// 
 			// table
-			//
+			// 
 			this.table.AutoSize = true;
 			this.table.ColumnCount = 1;
 			this.table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 664F));
@@ -4986,9 +5099,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.Size = new System.Drawing.Size(664, 351);
 			this.table.TabIndex = 7;
-			//
+			// 
 			// ReplacerCombo
-			//
+			// 
 			this.ReplacerCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ReplacerCombo.FormattingEnabled = true;
 			this.ReplacerCombo.ItemHeight = 20;
@@ -4997,9 +5110,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReplacerCombo.Size = new System.Drawing.Size(658, 207);
 			this.ReplacerCombo.TabIndex = 3;
 			this.ReplacerCombo.SelectedIndexChanged += new System.EventHandler(this.ReplacerCombo_SelectedIndexChanged);
-			//
+			// 
 			// ClassicReplacerLbl
-			//
+			// 
 			this.ClassicReplacerLbl.AutoSize = true;
 			this.ClassicReplacerLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ClassicReplacerLbl.Location = new System.Drawing.Point(3, 92);
@@ -5008,9 +5121,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ClassicReplacerLbl.TabIndex = 4;
 			this.ClassicReplacerLbl.Text = "指定的替换项为";
 			this.ClassicReplacerLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
+			// 
 			// ReplaceClipsLbl
-			//
+			// 
 			this.ReplaceClipsLbl.AutoSize = true;
 			this.ReplaceClipsLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ReplaceClipsLbl.Location = new System.Drawing.Point(3, 6);
@@ -5021,9 +5134,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReplaceClipsLbl.Text = "请先在轨道窗口中选中替换与被替换的素材，然后指定一个素材为替换的素材，剩余素材均为被替换素材。\r\n请先将替换素材的音视频创建分组，并确保替换素材放置在时间靠后的位" +
 	"置并且尽量不与其它被替换素材位于同一轨道。";
 			this.ReplaceClipsLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
+			// 
 			// ClassicReplacedLbl
-			//
+			// 
 			this.ClassicReplacedLbl.AutoSize = true;
 			this.ClassicReplacedLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ClassicReplacedLbl.Location = new System.Drawing.Point(3, 325);
@@ -5032,9 +5145,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ClassicReplacedLbl.TabIndex = 3;
 			this.ClassicReplacedLbl.Text = "则剩余 0 项轨道剪辑将被替换为选定素材。";
 			this.ClassicReplacedLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
+			// 
 			// SeparationTab
-			//
+			// 
 			this.SeparationTab.Controls.Add(this.tableLayoutPanel1);
 			this.SeparationTab.Location = new System.Drawing.Point(4, 29);
 			this.SeparationTab.Name = "SeparationTab";
@@ -5042,9 +5155,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SeparationTab.TabIndex = 1;
 			this.SeparationTab.Text = "分别指定";
 			this.SeparationTab.UseVisualStyleBackColor = true;
-			//
+			// 
 			// tableLayoutPanel1
-			//
+			// 
 			this.tableLayoutPanel1.AutoSize = true;
 			this.tableLayoutPanel1.ColumnCount = 1;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -5069,9 +5182,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(670, 335);
 			this.tableLayoutPanel1.TabIndex = 0;
-			//
+			// 
 			// tableLayoutPanel3
-			//
+			// 
 			this.tableLayoutPanel3.AutoSize = true;
 			this.tableLayoutPanel3.ColumnCount = 2;
 			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -5086,9 +5199,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel3.Size = new System.Drawing.Size(658, 74);
 			this.tableLayoutPanel3.TabIndex = 10;
-			//
+			// 
 			// SeparationReplacerInfo
-			//
+			// 
 			this.SeparationReplacerInfo.AutoSize = true;
 			this.SeparationReplacerInfo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SeparationReplacerInfo.Location = new System.Drawing.Point(67, 10);
@@ -5097,9 +5210,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SeparationReplacerInfo.TabIndex = 5;
 			this.SeparationReplacerInfo.Text = "音频：无\r\n视频：无";
 			this.SeparationReplacerInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
+			// 
 			// ReplacerIcon
-			//
+			// 
 			this.ReplacerIcon.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ReplacerIcon.Location = new System.Drawing.Point(13, 13);
 			this.ReplacerIcon.MinimumSize = new System.Drawing.Size(48, 48);
@@ -5107,9 +5220,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReplacerIcon.Size = new System.Drawing.Size(48, 48);
 			this.ReplacerIcon.TabIndex = 4;
 			this.ReplacerIcon.TabStop = false;
-			//
+			// 
 			// tableLayoutPanel5
-			//
+			// 
 			this.tableLayoutPanel5.ColumnCount = 2;
 			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -5122,9 +5235,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel5.Size = new System.Drawing.Size(658, 36);
 			this.tableLayoutPanel5.TabIndex = 9;
-			//
+			// 
 			// SetReplacerBtn
-			//
+			// 
 			this.SetReplacerBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SetReplacerBtn.Location = new System.Drawing.Point(3, 3);
 			this.SetReplacerBtn.Name = "SetReplacerBtn";
@@ -5133,9 +5246,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SetReplacerBtn.Text = "将选中的 0 个素材设为替换项";
 			this.SetReplacerBtn.UseVisualStyleBackColor = true;
 			this.SetReplacerBtn.Click += new System.EventHandler(this.SetReplacerBtn_Click);
-			//
+			// 
 			// BackToSelect2
-			//
+			// 
 			this.BackToSelect2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.BackToSelect2.Location = new System.Drawing.Point(332, 3);
 			this.BackToSelect2.Name = "BackToSelect2";
@@ -5144,9 +5257,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.BackToSelect2.Text = "返回 Vegas 选定素材";
 			this.BackToSelect2.UseVisualStyleBackColor = true;
 			this.BackToSelect2.Click += new System.EventHandler(this.BackToSelect_Click);
-			//
+			// 
 			// tableLayoutPanel2
-			//
+			// 
 			this.tableLayoutPanel2.AutoSize = true;
 			this.tableLayoutPanel2.ColumnCount = 2;
 			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -5162,9 +5275,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 54F));
 			this.tableLayoutPanel2.Size = new System.Drawing.Size(658, 74);
 			this.tableLayoutPanel2.TabIndex = 6;
-			//
+			// 
 			// SeparationReplacedInfo
-			//
+			// 
 			this.SeparationReplacedInfo.AutoSize = true;
 			this.SeparationReplacedInfo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SeparationReplacedInfo.Location = new System.Drawing.Point(67, 10);
@@ -5173,9 +5286,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SeparationReplacedInfo.TabIndex = 5;
 			this.SeparationReplacedInfo.Text = "已选中 0 个轨道素材，其中 0 个音频剪辑，0 个视频剪辑。";
 			this.SeparationReplacedInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
+			// 
 			// ReplacedIcon
-			//
+			// 
 			this.ReplacedIcon.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ReplacedIcon.Location = new System.Drawing.Point(13, 13);
 			this.ReplacedIcon.MinimumSize = new System.Drawing.Size(48, 48);
@@ -5183,27 +5296,27 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReplacedIcon.Size = new System.Drawing.Size(48, 48);
 			this.ReplacedIcon.TabIndex = 4;
 			this.ReplacedIcon.TabStop = false;
-			//
+			// 
 			// SeparationReplacedLbl
-			//
+			// 
 			this.SeparationReplacedLbl.AutoSize = true;
 			this.SeparationReplacedLbl.Location = new System.Drawing.Point(6, 48);
 			this.SeparationReplacedLbl.Name = "SeparationReplacedLbl";
 			this.SeparationReplacedLbl.Size = new System.Drawing.Size(69, 20);
 			this.SeparationReplacedLbl.TabIndex = 0;
 			this.SeparationReplacedLbl.Text = "被替换项";
-			//
+			// 
 			// SeparationReplacerLbl
-			//
+			// 
 			this.SeparationReplacerLbl.AutoSize = true;
 			this.SeparationReplacerLbl.Location = new System.Drawing.Point(6, 190);
 			this.SeparationReplacerLbl.Name = "SeparationReplacerLbl";
 			this.SeparationReplacerLbl.Size = new System.Drawing.Size(54, 20);
 			this.SeparationReplacerLbl.TabIndex = 1;
 			this.SeparationReplacerLbl.Text = "替换项";
-			//
+			// 
 			// tableLayoutPanel4
-			//
+			// 
 			this.tableLayoutPanel4.AutoSize = true;
 			this.tableLayoutPanel4.ColumnCount = 2;
 			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -5217,9 +5330,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel4.Size = new System.Drawing.Size(658, 36);
 			this.tableLayoutPanel4.TabIndex = 8;
-			//
+			// 
 			// SetReplacedBtn
-			//
+			// 
 			this.SetReplacedBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SetReplacedBtn.Location = new System.Drawing.Point(3, 3);
 			this.SetReplacedBtn.Name = "SetReplacedBtn";
@@ -5228,9 +5341,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SetReplacedBtn.Text = "将选中的 0 个素材设为被替换项";
 			this.SetReplacedBtn.UseVisualStyleBackColor = true;
 			this.SetReplacedBtn.Click += new System.EventHandler(this.SetReplacedBtn_Click);
-			//
+			// 
 			// BackToSelect1
-			//
+			// 
 			this.BackToSelect1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.BackToSelect1.Location = new System.Drawing.Point(332, 3);
 			this.BackToSelect1.Name = "BackToSelect1";
@@ -5239,9 +5352,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.BackToSelect1.Text = "返回 Vegas 选定素材";
 			this.BackToSelect1.UseVisualStyleBackColor = true;
 			this.BackToSelect1.Click += new System.EventHandler(this.BackToSelect_Click);
-			//
+			// 
 			// flowLayoutPanel1
-			//
+			// 
 			this.flowLayoutPanel1.Controls.Add(this.ViewLbl);
 			this.flowLayoutPanel1.Controls.Add(this.ViewSelectReplacedRadio);
 			this.flowLayoutPanel1.Controls.Add(this.ViewSelectReplacerRadio);
@@ -5252,9 +5365,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
 			this.flowLayoutPanel1.Size = new System.Drawing.Size(664, 34);
 			this.flowLayoutPanel1.TabIndex = 11;
-			//
+			// 
 			// ViewLbl
-			//
+			// 
 			this.ViewLbl.AutoSize = true;
 			this.ViewLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ViewLbl.Location = new System.Drawing.Point(3, 0);
@@ -5264,9 +5377,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ViewLbl.TabIndex = 0;
 			this.ViewLbl.Text = "查看";
 			this.ViewLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
+			// 
 			// ViewSelectReplacedRadio
-			//
+			// 
 			this.ViewSelectReplacedRadio.AutoSize = true;
 			this.ViewSelectReplacedRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ViewSelectReplacedRadio.Location = new System.Drawing.Point(54, 3);
@@ -5276,9 +5389,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ViewSelectReplacedRadio.Text = "被替换项";
 			this.ViewSelectReplacedRadio.UseVisualStyleBackColor = true;
 			this.ViewSelectReplacedRadio.CheckedChanged += new System.EventHandler(this.ReplacerCombo_SelectedIndexChanged);
-			//
+			// 
 			// ViewSelectReplacerRadio
-			//
+			// 
 			this.ViewSelectReplacerRadio.AutoSize = true;
 			this.ViewSelectReplacerRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ViewSelectReplacerRadio.Location = new System.Drawing.Point(150, 3);
@@ -5288,9 +5401,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ViewSelectReplacerRadio.Text = "替换项";
 			this.ViewSelectReplacerRadio.UseVisualStyleBackColor = true;
 			this.ViewSelectReplacerRadio.CheckedChanged += new System.EventHandler(this.ReplacerCombo_SelectedIndexChanged);
-			//
+			// 
 			// ViewSelectOriginalRadio
-			//
+			// 
 			this.ViewSelectOriginalRadio.AutoSize = true;
 			this.ViewSelectOriginalRadio.Checked = true;
 			this.ViewSelectOriginalRadio.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -5302,19 +5415,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ViewSelectOriginalRadio.Text = "选中项";
 			this.ViewSelectOriginalRadio.UseVisualStyleBackColor = true;
 			this.ViewSelectOriginalRadio.CheckedChanged += new System.EventHandler(this.ReplacerCombo_SelectedIndexChanged);
-			//
-			// ReserveOriginalNameCheck
-			//
-			this.ReserveOriginalNameCheck.AutoSize = true;
-			this.ReserveOriginalNameCheck.Location = new System.Drawing.Point(211, 8);
-			this.ReserveOriginalNameCheck.Name = "ReserveOriginalNameCheck";
-			this.ReserveOriginalNameCheck.Size = new System.Drawing.Size(136, 24);
-			this.ReserveOriginalNameCheck.TabIndex = 3;
-			this.ReserveOriginalNameCheck.Text = "保留原剪辑名称";
-			this.ReserveOriginalNameCheck.UseVisualStyleBackColor = true;
-			//
+			// 
 			// ReplaceClipsForm
-			//
+			// 
 			this.AcceptButton = this.OkBtn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -5323,11 +5426,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Location = new System.Drawing.Point(60, 60);
 			this.Margin = new System.Windows.Forms.Padding(4);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(712, 487);
 			this.Name = "ReplaceClipsForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
@@ -5692,9 +5795,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		[DllImport("Shell32.dll")]
 		public static extern int ExtractIconEx(string libName, int iconIndex, IntPtr[] largeIcon, IntPtr[] smallIcon, int nIcons);
 
-		public static Icon LoadImageresIcon(int index) {
+		public static Icon LoadIconFromLib(int index, string libName = "imageres.dll") {
 			IntPtr[] largeIcon = new IntPtr[1], smallIcon = new IntPtr[1];
-			ExtractIconEx("imageres.dll", index, largeIcon, smallIcon, 1);
+			ExtractIconEx(libName, index, largeIcon, smallIcon, 1);
 			Icon ic = Icon.FromHandle(largeIcon[0]);
 			return ic;
 		}
@@ -5704,20 +5807,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private Image GetIcon(IconType iconType) {
-			return iconType == IconType.CROSS ? LoadImageresIcon(100).ToBitmap() :
-				iconType == IconType.CHECK ? LoadImageresIcon(101).ToBitmap() :
-				null;
+			Image icon = null;
+			try {
+				icon = iconType == IconType.CROSS ? LoadIconFromLib(100).ToBitmap() :
+					iconType == IconType.CHECK ? LoadIconFromLib(101).ToBitmap() :
+					null;
+			} catch (Exception) { }
+			return icon;
 		}
 
 		private class SeparationSpecifier {
-			private ReplaceClipsForm form;
+			private readonly ReplaceClipsForm form;
 			private EntryPoint parent { get { return form.parent; } }
 			private Vegas vegas { get { return form.vegas; } }
 			private static readonly Guid _GUID = Guid.Parse("2671A8C8-FDB1-4653-8C79-5B91A0CCFD1E");
 			public static Guid REPLACEMENT_TAG_GUID { get { return _GUID; } }
-			public SeparationSpecifier(ReplaceClipsForm form) {
-				this.form = form;
-			}
+			public SeparationSpecifier(ReplaceClipsForm form) { this.form = form; }
 			private bool UseTrackEventGroup { get { return form.UseTrackEventGroupCheck.Checked; } }
 			// 此处不可以使用枚举类型来替代。
 			private const int INVALID_TAG = 0;
@@ -7995,24 +8100,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void OkBtn_Click(object sender, EventArgs e) {
 			Close();
+			#if VER_GEQ_16 // 不重要了，低于 16 的版本整个功能都不能用了，加上仅保证不会报错。
 			TimeStretchPitchShift method = GetMethod(MethodCombo.SelectedIndex);
 			bool isLockPitch = PitchLockCheck.Checked;
 			bool isLockFormant = FormantLockCheck.Checked;
-			#if VER_GEQ_16
-				ElastiqueStretchAttributes elastique = new ElastiqueStretchAttributes();
-				ClassicStretchAttributes classic = new ClassicStretchAttributes();
-				if (method == TimeStretchPitchShift.Elastique) elastique = (ElastiqueStretchAttributes)StretchAttrCombo.SelectedIndex;
-				if (method == TimeStretchPitchShift.Classic) classic = (ClassicStretchAttributes)StretchAttrCombo.SelectedIndex;
-			#endif
+			ElastiqueStretchAttributes elastique = new ElastiqueStretchAttributes();
+			ClassicStretchAttributes classic = new ClassicStretchAttributes();
+			if (method == TimeStretchPitchShift.Elastique) elastique = (ElastiqueStretchAttributes)StretchAttrCombo.SelectedIndex;
+			if (method == TimeStretchPitchShift.Classic) classic = (ClassicStretchAttributes)StretchAttrCombo.SelectedIndex;
 			AudioEvent[] audioEvents = parent.GetSelectedAudioEvents();
 			foreach (AudioEvent audioEvent in audioEvents) {
 				audioEvent.Method = method;
 				if (method == TimeStretchPitchShift.None) continue;
-				#if VER_GEQ_16 // 不重要了，低于 16 的版本整个功能都不能用了，加上仅保证不会报错。
 					if (method == TimeStretchPitchShift.Elastique) audioEvent.ElastiqueAttribute = elastique;
 					if (method == TimeStretchPitchShift.Classic) audioEvent.ClassicAttribute = classic;
 					if (method == TimeStretchPitchShift.Elastique && elastique == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = isLockFormant;
-				#endif
 				if (audioEvent.PitchLock != isLockPitch) {
 					if (isLockPitch) {
 						double originalPitch = audioEvent.PitchSemis;
@@ -8025,6 +8127,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 				}
 			}
+			#endif
 		}
 
 		private TimeStretchPitchShift GetMethod(int selectedIndex) {
@@ -8034,6 +8137,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void MethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			#if VER_GEQ_16
 			TimeStretchPitchShift method = GetMethod(MethodCombo.SelectedIndex);
 			StretchAttrCombo.Enabled = PitchLockCheck.Enabled = method != TimeStretchPitchShift.None;
 			FormantLockCheck.Enabled = method == TimeStretchPitchShift.Elastique && StretchAttrCombo.SelectedIndex == 0;
@@ -8048,14 +8152,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					StretchAttrCombo.SelectedIndex = 0;
 				}
 			}
-			#if VER_GEQ_16
 				if (method == TimeStretchPitchShift.Elastique) {
 					ElastiqueStretchAttributes attr = (ElastiqueStretchAttributes)StretchAttrCombo.SelectedIndex;
 					if (attr == ElastiqueStretchAttributes.Efficient || attr == ElastiqueStretchAttributes.Soloist_Speech) FormantLockCheck.Checked = false;
 					else if (attr == ElastiqueStretchAttributes.Soloist_Monophonic) FormantLockCheck.Checked = true;
 				}
-			#endif
 			if (PitchLockCheck.Checked) StretchAttrCombo.Enabled = FormantLockCheck.Enabled = false;
+			#endif
 		}
 
 		public static string[] ElastiqueAttrArray {
@@ -8099,6 +8202,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			PitchLockCheck.Text = str.pitch_lock;
 			Text = str.change_tune_method;
 		}
+		
+		#if !VER_GEQ_16
+			public enum TimeStretchPitchShift { // 兼容使用，不起任何效果。
+				Classic,
+				AcidStyle,
+				Elastique,
+				None = -1,
+			}
+		#endif
 	}
 
 	partial class BatchSubtitleGenerationForm {
@@ -13966,7 +14078,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				else OkBtn_Enabled = mediaConfigOn && midiConfigOn;
 			}
 			#else
-			OkBtn_Enabled = (isVConfigOn || isAConfigOn) && Tabs.SelectedTab != HelperTab;
+				OkBtn_Enabled = (isVConfigOn || isAConfigOn) && Tabs.SelectedTab != HelperTab;
 			#endif
 
 			bool isSheetConfigOn = StaffVisualizerConfigCheck.Checked;
@@ -13984,10 +14096,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			PreviewBeepWaveFormCombo.Enabled = PreviewBeepEngineCombo.SelectedIndex == 2;
 			
 			#if !VER_GEQ_16
+			{
 				AudioStretchAttrCombo.Enabled = false;
 				AudioStretchAttrCombo.SelectedIndex = -1;
-				AudioReserveFormantCheck.Enabled = false;
-				AudioReserveFormantCheck.CheckState = CheckState.Indeterminate;
+				AudioReserveFormantCheck.Enabled = AudioReserveFormantCheck.Checked = false;
+				PreviewTuneAudioCheck.Enabled = PreviewTuneAudioCheck.Checked = false;
+				int INVALID_METHOD_LESS_THAN_16 = 2;
+				if (AudioTuneMethodCombo.SelectedIndex >= INVALID_METHOD_LESS_THAN_16)
+					AudioTuneMethodCombo.SelectedIndex = INVALID_METHOD_LESS_THAN_16 - 1;
+				while (AudioTuneMethodCombo.Items.Count > INVALID_METHOD_LESS_THAN_16)
+					AudioTuneMethodCombo.Items.RemoveAt(INVALID_METHOD_LESS_THAN_16);
+			}
 			#endif
 
 			ConfigForm_Resize(null, null);
@@ -14439,25 +14558,30 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void ApplyTuningToAudioEvent(AudioEvent @event) {
-			AudioTuneMethod method = (AudioTuneMethod)AudioTuneMethodCombo.SelectedIndex;
-			if (method == AudioTuneMethod.NO_TUNE) return;
-			@event.Method = method == AudioTuneMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique;
-			#if VER_GEQ_16
+			#if VER_GEQ_16 // Vegas 版本号 15 及以下无法调整。
+				AudioTuneMethod method = (AudioTuneMethod)AudioTuneMethodCombo.SelectedIndex;
+				if (method == AudioTuneMethod.NO_TUNE) return;
+				@event.Method = method == AudioTuneMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique;
 				if (method == AudioTuneMethod.ELASTIQUE) {
 					ElastiqueStretchAttributes elastiqueAttr = @event.ElastiqueAttribute = (ElastiqueStretchAttributes)AudioStretchAttrCombo.SelectedIndex;
 					if (elastiqueAttr == ElastiqueStretchAttributes.Pro) @event.FormantLock = AudioReserveFormantCheck.Checked;
 				} else if (method == AudioTuneMethod.CLASSIC)
 					@event.ClassicAttribute = (ClassicStretchAttributes)AudioStretchAttrCombo.SelectedIndex;
+				try {
+					@event.PitchLock = @event.PitchLock;
+				} catch (Exception e) {
+					EntryPoint.ShowError(new Exceptions.NoTimeStretchPitchShiftException(), e); return;
+				}
+				int pitchDelta = REFERENCE_PITCH - BasePitch;
+				if (!AudioLockStretchPitchCheck.Checked) @event.PitchSemis += pitchDelta;
+				else {
+					double origPitch = @event.PitchSemis;
+					@event.PitchLock = true;
+					double rate = EntryPoint.Pitch2Stretch(origPitch + pitchDelta);
+					@event.AdjustPlaybackRate(rate, true);
+					@event.Length = @event.Length.Multiply(1 / rate);
+				}
 			#endif
-			int pitchDelta = REFERENCE_PITCH - BasePitch;
-			if (!AudioLockStretchPitchCheck.Checked) @event.PitchSemis += pitchDelta;
-			else {
-				double origPitch = @event.PitchSemis;
-				@event.PitchLock = true;
-				double rate = EntryPoint.Pitch2Stretch(origPitch + pitchDelta);
-				@event.AdjustPlaybackRate(rate, true);
-				@event.Length = @event.Length.Multiply(1 / rate);
-			}
 		}
 
 		private void YtpLenBox_ValueChanged(object sender, EventArgs e) {
@@ -15167,7 +15291,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ytp_over_length_exception = "错误：指定的 YTP 最小长度超过了媒体长度。\n\n指定的 YTP 最小长度过大，请尝试更小的值。或所选媒体素材长度过小。",
 			ytp_in_media_generator_exception = "错误：对媒体生成器产生的媒体应用 YTP。\n\n应用 YTP 必须使用本地媒体文件，不要使用媒体生成器生成的媒体。",
 			ytp_eliminate_duplicates_finally_null_exception = "技术异常：对 YTP 素材列表进行去重操作，最后列表为空了！（雾‽）\n\n这是一个不应该发生的错误。",
-			unknown_exception = "错误：未知异常。\n\n请展开详细信息查看具体错误内容，并将错误信息反馈给作者。";
+			unknown_exception = "错误：未知异常。\n\n请展开详细信息查看具体错误内容，并将错误信息反馈给作者。",
+			use_pic_in_pic_on_unsupported_vegas_exception = "错误：不支持在低版本 Vegas 中使用该画中画插件的效果。\n\n根本原因：Vegas 在新版本“画中画”效果插件中增加了一些新的功能和参数，这些新参数不能在低版本的 Vegas 插件中使用。\n\n解决方法：在当前 Vegas 版本不能使用该 PV 节奏视觉效果（如扩缩类等），请使用其它视觉效果。或更新 Vegas 软件。";
 
 		static Lang() {
 			SChinese = new Lang();
@@ -15598,7 +15723,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_over_length_exception = "Error: The specified YTP minimum length exceeds the media length.\n\nThe specified YTP minimum length is too large, please try a smaller value. Or the length of the selected media is too small.",
 				ytp_in_media_generator_exception = "Error: Apply YTP to the media generated by the media generator.\n\nThe application of YTP must use local media files, do not use the media generated by the media generator.",
 				ytp_eliminate_duplicates_finally_null_exception = "Technical Exception: Remove duplicate from YTP source list. Finally, the list is empty!\n\nThis is an error that should not happen.",
-				unknown_exception = "Error: Unknown exception.\n\nPlease expand the details to see the specific error content and feed the error information back to the author."
+				unknown_exception = "Error: Unknown exception.\n\nPlease expand the details to see the specific error content and feed the error information back to the author.",
+				use_pic_in_pic_on_unsupported_vegas_exception = "Error: Use of the Picture-in-Picture plug-in effect in lower versions of Vegas is not supported.\n\nRoot cause: Vegas has added some new features and parameters to the new Picture-in-Picture effect plug-in, which cannot be used in lower versions of Vegas plug-in.\n\nSolution: The current version of Vegas cannot use this PV rhythm visual effects (such as expansion aspects), please use other visual effects. Or update your Vegas software."
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -15629,8 +15755,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				mirror = "鏡像",
 				pic_in_pic = "畫中畫",
 				crop = "修剪",
-				check_pitch_shift_presets = "正在檢查移調挿件的預設是否可用⋯⋯",
-				no_pitch_shift_presets = "由於您試圖使用「移調」效果挿件調音，但是系統發現您並沒有完全配置好所需的所有音效預設。您可嘗試由腳本嘗試為您自動添加預設，可能會添加失敗。如果失敗，則請按照使用教程的說明來手動操作。是否由腳本為您自動添加預設？",
+				check_pitch_shift_presets = "正在檢查移調插件的預設是否可用⋯⋯",
+				no_pitch_shift_presets = "由於您試圖使用「移調」效果插件調音，但是系統發現您並沒有完全配置好所需的所有音效預設。您可嘗試由腳本嘗試為您自動添加預設，可能會添加失敗。如果失敗，則請按照使用教程的說明來手動操作。是否由腳本為您自動添加預設？",
 				yes_to_add_pitch_shift_presets = "自動添加",
 				no_to_add_pitch_shift_presets = "返回配置",
 				no_pitch_shift_presets_title = "未找到所有的移調音效預設",
@@ -15667,7 +15793,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				wave = "波浪",
 				multi_beat_delay = "多拍延遲",
 				spherize = "球面化",
-				warning_missing_plugin = "警告：找不到挿件「{0}」！",
+				warning_missing_plugin = "警告：找不到插件「{0}」！",
 				midi_channel = "通道",
 				midi_notes_count = "音符數",
 				midi_begin_note = "起音",
@@ -15739,7 +15865,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				alternately_negative = "正負交替",
 				reverse_order = "反轉順序",
 				change_tune_method = "更改調音算灋",
-				change_tune_method_info = "僅支持音訊事件内容中的調音方法，不支持「移調」挿件中的調音方法。",
+				change_tune_method_info = "僅支持音訊事件内容中的調音方法，不支持「移調」插件中的調音方法。",
 				time_stretch_pitch_shift = "時間拉伸/音調轉換",
 				formant_change = "共振峰移位",
 				pitch_change = "音調更改",
@@ -15797,7 +15923,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				source_start_time_tooltip = "此處填寫媒體素材裁剪的開始時間。\n單位：秒。",
 				source_end_time_tooltip = "注意如果此處填寫的數值比入點秒數小或相等，則始終表示持續到素材時間末尾。\n單位：秒。",
 				no_tune = "不調音",
-				pitch_shift_plugin = "移調效果挿件",
+				pitch_shift_plugin = "移調效果插件",
 				elastique_method = "彈性音調更改",
 				classic_method = "古典音調更改",
 				fool_tuning_method = "瞎調音",
@@ -15805,7 +15931,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "三角波",
 				square_wave = "方波",
 				sawtooth_wave = "鋸齒波",
-				tune_method_tooltip = "「移調效果挿件」表示使用「音訊FX」中的「移調」效果挿件改變音調，需要配置預設。\n「彈性音調更改」表示使用“Élastique”拉伸管道改變音調，也就是鍵盤上 +、- 鍵直接改變音調，\n有音高範圍限制。",
+				tune_method_tooltip = "「移調效果插件」表示使用「音訊FX」中的「移調」效果插件改變音調，需要配置預設。\n「彈性音調更改」表示使用“Élastique”拉伸管道改變音調，也就是鍵盤上 +、- 鍵直接改變音調，\n有音高範圍限制。",
 				audio_lock_stretch_pitch_tooltip = "採用重採樣管道，隨著速度變化而改變音高。如果使用的是「彈性音調\n更改」方法，那麼將會禁用拉伸音訊功能。",
 				preview_beep_duration_tooltip = "預聽標準音高所持續的時間。\n單位：毫秒。",
 				preview_tune_audio_tooltip = "勾選後，預聽音訊時會將音訊素材調整到主音高中央 C。\n否則，預聽標準音高將會播放原始音高處所設定的音高。",
@@ -15822,7 +15948,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				reset_config = "重置用戶配置(&R)",
 				exit_discarding_changes = "放弃更改並退出(&D)",
 				exit = "退出(&X)",
-				pitch_shift_preset = "移調挿件預設(&P)",
+				pitch_shift_preset = "移調插件預設(&P)",
 				load_presets = "加載預設",
 				unload_presets = "卸載預設",
 				remember_form_size = "記住表單大小",
@@ -16009,9 +16135,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_midi_exception = "錯誤：未選擇 MIDI 檔案。\n\n請重新啟動腳本參數配置對話方塊，然後在「MIDI 配置」分組中點擊「瀏覽」按鈕，打開一個有效的MIDI 檔案。",
 				no_media_exception = "錯誤：未選擇媒體檔案。\n\n請重新啟動腳本參數配置對話方塊，然後在「媒體配置」分組中點擊「瀏覽」按鈕，打開一個有效的媒體檔案。",
 				no_track_info_exception = "錯誤：沒有 MIDI 音軌。\n\n可能的原因：\n1.您沒有選擇一個 MIDI 音軌；\n2.該 MIDI 檔案中沒有任何音軌；\n3.該 MIDI 檔案已損壞或檔案格式不受支持。",
-				no_plugin_pitch_shift_exception = "錯誤：無法調用移調挿件。\n\n請按照教程檔案 {0} 的指引正確操作。\n不過，根據這個更新版本的腳本，按理應當是中英文版本均可正常運行的。\n囙此很有可能您是使用其它語言的 Vegas 造成的（逃",
-				no_plugin_presets_exception = "錯誤：無法調用移調挿件的預設效果。\n\n請按照教程檔案 {0} 的指引正確操作。\n確保在移調挿件中手動添加了所有的 25 個預設，且命名正確。\n\n補充說明：具體可見上述連結專欄中對於安裝方法的說明。這 25 個預設是上下一個八度以內的所有變調種類，\n缺少任何一個都有可能出錯。手動添加預設的確非常麻煩，但 Vegas 無法使用腳本來指定變調的具體參數，\n囙此只好繞這個彎子。",
-				no_plugin_name_exception = "錯誤：無法調用 {0} 挿件。\n\n可能您使用的是非中文版的 Vegas 或其它尚未測試版本的 Vegas。",
+				no_plugin_pitch_shift_exception = "錯誤：無法調用移調插件。\n\n請按照教程檔案 {0} 的指引正確操作。\n不過，根據這個更新版本的腳本，按理應當是中英文版本均可正常運行的。\n囙此很有可能您是使用其它語言的 Vegas 造成的（逃",
+				no_plugin_presets_exception = "錯誤：無法調用移調插件的預設效果。\n\n請按照教程檔案 {0} 的指引正確操作。\n確保在移調插件中手動添加了所有的 25 個預設，且命名正確。\n\n補充說明：具體可見上述連結專欄中對於安裝方法的說明。這 25 個預設是上下一個八度以內的所有變調種類，\n缺少任何一個都有可能出錯。手動添加預設的確非常麻煩，但 Vegas 無法使用腳本來指定變調的具體參數，\n囙此只好繞這個彎子。",
+				no_plugin_name_exception = "錯誤：無法調用 {0} 插件。\n\n可能您使用的是非中文版的 Vegas 或其它尚未測試版本的 Vegas。",
 				no_take_exception_ps = "補充說明：若仍不能解决，說明該素材檔案可能是 Vegas 不支持的格式，\n可以手動把該檔案拖入 Vegas 中看一下是否視頻音訊都正常。",
 				no_audio_take_exception = "錯誤：無法讀取音訊媒體流。\n\n在設定介面，純視頻/圖片素材不要勾選「生成音訊」。\n\n",
 				no_video_take_exception = "錯誤：無法讀取視頻媒體流。\n\n在設定介面，純音訊素材不要勾選「生成視頻」。\n\n",
@@ -16027,7 +16153,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_over_length_exception = "錯誤：指定的 YTP 最小長度超過了媒體長度。\n\n指定的 YTP 最小長度過大，請嘗試更小的值。或所選媒體素材長度過小。",
 				ytp_in_media_generator_exception = "錯誤：對媒體生成器產生的媒體應用 YTP。\n\n應用 YTP 必須使用本地媒體檔案，不要使用媒體生成器生成的媒體。",
 				ytp_eliminate_duplicates_finally_null_exception = "技術异常：對 YTP 素材清單進行去重操作，最後清單為空了！\n\n這是一個不應該被發生的錯誤。",
-				unknown_exception = "錯誤：未知异常。\n\n請展開詳細資訊查看具體錯誤內容，並將錯誤資訊回饋給作者。"
+				unknown_exception = "錯誤：未知异常。\n\n請展開詳細資訊查看具體錯誤內容，並將錯誤資訊回饋給作者。",
+				use_pic_in_pic_on_unsupported_vegas_exception = "錯誤：不支持在低版本 Vegas 中使用該畫中畫插件的效果。\n\n根本原因：Vegas 在新版本“畫中畫”效果插件中新增了一些新的功能和參數，這些新參數不能在低版本的 Vegas 插件中使用。\n\n解決方法：在當前 Vegas 版本不能使用該 PV 節奏視覺效果（如擴縮類等），請使用其它視覺效果。或更新您的 Vegas 軟件。"
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -16457,7 +16584,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_over_length_exception = "エラー：指定されたYTPの最小の長さがメディアの長さを超えています。\n\n指定されたYTPの最小の長さが長すぎます。小さい値を試してください。または、選択したメディアの長さが短すぎます。",
 				ytp_in_media_generator_exception = "エラー：メディアジェネレーターによって生成されたメディアにYTPを適用します。\n\nYTPのアプリケーションは、ローカルメディアファイルを使用する必要があります。メディアジェネレーターによって生成されたメディアは使用しないでください。",
 				ytp_eliminate_duplicates_finally_null_exception = "技術異常：YTP素材リストの重複値除去操作を行い、最後のリストが空きました。\n\nこれは起こるべきではないエラーです。",
-				unknown_exception = "エラー：不明の異常です。\n\n詳細を展開して、具体的なエラー内容を確認し、エラー情報を著者にフィードバックしてください。"
+				unknown_exception = "エラー：不明の異常です。\n\n詳細を展開して、具体的なエラー内容を確認し、エラー情報を著者にフィードバックしてください。",
+				use_pic_in_pic_on_unsupported_vegas_exception = "エラー：低バージョンVegasでは、この絵にプラグインを描く効果はサポートされていません。\n\n根本的な理由：Vegasは新しいバージョンの「絵に描いた」効果プラグインに新しい機能とパラメータを追加しました。これらの新しいパラメータは低バージョンのVegasプラグインでは使用できません。\n\n解決方法：現在のVegasバージョンでは、このPVリズム視覚効果（拡張クラスなど）は使用できません。他の視覚効果を使用してください。またはVegasソフトウェアを更新します。"
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -16887,7 +17015,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_over_length_exception = "Ошибка: указанная минимальная длина YTP превышает длину носителя.\n\nУказанная минимальная длина YTP слишком велика, попробуйте меньшее значение. Или длина выбранного носителя слишком мала.",
 				ytp_in_media_generator_exception = "Ошибка: примените YTP к носителю, созданному генератором мультимедиа.\n\nПриложение YTP должно использовать локальные медиа-файлы, а не медиа, созданные медиа-генератором.",
 				ytp_eliminate_duplicates_finally_null_exception = "Технические Аномалии: для удаления повторяющихся значений в списке материалов YTP последний список пуст! \n\nЭто ошибка, которая не должна была произойти.",
-				unknown_exception = "Ошибка: неизвестная ошибка.\n\nВключите подробную информацию, чтобы просмотреть содержимое конкретной ошибки, и отправьте сообщение об ошибке автору."
+				unknown_exception = "Ошибка: неизвестная ошибка.\n\nВключите подробную информацию, чтобы просмотреть содержимое конкретной ошибки, и отправьте сообщение об ошибке автору.",
+				use_pic_in_pic_on_unsupported_vegas_exception = "Ошибка: Использование эффекта плагина «Картинка в картинке» в более ранних версиях Vegas не поддерживается.\n\nОсновная причина: Vegas добавила некоторые новые функции и параметры в новый подключаемый модуль эффекта «картинка в картинке», которые нельзя использовать в более ранних версиях подключаемого модуля Vegas.\n\nРешение: Текущая версия Vegas не может использовать визуальные эффекты этого ритма PV (например, аспекты расширения), пожалуйста, используйте другие визуальные эффекты. Или обновите программное обеспечение Vegas."
 			};
 		}
 	}
