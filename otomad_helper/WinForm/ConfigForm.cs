@@ -866,6 +866,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			group.BackColor = Color.Transparent;
 			group.ForeColor = SystemColors.ControlText;
 		}
+
+		private void QuickNormalizeBtn_Click(object sender, EventArgs e) {
+			OkBtn_Click(null, null);
+		}
+
+		private void RememberOnceFormSizeToolStripMenuItem_Click(object sender, EventArgs e) {
+			Console.WriteLine(1);
+		}
+
+		private void RestoreDefaultFormSizeToolStripMenuItem_Click(object sender, EventArgs e) {
+			Console.WriteLine(0);
+		}
 	}
 
 	public static class Extensions {

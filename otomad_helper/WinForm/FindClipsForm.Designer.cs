@@ -135,6 +135,7 @@
             this.numHeader});
 			this.ClipNameList.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ClipNameList.FullRowSelect = true;
+			this.ClipNameList.HideSelection = false;
 			this.ClipNameList.Location = new System.Drawing.Point(12, 170);
 			this.ClipNameList.Name = "ClipNameList";
 			this.ClipNameList.Size = new System.Drawing.Size(445, 281);
@@ -219,6 +220,7 @@
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.Location = new System.Drawing.Point(60, 60);
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
@@ -226,6 +228,7 @@
 			this.Name = "FindClipsForm";
 			this.ShowInTaskbar = false;
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "查找轨道素材";
 			this.table.ResumeLayout(false);
 			this.table.PerformLayout();

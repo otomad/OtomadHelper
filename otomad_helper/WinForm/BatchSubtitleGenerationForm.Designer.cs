@@ -210,11 +210,13 @@
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.Location = new System.Drawing.Point(60, 60);
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.MinimizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(660, 540);
 			this.Name = "BatchSubtitleGenerationForm";
 			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "批量生成字幕";
 			this.table.ResumeLayout(false);
 			this.table.PerformLayout();
