@@ -27,6 +27,27 @@ Vegas 16 and above support all features, and Vegas 13 ~ 15 are compatible to run
 
 Tested **fine** on Vegas Pro 17 and 19.
 
+### Issues
+When you are using the script, if you:
+1. Have a problem in it;
+2. Found a bug;
+3. Submit some new suggestions or ideas;
+4. Help us collaborate on the production;
+5. Optimize interface appearance;
+6. Make corrections to existing translations;
+7. Provide a new language translation;
+8. …
+
+All can create issues.
+
+### Permissions
+If you use this script, the script will use the following permissions.
+1. File read and write.<br />
+	The script reads and writes an INI user profile in your disk memory to save your user data.
+2. Registry read and write.<br />
+	The script need to read and write the registry to install or uninstall pitch-shift plugin presets.<br />
+	If you don't use pitch-shift plugin method in script, you can ignore the installation presets and thus not use this permission.
+
 ### Reference
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
 * [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
