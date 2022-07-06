@@ -6,12 +6,23 @@
 </div>
 <h2 align="center">Otomad Helper</h2>
 <div align="center">
-	<a href="https://github.com/otomad/VegasScripts/releases/latest">Get download link now!</a>
+	<p><a href="https://github.com/otomad/VegasScripts/releases/latest">Get download link now!</a></p>
+
+**EN** | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | [日](README_ja-JP)
 </div>
+
+Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files as input, and automatically generate Otomad/YTPMV tracks.
+
+It can also be used to make YTP. And Drums beat cookie cutter, Lyrics/Karaoke, Manual vocaloid/Sentence mixing, Tatar tactics, etc. will be supported in the future.
+
+The store will be supported for downloading related templates in the future.
+
+### Usage
+> TO-DO
 
 ### Install
 1. [Download](https://github.com/otomad/VegasScripts/releases/latest) the latest version of this script.
-2. Unzip **ALL** the files in the zip file you just downloaded to the "Script Menu" folder in the Vegas installation directory.
+2. Unzip **ALL** the files in the zip file you've just downloaded to the "Script Menu" folder in the Vegas installation directory.
 > (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu)
 3. Make sure that the DLL file (DLL/NAudio.dll) is not locked. **Specific steps:**
 	1. In the Vegas installation directory, enter folder Script Menu/DLL.
@@ -40,6 +51,9 @@ When you are using the script, if you:
 
 All can create issues.
 
+### Roadmap
+[Roadmap >](ROADMAP.md)
+
 ### Permissions
 If you use this script, the script will use the following permissions.
 1. File read and write.<br />
@@ -48,7 +62,7 @@ If you use this script, the script will use the following permissions.
 	The script need to read and write the registry to install or uninstall pitch-shift plugin presets.<br />
 	If you don't use pitch-shift plugin method in script, you can ignore the installation presets and thus not use this permission.
 
-### Reference
+### References
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
 * [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
 * [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
