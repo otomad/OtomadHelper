@@ -22,7 +22,7 @@
 
 ### Future
 - [ ] Generate multiple tracks at once and apply auto layout tracks effects
-- [ ] Apply multiple visual effects for clips
+- [ ] Apply multiple visual effects to clips
 - [ ] Official documentation and tutorial video
 - [ ] Refresh UI to WinUI 3 (v5.x)
 - [ ] Store, to download templates uploaded by other users
