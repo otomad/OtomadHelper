@@ -10,7 +10,7 @@
 	</p>
 </div>
 
-音 MAD 助手 Vegas 版，旨在使 Vegas 接受 MIDI 序列檔作為輸入，自動生成音 MAD / YTPMV 的軌道。
+音 MAD 助手 Vegas 版，旨在使 Vegas 接受 MIDI 序列檔案作為輸入，自動生成音 MAD / YTPMV 的軌道。
 
 本腳本基於原作者 [@Chaosinism](https://github.com/Chaosinism) 的開原始程式碼二次開發，此外使用了 NAudio 庫。
 
