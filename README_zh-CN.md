@@ -1,8 +1,4 @@
 ![VegasScripts](https://github.com/otomad/VegasScripts/blob/winform/banner.png?raw=true)
-<div align="center">
-	<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="Badge" />
-	<img src="https://img.shields.io/badge/VERSION-4.18.4.0-orange?style=flat-square" alt="Badge" />
-</div>
 <h2 align="center">音 MAD 助手</h2>
 <div align="center">
 	<p><a href="https://github.com/otomad/VegasScripts/releases/latest">点击下载最新版！</a></p>
