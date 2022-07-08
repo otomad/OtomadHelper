@@ -7,12 +7,13 @@
 <h2 align="center">Otomad Helper</h2>
 <div align="center">
 	<p><a href="https://github.com/otomad/VegasScripts/releases/latest">Get download link now!</a></p>
-	<p>
-		<strong>EN</strong> |
-		<a href="README_zh-CN.md">简中</a> |
-		<a href="README_zh-TW.md">繁中</a> |
-		<a href="README_ja-JP.md">日</a>
-	</p>
+
+	
+	
+** EN ** | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | [日](README_ja-JP.md)
+	
+
+
 </div>
 
 Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files as input, and automatically generate Otomad/YTPMV tracks.
