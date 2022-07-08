@@ -7,8 +7,12 @@
 <h2 align="center">Otomad Helper</h2>
 <div align="center">
 	<p><a href="https://github.com/otomad/VegasScripts/releases/latest">Get download link now!</a></p>
-
-**EN** | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | [日](README_ja-JP)
+	<p>
+		<strong>EN</strong> |
+		<a href="README_zh-CN.md">简中</a> |
+		<a href="README_zh-TW.md">繁中</a> |
+		<a href="README_ja-JP.md">日</a>
+	</p>
 </div>
 
 Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files as input, and automatically generate Otomad/YTPMV tracks.
@@ -18,7 +22,9 @@ It can also be used to make YTP. And Drums beat cookie cutter, Lyrics/Karaoke, M
 The store will be supported for downloading related templates in the future.
 
 ### Usage
-> TO-DO
+Select the source track event in the track window, or select source media file in media pool window, or browse another media file (in the script configure form), then open the script to configure and generate.
+
+You can also read @Evauation's [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A).
 
 ### Install
 1. [Download](https://github.com/otomad/VegasScripts/releases/latest) the latest version of this script.
