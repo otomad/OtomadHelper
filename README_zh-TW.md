@@ -70,13 +70,13 @@ Vegas Pro 17 和 19 測試**正常**。
 
 ### 圖示
 靈感來源於:
-* [@uid13084550](https://space.bilibili.com/13084550)
-* [@uid8569439](https://space.bilibili.com/8569439)
+* [@冰鳩さくの](https://space.bilibili.com/13084550)
+* [@酥妃大魔王](https://space.bilibili.com/8569439)
 
 ### 幫助和疑難排解 *（中文）*
-**我的文件：**
-* [說明文檔 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
-* [說明文檔 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
+**我的文檔：**
+* [更新日誌 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
+* [更新日誌 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
 **Chaosinism 的原版文檔：**
 * [說明文檔 (v0.1) (B 站)](https://www.bilibili.com/read/cv392013)
