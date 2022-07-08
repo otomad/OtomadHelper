@@ -17,7 +17,7 @@
 
 您可以選擇菜單 *選項 > 自訂工具列*，將腳本添加到工具列中以便操作。
 
-您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[文檔](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看他的[教程視頻](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英語）*。
+您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文檔](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程視頻](https://www.youtube.com/watch?v=8vSpzgL_86A) *（英語）*。
 
 ### 安裝
 1. [下載](https://github.com/otomad/VegasScripts/releases/latest)最新版腳本。
