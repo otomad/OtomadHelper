@@ -24,7 +24,7 @@ The store will be supported for downloading related templates in the future.
 ### Usage
 Select the source track event in the track window, or select source media file in media pool window, or browse another media file (in the script configure form), then open the script to configure and generate.
 
-You can also read @Evauation's [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A).
+You can also read [@Evauation](https://github.com/Evauation)'s [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch his [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
 
 ### Install
 1. [Download](https://github.com/otomad/VegasScripts/releases/latest) the latest version of this script.
@@ -73,11 +73,24 @@ If you use this script, the script will use the following permissions.
 * [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
 * [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
 * [https://www.jetdv.com/](https://www.jetdv.com/)
+* [https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
 ### Logo
 Inspired by:
 * [@uid13084550](https://space.bilibili.com/13084550)
 * [@uid8569439](https://space.bilibili.com/8569439)
+
+### Help and Troubleshooting *(Chinese)*
+**My docs:**
+* [Documentation (v4.9.25.0)](http://www.bilibili.com/read/cv13335178)
+* [Documentation (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
+
+**Chaosinism's original docs:**
+* [Documentation (v0.1) (bilibili)](https://www.bilibili.com/read/cv392013)
+* [Documentation (v0.1) (bowlroll)](https://bowlroll.net/user/261124)
+* [Documentation for Staff Visualizer (v0.1)](https://www.bilibili.com/read/cv1027442)
+* [Troubleshooting](https://www.bilibili.com/read/cv495309)
+* [Tutorial video (v0.1)](https://www.bilibili.com/video/av22226321)
 
 ---
 
