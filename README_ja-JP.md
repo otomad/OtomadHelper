@@ -61,7 +61,7 @@ Vegas Pro 17 および 19 は**正常**にテストされました。
 	Pitch Shiftプラグインプリセットをインストールまたはアンインストールするには、スクリプトでレジストリを読み書きする必要があります。<br />
 	Pitch Shiftプラグインのチューニングアルゴリズムを使用しない場合は、この権限を無視できます。
 
-### 参考文献
+### 参考
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
 * [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
 * [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
