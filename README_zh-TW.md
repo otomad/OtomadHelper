@@ -27,7 +27,7 @@
 
 ### 安裝
 1. [下載](https://github.com/otomad/VegasScripts/releases/latest)最新版腳本。
-2. 解壓**所有**壓縮包內的檔案並放置到 Vegas 安裝目錄下的“Script Menu”資料夾中.
+2. 解壓**所有**壓縮包內的檔案並放置到 Vegas 安裝目錄下的“Script Menu”資料夾中。
 > (例如：C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu)
 3. 確保 DLL 檔案 (DLL/NAudio.dll) 沒有被鎖定。**具體步驟：**
 	1. 在 Vegas 安裝目錄下， 依次進入資料夾 Script Menu/DLL。
