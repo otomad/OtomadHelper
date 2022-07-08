@@ -11,7 +11,7 @@
 
 Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files as input, and automatically generate Otomad/YTPMV tracks.
 
-The script is based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code redevelopment and uses the NAudio library.
+The script is based on the original author [@Chaosinism](https://github.com/Chaosinism) 's open source code redevelopment and uses the NAudio library.
 
 It can also be used to make YTP. And Drums beat cookie cutter, Lyrics/Karaoke, Manual vocaloid/Sentence mixing, Tatar tactics, etc. will be supported in the future.
 
@@ -22,7 +22,7 @@ Select the source track event in the track window, or select source media file i
 
 You can add scripts as toolbar buttons rather than having to click inside the *Tools > Scripting* submenu, by adding them to the toolbar using the *Options > Customize Toolbar* menu.
 
-You can also read [@Evauation](https://github.com/Evauation)'s [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch his [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
+You can also read [@Evauation](https://github.com/Evauation) 's [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch his [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
 
 ### Install
 1. [Download](https://github.com/otomad/VegasScripts/releases/latest) the latest version of this script.
@@ -79,11 +79,11 @@ Inspired by:
 * [@uid8569439](https://space.bilibili.com/8569439)
 
 ### Help and Troubleshooting *(Chinese)*
-**My docs:**
-* [Documentation (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
-* [Documentation (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
+**My documentation:**
+* [Release notes (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
+* [Release notes (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**Chaosinism's original docs:**
+**Chaosinism's original documentation:**
 * [Documentation (v0.1) (bilibili)](https://www.bilibili.com/read/cv392013)
 * [Documentation (v0.1) (bowlroll)](https://bowlroll.net/user/261124)
 * [Documentation for Staff Visualizer (v0.1)](https://www.bilibili.com/read/cv1027442)
