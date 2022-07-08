@@ -70,13 +70,13 @@ Vegas Pro 17 および 19 は**正常**にテストされました。
 
 ### アイコン
 に触発された：
-* [@uid13084550](https://space.bilibili.com/13084550)
-* [@uid8569439](https://space.bilibili.com/8569439)
+* [@氷鳩さくの](https://space.bilibili.com/13084550)
+* [@酥妃大魔王](https://space.bilibili.com/8569439)
 
 ### ヘルプとトラブルシューティング *（中国語）*
 **私のドキュメンテーション：**
-* [ドキュメンテーション (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
-* [ドキュメンテーション (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
+* [リリースノート (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
+* [リリースノート (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
 **Chaosinismの元のドキュメンテーション：**
 * [ドキュメンテーション (v0.1) (ビリビリ)](https://www.bilibili.com/read/cv392013)
