@@ -79,11 +79,11 @@ Inspired by:
 * [@uid8569439](https://space.bilibili.com/8569439)
 
 ### Help and Troubleshooting *(Chinese)*
-**My documentation:**
+**My documentations:**
 * [Release notes (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [Release notes (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**Chaosinism's original documentation:**
+**Chaosinism's original documentations:**
 * [Documentation (v0.1) (bilibili)](https://www.bilibili.com/read/cv392013)
 * [Documentation (v0.1) (bowlroll)](https://bowlroll.net/user/261124)
 * [Documentation for Staff Visualizer (v0.1)](https://www.bilibili.com/read/cv1027442)
