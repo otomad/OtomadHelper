@@ -17,6 +17,8 @@
 
 Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files as input, and automatically generate Otomad/YTPMV tracks.
 
+The script is based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code redevelopment and uses the NAudio library.
+
 It can also be used to make YTP. And Drums beat cookie cutter, Lyrics/Karaoke, Manual vocaloid/Sentence mixing, Tatar tactics, etc. will be supported in the future.
 
 The store will be supported for downloading related templates in the future.
@@ -87,7 +89,7 @@ Inspired by:
 * [Documentation (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [Documentation (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**[@Chaosinism](https://github.com/Chaosinism)'s original docs:**
+**Chaosinism's original docs:**
 * [Documentation (v0.1) (bilibili)](https://www.bilibili.com/read/cv392013)
 * [Documentation (v0.1) (bowlroll)](https://bowlroll.net/user/261124)
 * [Documentation for Staff Visualizer (v0.1)](https://www.bilibili.com/read/cv1027442)
