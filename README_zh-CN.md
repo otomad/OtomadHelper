@@ -16,6 +16,8 @@
 
 音 MAD 助手 Vegas 版，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
 
+本脚本基于原作者 [@Chaosinism](https://github.com/Chaosinism) 的开源代码二次开发，此外使用了 NAudio 库。
+
 也可以制作 YTP。未来也可用于制作鼓组节奏区域切除、歌词/卡拉OK、人力/Rap、鞑靼战法。
 
 未来也会增加商城功能用于下载其他用户制作的模板等相关素材。
@@ -86,7 +88,7 @@ Vegas Pro 17 和 19 测试**正常**。
 * [说明文档 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [说明文档 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**[@Chaosinism](https://github.com/Chaosinism) 的原版文档：**
+**Chaosinism 的原版文档：**
 * [说明文档 (v0.1) (B 站)](https://www.bilibili.com/read/cv392013)
 * [说明文档 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
 * [五线谱可视化文档 (v0.1)](https://www.bilibili.com/read/cv1027442)
