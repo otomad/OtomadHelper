@@ -82,7 +82,7 @@ Inspired by:
 
 ### Help and Troubleshooting *(Chinese)*
 **My docs:**
-* [Documentation (v4.9.25.0)](http://www.bilibili.com/read/cv13335178)
+* [Documentation (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [Documentation (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
 **Chaosinism's original docs:**
