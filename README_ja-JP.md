@@ -23,7 +23,7 @@ YTPを作成することも可能です。 将来的にはドラムビート範�
 
 メニューで *オプション > ツールバーのカスタマイズ* を選択して、簡単な操作のためにスクリプトをツールバーに追加できます。
 
-[@Evauation](https://github.com/Evauation)のドキュメントを読んだり、彼の[チュートリアルビデオ](https://www.youtube.com/watch?v=8vSpzgL_86A)を視聴したりすることもできます *（英語）*。
+[@Evauation](https://github.com/Evauation) のドキュメントを読んだり、彼の[チュートリアルビデオ](https://www.youtube.com/watch?v=8vSpzgL_86A)を視聴したりすることもできます *（英語）*。
 
 ### インストール
 1. スクリプトの最新バージョンを[ダウンロード](https://github.com/otomad/VegasScripts/releases/latest)します。
