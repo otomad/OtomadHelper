@@ -56,7 +56,7 @@ Vegas Pro 17 和 19 测试**正常**。
 7. 提交新的翻译；
 8. ……
 
-都可以提出 Issue。
+都可以提出 issues。
 
 ### 路线图
 [路线图 >](ROADMAP.md)
@@ -66,7 +66,7 @@ Vegas Pro 17 和 19 测试**正常**。
 1. 文件读写。<br />
 	脚本会在磁盘中创建一个文件用来保存您的用户配置设置。
 2. 注册表读写。<br />
-	脚本需要读写注册表来安装或卸载移调插件预设<br />
+	脚本需要读写注册表来安装或卸载移调插件预设。<br />
 	如果您不使用移调插件这个调音算法，您可以忽略该权限。
 
 ### 参考
@@ -86,7 +86,7 @@ Vegas Pro 17 和 19 测试**正常**。
 * [说明文档 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [说明文档 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**[@Chaosinism](https://github.com/Chaosinism)的原版文档：**
+**[@Chaosinism](https://github.com/Chaosinism) 的原版文档：**
 * [说明文档 (v0.1) (B 站)](https://www.bilibili.com/read/cv392013)
 * [说明文档 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
 * [五线谱可视化文档 (v0.1)](https://www.bilibili.com/read/cv1027442)
