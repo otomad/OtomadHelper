@@ -21,6 +21,7 @@
 - [ ] Multiple track for video clips option
 
 ### Future
+- [ ] Generate multiple tracks at once and apply auto layout tracks effects
 - [ ] Official documentation and tutorial video
 - [ ] Refresh UI to WinUI 3 (v5.x)
 - [ ] Store, to download templates uploaded by other users
