@@ -17,7 +17,7 @@
 
 您可以选择菜单 *选项 > 自定义工具栏*，将脚本添加到工具栏中以便操作。
 
-您也可以阅读 [@Evauation](https://github.com/Evauation) 的[文档](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)并观看他的[教程视频](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英语）*。
+您也可以阅读 [@Evauation](https://github.com/Evauation) 的[说明文档](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)并观看 [@Cassidy](https://github.com/composition-cassidy) 的[教程视频](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英语）*。
 
 ### 安装
 1. [下载](https://github.com/otomad/VegasScripts/releases/latest)最新版脚本。
