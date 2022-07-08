@@ -24,6 +24,8 @@ The store will be supported for downloading related templates in the future.
 ### Usage
 Select the source track event in the track window, or select source media file in media pool window, or browse another media file (in the script configure form), then open the script to configure and generate.
 
+You can add scripts as toolbar buttons rather than having to click inside the *Tools > Scripting* submenu, by adding them to the toolbar using the *Options > Customize Toolbar* menu.
+
 You can also read [@Evauation](https://github.com/Evauation)'s [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch his [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
 
 ### Install
