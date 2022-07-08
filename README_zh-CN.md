@@ -30,7 +30,7 @@
 2. 解压**所有**压缩包内的文件并放置到 Vegas 安装目录下的“Script Menu”文件夹中。
 > (例如：C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu)
 3. 确保 DLL 文件 (DLL/NAudio.dll) 没有被锁定。**具体步骤：**
-	1. 在 Vegas 安装目录下， 依次进入文件夹 Script Menu/DLL。
+	1. 在 Vegas 安装目录下，依次进入文件夹 Script Menu/DLL。
 	2. 右键 NAudio.dll 文件，并选择“属性”。
 	3. 如果您看到了“解除锁定”按钮，就点一下。
 	4. 关闭属性对话框即可。
