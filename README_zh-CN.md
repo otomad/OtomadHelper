@@ -70,13 +70,13 @@ Vegas Pro 17 和 19 测试**正常**。
 
 ### 图标
 灵感来源于:
-* [@uid13084550](https://space.bilibili.com/13084550)
-* [@uid8569439](https://space.bilibili.com/8569439)
+* [@冰鸠さくの](https://space.bilibili.com/13084550)
+* [@酥妃大魔王](https://space.bilibili.com/8569439)
 
 ### 帮助和疑难解答 *（中文）*
 **我的文档：**
-* [说明文档 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
-* [说明文档 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
+* [更新日志 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
+* [更新日志 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
 **Chaosinism 的原版文档：**
 * [说明文档 (v0.1) (B 站)](https://www.bilibili.com/read/cv392013)
