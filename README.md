@@ -22,7 +22,7 @@ Select the source track event in the track window, or select source media file i
 
 You can add scripts as toolbar buttons rather than having to click inside the *Tools > Scripting* submenu, by adding them to the toolbar using the *Options > Customize Toolbar* menu.
 
-You can also read [@Evauation](https://github.com/Evauation) 's [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch his [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
+You can also read [@Evauation](https://github.com/Evauation) 's [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch [@Cassidy](https://github.com/composition-cassidy) 's [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
 
 ### Install
 1. [Download](https://github.com/otomad/VegasScripts/releases/latest) the latest version of this script.
