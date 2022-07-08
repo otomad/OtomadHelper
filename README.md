@@ -87,7 +87,7 @@ Inspired by:
 * [Documentation (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [Documentation (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**Chaosinism's original docs:**
+**[@Chaosinism](https://github.com/Chaosinism)'s original docs:**
 * [Documentation (v0.1) (bilibili)](https://www.bilibili.com/read/cv392013)
 * [Documentation (v0.1) (bowlroll)](https://bowlroll.net/user/261124)
 * [Documentation for Staff Visualizer (v0.1)](https://www.bilibili.com/read/cv1027442)
