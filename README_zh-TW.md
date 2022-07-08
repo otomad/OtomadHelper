@@ -4,8 +4,8 @@
 	<p><a href="https://github.com/otomad/VegasScripts/releases/latest">點擊下載最新版！</a></p>
 	<p>
 		<a href="README.md">EN</a> |
-		<strong>簡中</strong> |
-		<a href="README_zh-TW.md">繁中</a> |
+		<a href="README_zh-CN.md">簡中</a> |
+		<strong>繁中</strong> |
 		<a href="README_ja-JP.md">日</a>
 	</p>
 </div>
