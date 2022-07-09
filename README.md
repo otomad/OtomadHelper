@@ -78,17 +78,19 @@ Inspired by:
 * [@uid13084550](https://space.bilibili.com/13084550)
 * [@uid8569439](https://space.bilibili.com/8569439)
 
-### Help and Troubleshooting *(Chinese)*
-**My documentations:**
+### Help and Troubleshooting
+**My documentations:** *(Chinese)*
 * [Release notes (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [Release notes (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**Chaosinism's original documentations:**
+**Chaosinism's original documentations:** *(Chinese)*
 * [Documentation (v0.1) (bilibili)](https://www.bilibili.com/read/cv392013)
-* [Documentation (v0.1) (bowlroll)](https://bowlroll.net/user/261124)
 * [Documentation for Staff Visualizer (v0.1)](https://www.bilibili.com/read/cv1027442)
 * [Troubleshooting](https://www.bilibili.com/read/cv495309)
 * [Tutorial video (v0.1)](https://www.bilibili.com/video/av22226321)
+
+**Chaosinism's original documentations:** *(Japanese)*
+* [Documentation (v0.1) (bowlroll)](https://bowlroll.net/user/261124)
 
 ---
 
