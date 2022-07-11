@@ -8,7 +8,7 @@
 
 本腳本基於原作者 [@Chaosinism](https://github.com/Chaosinism) 的開原始程式碼二次開發，此外使用了 NAudio 庫。
 
-也可以製作 YTP。未來也可用於製作鼓組節奏區域切除、歌詞/卡拉OK、人力/Rap、韃靼戰法。
+也可以製作 YTP。未來也可用於製作鼓組節奏區域切除、歌詞/卡拉OK、人力/Rap、原音系戰法。
 
 未來也會增加商城功能用於下載其他使用者製作的範本等相關素材。
 
@@ -75,8 +75,8 @@ Vegas Pro 17 和 19 測試**正常**。
 
 ### 幫助和疑難排解 *（中文）*
 **我的文檔：**
-* [更新日誌 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
-* [更新日誌 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
+* [發行説明 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
+* [發行説明 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
 **Chaosinism 的原版文檔：**
 * [說明文檔 (v0.1) (B 站)](https://www.bilibili.com/read/cv392013)
