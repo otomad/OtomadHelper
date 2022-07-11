@@ -13,7 +13,7 @@ Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files a
 
 The script is based on the original author [@Chaosinism](https://github.com/Chaosinism) 's open source code redevelopment and uses the NAudio library.
 
-It can also be used to make YTP. And Drums beat cookie cutter, Lyrics/Karaoke, Manual vocaloid/Sentence mixing, Tatar tactics, etc. will be supported in the future.
+It can also be used to make YTP. And Drums beat cookie cutter, Lyrics/Karaoke, Manual vocaloid/Sentence mixing, Shupelunker tactics, etc. will be supported in the future.
 
 The store will be supported for downloading related templates in the future.
 
