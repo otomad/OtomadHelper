@@ -1,4 +1,4 @@
-![VegasScripts](https://github.com/otomad/VegasScripts/blob/winform/banner.png?raw=true)
+![VegasScripts](https://github.com/otomad/VegasScripts/blob/winform/cover.png?raw=true)
 <h1 align="center">VegasScripts</h1>
 <div align="center">
 	<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="Badge" />
