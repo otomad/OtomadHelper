@@ -26,7 +26,7 @@
 - [ ] Official documentation and tutorial video
 - [ ] Refresh UI to WinUI 3 (v5.x)
 - [ ] Store, to download templates uploaded by other users
-- [ ] Drums beat cookie cutter, Lyrics/Karaoke, Manual vocaloid/Sentence mixing, Tatar tactics, etc.
+- [ ] Drums beat cookie cutter, Lyrics/Karaoke, Manual vocaloid/Sentence mixing, Shupelunker tactics, etc.
 - [ ] More languages
 - [ ] More video visual effects, video parameters, YTP effects
 - [ ] Support After Effects, Aviutl, or stand alone app
