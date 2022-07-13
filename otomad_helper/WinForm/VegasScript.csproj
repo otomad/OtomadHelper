@@ -8,10 +8,11 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Otomad.VegasScript.OtomadHelper.V4</RootNamespace>
     <AssemblyName>VegasScript</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -70,8 +71,9 @@
       <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu\DLL\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
-    <Reference Include="ScriptPortal.Vegas">
-      <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 17.0\ScriptPortal.Vegas.dll</HintPath>
+    <Reference Include="ScriptPortal.Vegas, Version=17.0.0.421, Culture=neutral, PublicKeyToken=3cda94b1926e6fbc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Program Files\VEGAS\VEGAS Pro 19.0\ScriptPortal.Vegas.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll</HintPath>
@@ -121,6 +123,12 @@
     <Compile Include="ConfigForm.Designer.cs">
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FindClipsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindClipsForm.Designer.cs">
+      <DependentUpon>FindClipsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GradientTracksForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,6 +145,12 @@
       <DependentUpon>IntegerTrackWithBox.cs</DependentUpon>
     </Compile>
     <Compile Include="MessageBoxEx.cs" />
+    <Compile Include="MidiChannelAdvancedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MidiChannelAdvancedForm.Designer.cs">
+      <DependentUpon>MidiChannelAdvancedForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="NumericUpDownWithUnit.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -183,11 +197,17 @@
     <EmbeddedResource Include="ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FindClipsForm.resx">
+      <DependentUpon>FindClipsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GradientTracksForm.resx">
       <DependentUpon>GradientTracksForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="IntegerTrackWithBox.resx">
       <DependentUpon>IntegerTrackWithBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MidiChannelAdvancedForm.resx">
+      <DependentUpon>MidiChannelAdvancedForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>

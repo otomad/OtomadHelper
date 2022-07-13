@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using System.Drawing.Drawing2D;
 
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 	public class ToolStripRadioButtonMenuItem : ToolStripMenuItem {
@@ -63,7 +64,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			base.OnCheckedChanged(e);
 
 			// 如果此项不再处于选中状态或其父项尚未初始化，则不执行任何操作。
-			if (!Checked || this.Parent == null) return;
+			if (!Checked || Parent == null) return;
 
 			// 清除所有同级的选中状态。
 			foreach (ToolStripItem item in Parent.Items) {
@@ -94,31 +95,24 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			} else {
 				// 如果未设置“图像”属性，请在暂时清除“选中状态”属性的情况下调用基类 OnPaint
 				// 方法，以防止绘制复选标记。
-				CheckState currentState = this.CheckState;
-				this.CheckState = CheckState.Unchecked;
+				CheckState currentState = CheckState;
+				CheckState = CheckState.Unchecked;
 				base.OnPaint(e);
-				this.CheckState = currentState;
+				CheckState = currentState;
 			}
 
 			// 确定单选按钮的正确状态。
 			RadioButtonState buttonState = RadioButtonState.UncheckedNormal;
 			if (Enabled) {
-				if (mouseDownState) {
-					if (Checked) buttonState = RadioButtonState.CheckedPressed;
-					else buttonState = RadioButtonState.UncheckedPressed;
-				} else if (mouseHoverState) {
-					if (Checked) buttonState = RadioButtonState.CheckedHot;
-					else buttonState = RadioButtonState.UncheckedHot;
-				} else {
-					if (Checked) buttonState = RadioButtonState.CheckedNormal;
-				}
-			} else {
-				if (Checked) buttonState = RadioButtonState.CheckedDisabled;
-				else buttonState = RadioButtonState.UncheckedDisabled;
-			}
+				if (mouseDownState)
+					buttonState = Checked ? RadioButtonState.CheckedPressed : RadioButtonState.UncheckedPressed;
+				else if (mouseHoverState)
+					buttonState = Checked ? RadioButtonState.CheckedHot : RadioButtonState.UncheckedHot;
+				else if (Checked) buttonState = RadioButtonState.CheckedNormal;
+			} else buttonState = Checked ? RadioButtonState.CheckedDisabled : RadioButtonState.UncheckedDisabled;
 
 			// 计算显示单选按钮的位置。
-			Int32 offset = (ContentRectangle.Height -
+			int offset = (ContentRectangle.Height -
 				RadioButtonRenderer.GetGlyphSize(
 				e.Graphics, buttonState).Height) / 2;
 			Point imageLocation = new Point(
@@ -126,8 +120,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ContentRectangle.Location.Y + offset);
 
 			// 绘制单选按钮。
-			RadioButtonRenderer.DrawRadioButton(
-				e.Graphics, imageLocation, buttonState);
+			//RadioButtonRenderer.DrawRadioButton(e.Graphics, imageLocation, buttonState);
+
+			// 重新画一下。
+			const int CHECK_DOT_DIAMETER = 5;
+			int checkAreaLength = ContentRectangle.Height;
+			int checkTopLeft = (checkAreaLength - CHECK_DOT_DIAMETER) / 2;
+			Rectangle checkRect = new Rectangle(checkTopLeft + 4, checkTopLeft, CHECK_DOT_DIAMETER, CHECK_DOT_DIAMETER);
+			SolidBrush brush = new SolidBrush(Enabled ? Color.Black : Color.DarkGray);
+			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			if (Checked) e.Graphics.FillEllipse(brush, checkRect);
 		}
 
 		private bool mouseHoverState = false;

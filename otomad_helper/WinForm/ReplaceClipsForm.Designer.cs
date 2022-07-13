@@ -88,20 +88,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.UseTrackEventGroupCheck, 0, 0);
 			this.dock.Controls.Add(this.ReserveOriginalNameCheck, 1, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 398);
+			this.dock.Location = new System.Drawing.Point(0, 406);
 			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(694, 42);
+			this.dock.Size = new System.Drawing.Size(696, 42);
 			this.dock.TabIndex = 3;
 			// 
 			// OkBtn
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(529, 8);
+			this.OkBtn.Location = new System.Drawing.Point(531, 8);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(75, 26);
 			this.OkBtn.TabIndex = 1;
@@ -113,7 +113,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(610, 8);
+			this.CancelBtn.Location = new System.Drawing.Point(612, 8);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(75, 26);
 			this.CancelBtn.TabIndex = 2;
@@ -129,7 +129,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.UseTrackEventGroupCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.UseTrackEventGroupCheck.Location = new System.Drawing.Point(9, 8);
 			this.UseTrackEventGroupCheck.Name = "UseTrackEventGroupCheck";
-			this.UseTrackEventGroupCheck.Size = new System.Drawing.Size(196, 26);
+			this.UseTrackEventGroupCheck.Size = new System.Drawing.Size(158, 26);
 			this.UseTrackEventGroupCheck.TabIndex = 0;
 			this.UseTrackEventGroupCheck.Text = "同时替换分组内其它剪辑";
 			this.UseTrackEventGroupCheck.UseVisualStyleBackColor = true;
@@ -137,9 +137,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// ReserveOriginalNameCheck
 			// 
 			this.ReserveOriginalNameCheck.AutoSize = true;
-			this.ReserveOriginalNameCheck.Location = new System.Drawing.Point(211, 8);
+			this.ReserveOriginalNameCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ReserveOriginalNameCheck.Location = new System.Drawing.Point(138, 6);
 			this.ReserveOriginalNameCheck.Name = "ReserveOriginalNameCheck";
-			this.ReserveOriginalNameCheck.Size = new System.Drawing.Size(136, 24);
+			this.ReserveOriginalNameCheck.Size = new System.Drawing.Size(88, 21);
 			this.ReserveOriginalNameCheck.TabIndex = 3;
 			this.ReserveOriginalNameCheck.Text = "保留原剪辑名称";
 			this.ReserveOriginalNameCheck.UseVisualStyleBackColor = true;
@@ -152,7 +153,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
 			this.panel1.Padding = new System.Windows.Forms.Padding(8, 8, 8, 0);
-			this.panel1.Size = new System.Drawing.Size(694, 398);
+			this.panel1.Size = new System.Drawing.Size(696, 406);
 			this.panel1.TabIndex = 4;
 			// 
 			// tabs
@@ -163,17 +164,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tabs.Location = new System.Drawing.Point(8, 8);
 			this.tabs.Name = "tabs";
 			this.tabs.SelectedIndex = 0;
-			this.tabs.Size = new System.Drawing.Size(678, 390);
+			this.tabs.Size = new System.Drawing.Size(680, 398);
 			this.tabs.TabIndex = 0;
 			this.tabs.SelectedIndexChanged += new System.EventHandler(this.ReplacerCombo_SelectedIndexChanged);
 			// 
 			// ClassicTab
 			// 
 			this.ClassicTab.Controls.Add(this.table);
-			this.ClassicTab.Location = new System.Drawing.Point(4, 29);
+			this.ClassicTab.Location = new System.Drawing.Point(4, 24);
 			this.ClassicTab.Name = "ClassicTab";
 			this.ClassicTab.Padding = new System.Windows.Forms.Padding(3);
-			this.ClassicTab.Size = new System.Drawing.Size(670, 357);
+			this.ClassicTab.Size = new System.Drawing.Size(672, 370);
 			this.ClassicTab.TabIndex = 0;
 			this.ClassicTab.Text = "同时指定";
 			this.ClassicTab.UseVisualStyleBackColor = true;
@@ -196,17 +197,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.table.Size = new System.Drawing.Size(664, 351);
+			this.table.Size = new System.Drawing.Size(666, 364);
 			this.table.TabIndex = 7;
 			// 
 			// ReplacerCombo
 			// 
 			this.ReplacerCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ReplacerCombo.FormattingEnabled = true;
-			this.ReplacerCombo.ItemHeight = 20;
-			this.ReplacerCombo.Location = new System.Drawing.Point(3, 115);
+			this.ReplacerCombo.ItemHeight = 15;
+			this.ReplacerCombo.Location = new System.Drawing.Point(3, 60);
 			this.ReplacerCombo.Name = "ReplacerCombo";
-			this.ReplacerCombo.Size = new System.Drawing.Size(658, 207);
+			this.ReplacerCombo.Size = new System.Drawing.Size(660, 280);
 			this.ReplacerCombo.TabIndex = 3;
 			this.ReplacerCombo.SelectedIndexChanged += new System.EventHandler(this.ReplacerCombo_SelectedIndexChanged);
 			// 
@@ -214,9 +215,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.ClassicReplacerLbl.AutoSize = true;
 			this.ClassicReplacerLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ClassicReplacerLbl.Location = new System.Drawing.Point(3, 92);
+			this.ClassicReplacerLbl.Location = new System.Drawing.Point(3, 42);
 			this.ClassicReplacerLbl.Name = "ClassicReplacerLbl";
-			this.ClassicReplacerLbl.Size = new System.Drawing.Size(658, 20);
+			this.ClassicReplacerLbl.Size = new System.Drawing.Size(660, 15);
 			this.ClassicReplacerLbl.TabIndex = 4;
 			this.ClassicReplacerLbl.Text = "指定的替换项为";
 			this.ClassicReplacerLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -228,7 +229,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReplaceClipsLbl.Location = new System.Drawing.Point(3, 6);
 			this.ReplaceClipsLbl.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
 			this.ReplaceClipsLbl.Name = "ReplaceClipsLbl";
-			this.ReplaceClipsLbl.Size = new System.Drawing.Size(658, 80);
+			this.ReplaceClipsLbl.Size = new System.Drawing.Size(660, 30);
 			this.ReplaceClipsLbl.TabIndex = 1;
 			this.ReplaceClipsLbl.Text = "请先在轨道窗口中选中替换与被替换的素材，然后指定一个素材为替换的素材，剩余素材均为被替换素材。\r\n请先将替换素材的音视频创建分组，并确保替换素材放置在时间靠后的位" +
     "置并且尽量不与其它被替换素材位于同一轨道。";
@@ -238,9 +239,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.ClassicReplacedLbl.AutoSize = true;
 			this.ClassicReplacedLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ClassicReplacedLbl.Location = new System.Drawing.Point(3, 325);
+			this.ClassicReplacedLbl.Location = new System.Drawing.Point(3, 343);
 			this.ClassicReplacedLbl.Name = "ClassicReplacedLbl";
-			this.ClassicReplacedLbl.Size = new System.Drawing.Size(658, 20);
+			this.ClassicReplacedLbl.Size = new System.Drawing.Size(660, 15);
 			this.ClassicReplacedLbl.TabIndex = 3;
 			this.ClassicReplacedLbl.Text = "则剩余 0 项轨道剪辑将被替换为选定素材。";
 			this.ClassicReplacedLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -248,9 +249,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// SeparationTab
 			// 
 			this.SeparationTab.Controls.Add(this.tableLayoutPanel1);
-			this.SeparationTab.Location = new System.Drawing.Point(4, 29);
+			this.SeparationTab.Location = new System.Drawing.Point(4, 24);
 			this.SeparationTab.Name = "SeparationTab";
-			this.SeparationTab.Size = new System.Drawing.Size(670, 357);
+			this.SeparationTab.Size = new System.Drawing.Size(670, 362);
 			this.SeparationTab.TabIndex = 1;
 			this.SeparationTab.Text = "分别指定";
 			this.SeparationTab.UseVisualStyleBackColor = true;
@@ -279,7 +280,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(670, 335);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(670, 325);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
 			// tableLayoutPanel3
@@ -291,7 +292,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel3.Controls.Add(this.SeparationReplacerInfo, 0, 0);
 			this.tableLayoutPanel3.Controls.Add(this.ReplacerIcon, 0, 0);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(6, 213);
+			this.tableLayoutPanel3.Location = new System.Drawing.Point(6, 203);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
 			this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(10);
 			this.tableLayoutPanel3.RowCount = 1;
@@ -328,7 +329,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel5.Controls.Add(this.SetReplacerBtn, 0, 0);
 			this.tableLayoutPanel5.Controls.Add(this.BackToSelect2, 1, 0);
 			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel5.Location = new System.Drawing.Point(6, 293);
+			this.tableLayoutPanel5.Location = new System.Drawing.Point(6, 283);
 			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
 			this.tableLayoutPanel5.RowCount = 1;
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -366,7 +367,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel2.Controls.Add(this.SeparationReplacedInfo, 0, 0);
 			this.tableLayoutPanel2.Controls.Add(this.ReplacedIcon, 0, 0);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 71);
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 66);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(10);
 			this.tableLayoutPanel2.RowCount = 1;
@@ -401,16 +402,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SeparationReplacedLbl.AutoSize = true;
 			this.SeparationReplacedLbl.Location = new System.Drawing.Point(6, 48);
 			this.SeparationReplacedLbl.Name = "SeparationReplacedLbl";
-			this.SeparationReplacedLbl.Size = new System.Drawing.Size(69, 20);
+			this.SeparationReplacedLbl.Size = new System.Drawing.Size(55, 15);
 			this.SeparationReplacedLbl.TabIndex = 0;
 			this.SeparationReplacedLbl.Text = "被替换项";
 			// 
 			// SeparationReplacerLbl
 			// 
 			this.SeparationReplacerLbl.AutoSize = true;
-			this.SeparationReplacerLbl.Location = new System.Drawing.Point(6, 190);
+			this.SeparationReplacerLbl.Location = new System.Drawing.Point(6, 185);
 			this.SeparationReplacerLbl.Name = "SeparationReplacerLbl";
-			this.SeparationReplacerLbl.Size = new System.Drawing.Size(54, 20);
+			this.SeparationReplacerLbl.Size = new System.Drawing.Size(43, 15);
 			this.SeparationReplacerLbl.TabIndex = 1;
 			this.SeparationReplacerLbl.Text = "替换项";
 			// 
@@ -423,7 +424,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel4.Controls.Add(this.SetReplacedBtn, 0, 0);
 			this.tableLayoutPanel4.Controls.Add(this.BackToSelect1, 1, 0);
 			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel4.Location = new System.Drawing.Point(6, 151);
+			this.tableLayoutPanel4.Location = new System.Drawing.Point(6, 146);
 			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
 			this.tableLayoutPanel4.RowCount = 1;
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -472,7 +473,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ViewLbl.Location = new System.Drawing.Point(3, 0);
 			this.ViewLbl.Margin = new System.Windows.Forms.Padding(3, 0, 9, 0);
 			this.ViewLbl.Name = "ViewLbl";
-			this.ViewLbl.Size = new System.Drawing.Size(39, 30);
+			this.ViewLbl.Size = new System.Drawing.Size(31, 25);
 			this.ViewLbl.TabIndex = 0;
 			this.ViewLbl.Text = "查看";
 			this.ViewLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -481,9 +482,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.ViewSelectReplacedRadio.AutoSize = true;
 			this.ViewSelectReplacedRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ViewSelectReplacedRadio.Location = new System.Drawing.Point(54, 3);
+			this.ViewSelectReplacedRadio.Location = new System.Drawing.Point(46, 3);
 			this.ViewSelectReplacedRadio.Name = "ViewSelectReplacedRadio";
-			this.ViewSelectReplacedRadio.Size = new System.Drawing.Size(90, 24);
+			this.ViewSelectReplacedRadio.Size = new System.Drawing.Size(73, 19);
 			this.ViewSelectReplacedRadio.TabIndex = 1;
 			this.ViewSelectReplacedRadio.Text = "被替换项";
 			this.ViewSelectReplacedRadio.UseVisualStyleBackColor = true;
@@ -493,9 +494,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.ViewSelectReplacerRadio.AutoSize = true;
 			this.ViewSelectReplacerRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ViewSelectReplacerRadio.Location = new System.Drawing.Point(150, 3);
+			this.ViewSelectReplacerRadio.Location = new System.Drawing.Point(125, 3);
 			this.ViewSelectReplacerRadio.Name = "ViewSelectReplacerRadio";
-			this.ViewSelectReplacerRadio.Size = new System.Drawing.Size(75, 24);
+			this.ViewSelectReplacerRadio.Size = new System.Drawing.Size(61, 19);
 			this.ViewSelectReplacerRadio.TabIndex = 2;
 			this.ViewSelectReplacerRadio.Text = "替换项";
 			this.ViewSelectReplacerRadio.UseVisualStyleBackColor = true;
@@ -506,9 +507,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ViewSelectOriginalRadio.AutoSize = true;
 			this.ViewSelectOriginalRadio.Checked = true;
 			this.ViewSelectOriginalRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ViewSelectOriginalRadio.Location = new System.Drawing.Point(231, 3);
+			this.ViewSelectOriginalRadio.Location = new System.Drawing.Point(192, 3);
 			this.ViewSelectOriginalRadio.Name = "ViewSelectOriginalRadio";
-			this.ViewSelectOriginalRadio.Size = new System.Drawing.Size(75, 24);
+			this.ViewSelectOriginalRadio.Size = new System.Drawing.Size(61, 19);
 			this.ViewSelectOriginalRadio.TabIndex = 3;
 			this.ViewSelectOriginalRadio.TabStop = true;
 			this.ViewSelectOriginalRadio.Text = "选中项";
@@ -518,10 +519,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// ReplaceClipsForm
 			// 
 			this.AcceptButton = this.OkBtn;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(694, 440);
+			this.ClientSize = new System.Drawing.Size(696, 448);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);

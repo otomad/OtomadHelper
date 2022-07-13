@@ -44,9 +44,9 @@
 			// 
 			this.MatchSourceAndOffsetRadio.AutoSize = true;
 			this.MatchSourceAndOffsetRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchSourceAndOffsetRadio.Location = new System.Drawing.Point(12, 74);
+			this.MatchSourceAndOffsetRadio.Location = new System.Drawing.Point(12, 64);
 			this.MatchSourceAndOffsetRadio.Name = "MatchSourceAndOffsetRadio";
-			this.MatchSourceAndOffsetRadio.Size = new System.Drawing.Size(445, 24);
+			this.MatchSourceAndOffsetRadio.Size = new System.Drawing.Size(447, 19);
 			this.MatchSourceAndOffsetRadio.TabIndex = 1;
 			this.MatchSourceAndOffsetRadio.Text = "与选中轨道剪辑相同且开始偏移量相等的所有剪辑";
 			this.MatchSourceAndOffsetRadio.UseVisualStyleBackColor = true;
@@ -56,9 +56,9 @@
 			// 
 			this.MatchSourceRadio.AutoSize = true;
 			this.MatchSourceRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchSourceRadio.Location = new System.Drawing.Point(12, 44);
+			this.MatchSourceRadio.Location = new System.Drawing.Point(12, 39);
 			this.MatchSourceRadio.Name = "MatchSourceRadio";
-			this.MatchSourceRadio.Size = new System.Drawing.Size(445, 24);
+			this.MatchSourceRadio.Size = new System.Drawing.Size(447, 19);
 			this.MatchSourceRadio.TabIndex = 0;
 			this.MatchSourceRadio.Text = "与选中轨道剪辑相同的所有剪辑";
 			this.MatchSourceRadio.UseVisualStyleBackColor = true;
@@ -88,7 +88,7 @@
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.table.Size = new System.Drawing.Size(469, 489);
+			this.table.Size = new System.Drawing.Size(471, 497);
 			this.table.TabIndex = 11;
 			// 
 			// MatchNameRadio
@@ -96,9 +96,9 @@
 			this.MatchNameRadio.AutoSize = true;
 			this.MatchNameRadio.Checked = true;
 			this.MatchNameRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchNameRadio.Location = new System.Drawing.Point(12, 104);
+			this.MatchNameRadio.Location = new System.Drawing.Point(12, 89);
 			this.MatchNameRadio.Name = "MatchNameRadio";
-			this.MatchNameRadio.Size = new System.Drawing.Size(445, 24);
+			this.MatchNameRadio.Size = new System.Drawing.Size(447, 19);
 			this.MatchNameRadio.TabIndex = 2;
 			this.MatchNameRadio.TabStop = true;
 			this.MatchNameRadio.Text = "与指定名称相匹配的剪辑";
@@ -112,7 +112,7 @@
 			this.SelectInfo.Location = new System.Drawing.Point(9, 15);
 			this.SelectInfo.Margin = new System.Windows.Forms.Padding(0, 6, 0, 6);
 			this.SelectInfo.Name = "SelectInfo";
-			this.SelectInfo.Size = new System.Drawing.Size(451, 20);
+			this.SelectInfo.Size = new System.Drawing.Size(453, 15);
 			this.SelectInfo.TabIndex = 3;
 			this.SelectInfo.Text = "选中的第一个轨道剪辑：无";
 			this.SelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -120,10 +120,10 @@
 			// ClipNameTxt
 			// 
 			this.ClipNameTxt.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ClipNameTxt.Location = new System.Drawing.Point(12, 137);
+			this.ClipNameTxt.Location = new System.Drawing.Point(12, 117);
 			this.ClipNameTxt.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
 			this.ClipNameTxt.Name = "ClipNameTxt";
-			this.ClipNameTxt.Size = new System.Drawing.Size(445, 27);
+			this.ClipNameTxt.Size = new System.Drawing.Size(447, 23);
 			this.ClipNameTxt.TabIndex = 4;
 			this.ClipNameTxt.Click += new System.EventHandler(this.AutoSelectMatchName);
 			this.ClipNameTxt.TextChanged += new System.EventHandler(this.ClipNameTxt_TextChanged);
@@ -136,9 +136,9 @@
 			this.ClipNameList.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ClipNameList.FullRowSelect = true;
 			this.ClipNameList.HideSelection = false;
-			this.ClipNameList.Location = new System.Drawing.Point(12, 170);
+			this.ClipNameList.Location = new System.Drawing.Point(12, 146);
 			this.ClipNameList.Name = "ClipNameList";
-			this.ClipNameList.Size = new System.Drawing.Size(445, 281);
+			this.ClipNameList.Size = new System.Drawing.Size(447, 318);
 			this.ClipNameList.TabIndex = 5;
 			this.ClipNameList.UseCompatibleStateImageBehavior = false;
 			this.ClipNameList.View = System.Windows.Forms.View.Details;
@@ -158,10 +158,10 @@
 			// 
 			this.FindClipsInfo.AutoSize = true;
 			this.FindClipsInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FindClipsInfo.Location = new System.Drawing.Point(9, 457);
+			this.FindClipsInfo.Location = new System.Drawing.Point(9, 470);
 			this.FindClipsInfo.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.FindClipsInfo.Name = "FindClipsInfo";
-			this.FindClipsInfo.Size = new System.Drawing.Size(451, 20);
+			this.FindClipsInfo.Size = new System.Drawing.Size(453, 15);
 			this.FindClipsInfo.TabIndex = 6;
 			this.FindClipsInfo.Text = "在上方选中相匹配的剪辑，确定之后将会选中这些剪辑。";
 			this.FindClipsInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -170,7 +170,7 @@
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(304, 8);
+			this.OkBtn.Location = new System.Drawing.Point(306, 8);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(75, 26);
 			this.OkBtn.TabIndex = 1;
@@ -182,7 +182,7 @@
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(385, 8);
+			this.CancelBtn.Location = new System.Drawing.Point(387, 8);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(75, 26);
 			this.CancelBtn.TabIndex = 2;
@@ -200,23 +200,23 @@
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 489);
+			this.dock.Location = new System.Drawing.Point(0, 497);
 			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(469, 42);
+			this.dock.Size = new System.Drawing.Size(471, 42);
 			this.dock.TabIndex = 10;
 			// 
 			// FindClipsForm
 			// 
 			this.AcceptButton = this.OkBtn;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(469, 531);
+			this.ClientSize = new System.Drawing.Size(471, 539);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));

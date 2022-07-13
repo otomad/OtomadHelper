@@ -61,9 +61,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			};
 			exitToolStripMenuItem.Click += new EventHandler(CancelBtn_Click);
 			aboutToolStripMenuItem.Click += new EventHandler(AboutBtn_Click);
-			userHelpToolStripMenuItem.Click += (sender, e) => { OpenLink(aboutHelpLink); };
+			//userHelpToolStripMenuItem.Click += (sender, e) => { OpenLink(aboutHelpLink); };
 			troubleShootingToolStripMenuItem.Click += (sender, e) => { OpenLink(troubleShootingLink); };
-			updateInfoToolStripMenuItem.Click += (sender, e) => { OpenLink(updateInfoLink); };
+			//updateInfoToolStripMenuItem.Click += (sender, e) => { OpenLink(updateInfoLink); };
 			githubToolStripMenuItem.Click += (sender, e) => { OpenLink(githubLink); };
 			GetSystemLanguage();
 			TrackLegatoMenu.Renderer = menu.Renderer = new Windows10StyledContextMenuStripRenderer();
@@ -745,6 +745,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				{ AutoLayoutTracksBox3dBtn, typeof(AutoLayoutTracksBox3dForm) },
 				{ GradientTracksBtn, typeof(GradientTracksForm) },
 				{ ChangeTuneMethodBtn, typeof(ChangeTuneMethodForm) },
+				{ BatchSubtitleGenerationBtn, typeof(BatchSubtitleGenerationForm) },
+				{ FindClipsBtn, typeof(FindClipsForm) },
 			};
 			Type form;
 			map.TryGetValue(btn, out form);
@@ -877,6 +879,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void RestoreDefaultFormSizeToolStripMenuItem_Click(object sender, EventArgs e) {
 			Console.WriteLine(0);
+		}
+
+		private void MidiChannelAdvancedBtn_Click(object sender, EventArgs e) {
+			new MidiChannelAdvancedForm(this).ShowDialog();
+		}
+
+		private void MidiChannelCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			Console.WriteLine("変わった！");
+		}
+
+		private void VideoParamsPresetsBtn_MouseDown(object sender, MouseEventArgs e) {
+			Console.WriteLine("默认");
 		}
 	}
 

@@ -44,7 +44,7 @@
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(477, 8);
+			this.OkBtn.Location = new System.Drawing.Point(479, 8);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(75, 26);
 			this.OkBtn.TabIndex = 1;
@@ -56,7 +56,7 @@
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(558, 8);
+			this.CancelBtn.Location = new System.Drawing.Point(560, 8);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(75, 26);
 			this.CancelBtn.TabIndex = 2;
@@ -88,7 +88,7 @@
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.table.Size = new System.Drawing.Size(642, 451);
+			this.table.Size = new System.Drawing.Size(644, 459);
 			this.table.TabIndex = 19;
 			// 
 			// PresetsLbl
@@ -97,7 +97,7 @@
 			this.PresetsLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PresetsLbl.Location = new System.Drawing.Point(13, 11);
 			this.PresetsLbl.Name = "PresetsLbl";
-			this.PresetsLbl.Size = new System.Drawing.Size(616, 20);
+			this.PresetsLbl.Size = new System.Drawing.Size(618, 15);
 			this.PresetsLbl.TabIndex = 0;
 			this.PresetsLbl.Text = "选择一个预先设定好的“字幕和文字”媒体发生器的预设：";
 			this.PresetsLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -107,19 +107,19 @@
 			this.PresetsCombo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PresetsCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.PresetsCombo.FormattingEnabled = true;
-			this.PresetsCombo.Location = new System.Drawing.Point(13, 34);
+			this.PresetsCombo.Location = new System.Drawing.Point(13, 29);
 			this.PresetsCombo.Name = "PresetsCombo";
-			this.PresetsCombo.Size = new System.Drawing.Size(616, 28);
+			this.PresetsCombo.Size = new System.Drawing.Size(618, 23);
 			this.PresetsCombo.TabIndex = 1;
 			// 
 			// SubtitlesLbl
 			// 
 			this.SubtitlesLbl.AutoSize = true;
 			this.SubtitlesLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SubtitlesLbl.Location = new System.Drawing.Point(13, 71);
+			this.SubtitlesLbl.Location = new System.Drawing.Point(13, 61);
 			this.SubtitlesLbl.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
 			this.SubtitlesLbl.Name = "SubtitlesLbl";
-			this.SubtitlesLbl.Size = new System.Drawing.Size(616, 20);
+			this.SubtitlesLbl.Size = new System.Drawing.Size(618, 15);
 			this.SubtitlesLbl.TabIndex = 2;
 			this.SubtitlesLbl.Text = "输入要插入的字幕文本（一行一个，忽略空行）：";
 			this.SubtitlesLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -127,21 +127,23 @@
 			// SubtitlesTxt
 			// 
 			this.SubtitlesTxt.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SubtitlesTxt.Location = new System.Drawing.Point(13, 94);
+			this.SubtitlesTxt.Location = new System.Drawing.Point(13, 79);
 			this.SubtitlesTxt.MaxLength = 65535;
 			this.SubtitlesTxt.Multiline = true;
 			this.SubtitlesTxt.Name = "SubtitlesTxt";
-			this.SubtitlesTxt.Size = new System.Drawing.Size(616, 284);
+			this.SubtitlesTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.SubtitlesTxt.Size = new System.Drawing.Size(618, 316);
 			this.SubtitlesTxt.TabIndex = 3;
+			this.SubtitlesTxt.WordWrap = false;
 			// 
 			// SuggestionInfo
 			// 
 			this.SuggestionInfo.AutoSize = true;
 			this.SuggestionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SuggestionInfo.Location = new System.Drawing.Point(13, 420);
+			this.SuggestionInfo.Location = new System.Drawing.Point(13, 433);
 			this.SuggestionInfo.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
 			this.SuggestionInfo.Name = "SuggestionInfo";
-			this.SuggestionInfo.Size = new System.Drawing.Size(616, 20);
+			this.SuggestionInfo.Size = new System.Drawing.Size(618, 15);
 			this.SuggestionInfo.TabIndex = 5;
 			this.SuggestionInfo.Text = "稍后可开启“自动跟进”功能以便后续调整时间。";
 			this.SuggestionInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -155,12 +157,12 @@
 			this.tableLayoutPanel1.Controls.Add(this.SingleDurationLbl, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.SingleDurationTxt, 1, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(10, 381);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(10, 398);
 			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(622, 33);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(624, 29);
 			this.tableLayoutPanel1.TabIndex = 6;
 			// 
 			// SingleDurationLbl
@@ -169,7 +171,7 @@
 			this.SingleDurationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SingleDurationLbl.Location = new System.Drawing.Point(3, 0);
 			this.SingleDurationLbl.Name = "SingleDurationLbl";
-			this.SingleDurationLbl.Size = new System.Drawing.Size(129, 33);
+			this.SingleDurationLbl.Size = new System.Drawing.Size(103, 29);
 			this.SingleDurationLbl.TabIndex = 0;
 			this.SingleDurationLbl.Text = "每个字幕持续时间";
 			this.SingleDurationLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -177,9 +179,9 @@
 			// SingleDurationTxt
 			// 
 			this.SingleDurationTxt.Dock = System.Windows.Forms.DockStyle.Left;
-			this.SingleDurationTxt.Location = new System.Drawing.Point(138, 3);
+			this.SingleDurationTxt.Location = new System.Drawing.Point(112, 3);
 			this.SingleDurationTxt.Name = "SingleDurationTxt";
-			this.SingleDurationTxt.Size = new System.Drawing.Size(150, 27);
+			this.SingleDurationTxt.Size = new System.Drawing.Size(150, 23);
 			this.SingleDurationTxt.TabIndex = 1;
 			this.SingleDurationTxt.Leave += new System.EventHandler(this.SingleDurationTxt_Leave);
 			// 
@@ -193,20 +195,20 @@
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 451);
+			this.dock.Location = new System.Drawing.Point(0, 459);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(642, 42);
+			this.dock.Size = new System.Drawing.Size(644, 42);
 			this.dock.TabIndex = 18;
 			// 
 			// BatchSubtitleGenerationForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(642, 493);
+			this.ClientSize = new System.Drawing.Size(644, 501);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("微软雅黑", 9F);

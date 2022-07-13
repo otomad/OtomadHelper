@@ -75,8 +75,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			// IntegerTrackWithBox
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.Transparent;
 			this.Controls.Add(this.tableLayoutPanel);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);

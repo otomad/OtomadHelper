@@ -1,7 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Globalization;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 
@@ -9,8 +19,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	public partial class IntegerTrackWithBox : UserControl {
 		public IntegerTrackWithBox() {
 			InitializeComponent();
-			Track.MouseClick += new MouseEventHandler(Track_Reset);
+			Track.MouseClick += new MouseEventHandler(Track_MouseClick);
+			Track.MouseDown += new MouseEventHandler(Track_MouseDown);
 			Numeric.MouseWheel += AutoLayoutTracksGridForm.NumericUpDown_MouseWheel;
+			doubleClickTimer.Tick += new EventHandler((sender, e) => {
+				isWaitingDoubleClick = false;
+				doubleClickTimer.Stop();
+			});
 		}
 
 		private void Track_Scroll(object sender, EventArgs e) {
@@ -83,12 +98,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// 右键滑动条，可以重置其值。
 		/// </summary>
-		private void Track_Reset(object sender, MouseEventArgs e) {
-			if (e.Button == MouseButtons.Right && e.Clicks == 1)
-				Value = DefaultValue;
+		private void Track_MouseClick(object sender, MouseEventArgs e) {
+			if (e.Button == MouseButtons.Right && e.Clicks == 1) ResetDefaultValue();
 		}
 
-		/// <summary> 
+		/// <summary>
+		/// 双击滑动条，也可以重置其值。
+		/// </summary>
+		private void Track_MouseDown(object sender, MouseEventArgs e) {
+			if (e.Button == MouseButtons.Left && e.Clicks == 1) {
+				if (!isWaitingDoubleClick) {
+					isWaitingDoubleClick = true;
+					doubleClickTimer.Start();
+				} else {
+					doubleClickTimer.Stop();
+					isWaitingDoubleClick = false;
+					ResetDefaultValue();
+				}
+			}
+		}
+
+		private const int DOUBLE_CLICK_DURATION = 500;
+		private readonly System.Windows.Forms.Timer doubleClickTimer = new System.Windows.Forms.Timer { Interval = DOUBLE_CLICK_DURATION };
+		private bool isWaitingDoubleClick = false;
+
+		private void ResetDefaultValue() {
+			Value = DefaultValue;
+		}
+
+		/// <summary>
 		/// 设定数值控件的当前值，并确保不受最大值或最小值限制的干扰。
 		/// </summary>
 		/// <param name="value">设定值</param>
@@ -99,13 +137,5 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Value = (int)def;
 			} else Value = value;
 		}
-
-
-		/*[Browsable(false)]
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		private override Font Font {
-			get { return base.Font; }
-			//set { base.Font = value; }
-		}*/
 	}
 }
