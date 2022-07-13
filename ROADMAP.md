@@ -9,19 +9,20 @@
 - [x] Preview base pitch
 - [x] Auto add pitch-shift plugin presets
 - [x] Save configuration
+- [x] Generate multiple tracks at once and apply auto layout tracks effects
 
 ### Issues idea
 - [x] I18n (5 languages currently)
 - [x] Change tune method
 - [x] Tracks legato
 - [x] Compatible with Vegas 13~15
+- [x] Multiple track for video clips option
 
 ### Coming soon
-- [ ] Save last BPM config
-- [ ] Multiple track for video clips option
+
 
 ### Future
-- [ ] Generate multiple tracks at once and apply auto layout tracks effects
+- [ ] Edit MIDI channel notes
 - [ ] Apply multiple visual effects to clips
 - [ ] Official documentation and tutorial video
 - [ ] Refresh UI to WinUI 3 (v5.x)
