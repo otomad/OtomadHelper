@@ -15668,6 +15668,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Balloon.SetToolTip(AudioLockStretchPitchCheck, str.audio_lock_stretch_pitch_tooltip);
 			Balloon.SetToolTip(PreviewBeepDurationBox, str.preview_beep_duration_tooltip);
 			Balloon.SetToolTip(PreviewTuneAudioCheck, str.preview_tune_audio_tooltip);
+			Balloon.SetToolTip(StaffLegacyMethodCheck, str.sheet_legacy_method_tooltip);
 			AudioLockStretchPitchCheck.Text = str.audio_lock_stretch_pitch;
 			fileMenuItem.Text = str.file;
 			saveConfigToolStripMenuItem.Text = str.save_config;
