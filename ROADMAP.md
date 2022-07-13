@@ -19,7 +19,7 @@
 - [x] Multiple track for video clips option
 
 ### Coming soon
-
+∅
 
 ### Future
 - [ ] Edit MIDI channel notes
