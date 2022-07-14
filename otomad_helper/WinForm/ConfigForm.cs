@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -106,13 +107,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			} catch (Exception) { } // 如果路径不存在则不受影响
 			#else
 			icon = Icon = Properties.Resources.Otomad_Helper;
-			#endif
+#endif
 			#endregion
 
-			int trueValue = 0x01, falseValue = 0x00;
+			/*int trueValue = 0x01, falseValue = 0x00;
 			SetWindowTheme(this.Handle, "DarkMode_Explorer", null);
 			DwmSetWindowAttribute(this.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue, Marshal.SizeOf(typeof(int)));
-			DwmSetWindowAttribute(this.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue, Marshal.SizeOf(typeof(int)));
+			DwmSetWindowAttribute(this.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue, Marshal.SizeOf(typeof(int)));*/
 		}
 
 		[DllImport("uxtheme.dll", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
@@ -124,6 +125,57 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public enum DwmWindowAttribute : uint {
 			DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
 			DWMWA_MICA_EFFECT = 1029
+		}
+
+		/*protected override void OnHandleCreated(EventArgs e) {
+			// Use e.g. Color.FromArgb(128, Color.Lime) for a 50% opacity green tint.
+			WindowUtils.EnableAcrylic(this, Color.Transparent);
+
+			base.OnHandleCreated(e);
+		}
+
+		protected override void OnPaintBackground(PaintEventArgs e) {
+			e.Graphics.Clear(Color.Transparent);
+		}*/
+
+		/*private void Window_ContentRendered(object sender, System.EventArgs e) {
+			// Apply Mica brush
+			UpdateStyleAttributes((HwndSource)sender);
+		}
+
+		public static void UpdateStyleAttributes(HwndSource hwnd) {
+			int trueValue = 0x01;
+			DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue, Marshal.SizeOf(typeof(int)));
+		}
+
+		private void Window_Loaded(object sender, EventArgs e) {
+			// Get PresentationSource
+			PresentationSource presentationSource = PresentationSource.FromVisual((Visual)sender);
+
+			// Subscribe to PresentationSource's ContentRendered event
+			presentationSource.ContentRendered += Window_ContentRendered;
+		}*/
+
+		private void ThemeAllControls(Control parent = null) {
+			parent = parent ?? this;
+			Func<Color, Color> InvertColor = new Func<Color, Color>(orig => {
+				int r = 255 - orig.R, g = 255 - orig.G, b = 255 - orig.B;
+				return Color.FromArgb(r, g, b);
+			});
+			Action<Control> Theme = new Action<Control>(control => {
+				int trueValue = 0x01, falseValue = 0x00;
+				SetWindowTheme(control.Handle, "DarkMode_Explorer", null);
+				DwmSetWindowAttribute(control.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue, Marshal.SizeOf(typeof(int)));
+				DwmSetWindowAttribute(control.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue, Marshal.SizeOf(typeof(int)));
+				control.BackColor = Color.Black;
+				control.ForeColor = Color.White;
+			});
+			if (parent == this) Theme(this);
+			foreach (Control control in parent.Controls) {
+				Theme(control);
+				if (control.Controls.Count != 0)
+					ThemeAllControls(control);
+			}
 		}
 
 		/// <summary>
@@ -375,7 +427,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (StaffVisualizerConfigCheck.Checked && StaffVisualizerConfigCheck.Enabled) {
 				VideoEffectCombo.SelectedIndex = 0;
 				VideoScratchCheck.Checked = false;
-				VideoLegatoCheck.Checked = false;
+				//VideoLegatoCheck.Checked = false;
 			}
 			if (!StaffGenerateCheck.Enabled) StaffGenerateCheck.Checked = false;
 			Close();
@@ -412,7 +464,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			bool isSheetConfigOn = StaffVisualizerConfigCheck.Checked;
 			if (isSheetConfigOn)
 				VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled =
-				VideoLegatoCheck.Enabled =
+				//VideoLegatoCheck.Enabled =
 				VideoScratchCheck.Checked = VideoScratchCheck.Enabled = false;
 			SetEnabled(SheetTab, isSheetConfigOn, new Control[] { StaffVisualizerConfigCheck, SheetConfigInfoLabel });
 			if (!StaffGenerateCheck.Checked)
@@ -639,7 +691,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void AudioLegatoCheck_Or_AudioFreezeLastFrameCheck_CheckedChanged(object sender, EventArgs e) {
 			CheckBox check = sender as CheckBox;
-			CheckBox[] checks = { AudioLegatoCheck, AudioFreezeLastFrameCheck };
+			CheckBox[] checks = { /*AudioLegatoCheck,*/ AudioFreezeLastFrameCheck };
 			foreach (CheckBox checkBox in checks) {
 				if (checkBox == check) continue;
 				checkBox.Checked = false;
@@ -812,9 +864,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		[DllImport("dwmapi.dll")]
 		private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, int[] attrValue, int attrSize);
 
-		protected override void OnHandleCreated(EventArgs e) {
+		/*protected override void OnHandleCreated(EventArgs e) {
 			DwmSetWindowAttribute(Handle, 20, new[] { 1 }, 4);
-		}
+		}*/
 
 		private void ChooseSourceBtn_Click(object sender, EventArgs e) {
 			ChooseSourceCombo.SelectedIndex = 2;
@@ -891,6 +943,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void VideoParamsPresetsBtn_MouseDown(object sender, MouseEventArgs e) {
 			Console.WriteLine("默认");
+		}
+
+		private void ExperimentalThemeToolStripMenuItem_Click(object sender, EventArgs e) {
+			ThemeAllControls();
+			ToolStripMenuItem me = experimentalThemeToolStripMenuItem;
+			me.Checked = true;
+			me.Enabled = false;
 		}
 	}
 

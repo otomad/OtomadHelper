@@ -32,10 +32,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CustomRadio = new System.Windows.Forms.RadioButton();
 			this.CustomGroup = new System.Windows.Forms.GroupBox();
 			this.CustomTable = new System.Windows.Forms.TableLayoutPanel();
-			this.RowCountBox = new System.Windows.Forms.NumericUpDown();
 			this.RowCountLbl = new System.Windows.Forms.Label();
 			this.ColumnCountLbl = new System.Windows.Forms.Label();
-			this.ColumnCountBox = new System.Windows.Forms.NumericUpDown();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.FillRadio = new System.Windows.Forms.RadioButton();
 			this.AdaptRadio = new System.Windows.Forms.RadioButton();
@@ -43,15 +41,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
 			this.PaddingLbl = new System.Windows.Forms.Label();
 			this.PaddingBox = new System.Windows.Forms.NumericUpDown();
+			this.ColumnCountBox = new System.Windows.Forms.NumericUpDown();
+			this.RowCountBox = new System.Windows.Forms.NumericUpDown();
+			this.MinColumnsLink = new System.Windows.Forms.LinkLabel();
+			this.MaxColumnsLink = new System.Windows.Forms.LinkLabel();
 			this.dock.SuspendLayout();
 			this.table.SuspendLayout();
 			this.CustomGroup.SuspendLayout();
 			this.CustomTable.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.RowCountBox)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.ColumnCountBox)).BeginInit();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel4.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PaddingBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.ColumnCountBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.RowCountBox)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// dock
@@ -168,9 +170,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// CustomTable
 			// 
 			this.CustomTable.AutoSize = true;
-			this.CustomTable.ColumnCount = 2;
+			this.CustomTable.ColumnCount = 4;
+			this.CustomTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.CustomTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.CustomTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.CustomTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.CustomTable.Controls.Add(this.MinColumnsLink, 2, 0);
+			this.CustomTable.Controls.Add(this.MaxColumnsLink, 3, 0);
 			this.CustomTable.Controls.Add(this.RowCountBox, 1, 1);
 			this.CustomTable.Controls.Add(this.RowCountLbl, 0, 1);
 			this.CustomTable.Controls.Add(this.ColumnCountLbl, 0, 0);
@@ -186,27 +192,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CustomTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.CustomTable.Size = new System.Drawing.Size(317, 110);
 			this.CustomTable.TabIndex = 2;
-			// 
-			// RowCountBox
-			// 
-			this.RowCountBox.Dock = System.Windows.Forms.DockStyle.Left;
-			this.RowCountBox.Enabled = false;
-			this.RowCountBox.Location = new System.Drawing.Point(51, 39);
-			this.RowCountBox.Margin = new System.Windows.Forms.Padding(4);
-			this.RowCountBox.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.RowCountBox.Name = "RowCountBox";
-			this.RowCountBox.ReadOnly = true;
-			this.RowCountBox.Size = new System.Drawing.Size(94, 27);
-			this.RowCountBox.TabIndex = 3;
-			this.RowCountBox.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
 			// 
 			// RowCountLbl
 			// 
@@ -232,30 +217,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ColumnCountLbl.Text = "列数";
 			this.ColumnCountLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// ColumnCountBox
-			// 
-			this.ColumnCountBox.Dock = System.Windows.Forms.DockStyle.Left;
-			this.ColumnCountBox.Location = new System.Drawing.Point(51, 4);
-			this.ColumnCountBox.Margin = new System.Windows.Forms.Padding(4);
-			this.ColumnCountBox.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.ColumnCountBox.Name = "ColumnCountBox";
-			this.ColumnCountBox.Size = new System.Drawing.Size(94, 27);
-			this.ColumnCountBox.TabIndex = 2;
-			this.ColumnCountBox.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.ColumnCountBox.ValueChanged += new System.EventHandler(this.ColumnCountBox_ValueChanged);
-			// 
 			// flowLayoutPanel1
 			// 
 			this.flowLayoutPanel1.AutoSize = true;
-			this.CustomTable.SetColumnSpan(this.flowLayoutPanel1, 2);
+			this.CustomTable.SetColumnSpan(this.flowLayoutPanel1, 4);
 			this.flowLayoutPanel1.Controls.Add(this.FillRadio);
 			this.flowLayoutPanel1.Controls.Add(this.AdaptRadio);
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -326,15 +291,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PaddingLbl.Location = new System.Drawing.Point(4, 0);
 			this.PaddingLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.PaddingLbl.Name = "PaddingLbl";
-			this.PaddingLbl.Size = new System.Drawing.Size(69, 35);
+			this.PaddingLbl.Size = new System.Drawing.Size(39, 35);
 			this.PaddingLbl.TabIndex = 0;
-			this.PaddingLbl.Text = "增加边距";
+			this.PaddingLbl.Text = "边距";
 			this.PaddingLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// PaddingBox
 			// 
 			this.PaddingBox.Dock = System.Windows.Forms.DockStyle.Left;
-			this.PaddingBox.Location = new System.Drawing.Point(81, 4);
+			this.PaddingBox.Location = new System.Drawing.Point(51, 4);
 			this.PaddingBox.Margin = new System.Windows.Forms.Padding(4);
 			this.PaddingBox.Maximum = new decimal(new int[] {
             50,
@@ -344,6 +309,73 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PaddingBox.Name = "PaddingBox";
 			this.PaddingBox.Size = new System.Drawing.Size(94, 27);
 			this.PaddingBox.TabIndex = 1;
+			// 
+			// ColumnCountBox
+			// 
+			this.ColumnCountBox.Dock = System.Windows.Forms.DockStyle.Left;
+			this.ColumnCountBox.Location = new System.Drawing.Point(51, 4);
+			this.ColumnCountBox.Margin = new System.Windows.Forms.Padding(4);
+			this.ColumnCountBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.ColumnCountBox.Name = "ColumnCountBox";
+			this.ColumnCountBox.Size = new System.Drawing.Size(94, 27);
+			this.ColumnCountBox.TabIndex = 2;
+			this.ColumnCountBox.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.ColumnCountBox.ValueChanged += new System.EventHandler(this.ColumnCountBox_ValueChanged);
+			// 
+			// RowCountBox
+			// 
+			this.RowCountBox.Dock = System.Windows.Forms.DockStyle.Left;
+			this.RowCountBox.Enabled = false;
+			this.RowCountBox.Location = new System.Drawing.Point(51, 39);
+			this.RowCountBox.Margin = new System.Windows.Forms.Padding(4);
+			this.RowCountBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.RowCountBox.Name = "RowCountBox";
+			this.RowCountBox.ReadOnly = true;
+			this.RowCountBox.Size = new System.Drawing.Size(94, 27);
+			this.RowCountBox.TabIndex = 3;
+			this.RowCountBox.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			// 
+			// MinColumnsLink
+			// 
+			this.MinColumnsLink.AutoSize = true;
+			this.MinColumnsLink.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MinColumnsLink.Location = new System.Drawing.Point(152, 0);
+			this.MinColumnsLink.Name = "MinColumnsLink";
+			this.MinColumnsLink.Size = new System.Drawing.Size(54, 35);
+			this.MinColumnsLink.TabIndex = 5;
+			this.MinColumnsLink.TabStop = true;
+			this.MinColumnsLink.Text = "最小值";
+			this.MinColumnsLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.MinColumnsLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.MinColumnsLink_LinkClicked);
+			// 
+			// MaxColumnsLink
+			// 
+			this.MaxColumnsLink.AutoSize = true;
+			this.MaxColumnsLink.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MaxColumnsLink.Location = new System.Drawing.Point(212, 0);
+			this.MaxColumnsLink.Name = "MaxColumnsLink";
+			this.MaxColumnsLink.Size = new System.Drawing.Size(102, 35);
+			this.MaxColumnsLink.TabIndex = 6;
+			this.MaxColumnsLink.TabStop = true;
+			this.MaxColumnsLink.Text = "最大值";
+			this.MaxColumnsLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.MaxColumnsLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.MaxColumnsLink_LinkClicked);
 			// 
 			// AutoLayoutTracksGridForm
 			// 
@@ -373,13 +405,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CustomGroup.PerformLayout();
 			this.CustomTable.ResumeLayout(false);
 			this.CustomTable.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.RowCountBox)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.ColumnCountBox)).EndInit();
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.flowLayoutPanel1.PerformLayout();
 			this.tableLayoutPanel4.ResumeLayout(false);
 			this.tableLayoutPanel4.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PaddingBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.ColumnCountBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.RowCountBox)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -394,10 +426,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private System.Windows.Forms.RadioButton CustomRadio;
 		private System.Windows.Forms.GroupBox CustomGroup;
 		private System.Windows.Forms.TableLayoutPanel CustomTable;
-		private System.Windows.Forms.NumericUpDown RowCountBox;
 		private System.Windows.Forms.Label RowCountLbl;
 		private System.Windows.Forms.Label ColumnCountLbl;
-		private System.Windows.Forms.NumericUpDown ColumnCountBox;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 		private System.Windows.Forms.RadioButton FillRadio;
 		private System.Windows.Forms.RadioButton AdaptRadio;
@@ -405,5 +435,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
 		private System.Windows.Forms.Label PaddingLbl;
 		private System.Windows.Forms.NumericUpDown PaddingBox;
+		private System.Windows.Forms.LinkLabel MinColumnsLink;
+		private System.Windows.Forms.LinkLabel MaxColumnsLink;
+		private System.Windows.Forms.NumericUpDown RowCountBox;
+		private System.Windows.Forms.NumericUpDown ColumnCountBox;
 	}
 }

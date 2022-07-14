@@ -48,5 +48,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			bool isCustom = CustomRadio.Checked;
 			CustomGroup.Enabled = isCustom;
 		}
+
+		private void MinColumnsLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+			ColumnCountBox.Value = ColumnCountBox.Minimum;
+		}
+
+		private void MaxColumnsLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+			ColumnCountBox.Value = ColumnCountBox.Maximum;
+		}
 	}
 }
