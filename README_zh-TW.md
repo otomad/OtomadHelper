@@ -74,15 +74,15 @@ Vegas Pro 17 和 19 測試**正常**。
 * [@酥妃大魔王](https://space.bilibili.com/8569439)
 
 ### 幫助和疑難排解
-**我的文檔：** *（中文）*
+**我的文檔：***（中文）*
 * [發行説明 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [發行説明 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**Chaosinism 的原版文檔：** *（中文）*
+**Chaosinism 的原版文檔：***（中文）*
 * [說明文檔 (v0.1) (B 站)](https://www.bilibili.com/read/cv392013)
 * [五線譜視覺化文檔 (v0.1)](https://www.bilibili.com/read/cv1027442)
 * [疑難排解](https://www.bilibili.com/read/cv495309)
 * [教程視頻 (v0.1)](https://www.bilibili.com/video/av22226321)
 
-**Chaosinism 的原版文檔：** *（日語）*
+**Chaosinism 的原版文檔：***（日語）*
 * [說明文檔 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
