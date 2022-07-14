@@ -73,14 +73,16 @@ Vegas Pro 17 および 19 は**正常**にテストされました。
 * [@氷鳩さくの](https://space.bilibili.com/13084550)
 * [@酥妃大魔王](https://space.bilibili.com/8569439)
 
-### ヘルプとトラブルシューティング *（中国語）*
-**私のドキュメンテーション：**
+### ヘルプとトラブルシューティング
+**私のドキュメンテーション：***（中国語）*
 * [リリースノート (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [リリースノート (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**Chaosinismの元のドキュメンテーション：**
+**Chaosinismの元のドキュメンテーション：***（中国語）*
 * [ドキュメンテーション (v0.1) (ビリビリ)](https://www.bilibili.com/read/cv392013)
-* [ドキュメンテーション (v0.1) (ボウルロール)](https://bowlroll.net/user/261124)
 * [ステーブ視覚化のドキュメンテーション (v0.1)](https://www.bilibili.com/read/cv1027442)
 * [トラブルシューティング](https://www.bilibili.com/read/cv495309)
 * [チュートリアルビデオ (v0.1)](https://www.bilibili.com/video/av22226321)
+
+**Chaosinismの元のドキュメンテーション：***（日本語）*
+* [ドキュメンテーション (v0.1) (ボウルロール)](https://bowlroll.net/user/261124)
