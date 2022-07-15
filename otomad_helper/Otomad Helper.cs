@@ -5,7 +5,7 @@
  * 具体说明请参见下方的说明文档链接。
  * 本脚本基于原作者 Chaosinism 的开源代码二次开发，此外使用了 NAudio 库。
  *
- * 新版脚本由 淅琳雨 Otomad 重新编写。
+ * 新版脚本由兰音重新编写。
  * 在此处获取最新版：https://github.com/otomad/VegasScripts/releases/latest
  * 仓库地址：https://github.com/otomad/VegasScripts
  *
@@ -29,7 +29,7 @@
  * https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/
  *
  * 开工时间：公元 2021 年 9 月 5 日 星期日，上午 4:14:26
- * Copyright (c) 2021，淅琳雨
+ * Copyright (c) 2021, Ranne
  *
  * 本程序是一个自由的软件，你可以重新分发它，可以魔改它，但要遵守 GPL 3.0 版本或者后续其它版本。
  * 我们希望本程序是有用的，但是我们不保证它能用，不保证它好用，我们不提供任何保证。
@@ -95,9 +95,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 19, 14, 0);
+		public static readonly Version VERSION = new Version(4, 19, 15, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 7, 14);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 7, 15);
 
 		// 配置参数变量
 		#region 视频属性
@@ -176,8 +176,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		#endregion
 
 		#region 媒体属性
-		/* 起始时间 */
-		private double SourceConfigStartTime { get { return configForm.SourceStartTimeText.DoubleValue; } }
+		/* 起始时间 */ private double SourceConfigStartTime { get { return configForm.SourceStartTimeText.DoubleValue; } }
 		/* 终止时间 */ private double SourceConfigEndTime { get { return configForm.SourceStartTimeText.DoubleValue; } }
 		/* 素材来源 */ private MediaSourceFrom SourceConfigFrom { get { return (MediaSourceFrom)configForm.ChooseSourceCombo.SelectedIndex; } }
 		/* 生成位置 */ private GenerateAt GenerateAt { get { return configForm.GenerateAt; } }
@@ -1203,7 +1202,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						key1.ScaleBy(new VideoMotionVertex(endRatio, endRatio));
 						key1.MoveBy(new VideoMotionVertex(Math.Abs(1 - endRatio) * width / 2 * VConfigEndHTrans / 100, Math.Abs(1 - endRatio) * height / 2 * VConfigEndVTrans / 100));
 					}
-					// 色相、饱和度、对比度
+					// 色相、饱和度、对比度、对比度中心（阈值）
 					if (Plugin.hslAdjust != null) Plugin.ForVideoEvents.HueAndSaturationParam(videoEvent, VConfigStartHue, VConfigEndHue, VConfigStartSaturation, VConfigEndSaturation, VConfigStartHueCurve, VConfigStartSaturationCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return false; }
 					if (Plugin.contrast != null) Plugin.ForVideoEvents.ContrastAndThresholdParam(videoEvent, VConfigStartContrast, VConfigEndContrast, VConfigStartThreshold, VConfigEndThreshold, VConfigStartContrastCurve, VConfigStartThresholdCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
 					// 单独对所有关键帧处理翻转
@@ -1318,9 +1317,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#region 消除间隙
 			// ⸘视频被削除了‽
 			// 注意该方法目前仅能支持不可变的 BPM 和节拍，对于可变的值仅使用其初值。暂时还没有更加妥当的方法，先这样将就一下。此外视频参数的终止值也没法映射到延长长度后的位置上。
-			double maxGap = midi.MsPerQuarter;
-			if (VConfigLegato == LegatoMaxGapType.ONE_BAR_LONGEST) maxGap *= midi.TimeSignatureNumerator;
-			else if (VConfigLegato == LegatoMaxGapType.UNLIMITED) maxGap = double.MaxValue;
+			double quarter = midi.MsPerQuarter, bar = quarter * midi.TimeSignatureNumerator;
+			double[] maxGaps = { 0, quarter, bar, double.MaxValue };
+			double vMaxGap = maxGaps[(int)VConfigLegato], aMaxGap = maxGaps[(int)AConfigLegato];
 			if (VConfigLegato != LegatoMaxGapType.STACCATO && !SheetConfig && VConfig) {
 				List<VideoTrack> videoTracks = new List<VideoTrack> { vTrack };
 				if (vTracks != null) videoTracks.AddRange(vTracks);
@@ -1328,7 +1327,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (track != null) {
 						TrackEvents events = track.Events;
 						for (int i = 0; i < events.Count - 1; i++)
-							if ((events[i + 1].Start - events[i].End).ToMilliseconds() <= maxGap)
+							if ((events[i + 1].Start - events[i].End).ToMilliseconds() <= vMaxGap)
 								events[i].End = events[i + 1].Start;
 					}
 			}
@@ -1337,7 +1336,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (aTrack != null) {
 						TrackEvents events = aTrack.Events;
 						for (int i = 0; i < events.Count - 1; i++)
-							if ((events[i + 1].Start - events[i].End).ToMilliseconds() <= maxGap)
+							if ((events[i + 1].Start - events[i].End).ToMilliseconds() <= aMaxGap)
 								events[i].End = events[i + 1].Start;
 					}
 			#endregion
@@ -16319,7 +16318,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				{ str.vegas_version, vegas.Version },
 				{ str.script_supported_vegas_version, EntryPoint.GetScriptSupportedVersionRange() },
 				{ "", "" },
-				{ str.script_author, "淅琳雨" },
+				{ str.script_author, str.ranne },
 				{ str.script_original_author , "Chaosinism" },
 				{ "", "" },
 				{ str.repository_link , Links.REPOSITORY },
@@ -17625,6 +17624,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			script_author = "脚本作者",
 			script_original_author = "脚本原作者",
 			documentation = "说明文档",
+			ranne = "兰音",
 			why_ok_btn_is_disabled_info = "请按照下列步骤依次检查问题：",
 			why_ok_btn_is_disabled_no_audio_and_video_enabled = "“生成音频”与“生成视频”被同时取消勾选。请至少勾选生成其中一项。",
 			why_ok_btn_is_disabled_no_media_take = "所选的媒体素材来源不包含任何有效媒体资源。",
@@ -18118,6 +18118,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				script_author = "Author",
 				script_original_author = "Original author",
 				documentation = "Documentation",
+				ranne = "Ranne",
 				why_ok_btn_is_disabled_info = "Please follow these steps to check the problem in turn:",
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "Enabled Audio and Enabled Video are both unchecked. Please check to enable at least one of them.",
 				why_ok_btn_is_disabled_no_media_take = "The selected media sources does not contain any valid media takes.",
@@ -18608,7 +18609,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				about_title = "關於",
 				script_author = "腳本作者",
 				script_original_author = "腳本原作者",
-				documentation = "說明檔案",
+				documentation = "蘭音",
 				why_ok_btn_is_disabled_info = "請按照下列步驟依次檢查問題：",
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「生成音訊」與「生成視頻」被同時取消勾選。請至少勾選生成其中一項。",
 				why_ok_btn_is_disabled_no_media_take = "所選的媒體素材來源不包含任何有效媒體資源。",
@@ -19101,6 +19102,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				script_author = "著者",
 				script_original_author = "原著者",
 				documentation = "説明文書",
+				ranne = "蘭音",
 				why_ok_btn_is_disabled_info = "次の手順に従って順番に問題を確認してください：",
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「オーディオを有効」と「ビデオを有効」は同時にチェックアウトされます。少なくとも一つを有効にしてください。",
 				why_ok_btn_is_disabled_no_media_take = "選択されたメディア素材のソースには、有効なメディアリソースが含まれていません。",
@@ -19593,6 +19595,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				script_author = "Автор",
 				script_original_author = "Автор оригинала",
 				documentation = "Описание документа",
+				ranne = "Ранне",
 				why_ok_btn_is_disabled_info = "Пожалуйста, проверьте вопрос по порядку:",
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "создание аудио и создание видео были отменены одновременно. Выберите хотя бы один из них.",
 				why_ok_btn_is_disabled_no_media_take = "выбранный источник материалов для СМИ не содержит никаких эффективных средств массовой информации.",
