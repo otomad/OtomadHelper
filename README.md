@@ -17,6 +17,8 @@ It can also be used to make YTP. And Drums beat cookie cutter, Lyrics/Karaoke, M
 
 The store will be supported for downloading related templates in the future.
 
+The related functions of YTP refer to [YTP+](https://github.com/YTP-Plus).
+
 ### Usage
 Select the source track event in the track window, or select source media file in media pool window, or browse another media file (in the script configure form), then open the script to configure and generate.
 
@@ -70,6 +72,7 @@ If you use this script, the script will use the following permissions.
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
 * [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
 * [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
+* [https://github.com/YTP-Plus](https://github.com/YTP-Plus)
 * [https://www.jetdv.com/](https://www.jetdv.com/)
 * [https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
