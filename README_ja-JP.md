@@ -12,6 +12,8 @@ YTPを作成することも可能です。 将来的にはドラムビート範�
 
 将来的には、他のユーザーが作成したテンプレートやその他の関連資料をダウンロードするためのストア機能が追加される予定です。
 
+YTPの関連機能は[YTP+](https://github.com/YTP-Plus)から参照。
+
 ### 使用法
 「トラック」ウィンドウでクリップを選択するか、「プロジェクトメディア」ウィンドウでクリップを選択するか、手動で参照して他のクリップを選択します（「スクリプト」ウィンドウを開いた後）。 その後、スクリプト構成を開いて生成できます。
 
@@ -65,6 +67,7 @@ Vegas Pro 17 および 19 は**正常**にテストされました。
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
 * [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
 * [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
+* [https://github.com/YTP-Plus](https://github.com/YTP-Plus)
 * [https://www.jetdv.com/](https://www.jetdv.com/)
 * [https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
