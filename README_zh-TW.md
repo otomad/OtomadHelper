@@ -12,6 +12,8 @@
 
 未來也會增加商城功能用於下載其他使用者製作的範本等相關素材。
 
+YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
+
 ### 使用方法
 在軌道視窗中選中素材，或在專案媒體視窗中選中素材，或在（打開腳本視窗後）手動流覽選擇其它素材。然後即可打開腳本配置並生成。
 
@@ -65,6 +67,7 @@ Vegas Pro 17 和 19 測試**正常**。
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
 * [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
 * [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
+* [https://github.com/YTP-Plus](https://github.com/YTP-Plus)
 * [https://www.jetdv.com/](https://www.jetdv.com/)
 * [https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
