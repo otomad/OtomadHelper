@@ -12,6 +12,8 @@
 
 未来也会增加商城功能用于下载其他用户制作的模板等相关素材。
 
+YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
+
 ### 使用方法
 在轨道窗口中选中素材，或在项目媒体窗口中选中素材，或在（打开脚本窗口后）手动浏览选择其它素材。然后即可打开脚本配置并生成。
 
@@ -65,6 +67,7 @@ Vegas Pro 17 和 19 测试**正常**。
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
 * [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
 * [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
+* [https://github.com/YTP-Plus](https://github.com/YTP-Plus)
 * [https://www.jetdv.com/](https://www.jetdv.com/)
 * [https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
