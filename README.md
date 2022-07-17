@@ -65,7 +65,7 @@ All can create issues.
 
 ### Terms of Use
 1. Respect the rights and interests of authors when creating with non-self-made MIDI/source.
-2. With this script, users need to satisfy certain ability to create Otomad/YTPMV. This script should and should only be used to assist in creations. Do not rely solely on this script to generate works or learn to creating Otomad/YTPMV as a beginner. Listen, don't make Otomidi!
+2. Using this script requires some creative abilities from the users. This script should and should only be used to assist in creations. Do not rely solely on this script to generate productions or learn to creating Otomad/YTPMV as a beginner. Listen, don't make Otomidi!
 
 ### Permissions
 If you use this script, the script will use the following permissions.
