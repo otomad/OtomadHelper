@@ -951,6 +951,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			me.Checked = true;
 			me.Enabled = false;
 		}
+
+		private void QuickConfigMidiChannelsToolStripMenuItem_Click(object sender, EventArgs e) {
+			MidiChannelCombo_SelectedIndexChanged(null, null);
+		}
+
+		private void CheckUpdateToolStripMenuItem_Click(object sender, EventArgs e) {
+			Console.WriteLine("更新");
+		}
 	}
 
 	public static class Extensions {

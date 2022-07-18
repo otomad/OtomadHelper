@@ -369,11 +369,11 @@
 
 		#endregion
 
-		public System.Windows.Forms.TableLayoutPanel dock;
-		public System.Windows.Forms.Button OkBtn;
-		public System.Windows.Forms.Button CancelBtn;
+		private System.Windows.Forms.TableLayoutPanel dock;
+		private System.Windows.Forms.Button OkBtn;
+		private System.Windows.Forms.Button CancelBtn;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-		private System.Windows.Forms.ListView ChannelListView;
+		public System.Windows.Forms.ListView ChannelListView;
 		private System.Windows.Forms.ColumnHeader ChannelHeader;
 		private System.Windows.Forms.ColumnHeader NameHeader;
 		private System.Windows.Forms.ColumnHeader InstrumentHeader;
@@ -381,11 +381,11 @@
 		private System.Windows.Forms.ColumnHeader BeginNoteHeader;
 		private System.Windows.Forms.GroupBox AutoLayoutTracksGroup;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-		public System.Windows.Forms.Button ResetAutoLayoutTracksBtn;
-		public System.Windows.Forms.TableLayoutPanel AutoLayoutTracksButtons;
-		public System.Windows.Forms.Button GradientTracksBtn;
-		public System.Windows.Forms.Button AutoLayoutTracksBox3dBtn;
-		public System.Windows.Forms.Button AutoLayoutTracksGridBtn;
+		private System.Windows.Forms.Button ResetAutoLayoutTracksBtn;
+		private System.Windows.Forms.TableLayoutPanel AutoLayoutTracksButtons;
+		private System.Windows.Forms.Button GradientTracksBtn;
+		private System.Windows.Forms.Button AutoLayoutTracksBox3dBtn;
+		private System.Windows.Forms.Button AutoLayoutTracksGridBtn;
 		private System.Windows.Forms.Label MidiChannelAdvancedAutoLayoutTracksInfo;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 		private System.Windows.Forms.Button EditNotesBtn;
