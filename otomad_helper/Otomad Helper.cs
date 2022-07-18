@@ -96,7 +96,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 19, 18, 0);
+		public static readonly Version VERSION = new Version(4, 19, 18, 1);
 		/// <summary>修订日期</summary>
 		public static readonly DateTime REVISION_DATE = new DateTime(2022, 7, 18);
 
@@ -3205,10 +3205,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					action(track, value);
 				}
 			}
-			private static void AlternatelyBase(Track[] tracks, bool isAlternative, Action<Track> action) {
+			private static void AlternatelyBase(Track[] tracks, bool isAlternative, int gridColumn, Action<Track> action) {
+				bool useGrid = gridColumn > 0;
+				int value = isAlternative ? 1 : 0;
 				for (int i = 0; i < tracks.Length; i++) {
 					Track track = tracks[i];
-					if (i % 2 == (isAlternative ? 1 : 0)) action(track);
+					int effectiveValue = i % 2;
+					if (useGrid) {
+						int column = i % gridColumn,
+							row = i / gridColumn;
+						effectiveValue = ((int)Math.Pow(-1, column + row) + 1) / 2;
+					}
+					if (effectiveValue == value) action(track);
 				}
 			}
 			/// <summary>
@@ -3264,8 +3272,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// </summary>
 			/// <param name="tracks">轨道数组</param>
 			/// <param name="isAlternative">替代顺序</param>
-			public static void Chromatic(Track[] tracks, bool isAlternative = false) {
-				AlternatelyBase(tracks, !isAlternative, track => {
+			/// <param name="gridColumn">自动布局轨道网格布局的列数</param>
+			public static void Chromatic(Track[] tracks, bool isAlternative = false, int gridColumn = 0) {
+				AlternatelyBase(tracks, isAlternative, gridColumn, track => {
 					Effect effect = track.Effects.AddEffect(blackAndWhite);
 				});
 			}
@@ -3274,8 +3283,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// </summary>
 			/// <param name="tracks">轨道数组</param>
 			/// <param name="isAlternative">替代顺序</param>
-			public static void Negative(Track[] tracks, bool isAlternative = false) {
-				AlternatelyBase(tracks, isAlternative, track => {
+			/// <param name="gridColumn">自动布局轨道网格布局的列数</param>
+			public static void Negative(Track[] tracks, bool isAlternative = false, int gridColumn = 0) {
+				AlternatelyBase(tracks, isAlternative, gridColumn, track => {
 					Effect effect = track.Effects.AddEffect(invert);
 				});
 			}
@@ -7330,15 +7340,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private int Column { get { return (int)ColumnCountBox.Value; } }
 		private int Row {
 			get {
-				return !IsCustom ? Column : (int)Math.Ceiling(Count / (double)Column);
+				return !IsCustom ? Column : GetRow(Count, Column);
 			}
 		}
 		private bool IsReverse { get { return ReverseTracksCheck.Checked; } }
 		private int TracksPadding { get { return (int)PaddingBox.Value; } }
 
 		private void ColumnCountBox_ValueChanged(object sender, EventArgs e) {
-			if (!IsCustom) ColumnCountBox.SetValue((int)Math.Ceiling(Math.Sqrt(Count)));
+			if (!IsCustom) ColumnCountBox.SetValue(GetSquareSide(Count));
 			RowCountBox.SetValue(Row);
+		}
+		
+		public static int GetRow(int count, int column) {
+			return (int)Math.Ceiling(count / (double)column);
+		}
+		public static int GetSquareSide(int count) {
+			return (int)Math.Ceiling(Math.Sqrt(count));
 		}
 
 		private void CustomRadio_CheckedChanged(object sender, EventArgs e) {
@@ -7405,7 +7422,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		public void ReadIni() {
 			configIni.StartSection("AutoLayoutTracksGrid");
-			ReverseTracksCheck.Checked = configIni.Read("ReverseTracks", true);
+			ReverseTracksCheck.Checked = configIni.Read("Reversed", true);
 			PaddingBox.SetValue(configIni.Read("Padding", 0), 0);
 			bool isSquare = configIni.Read("IsSquare", true);
 			if (isSquare) SquareRadio.Checked = true;
@@ -7422,7 +7439,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.StartSection("AutoLayoutTracksGrid");
 			configIni.Write("IsSquare", SquareRadio.Checked);
 			configIni.Write("IsFill", FillRadio.Checked);
-			configIni.Write("ReverseTracks", ReverseTracksCheck.Checked);
+			configIni.Write("Reversed", ReverseTracksCheck.Checked);
 			configIni.Write("ColumnCount", ColumnCountBox.Value);
 			configIni.Write("Padding", PaddingBox.Value);
 			configIni.EndSection();
@@ -8167,12 +8184,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private System.Windows.Forms.CheckBox ReverseCheck;
 	}
 
-	public partial class GradientTracksForm : Form, IAutoLayoutTracks, IInterpret {
+	public partial class GradientTracksForm : Form, IAutoLayoutTracks, IInterpret, IConfigIniUser {
 		private readonly EntryPoint parent;
 		private Vegas vegas { get { return parent.vegas; } }
+		private ConfigIni configIni { get { return parent.configIni; } }
 		private AutoLayoutTracksInfos.GradientTracksInfo info;
 		private readonly VideoTrack[] tracks;
 		public bool IsToolMode { get { return info == null; } }
+		public bool EnableAutoLayoutTracksGrid { get { return info != null && info.AllInfos.Grid.enabled || gridInfo != null && gridInfo.enabled; } }
+		private AutoLayoutTracksInfos.GridInfo gridInfo;
 		public GradientTracksForm(EntryPoint e) : this(e, null, null) { }
 		public GradientTracksForm(EntryPoint entryPoint, AutoLayoutTracksInfos.GradientTracksInfo info = null, VideoTrack[] tracks = null) {
 			InitializeComponent();
@@ -8182,6 +8202,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Translate();
 			EffectsCombo.SelectedIndex = 0;
 			ReverseCheck.Checked = true;
+			ReadIni();
+			FormClosing += (sender, e) => SaveIni();
 			ReadFromInfo();
 			this.tracks = tracks ?? parent.GetSelectedVideoTracks();
 		}
@@ -8207,6 +8229,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			EffectsCombo.SetIndex((int)info.effect, 0);
 			ReverseCheck.Checked = info.descending;
 			if (_info != null) ReverseCheck.Checked = !ReverseCheck.Checked;
+			if (_info != null && _info.AllInfos.Grid.enabled) gridInfo = _info.AllInfos.Grid;
 
 			if (_info != null) info = null;
 		}
@@ -8215,6 +8238,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Plugin.Init(vegas);
 			VideoTrackGradientEffectType effect = (VideoTrackGradientEffectType)EffectsCombo.SelectedIndex;
 			bool isReversed = ReverseCheck.Checked;
+			int gridColumn = 0; // 0 表示无效值。
+			if (EnableAutoLayoutTracksGrid && gridInfo != null)
+				gridColumn = gridInfo.isSquare ? AutoLayoutTracksGridForm.GetSquareSide(tracks.Length) : gridInfo.columns;
 			switch (effect) {
 				case VideoTrackGradientEffectType.RAINBOW:
 					if (Plugin.hslAdjust == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return; }
@@ -8234,11 +8260,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					break;
 				case VideoTrackGradientEffectType.ALTERNATELY_CHROMATIC:
 					if (Plugin.blackAndWhite == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.black_and_white)); return; }
-					Plugin.ForVideoTracks.Chromatic(tracks, isReversed);
+					Plugin.ForVideoTracks.Chromatic(tracks, isReversed, gridColumn);
 					break;
 				case VideoTrackGradientEffectType.ALTERNATELY_NEGATIVE:
 					if (Plugin.invert == null) { EntryPoint.ShowError(new Exceptions.NoPluginNameException(Lang.str.invert)); return; }
-					Plugin.ForVideoTracks.Negative(tracks, isReversed);
+					Plugin.ForVideoTracks.Negative(tracks, isReversed, gridColumn);
 					break;
 				default:
 					break;
@@ -8265,6 +8291,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			});
 			ReverseCheck.Text = IsToolMode ? str.descending : str.ascending;
 			Text = str.gradient_tracks;
+		}
+		
+		public void ReadIni() {
+			configIni.StartSection("GradientTracks");
+			EffectsCombo.SetIndex(configIni.Read("Effect", 0), 0);
+			ReverseCheck.Checked = configIni.Read("Reversed", true);
+			configIni.EndSection();
+		}
+
+		public void SaveIni() {
+			configIni.StartSection("GradientTracks");
+			configIni.Write("Effect", EffectsCombo.SelectedIndex);
+			configIni.Write("Reversed", ReverseCheck.Checked);
+			configIni.EndSection();
 		}
 	}
 
@@ -10091,27 +10131,29 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public readonly MidiChannels channels;
 		public AutoLayoutTracksInfos(MidiChannels channels) {
 			this.channels = channels;
-			gradientTracks = new GradientTracksInfo(channels);
-			grid = new GridInfo(channels);
+			gradientTracks = new GradientTracksInfo(this);
+			grid = new GridInfo(this);
 		}
 		public abstract class BaseAutoLayoutTracksInfo {
 			public bool enabled = false;
 			private readonly MidiChannels channels;
-			public MidiChannels Channels { get { return channels; } }
-			public BaseAutoLayoutTracksInfo(MidiChannels channels) {
-				this.channels = channels;
+			public MidiChannels Channels { get { return allInfos.channels; } }
+			private readonly AutoLayoutTracksInfos allInfos;
+			public AutoLayoutTracksInfos AllInfos { get { return allInfos; } }
+			public BaseAutoLayoutTracksInfo(AutoLayoutTracksInfos allInfos) {
+				this.allInfos = allInfos;
 			}
 			public BaseAutoLayoutTracksInfo Clone() {
 				return MemberwiseClone() as BaseAutoLayoutTracksInfo;
 			}
 		}
 		public class GradientTracksInfo : BaseAutoLayoutTracksInfo {
-			public GradientTracksInfo(MidiChannels channels) : base(channels) { }
+			public GradientTracksInfo(AutoLayoutTracksInfos allInfos) : base(allInfos) { }
 			public VideoTrackGradientEffectType effect;
 			public bool descending;
 		}
 		public class GridInfo : BaseAutoLayoutTracksInfo {
-			public GridInfo(MidiChannels channels) : base(channels) { }
+			public GridInfo(AutoLayoutTracksInfos allInfos) : base(allInfos) { }
 			public bool isSquare;
 			public int columns;
 			public bool isFill;
