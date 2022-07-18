@@ -2,7 +2,7 @@
 <div align="center">
 	<h1>VegasScripts</h1>
 	<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="Badge" />
-	<img src="https://img.shields.io/badge/VERSION-4.19.15.0-orange?style=flat-square" alt="Badge" />
+	<img src="https://img.shields.io/badge/VERSION-4.19.18.0-orange?style=flat-square" alt="Badge" />
 </div>
 <div align="center">
 	<h2>Otomad Helper</h2>
