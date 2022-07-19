@@ -27,9 +27,9 @@ YTPの関連機能は[YTP+](https://github.com/YTP-Plus)から参照。
 ### インストール
 1. スクリプトの最新バージョンを[ダウンロード](https://github.com/otomad/VegasScripts/releases/latest)します。
 2. zipファイル内の**すべて**のファイルを解凍し、Vegasインストールディレクトリの下の「スクリプトメニュー」フォルダに配置します。
-> (例えば：C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu)
-3. DLLファイル (DLL/NAudio.dll) がロックされていないことを確認してください。**具体的な手順：**
-	1. Vegasのインストールディレクトリで、Script Menu/DLLフォルダを順番に入力します。
+> (例えば：C:¥Program Files¥VEGAS¥VEGAS Pro 17.0¥Script Menu)
+3. DLLファイル (DLL¥NAudio.dll) がロックされていないことを確認してください。**具体的な手順：**
+	1. Vegasのインストールディレクトリで、Script Menu¥DLLフォルダを順番に入力します。
 	2. NAudio.dllファイルを右クリックし、［プロパティ］を選択します。
 	3. 「ロック解除」ボタンが表示されたら、それをクリックします。
 	4. ［プロパティ］ダイアログを閉じれば完了です。
@@ -56,7 +56,7 @@ Vegas Pro 17 および 19 は**正常**にテストされました。
 「issues」を提出できます。
 
 ### ロードマップ
-[ロードマップ >](ROADMAP.md)
+[ロードマップ >](roadmap.md)
 
 ### 利用規約
 1. 非自作MIDI/素材を使用して創作する場合は、その作者の権益を尊重してください。
@@ -66,9 +66,11 @@ Vegas Pro 17 および 19 は**正常**にテストされました。
 スクリプトを使用する場合、次の権限が使用されます。
 1. ファイルの読み取りと書き込み。<br />
 	スクリプトは、ユーザー構成設定を保持するファイルをディスク上に作成します。
+	> パス：C:¥Users¥(あなたのユーザーネーム)¥AppData¥Roaming¥VEGAS Pro¥(Vegasバージョン)¥Otomad Helper.ini
 2. レジストリの読み取りと書き込み。<br />
 	ピッチシフトプラグインプリセットをインストールまたはアンインストールするには、スクリプトでレジストリを読み書きする必要があります。<br />
 	ピッチシフトプラグインのチューニングアルゴリズムを使用しない場合は、この権限を無視できます。
+	> パス：HKEY_CURRENT_USER¥Software¥DirectShow¥Presets¥{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
 
 ### 参考
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
