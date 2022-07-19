@@ -32,9 +32,9 @@ You can also read [@Evauation](https://github.com/Evauation) 's [documentation](
 ### Install
 1. [Download](https://github.com/otomad/VegasScripts/releases/latest) the latest version of this script.
 2. Unzip **ALL** the files in the zip file you've just downloaded to the "Script Menu" folder in the Vegas installation directory.
-> (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu)
+> (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 17.0\\Script Menu)
 3. Make sure that the DLL file (DLL/NAudio.dll) is not locked. **Specific steps:**
-	1. In the Vegas installation directory, enter folder Script Menu\DLL.
+	1. In the Vegas installation directory, enter folder Script Menu\\DLL.
 	2. Right-click the NAudio.dll file and select Properties.
 	3. If you see the "Unlock" button, click it.
 	4. Close the Properties dialog and you're done.
@@ -71,9 +71,11 @@ All can create issues.
 If you use this script, the script will use the following permissions.
 1. File read and write.<br />
 	The script reads and writes an INI user profile in your disk memory to save your user data.
+	> Location: C:\\Users\\(Your User Name)\\AppData\\Roaming\\VEGAS Pro\\(Your Vegas Version)\\Otomad Helper.ini
 2. Registry read and write.<br />
 	The script need to read and write the registry to install or uninstall pitch-shift plugin presets.<br />
 	If you don't use pitch-shift plugin method in script, you can ignore the installation presets and thus not use this permission.
+	> Location: HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
 
 ### References
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
