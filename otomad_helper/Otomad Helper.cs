@@ -16534,7 +16534,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				GITHUB_LATEST = "https://github.com/otomad/VegasScripts/releases/latest",
 				REPOSITORY = "https://github.com/otomad/VegasScripts",
 				REPOSITORY_ORIG = "https://github.com/Chaosinism/vegas_scripts",
-				ROADMAP = "https://github.com/otomad/VegasScripts/blob/winform/ROADMAP.md",
+				ROADMAP = "https://github.com/otomad/VegasScripts/blob/winform/roadmap.md",
 				UPDATE_LOGS = "https://github.com/otomad/VegasScripts/releases",
 				TROUBLE_SHOOTING = "https://www.bilibili.com/read/cv495309",
 				DOCUMENTATION_V0_1 = "https://www.bilibili.com/read/cv392013",
