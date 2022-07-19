@@ -33,7 +33,7 @@ You can also read [@Evauation](https://github.com/Evauation) 's [documentation](
 1. [Download](https://github.com/otomad/VegasScripts/releases/latest) the latest version of this script.
 2. Unzip **ALL** the files in the zip file you've just downloaded to the "Script Menu" folder in the Vegas installation directory.
 > (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 17.0\\Script Menu)
-3. Make sure that the DLL file (DLL/NAudio.dll) is not locked. **Specific steps:**
+3. Make sure that the DLL file (DLL\\NAudio.dll) is not locked. **Specific steps:**
 	1. In the Vegas installation directory, enter folder Script Menu\\DLL.
 	2. Right-click the NAudio.dll file and select Properties.
 	3. If you see the "Unlock" button, click it.
@@ -123,4 +123,4 @@ Compilation note for Sony Vegas **(v13 and under)**:
   * (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu)
 * Some scripts require additional DLLs, put them in a "DLL" folder in the "Script Menu" folder.
   * (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu\DLL)
-* Make sure that the DLL files (such as DLL/NAudio.dll) are not locked.
+* Make sure that the DLL files (such as DLL\\NAudio.dll) are not locked.
