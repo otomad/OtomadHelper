@@ -66,11 +66,11 @@ Vegas Pro 17 和 19 测试**正常**。
 使用脚本时，将会使用如下权限：
 1. 文件读写。<br />
 	脚本会在磁盘中创建一个文件用来保存您的用户配置设置。
-	> 路径：C:\Users\(你的用户名)\AppData\Roaming\VEGAS Pro\(你的 Vegas 版本号)\Otomad Helper.ini
+	> 路径：C:\\Users\\(Your User Name)\\AppData\\Roaming\\VEGAS Pro\\(Your Vegas Version)\\Otomad Helper.ini
 2. 注册表读写。<br />
 	脚本需要读写注册表来安装或卸载移调插件预设。<br />
 	如果您不使用移调插件这个调音算法，您可以忽略该权限。
-	> 路径：HKEY_CURRENT_USER\Software\DirectShow\Presets\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
+	> 路径：HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
 
 ### 参考
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
