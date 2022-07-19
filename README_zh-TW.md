@@ -66,7 +66,7 @@ Vegas Pro 17 和 19 測試**正常**。
 使用腳本時，將會使用如下許可權：
 1. 文件讀寫。<br />
 	腳本會在磁碟中創建一個檔案用來保存您的使用者配置設置。
-	> 路徑：C:\\Users\\(Your User Name)\\AppData\\Roaming\\VEGAS Pro\\(Your Vegas Version)\\Otomad Helper.ini
+	> 路徑：C:\\Users\\(你的用戶名)\\AppData\\Roaming\\VEGAS Pro\\(你的 Vegas 版本)\\Otomad Helper.ini
 2. 註冊表讀寫。<br />
 	腳本需要讀寫註冊表來安裝或卸載移調外掛插件預設。<br />
 	如果您不使用移調插件這個調音算法，您可以忽略該許可權。
