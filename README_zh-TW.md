@@ -27,9 +27,9 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 ### 安裝
 1. [下載](https://github.com/otomad/VegasScripts/releases/latest)最新版腳本。
 2. 解壓**所有**壓縮包內的檔案並放置到 Vegas 安裝目錄下的“Script Menu”資料夾中。
-> (例如：C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu)
-3. 確保 DLL 檔案 (DLL/NAudio.dll) 沒有被鎖定。**具體步驟：**
-	1. 在 Vegas 安裝目錄下，依次進入資料夾 Script Menu/DLL。
+> (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 17.0\\Script Menu)
+3. 確保 DLL 檔案 (DLL\\NAudio.dll) 沒有被鎖定。**具體步驟：**
+	1. 在 Vegas 安裝目錄下，依次進入資料夾 Script Menu\\DLL。
 	2. 右鍵 NAudio.dll 檔案，並選擇“屬性”。
 	3. 如果您看到了“解除鎖定”按鈕，就點一下。
 	4. 關閉屬性對話框即可。
@@ -56,7 +56,7 @@ Vegas Pro 17 和 19 測試**正常**。
 都可以提出 issues。
 
 ### 路線圖
-[路線圖 >](ROADMAP.md)
+[路線圖 >](roadmap.md)
 
 ### 使用條款
 1. 若使用非自製 MIDI/素材進行創作，請尊重其作者的權益。
@@ -66,9 +66,11 @@ Vegas Pro 17 和 19 測試**正常**。
 使用腳本時，將會使用如下許可權：
 1. 文件讀寫。<br />
 	腳本會在磁碟中創建一個檔案用來保存您的使用者配置設置。
+	> 路徑：C:\\Users\\(Your User Name)\\AppData\\Roaming\\VEGAS Pro\\(Your Vegas Version)\\Otomad Helper.ini
 2. 註冊表讀寫。<br />
 	腳本需要讀寫註冊表來安裝或卸載移調外掛插件預設。<br />
 	如果您不使用移調插件這個調音算法，您可以忽略該許可權。
+	> 路徑：HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
 
 ### 參考
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
