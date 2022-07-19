@@ -71,11 +71,11 @@ All can create issues.
 If you use this script, the script will use the following permissions.
 1. File read and write.<br />
 	The script reads and writes an INI user profile in your disk memory to save your user data.
-	> Location: C:\\Users\\(Your User Name)\\AppData\\Roaming\\VEGAS Pro\\(Your Vegas Version)\\Otomad Helper.ini
+	> Path: C:\\Users\\(Your User Name)\\AppData\\Roaming\\VEGAS Pro\\(Your Vegas Version)\\Otomad Helper.ini
 2. Registry read and write.<br />
 	The script need to read and write the registry to install or uninstall pitch-shift plugin presets.<br />
 	If you don't use pitch-shift plugin method in script, you can ignore the installation presets and thus not use this permission.
-	> Location: HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
+	> Path: HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
 
 ### References
 * [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
