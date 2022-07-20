@@ -1948,24 +1948,30 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <returns>最新版本号。</returns>
 		public static string GetLatestScriptVersion(out bool successful, out bool isLatest) {
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-			/* string json = GetHtml(ConfigForm.Links.GITHUB_LATEST_API);
-			if (string.IsNullOrWhiteSpace(json)) goto Failed;
-			MatchCollection matches = Regex.Matches(json, @"(?<=""tag_name"": "").*(?="",)");
-			if (matches.Count <= 0) goto Failed; */
-			string json = GetHtml(ConfigForm.Links.GITHUB_LATEST_API_2);
-			if (string.IsNullOrWhiteSpace(json)) goto Failed;
-			MatchCollection matches = Regex.Matches(json, @"(?<=VERSION-)[\d\.]*(?=-)");
-			if (matches.Count <= 0) goto Failed;
-			string version = matches[0].Value.Trim();
-			// string version_numbers = new Regex(@"-.*").Replace(version, "").Substring(1);
-			Version latestVersion = new Version(version);
-			successful = true;
-			isLatest = latestVersion <= VERSION;
-			return version;
+			string json;
+			MatchCollection matches;
+			json = GetHtml(ConfigForm.Links.GITHUB_LATEST_API);
+			if (string.IsNullOrWhiteSpace(json)) goto Second;
+			matches = Regex.Matches(json, @"(?<=tag_name[^\n]*v)[\d\.]*");
+			if (matches.Count <= 0) goto Second;
+			else goto Ok;
+		Second:
+			json = GetHtml(ConfigForm.Links.GITHUB_LATEST_API_2);
+			if (string.IsNullOrWhiteSpace(json)) goto Third;
+			matches = Regex.Matches(json, @"(?<=VERSION-)[\d\.]*(?=-)");
+			if (matches.Count <= 0) goto Third;
+			else goto Ok;
+		Third:
 		Failed:
 			successful = false;
 			isLatest = true;
 			return null;
+		Ok:
+			string version = matches[0].Value.Trim();
+			Version latestVersion = new Version(version);
+			successful = true;
+			isLatest = latestVersion <= VERSION;
+			return version;
 		}
 
 		/// <summary>最低支持 Vegas 版本号。</summary>
