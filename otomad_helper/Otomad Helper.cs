@@ -96,9 +96,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 19, 19, 0);
+		public static readonly Version VERSION = new Version(4, 19, 20, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 7, 19);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 7, 20);
 
 		// 配置参数变量
 		#region 视频属性
@@ -1948,13 +1948,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <returns>最新版本号。</returns>
 		public static string GetLatestScriptVersion(out bool successful, out bool isLatest) {
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-			string json = GetHtml(ConfigForm.Links.GITHUB_LATEST_API);
+			/* string json = GetHtml(ConfigForm.Links.GITHUB_LATEST_API);
 			if (string.IsNullOrWhiteSpace(json)) goto Failed;
 			MatchCollection matches = Regex.Matches(json, @"(?<=""tag_name"": "").*(?="",)");
+			if (matches.Count <= 0) goto Failed; */
+			string json = GetHtml(ConfigForm.Links.GITHUB_LATEST_API_2);
+			if (string.IsNullOrWhiteSpace(json)) goto Failed;
+			MatchCollection matches = Regex.Matches(json, @"(?<=VERSION-)[\d\.]*(?=-)");
 			if (matches.Count <= 0) goto Failed;
 			string version = matches[0].Value.Trim();
-			string version_numbers = new Regex(@"-.*").Replace(version, "").Substring(1);
-			Version latestVersion = new Version(version_numbers);
+			// string version_numbers = new Regex(@"-.*").Replace(version, "").Substring(1);
+			Version latestVersion = new Version(version);
 			successful = true;
 			isLatest = latestVersion <= VERSION;
 			return version;
@@ -16544,7 +16548,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				RELEASE_NOTES_V4_10_17_0 = "https://www.bilibili.com/read/cv13614419",
 				DOCUMENTATION_ENGLISH = "https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit",
 				TUTORIAL_VIDEO_ENGLISH = "https://youtu.be/8vSpzgL_86A", // Bug 之一：链接中不能包含如问号或等号等特殊符号。暂时打不开，以 YouTube 短链替换之。
-				GITHUB_LATEST_API = "https://api.github.com/repos/otomad/VegasScripts/releases/latest";
+				GITHUB_LATEST_API = "https://api.github.com/repos/otomad/VegasScripts/releases/latest", // 一小时 60 次上限。
+				GITHUB_LATEST_API_2 = "https://otomad.github.io/VegasScripts/README.md";
 		}
 
 		private void UserHelpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
