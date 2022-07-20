@@ -3217,7 +3217,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			private static void AlternatelyBase(Track[] tracks, bool isAlternative, int gridColumn, Action<Track> action) {
 				bool useGrid = gridColumn > 0;
 				int value = isAlternative ? 1 : 0;
-				gridColumn.s();
 				for (int i = 0; i < tracks.Length; i++) {
 					Track track = tracks[i];
 					int effectiveValue = i % 2;
