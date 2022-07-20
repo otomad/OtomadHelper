@@ -1962,7 +1962,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (matches.Count <= 0) goto Third;
 			else goto Ok;
 		Third:
-		Failed:
 			successful = false;
 			isLatest = true;
 			return null;
@@ -3218,6 +3217,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			private static void AlternatelyBase(Track[] tracks, bool isAlternative, int gridColumn, Action<Track> action) {
 				bool useGrid = gridColumn > 0;
 				int value = isAlternative ? 1 : 0;
+				gridColumn.s();
 				for (int i = 0; i < tracks.Length; i++) {
 					Track track = tracks[i];
 					int effectiveValue = i % 2;
@@ -10148,13 +10148,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			public bool enabled = false;
 			private readonly MidiChannels channels;
 			public MidiChannels Channels { get { return allInfos.channels; } }
-			private readonly AutoLayoutTracksInfos allInfos;
+			private AutoLayoutTracksInfos allInfos;
 			public AutoLayoutTracksInfos AllInfos { get { return allInfos; } }
 			public BaseAutoLayoutTracksInfo(AutoLayoutTracksInfos allInfos) {
 				this.allInfos = allInfos;
 			}
-			public BaseAutoLayoutTracksInfo Clone() {
-				return MemberwiseClone() as BaseAutoLayoutTracksInfo;
+			public BaseAutoLayoutTracksInfo Clone(AutoLayoutTracksInfos allInfos) {
+				BaseAutoLayoutTracksInfo clone = MemberwiseClone() as BaseAutoLayoutTracksInfo;
+				clone.allInfos = allInfos;
+				return clone;
 			}
 		}
 		public class GradientTracksInfo : BaseAutoLayoutTracksInfo {
@@ -10176,10 +10178,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public GridInfo Grid { get { return grid; } }
 
 		public static AutoLayoutTracksInfos CopyFrom(AutoLayoutTracksInfos existing, MidiChannels channels) {
-			AutoLayoutTracksInfos infos = new AutoLayoutTracksInfos(channels) {
-				gradientTracks = existing.gradientTracks.Clone() as GradientTracksInfo,
-				grid = existing.grid.Clone() as GridInfo,
-			};
+			AutoLayoutTracksInfos infos = new AutoLayoutTracksInfos(channels);
+			infos.gradientTracks = existing.gradientTracks.Clone(infos) as GradientTracksInfo;
+			infos.grid = existing.grid.Clone(infos) as GridInfo;
 			return infos;
 		}
 	}
