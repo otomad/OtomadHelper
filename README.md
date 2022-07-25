@@ -1,16 +1,18 @@
 ![Cover](https://github.com/otomad/VegasScripts/blob/winform/cover.png?raw=true)
 <div align="center">
 	<h1>VegasScripts</h1>
-	<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="Badge" />
-	<img src="https://img.shields.io/badge/VERSION-4.19.20.0-orange?style=flat-square" alt="Badge" />
+	<p>
+		<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="Badge" />
+		<img src="https://img.shields.io/badge/VERSION-4.19.20.0-orange?style=flat-square" alt="Badge" />
+	</p>
 </div>
 <div align="center">
 	<h2>Otomad Helper</h2>
+	<p>Ranne</p>
 	<a href="https://github.com/otomad/VegasScripts/releases/latest"><img src="https://img.shields.io/badge/-Get%20the%20download%20link%20now!-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="Download" /></a>
+	
+	**EN** | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | [日](README_ja-JP.md)
 </div>
-<p align="right"><b><i>Ranne</i></b></p>
-
-**EN** | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | [日](README_ja-JP.md)
 
 Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files as input, and automatically generate Otomad/YTPMV tracks.
 
