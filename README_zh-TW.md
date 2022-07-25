@@ -20,7 +20,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 ### 使用方法
 在軌道視窗中選中素材，或在專案媒體視窗中選中素材，或在（打開腳本視窗後）手動流覽選擇其它素材。然後即可打開腳本配置並生成。
 
-您可以選擇菜單 *選項 > 自訂工具列*，將腳本添加到工具列中以便操作。
+您可以選擇功能表列 *選項 > 自訂工具列*，將腳本添加到工具列中以便操作。
 
 您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文檔](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程視頻](https://www.youtube.com/watch?v=8vSpzgL_86A) *（英語）*。
 
@@ -33,7 +33,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 	2. 右鍵 NAudio.dll 檔案，並選擇“屬性”。
 	3. 如果您看到了“解除鎖定”按鈕，就點一下。
 	4. 關閉屬性對話框即可。
-4. 打開您的 Vegas Pro 來啟動腳本。選擇菜單 *工具 > 腳本化 > Otomad Helper*。
+4. 打開您的 Vegas Pro 來啟動腳本。選擇功能表列 *工具 > 腳本化 > Otomad Helper*。
 
 ### **注意**
 支援 Vegas Pro 13 及以上版本。
