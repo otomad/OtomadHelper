@@ -6,21 +6,21 @@
 			拉伸<br />
 			拉伸<br />
 			ストレッチ</td>
-		<td><img src="" alt="" /></td>
+		<td><img src="stretch.png" alt="Stretch" /></td>
 	</tr>
 	<tr>
 		<td>Loop<br />
 			循环<br />
 			循環<br />
 			ループ</td>
-		<td><img src="" alt="" /></td>
+		<td><img src="loop.png" alt="Loop" /></td>
 	</tr>
 	<tr>
 		<td>No Lengthening<br />
 			禁止延长<br />
 			禁止延長<br />
 			延長しない</td>
-		<td><img src="" alt="" /></td>
+		<td><img src="no_lengthening_video.png" alt="No Lengthening" /></td>
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
@@ -42,7 +42,7 @@
 			音频 - 规范化音量<br />
 			音訊 - 規範化音量<br />
 			オーディオ - ノーマライズ</td>
-		<td><img src="" alt="" /></td>
+		<td><img src="normalize.png" alt="Normalize" /></td>
 	</tr>
 	<tr>
 		<td>Video - Static Visual<br />
@@ -227,7 +227,7 @@
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
-		Use the <b>Élastique</b> time stretch and pitch shift method to change the pitch, which is the default time stretch and pitch shift method in Vegas 9+. Also the <b>+ and - keys</b> on the keyboard change the pitch directly. <b>Default</b> method.<br />
+		Use the <b>Élastique</b> time stretch and pitch shift method to change the pitch, which is the default time stretch and pitch shift method in <b>Vegas 9+</b>. Also the <b>+ and - keys</b> on the keyboard change the pitch directly. <b>Default</b> method.<br />
 		<b><i>Advantages:</i></b>
 		The generation is <b>very fast</b>. And it does not require configuring presets.<br />
 		<b><i>Disadvantages:</i></b>
@@ -242,7 +242,7 @@
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
-		Use the <b>Classic</b> time stretch and pitch shift method to change the pitch, which is the default time stretch and pitch shift method in Vegas 8-.<br />
+		Use the <b>Classic</b> time stretch and pitch shift method to change the pitch, which is the default time stretch and pitch shift method in <b>Vegas 8-</b>.<br />
 		Advantages and disadvantages are same as Elastic Pitch Change.<br />
 		<b><i>Another disadvantages:</i></b>
 		Cannot preserve formant.</td>
