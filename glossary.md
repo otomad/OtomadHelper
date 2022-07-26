@@ -71,32 +71,32 @@
 			不填补<br />
 			不填補<br />
 			スタッカート</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/legato_staccato.png" alt="Staccato" /></td>
 	</tr>
 	<tr>
 		<td>1 Beat Longest<br />
 			最长一拍<br />
 			最長一拍<br />
 			最長 1 ビート</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/legato_1beat_longest.png" alt="1 Beat Longest" /></td>
 	</tr>
 	<tr>
 		<td>1 Bar Longest<br />
 			最长一小节<br />
 			最長一小節<br />
 			最長 1 バー</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/legato_1bar_longest.png" alt="1 Bar Longest" /></td>
 	</tr>
 	<tr>
 		<td>Unlimited<br />
 			无限填补<br />
 			無限填補<br />
 			無制限</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/legato_unlimited.png" alt="Unlimited" /></td>
 	</tr>
 </table>
 
-## Track Legato (Tool)
+## Tracks Legato (Tool)
 <table>
 	<tr>
 		<td>Stacking Clips<br />
