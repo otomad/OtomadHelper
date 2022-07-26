@@ -96,9 +96,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 19, 20, 0);
+		public static readonly Version VERSION = new Version(4, 19, 26, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 7, 20);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 7, 26);
 
 		// 配置参数变量
 		#region 视频属性
@@ -1211,9 +1211,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					// 旋转属性单独调整，因为和上面“翻转所有关键帧”功能冲突了
 					key0.RotateBy(VConfigStartRotation + anim.RotationDeg);
 					if (needTwoKey) key1.RotateBy(VConfigEndRotation + anim.RotationDeg);
-					// 动画效果生成
+					// 发光效果
 					if (VConfigGlow != 0) if (Plugin.contrast != null) Plugin.ForVideoEvents.Glow(videoEvent, VConfigGlow, VConfigGlowCurve, VConfigGlowBright);
-						else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
+					else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
+					// 动画效果生成
 					if (anim.IsNegative) if (Plugin.invert != null) Plugin.ForVideoEvents.Negative(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.invert)); return false; }
 					if (anim.IsGrey) if (Plugin.blackAndWhite != null) Plugin.ForVideoEvents.Grey(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.black_and_white)); return false; }
 					if (anim.IsInvertLumin) if (Plugin.labAdjust != null) Plugin.ForVideoEvents.InvertLumin(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.lab_adjust)); return false; }
@@ -1353,7 +1354,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 
 			if (vTrack != null) generatedVideoTracks.Add(vTrack);
-			else foreach (VideoTrack videoTrack in vTracks)
+			else if (vTracks != null) foreach (VideoTrack videoTrack in vTracks)
 				if (videoTrack != null) generatedVideoTracks.Add(videoTrack);
 			return !progressForm.RequestAbort;
 		}
@@ -1766,55 +1767,58 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static readonly Timecode ZERO = Timecode.FromMilliseconds(0);
 
 		/// <summary>
-		/// 将指定的一些轨道的剪辑堆积起来，消除中间的空隙。<br />
-		/// 注意：第一个轨道剪辑之前的空隙不会消除。
-		/// </summary>
-		/// <param name="tracks">指定的多个轨道。如果为空，则为选中的轨道。</param>
-		public void StackingLegatoTracks(Track[] tracks = null) {
-			tracks = tracks ?? GetSelectedTracks();
-			foreach (Track track in tracks) {
-				for (int i = 1; i < track.Events.Count; i++) {
-					TrackEvent currentEvent = track.Events[i];
-					TrackEvent previousEvent = track.Events[i - 1];
-					currentEvent.Start = previousEvent.End;
-				}
-			}
-		}
-
-		/// <summary>
+		/// 整合后的填补轨道间隙函数。函数具体操作方式由 <c>type</c> 枚举参数决定。<br />
+		/// 注意：第一个轨道剪辑之前的空隙不会消除。<br /><br />
+		/// <c>type == TrackLegatoType.STACKING :</c><br />
+		/// 将指定的一些轨道的剪辑堆积起来，消除中间的空隙。<br /><br />
+		/// <c>type == TrackLegatoType.LIMIT_STRETCHING :</c><br />
 		/// 为指定的一些轨道以拉伸的方式填补中间的空隙。<br />
-		/// 注意：第一个轨道剪辑之前的空隙不会消除。
+		/// 不强制拉伸。Vegas 限制拉伸素材的速率在 0.25 ~ 2 之间或更小（取决于变调操作）。<br />
+		/// 当素材拉伸到极限之后将不再继续拉伸。<br /><br />
+		/// <c>type == TrackLegatoType.STRETCHING :</c><br />
+		/// 为指定的一些轨道以拉伸的方式填补中间的空隙。<br />
+		/// 强制拉伸。Vegas 限制拉伸素材的速率在 0.25 ~ 2 之间或更小（取决于变调操作）。<br />
+		/// 当素材拉伸到极限之后改变素材的长度，播放原素材裁剪范围之外的内容（拉长）或裁去多余长度的内容（缩短）。<br /><br />
+		/// <c>type == TrackLegatoType.LENGTHENING :</c><br />
+		/// 为指定的一些轨道以改变持续时间的方式填补中间的空隙。
 		/// </summary>
-		/// <param name="forceStretch">
-		/// 是否强制拉伸？Vegas 限制拉伸素材的速率在 0.25 ~ 2 之间或更小（取决于变调操作）。<br />
-		/// 如果为否，则当素材拉伸到极限之后将不再继续拉伸；<br />
-		/// 如果为是，则当素材拉伸到极限之后改变素材的长度，播放原素材裁剪范围之外的内容（拉长）或裁去多余长度的内容（缩短）。
-		/// </param>
-		/// <param name="tracks">指定的多个轨道。如果为空，则为选中的轨道。</param>
-		public void StretchLegatoTracks(bool forceStretch = false, Track[] tracks = null) {
-			tracks = tracks ?? GetSelectedTracks();
-			foreach (Track track in tracks) {
-				for (int i = 0; i < track.Events.Count - 1; i++) {
-					TrackEvent currentEvent = track.Events[i];
-					TrackEvent nextEvent = track.Events[i + 1];
-					double rate = currentEvent.Length.ToMilliseconds() / (nextEvent.Start - currentEvent.Start).ToMilliseconds();
-					currentEvent.RelativeAdjustPlaybackRate(rate, forceStretch);
-				}
-			}
-		}
-
-		/// <summary>
-		/// 为指定的一些轨道以改变持续时间的方式填补中间的空隙。<br />
-		/// 注意：第一个轨道剪辑之前的空隙不会消除。
-		/// </summary>
-		/// <param name="tracks">指定的多个轨道。如果为空，则为选中的轨道。</param>
-		public void LengthenLegatoTracks(Track[] tracks = null) {
-			tracks = tracks ?? GetSelectedTracks();
-			foreach (Track track in tracks) {
-				for (int i = 0; i < track.Events.Count - 1; i++) {
-					TrackEvent currentEvent = track.Events[i];
-					TrackEvent nextEvent = track.Events[i + 1];
-					currentEvent.Length = nextEvent.Start - currentEvent.Start;
+		///
+		/// <param name="type">填补轨道间隙的方式。</param>
+		/// <param name="forEvents">是否应用于选定的轨道事件而不是选定的轨道。</param>
+		/// <param name="tracks">仅在 <c>forEvents</c> 为 <c>false</c> 时有效。<br />指定的多个轨道。如果为空，则为选中的轨道。</param>
+		/// <param name="events">仅在 <c>forEvents</c> 为 <c>true</c> 时有效。<br />指定的多个轨道事件。如果为空，则为选中的轨道事件。</param>
+		public void LegatoTracks(TrackLegatoType type, bool forEvents = false, Track[] tracks = null, TrackEvent[] events = null) {
+			if (!forEvents) {
+				tracks = tracks ?? GetSelectedTracks();
+				if (tracks == null) return;
+				List<TrackEvent> _events = new List<TrackEvent>();
+				foreach (Track track in tracks)
+					_events.AddRange(track.Events);
+				events = _events.ToArray();
+			} else events = events ?? GetSelectedEvents();
+			if (events == null) return;
+			foreach (TrackEvent curEvent in events) {
+				if (type == TrackLegatoType.STACKING) {
+					TrackEvent prevEvent = curEvent.Previous();
+					if (prevEvent == null) continue;
+					curEvent.Start = prevEvent.End;
+					// 该方法将当前事件移到前一个事件后，而不是将后一个事件移到当前事件后，与另外几个方法略有不同。
+				} else {
+					TrackEvent nextEvent = curEvent.Next();
+					if (nextEvent == null) continue;
+					switch (type) {
+						case TrackLegatoType.LIMIT_STRETCHING:
+						case TrackLegatoType.STRETCHING:
+							bool forceStretch = type == TrackLegatoType.STRETCHING;
+							double rate = curEvent.Length.ToMilliseconds() / (nextEvent.Start - curEvent.Start).ToMilliseconds();
+							curEvent.RelativeAdjustPlaybackRate(rate, forceStretch);
+							break;
+						case TrackLegatoType.LENGTHENING:
+							curEvent.Length = nextEvent.Start - curEvent.Start;
+							break;
+						default:
+							break;
+					}
 				}
 			}
 		}
@@ -1905,7 +1909,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (!GenerateOtomad()) return;
 				MidiConfigTracks.Next();
 			}
-			if (!SheetConfig) {
+			if (!SheetConfig && generatedVideoTracks.Count != 0) {
 				VideoTrack[] videoTracks = generatedVideoTracks.ToArray();
 				AutoLayoutTracksGridForm.Arrange(videoTracks, LayoutInfos.Grid, this);
 				GradientTracksForm.Arrange(videoTracks, LayoutInfos.GradientTracks, this);
@@ -2234,8 +2238,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="trackEvent">轨道剪辑</param>
 		/// <param name="rate">相对速率</param>
 		/// <param name="forceStretch">
-		/// 是否强制拉伸？Vegas 限制拉伸素材的速率在 0.25 ~ 2 之间或更小（取决于变调操作）。
-		/// 如果为否，则当素材拉伸到极限之后将不再继续拉伸；
+		/// 是否强制拉伸？Vegas 限制拉伸素材的速率在 0.25 ~ 2 之间或更小（取决于变调操作）。<br />
+		/// 如果为否，则当素材拉伸到极限之后将不再继续拉伸；<br />
 		/// 如果为是，则当素材拉伸到极限之后改变素材的长度，播放原素材裁剪范围之外的内容（拉长）或裁去多余长度的内容（缩短）。
 		/// </param>
 		/// <returns></returns>
@@ -2275,6 +2279,29 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static void SelectAll(this ListView checks) {
 			foreach (ListViewItem check in checks.Items)
 				check.Checked = true;
+		}
+
+		/// <summary>
+		/// 获取当前轨道事件的下一个事件。<br />
+		/// 如果没有，返回 null。
+		/// </summary>
+		/// <param name="curEvent">当前轨道事件。</param>
+		public static TrackEvent Next(this TrackEvent curEvent) {
+			TrackEvents curTrack = curEvent.Track.Events;
+			int index = curTrack.IndexOf(curEvent);
+			if (index == -1 || index >= curTrack.Count - 1) return null;
+			return curTrack[index + 1];
+		}
+		/// <summary>
+		/// 获取当前轨道事件的上一个事件。<br />
+		/// 如果没有，返回 null。
+		/// </summary>
+		/// <param name="curEvent">当前轨道事件。</param>
+		public static TrackEvent Previous(this TrackEvent curEvent) {
+			TrackEvents curTrack = curEvent.Track.Events;
+			int index = curTrack.IndexOf(curEvent);
+			if (index == -1 || index == 0) return null;
+			return curTrack[index - 1];
 		}
 	}
 
@@ -2423,6 +2450,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		ONE_BEAT_LONGEST,
 		ONE_BAR_LONGEST,
 		UNLIMITED,
+	}
+
+	/// <summary>
+	/// 填补轨道间隙方式的枚举。
+	/// </summary>
+	public enum TrackLegatoType {
+		STACKING,
+		LIMIT_STRETCHING,
+		STRETCHING,
+		LENGTHENING,
 	}
 
 	/// <summary>
@@ -10636,6 +10673,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	#endregion
 
 	#region 设计器部分
+	#endregion
 	partial class ConfigForm {
 		/// <summary>
 		/// 必需的设计器变量。
@@ -10715,6 +10753,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.githubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.roadmapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.updateLogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.githubIssuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.englishDocumentationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.documentationEnglishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -10734,6 +10773,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.englishToolStripMenuItem = new Otomad.VegasScript.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
 			this.japaneseToolStripMenuItem = new Otomad.VegasScript.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
 			this.russianToolStripMenuItem = new Otomad.VegasScript.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
+			this.latestVersionToolStripMenuItemInBar = new System.Windows.Forms.ToolStripMenuItem();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.Tabs = new System.Windows.Forms.TabControl();
 			this.SourceTab = new System.Windows.Forms.TabPage();
@@ -10947,7 +10987,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.limitStretchLegatoTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stretchLegatoTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lengthenLegatoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.latestVersionToolStripMenuItemInBar = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+			this.effectToSelectedEventsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
@@ -11618,6 +11660,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.githubToolStripMenuItem,
 			this.roadmapToolStripMenuItem,
 			this.updateLogsToolStripMenuItem,
+			this.githubIssuesToolStripMenuItem,
 			this.toolStripSeparator3,
 			this.englishDocumentationsToolStripMenuItem,
 			this.chineseDocumentationsToolStripMenuItem});
@@ -11704,6 +11747,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.updateLogsToolStripMenuItem.Size = new System.Drawing.Size(272, 26);
 			this.updateLogsToolStripMenuItem.Text = "更新日志";
 			this.updateLogsToolStripMenuItem.Visible = false;
+			//
+			// githubIssuesToolStripMenuItem
+			//
+			this.githubIssuesToolStripMenuItem.Name = "githubIssuesToolStripMenuItem";
+			this.githubIssuesToolStripMenuItem.Size = new System.Drawing.Size(272, 26);
+			this.githubIssuesToolStripMenuItem.Text = "反馈问题或建议";
 			//
 			// toolStripSeparator3
 			//
@@ -11811,7 +11860,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.chineseToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.chineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.chineseToolStripMenuItem.Name = "chineseToolStripMenuItem";
-			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
 			this.chineseToolStripMenuItem.Text = "简体中文";
 			//
 			// tchineseToolStripMenuItem
@@ -11819,7 +11868,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tchineseToolStripMenuItem.CheckOnClick = true;
 			this.tchineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tchineseToolStripMenuItem.Name = "tchineseToolStripMenuItem";
-			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
 			this.tchineseToolStripMenuItem.Text = "繁體中文";
 			//
 			// englishToolStripMenuItem
@@ -11827,7 +11876,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.englishToolStripMenuItem.CheckOnClick = true;
 			this.englishToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-			this.englishToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.englishToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
 			this.englishToolStripMenuItem.Text = "English";
 			//
 			// japaneseToolStripMenuItem
@@ -11835,7 +11884,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.japaneseToolStripMenuItem.CheckOnClick = true;
 			this.japaneseToolStripMenuItem.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.japaneseToolStripMenuItem.Name = "japaneseToolStripMenuItem";
-			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
 			this.japaneseToolStripMenuItem.Text = "日本語";
 			//
 			// russianToolStripMenuItem
@@ -11843,8 +11892,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.russianToolStripMenuItem.CheckOnClick = true;
 			this.russianToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
-			this.russianToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.russianToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
 			this.russianToolStripMenuItem.Text = "Русский";
+			//
+			// latestVersionToolStripMenuItemInBar
+			//
+			this.latestVersionToolStripMenuItemInBar.ForeColor = System.Drawing.Color.Red;
+			this.latestVersionToolStripMenuItemInBar.Name = "latestVersionToolStripMenuItemInBar";
+			this.latestVersionToolStripMenuItemInBar.Size = new System.Drawing.Size(113, 24);
+			this.latestVersionToolStripMenuItemInBar.Text = "下载最新版本";
+			this.latestVersionToolStripMenuItemInBar.Visible = false;
 			//
 			// panel1
 			//
@@ -14606,7 +14663,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			"更改色相",
 			"旋转色相",
 			"黑白",
-			"反转颜色（概率性附加降调效果）",
+			"颜色反转（概率性附加降调效果）",
 			"高频重复",
 			"随机调音（附加左右翻转效果）",
 			"放大（附加增加音量）",
@@ -15018,9 +15075,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.stackingTracksToolStripMenuItem,
 			this.limitStretchLegatoTracksToolStripMenuItem,
 			this.stretchLegatoTracksToolStripMenuItem,
-			this.lengthenLegatoToolStripMenuItem});
+			this.lengthenLegatoToolStripMenuItem,
+			this.toolStripSeparator9,
+			this.effectToSelectedEventsToolStripMenuItem,
+			this.trackLegatoSelectInfoToolStripMenuItem});
 			this.TrackLegatoMenu.Name = "TrackLegatoMenu";
-			this.TrackLegatoMenu.Size = new System.Drawing.Size(334, 100);
+			this.TrackLegatoMenu.Size = new System.Drawing.Size(334, 182);
 			//
 			// stackingTracksToolStripMenuItem
 			//
@@ -15051,13 +15111,24 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.lengthenLegatoToolStripMenuItem.Text = "改变素材持续时间";
 			this.lengthenLegatoToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
 			//
-			// latestVersionToolStripMenuItemInBar
+			// toolStripSeparator9
 			//
-			this.latestVersionToolStripMenuItemInBar.ForeColor = System.Drawing.Color.Red;
-			this.latestVersionToolStripMenuItemInBar.Name = "latestVersionToolStripMenuItemInBar";
-			this.latestVersionToolStripMenuItemInBar.Size = new System.Drawing.Size(113, 24);
-			this.latestVersionToolStripMenuItemInBar.Text = "下载最新版本";
-			this.latestVersionToolStripMenuItemInBar.Visible = false;
+			this.toolStripSeparator9.Name = "toolStripSeparator9";
+			this.toolStripSeparator9.Size = new System.Drawing.Size(330, 6);
+			//
+			// effectToSelectedEventsToolStripMenuItem
+			//
+			this.effectToSelectedEventsToolStripMenuItem.CheckOnClick = true;
+			this.effectToSelectedEventsToolStripMenuItem.Name = "effectToSelectedEventsToolStripMenuItem";
+			this.effectToSelectedEventsToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
+			this.effectToSelectedEventsToolStripMenuItem.Text = "仅应用于选中的轨道剪辑";
+			//
+			// trackLegatoSelectInfoToolStripMenuItem
+			//
+			this.trackLegatoSelectInfoToolStripMenuItem.Enabled = false;
+			this.trackLegatoSelectInfoToolStripMenuItem.Name = "trackLegatoSelectInfoToolStripMenuItem";
+			this.trackLegatoSelectInfoToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
+			this.trackLegatoSelectInfoToolStripMenuItem.Text = "已选中 0 个轨道。";
 			//
 			// ConfigForm
 			//
@@ -15497,8 +15568,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.ContextMenuStrip QuickConfigMidiChannelsMenu;
 		public System.Windows.Forms.ToolStripMenuItem quickConfigMidiChannelsToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem latestVersionToolStripMenuItemInBar;
+		public System.Windows.Forms.ToolStripMenuItem githubIssuesToolStripMenuItem;
+		public System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+		public System.Windows.Forms.ToolStripMenuItem effectToSelectedEventsToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem trackLegatoSelectInfoToolStripMenuItem;
 	}
-	#endregion
 
 	public partial class ConfigForm : Form, IConfigIniUser, IInterpret {
 		public bool AcceptConfig = false;
@@ -15572,6 +15646,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			BindMenuLink(latestVersionToolStripMenuItemInBar, Links.GITHUB_LATEST);
 			BindMenuLink(githubToolStripMenuItem, Links.REPOSITORY);
 			BindMenuLink(roadmapToolStripMenuItem, Links.ROADMAP);
+			BindMenuLink(githubIssuesToolStripMenuItem, Links.GITHUB_ISSUES);
 			BindMenuLink(updateLogsToolStripMenuItem, Links.UPDATE_LOGS);
 			BindMenuLink(documentationEnglishToolStripMenuItem, Links.DOCUMENTATION_ENGLISH);
 			BindMenuLink(tutorialVideoEnglishToolStripMenuItem, Links.TUTORIAL_VIDEO_ENGLISH);
@@ -15787,6 +15862,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (ReadSize(formSize_string, out size)) Size = size;
 				}
 				checkUpdateOnStartupToolStripMenuItem.Checked = configIni.Read("CheckUpdateOnStartup", true);
+				effectToSelectedEventsToolStripMenuItem.Checked = configIni.Read("TracksLegatoApplyToSelectedEvents", false);
 				configIni.EndSection();
 				#endregion
 
@@ -15932,6 +16008,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("CloseAfterOpenHelper", CloseAfterOpenHelperCheck.Checked);
 			if (rememberFormSizeToolStripMenuItem.Checked) configIni.Write("FormSize", WriteSize(Size));
 			configIni.Write("CheckUpdateOnStartup", checkUpdateOnStartupToolStripMenuItem.Checked);
+			configIni.Write("TracksLegatoApplyToSelectedEvents", effectToSelectedEventsToolStripMenuItem.Checked);
 			configIni.EndSection();
 			#endregion
 			#endif
@@ -16095,6 +16172,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			latestVersionToolStripMenuItemInBar.Text = str.download_latest_version;
 			whyOkBtnIsDisabledToolStripMenuItem.Text = str.why_ok_btn_is_disabled;
 			roadmapToolStripMenuItem.Text = str.roadmap;
+			githubIssuesToolStripMenuItem.Text = str.send_issues;
 			updateLogsToolStripMenuItem.Text = str.update_logs;
 			chineseDocumentationsToolStripMenuItem.Text = str.chinese_documentations;
 			englishDocumentationsToolStripMenuItem.Text = str.english_documentations;
@@ -16279,6 +16357,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			limitStretchLegatoTracksToolStripMenuItem.Text = str.track_legato_limit_stretch;
 			stretchLegatoTracksToolStripMenuItem.Text = str.track_legato_stretch;
 			lengthenLegatoToolStripMenuItem.Text = str.track_legato_lengthen;
+			effectToSelectedEventsToolStripMenuItem.Text = str.effect_to_selected_events;
 			BatchSubtitleGenerationBtn.Text = str.batch_subtitle_generation;
 			BatchSubtitleGenerationBtn.CommandLinkNote = str.batch_subtitle_generation_configform_info;
 			FindClipsBtn.Text = str.find_clips;
@@ -16555,7 +16634,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				DOCUMENTATION_ENGLISH = "https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit",
 				TUTORIAL_VIDEO_ENGLISH = "https://youtu.be/8vSpzgL_86A", // Bug 之一：链接中不能包含如问号或等号等特殊符号。暂时打不开，以 YouTube 短链替换之。
 				GITHUB_LATEST_API = "https://api.github.com/repos/otomad/VegasScripts/releases/latest", // 一小时 60 次上限。
-				GITHUB_LATEST_API_2 = "https://otomad.github.io/VegasScripts/README.md";
+				GITHUB_LATEST_API_2 = "https://otomad.github.io/VegasScripts/README.md",
+				GITHUB_ISSUES = "https://github.com/otomad/VegasScripts/issues";
 		}
 
 		private void UserHelpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -16694,8 +16774,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			#region 选中轨道
 			int selectedTracksCount = parent.GetSelectedTracks().Length;
-			if (selectedTracksCount == 0)
-				TrackLegatoBtn.Enabled = ClearTrackEffectBtn.Enabled = false;
+			if (selectedTracksCount == 0) ClearTrackEffectBtn.Enabled = false;
 			#endregion
 
 			#region 选中视频轨道
@@ -17103,17 +17182,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void TrackLegatoBtn_MouseDown(object sender, MouseEventArgs e) {
 			if (e.Button == MouseButtons.Left) {
+				int count;
+				if (!effectToSelectedEventsToolStripMenuItem.Checked) {
+					count = parent.GetSelectedTracks().Length;
+					trackLegatoSelectInfoToolStripMenuItem.Text = string.Format(Lang.str.select_tracks_count_info, count);
+				} else {
+					count = parent.GetSelectedEvents().Length;
+					trackLegatoSelectInfoToolStripMenuItem.Text = string.Format(Lang.str.select_events_count_info, count);
+				}
+				foreach (ToolStripMenuItem menuItem in new ToolStripMenuItem[] {
+					stackingTracksToolStripMenuItem,
+					stretchLegatoTracksToolStripMenuItem,
+					limitStretchLegatoTracksToolStripMenuItem,
+					lengthenLegatoToolStripMenuItem
+				}) menuItem.Enabled = count != 0;
+				// 弹出菜单。
 				Button button = sender as Button;
 				TrackLegatoMenu.Show(button, new Point(0, button.Height));
 			}
 		}
 
 		private void TrackLegatoMenuItems_Click(object sender, EventArgs e) {
-			if (sender == stackingTracksToolStripMenuItem) parent.StackingLegatoTracks();
-			else if (sender == limitStretchLegatoTracksToolStripMenuItem) parent.StretchLegatoTracks(false);
-			else if (sender == stretchLegatoTracksToolStripMenuItem) parent.StretchLegatoTracks(true);
-			else if (sender == lengthenLegatoToolStripMenuItem) parent.LengthenLegatoTracks();
-			TrackLegatoBtn.Enabled = false;
+			List<bool> selects = new List<bool> {
+				sender == stackingTracksToolStripMenuItem,
+				sender == limitStretchLegatoTracksToolStripMenuItem,
+				sender == stretchLegatoTracksToolStripMenuItem,
+				sender == lengthenLegatoToolStripMenuItem,
+			};
+			int selected = selects.IndexOf(true);
+			if (selected == -1) return;
+			parent.LegatoTracks((TrackLegatoType)selected, effectToSelectedEventsToolStripMenuItem.Checked);
 			IsIrreversibleCancel = true;
 			vegas.UpdateUI();
 		}
@@ -17571,6 +17669,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			select_videotracks_count_info = "已选中 {0} 个视频轨道。",
 			select_audioevents_count_info = "已选中 {0} 个音频轨道剪辑。",
 			select_source_count_info = "已选中 {0} 项媒体素材。",
+			select_tracks_count_info = "已选中 {0} 个轨道。",
+			effect_to_selected_events = "仅应用于选中的轨道剪辑",
 			square = "平方",
 			custom = "自定义",
 			row_count = "行数",
@@ -17678,7 +17778,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			pitch_shift_plugin = "移调效果插件",
 			elastique_method = "弹性音调更改",
 			classic_method = "古典音调更改",
-			fool_tuning_method = "瞎调音",
+			fool_tuning_method = "无音阶调音",
 			sine_wave = "正弦波",
 			triangle_wave = "三角波",
 			square_wave = "方波",
@@ -17716,6 +17816,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			repository_link = "仓库地址",
 			latest_version_link = "最新版本链接",
 			roadmap = "路线图",
+			send_issues = "反馈问题或建议",
 			update_logs = "更新日志",
 			tutorial_video = "教程视频",
 			release_notes = "发行说明",
@@ -17874,7 +17975,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ytp_hue_change = "更改色相",
 			ytp_hue_rotate = "旋转色相",
 			ytp_monochrome = "黑白",
-			ytp_negative = "反转颜色（概率性附加降调效果）",
+			ytp_negative = "颜色反转（概率性附加降调效果）",
 			ytp_high_freq_repeat = "高频重复",
 			ytp_random_tone = "随机调音（附加水平翻转效果）",
 			ytp_enlarge = "放大（附加增加音量）",
@@ -17993,8 +18094,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				mirror = "Mirror",
 				pic_in_pic = "Picture in Picture",
 				crop = "Crop",
-				check_pitch_shift_presets = "Checking whether the presets of the Pitch Shift plug-in are available...",
-				no_pitch_shift_presets = "Since you tried to tune using the \"Pitch Shift\" effect plug-in, the system found that you did not fully configure all the audio presets you needed. The script can attempt to add presets for you, which may fail. If that fails, follow the instructions for using the tutorial manually. Would you like the script to automatically add presets for you?",
+				check_pitch_shift_presets = "Checking whether the presets of the Pitch Shift plugin are available...",
+				no_pitch_shift_presets = "Since you tried to tune using the \"Pitch Shift\" effect plugin, the system found that you did not fully configure all the audio presets you needed. The script can attempt to add presets for you, which may fail. If that fails, follow the instructions for using the tutorial manually. Would you like the script to automatically add presets for you?",
 				yes_to_add_pitch_shift_presets = "Auto Add",
 				no_to_add_pitch_shift_presets = "Back",
 				no_pitch_shift_presets_title = "Not all Pitch Shift presets found",
@@ -18031,7 +18132,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				wave = "Wave",
 				multi_beat_delay = "Multi-Tap Delay",
 				spherize = "Spherize",
-				warning_missing_plugin = "Warning: The plug-in \"{0}\" could not be found!",
+				warning_missing_plugin = "Warning: The plugin \"{0}\" could not be found!",
 				midi_channel = "CH",
 				midi_notes_count = "Notes Count",
 				midi_begin_note = "Begin Note",
@@ -18072,6 +18173,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				select_videotracks_count_info = "{0} video tracks have been selected.",
 				select_audioevents_count_info = "{0} audio track events have been selected.",
 				select_source_count_info = "{0} media sources has been selected.",
+				select_tracks_count_info = "{0} tracks have been selected.",
+				effect_to_selected_events = "Apply to selected track events only",
 				square = "Square",
 				custom = "Custom",
 				row_count = "Rows",
@@ -18107,7 +18210,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				descending = "Descending",
 				ascending = "Ascending",
 				change_tune_method = "Change Tuning Method",
-				change_tune_method_info = "Only tuning methods in audio event properties are supported, not in the Pitch Shift plug-in.",
+				change_tune_method_info = "Only tuning methods in audio event properties are supported, not in the Pitch Shift plugin.",
 				time_stretch_pitch_shift = "Time stretch / pitch shift",
 				formant_change = "Formant shift",
 				pitch_change = "Pitch",
@@ -18175,15 +18278,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				source_start_time_tooltip = "Fill in the start time of media material cutting here.\nUnit: seconds.",
 				source_end_time_tooltip = "Note that if the value entered here is less than or equal to the number of start seconds, it always means that it lasts until the end of the media time.\nUnit: seconds.",
 				no_tune = "No Tuning",
-				pitch_shift_plugin = "Pitch Shift Audio Effect Plug-in",
+				pitch_shift_plugin = "Pitch Shift Audio Effect Plugin",
 				elastique_method = "Elastic Pitch Change",
 				classic_method = "Classic Pitch Change",
-				fool_tuning_method = "Fiddle with Tuning",
+				fool_tuning_method = "Tuning without Scale",
 				sine_wave = "Sinusoid",
 				triangle_wave = "Triangle",
 				square_wave = "Square",
 				sawtooth_wave = "Sawtooth",
-				tune_method_tooltip = "\"Pitch Shift Audio Effect Plug-in\" means to use the \"Pitch Shift\" effect plug-in in \"Audio FX\" to change the pitch, and the presets needs to be configured.\r\n\"Elastic Pitch Change\" means to use the \"Élastique\" stretching method to change the pitch, that is, the + and-keys on the keyboard directly change the pitch, and the pitch range is limited.",
+				tune_method_tooltip = "\"Pitch Shift Audio Effect Plugin\" means to use the \"Pitch Shift\" effect plugin in \"Audio FX\" to change the pitch, and the presets needs to be configured.\r\n\"Elastic Pitch Change\" means to use the \"Élastique\" stretching method to change the pitch, that is, the + and-keys on the keyboard directly change the pitch, and the pitch range is limited.",
 				audio_lock_stretch_pitch_tooltip = "Use resampling to change pitch as speed changes. Stretch audio will be disabled if the \"Elastic Pitch Change\" method is used.",
 				preview_beep_duration_tooltip = "The duration of pre-listening to the base pitch.\nUnit: milliseconds.",
 				preview_tune_audio_tooltip = "If checked, the audio source will be tuned to the tonic central C when pre-listening the audio.\nOtherwise, the tone which set by the base pitch will be produced when pre-listening the base pitch.",
@@ -18201,7 +18304,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				reset_config = "&Reset user configuration",
 				exit_discarding_changes = "&Discard changes and exit",
 				exit = "E&xit",
-				pitch_shift_preset = "&Pitch shift plug-in presets",
+				pitch_shift_preset = "&Pitch shift plugin presets",
 				load_presets = "Load presets",
 				unload_presets = "Unload presets",
 				form_size = "Form size",
@@ -18216,6 +18319,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				repository_link = "Repository link",
 				latest_version_link = "Latest version link",
 				roadmap = "Roadmap",
+				send_issues = "Send feedback",
 				update_logs = "Update logs",
 				tutorial_video = "Tutorial video",
 				release_notes = "Release notes",
@@ -18367,22 +18471,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_max_length = "Maximum length",
 				ytp_chorus = "Chorus",
 				ytp_pitch_change = "Change Pitch",
-				ytp_vibrato = "Vibrato (probabily attach wave effect)",
+				ytp_vibrato = "Vibrato (likely attach wave effect)",
 				ytp_reverse = "Reverse",
 				ytp_delay = "Delay",
 				ytp_speed_change = "Change Speed",
 				ytp_hue_change = "Change Hue",
 				ytp_hue_rotate = "Rotate Hue",
-				ytp_monochrome = "Black and White",
-				ytp_negative = "Negative (probabily attach pitch-down effect)",
-				ytp_high_freq_repeat = "High Frequency Repeat",
+				ytp_monochrome = "Monochrome",
+				ytp_negative = "Negative (likely attach pitch-down effect)",
+				ytp_high_freq_repeat = "Repeat Rapidly",
 				ytp_random_tone = "Random Tuning (attach horizontal flip effect)",
-				ytp_enlarge = "Enlarge (attach loud)",
-				ytp_spherize = "Sphericalization",
-				ytp_mirror = "Mirroring",
+				ytp_enlarge = "Upsize (attach loud)",
+				ytp_spherize = "Spherize",
+				ytp_mirror = "Mirror",
 				ytp_high_contrast = "High Contrast (attach loud)",
-				ytp_oversaturation = "Oversaturation (probabily attach pitch-up effect)",
-				ytp_emphasize_thrice = "Thrice to Emphasize (attach enlarge focus effect)",
+				ytp_oversaturation = "Oversaturation (likely attach pitch-up effect)",
+				ytp_emphasize_thrice = "Thrice to Emphasize (attach sporadic upsize focus motion)",
 				ytp_info = "Click the \"Complete\" button under the current tab, the YTP will be generated instead of Otomad/YTPMV.\nThe parameter settings other than \"Enabled Audio\" and \"Enabled Video\" will not effective in YTP.",
 				video_preset_fade_out = "Fade Out",
 				flashlight = "Flashlight",
@@ -18408,9 +18512,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				clear_tracks_effect = "Clear Tracks Effect",
 				track_legato = "Tracks Legato",
 				track_legato_stacking = "Stacking clips",
-				track_legato_limit_stretch = "Stretch clips (limit to stretch ranges)",
-				track_legato_stretch = "Stretch clips",
-				track_legato_lengthen = "Lengthen clips",
+				track_legato_limit_stretch = "Stretching clips (limit to stretch ranges)",
+				track_legato_stretch = "Stretching clips",
+				track_legato_lengthen = "Lengthening clips",
 				helper_info = "The following functions are just some independent auxiliary functions, and have nothing to do with other parameters that generate audio and video.",
 				helper_info_warning = "Note: This dialog box will be closed after the operation, you can reopen it later, and some unsaved changes may be lost!\n",
 				close_after_open_helper = "Close this dialog after the operation completed",
@@ -18444,8 +18548,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_media_take_exception = "Error: Unable to read the media.\n\nThe file format you selected is not supported by Vegas. Please check if the media file is damaged or the corresponding Vegas decoder is not installed.\n\n",
 				not_a_midi_file_exception = "Error: Unable to read MIDI file.\n\nSolution: Import the MIDI with the host software, and then re-output a new MIDI file.\n\nSupplementary note: There are multiple formats of MIDI files, and the script does not guarantee that all of them can be read correctly. Fortunately,\nMIDI files exported by mainstream host software under default settings are generally readable. (Currently tested FL Studio, LMMS\nand Music Studio for iPad.)",
 				no_selected_exception_ps = "Additional note: If you want to manually select a media in the folder, please click the \"Browse\" button on the right to\nselect a media. And make sure that the path of the file you selected is selected in the drop-down menu on the left.",
-				no_selected_media_exception = "Error: No media is selected in the project media window.\n\nPlease select a media in the project media window, then reopen the configuration dialog, and select \"selected media file\" in the source settings.\n\n",
-				no_selected_clip_exception = "Error: No clips are selected in the track.\n\nPlease select a clip in the track, then reopen the configuration dialog, and select \"selected track clips\" in the source settings.\n\n",
+				no_selected_media_exception = "Error: No media is selected in the project media window.\n\nPlease select a media in the project media window, then reopen the configuration dialog, and select \"selected media file\" in the source configuration.\n\n",
+				no_selected_clip_exception = "Error: No clips are selected in the track.\n\nPlease select a clip in the track, then reopen the configuration dialog, and select \"selected track clips\" in the source configuration.\n\n",
 				no_time_stretch_pitch_shift_exception = "Error: The pitch conversion method of the selected clip is set to no tuning.\n\nMost likely you are using \"selected track clips\". You are not to blame for this error, but for the brain-dead design of Vegas.\n\nSolution: Please reselect your track clips, right-click the audio part, and select \"Properties\" at the bottom. Set the \"Method\" of \"Time Stretch/Pitch Conversion\" to \"élastique\".\nThen click OK.\n\nSupplementary note: If an audio event has not been transposed and its properties are opened, then the “Method” of “Time Stretch/Pitch Conversion” in its properties will be\nautomatically modified to “None”, and click OK. Take effect. At this time, you will find that the + and-key tuning operations on the keyboard are invalid. At this time, you must reopen the properties of the audio event,\nset the \"Method\" of \"Time Stretch/Pitch Conversion\" to \"élastique\", you don't need to set \"Pitch Change\", just click OK.",
 				read_config_fail_exception = "Error: Failed to read the parameter configuration file.\n\nUnfortunately you encountered this unforeseen error. We will clear the user configuration settings and restore them to default settings in order to solve the problem.\nIt is recommended to tell the author of this error in order to solve the problem quickly.\nThis script will be exited, and then I will bother you to reopen it manually.",
 				fail_to_select_clips_exception = "Error: Error selecting track clips.\n\nPlease select some track clips in the track window first.",
@@ -18454,7 +18558,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_in_media_generator_exception = "Error: Apply YTP to the media generated by the media generator.\n\nThe application of YTP must use local media files, do not use the media generated by the media generator.",
 				ytp_eliminate_duplicates_finally_null_exception = "Technical Exception: Remove duplicate from YTP source list. Finally, the list is empty!\n\nThis is an error that should not happen.",
 				unknown_exception = "Error: Unknown exception.\n\nPlease expand the details to see the specific error content and feed the error information back to the author.",
-				use_pic_in_pic_on_unsupported_vegas_exception = "Error: Use of the Picture-in-Picture plug-in effect in lower versions of Vegas is not supported.\n\nRoot cause: Vegas has added some new features and parameters to the new Picture-in-Picture effect plug-in, which cannot be used in lower versions of Vegas plug-in.\n\nSolution: The current version of Vegas cannot use this PV rhythm visual effects (such as expansion aspects), please use other visual effects. Or update your Vegas software."
+				use_pic_in_pic_on_unsupported_vegas_exception = "Error: Use of the Picture-in-Picture plugin effect in lower versions of Vegas is not supported.\n\nRoot cause: Vegas has added some new features and parameters to the new Picture-in-Picture effect plugin, which cannot be used in lower versions of Vegas plugin.\n\nSolution: The current version of Vegas cannot use this PV rhythm visual effects (such as expansion aspects), please use other visual effects. Or update your Vegas software."
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -18480,7 +18584,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				all_files = "所有檔案",
 				choose_a_midi_file = "請選擇一個 MIDI 檔案",
 				media_file_name = "支持的媒體檔案",
-				choose_a_source_file = "請選擇一個視頻或圖片素材片段",
+				choose_a_source_file = "請選擇一個視訊或圖片素材片段",
 				error = "錯誤",
 				details = "詳細資訊：",
 				brightness_and_contrast = "亮度和對比度",
@@ -18542,7 +18646,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				processing_tracks = "正在生成第 {0} 個軌道，通道 {1}{2}⋯⋯",
 				real_time_update = "即時更新當前進度（會减慢生成速度）",
 				replacer_is = "指定的替換項為",
-				replacer_info = "請先在軌道視窗中選中替換與被替換的素材，然後指定一個素材為替換的素材，剩餘素材均為被替換素材。\n請先將替換素材的音視頻創建分組，並確保替換素材放置在時間靠後的位置並且儘量不與其它被替換素材位於同一軌道。",
+				replacer_info = "請先在軌道視窗中選中替換與被替換的素材，然後指定一個素材為替換的素材，剩餘素材均為被替換素材。\n請先將替換素材的音視訊創建分組，並確保替換素材放置在時間靠後的位置並且儘量不與其它被替換素材位於同一軌道。",
 				replace_clips = "替換軌道素材",
 				replaced_info = "則剩餘 {0} 項軌道剪輯將被替換為選定素材。",
 				replaced_label = "被替換項",
@@ -18555,7 +18659,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				separation_reserve_original_name = "保留原始剪輯名稱",
 				replacements_classic_specify = "同時指定",
 				replacements_separation_specify = "分別指定",
-				view = "查看",
+				view = "檢視",
 				selected_items = "選中項",
 				replace_clips_form_ensure_to_close = "在「分別指定」中已指定有部分軌道素材。\n退出之後系統可能不會保留您的更改。",
 				track = "軌道",
@@ -18565,11 +18669,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				select_how_many = "每次要選取幾個",
 				reset_select = "重置選擇(&R)",
 				quick_select_interval = "快速間隔選擇",
-				select_interval_info = "請先在 Vegas 軌道中選中一些素材，然後再啟動本對話方塊，使用下麵的功能。",
+				select_interval_info = "請先在 Vegas 軌道中選中一些素材，然後再啟動本對話方塊，使用下面的功能。",
 				select_events_count_info = "已選中 {0} 個軌道剪輯。",
-				select_videotracks_count_info = "已選中 {0} 個視頻軌道。",
+				select_videotracks_count_info = "已選中 {0} 個視訊軌道。",
 				select_audioevents_count_info = "已选中 {0} 個音訊軌道剪輯。",
 				select_source_count_info = "已選中 {0} 項媒體素材。",
+				select_tracks_count_info = "已選中 {0} 個軌道。",
+				effect_to_selected_events = "僅應用於選中的軌道剪輯",
 				square = "平方",
 				custom = "自定義",
 				row_count = "行數",
@@ -18592,10 +18698,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				front_surface = "前面",
 				box_3d_layout_info = "由於腳本功能限制，將會新建軌道並將選定軌道中的剪輯移動過去，原軌道中的軌道運動、效果等訊息將會遺失。\n請在下方選定立方體的各個面所使用的軌道，如果為空則表示不設定該面。",
 				delete_original_tracks = "删除原軌道",
-				use_video_longer_side = "使用視頻的長邊作為立方體的棱長",
-				use_video_longer_side_tooltip = "勾選後，將以項目設定中視頻最長的一條邊（即寬度與高度的最大值）作為立方體的棱長。",
+				use_video_longer_side = "使用視訊的長邊作為立方體的棱長",
+				use_video_longer_side_tooltip = "勾選後，將以專案設定中視訊最長的一條邊（即寬度與高度的最大值）作為立方體的棱長。",
 				gradient_tracks = "漸變軌道",
-				gradient_tracks_info = "選擇一種漸變效果應用到所選的視頻軌道：",
+				gradient_tracks_info = "選擇一種漸變效果應用到所選的視訊軌道：",
 				rainbow_color = "彩虹色",
 				gradually_saturated = "逐漸飽和",
 				gradually_contrasted = "逐漸對比",
@@ -18638,7 +18744,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				classic_a18 = "A18. 鼓（更適用於通鼓）",
 				classic_a19 = "A19. 鼓（微弱回音）",
 				batch_subtitle_generation = "批量生成字幕",
-				batch_subtitle_generation_presets = "選擇一個預先設定好的“字幕和文字”媒體發生器的預設：",
+				batch_subtitle_generation_presets = "選擇一個預先設定好的“字幕和文字”媒體產生器的預設：",
 				batch_subtitle_generation_subtitles = "輸入要插入的字幕文字（一行一個，忽略空行）：",
 				batch_subtitle_generation_single_duration = "每個字幕持續時間",
 				batch_subtitle_generation_suggestion_info = "稍後可開啟“自動跟進”功能以便後續調整時間。",
@@ -18654,7 +18760,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				channel = "通道",
 				name = "名稱",
 				edit_notes = "編輯所選通道音符...",
-				auto_layout_tracks_midi_channel_advanced_info = "僅在生成視頻且不啟用五線譜視覺化效果時有效。",
+				auto_layout_tracks_midi_channel_advanced_info = "僅在生成視訊且不啟用五線譜視覺化效果時有效。",
 				reset = "重設",
 				select_all = "全選",
 				select_none = "全不選",
@@ -18662,7 +18768,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				replace = "替換(&R)",
 				apply = "應用(&A)",
 				close = "關閉(&C)",
-				complete = "完成(&I)",
+				complete = "完成(&O)",
 				cancel = "取消(&C)",
 				about = "關於(&A)",
 				ok = "確定(&O)",
@@ -18676,7 +18782,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				pitch_shift_plugin = "移調效果插件",
 				elastique_method = "彈性音調更改",
 				classic_method = "古典音調更改",
-				fool_tuning_method = "瞎調音",
+				fool_tuning_method = "無音階調音",
 				sine_wave = "正弦波",
 				triangle_wave = "三角波",
 				square_wave = "方波",
@@ -18689,7 +18795,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				sheet_width_tooltip = "將在荧幕中間所填的寬度內顯示音符，用於左右留白，給左側的譜號留間距。\n單位：點數。",
 				sheet_gap_tooltip = "五線譜線與線之間的間距。\n單位：點數。",
 				sheet_line_thickness_tooltip = "生成五線譜的譜線時，五線譜譜線的粗細。 當粗細值達到 100 % 後，譜線將會占滿整個譜線間距。\n單位：百分比。",
-				sheet_relative_tooltip = "勾選後，下方所填參數的點數單位將以相對於 1920 × 1080\n的尺寸進行定位；反之則以項目尺寸定位。",
+				sheet_relative_tooltip = "勾選後，下方所填參數的點數單位將以相對於 1920 × 1080\n的尺寸進行定位；反之則以專案尺寸定位。",
 				sheet_relative = "使用相對值",
 				preview_base_pitch_tooltip = "請確保開啟聲音並且未將聲音方案設定為無聲。\n如果仍沒有聲音，請重啟系統。",
 				ytp_max_length_tooltip = "指定單個軌道剪輯的最大長度。\n單位：毫秒。",
@@ -18714,18 +18820,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				repository_link = "倉庫地址",
 				latest_version_link = "最新版本連結",
 				roadmap = "路線圖",
+				send_issues = "反饋問題或建議",
 				update_logs = "更新日誌",
-				tutorial_video = "教程視頻",
+				tutorial_video = "教程視訊",
 				release_notes = "發行說明",
-				staff_visualizer_documentation = "五線譜視覺化文檔",
-				english_documentations = "英語說明文檔",
-				chinese_documentations = "中文說明穩定",
+				staff_visualizer_documentation = "五線譜視覺化文件",
+				english_documentations = "英語說明文件",
+				chinese_documentations = "中文說明文件",
 				check_update = "檢查更新(&U)",
 				why_ok_btn_is_disabled = "為什麼無法點擊完成按鈕？",
 				experimental_theme = "實驗性主題",
 				media = "媒體",
 				audio = "音訊",
-				video = "視頻",
+				video = "視訊",
 				staff = "五線譜",
 				ytp = "YTP",
 				helper = "工具",
@@ -18742,14 +18849,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				choose_midi_file = "選擇 MIDI 檔案",
 				midi_dynamic_midi_bpm = "動態 MIDI 速度",
 				midi_midi_bpm = "MIDI 速度",
-				midi_project_bpm = "項目速度",
+				midi_project_bpm = "專案速度",
 				midi_custom_bpm = "自定義",
 				dynamic_midi_bpm_info = "{0} 起始的動態速度",
 				dynamic_midi_beat_info = "{0} 起始的動態節拍",
 				colon = "：",
 				semicolon = "；",
 				source_settings = "素材配置",
-				generate_at_begin = "項目開始處",
+				generate_at_begin = "專案開始處",
 				generate_at_cursor = "光標處",
 				generate_position = "設定生成開始位置",
 				choose_source_file = "選擇媒體素材",
@@ -18781,7 +18888,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				create_event_group = "創建分組",
 				aconfig = "生成音訊",
 				audio_stretch = "拉伸音訊",
-				audio_loop = "迴圈音訊",
+				audio_loop = "循環音訊",
 				audio_normalize = "規範化音量",
 				audio_lock_stretch_pitch = "鎖定伸縮與音調",
 				video_glow_bright = "發光亮度",
@@ -18834,9 +18941,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				pendulum = "左右搖擺",
 				gaussian_blur = "高斯模糊",
 				radial_blur = "徑向模糊",
-				vconfig = "生成視頻",
-				video_stretch = "拉伸視頻",
-				video_loop = "迴圈視頻",
+				vconfig = "生成視訊",
+				video_stretch = "拉伸視訊",
+				video_loop = "循環視訊",
 				freeze_first_frame = "靜態畫面",
 				freeze_last_frame = "禁止延長",
 				legato = "填補間隙",
@@ -18855,7 +18962,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				sheet_notes_shift = "音符偏移",
 				sheet_config = "啟用五線譜視覺化效果",
 				sheet_generate = "生成五線譜",
-				sheet_config_info = "欲開啟五線譜視覺效果，需要先開啟「生成視頻」選項。\n開啟本功能會禁用視頻視覺效果和視頻拉伸選項。",
+				sheet_config_info = "欲開啟五線譜視覺效果，需要先開啟「生成視訊」選項。\n開啟本功能會禁用視訊視覺效果和視訊拉伸選項。",
 				sheet_notes_params = "音符參數",
 				sheet_sheet_line_params = "譜線參數",
 				sheet_legacy_method = "舊版定位方式",
@@ -18872,7 +18979,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_hue_change = "更改色相",
 				ytp_hue_rotate = "旋轉色相",
 				ytp_monochrome = "黑白",
-				ytp_negative = "反轉顏色（概率性附加降調效果）",
+				ytp_negative = "顏色反轉（概率性附加降調效果）",
 				ytp_high_freq_repeat = "高頻重複",
 				ytp_random_tone = "隨機調音（附加水平翻轉效果）",
 				ytp_enlarge = "放大（附加增大音量）",
@@ -18881,7 +18988,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_high_contrast = "高對比（附加增大音量）",
 				ytp_oversaturation = "過飽和（概率性附加升調效果）",
 				ytp_emphasize_thrice = "重說三（附加放大聚焦效果）",
-				ytp_info = "在當前選項卡下按一下「完成」按鈕，將會生成 YTP 而不是音 MAD / YTPMV。\n除「生成音訊」「生成視頻」外其它的參數設置並不會在 YTP 中使用。",
+				ytp_info = "在當前選項卡下按一下「完成」按鈕，將會生成 YTP 而不是音 MAD / YTPMV。\n除「生成音訊」「生成視訊」外其它的參數設定並不會在 YTP 中使用。",
 				video_preset_fade_out = "淡出",
 				flashlight = "閃光",
 				horizontal_movement = "水平移動",
@@ -18893,7 +19000,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				oversaturation = "過飽和",
 				high_contrast = "高對比",
 				select_interval = "間隔選擇",
-				select_interval_configform_info = "本功能旨在輔助用戶每隔一個或幾個選中一個素材，然後可以執行「粘貼視頻事件」等操作。",
+				select_interval_configform_info = "本功能旨在輔助用戶每隔一個或幾個選中一個素材，然後可以執行「粘貼視訊事件」等操作。",
 				quick_normalize = "快速規範音量",
 				quick_normalize_configform_info = "將選中的多個音訊軌道剪輯全部規範化音量。",
 				quick_normalize_complete = "完成規範化音量。",
@@ -18909,7 +19016,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				track_legato_limit_stretch = "拉伸素材（限制在拉伸極限範圍之內）",
 				track_legato_stretch = "拉伸素材",
 				track_legato_lengthen = "改變素材持續時間",
-				helper_info = "以下功能只是一些獨立的協助工具，與其它生成音視頻的參數無關。",
+				helper_info = "以下功能只是一些獨立的協助工具，與其它生成音視訊的參數無關。",
 				helper_info_warning = "注意：操作之後將會關閉本對話方塊，您可以稍後再重新啟動，部分您未保存的更改可能會遺失！\n",
 				close_after_open_helper = "操作完成之後關閉本對話方塊",
 				otomad_helper_config = "Otomad Helper for Vegas - 配置",
@@ -18919,34 +19026,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				about_title = "關於",
 				script_author = "腳本作者",
 				script_original_author = "腳本原作者",
-				documentation = "蘭音",
+				documentation = "說明文件",
+				ranne = "蘭音",
 				why_ok_btn_is_disabled_info = "請按照下列步驟依次檢查問題：",
-				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「生成音訊」與「生成視頻」被同時取消勾選。請至少勾選生成其中一項。",
+				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「生成音訊」與「生成視訊」被同時取消勾選。請至少勾選生成其中一項。",
 				why_ok_btn_is_disabled_no_media_take = "所選的媒體素材來源不包含任何有效媒體資源。",
 				why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / YTPMV，請先選擇一個 MIDI 序列檔案。",
 				why_ok_btn_is_disabled_in_helper_tab = "為避免誤操作，切勿在「工具」選項卡下進行提交生成操作。",
 				why_ok_btn_is_disabled_unknown_problem = "未知原因。",
-				no_selected_media_warning = "警告：您沒有在項目媒體視窗中選中任何有效媒體素材！",
+				no_selected_media_warning = "警告：您沒有在專案媒體視窗中選中任何有效媒體素材！",
 				no_selected_clip_warning = "警告：您沒有在軌道視窗中選中任何剪輯片段！",
 				preview_audio_track_name = "預聽音訊軌道（應該被删除！）",
-				no_midi_exception = "錯誤：未選擇 MIDI 檔案。\n\n請重新啟動腳本參數配置對話方塊，然後在「MIDI 配置」分組中點擊「瀏覽」按鈕，打開一個有效的MIDI 檔案。",
-				no_media_exception = "錯誤：未選擇媒體檔案。\n\n請重新啟動腳本參數配置對話方塊，然後在「媒體配置」分組中點擊「瀏覽」按鈕，打開一個有效的媒體檔案。",
+				no_midi_exception = "錯誤：未選擇 MIDI 檔案。\n\n請重新啟動腳本參數配置對話方塊，然後在「MIDI 配置」分組中點擊「瀏覽」按鈕，開啟一個有效的 MIDI 檔案。",
+				no_media_exception = "錯誤：未選擇媒體檔案。\n\n請重新啟動腳本參數配置對話方塊，然後在「媒體配置」分組中點擊「瀏覽」按鈕，開啟一個有效的媒體檔案。",
 				no_track_info_exception = "錯誤：沒有 MIDI 音軌。\n\n可能的原因：\n1.您沒有選擇一個 MIDI 音軌；\n2.該 MIDI 檔案中沒有任何音軌；\n3.該 MIDI 檔案已損壞或檔案格式不受支持。",
-				no_plugin_pitch_shift_exception = "錯誤：無法調用移調插件。\n\n請按照教程檔案 {0} 的指引正確操作。\n不過，根據這個更新版本的腳本，按理應當是中英文版本均可正常運行的。\n囙此很有可能您是使用其它語言的 Vegas 造成的（逃",
+				no_plugin_pitch_shift_exception = "錯誤：無法調用移調插件。\n\n請按照教程檔案 {0} 的指引正確操作。\n不過，根據這個更新版本的腳本，按理應當是中英文版本均可正常運行的。\n因此很有可能您是使用其它語言的 Vegas 造成的（逃",
 				no_plugin_presets_exception = "錯誤：無法調用移調插件的預設效果。\n\n請按照教程檔案 {0} 的指引正確操作。\n確保在移調插件中手動添加了所有的 25 個預設，且命名正確。\n\n補充說明：具體可見上述連結專欄中對於安裝方法的說明。這 25 個預設是上下一個八度以內的所有變調種類，\n缺少任何一個都有可能出錯。手動添加預設的確非常麻煩，但 Vegas 無法使用腳本來指定變調的具體參數，\n囙此只好繞這個彎子。",
 				no_plugin_name_exception = "錯誤：無法調用 {0} 插件。\n\n可能您使用的是非中文版的 Vegas 或其它尚未測試版本的 Vegas。",
-				no_take_exception_ps = "補充說明：若仍不能解决，說明該素材檔案可能是 Vegas 不支持的格式，\n可以手動把該檔案拖入 Vegas 中看一下是否視頻音訊都正常。",
-				no_audio_take_exception = "錯誤：無法讀取音訊媒體流。\n\n在設定介面，純視頻/圖片素材不要勾選「生成音訊」。\n\n",
-				no_video_take_exception = "錯誤：無法讀取視頻媒體流。\n\n在設定介面，純音訊素材不要勾選「生成視頻」。\n\n",
+				no_take_exception_ps = "補充說明：若仍不能解决，說明該素材檔案可能是 Vegas 不支持的格式，\n可以手動把該檔案拖入 Vegas 中看一下是否視訊音訊都正常。",
+				no_audio_take_exception = "錯誤：無法讀取音訊媒體流。\n\n在設定介面，純視訊/圖片素材不要勾選「生成音訊」。\n\n",
+				no_video_take_exception = "錯誤：無法讀取視訊媒體流。\n\n在設定介面，純音訊素材不要勾選「生成視訊」。\n\n",
 				no_media_take_exception = "錯誤：無法讀取媒體。\n\n您所選的檔案格式不受 Vegas 支持，請檢查該媒體檔案是否損壞，或未安裝對應的 Vegas 解碼器。\n\n",
-				not_a_midi_file_exception = "錯誤：無法讀取 MIDI 檔案。\n\n解決方法：用宿主軟件導入該 MIDI，然後重新輸出一個新的 MIDI 檔案。\n\n補充說明：MIDI 檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟件在\n默認設置下匯出的 MIDI 檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
+				not_a_midi_file_exception = "錯誤：無法讀取 MIDI 檔案。\n\n解決方法：用宿主軟件導入該 MIDI，然後重新輸出一個新的 MIDI 檔案。\n\n補充說明：MIDI 檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟件在\n默認設定下匯出的 MIDI 檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
 				no_selected_exception_ps = "補充說明：如果您想手動在資料夾中選擇一個媒體素材，那麼請點擊其右邊的「瀏覽」按鈕，\n選擇一個媒體素材。並確保左側的下拉式功能表中選中的是您所選檔案所在的路徑。",
-				no_selected_media_exception = "錯誤：沒有在項目媒體視窗中選擇任何媒體。\n\n請在項目媒體視窗中選擇一個媒體，然後重新啟動參數配置視窗，並在素材設定中選擇「選中的媒體檔案」。\n\n",
+				no_selected_media_exception = "錯誤：沒有在專案媒體視窗中選擇任何媒體。\n\n請在專案媒體視窗中選擇一個媒體，然後重新啟動參數配置視窗，並在素材設定中選擇「選中的媒體檔案」。\n\n",
 				no_selected_clip_exception = "錯誤：沒有在軌道中選擇任何剪輯。\n\n請在軌道中選擇一個剪輯，然後重新啟動參數配置視窗，並在素材設定中選擇「選中的軌道素材」。\n\n",
-				no_time_stretch_pitch_shift_exception = "錯誤：選定素材音調轉換方法被設定為不調音。\n\n很有可能您使用的是「選中的軌道素材」。出現了這個錯誤不怪你，要怪就怪 Vegas 這個腦殘設計。\n\n解決方法：請重新選中您的軌道素材，右鍵音訊部分，選擇底部的「內容」。將「時間拉伸/音調轉換」的「方法」設定為“élastique”。\n然後點擊確定即可。\n\n補充說明：如果某個音訊事件沒有進行變調操作，然後打開了它的內容，那麼其內容中的「時間拉伸/音調轉換」的「方法」會被\n自動修改為「無」，點擊確定就會生效。這時你會發現鍵盤上的 +、- 鍵調音操作無效了。這時必須重新打開音訊事件的內容，\n將「時間拉伸/音調轉換」的「方法」設定為“élastique”，不必設定「音調更改」，點擊確定即可。",
+				no_time_stretch_pitch_shift_exception = "錯誤：選定素材音調轉換方法被設定為不調音。\n\n很有可能您使用的是「選中的軌道素材」。出現了這個錯誤不怪你，要怪就怪 Vegas 這個腦殘設計。\n\n解決方法：請重新選中您的軌道素材，右鍵音訊部分，選擇底部的「內容」。將「時間拉伸/音調轉換」的「方法」設定為“élastique”。\n然後點擊確定即可。\n\n補充說明：如果某個音訊事件沒有進行變調操作，然後開啟了它的內容，那麼其內容中的「時間拉伸/音調轉換」的「方法」會被\n自動修改為「無」，點擊確定就會生效。這時你會發現鍵盤上的 +、- 鍵調音操作無效了。這時必須重新開啟音訊事件的內容，\n將「時間拉伸/音調轉換」的「方法」設定為“élastique”，不必設定「音調更改」，點擊確定即可。",
 				read_config_fail_exception = "錯誤：讀取參數設定檔失敗。\n\n很遺憾您遇到了這個不可預見的錯誤。我們將會清除用戶配置設定並恢復為預設值以便解决問題。\n建議將這個錯誤告訴作者以便快速解决問題。\n將會退出此腳本，然後勞煩閣下手動重新啟動此腳本。",
 				fail_to_select_clips_exception = "錯誤：選取軌道剪輯出錯。\n\n請先在軌道視窗中選取部分軌道剪輯。",
-				fail_to_select_tracks_exception = "錯誤：選取軌道出錯。\n\n請先在軌道視窗中選取部分視頻軌道。",
+				fail_to_select_tracks_exception = "錯誤：選取軌道出錯。\n\n請先在軌道視窗中選取部分視訊軌道。",
 				ytp_over_length_exception = "錯誤：指定的 YTP 最小長度超過了媒體長度。\n\n指定的 YTP 最小長度過大，請嘗試更小的值。或所選媒體素材長度過小。",
 				ytp_in_media_generator_exception = "錯誤：對媒體生成器產生的媒體應用 YTP。\n\n應用 YTP 必須使用本地媒體檔案，不要使用媒體生成器生成的媒體。",
 				ytp_eliminate_duplicates_finally_null_exception = "技術异常：對 YTP 素材清單進行去重操作，最後清單為空了！\n\n這是一個不應該被發生的錯誤。",
@@ -19067,6 +19175,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				select_videotracks_count_info = "{0}ビデオトラックが選択されました。",
 				select_audioevents_count_info = "{0}オーディオトラックイベントが選択されました。",
 				select_source_count_info = "{0}メディア素材が選択されました。",
+				select_tracks_count_info = "{0}トラックが選択されました。",
+				effect_to_selected_events = "選択したトラックイベントにのみ適用",
 				square = "四角",
 				custom = "カスタム",
 				row_count = "行の数",
@@ -19093,10 +19203,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				use_video_longer_side_tooltip = "チェック後、プロジェクト設定のビデオの最も長い辺（つまり、幅と高さの最大値）が立方体のエッジの長さとして使用されます。",
 				gradient_tracks = "グラデーショントラック",
 				gradient_tracks_info = "選択したビデオトラックに適用するグラデーション効果を選択します。",
-				rainbow_color = "レインボーカラー",
+				rainbow_color = "虹色",
 				gradually_saturated = "徐々に飽和",
 				gradually_contrasted = "徐々に対照",
-				threshold = "しきい値",
+				threshold = "スレッショルド",
 				alternately_chromatic = "交互にクロマチック",
 				alternately_negative = "交互にネガティブ",
 				descending = "降順",
@@ -19172,9 +19282,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				source_end_time_tooltip = "ここに入力された値が開始秒数以下の場合、それは常にメディア時間の終わりまで続くことを意味することに注意してください。\n単位：秒。",
 				no_tune = "チューニングなし",
 				pitch_shift_plugin = "ピッチシフトオーディオエフェクトプラグイン",
-				elastique_method = "弾性ピッチ変化",
-				classic_method = "古典ピッチ変化",
-				fool_tuning_method = "チューニングでばか",
+				elastique_method = "エラスティックなピッチ変化",
+				classic_method = "クラシックなピッチ変化",
+				fool_tuning_method = "スケールなしのチューニング",
 				sine_wave = "正弦波",
 				triangle_wave = "三角波",
 				square_wave = "方形波",
@@ -19212,6 +19322,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				repository_link = "リポジトリリンク",
 				latest_version_link = "最新バージョンのリンク",
 				roadmap = "ロードマップ",
+				send_issues = "フィードバックの送信",
 				update_logs = "ログを更新",
 				tutorial_video = "チュートリアルビデオ",
 				release_notes = "リリースノート",
@@ -19363,16 +19474,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_max_length = "最大の長さ",
 				ytp_chorus = "コーラス",
 				ytp_pitch_change = "ピッチを変更する",
-				ytp_vibrato = "ビブラート（おそらく波の効果を付ける）",
+				ytp_vibrato = "ビブラート（おそらく波浪の効果を付ける）",
 				ytp_reverse = "逆再生",
-				ytp_delay = "遅れ",
+				ytp_delay = "ディレイ",
 				ytp_speed_change = "速度を変更する",
 				ytp_hue_change = "色相を変更する",
 				ytp_hue_rotate = "色相を回転させる",
 				ytp_monochrome = "モノクロ",
 				ytp_negative = "ネガティブ（おそらくピッチダウン効果を付ける）",
-				ytp_high_freq_repeat = "高周波リピート",
-				ytp_random_tone = "ランダムチューニング（水平フリップ効果を付ける）",
+				ytp_high_freq_repeat = "急速に繰り返す",
+				ytp_random_tone = "ランダムチューニング（水平方向にフリップ効果を付ける）",
 				ytp_enlarge = "拡大（大声で添付）",
 				ytp_spherize = "球形",
 				ytp_mirror = "ミラー",
@@ -19432,7 +19543,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_media_exception = "エラー：メディアファイルが選択されていません。\n\nスクリプト設定ダイアログボックスを再度開き、「メディア設定」グループの「参照」ボタンをクリックして、有効なメディアファイルを開いてください。",
 				no_track_info_exception = "エラー：MIDIトラックがありません。\n\n考えられる理由：\n1.MIDIトラックを選択しなかった。\n2.MIDIファイルにチャンネルがありません。\n3. MIDIファイルが破損しているか、ファイル形式がサポートされていません。",
 				no_plugin_pitch_shift_exception = "エラー：ピッチシフトプラグインを呼び出すことができません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\nただし、この更新されたバージョンのスクリプトによると、中国語と英語のバージョンは正常に機能するはずです。\nしたがって、他の言語でVegasを使用している可能性が非常に高くなります。",
-				no_plugin_presets_exception = "エラー：ピッチシフトプラグインのプリセットエフェクトを呼び出すことはできません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\n25個のプリセットすべてが転置プラグインに手動で追加され、正しく名前が付けられていることを確認してください。\n\n補足：詳細については、上記リンク欄の設置方法の説明を参照してください。これらの25のプリセットは、次のオクターブ内のすべてのタイプのピッチ変更です。\nそれらのいずれかが欠落していると、エラーが発生する可能性があります。手動でプリセットを追加するのは確かに非常に面倒ですが、Vegasはスクリプトを使用し\nてピッチシフトの特定のパラメーターを指定できないため、このトリックを回避する必要がありました。",
+				no_plugin_presets_exception = "エラー：ピッチシフトプラグインのプリセットエフェクトを呼び出すことはできません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\n25個のプリセットすべてが転置プラグインに手動で追加され、正しく名前が付けられていることを確認してください。\n\n補足：詳細については、上記リンク欄の設定方法の説明を参照してください。これらの25のプリセットは、次のオクターブ内のすべてのタイプのピッチ変更です。\nそれらのいずれかが欠落していると、エラーが発生する可能性があります。手動でプリセットを追加するのは確かに非常に面倒ですが、Vegasはスクリプトを使用し\nてピッチシフトの特定のパラメーターを指定できないため、このトリックを回避する必要がありました。",
 				no_plugin_name_exception = "エラー：{0}プラグインを呼び出すことができませんでした。\n\n中国語以外のバージョンのVegas、またはまだテストされていない別のバージョンのVegasを使用している可能性があります。",
 				no_take_exception_ps = "補足：それでも解決できない場合は、メディアファイルがVegasでサポートされていない形式である可能性があることを意味します。\nファイルを手動でVegasにドラッグして、ビデオとオーディオが正常かどうかを確認できます。",
 				no_audio_take_exception = "エラー：オーディオメディアストリームを読み取ることができません。\n\n設定インターフェイスで、純粋なビデオ／画像メディアの「有効なオーディオ」をチェックしないでください。\n\n",
@@ -19566,6 +19677,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				select_videotracks_count_info = "Выбрано {0} видеодорожек.",
 				select_audioevents_count_info = "Выбран набор дорожек для аудио {0}.",
 				select_source_count_info = "Выделен материал для медиа {0}.",
+				select_tracks_count_info = "Выбрано {0} треков.",
+				effect_to_selected_events = "Применить только к выбранным клипам трека",
 				square = "Квадрат",
 				custom = "Настроить",
 				row_count = "Ряды",
@@ -19673,7 +19786,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				pitch_shift_plugin = "Плагин звукового эффекта Pitch Shift",
 				elastique_method = "Эластик изменение шага",
 				classic_method = "Классический изменение шага",
-				fool_tuning_method = "Глухой тон",
+				fool_tuning_method = "Тюнинг без масштаба",
 				sine_wave = "синусоидальная",
 				triangle_wave = "треугольная",
 				square_wave = "прямоугольная",
@@ -19709,6 +19822,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				repository_link = "Ссылка на репозиторий",
 				latest_version_link = "Ссылка на последнюю версию",
 				roadmap = "Дорожная карта",
+				send_issues = "Отправить отзыв",
 				update_logs = "Обновление журналов",
 				tutorial_video = "Учебное видео",
 				release_notes = "Выпуск заметок",
