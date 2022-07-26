@@ -50,7 +50,7 @@ Vegas 16 and above support all features, and Vegas 13 ~ 15 are compatible to run
 Tested **fine** on Vegas Pro 17 and 19.
 
 ### Glossary
-[Glossary >](glossary)
+[Glossary >](glossary.md)
 
 ### Issues
 When you are using the script, if you:
