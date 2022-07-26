@@ -49,7 +49,7 @@
 			视频 - 静态画面<br />
 			視訊 - 靜態畫面<br />
 			ビデオ - 静止画像</td>
-		<td><img src="" alt="" /></td>
+		<td><img src="static_visual.png" alt="Static VIsual" /></td>
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
@@ -60,7 +60,7 @@
 			视频 - 复音多轨<br />
 			視訊 - 複音多軌<br />
 			ビデオ - 和音の複数トラック</td>
-		<td><img src="" alt="" /></td>
+		<td><img src="multitrack_for_chords.png" alt="Multitrack for Chords" /></td>
 	</tr>
 </table>
 
