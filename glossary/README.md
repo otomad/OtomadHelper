@@ -20,7 +20,7 @@
 			禁止延长<br />
 			禁止延長<br />
 			延長しない</td>
-		<td><img src="no_lengthening_video.png" alt="No Lengthening" /></td>
+		<td><img src="no_lengthening.png" alt="No Lengthening" /></td>
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
