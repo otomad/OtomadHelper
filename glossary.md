@@ -1,4 +1,46 @@
 # Glossary
+## Modes
+<table>
+	<tr>
+		<td>Otomad / YTPMV<br />
+		音 MAD / YTPMV<br />
+		音声 Music Anime Douga / YouTube Poop Music Video</td>
+		<td><img src="glossary/yohane_no_koori.png" alt="Otomad / YTPMV" title="ヨハネの氷" /></td>
+	</tr>
+	<tr>
+		<td>YTP<br />
+		YouTube Poop</td>
+		<td><img src="glossary/yoooo_a_boom.png" alt="YTP" title="Yoooo a boom" /></td>
+	</tr>
+	<tr>
+		<td>Drums Beat Cookie Cutter<br />
+		鼓组节奏区域切除<br />
+		鼓組節奏區域切除<br />
+		ラムビートクッキーカッター</td>
+		<td><img src="glossary/brain_power.png" alt="Drums Beat Cookie Cutter" title="Let the bass kick O-oooooooooo" /></td>
+	</tr>
+	<tr>
+		<td>Lyrics / Karaoke<br />
+		歌词 / 卡拉 OK<br />
+		歌詞 / 卡拉 OK<br />
+		歌詞 / カラオケ</td>
+		<td><img src="glossary/spicy_hot_pot_chicken.png" alt="Lyrics / Karaoke" title="香辣火鍋雞" /></td>
+	</tr>
+	<tr>
+		<td>Manual Vocaloid / Sentence Mixing<br />
+		人力 / Rap<br />
+		ボカロ / 鬼畜</td>
+		<td><img src="glossary/you_are_a_songstress.png" alt="Manual Vocaloid / Sentence Mixing" title="你就是歌姬吧" /></td>
+	</tr>
+	<tr>
+		<td>Shupelunker Tactics<br />
+		原音系战法<br />
+		原音系戰法<br />
+		シュペランカー戦法</td>
+		<td><img src="glossary/izayoi_sakuya.png" alt="Shupelunker Tactics" title="十六夜 咲夜" /></td>
+	</tr>
+</table>
+
 ## Switches
 <table>
 	<tr>
@@ -103,28 +145,28 @@
 			堆积素材<br />
 			堆積素材<br />
 			素材を積み上げる</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/legato_stacking.gif" alt="Legato Stacking" /></td>
 	</tr>
 	<tr>
 		<td>Stretching Clips (Limit to Stretch Ranges)<br />
 			拉伸素材（限制在拉伸极限范围之内）<br />
 			拉伸素材（限制在拉伸極限範圍之內）<br />
 			引張り素材（引張り限界の範囲に制限する）</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/legato_limit_stretching.gif" alt="Legato Limit Stretching" /></td>
 	</tr>
 	<tr>
 		<td>Stretching Clips<br />
 			拉伸素材<br />
 			拉伸素材<br />
 			引張り素材</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/legato_stretching.gif" alt="Legato Stretching" /></td>
 	</tr>
 	<tr>
 		<td>Lengthening Clips<br />
 			改变素材持续时间<br />
 			改變素材持續時間<br />
 			素材の持続時間を変更します</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/legato_lengthening.gif" alt="Legato Lengthening" /></td>
 	</tr>
 </table>
 
@@ -283,7 +325,7 @@
 			水平翻转<br />
 			水平翻轉<br />
 			水平方向にフリップ</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/prve_hflip.gif" alt="Horizontal Flip" /></td>
 	</tr>
 	<tr>
 		<td>Vertical Flip<br />
@@ -307,6 +349,8 @@
 		<td><img src="glossary/" alt="" /></td>
 	</tr>
 </table>
+
+> **Recommended Video Parameters Preset:** Enter
 
 ### Rotation Class
 <table>
@@ -332,6 +376,8 @@
 		<td><img src="glossary/" alt="" /></td>
 	</tr>
 </table>
+
+> **Recommended Video Parameters Preset:** Counterclockwise Rotation, Clockwise Rotation. Depending on the selected PV Rhythm Visual Effect. That is, the names selected by PV Rhythm Visual Effect and Video Parameters Preset should be the same. For Turned PV Rhythm Visual Effect, either.
 
 ### Mirror Class
 <table>
@@ -419,18 +465,20 @@
 			乒乓效应<br />
 			桌球效應<br />
 			ピンポン効果</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/prve_pingpong.gif" alt="Ping-pong Effect" /></td>
 	</tr>
 	<tr>
 		<td>Whirl<br />
 			爱的魔力转圈圈<br />
 			愛的魔力轉圈圈<br />
 			愛の魔力が輪回し</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/prve_whirl.gif" alt="Whirl" /></td>
 	</tr>
 </table>
 
 > **Notice:** Whirl = Ping-pong Effect + Horizontal Flip.
+
+> **Recommended Video Parameters Preset:** Normal
 
 ### Expansion & Compression Class
 <table>
@@ -489,6 +537,8 @@
 	</tr>
 </table>
 
+> **Recommended Video Parameters Preset:** Normal
+
 ### Blur Class
 <table>
 	<tr>
@@ -506,6 +556,9 @@
 		<td><img src="glossary/" alt="" /></td>
 	</tr>
 </table>
+
+## Staff Visual Effect
+> **Recommended Video Parameters Preset:** Enter (Staff)
 
 ## Auto Layout Tracks
 <table>
@@ -640,7 +693,7 @@
 				旋转色相<br />
 				旋轉色相<br />
 				色相を回転させる</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><a href="https://v.douyin.com/2VA6J4d/" title="The Master of Shadows"><img src="glossary/ytp_rotate_hue.gif" alt="Rotate Hue" /></a></td>
 		</tr>
 		<tr>
 			<td>-</td>
@@ -648,7 +701,7 @@
 				黑白<br />
 				黑白<br />
 				モノクロ</b></td>
-			<td><img src="glossary/ytp_monochrome.jpg" alt="Monochrome" /></td>
+			<td><img src="glossary/ytp_monochrome.jpg" alt="Monochrome" title="Supreme" /></td>
 		</tr>
 		<tr>
 			<td><i>Pitch-down<br />
@@ -677,7 +730,7 @@
 				随旋律水平翻转<br />
 				隨旋律水平翻轉<br />
 				リズムのある水平方向にフリップ</td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_random_tuning.gif" alt="Random Tuning" title="Are you OK?" /></td>
 		</tr>
 		<tr>
 			<td>Loud<br />
@@ -735,7 +788,7 @@
 				重要的事情說三遍<br />
 				三回強調する
 			</b></td>
-			<td rowspan="3"><img src="glossary/" alt="" /></td>
+			<td rowspan="3"><img src="glossary/ytp_thrice_to_emphasize.gif" alt="Thrice to Emphasize" /></td>
 		</tr>
 		<tr>
 			<td rowspan="2">Pitch-up or Pitch-down<br />
