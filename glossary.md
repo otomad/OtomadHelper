@@ -31,7 +31,7 @@
 			创建分组<br />
 			創建分組<br />
 			グループの作成</td>
-		<td><img src="glossary/" alt="" /></td>
+		<td><img src="glossary/create_groups.gif" alt="Create Groups" /></td>
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
@@ -602,7 +602,7 @@
 				波浪<br />
 				波浪<br />
 				波浪</i></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_vibrato.jpg" alt="Vibrato" /></td>
 		</tr>
 		<tr>
 			<td colspan="2"><b>Reverse<br />
@@ -632,7 +632,7 @@
 				更改色相<br />
 				更改色相<br />
 				色相を変更する</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_change_hue.jpg" alt="Change Hue" /></td>
 		</tr>
 		<tr>
 			<td>-</td>
@@ -648,7 +648,7 @@
 				黑白<br />
 				黑白<br />
 				モノクロ</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_monochrome.jpg" alt="Monochrome" /></td>
 		</tr>
 		<tr>
 			<td><i>Pitch-down<br />
@@ -659,14 +659,14 @@
 				颜色反转<br />
 				顔色反轉<br />
 				ネガティブ</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_negative.jpg" alt="Negative" /></td>
 		</tr>
 		<tr>
 			<td colspan="2"><b>Repeat Rapidly<br />
 				高频重复<br />
 				高頻重複<br />
 				急速に繰り返す</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_repeat_rapidly.gif" alt="Repeat Rapidly" /></td>
 		</tr>
 		<tr>
 			<td><b>Random Tuning<br />
@@ -696,7 +696,7 @@
 				球面化<br />
 				球面化<br />
 				球形</b></td>
-			<td><a href="https://www.bilibili.com/video/BV1Ys41167iW" title="Chilled Dacing baby"><img src="glossary/ytp_spherize.jpg" alt="Spherize" /></a></td>
+			<td><a href="https://www.bilibili.com/video/av6117318" title="Chilled Dacing baby"><img src="glossary/ytp_spherize.jpg" alt="Spherize" /></a></td>
 		</tr>
 		<tr>
 			<td>-</td>
@@ -704,7 +704,7 @@
 				镜像<br />
 				鏡像<br />
 				ミラー</b></td>
-			<td><a href="https://www.bilibili.com/video/BV19J411U7GD" title="Hikakin from the far east"><img src="glossary/ytp_mirror.jpg" alt="Mirror" /></a></td>
+			<td><a href="https://www.bilibili.com/video/av75939866" title="Hikakin from the far east"><img src="glossary/ytp_mirror.jpg" alt="Mirror" /></a></td>
 		</tr>
 		<tr>
 			<td>Loud<br />
@@ -715,7 +715,7 @@
 				高对比<br />
 				高對比<br />
 				ハイコントラスト</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_high_contrast.jpg" alt="High Contrast" /></td>
 		</tr>
 		<tr>
 			<td><i>Pitch-up<br />
@@ -726,7 +726,7 @@
 				过饱和<br />
 				過飽和<br />
 				過飽和</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_oversaturation.jpg" alt="Oversaturation" /></td>
 		</tr>
 		<tr>
 			<td colspan="2"><b>
