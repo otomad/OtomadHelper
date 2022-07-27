@@ -602,7 +602,7 @@
 				波浪<br />
 				波浪<br />
 				波浪</i></td>
-			<td><img src="glossary/ytp_vibrato.jpg" alt="Vibrato" /></td>
+			<td><img src="glossary/ytp_vibrato.jpg" alt="Vibrato" title="Swagger" /></td>
 		</tr>
 		<tr>
 			<td colspan="2"><b>Reverse<br />
@@ -666,7 +666,7 @@
 				高频重复<br />
 				高頻重複<br />
 				急速に繰り返す</b></td>
-			<td><img src="glossary/ytp_repeat_rapidly.gif" alt="Repeat Rapidly" /></td>
+			<td><a href="https://www.bilibili.com/video/av12236930" title="Haikou Disco King"><img src="glossary/ytp_repeat_rapidly.gif" alt="Repeat Rapidly" /></a></td>
 		</tr>
 		<tr>
 			<td><b>Random Tuning<br />
