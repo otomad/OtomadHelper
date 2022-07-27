@@ -569,7 +569,7 @@
 > **Notice:**
 > * *Italic / Oblique* text indicates that the effect is likely to occur.
 > * **Bold** text indicates main affix.
-> * For pure audio effect sketches are for reference only.
+> * For pure audio effect sketches are for **reference only**.
 <table>
 	<thead>
 		<th>Audio</th>
@@ -583,7 +583,7 @@
 				合唱<br />
 				コーラス</b></td>
 			<td>-</td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_chorus.jpg" alt="Chorus" title="Pop cat traffic light" /></td>
 		</tr>
 		<tr>
 			<td><b>Change Pitch<br />
@@ -591,7 +591,7 @@
 				更改音調<br />
 				ピッチを変更する</b></td>
 			<td>-</td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_change_pitch.jpg" alt="Change Pitch" title="Chipmunk" /></td>
 		</tr>
 		<tr>
 			<td><b>Vibrato<br />
@@ -609,7 +609,7 @@
 				倒放<br />
 				倒放<br />
 				逆再生</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_reverse.png" alt="Reverse" /></td>
 		</tr>
 		<tr>
 			<td><b>Delay<br />
@@ -617,14 +617,14 @@
 				延遲<br />
 				ディレイ</b></td>
 			<td>-</td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_delay.png" alt="Delay" title="Pop cat" /></td>
 		</tr>
 		<tr>
 			<td colspan="2"><b>Change Speed<br />
 				更改速度<br />
 				更改速度<br />
 				速度を変更する</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><img src="glossary/ytp_change_speed.png" alt="Change Speed" title="Time flies" /></td>
 		</tr>
 		<tr>
 			<td>-</td>
@@ -696,7 +696,7 @@
 				球面化<br />
 				球面化<br />
 				球形</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><a href="https://www.bilibili.com/video/BV1Ys41167iW" title="Chilled Dacing baby"><img src="glossary/ytp_spherize.jpg" alt="Spherize" /></a></td>
 		</tr>
 		<tr>
 			<td>-</td>
@@ -704,7 +704,7 @@
 				镜像<br />
 				鏡像<br />
 				ミラー</b></td>
-			<td><img src="glossary/" alt="" /></td>
+			<td><a href="https://www.bilibili.com/video/BV19J411U7GD" title="Hikakin from the far east"><img src="glossary/ytp_mirror.jpg" alt="Mirror" /></a></td>
 		</tr>
 		<tr>
 			<td>Loud<br />
