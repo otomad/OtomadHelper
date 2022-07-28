@@ -1,4 +1,4 @@
-[![Cover](cover.png)](#VegasScripts)
+[![Cover](cover.png)](#otomad-helper)
 <div align="center">
 	<h1>VegasScripts</h1>
 	<p>
