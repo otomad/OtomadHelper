@@ -193,42 +193,42 @@
 			线性<br />
 			線性<br />
 			リニア</td>
-		<td><a href="#"><img src="glossary/" alt="Linear" /></a></td>
+		<td><a href="#"><img src="glossary/curve_linear.svg" alt="Linear" /></a></td>
 	</tr>
 	<tr>
 		<td>Fast<br />
 			快速<br />
 			快速<br />
 			高速</td>
-		<td><a href="#"><img src="glossary/" alt="Fast" /></a></td>
+		<td><a href="#"><img src="glossary/curve_fast.svg" alt="Fast" /></a></td>
 	</tr>
 	<tr>
 		<td>Slow<br />
 			慢速<br />
 			慢速<br />
 			低速</td>
-		<td><a href="#"><img src="glossary/" alt="Slow" /></a></td>
+		<td><a href="#"><img src="glossary/curve_slow.svg" alt="Slow" /></a></td>
 	</tr>
 	<tr>
 		<td>Smooth<br />
 			平滑<br />
 			平滑<br />
 			スムーズ</td>
-		<td><a href="#"><img src="glossary/" alt="Smooth" /></a></td>
+		<td><a href="#"><img src="glossary/curve_smooth.svg" alt="Smooth" /></a></td>
 	</tr>
 	<tr>
 		<td>Sharp<br />
 			急剧<br />
 			急劇<br />
 			シャープ</td>
-		<td><a href="#"><img src="glossary/" alt="Sharp" /></a></td>
+		<td><a href="#"><img src="glossary/curve_sharp.svg" alt="Sharp" /></a></td>
 	</tr>
 	<tr>
 		<td>Hold<br />
 			保留<br />
 			保留<br />
 			ホールド</td>
-		<td><a href="#"><img src="glossary/" alt="Hold" /></a></td>
+		<td><a href="#"><img src="glossary/curve_hold.svg" alt="Hold" /></a></td>
 	</tr>
 </table>
 
@@ -240,14 +240,14 @@
 			保留<br />
 			保留<br />
 			ホールド</td>
-		<td><a href="#"><img src="glossary/" alt="Hold" /></a></td>
+		<td><a href="#"><img src="glossary/dbpm_hold.svg" alt="Hold" /></a></td>
 	</tr>
 	<tr>
 		<td>Linear<br />
 			线性<br />
 			線性<br />
 			リニア</td>
-		<td><a href="#"><img src="glossary/" alt="Linear" /></a></td>
+		<td><a href="#"><img src="glossary/dbpm_linear.svg" alt="Linear" /></a></td>
 	</tr>
 </table>
 
