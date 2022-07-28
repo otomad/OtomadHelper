@@ -1,4 +1,4 @@
-[![Cover](cover.png)](#)
+[![Cover](cover.png)](#VegasScripts)
 <div align="center">
 	<h1>VegasScripts</h1>
 	<p>
