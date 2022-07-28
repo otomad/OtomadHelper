@@ -1,4 +1,4 @@
-![Cover](https://github.com/otomad/VegasScripts/blob/winform/cover.png?raw=true)
+[![Cover](cover.png)](#)
 <div align="center">
 	<h1>VegasScripts</h1>
 	<p>
