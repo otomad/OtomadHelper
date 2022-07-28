@@ -1,4 +1,4 @@
-![Cover](https://github.com/otomad/VegasScripts/blob/winform/cover.png?raw=true)
+[![Cover](cover.png)](#)
 <div align="center">
 	<h2>音 MAD ヘルパー</h2>
 	<p><b>蘭音</b></p>
