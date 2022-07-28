@@ -582,14 +582,14 @@
 			网格<br />
 			網格<br />
 			グリッド</td>
-		<td><a href="#"><img src="glossary/" alt="Grid" /></a></td>
+		<td><a href="#"><img src="glossary/alt_grid.png" alt="Grid" /></a></td>
 	</tr>
 	<tr>
 		<td>3D Box<br />
 			3D 方盒<br />
 			3D 方盒<br />
 			3D ボックス</td>
-		<td><a href="#"><img src="glossary/" alt="3D Box" /></a></td>
+		<td><a href="#"><img src="glossary/alt_3dbox.png" alt="3D Box" /></a></td>
 	</tr>
 </table>
 
