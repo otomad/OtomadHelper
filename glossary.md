@@ -1,5 +1,6 @@
 # Glossary
 > Some pictures come from the Internet, please contect to delete if there is any infringement.
+<!-- Example Accent Color: #8daee6 -->
 
 ## Modes<br />模式<br />模式<br />モード
 <table>
@@ -13,36 +14,36 @@
 			<td>Otomad / YTPMV<br />
 			音 MAD / YTPMV<br />
 			音声 Music Anime Douga / YouTube Poop Music Video</td>
-			<td><a href="#"><img src="glossary/yohane_no_koori.png" alt="Otomad / YTPMV" title="ヨハネの氷" /></a></td>
-			<td><a href="#"><img src="glossary/" alt="Otomad / YTPMV" /></a></td>
+			<td><a href="#"><img src="glossary/yohane_no_koori.png" alt="Otomad / YTPMV" title="Yohane's Ice" /></a></td>
+			<td><a href="#"><img src="glossary/otomad.svg" alt="Otomad / YTPMV" /></a></td>
 		</tr>
 		<tr>
 			<td>YTP<br />
 			YouTube Poop</td>
-			<td><a href="#"><img src="glossary/yoooo_a_boom.png" alt="YTP" title="Yoooo a boom" /></a></td>
-			<td><a href="#"><img src="glossary/" alt="YTP" /></a></td>
+			<td><a href="#"><img src="glossary/yoooo_a_boom.png" alt="YTP" title="Yoooo a Boom" /></a></td>
+			<td><a href="#"><img src="glossary/ytp.svg" alt="YTP" /></a></td>
 		</tr>
 		<tr>
 			<td>Drums Beat Cookie Cutter<br />
 			鼓组节奏区域切除<br />
 			鼓組節奏區域切除<br />
 			ラムビートクッキーカッター</td>
-			<td><a href="#"><img src="glossary/brain_power.png" alt="Drums Beat Cookie Cutter" title="Let the bass kick O-oooooooooo" /></a></td>
-			<td><a href="#"><img src="glossary/" alt="Drums Beat Cookie Cutter" /></a></td>
+			<td><a href="#"><img src="glossary/brain_power.png" alt="Drums Beat Cookie Cutter" title="Let the Bass Kick O-oooooooooo" /></a></td>
+			<td><a href="#"><img src="glossary/drums_beat_cookie_cutter.svg" alt="Drums Beat Cookie Cutter" /></a></td>
 		</tr>
 		<tr>
 			<td>Lyrics / Karaoke<br />
 			歌词 / 卡拉 OK<br />
 			歌詞 / 卡拉 OK<br />
 			歌詞 / カラオケ</td>
-			<td><a href="#"><img src="glossary/spicy_hot_pot_chicken.png" alt="Lyrics / Karaoke" title="香辣火鍋雞" /></a></td>
-			<td><a href="#"><img src="glossary/" alt="Lyrics / Karaoke" /></a></td>
+			<td><a href="#"><img src="glossary/spicy_hot_pot_chicken.png" alt="Lyrics / Karaoke" title="Spicy Hot Pot Chicken" /></a></td>
+			<td><a href="#"><img src="glossary/lyrics.svg" alt="Lyrics / Karaoke" /></a></td>
 		</tr>
 		<tr>
 			<td>Manual Vocaloid / Sentence Mixing<br />
 			人力 / Rap<br />
 			ボカロ / 鬼畜</td>
-			<td><a href="#"><img src="glossary/you_are_a_songstress.png" alt="Manual Vocaloid / Sentence Mixing" title="你就是歌姬吧" /></a></td>
+			<td><a href="#"><img src="glossary/you_are_a_songstress.png" alt="Manual Vocaloid / Sentence Mixing" title="You are a Songstress" /></a></td>
 			<td><a href="#"><img src="glossary/" alt="Manual Vocaloid / Sentence Mixing" /></a></td>
 		</tr>
 		<tr>
@@ -50,7 +51,7 @@
 			原音系战法<br />
 			原音系戰法<br />
 			シュペランカー戦法</td>
-			<td><a href="#"><img src="glossary/izayoi_sakuya.png" alt="Shupelunker Tactics" title="十六夜 咲夜" /></a></td>
+			<td><a href="#"><img src="glossary/izayoi_sakuya.png" alt="Shupelunker Tactics" title="Izayoi Sakuya" /></a></td>
 			<td><a href="#"><img src="glossary/" alt="Shupelunker Tactics" /></a></td>
 		</tr>
 	</tbody>
@@ -401,7 +402,7 @@
 			水平镜像<br />
 			水平鏡像<br />
 			水平方向のミラー</td>
-		<td><a href="#"><img src="glossary/" alt="Horizontal Mirror" /></a></td>
+		<td><a href="https://www.youtube.com/watch?v=EFXVFn7khSY"><img src="glossary/prve_hmirror.gif" alt="Horizontal Mirror" title="Earrape Potter" /></a></td>
 	</tr>
 	<tr>
 		<td>Vertical Mirror<br />
@@ -600,37 +601,37 @@
 			彩虹色<br />
 			彩虹色<br />
 			虹色</td>
-		<td><a href="#"><img src="glossary/" alt="Rainbow Colors" /></a></td>
+		<td><a href="#"><img src="glossary/gt_rainbow.png" alt="Rainbow Colors" /></a></td>
 	<tr>
 		<td>Gradually Saturated<br />
 			逐渐饱和<br />
 			逐漸飽和<br />
 			徐々に飽和</td>
-		<td><a href="#"><img src="glossary/" alt="Gradually Saturated" /></a></td>
+		<td><a href="#"><img src="glossary/gt_gsaturated.png" alt="Gradually Saturated" /></a></td>
 	<tr>
 		<td>Gradually Contrasted<br />
 			逐渐对比<br />
 			逐漸對比<br />
 			徐々に対照</td>
-		<td><a href="#"><img src="glossary/" alt="Gradually Contrasted" /></a></td>
+		<td><a href="#"><img src="glossary/gt_gcontrasted.png" alt="Gradually Contrasted" /></a></td>
 	<tr>
 		<td>Threshold<br />
 			阈值<br />
 			閾值<br />
 			スレッショルド</td>
-		<td><a href="#"><img src="glossary/" alt="Threshold" /></a></td>
+		<td><a href="#"><img src="glossary/gt_threshold.png" alt="Threshold" /></a></td>
 	<tr>
 		<td>Alternately Chromatic<br />
 			彩灰交替<br />
 			彩灰交替<br />
 			交互にクロマチック</td>
-		<td><a href="#"><img src="glossary/" alt="Alternately Chromatic" /></a></td>
+		<td><a href="#"><img src="glossary/gt_achromatic.png" alt="Alternately Chromatic" /></a></td>
 	<tr>
 		<td>Alternate Negative<br />
 			正负交替<br />
 			正負交替<br />
 			交互にネガティブ</td>
-		<td><a href="#"><img src="glossary/" alt="Alternate Negative" /></a></td>
+		<td><a href="#"><img src="glossary/gt_anegative.png" alt="Alternate Negative" /></a></td>
 </table>
 
 ## YTP Effects<br />YTP 效果<br />YTP 效果<br />YTP 効果
@@ -651,7 +652,7 @@
 				合唱<br />
 				コーラス</b></td>
 			<td>-</td>
-			<td><a href="#"><img src="glossary/ytp_chorus.jpg" alt="Chorus" title="Pop cat traffic light" /></a></td>
+			<td><a href="#"><img src="glossary/ytp_chorus.jpg" alt="Chorus" title="Pop Cat Traffic Light" /></a></td>
 		</tr>
 		<tr>
 			<td><b>Change Pitch<br />
@@ -685,14 +686,14 @@
 				延遲<br />
 				ディレイ</b></td>
 			<td>-</td>
-			<td><a href="#"><img src="glossary/ytp_delay.png" alt="Delay" title="Pop cat" /></a></td>
+			<td><a href="#"><img src="glossary/ytp_delay.png" alt="Delay" title="Pop Cat" /></a></td>
 		</tr>
 		<tr>
 			<td colspan="2"><b>Change Speed<br />
 				更改速度<br />
 				更改速度<br />
 				速度を変更</b></td>
-			<td><a href="#"><img src="glossary/ytp_change_speed.png" alt="Change Speed" title="Time flies" /></a></td>
+			<td><a href="#"><img src="glossary/ytp_change_speed.png" alt="Change Speed" title="Time Flies" /></a></td>
 		</tr>
 		<tr>
 			<td>-</td>
@@ -745,7 +746,7 @@
 				随旋律水平翻转<br />
 				隨旋律水平翻轉<br />
 				リズムのある水平方向にフリップ</td>
-			<td><a href="#"><img src="glossary/ytp_random_tuning.gif" alt="Random Tuning" title="Are you OK?" /></a></td>
+			<td><a href="#"><img src="glossary/ytp_random_tuning.gif" alt="Random Tuning" title="Are You OK?" /></a></td>
 		</tr>
 		<tr>
 			<td>Loud<br />
@@ -756,7 +757,7 @@
 				放大<br />
 				放大<br />
 				拡大</b></td>
-			<td><a href="#"><img src="glossary/" alt="Upsize" /></a></td>
+			<td><a href="#"><img src="glossary/ytp_upsize.gif" alt="Upsize" /></a></td>
 		</tr>
 		<tr>
 			<td>-</td>
@@ -764,7 +765,7 @@
 				球面化<br />
 				球面化<br />
 				球形</b></td>
-			<td><a href="https://www.bilibili.com/video/av6117318"><img src="glossary/ytp_spherize.jpg" alt="Spherize" title="Chilled Dacing baby" /></a></td>
+			<td><a href="https://www.bilibili.com/video/av6117318"><img src="glossary/ytp_spherize.jpg" alt="Spherize" title="Chilled Dacing Baby" /></a></td>
 		</tr>
 		<tr>
 			<td>-</td>
@@ -772,7 +773,7 @@
 				镜像<br />
 				鏡像<br />
 				ミラー</b></td>
-			<td><a href="https://www.bilibili.com/video/av75939866"><img src="glossary/ytp_mirror.jpg" alt="Mirror" title="Hikakin from the far east" /></a></td>
+			<td><a href="https://www.bilibili.com/video/av75939866"><img src="glossary/ytp_mirror.jpg" alt="Mirror" title="Hikakin from the Far East" /></a></td>
 		</tr>
 		<tr>
 			<td>Loud<br />
