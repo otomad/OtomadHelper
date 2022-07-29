@@ -21,15 +21,20 @@
 ### Coming soon
 ∅
 
-### Future
+### Far future
 - [ ] Edit MIDI channel notes
 - [ ] Apply multiple visual effects to clips
 - [ ] Official documentation and tutorial video
 - [ ] Refresh UI to WinUI 3 (v5.x)
 - [ ] Store, to download templates uploaded by other users
-- [ ] Drums beat cookie cutter, Lyrics/Karaoke, Manual vocaloid/Sentence mixing, Shupelunker tactics, etc.
+- [ ] Sonar Effect, Lyrics/Karaoke, Manual Vocaloid/Sentence Mixing, Shupelunker Tactics, etc.
 - [ ] More languages
 - [ ] More video visual effects, video parameters, YTP effects
 - [ ] Support After Effects, Aviutl, or stand alone app
 - [ ] Android app
 
+### Disputed
+> I'm not quite sure if these features should be added.
+- [ ] Optimize the update check mechanism.
+- [ ] Apply visual effects to selected video events.
+- [ ] Quickly generate kaleidoscope effects.
