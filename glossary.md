@@ -758,7 +758,7 @@
 				放大<br />
 				放大<br />
 				拡大</b></td>
-			<td><a href="#"><img src="glossary/ytp_upsize.gif" alt="Upsize" /></a></td>
+			<td><a href="#"><img src="glossary/ytp_upsize.gif" alt="Upsize" title="I have 2 Mozambiques" /></a></td>
 		</tr>
 		<tr>
 			<td>-</td>
