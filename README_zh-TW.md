@@ -22,7 +22,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 您可以選擇功能表列 *選項 > 自訂工具列*，將腳本添加到工具列中以便操作。
 
-您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文檔](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程視頻](https://www.youtube.com/watch?v=8vSpzgL_86A) *（英語）*。
+您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程視頻](https://www.youtube.com/watch?v=8vSpzgL_86A) *（英語）*。
 
 ### 安裝
 1. [下載](https://github.com/otomad/VegasScripts/releases/latest)最新版腳本。
@@ -86,15 +86,15 @@ Vegas Pro 17 和 19 測試**正常**。
 * [@酥妃大魔王](https://space.bilibili.com/8569439)
 
 ### 幫助和疑難排解
-**我的文檔：***（中文）*
+**我的文件：***（中文）*
 * [發行説明 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [發行説明 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**Chaosinism 的原版文檔：***（中文）*
-* [說明文檔 (v0.1) (B 站)](https://www.bilibili.com/read/cv392013)
-* [五線譜視覺化文檔 (v0.1)](https://www.bilibili.com/read/cv1027442)
+**Chaosinism 的原版文件：***（中文）*
+* [說明文件 (v0.1) (B 站)](https://www.bilibili.com/read/cv392013)
+* [五線譜視覺化文件 (v0.1)](https://www.bilibili.com/read/cv1027442)
 * [疑難排解](https://www.bilibili.com/read/cv495309)
 * [教程視頻 (v0.1)](https://www.bilibili.com/video/av22226321)
 
-**Chaosinism 的原版文檔：***（日語）*
-* [說明文檔 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
+**Chaosinism 的原版文件：***（日語）*
+* [說明文文件 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
