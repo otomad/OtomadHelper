@@ -24,12 +24,12 @@
 			<td><a href="#"><img src="glossary/ytp.svg" alt="YTP" /></a></td>
 		</tr>
 		<tr>
-			<td>Drums Beat Cookie Cutter<br />
-			鼓组节奏区域切除<br />
-			鼓組節奏區域切除<br />
-			ラムビートクッキーカッター</td>
-			<td><a href="#"><img src="glossary/brain_power.png" alt="Drums Beat Cookie Cutter" title="Let the Bass Kick O-oooooooooo" /></a></td>
-			<td><a href="#"><img src="glossary/drums_beat_cookie_cutter.svg" alt="Drums Beat Cookie Cutter" /></a></td>
+			<td>Sonar Effect<br />
+			声呐效果<br />
+			聲呐效果<br />
+			ソナー効果</td>
+			<td><a href="#"><img src="glossary/brain_power.png" alt="Sonar" title="Let the Bass Kick O-oooooooooo" /></a></td>
+			<td><a href="#"><img src="glossary/sonar.svg" alt="Sonar" /></a></td>
 		</tr>
 		<tr>
 			<td>Lyrics / Karaoke<br />
@@ -44,7 +44,7 @@
 			人力 / Rap<br />
 			ボカロ / 鬼畜</td>
 			<td><a href="#"><img src="glossary/you_are_a_songstress.png" alt="Manual Vocaloid / Sentence Mixing" title="You are a Songstress" /></a></td>
-			<td><a href="#"><img src="glossary/" alt="Manual Vocaloid / Sentence Mixing" /></a></td>
+			<td><a href="#"><img src="glossary/manual.svg" alt="Manual Vocaloid / Sentence Mixing" /></a></td>
 		</tr>
 		<tr>
 			<td>Shupelunker Tactics<br />
@@ -52,7 +52,7 @@
 			原音系戰法<br />
 			シュペランカー戦法</td>
 			<td><a href="#"><img src="glossary/izayoi_sakuya.png" alt="Shupelunker Tactics" title="Izayoi Sakuya" /></a></td>
-			<td><a href="#"><img src="glossary/" alt="Shupelunker Tactics" /></a></td>
+			<td><a href="#"><img src="glossary/shupelunker.svg" alt="Shupelunker Tactics" /></a></td>
 		</tr>
 	</tbody>
 </table>
@@ -187,6 +187,7 @@
 </table>
 
 ## Curves<br />曲线<br />曲線<br />カーブ
+> From bottom left to top right.
 <table>
 	<tr>
 		<td>Linear<br />
@@ -259,14 +260,14 @@
 			不调音<br />
 			不調音<br />
 			チューニングなし</td>
-		<td><a href="#"><img src="glossary/" alt="No Tuning" /></a></td>
+		<td><a href="#"><img src="glossary/tm_no_tuning.svg" alt="No Tuning" /></a></td>
 	</tr>
 	<tr>
 		<td>Pitch Shift Audio Effect Plugin<br />
 			移调效果插件<br />
 			移調效果插件<br />
 			ピッチシフトオーディオエフェクトプラグイン</td>
-		<td><a href="#"><img src="glossary/" alt="Pitch Shift Audio Effect Plugin" /></a></td>
+		<td><a href="#"><img src="glossary/tm_pitch_shift.svg" alt="Pitch Shift Audio Effect Plugin" /></a></td>
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
@@ -281,7 +282,7 @@
 			弹性音调更改 / 加减调音 / 创价调音<br />
 			彈性音調更改 / 加減調音 / 創價調音<br />
 			エラスティックなピッチ変化 / プラスとマイナスのチューニング / 創価チューニング</td>
-		<td><a href="#"><img src="glossary/" alt="Elastic Pitch Change" /></a></td>
+		<td><a href="#"><img src="glossary/tm_elastic.svg" alt="Elastic Pitch Change" /></a></td>
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
@@ -296,7 +297,7 @@
 			古典音调更改<br />
 			古典音調更改<br />
 			クラシックなピッチ変化</td>
-		<td><a href="#"><img src="glossary/" alt="Classic Pitch Change" /></a></td>
+		<td><a href="#"><img src="glossary/tm_classic.svg" alt="Classic Pitch Change" /></a></td>
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
@@ -310,7 +311,7 @@
 			酸式音调更改<br />
 			酸式音調更改<br />
 			アシッドなピッチ変化</td>
-		<td><a href="#"><img src="glossary/" alt="Acid Pitch Change" /></a></td>
+		<td><a href="#"><img src="glossary/tm_acid.svg" alt="Acid Pitch Change" /></a></td>
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
@@ -322,7 +323,7 @@
 			无音阶调音 / 瞎调音<br />
 			無音階調音 / 瞎调音<br />
 			スケールなしのチューニング</td>
-		<td><a href="#"><img src="glossary/" alt="Tuning without Sacle" /></a></td>
+		<td><a href="#"><img src="glossary/tm_tuning_without_scale.svg" alt="Tuning without Sacle" /></a></td>
 	</tr>
 	<tr>
 		<td colspan="2"><b><i>Remark:</i></b>
@@ -402,7 +403,7 @@
 			水平镜像<br />
 			水平鏡像<br />
 			水平方向のミラー</td>
-		<td><a href="https://www.youtube.com/watch?v=EFXVFn7khSY"><img src="glossary/prve_hmirror.gif" alt="Horizontal Mirror" title="Earrape Potter" /></a></td>
+		<td><a href="https://www.youtube.com/watch?v=ZI03qpO1b-U"><img src="glossary/prve_hmirror.gif" alt="Horizontal Mirror" title="Earrape Potter" /></a></td>
 	</tr>
 	<tr>
 		<td>Vertical Mirror<br />
@@ -583,14 +584,14 @@
 			网格<br />
 			網格<br />
 			グリッド</td>
-		<td><a href="#"><img src="glossary/alt_grid.png" alt="Grid" /></a></td>
+		<td><a href="#"><img src="glossary/alt_grid.png" alt="Grid" title="Jam" /></a></td>
 	</tr>
 	<tr>
 		<td>3D Box<br />
 			3D 方盒<br />
 			3D 方盒<br />
 			3D ボックス</td>
-		<td><a href="#"><img src="glossary/alt_3dbox.png" alt="3D Box" /></a></td>
+		<td><a href="#"><img src="glossary/alt_3dbox.png" alt="3D Box" title="Jelly" /></a></td>
 	</tr>
 </table>
 
