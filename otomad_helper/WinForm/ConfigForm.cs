@@ -75,7 +75,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			VideoConfigCheck.CheckedChanged += setCheckedEnabled;
 			AudioConfigCheck.CheckedChanged += setCheckedEnabled;
 			StaffVisualizerConfigCheck.CheckedChanged += setCheckedEnabled;
-			StaffGenerateCheck.CheckedChanged += setCheckedEnabled;
+			StaffGenerateLinesCheck.CheckedChanged += setCheckedEnabled;
 			AudioTuneMethodCombo.SelectedIndexChanged += setCheckedEnabled;
 			VideoEffectCombo.SelectedIndexChanged += setCheckedEnabled;
 			Tabs.SelectedIndexChanged += setCheckedEnabled;
@@ -429,7 +429,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				VideoScratchCheck.Checked = false;
 				//VideoLegatoCheck.Checked = false;
 			}
-			if (!StaffGenerateCheck.Enabled) StaffGenerateCheck.Checked = false;
+			if (!StaffGenerateLinesCheck.Enabled) StaffGenerateLinesCheck.Checked = false;
 			Close();
 		}
 
@@ -467,7 +467,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				//VideoLegatoCheck.Enabled =
 				VideoScratchCheck.Checked = VideoScratchCheck.Enabled = false;
 			SetEnabled(SheetTab, isSheetConfigOn, new Control[] { StaffVisualizerConfigCheck, SheetConfigInfoLabel });
-			if (!StaffGenerateCheck.Checked)
+			if (!StaffGenerateLinesCheck.Checked)
 				StaffLineThicknessBox.Enabled = StaffLineColorBtn.Enabled = false;
 		}
 
@@ -958,6 +958,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void CheckUpdateToolStripMenuItem_Click(object sender, EventArgs e) {
 			Console.WriteLine("更新");
+		}
+
+		private void EffectToSelectedEventsToolStripMenuItem_Click(object sender, EventArgs e) {
+			ToolStripMenuItem menu = sender as ToolStripMenuItem, info = trackLegatoSelectInfoToolStripMenuItem;
+			if (!menu.Checked) {
+				info.Text = "已选中 0 个轨道。";
+			} else {
+				info.Text = "已选中 0 个轨道剪辑。";
+			}
 		}
 	}
 
