@@ -17,6 +17,7 @@
 - [x] Tracks legato
 - [x] Compatible with Vegas 13~15
 - [x] Multiple track for video clips option
+- [x] Increase spacing
 
 ### Coming soon
 ∅
