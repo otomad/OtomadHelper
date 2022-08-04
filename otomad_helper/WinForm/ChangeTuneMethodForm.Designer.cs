@@ -53,7 +53,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.OkBtn.Location = new System.Drawing.Point(521, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(94, 32);
 			this.OkBtn.TabIndex = 1;
@@ -66,7 +66,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.CancelBtn.Location = new System.Drawing.Point(623, 10);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
 			this.CancelBtn.TabIndex = 2;
@@ -85,7 +85,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.dock.Location = new System.Drawing.Point(0, 258);
-			this.dock.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
@@ -102,7 +102,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.Controls.Add(this.TimeStretchPitchShiftGroup, 0, 1);
 			this.table.Dock = System.Windows.Forms.DockStyle.Top;
 			this.table.Location = new System.Drawing.Point(0, 0);
-			this.table.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.table.Margin = new System.Windows.Forms.Padding(5);
 			this.table.Name = "table";
 			this.table.Padding = new System.Windows.Forms.Padding(12, 14, 12, 14);
 			this.table.RowCount = 2;
@@ -131,9 +131,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TimeStretchPitchShiftGroup.Controls.Add(this.tableLayoutPanel2);
 			this.TimeStretchPitchShiftGroup.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TimeStretchPitchShiftGroup.Location = new System.Drawing.Point(16, 54);
-			this.TimeStretchPitchShiftGroup.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.TimeStretchPitchShiftGroup.Margin = new System.Windows.Forms.Padding(4);
 			this.TimeStretchPitchShiftGroup.Name = "TimeStretchPitchShiftGroup";
-			this.TimeStretchPitchShiftGroup.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+			this.TimeStretchPitchShiftGroup.Padding = new System.Windows.Forms.Padding(6);
 			this.TimeStretchPitchShiftGroup.Size = new System.Drawing.Size(697, 168);
 			this.TimeStretchPitchShiftGroup.TabIndex = 1;
 			this.TimeStretchPitchShiftGroup.TabStop = false;
@@ -155,7 +155,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel1, 1, 2);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 26);
-			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 4;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -170,7 +170,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FormantLockCheck.AutoSize = true;
 			this.FormantLockCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FormantLockCheck.Location = new System.Drawing.Point(96, 108);
-			this.FormantLockCheck.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.FormantLockCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.FormantLockCheck.Name = "FormantLockCheck";
 			this.FormantLockCheck.Size = new System.Drawing.Size(585, 24);
 			this.FormantLockCheck.TabIndex = 7;
@@ -183,7 +183,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StretchAttrCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.StretchAttrCombo.FormattingEnabled = true;
 			this.StretchAttrCombo.Location = new System.Drawing.Point(96, 40);
-			this.StretchAttrCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.StretchAttrCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.StretchAttrCombo.Name = "StretchAttrCombo";
 			this.StretchAttrCombo.Size = new System.Drawing.Size(585, 28);
 			this.StretchAttrCombo.TabIndex = 5;
@@ -247,7 +247,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "élastique",
             "古典"});
 			this.MethodCombo.Location = new System.Drawing.Point(96, 4);
-			this.MethodCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.MethodCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.MethodCombo.Name = "MethodCombo";
 			this.MethodCombo.Size = new System.Drawing.Size(585, 28);
 			this.MethodCombo.TabIndex = 4;
@@ -278,7 +278,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.LockPitchInsteadOfRateCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.LockPitchInsteadOfRateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LockPitchInsteadOfRateCheck.Location = new System.Drawing.Point(118, 4);
-			this.LockPitchInsteadOfRateCheck.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.LockPitchInsteadOfRateCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.LockPitchInsteadOfRateCheck.Name = "LockPitchInsteadOfRateCheck";
 			this.LockPitchInsteadOfRateCheck.Size = new System.Drawing.Size(471, 24);
 			this.LockPitchInsteadOfRateCheck.TabIndex = 8;
@@ -290,7 +290,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PitchLockCheck.AutoSize = true;
 			this.PitchLockCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PitchLockCheck.Location = new System.Drawing.Point(4, 4);
-			this.PitchLockCheck.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.PitchLockCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.PitchLockCheck.Name = "PitchLockCheck";
 			this.PitchLockCheck.Size = new System.Drawing.Size(106, 24);
 			this.PitchLockCheck.TabIndex = 7;
@@ -302,7 +302,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AcceptButton = this.OkBtn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
 			this.ClientSize = new System.Drawing.Size(729, 310);
 			this.Controls.Add(this.table);
@@ -310,7 +310,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Location = new System.Drawing.Point(60, 60);
-			this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.Margin = new System.Windows.Forms.Padding(5);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "ChangeTuneMethodForm";

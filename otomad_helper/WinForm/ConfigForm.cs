@@ -99,6 +99,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			SourceConfigGroup.AllowDrop = MidiConfigGroup.AllowDrop = true;
 			#endregion
 
+			#region 优化界面颜色和外观
+			List<Label> labels = new List<Label>();
+			int maxSheetTabLabelWidth = 0;
+			foreach (Control control_i in SheetTab.Controls)
+				if (control_i is GroupBox)
+					foreach (Control control_j in control_i.Controls)
+						if (control_j is TableLayoutPanel)
+							foreach (Control control_k in control_j.Controls)
+								if (control_k is Label) {
+									Label label = control_k as Label;
+									labels.Add(label);
+									if (label.Width > maxSheetTabLabelWidth)
+										maxSheetTabLabelWidth = label.Width;
+								}
+			foreach (Label label in labels) {
+				Size minSize = label.MinimumSize;
+				minSize.Width = maxSheetTabLabelWidth;
+				label.MinimumSize = minSize;
+			}
+			#endregion
+
+
 			#region 程序图标
 			#if VEGAS_ENVIRONMENT
 			try {
@@ -107,7 +129,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			} catch (Exception) { } // 如果路径不存在则不受影响
 			#else
 			icon = Icon = Properties.Resources.Otomad_Helper;
-#endif
+			#endif
 			#endregion
 
 			/*int trueValue = 0x01, falseValue = 0x00;
@@ -811,13 +833,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			GenerateAtCustomText.Text = "00000";
 		}
 
-		private void TrackLegatoBtn_MouseDown(object sender, MouseEventArgs e) {
-			if (e.Button == MouseButtons.Left) {
-				Button button = sender as Button;
-				TrackLegatoMenu.Show(button, new Point(0, button.Height));
-			}
-		}
-
 		private void TrackLegatoMenuItems_Click(object sender, EventArgs e) {
 			TrackLegatoBtn.Enabled = false;
 		}
@@ -941,10 +956,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Console.WriteLine("変わった！");
 		}
 
-		private void VideoParamsPresetsBtn_MouseDown(object sender, MouseEventArgs e) {
-			Console.WriteLine("默认");
-		}
-
 		private void ExperimentalThemeToolStripMenuItem_Click(object sender, EventArgs e) {
 			ThemeAllControls();
 			ToolStripMenuItem me = experimentalThemeToolStripMenuItem;
@@ -967,6 +978,33 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			} else {
 				info.Text = "已选中 0 个轨道剪辑。";
 			}
+		}
+
+		private void IncreaseSpacingToolStripMenuItem_Click(object sender, EventArgs e) {
+			new IncreaseSpacingDialog().ShowDialog();
+		}
+
+		private bool isMousedown = false;
+		private void MouseDownMapToClick(object sender, MouseEventArgs e) {
+			Button button = sender as Button;
+			if (button == null) return;
+			if (e.Button == MouseButtons.Left) {
+				button.PerformClick();
+				isMousedown = true;
+			}
+		}
+		private void MouseUpMapToClick(object sender, MouseEventArgs e) {
+			isMousedown = false;
+		}
+
+		private void TrackLegatoBtn_Click(object sender, EventArgs e) {
+			if (isMousedown) return;
+			Button button = sender as Button;
+			TrackLegatoMenu.Show(button, new Point(0, button.Height));
+		}
+
+		private void VideoParamsPresetsBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine("默认");
 		}
 	}
 

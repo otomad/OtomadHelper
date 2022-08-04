@@ -55,20 +55,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.ApplyBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 216);
+			this.dock.Location = new System.Drawing.Point(0, 270);
+			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
-			this.dock.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
+			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(544, 42);
+			this.dock.Size = new System.Drawing.Size(680, 52);
 			this.dock.TabIndex = 7;
 			// 
 			// ApplyBtn
 			// 
 			this.ApplyBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ApplyBtn.Location = new System.Drawing.Point(379, 8);
+			this.ApplyBtn.Location = new System.Drawing.Point(472, 10);
+			this.ApplyBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.ApplyBtn.Name = "ApplyBtn";
-			this.ApplyBtn.Size = new System.Drawing.Size(75, 26);
+			this.ApplyBtn.Size = new System.Drawing.Size(94, 32);
 			this.ApplyBtn.TabIndex = 1;
 			this.ApplyBtn.Text = "应用(&A)";
 			this.ApplyBtn.UseVisualStyleBackColor = true;
@@ -78,9 +80,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(460, 8);
+			this.CancelBtn.Location = new System.Drawing.Point(574, 10);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
-			this.CancelBtn.Size = new System.Drawing.Size(75, 26);
+			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
 			this.CancelBtn.TabIndex = 2;
 			this.CancelBtn.Text = "关闭(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
@@ -104,8 +107,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.Controls.Add(this.SelectInfo, 0, 1);
 			this.table.Dock = System.Windows.Forms.DockStyle.Top;
 			this.table.Location = new System.Drawing.Point(0, 0);
+			this.table.Margin = new System.Windows.Forms.Padding(4);
 			this.table.Name = "table";
-			this.table.Padding = new System.Windows.Forms.Padding(6);
+			this.table.Padding = new System.Windows.Forms.Padding(8);
 			this.table.RowCount = 6;
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -113,16 +117,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.table.Size = new System.Drawing.Size(544, 190);
+			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.table.Size = new System.Drawing.Size(680, 240);
 			this.table.TabIndex = 8;
 			// 
 			// SubmitSelectBtn
 			// 
 			this.SubmitSelectBtn.Dock = System.Windows.Forms.DockStyle.Left;
-			this.SubmitSelectBtn.Location = new System.Drawing.Point(106, 156);
+			this.SubmitSelectBtn.Location = new System.Drawing.Point(134, 197);
+			this.SubmitSelectBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.SubmitSelectBtn.Name = "SubmitSelectBtn";
-			this.SubmitSelectBtn.Size = new System.Drawing.Size(75, 25);
+			this.SubmitSelectBtn.Size = new System.Drawing.Size(94, 31);
 			this.SubmitSelectBtn.TabIndex = 10;
 			this.SubmitSelectBtn.Text = "设定选中(&S)";
 			this.SubmitSelectBtn.UseVisualStyleBackColor = true;
@@ -132,7 +137,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// SelectHowManyEachTimesBox
 			// 
 			this.SelectHowManyEachTimesBox.Dock = System.Windows.Forms.DockStyle.Left;
-			this.SelectHowManyEachTimesBox.Location = new System.Drawing.Point(106, 127);
+			this.SelectHowManyEachTimesBox.Location = new System.Drawing.Point(134, 162);
+			this.SelectHowManyEachTimesBox.Margin = new System.Windows.Forms.Padding(4);
 			this.SelectHowManyEachTimesBox.Maximum = new decimal(new int[] {
             2,
             0,
@@ -144,7 +150,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0,
             0});
 			this.SelectHowManyEachTimesBox.Name = "SelectHowManyEachTimesBox";
-			this.SelectHowManyEachTimesBox.Size = new System.Drawing.Size(75, 23);
+			this.SelectHowManyEachTimesBox.Size = new System.Drawing.Size(94, 27);
 			this.SelectHowManyEachTimesBox.TabIndex = 4;
 			this.SelectHowManyEachTimesBox.Value = new decimal(new int[] {
             1,
@@ -156,9 +162,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.SelectHowManyEachTimesLbl.AutoSize = true;
 			this.SelectHowManyEachTimesLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SelectHowManyEachTimesLbl.Location = new System.Drawing.Point(9, 124);
+			this.SelectHowManyEachTimesLbl.Location = new System.Drawing.Point(12, 158);
+			this.SelectHowManyEachTimesLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.SelectHowManyEachTimesLbl.Name = "SelectHowManyEachTimesLbl";
-			this.SelectHowManyEachTimesLbl.Size = new System.Drawing.Size(91, 29);
+			this.SelectHowManyEachTimesLbl.Size = new System.Drawing.Size(114, 35);
 			this.SelectHowManyEachTimesLbl.TabIndex = 8;
 			this.SelectHowManyEachTimesLbl.Text = "每次要选取几个";
 			this.SelectHowManyEachTimesLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -166,7 +173,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// SelectWhichEachGroupBox
 			// 
 			this.SelectWhichEachGroupBox.Dock = System.Windows.Forms.DockStyle.Left;
-			this.SelectWhichEachGroupBox.Location = new System.Drawing.Point(106, 98);
+			this.SelectWhichEachGroupBox.Location = new System.Drawing.Point(134, 127);
+			this.SelectWhichEachGroupBox.Margin = new System.Windows.Forms.Padding(4);
 			this.SelectWhichEachGroupBox.Maximum = new decimal(new int[] {
             2,
             0,
@@ -178,7 +186,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0,
             0});
 			this.SelectWhichEachGroupBox.Name = "SelectWhichEachGroupBox";
-			this.SelectWhichEachGroupBox.Size = new System.Drawing.Size(75, 23);
+			this.SelectWhichEachGroupBox.Size = new System.Drawing.Size(94, 27);
 			this.SelectWhichEachGroupBox.TabIndex = 3;
 			this.SelectWhichEachGroupBox.Value = new decimal(new int[] {
             1,
@@ -190,9 +198,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.SelectOneEveryFewLbl.AutoSize = true;
 			this.SelectOneEveryFewLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SelectOneEveryFewLbl.Location = new System.Drawing.Point(9, 66);
+			this.SelectOneEveryFewLbl.Location = new System.Drawing.Point(12, 88);
+			this.SelectOneEveryFewLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.SelectOneEveryFewLbl.Name = "SelectOneEveryFewLbl";
-			this.SelectOneEveryFewLbl.Size = new System.Drawing.Size(91, 29);
+			this.SelectOneEveryFewLbl.Size = new System.Drawing.Size(114, 35);
 			this.SelectOneEveryFewLbl.TabIndex = 0;
 			this.SelectOneEveryFewLbl.Text = "每几个选择一个";
 			this.SelectOneEveryFewLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -201,9 +210,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.SelectWhichEachGroupLbl.AutoSize = true;
 			this.SelectWhichEachGroupLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SelectWhichEachGroupLbl.Location = new System.Drawing.Point(9, 95);
+			this.SelectWhichEachGroupLbl.Location = new System.Drawing.Point(12, 123);
+			this.SelectWhichEachGroupLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.SelectWhichEachGroupLbl.Name = "SelectWhichEachGroupLbl";
-			this.SelectWhichEachGroupLbl.Size = new System.Drawing.Size(91, 29);
+			this.SelectWhichEachGroupLbl.Size = new System.Drawing.Size(114, 35);
 			this.SelectWhichEachGroupLbl.TabIndex = 1;
 			this.SelectWhichEachGroupLbl.Text = "选择每组第几个";
 			this.SelectWhichEachGroupLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -211,14 +221,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// SelectOneEveryFewBox
 			// 
 			this.SelectOneEveryFewBox.Dock = System.Windows.Forms.DockStyle.Left;
-			this.SelectOneEveryFewBox.Location = new System.Drawing.Point(106, 69);
+			this.SelectOneEveryFewBox.Location = new System.Drawing.Point(134, 92);
+			this.SelectOneEveryFewBox.Margin = new System.Windows.Forms.Padding(4);
 			this.SelectOneEveryFewBox.Minimum = new decimal(new int[] {
             2,
             0,
             0,
             0});
 			this.SelectOneEveryFewBox.Name = "SelectOneEveryFewBox";
-			this.SelectOneEveryFewBox.Size = new System.Drawing.Size(75, 23);
+			this.SelectOneEveryFewBox.Size = new System.Drawing.Size(94, 27);
 			this.SelectOneEveryFewBox.TabIndex = 2;
 			this.SelectOneEveryFewBox.Value = new decimal(new int[] {
             2,
@@ -231,10 +242,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.ResetBtn.AutoSize = true;
 			this.ResetBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ResetBtn.Location = new System.Drawing.Point(9, 156);
-			this.ResetBtn.MaximumSize = new System.Drawing.Size(0, 25);
+			this.ResetBtn.Location = new System.Drawing.Point(12, 197);
+			this.ResetBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.ResetBtn.MaximumSize = new System.Drawing.Size(0, 31);
 			this.ResetBtn.Name = "ResetBtn";
-			this.ResetBtn.Size = new System.Drawing.Size(91, 25);
+			this.ResetBtn.Size = new System.Drawing.Size(114, 31);
 			this.ResetBtn.TabIndex = 5;
 			this.ResetBtn.Text = "重置选择(&R)";
 			this.ResetBtn.UseVisualStyleBackColor = true;
@@ -246,12 +258,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.SetColumnSpan(this.SelectIntervalLbl, 2);
 			this.SelectIntervalLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SelectIntervalLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.SelectIntervalLbl.Location = new System.Drawing.Point(9, 12);
-			this.SelectIntervalLbl.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
+			this.SelectIntervalLbl.Location = new System.Drawing.Point(12, 16);
+			this.SelectIntervalLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 8);
 			this.SelectIntervalLbl.Name = "SelectIntervalLbl";
-			this.SelectIntervalLbl.Size = new System.Drawing.Size(526, 30);
+			this.SelectIntervalLbl.Size = new System.Drawing.Size(656, 40);
 			this.SelectIntervalLbl.TabIndex = 5;
-			this.SelectIntervalLbl.Text = "请先在 Vegas 轨道中选中一些素材，然后再打开本对话框，使用下面的功能。\r\n本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴视频事件”等操作。" +
+			this.SelectIntervalLbl.Text = "请先在 Vegas 轨道中选中一些素材，然后再打开本对话框，使用下面的功能。\r\n本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴事件属性”等操作。" +
     "";
 			this.SelectIntervalLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
@@ -260,10 +272,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SelectInfo.AutoSize = true;
 			this.table.SetColumnSpan(this.SelectInfo, 2);
 			this.SelectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SelectInfo.Location = new System.Drawing.Point(9, 48);
-			this.SelectInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
+			this.SelectInfo.Location = new System.Drawing.Point(12, 64);
+			this.SelectInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 4);
 			this.SelectInfo.Name = "SelectInfo";
-			this.SelectInfo.Size = new System.Drawing.Size(526, 15);
+			this.SelectInfo.Size = new System.Drawing.Size(656, 20);
 			this.SelectInfo.TabIndex = 6;
 			this.SelectInfo.Text = "已选中 0 个轨道剪辑。";
 			this.SelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -271,17 +283,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// SelectIntervalForm
 			// 
 			this.AcceptButton = this.ApplyBtn;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(544, 258);
+			this.ClientSize = new System.Drawing.Size(680, 322);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Location = new System.Drawing.Point(60, 60);
-			this.Margin = new System.Windows.Forms.Padding(4);
+			this.Margin = new System.Windows.Forms.Padding(5);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "SelectIntervalForm";

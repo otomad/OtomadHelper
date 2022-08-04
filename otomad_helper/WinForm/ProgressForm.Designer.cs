@@ -47,7 +47,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.Controls.Add(this.CancelBtn, 1, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 218);
-			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(5);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.tableLayoutPanel1.RowCount = 1;
@@ -60,7 +60,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.CancelBtn.Location = new System.Drawing.Point(482, 11);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(5);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 30);
 			this.CancelBtn.TabIndex = 1;
@@ -78,9 +78,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel2.Controls.Add(this.RealTimeUpdateCheck, 0, 3);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-			this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+			this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(8);
 			this.tableLayoutPanel2.RowCount = 4;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
@@ -131,7 +131,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.RealTimeUpdateCheck.AutoSize = true;
 			this.RealTimeUpdateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.RealTimeUpdateCheck.Location = new System.Drawing.Point(12, 181);
-			this.RealTimeUpdateCheck.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.RealTimeUpdateCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.RealTimeUpdateCheck.Name = "RealTimeUpdateCheck";
 			this.RealTimeUpdateCheck.Padding = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.RealTimeUpdateCheck.Size = new System.Drawing.Size(565, 25);
@@ -143,7 +143,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
 			this.ClientSize = new System.Drawing.Size(589, 270);
 			this.ControlBox = false;
@@ -151,7 +151,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-			this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.Margin = new System.Windows.Forms.Padding(5);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "ProgressForm";

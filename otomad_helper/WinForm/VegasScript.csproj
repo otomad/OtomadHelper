@@ -138,6 +138,12 @@
     <Compile Include="GroupedRadioButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="IncreaseSpacingDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IncreaseSpacingDialog.Designer.cs">
+      <DependentUpon>IncreaseSpacingDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="IntegerTrackWithBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -202,6 +208,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GradientTracksForm.resx">
       <DependentUpon>GradientTracksForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IncreaseSpacingDialog.resx">
+      <DependentUpon>IncreaseSpacingDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="IntegerTrackWithBox.resx">
       <DependentUpon>IntegerTrackWithBox.cs</DependentUpon>

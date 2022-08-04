@@ -47,10 +47,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PaddingBox = new System.Windows.Forms.NumericUpDown();
 			this.FlipGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.HFlipLbl = new System.Windows.Forms.Label();
-			this.VFlipLbl = new System.Windows.Forms.Label();
-			this.HFlipCombo = new System.Windows.Forms.ComboBox();
 			this.VFlipCombo = new System.Windows.Forms.ComboBox();
+			this.VFlipLbl = new System.Windows.Forms.Label();
+			this.HFlipLbl = new System.Windows.Forms.Label();
+			this.HFlipCombo = new System.Windows.Forms.ComboBox();
 			this.dock.SuspendLayout();
 			this.table.SuspendLayout();
 			this.CustomGroup.SuspendLayout();
@@ -420,18 +420,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(317, 72);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
-			// HFlipLbl
+			// VFlipCombo
 			// 
-			this.HFlipLbl.AutoSize = true;
-			this.HFlipLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.HFlipLbl.Location = new System.Drawing.Point(4, 0);
-			this.HFlipLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.HFlipLbl.MinimumSize = new System.Drawing.Size(0, 34);
-			this.HFlipLbl.Name = "HFlipLbl";
-			this.HFlipLbl.Size = new System.Drawing.Size(69, 34);
-			this.HFlipLbl.TabIndex = 1;
-			this.HFlipLbl.Text = "水平翻转";
-			this.HFlipLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.VFlipCombo.Dock = System.Windows.Forms.DockStyle.Left;
+			this.VFlipCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VFlipCombo.FormattingEnabled = true;
+			this.VFlipCombo.Items.AddRange(new object[] {
+            "不翻转",
+            "偶数行",
+            "奇数行"});
+			this.VFlipCombo.Location = new System.Drawing.Point(80, 37);
+			this.VFlipCombo.MinimumSize = new System.Drawing.Size(150, 0);
+			this.VFlipCombo.Name = "VFlipCombo";
+			this.VFlipCombo.Size = new System.Drawing.Size(150, 28);
+			this.VFlipCombo.TabIndex = 4;
 			// 
 			// VFlipLbl
 			// 
@@ -445,6 +447,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VFlipLbl.TabIndex = 2;
 			this.VFlipLbl.Text = "垂直翻转";
 			this.VFlipLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// HFlipLbl
+			// 
+			this.HFlipLbl.AutoSize = true;
+			this.HFlipLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.HFlipLbl.Location = new System.Drawing.Point(4, 0);
+			this.HFlipLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.HFlipLbl.MinimumSize = new System.Drawing.Size(0, 34);
+			this.HFlipLbl.Name = "HFlipLbl";
+			this.HFlipLbl.Size = new System.Drawing.Size(69, 34);
+			this.HFlipLbl.TabIndex = 1;
+			this.HFlipLbl.Text = "水平翻转";
+			this.HFlipLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// HFlipCombo
 			// 
@@ -461,28 +476,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HFlipCombo.Size = new System.Drawing.Size(150, 28);
 			this.HFlipCombo.TabIndex = 3;
 			// 
-			// VFlipCombo
-			// 
-			this.VFlipCombo.Dock = System.Windows.Forms.DockStyle.Left;
-			this.VFlipCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.VFlipCombo.FormattingEnabled = true;
-			this.VFlipCombo.Items.AddRange(new object[] {
-            "不翻转",
-            "偶数行",
-            "奇数行"});
-			this.VFlipCombo.Location = new System.Drawing.Point(80, 37);
-			this.VFlipCombo.MinimumSize = new System.Drawing.Size(150, 0);
-			this.VFlipCombo.Name = "VFlipCombo";
-			this.VFlipCombo.Size = new System.Drawing.Size(150, 28);
-			this.VFlipCombo.TabIndex = 4;
-			// 
 			// AutoLayoutTracksGridForm
 			// 
 			this.AcceptButton = this.OkBtn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.AutoSize = true;
-			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
 			this.ClientSize = new System.Drawing.Size(355, 455);
 			this.Controls.Add(this.table);

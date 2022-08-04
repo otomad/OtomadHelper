@@ -149,7 +149,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AcceptButton = this.OkBtn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
 			this.ClientSize = new System.Drawing.Size(605, 189);
 			this.Controls.Add(this.table);
