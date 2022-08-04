@@ -17355,7 +17355,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			stretchLegatoTracksToolStripMenuItem.Text = str.track_legato_stretch;
 			lengthenLegatoToolStripMenuItem.Text = str.track_legato_lengthen;
 			effectToSelectedEventsToolStripMenuItem.Text = str.effect_to_selected_events;
-			increaseSpacingToolStripMenuItem.Text = str.increase_spacing;
+			increaseSpacingToolStripMenuItem.Text = str.increase_spacing + str.dialog_sign;
 			includeEventsInGroupToolStripMenuItem.Text = str.include_events_within_group;
 			DragHereLbl.Text = str.drag_here_to_import;
 			BatchSubtitleGenerationBtn.Text = str.batch_subtitle_generation;
