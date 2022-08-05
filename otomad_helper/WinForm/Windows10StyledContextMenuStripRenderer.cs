@@ -15,10 +15,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Rectangle r = new Rectangle(e.ArrowRectangle.Location, e.ArrowRectangle.Size);
 			r.Inflate(-2, -6);
 			e.Graphics.DrawLines(Pens.Black, new Point[] {
-				new Point(r.Left + r.Width / 8, r.Top),
+				new Point(r.Right - r.Height / 2, r.Top),
 				new Point(r.Right, r.Top + r.Height / 2),
-				new Point(r.Left + r.Width / 8, r.Top + r.Height)
+				new Point(r.Right - r.Height / 2, r.Top + r.Height)
 			});
+			/*e.Graphics.DrawLines(Pens.Black, new Point[] {
+				new Point(r.Left, r.Top),
+				new Point(r.Right, r.Top),
+				new Point(r.Right, r.Bottom),
+				new Point(r.Left, r.Bottom)
+			});*/
 		}
 
 		protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e) {

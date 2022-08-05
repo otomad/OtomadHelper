@@ -118,6 +118,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				minSize.Width = maxSheetTabLabelWidth;
 				label.MinimumSize = minSize;
 			}
+			YtpEffectsCheckList.MinimumSize = new Size(0, YtpEnableAllEffectsCheck.Height * 5);
 			#endregion
 
 
@@ -1005,6 +1006,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void VideoParamsPresetsBtn_Click(object sender, EventArgs e) {
 			Console.WriteLine("默认");
+		}
+
+		private void SetComboBoxToolTipWhenOverflowText(object sender, EventArgs e) {
+			ComboBox comboBox = sender as ComboBox;
+			string text = comboBox.SelectedItem.ToString();
+			float iSize = comboBox.CreateGraphics().MeasureString(text, comboBox.Font).Width + comboBox.Height; // 去掉右边下拉图标的宽度
+			if (iSize > comboBox.Width) OverflowToolTip.SetToolTip(comboBox, text);
+			else OverflowToolTip.SetToolTip(comboBox, "");
 		}
 	}
 

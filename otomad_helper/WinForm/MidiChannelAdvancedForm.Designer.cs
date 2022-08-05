@@ -252,6 +252,7 @@
 			this.ChannelListView.Location = new System.Drawing.Point(8, 8);
 			this.ChannelListView.Margin = new System.Windows.Forms.Padding(2);
 			this.ChannelListView.Name = "ChannelListView";
+			this.ChannelListView.ShowItemToolTips = true;
 			this.ChannelListView.Size = new System.Drawing.Size(566, 257);
 			this.ChannelListView.TabIndex = 13;
 			this.ChannelListView.UseCompatibleStateImageBehavior = false;
