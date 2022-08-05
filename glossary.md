@@ -184,6 +184,29 @@
 			素材の持続時間を変更します</td>
 		<td><a href="#"><img src="glossary/legato_lengthening.gif" alt="Legato Lengthening" /></a></td>
 	</tr>
+	<tr>
+		<td>Increase Spacing<br />
+			增加间隙<br />
+			增加間隙<br />
+			間隙を増やす</td>
+		<td><a href="#"><img src="glossary/" alt="Increase Spacing" /></a></td>
+	</tr>
+	<tr>
+		<td>Apply to Selected Track</td>
+		<td><a href="#"><img src="glossary/" alt="Apply to Selected Track" /></a></td>
+	</tr>
+	<tr>
+		<td>Apply to Selected Track Events</td>
+		<td><a href="#"><img src="glossary/" alt="Apply to Selected Track Events" /></a></td>
+	</tr>
+	<tr>
+		<td>Exclude the Events within a Group</td>
+		<td><a href="#"><img src="glossary/" alt="Exclude the Events within a Group" /></a></td>
+	</tr>
+	<tr>
+		<td>Include the Events within a Group</td>
+		<td><a href="#"><img src="glossary/" alt="Include the Events within a Group" /></a></td>
+	</tr>
 </table>
 
 ## Curves<br />曲线<br />曲線<br />カーブ
