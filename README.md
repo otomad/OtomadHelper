@@ -3,7 +3,7 @@
 	<h1>VegasScripts</h1>
 	<p>
 		<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="Badge" />
-		<img src="https://img.shields.io/badge/VERSION-4.20.4.0-orange?style=flat-square" alt="Badge" />
+		<img src="https://img.shields.io/badge/VERSION-4.20.5.0-orange?style=flat-square" alt="Badge" />
 	</p>
 </div>
 <div align="center">
