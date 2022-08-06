@@ -63,7 +63,7 @@ When you are using the script, if you:
 7. Provide a new language translation;
 8. …
 
-All can create issues.
+You can create issues.
 
 ### Roadmap
 [Roadmap >](roadmap.md)
