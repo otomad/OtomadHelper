@@ -320,6 +320,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HelperLbl = new System.Windows.Forms.Label();
 			this.TrackLegatoMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.stackingTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.stackingAllAfterTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.stackingAllTracksTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.limitStretchLegatoTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stretchLegatoTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lengthenLegatoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -328,6 +330,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
 			this.effectToSelectedEventsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.includeEventsInGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.tableLayoutPanel1.SuspendLayout();
@@ -1079,6 +1082,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.experimentalThemeToolStripMenuItem.Name = "experimentalThemeToolStripMenuItem";
 			this.experimentalThemeToolStripMenuItem.Size = new System.Drawing.Size(272, 26);
 			this.experimentalThemeToolStripMenuItem.Text = "实验性主题";
+			this.experimentalThemeToolStripMenuItem.Visible = false;
 			this.experimentalThemeToolStripMenuItem.Click += new System.EventHandler(this.ExperimentalThemeToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator7
@@ -2052,14 +2056,34 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// AudioFadeInBox
 			// 
 			this.AudioFadeInBox.BackColor = System.Drawing.Color.Transparent;
+			this.AudioFadeInBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.AudioFadeInBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioFadeInBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.AudioFadeInBox.Location = new System.Drawing.Point(78, 5);
 			this.AudioFadeInBox.Margin = new System.Windows.Forms.Padding(5);
+			this.AudioFadeInBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.AudioFadeInBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.AudioFadeInBox.Name = "AudioFadeInBox";
 			this.AudioFadeInBox.NumericUpDownWidth = 65;
 			this.AudioFadeInBox.Size = new System.Drawing.Size(486, 31);
 			this.AudioFadeInBox.TabIndex = 2;
+			this.AudioFadeInBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// AudioFadeInCurveCombo
 			// 
@@ -2093,15 +2117,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// AudioFadeOutBox
 			// 
 			this.AudioFadeOutBox.BackColor = System.Drawing.Color.Transparent;
+			this.AudioFadeOutBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.AudioFadeOutBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioFadeOutBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.AudioFadeOutBox.Location = new System.Drawing.Point(78, 46);
 			this.AudioFadeOutBox.Margin = new System.Windows.Forms.Padding(5);
+			this.AudioFadeOutBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.AudioFadeOutBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.AudioFadeOutBox.Name = "AudioFadeOutBox";
 			this.AudioFadeOutBox.NumericUpDownWidth = 65;
 			this.AudioFadeOutBox.Size = new System.Drawing.Size(486, 31);
 			this.AudioFadeOutBox.TabIndex = 4;
 			this.AudioFadeOutBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.AudioFadeOutBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// AudioFadeOutCurveCombo
 			// 
@@ -2735,124 +2779,270 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoEndContrastBox
 			// 
 			this.VideoEndContrastBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndContrastBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoEndContrastBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoEndContrastBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoEndContrastBox.Location = new System.Drawing.Point(78, 738);
 			this.VideoEndContrastBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoEndContrastBox.Minimum = -100;
+			this.VideoEndContrastBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoEndContrastBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
 			this.VideoEndContrastBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoEndContrastBox.Name = "VideoEndContrastBox";
 			this.VideoEndContrastBox.NumericUpDownWidth = 65;
 			this.VideoEndContrastBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoEndContrastBox.TabIndex = 41;
 			this.VideoEndContrastBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndContrastBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoEndSaturationBox
 			// 
 			this.VideoEndSaturationBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndSaturationBox.DefaultValue = 100;
+			this.VideoEndSaturationBox.DefaultValue = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
 			this.VideoEndSaturationBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoEndSaturationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoEndSaturationBox.Location = new System.Drawing.Point(78, 656);
 			this.VideoEndSaturationBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoEndSaturationBox.Maximum = 200;
+			this.VideoEndSaturationBox.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+			this.VideoEndSaturationBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoEndSaturationBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoEndSaturationBox.Name = "VideoEndSaturationBox";
 			this.VideoEndSaturationBox.NumericUpDownWidth = 65;
 			this.VideoEndSaturationBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoEndSaturationBox.TabIndex = 38;
 			this.VideoEndSaturationBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndSaturationBox.Value = 100;
+			this.VideoEndSaturationBox.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
 			// 
 			// VideoEndHueBox
 			// 
 			this.VideoEndHueBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndHueBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoEndHueBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoEndHueBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoEndHueBox.Location = new System.Drawing.Point(78, 574);
 			this.VideoEndHueBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoEndHueBox.Maximum = 360;
+			this.VideoEndHueBox.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+			this.VideoEndHueBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoEndHueBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoEndHueBox.Name = "VideoEndHueBox";
 			this.VideoEndHueBox.NumericUpDownWidth = 65;
 			this.VideoEndHueBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoEndHueBox.TabIndex = 35;
 			this.VideoEndHueBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndHueBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoEndThresholdBox
 			// 
 			this.VideoEndThresholdBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndThresholdBox.DefaultValue = 50;
+			this.VideoEndThresholdBox.DefaultValue = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
 			this.VideoEndThresholdBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoEndThresholdBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoEndThresholdBox.Location = new System.Drawing.Point(78, 820);
 			this.VideoEndThresholdBox.Margin = new System.Windows.Forms.Padding(5);
+			this.VideoEndThresholdBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoEndThresholdBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoEndThresholdBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoEndThresholdBox.Name = "VideoEndThresholdBox";
 			this.VideoEndThresholdBox.NumericUpDownWidth = 65;
 			this.VideoEndThresholdBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoEndThresholdBox.TabIndex = 44;
 			this.VideoEndThresholdBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndThresholdBox.Value = 50;
+			this.VideoEndThresholdBox.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
 			// 
 			// VideoStartContrastBox
 			// 
 			this.VideoStartContrastBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartContrastBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoStartContrastBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoStartContrastBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoStartContrastBox.Location = new System.Drawing.Point(78, 697);
 			this.VideoStartContrastBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoStartContrastBox.Minimum = -100;
+			this.VideoStartContrastBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoStartContrastBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
 			this.VideoStartContrastBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoStartContrastBox.Name = "VideoStartContrastBox";
 			this.VideoStartContrastBox.NumericUpDownWidth = 65;
 			this.VideoStartContrastBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoStartContrastBox.TabIndex = 39;
+			this.VideoStartContrastBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoStartSaturationBox
 			// 
 			this.VideoStartSaturationBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartSaturationBox.DefaultValue = 100;
+			this.VideoStartSaturationBox.DefaultValue = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
 			this.VideoStartSaturationBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoStartSaturationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoStartSaturationBox.Location = new System.Drawing.Point(78, 615);
 			this.VideoStartSaturationBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoStartSaturationBox.Maximum = 200;
+			this.VideoStartSaturationBox.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+			this.VideoStartSaturationBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoStartSaturationBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoStartSaturationBox.Name = "VideoStartSaturationBox";
 			this.VideoStartSaturationBox.NumericUpDownWidth = 65;
 			this.VideoStartSaturationBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoStartSaturationBox.TabIndex = 36;
-			this.VideoStartSaturationBox.Value = 100;
+			this.VideoStartSaturationBox.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
 			// 
 			// VideoStartThresholdBox
 			// 
 			this.VideoStartThresholdBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartThresholdBox.DefaultValue = 50;
+			this.VideoStartThresholdBox.DefaultValue = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
 			this.VideoStartThresholdBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoStartThresholdBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoStartThresholdBox.Location = new System.Drawing.Point(78, 779);
 			this.VideoStartThresholdBox.Margin = new System.Windows.Forms.Padding(5);
+			this.VideoStartThresholdBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoStartThresholdBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoStartThresholdBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoStartThresholdBox.Name = "VideoStartThresholdBox";
 			this.VideoStartThresholdBox.NumericUpDownWidth = 65;
 			this.VideoStartThresholdBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoStartThresholdBox.TabIndex = 42;
-			this.VideoStartThresholdBox.Value = 50;
+			this.VideoStartThresholdBox.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
 			// 
 			// VideoStartHueBox
 			// 
 			this.VideoStartHueBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartHueBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoStartHueBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoStartHueBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoStartHueBox.Location = new System.Drawing.Point(78, 533);
 			this.VideoStartHueBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoStartHueBox.Maximum = 360;
+			this.VideoStartHueBox.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+			this.VideoStartHueBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoStartHueBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoStartHueBox.Name = "VideoStartHueBox";
 			this.VideoStartHueBox.NumericUpDownWidth = 65;
 			this.VideoStartHueBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoStartHueBox.TabIndex = 33;
+			this.VideoStartHueBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoStartThresholdLbl
 			// 
@@ -2965,15 +3155,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoFadeInBox
 			// 
 			this.VideoFadeInBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoFadeInBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoFadeInBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoFadeInBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoFadeInBox.Location = new System.Drawing.Point(78, 41);
 			this.VideoFadeInBox.Margin = new System.Windows.Forms.Padding(5);
+			this.VideoFadeInBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoFadeInBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoFadeInBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoFadeInBox.Name = "VideoFadeInBox";
 			this.VideoFadeInBox.NumericUpDownWidth = 65;
 			this.VideoFadeInBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoFadeInBox.TabIndex = 2;
+			this.VideoFadeInBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoFadeInCurveCombo
 			// 
@@ -3007,16 +3217,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoFadeOutBox
 			// 
 			this.VideoFadeOutBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoFadeOutBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoFadeOutBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoFadeOutBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoFadeOutBox.Location = new System.Drawing.Point(78, 82);
 			this.VideoFadeOutBox.Margin = new System.Windows.Forms.Padding(5);
+			this.VideoFadeOutBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoFadeOutBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoFadeOutBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoFadeOutBox.Name = "VideoFadeOutBox";
 			this.VideoFadeOutBox.NumericUpDownWidth = 65;
 			this.VideoFadeOutBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoFadeOutBox.TabIndex = 4;
 			this.VideoFadeOutBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoFadeOutBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoFadeOutCurveCombo
 			// 
@@ -3050,16 +3280,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoGlowBox
 			// 
 			this.VideoGlowBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoGlowBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoGlowBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoGlowBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoGlowBox.Location = new System.Drawing.Point(78, 123);
 			this.VideoGlowBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoGlowBox.Minimum = -100;
+			this.VideoGlowBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoGlowBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
 			this.VideoGlowBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoGlowBox.Name = "VideoGlowBox";
 			this.VideoGlowBox.NumericUpDownWidth = 65;
 			this.VideoGlowBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoGlowBox.TabIndex = 10;
+			this.VideoGlowBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoGlowCurveCombo
 			// 
@@ -3093,19 +3342,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoGlowBrightBox
 			// 
 			this.VideoGlowBrightBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoGlowBrightBox.DefaultValue = 100;
+			this.VideoGlowBrightBox.DefaultValue = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
 			this.VideoGlowBrightBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoGlowBrightBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoGlowBrightBox.Location = new System.Drawing.Point(78, 164);
 			this.VideoGlowBrightBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoGlowBrightBox.Minimum = -100;
+			this.VideoGlowBrightBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoGlowBrightBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
 			this.VideoGlowBrightBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoGlowBrightBox.Name = "VideoGlowBrightBox";
 			this.VideoGlowBrightBox.NumericUpDownWidth = 65;
 			this.VideoGlowBrightBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoGlowBrightBox.TabIndex = 12;
 			this.VideoGlowBrightBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoGlowBrightBox.Value = 100;
+			this.VideoGlowBrightBox.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
 			// 
 			// VideoStartSizeLbl
 			// 
@@ -3122,18 +3388,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoStartSizeBox
 			// 
 			this.VideoStartSizeBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoStartSizeBox.DefaultValue = 90;
+			this.VideoStartSizeBox.DefaultValue = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
 			this.VideoStartSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoStartSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoStartSizeBox.Location = new System.Drawing.Point(78, 205);
 			this.VideoStartSizeBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoStartSizeBox.Maximum = 200;
+			this.VideoStartSizeBox.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+			this.VideoStartSizeBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoStartSizeBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoStartSizeBox.Name = "VideoStartSizeBox";
 			this.VideoStartSizeBox.NumericUpDownWidth = 65;
 			this.VideoStartSizeBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoStartSizeBox.TabIndex = 14;
-			this.VideoStartSizeBox.Value = 90;
+			this.VideoStartSizeBox.Value = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
 			// 
 			// VideoStartSizeCurveCombo
 			// 
@@ -3167,19 +3450,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoEndSizeBox
 			// 
 			this.VideoEndSizeBox.BackColor = System.Drawing.Color.Transparent;
-			this.VideoEndSizeBox.DefaultValue = 100;
+			this.VideoEndSizeBox.DefaultValue = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
 			this.VideoEndSizeBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoEndSizeBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoEndSizeBox.Location = new System.Drawing.Point(78, 246);
 			this.VideoEndSizeBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoEndSizeBox.Maximum = 200;
+			this.VideoEndSizeBox.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+			this.VideoEndSizeBox.Minimum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoEndSizeBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoEndSizeBox.Name = "VideoEndSizeBox";
 			this.VideoEndSizeBox.NumericUpDownWidth = 65;
 			this.VideoEndSizeBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoEndSizeBox.TabIndex = 16;
 			this.VideoEndSizeBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-			this.VideoEndSizeBox.Value = 100;
+			this.VideoEndSizeBox.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
 			// 
 			// VideoStartRotationLbl
 			// 
@@ -3196,17 +3496,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoStartRotationBox
 			// 
 			this.VideoStartRotationBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartRotationBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoStartRotationBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoStartRotationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoStartRotationBox.Location = new System.Drawing.Point(78, 287);
 			this.VideoStartRotationBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoStartRotationBox.Maximum = 360;
-			this.VideoStartRotationBox.Minimum = -360;
+			this.VideoStartRotationBox.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+			this.VideoStartRotationBox.Minimum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            -2147483648});
 			this.VideoStartRotationBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoStartRotationBox.Name = "VideoStartRotationBox";
 			this.VideoStartRotationBox.NumericUpDownWidth = 65;
 			this.VideoStartRotationBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoStartRotationBox.TabIndex = 17;
+			this.VideoStartRotationBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoEndRotationLbl
 			// 
@@ -3223,18 +3541,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoEndRotationBox
 			// 
 			this.VideoEndRotationBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndRotationBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoEndRotationBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoEndRotationBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoEndRotationBox.Location = new System.Drawing.Point(78, 328);
 			this.VideoEndRotationBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoEndRotationBox.Maximum = 360;
-			this.VideoEndRotationBox.Minimum = -360;
+			this.VideoEndRotationBox.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+			this.VideoEndRotationBox.Minimum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            -2147483648});
 			this.VideoEndRotationBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoEndRotationBox.Name = "VideoEndRotationBox";
 			this.VideoEndRotationBox.NumericUpDownWidth = 65;
 			this.VideoEndRotationBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoEndRotationBox.TabIndex = 18;
 			this.VideoEndRotationBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndRotationBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoStartHorizontalTransLbl
 			// 
@@ -3251,16 +3587,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoStartHorizontalTransBox
 			// 
 			this.VideoStartHorizontalTransBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartHorizontalTransBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoStartHorizontalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoStartHorizontalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoStartHorizontalTransBox.Location = new System.Drawing.Point(78, 369);
 			this.VideoStartHorizontalTransBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoStartHorizontalTransBox.Minimum = -100;
+			this.VideoStartHorizontalTransBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoStartHorizontalTransBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
 			this.VideoStartHorizontalTransBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoStartHorizontalTransBox.Name = "VideoStartHorizontalTransBox";
 			this.VideoStartHorizontalTransBox.NumericUpDownWidth = 65;
 			this.VideoStartHorizontalTransBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoStartHorizontalTransBox.TabIndex = 19;
+			this.VideoStartHorizontalTransBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoEndHorizontalTransLbl
 			// 
@@ -3277,17 +3632,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoEndHorizontalTransBox
 			// 
 			this.VideoEndHorizontalTransBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndHorizontalTransBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoEndHorizontalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoEndHorizontalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoEndHorizontalTransBox.Location = new System.Drawing.Point(78, 410);
 			this.VideoEndHorizontalTransBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoEndHorizontalTransBox.Minimum = -100;
+			this.VideoEndHorizontalTransBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoEndHorizontalTransBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
 			this.VideoEndHorizontalTransBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoEndHorizontalTransBox.Name = "VideoEndHorizontalTransBox";
 			this.VideoEndHorizontalTransBox.NumericUpDownWidth = 65;
 			this.VideoEndHorizontalTransBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoEndHorizontalTransBox.TabIndex = 20;
 			this.VideoEndHorizontalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndHorizontalTransBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoStartVerticalTransLbl
 			// 
@@ -3304,16 +3678,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoStartVerticalTransBox
 			// 
 			this.VideoStartVerticalTransBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoStartVerticalTransBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoStartVerticalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoStartVerticalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoStartVerticalTransBox.Location = new System.Drawing.Point(78, 451);
 			this.VideoStartVerticalTransBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoStartVerticalTransBox.Minimum = -100;
+			this.VideoStartVerticalTransBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoStartVerticalTransBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
 			this.VideoStartVerticalTransBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoStartVerticalTransBox.Name = "VideoStartVerticalTransBox";
 			this.VideoStartVerticalTransBox.NumericUpDownWidth = 65;
 			this.VideoStartVerticalTransBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoStartVerticalTransBox.TabIndex = 21;
+			this.VideoStartVerticalTransBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoEndVerticalTransLbl
 			// 
@@ -3330,17 +3723,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoEndVerticalTransBox
 			// 
 			this.VideoEndVerticalTransBox.BackColor = System.Drawing.Color.Transparent;
+			this.VideoEndVerticalTransBox.DefaultValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			this.VideoEndVerticalTransBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.VideoEndVerticalTransBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.VideoEndVerticalTransBox.Location = new System.Drawing.Point(78, 492);
 			this.VideoEndVerticalTransBox.Margin = new System.Windows.Forms.Padding(5);
-			this.VideoEndVerticalTransBox.Minimum = -100;
+			this.VideoEndVerticalTransBox.Maximum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.VideoEndVerticalTransBox.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
 			this.VideoEndVerticalTransBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.VideoEndVerticalTransBox.Name = "VideoEndVerticalTransBox";
 			this.VideoEndVerticalTransBox.NumericUpDownWidth = 65;
 			this.VideoEndVerticalTransBox.Size = new System.Drawing.Size(465, 31);
 			this.VideoEndVerticalTransBox.TabIndex = 22;
 			this.VideoEndVerticalTransBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.VideoEndVerticalTransBox.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
 			// 
 			// VideoEffectsGroup
 			// 
@@ -4629,6 +5041,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TrackLegatoMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.TrackLegatoMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stackingTracksToolStripMenuItem,
+            this.stackingAllAfterTracksToolStripMenuItem,
+            this.stackingAllTracksTracksToolStripMenuItem,
             this.limitStretchLegatoTracksToolStripMenuItem,
             this.stretchLegatoTracksToolStripMenuItem,
             this.lengthenLegatoToolStripMenuItem,
@@ -4637,21 +5051,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             this.toolStripSeparator10,
             this.effectToSelectedEventsToolStripMenuItem,
             this.includeEventsInGroupToolStripMenuItem,
+            this.reverseDirectionToolStripMenuItem,
             this.trackLegatoSelectInfoToolStripMenuItem});
 			this.TrackLegatoMenu.Name = "TrackLegatoMenu";
-			this.TrackLegatoMenu.Size = new System.Drawing.Size(334, 208);
+			this.TrackLegatoMenu.Size = new System.Drawing.Size(394, 280);
 			// 
 			// stackingTracksToolStripMenuItem
 			// 
 			this.stackingTracksToolStripMenuItem.Name = "stackingTracksToolStripMenuItem";
-			this.stackingTracksToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
-			this.stackingTracksToolStripMenuItem.Text = "堆积素材";
+			this.stackingTracksToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
+			this.stackingTracksToolStripMenuItem.Text = "堆积素材（仅应用于选中素材）";
 			this.stackingTracksToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
+			// 
+			// stackingAllAfterTracksToolStripMenuItem
+			// 
+			this.stackingAllAfterTracksToolStripMenuItem.Name = "stackingAllAfterTracksToolStripMenuItem";
+			this.stackingAllAfterTracksToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
+			this.stackingAllAfterTracksToolStripMenuItem.Text = "堆积素材（也应用于后续所有素材）";
+			this.stackingAllAfterTracksToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
+			// 
+			// stackingAllTracksTracksToolStripMenuItem
+			// 
+			this.stackingAllTracksTracksToolStripMenuItem.Name = "stackingAllTracksTracksToolStripMenuItem";
+			this.stackingAllTracksTracksToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
+			this.stackingAllTracksTracksToolStripMenuItem.Text = "堆积素材（应用于所有轨道）";
+			this.stackingAllTracksTracksToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
 			// 
 			// limitStretchLegatoTracksToolStripMenuItem
 			// 
 			this.limitStretchLegatoTracksToolStripMenuItem.Name = "limitStretchLegatoTracksToolStripMenuItem";
-			this.limitStretchLegatoTracksToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
+			this.limitStretchLegatoTracksToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
 			this.limitStretchLegatoTracksToolStripMenuItem.Text = "拉伸素材（限制在拉伸极限范围之内）";
 			this.limitStretchLegatoTracksToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
 			// 
@@ -4659,53 +5088,60 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.stretchLegatoTracksToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold);
 			this.stretchLegatoTracksToolStripMenuItem.Name = "stretchLegatoTracksToolStripMenuItem";
-			this.stretchLegatoTracksToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
-			this.stretchLegatoTracksToolStripMenuItem.Text = "拉伸素材";
+			this.stretchLegatoTracksToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
+			this.stretchLegatoTracksToolStripMenuItem.Text = "拉伸素材（超出拉伸极限范围之后再延长素材）";
 			this.stretchLegatoTracksToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
 			// 
 			// lengthenLegatoToolStripMenuItem
 			// 
 			this.lengthenLegatoToolStripMenuItem.Name = "lengthenLegatoToolStripMenuItem";
-			this.lengthenLegatoToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
-			this.lengthenLegatoToolStripMenuItem.Text = "改变素材持续时间";
+			this.lengthenLegatoToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
+			this.lengthenLegatoToolStripMenuItem.Text = "延长素材（改变素材持续时间）";
 			this.lengthenLegatoToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
 			// 
 			// toolStripSeparator9
 			// 
 			this.toolStripSeparator9.Name = "toolStripSeparator9";
-			this.toolStripSeparator9.Size = new System.Drawing.Size(330, 6);
+			this.toolStripSeparator9.Size = new System.Drawing.Size(390, 6);
 			// 
 			// increaseSpacingToolStripMenuItem
 			// 
 			this.increaseSpacingToolStripMenuItem.Name = "increaseSpacingToolStripMenuItem";
-			this.increaseSpacingToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
+			this.increaseSpacingToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
 			this.increaseSpacingToolStripMenuItem.Text = "增加间隙...";
-			this.increaseSpacingToolStripMenuItem.Click += new System.EventHandler(this.IncreaseSpacingToolStripMenuItem_Click);
+			this.increaseSpacingToolStripMenuItem.Click += new System.EventHandler(this.TrackLegatoMenuItems_Click);
 			// 
 			// toolStripSeparator10
 			// 
 			this.toolStripSeparator10.Name = "toolStripSeparator10";
-			this.toolStripSeparator10.Size = new System.Drawing.Size(330, 6);
+			this.toolStripSeparator10.Size = new System.Drawing.Size(390, 6);
 			// 
 			// effectToSelectedEventsToolStripMenuItem
 			// 
 			this.effectToSelectedEventsToolStripMenuItem.CheckOnClick = true;
 			this.effectToSelectedEventsToolStripMenuItem.Name = "effectToSelectedEventsToolStripMenuItem";
-			this.effectToSelectedEventsToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
+			this.effectToSelectedEventsToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
 			this.effectToSelectedEventsToolStripMenuItem.Text = "仅应用于选中的轨道剪辑";
 			// 
 			// includeEventsInGroupToolStripMenuItem
 			// 
 			this.includeEventsInGroupToolStripMenuItem.CheckOnClick = true;
 			this.includeEventsInGroupToolStripMenuItem.Name = "includeEventsInGroupToolStripMenuItem";
-			this.includeEventsInGroupToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
+			this.includeEventsInGroupToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
 			this.includeEventsInGroupToolStripMenuItem.Text = "也应用于同分组内的其它轨道剪辑";
+			// 
+			// reverseDirectionToolStripMenuItem
+			// 
+			this.reverseDirectionToolStripMenuItem.CheckOnClick = true;
+			this.reverseDirectionToolStripMenuItem.Name = "reverseDirectionToolStripMenuItem";
+			this.reverseDirectionToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
+			this.reverseDirectionToolStripMenuItem.Text = "反转方向";
 			// 
 			// trackLegatoSelectInfoToolStripMenuItem
 			// 
 			this.trackLegatoSelectInfoToolStripMenuItem.Enabled = false;
 			this.trackLegatoSelectInfoToolStripMenuItem.Name = "trackLegatoSelectInfoToolStripMenuItem";
-			this.trackLegatoSelectInfoToolStripMenuItem.Size = new System.Drawing.Size(333, 24);
+			this.trackLegatoSelectInfoToolStripMenuItem.Size = new System.Drawing.Size(393, 24);
 			this.trackLegatoSelectInfoToolStripMenuItem.Text = "已选中 0 个轨道。";
 			// 
 			// OverflowToolTip
@@ -5176,6 +5612,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
 		public System.Windows.Forms.ToolStripMenuItem includeEventsInGroupToolStripMenuItem;
 		public System.Windows.Forms.ToolTip OverflowToolTip;
+		public System.Windows.Forms.ToolStripMenuItem stackingAllAfterTracksToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem stackingAllTracksTracksToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem reverseDirectionToolStripMenuItem;
 	}
 }
 

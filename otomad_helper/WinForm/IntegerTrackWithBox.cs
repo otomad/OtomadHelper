@@ -38,29 +38,37 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		[Description("指示数值控件的当前值。"), Category("Behavior"), DefaultValue(0)]
-		public int Value {
-			get { return Track.Value; }
+		public decimal Value {
+			get { return Numeric.Value; }
 			set {
-				Track.Value = value;
+				Track.Value = (int)value;
 				Numeric.Value = value;
 			}
 		}
 
+		public double DoubleValue {
+			get { return (double)Value; }
+		}
+
+		public float FloatValue {
+			get { return (float)Value; }
+		}
+
 		[Description("指示数值控件的最小值。"), Category("Behavior"), DefaultValue(0)]
-		public int Minimum {
-			get { return Track.Minimum; }
+		public decimal Minimum {
+			get { return Numeric.Minimum; }
 			set {
-				Track.Minimum = value;
+				Track.Minimum = (int)value;
 				Numeric.Minimum = value;
 				UpdateTickFrequency();
 			}
 		}
 
 		[Description("指示数值控件的最大值。"), Category("Behavior"), DefaultValue(100)]
-		public int Maximum {
-			get { return Track.Maximum; }
+		public decimal Maximum {
+			get { return Numeric.Maximum; }
 			set {
-				Track.Maximum = value;
+				Track.Maximum = (int)value;
 				Numeric.Maximum = value;
 				UpdateTickFrequency();
 			}
@@ -84,16 +92,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			set { Numeric.Width = value; }
 		}
 
-		private int defaultValue = 0;
+		private decimal defaultValue = 0;
 
 		[Description("指示数值控件的默认值，当用户鼠标右键跟踪条时可以重置为默认值。"), Category("Behavior"), DefaultValue(0)]
-		public int DefaultValue {
+		public decimal DefaultValue {
 			get { return defaultValue; }
 			set {
 				if (value < Minimum || value > Maximum)
 					throw new ArgumentOutOfRangeException("Value", "输入的默认值比最小值小或比最大值大。");
 				defaultValue = value;
 			}
+		}
+
+		[Description("指示要显示的小数位数。"), Category("Appearance"), DefaultValue(2)]
+		public int DecimalPlace {
+			get { return Numeric.DecimalPlaces; }
+			set { Numeric.DecimalPlaces = value; }
 		}
 
 		/// <summary>
@@ -132,10 +146,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="value">设定值</param>
 		/// <param name="def">如果设定失败后的默认值，如果为 null 表示不改变。</param>
-		public void SetValue(int value, int? def = null) {
+		public void SetValue(decimal value, decimal? def = null) {
 			if (value < Minimum || value > Maximum) {
 				if (def == null || def < Minimum || def > Maximum) return;
-				Value = (int)def;
+				Value = (decimal)def;
 			} else Value = value;
 		}
 	}

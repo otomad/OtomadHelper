@@ -64,6 +64,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			// Numeric
 			// 
+			this.Numeric.DecimalPlaces = 2;
 			this.Numeric.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Numeric.Font = new System.Drawing.Font("Segoe UI", 9F);
 			this.Numeric.Location = new System.Drawing.Point(302, 0);
