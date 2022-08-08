@@ -1,3 +1,5 @@
+<div lang="zh-TW">
+
 [![Cover](cover.png)](#otomad-helper)
 <div align="center">
 	<h2 id="otomad-helper">音 MAD 助手</h2>
@@ -73,12 +75,12 @@ Vegas Pro 17 和 19 測試**正常**。
 	> 路徑：HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
 
 ### 參考
-* [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
-* [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
-* [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
-* [https://github.com/YTP-Plus](https://github.com/YTP-Plus)
-* [https://www.jetdv.com/](https://www.jetdv.com/)
-* [https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
+* [Chaosinism 的**原版**音 MAD 助手腳本](https://github.com/Chaosinism/vegas_scripts)
+* [Evan Kale 的 **Vegas 腳本集**](https://github.com/evankale/VegasScripts)
+* [Mark Heath 的 **NAudio** .NET 音訊處理庫](https://github.com/naudio/NAudio)
+* [Ben Brown、Kiwifruitdev、Nuppington 的 **YTP+**](https://github.com/YTP-Plus)
+* [Edward 的 **JETDV** 腳本集](https://www.jetdv.com/)
+* [Vegas Pro 腳本**論壇**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
 ### 圖示
 靈感來源於:
@@ -97,4 +99,6 @@ Vegas Pro 17 和 19 測試**正常**。
 * [教程視頻 (v0.1)](https://www.bilibili.com/video/av22226321)
 
 **Chaosinism 的原版文件：***（日語）*
-* [說明文文件 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
+* [說明文件 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
+
+</div>

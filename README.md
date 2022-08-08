@@ -1,4 +1,4 @@
-<article lang="en">
+<div lang="en">
 
 [![Cover](cover.png)](#otomad-helper)
 <div align="center">
@@ -132,4 +132,4 @@ Compilation note for Sony Vegas **(v13 and under)**:
 	* (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu\DLL)
 * Make sure that the DLL files (such as DLL\\NAudio.dll) are not locked.
 
-</article>
+</div>

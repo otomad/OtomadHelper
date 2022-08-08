@@ -1,3 +1,5 @@
+<div lang="zh-CN">
+
 [![Cover](cover.png)](#otomad-helper)
 <div align="center">
 	<h2 id="otomad-helper">音 MAD 助手</h2>
@@ -73,12 +75,12 @@ Vegas Pro 17 和 19 测试**正常**。
 	> 路径：HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
 
 ### 参考
-* [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
-* [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
-* [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
-* [https://github.com/YTP-Plus](https://github.com/YTP-Plus)
-* [https://www.jetdv.com/](https://www.jetdv.com/)
-* [https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
+* [Chaosinism 的**原版**音 MAD 助手脚本](https://github.com/Chaosinism/vegas_scripts)
+* [Evan Kale 的 **Vegas 脚本集**](https://github.com/evankale/VegasScripts)
+* [Mark Heath 的 **NAudio** .NET 音频处理库](https://github.com/naudio/NAudio)
+* [Ben Brown、Kiwifruitdev、Nuppington 的 **YTP+**](https://github.com/YTP-Plus)
+* [Edward 的 **JETDV** 脚本集](https://www.jetdv.com/)
+* [Vegas Pro 脚本**论坛**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
 ### 图标
 灵感来源于:
@@ -98,3 +100,5 @@ Vegas Pro 17 和 19 测试**正常**。
 
 **Chaosinism 的原版文档：***（日语）*
 * [说明文档 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
+
+</div>

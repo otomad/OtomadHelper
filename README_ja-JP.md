@@ -1,4 +1,4 @@
-<article lang="ja">
+<div lang="ja">
 
 [![Cover](cover.png)](#otomad-helper)
 <div align="center">
@@ -75,12 +75,12 @@ Vegas Pro 17 および 19 は**正常**にテストされました。
 	> パス：HKEY_CURRENT_USER¥Software¥DirectShow¥Presets¥{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
 
 ### 参考
-* [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
-* [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
-* [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
-* [https://github.com/YTP-Plus](https://github.com/YTP-Plus)
-* [https://www.jetdv.com/](https://www.jetdv.com/)
-* [https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
+* [Chaosinism の**元**の音 MAD ヘルパー スクリプト](https://github.com/Chaosinism/vegas_scripts)
+* [Evan Kale の **Vegas スクリプト集**](https://github.com/evankale/VegasScripts)
+* [Mark Heath の **NAudio** .NET オーディオ ライブラリ](https://github.com/naudio/NAudio)
+* [Ben Brown、Kiwifruitdev、Nuppington の **YTP+**](https://github.com/YTP-Plus)
+* [Edward の **JETDV** スクリプト集](https://www.jetdv.com/)
+* [Vegas Pro スクリプト **フォーラム**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
 ### アイコン
 に触発された：
