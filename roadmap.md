@@ -37,5 +37,5 @@
 ### Disputed
 > I'm not quite sure if these features should be added.
 - [ ] Optimize the update check mechanism.
-- [ ] Apply visual effects to selected video events.
+- [x] Apply visual effects to selected video events.
 - [ ] Quickly generate kaleidoscope effects.
