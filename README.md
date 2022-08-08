@@ -1,3 +1,5 @@
+<article lang="en">
+
 [![Cover](cover.png)](#otomad-helper)
 <div align="center">
 	<h1>VegasScripts</h1>
@@ -83,17 +85,17 @@ If you use this script, the script will use the following permissions.
 	> Path: HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
 
 ### References
-* [https://github.com/Chaosinism/vegas_scripts](https://github.com/Chaosinism/vegas_scripts)
-* [https://github.com/evankale/VegasScripts](https://github.com/evankale/VegasScripts)
-* [https://github.com/naudio/NAudio](https://github.com/naudio/NAudio)
-* [https://github.com/YTP-Plus](https://github.com/YTP-Plus)
-* [https://www.jetdv.com/](https://www.jetdv.com/)
-* [https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
+* [Chaosinism's **Original** Otomad Helper Script](https://github.com/Chaosinism/vegas_scripts)
+* [Evan Kale's **Vegas Scripts**](https://github.com/evankale/VegasScripts)
+* [Mark Heath's **NAudio** .NET Audio Library](https://github.com/naudio/NAudio)
+* [Ben Brown, Kiwifruitdev, Nuppington's **YTP+**](https://github.com/YTP-Plus)
+* [Edward's **JETDV** Scripts](https://www.jetdv.com/)
+* [Vegas Pro Scripting **Forum**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
 ### Logo
 Inspired by:
-* [@uid13084550](https://space.bilibili.com/13084550)
-* [@uid8569439](https://space.bilibili.com/8569439)
+* [@Koorihato Sakuno](https://space.bilibili.com/13084550)
+* [@Sophie-King](https://space.bilibili.com/8569439)
 
 ### Help and Troubleshooting
 **My documentations:** *(Chinese)*
@@ -120,12 +122,14 @@ Various scripts for MAGIX Vegas **(v14 and above)**.
 
 Compilation note for Sony Vegas **(v13 and under)**:
 * The namespace name of the *.NET assembly* has changed from `Sony.Vegas` to `ScriptPortal.Vegas` in **v14 and onward**.
-  * Change **`using ScriptPortal.Vegas;`** to **`using Sony.Vegas;`** in the scripts to compile for **v13**.
+	* Change **`using ScriptPortal.Vegas;`** to **`using Sony.Vegas;`** in the scripts to compile for **v13**.
 * Actually, the scripts is not supported **v12 and under**.
 
 ### Install
 * Scripts belong in the Vegas install directory, in the "Script Menu" folder.
-  * (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu)
+	* (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu)
 * Some scripts require additional DLLs, put them in a "DLL" folder in the "Script Menu" folder.
-  * (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu\DLL)
+	* (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu\DLL)
 * Make sure that the DLL files (such as DLL\\NAudio.dll) are not locked.
+
+</article>

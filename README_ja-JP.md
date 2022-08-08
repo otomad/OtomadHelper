@@ -1,3 +1,5 @@
+<article lang="ja">
+
 [![Cover](cover.png)](#otomad-helper)
 <div align="center">
 	<h2 id="otomad-helper">音 MAD ヘルパー</h2>
@@ -98,3 +100,5 @@ Vegas Pro 17 および 19 は**正常**にテストされました。
 
 **Chaosinismの元のドキュメンテーション：***（日本語）*
 * [ドキュメンテーション (v0.1) (ボウルロール)](https://bowlroll.net/user/261124)
+
+</div>
