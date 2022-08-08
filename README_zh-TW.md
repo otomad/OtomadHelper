@@ -19,6 +19,8 @@
 
 YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
+**姊妹專案：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
+
 ### 使用方法
 在軌道視窗中選中素材，或在專案媒體視窗中選中素材，或在（打開腳本視窗後）手動流覽選擇其它素材。然後即可打開腳本配置並生成。
 

@@ -26,6 +26,8 @@ The store will be supported for downloading related templates in the future.
 
 The related functions of YTP refer to [YTP+](https://github.com/YTP-Plus).
 
+**Sister Projects:** [om_midi for After Effects](https://github.com/otomad/om_midi).
+
 ### Usage
 Select the source track event in the track window, or select source media file in media pool window, or browse another media file (in the script configure form), then open the script to configure and generate.
 
