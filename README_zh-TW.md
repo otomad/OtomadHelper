@@ -28,12 +28,12 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 ### 安裝
 1. [下載](https://github.com/otomad/VegasScripts/releases/latest)最新版腳本。
-2. 解壓**所有**壓縮包內的檔案並放置到 Vegas 安裝目錄下的“Script Menu”資料夾中。
+2. 解壓**所有**壓縮包內的檔案並放置到 Vegas 安裝目錄下的「Script Menu」資料夾中。
 > (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 17.0\\Script Menu)
 3. 確保 DLL 檔案 (DLL\\NAudio.dll) 沒有被鎖定。**具體步驟：**
 	1. 在 Vegas 安裝目錄下，依次進入資料夾 Script Menu\\DLL。
-	2. 右鍵 NAudio.dll 檔案，並選擇“屬性”。
-	3. 如果您看到了“解除鎖定”按鈕或復選框，就點一下或勾選它。
+	2. 右鍵 NAudio.dll 檔案，並選擇「屬性」。
+	3. 如果您看到了「解除鎖定」按鈕或復選框，就點一下或勾選它。
 	4. 點擊確定按鈕即可。
 4. 打開您的 Vegas Pro 來啟動腳本。選擇功能表列 *工具 > 腳本化 > Otomad Helper*。
 
