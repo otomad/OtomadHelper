@@ -54,7 +54,17 @@ Vegas 16 and above support all features, and Vegas 13 ~ 15 are compatible to run
 Tested **fine** on Vegas Pro 17 and 19.
 
 ### Glossary
+You could learn about many features more easily through pictures.
+
 [Glossary >](glossary.md)
+
+### Major Version Update History
+These are screenshots of the script user interface for major version updates in history.
+
+[Major Version Update History >](history/README.md)
+
+### Roadmap
+[Roadmap >](roadmap.md)
 
 ### Issues
 When you are using the script, if you:
@@ -68,9 +78,6 @@ When you are using the script, if you:
 8. …
 
 You can create issues.
-
-### Roadmap
-[Roadmap >](roadmap.md)
 
 ### Terms of Use
 1. Respect the rights and interests of authors when creating with non-self-made MIDI/source.
