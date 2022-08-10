@@ -156,57 +156,87 @@
 
 ## Tracks Legato (Tool)<br />填补轨道间隙（工具）<br />填補軌道間隙（工具）<br />ラックの間隙を埋める（ツール）
 <table>
-	<tr>
-		<td>Stacking Clips<br />
-			堆积素材<br />
-			堆積素材<br />
-			素材を積み上げる</td>
-		<td><a href="#"><img src="glossary/legato_stacking.gif" alt="Legato Stacking" /></a></td>
-	</tr>
-	<tr>
-		<td>Stretching Clips (Limit to Stretch Ranges)<br />
-			拉伸素材（限制在拉伸极限范围之内）<br />
-			拉伸素材（限制在拉伸極限範圍之內）<br />
-			引張り素材（引張り限界の範囲に制限）</td>
-		<td><a href="#"><img src="glossary/legato_limit_stretching.gif" alt="Legato Limit Stretching" /></a></td>
-	</tr>
-	<tr>
-		<td>Stretching Clips<br />
-			拉伸素材<br />
-			拉伸素材<br />
-			引張り素材</td>
-		<td><a href="#"><img src="glossary/legato_stretching.gif" alt="Legato Stretching" /></a></td>
-	</tr>
-	<tr>
-		<td>Lengthening Clips<br />
-			改变素材持续时间<br />
-			改變素材持續時間<br />
-			素材の持続時間を変更します</td>
-		<td><a href="#"><img src="glossary/legato_lengthening.gif" alt="Legato Lengthening" /></a></td>
-	</tr>
-	<tr>
-		<td>Increase Spacing<br />
-			增加间隙<br />
-			增加間隙<br />
-			間隙を増やす</td>
-		<td><a href="#"><img src="glossary/" alt="Increase Spacing" /></a></td>
-	</tr>
-	<tr>
-		<td>Apply to Selected Track</td>
-		<td><a href="#"><img src="glossary/" alt="Apply to Selected Track" /></a></td>
-	</tr>
-	<tr>
-		<td>Apply to Selected Track Events</td>
-		<td><a href="#"><img src="glossary/" alt="Apply to Selected Track Events" /></a></td>
-	</tr>
-	<tr>
-		<td>Exclude the Events within a Group</td>
-		<td><a href="#"><img src="glossary/" alt="Exclude the Events within a Group" /></a></td>
-	</tr>
-	<tr>
-		<td>Include the Events within a Group</td>
-		<td><a href="#"><img src="glossary/" alt="Include the Events within a Group" /></a></td>
-	</tr>
+	<thead>
+		<th>Main Affix</th>
+		<th>Minor Affix</th>
+		<th>Forward Direction</th>
+		<th>Reverse Direction</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td rowspan="4">Stacking Clips</td>
+			<td>for Current Tracks</td>
+			<td><a href="#"><img src="glossary/legato_stacking.gif" alt="Legato Stacking for Current Tracks" /></a></td>
+			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for Current Tracks Reversed" /></a></td>
+		</tr>
+		<tr>
+			<td>for All Tracks</td>
+			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for All Tracks" /></a></td>
+			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for All Tracks Reversed" /></a></td>
+		</tr>
+		<tr>
+			<td>for Selected Clips</td>
+			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for Selected Clips" /></a></td>
+			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for Selected Clips Reversed" /></a></td>
+		</tr>
+		<tr>
+			<td>for Clips All After</td>
+			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for Clips All After" /></a></td>
+			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for Clips All After Reversed" /></a></td>
+		</tr>
+		<tr>
+			<td rowspan="2">Stretching Clips</td>
+			<td>within Stretch Limits</td>
+			<td><a href="#"><img src="glossary/legato_limit_stretching.gif" alt="Legato Limit Stretching" /></a></td>
+			<td><a href="#"><img src="glossary/.gif" alt="Legato Limit Stretching Reversed" /></a></td>
+		</tr>
+		<tr>
+			<td><b>Lengthening when Outside Stretch Limits</b></td>
+			<td><a href="#"><img src="glossary/legato_stretching.gif" alt="Legato Stretching" /></a></td>
+			<td><a href="#"><img src="glossary/.gif" alt="Legato Stretching Reversed" /></a></td>
+		</tr>
+		<tr>
+			<td>Lengthening Clips</td>
+			<td>Change Clips Length</td>
+			<td><a href="#"><img src="glossary/legato_lengthening.gif" alt="Legato Lengthening" /></a></td>
+			<td><a href="#"><img src="glossary/.gif" alt="Legato Lengthening Reversed" /></a></td>
+		</tr>
+		<tr>
+			<td rowspan="2">Increase Spacing</td>
+			<td>for Current Tracks</td>
+			<td><a href="#"><img src="glossary/" alt="Increase Spacing for Current Tracks" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Increase Spacing for Current Tracks Reversed" /></a></td>
+		</tr>
+		<tr>
+			<td>for All Tracks</td>
+			<td><a href="#"><img src="glossary/" alt="Increase Spacing for All Tracks" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Increase Spacing for All Tracks Reversed" /></a></td>
+		</tr>
+	</tbody>
+	<thead>
+		<th colspan="2">Apply to Selected</th>
+		<th>Track</th>
+		<th>Track Events</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="2">Stacking Clips</td>
+			<td><a href="#"><img src="glossary/" alt="Apply to Selected Track" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Apply to Selected Track Events" /></a></td>
+		</tr>
+	</tbody>
+	<thead>
+		<th colspan="2">~ the Events within a Group</th>
+		<th>Exclude</th>
+		<th>Include</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="2">Stacking Clips</td>
+			<td><a href="#"><img src="glossary/" alt="Exclude the Events within a Group" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Include the Events within a Group" /></a></td>
+		</tr>
+	</tbody>
 </table>
 
 ## Curves<br />曲线<br />曲線<br />カーブ
