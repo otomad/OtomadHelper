@@ -23,7 +23,7 @@
 - [x] Change the parameters to decimal.
 - [x] Set fade in / fade out by timecode instead of percent.
 
-### Bring from v5.0 / 功能下放
+### Bring from newer versions / 功能下放
 > These features were originally scheduled to be released in v5.0, but due to the delay in v5.0, some of them had to be brought into v4.0.
 - [x] Replace track events specify separately.
 - [x] Generate multiple tracks at once and apply auto layout tracks effects.
