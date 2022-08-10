@@ -167,39 +167,39 @@
 			<td rowspan="4">Stacking Clips</td>
 			<td>for Current Tracks</td>
 			<td><a href="#"><img src="glossary/legato_stacking.gif" alt="Legato Stacking for Current Tracks" /></a></td>
-			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for Current Tracks Reversed" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Legato Stacking for Current Tracks Reversed" /></a></td>
 		</tr>
 		<tr>
 			<td>for All Tracks</td>
-			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for All Tracks" /></a></td>
-			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for All Tracks Reversed" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Legato Stacking for All Tracks" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Legato Stacking for All Tracks Reversed" /></a></td>
 		</tr>
 		<tr>
 			<td>for Selected Clips</td>
-			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for Selected Clips" /></a></td>
-			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for Selected Clips Reversed" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Legato Stacking for Selected Clips" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Legato Stacking for Selected Clips Reversed" /></a></td>
 		</tr>
 		<tr>
 			<td>for Clips All After</td>
-			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for Clips All After" /></a></td>
-			<td><a href="#"><img src="glossary/.gif" alt="Legato Stacking for Clips All After Reversed" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Legato Stacking for Clips All After" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Legato Stacking for Clips All After Reversed" /></a></td>
 		</tr>
 		<tr>
 			<td rowspan="2">Stretching Clips</td>
 			<td>within Stretch Limits</td>
 			<td><a href="#"><img src="glossary/legato_limit_stretching.gif" alt="Legato Limit Stretching" /></a></td>
-			<td><a href="#"><img src="glossary/.gif" alt="Legato Limit Stretching Reversed" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Legato Limit Stretching Reversed" /></a></td>
 		</tr>
 		<tr>
 			<td><b>Lengthening when Outside Stretch Limits</b></td>
 			<td><a href="#"><img src="glossary/legato_stretching.gif" alt="Legato Stretching" /></a></td>
-			<td><a href="#"><img src="glossary/.gif" alt="Legato Stretching Reversed" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Legato Stretching Reversed" /></a></td>
 		</tr>
 		<tr>
 			<td>Lengthening Clips</td>
 			<td>Change Clips Length</td>
 			<td><a href="#"><img src="glossary/legato_lengthening.gif" alt="Legato Lengthening" /></a></td>
-			<td><a href="#"><img src="glossary/.gif" alt="Legato Lengthening Reversed" /></a></td>
+			<td><a href="#"><img src="glossary/" alt="Legato Lengthening Reversed" /></a></td>
 		</tr>
 		<tr>
 			<td rowspan="2">Increase Spacing</td>
