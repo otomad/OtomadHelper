@@ -1,7 +1,7 @@
 # Major Version Update History
 # 主要版本更新历史
 
-## v0.1 - Chaosinism Original Edition
+## v0.1 - Chaosinism's Original Edition
 ![otomad_helper_v0.1](otomad_helper_v0.1.png)
 
 ## v2.0 - WPF

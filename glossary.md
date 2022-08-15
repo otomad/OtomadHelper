@@ -386,7 +386,7 @@
 </table>
 
 
-## PV Rhythm Visual Effects<br />映画节奏视觉效果<br />映畫節奏視覺效果<br />映画リズム視覚効果
+## PV Rhythm Visual Effects<br />映像节奏视觉效果<br />映像節奏視覺效果<br />映像リズム視覚効果
 
 ### Flip Class<br />翻转类<br />翻轉類<br />フリップクラス
 <table>

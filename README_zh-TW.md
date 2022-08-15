@@ -4,7 +4,7 @@
 <div align="center">
 	<h2 id="otomad-helper">音 MAD 助手</h2>
 	<p><b>蘭音</b></p>
-	<p><a href="https://github.com/otomad/VegasScripts/releases/latest"><img src="https://img.shields.io/badge/-點擊下載最新版！-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="Download" /></a></p>
+	<p><a href="https://github.com/otomad/OtomadHelper/releases/latest"><img src="https://img.shields.io/badge/-點擊下載最新版！-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="Download" /></a></p>
 
 [EN](README.md) | [简中](README_zh-CN.md) | **繁中** | [日](README_ja-JP.md)
 </div>
@@ -29,7 +29,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程視頻](https://www.youtube.com/watch?v=8vSpzgL_86A) *（英語）*。
 
 ### 安裝
-1. [下載](https://github.com/otomad/VegasScripts/releases/latest)最新版腳本。
+1. [下載](https://github.com/otomad/OtomadHelper/releases/latest)最新版腳本。
 2. 解壓**所有**壓縮包內的檔案並放置到 Vegas 安裝目錄下的「Script Menu」資料夾中。
 > (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 17.0\\Script Menu)
 3. 確保 DLL 檔案 (DLL\\NAudio.dll) 沒有被鎖定。**具體步驟：**

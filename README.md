@@ -11,14 +11,14 @@
 <div align="center">
 	<h2>Otomad Helper</h2>
 	<p><b><i>Ranne</i></b></p>
-	<p><a href="https://github.com/otomad/VegasScripts/releases/latest"><img src="https://img.shields.io/badge/-Get%20the%20download%20link%20now!-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="Download" /></a></p>
+	<p><a href="https://github.com/otomad/OtomadHelper/releases/latest"><img src="https://img.shields.io/badge/-Get%20the%20download%20link%20now!-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="Download" /></a></p>
 
 **EN** | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | [日](README_ja-JP.md)
 </div>
 
 Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files as input, and automatically generate Otomad/YTPMV tracks.
 
-The script is based on the original author [@Chaosinism](https://github.com/Chaosinism) 's open source code redevelopment and uses the NAudio library.
+The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
 
 It can also be used to make YTP. And Sonar Effect, Lyrics/Karaoke, Manual Vocaloid/Sentence Mixing, Shupelunker Tactics, etc. will be supported in the future.
 
@@ -33,10 +33,10 @@ Select the source track event in the track window, or select source media file i
 
 You can add scripts as toolbar buttons rather than having to click inside the *Tools > Scripting* submenu, by adding them to the toolbar using the *Options > Customize Toolbar* menu.
 
-You can also read [@Evauation](https://github.com/Evauation) 's [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch [@Cassidy](https://github.com/composition-cassidy) 's [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
+You can also read [@Evauation](https://github.com/Evauation)'s [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch [@Cassidy](https://github.com/composition-cassidy)'s [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
 
 ### Install
-1. [Download](https://github.com/otomad/VegasScripts/releases/latest) the latest version of this script.
+1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this script.
 2. Unzip **ALL** the files in the zip file you've just downloaded to the "Script Menu" folder in the Vegas installation directory.
 > (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 17.0\\Script Menu)
 3. Make sure that the DLL file (DLL\\NAudio.dll) is not locked. **Specific steps:**
