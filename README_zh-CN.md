@@ -93,6 +93,7 @@ Vegas Pro 17 和 19 测试**正常**。
 * [本·布朗、奇异果开发、纽平顿的 **YTP+**](https://github.com/YTP-Plus)
 * [爱德华的 **JETDV** 脚本集](https://www.jetdv.com/)
 * [Vegas Pro 脚本**论坛**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
+* [奥普洛斯的**带有透明通道的颜色选取器**](https://sourceforge.net/projects/alpha-color-dialog/)
 
 ### 图标
 灵感来源于:

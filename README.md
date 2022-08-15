@@ -100,6 +100,7 @@ If you use this script, the script will use the following permissions.
 * [Ben Brown, Kiwifruitdev, Nuppington's **YTP+**](https://github.com/YTP-Plus)
 * [Edward's **JETDV** Scripts](https://www.jetdv.com/)
 * [Vegas Pro Scripting **Forum**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
+* [Opulos's AlphaColorDialog](https://sourceforge.net/projects/alpha-color-dialog/)
 
 ### Logo
 Inspired by:

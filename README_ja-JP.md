@@ -93,6 +93,7 @@ Vegas Pro 17 および 19 は**正常**にテストされました。
 * [ベン・ブラウン、キウイフルーツ開発、ニュッピントンの **YTP+**](https://github.com/YTP-Plus)
 * [エドワードの **JETDV** スクリプト集](https://www.jetdv.com/)
 * [Vegas Pro スクリプト **フォーラム**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
+* [オプロスの**アルファ付きカラーピッカー**](https://sourceforge.net/projects/alpha-color-dialog/)
 
 ### アイコン
 に触発された：
