@@ -26,7 +26,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 
 您可以选择菜单 *选项 > 自定义工具栏*，将脚本添加到工具栏中以便操作。
 
-您也可以阅读 [@Evauation](https://github.com/Evauation) 的[说明文档](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)并观看 [@Cassidy](https://github.com/composition-cassidy) 的[教程视频](https://www.youtube.com/watch?v=8vSpzgL_86A) *（英语）*。
+您也可以阅读 [@Evauation](https://github.com/Evauation) 的[说明文档](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)并观看[@卡西迪](https://github.com/composition-cassidy)的[教程视频](https://www.youtube.com/watch?v=8vSpzgL_86A) *（英语）*。
 
 ### 安装
 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)最新版脚本。
@@ -42,7 +42,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 ### **注意**
 支持 Vegas Pro 13 及以上版本。
 
-Vegas 16 及以上版本支持所有功能，Vegas 13 ~ 15 可以兼容运行（会缺失部分功能）。前提是必须安装对应的版本。
+Vegas Pro 16 及以上版本支持所有功能，Vegas Pro 13 ~ 15 可以兼容运行（会缺失部分功能）。前提是必须安装对应的版本。
 
 Vegas Pro 17 和 19 测试**正常**。
 
@@ -88,10 +88,10 @@ Vegas Pro 17 和 19 测试**正常**。
 
 ### 参考
 * [Chaosinism 的**原版**音 MAD 助手脚本](https://github.com/Chaosinism/vegas_scripts)
-* [Evan Kale 的 **Vegas 脚本集**](https://github.com/evankale/VegasScripts)
-* [Mark Heath 的 **NAudio** .NET 音频处理库](https://github.com/naudio/NAudio)
-* [Ben Brown、Kiwifruitdev、Nuppington 的 **YTP+**](https://github.com/YTP-Plus)
-* [Edward 的 **JETDV** 脚本集](https://www.jetdv.com/)
+* [埃文·凯尔的 **Vegas 脚本集**](https://github.com/evankale/VegasScripts)
+* [马克·希斯的 **NAudio** .NET 音频处理库](https://github.com/naudio/NAudio)
+* [本·布朗、奇异果开发、纽平顿的 **YTP+**](https://github.com/YTP-Plus)
+* [爱德华的 **JETDV** 脚本集](https://www.jetdv.com/)
 * [Vegas Pro 脚本**论坛**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
 ### 图标

@@ -26,7 +26,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 您可以選擇功能表列 *選項 > 自訂工具列*，將腳本添加到工具列中以便操作。
 
-您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程視頻](https://www.youtube.com/watch?v=8vSpzgL_86A) *（英語）*。
+您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看[@卡西迪](https://github.com/composition-cassidy)的[教程視頻](https://www.youtube.com/watch?v=8vSpzgL_86A) *（英語）*。
 
 ### 安裝
 1. [下載](https://github.com/otomad/OtomadHelper/releases/latest)最新版腳本。
@@ -42,7 +42,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 ### **注意**
 支援 Vegas Pro 13 及以上版本。
 
-Vegas 16 及以上版本支援所有功能，Vegas 13 ~ 15 可以兼容運行（會缺失部分功能）。前提是必須安裝對應的版本。
+Vegas Pro 16 及以上版本支援所有功能，Vegas Pro 13 ~ 15 可以兼容運行（會缺失部分功能）。前提是必須安裝對應的版本。
 
 Vegas Pro 17 和 19 測試**正常**。
 
@@ -88,10 +88,10 @@ Vegas Pro 17 和 19 測試**正常**。
 
 ### 參考
 * [Chaosinism 的**原版**音 MAD 助手腳本](https://github.com/Chaosinism/vegas_scripts)
-* [Evan Kale 的 **Vegas 腳本集**](https://github.com/evankale/VegasScripts)
-* [Mark Heath 的 **NAudio** .NET 音訊處理庫](https://github.com/naudio/NAudio)
-* [Ben Brown、Kiwifruitdev、Nuppington 的 **YTP+**](https://github.com/YTP-Plus)
-* [Edward 的 **JETDV** 腳本集](https://www.jetdv.com/)
+* [埃文·凱爾的 **Vegas 腳本集**](https://github.com/evankale/VegasScripts)
+* [馬克·希斯的 **NAudio** .NET 音訊處理庫](https://github.com/naudio/NAudio)
+* [本·布朗、奇異果開發、紐平頓的 **YTP+**](https://github.com/YTP-Plus)
+* [愛德華的 **JETDV** 腳本集](https://www.jetdv.com/)
 * [Vegas Pro 腳本**論壇**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 
 ### 圖示
@@ -100,17 +100,17 @@ Vegas Pro 17 和 19 測試**正常**。
 * [@酥妃大魔王](https://space.bilibili.com/8569439)
 
 ### 幫助和疑難排解
-**我的文件：***（中文）*
+**我的說明文件：***（中文）*
 * [發行説明 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [發行説明 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**Chaosinism 的原版文件：***（中文）*
+**Chaosinism 的原版說明文件：***（中文）*
 * [說明文件 (v0.1) (B 站)](https://www.bilibili.com/read/cv392013)
 * [五線譜視覺化文件 (v0.1)](https://www.bilibili.com/read/cv1027442)
 * [疑難排解](https://www.bilibili.com/read/cv495309)
 * [教程視頻 (v0.1)](https://www.bilibili.com/video/av22226321)
 
-**Chaosinism 的原版文件：***（日語）*
+**Chaosinism 的原版說明文件：***（日語）*
 * [說明文件 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
 
 </div>

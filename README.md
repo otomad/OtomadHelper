@@ -49,7 +49,7 @@ You can also read [@Evauation](https://github.com/Evauation)'s [documentation](h
 ### **Attention**
 Vegas Pro 13+ supported.
 
-Vegas 16 and above support all features, and Vegas 13 ~ 15 are compatible to run (some features are missing). The correct version must be installed though.
+Vegas Pro 16 and above support all features, and Vegas Pro 13 ~ 15 are compatible to run (some features are missing). The correct version must be installed though.
 
 Tested **fine** on Vegas Pro 17 and 19.
 
