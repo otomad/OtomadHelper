@@ -10456,6 +10456,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			SingleDurationLbl.Text = str.batch_subtitle_generation_single_duration;
 			SuggestionInfo.Text = str.batch_subtitle_generation_suggestion_info;
 			ImportFromFileBtn.Text = str.browse + str.dialog_sign;
+			ImportFromFileLbl.Text = str.import_from_file;
 			Text = str.batch_subtitle_generation;
 			OkBtn.Text = str.ok;
 			CancelBtn.Text = str.cancel;
@@ -24471,6 +24472,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			text_document = "文本文档",
 			file_too_large_info = "文件过大，是否仍要打开？",
 			will_clear_existing_text_info = "将会清除现有的文本内容，系统可能不会保留您的更改。",
+			import_from_file = "从文件中导入",
 			find_clips = "查找轨道素材",
 			find_clips_select_info = "选中的第一个轨道剪辑",
 			find_clips_info = "在上方选中相匹配的剪辑，确定之后将会选中这些剪辑。",
@@ -25089,6 +25091,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				text_document = "Text Document",
 				file_too_large_info = "The file is too large. Do you want to open it anyway?",
 				will_clear_existing_text_info = "Existing text content will be cleared and your changes may not be retained.",
+				import_from_file = "Import from file",
 				find_clips = "Find Track Events",
 				find_clips_select_info = "First track event selected",
 				find_clips_info = "Select the matching clips above and they will be selected when you are sure.",
@@ -25705,6 +25708,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				text_document = "文字文件",
 				file_too_large_info = "檔案過大，是否仍要開啟？",
 				will_clear_existing_text_info = "將會清除現有的文字內容，系統可能不會保留您的更改。",
+				import_from_file = "從檔案中導入",
 				find_clips = "查找軌道素材",
 				find_clips_select_info = "選中的第一個軌道剪輯",
 				find_clips_info = "在上方選中相匹配的剪輯，確定之後將會選中這些剪輯。",
@@ -26322,6 +26326,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				text_document = "テキスト ファイル",
 				file_too_large_info = "ファイルが大きすぎて開きますか？",
 				will_clear_existing_text_info = "既存のテキストコンテンツが消去され、変更内容が保持されない場合があります。",
+				import_from_file = "ファイルからインポート",
 				find_clips = "レール素材を探す",
 				find_clips_select_info = "最初に選んだイベント",
 				find_clips_info = "一致するクリップを上から選択し、確定したら選択します。",
@@ -26939,6 +26944,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				text_document = "Текстовый документ",
 				file_too_large_info = "Файл слишком большой. Вы хотите открыть его в любом случае?",
 				will_clear_existing_text_info = "Существующее текстовое содержимое будет удалено, и ваши изменения могут быть потеряны.",
+				import_from_file = "Импортировать из файла",
 				find_clips = "Найти Отслеживать События",
 				find_clips_select_info = "Выбрано первое событие трека",
 				find_clips_info = "Выберите соответствующие клипы выше, и они будут выбраны, когда вы уверены.",
