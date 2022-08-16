@@ -39,12 +39,14 @@
 			this.ChannelHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.NameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.InstrumentHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.IsDrumsKitHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.NoteCountHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.BeginNoteHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.EditNotesBtn = new System.Windows.Forms.Button();
 			this.SelectAllBtn = new System.Windows.Forms.Button();
 			this.InvertSelectionButton = new System.Windows.Forms.Button();
+			this.PanHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.dock.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.AutoLayoutTracksGroup.SuspendLayout();
@@ -244,7 +246,9 @@
             this.ChannelHeader,
             this.NameHeader,
             this.InstrumentHeader,
+            this.IsDrumsKitHeader,
             this.NoteCountHeader,
+            this.PanHeader,
             this.BeginNoteHeader});
 			this.ChannelListView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ChannelListView.FullRowSelect = true;
@@ -267,12 +271,16 @@
 			// NameHeader
 			// 
 			this.NameHeader.Text = "名称";
-			this.NameHeader.Width = 200;
+			this.NameHeader.Width = 160;
 			// 
 			// InstrumentHeader
 			// 
 			this.InstrumentHeader.Text = "乐器";
 			this.InstrumentHeader.Width = 120;
+			// 
+			// IsDrumsKitHeader
+			// 
+			this.IsDrumsKitHeader.Text = "鼓组";
 			// 
 			// NoteCountHeader
 			// 
@@ -334,6 +342,10 @@
 			this.InvertSelectionButton.UseVisualStyleBackColor = true;
 			this.InvertSelectionButton.Click += new System.EventHandler(this.InvertSelectionButton_Click);
 			// 
+			// PanHeader
+			// 
+			this.PanHeader.Text = "声相";
+			// 
 			// MidiChannelAdvancedForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -351,7 +363,7 @@
 			this.Name = "MidiChannelAdvancedForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "MIDI 通道高级属性";
+			this.Text = "MIDI 轨道高级属性";
 			this.dock.ResumeLayout(false);
 			this.dock.PerformLayout();
 			this.tableLayoutPanel1.ResumeLayout(false);
@@ -392,5 +404,7 @@
 		private System.Windows.Forms.Button EditNotesBtn;
 		private System.Windows.Forms.Button SelectAllBtn;
 		private System.Windows.Forms.Button InvertSelectionButton;
+		private System.Windows.Forms.ColumnHeader IsDrumsKitHeader;
+		private System.Windows.Forms.ColumnHeader PanHeader;
 	}
 }

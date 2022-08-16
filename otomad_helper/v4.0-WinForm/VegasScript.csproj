@@ -90,6 +90,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlphaColorDialog\AlphaColorDialog.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AlphaColorDialog\AlphaColorPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ColorButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="PvRhythmVisualEffectAdvancedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PvRhythmVisualEffectAdvancedForm.Designer.cs">
+      <DependentUpon>PvRhythmVisualEffectAdvancedForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyVisualEffectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ApplyVisualEffectForm.Designer.cs">
+      <DependentUpon>ApplyVisualEffectForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AutoLayoutTracksBox3dForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -168,6 +190,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RememberedCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ReplaceClipsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -188,6 +213,12 @@
     </Compile>
     <Compile Include="Windows10StyledContextMenuStripRenderer.cs" />
     <Compile Include="WindowUtils.cs" />
+    <EmbeddedResource Include="PvRhythmVisualEffectAdvancedForm.resx">
+      <DependentUpon>PvRhythmVisualEffectAdvancedForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApplyVisualEffectForm.resx">
+      <DependentUpon>ApplyVisualEffectForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AutoLayoutTracksBox3dForm.resx">
       <DependentUpon>AutoLayoutTracksBox3dForm.cs</DependentUpon>
     </EmbeddedResource>

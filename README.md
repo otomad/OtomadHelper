@@ -5,7 +5,7 @@
 	<h1>VegasScripts</h1>
 	<p>
 		<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="Badge" />
-		<img src="https://img.shields.io/badge/VERSION-4.20.6.0-orange?style=flat-square" alt="Badge" />
+		<img src="https://img.shields.io/badge/VERSION-4.20.16.0-orange?style=flat-square" alt="Badge" />
 	</p>
 </div>
 <div align="center">
@@ -51,7 +51,7 @@ Vegas Pro 13+ supported.
 
 Vegas Pro 16 and above support all features, and Vegas Pro 13 ~ 15 are compatible to run (some features are missing). The correct version must be installed though.
 
-Tested **fine** on Vegas Pro 17 and 19.
+Tested **fine** on Vegas Pro 17, 18, 19, 20.
 
 ### Glossary
 You could learn about many features more easily through pictures.

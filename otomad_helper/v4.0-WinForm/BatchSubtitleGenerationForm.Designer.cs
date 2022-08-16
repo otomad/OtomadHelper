@@ -35,9 +35,13 @@
 			this.SingleDurationLbl = new System.Windows.Forms.Label();
 			this.SingleDurationTxt = new System.Windows.Forms.TextBox();
 			this.dock = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.ImportFromFileLbl = new System.Windows.Forms.Label();
+			this.ImportFromFileBtn = new System.Windows.Forms.Button();
 			this.table.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.dock.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// OkBtn
@@ -45,7 +49,7 @@
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.OkBtn.Location = new System.Drawing.Point(597, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(94, 32);
 			this.OkBtn.TabIndex = 1;
@@ -58,7 +62,7 @@
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.CancelBtn.Location = new System.Drawing.Point(699, 10);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
 			this.CancelBtn.TabIndex = 2;
@@ -71,18 +75,20 @@
 			this.table.AutoSize = true;
 			this.table.ColumnCount = 1;
 			this.table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.table.Controls.Add(this.tableLayoutPanel2, 0, 2);
 			this.table.Controls.Add(this.PresetsLbl, 0, 0);
 			this.table.Controls.Add(this.PresetsCombo, 0, 1);
-			this.table.Controls.Add(this.SubtitlesLbl, 0, 2);
-			this.table.Controls.Add(this.SubtitlesTxt, 0, 3);
-			this.table.Controls.Add(this.SuggestionInfo, 0, 5);
-			this.table.Controls.Add(this.tableLayoutPanel1, 0, 4);
+			this.table.Controls.Add(this.SubtitlesLbl, 0, 3);
+			this.table.Controls.Add(this.SubtitlesTxt, 0, 4);
+			this.table.Controls.Add(this.SuggestionInfo, 0, 6);
+			this.table.Controls.Add(this.tableLayoutPanel1, 0, 5);
 			this.table.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.table.Location = new System.Drawing.Point(0, 0);
-			this.table.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.table.Margin = new System.Windows.Forms.Padding(5);
 			this.table.Name = "table";
 			this.table.Padding = new System.Windows.Forms.Padding(12, 14, 12, 14);
-			this.table.RowCount = 6;
+			this.table.RowCount = 7;
+			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -110,7 +116,7 @@
 			this.PresetsCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.PresetsCombo.FormattingEnabled = true;
 			this.PresetsCombo.Location = new System.Drawing.Point(16, 38);
-			this.PresetsCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.PresetsCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.PresetsCombo.Name = "PresetsCombo";
 			this.PresetsCombo.Size = new System.Drawing.Size(773, 28);
 			this.PresetsCombo.TabIndex = 1;
@@ -119,7 +125,7 @@
 			// 
 			this.SubtitlesLbl.AutoSize = true;
 			this.SubtitlesLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SubtitlesLbl.Location = new System.Drawing.Point(16, 78);
+			this.SubtitlesLbl.Location = new System.Drawing.Point(16, 116);
 			this.SubtitlesLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
 			this.SubtitlesLbl.Name = "SubtitlesLbl";
 			this.SubtitlesLbl.Size = new System.Drawing.Size(773, 20);
@@ -130,13 +136,13 @@
 			// SubtitlesTxt
 			// 
 			this.SubtitlesTxt.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SubtitlesTxt.Location = new System.Drawing.Point(16, 102);
-			this.SubtitlesTxt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.SubtitlesTxt.Location = new System.Drawing.Point(16, 140);
+			this.SubtitlesTxt.Margin = new System.Windows.Forms.Padding(4);
 			this.SubtitlesTxt.MaxLength = 65535;
 			this.SubtitlesTxt.Multiline = true;
 			this.SubtitlesTxt.Name = "SubtitlesTxt";
 			this.SubtitlesTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.SubtitlesTxt.Size = new System.Drawing.Size(773, 391);
+			this.SubtitlesTxt.Size = new System.Drawing.Size(773, 353);
 			this.SubtitlesTxt.TabIndex = 3;
 			this.SubtitlesTxt.WordWrap = false;
 			// 
@@ -185,7 +191,7 @@
 			// 
 			this.SingleDurationTxt.Dock = System.Windows.Forms.DockStyle.Left;
 			this.SingleDurationTxt.Location = new System.Drawing.Point(141, 4);
-			this.SingleDurationTxt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.SingleDurationTxt.Margin = new System.Windows.Forms.Padding(4);
 			this.SingleDurationTxt.Name = "SingleDurationTxt";
 			this.SingleDurationTxt.Size = new System.Drawing.Size(186, 27);
 			this.SingleDurationTxt.TabIndex = 1;
@@ -202,13 +208,52 @@
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.dock.Location = new System.Drawing.Point(0, 574);
-			this.dock.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.dock.Size = new System.Drawing.Size(805, 52);
 			this.dock.TabIndex = 18;
+			// 
+			// tableLayoutPanel2
+			// 
+			this.tableLayoutPanel2.AutoSize = true;
+			this.tableLayoutPanel2.ColumnCount = 2;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel2.Controls.Add(this.ImportFromFileLbl, 0, 0);
+			this.tableLayoutPanel2.Controls.Add(this.ImportFromFileBtn, 1, 0);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 70);
+			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 1;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(781, 38);
+			this.tableLayoutPanel2.TabIndex = 7;
+			// 
+			// ImportFromFileLbl
+			// 
+			this.ImportFromFileLbl.AutoSize = true;
+			this.ImportFromFileLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ImportFromFileLbl.Location = new System.Drawing.Point(4, 0);
+			this.ImportFromFileLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.ImportFromFileLbl.Name = "ImportFromFileLbl";
+			this.ImportFromFileLbl.Size = new System.Drawing.Size(677, 38);
+			this.ImportFromFileLbl.TabIndex = 0;
+			this.ImportFromFileLbl.Text = "从文件中导入";
+			this.ImportFromFileLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// ImportFromFileBtn
+			// 
+			this.ImportFromFileBtn.Location = new System.Drawing.Point(688, 3);
+			this.ImportFromFileBtn.Name = "ImportFromFileBtn";
+			this.ImportFromFileBtn.Size = new System.Drawing.Size(90, 32);
+			this.ImportFromFileBtn.TabIndex = 1;
+			this.ImportFromFileBtn.Text = "浏览...";
+			this.ImportFromFileBtn.UseVisualStyleBackColor = true;
+			this.ImportFromFileBtn.Click += new System.EventHandler(this.ImportFromFileBtn_Click);
 			// 
 			// BatchSubtitleGenerationForm
 			// 
@@ -233,6 +278,8 @@
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.dock.ResumeLayout(false);
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel2.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -251,5 +298,8 @@
 		private System.Windows.Forms.Button OkBtn;
 		private System.Windows.Forms.Button CancelBtn;
 		private System.Windows.Forms.TableLayoutPanel dock;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+		private System.Windows.Forms.Label ImportFromFileLbl;
+		private System.Windows.Forms.Button ImportFromFileBtn;
 	}
 }

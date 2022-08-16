@@ -1,19 +1,25 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using ScriptPortal.Vegas;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using ScriptPortal.Vegas;
+using System.Windows.Forms.VisualStyles;
 
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 
@@ -32,6 +38,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="entryPoint">调用本对象的父对象，也就是 Vegas 脚本的入口类</param>
 		public ConfigForm(/* EntryPoint entryPoint */) {
+			CheckForIllegalCrossThreadCalls = false;
+			SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
 			InitializeComponent();
 			#if VEGAS_ENVIRONMENT
 			parent = entryPoint;
@@ -97,6 +105,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			};
 			#endif
 			SourceConfigGroup.AllowDrop = MidiConfigGroup.AllowDrop = true;
+			SonarList_SelectedIndexChanged_Timer.Tick += SonarList_SelectedIndexChanged_Timer_Tick;
 			#endregion
 
 			#region 优化界面颜色和外观
@@ -120,7 +129,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 			YtpEffectsCheckList.MinimumSize = new Size(0, YtpEnableAllEffectsCheck.Height * 5);
 			#endregion
-
 
 			#region 程序图标
 			#if VEGAS_ENVIRONMENT
@@ -464,7 +472,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			SetEnabled(VideoTab, isVConfigOn, new Control[] { VideoConfigCheck, VideoScratchCheck });
 			StaffVisualizerConfigCheck.Enabled = isVConfigOn;
 			if (!isVConfigOn) StaffVisualizerConfigCheck.Checked = false;
-			if (VideoEffect == VideoAnimFx.PINGPONG || VideoEffect == VideoAnimFx.UNLIMITED) {
+			if (VideoEffect == PvVisualEffectType.PINGPONG || VideoEffect == PvVisualEffectType.WHIRL) {
 				VideoScratchCheck.Checked = true;
 				VideoScratchCheck.Enabled = false;
 			} else {
@@ -584,7 +592,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (end.Value < start.Value) end.Value = start.Value;
 		}
 
-		public VideoAnimFx VideoEffect { get { return (VideoAnimFx)VideoEffectCombo.SelectedIndex; } }
+		public PvVisualEffectType VideoEffect { get { return (PvVisualEffectType)VideoEffectCombo.SelectedIndex; } }
 
 		public void ChooseSourceCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			#if VEGAS_ENVIRONMENT
@@ -684,7 +692,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			HelperTab.Parent = null; // 隐藏选项卡
 		}*/
 
-		private void StaffLineColorBtn_Click(object sender, EventArgs e) {
+		/*private void StaffLineColorBtn_Click(object sender, EventArgs e) {
 			DialogResult dr = StaffLineColorDialog.ShowDialog();
 			if (dr == DialogResult.OK) Update_StaffLineColorBtn_Color();
 		}
@@ -706,7 +714,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Color c = Color.FromArgb(r, g, b);
 			StaffLineColorDialog.Color = c;
 			Update_StaffLineColorBtn_Color();
-		}
+		}*/
 
 		private void AudioMainKeyCombo_MouseWheel(object sender, MouseEventArgs e) {
 
@@ -1035,37 +1043,223 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 			}
 		}
-	}
 
-	public static class Extensions {
-		public static string[] GetFileNames(this DragEventArgs e) {
-			if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return null;
-			return e.Data.GetData(DataFormats.FileDrop) as string[];
+		private void TimecodeText_Leave(object sender, EventArgs e) {
+			TextBox textBox = sender as TextBox;
+			Timecode timecode = Timecode.FromPositionString(textBox.Text);
+			textBox.Text = timecode.ToPositionString();
 		}
-	}
 
-	/// <summary>
-	/// 视频的动画效果枚举。
-	/// </summary>
-	public enum VideoAnimFx {
-		NONE,
-		H_FLIP,
-		V_FLIP,
-		CCW_FLIP,
-		CW_FLIP,
-		CCW_ROTATE,
-		CW_ROTATE,
-		TURNED,
-		H_MIRROR,
-		V_MIRROR,
-		CCW_MIRROR,
-		CW_MIRROR,
-		NEGATIVE,
-		INVERT_LUMIN,
-		INVERT_HUE,
-		STEP_CHANGE_HUE,
-		GREY,
-		PINGPONG,
-		UNLIMITED // PERPETUAL_MOTION
+		private void FadeSetAsRadio_CheckedChanged(object sender, EventArgs e) {
+			RadioButton radio = sender as RadioButton;
+			Control fadeInTrack, fadeOutTrack, fadeInTxt, fadeOutTxt;
+			TableLayoutPanel table;
+			bool isTimecode;
+			if (radio == AudioFadeSetAsPercentRadio || radio == AudioFadeSetAsTimecodeRadio) {
+				fadeInTrack = AudioFadeInBox;
+				fadeOutTrack = AudioFadeOutBox;
+				fadeInTxt = AudioFadeInTimeTxt;
+				fadeOutTxt = AudioFadeOutTimeTxt;
+				table = AudioParamsTable;
+				isTimecode = AudioFadeSetAsTimecodeRadio.Checked;
+			} else if (radio == VideoFadeSetAsPercentRadio || radio == VideoFadeSetAsTimecodeRadio) {
+				fadeInTrack = VideoFadeInBox;
+				fadeOutTrack = VideoFadeOutBox;
+				fadeInTxt = VideoFadeInTimeTxt;
+				fadeOutTxt = VideoFadeOutTimeTxt;
+				table = VideoParamsTable;
+				isTimecode = VideoFadeSetAsTimecodeRadio.Checked;
+			} else
+				return;
+			Control fadeInShown = isTimecode ? fadeInTxt : fadeInTrack,
+				fadeOutShown = isTimecode ? fadeOutTxt : fadeOutTrack,
+				fadeInHidden = !isTimecode ? fadeInTxt : fadeInTrack,
+				fadeOutHidden = !isTimecode ? fadeOutTxt : fadeOutTrack;
+			fadeInHidden.Visible = fadeOutHidden.Visible = false;
+			table.SetCellPosition(fadeInShown, new TableLayoutPanelCellPosition(1, 1));
+			table.SetCellPosition(fadeOutShown, new TableLayoutPanelCellPosition(1, 2));
+			fadeInShown.Visible = fadeOutShown.Visible = true;
+		}
+
+		private void VisualEffectAdvancedBtn_Click(object sender, EventArgs e) {
+			new PvRhythmVisualEffectAdvancedForm(this).ShowDialog();
+		}
+
+		protected override CreateParams CreateParams {
+			get {
+				CreateParams cp = base.CreateParams;
+				cp.ExStyle |= 0x02000000;
+				return cp;
+			}
+		}
+
+		private void SonarDeleteBtn_Click(object sender, EventArgs e) {
+			if (MessageBox.Show(sender == SonarResetBtn ? "确定要重置？" : "确定要删除？", "", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
+				return;
+			if (sender == SonarResetBtn) {
+				SonarList.Items.Clear();
+			} else if (sender == SonarDeleteBtn) {
+				ListView.SelectedListViewItemCollection selected = SonarList.SelectedItems;
+				foreach (ListViewItem item in selected)
+					SonarList.Items.Remove(item);
+			}
+		}
+
+		private void SonarAddBtn_Click(object sender, EventArgs e) {
+			SonarItem newItem = new SonarItem(this);
+			SonarList.Items.Add(newItem);
+			foreach (ListViewItem item in SonarList.SelectedItems)
+				item.Selected = false;
+			newItem.Selected = true;
+		}
+
+		private void SonarConfigChanged(object sender, EventArgs e) {
+			if (Is_SonarList_SelectedIndexChanged) return;
+			ListView.SelectedListViewItemCollection selected = SonarList.SelectedItems;
+			if (selected.Count != 0) {
+				SonarItem item = selected[0] as SonarItem;
+				item.DrumSound = SonarDrumSoundCombo.Text;
+				item.Shape = SonarShapeCombo.SelectedIndex;
+				item.Color = SonarColorBtn.Color;
+				item.Border = (double)SonarBorderBox.Value;
+				item.Size = (double)SonarSizeBox.Value;
+				item.XPos = (double)SonarXPosBox.Value;
+				item.YPos = (double)SonarYPosBox.Value;
+				item.XOffset = (double)SonarXOffsetBox.Value;
+				item.YOffset = (double)SonarYOffsetBox.Value;
+				item.Rotation = (double)SonarRotationBox.Value;
+				item.Curve = SonarCurveCombo.SelectedIndex;
+				item.FadeIn = (double)SonarFadeInBox.Value;
+				item.FadeOut = (double)SonarFadeOutBox.Value;
+			}
+		}
+
+		private bool Is_SonarList_SelectedIndexChanged = false;
+		private readonly System.Windows.Forms.Timer SonarList_SelectedIndexChanged_Timer = new System.Windows.Forms.Timer {
+			Interval = 50,
+			Enabled = false,
+		};
+
+		private void SonarList_SelectedIndexChanged(object sender, EventArgs e) {
+			Is_SonarList_SelectedIndexChanged = true;
+			ListView.SelectedListViewItemCollection selected = SonarList.SelectedItems;
+			bool isSelected = selected.Count != 0;
+			if (SonarParamsGroup.Enabled != isSelected) {
+				if (!isSelected) {
+					SonarList_SelectedIndexChanged_Timer.Stop();
+					SonarList_SelectedIndexChanged_Timer.Start();
+				} else SonarList_SelectedIndexChanged_Timer_Tick(null, null);
+			}
+			if (isSelected) {
+				SonarItem item = selected[0] as SonarItem;
+				SonarDrumSoundCombo.Text = item.DrumSound;
+				SonarShapeCombo.SelectedIndex = item.Shape;
+				SonarColorBtn.Color = item.Color;
+				SonarBorderBox.Value = (decimal)item.Border;
+				SonarSizeBox.Value = (decimal)item.Size;
+				SonarXPosBox.Value = (decimal)item.XPos;
+				SonarYPosBox.Value = (decimal)item.YPos;
+				SonarXOffsetBox.Value = (decimal)item.XOffset;
+				SonarYOffsetBox.Value = (decimal)item.YOffset;
+				SonarRotationBox.Value = (decimal)item.Rotation;
+				SonarCurveCombo.SelectedIndex = item.Curve;
+				SonarFadeInBox.Value = (decimal)item.FadeIn;
+				SonarFadeOutBox.Value = (decimal)item.FadeOut;
+			}
+			Is_SonarList_SelectedIndexChanged = false;
+		}
+
+		private void SonarList_SelectedIndexChanged_Timer_Tick(object sender, EventArgs e) {
+			bool isSelected = SonarList.SelectedItems.Count != 0;
+			if (SonarParamsGroup.Enabled != isSelected)
+				SonarDeleteBtn.Enabled = SonarParamsGroup.Enabled = isSelected;
+			SonarList_SelectedIndexChanged_Timer.Stop();
+		}
+
+		private void SonarMoveBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender.ToString());
+		}
+
+		private void SonarButtons_Paint(object sender, PaintEventArgs e) {
+			Button button = sender as Button;
+			List<Button> buttons = new List<Button> { SonarResetBtn, SonarDeleteBtn, SonarMoveUpBtn, SonarMoveDownBtn, SonarAddBtn };
+			if (!buttons.Contains(button)) return;
+			int index = buttons.IndexOf(button);
+			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			const int PADDING = 8;
+			int buttonSize = Math.Min(button.Width, button.Height),
+				iconSize = buttonSize - PADDING * 2;
+			Rectangle r = new Rectangle((button.Width - iconSize) / 2, (button.Height - iconSize) / 2, iconSize, iconSize);
+			int XCenter = r.Left + r.Width / 2, YCenter = r.Top + r.Height / 2;
+			List<Pen> pens = new List<Pen> {
+				/* 橙色 */ new Pen(Color.FromArgb(255, 127, 39)),
+				/* 红色 */ new Pen(Color.FromArgb(237, 28, 36)),
+				/* 蓝色 */ new Pen(Color.FromArgb(50, 130, 246)),
+				/* 蓝色 */ new Pen(Color.FromArgb(50, 130, 246)),
+				/* 绿色 */ new Pen(Color.FromArgb(34, 177, 76)),
+			};
+			Pen penColor = button.Enabled ? pens[index] : Pens.Gray;
+			const int RESET_ARC_OPEN_ANGLE = 60;
+			double resetArcOpenRadian = RESET_ARC_OPEN_ANGLE * Math.PI / 180 / 2;
+			int resetFinalPointX = (int)(XCenter - r.Width / 2 * Math.Cos(resetArcOpenRadian)),
+				resetFinalPointY = (int)(YCenter - r.Height / 2 * Math.Sin(resetArcOpenRadian)),
+				resetArrowLength = resetFinalPointY - r.Top;
+			List<Point[]> points = new List<Point[]> {
+				new Point[] {
+					new Point(resetFinalPointX, r.Top),
+					new Point(resetFinalPointX, resetFinalPointY),
+					new Point(resetFinalPointX + resetArrowLength, resetFinalPointY),
+				},
+				new Point[] {
+					new Point(r.Left, r.Top),
+					new Point(r.Right, r.Bottom),
+					new Point(XCenter, YCenter),
+					new Point(r.Right, r.Top),
+					new Point(r.Left, r.Bottom),
+				},
+				new Point[] {
+					new Point(XCenter, r.Bottom),
+					new Point(XCenter, r.Top),
+					new Point(r.Left, YCenter),
+					new Point(XCenter, r.Top),
+					new Point(r.Right, YCenter),
+				},
+				new Point[] {
+					new Point(XCenter, r.Top),
+					new Point(XCenter, r.Bottom),
+					new Point(r.Left, YCenter),
+					new Point(XCenter, r.Bottom),
+					new Point(r.Right, YCenter),
+				},
+				new Point[] {
+					new Point(r.Left, YCenter),
+					new Point(r.Right, YCenter),
+					new Point(XCenter, YCenter),
+					new Point(XCenter, r.Top),
+					new Point(XCenter, r.Bottom),
+				},
+			};
+			e.Graphics.DrawLines(penColor, points[index]);
+			if (button == SonarResetBtn)
+				e.Graphics.DrawArc(penColor, r, 180 + RESET_ARC_OPEN_ANGLE / 2, 360 - RESET_ARC_OPEN_ANGLE);
+		}
+
+		private void TrackShadowCheck_CheckedChanged(object sender, EventArgs e) {
+			TrackShadowColorBtn.Enabled = TrackShadowCheck.Checked && TrackShadowCheck.Enabled;
+		}
+
+		private void TrackShadowColorBtn_Click(object sender, EventArgs e) {
+			AlphaColorDialog dialog = new AlphaColorDialog {
+				AnyColor = true,
+				FullOpen = true,
+				Color = Color.Black,
+			};
+			if (dialog.ShowDialog() == DialogResult.Cancel) return;
+			TrackShadowColorBtn.Tag = dialog.Color;
+		}
+
+		private void ConvertMusicBeatsBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
 	}
 }
