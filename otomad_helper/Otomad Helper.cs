@@ -10455,7 +10455,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			SubtitlesLbl.Text = str.batch_subtitle_generation_subtitles;
 			SingleDurationLbl.Text = str.batch_subtitle_generation_single_duration;
 			SuggestionInfo.Text = str.batch_subtitle_generation_suggestion_info;
-			ImportFromFileBtn.Text = str.browse + str.dialog_sign;
+			ImportFromFileBtn.Text = str.browse;
 			ImportFromFileLbl.Text = str.import_from_file;
 			Text = str.batch_subtitle_generation;
 			OkBtn.Text = str.ok;
