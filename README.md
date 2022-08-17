@@ -20,7 +20,7 @@ Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files a
 
 The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
 
-It can also be used to make YTP. And Sonar Effect, Lyrics/Karaoke, Manual Vocaloid/Sentence Mixing, Shupelunker Tactics, etc. will be supported in the future.
+It can also be used to make YTP, Sonar Effect. And Lyrics/Karaoke, Manual Vocaloid/Sentence Mixing, Shupelunker Tactics, etc. will be supported in the future.
 
 The store will be supported for downloading related templates in the future.
 
