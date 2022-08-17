@@ -14,7 +14,7 @@
 			<td>Otomad / YTPMV<br />
 			音 MAD / YTPMV<br />
 			音声 Music Anime Douga / YouTube Poop Music Video</td>
-			<td><a href="#"><img src="glossary/yohane_no_koori.png" alt="Otomad / YTPMV" title="Yohane's Ice" /></a></td>
+			<td><a href="https://www.nicovideo.jp/watch/sm31208202"><img src="glossary/yohane_no_koori.png" alt="Otomad / YTPMV" title="Yohane's Ice" /></a></td>
 			<td><a href="#"><img src="glossary/otomad.svg" alt="Otomad / YTPMV" /></a></td>
 		</tr>
 		<tr>
@@ -28,7 +28,7 @@
 			声呐效果<br />
 			聲呐效果<br />
 			ソナー効果</td>
-			<td><a href="#"><img src="glossary/brain_power.png" alt="Sonar" title="Let the Bass Kick O-oooooooooo" /></a></td>
+			<td><a href="https://www.youtube.com/watch?v=h-mUGj41hWA"><img src="glossary/brain_power.png" alt="Sonar" title="Let the Bass Kick O-oooooooooo" /></a></td>
 			<td><a href="#"><img src="glossary/sonar.svg" alt="Sonar" /></a></td>
 		</tr>
 		<tr>
@@ -36,7 +36,7 @@
 			歌词 / 卡拉 OK<br />
 			歌詞 / 卡拉 OK<br />
 			歌詞 / カラオケ</td>
-			<td><a href="#"><img src="glossary/spicy_hot_pot_chicken.png" alt="Lyrics / Karaoke" title="Spicy Hot Pot Chicken" /></a></td>
+			<td><a href="https://www.youtube.com/watch?v=07prS6_oaXc"><img src="glossary/spicy_hot_pot_chicken.png" alt="Lyrics / Karaoke" title="Spicy Hot Pot Chicken" /></a></td>
 			<td><a href="#"><img src="glossary/lyrics.svg" alt="Lyrics / Karaoke" /></a></td>
 		</tr>
 		<tr>
@@ -51,7 +51,7 @@
 			原音系战法<br />
 			原音系戰法<br />
 			シュペランカー戦法</td>
-			<td><a href="#"><img src="glossary/izayoi_sakuya.png" alt="Shupelunker Tactics" title="Izayoi Sakuya" /></a></td>
+			<td><a href="https://www.youtube.com/watch?v=vS_a8Edde8k"><img src="glossary/izayoi_sakuya.png" alt="Shupelunker Tactics" title="Izayoi Sakuya" /></a></td>
 			<td><a href="#"><img src="glossary/shupelunker.svg" alt="Shupelunker Tactics" /></a></td>
 		</tr>
 	</tbody>
