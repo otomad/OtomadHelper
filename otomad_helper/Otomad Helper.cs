@@ -23876,6 +23876,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			saveConfigToolStripMenuItem.Click += (sender, e) => SaveIni();
 			exitToolStripMenuItem.Click += new EventHandler(CancelBtn_Click);
 			aboutToolStripMenuItem.Click += new EventHandler(AboutBtn_Click);
+			DownloadDatamoshLink.Click += (sender, e) => OpenLink(Links.GITHUB_LATEST);
 			BindMenuLink(latestVersionLinkToolStripMenuItem, Links.GITHUB_LATEST);
 			BindMenuLink(latestVersionToolStripMenuItemInBar, Links.GITHUB_LATEST);
 			BindMenuLink(githubToolStripMenuItem, Links.REPOSITORY);
@@ -24854,6 +24855,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ConvertMusicBeatsBtn.CommandLinkNote = str.convert_music_beats_configform_info;
 			HelperLbl.Text = str.helper_info;
 			CloseAfterOpenHelperCheck.Text = str.close_after_open_helper;
+			CloseAfterOpenMoshCheck.Text = str.close_after_open_helper;
+			MoshTab.Text = str.mosh;
+			DatamoshClipsFolderButton.Text = str.browse;
+			DatamoshClipsFolderGroup.Text = str.datamosh_clips_folder;
+			DatamoshNotInstalledInfo.Text = str.datamosh_not_installed_info;
+			DownloadDatamoshLink.Text = str.datamosh_install;
 			Text = str.otomad_helper_config;
 		}
 
