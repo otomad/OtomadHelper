@@ -76,9 +76,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -98,9 +101,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 20, 16, 0);
+		public static readonly Version VERSION = new Version(4, 20, 18, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 8, 16);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 8, 18);
 
 		// 配置参数变量
 		#region 视频属性
@@ -295,7 +298,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public bool ShowConfigForm() {
 			requestRestartScript = false; // 取消请求重启脚本
 			configForm = configForm ?? new ConfigForm(this);
-			progressForm = new ProgressForm();
 			#if SWALLOW_DIALOG_ERROR
 			try {
 				configForm.ShowDialog();
@@ -308,6 +310,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				configForm.IsIrreversibleCancel = true;
 				(Activator.CreateInstance(helper, new object[] { this }) as Form).ShowDialog();
 				if (!configForm.CloseAfterOpenHelperCheck.Checked) requestRestartScript = true;
+			}
+			Type datamosh = configForm.RequestToDatamosh;
+			if (datamosh != null) {
+				configForm.IsIrreversibleCancel = true;
+				(Activator.CreateInstance(datamosh) as DataMosh.IDataMosh).Main(vegas, this);
+				// if (!configForm.CloseAfterOpenMoshCheck.Checked) requestRestartScript = true;
 			}
 			vegas.Transport.CursorPosition = configForm.originalCursorPosition;
 			return configForm.AcceptConfig;
@@ -1024,9 +1032,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (AConfig && AConfigMethod == AudioTuneMethod.PITCH_SHIFT) requestShowProgress = true;
 			long startMakingTime = DateTime.Now.Ticks; // 单位：100 纳秒
 			const long MUST_SHOW_PROGRESS_WAITING_TIME = 10000000L; // 1 秒
-			if (progressForm.IsDisposed) // 这里有一个特别蛇皮的 bug，就是如果手动打开一个不受 Vegas 支持的媒体文件，触发打不开媒体文件的报错。然后再打开一个 Vegas 支持的媒体文件，最后点击生成。这竟然会导致进度条对话框被销毁且不为 null 的奇葩问题，而且因果毫无任何关系。反正这样可以解决问题就行了。
+			if (progressForm == null) { // 这里有一个特别蛇皮的 bug，就是如果手动打开一个不受 Vegas 支持的媒体文件，触发打不开媒体文件的报错。然后再打开一个 Vegas 支持的媒体文件，最后点击生成。这竟然会导致进度条对话框被销毁且不为 null 的奇葩问题，而且因果毫无任何关系。反正这样可以解决问题就行了。
 				progressForm = new ProgressForm();
-			progressForm.Show();
+				progressForm.Show();
+			}
 			if (YtpConfig) { GenerateYtp(); return true; }
 			if (AConfig && AConfigMethod == AudioTuneMethod.PITCH_SHIFT) if (!ExaminePitchShiftPresetsExist()) return false;
 			if (!IsMultiMidiChannel) progressForm.Info = "";
@@ -3098,6 +3107,54 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			else if (factor == -1) timecode -= ONE_BEAT;
 			return timecode;
 		}
+
+		/// <summary>
+		/// 删除系统菜单中指定的项目。比如还原、移动、大小、最小化、最大化、关闭。
+		/// </summary>
+		/// <param name="form">窗体。</param>
+		/// <param name="items">系统菜单项目。</param>
+		public static void DeleteSystemMenuItems(this Form form, SystemMenuItemType items) {
+			IntPtr menu = AlphaColorDialog.GetSystemMenu(form.Handle, false);
+			foreach (KeyValuePair<SystemMenuItemType, uint> item in SystemMenuItemTag.Map)
+				if ((items & item.Key) != 0)
+					AlphaColorDialog.DeleteMenu(menu, item.Value, AlphaColorDialog.MF_BYCOMMAND);
+		}
+		/// <summary>
+		/// 保留系统菜单中指定的项目。与 <see cref="DeleteSystemMenuItems"/> 方法取反。
+		/// </summary>
+		/// <param name="form">窗体。</param>
+		/// <param name="items">系统菜单项目。</param>
+		public static void ReserveSystemMenuItems(this Form form, SystemMenuItemType items) {
+			DeleteSystemMenuItems(form, ~items);
+		}
+	}
+
+	public static class SystemMenuItemTag {
+		public const uint RESTORE = 0xF120;
+		public const uint MOVE = 0xF010;
+		public const uint SIZE = 0xF000;
+		public const uint MINIMIZE = 0xF020;
+		public const uint MAXIMIZE = 0xF030;
+		public const uint CLOSE = 0xF060;
+
+		public static readonly Dictionary<SystemMenuItemType, uint> Map = new Dictionary<SystemMenuItemType, uint> {
+			{ SystemMenuItemType.RESTORE, RESTORE },
+			{ SystemMenuItemType.MOVE, MOVE },
+			{ SystemMenuItemType.SIZE, SIZE },
+			{ SystemMenuItemType.MINIMIZE, MINIMIZE },
+			{ SystemMenuItemType.MAXIMIZE, MAXIMIZE },
+			{ SystemMenuItemType.CLOSE, CLOSE },
+		};
+	}
+
+	[Flags]
+	public enum SystemMenuItemType {
+		RESTORE = 1 << 0,
+		MOVE = 1 << 1,
+		SIZE = 1 << 2,
+		MINIMIZE = 1 << 3,
+		MAXIMIZE = 1 << 4,
+		CLOSE = 1 << 5,
 	}
 
 	/// <summary>
@@ -5344,6 +5401,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private readonly ConfigForm form;
 		private const int MAX_VALUE_LENGTH = 1024;
 		private string filePath = null;
+		public string FilePath { get { return filePath; } }
 		protected string currentSection = null;
 
 		/// <summary>
@@ -5512,6 +5570,1411 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		void ReadIni();
 	}
 	#endregion
+
+	namespace DataMosh {
+		/// <summary>
+		/// Author: delthas<br />
+		/// Date: 2020-10-11<br />
+		/// License: MIT<br />
+		/// Source: https://github.com/delthas/vegas-datamosh<br />
+		/// Documentation: https://github.com/delthas/vegas-datamosh<br />
+		/// Version: 1.4.1
+		/// </summary>
+		public interface IDataMosh {
+			void Main(Vegas vegas, EntryPoint entryPoint);
+		}
+
+		public abstract class BaseUncompressedDataMosh {
+			protected static void GetStandardTemplates(Vegas vegas) {
+				Template.GetStandardTemplates(vegas, Template.Mode.Uncompressed);
+			}
+			protected static RenderTemplate GetTemplate(Vegas vegas, int frameRate) {
+				return Template.GetTemplate(vegas, frameRate, Template.Mode.Uncompressed);
+			}
+		}
+		public abstract class BaseUncomprAlphaDataMosh {
+			protected static void GetStandardTemplates(Vegas vegas) {
+				Template.GetStandardTemplates(vegas, Template.Mode.UncomprAlpha);
+			}
+			protected static RenderTemplate GetTemplate(Vegas vegas, int frameRate) {
+				return Template.GetTemplate(vegas, frameRate, Template.Mode.UncomprAlpha);
+			}
+		}
+
+		/// <summary>
+		/// Sets random automation values for video effects quickly and automatically.
+		/// </summary>
+		public class Automator : IDataMosh {
+			private static readonly Random Random = new Random();
+
+			public void Main(Vegas vegas, EntryPoint entryPoint) {
+				var events = vegas.Project.Tracks
+					.SelectMany(track => track.Events)
+					.Where(t => t.Selected)
+					.Where(t => t.IsVideo())
+					.Cast<VideoEvent>()
+					.ToList();
+
+				var effects = events
+					.SelectMany(ev => ev.Effects)
+					.Where(ev => !ev.Bypass)
+					.Where(ev => {
+						try {
+							return ev.IsOFX;
+						} catch (COMException) {
+							// vegas api throwing an exception if not ofx
+							return false;
+						}
+					})
+					.Select(ev => ev.OFXEffect)
+					.GroupBy(ev => ev.Label)
+					.Select(ev => ev.First())
+					.ToList();
+
+				var parameterEnabled = new HashSet<Tuple<string, string>>();
+
+				foreach (var effect in effects) {
+					foreach (var parameter in effect.Parameters) {
+						if (parameter.Label == null) {
+							continue;
+						}
+						if (!(parameter is OFXChoiceParameter
+							|| parameter is OFXDouble2DParameter
+							|| parameter is OFXDouble3DParameter
+							|| parameter is OFXDoubleParameter
+							|| parameter is OFXInteger2DParameter
+							|| parameter is OFXInteger3DParameter
+							|| parameter is OFXIntegerParameter
+							|| parameter is OFXRGBAParameter
+							|| parameter is OFXRGBParameter)) {
+							continue;
+						}
+
+						var key = effect.Label.Trim() + " - " + parameter.Label.Trim();
+						string hashed;
+						using (MD5 md5 = MD5.Create()) {
+							hashed = BitConverter.ToString(md5.ComputeHash(Encoding.UTF8.GetBytes(key))).Replace("-", "");
+						}
+						var renderChecked = (string)Registry.GetValue(
+							"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+							"Automate_" + hashed, "");
+						var defaultCheck = renderChecked != "False";
+
+						var prompt = new Form {
+							Width = 300,
+							Height = 150,
+							Text = "Automator Parameters",
+							KeyPreview = true
+						};
+						var textLabel = new Label { Left = 10, Top = 10, Width = 280, Text = key };
+						var textLabel2 = new Label { Left = 80, Top = 45, Text = "Scramble" };
+						var inputBox = new CheckBox {
+							Left = 200,
+							Top = 40,
+							Width = 240,
+							Checked = defaultCheck
+						};
+						var confirmation = new Button { Text = "OK", Left = 110, Width = 100, Top = 75 };
+						confirmation.Click += (sender, e) => {
+							prompt.DialogResult = DialogResult.OK;
+							prompt.Close();
+						};
+						prompt.KeyPress += (sender, args) => {
+							if (args.KeyChar != ' ')
+								return;
+							inputBox.Checked = !inputBox.Checked;
+							args.Handled = true;
+						};
+						prompt.KeyUp += (sender, args) => {
+							if (args.KeyCode != Keys.Space)
+								return;
+							args.Handled = true;
+						};
+						prompt.Controls.Add(confirmation);
+						prompt.Controls.Add(textLabel);
+						prompt.Controls.Add(inputBox);
+						prompt.Controls.Add(textLabel2);
+						prompt.AcceptButton = confirmation;
+						inputBox.Select();
+						if (prompt.ShowDialog() != DialogResult.OK) {
+							return;
+						}
+
+						if (defaultCheck != inputBox.Checked) {
+							Registry.SetValue(
+								"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+								"Automate_" + hashed, inputBox.Checked.ToString(), RegistryValueKind.String);
+						}
+
+						if (inputBox.Checked) {
+							parameterEnabled.Add(new Tuple<string, string>(effect.Label, parameter.Name));
+						}
+					}
+				}
+
+				if (parameterEnabled.Count == 0) {
+					return;
+				}
+
+				foreach (var ev in events) {
+					foreach (var effect in ev.Effects) {
+						if (effect.Bypass) {
+							continue;
+						}
+						try {
+							if (!effect.IsOFX) {
+								continue;
+							}
+						} catch (COMException) {
+							// vegas api throwing an exception if not ofx
+							continue;
+						}
+						var ofx = effect.OFXEffect;
+						foreach (var parameter in ofx.Parameters) {
+							if (!parameterEnabled.Contains(new Tuple<string, string>(ofx.Label, parameter.Name))) {
+								continue;
+							}
+
+							if (parameter is OFXChoiceParameter) {
+								var p = parameter as OFXChoiceParameter;
+								for (int i = 0; i < ev.Length.FrameCount; i++) {
+									p.SetValueAtTime(Timecode.FromFrames(i), p.Choices[Random.Next(0, p.Choices.Length)]);
+								}
+							} else if (parameter is OFXDouble2DParameter) {
+								var p = parameter as OFXDouble2DParameter;
+								for (int i = 0; i < ev.Length.FrameCount; i++) {
+									p.SetValueAtTime(Timecode.FromFrames(i), new OFXDouble2D {
+										X = p.DisplayMin.X + (p.DisplayMax.X - p.DisplayMin.X) * Random.NextDouble(),
+										Y = p.DisplayMin.Y + (p.DisplayMax.Y - p.DisplayMin.Y) * Random.NextDouble()
+									});
+								}
+							} else if (parameter is OFXDouble3DParameter) {
+								var p = parameter as OFXDouble3DParameter;
+								for (int i = 0; i < ev.Length.FrameCount; i++) {
+									p.SetValueAtTime(Timecode.FromFrames(i), new OFXDouble3D {
+										X = p.DisplayMin.X + (p.DisplayMax.X - p.DisplayMin.X) * Random.NextDouble(),
+										Y = p.DisplayMin.Y + (p.DisplayMax.Y - p.DisplayMin.Y) * Random.NextDouble(),
+										Z = p.DisplayMin.Z + (p.DisplayMax.Z - p.DisplayMin.Z) * Random.NextDouble()
+									});
+								}
+							} else if (parameter is OFXDoubleParameter) {
+								var p = parameter as OFXDoubleParameter;
+								for (int i = 0; i < ev.Length.FrameCount; i++) {
+									p.SetValueAtTime(Timecode.FromFrames(i), p.DisplayMin + (p.DisplayMax - p.DisplayMin) * Random.NextDouble());
+								}
+							} else if (parameter is OFXInteger2DParameter) {
+								var p = parameter as OFXInteger2DParameter;
+								for (int i = 0; i < ev.Length.FrameCount; i++) {
+									p.SetValueAtTime(Timecode.FromFrames(i), new OFXInteger2D {
+										X = Random.Next(p.DisplayMin.X, p.DisplayMax.X),
+										Y = Random.Next(p.DisplayMin.Y, p.DisplayMax.Y)
+									});
+								}
+							} else if (parameter is OFXInteger3DParameter) {
+								var p = parameter as OFXInteger3DParameter;
+								for (int i = 0; i < ev.Length.FrameCount; i++) {
+									p.SetValueAtTime(Timecode.FromFrames(i), new OFXInteger3D {
+										X = Random.Next(p.DisplayMin.X, p.DisplayMax.X),
+										Y = Random.Next(p.DisplayMin.Y, p.DisplayMax.Y),
+										Z = Random.Next(p.DisplayMin.Z, p.DisplayMax.Z)
+									});
+								}
+							} else if (parameter is OFXIntegerParameter) {
+								var p = parameter as OFXIntegerParameter;
+								for (int i = 0; i < ev.Length.FrameCount; i++) {
+									p.SetValueAtTime(Timecode.FromFrames(i), Random.Next(p.DisplayMin, p.DisplayMax));
+								}
+							} else if (parameter is OFXRGBAParameter) {
+								var p = parameter as OFXRGBAParameter;
+								for (int i = 0; i < ev.Length.FrameCount; i++) {
+									p.SetValueAtTime(Timecode.FromFrames(i), new OFXColor(Random.NextDouble(), Random.NextDouble(), Random.NextDouble(), Random.NextDouble()));
+								}
+							} else if (parameter is OFXRGBParameter) {
+								var p = parameter as OFXRGBParameter;
+								for (int i = 0; i < ev.Length.FrameCount; i++) {
+									p.SetValueAtTime(Timecode.FromFrames(i), new OFXColor(Random.NextDouble(), Random.NextDouble(), Random.NextDouble()));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Datamoshes a part of a video quickly and automatically (mosh a clip onto another).
+		/// </summary>
+		public class Datamix : BaseUncompressedDataMosh, IDataMosh {
+			private void Encode(Vegas vegas, string scriptDirectory, RenderArgs renderArgs, string pathEncoded) {
+				var status = vegas.Render(renderArgs);
+				if (status != RenderStatus.Complete) {
+					MessageBox.Show("Unexpected render status: " + status);
+					return;
+				}
+
+				var encode = new Process {
+					StartInfo = {
+						UseShellExecute = false,
+						FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "ffmpeg", "ffmpeg.exe"),
+						WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+						Arguments = "-y -hide_banner -nostdin -i \"" + renderArgs.OutputFile +
+									"\" -c:v libxvid -q:v 1 -g 1M -flags +mv4+qpel -mpeg_quant 1 -c:a copy \"" + pathEncoded +
+									"\"",
+						RedirectStandardOutput = true,
+						RedirectStandardError = true,
+						CreateNoWindow = true
+					}
+				};
+				encode.Start();
+				var error = encode.StandardError.ReadToEnd();
+				var output = encode.StandardOutput.ReadToEnd();
+				Debug.WriteLine(output);
+				Debug.WriteLine("---------------------");
+				Debug.WriteLine(error);
+				encode.WaitForExit();
+
+				File.Delete(renderArgs.OutputFile);
+				File.Delete(renderArgs.OutputFile + ".sfl");
+			}
+
+			public void Main(Vegas vegas, EntryPoint entryPoint) {
+				var start = vegas.Transport.LoopRegionStart;
+				var length = vegas.Transport.LoopRegionLength;
+
+				if (start.FrameCount == 0) {
+					MessageBox.Show("Selection must start at frame >= 1!");
+					return;
+				}
+				if (length.FrameCount <= 1) {
+					MessageBox.Show("Selection length must be > 1 frame!");
+					return;
+				}
+
+				try {
+					var frameRate = vegas.Project.Video.FrameRate;
+					var frameRateInt = (int)Math.Round(frameRate * 1000);
+
+					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
+					if (scriptDirectory == null) {
+						MessageBox.Show("Couldn't get script directory path!");
+						return;
+					}
+
+					var xvidPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+					if (string.IsNullOrEmpty(xvidPath)) {
+						xvidPath = Environment.GetEnvironmentVariable("ProgramFiles");
+					}
+					if (string.IsNullOrEmpty(xvidPath)) {
+						MessageBox.Show("Couldn't get Xvid install path!");
+						return;
+					}
+					xvidPath += @"\Xvid\uninstall.exe";
+					if (!File.Exists(xvidPath)) {
+						MessageBox.Show(
+							"Xvid codec not installed. The script will install it now and may ask for admin access to install it.");
+						var xvid = new Process {
+							StartInfo = {
+								UseShellExecute = true,
+								FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "xvid", "xvid.exe"),
+								WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+								Arguments =
+									"--unattendedmodeui none  --mode unattended  --AutoUpdater no --decode_divx DIVX  --decode_3ivx 3IVX --decode_divx DIVX --decode_other MPEG-4",
+								CreateNoWindow = true,
+								Verb = "runas"
+							}
+						};
+						try {
+							xvid.Start();
+						} catch (Win32Exception e) {
+							if (e.NativeErrorCode == 1223) {
+								MessageBox.Show("Admin privilege for Xvid installation refused.");
+								return;
+							}
+
+							throw;
+						}
+
+						xvid.WaitForExit();
+						GetStandardTemplates(vegas);
+						GetTemplate(vegas, frameRateInt);
+						MessageBox.Show(
+							"Xvid installed and render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
+						return;
+					}
+
+					var template = GetTemplate(vegas, frameRateInt);
+					if (template == null) {
+						GetStandardTemplates(vegas);
+						GetTemplate(vegas, frameRateInt);
+						MessageBox.Show(
+							"Render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
+						return;
+					}
+
+					VideoTrack videoTrack = null;
+					for (var i = vegas.Project.Tracks.Count - 1; i >= 0; i--) {
+						videoTrack = vegas.Project.Tracks[i] as VideoTrack;
+						if (videoTrack != null) {
+							break;
+						}
+					}
+
+					if (videoTrack == null) {
+						MessageBox.Show("No track found!");
+						return;
+					}
+
+					var finalFolder = (string)Registry.GetValue(
+						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+						"ClipFolder", "");
+					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
+						MessageBox.Show("Please select a folder to put generated datamoshed clips into.");
+						return;
+					}
+
+					var pathSrc = System.IO.Path.Combine(vegas.TemporaryFilesPath, System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" +
+						Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
+					var pathEncodedSrc = System.IO.Path.Combine(vegas.TemporaryFilesPath,
+						System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" +
+						Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
+					Encode(vegas, scriptDirectory, new RenderArgs {
+						OutputFile = pathSrc,
+						Start = Timecode.FromFrames(start.FrameCount - 1),
+						Length = Timecode.FromFrames(1),
+						RenderTemplate = template
+					}, pathEncodedSrc);
+
+					var pathClip = System.IO.Path.Combine(vegas.TemporaryFilesPath, System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" + Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
+					var pathEncodedClip = System.IO.Path.Combine(vegas.TemporaryFilesPath,
+						System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" +
+						Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
+					Encode(vegas, scriptDirectory, new RenderArgs {
+						OutputFile = pathClip,
+						Start = start,
+						Length = length,
+						RenderTemplate = template
+					}, pathEncodedClip);
+
+					var pathDatamixed = System.IO.Path.Combine(finalFolder,
+						System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" +
+						Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8)) + ".avi";
+
+					string[] datamoshConfig = {
+						"var input0=\"" + pathEncodedSrc.Replace("\\", "/") + "\";",
+						"var input1=\"" + pathEncodedClip.Replace("\\", "/") + "\";",
+						"var output=\"" + pathDatamixed.Replace("\\", "/") + "\";"
+					};
+
+					File.WriteAllLines(System.IO.Path.Combine(scriptDirectory, "_internal", "config_datamix.js"), datamoshConfig);
+
+					var datamosh = new Process {
+						StartInfo = {
+							UseShellExecute = false,
+							FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "avidemux", "avidemux2_cli.exe"),
+							WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+							Arguments = "--nogui --run avidemux_datamix.js",
+							RedirectStandardInput = true,
+							RedirectStandardOutput = true,
+							RedirectStandardError = true,
+							CreateNoWindow = true
+						}
+					};
+					datamosh.Start();
+					datamosh.StandardInput.WriteLine("n");
+					var output = datamosh.StandardOutput.ReadToEnd();
+					var error = datamosh.StandardError.ReadToEnd();
+					Debug.WriteLine(output);
+					Debug.WriteLine("---------------------");
+					Debug.WriteLine(error);
+					datamosh.WaitForExit();
+
+					File.Delete(pathEncodedSrc);
+					File.Delete(pathEncodedSrc + ".sfl");
+					File.Delete(pathEncodedClip);
+					File.Delete(pathEncodedClip + ".sfl");
+
+					var media = vegas.Project.MediaPool.AddMedia(pathDatamixed);
+					media.TimecodeIn = Timecode.FromFrames(1);
+
+					var videoEvent = videoTrack.AddVideoEvent(start, Timecode.FromFrames(length.FrameCount - 1));
+					videoEvent.AddTake(media.GetVideoStreamByIndex(0));
+				} catch (Exception e) {
+					MessageBox.Show("Unexpected exception: " + e.Message);
+					Debug.WriteLine(e);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Datamoshes a part of a video quickly and automatically.
+		/// </summary>
+		public class Datamosh : BaseUncompressedDataMosh, IDataMosh {
+			public void Main(Vegas vegas, EntryPoint entryPoint) {
+				var start = vegas.Transport.LoopRegionStart;
+				var length = vegas.Transport.LoopRegionLength;
+
+				try {
+					var frameRate = vegas.Project.Video.FrameRate;
+					var frameRateInt = (int)Math.Round(frameRate * 1000);
+
+					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
+					if (scriptDirectory == null) {
+						MessageBox.Show("Couldn't get script directory path!");
+						return;
+					}
+
+					var xvidPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+					if (string.IsNullOrEmpty(xvidPath)) {
+						xvidPath = Environment.GetEnvironmentVariable("ProgramFiles");
+					}
+					if (string.IsNullOrEmpty(xvidPath)) {
+						MessageBox.Show("Couldn't get Xvid install path!");
+						return;
+					}
+					xvidPath += @"\Xvid\uninstall.exe";
+					if (!File.Exists(xvidPath)) {
+						MessageBox.Show(
+							"Xvid codec not installed. The script will install it now and may ask for admin access to install it.");
+						var xvid = new Process {
+							StartInfo = {
+								UseShellExecute = true,
+								FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "xvid", "xvid.exe"),
+								WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+								Arguments =
+								"--unattendedmodeui none  --mode unattended  --AutoUpdater no --decode_divx DIVX  --decode_3ivx 3IVX --decode_divx DIVX --decode_other MPEG-4",
+								CreateNoWindow = true,
+								Verb = "runas"
+							}
+						};
+						try {
+							xvid.Start();
+						} catch (Win32Exception e) {
+							if (e.NativeErrorCode == 1223) {
+								MessageBox.Show("Admin privilege for Xvid installation refused.");
+								return;
+							}
+							throw;
+						}
+
+						xvid.WaitForExit();
+						GetStandardTemplates(vegas);
+						GetTemplate(vegas, frameRateInt);
+						MessageBox.Show(
+							"Xvid installed and render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
+						return;
+					}
+
+					var template = GetTemplate(vegas, frameRateInt);
+					if (template == null) {
+						GetStandardTemplates(vegas);
+						GetTemplate(vegas, frameRateInt);
+						MessageBox.Show(
+							"Render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
+						return;
+					}
+
+					var frameCount = (string)Registry.GetValue(
+						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+						"FrameCount", "");
+					var defaultCount = 1;
+					if (frameCount != "") {
+						try {
+							var value = int.Parse(frameCount);
+							if (value > 0) {
+								defaultCount = value;
+							}
+						} catch (Exception) {
+							// ignore
+						}
+					}
+
+					var prompt = new Form {
+						Width = 500,
+						Height = 140,
+						Text = "Datamoshing Parameters"
+					};
+					var textLabel = new Label { Left = 10, Top = 10, Text = "Frame count" };
+					var inputBox =
+						new NumericUpDown { Left = 200, Top = 10, Width = 200, Minimum = 1, Maximum = 1000000000, Value = defaultCount };
+					var textLabel2 = new Label { Left = 10, Top = 40, Text = "Frames repeats" };
+					var inputBox2 = new NumericUpDown {
+						Left = 200,
+						Top = 40,
+						Width = 200,
+						Value = 1,
+						Minimum = 1,
+						Maximum = 1000000000,
+						Text = ""
+					};
+					var confirmation = new Button { Text = "OK", Left = 200, Width = 100, Top = 70 };
+					confirmation.Click += (sender, e) => { prompt.DialogResult = DialogResult.OK; prompt.Close(); };
+					prompt.Controls.Add(confirmation);
+					prompt.Controls.Add(textLabel);
+					prompt.Controls.Add(inputBox);
+					prompt.Controls.Add(textLabel2);
+					prompt.Controls.Add(inputBox2);
+					inputBox2.Select();
+					prompt.AcceptButton = confirmation;
+					if (prompt.ShowDialog() != DialogResult.OK) {
+						return;
+					}
+					var size = (int)inputBox.Value;
+					var repeat = (int)inputBox2.Value;
+
+					if (repeat <= 0) {
+						MessageBox.Show("Frames repeats must be > 0!");
+						return;
+					}
+
+					if (length.FrameCount < size) {
+						MessageBox.Show("The selection must be as long as the frame count!");
+						return;
+					}
+
+					if (start.FrameCount < 1) {
+						MessageBox.Show("The selection mustn't start on the first frame of the project!");
+						return;
+					}
+
+					if (defaultCount != size) {
+						Registry.SetValue(
+							"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+							"FrameCount", size.ToString(), RegistryValueKind.String);
+					}
+
+					VideoTrack videoTrack = null;
+					for (var i = vegas.Project.Tracks.Count - 1; i >= 0; i--) {
+						videoTrack = vegas.Project.Tracks[i] as VideoTrack;
+						if (videoTrack != null) {
+							break;
+						}
+					}
+
+					AudioTrack audioTrack = null;
+					for (var i = 0; i < vegas.Project.Tracks.Count; i++) {
+						audioTrack = vegas.Project.Tracks[i] as AudioTrack;
+						if (audioTrack != null) {
+							break;
+						}
+					}
+
+					if (videoTrack == null && audioTrack == null) {
+						MessageBox.Show("No tracks found!");
+						return;
+					}
+
+					var finalFolder = (string)Registry.GetValue(
+						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+						"ClipFolder", "");
+					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
+						MessageBox.Show("Please select a folder to put generated datamoshed clips into.");
+						return;
+					}
+
+					var path = System.IO.Path.Combine(vegas.TemporaryFilesPath, System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) +
+						"-" + Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
+					var pathEncoded = System.IO.Path.Combine(vegas.TemporaryFilesPath,
+						System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" +
+						Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
+					var pathDatamoshedBase = System.IO.Path.Combine(finalFolder,
+						System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" +
+						Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8));
+					var pathDatamoshed = pathDatamoshedBase + ".avi";
+					var pathEncodedEscape = pathEncoded.Replace("\\", "/");
+					var pathDatamoshedEscape = pathDatamoshed.Replace("\\", "/");
+
+					var renderArgs = new RenderArgs {
+						OutputFile = path,
+						Start = Timecode.FromFrames(start.FrameCount - 1),
+						Length = Timecode.FromFrames(length.FrameCount + 1),
+						RenderTemplate = template
+					};
+					var status = vegas.Render(renderArgs);
+					if (status != RenderStatus.Complete) {
+						MessageBox.Show("Unexpected render status: " + status);
+						return;
+					}
+
+					string[] datamoshConfig = {
+						"var input=\"" + pathEncodedEscape + "\";",
+						"var output=\"" + pathDatamoshedEscape + "\";",
+						"var size=" + size + ";",
+						"var repeat=" + repeat + ";"
+					};
+
+					File.WriteAllLines(System.IO.Path.Combine(scriptDirectory, "_internal", "config_datamosh.js"), datamoshConfig);
+
+					var encode = new Process {
+						StartInfo = {
+							UseShellExecute = false,
+							FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "ffmpeg", "ffmpeg.exe"),
+							WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+							Arguments = "-y -hide_banner -nostdin -i \"" + path +
+								"\" -c:v libxvid -q:v 1 -g 1M -flags +mv4+qpel -mpeg_quant 1 -c:a copy \"" + pathEncoded +
+								"\"",
+							RedirectStandardOutput = true,
+							RedirectStandardError = true,
+							CreateNoWindow = true
+						}
+					};
+					encode.Start();
+					var output = encode.StandardOutput.ReadToEnd();
+					var error = encode.StandardError.ReadToEnd();
+					Debug.WriteLine(output);
+					Debug.WriteLine("---------------------");
+					Debug.WriteLine(error);
+					encode.WaitForExit();
+
+					File.Delete(path);
+					File.Delete(path + ".sfl");
+
+					var datamosh = new Process {
+						StartInfo = {
+							UseShellExecute = false,
+							FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "avidemux", "avidemux2_cli.exe"),
+							WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+							Arguments = "--nogui --run avidemux_datamosh.js",
+							RedirectStandardInput = true,
+							RedirectStandardOutput = true,
+							RedirectStandardError = true,
+							CreateNoWindow = true
+						}
+					};
+					datamosh.Start();
+					datamosh.StandardInput.WriteLine("n");
+					output = datamosh.StandardOutput.ReadToEnd();
+					error = datamosh.StandardError.ReadToEnd();
+					Debug.WriteLine(output);
+					Debug.WriteLine("---------------------");
+					Debug.WriteLine(error);
+					datamosh.WaitForExit();
+
+					File.Delete(pathEncoded);
+					File.Delete(pathEncoded + ".sfl");
+
+					var media = vegas.Project.MediaPool.AddMedia(pathDatamoshed);
+					media.TimecodeIn = Timecode.FromFrames(1);
+
+					VideoEvent videoEvent = null;
+					if (videoTrack != null) {
+						videoEvent =
+							videoTrack.AddVideoEvent(start, Timecode.FromFrames(1 + length.FrameCount + (repeat - 1) * size));
+						videoEvent.AddTake(media.GetVideoStreamByIndex(0));
+					}
+
+					AudioEvent audioEvent = null;
+					if (audioTrack != null) {
+						audioEvent =
+							audioTrack.AddAudioEvent(start, Timecode.FromFrames(1 + length.FrameCount + (repeat - 1) * size));
+						audioEvent.AddTake(media.GetAudioStreamByIndex(0));
+					}
+
+					if (videoTrack != null && audioTrack != null) {
+						var group = new TrackEventGroup();
+						vegas.Project.Groups.Add(group);
+						group.Add(videoEvent);
+						group.Add(audioEvent);
+					}
+				} catch (Exception e) {
+					MessageBox.Show("Unexpected exception: " + e.Message);
+					Debug.WriteLine(e);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Does multilayering on a part of a video quickly and automatically.
+		/// </summary>
+		public class Layering : BaseUncomprAlphaDataMosh, IDataMosh {
+			public void Main(Vegas vegas, EntryPoint entryPoint) {
+				var videoTrackIndex = -1;
+				VideoTrack videoTrackStart = null;
+				VideoEvent videoEvent = null;
+				for (var i = 0; i < vegas.Project.Tracks.Count; i++) {
+					var track = vegas.Project.Tracks[i];
+					if (!track.IsVideo())
+						continue;
+					foreach (var trackEvent in track.Events) {
+						if (!trackEvent.Selected)
+							continue;
+						if (videoEvent != null) {
+							MessageBox.Show("Only a single video event can be selected!");
+							return;
+						}
+
+						videoTrackIndex = i;
+						videoTrackStart = (VideoTrack)track;
+						videoEvent = (VideoEvent)trackEvent;
+					}
+				}
+
+				if (videoEvent == null) {
+					MessageBox.Show("Select a video event to be layered!");
+					return;
+				}
+
+				try {
+					var frameRate = vegas.Project.Video.FrameRate;
+					var frameRateInt = (int)Math.Round(frameRate * 1000);
+
+					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
+					if (scriptDirectory == null) {
+						MessageBox.Show("Couldn't get script directory path!");
+						return;
+					}
+
+					var template = GetTemplate(vegas, frameRateInt);
+					if (template == null) {
+						GetStandardTemplates(vegas);
+						GetTemplate(vegas, frameRateInt);
+						MessageBox.Show(
+							"Render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
+						return;
+					}
+
+					var layeringCount = (string)Registry.GetValue(
+						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+						"LayerCount", "");
+					var defaultCount = 1;
+					if (layeringCount != "") {
+						try {
+							var value = int.Parse(layeringCount);
+							if (value > 0) {
+								defaultCount = value;
+							}
+						} catch (Exception) {
+							// ignore
+						}
+					}
+
+					var renderChecked = (string)Registry.GetValue(
+						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+						"RenderLayer", "");
+					var defaultCheck = renderChecked == "True";
+					var prompt = new Form {
+						Width = 500,
+						Height = 170,
+						Text = "Layering Parameters",
+						KeyPreview = true
+					};
+					var textLabel = new Label { Left = 10, Top = 10, Text = "Layer count" };
+					var inputBox = new NumericUpDown {
+						Left = 200,
+						Top = 10,
+						Width = 200,
+						Minimum = 1,
+						Maximum = 1000000000,
+						Value = defaultCount
+					};
+					var textLabel2 = new Label { Left = 10, Top = 40, Text = "Layering offset" };
+					var inputBox2 =
+						new NumericUpDown { Left = 200, Top = 40, Width = 200, Minimum = -1000000000, Maximum = 1000000000, Text = "" };
+					var textLabel3 = new Label { Left = 10, Top = 70, Text = "Render" };
+					var inputBox3 = new CheckBox {
+						Left = 200,
+						Top = 70,
+						Width = 200,
+						Checked = defaultCheck
+					};
+					var confirmation = new Button { Text = "OK", Left = 200, Width = 100, Top = 100 };
+					confirmation.Click += (sender, e) => {
+						prompt.DialogResult = DialogResult.OK;
+						prompt.Close();
+					};
+					prompt.KeyPress += (sender, args) => {
+						if (args.KeyChar != ' ')
+							return;
+						inputBox3.Checked = !inputBox3.Checked;
+						args.Handled = true;
+					};
+					prompt.Controls.Add(confirmation);
+					prompt.Controls.Add(textLabel);
+					prompt.Controls.Add(inputBox);
+					prompt.Controls.Add(textLabel2);
+					prompt.Controls.Add(inputBox2);
+					prompt.Controls.Add(textLabel3);
+					prompt.Controls.Add(inputBox3);
+					inputBox2.Select();
+					prompt.AcceptButton = confirmation;
+					if (prompt.ShowDialog() != DialogResult.OK) {
+						return;
+					}
+
+					var count = (int)inputBox.Value;
+					var offset = (int)inputBox2.Value;
+					var render = inputBox3.Checked;
+
+					if (offset == 0) {
+						MessageBox.Show("Layering offset must not be 0!");
+						return;
+					}
+
+					if (count <= 0) {
+						MessageBox.Show("Layer count must be > 0!");
+						return;
+					}
+
+					if (defaultCount != count) {
+						Registry.SetValue(
+							"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+							"LayerCount", count.ToString(), RegistryValueKind.String);
+					}
+
+					if (defaultCheck != render) {
+						Registry.SetValue(
+							"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+							"RenderLayer", render.ToString(), RegistryValueKind.String);
+					}
+
+					var newTracks = new List<VideoTrack>();
+					var newEvents = new List<VideoEvent>();
+					var current = 0;
+					var baseOffset = offset > 0 ? 0 : -count * offset;
+
+					for (var i = videoTrackIndex - 1; i >= 0 && current < count; i--) {
+						var videoTrack = vegas.Project.Tracks[i] as VideoTrack;
+						if (videoTrack == null)
+							continue;
+						newEvents.Add((VideoEvent)videoEvent.Copy(videoTrack,
+							Timecode.FromFrames(videoEvent.Start.FrameCount + baseOffset + (++current) * offset)));
+					}
+
+					for (; current < count;) {
+						var videoTrack = vegas.Project.AddVideoTrack();
+						newTracks.Add(videoTrack);
+						newEvents.Add((VideoEvent)videoEvent.Copy(videoTrack,
+							Timecode.FromFrames(videoEvent.Start.FrameCount + baseOffset + (++current) * offset)));
+					}
+
+					var start = videoEvent.Start;
+					if (offset < 0) {
+						videoEvent.Start = Timecode.FromFrames(videoEvent.Start.FrameCount + baseOffset);
+					}
+
+					if (!render) return;
+					var finalFolder = (string)Registry.GetValue(
+						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+						"ClipFolder", ""); // LayerClipFolder
+					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
+						MessageBox.Show("Select the folder to put generated layered clips into.\n" +
+							"(As they are stored uncompressed with alpha, they can take a lot of space (think 1 GB/minute). " +
+							"Choose a location with a lot of available space and go remove some clips there if you need space.)");
+						return;
+					}
+
+					var path = System.IO.Path.Combine(vegas.TemporaryFilesPath, System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" + Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
+					var pathEncoded = System.IO.Path.Combine(vegas.TemporaryFilesPath,
+						System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) + "-" +
+						Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
+
+					var renderArgs = new RenderArgs {
+						OutputFile = path,
+						Start = Timecode.FromFrames(start.FrameCount),
+						Length = Timecode.FromFrames(videoEvent.Length.FrameCount + count * Math.Abs(offset)),
+						RenderTemplate = template
+					};
+					var status = vegas.Render(renderArgs);
+					if (status != RenderStatus.Complete) {
+						MessageBox.Show("Unexpected render status: " + status);
+						return;
+					}
+
+					File.Delete(pathEncoded + ".sfl");
+
+					var media = vegas.Project.MediaPool.AddMedia(path);
+					var newVideoEvent = videoTrackStart.AddVideoEvent(start,
+						Timecode.FromFrames(videoEvent.Length.FrameCount + count * Math.Abs(offset)));
+					((VideoStream)newVideoEvent.AddTake(media.GetVideoStreamByIndex(0)).MediaStream).AlphaChannel =
+						VideoAlphaType.Straight;
+					videoEvent.Track.Events.Remove(videoEvent);
+
+					foreach (var newEvent in newEvents) {
+						newEvent.Track.Events.Remove(newEvent);
+					}
+
+					foreach (var newTrack in newTracks) {
+						vegas.Project.Tracks.Remove(newTrack);
+					}
+				} catch (Exception e) {
+					MessageBox.Show("Unexpected exception: " + e.Message);
+					Debug.WriteLine(e);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Renders a part of a video quickly and automatically.
+		/// </summary>
+		public class Render : BaseUncomprAlphaDataMosh, IDataMosh {
+			public void Main(Vegas vegas, EntryPoint entryPoint) {
+				var start = vegas.Transport.LoopRegionStart;
+				var length = vegas.Transport.LoopRegionLength;
+
+				try {
+					var frameRate = vegas.Project.Video.FrameRate;
+					var frameRateInt = (int)Math.Round(frameRate * 1000);
+
+					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
+					if (scriptDirectory == null) {
+						MessageBox.Show("Couldn't get script directory path!");
+						return;
+					}
+
+					var template = GetTemplate(vegas, frameRateInt);
+					if (template == null) {
+						GetStandardTemplates(vegas);
+						GetTemplate(vegas, frameRateInt);
+						MessageBox.Show(
+							"Render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
+						return;
+					}
+
+					VideoTrack videoTrack = null;
+					for (var i = vegas.Project.Tracks.Count - 1; i >= 0; i--) {
+						videoTrack = vegas.Project.Tracks[i] as VideoTrack;
+						if (videoTrack != null) {
+							break;
+						}
+					}
+
+					AudioTrack audioTrack = null;
+					for (var i = 0; i < vegas.Project.Tracks.Count; i++) {
+						audioTrack = vegas.Project.Tracks[i] as AudioTrack;
+						if (audioTrack != null) {
+							break;
+						}
+					}
+
+					if (videoTrack == null && audioTrack == null) {
+						MessageBox.Show("No tracks found!");
+						return;
+					}
+
+					var finalFolder = (string)Registry.GetValue(
+						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+						"ClipFolder", ""); // RenderClipFolder
+					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
+						MessageBox.Show("Select the folder to put generated rendered clips into.\n" +
+							"(As they are stored uncompressed with alpha, they can take a lot of space (think 1 GB/minute). " +
+							"Choose a location with a lot of available space and go remove some clips there if you need space.)");
+						return;
+					}
+
+					var path = System.IO.Path.Combine(finalFolder, System.IO.Path.GetFileNameWithoutExtension(vegas.Project.FilePath) +
+						"-" + Guid.NewGuid().ToString("B").ToUpper().Substring(1, 8) + ".avi");
+
+					var renderArgs = new RenderArgs {
+						OutputFile = path,
+						Start = Timecode.FromFrames(start.FrameCount),
+						Length = Timecode.FromFrames(length.FrameCount),
+						RenderTemplate = template
+					};
+					var status = vegas.Render(renderArgs);
+					if (status != RenderStatus.Complete) {
+						MessageBox.Show("Unexpected render status: " + status);
+						return;
+					}
+
+					File.Delete(path + ".sfl");
+
+					var media = vegas.Project.MediaPool.AddMedia(path);
+
+					VideoEvent videoEvent = null;
+					if (videoTrack != null) {
+						videoEvent =
+							videoTrack.AddVideoEvent(start, length);
+						((VideoStream)videoEvent.AddTake(media.GetVideoStreamByIndex(0)).MediaStream).AlphaChannel =
+							VideoAlphaType.Straight;
+					}
+
+					AudioEvent audioEvent = null;
+					if (audioTrack != null) {
+						audioEvent =
+							audioTrack.AddAudioEvent(start, length);
+						audioEvent.AddTake(media.GetAudioStreamByIndex(0));
+					}
+
+					if (videoTrack != null && audioTrack != null) {
+						var group = new TrackEventGroup();
+						vegas.Project.Groups.Add(group);
+						group.Add(videoEvent);
+						group.Add(audioEvent);
+					}
+
+				} catch (Exception e) {
+					MessageBox.Show("Unexpected exception: " + e.Message);
+					Debug.WriteLine(e);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Scrambles clips/events quickly and automatically.
+		/// </summary>
+		public class Scramble {
+			private static readonly Random Random = new Random();
+
+			public void FromVegas(Vegas vegas) {
+				var events = vegas.Project.Tracks
+					.SelectMany(track => track.Events)
+					.Where(t => t.Selected)
+					.GroupBy(
+					t => new {
+						StartFrameCount = t.Start.FrameCount,
+						LengthFrameCount = t.Length.FrameCount
+					})
+					.Select(grp => grp.ToList())
+					.ToList();
+
+				var prompt = new Form {
+					Width = 500,
+					Height = 110,
+					Text = "Scrambling Parameters"
+				};
+				var textLabel = new Label { Left = 10, Top = 10, Text = "Scramble size" };
+				var inputBox = new NumericUpDown {
+					Left = 200,
+					Top = 10,
+					Width = 200,
+					Minimum = 1,
+					Maximum = 1000000000,
+					Text = ""
+				};
+				var confirmation = new Button { Text = "OK", Left = 200, Width = 100, Top = 40 };
+				confirmation.Click += (sender, e) => {
+					prompt.DialogResult = DialogResult.OK;
+					prompt.Close();
+				};
+				prompt.Controls.Add(confirmation);
+				prompt.Controls.Add(textLabel);
+				prompt.Controls.Add(inputBox);
+				inputBox.Select();
+				prompt.AcceptButton = confirmation;
+				if (prompt.ShowDialog() != DialogResult.OK) {
+					return;
+				}
+
+				var size = (int)inputBox.Value;
+
+				if (size <= 0) {
+					MessageBox.Show("Scrambling size must be > 0!");
+					return;
+				}
+
+				try {
+					foreach (var e in events) {
+						var order = new List<int>();
+						var startFrameCount = e[0].Start.FrameCount;
+						var endFrameCount = e[0].End.FrameCount;
+						var n = (int)(endFrameCount - startFrameCount);
+						var l = n / size;
+						if (l == 0)
+							continue;
+						if (n % size != 0) {
+							++l;
+						}
+						for (var i = 0; i < l; i++) {
+							order.Add(i);
+						}
+
+
+						for (var i = 0; i < l - 1; i++) {
+							var k = i + 1 + Random.Next(l - i - 1);
+							var v = order[k];
+							order[k] = order[i];
+							order[i] = v;
+						}
+
+						foreach (var evt in e) {
+							int offset;
+							for (var i = l - 1; i > 0; i--) {
+								var other = evt.Split(Timecode.FromFrames(i * size));
+								offset = order[i] > order[l - 1] ? -(size - n % size) : 0;
+								other.Start = Timecode.FromFrames(startFrameCount + offset + order[i] * size);
+							}
+							offset = order[0] > order[l - 1] ? -(size - n % size) : 0;
+							evt.Start = Timecode.FromFrames(startFrameCount + offset + order[0] * size);
+						}
+					}
+				} catch (Exception e) {
+					MessageBox.Show("Unexpected exception: " + e.Message);
+					Debug.WriteLine(e);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Stutters clips/events (play forward, backward, ...).
+		/// </summary>
+		public class Stutter {
+			private static readonly Random Random = new Random();
+
+			private static int Rand(int bound, double power) {
+				return (int)Math.Pow(Random.Next((int)Math.Pow(bound, 1 / power)), power);
+			}
+
+			public void FromVegas(Vegas vegas) {
+				var events = vegas.Project.Tracks
+					.SelectMany(track => track.Events)
+					.Where(t => t.Selected)
+					.GroupBy(
+					t => new {
+						StartFrameCount = t.Start.FrameCount,
+						LengthFrameCount = t.Length.FrameCount
+					})
+					.Select(grp => grp.ToList())
+					.ToList();
+				if (events.Count == 0) {
+					return;
+				}
+
+				var prompt = new Form {
+					Width = 500,
+					Height = 140,
+					Text = "Stutter Parameters"
+				};
+				var lengthLabel = new Label { Left = 10, Top = 10, Text = "Length in seconds" };
+				var lengthInput = new NumericUpDown {
+					Left = 200,
+					Top = 10,
+					Width = 200,
+					Minimum = 0,
+					Maximum = 10000,
+					Text = ""
+				};
+				var powLabel = new Label { Left = 10, Top = 40, Text = "Stutter window bias" };
+				var powInput = new NumericUpDown {
+					Left = 200,
+					Top = 40,
+					Width = 200,
+					Minimum = 0,
+					Maximum = 100,
+					Text = "1.2"
+				};
+				var confirmation = new Button { Text = "OK", Left = 200, Width = 100, Top = 70 };
+				confirmation.Click += (sender, e) => {
+					prompt.DialogResult = DialogResult.OK;
+					prompt.Close();
+				};
+				prompt.Controls.Add(confirmation);
+				prompt.Controls.Add(lengthLabel);
+				prompt.Controls.Add(lengthInput);
+				prompt.Controls.Add(powLabel);
+				prompt.Controls.Add(powInput);
+				lengthInput.Select();
+				prompt.AcceptButton = confirmation;
+				if (prompt.ShowDialog() != DialogResult.OK) {
+					return;
+				}
+
+				var size = (int)((double)lengthInput.Value * vegas.Project.Video.FrameRate);
+				if (size <= 0) {
+					MessageBox.Show("Length must be > 0!");
+					return;
+				}
+				var power = (double)powInput.Value;
+				if (power <= 0) {
+					MessageBox.Show("Window bias must be > 0!");
+					return;
+				}
+
+				try {
+					foreach (var e in events) {
+						var reverseClips = new List<Subclip>(e.Count);
+						foreach (var evt in e) {
+							foreach (var media in vegas.Project.MediaPool) {
+								if (!(media is Subclip)) {
+									continue;
+								}
+								var clip = media as Subclip;
+								if (!clip.IsReversed || clip.ParentMedia != evt.ActiveTake.Media || clip.Length != evt.ActiveTake.Media.Length) {
+									continue;
+								}
+								reverseClips.Add(clip);
+								goto outer;
+							}
+							if (evt.ActiveTake.Media.FilePath == null) {
+								MessageBox.Show("Stutter cannot automatically generate reverse clips for media generated from media generators (text, ...). Please create their reverse clips by reversing them and reversing them back, or render to a file first (for example using the Render script).");
+								return;
+							}
+							reverseClips.Add(new Subclip(evt.ActiveTake.Media.FilePath, Timecode.FromFrames(0), evt.ActiveTake.Media.Length, true, evt.ActiveTake.Media.Title + " (reversed)"));
+						outer:
+							;
+						}
+						var startFrameCount = (int)e[0].Start.FrameCount;
+						var endFrameCount = (int)e[0].End.FrameCount;
+						var max = endFrameCount - startFrameCount;
+						var cur = 0;
+						var reverse = false;
+						for (var total = startFrameCount; total < startFrameCount + size; reverse = !reverse) {
+							int dur;
+							if (!reverse) {
+								dur = 1 + Rand(max - cur, power);
+							} else {
+								dur = 1 + Rand(cur, power);
+							}
+
+							var i = -1;
+							foreach (var evt in e) {
+								i++;
+								var clip = evt.Copy(evt.Track, Timecode.FromFrames(total));
+								clip.Length = Timecode.FromFrames(dur);
+								if (!reverse) {
+									clip.ActiveTake.Offset = Timecode.FromFrames(evt.ActiveTake.Offset.FrameCount + cur);
+								} else {
+									var reverseClip = reverseClips[i];
+									var take = clip.AddTake(reverseClip.Streams[clip.ActiveTake.MediaStream.Index], true);
+									take.Offset = Timecode.FromFrames((long)(evt.ActiveTake.MediaStream.Length.FrameCount / evt.PlaybackRate) - (evt.ActiveTake.Offset.FrameCount + cur));
+								}
+							}
+
+							if (!reverse) {
+								cur += dur;
+							} else {
+								cur -= dur;
+							}
+							total += dur;
+						}
+
+						foreach (var evt in e) {
+							evt.Track.Events.Remove(evt);
+						}
+					}
+				} catch (Exception e) {
+					MessageBox.Show("Unexpected exception: " + e.Message);
+					Debug.WriteLine(e);
+				}
+			}
+		}
+
+		public static class Template {
+			public enum Mode {
+				Uncompressed,
+				UncomprAlpha,
+			}
+
+			public static RenderTemplate GetTemplate(Vegas vegas, int frameRate, Mode mode) {
+				if (frameRate >= 100 * 1000) {
+					throw new ArgumentException("Frame rate must be < 100!");
+				}
+
+				var frameString = (frameRate / 1000).ToString("00") + "." + (frameRate % 1000).ToString("000");
+				var name = (mode == Mode.Uncompressed ? "Uncompressed " : "UncomprAlpha ") + frameString;
+				var template = vegas.Renderers.FindByRendererID(0).Templates
+					.FindByName(name);
+				if (template != null) {
+					return template;
+				}
+
+				var appData = Environment.GetEnvironmentVariable("APPDATA");
+				if (appData == null) {
+					throw new IOException("APPDATA not set!");
+				}
+
+				var folder = System.IO.Path.Combine(appData, "Sony", "Render Templates", "avi");
+				Directory.CreateDirectory(folder);
+				var file = System.IO.Path.Combine(folder, name + ".sft2");
+				if (File.Exists(file)) {
+					return null;
+				}
+
+				using (var writer = new BinaryWriter(new FileStream(file, FileMode.Create, FileAccess.Write))) {
+					writer.Write(Array1(), 0, Array1().Length);
+					var guid = Guid.NewGuid().ToByteArray();
+					writer.Write(guid, 0, guid.Length);
+					writer.Write(Array2(mode), 0, Array2(mode).Length);
+					writer.Write((double)frameRate / 1000);
+					writer.Write(Array3(mode), 0, Array3(mode).Length);
+					var chars = frameString.ToCharArray();
+					foreach (var ch in chars) {
+						writer.Write((byte)ch);
+						writer.Write((byte)0x00);
+					}
+
+					writer.Write(Array4(), 0, Array4().Length);
+					return null;
+				}
+			}
+
+			public static void GetStandardTemplates(Vegas vegas, Mode mode) {
+				GetTemplate(vegas, 12000, mode);
+				GetTemplate(vegas, 12500, mode);
+				GetTemplate(vegas, 14000, mode);
+				GetTemplate(vegas, 14985, mode);
+				GetTemplate(vegas, 15000, mode);
+				GetTemplate(vegas, 16000, mode);
+				GetTemplate(vegas, 23976, mode);
+				GetTemplate(vegas, 24000, mode);
+				GetTemplate(vegas, 25000, mode);
+				GetTemplate(vegas, 29970, mode);
+				GetTemplate(vegas, 30000, mode);
+				GetTemplate(vegas, 50000, mode);
+				GetTemplate(vegas, 59940, mode);
+				GetTemplate(vegas, 60000, mode);
+			}
+
+			private static byte[] Array1() {
+				return new byte[] {
+					0x42, 0x02, 0x00, 0x00, 0x02, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x7b, 0x28, 0x9d, 0xea, 0x5a, 0xc8, 0xd3, 0x11, 0xbb, 0x3a, 0x00, 0x50, 0xda, 0x1a,
+					0x5b, 0x06
+				};
+			}
+
+			private static byte[] Array2(Mode mode) {
+				return new byte[] {
+					0xc8, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00,
+					0x00, 0x11, 0x00, 0x00, 0x00, 0x80, 0xbb, 0x00, 0x00, 0x02, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xee, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc8, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x28,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, (byte)(mode == Mode.Uncompressed ? 0x18 : 0x20), 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+				};
+			}
+
+			private static byte[] Array3(Mode mode) {
+				return mode == Mode.Uncompressed ? new byte[] {
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x44,
+					0x49, 0x42, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xd0, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x55,
+					0x00, 0x6e, 0x00, 0x63, 0x00, 0x6f, 0x00, 0x6d, 0x00, 0x70, 0x00, 0x72, 0x00, 0x65, 0x00, 0x73, 0x00, 0x73, 0x00,
+					0x65, 0x00, 0x64, 0x00, 0x20, 0x00
+				} : new byte[] {
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x20, 0x00, 0x44,
+					0x49, 0x42, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xd0, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x55,
+					0x00, 0x6e, 0x00, 0x63, 0x00, 0x6f, 0x00, 0x6d, 0x00, 0x70, 0x00, 0x72, 0x00, 0x41, 0x00, 0x6c, 0x00, 0x70, 0x00,
+					0x68, 0x00, 0x61, 0x00, 0x20, 0x00
+				};
+			}
+
+			private static byte[] Array4() { return new byte[] { 0x00, 0x00, 0x00, 0x00 }; }
+		}
+	}
 
 	#region 其它自定义控件部分
 	partial class IntegerTrackWithBox {
@@ -5879,6 +7342,266 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 	}
 
+	#region Animation Resource
+	/// <summary>
+	/// Represents an animation for the <see cref="ProgressDialog"/> loaded from a Win32 resource.
+	/// </summary>
+	/// <threadsafety instance="false" static="true" />
+	public sealed class AnimationResource {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AnimationResource"/> class.
+		/// </summary>
+		/// <param name="resourceFile">The file containing the animation resource.</param>
+		/// <param name="resourceId">The resource ID of the animation resource.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="resourceFile"/> is <see langword="null"/>.</exception>
+		public AnimationResource(string resourceFile, int resourceId) {
+			if (resourceFile == null)
+				throw new ArgumentNullException("resourceFile");
+
+			ResourceFile = resourceFile;
+			ResourceId = resourceId;
+		}
+
+		/// <summary>
+		/// Gets the name of the file containing the animation resource.
+		/// </summary>
+		/// <value>
+		/// The name of the file containing the animation resource. This is typically a DLL or EXE file.
+		/// </value>
+		public string ResourceFile { get; private set; }
+
+		/// <summary>
+		/// Gets the ID of the animation resource.
+		/// </summary>
+		/// <value>
+		/// The ID of the animation resource.
+		/// </value>
+		public int ResourceId { get; private set; }
+
+		/// <summary>
+		/// Gets a default animation from shell32.dll.
+		/// </summary>
+		/// <param name="animation">The animation to get.</param>
+		/// <returns>An instance of the <see cref="AnimationResource"/> class representing the specified animation.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">The <paramref name="animation"/> parameter was not a value defined in the
+		/// <see cref="ShellAnimation"/> enumeration.</exception>
+		public static AnimationResource GetShellAnimation(ShellAnimation animation) {
+			if (!Enum.IsDefined(typeof(ShellAnimation), animation))
+				throw new ArgumentOutOfRangeException("animation");
+
+			return new AnimationResource("shell32.dll", (int)animation);
+		}
+
+		internal SafeModuleHandle LoadLibrary() {
+			SafeModuleHandle handle = LoadLibraryEx(ResourceFile, IntPtr.Zero, LoadLibraryExFlags.LoadLibraryAsDatafile);
+			if (handle.IsInvalid) {
+				int error = Marshal.GetLastWin32Error();
+				if (error == ErrorFileNotFound)
+					throw new FileNotFoundException(ResourceFile);
+				else
+					throw new Win32Exception(error);
+			}
+
+			return handle;
+		}
+		public const int ErrorFileNotFound = 2;
+
+		[DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
+		public static extern SafeModuleHandle LoadLibraryEx(
+			string lpFileName,
+			IntPtr hFile,
+			LoadLibraryExFlags dwFlags
+			);
+
+		[Flags]
+		public enum LoadLibraryExFlags : uint {
+			DontResolveDllReferences = 0x00000001,
+			LoadLibraryAsDatafile = 0x00000002,
+			LoadWithAlteredSearchPath = 0x00000008,
+			LoadIgnoreCodeAuthzLevel = 0x00000010
+		}
+	}
+
+	/// <summary>
+	/// Resource identifiers for default animations from shell32.dll.
+	/// </summary>
+	public enum ShellAnimation {
+		/// <summary>
+		/// An animation representing a file move.
+		/// </summary>
+		FileMove = 160,
+		/// <summary>
+		/// An animation representing a file copy.
+		/// </summary>
+		FileCopy = 161,
+		/// <summary>
+		/// An animation showing flying papers.
+		/// </summary>
+		FlyingPapers = 165,
+		/// <summary>
+		/// An animation showing a magnifying glass over a globe.
+		/// </summary>
+		SearchGlobe = 166,
+		/// <summary>
+		/// An animation representing a permament delete.
+		/// </summary>
+		PermanentDelete = 164,
+		/// <summary>
+		/// An animation representing deleting an item from the recycle bin.
+		/// </summary>
+		FromRecycleBinDelete = 163,
+		/// <summary>
+		/// An animation representing a file move to the recycle bin.
+		/// </summary>
+		ToRecycleBinDelete = 162,
+		/// <summary>
+		/// An animation representing a search spanning the local computer.
+		/// </summary>
+		SearchComputer = 152,
+		/// <summary>
+		/// An animation representing a search in a document..
+		/// </summary>
+		SearchDocument = 151,
+		/// <summary>
+		/// An animation representing a search using a flashlight animation.
+		/// </summary>
+		SearchFlashlight = 150,
+	}
+
+	public class SafeModuleHandle : SafeHandle {
+		public SafeModuleHandle() : base(IntPtr.Zero, true) {
+		}
+
+		public override bool IsInvalid {
+			get { return handle == IntPtr.Zero; }
+		}
+
+		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
+		protected override bool ReleaseHandle() {
+			return FreeLibrary(handle);
+		}
+
+		[DllImport("kernel32", SetLastError = true),
+		ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static extern bool FreeLibrary(IntPtr hModule);
+	}
+
+	internal static class IIDGuid {
+		internal const string IModalWindow = "b4db1657-70d7-485e-8e3e-6fcb5a5c1802";
+		internal const string IFileDialog = "42f85136-db7e-439c-85f1-e4075d135fc8";
+		internal const string IFileOpenDialog = "d57c7288-d4ad-4768-be02-9d969532d960";
+		internal const string IFileSaveDialog = "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
+		internal const string IFileDialogEvents = "973510DB-7D7F-452B-8975-74A85828D354";
+		internal const string IFileDialogControlEvents = "36116642-D713-4b97-9B83-7484A9D00433";
+		internal const string IFileDialogCustomize = "e6fdd21a-163f-4975-9c8c-a69f1ba37034";
+		internal const string IShellItem = "43826D1E-E718-42EE-BC55-A1E261C37BFE";
+		internal const string IShellItemArray = "B63EA76D-1F85-456F-A19C-48159EFA858B";
+		internal const string IKnownFolder = "38521333-6A87-46A7-AE10-0F16706816C3";
+		internal const string IKnownFolderManager = "44BEAAEC-24F4-4E90-B3F0-23D258FBB146";
+		internal const string IPropertyStore = "886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99";
+		internal const string IProgressDialog = "EBBC7C04-315E-11d2-B62F-006097DF5BD4";
+	}
+
+	internal static class CLSIDGuid {
+		internal const string FileOpenDialog = "DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7";
+		internal const string FileSaveDialog = "C0B4E2F3-BA21-4773-8DBA-335EC946EB8B";
+		internal const string KnownFolderManager = "4df0c730-df9d-4ae3-9153-aa6b82e9795a";
+		internal const string ProgressDialog = "F8383852-FCD3-11d1-A6B9-006097DF5BD4";
+	}
+
+	[ComImport]
+	[Guid(CLSIDGuid.ProgressDialog)]
+	internal class ProgressDialogRCW {
+	}
+
+	[ComImport,
+	Guid(IIDGuid.IProgressDialog),
+	CoClass(typeof(ProgressDialogRCW))]
+	internal interface ProgressDialog : IProgressDialog {
+	}
+
+	[Flags]
+	internal enum ProgressDialogFlags : uint {
+		Normal = 0x00000000,
+		Modal = 0x00000001,
+		AutoTime = 0x00000002,
+		NoTime = 0x00000004,
+		NoMinimize = 0x00000008,
+		NoProgressBar = 0x00000010,
+		MarqueeProgress = 0x00000020,
+		NoCancel = 0x00000040
+	}
+
+	[ComImport]
+	[Guid(IIDGuid.IProgressDialog)]
+	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+	internal interface IProgressDialog {
+
+		[PreserveSig]
+		void StartProgressDialog(
+			IntPtr hwndParent,
+			[MarshalAs(UnmanagedType.IUnknown)]
+			object punkEnableModless,
+			ProgressDialogFlags dwFlags,
+			IntPtr pvResevered
+			);
+
+		[PreserveSig]
+		void StopProgressDialog();
+
+		[PreserveSig]
+		void SetTitle(
+			[MarshalAs(UnmanagedType.LPWStr)]
+			string pwzTitle
+			);
+
+		[PreserveSig]
+		void SetAnimation(
+			SafeModuleHandle hInstAnimation,
+			ushort idAnimation
+			);
+
+		[PreserveSig]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		bool HasUserCancelled();
+
+		[PreserveSig]
+		void SetProgress(
+			uint dwCompleted,
+			uint dwTotal
+			);
+		[PreserveSig]
+		void SetProgress64(
+			ulong ullCompleted,
+			ulong ullTotal
+			);
+
+		[PreserveSig]
+		void SetLine(
+			uint dwLineNum,
+			[MarshalAs(UnmanagedType.LPWStr)]
+			string pwzString,
+			[MarshalAs(UnmanagedType.VariantBool)]
+			bool fCompactPath,
+			IntPtr pvResevered
+			);
+
+		[PreserveSig]
+		void SetCancelMsg(
+			[MarshalAs(UnmanagedType.LPWStr)]
+			string pwzCancelMsg,
+			object pvResevered
+			);
+
+		[PreserveSig]
+		void Timer(
+			uint dwTimerAction,
+			object pvResevered
+			);
+	}
+	#endregion
+
 	partial class ProgressForm {
 		/// <summary>
 		/// Required designer variable.
@@ -6057,11 +7780,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	}
 
 	public partial class ProgressForm : Form, IInterpret {
+		private AnimationResource Animation;
+		private SafeModuleHandle _currentAnimationModuleHandle;
+		private IProgressDialog _dialog;
+
 		public ProgressForm() {
 			InitializeComponent();
 			Icon = ConfigForm.icon;
-			ProgressBar.Style = ProgressBarStyle.Marquee;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
+			//ProgressBar.Style = ProgressBarStyle.Marquee;
 			Translate();
+			Animation = AnimationResource.GetShellAnimation(ShellAnimation.FlyingPapers);
+			FormClosed += (sender, e) => Close();
+		}
+
+		public new void Show() {
+			//base.Show();
+			LoadAnimation();
+		}
+
+		private new void Close() {
+			if (_dialog != null) {
+				_dialog.StopProgressDialog();
+				Marshal.ReleaseComObject(_dialog);
+				_dialog = null;
+			}
+			if (_currentAnimationModuleHandle != null) {
+				_currentAnimationModuleHandle.Dispose();
+				_currentAnimationModuleHandle = null;
+			}
 		}
 
 		private void CancelBtn_Click(object sender, EventArgs e) {
@@ -6073,14 +7820,24 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public int Minimum { get { return ProgressBar.Minimum; } }
 		public int Maximum { get { return ProgressBar.Maximum; } }
 
-		public void ReportProgress(int value) {
+		private void _ReportProgress(int value) {
 			if (value < Minimum) value = Minimum;
 			if (value > Maximum) value = Maximum;
-			if (value == 0) ProgressBar.Style = ProgressBarStyle.Marquee;
-			else ProgressBar.Style = ProgressBarStyle.Blocks;
-			ProgressBar.Value = value;
-			PercentLabel.Text = value + "%";
-			_Update();
+			//if (value == 0) ProgressBar.Style = ProgressBarStyle.Marquee;
+			//else ProgressBar.Style = ProgressBarStyle.Blocks;
+			//ProgressBar.Value = value;
+			if (_dialog == null) return;
+			_dialog.SetProgress((uint)value, 100);
+			if (_dialog.HasUserCancelled()) {
+				CancelBtn_Click(null, null);
+				return;
+			}
+		}
+
+		public void ReportProgress(int value) {
+			_ReportProgress(value);
+			ProgressText = value + "%";
+			//_Update();
 		}
 
 		public void ReportProgress(double value) {
@@ -6089,13 +7846,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		public void ReportProgress(int current, int length) {
 			int value = (int)Math.Round(100.0 * current / length);
-			if (value < Minimum) value = Minimum;
-			if (value > Maximum) value = Maximum;
-			if (value == 0) ProgressBar.Style = ProgressBarStyle.Marquee;
-			else ProgressBar.Style = ProgressBarStyle.Blocks;
-			ProgressBar.Value = value;
-			PercentLabel.Text = current + " / " + length;
-			_Update();
+			_ReportProgress(value);
+			ProgressText = current + " / " + length;
+			//_Update();
 		}
 
 		private void _Update() {
@@ -6106,18 +7859,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			PercentLabel.Refresh();
 		}
 
+		/// <summary>
+		/// A short description of the operation being carried out.
+		/// </summary>
+		public string ProgressText {
+			get { return PercentLabel.Text ?? string.Empty; }
+			set {
+				PercentLabel.Text = value;
+				if (_dialog != null)
+					_dialog.SetLine(1, ProgressText, false, IntPtr.Zero);
+			}
+		}
+
 		public int Progress {
 			get { return ProgressBar.Value; }
 			set { ReportProgress(value); }
 		}
 
+		/// <summary>
+		/// Additional details about the operation being carried out.
+		/// </summary>
 		public string Info {
-			get { return InfoLabel.Text; }
+			get { return InfoLabel.Text ?? Lang.str.processing_otomad; }
 			set {
 				if (Info == value) return;
 				InfoLabel.Text = value != "" ? value : Lang.str.processing_otomad;
-				InfoLabel.Update();
-				InfoLabel.Refresh();
+				//InfoLabel.Update();
+				//InfoLabel.Refresh();
+				if (_dialog != null)
+					_dialog.SetLine(2, Info, false, IntPtr.Zero);
 			}
 		}
 
@@ -6127,6 +7897,29 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Text = str.processing_it;
 			InfoLabel.Text = Lang.str.processing_otomad;
 			RealTimeUpdateCheck.Text = Lang.str.real_time_update;
+		}
+
+		private void LoadAnimation() {
+			if (Animation != null) {
+				try {
+					_currentAnimationModuleHandle = Animation.LoadLibrary();
+				} catch (Exception ex) {
+					throw new InvalidOperationException("Unsupport system.", ex);
+				}
+			}
+			_dialog = new ProgressDialog();
+			_dialog.SetTitle(Lang.str.processing_it);
+			if (Animation != null)
+				_dialog.SetAnimation(_currentAnimationModuleHandle, (ushort)Animation.ResourceId);
+			_dialog.SetLine(1, Text, false, IntPtr.Zero);
+			_dialog.SetLine(2, Info, false, IntPtr.Zero);
+			if (Animation != null)
+				_dialog.SetAnimation(_currentAnimationModuleHandle, (ushort)Animation.ResourceId);
+			ProgressDialogFlags flags = ProgressDialogFlags.Normal;
+			if (ProgressBar.Style == ProgressBarStyle.Marquee) flags |= ProgressDialogFlags.MarqueeProgress;
+			flags |= ProgressDialogFlags.AutoTime;
+			flags |= ProgressDialogFlags.NoMinimize;
+			_dialog.StartProgressDialog(IntPtr.Zero, null, flags, IntPtr.Zero);
 		}
 	}
 
@@ -6968,9 +8761,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			((Action)ReadIni).OnErrorBreak();
 			Translate();
-			//Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
 			events = parent.GetSelectedEvents();
 			separation = new SeparationSpecifier(this);
 			if (!FindReplacer() || validTracks.Count == 0) {
@@ -7543,19 +9336,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.ApplyBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 270);
+			this.dock.Location = new System.Drawing.Point(0, 281);
 			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(680, 52);
+			this.dock.Size = new System.Drawing.Size(682, 52);
 			this.dock.TabIndex = 7;
 			// 
 			// ApplyBtn
 			// 
 			this.ApplyBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ApplyBtn.Location = new System.Drawing.Point(472, 10);
+			this.ApplyBtn.Location = new System.Drawing.Point(474, 10);
 			this.ApplyBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.ApplyBtn.Name = "ApplyBtn";
 			this.ApplyBtn.Size = new System.Drawing.Size(94, 32);
@@ -7568,7 +9361,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(574, 10);
+			this.CancelBtn.Location = new System.Drawing.Point(576, 10);
 			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
@@ -7606,7 +9399,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.table.Size = new System.Drawing.Size(680, 240);
+			this.table.Size = new System.Drawing.Size(682, 240);
 			this.table.TabIndex = 8;
 			// 
 			// SubmitSelectBtn
@@ -7749,7 +9542,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SelectIntervalLbl.Location = new System.Drawing.Point(12, 16);
 			this.SelectIntervalLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 8);
 			this.SelectIntervalLbl.Name = "SelectIntervalLbl";
-			this.SelectIntervalLbl.Size = new System.Drawing.Size(656, 40);
+			this.SelectIntervalLbl.Size = new System.Drawing.Size(658, 40);
 			this.SelectIntervalLbl.TabIndex = 5;
 			this.SelectIntervalLbl.Text = "请先在 Vegas 轨道中选中一些素材，然后再打开本对话框，使用下面的功能。\r\n本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴事件属性”等操作。" +
 	"";
@@ -7763,7 +9556,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SelectInfo.Location = new System.Drawing.Point(12, 64);
 			this.SelectInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 4);
 			this.SelectInfo.Name = "SelectInfo";
-			this.SelectInfo.Size = new System.Drawing.Size(656, 20);
+			this.SelectInfo.Size = new System.Drawing.Size(658, 20);
 			this.SelectInfo.TabIndex = 6;
 			this.SelectInfo.Text = "已选中 0 个轨道剪辑。";
 			this.SelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -7775,7 +9568,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(680, 322);
+			this.ClientSize = new System.Drawing.Size(682, 333);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
@@ -7821,11 +9614,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private readonly EntryPoint parent;
 		private TrackEvent[] events;
 		private Vegas vegas { get { return parent.vegas; } }
-		internal const int MARGIN = 40;
+		internal const int MARGIN = 60;
 		public SelectIntervalForm(EntryPoint entryPoint) {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			Height = table.Height + dock.Height + MARGIN;
 			SubmitSelectBtn_Click(null, null);
@@ -8503,6 +10297,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			parent = entryPoint;
 			this.info = info;
 			Icon = ConfigForm.icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
 			CustomGroup.Enabled = false;
@@ -8803,8 +10598,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(372, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.OkBtn.Location = new System.Drawing.Point(374, 10);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(94, 32);
 			this.OkBtn.TabIndex = 1;
@@ -8816,8 +10611,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(474, 10);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.CancelBtn.Location = new System.Drawing.Point(476, 10);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
 			this.CancelBtn.TabIndex = 2;
@@ -8835,13 +10630,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 409);
-			this.dock.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.dock.Location = new System.Drawing.Point(0, 421);
+			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(580, 52);
+			this.dock.Size = new System.Drawing.Size(582, 52);
 			this.dock.TabIndex = 10;
 			// 
 			// table
@@ -8867,7 +10662,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.Controls.Add(this.UseVideoLongerSideCheck, 0, 8);
 			this.table.Dock = System.Windows.Forms.DockStyle.Top;
 			this.table.Location = new System.Drawing.Point(0, 0);
-			this.table.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.table.Margin = new System.Windows.Forms.Padding(5);
 			this.table.Name = "table";
 			this.table.Padding = new System.Windows.Forms.Padding(12, 14, 12, 14);
 			this.table.RowCount = 9;
@@ -8881,7 +10676,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.table.Size = new System.Drawing.Size(580, 388);
+			this.table.Size = new System.Drawing.Size(582, 388);
 			this.table.TabIndex = 12;
 			// 
 			// BottomCombo
@@ -8890,9 +10685,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.BottomCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.BottomCombo.FormattingEnabled = true;
 			this.BottomCombo.Location = new System.Drawing.Point(63, 274);
-			this.BottomCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.BottomCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.BottomCombo.Name = "BottomCombo";
-			this.BottomCombo.Size = new System.Drawing.Size(501, 28);
+			this.BottomCombo.Size = new System.Drawing.Size(503, 28);
 			this.BottomCombo.TabIndex = 12;
 			this.BottomCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -8902,9 +10697,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TopCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.TopCombo.FormattingEnabled = true;
 			this.TopCombo.Location = new System.Drawing.Point(63, 238);
-			this.TopCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.TopCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.TopCombo.Name = "TopCombo";
-			this.TopCombo.Size = new System.Drawing.Size(501, 28);
+			this.TopCombo.Size = new System.Drawing.Size(503, 28);
 			this.TopCombo.TabIndex = 11;
 			this.TopCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -8914,9 +10709,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.RightCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.RightCombo.FormattingEnabled = true;
 			this.RightCombo.Location = new System.Drawing.Point(63, 202);
-			this.RightCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.RightCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.RightCombo.Name = "RightCombo";
-			this.RightCombo.Size = new System.Drawing.Size(501, 28);
+			this.RightCombo.Size = new System.Drawing.Size(503, 28);
 			this.RightCombo.TabIndex = 10;
 			this.RightCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -8926,9 +10721,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.LeftCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.LeftCombo.FormattingEnabled = true;
 			this.LeftCombo.Location = new System.Drawing.Point(63, 166);
-			this.LeftCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.LeftCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.LeftCombo.Name = "LeftCombo";
-			this.LeftCombo.Size = new System.Drawing.Size(501, 28);
+			this.LeftCombo.Size = new System.Drawing.Size(503, 28);
 			this.LeftCombo.TabIndex = 9;
 			this.LeftCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -8938,9 +10733,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.BackCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.BackCombo.FormattingEnabled = true;
 			this.BackCombo.Location = new System.Drawing.Point(63, 130);
-			this.BackCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.BackCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.BackCombo.Name = "BackCombo";
-			this.BackCombo.Size = new System.Drawing.Size(501, 28);
+			this.BackCombo.Size = new System.Drawing.Size(503, 28);
 			this.BackCombo.TabIndex = 8;
 			this.BackCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -9012,7 +10807,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.InfoLbl.Location = new System.Drawing.Point(16, 22);
 			this.InfoLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 8);
 			this.InfoLbl.Name = "InfoLbl";
-			this.InfoLbl.Size = new System.Drawing.Size(548, 60);
+			this.InfoLbl.Size = new System.Drawing.Size(550, 60);
 			this.InfoLbl.TabIndex = 0;
 			this.InfoLbl.Text = "由于脚本功能限制，将会新建轨道并将选定轨道中的剪辑移动过去，原轨道中的轨道运动、效果等信息将会丢失。\r\n请在下方选定立方体的各个面所使用的轨道，如果为空则表示不设" +
 	"定该面。";
@@ -9036,9 +10831,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FrontCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.FrontCombo.FormattingEnabled = true;
 			this.FrontCombo.Location = new System.Drawing.Point(63, 94);
-			this.FrontCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.FrontCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.FrontCombo.Name = "FrontCombo";
-			this.FrontCombo.Size = new System.Drawing.Size(501, 28);
+			this.FrontCombo.Size = new System.Drawing.Size(503, 28);
 			this.FrontCombo.TabIndex = 7;
 			this.FrontCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -9052,7 +10847,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DelOrigTrackCheck.Location = new System.Drawing.Point(16, 314);
 			this.DelOrigTrackCheck.Margin = new System.Windows.Forms.Padding(4, 8, 4, 4);
 			this.DelOrigTrackCheck.Name = "DelOrigTrackCheck";
-			this.DelOrigTrackCheck.Size = new System.Drawing.Size(548, 24);
+			this.DelOrigTrackCheck.Size = new System.Drawing.Size(550, 24);
 			this.DelOrigTrackCheck.TabIndex = 13;
 			this.DelOrigTrackCheck.Text = "删除原轨道";
 			this.DelOrigTrackCheck.UseVisualStyleBackColor = true;
@@ -9063,9 +10858,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.SetColumnSpan(this.UseVideoLongerSideCheck, 2);
 			this.UseVideoLongerSideCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.UseVideoLongerSideCheck.Location = new System.Drawing.Point(16, 346);
-			this.UseVideoLongerSideCheck.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.UseVideoLongerSideCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.UseVideoLongerSideCheck.Name = "UseVideoLongerSideCheck";
-			this.UseVideoLongerSideCheck.Size = new System.Drawing.Size(548, 24);
+			this.UseVideoLongerSideCheck.Size = new System.Drawing.Size(550, 24);
 			this.UseVideoLongerSideCheck.TabIndex = 14;
 			this.UseVideoLongerSideCheck.Text = "使用视频的长边作为立方体的棱长";
 			this.UseVideoLongerSideCheck.UseVisualStyleBackColor = true;
@@ -9077,13 +10872,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(580, 461);
+			this.ClientSize = new System.Drawing.Size(582, 473);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Location = new System.Drawing.Point(60, 60);
-			this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.Margin = new System.Windows.Forms.Padding(5);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AutoLayoutTracksBox3dForm";
@@ -9132,6 +10927,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
 			Lang str = Lang.str;
@@ -9513,6 +11309,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			parent = entryPoint;
 			this.info = info;
 			Icon = ConfigForm.icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			EffectsCombo.SelectedIndex = 0;
 			ReverseCheck.Checked = true;
@@ -9674,7 +11471,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(521, 10);
+			this.OkBtn.Location = new System.Drawing.Point(474, 10);
 			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(94, 32);
@@ -9687,7 +11484,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(623, 10);
+			this.CancelBtn.Location = new System.Drawing.Point(576, 10);
 			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
@@ -9706,13 +11503,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 258);
+			this.dock.Location = new System.Drawing.Point(0, 271);
 			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(729, 52);
+			this.dock.Size = new System.Drawing.Size(682, 52);
 			this.dock.TabIndex = 15;
 			// 
 			// table
@@ -9731,7 +11528,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.table.Size = new System.Drawing.Size(729, 240);
+			this.table.Size = new System.Drawing.Size(682, 248);
 			this.table.TabIndex = 17;
 			// 
 			// InfoLbl
@@ -9742,7 +11539,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.InfoLbl.Location = new System.Drawing.Point(12, 22);
 			this.InfoLbl.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
 			this.InfoLbl.Name = "InfoLbl";
-			this.InfoLbl.Size = new System.Drawing.Size(705, 20);
+			this.InfoLbl.Size = new System.Drawing.Size(658, 20);
 			this.InfoLbl.TabIndex = 0;
 			this.InfoLbl.Text = "仅支持音频事件属性中的调音方法，不支持“移调”插件中的调音方法。";
 			this.InfoLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -9756,7 +11553,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TimeStretchPitchShiftGroup.Margin = new System.Windows.Forms.Padding(4);
 			this.TimeStretchPitchShiftGroup.Name = "TimeStretchPitchShiftGroup";
 			this.TimeStretchPitchShiftGroup.Padding = new System.Windows.Forms.Padding(6);
-			this.TimeStretchPitchShiftGroup.Size = new System.Drawing.Size(697, 168);
+			this.TimeStretchPitchShiftGroup.Size = new System.Drawing.Size(650, 176);
 			this.TimeStretchPitchShiftGroup.TabIndex = 1;
 			this.TimeStretchPitchShiftGroup.TabStop = false;
 			this.TimeStretchPitchShiftGroup.Text = "时间拉伸/音调转换";
@@ -9784,17 +11581,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(685, 136);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(638, 144);
 			this.tableLayoutPanel2.TabIndex = 0;
 			// 
 			// FormantLockCheck
 			// 
 			this.FormantLockCheck.AutoSize = true;
-			this.FormantLockCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FormantLockCheck.Location = new System.Drawing.Point(96, 108);
+			this.FormantLockCheck.Dock = System.Windows.Forms.DockStyle.Left;
+			this.FormantLockCheck.Location = new System.Drawing.Point(96, 112);
 			this.FormantLockCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.FormantLockCheck.Name = "FormantLockCheck";
-			this.FormantLockCheck.Size = new System.Drawing.Size(585, 24);
+			this.FormantLockCheck.Size = new System.Drawing.Size(106, 28);
 			this.FormantLockCheck.TabIndex = 7;
 			this.FormantLockCheck.Text = "保持共振峰";
 			this.FormantLockCheck.UseVisualStyleBackColor = true;
@@ -9807,7 +11604,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StretchAttrCombo.Location = new System.Drawing.Point(96, 40);
 			this.StretchAttrCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.StretchAttrCombo.Name = "StretchAttrCombo";
-			this.StretchAttrCombo.Size = new System.Drawing.Size(585, 28);
+			this.StretchAttrCombo.Size = new System.Drawing.Size(538, 28);
 			this.StretchAttrCombo.TabIndex = 5;
 			this.StretchAttrCombo.SelectedIndexChanged += new System.EventHandler(this.MethodCombo_SelectedIndexChanged);
 			// 
@@ -9815,10 +11612,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.FormantChangeLbl.AutoSize = true;
 			this.FormantChangeLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FormantChangeLbl.Location = new System.Drawing.Point(4, 104);
+			this.FormantChangeLbl.Location = new System.Drawing.Point(4, 108);
 			this.FormantChangeLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.FormantChangeLbl.MinimumSize = new System.Drawing.Size(0, 36);
 			this.FormantChangeLbl.Name = "FormantChangeLbl";
-			this.FormantChangeLbl.Size = new System.Drawing.Size(84, 32);
+			this.FormantChangeLbl.Size = new System.Drawing.Size(84, 36);
 			this.FormantChangeLbl.TabIndex = 3;
 			this.FormantChangeLbl.Text = "共振峰移位";
 			this.FormantChangeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -9829,8 +11627,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PitchChangeLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PitchChangeLbl.Location = new System.Drawing.Point(4, 72);
 			this.PitchChangeLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.PitchChangeLbl.MinimumSize = new System.Drawing.Size(0, 36);
 			this.PitchChangeLbl.Name = "PitchChangeLbl";
-			this.PitchChangeLbl.Size = new System.Drawing.Size(84, 32);
+			this.PitchChangeLbl.Size = new System.Drawing.Size(84, 36);
 			this.PitchChangeLbl.TabIndex = 2;
 			this.PitchChangeLbl.Text = "音调更改";
 			this.PitchChangeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -9841,6 +11640,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StretchAttrLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.StretchAttrLbl.Location = new System.Drawing.Point(4, 36);
 			this.StretchAttrLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.StretchAttrLbl.MinimumSize = new System.Drawing.Size(0, 36);
 			this.StretchAttrLbl.Name = "StretchAttrLbl";
 			this.StretchAttrLbl.Size = new System.Drawing.Size(84, 36);
 			this.StretchAttrLbl.TabIndex = 1;
@@ -9853,6 +11653,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MethodLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MethodLbl.Location = new System.Drawing.Point(4, 0);
 			this.MethodLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.MethodLbl.MinimumSize = new System.Drawing.Size(0, 36);
 			this.MethodLbl.Name = "MethodLbl";
 			this.MethodLbl.Size = new System.Drawing.Size(84, 36);
 			this.MethodLbl.TabIndex = 0;
@@ -9871,7 +11672,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MethodCombo.Location = new System.Drawing.Point(96, 4);
 			this.MethodCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.MethodCombo.Name = "MethodCombo";
-			this.MethodCombo.Size = new System.Drawing.Size(585, 28);
+			this.MethodCombo.Size = new System.Drawing.Size(538, 28);
 			this.MethodCombo.TabIndex = 4;
 			this.MethodCombo.SelectedIndexChanged += new System.EventHandler(this.MethodCombo_SelectedIndexChanged);
 			// 
@@ -9890,7 +11691,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(593, 32);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(546, 36);
 			this.tableLayoutPanel1.TabIndex = 8;
 			// 
 			// LockPitchInsteadOfRateCheck
@@ -9898,11 +11699,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.LockPitchInsteadOfRateCheck.AutoSize = true;
 			this.LockPitchInsteadOfRateCheck.Checked = true;
 			this.LockPitchInsteadOfRateCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.LockPitchInsteadOfRateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LockPitchInsteadOfRateCheck.Dock = System.Windows.Forms.DockStyle.Left;
 			this.LockPitchInsteadOfRateCheck.Location = new System.Drawing.Point(118, 4);
 			this.LockPitchInsteadOfRateCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.LockPitchInsteadOfRateCheck.Name = "LockPitchInsteadOfRateCheck";
-			this.LockPitchInsteadOfRateCheck.Size = new System.Drawing.Size(471, 24);
+			this.LockPitchInsteadOfRateCheck.Size = new System.Drawing.Size(166, 28);
 			this.LockPitchInsteadOfRateCheck.TabIndex = 8;
 			this.LockPitchInsteadOfRateCheck.Text = "锁定音高而不是速度";
 			this.LockPitchInsteadOfRateCheck.UseVisualStyleBackColor = true;
@@ -9914,7 +11715,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PitchLockCheck.Location = new System.Drawing.Point(4, 4);
 			this.PitchLockCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.PitchLockCheck.Name = "PitchLockCheck";
-			this.PitchLockCheck.Size = new System.Drawing.Size(106, 24);
+			this.PitchLockCheck.Size = new System.Drawing.Size(106, 28);
 			this.PitchLockCheck.TabIndex = 7;
 			this.PitchLockCheck.Text = "锁定以拉伸";
 			this.PitchLockCheck.UseVisualStyleBackColor = true;
@@ -9926,7 +11727,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(729, 310);
+			this.ClientSize = new System.Drawing.Size(682, 323);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
@@ -9981,7 +11782,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
+			Width = 750;
 			Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
 			MethodCombo.SelectedIndex = 1;
 			MethodCombo_SelectedIndexChanged(null, null);
@@ -10421,6 +12224,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			this.DeleteSystemMenuItems(SystemMenuItemType.MINIMIZE);
 			Translate();
 			FormClosing += (sender, e) => SaveIni();
 			Plugin.Init(vegas);
@@ -10809,6 +12613,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			Icon = ConfigForm.icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			Translate();
 			((Action)ReadIni).OnErrorBreak();
 			selectedFirstEvent = parent.GetSelectedFirstEvents();
@@ -11360,6 +13165,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			InitializeComponent();
 			this.configForm = configForm;
 			Icon = configForm.Icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			Translate();
 			CheckNonEmpty(true);
 			channels = existChannel == null ? new MidiChannels() : new MidiChannels(existChannel);
@@ -11652,7 +13458,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 79);
+			this.dock.Location = new System.Drawing.Point(0, 97);
 			this.dock.Margin = new System.Windows.Forms.Padding(5);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
@@ -11699,27 +13505,29 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(416, 69);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(416, 83);
 			this.tableLayoutPanel1.TabIndex = 9;
 			// 
 			// IncreaseSpacingLbl
 			// 
 			this.IncreaseSpacingLbl.AutoSize = true;
 			this.IncreaseSpacingLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.IncreaseSpacingLbl.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F);
+			this.IncreaseSpacingLbl.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(51)))), ((int)(((byte)(153)))));
 			this.IncreaseSpacingLbl.Location = new System.Drawing.Point(10, 10);
-			this.IncreaseSpacingLbl.Margin = new System.Windows.Forms.Padding(0, 0, 0, 6);
+			this.IncreaseSpacingLbl.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
 			this.IncreaseSpacingLbl.Name = "IncreaseSpacingLbl";
-			this.IncreaseSpacingLbl.Size = new System.Drawing.Size(396, 20);
+			this.IncreaseSpacingLbl.Size = new System.Drawing.Size(396, 28);
 			this.IncreaseSpacingLbl.TabIndex = 0;
 			this.IncreaseSpacingLbl.Text = "在指定的剪辑之间增加的间隙时间：";
 			this.IncreaseSpacingLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// IncreaseSpacingText
 			// 
-			this.IncreaseSpacingText.Dock = System.Windows.Forms.DockStyle.Left;
-			this.IncreaseSpacingText.Location = new System.Drawing.Point(13, 39);
+			this.IncreaseSpacingText.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.IncreaseSpacingText.Location = new System.Drawing.Point(13, 53);
 			this.IncreaseSpacingText.Name = "IncreaseSpacingText";
-			this.IncreaseSpacingText.Size = new System.Drawing.Size(200, 27);
+			this.IncreaseSpacingText.Size = new System.Drawing.Size(390, 27);
 			this.IncreaseSpacingText.TabIndex = 1;
 			this.IncreaseSpacingText.Leave += new System.EventHandler(this.IncreaseSpacingText_Leave);
 			// 
@@ -11730,7 +13538,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(416, 131);
+			this.ClientSize = new System.Drawing.Size(416, 149);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
@@ -11738,6 +13546,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "IncreaseSpacingDialog";
+			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "增加间隙";
@@ -11766,6 +13575,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			InitializeComponent();
 			this.configForm = configForm;
 			Icon = configForm.Icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			ReadIni();
 			FormClosing += (sender, e) => SaveIni();
@@ -12025,6 +13835,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			InitializeComponent();
 			this.parent = parent;
 			Icon = configForm.Icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			for (int i = 0; i < PrveLength; i++)
 				VideoEffectCombo.Items.Add(configForm.VideoEffectCombo.Items[i]);
@@ -12247,6 +14058,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			InitializeComponent();
 			this.configForm = configForm;
 			Icon = configForm.Icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			Translate();
 			int groupIndex = 0;
 			PrveValues existPrves = null;
@@ -13253,9 +15065,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private IntPtr hWndRed = IntPtr.Zero; // handles to TextBoxes
 		private IntPtr hWndGreen = IntPtr.Zero;
 		private IntPtr hWndBlue = IntPtr.Zero;
+		private byte? alphaBackup = 255;
+		private System.Windows.Forms.Timer windowDragTimer = new System.Windows.Forms.Timer { Interval = 10 };
 
 		public AlphaColorDialog() {
 			btnAlpha.Click += btnAlpha_Click;
+			windowDragTimer.Tick += WindowDragTimer_Tick;
 		}
 
 		///<summary>The handle for the ColorDialog window.</summary>
@@ -13278,12 +15093,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Size sz = dialogAlpha.Size;
 				RECT r = new RECT();
 				GetWindowRect(handle, ref r);
-				dialogAlpha.Location = new Point(r.Left + ((r.Right - r.Left) - sz.Width) / 2, r.Top + ((r.Bottom - r.Top) - sz.Height) / 2);
+				//dialogAlpha.Location = new Point(r.Left + (r.Right - r.Left - sz.Width) / 2, r.Top + (r.Bottom - r.Top - sz.Height) / 2); // 位于父窗口中央
+				dialogAlpha.Location = new Point(r.Right, r.Top);
 				dialogAlpha.FormBorderStyle = FormBorderStyle.FixedDialog;
 				dialogAlpha.MinimizeBox = false;
 				dialogAlpha.MaximizeBox = false;
 				dialogAlpha.ShowInTaskbar = false;
 				dialogAlpha.Font = new Font("Segoe UI", 9F);
+				dialogAlpha.ReserveSystemMenuItems(SystemMenuItemType.CLOSE);
 			}
 
 			panelAlpha.Color = _color;
@@ -13305,7 +15122,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			SetColorInternal(panelAlpha.Color);
 		}
 
-		private static String GetWindowText(IntPtr hWnd) {
+		private static string GetWindowText(IntPtr hWnd) {
 			StringBuilder sb = new StringBuilder(256);
 			GetWindowText(hWnd, sb, sb.Capacity);
 			return sb.ToString();
@@ -13340,7 +15157,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			public int j;
 			public int len;
 
-			public override String ToString() {
+			public override string ToString() {
 				return i + " " + j + " " + len;
 			}
 		}
@@ -13367,7 +15184,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			for (int i = 0; i < w; i++) {
 				Color lastColor = Color.Empty;
 				for (int j = 0; j <= h; j++) {
-					Color c = (j == h ? Color.Empty : bmp.GetPixel(i, j));
+					Color c = j == h ? Color.Empty : bmp.GetPixel(i, j);
 					if (c == lastColor) {
 						ijl.len++;
 					} else {
@@ -13406,8 +15223,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private Color GetColorInternal() {
-			int a = (panelAlpha != null ? panelAlpha.Alpha : 255);
-			String _r = GetWindowText(hWndRed);
+			int a = panelAlpha != null ? panelAlpha.Alpha : 255;
+			string _r = GetWindowText(hWndRed);
 			if (_r.Length > 0) {
 				// Define Custom Colors UI is visible.
 				int r = int.Parse(_r);
@@ -13457,6 +15274,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		protected override IntPtr HookProc(IntPtr hWnd, int msg, IntPtr wparam, IntPtr lparam) {
 			//System.Diagnostics.Debug.WriteLine((Opulos.Core.Win32.WM) msg);
 			if (msg == WM_INITDIALOG) {
+				alphaBackup = Color.A;
 				IntPtr hWndOK = GetDlgItem(hWnd, 0x1); // 0x1 == OK button
 				RECT rOK = new RECT();
 				GetWindowRect(hWndOK, ref rOK);
@@ -13476,7 +15294,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				IntPtr hWndParent = GetParent(hWndCancel);
 				int w = rCancel.Right - rCancel.Left;
 				int h = rCancel.Bottom - rCancel.Top;
-				int gap = (rCancel.Left - rOK.Right);
+				int gap = rCancel.Left - rOK.Right;
 
 				// the "Define Custom Colors >>" button is slightly less wide than the total width of the
 				// OK, Cancel and Alpha buttons. Options:
@@ -13522,6 +15340,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				int x = cr.Left + ((cr.Right - cr.Left) - (r0.Right - r0.Left)) / 2;
 				int y = cr.Top + ((cr.Bottom - cr.Top) - (r0.Bottom - r0.Top)) / 2;
 				SetWindowPos(hWnd, IntPtr.Zero, x, y, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
+
+				btnAlpha.PerformClick();
+				if (alphaBackup != null) {
+					Color = Color.FromArgb((byte)alphaBackup, Color.R, Color.G, Color.B);
+					alphaBackup = null;
+				}
 			} else if (msg == ACD_COLORCHANGED) {
 				Color c = GetColorInternal();
 				SetColorInternal(c);
@@ -13529,9 +15353,27 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					panelAlpha.Color = c;
 			} else if (msg == WM_COMMAND || msg == WM_CHAR || msg == WM_LBUTTONDOWN) {
 				PostMessage(hWnd, ACD_COLORCHANGED, 0, 0);
+			} else if (msg == WM_NCLBUTTONDOWN) {
+				windowDragTimer.Start();
+			} else if (msg == WM_NCLBUTTONUP) {
+				windowDragTimer.Stop();
 			}
 
 			return base.HookProc(hWnd, msg, wparam, lparam);
+		}
+
+		private void WindowDragTimer_Tick(object sender, EventArgs e) {
+			try {
+				if (dialogAlpha == null || handle == null)
+					throw new NullReferenceException();
+				RECT r = new RECT();
+				GetWindowRect(handle, ref r);
+				dialogAlpha.Location = new Point(r.Right, r.Top);
+			} catch (Exception) { // 吞掉句柄丢失的错误。
+				windowDragTimer.Stop();
+				return;
+			}
+
 		}
 
 		protected override void Dispose(bool disposing) {
@@ -13548,9 +15390,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 		}
 
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		internal static extern bool DeleteMenu(IntPtr menu, uint uPosition, uint uFlags);
+
 		private class AlphaDialog : Form {
 
-			AlphaColorDialog AOwner;
+			private readonly AlphaColorDialog AOwner;
 			public AlphaDialog(AlphaColorDialog owner) {
 				AOwner = owner;
 				ShowIcon = false;
@@ -13563,6 +15411,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					SetForegroundWindow(AOwner.handle);
 				}
 				base.OnFormClosing(e);
+			}
+
+			protected override void WndProc(ref Message m) {
+				if (m.Msg == WM_SYSCOMMAND) {
+					if ((int)m.WParam == SC_MOVE)
+						return;
+				}
+				base.WndProc(ref m);
 			}
 		}
 
@@ -13636,11 +15492,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private const int WM_COMMAND = 0x111;
 		private const int WM_CHAR = 0x102;
 		private const int WM_LBUTTONDOWN = 0x201;
+		private const int WM_NCLBUTTONDOWN = 0x00A1;
+		private const int WM_NCLBUTTONUP = 0x00A2;
 
 		//private const uint WS_VISIBLE = 0x10000000;
 		//private const uint WS_CHILD = 0x40000000;
 		//private const uint WS_TABSTOP = 0x00010000;
 
+		private const int WM_SYSCOMMAND = 0x112;
+		private const int SC_MOVE = 0xF012;
+		private const int SC_MOVE_MENUITEM = 0xF010;
+		internal const uint MF_BYCOMMAND = 0x00000000;
 	}
 
 	public class AlphaColorPanel : Panel {
@@ -13897,6 +15759,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.loadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unloadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.exportConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.importConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitDiscardingChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -14276,6 +16141,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.MoshTab = new System.Windows.Forms.TabPage();
+			this.DatamoshNotInstalledTable = new System.Windows.Forms.TableLayoutPanel();
+			this.DatamoshNotInstalledInfo = new System.Windows.Forms.Label();
+			this.DownloadDatamoshLink = new System.Windows.Forms.LinkLabel();
+			this.AutomatorBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.ScrambleBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.RenderingBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.LayeringBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.DatamixBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.DatamoshBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.DatamoshClipsFolderGroup = new System.Windows.Forms.GroupBox();
+			this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
+			this.DatamoshClipsFolderButton = new System.Windows.Forms.Button();
+			this.DatamoshClipsFolderTxt = new System.Windows.Forms.TextBox();
+			this.CloseAfterOpenMoshCheck = new System.Windows.Forms.CheckBox();
+			this.DatamoshTable = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
@@ -14389,6 +16270,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
+			this.MoshTab.SuspendLayout();
+			this.DatamoshNotInstalledTable.SuspendLayout();
+			this.DatamoshClipsFolderGroup.SuspendLayout();
+			this.tableLayoutPanel21.SuspendLayout();
+			this.DatamoshTable.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -14905,6 +16791,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.toolStripSeparator6,
 			this.pitchShiftPresetMenuItem,
 			this.toolStripSeparator1,
+			this.exportConfigToolStripMenuItem,
+			this.importConfigToolStripMenuItem,
+			this.toolStripSeparator11,
 			this.exitDiscardingChangesToolStripMenuItem,
 			this.exitToolStripMenuItem});
 			this.fileMenuItem.Name = "fileMenuItem";
@@ -14934,7 +16823,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.restoreDefaultFormSizeToolStripMenuItem});
 			this.formSizeToolStripMenuItem.Name = "formSizeToolStripMenuItem";
 			this.formSizeToolStripMenuItem.Size = new System.Drawing.Size(271, 26);
-			this.formSizeToolStripMenuItem.Text = "窗体大小";
+			this.formSizeToolStripMenuItem.Text = "窗体大小(&F)";
 			// 
 			// rememberFormSizeToolStripMenuItem
 			// 
@@ -14979,21 +16868,40 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// loadPresetsToolStripMenuItem
 			// 
 			this.loadPresetsToolStripMenuItem.Name = "loadPresetsToolStripMenuItem";
-			this.loadPresetsToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
-			this.loadPresetsToolStripMenuItem.Text = "加载预设...";
+			this.loadPresetsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+			this.loadPresetsToolStripMenuItem.Text = "加载预设(&L)...";
 			this.loadPresetsToolStripMenuItem.Click += new System.EventHandler(this.LoadPresetsToolStripMenuItem_Click);
 			// 
 			// unloadPresetsToolStripMenuItem
 			// 
 			this.unloadPresetsToolStripMenuItem.Name = "unloadPresetsToolStripMenuItem";
-			this.unloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
-			this.unloadPresetsToolStripMenuItem.Text = "卸载预设...";
+			this.unloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+			this.unloadPresetsToolStripMenuItem.Text = "卸载预设(&U)...";
 			this.unloadPresetsToolStripMenuItem.Click += new System.EventHandler(this.LoadPresetsToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
 			this.toolStripSeparator1.Size = new System.Drawing.Size(268, 6);
+			// 
+			// exportConfigToolStripMenuItem
+			// 
+			this.exportConfigToolStripMenuItem.Name = "exportConfigToolStripMenuItem";
+			this.exportConfigToolStripMenuItem.Size = new System.Drawing.Size(271, 26);
+			this.exportConfigToolStripMenuItem.Text = "导出配置(&E)";
+			this.exportConfigToolStripMenuItem.Click += new System.EventHandler(this.ExportConfigToolStripMenuItem_Click);
+			// 
+			// importConfigToolStripMenuItem
+			// 
+			this.importConfigToolStripMenuItem.Name = "importConfigToolStripMenuItem";
+			this.importConfigToolStripMenuItem.Size = new System.Drawing.Size(271, 26);
+			this.importConfigToolStripMenuItem.Text = "导入配置(&I)";
+			this.importConfigToolStripMenuItem.Click += new System.EventHandler(this.ImportConfigToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator11
+			// 
+			this.toolStripSeparator11.Name = "toolStripSeparator11";
+			this.toolStripSeparator11.Size = new System.Drawing.Size(268, 6);
 			// 
 			// exitDiscardingChangesToolStripMenuItem
 			// 
@@ -15290,6 +17198,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Tabs.Controls.Add(this.SonarTab);
 			this.Tabs.Controls.Add(this.YtpTab);
 			this.Tabs.Controls.Add(this.HelperTab);
+			this.Tabs.Controls.Add(this.MoshTab);
 			this.Tabs.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Tabs.Location = new System.Drawing.Point(8, 0);
 			this.Tabs.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
@@ -20865,11 +22774,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HelperLbl.AutoSize = true;
 			this.HelperLbl.Dock = System.Windows.Forms.DockStyle.Top;
 			this.HelperLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.HelperLbl.Location = new System.Drawing.Point(2, 0);
-			this.HelperLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.HelperLbl.Location = new System.Drawing.Point(3, 0);
 			this.HelperLbl.Name = "HelperLbl";
 			this.HelperLbl.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-			this.HelperLbl.Size = new System.Drawing.Size(629, 25);
+			this.HelperLbl.Size = new System.Drawing.Size(627, 25);
 			this.HelperLbl.TabIndex = 2;
 			this.HelperLbl.Text = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。";
 			// 
@@ -20995,6 +22903,245 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
+			// MoshTab
+			// 
+			this.MoshTab.AutoScroll = true;
+			this.MoshTab.Controls.Add(this.DatamoshTable);
+			this.MoshTab.Controls.Add(this.DatamoshNotInstalledTable);
+			this.MoshTab.Location = new System.Drawing.Point(4, 29);
+			this.MoshTab.Name = "MoshTab";
+			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
+			this.MoshTab.Size = new System.Drawing.Size(658, 616);
+			this.MoshTab.TabIndex = 7;
+			this.MoshTab.Text = "变形";
+			this.MoshTab.UseVisualStyleBackColor = true;
+			// 
+			// DatamoshNotInstalledTable
+			// 
+			this.DatamoshNotInstalledTable.AutoSize = true;
+			this.DatamoshNotInstalledTable.ColumnCount = 1;
+			this.DatamoshNotInstalledTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.DatamoshNotInstalledTable.Controls.Add(this.DatamoshNotInstalledInfo, 0, 0);
+			this.DatamoshNotInstalledTable.Controls.Add(this.DownloadDatamoshLink, 0, 1);
+			this.DatamoshNotInstalledTable.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshNotInstalledTable.Location = new System.Drawing.Point(3, 3);
+			this.DatamoshNotInstalledTable.Name = "DatamoshNotInstalledTable";
+			this.DatamoshNotInstalledTable.Padding = new System.Windows.Forms.Padding(0, 8, 0, 5);
+			this.DatamoshNotInstalledTable.RowCount = 2;
+			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.DatamoshNotInstalledTable.Size = new System.Drawing.Size(631, 53);
+			this.DatamoshNotInstalledTable.TabIndex = 8;
+			// 
+			// DatamoshNotInstalledInfo
+			// 
+			this.DatamoshNotInstalledInfo.AutoSize = true;
+			this.DatamoshNotInstalledInfo.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshNotInstalledInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.DatamoshNotInstalledInfo.Location = new System.Drawing.Point(3, 8);
+			this.DatamoshNotInstalledInfo.Name = "DatamoshNotInstalledInfo";
+			this.DatamoshNotInstalledInfo.Size = new System.Drawing.Size(625, 20);
+			this.DatamoshNotInstalledInfo.TabIndex = 2;
+			this.DatamoshNotInstalledInfo.Text = "未安装 Datamosh 扩展包，下载后方可使用。";
+			// 
+			// DownloadDatamoshLink
+			// 
+			this.DownloadDatamoshLink.AutoSize = true;
+			this.DownloadDatamoshLink.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DownloadDatamoshLink.Location = new System.Drawing.Point(3, 28);
+			this.DownloadDatamoshLink.Name = "DownloadDatamoshLink";
+			this.DownloadDatamoshLink.Size = new System.Drawing.Size(625, 20);
+			this.DownloadDatamoshLink.TabIndex = 3;
+			this.DownloadDatamoshLink.TabStop = true;
+			this.DownloadDatamoshLink.Text = "下载扩展包";
+			// 
+			// AutomatorBtn
+			// 
+			this.AutomatorBtn.CommandLink = true;
+			this.AutomatorBtn.CommandLinkNote = "Sets random automation values for video effects quickly and automatically.";
+			this.AutomatorBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AutomatorBtn.Location = new System.Drawing.Point(2, 558);
+			this.AutomatorBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.AutomatorBtn.Name = "AutomatorBtn";
+			this.AutomatorBtn.Size = new System.Drawing.Size(627, 86);
+			this.AutomatorBtn.TabIndex = 16;
+			this.AutomatorBtn.Text = "Automator";
+			this.AutomatorBtn.UseVisualStyleBackColor = true;
+			this.AutomatorBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// ScrambleBtn
+			// 
+			this.ScrambleBtn.CommandLink = true;
+			this.ScrambleBtn.CommandLinkNote = "Scrambles clips/events quickly and automatically.";
+			this.ScrambleBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ScrambleBtn.Location = new System.Drawing.Point(2, 468);
+			this.ScrambleBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.ScrambleBtn.Name = "ScrambleBtn";
+			this.ScrambleBtn.Size = new System.Drawing.Size(627, 86);
+			this.ScrambleBtn.TabIndex = 15;
+			this.ScrambleBtn.Text = "Scramble";
+			this.ScrambleBtn.UseVisualStyleBackColor = true;
+			this.ScrambleBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// RenderingBtn
+			// 
+			this.RenderingBtn.CommandLink = true;
+			this.RenderingBtn.CommandLinkNote = "Renders a part of a video quickly and automatically.";
+			this.RenderingBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RenderingBtn.Location = new System.Drawing.Point(2, 378);
+			this.RenderingBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.RenderingBtn.Name = "RenderingBtn";
+			this.RenderingBtn.Size = new System.Drawing.Size(627, 86);
+			this.RenderingBtn.TabIndex = 14;
+			this.RenderingBtn.Text = "Render";
+			this.RenderingBtn.UseVisualStyleBackColor = true;
+			this.RenderingBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// LayeringBtn
+			// 
+			this.LayeringBtn.CommandLink = true;
+			this.LayeringBtn.CommandLinkNote = "Does multilayering on a part of a video quickly and automatically.";
+			this.LayeringBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LayeringBtn.Location = new System.Drawing.Point(2, 288);
+			this.LayeringBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.LayeringBtn.Name = "LayeringBtn";
+			this.LayeringBtn.Size = new System.Drawing.Size(627, 86);
+			this.LayeringBtn.TabIndex = 13;
+			this.LayeringBtn.Text = "Layer";
+			this.LayeringBtn.UseVisualStyleBackColor = true;
+			this.LayeringBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// DatamixBtn
+			// 
+			this.DatamixBtn.CommandLink = true;
+			this.DatamixBtn.CommandLinkNote = "Datamoshes a part of a video quickly and automatically (mosh a clip onto another)" +
+	".";
+			this.DatamixBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DatamixBtn.Location = new System.Drawing.Point(2, 198);
+			this.DatamixBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamixBtn.Name = "DatamixBtn";
+			this.DatamixBtn.Size = new System.Drawing.Size(627, 86);
+			this.DatamixBtn.TabIndex = 12;
+			this.DatamixBtn.Text = "Datamix";
+			this.DatamixBtn.UseVisualStyleBackColor = true;
+			this.DatamixBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// DatamoshBtn
+			// 
+			this.DatamoshBtn.CommandLink = true;
+			this.DatamoshBtn.CommandLinkNote = "Datamoshes a part of a video quickly and automatically.";
+			this.DatamoshBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DatamoshBtn.Location = new System.Drawing.Point(2, 108);
+			this.DatamoshBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshBtn.Name = "DatamoshBtn";
+			this.DatamoshBtn.Size = new System.Drawing.Size(627, 86);
+			this.DatamoshBtn.TabIndex = 11;
+			this.DatamoshBtn.Text = "Datamosh";
+			this.DatamoshBtn.UseVisualStyleBackColor = true;
+			this.DatamoshBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// DatamoshClipsFolderGroup
+			// 
+			this.DatamoshClipsFolderGroup.AutoSize = true;
+			this.DatamoshClipsFolderGroup.Controls.Add(this.tableLayoutPanel21);
+			this.DatamoshClipsFolderGroup.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderGroup.Location = new System.Drawing.Point(2, 42);
+			this.DatamoshClipsFolderGroup.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderGroup.Name = "DatamoshClipsFolderGroup";
+			this.DatamoshClipsFolderGroup.Padding = new System.Windows.Forms.Padding(5);
+			this.DatamoshClipsFolderGroup.Size = new System.Drawing.Size(627, 62);
+			this.DatamoshClipsFolderGroup.TabIndex = 6;
+			this.DatamoshClipsFolderGroup.TabStop = false;
+			this.DatamoshClipsFolderGroup.Text = "Datamosh 剪辑缓存目录";
+			// 
+			// tableLayoutPanel21
+			// 
+			this.tableLayoutPanel21.AutoSize = true;
+			this.tableLayoutPanel21.ColumnCount = 2;
+			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderTxt, 0, 0);
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderButton, 1, 0);
+			this.tableLayoutPanel21.Dock = System.Windows.Forms.DockStyle.Top;
+			this.tableLayoutPanel21.Location = new System.Drawing.Point(5, 25);
+			this.tableLayoutPanel21.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel21.Name = "tableLayoutPanel21";
+			this.tableLayoutPanel21.RowCount = 1;
+			this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel21.Size = new System.Drawing.Size(617, 32);
+			this.tableLayoutPanel21.TabIndex = 3;
+			// 
+			// DatamoshClipsFolderButton
+			// 
+			this.DatamoshClipsFolderButton.AutoSize = true;
+			this.DatamoshClipsFolderButton.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderButton.Location = new System.Drawing.Point(540, 2);
+			this.DatamoshClipsFolderButton.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderButton.MaximumSize = new System.Drawing.Size(300, 28);
+			this.DatamoshClipsFolderButton.Name = "DatamoshClipsFolderButton";
+			this.DatamoshClipsFolderButton.Size = new System.Drawing.Size(75, 28);
+			this.DatamoshClipsFolderButton.TabIndex = 3;
+			this.DatamoshClipsFolderButton.Text = "浏览...";
+			this.DatamoshClipsFolderButton.UseVisualStyleBackColor = true;
+			this.DatamoshClipsFolderButton.Click += new System.EventHandler(this.DatamoshClipsFolderButton_Click);
+			// 
+			// DatamoshClipsFolderTxt
+			// 
+			this.DatamoshClipsFolderTxt.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderTxt.Location = new System.Drawing.Point(2, 2);
+			this.DatamoshClipsFolderTxt.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderTxt.Name = "DatamoshClipsFolderTxt";
+			this.DatamoshClipsFolderTxt.ReadOnly = true;
+			this.DatamoshClipsFolderTxt.Size = new System.Drawing.Size(534, 27);
+			this.DatamoshClipsFolderTxt.TabIndex = 2;
+			// 
+			// CloseAfterOpenMoshCheck
+			// 
+			this.CloseAfterOpenMoshCheck.AutoSize = true;
+			this.CloseAfterOpenMoshCheck.Checked = true;
+			this.CloseAfterOpenMoshCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.CloseAfterOpenMoshCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.CloseAfterOpenMoshCheck.Enabled = false;
+			this.CloseAfterOpenMoshCheck.Location = new System.Drawing.Point(8, 8);
+			this.CloseAfterOpenMoshCheck.Margin = new System.Windows.Forms.Padding(8);
+			this.CloseAfterOpenMoshCheck.Name = "CloseAfterOpenMoshCheck";
+			this.CloseAfterOpenMoshCheck.Size = new System.Drawing.Size(615, 24);
+			this.CloseAfterOpenMoshCheck.TabIndex = 0;
+			this.CloseAfterOpenMoshCheck.Text = "操作完成之后关闭本对话框";
+			this.CloseAfterOpenMoshCheck.UseVisualStyleBackColor = true;
+			// 
+			// DatamoshTable
+			// 
+			this.DatamoshTable.AutoSize = true;
+			this.DatamoshTable.ColumnCount = 1;
+			this.DatamoshTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.DatamoshTable.Controls.Add(this.CloseAfterOpenMoshCheck, 0, 0);
+			this.DatamoshTable.Controls.Add(this.DatamoshClipsFolderGroup, 0, 1);
+			this.DatamoshTable.Controls.Add(this.DatamoshBtn, 0, 2);
+			this.DatamoshTable.Controls.Add(this.DatamixBtn, 0, 3);
+			this.DatamoshTable.Controls.Add(this.LayeringBtn, 0, 4);
+			this.DatamoshTable.Controls.Add(this.RenderingBtn, 0, 5);
+			this.DatamoshTable.Controls.Add(this.ScrambleBtn, 0, 6);
+			this.DatamoshTable.Controls.Add(this.AutomatorBtn, 0, 7);
+			this.DatamoshTable.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshTable.Location = new System.Drawing.Point(3, 56);
+			this.DatamoshTable.Margin = new System.Windows.Forms.Padding(0);
+			this.DatamoshTable.Name = "DatamoshTable";
+			this.DatamoshTable.RowCount = 8;
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.DatamoshTable.Size = new System.Drawing.Size(631, 646);
+			this.DatamoshTable.TabIndex = 9;
+			// 
 			// ConfigForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -21017,7 +23164,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Otomad Helper for Vegas - 配置";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ConfigForm_FormClosing);
-			this.Resize += new System.EventHandler(this.ConfigForm_Resize);
+			this.ResizeEnd += new System.EventHandler(this.ConfigForm_Resize);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).EndInit();
@@ -21199,6 +23346,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
+			this.MoshTab.ResumeLayout(false);
+			this.MoshTab.PerformLayout();
+			this.DatamoshNotInstalledTable.ResumeLayout(false);
+			this.DatamoshNotInstalledTable.PerformLayout();
+			this.DatamoshClipsFolderGroup.ResumeLayout(false);
+			this.DatamoshClipsFolderGroup.PerformLayout();
+			this.tableLayoutPanel21.ResumeLayout(false);
+			this.tableLayoutPanel21.PerformLayout();
+			this.DatamoshTable.ResumeLayout(false);
+			this.DatamoshTable.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -21625,6 +23782,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.ComboBox AudioAutoPanCurveCombo;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel16;
 		public CommandLinkButton ConvertMusicBeatsBtn;
+		public System.Windows.Forms.ToolStripMenuItem exportConfigToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem importConfigToolStripMenuItem;
+		public System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+		private System.Windows.Forms.TabPage MoshTab;
+		public System.Windows.Forms.TableLayoutPanel DatamoshNotInstalledTable;
+		public System.Windows.Forms.Label DatamoshNotInstalledInfo;
+		private System.Windows.Forms.LinkLabel DownloadDatamoshLink;
+		public System.Windows.Forms.TableLayoutPanel DatamoshTable;
+		public System.Windows.Forms.CheckBox CloseAfterOpenMoshCheck;
+		public System.Windows.Forms.GroupBox DatamoshClipsFolderGroup;
+		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel21;
+		public System.Windows.Forms.TextBox DatamoshClipsFolderTxt;
+		public System.Windows.Forms.Button DatamoshClipsFolderButton;
+		public CommandLinkButton DatamoshBtn;
+		public CommandLinkButton DatamixBtn;
+		public CommandLinkButton LayeringBtn;
+		public CommandLinkButton RenderingBtn;
+		public CommandLinkButton ScrambleBtn;
+		public CommandLinkButton AutomatorBtn;
 	}
 	#endregion
 
@@ -21654,6 +23830,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			InitializeComponent();
 			parent = entryPoint;
 			originalCursorPosition = vegas.Transport.CursorPosition;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 
 			#region 国际化
 			ScriptPath = Script.File;
@@ -21754,6 +23931,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#region 预听音频计时器
 			previewAudioTimer = new System.Windows.Forms.Timer { Interval = 1000 };
 			previewAudioTimer.Tick += PreviewAudioTimer_Tick;
+			#endregion
+
+			#region Datamosh
+			Path internalPath = new Path(ScriptPath);
+			internalPath.UpOneLevel();
+			internalPath.Add("_internal");
+			if (!System.IO.Directory.Exists(internalPath.FullPath))
+				DatamoshTable.Enabled = false;
+			else {
+				DatamoshNotInstalledTable.Visible = false;
+				string datamoshFolder = (string)Registry.GetValue(
+						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+						"ClipFolder", "");
+				if (!(string.IsNullOrEmpty(datamoshFolder) || !Directory.Exists(datamoshFolder)))
+					DatamoshClipsFolderTxt.Text = datamoshFolder;
+			}
 			#endregion
 
 			#region 优化界面颜色和外观
@@ -21960,8 +24153,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			StaffSurfacePaddingRightBox.SetValue(configIni.Read("PaddingRight", 200), 200);
 			StaffLineThicknessBox.SetValue(configIni.Read("Thickness", 25), 25);
 			StaffNotesShiftBox.SetValue(configIni.Read("Shift", 0), 0);
-			StaffLineColorBtn.Hex = configIni.Read("LineColor", "#FFFFFF");
-			StaffClefColorBtn.Hex = configIni.Read("ClefColor", "#FFFFFF");
+			StaffLineColorBtn.Color = Color.FromArgb(configIni.Read("LineColor", Color.White.ToArgb()));
+			StaffClefColorBtn.Color = Color.FromArgb(configIni.Read("ClefColor", Color.White.ToArgb()));
 			StaffClefScaleBox.SetValue(configIni.Read("ClefScale", 100), 100);
 			StaffGenerateClefCheck.Checked = configIni.Read("GenerateStaffClef", true);
 			StaffFreezeAtNoteOffCheck.Checked = configIni.Read("FreezeAtNoteOff", true);
@@ -22154,8 +24347,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("PaddingRight", StaffSurfacePaddingRightBox.Value);
 			configIni.Write("Thickness", StaffLineThicknessBox.Value);
 			configIni.Write("Shift", StaffNotesShiftBox.Value);
-			configIni.Write("LineColor", StaffLineColorBtn.Hex);
-			configIni.Write("ClefColor", StaffClefColorBtn.Hex);
+			configIni.Write("LineColor", StaffLineColorBtn.Color.ToArgb());
+			configIni.Write("ClefColor", StaffClefColorBtn.Color.ToArgb());
 			configIni.Write("ClefScale", StaffClefScaleBox.Value);
 			configIni.Write("GenerateStaffClef", StaffGenerateClefCheck.Checked);
 			configIni.Write("FreezeAtNoteOff", StaffFreezeAtNoteOffCheck.Checked);
@@ -22361,6 +24554,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			resetConfigToolStripMenuItem.Text = str.reset_config;
 			exitDiscardingChangesToolStripMenuItem.Text = str.exit_discarding_changes;
 			exitToolStripMenuItem.Text = str.exit;
+			importConfigToolStripMenuItem.Text = str.import_config;
+			exportConfigToolStripMenuItem.Text = str.export_config;
 			pitchShiftPresetMenuItem.Text = str.pitch_shift_preset;
 			loadPresetsToolStripMenuItem.Text = str.load_presets + str.dialog_sign;
 			unloadPresetsToolStripMenuItem.Text = str.unload_presets + str.dialog_sign;
@@ -22739,6 +24934,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AcceptConfig = false;
 			RequireSaveIni = true;
 			RequestToShowHelperDialog = null;
+			RequestToDatamosh = null;
 			foreach (Control _control in toolsTableLayoutPanel.Controls)
 				if (_control is CommandLinkButton)
 					(_control as CommandLinkButton).UpdateCommandLink();
@@ -22762,7 +24958,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		internal void SetCheckedEnabled(object sender, EventArgs e) {
 			bool isVConfigOn = VideoConfigCheck.Checked;
-			SetEnabled(VideoTab, isVConfigOn, new Control[] { VideoConfigCheck, VideoScratchCheck });
+			if (VideoParamsGroup.Enabled != isVConfigOn)
+				SetEnabled(VideoTab, isVConfigOn, new Control[] { VideoConfigCheck, VideoScratchCheck });
 			StaffVisualizerConfigCheck.Enabled = isVConfigOn;
 			if (!isVConfigOn) StaffVisualizerConfigCheck.Checked = false;
 			if (VideoEffect == PvVisualEffectType.PINGPONG || VideoEffect == PvVisualEffectType.WHIRL) {
@@ -22774,7 +24971,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 
 			bool isAConfigOn = AudioConfigCheck.Checked;
-			SetEnabled(AudioTab, isAConfigOn, new Control[] { AudioConfigCheck });
+			if (AudioParamsGroup.Enabled != isAConfigOn)
+				SetEnabled(AudioTab, isAConfigOn, new Control[] { AudioConfigCheck });
 			AudioTuneMethod method = (AudioTuneMethod)AudioTuneMethodCombo.SelectedIndex;
 			AudioLockStretchPitchCheck.Enabled = AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled
 				= PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled
@@ -22863,7 +25061,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 			#endif
 
-			ConfigForm_Resize(null, null);
+			// ConfigForm_Resize(null, null); // 为减少闪烁，已禁用。
 
 			#if VEGAS_ENVIRONMENT
 			{
@@ -24169,9 +26367,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (MessageBox.Show(string.Format(Lang.str.convert_music_beats_info, curBeats, willBeats), "", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Cancel)
 					return;
 			}
+			uint wBeats = beats == 4 ? 3u : beats == 6 ? 8u : 4u;
 			AudioEvent audioEvent = audioEvents[0];
 			Cursor = Cursors.WaitCursor;
 			parent.ConvertMusicBeats(audioEvent);
+			vegas.Project.Ruler.BeatsPerMeasure = wBeats;
 			Cursor = Cursors.Default;
 			if (CloseAfterOpenHelperCheck.Checked) CancelBtn_Click(null, null);
 			else {
@@ -24224,6 +26424,64 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				},
 			});
 		}
+
+		private void ExportConfigToolStripMenuItem_Click(object sender, EventArgs e) {
+			SaveIni();
+			SaveFileDialog saveFileDialog = new SaveFileDialog {
+				Filter = EntryPoint.GetOpenFileDialogFilter(Lang.str.configuration_settings, "*.ini"),
+				RestoreDirectory = false,
+				FilterIndex = 1,
+				Title = Lang.str.export,
+			};
+			if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
+			File.Copy(configIni.FilePath, saveFileDialog.FileName, true);
+		}
+
+		private void ImportConfigToolStripMenuItem_Click(object sender, EventArgs e) {
+			OpenFileDialog openFileDialog = new OpenFileDialog {
+				Filter = EntryPoint.GetOpenFileDialogFilter(Lang.str.configuration_settings, "*.ini"),
+				RestoreDirectory = false,
+				FilterIndex = 1,
+				Title = Lang.str.import,
+			};
+			if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+			if (MessageBox.Show(Lang.str.about_to_import_config, Lang.str.import, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Cancel) return;
+			File.Copy(openFileDialog.FileName, configIni.FilePath, true);
+			MessageBox.Show(Lang.str.import_config_complete, Lang.str.import, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+			exitDiscardingChangesToolStripMenuItem_Click(null, null);
+		}
+
+		private void DatamoshClipsFolderButton_Click(object sender, EventArgs e) {
+			FolderBrowserDialog dialog = new FolderBrowserDialog();
+			if (dialog.ShowDialog() != DialogResult.OK) return;
+			DatamoshClipsFolderTxt.Text = dialog.SelectedPath;
+			Registry.SetValue(
+				"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
+				"ClipFolder", dialog.SelectedPath, RegistryValueKind.String);
+		}
+
+		private void DatamoshBtn_Click(object sender, EventArgs e) {
+			string datamoshFolder = DatamoshClipsFolderTxt.Text;
+			if (string.IsNullOrEmpty(datamoshFolder) || !Directory.Exists(datamoshFolder)) {
+				MessageBox.Show("Please select a folder to put generated datamoshed clips into.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+
+			Button btn = sender as Button;
+			if (btn == null) return;
+			Dictionary<Button, Type> map = new Dictionary<Button, Type> {
+				{ DatamoshBtn, typeof(DataMosh.Datamosh) },
+				{ DatamixBtn, typeof(DataMosh.Datamix) },
+				{ LayeringBtn, typeof(DataMosh.Layering) },
+				{ RenderingBtn, typeof(DataMosh.Render) },
+				{ ScrambleBtn, typeof(DataMosh.Scramble) },
+				{ AutomatorBtn, typeof(DataMosh.Automator) },
+			};
+			map.TryGetValue(btn, out RequestToDatamosh);
+			Close();
+		}
+
+		public Type RequestToDatamosh = null;
 	}
 
 	#region 翻译
@@ -24537,13 +26795,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			exit_discarding_changes = "放弃更改并退出(&D)",
 			exit = "退出(&X)",
 			pitch_shift_preset = "移调插件预设(&P)",
-			load_presets = "加载预设",
-			unload_presets = "卸载预设",
-			form_size = "窗体大小",
+			load_presets = "加载预设(&L)",
+			unload_presets = "卸载预设(&U)",
+			form_size = "窗体大小(&F)",
 			remember_form_size = "记住窗体大小",
 			remember_always_form_size = "每次都记住窗体大小",
 			remember_once_form_size = "记住一次窗体大小",
 			restore_default_form_size = "下次恢复默认窗体大小",
+			export_config = "导出配置(&E)",
+			import_config = "导入配置(&I)",
+			export = "导出",
+			import = "导入",
+			configuration_settings = "配置设置",
+			about_to_import_config = "即将导入配置。\n注意：如果配置设置文件不合规范，可能导致脚本无法正常启动。\n是否继续？",
+			import_config_complete = "导入完成，请手动重启脚本。",
 			help = "帮助(&H)",
 			user_help = "使用说明",
 			trouble_shooting = "疑难解答",
@@ -24836,6 +27101,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			helper_info = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。",
 			helper_info_warning = "注意：操作之后将会关闭本对话框，您可以稍后再重新打开，部分您未保存的更改可能会丢失！",
 			close_after_open_helper = "操作完成之后关闭本对话框",
+			mosh = "变形",
+			datamosh_clips_folder = "Datamosh 剪辑缓存目录",
+			datamosh_not_installed_info = "未安装 Datamosh 扩展包，下载后方可使用。",
+			datamosh_install = "下载扩展包",
 			otomad_helper_config = "Otomad Helper for Vegas - 配置",
 			reset_config_successful = "重置完成，请重新启动脚本。",
 			reset_config_successful_title = "重置用户配置",
@@ -25156,13 +27425,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				exit_discarding_changes = "&Discard changes and exit",
 				exit = "E&xit",
 				pitch_shift_preset = "&Pitch shift plugin presets",
-				load_presets = "Load presets",
-				unload_presets = "Unload presets",
-				form_size = "Form size",
+				load_presets = "&Load presets",
+				unload_presets = "&Unload presets",
+				form_size = "&Form size",
 				remember_form_size = "Remember form size",
 				remember_always_form_size = "Remember form size each time",
 				remember_once_form_size = "Remember form size once",
 				restore_default_form_size = "Restore default form size next time",
+				export_config = "&Export configuration",
+				import_config = "&Import configuration",
+				export = "Export",
+				import = "Import",
+				configuration_settings = "Configuration settings",
+				about_to_import_config = "Configuration will be imported soon.\nNotice: If the configuration settings file is not standard, the script may not work properly.\nDo you want to continue?",
+				import_config_complete = "Completed import, please restart the script manually.",
 				help = "&Help",
 				user_help = "Instructions",
 				trouble_shooting = "Troubleshooting",
@@ -25455,6 +27731,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info = "The following functions are just some independent auxiliary functions, and have nothing to do with other parameters that generate audio and video.",
 				helper_info_warning = "Note: This dialog box will be closed after the operation, you can reopen it later, and some unsaved changes may be lost!\n",
 				close_after_open_helper = "Close this dialog after the operation completed",
+				mosh = "Mosh",
+				datamosh_clips_folder = "Datamosh clip cache folder",
+				datamosh_not_installed_info = "The Datamosh extension pack is not installed and can be used after downloading.",
+				datamosh_install = "Download the expansion pack",
 				otomad_helper_config = "Otomad Helper for Vegas - Config",
 				reset_config_successful = "The reset is complete, please restart the script.",
 				reset_config_successful_title = "Reset User Configuration",
@@ -25768,18 +28048,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_max_length_tooltip = "指定單個軌道剪輯的最大長度。\n單位：毫秒。",
 				ytp_min_length_tooltip = "指定單個軌道剪輯的最小長度。\n單位：毫秒。",
 				file = "檔案(&F)",
-				save_config = "储存使用者配置(&S)",
-				reset_config = "重置使用者配置(&R)",
+				save_config = "储存使用者組態(&S)",
+				reset_config = "重置使用者組態(&R)",
 				exit_discarding_changes = "放弃更改並退出(&D)",
 				exit = "退出(&X)",
 				pitch_shift_preset = "移調插件預設(&P)",
-				load_presets = "加載預設",
-				unload_presets = "卸載預設",
-				form_size = "表單大小",
+				load_presets = "加載預設(&L)",
+				unload_presets = "卸載預設(&U)",
+				form_size = "表單大小(&F)",
 				remember_form_size = "記住表單大小",
 				remember_always_form_size = "每次都記住表單大小",
 				remember_once_form_size = "記住一次表單大小",
 				restore_default_form_size = "下次恢復默認表單大小",
+				export_config = "導出組態(&E)",
+				import_config = "導入組態(&I)",
+				export = "導出",
+				import = "導入",
+				configuration_settings = "組態設定",
+				about_to_import_config = "即將導入組態。\n注意：如果組態設定檔不合規範，可能導致腳本無法正常啟動。\n是否繼續？",
+				import_config_complete = "導入完成，請手動重啟腳本。",
 				help = "幫助(&H)",
 				user_help = "使用說明",
 				trouble_shooting = "疑難排解",
@@ -25803,7 +28090,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				staff = "五線譜",
 				ytp = "YTP",
 				helper = "工具",
-				midi_settings = "MIDI 配置",
+				midi_settings = "MIDI 設定",
 				midi_start_time = "起始秒數",
 				midi_end_time = "終止秒數",
 				bpm_setting = "設定 BPM 速度為",
@@ -25822,7 +28109,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				dynamic_midi_beat_info = "{0} 起始的動態節拍",
 				colon = "：",
 				semicolon = "；",
-				source_settings = "素材配置",
+				source_settings = "素材設定",
 				generate_at_begin = "專案開始處",
 				generate_at_cursor = "光標處",
 				generate_position = "設定生成開始位置",
@@ -26072,10 +28359,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info = "以下功能只是一些獨立的協助工具，與其它生成音視訊的參數無關。",
 				helper_info_warning = "注意：操作之後將會關閉本對話方塊，您可以稍後再重新啟動，部分您未儲存的更改可能會遺失！\n",
 				close_after_open_helper = "操作完成之後關閉本對話方塊",
-				otomad_helper_config = "Otomad Helper for Vegas - 配置",
+				mosh = "變形",
+				datamosh_clips_folder = "Datamosh 剪輯快取目錄",
+				datamosh_not_installed_info = "未安裝 Datamosh 擴展包，下載後方可使用。",
+				datamosh_install = "下載擴展包",
+				otomad_helper_config = "Otomad Helper for Vegas - 設定",
 				reset_config_successful = "重置完成，請重新啟動腳本。",
-				reset_config_successful_title = "重置使用者配置",
-				sure_to_reset_config = "確定要重置使用者配置嗎？\n\n重置後您的使用者配置數據將會遺失。",
+				reset_config_successful_title = "重置使用者組態",
+				sure_to_reset_config = "確定要重置使用者組態嗎？\n\n重置後您的使用者組態設定數據將會遺失。",
 				about_title = "關於",
 				script_author = "腳本作者",
 				script_original_author = "腳本原作者",
@@ -26090,8 +28381,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_selected_media_warning = "警告：您沒有在專案媒體視窗中選中任何有效媒體素材！",
 				no_selected_clip_warning = "警告：您沒有在軌道視窗中選中任何剪輯片段！",
 				preview_audio_track_name = "預聽音訊軌道（應該被删除！）",
-				no_midi_exception = "錯誤：未選擇 MIDI 檔案。\n\n請重新啟動腳本參數配置對話方塊，然後在「MIDI 配置」分組中點擊「瀏覽」按鈕，開啟一個有效的 MIDI 檔案。",
-				no_media_exception = "錯誤：未選擇媒體檔案。\n\n請重新啟動腳本參數配置對話方塊，然後在「媒體配置」分組中點擊「瀏覽」按鈕，開啟一個有效的媒體檔案。",
+				no_midi_exception = "錯誤：未選擇 MIDI 檔案。\n\n請重新啟動腳本參數設定對話方塊，然後在「MIDI 設定」分組中點擊「瀏覽」按鈕，開啟一個有效的 MIDI 檔案。",
+				no_media_exception = "錯誤：未選擇媒體檔案。\n\n請重新啟動腳本參數設定對話方塊，然後在「媒體設定」分組中點擊「瀏覽」按鈕，開啟一個有效的媒體檔案。",
 				no_track_info_exception = "錯誤：沒有 MIDI 音軌。\n\n可能的原因：\n1.您沒有選擇一個 MIDI 音軌；\n2.該 MIDI 檔案中沒有任何音軌；\n3.該 MIDI 檔案已損壞或檔案格式不受支持。",
 				no_plugin_pitch_shift_exception = "錯誤：無法調用移調插件。\n\n請按照教程檔案 {0} 的指引正確操作。\n不過，根據這個更新版本的腳本，按理應當是中英文版本均可正常運行的。\n因此很有可能您是使用其它語言的 Vegas 造成的（逃",
 				no_plugin_presets_exception = "錯誤：無法調用移調插件的預設效果。\n\n請按照教程檔案 {0} 的指引正確操作。\n確保在移調插件中手動添加了所有的 25 個預設，且命名正確。\n\n補充說明：具體可見上述連結專欄中對於安裝方法的說明。這 25 個預設是上下一個八度以內的所有變調種類，\n缺少任何一個都有可能出錯。手動添加預設的確非常麻煩，但 Vegas 無法使用腳本來指定變調的具體參數，\n囙此只好繞這個彎子。",
@@ -26102,10 +28393,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_media_take_exception = "錯誤：無法讀取媒體。\n\n您所選的檔案格式不受 Vegas 支持，請檢查該媒體檔案是否損壞，或未安裝對應的 Vegas 解碼器。\n\n",
 				not_a_midi_file_exception = "錯誤：無法讀取 MIDI 檔案。\n\n解決方法：用宿主軟件導入該 MIDI，然後重新輸出一個新的 MIDI 檔案。\n\n補充說明：MIDI 檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟件在\n默認設定下匯出的 MIDI 檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
 				no_selected_exception_ps = "補充說明：如果您想手動在資料夾中選擇一個媒體素材，那麼請點擊其右邊的「瀏覽」按鈕，\n選擇一個媒體素材。並確保左側的下拉式功能表中選中的是您所選檔案所在的路徑。",
-				no_selected_media_exception = "錯誤：沒有在專案媒體視窗中選擇任何媒體。\n\n請在專案媒體視窗中選擇一個媒體，然後重新啟動參數配置視窗，並在素材設定中選擇「選中的媒體檔案」。\n\n",
-				no_selected_clip_exception = "錯誤：沒有在軌道中選擇任何剪輯。\n\n請在軌道中選擇一個剪輯，然後重新啟動參數配置視窗，並在素材設定中選擇「選中的軌道素材」。\n\n",
+				no_selected_media_exception = "錯誤：沒有在專案媒體視窗中選擇任何媒體。\n\n請在專案媒體視窗中選擇一個媒體，然後重新啟動參數設定視窗，並在素材設定中選擇「選中的媒體檔案」。\n\n",
+				no_selected_clip_exception = "錯誤：沒有在軌道中選擇任何剪輯。\n\n請在軌道中選擇一個剪輯，然後重新啟動參數設定視窗，並在素材設定中選擇「選中的軌道素材」。\n\n",
 				no_time_stretch_pitch_shift_exception = "錯誤：選定素材音調轉換方法被設定為不調音。\n\n很有可能您使用的是「選中的軌道素材」。出現了這個錯誤不怪你，要怪就怪 Vegas 這個腦殘設計。\n\n解決方法：請重新選中您的軌道素材，右鍵音訊部分，選擇底部的「內容」。將「時間拉伸/音調轉換」的「方法」設定為“élastique”。\n然後點擊確定即可。\n\n補充說明：如果某個音訊事件沒有進行變調操作，然後開啟了它的內容，那麼其內容中的「時間拉伸/音調轉換」的「方法」會被\n自動修改為「無」，點擊確定就會生效。這時你會發現鍵盤上的 +、- 鍵調音操作無效了。這時必須重新開啟音訊事件的內容，\n將「時間拉伸/音調轉換」的「方法」設定為“élastique”，不必設定「音調更改」，點擊確定即可。",
-				read_config_fail_exception = "錯誤：讀取參數設定檔失敗。\n\n很遺憾您遇到了這個不可預見的錯誤。我們將會清除使用者配置設定並恢復為預設值以便解决問題。\n建議將這個錯誤告訴作者以便快速解决問題。\n將會退出此腳本，然後勞煩閣下手動重新啟動此腳本。",
+				read_config_fail_exception = "錯誤：讀取參數設定檔失敗。\n\n很遺憾您遇到了這個不可預見的錯誤。我們將會清除使用者組態設定並恢復為預設值以便解决問題。\n建議將這個錯誤告訴作者以便快速解决問題。\n將會退出此腳本，然後勞煩閣下手動重新啟動此腳本。",
 				fail_to_select_clips_exception = "錯誤：選取軌道剪輯出錯。\n\n請先在軌道視窗中選取部分軌道剪輯。",
 				fail_to_select_tracks_exception = "錯誤：選取軌道出錯。\n\n請先在軌道視窗中選取部分視訊軌道。",
 				ytp_over_length_exception = "錯誤：指定的 YTP 最小長度超過了媒體長度。\n\n指定的 YTP 最小長度過大，請嘗試更小的值。或所選媒體素材長度過小。",
@@ -26391,13 +28682,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				exit_discarding_changes = "変更を破棄して終了します(&D)",
 				exit = "終了(&X)",
 				pitch_shift_preset = "ピッチシフトプラグインプリセット(&P)",
-				load_presets = "プリセットをロード",
-				unload_presets = "プリセットをアンロード",
-				form_size = "フォームサイズ",
+				load_presets = "プリセットをロード(&L)",
+				unload_presets = "プリセットをアンロード(&U)",
+				form_size = "フォームサイズ(&F)",
 				remember_form_size = "フォームサイズを記憶",
 				remember_always_form_size = "フォームサイズを毎回記憶",
 				remember_once_form_size = "フォームサイズを1回記憶",
 				restore_default_form_size = "次回デフォルトのフォームサイズに戻す",
+				export_config = "構成のエクスポート(&E)",
+				import_config = "構成のインポート(&I)",
+				export = "エクスポート",
+				import = "インポート",
+				configuration_settings = "構成設定",
+				about_to_import_config = "構成をインポートしようとしています。\n注：構成設定ファイルが仕様外の場合、スクリプトが正しく起動しない場合があります。\n続けるか？",
+				import_config_complete = "インポートが完了しました。スクリプトを手動で再起動してください。",
 				help = "ヘルプ(&H)",
 				user_help = "手順",
 				trouble_shooting = "トラブルシューティング",
@@ -26690,6 +28988,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info = "以下の機能は、いくつかの独立した補助機能であり、オーディオとビデオを生成する他のパラメーターとは関係ありません。",
 				helper_info_warning = "注：このダイアログボックスは操作後に閉じられます。後で再度開くことができ、保存されていない変更の一部が失われる可能性があります。\n",
 				close_after_open_helper = "操作後にこのダイアログを閉じます",
+				mosh = "モッシュ",
+				datamosh_clips_folder = "Datamosh クリップ キャッシュ ディレクトリ",
+				datamosh_not_installed_info = "Datamosh 拡張パッケージはインストールされていないため、ダウンロード後に使用できます。",
+				datamosh_install = "拡張パックをダウンロードする",
 				otomad_helper_config = "Otomad Helper for Vegas - 設定",
 				reset_config_successful = "リセットが完了しました。スクリプトを再起動してください。",
 				reset_config_successful_title = "ユーザ設定のリセット",
@@ -27009,13 +29311,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				exit_discarding_changes = "&Отменить изменения и выйти",
 				exit = "&Выход",
 				pitch_shift_preset = "&Пресеты плагина Pitch Shift",
-				load_presets = "Загрузить пресеты",
-				unload_presets = "Выгрузить пресеты",
-				form_size = "Размер формы",
+				load_presets = "&Загрузить пресеты",
+				unload_presets = "&Выгрузить пресеты",
+				form_size = "&Размер формы",
 				remember_form_size = "Запомнить размер формы",
 				remember_always_form_size = "Запомнить размер формы каждый раз",
 				remember_once_form_size = "Запомнить размер формы один раз",
 				restore_default_form_size = "Восстановить размер формы по умолчанию далее",
+				export_config = "&Экспорт конфигурации",
+				import_config = "&Импорт конфигурации",
+				export = "Экспорт",
+				import = "Импорт",
+				configuration_settings = "Параметры конфигурации",
+				about_to_import_config = "Конфигурация будет импортирована в ближайшее время.\nПримечание. Если файл настроек конфигурации не является стандартным, сценарий может работать некорректно.\nВы хотите продолжить?",
+				import_config_complete = "Импорт завершен, перезапустите скрипт вручную.",
 				help = "&Помощь",
 				user_help = "Инструкции",
 				trouble_shooting = "Устранение неполадок",
@@ -27308,6 +29617,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info = "Следующие ниже функции являются лишь некоторыми независимыми вспомогательными функциями и не имеют ничего общего с другими параметрами, генерирующими аудио и видео.",
 				helper_info_warning = "Примечание: это диалоговое окно будет закрыто после операции, вы можете открыть его позже, и некоторые несохраненные изменения могут быть потеряны!\n",
 				close_after_open_helper = "Закрыть диалог после завершения операции",
+				mosh = "Мош",
+				datamosh_clips_folder = "Datamosh каталог кэша клипов",
+				datamosh_not_installed_info = "Пакет расширения Datamosh не устанавливается и может быть использован после загрузки.",
+				datamosh_install = "Скачать пакет расширения",
 				otomad_helper_config = "Otomad Helper for Vegas - Конфигурация",
 				reset_config_successful = "Сброс завершен, перезапустите скрипт.",
 				reset_config_successful_title = "Сбросить конфигурацию пользователя",
