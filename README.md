@@ -102,6 +102,7 @@ If you use this script, the script will use the following permissions.
 * [Edward's **JETDV** Scripts](https://www.jetdv.com/)
 * [Vegas Pro Scripting **Forum**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 * [Opulos's **Alpha Color Dialog**](https://sourceforge.net/projects/alpha-color-dialog/)
+* [Ookii.Dialogs.WinForms](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
 
 ### Logo
 Inspired by:

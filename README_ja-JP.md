@@ -94,6 +94,7 @@ Vegas Pro 17、18、19、20 で**正常**にテストされました。
 * [エドワードの **JETDV** スクリプト集](https://www.jetdv.com/)
 * [Vegas Pro スクリプト **フォーラム**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 * [オプロスの**アルファ付きカラーピッカー**](https://sourceforge.net/projects/alpha-color-dialog/)
+* [Ookii.Dialogs.WinForms](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
 
 ### アイコン
 に触発された：
