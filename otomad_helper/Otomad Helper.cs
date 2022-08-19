@@ -243,7 +243,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/**<summary>分离鼓声</summary>*/ private bool SonarConfigSeparateDrums { get { return configForm.SeparateDrumsCheck.Checked; } }
 		/**<summary>差值混合</summary>*/ private bool SonarConfigDifferenceCompositeMode { get { return configForm.DifferenceCompositeModeCheck.Checked; } }
 		/**<summary>阴　　影</summary>*/ private bool SonarConfigShadow { get { return configForm.TrackShadowCheck.Checked; } }
-		/**<summary>阴影颜色</summary>*/ private Color SonarConfigShadowColor { get { return (Color)configForm.TrackShadowColorBtn.Tag; } }
+		/**<summary>阴影颜色</summary>*/ private Color SonarConfigShadowColor { get { return (Color)configForm.TrackShadowColorBtn.Color; } }
 		/**<summary>声呐项目</summary>*/ private List<SonarItem> SonarConfigItems { get {
 			List<SonarItem> result = new List<SonarItem>();
 			foreach (ListViewItem item in configForm.SonarList.Items)
@@ -24415,7 +24415,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			SeparateDrumsCheck.Checked = configIni.Read("SeparateDrums", true);
 			DifferenceCompositeModeCheck.Checked = configIni.Read("DifferenceCompositeMode", false);
 			TrackShadowCheck.Checked = configIni.Read("Shadow", false);
-			TrackShadowColorBtn.Tag = Color.FromArgb(configIni.Read("ShadowColor", Color.Black.ToArgb()));
+			TrackShadowColorBtn.Color = Color.FromArgb(configIni.Read("ShadowColor", Color.Black.ToArgb()));
 			int sonarCount = configIni.Read("Count", 0);
 			if (sonarCount == 0) ResetSonarToDefault();
 			else for (int i = 0; i < sonarCount; i++) {
@@ -24602,7 +24602,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("SeparateDrums", SeparateDrumsCheck.Checked);
 			configIni.Write("DifferenceCompositeMode", DifferenceCompositeModeCheck.Checked);
 			configIni.Write("Shadow", TrackShadowCheck.Checked);
-			configIni.Write("ShadowColor", ((Color)TrackShadowColorBtn.Tag).ToArgb());
+			configIni.Write("ShadowColor", TrackShadowColorBtn.Color.ToArgb());
 			configIni.Write("Count", SonarList.Items.Count);
 			int originalSonarCount = configIni.Read("Count", 0);
 			for (int i = 0; i < SonarList.Items.Count; i++)
@@ -26579,14 +26579,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void TrackShadowColorBtn_Click(object sender, EventArgs e) {
-			Button button = TrackShadowColorBtn;
+			/* Button button = TrackShadowColorBtn;
 			AlphaColorDialog dialog = new AlphaColorDialog {
 				AnyColor = true,
 				FullOpen = true,
 				Color = (Color)button.Tag,
 			};
 			if (dialog.ShowDialog() == DialogResult.Cancel) return;
-			button.Tag = dialog.Color;
+			button.Tag = dialog.Color; */
 		}
 
 		private void ConvertMusicBeatsBtn_Click(object sender, EventArgs e) {
