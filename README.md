@@ -5,7 +5,7 @@
 	<h1>VegasScripts</h1>
 	<p>
 		<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="State" />
-		<img src="https://img.shields.io/badge/VERSION-4.20.18.0-orange?style=flat-square" alt="Version" />
+		<img src="https://img.shields.io/badge/VERSION-4.20.19.0-orange?style=flat-square" alt="Version" />
 		<img src="https://img.shields.io/github/downloads/otomad/OtomadHelper/total.svg?style=flat-square&label=DOWNLOADS" alt="Downloads">
 	</p>
 </div>
@@ -46,6 +46,8 @@ You can also read [@Evauation](https://github.com/Evauation)'s [documentation](h
 	3. If you see the "Unlock" button or checkbox, click or check it.
 	4. Click OK button and you're done.
 4. Open the Vegas Pro to launch it. Select menu *Tools > Scripting > Otomad Helper* to open.
+
+> Note: If you need to use the full feature of Datamosh, you need to install the Datamosh extension pack.
 
 ### **Attention**
 Vegas Pro 13+ supported.
@@ -102,7 +104,8 @@ If you use this script, the script will use the following permissions.
 * [Edward's **JETDV** Scripts](https://www.jetdv.com/)
 * [Vegas Pro Scripting **Forum**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 * [Opulos's **Alpha Color Dialog**](https://sourceforge.net/projects/alpha-color-dialog/)
-* [Ookii.Dialogs.WinForms](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
+* [Ookii Dialogs WinForms **Progress Dialog**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
+* [Delthas's **Vegas Datamosh**](https://github.com/delthas/vegas-datamosh)
 
 ### Logo
 Inspired by:
@@ -122,6 +125,18 @@ Inspired by:
 
 **Chaosinism's original documentations:** *(Japanese)*
 * [Documentation (v0.1) (bowlroll)](https://bowlroll.net/user/261124)
+
+### License
+* This project is under the GPL 3.0.
+	* Chaosinism's original scripts are under the LGPL 3.0.
+		* Evan Kale's scripts are under the GPL 3.0.
+			* NAudio is under the MIT.
+* YTP+ are under the GPL 3.0.
+* Ookii Dialogs WinForms are under the BSD 3 Clause.
+* Delthas's Vegas Datamosh are under the MIT.
+	* FFmpeg is under the LGPL + GPL.
+	* Avidemux is under the GPL.
+	* Xvid codec is under the GPL.
 
 ---
 

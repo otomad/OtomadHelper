@@ -55,19 +55,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.ApplyBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 270);
+			this.dock.Location = new System.Drawing.Point(0, 281);
 			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(680, 52);
+			this.dock.Size = new System.Drawing.Size(682, 52);
 			this.dock.TabIndex = 7;
 			// 
 			// ApplyBtn
 			// 
 			this.ApplyBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ApplyBtn.Location = new System.Drawing.Point(472, 10);
+			this.ApplyBtn.Location = new System.Drawing.Point(474, 10);
 			this.ApplyBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.ApplyBtn.Name = "ApplyBtn";
 			this.ApplyBtn.Size = new System.Drawing.Size(94, 32);
@@ -80,7 +80,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(574, 10);
+			this.CancelBtn.Location = new System.Drawing.Point(576, 10);
 			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
@@ -118,7 +118,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.table.Size = new System.Drawing.Size(680, 240);
+			this.table.Size = new System.Drawing.Size(682, 240);
 			this.table.TabIndex = 8;
 			// 
 			// SubmitSelectBtn
@@ -261,7 +261,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SelectIntervalLbl.Location = new System.Drawing.Point(12, 16);
 			this.SelectIntervalLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 8);
 			this.SelectIntervalLbl.Name = "SelectIntervalLbl";
-			this.SelectIntervalLbl.Size = new System.Drawing.Size(656, 40);
+			this.SelectIntervalLbl.Size = new System.Drawing.Size(658, 40);
 			this.SelectIntervalLbl.TabIndex = 5;
 			this.SelectIntervalLbl.Text = "请先在 Vegas 轨道中选中一些素材，然后再打开本对话框，使用下面的功能。\r\n本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴事件属性”等操作。" +
     "";
@@ -275,7 +275,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SelectInfo.Location = new System.Drawing.Point(12, 64);
 			this.SelectInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 4);
 			this.SelectInfo.Name = "SelectInfo";
-			this.SelectInfo.Size = new System.Drawing.Size(656, 20);
+			this.SelectInfo.Size = new System.Drawing.Size(658, 20);
 			this.SelectInfo.TabIndex = 6;
 			this.SelectInfo.Text = "已选中 0 个轨道剪辑。";
 			this.SelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -287,7 +287,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(680, 322);
+			this.ClientSize = new System.Drawing.Size(682, 333);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);

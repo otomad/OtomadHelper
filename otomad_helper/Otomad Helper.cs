@@ -73,6 +73,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
@@ -101,9 +102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 20, 18, 0);
+		public static readonly Version VERSION = new Version(4, 20, 19, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 8, 18);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 8, 19);
 
 		// 配置参数变量
 		#region 视频属性
@@ -314,8 +315,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Type datamosh = configForm.RequestToDatamosh;
 			if (datamosh != null) {
 				configForm.IsIrreversibleCancel = true;
-				(Activator.CreateInstance(datamosh) as DataMosh.IDataMosh).Main(vegas, this);
-				// if (!configForm.CloseAfterOpenMoshCheck.Checked) requestRestartScript = true;
+				(Activator.CreateInstance(datamosh) as Datamosh.IDatamosh).Main(vegas, this);
+				 if (!configForm.CloseAfterOpenMoshCheck.Checked) requestRestartScript = true;
 			}
 			vegas.Transport.CursorPosition = configForm.originalCursorPosition;
 			return configForm.AcceptConfig;
@@ -1032,7 +1033,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (AConfig && AConfigMethod == AudioTuneMethod.PITCH_SHIFT) requestShowProgress = true;
 			long startMakingTime = DateTime.Now.Ticks; // 单位：100 纳秒
 			const long MUST_SHOW_PROGRESS_WAITING_TIME = 10000000L; // 1 秒
-			if (progressForm == null) { // 这里有一个特别蛇皮的 bug，就是如果手动打开一个不受 Vegas 支持的媒体文件，触发打不开媒体文件的报错。然后再打开一个 Vegas 支持的媒体文件，最后点击生成。这竟然会导致进度条对话框被销毁且不为 null 的奇葩问题，而且因果毫无任何关系。反正这样可以解决问题就行了。
+			if (progressForm == null || progressForm.IsDisposed) { // 这里有一个特别蛇皮的 bug，就是如果手动打开一个不受 Vegas 支持的媒体文件，触发打不开媒体文件的报错。然后再打开一个 Vegas 支持的媒体文件，最后点击生成。这竟然会导致进度条对话框被销毁且不为 null 的奇葩问题，而且因果毫无任何关系。反正这样可以解决问题就行了。
 				progressForm = new ProgressForm();
 				progressForm.Show();
 			}
@@ -3470,7 +3471,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private bool isInvertLumin = false;
 		private double hue = 0;
 		private bool isGrey = false;
-		private bool enableHueAdjust = false;
 		private int obliqueDirect = 0;
 		private int swingDirect = 0;
 		private int puyoShape = 0;
@@ -5571,7 +5571,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	}
 	#endregion
 
-	namespace DataMosh {
+	namespace Datamosh {
 		/// <summary>
 		/// Author: delthas<br />
 		/// Date: 2020-10-11<br />
@@ -5580,31 +5580,134 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// Documentation: https://github.com/delthas/vegas-datamosh<br />
 		/// Version: 1.4.1
 		/// </summary>
-		public interface IDataMosh {
+		public interface IDatamosh {
 			void Main(Vegas vegas, EntryPoint entryPoint);
 		}
 
-		public abstract class BaseUncompressedDataMosh {
+		public abstract class BaseUncompressedDatamosh : IDatamosh {
 			protected static void GetStandardTemplates(Vegas vegas) {
 				Template.GetStandardTemplates(vegas, Template.Mode.Uncompressed);
 			}
 			protected static RenderTemplate GetTemplate(Vegas vegas, int frameRate) {
 				return Template.GetTemplate(vegas, frameRate, Template.Mode.Uncompressed);
 			}
+			public abstract void Main(Vegas vegas, EntryPoint entryPoint);
+			protected bool CheckEnvironment(Vegas vegas, out string _scriptDirectory, out RenderTemplate _template) {
+				_scriptDirectory = "";
+				_template = null;
+				try {
+					var frameRate = vegas.Project.Video.FrameRate;
+					var frameRateInt = (int)Math.Round(frameRate * 1000);
+
+					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
+					if (scriptDirectory == null) {
+						MessageBox.Show("Couldn't get script directory path!");
+						return false;
+					}
+					_scriptDirectory = scriptDirectory;
+
+					var xvidPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+					if (string.IsNullOrEmpty(xvidPath)) {
+						xvidPath = Environment.GetEnvironmentVariable("ProgramFiles");
+					}
+					if (string.IsNullOrEmpty(xvidPath)) {
+						MessageBox.Show("Couldn't get Xvid install path!");
+						return false;
+					}
+					xvidPath += @"\Xvid\uninstall.exe";
+					if (!File.Exists(xvidPath)) {
+						MessageBox.Show(
+							"Xvid codec not installed. The script will install it now and may ask for admin access to install it.");
+						var xvid = new Process {
+								StartInfo = {
+								UseShellExecute = true,
+								FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "xvid", "xvid.exe"),
+								WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
+								Arguments =
+									"--unattendedmodeui none  --mode unattended  --AutoUpdater no --decode_divx DIVX  --decode_3ivx 3IVX --decode_divx DIVX --decode_other MPEG-4",
+								CreateNoWindow = true,
+								Verb = "runas"
+							}
+						};
+						try {
+							xvid.Start();
+						} catch (Win32Exception e) {
+							if (e.NativeErrorCode == 1223) {
+								MessageBox.Show("Admin privilege for Xvid installation refused.");
+								return false;
+							}
+							throw;
+						}
+
+						xvid.WaitForExit();
+						GetStandardTemplates(vegas);
+						GetTemplate(vegas, frameRateInt);
+						MessageBox.Show(
+							"Xvid installed and render template generated for the current frame rate. Please restart Vegas and run the script again.");
+						return false;
+					}
+
+					var template = GetTemplate(vegas, frameRateInt);
+					if (template == null) {
+						GetStandardTemplates(vegas);
+						GetTemplate(vegas, frameRateInt);
+						MessageBox.Show(
+							"Render template generated for the current frame rate. Please restart Vegas and run the script again.");
+						return false;
+					}
+					_template = template;
+				} catch (Exception e) {
+					MessageBox.Show("Unexpected exception: " + e.Message);
+					Debug.WriteLine(e);
+					return false;
+				}
+				return true;
+			}
 		}
-		public abstract class BaseUncomprAlphaDataMosh {
+		public abstract class BaseUncomprAlphaDatamosh : IDatamosh {
 			protected static void GetStandardTemplates(Vegas vegas) {
 				Template.GetStandardTemplates(vegas, Template.Mode.UncomprAlpha);
 			}
 			protected static RenderTemplate GetTemplate(Vegas vegas, int frameRate) {
 				return Template.GetTemplate(vegas, frameRate, Template.Mode.UncomprAlpha);
 			}
+			public abstract void Main(Vegas vegas, EntryPoint entryPoint);
+			protected bool CheckEnvironment(Vegas vegas, out string _scriptDirectory, out RenderTemplate _template) {
+				_scriptDirectory = "";
+				_template = null;
+				try {
+					var frameRate = vegas.Project.Video.FrameRate;
+					var frameRateInt = (int)Math.Round(frameRate * 1000);
+
+					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
+					if (scriptDirectory == null) {
+						MessageBox.Show("Couldn't get script directory path!");
+						return false;
+					}
+					_scriptDirectory = scriptDirectory;
+
+					var template = GetTemplate(vegas, frameRateInt);
+					if (template == null) {
+						GetStandardTemplates(vegas);
+						GetTemplate(vegas, frameRateInt);
+						MessageBox.Show(
+							"Render template generated for the current frame rate. Please restart Vegas and run the script again.");
+						return false;
+					}
+					_template = template;
+				} catch (Exception e) {
+					MessageBox.Show("Unexpected exception: " + e.Message);
+					Debug.WriteLine(e);
+					return false;
+				}
+				return true;
+			}
 		}
 
 		/// <summary>
 		/// Sets random automation values for video effects quickly and automatically.
 		/// </summary>
-		public class Automator : IDataMosh {
+		public class Automator : IDatamosh {
 			private static readonly Random Random = new Random();
 
 			public void Main(Vegas vegas, EntryPoint entryPoint) {
@@ -5655,19 +5758,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						using (MD5 md5 = MD5.Create()) {
 							hashed = BitConverter.ToString(md5.ComputeHash(Encoding.UTF8.GetBytes(key))).Replace("-", "");
 						}
-						var renderChecked = (string)Registry.GetValue(
-							"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-							"Automate_" + hashed, "");
+						var renderChecked = (string)Registry.GetValue(Template.DataPath, "Automate_" + hashed, "");
 						var defaultCheck = renderChecked != "False";
 
 						var prompt = new Form {
 							Width = 300,
-							Height = 150,
+							Height = 170,
 							Text = "Automator Parameters",
-							KeyPreview = true
+							KeyPreview = true,
 						};
-						var textLabel = new Label { Left = 10, Top = 10, Width = 280, Text = key };
-						var textLabel2 = new Label { Left = 80, Top = 45, Text = "Scramble" };
+						Template.OptimizePrompt(prompt, ImageBase64.AutomatorIcon);
+						var textLabel = new Label { Left = 10, Top = 10, Width = 280, Text = key, AutoSize = true };
+						var textLabel2 = new Label { Left = 80, Top = 45, Text = "Scramble", AutoSize = true };
 						var inputBox = new CheckBox {
 							Left = 200,
 							Top = 40,
@@ -5701,9 +5803,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						}
 
 						if (defaultCheck != inputBox.Checked) {
-							Registry.SetValue(
-								"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-								"Automate_" + hashed, inputBox.Checked.ToString(), RegistryValueKind.String);
+							Registry.SetValue(Template.DataPath, "Automate_" + hashed, inputBox.Checked.ToString(), RegistryValueKind.String);
 						}
 
 						if (inputBox.Checked) {
@@ -5804,7 +5904,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// Datamoshes a part of a video quickly and automatically (mosh a clip onto another).
 		/// </summary>
-		public class Datamix : BaseUncompressedDataMosh, IDataMosh {
+		public class Datamix : BaseUncompressedDatamosh {
 			private void Encode(Vegas vegas, string scriptDirectory, RenderArgs renderArgs, string pathEncoded) {
 				var status = vegas.Render(renderArgs);
 				if (status != RenderStatus.Complete) {
@@ -5837,7 +5937,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				File.Delete(renderArgs.OutputFile + ".sfl");
 			}
 
-			public void Main(Vegas vegas, EntryPoint entryPoint) {
+			public override void Main(Vegas vegas, EntryPoint entryPoint) {
 				var start = vegas.Transport.LoopRegionStart;
 				var length = vegas.Transport.LoopRegionLength;
 
@@ -5851,65 +5951,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 
 				try {
-					var frameRate = vegas.Project.Video.FrameRate;
-					var frameRateInt = (int)Math.Round(frameRate * 1000);
-
-					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
-					if (scriptDirectory == null) {
-						MessageBox.Show("Couldn't get script directory path!");
-						return;
-					}
-
-					var xvidPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
-					if (string.IsNullOrEmpty(xvidPath)) {
-						xvidPath = Environment.GetEnvironmentVariable("ProgramFiles");
-					}
-					if (string.IsNullOrEmpty(xvidPath)) {
-						MessageBox.Show("Couldn't get Xvid install path!");
-						return;
-					}
-					xvidPath += @"\Xvid\uninstall.exe";
-					if (!File.Exists(xvidPath)) {
-						MessageBox.Show(
-							"Xvid codec not installed. The script will install it now and may ask for admin access to install it.");
-						var xvid = new Process {
-							StartInfo = {
-								UseShellExecute = true,
-								FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "xvid", "xvid.exe"),
-								WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
-								Arguments =
-									"--unattendedmodeui none  --mode unattended  --AutoUpdater no --decode_divx DIVX  --decode_3ivx 3IVX --decode_divx DIVX --decode_other MPEG-4",
-								CreateNoWindow = true,
-								Verb = "runas"
-							}
-						};
-						try {
-							xvid.Start();
-						} catch (Win32Exception e) {
-							if (e.NativeErrorCode == 1223) {
-								MessageBox.Show("Admin privilege for Xvid installation refused.");
-								return;
-							}
-
-							throw;
-						}
-
-						xvid.WaitForExit();
-						GetStandardTemplates(vegas);
-						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(
-							"Xvid installed and render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
-						return;
-					}
-
-					var template = GetTemplate(vegas, frameRateInt);
-					if (template == null) {
-						GetStandardTemplates(vegas);
-						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(
-							"Render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
-						return;
-					}
+					string scriptDirectory;
+					RenderTemplate template;
+					if (!CheckEnvironment(vegas, out scriptDirectory, out template)) return;
 
 					VideoTrack videoTrack = null;
 					for (var i = vegas.Project.Tracks.Count - 1; i >= 0; i--) {
@@ -5924,9 +5968,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						return;
 					}
 
-					var finalFolder = (string)Registry.GetValue(
-						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-						"ClipFolder", "");
+					var finalFolder = (string)Registry.GetValue(Template.DataPath, "ClipFolder", "");
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
 						MessageBox.Show("Please select a folder to put generated datamoshed clips into.");
 						return;
@@ -6008,74 +6050,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// Datamoshes a part of a video quickly and automatically.
 		/// </summary>
-		public class Datamosh : BaseUncompressedDataMosh, IDataMosh {
-			public void Main(Vegas vegas, EntryPoint entryPoint) {
+		public class Datamosh : BaseUncompressedDatamosh {
+			public override void Main(Vegas vegas, EntryPoint entryPoint) {
 				var start = vegas.Transport.LoopRegionStart;
 				var length = vegas.Transport.LoopRegionLength;
 
 				try {
-					var frameRate = vegas.Project.Video.FrameRate;
-					var frameRateInt = (int)Math.Round(frameRate * 1000);
+					string scriptDirectory;
+					RenderTemplate template;
+					if (!CheckEnvironment(vegas, out scriptDirectory, out template)) return;
 
-					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
-					if (scriptDirectory == null) {
-						MessageBox.Show("Couldn't get script directory path!");
-						return;
-					}
-
-					var xvidPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
-					if (string.IsNullOrEmpty(xvidPath)) {
-						xvidPath = Environment.GetEnvironmentVariable("ProgramFiles");
-					}
-					if (string.IsNullOrEmpty(xvidPath)) {
-						MessageBox.Show("Couldn't get Xvid install path!");
-						return;
-					}
-					xvidPath += @"\Xvid\uninstall.exe";
-					if (!File.Exists(xvidPath)) {
-						MessageBox.Show(
-							"Xvid codec not installed. The script will install it now and may ask for admin access to install it.");
-						var xvid = new Process {
-							StartInfo = {
-								UseShellExecute = true,
-								FileName = System.IO.Path.Combine(scriptDirectory, "_internal", "xvid", "xvid.exe"),
-								WorkingDirectory = System.IO.Path.Combine(scriptDirectory, "_internal"),
-								Arguments =
-								"--unattendedmodeui none  --mode unattended  --AutoUpdater no --decode_divx DIVX  --decode_3ivx 3IVX --decode_divx DIVX --decode_other MPEG-4",
-								CreateNoWindow = true,
-								Verb = "runas"
-							}
-						};
-						try {
-							xvid.Start();
-						} catch (Win32Exception e) {
-							if (e.NativeErrorCode == 1223) {
-								MessageBox.Show("Admin privilege for Xvid installation refused.");
-								return;
-							}
-							throw;
-						}
-
-						xvid.WaitForExit();
-						GetStandardTemplates(vegas);
-						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(
-							"Xvid installed and render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
-						return;
-					}
-
-					var template = GetTemplate(vegas, frameRateInt);
-					if (template == null) {
-						GetStandardTemplates(vegas);
-						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(
-							"Render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
-						return;
-					}
-
-					var frameCount = (string)Registry.GetValue(
-						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-						"FrameCount", "");
+					var frameCount = (string)Registry.GetValue(Template.DataPath, "FrameCount", "");
 					var defaultCount = 1;
 					if (frameCount != "") {
 						try {
@@ -6090,13 +6075,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 					var prompt = new Form {
 						Width = 500,
-						Height = 140,
-						Text = "Datamoshing Parameters"
+						Height = 160,
+						Text = "Datamoshing Parameters",
 					};
-					var textLabel = new Label { Left = 10, Top = 10, Text = "Frame count" };
+					Template.OptimizePrompt(prompt, ImageBase64.DatamoshIcon);
+					var textLabel = new Label { Left = 10, Top = 10, Text = "Frame count", AutoSize = true };
 					var inputBox =
 						new NumericUpDown { Left = 200, Top = 10, Width = 200, Minimum = 1, Maximum = 1000000000, Value = defaultCount };
-					var textLabel2 = new Label { Left = 10, Top = 40, Text = "Frames repeats" };
+					var textLabel2 = new Label { Left = 10, Top = 40, Text = "Frames repeats", AutoSize = true };
 					var inputBox2 = new NumericUpDown {
 						Left = 200,
 						Top = 40,
@@ -6137,9 +6123,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 
 					if (defaultCount != size) {
-						Registry.SetValue(
-							"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-							"FrameCount", size.ToString(), RegistryValueKind.String);
+						Registry.SetValue(Template.DataPath, "FrameCount", size.ToString(), RegistryValueKind.String);
 					}
 
 					VideoTrack videoTrack = null;
@@ -6163,9 +6147,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						return;
 					}
 
-					var finalFolder = (string)Registry.GetValue(
-						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-						"ClipFolder", "");
+					var finalFolder = (string)Registry.GetValue(Template.DataPath, "ClipFolder", "");
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
 						MessageBox.Show("Please select a folder to put generated datamoshed clips into.");
 						return;
@@ -6285,8 +6267,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// Does multilayering on a part of a video quickly and automatically.
 		/// </summary>
-		public class Layering : BaseUncomprAlphaDataMosh, IDataMosh {
-			public void Main(Vegas vegas, EntryPoint entryPoint) {
+		public class Layering : BaseUncomprAlphaDatamosh {
+			public override void Main(Vegas vegas, EntryPoint entryPoint) {
 				var videoTrackIndex = -1;
 				VideoTrack videoTrackStart = null;
 				VideoEvent videoEvent = null;
@@ -6314,27 +6296,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 
 				try {
-					var frameRate = vegas.Project.Video.FrameRate;
-					var frameRateInt = (int)Math.Round(frameRate * 1000);
+					string scriptDirectory;
+					RenderTemplate template;
+					if (!CheckEnvironment(vegas, out scriptDirectory, out template)) return;
 
-					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
-					if (scriptDirectory == null) {
-						MessageBox.Show("Couldn't get script directory path!");
-						return;
-					}
-
-					var template = GetTemplate(vegas, frameRateInt);
-					if (template == null) {
-						GetStandardTemplates(vegas);
-						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(
-							"Render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
-						return;
-					}
-
-					var layeringCount = (string)Registry.GetValue(
-						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-						"LayerCount", "");
+					var layeringCount = (string)Registry.GetValue(Template.DataPath, "LayerCount", "");
 					var defaultCount = 1;
 					if (layeringCount != "") {
 						try {
@@ -6347,17 +6313,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						}
 					}
 
-					var renderChecked = (string)Registry.GetValue(
-						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-						"RenderLayer", "");
+					var renderChecked = (string)Registry.GetValue(Template.DataPath, "RenderLayer", "");
 					var defaultCheck = renderChecked == "True";
 					var prompt = new Form {
 						Width = 500,
-						Height = 170,
+						Height = 190,
 						Text = "Layering Parameters",
-						KeyPreview = true
+						KeyPreview = true,
 					};
-					var textLabel = new Label { Left = 10, Top = 10, Text = "Layer count" };
+					Template.OptimizePrompt(prompt, ImageBase64.LayerIcon);
+					var textLabel = new Label { Left = 10, Top = 10, Text = "Layer count", AutoSize = true };
 					var inputBox = new NumericUpDown {
 						Left = 200,
 						Top = 10,
@@ -6366,10 +6331,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						Maximum = 1000000000,
 						Value = defaultCount
 					};
-					var textLabel2 = new Label { Left = 10, Top = 40, Text = "Layering offset" };
+					var textLabel2 = new Label { Left = 10, Top = 40, Text = "Layering offset", AutoSize = true };
 					var inputBox2 =
 						new NumericUpDown { Left = 200, Top = 40, Width = 200, Minimum = -1000000000, Maximum = 1000000000, Text = "" };
-					var textLabel3 = new Label { Left = 10, Top = 70, Text = "Render" };
+					var textLabel3 = new Label { Left = 10, Top = 70, Text = "Render", AutoSize = true };
 					var inputBox3 = new CheckBox {
 						Left = 200,
 						Top = 70,
@@ -6415,15 +6380,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 
 					if (defaultCount != count) {
-						Registry.SetValue(
-							"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-							"LayerCount", count.ToString(), RegistryValueKind.String);
+						Registry.SetValue(Template.DataPath, "LayerCount", count.ToString(), RegistryValueKind.String);
 					}
 
 					if (defaultCheck != render) {
-						Registry.SetValue(
-							"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-							"RenderLayer", render.ToString(), RegistryValueKind.String);
+						Registry.SetValue(Template.DataPath, "RenderLayer", render.ToString(), RegistryValueKind.String);
 					}
 
 					var newTracks = new List<VideoTrack>();
@@ -6452,9 +6413,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 
 					if (!render) return;
-					var finalFolder = (string)Registry.GetValue(
-						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-						"ClipFolder", ""); // LayerClipFolder
+					var finalFolder = (string)Registry.GetValue(Template.DataPath, "ClipFolder", ""); // LayerClipFolder
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
 						MessageBox.Show("Select the folder to put generated layered clips into.\n" +
 							"(As they are stored uncompressed with alpha, they can take a lot of space (think 1 GB/minute). " +
@@ -6505,29 +6464,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// Renders a part of a video quickly and automatically.
 		/// </summary>
-		public class Render : BaseUncomprAlphaDataMosh, IDataMosh {
-			public void Main(Vegas vegas, EntryPoint entryPoint) {
+		public class Render : BaseUncomprAlphaDatamosh {
+			public override void Main(Vegas vegas, EntryPoint entryPoint) {
 				var start = vegas.Transport.LoopRegionStart;
 				var length = vegas.Transport.LoopRegionLength;
 
 				try {
-					var frameRate = vegas.Project.Video.FrameRate;
-					var frameRateInt = (int)Math.Round(frameRate * 1000);
-
-					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
-					if (scriptDirectory == null) {
-						MessageBox.Show("Couldn't get script directory path!");
-						return;
-					}
-
-					var template = GetTemplate(vegas, frameRateInt);
-					if (template == null) {
-						GetStandardTemplates(vegas);
-						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(
-							"Render template generated for the current frame rate. Please restart Sony Vegas and run the script again.");
-						return;
-					}
+					string scriptDirectory;
+					RenderTemplate template;
+					if (!CheckEnvironment(vegas, out scriptDirectory, out template)) return;
 
 					VideoTrack videoTrack = null;
 					for (var i = vegas.Project.Tracks.Count - 1; i >= 0; i--) {
@@ -6550,9 +6495,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						return;
 					}
 
-					var finalFolder = (string)Registry.GetValue(
-						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-						"ClipFolder", ""); // RenderClipFolder
+					var finalFolder = (string)Registry.GetValue(Template.DataPath, "ClipFolder", ""); // RenderClipFolder
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
 						MessageBox.Show("Select the folder to put generated rendered clips into.\n" +
 							"(As they are stored uncompressed with alpha, they can take a lot of space (think 1 GB/minute). " +
@@ -6611,10 +6554,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// Scrambles clips/events quickly and automatically.
 		/// </summary>
-		public class Scramble {
+		public class Scramble : IDatamosh {
 			private static readonly Random Random = new Random();
 
-			public void FromVegas(Vegas vegas) {
+			public void Main(Vegas vegas, EntryPoint entryPoint) {
 				var events = vegas.Project.Tracks
 					.SelectMany(track => track.Events)
 					.Where(t => t.Selected)
@@ -6628,10 +6571,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 				var prompt = new Form {
 					Width = 500,
-					Height = 110,
-					Text = "Scrambling Parameters"
+					Height = 130,
+					Text = "Scrambling Parameters",
 				};
-				var textLabel = new Label { Left = 10, Top = 10, Text = "Scramble size" };
+				Template.OptimizePrompt(prompt, ImageBase64.ScrambleIcon);
+				var textLabel = new Label { Left = 10, Top = 10, Text = "Scramble size", AutoSize = true };
 				var inputBox = new NumericUpDown {
 					Left = 200,
 					Top = 10,
@@ -6706,14 +6650,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// Stutters clips/events (play forward, backward, ...).
 		/// </summary>
-		public class Stutter {
+		public class Stutter : IDatamosh {
 			private static readonly Random Random = new Random();
 
 			private static int Rand(int bound, double power) {
 				return (int)Math.Pow(Random.Next((int)Math.Pow(bound, 1 / power)), power);
 			}
 
-			public void FromVegas(Vegas vegas) {
+			public void Main(Vegas vegas, EntryPoint entryPoint) {
 				var events = vegas.Project.Tracks
 					.SelectMany(track => track.Events)
 					.Where(t => t.Selected)
@@ -6730,10 +6674,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 				var prompt = new Form {
 					Width = 500,
-					Height = 140,
-					Text = "Stutter Parameters"
+					Height = 160,
+					Text = "Stutter Parameters",
 				};
-				var lengthLabel = new Label { Left = 10, Top = 10, Text = "Length in seconds" };
+				Template.OptimizePrompt(prompt, ImageBase64.ScrambleIcon);
+				var lengthLabel = new Label { Left = 10, Top = 10, Text = "Length in seconds", AutoSize = true };
 				var lengthInput = new NumericUpDown {
 					Left = 200,
 					Top = 10,
@@ -6742,7 +6687,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					Maximum = 10000,
 					Text = ""
 				};
-				var powLabel = new Label { Left = 10, Top = 40, Text = "Stutter window bias" };
+				var powLabel = new Label { Left = 10, Top = 40, Text = "Stutter window bias", AutoSize = true };
 				var powInput = new NumericUpDown {
 					Left = 200,
 					Top = 40,
@@ -6848,6 +6793,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		public static class Template {
+			public const string DataPath = "HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets";
+
 			public enum Mode {
 				Uncompressed,
 				UncomprAlpha,
@@ -6860,8 +6807,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 				var frameString = (frameRate / 1000).ToString("00") + "." + (frameRate % 1000).ToString("000");
 				var name = (mode == Mode.Uncompressed ? "Uncompressed " : "UncomprAlpha ") + frameString;
-				var template = vegas.Renderers.FindByRendererID(0).Templates
-					.FindByName(name);
+				var template = vegas.Renderers.FindByRendererID(0).Templates.FindByName(name);
 				if (template != null) {
 					return template;
 				}
@@ -6973,6 +6919,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 
 			private static byte[] Array4() { return new byte[] { 0x00, 0x00, 0x00, 0x00 }; }
+
+			public static void OptimizePrompt(Form prompt, string iconBase64) {
+				if (prompt == null) return;
+				if (EntryPoint.instance.configForm != null)
+					prompt.Font = EntryPoint.instance.configForm.Font;
+				prompt.AutoScaleMode = AutoScaleMode.Dpi;
+				prompt.FormBorderStyle = FormBorderStyle.FixedDialog;
+				prompt.MinimizeBox = false;
+				prompt.MaximizeBox = false;
+				prompt.ShowInTaskbar = false;
+				prompt.ShowIcon = true;
+				prompt.Icon = ImageBase64.GetIcon(iconBase64);
+				prompt.StartPosition = FormStartPosition.Manual;
+				prompt.Location = new Point(60, 60);
+				prompt.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
+			}
 		}
 	}
 
@@ -7342,7 +7304,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 	}
 
-	#region Animation Resource
+	#region 进度条对话框动画资源
 	/// <summary>
 	/// Represents an animation for the <see cref="ProgressDialog"/> loaded from a Win32 resource.
 	/// </summary>
@@ -7512,14 +7474,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	[ComImport]
 	[Guid(CLSIDGuid.ProgressDialog)]
-	internal class ProgressDialogRCW {
-	}
+	internal class ProgressDialogRCW { }
 
 	[ComImport,
 	Guid(IIDGuid.IProgressDialog),
 	CoClass(typeof(ProgressDialogRCW))]
-	internal interface ProgressDialog : IProgressDialog {
-	}
+	internal interface ProgressDialog : IProgressDialog { }
 
 	[Flags]
 	internal enum ProgressDialogFlags : uint {
@@ -7540,11 +7500,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		[PreserveSig]
 		void StartProgressDialog(
-			IntPtr hwndParent,
-			[MarshalAs(UnmanagedType.IUnknown)]
-			object punkEnableModless,
-			ProgressDialogFlags dwFlags,
-			IntPtr pvResevered
+				IntPtr hwndParent,
+				[MarshalAs(UnmanagedType.IUnknown)]
+				object punkEnableModless,
+				ProgressDialogFlags dwFlags,
+				IntPtr pvResevered
 			);
 
 		[PreserveSig]
@@ -7552,14 +7512,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		[PreserveSig]
 		void SetTitle(
-			[MarshalAs(UnmanagedType.LPWStr)]
-			string pwzTitle
+				[MarshalAs(UnmanagedType.LPWStr)]
+				string pwzTitle
 			);
 
 		[PreserveSig]
 		void SetAnimation(
-			SafeModuleHandle hInstAnimation,
-			ushort idAnimation
+				SafeModuleHandle hInstAnimation,
+				ushort idAnimation
 			);
 
 		[PreserveSig]
@@ -7568,36 +7528,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		[PreserveSig]
 		void SetProgress(
-			uint dwCompleted,
-			uint dwTotal
+				uint dwCompleted,
+				uint dwTotal
 			);
 		[PreserveSig]
 		void SetProgress64(
-			ulong ullCompleted,
-			ulong ullTotal
+				ulong ullCompleted,
+				ulong ullTotal
 			);
 
 		[PreserveSig]
 		void SetLine(
-			uint dwLineNum,
-			[MarshalAs(UnmanagedType.LPWStr)]
-			string pwzString,
-			[MarshalAs(UnmanagedType.VariantBool)]
-			bool fCompactPath,
-			IntPtr pvResevered
+				uint dwLineNum,
+				[MarshalAs(UnmanagedType.LPWStr)]
+				string pwzString,
+				[MarshalAs(UnmanagedType.VariantBool)]
+				bool fCompactPath,
+				IntPtr pvResevered
 			);
 
 		[PreserveSig]
 		void SetCancelMsg(
-			[MarshalAs(UnmanagedType.LPWStr)]
-			string pwzCancelMsg,
-			object pvResevered
+				[MarshalAs(UnmanagedType.LPWStr)]
+				string pwzCancelMsg,
+				object pvResevered
 			);
 
 		[PreserveSig]
 		void Timer(
-			uint dwTimerAction,
-			object pvResevered
+				uint dwTimerAction,
+				object pvResevered
 			);
 	}
 	#endregion
@@ -7812,11 +7772,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void CancelBtn_Click(object sender, EventArgs e) {
-			RequestAbort = true;
+			_requestAbort = true;
 			Close();
 		}
 
-		public bool RequestAbort = false;
+		private bool _requestAbort = false;
+		public bool RequestAbort { get { return _dialog.HasUserCancelled() || _requestAbort; } }
 		public int Minimum { get { return ProgressBar.Minimum; } }
 		public int Maximum { get { return ProgressBar.Maximum; } }
 
@@ -7828,10 +7789,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//ProgressBar.Value = value;
 			if (_dialog == null) return;
 			_dialog.SetProgress((uint)value, 100);
-			if (_dialog.HasUserCancelled()) {
-				CancelBtn_Click(null, null);
-				return;
-			}
 		}
 
 		public void ReportProgress(int value) {
@@ -7860,7 +7817,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		/// <summary>
-		/// A short description of the operation being carried out.
+		/// 对正在进行的操作的简短描述。
 		/// </summary>
 		public string ProgressText {
 			get { return PercentLabel.Text ?? string.Empty; }
@@ -7877,7 +7834,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		/// <summary>
-		/// Additional details about the operation being carried out.
+		/// 关于正在进行的操作的其他细节。
 		/// </summary>
 		public string Info {
 			get { return InfoLabel.Text ?? Lang.str.processing_otomad; }
@@ -7922,6 +7879,176 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			_dialog.StartProgressDialog(IntPtr.Zero, null, flags, IntPtr.Zero);
 		}
 	}
+
+	#region Vista 后文件夹选择器
+	#region Editor
+	/// <summary>
+	/// FolderBrowser 的设计器基类
+	/// </summary>
+	public class FolderNameEditor : UITypeEditor {
+		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) {
+			return UITypeEditorEditStyle.Modal;
+		}
+		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value) {
+			FolderBrowserDialog browser = new FolderBrowserDialog();
+			if (value != null) {
+				browser.DirectoryPath = string.Format("{0}", value);
+			}
+			if (browser.ShowDialog(null) == DialogResult.OK)
+				return browser.DirectoryPath;
+			return value;
+		}
+	}
+	#endregion
+
+	#region FolderBrowserDialog Base
+
+	/// <summary>
+	/// Vista 样式的选择文件对话框的基类
+	/// </summary>
+	[Description("提供一个Vista样式的选择文件对话框")]
+	[Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
+	public class FolderBrowserDialog : Component {
+		/// <summary>
+		/// 初始化 FolderBrowser 的新实例
+		/// </summary>
+		public FolderBrowserDialog() {
+		}
+
+		#region Public Property
+		/// <summary>
+		/// 获取在 FolderBrowser 中选择的文件夹路径
+		/// </summary>
+		public string DirectoryPath { get; set; }
+		/// <summary>
+		/// 向用户显示 FolderBrowser 的对话框
+		/// </summary>
+		/// <param name="owner">任何实现 System.Windows.Forms.IWin32Window（表示将拥有模式对话框的顶级窗口）的对象。</param>
+		/// <returns></returns>
+		public DialogResult ShowDialog(IWin32Window owner) {
+			IntPtr hwndOwner = owner != null ? owner.Handle : GetActiveWindow();
+			IFileOpenDialog dialog = (IFileOpenDialog)new FileOpenDialog();
+			try {
+				IShellItem item;
+				if (!string.IsNullOrEmpty(DirectoryPath)) {
+					IntPtr idl;
+					uint atts = 0;
+					if (SHILCreateFromPath(DirectoryPath, out idl, ref atts) == 0) {
+						if (SHCreateShellItem(IntPtr.Zero, IntPtr.Zero, idl, out item) == 0) {
+							dialog.SetFolder(item);
+						}
+					}
+				}
+				dialog.SetOptions(FOS.FOS_PICKFOLDERS | FOS.FOS_FORCEFILESYSTEM);
+				uint hr = dialog.Show(hwndOwner);
+				if (hr == ERROR_CANCELLED)
+					return DialogResult.Cancel;
+
+				if (hr != 0)
+					return DialogResult.Abort;
+				dialog.GetResult(out item);
+				string path;
+				item.GetDisplayName(SIGDN.SIGDN_FILESYSPATH, out path);
+				DirectoryPath = path;
+				return DialogResult.OK;
+			} finally {
+				Marshal.ReleaseComObject(dialog);
+			}
+		}
+		#endregion
+
+		#region BaseType
+		[DllImport("shell32.dll")]
+		private static extern int SHILCreateFromPath([MarshalAs(UnmanagedType.LPWStr)] string pszPath, out IntPtr ppIdl, ref uint rgflnOut);
+		[DllImport("shell32.dll")]
+		private static extern int SHCreateShellItem(IntPtr pidlParent, IntPtr psfParent, IntPtr pidl, out IShellItem ppsi);
+		[DllImport("user32.dll")]
+		private static extern IntPtr GetActiveWindow();
+		private const uint ERROR_CANCELLED = 0x800704C7;
+		[ComImport]
+		[Guid("DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7")]
+		private class FileOpenDialog {
+		}
+		[ComImport]
+		[Guid("42f85136-db7e-439c-85f1-e4075d135fc8")]
+		[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+		private interface IFileOpenDialog {
+			[PreserveSig]
+			uint Show([In] IntPtr parent); // IModalWindow
+			void SetFileTypes();  // not fully defined
+			void SetFileTypeIndex([In] uint iFileType);
+			void GetFileTypeIndex(out uint piFileType);
+			void Advise(); // not fully defined
+			void Unadvise();
+			void SetOptions([In] FOS fos);
+			void GetOptions(out FOS pfos);
+			void SetDefaultFolder(IShellItem psi);
+			void SetFolder(IShellItem psi);
+			void GetFolder(out IShellItem ppsi);
+			void GetCurrentSelection(out IShellItem ppsi);
+			void SetFileName([In, MarshalAs(UnmanagedType.LPWStr)] string pszName);
+			void GetFileName([MarshalAs(UnmanagedType.LPWStr)] out string pszName);
+			void SetTitle([In, MarshalAs(UnmanagedType.LPWStr)] string pszTitle);
+			void SetOkButtonLabel([In, MarshalAs(UnmanagedType.LPWStr)] string pszText);
+			void SetFileNameLabel([In, MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+			void GetResult(out IShellItem ppsi);
+			void AddPlace(IShellItem psi, int alignment);
+			void SetDefaultExtension([In, MarshalAs(UnmanagedType.LPWStr)] string pszDefaultExtension);
+			void Close(int hr);
+			void SetClientGuid();  // not fully defined
+			void ClearClientData();
+			void SetFilter([MarshalAs(UnmanagedType.Interface)] IntPtr pFilter);
+			void GetResults([MarshalAs(UnmanagedType.Interface)] out IntPtr ppenum); // not fully defined
+			void GetSelectedItems([MarshalAs(UnmanagedType.Interface)] out IntPtr ppsai); // not fully defined
+		}
+		[ComImport]
+		[Guid("43826D1E-E718-42EE-BC55-A1E261C37BFE")]
+		[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+		private interface IShellItem {
+			void BindToHandler(); // not fully defined
+			void GetParent(); // not fully defined
+			void GetDisplayName([In] SIGDN sigdnName, [MarshalAs(UnmanagedType.LPWStr)] out string ppszName);
+			void GetAttributes();  // not fully defined
+			void Compare();  // not fully defined
+		}
+		private enum SIGDN : uint {
+			SIGDN_DESKTOPABSOLUTEEDITING = 0x8004c000,
+			SIGDN_DESKTOPABSOLUTEPARSING = 0x80028000,
+			SIGDN_FILESYSPATH = 0x80058000,
+			SIGDN_NORMALDISPLAY = 0,
+			SIGDN_PARENTRELATIVE = 0x80080001,
+			SIGDN_PARENTRELATIVEEDITING = 0x80031001,
+			SIGDN_PARENTRELATIVEFORADDRESSBAR = 0x8007c001,
+			SIGDN_PARENTRELATIVEPARSING = 0x80018001,
+			SIGDN_URL = 0x80068000
+		}
+		[Flags]
+		private enum FOS {
+			FOS_ALLNONSTORAGEITEMS = 0x80,
+			FOS_ALLOWMULTISELECT = 0x200,
+			FOS_CREATEPROMPT = 0x2000,
+			FOS_DEFAULTNOMINIMODE = 0x20000000,
+			FOS_DONTADDTORECENT = 0x2000000,
+			FOS_FILEMUSTEXIST = 0x1000,
+			FOS_FORCEFILESYSTEM = 0x40,
+			FOS_FORCESHOWHIDDEN = 0x10000000,
+			FOS_HIDEMRUPLACES = 0x20000,
+			FOS_HIDEPINNEDPLACES = 0x40000,
+			FOS_NOCHANGEDIR = 8,
+			FOS_NODEREFERENCELINKS = 0x100000,
+			FOS_NOREADONLYRETURN = 0x8000,
+			FOS_NOTESTFILECREATE = 0x10000,
+			FOS_NOVALIDATE = 0x100,
+			FOS_OVERWRITEPROMPT = 2,
+			FOS_PATHMUSTEXIST = 0x800,
+			FOS_PICKFOLDERS = 0x20,
+			FOS_SHAREAWARE = 0x4000,
+			FOS_STRICTFILETYPES = 4
+		}
+		#endregion
+	}
+	#endregion
+	#endregion
 
 	public class ToolStripRadioButtonMenuItem : ToolStripMenuItem {
 		public ToolStripRadioButtonMenuItem()
@@ -9275,9 +9402,27 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 		}
 
+		/// <summary>
+		/// 根据 Base64 编码获得 <see cref="Icon"/> 类型图标。
+		/// </summary>
+		/// <param name="base64">Base64 编码字符串。</param>
+		/// <returns><see cref="Icon"/> 类型图标。</returns>
+		public static Icon GetIcon(string base64) {
+			byte[] buffer = Convert.FromBase64String(base64);
+			using (MemoryStream memory = new MemoryStream(buffer)) {
+				return new Icon(memory, new Size(16, 16));
+			}
+		}
+
 		#region 一堆数据
-		public static string CrossIcon = "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";
-		public static string CheckIcon = "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";
+		public const string CrossIcon = "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";
+		public const string CheckIcon = "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";
+		public const string DatamoshIcon = "AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAAA/wAAAP8AAAD/AAAA/w0NDf8QEBD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/CQkJ/ygoKP8AAAD/jY2N/1paWv98fHz/YGBg/35+fv9qamr/fHx8/2dnZ/98fHz/ZmZm/4mJif9kZGT/cXFx/21tbf9ycnL/dXV1/1RUVP9VVVX/YWFh/1ZWVv9gYGD/W1tb/2FhYf9ZWVn/YGBg/1lZWf9kZGT/WFhY/11dXf9bW1v/XFxc/0xMTP+lpaX///////////////////////////////////////////////////////7+/v+4urr///////////+lpaX/oKCg////////////juP7/zHk//+H1/D/Mub9/9/y///f4OD/hIeH/zY6O/8DCQr/CxAR/4+QkP//////oKCg/6CgoP///////////73h9P/R3+r/1tnd/7HX6f/J5vj/WVth/yMnKf8oLi7/Ky8x/yUqKv+Zmpr//////6CgoP+goKD////////////u7u7/9PPz/+3u7v/i4uH/1NTU/25vdf8yNzj/SU9Q/2htbv87P0H/nJ6e//////+goKD/oKCg//////+joaP/oqKi/7vt/P/h4OH/8O/v/wAAAP+Ympr/en5//7O1tv+ZnJ3/aGxt/8TExf//////oKCg/6CgoP///////////yMjJP+XxMn/p77L/1laWv9jY2P/goWF/ygtLv+Iiov//////////////////////6CgoP+goKD///////////+cm53/x8fH/2FhYf8/Pz//5eXl/83Nzf98f4D/TlRU/x0jJP9ydHX/8/T0//////+goKD/oKCg/////////////////7++v/+5ubn/4N/g/////////////////7S3t/+Dh4j/GiAh////////////oKCg/6CgoP//////////////////////////////////////////////////////3Nzd/9/g4P///////////6CgoP+jo6P///////////////////////////////////////////////////////////////////////////+ioqL/Xl5e/3Nzc/96enr/c3Nz/3p6ev93d3f/enp6/3V1df95eXn/dXV1/3x8fP90dHT/d3d3/3Z2dv93d3f/WFhY/4yMjP9YWFj/enp6/11dXf98fHz/a2tr/319ff9paWn/fn5+/2hoaP+Li4v/ZmZm/25ubv9sbGz/cnJy/3Nzc/8iIiL/Hx8f/y0tLf8vLy//JSUl/yMjI/8UFBT/AAAA/wAAAP8AAAD/AAAA/wAAAP83Nzf/KSkp/x8fH/8oKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
+		public const string DatamixIcon = "AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAAA/wAAAP8AAAD/AAAA/w0NDf8QEBD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/CQkJ/ygoKP8AAAD/jY2N/1paWv98fHz/YGBg/35+fv9qamr/fHx8/2dnZ/98fHz/ZmZm/4mJif9kZGT/cXFx/21tbf9ycnL/dXV1/1RUVP9VVVX/YWFh/1ZWVv9gYGD/W1tb/2FhYf9ZWVn/YGBg/1lZWf9kZGT/WFhY/11dXf9bW1v/XFxc/0xMTP+lpaX///////////////////////////////////////////////////////////////////////////+lpaX/oKCg///////psf///v3///////+7u///AAD//wAA//8AAP//AAD//7u7////////////////////////oKCg/6CgoP//////6bH//9td///psP//vLv//wkA//8AAP//AAD//wAA//+8vP///////////////////////6CgoP+goKD////////////24///6bH//9gy///psf//cRr//x0O//////////////////////////////////+goKD/oKCg///////////////////////+/f//6bH//9Av///QL///6bD///79////////////////////////oKCg/6CgoP////////////////////////////////81Lv//dy///+mx///bXf//6bD///79/////////////6CgoP+goKD/////////////////////////////////T0///09P////////9uP//+mx///YMv//6bH///////+goKD/oKCg//////////////////////+lpf//AAD//wAA//8AAP//AAD//6Wl/////////v3//+qy////////oKCg/6CgoP//////////////////////srL//yoq//8AAP//AAD//yoq//+ysv///////////////////////6CgoP+jo6P///////////////////////////////////////////////////////////////////////////+ioqL/Xl5e/3Nzc/96enr/c3Nz/3p6ev93d3f/enp6/3V1df95eXn/dXV1/3x8fP90dHT/d3d3/3Z2dv93d3f/WFhY/4yMjP9YWFj/enp6/11dXf98fHz/a2tr/319ff9paWn/fn5+/2hoaP+Li4v/ZmZm/25ubv9sbGz/cnJy/3Nzc/8iIiL/Hx8f/y0tLf8vLy//JSUl/yMjI/8UFBT/AAAA/wAAAP8AAAD/AAAA/wAAAP83Nzf/KSkp/x8fH/8oKCj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
+		public const string LayerIcon = "AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACkpKf/Pz8//z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//x8fI/8fHyP/Hx8j/AAAAAAAAAAApKSn/vLy9/7y8vf+pqav/qamr/6mpq/+pqav/qamr/6mpq/+pqav/qamr/7Cwsv+wsLL/sLCy/wAAAAAAAAAAKSkp/8/Pz//Pz8//z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//z8/P/8/Pz/8AAAAAAAAAACkpKf8pKSn/KSkp/ykpKf8pKSn/KSkp/ykpKf8pKSn/KSkp/ykpKf8pKSn/KSkp/ykpKf8pKSn/AAAAAAAAAAAAAAAAAAAAAAAAAAApKSn/z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//z8/P/wAAAAAAAAAAAAAAAAAAAAAAAAAAKSkp/7y8vf+8vL3/qamr/6mpq/+pqav/qamr/6mpq/+pqav/qamr/6mpq/8AAAAAAAAAAAAAAAAAAAAAAAAAACkpKf/Pz8//z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//AAAAAAAAAAAAAAAAAAAAAAAAAAApKSn/KSkp/ykpKf8pKSn/KSkp/ykpKf8pKSn/KSkp/ykpKf8pKSn/KSkp/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKSkp/8vLy//Ly8v/x8fI/8/Pz//Pz8//z8/P/8/Pz/8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACkpKf/AwMD/wMDA/7Cwsv+pqav/qamr/6mpq/+pqav/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApKSn/z8/P/8/Pz//Pz8//z8/P/8/Pz//Pz8//z8/P/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKSkp/ykpKf8pKSn/KSkp/ykpKf8pKSn/KSkp/ykpKf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApKSn/xcXG/8XFxv+8vL3/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKSkp/8XFxv/Fxcb/vLy9/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACkpKf8pKSn/KSkp/ykpKf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAMAAAADAAAAAwAAAAPgAAAD4AAAA+AAAAPgAAAD/AAAA/wAAAP8AAAD/AAAA//AAAP/wAAD/8AAA//8AAA==";
+		public const string RenderIcon = "AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAuJBD/7CTUP8AAAAAoJFn/52bcf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnZtx/65hRv+zc0H/qqdl/6xcSP+1f0T/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALeCP5ytekv/p3ZT/72qSP+pVE7/qldL/7yeQ/+sXEj/qldL/7yeQ/+wZ0T/sGdE/7BnRP+wZ0T/AAAAAAAAAAC3gj+Ct4I//7BnRP+sXEj/sGdE/6xcSP+qV0v/t4I//7NzQf+pVE7/uYo+/8GiPv/Boj7/waI+/wAAAAAAAAAAAAAAAJmXdma5ij7/qVRO/7eCP/+2fED/qVRO/6ybWv+8sE3/vpk+/5mXdmY0MjH/AAAAAFZPSf8AAAAAAAAAAAAAAAAAAAAAsJNQ/6lUTv+0l0z/uadM/7eCP/+Zl3Zmf7Bs/5jEcP+Mwnb/AAAA/xgVFP9WT0n/AAAAAAAAAAAAAAAAAAAAAKybWv+sXEj/qqdl/wAAAAATExP/nNmE/5zZhP+c2YT/nNmE/wICAv8AAAAAVk9J/wAAAAAAAAAAAAAAAAAAAAAAAAAAtrJY/4aBbv8xLyz/Dg0M/5zZhP+c2YT/nNmE/5zZhP8ODQz/JSIf/1ZPSf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABWT0n/AAAAACQgHv+c2YT/nNmE/5zZhP+c2YT/JCAe/wAAAABWT0n/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVk9J/1ZPSf9DPTn/nNmE/5zZhP+c2YT/nNmE/0M9Of9WT0n/Vk9J/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFZPSf8AAAAAZl1W/5zZhP+c2YT/nNmE/5zZhP9mXVb/AAAAAFZPSf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABWT0n/m46EiAAAAACc2YT/nNmE/5zZhP+c2YT/AAAAAJuOhIhWT0n/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVk9J/wAAAABWT0n/Vk9J/1ZPSf9WT0n/Vk9J/1ZPSf8AAAAAVk9J/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8n8AAOB/AAAAAwAAAAMAAIALAADAAwAAxAsAAOADAAD0CwAA8AMAAPQLAADyEwAA9AsAAP//AAD//wAA//8AAA==";
+		public const string ScrambleIcon = "AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc3WCzDg/cf8yOm//TVN3/wAAAAAAAAAAAAAAAAAAAABiZX3/R011/0dNdf9dYXz/AAAAAAAAAAAAAAAAAAAAAD1Ecv84QHX/bXOY/zI6b/9DSXT/AAAAAAAAAABiZX3/Mjpv/0BJe/9KUoL/Mjpv/1hdev8AAAAAAAAAAAAAAAAyOm//io2p//////+mpbz/Mjpv/2Jlff8AAAAAQ0l0/0BJe////////////2Bnkf84P3H/AAAAAAAAAAAAAAAAOD9x/21zmP///////////0pSgv9BRmz/AAAAADA2Zv9gZ5H///////////97f6H/Mjpv/wAAAAAAAAAAAAAAAFJXeP8yOm//wMDR//////9UXIn/Ki9S/zMxL/8mKkb/Mjpv/3t/of+Kjan/Mjpv/0dNdf8AAAAAAAAAAAAAAAAAAAAAOD9x/zI6b/9gZ5H/Mjpv/zk/Xv8fHBr/zsnK/zI5Xv8yOm//Mjpv/0NJdP8AAAAAAAAAAAAAAAAAAP9lAAD/FXd5g0RNU3f/Mjpv/yovUv89OTf/hXlx/7+3sf8mIyH/dXZ8iHd5g0QAAAAAAAAAAAAA/ygAAP+oAAD/4gAA/5cAAAAAAAAAAAAAAABGREP/JiMg/+3r6f89ODT/WlhX/wAAAAAAAAAAAAD/FQAA/6AAAP/FAAD/ugAA/90AAP/3AAD/iwAAAAAAAAAALCko/6SZkP8AAAAAHxwa/0ZEQ/8AAAAAAAD/FQAA/8kAAP/qAAD/2gAA/7cAAP/aAAD/5gAA/2QAAAAAWlhX/z04NP/t6+n/JiMg/7GnoP8mIyD/bm1t/wAAAAAAAP9hAAD/rQAA/+AAAP+XAAD/yAAA/ygAAAAAAAAAACYjIf+/t7H/ZFxV/x8cGv8AAAAAhXlx/zk3Nf8AAAAAAAAAAAAAAAAAAP96AAD/ngAA/zYAAAAAAAAAAE1MS/9VTUj/v7ex/yYjIf9hYF//JiMg/+3r6f8yLir/YWBf/wAAAAAAAAAAAAAAAAAA/xUAAAAAAAAAAAAAAAAfHBr/3dnW/0hBPf9UUlH/AAAAAEA+Pf90amL/pJmQ/zk3Nf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALCko/3RqYv8sKSj/AAAAAAAAAAAAAAAAJiMh/3RqYv9APj3/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA+Pf8fHBr/bm1t/wAAAAAAAAAAAAAAAFRSUf8fHBr/VFJR/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABaWFf/RkRD/wAAAAAAAAAAAAAAAAAAAAAAAAAAMzEv/3Rzc8wAAAAAAAAAAAAAAAAAAAAAh4cAAIMDAACBAwAAgQMAAIADAADABwAAAAwAADgwAAAZIAAAEBAAADCcAABgDgAA4Q8AAOOPAADjjwAA588AAA==";
+		public const string AutomatorIcon = "AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADY2Ngw2Njb/NjY2/zY2Nrk2NjYXNjY2FjY2Nt42Njb/NjY2ujY2NgwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2NjYRNjY28DY2NvI2Njb6NjY23jY2NrY2NjbfNjY27TY2Nvc2NjZcNjY2HTY2NgkAAAAAAAAAAAAAAAAAAAAANjY2HDY2NvA2NjbxNjY2/zY2Nv82Nja3NjY2szY2NrM2Nja3NjY2/zY2Nvc2Nja5NjY2CgAAAAA2NjYMNjY2HzY2Nss2NjbnNjY2tTY2Nis2NjYZLy+RCi8vkQo2NjYHNjY2DjY2Nrc2Njb9NjY2/zY2NlQ2NjYDNjY2/zY2Nv82Njb/NjY2uDY2Ng4WFu4DFhbuIhYW7mQWFu5iFhbuDxYW7gM2NjYONjY2vTY2Nv82NjYzAAAAADY2Nv82NjbqNjY2/zY2NhkWFu4DFhbuahYW7v8WFu7/Fhbu/xYW7v8WFu5VFhbuAzY2NhQ2NjbpNjY25jY2Ng42NjYhNjY2/zY2NmA2NjYDFhbuFRYW7v8WFu7/FhbuMhYW7lwWFu7/Fhbu/xYW7g82NjYHNjY2sjY2Nrc2NjYWJye+GzU1VP8yMnVcHR3eExYW7icWFu7/FhbuvhYW7hMWFu4PFhbuKRYW7v8WFu5ZHx/ZDzQ0YF01NUn/NTVL3xYW7v8WFu7/Fhbu/xYW7v8WFu7/Fhbu/xYW7v8WFu7/Fhbu/xYW7v8WFu7/Fhbu6BYW7rQaGubCIyPO/yMjzvkjI84XNDRcujQ0XbYiItIZFhbuZBYW7v8WFu6YFhbuWRYW7lEWFu5YFhbuzRYW7uYYGOu6ICDX/xYW7v8YGOu7NjY2CjY2Nso2Nja3NjY2BxYW7h4WFu7/Fhbu/xYW7rkWFu4cFhbuXBYW7v8WFu4bMzNvLzU1Sv8zM2iYKCi5DTY2NhY2Njb/NjY2/zY2NiA2NjYDFhbuJBYW7ssWFu7nFhbu/xYW7v8WFu7/Ly+MKzY2Nv82NjbUNjY2YjY2NgM2NjYHNjY2vDY2Nvo2Njb/NjY2YDY2NhUWFu4KFhbuDhYW7hAdHd4TLi6WJTY2Nv82Njb/NjY2/zY2NlQ2NjYDNjY2BzY2Nrs2Njb+NjY2/zY2Nv42NjbJNjY2FjY2Ngo2NjYmNjY2cDY2Nv82Njb/NjY22zY2Nv82NjYPAAAAADY2Ngc2NjaxNjY26jY2Nv82NjbqNjY2/zY2Nv82Nja7NjY2/zY2Nv82Njb/NjY2JDY2Ng02NjYMAAAAAAAAAAAAAAAANjY2BzY2Ng42NjYXNjY2DjY2NiI2Njb/NjY2/zY2Nvk2Njb5NjY2uTY2NgcAAAAAAAAAAAAAAAAAAAAAwA8AAMADAADAAQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAwAAgA8AAA==";
 		#endregion
 	}
 
@@ -13371,7 +13516,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 		public abstract class BaseAutoLayoutTracksInfo {
 			public bool enabled = false;
-			private readonly MidiChannels channels;
 			public MidiChannels Channels { get { return allInfos.channels; } }
 			private AutoLayoutTracksInfos allInfos;
 			public AutoLayoutTracksInfos AllInfos { get { return allInfos; } }
@@ -13458,20 +13602,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 97);
+			this.dock.Location = new System.Drawing.Point(0, 101);
 			this.dock.Margin = new System.Windows.Forms.Padding(5);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(416, 52);
+			this.dock.Size = new System.Drawing.Size(432, 52);
 			this.dock.TabIndex = 8;
 			// 
 			// OkBtn
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(208, 10);
+			this.OkBtn.Location = new System.Drawing.Point(224, 10);
 			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(94, 32);
@@ -13483,7 +13627,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(310, 10);
+			this.CancelBtn.Location = new System.Drawing.Point(326, 10);
 			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
@@ -13505,7 +13649,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(416, 83);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(432, 83);
 			this.tableLayoutPanel1.TabIndex = 9;
 			// 
 			// IncreaseSpacingLbl
@@ -13517,7 +13661,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.IncreaseSpacingLbl.Location = new System.Drawing.Point(10, 10);
 			this.IncreaseSpacingLbl.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
 			this.IncreaseSpacingLbl.Name = "IncreaseSpacingLbl";
-			this.IncreaseSpacingLbl.Size = new System.Drawing.Size(396, 28);
+			this.IncreaseSpacingLbl.Size = new System.Drawing.Size(412, 28);
 			this.IncreaseSpacingLbl.TabIndex = 0;
 			this.IncreaseSpacingLbl.Text = "在指定的剪辑之间增加的间隙时间：";
 			this.IncreaseSpacingLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -13527,7 +13671,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.IncreaseSpacingText.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.IncreaseSpacingText.Location = new System.Drawing.Point(13, 53);
 			this.IncreaseSpacingText.Name = "IncreaseSpacingText";
-			this.IncreaseSpacingText.Size = new System.Drawing.Size(390, 27);
+			this.IncreaseSpacingText.Size = new System.Drawing.Size(406, 27);
 			this.IncreaseSpacingText.TabIndex = 1;
 			this.IncreaseSpacingText.Leave += new System.EventHandler(this.IncreaseSpacingText_Leave);
 			// 
@@ -13538,7 +13682,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(416, 149);
+			this.ClientSize = new System.Drawing.Size(432, 153);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
@@ -13578,6 +13722,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
 			ReadIni();
+			Height = IncreaseSpacingLbl.Parent.Height + dock.Height + SelectIntervalForm.MARGIN;
 			FormClosing += (sender, e) => SaveIni();
 		}
 
@@ -13594,7 +13739,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			OkBtn.Text = str.ok;
 			CancelBtn.Text = str.cancel;
 			IncreaseSpacingLbl.Text = str.increase_spacing_info + str.colon;
-			Text = str.increase_spacing;
 		}
 
 		public void SaveIni() {
@@ -14669,7 +14813,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	}
 
 	public class ColorButton : Button {
-		private readonly ColorDialog dialog = new ColorDialog {
+		private readonly AlphaColorDialog dialog = new AlphaColorDialog {
 			AnyColor = true,
 			FullOpen = true,
 			Color = Color.White,
@@ -14679,13 +14823,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			base.UseVisualStyleBackColor = false;
 			base.BackColor = Color.White;
 			base.ForeColor = Color.Black;
-			base.Text = "#FFFFFF";
+			base.Text = "#FFFFFFFF";
 			Click += ColorButton_Click;
 		}
 
 		private void ColorButton_Click(object sender, EventArgs e) {
+			Color backup = Color;
 			DialogResult dr = dialog.ShowDialog();
-			if (dr == DialogResult.OK) Color = dialog.Color;
+			if (dr == DialogResult.OK)
+				Color = dialog.Color;
+			else
+				dialog.Color = backup;
 		}
 
 		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("该控件不支持此属性。"), DefaultValue(false)]
@@ -14706,10 +14854,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			set { base.ForeColor = value; }
 		}
 
-		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("该控件不支持此属性。"), DefaultValue("#FFFFFF")]
+		private string _text = string.Empty;
+		[Category("Appearance"), DefaultValue(""), Description("与控件关联的文本。")]
 		public new string Text {
-			get { return base.Text; }
-			set { base.Text = value; }
+			get { return _text; }
+			set {
+				_text = value;
+				if (string.IsNullOrEmpty(value))
+					base.Text = Hex;
+				else
+					base.Text = _text;
+			}
 		}
 
 		[Category("Appearance"), DefaultValue(typeof(Color), "White"), Description("用户选定的颜色。")]
@@ -14718,20 +14873,33 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			set {
 				base.BackColor = dialog.Color = value;
 				base.ForeColor = GetForeColor(value);
-				base.Text = '#' + value.R.ToString("X2") + value.G.ToString("X2") + value.B.ToString("X2");
+				if (string.IsNullOrEmpty(_text))
+					Text = string.Empty;
 			}
 		}
 
-		[Category("Appearance"), DefaultValue("#FFFFFF"), Description("颜色的十六进制代码。")]
+		[Category("Appearance"), DefaultValue("#FFFFFFFF"), Description("颜色的十六进制代码。")]
 		public string Hex {
-			get { return base.Text; }
+			get {
+				return '#' + Color.R.ToString("X2") + Color.G.ToString("X2") + Color.B.ToString("X2") + Color.A.ToString("X2");
+			}
 			set {
-				MatchCollection matches = Regex.Matches(value.ToUpper(), @"#[0-9A-F]{6}");
-				string color = matches.Count != 0 ? matches[0].ToString() : "#000000";
+				MatchCollection matches = Regex.Matches(value.ToUpper(), @"#[0-9A-F]{8}");
+				string color;
+				if (matches.Count != 0)
+					color = matches[0].ToString();
+				else {
+					matches = Regex.Matches(value.ToUpper(), @"#[0-9A-F]{6}");
+					if (matches.Count != 0)
+						color = matches[0].ToString() + "FF";
+					else
+						color = "#00000000";
+				}
 				int r = Convert.ToInt16(color.Substring(1, 2), 16),
 					g = Convert.ToInt16(color.Substring(3, 2), 16),
-					b = Convert.ToInt16(color.Substring(5, 2), 16);
-				Color = Color.FromArgb(r, g, b);
+					b = Convert.ToInt16(color.Substring(5, 2), 16),
+					a = Convert.ToInt16(color.Substring(7, 2), 16);
+				Color = Color.FromArgb(a, r, g, b);
 			}
 		}
 
@@ -14741,7 +14909,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="backColor">背景颜色。</param>
 		/// <returns>黑色或白色。</returns>
 		public static Color GetForeColor(Color backColor) {
-			double grey = backColor.R * 0.3 + backColor.G * 0.59 + backColor.B * 0.11;
+			int r = backColor.R, g = backColor.G, b = backColor.B, a = backColor.A;
+			Func<int, int> MixAlpha = new Func<int, int>(c => (255 - c) * (255 - a) / 255 + c);
+			r = MixAlpha(r);
+			g = MixAlpha(g);
+			b = MixAlpha(b);
+			double grey = r * 0.3 + g * 0.59 + b * 0.11;
 			return grey < 128 ? Color.White : Color.Black;
 		}
 	}
@@ -15093,14 +15266,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Size sz = dialogAlpha.Size;
 				RECT r = new RECT();
 				GetWindowRect(handle, ref r);
-				//dialogAlpha.Location = new Point(r.Left + (r.Right - r.Left - sz.Width) / 2, r.Top + (r.Bottom - r.Top - sz.Height) / 2); // 位于父窗口中央
-				dialogAlpha.Location = new Point(r.Right, r.Top);
+				//dialogAlpha.Location = new Point(r.Left + (r.Right - r.Left - sz.Width) / 2, r.Top + (r.Bottom - r.Top - sz.Height) / 2); // 位于父窗口中央。
+				dialogAlpha.Location = new Point(r.Right, r.Top); // 位于父窗口右上角。
 				dialogAlpha.FormBorderStyle = FormBorderStyle.FixedDialog;
 				dialogAlpha.MinimizeBox = false;
 				dialogAlpha.MaximizeBox = false;
 				dialogAlpha.ShowInTaskbar = false;
 				dialogAlpha.Font = new Font("Segoe UI", 9F);
-				dialogAlpha.ReserveSystemMenuItems(SystemMenuItemType.CLOSE);
 			}
 
 			panelAlpha.Color = _color;
@@ -15108,6 +15280,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (!dialogAlpha.IsHandleCreated || !dialogAlpha.Visible) {
 				dialogAlpha.Visible = false; // sometimes IsHandleCreated is reset, so Visible must be reset
 				dialogAlpha.Show(new SimpleWindow { Handle = handle });
+				WindowDragTimer_Tick(null, null);
+				dialogAlpha.ReserveSystemMenuItems(SystemMenuItemType.CLOSE);
 			} else {
 				if (dialogAlpha.WindowState == FormWindowState.Minimized)
 					dialogAlpha.WindowState = FormWindowState.Normal;
@@ -15274,7 +15448,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		protected override IntPtr HookProc(IntPtr hWnd, int msg, IntPtr wparam, IntPtr lparam) {
 			//System.Diagnostics.Debug.WriteLine((Opulos.Core.Win32.WM) msg);
 			if (msg == WM_INITDIALOG) {
-				alphaBackup = Color.A;
+				//alphaBackup = Color.A;
 				IntPtr hWndOK = GetDlgItem(hWnd, 0x1); // 0x1 == OK button
 				RECT rOK = new RECT();
 				GetWindowRect(hWndOK, ref rOK);
@@ -15329,6 +15503,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				hWndGreen = GetDlgItem(hWnd, 0x02c3);
 				hWndBlue = GetDlgItem(hWnd, 0x02c4);
 			} else if (msg == WM_SHOWWINDOW) {
+				alphaBackup = Color.A;
 				//center the dialog on the parent window:
 				RECT cr = new RECT();
 				RECT r0 = new RECT();
@@ -16024,7 +16199,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DifferenceCompositeModeCheck = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel15 = new System.Windows.Forms.FlowLayoutPanel();
 			this.TrackShadowCheck = new System.Windows.Forms.CheckBox();
-			this.TrackShadowColorBtn = new System.Windows.Forms.Button();
+			this.TrackShadowColorBtn = new Otomad.VegasScript.OtomadHelper.V4.ColorButton();
 			this.SonarList = new System.Windows.Forms.ListView();
 			this.SonarNameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.SonarShapeHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -16125,6 +16300,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FindClipsBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
 			this.HelperLbl = new System.Windows.Forms.Label();
+			this.MoshTab = new System.Windows.Forms.TabPage();
+			this.DatamoshTable = new System.Windows.Forms.TableLayoutPanel();
+			this.CloseAfterOpenMoshCheck = new System.Windows.Forms.CheckBox();
+			this.DatamoshClipsFolderGroup = new System.Windows.Forms.GroupBox();
+			this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
+			this.DatamoshClipsFolderOpenButton = new System.Windows.Forms.Button();
+			this.DatamoshClipsFolderTxt = new System.Windows.Forms.TextBox();
+			this.DatamoshClipsFolderButton = new System.Windows.Forms.Button();
+			this.DatamoshBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.DatamixBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.LayeringBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.RenderingBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.ScrambleBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.AutomatorBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.DatamoshNotInstalledTable = new System.Windows.Forms.TableLayoutPanel();
+			this.DatamoshNotInstalledInfo = new System.Windows.Forms.Label();
+			this.DownloadDatamoshLink = new System.Windows.Forms.LinkLabel();
 			this.TrackLegatoMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.stackingTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stackingAllAfterTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -16141,22 +16333,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.MoshTab = new System.Windows.Forms.TabPage();
-			this.DatamoshNotInstalledTable = new System.Windows.Forms.TableLayoutPanel();
-			this.DatamoshNotInstalledInfo = new System.Windows.Forms.Label();
-			this.DownloadDatamoshLink = new System.Windows.Forms.LinkLabel();
-			this.AutomatorBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
-			this.ScrambleBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
-			this.RenderingBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
-			this.LayeringBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
-			this.DatamixBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
-			this.DatamoshBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
-			this.DatamoshClipsFolderGroup = new System.Windows.Forms.GroupBox();
-			this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
-			this.DatamoshClipsFolderButton = new System.Windows.Forms.Button();
-			this.DatamoshClipsFolderTxt = new System.Windows.Forms.TextBox();
-			this.CloseAfterOpenMoshCheck = new System.Windows.Forms.CheckBox();
-			this.DatamoshTable = new System.Windows.Forms.TableLayoutPanel();
+			this.StutterBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
@@ -16269,12 +16446,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksButtons.SuspendLayout();
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
-			this.TrackLegatoMenu.SuspendLayout();
 			this.MoshTab.SuspendLayout();
-			this.DatamoshNotInstalledTable.SuspendLayout();
+			this.DatamoshTable.SuspendLayout();
 			this.DatamoshClipsFolderGroup.SuspendLayout();
 			this.tableLayoutPanel21.SuspendLayout();
-			this.DatamoshTable.SuspendLayout();
+			this.DatamoshNotInstalledTable.SuspendLayout();
+			this.TrackLegatoMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -21045,7 +21222,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TrackShadowColorBtn.Size = new System.Drawing.Size(113, 30);
 			this.TrackShadowColorBtn.TabIndex = 8;
 			this.TrackShadowColorBtn.Text = "阴影颜色...";
-			this.TrackShadowColorBtn.UseVisualStyleBackColor = true;
 			this.TrackShadowColorBtn.Click += new System.EventHandler(this.TrackShadowColorBtn_Click);
 			// 
 			// SonarList
@@ -22781,6 +22957,258 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HelperLbl.TabIndex = 2;
 			this.HelperLbl.Text = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。";
 			// 
+			// MoshTab
+			// 
+			this.MoshTab.AutoScroll = true;
+			this.MoshTab.Controls.Add(this.DatamoshTable);
+			this.MoshTab.Controls.Add(this.DatamoshNotInstalledTable);
+			this.MoshTab.Location = new System.Drawing.Point(4, 29);
+			this.MoshTab.Name = "MoshTab";
+			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
+			this.MoshTab.Size = new System.Drawing.Size(658, 616);
+			this.MoshTab.TabIndex = 7;
+			this.MoshTab.Text = "混乱";
+			this.MoshTab.UseVisualStyleBackColor = true;
+			// 
+			// DatamoshTable
+			// 
+			this.DatamoshTable.AutoSize = true;
+			this.DatamoshTable.ColumnCount = 1;
+			this.DatamoshTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.DatamoshTable.Controls.Add(this.StutterBtn, 0, 8);
+			this.DatamoshTable.Controls.Add(this.CloseAfterOpenMoshCheck, 0, 0);
+			this.DatamoshTable.Controls.Add(this.DatamoshClipsFolderGroup, 0, 1);
+			this.DatamoshTable.Controls.Add(this.DatamoshBtn, 0, 2);
+			this.DatamoshTable.Controls.Add(this.DatamixBtn, 0, 3);
+			this.DatamoshTable.Controls.Add(this.LayeringBtn, 0, 4);
+			this.DatamoshTable.Controls.Add(this.RenderingBtn, 0, 5);
+			this.DatamoshTable.Controls.Add(this.ScrambleBtn, 0, 6);
+			this.DatamoshTable.Controls.Add(this.AutomatorBtn, 0, 7);
+			this.DatamoshTable.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshTable.Location = new System.Drawing.Point(3, 56);
+			this.DatamoshTable.Margin = new System.Windows.Forms.Padding(0);
+			this.DatamoshTable.Name = "DatamoshTable";
+			this.DatamoshTable.RowCount = 9;
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.Size = new System.Drawing.Size(631, 736);
+			this.DatamoshTable.TabIndex = 9;
+			// 
+			// CloseAfterOpenMoshCheck
+			// 
+			this.CloseAfterOpenMoshCheck.AutoSize = true;
+			this.CloseAfterOpenMoshCheck.Checked = true;
+			this.CloseAfterOpenMoshCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.CloseAfterOpenMoshCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.CloseAfterOpenMoshCheck.Location = new System.Drawing.Point(8, 8);
+			this.CloseAfterOpenMoshCheck.Margin = new System.Windows.Forms.Padding(8);
+			this.CloseAfterOpenMoshCheck.Name = "CloseAfterOpenMoshCheck";
+			this.CloseAfterOpenMoshCheck.Size = new System.Drawing.Size(615, 24);
+			this.CloseAfterOpenMoshCheck.TabIndex = 0;
+			this.CloseAfterOpenMoshCheck.Text = "操作完成之后关闭本对话框";
+			this.CloseAfterOpenMoshCheck.UseVisualStyleBackColor = true;
+			// 
+			// DatamoshClipsFolderGroup
+			// 
+			this.DatamoshClipsFolderGroup.AutoSize = true;
+			this.DatamoshClipsFolderGroup.Controls.Add(this.tableLayoutPanel21);
+			this.DatamoshClipsFolderGroup.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderGroup.Location = new System.Drawing.Point(2, 42);
+			this.DatamoshClipsFolderGroup.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderGroup.Name = "DatamoshClipsFolderGroup";
+			this.DatamoshClipsFolderGroup.Padding = new System.Windows.Forms.Padding(5);
+			this.DatamoshClipsFolderGroup.Size = new System.Drawing.Size(627, 62);
+			this.DatamoshClipsFolderGroup.TabIndex = 6;
+			this.DatamoshClipsFolderGroup.TabStop = false;
+			this.DatamoshClipsFolderGroup.Text = "Datamosh 片段目录";
+			// 
+			// tableLayoutPanel21
+			// 
+			this.tableLayoutPanel21.AutoSize = true;
+			this.tableLayoutPanel21.ColumnCount = 3;
+			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderOpenButton, 2, 0);
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderTxt, 0, 0);
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderButton, 1, 0);
+			this.tableLayoutPanel21.Dock = System.Windows.Forms.DockStyle.Top;
+			this.tableLayoutPanel21.Location = new System.Drawing.Point(5, 25);
+			this.tableLayoutPanel21.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel21.Name = "tableLayoutPanel21";
+			this.tableLayoutPanel21.RowCount = 1;
+			this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel21.Size = new System.Drawing.Size(617, 32);
+			this.tableLayoutPanel21.TabIndex = 3;
+			// 
+			// DatamoshClipsFolderOpenButton
+			// 
+			this.DatamoshClipsFolderOpenButton.AutoSize = true;
+			this.DatamoshClipsFolderOpenButton.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderOpenButton.Location = new System.Drawing.Point(540, 2);
+			this.DatamoshClipsFolderOpenButton.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderOpenButton.MaximumSize = new System.Drawing.Size(300, 28);
+			this.DatamoshClipsFolderOpenButton.Name = "DatamoshClipsFolderOpenButton";
+			this.DatamoshClipsFolderOpenButton.Size = new System.Drawing.Size(75, 28);
+			this.DatamoshClipsFolderOpenButton.TabIndex = 4;
+			this.DatamoshClipsFolderOpenButton.Text = "打开...";
+			this.DatamoshClipsFolderOpenButton.UseVisualStyleBackColor = true;
+			this.DatamoshClipsFolderOpenButton.Click += new System.EventHandler(this.DatamoshClipsFolderOpenButton_Click);
+			// 
+			// DatamoshClipsFolderTxt
+			// 
+			this.DatamoshClipsFolderTxt.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderTxt.Location = new System.Drawing.Point(2, 2);
+			this.DatamoshClipsFolderTxt.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderTxt.Name = "DatamoshClipsFolderTxt";
+			this.DatamoshClipsFolderTxt.ReadOnly = true;
+			this.DatamoshClipsFolderTxt.Size = new System.Drawing.Size(455, 27);
+			this.DatamoshClipsFolderTxt.TabIndex = 2;
+			// 
+			// DatamoshClipsFolderButton
+			// 
+			this.DatamoshClipsFolderButton.AutoSize = true;
+			this.DatamoshClipsFolderButton.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderButton.Location = new System.Drawing.Point(461, 2);
+			this.DatamoshClipsFolderButton.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderButton.MaximumSize = new System.Drawing.Size(300, 28);
+			this.DatamoshClipsFolderButton.Name = "DatamoshClipsFolderButton";
+			this.DatamoshClipsFolderButton.Size = new System.Drawing.Size(75, 28);
+			this.DatamoshClipsFolderButton.TabIndex = 3;
+			this.DatamoshClipsFolderButton.Text = "浏览...";
+			this.DatamoshClipsFolderButton.UseVisualStyleBackColor = true;
+			this.DatamoshClipsFolderButton.Click += new System.EventHandler(this.DatamoshClipsFolderButton_Click);
+			// 
+			// DatamoshBtn
+			// 
+			this.DatamoshBtn.CommandLink = true;
+			this.DatamoshBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据混乱。";
+			this.DatamoshBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DatamoshBtn.Location = new System.Drawing.Point(2, 108);
+			this.DatamoshBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshBtn.Name = "DatamoshBtn";
+			this.DatamoshBtn.Size = new System.Drawing.Size(627, 86);
+			this.DatamoshBtn.TabIndex = 11;
+			this.DatamoshBtn.Text = "数据混乱";
+			this.DatamoshBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// DatamixBtn
+			// 
+			this.DatamixBtn.CommandLink = true;
+			this.DatamixBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据混乱（将一个剪辑混入另一个剪辑）。";
+			this.DatamixBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DatamixBtn.Location = new System.Drawing.Point(2, 198);
+			this.DatamixBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamixBtn.Name = "DatamixBtn";
+			this.DatamixBtn.Size = new System.Drawing.Size(627, 86);
+			this.DatamixBtn.TabIndex = 12;
+			this.DatamixBtn.Text = "数据混合";
+			this.DatamixBtn.UseVisualStyleBackColor = true;
+			this.DatamixBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// LayeringBtn
+			// 
+			this.LayeringBtn.CommandLink = true;
+			this.LayeringBtn.CommandLinkNote = "快速自动地对选中剪辑进行多层叠加。";
+			this.LayeringBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LayeringBtn.Location = new System.Drawing.Point(2, 288);
+			this.LayeringBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.LayeringBtn.Name = "LayeringBtn";
+			this.LayeringBtn.Size = new System.Drawing.Size(627, 86);
+			this.LayeringBtn.TabIndex = 13;
+			this.LayeringBtn.Text = "叠叠乐";
+			this.LayeringBtn.UseVisualStyleBackColor = true;
+			this.LayeringBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// RenderingBtn
+			// 
+			this.RenderingBtn.CommandLink = true;
+			this.RenderingBtn.CommandLinkNote = "快速自动地对视频选中区域进行渲染。";
+			this.RenderingBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RenderingBtn.Location = new System.Drawing.Point(2, 378);
+			this.RenderingBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.RenderingBtn.Name = "RenderingBtn";
+			this.RenderingBtn.Size = new System.Drawing.Size(627, 86);
+			this.RenderingBtn.TabIndex = 14;
+			this.RenderingBtn.Text = "渲染";
+			this.RenderingBtn.UseVisualStyleBackColor = true;
+			this.RenderingBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// ScrambleBtn
+			// 
+			this.ScrambleBtn.CommandLink = true;
+			this.ScrambleBtn.CommandLinkNote = "快速自动地对选中剪辑进行打乱。";
+			this.ScrambleBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ScrambleBtn.Location = new System.Drawing.Point(2, 468);
+			this.ScrambleBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.ScrambleBtn.Name = "ScrambleBtn";
+			this.ScrambleBtn.Size = new System.Drawing.Size(627, 86);
+			this.ScrambleBtn.TabIndex = 15;
+			this.ScrambleBtn.Text = "打乱";
+			this.ScrambleBtn.UseVisualStyleBackColor = true;
+			this.ScrambleBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// AutomatorBtn
+			// 
+			this.AutomatorBtn.CommandLink = true;
+			this.AutomatorBtn.CommandLinkNote = "快速自动地为选中视频效果设定随机值。";
+			this.AutomatorBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AutomatorBtn.Location = new System.Drawing.Point(2, 558);
+			this.AutomatorBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.AutomatorBtn.Name = "AutomatorBtn";
+			this.AutomatorBtn.Size = new System.Drawing.Size(627, 86);
+			this.AutomatorBtn.TabIndex = 16;
+			this.AutomatorBtn.Text = "自动化";
+			this.AutomatorBtn.UseVisualStyleBackColor = true;
+			this.AutomatorBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// DatamoshNotInstalledTable
+			// 
+			this.DatamoshNotInstalledTable.AutoSize = true;
+			this.DatamoshNotInstalledTable.ColumnCount = 1;
+			this.DatamoshNotInstalledTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.DatamoshNotInstalledTable.Controls.Add(this.DatamoshNotInstalledInfo, 0, 0);
+			this.DatamoshNotInstalledTable.Controls.Add(this.DownloadDatamoshLink, 0, 1);
+			this.DatamoshNotInstalledTable.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshNotInstalledTable.Location = new System.Drawing.Point(3, 3);
+			this.DatamoshNotInstalledTable.Name = "DatamoshNotInstalledTable";
+			this.DatamoshNotInstalledTable.Padding = new System.Windows.Forms.Padding(0, 8, 0, 5);
+			this.DatamoshNotInstalledTable.RowCount = 2;
+			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.DatamoshNotInstalledTable.Size = new System.Drawing.Size(631, 53);
+			this.DatamoshNotInstalledTable.TabIndex = 8;
+			// 
+			// DatamoshNotInstalledInfo
+			// 
+			this.DatamoshNotInstalledInfo.AutoSize = true;
+			this.DatamoshNotInstalledInfo.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshNotInstalledInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.DatamoshNotInstalledInfo.Location = new System.Drawing.Point(3, 8);
+			this.DatamoshNotInstalledInfo.Name = "DatamoshNotInstalledInfo";
+			this.DatamoshNotInstalledInfo.Size = new System.Drawing.Size(625, 20);
+			this.DatamoshNotInstalledInfo.TabIndex = 2;
+			this.DatamoshNotInstalledInfo.Text = "未安装 Datamosh 扩展包，下载后方可使用全部功能。";
+			// 
+			// DownloadDatamoshLink
+			// 
+			this.DownloadDatamoshLink.AutoSize = true;
+			this.DownloadDatamoshLink.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DownloadDatamoshLink.Location = new System.Drawing.Point(3, 28);
+			this.DownloadDatamoshLink.Name = "DownloadDatamoshLink";
+			this.DownloadDatamoshLink.Size = new System.Drawing.Size(625, 20);
+			this.DownloadDatamoshLink.TabIndex = 3;
+			this.DownloadDatamoshLink.TabStop = true;
+			this.DownloadDatamoshLink.Text = "下载扩展包";
+			// 
 			// TrackLegatoMenu
 			// 
 			this.TrackLegatoMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -22903,244 +23331,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
-			// MoshTab
+			// StutterBtn
 			// 
-			this.MoshTab.AutoScroll = true;
-			this.MoshTab.Controls.Add(this.DatamoshTable);
-			this.MoshTab.Controls.Add(this.DatamoshNotInstalledTable);
-			this.MoshTab.Location = new System.Drawing.Point(4, 29);
-			this.MoshTab.Name = "MoshTab";
-			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
-			this.MoshTab.Size = new System.Drawing.Size(658, 616);
-			this.MoshTab.TabIndex = 7;
-			this.MoshTab.Text = "变形";
-			this.MoshTab.UseVisualStyleBackColor = true;
-			// 
-			// DatamoshNotInstalledTable
-			// 
-			this.DatamoshNotInstalledTable.AutoSize = true;
-			this.DatamoshNotInstalledTable.ColumnCount = 1;
-			this.DatamoshNotInstalledTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.DatamoshNotInstalledTable.Controls.Add(this.DatamoshNotInstalledInfo, 0, 0);
-			this.DatamoshNotInstalledTable.Controls.Add(this.DownloadDatamoshLink, 0, 1);
-			this.DatamoshNotInstalledTable.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshNotInstalledTable.Location = new System.Drawing.Point(3, 3);
-			this.DatamoshNotInstalledTable.Name = "DatamoshNotInstalledTable";
-			this.DatamoshNotInstalledTable.Padding = new System.Windows.Forms.Padding(0, 8, 0, 5);
-			this.DatamoshNotInstalledTable.RowCount = 2;
-			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.DatamoshNotInstalledTable.Size = new System.Drawing.Size(631, 53);
-			this.DatamoshNotInstalledTable.TabIndex = 8;
-			// 
-			// DatamoshNotInstalledInfo
-			// 
-			this.DatamoshNotInstalledInfo.AutoSize = true;
-			this.DatamoshNotInstalledInfo.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshNotInstalledInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.DatamoshNotInstalledInfo.Location = new System.Drawing.Point(3, 8);
-			this.DatamoshNotInstalledInfo.Name = "DatamoshNotInstalledInfo";
-			this.DatamoshNotInstalledInfo.Size = new System.Drawing.Size(625, 20);
-			this.DatamoshNotInstalledInfo.TabIndex = 2;
-			this.DatamoshNotInstalledInfo.Text = "未安装 Datamosh 扩展包，下载后方可使用。";
-			// 
-			// DownloadDatamoshLink
-			// 
-			this.DownloadDatamoshLink.AutoSize = true;
-			this.DownloadDatamoshLink.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.DownloadDatamoshLink.Location = new System.Drawing.Point(3, 28);
-			this.DownloadDatamoshLink.Name = "DownloadDatamoshLink";
-			this.DownloadDatamoshLink.Size = new System.Drawing.Size(625, 20);
-			this.DownloadDatamoshLink.TabIndex = 3;
-			this.DownloadDatamoshLink.TabStop = true;
-			this.DownloadDatamoshLink.Text = "下载扩展包";
-			// 
-			// AutomatorBtn
-			// 
-			this.AutomatorBtn.CommandLink = true;
-			this.AutomatorBtn.CommandLinkNote = "Sets random automation values for video effects quickly and automatically.";
-			this.AutomatorBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AutomatorBtn.Location = new System.Drawing.Point(2, 558);
-			this.AutomatorBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.AutomatorBtn.Name = "AutomatorBtn";
-			this.AutomatorBtn.Size = new System.Drawing.Size(627, 86);
-			this.AutomatorBtn.TabIndex = 16;
-			this.AutomatorBtn.Text = "Automator";
-			this.AutomatorBtn.UseVisualStyleBackColor = true;
-			this.AutomatorBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
-			// 
-			// ScrambleBtn
-			// 
-			this.ScrambleBtn.CommandLink = true;
-			this.ScrambleBtn.CommandLinkNote = "Scrambles clips/events quickly and automatically.";
-			this.ScrambleBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ScrambleBtn.Location = new System.Drawing.Point(2, 468);
-			this.ScrambleBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.ScrambleBtn.Name = "ScrambleBtn";
-			this.ScrambleBtn.Size = new System.Drawing.Size(627, 86);
-			this.ScrambleBtn.TabIndex = 15;
-			this.ScrambleBtn.Text = "Scramble";
-			this.ScrambleBtn.UseVisualStyleBackColor = true;
-			this.ScrambleBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
-			// 
-			// RenderingBtn
-			// 
-			this.RenderingBtn.CommandLink = true;
-			this.RenderingBtn.CommandLinkNote = "Renders a part of a video quickly and automatically.";
-			this.RenderingBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RenderingBtn.Location = new System.Drawing.Point(2, 378);
-			this.RenderingBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.RenderingBtn.Name = "RenderingBtn";
-			this.RenderingBtn.Size = new System.Drawing.Size(627, 86);
-			this.RenderingBtn.TabIndex = 14;
-			this.RenderingBtn.Text = "Render";
-			this.RenderingBtn.UseVisualStyleBackColor = true;
-			this.RenderingBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
-			// 
-			// LayeringBtn
-			// 
-			this.LayeringBtn.CommandLink = true;
-			this.LayeringBtn.CommandLinkNote = "Does multilayering on a part of a video quickly and automatically.";
-			this.LayeringBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayeringBtn.Location = new System.Drawing.Point(2, 288);
-			this.LayeringBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.LayeringBtn.Name = "LayeringBtn";
-			this.LayeringBtn.Size = new System.Drawing.Size(627, 86);
-			this.LayeringBtn.TabIndex = 13;
-			this.LayeringBtn.Text = "Layer";
-			this.LayeringBtn.UseVisualStyleBackColor = true;
-			this.LayeringBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
-			// 
-			// DatamixBtn
-			// 
-			this.DatamixBtn.CommandLink = true;
-			this.DatamixBtn.CommandLinkNote = "Datamoshes a part of a video quickly and automatically (mosh a clip onto another)" +
-	".";
-			this.DatamixBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.DatamixBtn.Location = new System.Drawing.Point(2, 198);
-			this.DatamixBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.DatamixBtn.Name = "DatamixBtn";
-			this.DatamixBtn.Size = new System.Drawing.Size(627, 86);
-			this.DatamixBtn.TabIndex = 12;
-			this.DatamixBtn.Text = "Datamix";
-			this.DatamixBtn.UseVisualStyleBackColor = true;
-			this.DatamixBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
-			// 
-			// DatamoshBtn
-			// 
-			this.DatamoshBtn.CommandLink = true;
-			this.DatamoshBtn.CommandLinkNote = "Datamoshes a part of a video quickly and automatically.";
-			this.DatamoshBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.DatamoshBtn.Location = new System.Drawing.Point(2, 108);
-			this.DatamoshBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.DatamoshBtn.Name = "DatamoshBtn";
-			this.DatamoshBtn.Size = new System.Drawing.Size(627, 86);
-			this.DatamoshBtn.TabIndex = 11;
-			this.DatamoshBtn.Text = "Datamosh";
-			this.DatamoshBtn.UseVisualStyleBackColor = true;
-			this.DatamoshBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
-			// 
-			// DatamoshClipsFolderGroup
-			// 
-			this.DatamoshClipsFolderGroup.AutoSize = true;
-			this.DatamoshClipsFolderGroup.Controls.Add(this.tableLayoutPanel21);
-			this.DatamoshClipsFolderGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderGroup.Location = new System.Drawing.Point(2, 42);
-			this.DatamoshClipsFolderGroup.Margin = new System.Windows.Forms.Padding(2);
-			this.DatamoshClipsFolderGroup.Name = "DatamoshClipsFolderGroup";
-			this.DatamoshClipsFolderGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.DatamoshClipsFolderGroup.Size = new System.Drawing.Size(627, 62);
-			this.DatamoshClipsFolderGroup.TabIndex = 6;
-			this.DatamoshClipsFolderGroup.TabStop = false;
-			this.DatamoshClipsFolderGroup.Text = "Datamosh 剪辑缓存目录";
-			// 
-			// tableLayoutPanel21
-			// 
-			this.tableLayoutPanel21.AutoSize = true;
-			this.tableLayoutPanel21.ColumnCount = 2;
-			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderTxt, 0, 0);
-			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderButton, 1, 0);
-			this.tableLayoutPanel21.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel21.Location = new System.Drawing.Point(5, 25);
-			this.tableLayoutPanel21.Margin = new System.Windows.Forms.Padding(0);
-			this.tableLayoutPanel21.Name = "tableLayoutPanel21";
-			this.tableLayoutPanel21.RowCount = 1;
-			this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel21.Size = new System.Drawing.Size(617, 32);
-			this.tableLayoutPanel21.TabIndex = 3;
-			// 
-			// DatamoshClipsFolderButton
-			// 
-			this.DatamoshClipsFolderButton.AutoSize = true;
-			this.DatamoshClipsFolderButton.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderButton.Location = new System.Drawing.Point(540, 2);
-			this.DatamoshClipsFolderButton.Margin = new System.Windows.Forms.Padding(2);
-			this.DatamoshClipsFolderButton.MaximumSize = new System.Drawing.Size(300, 28);
-			this.DatamoshClipsFolderButton.Name = "DatamoshClipsFolderButton";
-			this.DatamoshClipsFolderButton.Size = new System.Drawing.Size(75, 28);
-			this.DatamoshClipsFolderButton.TabIndex = 3;
-			this.DatamoshClipsFolderButton.Text = "浏览...";
-			this.DatamoshClipsFolderButton.UseVisualStyleBackColor = true;
-			this.DatamoshClipsFolderButton.Click += new System.EventHandler(this.DatamoshClipsFolderButton_Click);
-			// 
-			// DatamoshClipsFolderTxt
-			// 
-			this.DatamoshClipsFolderTxt.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderTxt.Location = new System.Drawing.Point(2, 2);
-			this.DatamoshClipsFolderTxt.Margin = new System.Windows.Forms.Padding(2);
-			this.DatamoshClipsFolderTxt.Name = "DatamoshClipsFolderTxt";
-			this.DatamoshClipsFolderTxt.ReadOnly = true;
-			this.DatamoshClipsFolderTxt.Size = new System.Drawing.Size(534, 27);
-			this.DatamoshClipsFolderTxt.TabIndex = 2;
-			// 
-			// CloseAfterOpenMoshCheck
-			// 
-			this.CloseAfterOpenMoshCheck.AutoSize = true;
-			this.CloseAfterOpenMoshCheck.Checked = true;
-			this.CloseAfterOpenMoshCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.CloseAfterOpenMoshCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CloseAfterOpenMoshCheck.Enabled = false;
-			this.CloseAfterOpenMoshCheck.Location = new System.Drawing.Point(8, 8);
-			this.CloseAfterOpenMoshCheck.Margin = new System.Windows.Forms.Padding(8);
-			this.CloseAfterOpenMoshCheck.Name = "CloseAfterOpenMoshCheck";
-			this.CloseAfterOpenMoshCheck.Size = new System.Drawing.Size(615, 24);
-			this.CloseAfterOpenMoshCheck.TabIndex = 0;
-			this.CloseAfterOpenMoshCheck.Text = "操作完成之后关闭本对话框";
-			this.CloseAfterOpenMoshCheck.UseVisualStyleBackColor = true;
-			// 
-			// DatamoshTable
-			// 
-			this.DatamoshTable.AutoSize = true;
-			this.DatamoshTable.ColumnCount = 1;
-			this.DatamoshTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.DatamoshTable.Controls.Add(this.CloseAfterOpenMoshCheck, 0, 0);
-			this.DatamoshTable.Controls.Add(this.DatamoshClipsFolderGroup, 0, 1);
-			this.DatamoshTable.Controls.Add(this.DatamoshBtn, 0, 2);
-			this.DatamoshTable.Controls.Add(this.DatamixBtn, 0, 3);
-			this.DatamoshTable.Controls.Add(this.LayeringBtn, 0, 4);
-			this.DatamoshTable.Controls.Add(this.RenderingBtn, 0, 5);
-			this.DatamoshTable.Controls.Add(this.ScrambleBtn, 0, 6);
-			this.DatamoshTable.Controls.Add(this.AutomatorBtn, 0, 7);
-			this.DatamoshTable.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshTable.Location = new System.Drawing.Point(3, 56);
-			this.DatamoshTable.Margin = new System.Windows.Forms.Padding(0);
-			this.DatamoshTable.Name = "DatamoshTable";
-			this.DatamoshTable.RowCount = 8;
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.DatamoshTable.Size = new System.Drawing.Size(631, 646);
-			this.DatamoshTable.TabIndex = 9;
+			this.StutterBtn.CommandLink = true;
+			this.StutterBtn.CommandLinkNote = "口吃剪辑（向前向后播放）。";
+			this.StutterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StutterBtn.Location = new System.Drawing.Point(2, 648);
+			this.StutterBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.StutterBtn.Name = "StutterBtn";
+			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
+			this.StutterBtn.TabIndex = 17;
+			this.StutterBtn.Text = "口吃";
+			this.StutterBtn.UseVisualStyleBackColor = true;
+			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			// 
 			// ConfigForm
 			// 
@@ -23345,17 +23548,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.PerformLayout();
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
-			this.TrackLegatoMenu.ResumeLayout(false);
 			this.MoshTab.ResumeLayout(false);
 			this.MoshTab.PerformLayout();
-			this.DatamoshNotInstalledTable.ResumeLayout(false);
-			this.DatamoshNotInstalledTable.PerformLayout();
+			this.DatamoshTable.ResumeLayout(false);
+			this.DatamoshTable.PerformLayout();
 			this.DatamoshClipsFolderGroup.ResumeLayout(false);
 			this.DatamoshClipsFolderGroup.PerformLayout();
 			this.tableLayoutPanel21.ResumeLayout(false);
 			this.tableLayoutPanel21.PerformLayout();
-			this.DatamoshTable.ResumeLayout(false);
-			this.DatamoshTable.PerformLayout();
+			this.DatamoshNotInstalledTable.ResumeLayout(false);
+			this.DatamoshNotInstalledTable.PerformLayout();
+			this.TrackLegatoMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -23778,7 +23981,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.Label VideoVelocityLbl;
 		public System.Windows.Forms.CheckBox VideoVelocityCheck;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel15;
-		public System.Windows.Forms.Button TrackShadowColorBtn;
+		public ColorButton TrackShadowColorBtn;
 		public System.Windows.Forms.ComboBox AudioAutoPanCurveCombo;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel16;
 		public CommandLinkButton ConvertMusicBeatsBtn;
@@ -23801,6 +24004,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public CommandLinkButton RenderingBtn;
 		public CommandLinkButton ScrambleBtn;
 		public CommandLinkButton AutomatorBtn;
+		public System.Windows.Forms.Button DatamoshClipsFolderOpenButton;
+		public CommandLinkButton StutterBtn;
 	}
 	#endregion
 
@@ -23938,16 +24143,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Path internalPath = new Path(ScriptPath);
 			internalPath.UpOneLevel();
 			internalPath.Add("_internal");
-			if (!System.IO.Directory.Exists(internalPath.FullPath))
-				DatamoshTable.Enabled = false;
-			else {
+			if (!Directory.Exists(internalPath.FullPath))
+				DatamoshBtn.Enabled = DatamixBtn.Enabled = false;
+			else
 				DatamoshNotInstalledTable.Visible = false;
-				string datamoshFolder = (string)Registry.GetValue(
-						"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-						"ClipFolder", "");
-				if (!(string.IsNullOrEmpty(datamoshFolder) || !Directory.Exists(datamoshFolder)))
-					DatamoshClipsFolderTxt.Text = datamoshFolder;
-			}
+			string datamoshFolder = (string)Registry.GetValue(Datamosh.Template.DataPath, "ClipFolder", "");
+			if (!(string.IsNullOrEmpty(datamoshFolder) || !Directory.Exists(datamoshFolder)))
+				DatamoshClipsFolderTxt.Text = datamoshFolder;
 			#endregion
 
 			#region 优化界面颜色和外观
@@ -24188,6 +24390,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#region 个性化配置
 			configIni.StartSection("Personalize");
 			CloseAfterOpenHelperCheck.Checked = configIni.Read("CloseAfterOpenHelper", true);
+			CloseAfterOpenMoshCheck.Checked = configIni.Read("CloseAfterOpenMosh", true);
 			if (configIni.HasKey("FormSize")) {
 				rememberFormSizeToolStripMenuItem.Checked = true;
 				string formSize_string = configIni.Read("FormSize", "");
@@ -24379,6 +24582,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.StartSection("Personalize");
 			configIni.Write("Language", Language);
 			configIni.Write("CloseAfterOpenHelper", CloseAfterOpenHelperCheck.Checked);
+			configIni.Write("CloseAfterOpenMosh", CloseAfterOpenMoshCheck.Checked);
 			if (rememberFormSizeToolStripMenuItem.Checked) configIni.Write("FormSize", WriteSize(Size));
 			configIni.Write("CheckUpdateOnStartup", checkUpdateOnStartupToolStripMenuItem.Checked);
 			configIni.EndSection();
@@ -24856,11 +25060,26 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			HelperLbl.Text = str.helper_info;
 			CloseAfterOpenHelperCheck.Text = str.close_after_open_helper;
 			CloseAfterOpenMoshCheck.Text = str.close_after_open_helper;
+			DownloadDatamoshLink.Text = str.datamosh_install;
 			MoshTab.Text = str.mosh;
 			DatamoshClipsFolderButton.Text = str.browse;
 			DatamoshClipsFolderGroup.Text = str.datamosh_clips_folder;
 			DatamoshNotInstalledInfo.Text = str.datamosh_not_installed_info;
-			DownloadDatamoshLink.Text = str.datamosh_install;
+			DatamoshClipsFolderOpenButton.Text = str.open + str.dialog_sign;
+			DatamoshBtn.Text = str.datamosh;
+			DatamixBtn.Text = str.datamix;
+			LayeringBtn.Text = str.layering;
+			RenderingBtn.Text = str.render;
+			ScrambleBtn.Text = str.scramble;
+			AutomatorBtn.Text = str.automator;
+			StutterBtn.Text = str.stutter;
+			DatamoshBtn.CommandLinkNote = str.datamosh_configform_info;
+			DatamixBtn.CommandLinkNote = str.datamix_configform_info;
+			LayeringBtn.CommandLinkNote = str.layering_configform_info;
+			RenderingBtn.CommandLinkNote = str.render_configform_info;
+			ScrambleBtn.CommandLinkNote = str.scramble_configform_info;
+			AutomatorBtn.CommandLinkNote = str.automator_configform_info;
+			StutterBtn.CommandLinkNote = str.stutter_configform_info;
 			Text = str.otomad_helper_config;
 		}
 
@@ -24942,9 +25161,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			RequireSaveIni = true;
 			RequestToShowHelperDialog = null;
 			RequestToDatamosh = null;
-			foreach (Control _control in toolsTableLayoutPanel.Controls)
-				if (_control is CommandLinkButton)
-					(_control as CommandLinkButton).UpdateCommandLink();
+			foreach (TableLayoutPanel table in new TableLayoutPanel[] { toolsTableLayoutPanel, DatamoshTable })
+				foreach (Control _control in table.Controls)
+					if (_control is CommandLinkButton)
+						(_control as CommandLinkButton).UpdateCommandLink();
 			base.ShowDialog();
 		}
 
@@ -25073,7 +25293,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#if VEGAS_ENVIRONMENT
 			{
 				bool sonarConfigOn = SonarConfigCheck.Enabled && SonarConfigCheck.Checked;
-				if (Tabs.SelectedTab == HelperTab) OkBtn_Enabled = false;
+				if (Tabs.SelectedTab == HelperTab || Tabs.SelectedTab == MoshTab) OkBtn_Enabled = false;
 				else if (Tabs.SelectedTab == YtpTab) OkBtn_Enabled = mediaConfigOn;
 				else OkBtn_Enabled = (mediaConfigOn || sonarConfigOn) && midiConfigOn;
 			}
@@ -25321,6 +25541,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (selectedVideoTracksCount == 0)
 				AutoLayoutTracksButtons.Enabled = ClearTrackMotionBtn.Enabled = false;
 			#endregion
+
+			DatamoshBtn.CommandLinkNote = str.datamosh_configform_info;
+			DatamixBtn.CommandLinkNote = str.datamix_configform_info;
+			LayeringBtn.CommandLinkNote = str.layering_configform_info;
+			RenderingBtn.CommandLinkNote = str.render_configform_info;
+			ScrambleBtn.CommandLinkNote = str.scramble_configform_info;
+			AutomatorBtn.CommandLinkNote = str.automator_configform_info;
+			StutterBtn.CommandLinkNote = str.stutter_configform_info;
 		}
 
 		[Obsolete]
@@ -25628,7 +25856,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void WhyOkBtnIsDisabledToolStripMenuItem_Click(object sender, EventArgs e) {
 			Lang str = Lang.str;
 			List<string> reasons = new List<string>();
-			if (Tabs.SelectedTab == HelperTab) reasons.Add(str.why_ok_btn_is_disabled_in_helper_tab);
+			if (Tabs.SelectedTab == HelperTab || Tabs.SelectedTab == MoshTab)
+				reasons.Add(str.why_ok_btn_is_disabled_in_helper_tab);
 			if (!AudioConfigCheck.Checked && !VideoConfigCheck.Checked)
 				reasons.Add(isValidSource ? str.why_ok_btn_is_disabled_no_audio_and_video_enabled : str.why_ok_btn_is_disabled_no_media_take);
 			if (parent.midi == null && Tabs.SelectedTab != YtpTab) reasons.Add(str.why_ok_btn_is_disabled_no_midi_select);
@@ -25723,6 +25952,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 			if (type == TrackLegatoType.INCREASE_SPACING || type == TrackLegatoType.INCREASE_SPACING_ALL_TRACKS) {
 				dialog = new IncreaseSpacingDialog(this);
+				dialog.Text = type == TrackLegatoType.INCREASE_SPACING ? Lang.str.increase_spacing : Lang.str.increase_spacing_all_tracks;
 				if (dialog.ShowDialog() != DialogResult.OK || dialog.Spacing.ToMilliseconds() == 0) return;
 				increaseSpacingTime = dialog.Spacing;
 			}
@@ -26062,6 +26292,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				limitStretchLegatoTracksToolStripMenuItem,
 				lengthenLegatoToolStripMenuItem,
 				increaseSpacingToolStripMenuItem,
+				increaseSpacingAllTracksToolStripMenuItem,
 			}) menuItem.Enabled = count != 0;
 			stackingAllAfterTracksToolStripMenuItem.Visible = effectToSelectedEventsToolStripMenuItem.Checked;
 			stackingTracksToolStripMenuItem.Text = effectToSelectedEventsToolStripMenuItem.Checked ?
@@ -26460,35 +26691,50 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void DatamoshClipsFolderButton_Click(object sender, EventArgs e) {
 			FolderBrowserDialog dialog = new FolderBrowserDialog();
-			if (dialog.ShowDialog() != DialogResult.OK) return;
-			DatamoshClipsFolderTxt.Text = dialog.SelectedPath;
-			Registry.SetValue(
-				"HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets",
-				"ClipFolder", dialog.SelectedPath, RegistryValueKind.String);
+			if (IsDatamoshFolderExist(false))
+				dialog.DirectoryPath = DatamoshClipsFolderTxt.Text;
+			if (dialog.ShowDialog(this) != DialogResult.OK) return;
+			DatamoshClipsFolderTxt.Text = dialog.DirectoryPath;
+			Registry.SetValue(Datamosh.Template.DataPath, "ClipFolder", dialog.DirectoryPath, RegistryValueKind.String);
 		}
 
 		private void DatamoshBtn_Click(object sender, EventArgs e) {
-			string datamoshFolder = DatamoshClipsFolderTxt.Text;
-			if (string.IsNullOrEmpty(datamoshFolder) || !Directory.Exists(datamoshFolder)) {
-				MessageBox.Show("Please select a folder to put generated datamoshed clips into.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
-			}
-
 			Button btn = sender as Button;
 			if (btn == null) return;
-			Dictionary<Button, Type> map = new Dictionary<Button, Type> {
-				{ DatamoshBtn, typeof(DataMosh.Datamosh) },
-				{ DatamixBtn, typeof(DataMosh.Datamix) },
-				{ LayeringBtn, typeof(DataMosh.Layering) },
-				{ RenderingBtn, typeof(DataMosh.Render) },
-				{ ScrambleBtn, typeof(DataMosh.Scramble) },
-				{ AutomatorBtn, typeof(DataMosh.Automator) },
+			var T = new Func<Type, bool, Tuple<Type, bool>>((t, b) => new Tuple<Type, bool>(t, b));
+			Dictionary<Button, Tuple<Type, bool>> map = new Dictionary<Button, Tuple<Type, bool>> {
+				{ DatamoshBtn, T(typeof(Datamosh.Datamosh), true) },
+				{ DatamixBtn, T(typeof(Datamosh.Datamix), true) },
+				{ LayeringBtn, T(typeof(Datamosh.Layering), true) },
+				{ RenderingBtn, T(typeof(Datamosh.Render), true) },
+				{ ScrambleBtn, T(typeof(Datamosh.Scramble), false) },
+				{ AutomatorBtn, T(typeof(Datamosh.Automator), false) },
+				{ StutterBtn, T(typeof(Datamosh.Stutter), false) },
 			};
-			map.TryGetValue(btn, out RequestToDatamosh);
+			// Item2 的布尔值表示该功能是否需要设定剪辑缓存目录。
+			if (!map.ContainsKey(btn)) return;
+			if (map[btn].Item2 && !IsDatamoshFolderExist()) return;
+			RequestToDatamosh = map[btn].Item1;
 			Close();
 		}
 
 		public Type RequestToDatamosh = null;
+
+		private void DatamoshClipsFolderOpenButton_Click(object sender, EventArgs e) {
+			if (!IsDatamoshFolderExist()) return;
+			OpenLink(DatamoshClipsFolderTxt.Text);
+		}
+
+		private bool IsDatamoshFolderExist(bool alert = true) {
+			string datamoshFolder = DatamoshClipsFolderTxt.Text;
+			if (string.IsNullOrWhiteSpace(datamoshFolder) || !Directory.Exists(datamoshFolder)) {
+				if (alert)
+					MessageBox.Show(Lang.str.datamosh_no_clips_folder_info, "Datamosh",
+						MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return false;
+			}
+			return true;
+		}
 	}
 
 	#region 翻译
@@ -27108,10 +27354,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			helper_info = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。",
 			helper_info_warning = "注意：操作之后将会关闭本对话框，您可以稍后再重新打开，部分您未保存的更改可能会丢失！",
 			close_after_open_helper = "操作完成之后关闭本对话框",
-			mosh = "变形",
-			datamosh_clips_folder = "Datamosh 剪辑缓存目录",
-			datamosh_not_installed_info = "未安装 Datamosh 扩展包，下载后方可使用。",
+			mosh = "混乱",
+			datamosh_clips_folder = "Datamosh 片段目录",
+			datamosh_not_installed_info = "未安装 Datamosh 扩展包，下载后方可使用全部功能。",
 			datamosh_install = "下载扩展包",
+			datamosh_no_clips_folder_info = "请先指定一个用于存放生成的 Datamosh 片段的文件夹。",
+			datamosh = "数据混乱",
+			datamix = "数据混入",
+			layering = "叠叠乐",
+			render = "渲染",
+			scramble = "打乱",
+			automator = "自动化",
+			stutter = "口吃",
+			datamosh_configform_info = "快速自动地对视频选中区域进行数据混乱。",
+			datamix_configform_info = "快速自动地对视频选中区域进行数据混乱（将一个剪辑混入另一个剪辑）。",
+			layering_configform_info = "快速自动地对选中剪辑进行多层叠加。",
+			render_configform_info = "快速自动地对视频选中区域进行渲染。",
+			scramble_configform_info = "快速自动地对选中剪辑进行打乱。",
+			automator_configform_info = "快速自动地为选中视频效果设定随机值。",
+			stutter_configform_info = "口吃剪辑（向前向后播放）。",
 			otomad_helper_config = "Otomad Helper for Vegas - 配置",
 			reset_config_successful = "重置完成，请重新启动脚本。",
 			reset_config_successful_title = "重置用户配置",
@@ -27125,7 +27386,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			why_ok_btn_is_disabled_no_audio_and_video_enabled = "“生成音频”与“生成视频”被同时取消勾选。请至少勾选生成其中一项。",
 			why_ok_btn_is_disabled_no_media_take = "所选的媒体素材来源不包含任何有效媒体资源。",
 			why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / YTPMV，请先选择一个 MIDI 序列文件。",
-			why_ok_btn_is_disabled_in_helper_tab = "为避免误操作，切勿在“工具”选项卡下进行提交生成操作。",
+			why_ok_btn_is_disabled_in_helper_tab = "为避免误操作，切勿在“工具”和“混乱”选项卡下进行提交生成操作。",
 			why_ok_btn_is_disabled_unknown_problem = "未知原因。",
 			no_selected_media_warning = "警告：您没有在项目媒体窗口中选中任何有效媒体素材！",
 			no_selected_clip_warning = "警告：您没有在轨道窗口中选中任何剪辑片段！",
@@ -27740,8 +28001,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				close_after_open_helper = "Close this dialog after the operation completed",
 				mosh = "Mosh",
 				datamosh_clips_folder = "Datamosh clip cache folder",
-				datamosh_not_installed_info = "The Datamosh extension pack is not installed and can be used after downloading.",
+				datamosh_not_installed_info = "The Datamosh extension pack is not installed and will not be available for full features until it is downloaded.",
 				datamosh_install = "Download the expansion pack",
+				datamosh_no_clips_folder_info = "Please select a folder to put generated datamoshed clips into.",
+				datamosh = "Datamosh",
+				datamix = "Datamix",
+				layering = "Layer",
+				render = "Render",
+				scramble = "Scramble",
+				automator = "Automator",
+				stutter = "Stutter",
+				datamosh_configform_info = "Datamoshes a part of a video quickly and automatically.",
+				datamix_configform_info = "Datamoshes a part of a video quickly and automatically (mosh a clip onto another).",
+				layering_configform_info = "Does multilayering on a part of a video quickly and automatically.",
+				render_configform_info = "Renders a part of a video quickly and automatically.",
+				scramble_configform_info = "Scrambles clips/events quickly and automatically.",
+				automator_configform_info = "Sets random automation values for video effects quickly and automatically.",
+				stutter_configform_info = "Stutters clips/events (play forward, backward, ...).",
 				otomad_helper_config = "Otomad Helper for Vegas - Config",
 				reset_config_successful = "The reset is complete, please restart the script.",
 				reset_config_successful_title = "Reset User Configuration",
@@ -27755,7 +28031,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "Enabled Audio and Enabled Video are both unchecked. Please check to enable at least one of them.",
 				why_ok_btn_is_disabled_no_media_take = "The selected media sources does not contain any valid media takes.",
 				why_ok_btn_is_disabled_no_midi_select = "To generate Otomad/YTPMV, select a MIDI sequence file first.",
-				why_ok_btn_is_disabled_in_helper_tab = "To avoid misoperation, do not submit a build under the Tools tab.",
+				why_ok_btn_is_disabled_in_helper_tab = "To avoid misoperation, do not submit a build under the Tools and Mosh tab.",
 				why_ok_btn_is_disabled_unknown_problem = "Unknown reason.",
 				no_selected_media_warning = "Warning: You have not selected any valid media in the project media window!",
 				no_selected_clip_warning = "Warning: You have not selected any clips in the track window!",
@@ -28343,7 +28619,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				change_tune_method_configform_info = "將多個音訊軌道剪輯統一更改為指定的調音算法。",
 				batch_subtitle_generation_configform_info = "預先設定好“字幕和文字”的預設，然後在此添加多行文字。",
 				find_clips_configform_info = "根據指定的條件（如剪輯名稱、與選中剪輯相同的素材等）選中符合條件的所有軌道剪輯。",
-				apply_visual_effect_configform_info = "將指定的視頻軌道剪輯應用映像節奏視覺效果。",
+				apply_visual_effect_configform_info = "將指定的視訊軌道剪輯應用映像節奏視覺效果。",
 				convert_music_beats_configform_info = "將指定的音樂的節拍在四四拍、四三拍、八六拍等之間進行轉換。\n必須恰好選擇 1 個音訊軌道剪輯，不得多選或少選。",
 				clear_tracks_motion = "清除軌道運動",
 				clear_tracks_effect = "清除軌道效果",
@@ -28366,10 +28642,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info = "以下功能只是一些獨立的協助工具，與其它生成音視訊的參數無關。",
 				helper_info_warning = "注意：操作之後將會關閉本對話方塊，您可以稍後再重新啟動，部分您未儲存的更改可能會遺失！\n",
 				close_after_open_helper = "操作完成之後關閉本對話方塊",
-				mosh = "變形",
-				datamosh_clips_folder = "Datamosh 剪輯快取目錄",
-				datamosh_not_installed_info = "未安裝 Datamosh 擴展包，下載後方可使用。",
+				mosh = "混亂",
+				datamosh_clips_folder = "Datamosh 片段目錄",
+				datamosh_not_installed_info = "未安裝 Datamosh 擴展包，下載後方可使用全部功能",
 				datamosh_install = "下載擴展包",
+				datamosh_no_clips_folder_info = "請先指定一個用於存放生成的 Datamosh 片段的資料夾。",
+				datamosh = "數據混亂",
+				datamix = "數據混入",
+				layering = "疊疊樂",
+				render = "渲染",
+				scramble = "打亂",
+				automator = "自動化",
+				stutter = "口吃",
+				datamosh_configform_info = "快速自動地對視訊選中區域進行數據混亂。",
+				datamix_configform_info = "快速自動地對視訊選中區域進行數據混亂（將一個剪輯混入另一個剪輯）。",
+				layering_configform_info = "快速自動地對選中剪輯進行多層疊加。",
+				render_configform_info = "快速自動地對視訊選中區域進行渲染。",
+				scramble_configform_info = "快速自動地對選中剪輯進行打亂。",
+				automator_configform_info = "快速自動地為選中視訊效果設定隨機值。",
+				stutter_configform_info = "口吃剪輯（向前向後播放）。",
 				otomad_helper_config = "Otomad Helper for Vegas - 設定",
 				reset_config_successful = "重置完成，請重新啟動腳本。",
 				reset_config_successful_title = "重置使用者組態",
@@ -28383,7 +28674,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「生成音訊」與「生成視訊」被同時取消勾選。請至少勾選生成其中一項。",
 				why_ok_btn_is_disabled_no_media_take = "所選的媒體素材來源不包含任何有效媒體資源。",
 				why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / YTPMV，請先選擇一個 MIDI 序列檔案。",
-				why_ok_btn_is_disabled_in_helper_tab = "為避免誤操作，切勿在「工具」選項卡下進行提交生成操作。",
+				why_ok_btn_is_disabled_in_helper_tab = "為避免誤操作，切勿在「工具」和「混亂」選項卡下進行提交生成操作。",
 				why_ok_btn_is_disabled_unknown_problem = "未知原因。",
 				no_selected_media_warning = "警告：您沒有在專案媒體視窗中選中任何有效媒體素材！",
 				no_selected_clip_warning = "警告：您沒有在軌道視窗中選中任何剪輯片段！",
@@ -28997,8 +29288,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				close_after_open_helper = "操作後にこのダイアログを閉じます",
 				mosh = "モッシュ",
 				datamosh_clips_folder = "Datamosh クリップ キャッシュ ディレクトリ",
-				datamosh_not_installed_info = "Datamosh 拡張パッケージはインストールされていないため、ダウンロード後に使用できます。",
+				datamosh_not_installed_info = "Datamosh 拡張パックはインストールされていないため、ダウンロードするまではフル機能を利用することはできません。",
 				datamosh_install = "拡張パックをダウンロードする",
+				datamosh_no_clips_folder_info = "生成されたDatamoshクリップを格納するフォルダを選択してください。",
+				datamosh = "データモッシュ",
+				datamix = "データミックス",
+				layering = "レイヤー",
+				render = "レンダー",
+				scramble = "スクランブル",
+				automator = "オートメーター",
+				stutter = "口吃",
+				datamosh_configform_info = "ビデオ選択領域に自動的にDatamoshを実行します。",
+				datamix_configform_info = "ビデオ選択領域に自動的にDatamoshを実行します（1つのクリップを別のクリップに混ぜます）。",
+				layering_configform_info = "ビデオの一部にマルチレイヤを自動的に行います。",
+				render_configform_info = "ビデオ選択領域を自動的にレンダリングします。",
+				scramble_configform_info = "スクランブルを自動的にクリップを選択します。",
+				automator_configform_info = "選択したビデオエフェクトのランダムな値を自動的に設定します。",
+				stutter_configform_info = "スタータークリップ/イベント（再生、逆再生……）。",
 				otomad_helper_config = "Otomad Helper for Vegas - 設定",
 				reset_config_successful = "リセットが完了しました。スクリプトを再起動してください。",
 				reset_config_successful_title = "ユーザ設定のリセット",
@@ -29012,7 +29318,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「オーディオを有効」と「ビデオを有効」は同時にチェックアウトされます。少なくとも一つを有効にしてください。",
 				why_ok_btn_is_disabled_no_media_take = "選択されたメディア素材のソースには、有効なメディアリソースが含まれていません。",
 				why_ok_btn_is_disabled_no_midi_select = "音MAD/YTPMVを生成するには、まずMIDIシーケンスファイルを選択してください。",
-				why_ok_btn_is_disabled_in_helper_tab = "誤操作を避けるためには、「ツール」タブで作成操作を提出しないでください。",
+				why_ok_btn_is_disabled_in_helper_tab = "誤操作を避けるためには、「ツール」と「モッシュ」タブで作成操作を提出しないでください。",
 				why_ok_btn_is_disabled_unknown_problem = "原因は不明です。",
 				no_selected_media_warning = "警告：プロジェクトメディアウィンドウで有効なメディアを選択していません！",
 				no_selected_clip_warning = "警告：トラックウィンドウでクリップを選択していません！",
@@ -29119,7 +29425,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				wave = "Волна",
 				multi_beat_delay = "Многобитовая задержка",
 				spherize = "Сфериз",
-				warning_missing_plugin = "Предупреждение: не удалось найти подключаемый модуль \"{0}\"!",
+				warning_missing_plugin = "Предупреждение: не удалось найти подключаемый модуль «{0}»!",
 				midi_channel = "Канал",
 				midi_notes_count = "Количество нот",
 				midi_begin_note = "Начать заметку",
@@ -29155,7 +29461,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				replacements_separation_specify = "Уточняйте отдельно",
 				view = "Осмотр",
 				selected_items = "Избранный член",
-				replace_clips_form_ensure_to_close = "Часть орбитального материала указана в разделе \"Уточняйте отдельно\".\nПосле выхода система может не сохранять изменения.",
+				replace_clips_form_ensure_to_close = "Часть орбитального материала указана в разделе «Уточняйте отдельно».\nПосле выхода система может не сохранять изменения.",
 				track = "Отслеживать",
 				submit_select = "&Установить выбранное",
 				every_few = "Выберите по одному на каждые несколько",
@@ -29245,10 +29551,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				classic_a18 = "A18. барабан (лучше для Тома)",
 				classic_a19 = "A19. барабан (микроэхо)",
 				batch_subtitle_generation = "Серийное Создание Субтитров",
-				batch_subtitle_generation_presets = "Выберите предварительно установленную \"Субтитры и текст\" для медиа - генератора:",
+				batch_subtitle_generation_presets = "Выберите предварительно установленную «Субтитры и текст» для медиа - генератора:",
 				batch_subtitle_generation_subtitles = "Введите текст для вставки субтитров (одна строка, Игнорируемая пустая строка):",
 				batch_subtitle_generation_single_duration = "Продолжительность каждого субтитра",
-				batch_subtitle_generation_suggestion_info = "Затем может быть запущена функция \"автоматического контроля\" для последующей корректировки времени.",
+				batch_subtitle_generation_suggestion_info = "Затем может быть запущена функция «автоматического контроля» для последующей корректировки времени.",
 				open = "Открытым",
 				text_document = "Текстовый документ",
 				file_too_large_info = "Файл слишком большой. Вы хотите открыть его в любом случае?",
@@ -29599,7 +29905,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				replace_clips_configform_info = "Замените несколько клипов дорожки указанными новыми клипами дорожки.",
 				auto_layout_tracks_configform_info = "Автоматическая компоновка выбранных треков в стиле YTPMV.",
 				change_tune_method_configform_info = "преобразовать несколько звуковых дорожек в указанные алгоритмы тонального регулирования.",
-				batch_subtitle_generation_configform_info = "Заранее установите предустановку \"Субтитры и текст\", после чего добавьте несколько строк текста.",
+				batch_subtitle_generation_configform_info = "Заранее установите предустановку «Субтитры и текст», после чего добавьте несколько строк текста.",
 				find_clips_configform_info = "Выберите все клипы дорожки, соответствующие указанным критериям, таким как название клипа, тот же материал, что и у выбранного клипа и т.д.",
 				apply_visual_effect_configform_info = "Применить визуальный эффект ритма PV к указанным видеособытиям.",
 				convert_music_beats_configform_info = "Преобразование указанных музыкальных битов между 4/4, 3/4, 6/8 и т. д.\nВы должны выбрать ровно ОДНО звуковое событие, не больше и не меньше.",
@@ -29626,8 +29932,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				close_after_open_helper = "Закрыть диалог после завершения операции",
 				mosh = "Мош",
 				datamosh_clips_folder = "Datamosh каталог кэша клипов",
-				datamosh_not_installed_info = "Пакет расширения Datamosh не устанавливается и может быть использован после загрузки.",
+				datamosh_not_installed_info = "Пакет расширения Datamosh не установлен и не будет доступен для полных функций, пока он не будет загружен.",
 				datamosh_install = "Скачать пакет расширения",
+				datamosh_no_clips_folder_info = "Пожалуйста, выберите папку, в которую будут помещены созданные клипы Datamosh.",
+				datamosh = "Датамош",
+				datamix = "Датамикс",
+				layering = "Слой",
+				render = "Рендер",
+				scramble = "Скрамбл",
+				automator = "Автомат",
+				stutter = "口吃",
+				datamosh_configform_info = "Датамозаика части видео быстро и автоматически.",
+				datamix_configform_info = "Быстрая и автоматическая датамозаика части видео (наложение одного клипа на другой).",
+				layering_configform_info = "Быстро и автоматически выполняет многослойность на части видео.",
+				render_configform_info = "Быстрое и автоматическое рендеринг части видео.",
+				scramble_configform_info = "Быстро и автоматически скремблирует клипы/события.",
+				automator_configform_info = "Быстро и автоматически устанавливает случайные значения автоматизации для видеоэффектов.",
+				stutter_configform_info = "Заикание клипов/событий (воспроизведение вперед, назад, ...).",
 				otomad_helper_config = "Otomad Helper for Vegas - Конфигурация",
 				reset_config_successful = "Сброс завершен, перезапустите скрипт.",
 				reset_config_successful_title = "Сбросить конфигурацию пользователя",
@@ -29641,7 +29962,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "создание аудио и создание видео были отменены одновременно. Выберите хотя бы один из них.",
 				why_ok_btn_is_disabled_no_media_take = "выбранный источник материалов для СМИ не содержит никаких эффективных средств массовой информации.",
 				why_ok_btn_is_disabled_no_midi_select = "для создания Otomad/YTPMV Выберите файл последовательности MIDI.",
-				why_ok_btn_is_disabled_in_helper_tab = "во избежание неправильной операции не следует представлять генерирующие операции на вкладке \"инструмент\".",
+				why_ok_btn_is_disabled_in_helper_tab = "во избежание неправильной операции не следует представлять генерирующие операции на вкладке «Инструменты» и «Мош».",
 				why_ok_btn_is_disabled_unknown_problem = "Неизвестная причина.",
 				no_selected_media_warning = "Предупреждение: Вы не выбрали ни одного допустимого носителя в окне мультимедиа проекта!",
 				no_selected_clip_warning = "Предупреждение: Вы не выбрали ни одного клипа в окне трека!",

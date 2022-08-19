@@ -24,7 +24,6 @@ using System.Windows.Forms.VisualStyles;
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public partial class ConfigForm : Form {
-
 		public bool AcceptConfig = false;
 		public static Icon icon;
 		#if VEGAS_ENVIRONMENT
@@ -1252,7 +1251,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AlphaColorDialog dialog = new AlphaColorDialog {
 				AnyColor = true,
 				FullOpen = true,
-				Color = Color.Black,
+				Color = (Color?)TrackShadowColorBtn.Tag ?? Color.Black,
 			};
 			if (dialog.ShowDialog() == DialogResult.Cancel) return;
 			TrackShadowColorBtn.Tag = dialog.Color;
@@ -1260,6 +1259,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void ConvertMusicBeatsBtn_Click(object sender, EventArgs e) {
 			Console.WriteLine(sender);
+		}
+
+		private void ExportConfigToolStripMenuItem_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
+
+		private void ImportConfigToolStripMenuItem_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
+
+		private void DatamoshClipsFolderButton_Click(object sender, EventArgs e) {
+			FolderBrowserDialog dialog = new FolderBrowserDialog();
+			if (dialog.ShowDialog() != DialogResult.OK) return;
+			DatamoshClipsFolderTxt.Text = dialog.SelectedPath;
+		}
+
+		private void DatamoshBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
+
+		private void DatamoshClipsFolderOpenButton_Click(object sender, EventArgs e) {
+			OpenLink(DatamoshClipsFolderTxt.Text);
 		}
 	}
 }

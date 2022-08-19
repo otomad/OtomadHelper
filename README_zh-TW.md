@@ -39,6 +39,8 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 	4. 點擊確定按鈕即可。
 4. 打開您的 Vegas Pro 來啟動腳本。選擇功能表列 *工具 > 腳本化 > Otomad Helper*。
 
+> 注意：如果需要使用 Datamosh 的全部功能，需要安裝 Datamosh 擴展包方可使用。
+
 ### **注意**
 支援 Vegas Pro 13 及以上版本。
 
@@ -94,7 +96,8 @@ Vegas Pro 17、18、19、20 測試**正常**。
 * [愛德華的 **JETDV** 腳本集](https://www.jetdv.com/)
 * [Vegas Pro 腳本**論壇**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 * [奧普洛斯的**帶有透明通道的顔色選取器**](https://sourceforge.net/projects/alpha-color-dialog/)
-* [Ookii.Dialogs.WinForms](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
+* [大的對話方塊 (WinForm) 的**進度條對話方塊**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
+* [德爾薩斯的 **Vegas Datamosh**](https://github.com/delthas/vegas-datamosh)
 
 ### 圖示
 靈感來源於:
@@ -114,5 +117,17 @@ Vegas Pro 17、18、19、20 測試**正常**。
 
 **Chaosinism 的原版說明文件：***（日語）*
 * [說明文件 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
+
+### 協定
+* 該專案使用 GPL 3.0。
+	* Chaosinism 的原版腳本使用 LGPL 3.0。
+		* 埃文·凱爾的腳本使用 GPL 3.0。
+			* NAudio 使用 MIT。
+* YTP+ 使用 GPL 3.0。
+* Ookii Dialogs WinForms 使用 BSD 3 Clause。
+* 德爾薩斯的 Vegas Datamosh 使用 MIT。
+	* FFmpeg 使用 LGPL + GPL。
+	* Avidemux 使用 GPL。
+	* Xvid codec 使用 GPL。
 
 </div>

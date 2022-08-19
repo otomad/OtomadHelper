@@ -12,6 +12,54 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return null;
 			return e.Data.GetData(DataFormats.FileDrop) as string[];
 		}
+
+		/// <summary>
+		/// 删除系统菜单中指定的项目。比如还原、移动、大小、最小化、最大化、关闭。
+		/// </summary>
+		/// <param name="form">窗体。</param>
+		/// <param name="items">系统菜单项目。</param>
+		public static void DeleteSystemMenuItems(this Form form, SystemMenuItemType items) {
+			IntPtr menu = AlphaColorDialog.GetSystemMenu(form.Handle, false);
+			foreach (KeyValuePair<SystemMenuItemType, uint> item in SystemMenuItemTag.Map)
+				if ((items & item.Key) != 0)
+					AlphaColorDialog.DeleteMenu(menu, item.Value, AlphaColorDialog.MF_BYCOMMAND);
+		}
+		/// <summary>
+		/// 保留系统菜单中指定的项目。与 <see cref="DeleteSystemMenuItems"/> 方法取反。
+		/// </summary>
+		/// <param name="form">窗体。</param>
+		/// <param name="items">系统菜单项目。</param>
+		public static void ReserveSystemMenuItems(this Form form, SystemMenuItemType items) {
+			DeleteSystemMenuItems(form, ~items);
+		}
+	}
+
+	public static class SystemMenuItemTag {
+		public const uint RESTORE = 0xF120;
+		public const uint MOVE = 0xF010;
+		public const uint SIZE = 0xF000;
+		public const uint MINIMIZE = 0xF020;
+		public const uint MAXIMIZE = 0xF030;
+		public const uint CLOSE = 0xF060;
+
+		public static readonly Dictionary<SystemMenuItemType, uint> Map = new Dictionary<SystemMenuItemType, uint> {
+			{ SystemMenuItemType.RESTORE, RESTORE },
+			{ SystemMenuItemType.MOVE, MOVE },
+			{ SystemMenuItemType.SIZE, SIZE },
+			{ SystemMenuItemType.MINIMIZE, MINIMIZE },
+			{ SystemMenuItemType.MAXIMIZE, MAXIMIZE },
+			{ SystemMenuItemType.CLOSE, CLOSE },
+		};
+	}
+
+	[Flags]
+	public enum SystemMenuItemType {
+		RESTORE = 1 << 0,
+		MOVE = 1 << 1,
+		SIZE = 1 << 2,
+		MINIMIZE = 1 << 3,
+		MAXIMIZE = 1 << 4,
+		CLOSE = 1 << 5,
 	}
 
 	/// <summary>

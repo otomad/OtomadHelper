@@ -39,6 +39,8 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 	4. ［OK］ボタンをクリックすると、完了です。
 4. Vegas Pro を開いてスクリプトを開始します。メニューの *ツール > スクリプト > Otomad Helper* を選択します。
 
+> 注：Datamoshのすべての機能を使用する必要がある場合は、Datamosh拡張パッケージをインストールする必要があります。
+
 ### **注意**
 Vegas Pro 13 以降をサポートします。
 
@@ -94,7 +96,8 @@ Vegas Pro 17、18、19、20 で**正常**にテストされました。
 * [エドワードの **JETDV** スクリプト集](https://www.jetdv.com/)
 * [Vegas Pro スクリプト **フォーラム**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 * [オプロスの**アルファ付きカラーピッカー**](https://sourceforge.net/projects/alpha-color-dialog/)
-* [Ookii.Dialogs.WinForms](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
+* [大きい ダイアログ ウィンフォームの**進捗ダイアログ**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
+* [デルタスの **Vegas データモッシュ**](https://github.com/delthas/vegas-datamosh)
 
 ### アイコン
 に触発された：
@@ -114,5 +117,17 @@ Vegas Pro 17、18、19、20 で**正常**にテストされました。
 
 **カオシニズムの元のドキュメンテーション：***（日本語）*
 * [ドキュメンテーション (v0.1) (ボウルロール)](https://bowlroll.net/user/261124)
+
+### ライセンス
+* このプロジェクトは GPL 3.0 に準拠しています。
+	* カオシニズムのオリジナルスクリプトは、LGPL 3.0 に準拠しています。
+		* エヴァン・ケールのスクリプトは GPL 3.0 に準拠しています。
+			* NAudio は MIT に準拠しています。
+* YTP+ は GPL 3.0 に準拠しています。
+* 大きい ダイアログ ウィンフォームは BSD 3 Clause に準拠しています。
+* デルタスの Vegas データモッシュ は under the MIT に準拠しています。
+	* FFmpeg は LGPL + GPL に準拠しています。
+	* Avidemux は GPL に準拠しています。
+	* Xvid codec は GPL に準拠しています。
 
 </div>

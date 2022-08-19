@@ -52,7 +52,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(521, 10);
+			this.OkBtn.Location = new System.Drawing.Point(474, 10);
 			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(94, 32);
@@ -65,7 +65,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(623, 10);
+			this.CancelBtn.Location = new System.Drawing.Point(576, 10);
 			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
@@ -84,13 +84,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 258);
+			this.dock.Location = new System.Drawing.Point(0, 271);
 			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(729, 52);
+			this.dock.Size = new System.Drawing.Size(682, 52);
 			this.dock.TabIndex = 15;
 			// 
 			// table
@@ -109,7 +109,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.table.Size = new System.Drawing.Size(729, 240);
+			this.table.Size = new System.Drawing.Size(682, 248);
 			this.table.TabIndex = 17;
 			// 
 			// InfoLbl
@@ -120,7 +120,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.InfoLbl.Location = new System.Drawing.Point(12, 22);
 			this.InfoLbl.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
 			this.InfoLbl.Name = "InfoLbl";
-			this.InfoLbl.Size = new System.Drawing.Size(705, 20);
+			this.InfoLbl.Size = new System.Drawing.Size(658, 20);
 			this.InfoLbl.TabIndex = 0;
 			this.InfoLbl.Text = "仅支持音频事件属性中的调音方法，不支持“移调”插件中的调音方法。";
 			this.InfoLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -134,7 +134,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TimeStretchPitchShiftGroup.Margin = new System.Windows.Forms.Padding(4);
 			this.TimeStretchPitchShiftGroup.Name = "TimeStretchPitchShiftGroup";
 			this.TimeStretchPitchShiftGroup.Padding = new System.Windows.Forms.Padding(6);
-			this.TimeStretchPitchShiftGroup.Size = new System.Drawing.Size(697, 168);
+			this.TimeStretchPitchShiftGroup.Size = new System.Drawing.Size(650, 176);
 			this.TimeStretchPitchShiftGroup.TabIndex = 1;
 			this.TimeStretchPitchShiftGroup.TabStop = false;
 			this.TimeStretchPitchShiftGroup.Text = "时间拉伸/音调转换";
@@ -162,17 +162,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(685, 136);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(638, 144);
 			this.tableLayoutPanel2.TabIndex = 0;
 			// 
 			// FormantLockCheck
 			// 
 			this.FormantLockCheck.AutoSize = true;
-			this.FormantLockCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FormantLockCheck.Location = new System.Drawing.Point(96, 108);
+			this.FormantLockCheck.Dock = System.Windows.Forms.DockStyle.Left;
+			this.FormantLockCheck.Location = new System.Drawing.Point(96, 112);
 			this.FormantLockCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.FormantLockCheck.Name = "FormantLockCheck";
-			this.FormantLockCheck.Size = new System.Drawing.Size(585, 24);
+			this.FormantLockCheck.Size = new System.Drawing.Size(106, 28);
 			this.FormantLockCheck.TabIndex = 7;
 			this.FormantLockCheck.Text = "保持共振峰";
 			this.FormantLockCheck.UseVisualStyleBackColor = true;
@@ -185,7 +185,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StretchAttrCombo.Location = new System.Drawing.Point(96, 40);
 			this.StretchAttrCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.StretchAttrCombo.Name = "StretchAttrCombo";
-			this.StretchAttrCombo.Size = new System.Drawing.Size(585, 28);
+			this.StretchAttrCombo.Size = new System.Drawing.Size(538, 28);
 			this.StretchAttrCombo.TabIndex = 5;
 			this.StretchAttrCombo.SelectedIndexChanged += new System.EventHandler(this.MethodCombo_SelectedIndexChanged);
 			// 
@@ -193,10 +193,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.FormantChangeLbl.AutoSize = true;
 			this.FormantChangeLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FormantChangeLbl.Location = new System.Drawing.Point(4, 104);
+			this.FormantChangeLbl.Location = new System.Drawing.Point(4, 108);
 			this.FormantChangeLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.FormantChangeLbl.MinimumSize = new System.Drawing.Size(0, 36);
 			this.FormantChangeLbl.Name = "FormantChangeLbl";
-			this.FormantChangeLbl.Size = new System.Drawing.Size(84, 32);
+			this.FormantChangeLbl.Size = new System.Drawing.Size(84, 36);
 			this.FormantChangeLbl.TabIndex = 3;
 			this.FormantChangeLbl.Text = "共振峰移位";
 			this.FormantChangeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -207,8 +208,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PitchChangeLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PitchChangeLbl.Location = new System.Drawing.Point(4, 72);
 			this.PitchChangeLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.PitchChangeLbl.MinimumSize = new System.Drawing.Size(0, 36);
 			this.PitchChangeLbl.Name = "PitchChangeLbl";
-			this.PitchChangeLbl.Size = new System.Drawing.Size(84, 32);
+			this.PitchChangeLbl.Size = new System.Drawing.Size(84, 36);
 			this.PitchChangeLbl.TabIndex = 2;
 			this.PitchChangeLbl.Text = "音调更改";
 			this.PitchChangeLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -219,6 +221,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StretchAttrLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.StretchAttrLbl.Location = new System.Drawing.Point(4, 36);
 			this.StretchAttrLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.StretchAttrLbl.MinimumSize = new System.Drawing.Size(0, 36);
 			this.StretchAttrLbl.Name = "StretchAttrLbl";
 			this.StretchAttrLbl.Size = new System.Drawing.Size(84, 36);
 			this.StretchAttrLbl.TabIndex = 1;
@@ -231,6 +234,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MethodLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MethodLbl.Location = new System.Drawing.Point(4, 0);
 			this.MethodLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.MethodLbl.MinimumSize = new System.Drawing.Size(0, 36);
 			this.MethodLbl.Name = "MethodLbl";
 			this.MethodLbl.Size = new System.Drawing.Size(84, 36);
 			this.MethodLbl.TabIndex = 0;
@@ -249,7 +253,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MethodCombo.Location = new System.Drawing.Point(96, 4);
 			this.MethodCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.MethodCombo.Name = "MethodCombo";
-			this.MethodCombo.Size = new System.Drawing.Size(585, 28);
+			this.MethodCombo.Size = new System.Drawing.Size(538, 28);
 			this.MethodCombo.TabIndex = 4;
 			this.MethodCombo.SelectedIndexChanged += new System.EventHandler(this.MethodCombo_SelectedIndexChanged);
 			// 
@@ -268,7 +272,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(593, 32);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(546, 36);
 			this.tableLayoutPanel1.TabIndex = 8;
 			// 
 			// LockPitchInsteadOfRateCheck
@@ -276,11 +280,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.LockPitchInsteadOfRateCheck.AutoSize = true;
 			this.LockPitchInsteadOfRateCheck.Checked = true;
 			this.LockPitchInsteadOfRateCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.LockPitchInsteadOfRateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LockPitchInsteadOfRateCheck.Dock = System.Windows.Forms.DockStyle.Left;
 			this.LockPitchInsteadOfRateCheck.Location = new System.Drawing.Point(118, 4);
 			this.LockPitchInsteadOfRateCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.LockPitchInsteadOfRateCheck.Name = "LockPitchInsteadOfRateCheck";
-			this.LockPitchInsteadOfRateCheck.Size = new System.Drawing.Size(471, 24);
+			this.LockPitchInsteadOfRateCheck.Size = new System.Drawing.Size(166, 28);
 			this.LockPitchInsteadOfRateCheck.TabIndex = 8;
 			this.LockPitchInsteadOfRateCheck.Text = "锁定音高而不是速度";
 			this.LockPitchInsteadOfRateCheck.UseVisualStyleBackColor = true;
@@ -292,7 +296,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PitchLockCheck.Location = new System.Drawing.Point(4, 4);
 			this.PitchLockCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.PitchLockCheck.Name = "PitchLockCheck";
-			this.PitchLockCheck.Size = new System.Drawing.Size(106, 24);
+			this.PitchLockCheck.Size = new System.Drawing.Size(106, 28);
 			this.PitchLockCheck.TabIndex = 7;
 			this.PitchLockCheck.Text = "锁定以拉伸";
 			this.PitchLockCheck.UseVisualStyleBackColor = true;
@@ -304,7 +308,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(729, 310);
+			this.ClientSize = new System.Drawing.Size(682, 323);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);

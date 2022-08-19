@@ -65,6 +65,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.loadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unloadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.exportConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.importConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitDiscardingChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -327,7 +330,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DifferenceCompositeModeCheck = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel15 = new System.Windows.Forms.FlowLayoutPanel();
 			this.TrackShadowCheck = new System.Windows.Forms.CheckBox();
-			this.TrackShadowColorBtn = new System.Windows.Forms.Button();
+			this.TrackShadowColorBtn = new Otomad.VegasScript.OtomadHelper.V4.ColorButton();
 			this.SonarList = new System.Windows.Forms.ListView();
 			this.SonarNameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.SonarShapeHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -428,6 +431,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FindClipsBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
 			this.HelperLbl = new System.Windows.Forms.Label();
+			this.MoshTab = new System.Windows.Forms.TabPage();
+			this.DatamoshTable = new System.Windows.Forms.TableLayoutPanel();
+			this.CloseAfterOpenMoshCheck = new System.Windows.Forms.CheckBox();
+			this.DatamoshClipsFolderGroup = new System.Windows.Forms.GroupBox();
+			this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
+			this.DatamoshClipsFolderOpenButton = new System.Windows.Forms.Button();
+			this.DatamoshClipsFolderTxt = new System.Windows.Forms.TextBox();
+			this.DatamoshClipsFolderButton = new System.Windows.Forms.Button();
+			this.DatamoshBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.DatamixBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.LayeringBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.RenderingBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.ScrambleBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.AutomatorBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.DatamoshNotInstalledTable = new System.Windows.Forms.TableLayoutPanel();
+			this.DatamoshNotInstalledInfo = new System.Windows.Forms.Label();
+			this.DownloadDatamoshLink = new System.Windows.Forms.LinkLabel();
 			this.TrackLegatoMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.stackingTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stackingAllAfterTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -444,6 +464,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.StutterBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
@@ -556,6 +577,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksButtons.SuspendLayout();
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
+			this.MoshTab.SuspendLayout();
+			this.DatamoshTable.SuspendLayout();
+			this.DatamoshClipsFolderGroup.SuspendLayout();
+			this.tableLayoutPanel21.SuspendLayout();
+			this.DatamoshNotInstalledTable.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -1073,6 +1099,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             this.toolStripSeparator6,
             this.pitchShiftPresetMenuItem,
             this.toolStripSeparator1,
+            this.exportConfigToolStripMenuItem,
+            this.importConfigToolStripMenuItem,
+            this.toolStripSeparator11,
             this.exitDiscardingChangesToolStripMenuItem,
             this.exitToolStripMenuItem});
 			this.fileMenuItem.Name = "fileMenuItem";
@@ -1102,7 +1131,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             this.restoreDefaultFormSizeToolStripMenuItem});
 			this.formSizeToolStripMenuItem.Name = "formSizeToolStripMenuItem";
 			this.formSizeToolStripMenuItem.Size = new System.Drawing.Size(271, 26);
-			this.formSizeToolStripMenuItem.Text = "窗体大小";
+			this.formSizeToolStripMenuItem.Text = "窗体大小(&F)";
 			// 
 			// rememberFormSizeToolStripMenuItem
 			// 
@@ -1147,21 +1176,40 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// loadPresetsToolStripMenuItem
 			// 
 			this.loadPresetsToolStripMenuItem.Name = "loadPresetsToolStripMenuItem";
-			this.loadPresetsToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
-			this.loadPresetsToolStripMenuItem.Text = "加载预设...";
+			this.loadPresetsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+			this.loadPresetsToolStripMenuItem.Text = "加载预设(&L)...";
 			this.loadPresetsToolStripMenuItem.Click += new System.EventHandler(this.LoadPresetsToolStripMenuItem_Click);
 			// 
 			// unloadPresetsToolStripMenuItem
 			// 
 			this.unloadPresetsToolStripMenuItem.Name = "unloadPresetsToolStripMenuItem";
-			this.unloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
-			this.unloadPresetsToolStripMenuItem.Text = "卸载预设...";
+			this.unloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+			this.unloadPresetsToolStripMenuItem.Text = "卸载预设(&U)...";
 			this.unloadPresetsToolStripMenuItem.Click += new System.EventHandler(this.LoadPresetsToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
 			this.toolStripSeparator1.Size = new System.Drawing.Size(268, 6);
+			// 
+			// exportConfigToolStripMenuItem
+			// 
+			this.exportConfigToolStripMenuItem.Name = "exportConfigToolStripMenuItem";
+			this.exportConfigToolStripMenuItem.Size = new System.Drawing.Size(271, 26);
+			this.exportConfigToolStripMenuItem.Text = "导出配置(&E)";
+			this.exportConfigToolStripMenuItem.Click += new System.EventHandler(this.ExportConfigToolStripMenuItem_Click);
+			// 
+			// importConfigToolStripMenuItem
+			// 
+			this.importConfigToolStripMenuItem.Name = "importConfigToolStripMenuItem";
+			this.importConfigToolStripMenuItem.Size = new System.Drawing.Size(271, 26);
+			this.importConfigToolStripMenuItem.Text = "导入配置(&I)";
+			this.importConfigToolStripMenuItem.Click += new System.EventHandler(this.ImportConfigToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator11
+			// 
+			this.toolStripSeparator11.Name = "toolStripSeparator11";
+			this.toolStripSeparator11.Size = new System.Drawing.Size(268, 6);
 			// 
 			// exitDiscardingChangesToolStripMenuItem
 			// 
@@ -1458,6 +1506,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Tabs.Controls.Add(this.SonarTab);
 			this.Tabs.Controls.Add(this.YtpTab);
 			this.Tabs.Controls.Add(this.HelperTab);
+			this.Tabs.Controls.Add(this.MoshTab);
 			this.Tabs.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Tabs.Location = new System.Drawing.Point(8, 0);
 			this.Tabs.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
@@ -5304,7 +5353,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TrackShadowColorBtn.Size = new System.Drawing.Size(113, 30);
 			this.TrackShadowColorBtn.TabIndex = 8;
 			this.TrackShadowColorBtn.Text = "阴影颜色...";
-			this.TrackShadowColorBtn.UseVisualStyleBackColor = true;
 			this.TrackShadowColorBtn.Click += new System.EventHandler(this.TrackShadowColorBtn_Click);
 			// 
 			// SonarList
@@ -7033,13 +7081,264 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HelperLbl.AutoSize = true;
 			this.HelperLbl.Dock = System.Windows.Forms.DockStyle.Top;
 			this.HelperLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.HelperLbl.Location = new System.Drawing.Point(2, 0);
-			this.HelperLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.HelperLbl.Location = new System.Drawing.Point(3, 0);
 			this.HelperLbl.Name = "HelperLbl";
 			this.HelperLbl.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-			this.HelperLbl.Size = new System.Drawing.Size(629, 25);
+			this.HelperLbl.Size = new System.Drawing.Size(627, 25);
 			this.HelperLbl.TabIndex = 2;
 			this.HelperLbl.Text = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。";
+			// 
+			// MoshTab
+			// 
+			this.MoshTab.AutoScroll = true;
+			this.MoshTab.Controls.Add(this.DatamoshTable);
+			this.MoshTab.Controls.Add(this.DatamoshNotInstalledTable);
+			this.MoshTab.Location = new System.Drawing.Point(4, 29);
+			this.MoshTab.Name = "MoshTab";
+			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
+			this.MoshTab.Size = new System.Drawing.Size(658, 616);
+			this.MoshTab.TabIndex = 7;
+			this.MoshTab.Text = "混乱";
+			this.MoshTab.UseVisualStyleBackColor = true;
+			// 
+			// DatamoshTable
+			// 
+			this.DatamoshTable.AutoSize = true;
+			this.DatamoshTable.ColumnCount = 1;
+			this.DatamoshTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.DatamoshTable.Controls.Add(this.StutterBtn, 0, 8);
+			this.DatamoshTable.Controls.Add(this.CloseAfterOpenMoshCheck, 0, 0);
+			this.DatamoshTable.Controls.Add(this.DatamoshClipsFolderGroup, 0, 1);
+			this.DatamoshTable.Controls.Add(this.DatamoshBtn, 0, 2);
+			this.DatamoshTable.Controls.Add(this.DatamixBtn, 0, 3);
+			this.DatamoshTable.Controls.Add(this.LayeringBtn, 0, 4);
+			this.DatamoshTable.Controls.Add(this.RenderingBtn, 0, 5);
+			this.DatamoshTable.Controls.Add(this.ScrambleBtn, 0, 6);
+			this.DatamoshTable.Controls.Add(this.AutomatorBtn, 0, 7);
+			this.DatamoshTable.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshTable.Location = new System.Drawing.Point(3, 56);
+			this.DatamoshTable.Margin = new System.Windows.Forms.Padding(0);
+			this.DatamoshTable.Name = "DatamoshTable";
+			this.DatamoshTable.RowCount = 9;
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.Size = new System.Drawing.Size(631, 736);
+			this.DatamoshTable.TabIndex = 9;
+			// 
+			// CloseAfterOpenMoshCheck
+			// 
+			this.CloseAfterOpenMoshCheck.AutoSize = true;
+			this.CloseAfterOpenMoshCheck.Checked = true;
+			this.CloseAfterOpenMoshCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.CloseAfterOpenMoshCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.CloseAfterOpenMoshCheck.Location = new System.Drawing.Point(8, 8);
+			this.CloseAfterOpenMoshCheck.Margin = new System.Windows.Forms.Padding(8);
+			this.CloseAfterOpenMoshCheck.Name = "CloseAfterOpenMoshCheck";
+			this.CloseAfterOpenMoshCheck.Size = new System.Drawing.Size(615, 24);
+			this.CloseAfterOpenMoshCheck.TabIndex = 0;
+			this.CloseAfterOpenMoshCheck.Text = "操作完成之后关闭本对话框";
+			this.CloseAfterOpenMoshCheck.UseVisualStyleBackColor = true;
+			// 
+			// DatamoshClipsFolderGroup
+			// 
+			this.DatamoshClipsFolderGroup.AutoSize = true;
+			this.DatamoshClipsFolderGroup.Controls.Add(this.tableLayoutPanel21);
+			this.DatamoshClipsFolderGroup.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderGroup.Location = new System.Drawing.Point(2, 42);
+			this.DatamoshClipsFolderGroup.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderGroup.Name = "DatamoshClipsFolderGroup";
+			this.DatamoshClipsFolderGroup.Padding = new System.Windows.Forms.Padding(5);
+			this.DatamoshClipsFolderGroup.Size = new System.Drawing.Size(627, 62);
+			this.DatamoshClipsFolderGroup.TabIndex = 6;
+			this.DatamoshClipsFolderGroup.TabStop = false;
+			this.DatamoshClipsFolderGroup.Text = "Datamosh 片段目录";
+			// 
+			// tableLayoutPanel21
+			// 
+			this.tableLayoutPanel21.AutoSize = true;
+			this.tableLayoutPanel21.ColumnCount = 3;
+			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderOpenButton, 2, 0);
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderTxt, 0, 0);
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderButton, 1, 0);
+			this.tableLayoutPanel21.Dock = System.Windows.Forms.DockStyle.Top;
+			this.tableLayoutPanel21.Location = new System.Drawing.Point(5, 25);
+			this.tableLayoutPanel21.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel21.Name = "tableLayoutPanel21";
+			this.tableLayoutPanel21.RowCount = 1;
+			this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel21.Size = new System.Drawing.Size(617, 32);
+			this.tableLayoutPanel21.TabIndex = 3;
+			// 
+			// DatamoshClipsFolderOpenButton
+			// 
+			this.DatamoshClipsFolderOpenButton.AutoSize = true;
+			this.DatamoshClipsFolderOpenButton.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderOpenButton.Location = new System.Drawing.Point(540, 2);
+			this.DatamoshClipsFolderOpenButton.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderOpenButton.MaximumSize = new System.Drawing.Size(300, 28);
+			this.DatamoshClipsFolderOpenButton.Name = "DatamoshClipsFolderOpenButton";
+			this.DatamoshClipsFolderOpenButton.Size = new System.Drawing.Size(75, 28);
+			this.DatamoshClipsFolderOpenButton.TabIndex = 4;
+			this.DatamoshClipsFolderOpenButton.Text = "打开...";
+			this.DatamoshClipsFolderOpenButton.UseVisualStyleBackColor = true;
+			this.DatamoshClipsFolderOpenButton.Click += new System.EventHandler(this.DatamoshClipsFolderOpenButton_Click);
+			// 
+			// DatamoshClipsFolderTxt
+			// 
+			this.DatamoshClipsFolderTxt.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderTxt.Location = new System.Drawing.Point(2, 2);
+			this.DatamoshClipsFolderTxt.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderTxt.Name = "DatamoshClipsFolderTxt";
+			this.DatamoshClipsFolderTxt.ReadOnly = true;
+			this.DatamoshClipsFolderTxt.Size = new System.Drawing.Size(455, 27);
+			this.DatamoshClipsFolderTxt.TabIndex = 2;
+			// 
+			// DatamoshClipsFolderButton
+			// 
+			this.DatamoshClipsFolderButton.AutoSize = true;
+			this.DatamoshClipsFolderButton.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderButton.Location = new System.Drawing.Point(461, 2);
+			this.DatamoshClipsFolderButton.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderButton.MaximumSize = new System.Drawing.Size(300, 28);
+			this.DatamoshClipsFolderButton.Name = "DatamoshClipsFolderButton";
+			this.DatamoshClipsFolderButton.Size = new System.Drawing.Size(75, 28);
+			this.DatamoshClipsFolderButton.TabIndex = 3;
+			this.DatamoshClipsFolderButton.Text = "浏览...";
+			this.DatamoshClipsFolderButton.UseVisualStyleBackColor = true;
+			this.DatamoshClipsFolderButton.Click += new System.EventHandler(this.DatamoshClipsFolderButton_Click);
+			// 
+			// DatamoshBtn
+			// 
+			this.DatamoshBtn.CommandLink = true;
+			this.DatamoshBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据混乱。";
+			this.DatamoshBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DatamoshBtn.Location = new System.Drawing.Point(2, 108);
+			this.DatamoshBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshBtn.Name = "DatamoshBtn";
+			this.DatamoshBtn.Size = new System.Drawing.Size(627, 86);
+			this.DatamoshBtn.TabIndex = 11;
+			this.DatamoshBtn.Text = "数据混乱";
+			this.DatamoshBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// DatamixBtn
+			// 
+			this.DatamixBtn.CommandLink = true;
+			this.DatamixBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据混乱（将一个剪辑混入另一个剪辑）。";
+			this.DatamixBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DatamixBtn.Location = new System.Drawing.Point(2, 198);
+			this.DatamixBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamixBtn.Name = "DatamixBtn";
+			this.DatamixBtn.Size = new System.Drawing.Size(627, 86);
+			this.DatamixBtn.TabIndex = 12;
+			this.DatamixBtn.Text = "数据混合";
+			this.DatamixBtn.UseVisualStyleBackColor = true;
+			this.DatamixBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// LayeringBtn
+			// 
+			this.LayeringBtn.CommandLink = true;
+			this.LayeringBtn.CommandLinkNote = "快速自动地对选中剪辑进行多层叠加。";
+			this.LayeringBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LayeringBtn.Location = new System.Drawing.Point(2, 288);
+			this.LayeringBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.LayeringBtn.Name = "LayeringBtn";
+			this.LayeringBtn.Size = new System.Drawing.Size(627, 86);
+			this.LayeringBtn.TabIndex = 13;
+			this.LayeringBtn.Text = "叠叠乐";
+			this.LayeringBtn.UseVisualStyleBackColor = true;
+			this.LayeringBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// RenderingBtn
+			// 
+			this.RenderingBtn.CommandLink = true;
+			this.RenderingBtn.CommandLinkNote = "快速自动地对视频选中区域进行渲染。";
+			this.RenderingBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RenderingBtn.Location = new System.Drawing.Point(2, 378);
+			this.RenderingBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.RenderingBtn.Name = "RenderingBtn";
+			this.RenderingBtn.Size = new System.Drawing.Size(627, 86);
+			this.RenderingBtn.TabIndex = 14;
+			this.RenderingBtn.Text = "渲染";
+			this.RenderingBtn.UseVisualStyleBackColor = true;
+			this.RenderingBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// ScrambleBtn
+			// 
+			this.ScrambleBtn.CommandLink = true;
+			this.ScrambleBtn.CommandLinkNote = "快速自动地对选中剪辑进行打乱。";
+			this.ScrambleBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ScrambleBtn.Location = new System.Drawing.Point(2, 468);
+			this.ScrambleBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.ScrambleBtn.Name = "ScrambleBtn";
+			this.ScrambleBtn.Size = new System.Drawing.Size(627, 86);
+			this.ScrambleBtn.TabIndex = 15;
+			this.ScrambleBtn.Text = "打乱";
+			this.ScrambleBtn.UseVisualStyleBackColor = true;
+			this.ScrambleBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// AutomatorBtn
+			// 
+			this.AutomatorBtn.CommandLink = true;
+			this.AutomatorBtn.CommandLinkNote = "快速自动地为选中视频效果设定随机值。";
+			this.AutomatorBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AutomatorBtn.Location = new System.Drawing.Point(2, 558);
+			this.AutomatorBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.AutomatorBtn.Name = "AutomatorBtn";
+			this.AutomatorBtn.Size = new System.Drawing.Size(627, 86);
+			this.AutomatorBtn.TabIndex = 16;
+			this.AutomatorBtn.Text = "自动化";
+			this.AutomatorBtn.UseVisualStyleBackColor = true;
+			this.AutomatorBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
+			// DatamoshNotInstalledTable
+			// 
+			this.DatamoshNotInstalledTable.AutoSize = true;
+			this.DatamoshNotInstalledTable.ColumnCount = 1;
+			this.DatamoshNotInstalledTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.DatamoshNotInstalledTable.Controls.Add(this.DatamoshNotInstalledInfo, 0, 0);
+			this.DatamoshNotInstalledTable.Controls.Add(this.DownloadDatamoshLink, 0, 1);
+			this.DatamoshNotInstalledTable.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshNotInstalledTable.Location = new System.Drawing.Point(3, 3);
+			this.DatamoshNotInstalledTable.Name = "DatamoshNotInstalledTable";
+			this.DatamoshNotInstalledTable.Padding = new System.Windows.Forms.Padding(0, 8, 0, 5);
+			this.DatamoshNotInstalledTable.RowCount = 2;
+			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.DatamoshNotInstalledTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+			this.DatamoshNotInstalledTable.Size = new System.Drawing.Size(631, 53);
+			this.DatamoshNotInstalledTable.TabIndex = 8;
+			// 
+			// DatamoshNotInstalledInfo
+			// 
+			this.DatamoshNotInstalledInfo.AutoSize = true;
+			this.DatamoshNotInstalledInfo.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshNotInstalledInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.DatamoshNotInstalledInfo.Location = new System.Drawing.Point(3, 8);
+			this.DatamoshNotInstalledInfo.Name = "DatamoshNotInstalledInfo";
+			this.DatamoshNotInstalledInfo.Size = new System.Drawing.Size(625, 20);
+			this.DatamoshNotInstalledInfo.TabIndex = 2;
+			this.DatamoshNotInstalledInfo.Text = "未安装 Datamosh 扩展包，下载后方可使用全部功能。";
+			// 
+			// DownloadDatamoshLink
+			// 
+			this.DownloadDatamoshLink.AutoSize = true;
+			this.DownloadDatamoshLink.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.DownloadDatamoshLink.Location = new System.Drawing.Point(3, 28);
+			this.DownloadDatamoshLink.Name = "DownloadDatamoshLink";
+			this.DownloadDatamoshLink.Size = new System.Drawing.Size(625, 20);
+			this.DownloadDatamoshLink.TabIndex = 3;
+			this.DownloadDatamoshLink.TabStop = true;
+			this.DownloadDatamoshLink.Text = "下载扩展包";
 			// 
 			// TrackLegatoMenu
 			// 
@@ -7163,6 +7462,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
+			// StutterBtn
+			// 
+			this.StutterBtn.CommandLink = true;
+			this.StutterBtn.CommandLinkNote = "口吃剪辑（向前向后播放）。";
+			this.StutterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StutterBtn.Location = new System.Drawing.Point(2, 648);
+			this.StutterBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.StutterBtn.Name = "StutterBtn";
+			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
+			this.StutterBtn.TabIndex = 17;
+			this.StutterBtn.Text = "口吃";
+			this.StutterBtn.UseVisualStyleBackColor = true;
+			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
 			// ConfigForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -7185,7 +7498,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "Otomad Helper for Vegas - 配置";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ConfigForm_FormClosing);
-			this.Resize += new System.EventHandler(this.ConfigForm_Resize);
+			this.ResizeEnd += new System.EventHandler(this.ConfigForm_Resize);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).EndInit();
@@ -7366,6 +7679,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.PerformLayout();
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
+			this.MoshTab.ResumeLayout(false);
+			this.MoshTab.PerformLayout();
+			this.DatamoshTable.ResumeLayout(false);
+			this.DatamoshTable.PerformLayout();
+			this.DatamoshClipsFolderGroup.ResumeLayout(false);
+			this.DatamoshClipsFolderGroup.PerformLayout();
+			this.tableLayoutPanel21.ResumeLayout(false);
+			this.tableLayoutPanel21.PerformLayout();
+			this.DatamoshNotInstalledTable.ResumeLayout(false);
+			this.DatamoshNotInstalledTable.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -7789,10 +8112,31 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.Label VideoVelocityLbl;
 		public System.Windows.Forms.CheckBox VideoVelocityCheck;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel15;
-		public System.Windows.Forms.Button TrackShadowColorBtn;
+		public ColorButton TrackShadowColorBtn;
 		public System.Windows.Forms.ComboBox AudioAutoPanCurveCombo;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel16;
 		public CommandLinkButton ConvertMusicBeatsBtn;
+		public System.Windows.Forms.ToolStripMenuItem exportConfigToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem importConfigToolStripMenuItem;
+		public System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+		private System.Windows.Forms.TabPage MoshTab;
+		public System.Windows.Forms.TableLayoutPanel DatamoshNotInstalledTable;
+		public System.Windows.Forms.Label DatamoshNotInstalledInfo;
+		private System.Windows.Forms.LinkLabel DownloadDatamoshLink;
+		public System.Windows.Forms.TableLayoutPanel DatamoshTable;
+		public System.Windows.Forms.CheckBox CloseAfterOpenMoshCheck;
+		public System.Windows.Forms.GroupBox DatamoshClipsFolderGroup;
+		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel21;
+		public System.Windows.Forms.TextBox DatamoshClipsFolderTxt;
+		public System.Windows.Forms.Button DatamoshClipsFolderButton;
+		public CommandLinkButton DatamoshBtn;
+		public CommandLinkButton DatamixBtn;
+		public CommandLinkButton LayeringBtn;
+		public CommandLinkButton RenderingBtn;
+		public CommandLinkButton ScrambleBtn;
+		public CommandLinkButton AutomatorBtn;
+		public System.Windows.Forms.Button DatamoshClipsFolderOpenButton;
+		public CommandLinkButton StutterBtn;
 	}
 }
 

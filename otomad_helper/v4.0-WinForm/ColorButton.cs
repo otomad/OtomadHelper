@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 	public class ColorButton : Button {
-		private readonly ColorDialog dialog = new ColorDialog {
+		private readonly AlphaColorDialog dialog = new AlphaColorDialog {
 			AnyColor = true,
 			FullOpen = true,
 			Color = Color.White,
@@ -21,13 +21,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			base.UseVisualStyleBackColor = false;
 			base.BackColor = Color.White;
 			base.ForeColor = Color.Black;
-			base.Text = "#FFFFFF";
+			base.Text = "#FFFFFFFF";
 			Click += ColorButton_Click;
 		}
 
 		private void ColorButton_Click(object sender, EventArgs e) {
+			Color backup = Color;
 			DialogResult dr = dialog.ShowDialog();
 			if (dr == DialogResult.OK) Color = dialog.Color;
+			else dialog.Color = backup;
 		}
 
 		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("该控件不支持此属性。"), DefaultValue(false)]
@@ -48,10 +50,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			set { base.ForeColor = value; }
 		}
 
-		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("该控件不支持此属性。"), DefaultValue("#FFFFFF")]
+		private string _text = string.Empty;
+		[Category("Appearance"), DefaultValue(""), Description("与控件关联的文本。")]
 		public new string Text {
-			get { return base.Text; }
-			set { base.Text = value; }
+			get { return _text; }
+			set {
+				_text = value;
+				if (string.IsNullOrEmpty(value)) base.Text = Hex;
+				else base.Text = _text;
+			}
 		}
 
 		[Category("Appearance"), DefaultValue(typeof(Color), "White"), Description("用户选定的颜色。")]
@@ -60,20 +67,29 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			set {
 				base.BackColor = dialog.Color = value;
 				base.ForeColor = GetForeColor(value);
-				base.Text = '#' + value.R.ToString("X2") + value.G.ToString("X2") + value.B.ToString("X2");
+				if (string.IsNullOrEmpty(_text)) Text = string.Empty;
 			}
 		}
 
-		[Category("Appearance"), DefaultValue("#FFFFFF"), Description("颜色的十六进制代码。")]
+		[Category("Appearance"), DefaultValue("#FFFFFFFF"), Description("颜色的十六进制代码。")]
 		public string Hex {
-			get { return base.Text; }
+			get {
+				return '#' + Color.R.ToString("X2") + Color.G.ToString("X2") + Color.B.ToString("X2") + Color.A.ToString("X2");
+			}
 			set {
-				MatchCollection matches = Regex.Matches(value.ToUpper(), @"#[0-9A-F]{6}");
-				string color = matches.Count != 0 ? matches[0].ToString() : "#000000";
+				MatchCollection matches = Regex.Matches(value.ToUpper(), @"#[0-9A-F]{8}");
+				string color;
+				if (matches.Count != 0) color = matches[0].ToString();
+				else {
+					matches = Regex.Matches(value.ToUpper(), @"#[0-9A-F]{6}");
+					if (matches.Count != 0) color = matches[0].ToString() + "FF";
+					else color = "#00000000";
+				}
 				int r = Convert.ToInt16(color.Substring(1, 2), 16),
 					g = Convert.ToInt16(color.Substring(3, 2), 16),
-					b = Convert.ToInt16(color.Substring(5, 2), 16);
-				Color = Color.FromArgb(r, g, b);
+					b = Convert.ToInt16(color.Substring(5, 2), 16),
+					a = Convert.ToInt16(color.Substring(7, 2), 16);
+				Color = Color.FromArgb(a, r, g, b);
 			}
 		}
 
@@ -83,7 +99,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="backColor">背景颜色。</param>
 		/// <returns>黑色或白色。</returns>
 		public static Color GetForeColor(Color backColor) {
-			double grey = backColor.R * 0.3 + backColor.G * 0.59 + backColor.B * 0.11;
+			int r = backColor.R, g = backColor.G, b = backColor.B, a = backColor.A;
+			Func<int, int> MixAlpha = new Func<int, int>(c => (255 - c) * (255 - a) / 255 + c);
+			r = MixAlpha(r); g = MixAlpha(g); b = MixAlpha(b);
+			double grey = r * 0.3 + g * 0.59 + b * 0.11;
 			return grey < 128 ? Color.White : Color.Black;
 		}
 	}

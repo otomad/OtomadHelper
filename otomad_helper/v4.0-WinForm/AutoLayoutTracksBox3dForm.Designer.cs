@@ -51,8 +51,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(372, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.OkBtn.Location = new System.Drawing.Point(374, 10);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(94, 32);
 			this.OkBtn.TabIndex = 1;
@@ -64,8 +64,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(474, 10);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.CancelBtn.Location = new System.Drawing.Point(476, 10);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
 			this.CancelBtn.TabIndex = 2;
@@ -83,13 +83,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 409);
-			this.dock.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.dock.Location = new System.Drawing.Point(0, 421);
+			this.dock.Margin = new System.Windows.Forms.Padding(4);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(580, 52);
+			this.dock.Size = new System.Drawing.Size(582, 52);
 			this.dock.TabIndex = 10;
 			// 
 			// table
@@ -115,7 +115,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.Controls.Add(this.UseVideoLongerSideCheck, 0, 8);
 			this.table.Dock = System.Windows.Forms.DockStyle.Top;
 			this.table.Location = new System.Drawing.Point(0, 0);
-			this.table.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.table.Margin = new System.Windows.Forms.Padding(5);
 			this.table.Name = "table";
 			this.table.Padding = new System.Windows.Forms.Padding(12, 14, 12, 14);
 			this.table.RowCount = 9;
@@ -129,7 +129,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.table.Size = new System.Drawing.Size(580, 388);
+			this.table.Size = new System.Drawing.Size(582, 388);
 			this.table.TabIndex = 12;
 			// 
 			// BottomCombo
@@ -138,9 +138,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.BottomCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.BottomCombo.FormattingEnabled = true;
 			this.BottomCombo.Location = new System.Drawing.Point(63, 274);
-			this.BottomCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.BottomCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.BottomCombo.Name = "BottomCombo";
-			this.BottomCombo.Size = new System.Drawing.Size(501, 28);
+			this.BottomCombo.Size = new System.Drawing.Size(503, 28);
 			this.BottomCombo.TabIndex = 12;
 			this.BottomCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -150,9 +150,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TopCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.TopCombo.FormattingEnabled = true;
 			this.TopCombo.Location = new System.Drawing.Point(63, 238);
-			this.TopCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.TopCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.TopCombo.Name = "TopCombo";
-			this.TopCombo.Size = new System.Drawing.Size(501, 28);
+			this.TopCombo.Size = new System.Drawing.Size(503, 28);
 			this.TopCombo.TabIndex = 11;
 			this.TopCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -162,9 +162,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.RightCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.RightCombo.FormattingEnabled = true;
 			this.RightCombo.Location = new System.Drawing.Point(63, 202);
-			this.RightCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.RightCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.RightCombo.Name = "RightCombo";
-			this.RightCombo.Size = new System.Drawing.Size(501, 28);
+			this.RightCombo.Size = new System.Drawing.Size(503, 28);
 			this.RightCombo.TabIndex = 10;
 			this.RightCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -174,9 +174,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.LeftCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.LeftCombo.FormattingEnabled = true;
 			this.LeftCombo.Location = new System.Drawing.Point(63, 166);
-			this.LeftCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.LeftCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.LeftCombo.Name = "LeftCombo";
-			this.LeftCombo.Size = new System.Drawing.Size(501, 28);
+			this.LeftCombo.Size = new System.Drawing.Size(503, 28);
 			this.LeftCombo.TabIndex = 9;
 			this.LeftCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -186,9 +186,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.BackCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.BackCombo.FormattingEnabled = true;
 			this.BackCombo.Location = new System.Drawing.Point(63, 130);
-			this.BackCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.BackCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.BackCombo.Name = "BackCombo";
-			this.BackCombo.Size = new System.Drawing.Size(501, 28);
+			this.BackCombo.Size = new System.Drawing.Size(503, 28);
 			this.BackCombo.TabIndex = 8;
 			this.BackCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -260,7 +260,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.InfoLbl.Location = new System.Drawing.Point(16, 22);
 			this.InfoLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 8);
 			this.InfoLbl.Name = "InfoLbl";
-			this.InfoLbl.Size = new System.Drawing.Size(548, 60);
+			this.InfoLbl.Size = new System.Drawing.Size(550, 60);
 			this.InfoLbl.TabIndex = 0;
 			this.InfoLbl.Text = "由于脚本功能限制，将会新建轨道并将选定轨道中的剪辑移动过去，原轨道中的轨道运动、效果等信息将会丢失。\r\n请在下方选定立方体的各个面所使用的轨道，如果为空则表示不设" +
     "定该面。";
@@ -284,9 +284,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FrontCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.FrontCombo.FormattingEnabled = true;
 			this.FrontCombo.Location = new System.Drawing.Point(63, 94);
-			this.FrontCombo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.FrontCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.FrontCombo.Name = "FrontCombo";
-			this.FrontCombo.Size = new System.Drawing.Size(501, 28);
+			this.FrontCombo.Size = new System.Drawing.Size(503, 28);
 			this.FrontCombo.TabIndex = 7;
 			this.FrontCombo.SelectedIndexChanged += new System.EventHandler(this.Combo_SelectedIndexChanged);
 			// 
@@ -300,7 +300,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DelOrigTrackCheck.Location = new System.Drawing.Point(16, 314);
 			this.DelOrigTrackCheck.Margin = new System.Windows.Forms.Padding(4, 8, 4, 4);
 			this.DelOrigTrackCheck.Name = "DelOrigTrackCheck";
-			this.DelOrigTrackCheck.Size = new System.Drawing.Size(548, 24);
+			this.DelOrigTrackCheck.Size = new System.Drawing.Size(550, 24);
 			this.DelOrigTrackCheck.TabIndex = 13;
 			this.DelOrigTrackCheck.Text = "删除原轨道";
 			this.DelOrigTrackCheck.UseVisualStyleBackColor = true;
@@ -311,9 +311,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.SetColumnSpan(this.UseVideoLongerSideCheck, 2);
 			this.UseVideoLongerSideCheck.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.UseVideoLongerSideCheck.Location = new System.Drawing.Point(16, 346);
-			this.UseVideoLongerSideCheck.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.UseVideoLongerSideCheck.Margin = new System.Windows.Forms.Padding(4);
 			this.UseVideoLongerSideCheck.Name = "UseVideoLongerSideCheck";
-			this.UseVideoLongerSideCheck.Size = new System.Drawing.Size(548, 24);
+			this.UseVideoLongerSideCheck.Size = new System.Drawing.Size(550, 24);
 			this.UseVideoLongerSideCheck.TabIndex = 14;
 			this.UseVideoLongerSideCheck.Text = "使用视频的长边作为立方体的棱长";
 			this.UseVideoLongerSideCheck.UseVisualStyleBackColor = true;
@@ -325,13 +325,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(580, 461);
+			this.ClientSize = new System.Drawing.Size(582, 473);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Location = new System.Drawing.Point(60, 60);
-			this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.Margin = new System.Windows.Forms.Padding(5);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AutoLayoutTracksBox3dForm";

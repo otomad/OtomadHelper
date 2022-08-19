@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Diagnostics;
 
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 	public class AlphaColorDialog : ColorDialog {
@@ -22,9 +23,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private IntPtr hWndRed = IntPtr.Zero; // handles to TextBoxes
 		private IntPtr hWndGreen = IntPtr.Zero;
 		private IntPtr hWndBlue = IntPtr.Zero;
+		private byte? alphaBackup = 255;
+		private System.Windows.Forms.Timer windowDragTimer = new System.Windows.Forms.Timer { Interval = 10 };
 
 		public AlphaColorDialog() {
 			btnAlpha.Click += btnAlpha_Click;
+			windowDragTimer.Tick += WindowDragTimer_Tick;
 		}
 
 		///<summary>The handle for the ColorDialog window.</summary>
@@ -47,7 +51,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Size sz = dialogAlpha.Size;
 				RECT r = new RECT();
 				GetWindowRect(handle, ref r);
-				dialogAlpha.Location = new Point(r.Left + ((r.Right - r.Left) - sz.Width) / 2, r.Top + ((r.Bottom - r.Top) - sz.Height) / 2);
+				//dialogAlpha.Location = new Point(r.Left + (r.Right - r.Left - sz.Width) / 2, r.Top + (r.Bottom - r.Top - sz.Height) / 2); // 位于父窗口中央。
+				dialogAlpha.Location = new Point(r.Right, r.Top); // 位于父窗口右上角。
 				dialogAlpha.FormBorderStyle = FormBorderStyle.FixedDialog;
 				dialogAlpha.MinimizeBox = false;
 				dialogAlpha.MaximizeBox = false;
@@ -60,6 +65,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (!dialogAlpha.IsHandleCreated || !dialogAlpha.Visible) {
 				dialogAlpha.Visible = false; // sometimes IsHandleCreated is reset, so Visible must be reset
 				dialogAlpha.Show(new SimpleWindow { Handle = handle });
+				WindowDragTimer_Tick(null, null);
+				dialogAlpha.ReserveSystemMenuItems(SystemMenuItemType.CLOSE);
 			} else {
 				if (dialogAlpha.WindowState == FormWindowState.Minimized)
 					dialogAlpha.WindowState = FormWindowState.Normal;
@@ -74,7 +81,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			SetColorInternal(panelAlpha.Color);
 		}
 
-		private static String GetWindowText(IntPtr hWnd) {
+		private static string GetWindowText(IntPtr hWnd) {
 			StringBuilder sb = new StringBuilder(256);
 			GetWindowText(hWnd, sb, sb.Capacity);
 			return sb.ToString();
@@ -109,7 +116,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			public int j;
 			public int len;
 
-			public override String ToString() {
+			public override string ToString() {
 				return i + " " + j + " " + len;
 			}
 		}
@@ -136,7 +143,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			for (int i = 0; i < w; i++) {
 				Color lastColor = Color.Empty;
 				for (int j = 0; j <= h; j++) {
-					Color c = (j == h ? Color.Empty : bmp.GetPixel(i, j));
+					Color c = j == h ? Color.Empty : bmp.GetPixel(i, j);
 					if (c == lastColor) {
 						ijl.len++;
 					} else {
@@ -175,8 +182,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private Color GetColorInternal() {
-			int a = (panelAlpha != null ? panelAlpha.Alpha : 255);
-			String _r = GetWindowText(hWndRed);
+			int a = panelAlpha != null ? panelAlpha.Alpha : 255;
+			string _r = GetWindowText(hWndRed);
 			if (_r.Length > 0) {
 				// Define Custom Colors UI is visible.
 				int r = int.Parse(_r);
@@ -226,6 +233,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		protected override IntPtr HookProc(IntPtr hWnd, int msg, IntPtr wparam, IntPtr lparam) {
 			//System.Diagnostics.Debug.WriteLine((Opulos.Core.Win32.WM) msg);
 			if (msg == WM_INITDIALOG) {
+				//alphaBackup = Color.A;
 				IntPtr hWndOK = GetDlgItem(hWnd, 0x1); // 0x1 == OK button
 				RECT rOK = new RECT();
 				GetWindowRect(hWndOK, ref rOK);
@@ -245,7 +253,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				IntPtr hWndParent = GetParent(hWndCancel);
 				int w = rCancel.Right - rCancel.Left;
 				int h = rCancel.Bottom - rCancel.Top;
-				int gap = (rCancel.Left - rOK.Right);
+				int gap = rCancel.Left - rOK.Right;
 
 				// the "Define Custom Colors >>" button is slightly less wide than the total width of the
 				// OK, Cancel and Alpha buttons. Options:
@@ -280,6 +288,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				hWndGreen = GetDlgItem(hWnd, 0x02c3);
 				hWndBlue = GetDlgItem(hWnd, 0x02c4);
 			} else if (msg == WM_SHOWWINDOW) {
+				alphaBackup = Color.A;
 				//center the dialog on the parent window:
 				RECT cr = new RECT();
 				RECT r0 = new RECT();
@@ -291,6 +300,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				int x = cr.Left + ((cr.Right - cr.Left) - (r0.Right - r0.Left)) / 2;
 				int y = cr.Top + ((cr.Bottom - cr.Top) - (r0.Bottom - r0.Top)) / 2;
 				SetWindowPos(hWnd, IntPtr.Zero, x, y, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
+
+				btnAlpha.PerformClick();
+				if (alphaBackup != null) {
+					Color = Color.FromArgb((byte)alphaBackup, Color.R, Color.G, Color.B);
+					alphaBackup = null;
+				}
 			} else if (msg == ACD_COLORCHANGED) {
 				Color c = GetColorInternal();
 				SetColorInternal(c);
@@ -298,9 +313,26 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					panelAlpha.Color = c;
 			} else if (msg == WM_COMMAND || msg == WM_CHAR || msg == WM_LBUTTONDOWN) {
 				PostMessage(hWnd, ACD_COLORCHANGED, 0, 0);
+			} else if (msg == WM_NCLBUTTONDOWN) {
+				windowDragTimer.Start();
+			} else if (msg == WM_NCLBUTTONUP) {
+				windowDragTimer.Stop();
 			}
 
 			return base.HookProc(hWnd, msg, wparam, lparam);
+		}
+
+		private void WindowDragTimer_Tick(object sender, EventArgs e) {
+			try {
+				if (dialogAlpha == null || handle == null) throw new NullReferenceException();
+				RECT r = new RECT();
+				GetWindowRect(handle, ref r);
+				dialogAlpha.Location = new Point(r.Right, r.Top);
+			} catch (Exception) { // 吞掉句柄丢失的错误。
+				windowDragTimer.Stop();
+				return;
+			}
+			
 		}
 
 		protected override void Dispose(bool disposing) {
@@ -317,9 +349,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 		}
 
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		internal static extern bool DeleteMenu(IntPtr menu, uint uPosition, uint uFlags);
+
 		private class AlphaDialog : Form {
 
-			AlphaColorDialog AOwner;
+			private readonly AlphaColorDialog AOwner;
 			public AlphaDialog(AlphaColorDialog owner) {
 				AOwner = owner;
 				ShowIcon = false;
@@ -332,6 +370,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					SetForegroundWindow(AOwner.handle);
 				}
 				base.OnFormClosing(e);
+			}
+
+			protected override void WndProc(ref Message m) {
+				if (m.Msg == WM_SYSCOMMAND) {
+					if ((int)m.WParam == SC_MOVE)
+						return;
+				}
+				base.WndProc(ref m);
 			}
 		}
 
@@ -405,10 +451,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private const int WM_COMMAND = 0x111;
 		private const int WM_CHAR = 0x102;
 		private const int WM_LBUTTONDOWN = 0x201;
+		private const int WM_NCLBUTTONDOWN = 0x00A1;
+		private const int WM_NCLBUTTONUP = 0x00A2;
 
 		//private const uint WS_VISIBLE = 0x10000000;
 		//private const uint WS_CHILD = 0x40000000;
 		//private const uint WS_TABSTOP = 0x00010000;
 
+		private const int WM_SYSCOMMAND = 0x112;
+		private const int SC_MOVE = 0xF012;
+		private const int SC_MOVE_MENUITEM = 0xF010;
+		internal const uint MF_BYCOMMAND = 0x00000000;
 	}
 }
