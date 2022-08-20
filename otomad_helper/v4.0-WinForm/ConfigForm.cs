@@ -1248,13 +1248,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void TrackShadowColorBtn_Click(object sender, EventArgs e) {
-			AlphaColorDialog dialog = new AlphaColorDialog {
-				AnyColor = true,
-				FullOpen = true,
-				Color = (Color?)TrackShadowColorBtn.Tag ?? Color.Black,
-			};
-			if (dialog.ShowDialog() == DialogResult.Cancel) return;
-			TrackShadowColorBtn.Tag = dialog.Color;
+
 		}
 
 		private void ConvertMusicBeatsBtn_Click(object sender, EventArgs e) {

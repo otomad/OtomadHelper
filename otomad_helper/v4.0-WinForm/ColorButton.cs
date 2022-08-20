@@ -26,10 +26,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void ColorButton_Click(object sender, EventArgs e) {
-			Color backup = Color;
+			dialog.Color = Color;
 			DialogResult dr = dialog.ShowDialog();
 			if (dr == DialogResult.OK) Color = dialog.Color;
-			else dialog.Color = backup;
 		}
 
 		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("该控件不支持此属性。"), DefaultValue(false)]
@@ -61,11 +60,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 		}
 
+		private Color color = Color.White;
 		[Category("Appearance"), DefaultValue(typeof(Color), "White"), Description("用户选定的颜色。")]
 		public Color Color {
-			get { return dialog.Color; }
+			get { return color; }
 			set {
-				base.BackColor = dialog.Color = value;
+				base.BackColor = color = value;
 				base.ForeColor = GetForeColor(value);
 				if (string.IsNullOrEmpty(_text)) Text = string.Empty;
 			}

@@ -41,12 +41,12 @@
 			this.InstrumentHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.IsDrumsKitHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.NoteCountHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.PanHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.BeginNoteHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.EditNotesBtn = new System.Windows.Forms.Button();
 			this.SelectAllBtn = new System.Windows.Forms.Button();
 			this.InvertSelectionButton = new System.Windows.Forms.Button();
-			this.PanHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.dock.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.AutoLayoutTracksGroup.SuspendLayout();
@@ -286,6 +286,10 @@
 			// 
 			this.NoteCountHeader.Text = "音符数";
 			// 
+			// PanHeader
+			// 
+			this.PanHeader.Text = "声相";
+			// 
 			// BeginNoteHeader
 			// 
 			this.BeginNoteHeader.Text = "起音";
@@ -312,7 +316,7 @@
 			this.EditNotesBtn.Name = "EditNotesBtn";
 			this.EditNotesBtn.Size = new System.Drawing.Size(201, 34);
 			this.EditNotesBtn.TabIndex = 15;
-			this.EditNotesBtn.Text = "编辑所选通道音符...";
+			this.EditNotesBtn.Text = "编辑所选轨道音符...";
 			this.EditNotesBtn.UseVisualStyleBackColor = true;
 			this.EditNotesBtn.Click += new System.EventHandler(this.EditNotesBtn_Click);
 			// 
@@ -341,10 +345,6 @@
 			this.InvertSelectionButton.Text = "反选";
 			this.InvertSelectionButton.UseVisualStyleBackColor = true;
 			this.InvertSelectionButton.Click += new System.EventHandler(this.InvertSelectionButton_Click);
-			// 
-			// PanHeader
-			// 
-			this.PanHeader.Text = "声相";
 			// 
 			// MidiChannelAdvancedForm
 			// 

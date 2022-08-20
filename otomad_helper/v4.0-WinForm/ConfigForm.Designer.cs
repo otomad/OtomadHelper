@@ -433,6 +433,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HelperLbl = new System.Windows.Forms.Label();
 			this.MoshTab = new System.Windows.Forms.TabPage();
 			this.DatamoshTable = new System.Windows.Forms.TableLayoutPanel();
+			this.StutterBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.CloseAfterOpenMoshCheck = new System.Windows.Forms.CheckBox();
 			this.DatamoshClipsFolderGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
@@ -464,7 +465,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.StutterBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
@@ -5353,7 +5353,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TrackShadowColorBtn.Size = new System.Drawing.Size(113, 30);
 			this.TrackShadowColorBtn.TabIndex = 8;
 			this.TrackShadowColorBtn.Text = "阴影颜色...";
-			this.TrackShadowColorBtn.Click += new System.EventHandler(this.TrackShadowColorBtn_Click);
 			// 
 			// SonarList
 			// 
@@ -7132,6 +7131,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshTable.Size = new System.Drawing.Size(631, 736);
 			this.DatamoshTable.TabIndex = 9;
 			// 
+			// StutterBtn
+			// 
+			this.StutterBtn.CommandLink = true;
+			this.StutterBtn.CommandLinkNote = "口吃剪辑（向前向后播放）。";
+			this.StutterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StutterBtn.Location = new System.Drawing.Point(2, 648);
+			this.StutterBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.StutterBtn.Name = "StutterBtn";
+			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
+			this.StutterBtn.TabIndex = 17;
+			this.StutterBtn.Text = "口吃";
+			this.StutterBtn.UseVisualStyleBackColor = true;
+			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
 			// CloseAfterOpenMoshCheck
 			// 
 			this.CloseAfterOpenMoshCheck.AutoSize = true;
@@ -7461,20 +7474,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.AutoPopDelay = 60000;
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
-			// 
-			// StutterBtn
-			// 
-			this.StutterBtn.CommandLink = true;
-			this.StutterBtn.CommandLinkNote = "口吃剪辑（向前向后播放）。";
-			this.StutterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StutterBtn.Location = new System.Drawing.Point(2, 648);
-			this.StutterBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.StutterBtn.Name = "StutterBtn";
-			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
-			this.StutterBtn.TabIndex = 17;
-			this.StutterBtn.Text = "口吃";
-			this.StutterBtn.UseVisualStyleBackColor = true;
-			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			// 
 			// ConfigForm
 			// 
