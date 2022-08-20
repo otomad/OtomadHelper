@@ -31,7 +31,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 ### 安装
 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)最新版脚本。
 2. 解压**所有**压缩包内的文件并放置到 Vegas 安装目录下的“Script Menu”文件夹中。
-> (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 17.0\\Script Menu)
+> (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
 3. 确保 DLL 文件 (DLL\\NAudio.dll) 没有被锁定。**具体步骤：**
 	1. 在 Vegas 安装目录下，依次进入文件夹 Script Menu\\DLL。
 	2. 右键 NAudio.dll 文件，并选择“属性”。

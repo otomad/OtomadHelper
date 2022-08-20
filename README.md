@@ -39,7 +39,7 @@ You can also read [@Evauation](https://github.com/Evauation)'s [documentation](h
 ### Install
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this script.
 2. Unzip **ALL** the files in the zip file you've just downloaded to the "Script Menu" folder in the Vegas installation directory.
-> (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 17.0\\Script Menu)
+> (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
 3. Make sure that the DLL file (DLL\\NAudio.dll) is not locked. **Specific steps:**
 	1. In the Vegas installation directory, enter folder Script Menu\\DLL.
 	2. Right-click the NAudio.dll file and select Properties.
@@ -145,7 +145,6 @@ Inspired by:
 
 ### Tips
 Various scripts for MAGIX Vegas **(v14 and above)**.
-* Tested on v17.0.
 
 Compilation note for Sony Vegas **(v13 and under)**:
 * The namespace name of the *.NET assembly* has changed from `Sony.Vegas` to `ScriptPortal.Vegas` in **v14 and onward**.
@@ -154,9 +153,9 @@ Compilation note for Sony Vegas **(v13 and under)**:
 
 ### Install
 * Scripts belong in the Vegas install directory, in the "Script Menu" folder.
-	* (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu)
+	* (ie. C:\Program Files\VEGAS\VEGAS Pro 20.0\Script Menu)
 * Some scripts require additional DLLs, put them in a "DLL" folder in the "Script Menu" folder.
-	* (ie. C:\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu\DLL)
+	* (ie. C:\Program Files\VEGAS\VEGAS Pro 20.0\Script Menu\DLL)
 * Make sure that the DLL files (such as DLL\\NAudio.dll) are not locked.
 
 </div>
