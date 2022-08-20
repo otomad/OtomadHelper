@@ -102,9 +102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 20, 19, 0);
+		public static readonly Version VERSION = new Version(4, 20, 20, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 8, 19);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 8, 20);
 
 		// 配置参数变量
 		#region 视频属性
@@ -1037,8 +1037,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				progressForm = new ProgressForm();
 				progressForm.Show();
 			}
-			if (YtpConfig) { GenerateYtp(); return true; }
 			if (AConfig && AConfigMethod == AudioTuneMethod.PITCH_SHIFT) if (!ExaminePitchShiftPresetsExist()) return false;
+			if (YtpConfig) { GenerateYtp(); return true; }
 			if (!IsMultiMidiChannel) progressForm.Info = "";
 			#endregion
 			#region 开始处理 MIDI
@@ -1450,7 +1450,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 
 			#region 自动轨道声相
-			if (AConfigAutoPan && AConfig && !isSonarLegal) {
+			if (AConfigAutoPan && AConfig && !isSonarLegal && currentChannel.Pan != MIDI.INITIAL_PAN) {
 				// 从 NAudio 的声相值转换到 Vegas 的声相值。
 				Func<int, float> GetPan = new Func<int, float>(pan => pan == 64 ? 0 : (float)Map(pan, 0, 127, -1, 1));
 				Action<Action<AudioTrack>> ForATracks = new Action<Action<AudioTrack>>(action => {
@@ -3115,18 +3115,34 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="form">窗体。</param>
 		/// <param name="items">系统菜单项目。</param>
 		public static void DeleteSystemMenuItems(this Form form, SystemMenuItemType items) {
-			IntPtr menu = AlphaColorDialog.GetSystemMenu(form.Handle, false);
-			foreach (KeyValuePair<SystemMenuItemType, uint> item in SystemMenuItemTag.Map)
-				if ((items & item.Key) != 0)
-					AlphaColorDialog.DeleteMenu(menu, item.Value, AlphaColorDialog.MF_BYCOMMAND);
+			DeleteSystemMenuItems(form.Handle, items);
 		}
 		/// <summary>
-		/// 保留系统菜单中指定的项目。与 <see cref="DeleteSystemMenuItems"/> 方法取反。
+		/// 保留系统菜单中指定的项目。与 <see cref="DeleteSystemMenuItems(Form, SystemMenuItemType)"/> 方法取反。
 		/// </summary>
 		/// <param name="form">窗体。</param>
 		/// <param name="items">系统菜单项目。</param>
 		public static void ReserveSystemMenuItems(this Form form, SystemMenuItemType items) {
 			DeleteSystemMenuItems(form, ~items);
+		}
+		/// <summary>
+		/// 删除系统菜单中指定的项目。比如还原、移动、大小、最小化、最大化、关闭。
+		/// </summary>
+		/// <param name="hWnd">窗体句柄。</param>
+		/// <param name="items">系统菜单项目。</param>
+		public static void DeleteSystemMenuItems(this IntPtr hWnd, SystemMenuItemType items) {
+			IntPtr menu = AlphaColorDialog.GetSystemMenu(hWnd, false);
+			foreach (KeyValuePair<SystemMenuItemType, uint> item in SystemMenuItemTag.Map)
+				if ((items & item.Key) != 0)
+					AlphaColorDialog.DeleteMenu(menu, item.Value, AlphaColorDialog.MF_BYCOMMAND);
+		}
+		/// <summary>
+		/// 保留系统菜单中指定的项目。与 <see cref="DeleteSystemMenuItems(IntPtr, SystemMenuItemType)"/> 方法取反。
+		/// </summary>
+		/// <param name="hWnd">窗体句柄。</param>
+		/// <param name="items">系统菜单项目。</param>
+		public static void ReserveSystemMenuItems(this IntPtr hWnd, SystemMenuItemType items) {
+			DeleteSystemMenuItems(hWnd, ~items);
 		}
 	}
 
@@ -4837,7 +4853,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public readonly int TimeSignatureNumerator;
 		public IList<MidiEvent> TimeSignatureTrack;
 		public string Path;
-		private const int INITIAL_PAN = -1;
+		public const int INITIAL_PAN = -1;
 		public class TrackInfo {
 			public int Index;
 			public string Name = "";
@@ -7608,23 +7624,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 25F));
 			this.tableLayoutPanel1.Controls.Add(this.CancelBtn, 1, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 218);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 191);
 			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(5);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(18, 4, 18, 4);
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(589, 52);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(589, 50);
 			this.tableLayoutPanel1.TabIndex = 1;
 			// 
 			// CancelBtn
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(482, 11);
+			this.CancelBtn.Location = new System.Drawing.Point(472, 9);
 			this.CancelBtn.Margin = new System.Windows.Forms.Padding(5);
 			this.CancelBtn.Name = "CancelBtn";
-			this.CancelBtn.Size = new System.Drawing.Size(94, 30);
+			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
 			this.CancelBtn.TabIndex = 1;
 			this.CancelBtn.Text = "取消(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
@@ -7637,29 +7653,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel2.Controls.Add(this.InfoLabel, 0, 1);
 			this.tableLayoutPanel2.Controls.Add(this.PercentLabel, 0, 0);
 			this.tableLayoutPanel2.Controls.Add(this.ProgressBar, 0, 2);
-			this.tableLayoutPanel2.Controls.Add(this.RealTimeUpdateCheck, 0, 3);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-			this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(8);
+			this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(18, 8, 18, 8);
 			this.tableLayoutPanel2.RowCount = 4;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(589, 218);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(589, 191);
 			this.tableLayoutPanel2.TabIndex = 2;
 			// 
 			// InfoLabel
 			// 
 			this.InfoLabel.AutoSize = true;
 			this.InfoLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.InfoLabel.Location = new System.Drawing.Point(14, 84);
+			this.InfoLabel.Location = new System.Drawing.Point(24, 86);
 			this.InfoLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.InfoLabel.Name = "InfoLabel";
 			this.InfoLabel.Padding = new System.Windows.Forms.Padding(0, 6, 0, 6);
-			this.InfoLabel.Size = new System.Drawing.Size(561, 42);
+			this.InfoLabel.Size = new System.Drawing.Size(541, 43);
 			this.InfoLabel.TabIndex = 0;
 			this.InfoLabel.Text = "正在生成音 MAD / YTPMV⋯⋯";
 			this.InfoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -7669,10 +7684,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PercentLabel.AutoSize = true;
 			this.PercentLabel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.PercentLabel.Font = new System.Drawing.Font("Segoe UI", 24F);
-			this.PercentLabel.Location = new System.Drawing.Point(8, 8);
+			this.PercentLabel.Location = new System.Drawing.Point(18, 8);
 			this.PercentLabel.Margin = new System.Windows.Forms.Padding(0);
 			this.PercentLabel.Name = "PercentLabel";
-			this.PercentLabel.Size = new System.Drawing.Size(573, 76);
+			this.PercentLabel.Size = new System.Drawing.Size(553, 78);
 			this.PercentLabel.TabIndex = 1;
 			this.PercentLabel.Text = "0%";
 			this.PercentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -7680,24 +7695,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// ProgressBar
 			// 
 			this.ProgressBar.Dock = System.Windows.Forms.DockStyle.Top;
-			this.ProgressBar.Location = new System.Drawing.Point(18, 130);
+			this.ProgressBar.Location = new System.Drawing.Point(28, 133);
 			this.ProgressBar.Margin = new System.Windows.Forms.Padding(10, 4, 10, 4);
 			this.ProgressBar.Name = "ProgressBar";
-			this.ProgressBar.Size = new System.Drawing.Size(553, 29);
+			this.ProgressBar.Size = new System.Drawing.Size(533, 29);
 			this.ProgressBar.Step = 1;
 			this.ProgressBar.TabIndex = 2;
 			this.ProgressBar.UseWaitCursor = true;
 			// 
 			// RealTimeUpdateCheck
 			// 
+			this.RealTimeUpdateCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.RealTimeUpdateCheck.AutoSize = true;
-			this.RealTimeUpdateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RealTimeUpdateCheck.Location = new System.Drawing.Point(12, 181);
-			this.RealTimeUpdateCheck.Margin = new System.Windows.Forms.Padding(4);
+			this.RealTimeUpdateCheck.BackColor = System.Drawing.SystemColors.Control;
+			this.RealTimeUpdateCheck.Location = new System.Drawing.Point(22, 205);
+			this.RealTimeUpdateCheck.Margin = new System.Windows.Forms.Padding(4, 4, 4, 7);
 			this.RealTimeUpdateCheck.Name = "RealTimeUpdateCheck";
 			this.RealTimeUpdateCheck.Padding = new System.Windows.Forms.Padding(6, 0, 6, 0);
-			this.RealTimeUpdateCheck.Size = new System.Drawing.Size(565, 25);
-			this.RealTimeUpdateCheck.TabIndex = 3;
+			this.RealTimeUpdateCheck.Size = new System.Drawing.Size(298, 24);
+			this.RealTimeUpdateCheck.TabIndex = 6;
 			this.RealTimeUpdateCheck.Text = "实时更新当前进度（会减慢生成速度）";
 			this.RealTimeUpdateCheck.UseVisualStyleBackColor = true;
 			// 
@@ -7707,8 +7723,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(589, 270);
+			this.ClientSize = new System.Drawing.Size(589, 241);
 			this.ControlBox = false;
+			this.Controls.Add(this.RealTimeUpdateCheck);
 			this.Controls.Add(this.tableLayoutPanel2);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
@@ -7725,6 +7742,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel2.PerformLayout();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -7760,6 +7778,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private new void Close() {
+			base.Close();
 			if (_dialog != null) {
 				_dialog.StopProgressDialog();
 				Marshal.ReleaseComObject(_dialog);
@@ -7868,7 +7887,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			_dialog.SetTitle(Lang.str.processing_it);
 			if (Animation != null)
 				_dialog.SetAnimation(_currentAnimationModuleHandle, (ushort)Animation.ResourceId);
-			_dialog.SetLine(1, Text, false, IntPtr.Zero);
+			_dialog.SetLine(1, ProgressText, false, IntPtr.Zero);
 			_dialog.SetLine(2, Info, false, IntPtr.Zero);
 			if (Animation != null)
 				_dialog.SetAnimation(_currentAnimationModuleHandle, (ushort)Animation.ResourceId);
@@ -7877,7 +7896,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			flags |= ProgressDialogFlags.AutoTime;
 			flags |= ProgressDialogFlags.NoMinimize;
 			_dialog.StartProgressDialog(IntPtr.Zero, null, flags, IntPtr.Zero);
+			IntPtr hWnd = GetWindow();
+			if (hWnd != IntPtr.Zero) {
+				hWnd.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
+				if (showRealTimeUpdateCheck) {
+					int y = ClientRectangle.Height - PointToClient(RealTimeUpdateCheck.PointToScreen(new Point(0, 0))).Y;//13;
+					AlphaColorDialog.RECT rect = new AlphaColorDialog.RECT();
+					AlphaColorDialog.GetClientRect(hWnd, ref rect);
+					int newY = rect.Bottom - rect.Top - y;
+					Rectangle bounds = RealTimeUpdateCheck.Bounds;
+					bounds.Y = newY;
+					RealTimeUpdateCheck.Bounds = bounds;
+					NativeWin32API.SetParent(RealTimeUpdateCheck.Handle, hWnd);
+				}
+			}
 		}
+
+		private readonly bool showRealTimeUpdateCheck = false; // 开启之后即可在进度条对话框显示实时更新 UI 的复选框。但是启动会变慢。
+
+		private IntPtr GetWindow() {
+			IntPtr hWnd = IntPtr.Zero;
+			if (_dialog != null) IUnknown_GetWindow(_dialog, out hWnd);
+			return hWnd;
+		}
+
+		[DllImport("shlwapi", EntryPoint = "#172")]
+		private static extern long IUnknown_GetWindow(
+				[MarshalAs(UnmanagedType.IUnknown)]
+				object punk,
+				out IntPtr phwnd
+			);
 	}
 
 	#region Vista 后文件夹选择器
@@ -7963,7 +8011,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		[DllImport("shell32.dll")]
 		private static extern int SHCreateShellItem(IntPtr pidlParent, IntPtr psfParent, IntPtr pidl, out IShellItem ppsi);
 		[DllImport("user32.dll")]
-		private static extern IntPtr GetActiveWindow();
+		internal static extern IntPtr GetActiveWindow();
 		private const uint ERROR_CANCELLED = 0x800704C7;
 		[ComImport]
 		[Guid("DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7")]
@@ -12932,12 +12980,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.InstrumentHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.IsDrumsKitHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.NoteCountHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.PanHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.BeginNoteHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.EditNotesBtn = new System.Windows.Forms.Button();
 			this.SelectAllBtn = new System.Windows.Forms.Button();
 			this.InvertSelectionButton = new System.Windows.Forms.Button();
-			this.PanHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.dock.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.AutoLayoutTracksGroup.SuspendLayout();
@@ -13177,6 +13225,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.NoteCountHeader.Text = "音符数";
 			// 
+			// PanHeader
+			// 
+			this.PanHeader.Text = "声相";
+			// 
 			// BeginNoteHeader
 			// 
 			this.BeginNoteHeader.Text = "起音";
@@ -13203,7 +13255,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.EditNotesBtn.Name = "EditNotesBtn";
 			this.EditNotesBtn.Size = new System.Drawing.Size(201, 34);
 			this.EditNotesBtn.TabIndex = 15;
-			this.EditNotesBtn.Text = "编辑所选通道音符...";
+			this.EditNotesBtn.Text = "编辑所选轨道音符...";
 			this.EditNotesBtn.UseVisualStyleBackColor = true;
 			this.EditNotesBtn.Click += new System.EventHandler(this.EditNotesBtn_Click);
 			// 
@@ -13232,10 +13284,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.InvertSelectionButton.Text = "反选";
 			this.InvertSelectionButton.UseVisualStyleBackColor = true;
 			this.InvertSelectionButton.Click += new System.EventHandler(this.InvertSelectionButton_Click);
-			// 
-			// PanHeader
-			// 
-			this.PanHeader.Text = "声相";
 			// 
 			// MidiChannelAdvancedForm
 			// 
@@ -13320,7 +13368,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			foreach (object _midiChannel in configForm.MidiChannelCombo.Items)
 				if (_midiChannel is MIDI.TrackInfo) {
 					MIDI.TrackInfo midiChannel = _midiChannel as MIDI.TrackInfo;
-					string pan = midiChannel.Pan < 60 ? Lang.str.pan_left_abbr : midiChannel.Pan > 68 ? Lang.str.pan_right_abbr : Lang.str.pan_center_abbr;
+					string pan =
+						midiChannel.Pan == MIDI.INITIAL_PAN ? "" : // 轨道不包含声相信息
+						midiChannel.Pan < 60 ? Lang.str.pan_left_abbr :
+						midiChannel.Pan > 68 ? Lang.str.pan_right_abbr :
+						Lang.str.pan_center_abbr; // 60 ~ 68 之间判定为中置声道。
 					if (midiChannel.IsDynamicPan) pan += " " + Lang.str.pan_dynamic_abbr;
 					ListViewItem item = ChannelListView.Items.Add(new ListViewItem(new string[] {
 						midiChannel.Index.ToString(), midiChannel.Name, midiChannel.Instrument,
@@ -14737,10 +14789,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				_buttonTitles = buttonTitles;
 
 				//让自己在界面上看不到
-				this.Text = "";
-				this.StartPosition = FormStartPosition.Manual;
-				this.Location = new Point(-32000, -32000);
-				this.ShowInTaskbar = false;
+				Text = "";
+				StartPosition = FormStartPosition.Manual;
+				Location = new Point(-32000, -32000);
+				ShowInTaskbar = false;
+				TopMost = true;
 			}
 
 			protected override void OnShown(EventArgs e) {
@@ -14789,26 +14842,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 			}
 
-			/// <summary>
-			/// Win32 API
-			/// </summary>
-			private static class NativeWin32API {
-				[DllImport("user32.dll", CharSet = CharSet.Auto)]
-				public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int Width, int Height, int flags);
-				[DllImport("user32.dll")]
-				public static extern IntPtr GetWindow(IntPtr hWnd, long wCmd);
-				[DllImport("user32.dll")]
-				public static extern bool SetWindowText(IntPtr hWnd, string lpString);
-				[DllImport("user32.dll")]
-				public static extern int GetClassNameW(IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpString, int nMaxCount);
+		}
+	}
+	/// <summary>
+	/// Win32 API
+	/// </summary>
+	public static class NativeWin32API {
+		[DllImport("user32.dll", CharSet = CharSet.Auto)]
+		public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int Width, int Height, int flags);
+		[DllImport("user32.dll")]
+		public static extern IntPtr GetWindow(IntPtr hWnd, long wCmd);
+		[DllImport("user32.dll")]
+		public static extern bool SetWindowText(IntPtr hWnd, string lpString);
+		[DllImport("user32.dll")]
+		public static extern int GetClassNameW(IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpString, int nMaxCount);
+		[DllImport("user32.dll", EntryPoint = "SetParent")]
+		public static extern int SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
-				public static string GetWindowClassName(IntPtr handle) {
-					StringBuilder sb = new StringBuilder(256);
+		public static string GetWindowClassName(IntPtr handle) {
+			StringBuilder sb = new StringBuilder(256);
 
-					GetClassNameW(handle, sb, sb.Capacity); //得到窗口类名并保存在strClass中
-					return sb.ToString();
-				}
-			}
+			GetClassNameW(handle, sb, sb.Capacity); //得到窗口类名并保存在strClass中
+			return sb.ToString();
 		}
 	}
 
@@ -14828,12 +14883,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void ColorButton_Click(object sender, EventArgs e) {
-			Color backup = Color;
+			dialog.Color = Color;
 			DialogResult dr = dialog.ShowDialog();
-			if (dr == DialogResult.OK)
-				Color = dialog.Color;
-			else
-				dialog.Color = backup;
+			if (dr == DialogResult.OK) Color = dialog.Color;
 		}
 
 		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("该控件不支持此属性。"), DefaultValue(false)]
@@ -14860,21 +14912,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			get { return _text; }
 			set {
 				_text = value;
-				if (string.IsNullOrEmpty(value))
-					base.Text = Hex;
-				else
-					base.Text = _text;
+				if (string.IsNullOrEmpty(value)) base.Text = Hex;
+				else base.Text = _text;
 			}
 		}
 
+		private Color color = Color.White;
 		[Category("Appearance"), DefaultValue(typeof(Color), "White"), Description("用户选定的颜色。")]
 		public Color Color {
-			get { return dialog.Color; }
+			get { return color; }
 			set {
-				base.BackColor = dialog.Color = value;
+				base.BackColor = color = value;
 				base.ForeColor = GetForeColor(value);
-				if (string.IsNullOrEmpty(_text))
-					Text = string.Empty;
+				if (string.IsNullOrEmpty(_text)) Text = string.Empty;
 			}
 		}
 
@@ -14886,14 +14936,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			set {
 				MatchCollection matches = Regex.Matches(value.ToUpper(), @"#[0-9A-F]{8}");
 				string color;
-				if (matches.Count != 0)
-					color = matches[0].ToString();
+				if (matches.Count != 0) color = matches[0].ToString();
 				else {
 					matches = Regex.Matches(value.ToUpper(), @"#[0-9A-F]{6}");
-					if (matches.Count != 0)
-						color = matches[0].ToString() + "FF";
-					else
-						color = "#00000000";
+					if (matches.Count != 0) color = matches[0].ToString() + "FF";
+					else color = "#00000000";
 				}
 				int r = Convert.ToInt16(color.Substring(1, 2), 16),
 					g = Convert.ToInt16(color.Substring(3, 2), 16),
@@ -14911,9 +14958,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static Color GetForeColor(Color backColor) {
 			int r = backColor.R, g = backColor.G, b = backColor.B, a = backColor.A;
 			Func<int, int> MixAlpha = new Func<int, int>(c => (255 - c) * (255 - a) / 255 + c);
-			r = MixAlpha(r);
-			g = MixAlpha(g);
-			b = MixAlpha(b);
+			r = MixAlpha(r); g = MixAlpha(g); b = MixAlpha(b);
 			double grey = r * 0.3 + g * 0.59 + b * 0.11;
 			return grey < 128 ? Color.White : Color.Black;
 		}
@@ -15597,14 +15642,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 		}
 
-		private struct RECT {
+		internal struct RECT {
 			public int Left;
 			public int Top;
 			public int Right;
 			public int Bottom;
 		}
 
-		private struct POINT {
+		internal struct POINT {
 			public int X;
 			public int Y;
 		}
@@ -15613,7 +15658,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
 		[DllImport("user32.dll")]
-		private static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+		internal static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+
+		[DllImport("user32.dll")]
+		internal static extern bool GetClientRect(IntPtr hWnd, ref RECT lpRect);
 
 		[DllImport("user32.dll")]
 		private static extern IntPtr GetParent(IntPtr hWnd);
@@ -16302,6 +16350,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HelperLbl = new System.Windows.Forms.Label();
 			this.MoshTab = new System.Windows.Forms.TabPage();
 			this.DatamoshTable = new System.Windows.Forms.TableLayoutPanel();
+			this.StutterBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.CloseAfterOpenMoshCheck = new System.Windows.Forms.CheckBox();
 			this.DatamoshClipsFolderGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
@@ -16333,7 +16382,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.StutterBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
@@ -21222,7 +21270,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TrackShadowColorBtn.Size = new System.Drawing.Size(113, 30);
 			this.TrackShadowColorBtn.TabIndex = 8;
 			this.TrackShadowColorBtn.Text = "阴影颜色...";
-			this.TrackShadowColorBtn.Click += new System.EventHandler(this.TrackShadowColorBtn_Click);
 			// 
 			// SonarList
 			// 
@@ -23001,6 +23048,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshTable.Size = new System.Drawing.Size(631, 736);
 			this.DatamoshTable.TabIndex = 9;
 			// 
+			// StutterBtn
+			// 
+			this.StutterBtn.CommandLink = true;
+			this.StutterBtn.CommandLinkNote = "口吃剪辑（向前向后播放）。";
+			this.StutterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StutterBtn.Location = new System.Drawing.Point(2, 648);
+			this.StutterBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.StutterBtn.Name = "StutterBtn";
+			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
+			this.StutterBtn.TabIndex = 17;
+			this.StutterBtn.Text = "口吃";
+			this.StutterBtn.UseVisualStyleBackColor = true;
+			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			// 
 			// CloseAfterOpenMoshCheck
 			// 
 			this.CloseAfterOpenMoshCheck.AutoSize = true;
@@ -23330,20 +23391,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.AutoPopDelay = 60000;
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
-			// 
-			// StutterBtn
-			// 
-			this.StutterBtn.CommandLink = true;
-			this.StutterBtn.CommandLinkNote = "口吃剪辑（向前向后播放）。";
-			this.StutterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StutterBtn.Location = new System.Drawing.Point(2, 648);
-			this.StutterBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.StutterBtn.Name = "StutterBtn";
-			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
-			this.StutterBtn.TabIndex = 17;
-			this.StutterBtn.Text = "口吃";
-			this.StutterBtn.UseVisualStyleBackColor = true;
-			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			// 
 			// ConfigForm
 			// 
@@ -26576,17 +26623,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void TrackShadowCheck_CheckedChanged(object sender, EventArgs e) {
 			TrackShadowColorBtn.Enabled = TrackShadowCheck.Checked && TrackShadowCheck.Enabled;
-		}
-
-		private void TrackShadowColorBtn_Click(object sender, EventArgs e) {
-			/* Button button = TrackShadowColorBtn;
-			AlphaColorDialog dialog = new AlphaColorDialog {
-				AnyColor = true,
-				FullOpen = true,
-				Color = (Color)button.Tag,
-			};
-			if (dialog.ShowDialog() == DialogResult.Cancel) return;
-			button.Tag = dialog.Color; */
 		}
 
 		private void ConvertMusicBeatsBtn_Click(object sender, EventArgs e) {
