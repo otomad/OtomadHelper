@@ -25311,8 +25311,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 
 			enableSonar = enableSonar && SonarConfigCheck.Checked;
-			SetEnabled(SonarSwitchesFlow, enableSonar, new Control[] { SonarConfigCheck });
-			SonarButtonsTable.Enabled = SonarList.Enabled = enableSonar;
+			SetEnabled(SonarSwitchesFlow, enableSonar, new Control[] { SonarConfigCheck, TrackShadowCheck.Parent });
+			SonarButtonsTable.Enabled = SonarList.Enabled = TrackShadowCheck.Parent.Enabled = enableSonar;
+			TrackShadowColorBtn.Enabled = TrackShadowCheck.Checked;
 			SonarDeleteBtn.Enabled = SonarMoveUpBtn.Enabled = SonarMoveDownBtn.Enabled = SonarParamsGroup.Enabled = enableSonar && SonarList.SelectedItems.Count != 0;
 
 			SetEnabled(AudioVelocityCheck.Parent, AudioVelocityCheck.Checked, new Control[] { AudioVelocityCheck });
