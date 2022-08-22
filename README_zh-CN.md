@@ -9,7 +9,7 @@
 [EN](README.md) | **简中** | [繁中](README_zh-TW.md) | [日](README_ja-JP.md)
 </div>
 
-音 MAD 助手 Vegas，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
+**音 MAD 助手 Vegas**，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
 
 本脚本基于原作者 [@Chaosinism](https://github.com/Chaosinism) 的开源代码二次开发，此外使用了 NAudio 库。
 
@@ -18,6 +18,8 @@
 未来也会增加商城功能用于下载其他用户制作的模板等相关素材。
 
 YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
+
+Datamosh 的相关功能参考自 [vegas-datamosh](https://github.com/delthas/vegas-datamosh)。
 
 **姊妹项目：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 
@@ -32,8 +34,8 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)最新版脚本。
 2. 解压**所有**压缩包内的文件并放置到 Vegas 安装目录下的“Script Menu”文件夹中。
 > (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
-3. 确保 DLL 文件 (DLL\\NAudio.dll) 没有被锁定。**具体步骤：**
-	1. 在 Vegas 安装目录下，依次进入文件夹 Script Menu\\DLL。
+3. 确保 DLL 文件 (`DLL\NAudio.dll`) 没有被锁定。**具体步骤：**
+	1. 在 Vegas 安装目录下，依次进入文件夹 `Script Menu\DLL`。
 	2. 右键 NAudio.dll 文件，并选择“属性”。
 	3. 如果您看到了“解除锁定”按钮或复选框，就点一下或勾选它。
 	4. 点击确定按钮即可。
@@ -82,7 +84,7 @@ Vegas Pro 17、18、19、20 测试**正常**。
 使用脚本时，将会使用如下权限：
 1. 文件读写。<br />
 	脚本会在磁盘中创建一个文件用来保存您的用户配置设置。
-	> 路径：C:\\Users\\(Your User Name)\\AppData\\Roaming\\VEGAS Pro\\(Your Vegas Version)\\Otomad Helper.ini
+	> 路径：C:\\Users\\*(您的用户名)*\\AppData\\Roaming\\VEGAS Pro\\*(您的 Vegas 版本)*\\Otomad Helper.ini
 2. 注册表读写。<br />
 	脚本需要读写注册表来安装或卸载移调插件预设。<br />
 	如果您不使用移调插件这个调音算法，您可以忽略该权限。

@@ -17,7 +17,7 @@
 **EN** | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | [日](README_ja-JP.md)
 </div>
 
-Otomad Helper for Vegas, which is designed to allow Vegas to accept MIDI files as input, and automatically generate Otomad/YTPMV tracks.
+**Otomad Helper** for **Vegas**, which is designed to allow Vegas to accept MIDI files as input, and automatically generate Otomad/YTPMV tracks.
 
 The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
 
@@ -25,7 +25,9 @@ It can also be used to make YTP, Sonar Effect. And Lyrics/Karaoke, Manual Vocalo
 
 The store will be supported for downloading related templates in the future.
 
-The related functions of YTP refer to [YTP+](https://github.com/YTP-Plus).
+The related features of YTP refer to [YTP+](https://github.com/YTP-Plus).
+
+The related features of Datamosh refer to [vegas-datamosh](https://github.com/delthas/vegas-datamosh).
 
 **Sister Projects:** [om_midi for After Effects](https://github.com/otomad/om_midi).
 
@@ -40,8 +42,8 @@ You can also read [@Evauation](https://github.com/Evauation)'s [documentation](h
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this script.
 2. Unzip **ALL** the files in the zip file you've just downloaded to the "Script Menu" folder in the Vegas installation directory.
 > (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
-3. Make sure that the DLL file (DLL\\NAudio.dll) is not locked. **Specific steps:**
-	1. In the Vegas installation directory, enter folder Script Menu\\DLL.
+3. Make sure that the DLL file (`DLL\NAudio.dll`) is not locked. **Specific steps:**
+	1. In the Vegas installation directory, enter folder `Script Menu\DLL`.
 	2. Right-click the NAudio.dll file and select Properties.
 	3. If you see the "Unlock" button or checkbox, click or check it.
 	4. Click OK button and you're done.
@@ -90,7 +92,7 @@ You can create issues.
 If you use this script, the script will use the following permissions.
 1. File read and write.<br />
 	The script reads and writes an INI user profile in your disk memory to save your user data.
-	> Path: C:\\Users\\(Your User Name)\\AppData\\Roaming\\VEGAS Pro\\(Your Vegas Version)\\Otomad Helper.ini
+	> Path: C:\\Users\\*(Your User Name)*\\AppData\\Roaming\\VEGAS Pro\\*(Your Vegas Version)*\\Otomad Helper.ini
 2. Registry read and write.<br />
 	The script need to read and write the registry to install or uninstall pitch-shift plugin presets.<br />
 	If you don't use pitch-shift plugin method in script, you can ignore the installation presets and thus not use this permission.
@@ -153,9 +155,9 @@ Compilation note for Sony Vegas **(v13 and under)**:
 
 ### Install
 * Scripts belong in the Vegas install directory, in the "Script Menu" folder.
-	* (ie. C:\Program Files\VEGAS\VEGAS Pro 20.0\Script Menu)
+	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
 * Some scripts require additional DLLs, put them in a "DLL" folder in the "Script Menu" folder.
-	* (ie. C:\Program Files\VEGAS\VEGAS Pro 20.0\Script Menu\DLL)
-* Make sure that the DLL files (such as DLL\\NAudio.dll) are not locked.
+	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu\\DLL)
+* Make sure that the DLL files (such as `DLL\NAudio.dll`) are not locked.
 
 </div>

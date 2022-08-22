@@ -9,7 +9,7 @@
 [EN](README.md) | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | **日**
 </div>
 
-音 MAD ヘルパー Vegas、Vegas が MIDI シーケンスファイルを入力として受け入れ、音 MAD / YTPMV トラックを自動的に生成できるように設計されています。
+**音 MAD ヘルパー Vegas**、Vegas が MIDI シーケンスファイルを入力として受け入れ、音 MAD / YTPMV トラックを自動的に生成できるように設計されています。
 
 このスクリプトは、元の作成者 [@カオシニズム](https://github.com/Chaosinism) のオープンソースコードの二次開発に基づいており、NAudio ライブラリを使用しています。
 
@@ -18,6 +18,8 @@ YTP・ソナー効果を作成することも可能です。将来的には歌�
 将来的には、他のユーザーが作成したテンプレートやその他の関連資料をダウンロードするためのストア機能が追加される予定です。
 
 YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
+
+Datamosh の関連機能は [vegas-datamosh](https://github.com/delthas/vegas-datamosh) から参照。
 
 **姉妹プロジェクト：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 
@@ -32,8 +34,8 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 1. スクリプトの最新バージョンを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/latest)します。
 2. ZIP ファイル内の**すべて**のファイルを解凍し、Vegas インストールディレクトリの下の「スクリプトメニュー」フォルダに配置します。
 > (例えば：C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
-3. DLL ファイル (DLL\\NAudio.dll) がロックされていないことを確認してください。**具体的な手順：**
-	1. Vegas のインストールディレクトリで、Script Menu\\DLL フォルダを順番に入力します。
+3. DLL ファイル (`DLL\NAudio.dll`) がロックされていないことを確認してください。**具体的な手順：**
+	1. Vegas のインストールディレクトリで、`Script Menu\DLL` フォルダを順番に入力します。
 	2. NAudio.dll ファイルを右クリックし、［プロパティ］を選択します。
 	3. ［ロック解除］ボタンまたはチェックボックスが表示されている場合は、クリックまたはチェックします。
 	4. ［OK］ボタンをクリックすると、完了です。
@@ -82,7 +84,7 @@ Vegas Pro 17、18、19、20 で**正常**にテストされました。
 スクリプトを使用する場合、次の権限が使用されます。
 1. ファイルの読み取りと書き込み。<br />
 	スクリプトは、ユーザー構成設定を保持するファイルをディスク上に作成します。
-	> パス：C:\\Users\\(あなたのユーザーネーム)\\AppData\\Roaming\\VEGAS Pro\\(Vegasバージョン)\\Otomad Helper.ini
+	> パス：C:\\Users\\*(あなたのユーザーネーム)*\\AppData\\Roaming\\VEGAS Pro\\*(Vegas バージョン)*\\Otomad Helper.ini
 2. レジストリの読み取りと書き込み。<br />
 	ピッチシフトプラグインプリセットをインストールまたはアンインストールするには、スクリプトでレジストリを読み書きする必要があります。<br />
 	ピッチシフトプラグインのチューニングアルゴリズムを使用しない場合は、この権限を無視できます。
