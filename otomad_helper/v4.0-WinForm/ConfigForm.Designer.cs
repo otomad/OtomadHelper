@@ -5340,7 +5340,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TrackShadowCheck.TabIndex = 7;
 			this.TrackShadowCheck.Text = "阴影";
 			this.TrackShadowCheck.UseVisualStyleBackColor = true;
-			this.TrackShadowCheck.CheckedChanged += new System.EventHandler(this.TrackShadowCheck_CheckedChanged);
 			// 
 			// TrackShadowColorBtn
 			// 

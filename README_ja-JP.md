@@ -9,7 +9,7 @@
 [EN](README.md) | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | **日**
 </div>
 
-ベガスの音 MAD ヘルパー、Vegas が MIDI シーケンスファイルを入力として受け入れ、音 MAD / YTPMV トラックを自動的に生成できるように設計されています。
+音 MAD ヘルパー Vegas、Vegas が MIDI シーケンスファイルを入力として受け入れ、音 MAD / YTPMV トラックを自動的に生成できるように設計されています。
 
 このスクリプトは、元の作成者 [@カオシニズム](https://github.com/Chaosinism) のオープンソースコードの二次開発に基づいており、NAudio ライブラリを使用しています。
 

@@ -1244,7 +1244,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void TrackShadowCheck_CheckedChanged(object sender, EventArgs e) {
-			TrackShadowColorBtn.Enabled = TrackShadowCheck.Checked && TrackShadowCheck.Enabled;
+
 		}
 
 		private void TrackShadowColorBtn_Click(object sender, EventArgs e) {

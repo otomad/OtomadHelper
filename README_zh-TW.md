@@ -9,7 +9,7 @@
 [EN](README.md) | [简中](README_zh-CN.md) | **繁中** | [日](README_ja-JP.md)
 </div>
 
-音 MAD 助手 Vegas 版，旨在使 Vegas 接受 MIDI 序列檔案作為輸入，自動生成音 MAD / YTPMV 的軌道。
+音 MAD 助手 Vegas，旨在使 Vegas 接受 MIDI 序列檔案作為輸入，自動生成音 MAD / YTPMV 的軌道。
 
 本腳本基於原作者 [@Chaosinism](https://github.com/Chaosinism) 的開原始程式碼二次開發，此外使用了 NAudio 庫。
 
@@ -104,7 +104,7 @@ Vegas Pro 17、18、19、20 測試**正常**。
 * [@冰鳩さくの](https://space.bilibili.com/13084550)
 * [@酥妃大魔王](https://space.bilibili.com/8569439)
 
-### 幫助和疑難排解
+### 幫助和故障排解
 **我的說明文件：***（中文）*
 * [發行説明 (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [發行説明 (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
@@ -112,7 +112,7 @@ Vegas Pro 17、18、19、20 測試**正常**。
 **Chaosinism 的原版說明文件：***（中文）*
 * [說明文件 (v0.1) (B 站)](https://www.bilibili.com/read/cv392013)
 * [五線譜視覺化文件 (v0.1)](https://www.bilibili.com/read/cv1027442)
-* [疑難排解](https://www.bilibili.com/read/cv495309)
+* [故障排解](https://www.bilibili.com/read/cv495309)
 * [教程視頻 (v0.1)](https://www.bilibili.com/video/av22226321)
 
 **Chaosinism 的原版說明文件：***（日語）*

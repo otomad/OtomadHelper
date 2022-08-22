@@ -9,7 +9,7 @@
 [EN](README.md) | **简中** | [繁中](README_zh-TW.md) | [日](README_ja-JP.md)
 </div>
 
-音 MAD 助手 Vegas 版，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
+音 MAD 助手 Vegas，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
 
 本脚本基于原作者 [@Chaosinism](https://github.com/Chaosinism) 的开源代码二次开发，此外使用了 NAudio 库。
 

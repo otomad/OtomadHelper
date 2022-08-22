@@ -1,5 +1,5 @@
 /**
- * 音 MAD 助手 Vegas 版，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
+ * 音 MAD 助手 Vegas，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
  * Vegas 16 及以上的版本支持所有功能，Vegas 13 及以上的版本可以兼容运行。
  * 将本脚本及其它所有附属文件放置在您 Vegas 安装目录下的 Script Menu 文件夹中。
  * 具体说明请参见下方的说明文档链接。
@@ -102,9 +102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 20, 20, 0);
+		public static readonly Version VERSION = new Version(4, 20, 22, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 8, 20);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 8, 22);
 
 		// 配置参数变量
 		#region 视频属性
@@ -4901,7 +4901,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 					if (midiEvent is TextEvent && !info.HasName) {
 						TextEvent textEvent = midiEvent as TextEvent;
-						info.Name = textEvent.Text; // 乐轨名称
+						string latin1Text = textEvent.Text; // 乐轨名称
+						info.Name = Latin1ToAnsi(latin1Text);
 					}
 					if (midiEvent is TimeSignatureEvent && TimeSignature.Length == 0) {
 						TimeSignatureEvent timeSignatureEvent = midiEvent as TimeSignatureEvent;
@@ -4934,7 +4935,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						num++;
 			return num;
 		}
-		public bool IsDynamicBeat { get { return CountIf<TimeSignatureEvent>(TimeSignatureTrack) > 1; } }
+		public bool IsDynamicBeat { get { return (TimeSignatureTrack == null ? 0 : TimeSignatureTrack.Count(midiEvent => midiEvent is TimeSignatureEvent)) > 1; } }
 		public bool IsDynamicBpm {
 			get {
 				double tempTempo = -1;
@@ -4947,6 +4948,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						}
 				return false;
 			}
+		}
+		/// <summary>
+		/// 将错误读取为 Latin1 编码的字符串转换回 ANSI 编码字符串。
+		/// </summary>
+		/// <param name="latin1">错误读取为 Latin1 编码的字符串。</param>
+		/// <returns>ANSI 编码字符串。</returns>
+		public static string Latin1ToAnsi(string latin1) {
+			List<byte> unicodeByte = new List<byte>(Encoding.Unicode.GetBytes(latin1)), // 读取为 Unicode 数组后，偶数位（1 起始）字符会多出一个 0。
+				latin1Byte = new List<byte>(unicodeByte.Where(b => b != 0)); // 把 0 去除，一般在偶数位（1 起始）。但无法确定是否有另类异常。
+			string utf8Text = Encoding.Default.GetString(latin1Byte.ToArray());
+			return utf8Text;
 		}
 	}
 
@@ -21257,7 +21269,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.TrackShadowCheck.TabIndex = 7;
 			this.TrackShadowCheck.Text = "阴影";
 			this.TrackShadowCheck.UseVisualStyleBackColor = true;
-			this.TrackShadowCheck.CheckedChanged += new System.EventHandler(this.TrackShadowCheck_CheckedChanged);
 			// 
 			// TrackShadowColorBtn
 			// 
@@ -24169,6 +24180,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				AudioVelocityCheck.CheckedChanged += e;
 				VideoVelocityCheck.CheckedChanged += e;
 				AudioAutoPanCheck.CheckedChanged += e;
+				TrackShadowCheck.CheckedChanged += e;
 			}
 			AudioMainKeyCombo.MouseWheel += AudioMainKeyCombo_MouseWheel;
 			SourceConfigGroup.AllowDrop = MidiConfigGroup.AllowDrop = true;
@@ -24679,6 +24691,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void ChooseMidiBtn_Click(object sender, EventArgs e) {
 			string midiFileName = parent.SelectMidiFile();
 			if (!string.IsNullOrWhiteSpace(midiFileName)) OpenMidiFile(midiFileName);
+			ConfigForm_Resize(null, null); // 原先位于 SetCheckedEnabled 方法中，为了节省性能移至这里。
 		}
 
 		private bool OpenMidiFile(string filePath, bool inSilence = false) {
@@ -25313,7 +25326,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			enableSonar = enableSonar && SonarConfigCheck.Checked;
 			SetEnabled(SonarSwitchesFlow, enableSonar, new Control[] { SonarConfigCheck, TrackShadowCheck.Parent });
 			SonarButtonsTable.Enabled = SonarList.Enabled = TrackShadowCheck.Parent.Enabled = enableSonar;
-			TrackShadowColorBtn.Enabled = TrackShadowCheck.Checked;
+			TrackShadowColorBtn.Enabled = TrackShadowCheck.Checked && TrackShadowCheck.Enabled;
 			SonarDeleteBtn.Enabled = SonarMoveUpBtn.Enabled = SonarMoveDownBtn.Enabled = SonarParamsGroup.Enabled = enableSonar && SonarList.SelectedItems.Count != 0;
 
 			SetEnabled(AudioVelocityCheck.Parent, AudioVelocityCheck.Checked, new Control[] { AudioVelocityCheck });
@@ -26622,10 +26635,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				e.Graphics.DrawArc(penColor, r, 180 + RESET_ARC_OPEN_ANGLE / 2, 360 - RESET_ARC_OPEN_ANGLE);
 		}
 
-		private void TrackShadowCheck_CheckedChanged(object sender, EventArgs e) {
-			TrackShadowColorBtn.Enabled = TrackShadowCheck.Checked && TrackShadowCheck.Enabled;
-		}
-
 		private void ConvertMusicBeatsBtn_Click(object sender, EventArgs e) {
 			AudioEvent[] audioEvents = parent.GetSelectedAudioEvents();
 			if (audioEvents.Length != 1) {
@@ -27575,7 +27584,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				which_one = "Select which one of group",
 				select_how_many = "Select how many at a time",
 				reset_select = "&Reset selection",
-				quick_select_interval = "Quick Select Interval",
+				quick_select_interval = "Quickly Select Interval",
 				select_interval_info = "Please select some clips in the Vegas track window first, and then open this dialog box to use the following functions.",
 				select_events_count_info = "{0} track events have been selected.",
 				select_videotracks_count_info = "{0} video tracks have been selected.",
@@ -28005,7 +28014,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				cookie_cutter_shape_arrowhead_left = "Arrowhead left",
 				select_interval = "Select interval",
 				select_interval_configform_info = "This function is designed to assist the user to select clips every one or more few, and then perform operations such as \"Paste Event Attributes\".",
-				quick_normalize = "Quick Normalize",
+				quick_normalize = "Quickly Normalize",
 				quick_normalize_configform_info = "Normalize all selected audio events volume.",
 				quick_normalize_complete = "Completed normalize.",
 				replace_clips_configform_info = "Replace multiple track clips with specified new track clips.",
@@ -28389,7 +28398,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				import_config_complete = "導入完成，請手動重啟腳本。",
 				help = "幫助(&H)",
 				user_help = "使用說明",
-				trouble_shooting = "疑難排解",
+				trouble_shooting = "故障排解",
 				update_info = "更新說明",
 				repository_link = "倉庫地址",
 				latest_version_link = "最新版本連結",
