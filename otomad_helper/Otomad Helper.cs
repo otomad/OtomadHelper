@@ -29,7 +29,7 @@
  * https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/
  *
  * 开工时间：公元 2021 年 9 月 5 日 星期日，上午 4:14:26
- * Copyright (c) 2021, Ranne
+ * Copyright (c) 2021 ~, Ranne
  *
  * 本程序是一个自由的软件，你可以重新分发它，可以魔改它，但要遵守 GPL 3.0 版本或者后续其它版本。
  * 我们希望本程序是有用的，但是我们不保证它能用，不保证它好用，我们不提供任何保证。
