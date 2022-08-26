@@ -28,9 +28,9 @@ Datamosh の関連機能は [vegas-datamosh](https://github.com/delthas/vegas-da
 
 メニューで *オプション > ツールバーのカスタマイズ* を選択して、簡単な操作のためにスクリプトをツールバーに追加できます。
 
-[@エバユエーション](https://github.com/Evauation)の[ドキュメンテーション](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)を読んだり、[@キャシディ](https://github.com/composition-cassidy)の[チュートリアルビデオ](https://www.youtube.com/watch?v=8vSpzgL_86A)を視聴したりすることもできます<i>（英語）</i>。
+[@エバユエーション](https://github.com/Evauation)の[ドキュメンテーション](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)を読んだり、[@キャシディ](https://github.com/composition-cassidy)の[チュートリアルビデオ](https://www.youtube.com/watch?v=8vSpzgL_86A)を視聴したりすることもできます *（英語）*。
 
-Datamosh の使用に関する[ビデオをご覧](https://www.youtube.com/watch?v=6D2lW6H0bb8)ください<i>（英语）</i>。
+Datamosh の使用に関する[ビデオをご覧](https://www.youtube.com/watch?v=6D2lW6H0bb8)ください *（英语）*。
 
 ### インストール
 1. スクリプトの最新バージョンを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/latest)します。
