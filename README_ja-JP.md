@@ -28,20 +28,26 @@ Datamosh の関連機能は [vegas-datamosh](https://github.com/delthas/vegas-da
 
 メニューで *オプション > ツールバーのカスタマイズ* を選択して、簡単な操作のためにスクリプトをツールバーに追加できます。
 
-[@エバユエーション](https://github.com/Evauation)の[ドキュメンテーション](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)を読んだり、[@キャシディ](https://github.com/composition-cassidy)の[チュートリアルビデオ](https://www.youtube.com/watch?v=8vSpzgL_86A)を視聴したりすることもできます *（英語）*。
+[@エバユエーション](https://github.com/Evauation)の[ドキュメンテーション](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)を読んだり、[@キャシディ](https://github.com/composition-cassidy)の[チュートリアルビデオ](https://www.youtube.com/watch?v=8vSpzgL_86A)を視聴したりすることもできます *（英語）*。
+
+Datamosh の使用に関する[ビデオをご覧](https://www.youtube.com/watch?v=6D2lW6H0bb8)ください *（英语）*。
 
 ### インストール
 1. スクリプトの最新バージョンを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/latest)します。
 2. ZIP ファイル内の**すべて**のファイルを解凍し、Vegas インストールディレクトリの下の「スクリプトメニュー」フォルダに配置します。
 > (例えば：C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
-3. DLL ファイル (`DLL\NAudio.dll`) がロックされていないことを確認してください。**具体的な手順：**
+3. DLL ファイル `(DLL\NAudio.dll)` がロックされていないことを確認してください。**具体的な手順：**
 	1. Vegas のインストールディレクトリで、`Script Menu\DLL` フォルダを順番に入力します。
 	2. NAudio.dll ファイルを右クリックし、［プロパティ］を選択します。
 	3. ［ロック解除］ボタンまたはチェックボックスが表示されている場合は、クリックまたはチェックします。
 	4. ［OK］ボタンをクリックすると、完了です。
 4. Vegas Pro を開いてスクリプトを開始します。メニューの *ツール > スクリプト > Otomad Helper* を選択します。
 
-> 注：Datamoshのすべての機能を使用する必要がある場合は、Datamosh拡張パッケージをインストールする必要があります。
+#### Datamosh 拡張パッケー
+Datamosh のすべての機能を使用する必要がある場合は、Datamosh 拡張パッケージをインストールする必要があります。
+
+1. Datamosh 拡張パックを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/latest)します。
+2. ZIP ファイルを解凍し、`_internal` フォルダーをスクリプト `Otomad Helper.cs` と同じディレクトリに移動します。
 
 ### **注意**
 Vegas Pro 13 以降をサポートします。

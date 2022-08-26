@@ -28,20 +28,26 @@ Datamosh 的相关功能参考自 [vegas-datamosh](https://github.com/delthas/ve
 
 您可以选择菜单 *选项 > 自定义工具栏*，将脚本添加到工具栏中以便操作。
 
-您也可以阅读 [@Evauation](https://github.com/Evauation) 的[说明文档](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)并观看[@卡西迪](https://github.com/composition-cassidy)的[教程视频](https://www.youtube.com/watch?v=8vSpzgL_86A) *（英语）*。
+您也可以阅读 [@Evauation](https://github.com/Evauation) 的[说明文档](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)并观看[@卡西迪](https://github.com/composition-cassidy)的[教程视频](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英语）*。
+
+关于 Datamosh 的使用请[观看视频](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英语）*。
 
 ### 安装
 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)最新版脚本。
 2. 解压**所有**压缩包内的文件并放置到 Vegas 安装目录下的“Script Menu”文件夹中。
 > (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
-3. 确保 DLL 文件 (`DLL\NAudio.dll`) 没有被锁定。**具体步骤：**
+3. 确保 DLL 文件 `(DLL\NAudio.dll)` 没有被锁定。**具体步骤：**
 	1. 在 Vegas 安装目录下，依次进入文件夹 `Script Menu\DLL`。
 	2. 右键 NAudio.dll 文件，并选择“属性”。
 	3. 如果您看到了“解除锁定”按钮或复选框，就点一下或勾选它。
 	4. 点击确定按钮即可。
 4. 打开您的 Vegas Pro 来启动脚本。选择菜单 *工具 > 脚本化 > Otomad Helper*。
 
-> 注意：如果需要使用 Datamosh 的全部功能，需要安装 Datamosh 扩展包方可使用。
+#### Datamosh 扩展包
+如果需要使用 Datamosh 的全部功能，需要安装 Datamosh 扩展包方可使用。
+
+1. [下载](https://github.com/otomad/OtomadHelper/releases/latest) Datamosh 扩展包。
+2. 解压文件并将 `_internal` 文件夹移动到脚本 `Otomad Helper.cs` 所在的相同目录下。
 
 ### **注意**
 支持 Vegas Pro 13 及以上版本。

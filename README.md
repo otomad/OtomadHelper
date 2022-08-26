@@ -38,18 +38,24 @@ You can add scripts as toolbar buttons rather than having to click inside the *T
 
 You can also read [@Evauation](https://github.com/Evauation)'s [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch [@Cassidy](https://github.com/composition-cassidy)'s [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
 
+For the use of Datamosh please [watch the video](https://www.youtube.com/watch?v=6D2lW6H0bb8) *(English)*.
+
 ### Install
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this script.
 2. Unzip **ALL** the files in the zip file you've just downloaded to the "Script Menu" folder in the Vegas installation directory.
 > (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
-3. Make sure that the DLL file (`DLL\NAudio.dll`) is not locked. **Specific steps:**
+3. Make sure that the DLL file `(DLL\NAudio.dll)` is not locked. **Specific steps:**
 	1. In the Vegas installation directory, enter folder `Script Menu\DLL`.
 	2. Right-click the NAudio.dll file and select Properties.
 	3. If you see the "Unlock" button or checkbox, click or check it.
 	4. Click OK button and you're done.
 4. Open the Vegas Pro to launch it. Select menu *Tools > Scripting > Otomad Helper* to open.
 
-> Note: If you need to use the full feature of Datamosh, you need to install the Datamosh extension pack.
+#### Datamosh Extension Pack
+If you need to use the full feature of Datamosh, you need to install the Datamosh extension pack.
+
+1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the Datamosh extension pack.
+2. Unzip the zip file and move the `_internal` folder to the same directory as the script `Otomad Helper.cs`.
 
 ### **Attention**
 Vegas Pro 13+ supported.
