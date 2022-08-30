@@ -201,7 +201,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioLegatoCombo = new System.Windows.Forms.ComboBox();
 			this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioConfigCheck = new System.Windows.Forms.CheckBox();
-			this.AudioScratchCheck = new System.Windows.Forms.CheckBox();
 			this.AudioLoopCheck = new System.Windows.Forms.CheckBox();
 			this.AudioNormalizeCheck = new System.Windows.Forms.CheckBox();
 			this.AudioFreezeLastFrameCheck = new System.Windows.Forms.CheckBox();
@@ -289,7 +288,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoLegatoCombo = new System.Windows.Forms.ComboBox();
 			this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
 			this.VideoConfigCheck = new System.Windows.Forms.CheckBox();
-			this.VideoScratchCheck = new System.Windows.Forms.CheckBox();
 			this.VideoLoopCheck = new System.Windows.Forms.CheckBox();
 			this.VideoFreezeFirstFrameCheck = new System.Windows.Forms.CheckBox();
 			this.VideoFreezeLastFrameCheck = new System.Windows.Forms.CheckBox();
@@ -465,6 +463,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.AudioScratchLbl = new System.Windows.Forms.Label();
+			this.AudioScratchCombo = new System.Windows.Forms.ComboBox();
+			this.VideoScratchLbl = new System.Windows.Forms.Label();
+			this.VideoScratchCombo = new System.Windows.Forms.ComboBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
@@ -2910,6 +2912,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// flowLayoutPanel12
 			// 
 			this.flowLayoutPanel12.AutoSize = true;
+			this.flowLayoutPanel12.Controls.Add(this.AudioScratchLbl);
+			this.flowLayoutPanel12.Controls.Add(this.AudioScratchCombo);
 			this.flowLayoutPanel12.Controls.Add(this.AudioLegatoLbl);
 			this.flowLayoutPanel12.Controls.Add(this.AudioLegatoCombo);
 			this.flowLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Top;
@@ -2924,7 +2928,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.AudioLegatoLbl.AutoSize = true;
 			this.AudioLegatoLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioLegatoLbl.Location = new System.Drawing.Point(7, 2);
+			this.AudioLegatoLbl.Location = new System.Drawing.Point(226, 2);
 			this.AudioLegatoLbl.MinimumSize = new System.Drawing.Size(0, 34);
 			this.AudioLegatoLbl.Name = "AudioLegatoLbl";
 			this.AudioLegatoLbl.Size = new System.Drawing.Size(69, 34);
@@ -2942,7 +2946,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "最长一拍",
             "最长一小节",
             "无限填补"});
-			this.AudioLegatoCombo.Location = new System.Drawing.Point(80, 5);
+			this.AudioLegatoCombo.Location = new System.Drawing.Point(299, 5);
 			this.AudioLegatoCombo.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
 			this.AudioLegatoCombo.Name = "AudioLegatoCombo";
 			this.AudioLegatoCombo.Size = new System.Drawing.Size(140, 28);
@@ -2953,7 +2957,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.flowLayoutPanel5.AutoSize = true;
 			this.flowLayoutPanel5.Controls.Add(this.AudioConfigCheck);
-			this.flowLayoutPanel5.Controls.Add(this.AudioScratchCheck);
 			this.flowLayoutPanel5.Controls.Add(this.AudioLoopCheck);
 			this.flowLayoutPanel5.Controls.Add(this.AudioNormalizeCheck);
 			this.flowLayoutPanel5.Controls.Add(this.AudioFreezeLastFrameCheck);
@@ -2980,21 +2983,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioConfigCheck.Text = "生成音频";
 			this.AudioConfigCheck.UseVisualStyleBackColor = true;
 			// 
-			// AudioScratchCheck
-			// 
-			this.AudioScratchCheck.AutoSize = true;
-			this.AudioScratchCheck.Location = new System.Drawing.Point(97, 4);
-			this.AudioScratchCheck.Margin = new System.Windows.Forms.Padding(2);
-			this.AudioScratchCheck.Name = "AudioScratchCheck";
-			this.AudioScratchCheck.Size = new System.Drawing.Size(91, 24);
-			this.AudioScratchCheck.TabIndex = 1;
-			this.AudioScratchCheck.Text = "拉伸音频";
-			this.AudioScratchCheck.UseVisualStyleBackColor = true;
-			// 
 			// AudioLoopCheck
 			// 
 			this.AudioLoopCheck.AutoSize = true;
-			this.AudioLoopCheck.Location = new System.Drawing.Point(192, 4);
+			this.AudioLoopCheck.Location = new System.Drawing.Point(97, 4);
 			this.AudioLoopCheck.Margin = new System.Windows.Forms.Padding(2);
 			this.AudioLoopCheck.Name = "AudioLoopCheck";
 			this.AudioLoopCheck.Size = new System.Drawing.Size(91, 24);
@@ -3007,7 +2999,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioNormalizeCheck.AutoSize = true;
 			this.AudioNormalizeCheck.Checked = true;
 			this.AudioNormalizeCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.AudioNormalizeCheck.Location = new System.Drawing.Point(287, 4);
+			this.AudioNormalizeCheck.Location = new System.Drawing.Point(192, 4);
 			this.AudioNormalizeCheck.Margin = new System.Windows.Forms.Padding(2);
 			this.AudioNormalizeCheck.Name = "AudioNormalizeCheck";
 			this.AudioNormalizeCheck.Size = new System.Drawing.Size(106, 24);
@@ -3018,7 +3010,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// AudioFreezeLastFrameCheck
 			// 
 			this.AudioFreezeLastFrameCheck.AutoSize = true;
-			this.AudioFreezeLastFrameCheck.Location = new System.Drawing.Point(397, 4);
+			this.AudioFreezeLastFrameCheck.Location = new System.Drawing.Point(302, 4);
 			this.AudioFreezeLastFrameCheck.Margin = new System.Windows.Forms.Padding(2);
 			this.AudioFreezeLastFrameCheck.Name = "AudioFreezeLastFrameCheck";
 			this.AudioFreezeLastFrameCheck.Size = new System.Drawing.Size(91, 24);
@@ -3030,7 +3022,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// CreateEventGroupCheck
 			// 
 			this.CreateEventGroupCheck.AutoSize = true;
-			this.CreateEventGroupCheck.Location = new System.Drawing.Point(492, 4);
+			this.CreateEventGroupCheck.Location = new System.Drawing.Point(397, 4);
 			this.CreateEventGroupCheck.Margin = new System.Windows.Forms.Padding(2);
 			this.CreateEventGroupCheck.Name = "CreateEventGroupCheck";
 			this.CreateEventGroupCheck.Size = new System.Drawing.Size(91, 24);
@@ -4432,6 +4424,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "彩灰",
             "乒乓效应",
             "爱的魔力转圈圈",
+            "急剧倒带",
+            "摆动周期",
             "垂直扩张",
             "垂直扩张并回弹",
             "垂直压缩",
@@ -4656,6 +4650,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// flowLayoutPanel13
 			// 
 			this.flowLayoutPanel13.AutoSize = true;
+			this.flowLayoutPanel13.Controls.Add(this.VideoScratchLbl);
+			this.flowLayoutPanel13.Controls.Add(this.VideoScratchCombo);
 			this.flowLayoutPanel13.Controls.Add(this.VideoLegatoLbl);
 			this.flowLayoutPanel13.Controls.Add(this.VideoLegatoCombo);
 			this.flowLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Top;
@@ -4670,7 +4666,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.VideoLegatoLbl.AutoSize = true;
 			this.VideoLegatoLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoLegatoLbl.Location = new System.Drawing.Point(7, 2);
+			this.VideoLegatoLbl.Location = new System.Drawing.Point(226, 2);
 			this.VideoLegatoLbl.MinimumSize = new System.Drawing.Size(0, 34);
 			this.VideoLegatoLbl.Name = "VideoLegatoLbl";
 			this.VideoLegatoLbl.Size = new System.Drawing.Size(69, 34);
@@ -4688,7 +4684,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "最长一拍",
             "最长一小节",
             "无限填补"});
-			this.VideoLegatoCombo.Location = new System.Drawing.Point(80, 5);
+			this.VideoLegatoCombo.Location = new System.Drawing.Point(299, 5);
 			this.VideoLegatoCombo.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
 			this.VideoLegatoCombo.Name = "VideoLegatoCombo";
 			this.VideoLegatoCombo.Size = new System.Drawing.Size(140, 28);
@@ -4698,7 +4694,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.flowLayoutPanel7.AutoSize = true;
 			this.flowLayoutPanel7.Controls.Add(this.VideoConfigCheck);
-			this.flowLayoutPanel7.Controls.Add(this.VideoScratchCheck);
 			this.flowLayoutPanel7.Controls.Add(this.VideoLoopCheck);
 			this.flowLayoutPanel7.Controls.Add(this.VideoFreezeFirstFrameCheck);
 			this.flowLayoutPanel7.Controls.Add(this.VideoFreezeLastFrameCheck);
@@ -4724,23 +4719,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoConfigCheck.Text = "生成视频";
 			this.VideoConfigCheck.UseVisualStyleBackColor = true;
 			// 
-			// VideoScratchCheck
-			// 
-			this.VideoScratchCheck.AutoSize = true;
-			this.VideoScratchCheck.Location = new System.Drawing.Point(97, 4);
-			this.VideoScratchCheck.Margin = new System.Windows.Forms.Padding(2);
-			this.VideoScratchCheck.Name = "VideoScratchCheck";
-			this.VideoScratchCheck.Size = new System.Drawing.Size(91, 24);
-			this.VideoScratchCheck.TabIndex = 1;
-			this.VideoScratchCheck.Text = "拉伸视频";
-			this.VideoScratchCheck.UseVisualStyleBackColor = true;
-			// 
 			// VideoLoopCheck
 			// 
 			this.VideoLoopCheck.AutoSize = true;
 			this.VideoLoopCheck.Checked = true;
 			this.VideoLoopCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.VideoLoopCheck.Location = new System.Drawing.Point(192, 4);
+			this.VideoLoopCheck.Location = new System.Drawing.Point(97, 4);
 			this.VideoLoopCheck.Margin = new System.Windows.Forms.Padding(2);
 			this.VideoLoopCheck.Name = "VideoLoopCheck";
 			this.VideoLoopCheck.Size = new System.Drawing.Size(91, 24);
@@ -4751,7 +4735,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoFreezeFirstFrameCheck
 			// 
 			this.VideoFreezeFirstFrameCheck.AutoSize = true;
-			this.VideoFreezeFirstFrameCheck.Location = new System.Drawing.Point(287, 4);
+			this.VideoFreezeFirstFrameCheck.Location = new System.Drawing.Point(192, 4);
 			this.VideoFreezeFirstFrameCheck.Margin = new System.Windows.Forms.Padding(2);
 			this.VideoFreezeFirstFrameCheck.Name = "VideoFreezeFirstFrameCheck";
 			this.VideoFreezeFirstFrameCheck.Size = new System.Drawing.Size(91, 24);
@@ -4762,7 +4746,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoFreezeLastFrameCheck
 			// 
 			this.VideoFreezeLastFrameCheck.AutoSize = true;
-			this.VideoFreezeLastFrameCheck.Location = new System.Drawing.Point(382, 4);
+			this.VideoFreezeLastFrameCheck.Location = new System.Drawing.Point(287, 4);
 			this.VideoFreezeLastFrameCheck.Margin = new System.Windows.Forms.Padding(2);
 			this.VideoFreezeLastFrameCheck.Name = "VideoFreezeLastFrameCheck";
 			this.VideoFreezeLastFrameCheck.Size = new System.Drawing.Size(91, 24);
@@ -4773,7 +4757,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// VideoMultitrackForChordsCheck
 			// 
 			this.VideoMultitrackForChordsCheck.AutoSize = true;
-			this.VideoMultitrackForChordsCheck.Location = new System.Drawing.Point(477, 4);
+			this.VideoMultitrackForChordsCheck.Location = new System.Drawing.Point(382, 4);
 			this.VideoMultitrackForChordsCheck.Margin = new System.Windows.Forms.Padding(2);
 			this.VideoMultitrackForChordsCheck.Name = "VideoMultitrackForChordsCheck";
 			this.VideoMultitrackForChordsCheck.Size = new System.Drawing.Size(91, 24);
@@ -7474,6 +7458,62 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
+			// AudioScratchLbl
+			// 
+			this.AudioScratchLbl.AutoSize = true;
+			this.AudioScratchLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioScratchLbl.Location = new System.Drawing.Point(7, 2);
+			this.AudioScratchLbl.MinimumSize = new System.Drawing.Size(0, 34);
+			this.AudioScratchLbl.Name = "AudioScratchLbl";
+			this.AudioScratchLbl.Size = new System.Drawing.Size(69, 34);
+			this.AudioScratchLbl.TabIndex = 2;
+			this.AudioScratchLbl.Text = "拉伸音频";
+			this.AudioScratchLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// AudioScratchCombo
+			// 
+			this.AudioScratchCombo.Dock = System.Windows.Forms.DockStyle.Top;
+			this.AudioScratchCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.AudioScratchCombo.FormattingEnabled = true;
+			this.AudioScratchCombo.Items.AddRange(new object[] {
+            "不拉伸",
+            "能屈能伸",
+            "仅伸展",
+            "仅屈折"});
+			this.AudioScratchCombo.Location = new System.Drawing.Point(80, 5);
+			this.AudioScratchCombo.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+			this.AudioScratchCombo.Name = "AudioScratchCombo";
+			this.AudioScratchCombo.Size = new System.Drawing.Size(140, 28);
+			this.AudioScratchCombo.TabIndex = 0;
+			// 
+			// VideoScratchLbl
+			// 
+			this.VideoScratchLbl.AutoSize = true;
+			this.VideoScratchLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoScratchLbl.Location = new System.Drawing.Point(7, 2);
+			this.VideoScratchLbl.MinimumSize = new System.Drawing.Size(0, 34);
+			this.VideoScratchLbl.Name = "VideoScratchLbl";
+			this.VideoScratchLbl.Size = new System.Drawing.Size(69, 34);
+			this.VideoScratchLbl.TabIndex = 4;
+			this.VideoScratchLbl.Text = "拉伸视频";
+			this.VideoScratchLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// VideoScratchCombo
+			// 
+			this.VideoScratchCombo.Dock = System.Windows.Forms.DockStyle.Top;
+			this.VideoScratchCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoScratchCombo.FormattingEnabled = true;
+			this.VideoScratchCombo.Items.AddRange(new object[] {
+            "不拉伸",
+            "能屈能伸",
+            "仅伸展",
+            "仅屈折"});
+			this.VideoScratchCombo.Location = new System.Drawing.Point(80, 5);
+			this.VideoScratchCombo.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+			this.VideoScratchCombo.Name = "VideoScratchCombo";
+			this.VideoScratchCombo.Size = new System.Drawing.Size(140, 28);
+			this.VideoScratchCombo.TabIndex = 0;
+			// 
 			// ConfigForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -7758,7 +7798,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.GroupBox AudioTuneGroup;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
 		public System.Windows.Forms.CheckBox AudioConfigCheck;
-		public System.Windows.Forms.CheckBox AudioScratchCheck;
 		public System.Windows.Forms.CheckBox AudioLoopCheck;
 		public System.Windows.Forms.CheckBox AudioNormalizeCheck;
 		public System.Windows.Forms.TabPage VideoTab;
@@ -7795,7 +7834,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.ComboBox VideoEffectCombo;
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel7;
 		public System.Windows.Forms.CheckBox VideoConfigCheck;
-		public System.Windows.Forms.CheckBox VideoScratchCheck;
 		public System.Windows.Forms.CheckBox VideoLoopCheck;
 		public System.Windows.Forms.CheckBox VideoFreezeFirstFrameCheck;
 		public System.Windows.Forms.CheckBox VideoFreezeLastFrameCheck;
@@ -8135,6 +8173,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public CommandLinkButton AutomatorBtn;
 		public System.Windows.Forms.Button DatamoshClipsFolderOpenButton;
 		public CommandLinkButton StutterBtn;
+		public System.Windows.Forms.Label AudioScratchLbl;
+		public System.Windows.Forms.ComboBox AudioScratchCombo;
+		public System.Windows.Forms.Label VideoScratchLbl;
+		public System.Windows.Forms.ComboBox VideoScratchCombo;
 	}
 }
 

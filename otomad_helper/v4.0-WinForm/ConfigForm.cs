@@ -456,7 +456,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 特殊处理部分
 			if (StaffVisualizerConfigCheck.Checked && StaffVisualizerConfigCheck.Enabled) {
 				VideoEffectCombo.SelectedIndex = 0;
-				VideoScratchCheck.Checked = false;
+				VideoScratchCombo.SelectedIndex = 0;
 				//VideoLegatoCheck.Checked = false;
 			}
 			if (!StaffGenerateLinesCheck.Enabled) StaffGenerateLinesCheck.Checked = false;
@@ -468,22 +468,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		private void SetCheckedEnabled(object sender, EventArgs e) {
 			bool isVConfigOn = VideoConfigCheck.Checked;
-			SetEnabled(VideoTab, isVConfigOn, new Control[] { VideoConfigCheck, VideoScratchCheck });
+			SetEnabled(VideoTab, isVConfigOn, new Control[] { VideoConfigCheck, VideoScratchCombo });
 			StaffVisualizerConfigCheck.Enabled = isVConfigOn;
 			if (!isVConfigOn) StaffVisualizerConfigCheck.Checked = false;
 			if (VideoEffect == PvVisualEffectType.PINGPONG || VideoEffect == PvVisualEffectType.WHIRL) {
-				VideoScratchCheck.Checked = true;
-				VideoScratchCheck.Enabled = false;
+				VideoScratchCombo.SelectedIndex = 1;
+				VideoScratchCombo.Enabled = false;
 			} else {
-				if (!VideoScratchCheck.Enabled && VideoConfigCheck.Enabled) VideoScratchCheck.Checked = false;
-				VideoScratchCheck.Enabled = isVConfigOn;
+				if (!VideoScratchCombo.Enabled && VideoConfigCheck.Enabled) VideoScratchCombo.SelectedIndex = 0;
+				VideoScratchCombo.Enabled = isVConfigOn;
 			}
 
 			bool isAConfigOn = AudioConfigCheck.Checked;
 			SetEnabled(AudioTab, isAConfigOn, new Control[] { AudioConfigCheck });
 			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled
 				= isAConfigOn && AudioTuneMethodCombo.SelectedIndex != 0;
-			if (AudioTuneMethodCombo.SelectedIndex == 4) AudioScratchCheck.Checked = AudioScratchCheck.Enabled = false;
+			if (AudioTuneMethodCombo.SelectedIndex == 4) {
+				AudioScratchCombo.Enabled = false;
+				AudioScratchCombo.SelectedIndex = 0;
+			}
 
 			#if VEGAS_ENVIRONMENT
 			OkBtn_Enabled = (isVConfigOn || isAConfigOn) && Tabs.SelectedIndex != 4 && parent.midi != null;
@@ -492,10 +495,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#endif
 
 			bool isSheetConfigOn = StaffVisualizerConfigCheck.Checked;
-			if (isSheetConfigOn)
+			if (isSheetConfigOn) {
 				VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled =
 				//VideoLegatoCheck.Enabled =
-				VideoScratchCheck.Checked = VideoScratchCheck.Enabled = false;
+				VideoScratchCombo.Enabled = false;
+				VideoScratchCombo.SelectedIndex = 0;
+			}
 			SetEnabled(SheetTab, isSheetConfigOn, new Control[] { StaffVisualizerConfigCheck, SheetConfigInfoLabel });
 			if (!StaffGenerateLinesCheck.Checked)
 				StaffLineThicknessBox.Enabled = StaffLineColorBtn.Enabled = false;
