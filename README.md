@@ -52,7 +52,7 @@ For the use of Datamosh please [watch the video](https://www.youtube.com/watch?v
 4. Open the Vegas Pro to launch it. Select menu *Tools > Scripting > Otomad Helper* to open.
 
 #### Datamosh Extension Pack
-If you need to use the full feature of Datamosh, you need to install the Datamosh extension pack.
+If you need to use the full features of Datamosh, you need to install the Datamosh extension pack.
 
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the Datamosh extension pack.
 2. Unzip the zip file and move the `_internal` folder to the same directory as the script `Otomad Helper.cs`.
