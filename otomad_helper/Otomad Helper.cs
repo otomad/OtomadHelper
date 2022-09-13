@@ -102,9 +102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 21, 8, 0);
+		public static readonly Version VERSION = new Version(4, 21, 13, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 9, 8);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 9, 13);
 
 		// 配置参数变量
 		#region 视频属性
@@ -24770,7 +24770,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public void ReadIni() {
 			#region 音频配置
 			configIni.StartSection("Audio");
-			AudioScratchCombo.SelectedIndex = configIni.Read("Stretch", 0);
+			AudioScratchCombo.SetIndex(configIni.Read("Stretch", 0), 0);
 			AudioLoopCheck.Checked = configIni.Read("Loop", false);
 			AudioNormalizeCheck.Checked = configIni.Read("Normalize", true);
 			AudioFreezeLastFrameCheck.Checked = configIni.Read("FreezeLastFrame", true);
@@ -24805,7 +24805,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.StartSection("Video");
 			VideoEffectCombo.SetIndex(configIni.Read("VisualEffect", 1), 1);
 			selectedVisualEffectBackupIndex = VideoEffectCombo.SelectedIndex;
-			VideoScratchCombo.SelectedIndex = configIni.Read("Stretch", 0);
+			VideoScratchCombo.SetIndex(configIni.Read("Stretch", 0), 0);
 			VideoLoopCheck.Checked = configIni.Read("Loop", true);
 			VideoFreezeFirstFrameCheck.Checked = configIni.Read("FreezeFirstFrame", false);
 			VideoFreezeLastFrameCheck.Checked = configIni.Read("FreezeLastFrame", false);
