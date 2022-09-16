@@ -102,9 +102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 21, 13, 0);
+		public static readonly Version VERSION = new Version(4, 21, 16, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 9, 13);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 9, 16);
 
 		// 配置参数变量
 		#region 视频属性
@@ -181,6 +181,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/**<summary>伸缩变调</summary>*/ private bool AConfigLockStretchPitch { get { return configForm.AudioLockStretchPitchCheck.Checked; } }
 		/**<summary>保留共振</summary>*/ private bool AConfigReserveFormant { get { return configForm.AudioReserveFormantCheck.Checked; } }
 		/**<summary>创建分组</summary>*/ private bool ConfigCreateEventGroup { get { return configForm.CreateEventGroupCheck.Checked; } }
+		/**<summary>复音多轨</summary>*/ private bool AConfigMultitrackForChords { get { return configForm.AudioMultitrackForChordsCheck.Checked; } }
 		#endregion
 
 		#region 迷笛属性
@@ -507,7 +508,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (instance.progressForm != null) instance.progressForm.Close();
 			if (state == ShowErrorState.NORMAL) {
 				if (instance.configForm != null) instance.configForm.FocusOn(null, null);
-				#if PRODUCTION
+				#if PRODUCTION // 开发模式下别乱删配置文件。
 				instance.configIni.Delete(true);
 				#endif
 			}
@@ -1045,6 +1046,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#region 开始处理 MIDI
 			MIDI.TrackInfo currentChannel = MidiConfigTracks[0];
 			string name = currentChannel.Name; // 所选 MIDI 轨道名称。如果没有则为空串。
+			currentChannel.Resort(); // 重新排序。
 
 			#region 视频操作
 			const int MAX_VIDEO_TRACK_SIZE = 100;
@@ -1262,11 +1264,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 				#region 生成音频事件
 				if (AConfig) {
-					while (Math.Ceiling(startTime) < aTrackPositions[trackIndex]) // 如果音频是多轨则放到新建的轨道，虽然有时候判断不准确，但问题不大。 // 后来改用整数加以限制，效果就好很多了。
-						if (++trackIndex == aTrackCount) {
-							aTrackCount++;
-							vegas.Project.Tracks.Add(aTracks[trackIndex] = new AudioTrack(vegas.Project, startIndex + tTrackCount++, name));
+					if (AConfigMultitrackForChords) {
+						while (Math.Ceiling(startTime) < aTrackPositions[trackIndex]) // 如果音频是多轨则放到新建的轨道，虽然有时候判断不准确，但问题不大。 // 后来改用整数加以限制，效果就好很多了。
+							if (++trackIndex == aTrackCount) {
+								aTrackCount++;
+								vegas.Project.Tracks.Add(aTracks[trackIndex] = new AudioTrack(vegas.Project, startIndex + tTrackCount++, name));
+							}
+					} else {
+						AudioTrack aTrack = aTracks[trackIndex];
+						if (aTrack.Events.Count > 0) {
+							TrackEvent lastEvent = aTrack.Events[aTrack.Events.Count - 1];
+							if (lastEvent != audioEventSample) { // 别把示例音频给算进去了！
+								var Round = new Func<double, double>(value => Math.Round(value, MidpointRounding.AwayFromZero)); // 中国式四舍五入！
+								if (Round(startTime) <= Round(lastEvent.Start.ToMilliseconds()))
+									goto EndAConfig;
+							}
 						}
+					}
 					AudioEvent audioEvent = audioEventSample.Copy(aTracks[trackIndex], Timecode.FromMilliseconds(generateBeginTime + startTime)) as AudioEvent;
 					audioEvent.Length = Timecode.FromMilliseconds(duration);
 					bool audioFreezeLastFrameCondition = AConfigFreezeLastFrame &&
@@ -1338,6 +1352,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 					#endregion
 				}
+				EndAConfig:
 				#endregion
 
 				#region 生成视频事件
@@ -4940,6 +4955,33 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			public bool IsDrumKit = false;
 			public int Pan = INITIAL_PAN;
 			public bool IsDynamicPan = false;
+			private bool isResorted = false;
+			/// <summary>
+			/// 重新对轨道中的音符进行排序。
+			/// </summary>
+			public void Resort() {
+				if (isResorted) return; // 已经排序过，不必再排序。
+				List<MidiEvent> events = Events as List<MidiEvent>;
+				events.Sort((x, y) => {
+					if (x.AbsoluteTime != y.AbsoluteTime) // 先比较两者的开始时间。
+						return Math.Sign(x.AbsoluteTime - y.AbsoluteTime);
+					if (x.Channel != y.Channel) // 再比较两者的通道编号。
+						return x.Channel - y.Channel;
+					if (x is NoteEvent && y is NoteEvent) {
+						NoteEvent xn = x as NoteEvent, yn = y as NoteEvent;
+						if (xn.NoteNumber != yn.NoteNumber) // 再比较两者的音调，音调更高的在前。
+							return yn.NoteNumber - xn.NoteNumber;
+					}
+					if (x is NoteOnEvent && y is NoteOnEvent) {
+						NoteOnEvent xn = x as NoteOnEvent, yn = y as NoteOnEvent;
+						if (xn.NoteLength != yn.NoteLength) // 再比较两者的持续时间，持续时间更长的在前。
+							return yn.NoteLength - xn.NoteLength;
+					}
+					return 0; // 其余情况不作排序。
+				});
+				Events = events;
+				isResorted = true;
+			}
 		}
 		public MIDI(string path) : base(path) {
 			Path = path;
@@ -4947,6 +4989,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			TicksPerQuarter = DeltaTicksPerQuarterNote;
 			MsPerQuarter = 0; // 毫秒每拍
 			for (int i = 0; i < Events.Tracks; i++) {
+				var a = Events[i];
 				TrackInfo info = new TrackInfo { Index = i, Events = Events[i] };
 				foreach (MidiEvent midiEvent in info.Events) {
 					if (midiEvent is NoteEvent && !(midiEvent is NoteOnEvent)) {
@@ -7309,34 +7352,34 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 	}
 
-	[ToolboxBitmap(typeof(TextBox))]
-	public class TimecodeBox : TextBox {
-		public TimecodeBox() : base() {
-			Leave += (sender, e) => {
-				Text = base.Text;
-			};
-		}
+	[ToolboxBitmap(typeof(NumericUpDown))]
+	public class TimecodeBox : NumericUpDown {
+		public TimecodeBox() : base() { }
 
+		#region | Fields |
 		private bool useTimecodeDeal = false;
 		private const string DEFAULT_TIME = "0:00.000";
 		private const RulerFormat format = RulerFormat.Time;
-		//private Timecode timecode = Timecode.FromMilliseconds(0);
-		//private double value = 0;
+		private Selection? lastSelection;
+		#endregion
 
+		#region | Properties |
 		[Description("与控件关联的文本。"), Category("Appearance"), DefaultValue(DEFAULT_TIME)]
 		public override string Text {
 			get { return base.Text; }
 			set {
-				if (!useTimecodeDeal) base.Text = DealLegal(value);
+				TimecodeText.TimeUnit unit = TimecodeText.GetUnit(TextBox.SelectionStart, base.Text);
+				if (!useTimecodeDeal) base.Text = TimecodeText.DealLegal(value);
 				else Timecode = Timecode.FromPositionString(value, format);
+				Select(TimecodeText.GetPosition(unit, base.Text), 0);
 			}
 		}
 
 		[Description("与控件关联的文本对应的毫秒整型值。"), Category("Behavior"), DefaultValue(0)]
-		public int Value {
-			get { return ClipTrimTime2Ms(Text); }
+		public new int Value {
+			get { return new TimecodeText(Text).Ms; }
 			set {
-				if (!useTimecodeDeal) base.Text = FormatClipTrimTime(value);
+				if (!useTimecodeDeal) base.Text = new TimecodeText(value).ToString();
 				else DoubleValue = value;
 			}
 		}
@@ -7351,14 +7394,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		[Description("与控件关联的文本对应的毫秒整型值。"), Category("Behavior"), DefaultValue(0)]
-		public int Millisecond {
+		public int Milliseconds {
 			get { return Value; }
 			set { Value = value; }
 		}
 
-		[Description("与控件关联的文本对应的时间码值。"), Category("Behavior")]
+		[Description("与控件关联的文本对应的时间码值。"), Category("Behavior"), Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public Timecode Timecode {
-			get { return Timecode.FromMilliseconds(DoubleValue); }
+			get {
+				return Timecode.FromMilliseconds(DoubleValue);
+			}
 			set {
 				base.Text = value.ToPositionString();
 			}
@@ -7370,69 +7415,272 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			set { useTimecodeDeal = value; }
 		}
 
-		public static string DealLegal(string raw) {
-			raw = new Regex(@"[:：;；]+").Replace(raw, ":");
-			raw = new Regex(@"[\.。．,，、]+").Replace(raw, ".");
-			raw = new Regex(@"\s").Replace(raw, "");
-			raw = new Regex(@"^\.").Replace(raw, "0.");
-			MatchCollection matches = Regex.Matches(raw, @"(\d+:){0,2}\d+(\.\d{1,3})?");
-			if (matches.Count == 0) return DEFAULT_TIME;
-			else {
-				string bestMatch = "";
-				foreach (Match match in matches)
-					if (match.ToString().Length > bestMatch.Length)
-						bestMatch = match.ToString();
-				raw = bestMatch;
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("TimecodeBox 控件不支持此属性。"), DefaultValue(3)]
+		public new int DecimalPlaces {
+			get {
+				return base.DecimalPlaces;
 			}
-			return FormatClipTrimTime(raw);
+			set {
+				base.DecimalPlaces = value;
+			}
 		}
 
 		/// <summary>
-		/// 将输入的时间格式的字符串转换为毫秒。
+		/// 获取或设置 <see cref="NumberFormatInfo"/>，它定义适合区域性的、显示数字、货币和百分比的格式。
 		/// </summary>
-		/// <param name="clipTrimTime">时间格式，如 “0:00.000”</param>
-		/// <returns>毫秒值</returns>
-		public static int ClipTrimTime2Ms(string clipTrimTime) {
-			if (clipTrimTime == "") clipTrimTime = DEFAULT_TIME;
-			int h = 0, m = 0, s = 0, ms = 0;
-			string[] timeSplitDot = clipTrimTime.Split('.');
-			if (timeSplitDot.Length >= 2) {
-				string ms_str = timeSplitDot[1];
-				while (ms_str.Length < 3) ms_str += '0';
-				ms = int.Parse(ms_str);
+		private static NumberFormatInfo NumberFormat { get { return CultureInfo.CurrentCulture.NumberFormat; } }
+		#endregion
+
+		#region | Classes |
+		/// <summary>
+		/// 时间码文本处理辅助类。
+		/// </summary>
+		private class TimecodeText {
+			#region 逻辑方法部分
+			/// <summary>
+			/// 处理输入文本的合法性。
+			/// </summary>
+			/// <param name="raw">源输入文本。</param>
+			/// <returns>合法的文本。</returns>
+			public static string DealLegal(string raw) {
+				raw = new Regex(@"[:：;；]+").Replace(raw, ":");
+				raw = new Regex(@"[\.。．,，、]+").Replace(raw, ".");
+				raw = new Regex(@"\s").Replace(raw, "");
+				raw = new Regex(@"^\.").Replace(raw, "0.");
+				MatchCollection matches = Regex.Matches(raw, @"(\d+:){0,2}\d+(\.\d{1,3})?");
+				if (matches.Count == 0) return DEFAULT_TIME;
+				else {
+					string bestMatch = "";
+					foreach (Match match in matches)
+						if (match.ToString().Length > bestMatch.Length)
+							bestMatch = match.ToString();
+					raw = bestMatch;
+				}
+				return Format(raw);
 			}
-			string[] timeSplitColon = timeSplitDot[0].Split(':');
-			var tryParseInt = new Func<string, int, int>((str, def) => {
-				int result = def;
-				bool ok = int.TryParse(str, out result);
-				if (!ok) result = def;
-				return result;
-			});
-			s = tryParseInt(timeSplitColon[timeSplitColon.Length - 1], 0); // timeSplitColon[^1]
-			if (timeSplitColon.Length >= 2) m = tryParseInt(timeSplitColon[timeSplitColon.Length - 2], 0); // timeSplitColon[^2]
-			if (timeSplitColon.Length >= 3) h = tryParseInt(timeSplitColon[timeSplitColon.Length - 3], 0); // timeSplitColon[^3]
-			int value = ((h * 60 + m) * 60 + s) * 1000 + ms;
-			return value;
+
+			/// <summary>
+			/// 将输入的时间格式的字符串转换为毫秒。
+			/// </summary>
+			/// <param name="clipTrimTime">时间格式，如 “0:00.000”。</param>
+			/// <returns>毫秒值。</returns>
+			private static int ClipTrimTime2Ms(string clipTrimTime) {
+				if (clipTrimTime == "") clipTrimTime = DEFAULT_TIME;
+				int h = 0, m = 0, s = 0, ms = 0;
+				string[] timeSplitDot = clipTrimTime.Split(NumberFormat.NumberDecimalSeparator[0]);
+				if (timeSplitDot.Length >= 2) {
+					string ms_str = timeSplitDot[1];
+					while (ms_str.Length < 3) ms_str += '0';
+					ms = int.Parse(ms_str);
+				}
+				string[] timeSplitColon = timeSplitDot[0].Split(':');
+				var tryParseInt = new Func<string, int, int>((str, def) => {
+					int result;
+					bool ok = int.TryParse(str, out result);
+					if (!ok) result = def;
+					return result;
+				});
+				s = tryParseInt(timeSplitColon[timeSplitColon.Length - 1], 0); // timeSplitColon[^1]
+				if (timeSplitColon.Length >= 2) m = tryParseInt(timeSplitColon[timeSplitColon.Length - 2], 0); // timeSplitColon[^2]
+				if (timeSplitColon.Length >= 3) h = tryParseInt(timeSplitColon[timeSplitColon.Length - 3], 0); // timeSplitColon[^3]
+				int value = ((h * 60 + m) * 60 + s) * 1000 + ms;
+				return value;
+			}
+
+			/// <summary>
+			/// 格式化时间值。
+			/// </summary>
+			/// <param name="value">毫秒值。</param>
+			/// <returns>时间格式，如 “0:00.000”。</returns>
+			private static string FormatClipTrimTime(int value) {
+				int ms = value % 1000; value /= 1000;
+				int s = value % 60; value /= 60;
+				int m = value % 60; value /= 60;
+				int h = value;
+				return h == 0 ?
+					string.Format("{0:D}:{1:D2}.{2:D3}", m, s, ms) :
+					string.Format("{0:D}:{1:D2}:{2:D2}.{3:D3}", h, m, s, ms);
+			}
+
+			/// <summary>
+			/// 格式化时间值。
+			/// </summary>
+			/// <param name="clipTrimTime">不规范的时间格式。</param>
+			/// <returns>时间格式，如 “0:00.000”。</returns>
+			public static string Format(string clipTrimTime) {
+				return new TimecodeText(clipTrimTime).ToString();
+			}
+			#endregion
+
+			private int ms = 0;
+			/// <summary>毫秒值。</summary>
+			public int Ms { get { return ms; } }
+
+			/// <summary>
+			/// 格式化时间值。
+			/// </summary>
+			/// <param name="clipTrimTime">不规范的时间格式。</param>
+			public TimecodeText(string clipTrimTime) {
+				ms = ClipTrimTime2Ms(clipTrimTime);
+			}
+
+			/// <summary>
+			/// 从毫秒值初始化。
+			/// </summary>
+			/// <param name="ms">毫秒值。</param>
+			public TimecodeText(int ms) {
+				this.ms = ms;
+			}
+
+			/// <summary>
+			/// 格式化时间值。
+			/// </summary>
+			/// <returns>时间格式，如 “0:00.000”。</returns>
+			public override string ToString() {
+				return FormatClipTrimTime(ms);
+			}
+
+			/// <summary>
+			/// 对时间码加减。
+			/// </summary>
+			/// <param name="unit">单位。</param>
+			/// <param name="value">数值。默认为加一。</param>
+			/// <returns>返回自己，用于链式。</returns>
+			public TimecodeText AddOrSub(TimeUnit unit, int value = 1) {
+				int mul = unit == TimeUnit.SECONDS ? 1000 :
+					unit == TimeUnit.MINUTES ? 60000 :
+					unit == TimeUnit.HOURS ? 3600000 : 1;
+				int _ms = ms;
+				ms += value * mul;
+				if (ms < 0) ms = _ms;
+				return this;
+			}
+
+			/// <summary>
+			/// 时间单位。
+			/// </summary>
+			public enum TimeUnit {
+				MILLISECONDS, SECONDS, MINUTES, HOURS,
+			}
+
+			internal static TimeUnit GetUnit(int cursor, string text) {
+				int dotPosition = text.IndexOf(NumberFormat.NumberDecimalSeparator[0]);
+				if (dotPosition != -1 && cursor > dotPosition)
+					return TimeUnit.MILLISECONDS;
+				dotPosition = text.Length - 1;
+				int colonCount = 0;
+				char lastChar = '\0';
+				for (int i = dotPosition - 1; i >= 0 && i >= cursor; i--) {
+					char ch = text[i];
+					if (ch == ':' && lastChar != ch)
+						colonCount++;
+					lastChar = ch;
+				}
+				return colonCount == 0 ? TimeUnit.SECONDS :
+					colonCount == 1 ? TimeUnit.MINUTES : TimeUnit.HOURS;
+			}
+
+			internal static int GetPosition(TimeUnit unit, string text) {
+				int newCursor = unit == TimeUnit.MILLISECONDS ? 0 :
+					unit == TimeUnit.SECONDS ? 4 :
+					unit == TimeUnit.MINUTES ? 7 : 10;
+				newCursor = text.Length - newCursor;
+				if (newCursor < 0) newCursor = 0;
+				return newCursor;
+			}
 		}
 
 		/// <summary>
-		/// 格式化时间值。
+		/// 选择区域。
 		/// </summary>
-		/// <param name="value">毫秒值</param>
-		/// <returns>时间格式，如 “0:00.000”</returns>
-		public static string FormatClipTrimTime(int value) {
-			int ms = value % 1000; value /= 1000;
-			int s = value % 60; value /= 60;
-			int m = value % 60; value /= 60;
-			int h = value;
-			return h == 0 ?
-				string.Format("{0:D}:{1:D2}.{2:D3}", m, s, ms) :
-				string.Format("{0:D}:{1:D2}:{2:D2}.{3:D3}", h, m, s, ms);
+		private struct Selection {
+			public int start;
+			public int end;
+			public int length { get { return end - start; } }
+			public Selection(int start, int end) {
+				this.start = start;
+				this.end = end;
+			}
+			public bool legal { get { return start < end; } }
+		}
+		#endregion
+
+		#region | Methods |
+		protected override void UpdateEditText() {
+			Text = base.Text;
 		}
 
-		public static string FormatClipTrimTime(string clipTrimTime) {
-			return FormatClipTrimTime(ClipTrimTime2Ms(clipTrimTime));
+		protected override void OnKeyDown(KeyEventArgs e) {
+			if (e.KeyCode == Keys.Enter) return;
+			base.OnKeyDown(e);
 		}
+
+		protected override void OnTextBoxKeyPress(object source, KeyPressEventArgs e) {
+			string key = e.KeyChar.ToString();
+			if (key == NumberFormat.NegativeSign) { // 禁止输入负号。
+				e.Handled = true;
+				System.Media.SystemSounds.Beep.Play();
+			} else if (key == ":") { } // 允许输入冒号。
+			else base.OnTextBoxKeyPress(source, e);
+		}
+
+		protected override void OnMouseClick(MouseEventArgs e) {
+			base.OnMouseClick(e);
+			string text = base.Text;
+			if (TextBox.SelectionLength != 0) return;
+			int cursor = TextBox.SelectionStart;
+			if (e != null && lastSelection.HasValue && cursor >= lastSelection.Value.start && cursor <= lastSelection.Value.end) {
+				lastSelection = null;
+				return;
+			}
+			lastSelection = null;
+			Selection selection = new Selection(0, text.Length);
+			for (int i = cursor - 1; i >= 0; i--) {
+				char ch = text[i];
+				if (!char.IsDigit(ch)) {
+					selection.start = i + 1;
+					break;
+				}
+			}
+			for (int i = cursor; i < text.Length; i++) {
+				char ch = text[i];
+				if (!char.IsDigit(ch)) {
+					selection.end = i;
+					break;
+				}
+			}
+			if (selection.legal)
+				Select(selection.start, selection.length);
+			lastSelection = selection;
+		}
+
+		public override void UpButton() {
+			OnUpDown(1);
+		}
+		public override void DownButton() {
+			OnUpDown(-1);
+		}
+		protected void OnUpDown(int value) {
+			string text = base.Text;
+			TimecodeText.TimeUnit unit = TimecodeText.GetUnit(TextBox.SelectionStart, text);
+			Value = new TimecodeText(text).AddOrSub(unit, value).Ms;
+			int newCursor = TimecodeText.GetPosition(unit, base.Text);
+			Select(newCursor, 0);
+			OnMouseClick(null);
+		}
+
+		/// <summary>
+		/// 获取控件中的文本框部分。
+		/// </summary>
+		protected TextBox TextBox {
+			get {
+				PropertyInfo property = typeof(NumericUpDown).GetProperty("TextBox", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic); // 使用 GetType 差点栈溢出。
+				if (property == null)
+					throw new MissingFieldException(new StackTrace().GetFrame(0).ToString());
+				return (TextBox)property.GetValue(this);
+			}
+		}
+		#endregion
 	}
 
 	#region 进度条对话框动画资源
@@ -16556,6 +16804,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioLoopCheck = new System.Windows.Forms.CheckBox();
 			this.AudioNormalizeCheck = new System.Windows.Forms.CheckBox();
 			this.AudioFreezeLastFrameCheck = new System.Windows.Forms.CheckBox();
+			this.AudioMultitrackForChordsCheck = new System.Windows.Forms.CheckBox();
 			this.CreateEventGroupCheck = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel16 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioAutoPanCheck = new System.Windows.Forms.CheckBox();
@@ -16764,9 +17013,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CloseAfterOpenMoshCheck = new System.Windows.Forms.CheckBox();
 			this.DatamoshClipsFolderGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
-			this.DatamoshClipsFolderOpenButton = new System.Windows.Forms.Button();
 			this.DatamoshClipsFolderTxt = new System.Windows.Forms.TextBox();
 			this.DatamoshClipsFolderButton = new System.Windows.Forms.Button();
+			this.DatamoshClipsFolderOpenButton = new System.Windows.Forms.Button();
 			this.DatamoshBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.DatamixBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.LayeringBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
@@ -16778,9 +17027,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DownloadDatamoshLink = new System.Windows.Forms.LinkLabel();
 			this.HelperTab = new System.Windows.Forms.TabPage();
 			this.toolsTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-			this.CustomFadeGainBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
-			this.ConvertMusicBeatsBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
-			this.ApplyVisualEffectBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.CloseAfterOpenHelperCheck = new System.Windows.Forms.CheckBox();
 			this.AutoLayoutTracksGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
@@ -16800,6 +17046,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ChangeTuneMethodBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.BatchSubtitleGenerationBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.FindClipsBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.ApplyVisualEffectBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.ConvertMusicBeatsBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.CustomFadeGainBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
 			this.HelperLbl = new System.Windows.Forms.Label();
 			this.TrackLegatoMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -16818,7 +17067,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.DatamoshClipsFolderInfo = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePaddingRightBox)).BeginInit();
@@ -19339,6 +19593,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel5.Controls.Add(this.AudioLoopCheck);
 			this.flowLayoutPanel5.Controls.Add(this.AudioNormalizeCheck);
 			this.flowLayoutPanel5.Controls.Add(this.AudioFreezeLastFrameCheck);
+			this.flowLayoutPanel5.Controls.Add(this.AudioMultitrackForChordsCheck);
 			this.flowLayoutPanel5.Controls.Add(this.CreateEventGroupCheck);
 			this.flowLayoutPanel5.Controls.Add(this.flowLayoutPanel16);
 			this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
@@ -19398,10 +19653,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioFreezeLastFrameCheck.UseVisualStyleBackColor = true;
 			this.AudioFreezeLastFrameCheck.CheckedChanged += new System.EventHandler(this.AudioLegatoCheck_Or_AudioFreezeLastFrameCheck_CheckedChanged);
 			//
+			// AudioMultitrackForChordsCheck
+			//
+			this.AudioMultitrackForChordsCheck.AutoSize = true;
+			this.AudioMultitrackForChordsCheck.Checked = true;
+			this.AudioMultitrackForChordsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.AudioMultitrackForChordsCheck.Location = new System.Drawing.Point(397, 4);
+			this.AudioMultitrackForChordsCheck.Margin = new System.Windows.Forms.Padding(2);
+			this.AudioMultitrackForChordsCheck.Name = "AudioMultitrackForChordsCheck";
+			this.AudioMultitrackForChordsCheck.Size = new System.Drawing.Size(91, 24);
+			this.AudioMultitrackForChordsCheck.TabIndex = 7;
+			this.AudioMultitrackForChordsCheck.Text = "复音多轨";
+			this.AudioMultitrackForChordsCheck.UseVisualStyleBackColor = true;
+			//
 			// CreateEventGroupCheck
 			//
 			this.CreateEventGroupCheck.AutoSize = true;
-			this.CreateEventGroupCheck.Location = new System.Drawing.Point(397, 4);
+			this.CreateEventGroupCheck.Location = new System.Drawing.Point(492, 4);
 			this.CreateEventGroupCheck.Margin = new System.Windows.Forms.Padding(2);
 			this.CreateEventGroupCheck.Name = "CreateEventGroupCheck";
 			this.CreateEventGroupCheck.Size = new System.Drawing.Size(91, 24);
@@ -23125,7 +23393,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.Size = new System.Drawing.Size(631, 736);
+			this.DatamoshTable.Size = new System.Drawing.Size(631, 759);
 			this.DatamoshTable.TabIndex = 9;
 			//
 			// StutterBtn
@@ -23133,7 +23401,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StutterBtn.CommandLink = true;
 			this.StutterBtn.CommandLinkNote = "口吃剪辑（向前向后播放）。";
 			this.StutterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StutterBtn.Location = new System.Drawing.Point(2, 648);
+			this.StutterBtn.Location = new System.Drawing.Point(2, 671);
 			this.StutterBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.StutterBtn.Name = "StutterBtn";
 			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
@@ -23165,7 +23433,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshClipsFolderGroup.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamoshClipsFolderGroup.Name = "DatamoshClipsFolderGroup";
 			this.DatamoshClipsFolderGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.DatamoshClipsFolderGroup.Size = new System.Drawing.Size(627, 62);
+			this.DatamoshClipsFolderGroup.Size = new System.Drawing.Size(627, 85);
 			this.DatamoshClipsFolderGroup.TabIndex = 6;
 			this.DatamoshClipsFolderGroup.TabStop = false;
 			this.DatamoshClipsFolderGroup.Text = "Datamosh 片段目录";
@@ -23177,36 +23445,24 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderTxt, 0, 0);
-			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderButton, 1, 0);
-			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderOpenButton, 2, 0);
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderInfo, 0, 0);
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderTxt, 0, 1);
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderButton, 1, 1);
+			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderOpenButton, 2, 1);
 			this.tableLayoutPanel21.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tableLayoutPanel21.Location = new System.Drawing.Point(5, 25);
 			this.tableLayoutPanel21.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel21.Name = "tableLayoutPanel21";
-			this.tableLayoutPanel21.RowCount = 1;
+			this.tableLayoutPanel21.RowCount = 2;
+			this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel21.Size = new System.Drawing.Size(617, 32);
+			this.tableLayoutPanel21.Size = new System.Drawing.Size(617, 55);
 			this.tableLayoutPanel21.TabIndex = 3;
-			//
-			// DatamoshClipsFolderOpenButton
-			//
-			this.DatamoshClipsFolderOpenButton.AutoSize = true;
-			this.DatamoshClipsFolderOpenButton.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderOpenButton.Location = new System.Drawing.Point(540, 2);
-			this.DatamoshClipsFolderOpenButton.Margin = new System.Windows.Forms.Padding(2);
-			this.DatamoshClipsFolderOpenButton.MaximumSize = new System.Drawing.Size(300, 28);
-			this.DatamoshClipsFolderOpenButton.Name = "DatamoshClipsFolderOpenButton";
-			this.DatamoshClipsFolderOpenButton.Size = new System.Drawing.Size(75, 28);
-			this.DatamoshClipsFolderOpenButton.TabIndex = 4;
-			this.DatamoshClipsFolderOpenButton.Text = "打开...";
-			this.DatamoshClipsFolderOpenButton.UseVisualStyleBackColor = true;
-			this.DatamoshClipsFolderOpenButton.Click += new System.EventHandler(this.DatamoshClipsFolderOpenButton_Click);
 			//
 			// DatamoshClipsFolderTxt
 			//
 			this.DatamoshClipsFolderTxt.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderTxt.Location = new System.Drawing.Point(2, 2);
+			this.DatamoshClipsFolderTxt.Location = new System.Drawing.Point(2, 25);
 			this.DatamoshClipsFolderTxt.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamoshClipsFolderTxt.Name = "DatamoshClipsFolderTxt";
 			this.DatamoshClipsFolderTxt.ReadOnly = true;
@@ -23217,7 +23473,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.DatamoshClipsFolderButton.AutoSize = true;
 			this.DatamoshClipsFolderButton.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderButton.Location = new System.Drawing.Point(461, 2);
+			this.DatamoshClipsFolderButton.Location = new System.Drawing.Point(461, 25);
 			this.DatamoshClipsFolderButton.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamoshClipsFolderButton.MaximumSize = new System.Drawing.Size(300, 28);
 			this.DatamoshClipsFolderButton.Name = "DatamoshClipsFolderButton";
@@ -23227,12 +23483,26 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshClipsFolderButton.UseVisualStyleBackColor = true;
 			this.DatamoshClipsFolderButton.Click += new System.EventHandler(this.DatamoshClipsFolderButton_Click);
 			//
+			// DatamoshClipsFolderOpenButton
+			//
+			this.DatamoshClipsFolderOpenButton.AutoSize = true;
+			this.DatamoshClipsFolderOpenButton.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderOpenButton.Location = new System.Drawing.Point(540, 25);
+			this.DatamoshClipsFolderOpenButton.Margin = new System.Windows.Forms.Padding(2);
+			this.DatamoshClipsFolderOpenButton.MaximumSize = new System.Drawing.Size(300, 28);
+			this.DatamoshClipsFolderOpenButton.Name = "DatamoshClipsFolderOpenButton";
+			this.DatamoshClipsFolderOpenButton.Size = new System.Drawing.Size(75, 28);
+			this.DatamoshClipsFolderOpenButton.TabIndex = 4;
+			this.DatamoshClipsFolderOpenButton.Text = "打开...";
+			this.DatamoshClipsFolderOpenButton.UseVisualStyleBackColor = true;
+			this.DatamoshClipsFolderOpenButton.Click += new System.EventHandler(this.DatamoshClipsFolderOpenButton_Click);
+			//
 			// DatamoshBtn
 			//
 			this.DatamoshBtn.CommandLink = true;
 			this.DatamoshBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据混乱。";
 			this.DatamoshBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.DatamoshBtn.Location = new System.Drawing.Point(2, 108);
+			this.DatamoshBtn.Location = new System.Drawing.Point(2, 131);
 			this.DatamoshBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamoshBtn.Name = "DatamoshBtn";
 			this.DatamoshBtn.Size = new System.Drawing.Size(627, 86);
@@ -23245,7 +23515,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamixBtn.CommandLink = true;
 			this.DatamixBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据混乱（将一个剪辑混入另一个剪辑）。";
 			this.DatamixBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.DatamixBtn.Location = new System.Drawing.Point(2, 198);
+			this.DatamixBtn.Location = new System.Drawing.Point(2, 221);
 			this.DatamixBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamixBtn.Name = "DatamixBtn";
 			this.DatamixBtn.Size = new System.Drawing.Size(627, 86);
@@ -23259,7 +23529,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.LayeringBtn.CommandLink = true;
 			this.LayeringBtn.CommandLinkNote = "快速自动地对选中剪辑进行多层叠加。";
 			this.LayeringBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayeringBtn.Location = new System.Drawing.Point(2, 288);
+			this.LayeringBtn.Location = new System.Drawing.Point(2, 311);
 			this.LayeringBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.LayeringBtn.Name = "LayeringBtn";
 			this.LayeringBtn.Size = new System.Drawing.Size(627, 86);
@@ -23273,7 +23543,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.RenderingBtn.CommandLink = true;
 			this.RenderingBtn.CommandLinkNote = "快速自动地对视频选中区域进行渲染。";
 			this.RenderingBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RenderingBtn.Location = new System.Drawing.Point(2, 378);
+			this.RenderingBtn.Location = new System.Drawing.Point(2, 401);
 			this.RenderingBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.RenderingBtn.Name = "RenderingBtn";
 			this.RenderingBtn.Size = new System.Drawing.Size(627, 86);
@@ -23287,7 +23557,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ScrambleBtn.CommandLink = true;
 			this.ScrambleBtn.CommandLinkNote = "快速自动地对选中剪辑进行打乱。";
 			this.ScrambleBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ScrambleBtn.Location = new System.Drawing.Point(2, 468);
+			this.ScrambleBtn.Location = new System.Drawing.Point(2, 491);
 			this.ScrambleBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.ScrambleBtn.Name = "ScrambleBtn";
 			this.ScrambleBtn.Size = new System.Drawing.Size(627, 86);
@@ -23301,7 +23571,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutomatorBtn.CommandLink = true;
 			this.AutomatorBtn.CommandLinkNote = "快速自动地为选中视频效果设定随机值。";
 			this.AutomatorBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AutomatorBtn.Location = new System.Drawing.Point(2, 558);
+			this.AutomatorBtn.Location = new System.Drawing.Point(2, 581);
 			this.AutomatorBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.AutomatorBtn.Name = "AutomatorBtn";
 			this.AutomatorBtn.Size = new System.Drawing.Size(627, 86);
@@ -23399,48 +23669,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
 			this.toolsTableLayoutPanel.Size = new System.Drawing.Size(633, 1180);
 			this.toolsTableLayoutPanel.TabIndex = 8;
-			//
-			// CustomFadeGainBtn
-			//
-			this.CustomFadeGainBtn.CommandLink = true;
-			this.CustomFadeGainBtn.CommandLinkNote = "将多个轨道剪辑根据指定的规则来更改增益值。\r\n已选中 0 个轨道剪辑。";
-			this.CustomFadeGainBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CustomFadeGainBtn.Location = new System.Drawing.Point(2, 1072);
-			this.CustomFadeGainBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.CustomFadeGainBtn.Name = "CustomFadeGainBtn";
-			this.CustomFadeGainBtn.Size = new System.Drawing.Size(629, 106);
-			this.CustomFadeGainBtn.TabIndex = 19;
-			this.CustomFadeGainBtn.Text = "自定渐入增益";
-			this.CustomFadeGainBtn.UseVisualStyleBackColor = true;
-			this.CustomFadeGainBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
-			//
-			// ConvertMusicBeatsBtn
-			//
-			this.ConvertMusicBeatsBtn.CommandLink = true;
-			this.ConvertMusicBeatsBtn.CommandLinkNote = "将指定的音乐的节拍在四四拍、四三拍、八六拍等之间进行转换。\r\n必须恰好选择 1 个音频轨道剪辑，不得多选或少选。";
-			this.ConvertMusicBeatsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ConvertMusicBeatsBtn.Location = new System.Drawing.Point(2, 962);
-			this.ConvertMusicBeatsBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.ConvertMusicBeatsBtn.Name = "ConvertMusicBeatsBtn";
-			this.ConvertMusicBeatsBtn.Size = new System.Drawing.Size(629, 106);
-			this.ConvertMusicBeatsBtn.TabIndex = 18;
-			this.ConvertMusicBeatsBtn.Text = "转换音乐节拍";
-			this.ConvertMusicBeatsBtn.UseVisualStyleBackColor = true;
-			this.ConvertMusicBeatsBtn.Click += new System.EventHandler(this.ConvertMusicBeatsBtn_Click);
-			//
-			// ApplyVisualEffectBtn
-			//
-			this.ApplyVisualEffectBtn.CommandLink = true;
-			this.ApplyVisualEffectBtn.CommandLinkNote = "将指定的视频轨道剪辑应用映像节奏视觉效果。\r\n已选中 0 个视频轨道剪辑。";
-			this.ApplyVisualEffectBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ApplyVisualEffectBtn.Location = new System.Drawing.Point(2, 852);
-			this.ApplyVisualEffectBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.ApplyVisualEffectBtn.Name = "ApplyVisualEffectBtn";
-			this.ApplyVisualEffectBtn.Size = new System.Drawing.Size(629, 106);
-			this.ApplyVisualEffectBtn.TabIndex = 17;
-			this.ApplyVisualEffectBtn.Text = "应用视觉效果";
-			this.ApplyVisualEffectBtn.UseVisualStyleBackColor = true;
-			this.ApplyVisualEffectBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
 			//
 			// CloseAfterOpenHelperCheck
 			//
@@ -23731,6 +23959,48 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FindClipsBtn.UseVisualStyleBackColor = true;
 			this.FindClipsBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
 			//
+			// ApplyVisualEffectBtn
+			//
+			this.ApplyVisualEffectBtn.CommandLink = true;
+			this.ApplyVisualEffectBtn.CommandLinkNote = "将指定的视频轨道剪辑应用映像节奏视觉效果。\r\n已选中 0 个视频轨道剪辑。";
+			this.ApplyVisualEffectBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ApplyVisualEffectBtn.Location = new System.Drawing.Point(2, 852);
+			this.ApplyVisualEffectBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.ApplyVisualEffectBtn.Name = "ApplyVisualEffectBtn";
+			this.ApplyVisualEffectBtn.Size = new System.Drawing.Size(629, 106);
+			this.ApplyVisualEffectBtn.TabIndex = 17;
+			this.ApplyVisualEffectBtn.Text = "应用视觉效果";
+			this.ApplyVisualEffectBtn.UseVisualStyleBackColor = true;
+			this.ApplyVisualEffectBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
+			//
+			// ConvertMusicBeatsBtn
+			//
+			this.ConvertMusicBeatsBtn.CommandLink = true;
+			this.ConvertMusicBeatsBtn.CommandLinkNote = "将指定的音乐的节拍在四四拍、四三拍、八六拍等之间进行转换。\r\n必须恰好选择 1 个音频轨道剪辑，不得多选或少选。";
+			this.ConvertMusicBeatsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ConvertMusicBeatsBtn.Location = new System.Drawing.Point(2, 962);
+			this.ConvertMusicBeatsBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.ConvertMusicBeatsBtn.Name = "ConvertMusicBeatsBtn";
+			this.ConvertMusicBeatsBtn.Size = new System.Drawing.Size(629, 106);
+			this.ConvertMusicBeatsBtn.TabIndex = 18;
+			this.ConvertMusicBeatsBtn.Text = "转换音乐节拍";
+			this.ConvertMusicBeatsBtn.UseVisualStyleBackColor = true;
+			this.ConvertMusicBeatsBtn.Click += new System.EventHandler(this.ConvertMusicBeatsBtn_Click);
+			//
+			// CustomFadeGainBtn
+			//
+			this.CustomFadeGainBtn.CommandLink = true;
+			this.CustomFadeGainBtn.CommandLinkNote = "将多个轨道剪辑根据指定的规则来更改增益值。\r\n已选中 0 个轨道剪辑。";
+			this.CustomFadeGainBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.CustomFadeGainBtn.Location = new System.Drawing.Point(2, 1072);
+			this.CustomFadeGainBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.CustomFadeGainBtn.Name = "CustomFadeGainBtn";
+			this.CustomFadeGainBtn.Size = new System.Drawing.Size(629, 106);
+			this.CustomFadeGainBtn.TabIndex = 19;
+			this.CustomFadeGainBtn.Text = "自定渐入增益";
+			this.CustomFadeGainBtn.UseVisualStyleBackColor = true;
+			this.CustomFadeGainBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
+			//
 			// tableLayoutPanel19
 			//
 			this.tableLayoutPanel19.AutoSize = true;
@@ -23881,6 +24151,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
+			// DatamoshClipsFolderInfo
+			//
+			this.DatamoshClipsFolderInfo.AutoSize = true;
+			this.tableLayoutPanel21.SetColumnSpan(this.DatamoshClipsFolderInfo, 3);
+			this.DatamoshClipsFolderInfo.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.DatamoshClipsFolderInfo.Location = new System.Drawing.Point(0, 0);
+			this.DatamoshClipsFolderInfo.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
+			this.DatamoshClipsFolderInfo.Name = "DatamoshClipsFolderInfo";
+			this.DatamoshClipsFolderInfo.Size = new System.Drawing.Size(617, 20);
+			this.DatamoshClipsFolderInfo.TabIndex = 5;
+			this.DatamoshClipsFolderInfo.Text = "请先指定一个用于存放生成的 Datamosh 片段的文件夹。";
+			//
 			// ConfigForm
 			//
 			this.AcceptButton = this.OkBtn;
@@ -23906,6 +24189,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ResizeEnd += new System.EventHandler(this.ConfigForm_Resize);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.SourceStartTimeText)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.SourceEndTimeText)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.PreviewBeepDurationBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffLineThicknessBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.StaffSurfacePaddingRightBox)).EndInit();
@@ -24545,6 +24832,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.Label VideoScratchLbl;
 		public System.Windows.Forms.ComboBox VideoScratchCombo;
 		public CommandLinkButton CustomFadeGainBtn;
+		public System.Windows.Forms.CheckBox AudioMultitrackForChordsCheck;
+		public System.Windows.Forms.Label DatamoshClipsFolderInfo;
 	}
 	#endregion
 
@@ -24777,6 +25066,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AudioLegatoCombo.SetIndex(configIni.Read("Legato", 0), 0);
 			AudioAutoPanCheck.Checked = configIni.Read("AutoPan", true);
 			AudioAutoPanCurveCombo.SetIndex(configIni.Read("AutoPanCurve", 5), 5);
+			AudioMultitrackForChordsCheck.Checked = configIni.Read("MultitrackForChords", true);
 			AudioVelocityCheck.Checked = configIni.Read("Velocity", false);
 			AudioVelocityLessBox.SetValue(configIni.Read("VelocityLessVelocity", 0), 0);
 			AudioVelocityMoreBox.SetValue(configIni.Read("VelocityMoreVelocity", 127), 127);
@@ -24981,6 +25271,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("Legato", AudioLegatoCombo.SelectedIndex);
 			configIni.Write("AutoPan", AudioAutoPanCheck.Checked);
 			configIni.Write("AutoPanCurve", AudioAutoPanCurveCombo.SelectedIndex);
+			configIni.Write("MultitrackForChords", AudioMultitrackForChordsCheck.Checked);
 			configIni.Write("Velocity", AudioVelocityCheck.Checked);
 			configIni.Write("VelocityLessVelocity", AudioVelocityLessBox.Value);
 			configIni.Write("VelocityMoreVelocity", AudioVelocityMoreBox.Value);
@@ -25245,7 +25536,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				return;
 			}
 			LanguageBackup = Language;
-			if (result == DialogResult.No) Translate();
+			if (result == DialogResult.No) {
+				Translate();
+				this.Invalidate();
+			}
 			else Close();
 		}
 
@@ -25471,7 +25765,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 			VideoLoopCheck.Text = str.video_loop;
 			VideoFreezeFirstFrameCheck.Text = str.freeze_first_frame;
-			VideoMultitrackForChordsCheck.Text = str.multitrack_for_chords;
+			AudioMultitrackForChordsCheck.Text = VideoMultitrackForChordsCheck.Text = str.multitrack_for_chords;
 			VideoParamsPresetsBtn.Text = str.presets;
 			SheetTab.Text = str.staff;
 			StaffLineThicknessLbl.Text = str.sheet_thickness;
@@ -25616,6 +25910,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			DatamoshClipsFolderGroup.Text = str.datamosh_clips_folder;
 			DatamoshNotInstalledInfo.Text = str.datamosh_not_installed_info;
 			DatamoshClipsFolderOpenButton.Text = str.open + str.dialog_sign;
+			DatamoshClipsFolderInfo.Text = str.datamosh_no_clips_folder_info;
 			DatamoshBtn.Text = str.datamosh;
 			DatamixBtn.Text = str.datamix;
 			LayeringBtn.Text = str.layering;
