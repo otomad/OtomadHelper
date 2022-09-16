@@ -12495,6 +12495,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.table = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.ImportFromFileLbl = new System.Windows.Forms.Label();
+			this.ImportFromFileBtn = new System.Windows.Forms.Button();
 			this.PresetsLbl = new System.Windows.Forms.Label();
 			this.PresetsCombo = new System.Windows.Forms.ComboBox();
 			this.SubtitlesLbl = new System.Windows.Forms.Label();
@@ -12504,13 +12507,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SingleDurationLbl = new System.Windows.Forms.Label();
 			this.SingleDurationTxt = new System.Windows.Forms.TextBox();
 			this.dock = new System.Windows.Forms.TableLayoutPanel();
-			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-			this.ImportFromFileLbl = new System.Windows.Forms.Label();
-			this.ImportFromFileBtn = new System.Windows.Forms.Button();
 			this.table.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.dock.SuspendLayout();
-			this.tableLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// OkBtn
@@ -12567,6 +12567,45 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.Size = new System.Drawing.Size(805, 574);
 			this.table.TabIndex = 19;
 			//
+			// tableLayoutPanel2
+			//
+			this.tableLayoutPanel2.AutoSize = true;
+			this.tableLayoutPanel2.ColumnCount = 2;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel2.Controls.Add(this.ImportFromFileLbl, 0, 0);
+			this.tableLayoutPanel2.Controls.Add(this.ImportFromFileBtn, 1, 0);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 70);
+			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 1;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(781, 38);
+			this.tableLayoutPanel2.TabIndex = 7;
+			//
+			// ImportFromFileLbl
+			//
+			this.ImportFromFileLbl.AutoSize = true;
+			this.ImportFromFileLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ImportFromFileLbl.Location = new System.Drawing.Point(4, 0);
+			this.ImportFromFileLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.ImportFromFileLbl.Name = "ImportFromFileLbl";
+			this.ImportFromFileLbl.Size = new System.Drawing.Size(677, 38);
+			this.ImportFromFileLbl.TabIndex = 0;
+			this.ImportFromFileLbl.Text = "从文件中导入";
+			this.ImportFromFileLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// ImportFromFileBtn
+			//
+			this.ImportFromFileBtn.Location = new System.Drawing.Point(688, 3);
+			this.ImportFromFileBtn.Name = "ImportFromFileBtn";
+			this.ImportFromFileBtn.Size = new System.Drawing.Size(90, 32);
+			this.ImportFromFileBtn.TabIndex = 1;
+			this.ImportFromFileBtn.Text = "浏览...";
+			this.ImportFromFileBtn.UseVisualStyleBackColor = true;
+			this.ImportFromFileBtn.Click += new System.EventHandler(this.ImportFromFileBtn_Click);
+			//
 			// PresetsLbl
 			//
 			this.PresetsLbl.AutoSize = true;
@@ -12595,7 +12634,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SubtitlesLbl.AutoSize = true;
 			this.SubtitlesLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SubtitlesLbl.Location = new System.Drawing.Point(16, 116);
-			this.SubtitlesLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
+			this.SubtitlesLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.SubtitlesLbl.Name = "SubtitlesLbl";
 			this.SubtitlesLbl.Size = new System.Drawing.Size(773, 20);
 			this.SubtitlesLbl.TabIndex = 2;
@@ -12685,45 +12724,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Size = new System.Drawing.Size(805, 52);
 			this.dock.TabIndex = 18;
 			//
-			// tableLayoutPanel2
-			//
-			this.tableLayoutPanel2.AutoSize = true;
-			this.tableLayoutPanel2.ColumnCount = 2;
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel2.Controls.Add(this.ImportFromFileLbl, 0, 0);
-			this.tableLayoutPanel2.Controls.Add(this.ImportFromFileBtn, 1, 0);
-			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 70);
-			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
-			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-			this.tableLayoutPanel2.RowCount = 1;
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(781, 38);
-			this.tableLayoutPanel2.TabIndex = 7;
-			//
-			// ImportFromFileLbl
-			//
-			this.ImportFromFileLbl.AutoSize = true;
-			this.ImportFromFileLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ImportFromFileLbl.Location = new System.Drawing.Point(4, 0);
-			this.ImportFromFileLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.ImportFromFileLbl.Name = "ImportFromFileLbl";
-			this.ImportFromFileLbl.Size = new System.Drawing.Size(677, 38);
-			this.ImportFromFileLbl.TabIndex = 0;
-			this.ImportFromFileLbl.Text = "从文件中导入";
-			this.ImportFromFileLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
-			// ImportFromFileBtn
-			//
-			this.ImportFromFileBtn.Location = new System.Drawing.Point(688, 3);
-			this.ImportFromFileBtn.Name = "ImportFromFileBtn";
-			this.ImportFromFileBtn.Size = new System.Drawing.Size(90, 32);
-			this.ImportFromFileBtn.TabIndex = 1;
-			this.ImportFromFileBtn.Text = "浏览...";
-			this.ImportFromFileBtn.UseVisualStyleBackColor = true;
-			this.ImportFromFileBtn.Click += new System.EventHandler(this.ImportFromFileBtn_Click);
-			//
 			// BatchSubtitleGenerationForm
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -12744,11 +12744,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Text = "批量生成字幕";
 			this.table.ResumeLayout(false);
 			this.table.PerformLayout();
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel2.PerformLayout();
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.dock.ResumeLayout(false);
-			this.tableLayoutPanel2.ResumeLayout(false);
-			this.tableLayoutPanel2.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -25547,7 +25547,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Lang str = Lang.str;
 			TrackLegatoMenu.Font = menu.Font = QuickConfigMidiChannelsMenu.Font = Font = new Font(str.ui_font, 9F);
 			WarningInfoLabel.Font = new Font(str.info_label_font, 11F, FontStyle.Bold);
-			Label[] infoLabels = { SheetConfigInfoLabel, YtpLbl, HelperLbl };
+			Label[] infoLabels = { SheetConfigInfoLabel, YtpLbl, HelperLbl, DatamoshClipsFolderInfo };
 			foreach (Label label in infoLabels)
 				label.Font = new Font(str.info_label_font, 9F);
 			latestVersionToolStripMenuItemInBar.Font = stretchLegatoTracksToolStripMenuItem.Font = new Font(str.ui_font, 9F, FontStyle.Bold);
@@ -28875,7 +28875,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info_warning = "Note: This dialog box will be closed after the operation, you can reopen it later, and some unsaved changes may be lost!\n",
 				close_after_open_helper = "Close this dialog after the operation completed",
 				mosh = "Mosh",
-				datamosh_clips_folder = "Datamosh clip cache folder",
+				datamosh_clips_folder = "Datamosh clips folder",
 				datamosh_not_installed_info = "The Datamosh extension pack is not installed and will not be available for full features until it is downloaded.",
 				datamosh_install = "Download the expansion pack",
 				datamosh_no_clips_folder_info = "Please select a folder to put generated datamoshed clips into.",
@@ -30186,8 +30186,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info_warning = "注：このダイアログボックスは操作後に閉じられます。後で再度開くことができ、保存されていない変更の一部が失われる可能性があります。\n",
 				close_after_open_helper = "操作後にこのダイアログを閉じます",
 				mosh = "モッシュ",
-				datamosh_clips_folder = "Datamosh クリップ キャッシュ ディレクトリ",
-				datamosh_not_installed_info = "Datamosh 拡張パックはインストールされていないため、ダウンロードするまではフル機能を利用することはできません。",
+				datamosh_clips_folder = "Datamosh クリップ フォルダー",
+				datamosh_not_installed_info = "Datamosh拡張パックはインストールされていないため、ダウンロードするまではフル機能を利用することはできません。",
 				datamosh_install = "拡張パックをダウンロードする",
 				datamosh_no_clips_folder_info = "生成されたDatamoshクリップを格納するフォルダを選択してください。",
 				datamosh = "データモッシュ",
@@ -30196,7 +30196,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				render = "レンダー",
 				scramble = "スクランブル",
 				automator = "オートメーター",
-				stutter = "口吃",
+				stutter = "吃音",
 				datamosh_configform_info = "ビデオ選択領域に自動的にDatamoshを実行します。",
 				datamix_configform_info = "ビデオ選択領域に自動的にDatamoshを実行します（1つのクリップを別のクリップに混ぜます）。",
 				layering_configform_info = "ビデオの一部にマルチレイヤを自動的に行います。",
@@ -30842,7 +30842,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info_warning = "Примечание: это диалоговое окно будет закрыто после операции, вы можете открыть его позже, и некоторые несохраненные изменения могут быть потеряны!\n",
 				close_after_open_helper = "Закрыть диалог после завершения операции",
 				mosh = "Мош",
-				datamosh_clips_folder = "Datamosh каталог кэша клипов",
+				datamosh_clips_folder = "Папка клипов Datamosh",
 				datamosh_not_installed_info = "Пакет расширения Datamosh не установлен и не будет доступен для полных функций, пока он не будет загружен.",
 				datamosh_install = "Скачать пакет расширения",
 				datamosh_no_clips_folder_info = "Пожалуйста, выберите папку, в которую будут помещены созданные клипы Datamosh.",
@@ -30852,7 +30852,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				render = "Рендер",
 				scramble = "Скрамбл",
 				automator = "Автомат",
-				stutter = "口吃",
+				stutter = "Заикаться",
 				datamosh_configform_info = "Датамозаика части видео быстро и автоматически.",
 				datamix_configform_info = "Быстрая и автоматическая датамозаика части видео (наложение одного клипа на другой).",
 				layering_configform_info = "Быстро и автоматически выполняет многослойность на части видео.",

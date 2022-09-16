@@ -26,6 +26,9 @@
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.table = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.ImportFromFileLbl = new System.Windows.Forms.Label();
+			this.ImportFromFileBtn = new System.Windows.Forms.Button();
 			this.PresetsLbl = new System.Windows.Forms.Label();
 			this.PresetsCombo = new System.Windows.Forms.ComboBox();
 			this.SubtitlesLbl = new System.Windows.Forms.Label();
@@ -35,13 +38,10 @@
 			this.SingleDurationLbl = new System.Windows.Forms.Label();
 			this.SingleDurationTxt = new System.Windows.Forms.TextBox();
 			this.dock = new System.Windows.Forms.TableLayoutPanel();
-			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-			this.ImportFromFileLbl = new System.Windows.Forms.Label();
-			this.ImportFromFileBtn = new System.Windows.Forms.Button();
 			this.table.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.dock.SuspendLayout();
-			this.tableLayoutPanel2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// OkBtn
@@ -98,6 +98,45 @@
 			this.table.Size = new System.Drawing.Size(805, 574);
 			this.table.TabIndex = 19;
 			// 
+			// tableLayoutPanel2
+			// 
+			this.tableLayoutPanel2.AutoSize = true;
+			this.tableLayoutPanel2.ColumnCount = 2;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel2.Controls.Add(this.ImportFromFileLbl, 0, 0);
+			this.tableLayoutPanel2.Controls.Add(this.ImportFromFileBtn, 1, 0);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 70);
+			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 1;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(781, 38);
+			this.tableLayoutPanel2.TabIndex = 7;
+			// 
+			// ImportFromFileLbl
+			// 
+			this.ImportFromFileLbl.AutoSize = true;
+			this.ImportFromFileLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ImportFromFileLbl.Location = new System.Drawing.Point(4, 0);
+			this.ImportFromFileLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.ImportFromFileLbl.Name = "ImportFromFileLbl";
+			this.ImportFromFileLbl.Size = new System.Drawing.Size(677, 38);
+			this.ImportFromFileLbl.TabIndex = 0;
+			this.ImportFromFileLbl.Text = "从文件中导入";
+			this.ImportFromFileLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// ImportFromFileBtn
+			// 
+			this.ImportFromFileBtn.Location = new System.Drawing.Point(688, 3);
+			this.ImportFromFileBtn.Name = "ImportFromFileBtn";
+			this.ImportFromFileBtn.Size = new System.Drawing.Size(90, 32);
+			this.ImportFromFileBtn.TabIndex = 1;
+			this.ImportFromFileBtn.Text = "浏览...";
+			this.ImportFromFileBtn.UseVisualStyleBackColor = true;
+			this.ImportFromFileBtn.Click += new System.EventHandler(this.ImportFromFileBtn_Click);
+			// 
 			// PresetsLbl
 			// 
 			this.PresetsLbl.AutoSize = true;
@@ -126,7 +165,7 @@
 			this.SubtitlesLbl.AutoSize = true;
 			this.SubtitlesLbl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SubtitlesLbl.Location = new System.Drawing.Point(16, 116);
-			this.SubtitlesLbl.Margin = new System.Windows.Forms.Padding(4, 8, 4, 0);
+			this.SubtitlesLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.SubtitlesLbl.Name = "SubtitlesLbl";
 			this.SubtitlesLbl.Size = new System.Drawing.Size(773, 20);
 			this.SubtitlesLbl.TabIndex = 2;
@@ -216,45 +255,6 @@
 			this.dock.Size = new System.Drawing.Size(805, 52);
 			this.dock.TabIndex = 18;
 			// 
-			// tableLayoutPanel2
-			// 
-			this.tableLayoutPanel2.AutoSize = true;
-			this.tableLayoutPanel2.ColumnCount = 2;
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-			this.tableLayoutPanel2.Controls.Add(this.ImportFromFileLbl, 0, 0);
-			this.tableLayoutPanel2.Controls.Add(this.ImportFromFileBtn, 1, 0);
-			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 70);
-			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
-			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-			this.tableLayoutPanel2.RowCount = 1;
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(781, 38);
-			this.tableLayoutPanel2.TabIndex = 7;
-			// 
-			// ImportFromFileLbl
-			// 
-			this.ImportFromFileLbl.AutoSize = true;
-			this.ImportFromFileLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ImportFromFileLbl.Location = new System.Drawing.Point(4, 0);
-			this.ImportFromFileLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.ImportFromFileLbl.Name = "ImportFromFileLbl";
-			this.ImportFromFileLbl.Size = new System.Drawing.Size(677, 38);
-			this.ImportFromFileLbl.TabIndex = 0;
-			this.ImportFromFileLbl.Text = "从文件中导入";
-			this.ImportFromFileLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// ImportFromFileBtn
-			// 
-			this.ImportFromFileBtn.Location = new System.Drawing.Point(688, 3);
-			this.ImportFromFileBtn.Name = "ImportFromFileBtn";
-			this.ImportFromFileBtn.Size = new System.Drawing.Size(90, 32);
-			this.ImportFromFileBtn.TabIndex = 1;
-			this.ImportFromFileBtn.Text = "浏览...";
-			this.ImportFromFileBtn.UseVisualStyleBackColor = true;
-			this.ImportFromFileBtn.Click += new System.EventHandler(this.ImportFromFileBtn_Click);
-			// 
 			// BatchSubtitleGenerationForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -275,11 +275,11 @@
 			this.Text = "批量生成字幕";
 			this.table.ResumeLayout(false);
 			this.table.PerformLayout();
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel2.PerformLayout();
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.dock.ResumeLayout(false);
-			this.tableLayoutPanel2.ResumeLayout(false);
-			this.tableLayoutPanel2.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
