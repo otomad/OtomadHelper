@@ -573,7 +573,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void AboutBtn_Click(object sender, EventArgs e) {
 			MessageBox.Show(
-				"脚本作者：淅琳雨\n" +
+				"脚本作者：兰音\n" +
 				"说明文档：" + updateInfoLink + "\n" +
 				"仓库地址：" + githubLink + "\n\n" +
 				"脚本原作者：Chaosinism\n" +
@@ -834,6 +834,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				{ ChangeTuneMethodBtn, typeof(ChangeTuneMethodForm) },
 				{ BatchSubtitleGenerationBtn, typeof(BatchSubtitleGenerationForm) },
 				{ FindClipsBtn, typeof(FindClipsForm) },
+				{ CustomFadeGainBtn, typeof(CustomFadeGainForm) },
 			};
 			Type form;
 			map.TryGetValue(btn, out form);

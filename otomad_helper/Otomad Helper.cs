@@ -7415,7 +7415,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			set { useTimecodeDeal = value; }
 		}
 
-		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("TimecodeBox 控件不支持此属性。"), DefaultValue(3)]
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("TimecodeBox 控件不支持此属性。"), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), DefaultValue(3)]
 		public new int DecimalPlaces {
 			get {
 				return base.DecimalPlaces;
@@ -17013,6 +17013,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CloseAfterOpenMoshCheck = new System.Windows.Forms.CheckBox();
 			this.DatamoshClipsFolderGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
+			this.DatamoshClipsFolderInfo = new System.Windows.Forms.Label();
 			this.DatamoshClipsFolderTxt = new System.Windows.Forms.TextBox();
 			this.DatamoshClipsFolderButton = new System.Windows.Forms.Button();
 			this.DatamoshClipsFolderOpenButton = new System.Windows.Forms.Button();
@@ -17067,7 +17068,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.DatamoshClipsFolderInfo = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).BeginInit();
@@ -23393,7 +23393,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.Size = new System.Drawing.Size(631, 759);
+			this.DatamoshTable.Size = new System.Drawing.Size(631, 756);
 			this.DatamoshTable.TabIndex = 9;
 			//
 			// StutterBtn
@@ -23401,7 +23401,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StutterBtn.CommandLink = true;
 			this.StutterBtn.CommandLinkNote = "口吃剪辑（向前向后播放）。";
 			this.StutterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StutterBtn.Location = new System.Drawing.Point(2, 671);
+			this.StutterBtn.Location = new System.Drawing.Point(2, 668);
 			this.StutterBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.StutterBtn.Name = "StutterBtn";
 			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
@@ -23433,7 +23433,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshClipsFolderGroup.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamoshClipsFolderGroup.Name = "DatamoshClipsFolderGroup";
 			this.DatamoshClipsFolderGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.DatamoshClipsFolderGroup.Size = new System.Drawing.Size(627, 85);
+			this.DatamoshClipsFolderGroup.Size = new System.Drawing.Size(627, 82);
 			this.DatamoshClipsFolderGroup.TabIndex = 6;
 			this.DatamoshClipsFolderGroup.TabStop = false;
 			this.DatamoshClipsFolderGroup.Text = "Datamosh 片段目录";
@@ -23451,18 +23451,31 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel21.Controls.Add(this.DatamoshClipsFolderOpenButton, 2, 1);
 			this.tableLayoutPanel21.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tableLayoutPanel21.Location = new System.Drawing.Point(5, 25);
-			this.tableLayoutPanel21.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel21.Margin = new System.Windows.Forms.Padding(2);
 			this.tableLayoutPanel21.Name = "tableLayoutPanel21";
 			this.tableLayoutPanel21.RowCount = 2;
 			this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel21.Size = new System.Drawing.Size(617, 55);
+			this.tableLayoutPanel21.Size = new System.Drawing.Size(617, 52);
 			this.tableLayoutPanel21.TabIndex = 3;
+			//
+			// DatamoshClipsFolderInfo
+			//
+			this.DatamoshClipsFolderInfo.AutoSize = true;
+			this.tableLayoutPanel21.SetColumnSpan(this.DatamoshClipsFolderInfo, 3);
+			this.DatamoshClipsFolderInfo.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshClipsFolderInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.DatamoshClipsFolderInfo.Location = new System.Drawing.Point(2, 0);
+			this.DatamoshClipsFolderInfo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.DatamoshClipsFolderInfo.Name = "DatamoshClipsFolderInfo";
+			this.DatamoshClipsFolderInfo.Size = new System.Drawing.Size(613, 20);
+			this.DatamoshClipsFolderInfo.TabIndex = 5;
+			this.DatamoshClipsFolderInfo.Text = "请先指定一个用于存放生成的 Datamosh 片段的文件夹。";
 			//
 			// DatamoshClipsFolderTxt
 			//
 			this.DatamoshClipsFolderTxt.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderTxt.Location = new System.Drawing.Point(2, 25);
+			this.DatamoshClipsFolderTxt.Location = new System.Drawing.Point(2, 22);
 			this.DatamoshClipsFolderTxt.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamoshClipsFolderTxt.Name = "DatamoshClipsFolderTxt";
 			this.DatamoshClipsFolderTxt.ReadOnly = true;
@@ -23473,7 +23486,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.DatamoshClipsFolderButton.AutoSize = true;
 			this.DatamoshClipsFolderButton.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderButton.Location = new System.Drawing.Point(461, 25);
+			this.DatamoshClipsFolderButton.Location = new System.Drawing.Point(461, 22);
 			this.DatamoshClipsFolderButton.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamoshClipsFolderButton.MaximumSize = new System.Drawing.Size(300, 28);
 			this.DatamoshClipsFolderButton.Name = "DatamoshClipsFolderButton";
@@ -23487,7 +23500,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.DatamoshClipsFolderOpenButton.AutoSize = true;
 			this.DatamoshClipsFolderOpenButton.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderOpenButton.Location = new System.Drawing.Point(540, 25);
+			this.DatamoshClipsFolderOpenButton.Location = new System.Drawing.Point(540, 22);
 			this.DatamoshClipsFolderOpenButton.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamoshClipsFolderOpenButton.MaximumSize = new System.Drawing.Size(300, 28);
 			this.DatamoshClipsFolderOpenButton.Name = "DatamoshClipsFolderOpenButton";
@@ -23502,7 +23515,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshBtn.CommandLink = true;
 			this.DatamoshBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据混乱。";
 			this.DatamoshBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.DatamoshBtn.Location = new System.Drawing.Point(2, 131);
+			this.DatamoshBtn.Location = new System.Drawing.Point(2, 128);
 			this.DatamoshBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamoshBtn.Name = "DatamoshBtn";
 			this.DatamoshBtn.Size = new System.Drawing.Size(627, 86);
@@ -23515,7 +23528,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamixBtn.CommandLink = true;
 			this.DatamixBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据混乱（将一个剪辑混入另一个剪辑）。";
 			this.DatamixBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.DatamixBtn.Location = new System.Drawing.Point(2, 221);
+			this.DatamixBtn.Location = new System.Drawing.Point(2, 218);
 			this.DatamixBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamixBtn.Name = "DatamixBtn";
 			this.DatamixBtn.Size = new System.Drawing.Size(627, 86);
@@ -23529,7 +23542,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.LayeringBtn.CommandLink = true;
 			this.LayeringBtn.CommandLinkNote = "快速自动地对选中剪辑进行多层叠加。";
 			this.LayeringBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LayeringBtn.Location = new System.Drawing.Point(2, 311);
+			this.LayeringBtn.Location = new System.Drawing.Point(2, 308);
 			this.LayeringBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.LayeringBtn.Name = "LayeringBtn";
 			this.LayeringBtn.Size = new System.Drawing.Size(627, 86);
@@ -23543,7 +23556,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.RenderingBtn.CommandLink = true;
 			this.RenderingBtn.CommandLinkNote = "快速自动地对视频选中区域进行渲染。";
 			this.RenderingBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RenderingBtn.Location = new System.Drawing.Point(2, 401);
+			this.RenderingBtn.Location = new System.Drawing.Point(2, 398);
 			this.RenderingBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.RenderingBtn.Name = "RenderingBtn";
 			this.RenderingBtn.Size = new System.Drawing.Size(627, 86);
@@ -23557,7 +23570,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ScrambleBtn.CommandLink = true;
 			this.ScrambleBtn.CommandLinkNote = "快速自动地对选中剪辑进行打乱。";
 			this.ScrambleBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ScrambleBtn.Location = new System.Drawing.Point(2, 491);
+			this.ScrambleBtn.Location = new System.Drawing.Point(2, 488);
 			this.ScrambleBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.ScrambleBtn.Name = "ScrambleBtn";
 			this.ScrambleBtn.Size = new System.Drawing.Size(627, 86);
@@ -23571,7 +23584,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutomatorBtn.CommandLink = true;
 			this.AutomatorBtn.CommandLinkNote = "快速自动地为选中视频效果设定随机值。";
 			this.AutomatorBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AutomatorBtn.Location = new System.Drawing.Point(2, 581);
+			this.AutomatorBtn.Location = new System.Drawing.Point(2, 578);
 			this.AutomatorBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.AutomatorBtn.Name = "AutomatorBtn";
 			this.AutomatorBtn.Size = new System.Drawing.Size(627, 86);
@@ -24150,19 +24163,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.AutoPopDelay = 60000;
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
-			//
-			// DatamoshClipsFolderInfo
-			//
-			this.DatamoshClipsFolderInfo.AutoSize = true;
-			this.tableLayoutPanel21.SetColumnSpan(this.DatamoshClipsFolderInfo, 3);
-			this.DatamoshClipsFolderInfo.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.DatamoshClipsFolderInfo.Location = new System.Drawing.Point(0, 0);
-			this.DatamoshClipsFolderInfo.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
-			this.DatamoshClipsFolderInfo.Name = "DatamoshClipsFolderInfo";
-			this.DatamoshClipsFolderInfo.Size = new System.Drawing.Size(617, 20);
-			this.DatamoshClipsFolderInfo.TabIndex = 5;
-			this.DatamoshClipsFolderInfo.Text = "请先指定一个用于存放生成的 Datamosh 片段的文件夹。";
 			//
 			// ConfigForm
 			//
