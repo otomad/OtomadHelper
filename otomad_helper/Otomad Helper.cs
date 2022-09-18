@@ -317,7 +317,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (datamosh != null) {
 				configForm.IsIrreversibleCancel = true;
 				(Activator.CreateInstance(datamosh) as Datamosh.IDatamosh).Main(vegas, this);
-				 if (!configForm.CloseAfterOpenMoshCheck.Checked) requestRestartScript = true;
+				if (!configForm.CloseAfterOpenMoshCheck.Checked) requestRestartScript = true;
 			}
 			vegas.Transport.CursorPosition = configForm.originalCursorPosition;
 			return configForm.AcceptConfig;
