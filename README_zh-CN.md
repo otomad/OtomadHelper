@@ -19,7 +19,7 @@
 
 YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 
-Datamosh 的相关功能参考自 [vegas-datamosh](https://github.com/delthas/vegas-datamosh)。
+数据抹失的相关功能参考自 [vegas-datamosh](https://github.com/delthas/vegas-datamosh)。
 
 **姊妹项目：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 
@@ -30,7 +30,7 @@ Datamosh 的相关功能参考自 [vegas-datamosh](https://github.com/delthas/ve
 
 您也可以阅读 [@Evauation](https://github.com/Evauation) 的[说明文档](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)并观看[@卡西迪](https://github.com/composition-cassidy)的[教程视频](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英语）*。
 
-关于 Datamosh 的使用请[观看视频](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英语）*。
+关于数据抹失的使用请[观看视频](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英语）*。
 
 ### 安装
 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)最新版脚本。
@@ -43,10 +43,10 @@ Datamosh 的相关功能参考自 [vegas-datamosh](https://github.com/delthas/ve
 	4. 点击确定按钮即可。
 4. 打开您的 Vegas Pro 来启动脚本。选择菜单 *工具 > 脚本化 > Otomad Helper*。
 
-#### Datamosh 扩展包
-如果需要使用 Datamosh 的全部功能，需要安装 Datamosh 扩展包方可使用。
+#### 数据抹失扩展包
+如果需要使用数据抹失的全部功能，需要安装数据抹失扩展包方可使用。
 
-1. [下载](https://github.com/otomad/OtomadHelper/releases/latest) Datamosh 扩展包。
+1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)数据抹失扩展包。
 2. 解压文件并将 `_internal` 文件夹移动到脚本 `Otomad Helper.cs` 所在的相同目录下。
 
 ### **注意**
@@ -105,7 +105,7 @@ Vegas Pro 17、18、19、20 测试**正常**。
 * [Vegas Pro 脚本**论坛**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 * [奥普洛斯的**带有透明通道的颜色选取器**](https://sourceforge.net/projects/alpha-color-dialog/)
 * [大的对话框 (WinForm) 的**进度条对话框**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
-* [德尔萨斯的 **Vegas Datamosh**](https://github.com/delthas/vegas-datamosh)
+* [德尔萨斯的 **Vegas 数据抹失**](https://github.com/delthas/vegas-datamosh)
 
 ### 图标
 灵感来源于:
@@ -133,7 +133,7 @@ Vegas Pro 17、18、19、20 测试**正常**。
 			* NAudio 使用 MIT。
 * YTP+ 使用 GPL 3.0。
 * Ookii Dialogs WinForms 使用 BSD 3 Clause。
-* 德尔萨斯的 Vegas Datamosh 使用 MIT。
+* 德尔萨斯的 Vegas 数据抹失使用 MIT。
 	* FFmpeg 使用 LGPL + GPL。
 	* Avidemux 使用 GPL。
 	* Xvid codec 使用 GPL。

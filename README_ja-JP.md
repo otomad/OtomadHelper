@@ -19,7 +19,7 @@ YTP・ソナー効果を作成することも可能です。将来的には歌�
 
 YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 
-Datamosh の関連機能は [vegas-datamosh](https://github.com/delthas/vegas-datamosh) から参照。
+データモッシュの関連機能は [vegas-datamosh](https://github.com/delthas/vegas-datamosh) から参照。
 
 **姉妹プロジェクト：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 
@@ -30,7 +30,7 @@ Datamosh の関連機能は [vegas-datamosh](https://github.com/delthas/vegas-da
 
 [@エバユエーション](https://github.com/Evauation)の[ドキュメンテーション](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)を読んだり、[@キャシディ](https://github.com/composition-cassidy)の[チュートリアルビデオ](https://www.youtube.com/watch?v=8vSpzgL_86A)を視聴したりすることもできます *（英語）*。
 
-Datamosh の使用に関する[ビデオをご覧](https://www.youtube.com/watch?v=6D2lW6H0bb8)ください *（英語）*。
+データモッシュの使用に関する[ビデオをご覧](https://www.youtube.com/watch?v=6D2lW6H0bb8)ください *（英語）*。
 
 ### インストール
 1. スクリプトの最新バージョンを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/latest)します。
@@ -43,10 +43,10 @@ Datamosh の使用に関する[ビデオをご覧](https://www.youtube.com/watch
 	4. ［OK］ボタンをクリックすると、完了です。
 4. Vegas Pro を開いてスクリプトを開始します。メニューの *ツール > スクリプト > Otomad Helper* を選択します。
 
-#### Datamosh 拡張パッケー
-Datamosh のすべての機能を使用する必要がある場合は、Datamosh 拡張パッケージをインストールする必要があります。
+#### データモッシュ拡張パッケー
+データモッシュのすべての機能を使用する必要がある場合は、データモッシュ拡張パッケージをインストールする必要があります。
 
-1. Datamosh 拡張パックを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/latest)します。
+1. データモッシュ拡張パックを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/latest)します。
 2. ZIP ファイルを解凍し、`_internal` フォルダーをスクリプト `Otomad Helper.cs` と同じディレクトリに移動します。
 
 ### **注意**
