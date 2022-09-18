@@ -102,9 +102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 21, 16, 0);
+		public static readonly Version VERSION = new Version(4, 21, 18, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 9, 16);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 9, 18);
 
 		// 配置参数变量
 		#region 视频属性
@@ -17068,6 +17068,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.DatamoshInfoLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).BeginInit();
@@ -23357,12 +23358,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MoshTab.AutoScroll = true;
 			this.MoshTab.Controls.Add(this.DatamoshTable);
 			this.MoshTab.Controls.Add(this.DatamoshNotInstalledTable);
+			this.MoshTab.Controls.Add(this.DatamoshInfoLbl);
 			this.MoshTab.Location = new System.Drawing.Point(4, 29);
 			this.MoshTab.Name = "MoshTab";
 			this.MoshTab.Padding = new System.Windows.Forms.Padding(3);
 			this.MoshTab.Size = new System.Drawing.Size(658, 616);
 			this.MoshTab.TabIndex = 7;
-			this.MoshTab.Text = "混乱";
+			this.MoshTab.Text = "抹失";
 			this.MoshTab.UseVisualStyleBackColor = true;
 			//
 			// DatamoshTable
@@ -23380,7 +23382,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshTable.Controls.Add(this.ScrambleBtn, 0, 6);
 			this.DatamoshTable.Controls.Add(this.AutomatorBtn, 0, 7);
 			this.DatamoshTable.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshTable.Location = new System.Drawing.Point(3, 56);
+			this.DatamoshTable.Location = new System.Drawing.Point(3, 82);
 			this.DatamoshTable.Margin = new System.Windows.Forms.Padding(0);
 			this.DatamoshTable.Name = "DatamoshTable";
 			this.DatamoshTable.RowCount = 9;
@@ -23406,7 +23408,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StutterBtn.Name = "StutterBtn";
 			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
 			this.StutterBtn.TabIndex = 17;
-			this.StutterBtn.Text = "口吃";
+			this.StutterBtn.Text = "结结巴巴";
 			this.StutterBtn.UseVisualStyleBackColor = true;
 			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -23436,7 +23438,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshClipsFolderGroup.Size = new System.Drawing.Size(627, 82);
 			this.DatamoshClipsFolderGroup.TabIndex = 6;
 			this.DatamoshClipsFolderGroup.TabStop = false;
-			this.DatamoshClipsFolderGroup.Text = "Datamosh 片段目录";
+			this.DatamoshClipsFolderGroup.Text = "数据抹失片段目录";
 			//
 			// tableLayoutPanel21
 			//
@@ -23461,16 +23463,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			// DatamoshClipsFolderInfo
 			//
-			this.DatamoshClipsFolderInfo.AutoSize = true;
 			this.tableLayoutPanel21.SetColumnSpan(this.DatamoshClipsFolderInfo, 3);
 			this.DatamoshClipsFolderInfo.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshClipsFolderInfo.Font = new System.Drawing.Font("微软雅黑", 9F);
 			this.DatamoshClipsFolderInfo.Location = new System.Drawing.Point(2, 0);
 			this.DatamoshClipsFolderInfo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.DatamoshClipsFolderInfo.Name = "DatamoshClipsFolderInfo";
 			this.DatamoshClipsFolderInfo.Size = new System.Drawing.Size(613, 20);
 			this.DatamoshClipsFolderInfo.TabIndex = 5;
-			this.DatamoshClipsFolderInfo.Text = "请先指定一个用于存放生成的 Datamosh 片段的文件夹。";
+			this.DatamoshClipsFolderInfo.Text = "请先指定一个用于存放生成的数据抹失片段的文件夹。";
 			//
 			// DatamoshClipsFolderTxt
 			//
@@ -23513,41 +23513,41 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// DatamoshBtn
 			//
 			this.DatamoshBtn.CommandLink = true;
-			this.DatamoshBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据混乱。";
+			this.DatamoshBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据抹失。";
 			this.DatamoshBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.DatamoshBtn.Location = new System.Drawing.Point(2, 128);
 			this.DatamoshBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamoshBtn.Name = "DatamoshBtn";
 			this.DatamoshBtn.Size = new System.Drawing.Size(627, 86);
 			this.DatamoshBtn.TabIndex = 11;
-			this.DatamoshBtn.Text = "数据混乱";
+			this.DatamoshBtn.Text = "数据抹失";
 			this.DatamoshBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
 			// DatamixBtn
 			//
 			this.DatamixBtn.CommandLink = true;
-			this.DatamixBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据混乱（将一个剪辑混入另一个剪辑）。";
+			this.DatamixBtn.CommandLinkNote = "快速自动地对视频选中区域进行数据抹失（将一个剪辑抹入另一个剪辑）。";
 			this.DatamixBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.DatamixBtn.Location = new System.Drawing.Point(2, 218);
 			this.DatamixBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.DatamixBtn.Name = "DatamixBtn";
 			this.DatamixBtn.Size = new System.Drawing.Size(627, 86);
 			this.DatamixBtn.TabIndex = 12;
-			this.DatamixBtn.Text = "数据混合";
+			this.DatamixBtn.Text = "数据抹拭";
 			this.DatamixBtn.UseVisualStyleBackColor = true;
 			this.DatamixBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
 			// LayeringBtn
 			//
 			this.LayeringBtn.CommandLink = true;
-			this.LayeringBtn.CommandLinkNote = "快速自动地对选中剪辑进行多层叠加。";
+			this.LayeringBtn.CommandLinkNote = "快速自动地对选中剪辑进行多层叠放。";
 			this.LayeringBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LayeringBtn.Location = new System.Drawing.Point(2, 308);
 			this.LayeringBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.LayeringBtn.Name = "LayeringBtn";
 			this.LayeringBtn.Size = new System.Drawing.Size(627, 86);
 			this.LayeringBtn.TabIndex = 13;
-			this.LayeringBtn.Text = "叠叠乐";
+			this.LayeringBtn.Text = "多层叠放";
 			this.LayeringBtn.UseVisualStyleBackColor = true;
 			this.LayeringBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -23561,7 +23561,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.RenderingBtn.Name = "RenderingBtn";
 			this.RenderingBtn.Size = new System.Drawing.Size(627, 86);
 			this.RenderingBtn.TabIndex = 14;
-			this.RenderingBtn.Text = "渲染";
+			this.RenderingBtn.Text = "预渲染化";
 			this.RenderingBtn.UseVisualStyleBackColor = true;
 			this.RenderingBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -23575,7 +23575,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ScrambleBtn.Name = "ScrambleBtn";
 			this.ScrambleBtn.Size = new System.Drawing.Size(627, 86);
 			this.ScrambleBtn.TabIndex = 15;
-			this.ScrambleBtn.Text = "打乱";
+			this.ScrambleBtn.Text = "随意打乱";
 			this.ScrambleBtn.UseVisualStyleBackColor = true;
 			this.ScrambleBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -23589,7 +23589,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutomatorBtn.Name = "AutomatorBtn";
 			this.AutomatorBtn.Size = new System.Drawing.Size(627, 86);
 			this.AutomatorBtn.TabIndex = 16;
-			this.AutomatorBtn.Text = "自动化";
+			this.AutomatorBtn.Text = "自动流程";
 			this.AutomatorBtn.UseVisualStyleBackColor = true;
 			this.AutomatorBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -23601,7 +23601,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshNotInstalledTable.Controls.Add(this.DatamoshNotInstalledInfo, 0, 0);
 			this.DatamoshNotInstalledTable.Controls.Add(this.DownloadDatamoshLink, 0, 1);
 			this.DatamoshNotInstalledTable.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshNotInstalledTable.Location = new System.Drawing.Point(3, 3);
+			this.DatamoshNotInstalledTable.Location = new System.Drawing.Point(3, 29);
 			this.DatamoshNotInstalledTable.Name = "DatamoshNotInstalledTable";
 			this.DatamoshNotInstalledTable.Padding = new System.Windows.Forms.Padding(0, 8, 0, 5);
 			this.DatamoshNotInstalledTable.RowCount = 2;
@@ -23620,7 +23620,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshNotInstalledInfo.Name = "DatamoshNotInstalledInfo";
 			this.DatamoshNotInstalledInfo.Size = new System.Drawing.Size(625, 20);
 			this.DatamoshNotInstalledInfo.TabIndex = 2;
-			this.DatamoshNotInstalledInfo.Text = "未安装 Datamosh 扩展包，下载后方可使用全部功能。";
+			this.DatamoshNotInstalledInfo.Text = "未安装数据抹失扩展包，下载后方可使用全部功能。";
 			//
 			// DownloadDatamoshLink
 			//
@@ -23668,6 +23668,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.toolsTableLayoutPanel.Location = new System.Drawing.Point(2, 29);
 			this.toolsTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.toolsTableLayoutPanel.Name = "toolsTableLayoutPanel";
+			this.toolsTableLayoutPanel.Padding = new System.Windows.Forms.Padding(1, 0, 1, 0);
 			this.toolsTableLayoutPanel.RowCount = 11;
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -23689,10 +23690,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CloseAfterOpenHelperCheck.Checked = true;
 			this.CloseAfterOpenHelperCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.CloseAfterOpenHelperCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CloseAfterOpenHelperCheck.Location = new System.Drawing.Point(8, 8);
+			this.CloseAfterOpenHelperCheck.Location = new System.Drawing.Point(9, 8);
 			this.CloseAfterOpenHelperCheck.Margin = new System.Windows.Forms.Padding(8);
 			this.CloseAfterOpenHelperCheck.Name = "CloseAfterOpenHelperCheck";
-			this.CloseAfterOpenHelperCheck.Size = new System.Drawing.Size(617, 24);
+			this.CloseAfterOpenHelperCheck.Size = new System.Drawing.Size(615, 24);
 			this.CloseAfterOpenHelperCheck.TabIndex = 0;
 			this.CloseAfterOpenHelperCheck.Text = "操作完成之后关闭本对话框";
 			this.CloseAfterOpenHelperCheck.UseVisualStyleBackColor = true;
@@ -23702,11 +23703,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksGroup.AutoSize = true;
 			this.AutoLayoutTracksGroup.Controls.Add(this.tableLayoutPanel14);
 			this.AutoLayoutTracksGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.AutoLayoutTracksGroup.Location = new System.Drawing.Point(2, 42);
+			this.AutoLayoutTracksGroup.Location = new System.Drawing.Point(3, 42);
 			this.AutoLayoutTracksGroup.Margin = new System.Windows.Forms.Padding(2);
 			this.AutoLayoutTracksGroup.Name = "AutoLayoutTracksGroup";
 			this.AutoLayoutTracksGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.AutoLayoutTracksGroup.Size = new System.Drawing.Size(629, 146);
+			this.AutoLayoutTracksGroup.Size = new System.Drawing.Size(627, 146);
 			this.AutoLayoutTracksGroup.TabIndex = 6;
 			this.AutoLayoutTracksGroup.TabStop = false;
 			this.AutoLayoutTracksGroup.Text = "自动布局轨道";
@@ -23729,7 +23730,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel14.Size = new System.Drawing.Size(619, 116);
+			this.tableLayoutPanel14.Size = new System.Drawing.Size(617, 116);
 			this.tableLayoutPanel14.TabIndex = 2;
 			//
 			// AutoLayoutTracksLbl
@@ -23739,7 +23740,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksLbl.Location = new System.Drawing.Point(2, 0);
 			this.AutoLayoutTracksLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 2);
 			this.AutoLayoutTracksLbl.Name = "AutoLayoutTracksLbl";
-			this.AutoLayoutTracksLbl.Size = new System.Drawing.Size(615, 20);
+			this.AutoLayoutTracksLbl.Size = new System.Drawing.Size(613, 20);
 			this.AutoLayoutTracksLbl.TabIndex = 1;
 			this.AutoLayoutTracksLbl.Text = "类 YTPMV 风格自动布局选中的轨道。";
 			this.AutoLayoutTracksLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -23752,7 +23753,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksSelectInfo.Location = new System.Drawing.Point(2, 22);
 			this.AutoLayoutTracksSelectInfo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 2);
 			this.AutoLayoutTracksSelectInfo.Name = "AutoLayoutTracksSelectInfo";
-			this.AutoLayoutTracksSelectInfo.Size = new System.Drawing.Size(615, 20);
+			this.AutoLayoutTracksSelectInfo.Size = new System.Drawing.Size(613, 20);
 			this.AutoLayoutTracksSelectInfo.TabIndex = 7;
 			this.AutoLayoutTracksSelectInfo.Text = "已选中 0 个视频轨道。";
 			this.AutoLayoutTracksSelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -23774,7 +23775,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksButtons.Name = "AutoLayoutTracksButtons";
 			this.AutoLayoutTracksButtons.RowCount = 1;
 			this.AutoLayoutTracksButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.AutoLayoutTracksButtons.Size = new System.Drawing.Size(619, 36);
+			this.AutoLayoutTracksButtons.Size = new System.Drawing.Size(617, 36);
 			this.AutoLayoutTracksButtons.TabIndex = 8;
 			//
 			// GradientTracksBtn
@@ -23836,7 +23837,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.Name = "AutoLayoutTracksClearButtons";
 			this.AutoLayoutTracksClearButtons.RowCount = 1;
 			this.AutoLayoutTracksClearButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.AutoLayoutTracksClearButtons.Size = new System.Drawing.Size(619, 36);
+			this.AutoLayoutTracksClearButtons.Size = new System.Drawing.Size(617, 36);
 			this.AutoLayoutTracksClearButtons.TabIndex = 9;
 			//
 			// TrackLegatoBtn
@@ -23893,10 +23894,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.QuickSelectIntervalBtn.CommandLink = true;
 			this.QuickSelectIntervalBtn.CommandLinkNote = "本功能旨在辅助用户每隔一个或几个选中一个素材，然后可以执行“粘贴事件属性”等操作。\r\n已选中 0 个轨道剪辑。";
 			this.QuickSelectIntervalBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(2, 192);
+			this.QuickSelectIntervalBtn.Location = new System.Drawing.Point(3, 192);
 			this.QuickSelectIntervalBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.QuickSelectIntervalBtn.Name = "QuickSelectIntervalBtn";
-			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(629, 106);
+			this.QuickSelectIntervalBtn.Size = new System.Drawing.Size(627, 106);
 			this.QuickSelectIntervalBtn.TabIndex = 11;
 			this.QuickSelectIntervalBtn.Text = "快速间隔选择";
 			this.QuickSelectIntervalBtn.UseVisualStyleBackColor = true;
@@ -23907,10 +23908,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.QuickNormalizeBtn.CommandLink = true;
 			this.QuickNormalizeBtn.CommandLinkNote = "将选中的多个音频轨道剪辑全部规范化音量。\r\n已选中 0 个音频轨道剪辑。";
 			this.QuickNormalizeBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.QuickNormalizeBtn.Location = new System.Drawing.Point(2, 302);
+			this.QuickNormalizeBtn.Location = new System.Drawing.Point(3, 302);
 			this.QuickNormalizeBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.QuickNormalizeBtn.Name = "QuickNormalizeBtn";
-			this.QuickNormalizeBtn.Size = new System.Drawing.Size(629, 106);
+			this.QuickNormalizeBtn.Size = new System.Drawing.Size(627, 106);
 			this.QuickNormalizeBtn.TabIndex = 12;
 			this.QuickNormalizeBtn.Text = "快速规范音量";
 			this.QuickNormalizeBtn.UseVisualStyleBackColor = true;
@@ -23921,10 +23922,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReplaceClipsBtn.CommandLink = true;
 			this.ReplaceClipsBtn.CommandLinkNote = "将多个轨道剪辑替换为指定的新轨道剪辑。\r\n已选中 0 个轨道剪辑。";
 			this.ReplaceClipsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ReplaceClipsBtn.Location = new System.Drawing.Point(2, 412);
+			this.ReplaceClipsBtn.Location = new System.Drawing.Point(3, 412);
 			this.ReplaceClipsBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.ReplaceClipsBtn.Name = "ReplaceClipsBtn";
-			this.ReplaceClipsBtn.Size = new System.Drawing.Size(629, 106);
+			this.ReplaceClipsBtn.Size = new System.Drawing.Size(627, 106);
 			this.ReplaceClipsBtn.TabIndex = 13;
 			this.ReplaceClipsBtn.Text = "替换轨道素材";
 			this.ReplaceClipsBtn.UseVisualStyleBackColor = true;
@@ -23935,10 +23936,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ChangeTuneMethodBtn.CommandLink = true;
 			this.ChangeTuneMethodBtn.CommandLinkNote = "将多个音频轨道剪辑统一更改为指定的调音算法。\r\n已选中 0 个音频轨道剪辑。";
 			this.ChangeTuneMethodBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(2, 522);
+			this.ChangeTuneMethodBtn.Location = new System.Drawing.Point(3, 522);
 			this.ChangeTuneMethodBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.ChangeTuneMethodBtn.Name = "ChangeTuneMethodBtn";
-			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(629, 106);
+			this.ChangeTuneMethodBtn.Size = new System.Drawing.Size(627, 106);
 			this.ChangeTuneMethodBtn.TabIndex = 14;
 			this.ChangeTuneMethodBtn.Text = "更改调音算法";
 			this.ChangeTuneMethodBtn.UseVisualStyleBackColor = true;
@@ -23949,10 +23950,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.BatchSubtitleGenerationBtn.CommandLink = true;
 			this.BatchSubtitleGenerationBtn.CommandLinkNote = "预先设定好“字幕和文字”的预设，然后在此添加多行文本。";
 			this.BatchSubtitleGenerationBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BatchSubtitleGenerationBtn.Location = new System.Drawing.Point(2, 632);
+			this.BatchSubtitleGenerationBtn.Location = new System.Drawing.Point(3, 632);
 			this.BatchSubtitleGenerationBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.BatchSubtitleGenerationBtn.Name = "BatchSubtitleGenerationBtn";
-			this.BatchSubtitleGenerationBtn.Size = new System.Drawing.Size(629, 106);
+			this.BatchSubtitleGenerationBtn.Size = new System.Drawing.Size(627, 106);
 			this.BatchSubtitleGenerationBtn.TabIndex = 15;
 			this.BatchSubtitleGenerationBtn.Text = "批量生成字幕";
 			this.BatchSubtitleGenerationBtn.UseVisualStyleBackColor = true;
@@ -23963,10 +23964,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FindClipsBtn.CommandLink = true;
 			this.FindClipsBtn.CommandLinkNote = "根据指定的条件（如剪辑名称、与选中剪辑相同的素材等）选中符合条件的所有轨道剪辑。";
 			this.FindClipsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FindClipsBtn.Location = new System.Drawing.Point(2, 742);
+			this.FindClipsBtn.Location = new System.Drawing.Point(3, 742);
 			this.FindClipsBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.FindClipsBtn.Name = "FindClipsBtn";
-			this.FindClipsBtn.Size = new System.Drawing.Size(629, 106);
+			this.FindClipsBtn.Size = new System.Drawing.Size(627, 106);
 			this.FindClipsBtn.TabIndex = 16;
 			this.FindClipsBtn.Text = "查找轨道素材";
 			this.FindClipsBtn.UseVisualStyleBackColor = true;
@@ -23977,10 +23978,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ApplyVisualEffectBtn.CommandLink = true;
 			this.ApplyVisualEffectBtn.CommandLinkNote = "将指定的视频轨道剪辑应用映像节奏视觉效果。\r\n已选中 0 个视频轨道剪辑。";
 			this.ApplyVisualEffectBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ApplyVisualEffectBtn.Location = new System.Drawing.Point(2, 852);
+			this.ApplyVisualEffectBtn.Location = new System.Drawing.Point(3, 852);
 			this.ApplyVisualEffectBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.ApplyVisualEffectBtn.Name = "ApplyVisualEffectBtn";
-			this.ApplyVisualEffectBtn.Size = new System.Drawing.Size(629, 106);
+			this.ApplyVisualEffectBtn.Size = new System.Drawing.Size(627, 106);
 			this.ApplyVisualEffectBtn.TabIndex = 17;
 			this.ApplyVisualEffectBtn.Text = "应用视觉效果";
 			this.ApplyVisualEffectBtn.UseVisualStyleBackColor = true;
@@ -23991,10 +23992,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ConvertMusicBeatsBtn.CommandLink = true;
 			this.ConvertMusicBeatsBtn.CommandLinkNote = "将指定的音乐的节拍在四四拍、四三拍、八六拍等之间进行转换。\r\n必须恰好选择 1 个音频轨道剪辑，不得多选或少选。";
 			this.ConvertMusicBeatsBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ConvertMusicBeatsBtn.Location = new System.Drawing.Point(2, 962);
+			this.ConvertMusicBeatsBtn.Location = new System.Drawing.Point(3, 962);
 			this.ConvertMusicBeatsBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.ConvertMusicBeatsBtn.Name = "ConvertMusicBeatsBtn";
-			this.ConvertMusicBeatsBtn.Size = new System.Drawing.Size(629, 106);
+			this.ConvertMusicBeatsBtn.Size = new System.Drawing.Size(627, 106);
 			this.ConvertMusicBeatsBtn.TabIndex = 18;
 			this.ConvertMusicBeatsBtn.Text = "转换音乐节拍";
 			this.ConvertMusicBeatsBtn.UseVisualStyleBackColor = true;
@@ -24005,10 +24006,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CustomFadeGainBtn.CommandLink = true;
 			this.CustomFadeGainBtn.CommandLinkNote = "将多个轨道剪辑根据指定的规则来更改增益值。\r\n已选中 0 个轨道剪辑。";
 			this.CustomFadeGainBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CustomFadeGainBtn.Location = new System.Drawing.Point(2, 1072);
+			this.CustomFadeGainBtn.Location = new System.Drawing.Point(3, 1072);
 			this.CustomFadeGainBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.CustomFadeGainBtn.Name = "CustomFadeGainBtn";
-			this.CustomFadeGainBtn.Size = new System.Drawing.Size(629, 106);
+			this.CustomFadeGainBtn.Size = new System.Drawing.Size(627, 106);
 			this.CustomFadeGainBtn.TabIndex = 19;
 			this.CustomFadeGainBtn.Text = "自定渐入增益";
 			this.CustomFadeGainBtn.UseVisualStyleBackColor = true;
@@ -24035,10 +24036,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HelperLbl.AutoSize = true;
 			this.HelperLbl.Dock = System.Windows.Forms.DockStyle.Top;
 			this.HelperLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.HelperLbl.Location = new System.Drawing.Point(3, 0);
+			this.HelperLbl.Location = new System.Drawing.Point(4, 0);
+			this.HelperLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.HelperLbl.Name = "HelperLbl";
 			this.HelperLbl.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-			this.HelperLbl.Size = new System.Drawing.Size(627, 25);
+			this.HelperLbl.Size = new System.Drawing.Size(625, 25);
 			this.HelperLbl.TabIndex = 2;
 			this.HelperLbl.Text = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。";
 			//
@@ -24163,6 +24165,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.AutoPopDelay = 60000;
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
+			//
+			// DatamoshInfoLbl
+			//
+			this.DatamoshInfoLbl.AutoSize = true;
+			this.DatamoshInfoLbl.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshInfoLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.DatamoshInfoLbl.Location = new System.Drawing.Point(3, 3);
+			this.DatamoshInfoLbl.Name = "DatamoshInfoLbl";
+			this.DatamoshInfoLbl.Padding = new System.Windows.Forms.Padding(3, 6, 3, 0);
+			this.DatamoshInfoLbl.Size = new System.Drawing.Size(345, 26);
+			this.DatamoshInfoLbl.TabIndex = 10;
+			this.DatamoshInfoLbl.Text = "数据抹失是一种磨损素材以产生故障效果的技术。";
 			//
 			// ConfigForm
 			//
@@ -24834,6 +24848,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public CommandLinkButton CustomFadeGainBtn;
 		public System.Windows.Forms.CheckBox AudioMultitrackForChordsCheck;
 		public System.Windows.Forms.Label DatamoshClipsFolderInfo;
+		public System.Windows.Forms.Label DatamoshInfoLbl;
 	}
 	#endregion
 
@@ -24968,7 +24983,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			previewAudioTimer.Tick += PreviewAudioTimer_Tick;
 			#endregion
 
-			#region Datamosh
+			#region 数据抹失
 			Path internalPath = new Path(ScriptPath);
 			internalPath.UpOneLevel();
 			internalPath.Add("_internal");
@@ -25538,7 +25553,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			LanguageBackup = Language;
 			if (result == DialogResult.No) {
 				Translate();
-				this.Invalidate();
+				Invalidate();
 			}
 			else Close();
 		}
@@ -25547,7 +25562,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Lang str = Lang.str;
 			TrackLegatoMenu.Font = menu.Font = QuickConfigMidiChannelsMenu.Font = Font = new Font(str.ui_font, 9F);
 			WarningInfoLabel.Font = new Font(str.info_label_font, 11F, FontStyle.Bold);
-			Label[] infoLabels = { SheetConfigInfoLabel, YtpLbl, HelperLbl, DatamoshClipsFolderInfo };
+			Label[] infoLabels = { SheetConfigInfoLabel, YtpLbl, HelperLbl, DatamoshInfoLbl };
 			foreach (Label label in infoLabels)
 				label.Font = new Font(str.info_label_font, 9F);
 			latestVersionToolStripMenuItemInBar.Font = stretchLegatoTracksToolStripMenuItem.Font = new Font(str.ui_font, 9F, FontStyle.Bold);
@@ -25906,6 +25921,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			CloseAfterOpenMoshCheck.Text = str.close_after_open_helper;
 			DownloadDatamoshLink.Text = str.datamosh_install;
 			MoshTab.Text = str.mosh;
+			DatamoshInfoLbl.Text = str.datamosh_info;
 			DatamoshClipsFolderButton.Text = str.browse;
 			DatamoshClipsFolderGroup.Text = str.datamosh_clips_folder;
 			DatamoshNotInstalledInfo.Text = str.datamosh_not_installed_info;
@@ -28217,21 +28233,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			helper_info = "以下功能只是一些独立的辅助功能，与其它生成音视频的参数无关。",
 			helper_info_warning = "注意：操作之后将会关闭本对话框，您可以稍后再重新打开，部分您未保存的更改可能会丢失！",
 			close_after_open_helper = "操作完成之后关闭本对话框",
-			mosh = "混乱",
-			datamosh_clips_folder = "Datamosh 片段目录",
-			datamosh_not_installed_info = "未安装 Datamosh 扩展包，下载后方可使用全部功能。",
+			mosh = "抹失",
+			datamosh_clips_folder = "数据抹失片段目录",
+			datamosh_not_installed_info = "未安装数据抹失扩展包，下载后方可使用全部功能。",
 			datamosh_install = "下载扩展包",
-			datamosh_no_clips_folder_info = "请先指定一个用于存放生成的 Datamosh 片段的文件夹。",
-			datamosh = "数据混乱",
-			datamix = "数据混入",
-			layering = "叠叠乐",
-			render = "渲染",
-			scramble = "打乱",
-			automator = "自动化",
-			stutter = "口吃",
-			datamosh_configform_info = "快速自动地对视频选中区域进行数据混乱。",
-			datamix_configform_info = "快速自动地对视频选中区域进行数据混乱（将一个剪辑混入另一个剪辑）。",
-			layering_configform_info = "快速自动地对选中剪辑进行多层叠加。",
+			datamosh_no_clips_folder_info = "请先指定一个用于存放生成的数据抹失片段的文件夹。",
+			datamosh_info = "锘挎藪琚沬妷是一种磨损素材以产生故障效果的技术。",
+			datamosh = "数据抹失",
+			datamix = "数据抹拭",
+			layering = "多层叠放",
+			render = "预渲染化",
+			scramble = "随意打乱",
+			automator = "自动流程",
+			stutter = "结结巴巴",
+			datamosh_configform_info = "快速自动地对视频选中区域进行数据抹失。",
+			datamix_configform_info = "快速自动地对视频选中区域进行数据抹失（将一个剪辑抹入另一个剪辑）。",
+			layering_configform_info = "快速自动地对选中剪辑进行多层叠放。",
 			render_configform_info = "快速自动地对视频选中区域进行渲染。",
 			scramble_configform_info = "快速自动地对选中剪辑进行打乱。",
 			automator_configform_info = "快速自动地为选中视频效果设定随机值。",
@@ -28879,6 +28896,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				datamosh_not_installed_info = "The Datamosh extension pack is not installed and will not be available for full features until it is downloaded.",
 				datamosh_install = "Download the expansion pack",
 				datamosh_no_clips_folder_info = "Please select a folder to put generated datamoshed clips into.",
+				datamosh_info = "Datą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍mo̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́sh is a technique of damaging clips to create glitchy effects.",
 				datamosh = "Datamosh",
 				datamix = "Datamix",
 				layering = "Layer",
@@ -29529,21 +29547,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info = "以下功能只是一些獨立的協助工具，與其它生成音視訊的參數無關。",
 				helper_info_warning = "注意：操作之後將會關閉本對話方塊，您可以稍後再重新啟動，部分您未儲存的更改可能會遺失！\n",
 				close_after_open_helper = "操作完成之後關閉本對話方塊",
-				mosh = "混亂",
-				datamosh_clips_folder = "Datamosh 片段目錄",
-				datamosh_not_installed_info = "未安裝 Datamosh 擴展包，下載後方可使用全部功能",
+				mosh = "抹失",
+				datamosh_clips_folder = "數據抹失片段目錄",
+				datamosh_not_installed_info = "未安裝數據抹失擴展包，下載後方可使用全部功能",
 				datamosh_install = "下載擴展包",
-				datamosh_no_clips_folder_info = "請先指定一個用於存放生成的 Datamosh 片段的資料夾。",
-				datamosh = "數據混亂",
-				datamix = "數據混入",
-				layering = "疊疊樂",
-				render = "渲染",
-				scramble = "打亂",
-				automator = "自動化",
-				stutter = "口吃",
-				datamosh_configform_info = "快速自動地對視訊選中區域進行數據混亂。",
-				datamix_configform_info = "快速自動地對視訊選中區域進行數據混亂（將一個剪輯混入另一個剪輯）。",
-				layering_configform_info = "快速自動地對選中剪輯進行多層疊加。",
+				datamosh_no_clips_folder_info = "請先指定一個用於存放生成的數據抹失片段的資料夾。",
+				datamosh_info = "嚜踵藪璩沬妷是一種磨損素材以產生故障效果的技術。",
+				datamosh = "數據抹失",
+				datamix = "數據抹拭",
+				layering = "多層疊放",
+				render = "預渲染化",
+				scramble = "隨意打亂",
+				automator = "自動流程",
+				stutter = "結結巴巴",
+				datamosh_configform_info = "快速自動地對視訊選中區域進行數據抹失。",
+				datamix_configform_info = "快速自動地對視訊選中區域進行數據抹失（將一個剪輯抹入另一個剪輯）。",
+				layering_configform_info = "快速自動地對選中剪輯進行多層疊放。",
 				render_configform_info = "快速自動地對視訊選中區域進行渲染。",
 				scramble_configform_info = "快速自動地對選中剪輯進行打亂。",
 				automator_configform_info = "快速自動地為選中視訊效果設定隨機值。",
@@ -30186,10 +30205,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info_warning = "注：このダイアログボックスは操作後に閉じられます。後で再度開くことができ、保存されていない変更の一部が失われる可能性があります。\n",
 				close_after_open_helper = "操作後にこのダイアログを閉じます",
 				mosh = "モッシュ",
-				datamosh_clips_folder = "Datamosh クリップ フォルダー",
-				datamosh_not_installed_info = "Datamosh拡張パックはインストールされていないため、ダウンロードするまではフル機能を利用することはできません。",
+				datamosh_clips_folder = "データモッシュ クリップ フォルダー",
+				datamosh_not_installed_info = "データモッシュ拡張パックはインストールされていないため、ダウンロードするまではフル機能を利用することはできません。",
 				datamosh_install = "拡張パックをダウンロードする",
-				datamosh_no_clips_folder_info = "生成されたDatamoshクリップを格納するフォルダを選択してください。",
+				datamosh_no_clips_folder_info = "生成されたデータモッシュクリップを格納するフォルダを選択してください。",
+				datamosh_info = "縺ﾃﾞ繧ｰﾀ繝ﾓ譌ｯ縲｢ｼ譛ｭ･はクリップに損傷を与えてグリッチ効果を作成する技術です。",
 				datamosh = "データモッシュ",
 				datamix = "データミックス",
 				layering = "レイヤー",
@@ -30197,8 +30217,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scramble = "スクランブル",
 				automator = "オートメーター",
 				stutter = "吃音",
-				datamosh_configform_info = "ビデオ選択領域に自動的にDatamoshを実行します。",
-				datamix_configform_info = "ビデオ選択領域に自動的にDatamoshを実行します（1つのクリップを別のクリップに混ぜます）。",
+				datamosh_configform_info = "ビデオ選択領域に自動的にデータモッシュを実行します。",
+				datamix_configform_info = "ビデオ選択領域に自動的にデータモッシュを実行します（1つのクリップを別のクリップに混ぜます）。",
 				layering_configform_info = "ビデオの一部にマルチレイヤを自動的に行います。",
 				render_configform_info = "ビデオ選択領域を自動的にレンダリングします。",
 				scramble_configform_info = "スクランブルを自動的にクリップを選択します。",
@@ -30842,10 +30862,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info_warning = "Примечание: это диалоговое окно будет закрыто после операции, вы можете открыть его позже, и некоторые несохраненные изменения могут быть потеряны!\n",
 				close_after_open_helper = "Закрыть диалог после завершения операции",
 				mosh = "Мош",
-				datamosh_clips_folder = "Папка клипов Datamosh",
-				datamosh_not_installed_info = "Пакет расширения Datamosh не установлен и не будет доступен для полных функций, пока он не будет загружен.",
+				datamosh_clips_folder = "Папка клипов датамош",
+				datamosh_not_installed_info = "Пакет расширения датамош не установлен и не будет доступен для полных функций, пока он не будет загружен.",
 				datamosh_install = "Скачать пакет расширения",
-				datamosh_no_clips_folder_info = "Пожалуйста, выберите папку, в которую будут помещены созданные клипы Datamosh.",
+				datamosh_no_clips_folder_info = "Пожалуйста, выберите папку, в которую будут помещены созданные клипы датамош.",
+				datamosh_info = "дⷶⷢтⷶмⷪш҄҉ — это метод повреждения клипов для создания глючных эффектов.",
 				datamosh = "Датамош",
 				datamix = "Датамикс",
 				layering = "Слой",
