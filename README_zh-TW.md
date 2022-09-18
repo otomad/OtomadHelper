@@ -19,7 +19,7 @@
 
 YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
-數據抹失的相關功能參考自 [vegas-datamosh](https://github.com/delthas/vegas-datamosh)。
+嚜踵藪璩沬妷是一種磨損素材以產生故障效果的技術。數據抹失的相關功能參考自 [vegas-datamosh](https://github.com/delthas/vegas-datamosh)。
 
 **姊妹專案：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 

@@ -19,7 +19,7 @@ YTP・ソナー効果を作成することも可能です。将来的には歌�
 
 YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 
-データモッシュの関連機能は [vegas-datamosh](https://github.com/delthas/vegas-datamosh) から参照。
+縺ﾃﾞ繧ｰﾀ繝ﾓ譌ｯ縲｢ｼ譛ｭ･はクリップに損傷を与えてグリッチ効果を作成する技術です。データモッシュの関連機能は [vegas-datamosh](https://github.com/delthas/vegas-datamosh) から参照。
 
 **姉妹プロジェクト：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 

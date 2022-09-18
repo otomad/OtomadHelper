@@ -19,7 +19,7 @@
 
 YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 
-数据抹失的相关功能参考自 [vegas-datamosh](https://github.com/delthas/vegas-datamosh)。
+锘挎藪琚沬妷是一种磨损素材以产生故障效果的技术。数据抹失的相关功能参考自 [vegas-datamosh](https://github.com/delthas/vegas-datamosh)。
 
 **姊妹项目：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 
