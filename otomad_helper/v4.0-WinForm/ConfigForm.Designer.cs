@@ -428,6 +428,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshNotInstalledTable = new System.Windows.Forms.TableLayoutPanel();
 			this.DatamoshNotInstalledInfo = new System.Windows.Forms.Label();
 			this.DownloadDatamoshLink = new System.Windows.Forms.LinkLabel();
+			this.DatamoshInfoLbl = new System.Windows.Forms.Label();
 			this.HelperTab = new System.Windows.Forms.TabPage();
 			this.toolsTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.CloseAfterOpenHelperCheck = new System.Windows.Forms.CheckBox();
@@ -470,7 +471,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.DatamoshInfoLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).BeginInit();
@@ -4455,9 +4455,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "垂直翻转",
             "逆时针翻转",
             "顺时针翻转",
+            "水平翻转保持",
+            "水平翻转中继",
             "逆时针旋转",
             "顺时针旋转",
             "颠倒",
+            "缩小后放大",
             "水平镜像",
             "垂直镜像",
             "逆时针镜像",
@@ -7035,6 +7038,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DownloadDatamoshLink.TabStop = true;
 			this.DownloadDatamoshLink.Text = "下载扩展包";
 			// 
+			// DatamoshInfoLbl
+			// 
+			this.DatamoshInfoLbl.AutoSize = true;
+			this.DatamoshInfoLbl.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshInfoLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.DatamoshInfoLbl.Location = new System.Drawing.Point(3, 3);
+			this.DatamoshInfoLbl.Name = "DatamoshInfoLbl";
+			this.DatamoshInfoLbl.Padding = new System.Windows.Forms.Padding(3, 6, 3, 0);
+			this.DatamoshInfoLbl.Size = new System.Drawing.Size(345, 26);
+			this.DatamoshInfoLbl.TabIndex = 10;
+			this.DatamoshInfoLbl.Text = "数据抹失是一种磨损素材以产生故障效果的技术。";
+			// 
 			// HelperTab
 			// 
 			this.HelperTab.AutoScroll = true;
@@ -7567,18 +7582,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.AutoPopDelay = 60000;
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
-			// 
-			// DatamoshInfoLbl
-			// 
-			this.DatamoshInfoLbl.AutoSize = true;
-			this.DatamoshInfoLbl.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshInfoLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.DatamoshInfoLbl.Location = new System.Drawing.Point(3, 3);
-			this.DatamoshInfoLbl.Name = "DatamoshInfoLbl";
-			this.DatamoshInfoLbl.Padding = new System.Windows.Forms.Padding(3, 6, 3, 0);
-			this.DatamoshInfoLbl.Size = new System.Drawing.Size(345, 26);
-			this.DatamoshInfoLbl.TabIndex = 10;
-			this.DatamoshInfoLbl.Text = "数据抹失是一种磨损素材以产生故障效果的技术。";
 			// 
 			// ConfigForm
 			// 

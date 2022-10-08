@@ -102,9 +102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 21, 18, 0);
+		public static readonly Version VERSION = new Version(4, 22, 8, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 9, 18);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 10, 8);
 
 		// 配置参数变量
 		#region 视频属性
@@ -621,7 +621,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				this.videoReverse = videoReverse;
 			}
 			public override bool Equals(object obj) {
-				if (object.ReferenceEquals(this, obj)) return true;
+				if (ReferenceEquals(this, obj)) return true;
 				if (obj == null || !(obj is EventSet)) return false;
 				EventSet other = obj as EventSet;
 				return other.audioEvent == audioEvent && other.videoEvent == videoEvent;
@@ -1014,7 +1014,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		/// <summary>
-		/// 生成音声 Music Anime Dōga / YouTube Poop Music Video。
+		/// 生成音系 Music Anime Dōga / YouTube Poop Music Video。
 		/// </summary>
 		/// <returns>是否成功生成。</returns>
 		private bool GenerateOtomad() {
@@ -1072,10 +1072,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			double lastStartTime = -1;
 			bool multitrack = SheetConfig || VConfigMultitrackForChords;
 			bool sonarMode = currentChannel.IsDrumKit && SonarConfig;
-			if (VConfig && !multitrack && !sonarMode) vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, startIndex + tTrackCount++, name));
-			else if (multitrack) {
-				vTracks = new VideoTrack[MAX_VIDEO_TRACK_SIZE];
-				anims = new PvVisualEffect[MAX_VIDEO_TRACK_SIZE];
+			if (VConfig) {
+				if (!multitrack && !sonarMode) {
+					vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, startIndex + tTrackCount++, name));
+				} else if (multitrack) {
+					vTracks = new VideoTrack[MAX_VIDEO_TRACK_SIZE];
+					anims = new PvVisualEffect[MAX_VIDEO_TRACK_SIZE];
+				}
 			}
 			#endregion
 
@@ -1367,6 +1370,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						}
 					VideoTrack _vTrack = !multitrack ? vTrack : vTracks[trackPointer];
 					PvVisualEffect anim = !multitrack ? anime : anims[trackPointer];
+					bool pitchHold = anim.EqualsLastPitch(pitch);
 					VideoEvent videoEvent;
 					if (!IsFromSelectedClip) {
 						videoEvent = _vTrack.AddVideoEvent(
@@ -1645,6 +1649,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (anim.IsRadialBlur) if (Plugin.radialBlur != null) Plugin.ForVideoEvents.RadialBlur(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.radial_blur)); return false; }
 			if (anim.VerticalExpansion != null) if (Plugin.picInPic != null) Plugin.ForVideoEvents.Expansion(videoEvent, anim.VerticalExpansion); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
 			if (anim.TimeClass2 != null) Plugin.ForVideoEvents.TimeClass2(videoEvent, anim.TimeClass2);
+			if (anim.IsZoomOutIn) if (Plugin.picInPic != null) Plugin.ForVideoEvents.ZoomOutIn(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
 			return true;
 		}
 
@@ -3170,6 +3175,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static void ReserveSystemMenuItems(this IntPtr hWnd, SystemMenuItemType items) {
 			DeleteSystemMenuItems(hWnd, ~items);
 		}
+		/// <summary>
+		/// 对集合填充某个固定值。
+		/// </summary>
+		/// <typeparam name="T">任意类型。</typeparam>
+		/// <typeparam name="L">集合的类型。</typeparam>
+		/// <param name="array">某种集合。</param>
+		/// <param name="item">要填充的固定值。</param>
+		/// <returns>返回原集合。</returns>
+		public static L Fill<T, L>(this L array, T item) where L : IList<T> {
+			for (int i = 0; i < array.Count; i++)
+				array[i] = item;
+			return array;
+		}
 	}
 
 	public static class SystemMenuItemTag {
@@ -3420,9 +3438,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		V_FLIP,
 		CCW_FLIP,
 		CW_FLIP,
+		H_FLIP_SUSTAIN,
+		H_FLIP_RELAY,
 		CCW_ROTATE,
 		CW_ROTATE,
 		TURNED,
+		ZOOM_OUT_IN,
 		H_MIRROR,
 		V_MIRROR,
 		CCW_MIRROR,
@@ -3465,9 +3486,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					new string[] { str.effect_init_forward, str.effect_init_turned },
 					new string[] { "0°", "-90°", "-180°", "-270°" },
 					new string[] { "0°", "90°", "180°", "270°" },
+					new string[] { str.effect_init_forward, str.effect_init_reversed },
+					new string[] { str.effect_init_forward, str.effect_init_reversed },
 					new string[] { "0°", "-90°", "-180°", "-270°" },
 					new string[] { "0°", "90°", "180°", "270°" },
 					new string[] { str.effect_init_forward, str.effect_init_turned },
+					new string[] { str.effect_init_zoom_out },
 					new string[] { str.effect_init_left, str.effect_init_right },
 					new string[] { str.effect_init_up, str.effect_init_down },
 					new string[] { str.effect_init_left_up, str.effect_init_left_down, str.effect_init_right_down, str.effect_init_right_up },
@@ -3503,8 +3527,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			get {
 				Lang str = Lang.str;
 				return new Dictionary<string, PvVisualEffectType[]> {
-					{ str.flip_class, new PvVisualEffectType[] { PvVisualEffectType.H_FLIP, PvVisualEffectType.V_FLIP, PvVisualEffectType.CCW_FLIP, PvVisualEffectType.CW_FLIP } },
+					{ str.flip_class, new PvVisualEffectType[] { PvVisualEffectType.H_FLIP, PvVisualEffectType.V_FLIP, PvVisualEffectType.CCW_FLIP, PvVisualEffectType.CW_FLIP, PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_RELAY } },
 					{ str.rotation_class, new PvVisualEffectType[] { PvVisualEffectType.CCW_ROTATE, PvVisualEffectType.CW_ROTATE, PvVisualEffectType.TURNED } },
+					{ str.scale_class, new PvVisualEffectType[] { PvVisualEffectType.ZOOM_OUT_IN } },
 					{ str.mirror_class, new PvVisualEffectType[] { PvVisualEffectType.H_MIRROR, PvVisualEffectType.V_MIRROR, PvVisualEffectType.CCW_MIRROR, PvVisualEffectType.CW_MIRROR } },
 					{ str.invert_class, new PvVisualEffectType[] { PvVisualEffectType.NEGATIVE, PvVisualEffectType.LUMIN_INVERT } },
 					{ str.hue_class, new PvVisualEffectType[] { PvVisualEffectType.HUE_INVERT, PvVisualEffectType.STEP_3_CHANGE_HUE, PvVisualEffectType.STEP_4_CHANGE_HUE, PvVisualEffectType.STEP_5_CHANGE_HUE, PvVisualEffectType.STEP_6_CHANGE_HUE, PvVisualEffectType.STEP_7_CHANGE_HUE, PvVisualEffectType.STEP_8_CHANGE_HUE } },
@@ -3521,6 +3546,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public readonly PrveValues fxes;
 		private int[] steps;
 		private int[] durations;
+		private int lastPitch = -1; // Double.NaN ???
+		private bool isPitchHold = false;
+		private bool isUsing = false;
 
 		private bool horizontalFlip = false;
 		private bool verticalFlip = false;
@@ -3551,9 +3579,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public int PuyoShape { get { return puyoShape; } }
 		public bool IsGaussianBlur { get { return fxes.HasEffect(PvVisualEffectType.GAUSSIAN_BLUR); } }
 		public bool IsRadialBlur { get { return fxes.HasEffect(PvVisualEffectType.RADIAL_BLUR); } }
+		public bool IsZoomOutIn { get { return fxes.HasEffect(PvVisualEffectType.ZOOM_OUT_IN); } }
 		public PvVisualEffectType? VerticalExpansion { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND); } }
 		public bool RequirePicInPicDeformEffects { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.PUYO_PUYO) != null; } }
 		public PvVisualEffectType? TimeClass2 { get { return GetFirstEffectInRange(PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD); } }
+		public bool IsPitchHoldEffects { get { return GetFirstEffectInRange(PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_RELAY) != null; } }
 
 		public PvVisualEffect(PvVisualEffectType fx, int initStep = 0) : this(new PrveValue(fx, initStep)) { }
 		public PvVisualEffect(PrveValue fx) : this(new PrveValues { fx }) { }
@@ -3566,7 +3596,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				steps[i] = fx.Initial;
 				durations[i] = InitialValues[(int)fx.Effect].Length;
 			}
-			Update();
+			if (!IsPitchHoldEffects) Update();
 		}
 		private void NextStep() {
 			for (int i = 0; i < steps.Length; i++)
@@ -3576,10 +3606,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// 下一步节奏视觉效果。
 		/// </summary>
 		public void Next() {
+			if (IsPitchHoldEffects) return;
 			NextStep();
 			Update();
 		}
+		private void PitchHoldNext() {
+			if (!isPitchHold && isUsing) NextStep();
+			Update();
+		}
 		private void Update() {
+			isUsing = true;
 			for (int i = 0; i < fxes.Count; i++) {
 				PvVisualEffectType fx = fxes[i].Effect;
 				int step = steps[i], duration = durations[i];
@@ -3591,6 +3627,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						break;
 					case PvVisualEffectType.V_FLIP:
 						verticalFlip = step == 1;
+						break;
+					case PvVisualEffectType.H_FLIP_SUSTAIN:
+					case PvVisualEffectType.H_FLIP_RELAY:
+						if (!isPitchHold) {
+							horizontalFlip = step == 1;
+							verticalFlip = false;
+						} else if (fx == PvVisualEffectType.H_FLIP_RELAY)
+							verticalFlip = !verticalFlip;
 						break;
 					case PvVisualEffectType.NEGATIVE:
 						isNegative = step == 1;
@@ -3666,6 +3710,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					return fx;
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// 判断给定的音高值是否与上一次音高值相等。同时将给定的音高值自动设为上一次音高值。
+		/// </summary>
+		/// <param name="pitch">给定的音高值。</param>
+		/// <returns>给定的音高值是否与上一次音高值相等。</returns>
+		public bool EqualsLastPitch(int pitch) {
+			isPitchHold = lastPitch == pitch;
+			lastPitch = pitch;
+			if (IsPitchHoldEffects) PitchHoldNext();
+			return isPitchHold;
 		}
 	}
 
@@ -4325,6 +4381,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					velocity.Points.Add(new EnvelopePoint(videoEvent.Length.Multiply(_percent), start, CurveType.Sharp));
 					velocity.Points.Add(new EnvelopePoint(videoEvent.Length, value, CurveType.Sharp));
 				}
+			}
+			/// <summary>
+			/// 应用缩小后放大效果。
+			/// </summary>
+			/// <param name="videoEvent">视频事件。</param>
+			public static void ZoomOutIn(VideoEvent videoEvent) {
+				Effect effect = videoEvent.Effects.AddEffect(picInPic);
+				OFXDoubleParameter scale = effect.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter;
+				scale.IsAnimated = true;
+				const double MAX_SIZE_VALUE = 10;
+				scale.SetValueAtTime(Timecode.FromMilliseconds(0), MAX_SIZE_VALUE);
+				scale.SetValueAtTime(videoEvent.Length.Multiply(0.5), 1);
+				scale.SetValueAtTime(videoEvent.Length, MAX_SIZE_VALUE);
+				OFXKeyframes<double, OFXDoubleKeyframe> keys = scale.Keyframes;
+				if (keys.Count >= 3) { // 防止关键帧过少问题。
+					keys[0].Interpolation = OFXInterpolationType.Fast;
+					keys[1].Interpolation = OFXInterpolationType.Slow;
+				}
+				effect.OFXEffect.AllParametersChanged();
 			}
 		}
 
@@ -5258,7 +5333,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// <summary>
 			/// 没有在项目媒体中选择任何媒体报错。
 			/// </summary>
-			public NoSelectedClipException() : base(Lang.str.no_selected_clip_exception + Lang.str.no_selected_exception_ps) { }
+			public NoSelectedClipException(bool @short = false) : base(
+				@short ? Lang.str.no_selected_clip_exception_short :
+				Lang.str.no_selected_clip_exception + Lang.str.no_selected_exception_ps
+				) { }
 		}
 		public class NoTimeStretchPitchShiftException : Exception {
 			/// <summary>
@@ -5313,6 +5391,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// 未知异常。
 			/// </summary>
 			public UnknownException() : base(Lang.str.unknown_exception) { }
+
+			/// <summary>
+			/// 带消息的未知异常。
+			/// </summary>
+			/// <param name="e">异常对象。</param>
+			public UnknownException(Exception e) : base(Lang.str.unexpected_exception + e.Message) { }
 		}
 
 		public class UsePicInPicOnUnsupportedVegasException : Exception {
@@ -5350,6 +5434,149 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// 使用不合法的映射力度参数。
 			/// </summary>
 			public InvalidMappingVelocityValuesException() : base(Lang.str.invalid_mapping_velocity_values_exception) { }
+		}
+
+		public class CannotGetScriptDirException : Exception {
+			/// <summary>
+			/// 无法获取脚本路径。
+			/// </summary>
+			public CannotGetScriptDirException() : base(Lang.str.cannot_get_script_dir_exception) { }
+		}
+
+		public class CannotGetXvidPathException : Exception {
+			/// <summary>
+			/// 无法获取 XviD 路径。
+			/// </summary>
+			public CannotGetXvidPathException() : base(Lang.str.cannot_get_xvid_path_exception) { }
+		}
+
+		public class InstallXvidAdminFailed : Exception {
+			/// <summary>
+			/// 安装 XviD 时获取管理员权限失败。
+			/// </summary>
+			public InstallXvidAdminFailed() : base(Lang.str.install_xvid_admin_failed) { }
+		}
+
+		public class UnexpectedRenderStatus : Exception {
+			/// <summary>
+			/// 非预期的渲染状态。
+			/// </summary>
+			/// <param name="status">渲染状态命令的返回值枚举。</param>
+			public UnexpectedRenderStatus(RenderStatus status) : base(
+				status == RenderStatus.Canceled ? Lang.str.canceled : Lang.str.unexpected_render_status + status
+				) { }
+		}
+
+		public class DatamixSelectionPositionException : Exception {
+			/// <summary>
+			/// 数据抹拭选区位置错误。
+			/// </summary>
+			public DatamixSelectionPositionException() : base(Lang.str.datamix_selection_position_exception) { }
+		}
+
+		public class DatamixSelectionLengthException : Exception {
+			/// <summary>
+			/// 数据抹拭选区长度错误。
+			/// </summary>
+			public DatamixSelectionLengthException() : base(Lang.str.datamix_selection_length_exception) { }
+		}
+
+		public class DatamoshFramesRepeatsException : Exception {
+			/// <summary>
+			/// 数据抹失重复次数参数错误。
+			/// </summary>
+			public DatamoshFramesRepeatsException() : base(Lang.str.datamosh_frames_repeats_exception) { }
+		}
+
+		public class DatamoshSelectionLengthException : Exception {
+			/// <summary>
+			/// 数据抹失选区长度错误。
+			/// </summary>
+			public DatamoshSelectionLengthException() : base(Lang.str.datamosh_selection_length_exception) { }
+		}
+
+		public class DatamoshSelectionPositionException : Exception {
+			/// <summary>
+			/// 数据抹失选区位置错误。
+			/// </summary>
+			public DatamoshSelectionPositionException() : base(Lang.str.datamosh_selection_position_exception) { }
+		}
+
+		public class NoTrackFoundException : Exception {
+			/// <summary>
+			/// 未找到轨道错误。
+			/// </summary>
+			public NoTrackFoundException() : base(Lang.str.no_track_found_exception) { }
+		}
+
+		public class ExcessivelyVideoEventsSelectedException : Exception {
+			/// <summary>
+			/// 选取视频事件数目过多。
+			/// </summary>
+			public ExcessivelyVideoEventsSelectedException() : base(Lang.str.excessively_video_events_selected_exception) { }
+		}
+
+		public class NoVideoEventSelectedException : Exception {
+			/// <summary>
+			/// 未选取视频事件。
+			/// </summary>
+			public NoVideoEventSelectedException() : base(Lang.str.no_video_event_selected_exception) { }
+		}
+
+		public class NoOfxEffectsIncludedException : Exception {
+			/// <summary>
+			/// 没有可操作的效果。
+			/// </summary>
+			public NoOfxEffectsIncludedException() : base(Lang.str.no_ofx_effects_included_exception) { }
+		}
+
+		public class LayeringOffsetException : Exception {
+			/// <summary>
+			/// 多层叠放分层偏移参数错误。
+			/// </summary>
+			public LayeringOffsetException() : base(Lang.str.layering_offset_exception) { }
+		}
+
+		public class LayeringCountException : Exception {
+			/// <summary>
+			/// 多层叠放层数参数错误。
+			/// </summary>
+			public LayeringCountException() : base(Lang.str.layering_count_exception) { }
+		}
+
+		public class ScrambleSizeException : Exception {
+			/// <summary>
+			/// 随意打乱扰乱大小参数错误。
+			/// </summary>
+			public ScrambleSizeException() : base(Lang.str.scramble_size_exception) { }
+		}
+
+		public class StutterLengthException : Exception {
+			/// <summary>
+			/// 结结巴巴长度参数错误。
+			/// </summary>
+			public StutterLengthException() : base(Lang.str.stutter_length_exception) { }
+		}
+
+		public class StutterWindowBiasException : Exception {
+			/// <summary>
+			/// 结结巴巴窗口偏移参数错误。
+			/// </summary>
+			public StutterWindowBiasException() : base(Lang.str.stutter_window_bias_exception) { }
+		}
+
+		public class RenderTemplateFrameRateException : Exception {
+			/// <summary>
+			/// 渲染模板帧率参数错误。
+			/// </summary>
+			public RenderTemplateFrameRateException() : base(Lang.str.render_template_frame_rate_exception) { }
+		}
+
+		public class AppdataNotSetException : IOException {
+			/// <summary>
+			/// 无法获取 AppData 路径。
+			/// </summary>
+			public AppdataNotSetException() : base(Lang.str.appdata_not_set_exception) { }
 		}
 	}
 
@@ -5723,6 +5950,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	}
 	#endregion
 
+	#region 数据抹失
 	namespace Datamosh {
 		/// <summary>
 		/// Author: delthas<br />
@@ -5753,7 +5981,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
 					if (scriptDirectory == null) {
-						MessageBox.Show("Couldn't get script directory path!");
+						EntryPoint.ShowError(new Exceptions.CannotGetScriptDirException());
 						return false;
 					}
 					_scriptDirectory = scriptDirectory;
@@ -5763,13 +5991,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						xvidPath = Environment.GetEnvironmentVariable("ProgramFiles");
 					}
 					if (string.IsNullOrEmpty(xvidPath)) {
-						MessageBox.Show("Couldn't get Xvid install path!");
+						EntryPoint.ShowError(new Exceptions.CannotGetXvidPathException());
 						return false;
 					}
 					xvidPath += @"\Xvid\uninstall.exe";
 					if (!File.Exists(xvidPath)) {
-						MessageBox.Show(
-							"Xvid codec not installed. The script will install it now and may ask for admin access to install it.");
+						const string XVID_TITLE = "XviD";
+						if (MessageBox.Show(Lang.str.install_xvid_info, XVID_TITLE, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel)
+							return false;
 						var xvid = new Process {
 								StartInfo = {
 								UseShellExecute = true,
@@ -5785,17 +6014,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							xvid.Start();
 						} catch (Win32Exception e) {
 							if (e.NativeErrorCode == 1223) {
-								MessageBox.Show("Admin privilege for Xvid installation refused.");
+								EntryPoint.ShowError(new Exceptions.InstallXvidAdminFailed(), ShowErrorState.SILENCE);
 								return false;
 							}
-							throw;
+							throw e;
 						}
 
 						xvid.WaitForExit();
 						GetStandardTemplates(vegas);
 						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(
-							"Xvid installed and render template generated for the current frame rate. Please restart Vegas and run the script again.");
+						MessageBox.Show(Lang.str.install_xvid_succeed, XVID_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Information);
 						return false;
 					}
 
@@ -5803,13 +6031,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (template == null) {
 						GetStandardTemplates(vegas);
 						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(
-							"Render template generated for the current frame rate. Please restart Vegas and run the script again.");
+						MessageBox.Show(Lang.str.render_template_generate_completed, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 						return false;
 					}
 					_template = template;
 				} catch (Exception e) {
-					MessageBox.Show("Unexpected exception: " + e.Message);
+					EntryPoint.ShowError(new Exceptions.UnknownException(e), e);
 					Debug.WriteLine(e);
 					return false;
 				}
@@ -5833,7 +6060,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 					var scriptDirectory = System.IO.Path.GetDirectoryName(Script.File);
 					if (scriptDirectory == null) {
-						MessageBox.Show("Couldn't get script directory path!");
+						EntryPoint.ShowError(new Exceptions.CannotGetScriptDirException());
 						return false;
 					}
 					_scriptDirectory = scriptDirectory;
@@ -5842,13 +6069,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (template == null) {
 						GetStandardTemplates(vegas);
 						GetTemplate(vegas, frameRateInt);
-						MessageBox.Show(
-							"Render template generated for the current frame rate. Please restart Vegas and run the script again.");
+						MessageBox.Show(Lang.str.render_template_generate_completed, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 						return false;
 					}
 					_template = template;
 				} catch (Exception e) {
-					MessageBox.Show("Unexpected exception: " + e.Message);
+					EntryPoint.ShowError(new Exceptions.UnknownException(e), e);
 					Debug.WriteLine(e);
 					return false;
 				}
@@ -5886,7 +6112,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					.Select(ev => ev.First())
 					.ToList();
 
-				var parameterEnabled = new HashSet<Tuple<string, string>>();
+				if (events.Count == 0) {
+					EntryPoint.ShowError(new Exceptions.NoVideoEventSelectedException(), ShowErrorState.SILENCE);
+					return;
+				}
+				if (effects.Count == 0) {
+					EntryPoint.ShowError(new Exceptions.NoOfxEffectsIncludedException(), ShowErrorState.SILENCE);
+					return;
+				}
+
+				ParameterDataList parameters = new ParameterDataList();
 
 				foreach (var effect in effects) {
 					foreach (var parameter in effect.Parameters) {
@@ -5913,22 +6148,30 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						var renderChecked = (string)Registry.GetValue(Template.DataPath, "Automate_" + hashed, "");
 						var defaultCheck = renderChecked != "False";
 
-						var prompt = new Form {
+						parameters.Add(new ParameterData {
+							key = key,
+							hashed = hashed,
+							defaultCheck = defaultCheck,
+							effectName = effect.Label,
+							paramName = parameter.Name,
+						});
+
+						/*var prompt = new Form {
 							Width = 300,
 							Height = 170,
-							Text = "Automator Parameters",
+							Text = Lang.str.automator_parameters,
 							KeyPreview = true,
 						};
 						Template.OptimizePrompt(prompt, ImageBase64.AutomatorIcon);
 						var textLabel = new Label { Left = 10, Top = 10, Width = 280, Text = key, AutoSize = true };
-						var textLabel2 = new Label { Left = 80, Top = 45, Text = "Scramble", AutoSize = true };
+						var textLabel2 = new Label { Left = 80, Top = 45, Text = Lang.str.scramble, AutoSize = true };
 						var inputBox = new CheckBox {
 							Left = 200,
 							Top = 40,
 							Width = 240,
 							Checked = defaultCheck
 						};
-						var confirmation = new Button { Text = "OK", Left = 110, Width = 100, Top = 75 };
+						var confirmation = new Button { Text = Lang.str.ok, Left = 110, Width = 100, Top = 75 };
 						confirmation.Click += (sender, e) => {
 							prompt.DialogResult = DialogResult.OK;
 							prompt.Close();
@@ -5960,12 +6203,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 						if (inputBox.Checked) {
 							parameterEnabled.Add(new Tuple<string, string>(effect.Label, parameter.Name));
-						}
+						}*/
 					}
 				}
 
-				if (parameterEnabled.Count == 0) {
-					return;
+				var prompt = new AutomatorForm(parameters);
+				var _parameterEnabled = prompt.ShowDialog();
+				if (_parameterEnabled == null || _parameterEnabled.Count == 0) return;
+				var parameterEnabled = _parameterEnabled.GetTuples();
+
+				foreach (var param in parameters) {
+					bool check = _parameterEnabled.Contains(param);
+					if (param.defaultCheck != check) {
+						Registry.SetValue(Template.DataPath, "Automate_" + param.hashed, check.ToString(), RegistryValueKind.String);
+					}
 				}
 
 				foreach (var ev in events) {
@@ -6051,6 +6302,49 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 				}
 			}
+
+			/// <summary>
+			/// 自动流程的参数数据类。
+			/// </summary>
+			public class ParameterData {
+				/// <summary>
+				/// 效果参数显示名称。
+				/// </summary>
+				public string key;
+				/// <summary>
+				/// 效果参数哈希值。
+				/// </summary>
+				public string hashed;
+				/// <summary>
+				/// 效果名。
+				/// </summary>
+				public string effectName;
+				/// <summary>
+				/// 参数名。
+				/// </summary>
+				public string paramName;
+				/// <summary>
+				/// 是否默认勾选。
+				/// </summary>
+				public bool defaultCheck;
+
+				public override string ToString() { return key; }
+			}
+
+			/// <summary>
+			/// 自动流程的参数数据类列表。
+			/// </summary>
+			public class ParameterDataList : List<ParameterData> {
+				public ParameterDataList() : base() { }
+				public ParameterDataList(IEnumerable<ParameterData> collection) : base(collection) { }
+
+				public HashSet<Tuple<string, string>> GetTuples() {
+					var hashSet = new HashSet<Tuple<string, string>>();
+					foreach (ParameterData item in this)
+						hashSet.Add(new Tuple<string, string>(item.effectName, item.paramName));
+					return hashSet;
+				}
+			}
 		}
 
 		/// <summary>
@@ -6060,7 +6354,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			private void Encode(Vegas vegas, string scriptDirectory, RenderArgs renderArgs, string pathEncoded) {
 				var status = vegas.Render(renderArgs);
 				if (status != RenderStatus.Complete) {
-					MessageBox.Show("Unexpected render status: " + status);
+					EntryPoint.ShowError(new Exceptions.UnexpectedRenderStatus(status), ShowErrorState.SILENCE);
 					return;
 				}
 
@@ -6094,11 +6388,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				var length = vegas.Transport.LoopRegionLength;
 
 				if (start.FrameCount == 0) {
-					MessageBox.Show("Selection must start at frame >= 1!");
+					EntryPoint.ShowError(new Exceptions.DatamixSelectionPositionException(), ShowErrorState.SILENCE);
 					return;
 				}
 				if (length.FrameCount <= 1) {
-					MessageBox.Show("Selection length must be > 1 frame!");
+					EntryPoint.ShowError(new Exceptions.DatamixSelectionLengthException(), ShowErrorState.SILENCE);
 					return;
 				}
 
@@ -6116,13 +6410,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 
 					if (videoTrack == null) {
-						MessageBox.Show("No track found!");
+						EntryPoint.ShowError(new Exceptions.NoTrackFoundException(), ShowErrorState.SILENCE);
 						return;
 					}
 
 					var finalFolder = (string)Registry.GetValue(Template.DataPath, "ClipFolder", "");
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
-						MessageBox.Show("Please select a folder to put generated datamoshed clips into.");
+						MessageBox.Show(Lang.str.datamosh_no_clips_folder_info, Lang.str.datamix, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 						return;
 					}
 
@@ -6193,7 +6487,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					var videoEvent = videoTrack.AddVideoEvent(start, Timecode.FromFrames(length.FrameCount - 1));
 					videoEvent.AddTake(media.GetVideoStreamByIndex(0));
 				} catch (Exception e) {
-					MessageBox.Show("Unexpected exception: " + e.Message);
+					EntryPoint.ShowError(new Exceptions.UnknownException(e), e);
 					Debug.WriteLine(e);
 				}
 			}
@@ -6228,13 +6522,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					var prompt = new Form {
 						Width = 500,
 						Height = 160,
-						Text = "Datamoshing Parameters",
+						Text = Lang.str.datamoshing_parameters,
 					};
 					Template.OptimizePrompt(prompt, ImageBase64.DatamoshIcon);
-					var textLabel = new Label { Left = 10, Top = 10, Text = "Frame count", AutoSize = true };
+					var textLabel = new Label { Left = 10, Top = 10, Text = Lang.str.frame_count, AutoSize = true };
 					var inputBox =
 						new NumericUpDown { Left = 200, Top = 10, Width = 200, Minimum = 1, Maximum = 1000000000, Value = defaultCount };
-					var textLabel2 = new Label { Left = 10, Top = 40, Text = "Frames repeats", AutoSize = true };
+					var textLabel2 = new Label { Left = 10, Top = 40, Text = Lang.str.frames_repeats, AutoSize = true };
 					var inputBox2 = new NumericUpDown {
 						Left = 200,
 						Top = 40,
@@ -6244,7 +6538,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						Maximum = 1000000000,
 						Text = ""
 					};
-					var confirmation = new Button { Text = "OK", Left = 200, Width = 100, Top = 70 };
+					var confirmation = new Button { Text = Lang.str.ok, Left = 200, Width = 100, Top = 70 };
 					confirmation.Click += (sender, e) => { prompt.DialogResult = DialogResult.OK; prompt.Close(); };
 					prompt.Controls.Add(confirmation);
 					prompt.Controls.Add(textLabel);
@@ -6260,17 +6554,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					var repeat = (int)inputBox2.Value;
 
 					if (repeat <= 0) {
-						MessageBox.Show("Frames repeats must be > 0!");
+						EntryPoint.ShowError(new Exceptions.DatamoshFramesRepeatsException(), ShowErrorState.SILENCE);
 						return;
 					}
 
 					if (length.FrameCount < size) {
-						MessageBox.Show("The selection must be as long as the frame count!");
+						EntryPoint.ShowError(new Exceptions.DatamoshSelectionLengthException(), ShowErrorState.SILENCE);
 						return;
 					}
 
 					if (start.FrameCount < 1) {
-						MessageBox.Show("The selection mustn't start on the first frame of the project!");
+						EntryPoint.ShowError(new Exceptions.DatamoshSelectionPositionException(), ShowErrorState.SILENCE);
 						return;
 					}
 
@@ -6295,13 +6589,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 
 					if (videoTrack == null && audioTrack == null) {
-						MessageBox.Show("No tracks found!");
+						EntryPoint.ShowError(new Exceptions.NoTrackFoundException(), ShowErrorState.SILENCE);
 						return;
 					}
 
 					var finalFolder = (string)Registry.GetValue(Template.DataPath, "ClipFolder", "");
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
-						MessageBox.Show("Please select a folder to put generated datamoshed clips into.");
+						MessageBox.Show(Lang.str.datamosh_no_clips_folder_info, Lang.str.datamosh, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 						return;
 					}
 
@@ -6325,7 +6619,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					};
 					var status = vegas.Render(renderArgs);
 					if (status != RenderStatus.Complete) {
-						MessageBox.Show("Unexpected render status: " + status);
+						EntryPoint.ShowError(new Exceptions.UnexpectedRenderStatus(status), ShowErrorState.SILENCE);
 						return;
 					}
 
@@ -6410,7 +6704,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						group.Add(audioEvent);
 					}
 				} catch (Exception e) {
-					MessageBox.Show("Unexpected exception: " + e.Message);
+					EntryPoint.ShowError(new Exceptions.UnknownException(e), e);
 					Debug.WriteLine(e);
 				}
 			}
@@ -6432,7 +6726,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						if (!trackEvent.Selected)
 							continue;
 						if (videoEvent != null) {
-							MessageBox.Show("Only a single video event can be selected!");
+							EntryPoint.ShowError(new Exceptions.ExcessivelyVideoEventsSelectedException(), ShowErrorState.SILENCE);
 							return;
 						}
 
@@ -6443,7 +6737,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 
 				if (videoEvent == null) {
-					MessageBox.Show("Select a video event to be layered!");
+					EntryPoint.ShowError(new Exceptions.NoVideoEventSelectedException(), ShowErrorState.SILENCE);
 					return;
 				}
 
@@ -6470,11 +6764,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					var prompt = new Form {
 						Width = 500,
 						Height = 190,
-						Text = "Layering Parameters",
+						Text = Lang.str.layering_parameters,
 						KeyPreview = true,
 					};
 					Template.OptimizePrompt(prompt, ImageBase64.LayerIcon);
-					var textLabel = new Label { Left = 10, Top = 10, Text = "Layer count", AutoSize = true };
+					var textLabel = new Label { Left = 10, Top = 10, Text = Lang.str.layer_count, AutoSize = true };
 					var inputBox = new NumericUpDown {
 						Left = 200,
 						Top = 10,
@@ -6483,17 +6777,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						Maximum = 1000000000,
 						Value = defaultCount
 					};
-					var textLabel2 = new Label { Left = 10, Top = 40, Text = "Layering offset", AutoSize = true };
+					var textLabel2 = new Label { Left = 10, Top = 40, Text = Lang.str.layering_offset, AutoSize = true };
 					var inputBox2 =
 						new NumericUpDown { Left = 200, Top = 40, Width = 200, Minimum = -1000000000, Maximum = 1000000000, Text = "" };
-					var textLabel3 = new Label { Left = 10, Top = 70, Text = "Render", AutoSize = true };
+					var textLabel3 = new Label { Left = 10, Top = 70, Text = Lang.str.rendering, AutoSize = true };
 					var inputBox3 = new CheckBox {
 						Left = 200,
 						Top = 70,
 						Width = 200,
 						Checked = defaultCheck
 					};
-					var confirmation = new Button { Text = "OK", Left = 200, Width = 100, Top = 100 };
+					var confirmation = new Button { Text = Lang.str.ok, Left = 200, Width = 100, Top = 100 };
 					confirmation.Click += (sender, e) => {
 						prompt.DialogResult = DialogResult.OK;
 						prompt.Close();
@@ -6522,12 +6816,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					var render = inputBox3.Checked;
 
 					if (offset == 0) {
-						MessageBox.Show("Layering offset must not be 0!");
+						EntryPoint.ShowError(new Exceptions.LayeringOffsetException(), ShowErrorState.SILENCE);
 						return;
 					}
 
 					if (count <= 0) {
-						MessageBox.Show("Layer count must be > 0!");
+						EntryPoint.ShowError(new Exceptions.LayeringCountException(), ShowErrorState.SILENCE);
 						return;
 					}
 
@@ -6569,7 +6863,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
 						MessageBox.Show("Select the folder to put generated layered clips into.\n" +
 							"(As they are stored uncompressed with alpha, they can take a lot of space (think 1 GB/minute). " +
-							"Choose a location with a lot of available space and go remove some clips there if you need space.)");
+							"Choose a location with a lot of available space and go remove some clips there if you need space.)", Lang.str.layering, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 						return;
 					}
 
@@ -6586,7 +6880,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					};
 					var status = vegas.Render(renderArgs);
 					if (status != RenderStatus.Complete) {
-						MessageBox.Show("Unexpected render status: " + status);
+						EntryPoint.ShowError(new Exceptions.UnexpectedRenderStatus(status), ShowErrorState.SILENCE);
 						return;
 					}
 
@@ -6607,7 +6901,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						vegas.Project.Tracks.Remove(newTrack);
 					}
 				} catch (Exception e) {
-					MessageBox.Show("Unexpected exception: " + e.Message);
+					EntryPoint.ShowError(new Exceptions.UnknownException(e), e);
 					Debug.WriteLine(e);
 				}
 			}
@@ -6643,7 +6937,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 
 					if (videoTrack == null && audioTrack == null) {
-						MessageBox.Show("No tracks found!");
+						EntryPoint.ShowError(new Exceptions.NoTrackFoundException(), ShowErrorState.SILENCE);
 						return;
 					}
 
@@ -6651,7 +6945,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (string.IsNullOrEmpty(finalFolder) || !Directory.Exists(finalFolder)) {
 						MessageBox.Show("Select the folder to put generated rendered clips into.\n" +
 							"(As they are stored uncompressed with alpha, they can take a lot of space (think 1 GB/minute). " +
-							"Choose a location with a lot of available space and go remove some clips there if you need space.)");
+							"Choose a location with a lot of available space and go remove some clips there if you need space.)", Lang.str.rendering, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 						return;
 					}
 
@@ -6666,7 +6960,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					};
 					var status = vegas.Render(renderArgs);
 					if (status != RenderStatus.Complete) {
-						MessageBox.Show("Unexpected render status: " + status);
+						EntryPoint.ShowError(new Exceptions.UnexpectedRenderStatus(status), ShowErrorState.SILENCE);
 						return;
 					}
 
@@ -6697,7 +6991,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 
 				} catch (Exception e) {
-					MessageBox.Show("Unexpected exception: " + e.Message);
+					EntryPoint.ShowError(new Exceptions.UnknownException(e), e);
 					Debug.WriteLine(e);
 				}
 			}
@@ -6724,10 +7018,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				var prompt = new Form {
 					Width = 500,
 					Height = 130,
-					Text = "Scrambling Parameters",
+					Text = Lang.str.scrambling_parameters,
 				};
 				Template.OptimizePrompt(prompt, ImageBase64.ScrambleIcon);
-				var textLabel = new Label { Left = 10, Top = 10, Text = "Scramble size", AutoSize = true };
+				var textLabel = new Label { Left = 10, Top = 10, Text = Lang.str.scramble_size, AutoSize = true };
 				var inputBox = new NumericUpDown {
 					Left = 200,
 					Top = 10,
@@ -6736,7 +7030,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					Maximum = 1000000000,
 					Text = ""
 				};
-				var confirmation = new Button { Text = "OK", Left = 200, Width = 100, Top = 40 };
+				var confirmation = new Button { Text = Lang.str.ok, Left = 200, Width = 100, Top = 40 };
 				confirmation.Click += (sender, e) => {
 					prompt.DialogResult = DialogResult.OK;
 					prompt.Close();
@@ -6753,7 +7047,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				var size = (int)inputBox.Value;
 
 				if (size <= 0) {
-					MessageBox.Show("Scrambling size must be > 0!");
+					EntryPoint.ShowError(new Exceptions.ScrambleSizeException(), ShowErrorState.SILENCE);
 					return;
 				}
 
@@ -6793,7 +7087,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						}
 					}
 				} catch (Exception e) {
-					MessageBox.Show("Unexpected exception: " + e.Message);
+					EntryPoint.ShowError(new Exceptions.UnknownException(e), e);
 					Debug.WriteLine(e);
 				}
 			}
@@ -6821,16 +7115,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					.Select(grp => grp.ToList())
 					.ToList();
 				if (events.Count == 0) {
+					EntryPoint.ShowError(new Exceptions.NoSelectedClipException(true), ShowErrorState.SILENCE);
 					return;
 				}
 
 				var prompt = new Form {
 					Width = 500,
 					Height = 160,
-					Text = "Stutter Parameters",
+					Text = Lang.str.stutter_parameters,
 				};
 				Template.OptimizePrompt(prompt, ImageBase64.ScrambleIcon);
-				var lengthLabel = new Label { Left = 10, Top = 10, Text = "Length in seconds", AutoSize = true };
+				var lengthLabel = new Label { Left = 10, Top = 10, Text = Lang.str.length_in_seconds, AutoSize = true };
 				var lengthInput = new NumericUpDown {
 					Left = 200,
 					Top = 10,
@@ -6839,7 +7134,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					Maximum = 10000,
 					Text = ""
 				};
-				var powLabel = new Label { Left = 10, Top = 40, Text = "Stutter window bias", AutoSize = true };
+				var powLabel = new Label { Left = 10, Top = 40, Text = Lang.str.stutter_window_bias, AutoSize = true };
 				var powInput = new NumericUpDown {
 					Left = 200,
 					Top = 40,
@@ -6848,7 +7143,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					Maximum = 100,
 					Text = "1.2"
 				};
-				var confirmation = new Button { Text = "OK", Left = 200, Width = 100, Top = 70 };
+				var confirmation = new Button { Text = Lang.str.ok, Left = 200, Width = 100, Top = 70 };
 				confirmation.Click += (sender, e) => {
 					prompt.DialogResult = DialogResult.OK;
 					prompt.Close();
@@ -6866,12 +7161,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 				var size = (int)((double)lengthInput.Value * vegas.Project.Video.FrameRate);
 				if (size <= 0) {
-					MessageBox.Show("Length must be > 0!");
+					EntryPoint.ShowError(new Exceptions.StutterLengthException(), ShowErrorState.SILENCE);
 					return;
 				}
 				var power = (double)powInput.Value;
 				if (power <= 0) {
-					MessageBox.Show("Window bias must be > 0!");
+					EntryPoint.ShowError(new Exceptions.StutterWindowBiasException(), ShowErrorState.SILENCE);
 					return;
 				}
 
@@ -6891,10 +7186,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 								goto outer;
 							}
 							if (evt.ActiveTake.Media.FilePath == null) {
-								MessageBox.Show("Stutter cannot automatically generate reverse clips for media generated from media generators (text, ...). Please create their reverse clips by reversing them and reversing them back, or render to a file first (for example using the Render script).");
+								MessageBox.Show(Lang.str.stutter_generator_media_info, Lang.str.stutter, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 								return;
 							}
-							reverseClips.Add(new Subclip(evt.ActiveTake.Media.FilePath, Timecode.FromFrames(0), evt.ActiveTake.Media.Length, true, evt.ActiveTake.Media.Title + " (reversed)"));
+							reverseClips.Add(new Subclip(evt.ActiveTake.Media.FilePath, Timecode.FromFrames(0), evt.ActiveTake.Media.Length, true, evt.ActiveTake.Media.Title + Lang.str.reverse_suffix_tag));
 						outer:
 							;
 						}
@@ -6938,7 +7233,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						}
 					}
 				} catch (Exception e) {
-					MessageBox.Show("Unexpected exception: " + e.Message);
+					EntryPoint.ShowError(new Exceptions.UnknownException(e), e);
 					Debug.WriteLine(e);
 				}
 			}
@@ -6954,7 +7249,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			public static RenderTemplate GetTemplate(Vegas vegas, int frameRate, Mode mode) {
 				if (frameRate >= 100 * 1000) {
-					throw new ArgumentException("Frame rate must be < 100!");
+					EntryPoint.ShowError(new Exceptions.RenderTemplateFrameRateException(), ShowErrorState.SILENCE);
 				}
 
 				var frameString = (frameRate / 1000).ToString("00") + "." + (frameRate % 1000).ToString("000");
@@ -6966,10 +7261,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 				var appData = Environment.GetEnvironmentVariable("APPDATA");
 				if (appData == null) {
-					throw new IOException("APPDATA not set!");
+					throw new Exceptions.AppdataNotSetException();
 				}
 
-				var folder = System.IO.Path.Combine(appData, "Sony", "Render Templates", "avi");
+				var folder = System.IO.Path.Combine(appData, "Sony", "Render Templates", "avi"); // TODO: Sony? MAGIX?
 				Directory.CreateDirectory(folder);
 				var file = System.IO.Path.Combine(folder, name + ".sft2");
 				if (File.Exists(file)) {
@@ -7084,11 +7379,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				prompt.ShowIcon = true;
 				prompt.Icon = ImageBase64.GetIcon(iconBase64);
 				prompt.StartPosition = FormStartPosition.Manual;
-				prompt.Location = new Point(60, 60);
+				prompt.Location = new Point(240, 240);
 				prompt.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			}
 		}
 	}
+	#endregion
 
 	#region 其它自定义控件部分
 	partial class IntegerTrackWithBox {
@@ -14439,7 +14735,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				foreach (TrackEvent trackEvent in track.Events)
 					if (trackEvent is VideoEvent && trackEvent.Selected) {
 						VideoEvent videoEvent = trackEvent as VideoEvent;
-						if (!parent.ApplyPvRhythmVisualEffect(videoEvent, anim)) return;
+						if (!parent.ApplyPvRhythmVisualEffect(videoEvent, anim)) return; // 选中的是视频，怎么能检测保持音调？
 						anim.Next();
 					}
 			}
@@ -14466,10 +14762,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public override string ToString() { return displayValue; }
 		public string DisplayValue { get { return displayValue; } }
 		public bool HasEffect(PvVisualEffectType effect) {
-			foreach (PrveValue value in this)
-				if (value.Effect == effect)
-					return true;
-			return false;
+			return this.Select(value => value.Effect).Contains(effect);
 		}
 	}
 
@@ -16100,10 +16393,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							}
 						}
 
-						ijl = new IJL();
-						ijl.i = i;
-						ijl.j = j;
-						ijl.len = 1;
+						ijl = new IJL {
+							i = i,
+							j = j,
+							len = 1
+						};
 						lastColor = c;
 					}
 				}
@@ -16595,6 +16889,193 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 		}
 	}
+
+	partial class AutomatorForm {
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
+
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing) {
+			if (disposing && (components != null)) {
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		#region Windows Form Designer generated code
+
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent() {
+			this.dock = new System.Windows.Forms.TableLayoutPanel();
+			this.OkBtn = new System.Windows.Forms.Button();
+			this.CancelBtn = new System.Windows.Forms.Button();
+			this.AutomatorInfo = new System.Windows.Forms.Label();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.ParamsList = new System.Windows.Forms.CheckedListBox();
+			this.dock.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
+			this.SuspendLayout();
+			//
+			// dock
+			//
+			this.dock.BackColor = System.Drawing.SystemColors.Control;
+			this.dock.ColumnCount = 3;
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.dock.Controls.Add(this.OkBtn, 1, 0);
+			this.dock.Controls.Add(this.CancelBtn, 2, 0);
+			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.dock.Location = new System.Drawing.Point(0, 501);
+			this.dock.Margin = new System.Windows.Forms.Padding(5);
+			this.dock.Name = "dock";
+			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.dock.RowCount = 1;
+			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.dock.Size = new System.Drawing.Size(532, 52);
+			this.dock.TabIndex = 8;
+			//
+			// OkBtn
+			//
+			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.OkBtn.Location = new System.Drawing.Point(324, 10);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.OkBtn.Name = "OkBtn";
+			this.OkBtn.Size = new System.Drawing.Size(94, 32);
+			this.OkBtn.TabIndex = 1;
+			this.OkBtn.Text = "确定(&O)";
+			this.OkBtn.UseVisualStyleBackColor = true;
+			//
+			// CancelBtn
+			//
+			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.CancelBtn.Location = new System.Drawing.Point(426, 10);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.CancelBtn.Name = "CancelBtn";
+			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
+			this.CancelBtn.TabIndex = 2;
+			this.CancelBtn.Text = "取消(&C)";
+			this.CancelBtn.UseVisualStyleBackColor = true;
+			//
+			// AutomatorInfo
+			//
+			this.AutomatorInfo.AutoSize = true;
+			this.AutomatorInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AutomatorInfo.Location = new System.Drawing.Point(12, 18);
+			this.AutomatorInfo.Margin = new System.Windows.Forms.Padding(0, 6, 0, 6);
+			this.AutomatorInfo.Name = "AutomatorInfo";
+			this.AutomatorInfo.Size = new System.Drawing.Size(508, 20);
+			this.AutomatorInfo.TabIndex = 9;
+			this.AutomatorInfo.Text = "勾选需要自动随机设置值的效果参数。";
+			this.AutomatorInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// tableLayoutPanel1
+			//
+			this.tableLayoutPanel1.ColumnCount = 1;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.Controls.Add(this.AutomatorInfo, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.ParamsList, 0, 1);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(12);
+			this.tableLayoutPanel1.RowCount = 2;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(532, 501);
+			this.tableLayoutPanel1.TabIndex = 10;
+			//
+			// ParamsList
+			//
+			this.ParamsList.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.ParamsList.CheckOnClick = true;
+			this.ParamsList.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ParamsList.FormattingEnabled = true;
+			this.ParamsList.Location = new System.Drawing.Point(15, 47);
+			this.ParamsList.Name = "ParamsList";
+			this.ParamsList.Size = new System.Drawing.Size(502, 439);
+			this.ParamsList.TabIndex = 10;
+			//
+			// AutomatorForm
+			//
+			this.AcceptButton = this.OkBtn;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.BackColor = System.Drawing.SystemColors.Window;
+			this.CancelButton = this.CancelBtn;
+			this.ClientSize = new System.Drawing.Size(532, 553);
+			this.Controls.Add(this.tableLayoutPanel1);
+			this.Controls.Add(this.dock);
+			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.Location = new System.Drawing.Point(60, 60);
+			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(550, 600);
+			this.Name = "AutomatorForm";
+			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+			this.Text = "自动流程 - 参数";
+			this.dock.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
+			this.ResumeLayout(false);
+
+		}
+
+		#endregion
+
+		public System.Windows.Forms.TableLayoutPanel dock;
+		public System.Windows.Forms.Button OkBtn;
+		public System.Windows.Forms.Button CancelBtn;
+		private System.Windows.Forms.Label AutomatorInfo;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.CheckedListBox ParamsList;
+	}
+
+	public partial class AutomatorForm : Form, IInterpret {
+		private Datamosh.Automator.ParameterDataList parameters;
+		public Datamosh.Automator.ParameterDataList CheckedParams { get { return parameters; } }
+
+		public AutomatorForm(Datamosh.Automator.ParameterDataList parameters) {
+			InitializeComponent();
+			Icon = ImageBase64.GetIcon(ImageBase64.AutomatorIcon);
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
+			Translate();
+			this.parameters = parameters;
+			InitItems();
+		}
+
+		private void InitItems() {
+			ParamsList.Items.AddRange(parameters.ToArray());
+			for (int i = 0; i < parameters.Count; i++)
+				ParamsList.SetItemChecked(i, parameters[i].defaultCheck);
+		}
+
+		public void Translate() {
+			Lang str = Lang.str;
+			Font = new Font(str.ui_font, 9F);
+			OkBtn.Text = str.ok;
+			CancelBtn.Text = str.cancel;
+			AutomatorInfo.Text = str.automator_info;
+			Text = str.automator_parameters;
+		}
+
+		public new Datamosh.Automator.ParameterDataList ShowDialog() {
+			if (base.ShowDialog() != DialogResult.OK) return null;
+			return new Datamosh.Automator.ParameterDataList(ParamsList.CheckedItems.Cast<Datamosh.Automator.ParameterData>());
+		}
+	}
 	#endregion
 
 	#region 设计器部分
@@ -17026,6 +17507,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshNotInstalledTable = new System.Windows.Forms.TableLayoutPanel();
 			this.DatamoshNotInstalledInfo = new System.Windows.Forms.Label();
 			this.DownloadDatamoshLink = new System.Windows.Forms.LinkLabel();
+			this.DatamoshInfoLbl = new System.Windows.Forms.Label();
 			this.HelperTab = new System.Windows.Forms.TabPage();
 			this.toolsTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.CloseAfterOpenHelperCheck = new System.Windows.Forms.CheckBox();
@@ -17068,7 +17550,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.DatamoshInfoLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).BeginInit();
@@ -21053,9 +21534,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			"垂直翻转",
 			"逆时针翻转",
 			"顺时针翻转",
+			"水平翻转保持",
+			"水平翻转中继",
 			"逆时针旋转",
 			"顺时针旋转",
 			"颠倒",
+			"缩小后放大",
 			"水平镜像",
 			"垂直镜像",
 			"逆时针镜像",
@@ -23633,6 +24117,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DownloadDatamoshLink.TabStop = true;
 			this.DownloadDatamoshLink.Text = "下载扩展包";
 			//
+			// DatamoshInfoLbl
+			//
+			this.DatamoshInfoLbl.AutoSize = true;
+			this.DatamoshInfoLbl.Dock = System.Windows.Forms.DockStyle.Top;
+			this.DatamoshInfoLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
+			this.DatamoshInfoLbl.Location = new System.Drawing.Point(3, 3);
+			this.DatamoshInfoLbl.Name = "DatamoshInfoLbl";
+			this.DatamoshInfoLbl.Padding = new System.Windows.Forms.Padding(3, 6, 3, 0);
+			this.DatamoshInfoLbl.Size = new System.Drawing.Size(345, 26);
+			this.DatamoshInfoLbl.TabIndex = 10;
+			this.DatamoshInfoLbl.Text = "数据抹失是一种磨损素材以产生故障效果的技术。";
+			//
 			// HelperTab
 			//
 			this.HelperTab.AutoScroll = true;
@@ -24165,18 +24661,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.AutoPopDelay = 60000;
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
-			//
-			// DatamoshInfoLbl
-			//
-			this.DatamoshInfoLbl.AutoSize = true;
-			this.DatamoshInfoLbl.Dock = System.Windows.Forms.DockStyle.Top;
-			this.DatamoshInfoLbl.Font = new System.Drawing.Font("微软雅黑", 9F);
-			this.DatamoshInfoLbl.Location = new System.Drawing.Point(3, 3);
-			this.DatamoshInfoLbl.Name = "DatamoshInfoLbl";
-			this.DatamoshInfoLbl.Padding = new System.Windows.Forms.Padding(3, 6, 3, 0);
-			this.DatamoshInfoLbl.Size = new System.Drawing.Size(345, 26);
-			this.DatamoshInfoLbl.TabIndex = 10;
-			this.DatamoshInfoLbl.Text = "数据抹失是一种磨损素材以产生故障效果的技术。";
 			//
 			// ConfigForm
 			//
@@ -25750,7 +26234,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			VideoEffectCombo.Items.AddRange(new string[] {
 				str.no_effects, str.h_flip, str.v_flip,
 				str.ccw_flip, str.cw_flip,
+				str.h_flip_sustain, str.h_flip_relay,
 				str.ccw_rotate, str.cw_rotate, str.turned,
+				str.zoom_out_in,
 				str.h_mirror, str.v_mirror,
 				str.ccw_mirror, str.cw_mirror,
 				str.negative, str.lumin_invert, str.hue_invert,
@@ -25930,14 +26416,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			DatamoshBtn.Text = str.datamosh;
 			DatamixBtn.Text = str.datamix;
 			LayeringBtn.Text = str.layering;
-			RenderingBtn.Text = str.render;
+			RenderingBtn.Text = str.rendering;
 			ScrambleBtn.Text = str.scramble;
 			AutomatorBtn.Text = str.automator;
 			StutterBtn.Text = str.stutter;
 			DatamoshBtn.CommandLinkNote = str.datamosh_configform_info;
 			DatamixBtn.CommandLinkNote = str.datamix_configform_info;
 			LayeringBtn.CommandLinkNote = str.layering_configform_info;
-			RenderingBtn.CommandLinkNote = str.render_configform_info;
+			RenderingBtn.CommandLinkNote = str.rendering_configform_info;
 			ScrambleBtn.CommandLinkNote = str.scramble_configform_info;
 			AutomatorBtn.CommandLinkNote = str.automator_configform_info;
 			StutterBtn.CommandLinkNote = str.stutter_configform_info;
@@ -26417,7 +26903,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			DatamoshBtn.CommandLinkNote = str.datamosh_configform_info;
 			DatamixBtn.CommandLinkNote = str.datamix_configform_info;
 			LayeringBtn.CommandLinkNote = str.layering_configform_info;
-			RenderingBtn.CommandLinkNote = str.render_configform_info;
+			RenderingBtn.CommandLinkNote = str.rendering_configform_info;
 			ScrambleBtn.CommandLinkNote = str.scramble_configform_info;
 			AutomatorBtn.CommandLinkNote = str.automator_configform_info;
 			StutterBtn.CommandLinkNote = str.stutter_configform_info;
@@ -27662,9 +28148,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			check_update_on_startup = "启动时自动检查更新",
 			download_latest_version = "下载最新版本",
 			quick_config = "快速配置",
-			midi_file_name = "MIDI 序列",
+			midi_file_name = "迷笛序列",
 			all_files = "所有文件",
-			choose_a_midi_file = "请选择一个 MIDI 文件",
+			choose_a_midi_file = "请选择一个迷笛文件",
 			media_file_name = "支持的媒体文件",
 			choose_a_source_file = "请选择一个视频或图片素材片段",
 			error = "错误",
@@ -27711,6 +28197,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			effect_init_flat = "扁",
 			effect_init_thin = "细",
 			effect_init_blur = "糊",
+			effect_init_zoom_out = "缩小",
+			effect_init_zoom_in = "放大",
 			enable_all_effects = "开启所有效果",
 			chorus = "合唱",
 			vibrato = "颤音",
@@ -27732,8 +28220,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			yes = "是",
 			no = "否",
 			error_code = "错误代码：",
-			processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
-			processing_ytp = "正在生成 YTP⋯⋯",
+			processing_otomad = "正在生成音 MAD / 油管便视乐⋯⋯",
+			processing_ytp = "正在生成油管便⋯⋯",
 			processing_it = "正在处理它",
 			processing_tracks = "正在生成第 {0} 个轨道，共 {1} 个。通道 {2}{3}⋯⋯",
 			real_time_update = "实时更新当前进度（会减慢生成速度）",
@@ -27869,7 +28357,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			custom_fade_gain = "自定渐入增益",
 			from = "从",
 			to = "至",
-			midi_channel_advanced = "MIDI 轨道高级属性",
+			midi_channel_advanced = "迷笛轨道高级属性",
 			channel = "通道",
 			name = "名称",
 			edit_notes = "编辑所选轨道音符...",
@@ -27886,9 +28374,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			about = "关于(&A)",
 			ok = "确定(&O)",
 			balloon_title = "填写说明",
-			midi_start_second_tooltip = "用于截取 MIDI 音乐的一部分。\n单位：秒。",
-			midi_end_second_tooltip = "此处填写需要读取 MIDI 文件的时间长度。\n注意如果填写的值过小，将截去多余时间部分的音符。\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时长末尾。\n单位：秒。",
-			midi_beat_conbo_tooltip = "目前仅用于五线谱的分页功能。\n暂时无法通过 MIDI 文件自动推测。",
+			midi_start_second_tooltip = "用于截取迷笛音乐的一部分。\n单位：秒。",
+			midi_end_second_tooltip = "此处填写需要读取迷笛文件的时间长度。\n注意如果填写的值过小，将截去多余时间部分的音符。\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时长末尾。\n单位：秒。",
+			midi_beat_conbo_tooltip = "目前仅用于五线谱的分页功能。\n暂时无法通过迷笛文件自动推测。",
 			source_start_time_tooltip = "此处填写媒体素材裁剪的开始时间。\n单位：秒。",
 			source_end_time_tooltip = "注意如果此处填写的数值比入点秒数小或相等，则始终表示持续到素材时间末尾。\n单位：秒。",
 			no_tune = "不调音",
@@ -27954,21 +28442,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			audio = "音频",
 			video = "视频",
 			staff = "五线谱",
-			ytp = "YTP",
+			ytp = "油管便",
 			helper = "工具",
-			midi_settings = "MIDI 属性",
+			midi_settings = "迷笛属性",
 			midi_start_time = "起始秒数",
 			midi_end_time = "终止秒数",
 			bpm_setting = "设定 BPM 速度为",
 			midi_beat = "节拍　　",
-			midi_channel_setting = "使用 MIDI 轨道",
+			midi_channel_setting = "使用迷笛轨道",
 			browse = "浏览...",
 			advanced = "高级...",
 			presets = "预设",
-			no_midi_selected = "<未选择 MIDI 文件>",
-			choose_midi_file = "选择 MIDI 文件",
-			midi_dynamic_midi_bpm = "动态 MIDI 速度",
-			midi_midi_bpm = "MIDI 速度",
+			no_midi_selected = "<未选择迷笛文件>",
+			choose_midi_file = "选择迷笛文件",
+			midi_dynamic_midi_bpm = "动态迷笛速度",
+			midi_midi_bpm = "迷笛速度",
 			midi_project_bpm = "项目速度",
 			midi_custom_bpm = "自定义",
 			dynamic_midi_bpm_info = "{0} 起始的动态速度",
@@ -28046,6 +28534,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			pv_rhythm_visual_effect = "映像节奏视觉效果",
 			flip_class = "翻转类",
 			rotation_class = "旋转类",
+			scale_class = "缩放类",
 			mirror_class = "镜像类",
 			invert_class = "反转类",
 			hue_class = "色相类",
@@ -28060,9 +28549,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			v_flip = "垂直翻转",
 			ccw_flip = "逆时针翻转",
 			cw_flip = "顺时针翻转",
+			h_flip_sustain = "水平翻转保持",
+			h_flip_relay = "水平翻转中继",
 			ccw_rotate = "逆时针旋转",
 			cw_rotate = "顺时针旋转",
 			turned = "颠倒",
+			zoom_out_in = "缩小后放大",
 			h_mirror = "水平镜像",
 			v_mirror = "垂直镜像",
 			ccw_mirror = "逆时针镜像",
@@ -28143,7 +28635,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ytp_high_contrast = "高对比（附加增加音量）",
 			ytp_oversaturation = "过饱和（概率性附加升调效果）",
 			ytp_emphasize_thrice = "重说三（附加放大聚焦效果）",
-			ytp_info = "在当前选项卡下单击“完成”按钮，将会生成 YTP 而不是音 MAD / YTPMV。\n除“生成音频”“生成视频”外其它的参数设置并不会在 YTP 中使用。",
+			ytp_info = "在当前选项卡下单击“完成”按钮，将会生成油管便而不是音 MAD / 油管便视乐。\n除“生成音频”“生成视频”外其它的参数设置并不会在油管便中使用。",
 			video_preset_fade_out = "淡出",
 			flashlight = "闪光",
 			horizontal_movement = "水平移动",
@@ -28205,7 +28697,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			quick_normalize_configform_info = "将选中的多个音频轨道剪辑全部规范化音量。",
 			quick_normalize_complete = "完成规范化音量。",
 			replace_clips_configform_info = "将多个轨道剪辑替换为指定的新轨道剪辑。",
-			auto_layout_tracks_configform_info = "类 YTPMV 风格自动布局选中的轨道。",
+			auto_layout_tracks_configform_info = "类油管便视乐风格自动布局选中的轨道。",
 			change_tune_method_configform_info = "将多个音频轨道剪辑统一更改为指定的调音算法。",
 			batch_subtitle_generation_configform_info = "预先设定好“字幕和文字”的预设，然后在此添加多行文本。",
 			find_clips_configform_info = "根据指定的条件（如剪辑名称、与选中剪辑相同的素材等）选中符合条件的所有轨道剪辑。",
@@ -28242,14 +28734,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			datamosh = "数据抹失",
 			datamix = "数据抹拭",
 			layering = "多层叠放",
-			render = "预渲染化",
+			rendering = "预渲染化",
 			scramble = "随意打乱",
 			automator = "自动流程",
 			stutter = "结结巴巴",
 			datamosh_configform_info = "快速自动地对视频选中区域进行数据抹失。",
 			datamix_configform_info = "快速自动地对视频选中区域进行数据抹失（将一个剪辑抹入另一个剪辑）。",
 			layering_configform_info = "快速自动地对选中剪辑进行多层叠放。",
-			render_configform_info = "快速自动地对视频选中区域进行渲染。",
+			rendering_configform_info = "快速自动地对视频选中区域进行渲染。",
 			scramble_configform_info = "快速自动地对选中剪辑进行打乱。",
 			automator_configform_info = "快速自动地为选中视频效果设定随机值。",
 			stutter_configform_info = "口吃剪辑（向前向后播放）。",
@@ -28265,15 +28757,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			why_ok_btn_is_disabled_info = "请按照下列步骤依次检查问题：",
 			why_ok_btn_is_disabled_no_audio_and_video_enabled = "“生成音频”与“生成视频”被同时取消勾选。请至少勾选生成其中一项。",
 			why_ok_btn_is_disabled_no_media_take = "所选的媒体素材来源不包含任何有效媒体资源。",
-			why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / YTPMV，请先选择一个 MIDI 序列文件。",
-			why_ok_btn_is_disabled_in_helper_tab = "为避免误操作，切勿在“工具”和“混乱”选项卡下进行提交生成操作。",
+			why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / 油管便视乐，请先选择一个迷笛序列文件。",
+			why_ok_btn_is_disabled_in_helper_tab = "为避免误操作，切勿在“工具”和“抹失”选项卡下进行提交生成操作。",
 			why_ok_btn_is_disabled_unknown_problem = "未知原因。",
 			no_selected_media_warning = "警告：您没有在项目媒体窗口中选中任何有效媒体素材！",
 			no_selected_clip_warning = "警告：您没有在轨道窗口中选中任何剪辑片段！",
 			preview_audio_track_name = "预听音频轨道（应该被删除！）",
-			no_midi_exception = "错误：未选择 MIDI 文件。\n\n请重新打开脚本参数配置对话框，然后在“MIDI 属性”分组中点击“浏览”按钮，打开一个有效的 MIDI 文件。",
+			no_midi_exception = "错误：未选择迷笛文件。\n\n请重新打开脚本参数配置对话框，然后在“迷笛属性”分组中点击“浏览”按钮，打开一个有效的迷笛文件。",
 			no_media_exception = "错误：未选择媒体文件。\n\n请重新打开脚本参数配置对话框，然后在“媒体属性”分组中点击“浏览”按钮，打开一个有效的媒体文件。",
-			no_track_info_exception = "错误：没有 MIDI 音轨。\n\n可能的原因：\n1. 您没有选择一个 MIDI 音轨；\n2. 该 MIDI 文件中没有任何音轨；\n3. 该 MIDI 文件已损坏或文件格式不受支持。",
+			no_track_info_exception = "错误：没有迷笛音轨。\n\n可能的原因：\n1. 您没有选择一个迷笛音轨；\n2. 该迷笛文件中没有任何音轨；\n3. 该迷笛文件已损坏或文件格式不受支持。",
 			no_plugin_pitch_shift_exception = "错误：无法调用移调插件。\n\n请按照教程文档 {0} 的指引正确操作。\n不过，根据这个更新版本的脚本，按理应当是中英文版本均可正常运行的。\n因此很有可能您是使用其它语言的 Vegas 造成的（逃",
 			no_plugin_presets_exception = "错误：无法调用移调插件的预设效果。\n\n请按照教程文档 {0} 的指引正确操作。\n确保在移调插件中手动添加了所有的 25 个预设，且命名正确。\n\n补充说明：具体可见上述链接专栏中对于安装方法的说明。这 25 个预设是上下一个八度以内的所有变调种类，\n缺少任何一个都有可能出错。手动添加预设的确非常麻烦，但 Vegas 无法使用脚本来指定变调的具体参数，\n因此只好绕这个弯子。",
 			no_plugin_name_exception = "错误：无法调用{0}插件。\n\n可能您使用的 Vegas 版本不支持该插件。",
@@ -28281,23 +28773,63 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			no_audio_take_exception = "错误：无法读取音频媒体流。\n\n在设置界面，纯视频/图片素材不要勾选“生成音频”。\n\n",
 			no_video_take_exception = "错误：无法读取视频媒体流。\n\n在设置界面，纯音频素材不要勾选“生成视频”。\n\n",
 			no_media_take_exception = "错误：无法读取媒体。\n\n您所选的文件格式不受 Vegas 支持，请检查该媒体文件是否损坏，或未安装对应的 Vegas 解码器。\n\n",
-			not_a_midi_file_exception = "错误：无法读取 MIDI 文件。\n\n解决方法：用宿主软件导入该 MIDI，然后重新输出一个新的 MIDI 文件。\n\n补充说明：MIDI 文件有多种格式，脚本不保证都能够正确读取。所幸主流宿主软件在\n默认设置下导出的 MIDI 文件一般是可以读取的。（目前测试过 FL Studio、LMMS \n与 Music Studio for iPad。）",
+			not_a_midi_file_exception = "错误：无法读取迷笛文件。\n\n解决方法：用宿主软件导入该迷笛，然后重新输出一个新的迷笛文件。\n\n补充说明：迷笛文件有多种格式，脚本不保证都能够正确读取。所幸主流宿主软件在\n默认设置下导出的迷笛文件一般是可以读取的。（目前测试过 FL Studio、LMMS \n与 Music Studio for iPad。）",
 			no_selected_exception_ps = "补充说明：如果您想手动在文件夹中选择一个媒体素材，那么请点击其右边的“浏览”按钮，\n选择一个媒体素材。并确保左侧的下拉菜单中选中的是您所选文件所在的路径。",
 			no_selected_media_exception = "错误：没有在项目媒体窗口中选择任何媒体。\n\n请在项目媒体窗口中选择一个媒体，然后重新打开参数配置窗口，并在素材设置中选择“选中的媒体文件”。\n\n",
+			no_selected_clip_exception_short = "错误：没有在轨道中选择任何剪辑。",
 			no_selected_clip_exception = "错误：没有在轨道中选择任何剪辑。\n\n请在轨道中选择一个剪辑，然后重新打开参数配置窗口，并在素材设置中选择“选中的轨道素材”。\n\n",
 			no_time_stretch_pitch_shift_exception = "错误：选定素材音调转换方法被设置为不调音。\n\n很有可能您使用的是“选中的轨道素材”。出现了这个错误不怪你，要怪就怪 Vegas 这个脑残设计。\n\n解决方法：请重新选中您的轨道素材，右键音频部分，选择底部的“属性”。将“时间拉伸/音调转换”的“方法”设定为“élastique”。\n然后点击确定即可。\n\n补充说明：如果某个音频事件没有进行变调操作，然后打开了它的属性，那么其属性中的“时间拉伸/音调转换”的“方法”会被\n自动修改为“无”，点击确定就会生效。这时你会发现键盘上的 +、- 键调音操作无效了。这时必须重新打开音频事件的属性，\n将“时间拉伸/音调转换”的“方法”设定为“élastique”，不必设置“音调更改”，点击确定即可。",
 			read_config_fail_exception = "错误：读取参数配置文件失败。\n\n很遗憾您遇到了这个不可预见的错误。我们将会清除用户配置设置并恢复为默认值以便解决问题。\n建议将这个错误告诉作者以便快速解决问题。\n将会退出此脚本，然后劳烦阁下手动重新打开此脚本。",
 			fail_to_select_clips_exception = "错误：选取轨道剪辑出错。\n\n请先在轨道窗口中选取部分轨道剪辑。",
 			fail_to_select_tracks_exception = "错误：选取轨道出错。\n\n请先在轨道窗口中选取部分视频轨道。",
-			ytp_over_length_exception = "错误：指定的 YTP 最小长度超过了媒体长度。\n\n指定的 YTP 最小长度过大，请尝试更小的值。或所选媒体素材长度过小。",
-			ytp_in_media_generator_exception = "错误：对媒体生成器产生的媒体应用 YTP。\n\n应用 YTP 必须使用本地媒体文件，不要使用媒体生成器生成的媒体。",
-			ytp_eliminate_duplicates_finally_null_exception = "技术异常：对 YTP 素材列表进行去重操作，最后列表为空了！（雾‽）\n\n这是一个不应该发生的错误。",
+			ytp_over_length_exception = "错误：指定的油管便最小长度超过了媒体长度。\n\n指定的油管便最小长度过大，请尝试更小的值。或所选媒体素材长度过小。",
+			ytp_in_media_generator_exception = "错误：对媒体生成器产生的媒体应用油管便。\n\n应用油管便必须使用本地媒体文件，不要使用媒体生成器生成的媒体。",
+			ytp_eliminate_duplicates_finally_null_exception = "技术异常：对油管便素材列表进行去重操作，最后列表为空了！（雾‽）\n\n这是一个不应该发生的错误。",
 			unknown_exception = "错误：未知异常。\n\n请展开详细信息查看具体错误内容，并将错误信息反馈给作者。",
 			use_pic_in_pic_on_unsupported_vegas_exception = "错误：不支持在低版本 Vegas 中使用该画中画插件的效果。\n\n根本原因：Vegas 在新版本“画中画”效果插件中增加了一些新的功能和参数，这些新参数不能在低版本的 Vegas 插件中使用。\n\n解决方法：在当前 Vegas 版本不能使用该映像节奏视觉效果（如扩缩类等），请使用其它视觉效果。或更新 Vegas 软件。",
 			unsupported_curve_enum_exception = "错误：使用不支持的曲线枚举类型作为参数。\n\n{0} 不是曲线枚举类型。",
 			convert_music_beats_not_one_audio_event_exception = "错误：在转换音乐节拍工具中选择了的音频剪辑数目不恰好等于一个。\n\n应当选择 1 个音频，却选择了 {0} 个音频。",
 			convert_music_beats_unsupported_beats_exception = "错误：当前 Vegas 设定的节拍不是在四四拍、四三拍、八六拍之中的其一。",
-			invalid_mapping_velocity_values_exception = "错误：使用不合法的映射力度参数。\n\n解决方法：确保音频和视频的映射力度参数中，\n1. 较小值不能大于较大值；\n2. “力度”的较小值和较大值不能相等。\n否则将无法完成映射力度的操作。";
+			invalid_mapping_velocity_values_exception = "错误：使用不合法的映射力度参数。\n\n解决方法：确保音频和视频的映射力度参数中，\n1. 较小值不能大于较大值；\n2. “力度”的较小值和较大值不能相等。\n否则将无法完成映射力度的操作。",
+			cannot_get_script_dir_exception = "错误：无法获取脚本目录路径！",
+			cannot_get_xvid_path_exception = "错误：无法获取 XviD 安装路径！",
+			install_xvid_info = "未安装 XviD 编解码器。脚本将立即安装它，并可能会要求管理员权限。",
+			install_xvid_admin_failed = "错误：安装 XviD 时管理员权限被拒绝。",
+			install_xvid_succeed = "XviD 已安装，并为当前帧率生成了渲染模板。请重新启动 Vegas 并再次运行该脚本。",
+			render_template_generate_completed = "已为当前帧速率生成了渲染模板。请重新启动 Vegas 并再次运行该脚本。",
+			unexpected_exception = "未知异常：",
+			unexpected_render_status = "非预期的渲染状态：",
+			datamix_selection_position_exception = "错误：选区必须从大于或等于 1 帧开始！",
+			datamix_selection_length_exception = "错误：选区长度必须大于 1 帧！",
+			datamosh_frames_repeats_exception = "错误：重复次数必须大于 0！",
+			datamosh_selection_length_exception = "错误：选区长度必须与帧数一样长！",
+			datamosh_selection_position_exception = "错误：选区不能从项目的第一帧开始！",
+			no_track_found_exception = "错误：未找到轨道！",
+			excessively_video_events_selected_exception = "错误：只能选择一个视频剪辑！",
+			no_video_event_selected_exception = "错误：请先选择一个视频剪辑！",
+			no_ofx_effects_included_exception = "错误：所选视频剪辑不包含任何效果或效果均不为 OFX 效果！",
+			layering_offset_exception = "错误：层叠偏移不能为 0！",
+			layering_count_exception = "错误：层数必须大于 0！",
+			scramble_size_exception = "错误：打乱大小必须大于 0！",
+			stutter_length_exception = "错误：长度必须大于 0！",
+			stutter_window_bias_exception = "错误：窗口偏移必须大于 0！",
+			render_template_frame_rate_exception = "错误：帧率必须小于 100！",
+			appdata_not_set_exception = "错误：无法获取 AppData 路径！",
+			stutter_generator_media_info = "“结结巴巴”无法自动为媒体生成器生成的媒体生成反向剪辑（如字幕和文字等）。请手动反转它再反转回来从而创建它们的反向剪辑，或者先渲染到文件（例如使用“预渲染化”）。",
+			automator_parameters = "自动流程 - 参数",
+			datamoshing_parameters = "数据抹失 - 参数",
+			layering_parameters = "多层叠放 - 参数",
+			scrambling_parameters = "随意打乱 - 参数",
+			stutter_parameters = "结结巴巴 - 参数",
+			frame_count = "帧数",
+			frames_repeats = "重复次数",
+			layer_count = "层数",
+			layering_offset = "层叠偏移",
+			scramble_size = "打乱大小",
+			length_in_seconds = "长度（秒）",
+			stutter_window_bias = "结巴窗口偏移",
+			canceled = "已取消。",
+			automator_info = "勾选需要自动随机设置值的效果参数。";
 
 		static Lang() {
 			SChinese = new Lang();
@@ -28348,7 +28880,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				add_pitch_shift_presets_fail_title = "Unfortunately",
 				ensure_load_presets = "Are you sure you want to load presets?",
 				ensure_unload_presets = "Are you sure you want to unload presets?",
-				reverse_suffix_tag = "(Reversed)",
+				reverse_suffix_tag = " (Reversed)",
 				effect_init_forward = "Forward",
 				effect_init_reversed = "Reversed",
 				effect_init_turned = "Turned",
@@ -28370,6 +28902,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect_init_flat = "Flat",
 				effect_init_thin = "Thin",
 				effect_init_blur = "Blur",
+				effect_init_zoom_out = "Zoom out",
+				effect_init_zoom_in = "Zoom in",
 				enable_all_effects = "Enable All Effects",
 				chorus = "Chorus",
 				vibrato = "Vibrato",
@@ -28704,6 +29238,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				pv_rhythm_visual_effect = "PV Rhythm Visual Effect",
 				flip_class = "Flip Class",
 				rotation_class = "Rotation Class",
+				scale_class = "Scale Class",
 				mirror_class = "Mirror Class",
 				invert_class = "Invert Class",
 				hue_class = "Hue Class",
@@ -28718,9 +29253,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				v_flip = "Vertical Flip",
 				ccw_flip = "Counterclockwise Flip",
 				cw_flip = "Clockwise Flip",
+				h_flip_sustain = "Horizontal Flip Sustain",
+				h_flip_relay = "Horizontal Flip Relay",
 				ccw_rotate = "Counterclockwise Rotation",
 				cw_rotate = "Clockwise Rotation",
 				turned = "Turned",
+				zoom_out_in = "Zoom Out In",
 				h_mirror = "Horizontal Mirror",
 				v_mirror = "Vertical Mirror",
 				ccw_mirror = "Counterclockwise Mirror",
@@ -28900,14 +29438,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				datamosh = "Datamosh",
 				datamix = "Datamix",
 				layering = "Layer",
-				render = "Render",
+				rendering = "Render",
 				scramble = "Scramble",
 				automator = "Automator",
 				stutter = "Stutter",
 				datamosh_configform_info = "Datamoshes a part of a video quickly and automatically.",
 				datamix_configform_info = "Datamoshes a part of a video quickly and automatically (mosh a clip onto another).",
 				layering_configform_info = "Does multilayering on a part of a video quickly and automatically.",
-				render_configform_info = "Renders a part of a video quickly and automatically.",
+				rendering_configform_info = "Renders a part of a video quickly and automatically.",
 				scramble_configform_info = "Scrambles clips/events quickly and automatically.",
 				automator_configform_info = "Sets random automation values for video effects quickly and automatically.",
 				stutter_configform_info = "Stutters clips/events (play forward, backward, ...).",
@@ -28939,9 +29477,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_audio_take_exception = "Error: Unable to read audio media stream.\n\nIn the setting interface, do not check \"Enabled Audio\" for pure video/picture media.\n\n",
 				no_video_take_exception = "Error: Unable to read the video media stream.\n\nIn the settings user interface, do not check \"Enabled Video\" for pure audio media.\n\n",
 				no_media_take_exception = "Error: Unable to read the media.\n\nThe file format you selected is not supported by Vegas. Please check if the media file is damaged or the corresponding Vegas decoder is not installed.\n\n",
-				not_a_midi_file_exception = "Error: Unable to read MIDI file.\n\nSolution: Import the MIDI with the host software, and then re-output a new MIDI file.\n\nSupplementary note: There are multiple formats of MIDI files, and the script does not guarantee that all of them can be read correctly. Fortunately,\nMIDI files exported by mainstream host software under default settings are generally readable. (Currently tested FL Studio, LMMS\nand Music Studio for iPad.)",
+				not_a_midi_file_exception = "Error: Unable to read MIDI file.\n\nSolution: Import the MIDI with the host software, and then re-output a new MIDI file.\n\nSupplementary note: There are multiple formats of MIDI files, and the script does not guarantee that all of them can be read correctly. Fortunately,\nMIDI files exported by mainstream host software under default settings are generally readable. (Currently tested FL Studio, LMMS \nand Music Studio for iPad.)",
 				no_selected_exception_ps = "Additional note: If you want to manually select a media in the folder, please click the \"Browse\" button on the right to\nselect a media. And make sure that the path of the file you selected is selected in the drop-down menu on the left.",
 				no_selected_media_exception = "Error: No media is selected in the project media window.\n\nPlease select a media in the project media window, then reopen the configuration dialog, and select \"selected media file\" in the source configuration.\n\n",
+				no_selected_clip_exception_short = "Error: No clips are selected in the track.",
 				no_selected_clip_exception = "Error: No clips are selected in the track.\n\nPlease select a clip in the track, then reopen the configuration dialog, and select \"selected track clips\" in the source configuration.\n\n",
 				no_time_stretch_pitch_shift_exception = "Error: The pitch conversion method of the selected clip is set to no tuning.\n\nMost likely you are using \"selected track clips\". You are not to blame for this error, but for the brain-dead design of Vegas.\n\nSolution: Please reselect your track clips, right-click the audio part, and select \"Properties\" at the bottom. Set the \"Method\" of \"Time Stretch/Pitch Conversion\" to \"élastique\".\nThen click OK.\n\nSupplementary note: If an audio event has not been transposed and its properties are opened, then the “Method” of “Time Stretch/Pitch Conversion” in its properties will be\nautomatically modified to “None”, and click OK. Take effect. At this time, you will find that the + and-key tuning operations on the keyboard are invalid. At this time, you must reopen the properties of the audio event,\nset the \"Method\" of \"Time Stretch/Pitch Conversion\" to \"élastique\", you don't need to set \"Pitch Change\", just click OK.",
 				read_config_fail_exception = "Error: Failed to read the parameter configuration file.\n\nUnfortunately you encountered this unforeseen error. We will clear the user configuration settings and restore them to default settings in order to solve the problem.\nIt is recommended to tell the author of this error in order to solve the problem quickly.\nThis script will be exited, and then I will bother you to reopen it manually.",
@@ -28955,7 +29494,46 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				unsupported_curve_enum_exception = "Error: Use unsupported curve enumeration types as parameters.\n\n{0} is not a curve enumeration type.",
 				convert_music_beats_not_one_audio_event_exception = "Error: The number of audio clips selected in the convert music beats tool is not exactly equal to one.\n\n1 audio should be selected, but {0} audio are selected.",
 				convert_music_beats_unsupported_beats_exception = "Error: Current Vegas beats are not in 4/4, 3/4, 6/8.",
-				invalid_mapping_velocity_values_exception = "Error: Illegal mapping velocity parameters used.\n\nSolution: Make sure the mapping velocity parameters of audio and video,\n1. The smaller value cannot be greater than the larger value;\n2. The smaller and larger values of VELOCITY cannot be equal.\nOtherwise, this will not complete the mapping velocity operation."
+				invalid_mapping_velocity_values_exception = "Error: Illegal mapping velocity parameters used.\n\nSolution: Make sure the mapping velocity parameters of audio and video,\n1. The smaller value cannot be greater than the larger value;\n2. The smaller and larger values of VELOCITY cannot be equal.\nOtherwise, this will not complete the mapping velocity operation.",
+				cannot_get_script_dir_exception = "Error: Couldn't get script directory path!",
+				cannot_get_xvid_path_exception = "Error: Couldn't get XviD install path!",
+				install_xvid_info = "XviD codec not installed. The script will install it now and may ask for admin access to install it.",
+				install_xvid_admin_failed = "Error: Admin privilege for XviD installation refused.",
+				install_xvid_succeed = "XviD installed and render template generated for the current frame rate. Please restart Vegas and run the script again.",
+				render_template_generate_completed = "Render template generated for the current frame rate. Please restart Vegas and run the script again.",
+				unexpected_exception = "Unexpected exception: ",
+				unexpected_render_status = "Unexpected render status: ",
+				datamix_selection_position_exception = "Error: Selection must start at frame ≥ 1!",
+				datamix_selection_length_exception = "Error: Selection length must be > 1 frame!",
+				datamosh_frames_repeats_exception = "Error: Frames repeats must be > 0!",
+				datamosh_selection_length_exception = "Error: The selection must be as long as the frame count!",
+				datamosh_selection_position_exception = "Error: The selection mustn't start on the first frame of the project!",
+				no_track_found_exception = "Error: No tracks found!",
+				excessively_video_events_selected_exception = "Error: Only a single video event can be selected!",
+				no_video_event_selected_exception = "Error: Select a video event first!",
+				no_ofx_effects_included_exception = "Error: The selected video clips do not contain any effects or the effects are not OFX effects!",
+				layering_offset_exception = "Error: Layering offset must not be 0!",
+				layering_count_exception = "Error: Layer count must be > 0!",
+				scramble_size_exception = "Error: Scrambling size must be > 0!",
+				stutter_length_exception = "Error: Length must be > 0!",
+				stutter_window_bias_exception = "Error: Window bias must be > 0!",
+				render_template_frame_rate_exception = "Error: Frame rate must be < 100!",
+				appdata_not_set_exception = "Error: Couldn't get AppData path!",
+				stutter_generator_media_info = "Stutter cannot automatically generate reverse clips for media generated from media generators (Titles & Text, …). Please create their reverse clips by reversing them and reversing them back, or render to a file first (for example using the Render).",
+				automator_parameters = "Automator Parameters",
+				datamoshing_parameters = "Datamoshing Parameters",
+				layering_parameters = "Layering Parameters",
+				scrambling_parameters = "Scrambling Parameters",
+				stutter_parameters = "Stutter Parameters",
+				frame_count = "Frame count",
+				frames_repeats = "Frames repeats",
+				layer_count = "Layer count",
+				layering_offset = "Layering offset",
+				scramble_size = "Scramble size",
+				length_in_seconds = "Length in seconds",
+				stutter_window_bias = "Stutter window bias",
+				canceled = "Canceled.",
+				automator_info = "Check the effect parameters that require automatic random setting of values."
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -28977,9 +29555,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_on_startup = "啟動時自動檢查更新",
 				download_latest_version = "下載最新版本",
 				quick_config = "快速配置",
-				midi_file_name = "MIDI 序列",
+				midi_file_name = "迷笛序列",
 				all_files = "所有檔案",
-				choose_a_midi_file = "請選擇一個 MIDI 檔案",
+				choose_a_midi_file = "請選擇一個迷笛檔案",
 				media_file_name = "支持的媒體檔案",
 				choose_a_source_file = "請選擇一個視訊或圖片素材片段",
 				error = "錯誤",
@@ -29026,6 +29604,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect_init_flat = "扁",
 				effect_init_thin = "細",
 				effect_init_blur = "糊",
+				effect_init_zoom_out = "縮小",
+				effect_init_zoom_in = "放大",
 				enable_all_effects = "開啟所有效果",
 				chorus = "合唱",
 				vibrato = "顫音",
@@ -29047,8 +29627,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				yes = "是",
 				no = "否",
 				error_code = "錯誤代碼：",
-				processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
-				processing_ytp = "正在生成 YTP⋯⋯",
+				processing_otomad = "正在生成音 MAD / 油土伯便影樂⋯⋯",
+				processing_ytp = "正在生成油土伯便⋯⋯",
 				processing_it = "正在處理它",
 				processing_tracks = "正在生成第 {0} 個軌道，共 {1} 個。通道 {1}{2}⋯⋯",
 				real_time_update = "即時更新當前進度（會减慢生成速度）",
@@ -29183,7 +29763,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				custom_fade_gain = "自定漸入增益",
 				from = "從",
 				to = "至",
-				midi_channel_advanced = "MIDI 軌道高級內容",
+				midi_channel_advanced = "迷笛軌道高級內容",
 				channel = "通道",
 				name = "名稱",
 				edit_notes = "編輯所選軌道音符...",
@@ -29200,9 +29780,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				about = "關於(&A)",
 				ok = "確定(&O)",
 				balloon_title = "填寫說明",
-				midi_start_second_tooltip = "用於截取 MIDI 音樂的一部分。\n單位：秒。",
-				midi_end_second_tooltip = "此處填寫需要讀取MIDI檔案的時間長度。\n注意如果填寫的值過小，將截去多餘時間部分的音符。\n如果此處填寫的值比起始秒數小或相等，則始終表示持續到整個音樂時長末尾。\n單位：秒。",
-				midi_beat_conbo_tooltip = "現時僅用於五線譜的分頁功能。\n暫時無法通過 MIDI 檔案自動推測。",
+				midi_start_second_tooltip = "用於截取迷笛音樂的一部分。\n單位：秒。",
+				midi_end_second_tooltip = "此處填寫需要讀取迷笛檔案的時間長度。\n注意如果填寫的值過小，將截去多餘時間部分的音符。\n如果此處填寫的值比起始秒數小或相等，則始終表示持續到整個音樂時長末尾。\n單位：秒。",
+				midi_beat_conbo_tooltip = "現時僅用於五線譜的分頁功能。\n暫時無法通過迷笛檔案自動推測。",
 				source_start_time_tooltip = "此處填寫媒體素材裁剪的開始時間。\n單位：秒。",
 				source_end_time_tooltip = "注意如果此處填寫的數值比入點秒數小或相等，則始終表示持續到素材時間末尾。\n單位：秒。",
 				no_tune = "不調音",
@@ -29268,21 +29848,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				audio = "音訊",
 				video = "視訊",
 				staff = "五線譜",
-				ytp = "YTP",
+				ytp = "油土伯便",
 				helper = "工具",
-				midi_settings = "MIDI 設定",
+				midi_settings = "迷笛設定",
 				midi_start_time = "起始秒數",
 				midi_end_time = "終止秒數",
 				bpm_setting = "設定 BPM 速度為",
 				midi_beat = "節拍",
-				midi_channel_setting = "使用 MIDI 軌道",
+				midi_channel_setting = "使用迷笛軌道",
 				browse = "瀏覽...",
 				advanced = "高級...",
 				presets = "預設",
-				no_midi_selected = "<未選擇 MIDI 檔案>",
-				choose_midi_file = "選擇 MIDI 檔案",
-				midi_dynamic_midi_bpm = "動態 MIDI 速度",
-				midi_midi_bpm = "MIDI 速度",
+				no_midi_selected = "<未選擇迷笛檔案>",
+				choose_midi_file = "選擇迷笛檔案",
+				midi_dynamic_midi_bpm = "動態迷笛速度",
+				midi_midi_bpm = "迷笛速度",
 				midi_project_bpm = "專案速度",
 				midi_custom_bpm = "自定義",
 				dynamic_midi_bpm_info = "{0} 起始的動態速度",
@@ -29360,6 +29940,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				pv_rhythm_visual_effect = "映像節奏視覺效果",
 				flip_class = "翻轉類",
 				rotation_class = "旋轉類",
+				scale_class = "縮放類",
 				mirror_class = "鏡像類",
 				invert_class = "反轉類",
 				hue_class = "色相類",
@@ -29374,9 +29955,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				v_flip = "垂直翻轉",
 				ccw_flip = "逆時針翻轉",
 				cw_flip = "順時針翻轉",
+				h_flip_sustain = "水平翻轉保持",
+				h_flip_relay = "水平翻轉中繼",
 				ccw_rotate = "逆時針旋轉",
 				cw_rotate = "順時針旋轉",
 				turned = "顛倒",
+				zoom_out_in = "縮小後放大",
 				h_mirror = "水平鏡像",
 				v_mirror = "垂直鏡像",
 				ccw_mirror = "逆時針鏡像",
@@ -29457,7 +30041,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_high_contrast = "高對比（附加增大音量）",
 				ytp_oversaturation = "過飽和（概率性附加升調效果）",
 				ytp_emphasize_thrice = "重說三（附加放大聚焦效果）",
-				ytp_info = "在當前選項卡下按一下「完成」按鈕，將會生成 YTP 而不是音 MAD / YTPMV。\n除「生成音訊」「生成視訊」外其它的參數設定並不會在 YTP 中使用。",
+				ytp_info = "在當前選項卡下按一下「完成」按鈕，將會生成油土伯便而不是音 MAD / 油土伯便影樂。\n除「生成音訊」「生成視訊」外其它的參數設定並不會在油土伯便中使用。",
 				video_preset_fade_out = "淡出",
 				flashlight = "閃光",
 				horizontal_movement = "水平移動",
@@ -29519,7 +30103,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				quick_normalize_configform_info = "將選中的多個音訊軌道剪輯全部規範化音量。",
 				quick_normalize_complete = "完成規範化音量。",
 				replace_clips_configform_info = "將多個軌道剪輯替換為指定的新軌道剪輯。",
-				auto_layout_tracks_configform_info = "類 YTPMV 風格自動佈局選中的軌道。",
+				auto_layout_tracks_configform_info = "類油土伯便影樂風格自動佈局選中的軌道。",
 				change_tune_method_configform_info = "將多個音訊軌道剪輯統一更改為指定的調音算法。",
 				batch_subtitle_generation_configform_info = "預先設定好“字幕和文字”的預設，然後在此添加多行文字。",
 				find_clips_configform_info = "根據指定的條件（如剪輯名稱、與選中剪輯相同的素材等）選中符合條件的所有軌道剪輯。",
@@ -29556,14 +30140,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				datamosh = "數據抹失",
 				datamix = "數據抹拭",
 				layering = "多層疊放",
-				render = "預渲染化",
+				rendering = "預渲染化",
 				scramble = "隨意打亂",
 				automator = "自動流程",
 				stutter = "結結巴巴",
 				datamosh_configform_info = "快速自動地對視訊選中區域進行數據抹失。",
 				datamix_configform_info = "快速自動地對視訊選中區域進行數據抹失（將一個剪輯抹入另一個剪輯）。",
 				layering_configform_info = "快速自動地對選中剪輯進行多層疊放。",
-				render_configform_info = "快速自動地對視訊選中區域進行渲染。",
+				rendering_configform_info = "快速自動地對視訊選中區域進行渲染。",
 				scramble_configform_info = "快速自動地對選中剪輯進行打亂。",
 				automator_configform_info = "快速自動地為選中視訊效果設定隨機值。",
 				stutter_configform_info = "口吃剪輯（向前向後播放）。",
@@ -29579,15 +30163,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_info = "請按照下列步驟依次檢查問題：",
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「生成音訊」與「生成視訊」被同時取消勾選。請至少勾選生成其中一項。",
 				why_ok_btn_is_disabled_no_media_take = "所選的媒體素材來源不包含任何有效媒體資源。",
-				why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / YTPMV，請先選擇一個 MIDI 序列檔案。",
-				why_ok_btn_is_disabled_in_helper_tab = "為避免誤操作，切勿在「工具」和「混亂」選項卡下進行提交生成操作。",
+				why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / 油土伯便影樂，請先選擇一個迷笛序列檔案。",
+				why_ok_btn_is_disabled_in_helper_tab = "為避免誤操作，切勿在「工具」和「抹失」選項卡下進行提交生成操作。",
 				why_ok_btn_is_disabled_unknown_problem = "未知原因。",
 				no_selected_media_warning = "警告：您沒有在專案媒體視窗中選中任何有效媒體素材！",
 				no_selected_clip_warning = "警告：您沒有在軌道視窗中選中任何剪輯片段！",
 				preview_audio_track_name = "預聽音訊軌道（應該被删除！）",
-				no_midi_exception = "錯誤：未選擇 MIDI 檔案。\n\n請重新啟動腳本參數設定對話方塊，然後在「MIDI 設定」分組中點擊「瀏覽」按鈕，開啟一個有效的 MIDI 檔案。",
+				no_midi_exception = "錯誤：未選擇迷笛檔案。\n\n請重新啟動腳本參數設定對話方塊，然後在「迷笛設定」分組中點擊「瀏覽」按鈕，開啟一個有效的迷笛檔案。",
 				no_media_exception = "錯誤：未選擇媒體檔案。\n\n請重新啟動腳本參數設定對話方塊，然後在「媒體設定」分組中點擊「瀏覽」按鈕，開啟一個有效的媒體檔案。",
-				no_track_info_exception = "錯誤：沒有 MIDI 音軌。\n\n可能的原因：\n1.您沒有選擇一個 MIDI 音軌；\n2.該 MIDI 檔案中沒有任何音軌；\n3.該 MIDI 檔案已損壞或檔案格式不受支持。",
+				no_track_info_exception = "錯誤：沒有迷笛音軌。\n\n可能的原因：\n1.您沒有選擇一個迷笛音軌；\n2.該迷笛檔案中沒有任何音軌；\n3.該迷笛檔案已損壞或檔案格式不受支持。",
 				no_plugin_pitch_shift_exception = "錯誤：無法調用移調插件。\n\n請按照教程檔案 {0} 的指引正確操作。\n不過，根據這個更新版本的腳本，按理應當是中英文版本均可正常運行的。\n因此很有可能您是使用其它語言的 Vegas 造成的（逃",
 				no_plugin_presets_exception = "錯誤：無法調用移調插件的預設效果。\n\n請按照教程檔案 {0} 的指引正確操作。\n確保在移調插件中手動添加了所有的 25 個預設，且命名正確。\n\n補充說明：具體可見上述連結專欄中對於安裝方法的說明。這 25 個預設是上下一個八度以內的所有變調種類，\n缺少任何一個都有可能出錯。手動添加預設的確非常麻煩，但 Vegas 無法使用腳本來指定變調的具體參數，\n囙此只好繞這個彎子。",
 				no_plugin_name_exception = "錯誤：無法調用 {0} 插件。\n\n可能您使用的 Vegas 版本不支持該插件。",
@@ -29595,23 +30179,63 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_audio_take_exception = "錯誤：無法讀取音訊媒體流。\n\n在設定介面，純視訊/圖片素材不要勾選「生成音訊」。\n\n",
 				no_video_take_exception = "錯誤：無法讀取視訊媒體流。\n\n在設定介面，純音訊素材不要勾選「生成視訊」。\n\n",
 				no_media_take_exception = "錯誤：無法讀取媒體。\n\n您所選的檔案格式不受 Vegas 支持，請檢查該媒體檔案是否損壞，或未安裝對應的 Vegas 解碼器。\n\n",
-				not_a_midi_file_exception = "錯誤：無法讀取 MIDI 檔案。\n\n解決方法：用宿主軟件導入該 MIDI，然後重新輸出一個新的 MIDI 檔案。\n\n補充說明：MIDI 檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟件在\n默認設定下匯出的 MIDI 檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
+				not_a_midi_file_exception = "錯誤：無法讀取迷笛檔案。\n\n解決方法：用宿主軟件導入該迷笛，然後重新輸出一個新的迷笛檔案。\n\n補充說明：迷笛檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟件在\n默認設定下匯出的迷笛檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
 				no_selected_exception_ps = "補充說明：如果您想手動在資料夾中選擇一個媒體素材，那麼請點擊其右邊的「瀏覽」按鈕，\n選擇一個媒體素材。並確保左側的下拉式功能表中選中的是您所選檔案所在的路徑。",
 				no_selected_media_exception = "錯誤：沒有在專案媒體視窗中選擇任何媒體。\n\n請在專案媒體視窗中選擇一個媒體，然後重新啟動參數設定視窗，並在素材設定中選擇「選中的媒體檔案」。\n\n",
+				no_selected_clip_exception_short = "錯誤：沒有在軌道中選擇任何剪輯。",
 				no_selected_clip_exception = "錯誤：沒有在軌道中選擇任何剪輯。\n\n請在軌道中選擇一個剪輯，然後重新啟動參數設定視窗，並在素材設定中選擇「選中的軌道素材」。\n\n",
 				no_time_stretch_pitch_shift_exception = "錯誤：選定素材音調轉換方法被設定為不調音。\n\n很有可能您使用的是「選中的軌道素材」。出現了這個錯誤不怪你，要怪就怪 Vegas 這個腦殘設計。\n\n解決方法：請重新選中您的軌道素材，右鍵音訊部分，選擇底部的「內容」。將「時間拉伸/音調轉換」的「方法」設定為“élastique”。\n然後點擊確定即可。\n\n補充說明：如果某個音訊事件沒有進行變調操作，然後開啟了它的內容，那麼其內容中的「時間拉伸/音調轉換」的「方法」會被\n自動修改為「無」，點擊確定就會生效。這時你會發現鍵盤上的 +、- 鍵調音操作無效了。這時必須重新開啟音訊事件的內容，\n將「時間拉伸/音調轉換」的「方法」設定為“élastique”，不必設定「音調更改」，點擊確定即可。",
 				read_config_fail_exception = "錯誤：讀取參數設定檔失敗。\n\n很遺憾您遇到了這個不可預見的錯誤。我們將會清除使用者組態設定並恢復為預設值以便解决問題。\n建議將這個錯誤告訴作者以便快速解决問題。\n將會退出此腳本，然後勞煩閣下手動重新啟動此腳本。",
 				fail_to_select_clips_exception = "錯誤：選取軌道剪輯出錯。\n\n請先在軌道視窗中選取部分軌道剪輯。",
 				fail_to_select_tracks_exception = "錯誤：選取軌道出錯。\n\n請先在軌道視窗中選取部分視訊軌道。",
-				ytp_over_length_exception = "錯誤：指定的 YTP 最小長度超過了媒體長度。\n\n指定的 YTP 最小長度過大，請嘗試更小的值。或所選媒體素材長度過小。",
-				ytp_in_media_generator_exception = "錯誤：對媒體生成器產生的媒體應用 YTP。\n\n應用 YTP 必須使用本地媒體檔案，不要使用媒體生成器生成的媒體。",
-				ytp_eliminate_duplicates_finally_null_exception = "技術异常：對 YTP 素材清單進行去重操作，最後清單為空了！\n\n這是一個不應該被發生的錯誤。",
+				ytp_over_length_exception = "錯誤：指定的油土伯便最小長度超過了媒體長度。\n\n指定的油土伯便最小長度過大，請嘗試更小的值。或所選媒體素材長度過小。",
+				ytp_in_media_generator_exception = "錯誤：對媒體產生器產生的媒體應用油土伯便。\n\n應用油土伯便必須使用本地媒體檔案，不要使用媒體產生器生成的媒體。",
+				ytp_eliminate_duplicates_finally_null_exception = "技術异常：對油土伯便素材清單進行去重操作，最後清單為空了！\n\n這是一個不應該被發生的錯誤。",
 				unknown_exception = "錯誤：未知异常。\n\n請展開詳細資訊查看具體錯誤內容，並將錯誤資訊回饋給作者。",
 				use_pic_in_pic_on_unsupported_vegas_exception = "錯誤：不支持在低版本 Vegas 中使用該畫中畫插件的效果。\n\n根本原因：Vegas 在新版本“畫中畫”效果插件中新增了一些新的功能和參數，這些新參數不能在低版本的 Vegas 插件中使用。\n\n解決方法：在當前 Vegas 版本不能使用該映像節奏視覺效果（如擴縮類等），請使用其它視覺效果。或更新您的 Vegas 軟件。",
 				unsupported_curve_enum_exception = "錯誤：使用不支持的曲線枚舉類型作為參數。\n\n{0} 不是曲線枚舉類型。",
 				convert_music_beats_not_one_audio_event_exception = "錯誤：在轉換音樂節拍工具中選擇了的音訊剪輯數目不恰好等於一個。\n\n應當選擇 1 個音訊，卻選擇了 {0} 個音訊。",
 				convert_music_beats_unsupported_beats_exception = "錯誤：當前 Vegas 設定的節拍不是在四四拍、四三拍、八六拍之中的其一。",
-				invalid_mapping_velocity_values_exception = "錯誤：使用不合法的映射力度參數。\n\n解決方法：確保音訊和視訊的映射力度參數中，\n1. 較小值不能大於較大值；\n2. 「力度」的較小值和較大值不能相等。\n否則將無法完成映射力度的操作。"
+				invalid_mapping_velocity_values_exception = "錯誤：使用不合法的映射力度參數。\n\n解決方法：確保音訊和視訊的映射力度參數中，\n1. 較小值不能大於較大值；\n2. 「力度」的較小值和較大值不能相等。\n否則將無法完成映射力度的操作。",
+				cannot_get_script_dir_exception = "錯誤：無法獲取腳本目錄路徑！",
+				cannot_get_xvid_path_exception = "錯誤：無法獲取 XviD 安裝路徑！",
+				install_xvid_info = "未安裝 XviD 轉碼器。腳本將立即安裝它，並可能會要求管理員權限。",
+				install_xvid_admin_failed = "錯誤：安裝 XviD 時管理員權限被拒絕。",
+				install_xvid_succeed = "XviD 已安裝，並為當前幀率生成了渲染範本。請重新啟動 Vegas 並再次運行該腳本。",
+				render_template_generate_completed = "已為當前畫面播放速率生成了渲染範本。請重新啟動 Vegas 並再次運行該腳本。",
+				unexpected_exception = "未知异常：",
+				unexpected_render_status = "非預期的渲染狀態：",
+				datamix_selection_position_exception = "錯誤：選區必須從大於或等於 1 幀開始！",
+				datamix_selection_length_exception = "錯誤：選區長度必須大於 1 幀！",
+				datamosh_frames_repeats_exception = "錯誤：重複次數必須大於 0！",
+				datamosh_selection_length_exception = "錯誤：選區長度必須與幀數一樣長！",
+				datamosh_selection_position_exception = "錯誤：選區不能從項目的第一幀開始！",
+				no_track_found_exception = "錯誤：未找到軌道！",
+				excessively_video_events_selected_exception = "錯誤：只能選擇一個視訊剪輯！",
+				no_video_event_selected_exception = "錯誤：請先選擇一個視訊剪輯！",
+				no_ofx_effects_included_exception = "錯誤：所選視訊剪輯不包含任何效果或效果均不為 OFX 效果！",
+				layering_offset_exception = "錯誤：層曡偏移不能為 0！",
+				layering_count_exception = "錯誤：層數必須大於 0！",
+				scramble_size_exception = "錯誤：打亂大小必須大於 0！",
+				stutter_length_exception = "錯誤：長度必須大於 0！",
+				stutter_window_bias_exception = "錯誤：視窗偏移必須大於 0！",
+				render_template_frame_rate_exception = "錯誤：幀率必須小於 100！",
+				appdata_not_set_exception = "錯誤：無法獲取 AppData 路徑！",
+				stutter_generator_media_info = "「結結巴巴」無法自動為媒體產生器生成的媒體生成反向剪輯（如字幕和文字等）。請手動反轉它再反轉回來從而創建它們的反向剪輯，或者先渲染到檔案（例如使用「預渲染化」）。",
+				automator_parameters = "自動流程 - 參數",
+				datamoshing_parameters = "數據抹失 - 參數",
+				layering_parameters = "多層疊放 - 參數",
+				scrambling_parameters = "隨意打亂 - 參數",
+				stutter_parameters = "結結巴巴 - 參數",
+				frame_count = "幀數",
+				frames_repeats = "重複次數",
+				layer_count = "層數",
+				layering_offset = "層曡偏移",
+				scramble_size = "打亂大小",
+				length_in_seconds = "長度（秒）",
+				stutter_window_bias = "結巴視窗偏移",
+				canceled = "已取消。",
+				automator_info = "勾選需要自動隨機設定值的效果參數。"
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -29633,9 +30257,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_on_startup = "起動時に更新を確認",
 				download_latest_version = "最新のダウンロード",
 				quick_config = "高速構成",
-				midi_file_name = "MIDIシーケンス",
+				midi_file_name = "ミディシーケンス",
 				all_files = "すべてのファイル",
-				choose_a_midi_file = "MIDIファイルを選択してください",
+				choose_a_midi_file = "ミディファイルを選択してください",
 				media_file_name = "サポートされているメディアファイル",
 				choose_a_source_file = "ビデオまたは画像クリップを選択してください",
 				error = "エラー",
@@ -29682,6 +30306,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect_init_flat = "幅",
 				effect_init_thin = "細",
 				effect_init_blur = "ぼかし",
+				effect_init_zoom_out = "縮小",
+				effect_init_zoom_in = "拡大",
 				enable_all_effects = "すべての効果をオンにします",
 				chorus = "コーラス",
 				vibrato = "ビブラート",
@@ -29703,8 +30329,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				yes = "はい",
 				no = "いいえ",
 				error_code = "エラーコード：",
-				processing_otomad = "音MAD/YTPMVを生成中⋯⋯",
-				processing_ytp = "YTPを生成中⋯⋯",
+				processing_otomad = "音マッド/ヤタプムブを生成中⋯⋯",
+				processing_ytp = "ヤタプを生成中⋯⋯",
 				processing_it = "それを処理する",
 				processing_tracks = "レール {0}/{1}、チャネル{2}{3}を生成中⋯⋯",
 				real_time_update = "現在の進捗状況をリアルタイムで更新（生成速度が低下）",
@@ -29840,7 +30466,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				custom_fade_gain = "カスタムフェードゲイン",
 				from = "から",
 				to = "へ",
-				midi_channel_advanced = "MIDIトラックの詳細プロパティ",
+				midi_channel_advanced = "ミディトラックの詳細プロパティ",
 				channel = "チャネル",
 				name = "名",
 				edit_notes = "選択したトラックの音符を編集...",
@@ -29857,9 +30483,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				about = "だいたい(&A)",
 				ok = "&OK",
 				balloon_title = "記入手順",
-				midi_start_second_tooltip = "MIDI音楽の一部を傍受するために使用されます。\n単位：秒。",
-				midi_end_second_tooltip = "MIDIファイルの読み取りに必要な時間をここに入力します。\n入力した値が小さすぎると、超過時間の音符が途切れる場合がありますのでご注意ください。\nここに入力した値が開始秒以下の場合、それは常に音楽の全持続時間の終わりまで続くことを意味します。\n単位：秒。",
-				midi_beat_conbo_tooltip = "現在、五線譜のページネーション機能にのみ使用されています。\nMIDIファイルからの自動推測は一時的に利用できません。",
+				midi_start_second_tooltip = "ミディ音楽の一部を傍受するために使用されます。\n単位：秒。",
+				midi_end_second_tooltip = "ミディファイルの読み取りに必要な時間をここに入力します。\n入力した値が小さすぎると、超過時間の音符が途切れる場合がありますのでご注意ください。\nここに入力した値が開始秒以下の場合、それは常に音楽の全持続時間の終わりまで続くことを意味します。\n単位：秒。",
+				midi_beat_conbo_tooltip = "現在、五線譜のページネーション機能にのみ使用されています。\nミディファイルからの自動推測は一時的に利用できません。",
 				source_start_time_tooltip = "メディア素材のカットの開始時間をここに入力します。\n単位：秒。",
 				source_end_time_tooltip = "ここに入力された値が開始秒数以下の場合、それは常にメディア時間の終わりまで続くことを意味することに注意してください。\n単位：秒。",
 				no_tune = "チューニングなし",
@@ -29925,21 +30551,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				audio = "オーディオ",
 				video = "ビデオ",
 				staff = "スタッフ",
-				ytp = "ユーチューブポープ",
+				ytp = "ヤタプ",
 				helper = "ツール",
-				midi_settings = "MIDI構成",
+				midi_settings = "ミディ構成",
 				midi_start_time = "秒を開始",
 				midi_end_time = "秒を终了",
 				bpm_setting = "BPMテンポをに設定します",
 				midi_beat = "ビート",
-				midi_channel_setting = "MIDIトラックの使用",
+				midi_channel_setting = "ミディトラックの使用",
 				browse = "参照...",
 				advanced = "詳細...",
 				presets = "プリセット",
-				no_midi_selected = "<MIDIファイルが選択されていません>",
-				choose_midi_file = "MIDIファイルを選択",
-				midi_dynamic_midi_bpm = "ダイナミックMIDIテンポ",
-				midi_midi_bpm = "MIDIテンポ",
+				no_midi_selected = "<ミディファイルが選択されていません>",
+				choose_midi_file = "ミディファイルを選択",
+				midi_dynamic_midi_bpm = "ダイナミックミディテンポ",
+				midi_midi_bpm = "ミディテンポ",
 				midi_project_bpm = "プロジェクトテンポ",
 				midi_custom_bpm = "カスタム",
 				dynamic_midi_bpm_info = "{0}からのダイナミックテンポ",
@@ -30017,6 +30643,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				pv_rhythm_visual_effect = "映像リズム視覚効果",
 				flip_class = "フリップクラス",
 				rotation_class = "回転クラス",
+				scale_class = "スケールクラス",
 				mirror_class = "ミラークラス",
 				invert_class = "反転クラス",
 				hue_class = "色相クラス",
@@ -30031,9 +30658,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				v_flip = "垂直方向にフリップ",
 				ccw_flip = "反時計回りにフリップ",
 				cw_flip = "時計回りにフリップ",
+				h_flip_sustain = "持続的に水平方向にフリップ",
+				h_flip_relay = "中継した水平方向にフリップ",
 				ccw_rotate = "反時計回りの回転",
 				cw_rotate = "時計回りの回転",
 				turned = "向きを変えた",
+				zoom_out_in = "縮小後に拡大",
 				h_mirror = "水平方向のミラー",
 				v_mirror = "垂直方向のミラー",
 				ccw_mirror = "反時計回りのミラー",
@@ -30114,7 +30744,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_high_contrast = "ハイコントラスト（大声で添付）",
 				ytp_oversaturation = "過飽和（おそらくピッチアップ効果を付ける）",
 				ytp_emphasize_thrice = "三回強調（焦点を拡大効果を付ける）",
-				ytp_info = "現在のタブの下にある［完了］ボタンをクリックすると、音MAD/YTPMVの代わりにYTPが生成されます。\n「オーディオを有効」と「ビデオを有効」以外のパラメータ設定は、YTPでは有効になりません。",
+				ytp_info = "現在のタブの下にある［完了］ボタンをクリックすると、音マッド/ヤタプムブの代わりにヤタプが生成されます。\n「オーディオを有効」と「ビデオを有効」以外のパラメータ設定は、ヤタプでは有効になりません。",
 				video_preset_fade_out = "フェードアウト",
 				flashlight = "フラッシュライト",
 				horizontal_movement = "水平方向に移動",
@@ -30176,7 +30806,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				quick_normalize_configform_info = "選択した複数のオーディオトラッククリップをすべて音量に正規化します。",
 				quick_normalize_complete = "音量の正規化を完了します。",
 				replace_clips_configform_info = "複数のトラッククリップを指定された新しいトラッククリップと交換します。",
-				auto_layout_tracks_configform_info = "選択したトラックをYTPMVのようなスタイルで自動レイアウトします。",
+				auto_layout_tracks_configform_info = "選択したトラックをヤタプムブのようなスタイルで自動レイアウトします。",
 				change_tune_method_configform_info = "複数のオーディオトラックのクリップを一括して指定されたトーンアルゴリズムに変更します。",
 				batch_subtitle_generation_configform_info = "「字幕と文字」のプリセットを設定し、ここに複数行の文字を追加します。",
 				find_clips_configform_info = "指定した条件（クリップ名、選択したクリップと同じ素材など）に基づいて、条件に一致するすべてのトラッククリップを選択します。",
@@ -30213,14 +30843,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				datamosh = "データモッシュ",
 				datamix = "データミックス",
 				layering = "レイヤー",
-				render = "レンダー",
+				rendering = "レンダー",
 				scramble = "スクランブル",
 				automator = "オートメーター",
-				stutter = "吃音",
+				stutter = "スタッター",
 				datamosh_configform_info = "ビデオ選択領域に自動的にデータモッシュを実行します。",
 				datamix_configform_info = "ビデオ選択領域に自動的にデータモッシュを実行します（1つのクリップを別のクリップに混ぜます）。",
 				layering_configform_info = "ビデオの一部にマルチレイヤを自動的に行います。",
-				render_configform_info = "ビデオ選択領域を自動的にレンダリングします。",
+				rendering_configform_info = "ビデオ選択領域を自動的にレンダリングします。",
 				scramble_configform_info = "スクランブルを自動的にクリップを選択します。",
 				automator_configform_info = "選択したビデオエフェクトのランダムな値を自動的に設定します。",
 				stutter_configform_info = "スタータークリップ/イベント（再生、逆再生……）。",
@@ -30236,15 +30866,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_info = "次の手順に従って順番に問題を確認してください：",
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「オーディオを有効」と「ビデオを有効」は同時にチェックアウトされます。少なくとも一つを有効にしてください。",
 				why_ok_btn_is_disabled_no_media_take = "選択されたメディア素材のソースには、有効なメディアリソースが含まれていません。",
-				why_ok_btn_is_disabled_no_midi_select = "音MAD/YTPMVを生成するには、まずMIDIシーケンスファイルを選択してください。",
+				why_ok_btn_is_disabled_no_midi_select = "音マッド/ヤタプムブを生成するには、まずミディシーケンスファイルを選択してください。",
 				why_ok_btn_is_disabled_in_helper_tab = "誤操作を避けるためには、「ツール」と「モッシュ」タブで作成操作を提出しないでください。",
 				why_ok_btn_is_disabled_unknown_problem = "原因は不明です。",
 				no_selected_media_warning = "警告：プロジェクトメディアウィンドウで有効なメディアを選択していません！",
 				no_selected_clip_warning = "警告：トラックウィンドウでクリップを選択していません！",
 				preview_audio_track_name = "オーディオトラックのプレビュー（削除する必要があります！）",
-				no_midi_exception = "エラー：MIDIファイルが選択されていません。\n\nスクリプト設定ダイアログボックスを再度開き、「MIDI設定」グループの「参照」ボタンをクリックして、有効なMIDIファイルを開いてください。",
+				no_midi_exception = "エラー：ミディファイルが選択されていません。\n\nスクリプト設定ダイアログボックスを再度開き、「ミディ設定」グループの「参照」ボタンをクリックして、有効なミディファイルを開いてください。",
 				no_media_exception = "エラー：メディアファイルが選択されていません。\n\nスクリプト設定ダイアログボックスを再度開き、「メディア設定」グループの「参照」ボタンをクリックして、有効なメディアファイルを開いてください。",
-				no_track_info_exception = "エラー：MIDIトラックがありません。\n\n考えられる理由：\n1.MIDIトラックを選択しなかった。\n2.MIDIファイルにチャンネルがありません。\n3. MIDIファイルが破損しているか、ファイル形式がサポートされていません。",
+				no_track_info_exception = "エラー：ミディトラックがありません。\n\n考えられる理由：\n1. ミディトラックを選択しなかった。\n2. ミディファイルにチャンネルがありません。\n3. ミディファイルが破損しているか、ファイル形式がサポートされていません。",
 				no_plugin_pitch_shift_exception = "エラー：ピッチシフトプラグインを呼び出すことができません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\nただし、この更新されたバージョンのスクリプトによると、中国語と英語のバージョンは正常に機能するはずです。\nしたがって、他の言語でVegasを使用している可能性が非常に高くなります。",
 				no_plugin_presets_exception = "エラー：ピッチシフトプラグインのプリセットエフェクトを呼び出すことはできません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\n25個のプリセットすべてが転置プラグインに手動で追加され、正しく名前が付けられていることを確認してください。\n\n補足：詳細については、上記リンク欄の設定方法の説明を参照してください。これらの25のプリセットは、次のオクターブ内のすべてのタイプのピッチ変更です。\nそれらのいずれかが欠落していると、エラーが発生する可能性があります。手動でプリセットを追加するのは確かに非常に面倒ですが、Vegasはスクリプトを使用し\nてピッチシフトの特定のパラメーターを指定できないため、このトリックを回避する必要がありました。",
 				no_plugin_name_exception = "エラー：{0}プラグインを呼び出すことができませんでした。\n\n使用している Vegas のバージョンがこのプラグインをサポートしていない可能性があります。",
@@ -30252,9 +30882,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_audio_take_exception = "エラー：オーディオメディアストリームを読み取ることができません。\n\n設定インターフェイスで、純粋なビデオ／画像メディアの「有効なオーディオ」をチェックしないでください。\n\n",
 				no_video_take_exception = "エラー：ビデオメディアストリームを読み取ることができません。\n\n設定画面で、純粋なオーディオメディアの[有効なビデオ]をチェックしないでください。\n\n",
 				no_media_take_exception = "エラー：メディアを読み取ることができません。\n\n選択したファイル形式はVegasではサポートされていません。メディアファイルが破損していないか、対応するVegasデコーダーがインストールされていないか確認してください。\n\n",
-				not_a_midi_file_exception = "エラー：MIDIファイルを読み取ることができません。\n\n解決策：ホストソフトウェアでMIDIをインポートしてから、新しいMIDIファイルを再出力します。\n\n補足：MIDIファイルには複数の形式があり、スクリプトはそれらすべてが正しく読み取れることを保証するものではありません。幸い、\nデフォルト設定で主流のホストソフトウェアによってエクスポートされたMIDIファイルは一般的に読み取り可能です。（現在テスト済みのFL Studio、LMMS、\nおよびMusic Studio for iPadです。）",
+				not_a_midi_file_exception = "エラー：ミディファイルを読み取ることができません。\n\n解決策：ホストソフトウェアでミディをインポートしてから、新しいミディファイルを再出力します。\n\n補足：ミディファイルには複数の形式があり、スクリプトはそれらすべてが正しく読み取れることを保証するものではありません。幸い、\nデフォルト設定で主流のホストソフトウェアによってエクスポートされたミディファイルは一般的に読み取り可能です。（現在テスト済みのFL Studio、LMMS、\nおよびMusic Studio for iPadです。）",
 				no_selected_exception_ps = "追記：フォルダ内のメディアを手動で選択する場合は、右側の\n[参照]ボタンをクリックしてメディアを選択してください。また、左側のドロップダウンメニューで、選択したファイルのパスが選択されていることを確認してください。",
 				no_selected_media_exception = "エラー：プロジェクトメディアウィンドウでメディアが選択されていません。\n\nプロジェクトメディアウィンドウでメディアを選択してから、構成ダイアログを再度開き、素材設定で「選択したメディアファイル」を選択してください。\n\n",
+				no_selected_clip_exception_short = "エラー：トラックでクリップが選択されていません。",
 				no_selected_clip_exception = "エラー：トラックでクリップが選択されていません。\n\nトラック内のクリップを選択してから、構成ダイアログを再度開き、素材設定で「選択したトラッククリップ」を選択してください。\n\n",
 				no_time_stretch_pitch_shift_exception = "エラー：選択したクリップのピッチ変換方法がチューニングなしに設定されています。\n\n「選択したトラッククリップ」を使用している可能性があります。あなたはこのエラーのせいではなく、ベガスの脳死したデザインのせいです。\n\n解決策：トラッククリップを再度選択し、オーディオパーツを右クリックして、下部にある[プロパティ]を選択してください。「タイムストレッチ／ピッチ変換」の「方法」を「エラスティック」に設定します。\n次に、[OK]をクリックします。\n\n補足：オーディオイベントが移調されておらず、そのプロパティが開かれている場合、そのプロパティの「タイムストレッチ／ピッチ変換」の「メソッド」は次のようになります。\n自動的に「なし」に変更され、「OK」をクリックします。有効にします。現時点では、キーボードの+および-キーのチューニング操作が無効であることがわかります。このとき、オーディオイベントのプロパティを\n再度開き、「タイムストレッチ／ピッチ変換」の「方法」を「エラスティック」に設定する必要があります。「ピッチ変更」を設定する必要はありません。「OK」をクリックするだけです。",
 				read_config_fail_exception = "エラー：パラメータ構成ファイルの読み取りに失敗しました。\n\n残念ながら、この予期しないエラーが発生しました。問題を解決するために、ユーザー構成設定をクリアしてデフォルト設定に復元します。\n問題を迅速に解決するために、このエラーの作成者に伝えることをお勧めします。\nこのスクリプトは終了します。その後、手動で再度開く必要があります。",
@@ -30268,7 +30899,46 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				unsupported_curve_enum_exception = "エラー：サポートされていないカーブ列挙タイプをパラメータとして使用します。\n\n{0} は曲線列挙型ではありません。",
 				convert_music_beats_not_one_audio_event_exception = "エラー：音楽ビート変換ツールで選択されたオーディオクリップの数は1つに等しくありません。\n\nオーディオは1つ選択する必要がありますが、オーディオは{0}つ選択されています。",
 				convert_music_beats_unsupported_beats_exception = "エラー：現在Vegasが設定しているビートは、四四拍、四三拍、八六拍のうちの1つではありません。",
-				invalid_mapping_velocity_values_exception = "エラー：使用される違法なマッピングベロシティパラメタ。\n\n解決策：オーディオとビデオのマッピングベロシティパラメータを確認します。\n1. より小さい値は、より大きい値より大きくない；\n2. ベロシティの小さい値と大きい値は等しくはなりません。\nさもなければ、これはマッピングベロシティ操作を完了しません。"
+				invalid_mapping_velocity_values_exception = "エラー：使用される違法なマッピングベロシティパラメタ。\n\n解決策：オーディオとビデオのマッピングベロシティパラメータを確認します。\n1. より小さい値は、より大きい値より大きくない；\n2. ベロシティの小さい値と大きい値は等しくはなりません。\nさもなければ、これはマッピングベロシティ操作を完了しません。",
+				cannot_get_script_dir_exception = "エラー：スクリプトディレクトリのパスが取得できませんでした！",
+				cannot_get_xvid_path_exception = "エラー：XviDのインストールパスが取得できませんでした！",
+				install_xvid_info = "XviDコーデックがインストールされていません。スクリプトは今それをインストールし、それをインストールするために管理者権限を要求することができます。",
+				install_xvid_admin_failed = "エラー：XviDインストールのための管理者権限が拒否されました。",
+				install_xvid_succeed = "XviDがインストールされ、現在のフレームレート用にレンダーテンプレートが生成されました。Vegasを再起動し、スクリプトを再度実行してください。",
+				render_template_generate_completed = "現在のフレームレート用にレンダーテンプレートが生成されました。Vegasを再起動し、スクリプトを再実行してください。",
+				unexpected_exception = "予期しない例外が発生しました：",
+				unexpected_render_status = "予期しないレンダリングステータスです：",
+				datamix_selection_position_exception = "エラー：選択は、フレーム ≥ 1 で開始する必要があります！",
+				datamix_selection_length_exception = "エラー：選択部分の長さは、1フレーム以上でなければなりません！",
+				datamosh_frames_repeats_exception = "エラー：フレームリピートは > 0 でなければなりません！",
+				datamosh_selection_length_exception = "エラー：選択範囲はフレーム数と同じ長さでなければならない！",
+				datamosh_selection_position_exception = "エラー：選択範囲はプロジェクトの最初のフレームから始めてはいけません！",
+				no_track_found_exception = "エラー：トラックが見つかりません！",
+				excessively_video_events_selected_exception = "エラー：選択できるのは1つのビデオイベントのみです！",
+				no_video_event_selected_exception = "エラー：ビデオイベントを選択してください！",
+				no_ofx_effects_included_exception = "エラー：選択されたビデオクリップにエフェクトが含まれていないか、エフェクトがOFXエフェクトでありません!",
+				layering_offset_exception = "エラー：レイヤーのオフセットが0であってはならない！",
+				layering_count_exception = "エラー：レイヤーカウントが0以上であること！",
+				scramble_size_exception = "エラー：スクランブルサイズ > 0！",
+				stutter_length_exception = "エラー：長さを > 0 にする！",
+				stutter_window_bias_exception = "エラー：ウィンドウ・バイアスは > 0 でなければなりません！",
+				render_template_frame_rate_exception = "エラー：フレームレートは100以下でなければならない！",
+				appdata_not_set_exception = "エラー：AppDataのパスを取得できませんでした。",
+				stutter_generator_media_info = "［スタッター］はメディアジェネレータから生成されたメディア（字幕と文字など）に対して自動的にリバースクリップを生成することができません。リバースクリップは、反転して戻すか、先にファイルにレンダリングしてください（例えば［レンダー］を使用）。",
+				automator_parameters = "オートメーター - パラメータ",
+				datamoshing_parameters = "データモッシュ - パラメータ",
+				layering_parameters = "レイヤー - パラメータ",
+				scrambling_parameters = "スクランブル - パラメータ",
+				stutter_parameters = "スタッター - パラメータ",
+				frame_count = "フレーム数",
+				frames_repeats = "フレームリピート",
+				layer_count = "レイヤー数",
+				layering_offset = "レイヤーオフセット",
+				scramble_size = "スクランブルサイズ",
+				length_in_seconds = "長さ（秒）",
+				stutter_window_bias = "スタッターウィンドウバイアス",
+				canceled = "キャンセルされました。",
+				automator_info = "値を自動的にランダムに設定する必要がある効果パラメータをチェックします。"
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -30317,7 +30987,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				add_pitch_shift_presets_fail_title = "к несчастью",
 				ensure_load_presets = "Вы уверены, что хотите загрузить пресеты?",
 				ensure_unload_presets = "Вы уверены, что хотите выгрузить пресеты?",
-				reverse_suffix_tag = "(В обратном порядке)",
+				reverse_suffix_tag = " (В обратном порядке)",
 				effect_init_forward = "Вперед",
 				effect_init_reversed = "Обратный",
 				effect_init_turned = "Повернулся",
@@ -30339,6 +31009,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect_init_flat = "Плоский",
 				effect_init_thin = "Тонкий",
 				effect_init_blur = "Размывание",
+				effect_init_zoom_out = "Уменьшить",
+				effect_init_zoom_in = "Увеличить",
 				enable_all_effects = "Открыть все эффекты",
 				chorus = "Хор",
 				vibrato = "Вибрато",
@@ -30471,7 +31143,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				classic_a18 = "A18. барабан (лучше для Тома)",
 				classic_a19 = "A19. барабан (микроэхо)",
 				batch_subtitle_generation = "Серийное Создание Субтитров",
-				batch_subtitle_generation_presets = "Выберите предварительно установленную «Субтитры и текст» для медиа - генератора:",
+				batch_subtitle_generation_presets = "Выберите предварительно установленную «Субтитры и Текст» для медиа - генератора:",
 				batch_subtitle_generation_subtitles = "Введите текст для вставки субтитров (одна строка, Игнорируемая пустая строка):",
 				batch_subtitle_generation_single_duration = "Продолжительность каждого субтитра",
 				batch_subtitle_generation_suggestion_info = "Затем может быть запущена функция «автоматического контроля» для последующей корректировки времени.",
@@ -30674,6 +31346,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				pv_rhythm_visual_effect = "PV Ритм Визуальный Эффект",
 				flip_class = "Флип Класс",
 				rotation_class = "Вращение Класс",
+				scale_class = "Шкала Класс",
 				mirror_class = "Зеркало Класс",
 				invert_class = "Инвертировать Класс",
 				hue_class = "Оттенок Класс",
@@ -30688,9 +31361,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				v_flip = "Вертикальный переворот",
 				ccw_flip = "Переворот против часовой стрелки",
 				cw_flip = "Переворот по часовой стрелке",
+				h_flip_sustain = "Сустейн с горизонтальным переворотом",
+				h_flip_relay = "Реле горизонтального переворота",
 				ccw_rotate = "Вращение против часовой стрелки",
 				cw_rotate = "Вращение по часовой стрелке",
 				turned = "Повернулся",
+				zoom_out_in = "Увеличение после уменьшения",
 				h_mirror = "Горизонтальное зеркало",
 				v_mirror = "Вертикальное зеркало",
 				ccw_mirror = "Зеркало против часовой стрелки",
@@ -30835,7 +31511,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				replace_clips_configform_info = "Замените несколько клипов дорожки указанными новыми клипами дорожки.",
 				auto_layout_tracks_configform_info = "Автоматическая компоновка выбранных треков в стиле YTPMV.",
 				change_tune_method_configform_info = "преобразовать несколько звуковых дорожек в указанные алгоритмы тонального регулирования.",
-				batch_subtitle_generation_configform_info = "Заранее установите предустановку «Субтитры и текст», после чего добавьте несколько строк текста.",
+				batch_subtitle_generation_configform_info = "Заранее установите предустановку «Субтитры и Текст», после чего добавьте несколько строк текста.",
 				find_clips_configform_info = "Выберите все клипы дорожки, соответствующие указанным критериям, таким как название клипа, тот же материал, что и у выбранного клипа и т.д.",
 				apply_visual_effect_configform_info = "Применить визуальный эффект ритма PV к указанным видеособытиям.",
 				convert_music_beats_configform_info = "Преобразование указанных музыкальных битов между 4/4, 3/4, 6/8 и т. д.\nВы должны выбрать ровно ОДНО звуковое событие, не больше и не меньше.",
@@ -30870,14 +31546,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				datamosh = "Датамош",
 				datamix = "Датамикс",
 				layering = "Слой",
-				render = "Рендер",
+				rendering = "Рендер",
 				scramble = "Скрамбл",
 				automator = "Автомат",
 				stutter = "Заикаться",
 				datamosh_configform_info = "Датамозаика части видео быстро и автоматически.",
 				datamix_configform_info = "Быстрая и автоматическая датамозаика части видео (наложение одного клипа на другой).",
 				layering_configform_info = "Быстро и автоматически выполняет многослойность на части видео.",
-				render_configform_info = "Быстрое и автоматическое рендеринг части видео.",
+				rendering_configform_info = "Быстрое и автоматическое рендеринг части видео.",
 				scramble_configform_info = "Быстро и автоматически скремблирует клипы/события.",
 				automator_configform_info = "Быстро и автоматически устанавливает случайные значения автоматизации для видеоэффектов.",
 				stutter_configform_info = "Заикание клипов/событий (воспроизведение вперед, назад, ...).",
@@ -30912,6 +31588,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				not_a_midi_file_exception = "Ошибка: невозможно прочитать файл MIDI.\n\nРешение: импортируйте MIDI с помощью программного обеспечения хоста, а затем повторно выведите новый файл MIDI.\n\nДополнительное примечание: существует несколько форматов файлов MIDI, и сценарий не гарантирует, что все они могут быть правильно прочитаны. К счастью,\nфайлы MIDI, экспортированные основным программным обеспечением хоста с настройками по умолчанию, обычно читаются. (В настоящее время протестированы FL Studio, LMMS\nи Music Studio для iPad.)",
 				no_selected_exception_ps = "Дополнительное примечание: если вы хотите вручную выбрать носитель в папке, нажмите кнопку «Обзор» справа, чтобы\nвыбрать носитель. И убедитесь, что путь к выбранному вами файлу выбран в раскрывающемся меню слева.",
 				no_selected_media_exception = "Ошибка: в окне мультимедиа проекта не выбран ни один носитель.\n\nВыберите носитель в окне мультимедиа проекта, затем снова откройте диалоговое окно конфигурации и выберите «выбранный файл мультимедиа» в настройках источника.\n\n",
+				no_selected_clip_exception_short = "Ошибка: на дорожке не выбраны клипы.",
 				no_selected_clip_exception = "Ошибка: на дорожке не выбраны клипы.\n\nПожалуйста, выберите клип на дорожке, затем снова откройте диалоговое окно конфигурации и выберите «выбранные клипы дорожки» в настройках источника.\n\n",
 				no_time_stretch_pitch_shift_exception = "Ошибка: метод преобразования высоты звука выбранного клипа не настроен.\n\nСкорее всего, вы используете «выбранные клипы треков». Вы виноваты не в этой ошибке, а в безумном дизайне Вегаса.\n\nРешение: повторно выберите клипы дорожки, щелкните правой кнопкой мыши по аудиочасти и выберите «Свойства» внизу. Установите «Метод» «Преобразование растяжения во времени / шага» на «élastique».\nЗатем нажмите ОК.\n\nДополнительное примечание: если звуковое событие не было транспонировано и его свойства открыты, тогда «Метод» «Преобразование растяжения / высоты звука» в его свойствах будет\nавтоматически изменяется на «Нет», и нажмите «ОК». Возьмите эффект. В это время вы обнаружите, что операции настройки + и-клавиши на клавиатуре недействительны. В это время вы должны повторно открыть свойства звукового события,\nустановить «Метод» «Преобразование растяжения / высоты звука» на «élastique», вам не нужно устанавливать «Изменение высоты тона», просто нажмите «ОК».",
 				read_config_fail_exception = "Ошибка: не удалось прочитать файл конфигурации параметров.\n\nК сожалению, вы столкнулись с этой непредвиденной ошибкой. Мы очистим пользовательские настройки конфигурации и восстановим их до настроек по умолчанию, чтобы решить проблему.\nРекомендуется сообщить автору об этой ошибке, чтобы быстро решить проблему.\nЭтот скрипт будет закрыт, и я побеспокою вас, чтобы вы снова открыли его вручную.",
@@ -30925,7 +31602,46 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				unsupported_curve_enum_exception = "Ошибка: Используйте неподдерживаемые типы перечисления кривых в качестве параметров.\n\n{0} не является типом перечисления кривых.",
 				convert_music_beats_not_one_audio_event_exception = "Ошибка: количество аудиоклипов, выбранных в инструменте преобразования музыкальных ритмов, не равно единице.\n\nДолжен быть выбран 1 звук, но выбрано {0} звука.",
 				convert_music_beats_unsupported_beats_exception = "Ошибка: Текущие биты Вегаса не в размере 4/4, 3/4, 6/8.",
-				invalid_mapping_velocity_values_exception = "Ошибка: Используйте незаконное отображение параметров скорости.\n\nРешения: Убедитесь, что параметры скорости отображения аудио и видео,\n1. Меньшие значения не могут превышать более крупные;\n2. Скорость не может быть одинаковой для малых и больших величин.\nВ противном случае, это не будет завершено с учётом скорости."
+				invalid_mapping_velocity_values_exception = "Ошибка: Используйте незаконное отображение параметров скорости.\n\nРешения: Убедитесь, что параметры скорости отображения аудио и видео,\n1. Меньшие значения не могут превышать более крупные;\n2. Скорость не может быть одинаковой для малых и больших величин.\nВ противном случае, это не будет завершено с учётом скорости.",
+				cannot_get_script_dir_exception = "Ошибка: Не удается получить путь к каталогу скриптов!",
+				cannot_get_xvid_path_exception = "Ошибка: Не удалось получить путь установки XviD!",
+				install_xvid_info = "Кодек XviD не установлен. Сценарий установит его сейчас и может запросить доступ администратора для его установки.",
+				install_xvid_admin_failed = "Ошибка: Привилегия администратора для установки XviD отклонена.",
+				install_xvid_succeed = "XviD установлен и сгенерирован шаблон рендеринга для текущей частоты кадров. Пожалуйста, перезапустите Vegas и запустите скрипт снова.",
+				render_template_generate_completed = "Создан шаблон рендеринга для текущей частоты кадров. Пожалуйста, перезапустите Vegas и запустите скрипт снова.",
+				unexpected_exception = "Неожиданное исключение: ",
+				unexpected_render_status = "Неожиданное состояние рендеринга: ",
+				datamix_selection_position_exception = "Ошибка: Выборка должна начинаться с кадра ≥ 1!",
+				datamix_selection_length_exception = "Ошибка: Длина выделения должна быть > 1 кадра!",
+				datamosh_frames_repeats_exception = "Ошибка: Повторы кадров должны быть > 0!",
+				datamosh_selection_length_exception = "Ошибка: Длина выделения должна быть равна количеству кадров!",
+				datamosh_selection_position_exception = "Ошибка: Выделение не должно начинаться с первого кадра проекта!",
+				no_track_found_exception = "Ошибка: Треки не найдены!",
+				excessively_video_events_selected_exception = "Ошибка: Можно выбрать только одно видеособытие!",
+				no_video_event_selected_exception = "Ошибка: Сначала выберите видеособытие!",
+				no_ofx_effects_included_exception = "Ошибка: Выбранные видеоклипы не содержат эффектов или эффекты не являются эффектами OFX!",
+				layering_offset_exception = "Ошибка: Смещение наслоения не должно быть 0!",
+				layering_count_exception = "Ошибка: Количество слоев должно быть > 0!",
+				scramble_size_exception = "Ошибка: Размер скремблирования должен быть > 0!",
+				stutter_length_exception = "Ошибка: Длина должна быть > 0!",
+				stutter_window_bias_exception = "Ошибка: Смещение окна должно быть > 0!",
+				render_template_frame_rate_exception = "Ошибка: Частота кадров должна быть < 100!",
+				appdata_not_set_exception = "Ошибка: Не удалось получить путь к AppData!",
+				stutter_generator_media_info = "Заикаться не может автоматически генерировать обратные клипы для медиа, созданных с помощью медиагенераторов (Субтитры и Текст, …). Пожалуйста, создайте их обратные клипы, перевернув их и вернув обратно, или сначала выполните рендеринг в файл (например, используя Рендер).",
+				automator_parameters = "Параметры Автомат",
+				datamoshing_parameters = "Параметры Датамошинга",
+				layering_parameters = "Параметры Наслоения",
+				scrambling_parameters = "Параметры Скремблирования",
+				stutter_parameters = "Параметры Заикания",
+				frame_count = "Количество кадров",
+				frames_repeats = "Повторы кадров",
+				layer_count = "Количество слоев",
+				layering_offset = "Смещение слоя",
+				scramble_size = "Размер скремблера",
+				length_in_seconds = "Длина в секундах",
+				stutter_window_bias = "Смещение окна заикания",
+				canceled = "Отменено.",
+				automator_info = "Проверьте параметры эффекта, для которых требуется автоматическая случайная установка значений."
 			};
 		}
 	}

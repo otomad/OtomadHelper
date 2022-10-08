@@ -97,8 +97,20 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="AnimationResource.cs" />
+    <Compile Include="AutomatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AutomatorForm.Designer.cs">
+      <DependentUpon>AutomatorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ColorButton.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomFadeGainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomFadeGainForm.Designer.cs">
+      <DependentUpon>CustomFadeGainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="PvRhythmVisualEffectAdvancedForm.cs">
@@ -214,6 +226,12 @@
     </Compile>
     <Compile Include="Windows10StyledContextMenuStripRenderer.cs" />
     <Compile Include="WindowUtils.cs" />
+    <EmbeddedResource Include="AutomatorForm.resx">
+      <DependentUpon>AutomatorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomFadeGainForm.resx">
+      <DependentUpon>CustomFadeGainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PvRhythmVisualEffectAdvancedForm.resx">
       <DependentUpon>PvRhythmVisualEffectAdvancedForm.cs</DependentUpon>
     </EmbeddedResource>
