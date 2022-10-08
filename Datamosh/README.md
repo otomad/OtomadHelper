@@ -6,10 +6,11 @@
 - **1.3.0**: Added Automator (randomizes video effects)
 
 ## Video tutorial
-[![youtube video tutorial](https://img.youtube.com/vi/6D2lW6H0bb8/0.jpg)](https://www.youtube.com/watch?v=6D2lW6H0bb8)
+[![youtube video tutorial](0.jpg)](https://www.youtube.com/watch?v=6D2lW6H0bb8)
+<!-- Raw image link: https://img.youtube.com/vi/6D2lW6H0bb8/0.jpg -->
 
 ## Setup
-Download the latest [release](../../releases/) **(the windows64.zip file)** and unpack it into your ```C:\Users\<user>\Documents\Vegas Script Menu``` folder. (If the folder does not exist, create it.)
+Download the latest [release](../releases/latest) **(the windows64.zip file)** and unpack it into your ```C:\Users\<user>\Documents\Vegas Script Menu``` folder. (If the folder does not exist, create it.)
 
 Several entries will be added in the ```Tools -> Scripting``` submenu in Vegas. For each script, there will two entries, one of which is suffixed by "14" (for example, Datamosh and Datamosh14). If you use Sony Vegas <= 13, use the normal ones (eg Datamosh), otherwise use the ones suffixed by 14 (eg Datamosh14).
 
@@ -42,7 +43,7 @@ If you want to datamix on a scene change, you can typically split the clip at th
 The end of the selection simply tells the script until which frame it should render the datamoshed file. The longer the selection, the longer the render time.
 
 ### Layer
-This does multilayering, by copying the select video clip/event N times, each time offsetting the clip by M frames. N is the ```Layer count```, M is the  ```Layering offset```. You can also choose to automatically render the multilayered clip by checking the ```Render``` hitbox, otherwise the copies clips will simply be added to the timeline.
+This does multilayering, by copying the select video clip/event N times, each time offsetting the clip by M frames. N is the ```Layer count```, M is the ```Layering offset```. You can also choose to automatically render the multilayered clip by checking the ```Render``` hitbox, otherwise the copies clips will simply be added to the timeline.
 
 To use, select a single video clip/event, then it will be multilayered automatically, and rendered transparently if specified.
 
