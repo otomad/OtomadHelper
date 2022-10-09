@@ -13,7 +13,7 @@
 
 本脚本基于原作者 [@Chaosinism](https://github.com/Chaosinism) 的开源代码二次开发，此外使用了 NAudio 库。
 
-也可以制作 YTP、声呐效果。未来也可用于制作歌词/卡拉OK、人力/Rap、原音系战法。
+也可以制作 YTP、声呐效果、幻术故障/数据抹失。未来也可用于制作歌词/卡拉OK、人力/Rap、原音系战法。
 
 未来也会增加商城功能用于下载其他用户制作的模板等相关素材。
 
@@ -30,7 +30,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 
 您也可以阅读 [@Evauation](https://github.com/Evauation) 的[说明文档](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)并观看[@卡西迪](https://github.com/composition-cassidy)的[教程视频](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英语）*。
 
-关于数据抹失的使用请[观看视频](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英语）*。
+[点击此处查看数据抹失的使用介绍](Datamosh/README_zh-CN.md)。您也可以[观看视频](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英语）*。
 
 ### 安装
 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)最新版脚本。

@@ -1,6 +1,10 @@
 # vegas-datamosh ![Github All Releases](https://img.shields.io/github/downloads/delthas/vegas-datamosh/total.svg?style=flat-square)
 **A pack of Sony/MAGIX Vegas Pro scripts for YTP (datamoshing, multilayering, ...), using FFmpeg and Avidemux**
 
+**EN** | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | [日](README_ja-JP.md)
+
+> Delthas's original repository: https://github.com/delthas/vegas-datamosh
+
 ## News
 - **1.4.0**: Added Datamix (datamosh: apply a clip P-frames on another clip I-frame)
 - **1.3.0**: Added Automator (randomizes video effects)
@@ -19,6 +23,11 @@ You can add scripts as toolbar buttons rather than having to click inside the ``
 **If Sony/MAGIX Vegas complains about not finding the Microsoft.WindowsAPICodePack.dll file, simply restart Vegas and it will work. It just happens from time to time and I don't know how to fix it yet.**
 
 **If you encounter any issue with the scripts, or you have any suggestion, please open an issue on this repository or contact me on Discord at ```cc#6439```.**
+
+> ## Note
+> * **I-frame:** Intra Frame
+> * **P-frame:** Forward Predicted Frame
+> * **B-frame:** Bi-Directional Predictive Frame
 
 ## Scripts
 

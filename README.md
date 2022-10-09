@@ -21,7 +21,7 @@
 
 The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
 
-It can also be used to make YTP, Sonar Effect. And Lyrics/Karaoke, Manual Vocaloid/Sentence Mixing, Shupelunker Tactics, etc. will be supported in the future.
+It can also be used to make YTP, Sonar Effect, Datamosh. And Lyrics/Karaoke, Manual Vocaloid/Sentence Mixing, Shupelunker Tactics, etc. will be supported in the future.
 
 The store will be supported for downloading related templates in the future.
 
@@ -38,7 +38,7 @@ You can add scripts as toolbar buttons rather than having to click inside the *T
 
 You can also read [@Evauation](https://github.com/Evauation)'s [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch [@Cassidy](https://github.com/composition-cassidy)'s [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
 
-For the use of Datamosh please [watch the video](https://www.youtube.com/watch?v=6D2lW6H0bb8) *(English)*.
+[Click here to see an introduction to using Datamosh](Datamosh/README.md). You can also [watch the video](https://www.youtube.com/watch?v=6D2lW6H0bb8) *(English)*.
 
 ### Install
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this script.

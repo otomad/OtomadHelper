@@ -13,7 +13,7 @@
 
 このスクリプトは、元の作成者 [@カオシニズム](https://github.com/Chaosinism) のオープンソースコードの二次開発に基づいており、NAudio ライブラリを使用しています。
 
-YTP・ソナー効果を作成することも可能です。将来的には歌詞/カラオケ・ボカロ/鬼畜・シュペランカー戦法の作成にも使用できます。
+YTP・ソナー効果・データモッシュを作成することも可能です。将来的には歌詞/カラオケ・ボカロ/鬼畜・シュペランカー戦法の作成にも使用できます。
 
 将来的には、他のユーザーが作成したテンプレートやその他の関連資料をダウンロードするためのストア機能が追加される予定です。
 
@@ -30,7 +30,7 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 
 [@エバユエーション](https://github.com/Evauation)の[ドキュメンテーション](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)を読んだり、[@キャシディ](https://github.com/composition-cassidy)の[チュートリアルビデオ](https://www.youtube.com/watch?v=8vSpzgL_86A)を視聴したりすることもできます<wbr />*（英語）*。
 
-データモッシュの使用に関する[ビデオをご覧](https://www.youtube.com/watch?v=6D2lW6H0bb8)ください<wbr />*（英語）*。
+データモッシュの使用方法については、[ここをクリックしてください](Datamosh/README.md)。[ビデオを見る](https://www.youtube.com/watch?v=6D2lW6H0bb8)こともできます<wbr />*（英語）*。
 
 ### インストール
 1. スクリプトの最新バージョンを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/latest)します。
