@@ -319,6 +319,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				(Activator.CreateInstance(datamosh) as Datamosh.IDatamosh).Main(vegas, this);
 				if (!configForm.CloseAfterOpenMoshCheck.Checked) requestRestartScript = true;
 			}
+			if (requestRestartScript) vegas.UpdateUI();
 			vegas.Transport.CursorPosition = configForm.originalCursorPosition;
 			return configForm.AcceptConfig;
 		}
@@ -3362,7 +3363,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	public enum StretchType {
 		/// <summary>不拉伸。</summary>
 		NO_STRETCHING,
-		/// <summary>能屈能伸。</summary>
+		/// <summary>可屈伸。</summary>
 		FLEXING_AND_EXTENDING,
 		/// <summary>仅伸展。</summary>
 		EXTENDING_ONLY,
@@ -5532,35 +5533,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		public class LayeringOffsetException : Exception {
 			/// <summary>
-			/// 多层叠放分层偏移参数错误。
+			/// 多层叠化分层偏移参数错误。
 			/// </summary>
 			public LayeringOffsetException() : base(Lang.str.layering_offset_exception) { }
 		}
 
 		public class LayeringCountException : Exception {
 			/// <summary>
-			/// 多层叠放层数参数错误。
+			/// 多层叠化层数参数错误。
 			/// </summary>
 			public LayeringCountException() : base(Lang.str.layering_count_exception) { }
 		}
 
 		public class ScrambleSizeException : Exception {
 			/// <summary>
-			/// 随意打乱扰乱大小参数错误。
+			/// 随机扰乱扰乱大小参数错误。
 			/// </summary>
 			public ScrambleSizeException() : base(Lang.str.scramble_size_exception) { }
 		}
 
 		public class StutterLengthException : Exception {
 			/// <summary>
-			/// 结结巴巴长度参数错误。
+			/// 结巴效果长度参数错误。
 			/// </summary>
 			public StutterLengthException() : base(Lang.str.stutter_length_exception) { }
 		}
 
 		public class StutterWindowBiasException : Exception {
 			/// <summary>
-			/// 结结巴巴窗口偏移参数错误。
+			/// 结巴效果窗口偏移参数错误。
 			/// </summary>
 			public StutterWindowBiasException() : base(Lang.str.stutter_window_bias_exception) { }
 		}
@@ -6304,7 +6305,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 
 			/// <summary>
-			/// 自动流程的参数数据类。
+			/// 自动生效的参数数据类。
 			/// </summary>
 			public class ParameterData {
 				/// <summary>
@@ -6332,7 +6333,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 
 			/// <summary>
-			/// 自动流程的参数数据类列表。
+			/// 自动生效的参数数据类列表。
 			/// </summary>
 			public class ParameterDataList : List<ParameterData> {
 				public ParameterDataList() : base() { }
@@ -6780,7 +6781,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					var textLabel2 = new Label { Left = 10, Top = 40, Text = Lang.str.layering_offset, AutoSize = true };
 					var inputBox2 =
 						new NumericUpDown { Left = 200, Top = 40, Width = 200, Minimum = -1000000000, Maximum = 1000000000, Text = "" };
-					var textLabel3 = new Label { Left = 10, Top = 70, Text = Lang.str.rendering, AutoSize = true };
+					var textLabel3 = new Label { Left = 10, Top = 70, Text = Lang.str.pre_render, AutoSize = true };
 					var inputBox3 = new CheckBox {
 						Left = 200,
 						Top = 70,
@@ -17025,7 +17026,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Name = "AutomatorForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-			this.Text = "自动流程 - 参数";
+			this.Text = "自动生效 - 参数";
 			this.dock.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
@@ -20030,7 +20031,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioScratchCombo.FormattingEnabled = true;
 			this.AudioScratchCombo.Items.AddRange(new object[] {
 			"不拉伸",
-			"能屈能伸",
+			"可屈伸",
 			"仅伸展",
 			"仅屈折"});
 			this.AudioScratchCombo.Location = new System.Drawing.Point(80, 5);
@@ -21813,7 +21814,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoScratchCombo.FormattingEnabled = true;
 			this.VideoScratchCombo.Items.AddRange(new object[] {
 			"不拉伸",
-			"能屈能伸",
+			"可屈伸",
 			"仅伸展",
 			"仅屈折"});
 			this.VideoScratchCombo.Location = new System.Drawing.Point(80, 5);
@@ -23892,7 +23893,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StutterBtn.Name = "StutterBtn";
 			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
 			this.StutterBtn.TabIndex = 17;
-			this.StutterBtn.Text = "结结巴巴";
+			this.StutterBtn.Text = "结巴效果";
 			this.StutterBtn.UseVisualStyleBackColor = true;
 			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -24024,14 +24025,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// LayeringBtn
 			//
 			this.LayeringBtn.CommandLink = true;
-			this.LayeringBtn.CommandLinkNote = "快速自动地对选中剪辑进行多层叠放。";
+			this.LayeringBtn.CommandLinkNote = "快速自动地对选中剪辑进行多层叠化。";
 			this.LayeringBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LayeringBtn.Location = new System.Drawing.Point(2, 308);
 			this.LayeringBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.LayeringBtn.Name = "LayeringBtn";
 			this.LayeringBtn.Size = new System.Drawing.Size(627, 86);
 			this.LayeringBtn.TabIndex = 13;
-			this.LayeringBtn.Text = "多层叠放";
+			this.LayeringBtn.Text = "多层叠化";
 			this.LayeringBtn.UseVisualStyleBackColor = true;
 			this.LayeringBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -24059,7 +24060,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ScrambleBtn.Name = "ScrambleBtn";
 			this.ScrambleBtn.Size = new System.Drawing.Size(627, 86);
 			this.ScrambleBtn.TabIndex = 15;
-			this.ScrambleBtn.Text = "随意打乱";
+			this.ScrambleBtn.Text = "随机扰乱";
 			this.ScrambleBtn.UseVisualStyleBackColor = true;
 			this.ScrambleBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -24073,7 +24074,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutomatorBtn.Name = "AutomatorBtn";
 			this.AutomatorBtn.Size = new System.Drawing.Size(627, 86);
 			this.AutomatorBtn.TabIndex = 16;
-			this.AutomatorBtn.Text = "自动流程";
+			this.AutomatorBtn.Text = "自动生效";
 			this.AutomatorBtn.UseVisualStyleBackColor = true;
 			this.AutomatorBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -28588,7 +28589,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			legato_one_bar_longest = "最长一小节",
 			legato_unlimited = "无限填补",
 			no_stretching = "不拉伸",
-			flexing_and_extending = "能屈能伸",
+			flexing_and_extending = "可屈伸",
 			extending_only = "仅伸展",
 			flexing_only = "仅屈折",
 			sheet_width = "谱面宽度",
@@ -28733,14 +28734,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			datamosh_info = "锘挎藪琚沬妷是一种磨损素材以产生故障效果的技术。",
 			datamosh = "数据抹失",
 			datamix = "数据抹拭",
-			layering = "多层叠放",
+			layering = "多层叠化",
 			rendering = "预渲染化",
-			scramble = "随意打乱",
-			automator = "自动流程",
-			stutter = "结结巴巴",
+			scramble = "随机扰乱",
+			automator = "自动生效",
+			stutter = "结巴效果",
 			datamosh_configform_info = "快速自动地对视频选中区域进行数据抹失。",
 			datamix_configform_info = "快速自动地对视频选中区域进行数据抹失（将一个剪辑抹入另一个剪辑）。",
-			layering_configform_info = "快速自动地对选中剪辑进行多层叠放。",
+			layering_configform_info = "快速自动地对选中剪辑进行多层叠化。",
 			rendering_configform_info = "快速自动地对视频选中区域进行渲染。",
 			scramble_configform_info = "快速自动地对选中剪辑进行打乱。",
 			automator_configform_info = "快速自动地为选中视频效果设定随机值。",
@@ -28810,26 +28811,27 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			no_ofx_effects_included_exception = "错误：所选视频剪辑不包含任何效果或效果均不为 OFX 效果！",
 			layering_offset_exception = "错误：层叠偏移不能为 0！",
 			layering_count_exception = "错误：层数必须大于 0！",
-			scramble_size_exception = "错误：打乱大小必须大于 0！",
+			scramble_size_exception = "错误：扰乱大小必须大于 0！",
 			stutter_length_exception = "错误：长度必须大于 0！",
 			stutter_window_bias_exception = "错误：窗口偏移必须大于 0！",
 			render_template_frame_rate_exception = "错误：帧率必须小于 100！",
 			appdata_not_set_exception = "错误：无法获取 AppData 路径！",
-			stutter_generator_media_info = "“结结巴巴”无法自动为媒体生成器生成的媒体生成反向剪辑（如字幕和文字等）。请手动反转它再反转回来从而创建它们的反向剪辑，或者先渲染到文件（例如使用“预渲染化”）。",
-			automator_parameters = "自动流程 - 参数",
+			stutter_generator_media_info = "“结巴效果”无法自动为媒体生成器生成的媒体生成反向剪辑（如字幕和文字等）。请手动反转它再反转回来从而创建它们的反向剪辑，或者先渲染到文件（例如使用“预渲染化”）。",
+			automator_parameters = "自动生效 - 参数",
 			datamoshing_parameters = "数据抹失 - 参数",
-			layering_parameters = "多层叠放 - 参数",
-			scrambling_parameters = "随意打乱 - 参数",
-			stutter_parameters = "结结巴巴 - 参数",
+			layering_parameters = "多层叠化 - 参数",
+			scrambling_parameters = "随机扰乱 - 参数",
+			stutter_parameters = "结巴效果 - 参数",
 			frame_count = "帧数",
 			frames_repeats = "重复次数",
 			layer_count = "层数",
 			layering_offset = "层叠偏移",
-			scramble_size = "打乱大小",
+			scramble_size = "扰乱大小",
 			length_in_seconds = "长度（秒）",
 			stutter_window_bias = "结巴窗口偏移",
 			canceled = "已取消。",
-			automator_info = "勾选需要自动随机设置值的效果参数。";
+			automator_info = "勾选需要自动随机设置值的效果参数。",
+			pre_render = "预渲染";
 
 		static Lang() {
 			SChinese = new Lang();
@@ -29533,7 +29535,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				length_in_seconds = "Length in seconds",
 				stutter_window_bias = "Stutter window bias",
 				canceled = "Canceled.",
-				automator_info = "Check the effect parameters that require automatic random setting of values."
+				automator_info = "Check the effect parameters that require scrambled",
+				pre_render = "Render"
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -29994,7 +29997,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				legato_one_bar_longest = "最長一小節",
 				legato_unlimited = "無限填補",
 				no_stretching = "不拉伸",
-				flexing_and_extending = "能屈能伸",
+				flexing_and_extending = "可屈伸",
 				extending_only = "僅伸展",
 				flexing_only = "僅屈折",
 				sheet_width = "譜面寬度",
@@ -30139,14 +30142,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				datamosh_info = "嚜踵藪璩沬妷是一種磨損素材以產生故障效果的技術。",
 				datamosh = "數據抹失",
 				datamix = "數據抹拭",
-				layering = "多層疊放",
+				layering = "多層疊化",
 				rendering = "預渲染化",
-				scramble = "隨意打亂",
-				automator = "自動流程",
-				stutter = "結結巴巴",
+				scramble = "隨機擾亂",
+				automator = "自動生效",
+				stutter = "結巴效果",
 				datamosh_configform_info = "快速自動地對視訊選中區域進行數據抹失。",
 				datamix_configform_info = "快速自動地對視訊選中區域進行數據抹失（將一個剪輯抹入另一個剪輯）。",
-				layering_configform_info = "快速自動地對選中剪輯進行多層疊放。",
+				layering_configform_info = "快速自動地對選中剪輯進行多層疊化。",
 				rendering_configform_info = "快速自動地對視訊選中區域進行渲染。",
 				scramble_configform_info = "快速自動地對選中剪輯進行打亂。",
 				automator_configform_info = "快速自動地為選中視訊效果設定隨機值。",
@@ -30216,26 +30219,27 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_ofx_effects_included_exception = "錯誤：所選視訊剪輯不包含任何效果或效果均不為 OFX 效果！",
 				layering_offset_exception = "錯誤：層曡偏移不能為 0！",
 				layering_count_exception = "錯誤：層數必須大於 0！",
-				scramble_size_exception = "錯誤：打亂大小必須大於 0！",
+				scramble_size_exception = "錯誤：擾亂大小必須大於 0！",
 				stutter_length_exception = "錯誤：長度必須大於 0！",
 				stutter_window_bias_exception = "錯誤：視窗偏移必須大於 0！",
 				render_template_frame_rate_exception = "錯誤：幀率必須小於 100！",
 				appdata_not_set_exception = "錯誤：無法獲取 AppData 路徑！",
-				stutter_generator_media_info = "「結結巴巴」無法自動為媒體產生器生成的媒體生成反向剪輯（如字幕和文字等）。請手動反轉它再反轉回來從而創建它們的反向剪輯，或者先渲染到檔案（例如使用「預渲染化」）。",
-				automator_parameters = "自動流程 - 參數",
+				stutter_generator_media_info = "「結巴效果」無法自動為媒體產生器生成的媒體生成反向剪輯（如字幕和文字等）。請手動反轉它再反轉回來從而創建它們的反向剪輯，或者先渲染到檔案（例如使用「預渲染化」）。",
+				automator_parameters = "自動生效 - 參數",
 				datamoshing_parameters = "數據抹失 - 參數",
-				layering_parameters = "多層疊放 - 參數",
-				scrambling_parameters = "隨意打亂 - 參數",
-				stutter_parameters = "結結巴巴 - 參數",
+				layering_parameters = "多層疊化 - 參數",
+				scrambling_parameters = "隨機擾亂 - 參數",
+				stutter_parameters = "結巴效果 - 參數",
 				frame_count = "幀數",
 				frames_repeats = "重複次數",
 				layer_count = "層數",
 				layering_offset = "層曡偏移",
-				scramble_size = "打亂大小",
+				scramble_size = "擾亂大小",
 				length_in_seconds = "長度（秒）",
 				stutter_window_bias = "結巴視窗偏移",
 				canceled = "已取消。",
-				automator_info = "勾選需要自動隨機設定值的效果參數。"
+				automator_info = "勾選需要自動隨機設定值的效果參數。",
+				pre_render = "預渲染"
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -30938,7 +30942,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				length_in_seconds = "長さ（秒）",
 				stutter_window_bias = "スタッターウィンドウバイアス",
 				canceled = "キャンセルされました。",
-				automator_info = "値を自動的にランダムに設定する必要がある効果パラメータをチェックします。"
+				automator_info = "スクランブルが必要な効果パラメータをチェックします。",
+				pre_render = "レンダー"
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -31641,7 +31646,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				length_in_seconds = "Длина в секундах",
 				stutter_window_bias = "Смещение окна заикания",
 				canceled = "Отменено.",
-				automator_info = "Проверьте параметры эффекта, для которых требуется автоматическая случайная установка значений."
+				automator_info = "Проверьте параметры эффекта, которые требуют скремблирования.",
+				pre_render = "Рендер"
 			};
 		}
 	}

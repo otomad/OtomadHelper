@@ -2951,7 +2951,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioScratchCombo.FormattingEnabled = true;
 			this.AudioScratchCombo.Items.AddRange(new object[] {
             "不拉伸",
-            "能屈能伸",
+            "可屈伸",
             "仅伸展",
             "仅屈折"});
 			this.AudioScratchCombo.Location = new System.Drawing.Point(80, 5);
@@ -4734,7 +4734,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoScratchCombo.FormattingEnabled = true;
 			this.VideoScratchCombo.Items.AddRange(new object[] {
             "不拉伸",
-            "能屈能伸",
+            "可屈伸",
             "仅伸展",
             "仅屈折"});
 			this.VideoScratchCombo.Location = new System.Drawing.Point(80, 5);
@@ -6813,7 +6813,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StutterBtn.Name = "StutterBtn";
 			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
 			this.StutterBtn.TabIndex = 17;
-			this.StutterBtn.Text = "结结巴巴";
+			this.StutterBtn.Text = "结巴效果";
 			this.StutterBtn.UseVisualStyleBackColor = true;
 			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			// 
@@ -6945,14 +6945,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// LayeringBtn
 			// 
 			this.LayeringBtn.CommandLink = true;
-			this.LayeringBtn.CommandLinkNote = "快速自动地对选中剪辑进行多层叠放。";
+			this.LayeringBtn.CommandLinkNote = "快速自动地对选中剪辑进行多层叠化。";
 			this.LayeringBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.LayeringBtn.Location = new System.Drawing.Point(2, 308);
 			this.LayeringBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.LayeringBtn.Name = "LayeringBtn";
 			this.LayeringBtn.Size = new System.Drawing.Size(627, 86);
 			this.LayeringBtn.TabIndex = 13;
-			this.LayeringBtn.Text = "多层叠放";
+			this.LayeringBtn.Text = "多层叠化";
 			this.LayeringBtn.UseVisualStyleBackColor = true;
 			this.LayeringBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			// 
@@ -6980,7 +6980,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ScrambleBtn.Name = "ScrambleBtn";
 			this.ScrambleBtn.Size = new System.Drawing.Size(627, 86);
 			this.ScrambleBtn.TabIndex = 15;
-			this.ScrambleBtn.Text = "随意打乱";
+			this.ScrambleBtn.Text = "随机扰乱";
 			this.ScrambleBtn.UseVisualStyleBackColor = true;
 			this.ScrambleBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			// 
@@ -6994,7 +6994,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutomatorBtn.Name = "AutomatorBtn";
 			this.AutomatorBtn.Size = new System.Drawing.Size(627, 86);
 			this.AutomatorBtn.TabIndex = 16;
-			this.AutomatorBtn.Text = "自动流程";
+			this.AutomatorBtn.Text = "自动生效";
 			this.AutomatorBtn.UseVisualStyleBackColor = true;
 			this.AutomatorBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			// 
