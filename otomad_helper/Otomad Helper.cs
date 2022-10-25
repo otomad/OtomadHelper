@@ -102,9 +102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 22, 8, 0);
+		public static readonly Version VERSION = new Version(4, 22, 25, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 10, 8);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 10, 25);
 
 		// 配置参数变量
 		#region 视频属性
@@ -29347,8 +29347,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				horizontal_movement = "Horizontal Movement",
 				vertical_movement = "Vertical Movement",
 				threshold_change = "Threshold Change",
-				video_preset_enter = "Enter",
-				video_preset_enter_staff = "Enter (Staff)",
+				video_preset_enter = "Entrance",
+				video_preset_enter_staff = "Entrance (Staff)",
 				video_preset_normal = "Normal",
 				oversaturation = "Oversaturation",
 				high_contrast = "High Contrast",
@@ -30615,7 +30615,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				audio_lock_stretch_pitch = "伸縮と音調をロック",
 				auto_pan = "オートパン",
 				velocity = "ベロシティ",
-				mapping_velocity = "マッピングベロシティ",
+				mapping_velocity = "ベロシティのマッピング",
 				notes_velocity = "音符ベロシティ",
 				volume_gain = "音量",
 				opacity = "不透明度",
@@ -30754,8 +30754,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				horizontal_movement = "水平方向に移動",
 				vertical_movement = "垂直方向に移動",
 				threshold_change = "スレッショルドの変更",
-				video_preset_enter = "入る",
-				video_preset_enter_staff = "入る（スタッフ）",
+				video_preset_enter = "開始",
+				video_preset_enter_staff = "開始（スタッフ）",
 				video_preset_normal = "通常",
 				oversaturation = "過飽和",
 				high_contrast = "ハイコントラスト",
@@ -31458,8 +31458,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				horizontal_movement = "Горизонтальное Движение",
 				vertical_movement = "Вертикальное Движение",
 				threshold_change = "Изменение Порога",
-				video_preset_enter = "Введите",
-				video_preset_enter_staff = "Введите (персонал)",
+				video_preset_enter = "Вход",
+				video_preset_enter_staff = "Вход (персонал)",
 				video_preset_normal = "Обычный",
 				oversaturation = "Перенасыщение",
 				high_contrast = "Высокая Контрастность",
