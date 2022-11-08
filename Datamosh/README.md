@@ -34,7 +34,7 @@ You can add scripts as toolbar buttons rather than having to click inside the ``
 ### Datamosh
 This repeats N P-frames M times. N is the ```Frame count```, M is the  ```Frame repeats```.
 
-To use, make a selection in the timeline using I and O, then it will be rendered and datamoshed and added to your project, all in one click. It can take quite some time for long selections so wait if Vegas seems to freeze.
+To use, make a selection in the timeline using <kbd>I</kbd> and <kbd>O</kbd>, then it will be rendered and datamoshed and added to your project, all in one click. It can take quite some time for long selections so wait if Vegas seems to freeze.
 
 The start of the selection is the first P-frame that will be repeated. The P-frame will be relative to the previous frame, which will be rendered as an I-frame. So for best results, the start of the selection should be a frame with a lot of movement.
 
@@ -43,7 +43,7 @@ The end of the selection simply tells the script until which frame it should ren
 ### Datamix
 This replaces the first I-frames of a clip by a frame of another clip.
 
-To use, make a selection in the timeline using I and O, then it will be rendered and datamixed and added to your project, all in one click. It can take quite some time for long selections so wait if Vegas seems to freeze.
+To use, make a selection in the timeline using <kbd>I</kbd> and <kbd>O</kbd>, then it will be rendered and datamixed and added to your project, all in one click. It can take quite some time for long selections so wait if Vegas seems to freeze.
 
 The start of the selection is the I-frame of the clip that will be replaced by another I-frame. *The image used for the new I-frame will be the frame just before the start of the selection.* So make sure to place the image you want to datamix from, just before the selection start.
 
@@ -63,7 +63,7 @@ To use, select a single video clip/event, then it will be multilayered automatic
 ### Render
 This simply renders a part of the timeline and places it into the timeline in a single click.
 
-To use, make a selection in the timeline using I and O, then it will be rendered and added to your project, all in one click.
+To use, make a selection in the timeline using <kbd>I</kbd> and <kbd>O</kbd>, then it will be rendered and added to your project, all in one click.
 
 **The rendered file will support alpha/transparency, meaning you don't need to add a green screen and remove it after, the alpha is handled automatically.**
 
@@ -82,7 +82,7 @@ To use, select several clips/events which have video effects on them (they must 
 **Only *OFX* video effects are supported (newsprint, mirror, ...); they all have the same look, it's easy to identify which effects are OFX. Other effects are ignored.**
 
 ## Tips
-*On most script window prompts, pressing ```enter``` confirms and pressing ```space``` toggles the checkbox (if present) so you don't even need to use your mouse most of the time.*
+*On most script window prompts, pressing <kbd>enter</kbd> confirms and pressing <kbd>space</kbd> toggles the checkbox (if present) so you don't even need to use your mouse most of the time.*
 
 ## License
 All the code is licensed under MIT. The releases include binaries of FFmpeg and Avidemux and the Xvid codec, which are under the LGPL+GPL and GPL and GPL licenses respectively.
