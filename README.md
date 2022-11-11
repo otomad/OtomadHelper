@@ -57,7 +57,7 @@ If you need to use the full features of Datamosh, you need to install the Datamo
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the Datamosh extension pack.
 2. Unzip the zip file and move the `_internal` folder to the same directory as the script `Otomad Helper.cs`.
 
-### **Attention**
+### **Compatibility**
 Vegas Pro 13+ supported.
 
 Vegas Pro 16 and above support all features, and Vegas Pro 13 ~ 15 are compatible to run (some features are missing). The correct version must be installed though.

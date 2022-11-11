@@ -49,7 +49,7 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 1. データモッシュ拡張パックを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/latest)します。
 2. ZIP ファイルを解凍し、`_internal` フォルダーをスクリプト `Otomad Helper.cs` と同じディレクトリに移動します。
 
-### **注意**
+### **互換性**
 Vegas Pro 13 以降をサポートします。
 
 Vegas 16 以降はすべての機能をサポートしており、Vegas 13〜15 は互換性のある実行が可能です（一部の機能が欠落しています）。対応するバージョンをインストールする必要があることが前提です。

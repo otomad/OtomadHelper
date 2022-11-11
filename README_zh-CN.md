@@ -49,7 +49,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)数据抹失扩展包。
 2. 解压文件并将 `_internal` 文件夹移动到脚本 `Otomad Helper.cs` 所在的相同目录下。
 
-### **注意**
+### **兼容性**
 支持 Vegas Pro 13 及以上版本。
 
 Vegas Pro 16 及以上版本支持所有功能，Vegas Pro 13 ~ 15 可以兼容运行（会缺失部分功能）。前提是必须安装对应的版本。

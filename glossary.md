@@ -546,7 +546,7 @@
 	</tr>
 </table>
 
-> **Notice:** Whirl = Ping-pong Effect + Horizontal Flip.
+> **Note:** Whirl = Ping-pong Effect + Horizontal Flip.
 
 > **Recommended Video Parameters Preset:** Normal
 
@@ -689,7 +689,7 @@
 </table>
 
 ## YTP Effects<br />YTP 效果<br />YTP 效果<br />YTP 効果
-> **Notice:**
+> **Note:**
 > * *Italic / Oblique* text indicates that the effect is likely to occur.
 > * **Bold** text indicates main affix.
 > * For pure audio effect sketches are for **reference only**.
