@@ -15,8 +15,8 @@ using System.Windows.Forms.VisualStyles;
 
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 
-	//[ToolboxBitmap(typeof(TrackBar))]
-	public partial class IntegerTrackWithBox : UserControl {
+	[ToolboxBitmap(typeof(TrackBar))]
+	public partial class IntegerTrackWithBox : UserControl { // 兼容说明：后期被更新成带小数的了，但由于为了兼容只能保留 Integer 的字样。
 		public IntegerTrackWithBox() {
 			InitializeComponent();
 			Track.MouseClick += new MouseEventHandler(Track_MouseClick);
@@ -26,7 +26,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				isWaitingDoubleClick = false;
 				doubleClickTimer.Stop();
 			});
-			// Layout += (sender, e) => Track.BackColor = Parent.BackColor; // 设计视图中用了会引发异常。
+			//Layout += (sender, e) => Track.BackColor = Parent.BackColor; // 设计视图中用了会引发异常。
 		}
 
 		private void Track_Scroll(object sender, EventArgs e) {
@@ -35,6 +35,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void Numeric_ValueChanged(object sender, EventArgs e) {
 			Track.Value = (int)Numeric.Value;
+			OnValueChanged(e);
 		}
 
 		[Description("指示数值控件的当前值。"), Category("Behavior"), DefaultValue(0)]
@@ -46,12 +47,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 		}
 
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		public double DoubleValue {
 			get { return (double)Value; }
 		}
 
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		public float FloatValue {
 			get { return (float)Value; }
+		}
+
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		public int IntValue {
+			get { return (int)Value; }
 		}
 
 		[Description("指示数值控件的最小值。"), Category("Behavior"), DefaultValue(0)]
@@ -151,6 +159,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (def == null || def < Minimum || def > Maximum) return;
 				Value = (decimal)def;
 			} else Value = value;
+		}
+
+		// 自定义值改变事件。
+		private EventHandler onValueChanged;
+		[Description("在控件中的值更改时发生。"), Category("Action")]
+		public event EventHandler ValueChanged {
+			add {
+				onValueChanged += value;
+			}
+			remove {
+				onValueChanged -= value;
+			}
+		}
+		protected virtual void OnValueChanged(EventArgs e) {
+			if (onValueChanged != null) onValueChanged.Invoke(this, e);
 		}
 	}
 }

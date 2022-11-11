@@ -97,7 +97,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.table.AutoSize = true;
 			this.table.ColumnCount = 1;
-			this.table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.table.Controls.Add(this.InfoLbl, 0, 0);
 			this.table.Controls.Add(this.TimeStretchPitchShiftGroup, 0, 1);
 			this.table.Dock = System.Windows.Forms.DockStyle.Top;
@@ -108,7 +108,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowCount = 2;
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
 			this.table.Size = new System.Drawing.Size(682, 248);
 			this.table.TabIndex = 17;
 			// 

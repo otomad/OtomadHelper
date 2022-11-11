@@ -471,6 +471,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.enableLegacyProgressDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).BeginInit();
@@ -1109,6 +1111,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             this.toolStripSeparator6,
             this.pitchShiftPresetMenuItem,
             this.toolStripSeparator1,
+            this.enableLegacyProgressDialogToolStripMenuItem,
+            this.toolStripSeparator12,
             this.exportConfigToolStripMenuItem,
             this.importConfigToolStripMenuItem,
             this.toolStripSeparator11,
@@ -7583,6 +7587,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
+			// enableLegacyProgressDialogToolStripMenuItem
+			// 
+			this.enableLegacyProgressDialogToolStripMenuItem.CheckOnClick = true;
+			this.enableLegacyProgressDialogToolStripMenuItem.Name = "enableLegacyProgressDialogToolStripMenuItem";
+			this.enableLegacyProgressDialogToolStripMenuItem.Size = new System.Drawing.Size(271, 26);
+			this.enableLegacyProgressDialogToolStripMenuItem.Text = "启用旧版进度对话框";
+			// 
+			// toolStripSeparator12
+			// 
+			this.toolStripSeparator12.Name = "toolStripSeparator12";
+			this.toolStripSeparator12.Size = new System.Drawing.Size(268, 6);
+			// 
 			// ConfigForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -8254,6 +8270,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.CheckBox AudioMultitrackForChordsCheck;
 		public System.Windows.Forms.Label DatamoshClipsFolderInfo;
 		public System.Windows.Forms.Label DatamoshInfoLbl;
+		public System.Windows.Forms.ToolStripMenuItem enableLegacyProgressDialogToolStripMenuItem;
+		public System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
 	}
 }
 
