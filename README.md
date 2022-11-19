@@ -69,6 +69,9 @@ You could learn about many features more easily through pictures.
 
 [Glossary >](glossary.md)
 
+### [Explore Visual Effects](https://youtu.be/cY2Qa3Owetw)
+[![](https://markdown-videos.deta/youtube/cY2Qa3Owetw)](https://youtu.be/cY2Qa3Owetw)
+
 ### Major Version Update History
 These are screenshots of the script user interface for major version updates in history.
 
