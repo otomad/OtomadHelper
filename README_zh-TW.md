@@ -114,7 +114,7 @@ Vegas Pro 17、18、19、20 測試**正常**。
 
 ### 圖示
 靈感來源於:
-* [@冰鳩さくの](https://space.bilibili.com/13084550)
+* [@冰鳩櫻乃](https://space.bilibili.com/13084550)
 * [@酥妃大魔王](https://space.bilibili.com/8569439)
 
 ### 幫助和故障排解

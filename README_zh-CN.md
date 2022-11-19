@@ -112,7 +112,7 @@ Vegas Pro 17、18、19、20 测试**正常**。
 
 ### 图标
 灵感来源于:
-* [@冰鸠さくの](https://space.bilibili.com/13084550)
+* [@冰鸠樱乃](https://space.bilibili.com/13084550)
 * [@酥妃大魔王](https://space.bilibili.com/8569439)
 
 ### 帮助和疑难解答
