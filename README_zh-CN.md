@@ -61,6 +61,9 @@ Vegas Pro 17、18、19、20 测试**正常**。
 
 [词汇表 >](glossary.md)
 
+### 探索视觉效果
+[![探索视觉效果](covers/otomad_helper_visual_effects_example.png)](https://youtu.be/cY2Qa3Owetw)
+
 ### 主要版本更新历史
 这些是历史上主要版本更新的脚本用户界面的屏幕截图。
 

@@ -61,6 +61,9 @@ Vegas Pro 17、18、19、20 で**正常**にテストされました。
 
 [用語集 >](glossary.md)
 
+### 視覚効果の探索
+[![視覚効果の探索](covers/otomad_helper_visual_effects_example.png)](https://youtu.be/cY2Qa3Owetw)
+
 ### メジャーバージョン更新履歴
 これらは、履歴のメジャー バージョン アップデートのスクリプト ユーザー インターフェイスのスクリーンショットです。
 
