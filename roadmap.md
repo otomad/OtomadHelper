@@ -35,6 +35,7 @@
 ∅
 
 ### Far future / 遥远未来
+- [ ] Support MIDI files not exported by FL Studio.
 - [ ] Edit MIDI channel notes.
 - [ ] Official documentation and tutorial video.
 - [ ] Refresh UI to WinUI 3 (v5.x).
