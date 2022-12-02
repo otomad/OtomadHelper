@@ -102,9 +102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 23, 11, 0);
+		public static readonly Version VERSION = new Version(4, 24, 2, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 11, 11);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 12, 2);
 
 		// 配置参数变量
 		#region 视频属性
@@ -1024,8 +1024,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			bool noMidiChannel = MidiConfigTracks == null || MidiConfigTracks.Count == 0;
 			bool isSonarLegal = SonarConfig && !noMidiChannel && MidiConfigTracks[0].IsDrumKit;
 			if (!AConfig && !VConfig && !SonarConfig) return false;
-			if (!IsFromBrowseFile && !isSonarLegal) { bool ok = GetSelectedSource(); if (!ok) return false; }
-			if (media == null && !IsFromSelectedClip) { ShowError(new Exceptions.NoMediaException()); return false; }
+			if (!isSonarLegal) {
+				if (!IsFromBrowseFile) { bool ok = GetSelectedSource(); if (!ok) return false; }
+				if (media == null && !IsFromSelectedClip) { ShowError(new Exceptions.NoMediaException()); return false; }
+			}
 			if (!YtpConfig) {
 				if (noMidiChannel) { ShowError(new Exceptions.NoTrackInfoException()); return false; }
 				if (midi == null) { ShowError(new Exceptions.NoMidiException()); return false; }
@@ -2689,8 +2691,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				do {
 					if (!ShowConfigForm()) continue;
 					Generate();
-					progressForm.ReportProgress(100);
-					progressForm.Close();
+					if (progressForm != null) {
+						progressForm.ReportProgress(100);
+						progressForm.Close();
+					}
 				} while (requestRestartScript);
 			#if PRODUCTION
 			} catch (Exception e) {
@@ -15962,7 +15966,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		[Category("Appearance"), DefaultValue(false), Description("设置用户设定的选中状态值。")]
 		public bool UserChecked {
 			get { return userChecked; }
-			set { userChecked = value; }
+			set {
+				userChecked = value;
+				if (!locked) base.Checked = value;
+			}
 		}
 
 		private StatusType status = StatusType.Unlocked;
@@ -15992,8 +15999,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			get { return base.Checked; }
 			set {
 				base.Checked = value;
-				if (!locked)
-					UserChecked = value;
+				if (!locked) userChecked = value;
 			}
 		}
 
@@ -29208,7 +29214,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				generate_at_cursor = "Cursor",
 				generate_position = "Generate at",
 				generate_below_top_adjustment_tracks = "Below top adjustment tracks",
-				choose_source_file = "Select media file",
+				choose_source_file = "Select media source",
 				selected_media = "Selected media file",
 				selected_clip = "Selected track event",
 				source_start_time = "Start seconds",
@@ -30617,7 +30623,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				generate_at_cursor = "カーソル",
 				generate_position = "どこを生成しますか",
 				generate_below_top_adjustment_tracks = "最上層調整トラックの下に生成",
-				choose_source_file = "メディアファイルを選択します",
+				choose_source_file = "メディアソースを選択",
 				selected_media = "選択したメディアファイル",
 				selected_clip = "選択されたトラッククリップ",
 				source_start_time = "秒を開始",
