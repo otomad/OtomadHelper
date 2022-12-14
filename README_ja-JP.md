@@ -28,7 +28,7 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 
 メニューで *オプション > ツールバーのカスタマイズ* を選択して、簡単な操作のためにスクリプトをツールバーに追加できます。
 
-[@エバユエーション](https://github.com/Evauation)の[ドキュメンテーション](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)を読んだり、[@キャシディ](https://github.com/composition-cassidy)の[チュートリアルビデオ](https://www.youtube.com/watch?v=8vSpzgL_86A)を視聴したりすることもできます<wbr />*（英語）*。
+[@イーユエーション](https://github.com/Evauation)の[ドキュメンテーション](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)を読んだり、[@キャシディ](https://github.com/composition-cassidy)の[チュートリアルビデオ](https://www.youtube.com/watch?v=8vSpzgL_86A)を視聴したりすることもできます<wbr />*（英語）*。
 
 データモッシュの使用方法については、[ここをクリックしてください](Datamosh/README.md)。[ビデオを見る](https://www.youtube.com/watch?v=6D2lW6H0bb8)こともできます<wbr />*（英語）*。
 
