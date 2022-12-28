@@ -11,7 +11,7 @@
 
 **音 MAD ヘルパー Vegas**、Vegas が MIDI シーケンスファイルを入力として受け入れ、音 MAD / YTPMV トラックを自動的に生成できるように設計されています。
 
-このスクリプトは、元の作成者 [@カオシニズム](https://github.com/Chaosinism) のオープンソースコードの二次開発に基づいており、NAudio ライブラリを使用しています。
+このスクリプトは、元の作成者[@カオシニズム](https://github.com/Chaosinism)のオープンソースコードの二次開発に基づいており、NAudio ライブラリを使用しています。
 
 YTP・ソナー効果・データモッシュを作成することも可能です。将来的には歌詞/カラオケ・ボカロ/鬼畜・シュペランカー戦法の作成にも使用できます。
 
@@ -19,7 +19,9 @@ YTP・ソナー効果・データモッシュを作成することも可能で�
 
 YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 
-縺ﾃﾞ繧ｰﾀ繝ﾓ譌ｯ縲｢ｼ譛ｭ･はクリップに損傷を与えてグリッチ効果を作成する技術です。データモッシュの関連機能は [vegas-datamosh](https://github.com/delthas/vegas-datamosh) から参照。
+縺ﾃﾞ繧ｰﾀ繝ﾓ譌ｯ縲｢ｼ譛ｭ･はクリップに損傷を与えてグリッチ効果を作成する技術です。データモッシュの関連機能は [Vegas データモッシュ](https://github.com/delthas/vegas-datamosh) から参照。
+
+手ぶれ機能とは [Vegas シェイク スクリプト](https://github.com/tmarplatt/VegasScripts) から参照。
 
 **姉妹プロジェクト：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 
@@ -109,6 +111,7 @@ Vegas Pro 17、18、19、20 で**正常**にテストされました。
 * [オプロスの**アルファ付きカラーピッカー**](https://sourceforge.net/projects/alpha-color-dialog/)
 * [大きい ダイアログ ウィンフォームの**進捗ダイアログ**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
 * [デルタスの **Vegas データモッシュ**](https://github.com/delthas/vegas-datamosh)
+* [トゥマープラットの **Vegas シェイク スクリプト**](https://github.com/tmarplatt/VegasScripts)
 
 ### アイコン
 に触発された：

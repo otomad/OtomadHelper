@@ -29,6 +29,8 @@ The related features of YTP refer to [YTP+](https://github.com/YTP-Plus).
 
 Datą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍mo̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́sh is a technique of damaging clips to create glitchy effects. The related features of Datamosh refer to [vegas-datamosh](https://github.com/delthas/vegas-datamosh).
 
+Camera Shake feature refer to [VegasShakeScript](https://github.com/tmarplatt/VegasScripts).
+
 **Sister Projects:** [om_midi for After Effects](https://github.com/otomad/om_midi).
 
 ### Usage
@@ -117,6 +119,7 @@ If you use this script, the script will use the following permissions.
 * [Opulos's **Alpha Color Dialog**](https://sourceforge.net/projects/alpha-color-dialog/)
 * [Ookii Dialogs WinForms **Progress Dialog**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
 * [Delthas's **Vegas Datamosh**](https://github.com/delthas/vegas-datamosh)
+* [Tmarplatt's **VegasShakeScript**](https://github.com/tmarplatt/VegasScripts)
 
 ### Logo
 Inspired by:

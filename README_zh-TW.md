@@ -19,7 +19,9 @@
 
 YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
-嚜踵藪璩沬妷是一種磨損素材以產生故障效果的技術。數據抹失的相關功能參考自 [vegas-datamosh](https://github.com/delthas/vegas-datamosh)。
+嚜踵藪璩沬妷是一種磨損素材以產生故障效果的技術。數據抹失的相關功能參考自 [Vegas 數據抹失](https://github.com/delthas/vegas-datamosh)。
+
+鏡頭搖晃功能參考自 [Vegas 搖晃腳本](https://github.com/tmarplatt/VegasScripts).
 
 **姊妹專案：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 
@@ -28,7 +30,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 您可以選擇功能表列 *選項 > 自訂工具列*，將腳本添加到工具列中以便操作。
 
-您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看[@卡西迪](https://github.com/composition-cassidy)的[教程影片](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英語）*。
+您也可以閱讀[@伊尤阿省](https://github.com/Evauation)的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看[@卡西迪](https://github.com/composition-cassidy)的[教程影片](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英語）*。
 
 [點擊此處查看數據抹失的使用介紹](Datamosh/README.md)。您也可以[觀看影片](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英語）*。
 
@@ -111,6 +113,7 @@ Vegas Pro 17、18、19、20 測試**正常**。
 * [奧普洛斯的**帶有透明通道的顔色選取器**](https://sourceforge.net/projects/alpha-color-dialog/)
 * [大的對話方塊 (WinForm) 的**進度條對話方塊**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
 * [德爾薩斯的 **Vegas 數據抹失**](https://github.com/delthas/vegas-datamosh)
+* [特瑪普拉特的 **Vegas 搖晃腳本**](https://github.com/tmarplatt/VegasScripts)
 
 ### 圖示
 靈感來源於:
