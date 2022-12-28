@@ -21,13 +21,6 @@
  * 疑难解答（中文）：https://www.bilibili.com/read/cv495309
  * 教程视频 (v0.1)（中文）：https://www.bilibili.com/video/av22226321
  *
- * 参考与致谢：
- * 原仓库地址：https://github.com/Chaosinism/vegas_scripts
- * https://github.com/evankale/VegasScripts
- * https://github.com/naudio/NAudio
- * https://www.jetdv.com/
- * https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/
- *
  * 开工时间：公元 2021 年 9 月 5 日 星期日，上午 4:14:26
  * Copyright (c) 2021 ~, Ranne
  *
