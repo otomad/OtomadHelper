@@ -102,9 +102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 24, 2, 0);
+		public static readonly Version VERSION = new Version(4, 24, 28, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 12, 2);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 12, 28);
 
 		// 配置参数变量
 		#region 视频属性
@@ -180,7 +180,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		#endif
 		/**<summary>伸缩变调</summary>*/ private bool AConfigLockStretchPitch { get { return configForm.AudioLockStretchPitchCheck.Checked; } }
 		/**<summary>保留共振</summary>*/ private bool AConfigReserveFormant { get { return configForm.AudioReserveFormantCheck.Checked; } }
-		/**<summary>创建分组</summary>*/ private bool ConfigCreateEventGroup { get { return configForm.CreateEventGroupCheck.Checked; } }
+		/**<summary>创建分组</summary>*/ private bool ConfigCreateEventGroup { get { return configForm.CreateEventGroupInAudioCheck.Checked; } }
 		/**<summary>复音多轨</summary>*/ private bool AConfigMultitrackForChords { get { return configForm.AudioMultitrackForChordsCheck.Checked; } }
 		#endregion
 
@@ -261,7 +261,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		internal static EntryPoint instance;
 		private readonly List<VideoTrack> generatedVideoTracks = new List<VideoTrack>();
 		private bool requestShowProgress = false;
-		Media sonarSolidColor = null;
+		private Media sonarSolidColor = null;
 
 		// 媒体 / MIDI 参数变量
 		internal MIDI midi = null;
@@ -769,11 +769,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// 获取选中的第一个轨道剪辑。
 		/// </summary>
 		/// <returns>选中的第一个轨道剪辑。</returns>
-		public TrackEvent GetSelectedFirstEvents() {
+		public T GetSelectedFirstEvent<T>() where T : TrackEvent {
 			foreach (Track track in vegas.Project.Tracks)
 				foreach (TrackEvent trackEvent in track.Events)
-					if (trackEvent.Selected && trackEvent.ActiveTake != null && trackEvent.ActiveTake.Media != null)
-						return trackEvent;
+					if (trackEvent.Selected && trackEvent.ActiveTake != null && trackEvent.ActiveTake.Media != null && trackEvent is T)
+						return trackEvent as T;
 			return null;
 		}
 
@@ -2143,7 +2143,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			private Timecode startTime;
 			private List<TrackEvent> events = new List<TrackEvent>();
 			private readonly EntryPoint parent;
-			private bool Enabled { get { return parent.ConfigCreateEventGroup && parent.AConfig; } }
+			private bool Enabled { get { return parent.ConfigCreateEventGroup && (parent.AConfig || parent.VConfig); } }
 			public TempEventGroup(EntryPoint parent) { this.parent = parent; }
 			/// <summary>
 			/// 将轨道事件添加到临时轨道事件分组的结尾处。
@@ -7387,6 +7387,82 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				prompt.StartPosition = FormStartPosition.Manual;
 				prompt.Location = new Point(240, 240);
 				prompt.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
+			}
+		}
+
+		public class CameraShake : IDatamosh {
+			private CameraShakeForm.Config config;
+
+			public void Main(Vegas vegas, EntryPoint entryPoint) {
+				VideoEvent[] videoEvents = entryPoint.GetSelectedEvents<VideoEvent>();
+				if (videoEvents == null || videoEvents.Length == 0) {
+					EntryPoint.ShowError(new Exceptions.NoVideoEventSelectedException(), ShowErrorState.SILENCE);
+					return;
+				}
+				CameraShakeForm form = new CameraShakeForm(entryPoint);
+				if (form.ShowDialog() != DialogResult.OK) return;
+				config = form.GetConfig();
+				foreach (VideoEvent videoEvent in videoEvents)
+					ShakeClip(videoEvent);
+			}
+
+			private void ShakeClip(VideoEvent ve) {
+				if (config.ShouldClearFrames) {
+					// 移除所有平移/裁切关键帧
+					ve.VideoMotion.Keyframes.Clear();
+					// 恢复缩放到默认值
+					if (config.ShouldResetPan)
+						ResetPan(ve);
+					// 填充关键帧：每帧一个
+					Populate(ve);
+				}
+				// 摇晃镜头
+				PanShake(ve);
+			}
+
+			private void PanShake(VideoEvent ve) {
+				int i = 0;
+
+				foreach (VideoMotionKeyframe key in ve.VideoMotion.Keyframes) {
+					SafelyScaleVideo(key);
+					VideoMotionVertex movertex = MoveDelta(i++);
+					key.MoveBy(movertex);
+				}
+			}
+
+			private void ResetPan(VideoEvent ve) {
+				VideoStream v = ve.ActiveTake.Media.GetVideoStreamByIndex(0);
+				ve.VideoMotion.Keyframes[0].Bounds = new VideoMotionBounds(new VideoMotionVertex(0, 0), new VideoMotionVertex(v.Width, 0), new VideoMotionVertex(v.Width, v.Height), new VideoMotionVertex(0, v.Height));
+			}
+
+			private void SafelyScaleVideo(VideoMotionKeyframe key) {
+				VideoMotionVertex delta = new VideoMotionVertex(0, 0);
+
+				// 获得每个轴的缩放比例
+				delta.X = (-(2 * config.SkewOut * config.XToYRatio) + (key.TopRight.X - key.TopLeft.X)) / (key.TopRight.X - key.TopLeft.X);
+				delta.Y = (-(2 * config.SkewOut) + (key.BottomLeft.Y - key.TopLeft.Y)) / (key.BottomLeft.Y - key.TopLeft.Y);
+
+				key.ScaleBy(delta);
+			}
+
+			private VideoMotionVertex MoveDelta(int n) {
+				VideoMotionVertex delta = new VideoMotionVertex(0, 0);
+
+				delta.X = (float)Math.Sin(ToRads(n * config.SkewIn)) * config.SkewOut * config.XToYRatio;
+				delta.Y = (float)Math.Cos(ToRads(n * config.SkewIn * config.SkewXY)) * config.SkewOut;
+
+				return delta;
+			}
+
+			private double ToRads(double deg) {
+				return deg * (Math.PI / 180);
+			}
+
+			private void Populate(VideoEvent ve) {
+				for (int i = 0; i < ve.Length.FrameCount; i++) {
+					VideoMotionKeyframe key = new VideoMotionKeyframe(Timecode.FromFrames(i));
+					ve.VideoMotion.Keyframes.Add(key);
+				}
 			}
 		}
 	}
@@ -13485,7 +13561,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			Translate();
 			((Action)ReadIni).OnErrorBreak();
-			selectedFirstEvent = parent.GetSelectedFirstEvents();
+			selectedFirstEvent = parent.GetSelectedFirstEvent<VideoEvent>();
 			if (selectedFirstEvent == null) {
 				MatchSourceRadio.Enabled = MatchSourceAndOffsetRadio.Enabled = false;
 				MatchNameRadio.Checked = true;
@@ -15822,7 +15898,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 			}
 
-
 			private static class OCCommon {
 				/// <summary>
 				/// Messages
@@ -15832,7 +15907,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					public const int GW_HWNDNEXT = 2;
 				}
 			}
-
 		}
 	}
 	/// <summary>
@@ -17095,6 +17169,473 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return new Datamosh.Automator.ParameterDataList(ParamsList.CheckedItems.Cast<Datamosh.Automator.ParameterData>());
 		}
 	}
+
+	partial class CameraShakeForm {
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
+
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing) {
+			if (disposing && (components != null)) {
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		#region Windows Form Designer generated code
+
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent() {
+			this.components = new System.ComponentModel.Container();
+			this.dock = new System.Windows.Forms.TableLayoutPanel();
+			this.OkBtn = new System.Windows.Forms.Button();
+			this.CancelBtn = new System.Windows.Forms.Button();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.XToYBox = new System.Windows.Forms.NumericUpDown();
+			this.SkewOutBox = new System.Windows.Forms.NumericUpDown();
+			this.SkewXYBox = new System.Windows.Forms.NumericUpDown();
+			this.ShouldClearFramesCheck = new System.Windows.Forms.CheckBox();
+			this.XToYLbl = new System.Windows.Forms.Label();
+			this.SkewOutLbl = new System.Windows.Forms.Label();
+			this.SkewXYLbl = new System.Windows.Forms.Label();
+			this.SkewInLbl = new System.Windows.Forms.Label();
+			this.ShouldResetPanCheck = new System.Windows.Forms.CheckBox();
+			this.SkewInBox = new System.Windows.Forms.NumericUpDown();
+			this.Balloon = new System.Windows.Forms.ToolTip(this.components);
+			this.dock.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.XToYBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.SkewOutBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.SkewXYBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.SkewInBox)).BeginInit();
+			this.SuspendLayout();
+			//
+			// dock
+			//
+			this.dock.BackColor = System.Drawing.SystemColors.Control;
+			this.dock.ColumnCount = 3;
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.dock.Controls.Add(this.OkBtn, 1, 0);
+			this.dock.Controls.Add(this.CancelBtn, 2, 0);
+			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.dock.Location = new System.Drawing.Point(0, 215);
+			this.dock.Margin = new System.Windows.Forms.Padding(5);
+			this.dock.Name = "dock";
+			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.dock.RowCount = 1;
+			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.dock.Size = new System.Drawing.Size(366, 52);
+			this.dock.TabIndex = 9;
+			//
+			// OkBtn
+			//
+			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.OkBtn.Location = new System.Drawing.Point(158, 10);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.OkBtn.Name = "OkBtn";
+			this.OkBtn.Size = new System.Drawing.Size(94, 32);
+			this.OkBtn.TabIndex = 1;
+			this.OkBtn.Text = "确定(&O)";
+			this.OkBtn.UseVisualStyleBackColor = true;
+			//
+			// CancelBtn
+			//
+			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.CancelBtn.Location = new System.Drawing.Point(260, 10);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.CancelBtn.Name = "CancelBtn";
+			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
+			this.CancelBtn.TabIndex = 2;
+			this.CancelBtn.Text = "取消(&C)";
+			this.CancelBtn.UseVisualStyleBackColor = true;
+			//
+			// tableLayoutPanel1
+			//
+			this.tableLayoutPanel1.AutoSize = true;
+			this.tableLayoutPanel1.ColumnCount = 2;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.Controls.Add(this.XToYBox, 1, 3);
+			this.tableLayoutPanel1.Controls.Add(this.SkewOutBox, 1, 2);
+			this.tableLayoutPanel1.Controls.Add(this.SkewXYBox, 1, 1);
+			this.tableLayoutPanel1.Controls.Add(this.ShouldClearFramesCheck, 0, 5);
+			this.tableLayoutPanel1.Controls.Add(this.XToYLbl, 0, 3);
+			this.tableLayoutPanel1.Controls.Add(this.SkewOutLbl, 0, 2);
+			this.tableLayoutPanel1.Controls.Add(this.SkewXYLbl, 0, 1);
+			this.tableLayoutPanel1.Controls.Add(this.SkewInLbl, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.ShouldResetPanCheck, 0, 4);
+			this.tableLayoutPanel1.Controls.Add(this.SkewInBox, 1, 0);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(9);
+			this.tableLayoutPanel1.RowCount = 6;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(366, 214);
+			this.tableLayoutPanel1.TabIndex = 10;
+			//
+			// XToYBox
+			//
+			this.XToYBox.DecimalPlaces = 3;
+			this.XToYBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.XToYBox.Increment = new decimal(new int[] {
+			1,
+			0,
+			0,
+			65536});
+			this.XToYBox.Location = new System.Drawing.Point(147, 114);
+			this.XToYBox.Maximum = new decimal(new int[] {
+			1000,
+			0,
+			0,
+			0});
+			this.XToYBox.Minimum = new decimal(new int[] {
+			1000,
+			0,
+			0,
+			-2147483648});
+			this.XToYBox.Name = "XToYBox";
+			this.XToYBox.Size = new System.Drawing.Size(207, 27);
+			this.XToYBox.TabIndex = 9;
+			this.XToYBox.Value = new decimal(new int[] {
+			25,
+			0,
+			0,
+			65536});
+			//
+			// SkewOutBox
+			//
+			this.SkewOutBox.DecimalPlaces = 3;
+			this.SkewOutBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SkewOutBox.Location = new System.Drawing.Point(147, 80);
+			this.SkewOutBox.Maximum = new decimal(new int[] {
+			1000,
+			0,
+			0,
+			0});
+			this.SkewOutBox.Minimum = new decimal(new int[] {
+			1000,
+			0,
+			0,
+			-2147483648});
+			this.SkewOutBox.Name = "SkewOutBox";
+			this.SkewOutBox.Size = new System.Drawing.Size(207, 27);
+			this.SkewOutBox.TabIndex = 8;
+			this.SkewOutBox.Value = new decimal(new int[] {
+			4,
+			0,
+			0,
+			0});
+			//
+			// SkewXYBox
+			//
+			this.SkewXYBox.DecimalPlaces = 3;
+			this.SkewXYBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SkewXYBox.Increment = new decimal(new int[] {
+			1,
+			0,
+			0,
+			65536});
+			this.SkewXYBox.Location = new System.Drawing.Point(147, 46);
+			this.SkewXYBox.Maximum = new decimal(new int[] {
+			1000,
+			0,
+			0,
+			0});
+			this.SkewXYBox.Minimum = new decimal(new int[] {
+			1000,
+			0,
+			0,
+			-2147483648});
+			this.SkewXYBox.Name = "SkewXYBox";
+			this.SkewXYBox.Size = new System.Drawing.Size(207, 27);
+			this.SkewXYBox.TabIndex = 7;
+			this.SkewXYBox.Value = new decimal(new int[] {
+			15,
+			0,
+			0,
+			65536});
+			//
+			// ShouldClearFramesCheck
+			//
+			this.ShouldClearFramesCheck.AutoSize = true;
+			this.ShouldClearFramesCheck.Checked = true;
+			this.ShouldClearFramesCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.tableLayoutPanel1.SetColumnSpan(this.ShouldClearFramesCheck, 2);
+			this.ShouldClearFramesCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ShouldClearFramesCheck.Location = new System.Drawing.Point(12, 178);
+			this.ShouldClearFramesCheck.Name = "ShouldClearFramesCheck";
+			this.ShouldClearFramesCheck.Size = new System.Drawing.Size(342, 24);
+			this.ShouldClearFramesCheck.TabIndex = 5;
+			this.ShouldClearFramesCheck.Text = "在摇晃前重置所有帧";
+			this.ShouldClearFramesCheck.UseVisualStyleBackColor = true;
+			//
+			// XToYLbl
+			//
+			this.XToYLbl.AutoSize = true;
+			this.XToYLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.XToYLbl.Location = new System.Drawing.Point(9, 111);
+			this.XToYLbl.Margin = new System.Windows.Forms.Padding(0);
+			this.XToYLbl.MinimumSize = new System.Drawing.Size(0, 34);
+			this.XToYLbl.Name = "XToYLbl";
+			this.XToYLbl.Size = new System.Drawing.Size(135, 34);
+			this.XToYLbl.TabIndex = 3;
+			this.XToYLbl.Text = "水平/垂直位移比";
+			this.XToYLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// SkewOutLbl
+			//
+			this.SkewOutLbl.AutoSize = true;
+			this.SkewOutLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SkewOutLbl.Location = new System.Drawing.Point(9, 77);
+			this.SkewOutLbl.Margin = new System.Windows.Forms.Padding(0);
+			this.SkewOutLbl.MinimumSize = new System.Drawing.Size(0, 34);
+			this.SkewOutLbl.Name = "SkewOutLbl";
+			this.SkewOutLbl.Size = new System.Drawing.Size(135, 34);
+			this.SkewOutLbl.TabIndex = 2;
+			this.SkewOutLbl.Text = "数量";
+			this.SkewOutLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// SkewXYLbl
+			//
+			this.SkewXYLbl.AutoSize = true;
+			this.SkewXYLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SkewXYLbl.Location = new System.Drawing.Point(9, 43);
+			this.SkewXYLbl.Margin = new System.Windows.Forms.Padding(0);
+			this.SkewXYLbl.MinimumSize = new System.Drawing.Size(0, 34);
+			this.SkewXYLbl.Name = "SkewXYLbl";
+			this.SkewXYLbl.Size = new System.Drawing.Size(135, 34);
+			this.SkewXYLbl.TabIndex = 1;
+			this.SkewXYLbl.Text = "水平/垂直同步系数";
+			this.SkewXYLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// SkewInLbl
+			//
+			this.SkewInLbl.AutoSize = true;
+			this.SkewInLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SkewInLbl.Location = new System.Drawing.Point(9, 9);
+			this.SkewInLbl.Margin = new System.Windows.Forms.Padding(0);
+			this.SkewInLbl.MinimumSize = new System.Drawing.Size(0, 34);
+			this.SkewInLbl.Name = "SkewInLbl";
+			this.SkewInLbl.Size = new System.Drawing.Size(135, 34);
+			this.SkewInLbl.TabIndex = 0;
+			this.SkewInLbl.Text = "速度";
+			this.SkewInLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// ShouldResetPanCheck
+			//
+			this.ShouldResetPanCheck.AutoSize = true;
+			this.tableLayoutPanel1.SetColumnSpan(this.ShouldResetPanCheck, 2);
+			this.ShouldResetPanCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ShouldResetPanCheck.Location = new System.Drawing.Point(12, 148);
+			this.ShouldResetPanCheck.Name = "ShouldResetPanCheck";
+			this.ShouldResetPanCheck.Size = new System.Drawing.Size(342, 24);
+			this.ShouldResetPanCheck.TabIndex = 4;
+			this.ShouldResetPanCheck.Text = "在第一帧上重置平移/裁切";
+			this.ShouldResetPanCheck.UseVisualStyleBackColor = true;
+			//
+			// SkewInBox
+			//
+			this.SkewInBox.DecimalPlaces = 3;
+			this.SkewInBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SkewInBox.Location = new System.Drawing.Point(147, 12);
+			this.SkewInBox.Maximum = new decimal(new int[] {
+			1000,
+			0,
+			0,
+			0});
+			this.SkewInBox.Minimum = new decimal(new int[] {
+			1000,
+			0,
+			0,
+			-2147483648});
+			this.SkewInBox.Name = "SkewInBox";
+			this.SkewInBox.Size = new System.Drawing.Size(207, 27);
+			this.SkewInBox.TabIndex = 6;
+			this.SkewInBox.Value = new decimal(new int[] {
+			12,
+			0,
+			0,
+			0});
+			//
+			// Balloon
+			//
+			this.Balloon.AutomaticDelay = 0;
+			this.Balloon.AutoPopDelay = 60000;
+			this.Balloon.InitialDelay = 0;
+			this.Balloon.IsBalloon = true;
+			this.Balloon.ReshowDelay = 0;
+			this.Balloon.ShowAlways = true;
+			this.Balloon.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+			this.Balloon.ToolTipTitle = "填写说明";
+			//
+			// CameraShakeForm
+			//
+			this.AcceptButton = this.OkBtn;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.BackColor = System.Drawing.SystemColors.Window;
+			this.CancelButton = this.CancelBtn;
+			this.ClientSize = new System.Drawing.Size(366, 267);
+			this.Controls.Add(this.tableLayoutPanel1);
+			this.Controls.Add(this.dock);
+			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.Location = new System.Drawing.Point(60, 60);
+			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
+			this.Name = "CameraShakeForm";
+			this.ShowIcon = false;
+			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+			this.Text = "镜头摇晃 - 参数";
+			this.dock.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.XToYBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.SkewOutBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.SkewXYBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.SkewInBox)).EndInit();
+			this.ResumeLayout(false);
+			this.PerformLayout();
+
+		}
+
+		#endregion
+
+		public System.Windows.Forms.TableLayoutPanel dock;
+		public System.Windows.Forms.Button OkBtn;
+		public System.Windows.Forms.Button CancelBtn;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.Label SkewXYLbl;
+		private System.Windows.Forms.Label SkewInLbl;
+		private System.Windows.Forms.Label SkewOutLbl;
+		private System.Windows.Forms.Label XToYLbl;
+		private System.Windows.Forms.CheckBox ShouldResetPanCheck;
+		private System.Windows.Forms.CheckBox ShouldClearFramesCheck;
+		private System.Windows.Forms.NumericUpDown SkewInBox;
+		private System.Windows.Forms.NumericUpDown XToYBox;
+		private System.Windows.Forms.NumericUpDown SkewOutBox;
+		private System.Windows.Forms.NumericUpDown SkewXYBox;
+		public System.Windows.Forms.ToolTip Balloon;
+	}
+
+	public partial class CameraShakeForm : Form, IInterpret, IConfigIniUser {
+		private readonly EntryPoint parent;
+		private ConfigIni configIni { get { return parent.configIni; } }
+
+		public CameraShakeForm(EntryPoint parent) {
+			this.parent = parent;
+			InitializeComponent();
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
+			Translate();
+			ReadIni();
+			FormClosing += (sender, e) => SaveIni();
+		}
+
+		public Config GetConfig() {
+			return new Config {
+				SkewIn = (double)SkewInBox.Value,
+				SkewXY = (double)SkewXYBox.Value,
+				SkewOut = (float)SkewOutBox.Value,
+				XToYRatio = (float)XToYBox.Value,
+				ShouldResetPan = ShouldResetPanCheck.Checked,
+				ShouldClearFrames = ShouldClearFramesCheck.Checked,
+			};
+		}
+
+		public void Translate() {
+			Lang str = Lang.str;
+			Font = new Font(str.ui_font, 9F);
+			OkBtn.Text = str.ok;
+			CancelBtn.Text = str.cancel;
+			SkewInLbl.Text = str.shake_skew_in;
+			SkewXYLbl.Text = str.shake_skew_xy;
+			SkewOutLbl.Text = str.shake_skew_out;
+			XToYLbl.Text = str.shake_x_to_y_ratio;
+			ShouldResetPanCheck.Text = str.shake_should_reset_pan;
+			ShouldClearFramesCheck.Text = str.shake_should_clear_frames;
+			Balloon.ToolTipTitle = str.balloon_title;
+			Balloon.SetToolTip(SkewInLbl, str.shake_skew_in_tooltip);
+			Balloon.SetToolTip(SkewInBox, str.shake_skew_in_tooltip);
+			Balloon.SetToolTip(SkewXYLbl, str.shake_skew_xy_tooltip);
+			Balloon.SetToolTip(SkewXYBox, str.shake_skew_xy_tooltip);
+			Balloon.SetToolTip(SkewOutLbl, str.shake_skew_out_tooltip);
+			Balloon.SetToolTip(SkewOutBox, str.shake_skew_out_tooltip);
+			Balloon.SetToolTip(XToYLbl, str.shake_x_to_y_tooltip);
+			Balloon.SetToolTip(XToYBox, str.shake_x_to_y_tooltip);
+			Balloon.SetToolTip(ShouldResetPanCheck, str.shake_should_reset_pan_tooltip);
+			Balloon.SetToolTip(ShouldClearFramesCheck, str.shake_should_clear_frames_tooltip);
+			Text = str.camera_shake_parameters;
+		}
+
+		public void SaveIni() {
+			configIni.StartSection("CameraShake");
+			configIni.Write("SkewIn", SkewInBox.Value);
+			configIni.Write("SkewXY", SkewXYBox.Value);
+			configIni.Write("SkewOut", SkewOutBox.Value);
+			configIni.Write("XToYRatio", XToYBox.Value);
+			configIni.Write("ShouldResetPan", ShouldResetPanCheck.Checked);
+			configIni.Write("ShouldClearFrames", ShouldClearFramesCheck.Checked);
+			configIni.EndSection();
+		}
+
+		public void ReadIni() {
+			configIni.StartSection("CameraShake");
+			SkewInBox.SetValue(configIni.Read("SkewIn", 12m));
+			SkewXYBox.SetValue(configIni.Read("SkewXY", 1.5m));
+			SkewOutBox.SetValue(configIni.Read("SkewOut", 4m));
+			XToYBox.SetValue(configIni.Read("XToYRatio", 2.5m));
+			ShouldResetPanCheck.Checked = configIni.Read("ShouldResetPan", false);
+			ShouldClearFramesCheck.Checked = configIni.Read("ShouldClearFrames", true);
+			configIni.EndSection();
+		}
+
+		public struct Config {
+			/// <summary>
+			/// Rate of shake multiplier.
+			/// </summary>
+			public double SkewIn;
+			/// <summary>
+			/// Synchronicity factor between horizontal and vertical movements.
+			/// </summary>
+			public double SkewXY;
+			/// <summary>
+			/// Number of pixels to displace.
+			/// </summary>
+			public float SkewOut;
+			/// <summary>
+			/// Affect displacement horizontally as a proportion of vertical displacement.
+			/// </summary>
+			public float XToYRatio;
+			/// <summary>
+			/// Reset Pan on first frame.
+			/// </summary>
+			public bool ShouldResetPan;
+			/// <summary>
+			/// Start all over?
+			/// </summary>
+			public bool ShouldClearFrames;
+		}
+	}
 	#endregion
 
 	#region 设计器部分
@@ -17163,6 +17704,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.loadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unloadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.enableLegacyProgressDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
 			this.exportConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.importConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
@@ -17262,7 +17805,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioFadeOutBox = new Otomad.VegasScript.OtomadHelper.V4.IntegerTrackWithBox();
 			this.AudioFadeOutCurveCombo = new System.Windows.Forms.ComboBox();
 			this.AudioFadeInTimeTxt = new System.Windows.Forms.TextBox();
-			this.flowLayoutPanel14 = new System.Windows.Forms.FlowLayoutPanel();
+			this.tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
 			this.AudioFadeSetAsPercentRadio = new System.Windows.Forms.RadioButton();
 			this.AudioFadeSetAsTimecodeRadio = new System.Windows.Forms.RadioButton();
 			this.AudioTuneGroup = new System.Windows.Forms.GroupBox();
@@ -17305,7 +17848,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioNormalizeCheck = new System.Windows.Forms.CheckBox();
 			this.AudioFreezeLastFrameCheck = new System.Windows.Forms.CheckBox();
 			this.AudioMultitrackForChordsCheck = new System.Windows.Forms.CheckBox();
-			this.CreateEventGroupCheck = new System.Windows.Forms.CheckBox();
+			this.CreateEventGroupInAudioCheck = new System.Windows.Forms.CheckBox();
 			this.flowLayoutPanel16 = new System.Windows.Forms.FlowLayoutPanel();
 			this.AudioAutoPanCheck = new System.Windows.Forms.CheckBox();
 			this.AudioAutoPanCurveCombo = new System.Windows.Forms.ComboBox();
@@ -17395,6 +17938,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoFreezeFirstFrameCheck = new System.Windows.Forms.CheckBox();
 			this.VideoFreezeLastFrameCheck = new System.Windows.Forms.CheckBox();
 			this.VideoMultitrackForChordsCheck = new System.Windows.Forms.CheckBox();
+			this.CreateEventGroupInVideoCheck = new System.Windows.Forms.CheckBox();
 			this.SheetTab = new System.Windows.Forms.TabPage();
 			this.StaffClefParamsGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -17509,7 +18053,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.YtpLbl = new System.Windows.Forms.Label();
 			this.MoshTab = new System.Windows.Forms.TabPage();
 			this.DatamoshTable = new System.Windows.Forms.TableLayoutPanel();
-			this.StutterBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.CloseAfterOpenMoshCheck = new System.Windows.Forms.CheckBox();
 			this.DatamoshClipsFolderGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
@@ -17523,6 +18066,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.RenderingBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.ScrambleBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.AutomatorBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.StutterBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
+			this.CameraShakeBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.DatamoshNotInstalledTable = new System.Windows.Forms.TableLayoutPanel();
 			this.DatamoshNotInstalledInfo = new System.Windows.Forms.Label();
 			this.DownloadDatamoshLink = new System.Windows.Forms.LinkLabel();
@@ -17569,8 +18114,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.enableLegacyProgressDialogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).BeginInit();
@@ -17608,7 +18151,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioTab.SuspendLayout();
 			this.AudioParamsGroup.SuspendLayout();
 			this.AudioParamsTable.SuspendLayout();
-			this.flowLayoutPanel14.SuspendLayout();
+			this.tableLayoutPanel20.SuspendLayout();
 			this.AudioTuneGroup.SuspendLayout();
 			this.AudioTuneTablePanel.SuspendLayout();
 			this.flowLayoutPanel10.SuspendLayout();
@@ -18303,6 +18846,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
 			this.toolStripSeparator1.Size = new System.Drawing.Size(268, 6);
+			//
+			// enableLegacyProgressDialogToolStripMenuItem
+			//
+			this.enableLegacyProgressDialogToolStripMenuItem.CheckOnClick = true;
+			this.enableLegacyProgressDialogToolStripMenuItem.Name = "enableLegacyProgressDialogToolStripMenuItem";
+			this.enableLegacyProgressDialogToolStripMenuItem.Size = new System.Drawing.Size(271, 26);
+			this.enableLegacyProgressDialogToolStripMenuItem.Text = "启用旧版进度对话框";
+			//
+			// toolStripSeparator12
+			//
+			this.toolStripSeparator12.Name = "toolStripSeparator12";
+			this.toolStripSeparator12.Size = new System.Drawing.Size(268, 6);
 			//
 			// exportConfigToolStripMenuItem
 			//
@@ -19358,7 +19913,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioParamsTable.Controls.Add(this.AudioFadeOutBox, 1, 2);
 			this.AudioParamsTable.Controls.Add(this.AudioFadeOutCurveCombo, 2, 2);
 			this.AudioParamsTable.Controls.Add(this.AudioFadeInTimeTxt, 1, 3);
-			this.AudioParamsTable.Controls.Add(this.flowLayoutPanel14, 1, 0);
+			this.AudioParamsTable.Controls.Add(this.tableLayoutPanel20, 0, 0);
 			this.AudioParamsTable.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.AudioParamsTable.Location = new System.Drawing.Point(5, 25);
 			this.AudioParamsTable.Margin = new System.Windows.Forms.Padding(2);
@@ -19519,18 +20074,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioFadeInTimeTxt.Visible = false;
 			this.AudioFadeInTimeTxt.Leave += new System.EventHandler(this.TimecodeText_Leave);
 			//
-			// flowLayoutPanel14
+			// tableLayoutPanel20
 			//
-			this.flowLayoutPanel14.AutoSize = true;
-			this.AudioParamsTable.SetColumnSpan(this.flowLayoutPanel14, 2);
-			this.flowLayoutPanel14.Controls.Add(this.AudioFadeSetAsPercentRadio);
-			this.flowLayoutPanel14.Controls.Add(this.AudioFadeSetAsTimecodeRadio);
-			this.flowLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Right;
-			this.flowLayoutPanel14.Location = new System.Drawing.Point(386, 0);
-			this.flowLayoutPanel14.Margin = new System.Windows.Forms.Padding(0);
-			this.flowLayoutPanel14.Name = "flowLayoutPanel14";
-			this.flowLayoutPanel14.Size = new System.Drawing.Size(252, 30);
-			this.flowLayoutPanel14.TabIndex = 0;
+			this.tableLayoutPanel20.AutoSize = true;
+			this.tableLayoutPanel20.ColumnCount = 2;
+			this.AudioParamsTable.SetColumnSpan(this.tableLayoutPanel20, 3);
+			this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel20.Controls.Add(this.AudioFadeSetAsPercentRadio);
+			this.tableLayoutPanel20.Controls.Add(this.AudioFadeSetAsTimecodeRadio);
+			this.tableLayoutPanel20.Dock = System.Windows.Forms.DockStyle.Right;
+			this.tableLayoutPanel20.Location = new System.Drawing.Point(386, 0);
+			this.tableLayoutPanel20.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel20.Name = "tableLayoutPanel20";
+			this.tableLayoutPanel20.RowCount = 1;
+			this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel20.Size = new System.Drawing.Size(252, 30);
+			this.tableLayoutPanel20.TabIndex = 1;
 			//
 			// AudioFadeSetAsPercentRadio
 			//
@@ -19540,7 +20100,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioFadeSetAsPercentRadio.Location = new System.Drawing.Point(3, 3);
 			this.AudioFadeSetAsPercentRadio.Name = "AudioFadeSetAsPercentRadio";
 			this.AudioFadeSetAsPercentRadio.Size = new System.Drawing.Size(120, 24);
-			this.AudioFadeSetAsPercentRadio.TabIndex = 0;
+			this.AudioFadeSetAsPercentRadio.TabIndex = 1;
 			this.AudioFadeSetAsPercentRadio.TabStop = true;
 			this.AudioFadeSetAsPercentRadio.Text = "设定为百分比";
 			this.AudioFadeSetAsPercentRadio.UseVisualStyleBackColor = true;
@@ -19553,7 +20113,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioFadeSetAsTimecodeRadio.Location = new System.Drawing.Point(129, 3);
 			this.AudioFadeSetAsTimecodeRadio.Name = "AudioFadeSetAsTimecodeRadio";
 			this.AudioFadeSetAsTimecodeRadio.Size = new System.Drawing.Size(120, 24);
-			this.AudioFadeSetAsTimecodeRadio.TabIndex = 1;
+			this.AudioFadeSetAsTimecodeRadio.TabIndex = 2;
 			this.AudioFadeSetAsTimecodeRadio.Text = "设定为时间码";
 			this.AudioFadeSetAsTimecodeRadio.UseVisualStyleBackColor = true;
 			this.AudioFadeSetAsTimecodeRadio.CheckedChanged += new System.EventHandler(this.FadeSetAsRadio_CheckedChanged);
@@ -20099,7 +20659,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel5.Controls.Add(this.AudioNormalizeCheck);
 			this.flowLayoutPanel5.Controls.Add(this.AudioFreezeLastFrameCheck);
 			this.flowLayoutPanel5.Controls.Add(this.AudioMultitrackForChordsCheck);
-			this.flowLayoutPanel5.Controls.Add(this.CreateEventGroupCheck);
+			this.flowLayoutPanel5.Controls.Add(this.CreateEventGroupInAudioCheck);
 			this.flowLayoutPanel5.Controls.Add(this.flowLayoutPanel16);
 			this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel5.Location = new System.Drawing.Point(5, 5);
@@ -20149,6 +20709,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// AudioFreezeLastFrameCheck
 			//
 			this.AudioFreezeLastFrameCheck.AutoSize = true;
+			this.AudioFreezeLastFrameCheck.Checked = true;
+			this.AudioFreezeLastFrameCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.AudioFreezeLastFrameCheck.Location = new System.Drawing.Point(302, 4);
 			this.AudioFreezeLastFrameCheck.Margin = new System.Windows.Forms.Padding(2);
 			this.AudioFreezeLastFrameCheck.Name = "AudioFreezeLastFrameCheck";
@@ -20171,16 +20733,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioMultitrackForChordsCheck.Text = "复音多轨";
 			this.AudioMultitrackForChordsCheck.UseVisualStyleBackColor = true;
 			//
-			// CreateEventGroupCheck
+			// CreateEventGroupInAudioCheck
 			//
-			this.CreateEventGroupCheck.AutoSize = true;
-			this.CreateEventGroupCheck.Location = new System.Drawing.Point(492, 4);
-			this.CreateEventGroupCheck.Margin = new System.Windows.Forms.Padding(2);
-			this.CreateEventGroupCheck.Name = "CreateEventGroupCheck";
-			this.CreateEventGroupCheck.Size = new System.Drawing.Size(91, 24);
-			this.CreateEventGroupCheck.TabIndex = 8;
-			this.CreateEventGroupCheck.Text = "创建分组";
-			this.CreateEventGroupCheck.UseVisualStyleBackColor = true;
+			this.CreateEventGroupInAudioCheck.AutoSize = true;
+			this.CreateEventGroupInAudioCheck.Checked = true;
+			this.CreateEventGroupInAudioCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.CreateEventGroupInAudioCheck.Location = new System.Drawing.Point(492, 4);
+			this.CreateEventGroupInAudioCheck.Margin = new System.Windows.Forms.Padding(2);
+			this.CreateEventGroupInAudioCheck.Name = "CreateEventGroupInAudioCheck";
+			this.CreateEventGroupInAudioCheck.Size = new System.Drawing.Size(91, 24);
+			this.CreateEventGroupInAudioCheck.TabIndex = 8;
+			this.CreateEventGroupInAudioCheck.Text = "创建分组";
+			this.CreateEventGroupInAudioCheck.UseVisualStyleBackColor = true;
+			this.CreateEventGroupInAudioCheck.CheckedChanged += new System.EventHandler(this.CreateEventGroupCheck_CheckedChanged);
 			//
 			// flowLayoutPanel16
 			//
@@ -21881,6 +22446,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel7.Controls.Add(this.VideoFreezeFirstFrameCheck);
 			this.flowLayoutPanel7.Controls.Add(this.VideoFreezeLastFrameCheck);
 			this.flowLayoutPanel7.Controls.Add(this.VideoMultitrackForChordsCheck);
+			this.flowLayoutPanel7.Controls.Add(this.CreateEventGroupInVideoCheck);
 			this.flowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel7.Location = new System.Drawing.Point(5, 5);
 			this.flowLayoutPanel7.Margin = new System.Windows.Forms.Padding(2);
@@ -21947,6 +22513,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoMultitrackForChordsCheck.TabIndex = 9;
 			this.VideoMultitrackForChordsCheck.Text = "复音多轨";
 			this.VideoMultitrackForChordsCheck.UseVisualStyleBackColor = true;
+			//
+			// CreateEventGroupInVideoCheck
+			//
+			this.CreateEventGroupInVideoCheck.AutoSize = true;
+			this.CreateEventGroupInVideoCheck.Checked = true;
+			this.CreateEventGroupInVideoCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.CreateEventGroupInVideoCheck.Location = new System.Drawing.Point(477, 4);
+			this.CreateEventGroupInVideoCheck.Margin = new System.Windows.Forms.Padding(2);
+			this.CreateEventGroupInVideoCheck.Name = "CreateEventGroupInVideoCheck";
+			this.CreateEventGroupInVideoCheck.Size = new System.Drawing.Size(91, 24);
+			this.CreateEventGroupInVideoCheck.TabIndex = 10;
+			this.CreateEventGroupInVideoCheck.Text = "创建分组";
+			this.CreateEventGroupInVideoCheck.UseVisualStyleBackColor = true;
+			this.CreateEventGroupInVideoCheck.CheckedChanged += new System.EventHandler(this.CreateEventGroupCheck_CheckedChanged);
 			//
 			// SheetTab
 			//
@@ -23879,7 +24459,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshTable.AutoSize = true;
 			this.DatamoshTable.ColumnCount = 1;
 			this.DatamoshTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.DatamoshTable.Controls.Add(this.StutterBtn, 0, 8);
 			this.DatamoshTable.Controls.Add(this.CloseAfterOpenMoshCheck, 0, 0);
 			this.DatamoshTable.Controls.Add(this.DatamoshClipsFolderGroup, 0, 1);
 			this.DatamoshTable.Controls.Add(this.DatamoshBtn, 0, 2);
@@ -23888,36 +24467,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.DatamoshTable.Controls.Add(this.RenderingBtn, 0, 5);
 			this.DatamoshTable.Controls.Add(this.ScrambleBtn, 0, 6);
 			this.DatamoshTable.Controls.Add(this.AutomatorBtn, 0, 7);
+			this.DatamoshTable.Controls.Add(this.StutterBtn, 0, 8);
+			this.DatamoshTable.Controls.Add(this.CameraShakeBtn, 0, 9);
 			this.DatamoshTable.Dock = System.Windows.Forms.DockStyle.Top;
 			this.DatamoshTable.Location = new System.Drawing.Point(3, 82);
 			this.DatamoshTable.Margin = new System.Windows.Forms.Padding(0);
 			this.DatamoshTable.Name = "DatamoshTable";
-			this.DatamoshTable.RowCount = 9;
+			this.DatamoshTable.RowCount = 10;
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
 			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-			this.DatamoshTable.Size = new System.Drawing.Size(631, 756);
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+			this.DatamoshTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+			this.DatamoshTable.Size = new System.Drawing.Size(631, 946);
 			this.DatamoshTable.TabIndex = 9;
-			//
-			// StutterBtn
-			//
-			this.StutterBtn.CommandLink = true;
-			this.StutterBtn.CommandLinkNote = "口吃剪辑（向前向后播放）。";
-			this.StutterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.StutterBtn.Location = new System.Drawing.Point(2, 668);
-			this.StutterBtn.Margin = new System.Windows.Forms.Padding(2);
-			this.StutterBtn.Name = "StutterBtn";
-			this.StutterBtn.Size = new System.Drawing.Size(627, 86);
-			this.StutterBtn.TabIndex = 17;
-			this.StutterBtn.Text = "结巴效果";
-			this.StutterBtn.UseVisualStyleBackColor = true;
-			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
 			// CloseAfterOpenMoshCheck
 			//
@@ -24052,7 +24620,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.LayeringBtn.Location = new System.Drawing.Point(2, 308);
 			this.LayeringBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.LayeringBtn.Name = "LayeringBtn";
-			this.LayeringBtn.Size = new System.Drawing.Size(627, 86);
+			this.LayeringBtn.Size = new System.Drawing.Size(627, 106);
 			this.LayeringBtn.TabIndex = 13;
 			this.LayeringBtn.Text = "多层叠化";
 			this.LayeringBtn.UseVisualStyleBackColor = true;
@@ -24063,7 +24631,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.RenderingBtn.CommandLink = true;
 			this.RenderingBtn.CommandLinkNote = "快速自动地对视频选中区域进行渲染。";
 			this.RenderingBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RenderingBtn.Location = new System.Drawing.Point(2, 398);
+			this.RenderingBtn.Location = new System.Drawing.Point(2, 418);
 			this.RenderingBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.RenderingBtn.Name = "RenderingBtn";
 			this.RenderingBtn.Size = new System.Drawing.Size(627, 86);
@@ -24077,10 +24645,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ScrambleBtn.CommandLink = true;
 			this.ScrambleBtn.CommandLinkNote = "快速自动地对选中剪辑进行打乱。";
 			this.ScrambleBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ScrambleBtn.Location = new System.Drawing.Point(2, 488);
+			this.ScrambleBtn.Location = new System.Drawing.Point(2, 508);
 			this.ScrambleBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.ScrambleBtn.Name = "ScrambleBtn";
-			this.ScrambleBtn.Size = new System.Drawing.Size(627, 86);
+			this.ScrambleBtn.Size = new System.Drawing.Size(627, 106);
 			this.ScrambleBtn.TabIndex = 15;
 			this.ScrambleBtn.Text = "随机扰乱";
 			this.ScrambleBtn.UseVisualStyleBackColor = true;
@@ -24091,14 +24659,42 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutomatorBtn.CommandLink = true;
 			this.AutomatorBtn.CommandLinkNote = "快速自动地为选中视频效果设定随机值。";
 			this.AutomatorBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AutomatorBtn.Location = new System.Drawing.Point(2, 578);
+			this.AutomatorBtn.Location = new System.Drawing.Point(2, 618);
 			this.AutomatorBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.AutomatorBtn.Name = "AutomatorBtn";
-			this.AutomatorBtn.Size = new System.Drawing.Size(627, 86);
+			this.AutomatorBtn.Size = new System.Drawing.Size(627, 106);
 			this.AutomatorBtn.TabIndex = 16;
 			this.AutomatorBtn.Text = "自动生效";
 			this.AutomatorBtn.UseVisualStyleBackColor = true;
 			this.AutomatorBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			//
+			// StutterBtn
+			//
+			this.StutterBtn.CommandLink = true;
+			this.StutterBtn.CommandLinkNote = "口吃剪辑（向前向后播放）。";
+			this.StutterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.StutterBtn.Location = new System.Drawing.Point(2, 728);
+			this.StutterBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.StutterBtn.Name = "StutterBtn";
+			this.StutterBtn.Size = new System.Drawing.Size(627, 106);
+			this.StutterBtn.TabIndex = 17;
+			this.StutterBtn.Text = "结巴效果";
+			this.StutterBtn.UseVisualStyleBackColor = true;
+			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
+			//
+			// CameraShakeBtn
+			//
+			this.CameraShakeBtn.CommandLink = true;
+			this.CameraShakeBtn.CommandLinkNote = "使用平移/裁切来摇晃选中剪辑。";
+			this.CameraShakeBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.CameraShakeBtn.Location = new System.Drawing.Point(2, 838);
+			this.CameraShakeBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.CameraShakeBtn.Name = "CameraShakeBtn";
+			this.CameraShakeBtn.Size = new System.Drawing.Size(627, 106);
+			this.CameraShakeBtn.TabIndex = 18;
+			this.CameraShakeBtn.Text = "镜头摇晃";
+			this.CameraShakeBtn.UseVisualStyleBackColor = true;
+			this.CameraShakeBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
 			// DatamoshNotInstalledTable
 			//
@@ -24685,18 +25281,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			//
-			// enableLegacyProgressDialogToolStripMenuItem
-			//
-			this.enableLegacyProgressDialogToolStripMenuItem.CheckOnClick = true;
-			this.enableLegacyProgressDialogToolStripMenuItem.Name = "enableLegacyProgressDialogToolStripMenuItem";
-			this.enableLegacyProgressDialogToolStripMenuItem.Size = new System.Drawing.Size(271, 26);
-			this.enableLegacyProgressDialogToolStripMenuItem.Text = "启用旧版进度对话框";
-			//
-			// toolStripSeparator12
-			//
-			this.toolStripSeparator12.Name = "toolStripSeparator12";
-			this.toolStripSeparator12.Size = new System.Drawing.Size(268, 6);
-			//
 			// ConfigForm
 			//
 			this.AcceptButton = this.OkBtn;
@@ -24707,6 +25291,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.menu);
+			this.DoubleBuffered = true;
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.Location = new System.Drawing.Point(40, 40);
 			this.MainMenuStrip = this.menu;
@@ -24778,8 +25363,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioParamsGroup.PerformLayout();
 			this.AudioParamsTable.ResumeLayout(false);
 			this.AudioParamsTable.PerformLayout();
-			this.flowLayoutPanel14.ResumeLayout(false);
-			this.flowLayoutPanel14.PerformLayout();
+			this.tableLayoutPanel20.ResumeLayout(false);
+			this.tableLayoutPanel20.PerformLayout();
 			this.AudioTuneGroup.ResumeLayout(false);
 			this.AudioTuneGroup.PerformLayout();
 			this.AudioTuneTablePanel.ResumeLayout(false);
@@ -25135,7 +25720,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.ToolStripMenuItem unloadPresetsToolStripMenuItem;
 		public System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		public System.Windows.Forms.ToolStripMenuItem formSizeToolStripMenuItem;
-		public System.Windows.Forms.CheckBox CreateEventGroupCheck;
+		public System.Windows.Forms.CheckBox CreateEventGroupInAudioCheck;
 		public CommandLinkButton BatchSubtitleGenerationBtn;
 		public CommandLinkButton FindClipsBtn;
 		public CommandLinkButton QuickNormalizeBtn;
@@ -25229,9 +25814,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.ToolStripMenuItem increaseSpacingAllTracksToolStripMenuItem;
 		public System.Windows.Forms.TextBox AudioFadeOutTimeTxt;
 		public System.Windows.Forms.TextBox AudioFadeInTimeTxt;
-		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel14;
-		public System.Windows.Forms.RadioButton AudioFadeSetAsPercentRadio;
-		public System.Windows.Forms.RadioButton AudioFadeSetAsTimecodeRadio;
 		public System.Windows.Forms.TextBox VideoFadeInTimeTxt;
 		public System.Windows.Forms.TextBox VideoFadeOutTimeTxt;
 		public System.Windows.Forms.Button VideoParamsPresetsBtn;
@@ -25370,6 +25952,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.Label DatamoshInfoLbl;
 		public System.Windows.Forms.ToolStripMenuItem enableLegacyProgressDialogToolStripMenuItem;
 		public System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
+		public CommandLinkButton CameraShakeBtn;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel20;
+		public System.Windows.Forms.RadioButton AudioFadeSetAsPercentRadio;
+		public System.Windows.Forms.RadioButton AudioFadeSetAsTimecodeRadio;
+		public System.Windows.Forms.CheckBox CreateEventGroupInVideoCheck;
 	}
 	#endregion
 
@@ -25623,7 +26210,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AudioStretchAttrCombo.SetIndex(configIni.Read("StretchAttr", 1), 1);
 			AudioLockStretchPitchCheck.Checked = configIni.Read("LockStretchPitch", false);
 			AudioReserveFormantCheck.Checked = configIni.Read("ReserveFormant", false);
-			CreateEventGroupCheck.Checked = configIni.Read("CreateEventGroup", true);
+			CreateEventGroupInAudioCheck.Checked = configIni.Read("CreateEventGroup", true);
 			configIni.EndSection();
 			#endregion
 
@@ -25826,7 +26413,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("StretchAttr", AudioStretchAttrCombo.SelectedIndex);
 			configIni.Write("LockStretchPitch", AudioLockStretchPitchCheck.Checked);
 			configIni.Write("ReserveFormant", AudioReserveFormantCheck.Checked);
-			configIni.Write("CreateEventGroup", CreateEventGroupCheck.Checked);
+			configIni.Write("CreateEventGroup", CreateEventGroupInAudioCheck.Checked);
 			configIni.EndSection();
 			#endregion
 
@@ -26014,7 +26601,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				for (int i = 0; i < midi.TrackInfos.Length; i++) {
 					MIDI.TrackInfo info = midi.TrackInfos[i];
 					MidiChannelCombo.Items.Add(info);
-					if (preferredChannel == null && (info.IsDrumKit || info.Index != 10))
+					if (preferredChannel == null && (!info.IsDrumKit || info.Index != 10))
 						preferredChannel = i; // 10 号通道是鼓组专用通道，不要选。
 				}
 				MidiChannelCombo.SelectedIndex = preferredChannel ?? 0;
@@ -26238,7 +26825,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AudioNormalizeCheck.Text = str.audio_normalize;
 			AudioFreezeLastFrameCheck.Text = VideoFreezeLastFrameCheck.Text = str.freeze_last_frame;
 			AudioLegatoLbl.Text = VideoLegatoLbl.Text = str.legato;
-			CreateEventGroupCheck.Text = str.create_event_group;
+			CreateEventGroupInAudioCheck.Text = str.create_event_group;
 			AudioAutoPanCheck.Text = str.auto_pan;
 			AudioVelocityGroup.Text = VideoVelocityGroup.Text = str.velocity;
 			AudioVelocityCheck.Text = VideoVelocityCheck.Text = str.mapping_velocity;
@@ -26401,13 +26988,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			});
 			HelperTab.Text = str.helper;
 			QuickSelectIntervalBtn.Text = str.quick_select_interval;
-			QuickSelectIntervalBtn.CommandLinkNote = str.select_interval_configform_info + '\n' + str.select_events_count_info;
+			QuickSelectIntervalBtn.CommandLinkNote = str.select_interval_configform_info;
 			QuickNormalizeBtn.Text = str.quick_normalize;
-			QuickNormalizeBtn.CommandLinkNote = str.quick_normalize_configform_info + '\n' + str.select_audioevents_count_info;
+			QuickNormalizeBtn.CommandLinkNote = str.quick_normalize_configform_info;
 			ReplaceClipsBtn.Text = str.replace_clips;
-			ReplaceClipsBtn.CommandLinkNote = str.replace_clips_configform_info + '\n' + str.select_events_count_info;
+			ReplaceClipsBtn.CommandLinkNote = str.replace_clips_configform_info;
 			ChangeTuneMethodBtn.Text = str.change_tune_method;
-			ChangeTuneMethodBtn.CommandLinkNote = str.change_tune_method_configform_info + '\n' + str.select_audioevents_count_info;
+			ChangeTuneMethodBtn.CommandLinkNote = str.change_tune_method_configform_info;
 			#if !VER_GEQ_16
 				ChangeTuneMethodBtn.CommandLinkNote = str.change_tune_method_configform_info + '\n' + string.Format(str.unsupported_vegas_version_feature, 16);
 			#endif
@@ -26437,11 +27024,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			FindClipsBtn.Text = str.find_clips;
 			FindClipsBtn.CommandLinkNote = str.find_clips_configform_info;
 			ApplyVisualEffectBtn.Text = str.apply_visual_effect;
-			ApplyVisualEffectBtn.CommandLinkNote = str.apply_visual_effect_configform_info + '\n' + str.select_videoevents_count_info;
+			ApplyVisualEffectBtn.CommandLinkNote = str.apply_visual_effect_configform_info;
 			ConvertMusicBeatsBtn.Text = str.convert_music_beats;
 			ConvertMusicBeatsBtn.CommandLinkNote = str.convert_music_beats_configform_info;
 			CustomFadeGainBtn.Text = str.custom_fade_gain;
-			CustomFadeGainBtn.CommandLinkNote = str.custom_fade_gain_configform_info + '\n' + str.select_events_count_info;
+			CustomFadeGainBtn.CommandLinkNote = str.custom_fade_gain_configform_info;
 			HelperLbl.Text = str.helper_info;
 			CloseAfterOpenHelperCheck.Text = str.close_after_open_helper;
 			CloseAfterOpenMoshCheck.Text = str.close_after_open_helper;
@@ -26460,12 +27047,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ScrambleBtn.Text = str.scramble;
 			AutomatorBtn.Text = str.automator;
 			StutterBtn.Text = str.stutter;
+			CameraShakeBtn.Text = str.camera_shake;
 			DatamoshBtn.CommandLinkNote = str.datamosh_configform_info;
 			DatamixBtn.CommandLinkNote = str.datamix_configform_info;
 			LayeringBtn.CommandLinkNote = str.layering_configform_info;
 			RenderingBtn.CommandLinkNote = str.rendering_configform_info;
 			ScrambleBtn.CommandLinkNote = str.scramble_configform_info;
 			AutomatorBtn.CommandLinkNote = str.automator_configform_info;
+			CameraShakeBtn.CommandLinkNote = str.camera_shake_configform_info;
 			StutterBtn.CommandLinkNote = str.stutter_configform_info;
 			Text = str.otomad_helper_config;
 		}
@@ -26900,8 +27489,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			QuickSelectIntervalBtn.CommandLinkNote = str.select_interval_configform_info + '\n' + selectInfo;
 			ReplaceClipsBtn.CommandLinkNote = str.replace_clips_configform_info + '\n' + selectInfo;
 			CustomFadeGainBtn.CommandLinkNote = str.custom_fade_gain_configform_info + '\n' + selectInfo;
+			ScrambleBtn.CommandLinkNote = str.scramble_configform_info + '\n' + selectInfo;
+			StutterBtn.CommandLinkNote = str.stutter_configform_info + '\n' + selectInfo;
 			if (selectedClipsCount == 0)
-				ReplaceClipsBtn.Enabled = QuickSelectIntervalBtn.Enabled = CustomFadeGainBtn.Enabled = false;
+				ReplaceClipsBtn.Enabled = QuickSelectIntervalBtn.Enabled = CustomFadeGainBtn.Enabled =
+					ScrambleBtn.Enabled = StutterBtn.Enabled = false;
 			#endregion
 
 			#region 选中音频剪辑
@@ -26909,11 +27501,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			string selectAudioInfo = string.Format(str.select_audioevents_count_info, selectedAudioClipsCount);
 			ChangeTuneMethodBtn.CommandLinkNote = str.change_tune_method_configform_info + '\n' + selectAudioInfo;
 			QuickNormalizeBtn.CommandLinkNote = str.quick_normalize_configform_info + '\n' + selectAudioInfo;
+			ConvertMusicBeatsBtn.CommandLinkNote = str.convert_music_beats_configform_info + '\n' + str.select_exactly_one_audio_event_configform_info;
 			if (selectedAudioClipsCount == 0)
 				ChangeTuneMethodBtn.Enabled = QuickNormalizeBtn.Enabled = false;
 			if (selectedAudioClipsCount != 1)
 				ConvertMusicBeatsBtn.Enabled = false;
 
+			// 低于 Vegas 16 的版本不支持更改调音算法。
 			#if !VER_GEQ_16
 				ChangeTuneMethodBtn.Enabled = false;
 				ChangeTuneMethodBtn.CommandLinkNote = str.change_tune_method_configform_info + '\n' +
@@ -26925,7 +27519,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			int selectedVideoClipsCount = parent.GetSelectedVideoEvents().Length;
 			string selectVideoInfo = string.Format(str.select_videoevents_count_info, selectedVideoClipsCount);
 			ApplyVisualEffectBtn.CommandLinkNote = str.apply_visual_effect_configform_info + '\n' + selectVideoInfo;
-			if (selectedVideoClipsCount == 0) ApplyVisualEffectBtn.Enabled = false;
+			AutomatorBtn.CommandLinkNote = str.automator_configform_info + '\n' + selectVideoInfo;
+			CameraShakeBtn.CommandLinkNote = str.camera_shake_configform_info + '\n' + selectVideoInfo;
+			LayeringBtn.CommandLinkNote = str.layering_configform_info + '\n' + str.select_exactly_one_video_event_configform_info;
+			if (selectedVideoClipsCount == 0)
+				ApplyVisualEffectBtn.Enabled = AutomatorBtn.Enabled = CameraShakeBtn.Enabled = false;
+			if (selectedVideoClipsCount != 1)
+				LayeringBtn.Enabled = false;
 			#endregion
 
 			#region 选中轨道
@@ -26942,11 +27542,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			DatamoshBtn.CommandLinkNote = str.datamosh_configform_info;
 			DatamixBtn.CommandLinkNote = str.datamix_configform_info;
-			LayeringBtn.CommandLinkNote = str.layering_configform_info;
 			RenderingBtn.CommandLinkNote = str.rendering_configform_info;
-			ScrambleBtn.CommandLinkNote = str.scramble_configform_info;
-			AutomatorBtn.CommandLinkNote = str.automator_configform_info;
-			StutterBtn.CommandLinkNote = str.stutter_configform_info;
 		}
 
 		[Obsolete]
@@ -28094,6 +28690,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				{ ScrambleBtn, T(typeof(Datamosh.Scramble), false) },
 				{ AutomatorBtn, T(typeof(Datamosh.Automator), false) },
 				{ StutterBtn, T(typeof(Datamosh.Stutter), false) },
+				{ CameraShakeBtn, T(typeof(Datamosh.CameraShake), false) },
 			};
 			// Item2 的布尔值表示该功能是否需要设定剪辑缓存目录。
 			if (!map.ContainsKey(btn)) return;
@@ -28128,6 +28725,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (VideoVelocityLessBox.Value >= VideoVelocityMoreBox.Value || VideoGainLessBox.Value > VideoGainMoreBox.Value)
 					return false;
 			return true;
+		}
+
+		private bool Is_CreateEventGroupCheck_CheckedChanging = false;
+		private void CreateEventGroupCheck_CheckedChanged(object sender, EventArgs e) {
+			if (Is_CreateEventGroupCheck_CheckedChanging) return;
+			Is_CreateEventGroupCheck_CheckedChanging = true;
+			if (sender == CreateEventGroupInVideoCheck)
+				CreateEventGroupInAudioCheck.Checked = CreateEventGroupInVideoCheck.Checked;
+			else if (sender == CreateEventGroupInAudioCheck)
+				CreateEventGroupInVideoCheck.Checked = CreateEventGroupInAudioCheck.Checked;
+			Is_CreateEventGroupCheck_CheckedChanging = false;
 		}
 	}
 
@@ -28742,8 +29350,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			batch_subtitle_generation_configform_info = "预先设定好“字幕和文字”的预设，然后在此添加多行文本。",
 			find_clips_configform_info = "根据指定的条件（如剪辑名称、与选中剪辑相同的素材等）选中符合条件的所有轨道剪辑。",
 			apply_visual_effect_configform_info = "将指定的视频轨道剪辑应用映像节奏视觉效果。",
-			convert_music_beats_configform_info = "将指定的音乐的节拍在四四拍、四三拍、八六拍等之间进行转换。\n必须恰好选择 1 个音频轨道剪辑，不得多选或少选。",
+			convert_music_beats_configform_info = "将指定的音乐的节拍在四四拍、四三拍、八六拍等之间进行转换。",
 			custom_fade_gain_configform_info = "将多个轨道剪辑根据指定的规则来更改增益值。",
+			select_exactly_one_audio_event_configform_info = "必须恰好选择 1 个音频轨道剪辑，不得多选或少选。",
+			select_exactly_one_video_event_configform_info = "必须恰好选择 1 个视频轨道剪辑，不得多选或少选。",
 			clear_tracks_motion = "清除轨道运动",
 			clear_tracks_effect = "清除轨道效果",
 			track_legato = "填补轨道间隙",
@@ -28778,6 +29388,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			scramble = "随机扰乱",
 			automator = "自动生效",
 			stutter = "结巴效果",
+			camera_shake = "镜头摇晃",
 			datamosh_configform_info = "快速自动地对视频选中区域进行数据抹失。",
 			datamix_configform_info = "快速自动地对视频选中区域进行数据抹失（将一个剪辑抹入另一个剪辑）。",
 			layering_configform_info = "快速自动地对选中剪辑进行多层叠化。",
@@ -28785,6 +29396,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			scramble_configform_info = "快速自动地对选中剪辑进行打乱。",
 			automator_configform_info = "快速自动地为选中视频效果设定随机值。",
 			stutter_configform_info = "口吃剪辑（向前向后播放）。",
+			camera_shake_configform_info = "使用平移/裁切来摇晃选中剪辑。",
 			otomad_helper_config = "Otomad Helper for Vegas - 配置",
 			reset_config_successful = "重置完成，请重新启动脚本。",
 			reset_config_successful_title = "重置用户配置",
@@ -28839,7 +29451,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			render_template_generate_completed = "已为当前帧速率生成了渲染模板。请重新启动 Vegas 并再次运行该脚本。",
 			unexpected_exception = "未知异常：",
 			unexpected_render_status = "非预期的渲染状态：",
-			datamix_selection_position_exception = "错误：选区必须从大于或等于 1 帧开始！",
+			datamix_selection_position_exception = "错误：选区必须从大于或等于第 1 帧开始！",
 			datamix_selection_length_exception = "错误：选区长度必须大于 1 帧！",
 			datamosh_frames_repeats_exception = "错误：帧重复必须大于 0！",
 			datamosh_selection_length_exception = "错误：选区长度必须与帧计数一样长！",
@@ -28871,7 +29483,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			canceled = "已取消。",
 			automator_info = "勾选需要自动随机设置值的效果参数。",
 			pre_render = "预渲染",
-			enable_legacy_progress_dialog = "启用旧版进度对话框";
+			enable_legacy_progress_dialog = "启用旧版进度对话框",
+			camera_shake_parameters = "镜头摇晃 - 参数",
+			shake_skew_in = "速度",
+			shake_skew_xy = "水平/垂直同步系数",
+			shake_skew_out = "数量",
+			shake_x_to_y_ratio = "水平/垂直位移比",
+			shake_should_reset_pan = "在第一帧上重置平移/裁切",
+			shake_should_clear_frames = "在摇晃前重置所有帧",
+			shake_skew_in_tooltip = "更改摇晃的频率。",
+			shake_skew_xy_tooltip = "更改相对垂直速度。设置为 1，则以圆圈的方式运动。",
+			shake_skew_out_tooltip = "镜头偏离中心的像素数。亦是放大的边距。",
+			shake_x_to_y_tooltip = "与水平距离相乘。大于 1 的值将会放得更大。",
+			shake_should_reset_pan_tooltip = "若不勾选，可在当前视频缩放范围内摇晃。",
+			shake_should_clear_frames_tooltip = "若不勾选，可将新的抖动效果与之前的抖动效果相乘。";
 
 		static Lang() {
 			SChinese = new Lang();
@@ -29448,8 +30073,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				batch_subtitle_generation_configform_info = "Preset the \"Titles & Text\" preset, and then add multiple lines of text here.",
 				find_clips_configform_info = "Select all track events that match the specified, such as the clip name, the same source as the selected clip, etc.",
 				apply_visual_effect_configform_info = "Apply PV rhythm visual effect to the specified video events.",
-				convert_music_beats_configform_info = "Convert the specified music beats between 4/4, 3/4, 6/8, etc.\nYou must select exactly ONE audio event, not more or less.",
+				convert_music_beats_configform_info = "Convert the specified music beats between 4/4, 3/4, 6/8, etc.",
 				custom_fade_gain_configform_info = "Change the gain value of multiple track clips according to the specified rules.",
+				select_exactly_one_audio_event_configform_info = "You must select exactly ONE audio event, not more or less.",
+				select_exactly_one_video_event_configform_info = "You must select exactly ONE video event, not more or less.",
 				clear_tracks_motion = "Clear Tracks Motion",
 				clear_tracks_effect = "Clear Tracks Effect",
 				track_legato = "Tracks Legato",
@@ -29484,6 +30111,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scramble = "Scramble",
 				automator = "Automator",
 				stutter = "Stutter",
+				camera_shake = "Shake",
 				datamosh_configform_info = "Datamoshes a part of a video quickly and automatically.",
 				datamix_configform_info = "Datamoshes a part of a video quickly and automatically (mosh a clip onto another).",
 				layering_configform_info = "Does multilayering on a part of a video quickly and automatically.",
@@ -29491,6 +30119,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scramble_configform_info = "Scrambles clips/events quickly and automatically.",
 				automator_configform_info = "Sets random automation values for video effects quickly and automatically.",
 				stutter_configform_info = "Stutters clips/events (play forward, backward, ...).",
+				camera_shake_configform_info = "Uses Pan/crop to make the selected layers shake.",
 				otomad_helper_config = "Otomad Helper for Vegas - Config",
 				reset_config_successful = "The reset is complete, please restart the script.",
 				reset_config_successful_title = "Reset User Configuration",
@@ -29578,6 +30207,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				automator_info = "Check the effect parameters that require scrambled",
 				pre_render = "Render",
 				enable_legacy_progress_dialog = "Enable legacy progress dialog",
+				camera_shake_parameters = "Camera Shake Parameters",
+				shake_skew_in = "Speed",
+				shake_skew_xy = "H/V synchronicity",
+				shake_skew_out = "Amount",
+				shake_x_to_y_ratio = "H/V ratio of displacement",
+				shake_should_reset_pan = "Reset Pan/Crop on first frame",
+				shake_should_clear_frames = "Reset all frames before shaking",
+				shake_skew_in_tooltip = "Changes the frequency of the shake.",
+				shake_skew_xy_tooltip = "Changes the relative vertical speed. Set to 1 to move in a circle.",
+				shake_skew_out_tooltip = "Number of pixels the camera will shift away from the center. It is also the margin of zoom-in.",
+				shake_x_to_y_tooltip = "Multiply horizontal distance. Values above 1 will produce a greater zoom-in.",
+				shake_should_reset_pan_tooltip = "Leave unchecked to shake within the current video zoom.",
+				shake_should_clear_frames_tooltip = "Leave unchecked to multiply the new shake effect with a previous shake effect.",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -29698,7 +30340,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				every_few = "每幾個選擇一個",
 				which_one = "選擇每組第幾個",
 				select_how_many = "每次要選取幾個",
-				reset_select = "重置選擇(&R)",
+				reset_select = "重設選擇(&R)",
 				quick_select_interval = "快速間隔選擇",
 				select_interval_info = "請先在 Vegas 軌道中選中一些素材，然後再啟動本對話方塊，使用下面的功能。",
 				select_events_count_info = "已選中 {0} 個軌道剪輯。",
@@ -29853,7 +30495,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_min_length_tooltip = "指定單個軌道剪輯的最小長度。\n單位：毫秒。",
 				file = "檔案(&F)",
 				save_config = "储存使用者組態(&S)",
-				reset_config = "重置使用者組態(&R)",
+				reset_config = "重設使用者組態(&R)",
 				exit_discarding_changes = "放弃更改並退出(&D)",
 				exit = "退出(&X)",
 				pitch_shift_preset = "移調插件預設(&P)",
@@ -30097,7 +30739,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				oversaturation = "過飽和",
 				high_contrast = "高對比",
 				sure_to_delete = "確定要删除選中項？",
-				sure_to_reset = "確定要重置？",
+				sure_to_reset = "確定要重設？",
 				sonar = "聲呐",
 				sonar_config = "為鼓組啟用聲呐效果",
 				separate_drums = "分離不同鼓聲",
@@ -30152,8 +30794,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				batch_subtitle_generation_configform_info = "預先設定好“字幕和文字”的預設，然後在此添加多行文字。",
 				find_clips_configform_info = "根據指定的條件（如剪輯名稱、與選中剪輯相同的素材等）選中符合條件的所有軌道剪輯。",
 				apply_visual_effect_configform_info = "將指定的視訊軌道剪輯應用映像節奏視覺效果。",
-				convert_music_beats_configform_info = "將指定的音樂的節拍在四四拍、四三拍、八六拍等之間進行轉換。\n必須恰好選擇 1 個音訊軌道剪輯，不得多選或少選。",
+				convert_music_beats_configform_info = "將指定的音樂的節拍在四四拍、四三拍、八六拍等之間進行轉換。",
 				custom_fade_gain_configform_info = "將多個軌道剪輯根據指定的規則來更改增益值。",
+				select_exactly_one_audio_event_configform_info = "必須恰好選擇 1 個音訊軌道剪輯，不得多選或少選。",
+				select_exactly_one_video_event_configform_info = "必須恰好選擇 1 個視訊軌道剪輯，不得多選或少選。",
 				clear_tracks_motion = "清除軌道運動",
 				clear_tracks_effect = "清除軌道效果",
 				track_legato = "填補軌道間隙",
@@ -30188,6 +30832,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scramble = "隨機擾亂",
 				automator = "自動生效",
 				stutter = "結巴效果",
+				camera_shake = "鏡頭搖晃",
 				datamosh_configform_info = "快速自動地對視訊選中區域進行數據抹失。",
 				datamix_configform_info = "快速自動地對視訊選中區域進行數據抹失（將一個剪輯抹入另一個剪輯）。",
 				layering_configform_info = "快速自動地對選中剪輯進行多層疊化。",
@@ -30195,10 +30840,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scramble_configform_info = "快速自動地對選中剪輯進行打亂。",
 				automator_configform_info = "快速自動地為選中視訊效果設定隨機值。",
 				stutter_configform_info = "口吃剪輯（向前向後播放）。",
+				camera_shake_configform_info = "使用平移/裁切來搖晃選中剪輯。",
 				otomad_helper_config = "Otomad Helper for Vegas - 設定",
-				reset_config_successful = "重置完成，請重新啟動腳本。",
-				reset_config_successful_title = "重置使用者組態",
-				sure_to_reset_config = "確定要重置使用者組態嗎？\n\n重置後您的使用者組態設定數據將會遺失。",
+				reset_config_successful = "重設完成，請重新啟動腳本。",
+				reset_config_successful_title = "重設使用者組態",
+				sure_to_reset_config = "確定要重設使用者組態嗎？\n\n重設後您的使用者組態設定數據將會遺失。",
 				about_title = "關於",
 				script_author = "腳本作者",
 				script_original_author = "腳本原作者",
@@ -30249,7 +30895,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				render_template_generate_completed = "已為當前畫面播放速率生成了渲染範本。請重新啟動 Vegas 並再次運行該腳本。",
 				unexpected_exception = "未知异常：",
 				unexpected_render_status = "非預期的渲染狀態：",
-				datamix_selection_position_exception = "錯誤：選區必須從大於或等於 1 幀開始！",
+				datamix_selection_position_exception = "錯誤：選區必須從大於或等於第 1 幀開始！",
 				datamix_selection_length_exception = "錯誤：選區長度必須大於 1 幀！",
 				datamosh_frames_repeats_exception = "錯誤：幀重複必須大於 0！",
 				datamosh_selection_length_exception = "錯誤：選區長度必須與幀計數一樣長！",
@@ -30282,6 +30928,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				automator_info = "勾選需要自動隨機設定值的效果參數。",
 				pre_render = "預渲染",
 				enable_legacy_progress_dialog = "啟用舊版進度對話方塊",
+				camera_shake_parameters = "鏡頭搖晃 - 參數",
+				shake_skew_in = "速度",
+				shake_skew_xy = "水平/垂直同步係數",
+				shake_skew_out = "數量",
+				shake_x_to_y_ratio = "水平/垂直位移比",
+				shake_should_reset_pan = "在第一幀上重設平移/裁切",
+				shake_should_clear_frames = "在搖晃前重設所有幀",
+				shake_skew_in_tooltip = "更改搖晃的頻率。",
+				shake_skew_xy_tooltip = "更改相對垂直速度。設定為 1，則以圓圈的管道運動。",
+				shake_skew_out_tooltip = "鏡頭偏離中心的圖元數。亦是放大的邊距。",
+				shake_x_to_y_tooltip = "與水准距離相乘。大於 1 的值將會放得更大。",
+				shake_should_reset_pan_tooltip = "若不勾選，可在當前視頻縮放範圍內搖晃。",
+				shake_should_clear_frames_tooltip = "若不勾選，可將新的抖動效果與之前的抖動效果相乘。",
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -30857,8 +31516,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				batch_subtitle_generation_configform_info = "「字幕と文字」のプリセットを設定し、ここに複数行の文字を追加します。",
 				find_clips_configform_info = "指定した条件（クリップ名、選択したクリップと同じ素材など）に基づいて、条件に一致するすべてのトラッククリップを選択します。",
 				apply_visual_effect_configform_info = "指定したビデオトラッククリップに映画リズム視覚効果を適用します。",
-				convert_music_beats_configform_info = "指定された音楽のビートを四四拍、四三拍、八六拍などの間で変換します。\nオーディオトラッククリップを適切に1つ選択する必要があり、複数選択または複数選択しないでください。",
+				convert_music_beats_configform_info = "指定された音楽のビートを四四拍、四三拍、八六拍などの間で変換します。",
 				custom_fade_gain_configform_info = "複数のトラッククリップを指定した規則に基づいてゲイン値を変更します。",
+				select_exactly_one_audio_event_configform_info = "オーディオトラッククリップを適切に1つ選択する必要があり、複数選択または複数選択しないでください。",
+				select_exactly_one_video_event_configform_info = "ビデオトラッククリップを適切に1つ選択する必要があり、複数選択または複数選択しないでください。",
 				clear_tracks_motion = "クリアトラックモーション",
 				clear_tracks_effect = "クリアトラック効果",
 				track_legato = "ラックの間隙を埋める",
@@ -30893,6 +31554,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scramble = "スクランブル",
 				automator = "オートメーター",
 				stutter = "スタッター",
+				camera_shake = "ブレ",
 				datamosh_configform_info = "ビデオ選択領域に自動的にデータモッシュを実行します。",
 				datamix_configform_info = "ビデオ選択領域に自動的にデータモッシュを実行します（1つのクリップを別のクリップに混ぜます）。",
 				layering_configform_info = "ビデオの一部にマルチレイヤを自動的に行います。",
@@ -30900,6 +31562,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scramble_configform_info = "スクランブルを自動的にクリップを選択します。",
 				automator_configform_info = "選択したビデオエフェクトのランダムな値を自動的に設定します。",
 				stutter_configform_info = "スタータークリップ/イベント（再生、逆再生……）。",
+				camera_shake_configform_info = "パン/クロップを使用して、選択したレイヤーをブレさせます。",
 				otomad_helper_config = "Otomad Helper for Vegas - 設定",
 				reset_config_successful = "リセットが完了しました。スクリプトを再起動してください。",
 				reset_config_successful_title = "ユーザ設定のリセット",
@@ -30987,6 +31650,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				automator_info = "スクランブルが必要な効果パラメータをチェックします。",
 				pre_render = "レンダー",
 				enable_legacy_progress_dialog = "旧進捗ダイアログを有効化",
+				camera_shake_parameters = "手ぶれ - パラメータ",
+				shake_skew_in = "スピード",
+				shake_skew_xy = "水平・垂直方向の同期性",
+				shake_skew_out = "量",
+				shake_x_to_y_ratio = "変位量の水平・垂直比率",
+				shake_should_reset_pan = "最初のフレームでパン/クロップをリセット",
+				shake_should_clear_frames = "シェイク前に全フレームをリセット",
+				shake_skew_in_tooltip = "シェイクの周波数を変更します。",
+				shake_skew_xy_tooltip = "垂直方向の相対速度を変更します。1に設定すると円形に移動します。",
+				shake_skew_out_tooltip = "カメラが中心からずれる画素数。ズームインの余白でもある。",
+				shake_x_to_y_tooltip = "水平距離を乗算する。1以上の値を設定すると、より大きく拡大されます。",
+				shake_should_reset_pan_tooltip = "チェックを外すと、現在の映像のズーム範囲内で手ぶれします。",
+				shake_should_clear_frames_tooltip = "チェックを外すと、新しいシェイクエフェクトと以前のシェイクエフェクトを掛け合わせます。",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -31562,8 +32238,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				batch_subtitle_generation_configform_info = "Заранее установите предустановку «Субтитры и Текст», после чего добавьте несколько строк текста.",
 				find_clips_configform_info = "Выберите все клипы дорожки, соответствующие указанным критериям, таким как название клипа, тот же материал, что и у выбранного клипа и т.д.",
 				apply_visual_effect_configform_info = "Применить визуальный эффект ритма PV к указанным видеособытиям.",
-				convert_music_beats_configform_info = "Преобразование указанных музыкальных битов между 4/4, 3/4, 6/8 и т. д.\nВы должны выбрать ровно ОДНО звуковое событие, не больше и не меньше.",
+				convert_music_beats_configform_info = "Преобразование указанных музыкальных битов между 4/4, 3/4, 6/8 и т. д.",
 				custom_fade_gain_configform_info = "Измените значение усиления нескольких клипов дорожек в соответствии с указанными правилами.",
+				select_exactly_one_audio_event_configform_info = "Вы должны выбрать ровно ОДНО звуковое событие, не больше и не меньше.",
+				select_exactly_one_video_event_configform_info = "Вы должны выбрать именно ОДНО видео событие, не больше и не меньше.",
 				clear_tracks_motion = "Очистить отслеживание движения",
 				clear_tracks_effect = "Эффект удаления траекторнн",
 				track_legato = "Заполнение орбитального зазора",
@@ -31598,6 +32276,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scramble = "Скрамбл",
 				automator = "Автомат",
 				stutter = "Заикаться",
+				camera_shake = "Дрожание",
 				datamosh_configform_info = "Датамозаика части видео быстро и автоматически.",
 				datamix_configform_info = "Быстрая и автоматическая датамозаика части видео (наложение одного клипа на другой).",
 				layering_configform_info = "Быстро и автоматически выполняет многослойность на части видео.",
@@ -31605,6 +32284,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scramble_configform_info = "Быстро и автоматически скремблирует клипы/события.",
 				automator_configform_info = "Быстро и автоматически устанавливает случайные значения автоматизации для видеоэффектов.",
 				stutter_configform_info = "Заикание клипов/событий (воспроизведение вперед, назад, ...).",
+				camera_shake_configform_info = "Использует функцию панорама/урожай, чтобы заставить выбранные слои дрожать.",
 				otomad_helper_config = "Otomad Helper for Vegas - Конфигурация",
 				reset_config_successful = "Сброс завершен, перезапустите скрипт.",
 				reset_config_successful_title = "Сбросить конфигурацию пользователя",
@@ -31692,6 +32372,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				automator_info = "Проверьте параметры эффекта, которые требуют скремблирования.",
 				pre_render = "Рендер",
 				enable_legacy_progress_dialog = "Включить диалоговое окно прогресса наследия",
+				camera_shake_parameters = "Параметры Дрожание Камеры",
+				shake_skew_in = "Скорость",
+				shake_skew_xy = "Г/В синхронность",
+				shake_skew_out = "Сумма",
+				shake_x_to_y_ratio = "Соотношение Г/В смещения",
+				shake_should_reset_pan = "Сброс панорама/урожай по первому кадру",
+				shake_should_clear_frames = "Сброс всех кадров перед встряхиванием",
+				shake_skew_in_tooltip = "Изменяет частоту встряхивания.",
+				shake_skew_xy_tooltip = "Изменяет относительную вертикальную скорость.\nУстановите значение 1, чтобы двигаться по кругу.",
+				shake_skew_out_tooltip = "Количество пикселей, на которое камера сместится от центра.\nЭто также предел увеличения.",
+				shake_x_to_y_tooltip = "Умножение горизонтального расстояния.\nЗначения больше 1 обеспечивают большее увеличение.",
+				shake_should_reset_pan_tooltip = "Оставьте флажок не отмеченным, чтобы трястись в пределах текущего масштаба видео.",
+				shake_should_clear_frames_tooltip = "Если флажок не установлен,\nновый эффект встряхивания будет умножен на предыдущий эффект встряхивания.",
 			};
 		}
 	}
