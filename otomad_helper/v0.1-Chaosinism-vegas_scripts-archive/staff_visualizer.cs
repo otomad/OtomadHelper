@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-using Sony.Vegas;
+using ScriptPortal.Vegas;
 using NAudio.Midi;
 
 public class EntryPoint {
