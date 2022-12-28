@@ -7,19 +7,7 @@
  *
  * 新版脚本由兰音重新编写。
  * 在此处获取最新版：https://github.com/otomad/OtomadHelper/releases/latest
- * 仓库地址：https://github.com/otomad/OtomadHelper
- *
- * Evauation 的说明文档（英语）：https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit
- * Cassidy 的教程视频（英语）：https://www.youtube.com/watch?v=8vSpzgL_86A
- *
- * 旧版说明文档：
- * 发行说明 (v4.9.25.0)（中文）：https://www.bilibili.com/read/cv13335178
- * 发行说明 (v4.10.17.0)（中文）：https://www.bilibili.com/read/cv13614419
- * 说明文档（B 站）(v0.1)（中文）：https://www.bilibili.com/read/cv392013
- * 说明文档（B 碗）(v0.1)（日语）：https://bowlroll.net/user/261124
- * 五线谱可视化说明文档 (v0.1)（中文）：https://www.bilibili.com/read/cv1027442
- * 疑难解答（中文）：https://www.bilibili.com/read/cv495309
- * 教程视频 (v0.1)（中文）：https://www.bilibili.com/video/av22226321
+ * 更多详情请见仓库地址：https://github.com/otomad/OtomadHelper
  *
  * 开工时间：公元 2021 年 9 月 5 日 星期日，上午 4:14:26
  * Copyright (c) 2021 ~, Ranne
@@ -40,6 +28,7 @@
  * See the documentation link for instructions.
  * The script is redeveloped based on the original author Chaosinism's open source code and uses the NAudio library.
  * Get the latest version here: https://github.com/otomad/OtomadHelper/releases/latest
+ * Repository link for more details: https://github.com/otomad/OtomadHelper
  * Project start date: Sun, Sep 5th 2021 A.D., 4:14:26 a.m.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
