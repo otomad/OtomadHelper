@@ -84,9 +84,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 24, 28, 0);
+		public static readonly Version VERSION = new Version(4, 24, 29, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2022, 12, 28);
+		public static readonly DateTime REVISION_DATE = new DateTime(2022, 12, 29);
 
 		// 配置参数变量
 		#region 视频属性
@@ -3428,6 +3428,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		CW_FLIP,
 		H_FLIP_SUSTAIN,
 		H_FLIP_RELAY,
+		H_FLIP_INVERT,
 		CCW_ROTATE,
 		CW_ROTATE,
 		TURNED,
@@ -3476,6 +3477,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					new string[] { "0°", "90°", "180°", "270°" },
 					new string[] { str.effect_init_forward, str.effect_init_reversed },
 					new string[] { str.effect_init_forward, str.effect_init_reversed },
+					new string[] { str.effect_init_forward, str.effect_init_reversed },
 					new string[] { "0°", "-90°", "-180°", "-270°" },
 					new string[] { "0°", "90°", "180°", "270°" },
 					new string[] { str.effect_init_forward, str.effect_init_turned },
@@ -3515,7 +3517,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			get {
 				Lang str = Lang.str;
 				return new Dictionary<string, PvVisualEffectType[]> {
-					{ str.flip_class, new PvVisualEffectType[] { PvVisualEffectType.H_FLIP, PvVisualEffectType.V_FLIP, PvVisualEffectType.CCW_FLIP, PvVisualEffectType.CW_FLIP, PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_RELAY } },
+					{ str.flip_class, new PvVisualEffectType[] { PvVisualEffectType.H_FLIP, PvVisualEffectType.V_FLIP, PvVisualEffectType.CCW_FLIP, PvVisualEffectType.CW_FLIP, PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_RELAY, PvVisualEffectType.H_FLIP_INVERT } },
 					{ str.rotation_class, new PvVisualEffectType[] { PvVisualEffectType.CCW_ROTATE, PvVisualEffectType.CW_ROTATE, PvVisualEffectType.TURNED } },
 					{ str.scale_class, new PvVisualEffectType[] { PvVisualEffectType.ZOOM_OUT_IN } },
 					{ str.mirror_class, new PvVisualEffectType[] { PvVisualEffectType.H_MIRROR, PvVisualEffectType.V_MIRROR, PvVisualEffectType.CCW_MIRROR, PvVisualEffectType.CW_MIRROR } },
@@ -3571,7 +3573,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public PvVisualEffectType? VerticalExpansion { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND); } }
 		public bool RequirePicInPicDeformEffects { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.PUYO_PUYO) != null; } }
 		public PvVisualEffectType? TimeClass2 { get { return GetFirstEffectInRange(PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD); } }
-		public bool IsPitchHoldEffects { get { return GetFirstEffectInRange(PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_RELAY) != null; } }
+		public bool IsPitchHoldEffects { get { return GetFirstEffectInRange(PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_INVERT) != null; } }
 
 		public PvVisualEffect(PvVisualEffectType fx, int initStep = 0) : this(new PrveValue(fx, initStep)) { }
 		public PvVisualEffect(PrveValue fx) : this(new PrveValues { fx }) { }
@@ -3623,6 +3625,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							verticalFlip = false;
 						} else if (fx == PvVisualEffectType.H_FLIP_RELAY)
 							verticalFlip = !verticalFlip;
+						break;
+					case PvVisualEffectType.H_FLIP_INVERT:
+						if (!isPitchHold) {
+							horizontalFlip = step == 1;
+							isNegative = false;
+						} else
+							isNegative = !isNegative;
 						break;
 					case PvVisualEffectType.NEGATIVE:
 						isNegative = step == 1;
@@ -26014,7 +26023,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			saveConfigToolStripMenuItem.Click += (sender, e) => SaveIni();
 			exitToolStripMenuItem.Click += new EventHandler(CancelBtn_Click);
 			aboutToolStripMenuItem.Click += new EventHandler(AboutBtn_Click);
-			DownloadDatamoshLink.Click += (sender, e) => OpenLink(Links.GITHUB_LATEST);
+			DownloadDatamoshLink.Click += (sender, e) => OpenLink(Links.GITHUB_DATAMOSH_EXTPACK);
 			BindMenuLink(latestVersionLinkToolStripMenuItem, Links.GITHUB_LATEST);
 			BindMenuLink(latestVersionToolStripMenuItemInBar, Links.GITHUB_LATEST);
 			BindMenuLink(githubToolStripMenuItem, Links.REPOSITORY);
@@ -26701,8 +26710,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			resetConfigToolStripMenuItem.Text = str.reset_config;
 			exitDiscardingChangesToolStripMenuItem.Text = str.exit_discarding_changes;
 			exitToolStripMenuItem.Text = str.exit;
-			importConfigToolStripMenuItem.Text = str.import_config;
-			exportConfigToolStripMenuItem.Text = str.export_config;
+			importConfigToolStripMenuItem.Text = str.import_config + str.dialog_sign;
+			exportConfigToolStripMenuItem.Text = str.export_config + str.dialog_sign;
 			pitchShiftPresetMenuItem.Text = str.pitch_shift_preset;
 			loadPresetsToolStripMenuItem.Text = str.load_presets + str.dialog_sign;
 			unloadPresetsToolStripMenuItem.Text = str.unload_presets + str.dialog_sign;
@@ -26807,7 +26816,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AudioNormalizeCheck.Text = str.audio_normalize;
 			AudioFreezeLastFrameCheck.Text = VideoFreezeLastFrameCheck.Text = str.freeze_last_frame;
 			AudioLegatoLbl.Text = VideoLegatoLbl.Text = str.legato;
-			CreateEventGroupInAudioCheck.Text = str.create_event_group;
+			CreateEventGroupInAudioCheck.Text = CreateEventGroupInVideoCheck.Text = str.create_event_group;
 			AudioAutoPanCheck.Text = str.auto_pan;
 			AudioVelocityGroup.Text = VideoVelocityGroup.Text = str.velocity;
 			AudioVelocityCheck.Text = VideoVelocityCheck.Text = str.mapping_velocity;
@@ -26843,7 +26852,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			VideoEffectCombo.Items.AddRange(new string[] {
 				str.no_effects, str.h_flip, str.v_flip,
 				str.ccw_flip, str.cw_flip,
-				str.h_flip_sustain, str.h_flip_relay,
+				str.h_flip_sustain, str.h_flip_relay, str.h_flip_invert,
 				str.ccw_rotate, str.cw_rotate, str.turned,
 				str.zoom_out_in,
 				str.h_mirror, str.v_mirror,
@@ -27351,7 +27360,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				TUTORIAL_VIDEO_ENGLISH = "https://youtu.be/8vSpzgL_86A", // Bug 之一：链接中不能包含如问号或等号等特殊符号。暂时打不开，以 YouTube 短链替换之。
 				GITHUB_LATEST_API = "https://api.github.com/repos/otomad/VegasScripts/releases/latest", // 一小时 60 次上限。
 				GITHUB_LATEST_API_2 = "https://otomad.github.io/VegasScripts/README.md",
-				GITHUB_ISSUES = "https://github.com/otomad/OtomadHelper/issues";
+				GITHUB_ISSUES = "https://github.com/otomad/OtomadHelper/issues",
+				GITHUB_DATAMOSH_EXTPACK = "https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh";
 		}
 
 		private void UserHelpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -29032,8 +29042,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ytp_max_length_tooltip = "指定单个轨道剪辑的最大长度。\n单位：毫秒。",
 			ytp_min_length_tooltip = "指定单个轨道剪辑的最小长度。\n单位：毫秒。",
 			file = "文件(&F)",
-			save_config = "保存用户配置(&S)",
-			reset_config = "重置用户配置(&R)",
+			save_config = "保存配置(&S)",
+			reset_config = "重置配置(&R)",
 			exit_discarding_changes = "放弃更改并退出(&D)",
 			exit = "退出(&X)",
 			pitch_shift_preset = "移调插件预设(&P)",
@@ -29181,6 +29191,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			cw_flip = "顺时针翻转",
 			h_flip_sustain = "水平翻转保持",
 			h_flip_relay = "水平翻转中继",
+			h_flip_invert = "水平翻转反转",
 			ccw_rotate = "逆时针旋转",
 			cw_rotate = "顺时针旋转",
 			turned = "颠倒",
@@ -29755,8 +29766,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_max_length_tooltip = "Specify the maximum length of a single track clip.\nUnit: milliseconds.",
 				ytp_min_length_tooltip = "Specify the minimum length of a single track clip.\nUnit: milliseconds.",
 				file = "&File",
-				save_config = "&Save user configuration",
-				reset_config = "&Reset user configuration",
+				save_config = "&Save configuration",
+				reset_config = "&Reset configuration",
 				exit_discarding_changes = "&Discard changes and exit",
 				exit = "E&xit",
 				pitch_shift_preset = "&Pitch shift plugin presets",
@@ -29904,6 +29915,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				cw_flip = "Clockwise Flip",
 				h_flip_sustain = "Horizontal Flip Sustain",
 				h_flip_relay = "Horizontal Flip Relay",
+				h_flip_invert = "Horizontal Flip Invert",
 				ccw_rotate = "Counterclockwise Rotation",
 				cw_rotate = "Clockwise Rotation",
 				turned = "Turned",
@@ -30476,8 +30488,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_max_length_tooltip = "指定單個軌道剪輯的最大長度。\n單位：毫秒。",
 				ytp_min_length_tooltip = "指定單個軌道剪輯的最小長度。\n單位：毫秒。",
 				file = "檔案(&F)",
-				save_config = "储存使用者組態(&S)",
-				reset_config = "重設使用者組態(&R)",
+				save_config = "储存組態(&S)",
+				reset_config = "重設組態(&R)",
 				exit_discarding_changes = "放弃更改並退出(&D)",
 				exit = "退出(&X)",
 				pitch_shift_preset = "移調插件預設(&P)",
@@ -30625,6 +30637,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				cw_flip = "順時針翻轉",
 				h_flip_sustain = "水平翻轉保持",
 				h_flip_relay = "水平翻轉中繼",
+				h_flip_invert = "水平翻轉反轉",
 				ccw_rotate = "逆時針旋轉",
 				cw_rotate = "順時針旋轉",
 				turned = "顛倒",
@@ -31198,8 +31211,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_max_length_tooltip = "1つのトラッククリップの最大長を指定します。\n単位：ミリ秒。",
 				ytp_min_length_tooltip = "単一のトラッククリップの最小の長さを指定します。\n単位：ミリ秒。",
 				file = "ファイル(&F)",
-				save_config = "ユーザー構成の保存(&S)",
-				reset_config = "ユーザー構成のリセット(&R)",
+				save_config = "構成の保存(&S)",
+				reset_config = "構成のリセット(&R)",
 				exit_discarding_changes = "変更を破棄して終了します(&D)",
 				exit = "終了(&X)",
 				pitch_shift_preset = "ピッチシフトプラグインプリセット(&P)",
@@ -31347,6 +31360,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				cw_flip = "時計回りにフリップ",
 				h_flip_sustain = "持続的に水平方向にフリップ",
 				h_flip_relay = "中継した水平方向にフリップ",
+				h_flip_invert = "反転時の水平方向にフリップ",
 				ccw_rotate = "反時計回りの回転",
 				cw_rotate = "時計回りの回転",
 				turned = "向きを変えた",
@@ -31920,8 +31934,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_max_length_tooltip = "Укажите максимальную длину клипа на одну дорожку.\nЕдиница: миллисекунды.",
 				ytp_min_length_tooltip = "Укажите минимальную длину клипа на одну дорожку.\nЕдиница: миллисекунды.",
 				file = "&Файл",
-				save_config = "&Сохранить конфигурацию пользователя",
-				reset_config = "С&бросить конфигурацию пользователя",
+				save_config = "&Сохранить конфигурацию",
+				reset_config = "С&бросить конфигурацию",
 				exit_discarding_changes = "&Отменить изменения и выйти",
 				exit = "&Выход",
 				pitch_shift_preset = "&Пресеты плагина Pitch Shift",
@@ -32069,6 +32083,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				cw_flip = "Переворот по часовой стрелке",
 				h_flip_sustain = "Сустейн с горизонтальным переворотом",
 				h_flip_relay = "Реле горизонтального переворота",
+				h_flip_invert = "Горизонтальное переворачивание инверсия",
 				ccw_rotate = "Вращение против часовой стрелки",
 				cw_rotate = "Вращение по часовой стрелке",
 				turned = "Повернулся",
