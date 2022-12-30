@@ -48,7 +48,7 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 #### データモッシュ拡張パッケー
 データモッシュのすべての機能を使用する必要がある場合は、データモッシュ拡張パッケージをインストールする必要があります。
 
-1. データモッシュ拡張パックを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/latest)します。
+1. データモッシュ拡張パックを[ダウンロード](https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh)します。
 2. ZIP ファイルを解凍し、`_internal` フォルダーをスクリプト `Otomad Helper.cs` と同じディレクトリに移動します。
 
 ### **互換性**

@@ -48,7 +48,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 #### 数据抹失扩展包
 如果需要使用数据抹失的全部功能，需要安装数据抹失扩展包方可使用。
 
-1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)数据抹失扩展包。
+1. [下载](https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh)数据抹失扩展包。
 2. 解压文件并将 `_internal` 文件夹移动到脚本 `Otomad Helper.cs` 所在的相同目录下。
 
 ### **兼容性**

@@ -56,7 +56,7 @@ You can also read [@Evauation](https://github.com/Evauation)'s [documentation](h
 #### Datamosh Extension Pack
 If you need to use the full features of Datamosh, you need to install the Datamosh extension pack.
 
-1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the Datamosh extension pack.
+1. [Download](https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh) the Datamosh extension pack.
 2. Unzip the zip file and move the `_internal` folder to the same directory as the script `Otomad Helper.cs`.
 
 ### **Compatibility**
