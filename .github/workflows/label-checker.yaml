@@ -1,0 +1,35 @@
+name: Label Checker
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+      - unlabeled
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+  
+jobs:
+  check_semver_labels:
+    name: Check Semver labels
+    runs-on: [ self-hosted ]
+
+    steps:
+      - name: Check for Semver labels
+        uses: danielchabr/pr-labels-checker@v3.1
+        with:
+          hasSome: major,minor,patch
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  check_cc_labels:
+    name: Check conventional commits labels
+    runs-on: [ self-hosted ]
+    steps:
+      - uses: danielchabr/pr-labels-checker@v3.1
+        with:
+          hasSome: feature,fix,changed,deprecated,removed,security,docs,dependencies
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
