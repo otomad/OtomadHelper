@@ -51,7 +51,7 @@ Bạn cũng có thể đọc  [tài liệu](https://docs.google.com/document/d/1
 Nếu bạn cần sử dụng đầy đủ chức năng của Datamosh, bạn cần cài đặt Datamosh extension pack.
 
 1. [Tải xuống](https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh) Datamosh extension pack.
-2. Giải nén file zip và di chuyển thư mục `_internal` tới cùng đường dẫn như script `Otomad Helper.cs`.
+2. Giải nén file 7z và di chuyển thư mục `_internal` tới cùng đường dẫn như script `Otomad Helper.cs`.
 
 ### **Độ tương thích**
 Vegas Pro 13+ được hỗ trợ.
