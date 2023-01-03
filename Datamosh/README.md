@@ -1,7 +1,7 @@
 # vegas-datamosh ![Github All Releases](https://img.shields.io/github/downloads/delthas/vegas-datamosh/total.svg?style=flat-square)
 **A pack of Sony/MAGIX Vegas Pro scripts for YTP (datamoshing, multilayering, ...), using FFmpeg and Avidemux**
 
-**EN** | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | [日](README_ja-JP.md)
+**EN** | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | [日](README_ja-JP.md) | [VI](README_vi-VN.md)
 
 > Delthas's original repository: https://github.com/delthas/vegas-datamosh
 
