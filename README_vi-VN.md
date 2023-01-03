@@ -30,7 +30,7 @@ Phiên bản Việt ngữ của script do [@Cyahega](https://github.com/Cyahega)
 ### Cách sử dụng 
 Chọn track event nguồn trong track window, hoặc chọn file phương tiện nguồn trong media pool window, hoặc duyệt (browse) tìm file phương tiện khác (trong biểu mẫu cấu hình/thiết lập script), rồi mở script để chỉnh sửa và tạo ra.
 
-Bạn có thể thêm script thành nút toolbar thay vì luôn phải click vào menu phụ *Tools > Scripting* , bằng cách thêm vào toolbar thông qua menu *Options > Customize Toolbar*.
+Bạn có thể thêm script thành nút toolbar thay vì luôn phải click vào menu phụ *Tools > Scripting*, bằng cách thêm vào toolbar thông qua menu *Options > Customize Toolbar*.
 
 Bạn cũng có thể đọc  [tài liệu](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) của [@Evauation](https://github.com/Evauation) và xem [video hướng dẫn](https://www.youtube.com/watch?v=8vSpzgL_86A) của [@Cassidy](https://github.com/composition-cassidy) *(Tiếng Anh)*.
 
