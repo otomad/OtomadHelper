@@ -31,6 +31,8 @@ Datą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸͛̐̄̎̚
 
 Camera Shake feature refer to [VegasShakeScript](https://github.com/tmarplatt/VegasScripts).
 
+Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
+
 **Sister Projects:** [om_midi for After Effects](https://github.com/otomad/om_midi).
 
 ### Usage

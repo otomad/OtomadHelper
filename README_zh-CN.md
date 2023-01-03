@@ -23,6 +23,8 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 
 镜头摇晃功能参考自 [Vegas 摇晃脚本](https://github.com/tmarplatt/VegasScripts).
 
+越南语翻译由 [@Cyahega](https://github.com/Cyahega) 提供。
+
 **姊妹项目：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 
 ### 使用方法

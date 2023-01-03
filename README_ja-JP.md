@@ -23,6 +23,8 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 
 手ぶれ機能とは [Vegas シェイク スクリプト](https://github.com/tmarplatt/VegasScripts) から参照。
 
+ベトナム語翻訳は[@シャヘガ](https://github.com/Cyahega)によって提供されている。
+
 **姉妹プロジェクト：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 
 ### 使用法
