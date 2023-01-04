@@ -115,10 +115,10 @@ Vegas Pro 17、18、19、20 で**正常**にテストされました。
 * [デルタスの **Vegas データモッシュ**](https://github.com/delthas/vegas-datamosh)
 * [トゥマープラットの **Vegas シェイク スクリプト**](https://github.com/tmarplatt/VegasScripts)
 
-### アイコン
+<!-- ### アイコン
 に触発された：
 * [@氷鳩さくの](https://space.bilibili.com/13084550)
-* [@酥妃大魔王](https://space.bilibili.com/8569439)
+* [@酥妃大魔王](https://space.bilibili.com/8569439) -->
 
 ### ヘルプとトラブルシューティング
 **私のドキュメンテーション：***（中国語）*

@@ -123,10 +123,10 @@ If you use this script, the script will use the following permissions.
 * [Delthas's **Vegas Datamosh**](https://github.com/delthas/vegas-datamosh)
 * [Tmarplatt's **VegasShakeScript**](https://github.com/tmarplatt/VegasScripts)
 
-### Logo
+<!-- ### Logo
 Inspired by:
 * [@Hibato Sakuno](https://space.bilibili.com/13084550)
-* [@Sufei-King](https://space.bilibili.com/8569439)
+* [@Sufei-King](https://space.bilibili.com/8569439) -->
 
 ### Help and Troubleshooting
 **My documentations:** *(Chinese)*

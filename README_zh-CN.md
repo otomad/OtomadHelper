@@ -115,10 +115,10 @@ Vegas Pro 17、18、19、20 测试**正常**。
 * [德尔萨斯的 **Vegas 数据抹失**](https://github.com/delthas/vegas-datamosh)
 * [特玛普拉特的 **Vegas 摇晃脚本**](https://github.com/tmarplatt/VegasScripts)
 
-### 图标
+<!-- ### 图标
 灵感来源于:
 * [@冰鸠樱乃](https://space.bilibili.com/13084550)
-* [@酥妃大魔王](https://space.bilibili.com/8569439)
+* [@酥妃大魔王](https://space.bilibili.com/8569439) -->
 
 ### 帮助和疑难解答
 **我的文档：***（中文）*

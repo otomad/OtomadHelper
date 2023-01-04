@@ -115,10 +115,10 @@ Nếu bạn dùng script này, script sẽ sử dụng các quyền sau.
 * [**Vegas Datamosh** của Delthas](https://github.com/delthas/vegas-datamosh)
 * [**VegasShakeScript** của Tmarplatt](https://github.com/tmarplatt/VegasScripts)
 
-### Logo
+<!-- ### Logo
 Lấy cảm hứng từ:
-* [@冰鸠樱乃](https://space.bilibili.com/13084550) <!--Băng Cưu Anh Nãi-->
-* [@酥妃大魔王](https://space.bilibili.com/8569439) <!--Tô Phi Đại Ma Vương-->
+* [@Băng Cưu Anh Nãi](https://space.bilibili.com/13084550)
+* [@Tô Phi Đại Ma Vương](https://space.bilibili.com/8569439) -->
 
 ### Trợ giúp và Khắc phục sự cố
 **Các tài liệu của tôi:** *(Tiếng Trung)*
