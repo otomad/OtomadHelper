@@ -1,6 +1,6 @@
 <div lang="ja">
 
-[![Cover](cover.png)](#otomad-helper)
+[![Cover](covers/cover_ja.png)](#otomad-helper)
 <div align="center">
 	<h2 id="otomad-helper">音 MAD ヘルパー</h2>
 	<p><b>蘭音</b></p>
