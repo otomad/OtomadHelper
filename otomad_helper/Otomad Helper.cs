@@ -84,9 +84,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 25, 4, 0);
+		public static readonly Version VERSION = new Version(4, 25, 5, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2023, 1, 4);
+		public static readonly DateTime REVISION_DATE = new DateTime(2023, 1, 5);
 
 		// 配置参数变量
 		#region 视频属性
@@ -32600,7 +32600,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				classic_a18 = "A18. Drums (Tốt hơn với toms <tìm google toms-toms drum nhé>)",
 				classic_a19 = "A19. Drums (tiếng vang nhỏ)",
 				batch_subtitle_generation = "Tạo Phụ Đề Hàng Loạt",
-				batch_subtitle_generation_presets = "Chọn một preset cho trình tạo Tiêu đề & Văn bản:",
+				batch_subtitle_generation_presets = "Chọn một preset cho trình tạo Tiêu đề&Văn bản:",
 				batch_subtitle_generation_subtitles = "Nhập văn bản phụ đề (từng dòng một, bỏ qua các dòng trống):",
 				batch_subtitle_generation_single_duration = "Độ dài của mỗi phụ đề",
 				batch_subtitle_generation_suggestion_info = "Bật chức năng Auto Follow-up để chỉnh thời gian lúc sau.",
@@ -32905,7 +32905,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_high_contrast = "Độ tương phản cao (kèm theo tiếng ồn)",
 				ytp_oversaturation = "Quá bão hòa (thường kèm theo hiệu ứng pitch-up)",
 				ytp_emphasize_thrice = "Nổi lên ba lần (kèm theo motion tập trung tăng độ phóng to một cách rời rạc)",
-				ytp_info = "Nhấn vào nút \"Complete\" dưới tab hiện tại, YTP sẽ được tạo ra thay vì Otomad/YTPMV.\nCác thông số cài đặt ngoài \"Bật Âm thanh\" và \"Bật Video\" ra sẽ không có hiệu lực trong YTP.",
+				ytp_info = "Nhấn vào nút \"Hoàn thành\" dưới tab hiện tại, YTP sẽ được tạo ra thay vì Otomad/YTPMV.\nCác thông số cài đặt ngoài \"Bật Âm thanh\" và \"Bật Video\" ra sẽ không có hiệu lực trong YTP.",
 				video_preset_fade_out = "Mờ dần",
 				flashlight = "Nhấp nhoáng (Flashlight)",
 				horizontal_movement = "Horizontal Movement",
