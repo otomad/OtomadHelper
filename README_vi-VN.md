@@ -23,7 +23,7 @@ Datą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸͛̐̄̎̚
 
 Tính năng Camera Shake đề cập đến ở [VegasShakeScript](https://github.com/tmarplatt/VegasScripts).
 
-Phiên bản Việt ngữ của script do [@Cyahega](https://github.com/Cyahega) đóng góp.
+Phiên bản Việt hoá của script do [@Cyahega](https://github.com/Cyahega) đóng góp.
 
 **Các dự án khác:** [om_midi dành cho After Effects](https://github.com/otomad/om_midi).
 
