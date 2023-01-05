@@ -27213,10 +27213,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			bool isSheetConfigOn = StaffVisualizerConfigCheck.Checked;
 			VideoEffectInitialValueCombo.Visible = VideoEffectInitialValueLbl.Visible = VisualEffectAdvancedBtn.Visible = !isSheetConfigOn;
+			VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled =
+				VideoLegatoCombo.Enabled = !isSheetConfigOn;
 			if (isSheetConfigOn) {
-				VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled =
-					VideoLegatoCombo.Enabled = VideoLegatoLbl.Enabled =
-					VideoScratchCombo.Enabled = false;
+				VideoScratchCombo.Enabled = false;
 				VideoScratchCombo.SelectedIndex = 0;
 				if (IsVisualEffectIndexLegal(VideoEffectCombo.SelectedIndex))
 					selectedVisualEffectBackupIndex = VideoEffectCombo.SelectedIndex;
