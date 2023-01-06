@@ -84,9 +84,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 25, 4, 0);
+		public static readonly Version VERSION = new Version(4, 25, 5, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2023, 1, 4);
+		public static readonly DateTime REVISION_DATE = new DateTime(2023, 1, 5);
 
 		// 配置参数变量
 		#region 视频属性
@@ -27213,10 +27213,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			bool isSheetConfigOn = StaffVisualizerConfigCheck.Checked;
 			VideoEffectInitialValueCombo.Visible = VideoEffectInitialValueLbl.Visible = VisualEffectAdvancedBtn.Visible = !isSheetConfigOn;
+			VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled =
+				VideoLegatoCombo.Enabled = !isSheetConfigOn;
 			if (isSheetConfigOn) {
-				VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled =
-					VideoLegatoCombo.Enabled = VideoLegatoLbl.Enabled =
-					VideoScratchCombo.Enabled = false;
+				VideoScratchCombo.Enabled = false;
 				VideoScratchCombo.SelectedIndex = 0;
 				if (IsVisualEffectIndexLegal(VideoEffectCombo.SelectedIndex))
 					selectedVisualEffectBackupIndex = VideoEffectCombo.SelectedIndex;
@@ -29654,7 +29654,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				auto_layout_tracks = "Auto Layout Tracks",
 				grid_layout = "Grid Layout",
 				box_3d_layout = "3D Box Layout",
-				selected_tracks_too_much = "You've selected {0}tracks, which is beyond the scope of available functions. That's too many!\nPlease select fewer tracks and try again.",
+				selected_tracks_too_much = "You've selected {0} tracks, which is beyond the scope of available functions. That's too many!\nPlease select fewer tracks and try again.",
 				selected_tracks_too_much_title = "Too many tracks selected",
 				bottom_surface = "Bottom",
 				top_surface = "Top",
@@ -32600,7 +32600,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				classic_a18 = "A18. Drums (Tốt hơn với toms <tìm google toms-toms drum nhé>)",
 				classic_a19 = "A19. Drums (tiếng vang nhỏ)",
 				batch_subtitle_generation = "Tạo Phụ Đề Hàng Loạt",
-				batch_subtitle_generation_presets = "Chọn một preset cho trình tạo Tiêu đề & Văn bản:",
+				batch_subtitle_generation_presets = "Chọn một preset cho trình tạo Tiêu đề&Văn bản:",
 				batch_subtitle_generation_subtitles = "Nhập văn bản phụ đề (từng dòng một, bỏ qua các dòng trống):",
 				batch_subtitle_generation_single_duration = "Độ dài của mỗi phụ đề",
 				batch_subtitle_generation_suggestion_info = "Bật chức năng Auto Follow-up để chỉnh thời gian lúc sau.",
@@ -32905,10 +32905,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_high_contrast = "Độ tương phản cao (kèm theo tiếng ồn)",
 				ytp_oversaturation = "Quá bão hòa (thường kèm theo hiệu ứng pitch-up)",
 				ytp_emphasize_thrice = "Nổi lên ba lần (kèm theo motion tập trung tăng độ phóng to một cách rời rạc)",
-				ytp_info = "Nhấn vào nút \"Complete\" dưới tab hiện tại, YTP sẽ được tạo ra thay vì Otomad/YTPMV.\nCác thông số cài đặt ngoài \"Bật Âm thanh\" và \"Bật Video\" ra sẽ không có hiệu lực trong YTP.",
+				ytp_info = "Nhấn vào nút \"Hoàn thành\" dưới tab hiện tại, YTP sẽ được tạo ra thay vì Otomad/YTPMV.\nCác thông số cài đặt ngoài \"Bật Âm thanh\" và \"Bật Video\" ra sẽ không có hiệu lực trong YTP.",
 				video_preset_fade_out = "Mờ dần",
 				flashlight = "Nhấp nhoáng (Flashlight)",
-				horizontal_movement = "Horizontal Movement",
+				horizontal_movement = "Di chuyển theo chiều ngang",
 				vertical_movement = "Di chuyển theo chiều dọc",
 				threshold_change = "Thay đổi Threshold",
 				video_preset_enter = "Thu phóng",
@@ -33061,7 +33061,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_eliminate_duplicates_finally_null_exception = "Lỗi kỹ thuật ngoại lệ: Xóa các trùng lặp (duplicate) khỏi danh sách nguồn YTP. Cuối cùng, danh sách trống!\n\nĐây là lỗi không nên xuất hiện",
 				unknown_exception = "Lỗi: Lỗi ngoại lệ không rõ.\n\nVui lòng mở rộng chi tiết để xem nội dung lỗi cụ thể và cung cấp thông tin lỗi lại cho tác giả.",
 				use_pic_in_pic_on_unsupported_vegas_exception = "Lỗi: Không hỗ trợ sử dụng hiệu ứng plugin Picture-in-Picture (PiP) trong các phiên bản thấp hơn của Vegas.\n\nNguyên nhân gốc rễ: Vegas đã thêm một số tính năng và thông số mới cho plugin hiệu ứng Picture-in-Picture mới, không thể sử dụng tính năng này trong các phiên bản plugin Vegas thấp hơn.\n\nGiải pháp: Phiên bản hiện tại của Vegas không thể sử dụng hiệu ứng nhịp điệu PV visual này (chẳng hạn như mở rộng khung hình), vui lòng sử dụng các hiệu ứng visual khác. Hoặc cập nhật phần mềm Vegas của bạn.",
-				unsupported_curve_enum_exception = "Lỗi: Sử dụng các kiểu trích xuất đường cong không được hỗ trợ làm tham số.\n\n{0}không phải là kiểu trích xuất đường cong.",
+				unsupported_curve_enum_exception = "Lỗi: Sử dụng các kiểu trích xuất đường cong không được hỗ trợ làm tham số.\n\n{0} không phải là kiểu trích xuất đường cong.",
 				convert_music_beats_not_one_audio_event_exception = "Lỗi: Số lượng clip âm thanh được chọn trong công cụ chuyển đổi beat nhạc không chính xác bằng một.\n\n1 đoạn âm thanh đáng lẽ đã chọn, nhưng {0} đoạn âm thanh đã chọn.",
 				convert_music_beats_unsupported_beats_exception = "Lỗi: Beat của Vegas hiện tại không trong khoảng 4/4, 3/4, hoặc 6/8.",
 				invalid_mapping_velocity_values_exception = "Lỗi: Thông số lập bản đồ velocity không hợp lệ được sử dụng.\n\nGiải pháp: Đảm bảo các thông số lập bản đồ velocity của âm thanh và video,\n1. Giá trị nhỏ hơn không thể lớn hơn giá trị lớn hơn;\n2. Các giá trị nhỏ hơn và lớn hơn của VELOCITY không thể bằng nhau.\nNếu không, nó sẽ không hoàn thành thao tác lập bản đồ velocity.",
