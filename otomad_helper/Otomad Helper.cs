@@ -32908,7 +32908,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_info = "Nhấn vào nút \"Hoàn thành\" dưới tab hiện tại, YTP sẽ được tạo ra thay vì Otomad/YTPMV.\nCác thông số cài đặt ngoài \"Bật Âm thanh\" và \"Bật Video\" ra sẽ không có hiệu lực trong YTP.",
 				video_preset_fade_out = "Mờ dần",
 				flashlight = "Nhấp nhoáng (Flashlight)",
-				horizontal_movement = "Horizontal Movement",
+				horizontal_movement = "Di chuyển theo chiều ngang",
 				vertical_movement = "Di chuyển theo chiều dọc",
 				threshold_change = "Thay đổi Threshold",
 				video_preset_enter = "Thu phóng",
