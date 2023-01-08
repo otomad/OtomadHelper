@@ -27,9 +27,12 @@
  * Place this script and all other attached files in the Script Menu folder in your Vegas installation directory.
  * See the documentation link for instructions.
  * The script is redeveloped based on the original author Chaosinism's open source code and uses the NAudio library.
+ *
  * Get the latest version here: https://github.com/otomad/OtomadHelper/releases/latest
  * Repository link for more details: https://github.com/otomad/OtomadHelper
+ *
  * Project start date: Sun, Sep 5th 2021 A.D., 4:14:26 a.m.
+ * Copyright (c) 2021 ~, Ranne
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any
@@ -84,9 +87,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 25, 5, 0);
+		public static readonly Version VERSION = new Version(4, 25, 8, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2023, 1, 5);
+		public static readonly DateTime REVISION_DATE = new DateTime(2023, 1, 8);
 
 		// 配置参数变量
 		#region 视频属性
@@ -26010,7 +26013,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				EntryPoint.AlertUnsupportVersion();
 				isAlertedUnsupport = true;
 			}
-			if (EntryPoint.CurrentVegasVersion < new Version(19, 0))
+			if (EntryPoint.CurrentVegasVersion == null || // 当获取当前版本号为未知时。
+				EntryPoint.CurrentVegasVersion < new Version(19, 0))
 				BelowTopAdjustmentTrackCheck.Checked = BelowTopAdjustmentTrackCheck.Enabled = false;
 			#endregion
 
