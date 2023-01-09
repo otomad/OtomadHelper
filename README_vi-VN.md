@@ -1,7 +1,13 @@
 <div lang="vi">
 
-[![Cover](cover.png)](#otomad-helper)
+[![Cover](covers/cover_vi.png)](#otomad-helper)
 <div align="center">
+<h1>VegasScripts</h1>
+	<p>
+		<img src="https://img.shields.io/badge/TRẠNG THÁI-ỔN ĐỊNH-green?style=flat-square" alt="State" />
+		<img src="https://img.shields.io/badge/PHIÊN BẢN-4.25.8.0-orange?style=flat-square" alt="Version" />
+		<img src="https://img.shields.io/github/downloads/otomad/OtomadHelper/total.svg?style=flat-square&label=TẢI XUỐNG" alt="Downloads">
+	</p
 	<h2 id="otomad-helper">Otomad Helper</h2>
 	<p><b><i>Lan Âm</i></b></p>
 	<p><a href="https://github.com/otomad/OtomadHelper/releases/latest"><img src="https://img.shields.io/badge/-Tải%20ngay%20phiên%20bản%20mới%20nhất!-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="Download" /></a></p>
@@ -23,7 +29,7 @@ Datą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸͛̐̄̎̚
 
 Tính năng Camera Shake đề cập đến ở [VegasShakeScript](https://github.com/tmarplatt/VegasScripts).
 
-Phiên bản Việt ngữ của script do [@Cyahega](https://github.com/Cyahega) đóng góp.
+Phiên bản Việt hoá của script do [@Cyahega](https://github.com/Cyahega) đóng góp.
 
 **Các dự án khác:** [om_midi dành cho After Effects](https://github.com/otomad/om_midi).
 
