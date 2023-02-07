@@ -1,6 +1,6 @@
 <div lang="ja">
 
-[![Cover](covers/cover_ja.png)](#otomad-helper)
+[![Cover](cover.png)](#otomad-helper)
 <div align="center">
 	<h2 id="otomad-helper">音 MAD ヘルパー</h2>
 	<p><b>蘭音</b></p>
@@ -19,7 +19,7 @@ YTP・ソナー効果・データモッシュを作成することも可能で�
 
 YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照。
 
-縺ﾃﾞ繧ｰﾀ繝ﾓ譌ｯ縲｢ｼ譛ｭ･はクリップに損傷を与えてグリッチ効果を作成する技術です。データモッシュの関連機能は [Vegas データモッシュ](https://github.com/delthas/vegas-datamosh) から参照。
+縺ﾃﾞ繧ｰﾀ繝ﾓ譌ｯ縲｢ｼ譛ｭ･はクリップに損傷を与えてグリッチ効果を作成する技術です。データモッシュの関連機能は [Vegas データモッシュ](https://github.com/delthas/vegas-datamosh)から参照。
 
 手ぶれ機能とは [Vegas シェイク スクリプト](https://github.com/tmarplatt/VegasScripts) から参照。
 

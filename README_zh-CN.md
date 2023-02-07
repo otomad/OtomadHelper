@@ -1,6 +1,6 @@
 <div lang="zh-CN">
 
-[![Cover](covers/cover_zh.png)](#otomad-helper)
+[![Cover](cover.png)](#otomad-helper)
 <div align="center">
 	<h2 id="otomad-helper">音 MAD 助手</h2>
 	<p><b>兰音</b></p>
@@ -21,7 +21,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 
 锘挎藪琚沬妷是一种磨损素材以产生故障效果的技术。数据抹失的相关功能参考自 [Vegas 数据抹失](https://github.com/delthas/vegas-datamosh)。
 
-镜头摇晃功能参考自 [Vegas 摇晃脚本](https://github.com/tmarplatt/VegasScripts).
+镜头摇晃功能参考自 [Vegas 摇晃脚本](https://github.com/tmarplatt/VegasScripts)。
 
 越南语翻译由 [@Cyahega](https://github.com/Cyahega) 提供。
 

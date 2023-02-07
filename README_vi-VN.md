@@ -1,6 +1,6 @@
 <div lang="vi">
 
-[![Cover](covers/cover_vi.png)](#otomad-helper)
+[![Cover](cover.png)](#otomad-helper)
 <div align="center">
 	<h2 id="otomad-helper">Otomad Helper</h2>
 	<p><b><i>Lan Âm</i></b></p>
@@ -111,7 +111,7 @@ Nếu bạn dùng script này, script sẽ sử dụng các quyền sau.
 * [Script **JETDV** của Edward](https://www.jetdv.com/)
 * [**Diễn đàn** Vegas Pro Scripting](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 * [**Alpha Color Dialog** của Opulos](https://sourceforge.net/projects/alpha-color-dialog/)
-* [Ookii Dialogs WinForms **Progress Dialog**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
+* [**Progress Dialog** của Ookii Dialogs WinForms](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
 * [**Vegas Datamosh** của Delthas](https://github.com/delthas/vegas-datamosh)
 * [**VegasShakeScript** của Tmarplatt](https://github.com/tmarplatt/VegasScripts)
 
