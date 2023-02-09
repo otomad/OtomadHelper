@@ -9,7 +9,7 @@
 [EN](README.md) | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | **日本語** | [VI](README_vi-VN.md)
 </div>
 
-**音MADヘルパー Vegas**とは、Vegas が MIDI シーケンスファイルを読み込んで、音MAD / YTPMV トラックを自動的に生成するのスクリプトです。
+**音MADヘルパー Vegas**とは、Vegas に MIDI シーケンスファイルを読み込まさせて、音MAD / YTPMV トラックを自動的に生成するのスクリプトです。
 
 このスクリプトは、元開発者[@Chaosinism](https://github.com/Chaosinism)さんのオープンソースコードに基づいて二次開発されたものであり、NAudio ライブラリを使用しています。
 
