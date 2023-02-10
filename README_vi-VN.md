@@ -135,15 +135,18 @@ Lấy cảm hứng từ:
 * [Tài liệu (v0.1) (bowlroll)](https://bowlroll.net/user/261124)
 
 ### Giấy phép
-* Dự án này nằm dưới giấy phép GPL 3.0.
-	* Script gốc của Chaosinism nằm dưới giấy phép LGPL 3.0.
-		* Script của Evan Kale nằm dưới giấy phép GPL 3.0.
-			* NAudio nằm dưới giấy phép MIT.
-* YTP+ nằm dưới giấy phép GPL 3.0.
-* Ookii Dialogs WinForms nằm dưới giấy phép Điều khoản BSD 3 (BSD 3 Clause).
-* Vegas Datamosh của Delthas nằm dưới giấy phép MIT.
-	* FFmpeg nằm dưới giấy phép LGPL + GPL.
-	* Avidemux nằm dưới giấy phép GPL.
-	* Xvid codec nằm dưới giấy phép GPL.
+| Dự án | Giấy phép |
+| ---- | ---- |
+| Otomad Helper<br />*Dự án này* | GPL 3.0 |
+| otomad_helper<br />*Script gốc của Chaosinism* | LGPL 3.0 |
+| VegasScripts<br />*Script của Evan Kale* | GPL 3.0 |
+| NAudio | MIT |
+| YTP+ | GPL 3.0 |
+| Alpha Color Dialog | BSD |
+| Ookii Dialogs WinForms | BSD 3 Clause |
+| vegas-datamosh | MIT |
+| FFmpeg | LGPL + GPL |
+| Avidemux | GPL |
+| Xvid codec | GPL |
 
 </div>

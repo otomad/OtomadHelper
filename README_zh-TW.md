@@ -32,7 +32,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 您可以選擇功能表列 *選項 > 自訂工具列*，將腳本添加到工具列中以便操作。
 
-您也可以閱讀[@伊尤阿省](https://github.com/Evauation)的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看[@卡西迪](https://github.com/composition-cassidy)的[教程影片](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英語）*。
+您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程影片](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英語）*。
 
 [點擊此處查看數據抹失的使用介紹](Datamosh/README.md)。您也可以[觀看影片](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英語）*。
 
@@ -107,15 +107,15 @@ Vegas Pro 17、18、19、20 測試**正常**。
 
 ### 參考
 * [Chaosinism 的**原版**音 MAD 助手腳本](https://github.com/Chaosinism/vegas_scripts)
-* [埃文·凱爾的 **Vegas 腳本集**](https://github.com/evankale/VegasScripts)
-* [馬克·希斯的 **NAudio** .NET 音訊處理庫](https://github.com/naudio/NAudio)
-* [本·布朗、奇異果開發、紐平頓的 **YTP+**](https://github.com/YTP-Plus)
-* [愛德華的 **JETDV** 腳本集](https://www.jetdv.com/)
+* [Evan Kale 的 **Vegas 腳本集**](https://github.com/evankale/VegasScripts)
+* [Mark Heath 的 **NAudio** .NET 音訊處理庫](https://github.com/naudio/NAudio)
+* [Ben Brown、Kiwifruitdev、Nuppington 的 **YTP+**](https://github.com/YTP-Plus)
+* [Edward 的 **JETDV** 腳本集](https://www.jetdv.com/)
 * [Vegas Pro 腳本**論壇**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
-* [奧普洛斯的**帶有透明通道的顔色選取器**](https://sourceforge.net/projects/alpha-color-dialog/)
-* [大的對話方塊 (WinForm) 的**進度條對話方塊**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
-* [德爾薩斯的 **Vegas 數據抹失**](https://github.com/delthas/vegas-datamosh)
-* [特瑪普拉特的 **Vegas 搖晃腳本**](https://github.com/tmarplatt/VegasScripts)
+* [Opulos 的**帶有透明通道的顔色選取器**](https://sourceforge.net/projects/alpha-color-dialog/)
+* [Ookii Dialogs WinForms 的**進度條對話方塊**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
+* [Delthas 的 **Vegas 數據抹失**](https://github.com/delthas/vegas-datamosh)
+* [Tmarplatt 的 **Vegas 搖晃腳本**](https://github.com/tmarplatt/VegasScripts)
 
 <!-- ### 圖示
 靈感來源於:
@@ -136,16 +136,19 @@ Vegas Pro 17、18、19、20 測試**正常**。
 **Chaosinism 的原版說明文件：***（日語）*
 * [說明文件 (v0.1) (B 碗)](https://bowlroll.net/user/261124)
 
-### 協定
-* 該專案使用 GPL 3.0。
-	* Chaosinism 的原版腳本使用 LGPL 3.0。
-		* 埃文·凱爾的腳本使用 GPL 3.0。
-			* NAudio 使用 MIT。
-* YTP+ 使用 GPL 3.0。
-* Ookii Dialogs WinForms 使用 BSD 3 Clause。
-* 德爾薩斯的 Vegas 數據抹失使用 MIT。
-	* FFmpeg 使用 LGPL + GPL。
-	* Avidemux 使用 GPL。
-	* Xvid codec 使用 GPL。
+### 授權條款
+| 專案 | 授權條款 |
+| ---- | ---- |
+| Otomad Helper<br />*當前專案* | GPL 3.0 |
+| otomad_helper<br />*Chaosinism 的原版腳本* | LGPL 3.0 |
+| VegasScripts<br />*Evan Kale 的腳本* | GPL 3.0 |
+| NAudio | MIT |
+| YTP+ | GPL 3.0 |
+| Alpha Color Dialog | BSD |
+| Ookii Dialogs WinForms | BSD 3 Clause |
+| vegas-datamosh | MIT |
+| FFmpeg | LGPL + GPL |
+| Avidemux | GPL |
+| Xvid codec | GPL |
 
 </div>

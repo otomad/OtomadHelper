@@ -9,9 +9,9 @@
 [EN](README.md) | [简中](README_zh-CN.md) | [繁中](README_zh-TW.md) | **日** | [VI](README_vi-VN.md)
 </div>
 
-**音MADヘルパー Vegas**とは、Vegas に MIDI シーケンスファイルを読み込まさせて、音MAD / YTPMV トラックを自動的に生成するのスクリプトです。
+**音MADヘルパー Vegas** とは、Vegas に MIDI シーケンスファイルを読み込まさせて、音MAD / YTPMV トラックを自動的に生成するのスクリプトです。
 
-このスクリプトは、元開発者[@Chaosinism](https://github.com/Chaosinism)さんのオープンソースコードに基づいて二次開発されたものであり、NAudio ライブラリを使用しています。
+このスクリプトは、元開発者 [@Chaosinism](https://github.com/Chaosinism) さんのオープンソースコードに基づいて二次開発されたものであり、NAudio ライブラリを使用しています。
 
 YTP・ソナーエフェクト・データモッシュも作れます。将来的には歌詞/カラオケ・ボカロ/ラップ・シュペランカー戦法の作成にも使えます。
 
@@ -21,9 +21,9 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照してい
 
 縺ﾃﾞ繧ｰﾀ繝ﾓ譌ｯ縲｢ｼ譛ｭ･は素材に損傷を与えてグリッチ効果を作成する技術です。データモッシュの関連機能は [Vegas データモッシュ](https://github.com/delthas/vegas-datamosh)から参照しています。
 
-手ぶれ機能とは [Vegas シェイク スクリプト](https://github.com/tmarplatt/VegasScripts) から参照しています。
+手ぶれ機能とは [Vegas シェイク スクリプト](https://github.com/tmarplatt/VegasScripts)から参照しています。
 
-ベトナム語翻訳は[@Cyahega](https://github.com/Cyahega)によって提供されています。
+ベトナム語翻訳は [@Cyahega](https://github.com/Cyahega) によって提供されています。
 
 **姉妹プロジェクト：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
 
@@ -32,7 +32,7 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照してい
 
 より簡単に操作できるには、*オプション > ツールバーのカスタマイズ* メニューで、このスクリプトツールバーに追加することができます。
 
-また、[@Evauation](https://github.com/Evauation)さんの[ドキュメント](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)と、[@cassidy](https://github.com/composition-cassidy)さんの[チュートリアル動画](https://www.youtube.com/watch?v=8vSpzgL_86A)もご参考になれると思います。<wbr />*（英語）*。
+また、[@Evauation](https://github.com/Evauation) さんの[ドキュメント](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)と、[@Cassidy](https://github.com/composition-cassidy) さんの[チュートリアル動画](https://www.youtube.com/watch?v=8vSpzgL_86A)もご参考になれると思います<wbr />*（英語）*。
 
 データモッシュの使い方については、[ここをクリックしてください](Datamosh/README.md)。または[動画を観ます](https://www.youtube.com/watch?v=6D2lW6H0bb8)<wbr />*（英語）*。
 
@@ -69,7 +69,7 @@ Vegas Pro 17、18、19、20 で**正常**に作動します。
 [![ビジュアルエフェクトの探索](covers/otomad_helper_visual_effects_example.png)](https://youtu.be/cY2Qa3Owetw)
 
 ### メジャーバージョンの更新履歴
-これらは過去のメジャーバージョンアップのスクリプトUIのスクリーンショットです。
+これらは過去のメジャーバージョンアップのスクリプト UI のスクリーンショットです。
 
 [メジャーバージョンの更新履歴 >](history/README.md)
 
@@ -82,7 +82,7 @@ Vegas Pro 17、18、19、20 で**正常**に作動します。
 2. バグを見つけました；
 3. 新しい提案やアイデアを伝えたい；
 4. 当プロジェクトのメンテナンスに協力したい；
-5. UIの外観を最適化したい；
+5. UI の外観を最適化したい；
 6. 訳文を訂正したい；
 7. 新しい訳文を提出したい；
 8. ……
@@ -105,8 +105,8 @@ Vegas Pro 17、18、19、20 で**正常**に作動します。
 
 ### 参考（敬称略）
 * [Chaosinism の**元祖**音MADヘルパー スクリプト](https://github.com/Chaosinism/vegas_scripts)
-* [evankale の **Vegas スクリプト集**](https://github.com/evankale/VegasScripts)
-* [markheath の **NAudio** .NET オーディオ ライブラリ](https://github.com/naudio/NAudio)
+* [Evan Kale の **Vegas スクリプト集**](https://github.com/evankale/VegasScripts)
+* [Mark Heath の **NAudio** .NET オーディオ ライブラリ](https://github.com/naudio/NAudio)
 * [Ben Brown, Kiwifruitdev, Nuppington の **YTP+**](https://github.com/YTP-Plus)
 * [Edward の **JETDV** スクリプト集](https://www.jetdv.com/)
 * [Vegas Pro スクリプト **フォーラム**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
@@ -125,43 +125,28 @@ Vegas Pro 17、18、19、20 で**正常**に作動します。
 * [リリースノート (v4.9.25.0)](https://www.bilibili.com/read/cv13335178)
 * [リリースノート (v4.10.17.0)](https://www.bilibili.com/read/cv13614419)
 
-**Chaosinismの元祖版スクリプトのドキュメント：***（中国語）*
+**Chaosinism の元祖版スクリプトのドキュメント：***（中国語）*
 * [ドキュメント (v0.1) (ビリビリ)](https://www.bilibili.com/read/cv392013)
 * [五線譜可視化のドキュメント (v0.1)](https://www.bilibili.com/read/cv1027442)
 * [トラブルシューティング](https://www.bilibili.com/read/cv495309)
 * [チュートリアル動画 (v0.1)](https://www.bilibili.com/video/av22226321)
 
-**Chaosinismの元祖版スクリプトのドキュメント：***（日本語）*
+**Chaosinism の元祖版スクリプトのドキュメント：***（日本語）*
 * [ドキュメント (v0.1) (ボウルロール)](https://bowlroll.net/user/261124)
 
-<!-- ### ライセンス
-* 当プロジェクトは GPL 3.0 に準拠しています。
-	* Chaosinismのオリジナルスクリプトは LGPL 3.0 に準拠しています。
-		* evankaleのスクリプトは GPL 3.0 に準拠しています。
-			* NAudio は MIT に準拠しています。
-* YTP+ は GPL 3.0 に準拠しています。
-* Ookii Dialogs WinFormsは BSD 3 Clause に準拠しています。
-* デルタスの Vegas データモッシュ は under the MIT に準拠しています。
-	* FFmpeg は LGPL + GPL に準拠しています。
-	* Avidemux は GPL に準拠しています。
-	* Xvid codec は GPL に準拠しています。 -->
 ### ライセンス
-* OtomadHelper（当プロジェクト）  
-GPL 3.0
-* VegasScripts (Chaosinismのオリジナルスクリプト)  
-LGPL 3.0
-* NAudio  
-MIT
-* YTP+  
-GPL 3.0
-* Ookii Dialogs WinForms  
-BSD 3 Clause
-* vegas-datamosh  
-MIT
-* FFmpeg  
-LGPL + GPL
-* Avidemux  
-GPL
-* Xvid codec  
-GPL
+| プロジェクト | ライセンス |
+| ---- | ---- |
+| Otomad Helper<br />*当プロジェクト* | GPL 3.0 |
+| otomad_helper<br />*Chaosinism の元祖版スクリプト* | LGPL 3.0 |
+| VegasScripts<br />*Evan Kale のスクリプト* | GPL 3.0 |
+| NAudio | MIT |
+| YTP+ | GPL 3.0 |
+| Alpha Color Dialog | BSD |
+| Ookii Dialogs WinForms | BSD 3 Clause |
+| vegas-datamosh | MIT |
+| FFmpeg | LGPL + GPL |
+| Avidemux | GPL |
+| Xvid codec | GPL |
+
 </div>

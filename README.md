@@ -143,16 +143,19 @@ Inspired by:
 * [Documentation (v0.1) (bowlroll)](https://bowlroll.net/user/261124)
 
 ### License
-* This project is under the GPL 3.0.
-	* Chaosinism's original scripts are under the LGPL 3.0.
-		* Evan Kale's scripts are under the GPL 3.0.
-			* NAudio is under the MIT.
-* YTP+ are under the GPL 3.0.
-* Ookii Dialogs WinForms are under the BSD 3 Clause.
-* Delthas's Vegas Datamosh are under the MIT.
-	* FFmpeg is under the LGPL + GPL.
-	* Avidemux is under the GPL.
-	* Xvid codec is under the GPL.
+| Project | License |
+| ---- | ---- |
+| Otomad Helper<br />*This project* | GPL 3.0 |
+| otomad_helper<br />*Chaosinism's original scripts* | LGPL 3.0 |
+| VegasScripts<br />*Evan Kale's scripts* | GPL 3.0 |
+| NAudio | MIT |
+| YTP+ | GPL 3.0 |
+| Alpha Color Dialog | BSD |
+| Ookii Dialogs WinForms | BSD 3 Clause |
+| vegas-datamosh | MIT |
+| FFmpeg | LGPL + GPL |
+| Avidemux | GPL |
+| Xvid codec | GPL |
 
 ---
 
