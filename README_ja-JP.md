@@ -107,7 +107,7 @@ Vegas Pro 17、18、19、20 で**正常**に作動します。
 * [Chaosinism の**元祖**音MADヘルパー スクリプト](https://github.com/Chaosinism/vegas_scripts)
 * [Evan Kale の **Vegas スクリプト集**](https://github.com/evankale/VegasScripts)
 * [Mark Heath の **NAudio** .NET オーディオ ライブラリ](https://github.com/naudio/NAudio)
-* [Ben Brown, Kiwifruitdev, Nuppington の **YTP+**](https://github.com/YTP-Plus)
+* [Ben Brown、Kiwifruitdev、Nuppington の **YTP+**](https://github.com/YTP-Plus)
 * [Edward の **JETDV** スクリプト集](https://www.jetdv.com/)
 * [Vegas Pro スクリプト **フォーラム**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 * [Opulos の**アルファ付きカラーピッカー**](https://sourceforge.net/projects/alpha-color-dialog/)
