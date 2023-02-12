@@ -40,7 +40,7 @@ Select the source track event in the track window, or select source media file i
 
 You can add scripts as toolbar buttons rather than having to click inside the *Tools > Scripting* submenu, by adding them to the toolbar using the *Options > Customize Toolbar* menu.
 
-You can also read [@Evauation](https://github.com/Evauation)'s [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit) and watch [@Cassidy](https://github.com/composition-cassidy)'s [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
+You can also read [@Evauation](https://github.com/Evauation)'s [documentation](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng) and watch [@Cassidy](https://github.com/composition-cassidy)'s [tutorial video](https://www.youtube.com/watch?v=8vSpzgL_86A) *(English)*.
 
 [Click here to see an introduction to using Datamosh](Datamosh/README.md). You can also [watch the video](https://www.youtube.com/watch?v=6D2lW6H0bb8) *(English)*.
 

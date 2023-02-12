@@ -32,7 +32,7 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照してい
 
 より簡単に操作できるには、*オプション > ツールバーのカスタマイズ* メニューで、このスクリプトツールバーに追加することができます。
 
-また、[@Evauation](https://github.com/Evauation) さんの[ドキュメント](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)と、[@Cassidy](https://github.com/composition-cassidy) さんの[チュートリアル動画](https://www.youtube.com/watch?v=8vSpzgL_86A)もご参考になれると思います<wbr />*（英語）*。
+また、[@Evauation](https://github.com/Evauation) さんの[ドキュメント](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng)と、[@Cassidy](https://github.com/composition-cassidy) さんの[チュートリアル動画](https://www.youtube.com/watch?v=8vSpzgL_86A)もご参考になれると思います<wbr />*（英語）*。
 
 データモッシュの使い方については、[ここをクリックしてください](Datamosh/README.md)。または[動画を観ます](https://www.youtube.com/watch?v=6D2lW6H0bb8)<wbr />*（英語）*。
 

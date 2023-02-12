@@ -32,7 +32,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 您可以選擇功能表列 *選項 > 自訂工具列*，將腳本添加到工具列中以便操作。
 
-您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit)並觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程影片](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英語）*。
+您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng)並觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程影片](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英語）*。
 
 [點擊此處查看數據抹失的使用介紹](Datamosh/README.md)。您也可以[觀看影片](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英語）*。
 
