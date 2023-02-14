@@ -5,7 +5,7 @@
 	<h1>VegasScripts</h1>
 	<p>
 		<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="State" />
-		<img src="https://img.shields.io/badge/VERSION-4.25.12.0-orange?style=flat-square" alt="Version" />
+		<img src="https://img.shields.io/badge/VERSION-4.26.14.0-orange?style=flat-square" alt="Version" />
 		<img src="https://img.shields.io/github/downloads/otomad/OtomadHelper/total.svg?style=flat-square&label=DOWNLOADS" alt="Downloads">
 	</p>
 </div>
@@ -98,8 +98,8 @@ When you are using the script, if you:
 You can create issues.
 
 ### Terms of Use
-1. Respect the rights and interests of authors when creating with non-self-made MIDI/source.
-2. Using this script requires some creative abilities from the users. This script should and should only be used to assist in creations. Do not rely solely on this script to generate productions or learn to creating Otomad/YTPMV as a beginner. Listen, don't make Otomidi!
+1. Respect the rights and interests of authors when creating with non-self-made MIDI / materials.
+2. Using this script requires some creative abilities from the users. This script should and should only be used to assist in creations. Do not rely solely on this script to generate productions nor learn to creating Otomad/YTPMV as a beginner. Listen, don't make Otomidi!
 
 ### Permissions
 If you use this script, the script will use the following permissions.

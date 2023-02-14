@@ -32,7 +32,7 @@ Chọn track event nguồn trong track window, hoặc chọn file phương tiệ
 
 Bạn có thể thêm script thành nút toolbar thay vì luôn phải click vào menu phụ *Tools > Scripting*, bằng cách thêm vào toolbar thông qua menu *Options > Customize Toolbar*.
 
-Bạn cũng có thể đọc  [tài liệu](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng) của [@Evauation](https://github.com/Evauation) và xem [video hướng dẫn](https://www.youtube.com/watch?v=8vSpzgL_86A) của [@Cassidy](https://github.com/composition-cassidy) *(Tiếng Anh)*.
+Bạn cũng có thể đọc [tài liệu](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng) của [@Evauation](https://github.com/Evauation) và xem [video hướng dẫn](https://www.youtube.com/watch?v=8vSpzgL_86A) của [@Cassidy](https://github.com/composition-cassidy) *(Tiếng Anh)*.
 
 [Bấm vào đây để xem giới thiệu về Datamosh](Datamosh/README.md). Bạn cũng có thể [xem video](https://www.youtube.com/watch?v=6D2lW6H0bb8) *(Tiếng Anh)*.
 
