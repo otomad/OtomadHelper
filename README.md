@@ -51,7 +51,7 @@ You can also read [@Evauation](https://github.com/Evauation)'s [documentation](h
 3. Make sure that the DLL file `(DLL\NAudio.dll)` is not locked. **Specific steps:**
 	1. In the Vegas installation directory, enter folder `Script Menu\DLL`.
 	2. Right-click the NAudio.dll file and select Properties.
-	3. If you see the "Unblock" button or checkbox, click or check it.
+	3. If you see the "Unblock" button (Windows 7/8.x) or checkbox (Windows 10+), click or check it.
 	4. Click OK button and you're done.
 4. Open the Vegas Pro to launch it. Select menu *Tools > Scripting > Otomad Helper* to open.
 

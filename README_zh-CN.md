@@ -43,7 +43,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 3. 确保 DLL 文件 `(DLL\NAudio.dll)` 没有被锁定。**具体步骤：**
 	1. 在 Vegas 安装目录下，依次进入文件夹 `Script Menu\DLL`。
 	2. 右键 NAudio.dll 文件，并选择“属性”。
-	3. 如果您看到了“解除锁定”按钮或复选框，就点一下或勾选它。
+	3. 如果您看到了“解除锁定”按钮 (Windows 7/8.x) 或复选框 (Windows 10+)，就点一下或勾选它。
 	4. 点击确定按钮即可。
 4. 打开您的 Vegas Pro 来启动脚本。选择菜单 *工具 > 脚本化 > Otomad Helper*。
 
