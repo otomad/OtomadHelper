@@ -1,6 +1,6 @@
 <div lang="vi">
 
-[![Cover](cover.png)](#otomad-helper)
+[![Cover](covers/cover_vi.png)](#otomad-helper)
 <div align="center">
 	<h2 id="otomad-helper">Otomad Helper</h2>
 	<p><b><i>Lan Âm</i></b></p>
