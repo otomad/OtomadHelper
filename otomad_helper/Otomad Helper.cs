@@ -33201,7 +33201,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				automator_configform_info = "Đặt giá trị automation ngẫu nhiên cho hiệu ứng video nhanh chóng và tự động.",
 				stutter_configform_info = "Stutter clips/events (phát về trước, lùi, ...).",
 				camera_shake_configform_info = "Dùng Pan/crop để làm cho các lớp phủ (layer) đã chọn rung lắc.",
-				otomad_helper_config = "Otomad Helper for Vegas - Thiết Lập (Việt hoá bởi Cyahega)",
+				otomad_helper_config = "Otomad Helper dành cho Vegas - Thiết Lập (Việt hoá bởi Cyahega)",
 				reset_config_successful = "Đặt lại hoàn tất, vui lòng khởi động lại script.",
 				reset_config_successful_title = "Đặt lại thiết lập người dùng",
 				sure_to_reset_config = "Bạn có chắc muốn đặt lại thiết lập người dùng?\n\nDữ liệu thiết lập người dùng của bạn sẽ bị mất.",
