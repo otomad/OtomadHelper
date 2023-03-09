@@ -27,9 +27,12 @@
  * Place this script and all other attached files in the Script Menu folder in your Vegas installation directory.
  * See the documentation link for instructions.
  * The script is redeveloped based on the original author Chaosinism's open source code and uses the NAudio library.
+ *
  * Get the latest version here: https://github.com/otomad/OtomadHelper/releases/latest
  * Repository link for more details: https://github.com/otomad/OtomadHelper
+ *
  * Project start date: Sun, Sep 5th 2021 A.D., 4:14:26 a.m.
+ * Copyright (c) 2021 ~, Ranne
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any
@@ -84,9 +87,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 25, 5, 0);
+		public static readonly Version VERSION = new Version(4, 26, 14, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2023, 1, 5);
+		public static readonly DateTime REVISION_DATE = new DateTime(2023, 2, 14);
 
 		// 配置参数变量
 		#region 视频属性
@@ -175,6 +178,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/**<summary>项目速度</summary>*/ private bool MidiUseProjectBpm { get { return configForm.MidiProjectBpmCheck.Checked; } }
 		/**<summary>自拟速度</summary>*/ private bool MidiUseCustomBpm { get { return configForm.MidiCustomBpmCheck.Checked; } }
 		/**<summary>变速形式</summary>*/ private int MidiUseDynamicMidiBpmForm { get { return configForm.MidiDynamicMidiBpmFormCombo.SelectedIndex; } }
+		/**<summary>限长模式</summary>*/ private RestrictLengthModeType RestrictLengthMode { get { return configForm.RestrictLengthMode; } }
+		/**<summary>限长大小</summary>*/ private double RestrictLengthValue { get { return configForm.RestrictLengthBox.DoubleValue; } }
 		#endregion
 
 		#region 媒体属性
@@ -1188,6 +1193,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				int _pitch = pitch + SheetConfigShift; // 五线谱音符偏移量。
 				int trackIndex = 0;
 				int velocity = noteEvent.Velocity;
+				if (RestrictLengthMode == RestrictLengthModeType.FIXED_LENGTH) duration = RestrictLengthValue;
+				else if (RestrictLengthMode == RestrictLengthModeType.MAX_LENGTH) duration = Math.Min(duration, RestrictLengthValue);
 
 				if (startTime < MidiConfigStartTime) continue;
 				if (startTime > MidiConfigEndTime && sliceComposition) break;
@@ -2509,7 +2516,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void Generate() {
-			MidiConfigTracks.CompleteConfig();
+			if (!YtpConfig)
+				MidiConfigTracks.CompleteConfig();
 			if (YtpConfig || !IsMultiMidiChannel) {
 				GenerateOtomad();
 				return;
@@ -3390,6 +3398,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		PERCENT,
 		/// <summary>时间码。</summary>
 		TIMECODE,
+	}
+
+	/// <summary>
+	/// 限制音符长度类型枚举。
+	/// </summary>
+	public enum RestrictLengthModeType {
+		/// <summary>不限制。</summary>
+		UNRESTRICTED,
+		/// <summary>限制最大长度。</summary>
+		MAX_LENGTH,
+		/// <summary>限制在固定长度。</summary>
+		FIXED_LENGTH,
+		/// <summary>限制最小长度。</summary>
+		MIN_LENGTH,
 	}
 
 	/// <summary>
@@ -17743,6 +17765,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.WarningInfoLabel = new System.Windows.Forms.Label();
 			this.MidiConfigGroup = new System.Windows.Forms.GroupBox();
 			this.MidiConfigTablePanel = new System.Windows.Forms.TableLayoutPanel();
+			this.RestrictLengthLbl = new System.Windows.Forms.Label();
 			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
 			this.MidiChannelCombo = new System.Windows.Forms.ComboBox();
 			this.MidiChannelAdvancedBtn = new System.Windows.Forms.Button();
@@ -17769,6 +17792,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
 			this.MidiBeatLbl = new System.Windows.Forms.Label();
 			this.MidiBeatTxt = new System.Windows.Forms.Label();
+			this.RestrictLengthFlow = new System.Windows.Forms.FlowLayoutPanel();
+			this.UnrestrictLengthRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.RestrictMaxLengthRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.RestrictFixedLengthRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.RestrictLengthBox = new Otomad.VegasScript.OtomadHelper.V4.TimecodeBox();
 			this.SourceConfigGroup = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.ChooseSourceLbl = new System.Windows.Forms.Label();
@@ -18134,6 +18162,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MidiCustomBpmBox)).BeginInit();
 			this.tableLayoutPanel12.SuspendLayout();
+			this.RestrictLengthFlow.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.RestrictLengthBox)).BeginInit();
 			this.SourceConfigGroup.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
 			this.tableLayoutPanel4.SuspendLayout();
@@ -18245,7 +18275,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.Controls.Add(this.OkBtn, 3, 0);
 			this.tableLayoutPanel1.Controls.Add(this.CancelBtn, 4, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 679);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 689);
 			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(5, 5, 5, 2);
@@ -19102,7 +19132,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.chineseToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.chineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.chineseToolStripMenuItem.Name = "chineseToolStripMenuItem";
-			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
 			this.chineseToolStripMenuItem.Text = "简体中文";
 			//
 			// tchineseToolStripMenuItem
@@ -19110,7 +19140,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tchineseToolStripMenuItem.CheckOnClick = true;
 			this.tchineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tchineseToolStripMenuItem.Name = "tchineseToolStripMenuItem";
-			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
 			this.tchineseToolStripMenuItem.Text = "繁體中文";
 			//
 			// englishToolStripMenuItem
@@ -19118,7 +19148,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.englishToolStripMenuItem.CheckOnClick = true;
 			this.englishToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-			this.englishToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.englishToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
 			this.englishToolStripMenuItem.Text = "English";
 			//
 			// japaneseToolStripMenuItem
@@ -19126,7 +19156,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.japaneseToolStripMenuItem.CheckOnClick = true;
 			this.japaneseToolStripMenuItem.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.japaneseToolStripMenuItem.Name = "japaneseToolStripMenuItem";
-			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
 			this.japaneseToolStripMenuItem.Text = "日本語";
 			//
 			// russianToolStripMenuItem
@@ -19134,7 +19164,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.russianToolStripMenuItem.CheckOnClick = true;
 			this.russianToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
-			this.russianToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.russianToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
 			this.russianToolStripMenuItem.Text = "Русский";
 			//
 			// vietnameseToolStripMenuItem
@@ -19142,7 +19172,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.vietnameseToolStripMenuItem.CheckOnClick = true;
 			this.vietnameseToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.vietnameseToolStripMenuItem.Name = "vietnameseToolStripMenuItem";
-			this.vietnameseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.vietnameseToolStripMenuItem.Size = new System.Drawing.Size(159, 26);
 			this.vietnameseToolStripMenuItem.Text = "Tiếng Việt";
 			//
 			// latestVersionToolStripMenuItemInBar
@@ -19162,7 +19192,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.panel1.Margin = new System.Windows.Forms.Padding(2);
 			this.panel1.Name = "panel1";
 			this.panel1.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
-			this.panel1.Size = new System.Drawing.Size(682, 649);
+			this.panel1.Size = new System.Drawing.Size(682, 659);
 			this.panel1.TabIndex = 3;
 			//
 			// Tabs
@@ -19181,7 +19211,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Tabs.Multiline = true;
 			this.Tabs.Name = "Tabs";
 			this.Tabs.SelectedIndex = 0;
-			this.Tabs.Size = new System.Drawing.Size(666, 649);
+			this.Tabs.Size = new System.Drawing.Size(666, 659);
 			this.Tabs.TabIndex = 2;
 			//
 			// SourceTab
@@ -19195,7 +19225,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SourceTab.Margin = new System.Windows.Forms.Padding(2);
 			this.SourceTab.Name = "SourceTab";
 			this.SourceTab.Padding = new System.Windows.Forms.Padding(5);
-			this.SourceTab.Size = new System.Drawing.Size(658, 616);
+			this.SourceTab.Size = new System.Drawing.Size(658, 626);
 			this.SourceTab.TabIndex = 0;
 			this.SourceTab.Text = "媒体";
 			this.SourceTab.UseVisualStyleBackColor = true;
@@ -19206,7 +19236,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
 			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(5, 489);
+			this.WarningInfoLabel.Location = new System.Drawing.Point(5, 550);
 			this.WarningInfoLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(540, 0);
 			this.WarningInfoLabel.Name = "WarningInfoLabel";
@@ -19223,7 +19253,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiConfigGroup.Margin = new System.Windows.Forms.Padding(2);
 			this.MidiConfigGroup.Name = "MidiConfigGroup";
 			this.MidiConfigGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.MidiConfigGroup.Size = new System.Drawing.Size(648, 275);
+			this.MidiConfigGroup.Size = new System.Drawing.Size(648, 336);
 			this.MidiConfigGroup.TabIndex = 2;
 			this.MidiConfigGroup.TabStop = false;
 			this.MidiConfigGroup.Text = "MIDI 属性";
@@ -19236,6 +19266,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.AutoSize = true;
 			this.MidiConfigTablePanel.ColumnCount = 1;
 			this.MidiConfigTablePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.MidiConfigTablePanel.Controls.Add(this.RestrictLengthLbl, 0, 8);
 			this.MidiConfigTablePanel.Controls.Add(this.tableLayoutPanel5, 0, 3);
 			this.MidiConfigTablePanel.Controls.Add(this.ChooseMidiLbl, 0, 0);
 			this.MidiConfigTablePanel.Controls.Add(this.tableLayoutPanel6, 0, 1);
@@ -19244,11 +19275,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.Controls.Add(this.MidiBpmLbl, 0, 6);
 			this.MidiConfigTablePanel.Controls.Add(this.MidiBpmFlowPanel, 0, 7);
 			this.MidiConfigTablePanel.Controls.Add(this.tableLayoutPanel12, 0, 4);
+			this.MidiConfigTablePanel.Controls.Add(this.RestrictLengthFlow, 0, 9);
 			this.MidiConfigTablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MidiConfigTablePanel.Location = new System.Drawing.Point(5, 25);
 			this.MidiConfigTablePanel.Margin = new System.Windows.Forms.Padding(2);
 			this.MidiConfigTablePanel.Name = "MidiConfigTablePanel";
-			this.MidiConfigTablePanel.RowCount = 8;
+			this.MidiConfigTablePanel.RowCount = 10;
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -19257,8 +19289,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.MidiConfigTablePanel.Size = new System.Drawing.Size(638, 245);
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.MidiConfigTablePanel.Size = new System.Drawing.Size(638, 306);
 			this.MidiConfigTablePanel.TabIndex = 1;
+			//
+			// RestrictLengthLbl
+			//
+			this.RestrictLengthLbl.AutoSize = true;
+			this.RestrictLengthLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RestrictLengthLbl.Location = new System.Drawing.Point(2, 250);
+			this.RestrictLengthLbl.Margin = new System.Windows.Forms.Padding(2, 5, 2, 0);
+			this.RestrictLengthLbl.Name = "RestrictLengthLbl";
+			this.RestrictLengthLbl.Size = new System.Drawing.Size(634, 20);
+			this.RestrictLengthLbl.TabIndex = 14;
+			this.RestrictLengthLbl.Text = "限制音符长度";
+			this.RestrictLengthLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
 			//
 			// tableLayoutPanel5
 			//
@@ -19623,6 +19669,71 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiBeatTxt.TabIndex = 5;
 			this.MidiBeatTxt.Text = "无";
 			this.MidiBeatTxt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			//
+			// RestrictLengthFlow
+			//
+			this.RestrictLengthFlow.AutoSize = true;
+			this.RestrictLengthFlow.Controls.Add(this.UnrestrictLengthRadio);
+			this.RestrictLengthFlow.Controls.Add(this.RestrictMaxLengthRadio);
+			this.RestrictLengthFlow.Controls.Add(this.RestrictFixedLengthRadio);
+			this.RestrictLengthFlow.Controls.Add(this.RestrictLengthBox);
+			this.RestrictLengthFlow.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RestrictLengthFlow.Enabled = false;
+			this.RestrictLengthFlow.Location = new System.Drawing.Point(3, 273);
+			this.RestrictLengthFlow.Name = "RestrictLengthFlow";
+			this.RestrictLengthFlow.Size = new System.Drawing.Size(632, 30);
+			this.RestrictLengthFlow.TabIndex = 15;
+			//
+			// UnrestrictLengthRadio
+			//
+			this.UnrestrictLengthRadio.AutoSize = true;
+			this.UnrestrictLengthRadio.Checked = true;
+			this.UnrestrictLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.UnrestrictLengthRadio.Group = "LimitLength";
+			this.UnrestrictLengthRadio.Location = new System.Drawing.Point(3, 3);
+			this.UnrestrictLengthRadio.Name = "UnrestrictLengthRadio";
+			this.UnrestrictLengthRadio.Size = new System.Drawing.Size(75, 24);
+			this.UnrestrictLengthRadio.TabIndex = 0;
+			this.UnrestrictLengthRadio.TabStop = true;
+			this.UnrestrictLengthRadio.Text = "不限制";
+			this.UnrestrictLengthRadio.UseVisualStyleBackColor = true;
+			//
+			// RestrictMaxLengthRadio
+			//
+			this.RestrictMaxLengthRadio.AutoSize = true;
+			this.RestrictMaxLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RestrictMaxLengthRadio.Group = "LimitLength";
+			this.RestrictMaxLengthRadio.Location = new System.Drawing.Point(84, 3);
+			this.RestrictMaxLengthRadio.Name = "RestrictMaxLengthRadio";
+			this.RestrictMaxLengthRadio.Size = new System.Drawing.Size(90, 24);
+			this.RestrictMaxLengthRadio.TabIndex = 1;
+			this.RestrictMaxLengthRadio.Text = "最大长度";
+			this.RestrictMaxLengthRadio.UseVisualStyleBackColor = true;
+			//
+			// RestrictFixedLengthRadio
+			//
+			this.RestrictFixedLengthRadio.AutoSize = true;
+			this.RestrictFixedLengthRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RestrictFixedLengthRadio.Group = "LimitLength";
+			this.RestrictFixedLengthRadio.Location = new System.Drawing.Point(180, 3);
+			this.RestrictFixedLengthRadio.Name = "RestrictFixedLengthRadio";
+			this.RestrictFixedLengthRadio.Size = new System.Drawing.Size(90, 24);
+			this.RestrictFixedLengthRadio.TabIndex = 2;
+			this.RestrictFixedLengthRadio.Text = "固定长度";
+			this.RestrictFixedLengthRadio.UseVisualStyleBackColor = true;
+			//
+			// RestrictLengthBox
+			//
+			this.RestrictLengthBox.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RestrictLengthBox.DoubleValue = 1000D;
+			this.RestrictLengthBox.Enabled = false;
+			this.RestrictLengthBox.Location = new System.Drawing.Point(275, 2);
+			this.RestrictLengthBox.Margin = new System.Windows.Forms.Padding(2);
+			this.RestrictLengthBox.Milliseconds = 1000;
+			this.RestrictLengthBox.Name = "RestrictLengthBox";
+			this.RestrictLengthBox.Size = new System.Drawing.Size(163, 27);
+			this.RestrictLengthBox.TabIndex = 6;
+			this.RestrictLengthBox.Value = 1000;
 			//
 			// SourceConfigGroup
 			//
@@ -25288,7 +25399,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(682, 733);
+			this.ClientSize = new System.Drawing.Size(682, 743);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.menu);
@@ -25299,7 +25410,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Margin = new System.Windows.Forms.Padding(4);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(700, 780);
+			this.MinimumSize = new System.Drawing.Size(700, 790);
 			this.Name = "ConfigForm";
 			this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
@@ -25346,6 +25457,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			((System.ComponentModel.ISupportInitialize)(this.MidiCustomBpmBox)).EndInit();
 			this.tableLayoutPanel12.ResumeLayout(false);
 			this.tableLayoutPanel12.PerformLayout();
+			this.RestrictLengthFlow.ResumeLayout(false);
+			this.RestrictLengthFlow.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.RestrictLengthBox)).EndInit();
 			this.SourceConfigGroup.ResumeLayout(false);
 			this.SourceConfigGroup.PerformLayout();
 			this.tableLayoutPanel3.ResumeLayout(false);
@@ -25959,6 +26073,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.RadioButton AudioFadeSetAsTimecodeRadio;
 		public System.Windows.Forms.CheckBox CreateEventGroupInVideoCheck;
 		public ToolStripRadioButtonMenuItem vietnameseToolStripMenuItem;
+		public System.Windows.Forms.Label RestrictLengthLbl;
+		public System.Windows.Forms.FlowLayoutPanel RestrictLengthFlow;
+		public GroupedRadioButton UnrestrictLengthRadio;
+		public GroupedRadioButton RestrictMaxLengthRadio;
+		public GroupedRadioButton RestrictFixedLengthRadio;
+		public TimecodeBox RestrictLengthBox;
 	}
 	#endregion
 
@@ -26010,13 +26130,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				EntryPoint.AlertUnsupportVersion();
 				isAlertedUnsupport = true;
 			}
-			if (EntryPoint.CurrentVegasVersion < new Version(19, 0))
+			if (EntryPoint.CurrentVegasVersion == null || // 当获取当前版本号为未知时。
+				EntryPoint.CurrentVegasVersion < new Version(19, 0))
 				BelowTopAdjustmentTrackCheck.Checked = BelowTopAdjustmentTrackCheck.Enabled = false;
 			#endregion
 
 			#region MIDI 速度控制点击事件
 			MidiCustomBpmCheck.CheckedChanged += (sender, e) => { MidiCustomBpmBox.Enabled = MidiCustomBpmCheck.Checked; };
 			GenerateAtCustomRadio.CheckedChanged += (sender, e) => { GenerateAtCustomText.Enabled = GenerateAtCustomRadio.Checked; };
+			UnrestrictLengthRadio.CheckedChanged += (sender, e) => { RestrictLengthBox.Enabled = !UnrestrictLengthRadio.Checked; };
 			MidiProjectBpmCheck.Text = Lang.str.midi_project_bpm + Lang.str.colon + ProcessBpmDouble(parent.ProjectBpm);
 			MidiCustomBpmBox.Value = (decimal)Math.Max(parent.ProjectBpm, (double)MidiCustomBpmBox.Minimum);
 			GenerateAtBeginRadio.Text = Lang.str.generate_at_begin + Lang.str.colon + Timecode.FromMilliseconds(0).ToPositionString();
@@ -26290,6 +26412,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			else configIni.DeleteKey("MidiCustomBpm");
 			if (BelowTopAdjustmentTrackCheck.Enabled)
 				BelowTopAdjustmentTrackCheck.Checked = configIni.Read("BelowTopAdjustmentTracks", true);
+			RestrictLengthMode_int = configIni.Read("RestrictLengthMode", 0);
+			RestrictLengthBox.Value = configIni.Read("RestrictLengthValue", 1000);
 			configIni.EndSection();
 			#endregion
 
@@ -26493,6 +26617,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (MidiCustomBpmCheck.Checked)
 				configIni.Write("MidiCustomBpm", MidiCustomBpmBox.Value);
 			configIni.Write("BelowTopAdjustmentTracks", BelowTopAdjustmentTrackCheck.Checked);
+			configIni.Write("RestrictLengthMode", RestrictLengthMode_int);
+			configIni.Write("RestrictLengthValue", RestrictLengthBox.Value);
 			configIni.EndSection();
 			#endregion
 
@@ -26770,6 +26896,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			MidiDynamicMidiBpmCheck.Text = str.midi_dynamic_midi_bpm;
 			MidiMidiBpmCheck.Text = str.midi_midi_bpm;
 			MidiProjectBpmCheck.Text = str.midi_project_bpm;
+			RestrictLengthLbl.Text = str.restrict_note_length;
+			UnrestrictLengthRadio.Text = str.unrestricted;
+			RestrictMaxLengthRadio.Text = str.restrict_max_length;
+			RestrictFixedLengthRadio.Text = str.restrict_fixed_length;
 			GenerateAtCustomRadio.Text = MidiCustomBpmCheck.Text = str.midi_custom_bpm;
 			SourceConfigGroup.Text = str.source_settings;
 			GenerateAtBeginRadio.Text = str.generate_at_begin;
@@ -27344,6 +27474,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				= MidiChannelCombo.Enabled
 				= MidiChannelAdvancedBtn.Enabled
 				= MidiBeatTxt.Enabled
+				= RestrictLengthFlow.Enabled
 				= true;
 			Lang str = Lang.str;
 			string bpm_str = ProcessBpmDouble(midi.Bpm);
@@ -27369,7 +27500,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				TUTORIAL_VIDEO_V0_1 = "https://www.bilibili.com/video/av22226321",
 				RELEASE_NOTES_V4_9_25_0 = "http://www.bilibili.com/read/cv13335178",
 				RELEASE_NOTES_V4_10_17_0 = "https://www.bilibili.com/read/cv13614419",
-				DOCUMENTATION_ENGLISH = "https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng/edit",
+				DOCUMENTATION_ENGLISH = "https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng",
 				TUTORIAL_VIDEO_ENGLISH = "https://youtu.be/8vSpzgL_86A", // Bug 之一：链接中不能包含如问号或等号等特殊符号。暂时打不开，以 YouTube 短链替换之。
 				GITHUB_LATEST_API = "https://api.github.com/repos/otomad/VegasScripts/releases/latest", // 一小时 60 次上限。
 				GITHUB_LATEST_API_2 = "https://otomad.github.io/VegasScripts/README.md",
@@ -27395,6 +27526,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				{ "", "" },
 				{ str.script_author, str.ranne },
 				{ str.script_original_author , "Chaosinism" },
+				{ str.script_translator, str.__translator__ },
 				{ "", "" },
 				{ str.repository_link , Links.REPOSITORY },
 				{ str.latest_version_link , Links.GITHUB_LATEST },
@@ -27402,6 +27534,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			StringBuilder text = new StringBuilder();
 			for (int i = 0; i < pairs.GetLength(0); i++) {
 				string key = pairs[i, 0], value = pairs[i, 1];
+				if (value == Lang.NO_TRANSLATOR) continue;
 				if (string.IsNullOrWhiteSpace(value)) text.AppendLine();
 				else text.AppendLine(key + str.colon + value);
 			}
@@ -27917,6 +28050,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private int MidiUseBpm_int {
 			get { return (int)MidiUseBpm; }
 			set { MidiUseBpm = (MidiUseBpm)value; }
+		}
+
+		public RestrictLengthModeType RestrictLengthMode {
+			get {
+				return RestrictMaxLengthRadio.Checked ? RestrictLengthModeType.MAX_LENGTH :
+					RestrictFixedLengthRadio.Checked ? RestrictLengthModeType.FIXED_LENGTH :
+					RestrictLengthModeType.UNRESTRICTED;
+			}
+			set {
+				UnrestrictLengthRadio.Related.Selected = value == RestrictLengthModeType.MAX_LENGTH ? RestrictMaxLengthRadio :
+					value == RestrictLengthModeType.FIXED_LENGTH ? RestrictFixedLengthRadio : UnrestrictLengthRadio;
+			}
+		}
+
+		private int RestrictLengthMode_int {
+			get { return (int)RestrictLengthMode; }
+			set { RestrictLengthMode = (RestrictLengthModeType)value; }
 		}
 
 		public Timecode GenerateAtCustomTimecode = Timecode.FromMilliseconds(0);
@@ -28782,9 +28932,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return __name__;
 		}
 
+		public const string NO_TRANSLATOR = "null";
 		public readonly string dialog_sign = "...";
 		public readonly string dropdown_sign = "▾";
 		public string __name__ = "简体中文",
+			__translator__ = NO_TRANSLATOR,
 			info_label_font = "Microsoft Yahei",
 			ui_font = "Microsoft YaHei UI",
 			restart_to_effect_language = "重新启动以使语言生效？",
@@ -28803,9 +28955,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			check_update_on_startup = "启动时自动检查更新",
 			download_latest_version = "下载最新版本",
 			quick_config = "快速配置",
-			midi_file_name = "迷笛序列",
+			midi_file_name = "MIDI 序列",
 			all_files = "所有文件",
-			choose_a_midi_file = "请选择一个迷笛文件",
+			choose_a_midi_file = "请选择一个 MIDI 文件",
 			media_file_name = "支持的媒体文件",
 			choose_a_source_file = "请选择一个视频或图片素材片段",
 			error = "错误",
@@ -28875,8 +29027,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			yes = "是",
 			no = "否",
 			error_code = "错误代码：",
-			processing_otomad = "正在生成音 MAD / 油管便视乐⋯⋯",
-			processing_ytp = "正在生成油管便⋯⋯",
+			processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
+			processing_ytp = "正在生成 YTP⋯⋯",
 			processing_it = "正在处理它",
 			processing_tracks = "正在生成第 {0} 个轨道，共 {1} 个。通道 {2}{3}⋯⋯",
 			real_time_update = "实时更新当前进度（会减慢生成速度）",
@@ -29012,7 +29164,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			custom_fade_gain = "自定渐入增益",
 			from = "从",
 			to = "至",
-			midi_channel_advanced = "迷笛轨道高级属性",
+			midi_channel_advanced = "MIDI 轨道高级属性",
 			channel = "通道",
 			name = "名称",
 			edit_notes = "编辑所选轨道音符...",
@@ -29029,9 +29181,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			about = "关于(&A)",
 			ok = "确定(&O)",
 			balloon_title = "填写说明",
-			midi_start_second_tooltip = "用于截取迷笛音乐的一部分。\n单位：秒。",
-			midi_end_second_tooltip = "此处填写需要读取迷笛文件的时间长度。\n注意如果填写的值过小，将截去多余时间部分的音符。\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时长末尾。\n单位：秒。",
-			midi_beat_conbo_tooltip = "目前仅用于五线谱的分页功能。\n暂时无法通过迷笛文件自动推测。",
+			midi_start_second_tooltip = "用于截取 MIDI 音乐的一部分。\n单位：秒。",
+			midi_end_second_tooltip = "此处填写需要读取 MIDI 文件的时间长度。\n注意如果填写的值过小，将截去多余时间部分的音符。\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时长末尾。\n单位：秒。",
+			midi_beat_conbo_tooltip = "目前仅用于五线谱的分页功能。\n暂时无法通过 MIDI 文件自动推测。",
 			source_start_time_tooltip = "此处填写媒体素材裁剪的开始时间。\n单位：秒。",
 			source_end_time_tooltip = "注意如果此处填写的数值比入点秒数小或相等，则始终表示持续到素材时间末尾。\n单位：秒。",
 			no_tune = "不调音",
@@ -29097,21 +29249,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			audio = "音频",
 			video = "视频",
 			staff = "五线谱",
-			ytp = "油管便",
+			ytp = "YTP",
 			helper = "工具",
-			midi_settings = "迷笛属性",
+			midi_settings = "MIDI 属性",
 			midi_start_time = "起始秒数",
 			midi_end_time = "终止秒数",
 			bpm_setting = "设定 BPM 速度为",
 			midi_beat = "节拍　　",
-			midi_channel_setting = "使用迷笛轨道",
+			midi_channel_setting = "使用 MIDI 轨道",
 			browse = "浏览...",
 			advanced = "高级...",
 			presets = "预设",
-			no_midi_selected = "<未选择迷笛文件>",
-			choose_midi_file = "选择迷笛文件",
-			midi_dynamic_midi_bpm = "动态迷笛速度",
-			midi_midi_bpm = "迷笛速度",
+			no_midi_selected = "<未选择 MIDI 文件>",
+			choose_midi_file = "选择 MIDI 文件",
+			midi_dynamic_midi_bpm = "动态 MIDI 速度",
+			midi_midi_bpm = "MIDI 速度",
 			midi_project_bpm = "项目速度",
 			midi_custom_bpm = "自定义",
 			dynamic_midi_bpm_info = "{0} 起始的动态速度",
@@ -29291,7 +29443,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ytp_high_contrast = "高对比（附加增加音量）",
 			ytp_oversaturation = "过饱和（概率性附加升调效果）",
 			ytp_emphasize_thrice = "重说三（附加放大聚焦效果）",
-			ytp_info = "在当前选项卡下单击“完成”按钮，将会生成油管便而不是音 MAD / 油管便视乐。\n除“生成音频”“生成视频”外其它的参数设置并不会在油管便中使用。",
+			ytp_info = "在当前选项卡下单击“完成”按钮，将会生成 YTP 而不是音 MAD / YTPMV。\n除“生成音频”“生成视频”外其它的参数设置并不会在 YTP 中使用。",
 			video_preset_fade_out = "淡出",
 			flashlight = "闪光",
 			horizontal_movement = "水平移动",
@@ -29353,7 +29505,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			quick_normalize_configform_info = "将选中的多个音频轨道剪辑全部规范化音量。",
 			quick_normalize_complete = "完成规范化音量。",
 			replace_clips_configform_info = "将多个轨道剪辑替换为指定的新轨道剪辑。",
-			auto_layout_tracks_configform_info = "类油管便视乐风格自动布局选中的轨道。",
+			auto_layout_tracks_configform_info = "类 YTPMV 风格自动布局选中的轨道。",
 			change_tune_method_configform_info = "将多个音频轨道剪辑统一更改为指定的调音算法。",
 			batch_subtitle_generation_configform_info = "预先设定好“字幕和文字”的预设，然后在此添加多行文本。",
 			find_clips_configform_info = "根据指定的条件（如剪辑名称、与选中剪辑相同的素材等）选中符合条件的所有轨道剪辑。",
@@ -29412,20 +29564,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			about_title = "关于",
 			script_author = "脚本作者",
 			script_original_author = "脚本原作者",
+			script_translator = "脚本翻译",
 			documentation = "说明文档",
 			ranne = "兰音",
 			why_ok_btn_is_disabled_info = "请按照下列步骤依次检查问题：",
 			why_ok_btn_is_disabled_no_audio_and_video_enabled = "“生成音频”与“生成视频”被同时取消勾选。请至少勾选生成其中一项。",
 			why_ok_btn_is_disabled_no_media_take = "所选的媒体素材来源不包含任何有效媒体资源。",
-			why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / 油管便视乐，请先选择一个迷笛序列文件。",
+			why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / YTPMV，请先选择一个 MIDI 序列文件。",
 			why_ok_btn_is_disabled_in_helper_tab = "为避免误操作，切勿在“工具”和“抹失”选项卡下进行提交生成操作。",
 			why_ok_btn_is_disabled_unknown_problem = "未知原因。",
 			no_selected_media_warning = "警告：您没有在项目媒体窗口中选中任何有效媒体素材！",
 			no_selected_clip_warning = "警告：您没有在轨道窗口中选中任何剪辑片段！",
 			preview_audio_track_name = "预听音频轨道（应该被删除！）",
-			no_midi_exception = "错误：未选择迷笛文件。\n\n请重新打开脚本参数配置对话框，然后在“迷笛属性”分组中点击“浏览”按钮，打开一个有效的迷笛文件。",
+			no_midi_exception = "错误：未选择 MIDI 文件。\n\n请重新打开脚本参数配置对话框，然后在“MIDI 属性”分组中点击“浏览”按钮，打开一个有效的 MIDI 文件。",
 			no_media_exception = "错误：未选择媒体文件。\n\n请重新打开脚本参数配置对话框，然后在“媒体属性”分组中点击“浏览”按钮，打开一个有效的媒体文件。",
-			no_track_info_exception = "错误：没有迷笛音轨。\n\n可能的原因：\n1. 您没有选择一个迷笛音轨；\n2. 该迷笛文件中没有任何音轨；\n3. 该迷笛文件已损坏或文件格式不受支持。",
+			no_track_info_exception = "错误：没有 MIDI 音轨。\n\n可能的原因：\n1. 您没有选择一个 MIDI 音轨；\n2. 该 MIDI 文件中没有任何音轨；\n3. 该 MIDI 文件已损坏或文件格式不受支持。",
 			no_plugin_pitch_shift_exception = "错误：无法调用移调插件。\n\n请按照教程文档 {0} 的指引正确操作。\n不过，根据这个更新版本的脚本，按理应当是中英文版本均可正常运行的。\n因此很有可能您是使用其它语言的 Vegas 造成的（逃",
 			no_plugin_presets_exception = "错误：无法调用移调插件的预设效果。\n\n请按照教程文档 {0} 的指引正确操作。\n确保在移调插件中手动添加了所有的 25 个预设，且命名正确。\n\n补充说明：具体可见上述链接专栏中对于安装方法的说明。这 25 个预设是上下一个八度以内的所有变调种类，\n缺少任何一个都有可能出错。手动添加预设的确非常麻烦，但 Vegas 无法使用脚本来指定变调的具体参数，\n因此只好绕这个弯子。",
 			no_plugin_name_exception = "错误：无法调用{0}插件。\n\n可能您使用的 Vegas 版本不支持该插件。",
@@ -29433,7 +29586,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			no_audio_take_exception = "错误：无法读取音频媒体流。\n\n在设置界面，纯视频/图片素材不要勾选“生成音频”。\n\n",
 			no_video_take_exception = "错误：无法读取视频媒体流。\n\n在设置界面，纯音频素材不要勾选“生成视频”。\n\n",
 			no_media_take_exception = "错误：无法读取媒体。\n\n您所选的文件格式不受 Vegas 支持，请检查该媒体文件是否损坏，或未安装对应的 Vegas 解码器。\n\n",
-			not_a_midi_file_exception = "错误：无法读取迷笛文件。\n\n解决方法：用宿主软件导入该迷笛，然后重新输出一个新的迷笛文件。\n\n补充说明：迷笛文件有多种格式，脚本不保证都能够正确读取。所幸主流宿主软件在\n默认设置下导出的迷笛文件一般是可以读取的。（目前测试过 FL Studio、LMMS \n与 Music Studio for iPad。）",
+			not_a_midi_file_exception = "错误：无法读取 MIDI 文件。\n\n解决方法：用宿主软件导入该 MIDI，然后重新输出一个新的 MIDI 文件。\n\n补充说明：MIDI 文件有多种格式，脚本不保证都能够正确读取。所幸主流宿主软件在\n默认设置下导出的 MIDI 文件一般是可以读取的。（目前测试过 FL Studio、LMMS \n与 Music Studio for iPad。）",
 			no_selected_exception_ps = "补充说明：如果您想手动在文件夹中选择一个媒体素材，那么请点击其右边的“浏览”按钮，\n选择一个媒体素材。并确保左侧的下拉菜单中选中的是您所选文件所在的路径。",
 			no_selected_media_exception = "错误：没有在项目媒体窗口中选择任何媒体。\n\n请在项目媒体窗口中选择一个媒体，然后重新打开参数配置窗口，并在素材设置中选择“选中的媒体文件”。\n\n",
 			no_selected_clip_exception_short = "错误：没有在轨道中选择任何剪辑。",
@@ -29442,9 +29595,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			read_config_fail_exception = "错误：读取参数配置文件失败。\n\n很遗憾您遇到了这个不可预见的错误。我们将会清除用户配置设置并恢复为默认值以便解决问题。\n建议将这个错误告诉作者以便快速解决问题。\n将会退出此脚本，然后劳烦阁下手动重新打开此脚本。",
 			fail_to_select_clips_exception = "错误：选取轨道剪辑出错。\n\n请先在轨道窗口中选取部分轨道剪辑。",
 			fail_to_select_tracks_exception = "错误：选取轨道出错。\n\n请先在轨道窗口中选取部分视频轨道。",
-			ytp_over_length_exception = "错误：指定的油管便最小长度超过了媒体长度。\n\n指定的油管便最小长度过大，请尝试更小的值。或所选媒体素材长度过小。",
-			ytp_in_media_generator_exception = "错误：对媒体生成器产生的媒体应用油管便。\n\n应用油管便必须使用本地媒体文件，不要使用媒体生成器生成的媒体。",
-			ytp_eliminate_duplicates_finally_null_exception = "技术异常：对油管便素材列表进行去重操作，最后列表为空了！（雾‽）\n\n这是一个不应该发生的错误。",
+			ytp_over_length_exception = "错误：指定的 YTP 最小长度超过了媒体长度。\n\n指定的 YTP 最小长度过大，请尝试更小的值。或所选媒体素材长度过小。",
+			ytp_in_media_generator_exception = "错误：对媒体生成器产生的媒体应用 YTP。\n\n应用 YTP 必须使用本地媒体文件，不要使用媒体生成器生成的媒体。",
+			ytp_eliminate_duplicates_finally_null_exception = "技术异常：对 YTP 素材列表进行去重操作，最后列表为空了！（雾‽）\n\n这是一个不应该发生的错误。",
 			unknown_exception = "错误：未知异常。\n\n请展开详细信息查看具体错误内容，并将错误信息反馈给作者。",
 			use_pic_in_pic_on_unsupported_vegas_exception = "错误：不支持在低版本 Vegas 中使用该画中画插件的效果。\n\n根本原因：Vegas 在新版本“画中画”效果插件中增加了一些新的功能和参数，这些新参数不能在低版本的 Vegas 插件中使用。\n\n解决方法：在当前 Vegas 版本不能使用该映像节奏视觉效果（如扩缩类等），请使用其它视觉效果。或更新 Vegas 软件。",
 			unsupported_curve_enum_exception = "错误：使用不支持的曲线枚举类型作为参数。\n\n{0} 不是曲线枚举类型。",
@@ -29504,12 +29657,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			shake_skew_out_tooltip = "镜头偏离中心的像素数。亦是放大的边距。",
 			shake_x_to_y_tooltip = "与水平距离相乘。大于 1 的值将会放得更大。",
 			shake_should_reset_pan_tooltip = "若不勾选，可在当前视频缩放范围内摇晃。",
-			shake_should_clear_frames_tooltip = "若不勾选，可将新的抖动效果与之前的抖动效果相乘。";
+			shake_should_clear_frames_tooltip = "若不勾选，可将新的摇晃效果与之前的摇晃效果相乘。",
+			restrict_note_length = "限制音符长度",
+			unrestricted = "不限制",
+			restrict_max_length = "最大长度",
+			restrict_fixed_length = "固定长度";
 
 		static Lang() {
 			SChinese = new Lang();
 			English = new Lang {
 				__name__ = "English",
+				__translator__ = NO_TRANSLATOR,
 				info_label_font = "Segoe UI",
 				ui_font = "Segoe UI",
 				restart_to_effect_language = "Restart for language to take effect?",
@@ -29527,7 +29685,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_not_found = "Already the latest version!\n\nLatest version: {0}",
 				check_update_on_startup = "Check for updates at startup",
 				download_latest_version = "Download the latest",
-				quick_config = "Quick Configuration",
+				quick_config = "Quickly configure",
 				midi_file_name = "MIDI sequence",
 				all_files = "All files",
 				choose_a_midi_file = "Please select a MIDI file",
@@ -29819,7 +29977,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				experimental_theme = "Experimental theme",
 				media = "Media",
 				audio = "Audio",
-				video = "Video",
+				video = "Visual",
 				staff = "Staff",
 				ytp = "YTP",
 				helper = "Tools",
@@ -29842,7 +30000,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				dynamic_midi_beat_info = "Dynamic beat from {0}",
 				colon = ": ",
 				semicolon = "; ",
-				source_settings = "Source configuration",
+				source_settings = "Material configuration",
 				generate_at_begin = "Project start",
 				generate_at_cursor = "Cursor",
 				generate_position = "Generate at",
@@ -30136,6 +30294,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				about_title = "About",
 				script_author = "Author",
 				script_original_author = "Original author",
+				script_translator = "Translator",
 				documentation = "Documentation",
 				ranne = "Ranne",
 				why_ok_btn_is_disabled_info = "Please follow these steps to check the problem in turn:",
@@ -30229,9 +30388,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				shake_x_to_y_tooltip = "Multiply horizontal distance. Values above 1 will produce a greater zoom-in.",
 				shake_should_reset_pan_tooltip = "Leave unchecked to shake within the current video zoom.",
 				shake_should_clear_frames_tooltip = "Leave unchecked to multiply the new shake effect with a previous shake effect.",
+				restrict_note_length = "Restrict notes length",
+				unrestricted = "Unrestricted",
+				restrict_max_length = "Max length",
+				restrict_fixed_length = "Fixed length",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
+				__translator__ = NO_TRANSLATOR,
 				info_label_font = "Microsoft JhengHei",
 				ui_font = "Microsoft JhengHei UI",
 				restart_to_effect_language = "重新啟動以使語言生效？",
@@ -30250,9 +30414,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_on_startup = "啟動時自動檢查更新",
 				download_latest_version = "下載最新版本",
 				quick_config = "快速配置",
-				midi_file_name = "迷笛序列",
+				midi_file_name = "MIDI 序列",
 				all_files = "所有檔案",
-				choose_a_midi_file = "請選擇一個迷笛檔案",
+				choose_a_midi_file = "請選擇一個 MIDI 檔案",
 				media_file_name = "支持的媒體檔案",
 				choose_a_source_file = "請選擇一個視訊或圖片素材片段",
 				error = "錯誤",
@@ -30322,8 +30486,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				yes = "是",
 				no = "否",
 				error_code = "錯誤代碼：",
-				processing_otomad = "正在生成音 MAD / 油土伯便影樂⋯⋯",
-				processing_ytp = "正在生成油土伯便⋯⋯",
+				processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
+				processing_ytp = "正在生成 YTP⋯⋯",
 				processing_it = "正在處理它",
 				processing_tracks = "正在生成第 {0} 個軌道，共 {1} 個。通道 {1}{2}⋯⋯",
 				real_time_update = "即時更新當前進度（會减慢生成速度）",
@@ -30458,7 +30622,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				custom_fade_gain = "自定漸入增益",
 				from = "從",
 				to = "至",
-				midi_channel_advanced = "迷笛軌道高級內容",
+				midi_channel_advanced = "MIDI 軌道高級內容",
 				channel = "通道",
 				name = "名稱",
 				edit_notes = "編輯所選軌道音符...",
@@ -30475,9 +30639,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				about = "關於(&A)",
 				ok = "確定(&O)",
 				balloon_title = "填寫說明",
-				midi_start_second_tooltip = "用於截取迷笛音樂的一部分。\n單位：秒。",
-				midi_end_second_tooltip = "此處填寫需要讀取迷笛檔案的時間長度。\n注意如果填寫的值過小，將截去多餘時間部分的音符。\n如果此處填寫的值比起始秒數小或相等，則始終表示持續到整個音樂時長末尾。\n單位：秒。",
-				midi_beat_conbo_tooltip = "現時僅用於五線譜的分頁功能。\n暫時無法通過迷笛檔案自動推測。",
+				midi_start_second_tooltip = "用於截取 MIDI 音樂的一部分。\n單位：秒。",
+				midi_end_second_tooltip = "此處填寫需要讀取 MIDI 檔案的時間長度。\n注意如果填寫的值過小，將截去多餘時間部分的音符。\n如果此處填寫的值比起始秒數小或相等，則始終表示持續到整個音樂時長末尾。\n單位：秒。",
+				midi_beat_conbo_tooltip = "現時僅用於五線譜的分頁功能。\n暫時無法通過 MIDI 檔案自動推測。",
 				source_start_time_tooltip = "此處填寫媒體素材裁剪的開始時間。\n單位：秒。",
 				source_end_time_tooltip = "注意如果此處填寫的數值比入點秒數小或相等，則始終表示持續到素材時間末尾。\n單位：秒。",
 				no_tune = "不調音",
@@ -30543,21 +30707,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				audio = "音訊",
 				video = "視訊",
 				staff = "五線譜",
-				ytp = "油土伯便",
+				ytp = "YTP",
 				helper = "工具",
-				midi_settings = "迷笛設定",
+				midi_settings = "MIDI 設定",
 				midi_start_time = "起始秒數",
 				midi_end_time = "終止秒數",
 				bpm_setting = "設定 BPM 速度為",
 				midi_beat = "節拍",
-				midi_channel_setting = "使用迷笛軌道",
+				midi_channel_setting = "使用 MIDI 軌道",
 				browse = "瀏覽...",
 				advanced = "高級...",
 				presets = "預設",
-				no_midi_selected = "<未選擇迷笛檔案>",
-				choose_midi_file = "選擇迷笛檔案",
-				midi_dynamic_midi_bpm = "動態迷笛速度",
-				midi_midi_bpm = "迷笛速度",
+				no_midi_selected = "<未選擇 MIDI 檔案>",
+				choose_midi_file = "選擇 MIDI 檔案",
+				midi_dynamic_midi_bpm = "動態 MIDI 速度",
+				midi_midi_bpm = "MIDI 速度",
 				midi_project_bpm = "專案速度",
 				midi_custom_bpm = "自定義",
 				dynamic_midi_bpm_info = "{0} 起始的動態速度",
@@ -30737,7 +30901,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_high_contrast = "高對比（附加增大音量）",
 				ytp_oversaturation = "過飽和（概率性附加升調效果）",
 				ytp_emphasize_thrice = "重說三（附加放大聚焦效果）",
-				ytp_info = "在當前選項卡下按一下「完成」按鈕，將會生成油土伯便而不是音 MAD / 油土伯便影樂。\n除「生成音訊」「生成視訊」外其它的參數設定並不會在油土伯便中使用。",
+				ytp_info = "在當前選項卡下按一下「完成」按鈕，將會生成 YTP 而不是音 MAD / YTPMV。\n除「生成音訊」「生成視訊」外其它的參數設定並不會在 YTP 中使用。",
 				video_preset_fade_out = "淡出",
 				flashlight = "閃光",
 				horizontal_movement = "水平移動",
@@ -30799,7 +30963,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				quick_normalize_configform_info = "將選中的多個音訊軌道剪輯全部規範化音量。",
 				quick_normalize_complete = "完成規範化音量。",
 				replace_clips_configform_info = "將多個軌道剪輯替換為指定的新軌道剪輯。",
-				auto_layout_tracks_configform_info = "類油土伯便影樂風格自動佈局選中的軌道。",
+				auto_layout_tracks_configform_info = "類 YTPMV 風格自動佈局選中的軌道。",
 				change_tune_method_configform_info = "將多個音訊軌道剪輯統一更改為指定的調音算法。",
 				batch_subtitle_generation_configform_info = "預先設定好“字幕和文字”的預設，然後在此添加多行文字。",
 				find_clips_configform_info = "根據指定的條件（如剪輯名稱、與選中剪輯相同的素材等）選中符合條件的所有軌道剪輯。",
@@ -30858,20 +31022,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				about_title = "關於",
 				script_author = "腳本作者",
 				script_original_author = "腳本原作者",
+				script_translator = "腳本翻譯",
 				documentation = "說明文件",
 				ranne = "蘭音",
 				why_ok_btn_is_disabled_info = "請按照下列步驟依次檢查問題：",
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「生成音訊」與「生成視訊」被同時取消勾選。請至少勾選生成其中一項。",
 				why_ok_btn_is_disabled_no_media_take = "所選的媒體素材來源不包含任何有效媒體資源。",
-				why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / 油土伯便影樂，請先選擇一個迷笛序列檔案。",
+				why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / YTPMV，請先選擇一個 MIDI 序列檔案。",
 				why_ok_btn_is_disabled_in_helper_tab = "為避免誤操作，切勿在「工具」和「抹失」選項卡下進行提交生成操作。",
 				why_ok_btn_is_disabled_unknown_problem = "未知原因。",
 				no_selected_media_warning = "警告：您沒有在專案媒體視窗中選中任何有效媒體素材！",
 				no_selected_clip_warning = "警告：您沒有在軌道視窗中選中任何剪輯片段！",
 				preview_audio_track_name = "預聽音訊軌道（應該被删除！）",
-				no_midi_exception = "錯誤：未選擇迷笛檔案。\n\n請重新啟動腳本參數設定對話方塊，然後在「迷笛設定」分組中點擊「瀏覽」按鈕，開啟一個有效的迷笛檔案。",
+				no_midi_exception = "錯誤：未選擇 MIDI 檔案。\n\n請重新啟動腳本參數設定對話方塊，然後在「MIDI 設定」分組中點擊「瀏覽」按鈕，開啟一個有效的 MIDI 檔案。",
 				no_media_exception = "錯誤：未選擇媒體檔案。\n\n請重新啟動腳本參數設定對話方塊，然後在「媒體設定」分組中點擊「瀏覽」按鈕，開啟一個有效的媒體檔案。",
-				no_track_info_exception = "錯誤：沒有迷笛音軌。\n\n可能的原因：\n1.您沒有選擇一個迷笛音軌；\n2.該迷笛檔案中沒有任何音軌；\n3.該迷笛檔案已損壞或檔案格式不受支持。",
+				no_track_info_exception = "錯誤：沒有 MIDI 音軌。\n\n可能的原因：\n1.您沒有選擇一個 MIDI 音軌；\n2.該 MIDI 檔案中沒有任何音軌；\n3.該 MIDI 檔案已損壞或檔案格式不受支持。",
 				no_plugin_pitch_shift_exception = "錯誤：無法調用移調插件。\n\n請按照教程檔案 {0} 的指引正確操作。\n不過，根據這個更新版本的腳本，按理應當是中英文版本均可正常運行的。\n因此很有可能您是使用其它語言的 Vegas 造成的（逃",
 				no_plugin_presets_exception = "錯誤：無法調用移調插件的預設效果。\n\n請按照教程檔案 {0} 的指引正確操作。\n確保在移調插件中手動添加了所有的 25 個預設，且命名正確。\n\n補充說明：具體可見上述連結專欄中對於安裝方法的說明。這 25 個預設是上下一個八度以內的所有變調種類，\n缺少任何一個都有可能出錯。手動添加預設的確非常麻煩，但 Vegas 無法使用腳本來指定變調的具體參數，\n囙此只好繞這個彎子。",
 				no_plugin_name_exception = "錯誤：無法調用 {0} 插件。\n\n可能您使用的 Vegas 版本不支持該插件。",
@@ -30879,7 +31044,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_audio_take_exception = "錯誤：無法讀取音訊媒體流。\n\n在設定介面，純視訊/圖片素材不要勾選「生成音訊」。\n\n",
 				no_video_take_exception = "錯誤：無法讀取視訊媒體流。\n\n在設定介面，純音訊素材不要勾選「生成視訊」。\n\n",
 				no_media_take_exception = "錯誤：無法讀取媒體。\n\n您所選的檔案格式不受 Vegas 支持，請檢查該媒體檔案是否損壞，或未安裝對應的 Vegas 解碼器。\n\n",
-				not_a_midi_file_exception = "錯誤：無法讀取迷笛檔案。\n\n解決方法：用宿主軟件導入該迷笛，然後重新輸出一個新的迷笛檔案。\n\n補充說明：迷笛檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟件在\n默認設定下匯出的迷笛檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
+				not_a_midi_file_exception = "錯誤：無法讀取 MIDI 檔案。\n\n解決方法：用宿主軟件導入該 MIDI，然後重新輸出一個新的 MIDI 檔案。\n\n補充說明：MIDI 檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟件在\n默認設定下匯出的 MIDI 檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
 				no_selected_exception_ps = "補充說明：如果您想手動在資料夾中選擇一個媒體素材，那麼請點擊其右邊的「瀏覽」按鈕，\n選擇一個媒體素材。並確保左側的下拉式功能表中選中的是您所選檔案所在的路徑。",
 				no_selected_media_exception = "錯誤：沒有在專案媒體視窗中選擇任何媒體。\n\n請在專案媒體視窗中選擇一個媒體，然後重新啟動參數設定視窗，並在素材設定中選擇「選中的媒體檔案」。\n\n",
 				no_selected_clip_exception_short = "錯誤：沒有在軌道中選擇任何剪輯。",
@@ -30888,9 +31053,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				read_config_fail_exception = "錯誤：讀取參數設定檔失敗。\n\n很遺憾您遇到了這個不可預見的錯誤。我們將會清除使用者組態設定並恢復為預設值以便解决問題。\n建議將這個錯誤告訴作者以便快速解决問題。\n將會退出此腳本，然後勞煩閣下手動重新啟動此腳本。",
 				fail_to_select_clips_exception = "錯誤：選取軌道剪輯出錯。\n\n請先在軌道視窗中選取部分軌道剪輯。",
 				fail_to_select_tracks_exception = "錯誤：選取軌道出錯。\n\n請先在軌道視窗中選取部分視訊軌道。",
-				ytp_over_length_exception = "錯誤：指定的油土伯便最小長度超過了媒體長度。\n\n指定的油土伯便最小長度過大，請嘗試更小的值。或所選媒體素材長度過小。",
-				ytp_in_media_generator_exception = "錯誤：對媒體產生器產生的媒體應用油土伯便。\n\n應用油土伯便必須使用本地媒體檔案，不要使用媒體產生器生成的媒體。",
-				ytp_eliminate_duplicates_finally_null_exception = "技術异常：對油土伯便素材清單進行去重操作，最後清單為空了！\n\n這是一個不應該被發生的錯誤。",
+				ytp_over_length_exception = "錯誤：指定的 YTP 最小長度超過了媒體長度。\n\n指定的 YTP 最小長度過大，請嘗試更小的值。或所選媒體素材長度過小。",
+				ytp_in_media_generator_exception = "錯誤：對媒體產生器產生的媒體應用 YTP。\n\n應用 YTP 必須使用本地媒體檔案，不要使用媒體產生器生成的媒體。",
+				ytp_eliminate_duplicates_finally_null_exception = "技術异常：對 YTP 素材清單進行去重操作，最後清單為空了！\n\n這是一個不應該被發生的錯誤。",
 				unknown_exception = "錯誤：未知异常。\n\n請展開詳細資訊查看具體錯誤內容，並將錯誤資訊回饋給作者。",
 				use_pic_in_pic_on_unsupported_vegas_exception = "錯誤：不支持在低版本 Vegas 中使用該畫中畫插件的效果。\n\n根本原因：Vegas 在新版本“畫中畫”效果插件中新增了一些新的功能和參數，這些新參數不能在低版本的 Vegas 插件中使用。\n\n解決方法：在當前 Vegas 版本不能使用該映像節奏視覺效果（如擴縮類等），請使用其它視覺效果。或更新您的 Vegas 軟件。",
 				unsupported_curve_enum_exception = "錯誤：使用不支持的曲線枚舉類型作為參數。\n\n{0} 不是曲線枚舉類型。",
@@ -30950,10 +31115,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				shake_skew_out_tooltip = "鏡頭偏離中心的圖元數。亦是放大的邊距。",
 				shake_x_to_y_tooltip = "與水准距離相乘。大於 1 的值將會放得更大。",
 				shake_should_reset_pan_tooltip = "若不勾選，可在當前視頻縮放範圍內搖晃。",
-				shake_should_clear_frames_tooltip = "若不勾選，可將新的抖動效果與之前的抖動效果相乘。",
+				shake_should_clear_frames_tooltip = "若不勾選，可將新的搖晃效果與之前的搖晃效果相乘。",
+				restrict_note_length = "限制音符長度",
+				unrestricted = "不限制",
+				restrict_max_length = "最大長度",
+				restrict_fixed_length = "固定長度",
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
+				__translator__ = NO_TRANSLATOR,
 				info_label_font = "Yu Gothic",
 				ui_font = "Yu Gothic UI",
 				restart_to_effect_language = "言語を有効にするために再起動しますか？",
@@ -30971,10 +31141,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_not_found = "すでに最新バージョン！\n\n最新バージョン：{0}",
 				check_update_on_startup = "起動時に更新を確認",
 				download_latest_version = "最新のダウンロード",
-				quick_config = "高速構成",
-				midi_file_name = "ミディシーケンス",
+				quick_config = "迅速な設定",
+				midi_file_name = "MIDIシーケンス",
 				all_files = "すべてのファイル",
-				choose_a_midi_file = "ミディファイルを選択してください",
+				choose_a_midi_file = "MIDIファイルを選択してください",
 				media_file_name = "サポートされているメディアファイル",
 				choose_a_source_file = "ビデオまたは画像クリップを選択してください",
 				error = "エラー",
@@ -31044,8 +31214,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				yes = "はい",
 				no = "いいえ",
 				error_code = "エラーコード：",
-				processing_otomad = "音マッド/ヤタプムブを生成中⋯⋯",
-				processing_ytp = "ヤタプを生成中⋯⋯",
+				processing_otomad = "音MAD/YTPMVを生成中⋯⋯",
+				processing_ytp = "YTPを生成中⋯⋯",
 				processing_it = "それを処理する",
 				processing_tracks = "レール {0}/{1}、チャネル{2}{3}を生成中⋯⋯",
 				real_time_update = "現在の進捗状況をリアルタイムで更新（生成速度が低下）",
@@ -31181,7 +31351,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				custom_fade_gain = "カスタムフェードゲイン",
 				from = "から",
 				to = "へ",
-				midi_channel_advanced = "ミディトラックの詳細プロパティ",
+				midi_channel_advanced = "MIDIトラックの詳細プロパティ",
 				channel = "チャネル",
 				name = "名",
 				edit_notes = "選択したトラックの音符を編集...",
@@ -31198,9 +31368,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				about = "だいたい(&A)",
 				ok = "&OK",
 				balloon_title = "記入手順",
-				midi_start_second_tooltip = "ミディ音楽の一部を傍受するために使用されます。\n単位：秒。",
-				midi_end_second_tooltip = "ミディファイルの読み取りに必要な時間をここに入力します。\n入力した値が小さすぎると、超過時間の音符が途切れる場合がありますのでご注意ください。\nここに入力した値が開始秒以下の場合、それは常に音楽の全持続時間の終わりまで続くことを意味します。\n単位：秒。",
-				midi_beat_conbo_tooltip = "現在、五線譜のページネーション機能にのみ使用されています。\nミディファイルからの自動推測は一時的に利用できません。",
+				midi_start_second_tooltip = "MIDI音楽の一部を傍受するために使用されます。\n単位：秒。",
+				midi_end_second_tooltip = "MIDIファイルの読み取りに必要な時間をここに入力します。\n入力した値が小さすぎると、超過時間の音符が途切れる場合がありますのでご注意ください。\nここに入力した値が開始秒以下の場合、それは常に音楽の全持続時間の終わりまで続くことを意味します。\n単位：秒。",
+				midi_beat_conbo_tooltip = "現在、五線譜のページネーション機能にのみ使用されています。\nMIDIファイルからの自動推測は一時的に利用できません。",
 				source_start_time_tooltip = "メディア素材のカットの開始時間をここに入力します。\n単位：秒。",
 				source_end_time_tooltip = "ここに入力された値が開始秒数以下の場合、それは常にメディア時間の終わりまで続くことを意味することに注意してください。\n単位：秒。",
 				no_tune = "チューニングなし",
@@ -31263,31 +31433,31 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				why_ok_btn_is_disabled = "なぜ［完了］ボタンをクリックできないですか？",
 				experimental_theme = "実験的テーマ",
 				media = "メディア",
-				audio = "オーディオ",
-				video = "ビデオ",
-				staff = "スタッフ",
+				audio = "音声",
+				video = "映像",
+				staff = "五線譜",
 				ytp = "ヤタプ",
 				helper = "ツール",
-				midi_settings = "ミディ構成",
+				midi_settings = "MIDIプロパティ",
 				midi_start_time = "秒を開始",
 				midi_end_time = "秒を终了",
 				bpm_setting = "BPMテンポをに設定します",
 				midi_beat = "ビート",
-				midi_channel_setting = "ミディトラックの使用",
+				midi_channel_setting = "MIDIトラックの使用",
 				browse = "参照...",
 				advanced = "詳細...",
 				presets = "プリセット",
-				no_midi_selected = "<ミディファイルが選択されていません>",
-				choose_midi_file = "ミディファイルを選択",
-				midi_dynamic_midi_bpm = "ダイナミックミディテンポ",
-				midi_midi_bpm = "ミディテンポ",
+				no_midi_selected = "<MIDIファイルが選択されていません>",
+				choose_midi_file = "MIDIファイルを選択",
+				midi_dynamic_midi_bpm = "ダイナミックMIDIテンポ",
+				midi_midi_bpm = "MIDIテンポ",
 				midi_project_bpm = "プロジェクトテンポ",
 				midi_custom_bpm = "カスタム",
 				dynamic_midi_bpm_info = "{0}からのダイナミックテンポ",
 				dynamic_midi_beat_info = "{0}からのダイナミックビート",
 				colon = "：",
 				semicolon = "；",
-				source_settings = "素材構成",
+				source_settings = "素材プロパティ",
 				generate_at_begin = "プロジェクト開始",
 				generate_at_cursor = "カーソル",
 				generate_position = "どこを生成しますか",
@@ -31460,7 +31630,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp_high_contrast = "ハイコントラスト（大声で添付）",
 				ytp_oversaturation = "過飽和（おそらくピッチアップ効果を付ける）",
 				ytp_emphasize_thrice = "三回強調（焦点を拡大効果を付ける）",
-				ytp_info = "現在のタブの下にある［完了］ボタンをクリックすると、音マッド/ヤタプムブの代わりにヤタプが生成されます。\n「オーディオを有効」と「ビデオを有効」以外のパラメータ設定は、ヤタプでは有効になりません。",
+				ytp_info = "現在のタブの下にある［完了］ボタンをクリックすると、音MAD/YTPMVの代わりにYTPが生成されます。\n「オーディオを有効」と「ビデオを有効」以外のパラメータ設定は、YTPでは有効になりません。",
 				video_preset_fade_out = "フェードアウト",
 				flashlight = "フラッシュライト",
 				horizontal_movement = "水平方向に移動",
@@ -31522,7 +31692,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				quick_normalize_configform_info = "選択した複数のオーディオトラッククリップをすべて音量に正規化します。",
 				quick_normalize_complete = "音量の正規化を完了します。",
 				replace_clips_configform_info = "複数のトラッククリップを指定された新しいトラッククリップと交換します。",
-				auto_layout_tracks_configform_info = "選択したトラックをヤタプムブのようなスタイルで自動レイアウトします。",
+				auto_layout_tracks_configform_info = "選択したトラックをYTPMVのようなスタイルで自動レイアウトします。",
 				change_tune_method_configform_info = "複数のオーディオトラックのクリップを一括して指定されたトーンアルゴリズムに変更します。",
 				batch_subtitle_generation_configform_info = "「字幕と文字」のプリセットを設定し、ここに複数行の文字を追加します。",
 				find_clips_configform_info = "指定した条件（クリップ名、選択したクリップと同じ素材など）に基づいて、条件に一致するすべてのトラッククリップを選択します。",
@@ -31565,7 +31735,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scramble = "スクランブル",
 				automator = "オートメーター",
 				stutter = "スタッター",
-				camera_shake = "ブレ",
+				camera_shake = "ぶれ",
 				datamosh_configform_info = "ビデオ選択領域に自動的にデータモッシュを実行します。",
 				datamix_configform_info = "ビデオ選択領域に自動的にデータモッシュを実行します（1つのクリップを別のクリップに混ぜます）。",
 				layering_configform_info = "ビデオの一部にマルチレイヤを自動的に行います。",
@@ -31579,22 +31749,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				reset_config_successful_title = "ユーザ設定のリセット",
 				sure_to_reset_config = "ユーザー構成をリセットしてもよろしいですか？\n\nリセット後、ユーザープロファイルデータは失われます。",
 				about_title = "だいたい",
-				script_author = "脚本作者",
-				script_original_author = "脚本原作者",
+				script_author = "開発者",
+				script_original_author = "元開発者",
+				script_translator = "訳者",
 				documentation = "説明文書",
 				ranne = "蘭音",
 				why_ok_btn_is_disabled_info = "次の手順に従って順番に問題を確認してください：",
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「オーディオを有効」と「ビデオを有効」は同時にチェックアウトされます。少なくとも一つを有効にしてください。",
 				why_ok_btn_is_disabled_no_media_take = "選択されたメディア素材のソースには、有効なメディアリソースが含まれていません。",
-				why_ok_btn_is_disabled_no_midi_select = "音マッド/ヤタプムブを生成するには、まずミディシーケンスファイルを選択してください。",
+				why_ok_btn_is_disabled_no_midi_select = "音MAD/YTPMVを生成するには、まずMIDIシーケンスファイルを選択してください。",
 				why_ok_btn_is_disabled_in_helper_tab = "誤操作を避けるためには、「ツール」と「モッシュ」タブで作成操作を提出しないでください。",
 				why_ok_btn_is_disabled_unknown_problem = "原因は不明です。",
 				no_selected_media_warning = "警告：プロジェクトメディアウィンドウで有効なメディアを選択していません！",
 				no_selected_clip_warning = "警告：トラックウィンドウでクリップを選択していません！",
 				preview_audio_track_name = "オーディオトラックのプレビュー（削除する必要があります！）",
-				no_midi_exception = "エラー：ミディファイルが選択されていません。\n\nスクリプト設定ダイアログボックスを再度開き、「ミディ設定」グループの「参照」ボタンをクリックして、有効なミディファイルを開いてください。",
+				no_midi_exception = "エラー：MIDIファイルが選択されていません。\n\nスクリプト設定ダイアログボックスを再度開き、「MIDI設定」グループの「参照」ボタンをクリックして、有効なMIDIファイルを開いてください。",
 				no_media_exception = "エラー：メディアファイルが選択されていません。\n\nスクリプト設定ダイアログボックスを再度開き、「メディア設定」グループの「参照」ボタンをクリックして、有効なメディアファイルを開いてください。",
-				no_track_info_exception = "エラー：ミディトラックがありません。\n\n考えられる理由：\n1. ミディトラックを選択しなかった。\n2. ミディファイルにチャンネルがありません。\n3. ミディファイルが破損しているか、ファイル形式がサポートされていません。",
+				no_track_info_exception = "エラー：MIDIトラックがありません。\n\n考えられる理由：\n1. MIDIトラックを選択しなかった。\n2. MIDIファイルにチャンネルがありません。\n3. MIDIファイルが破損しているか、ファイル形式がサポートされていません。",
 				no_plugin_pitch_shift_exception = "エラー：ピッチシフトプラグインを呼び出すことができません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\nただし、この更新されたバージョンのスクリプトによると、中国語と英語のバージョンは正常に機能するはずです。\nしたがって、他の言語でVegasを使用している可能性が非常に高くなります。",
 				no_plugin_presets_exception = "エラー：ピッチシフトプラグインのプリセットエフェクトを呼び出すことはできません。\n\n正しく動作するには、チュートリアルドキュメント{0}の指示に従ってください。\n25個のプリセットすべてが転置プラグインに手動で追加され、正しく名前が付けられていることを確認してください。\n\n補足：詳細については、上記リンク欄の設定方法の説明を参照してください。これらの25のプリセットは、次のオクターブ内のすべてのタイプのピッチ変更です。\nそれらのいずれかが欠落していると、エラーが発生する可能性があります。手動でプリセットを追加するのは確かに非常に面倒ですが、Vegasはスクリプトを使用し\nてピッチシフトの特定のパラメーターを指定できないため、このトリックを回避する必要がありました。",
 				no_plugin_name_exception = "エラー：{0}プラグインを呼び出すことができませんでした。\n\n使用している Vegas のバージョンがこのプラグインをサポートしていない可能性があります。",
@@ -31602,7 +31773,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_audio_take_exception = "エラー：オーディオメディアストリームを読み取ることができません。\n\n設定インターフェイスで、純粋なビデオ／画像メディアの「有効なオーディオ」をチェックしないでください。\n\n",
 				no_video_take_exception = "エラー：ビデオメディアストリームを読み取ることができません。\n\n設定画面で、純粋なオーディオメディアの[有効なビデオ]をチェックしないでください。\n\n",
 				no_media_take_exception = "エラー：メディアを読み取ることができません。\n\n選択したファイル形式はVegasではサポートされていません。メディアファイルが破損していないか、対応するVegasデコーダーがインストールされていないか確認してください。\n\n",
-				not_a_midi_file_exception = "エラー：ミディファイルを読み取ることができません。\n\n解決策：ホストソフトウェアでミディをインポートしてから、新しいミディファイルを再出力します。\n\n補足：ミディファイルには複数の形式があり、スクリプトはそれらすべてが正しく読み取れることを保証するものではありません。幸い、\nデフォルト設定で主流のホストソフトウェアによってエクスポートされたミディファイルは一般的に読み取り可能です。（現在テスト済みのFL Studio、LMMS、\nおよびMusic Studio for iPadです。）",
+				not_a_midi_file_exception = "エラー：MIDIファイルを読み取ることができません。\n\n解決策：ホストソフトウェアでMIDIをインポートしてから、新しいMIDIファイルを再出力します。\n\n補足：MIDIファイルには複数の形式があり、スクリプトはそれらすべてが正しく読み取れることを保証するものではありません。幸い、\nデフォルト設定で主流のホストソフトウェアによってエクスポートされたMIDIファイルは一般的に読み取り可能です。（現在テスト済みのFL Studio、LMMS、\nおよびMusic Studio for iPadです。）",
 				no_selected_exception_ps = "追記：フォルダ内のメディアを手動で選択する場合は、右側の\n[参照]ボタンをクリックしてメディアを選択してください。また、左側のドロップダウンメニューで、選択したファイルのパスが選択されていることを確認してください。",
 				no_selected_media_exception = "エラー：プロジェクトメディアウィンドウでメディアが選択されていません。\n\nプロジェクトメディアウィンドウでメディアを選択してから、構成ダイアログを再度開き、素材設定で「選択したメディアファイル」を選択してください。\n\n",
 				no_selected_clip_exception_short = "エラー：トラックでクリップが選択されていません。",
@@ -31674,9 +31845,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				shake_x_to_y_tooltip = "水平距離を乗算する。1以上の値を設定すると、より大きく拡大されます。",
 				shake_should_reset_pan_tooltip = "チェックを外すと、現在の映像のズーム範囲内で手ぶれします。",
 				shake_should_clear_frames_tooltip = "チェックを外すと、新しいシェイクエフェクトと以前のシェイクエフェクトを掛け合わせます。",
+				restrict_note_length = "音符の長さを制限",
+				unrestricted = "無制限",
+				restrict_max_length = "最大長",
+				restrict_fixed_length = "固定長",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
+				__translator__ = NO_TRANSLATOR,
 				info_label_font = "Segoe UI",
 				ui_font = "Segoe UI",
 				restart_to_effect_language = "Перезагрузить, чтобы язык вступил в силу?",
@@ -32304,6 +32480,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				about_title = "О",
 				script_author = "Автор",
 				script_original_author = "Автор оригинала",
+				script_translator = "Переводчик",
 				documentation = "Описание документа",
 				ranne = "Ранне",
 				why_ok_btn_is_disabled_info = "Пожалуйста, проверьте вопрос по порядку:",
@@ -32397,9 +32574,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				shake_x_to_y_tooltip = "Умножение горизонтального расстояния.\nЗначения больше 1 обеспечивают большее увеличение.",
 				shake_should_reset_pan_tooltip = "Оставьте флажок не отмеченным, чтобы трястись в пределах текущего масштаба видео.",
 				shake_should_clear_frames_tooltip = "Если флажок не установлен,\nновый эффект встряхивания будет умножен на предыдущий эффект встряхивания.",
+				restrict_note_length = "Ограничить длину нот",
+				unrestricted = "Неограниченный",
+				restrict_max_length = "Максимальная длина",
+				restrict_fixed_length = "Фиксированная длина",
 			};
 			Vietnamese = new Lang {
 				__name__ = "Tiếng Việt",
+				__translator__ = "Cyahega",
 				info_label_font = "Segoe UI",
 				ui_font = "Segoe UI",
 				restart_to_effect_language = "Khởi động lại để ngôn ngữ có hiệu lực ngay?",
@@ -33019,13 +33201,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				automator_configform_info = "Đặt giá trị automation ngẫu nhiên cho hiệu ứng video nhanh chóng và tự động.",
 				stutter_configform_info = "Stutter clips/events (phát về trước, lùi, ...).",
 				camera_shake_configform_info = "Dùng Pan/crop để làm cho các lớp phủ (layer) đã chọn rung lắc.",
-				otomad_helper_config = "Otomad Helper dành cho Vegas - Thiết Lập (Việt hoá bởi Cyahega)",
+				otomad_helper_config = "Otomad Helper for Vegas - Thiết Lập (Việt hoá bởi Cyahega)",
 				reset_config_successful = "Đặt lại hoàn tất, vui lòng khởi động lại script.",
 				reset_config_successful_title = "Đặt lại thiết lập người dùng",
 				sure_to_reset_config = "Bạn có chắc muốn đặt lại thiết lập người dùng?\n\nDữ liệu thiết lập người dùng của bạn sẽ bị mất.",
 				about_title = "Thông tin",
 				script_author = "Tác giả",
 				script_original_author = "Tác giả gốc",
+				script_translator = "Thông dịch viên",
 				documentation = "Tài liệu",
 				ranne = "Lan Âm",
 				why_ok_btn_is_disabled_info = "Hãy lần lượt làm theo các bước sau để kiểm tra sự cố:",
@@ -33119,6 +33302,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				shake_x_to_y_tooltip = "Nhân khoảng cách ngang. Giá trị trên 1 sẽ tạo ra khả năng phóng to lớn hơn.",
 				shake_should_reset_pan_tooltip = "Bỏ chọn để rung trong chế độ thu phóng video hiện tại.",
 				shake_should_clear_frames_tooltip = "Bỏ chọn để nhân hiệu ứng rung lắc mới với hiệu ứng rung lắc trước đó.",
+				restrict_note_length = "Hạn chế độ dài nốt",
+				unrestricted = "Không giới hạn",
+				restrict_max_length = "Độ dài tối đa",
+				restrict_fixed_length = "Độ dài cố định",
 			};
 		}
 	}
