@@ -30388,7 +30388,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				shake_x_to_y_tooltip = "Multiply horizontal distance. Values above 1 will produce a greater zoom-in.",
 				shake_should_reset_pan_tooltip = "Leave unchecked to shake within the current video zoom.",
 				shake_should_clear_frames_tooltip = "Leave unchecked to multiply the new shake effect with a previous shake effect.",
-				restrict_note_length = "Restrict notes length",
+				restrict_note_length = "Restrict note length",
 				unrestricted = "Unrestricted",
 				restrict_max_length = "Max length",
 				restrict_fixed_length = "Fixed length",
