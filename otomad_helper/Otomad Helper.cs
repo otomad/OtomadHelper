@@ -30388,7 +30388,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				shake_x_to_y_tooltip = "Multiply horizontal distance. Values above 1 will produce a greater zoom-in.",
 				shake_should_reset_pan_tooltip = "Leave unchecked to shake within the current video zoom.",
 				shake_should_clear_frames_tooltip = "Leave unchecked to multiply the new shake effect with a previous shake effect.",
-				restrict_note_length = "Restrict notes length",
+				restrict_note_length = "Restrict note length",
 				unrestricted = "Unrestricted",
 				restrict_max_length = "Max length",
 				restrict_fixed_length = "Fixed length",
@@ -33201,7 +33201,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				automator_configform_info = "Đặt giá trị automation ngẫu nhiên cho hiệu ứng video nhanh chóng và tự động.",
 				stutter_configform_info = "Stutter clips/events (phát về trước, lùi, ...).",
 				camera_shake_configform_info = "Dùng Pan/crop để làm cho các lớp phủ (layer) đã chọn rung lắc.",
-				otomad_helper_config = "Otomad Helper for Vegas - Thiết Lập (Việt hoá bởi Cyahega)",
+				otomad_helper_config = "Otomad Helper dành cho Vegas - Thiết Lập (Việt hoá bởi Cyahega)",
 				reset_config_successful = "Đặt lại hoàn tất, vui lòng khởi động lại script.",
 				reset_config_successful_title = "Đặt lại thiết lập người dùng",
 				sure_to_reset_config = "Bạn có chắc muốn đặt lại thiết lập người dùng?\n\nDữ liệu thiết lập người dùng của bạn sẽ bị mất.",
@@ -33302,10 +33302,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				shake_x_to_y_tooltip = "Nhân khoảng cách ngang. Giá trị trên 1 sẽ tạo ra khả năng phóng to lớn hơn.",
 				shake_should_reset_pan_tooltip = "Bỏ chọn để rung trong chế độ thu phóng video hiện tại.",
 				shake_should_clear_frames_tooltip = "Bỏ chọn để nhân hiệu ứng rung lắc mới với hiệu ứng rung lắc trước đó.",
-				restrict_note_length = "Hạn chế độ dài ghi chú",
+				restrict_note_length = "Hạn chế độ dài nốt",
 				unrestricted = "Không giới hạn",
-				restrict_max_length = "Chiều dài tối đa",
-				restrict_fixed_length = "Chiều dài cố định",
+				restrict_max_length = "Độ dài tối đa",
+				restrict_fixed_length = "Độ dài cố định",
 			};
 		}
 	}
