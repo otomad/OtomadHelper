@@ -32918,7 +32918,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				generate_at_begin = "Project bắt đầu",
 				generate_at_cursor = "Con trỏ",
 				generate_position = "Tạo ra ở",
-				generate_below_top_adjustment_tracks = "Bên dưới các track điều chỉnh trên cùng",
+				generate_below_top_adjustment_tracks = "Tạo ra các top track điều chỉnh bên dưới",
 				choose_source_file = "Chọn phương tiện nguồn",
 				selected_media = "File phương tiện đã chọn",
 				selected_clip = "Track event đã chọn",
