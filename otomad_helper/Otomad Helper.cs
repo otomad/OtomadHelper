@@ -6174,55 +6174,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							effectName = effect.Label,
 							paramName = parameter.Name,
 						});
-
-						/*var prompt = new Form {
-							Width = 300,
-							Height = 170,
-							Text = Lang.str.automator_parameters,
-							KeyPreview = true,
-						};
-						Template.OptimizePrompt(prompt, ImageBase64.AutomatorIcon);
-						var textLabel = new Label { Left = 10, Top = 10, Width = 280, Text = key, AutoSize = true };
-						var textLabel2 = new Label { Left = 80, Top = 45, Text = Lang.str.scramble, AutoSize = true };
-						var inputBox = new CheckBox {
-							Left = 200,
-							Top = 40,
-							Width = 240,
-							Checked = defaultCheck
-						};
-						var confirmation = new Button { Text = Lang.str.ok, Left = 110, Width = 100, Top = 75 };
-						confirmation.Click += (sender, e) => {
-							prompt.DialogResult = DialogResult.OK;
-							prompt.Close();
-						};
-						prompt.KeyPress += (sender, args) => {
-							if (args.KeyChar != ' ')
-								return;
-							inputBox.Checked = !inputBox.Checked;
-							args.Handled = true;
-						};
-						prompt.KeyUp += (sender, args) => {
-							if (args.KeyCode != Keys.Space)
-								return;
-							args.Handled = true;
-						};
-						prompt.Controls.Add(confirmation);
-						prompt.Controls.Add(textLabel);
-						prompt.Controls.Add(inputBox);
-						prompt.Controls.Add(textLabel2);
-						prompt.AcceptButton = confirmation;
-						inputBox.Select();
-						if (prompt.ShowDialog() != DialogResult.OK) {
-							return;
-						}
-
-						if (defaultCheck != inputBox.Checked) {
-							Registry.SetValue(Template.DataPath, "Automate_" + hashed, inputBox.Checked.ToString(), RegistryValueKind.String);
-						}
-
-						if (inputBox.Checked) {
-							parameterEnabled.Add(new Tuple<string, string>(effect.Label, parameter.Name));
-						}*/
 					}
 				}
 

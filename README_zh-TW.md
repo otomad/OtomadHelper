@@ -9,7 +9,7 @@
 [English](README.md) | [简体中文](README_zh-CN.md) | **繁體中文** | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md)
 </div>
 
-**音 MAD 助手 Vegas**，旨在使 Vegas 接受 MIDI 序列檔案作為輸入，自動生成音 MAD / YTPMV 的軌道。
+**音 MAD 助手**，旨在使 Vegas 接受 MIDI 序列檔案作為輸入，自動生成音 MAD / YTPMV 的軌道。
 
 本腳本基於原作者 [@Chaosinism](https://github.com/Chaosinism) 的開原始程式碼二次開發，此外使用了 NAudio 庫。
 
@@ -40,7 +40,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 ### 安裝
 1. [下載](https://github.com/otomad/OtomadHelper/releases/latest)最新版腳本。
-2. 解壓**所有**壓縮包內的檔案並放置到 Vegas 安裝目錄下的「Script Menu」資料夾中。
+2. 解壓壓縮包內的**所有**檔案並放置到 Vegas 安裝目錄下的「Script Menu」資料夾中。
 > (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
 3. 確保 DLL 檔案 `(DLL\NAudio.dll)` 沒有被鎖定。**具體步驟：**
 	1. 在 Vegas 安裝目錄下，依次進入資料夾 `Script Menu\DLL`。
@@ -89,7 +89,7 @@ Vegas Pro 17、18、19、20 測試**正常**。
 7. 提交新的翻譯；
 8. ……
 
-都可以提出 issues。
+都可以提出議題。
 
 ### 使用條款
 1. 若使用非自製 MIDI / 素材進行創作，請尊重其作者的權益。
@@ -97,13 +97,16 @@ Vegas Pro 17、18、19、20 測試**正常**。
 
 ### 許可權
 使用腳本時，將會使用如下許可權：
-1. 文件讀寫。<br />
-	腳本會在磁碟中創建一個檔案用來保存您的使用者配置設置。
+1. 檔案讀寫。<br />
+	腳本會在磁碟中創建一個檔案用來儲存您的使用者配置設置。
 	> 路徑：C:\\Users\\*(您的使用者名稱)*\\AppData\\Roaming\\VEGAS Pro\\*(您的 Vegas 版本)*\\Otomad Helper.ini
-2. 註冊表讀寫。<br />
-	腳本需要讀寫註冊表來安裝或卸載移調外掛插件預設。<br />
-	如果您不使用移調插件這個調音算法，您可以忽略該許可權。
+2. 登錄檔讀寫。<br />
+	腳本需要讀寫登錄檔來安裝或卸載移調外掛插件預設。
+	<!-- 如果您不使用移調插件這個調音算法，您可以忽略該許可權。 -->
 	> 路徑：HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
+	
+	數據抹失的相關配置儲存在登錄檔中。
+	> 路徑：HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets
 
 ### 參考
 * [Chaosinism 的**原版**音 MAD 助手腳本](https://github.com/Chaosinism/vegas_scripts)

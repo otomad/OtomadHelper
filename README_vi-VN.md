@@ -99,9 +99,12 @@ Nếu bạn dùng script này, script sẽ sử dụng các quyền sau.
 	Script đọc và ghi một INI user profile trong bộ nhớ ổ đĩa của bạn để lưu dữ liệu người dùng của bạn.
 	> Đường dẫn: C:\\Users\\*(Username của bạn)*\\AppData\\Roaming\\VEGAS Pro\\*(Phiên bản Vegas của bạn)*\\Otomad Helper.ini
 2. Đọc và ghi registry.<br />
-	Script cần đọc và ghi registry để cài đặt hoặc gỡ cài đặt preset pitch-shift plugin.<br />
-	Nếu bạn không dùng phương pháp pitch shift plugin trong script, bạn có thể bỏ qua việc cài đặt preset và do đó không sử dụng quyền này.
+	Script cần đọc và ghi registry để cài đặt hoặc gỡ cài đặt preset pitch-shift plugin.
+	<!-- Nếu bạn không dùng phương pháp pitch shift plugin trong script, bạn có thể bỏ qua việc cài đặt preset và do đó không sử dụng quyền này. -->
 	> Đường dẫn: HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
+	
+	Các cấu hình liên quan đến Datamosh được lưu trong registry.
+	> Đường dẫn: HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets
 
 ### Chú thích
 * [Script Otomad Helper **bản gốc** của Chaosinism](https://github.com/Chaosinism/vegas_scripts)

@@ -99,9 +99,12 @@ Vegas Pro 17、18、19、20 で**正常**に作動します。
 	スクリプトはユーザー構成設定を保存するためディスク上にファイルを作成します。
 	> パス：C:\\Users\\*(あなたのユーザーネーム)*\\AppData\\Roaming\\VEGAS Pro\\*(Vegas バージョン)*\\Otomad Helper.ini
 2. レジストリの読み書き。<br />
-	ピッチシフトプラグインプリセットをインストールまたはアンインストールするには、スクリプトでレジストリを読み書きで実現します。<br />
-	ピッチシフトプラグインのチューニングアルゴリズムを使用しない場合は、この権限を無視してもいいです。
+	ピッチシフトプラグインプリセットをインストールまたはアンインストールするには、スクリプトでレジストリを読み書きで実現します。
+	<!-- ピッチシフトプラグインのチューニングアルゴリズムを使用しない場合は、この権限を無視してもいいです。 -->
 	> パス：HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
+	
+	データモッシュに関連する構成はレジストリに保存されます。
+	> パス：HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets
 
 ### 参考（敬称略）
 * [Chaosinism の**元祖**音MADヘルパー スクリプト](https://github.com/Chaosinism/vegas_scripts)
