@@ -1,0 +1,39 @@
+name: "\U0001F3E4 Translation correction"
+about: Correct translation of scripts or README, or provide a new language support.
+# title: "[TRANSLATION] "
+labels: translation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We are gladly accepting contributions or translations for this project.
+        
+        If you want to provide a new language support, please submit a pull request or directly contact me if you don't know how to use git or GitHub.
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      description: Choose the language you need to correct.
+      options:
+        - New language
+        - English
+        - Traditional Chinese / 繁体中文
+        - Japanese / 日本語
+        - Vietnamese / Tiếng Việt
+        - Russian / Русский
+        - Multiple
+    validations:
+      required: true
+  - type: input
+    id: new-language-name
+    attributes:
+      label: New language name
+      description: Fill in here if the previous option is "New language".
+  - type: textarea
+    id: description
+    attributes:
+      label: Translations
+      description: Please fill in all translation entries that need to be corrected here.
+      placeholder: Translations
+    validations:
+      required: true

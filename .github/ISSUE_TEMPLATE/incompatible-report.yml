@@ -1,4 +1,4 @@
-name: "\U23F3\UFE0F Bug report for Vegas Pro 13~15"
+name: "\U000023F3\U0000FE0F Bug report for Vegas Pro 13~15"
 description: Create a report to help us improve Otomad Helper when you are using Vegas Pro 13~15.
 # title: "[Vegas Pro 13~15] "
 labels: Vegas Pro 13~15
@@ -30,9 +30,7 @@ body:
     attributes:
       label: Otomad Helper Version
       description: |
-        What version of Otomad Helper script are you using?
-        Click the About button to view the version.
-        
+        What version of Otomad Helper script are you using? Click the About button in the script dialog to view the version.
         If you have confirmed that you are using the latest version, you can leave this option blank.
       placeholder: Latest
       value: Latest

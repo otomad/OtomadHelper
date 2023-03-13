@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
   - name: 🚀 Feature Request
-    url: https://github.com/otomad/OtomadHelper/discussions/new?category=ideas
+    url: https://github.com/otomad/OtomadHelper/discussions/new?category=ideas&labels=suggestion
     about: Suggest ideas for Otomad Helper.
   - name: 💬 Question
-    url: https://github.com/otomad/OtomadHelper/discussions/new?category=q-a
+    url: https://github.com/otomad/OtomadHelper/discussions/new?category=q-a&labels=question
     about: Please ask and answer questions here.

@@ -32,9 +32,7 @@ body:
     attributes:
       label: Otomad Helper Version
       description: |
-        What version of Otomad Helper script are you using?
-        Click the About button to view the version.
-        
+        What version of Otomad Helper script are you using? Click the About button in the script dialog to view the version.
         If you have confirmed that you are using the latest version, you can leave this option blank.
       placeholder: Latest
       value: Latest
