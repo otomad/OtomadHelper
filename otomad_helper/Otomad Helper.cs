@@ -1523,6 +1523,47 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 			}
 			#endregion
+
+			#region 自动轨道滑音
+			if (true && !SheetConfig) { // 五线谱效果开启时最好不要做滑音漩涡动画。
+				List<PitchWheelChangeEvent> pitchEvents = new List<PitchWheelChangeEvent>();
+				foreach (MidiEvent midiEvent in currentChannel.Events) { // 去重
+					if (!(midiEvent is PitchWheelChangeEvent)) continue;
+					PitchWheelChangeEvent pitchEvent = midiEvent as PitchWheelChangeEvent;
+					if (pitchEvents.Count != 0) {
+						int lastIndex = pitchEvents.Count - 1;
+						PitchWheelChangeEvent lastEvent = pitchEvents[lastIndex];
+						if (pitchEvent.Pitch == lastEvent.Pitch) continue;
+						else if (pitchEvent.AbsoluteTime == lastEvent.AbsoluteTime) pitchEvents.RemoveAt(lastIndex);
+					}
+					pitchEvents.Add(pitchEvent);
+				}
+				if (pitchEvents.Count <= 1) goto EndGlissando;
+				List<VideoTrack> videoTracks = new List<VideoTrack>();
+				if (vTrack != null) videoTracks.Add(vTrack);
+				if (vTracks != null) videoTracks.AddRange(vTracks.Where(track => track != null));
+				if (videoTracks.Count == 0) goto EndGlissando;
+				List<Effect> swirls = videoTracks.Select(track => track.Effects.AddEffect(Plugin.swirl)).ToList();
+				foreach (PitchWheelChangeEvent pitchEvent in pitchEvents) {
+					double startTime;
+					if (!MidiUseDynamicMidiBpm)
+						startTime = pitchEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
+					else
+						startTime = integrator.GetActualTime(pitchEvent.AbsoluteTime);
+
+					if (startTime < MidiConfigStartTime) continue;
+					if (startTime > MidiConfigEndTime && sliceComposition) break;
+
+					Timecode start = Timecode.FromMilliseconds(startTime);
+					double key = PitchBend2Key(pitchEvent.Pitch);
+					double amount = key / 12;
+					foreach (Effect swirl in swirls)
+						Plugin.ForVideoEvents.SetSwirlAtTime(swirl, start, true, amount);
+				}
+				Plugin.ForVideoEvents.RemoveSwirlTempPreset();
+			}
+		EndGlissando:
+			#endregion
 			#endregion
 			tempEventGroup.Bundle();
 			if (MidiConfigTracks.Count == 1 && !progressForm.RequestAbort)
@@ -1662,8 +1703,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// 相对音高到拉伸值的转换。
 		/// </summary>
-		/// <param name="pitch">相对音高</param>
-		/// <returns>拉伸值</returns>
+		/// <param name="pitch">相对音高。</param>
+		/// <returns>拉伸值。</returns>
 		public static double Pitch2Stretch(double pitch) {
 			return Math.Pow(2, pitch / 12.0);
 		}
@@ -1671,10 +1712,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// 拉伸值到相对音高的转换。
 		/// </summary>
-		/// <param name="stretch">拉伸值</param>
-		/// <returns>相对音高</returns>
+		/// <param name="stretch">拉伸值。</param>
+		/// <returns>相对音高。</returns>
 		public static double Stretch2Pitch(double stretch) {
 			return 12.0 * Math.Log(stretch, 2.0);
+		}
+
+		/// <summary>
+		/// MIDI 滑音轮的值到半音值的转换。
+		/// </summary>
+		/// <param name="pitchBend">MIDI 滑音轮的值 ∈ [0 ~ 16383]。</param>
+		/// <returns>半音值 ∈ [-12 ~ 12)。</returns>
+		public static double PitchBend2Key(int pitchBend) {
+			return (pitchBend - 8192) / 8192.0 * 12;
 		}
 
 		private bool requestRestartScript = false;
@@ -3796,6 +3846,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static PlugInNode bzMasking;
 		/// <summary> 区域裁切 </summary>
 		public static PlugInNode cookieCutter;
+		/// <summary> 漩涡 </summary>
+		public static PlugInNode swirl;
 
 		/// <summary>
 		/// 初始化所需插件。
@@ -3889,6 +3941,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				?? vegas.VideoFX.FindChildByName("VEGAS 区域裁切")
 				?? vegas.VideoFX.FindChildByName("VEGAS Cookie Cutter")
 				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:cookiecutter}");
+			swirl = vegas.VideoFX.FindChildByName("漩涡")
+				?? vegas.VideoFX.FindChildByName("Swirl")
+				?? vegas.VideoFX.FindChildByName("VEGAS 漩涡")
+				?? vegas.VideoFX.FindChildByName("VEGAS Swirl")
+				?? vegas.VideoFX.FindChildByUniqueID("{B3A8C4CF-E5AD-4B2F-A603-2F0FCB3B546E}");
 			#endregion
 
 			#region 媒体发生器
@@ -4424,6 +4481,47 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					keys[1].Interpolation = OFXInterpolationType.Slow;
 				}
 				effect.OFXEffect.AllParametersChanged();
+			}
+			/// <summary>
+			/// 在漩涡效果的指定时间码处设置值。
+			/// </summary>
+			/// <param name="swirl">漩涡效果。不管是视频剪辑的效果或是视频轨道的效果都可以。</param>
+			/// <param name="timecode">指定时间码。</param>
+			/// <param name="isHold">是否是“保留”关键帧插值。</param>
+			/// <param name="amount">数量。</param>
+			/// <param name="centerX">X 中心。</param>
+			/// <param name="centerY">Y 中心。</param>
+			/// <param name="scaleH">水平缩放。</param>
+			/// <param name="scaleV">垂直缩放。</param>
+			public static void SetSwirlAtTime(Effect swirl, Timecode timecode, bool isHold, double amount = 0, double centerX = 0, double centerY = 0, double scaleH = 1, double scaleV = 1) {
+				Keyframe keyframe = new Keyframe(timecode);
+				try {
+					swirl.Keyframes.Add(keyframe);
+				} catch (ApplicationException) { // 待插入的时间码上已有关键帧。
+					foreach (Keyframe existKeyframe in swirl.Keyframes)
+						if (existKeyframe.Position == timecode) {
+							keyframe = existKeyframe;
+							goto EndFindKeyframe;
+						}
+					return; // 此时未知原因，找不到相应的时间码。
+				}
+			EndFindKeyframe:
+				AddSwirlTempPreset(amount, centerX, centerY, scaleH, scaleV);
+				keyframe.Preset = SWIRL_TEMP_PRESET_NAME;
+				if (isHold) keyframe.Type = VideoKeyframeType.Hold;
+			}
+			private const string SWIRL_PRESETS_PATH = @"Software\DXTransform\Presets\{B3A8C4CF-E5AD-4B2F-A603-2F0FCB3B546E}";
+			private static RegistryKey SWIRL_PRESETS_REG { get { return Registry.CurrentUser.CreateSubKey(SWIRL_PRESETS_PATH); } }
+			private const string SWIRL_TEMP_PRESET_NAME = "(Temp)";
+			public static void RemoveSwirlTempPreset() {
+				SWIRL_PRESETS_REG.DeleteValue(SWIRL_TEMP_PRESET_NAME, false);
+			}
+			private static void AddSwirlTempPreset(double amount, double centerX, double centerY, double scaleH, double scaleV) {
+				double[] values = { amount, centerX, centerY, scaleH, scaleV, 0 };
+				bool inProportion = values[1] == values[2];
+				byte[] result = values.SelectMany(value => BitConverter.GetBytes(value)).ToArray();
+				result[40] = (byte)(inProportion ? 1 : 0);
+				SWIRL_PRESETS_REG.SetValue(SWIRL_TEMP_PRESET_NAME, result, RegistryValueKind.Binary);
 			}
 		}
 
