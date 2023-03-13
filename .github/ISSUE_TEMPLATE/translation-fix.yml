@@ -1,5 +1,5 @@
 name: "\U0001F3E4 Translation correction"
-about: Correct translation of scripts or README, or provide a new language support.
+description: Correct translation of scripts or README, or provide a new language support.
 # title: "[TRANSLATION] "
 labels: translation
 body:
