@@ -14144,9 +14144,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			CheckAutoLayoutTracksButtonActived();
 		}
 
-		public void QuickEnableAllAutoLayoutTracks() {
-			new AutoLayoutTracksGridForm(entryPoint, layoutInfos.Grid).OkBtn_Click(null, null);
-			new GradientTracksForm(entryPoint, layoutInfos.GradientTracks).OkBtn_Click(null, null);
+		public void QuickEnableAllAutoLayoutTracks(bool grid = true, bool box3d = true, bool gradient = true) {
+			if (grid) new AutoLayoutTracksGridForm(entryPoint, layoutInfos.Grid).OkBtn_Click(null, null);
+			if (gradient) new GradientTracksForm(entryPoint, layoutInfos.GradientTracks).OkBtn_Click(null, null);
 		}
 
 		private void ResetAutoLayoutTracksBtn_Click(object sender, EventArgs e) {
@@ -26053,6 +26053,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private bool openReplaceClipDirectly = false;
 		private bool isAlertedUnsupport = false;
 		private Thread checkUpdateThread;
+		private bool enableGridLayoutForTracks = true;
+		private bool enableGradientForTracks = true;
 		#endif
 
 		/// <summary>
@@ -26370,6 +26372,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				BelowTopAdjustmentTrackCheck.Checked = configIni.Read("BelowTopAdjustmentTracks", true);
 			RestrictLengthMode_int = configIni.Read("RestrictLengthMode", 0);
 			RestrictLengthBox.Value = configIni.Read("RestrictLengthValue", 1000);
+			enableGridLayoutForTracks = configIni.Read("EnableGridLayoutForTracks", true);
+			enableGradientForTracks = configIni.Read("EnableGradientForTracks", true);
 			configIni.EndSection();
 			#endregion
 
@@ -26575,6 +26579,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("BelowTopAdjustmentTracks", BelowTopAdjustmentTrackCheck.Checked);
 			configIni.Write("RestrictLengthMode", RestrictLengthMode_int);
 			configIni.Write("RestrictLengthValue", RestrictLengthBox.Value);
+			configIni.Write("EnableGridLayoutForTracks", enableGridLayoutForTracks);
+			configIni.Write("EnableGradientForTracks", enableGradientForTracks);
 			configIni.EndSection();
 			#endregion
 
@@ -28241,6 +28247,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			MidiChannelCombo.Items.Add(midiChannels);
 			MidiChannelCombo.SelectedItem = midiChannels;
 			lastMidiChannelsChecked = advanced.ChannelListView.BatchGet();
+			enableGridLayoutForTracks = advanced.LayoutInfos.Grid.enabled;
+			enableGradientForTracks = advanced.LayoutInfos.GradientTracks.enabled;
 		}
 
 		private void MidiChannelCombo_SelectedIndexChanged(object sender, EventArgs e) {
@@ -28335,7 +28343,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				advanced.ChannelListView.SelectAll();
 			else advanced.ChannelListView.BatchSet(lastMidiChannelsChecked);
 			advanced.ChannelListView_ItemChecked(null, null);
-			advanced.QuickEnableAllAutoLayoutTracks();
+			advanced.QuickEnableAllAutoLayoutTracks(grid: enableGridLayoutForTracks, gradient: enableGradientForTracks);
 			PostprocessMidiChannelAdvanced(advanced);
 		}
 
