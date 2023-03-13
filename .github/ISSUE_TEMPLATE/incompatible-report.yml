@@ -1,0 +1,62 @@
+name: "\U23F3\UFE0F Bug report for Vegas Pro 13~15"
+description: Create a report to help us improve Otomad Helper when you are using Vegas Pro 13~15.
+# title: "[Vegas Pro 13~15] "
+labels: Vegas Pro 13~15
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please note that you are using the latest version of the script. Click the following link to view the latest version and download it.
+        👉 https://github.com/otomad/OtomadHelper/releases/latest
+      
+        Please carefully read the common questions before creating a bug report, if it can solve your problem.
+        👉 https://github.com/otomad/OtomadHelper/issues/25
+
+        This issue template is only applicable to with Vegas Pro 13~15. If you are currently using a version of Vegas Pro 16+, please switch to:
+        👉 https://github.com/otomad/OtomadHelper/issues/new?template=bug-report.yml
+  - type: dropdown
+    id: vegas-version
+    attributes:
+      label: Vegas Pro Version
+      description: What version of Vegas Pro are you using?
+      options:
+        - Vegas Pro 15
+        - Vegas Pro 14
+        - Vegas Pro 13
+    validations:
+      required: true
+  - type: input
+    id: otomad-helper-version
+    attributes:
+      label: Otomad Helper Version
+      description: |
+        What version of Otomad Helper script are you using?
+        Click the About button to view the version.
+        
+        If you have confirmed that you are using the latest version, you can leave this option blank.
+      placeholder: Latest
+      value: Latest
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is. If you intend to submit a PR for this issue, tell us in the description. Thanks!
+      placeholder: Bug description
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Please show the details if it alert an error. You can insert an image or copy paste the details text.
+      # render: shell-script
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot or recording
+      description: If possible, provide screenshots or screen recordings (preferably) here.
+  - type: textarea
+    id: additonal
+    attributes:
+      label: Additional
+      description: If applicable, add any other context about the problem here.

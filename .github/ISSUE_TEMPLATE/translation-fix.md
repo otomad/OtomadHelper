@@ -1,9 +1,7 @@
 ---
-name: Translation fix
-about: Suggest an idea for this project
-title: "[TRANSLATION]"
+name: "\U0001F3E4 Translation correction"
+about: Correct translation of scripts or README.
 labels: translation
-assignees: ''
 
 ---
 
