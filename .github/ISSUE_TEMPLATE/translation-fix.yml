@@ -14,6 +14,7 @@ body:
     attributes:
       label: Language
       description: Choose the language you need to correct.
+      multiple: true
       options:
         - New language
         - English
@@ -21,7 +22,6 @@ body:
         - Japanese / 日本語
         - Vietnamese / Tiếng Việt
         - Russian / Русский
-        - Multiple
     validations:
       required: true
   - type: input
