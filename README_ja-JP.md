@@ -25,7 +25,7 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照してい
 
 ベトナム語翻訳は [@Cyahega](https://github.com/Cyahega) によって提供されています。
 
-**姉妹プロジェクト：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
+**姉妹プロジェクト：**[om midi for After Effects](https://github.com/otomad/om_midi)。
 
 ### 使い方
 「トラック」ウィンドウで素材アイテムを選択するか、「プロジェクトメディア」ウィンドウで素材アイテムを選択するか、「スクリプト」ウィンドウを呼び出してから手動で他の素材を選択します。そしてスクリプトで設定して、動画を作成します。

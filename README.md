@@ -33,7 +33,7 @@ Camera Shake feature refer to [VegasShakeScript](https://github.com/tmarplatt/Ve
 
 Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
 
-**Sister Projects:** [om_midi for After Effects](https://github.com/otomad/om_midi).
+**Sister Projects:** [om midi for After Effects](https://github.com/otomad/om_midi).
 
 ### Usage
 Select the source track event in the track window, or select source media file in media pool window, or browse another media file (in the script configure form), then open the script to configure and generate.

@@ -25,7 +25,7 @@ Tính năng Camera Shake đề cập đến ở [VegasShakeScript](https://githu
 
 Phiên bản Việt hoá của script do [@Cyahega](https://github.com/Cyahega) đóng góp.
 
-**Các dự án khác:** [om_midi dành cho After Effects](https://github.com/otomad/om_midi/blob/extendscript/README_vi-VN.md).
+**Các dự án khác:** [om midi dành cho After Effects](https://github.com/otomad/om_midi/blob/extendscript/README_vi-VN.md).
 
 ### Cách sử dụng 
 Chọn track event nguồn trong track window, hoặc chọn file phương tiện nguồn trong media pool window, hoặc duyệt (browse) tìm file phương tiện khác (trong biểu mẫu cấu hình/thiết lập script), rồi mở script để chỉnh sửa và tạo ra.

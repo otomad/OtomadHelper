@@ -25,7 +25,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 
 越南语翻译由 [@Cyahega](https://github.com/Cyahega) 提供。
 
-**姊妹项目：**[om_midi for After Effects](https://github.com/otomad/om_midi)。
+**姊妹项目：**[om midi for After Effects](https://github.com/otomad/om_midi)。
 
 ### 使用方法
 在轨道窗口中选中素材，或在项目媒体窗口中选中素材，或在（打开脚本窗口后）手动浏览选择其它素材。然后即可打开脚本配置并生成。
