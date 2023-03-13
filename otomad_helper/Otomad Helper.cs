@@ -47,7 +47,7 @@
 
 #define VEGAS_ENVIRONMENT // Vegas 运行环境。取消定义后避免在 Visual Studio 中调试时因缺少环境而导致报错。
 #define INTERNATIONALIZED // 启用国际化翻译操作。取消定义后可暂时禁用翻译操作并锁定为简体中文，如不需要翻译时也许可以加快脚本启动速度，但其实也没快多少。
-#define PRODUCTION // 用于生产环境。定义后可以吞掉一些无关紧要的错误。取消定义后可以展现一些可能会产生隐患的错误。
+// #define PRODUCTION // 用于生产环境。定义后可以吞掉一些无关紧要的错误。取消定义后可以展现一些可能会产生隐患的错误。
 // 以下宏定义为版本号标记。如您的软件本体版本号低于这些标记，应注释掉它们。注意若启用高版本号的标记，比它更低的版本号标记必须同时启用。
 #define VER_GEQ_16 // Vegas 版本号大于或等于 16。定义后可正常使用调音算法属性等功能。
 #define VER_GEQ_14 // Vegas 版本号大于或等于 14。定义后将依赖库切换到 Magix 版本。
@@ -1414,8 +1414,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						key1.MoveBy(new VideoMotionVertex(Math.Abs(1 - endRatio) * width / 2 * VConfigEndHTrans / 100, Math.Abs(1 - endRatio) * height / 2 * VConfigEndVTrans / 100));
 					}
 					// 色相、饱和度、对比度、对比度中心（阈值）
-					if (Plugin.hslAdjust != null) Plugin.ForVideoEvents.HueAndSaturationParam(videoEvent, VConfigStartHue, VConfigEndHue, VConfigStartSaturation, VConfigEndSaturation, VConfigStartHueCurve, VConfigStartSaturationCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return false; }
-					if (Plugin.contrast != null) Plugin.ForVideoEvents.ContrastAndThresholdParam(videoEvent, VConfigStartContrast, VConfigEndContrast, VConfigStartThreshold, VConfigEndThreshold, VConfigStartContrastCurve, VConfigStartThresholdCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
+					if (VConfigStartHue != 0 || VConfigEndHue != 0 || VConfigStartSaturation != 100 || VConfigEndSaturation != 100) {
+						if (Plugin.hslAdjust != null) Plugin.ForVideoEvents.HueAndSaturationParam(videoEvent, VConfigStartHue, VConfigEndHue, VConfigStartSaturation, VConfigEndSaturation, VConfigStartHueCurve, VConfigStartSaturationCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return false; }
+					}
+					if (VConfigStartContrast != 0 || VConfigEndContrast != 0 || VConfigStartThreshold != 50 || VConfigEndThreshold != 0)
+					{
+						if (Plugin.contrast != null) Plugin.ForVideoEvents.ContrastAndThresholdParam(videoEvent, VConfigStartContrast, VConfigEndContrast, VConfigStartThreshold, VConfigEndThreshold, VConfigStartContrastCurve, VConfigStartThresholdCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
+					}
 					// 单独对所有关键帧处理翻转
 					videoEvent.FlipAllKeyframe(anim.HorizontalFlip, anim.VerticalFlip);
 					// 旋转属性单独调整，因为和上面“翻转所有关键帧”功能冲突了
@@ -30266,7 +30271,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_track_info_exception = "Error: There is no MIDI track.\n\nPossible reasons:\n1. You did not select a MIDI track;\n2. There is no channel in the MIDI file;\n3. The MIDI file is damaged or the file format is not supported.",
 				no_plugin_pitch_shift_exception = "Error: Unable to call the Pitch Shift plugin.\n\nPlease follow the instructions of the tutorial document {0} to operate correctly.\nHowever, according to this updated version of the script, the Chinese and English versions should work properly.\nSo it is very likely that you are using Vegas in other languages.",
 				no_plugin_presets_exception = "Error: Cannot call the preset effect of the Pitch Shift plugin.\n\nPlease follow the instructions of the tutorial document {0} to operate correctly.\nMake sure that all 25 presets are manually added in the transposition plugin and named correctly.\n\nSupplementary explanation: For details, please refer to the explanation of the installation method in the above link column. These 25 presets are all the types of pitch changes within the next octave.\nMissing any of them may cause errors. It is indeed very troublesome to manually add presets, but Vegas cannot use scripts to specify the specific parameters of\nthe pitch shift, so I had to go around this trick.",
-				no_plugin_name_exception = "Error: The {0} plugin could not be called.\n\nMaybe the version of Vegas you are using does not support this plugin.",
+				no_plugin_name_exception = "Error: The {0} plugin could not be called.\n\nMaybe the version of Vegas you are using does not support that plugin.",
 				no_take_exception_ps = "Supplementary note: If it still cannot be resolved, it means that the media file may be in a format not supported by Vegas.\nYou can manually drag the file into Vegas to see if the video and audio files are working properly.",
 				no_audio_take_exception = "Error: Unable to read audio media stream.\n\nIn the setting interface, do not check \"Enabled Audio\" for pure video/picture media.\n\n",
 				no_video_take_exception = "Error: Unable to read the video media stream.\n\nIn the settings user interface, do not check \"Enabled Video\" for pure audio media.\n\n",
