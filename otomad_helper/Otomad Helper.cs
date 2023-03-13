@@ -29661,7 +29661,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			restrict_note_length = "限制音符长度",
 			unrestricted = "不限制",
 			restrict_max_length = "最大长度",
-			restrict_fixed_length = "固定长度";
+			restrict_fixed_length = "固定长度",
+			preferred_track = "首选轨道",
+			new_track = "新增轨道",
+			glissando = "滑音",
+			swirl = "漩涡";
 
 		static Lang() {
 			SChinese = new Lang();
@@ -30392,6 +30396,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				unrestricted = "Unrestricted",
 				restrict_max_length = "Max length",
 				restrict_fixed_length = "Fixed length",
+				preferred_track = "Preferred track",
+				new_track = "New track",
+				glissando = "Glissando",
+				swirl = "Swirl",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -31120,6 +31128,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				unrestricted = "不限制",
 				restrict_max_length = "最大長度",
 				restrict_fixed_length = "固定長度",
+				preferred_track = "首選軌道",
+				new_track = "新增軌道",
+				glissando = "滑音",
+				swirl = "漩渦",
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -31849,6 +31861,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				unrestricted = "無制限",
 				restrict_max_length = "最大長",
 				restrict_fixed_length = "固定長",
+				preferred_track = "優先トラック",
+				new_track = "新しいトラック",
+				glissando = "グリッサンド",
+				swirl = "渦巻き",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -32578,6 +32594,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				unrestricted = "Неограниченный",
 				restrict_max_length = "Максимальная длина",
 				restrict_fixed_length = "Фиксированная длина",
+				preferred_track = "Предпочтительный трек",
+				new_track = "Новый трек",
+				glissando = "Глиссандо",
+				swirl = "Водоворот",
 			};
 			Vietnamese = new Lang {
 				__name__ = "Tiếng Việt",
@@ -32599,7 +32619,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_not_found = "Hiện đã ở phiên bản mới nhất!\n\nPhiên bản mới nhất: {0}",
 				check_update_on_startup = "Kiểm tra bản cập nhật khi khởi động",
 				download_latest_version = "Tải xuống phiên bản mới nhất",
-				quick_config = "Thiết lập nhanh",
+				quick_config = "Nhanh chóng thiết lập",
 				midi_file_name = "Trình tự MIDI",
 				all_files = "Tất cả tệp",
 				choose_a_midi_file = "Vui lòng chọn 1 file MIDI",
@@ -33208,7 +33228,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				about_title = "Thông tin",
 				script_author = "Tác giả",
 				script_original_author = "Tác giả gốc",
-				script_translator = "Thông dịch viên",
+				script_translator = "Dịch giả",
 				documentation = "Tài liệu",
 				ranne = "Lan Âm",
 				why_ok_btn_is_disabled_info = "Hãy lần lượt làm theo các bước sau để kiểm tra sự cố:",
@@ -33306,6 +33326,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				unrestricted = "Không giới hạn",
 				restrict_max_length = "Độ dài tối đa",
 				restrict_fixed_length = "Độ dài cố định",
+				preferred_track = "Track ưa thích",
+				new_track = "Track mới",
+				glissando = "Glisssando", // Thuật ngữ chỉ sự lướt qua lên hoặc xuống giữa hai nốt nhạc
+				swirl = "Xoáy",
 			};
 		}
 	}
