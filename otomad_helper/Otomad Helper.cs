@@ -1273,7 +1273,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							if (lastEvent != audioEventSample) { // 别把示例音频给算进去了！
 								var Round = new Func<double, double>(value => Math.Round(value, MidpointRounding.AwayFromZero)); // 中国式四舍五入！
 								if (Round(startTime) <= Round(lastEvent.Start.ToMilliseconds()))
-									goto EndAConfig;
+									goto endAConfig;
 							}
 						}
 					}
@@ -1348,7 +1348,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 					#endregion
 				}
-				EndAConfig:
+			endAConfig:
 				#endregion
 
 				#region 生成视频事件
@@ -1538,11 +1538,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					}
 					pitchEvents.Add(pitchEvent);
 				}
-				if (pitchEvents.Count <= 1) goto EndGlissando;
+				if (pitchEvents.Count <= 1) goto endGlissando;
 				List<VideoTrack> videoTracks = new List<VideoTrack>();
 				if (vTrack != null) videoTracks.Add(vTrack);
 				if (vTracks != null) videoTracks.AddRange(vTracks.Where(track => track != null));
-				if (videoTracks.Count == 0) goto EndGlissando;
+				if (videoTracks.Count == 0) goto endGlissando;
+				if (Plugin.swirl == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.swirl)); return false; }
 				List<Effect> swirls = videoTracks.Select(track => track.Effects.AddEffect(Plugin.swirl)).ToList();
 				foreach (PitchWheelChangeEvent pitchEvent in pitchEvents) {
 					double startTime;
@@ -1562,7 +1563,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 				Plugin.ForVideoEvents.RemoveSwirlTempPreset();
 			}
-		EndGlissando:
+		endGlissando:
 			#endregion
 			#endregion
 			tempEventGroup.Bundle();
@@ -1572,8 +1573,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#region 生成五线谱
 			if (MidiConfigTracks.CurrentChannel == 0) {
 				if (SheetConfigGenerateStaffClef) {
-					if (Plugin.picInPic == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); goto EndGenerateClef; }
-					if (Plugin.bzMasking == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.bz_masking)); goto EndGenerateClef; }
+					if (Plugin.picInPic == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); goto endGenerateClef; }
+					if (Plugin.bzMasking == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.bz_masking)); goto endGenerateClef; }
 					VideoTrack sheetTrack;
 					vegas.Project.Tracks.Add(sheetTrack = new VideoTrack(startIndex + tTrackCount++));
 					VideoEvent clef = AddClef(SheetConfigCelf, sheetTrack, songStart, songLength, SheetConfigClefColor);
@@ -1587,7 +1588,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (scaleY != null) scaleY.Value = scale.Value;
 					(effect2.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter).Value = new OFXDouble2D { X = paddingLeft / 2 - noteSizeHalf, Y = 0.5 };
 				}
-			EndGenerateClef:
+			endGenerateClef:
 				if (SheetConfigGenerateStaffLines) {
 					if (Plugin.crop == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.crop)); return false; }
 					if (Plugin.mirror == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.mirror)); return false; }
@@ -2112,13 +2113,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					Subclip aReverse = null, vReverse = null;
 					if (AConfig) {
 						if (aEvent == null) { SE(new Exceptions.NoAudioTakeException()); return false; }
-						if (YtpConfigMinLen > aEvent.Length.ToMilliseconds()) goto YtpOverLength;
+						if (YtpConfigMinLen > aEvent.Length.ToMilliseconds()) goto ytpOverLength;
 						aReverse = vReverse = GetReversedSubclip(aEvent);
 					}
 					if (VConfig) {
 						if (vEvent == null) { SE(new Exceptions.NoVideoTakeException()); return false; }
-						if (YtpConfigMinLen > vEvent.Length.ToMilliseconds()) goto YtpOverLength;
-						if (vEvent.ActiveTake.Media.Generator != null) goto YtpInMediaGenerator;
+						if (YtpConfigMinLen > vEvent.Length.ToMilliseconds()) goto ytpOverLength;
+						if (vEvent.ActiveTake.Media.Generator != null) goto ytpInMediaGenerator;
 						if (!AConfig || vEvent.ActiveTake.Media != aEvent.ActiveTake.Media)
 							vReverse = GetReversedSubclip(vEvent);
 					}
@@ -2127,10 +2128,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (VConfig) vSmp = Track_Append(vSmpTrack, vEvent, Timecode.FromMilliseconds(0), true);
 					eventSets.Add(new EventSet(aSmp, vSmp, aReverse, vReverse));
 					return true;
-				YtpOverLength:
+				ytpOverLength:
 					SE(new Exceptions.YtpOverLengthException());
 					return false;
-				YtpInMediaGenerator:
+				ytpInMediaGenerator:
 					SE(new Exceptions.YtpInMediaGeneratorException());
 					return false;
 				});
@@ -2517,9 +2518,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			});
 			EventSet[] eventSets;
 			#region 多素材支持
-			if (!GetSelectedSources(aSmpTrack, vSmpTrack, out eventSets) || eventSets.Length == 0) goto CleanUpRuins;
+			if (!GetSelectedSources(aSmpTrack, vSmpTrack, out eventSets) || eventSets.Length == 0) goto cleanUpRuins;
 			EventSet.EliminateDuplicates(ref eventSets);
-			if (eventSets.Length == 0) goto CleanUpRuins;
+			if (eventSets.Length == 0) goto cleanUpRuins;
 			#endregion
 			#region 获取选中需要使用的效果
 			Random rand = new Random();
@@ -2557,7 +2558,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			progressForm.ReportProgress(YtpConfigClipsCount, YtpConfigClipsCount);
 			DeleteYtpSampleTracks(true);
 			return true;
-		CleanUpRuins:
+		cleanUpRuins:
 			DeleteYtpSampleTracks(false);
 			return false;
 		}
@@ -2627,21 +2628,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			string json;
 			MatchCollection matches;
 			json = GetHtml(ConfigForm.Links.GITHUB_LATEST_API);
-			if (string.IsNullOrWhiteSpace(json)) goto Second;
+			if (string.IsNullOrWhiteSpace(json)) goto second;
 			matches = Regex.Matches(json, @"(?<=tag_name[^\n]*v)[\d\.]*");
-			if (matches.Count <= 0) goto Second;
-			else goto Ok;
-		Second:
+			if (matches.Count <= 0) goto second;
+			else goto ok;
+		second:
 			json = GetHtml(ConfigForm.Links.GITHUB_LATEST_API_2);
-			if (string.IsNullOrWhiteSpace(json)) goto Third;
+			if (string.IsNullOrWhiteSpace(json)) goto third;
 			matches = Regex.Matches(json, @"(?<=VERSION-)[\d\.]*(?=-)");
-			if (matches.Count <= 0) goto Third;
-			else goto Ok;
-		Third:
+			if (matches.Count <= 0) goto third;
+			else goto ok;
+		third:
 			successful = false;
 			isLatest = true;
 			return null;
-		Ok:
+		ok:
 			string version = matches[0].Value.Trim();
 			Version latestVersion = new Version(version);
 			successful = true;
@@ -4416,7 +4417,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					preOffset.SetValueAtTime(end, new OFXDouble2D { X = 0.5, Y = 0.5 });
 					preOffset.Keyframes[0].Interpolation = EntryPoint.GetOFXInterpolationType(sonar.Curve);
 				}
-				if (!sonar.IsRequirePicInPic()) goto End;
+				if (!sonar.IsRequirePicInPic()) goto end;
 				Effect picFx = videoEvent.Effects.AddEffect(picInPic);
 				OFXDoubleParameter scaleX = picFx.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter;
 				scaleX.Value = 1;
@@ -4433,7 +4434,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					location.SetValueAtTime(end, new OFXDouble2D { X = sonar.XPos / 100, Y = sonar.YPos / 100 });
 				}
 				(picFx.OFXEffect.FindParameterByName("Angle") as OFXDoubleParameter).SetValues(sonar.IsEven ? sonar.Rotation2 : sonar.Rotation, 0, videoEvent, sonar.Curve);
-			End:
+			end:
 				sonar.ChangeOddEven();
 			}
 			/// <summary>
@@ -4485,7 +4486,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// <summary>
 			/// 在漩涡效果的指定时间码处设置值。
 			/// </summary>
-			/// <param name="swirl">漩涡效果。不管是视频剪辑的效果或是视频轨道的效果都可以。</param>
+			/// <param name="swirl">漩涡效果。不管是视频剪辑的效果或是视频轨道的效果都可以使用。</param>
 			/// <param name="timecode">指定时间码。</param>
 			/// <param name="isHold">是否是“保留”关键帧插值。</param>
 			/// <param name="amount">数量。</param>
@@ -4501,11 +4502,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					foreach (Keyframe existKeyframe in swirl.Keyframes)
 						if (existKeyframe.Position == timecode) {
 							keyframe = existKeyframe;
-							goto EndFindKeyframe;
+							goto endFindKeyframe;
 						}
 					return; // 此时未知原因，找不到相应的时间码。
 				}
-			EndFindKeyframe:
+			endFindKeyframe:
 				AddSwirlTempPreset(amount, centerX, centerY, scaleH, scaleV);
 				keyframe.Preset = SWIRL_TEMP_PRESET_NAME;
 				if (isHold) keyframe.Type = VideoKeyframeType.Hold;
@@ -4532,7 +4533,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			private static void GraduallyBase(Track[] tracks, bool isReversed, Action<Track, double> action) {
 				for (int i = 0, j = tracks.Length - 1; i < tracks.Length; i++, j--) {
 					Track track = tracks[!isReversed ? i : j];
-					// double value = (double)(!isReversed ? i : tracks.Length - i) / tracks.Length;
 					double value = (double)i / tracks.Length;
 					action(track, value);
 				}
@@ -15798,13 +15798,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void OnCheckedChanged(object sender, EventArgs e) {
 			if (isOnCheckedChanged) return;
 			isOnCheckedChanged = true;
-			if (string.IsNullOrWhiteSpace(Group)) goto End;
-			if (Form == null) goto End;
+			if (string.IsNullOrWhiteSpace(Group)) goto end;
+			if (Form == null) goto end;
 			ForEachInGroup(Form, radio => {
 				if (radio.Group == Group) radio.Checked = false;
 				if (radio == this) Checked = true;
 			});
-		End:
+		end:
 			isOnCheckedChanged = false;
 		}
 
@@ -27926,7 +27926,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				vegas.Project.Tracks.Add(previewAudioTrack);
 				AudioEvent previewAudio;
 				bool putOk = parent.PutPreviewAudioEvent(previewAudioTrack, projectEndTimecode, out previewAudio);
-				if (!putOk) goto NotOk;
+				if (!putOk) goto notOk;
 				if (PreviewTuneAudioCheck.Checked) ApplyTuningToAudioEvent(previewAudio);
 				vegas.Transport.CursorPosition = projectEndTimecode;
 				stopPreviewAudioTimecode = previewAudio.End;
@@ -27936,7 +27936,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			} else {
 				vegas.Transport.Stop();
 				vegas.Transport.CursorPosition = originalCursorPosition;
-				if (previewAudioTrack == null) goto NotOk;
+				if (previewAudioTrack == null) goto notOk;
 				vegas.Project.Tracks.Remove(previewAudioTrack);
 				previewAudioTrack = null;
 				previewAudioTimer.Stop();
@@ -27945,7 +27945,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (DEBUG_PREVIEW_AUDIO_TRACK_SHOW) vegas.UpdateUI();
 			return;
 
-		NotOk:
+		notOk:
 			IsPreviewingAudio = false;
 			Asterisk.Play();
 			return;
@@ -28714,10 +28714,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				int index = SonarList.Items.IndexOf(item),
 					newIndex = index + move;
 				if (newIndex < 0 || newIndex >= SonarList.Items.Count ||
-					movedList.Contains(SonarList.Items[newIndex])) goto Marked;
+					movedList.Contains(SonarList.Items[newIndex])) goto marked;
 				SonarList.Items.Remove(item);
 				SonarList.Items.Insert(newIndex, item);
-			Marked:
+			marked:
 				movedList.Add(item);
 			}
 		}
