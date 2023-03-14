@@ -138,6 +138,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/**<summary>复音多轨</summary>*/ private bool VConfigMultitrackForChords { get { return configForm.VideoMultitrackForChordsCheck.Checked; } }
 		/**<summary>滑音效果</summary>*/ private bool VConfigGlissando { get { return configForm.VideoGlissandoCheck.Checked; } }
 		/**<summary>滑音大小</summary>*/ private double VConfigGlissandoAmount { get { return (double)configForm.VideoGlissandoBox.Value; } }
+		/**<summary>首选轨道</summary>*/ private PreferredTrackWrapper<VideoTrack> VConfigPreferredTrack { get { return configForm.VideoPreferredTrackCombo.SelectedItem as PreferredTrackWrapper<VideoTrack>; } }
 		#endregion
 
 		#region 音频属性
@@ -169,6 +170,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/**<summary>保留共振</summary>*/ private bool AConfigReserveFormant { get { return configForm.AudioReserveFormantCheck.Checked; } }
 		/**<summary>创建分组</summary>*/ private bool ConfigCreateEventGroup { get { return configForm.CreateEventGroupInAudioCheck.Checked; } }
 		/**<summary>复音多轨</summary>*/ private bool AConfigMultitrackForChords { get { return configForm.AudioMultitrackForChordsCheck.Checked; } }
+		/**<summary>首选轨道</summary>*/ private PreferredTrackWrapper<AudioTrack> AConfigPreferredTrack { get { return configForm.AudioPreferredTrackCombo.SelectedItem as PreferredTrackWrapper<AudioTrack>; } }
 		#endregion
 
 		#region 迷笛属性
@@ -265,6 +267,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private AutoLayoutTracksInfos LayoutInfos { get { return configForm.IsMultiMidiChannel ? configForm.layoutInfos : null; } }
 		private bool IsMultiMidiChannel { get { return MidiConfigTracks.IsMultiMidiChannel; } }
 		private bool IsNativeProgressDialogStyle { get { return !configForm.enableLegacyProgressDialogToolStripMenuItem.Checked; } }
+		private bool IsVPreferredTrack { get { return VConfigPreferredTrack != null && VConfigPreferredTrack.Track != null; } }
+		private bool IsAPreferredTrack { get { return AConfigPreferredTrack != null && AConfigPreferredTrack.Track != null; } }
 
 		/// <summary>
 		/// 根据主音高名称转换为主音高对应的值。
@@ -1044,6 +1048,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#region 视频操作
 			const int MAX_VIDEO_TRACK_SIZE = 100;
 			int startIndex = GenerateBelowTopAdjustmentTrack ? GetFirstNotAdjustmentTrackIndex() : 0;
+			int vStartIndex = IsVPreferredTrack ? VConfigPreferredTrack.Track.Index : startIndex;
 			int tTrackCount = 0; // 总轨道计数，用于新建音频轨道。
 			VideoTrack vTrack = null; // 如果不启用五线谱时用的视频轨道。
 			VideoTrack[] vTracks = null; // 如果启用五线谱时用的视频轨道列表。
@@ -1067,7 +1072,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			bool sonarMode = currentChannel.IsDrumKit && SonarConfig;
 			if (VConfig) {
 				if (!multitrack && !sonarMode) {
-					vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, startIndex + tTrackCount++, name));
+					if (!IsVPreferredTrack)
+						vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, vStartIndex + tTrackCount++, name));
+					else
+						vTrack = VConfigPreferredTrack.Track;
+					vTrack.Name = name;
 				} else if (multitrack) {
 					vTracks = new VideoTrack[MAX_VIDEO_TRACK_SIZE];
 					anims = new PvVisualEffect[MAX_VIDEO_TRACK_SIZE];
@@ -1077,13 +1086,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			#region 音频操作
 			const int MAX_AUDIO_TRACK_SIZE = 100;
+			int aStartIndex = IsAPreferredTrack ? AConfigPreferredTrack.Track.Index : startIndex;
 			AudioTrack[] aTracks = null; // 音频轨道列表
 			double[] aTrackPositions = null; // 音轨轨道长度计数列表
 			int aTrackCount = 1; // 音频轨道计数，用于新建音频轨道。由于如果不生成音频也不会使用这个变量，因此初始化为 1 没有问题。
 			if (AConfig && !isSonarLegal) {
 				aTracks = new AudioTrack[MAX_AUDIO_TRACK_SIZE];
 				aTrackPositions = new double[MAX_AUDIO_TRACK_SIZE];
-				vegas.Project.Tracks.Add(aTracks[0] = new AudioTrack(vegas.Project, startIndex + tTrackCount++, name));
+				if (!IsAPreferredTrack)
+					vegas.Project.Tracks.Add(aTracks[0] = new AudioTrack(vegas.Project, aStartIndex + tTrackCount++, name));
+				else
+					aTracks[0] = AConfigPreferredTrack.Track;
+				aTracks[0].Name = name;
 				aTrackPositions[0] = 0;
 			}
 			TempEventGroup tempEventGroup = new TempEventGroup(this); // 事件分组临时列表。
@@ -1117,11 +1131,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Func<VideoTrack> NewVideoTrack = new Func<VideoTrack>(() => {
 				tTrackCount++;
 				if (!sonarMode) {
-					vegas.Project.Tracks.Add(vTracks[++vTrackCount] = new VideoTrack(vegas.Project, startIndex, name));
+					if (!IsAPreferredTrack)
+						vegas.Project.Tracks.Add(vTracks[++vTrackCount] = new VideoTrack(vegas.Project, vStartIndex, name));
+					else
+						vTracks[++vTrackCount] = VConfigPreferredTrack.Track;
+					vTracks[vTrackCount].Name = name;
 					anims[vTrackCount] = IsVConfigEffects ? new PvVisualEffect(VConfigEffects) : new PvVisualEffect(VConfigEffect, VConfigInitialValue);
 					return vTracks[vTrackCount];
 				} else {
-					vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, startIndex, name));
+					if (!IsAPreferredTrack)
+						vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, vStartIndex, name));
+					else
+						vTrack = VConfigPreferredTrack.Track;
+					vTrack.Name = name;
 					return vTrack;
 				}
 			});
@@ -1266,7 +1288,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						while (Math.Ceiling(startTime) < aTrackPositions[trackIndex]) // 如果音频是多轨则放到新建的轨道，虽然有时候判断不准确，但问题不大。 // 后来改用整数加以限制，效果就好很多了。
 							if (++trackIndex == aTrackCount) {
 								aTrackCount++;
-								vegas.Project.Tracks.Add(aTracks[trackIndex] = new AudioTrack(vegas.Project, startIndex + tTrackCount++, name));
+								vegas.Project.Tracks.Add(aTracks[trackIndex] = new AudioTrack(vegas.Project, aStartIndex + tTrackCount++, name));
 							}
 					} else {
 						AudioTrack aTrack = aTracks[trackIndex];
@@ -1579,7 +1601,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (Plugin.picInPic == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); goto endGenerateClef; }
 					if (Plugin.bzMasking == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.bz_masking)); goto endGenerateClef; }
 					VideoTrack sheetTrack;
-					vegas.Project.Tracks.Add(sheetTrack = new VideoTrack(startIndex + tTrackCount++));
+					vegas.Project.Tracks.Add(sheetTrack = new VideoTrack(vStartIndex + tTrackCount++));
 					VideoEvent clef = AddClef(SheetConfigCelf, sheetTrack, songStart, songLength, SheetConfigClefColor);
 					Effect effect2 = clef.Effects.AddEffect(Plugin.picInPic);
 					double paddingLeft = (double)SheetConfigPaddingLeft / virtualWidth;
@@ -1596,7 +1618,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (Plugin.crop == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.crop)); return false; }
 					if (Plugin.mirror == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.mirror)); return false; }
 					VideoTrack sheetTrack;
-					vegas.Project.Tracks.Add(sheetTrack = new VideoTrack(startIndex + tTrackCount++));
+					vegas.Project.Tracks.Add(sheetTrack = new VideoTrack(vStartIndex + tTrackCount++));
 					VideoEvent videoEvent = sheetTrack.AddVideoEvent(Timecode.FromMilliseconds(songStart), Timecode.FromMilliseconds(songLength));
 					Media solidColor = new Media(Plugin.solidColor);
 					videoEvent.AddTake(solidColor.GetVideoStreamByIndex(0));
@@ -2507,10 +2529,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AudioTrack aSmpTrack = null, aTrack = null;
 			VideoTrack vSmpTrack = null, vTrack = null;
 			int startIndex = GenerateBelowTopAdjustmentTrack ? GetFirstNotAdjustmentTrackIndex() : 0;
-			if (AConfig) vegas.Project.Tracks.Add(aSmpTrack = new AudioTrack(vegas.Project, startIndex, "YTP Audio Sample Track"));
-			if (VConfig) vegas.Project.Tracks.Add(vSmpTrack = new VideoTrack(vegas.Project, startIndex, "YTP Video Sample Track"));
-			if (AConfig) vegas.Project.Tracks.Add(aTrack = new AudioTrack(vegas.Project, startIndex, ""));
-			if (VConfig) vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, startIndex, ""));
+			int vStartIndex = IsVPreferredTrack ? VConfigPreferredTrack.Track.Index : startIndex;
+			int aStartIndex = IsAPreferredTrack ? AConfigPreferredTrack.Track.Index : startIndex;
+			if (AConfig) vegas.Project.Tracks.Add(aSmpTrack = new AudioTrack(vegas.Project, aStartIndex, "YTP Audio Sample Track"));
+			if (VConfig) vegas.Project.Tracks.Add(vSmpTrack = new VideoTrack(vegas.Project, vStartIndex, "YTP Video Sample Track"));
+			if (AConfig) vegas.Project.Tracks.Add(aTrack = new AudioTrack(vegas.Project, aStartIndex, ""));
+			if (VConfig) vegas.Project.Tracks.Add(vTrack = new VideoTrack(vegas.Project, vStartIndex, ""));
 			Action<bool> DeleteYtpSampleTracks = new Action<bool>(reserveYtpTracks => {
 				if (aSmpTrack != null) vegas.Project.Tracks.Remove(aSmpTrack);
 				if (vSmpTrack != null) vegas.Project.Tracks.Remove(vSmpTrack);
@@ -17713,6 +17737,30 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			public bool ShouldClearFrames;
 		}
 	}
+
+	/// <summary>
+	/// 首选轨道包装器。用于下拉框的展示。
+	/// </summary>
+	/// <typeparam name="T">轨道类型。指定是音频轨道还是视频轨道。</typeparam>
+	public class PreferredTrackWrapper<T> where T : Track {
+		public T Track { get; protected set; }
+		public string DisplayValue { get; protected set; }
+
+		public PreferredTrackWrapper(T track, string displayValue) {
+			Track = track;
+			DisplayValue = displayValue;
+		}
+
+		public PreferredTrackWrapper(string displayValue) : this(null, displayValue) { }
+
+		public override string ToString() {
+			return DisplayValue;
+		}
+	}
+
+	public class PreferredNewTrackWrapper : PreferredTrackWrapper<Track> {
+		public PreferredNewTrackWrapper(string displayValue) : base(displayValue) { }
+	}
 	#endregion
 
 	#region 设计器部分
@@ -26444,6 +26492,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#if VEGAS_ENVIRONMENT
 			((Action)ReadIni).OnErrorBreak();
 			#endif
+			#endregion
+
+			#region 加载项目轨道信息
+			List<AudioTrack> audioTracks = vegas.Project.Tracks.Where(track => track.MediaType == MediaType.Audio).Cast<AudioTrack>().ToList();
+			List<VideoTrack> videoTracks = vegas.Project.Tracks.Where(track => track.MediaType == MediaType.Video).Cast<VideoTrack>().ToList();
+			AudioPreferredTrackCombo.Items.Add(new PreferredNewTrackWrapper(Lang.str.new_track));
+			VideoPreferredTrackCombo.Items.Add(new PreferredNewTrackWrapper(Lang.str.new_track));
+			AudioPreferredTrackCombo.SelectedIndex = VideoPreferredTrackCombo.SelectedIndex = 0;
+			Func<Track, string> GetTrackDisplayValue = track => {
+				Lang str = Lang.str;
+				string result = str.track + " " + (track.Index + 1);
+				if (!string.IsNullOrWhiteSpace(track.Name)) result += str.colon + track.Name.Trim();
+				return result;
+			};
+			audioTracks.ForEach(track => AudioPreferredTrackCombo.Items.Add(new PreferredTrackWrapper<AudioTrack>(track, GetTrackDisplayValue(track))));
+			videoTracks.ForEach(track => VideoPreferredTrackCombo.Items.Add(new PreferredTrackWrapper<VideoTrack>(track, GetTrackDisplayValue(track))));
 			#endregion
 
 			#region 预听音频计时器
