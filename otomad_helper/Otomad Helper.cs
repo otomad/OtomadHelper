@@ -85,6 +85,9 @@ using NAudio.Wave.SampleProviders;
 
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 
+	/// <summary>
+	/// Vegas 入口类。
+	/// </summary>
 	public class EntryPoint {
 		/// <summary>版本号</summary>
 		public static readonly Version VERSION = new Version(4, 26, 14, 0);
@@ -3114,7 +3117,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 		}
 		/// <summary>
-		/// 查找轨道中在指定的时间范围内的所有事件。
+		/// 查找轨道中完全在指定的时间范围内的所有事件。
 		/// </summary>
 		/// <param name="track">轨道。param>
 		/// <param name="start">开始时间。</param>
@@ -3125,6 +3128,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			List<TrackEvent> trackEvents = new List<TrackEvent>();
 			foreach (TrackEvent trackEvent in track.Events) {
 				if (trackEvent.Start >= start && trackEvent.End <= end)
+					trackEvents.Add(trackEvent);
+				else if (trackEvent.Start >= end) break;
+			}
+			return trackEvents.ToArray();
+		}
+		/// <summary>
+		/// 查找轨道中不完全在指定的时间范围内的所有事件。
+		/// </summary>
+		/// <param name="track">轨道。param>
+		/// <param name="start">开始时间。</param>
+		/// <param name="end">结束时间。</param>
+		/// <returns>在指定的时间范围内的所有轨道事件。</returns>
+		public static TrackEvent[] FindEventsAlmostIn(this Track track, Timecode start, Timecode end) {
+			if (end < start) return null;
+			List<TrackEvent> trackEvents = new List<TrackEvent>();
+			foreach (TrackEvent trackEvent in track.Events) {
+				if (trackEvent.Start >= start && trackEvent.Start < end || trackEvent.End > start && trackEvent.End >= end)
 					trackEvents.Add(trackEvent);
 				else if (trackEvent.Start >= end) break;
 			}
@@ -3266,6 +3286,27 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			for (int i = 0; i < array.Count; i++)
 				array[i] = item;
 			return array;
+		}
+		/// <summary>
+		/// 在列表之后添加一项，并立即返回添加的项目。适用于链式或嵌套调用。
+		/// </summary>
+		/// <typeparam name="T">任意类型。</typeparam>
+		/// <param name="list">列表。</param>
+		/// <param name="item">项目。</param>
+		/// <returns>返回添加的项目。</returns>
+		public static T AddAlsoReturn<T>(this List<T> list, T item) {
+			list.Add(item);
+			return item;
+		}
+		/// <summary>
+		/// 快速获取列表的最后一项。
+		/// </summary>
+		/// <typeparam name="T">任意类型。</typeparam>
+		/// <param name="list">列表。</param>
+		/// <returns>返回列表的最后一项。</returns>
+		public static T LastOne<T>(this IList<T> list) {
+			if (list.Count == 0) return default(T);
+			return list[list.Count - 1];
 		}
 	}
 
@@ -10775,6 +10816,146 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// 从自动布局轨道属性对象中读取配置。
 		/// </summary>
 		//void ReadFromInfo(AutoLayoutTracksInfos.BaseAutoLayoutTracksInfo info = null);
+	}
+
+	/// <summary>
+	/// 生成轨道辅助类。
+	/// 用于自动处理新增轨道、剪辑重叠、轨道位置等麻烦问题。
+	/// </summary>
+	/// <typeparam name="A">音频轨道参照类型。可以是现有轨道或表示序号的整型数字。</typeparam>
+	/// <typeparam name="V">视频轨道参照类型。可以是现有轨道或表示序号的整型数字。</typeparam>
+	public class TrackHelper<A, V> {
+		private readonly EntryPoint entryPoint;
+		private Vegas vegas { get { return entryPoint.vegas; } }
+		private Tracks Tracks { get { return vegas.Project.Tracks; } }
+		private A audio;
+		private V video;
+		public List<AudioTrack> audioTracks = new List<AudioTrack>();
+		public List<VideoTrack> videoTracks = new List<VideoTrack>();
+		private bool NoAudio { get { return audio == null; } }
+		private bool NoVideo { get { return video == null; } }
+		private readonly bool isAudioAboveVideo = false;
+		public string audioName;
+		public string videoName;
+		public const string EXAMPLE_EVENT_NAME = "(Example Track Event)";
+
+		/// <summary>
+		/// 构造生成轨道辅助类。
+		/// </summary>
+		/// <param name="entryPoint">Vegas 入口类。</param>
+		/// <param name="audio">音频轨道参照。可以是现有轨道、表示序号的整型数字、空。</param>
+		/// <param name="video">视频轨道参照。可以是现有轨道、表示序号的整型数字、空。</param>
+		/// <param name="audioName">音频轨道名称。</param>
+		/// <param name="videoName">视频轨道名称。</param>
+		/// <exception cref="NullReferenceException">传入的 audio 或 video 类型不合法。</exception>
+		public TrackHelper(EntryPoint entryPoint, A audio, V video, string audioName = "", string videoName = "") {
+			this.entryPoint = entryPoint;
+			this.audio = audio;
+			this.video = video;
+			this.audioName = audioName;
+			this.videoName = videoName;
+			if (audio is AudioTrack) {
+				AudioTrack track = audio as AudioTrack;
+				while (track != null) {
+					audioTracks.Add(track);
+					track = GetNextTrack(track);
+				}
+			}
+			if (video is VideoTrack) {
+				VideoTrack track = video as VideoTrack;
+				while (track != null) {
+					videoTracks.Add(track);
+					track = GetPreviousTrack(track);
+				}
+			}
+			if (!NoAudio && !NoVideo) {
+				int? audioIndex = audio is AudioTrack ? (audio as AudioTrack).Index : audio as int?;
+				int? videoIndex = video is VideoTrack ? (video as VideoTrack).Index : video as int?;
+				if (!audioIndex.HasValue || !videoIndex.HasValue) throw new NullReferenceException();
+				if (audioIndex.Value < videoIndex.Value) isAudioAboveVideo = true; // 相等时也为 false。
+			}
+		}
+
+		/// <summary>
+		/// 获取上一轨道。
+		/// </summary>
+		/// <typeparam name="T">轨道类型。</typeparam>
+		/// <param name="track">轨道。</param>
+		/// <returns>上一轨道。</returns>
+		public static T GetPreviousTrack<T>(T track) where T : Track {
+			Tracks tracks = track.Project.Tracks;
+			int index = tracks.IndexOf(track);
+			return index <= 0 ? null : tracks[index - 1] is T ? tracks[index - 1] as T : null;
+		}
+
+		/// <summary>
+		/// 获取下一轨道。
+		/// </summary>
+		/// <typeparam name="T">轨道类型。</typeparam>
+		/// <param name="track">轨道。</param>
+		/// <returns>下一轨道。</returns>
+		public static T GetNextTrack<T>(T track) where T : Track {
+			Tracks tracks = track.Project.Tracks;
+			int index = tracks.IndexOf(track);
+			return index < 0 || index >= tracks.Count ? null : tracks[index + 1] is T ? tracks[index + 1] as T : null;
+		}
+
+		/// <summary>
+		/// 音频参照索引值加一。
+		/// </summary>
+		private void AudioIndexAddOne() {
+			if (!isAudioAboveVideo && audio is int) audio = (A)(object)((int)(object)audio + 1);
+		}
+
+		/// <summary>
+		/// 视频参照索引值加一。
+		/// </summary>
+		private void VideoIndexAddOne() {
+			if (isAudioAboveVideo && video is int) video = (V)(object)((int)(object)video + 1);
+		}
+
+		/// <summary>
+		/// 在之后新增一条音频轨道。
+		/// </summary>
+		/// <returns>新增的音频轨道。</returns>
+		public AudioTrack AddAudioTrackAfter() {
+			Func<int?, AudioTrack> Add = index => audioTracks.AddAlsoReturn(new AudioTrack(vegas.Project, index.Value, audioName));
+			VideoIndexAddOne();
+			return audioTracks.Count == 0 ? Add(audio as int?) : Add(audioTracks.LastOne().Index + 1);
+		}
+
+		/// <summary>
+		/// 在之前新增一条视频轨道。
+		/// </summary>
+		/// <returns>新增的视频轨道。</returns>
+		public VideoTrack AddVideoTrackBefore() {
+			Func<int?, VideoTrack> Add = index => videoTracks.AddAlsoReturn(new VideoTrack(vegas.Project, index.Value, videoName));
+			AudioIndexAddOne();
+			return videoTracks.Count == 0 ? Add(video as int?) : Add(videoTracks.LastOne().Index);
+		}
+
+		/// <summary>
+		/// 添加轨道事件。
+		/// </summary>
+		/// <typeparam name="T">轨道事件类型。</typeparam>
+		/// <param name="trackEvent">轨道事件。</param>
+		/// <returns>返回添加的轨道事件。</returns>
+		public T AddEvent<T>(T trackEvent, Timecode start, Timecode length) where T : TrackEvent {
+			if (trackEvent is AudioEvent && NoAudio || trackEvent is VideoEvent && NoVideo) return null;
+			bool isAudio = trackEvent is AudioEvent;
+			Track track = null;
+			Timecode end = start + length;
+			foreach (Track otherTrack in isAudio ? audioTracks.Cast<Track>() : videoTracks.Cast<Track>()) {
+				TrackEvent[] inEvents = otherTrack.FindEventsAlmostIn(start, end);
+				if (inEvents.Length == 0 || inEvents.Length == 1 && inEvents[0].Name == EXAMPLE_EVENT_NAME) {
+					track = otherTrack;
+					break;
+				}
+			}
+			if (track == null)
+				track = isAudio ? AddAudioTrackAfter() as Track : AddVideoTrackBefore() as Track;
+			return trackEvent.Copy(track, start);
+		}
 	}
 
 	partial class AutoLayoutTracksGridForm {
