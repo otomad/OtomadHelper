@@ -10954,7 +10954,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 			if (track == null)
 				track = isAudio ? AddAudioTrackAfter() as Track : AddVideoTrackBefore() as Track;
-			return trackEvent.Copy(track, start);
+			return trackEvent.Copy(track, start) as T;
 		}
 	}
 
