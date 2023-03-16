@@ -1934,20 +1934,52 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return ok;
 		}
 
-		private TrackEvent Track_Append(Track track, TrackEvent source, Timecode startTime, bool isCopy = false) {
+		/// <summary>
+		/// 将新事件追加到指定轨道的末尾。
+		/// </summary>
+		/// <typeparam name="T">轨道事件类型。</typeparam>
+		/// <param name="track">轨道。</param>
+		/// <param name="source">源事件。</param>
+		/// <param name="startTime">指定开始时间，如果需要整体往后移动的话。</param>
+		/// <param name="isCopy">是否是复制而不是移动。</param>
+		/// <returns>追加后的新事件。</returns>
+		private T Track_Append<T>(Track track, T source, Timecode startTime, bool isCopy = false) where T : TrackEvent {
 			Timecode start = track.Length;
 			if (track.Events.Count == 0) start += startTime;
+			return AppendOrCopyEventAtTime(track, source, start, isCopy);
+		}
+
+		/// <summary>
+		/// 将新事件追加到指定事件的后面。
+		/// </summary>
+		/// <typeparam name="T">轨道事件类型。</typeparam>
+		/// <param name="lastEvent">指定的上一个事件。</param>
+		/// <param name="track">轨道。</param>
+		/// <param name="source">源事件。</param>
+		/// <param name="startTime">当上一个事件为空时指定的开始时间。</param>
+		/// <param name="isCopy">是否是复制而不是移动。</param>
+		/// <returns>追加后的新事件。</returns>
+		public T AppendAtEventTail<T>(T lastEvent, Track track, T source, Timecode startTime = null, bool isCopy = false) where T : TrackEvent {
+			startTime = startTime ?? Timecode.FromMilliseconds(0);
+			if (lastEvent != null) startTime = lastEvent.End;
+			return AppendOrCopyEventAtTime(track, source, startTime, isCopy);
+		}
+
+		/// <summary>
+		/// 内部使用，追加或复制事件到指定的时间码。
+		/// </summary>
+		/// <typeparam name="T">轨道事件类型。</typeparam>
+		/// <param name="track">轨道。</param>
+		/// <param name="source">源事件。</param>
+		/// <param name="startTime">当上一个事件为空时指定的开始时间。</param>
+		/// <param name="isCopy">是否是复制而不是移动。</param>
+		/// <returns>追加后的新事件。</returns>
+		private T AppendOrCopyEventAtTime<T>(Track track, T source, Timecode startTime = null, bool isCopy = false) where T : TrackEvent {
 			if (!isCopy) {
 				source.Track = track;
-				source.Start = start;
+				source.Start = startTime;
 				return source;
-			} else return source.Copy(track, start);
-		}
-		public AudioEvent Track_Append(Track track, AudioEvent source, Timecode startTime, bool isCopy = false) {
-			return Track_Append(track, source as TrackEvent, startTime, isCopy) as AudioEvent;
-		}
-		public VideoEvent Track_Append(Track track, VideoEvent source, Timecode startTime, bool isCopy = false) {
-			return Track_Append(track, source as TrackEvent, startTime, isCopy) as VideoEvent;
+			} else return source.Copy(track, startTime) as T;
 		}
 
 		private TrackEvent GetAssociatedEvent(TrackEvent trackEvent) {
@@ -2026,10 +2058,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				#endregion
 			} else {
 				#region 放置示例轨道剪辑
-				var appendOne = new Func<AudioEvent, VideoEvent, bool, bool>((aEvent, vEvent, notIgnore) => {
-					var SE = new Action<Exception>(e => { // 色氵炎々（误
+				Func<AudioEvent, VideoEvent, bool, bool> appendOne = (aEvent, vEvent, notIgnore) => {
+					Action<Exception> SE = e => { // 色氵炎々（误
 						if (notIgnore) ShowError(e, ShowErrorState.RESUME_NEXT);
-					});
+					};
 					AudioEvent aSmp = null; VideoEvent vSmp = null;
 					Subclip aReverse = null, vReverse = null;
 					if (AConfig) {
@@ -2055,7 +2087,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytpInMediaGenerator:
 					SE(new Exceptions.YtpInMediaGeneratorException());
 					return false;
-				});
+				};
 				TrackEvent[] _selected = GetSelectedEvents();
 				AudioEvent[] _selectedAudio = GetSelectedAudioEvents();
 				VideoEvent[] _selectedVideo = GetSelectedVideoEvents();
@@ -2445,6 +2477,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#endregion
 			#region 获取选中需要使用的效果
 			Random rand = new Random();
+			AudioEvent lastAEvent = null;
+			VideoEvent lastVEvent = null;
 			for (int i = 0; i < YtpConfigClipsCount; i++) {
 				progressForm.ReportProgress(i + 1, YtpConfigClipsCount);
 				if (progressForm.RealTimeUpdateCheck.Checked)
@@ -2461,12 +2495,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (AConfig) {
 					aEvent = randClip.audioEvent.Copy(aSmpTrack, generateBeginTime) as AudioEvent;
 					aEvent.AdjustStartLength(Timecode.FromMilliseconds(randStart), Timecode.FromMilliseconds(randLen), true);
-					Track_Append(aTrack, aEvent, generateBeginTime, false);
+					lastAEvent = AppendAtEventTail(lastAEvent, aTrack, aEvent, generateBeginTime, false);
 				}
 				if (VConfig) {
 					vEvent = randClip.videoEvent.Copy(vSmpTrack, generateBeginTime) as VideoEvent;
 					vEvent.AdjustStartLength(Timecode.FromMilliseconds(randStart), Timecode.FromMilliseconds(randLen), true);
-					Track_Append(vTrack, vEvent, generateBeginTime, false);
+					lastVEvent = AppendAtEventTail(lastVEvent, vTrack, vEvent, generateBeginTime, false);
 				}
 				if (AConfig && VConfig) // 为音频与视频事件创建一个新的分组
 					GroupTrackEvents(vEvent, aEvent);
