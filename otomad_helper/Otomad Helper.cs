@@ -18359,7 +18359,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.VideoLoopCheck = new System.Windows.Forms.CheckBox();
 			this.VideoFreezeFirstFrameCheck = new System.Windows.Forms.CheckBox();
 			this.VideoFreezeLastFrameCheck = new System.Windows.Forms.CheckBox();
-			this.VideoMultitrackForChordsCheck = new System.Windows.Forms.CheckBox();
+			this.VideoMultitrackForChordsCheck = new Otomad.VegasScript.OtomadHelper.V4.RememberedCheckBox();
 			this.CreateEventGroupInVideoCheck = new System.Windows.Forms.CheckBox();
 			this.VideoGlissandoFlow = new System.Windows.Forms.FlowLayoutPanel();
 			this.VideoGlissandoCheck = new Otomad.VegasScript.OtomadHelper.V4.RememberedCheckBox();
@@ -26399,7 +26399,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.ToolStripMenuItem restoreDefaultFormSizeToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem rememberFormSizeToolStripMenuItem;
 		public System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-		public System.Windows.Forms.CheckBox VideoMultitrackForChordsCheck;
+		public RememberedCheckBox VideoMultitrackForChordsCheck;
 		public System.Windows.Forms.ToolStripMenuItem rememberOnceFormSizeToolStripMenuItem;
 		public System.Windows.Forms.ToolStripMenuItem updateLogsToolStripMenuItem;
 		public System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -26931,8 +26931,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			VideoFreezeFirstFrameCheck.Checked = configIni.Read("FreezeFirstFrame", false);
 			VideoFreezeLastFrameCheck.Checked = configIni.Read("FreezeLastFrame", false);
 			VideoLegatoCombo.SetIndex(configIni.Read("Legato", 1), 1);
-			VideoMultitrackForChordsCheck.Checked = configIni.Read("MultitrackForChords", false);
-			VideoGlissandoCheck.Checked = configIni.Read("VideoGlissando", true);
+			VideoMultitrackForChordsCheck.UserChecked = configIni.Read("MultitrackForChords", false);
+			VideoGlissandoCheck.UserChecked = configIni.Read("VideoGlissando", true);
 			VideoGlissandoBox.SetValue(configIni.Read("VideoGlissandoAmount", 12m), 12m);
 			VideoVelocityCheck.Checked = configIni.Read("Velocity", false);
 			VideoVelocityLessBox.SetValue(configIni.Read("VelocityLessVelocity", 0), 0);
@@ -27142,8 +27142,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("FreezeFirstFrame", VideoFreezeFirstFrameCheck.Checked);
 			configIni.Write("FreezeLastFrame", VideoFreezeLastFrameCheck.Checked);
 			configIni.Write("Legato", VideoLegatoCombo.SelectedIndex);
-			configIni.Write("MultitrackForChords", VideoMultitrackForChordsCheck.Checked);
-			configIni.Write("VideoGlissando", VideoGlissandoCheck.Checked);
+			configIni.Write("MultitrackForChords", VideoMultitrackForChordsCheck.UserChecked);
+			configIni.Write("VideoGlissando", VideoGlissandoCheck.UserChecked);
 			configIni.Write("VideoGlissandoAmount", VideoGlissandoBox.Value);
 			configIni.Write("Velocity", VideoVelocityCheck.Checked);
 			configIni.Write("VelocityLessVelocity", VideoVelocityLessBox.Value);
@@ -27946,6 +27946,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			VideoEffectCombo.Enabled = VideoEffectInitialValueCombo.Enabled =
 				VideoLegatoCombo.Enabled = VideoGlissandoFlow.Enabled = isVConfigOnButNotSheetConfigOn;
 			VideoGlissandoCheck.Status = isSheetConfigOn ? RememberedCheckBox.StatusType.False : RememberedCheckBox.StatusType.Unlocked;
+			VideoMultitrackForChordsCheck.Status = isSheetConfigOn ? RememberedCheckBox.StatusType.True : RememberedCheckBox.StatusType.Unlocked;
+			if (!isVConfigOn) VideoMultitrackForChordsCheck.Enabled = false;
 			if (isSheetConfigOn) {
 				VideoScratchCombo.Enabled = false;
 				VideoScratchCombo.SelectedIndex = 0;
