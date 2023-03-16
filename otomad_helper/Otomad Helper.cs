@@ -252,6 +252,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private bool requestShowProgress = false;
 		private Media sonarSolidColor = null;
 		private List<Track> assignedSonarTracks = new List<Track>();
+		private int? nextTrackIndex = null;
 
 		// 媒体 / MIDI 参数变量
 		internal MIDI midi = null;
@@ -1048,8 +1049,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			bool sonarMode = currentChannel.IsDrumKit && SonarConfig;
 			int topIndex = GenerateBelowTopAdjustmentTrack ? GetFirstNotAdjustmentTrackIndex() : 0;
 			var trackHelper = TrackHelper.New(this,
-				!AConfig ? null : IsAPreferredTrack ? AConfigPreferredTrack.Track as object : topIndex as object,
-				!VConfig ? null : IsVPreferredTrack ? VConfigPreferredTrack.Track as object : topIndex as object,
+				!AConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsAPreferredTrack ? AConfigPreferredTrack.Track as object : topIndex as object,
+				!VConfig ? null : nextTrackIndex.HasValue ? nextTrackIndex.Value as object : IsVPreferredTrack ? VConfigPreferredTrack.Track as object : topIndex as object,
 				!AConfigMultitrack, !VConfigMultitrack && !sonarMode, name);
 			bool requireTwoKey = VConfigStartSize != VConfigEndSize || // 如果为起始尺寸与终止尺寸大小相等，则没有必要打两个关键帧了。
 				VConfigStartRotation != VConfigEndRotation ||
@@ -1432,9 +1433,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						if (!(midiEvent is ControlChangeEvent)) continue;
 						ControlChangeEvent controlChangeEvent = midiEvent as ControlChangeEvent;
 						if (controlChangeEvent.Controller == MidiController.Pan) {
-							if (!MidiUseDynamicMidiBpm)
-								startTime = midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
-							else
+							startTime = !MidiUseDynamicMidiBpm ?
+								midiEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter :
 								startTime = integrator.GetActualTime(midiEvent.AbsoluteTime);
 
 							if (startTime < MidiConfigStartTime) continue;
@@ -1592,6 +1592,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					trackEvent.Selected = true;
 
 			if (!sonarMode) generatedVideoTracks.AddRange(trackHelper.videoTracks);
+			nextTrackIndex = trackHelper.SumUp();
 			return !progressForm.RequestAbort;
 		}
 
@@ -10800,6 +10801,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public List<Track> AllTracks { get { return videoTracks.Cast<Track>().Concat(audioTracks.Cast<Track>()).ToList(); } }
 		public readonly bool audioSingleTrack;
 		public readonly bool videoSingleTrack;
+		private int topmostTrackIndex = int.MaxValue;
+		private void SetTopmostTrackIndex(int value) { if (value < topmostTrackIndex) topmostTrackIndex = value; }
 
 		/// <summary>
 		/// 构造生成轨道辅助类。
@@ -10963,6 +10966,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			T copiedEvent = trackEvent.Copy(track, start) as T;
 			if (copiedEvent.Name == EXAMPLE_EVENT_NAME) copiedEvent.Name = "";
 			copiedEvent.Length = length;
+			SetTopmostTrackIndex(track.Index);
 			return copiedEvent;
 		}
 
@@ -10980,6 +10984,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (!TrackVacateSpace<T>(track, start, length)) return null;
 			T trackEvent = IsAudio<T>() ? new AudioEvent(start, length) as T : new VideoEvent(start, length) as T;
 			track.Events.Add(trackEvent);
+			SetTopmostTrackIndex(track.Index);
 			return trackEvent;
 		}
 
@@ -11058,6 +11063,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private bool IsSingleTrack<T>() where T : TrackEvent {
 			bool isAudio = IsAudio<T>();
 			return isAudio && audioSingleTrack || !isAudio && videoSingleTrack;
+		}
+
+		/// <summary>
+		/// 总结，结算。<br />
+		/// 在某个乐轨完成后调用。
+		/// </summary>
+		/// <returns>
+		/// 如果轨道完全没有被使用过，完全没有新增任何轨道事件，则返回 <c>null</c>，这样生成下一组乐轨时仍然可以继续沿用现有设定。<br />
+		/// 如果轨道使用过至少一次了（添加示例轨道事件除外），则根据生成后的轨道情况提供一个建议的新参照轨道索引值。
+		/// </returns>
+		public int? SumUp() {
+			return topmostTrackIndex == int.MaxValue ? null : topmostTrackIndex as int?;
 		}
 	}
 
