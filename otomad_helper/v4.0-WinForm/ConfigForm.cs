@@ -1289,5 +1289,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			else if (sender == CreateEventGroupInAudioCheck)
 				MessageBox.Show("变了啊");
 		}
+
+		private void RemoveSourceTrackEventsCheck_CheckedChanged(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
 	}
 }

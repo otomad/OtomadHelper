@@ -161,7 +161,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel11 = new System.Windows.Forms.FlowLayoutPanel();
 			this.GenerateAtCustomRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
 			this.GenerateAtCustomText = new System.Windows.Forms.TextBox();
+			this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
 			this.BelowTopAdjustmentTrackCheck = new System.Windows.Forms.CheckBox();
+			this.RemoveSourceTrackEventsCheck = new Otomad.VegasScript.OtomadHelper.V4.RememberedCheckBox();
+			this.SelectAllGeneratedEventsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioTab = new System.Windows.Forms.TabPage();
 			this.AudioParamsGroup = new System.Windows.Forms.GroupBox();
 			this.AudioParamsTable = new System.Windows.Forms.TableLayoutPanel();
@@ -527,6 +530,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel9.SuspendLayout();
 			this.flowLayoutPanel11.SuspendLayout();
+			this.flowLayoutPanel5.SuspendLayout();
 			this.AudioTab.SuspendLayout();
 			this.AudioParamsGroup.SuspendLayout();
 			this.AudioParamsTable.SuspendLayout();
@@ -1597,7 +1601,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
 			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(5, 550);
+			this.WarningInfoLabel.Location = new System.Drawing.Point(5, 592);
 			this.WarningInfoLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(540, 0);
 			this.WarningInfoLabel.Name = "WarningInfoLabel";
@@ -1610,7 +1614,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiConfigGroup.AutoSize = true;
 			this.MidiConfigGroup.Controls.Add(this.MidiConfigTablePanel);
 			this.MidiConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.MidiConfigGroup.Location = new System.Drawing.Point(5, 214);
+			this.MidiConfigGroup.Location = new System.Drawing.Point(5, 256);
 			this.MidiConfigGroup.Margin = new System.Windows.Forms.Padding(2);
 			this.MidiConfigGroup.Name = "MidiConfigGroup";
 			this.MidiConfigGroup.Padding = new System.Windows.Forms.Padding(5);
@@ -2105,7 +2109,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SourceConfigGroup.Margin = new System.Windows.Forms.Padding(2);
 			this.SourceConfigGroup.Name = "SourceConfigGroup";
 			this.SourceConfigGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.SourceConfigGroup.Size = new System.Drawing.Size(648, 209);
+			this.SourceConfigGroup.Size = new System.Drawing.Size(648, 251);
 			this.SourceConfigGroup.TabIndex = 1;
 			this.SourceConfigGroup.TabStop = false;
 			this.SourceConfigGroup.Text = "素材属性";
@@ -2123,7 +2127,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel1, 0, 2);
 			this.tableLayoutPanel3.Controls.Add(this.GenerateAtLbl, 0, 3);
 			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel9, 0, 4);
-			this.tableLayoutPanel3.Controls.Add(this.BelowTopAdjustmentTrackCheck, 0, 5);
+			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel5, 0, 5);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel3.Location = new System.Drawing.Point(5, 25);
 			this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(2);
@@ -2135,7 +2139,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(638, 179);
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(638, 221);
 			this.tableLayoutPanel3.TabIndex = 1;
 			// 
 			// ChooseSourceLbl
@@ -2325,19 +2330,60 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.GenerateAtCustomText.TabIndex = 6;
 			this.GenerateAtCustomText.Leave += new System.EventHandler(this.GenerateAtCustomText_Leave);
 			// 
+			// flowLayoutPanel5
+			// 
+			this.flowLayoutPanel5.AutoSize = true;
+			this.flowLayoutPanel5.Controls.Add(this.BelowTopAdjustmentTrackCheck);
+			this.flowLayoutPanel5.Controls.Add(this.RemoveSourceTrackEventsCheck);
+			this.flowLayoutPanel5.Controls.Add(this.SelectAllGeneratedEventsCheck);
+			this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel5.Location = new System.Drawing.Point(4, 149);
+			this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+			this.flowLayoutPanel5.Size = new System.Drawing.Size(630, 72);
+			this.flowLayoutPanel5.TabIndex = 11;
+			// 
 			// BelowTopAdjustmentTrackCheck
 			// 
 			this.BelowTopAdjustmentTrackCheck.AutoSize = true;
 			this.BelowTopAdjustmentTrackCheck.Checked = true;
 			this.BelowTopAdjustmentTrackCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.BelowTopAdjustmentTrackCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BelowTopAdjustmentTrackCheck.Location = new System.Drawing.Point(4, 152);
-			this.BelowTopAdjustmentTrackCheck.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.BelowTopAdjustmentTrackCheck.Location = new System.Drawing.Point(0, 0);
+			this.BelowTopAdjustmentTrackCheck.Margin = new System.Windows.Forms.Padding(0);
 			this.BelowTopAdjustmentTrackCheck.Name = "BelowTopAdjustmentTrackCheck";
-			this.BelowTopAdjustmentTrackCheck.Size = new System.Drawing.Size(630, 24);
-			this.BelowTopAdjustmentTrackCheck.TabIndex = 10;
+			this.BelowTopAdjustmentTrackCheck.Size = new System.Drawing.Size(286, 24);
+			this.BelowTopAdjustmentTrackCheck.TabIndex = 0;
 			this.BelowTopAdjustmentTrackCheck.Text = "生成在顶层调整轨道的下方";
 			this.BelowTopAdjustmentTrackCheck.UseVisualStyleBackColor = true;
+			// 
+			// RemoveSourceTrackEventsCheck
+			// 
+			this.RemoveSourceTrackEventsCheck.AutoSize = true;
+			this.RemoveSourceTrackEventsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RemoveSourceTrackEventsCheck.Location = new System.Drawing.Point(0, 24);
+			this.RemoveSourceTrackEventsCheck.Margin = new System.Windows.Forms.Padding(0);
+			this.RemoveSourceTrackEventsCheck.Name = "RemoveSourceTrackEventsCheck";
+			this.RemoveSourceTrackEventsCheck.Size = new System.Drawing.Size(286, 24);
+			this.RemoveSourceTrackEventsCheck.TabIndex = 1;
+			this.RemoveSourceTrackEventsCheck.Text = "生成完成后移除作为源素材的轨道事件";
+			this.RemoveSourceTrackEventsCheck.UseVisualStyleBackColor = true;
+			this.RemoveSourceTrackEventsCheck.CheckedChanged += new System.EventHandler(this.RemoveSourceTrackEventsCheck_CheckedChanged);
+			// 
+			// SelectAllGeneratedEventsCheck
+			// 
+			this.SelectAllGeneratedEventsCheck.AutoSize = true;
+			this.SelectAllGeneratedEventsCheck.Checked = true;
+			this.SelectAllGeneratedEventsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.SelectAllGeneratedEventsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SelectAllGeneratedEventsCheck.Location = new System.Drawing.Point(0, 48);
+			this.SelectAllGeneratedEventsCheck.Margin = new System.Windows.Forms.Padding(0);
+			this.SelectAllGeneratedEventsCheck.Name = "SelectAllGeneratedEventsCheck";
+			this.SelectAllGeneratedEventsCheck.Size = new System.Drawing.Size(286, 24);
+			this.SelectAllGeneratedEventsCheck.TabIndex = 2;
+			this.SelectAllGeneratedEventsCheck.Text = "生成完成后选中生成的所有事件";
+			this.SelectAllGeneratedEventsCheck.UseVisualStyleBackColor = true;
 			// 
 			// AudioTab
 			// 
@@ -7974,6 +8020,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel9.PerformLayout();
 			this.flowLayoutPanel11.ResumeLayout(false);
 			this.flowLayoutPanel11.PerformLayout();
+			this.flowLayoutPanel5.ResumeLayout(false);
+			this.flowLayoutPanel5.PerformLayout();
 			this.AudioTab.ResumeLayout(false);
 			this.AudioTab.PerformLayout();
 			this.AudioParamsGroup.ResumeLayout(false);
@@ -8445,7 +8493,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.RadioButton VideoFadeSetAsTimecodeRadio;
 		public System.Windows.Forms.RadioButton VideoFadeSetAsPercentRadio;
 		public CommandLinkButton ApplyVisualEffectBtn;
-		public System.Windows.Forms.CheckBox BelowTopAdjustmentTrackCheck;
 		public System.Windows.Forms.Button VisualEffectAdvancedBtn;
 		public System.Windows.Forms.TabPage SonarTab;
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
@@ -8597,6 +8644,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.TableLayoutPanel AudioPreferredTrackPanel;
 		public System.Windows.Forms.Label AudioPreferredTrackLbl;
 		public System.Windows.Forms.ComboBox AudioPreferredTrackCombo;
+		public System.Windows.Forms.CheckBox BelowTopAdjustmentTrackCheck;
+		public RememberedCheckBox RemoveSourceTrackEventsCheck;
+		public System.Windows.Forms.CheckBox SelectAllGeneratedEventsCheck;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
 	}
 }
 
