@@ -2610,7 +2610,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Version latestVersion = new Version(version);
 			successful = true;
 			isLatest = latestVersion <= VERSION;
-			return version;
+			return "v" + version;
 		}
 
 		/// <summary>最低支持 Vegas 版本号。</summary>
