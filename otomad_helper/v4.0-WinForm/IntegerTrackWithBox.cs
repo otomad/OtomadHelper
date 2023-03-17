@@ -119,10 +119,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		/// <summary>
-		/// 右键滑动条，可以重置其值。
+		/// 右键/中键滑动条，可以重置其值。
 		/// </summary>
 		private void Track_MouseClick(object sender, MouseEventArgs e) {
-			if (e.Button == MouseButtons.Right && e.Clicks == 1) ResetDefaultValue();
+			if ((e.Button == MouseButtons.Middle || e.Button == MouseButtons.Right) && e.Clicks == 1) ResetDefaultValue();
 		}
 
 		/// <summary>

@@ -1282,5 +1282,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void DatamoshClipsFolderOpenButton_Click(object sender, EventArgs e) {
 			OpenLink(DatamoshClipsFolderTxt.Text);
 		}
+
+		private void CreateEventGroupCheck_CheckedChanged(object sender, EventArgs e) {
+			if (sender == CreateEventGroupInVideoCheck)
+				CreateEventGroupInAudioCheck.Checked = CreateEventGroupInVideoCheck.Checked;
+			else if (sender == CreateEventGroupInAudioCheck)
+				MessageBox.Show("变了啊");
+		}
 	}
 }
