@@ -1895,46 +1895,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return GetReversedSubclip(take.Media, take.Offset, take.AvailableLength);
 		}
 
-		private bool Track_AppendMedia(Track track, Media media, out TrackEvent trackEvent) {
-			/* typeof(T) == typeof(AudioEvent) */
+		/// <summary>
+		/// 在轨道追加媒体文件的音频或视频。
+		/// </summary>
+		/// <param name="track">轨道。</param>
+		/// <param name="media">媒体。</param>
+		/// <param name="trackEvent">输出的轨道事件。</param>
+		/// <returns>是否成功添加媒体。</returns>
+		private static bool Track_AppendMedia<T, E>(T track, Media media, out E trackEvent)
+			where T : Track
+			where E : TrackEvent {
 			if (track is AudioTrack) {
-				trackEvent = (track as AudioTrack).AddAudioEvent(track.Length, media.Length);
+				trackEvent = (track as AudioTrack).AddAudioEvent(track.Length, media.Length) as E;
 				try {
 					trackEvent.AddTake(media.GetAudioStreamByIndex(0));
 				} catch (Exception e) { ShowError(new Exceptions.NoAudioTakeException(), e); return false; }
 			} else if (track is VideoTrack) {
-				trackEvent = (track as VideoTrack).AddVideoEvent(track.Length, media.Length);
+				trackEvent = (track as VideoTrack).AddVideoEvent(track.Length, media.Length) as E;
 				try {
 					trackEvent.AddTake(media.GetVideoStreamByIndex(0));
 				} catch (Exception e) { ShowError(new Exceptions.NoVideoTakeException(), e); return false; }
 			} else { trackEvent = null; return false; }
 			return true;
-		}
-		/// <summary>
-		/// 在轨道追加媒体文件的音频。
-		/// </summary>
-		/// <param name="track">轨道</param>
-		/// <param name="media">媒体</param>
-		/// <param name="trackEvent">输出的轨道事件</param>
-		/// <returns>是否成功添加媒体</returns>
-		public bool Track_AppendMedia(AudioTrack track, Media media, out AudioEvent trackEvent) {
-			TrackEvent _trackEvent;
-			bool ok = Track_AppendMedia(track, media, out _trackEvent);
-			trackEvent = _trackEvent as AudioEvent;
-			return ok;
-		}
-		/// <summary>
-		/// 在轨道追加媒体文件的视频。
-		/// </summary>
-		/// <param name="track">轨道</param>
-		/// <param name="media">媒体</param>
-		/// <param name="trackEvent">输出的轨道事件</param>
-		/// <returns>是否成功添加媒体</returns>
-		public bool Track_AppendMedia(VideoTrack track, Media media, out VideoEvent trackEvent) {
-			TrackEvent _trackEvent;
-			bool ok = Track_AppendMedia(track, media, out _trackEvent);
-			trackEvent = _trackEvent as VideoEvent;
-			return ok;
 		}
 
 		/// <summary>
@@ -1946,7 +1928,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="startTime">指定开始时间，如果需要整体往后移动的话。</param>
 		/// <param name="isCopy">是否是复制而不是移动。</param>
 		/// <returns>追加后的新事件。</returns>
-		private T Track_Append<T>(Track track, T source, Timecode startTime, bool isCopy = false) where T : TrackEvent {
+		private static T Track_Append<T>(Track track, T source, Timecode startTime, bool isCopy = false) where T : TrackEvent {
 			Timecode start = track.Length;
 			if (track.Events.Count == 0) start += startTime;
 			return AppendOrCopyEventAtTime(track, source, start, isCopy);
@@ -1962,10 +1944,24 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="startTime">当上一个事件为空时指定的开始时间。</param>
 		/// <param name="isCopy">是否是复制而不是移动。</param>
 		/// <returns>追加后的新事件。</returns>
-		public T AppendAtEventTail<T>(T lastEvent, Track track, T source, Timecode startTime = null, bool isCopy = false) where T : TrackEvent {
+		public static T AppendAtEventTail<T>(T lastEvent, Track track, T source, Timecode startTime = null, bool isCopy = false) where T : TrackEvent {
 			startTime = startTime ?? Timecode.FromMilliseconds(0);
 			if (lastEvent != null) startTime = lastEvent.End;
 			return AppendOrCopyEventAtTime(track, source, startTime, isCopy);
+		}
+
+		/// <summary>
+		/// 将事件本身复制到其自己的后面。<br />
+		/// 出问题了，上一个事件不是自己……
+		/// </summary>
+		/// <typeparam name="T">轨道事件类型。</typeparam>
+		/// <param name="source">源事件。</param>
+		/// <param name="its">指定的上一个事件。</param>
+		/// <param name="track">轨道。如为空则自动获取轨道事件所在的轨道。</param>
+		/// <returns>追加后的新事件。</returns>
+		public static T CopyEventAtItsTail<T>(T source, T its, Track track = null) where T : TrackEvent {
+			track = track ?? source.Track;
+			return AppendAtEventTail(its, track, source, null, true);
 		}
 
 		/// <summary>
@@ -1977,7 +1973,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="startTime">当上一个事件为空时指定的开始时间。</param>
 		/// <param name="isCopy">是否是复制而不是移动。</param>
 		/// <returns>追加后的新事件。</returns>
-		private T AppendOrCopyEventAtTime<T>(Track track, T source, Timecode startTime = null, bool isCopy = false) where T : TrackEvent {
+		private static T AppendOrCopyEventAtTime<T>(Track track, T source, Timecode startTime = null, bool isCopy = false) where T : TrackEvent {
 			if (!isCopy) {
 				source.Track = track;
 				source.Start = startTime;
@@ -1985,17 +1981,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			} else return source.Copy(track, startTime) as T;
 		}
 
-		private TrackEvent GetAssociatedEvent(TrackEvent trackEvent) {
+		private static TrackEvent GetAssociatedEvent(TrackEvent trackEvent) {
 			if (!trackEvent.IsGrouped) return null;
 			foreach (TrackEvent eventInGroup in trackEvent.Group)
 				if (trackEvent is AudioEvent && eventInGroup is TrackEvent)
 					return eventInGroup;
 			return null;
 		}
-		public VideoEvent GetAssociatedEvent(AudioEvent trackEvent) {
+		public static VideoEvent GetAssociatedEvent(AudioEvent trackEvent) {
 			return GetAssociatedEvent(trackEvent as TrackEvent) as VideoEvent;
 		}
-		public AudioEvent GetAssociatedEvent(VideoEvent trackEvent) {
+		public static AudioEvent GetAssociatedEvent(VideoEvent trackEvent) {
 			return GetAssociatedEvent(trackEvent as TrackEvent) as AudioEvent;
 		}
 
@@ -2052,7 +2048,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				#region 放置示例轨道剪辑
 				foreach (Media media in selections) {
 					AudioEvent aSmp = null; VideoEvent vSmp = null;
-					Subclip aReverse = null, vReverse = null;
+					Subclip aReverse, vReverse;
 					if (AConfig) if (!Track_AppendMedia(aSmpTrack, media, out aSmp)) return false;
 					if (VConfig) if (!Track_AppendMedia(vSmpTrack, media, out vSmp)) return false;
 					aReverse = vReverse = GetReversedSubclip(media);
@@ -2509,9 +2505,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					GroupTrackEvents(vEvent, aEvent);
 				#endregion
 				#region 应用随机效果
-				Plugin.ForYtps.GetRandomEffect(aEvent, vEvent, AConfig, VConfig, randClip.audioReverse, randClip.videoReverse, this, YtpConfigEffects);
+				List<TrackEvent> generatedEvents;
+				Plugin.ForYtps.GetRandomEffect(aEvent, vEvent, AConfig, VConfig, randClip.audioReverse, randClip.videoReverse, this, out generatedEvents, YtpConfigEffects);
+				generatedEvents.ForEach(@event => @event.Selected = SelectAllGeneratedEvents);
+				if (AConfig) lastAEvent = generatedEvents.Where(@event => @event is AudioEvent).LastOrDefault() as AudioEvent;
+				if (VConfig) lastVEvent = generatedEvents.Where(@event => @event is VideoEvent).LastOrDefault() as VideoEvent;
 				#endregion
-				aEvent.Selected = vEvent.Selected = SelectAllGeneratedEvents;
 			}
 			#endregion
 			progressForm.ReportProgress(YtpConfigClipsCount, YtpConfigClipsCount);
@@ -2535,10 +2534,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				MidiConfigTracks.CompleteConfig();
 			if (YtpConfig || !IsMultiMidiChannel) {
 				GenerateOtomad();
-				return;
+				goto startRemoveSourceTrackEvents;
 			}
 			while (MidiConfigTracks.IsNonEmpty) {
-				if (!GenerateOtomad()) return;
+				if (!GenerateOtomad()) goto startRemoveSourceTrackEvents;
 				MidiConfigTracks.Next();
 			}
 			if (!SheetConfig && generatedVideoTracks.Count > 1) {
@@ -2546,6 +2545,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				AutoLayoutTracksGridForm.Arrange(videoTracks, LayoutInfos.Grid, this);
 				GradientTracksForm.Arrange(videoTracks, LayoutInfos.GradientTracks, this);
 			}
+		startRemoveSourceTrackEvents:
 			if (RemoveSourceTrackEvents && SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP) {
 				if (AConfig && selectedEventSet.audioEvent != null) selectedEventSet.audioEvent.Remove();
 				if (VConfig && selectedEventSet.videoEvent != null) selectedEventSet.videoEvent.Remove();
@@ -3249,24 +3249,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static T AddAlsoReturn<T>(this IList<T> list, T item) {
 			list.Add(item);
 			return item;
-		}
-		/// <summary>
-		/// 快速获取列表的最后一项。
-		/// </summary>
-		/// <typeparam name="T">任意类型。</typeparam>
-		/// <param name="list">列表。</param>
-		/// <returns>返回列表的最后一项。</returns>
-		public static T LastOne<T>(this IEnumerable<T> list) {
-			return list.ElementAtOrDefault(list.Count() - 1);
-		}
-		/// <summary>
-		/// 快速获取列表的第一项。
-		/// </summary>
-		/// <typeparam name="T">任意类型。</typeparam>
-		/// <param name="list">列表。</param>
-		/// <returns>返回列表的第一项。</returns>
-		public static T FirstOne<T>(this IEnumerable<T> list) {
-			return list.ElementAtOrDefault(0);
 		}
 	}
 
@@ -4693,18 +4675,31 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// <summary>
 			/// 获取随机效果。
 			/// </summary>
-			/// <param name="aEvent">音频事件</param>
-			/// <param name="vEvent">视频事件</param>
-			/// <param name="aConfig">包含音频</param>
-			/// <param name="vConfig">包含视频</param>
-			/// <param name="aReverse">倒放音频子剪辑</param>
-			/// <param name="vReverse">倒放视频子剪辑</param>
-			/// <param name="p">Vegas 入口类</param>
-			/// <param name="effects">指定希望使用到的效果的数组</param>
-			public static void GetRandomEffect(AudioEvent aEvent, VideoEvent vEvent, bool aConfig, bool vConfig, Subclip aReverse, Subclip vReverse, EntryPoint p, YtpEffectType[] effects = null) {
+			/// <param name="aEvent">音频事件。</param>
+			/// <param name="vEvent">视频事件。</param>
+			/// <param name="aConfig">包含音频。</param>
+			/// <param name="vConfig">包含视频。</param>
+			/// <param name="aReverse">倒放音频子剪辑。</param>
+			/// <param name="vReverse">倒放视频子剪辑。</param>
+			/// <param name="p">Vegas 入口类。</param>
+			/// <param name="generatedEvents">返回将会生成的轨道事件们。</param>
+			/// <param name="effects">指定希望使用到的效果的数组。</param>
+			public static void GetRandomEffect(
+				AudioEvent aEvent,
+				VideoEvent vEvent,
+				bool aConfig,
+				bool vConfig,
+				Subclip aReverse,
+				Subclip vReverse,
+				EntryPoint p,
+				out List<TrackEvent> generatedEvents,
+				YtpEffectType[] effects = null
+			) {
+				generatedEvents = new List<TrackEvent>();
+				if (aEvent != null) generatedEvents.Add(aEvent);
+				if (vEvent != null) generatedEvents.Add(vEvent);
 				YtpEffectType? effect;
-				if (effects == null) effect = GetRandomYtpEffectType();
-				else effect = GetRandomYtpEffectType(effects);
+				effect = effects == null ? GetRandomYtpEffectType() : GetRandomYtpEffectType(effects);
 				if (effect == null) return;
 				bool probably = RandomBool(); // 如果有可能的话。
 				Action RestoreAudioEventMethod = new Action(() => {
@@ -4815,13 +4810,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						if (aConfig) {
 							repeatClips = new AudioEvent[repeatTimes];
 							aEvent.Length = Timecode.FromMilliseconds(HIGH_FREQ_REPEAT_FREQ);
+							AudioEvent lastEvent = aEvent;
 							for (int i = 1; i < repeatTimes; i++)
-								repeatClips[i] = aEvent.Copy(aEvent.Track, aEvent.Track.Length);
+								generatedEvents.Add(repeatClips[i] = lastEvent = EntryPoint.CopyEventAtItsTail(aEvent, lastEvent));
 						}
 						if (vConfig) {
 							vEvent.Length = Timecode.FromMilliseconds(HIGH_FREQ_REPEAT_FREQ);
+							VideoEvent lastEvent = vEvent;
 							for (int i = 1; i < repeatTimes; i++) {
-								TrackEvent clip = vEvent.Copy(vEvent.Track, vEvent.Track.Length);
+								TrackEvent clip = lastEvent = EntryPoint.CopyEventAtItsTail(vEvent, lastEvent);
+								generatedEvents.Add(clip);
 								if (repeatClips != null) p.GroupTrackEvents(clip, repeatClips[i]);
 							}
 						}
@@ -4835,11 +4833,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							repeatClips = new AudioEvent[count];
 							if (aEvent.Length > MAX_LENGTH) aEvent.Length = shorterLength;
 							RestoreAudioEventMethod();
+							AudioEvent lastEvent = aEvent;
 							for (int i = 0; i < count; i++) {
 								AudioEvent clip = aEvent;
 								if (i != 0) {
-									clip = aEvent.Copy(aEvent.Track, aEvent.Track.Length) as AudioEvent;
-									repeatClips[i] = clip;
+									clip = lastEvent = EntryPoint.CopyEventAtItsTail(aEvent, lastEvent);
+									generatedEvents.Add(repeatClips[i] = clip);
 								}
 								int randomPitch = random.Next(MIN_TONE_PITCH_CHANGE, MAX_TONE_PITCH_CHANGE + 1);
 								#if VER_GEQ_16
@@ -4851,10 +4850,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						}
 						if (vConfig) {
 							if (vEvent.Length > MAX_LENGTH) vEvent.Length = shorterLength;
+							VideoEvent lastEvent = vEvent;
 							for (int i = 0; i < count; i++) {
 								VideoEvent clip = vEvent;
 								if (i != 0) {
-									clip = vEvent.Copy(vEvent.Track, vEvent.Track.Length) as VideoEvent;
+									generatedEvents.Add(clip = lastEvent = EntryPoint.CopyEventAtItsTail(vEvent, lastEvent));
 									if (repeatClips != null) p.GroupTrackEvents(clip, repeatClips[i]);
 								}
 								bool hFlip = i % 2 == 0;
@@ -4912,11 +4912,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						Repeat3State state = GetRandomRepeat3State(); // 去掉了 1.5 倍减速这种情况。
 						bool isSpeedUp = state != Repeat3State.SPEED_DOWN_MULTIPLY, isMultiply = state != Repeat3State.SPEED_UP_1_5_TIMES;
 						int count = isMultiply ? 3 : 6;
-						var getRate = new Func<int, double>(index => {
+						Func<int, double> getRate = index => {
 							if (!(index >= 0 && (isMultiply && index < 3 || !isMultiply && index < 6))) throw new ArgumentOutOfRangeException();
 							double[] rates2 = { 1, 2, 4 }, rates1_5 = { 1, 1.25, 1.5, 2, 3, 4 };
 							return Math.Pow((isMultiply ? rates2 : rates1_5)[index], isSpeedUp ? 1 : -1);
-						});
+						};
 						AudioEvent[] repeatClips = null;
 						if (aConfig) {
 							repeatClips = new AudioEvent[count];
@@ -4924,9 +4924,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							#if VER_GEQ_16
 								aEvent.PitchLock = true;
 							#endif
+							AudioEvent lastEvent = aEvent;
 							for (int i = 1; i < count; i++) {
-								AudioEvent clip = aEvent.Copy(aEvent.Track, aEvent.Track.Length) as AudioEvent;
-								repeatClips[i] = clip;
+								AudioEvent clip = lastEvent = EntryPoint.CopyEventAtItsTail(aEvent, lastEvent);
+								generatedEvents.Add(repeatClips[i] = clip);
 								double rate = getRate(i);
 								clip.AdjustPlaybackRate(rate, true);
 								clip.Length = clip.Length.Multiply(1 / rate);
@@ -4934,16 +4935,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						}
 						if (vConfig) {
 							if (blackAndWhite == null) WarningMissingPlugin(Lang.str.black_and_white);
-							List<VideoEvent> videoEvents = new List<VideoEvent>();
-							videoEvents.Add(vEvent);
+							List<VideoEvent> videoEvents = new List<VideoEvent> { vEvent };
+							VideoEvent lastEvent = vEvent;
 							for (int i = 1; i < count; i++) {
-								VideoEvent clip = vEvent.Copy(vEvent.Track, vEvent.Track.Length) as VideoEvent;
+								VideoEvent clip = lastEvent = EntryPoint.CopyEventAtItsTail(vEvent, lastEvent);
 								if (repeatClips != null) p.GroupTrackEvents(clip, repeatClips[i]);
 								if (probably && !isSpeedUp) ForVideoEvents.Grey(clip);
 								double rate = getRate(i);
 								clip.AdjustPlaybackRate(rate, true);
 								clip.Length = clip.Length.Multiply(1 / rate);
 								videoEvents.Add(clip);
+								generatedEvents.Add(clip);
 							}
 							ForVideoEvents.Focus(videoEvents);
 						}
@@ -10904,7 +10906,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				return track;
 			};
 			VideoIndexAddOne();
-			return audioTracks.Count == 0 ? Add(audio as int?) : Add(audioTracks.LastOne().Index + 1);
+			return audioTracks.Count == 0 ? Add(audio as int?) : Add(audioTracks.LastOrDefault().Index + 1);
 		}
 
 		/// <summary>
@@ -10919,7 +10921,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				return track;
 			};
 			AudioIndexAddOne();
-			return videoTracks.Count == 0 ? Add(video as int?) : Add(videoTracks.LastOne().Index);
+			return videoTracks.Count == 0 ? Add(video as int?) : Add(videoTracks.LastOrDefault().Index);
 		}
 
 		/// <summary>
@@ -11047,7 +11049,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						break;
 					}
 				}
-			} else track = tracks.FirstOne();
+			} else track = tracks.FirstOrDefault();
 			if (track == null)
 				track = IsAudio<T>() ? AddAudioTrackAfter() as Track : AddVideoTrackBefore() as Track;
 			return track;
