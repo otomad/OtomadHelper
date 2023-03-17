@@ -28265,7 +28265,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				SourceConfigFrom == MediaSourceFrom.SELECTED_MEDIA ? parent.GetSelectedMedia().Length :
 				SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP ? parent.GetSelectedEvents().Length : 1;
 			YtpSelectInfo.Text = string.Format(Lang.str.select_source_count_info, selectSourceCountForYtp);
+			doNotChangePreferredTracksWhileSwitchSourceFrom = true;
 			RemoveSourceTrackEventsCheck.Status = SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP && !parent.audioVideoEnabledTable.SelectNoEvents ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
+			doNotChangePreferredTracksWhileSwitchSourceFrom = false;
 			#endif
 		}
 
@@ -29596,8 +29598,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 		}
 
+		private bool doNotChangePreferredTracksWhileSwitchSourceFrom = false;
 		private void RemoveSourceTrackEventsCheck_CheckedChanged(object sender, EventArgs e) {
-			if (!RemoveSourceTrackEventsCheck.Checked) return;
+			if (!RemoveSourceTrackEventsCheck.Checked || doNotChangePreferredTracksWhileSwitchSourceFrom) return;
 			MediaSourceFrom sourceFrom = (MediaSourceFrom)ChooseSourceCombo.SelectedIndex;
 			if (sourceFrom != MediaSourceFrom.SELECTED_CLIP || parent.audioVideoEnabledTable.SelectNoEvents) return;
 			EntryPoint.EventSet eventSet = parent.selectedEventSet;
