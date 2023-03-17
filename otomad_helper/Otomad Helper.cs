@@ -47,7 +47,7 @@
 
 #define VEGAS_ENVIRONMENT // Vegas 运行环境。取消定义后避免在 Visual Studio 中调试时因缺少环境而导致报错。
 #define INTERNATIONALIZED // 启用国际化翻译操作。取消定义后可暂时禁用翻译操作并锁定为简体中文，如不需要翻译时也许可以加快脚本启动速度，但其实也没快多少。
-// #define PRODUCTION // 用于生产环境。定义后可以吞掉一些无关紧要的错误。取消定义后可以展现一些可能会产生隐患的错误。
+#define PRODUCTION // 用于生产环境。定义后可以吞掉一些无关紧要的错误。取消定义后可以展现一些可能会产生隐患的错误。
 // 以下宏定义为版本号标记。如您的软件本体版本号低于这些标记，应注释掉它们。注意若启用高版本号的标记，比它更低的版本号标记必须同时启用。
 #define VER_GEQ_16 // Vegas 版本号大于或等于 16。定义后可正常使用调音算法属性等功能。
 #define VER_GEQ_14 // Vegas 版本号大于或等于 14。定义后将依赖库切换到 Magix 版本。
@@ -195,6 +195,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/**<summary>素材来源</summary>*/ private MediaSourceFrom SourceConfigFrom { get { return (MediaSourceFrom)configForm.ChooseSourceCombo.SelectedIndex; } }
 		/**<summary>生成位置</summary>*/ private GenerateAt GenerateAt { get { return configForm.GenerateAt; } }
 		/**<summary>顶层调整下方</summary>*/ private bool GenerateBelowTopAdjustmentTrack { get { return configForm.BelowTopAdjustmentTrackCheck.Checked; } }
+		/**<summary>移除源轨事件</summary>*/ private bool RemoveSourceTrackEvents { get { return configForm.RemoveSourceTrackEventsCheck.Checked; } }
+		/**<summary>全选生成事件</summary>*/ private bool SelectAllGeneratedEvents { get { return configForm.SelectAllGeneratedEventsCheck.Checked; } }
 		/**<summary>自定生成位置</summary>*/ private Timecode GenerateAtCustomTimecode { get { return configForm.GenerateAtCustomTimecode; } }
 		/**<summary>上次媒体目录</summary>*/ public string lastMediaDirectory {
 			get { return configIni.Read("LastMediaDirectory", "", "Source"); }
@@ -262,7 +264,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private bool IsFromSelectedMedia { get { return SourceConfigFrom == MediaSourceFrom.SELECTED_MEDIA; } }
 		private bool IsFromSelectedClip { get { return SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP; } }
 		private bool IsFromBrowseFile { get { return SourceConfigFrom == MediaSourceFrom.BROWSE_FILE; } }
-		private EventSet selectedEventSet = new EventSet();
+		internal EventSet selectedEventSet = new EventSet();
 		public double ProjectBpm { get { return vegas.Project.Ruler.BeatsPerMinute; } }
 		private AutoLayoutTracksInfos LayoutInfos { get { return configForm.IsMultiMidiChannel ? configForm.layoutInfos : null; } }
 		private bool IsMultiMidiChannel { get { return MidiConfigTracks.IsMultiMidiChannel; } }
@@ -503,8 +505,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (instance.progressForm != null) instance.progressForm.Close();
 			if (state == ShowErrorState.NORMAL) {
 				if (instance.configForm != null) instance.configForm.FocusOn(null, null);
-				#if PRODUCTION // 开发模式下别乱删配置文件。
-				instance.configIni.Delete(true);
+				#if PRODUCTION && false // 开发模式下别乱删配置文件。
+					instance.configIni.Delete(true);
 				#endif
 			}
 		}
@@ -1589,7 +1591,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (audioEventSample != null) audioEventSample.Remove();
 			foreach (Track track in trackHelper.AllTracks)
 				foreach (TrackEvent trackEvent in track.Events)
-					trackEvent.Selected = true;
+					trackEvent.Selected = SelectAllGeneratedEvents;
 
 			if (!sonarMode) generatedVideoTracks.AddRange(trackHelper.videoTracks);
 			nextTrackIndex = trackHelper.SumUp();
@@ -2509,6 +2511,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				#region 应用随机效果
 				Plugin.ForYtps.GetRandomEffect(aEvent, vEvent, AConfig, VConfig, randClip.audioReverse, randClip.videoReverse, this, YtpConfigEffects);
 				#endregion
+				aEvent.Selected = vEvent.Selected = SelectAllGeneratedEvents;
 			}
 			#endregion
 			progressForm.ReportProgress(YtpConfigClipsCount, YtpConfigClipsCount);
@@ -2542,6 +2545,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				VideoTrack[] videoTracks = generatedVideoTracks.ToArray();
 				AutoLayoutTracksGridForm.Arrange(videoTracks, LayoutInfos.Grid, this);
 				GradientTracksForm.Arrange(videoTracks, LayoutInfos.GradientTracks, this);
+			}
+			if (RemoveSourceTrackEvents && SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP) {
+				if (AConfig && selectedEventSet.audioEvent != null) selectedEventSet.audioEvent.Remove();
+				if (VConfig && selectedEventSet.videoEvent != null) selectedEventSet.videoEvent.Remove();
 			}
 		}
 
@@ -18226,7 +18233,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel11 = new System.Windows.Forms.FlowLayoutPanel();
 			this.GenerateAtCustomRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
 			this.GenerateAtCustomText = new System.Windows.Forms.TextBox();
+			this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
 			this.BelowTopAdjustmentTrackCheck = new System.Windows.Forms.CheckBox();
+			this.RemoveSourceTrackEventsCheck = new Otomad.VegasScript.OtomadHelper.V4.RememberedCheckBox();
+			this.SelectAllGeneratedEventsCheck = new System.Windows.Forms.CheckBox();
 			this.AudioTab = new System.Windows.Forms.TabPage();
 			this.AudioParamsGroup = new System.Windows.Forms.GroupBox();
 			this.AudioParamsTable = new System.Windows.Forms.TableLayoutPanel();
@@ -18592,6 +18602,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel9.SuspendLayout();
 			this.flowLayoutPanel11.SuspendLayout();
+			this.flowLayoutPanel5.SuspendLayout();
 			this.AudioTab.SuspendLayout();
 			this.AudioParamsGroup.SuspendLayout();
 			this.AudioParamsTable.SuspendLayout();
@@ -19662,7 +19673,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Top;
 			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
 			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(5, 550);
+			this.WarningInfoLabel.Location = new System.Drawing.Point(5, 592);
 			this.WarningInfoLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(540, 0);
 			this.WarningInfoLabel.Name = "WarningInfoLabel";
@@ -19675,7 +19686,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MidiConfigGroup.AutoSize = true;
 			this.MidiConfigGroup.Controls.Add(this.MidiConfigTablePanel);
 			this.MidiConfigGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.MidiConfigGroup.Location = new System.Drawing.Point(5, 214);
+			this.MidiConfigGroup.Location = new System.Drawing.Point(5, 256);
 			this.MidiConfigGroup.Margin = new System.Windows.Forms.Padding(2);
 			this.MidiConfigGroup.Name = "MidiConfigGroup";
 			this.MidiConfigGroup.Padding = new System.Windows.Forms.Padding(5);
@@ -20170,7 +20181,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SourceConfigGroup.Margin = new System.Windows.Forms.Padding(2);
 			this.SourceConfigGroup.Name = "SourceConfigGroup";
 			this.SourceConfigGroup.Padding = new System.Windows.Forms.Padding(5);
-			this.SourceConfigGroup.Size = new System.Drawing.Size(648, 209);
+			this.SourceConfigGroup.Size = new System.Drawing.Size(648, 251);
 			this.SourceConfigGroup.TabIndex = 1;
 			this.SourceConfigGroup.TabStop = false;
 			this.SourceConfigGroup.Text = "素材属性";
@@ -20188,7 +20199,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel1, 0, 2);
 			this.tableLayoutPanel3.Controls.Add(this.GenerateAtLbl, 0, 3);
 			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel9, 0, 4);
-			this.tableLayoutPanel3.Controls.Add(this.BelowTopAdjustmentTrackCheck, 0, 5);
+			this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel5, 0, 5);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel3.Location = new System.Drawing.Point(5, 25);
 			this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(2);
@@ -20200,7 +20211,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(638, 179);
+			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(638, 221);
 			this.tableLayoutPanel3.TabIndex = 1;
 			// 
 			// ChooseSourceLbl
@@ -20390,19 +20402,60 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.GenerateAtCustomText.TabIndex = 6;
 			this.GenerateAtCustomText.Leave += new System.EventHandler(this.GenerateAtCustomText_Leave);
 			// 
+			// flowLayoutPanel5
+			// 
+			this.flowLayoutPanel5.AutoSize = true;
+			this.flowLayoutPanel5.Controls.Add(this.BelowTopAdjustmentTrackCheck);
+			this.flowLayoutPanel5.Controls.Add(this.RemoveSourceTrackEventsCheck);
+			this.flowLayoutPanel5.Controls.Add(this.SelectAllGeneratedEventsCheck);
+			this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel5.Location = new System.Drawing.Point(4, 149);
+			this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+			this.flowLayoutPanel5.Size = new System.Drawing.Size(630, 72);
+			this.flowLayoutPanel5.TabIndex = 11;
+			// 
 			// BelowTopAdjustmentTrackCheck
 			// 
 			this.BelowTopAdjustmentTrackCheck.AutoSize = true;
 			this.BelowTopAdjustmentTrackCheck.Checked = true;
 			this.BelowTopAdjustmentTrackCheck.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.BelowTopAdjustmentTrackCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BelowTopAdjustmentTrackCheck.Location = new System.Drawing.Point(4, 152);
-			this.BelowTopAdjustmentTrackCheck.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.BelowTopAdjustmentTrackCheck.Location = new System.Drawing.Point(0, 0);
+			this.BelowTopAdjustmentTrackCheck.Margin = new System.Windows.Forms.Padding(0);
 			this.BelowTopAdjustmentTrackCheck.Name = "BelowTopAdjustmentTrackCheck";
-			this.BelowTopAdjustmentTrackCheck.Size = new System.Drawing.Size(630, 24);
-			this.BelowTopAdjustmentTrackCheck.TabIndex = 10;
+			this.BelowTopAdjustmentTrackCheck.Size = new System.Drawing.Size(286, 24);
+			this.BelowTopAdjustmentTrackCheck.TabIndex = 0;
 			this.BelowTopAdjustmentTrackCheck.Text = "生成在顶层调整轨道的下方";
 			this.BelowTopAdjustmentTrackCheck.UseVisualStyleBackColor = true;
+			// 
+			// RemoveSourceTrackEventsCheck
+			// 
+			this.RemoveSourceTrackEventsCheck.AutoSize = true;
+			this.RemoveSourceTrackEventsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.RemoveSourceTrackEventsCheck.Location = new System.Drawing.Point(0, 24);
+			this.RemoveSourceTrackEventsCheck.Margin = new System.Windows.Forms.Padding(0);
+			this.RemoveSourceTrackEventsCheck.Name = "RemoveSourceTrackEventsCheck";
+			this.RemoveSourceTrackEventsCheck.Size = new System.Drawing.Size(286, 24);
+			this.RemoveSourceTrackEventsCheck.TabIndex = 1;
+			this.RemoveSourceTrackEventsCheck.Text = "生成完成后移除作为源素材的轨道事件";
+			this.RemoveSourceTrackEventsCheck.UseVisualStyleBackColor = true;
+			this.RemoveSourceTrackEventsCheck.CheckedChanged += new System.EventHandler(this.RemoveSourceTrackEventsCheck_CheckedChanged);
+			// 
+			// SelectAllGeneratedEventsCheck
+			// 
+			this.SelectAllGeneratedEventsCheck.AutoSize = true;
+			this.SelectAllGeneratedEventsCheck.Checked = true;
+			this.SelectAllGeneratedEventsCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.SelectAllGeneratedEventsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SelectAllGeneratedEventsCheck.Location = new System.Drawing.Point(0, 48);
+			this.SelectAllGeneratedEventsCheck.Margin = new System.Windows.Forms.Padding(0);
+			this.SelectAllGeneratedEventsCheck.Name = "SelectAllGeneratedEventsCheck";
+			this.SelectAllGeneratedEventsCheck.Size = new System.Drawing.Size(286, 24);
+			this.SelectAllGeneratedEventsCheck.TabIndex = 2;
+			this.SelectAllGeneratedEventsCheck.Text = "生成完成后选中生成的所有事件";
+			this.SelectAllGeneratedEventsCheck.UseVisualStyleBackColor = true;
 			// 
 			// AudioTab
 			// 
@@ -26039,6 +26092,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel9.PerformLayout();
 			this.flowLayoutPanel11.ResumeLayout(false);
 			this.flowLayoutPanel11.PerformLayout();
+			this.flowLayoutPanel5.ResumeLayout(false);
+			this.flowLayoutPanel5.PerformLayout();
 			this.AudioTab.ResumeLayout(false);
 			this.AudioTab.PerformLayout();
 			this.AudioParamsGroup.ResumeLayout(false);
@@ -26510,7 +26565,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.RadioButton VideoFadeSetAsTimecodeRadio;
 		public System.Windows.Forms.RadioButton VideoFadeSetAsPercentRadio;
 		public CommandLinkButton ApplyVisualEffectBtn;
-		public System.Windows.Forms.CheckBox BelowTopAdjustmentTrackCheck;
 		public System.Windows.Forms.Button VisualEffectAdvancedBtn;
 		public System.Windows.Forms.TabPage SonarTab;
 		public System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
@@ -26662,6 +26716,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.TableLayoutPanel AudioPreferredTrackPanel;
 		public System.Windows.Forms.Label AudioPreferredTrackLbl;
 		public System.Windows.Forms.ComboBox AudioPreferredTrackCombo;
+		public System.Windows.Forms.CheckBox BelowTopAdjustmentTrackCheck;
+		public RememberedCheckBox RemoveSourceTrackEventsCheck;
+		public System.Windows.Forms.CheckBox SelectAllGeneratedEventsCheck;
+		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
 	}
 	#endregion
 
@@ -26809,6 +26867,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			};
 			audioTracks.ForEach(track => AudioPreferredTrackCombo.Items.Add(new PreferredTrackWrapper<AudioTrack>(track, GetTrackDisplayValue(track))));
 			videoTracks.ForEach(track => VideoPreferredTrackCombo.Items.Add(new PreferredTrackWrapper<VideoTrack>(track, GetTrackDisplayValue(track))));
+			RemoveSourceTrackEventsCheck_CheckedChanged(null, null);
 			#endregion
 
 			#region 预听音频计时器
@@ -27015,6 +27074,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			else configIni.DeleteKey("MidiCustomBpm");
 			if (BelowTopAdjustmentTrackCheck.Enabled)
 				BelowTopAdjustmentTrackCheck.Checked = configIni.Read("BelowTopAdjustmentTracks", true);
+			RemoveSourceTrackEventsCheck.UserChecked = configIni.Read("RemoveSourceTrackEvents", false);
+			SelectAllGeneratedEventsCheck.Checked = configIni.Read("SelectAllGeneratedEvents", true);
 			RestrictLengthMode_int = configIni.Read("RestrictLengthMode", 0);
 			RestrictLengthBox.Value = configIni.Read("RestrictLengthValue", 1000);
 			enableGridLayoutForTracks = configIni.Read("EnableGridLayoutForTracks", true);
@@ -27224,6 +27285,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (MidiCustomBpmCheck.Checked)
 				configIni.Write("MidiCustomBpm", MidiCustomBpmBox.Value);
 			configIni.Write("BelowTopAdjustmentTracks", BelowTopAdjustmentTrackCheck.Checked);
+			configIni.Write("RemoveSourceTrackEvents", RemoveSourceTrackEventsCheck.UserChecked);
+			configIni.Write("SelectAllGeneratedEvents", SelectAllGeneratedEventsCheck.Checked);
 			configIni.Write("RestrictLengthMode", RestrictLengthMode_int);
 			configIni.Write("RestrictLengthValue", RestrictLengthBox.Value);
 			configIni.Write("EnableGridLayoutForTracks", enableGridLayoutForTracks);
@@ -27515,6 +27578,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			GenerateAtCursorRadio.Text = str.generate_at_cursor;
 			GenerateAtLbl.Text = str.generate_position;
 			BelowTopAdjustmentTrackCheck.Text = str.generate_below_top_adjustment_tracks;
+			RemoveSourceTrackEventsCheck.Text = str.remove_source_track_events;
+			SelectAllGeneratedEventsCheck.Text = str.select_all_generated_events;
 			ChooseSourceLbl.Text = str.choose_source_file;
 			ChooseSourceCombo.Items[0] = str.selected_media;
 			ChooseSourceCombo.Items[1] = str.selected_clip;
@@ -28198,6 +28263,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				SourceConfigFrom == MediaSourceFrom.SELECTED_MEDIA ? parent.GetSelectedMedia().Length :
 				SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP ? parent.GetSelectedEvents().Length : 1;
 			YtpSelectInfo.Text = string.Format(Lang.str.select_source_count_info, selectSourceCountForYtp);
+			RemoveSourceTrackEventsCheck.Status = SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP && !parent.audioVideoEnabledTable.SelectNoEvents ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
 			#endif
 		}
 
@@ -29514,6 +29580,30 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				CreateEventGroupInVideoCheck.Checked = CreateEventGroupInAudioCheck.Checked;
 			Is_CreateEventGroupCheck_CheckedChanging = false;
 		}
+
+		private void SetPreferredTrackCombo<T>(T track) where T : Track {
+			bool isAudio = track is AudioTrack;
+			ComboBox combo = isAudio ? AudioPreferredTrackCombo : VideoPreferredTrackCombo;
+			foreach (object item in combo.Items)
+				if (item is PreferredTrackWrapper<T>) {
+					PreferredTrackWrapper<T> trackWrapper = item as PreferredTrackWrapper<T>;
+					if (trackWrapper.Track == track) {
+						combo.SelectedItem = item;
+						return;
+					}
+				}
+		}
+
+		private void RemoveSourceTrackEventsCheck_CheckedChanged(object sender, EventArgs e) {
+			if (!RemoveSourceTrackEventsCheck.Checked) return;
+			MediaSourceFrom sourceFrom = (MediaSourceFrom)ChooseSourceCombo.SelectedIndex;
+			if (sourceFrom != MediaSourceFrom.SELECTED_CLIP || parent.audioVideoEnabledTable.SelectNoEvents) return;
+			EntryPoint.EventSet eventSet = parent.selectedEventSet;
+			if (eventSet.audioEvent != null)
+				SetPreferredTrackCombo(eventSet.audioEvent.Track as AudioTrack);
+			if (eventSet.videoEvent != null)
+				SetPreferredTrackCombo(eventSet.videoEvent.Track as VideoTrack);
+		}
 	}
 
 	#region 翻译
@@ -29897,6 +29987,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			generate_at_cursor = "光标处",
 			generate_position = "设定生成开始位置",
 			generate_below_top_adjustment_tracks = "生成在顶层调整轨道的下方",
+			remove_source_track_events = "生成完成后移除作为源素材的轨道事件",
+			select_all_generated_events = "生成完成后选中生成的所有事件",
 			choose_source_file = "选择媒体素材",
 			selected_media = "选中的媒体文件",
 			selected_clip = "选中的轨道素材",
@@ -30632,6 +30724,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				generate_at_cursor = "Cursor",
 				generate_position = "Generate at",
 				generate_below_top_adjustment_tracks = "Below top adjustment tracks",
+				remove_source_track_events = "Remove track events assigned as source material after the generation completed",
+				select_all_generated_events = "Select all generated events after the generation completed",
 				choose_source_file = "Select media source",
 				selected_media = "Selected media file",
 				selected_clip = "Selected track event",
@@ -31301,7 +31395,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				file = "檔案(&F)",
 				save_config = "储存組態(&S)",
 				reset_config = "重設組態(&R)",
-				exit_discarding_changes = "放弃更改並退出(&D)",
+				exit_discarding_changes = "放棄更改並退出(&D)",
 				exit = "退出(&X)",
 				pitch_shift_preset = "移調插件預設(&P)",
 				load_presets = "加載預設(&L)",
@@ -31362,9 +31456,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				semicolon = "；",
 				source_settings = "素材設定",
 				generate_at_begin = "專案開始處",
-				generate_at_cursor = "光標處",
+				generate_at_cursor = "游標處",
 				generate_position = "設定生成開始位置",
 				generate_below_top_adjustment_tracks = "生成在頂層調整軌道的下方",
+				remove_source_track_events = "生成完成後移除作為源素材的軌道事件",
+				select_all_generated_events = "生成完成後選中生成的所有事件",
 				choose_source_file = "選擇媒體素材",
 				selected_media = "選中的媒體檔案",
 				selected_clip = "選中的軌道素材",
@@ -32099,6 +32195,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				generate_at_cursor = "カーソル",
 				generate_position = "どこを生成しますか",
 				generate_below_top_adjustment_tracks = "最上層調整トラックの下に生成",
+				remove_source_track_events = "生成完了後に素材に割り当てられたトラックイベントを削除",
+				select_all_generated_events = "生成完了後に生成されたイベントを全て選択",
 				choose_source_file = "メディアソースを選択",
 				selected_media = "選択したメディアファイル",
 				selected_clip = "選択されたトラッククリップ",
@@ -32833,6 +32931,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				generate_at_cursor = "Курсор",
 				generate_position = "Сгенерировать в",
 				generate_below_top_adjustment_tracks = "Создайте под дорожками регулировки верхнего слоя",
+				remove_source_track_events = "Удалить события трека, назначенные в качестве исходного материала, после завершения генерации",
+				select_all_generated_events = "Выберите все сгенерированные события после завершения генерации",
 				choose_source_file = "Выберите медиафайл",
 				selected_media = "Выбранный медиафайл",
 				selected_clip = "Выбранное событие трека",
@@ -33566,6 +33666,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				generate_at_cursor = "Con trỏ",
 				generate_position = "Tạo ra ở",
 				generate_below_top_adjustment_tracks = "Tạo ra các top track điều chỉnh bên dưới",
+				remove_source_track_events = "Xóa các track event được chỉ định làm nguyên liệu nguồn sau khi quá trình tạo hoàn tất",
+				select_all_generated_events = "Chọn tất cả các event được tạo sau khi quá trình tạo hoàn tất",
 				choose_source_file = "Chọn phương tiện nguồn",
 				selected_media = "File phương tiện đã chọn",
 				selected_clip = "Track event đã chọn",
@@ -33895,7 +33997,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				convert_music_beats_not_one_audio_event_exception = "Lỗi: Số lượng clip âm thanh được chọn trong công cụ chuyển đổi beat nhạc không chính xác bằng một.\n\n1 đoạn âm thanh đáng lẽ đã chọn, nhưng {0} đoạn âm thanh đã chọn.",
 				convert_music_beats_unsupported_beats_exception = "Lỗi: Beat của Vegas hiện tại không trong khoảng 4/4, 3/4, hoặc 6/8.",
 				invalid_mapping_velocity_values_exception = "Lỗi: Thông số lập bản đồ velocity không hợp lệ được sử dụng.\n\nGiải pháp: Đảm bảo các thông số lập bản đồ velocity của âm thanh và video,\n1. Giá trị nhỏ hơn không thể lớn hơn giá trị lớn hơn;\n2. Các giá trị nhỏ hơn và lớn hơn của VELOCITY không thể bằng nhau.\nNếu không, nó sẽ không hoàn thành thao tác lập bản đồ velocity.",
-				invalid_glissando_amount_exception = "Lỗi: Tham số số lượng glissando bất hợp pháp đã được sử dụng.\n\nSố lượng glissando không thể bằng 0.",
+				invalid_glissando_amount_exception = "Lỗi: Đã sử dụng thông số lượng glissando sai.\n\nSố lượng glissando không thể bằng 0.",
 				cannot_get_script_dir_exception = "Lỗi: Không nhận được đường dẫn của script!",
 				cannot_get_xvid_path_exception = "Lỗi: Không nhận được đường dẫn cài đặt XviD!",
 				install_xvid_info = "XviD codec chưa được cài đặt. Script sẽ cài đặt nó ngay và có thể hỏi bạn quyền truy cập admin để cài đặt nó.",
