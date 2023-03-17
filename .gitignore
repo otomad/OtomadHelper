@@ -404,3 +404,4 @@ FodyWeavers.xsd
 # Specific files
 otomad_helper/v4.0-WinForm/VegasScript_InAppDirectory.csproj.bak
 !otomad_helper/v4.0-WinForm/VegasScript.csproj.user
+!otomad_helper/v0.1-Chaosinism-vegas_scripts-archive/releases/
