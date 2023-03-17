@@ -1951,17 +1951,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		/// <summary>
-		/// 将事件本身复制到其自己的后面。<br />
-		/// 出问题了，上一个事件不是自己……
+		/// 将事件复制到“它”的后面。
 		/// </summary>
 		/// <typeparam name="T">轨道事件类型。</typeparam>
 		/// <param name="source">源事件。</param>
-		/// <param name="its">指定的上一个事件。</param>
+		/// <param name="it">指定的上一个事件。</param>
 		/// <param name="track">轨道。如为空则自动获取轨道事件所在的轨道。</param>
 		/// <returns>追加后的新事件。</returns>
-		public static T CopyEventAtItsTail<T>(T source, T its, Track track = null) where T : TrackEvent {
+		public static T CopyEventAtItsTail<T>(T source, T it, Track track = null) where T : TrackEvent {
 			track = track ?? source.Track;
-			return AppendAtEventTail(its, track, source, null, true);
+			return AppendAtEventTail(it, track, source, null, true);
 		}
 
 		/// <summary>
@@ -2333,17 +2332,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <remarks>注意：仅在 Vegas Pro 19 及以上的版本才可使用。低于这些版本则函数将会返回 0。</remarks>
 		/// <returns>第一个不是调整轨道的轨道序号。</returns>
 		public int GetFirstNotAdjustmentTrackIndex() {
+			if (!SupportAdjustmentTrack()) return 0; // Vegas Pro 18 及以下直接返回 0。
+			foreach (Track track in vegas.Project.Tracks)
+				if (track is VideoTrack) {
+					VideoTrack videoTrack = track as VideoTrack;
+					bool isAdjust = IsAdjustmentTrack(track);
+					if (!isAdjust) return videoTrack.Index;
+				} else return track.Index; // 否则这个轨道就是音频轨道。
+			return vegas.Project.Tracks.Count; // 否则生成到末尾。
+		}
+
+		/// <summary>
+		/// 判断轨道是否为调整轨道。使用反射来获取，省去低版本因不支持属性而报错的烦恼。
+		/// </summary>
+		/// <param name="track">要检测的轨道。</param>
+		/// <returns>该轨道是否是调整轨道。</returns>
+		public static bool IsAdjustmentTrack(Track track) {
+			if (!(track is VideoTrack)) return false;
+			VideoTrack videoTrack = track as VideoTrack;
 			Type videoTrackType = typeof(VideoTrack); // 为了避免再分出一个 Vegas Pro 19 专用脚本，使用反射来执行操作更为方便一些。
 			PropertyInfo isAdjustProp = videoTrackType.GetProperty("IsAdjustmentTrack");
-			if (isAdjustProp != null) {
-				foreach (Track track in vegas.Project.Tracks)
-					if (track is VideoTrack) {
-						VideoTrack videoTrack = track as VideoTrack;
-						bool isAdjust = (bool)isAdjustProp.GetValue(videoTrack);
-						if (!isAdjust) return videoTrack.Index;
-					} else return track.Index; // 否则这个轨道就是音频轨道。
-				return vegas.Project.Tracks.Count; // 否则生成到末尾。
-			} else return 0; // 否则认为是低于 Vegas Pro 19 的版本。
+			if (isAdjustProp == null) return false; // 认为是低于 Vegas Pro 19 的版本，自然也不可能是调整轨道了。
+			return (bool)isAdjustProp.GetValue(videoTrack);
+		}
+
+		/// <summary>
+		/// 判断是否支持调整轨道。
+		/// </summary>
+		/// <returns>仅在 Vegas Pro 19 及更高版本返回 <c>true</c>。</returns>
+		public static bool SupportAdjustmentTrack() {
+			return typeof(VideoTrack).GetProperty("IsAdjustmentTrack") != null;
 		}
 
 		/// <summary>
@@ -2508,8 +2526,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				List<TrackEvent> generatedEvents;
 				Plugin.ForYtps.GetRandomEffect(aEvent, vEvent, AConfig, VConfig, randClip.audioReverse, randClip.videoReverse, this, out generatedEvents, YtpConfigEffects);
 				generatedEvents.ForEach(@event => @event.Selected = SelectAllGeneratedEvents);
-				if (AConfig) lastAEvent = generatedEvents.Where(@event => @event is AudioEvent).LastOrDefault() as AudioEvent;
-				if (VConfig) lastVEvent = generatedEvents.Where(@event => @event is VideoEvent).LastOrDefault() as VideoEvent;
+				if (AConfig) lastAEvent = generatedEvents.LastOrDefault(@event => @event is AudioEvent) as AudioEvent;
+				if (VConfig) lastVEvent = generatedEvents.LastOrDefault(@event => @event is VideoEvent) as VideoEvent;
 				#endregion
 			}
 			#endregion
@@ -3249,6 +3267,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static T AddAlsoReturn<T>(this IList<T> list, T item) {
 			list.Add(item);
 			return item;
+		}
+		/// <summary>
+		/// 获取复选框是否已勾选且未被禁用。
+		/// </summary>
+		/// <param name="checkBox">复选框。</param>
+		/// <returns>返回复选框是否已勾选且未被禁用。</returns>
+		public static bool CheckedAndEnabled(this CheckBox checkBox) {
+			return checkBox.Checked && checkBox.Enabled;
 		}
 	}
 
@@ -10865,7 +10891,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static T GetPreviousTrack<T>(T track) where T : Track {
 			Tracks tracks = track.Project.Tracks;
 			int index = tracks.IndexOf(track);
-			return index <= 0 ? null : tracks[index - 1] is T ? tracks[index - 1] as T : null;
+			if (index <= 0) return null;
+			T thatTrack = tracks[index - 1] as T;
+			return EntryPoint.IsAdjustmentTrack(thatTrack) ? null : thatTrack;
 		}
 
 		/// <summary>
@@ -10877,7 +10905,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static T GetNextTrack<T>(T track) where T : Track {
 			Tracks tracks = track.Project.Tracks;
 			int index = tracks.IndexOf(track);
-			return index < 0 || index >= tracks.Count - 1 ? null : tracks[index + 1] is T ? tracks[index + 1] as T : null;
+			if (index < 0 || index >= tracks.Count - 1) return null;
+			T thatTrack = tracks[index + 1] as T;
+			return EntryPoint.IsAdjustmentTrack(thatTrack) ? null : thatTrack;
 		}
 
 		/// <summary>
@@ -26842,6 +26872,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				AudioVelocityCheck.CheckedChanged += e;
 				VideoVelocityCheck.CheckedChanged += e;
 				AudioAutoPanCheck.CheckedChanged += e;
+				VideoGlissandoCheck.CheckedChanged += e;
 				TrackShadowCheck.CheckedChanged += e;
 			}
 			AudioMainKeyCombo.MouseWheel += AudioMainKeyCombo_MouseWheel;
@@ -28077,7 +28108,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			SetEnabled(AudioVelocityCheck.Parent, AudioVelocityCheck.Checked, new Control[] { AudioVelocityCheck });
 			SetEnabled(VideoVelocityCheck.Parent, VideoVelocityCheck.Checked, new Control[] { VideoVelocityCheck });
-			AudioAutoPanCurveCombo.Enabled = AudioAutoPanCheck.Checked && AudioAutoPanCheck.Enabled;
+			AudioAutoPanCurveCombo.Enabled = AudioAutoPanCheck.CheckedAndEnabled();
+			VideoGlissandoBox.Enabled = VideoGlissandoCheck.CheckedAndEnabled();
 
 			PreviewBeepWaveFormCombo.Enabled = PreviewBeepEngineCombo.SelectedIndex == 2;
 
