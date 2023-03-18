@@ -3102,6 +3102,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// 查找轨道中不完全在指定的时间范围内的所有事件。
 		/// </summary>
+		/// <remarks>注意：使用本函数会非常地慢。</remarks>
 		/// <param name="track">轨道。</param>
 		/// <param name="start">开始时间。</param>
 		/// <param name="end">结束时间。</param>
@@ -3110,13 +3111,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static TrackEvent[] FindEventsAlmostIn(this Track track, Timecode start, Timecode end, string exceptName = null) {
 			if (end < start) return null;
 			List<TrackEvent> trackEvents = new List<TrackEvent>();
-			foreach (TrackEvent trackEvent in track.Events) {
-				if (exceptName != null && trackEvent.Name == exceptName) continue;
+			for (int i = track.Events.Count - 1; i >= 0; i--) { // 倒着找会更快些。
+				TrackEvent trackEvent = track.Events[i];
+					if (exceptName != null && trackEvent.Name == exceptName) continue;
 				else if (trackEvent.Start >= start && trackEvent.Start < end ||
 					trackEvent.End > start && trackEvent.End <= end ||
 					trackEvent.Start <= start && trackEvent.End >= end)
 					trackEvents.Add(trackEvent);
-				else if (trackEvent.Start >= end) break;
+				else if (trackEvent.End <= start) break; // 不一定，可能会遗漏部分剪辑，但是为了速度只能这样将就一下了。
 			}
 			return trackEvents.ToArray();
 		}
@@ -10838,6 +10840,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public readonly bool videoSingleTrack;
 		private int topmostTrackIndex = int.MaxValue;
 		private void SetTopmostTrackIndex(int value) { if (value < topmostTrackIndex) topmostTrackIndex = value; }
+		private bool IsAAlwaysNewTrack { get { return audio == null || audio is int; } }
+		private bool IsVAlwaysNewTrack { get { return video == null || video is int; } }
+		private bool IsAlwaysNewTrack<T>() where T : TrackEvent { return IsAudio<T>() ? IsAAlwaysNewTrack : IsVAlwaysNewTrack; }
 
 		/// <summary>
 		/// 构造生成轨道辅助类。
@@ -10981,11 +10986,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private bool TrackVacateSpace<T>(Track track, Timecode start, Timecode length) where T : TrackEvent {
 			if (!IsSingleTrack<T>()) return true;
 			Timecode end = start + length;
-			TrackEvent[] inEvents = track.FindEventsAlmostIn(start, end, EXAMPLE_EVENT_NAME);
-			if (inEvents.Where(trackEvent => trackEvent.Start == start).Count() != 0) return false;
-			foreach (TrackEvent trackEvent in inEvents)
-				if (trackEvent.Start < start && trackEvent.End <= end)
+			if (!IsAlwaysNewTrack<T>()) {
+				TrackEvent[] inEvents = track.FindEventsAlmostIn(start, end, EXAMPLE_EVENT_NAME);
+				if (inEvents.Where(trackEvent => trackEvent.Start == start).Count() != 0) return false;
+				foreach (TrackEvent trackEvent in inEvents)
+					if (trackEvent.Start < start && trackEvent.End <= end)
+						trackEvent.Length = start - trackEvent.Start;
+			} else {
+				TrackEvent trackEvent = track.Events.LastOrDefault();
+				if (trackEvent == null || IsExampleEvent(trackEvent)) return true;
+				else if (trackEvent.Start == start) return false;
+				else if (trackEvent.End <= end)
 					trackEvent.Length = start - trackEvent.Start;
+			}
 			return true;
 		}
 
@@ -11073,11 +11086,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Timecode end = start + length;
 				foreach (Track otherTrack in tracks) {
 					if (exceptTracks != null && exceptTracks.Contains(otherTrack)) continue;
-					TrackEvent[] inEvents = otherTrack.FindEventsAlmostIn(start, end, EXAMPLE_EVENT_NAME);
-					if (length.ToMilliseconds() == 0 || inEvents.Length == 0) {
-						track = otherTrack;
-						break;
+					if (length.ToMilliseconds() == 0) goto ok;
+					if (!IsAlwaysNewTrack<T>()) {
+						TrackEvent[] inEvents = otherTrack.FindEventsAlmostIn(start, end, EXAMPLE_EVENT_NAME);
+						if (inEvents.Length == 0) goto ok;
+					} else {
+						Timecode trackEnd = otherTrack.Length;
+						if (trackEnd <= start) goto ok;
 					}
+					continue;
+				ok:
+					track = otherTrack;
+					break;
 				}
 			} else track = tracks.FirstOrDefault();
 			if (track == null)
@@ -11114,6 +11134,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </returns>
 		public int? SumUp() {
 			return topmostTrackIndex == int.MaxValue ? null : topmostTrackIndex as int?;
+		}
+
+		/// <summary>
+		/// 快速验证指定轨道事件是否是范例样本。
+		/// </summary>
+		/// <param name="trackEvent">要检测的轨道事件。</param>
+		/// <returns>该轨道事件是否是范例样本。</returns>
+		public static bool IsExampleEvent(TrackEvent trackEvent) {
+			return trackEvent.Name == EXAMPLE_EVENT_NAME;
 		}
 	}
 
