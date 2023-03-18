@@ -90,9 +90,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// </summary>
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 27, 17, 0);
+		public static readonly Version VERSION = new Version(4, 27, 18, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2023, 3, 17);
+		public static readonly DateTime REVISION_DATE = new DateTime(2023, 3, 18);
 
 		// 配置参数变量
 		#region 视频属性
