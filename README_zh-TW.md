@@ -6,7 +6,7 @@
 	<p><b>蘭音</b></p>
 	<p><a href="https://github.com/otomad/OtomadHelper/releases/latest"><img src="https://img.shields.io/badge/-點擊下載最新版！-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="Download" /></a></p>
 
-[English](README.md) | [简体中文](README_zh-CN.md) | **繁體中文** | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md)
+[English](README.md) | [简体中文](README_zh-CN.md) | **繁體中文** | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md) | [Bahasa Indo](README_id-ID.md)
 </div>
 
 **音 MAD 助手**，旨在使 Vegas 接受 MIDI 序列檔案作為輸入，自動生成音 MAD / YTPMV 的軌道。
@@ -23,9 +23,11 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 鏡頭搖晃功能參考自 [Vegas 搖晃腳本](https://github.com/tmarplatt/VegasScripts)。
 
-越南語翻譯由 [@Cyahega](https://github.com/Cyahega) 提供。
-
 **姊妹專案：**[om midi for After Effects](https://github.com/otomad/om_midi)。
+
+### 翻譯
+* 越南語翻譯由 [@Cyahega](https://github.com/Cyahega) 提供。
+* 印尼語翻譯由 [@AdeEdogawa](https://github.com/AdeEdogawa) 和 @JujunG 提供。
 
 ### 使用方法
 在軌道視窗中選中素材，或在專案媒體視窗中選中素材，或在（打開腳本視窗後）手動流覽選擇其它素材。然後即可打開腳本配置並生成。

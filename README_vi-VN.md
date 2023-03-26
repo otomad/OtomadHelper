@@ -6,10 +6,10 @@
 	<p><b><i>Lan Âm</i></b></p>
 	<p><a href="https://github.com/otomad/OtomadHelper/releases/latest"><img src="https://img.shields.io/badge/-Tải%20ngay%20phiên%20bản%20mới%20nhất!-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="Download" /></a></p>
 
-[English](README.md) | [简体中文](README_zh-CN.md) | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | **Tiếng Việt**
+[English](README.md) | [简体中文](README_zh-CN.md) | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | **Tiếng Việt** | [Bahasa Indo](README_id-ID.md)
 </div>
 
-**Otomad Helper** dành cho **Vegas**, được thiết kế để cho phép Vegas chấp nhận các file MIDI làm đầu vào và tự động tạo các track Otomad/YTPMV.
+**Otomad Helper** dành cho **Vegas**, được thiết kế để cho phép Vegas chấp nhận các file MIDI làm đầu vào và tự động tạo các track YTPMV/Otomad.
 
 Script được phát triển lại dựa theo mã nguồn mở của tác giả [@Chaosinism](https://github.com/Chaosinism) và sử dụng thư viện NAudio.
 
@@ -23,11 +23,13 @@ Datą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸͛̐̄̎̚
 
 Tính năng Camera Shake đề cập đến ở [VegasShakeScript](https://github.com/tmarplatt/VegasScripts).
 
-Phiên bản Việt hoá của script do [@Cyahega](https://github.com/Cyahega) đóng góp.
-
 **Các dự án khác:** [om midi dành cho After Effects](https://github.com/otomad/om_midi/blob/extendscript/README_vi-VN.md).
 
-### Cách sử dụng 
+### Dịch giả
+* Bản dịch tiếng Việt được cung cấp bởi [@Cyahega](https://github.com/Cyahega).
+* Bản dịch tiếng Indonesia được cung cấp bởi [@AdeEdogawa](https://github.com/AdeEdogawa) và @JujunG.
+
+### Cách sử dụng
 Chọn track event nguồn trong track window, hoặc chọn file phương tiện nguồn trong media pool window, hoặc duyệt (browse) tìm file phương tiện khác (trong biểu mẫu cấu hình/thiết lập script), rồi mở script để chỉnh sửa và tạo ra.
 
 Bạn có thể thêm script thành nút toolbar thay vì luôn phải click vào menu phụ *Tools > Scripting*, bằng cách thêm vào toolbar thông qua menu *Options > Customize Toolbar*.
@@ -93,7 +95,7 @@ Bạn có thể tạo issues trên trang GitHub này.
 1. Tôn trọng quyền và lợi ích của tác giả khi sáng tạo video bằng MIDI/nguồn tư liệu không tự tạo ra.
 2. Sử dụng script này yêu cầu một số khả năng sáng tạo từ người dùng. Script này nên và chỉ nên được sử dụng để hỗ trợ trong việc sáng tạo video/audio. Không được dựa vào script này để tạo sản phẩm hoặc học cách tạo Otomad/YTPMV khi là người mới bắt đầu.  Nghe này, không ai muốn làm Otomidi đâu!
 
-### Cấp quyền 
+### Cấp quyền
 Nếu bạn dùng script này, script sẽ sử dụng các quyền sau.
 1. Đọc và ghi file.<br />
 	Script đọc và ghi một INI user profile trong bộ nhớ ổ đĩa của bạn để lưu dữ liệu người dùng của bạn.
@@ -102,7 +104,7 @@ Nếu bạn dùng script này, script sẽ sử dụng các quyền sau.
 	Script cần đọc và ghi registry để cài đặt hoặc gỡ cài đặt preset pitch-shift plugin.
 	<!-- Nếu bạn không dùng phương pháp pitch shift plugin trong script, bạn có thể bỏ qua việc cài đặt preset và do đó không sử dụng quyền này. -->
 	> Đường dẫn: HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
-	
+
 	Các cấu hình liên quan đến Datamosh được lưu trong registry.
 	> Đường dẫn: HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets
 

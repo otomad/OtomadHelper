@@ -14,10 +14,10 @@
 	<p><b><i>Ranne</i></b></p>
 	<p><a href="https://github.com/otomad/OtomadHelper/releases/latest"><img src="https://img.shields.io/badge/-Get%20the%20download%20link%20now!-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="Download" /></a></p>
 
-**English** | [简体中文](README_zh-CN.md) | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md)
+**English** | [简体中文](README_zh-CN.md) | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md) | [Bahasa Indo](README_id-ID.md)
 </div>
 
-**Otomad Helper** for **Vegas**, which is designed to allow Vegas to accept MIDI files as input, and automatically generate Otomad/YTPMV tracks.
+**Otomad Helper** for **Vegas**, which is designed to allow Vegas to accept MIDI files as input, and automatically generate YTPMV/Otomad tracks.
 
 The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
 
@@ -31,9 +31,11 @@ Datą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸͛̐̄̎̚
 
 Camera Shake feature refer to [VegasShakeScript](https://github.com/tmarplatt/VegasScripts).
 
-Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
-
 **Sister Projects:** [om midi for After Effects](https://github.com/otomad/om_midi).
+
+### Translators
+* Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
+* Indonesian translation provided by [@AdeEdogawa](https://github.com/AdeEdogawa) and @JujunG.
 
 ### Usage
 Select the source track event in the track window, or select source media file in media pool window, or browse another media file (in the script configure form), then open the script to configure and generate.
@@ -98,7 +100,7 @@ When you are using the script, if you:
 You can create issues.
 
 ### Terms of Use
-1. Respect the rights and interests of authors when creating with non-self-made MIDI / materials.
+1. Respect the rights and interests of authors when creating with non-self-made MIDI / sources / materials.
 2. Using this script requires some creative abilities from the users. This script should and should only be used to assist in creations. Do not rely solely on this script to generate productions nor learn to creating Otomad/YTPMV as a beginner. Listen, don't make Otomidi!
 
 ### Permissions
