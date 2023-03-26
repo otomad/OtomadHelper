@@ -17,7 +17,7 @@
 **English** | [简体中文](README_zh-CN.md) | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md) | [Bahasa Indo](README_id-ID.md)
 </div>
 
-**Otomad Helper** for **Vegas**, which is designed to allow Vegas to accept MIDI files as input, and automatically generate YTPMV/Otomad tracks.
+**Otomad Helper** for **Vegas**, designed to allow Vegas to accept MIDI files as input, and automatically generate YTPMV/Otomad tracks.
 
 The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
 
