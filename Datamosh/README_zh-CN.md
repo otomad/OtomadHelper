@@ -1,7 +1,7 @@
 # Vegas 数据抹失 ![Github All Releases](https://img.shields.io/github/downloads/delthas/vegas-datamosh/total.svg?style=flat-square)
 **Sony/MAGIX Vegas Pro 脚本包，用于 YTP（Datamosh、Layering ……），使用 FFmpeg 和 Avidemux**
 
-[English](README.md) | **简体中文** | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md)
+[English](README.md) | **简体中文** | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md) | [Bahasa Indo](README_id-ID.md)
 
 > Delthas 的原始仓库：https://github.com/delthas/vegas-datamosh
 
