@@ -99,7 +99,7 @@ Kalian bisa bikin Issues.
 Jika Kalian menggunakan skrip ini, skrip akan menggunakan izin berikut.
 1. File read and write.<br />
 	Skrip membaca dan mengedit profil pengguna INI di memori disk Anda untuk menyimpan data pengguna Kalian.
-	> Path: C:\\Users\\*(Your User Name)*\\AppData\\Roaming\\VEGAS Pro\\*(Your Vegas Version)*\\Otomad Helper.ini
+	> Path: C:\\Users\\*(Nama penggunamu)*\\AppData\\Roaming\\VEGAS Pro\\*(Versi Vegas anda)*\\Otomad Helper.ini
 2. Registry read and write.<br />
 	Skrip perlu membaca dan mengedit registry untuk menginstal atau menghapus preset plugin pitch-shift.
 	> Path: HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
