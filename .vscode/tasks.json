@@ -8,8 +8,10 @@
 			"type": "shell",
 			"command": "powershell .\\pack.ps1",
 			"problemMatcher": [],
-			"group": {
-				"kind": "build",
+			"group": "build",
+			"presentation": {
+				"reveal": "silent",
+				"close": true,
 			}
 		}
 	]
