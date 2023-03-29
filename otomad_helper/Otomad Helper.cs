@@ -34571,7 +34571,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				update_logs = "Update logs",
 				tutorial_video = "Video tutorial",
 				release_notes = "Catatan rilis",
-				staff_visualizer_documentation = "Dokumentasi untuk Visualizer Staf",
+				staff_visualizer_documentation = "Dokumentasi untuk Staff Visualizer",
 				english_documentations = "Dokumentasi bahasa Inggris",
 				chinese_documentations = "Dokumentasi bahasa Cina",
 				check_update = "Cek update",
