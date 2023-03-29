@@ -1040,12 +1040,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 			if (AConfig && AConfigMethod == AudioTuneMethod.PITCH_SHIFT) if (!ExaminePitchShiftPresetsExist()) return false;
 			if (YtpConfig) { GenerateYtp(); return true; }
-			if (!IsMultiMidiChannel) progressForm.Info = "";
 			#endregion
 			#region 开始处理 MIDI
 			MIDI.TrackInfo currentChannel = MidiConfigTracks[0];
 			string name = currentChannel.Name; // 所选 MIDI 轨道名称。如果没有则为空串。
 			currentChannel.Resort(); // 重新排序。
+			bool requireGlissandoSwirl = VConfig && VConfigGlissando && !SheetConfig && currentChannel.HasPitchWheelEvents; // 五线谱效果开启时最好不要做滑音漩涡动画。
+			const double NOTE_ON_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL = 0.8;
+			double PITCH_WHEEL_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL = 1 - NOTE_ON_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL;
+			if (!IsMultiMidiChannel)
+				progressForm.Info = "";
+			else {
+				string _name = currentChannel.HasName ? Lang.str.colon + name : "";
+				progressForm.Info = string.Format(Lang.str.processing_tracks, MidiConfigTracks.CurrentChannel + 1, MidiConfigTracks.SelectedChannelCount, currentChannel.Index, _name);
+			}
 
 			#region 准备轨道
 			bool sonarMode = currentChannel.IsDrumKit && SonarConfig;
@@ -1123,16 +1131,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				MidiEvent midiEvent = currentChannel.Events[i];
 				if (!(midiEvent is NoteOnEvent)) continue;
 				double statusProgress = Math.Round(100.0 * i / currentChannel.Events.Count);
+				if (requireGlissandoSwirl) statusProgress *= NOTE_ON_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL;
 				if (IsMultiMidiChannel) statusProgress = MidiConfigTracks.GetPercent(statusProgress);
 				long curTime = DateTime.Now.Ticks;
 				if (!requestShowProgress && curTime - startMakingTime > MUST_SHOW_PROGRESS_WAITING_TIME)
 					requestShowProgress = true; // 超过规定等待的时间，则还是会显示进度条
 				if (requestShowProgress) { // 如果不是使用“移调”效果插件，就不要刷进度条，否则还会额外拖延时间。
 					progressForm.ReportProgress(statusProgress); // 说明：只有在使用“移调”效果插件时才会生成得很慢，其它情况下都是非常快的。
-					if (IsMultiMidiChannel) {
-						string _name = currentChannel.HasName ? Lang.str.colon + name : "";
-						progressForm.Info = string.Format(Lang.str.processing_tracks, MidiConfigTracks.CurrentChannel + 1, MidiConfigTracks.SelectedChannelCount, currentChannel.Index, _name);
-					}
 					if (progressForm.RealTimeUpdateCheck.Checked)
 						vegas.UpdateUI(); // 可以让 Vegas 实时更新 UI，但是会更慢。
 				}
@@ -1464,7 +1469,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#endregion
 
 			#region 自动轨道滑音
-			if (VConfig && VConfigGlissando && !SheetConfig) { // 五线谱效果开启时最好不要做滑音漩涡动画。
+			if (requireGlissandoSwirl) {
+				if (!IsMultiMidiChannel)
+					progressForm.Info = Lang.str.processing_otomad_swirl;
+				else {
+					string _name = currentChannel.HasName ? Lang.str.colon + name : "";
+					progressForm.Info = string.Format(Lang.str.processing_tracks_swirl, MidiConfigTracks.CurrentChannel + 1, MidiConfigTracks.SelectedChannelCount, currentChannel.Index, _name);
+				}
 				List<PitchWheelChangeEvent> pitchEvents = new List<PitchWheelChangeEvent>();
 				foreach (MidiEvent midiEvent in currentChannel.Events) { // 去重
 					if (!(midiEvent is PitchWheelChangeEvent)) continue;
@@ -1482,7 +1493,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (videoTracks.Count == 0) goto endGlissando;
 				if (Plugin.swirl == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.swirl)); return false; }
 				List<Effect> swirls = videoTracks.Select(track => track.Effects.AddEffect(Plugin.swirl)).ToList();
-				foreach (PitchWheelChangeEvent pitchEvent in pitchEvents) {
+				for (int i = 0; i < pitchEvents.Count; i++) {
+					PitchWheelChangeEvent pitchEvent = pitchEvents[i];
+					double statusProgress = Math.Round(100.0 * i / pitchEvents.Count);
+					if (requireGlissandoSwirl) statusProgress *= PITCH_WHEEL_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL;
+					if (IsMultiMidiChannel) statusProgress = MidiConfigTracks.GetPercent(statusProgress);
+					long curTime = DateTime.Now.Ticks;
+					if (!requestShowProgress && curTime - startMakingTime > MUST_SHOW_PROGRESS_WAITING_TIME)
+						requestShowProgress = true;
+					if (requestShowProgress) {
+						progressForm.ReportProgress(statusProgress);
+						if (progressForm.RealTimeUpdateCheck.Checked)
+							vegas.UpdateUI();
+					}
+					if (progressForm.RequestAbort) break;
+
 					double startTime;
 					if (!MidiUseDynamicMidiBpm)
 						startTime = pitchEvent.AbsoluteTime * midi.MsPerQuarter / midi.TicksPerQuarter;
@@ -5211,6 +5236,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			public int Pan = INITIAL_PAN;
 			public bool IsDynamicPan = false;
 			private bool isResorted = false;
+			public bool HasPitchWheelEvents = false;
 			/// <summary>
 			/// 重新对轨道中的音符进行排序。
 			/// </summary>
@@ -5281,6 +5307,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 									info.Pan = controlChangeEvent.ControllerValue;
 								else info.IsDynamicPan = true;
 					}
+					if (midiEvent is PitchWheelChangeEvent && !info.HasPitchWheelEvents)
+						info.HasPitchWheelEvents = true;
 				}
 				if (info.NotesCount != 0) {
 					string beginNote = info.BeginNote.Trim().ToUpper();
@@ -29839,9 +29867,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			no = "否",
 			error_code = "错误代码：",
 			processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
+			processing_otomad_swirl = "正在生成滑音效果⋯⋯",
 			processing_ytp = "正在生成 YTP⋯⋯",
 			processing_it = "正在处理它",
 			processing_tracks = "正在生成第 {0} 个轨道，共 {1} 个。通道 {2}{3}⋯⋯",
+			processing_tracks_swirl = "正在生成第 {0} 个轨道的滑音效果，共 {1} 个。通道 {2}{3}⋯⋯",
 			real_time_update = "实时更新当前进度（会减慢生成速度）",
 			replacer_is = "指定的替换项为",
 			replacer_info = "请先在轨道窗口中选中替换与被替换的素材，然后指定一个素材为替换的素材，剩余素材均为被替换素材。\n请先将替换素材的音视频创建分组，并确保替换素材放置在时间靠后的位置并且尽量不与其它被替换素材位于同一轨道。",
@@ -30577,9 +30607,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no = "No",
 				error_code = "Error Code:",
 				processing_otomad = "Generating Otomad/YTPMV...",
+				processing_otomad_swirl = "Generating glissando visuals...",
 				processing_ytp = "Generating YTP...",
 				processing_it = "Processing it",
 				processing_tracks = "Generating track {0} of {1}, channel {2}{3}...",
+				processing_tracks_swirl = "Generating glissando for track {0} of {1}, channel {2}{3}...",
 				real_time_update = "Real time update current progress (it will slow down the generation)",
 				replacer_is = "The specified replacement is",
 				replacer_info = "Please select the clips which to be replaced and replaced in the track window first, and then specify a clip as the replacement clip, and the remaining clips are all replaced clips.\nPlease create a group for the audio and video of the replacement clip first, and make sure that the replacement clip is placed later in time and not on the same track as other replaced clips.",
@@ -31312,9 +31344,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no = "否",
 				error_code = "錯誤代碼：",
 				processing_otomad = "正在生成音 MAD / YTPMV⋯⋯",
+				processing_otomad_swirl = "正在生成滑音效果⋯⋯",
 				processing_ytp = "正在生成 YTP⋯⋯",
 				processing_it = "正在處理它",
 				processing_tracks = "正在生成第 {0} 個軌道，共 {1} 個。通道 {1}{2}⋯⋯",
+				processing_tracks_swirl = "正在生成第 {0} 個軌道的滑音效果，共 {1} 個。通道 {1}{2}⋯⋯",
 				real_time_update = "即時更新當前進度（會减慢生成速度）",
 				replacer_is = "指定的替換項為",
 				replacer_info = "請先在軌道視窗中選中替換與被替換的素材，然後指定一個素材為替換的素材，剩餘素材均為被替換素材。\n請先將替換素材的音視訊創建分組，並確保替換素材放置在時間靠後的位置並且儘量不與其它被替換素材位於同一軌道。",
@@ -32047,9 +32081,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no = "いいえ",
 				error_code = "エラーコード：",
 				processing_otomad = "音MAD/YTPMVを生成中⋯⋯",
+				processing_otomad_swirl = "グリッサンドを生成中⋯⋯",
 				processing_ytp = "YTPを生成中⋯⋯",
 				processing_it = "それを処理する",
 				processing_tracks = "レール {0}/{1}、チャネル{2}{3}を生成中⋯⋯",
+				processing_tracks_swirl = "レール {0}/{1}、チャネル{2}{3}のグリッサンドを生成中⋯⋯",
 				real_time_update = "現在の進捗状況をリアルタイムで更新（生成速度が低下）",
 				replacer_is = "指定された代替品は",
 				replacer_info = "最初にトラックウィンドウで置換および置換するクリップを選択してから、置換クリップとしてクリップを指定してください。残りのクリップはすべて置換されたクリップです。\n最初に交換用クリップのオーディオとビデオのグループを作成し、交換用クリップが他の交換済みクリップと同じトラック上に配置されていないことを確認してください。",
@@ -32782,10 +32818,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				yes = "Да",
 				no = "Нет",
 				error_code = "Код ошибки:",
-				processing_otomad = "Создание Отомад / УТРМѴ ...",
+				processing_otomad = "Создание Отомад / УТРМѴ...",
+				processing_otomad_swirl = "Создание глиссандо...",
 				processing_ytp = "Создание УТР ...",
 				processing_it = "Обработка его",
 				processing_tracks = "Создание трека {0} из {1}, канала {2}{3}...",
+				processing_tracks_swirl = "Создание глиссандо для трека {0} из {1}, канала {2}{3}...",
 				real_time_update = "обновление текущего прогресса в реальном времени (замедлит темпы генерации)",
 				replacer_is = "Указанная замена",
 				replacer_info = "Сначала выберите клипы, которые необходимо заменить и заменить в окне дорожки, а затем укажите клип в качестве замещающего клипа, а остальные клипы будут замененными клипами.\nСначала создайте группу для аудио и видео замещающего клипа , и убедитесь, что замещающий клип размещен позже по времени и не на той же дорожке, что и другие замененные клипы.",
@@ -33519,9 +33557,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no = "Không",
 				error_code = "Mã lỗi:",
 				processing_otomad = "Đang khởi tạo ra Otomad/YTPMV...",
+				processing_otomad_swirl = "Đang khởi tạo ra glissando...",
 				processing_ytp = "Đang khởi tạo ra YTP...",
 				processing_it = "Đang xử lý",
 				processing_tracks = "Đang khởi tạo ra track {0} của {1}, kênh {2}{3}...",
+				processing_tracks_swirl = "Đang khởi tạo ra glissando cho track {0} của {1}, kênh {2}{3}...",
 				real_time_update = "Cập nhật tiến độ hiện tại theo thời gian thực (nó sẽ làm chậm quá trình khởi tạo)",
 				replacer_is = "Thứ cần thay thế được chỉ định là",
 				replacer_info = "Vui lòng chọn clip đã được thay thế và thay thế trong cửa sổ track (track window) trước, và chỉ định 1 clip như clip thay thế, và những clip còn lại là tất cả những clip đã thay thế.\nVui lòng tạo 1 group cho audio và video của clip thay thế trước, và đảm bảo rằng clip thay thế đã được đặt sau khoảng thời gian và không ở cùng 1 track như các clip thay thế khác.",
@@ -34253,10 +34293,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				yes = "Ya",
 				no = "Tidak",
 				error_code = "Kode Error:",
-				processing_otomad = "Membuat YTPMV....",
+				processing_otomad = "Membuat Otomad/YTPMV...",
+				processing_otomad_swirl = "Membuat glissando",
 				processing_ytp = "Membuat YTP...",
 				processing_it = "Memprosesnya",
 				processing_tracks = "Membuat trek {0} dari {1}, channel {2}{3}...",
+				processing_tracks_swirl = "Membuat glissando untuk trek {0} dari {1}, channel {2}{3}...",
 				real_time_update = "Update progress saat ini secara real time (itu akan memperlambat generate)",
 				replacer_is = "Replacement yang dimaksud adalah",
 				replacer_info = "Harap pilih klip yang akan diganti dan diganti di jendela trek terlebih dahulu, lalu tentukan klip sebagai klip pengganti, dan klip yang tersisa adalah semua klip yang diganti.\nHarap buat grup untuk audio dan video dari klip pengganti terlebih dahulu , dan pastikan klip pengganti ditempatkan di lain waktu dan tidak di trek yang sama dengan klip lain yang diganti.",
