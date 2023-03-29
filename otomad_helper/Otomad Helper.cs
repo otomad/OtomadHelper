@@ -1,5 +1,5 @@
 /**
- * 音 MAD 助手 Vegas，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
+ * 音 MAD 助手，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
  * Vegas 16 及以上的版本支持所有功能，Vegas 13 及以上的版本可以兼容运行。
  * 将本脚本及其它所有附属文件放置在您 Vegas 安装目录下的 Script Menu 文件夹中。
  * 具体说明请参见下方的说明文档链接。
