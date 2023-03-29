@@ -1203,6 +1203,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					VideoEvent videoEvent;
 					if (vTrack == null) {
 						videoEvent = trackHelper.AddEvent<VideoEvent>(start, length, assignedSonarTracks);
+						if (videoEvent == null) continue;
 						vTrack = videoEvent.Track as VideoTrack;
 					} else videoEvent = vTrack.AddVideoEvent(start, length);
 					if (SonarConfigSeparateDrums && sonar.videoTrack == null) {
@@ -1315,14 +1316,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							Timecode.FromMilliseconds(generateBeginTime + startTime),
 							Timecode.FromMilliseconds(duration)
 						);
+						if (videoEvent == null) goto endVConfig;
 						try {
 							videoEvent.AddTake(media.GetVideoStreamByIndex(0));
 						} catch (Exception) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
 					} else {
 						if (selectedEventSet.videoEvent == null) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
 						videoEvent = trackHelper.AddEvent(selectedEventSet.videoEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(duration));
+						if (videoEvent == null) goto endVConfig;
 					}
-					if (videoEvent == null) goto endVConfig;
 					VideoTrack videoTrack = videoEvent.Track as VideoTrack;
 					PvVisualEffect anim;
 					if (!anims.TryGetValue(videoTrack, out anim))
@@ -1496,7 +1498,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				for (int i = 0; i < pitchEvents.Count; i++) {
 					PitchWheelChangeEvent pitchEvent = pitchEvents[i];
 					double statusProgress = Math.Round(100.0 * i / pitchEvents.Count);
-					if (requireGlissandoSwirl) statusProgress *= PITCH_WHEEL_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL;
+					if (requireGlissandoSwirl) statusProgress = statusProgress * PITCH_WHEEL_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL + 100 * NOTE_ON_EVENT_PERCENTAGE_WEIGHT_IF_ENABLE_SWIRL;
 					if (IsMultiMidiChannel) statusProgress = MidiConfigTracks.GetPercent(statusProgress);
 					long curTime = DateTime.Now.Ticks;
 					if (!requestShowProgress && curTime - startMakingTime > MUST_SHOW_PROGRESS_WAITING_TIME)
@@ -3121,29 +3123,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (trackEvent.Start >= start && trackEvent.End <= end)
 					trackEvents.Add(trackEvent);
 				else if (trackEvent.Start >= end) break;
-			}
-			return trackEvents.ToArray();
-		}
-		/// <summary>
-		/// 查找轨道中不完全在指定的时间范围内的所有事件。
-		/// </summary>
-		/// <remarks>注意：使用本函数会非常地慢。</remarks>
-		/// <param name="track">轨道。</param>
-		/// <param name="start">开始时间。</param>
-		/// <param name="end">结束时间。</param>
-		/// <param name="exceptName">如事件名称为此的话则排除在外。</param>
-		/// <returns>在指定的时间范围内的所有轨道事件。</returns>
-		public static TrackEvent[] FindEventsAlmostIn(this Track track, Timecode start, Timecode end, string exceptName = null) {
-			if (end < start) return null;
-			List<TrackEvent> trackEvents = new List<TrackEvent>();
-			for (int i = track.Events.Count - 1; i >= 0; i--) { // 倒着找会更快些。
-				TrackEvent trackEvent = track.Events[i];
-					if (exceptName != null && trackEvent.Name == exceptName) continue;
-				else if (trackEvent.Start >= start && trackEvent.Start < end ||
-					trackEvent.End > start && trackEvent.End <= end ||
-					trackEvent.Start <= start && trackEvent.End >= end)
-					trackEvents.Add(trackEvent);
-				else if (trackEvent.End <= start) break; // 不一定，可能会遗漏部分剪辑，但是为了速度只能这样将就一下了。
 			}
 			return trackEvents.ToArray();
 		}
@@ -11014,18 +10993,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private bool TrackVacateSpace<T>(Track track, Timecode start, Timecode length) where T : TrackEvent {
 			if (!IsSingleTrack<T>()) return true;
 			Timecode end = start + length;
-			if (!IsAlwaysNewTrack<T>()) {
-				TrackEvent[] inEvents = track.FindEventsAlmostIn(start, end, EXAMPLE_EVENT_NAME);
-				if (inEvents.Where(trackEvent => trackEvent.Start == start).Count() != 0) return false;
-				foreach (TrackEvent trackEvent in inEvents)
-					if (trackEvent.Start < start && trackEvent.End <= end)
-						trackEvent.Length = start - trackEvent.Start;
-			} else {
+			{
 				TrackEvent trackEvent = track.Events.LastOrDefault();
-				if (trackEvent == null || IsExampleEvent(trackEvent)) return true;
+				if (trackEvent == null || IsExampleEvent(trackEvent)) { }
 				else if (trackEvent.Start == start) return false;
 				else if (trackEvent.End <= end)
 					trackEvent.Length = start - trackEvent.Start;
+			}
+			if (!IsAlwaysNewTrack<T>()) {
+				bool hasEqualedStart;
+				List<TrackEvent> inEvents = FindEventsAlmostIn(track, start, end, out hasEqualedStart, EXAMPLE_EVENT_NAME);
+				if (hasEqualedStart) return false;
+				foreach (TrackEvent trackEvent in inEvents)
+					if (trackEvent.Start < start && trackEvent.End <= end)
+						trackEvent.Length = start - trackEvent.Start;
 			}
 			return true;
 		}
@@ -11038,11 +11019,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="start">开始时间。</param>
 		/// <param name="length">长度。</param>
 		/// <param name="exceptTracks">指定排除在外的轨道。</param>
+		/// <param name="isSampleEvent">是否是示例轨道事件。</param>
 		/// <returns>返回添加的轨道事件。</returns>
-		public T AddEvent<T>(T trackEvent, Timecode start, Timecode length, IEnumerable<Track> exceptTracks = null) where T : TrackEvent {
-			Track track = FindASuitableTrack<T>(start, length, exceptTracks);
+		public T AddEvent<T>(T trackEvent, Timecode start, Timecode length, IEnumerable<Track> exceptTracks = null, bool isSampleEvent = false) where T : TrackEvent {
+			if (trackEvent == null) return null;
+			Track track = FindASuitableTrack<T>(start, length, exceptTracks, isSampleEvent);
 			if (track == null) return null;
-			if (!TrackVacateSpace<T>(track, start, length)) return null;
+			if (!isSampleEvent && !TrackVacateSpace<T>(track, start, length)) return null;
 			T copiedEvent = trackEvent.Copy(track, start) as T;
 			if (copiedEvent.Name == EXAMPLE_EVENT_NAME) copiedEvent.Name = "";
 			copiedEvent.Length = length;
@@ -11057,11 +11040,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="start">开始时间。</param>
 		/// <param name="length">长度。</param>
 		/// <param name="exceptTracks">指定排除在外的轨道。</param>
+		/// <param name="isSampleEvent">是否是示例轨道事件。</param>
 		/// <returns>返回添加的轨道事件。</returns>
-		public T AddEvent<T>(Timecode start, Timecode length, IEnumerable<Track> exceptTracks = null) where T : TrackEvent {
-			Track track = FindASuitableTrack<T>(start, length, exceptTracks);
+		public T AddEvent<T>(Timecode start, Timecode length, IEnumerable<Track> exceptTracks = null, bool isSampleEvent = false) where T : TrackEvent {
+			Track track = FindASuitableTrack<T>(start, length, exceptTracks, isSampleEvent);
 			if (track == null) return null;
-			if (!TrackVacateSpace<T>(track, start, length)) return null;
+			if (!isSampleEvent && !TrackVacateSpace<T>(track, start, length)) return null;
 			T trackEvent = IsAudio<T>() ? new AudioEvent(start, length) as T : new VideoEvent(start, length) as T;
 			track.Events.Add(trackEvent);
 			SetTopmostTrackIndex(track.Index);
@@ -11077,9 +11061,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="name">示例事件名称。</param>
 		/// <returns>示例轨道事件。</returns>
 		public T AddSampleEvent<T>(Timecode start, Timecode length, string name = EXAMPLE_EVENT_NAME) where T : TrackEvent {
-			T sampleEvent = AddEvent<T>(start, length);
+			T sampleEvent = AddEvent<T>(start, length, null, true);
 			if (sampleEvent == null) return null;
 			sampleEvent.Name = name;
+			sampleEvent.Length = Timecode.FromMilliseconds(0);
 			return sampleEvent;
 		}
 
@@ -11091,9 +11076,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="name">示例事件名称。</param>
 		/// <returns>示例轨道事件。</returns>
 		public T AddSampleEvent<T>(T trackEvent, Timecode start, string name = EXAMPLE_EVENT_NAME) where T : TrackEvent {
-			T sampleEvent = AddEvent(trackEvent, start, trackEvent.Length);
+			T sampleEvent = AddEvent(trackEvent, start, trackEvent.Length, null, true);
 			if (sampleEvent == null) return null;
 			sampleEvent.Name = name;
+			sampleEvent.Length = Timecode.FromMilliseconds(0);
 			return sampleEvent;
 		}
 
@@ -11105,8 +11091,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="start">开始时间。</param>
 		/// <param name="length">长度。</param>
 		/// <param name="exceptTracks">指定排除在外的轨道。</param>
+		/// <param name="isSampleEvent">是否是示例轨道事件。</param>
 		/// <returns>适合的轨道。</returns>
-		private Track FindASuitableTrack<T>(Timecode start, Timecode length, IEnumerable<Track> exceptTracks = null) where T : TrackEvent {
+		private Track FindASuitableTrack<T>(Timecode start, Timecode length, IEnumerable<Track> exceptTracks = null, bool isSampleEvent = false) where T : TrackEvent {
 			if (typeof(T) == typeof(AudioEvent) && NoAudio || typeof(T) == typeof(VideoEvent) && NoVideo) return null;
 			Track track = null;
 			IEnumerable<Track> tracks = IsAudio<T>() ? audioTracks.Cast<Track>() : videoTracks.Cast<Track>();
@@ -11114,23 +11101,101 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Timecode end = start + length;
 				foreach (Track otherTrack in tracks) {
 					if (exceptTracks != null && exceptTracks.Contains(otherTrack)) continue;
+					TrackOtherInfo info = GetTrackOtherInfo(otherTrack);
 					if (length.ToMilliseconds() == 0) goto ok;
+					if (info.length > Round(start)) continue;
 					if (!IsAlwaysNewTrack<T>()) {
-						TrackEvent[] inEvents = otherTrack.FindEventsAlmostIn(start, end, EXAMPLE_EVENT_NAME);
-						if (inEvents.Length == 0) goto ok;
-					} else {
-						Timecode trackEnd = otherTrack.Length;
-						if (trackEnd <= start) goto ok;
+						bool _;
+						List<TrackEvent> inEvents = FindEventsAlmostIn(otherTrack, start, end, out _, EXAMPLE_EVENT_NAME, true);
+						if (inEvents.Count != 0) continue;
 					}
-					continue;
 				ok:
 					track = otherTrack;
+					if (!isSampleEvent) info.Length = end;
 					break;
 				}
 			} else track = tracks.FirstOrDefault();
 			if (track == null)
 				track = IsAudio<T>() ? AddAudioTrackAfter() as Track : AddVideoTrackBefore() as Track;
 			return track;
+		}
+
+		/// <summary>
+		/// 查找轨道中不完全在指定的时间范围内的所有事件。
+		/// </summary>
+		/// <remarks>注意：使用本函数会非常地慢。</remarks>
+		/// <param name="track">轨道。</param>
+		/// <param name="start">开始时间。</param>
+		/// <param name="end">结束时间。</param>
+		/// <param name="hasEqualedStart">返回是否有开始时间相等的事件。</param>
+		/// <param name="exceptName">如事件名称为此的话则排除在外。</param>
+		/// <param name="justFindOne">只找一个，用于仅判断是否有内容而不是获取内容，以节约性能。</param>
+		/// <returns>在指定的时间范围内的所有轨道事件。</returns>
+		public static List<TrackEvent> FindEventsAlmostIn(Track track, Timecode start, Timecode end, out bool hasEqualedStart, string exceptName = null, bool justFindOne = false) {
+			hasEqualedStart = false;
+			if (end < start) return null;
+			int rsStart = Round(start), rsEnd = Round(end);
+			TrackOtherInfo info = GetTrackOtherInfo(track);
+			List<TrackEvent> trackEvents = new List<TrackEvent>();
+			foreach (TrackEvent trackEvent in info.originalEvents) {
+				int curStart = Round(trackEvent.Start), curEnd = Round(trackEvent.End);
+				if (exceptName != null && trackEvent.Name == exceptName) continue;
+				else if (curStart >= rsStart && curStart < rsEnd ||
+					curEnd > rsStart && curEnd <= rsEnd ||
+					curStart <= rsStart && curEnd >= rsEnd) {
+					trackEvents.Add(trackEvent);
+					if (curStart == rsStart) hasEqualedStart = true;
+					if (justFindOne) break;
+				} else if (curEnd <= rsStart) break;
+			}
+			return trackEvents;
+		}
+		private readonly static Dictionary<Track, TrackOtherInfo> trackOtherInfos = new Dictionary<Track, TrackOtherInfo>();
+		private class TrackOtherInfo {
+			public List<TrackEvent> originalEvents;
+			public int length = -1;
+			public Timecode Length {
+				set {
+					int ms = Round(value);
+					if (ms > length) length = ms;
+				}
+			}
+			public TrackOtherInfo(Track track) {
+				originalEvents = track.Events.ToList();
+			}
+		}
+
+		/// <summary>
+		/// 获取轨道的附加信息，如为空则自动创建一个新的。
+		/// </summary>
+		/// <param name="track">参考轨道。</param>
+		/// <returns>轨道其它信息。</returns>
+		private static TrackOtherInfo GetTrackOtherInfo(Track track) {
+			TrackOtherInfo info;
+			if (!trackOtherInfos.TryGetValue(track, out info)) {
+				info = new TrackOtherInfo(track);
+				info.originalEvents.Sort((x, y) => Math.Sign(y.End.ToMilliseconds() - x.End.ToMilliseconds()));
+				trackOtherInfos.Add(track, info);
+			}
+			return info;
+		}
+
+		/// <summary>
+		/// 四舍五入取整（不是四舍六入五成双）。
+		/// </summary>
+		/// <param name="value">浮点数值。</param>
+		/// <returns>舍入后取整值。</returns>
+		private static int Round(double value) {
+			return (int)Math.Round(value, MidpointRounding.AwayFromZero);
+		}
+
+		/// <summary>
+		/// 四舍五入取整（不是四舍六入五成双）。
+		/// </summary>
+		/// <param name="timecode">时间码。</param>
+		/// <returns>舍入后取整值。</returns>
+		private static int Round(Timecode timecode) {
+			return Round(timecode.ToMilliseconds());
 		}
 
 		/// <summary>
