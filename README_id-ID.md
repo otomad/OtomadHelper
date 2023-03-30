@@ -9,7 +9,7 @@
 [English](README.md) | [简体中文](README_zh-CN.md) | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md) | **Bahasa Indo**
 </div>
 
-**Otomad Helper** untuk **Vegas**, yang dirancang untuk menerima file MIDI sebagai input, dan secara otomatis membuat trek YTPMV/otoMAD.
+**Otomad Helper** untuk **Vegas**, yang dirancang untuk menerima file MIDI sebagai input, dan secara otomatis membuat trek YTPMV/Otomad.
 
 Skrip ini dibikin oleh orang keren, yaitu si [@Chaosinism](https://github.com/Chaosinism)'s open source code dan menggunakan NAudio library.
 
