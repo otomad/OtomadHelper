@@ -38,8 +38,6 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 [點擊此處查看數據抹失的使用介紹](Datamosh/README.md)。您也可以[觀看影片](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英語）*。
 
-關於數據抹失的使用請[觀看影片](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英語）*。
-
 ### 安裝
 1. [下載](https://github.com/otomad/OtomadHelper/releases/latest)最新版腳本。
 2. 解壓壓縮包內的**所有**檔案並放置到 Vegas 安裝目錄下的「Script Menu」資料夾中。
