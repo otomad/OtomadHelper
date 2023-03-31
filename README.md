@@ -76,7 +76,7 @@ You could learn about many features more easily through pictures.
 [Glossary >](glossary.md)
 
 ### Explore Visual Effects
-[![Explore Visual Effects](covers/otomad_helper_visual_effects_example.png)](https://youtu.be/cY2Qa3Owetw)
+[![Explore Visual Effects](covers/youtube_cover.svg)](https://youtu.be/cY2Qa3Owetw)
 
 ### Major Version Update History
 These are screenshots of the script user interface for major version updates in history.
