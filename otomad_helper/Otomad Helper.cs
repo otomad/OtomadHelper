@@ -90,9 +90,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// </summary>
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 27, 29, 0);
+		public static readonly Version VERSION = new Version(4, 28, 1, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2023, 3, 29);
+		public static readonly DateTime REVISION_DATE = new DateTime(2023, 4, 1);
 
 		// 配置参数变量
 		#region 视频属性
@@ -11064,7 +11064,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			T sampleEvent = AddEvent<T>(start, length, null, true);
 			if (sampleEvent == null) return null;
 			sampleEvent.Name = name;
-			sampleEvent.Length = Timecode.FromMilliseconds(0);
 			return sampleEvent;
 		}
 
@@ -11079,7 +11078,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			T sampleEvent = AddEvent(trackEvent, start, trackEvent.Length, null, true);
 			if (sampleEvent == null) return null;
 			sampleEvent.Name = name;
-			sampleEvent.Length = Timecode.FromMilliseconds(0);
 			return sampleEvent;
 		}
 
