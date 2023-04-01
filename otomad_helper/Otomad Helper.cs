@@ -10997,7 +10997,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				TrackEvent trackEvent = track.Events.LastOrDefault();
 				if (trackEvent == null || IsExampleEvent(trackEvent)) { }
 				else if (trackEvent.Start == start) return false;
-				else if (trackEvent.End <= end)
+				else if (trackEvent.End > start && trackEvent.End <= end)
 					trackEvent.Length = start - trackEvent.Start;
 			}
 			if (!IsAlwaysNewTrack<T>()) {
@@ -11005,7 +11005,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				List<TrackEvent> inEvents = FindEventsAlmostIn(track, start, end, out hasEqualedStart, EXAMPLE_EVENT_NAME);
 				if (hasEqualedStart) return false;
 				foreach (TrackEvent trackEvent in inEvents)
-					if (trackEvent.Start < start && trackEvent.End <= end)
+					if (trackEvent.Start < start && trackEvent.End > start && trackEvent.End <= end)
 						trackEvent.Length = start - trackEvent.Start;
 			}
 			return true;
