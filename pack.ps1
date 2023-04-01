@@ -38,7 +38,7 @@ function Update-ToReplaceTextFileOnce {
 	
 	# Set-Content -Path $file -Value $content -Encoding UTF8
 	$utf8NoBomEncoding = New-Object Text.UTF8Encoding $False
-	[IO.File]::WriteAllLines($file, $content, $utf8NoBomEncoding)
+	[IO.File]::WriteAllLines((Join-Path $pwd $file), $content, $utf8NoBomEncoding)
 }
 
 function Update-UndefinedSymbols {
@@ -76,4 +76,4 @@ for ($i = 0; $i -lt $infos.Count; $i++) {
 	Rename-Item -Path "release_package_template.zip" -NewName ([String]$i + "_otomad_helper_v" + $version + "_vegas" + [string]$info.VegasVersions + ".zip")
 	Remove-Item "Otomad Helper.cs"
 }
-Remove-Item "..\Otomad Helper.cs"
+# Remove-Item "..\Otomad Helper.cs"
