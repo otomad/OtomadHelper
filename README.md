@@ -180,6 +180,6 @@ Compilation note for Sony Vegas **(v13 and under)**:
 	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
 * Some scripts require additional DLLs, put them in a "DLL" folder in the "Script Menu" folder.
 	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu\\DLL)
-* Make sure that the DLL files (such as `DLL\NAudio.dll`) are not locked.
+* Make sure that the DLL files (such as `DLL\NAudio.dll`) are not blocked.
 
 </div>
