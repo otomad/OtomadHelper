@@ -51,8 +51,8 @@ body:
   - type: textarea
     id: screenshot
     attributes:
-      label: Screenshot or recording
-      description: If possible, provide screenshots or screen recordings (preferably) here.
+      label: Screenshot or screencast
+      description: If possible, provide screenshots or screencasts (preferably) here.
   - type: textarea
     id: additonal
     attributes:
