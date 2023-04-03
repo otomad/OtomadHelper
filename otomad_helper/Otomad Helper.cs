@@ -90,9 +90,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// </summary>
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 28, 1, 0);
+		public static readonly Version VERSION = new Version(4, 28, 3, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2023, 4, 1);
+		public static readonly DateTime REVISION_DATE = new DateTime(2023, 4, 3);
 
 		// 配置参数变量
 		#region 视频属性
@@ -11095,16 +11095,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (typeof(T) == typeof(AudioEvent) && NoAudio || typeof(T) == typeof(VideoEvent) && NoVideo) return null;
 			Track track = null;
 			IEnumerable<Track> tracks = IsAudio<T>() ? audioTracks.Cast<Track>() : videoTracks.Cast<Track>();
+			Timecode end = start + length;
 			if (!IsSingleTrack<T>()) {
-				Timecode end = start + length;
 				foreach (Track otherTrack in tracks) {
 					if (exceptTracks != null && exceptTracks.Contains(otherTrack)) continue;
 					TrackOtherInfo info = GetTrackOtherInfo(otherTrack);
 					if (length.ToMilliseconds() == 0) goto ok;
 					if (info.length > Round(start)) continue;
 					if (!IsAlwaysNewTrack<T>()) {
-						bool _;
-						List<TrackEvent> inEvents = FindEventsAlmostIn(otherTrack, start, end, out _, EXAMPLE_EVENT_NAME, true);
+						List<TrackEvent> inEvents = FindEventsAlmostIn(otherTrack, start, end, EXAMPLE_EVENT_NAME, true);
 						if (inEvents.Count != 0) continue;
 					}
 				ok:
@@ -11113,9 +11112,26 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					break;
 				}
 			} else track = tracks.FirstOrDefault();
-			if (track == null)
+			if (track == null) {
 				track = IsAudio<T>() ? AddAudioTrackAfter() as Track : AddVideoTrackBefore() as Track;
+				GetTrackOtherInfo(track).Length = end;
+			}
 			return track;
+		}
+
+		/// <summary>
+		/// 查找轨道中不完全在指定的时间范围内的所有事件。
+		/// </summary>
+		/// <remarks>注意：使用本函数会非常地慢。</remarks>
+		/// <param name="track">轨道。</param>
+		/// <param name="start">开始时间。</param>
+		/// <param name="end">结束时间。</param>
+		/// <param name="exceptName">如事件名称为此的话则排除在外。</param>
+		/// <param name="justFindOne">只找一个，用于仅判断是否有内容而不是获取内容，以节约性能。</param>
+		/// <returns>在指定的时间范围内的所有轨道事件。</returns>
+		public static List<TrackEvent> FindEventsAlmostIn(Track track, Timecode start, Timecode end, string exceptName = null, bool justFindOne = false) {
+			bool _;
+			return FindEventsAlmostIn(track, start, end, out _, exceptName, justFindOne);
 		}
 
 		/// <summary>
@@ -11151,7 +11167,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private readonly static Dictionary<Track, TrackOtherInfo> trackOtherInfos = new Dictionary<Track, TrackOtherInfo>();
 		private class TrackOtherInfo {
 			public List<TrackEvent> originalEvents;
-			public int length = -1;
+			public int length = 0;
 			public Timecode Length {
 				set {
 					int ms = Round(value);
