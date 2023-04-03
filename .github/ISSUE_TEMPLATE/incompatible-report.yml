@@ -13,7 +13,7 @@ body:
         👉 https://github.com/otomad/OtomadHelper/issues/25
 
         This issue template is only applicable to with Vegas Pro 13~15. If you are currently using a version of Vegas Pro 16+, please switch to:
-        👉 https://github.com/otomad/OtomadHelper/issues/new?template=bug-report.yml
+        👉 https://github.com/otomad/OtomadHelper/issues/new?template=bug-report.yml&labels=bug
   - type: dropdown
     id: vegas-version
     attributes:

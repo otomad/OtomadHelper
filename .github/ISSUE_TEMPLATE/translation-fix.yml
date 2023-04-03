@@ -22,6 +22,8 @@ body:
         - Japanese / 日本語
         - Vietnamese / Tiếng Việt
         - Russian / Русский
+        - Indonesian / Bahasa Indonesia
+        - Korean / 한국어
     validations:
       required: true
   - type: input
