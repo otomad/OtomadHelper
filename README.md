@@ -173,7 +173,7 @@ Various scripts for MAGIX Vegas **(v14 and above)**.
 Compilation note for Sony Vegas **(v13 and under)**:
 * The namespace name of the *.NET assembly* has changed from `Sony.Vegas` to `ScriptPortal.Vegas` in **v14 and onward**.
 	* Change **`using ScriptPortal.Vegas;`** to **`using Sony.Vegas;`** in the scripts to compile for **v13**.
-* Actually, the scripts is not supported **v12 and under**.
+* Actually, the scripts are not supported **v12 and under**.
 
 ### Install
 * Scripts belong in the Vegas install directory, in the "Script Menu" folder.
