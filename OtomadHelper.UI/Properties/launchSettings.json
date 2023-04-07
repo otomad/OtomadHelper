@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "OtomadHelper.UI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "OtomadHelper.UI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
