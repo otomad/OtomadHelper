@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using OtomadHelper.UI.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +16,12 @@ namespace OtomadHelper.UI;
 /// Provides application-specific behavior to supplement the default Application class.
 /// </summary>
 public partial class App : Application {
-	public static List<string> Args { get; private set; }
-	public static AppStartMode StartMode { get; private set; }
-	public static IntPtr ServerHwnd { get; private set; }
-	internal Window mainWindow;
+	internal MainWindow mainWindow;
 	internal AppWindow appWindow;
 	internal ThemeManager themeManager;
 	internal static new App Current { get { return Application.Current as App; } }
-	internal static Window MainWindow { get { return App.Current.mainWindow; } }
+	internal static MainWindow MainWindow { get { return App.Current.mainWindow; } }
+	internal PipeClient client;
 
 	/// <summary>
 	/// Initializes the singleton application object.  This is the first line of authored code
@@ -38,27 +37,9 @@ public partial class App : Application {
 	/// </summary>
 	/// <param name="args">Details about the launch request and process.</param>
 	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) {
-		Args = Environment.GetCommandLineArgs().ToList();
-		if (Args.Count <= 1) {
-			StartMode = AppStartMode.Manual;
-			//return;
-			goto StartApp; // 生产环境换成上面的 return。
-		}
-		int paramIndex = Args.IndexOf("-OtomadHelper");
-		if (paramIndex == -1 || paramIndex >= Args.Count - 1) {
-			StartMode = AppStartMode.Abnormal;
-			return;
-		}
-		string serverHwnd_Str = Args[paramIndex + 1];
-		bool ok = int.TryParse(serverHwnd_Str, out int serverHwnd_Int);
-		if (!ok) {
-			StartMode = AppStartMode.Abnormal;
-			return;
-		}
-		ServerHwnd = (IntPtr)serverHwnd_Int;
-		StartMode = AppStartMode.Awake;
+		client = new();
+		client.ClientReceived += text => mainWindow.recieved = text;
 
-	StartApp:
 		mainWindow = new MainWindow();
 		mainWindow.SizeChanged += SizeChanged;
 		appWindow = GetAppWindow(mainWindow); // Set ExtendsContentIntoTitleBar for the AppWindow not the window

@@ -6,9 +6,14 @@ namespace OtomadHelper.UI;
 /// </summary>
 public sealed partial class MainWindow : Window {
 	internal static MainWindow Instance { get; private set; }
+	internal string recieved = "Loaded!";
 
 	public MainWindow() {
 		InitializeComponent();
 		Instance = this;
+	}
+
+	private void Window_Closed(object sender, WindowEventArgs args) {
+		App.Current.client.Close();
 	}
 }
