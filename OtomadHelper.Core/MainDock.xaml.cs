@@ -12,10 +12,16 @@ namespace OtomadHelper.Core {
 	/// </summary>
 	public partial class MainDock : UserControl {
 		//private readonly Vegas vegas;
+		internal static MainDock Instance { get; private set; }
 
 		public MainDock() {
 			InitializeComponent();
-			DataContext = this;
+			Instance = this;
+		}
+
+		internal string Received {
+			get { return ReceivedLbl.Text; }
+			set { ReceivedLbl.Text = value; }
 		}
 
 		/*public MainDock(Vegas myVegas) : this() {
@@ -26,7 +32,7 @@ namespace OtomadHelper.Core {
 		}*/
 
 		public void SendBtn_Click(object sender, RoutedEventArgs e) {
-			(App.Current.MainWindow as TestWindow).server.send = SendTxt.Text;
+			(App.Current.MainWindow as TestWindow).Send(SendTxt.Text);
 		}
 
 		/*public TrackEvent[] GetSelectedEvents() {
@@ -40,6 +46,10 @@ namespace OtomadHelper.Core {
 
 		public static Color ToMediaColor(System.Drawing.Color color) {
 			return Color.FromArgb(color.A, color.R, color.G, color.B);
+		}
+
+		private void OpenClientBtn_Click(object sender, RoutedEventArgs e) {
+			(App.Current.MainWindow as TestWindow).windowHelper.OpenClient();
 		}
 	}
 }

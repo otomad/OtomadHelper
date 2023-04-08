@@ -1,63 +1,119 @@
 ﻿using Microsoft.UI.Xaml;
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 using WinRT;
 
 namespace OtomadHelper.UI;
 internal class WindowHelper {
-	public WindowHelper(Window window) {
-		this.window = window;
-		SubClassing();
-	}
-
-	private Window window;
-	private delegate IntPtr WinProc(IntPtr hWnd, PInvoke.User32.WindowMessage Msg, IntPtr wParam, IntPtr lParam);
+	private readonly Window window;
 	private WinProc newWndProc = null;
 	private IntPtr oldWndProc = IntPtr.Zero;
-	[DllImport("user32")]
-	private static extern IntPtr SetWindowLong(IntPtr hWnd, PInvoke.User32.WindowLongIndexFlags nIndex, WinProc newProc);
+	private delegate IntPtr WinProc(IntPtr hWnd, WindowMessage Msg, IntPtr wParam, IntPtr lParam);
+
+	[DllImport("User32.dll")]
+	internal static extern int GetDpiForWindow(IntPtr hwnd);
+
+	[DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+	private static extern int SetWindowLong32(IntPtr hWnd, WindowLongIndexFlags nIndex, WinProc newProc);
+
+	[DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
+	private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, WindowLongIndexFlags nIndex, WinProc newProc);
+
 	[DllImport("user32.dll")]
-	static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, PInvoke.User32.WindowMessage Msg, IntPtr wParam, IntPtr lParam);
+	private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, WindowMessage Msg, IntPtr wParam, IntPtr lParam);
 
-	private void SubClassing() {
-		// Get the Window's HWND
-		IntPtr hwnd = window.As<IWindowNative>().WindowHandle;
-		newWndProc = new WinProc(NewWindowProc);
-		oldWndProc = SetWindowLong(hwnd, PInvoke.User32.WindowLongIndexFlags.GWL_WNDPROC, newWndProc);
+	[DllImport("user32.dll", EntryPoint = "SendMessage")]
+	private static extern int SendMessage(int hWnd, int Msg, int wParam, ref COPYDATASTRUCT lParam);
+
+	public static int MinWindowWidth { get; set; } = 500;
+	public static int MinWindowHeight { get; set; } = 400;
+
+	public WindowHelper(Window window) {
+		this.window = window;
+		RegisterWindowMinMax(window);
 	}
 
-	public int MinWidth = 800;
-	public int MinHeight = 600;
+	private void RegisterWindowMinMax(Window window) {
+		IntPtr hwnd = GetWindowHandleForCurrentWindow(window);
 
-	[StructLayout(LayoutKind.Sequential)]
-	struct MINMAXINFO {
-		public PInvoke.POINT ptReserved;
-		public PInvoke.POINT ptMaxSize;
-		public PInvoke.POINT ptMaxPosition;
-		public PInvoke.POINT ptMinTrackSize;
-		public PInvoke.POINT ptMaxTrackSize;
+		newWndProc = new WinProc(WndProc);
+		oldWndProc = SetWindowLongPtr(hwnd, WindowLongIndexFlags.GWL_WNDPROC, newWndProc);
 	}
 
-	private IntPtr NewWindowProc(IntPtr hWnd, PInvoke.User32.WindowMessage Msg, IntPtr wParam, IntPtr lParam) {
+	private static IntPtr GetWindowHandleForCurrentWindow(object target) =>
+		WinRT.Interop.WindowNative.GetWindowHandle(target);
+
+	private IntPtr WndProc(IntPtr hWnd, WindowMessage Msg, IntPtr wParam, IntPtr lParam) {
 		switch (Msg) {
-			case PInvoke.User32.WindowMessage.WM_GETMINMAXINFO:
-				var dpi = PInvoke.User32.GetDpiForWindow(hWnd);
+			case WindowMessage.WM_GETMINMAXINFO:
+				int dpi = GetDpiForWindow(hWnd);
 				float scalingFactor = (float)dpi / 96;
 
 				MINMAXINFO minMaxInfo = Marshal.PtrToStructure<MINMAXINFO>(lParam);
-				minMaxInfo.ptMinTrackSize.x = (int)(MinWidth * scalingFactor);
-				minMaxInfo.ptMinTrackSize.y = (int)(MinHeight * scalingFactor);
+				minMaxInfo.ptMinTrackSize.x = (int)(MinWindowWidth * scalingFactor);
+				minMaxInfo.ptMinTrackSize.y = (int)(MinWindowHeight * scalingFactor);
+
 				Marshal.StructureToPtr(minMaxInfo, lParam, true);
 				break;
-
+			case WindowMessage.WM_COPYDATA:
+				COPYDATASTRUCT cds = (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT)); // 接收封装的消息
+				// 以下为逻辑处理
+				string strResult = cds.lpData;
+				string strType = cds.dwData.ToString();
+				if (strType == "1") Received(strResult);
+				break;
 		}
 		return CallWindowProc(oldWndProc, hWnd, Msg, wParam, lParam);
 	}
 
-	[ComImport]
-	[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-	[Guid("EECDBF0E-BAE9-4CB6-A68E-9598E1CB57BB")]
-	internal interface IWindowNative {
-		IntPtr WindowHandle { get; }
+	public void SendMessage(string data) {
+		byte[] sarr = Encoding.UTF8.GetBytes(data);
+		int len = sarr.Length;
+		COPYDATASTRUCT cds;
+		cds.dwData = (IntPtr)Convert.ToInt16(1); // 可以是任意值
+		cds.cbData = len + 1; // 指定lpData内存区域的字节数
+		cds.lpData = data; // 发送给目标窗口所在进程的数据
+		if (App.ServerHwnd != IntPtr.Zero)
+			SendMessage(App.ServerHwnd.ToInt32(), (int)WindowMessage.WM_COPYDATA, 0, ref cds);
 	}
+
+	private static IntPtr SetWindowLongPtr(IntPtr hWnd, WindowLongIndexFlags nIndex, WinProc newProc) {
+		return IntPtr.Size == 8 ? SetWindowLongPtr64(hWnd, nIndex, newProc) : new IntPtr(SetWindowLong32(hWnd, nIndex, newProc));
+	}
+
+	private struct POINT {
+		public int x;
+		public int y;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	private struct MINMAXINFO {
+		public POINT ptReserved;
+		public POINT ptMaxSize;
+		public POINT ptMaxPosition;
+		public POINT ptMinTrackSize;
+		public POINT ptMaxTrackSize;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public struct COPYDATASTRUCT {
+		public IntPtr dwData; // 用户定义数据
+		public int cbData; // 数据大小
+		[MarshalAs(UnmanagedType.LPStr)]
+		public string lpData; // 指向数据的指针
+	}
+
+	[Flags]
+	private enum WindowLongIndexFlags : int {
+		GWL_WNDPROC = -4,
+	}
+
+	private enum WindowMessage : int {
+		WM_GETMINMAXINFO = 0x0024,
+		WM_COPYDATA = 0x004A, // 当一个应用程序传递数据给另一个应用程序时发送此消息
+	}
+
+	public delegate void ReceivedType(string text);
+	public event ReceivedType Received;
 }

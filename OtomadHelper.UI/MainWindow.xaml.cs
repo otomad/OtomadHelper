@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using System;
 
 namespace OtomadHelper.UI;
 /// <summary>
@@ -6,7 +7,13 @@ namespace OtomadHelper.UI;
 /// </summary>
 public sealed partial class MainWindow : Window {
 	internal static MainWindow Instance { get; private set; }
-	internal string recieved = "Loaded!";
+	internal string Received {
+		set {
+			Pages.HomePage homePage = Pages.HomePage.Instance;
+			if (homePage != null)
+				homePage.Received = value;
+		}
+	}
 
 	public MainWindow() {
 		InitializeComponent();
@@ -14,6 +21,6 @@ public sealed partial class MainWindow : Window {
 	}
 
 	private void Window_Closed(object sender, WindowEventArgs args) {
-		App.Current.client.Close();
+		
 	}
 }

@@ -19,20 +19,24 @@ namespace OtomadHelper.UI.Pages;
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
 public sealed partial class HomePage : Page {
+	internal static HomePage Instance { get; private set; }
+	internal string Received { get => ReceivedLbl.Text; set => ReceivedLbl.Text = value; }
+
 	public HomePage() {
 		InitializeComponent();
+		Instance = this;
+		Received = string.Join("\n", App.Args);
 	}
-
-	private string Received { get => App.MainWindow.recieved; }
 
 	private void SendBtn_Click(object sender, RoutedEventArgs e) {
 		string text = SendTxt.Text;
-		/*await new ContentDialog {
+		/*ReceivedLbl.Text = text;
+		await new ContentDialog {
 			Title = "Message",
 			Content = text,
 			CloseButtonText = "OK",
 			XamlRoot = XamlRoot,
 		}.ShowAsync();*/
-		App.Current.client.send = text;
+		App.Current.windowHelper.SendMessage(text);
 	}
 }

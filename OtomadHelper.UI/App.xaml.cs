@@ -21,7 +21,10 @@ public partial class App : Application {
 	internal ThemeManager themeManager;
 	internal static new App Current { get { return Application.Current as App; } }
 	internal static MainWindow MainWindow { get { return App.Current.mainWindow; } }
-	internal PipeClient client;
+	internal WindowHelper windowHelper;
+	public static List<string> Args { get; private set; }
+	public static AppStartMode StartMode { get; private set; }
+	public static IntPtr ServerHwnd { get; private set; }
 
 	/// <summary>
 	/// Initializes the singleton application object.  This is the first line of authored code
@@ -36,7 +39,28 @@ public partial class App : Application {
 	/// Other entry points will be used such as when the application is launched to open a specific file.
 	/// </summary>
 	/// <param name="args">Details about the launch request and process.</param>
-	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) {
+	protected override void OnLaunched(LaunchActivatedEventArgs args) {
+		Args = Environment.GetCommandLineArgs().ToList();
+		if (Args.Count <= 1) {
+			StartMode = AppStartMode.Manual;
+			//return;
+			goto StartApp; // 生产环境换成上面的 return。
+		}
+		int paramIndex =  Args.IndexOf("-OtomadHelper");
+		if (paramIndex == -1 || paramIndex >= Args.Count - 1) {
+			StartMode = AppStartMode.Abnormal;
+			return;
+		}
+		string serverHwnd_Str = Args[paramIndex + 1];
+		bool ok = int.TryParse(serverHwnd_Str, out int serverHwnd_Int);
+		if (!ok) {
+			StartMode = AppStartMode.Abnormal;
+			return;
+		}
+		ServerHwnd = (IntPtr)serverHwnd_Int;
+		StartMode = AppStartMode.Awake;
+
+	StartApp:
 		mainWindow = new MainWindow();
 		mainWindow.SizeChanged += SizeChanged;
 		appWindow = GetAppWindow(mainWindow); // Set ExtendsContentIntoTitleBar for the AppWindow not the window
@@ -45,9 +69,8 @@ public partial class App : Application {
 		appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 		themeManager = ThemeManager.Initialize(mainWindow, WinUICommunity.Common.Helpers.BackdropType.DesktopAcrylic);
 		mainWindow.Activate();
-
-		client = new();
-		client.ClientReceived += text => mainWindow.recieved = text;
+		windowHelper = new WindowHelper(mainWindow);
+		windowHelper.Received += text => mainWindow.Received = text;
 	}
 
 	private void SizeChanged(object sender, WindowSizeChangedEventArgs args) {

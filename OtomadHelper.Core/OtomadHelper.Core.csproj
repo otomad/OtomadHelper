@@ -70,6 +70,7 @@
     <Compile Include="App.xaml.cs" />
     <Compile Include="Communication\PipeServer.cs" />
     <None Include="OtomadHelperModule.cs" />
+    <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="MainDock.xaml.cs">
       <DependentUpon>MainDock.xaml</DependentUpon>
     </Compile>

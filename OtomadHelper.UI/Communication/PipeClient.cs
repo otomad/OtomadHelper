@@ -23,21 +23,26 @@ internal class PipeClient {
 				if (!pipeClient.IsConnected) pipeClient.Connect();
 				using StreamReader reader = new(pipeClient, Encoding.UTF8);
 				using StreamWriter writer = new(pipeClient, Encoding.UTF8);
+				writer.AutoFlush = true;
 				ClientReceived("Connected");
 				while (pipeClient.IsConnected) {
-					//string received = reader.ReadLine();
-					//if (received != null) ClientReceived(received);
-					if (!string.IsNullOrEmpty(send)) {
+					string received = reader.ReadLine();
+					if (received != null) ClientReceived(received);
+					/*if (!string.IsNullOrEmpty(send)) {
 						writer.WriteLine(send);
-						writer.Flush();
 						send = "";
 					}
-					Thread.Sleep(100);
+					Thread.Sleep(100);*/
 				}
 			}
 		} catch (ThreadInterruptedException) { }
 		catch (ObjectDisposedException) { }
 		catch (IOException) { ClientReceived("Disconnected"); }
+	}
+
+	public void Send(string text) {
+		byte[] data = Encoding.UTF8.GetBytes(text);
+		pipeClient.Write(data, 0, data.Length);
 	}
 
 	public delegate void ClientReceivedType(string text);

@@ -15,5 +15,6 @@
 		<TextBlock x:Name="ReceivedLbl" Text="Loaded!" Margin="{DynamicResource MarginSpacing}" />
 		<TextBox x:Name="SendTxt" Margin="{DynamicResource MarginSpacing}" />
 		<Button x:Name="SendBtn" Content="_Send" Click="SendBtn_Click" Margin="{DynamicResource MarginSpacing}" />
+		<Button x:Name="OpenClientBtn" Content="Open _client" Click="OpenClientBtn_Click" Margin="{DynamicResource MarginSpacing}" />
 	</StackPanel>
 </UserControl>

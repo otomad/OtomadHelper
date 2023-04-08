@@ -1,25 +1,36 @@
 ﻿using OtomadHelper.Core.Communication;
+using OtomadHelper.Core.Helpers;
+using System;
 using System.Windows;
+using System.Windows.Interop;
 
 namespace OtomadHelper.Core {
 	/// <summary>
 	/// TestWindow.xaml 的交互逻辑
 	/// </summary>
 	public partial class TestWindow : Window {
-		internal PipeServer server;
+		internal WindowHelper windowHelper;
 
 		public TestWindow() {
 			InitializeComponent();
+			windowHelper = new WindowHelper(this);
+			windowHelper.Received += text => {
+				MainDock dock = MainDock.Instance;
+				if (dock != null) dock.Received = text;
+			};
 		}
 
-		private void Window_Loaded(object sender, RoutedEventArgs e) {
-			server = new PipeServer();
-			server.ServerReceived += text => Dispatcher.Invoke(() => (Content as MainDock).ReceivedLbl.Text = text);
+		protected override void OnSourceInitialized(EventArgs e) {
+			base.OnSourceInitialized(e);
+			HwndSource hwndSource = PresentationSource.FromVisual(this) as HwndSource;
+			if (hwndSource != null) {
+				IntPtr handle = hwndSource.Handle;
+				hwndSource.AddHook(new HwndSourceHook(windowHelper.WndProc));
+			}
 		}
 
-		private void Window_Closed(object sender, System.EventArgs e) {
-			if (server != null)
-				server.Close();
+		internal void Send(string text) {
+			windowHelper.SendMessage(text);
 		}
 	}
 }
