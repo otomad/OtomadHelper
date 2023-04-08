@@ -41,7 +41,7 @@ public sealed partial class SettingsPage : Page {
 	private void SetSolidBackground() {
 		if (App.MainWindow.Content is ShellPage page) {
 			bool isPictureBg = selectedBackdrop is BackdropType.Rem or BackdropType.Custom;
-			bool isDark = App.Current.themeManager.ActualTheme == ElementTheme.Dark;
+			bool isDark = App.Current.themeManager.IsDarkTheme();
 			page.Background = new SolidColorBrush(
 				!(selectedBackdrop == BackdropType.None || isPictureBg) ? Colors.Transparent :
 				isDark ? Colors.Black : Colors.White
