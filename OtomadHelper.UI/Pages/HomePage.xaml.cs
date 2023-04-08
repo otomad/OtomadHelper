@@ -25,13 +25,14 @@ public sealed partial class HomePage : Page {
 
 	private string Received { get => App.MainWindow.recieved; }
 
-	private async void SendBtn_Click(object sender, RoutedEventArgs e) {
+	private void SendBtn_Click(object sender, RoutedEventArgs e) {
 		string text = SendTxt.Text;
-		await new ContentDialog {
+		/*await new ContentDialog {
 			Title = "Message",
 			Content = text,
 			CloseButtonText = "OK",
 			XamlRoot = XamlRoot,
-		}.ShowAsync();
+		}.ShowAsync();*/
+		App.Current.client.send = text;
 	}
 }

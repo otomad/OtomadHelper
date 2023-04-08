@@ -9,6 +9,7 @@ internal class PipeClient {
 	private readonly Thread thread;
 	public string send = "";
 	private readonly object lockObject = new();
+	private readonly NamedPipeClientStream pipeClient = new(".", "OtomadHelper", PipeDirection.InOut);
 
 	internal PipeClient() {
 		thread = new Thread(StartClient);
@@ -18,21 +19,25 @@ internal class PipeClient {
 	private void StartClient() {
 		try {
 			lock (lockObject) {
-				using NamedPipeClientStream pipeClient = new(".", "OtomadHelper", PipeDirection.InOut);
-				pipeClient.Connect();
-				using StreamReader streamReader = new(pipeClient);
-				while (true) {
-					string received = streamReader.ReadLine();
-					if (received != null)
-						ClientReceived(received);
+				ClientReceived("Wait for connection");
+				if (!pipeClient.IsConnected) pipeClient.Connect();
+				using StreamReader reader = new(pipeClient, Encoding.UTF8);
+				using StreamWriter writer = new(pipeClient, Encoding.UTF8);
+				ClientReceived("Connected");
+				while (pipeClient.IsConnected) {
+					//string received = reader.ReadLine();
+					//if (received != null) ClientReceived(received);
 					if (!string.IsNullOrEmpty(send)) {
-						byte[] data = Encoding.UTF8.GetBytes(send);
+						writer.WriteLine(send);
+						writer.Flush();
 						send = "";
-						pipeClient.Write(data, 0, data.Length);
 					}
+					Thread.Sleep(100);
 				}
 			}
 		} catch (ThreadInterruptedException) { }
+		catch (ObjectDisposedException) { }
+		catch (IOException) { ClientReceived("Disconnected"); }
 	}
 
 	public delegate void ClientReceivedType(string text);
@@ -44,5 +49,6 @@ internal class PipeClient {
 
 	public void Close() {
 		thread.Interrupt();
+		pipeClient.Close();
 	}
 }

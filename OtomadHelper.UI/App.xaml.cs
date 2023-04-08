@@ -37,9 +37,6 @@ public partial class App : Application {
 	/// </summary>
 	/// <param name="args">Details about the launch request and process.</param>
 	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) {
-		client = new();
-		client.ClientReceived += text => mainWindow.recieved = text;
-
 		mainWindow = new MainWindow();
 		mainWindow.SizeChanged += SizeChanged;
 		appWindow = GetAppWindow(mainWindow); // Set ExtendsContentIntoTitleBar for the AppWindow not the window
@@ -48,6 +45,9 @@ public partial class App : Application {
 		appWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 		themeManager = ThemeManager.Initialize(mainWindow, WinUICommunity.Common.Helpers.BackdropType.DesktopAcrylic);
 		mainWindow.Activate();
+
+		client = new();
+		client.ClientReceived += text => mainWindow.recieved = text;
 	}
 
 	private void SizeChanged(object sender, WindowSizeChangedEventArgs args) {

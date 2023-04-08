@@ -6,7 +6,7 @@ using System.Windows.Forms.Integration;
 
 namespace OtomadHelper.Core {
 	public class OtomadHelperDock : DockableControl {
-		private MainWindow myForm = null;
+		private MainDock myForm = null;
 		private readonly ElementHost elementHost = new ElementHost { Dock = DockStyle.Fill };
 		private Vegas vegas { get { return myVegas; } }
 
@@ -23,16 +23,16 @@ namespace OtomadHelper.Core {
 		}
 
 		protected override void OnLoad(EventArgs args) {
-			myForm = new MainWindow(myVegas);
+			myForm = new MainDock(myVegas);
 			elementHost.Child = myForm;
 			Controls.Add(elementHost);
 
-			vegas.TrackEventStateChanged += HandleTrackEventChanged;
-			vegas.TrackEventCountChanged += HandleTrackEventChanged;
+			//vegas.TrackEventStateChanged += HandleTrackEventChanged;
+			//vegas.TrackEventCountChanged += HandleTrackEventChanged;
 		}
 
 		private void HandleTrackEventChanged(object sender, EventArgs e) {
-			myForm.SelectBtn_Click(null, null);
+			//myForm.SelectBtn_Click(null, null);
 		}
 
 		protected override void OnClosed(EventArgs args) {
