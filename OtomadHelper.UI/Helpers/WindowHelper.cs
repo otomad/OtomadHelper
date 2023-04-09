@@ -2,7 +2,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using WinRT;
 
 namespace OtomadHelper.UI;
 internal class WindowHelper {
@@ -59,7 +58,7 @@ internal class WindowHelper {
 			case WindowMessage.WM_COPYDATA:
 				COPYDATASTRUCT cds = (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT)); // 接收封装的消息
 				// 以下为逻辑处理
-				string strResult = cds.lpData;
+				string strResult = Shared.Encodings.DecodeEncodedNonAscii(cds.lpData);
 				string strType = cds.dwData.ToString();
 				if (strType == "1") Received(strResult);
 				break;
@@ -68,11 +67,12 @@ internal class WindowHelper {
 	}
 
 	public void SendMessage(string data) {
-		byte[] sarr = Encoding.UTF8.GetBytes(data);
+		data = Shared.Encodings.EncodeNonAscii(data);
+		byte[] sarr = Encoding.Default.GetBytes(data);
 		int len = sarr.Length;
 		COPYDATASTRUCT cds;
 		cds.dwData = (IntPtr)Convert.ToInt16(1); // 可以是任意值
-		cds.cbData = len + 1; // 指定lpData内存区域的字节数
+		cds.cbData = len + 1; // 指定 lpData 内存区域的字节数
 		cds.lpData = data; // 发送给目标窗口所在进程的数据
 		if (App.ServerHwnd != IntPtr.Zero)
 			SendMessage(App.ServerHwnd.ToInt32(), (int)WindowMessage.WM_COPYDATA, 0, ref cds);
