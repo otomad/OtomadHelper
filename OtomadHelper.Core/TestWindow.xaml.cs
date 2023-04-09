@@ -32,5 +32,9 @@ namespace OtomadHelper.Core {
 		internal void Send(string text) {
 			windowHelper.SendMessage(text);
 		}
+
+		private void Window_Closed(object sender, EventArgs e) {
+			windowHelper.Close();
+		}
 	}
 }

@@ -8,6 +8,7 @@
 	mc:Ignorable="d"
 	Title="Otomad Helper"
 	Height="480"
-	Width="800">
+	Width="800"
+	Closed="Window_Closed">
 	<local:MainDock />
 </Window>

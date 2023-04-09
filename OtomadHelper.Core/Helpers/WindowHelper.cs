@@ -13,6 +13,7 @@ using System.Windows.Threading;
 namespace OtomadHelper.Core.Helpers {
 	internal class WindowHelper {
 		private Process pro;
+		private IntPtr ClientHandle { get { return pro.MainWindowHandle; } }
 		private readonly Window window;
 
 		internal WindowHelper(Window window) {
@@ -21,8 +22,8 @@ namespace OtomadHelper.Core.Helpers {
 
 		private bool isOpenedClient = false;
 		public void OpenClient() {
-			if (isOpenedClient) {
-				Debug.WriteLine("isOpenedClient");
+			if (isOpenedClient && pro != null) {
+				SwitchToThisWindow(ClientHandle, true);
 				return;
 			}
 			isOpenedClient = true;
@@ -41,14 +42,16 @@ namespace OtomadHelper.Core.Helpers {
 			}).Start();
 		}
 
-		private void ServerWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-			if (!pro.HasExited) pro?.Kill(); // 结束进程
+		public void Close() {
+			if (pro != null && !pro.HasExited) pro?.Kill(); // 结束进程
 		}
 
-		[DllImport("User32.dll", EntryPoint = "SendMessage")]
+		[DllImport("user32.dll", EntryPoint = "SendMessage")]
 		private static extern int SendMessage(int hWnd, int Msg, int wParam, ref COPYDATASTRUCT lParam);
-		[DllImport("User32.dll", EntryPoint = "FindWindow")]
+		[DllImport("user32.dll", EntryPoint = "FindWindow")]
 		private static extern int FindWindow(string lpClassName, string lpWindowName);
+		[DllImport("user32.dll ", SetLastError = true)]
+		static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
 		const int WM_COPYDATA = 0x004A; // 当一个应用程序传递数据给另一个应用程序时发送此消息
 
 		private struct COPYDATASTRUCT {
@@ -70,7 +73,7 @@ namespace OtomadHelper.Core.Helpers {
 			cds.dwData = (IntPtr)Convert.ToInt16(1); // 可以是任意值
 			cds.cbData = len + 1; // 指定 lpData 内存区域的字节数
 			cds.lpData = data; // 发送给目标窗口所在进程的数据
-			SendMessage((int)pro.MainWindowHandle, WM_COPYDATA, 0, ref cds); // 发送消息
+			SendMessage((int)ClientHandle, WM_COPYDATA, 0, ref cds); // 发送消息
 		}
 
 		internal IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
