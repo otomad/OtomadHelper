@@ -1,4 +1,5 @@
-﻿using ScriptPortal.Vegas;
+﻿using OtomadHelper.Core.Helpers;
+using ScriptPortal.Vegas;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -8,10 +9,15 @@ namespace OtomadHelper.Core {
 	public class OtomadHelperDock : DockableControl {
 		private MainDock myForm = null;
 		private readonly ElementHost elementHost = new ElementHost { Dock = DockStyle.Fill };
-		private Vegas vegas { get { return myVegas; } }
+		internal Vegas vegas { get { return myVegas; } }
+		internal readonly WindowHelper windowHelper;
 
 		public OtomadHelperDock() : base(OtomadHelperModule.INTERNAL_NAME) {
 			DisplayName = OtomadHelperModule.DISPLAY_NAME;
+			windowHelper = new WindowHelper(this);
+			windowHelper.Received += text => {
+				if (myForm != null) myForm.Received = text;
+			};
 		}
 
 		public override DockWindowStyle DefaultDockWindowStyle {
@@ -23,7 +29,7 @@ namespace OtomadHelper.Core {
 		}
 
 		protected override void OnLoad(EventArgs args) {
-			myForm = new MainDock(myVegas);
+			myForm = new MainDock(this);
 			elementHost.Child = myForm;
 			Controls.Add(elementHost);
 
@@ -37,6 +43,12 @@ namespace OtomadHelper.Core {
 
 		protected override void OnClosed(EventArgs args) {
 			base.OnClosed(args);
+		}
+
+		protected override void WndProc(ref Message m) {
+			bool handled = false;
+			windowHelper.WndProc(m.HWnd, m.Msg, m.WParam, m.LParam, ref handled);
+			if (!handled) base.WndProc(ref m);
 		}
 	}
 }

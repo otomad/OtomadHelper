@@ -1,5 +1,4 @@
-﻿using OtomadHelper.Core.Communication;
-using OtomadHelper.Core.Helpers;
+﻿using OtomadHelper.Core.Helpers;
 using System;
 using System.Windows;
 using System.Windows.Interop;
@@ -9,7 +8,7 @@ namespace OtomadHelper.Core {
 	/// TestWindow.xaml 的交互逻辑
 	/// </summary>
 	public partial class TestWindow : Window {
-		internal WindowHelper windowHelper;
+		internal readonly WindowHelper windowHelper;
 
 		public TestWindow() {
 			InitializeComponent();

@@ -1,23 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Threading;
 
 namespace OtomadHelper.Core.Helpers {
 	internal class WindowHelper {
 		private Process pro;
 		private IntPtr ClientHandle { get { return pro.MainWindowHandle; } }
-		private readonly Window window;
+		private readonly Window wpfWindow;
+		private readonly System.Windows.Forms.IWin32Window winformWindow;
 
 		internal WindowHelper(Window window) {
-			this.window = window;
+			wpfWindow = window;
+		}
+
+		internal WindowHelper(System.Windows.Forms.IWin32Window window) {
+			winformWindow = window;
 		}
 
 		private bool isOpenedClient = false;
@@ -91,7 +92,12 @@ namespace OtomadHelper.Core.Helpers {
 			return (IntPtr)0;
 		}
 
-		public IntPtr Handle { get { return new WindowInteropHelper(window).Handle; } }
+		public IntPtr Handle {
+			get {
+				return wpfWindow != null ? new WindowInteropHelper(wpfWindow).Handle :
+					winformWindow != null ? winformWindow.Handle : IntPtr.Zero;
+			}
+		}
 		public delegate void ReceivedType(string text);
 		public event ReceivedType Received;
 	}

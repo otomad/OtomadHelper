@@ -1,6 +1,5 @@
-﻿//using ScriptPortal.MediaSoftware.Skins;
-//using ScriptPortal.Vegas;
-using OtomadHelper.Core.Communication;
+﻿using ScriptPortal.MediaSoftware.Skins;
+using ScriptPortal.Vegas;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,8 +10,9 @@ namespace OtomadHelper.Core {
 	/// MainWindow.xaml 的交互逻辑
 	/// </summary>
 	public partial class MainDock : UserControl {
-		//private readonly Vegas vegas;
+		private Vegas vegas { get { return dock.vegas; } }
 		internal static MainDock Instance { get; private set; }
+		private readonly OtomadHelperDock dock;
 
 		public MainDock() {
 			InitializeComponent();
@@ -24,15 +24,16 @@ namespace OtomadHelper.Core {
 			set { ReceivedLbl.Text = value; }
 		}
 
-		/*public MainDock(Vegas myVegas) : this() {
-			vegas = myVegas;
+		public MainDock(OtomadHelperDock dock) : this() {
+			this.dock = dock;
 			Background = new SolidColorBrush(ToMediaColor(Skins.Colors.ButtonFace));
 			Foreground = new SolidColorBrush(ToMediaColor(Skins.Colors.ButtonText));
 			ReceivedLbl.Foreground = new SolidColorBrush(ToMediaColor(Skins.Colors.ButtonText));
-		}*/
+		}
 
 		public void SendBtn_Click(object sender, RoutedEventArgs e) {
-			(App.Current.MainWindow as TestWindow).Send(SendTxt.Text);
+			//(App.Current.MainWindow as TestWindow).Send(SendTxt.Text);
+			dock.windowHelper.SendMessage(SendTxt.Text);
 		}
 
 		/*public TrackEvent[] GetSelectedEvents() {
@@ -49,7 +50,8 @@ namespace OtomadHelper.Core {
 		}
 
 		private void OpenClientBtn_Click(object sender, RoutedEventArgs e) {
-			(App.Current.MainWindow as TestWindow).windowHelper.OpenClient();
+			//(App.Current.MainWindow as TestWindow).windowHelper.OpenClient();
+			dock.windowHelper.OpenClient();
 		}
 	}
 }

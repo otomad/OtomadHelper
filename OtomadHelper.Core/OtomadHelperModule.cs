@@ -13,6 +13,7 @@ public class OtomadHelperModule : ICustomCommandModule {
 	public void InitializeModule(Vegas myVegas) {
 		vegas = myVegas;
 		customCommandModule.MenuItemName = DISPLAY_NAME;
+		customCommandModule.IconFile = @"C:\ProgramData\VEGAS Pro\20.0\Application Extensions\Otomad Helper.png";
 	}
 
 	public ICollection GetCustomCommands() {

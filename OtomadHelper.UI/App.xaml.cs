@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using OtomadHelper.UI.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +74,8 @@ public partial class App : Application {
 
 	private void SizeChanged(object sender, WindowSizeChangedEventArgs args) {
 		// Update the title bar draggable region. We need to indent from the left both for the nav back button and to avoid the system menu
-		Windows.Graphics.RectInt32[] rects = new Windows.Graphics.RectInt32[] { new Windows.Graphics.RectInt32(48, 0, (int)args.Size.Width - 48, 48) };
+		double dpi = 2; // TODO: 暂时不知道 WinUI 3 怎么找 DPI。
+		Windows.Graphics.RectInt32[] rects = new Windows.Graphics.RectInt32[] { new Windows.Graphics.RectInt32(48, 0, (int)((args.Size.Width - 48) * dpi), 48) };
 		appWindow.TitleBar.SetDragRectangles(rects);
 	}
 
