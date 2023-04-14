@@ -90,9 +90,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// </summary>
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 28, 3, 0);
+		public static readonly Version VERSION = new Version(4, 28, 14, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2023, 4, 3);
+		public static readonly DateTime REVISION_DATE = new DateTime(2023, 4, 14);
 
 		// 配置参数变量
 		#region 视频属性
@@ -1641,6 +1641,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (anim.VerticalExpansion != null) if (Plugin.picInPic != null) Plugin.ForVideoEvents.Expansion(videoEvent, anim.VerticalExpansion); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
 			if (anim.TimeClass2 != null) Plugin.ForVideoEvents.TimeClass2(videoEvent, anim.TimeClass2);
 			if (anim.IsZoomOutIn) if (Plugin.picInPic != null) Plugin.ForVideoEvents.ZoomOutIn(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
+			if (anim.IsWipeInTheRight) if (Plugin.crop != null) Plugin.ForVideoEvents.WipeInTheRight(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.crop)); return false; }
+			if (anim.IsSplitVerticalOut) if (Plugin.crop != null) Plugin.ForVideoEvents.SplitVerticalOut(videoEvent); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.crop)); return false; }
 			return true;
 		}
 
@@ -3575,11 +3577,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		VERTICAL_EXPANSION_WITH_REBOUND,
 		VERTICAL_COMPRESSION,
 		VERTICAL_COMPRESSION_WITH_REBOUND,
+		VERTICAL_BOUNCE,
 		OBLIQUE_EXPANSION_AND_COMPRESSION,
 		PUYO_PUYO, // PUYO_POP
 		PENDULUM, // SWING
 		GAUSSIAN_BLUR,
 		RADIAL_BLUR,
+		WIPE_IN_THE_RIGHT,
+		SPLIT_VERTICAL_OUT,
 	}
 
 	/// <summary>
@@ -3624,11 +3629,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					new string[] { str.effect_init_up },
 					new string[] { str.effect_init_down },
 					new string[] { str.effect_init_down },
+					new string[] { str.effect_init_outward },
 					new string[] { str.effect_init_right, str.effect_init_left },
 					new string[] { str.effect_init_flat, str.effect_init_thin },
 					new string[] { str.effect_init_right, str.effect_init_left },
 					new string[] { str.effect_init_blur },
 					new string[] { str.effect_init_blur },
+					new string[] { str.effect_init_right },
+					new string[] { str.effect_init_outward },
 				};
 			}
 		}
@@ -3646,9 +3654,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					{ str.monochrome_class, new PvVisualEffectType[] { PvVisualEffectType.GREY } },
 					{ str.time_class, new PvVisualEffectType[] { PvVisualEffectType.PINGPONG, PvVisualEffectType.WHIRL } },
 					{ str.time_class_2, new PvVisualEffectType[] { PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD } },
-					{ str.expansion_and_compression_class, new PvVisualEffectType[] { PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_EXPANSION_WITH_REBOUND, PvVisualEffectType.VERTICAL_COMPRESSION, PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND, PvVisualEffectType.OBLIQUE_EXPANSION_AND_COMPRESSION, PvVisualEffectType.PUYO_PUYO} },
+					{ str.expansion_and_compression_class, new PvVisualEffectType[] { PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_EXPANSION_WITH_REBOUND, PvVisualEffectType.VERTICAL_COMPRESSION, PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND, PvVisualEffectType.VERTICAL_BOUNCE, PvVisualEffectType.OBLIQUE_EXPANSION_AND_COMPRESSION, PvVisualEffectType.PUYO_PUYO} },
 					{ str.swing_class, new PvVisualEffectType[] { PvVisualEffectType.PENDULUM } },
 					{ str.blur_class, new PvVisualEffectType[] { PvVisualEffectType.GAUSSIAN_BLUR, PvVisualEffectType.RADIAL_BLUR } },
+					{ str.wipe_class, new PvVisualEffectType[] { PvVisualEffectType.WIPE_IN_THE_RIGHT, PvVisualEffectType.SPLIT_VERTICAL_OUT } },
 				};
 			}
 		}
@@ -3690,8 +3699,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public bool IsGaussianBlur { get { return fxes.HasEffect(PvVisualEffectType.GAUSSIAN_BLUR); } }
 		public bool IsRadialBlur { get { return fxes.HasEffect(PvVisualEffectType.RADIAL_BLUR); } }
 		public bool IsZoomOutIn { get { return fxes.HasEffect(PvVisualEffectType.ZOOM_OUT_IN); } }
-		public PvVisualEffectType? VerticalExpansion { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND); } }
+		public bool IsWipeInTheRight { get { return fxes.HasEffect(PvVisualEffectType.WIPE_IN_THE_RIGHT); } }
+		public bool IsSplitVerticalOut { get { return fxes.HasEffect(PvVisualEffectType.SPLIT_VERTICAL_OUT); } }
+		public PvVisualEffectType? VerticalExpansion { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.VERTICAL_BOUNCE); } }
 		public bool RequirePicInPicDeformEffects { get { return GetFirstEffectInRange(PvVisualEffectType.VERTICAL_EXPANSION, PvVisualEffectType.PUYO_PUYO) != null; } }
+		public bool IsVerticalBounce { get { return fxes.HasEffect(PvVisualEffectType.VERTICAL_BOUNCE); } }
 		public PvVisualEffectType? TimeClass2 { get { return GetFirstEffectInRange(PvVisualEffectType.SHARP_REWIND, PvVisualEffectType.WOBBLE_PERIOD); } }
 		public bool IsPitchHoldEffects { get { return GetFirstEffectInRange(PvVisualEffectType.H_FLIP_SUSTAIN, PvVisualEffectType.H_FLIP_INVERT) != null; } }
 
@@ -4198,7 +4210,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			public static void Expansion(VideoEvent videoEvent, PvVisualEffectType? _type, double scale = 0.8) {
 				if (_type == null) return;
 				PvVisualEffectType type = (PvVisualEffectType)_type;
-				if (type < PvVisualEffectType.VERTICAL_EXPANSION || type > PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND) return;
+				if (type < PvVisualEffectType.VERTICAL_EXPANSION || type > PvVisualEffectType.VERTICAL_BOUNCE) return;
+				bool isVerticalBounce = type == PvVisualEffectType.VERTICAL_BOUNCE;
 				Timecode startTime = Timecode.FromMilliseconds(0), endTime = videoEvent.Length, centerTime = Timecode.FromMilliseconds(videoEvent.Length.ToMilliseconds() / 2);
 				Effect effect = videoEvent.Effects.AddEffect(picInPic);
 				OFXChoiceParameter keepProp = effect.OFXEffect.FindParameterByName("KeepProportions") as OFXChoiceParameter;
@@ -4209,14 +4222,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scaleYParam.Value = isCompression ? 1 : scale; // 如果不设置该项，会出现闪屏错误。
 				OFXDouble2DParameter locationParam = effect.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter;
 				Func<bool, OFXDouble2D> setLocationIsMax = max => max ? new OFXDouble2D { X = 0.5, Y = 0.5 } : new OFXDouble2D { X = 0.5, Y = scale / 2 };
-				locationParam.Value = setLocationIsMax(isCompression);
+				if (!isVerticalBounce) {
+					locationParam.Value = setLocationIsMax(isCompression);
+					locationParam.IsAnimated = true;
+				}
 				scaleYParam.IsAnimated = true;
-				locationParam.IsAnimated = true;
 				Action<Timecode, bool> setY = (timecode, max) => {
 					scaleYParam.SetValueAtTime(timecode, max ? 1 : scale);
 					locationParam.SetValueAtTime(timecode, setLocationIsMax(max));
 				};
-				if (type == PvVisualEffectType.VERTICAL_EXPANSION || type == PvVisualEffectType.VERTICAL_COMPRESSION) {
+				if (isVerticalBounce) {
+					scaleYParam.SetValueAtTime(startTime, scale);
+					scaleYParam.SetValueAtTime(endTime, 1);
+				} else if (type == PvVisualEffectType.VERTICAL_EXPANSION || type == PvVisualEffectType.VERTICAL_COMPRESSION) {
 					setY(startTime, type == PvVisualEffectType.VERTICAL_COMPRESSION);
 					setY(endTime, type == PvVisualEffectType.VERTICAL_EXPANSION);
 				} else {
@@ -4224,8 +4242,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					setY(centerTime, type == PvVisualEffectType.VERTICAL_EXPANSION_WITH_REBOUND);
 					setY(endTime, type == PvVisualEffectType.VERTICAL_COMPRESSION_WITH_REBOUND);
 				}
-				scaleYParam.Keyframes[0].Interpolation = locationParam.Keyframes[0].Interpolation = OFXInterpolationType.Fast;
-				scaleYParam.Keyframes[1].Interpolation = locationParam.Keyframes[1].Interpolation = OFXInterpolationType.Slow;
+				scaleYParam.Keyframes[0].Interpolation = OFXInterpolationType.Fast;
+				scaleYParam.Keyframes[1].Interpolation = OFXInterpolationType.Slow;
+				if (!isVerticalBounce) {
+					locationParam.Keyframes[0].Interpolation = OFXInterpolationType.Fast;
+					locationParam.Keyframes[1].Interpolation = OFXInterpolationType.Slow;
+				}
 			}
 			/// <summary>
 			/// 斜向扩缩效果。
@@ -4518,11 +4540,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				scale.SetValueAtTime(Timecode.FromMilliseconds(0), MAX_SIZE_VALUE);
 				scale.SetValueAtTime(videoEvent.Length.Multiply(0.5), 1);
 				scale.SetValueAtTime(videoEvent.Length, MAX_SIZE_VALUE);
-				OFXKeyframes<double, OFXDoubleKeyframe> keys = scale.Keyframes;
-				if (keys.Count >= 3) { // 防止关键帧过少问题。
-					keys[0].Interpolation = OFXInterpolationType.Fast;
-					keys[1].Interpolation = OFXInterpolationType.Slow;
-				}
+				WipeInTheRight_SetInterpolation(scale.Keyframes); // 因为实现一致，临时借用另一效果的子方法。
 				effect.OFXEffect.AllParametersChanged();
 			}
 			/// <summary>
@@ -4565,6 +4583,47 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				byte[] result = values.SelectMany(value => BitConverter.GetBytes(value)).ToArray();
 				result[40] = (byte)(inProportion ? 1 : 0);
 				SWIRL_PRESETS_REG.SetValue(SWIRL_TEMP_PRESET_NAME, result, RegistryValueKind.Binary);
+			}
+			/// <summary>
+			/// 向右擦除效果。
+			/// </summary>
+			/// <param name="videoEvent">视频事件。</param>
+			public static void WipeInTheRight(VideoEvent videoEvent) {
+				Effect effect = videoEvent.Effects.AddEffect(crop);
+				effect.ApplyBeforePanCrop = true;
+				Timecode startTime = Timecode.FromMilliseconds(0), endTime = videoEvent.Length, centerTime = Timecode.FromMilliseconds(videoEvent.Length.ToMilliseconds() / 2);
+				OFXDoubleParameter xScale = effect.OFXEffect.FindParameterByName("XScale") as OFXDoubleParameter;
+				OFXDouble2DParameter location = effect.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter;
+				xScale.IsAnimated = true;
+				location.IsAnimated = true;
+				xScale.SetValueAtTime(startTime, 0);
+				location.SetValueAtTime(startTime, new OFXDouble2D { X = 0, Y = 0.5 });
+				xScale.SetValueAtTime(centerTime, 1);
+				location.SetValueAtTime(centerTime, new OFXDouble2D { X = 0.5, Y = 0.5 });
+				xScale.SetValueAtTime(endTime, 0);
+				location.SetValueAtTime(endTime, new OFXDouble2D { X = 1, Y = 0.5 });
+				WipeInTheRight_SetInterpolation(xScale.Keyframes);
+				WipeInTheRight_SetInterpolation(location.Keyframes);
+			}
+			private static void WipeInTheRight_SetInterpolation<TValue, TKeyValue>(OFXKeyframes<TValue, TKeyValue> keys) where TKeyValue : OFXKeyframe {
+				if (keys.Count >= 3) { // 防止关键帧过少问题。
+					keys[0].Interpolation = OFXInterpolationType.Fast;
+					keys[1].Interpolation = OFXInterpolationType.Slow;
+				}
+			}
+			/// <summary>
+			/// 分割/劈裂 - 中央向上下展开 效果。
+			/// </summary>
+			/// <param name="videoEvent">视频事件。</param>
+			/// <param name="scale">缩小比例。<br /><strong>V4 (WinForm) 版本暂不支持修改。</strong></param>
+			public static void SplitVerticalOut(VideoEvent videoEvent, double scale = 0.8) {
+				Effect effect = videoEvent.Effects.AddEffect(crop);
+				effect.ApplyBeforePanCrop = true;
+				OFXDoubleParameter yScale = effect.OFXEffect.FindParameterByName("YScale") as OFXDoubleParameter;
+				yScale.IsAnimated = true;
+				yScale.SetValueAtTime(Timecode.FromMilliseconds(0), scale);
+				yScale.SetValueAtTime(videoEvent.Length, 1);
+				yScale.Keyframes[0].Interpolation = OFXInterpolationType.Fast;
 			}
 		}
 
@@ -11114,7 +11173,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			} else track = tracks.FirstOrDefault();
 			if (track == null) {
 				track = IsAudio<T>() ? AddAudioTrackAfter() as Track : AddVideoTrackBefore() as Track;
-				GetTrackOtherInfo(track).Length = end;
+				if (!isSampleEvent) GetTrackOtherInfo(track).Length = end;
 			}
 			return track;
 		}
@@ -14138,7 +14197,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			Translate();
 			((Action)ReadIni).OnErrorBreak();
-			selectedFirstEvent = parent.GetSelectedFirstEvent<VideoEvent>();
+			selectedFirstEvent = parent.GetSelectedFirstEvent<TrackEvent>();
 			if (selectedFirstEvent == null) {
 				MatchSourceRadio.Enabled = MatchSourceAndOffsetRadio.Enabled = false;
 				MatchNameRadio.Checked = true;
@@ -14163,6 +14222,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					foreach (TrackEvent trackEvent in parent.GetEventsByTakeName(item.Text))
 						trackEvent.Selected = true;
 			else foreach (TrackEvent trackEvent in parent.GetAllEvents()) {
+				if (trackEvent.ActiveTake == null || trackEvent.ActiveTake.Media == null) continue;
 				if (trackEvent.ActiveTake.Media != selectedFirstEvent.ActiveTake.Media) continue;
 				if (MatchMethod == MatchMethodType.MATCH_SOURCE_AND_OFFSET &&
 					trackEvent.ActiveTake.Offset != selectedFirstEvent.ActiveTake.Offset) continue;
@@ -27886,9 +27946,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				str.vertical_expansion_with_rebound,
 				str.vertical_compression,
 				str.vertical_compression_with_rebound,
+				str.vertical_bounce,
 				str.oblique_expansion_and_compression,
 				str.puyo_puyo, str.pendulum,
 				str.gaussian_blur, str.radial_blur,
+				str.wipe_in_the_right,
+				str.split_vertical_out,
 			});
 			VideoConfigCheck.Text = str.vconfig;
 			VideoScratchLbl.Text = str.video_stretch;
@@ -29908,6 +29971,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			effect_init_right = "右",
 			effect_init_up = "上",
 			effect_init_down = "下",
+			effect_init_outward = "外",
 			effect_init_left_up = "左上",
 			effect_init_right_up = "右上",
 			effect_init_left_down = "左下",
@@ -30273,6 +30337,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			expansion_and_compression_class = "扩缩类",
 			swing_class = "摇摆类",
 			blur_class = "模糊类",
+			wipe_class = "擦除类",
 			no_effects = "无效果",
 			h_flip = "水平翻转",
 			v_flip = "垂直翻转",
@@ -30302,11 +30367,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			vertical_expansion_with_rebound = "垂直扩张并回弹",
 			vertical_compression = "垂直压缩",
 			vertical_compression_with_rebound = "垂直压缩并回弹",
+			vertical_bounce = "垂直弹起",
 			oblique_expansion_and_compression = "斜向扩缩",
 			puyo_puyo = "魔法气泡",
 			pendulum = "左右摇摆",
 			gaussian_blur = "高斯模糊",
 			radial_blur = "径向模糊",
+			wipe_in_the_right = "向右擦除",
+			split_vertical_out = "垂直分割",
 			vconfig = "生成视频",
 			video_stretch = "拉伸视频",
 			video_loop = "循环视频",
@@ -30648,6 +30716,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect_init_right = "Right",
 				effect_init_up = "Top",
 				effect_init_down = "Bottom",
+				effect_init_outward = "Outward",
 				effect_init_left_up = "Upper left",
 				effect_init_right_up = "Upper right",
 				effect_init_left_down = "Lower left",
@@ -31012,6 +31081,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				expansion_and_compression_class = "Expansion & Compression Class",
 				swing_class = "Swing Class",
 				blur_class = "Blur Class",
+				wipe_class = "Wipe Class",
 				no_effects = "No Effects",
 				h_flip = "Horizontal Flip",
 				v_flip = "Vertical Flip",
@@ -31041,11 +31111,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				vertical_expansion_with_rebound = "Vertical Expansion with Rebound",
 				vertical_compression = "Vertical Compression",
 				vertical_compression_with_rebound = "Vertical Compression with Rebound",
+				vertical_bounce = "Vertical Bounce",
 				oblique_expansion_and_compression = "Oblique Expansion and Compression",
 				puyo_puyo = "Puyo Pop",
 				pendulum = "Play Pendulum",
 				gaussian_blur = "Gaussian Blur",
 				radial_blur = "Radial Blur",
+				wipe_in_the_right = "Wipe in the Right",
+				split_vertical_out = "Split Vertical Out",
 				vconfig = "Enabled",
 				video_stretch = "Stretch",
 				video_loop = "Loop",
@@ -31385,6 +31458,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect_init_right = "右",
 				effect_init_up = "上",
 				effect_init_down = "下",
+				effect_init_outward = "外",
 				effect_init_left_up = "左上",
 				effect_init_right_up = "右上",
 				effect_init_left_down = "左下",
@@ -31749,6 +31823,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				expansion_and_compression_class = "擴縮類",
 				swing_class = "搖擺類",
 				blur_class = "模糊類",
+				wipe_class = "擦除類",
 				no_effects = "無效果",
 				h_flip = "水平翻轉",
 				v_flip = "垂直翻轉",
@@ -31778,11 +31853,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				vertical_expansion_with_rebound = "垂直擴張並回彈",
 				vertical_compression = "垂直壓縮",
 				vertical_compression_with_rebound = "垂直壓縮並回彈",
+				vertical_bounce = "垂直彈起",
 				oblique_expansion_and_compression = "斜向擴縮",
 				puyo_puyo = "魔法氣泡",
 				pendulum = "左右搖擺",
 				gaussian_blur = "高斯模糊",
 				radial_blur = "徑向模糊",
+				wipe_in_the_right = "向右擦除",
+				split_vertical_out = "垂直分割",
 				vconfig = "生成視訊",
 				video_stretch = "拉伸視訊",
 				video_loop = "循環視訊",
@@ -32122,6 +32200,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect_init_right = "右",
 				effect_init_up = "上",
 				effect_init_down = "下",
+				effect_init_outward = "外",
 				effect_init_left_up = "左上",
 				effect_init_right_up = "右上",
 				effect_init_left_down = "左下",
@@ -32487,6 +32566,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				expansion_and_compression_class = "拡縮クラス",
 				swing_class = "スイングクラス",
 				blur_class = "ブラークラス",
+				wipe_class = "消去クラス",
 				no_effects = "効果なし",
 				h_flip = "水平方向にフリップ",
 				v_flip = "垂直方向にフリップ",
@@ -32516,11 +32596,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				vertical_expansion_with_rebound = "縦拡張とリバウンド",
 				vertical_compression = "縦圧縮",
 				vertical_compression_with_rebound = "縦圧縮とリバウンド",
+				vertical_bounce = "縦バウンス",
 				oblique_expansion_and_compression = "斜め拡縮",
 				puyo_puyo = "ぷよぷよ",
 				pendulum = "振り子",
 				gaussian_blur = "ガウスブラー",
 				radial_blur = "放射状ブラー",
+				wipe_in_the_right = "右に擦る",
+				split_vertical_out = "縦に分割",
 				vconfig = "ビデオを有効",
 				video_stretch = "ストレッチ",
 				video_loop = "ループ",
@@ -32860,6 +32943,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect_init_right = "Верно",
 				effect_init_up = "Верхний",
 				effect_init_down = "Нижний",
+				effect_init_outward = "Наружу",
 				effect_init_left_up = "Верхний левый",
 				effect_init_right_up = "Верхний правый",
 				effect_init_left_down = "Нижний левый",
@@ -33225,6 +33309,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				expansion_and_compression_class = "Расширение и Сжатие Класс",
 				swing_class = "Качать Класс",
 				blur_class = "Размытие Класс",
+				wipe_class = "Стирания Класс",
 				no_effects = "Без эффектов",
 				h_flip = "Горизонтальный флип",
 				v_flip = "Вертикальный переворот",
@@ -33254,11 +33339,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				vertical_expansion_with_rebound = "Вертикальное расширение и отскок",
 				vertical_compression = "Вертикальное сжатие",
 				vertical_compression_with_rebound = "Вертикальное сжатие и отскок",
+				vertical_bounce = "Вертикальный отскок",
 				oblique_expansion_and_compression = "Косое расширение",
 				puyo_puyo = "Пуйо Пуйо",
 				pendulum = "Маятник",
-				gaussian_blur = "Размытие по Гауссу",
+				gaussian_blur = "Размытие по гауссу",
 				radial_blur = "Радиальное размытие",
+				wipe_in_the_right = "Вытри вправо",
+				split_vertical_out = "Вертикальное разделение",
 				vconfig = "Включено",
 				video_stretch = "Потягиваться",
 				video_loop = "Петля",
@@ -33598,6 +33686,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect_init_right = "Phải",
 				effect_init_up = "Trên",
 				effect_init_down = "Dưới",
+				effect_init_outward = "Ngoài",
 				effect_init_left_up = "Phía trên bên trái",
 				effect_init_right_up = "Phía trên bên phải",
 				effect_init_left_down = "Phía dưới bên trái",
@@ -33962,6 +34051,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				expansion_and_compression_class = "Mở rộng & Nén",
 				swing_class = "Lung lắc",
 				blur_class = "Làm mờ",
+				wipe_class = "Xoá",
 				no_effects = "Không hiệu ứng",
 				h_flip = "Lật ngang",
 				v_flip = "Lật dọc",
@@ -33991,11 +34081,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				vertical_expansion_with_rebound = "Mở rộng theo chiều dọc với nảy lại",
 				vertical_compression = "Nén theo chiều dọc",
 				vertical_compression_with_rebound = "Nén theo chiều dọc với nảy lại",
+				vertical_bounce = "Nảy dọc",
 				oblique_expansion_and_compression = "Mở rộng nghiêng ra và nén lại",
 				puyo_puyo = "Puyo Pop",
 				pendulum = "Con lắc",
 				gaussian_blur = "Mờ kiểu Gaussian",
 				radial_blur = "Mờ xuyên tâm",
+				wipe_in_the_right = "Xoá sang bên phải",
+				split_vertical_out = "Tách dọc",
 				vconfig = "Đã bật",
 				video_stretch = "Kéo căng",
 				video_loop = "Lặp lại",
@@ -34335,6 +34428,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				effect_init_right = "Kanan",
 				effect_init_up = "Atas",
 				effect_init_down = "Bawah",
+				effect_init_outward = "Keluar",
 				effect_init_left_up = "Kiri atas",
 				effect_init_right_up = "Kanan atas",
 				effect_init_left_down = "Bawah kiri",
@@ -34699,6 +34793,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				expansion_and_compression_class = "Kelas Ekspansi dan Kompresi",
 				swing_class = "Kelas Ayunan",
 				blur_class = "Kelas buram",
+				wipe_class = "Kelas Wipe",
 				no_effects = "Tidak ada efek",
 				h_flip = "Flip Horizontal",
 				v_flip = "Flip Vertikal",
@@ -34728,11 +34823,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				vertical_expansion_with_rebound = "Ekspansi Vertikal dengan Rebound",
 				vertical_compression = "Kompresi Vertikal",
 				vertical_compression_with_rebound = "Kompresi Vertikal dengan Rebound",
+				vertical_bounce = "Pantulan Vertikal",
 				oblique_expansion_and_compression = "Ekspansi dan Kompresi Miring",
 				puyo_puyo = "Pop Puyo",
 				pendulum = "Mainkan Pendulum",
 				gaussian_blur = "Gaussian Blur",
 				radial_blur = "Radial Blur",
+				wipe_in_the_right = "Mental vertikal",
+				split_vertical_out = "Berbagi Vertikal Keluar",
 				vconfig = "Diaktifkan",
 				video_stretch = "Stretch",
 				video_loop = "Loop",
