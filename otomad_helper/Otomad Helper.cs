@@ -13959,38 +13959,43 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.dock = new System.Windows.Forms.TableLayoutPanel();
+			this.FilterTrackEventFlow = new System.Windows.Forms.FlowLayoutPanel();
+			this.FilterBothEventRadio = new System.Windows.Forms.RadioButton();
+			this.FilterVideoEventRadio = new System.Windows.Forms.RadioButton();
+			this.FilterAudioEventRadio = new System.Windows.Forms.RadioButton();
 			this.table.SuspendLayout();
 			this.dock.SuspendLayout();
+			this.FilterTrackEventFlow.SuspendLayout();
 			this.SuspendLayout();
-			//
+			// 
 			// MatchSourceAndOffsetRadio
-			//
+			// 
 			this.MatchSourceAndOffsetRadio.AutoSize = true;
 			this.MatchSourceAndOffsetRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MatchSourceAndOffsetRadio.Location = new System.Drawing.Point(15, 83);
-			this.MatchSourceAndOffsetRadio.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.MatchSourceAndOffsetRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.MatchSourceAndOffsetRadio.Name = "MatchSourceAndOffsetRadio";
 			this.MatchSourceAndOffsetRadio.Size = new System.Drawing.Size(559, 24);
 			this.MatchSourceAndOffsetRadio.TabIndex = 1;
 			this.MatchSourceAndOffsetRadio.Text = "与选中轨道剪辑相同且开始偏移量相等的所有剪辑";
 			this.MatchSourceAndOffsetRadio.UseVisualStyleBackColor = true;
 			this.MatchSourceAndOffsetRadio.CheckedChanged += new System.EventHandler(this.SetEnabled);
-			//
+			// 
 			// MatchSourceRadio
-			//
+			// 
 			this.MatchSourceRadio.AutoSize = true;
 			this.MatchSourceRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MatchSourceRadio.Location = new System.Drawing.Point(15, 51);
-			this.MatchSourceRadio.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.MatchSourceRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.MatchSourceRadio.Name = "MatchSourceRadio";
 			this.MatchSourceRadio.Size = new System.Drawing.Size(559, 24);
 			this.MatchSourceRadio.TabIndex = 0;
 			this.MatchSourceRadio.Text = "与选中轨道剪辑相同的所有剪辑";
 			this.MatchSourceRadio.UseVisualStyleBackColor = true;
 			this.MatchSourceRadio.CheckedChanged += new System.EventHandler(this.SetEnabled);
-			//
+			// 
 			// table
-			//
+			// 
 			this.table.AutoSize = true;
 			this.table.ColumnCount = 1;
 			this.table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -13999,14 +14004,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.Controls.Add(this.MatchNameRadio, 0, 3);
 			this.table.Controls.Add(this.SelectInfo, 0, 0);
 			this.table.Controls.Add(this.ClipNameTxt, 0, 4);
-			this.table.Controls.Add(this.ClipNameList, 0, 5);
-			this.table.Controls.Add(this.FindClipsInfo, 0, 6);
+			this.table.Controls.Add(this.ClipNameList, 0, 6);
+			this.table.Controls.Add(this.FindClipsInfo, 0, 7);
+			this.table.Controls.Add(this.FilterTrackEventFlow, 0, 5);
 			this.table.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.table.Location = new System.Drawing.Point(0, 0);
-			this.table.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.table.Margin = new System.Windows.Forms.Padding(4);
 			this.table.Name = "table";
-			this.table.Padding = new System.Windows.Forms.Padding(11, 11, 11, 11);
-			this.table.RowCount = 7;
+			this.table.Padding = new System.Windows.Forms.Padding(11);
+			this.table.RowCount = 8;
+			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -14016,14 +14023,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.Size = new System.Drawing.Size(589, 622);
 			this.table.TabIndex = 11;
-			//
+			// 
 			// MatchNameRadio
-			//
+			// 
 			this.MatchNameRadio.AutoSize = true;
 			this.MatchNameRadio.Checked = true;
 			this.MatchNameRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MatchNameRadio.Location = new System.Drawing.Point(15, 115);
-			this.MatchNameRadio.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.MatchNameRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.MatchNameRadio.Name = "MatchNameRadio";
 			this.MatchNameRadio.Size = new System.Drawing.Size(559, 24);
 			this.MatchNameRadio.TabIndex = 2;
@@ -14031,9 +14038,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MatchNameRadio.Text = "与指定名称相匹配的剪辑";
 			this.MatchNameRadio.UseVisualStyleBackColor = true;
 			this.MatchNameRadio.CheckedChanged += new System.EventHandler(this.SetEnabled);
-			//
+			// 
 			// SelectInfo
-			//
+			// 
 			this.SelectInfo.AutoSize = true;
 			this.SelectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SelectInfo.Location = new System.Drawing.Point(11, 19);
@@ -14043,9 +14050,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SelectInfo.TabIndex = 3;
 			this.SelectInfo.Text = "选中的第一个轨道剪辑：无";
 			this.SelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
+			// 
 			// ClipNameTxt
-			//
+			// 
 			this.ClipNameTxt.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ClipNameTxt.Location = new System.Drawing.Point(15, 151);
 			this.ClipNameTxt.Margin = new System.Windows.Forms.Padding(4, 8, 4, 4);
@@ -14054,74 +14061,74 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ClipNameTxt.TabIndex = 4;
 			this.ClipNameTxt.Click += new System.EventHandler(this.AutoSelectMatchName);
 			this.ClipNameTxt.TextChanged += new System.EventHandler(this.ClipNameTxt_TextChanged);
-			//
+			// 
 			// ClipNameList
-			//
+			// 
 			this.ClipNameList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 			this.nameHeader,
 			this.numHeader});
 			this.ClipNameList.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ClipNameList.FullRowSelect = true;
 			this.ClipNameList.HideSelection = false;
-			this.ClipNameList.Location = new System.Drawing.Point(15, 186);
-			this.ClipNameList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.ClipNameList.Location = new System.Drawing.Point(15, 218);
+			this.ClipNameList.Margin = new System.Windows.Forms.Padding(4);
 			this.ClipNameList.Name = "ClipNameList";
-			this.ClipNameList.Size = new System.Drawing.Size(559, 393);
-			this.ClipNameList.TabIndex = 5;
+			this.ClipNameList.Size = new System.Drawing.Size(559, 361);
+			this.ClipNameList.TabIndex = 6;
 			this.ClipNameList.UseCompatibleStateImageBehavior = false;
 			this.ClipNameList.View = System.Windows.Forms.View.Details;
 			this.ClipNameList.SelectedIndexChanged += new System.EventHandler(this.AutoSelectMatchName);
-			//
+			// 
 			// nameHeader
-			//
+			// 
 			this.nameHeader.Text = "名称";
 			this.nameHeader.Width = 300;
-			//
+			// 
 			// numHeader
-			//
+			// 
 			this.numHeader.Text = "数目";
 			this.numHeader.Width = 75;
-			//
+			// 
 			// FindClipsInfo
-			//
+			// 
 			this.FindClipsInfo.AutoSize = true;
 			this.FindClipsInfo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FindClipsInfo.Location = new System.Drawing.Point(11, 587);
 			this.FindClipsInfo.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
 			this.FindClipsInfo.Name = "FindClipsInfo";
 			this.FindClipsInfo.Size = new System.Drawing.Size(567, 20);
-			this.FindClipsInfo.TabIndex = 6;
+			this.FindClipsInfo.TabIndex = 7;
 			this.FindClipsInfo.Text = "在上方选中相匹配的剪辑，确定之后将会选中这些剪辑。";
 			this.FindClipsInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			//
+			// 
 			// OkBtn
-			//
+			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.OkBtn.Location = new System.Drawing.Point(381, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(94, 32);
 			this.OkBtn.TabIndex = 1;
 			this.OkBtn.Text = "确定(&O)";
 			this.OkBtn.UseVisualStyleBackColor = true;
 			this.OkBtn.Click += new System.EventHandler(this.OkBtn_Click);
-			//
+			// 
 			// CancelBtn
-			//
+			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.CancelBtn.Location = new System.Drawing.Point(483, 10);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
 			this.CancelBtn.TabIndex = 2;
 			this.CancelBtn.Text = "取消(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
 			this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
-			//
+			// 
 			// dock
-			//
+			// 
 			this.dock.BackColor = System.Drawing.SystemColors.Control;
 			this.dock.ColumnCount = 3;
 			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -14131,16 +14138,61 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.dock.Location = new System.Drawing.Point(0, 622);
-			this.dock.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.dock.Margin = new System.Windows.Forms.Padding(5);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.dock.Size = new System.Drawing.Size(589, 52);
 			this.dock.TabIndex = 10;
-			//
+			// 
+			// FilterTrackEventFlow
+			// 
+			this.FilterTrackEventFlow.AutoSize = true;
+			this.FilterTrackEventFlow.Controls.Add(this.FilterBothEventRadio);
+			this.FilterTrackEventFlow.Controls.Add(this.FilterVideoEventRadio);
+			this.FilterTrackEventFlow.Controls.Add(this.FilterAudioEventRadio);
+			this.FilterTrackEventFlow.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.FilterTrackEventFlow.Location = new System.Drawing.Point(12, 183);
+			this.FilterTrackEventFlow.Margin = new System.Windows.Forms.Padding(1);
+			this.FilterTrackEventFlow.Name = "FilterTrackEventFlow";
+			this.FilterTrackEventFlow.Size = new System.Drawing.Size(565, 30);
+			this.FilterTrackEventFlow.TabIndex = 5;
+			// 
+			// FilterBothEventRadio
+			// 
+			this.FilterBothEventRadio.AutoSize = true;
+			this.FilterBothEventRadio.Checked = true;
+			this.FilterBothEventRadio.Location = new System.Drawing.Point(3, 3);
+			this.FilterBothEventRadio.Name = "FilterBothEventRadio";
+			this.FilterBothEventRadio.Size = new System.Drawing.Size(60, 24);
+			this.FilterBothEventRadio.TabIndex = 0;
+			this.FilterBothEventRadio.TabStop = true;
+			this.FilterBothEventRadio.Text = "全部";
+			this.FilterBothEventRadio.UseVisualStyleBackColor = true;
+			// 
+			// FilterVideoEventRadio
+			// 
+			this.FilterVideoEventRadio.AutoSize = true;
+			this.FilterVideoEventRadio.Location = new System.Drawing.Point(69, 3);
+			this.FilterVideoEventRadio.Name = "FilterVideoEventRadio";
+			this.FilterVideoEventRadio.Size = new System.Drawing.Size(75, 24);
+			this.FilterVideoEventRadio.TabIndex = 1;
+			this.FilterVideoEventRadio.Text = "仅视频";
+			this.FilterVideoEventRadio.UseVisualStyleBackColor = true;
+			// 
+			// FilterAudioEventRadio
+			// 
+			this.FilterAudioEventRadio.AutoSize = true;
+			this.FilterAudioEventRadio.Location = new System.Drawing.Point(150, 3);
+			this.FilterAudioEventRadio.Name = "FilterAudioEventRadio";
+			this.FilterAudioEventRadio.Size = new System.Drawing.Size(75, 24);
+			this.FilterAudioEventRadio.TabIndex = 2;
+			this.FilterAudioEventRadio.Text = "仅音频";
+			this.FilterAudioEventRadio.UseVisualStyleBackColor = true;
+			// 
 			// FindClipsForm
-			//
+			// 
 			this.AcceptButton = this.OkBtn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -14163,6 +14215,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.ResumeLayout(false);
 			this.table.PerformLayout();
 			this.dock.ResumeLayout(false);
+			this.FilterTrackEventFlow.ResumeLayout(false);
+			this.FilterTrackEventFlow.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -14183,6 +14237,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private System.Windows.Forms.ColumnHeader nameHeader;
 		private System.Windows.Forms.ColumnHeader numHeader;
 		private System.Windows.Forms.Label FindClipsInfo;
+		private System.Windows.Forms.FlowLayoutPanel FilterTrackEventFlow;
+		private System.Windows.Forms.RadioButton FilterBothEventRadio;
+		private System.Windows.Forms.RadioButton FilterVideoEventRadio;
+		private System.Windows.Forms.RadioButton FilterAudioEventRadio;
 	}
 
 	public partial class FindClipsForm : Form, IConfigIniUser, IInterpret {
@@ -14226,6 +14284,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (trackEvent.ActiveTake.Media != selectedFirstEvent.ActiveTake.Media) continue;
 				if (MatchMethod == MatchMethodType.MATCH_SOURCE_AND_OFFSET &&
 					trackEvent.ActiveTake.Offset != selectedFirstEvent.ActiveTake.Offset) continue;
+				if (trackEvent is VideoEvent && FilterAudioEventRadio.Checked ||
+					trackEvent is AudioEvent && FilterVideoEventRadio.Checked) continue;
 				trackEvent.Selected = true;
 			}
 		}
@@ -14273,6 +14333,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			MatchSourceRadio.Text = str.find_clips_match_source;
 			MatchSourceAndOffsetRadio.Text = str.find_clips_match_source_and_offset;
 			MatchNameRadio.Text = str.find_clips_match_name;
+			FilterBothEventRadio.Text = str.filter_both_event;
+			FilterVideoEventRadio.Text = str.filter_video_event;
+			FilterAudioEventRadio.Text = str.filter_audio_event;
 			Text = str.find_clips;
 			OkBtn.Text = str.ok;
 			CancelBtn.Text = str.cancel;
@@ -14314,15 +14377,29 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			MATCH_NAME,
 		}
 
+		private int FilterTrackEvent_int {
+			get {
+				return FilterVideoEventRadio.Checked ? 1 :
+					FilterAudioEventRadio.Checked ? 2 : 0;
+			}
+			set {
+				RadioButton radio = value == 1 ? FilterVideoEventRadio :
+					value == 2 ? FilterAudioEventRadio : FilterBothEventRadio;
+				radio.Checked = true;
+			}
+		}
+
 		public void SaveIni() {
 			configIni.StartSection("FindClips");
 			configIni.Write("MatchMethod", MatchMethod_int);
+			configIni.Write("FilterTrackEvent", FilterTrackEvent_int);
 			configIni.EndSection();
 		}
 
 		public void ReadIni() {
 			configIni.StartSection("FindClips");
 			MatchMethod_int = configIni.Read("MatchMethod", 2);
+			FilterTrackEvent_int = configIni.Read("FilterTrackEvent", 0);
 			configIni.EndSection();
 		}
 	}
@@ -30139,6 +30216,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			find_clips_match_source = "与选中轨道剪辑相同的所有剪辑",
 			find_clips_match_source_and_offset = "与选中轨道剪辑相同且开始偏移量相等的所有剪辑",
 			find_clips_match_name = "与指定名称相匹配的剪辑",
+			filter_both_event = "全部",
+			filter_video_event = "仅视频",
+			filter_audio_event = "仅音频",
 			convert_music_beats = "转换音乐节拍",
 			convert_music_beats_complete = "完成转换音乐节拍。",
 			convert_music_beats_info = "即将对选中的音乐音频剪辑从{0}转换到{1}。",
@@ -30883,6 +30963,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				find_clips_match_source = "Matching the same source",
 				find_clips_match_source_and_offset = "Matching the same source with the same starting offset",
 				find_clips_match_name = "Matching the specified name",
+				filter_both_event = "Both",
+				filter_video_event = "Video events",
+				filter_audio_event = "Audio events",
 				convert_music_beats = "Convert Music Beats",
 				convert_music_beats_complete = "Completed convert music beats.",
 				convert_music_beats_info = "The selected music audio clip will be converted from {0} to {1}.",
@@ -31625,6 +31708,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				find_clips_match_source = "與選中軌道剪輯相同的所有剪輯",
 				find_clips_match_source_and_offset = "與選中軌道剪輯相同且開始偏移量相等的所有剪輯",
 				find_clips_match_name = "與指定名稱相匹配的剪輯",
+				filter_both_event = "全部",
+				filter_video_event = "僅視訊",
+				filter_audio_event = "僅音訊",
 				convert_music_beats = "轉換音樂節拍",
 				convert_music_beats_complete = "完成轉換音樂節拍。",
 				convert_music_beats_info = "即將對選中的音樂音訊剪輯從{0}轉換到{1}。",
@@ -32368,6 +32454,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				find_clips_match_source = "選択したトラッククリップと同じすべてのクリップ",
 				find_clips_match_source_and_offset = "選択したトラッククリップと同じオフセット開始量のすべてのクリップ",
 				find_clips_match_name = "指定した名前に一致するクリップ",
+				filter_both_event = "全部",
+				filter_video_event = "ビデオのみ",
+				filter_audio_event = "オーディオのみ",
 				convert_music_beats = "音楽ビートを変換",
 				convert_music_beats_complete = "音楽ビートの変換を終了する。",
 				convert_music_beats_info = "選択した音楽オーディオクリップを{0}から{1}に変換しようとしています。",
@@ -33111,6 +33200,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				find_clips_match_source = "Соответствие тому же источнику",
 				find_clips_match_source_and_offset = "Сопоставление одного и того же источника с одинаковым начальным смещением",
 				find_clips_match_name = "Соответствие указанному имени",
+				filter_both_event = "Оба",
+				filter_video_event = "Видео события",
+				filter_audio_event = "Аудио события",
 				convert_music_beats = "Конвертировать музыкальные биты",
 				convert_music_beats_complete = "Завершено преобразование музыкальных битов",
 				convert_music_beats_info = "О преобразовании выбранного музыкального аудиоклипа из {0} в {1}.",
@@ -33853,6 +33945,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				find_clips_match_source = "Trùng khớp cùng nguồn tư liệu",
 				find_clips_match_source_and_offset = "Trùng khớp cùng nguồn tư liệu với cùng thời điểm bắt đầu",
 				find_clips_match_name = "Trùng khớp với tên chỉ định",
+				filter_both_event = "Cả hai",
+				filter_video_event = "Chỉ có video",
+				filter_audio_event = "Chỉ có âm thanh",
 				convert_music_beats = "Chuyển Đổi Music Beats",
 				convert_music_beats_complete = "Đã hoàn thành chuyển đổi music beats.",
 				convert_music_beats_info = "Clip âm thanh đã chọn sẽ được chuyển đổi từ {0} thành {1}.",
@@ -34595,6 +34690,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				find_clips_match_source = "Mencocokkan sumber yang sama",
 				find_clips_match_source_and_offset = "Mencocokkan sumber yang sama dengan offset awal yang sama",
 				find_clips_match_name = "Sesuai dengan nama yang ditentukan",
+				filter_both_event = "Keduanya",
+				filter_video_event = "Video saja",
+				filter_audio_event = "Audio saja",
 				convert_music_beats = "Mengkonversi Ketukan Musik",
 				convert_music_beats_complete = "Ketukan musik konversi selesai.",
 				convert_music_beats_info = "Klip audio musik yang dipilih akan diubah dari {0} menjadi {1}.",

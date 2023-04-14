@@ -36,8 +36,13 @@
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.dock = new System.Windows.Forms.TableLayoutPanel();
+			this.FilterTrackEventFlow = new System.Windows.Forms.FlowLayoutPanel();
+			this.FilterBothEventRadio = new System.Windows.Forms.RadioButton();
+			this.FilterVideoEventRadio = new System.Windows.Forms.RadioButton();
+			this.FilterAudioEventRadio = new System.Windows.Forms.RadioButton();
 			this.table.SuspendLayout();
 			this.dock.SuspendLayout();
+			this.FilterTrackEventFlow.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// MatchSourceAndOffsetRadio
@@ -45,7 +50,7 @@
 			this.MatchSourceAndOffsetRadio.AutoSize = true;
 			this.MatchSourceAndOffsetRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MatchSourceAndOffsetRadio.Location = new System.Drawing.Point(15, 83);
-			this.MatchSourceAndOffsetRadio.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.MatchSourceAndOffsetRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.MatchSourceAndOffsetRadio.Name = "MatchSourceAndOffsetRadio";
 			this.MatchSourceAndOffsetRadio.Size = new System.Drawing.Size(559, 24);
 			this.MatchSourceAndOffsetRadio.TabIndex = 1;
@@ -58,7 +63,7 @@
 			this.MatchSourceRadio.AutoSize = true;
 			this.MatchSourceRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MatchSourceRadio.Location = new System.Drawing.Point(15, 51);
-			this.MatchSourceRadio.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.MatchSourceRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.MatchSourceRadio.Name = "MatchSourceRadio";
 			this.MatchSourceRadio.Size = new System.Drawing.Size(559, 24);
 			this.MatchSourceRadio.TabIndex = 0;
@@ -76,14 +81,16 @@
 			this.table.Controls.Add(this.MatchNameRadio, 0, 3);
 			this.table.Controls.Add(this.SelectInfo, 0, 0);
 			this.table.Controls.Add(this.ClipNameTxt, 0, 4);
-			this.table.Controls.Add(this.ClipNameList, 0, 5);
-			this.table.Controls.Add(this.FindClipsInfo, 0, 6);
+			this.table.Controls.Add(this.ClipNameList, 0, 6);
+			this.table.Controls.Add(this.FindClipsInfo, 0, 7);
+			this.table.Controls.Add(this.FilterTrackEventFlow, 0, 5);
 			this.table.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.table.Location = new System.Drawing.Point(0, 0);
-			this.table.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.table.Margin = new System.Windows.Forms.Padding(4);
 			this.table.Name = "table";
-			this.table.Padding = new System.Windows.Forms.Padding(11, 11, 11, 11);
-			this.table.RowCount = 7;
+			this.table.Padding = new System.Windows.Forms.Padding(11);
+			this.table.RowCount = 8;
+			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -100,7 +107,7 @@
 			this.MatchNameRadio.Checked = true;
 			this.MatchNameRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MatchNameRadio.Location = new System.Drawing.Point(15, 115);
-			this.MatchNameRadio.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.MatchNameRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.MatchNameRadio.Name = "MatchNameRadio";
 			this.MatchNameRadio.Size = new System.Drawing.Size(559, 24);
 			this.MatchNameRadio.TabIndex = 2;
@@ -140,11 +147,11 @@
 			this.ClipNameList.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ClipNameList.FullRowSelect = true;
 			this.ClipNameList.HideSelection = false;
-			this.ClipNameList.Location = new System.Drawing.Point(15, 186);
-			this.ClipNameList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.ClipNameList.Location = new System.Drawing.Point(15, 218);
+			this.ClipNameList.Margin = new System.Windows.Forms.Padding(4);
 			this.ClipNameList.Name = "ClipNameList";
-			this.ClipNameList.Size = new System.Drawing.Size(559, 393);
-			this.ClipNameList.TabIndex = 5;
+			this.ClipNameList.Size = new System.Drawing.Size(559, 361);
+			this.ClipNameList.TabIndex = 6;
 			this.ClipNameList.UseCompatibleStateImageBehavior = false;
 			this.ClipNameList.View = System.Windows.Forms.View.Details;
 			this.ClipNameList.SelectedIndexChanged += new System.EventHandler(this.AutoSelectMatchName);
@@ -167,7 +174,7 @@
 			this.FindClipsInfo.Margin = new System.Windows.Forms.Padding(0, 4, 0, 4);
 			this.FindClipsInfo.Name = "FindClipsInfo";
 			this.FindClipsInfo.Size = new System.Drawing.Size(567, 20);
-			this.FindClipsInfo.TabIndex = 6;
+			this.FindClipsInfo.TabIndex = 7;
 			this.FindClipsInfo.Text = "在上方选中相匹配的剪辑，确定之后将会选中这些剪辑。";
 			this.FindClipsInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
@@ -176,7 +183,7 @@
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.OkBtn.Location = new System.Drawing.Point(381, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.OkBtn.Name = "OkBtn";
 			this.OkBtn.Size = new System.Drawing.Size(94, 32);
 			this.OkBtn.TabIndex = 1;
@@ -189,7 +196,7 @@
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.CancelBtn.Location = new System.Drawing.Point(483, 10);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
 			this.CancelBtn.Name = "CancelBtn";
 			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
 			this.CancelBtn.TabIndex = 2;
@@ -208,13 +215,58 @@
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.dock.Location = new System.Drawing.Point(0, 622);
-			this.dock.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.dock.Margin = new System.Windows.Forms.Padding(5);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.dock.Size = new System.Drawing.Size(589, 52);
 			this.dock.TabIndex = 10;
+			// 
+			// FilterTrackEventFlow
+			// 
+			this.FilterTrackEventFlow.AutoSize = true;
+			this.FilterTrackEventFlow.Controls.Add(this.FilterBothEventRadio);
+			this.FilterTrackEventFlow.Controls.Add(this.FilterVideoEventRadio);
+			this.FilterTrackEventFlow.Controls.Add(this.FilterAudioEventRadio);
+			this.FilterTrackEventFlow.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.FilterTrackEventFlow.Location = new System.Drawing.Point(12, 183);
+			this.FilterTrackEventFlow.Margin = new System.Windows.Forms.Padding(1);
+			this.FilterTrackEventFlow.Name = "FilterTrackEventFlow";
+			this.FilterTrackEventFlow.Size = new System.Drawing.Size(565, 30);
+			this.FilterTrackEventFlow.TabIndex = 5;
+			// 
+			// FilterBothEventRadio
+			// 
+			this.FilterBothEventRadio.AutoSize = true;
+			this.FilterBothEventRadio.Checked = true;
+			this.FilterBothEventRadio.Location = new System.Drawing.Point(3, 3);
+			this.FilterBothEventRadio.Name = "FilterBothEventRadio";
+			this.FilterBothEventRadio.Size = new System.Drawing.Size(60, 24);
+			this.FilterBothEventRadio.TabIndex = 0;
+			this.FilterBothEventRadio.TabStop = true;
+			this.FilterBothEventRadio.Text = "全部";
+			this.FilterBothEventRadio.UseVisualStyleBackColor = true;
+			// 
+			// FilterVideoEventRadio
+			// 
+			this.FilterVideoEventRadio.AutoSize = true;
+			this.FilterVideoEventRadio.Location = new System.Drawing.Point(69, 3);
+			this.FilterVideoEventRadio.Name = "FilterVideoEventRadio";
+			this.FilterVideoEventRadio.Size = new System.Drawing.Size(75, 24);
+			this.FilterVideoEventRadio.TabIndex = 1;
+			this.FilterVideoEventRadio.Text = "仅视频";
+			this.FilterVideoEventRadio.UseVisualStyleBackColor = true;
+			// 
+			// FilterAudioEventRadio
+			// 
+			this.FilterAudioEventRadio.AutoSize = true;
+			this.FilterAudioEventRadio.Location = new System.Drawing.Point(150, 3);
+			this.FilterAudioEventRadio.Name = "FilterAudioEventRadio";
+			this.FilterAudioEventRadio.Size = new System.Drawing.Size(75, 24);
+			this.FilterAudioEventRadio.TabIndex = 2;
+			this.FilterAudioEventRadio.Text = "仅音频";
+			this.FilterAudioEventRadio.UseVisualStyleBackColor = true;
 			// 
 			// FindClipsForm
 			// 
@@ -240,6 +292,8 @@
 			this.table.ResumeLayout(false);
 			this.table.PerformLayout();
 			this.dock.ResumeLayout(false);
+			this.FilterTrackEventFlow.ResumeLayout(false);
+			this.FilterTrackEventFlow.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -260,5 +314,9 @@
 		private System.Windows.Forms.ColumnHeader nameHeader;
 		private System.Windows.Forms.ColumnHeader numHeader;
 		private System.Windows.Forms.Label FindClipsInfo;
+		private System.Windows.Forms.FlowLayoutPanel FilterTrackEventFlow;
+		private System.Windows.Forms.RadioButton FilterBothEventRadio;
+		private System.Windows.Forms.RadioButton FilterVideoEventRadio;
+		private System.Windows.Forms.RadioButton FilterAudioEventRadio;
 	}
 }
