@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace OtomadHelper.Shared {
-	public class Encodings {
+	public static class Encodings {
 		public static string EncodeNonAscii(string value) {
 			StringBuilder sb = new StringBuilder();
 			foreach (char c in value) {
