@@ -67,8 +67,9 @@ Vegas Pro 17、18、19、20 で**正常**に作動します。
 
 [用語集 >](glossary.md)
 
-### ビジュアルエフェクトの探索
-[![ビジュアルエフェクトの探索](covers/otomad_helper_visual_effects_example.png)](https://youtu.be/cY2Qa3Owetw)
+### チュートリアル
+[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)
+<small>[ビジュアルエフェクトの探索](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### メジャーバージョンの更新履歴
 これらは過去のメジャーバージョンアップのスクリプト UI のスクリーンショットです。
