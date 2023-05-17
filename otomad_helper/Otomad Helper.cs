@@ -90,9 +90,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// </summary>
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 28, 14, 0);
+		public static readonly Version VERSION = new Version(4, 29, 17, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2023, 4, 14);
+		public static readonly DateTime REVISION_DATE = new DateTime(2023, 5, 17);
 
 		// 配置参数变量
 		#region 视频属性
@@ -301,7 +301,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				configForm.ShowDialog();
 			} catch (Exception) { return false; }
 			#else
-			configForm.ShowDialog();
+			bool openReplaceClipDirectly = configForm.IsOpenReplaceClipDirectly();
+			if (openReplaceClipDirectly) quickConfigMode = false;
+			if (!quickConfigMode) configForm.ShowDialog();
 			#endif
 			Type helper = configForm.RequestToShowHelperDialog;
 			if (helper != null) {
@@ -2731,6 +2733,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private SupportVegasVersionState _supported = SupportVegasVersionState.UNDEFINED;
 		public SupportVegasVersionState Supported { get { return _supported; } }
+		public bool quickConfigMode = false;
 
 		/// <summary>
 		/// Vegas 脚本的入口方法。
@@ -2740,6 +2743,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			vegas = myVegas;
 			if (instance != null) return;
 			instance = this;
+			if ((Control.ModifierKeys & Keys.Control) != 0) // 启动时如果按下键盘按键 Ctrl，则进行快速配置而不弹出配置对话框。
+				quickConfigMode = true;
 			_supported = CheckVersionSupport();
 			try {
 				do {
@@ -13967,9 +13972,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.SuspendLayout();
 			this.FilterTrackEventFlow.SuspendLayout();
 			this.SuspendLayout();
-			// 
+			//
 			// MatchSourceAndOffsetRadio
-			// 
+			//
 			this.MatchSourceAndOffsetRadio.AutoSize = true;
 			this.MatchSourceAndOffsetRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MatchSourceAndOffsetRadio.Location = new System.Drawing.Point(15, 83);
@@ -13980,9 +13985,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MatchSourceAndOffsetRadio.Text = "与选中轨道剪辑相同且开始偏移量相等的所有剪辑";
 			this.MatchSourceAndOffsetRadio.UseVisualStyleBackColor = true;
 			this.MatchSourceAndOffsetRadio.CheckedChanged += new System.EventHandler(this.SetEnabled);
-			// 
+			//
 			// MatchSourceRadio
-			// 
+			//
 			this.MatchSourceRadio.AutoSize = true;
 			this.MatchSourceRadio.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.MatchSourceRadio.Location = new System.Drawing.Point(15, 51);
@@ -13993,9 +13998,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MatchSourceRadio.Text = "与选中轨道剪辑相同的所有剪辑";
 			this.MatchSourceRadio.UseVisualStyleBackColor = true;
 			this.MatchSourceRadio.CheckedChanged += new System.EventHandler(this.SetEnabled);
-			// 
+			//
 			// table
-			// 
+			//
 			this.table.AutoSize = true;
 			this.table.ColumnCount = 1;
 			this.table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -14023,9 +14028,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.Size = new System.Drawing.Size(589, 622);
 			this.table.TabIndex = 11;
-			// 
+			//
 			// MatchNameRadio
-			// 
+			//
 			this.MatchNameRadio.AutoSize = true;
 			this.MatchNameRadio.Checked = true;
 			this.MatchNameRadio.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -14038,9 +14043,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MatchNameRadio.Text = "与指定名称相匹配的剪辑";
 			this.MatchNameRadio.UseVisualStyleBackColor = true;
 			this.MatchNameRadio.CheckedChanged += new System.EventHandler(this.SetEnabled);
-			// 
+			//
 			// SelectInfo
-			// 
+			//
 			this.SelectInfo.AutoSize = true;
 			this.SelectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.SelectInfo.Location = new System.Drawing.Point(11, 19);
@@ -14050,9 +14055,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SelectInfo.TabIndex = 3;
 			this.SelectInfo.Text = "选中的第一个轨道剪辑：无";
 			this.SelectInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
+			//
 			// ClipNameTxt
-			// 
+			//
 			this.ClipNameTxt.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ClipNameTxt.Location = new System.Drawing.Point(15, 151);
 			this.ClipNameTxt.Margin = new System.Windows.Forms.Padding(4, 8, 4, 4);
@@ -14061,9 +14066,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ClipNameTxt.TabIndex = 4;
 			this.ClipNameTxt.Click += new System.EventHandler(this.AutoSelectMatchName);
 			this.ClipNameTxt.TextChanged += new System.EventHandler(this.ClipNameTxt_TextChanged);
-			// 
+			//
 			// ClipNameList
-			// 
+			//
 			this.ClipNameList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
 			this.nameHeader,
 			this.numHeader});
@@ -14078,19 +14083,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ClipNameList.UseCompatibleStateImageBehavior = false;
 			this.ClipNameList.View = System.Windows.Forms.View.Details;
 			this.ClipNameList.SelectedIndexChanged += new System.EventHandler(this.AutoSelectMatchName);
-			// 
+			//
 			// nameHeader
-			// 
+			//
 			this.nameHeader.Text = "名称";
 			this.nameHeader.Width = 300;
-			// 
+			//
 			// numHeader
-			// 
+			//
 			this.numHeader.Text = "数目";
 			this.numHeader.Width = 75;
-			// 
+			//
 			// FindClipsInfo
-			// 
+			//
 			this.FindClipsInfo.AutoSize = true;
 			this.FindClipsInfo.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FindClipsInfo.Location = new System.Drawing.Point(11, 587);
@@ -14100,9 +14105,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FindClipsInfo.TabIndex = 7;
 			this.FindClipsInfo.Text = "在上方选中相匹配的剪辑，确定之后将会选中这些剪辑。";
 			this.FindClipsInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
+			//
 			// OkBtn
-			// 
+			//
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.OkBtn.Location = new System.Drawing.Point(381, 10);
@@ -14113,9 +14118,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OkBtn.Text = "确定(&O)";
 			this.OkBtn.UseVisualStyleBackColor = true;
 			this.OkBtn.Click += new System.EventHandler(this.OkBtn_Click);
-			// 
+			//
 			// CancelBtn
-			// 
+			//
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.CancelBtn.Location = new System.Drawing.Point(483, 10);
@@ -14126,9 +14131,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CancelBtn.Text = "取消(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
 			this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
-			// 
+			//
 			// dock
-			// 
+			//
 			this.dock.BackColor = System.Drawing.SystemColors.Control;
 			this.dock.ColumnCount = 3;
 			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -14145,9 +14150,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.dock.Size = new System.Drawing.Size(589, 52);
 			this.dock.TabIndex = 10;
-			// 
+			//
 			// FilterTrackEventFlow
-			// 
+			//
 			this.FilterTrackEventFlow.AutoSize = true;
 			this.FilterTrackEventFlow.Controls.Add(this.FilterBothEventRadio);
 			this.FilterTrackEventFlow.Controls.Add(this.FilterVideoEventRadio);
@@ -14158,9 +14163,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FilterTrackEventFlow.Name = "FilterTrackEventFlow";
 			this.FilterTrackEventFlow.Size = new System.Drawing.Size(565, 30);
 			this.FilterTrackEventFlow.TabIndex = 5;
-			// 
+			//
 			// FilterBothEventRadio
-			// 
+			//
 			this.FilterBothEventRadio.AutoSize = true;
 			this.FilterBothEventRadio.Checked = true;
 			this.FilterBothEventRadio.Location = new System.Drawing.Point(3, 3);
@@ -14170,9 +14175,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FilterBothEventRadio.TabStop = true;
 			this.FilterBothEventRadio.Text = "全部";
 			this.FilterBothEventRadio.UseVisualStyleBackColor = true;
-			// 
+			//
 			// FilterVideoEventRadio
-			// 
+			//
 			this.FilterVideoEventRadio.AutoSize = true;
 			this.FilterVideoEventRadio.Location = new System.Drawing.Point(69, 3);
 			this.FilterVideoEventRadio.Name = "FilterVideoEventRadio";
@@ -14180,9 +14185,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FilterVideoEventRadio.TabIndex = 1;
 			this.FilterVideoEventRadio.Text = "仅视频";
 			this.FilterVideoEventRadio.UseVisualStyleBackColor = true;
-			// 
+			//
 			// FilterAudioEventRadio
-			// 
+			//
 			this.FilterAudioEventRadio.AutoSize = true;
 			this.FilterAudioEventRadio.Location = new System.Drawing.Point(150, 3);
 			this.FilterAudioEventRadio.Name = "FilterAudioEventRadio";
@@ -14190,9 +14195,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FilterAudioEventRadio.TabIndex = 2;
 			this.FilterAudioEventRadio.Text = "仅音频";
 			this.FilterAudioEventRadio.UseVisualStyleBackColor = true;
-			// 
+			//
 			// FindClipsForm
-			// 
+			//
 			this.AcceptButton = this.OkBtn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -27101,57 +27106,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#endif
 			#endregion
 
-			#region 检查版本支持情况
-			if (!isAlertedUnsupport && parent.Supported == SupportVegasVersionState.UNSUPPORTED) {
-				EntryPoint.AlertUnsupportVersion();
-				isAlertedUnsupport = true;
-			}
-			if (EntryPoint.CurrentVegasVersion == null || // 当获取当前版本号为未知时。
-				EntryPoint.CurrentVegasVersion < new Version(19, 0))
-				BelowTopAdjustmentTrackCheck.Checked = BelowTopAdjustmentTrackCheck.Enabled = false;
-			#endregion
-
-			#region MIDI 速度控制点击事件
-			MidiCustomBpmCheck.CheckedChanged += (sender, e) => { MidiCustomBpmBox.Enabled = MidiCustomBpmCheck.Checked; };
-			GenerateAtCustomRadio.CheckedChanged += (sender, e) => { GenerateAtCustomText.Enabled = GenerateAtCustomRadio.Checked; };
-			UnrestrictLengthRadio.CheckedChanged += (sender, e) => { RestrictLengthBox.Enabled = !UnrestrictLengthRadio.Checked; };
-			MidiProjectBpmCheck.Text = Lang.str.midi_project_bpm + Lang.str.colon + ProcessBpmDouble(parent.ProjectBpm);
-			MidiCustomBpmBox.Value = (decimal)Math.Max(parent.ProjectBpm, (double)MidiCustomBpmBox.Minimum);
-			GenerateAtBeginRadio.Text = Lang.str.generate_at_begin + Lang.str.colon + Timecode.FromMilliseconds(0).ToPositionString();
-			GenerateAtCursorRadio.Text = Lang.str.generate_at_cursor + Lang.str.colon + vegas.Transport.CursorPosition.ToPositionString();
-			#endregion
-
 			#region 浏览并打开媒体文件
 			parent.audioVideoEnabledTable = new EntryPoint.AudioVideoEnabledTable(parent);
 			ChooseSourceCombo_InitSourceNames();
 			ChooseSourceCombo_SelectedIndexChanged(null, null);
 			HelperSelectedCount();
-			#endregion
-
-			#region 菜单选项
-			saveConfigToolStripMenuItem.Click += (sender, e) => SaveIni();
-			exitToolStripMenuItem.Click += new EventHandler(CancelBtn_Click);
-			aboutToolStripMenuItem.Click += new EventHandler(AboutBtn_Click);
-			DownloadDatamoshLink.Click += (sender, e) => OpenLink(Links.GITHUB_DATAMOSH_EXTPACK);
-			BindMenuLink(latestVersionLinkToolStripMenuItem, Links.GITHUB_LATEST);
-			BindMenuLink(latestVersionToolStripMenuItemInBar, Links.GITHUB_LATEST);
-			BindMenuLink(githubToolStripMenuItem, Links.REPOSITORY);
-			BindMenuLink(roadmapToolStripMenuItem, Links.ROADMAP);
-			BindMenuLink(githubIssuesToolStripMenuItem, Links.GITHUB_ISSUES);
-			BindMenuLink(updateLogsToolStripMenuItem, Links.UPDATE_LOGS);
-			BindMenuLink(documentationEnglishToolStripMenuItem, Links.DOCUMENTATION_ENGLISH);
-			BindMenuLink(tutorialVideoEnglishToolStripMenuItem, Links.TUTORIAL_VIDEO_ENGLISH);
-			BindMenuLink(troubleShootingToolStripMenuItem, Links.TROUBLE_SHOOTING);
-			BindMenuLink(releaseNotesV4_9_25_0ToolStripMenuItem, Links.RELEASE_NOTES_V4_9_25_0);
-			BindMenuLink(releaseNotesV4_10_17_0ToolStripMenuItem, Links.RELEASE_NOTES_V4_10_17_0);
-			BindMenuLink(documentationV0_1ToolStripMenuItem, Links.DOCUMENTATION_V0_1);
-			BindMenuLink(staffVisualizerV0_1ToolStripMenuItem, Links.STAFF_VISUALIZER_DOCUMENTATION_V0_1);
-			BindMenuLink(tutorialVideoV0_1ToolStripMenuItem, Links.TUTORIAL_VIDEO_V0_1);
-
-			foreach (ToolStripItem item in languageToolStripMenuItem.DropDownItems)
-				item.Click += new EventHandler(LanguageStripMenuItem_Click);
-			TrackLegatoMenu.Renderer = menu.Renderer = new Windows10StyledContextMenuStripRenderer();
-			QuickConfigMidiChannelsMenu.Renderer = menu.Renderer = new Windows10StyledContextMenuStripRenderer();
 			#endregion
 
 			#region 复选框设置、下拉菜单默认值
@@ -27202,6 +27161,52 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			audioTracks.ForEach(track => AudioPreferredTrackCombo.Items.Add(new PreferredTrackWrapper<AudioTrack>(track, GetTrackDisplayValue(track))));
 			videoTracks.ForEach(track => VideoPreferredTrackCombo.Items.Add(new PreferredTrackWrapper<VideoTrack>(track, GetTrackDisplayValue(track))));
 			RemoveSourceTrackEventsCheck_CheckedChanged(null, null);
+			#endregion
+
+			#region 检查版本支持情况
+			if (!isAlertedUnsupport && parent.Supported == SupportVegasVersionState.UNSUPPORTED) {
+				EntryPoint.AlertUnsupportVersion();
+				isAlertedUnsupport = true;
+			}
+			if (EntryPoint.CurrentVegasVersion == null || // 当获取当前版本号为未知时。
+				EntryPoint.CurrentVegasVersion < new Version(19, 0))
+				BelowTopAdjustmentTrackCheck.Checked = BelowTopAdjustmentTrackCheck.Enabled = false;
+			#endregion
+
+			#region MIDI 速度控制点击事件
+			MidiCustomBpmCheck.CheckedChanged += (sender, e) => { MidiCustomBpmBox.Enabled = MidiCustomBpmCheck.Checked; };
+			GenerateAtCustomRadio.CheckedChanged += (sender, e) => { GenerateAtCustomText.Enabled = GenerateAtCustomRadio.Checked; };
+			UnrestrictLengthRadio.CheckedChanged += (sender, e) => { RestrictLengthBox.Enabled = !UnrestrictLengthRadio.Checked; };
+			MidiProjectBpmCheck.Text = Lang.str.midi_project_bpm + Lang.str.colon + ProcessBpmDouble(parent.ProjectBpm);
+			MidiCustomBpmBox.Value = (decimal)Math.Max(parent.ProjectBpm, (double)MidiCustomBpmBox.Minimum);
+			GenerateAtBeginRadio.Text = Lang.str.generate_at_begin + Lang.str.colon + Timecode.FromMilliseconds(0).ToPositionString();
+			GenerateAtCursorRadio.Text = Lang.str.generate_at_cursor + Lang.str.colon + vegas.Transport.CursorPosition.ToPositionString();
+			#endregion
+
+			#region 菜单选项
+			saveConfigToolStripMenuItem.Click += (sender, e) => SaveIni();
+			exitToolStripMenuItem.Click += new EventHandler(CancelBtn_Click);
+			aboutToolStripMenuItem.Click += new EventHandler(AboutBtn_Click);
+			DownloadDatamoshLink.Click += (sender, e) => OpenLink(Links.GITHUB_DATAMOSH_EXTPACK);
+			BindMenuLink(latestVersionLinkToolStripMenuItem, Links.GITHUB_LATEST);
+			BindMenuLink(latestVersionToolStripMenuItemInBar, Links.GITHUB_LATEST);
+			BindMenuLink(githubToolStripMenuItem, Links.REPOSITORY);
+			BindMenuLink(roadmapToolStripMenuItem, Links.ROADMAP);
+			BindMenuLink(githubIssuesToolStripMenuItem, Links.GITHUB_ISSUES);
+			BindMenuLink(updateLogsToolStripMenuItem, Links.UPDATE_LOGS);
+			BindMenuLink(documentationEnglishToolStripMenuItem, Links.DOCUMENTATION_ENGLISH);
+			BindMenuLink(tutorialVideoEnglishToolStripMenuItem, Links.TUTORIAL_VIDEO_ENGLISH);
+			BindMenuLink(troubleShootingToolStripMenuItem, Links.TROUBLE_SHOOTING);
+			BindMenuLink(releaseNotesV4_9_25_0ToolStripMenuItem, Links.RELEASE_NOTES_V4_9_25_0);
+			BindMenuLink(releaseNotesV4_10_17_0ToolStripMenuItem, Links.RELEASE_NOTES_V4_10_17_0);
+			BindMenuLink(documentationV0_1ToolStripMenuItem, Links.DOCUMENTATION_V0_1);
+			BindMenuLink(staffVisualizerV0_1ToolStripMenuItem, Links.STAFF_VISUALIZER_DOCUMENTATION_V0_1);
+			BindMenuLink(tutorialVideoV0_1ToolStripMenuItem, Links.TUTORIAL_VIDEO_V0_1);
+
+			foreach (ToolStripItem item in languageToolStripMenuItem.DropDownItems)
+				item.Click += new EventHandler(LanguageStripMenuItem_Click);
+			TrackLegatoMenu.Renderer = menu.Renderer = new Windows10StyledContextMenuStripRenderer();
+			QuickConfigMidiChannelsMenu.Renderer = menu.Renderer = new Windows10StyledContextMenuStripRenderer();
 			#endregion
 
 			#region 预听音频计时器
@@ -27278,6 +27283,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (CloseAfterOpenHelperCheck.Checked) Opacity = 0;
 				openReplaceClipDirectly = false;
 				Load += OpenReplaceClipDirectlyEvent;
+			} else if (parent.quickConfigMode) {
+				if (lastMidiChannelsEnabled) QuickConfigMidiChannelsToolStripMenuItem_Click(null, null);
+				OkBtn_Click(null, null);
 			}
 			#endregion
 
@@ -27295,6 +27303,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void BindMenuLink(ToolStripMenuItem menu, string link) {
 			menu.Click += (sender, e) => OpenLink(link);
+		}
+
+		/// <summary>
+		/// 从用户配置中查询此时是否应该直接打开替换轨道素材的对话框。<br />
+		/// 将其作为独立函数是避免在该配置设置对话框启动前访问数据而造成的数据偏差。<br />
+		/// 使用函数而不是只读属性是因为看见函数就会明白需要减少调用次数。
+		/// </summary>
+		internal bool IsOpenReplaceClipDirectly() {
+			return configIni.Read("OpenToolDirectlyNext", false, "ReplaceClips");
 		}
 
 		public void ReadIni() {
@@ -27401,6 +27418,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (OpenMidiFile(configIni.Read("LastMidiFile", null), true)) {
 				MidiChannelCombo.SetIndex(configIni.Read("LastMidiChannel", -1), -1);
 				lastMidiChannelsChecked = configIni.Read("LastMidiChannelsChecked", "");
+				lastMidiChannelsEnabled = configIni.Read("EnableMultiMidiTracks", false);
 			} else RemoveLastMidiConfig();
 			MidiDynamicMidiBpmFormCombo.SetIndex(configIni.Read("DynamicMidiBpmForm", 0), 0);
 			MidiUseBpm_int = configIni.Read("MidiUseBpm", 0);
@@ -27507,7 +27525,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#endregion
 
 			#region 工具配置
-			openReplaceClipDirectly = configIni.Read("OpenToolDirectlyNext", false, "ReplaceClips");
+			openReplaceClipDirectly = IsOpenReplaceClipDirectly();
 			#endregion
 		}
 
@@ -27605,14 +27623,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (!ChooseMidiText.Text.Contains("<")) { // 是否不为 "<未选择 MIDI 文件>"
 				configIni.Write("LastMidiFile", ChooseMidiText.Text);
 				int lastMidiChannelIndex = MidiChannelCombo.SelectedIndex;
+				bool isValidMultiMidiTracksMode = false;
 				if (MidiChannelCombo.SelectedItem is MidiChannels) {
 					MidiChannels channels = MidiChannelCombo.SelectedItem as MidiChannels;
 					if (channels.Count != 0) {
 						lastMidiChannelIndex = MidiChannelCombo.Items.IndexOf(channels[0]);
 						configIni.Write("LastMidiChannelsChecked", lastMidiChannelsChecked);
+						isValidMultiMidiTracksMode = true;
 					}
 				}
 				configIni.Write("LastMidiChannel", lastMidiChannelIndex);
+				if (AcceptConfig) configIni.Write("EnableMultiMidiTracks", isValidMultiMidiTracksMode);
 			} else RemoveLastMidiConfig();
 			configIni.Write("DynamicMidiBpmForm", MidiDynamicMidiBpmFormCombo.SelectedIndex);
 			configIni.Write("MidiUseBpm", MidiUseBpm_int);
@@ -27755,6 +27776,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.DeleteKey("LastMidiFile");
 			configIni.DeleteKey("LastMidiChannel");
 			configIni.DeleteKey("LastMidiChannelsChecked");
+			configIni.DeleteKey("EnableMultiMidiTracks");
 			#endif
 		}
 
@@ -28269,7 +28291,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (!StaffGenerateLinesCheck.Enabled) StaffGenerateLinesCheck.Checked = false;
 			if (!StaffGenerateClefCheck.Enabled) StaffGenerateClefCheck.Checked = false;
 			if (Tabs.SelectedTab == YtpTab) IsGenerateYtp = true;
-			Close();
 		}
 		private void ConfigForm_FormClosing(object sender, FormClosingEventArgs e) {
 			checkUpdateThread.Abort();
@@ -29293,6 +29314,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public MidiChannels midiChannels;
 		public AutoLayoutTracksInfos layoutInfos;
 		public bool IsMultiMidiChannel { get { return midiChannels != null; } }
+		private bool lastMidiChannelsEnabled = false;
 		private string lastMidiChannelsChecked;
 		private void MidiChannelAdvancedBtn_Click(object sender, EventArgs e) {
 			MidiChannelAdvancedForm advanced = new MidiChannelAdvancedForm(this, midiChannels, layoutInfos);
