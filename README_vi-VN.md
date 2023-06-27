@@ -68,8 +68,8 @@ Bạn có thể tìm hiểu về nhiều tính năng dễ dàng hơn thông qua 
 [Chú giải >](glossary.md)
 
 ### Hướng dẫn
-[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)
-<br /><small>[Khám phá các hiệu ứng Visual](https://youtu.be/cY2Qa3Owetw)</small>
+[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)  
+<small>[Khám phá các hiệu ứng Visual](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### Lịch sử cập nhật phiên bản chính
 Đây là các bức ảnh chụp màn hình về UI (giao diện người dùng) của script dành cho lịch sử cập nhật phiên bản chính.

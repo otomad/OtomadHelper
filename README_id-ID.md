@@ -68,8 +68,8 @@ Kalian dapat mempelajari banyak fitur dengan lebih mudah melalui gambar.
 [Glossary >](glossary.md)
 
 ### Tutorial
-[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)
-<br /><small>[Eksplor efek Visual](https://youtu.be/cY2Qa3Owetw)</small>
+[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)  
+<small>[Eksplor efek Visual](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### Riwayat update
 Ini adalah screenshot dari antarmuka pengguna skrip untuk pembaruan versi utama dalam histori.
