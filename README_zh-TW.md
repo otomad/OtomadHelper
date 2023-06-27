@@ -69,7 +69,7 @@ Vegas Pro 17、18、19、20 測試**正常**。
 
 ### 教程
 [![一分半上手 Otomad Helper](covers/youtube_cover.svg)](https://b23.tv/g98ALSe)
-<small>[探索視覺效果](https://youtu.be/cY2Qa3Owetw)</small>
+<br /><small>[探索視覺效果](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### 主要版本更新歷史
 這些是歷史上主要版本更新的腳本使用者介面的螢幕截圖。

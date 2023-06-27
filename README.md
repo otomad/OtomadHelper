@@ -77,7 +77,7 @@ You could learn about many features more easily through pictures.
 
 ### Tutorial
 [![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)
-<small>[Explore Visual Effects](https://youtu.be/cY2Qa3Owetw)</small>
+<br /><small>[Explore Visual Effects](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### Major Version Update History
 These are screenshots of the script user interface for major version updates in history.
