@@ -85,7 +85,7 @@ These are screenshots of the script user interface for major version updates in 
 [Major Version Update History >](history/README.md)
 
 ### Roadmap
-[Go to GitHub Project >](https://github.com/users/otomad/projects/2)
+[Go to GitHub Project **OTOMAD+** >](https://github.com/users/otomad/projects/2)
 
 ### Issues
 When you are using the script, if you:
