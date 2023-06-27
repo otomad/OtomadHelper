@@ -77,7 +77,7 @@ Vegas Pro 17、18、19、20 測試**正常**。
 [主要版本更新歷史 >](history/README.md)
 
 ### 路線圖
-[路線圖 >](roadmap.md)
+[轉到 GitHub 專案 >](https://github.com/users/otomad/projects/2)
 
 ### 問題
 使用腳本時，如果您：

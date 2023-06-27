@@ -1,5 +1,11 @@
 # Roadmap
-### Basic feature / 基础功能
+
+The new roadmap has been moved to [GitHub Project](https://github.com/users/otomad/projects/2).
+
+<details>
+<summary>View old version roadmap</summary>
+
+### Basic feature
 - [x] Trim sources.
 - [x] Using sources in media pool or track.
 - [x] New tuning method (which will be faster) (for Vegas 16+ only).
@@ -11,7 +17,7 @@
 - [x] Support YTP.
 - [x] Apply visual effects to selected video events.
 
-### Issues idea / 建议灵感
+### Issues idea
 > Suggestions from other friends.
 - [x] I18n (5 languages currently).
 - [x] Change tune method.
@@ -24,17 +30,17 @@
 - [x] Set fade in / fade out by timecode instead of percent.
 - [x] Change the opacity by velocity.
 
-### Bring from newer versions / 功能下放
+### Bring from newer versions
 > These features were originally scheduled to be released in v5.0, but due to the delay in v5.0, some of them had to be brought into v4.0.
 - [x] Replace track events specify separately.
 - [x] Generate multiple tracks at once and apply auto layout tracks effects.
 - [x] Apply multiple visual effects to clips.
 - [x] Sonar Effect.
 
-### Coming soon / 即将来袭
+### Coming soon
 ∅
 
-### Far future / 遥远未来
+### Backlog
 - [ ] Support MIDI files not exported by FL Studio.
 - [ ] Edit MIDI channel notes.
 - [ ] Official documentation and tutorial video.
@@ -50,11 +56,13 @@
 - [ ] Stand alone app.
 - [ ] Android app.
 
-### Failed / 我失败了
+### Failed
 > Sorry, I don't know how to add these features.
 - [ ] Quickly generate kaleidoscope effects.
 
-### Disputed / 有争议的
+### Disputed
 > I'm not quite sure if these features should be added.
 
 ∅
+
+</details>

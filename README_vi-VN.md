@@ -77,7 +77,7 @@ Bạn có thể tìm hiểu về nhiều tính năng dễ dàng hơn thông qua 
 [Lịch sử cập nhật phiên bản chính >](history/README.md)
 
 ### Roadmap
-[Roadmap >](roadmap.md)
+[Chuyển đến Dự án GitHub >](https://github.com/users/otomad/projects/2)
 
 ### Các vấn đề gặp phải (Issues)
 Khi bạn đang dùng script, nếu bạn:

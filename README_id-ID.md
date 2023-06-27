@@ -77,7 +77,7 @@ Ini adalah screenshot dari antarmuka pengguna skrip untuk pembaruan versi utama 
 [Riwayat update >](history/README.md)
 
 ### Roadmap
-[Roadmap >](roadmap.md)
+[Pergi ke Proyek GitHub >](https://github.com/users/otomad/projects/2)
 
 ### Issues
 Kalian memakai skrip ini? dan kalian:

@@ -77,7 +77,7 @@ Vegas Pro 17、18、19、20 で**正常**に作動します。
 [メジャーバージョンの更新履歴 >](history/README.md)
 
 ### ロードマップ
-[ロードマップ >](roadmap.md)
+[GitHub プロジェクトに移動 >](https://github.com/users/otomad/projects/2)
 
 ### イシューズ
 スクリプトを使用中に次のような状況がありましたら：
