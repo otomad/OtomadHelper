@@ -17,6 +17,10 @@ namespace OtomadHelper.Core {
 				MainDock dock = MainDock.Instance;
 				if (dock != null) dock.Received = text;
 			};
+
+			TestForm form = new TestForm();
+			form.ShowDialog();
+			Close();
 		}
 
 		protected override void OnSourceInitialized(EventArgs e) {

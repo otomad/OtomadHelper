@@ -10,5 +10,5 @@
 	Height="480"
 	Width="800"
 	Closed="Window_Closed">
-	<local:MainDock />
+	<!--<local:MainDock />-->
 </Window>
