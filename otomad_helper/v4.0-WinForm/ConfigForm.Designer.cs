@@ -106,11 +106,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.japaneseToolStripMenuItem = new Otomad.VegasScript.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
 			this.russianToolStripMenuItem = new Otomad.VegasScript.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
 			this.vietnameseToolStripMenuItem = new Otomad.VegasScript.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
+			this.indonesianToolStripMenuItem = new Otomad.VegasScript.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
 			this.latestVersionToolStripMenuItemInBar = new System.Windows.Forms.ToolStripMenuItem();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.Tabs = new System.Windows.Forms.TabControl();
 			this.SourceTab = new System.Windows.Forms.TabPage();
-			this.WarningInfoLabel = new System.Windows.Forms.Label();
+			this.panel2 = new System.Windows.Forms.Panel();
 			this.MidiConfigGroup = new System.Windows.Forms.GroupBox();
 			this.MidiConfigTablePanel = new System.Windows.Forms.TableLayoutPanel();
 			this.RestrictLengthLbl = new System.Windows.Forms.Label();
@@ -165,6 +166,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.BelowTopAdjustmentTrackCheck = new System.Windows.Forms.CheckBox();
 			this.RemoveSourceTrackEventsCheck = new Otomad.VegasScript.OtomadHelper.V4.RememberedCheckBox();
 			this.SelectAllGeneratedEventsCheck = new System.Windows.Forms.CheckBox();
+			this.WarningInfoLabel = new System.Windows.Forms.Label();
 			this.AudioTab = new System.Windows.Forms.TabPage();
 			this.AudioParamsGroup = new System.Windows.Forms.GroupBox();
 			this.AudioParamsTable = new System.Windows.Forms.TableLayoutPanel();
@@ -494,8 +496,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.reverseDirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trackLegatoSelectInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.OverflowToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.indonesianToolStripMenuItem = new Otomad.VegasScript.OtomadHelper.V4.ToolStripRadioButtonMenuItem();
-			this.panel2 = new System.Windows.Forms.Panel();
+			this.ExportMidiFileBtn = new Otomad.VegasScript.OtomadHelper.V4.CommandLinkButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.MidiStartSecondBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.MidiEndSecondBox)).BeginInit();
@@ -513,6 +514,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.panel1.SuspendLayout();
 			this.Tabs.SuspendLayout();
 			this.SourceTab.SuspendLayout();
+			this.panel2.SuspendLayout();
 			this.MidiConfigGroup.SuspendLayout();
 			this.MidiConfigTablePanel.SuspendLayout();
 			this.tableLayoutPanel5.SuspendLayout();
@@ -625,7 +627,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutoLayoutTracksClearButtons.SuspendLayout();
 			this.tableLayoutPanel19.SuspendLayout();
 			this.TrackLegatoMenu.SuspendLayout();
-			this.panel2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -1501,7 +1502,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.chineseToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.chineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.chineseToolStripMenuItem.Name = "chineseToolStripMenuItem";
-			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.chineseToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
 			this.chineseToolStripMenuItem.Text = "简体中文";
 			// 
 			// tchineseToolStripMenuItem
@@ -1509,7 +1510,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tchineseToolStripMenuItem.CheckOnClick = true;
 			this.tchineseToolStripMenuItem.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tchineseToolStripMenuItem.Name = "tchineseToolStripMenuItem";
-			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.tchineseToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
 			this.tchineseToolStripMenuItem.Text = "繁體中文";
 			// 
 			// englishToolStripMenuItem
@@ -1517,7 +1518,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.englishToolStripMenuItem.CheckOnClick = true;
 			this.englishToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-			this.englishToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.englishToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
 			this.englishToolStripMenuItem.Text = "English";
 			// 
 			// japaneseToolStripMenuItem
@@ -1525,7 +1526,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.japaneseToolStripMenuItem.CheckOnClick = true;
 			this.japaneseToolStripMenuItem.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.japaneseToolStripMenuItem.Name = "japaneseToolStripMenuItem";
-			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.japaneseToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
 			this.japaneseToolStripMenuItem.Text = "日本語";
 			// 
 			// russianToolStripMenuItem
@@ -1533,7 +1534,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.russianToolStripMenuItem.CheckOnClick = true;
 			this.russianToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.russianToolStripMenuItem.Name = "russianToolStripMenuItem";
-			this.russianToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.russianToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
 			this.russianToolStripMenuItem.Text = "Русский";
 			// 
 			// vietnameseToolStripMenuItem
@@ -1541,8 +1542,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.vietnameseToolStripMenuItem.CheckOnClick = true;
 			this.vietnameseToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.vietnameseToolStripMenuItem.Name = "vietnameseToolStripMenuItem";
-			this.vietnameseToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.vietnameseToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
 			this.vietnameseToolStripMenuItem.Text = "Tiếng Việt";
+			// 
+			// indonesianToolStripMenuItem
+			// 
+			this.indonesianToolStripMenuItem.CheckOnClick = true;
+			this.indonesianToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.indonesianToolStripMenuItem.Name = "indonesianToolStripMenuItem";
+			this.indonesianToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
+			this.indonesianToolStripMenuItem.Text = "Bahasa Indonesia";
 			// 
 			// latestVersionToolStripMenuItemInBar
 			// 
@@ -1597,19 +1606,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SourceTab.Text = "媒体";
 			this.SourceTab.UseVisualStyleBackColor = true;
 			// 
-			// WarningInfoLabel
+			// panel2
 			// 
-			this.WarningInfoLabel.AutoSize = true;
-			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
-			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
-			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 595);
-			this.WarningInfoLabel.Margin = new System.Windows.Forms.Padding(0);
-			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(540, 0);
-			this.WarningInfoLabel.Name = "WarningInfoLabel";
-			this.WarningInfoLabel.Padding = new System.Windows.Forms.Padding(5, 5, 5, 0);
-			this.WarningInfoLabel.Size = new System.Drawing.Size(10, 31);
-			this.WarningInfoLabel.TabIndex = 3;
+			this.panel2.AutoScroll = true;
+			this.panel2.AutoSize = true;
+			this.panel2.Controls.Add(this.MidiConfigGroup);
+			this.panel2.Controls.Add(this.SourceConfigGroup);
+			this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel2.Location = new System.Drawing.Point(0, 0);
+			this.panel2.Margin = new System.Windows.Forms.Padding(0);
+			this.panel2.Name = "panel2";
+			this.panel2.Padding = new System.Windows.Forms.Padding(5);
+			this.panel2.Size = new System.Drawing.Size(658, 595);
+			this.panel2.TabIndex = 0;
 			// 
 			// MidiConfigGroup
 			// 
@@ -2386,6 +2395,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SelectAllGeneratedEventsCheck.TabIndex = 2;
 			this.SelectAllGeneratedEventsCheck.Text = "生成完成后选中生成的所有事件";
 			this.SelectAllGeneratedEventsCheck.UseVisualStyleBackColor = true;
+			// 
+			// WarningInfoLabel
+			// 
+			this.WarningInfoLabel.AutoSize = true;
+			this.WarningInfoLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.WarningInfoLabel.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Bold);
+			this.WarningInfoLabel.ForeColor = System.Drawing.Color.Red;
+			this.WarningInfoLabel.Location = new System.Drawing.Point(0, 595);
+			this.WarningInfoLabel.Margin = new System.Windows.Forms.Padding(0);
+			this.WarningInfoLabel.MaximumSize = new System.Drawing.Size(540, 0);
+			this.WarningInfoLabel.Name = "WarningInfoLabel";
+			this.WarningInfoLabel.Padding = new System.Windows.Forms.Padding(5, 5, 5, 0);
+			this.WarningInfoLabel.Size = new System.Drawing.Size(10, 31);
+			this.WarningInfoLabel.TabIndex = 3;
 			// 
 			// AudioTab
 			// 
@@ -7430,6 +7453,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.toolsTableLayoutPanel.AutoSize = true;
 			this.toolsTableLayoutPanel.ColumnCount = 1;
 			this.toolsTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.toolsTableLayoutPanel.Controls.Add(this.ExportMidiFileBtn, 0, 11);
 			this.toolsTableLayoutPanel.Controls.Add(this.CloseAfterOpenHelperCheck, 0, 0);
 			this.toolsTableLayoutPanel.Controls.Add(this.AutoLayoutTracksGroup, 0, 1);
 			this.toolsTableLayoutPanel.Controls.Add(this.QuickSelectIntervalBtn, 0, 2);
@@ -7446,7 +7470,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.toolsTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.toolsTableLayoutPanel.Name = "toolsTableLayoutPanel";
 			this.toolsTableLayoutPanel.Padding = new System.Windows.Forms.Padding(1, 0, 1, 0);
-			this.toolsTableLayoutPanel.RowCount = 11;
+			this.toolsTableLayoutPanel.RowCount = 12;
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
@@ -7458,7 +7482,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
 			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
-			this.toolsTableLayoutPanel.Size = new System.Drawing.Size(633, 1180);
+			this.toolsTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+			this.toolsTableLayoutPanel.Size = new System.Drawing.Size(633, 1290);
 			this.toolsTableLayoutPanel.TabIndex = 8;
 			// 
 			// CloseAfterOpenHelperCheck
@@ -7943,27 +7968,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverflowToolTip.InitialDelay = 0;
 			this.OverflowToolTip.ReshowDelay = 0;
 			// 
-			// indonesianToolStripMenuItem
+			// ExportMidiFileBtn
 			// 
-			this.indonesianToolStripMenuItem.CheckOnClick = true;
-			this.indonesianToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.indonesianToolStripMenuItem.Name = "indonesianToolStripMenuItem";
-			this.indonesianToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-			this.indonesianToolStripMenuItem.Text = "Bahasa Indonesia";
-			// 
-			// panel2
-			// 
-			this.panel2.AutoScroll = true;
-			this.panel2.AutoSize = true;
-			this.panel2.Controls.Add(this.MidiConfigGroup);
-			this.panel2.Controls.Add(this.SourceConfigGroup);
-			this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel2.Location = new System.Drawing.Point(0, 0);
-			this.panel2.Margin = new System.Windows.Forms.Padding(0);
-			this.panel2.Name = "panel2";
-			this.panel2.Padding = new System.Windows.Forms.Padding(5);
-			this.panel2.Size = new System.Drawing.Size(658, 595);
-			this.panel2.TabIndex = 0;
+			this.ExportMidiFileBtn.CommandLink = true;
+			this.ExportMidiFileBtn.CommandLinkNote = "依照轨道中的事件来导出 MIDI 文件。";
+			this.ExportMidiFileBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ExportMidiFileBtn.Location = new System.Drawing.Point(3, 1182);
+			this.ExportMidiFileBtn.Margin = new System.Windows.Forms.Padding(2);
+			this.ExportMidiFileBtn.Name = "ExportMidiFileBtn";
+			this.ExportMidiFileBtn.Size = new System.Drawing.Size(627, 106);
+			this.ExportMidiFileBtn.TabIndex = 20;
+			this.ExportMidiFileBtn.Text = "导出 MIDI 文件";
+			this.ExportMidiFileBtn.UseVisualStyleBackColor = true;
+			this.ExportMidiFileBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
 			// 
 			// ConfigForm
 			// 
@@ -8009,6 +8026,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Tabs.ResumeLayout(false);
 			this.SourceTab.ResumeLayout(false);
 			this.SourceTab.PerformLayout();
+			this.panel2.ResumeLayout(false);
+			this.panel2.PerformLayout();
 			this.MidiConfigGroup.ResumeLayout(false);
 			this.MidiConfigGroup.PerformLayout();
 			this.MidiConfigTablePanel.ResumeLayout(false);
@@ -8196,8 +8215,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel19.ResumeLayout(false);
 			this.tableLayoutPanel19.PerformLayout();
 			this.TrackLegatoMenu.ResumeLayout(false);
-			this.panel2.ResumeLayout(false);
-			this.panel2.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -8676,6 +8693,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
 		public ToolStripRadioButtonMenuItem indonesianToolStripMenuItem;
 		public System.Windows.Forms.Panel panel2;
+		public CommandLinkButton ExportMidiFileBtn;
 	}
 }
 
