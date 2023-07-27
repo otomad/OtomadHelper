@@ -5323,7 +5323,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				info.Add(Lang.str.midi_channel + ' ' + Index + (HasName ? Lang.str.colon + Name : ""));
 				if (HasInstrument) info.Add(Lang.str.midi_instrument + Lang.str.colon + Instrument);
 				if (IsDrumKit) info.Add(Lang.str.drum_kit);
-				info.Add(Lang.str.midi_notes_count + Lang.str.colon + NotesCount);
+				info.Add(Lang.str.notes_count + Lang.str.colon + NotesCount);
 				if (NotesCount != 0) info.Add(Lang.str.midi_begin_note + Lang.str.colon + BeginNote);
 				return string.Join(Lang.str.semicolon, info);
 			}
@@ -5888,6 +5888,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// 使用不合法的滑音大小参数。
 			/// </summary>
 			public InvalidGlissandoAmountException() : base(Lang.str.invalid_glissando_amount_exception) { }
+		}
+
+		public class FailedToExportMidiFileException : Exception {
+			/// <summary>
+			/// 导出 MIDI 文件失败。
+			/// </summary>
+			public FailedToExportMidiFileException() : base(Lang.str.failed_to_export_midi_file_exception) { }
 		}
 	}
 
@@ -11316,7 +11323,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="value">浮点数值。</param>
 		/// <returns>舍入后取整值。</returns>
-		private static int Round(double value) {
+		internal static int Round(double value) {
 			return (int)Math.Round(value, MidpointRounding.AwayFromZero);
 		}
 
@@ -11325,7 +11332,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="timecode">时间码。</param>
 		/// <returns>舍入后取整值。</returns>
-		private static int Round(Timecode timecode) {
+		internal static int Round(Timecode timecode) {
 			return Round(timecode.ToMilliseconds());
 		}
 
@@ -14999,7 +15006,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ChannelHeader.Text = str.channel;
 			NameHeader.Text = str.name;
 			InstrumentHeader.Text = str.instrument;
-			NoteCountHeader.Text = str.midi_notes_count;
+			NoteCountHeader.Text = str.notes_count;
 			BeginNoteHeader.Text = str.midi_begin_note;
 			IsDrumsKitHeader.Text = str.drum_kit;
 			PanHeader.Text = str.pan;
@@ -17369,6 +17376,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				MidiChannelList.Items.AddRange(selectedVegasTracks.Channels.Cast<ListViewItem>().Where(item => !IsTrackHidden(item as VirtualMidiChannelItem)).ToArray());
 			}
 			MidiChannelList.EndUpdate();
+
+			OkBtn.Enabled = MidiTrackList.Items.Count > 0;
 		}
 
 		private void List_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
@@ -17548,8 +17557,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			} catch (Exception) { }
 		}
 
-		private void OkBtn_Click(object sender, EventArgs e) {
-			// TODO: 这里需要try catch检测报错。
+		private void OkBtn_Click(object sender, EventArgs evt) {
 			if (MidiTrackList.Items.Count == 0) return;
 			SaveFileDialog saveFileDialog = new SaveFileDialog {
 				Filter = EntryPoint.GetOpenFileDialogFilter(Lang.str.midi_file_name, "*.mid;*.midi"),
@@ -17558,9 +17566,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Title = Lang.str.export,
 			};
 			if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
-			MidiExporter midiExporter = new MidiExporter(saveFileDialog.FileName, vegas.Project.Ruler.BeatsPerMinute, MidiTrackList, MidiInstrumentList, EntryPoint.PitchMap(AudioMainKeyCombo.SelectedItem.ToString(), AudioMainOctaveCombo.SelectedItem.ToString()), LoopRegionOnlyCheck.Checked);
-			midiExporter.SaveToFile();
-			MessageBox.Show("导出成功！", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			try {
+				MidiExporter midiExporter = new MidiExporter(saveFileDialog.FileName, vegas.Project.Ruler.BeatsPerMinute, MidiTrackList, MidiInstrumentList, EntryPoint.PitchMap(AudioMainKeyCombo.SelectedItem.ToString(), AudioMainOctaveCombo.SelectedItem.ToString()), LoopRegionOnlyCheck.Checked, vegas);
+				midiExporter.SaveToFile();
+				MessageBox.Show(Lang.str.export_successful, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			} catch (Exception e) {
+				EntryPoint.ShowError(new Exceptions.FailedToExportMidiFileException(), e);
+				ConfigForm.SetF(Handle);
+			}
 		}
 
 		public void Translate() {
@@ -17569,6 +17582,49 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			OkBtn.Text = str.export_with_accesskey;
 			PreviewTrackBtn.Text = str.preview;
 			CancelBtn.Text = str.cancel;
+			FilterAllRadio.Text = str.all_tracks;
+			FilterVideoRadio.Text = str.video_tracks;
+			FilterAudioRadio.Text = str.audio_tracks;
+			AudioBasePitchLbl.Text = str.base_pitch;
+			VegasTrackLbl.Text = str.vegas_track_list;
+			MidiTrackLbl.Text = str.midi_track_list;
+			MidiChannelLbl.Text = str.midi_channel_list;
+			MidiInstrumentLbl.Text = str.midi_instrument_list;
+			VegasTrackName.Text = str.track_name;
+			VegasTrackEventCount.Text = str.event_count;
+			VegasTrackMute.Text = str.muted_abbr;
+			VegasTrackSolo.Text = str.soloed_abbr;
+			MidiTrackName.Text = str.name;
+			MidiTrackContain.Text = str.contains;
+			MidiTrackNoteCount.Text = str.midi_notes_count;
+			MidiChannelName.Text = str.original_track_name;
+			MidiChannelValue.Text = str.channel_value;
+			MidiChannelNoteCount.Text = str.midi_notes_count;
+			MidiInstrumentChannel.Text = str.channel_value;
+			MidiInstrumentInstrument.Text = str.instrument;
+			AddToEachNewTrackBtn.Text = str.add_to_each_new_tracks;
+			AddToSameNewTrackBtn.Text = str.add_to_same_new_track;
+			AddToCurrentTrackBtn.Text = str.add_to_current_track;
+			AddNewTrackBtn.Text = str.add_a_new_empty_track;
+			InsertNewTrackBtn.Text = str.insert_a_new_empty_track;
+			MoveUpBtn.Text = str.move_up;
+			MoveDownBtn.Text = str.move_down;
+			RemoveTrackBtn.Text = str.remove;
+			RemoveChannelBtn.Text = str.remove;
+			MidiTrackNameLbl.Text = str.name;
+			ChannelValueLbl.Text = str.channel_value;
+			InstrumentLbl.Text = str.midi_instrument;
+			DispatchInstrumentLbl.Text = str.dispatch_instrument_to_channel;
+			LoopRegionOnlyCheck.Text = str.export_loop_region_only;
+			Text = str.export_midi_file;
+
+			if (Lang.str != Lang.SChinese && Lang.str != Lang.TChinese && Lang.str != Lang.Japanese) {
+				AddToEachNewTrackBtn.Font =
+				AddToSameNewTrackBtn.Font =
+				AddToCurrentTrackBtn.Font =
+				AddNewTrackBtn.Font =
+				InsertNewTrackBtn.Font = new Font(str.ui_font, 7F);
+			}
 		}
 
 		public void SaveIni() {
@@ -17636,7 +17692,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			public VirtualVegasTrackItem(Track track) :
 				base(new string[] { track.DisplayIndex.ToString(), track.Name, track.Events.Count.ToString(),
-					track.Mute ? "×" : "", track.Solo ? "√" : ""}) {
+					track.Mute ? "✖" : "", track.Solo ? "✔" : ""}) {
 				Track = track;
 				Index = track.DisplayIndex;
 				Name = track.Name ?? "";
@@ -17644,6 +17700,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Count = track.Events.Count;
 				Mute = track.Mute;
 				Solo = track.Solo;
+				SubItems[3].Font = SubItems[4].Font = new Font("Segoe UI Symbol", 9F);
 			}
 		}
 
@@ -17731,51 +17788,66 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public List<ExportMidiFileForm.VirtualMidiInstrumentItem> patches;
 		public int basePitch;
 		public bool loopMode;
+		private readonly Vegas vegas;
 
-
-		const int MidiFileType = 1;
-		const int TicksPerQuarterNote = 120;
+		const int MIDI_FILE_TYPE = 1;
+		const int TICKS_PER_QUARTER_NOTE = 120;
 		const int MAX = 127;
 
-		public MidiExporter(string fileName, double bpm, List<ExportMidiFileForm.VirtualMidiTrackItem> tracks, List<ExportMidiFileForm.VirtualMidiInstrumentItem> patches, int basePitch, bool loopMode) {
+		public MidiExporter(string fileName, double bpm, List<ExportMidiFileForm.VirtualMidiTrackItem> tracks, List<ExportMidiFileForm.VirtualMidiInstrumentItem> patches, int basePitch, bool loopMode, Vegas vegas) {
 			this.fileName = fileName;
 			this.bpm = bpm;
 			this.tracks = tracks;
 			this.patches = patches;
 			this.basePitch = basePitch;
 			this.loopMode = loopMode;
+			this.vegas = vegas;
 		}
 
-		public MidiExporter(string fileName, double bpm, ListView tracks, ListView patches, int basePitch, bool loopMode) :
+		public MidiExporter(string fileName, double bpm, ListView tracks, ListView patches, int basePitch, bool loopMode, Vegas vegas) :
 			this(fileName, bpm, tracks.Items.Cast<ExportMidiFileForm.VirtualMidiTrackItem>().ToList(),
-				patches.Items.Cast<ExportMidiFileForm.VirtualMidiInstrumentItem>().ToList(), basePitch, loopMode) { }
+				patches.Items.Cast<ExportMidiFileForm.VirtualMidiInstrumentItem>().ToList(), basePitch, loopMode, vegas) { }
+
+		public Dictionary<int, int> GetPatchMap() {
+			return patches.ToDictionary(patch => patch.Channel, patch => patch.PatchIndex - 1);
+		}
 
 		public void SaveToFile() {
-			MidiEventCollection collection = new MidiEventCollection(MidiFileType, TicksPerQuarterNote);
+			MidiEventCollection collection = new MidiEventCollection(MIDI_FILE_TYPE, TICKS_PER_QUARTER_NOTE);
 
-			collection.AddEvent(new TextEvent("--Export by Otomad Helper--", MetaEventType.SequenceTrackName, 0), 0);
+			collection.AddEvent(new TextEvent("--Exported by Otomad Helper--", MetaEventType.SequenceTrackName, 0), 0);
 			collection.AddEvent(new TempoEvent(MicrosecondsPerQuaterNote, 0), 0);
+			Dictionary<int, int> patchMap = GetPatchMap();
+			Dictionary<int, bool> patchMarked = patchMap.ToDictionary(channel => channel.Key, _ => false);
 
 			foreach (ExportMidiFileForm.VirtualMidiTrackItem _track in tracks) {
 				List<MidiEvent> currentTrack = new List<MidiEvent>();
 				currentTrack.Add(new TextEvent(_track.Name, MetaEventType.SequenceTrackName, 0));
-				if (_track.Channels.Count > 0) {
-					var patch = patches.FirstOrDefault(p => p.Channel == _track.Channels[0].Channel);
-					if (patch != null) currentTrack.Add(new PatchChangeEvent(0, patch.Channel, patch.PatchIndex - 1));
-				}
-				foreach (ExportMidiFileForm.VirtualMidiChannelItem vegasTrack in _track.Channels) {
+				foreach (ExportMidiFileForm.VirtualMidiChannelItem vegasTrack in _track.FilteredChannels) {
 					Track track = vegasTrack.Track.Track;
 					int channel = (int)vegasTrack.Channel;
+					int patch = patchMap[channel];
+					if (!patchMarked[channel]) {
+						patchMarked[channel] = true;
+						currentTrack.Add(new PatchChangeEvent(0, channel, patch));
+					}
 					foreach (TrackEvent trackEvent in track.Events) {
+						EventState state = GetEventState(trackEvent.Start);
+						if (state == EventState.CONTINUE) continue;
+						else if (state == EventState.BREAK) break;
 						int pitch = GetNotePitch(trackEvent);
-						currentTrack.Add(new NoteOnEvent(GetTick(trackEvent.Start), channel, pitch, (int)Math.Round(trackEvent.FadeIn.Gain * MAX), (int)GetTick(trackEvent.Length)));
+						currentTrack.Add(new NoteOnEvent(GetTick(trackEvent.Start), channel, pitch, (int)Math.Round(trackEvent.FadeIn.Gain * MAX), (int)GetTick(trackEvent.Length, false)));
 						currentTrack.Add(new NoteEvent(GetTick(trackEvent.End), channel, MidiCommandCode.NoteOff, pitch, 0));
 					}
 
 					Envelope volume = track.Envelopes.FindByType(EnvelopeType.Volume) ?? track.Envelopes.FindByType(EnvelopeType.Composite);
 					if (volume != null)
-						foreach (EnvelopePoint point in volume.Points)
+						foreach (EnvelopePoint point in volume.Points) {
+							EventState state = GetEventState(point.X);
+							if (state == EventState.CONTINUE) continue;
+							else if (state == EventState.BREAK) break;
 							currentTrack.Add(new ControlChangeEvent(GetTick(point.X), channel, MidiController.MainVolume, GetGain(point.Y)));
+						}
 					else {
 						int gain = GetGain(track is AudioTrack ? (track as AudioTrack).Volume : (track as VideoTrack).CompositeLevel);
 						currentTrack.Add(new ControlChangeEvent(0, channel, MidiController.MainVolume, gain));
@@ -17783,8 +17855,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 					Envelope pan = track.Envelopes.FindByType(EnvelopeType.Pan);
 					if (pan != null)
-						foreach (EnvelopePoint point in pan.Points)
+						foreach (EnvelopePoint point in pan.Points) {
+							EventState state = GetEventState(point.X);
+							if (state == EventState.CONTINUE) continue;
+							else if (state == EventState.BREAK) break;
 							currentTrack.Add(new ControlChangeEvent(GetTick(point.X), channel, MidiController.Pan, MapPan(point.Y, true)));
+						}
 					else if (track is AudioTrack)
 						currentTrack.Add(new ControlChangeEvent(0, channel, MidiController.Pan, MapPan((track as AudioTrack).PanX, false)));
 				}
@@ -17795,26 +17871,48 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			MidiFile.Export(fileName, collection);
 		}
 
+		private enum EventState {
+			/// <summary>跳过事件。</summary>
+			CONTINUE,
+			/// <summary>通过事件。</summary>
+			PASS,
+			/// <summary>终止事件。</summary>
+			BREAK = -1,
+		}
+
+		private EventState GetEventState(Timecode timecode, bool isNoteOff = false) {
+			if (!loopMode) return EventState.PASS;
+			Func<Timecode, int> Round = value => TrackHelper<object, object>.Round(value);
+			int current = Round(timecode),
+				loopRegionStart = Round(vegas.Transport.LoopRegionStart),
+				loopRegionEnd = Round(vegas.Transport.LoopRegionStart + vegas.Transport.LoopRegionLength);
+			if (current < loopRegionStart) return EventState.CONTINUE;
+			else if (!isNoteOff && current >= loopRegionEnd) return EventState.BREAK;
+			else if (isNoteOff && current > loopRegionEnd) return EventState.BREAK;
+			else return EventState.PASS;
+		}
+
 		private int GetNotePitch(TrackEvent trackEvent) {
 			int result = basePitch;
 			#if VER_GEQ_16
 			AudioEvent audioEvent = trackEvent as AudioEvent;
 			if (audioEvent == null) result = basePitch;
-			if (!audioEvent.PitchLock) result = (int)Math.Round(audioEvent.PitchSemis + basePitch);
+			else if (!audioEvent.PitchLock) result = (int)Math.Round(audioEvent.PitchSemis + basePitch);
 			else result = (int)Math.Round(EntryPoint.Stretch2Pitch(audioEvent.PlaybackRate) + basePitch);
 			#endif
 			return EntryPoint.Clamp(result, 0, 127);
 		}
 
-		private long GetTick(Timecode timecode) {
-			return (long)(timecode.ToMilliseconds() * TicksPerQuarterNote / MicrosecondsPerQuaterNote * 1000);
+		private long GetTick(Timecode timecode, bool isPosition = true) {
+			if (loopMode && isPosition) timecode -= vegas.Transport.LoopRegionStart;
+			return (long)(timecode.ToMilliseconds() * TICKS_PER_QUARTER_NOTE / MicrosecondsPerQuaterNote * 1000);
 		}
 
-		private int GetGain(double gain) {
+		private static int GetGain(double gain) {
 			return EntryPoint.Clamp((int)(gain <= 1 ? gain * 100 : (gain - 1) * 27 + 100), 0, 127);
 		}
 
-		private int MapPan(double pan, bool isEnvelope) {
+		private static int MapPan(double pan, bool isEnvelope) {
 			return EntryPoint.Map(pan, isEnvelope ? 1 : -1, isEnvelope ? -1 : 1, 0, 127);
 		}
 	}
@@ -28896,6 +28994,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				openReplaceClipDirectly = false;
 				Load += OpenReplaceClipDirectlyEvent;
 			} else if (parent.quickConfigMode) {
+				if (!OkBtn_Enabled) {
+					MessageBox.Show(Lang.str.failed_to_quick_config, "Otomad Helper", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+					return;
+				}
 				if (lastMidiChannelsEnabled) QuickConfigMidiChannelsToolStripMenuItem_Click(null, null);
 				OkBtn_Click(null, null);
 			}
@@ -29810,6 +29912,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ConvertMusicBeatsBtn.CommandLinkNote = str.convert_music_beats_configform_info;
 			CustomFadeGainBtn.Text = str.custom_fade_gain;
 			CustomFadeGainBtn.CommandLinkNote = str.custom_fade_gain_configform_info;
+			ExportMidiFileBtn.Text = str.export_midi_file;
+			ExportMidiFileBtn.CommandLinkNote = str.export_midi_file_configform_info;
 			HelperLbl.Text = str.helper_info;
 			CloseAfterOpenHelperCheck.Text = str.close_after_open_helper;
 			CloseAfterOpenMoshCheck.Text = str.close_after_open_helper;
@@ -29847,7 +29951,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		/// <returns>本窗体的句柄</returns>
 		[DllImport("user32.dll", EntryPoint = "GetForegroundWindow", CharSet = CharSet.Auto, ExactSpelling = true)]
-		private static extern IntPtr GetF();
+		internal static extern IntPtr GetF();
 
 		/// <summary>
 		/// 设置此窗体为活动窗体。
@@ -29855,7 +29959,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="hWnd">窗体的句柄</param>
 		/// <returns>操作是否成功</returns>
 		[DllImport("user32.dll", EntryPoint = "SetForegroundWindow")]
-		private static extern bool SetF(IntPtr hWnd);
+		internal static extern bool SetF(IntPtr hWnd);
 
 		/// <summary>
 		/// 请求强制聚焦本对话框。
@@ -31702,6 +31806,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			midi_notes_count = "音符数",
 			midi_begin_note = "起音",
 			midi_instrument = "乐器",
+			notes_count = "音符数",
 			instrument = "乐器",
 			drum_kit = "鼓组",
 			pan = "声像",
@@ -32365,7 +32470,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			preferred_track = "首选轨道",
 			new_track = "新增轨道",
 			glissando = "滑音效果",
-			swirl = "漩涡";
+			swirl = "漩涡",
+			failed_to_export_midi_file_exception = "错误：导出 MIDI 文件失败！\n\n您可以展开详细信息以查看失败原因。",
+			export_successful = "导出成功！",
+			export_midi_file = "导出 MIDI 文件",
+			export_midi_file_configform_info = "依照轨道中的事件来导出 MIDI 文件。",
+			all_tracks = "所有轨道",
+			video_tracks = "视频轨道",
+			audio_tracks = "音频轨道",
+			vegas_track_list = "Vegas 轨道列表",
+			midi_track_list = "MIDI 轨道列表",
+			midi_channel_list = "MIDI 通道列表",
+			midi_instrument_list = "MIDI 乐器列表",
+			track_name = "轨道名称",
+			original_track_name = "原轨道名称",
+			event_count = "事件数",
+			contains = "已包含",
+			channel_value = "通道值",
+			muted_abbr = "静音",
+			soloed_abbr = "独奏",
+			add_to_each_new_tracks = "添加到各自新轨道",
+			add_to_same_new_track = "添加到同一新轨道",
+			add_to_current_track = "添加到当前轨道",
+			move_up = "上移",
+			move_down = "下移",
+			remove = "移除",
+			add_a_new_empty_track = "添加新的空轨道",
+			insert_a_new_empty_track = "插入新的空轨道",
+			dispatch_instrument_to_channel = "为通道指派乐器",
+			export_loop_region_only = "仅导出循环区域",
+			failed_to_quick_config = "MIDI 文件路径已变更或未定义，无法执行快速生成操作，请直接打开配置界面手动配置。";
 
 		static Lang() {
 			SChinese = new Lang();
@@ -32450,9 +32584,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				spherize = "Spherize",
 				warning_missing_plugin = "Warning: The plugin \"{0}\" could not be found!",
 				midi_channel = "CH",
-				midi_notes_count = "Notes Count",
+				midi_notes_count = "Notes",
 				midi_begin_note = "Begin Note",
 				midi_instrument = "Inst",
+				notes_count = "Notes Count",
 				instrument = "Instrument",
 				drum_kit = "Drum Kit",
 				pan = "Pan",
@@ -32711,7 +32846,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				dynamic_midi_beat_info = "Dynamic beat from {0}",
 				colon = ": ",
 				semicolon = "; ",
-				source_settings = "Material configuration",
+				source_settings = "Source configuration",
 				generate_at_begin = "Project start",
 				generate_at_cursor = "Cursor",
 				generate_position = "Generate at",
@@ -33116,6 +33251,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				new_track = "New track",
 				glissando = "Glissando",
 				swirl = "Swirl",
+				failed_to_export_midi_file_exception = "Error: Failed to export MIDI file!\n\nYou can expand the details to view the failure reasons.",
+				export_successful = "Successfully exported!",
+				export_midi_file = "Export MIDI File",
+				export_midi_file_configform_info = "Export MIDI files based on the track events.",
+				all_tracks = "All tracks",
+				video_tracks = "Video tracks",
+				audio_tracks = "Audio tracks",
+				vegas_track_list = "Vegas track list",
+				midi_track_list = "MIDI track list",
+				midi_channel_list = "MIDI channel list",
+				midi_instrument_list = "MIDI instrument list",
+				track_name = "Track name",
+				original_track_name = "Original track name",
+				event_count = "Events",
+				contains = "Contains",
+				channel_value = "Channel",
+				muted_abbr = "M",
+				soloed_abbr = "S",
+				add_to_each_new_tracks = "Add to each new tracks",
+				add_to_same_new_track = "Add to same new track",
+				add_to_current_track = "Add to current track",
+				move_up = "Move up",
+				move_down = "Move down",
+				remove = "Remove",
+				add_a_new_empty_track = "Add a new empty track",
+				insert_a_new_empty_track = "Insert a new empty track",
+				dispatch_instrument_to_channel = "Dispatch instrument to channel",
+				export_loop_region_only = "Export loop region only",
+				failed_to_quick_config = "The MIDI file path has been changed or not defined, and the quick generation operation cannot be performed. Please open the configuration UI directly for manual configuration.",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -33201,6 +33365,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				midi_notes_count = "音符數",
 				midi_begin_note = "起音",
 				midi_instrument = "樂器",
+				notes_count = "音符數",
 				instrument = "樂器",
 				drum_kit = "鼓組",
 				pan = "聲像",
@@ -33864,6 +34029,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				new_track = "新增軌道",
 				glissando = "滑音效果",
 				swirl = "漩渦",
+				failed_to_export_midi_file_exception = "錯誤：導出 MIDI 檔案失敗！\n\n您可以展開詳細資訊以查看失敗原因。",
+				export_successful = "導出成功！",
+				export_midi_file = "導出 MIDI 檔案",
+				export_midi_file_configform_info = "依照軌道中的事件來導出 MIDI 檔案。",
+				all_tracks = "所有軌道",
+				video_tracks = "視訊軌道",
+				audio_tracks = "音訊軌道",
+				vegas_track_list = "Vegas 軌道清單",
+				midi_track_list = "MIDI 軌道清單",
+				midi_channel_list = "MIDI 通道清單",
+				midi_instrument_list = "MIDI 樂器清單",
+				track_name = "軌道名稱",
+				original_track_name = "原軌道名稱",
+				event_count = "事件數",
+				contains = "已包含",
+				channel_value = "通道值",
+				muted_abbr = "靜音",
+				soloed_abbr = "獨奏",
+				add_to_each_new_tracks = "添加到各自新軌道",
+				add_to_same_new_track = "添加到同一新軌道",
+				add_to_current_track = "添加到當前軌道",
+				move_up = "上移",
+				move_down = "下移",
+				remove = "移除",
+				add_a_new_empty_track = "添加新的空軌道",
+				insert_a_new_empty_track = "插入新的空軌道",
+				dispatch_instrument_to_channel = "為通道指派樂器",
+				export_loop_region_only = "僅導出循環區域",
+				failed_to_quick_config = "MIDI 檔案路徑已變更或未定義，無法執行快速生成操作，請直接打開配置介面手動配置。",
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -33948,8 +34142,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				midi_channel = "チャネル",
 				midi_notes_count = "音符の数",
 				midi_begin_note = "冒頭の音符",
-				midi_instrument = "樂器",
-				instrument = "樂器",
+				midi_instrument = "楽器",
+				notes_count = "音符の数",
+				instrument = "楽器",
 				drum_kit = "ドラムキット",
 				pan = "パン",
 				pan_left_abbr = "左",
@@ -34112,7 +34307,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				invert_selection = "選択の切り替え",
 				replace = "交換(&R)",
 				apply = "申し込み(&A)",
-				close = "選ぶ(&C)",
+				close = "閉じる(&C)",
 				complete = "完了(&O)",
 				cancel = "キャンセル(&C)",
 				about = "概要(&A)",
@@ -34613,6 +34808,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				new_track = "新しいトラック",
 				glissando = "グリッサンド",
 				swirl = "渦巻き",
+				failed_to_export_midi_file_exception = "エラー：MIDIファイルのエクスポートに失敗しました！\n\n失敗した理由を表示するために詳細を展開できます。",
+				export_successful = "エクスポート成功！",
+				export_midi_file = "MIDIファイルのエクスポート",
+				export_midi_file_configform_info = "トラック内のイベントに基づいてMIDIファイルをエクスポートします。",
+				all_tracks = "すべてのトラック",
+				video_tracks = "ビデオトラック",
+				audio_tracks = "オーディオトラック",
+				vegas_track_list = "Vegas トラックリスト",
+				midi_track_list = "MIDI トラックリスト",
+				midi_channel_list = "MIDI チャネルリスト",
+				midi_instrument_list = "MIDI 楽器リスト",
+				track_name = "トラック名",
+				original_track_name = "元トラック名",
+				event_count = "イベント数",
+				contains = "含める",
+				channel_value = "チャネル値",
+				muted_abbr = "ミュート",
+				soloed_abbr = "独奏",
+				add_to_each_new_tracks = "新しい曲ごとに追加",
+				add_to_same_new_track = "同じ新しい曲に追加",
+				add_to_current_track = "現在の曲に追加",
+				move_up = "上へ移動",
+				move_down = "下へ移動",
+				remove = "削除",
+				add_a_new_empty_track = "新しい空の曲に追加",
+				insert_a_new_empty_track = "新しい空の曲に挿入",
+				dispatch_instrument_to_channel = "楽器をチャネルにスケジューリングする",
+				export_loop_region_only = "循環領域のみエクスポート",
+				failed_to_quick_config = "MIDIファイルのパスが変更されているか、定義されていないため、高速生成操作を実行できません。直接構成インタフェースを開いて手動で構成してください。",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -34695,9 +34919,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				spherize = "Сфериз",
 				warning_missing_plugin = "Предупреждение: не удалось найти подключаемый модуль «{0}»!",
 				midi_channel = "Канал",
-				midi_notes_count = "Количество нот",
+				midi_notes_count = "Нот",
 				midi_begin_note = "Начать заметку",
 				midi_instrument = "Инст",
+				notes_count = "Количество нот",
 				instrument = "Инструмент",
 				drum_kit = "Ударная установка",
 				pan = "Пан",
@@ -35362,6 +35587,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				new_track = "Новый трек",
 				glissando = "Глиссандо",
 				swirl = "Водоворот",
+				failed_to_export_midi_file_exception = "Ошибка: не удалось экспортировать файл MIDI!\n\nВы можете развернуть детали, чтобы просмотреть причины сбоя.",
+				export_successful = "Экспорт выполнен успешно!",
+				export_midi_file = "Экспорт MIDI-файла",
+				export_midi_file_configform_info = "Экспорт MIDI-файлов на основе событий трека.",
+				all_tracks = "Все треки",
+				video_tracks = "Видеодорожки",
+				audio_tracks = "Аудиодорожки",
+				vegas_track_list = "Треклист Vegas",
+				midi_track_list = "Треклист MIDI",
+				midi_channel_list = "Список каналов MIDI",
+				midi_instrument_list = "Список инструментов MIDI",
+				track_name = "Название трека",
+				original_track_name = "Оригинальное название трека",
+				event_count = "События",
+				contains = "Содержит",
+				channel_value = "Канал",
+				muted_abbr = "П",
+				soloed_abbr = "С",
+				add_to_each_new_tracks = "Добавлять к каждому новому треку",
+				add_to_same_new_track = "Добавить в тот же новый трек",
+				add_to_current_track = "Добавить к текущему треку",
+				move_up = "Вверх",
+				move_down = "Вниз",
+				remove = "Удалять",
+				add_a_new_empty_track = "Добавить новую пустую дорожку",
+				insert_a_new_empty_track = "Вставить новую пустую дорожку",
+				dispatch_instrument_to_channel = "Отправка инструмента на канал",
+				export_loop_region_only = "Экспортировать только область петли",
+				failed_to_quick_config = "Путь к файлу MIDI был изменен или не определен, и операция быстрого создания не может быть выполнена. Пожалуйста, откройте пользовательский интерфейс конфигурации непосредственно для ручной настройки.",
 			};
 			Vietnamese = new Lang {
 				__name__ = "Tiếng Việt",
@@ -35447,6 +35701,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				midi_notes_count = "Số nốt đếm được",
 				midi_begin_note = "Nốt bắt đầu",
 				midi_instrument = "N.Cụ",
+				notes_count = "Số nốt đếm được",
 				instrument = "Nhạc cụ",
 				drum_kit = "Drum Kit",
 				pan = "Xoay (Pan)",
@@ -36110,6 +36365,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				new_track = "Track mới",
 				glissando = "Glisssando", // Thuật ngữ chỉ sự lướt qua lên hoặc xuống giữa hai nốt nhạc
 				swirl = "Xoáy",
+				failed_to_export_midi_file_exception = "Lỗi: Không xuất được tệp MIDI!\n\nBạn có thể mở rộng chi tiết để xem các lý do thất bại.",
+				export_successful = "Xuất thành công!",
+				export_midi_file = "Xuất tệp MIDI",
+				export_midi_file_configform_info = "Xuất các tệp MIDI dựa trên các sự kiện theo dõi.",
+				all_tracks = "Tất cả các bài hát",
+				video_tracks = "Bài hát video",
+				audio_tracks = "Bản âm thanh",
+				vegas_track_list = "Danh sách theo dõi Vegas",
+				midi_track_list = "Danh sách theo dõi MIDI",
+				midi_channel_list = "Danh sách kênh MIDI",
+				midi_instrument_list = "Danh sách nhạc cụ MIDI",
+				track_name = "Tên bài hát",
+				original_track_name = "Tên bài hát gốc",
+				event_count = "Sự kiện",
+				contains = "Chứa",
+				channel_value = "Kênh",
+				muted_abbr = "T",
+				soloed_abbr = "Đ",
+				add_to_each_new_tracks = "Thêm vào mỗi bản nhạc mới",
+				add_to_same_new_track = "Thêm vào cùng một bản nhạc mới",
+				add_to_current_track = "Thêm vào bản nhạc hiện tại",
+				move_up = "Đi lên",
+				move_down = "Đi xuống",
+				remove = "Di dời",
+				add_a_new_empty_track = "Thêm một bản nhạc trống mới",
+				insert_a_new_empty_track = "Chèn một bản nhạc trống mới",
+				dispatch_instrument_to_channel = "Công cụ gửi đến kênh",
+				export_loop_region_only = "Chỉ xuất vùng vòng lặp",
+				failed_to_quick_config = "Đường dẫn tệp MIDI đã bị thay đổi hoặc không được xác định và không thể thực hiện thao tác tạo nhanh. Vui lòng mở giao diện người dùng cấu hình trực tiếp để cấu hình thủ công.",
 			};
 			Indonesian = new Lang {
 				__name__ = "Bahasa Indonesia",
@@ -36195,6 +36479,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				midi_notes_count = "Jumlah not",
 				midi_begin_note = "Mulai Not",
 				midi_instrument = "Inst",
+				notes_count = "Jumlah not",
 				instrument = "Instrumen",
 				drum_kit = "Drum Kit",
 				pan = "Pan",
@@ -36858,6 +37143,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				new_track = "Trek baru",
 				glissando = "Glissando",
 				swirl = "Swirl(Putar)",
+				failed_to_export_midi_file_exception = "Kesalahan: Gagal mengekspor file MIDI!\n\nAnda dapat memperluas detail untuk melihat alasan kegagalan.",
+				export_successful = "Ekspor berhasil!",
+				export_midi_file = "Ekspor File MIDI",
+				export_midi_file_configform_info = "Ekspor file MIDI berdasarkan peristiwa trek.",
+				all_tracks = "Semua trek",
+				video_tracks = "Trek video",
+				audio_tracks = "Trek audio",
+				vegas_track_list = "Daftar lagu Vegas",
+				midi_track_list = "Daftar lagu MIDI",
+				midi_channel_list = "Daftar saluran MIDI",
+				midi_instrument_list = "Daftar instrumen MIDI",
+				track_name = "Nama trek",
+				original_track_name = "Nama trek asli",
+				event_count = "Acara",
+				contains = "Berisi",
+				channel_value = "Saluran",
+				muted_abbr = "M",
+				soloed_abbr = "S",
+				add_to_each_new_tracks = "Tambahkan ke setiap trek baru",
+				add_to_same_new_track = "Tambahkan ke trek baru yang sama",
+				add_to_current_track = "Tambahkan ke trek saat ini",
+				move_up = "Pindahkan",
+				move_down = "Turunkan",
+				remove = "Menghapus",
+				add_a_new_empty_track = "Tambahkan trek kosong baru",
+				insert_a_new_empty_track = "Sisipkan trek kosong baru",
+				dispatch_instrument_to_channel = "Kirim instrumen ke saluran",
+				export_loop_region_only = "Ekspor wilayah loop saja",
+				failed_to_quick_config = "Jalur file MIDI telah diubah atau tidak ditentukan, dan operasi pembuatan cepat tidak dapat dilakukan. Silakan buka UI konfigurasi secara langsung untuk konfigurasi manual.",
 			};
 		}
 	}
