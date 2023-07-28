@@ -33286,7 +33286,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				muted_abbr = "M",
 				soloed_abbr = "S",
 				add_to_each_new_tracks = "Add to each new tracks",
-				add_to_same_new_track = "Add to same new track",
+				add_to_same_new_track = "Add to a same new track",
 				add_to_current_track = "Add to current track",
 				move_up = "Move up",
 				move_down = "Move down",
