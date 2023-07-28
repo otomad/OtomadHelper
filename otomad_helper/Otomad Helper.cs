@@ -90,9 +90,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// </summary>
 	public class EntryPoint {
 		/// <summary>版本号</summary>
-		public static readonly Version VERSION = new Version(4, 31, 27, 0);
+		public static readonly Version VERSION = new Version(4, 31, 28, 0);
 		/// <summary>修订日期</summary>
-		public static readonly DateTime REVISION_DATE = new DateTime(2023, 7, 27);
+		public static readonly DateTime REVISION_DATE = new DateTime(2023, 7, 28);
 
 		// 配置参数变量
 		#region 视频属性
@@ -5366,7 +5366,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			TicksPerQuarter = DeltaTicksPerQuarterNote;
 			MsPerQuarter = 0; // 毫秒每拍
 			for (int i = 0; i < Events.Tracks; i++) {
-				var a = Events[i];
 				TrackInfo info = new TrackInfo { Index = i, Events = Events[i] };
 				foreach (MidiEvent midiEvent in info.Events) {
 					if (midiEvent is NoteEvent && !(midiEvent is NoteOnEvent)) {
@@ -5381,13 +5380,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					if (midiEvent is TempoEvent && MsPerQuarter == 0) {
 						TempoEvent tempoEvent = midiEvent as TempoEvent;
 						MsPerQuarter = Convert.ToDouble(tempoEvent.MicrosecondsPerQuarterNote) / 1000; // 每四分音符多少毫秒
-						// MessageBox.Show(tempoEvent.Tempo.ToString()); // 用 Tempo 表示 BPM
+						// tempoEvent.Tempo; // 用 Tempo 表示 BPM
 						MsPerQuarterTrack = info.Events;
 					}
 					if (midiEvent is TextEvent && !info.HasName) {
 						TextEvent textEvent = midiEvent as TextEvent;
-						string latin1Text = textEvent.Text; // 乐轨名称
-						info.Name = Latin1ToAnsi(latin1Text);
+						if (textEvent.MetaEventType == MetaEventType.SequenceTrackName) {
+							string latin1Text = textEvent.Text; // 乐轨名称
+							info.Name = Latin1ToAnsi(latin1Text);
+						}
 					}
 					if (midiEvent is TimeSignatureEvent && TimeSignature.Length == 0) {
 						TimeSignatureEvent timeSignatureEvent = midiEvent as TimeSignatureEvent;
@@ -5436,16 +5437,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				return false;
 			}
 		}
+
 		/// <summary>
-		/// 将错误读取为 Latin1 编码的字符串转换回 ANSI 编码字符串。
+		/// Latin1 编码又称为 ISO-8859-1 编码。
+		/// </summary>
+		internal const string LATIN1 = "ISO-8859-1";
+		/// <summary>
+		/// 将错误读取为 Latin1 (ISO-8859-1) 编码的字符串转换回 ANSI 编码字符串。
 		/// </summary>
 		/// <param name="latin1">错误读取为 Latin1 编码的字符串。</param>
 		/// <returns>ANSI 编码字符串。</returns>
 		public static string Latin1ToAnsi(string latin1) {
-			List<byte> unicodeByte = new List<byte>(Encoding.Unicode.GetBytes(latin1)), // 读取为 Unicode 数组后，偶数位（1 起始）字符会多出一个 0。
-				latin1Byte = new List<byte>(unicodeByte.Where(b => b != 0)); // 把 0 去除，一般在偶数位（1 起始）。但无法确定是否有另类异常。
-			string utf8Text = Encoding.Default.GetString(latin1Byte.ToArray());
-			return utf8Text;
+			byte[] bytes = Encoding.GetEncoding(LATIN1).GetBytes(latin1);
+			return Encoding.Default.GetString(bytes);
+		}
+		/// <summary>
+		/// 将 ANSI 编码的正常字符串反向编码回 Latin1 (ISO-8859-1) 编码，用于通过 NAudio 导出 MIDI 文件，以兼容 FL Studio 的设定。
+		/// </summary>
+		/// <param name="ansi">待编码的字符串。</param>
+		/// <returns>Latin1 编码字符串。</returns>
+		public static string AnsiToLatin1(string ansi) {
+			byte[] bytes = Encoding.Default.GetBytes(ansi);
+			return Encoding.GetEncoding(LATIN1).GetString(bytes);
 		}
 	}
 
@@ -15006,7 +15019,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ChannelHeader.Text = str.channel;
 			NameHeader.Text = str.name;
 			InstrumentHeader.Text = str.instrument;
-			NoteCountHeader.Text = str.notes_count;
+			NoteCountHeader.Text = str.midi_notes_count;
 			BeginNoteHeader.Text = str.midi_begin_note;
 			IsDrumsKitHeader.Text = str.drum_kit;
 			PanHeader.Text = str.pan;
@@ -16696,6 +16709,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.InsertNewTrackBtn.AutoSize = true;
 			this.InsertNewTrackBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.InsertNewTrackBtn.Enabled = false;
 			this.InsertNewTrackBtn.Location = new System.Drawing.Point(158, 41);
 			this.InsertNewTrackBtn.Name = "InsertNewTrackBtn";
 			this.InsertNewTrackBtn.Size = new System.Drawing.Size(149, 32);
@@ -17618,12 +17632,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			LoopRegionOnlyCheck.Text = str.export_loop_region_only;
 			Text = str.export_midi_file;
 
-			if (Lang.str != Lang.SChinese && Lang.str != Lang.TChinese && Lang.str != Lang.Japanese) {
-				AddToEachNewTrackBtn.Font =
-				AddToSameNewTrackBtn.Font =
-				AddToCurrentTrackBtn.Font =
-				AddNewTrackBtn.Font =
-				InsertNewTrackBtn.Font = new Font(str.ui_font, 7F);
+			if (Lang.str != Lang.SChinese && Lang.str != Lang.TChinese && Lang.str != Lang.Japanese &&
+				Lang.str != Lang.Vietnamese) {
+				AddToEachNewTrackBtn.Font = AddToSameNewTrackBtn.Font = AddToCurrentTrackBtn.Font =
+				AddNewTrackBtn.Font = InsertNewTrackBtn.Font = new Font(str.ui_font, 7F);
 			}
 		}
 
@@ -17822,7 +17834,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			foreach (ExportMidiFileForm.VirtualMidiTrackItem _track in tracks) {
 				List<MidiEvent> currentTrack = new List<MidiEvent>();
-				currentTrack.Add(new TextEvent(_track.Name, MetaEventType.SequenceTrackName, 0));
+				currentTrack.Add(new TextEvent(EncodeTrackName(_track.Name), MetaEventType.SequenceTrackName, 0));
 				foreach (ExportMidiFileForm.VirtualMidiChannelItem vegasTrack in _track.FilteredChannels) {
 					Track track = vegasTrack.Track.Track;
 					int channel = (int)vegasTrack.Channel;
@@ -17890,6 +17902,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			else if (!isNoteOff && current >= loopRegionEnd) return EventState.BREAK;
 			else if (isNoteOff && current > loopRegionEnd) return EventState.BREAK;
 			else return EventState.PASS;
+		}
+
+		private string EncodeTrackName(string text) {
+			return MIDI.AnsiToLatin1(text);
 		}
 
 		private int GetNotePitch(TrackEvent trackEvent) {
@@ -35698,7 +35714,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				spherize = "Tạo hình cầu",
 				warning_missing_plugin = "Cảnh báo: Không tìm thấy plugin \"{0}\"!",
 				midi_channel = "CH",
-				midi_notes_count = "Số nốt đếm được",
+				midi_notes_count = "Số nốt",
 				midi_begin_note = "Nốt bắt đầu",
 				midi_instrument = "N.Cụ",
 				notes_count = "Số nốt đếm được",
@@ -36365,35 +36381,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				new_track = "Track mới",
 				glissando = "Glisssando", // Thuật ngữ chỉ sự lướt qua lên hoặc xuống giữa hai nốt nhạc
 				swirl = "Xoáy",
-				failed_to_export_midi_file_exception = "Lỗi: Không xuất được tệp MIDI!\n\nBạn có thể mở rộng chi tiết để xem các lý do thất bại.",
-				export_successful = "Xuất thành công!",
+				failed_to_export_midi_file_exception = "Lỗi: Xuất tệp MIDI thất bại!\n\nBạn có thể mở rộng chi tiết để xem lí do thất bại.",
+				export_successful = "Đã xuất thành công!",
 				export_midi_file = "Xuất tệp MIDI",
-				export_midi_file_configform_info = "Xuất các tệp MIDI dựa trên các sự kiện theo dõi.",
-				all_tracks = "Tất cả các bài hát",
-				video_tracks = "Bài hát video",
-				audio_tracks = "Bản âm thanh",
-				vegas_track_list = "Danh sách theo dõi Vegas",
-				midi_track_list = "Danh sách theo dõi MIDI",
-				midi_channel_list = "Danh sách kênh MIDI",
+				export_midi_file_configform_info = "Xuất tệp MIDI dựa theo các track event.",
+				all_tracks = "Tất cả các track",
+				video_tracks = "Các track video",
+				audio_tracks = "Các track âm thanh",
+				vegas_track_list = "Danh sách track Vegas",
+				midi_track_list = "Danh sách track MIDI",
+				midi_channel_list = "Danh sách MIDI channel",
 				midi_instrument_list = "Danh sách nhạc cụ MIDI",
-				track_name = "Tên bài hát",
-				original_track_name = "Tên bài hát gốc",
-				event_count = "Sự kiện",
+				track_name = "Tên track",
+				original_track_name = "Tên track gốc",
+				event_count = "Event",
 				contains = "Chứa",
-				channel_value = "Kênh",
-				muted_abbr = "T",
-				soloed_abbr = "Đ",
-				add_to_each_new_tracks = "Thêm vào mỗi bản nhạc mới",
-				add_to_same_new_track = "Thêm vào cùng một bản nhạc mới",
-				add_to_current_track = "Thêm vào bản nhạc hiện tại",
-				move_up = "Đi lên",
-				move_down = "Đi xuống",
-				remove = "Di dời",
-				add_a_new_empty_track = "Thêm một bản nhạc trống mới",
-				insert_a_new_empty_track = "Chèn một bản nhạc trống mới",
-				dispatch_instrument_to_channel = "Công cụ gửi đến kênh",
-				export_loop_region_only = "Chỉ xuất vùng vòng lặp",
-				failed_to_quick_config = "Đường dẫn tệp MIDI đã bị thay đổi hoặc không được xác định và không thể thực hiện thao tác tạo nhanh. Vui lòng mở giao diện người dùng cấu hình trực tiếp để cấu hình thủ công.",
+				channel_value = "Channel",
+				muted_abbr = "M", // Đã tắt tiếng
+				soloed_abbr = "S", // Đã solo
+				add_to_each_new_tracks = "Thêm vào mỗi\ntrack mới",
+				add_to_same_new_track = "Thêm vào cùng\ntrack mới",
+				add_to_current_track = "Thêm vào track\nhiện tại",
+				move_up = "Kéo lên",
+				move_down = "Kéo xuống",
+				remove = "Loại bỏ",
+				add_a_new_empty_track = "Thêm một track\ntrống mới",
+				insert_a_new_empty_track = "Chèn một track\ntrống mới",
+				dispatch_instrument_to_channel = "Gửi nhạc cụ tới channel",
+				export_loop_region_only = "Chỉ xuất phần lặp lại (loop)",
+				failed_to_quick_config = "Đường dẫn tệp MIDI đã bị thay đổi hoặc không được xác định và không thể thực hiện thao tác tạo nhanh. Vui lòng mở giao diện người dùng tùy chỉnh trực tiếp để tùy chỉnh thủ công.",
 			};
 			Indonesian = new Lang {
 				__name__ = "Bahasa Indonesia",

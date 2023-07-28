@@ -410,6 +410,7 @@
 			// 
 			this.InsertNewTrackBtn.AutoSize = true;
 			this.InsertNewTrackBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.InsertNewTrackBtn.Enabled = false;
 			this.InsertNewTrackBtn.Location = new System.Drawing.Point(158, 41);
 			this.InsertNewTrackBtn.Name = "InsertNewTrackBtn";
 			this.InsertNewTrackBtn.Size = new System.Drawing.Size(149, 32);
