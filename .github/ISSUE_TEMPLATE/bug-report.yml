@@ -20,7 +20,8 @@ body:
       label: Vegas Pro Version
       description: What version of Vegas Pro are you using?
       options:
-        - Vegas Pro 20+
+        - Vegas Pro 21
+        - Vegas Pro 20
         - Vegas Pro 19
         - Vegas Pro 18
         - Vegas Pro 17
