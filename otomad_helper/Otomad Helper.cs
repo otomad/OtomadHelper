@@ -36239,7 +36239,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				track_legato_stretch = "Kéo dài clip (kéo dài khi nằm ngoài giới hạn kéo căng)",
 				track_legato_lengthen = "Kéo dài clip (thay đổi độ dài clip)",
 				increase_spacing = "Tăng khoảng cách (cho track hiện tại)",
-				increase_spacing_all_tracks = "Tăng khoảnh cách (cho tất cả track)",
+				increase_spacing_all_tracks = "Tăng khoảng cách (cho tất cả track)",
 				increase_spacing_info = "Đặt thời gian được chỉ định ở giữa mỗi clip",
 				effect_to_selected_events = "Chỉ dành cho track event đã chọn",
 				include_events_within_group = "Bao gồm các track event trong một group",
