@@ -76,4 +76,3 @@ for ($i = 0; $i -lt $infos.Count; $i++) {
 	Rename-Item -Path "release_package_template.zip" -NewName ([String]$i + "_otomad_helper_v" + $version + "_vegas" + [string]$info.VegasVersions + ".zip")
 	Remove-Item "Otomad Helper.cs"
 }
-# Remove-Item "..\Otomad Helper.cs"
