@@ -41,7 +41,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 ### 安裝
 1. [下載](https://github.com/otomad/OtomadHelper/releases/latest)最新版腳本。
 2. 解壓壓縮包內的**所有**檔案並放置到 Vegas 安裝目錄下的「Script Menu」資料夾中。
-> (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 20.0\\Script Menu)
+> (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu)
 3. 確保 DLL 檔案 `(DLL\NAudio.dll)` 沒有被鎖定。**具體步驟：**
 	1. 在 Vegas 安裝目錄下，依次進入資料夾 `Script Menu\DLL`。
 	2. 右鍵 NAudio.dll 檔案，並選擇「屬性」。
@@ -60,7 +60,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 Vegas Pro 16 及以上版本支援所有功能，Vegas Pro 13 ~ 15 可以兼容運行（會缺失部分功能）。前提是必須安裝對應的版本。
 
-Vegas Pro 17、18、19、20 測試**正常**。
+Vegas Pro 17、18、19、20、21 測試**正常**。
 
 ### 詞彙表
 您可以通過圖片更輕鬆地瞭解許多功能。
