@@ -68,7 +68,7 @@ Vegas Pro 13+ supported.
 
 Vegas Pro 16 and above support all features, and Vegas Pro 13 ~ 15 are compatible to run (some features are missing). The correct version must be installed though.
 
-Tested **fine** on Vegas Pro 17, 18, 19, 20.
+Tested **fine** on Vegas Pro 17, 18, 19, 20, 21.
 
 ### Glossary
 You could learn about many features more easily through pictures.
