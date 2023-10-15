@@ -43,6 +43,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.Controls.Add(this.button1);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.Name = "TestMica";

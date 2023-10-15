@@ -28,8 +28,15 @@ namespace OtomadHelper.Core {
 			DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
 			DWMWA_MICA_EFFECT = 1029,
 		}
-		[DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
-		private static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
+
+		protected override void OnHandleCreated(EventArgs e) {
+			WindowUtils.EnableAcrylic(this, Color.Transparent);
+			base.OnHandleCreated(e);
+		}
+
+		protected override void OnPaintBackground(PaintEventArgs e) {
+			e.Graphics.Clear(Color.Transparent);
+		}
 
 		/// <summary>
 		/// Enable Mica on the given HWND.
@@ -37,70 +44,35 @@ namespace OtomadHelper.Core {
 		/// <param name="hWnd"></param>
 		/// <param name="darkThemeEnabled"></param>
 		public static void EnableMica(IntPtr hWnd) {
-			AccentPolicy accent = new AccentPolicy();
-			accent.AccentState = AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND;
-			accent.GradientColor = 0 << 0 | 0 << 8 | 0 << 16 | 10 << 24;
-
-			// 将托管结构转换为非托管对象。
-			int accentPolicySize = Marshal.SizeOf(accent);
-			IntPtr accentPtr = Marshal.AllocHGlobal(accentPolicySize);
-			Marshal.StructureToPtr(accent, accentPtr, false);
-
-			// 设置窗口组合特性。
-			try {
-				// 设置模糊特效。
-				WindowCompositionAttributeData data = new WindowCompositionAttributeData {
-					Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY,
-					SizeOfData = accentPolicySize,
-					Data = accentPtr,
-				};
-				SetWindowCompositionAttribute(hWnd, ref data);
-			} finally {
-				// 释放非托管对象。
-				Marshal.FreeHGlobal(accentPtr);
-			}
+			
 		}
 
 		private void Button1_Click(object sender, EventArgs e) {
-			EnableMica(dockHandle);
-			EnableMica(Handle);
-			Form form = new Form();
-			form.Size = new Size(300, 400);
-			form.Load += (_sender, _e) => EnableMica(form.Handle);
+			//EnableMica(dockHandle);
+			//EnableMica(Handle);
+			Form1 form = new Form1();
+			//form.Size = new Size(300, 400);
+			//form.Load += (_sender, _e) => EnableMica(form.Handle);
 			form.Show();
 		}
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct AccentPolicy {
-		public AccentState AccentState;
-		public int AccentFlags;
-		public int GradientColor;
-		public int AnimationId;
-	}
+	internal class Form1 : Form {
+		public Form1() {
+			Size = new Size(300, 400);
+			TestMica testMica = new TestMica(Handle);
+			Controls.Add(testMica);
+		}
 
-	internal enum AccentState {
-		/// <summary>
-		/// 完全禁用 DWM 的叠加特效。
-		/// </summary>
-		ACCENT_DISABLED = 0,
-		ACCENT_ENABLE_GRADIENT = 1,
-		ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-		ACCENT_ENABLE_BLURBEHIND = 3,
-		ACCENT_ENABLE_ACRYLICBLURBEHIND = 4,
-		ACCENT_INVALID_STATE = 5,
-	}
+		protected override void OnHandleCreated(EventArgs e) {
+			// Use e.g. Color.FromArgb(128, Color.Lime) for a 50% opacity green tint.
+			WindowUtils.EnableAcrylic(this, Color.Transparent);
 
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct WindowCompositionAttributeData {
-		public WindowCompositionAttribute Attribute;
-		public IntPtr Data;
-		public int SizeOfData;
-	}
+			base.OnHandleCreated(e);
+		}
 
-	internal enum WindowCompositionAttribute {
-		// 省略其他未使用的字段
-		WCA_ACCENT_POLICY = 19,
-		// 省略其他未使用的字段
+		protected override void OnPaintBackground(PaintEventArgs e) {
+			e.Graphics.Clear(Color.Transparent);
+		}
 	}
 }

@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -70,6 +72,7 @@
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Helpers\Win32API.cs" />
+    <Compile Include="Helpers\WindowUtils.cs" />
     <Compile Include="OtomadHelperModule.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="MainDock.xaml.cs">
