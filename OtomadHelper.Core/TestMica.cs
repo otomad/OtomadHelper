@@ -28,31 +28,8 @@ namespace OtomadHelper.Core {
 			DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
 			DWMWA_MICA_EFFECT = 1029,
 		}
-
-		/// <summary>
-		/// Type of system backdrop to be rendered by DWM
-		/// </summary>
-		public enum DWM_SYSTEMBACKDROP_TYPE : uint {
-			DWMSBT_AUTO = 0,
-			/// <summary>
-			/// no backdrop
-			/// </summary>
-			DWMSBT_NONE = 1,
-			/// <summary>
-			/// Use tinted blurred wallpaper backdrop (Mica)
-			/// </summary>
-			DWMSBT_MAINWINDOW = 2,
-			/// <summary>
-			/// Use Acrylic backdrop
-			/// </summary>
-			DWMSBT_TRANSIENTWINDOW = 3,
-			/// <summary>
-			/// Use blurred wallpaper backdrop
-			/// </summary>
-			DWMSBT_TABBEDWINDOW = 4,
-		}
-
-		private const uint DWMWA_SYSTEMBACKDROP_TYPE = 38;
+		[DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
+		private static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
 		/// <summary>
 		/// Enable Mica on the given HWND.
@@ -60,12 +37,28 @@ namespace OtomadHelper.Core {
 		/// <param name="hWnd"></param>
 		/// <param name="darkThemeEnabled"></param>
 		public static void EnableMica(IntPtr hWnd) {
-			DWM_SYSTEMBACKDROP_TYPE backdropType = DWM_SYSTEMBACKDROP_TYPE.DWMSBT_MAINWINDOW;
-			GCHandle value = GCHandle.Alloc((uint)backdropType, GCHandleType.Pinned);
-			int result = DwmSetWindowAttribute(hWnd, DWMWA_SYSTEMBACKDROP_TYPE, value.AddrOfPinnedObject(), sizeof(uint));
-			value.Free();
-			if (result != 0)
-				throw Marshal.GetExceptionForHR(result);
+			AccentPolicy accent = new AccentPolicy();
+			accent.AccentState = AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND;
+			accent.GradientColor = 0 << 0 | 0 << 8 | 0 << 16 | 10 << 24;
+
+			// 将托管结构转换为非托管对象。
+			int accentPolicySize = Marshal.SizeOf(accent);
+			IntPtr accentPtr = Marshal.AllocHGlobal(accentPolicySize);
+			Marshal.StructureToPtr(accent, accentPtr, false);
+
+			// 设置窗口组合特性。
+			try {
+				// 设置模糊特效。
+				WindowCompositionAttributeData data = new WindowCompositionAttributeData {
+					Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY,
+					SizeOfData = accentPolicySize,
+					Data = accentPtr,
+				};
+				SetWindowCompositionAttribute(hWnd, ref data);
+			} finally {
+				// 释放非托管对象。
+				Marshal.FreeHGlobal(accentPtr);
+			}
 		}
 
 		private void Button1_Click(object sender, EventArgs e) {
@@ -76,5 +69,38 @@ namespace OtomadHelper.Core {
 			form.Load += (_sender, _e) => EnableMica(form.Handle);
 			form.Show();
 		}
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct AccentPolicy {
+		public AccentState AccentState;
+		public int AccentFlags;
+		public int GradientColor;
+		public int AnimationId;
+	}
+
+	internal enum AccentState {
+		/// <summary>
+		/// 完全禁用 DWM 的叠加特效。
+		/// </summary>
+		ACCENT_DISABLED = 0,
+		ACCENT_ENABLE_GRADIENT = 1,
+		ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
+		ACCENT_ENABLE_BLURBEHIND = 3,
+		ACCENT_ENABLE_ACRYLICBLURBEHIND = 4,
+		ACCENT_INVALID_STATE = 5,
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct WindowCompositionAttributeData {
+		public WindowCompositionAttribute Attribute;
+		public IntPtr Data;
+		public int SizeOfData;
+	}
+
+	internal enum WindowCompositionAttribute {
+		// 省略其他未使用的字段
+		WCA_ACCENT_POLICY = 19,
+		// 省略其他未使用的字段
 	}
 }
