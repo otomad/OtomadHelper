@@ -136,10 +136,5 @@
     <EmbeddedResource Include="web\dist\images\1.jpg" />
     <EmbeddedResource Include="web\dist\index.html" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="CefSharp.WinForms">
-      <Version>117.2.40</Version>
-    </PackageReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
