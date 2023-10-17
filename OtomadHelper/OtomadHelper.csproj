@@ -61,15 +61,20 @@
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="NAudio">
       <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 20.0\Script Menu\DLL\NAudio.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ScriptPortal.MediaSoftware.Skins">
       <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 20.0\ScriptPortal.MediaSoftware.Skins.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ScriptPortal.Vegas">
       <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 20.0\ScriptPortal.Vegas.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -133,8 +138,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Otomad Helper.ico" />
-    <EmbeddedResource Include="web\dist\images\1.jpg" />
-    <EmbeddedResource Include="web\dist\index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Costura.Fody">
+      <Version>5.7.0</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Web.WebView2">
+      <Version>1.0.2088.41</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

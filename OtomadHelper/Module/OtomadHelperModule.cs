@@ -3,7 +3,7 @@ using ScriptPortal.Vegas;
 using OtomadHelper.Module;
 using System.Collections;
 
-//namespace OtomadHelper.Module {
+namespace OtomadHelper.Module {
 	public class OtomadHelperModule : ICustomCommandModule {
 		public Vegas vegas = null;
 		private readonly CustomCommand customCommandModule =
@@ -38,4 +38,4 @@ using System.Collections;
 			}
 		}
 	}
-//}
+}

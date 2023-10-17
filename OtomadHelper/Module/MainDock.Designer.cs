@@ -23,20 +23,38 @@
 		/// 使用代码编辑器修改此方法的内容。
 		/// </summary>
 		private void InitializeComponent() {
+			this.Browser = new Microsoft.Web.WebView2.WinForms.WebView2();
+			((System.ComponentModel.ISupportInitialize)(this.Browser)).BeginInit();
 			this.SuspendLayout();
+			// 
+			// Browser
+			// 
+			this.Browser.AllowExternalDrop = true;
+			this.Browser.CreationProperties = null;
+			this.Browser.DefaultBackgroundColor = System.Drawing.Color.White;
+			this.Browser.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Browser.Location = new System.Drawing.Point(0, 0);
+			this.Browser.Name = "Browser";
+			this.Browser.Size = new System.Drawing.Size(564, 314);
+			this.Browser.TabIndex = 0;
+			this.Browser.ZoomFactor = 1D;
 			// 
 			// MainDock
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.Controls.Add(this.Browser);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.Name = "MainDock";
 			this.Size = new System.Drawing.Size(564, 314);
 			this.Load += new System.EventHandler(this.MainDock_Load);
+			((System.ComponentModel.ISupportInitialize)(this.Browser)).EndInit();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
+
+		private Microsoft.Web.WebView2.WinForms.WebView2 Browser;
 	}
 }
