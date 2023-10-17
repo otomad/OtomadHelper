@@ -63,6 +63,7 @@
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="NAudio">
       <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 20.0\Script Menu\DLL\NAudio.dll</HintPath>
@@ -99,6 +100,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Module\OtomadHelperModule.cs" />
+    <Compile Include="Module\WebResourceRequested.cs" />
     <Compile Include="Test\TestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,6 +124,7 @@
     <EmbeddedResource Include="Test\TestForm.resx">
       <DependentUpon>TestForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Web\dist\index.html" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -138,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Otomad Helper.ico" />
+    <EmbeddedResource Include="Web\dist\images\R-C.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Costura.Fody">

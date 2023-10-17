@@ -2,6 +2,8 @@
 using ScriptPortal.Vegas;
 using OtomadHelper.Module;
 using System.Collections;
+using System.IO;
+using System.Reflection;
 
 namespace OtomadHelper.Module {
 	public class OtomadHelperModule : ICustomCommandModule {
@@ -14,7 +16,8 @@ namespace OtomadHelper.Module {
 		public void InitializeModule(Vegas myVegas) {
 			vegas = myVegas;
 			customCommandModule.MenuItemName = DISPLAY_NAME;
-			customCommandModule.IconFile = @"C:\ProgramData\VEGAS Pro\20.0\Application Extensions\Otomad Helper.png";
+			customCommandModule.IconFile =
+				Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Otomad Helper.png");;
 		}
 
 		public ICollection GetCustomCommands() {

@@ -38,6 +38,7 @@
 			this.Browser.Size = new System.Drawing.Size(564, 314);
 			this.Browser.TabIndex = 0;
 			this.Browser.ZoomFactor = 1D;
+			this.Browser.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.Browser_CoreWebView2InitializationCompleted);
 			// 
 			// MainDock
 			// 
@@ -47,7 +48,6 @@
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.Name = "MainDock";
 			this.Size = new System.Drawing.Size(564, 314);
-			this.Load += new System.EventHandler(this.MainDock_Load);
 			((System.ComponentModel.ISupportInitialize)(this.Browser)).EndInit();
 			this.ResumeLayout(false);
 

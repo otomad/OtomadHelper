@@ -1,7 +1,6 @@
 ﻿using ScriptPortal.Vegas;
 using System;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace OtomadHelper.Module {
 	public class OtomadHelperDock : DockableControl {
@@ -21,11 +20,6 @@ namespace OtomadHelper.Module {
 		}
 
 		protected override void OnLoad(EventArgs args) {
-			//myForm = new MainDock(this);
-			//elementHost.Child = myForm;
-			//Controls.Add(elementHost);
-			//testMica = new TestMica(Handle) { Dock = DockStyle.Fill };
-			//Controls.Add(testMica);
 			if (mainDock != null) Controls.Remove(mainDock);
 			mainDock = new MainDock();
 			Controls.Add(mainDock);
