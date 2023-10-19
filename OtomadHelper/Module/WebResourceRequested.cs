@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
+using OtomadHelper.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -63,12 +64,9 @@ namespace OtomadHelper.Module {
 			webView.CoreWebView2.AddWebResourceRequestedFilter("https://app/*", CoreWebView2WebResourceContext.All);
 			webView.CoreWebView2.WebResourceRequested += delegate (object sender, CoreWebView2WebResourceRequestedEventArgs args) {
 				string file = args.Request.Uri.Substring("https://app/*".Length - 1);
-				Assembly assembly = Assembly.GetExecutingAssembly();
-				string assetsFilePath = assembly.GetName().Name + ".Web.dist." + file.Replace("/", "."); // 你可以设置断点看看这里的值
+				string assetsFilePath = "Web.dist." + file.Replace("/", ".");
 				try {
-					if (assembly.GetManifestResourceInfo(assetsFilePath) == null)
-						throw new FileNotFoundException();
-					Stream fileStream = assembly.GetManifestResourceStream(assetsFilePath);
+					Stream fileStream = ResourceHelper.GetEmbeddedResource(assetsFilePath);
 					ManagedStream managedStream = new ManagedStream(fileStream);
 					Dictionary<string, string> contentTypes = new Dictionary<string, string> {
 						{ "html", "text/html" },

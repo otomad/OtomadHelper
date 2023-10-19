@@ -64,6 +64,7 @@
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="NAudio">
       <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 20.0\Script Menu\DLL\NAudio.dll</HintPath>
@@ -90,6 +91,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Module\MainDock.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -120,6 +122,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Test\TestForm.resx">
       <DependentUpon>TestForm.cs</DependentUpon>
@@ -140,6 +143,126 @@
     <None Include="Test\App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_000.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_001.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_002.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_003.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_004.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_005.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_006.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_007.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_008.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_009.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_010.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_011.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_012.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_013.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_014.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_015.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_016.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_017.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_018.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_019.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_020.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_021.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_022.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_023.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_024.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_025.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_026.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_027.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_028.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_029.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_030.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_031.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_032.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_033.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_034.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_035.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_036.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_037.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_038.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_039.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_040.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_041.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_042.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_043.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_044.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_045.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_046.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_047.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_048.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_049.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_050.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_051.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_052.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_053.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_054.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_055.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_056.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_057.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_058.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_059.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_060.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_061.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_062.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_063.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_064.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_065.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_066.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_067.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_068.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_069.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_070.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_071.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_072.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_073.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_074.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_075.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_076.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_077.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_078.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_079.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_080.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_081.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_082.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_083.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_084.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_085.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_086.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_087.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_088.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_089.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_090.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_091.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_092.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_093.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_094.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_095.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_096.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_097.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_098.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_099.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_100.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_101.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_102.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_103.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_104.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_105.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_106.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_107.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_108.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_109.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_110.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_111.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_112.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_113.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_114.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_115.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_116.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_117.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_118.png" />
+    <EmbeddedResource Include="Assets\LoadingAnimation\otomad helper loading_119.png" />
     <Content Include="Otomad Helper.ico" />
     <EmbeddedResource Include="Web\dist\images\R-C.png" />
   </ItemGroup>
