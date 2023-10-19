@@ -1,0 +1,45 @@
+{
+	"compilerOptions": {
+		"module": "ESNext",
+		"target": "ESNext",
+		"noImplicitAny": true,
+		"moduleResolution": "Bundler",
+		"skipLibCheck": true,
+		"strict": true,
+		"lib": [
+			"ESNext",
+			"ESNext.AsyncIterable",
+			"ES2015.Promise",
+			"DOM",
+			"DOM.Iterable"
+		],
+		"jsx": "react-jsx",
+		"allowSyntheticDefaultImports": true,
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"paths": {
+			"*": [
+				"./src/types/*",
+			]
+		},
+		"plugins": [
+			{
+				"name": "typescript-styled-plugin",
+				"validate": false,
+			}
+		],
+	},
+	"include": [
+		"src",
+	],
+	"exclude": [
+		"node_modules",
+	],
+	"references": [
+		{
+			"path": "./tsconfig.node.json",
+		},
+	],
+}
