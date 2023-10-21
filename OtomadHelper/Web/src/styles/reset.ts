@@ -21,13 +21,18 @@ export default css`
 		img,
 		video,
 		picture {
-			display: ${"block"}; // 防止插件报错。
+			display: block;
 			vertical-align: bottom;
 		}
 
 		// 标签的鼠标光标应该使用继承的样式。
 		label {
 			cursor: inherit;
+		}
+
+		[disabled],
+		:disabled {
+			cursor: not-allowed;
 		}
 	}
 `;

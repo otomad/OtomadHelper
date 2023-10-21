@@ -4,8 +4,10 @@ const Container = styled.div`
 
 export default function App() {
 	return (
-		<Container>
-			<Button>Hello</Button>
-		</Container>
+		<NavigationView></NavigationView>
 	);
 }
+
+/* <Container>
+			<Button>Hello</Button>
+		</Container> */

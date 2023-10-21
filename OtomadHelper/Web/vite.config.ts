@@ -1,14 +1,29 @@
 /* eslint-disable quote-props */
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
+import path from "path";
 import autoImport from "unplugin-auto-import/vite";
 import { defineConfig } from "vite";
-// import babel from "vite-plugin-babel";
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
-		// babel(),
-		react(),
+		react({
+			babel: {
+				plugins: [
+					[
+						"babel-plugin-styled-components",
+						{
+							ssr: false,
+							displayName: true,
+							fileName: false,
+							minify: true,
+							pure: false,
+						},
+					],
+				],
+			},
+		}),
 		autoImport({
 			imports: [
 				"react",
@@ -26,6 +41,9 @@ export default defineConfig({
 						"createGlobalStyle",
 						"isStyledComponent",
 					],
+					"classnames": [
+						["default", "classNames"],
+					],
 				},
 			],
 			dirs: [
@@ -34,6 +52,10 @@ export default defineConfig({
 				"./src/utils/**",
 			],
 			dts: "./src/types/auto-imports.d.ts",
+		}),
+		createSvgIconsPlugin({
+			iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],
+			symbolId: "icon-[dir]-[name]",
 		}),
 	],
 });
