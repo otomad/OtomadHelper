@@ -1,13 +1,15 @@
-const Container = styled.div`
-	padding: 2rem;
-`;
+import Navigation from "pages/Navigation";
+import GlobalStyle from "./styles/global.ts";
 
 export default function App() {
+	const [ready, setReady] = useState(false);
+
+	useEffect(() => void delay(100).then(() => setReady(true)));
+
 	return (
-		<NavigationView></NavigationView>
+		<>
+			<GlobalStyle $ready={ready} />
+			<Navigation />
+		</>
 	);
 }
-
-/* <Container>
-			<Button>Hello</Button>
-		</Container> */

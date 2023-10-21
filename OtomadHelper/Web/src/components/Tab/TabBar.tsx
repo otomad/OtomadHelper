@@ -1,15 +1,34 @@
 const THICKNESS = 3;
 const LENGTH = 16;
+const DELAY = 100;
+
+const Indicator = styled.div<{
+	$noTransition?: boolean;
+	$position?: TwoD;
+}>`
+	${styles.mixins.oval()}
+	width: ${THICKNESS}px;
+	background-color: ${c("accent-color")};
+	position: absolute;
+	left: 5px;
+	${({ $noTransition }) => $noTransition && css`transition: none`};
+	${({ $position }) => $position && css`
+		top: ${$position[0]}px;
+		bottom: ${$position[1]}px;
+	`};
+`;
 
 const StyledTabBar = styled.div`
 	position: relative;
 
-	.indicator {
-		${styles.mixins.oval()}
-		width: ${THICKNESS}px;
-		background-color: ${c("accent-color")};
-		position: absolute;
-		left: 5px;
+	&:has(.active:active) ${Indicator} {
+		scale: 1 0.5;
+	}
+
+	hr {
+		margin: 4px 0;
+		border: none;
+		border-bottom: 1px solid ${c("white", 8)};
 	}
 `;
 
@@ -17,25 +36,78 @@ const TabBar: FC<{
 	current: StateProperty<string>;
 }> = ({ current: [current, setCurrent], children }) => {
 	const indicator = useRef<HTMLDivElement>(null);
+	const [position, setPosition] = useState<TwoD>([NaN, NaN]);
+	const [noIndicatorTransition, setNoIndicatorTransition] = useState(false);
+
+	/**
+	 * 更新选项卡指示器。
+	 */
+	const update = useCallback(async () => {
+		const ind = indicator.current;
+		if (!ind) return;
+		type TabBarMovement = "previous" | "next" | "appear" | "disappear" | "none";
+		let movement: TabBarMovement = "none";
+		const entireRect = ind.parentElement!.getBoundingClientRect();
+		const entire1 = entireRect.top, entire2 = entireRect.bottom, entireLength = entire2 - entire1;
+		const _setPosition = ([pos1, pos2]: TwoD) => setPosition([pos1, entireLength - pos2]);
+		const [entry1, entry2] = position;
+		if (entry1 + entry2 >= entireLength || !Number.isFinite(entry1) || !Number.isFinite(entry2))
+			movement = "appear";
+		const activeTabItem = ind.previousElementSibling!.querySelector(".active");
+		if (!activeTabItem) {
+			if (movement === "appear") return;
+			movement = "disappear";
+			const center = (entry1 + entireLength - entry2) / 2;
+			_setPosition([center, center - 1]);
+			return;
+		}
+		const targetRect = activeTabItem.getBoundingClientRect();
+		let target1 = targetRect.top - entire1, target2 = targetRect.bottom - entire1;
+		const targetOffset = (target2 - target1 - LENGTH) / 2;
+		if (targetOffset > 0) target1 += targetOffset, target2 -= targetOffset;
+		if (movement === "appear") {
+			setNoIndicatorTransition(true);
+			const center = (target1 + target2) / 2;
+			_setPosition([center, center]);
+			await nextAnimationTick();
+			setNoIndicatorTransition(false);
+			_setPosition([target1, target2]);
+			return;
+		}
+		const movementSign = (entry1 + entireLength - entry2) - (target1 + target2);
+		movement = movementSign > 0 ? "previous" : movementSign < 0 ? "next" : "none";
+		if (movement === "none") return;
+		const setPosition1 = () => setPosition(([_, pos2]) => [target1, pos2]);
+		const setPosition2 = () => setPosition(([pos1]) => [pos1, entireLength - target2]);
+		const delayTime = () => delay(DELAY);
+		if (movement === "previous") {
+			setPosition1();
+			await delayTime();
+			setPosition2();
+		} else if (movement === "next") {
+			setPosition2();
+			await delayTime();
+			setPosition1();
+		}
+	}, [position]);
 
 	useEffect(() => {
-		if (!indicator.current) return;
-		console.log(indicator.current.previousElementSibling!.querySelector(".active"));
-	});
+		update();
+	}, [current]);
 
 	return (
 		<StyledTabBar>
 			<div className="items">
 				{React.Children.map(children, child => {
-					if (!React.isValidElement(child)) return child;
-					const id = child.props.id as string;
-					return React.cloneElement(child as ReactElement, {
+					if (!isReactInstance(child, TabItem)) return child;
+					const id = child.props.id;
+					return React.cloneElement(child, {
 						active: current === id,
 						onClick: () => setCurrent(id),
 					});
 				})}
 			</div>
-			<div ref={indicator} className="indicator"></div>
+			<Indicator ref={indicator} $position={position} $noTransition={noIndicatorTransition} />
 		</StyledTabBar>
 	);
 };

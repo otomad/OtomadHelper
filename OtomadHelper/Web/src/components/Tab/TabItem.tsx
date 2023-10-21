@@ -5,7 +5,6 @@ const StyledTabItem = styled.div`
 	align-items: center;
 	padding: 9px 16px 11px;
 	gap: 16px;
-	width: 100%;
 	cursor: pointer;
 
 	&:hover,
@@ -13,7 +12,8 @@ const StyledTabItem = styled.div`
 		background-color: ${c("white", 6)};
 	}
 
-	&:active {
+	&:not(.active):active,
+	&.active:not(:active):hover {
 		background-color: ${c("white", 4)};
 	}
 

@@ -1,7 +1,11 @@
 import eases from "./eases";
 import reset from "./reset";
 
-const GlobalStyle = createGlobalStyle`
+const readyColorDuration = ({ $ready }: { $ready?: boolean }) => $ready ? "100ms" : "0s";
+
+const GlobalStyle = createGlobalStyle<{
+	$ready?: boolean;
+}>`
 	@layer base, theme, layout, props, utilities, components, special;
 
 	:root {
@@ -15,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
 	*,
 	::before,
 	::after {
-		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms;
+		transition: all ${eases.easeOutSmooth} 250ms, color ${eases.easeOutSmooth} ${readyColorDuration}, fill ${eases.easeOutSmooth} ${readyColorDuration};
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", "Microsoft YaHei UI", sans-serif, system-ui;
 		user-select: none;
 		box-sizing: border-box;
@@ -39,6 +43,7 @@ const GlobalStyle = createGlobalStyle`
 		height: 100vh;
 		overflow: hidden;
 		transition: none !important;
+		color-scheme: dark;
 	}
 
 	#root {
