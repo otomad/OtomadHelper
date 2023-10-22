@@ -1,4 +1,5 @@
 import _react from "react";
+import _reactTransitionGroup from "react-transition-group";
 
 declare global {
 	/**
@@ -16,5 +17,6 @@ declare global {
 	export type StateProperty<T> = [T, React.Dispatch<React.SetStateAction<string>>];
 	// | (T extends unknown[] ? never : T)
 
-	export type { CSSProperties, ReactElement, ReactNode } from "react";
+	export { CSSProperties, ReactElement, ReactNode } from "react";
+	export { CSSTransition, SwitchTransition, TransitionGroup } from "react-transition-group";
 }

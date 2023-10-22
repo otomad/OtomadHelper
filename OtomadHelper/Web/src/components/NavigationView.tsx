@@ -1,4 +1,4 @@
-import { CSSTransition, SwitchTransition } from "react-transition-group";
+import { CSSTransition, SwitchTransition, TransitionGroup } from "react-transition-group";
 
 const StyledNavButton = styled(Button)`
 	width: 48px;
@@ -28,6 +28,7 @@ const StyledNavigationView = styled.div`
 		display: flex;
 		flex-direction: column;
 		width: 320px;
+		flex-shrink: 0;
 
 		> * {
 			flex-shrink: 0;
@@ -45,12 +46,33 @@ const StyledNavigationView = styled.div`
 	}
 
 	.right {
-		.title {
+		width: 100%;
+
+		.title-wrapper {
+			position: relative;
 			margin: 22px 56px;
-			font-size: 28px;
 			font-weight: 600;
-			line-height: 36px;
+			width: 100%;
+			height: 36px;
+			overflow: hidden;
+		}
+
+		.title {
+			font-size: 28px;
 			position: absolute;
+			transition: all ${eases.easeOutSmooth} 700ms;
+
+			&.exit {
+				translate: 0 -100%;
+			}
+
+			&.enter {
+				translate: 0 100%;
+			}
+
+			&.enter-active {
+				translate: 0;
+			}
 		}
 	}
 `;
@@ -96,7 +118,13 @@ const NavigationView: FC<{
 				</TabBar>}
 			</div>
 			<div className="right">
-				<h1 className="title">{currentNavItem?.text ?? ""}</h1>
+				<div className="title-wrapper">
+					<TransitionGroup>
+						<CSSTransition key={currentNavItem?.id ?? ""} timeout={350}>
+							<h1 className="title">{currentNavItem?.text ?? ""}</h1>
+						</CSSTransition>
+					</TransitionGroup>
+				</div>
 				{children}
 			</div>
 		</StyledNavigationView>

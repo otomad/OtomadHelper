@@ -1,4 +1,4 @@
-const StyledTabItem = styled.div`
+const StyledTabItem = styled.button`
 	border-radius: 3px;
 	margin: 3px 5px 4px;
 	display: flex;
@@ -6,6 +6,7 @@ const StyledTabItem = styled.div`
 	padding: 9px 16px 11px;
 	gap: 16px;
 	cursor: pointer;
+	width: -webkit-fill-available;
 
 	&:hover,
 	&.active {
@@ -30,7 +31,7 @@ const TabItem: FC<{
 	icon: string;
 	id: string;
 	active?: boolean;
-}, HTMLDivElement> = ({ icon, children, active, ...htmlAttrs }) => {
+}, HTMLButtonElement> = ({ icon, children, active, id: _id, ...htmlAttrs }) => {
 	return (
 		<StyledTabItem tabIndex={0} {...htmlAttrs} className={classNames({ active })}>
 			<Icon name={icon} />

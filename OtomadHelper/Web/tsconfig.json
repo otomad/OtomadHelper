@@ -42,6 +42,9 @@
 			"utils/*": [
 				"src/utils/*"
 			],
+			"locales/*": [
+				"src/locales/*"
+			],
 		},
 		"plugins": [
 			{

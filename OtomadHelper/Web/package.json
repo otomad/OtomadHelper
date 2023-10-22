@@ -8,14 +8,18 @@
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-		"release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")"
+		"release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
+		"postinstall": "patch-package"
 	},
 	"author": "Ranne",
 	"license": "GPL",
 	"dependencies": {
 		"classnames": "^2.3.2",
+		"i18next": "^23.6.0",
+		"i18next-browser-languagedetector": "^7.1.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-i18next": "^13.3.1",
 		"react-transition-group": "^4.4.5",
 		"redux": "^4.2.1",
 		"styled-components": "^6.1.0"
@@ -34,6 +38,7 @@
 		"eslint-plugin-react": "^7.31.10",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.3",
+		"patch-package": "^8.0.0",
 		"typescript": "^5.1.6",
 		"unplugin-auto-import": "^0.16.6",
 		"vite": "^4.4.5",

@@ -1,0 +1,25 @@
+diff --git a/node_modules/babel-plugin-styled-components/lib/utils/detectors.js b/node_modules/babel-plugin-styled-components/lib/utils/detectors.js
+index 3ad71f3..aaae80e 100644
+--- a/node_modules/babel-plugin-styled-components/lib/utils/detectors.js
++++ b/node_modules/babel-plugin-styled-components/lib/utils/detectors.js
+@@ -14,6 +14,7 @@ const isValidTopLevelImport = (x, state) => {
+ exports.isValidTopLevelImport = isValidTopLevelImport;
+ const localNameCache = {};
+ const importLocalName = (name, state, options = {}) => {
++  return 'styled';
+   const {
+     cacheIdentifier,
+     bypassCache = false
+diff --git a/node_modules/babel-plugin-styled-components/lib/utils/getName.js b/node_modules/babel-plugin-styled-components/lib/utils/getName.js
+index 90d17cc..4347a34 100644
+--- a/node_modules/babel-plugin-styled-components/lib/utils/getName.js
++++ b/node_modules/babel-plugin-styled-components/lib/utils/getName.js
+@@ -46,6 +46,7 @@ var _default = t => path => {
+   }
+ 
+   // identifiers are the only thing we can reliably get a name from
+-  return t.isIdentifier(namedNode) ? namedNode.name : undefined;
++  const name = t.isIdentifier(namedNode) ? namedNode.name : undefined;
++  return name.replace(/^Styled(?=[A-Z0-9])/, "").replace(/(?<!^)([A-Z])/, "-$1").toLowerCase();
+ };
+ exports.default = _default;
