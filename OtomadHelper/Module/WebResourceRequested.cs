@@ -76,6 +76,8 @@ namespace OtomadHelper.Module {
 						{ "png", "image/png" },
 						{ "svg", "image/svg+xml" },
 						{ "manifest", "text/cache-manifest" },
+						{ "woff", "font/woff" },
+						{ "woff2", "font/woff2" },
 					};
 					string headers = "application/octet-stream";
 					foreach (KeyValuePair<string, string> item in contentTypes)

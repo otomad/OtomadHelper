@@ -59,15 +59,5 @@ namespace OtomadHelper.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap otomad_helper_loading_000 {
-            get {
-                object obj = ResourceManager.GetObject("otomad_helper_loading_000", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }
