@@ -1,19 +1,16 @@
+import Settings from "./Settings";
+
 export default function Navigation() {
-	const { t, i18n } = useTranslation();
 	const [currentNav, setCurrentNav] = useState("source");
+	const navItems = ["source", "midi", "audio", "visual", "sonar", "track", "hr", "tools"];
 
 	return (
 		<NavigationView
 			currentNav={[currentNav, setCurrentNav]}
-			navItems={[
-				{ text: t("source"), id: "source" },
-				{ text: "MIDI", id: "midi" },
-				{ text: "Audio", id: "audio" },
-				{ text: "Visual", id: "visual" },
-				{ text: "Track", id: "track" },
-				"hr",
-				{ text: "Tools", id: "tools" },
-			]}
-		></NavigationView>
+			navItems={navItems.map(item =>
+				item === "hr" ? "hr" : { text: t[item], id: item })}
+		>
+			<Settings />
+		</NavigationView>
 	);
 }

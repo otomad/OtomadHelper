@@ -1,5 +1,3 @@
-import { CSSTransition, SwitchTransition, TransitionGroup } from "react-transition-group";
-
 const StyledNavButton = styled(Button)`
 	width: 48px;
 	height: 40px;
@@ -92,7 +90,7 @@ const NavigationView: FC<{
 	const navItemsRef = useRef<HTMLDivElement>(null);
 
 	const currentNavItem = useMemo(() =>
-		navItems.find(item => typeof item === "object" && item.id === currentNav[0]) as NavItem | undefined, currentNav);
+		navItems.find(item => typeof item === "object" && item.id === currentNav[0]) as NavItem | undefined, [currentNav, navItems]);
 
 	useEventListener(window, "resize", () => {
 		const navItems = navItemsRef.current;
@@ -114,15 +112,15 @@ const NavigationView: FC<{
 					</TabBar>
 				</div>
 				{showSettings && <TabBar current={currentNav}>
-					<TabItem id="settings" icon="settings">Settings</TabItem>
+					<TabItem id="settings" icon="settings">{t.settings}</TabItem>
 				</TabBar>}
 			</div>
 			<div className="right">
 				<div className="title-wrapper">
 					<TransitionGroup>
-						<CSSTransition key={currentNavItem?.id ?? ""} timeout={350}>
+						<Transition key={currentNavItem?.id ?? ""} timeout={350}>
 							<h1 className="title">{currentNavItem?.text ?? ""}</h1>
-						</CSSTransition>
+						</Transition>
 					</TransitionGroup>
 				</div>
 				{children}

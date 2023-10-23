@@ -1,7 +1,8 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import zhCN from "./locales/zh-CN";
+import en from "./English";
+import zhCN from "./SChinese";
 
 i18n
 	// 检测用户当前使用的语言
@@ -18,6 +19,7 @@ i18n
 			escapeValue: false,
 		},
 		resources: {
+			en,
 			"zh-CN": zhCN,
 		},
 	});

@@ -17,6 +17,6 @@ declare global {
 	export type StateProperty<T> = [T, React.Dispatch<React.SetStateAction<string>>];
 	// | (T extends unknown[] ? never : T)
 
-	export { CSSProperties, ReactElement, ReactNode } from "react";
-	export { CSSTransition, SwitchTransition, TransitionGroup } from "react-transition-group";
+	export { CSSProperties, ChangeEvent, ChangeEventHandler, EventHandler, ReactElement, ReactNode } from "react";
+	export { SwitchTransition, CSSTransition as Transition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 }
