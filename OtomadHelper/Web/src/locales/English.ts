@@ -11,9 +11,6 @@ const English = {
 		tools: "Tools",
 		mosh: "Mosh",
 		settings: "Settings",
-		foo: {
-			bar: "baz",
-		},
 	},
 } as const;
 

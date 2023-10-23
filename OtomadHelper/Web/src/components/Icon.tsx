@@ -1,7 +1,10 @@
 import "virtual:svg-icons-register";
 
 const squared = styles.mixins.square("1em");
-const StyledIcon = styled.span<{
+const StyledIcon = styled.span.attrs({
+	className: "icon",
+	role: "img",
+})<{
 	$filled?: boolean;
 }>`
 	${squared};
@@ -25,7 +28,7 @@ const Icon: FC<{
 	const symbolId = "#icon-" + name.replaceAll("/", "-");
 
 	return (
-		<StyledIcon className="icon" role="img" $filled={filled} {...htmlAttrs}>
+		<StyledIcon $filled={filled} {...htmlAttrs}>
 			<svg aria-hidden={true}>
 				<use href={symbolId} />
 			</svg>

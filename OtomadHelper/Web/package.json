@@ -1,5 +1,5 @@
 {
-	"name": "Otomad Helper",
+	"name": "otomad-helper",
 	"version": "7.0",
 	"description": "The front-end part of Otomad Helper script.",
 	"type": "module",

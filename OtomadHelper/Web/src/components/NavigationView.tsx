@@ -18,13 +18,19 @@ const NavButton: FC<{}, HTMLButtonElement> = ({ ...htmlAttrs }) => {
 	);
 };
 
+const CONTENT_MARGIN_X = 56;
+// 865 670
+
 const StyledNavigationView = styled.div`
 	${styles.mixins.square("100%")};
 	display: flex;
 
-	.left {
+	> * {
 		display: flex;
 		flex-direction: column;
+	}
+
+	.left {
 		width: 320px;
 		flex-shrink: 0;
 
@@ -45,14 +51,22 @@ const StyledNavigationView = styled.div`
 
 	.right {
 		width: 100%;
+		max-width: 1000px;
+		margin: 0 auto;
 
 		.title-wrapper {
 			position: relative;
-			margin: 22px 56px;
+			margin: 22px ${CONTENT_MARGIN_X}px;
 			font-weight: 600;
 			width: 100%;
 			height: 36px;
 			overflow: hidden;
+			flex-shrink: 0;
+		}
+
+		.content {
+			padding: 0 ${CONTENT_MARGIN_X}px;
+			overflow-y: auto;
 		}
 
 		.title {
@@ -89,8 +103,17 @@ const NavigationView: FC<{
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
 	const navItemsRef = useRef<HTMLDivElement>(null);
 
-	const currentNavItem = useMemo(() =>
-		navItems.find(item => typeof item === "object" && item.id === currentNav[0]) as NavItem | undefined, [currentNav, navItems]);
+	const currentNavItem = useMemo(() => {
+		const items = navItems.filter(item => typeof item === "object") as NavItem[];
+		const SETTINGS = "settings";
+		items.push({ text: t[SETTINGS], id: SETTINGS });
+		return items.find(item => item.id === currentNav[0]);
+	}, [currentNav, navItems]);
+
+	const previousPageTitleKey = useRef<typeof pageTitleKey>();
+	const pageTitleKey: [string, number] = [currentNavItem?.id ?? "", new Date().valueOf()];
+	if (pageTitleKey[0] === previousPageTitleKey.current?.[0]) pageTitleKey[1] = previousPageTitleKey.current?.[1];
+	previousPageTitleKey.current = pageTitleKey;
 
 	useEventListener(window, "resize", () => {
 		const navItems = navItemsRef.current;
@@ -118,12 +141,14 @@ const NavigationView: FC<{
 			<div className="right">
 				<div className="title-wrapper">
 					<TransitionGroup>
-						<Transition key={currentNavItem?.id ?? ""} timeout={350}>
+						<Transition key={pageTitleKey.join()} addEndListener={endListener}>
 							<h1 className="title">{currentNavItem?.text ?? ""}</h1>
 						</Transition>
 					</TransitionGroup>
 				</div>
-				{children}
+				<div className="content">
+					{children}
+				</div>
 			</div>
 		</StyledNavigationView>
 	);

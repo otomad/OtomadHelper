@@ -33,3 +33,8 @@ export async function setStyleWithoutTransition(element: HTMLElement, style: CSS
 export function delay(ms: number): Promise<void> {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+/**
+ * 用于获取元素动画在何时结束，以助于自动获取动画时间。
+ */
+export const endListener = (node: HTMLElement, done: () => void) => node.addEventListener("transitionend", done, false);
