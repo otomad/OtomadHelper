@@ -11,10 +11,16 @@ declare global {
 		E extends null ? { children?: ReactNode } : React.HTMLAttributes<E>, P>>;
 
 	/**
+	 * React useState 中 setter 函数的类型。
+	 * @template T - 参数类型。
+	 */
+	export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
+
+	/**
 	 * useState 的返回值，即包含表示当前值以及设定该值的函数的元组。可用于实现双向绑定。
 	 * @template T - 参数类型。
 	 */
-	export type StateProperty<T> = [T, React.Dispatch<React.SetStateAction<string>>];
+	export type StateProperty<T> = [T, SetState<T>];
 	// | (T extends unknown[] ? never : T)
 
 	export { CSSProperties, ChangeEvent, ChangeEventHandler, EventHandler, ReactElement, ReactNode } from "react";

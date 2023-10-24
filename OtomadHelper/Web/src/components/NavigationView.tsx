@@ -20,6 +20,7 @@ const NavButton: FC<{}, HTMLButtonElement> = ({ ...htmlAttrs }) => {
 
 const CONTENT_MARGIN_X = 56;
 // 865 670
+const TITLE_LINE_HEIGHT = 40;
 
 const StyledNavigationView = styled.div`
 	${styles.mixins.square("100%")};
@@ -56,17 +57,12 @@ const StyledNavigationView = styled.div`
 
 		.title-wrapper {
 			position: relative;
-			margin: 22px ${CONTENT_MARGIN_X}px;
+			margin: 22px ${CONTENT_MARGIN_X}px 18px;
 			font-weight: 600;
 			width: 100%;
-			height: 36px;
+			height: ${TITLE_LINE_HEIGHT}px;
 			overflow: hidden;
 			flex-shrink: 0;
-		}
-
-		.content {
-			padding: 0 ${CONTENT_MARGIN_X}px;
-			overflow-y: auto;
 		}
 
 		.title {
@@ -75,16 +71,21 @@ const StyledNavigationView = styled.div`
 			transition: all ${eases.easeOutSmooth} 700ms;
 
 			&.exit {
-				translate: 0 -100%;
+				translate: 0 -${TITLE_LINE_HEIGHT}px;
 			}
 
 			&.enter {
-				translate: 0 100%;
+				translate: 0 ${TITLE_LINE_HEIGHT}px;
 			}
 
 			&.enter-active {
 				translate: 0;
 			}
+		}
+
+		.content {
+			padding: 0 ${CONTENT_MARGIN_X}px;
+			overflow-y: auto;
 		}
 	}
 `;
@@ -93,22 +94,30 @@ interface NavItem {
 	text: string;
 	icon?: string;
 	id: string;
+	bottom?: boolean;
+}
+
+interface NavBrItem {
+	type: "hr";
+	bottom ?: boolean;
 }
 
 const NavigationView: FC<{
 	currentNav: StateProperty<string>;
-	navItems?: (NavItem | "hr")[];
-	showSettings?: boolean;
-}> = ({ currentNav, navItems = [], showSettings = true, children }) => {
+	navItems?: (NavItem | NavBrItem)[];
+}> = ({ currentNav, navItems = [], children }) => {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
 	const navItemsRef = useRef<HTMLDivElement>(null);
 
-	const currentNavItem = useMemo(() => {
-		const items = navItems.filter(item => typeof item === "object") as NavItem[];
-		const SETTINGS = "settings";
-		items.push({ text: t[SETTINGS], id: SETTINGS });
-		return items.find(item => item.id === currentNav[0]);
-	}, [currentNav, navItems]);
+	const currentNavItem = useMemo(() =>
+		navItems.find(item => !("type" in item) && item.id === currentNav[0]) as NavItem,
+	[currentNav, navItems]);
+
+	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
+		if ("type" in item) return item.type === "hr" ? <hr key={index} /> : undefined;
+		const { text, icon, id } = item;
+		return <TabItem key={id} id={id} icon={icon || "placeholder"}>{text}</TabItem>;
+	}, []);
 
 	const previousPageTitleKey = useRef<typeof pageTitleKey>();
 	const pageTitleKey: [string, number] = [currentNavItem?.id ?? "", new Date().valueOf()];
@@ -128,15 +137,15 @@ const NavigationView: FC<{
 				<div ref={navItemsRef} className={classNames(["nav-items", { overflowing: isNavItemsOverflowing }])}>
 					<TabBar current={currentNav}>
 						{navItems.map((item, index) => {
-							if (item === "hr") return <hr key={index} />;
-							const { text, icon, id } = item;
-							return <TabItem key={id} id={id} icon={icon || "placeholder"}>{text}</TabItem>;
+							if (!item.bottom) return getNavItemNode(item, index);
 						})}
 					</TabBar>
 				</div>
-				{showSettings && <TabBar current={currentNav}>
-					<TabItem id="settings" icon="settings">{t.settings}</TabItem>
-				</TabBar>}
+				<TabBar current={currentNav}>
+					{navItems.map((item, index) => {
+						if (item.bottom) return getNavItemNode(item, index);
+					})}
+				</TabBar>
 			</div>
 			<div className="right">
 				<div className="title-wrapper">

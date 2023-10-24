@@ -4,6 +4,7 @@ import path from "path";
 import autoImport from "unplugin-auto-import/vite";
 import { defineConfig } from "vite";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -64,6 +65,9 @@ export default defineConfig({
 		createSvgIconsPlugin({
 			iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],
 			symbolId: "icon-[dir]-[name]",
+		}),
+		svgr({
+			include: "**/*.svg",
 		}),
 	],
 	resolve: {
