@@ -49,3 +49,21 @@ export function useStateSelector<T, U>(stateProperty: StateProperty<T>, getter: 
 		setter(stateProperty[1]),
 	] as StateProperty<U>;
 }
+
+/**
+ * 判断一个变量是否是 Ref 包装对象。
+ * @param ref - Ref 包装对象。
+ * @returns - 是否是 Ref 包装对象。
+ */
+export function isRef<T>(ref: MaybeRef<T>): ref is RefObject<T> {
+	return ref && "current" in (ref as object) && Object.keys(ref).length === 1;
+}
+
+/**
+ * 将一个可能是 Ref 包装对象的值还原其本身。
+ * @param ref - Ref 包装对象。
+ * @returns 原类型值。
+ */
+export function toValue<T>(ref: MaybeRef<T>): T {
+	return isRef(ref) ? ref.current! : ref;
+}

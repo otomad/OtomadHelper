@@ -7,6 +7,7 @@ const StyledTabItem = styled.button`
 	gap: 16px;
 	cursor: pointer;
 	width: -webkit-fill-available;
+	position: relative;
 
 	&:hover,
 	&.active {
@@ -24,6 +25,13 @@ const StyledTabItem = styled.button`
 
 	.icon {
 		margin-bottom: -1px;
+	}
+
+	// 允许点击元素外边距。
+	&::before {
+		content: "";
+		position: absolute;
+		inset: -1.5px 0;
 	}
 `;
 

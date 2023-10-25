@@ -156,11 +156,11 @@ const NavigationView: FC<{
 			<div className="right">
 				<div className="title-wrapper">
 					<TransitionGroup>
-						<Transition key={pageTitleKey.join()} addEndListener={endListener()}>
+						<CssTransition key={pageTitleKey.join()}>
 							<h1 className="title">
 								{titles.map((title, index) => <div key={index}>{title}</div>)}
 							</h1>
-						</Transition>
+						</CssTransition>
 					</TransitionGroup>
 				</div>
 				<div className="content">

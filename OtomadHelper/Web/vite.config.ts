@@ -48,7 +48,6 @@ export default defineConfig({
 						["default", "classNames"],
 					],
 					"react-transition-group": [
-						["CSSTransition", "Transition"],
 						"SwitchTransition",
 						"TransitionGroup",
 					],

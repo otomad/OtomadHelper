@@ -35,7 +35,6 @@ export default function Navigation() {
 	const navItems = ["source", "midi", "audio", "visual", "sonar", "track"];
 	const bottomNavItems = ["tools", "settings"];
 	const Page = pages[`./views/${pagePath}.tsx`] ?? EmptyPage;
-	const pageNodeRef = useRef<HTMLElement>(null);
 
 	return (
 		<NavigationView
@@ -48,11 +47,11 @@ export default function Navigation() {
 		>
 			<PageContext.Provider value={[currentNav, setCurrentNav]}>
 				<SwitchTransition>
-					<Transition nodeRef={pageNodeRef} key={pagePath} timeout={50}>
-						<StyledPage ref={pageNodeRef}>
+					<CssTransition key={pagePath} timeout={50}>
+						<StyledPage >
 							<Page />
 						</StyledPage>
-					</Transition>
+					</CssTransition>
 				</SwitchTransition>
 			</PageContext.Provider>
 		</NavigationView>
