@@ -5,6 +5,7 @@ import autoImport from "unplugin-auto-import/vite";
 import { defineConfig } from "vite";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -31,6 +32,7 @@ export default defineConfig({
 				{
 					"react": [
 						["default", "React"],
+						"createContext",
 					],
 					"react-dom/client": [
 						["*", "ReactDOM"],
@@ -69,18 +71,6 @@ export default defineConfig({
 		svgr({
 			include: "**/*.svg",
 		}),
+		tsconfigPaths(),
 	],
-	resolve: {
-		alias: {
-			"@": path.resolve(__dirname, "./src"),
-			"assets": path.resolve(__dirname, "./src/assets"),
-			"components": path.resolve(__dirname, "./src/components"),
-			"pages": path.resolve(__dirname, "./src/pages"),
-			"styles": path.resolve(__dirname, "./src/styles"),
-			"types": path.resolve(__dirname, "./src/types"),
-			"utils": path.resolve(__dirname, "./src/utils"),
-			"locales": path.resolve(__dirname, "./src/locales"),
-			"stores": path.resolve(__dirname, "./src/stores"),
-		},
-	},
 });

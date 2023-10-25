@@ -68,7 +68,7 @@ const StyledNavigationView = styled.div`
 		.title {
 			font-size: 28px;
 			position: absolute;
-			transition: all ${eases.easeOutSmooth} 700ms;
+			transition: all ${eases.easeOutSmooth} 500ms;
 			display: flex;
 			gap: 8px;
 
@@ -156,7 +156,7 @@ const NavigationView: FC<{
 			<div className="right">
 				<div className="title-wrapper">
 					<TransitionGroup>
-						<Transition key={pageTitleKey.join()} addEndListener={endListener}>
+						<Transition key={pageTitleKey.join()} addEndListener={endListener()}>
 							<h1 className="title">
 								{titles.map((title, index) => <div key={index}>{title}</div>)}
 							</h1>

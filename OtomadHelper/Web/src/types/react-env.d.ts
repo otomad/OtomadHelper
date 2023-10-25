@@ -25,6 +25,6 @@ declare global {
 	// | (T extends unknown[] ? never : T)
 
 	export { PayloadAction } from "@reduxjs/toolkit";
-	export { CSSProperties, ChangeEvent, ChangeEventHandler, EventHandler, ReactElement, ReactNode } from "react";
+	export { CSSProperties, ChangeEvent, ChangeEventHandler, EventHandler, ReactElement, ReactNode, RefObject } from "react";
 	export { SwitchTransition, CSSTransition as Transition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 }

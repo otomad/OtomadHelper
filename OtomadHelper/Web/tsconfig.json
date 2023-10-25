@@ -24,12 +24,14 @@
 			"@/*": ["src/*"],
 			"assets/*": ["src/assets/*"],
 			"components/*": ["src/components/*"],
-			"pages/*": ["src/pages/*"],
+			"views/*": ["src/views/*"],
 			"styles/*": ["src/styles/*"],
 			"types/*": ["src/types/*"],
 			"utils/*": ["src/utils/*"],
 			"locales/*": ["src/locales/*"],
 			"stores/*": ["src/stores/*"],
+			"hooks/*": ["src/hooks/*"],
+			"contexts/*": ["src/contexts/*"],
 		},
 		"plugins": [
 			{

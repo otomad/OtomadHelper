@@ -37,4 +37,13 @@ export function delay(ms: number): Promise<void> {
 /**
  * 用于获取元素动画在何时结束，以助于自动获取动画时间。
  */
-export const endListener = (node: HTMLElement, done: () => void) => node.addEventListener("transitionend", done, false);
+export function endListener(): (node: HTMLElement, done: () => void) => void;
+/**
+ * 用于获取元素动画在何时结束，以助于自动获取动画时间。
+ */
+export function endListener(nodeRef: RefObject<HTMLElement>): (done: () => void) => void;
+export function endListener(nodeRef?: RefObject<HTMLElement>) {
+	return !nodeRef ?
+		(node: HTMLElement, done: () => void) => node.addEventListener("transitionend", done, false) :
+		(done: () => void) => nodeRef.current?.addEventListener("transitionend", done, false);
+}

@@ -1,6 +1,6 @@
 import { pageStore } from "stores/page";
 
-const pages = import.meta.glob<FC>("pages/*.tsx", { import: "default", eager: true });
+const pages = import.meta.glob<FC>("./views/*.tsx", { import: "default", eager: true });
 
 function EmptyPage() {
 	return (
@@ -18,15 +18,15 @@ const StyledPage = styled.main`
 
 	&.enter {
 		opacity: 0;
-		translate: 0 7rem;
+		translate: 0 5rem;
 	}
 
 	&.exit-active {
-		transition: all ${eases.easeOutSmooth} 100ms;
+		transition: all ${eases.easeOutMax} 83ms;
 	}
 
 	&.enter-done {
-		transition: all ${eases.easeOutSmooth} 600ms;
+		transition: all ${eases.easeOutMax} 250ms;
 	}
 `;
 
@@ -35,7 +35,7 @@ export default function Navigation() {
 	const { texts: pageTitles, path: pagePath } = pageStore;
 	const navItems = ["source", "midi", "audio", "visual", "sonar", "track"];
 	const bottomNavItems = ["tools", "settings"];
-	const Page = pages[`/src/pages/${pagePath}.tsx`] ?? EmptyPage;
+	const Page = pages[`./views/${pagePath}.tsx`] ?? EmptyPage;
 	const pageNodeRef = useRef<HTMLElement>(null);
 
 	return (
@@ -48,7 +48,7 @@ export default function Navigation() {
 			titles={pageTitles}
 		>
 			<SwitchTransition>
-				<Transition nodeRef={pageNodeRef} key={pagePath} timeout={60}>
+				<Transition nodeRef={pageNodeRef} key={pagePath} timeout={50}>
 					<StyledPage ref={pageNodeRef}>
 						<Page />
 					</StyledPage>
