@@ -1,4 +1,4 @@
-import Navigation from "pages/Navigation";
+import Navigation from "@/Navigation.tsx";
 import GlobalStyle from "./styles/global.ts";
 
 export default function App() {

@@ -26,6 +26,10 @@ declare global {
 	 */
 	type AnyObject = Record<ObjectKey, Any>;
 	/**
+	 * 消除函数参数具有隐式 any 类型的警告。
+	 */
+	type AnyFunction = (...args: Any[]) => Any;
+	/**
 	 * 为什么 Record 还需要手动指定键的类型？多此一举。
 	 * @template T - 值的类型。
 	 */

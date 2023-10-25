@@ -32,6 +32,8 @@ const StyledTabBar = styled.div`
 	}
 `;
 
+// import { pageSlice, pageStore } from "stores/page";
+
 const TabBar: FC<{
 	current: StateProperty<string>;
 }> = ({ current: [current, setCurrent], children }) => {

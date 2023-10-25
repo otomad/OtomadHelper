@@ -80,6 +80,7 @@ export default defineConfig({
 			"types": path.resolve(__dirname, "./src/types"),
 			"utils": path.resolve(__dirname, "./src/utils"),
 			"locales": path.resolve(__dirname, "./src/locales"),
+			"stores": path.resolve(__dirname, "./src/stores"),
 		},
 	},
 });

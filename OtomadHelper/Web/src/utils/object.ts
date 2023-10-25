@@ -14,7 +14,7 @@ export function forMap<T>(length: number, callback: (index: number) => T, flat: 
 }
 
 /**
- * 对useState 中的 setter 函数进行拦截。
+ * 对 useState 中的 setter 函数进行拦截。
  * @param setter - useState 中的 setter 函数。
  * @param interceptor - 拦截器。
  * @returns - 生成的新 setter 函数。
@@ -26,4 +26,26 @@ export function setStateInterceptor<T>(setter: SetState<T>, interceptor: (userIn
 		else
 			setter(interceptor(userInput));
 	};
+}
+
+/**
+ * 判断对象是否包含该键名，同时对类型捍卫。
+ * @param obj - 对象。
+ * @param k - 键名。
+ * @returns 对象是否包含该键名。
+ */
+export const hasKey = <T extends object>(obj: T, k: keyof Any): k is keyof T => k in obj;
+
+/**
+ * 将原 useState 映射到例如其子属性上的新属性。
+ * @param stateProperty - 原 useState。
+ * @param getter - 映射到新的 getter。
+ * @param setter - 映射到新的 setter。
+ * @returns - 新的 useState。
+ */
+export function useStateSelector<T, U>(stateProperty: StateProperty<T>, getter: (original: T) => U, setter: (original: SetState<T>) => SetState<U>) {
+	return [
+		getter(stateProperty[0]),
+		setter(stateProperty[1]),
+	] as StateProperty<U>;
 }

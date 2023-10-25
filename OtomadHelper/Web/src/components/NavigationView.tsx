@@ -69,6 +69,8 @@ const StyledNavigationView = styled.div`
 			font-size: 28px;
 			position: absolute;
 			transition: all ${eases.easeOutSmooth} 700ms;
+			display: flex;
+			gap: 8px;
 
 			&.exit {
 				translate: 0 -${TITLE_LINE_HEIGHT}px;
@@ -86,6 +88,7 @@ const StyledNavigationView = styled.div`
 		.content {
 			padding: 0 ${CONTENT_MARGIN_X}px;
 			overflow-y: auto;
+			height: 100%;
 		}
 	}
 `;
@@ -103,15 +106,18 @@ interface NavBrItem {
 }
 
 const NavigationView: FC<{
-	currentNav: StateProperty<string>;
+	currentNav: StateProperty<string[]>;
 	navItems?: (NavItem | NavBrItem)[];
-}> = ({ currentNav, navItems = [], children }) => {
+	titles?: string[];
+}> = ({ currentNav, navItems = [], titles, children }) => {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
 	const navItemsRef = useRef<HTMLDivElement>(null);
+	const currentNavTab = useMemo(() => Tuple(currentNav[0][0], (value: string) => currentNav[1]([value])), [currentNav]) as StateProperty<string>;
 
 	const currentNavItem = useMemo(() =>
-		navItems.find(item => !("type" in item) && item.id === currentNav[0]) as NavItem,
+		navItems.find(item => !("type" in item) && item.id === currentNavTab[0]) as NavItem,
 	[currentNav, navItems]);
+	titles ??= [currentNavItem?.text ?? ""];
 
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
 		if ("type" in item) return item.type === "hr" ? <hr key={index} /> : undefined;
@@ -135,13 +141,13 @@ const NavigationView: FC<{
 			<div className="left">
 				<NavButton />
 				<div ref={navItemsRef} className={classNames(["nav-items", { overflowing: isNavItemsOverflowing }])}>
-					<TabBar current={currentNav}>
+					<TabBar current={currentNavTab}>
 						{navItems.map((item, index) => {
 							if (!item.bottom) return getNavItemNode(item, index);
 						})}
 					</TabBar>
 				</div>
-				<TabBar current={currentNav}>
+				<TabBar current={currentNavTab}>
 					{navItems.map((item, index) => {
 						if (item.bottom) return getNavItemNode(item, index);
 					})}
@@ -151,7 +157,9 @@ const NavigationView: FC<{
 				<div className="title-wrapper">
 					<TransitionGroup>
 						<Transition key={pageTitleKey.join()} addEndListener={endListener}>
-							<h1 className="title">{currentNavItem?.text ?? ""}</h1>
+							<h1 className="title">
+								{titles.map((title, index) => <div key={index}>{title}</div>)}
+							</h1>
 						</Transition>
 					</TransitionGroup>
 				</div>

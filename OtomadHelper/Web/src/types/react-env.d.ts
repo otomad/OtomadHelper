@@ -1,3 +1,4 @@
+import _reduxjsToolkit from "@reduxjs/toolkit";
 import _react from "react";
 import _reactTransitionGroup from "react-transition-group";
 
@@ -23,6 +24,7 @@ declare global {
 	export type StateProperty<T> = [T, SetState<T>];
 	// | (T extends unknown[] ? never : T)
 
+	export { PayloadAction } from "@reduxjs/toolkit";
 	export { CSSProperties, ChangeEvent, ChangeEventHandler, EventHandler, ReactElement, ReactNode } from "react";
 	export { SwitchTransition, CSSTransition as Transition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 }
