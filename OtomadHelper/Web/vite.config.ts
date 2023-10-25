@@ -61,8 +61,12 @@ export default defineConfig({
 				"./src/components/**",
 				"./src/composables/**",
 				"./src/utils/**",
+				"./src/hooks/**",
+				"./src/contexts/**",
+				"./src/stores/**",
 			],
 			dts: "./src/types/auto-imports.d.ts",
+			defaultExportByFilename: false,
 		}),
 		createSvgIconsPlugin({
 			iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],

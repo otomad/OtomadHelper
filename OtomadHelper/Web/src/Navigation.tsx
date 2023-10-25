@@ -1,5 +1,3 @@
-import { pageStore } from "stores/page";
-
 const pages = import.meta.glob<FC>("./views/*.tsx", { import: "default", eager: true });
 
 function EmptyPage() {
@@ -31,8 +29,9 @@ const StyledPage = styled.main`
 `;
 
 export default function Navigation() {
-	const [currentNav, setCurrentNav] = pageStore.useState(true);
-	const { texts: pageTitles, path: pagePath } = pageStore;
+	const [currentNav, setCurrentNav] = useState(["source"]);
+	const pageTitles = currentNav.map(page => t[page]);
+	const pagePath = currentNav.join("/");
 	const navItems = ["source", "midi", "audio", "visual", "sonar", "track"];
 	const bottomNavItems = ["tools", "settings"];
 	const Page = pages[`./views/${pagePath}.tsx`] ?? EmptyPage;
@@ -47,13 +46,15 @@ export default function Navigation() {
 			]}
 			titles={pageTitles}
 		>
-			<SwitchTransition>
-				<Transition nodeRef={pageNodeRef} key={pagePath} timeout={50}>
-					<StyledPage ref={pageNodeRef}>
-						<Page />
-					</StyledPage>
-				</Transition>
-			</SwitchTransition>
+			<PageContext.Provider value={[currentNav, setCurrentNav]}>
+				<SwitchTransition>
+					<Transition nodeRef={pageNodeRef} key={pagePath} timeout={50}>
+						<StyledPage ref={pageNodeRef}>
+							<Page />
+						</StyledPage>
+					</Transition>
+				</SwitchTransition>
+			</PageContext.Provider>
 		</NavigationView>
 	);
 }

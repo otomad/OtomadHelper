@@ -1,3 +1,1 @@
-const { Provider, Consumer } = createContext(["source"]);
-
-export { Consumer, Provider };
+export const PageContext = createContext<StateProperty<string[]>>(undefined!);
