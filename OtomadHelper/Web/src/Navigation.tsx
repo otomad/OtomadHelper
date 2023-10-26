@@ -11,16 +11,7 @@ export default function Navigation() {
 	const [mode, setMode] = useState<Mode>("otomadOrYtpmv");
 	const pageTitles = currentNav.map(page => t[page]);
 	const pagePath = currentNav.join("/");
-	const navItems = useMemo(() => arrayToRemoveFalsy([
-		"source",
-		mode !== "ytp" && "midi",
-		"audio",
-		"visual",
-		mode === "otomadOrYtpmv" && "sonar",
-		mode === "ytp" && "ytp",
-		mode === "shupelunker" && "shupelunker",
-		"track",
-	]), [mode]);
+	const navItems = ["source", "midi", "audio", "visual", "track", "sonar", "shupelunker", "ytp"];
 	const bottomNavItems = ["tools", "settings"] as const;
 	const modes = ["otomadOrYtpmv", "ytp", "shupelunker"] as const;
 	type Mode = typeof modes[number];
@@ -35,12 +26,6 @@ export default function Navigation() {
 					...bottomNavItems.map(item => ({ text: t[item], id: item, bottom: true })),
 				]}
 				titles={pageTitles}
-				customContent={
-					<TabBar current={[mode, setMode]}>
-						{modes.map(mode =>
-							<TabItem key={mode} id={mode} icon="placeholder">{t[mode]}</TabItem>)}
-					</TabBar>
-				}
 			>
 				<Page />
 			</NavigationView>
