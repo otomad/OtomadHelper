@@ -52,17 +52,26 @@ const StyledNavigationView = styled.div`
 
 	.right {
 		width: 100%;
-		max-width: 1000px;
-		margin: 0 auto;
+
+		&.hairtail {
+			.title-wrapper > *,
+			.content > * {
+				width: 100%;
+				max-width: 1000px;
+				margin: 0 auto;
+			}
+		}
 
 		.title-wrapper {
 			position: relative;
-			margin: 22px ${CONTENT_MARGIN_X}px 18px;
+			margin: 22px 0 18px;
 			font-weight: 600;
-			width: 100%;
-			height: ${TITLE_LINE_HEIGHT}px;
 			overflow: hidden;
 			flex-shrink: 0;
+
+			> div {
+				height: ${TITLE_LINE_HEIGHT}px;
+			}
 		}
 
 		.title {
@@ -86,10 +95,40 @@ const StyledNavigationView = styled.div`
 		}
 
 		.content {
-			padding: 0 ${CONTENT_MARGIN_X}px;
-			overflow-y: auto;
 			height: 100%;
+			overflow-y: auto;
+
+			&:has(.enter, .exit) {
+				overflow-y: hidden;
+			}
 		}
+
+		.title-wrapper,
+		.content {
+			padding: 0 ${CONTENT_MARGIN_X}px;
+			scrollbar-gutter: stable;
+		}
+	}
+`;
+
+const StyledPage = styled.main`
+	height: 100%;
+
+	&.exit {
+		opacity: 0;
+		translate: 0 -2rem;
+		transition: all ${eases.easeOutMax} 83ms;
+	}
+
+	&.enter {
+		opacity: 0;
+		translate: 0 5rem;
+	}
+
+	&.enter-active {
+		opacity: 1;
+		translate: 0;
+		transition: all ${eases.easeOutMax} 250ms;
 	}
 `;
 
@@ -113,6 +152,7 @@ const NavigationView: FC<{
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
 	const navItemsRef = useRef<HTMLDivElement>(null);
 	const currentNavTab = useMemo(() => Tuple(currentNav[0][0], (value: string) => currentNav[1]([value])), [currentNav]) as StateProperty<string>;
+	const pagePath = currentNav.join("/");
 
 	const currentNavItem = useMemo(() =>
 		navItems.find(item => !("type" in item) && item.id === currentNavTab[0]) as NavItem,
@@ -153,7 +193,7 @@ const NavigationView: FC<{
 					})}
 				</TabBar>
 			</div>
-			<div className="right">
+			<div className={classNames(["right", "hairtail"])}>
 				<div className="title-wrapper">
 					<TransitionGroup>
 						<CssTransition key={pageTitleKey.join()}>
@@ -164,7 +204,13 @@ const NavigationView: FC<{
 					</TransitionGroup>
 				</div>
 				<div className="content">
-					{children}
+					<SwitchTransition>
+						<CssTransition key={pagePath}>
+							<StyledPage>
+								{children}
+							</StyledPage>
+						</CssTransition>
+					</SwitchTransition>
 				</div>
 			</div>
 		</StyledNavigationView>

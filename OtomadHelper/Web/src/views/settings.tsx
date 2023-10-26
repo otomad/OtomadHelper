@@ -10,6 +10,7 @@ export default function Settings() {
 					{language}
 				</label>
 			))}
+			{forMap(50, i => <p key={i}>123</p>)}
 		</div>
 	);
 }
