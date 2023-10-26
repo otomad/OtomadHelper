@@ -1,3 +1,13 @@
+/**
+ * 返回一个新数组，该数组将被剔除任何虚值，如 undefined、null、false、""、±0、±0n。
+ * @param array - 源数组。
+ * @returns 不包含任何虚值的新数组。
+ */
+export function arrayToRemoveFalsy<T>(array: T[]) {
+	return array.filter(item => item) as NonFalsy<T>[];
+}
+
+// #region Tuples
 /** 创建可供 TypeScript 正确识别的一元组。 */
 export function Tuple<T>(arg1: T): [T];
 /** 创建可供 TypeScript 正确识别的二元组。 */
@@ -15,3 +25,4 @@ export function Tuple<T, U, V, W, X, Y, Z>(arg1: T, arg2: U, arg3: V, arg4: W, a
 export function Tuple(...args: unknown[]) {
 	return [...args];
 }
+// #endregion

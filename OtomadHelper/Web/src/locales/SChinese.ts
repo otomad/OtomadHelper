@@ -13,6 +13,7 @@ const SChinese: LocaleIdentifiers = {
 		tools: "工具",
 		mosh: "抹失",
 		settings: "设置",
+		otomadOrYtpmv: "音MAD/YTPMV",
 	},
 };
 

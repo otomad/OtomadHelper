@@ -54,11 +54,15 @@ const StyledNavigationView = styled.div`
 		width: 100%;
 
 		&.hairtail {
-			.title-wrapper > *,
-			.content > * {
-				width: 100%;
-				max-width: 1000px;
-				margin: 0 auto;
+			.title-wrapper,
+			.content {
+				scrollbar-gutter: stable;
+
+				> * {
+					width: 100%;
+					max-width: 1000px;
+					margin: 0 auto;
+				}
 			}
 		}
 
@@ -106,7 +110,6 @@ const StyledNavigationView = styled.div`
 		.title-wrapper,
 		.content {
 			padding: 0 ${CONTENT_MARGIN_X}px;
-			scrollbar-gutter: stable;
 		}
 	}
 `;
@@ -148,7 +151,8 @@ const NavigationView: FC<{
 	currentNav: StateProperty<string[]>;
 	navItems?: (NavItem | NavBrItem)[];
 	titles?: string[];
-}> = ({ currentNav, navItems = [], titles, children }) => {
+	customContent?: ReactNode;
+}> = ({ currentNav, navItems = [], titles, children, customContent }) => {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
 	const navItemsRef = useRef<HTMLDivElement>(null);
 	const currentNavTab = useMemo(() => Tuple(currentNav[0][0], (value: string) => currentNav[1]([value])), [currentNav]) as StateProperty<string>;
@@ -181,6 +185,7 @@ const NavigationView: FC<{
 			<div className="left">
 				<NavButton />
 				<div ref={navItemsRef} className={classNames(["nav-items", { overflowing: isNavItemsOverflowing }])}>
+					{customContent}
 					<TabBar current={currentNavTab}>
 						{navItems.map((item, index) => {
 							if (!item.bottom) return getNavItemNode(item, index);

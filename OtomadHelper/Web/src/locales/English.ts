@@ -11,6 +11,7 @@ const English = {
 		tools: "Tools",
 		mosh: "Mosh",
 		settings: "Settings",
+		otomadOrYtpmv: "Otomad/YTPMV",
 	},
 } as const;
 
