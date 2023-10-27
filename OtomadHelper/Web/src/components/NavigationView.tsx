@@ -136,21 +136,31 @@ const StyledPage = styled.main`
 `;
 
 interface NavItem {
+	/** 标签文本。 */
 	text: string;
+	/** 图标。 */
 	icon?: string;
+	/** 标识符。 */
 	id: string;
+	/** 是否将其放置于导航面板底部。 */
 	bottom?: boolean;
 }
 
 interface NavBrItem {
+	/** 类型：分割线。 */
 	type: "hr";
+	/** 是否将其放置于导航面板底部。 */
 	bottom ?: boolean;
 }
 
 const NavigationView: FC<{
+	/** 当前导航页状态参数。 */
 	currentNav: StateProperty<string[]>;
+	/** 所有导航项。 */
 	navItems?: (NavItem | NavBrItem)[];
+	/** 面包屑导航标题数组。 */
 	titles?: string[];
+	/** 自定义区域。 */
 	customContent?: ReactNode;
 }> = ({ currentNav, navItems = [], titles, children, customContent }) => {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);

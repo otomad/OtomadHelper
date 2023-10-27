@@ -4,6 +4,7 @@ import reset from "./reset";
 const readyColorDuration = ({ $ready }: { $ready?: boolean }) => $ready ? "100ms" : "0s";
 
 const GlobalStyle = createGlobalStyle<{
+	/** 页面已完成加载？ */
 	$ready?: boolean;
 }>`
 	@layer base, theme, layout, props, utilities, components, special;

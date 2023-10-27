@@ -50,6 +50,7 @@ export default defineConfig({
 					"react-transition-group": [
 						"SwitchTransition",
 						"TransitionGroup",
+						"Transition",
 					],
 					"react-i18next": [
 						"useTranslation",

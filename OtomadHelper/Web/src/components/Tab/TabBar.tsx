@@ -3,7 +3,9 @@ const LENGTH = 16;
 const DELAY = 100;
 
 const Indicator = styled.div<{
+	/** 是否禁用过渡动画？ */
 	$noTransition?: boolean;
+	/** 位置（上方向和下方向距离容器的距离元组）。 */
 	$position?: TwoD;
 }>`
 	${styles.mixins.oval()}

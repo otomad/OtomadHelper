@@ -4,7 +4,8 @@ const squared = styles.mixins.square("1em");
 const StyledIcon = styled.span.attrs({
 	className: "icon",
 	role: "img",
-})<{
+}) <{
+	/** 是否保持图标本身的颜色？ */
 	$filled?: boolean;
 }>`
 	${squared};
@@ -22,7 +23,7 @@ const StyledIcon = styled.span.attrs({
 const Icon: FC<{
 	/** 图标文件名称。 */
 	name: string;
-	/** 是否保持图标本身的颜色。 */
+	/** 是否保持图标本身的颜色？ */
 	filled?: boolean;
 }, HTMLSpanElement> = ({ name, filled, ...htmlAttrs }) => {
 	const symbolId = "#icon-" + name.replaceAll("/", "-");

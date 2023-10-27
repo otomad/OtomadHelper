@@ -40,9 +40,10 @@ export function delay(ms: number): Promise<void> {
 export function endListener(): (node: HTMLElement, done: () => void) => void;
 /**
  * 用于获取元素动画在何时结束，以助于自动获取动画时间。
+ * @param nodeRef - 获取的子元素引用对象。
  */
-export function endListener(nodeRef: RefObject<HTMLElement>): (done: () => void) => void;
-export function endListener(nodeRef?: RefObject<HTMLElement>) {
+export function endListener(nodeRef: RefObject<HTMLElement | undefined>): (done: () => void) => void;
+export function endListener(nodeRef?: RefObject<HTMLElement | undefined>) {
 	return !nodeRef ?
 		(node: HTMLElement, done: () => void) => node.addEventListener("transitionend", done, false) :
 		(done: () => void) => nodeRef.current?.addEventListener("transitionend", done, false);
@@ -167,7 +168,7 @@ export async function* animateSizeGenerator(
 		keyframes[1].translate = setTranslate([isWidthChanged ? startWidth : 0, isHeightChanged ? startHeight : 0]);
 	Object.assign(keyframes[0], startStyle);
 	Object.assign(keyframes[1], endStyle);
-	const animationOptions = { duration, easing };
+	const animationOptions: KeyframeAnimationOptions = { duration, easing };
 	const htmlElement = element as HTMLElement;
 	if (!noCropping) htmlElement.style.overflow = "hidden";
 	const result = element.animate(keyframes, animationOptions);
@@ -208,7 +209,6 @@ export async function animateSize(
 }
 
 type SameOrDifferent<T> = T | undefined | [T | undefined, T | undefined];
-type TransitionHook = (el: Element, done: () => void) => Promise<void>;
 
 /**
  * `animateSize` 函数的简化版，适用于更为简单的动画。
@@ -217,7 +217,7 @@ type TransitionHook = (el: Element, done: () => void) => Promise<void>;
  * @param easing - 指定动画缓动曲线。
  * @returns 返回 `onEnter` 和 `onExit` 两个函数。
  */
-export function simpleAnimateSize(specified: "width" | "height" = "height", duration?: SameOrDifferent<number>, easing?: SameOrDifferent<string>) {
+export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "width" | "height" = "height", duration?: SameOrDifferent<number>, easing?: SameOrDifferent<string>) {
 	type Options = Parameters<typeof animateSize>[2];
 	let enter: Options, exit: Options;
 	if (specified === "width") {
@@ -234,13 +234,19 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 	enter.easing = easing[0];
 	exit.easing = easing[1];
 
-	const onEnter: TransitionHook = async (el, done) => {
+	const onEnter = async () => {
+		const el = nodeRef.current;
+		if (!el) return;
 		await animateSize(el, null, enter);
-		done();
+		el.dispatchEvent(new Event("transitionend"));
 	};
-	const onExit: TransitionHook = async (el, done) => {
+
+	const onExit = async () => {
+		const el = nodeRef.current;
+		if (!el) return;
 		await animateSize(el, null, exit);
-		done();
+		el.dispatchEvent(new Event("transitionend"));
+		el.hidden = true;
 	};
 
 	return [onEnter, onExit];

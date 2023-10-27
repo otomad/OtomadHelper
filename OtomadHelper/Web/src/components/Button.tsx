@@ -1,4 +1,9 @@
-const StyledButton = styled.button`
+const StyledButton = styled.button.attrs({
+	type: "button",
+}) <{
+	/** 是否使用无背景按钮？ */
+	$lite?: boolean;
+}>`
 	${styles.mixins.flexCenter()};
 	padding: 4px 11px 6px;
 	border-radius: 4px;
@@ -32,7 +37,7 @@ const StyledButton = styled.button`
 	}
 
 	> .base {
-		${styles.mixins.flexCenter()}
+		${styles.mixins.flexCenter()};
 		gap: 8px;
 
 		> span:empty {
