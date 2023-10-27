@@ -3,8 +3,10 @@ using Microsoft.Web.WebView2.WinForms;
 using OtomadHelper.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 
 namespace OtomadHelper.Module {
 	/// <summary>
@@ -61,11 +63,25 @@ namespace OtomadHelper.Module {
 		private readonly Stream s;
 
 		internal static void Handler(WebView2 webView) {
-			webView.CoreWebView2.AddWebResourceRequestedFilter("https://app/*", CoreWebView2WebResourceContext.All);
-			webView.CoreWebView2.WebResourceRequested += delegate (object sender, CoreWebView2WebResourceRequestedEventArgs args) {
-				string file = args.Request.Uri.Substring("https://app/*".Length - 1);
+			const string HOST = "https://app/*";
+			webView.CoreWebView2.AddWebResourceRequestedFilter(HOST, CoreWebView2WebResourceContext.All);
+			webView.CoreWebView2.WebResourceRequested += (object sender, CoreWebView2WebResourceRequestedEventArgs args) => {
+				string file = args.Request.Uri.Substring(HOST.Length - 1);
+				string[] fileSlug = file.Split('/');
+				string virtualPath = fileSlug.FirstOrDefault();
 				string assetsFilePath = "Web.dist." + file.Replace("/", ".");
 				try {
+					if (virtualPath != null) {
+						string path = string.Join("/", fileSlug.Skip(1));
+						path = Uri.UnescapeDataString(path);
+						switch (virtualPath) {
+							case "thumbnail":
+								Handler_Thumbnail(webView, args, path);
+								return;
+							default:
+								break;
+						}
+					}
 					Stream fileStream = ResourceHelper.GetEmbeddedResource(assetsFilePath);
 					ManagedStream managedStream = new ManagedStream(fileStream);
 					Dictionary<string, string> contentTypes = new Dictionary<string, string> {
@@ -90,6 +106,16 @@ namespace OtomadHelper.Module {
 					args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(null, 404, "Not found", "");
 				}
 			};
+		}
+
+		private static void Handler_Thumbnail(WebView2 webView, CoreWebView2WebResourceRequestedEventArgs args, string filePath) {
+			filePath = filePath.Replace("/", "\\");
+			Bitmap thumb = ResourceHelper.GetFileThumbnail(filePath);
+			MemoryStream memoryStream = new MemoryStream();
+			thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+			ManagedStream managedStream = new ManagedStream(memoryStream);
+			string headers = "image/png";
+			args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(managedStream, 200, "OK", headers);
 		}
 	}
 }

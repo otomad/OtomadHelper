@@ -139,7 +139,7 @@
     <None Include="Test\App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Web\dist\assets\index-c380191e.js" />
+    <EmbeddedResource Include="Web\dist\assets\index.js" />
     <EmbeddedResource Include="Assets\LoadingAnimation.apng" />
     <Content Include="Otomad Helper.ico" />
   </ItemGroup>
@@ -148,6 +148,9 @@
       <Version>5.7.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell">
+      <Version>1.1.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>1.0.2088.41</Version>

@@ -5,6 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack;
+using System.Drawing;
 
 namespace OtomadHelper.Helpers {
 	internal static class ResourceHelper {
@@ -19,6 +22,12 @@ namespace OtomadHelper.Helpers {
 			if (assembly.GetManifestResourceInfo(assetsFilePath) == null)
 				throw new FileNotFoundException("Cannot find embedded resource: " + assetsFilePath);
 			return assembly.GetManifestResourceStream(assetsFilePath);
+		}
+
+		public static Bitmap GetFileThumbnail(string filePath) {
+			ShellFile shellFile = ShellFile.FromFilePath(filePath);
+			Bitmap thumb = shellFile.Thumbnail.ExtraLargeBitmap;
+			return thumb;
 		}
 	}
 }
