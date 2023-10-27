@@ -11,6 +11,11 @@ const StyledTabItem = styled.button.attrs({
 	width: -webkit-fill-available;
 	min-height: 40px;
 	position: relative;
+	overflow: hidden;
+
+	&.collapsed {
+		width: 48px;
+	}
 
 	&:hover,
 	&.active {
@@ -51,22 +56,38 @@ const TabItem: FC<{
 	id: string;
 	/** 是否活跃状态？ */
 	active?: boolean;
-}, HTMLButtonElement> = ({ icon, children, active, id: _id, ...htmlAttrs }) => {
-	const textRef = useRef<HTMLDivElement>(null);
-	const [showText, setShowText] = useState(true);
-	const [onEnter, onExit] = simpleAnimateSize(textRef, "width");
+	/** 是否隐藏文本标签，仅显示图标？ */
+	collapsed?: boolean;
+}, HTMLButtonElement> = ({ icon, children, active, collapsed, id: _id, ...htmlAttrs }) => {
+	const tabItemRef = useRef<HTMLButtonElement>(null);
 
-	useEventListener(window, "resize", () => {
-		setShowText(window.innerWidth >= 865);
-	});
+	const onEnter = async () => {
+		const el = tabItemRef.current;
+		if (!el) return;
+		await animateSize(el, () => el.classList.toggle("collapsed", false));
+		el.dispatchEvent(new Event("transitionend"));
+	};
+
+	const onExit = async () => {
+		const el = tabItemRef.current;
+		if (!el) return;
+		await animateSize(el, () => el.classList.toggle("collapsed", true));
+		el.dispatchEvent(new Event("transitionend"));
+	};
 
 	return (
-		<StyledTabItem tabIndex={0} {...htmlAttrs} className={classNames({ active })}>
-			<Icon name={icon} />
-			<Transition nodeRef={textRef} in={showText} addEndListener={endListener(textRef)} onEnter={onEnter} onExit={onExit} unmountOnExit>
-				<div className="text" ref={textRef}>{children}</div>
-			</Transition>
-		</StyledTabItem>
+		<Transition
+			nodeRef={tabItemRef}
+			in={!collapsed}
+			addEndListener={endListener(tabItemRef)}
+			onEnter={onEnter}
+			onExit={onExit}
+		>
+			<StyledTabItem ref={tabItemRef} tabIndex={0} {...htmlAttrs} className={classNames({ active })}>
+				<Icon name={icon} />
+				<div className="text">{children}</div>
+			</StyledTabItem>
+		</Transition>
 	);
 };
 

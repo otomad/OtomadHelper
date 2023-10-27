@@ -52,12 +52,16 @@ const StyledTabBar = styled.div`
 `;
 
 interface Prop<T> {
+	/** 当前选中项标识符。 */
 	current: StateProperty<T>;
+	/** 选项卡项目。 */
 	children?: ReactNode;
+	/** 是否隐藏文本标签，仅显示图标？ */
+	collapsed?: boolean;
 }
 
 const TabBar: <T extends string = string>(p: Prop<T>) => ReactElement<Prop<T>> =
-	({ current: [current, setCurrent], children }) => {
+	({ current: [current, setCurrent], collapsed, children }) => {
 		type T = typeof current;
 		const indicator = useRef<HTMLDivElement>(null);
 		const [position, _setPosition] = useState<TwoD>([NaN, NaN]);
@@ -127,6 +131,7 @@ const TabBar: <T extends string = string>(p: Prop<T>) => ReactElement<Prop<T>> =
 						const id = child.props.id as T;
 						return (
 							React.cloneElement(child, {
+								collapsed,
 								active: current === id,
 								onClick: () => setCurrent(id),
 							})

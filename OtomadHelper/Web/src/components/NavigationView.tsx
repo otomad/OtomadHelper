@@ -1,26 +1,26 @@
-const StyledNavButton = styled(Button)`
+const NavButton = styled(Button).attrs({
+	lite: true,
+	icon: "global_nav_button",
+}) <{
+	/** 是否是影子？ */
+	$shadow: boolean;
+}>`
 	width: 48px;
 	height: 40px;
 	margin: 3px 5px;
-	background-color: transparent;
-	border: none !important;
 	min-width: unset;
-	font-size: 16px;
+	z-index: 10;
 
-	.icon {
-		display: block;
-	}
+	${({ $shadow }) => $shadow ? css`
+		visibility: hidden;
+	` : css`
+		position: fixed;
+	`}
 `;
 
-const NavButton: FC<{}, HTMLButtonElement> = ({ ...htmlAttrs }) => {
-	return (
-		<StyledNavButton icon="global_nav_button" {...htmlAttrs} />
-	);
-};
-
 const CONTENT_MARGIN_X = 56;
-// 865 670
 const TITLE_LINE_HEIGHT = 40;
+const COMPACT_WIDTH = 58;
 
 const StyledNavigationView = styled.div`
 	${styles.mixins.square("100%")};
@@ -33,6 +33,7 @@ const StyledNavigationView = styled.div`
 
 	.left {
 		width: 320px;
+		height: 100%;
 		flex-shrink: 0;
 
 		> * {
@@ -47,6 +48,32 @@ const StyledNavigationView = styled.div`
 			&.overflowing {
 				border-bottom: 1px solid ${c("white", 8)};
 			}
+		}
+
+		.nav-items,
+		.nav-items-bottom {
+			overflow-x: hidden;
+		}
+
+		&.compact {
+			width: ${COMPACT_WIDTH}px;
+		}
+
+		&.minimal {
+			width: 0;
+
+			&:not(.flyout) {
+				translate: -${COMPACT_WIDTH}px;
+			}
+		}
+
+		&.flyout {
+			position: fixed;
+			border-radius: 0 7px 7px 0;
+			background-color: ${c("white", 3)};
+			box-shadow: 0 8px 16px ${c("black", 26)};
+			backdrop-filter: blur(10px);
+			z-index: 1;
 		}
 	}
 
@@ -135,6 +162,50 @@ const StyledPage = styled.main`
 	}
 `;
 
+const NavigationViewLeftPanel: FC<{
+	paneDisplayMode: PaneDisplayMode;
+	customContent?: ReactNode;
+	currentNavTab: StateProperty<string>;
+	navItems: (NavItem | NavBrItem)[];
+	flyout?: boolean;
+}> = ({ paneDisplayMode, customContent, currentNavTab, navItems, flyout }) => {
+	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
+	const navItemsRef = useRef<HTMLDivElement>(null);
+
+	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
+		if ("type" in item) return item.type === "hr" ? <hr key={index} /> : undefined;
+		const { text, icon, id } = item;
+		return <TabItem key={id} id={id} icon={icon || "placeholder"}>{text}</TabItem>;
+	}, []);
+
+	useEventListener(window, "resize", () => {
+		const navItems = navItemsRef.current;
+		if (!navItems) return;
+		setIsNavItemsOverflowing(navItems.scrollHeight !== navItems.offsetHeight);
+	}, { immediate: true });
+
+	return (
+		<div className={classNames(["left", paneDisplayMode, { flyout }])}>
+			<NavButton $shadow />
+			<div ref={navItemsRef} className={classNames(["nav-items", { overflowing: isNavItemsOverflowing }])}>
+				{customContent}
+				<TabBar current={currentNavTab} collapsed={paneDisplayMode === "compact"}>
+					{navItems.map((item, index) => {
+						if (!item.bottom) return getNavItemNode(item, index);
+					})}
+				</TabBar>
+			</div>
+			<div className="nav-items-bottom">
+				<TabBar current={currentNavTab} collapsed={paneDisplayMode === "compact"}>
+					{navItems.map((item, index) => {
+						if (item.bottom) return getNavItemNode(item, index);
+					})}
+				</TabBar>
+			</div>
+		</div>
+	);
+};
+
 interface NavItem {
 	/** 标签文本。 */
 	text: string;
@@ -153,6 +224,16 @@ interface NavBrItem {
 	bottom ?: boolean;
 }
 
+type PaneDisplayMode = "expanded" | "compact" | "minimal";
+const getPaneDisplayMode = (): PaneDisplayMode =>
+	window.innerWidth < 670 ? "minimal" :
+	window.innerWidth < 865 ? "compact" : "expanded";
+const usePaneDisplayMode = () => {
+	const [paneDisplayMode, setPaneDisplayMode] = useState<PaneDisplayMode>(getPaneDisplayMode());
+	useEventListener(window, "resize", () => setPaneDisplayMode(getPaneDisplayMode()));
+	return paneDisplayMode;
+};
+
 const NavigationView: FC<{
 	/** 当前导航页状态参数。 */
 	currentNav: StateProperty<string[]>;
@@ -163,52 +244,49 @@ const NavigationView: FC<{
 	/** 自定义区域。 */
 	customContent?: ReactNode;
 }> = ({ currentNav, navItems = [], titles, children, customContent }) => {
-	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
-	const navItemsRef = useRef<HTMLDivElement>(null);
 	const currentNavTab = useMemo(() => Tuple(currentNav[0][0], (value: string) => currentNav[1]([value])), [currentNav]) as StateProperty<string>;
 	const pagePath = currentNav.join("/");
+	const responsive = usePaneDisplayMode();
+	const [flyoutDisplayMode, setFlyoutDisplayMode] = useState<PaneDisplayMode>("minimal");
+	const [isExpandedInExpandedMode, setIsExpandedInExpandedMode] = useState(true);
+	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
+		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 
 	const currentNavItem = useMemo(() =>
 		navItems.find(item => !("type" in item) && item.id === currentNavTab[0]) as NavItem,
 	[currentNav, navItems]);
 	titles ??= [currentNavItem?.text ?? ""];
 
-	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
-		if ("type" in item) return item.type === "hr" ? <hr key={index} /> : undefined;
-		const { text, icon, id } = item;
-		return <TabItem key={id} id={id} icon={icon || "placeholder"}>{text}</TabItem>;
-	}, []);
-
 	const previousPageTitleKey = useRef<typeof pageTitleKey>();
 	const pageTitleKey: [string, number] = [currentNavItem?.id ?? "", new Date().valueOf()];
 	if (pageTitleKey[0] === previousPageTitleKey.current?.[0]) pageTitleKey[1] = previousPageTitleKey.current?.[1];
 	previousPageTitleKey.current = pageTitleKey;
 
-	useEventListener(window, "resize", () => {
-		const navItems = navItemsRef.current;
-		if (!navItems) return;
-		setIsNavItemsOverflowing(navItems.scrollHeight !== navItems.offsetHeight);
-	}, { immediate: true });
+	const onNavButtonClick = useCallback(() => {
+		responsive === "expanded" ?
+			setIsExpandedInExpandedMode(expanded => !expanded) :
+			setFlyoutDisplayMode(mode => mode === "expanded" ? "minimal" : "expanded");
+	}, [responsive, flyoutDisplayMode, isExpandedInExpandedMode]);
+	const onRightClick = useCallback(() => void (flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal")), [flyoutDisplayMode]);
+	useEffect(onRightClick, [currentNav, responsive]);
 
 	return (
 		<StyledNavigationView>
-			<div className="left">
-				<NavButton />
-				<div ref={navItemsRef} className={classNames(["nav-items", { overflowing: isNavItemsOverflowing }])}>
-					{customContent}
-					<TabBar current={currentNavTab}>
-						{navItems.map((item, index) => {
-							if (!item.bottom) return getNavItemNode(item, index);
-						})}
-					</TabBar>
-				</div>
-				<TabBar current={currentNavTab}>
-					{navItems.map((item, index) => {
-						if (item.bottom) return getNavItemNode(item, index);
-					})}
-				</TabBar>
-			</div>
-			<div className={classNames(["right", "hairtail"])}>
+			<NavButton onClick={onNavButtonClick} />
+			{forMap(2, i => {
+				const isFlyout = i === 2;
+				return (
+					<NavigationViewLeftPanel
+						key={i}
+						paneDisplayMode={isFlyout ? flyoutDisplayMode : paneDisplayMode}
+						currentNavTab={currentNavTab}
+						navItems={navItems}
+						customContent={customContent}
+						flyout={isFlyout}
+					/>
+				);
+			})}
+			<div className={classNames(["right", "hairtail"])} onClick={onRightClick}>
 				<div className="title-wrapper">
 					<TransitionGroup>
 						<CssTransition key={pageTitleKey.join()}>

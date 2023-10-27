@@ -16,10 +16,10 @@ index 90d17cc..4347a34 100644
 +++ b/node_modules/babel-plugin-styled-components/lib/utils/getName.js
 @@ -46,6 +46,7 @@ var _default = t => path => {
    }
- 
+
    // identifiers are the only thing we can reliably get a name from
 -  return t.isIdentifier(namedNode) ? namedNode.name : undefined;
 +  const name = t.isIdentifier(namedNode) ? namedNode.name : undefined;
-+  return name.replace(/^Styled(?=[A-Z0-9])/, "").replace(/(?<!^)([A-Z])/, "-$1").toLowerCase();
++  return name.replaceAll(/^Styled(?=[A-Z0-9])/g, "").replaceAll(/(?<!^)([A-Z])/g, "-$1").toLowerCase();
  };
  exports.default = _default;

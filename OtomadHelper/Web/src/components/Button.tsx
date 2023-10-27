@@ -44,14 +44,21 @@ const StyledButton = styled.button.attrs({
 			display: none;
 		}
 	}
+
+	${({ $lite }) => $lite && css`
+		background-color: transparent;
+		border: none !important;
+	`}
 `;
 
 const Button: FC<{
 	/** 按钮图标。 */
 	icon?: string;
-}, HTMLButtonElement> = ({ children, icon, ...htmlAttrs }) => {
+	/** 是否使用无背景按钮？ */
+	lite?: boolean;
+}, HTMLButtonElement> = ({ children, icon, lite, ...htmlAttrs }) => {
 	return (
-		<StyledButton {...htmlAttrs}>
+		<StyledButton $lite={lite} {...htmlAttrs}>
 			<div className="base">
 				{icon && <Icon name={icon} />}
 				<span>{children}</span>
