@@ -32,7 +32,7 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	:focus-visible {
-		box-shadow: 0 0 0 3px white;
+		${styles.effects.focus()};
 	}
 
 	html,

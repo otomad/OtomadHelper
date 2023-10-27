@@ -7,7 +7,7 @@ const NavButton = styled(Button).attrs({
 }>`
 	width: 48px;
 	height: 40px;
-	margin: 3px 5px;
+	margin: 3px 5px 0;
 	min-width: unset;
 	z-index: 10;
 

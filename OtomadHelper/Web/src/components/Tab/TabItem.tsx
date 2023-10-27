@@ -11,7 +11,7 @@ const StyledTabItem = styled.button.attrs({
 	width: -webkit-fill-available;
 	min-height: 40px;
 	position: relative;
-	overflow: hidden;
+	overflow-x: hidden;
 
 	&.collapsed {
 		width: 48px;
@@ -39,13 +39,6 @@ const StyledTabItem = styled.button.attrs({
 	.text {
 		white-space: nowrap;
 		line-height: 20px;
-	}
-
-	// 允许点击元素外边距。
-	&::before {
-		content: "";
-		position: absolute;
-		inset: -1.5px 0;
 	}
 `;
 

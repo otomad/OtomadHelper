@@ -3,12 +3,14 @@
  */
 
 import eases from "../styles/eases";
+import effects from "../styles/effects";
 import mixins from "../styles/mixins";
 
 export { eases };
 
 export const styles = {
 	mixins,
+	effects,
 };
 
 /**
