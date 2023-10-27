@@ -267,8 +267,9 @@ const NavigationView: FC<{
 			setIsExpandedInExpandedMode(expanded => !expanded) :
 			setFlyoutDisplayMode(mode => mode === "expanded" ? "minimal" : "expanded");
 	}, [responsive, flyoutDisplayMode, isExpandedInExpandedMode]);
-	const onRightClick = useCallback(() => void (flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal")), [flyoutDisplayMode]);
-	useEffect(onRightClick, [currentNav, responsive]);
+	const hideFlyoutNavMenu = useCallback(() => void (flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal")), [flyoutDisplayMode]);
+	useEffect(hideFlyoutNavMenu, [currentNav]);
+	useEventListener(window, "resize", () => hideFlyoutNavMenu(), undefined, [hideFlyoutNavMenu]);
 
 	return (
 		<StyledNavigationView>
@@ -286,7 +287,10 @@ const NavigationView: FC<{
 					/>
 				);
 			})}
-			<div className={classNames(["right", "hairtail"])} onClick={onRightClick}>
+			<div
+				className={classNames(["right", "hairtail", { minimal: paneDisplayMode === "minimal" }])}
+				onClick={hideFlyoutNavMenu}
+			>
 				<div className="title-wrapper">
 					<TransitionGroup>
 						<CssTransition key={pageTitleKey.join()}>
