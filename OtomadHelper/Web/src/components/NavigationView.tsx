@@ -266,7 +266,7 @@ const NavigationView: FC<{
 	/** 自定义区域。 */
 	customContent?: ReactNode;
 }> = ({ currentNav, navItems = [], titles, children, customContent }) => {
-	const currentNavTab = useMemo(() => Tuple(currentNav[0][0], (value: string) => currentNav[1]([value])), [currentNav]) as StateProperty<string>;
+	const currentNavTab = useStateSelector(currentNav, nav => nav[0], value => [value]);
 	const pagePath = currentNav.join("/");
 	const responsive = usePaneDisplayMode();
 	const [flyoutDisplayMode, setFlyoutDisplayMode] = useState<PaneDisplayMode>("minimal");

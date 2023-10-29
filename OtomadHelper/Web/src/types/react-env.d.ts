@@ -1,6 +1,7 @@
 import _reduxjsToolkit from "@reduxjs/toolkit";
 import _react from "react";
 import _reactTransitionGroup from "react-transition-group";
+import { StoreApi, UseBoundStore } from "zustand";
 
 declare global {
 	/**
@@ -30,7 +31,12 @@ declare global {
 	 */
 	export type PropsOf<C> = C extends React.FC<infer P> ? P : never;
 
-	export { PayloadAction } from "@reduxjs/toolkit";
+	/**
+	 * 获取 Zustand 状态管理的参数类型。
+	 * @template S - Zustand 存储对象。
+	 */
+	export type ZustandState<S> = S extends UseBoundStore<StoreApi<infer T>> ? T : never;
+
 	export { CSSProperties, ChangeEvent, ChangeEventHandler, DependencyList, EventHandler, MouseEventHandler, ReactElement, ReactNode, RefObject } from "react";
 	export { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 }

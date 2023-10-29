@@ -1,3 +1,5 @@
+import { initColorMode } from "helpers/color-mode";
+
 const DEV = true;
 
 /**
@@ -5,10 +7,7 @@ const DEV = true;
  */
 export default function initial() {
 	// #region 配色方案
-	const changeColorScheme = (isLight: boolean) => document.documentElement.dataset.scheme = isLight ? "light" : "dark";
-	const lightModePreference = window.matchMedia("(prefers-color-scheme: light)");
-	lightModePreference.addEventListener("change", e => changeColorScheme(e.matches));
-	changeColorScheme(lightModePreference.matches);
+	initColorMode();
 	// #endregion
 
 	if (!DEV) {

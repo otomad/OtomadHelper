@@ -1,4 +1,3 @@
-
 /**
  * 创建一个重复指定次数对象的数组，用于循环创建组件。
  * 但是只需关心循环次数，不关心数组的内容。
@@ -12,6 +11,14 @@ export function forMap<T>(length: number, callback: (index: number) => T, flat: 
 	const mapAction = (flat ? "flatMap" : "map") as "map";
 	return Array<void>(length).fill(undefined)[mapAction]((_, index) => callback(index + 1));
 }
+
+/**
+ * 判断对象是否包含该键名，同时对类型捍卫。
+ * @param obj - 对象。
+ * @param k - 键名。
+ * @returns 对象是否包含该键名。
+ */
+export const hasKey = <T extends object>(obj: T, k: keyof Any): k is keyof T => k in obj;
 
 /**
  * 对 useState 中的 setter 函数进行拦截。
@@ -29,24 +36,16 @@ export function setStateInterceptor<T>(setter: SetState<T>, interceptor: (userIn
 }
 
 /**
- * 判断对象是否包含该键名，同时对类型捍卫。
- * @param obj - 对象。
- * @param k - 键名。
- * @returns 对象是否包含该键名。
- */
-export const hasKey = <T extends object>(obj: T, k: keyof Any): k is keyof T => k in obj;
-
-/**
  * 将原 useState 映射到例如其子属性上的新属性。
  * @param stateProperty - 原 useState。
  * @param getter - 映射到新的 getter。
  * @param setter - 映射到新的 setter。
  * @returns - 新的 useState。
  */
-export function useStateSelector<T, U>(stateProperty: StateProperty<T>, getter: (original: T) => U, setter: (original: SetState<T>) => SetState<U>) {
+export function useStateSelector<T, U>(stateProperty: StateProperty<T>, getter: (original: T) => U, setter: (userInput: U) => T) {
 	return [
 		getter(stateProperty[0]),
-		setter(stateProperty[1]),
+		setStateInterceptor(stateProperty[1], setter),
 	] as StateProperty<U>;
 }
 

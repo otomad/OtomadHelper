@@ -32,6 +32,7 @@
 			"stores/*": ["src/stores/*"],
 			"hooks/*": ["src/hooks/*"],
 			"contexts/*": ["src/contexts/*"],
+			"helpers/*": ["src/helpers/*"],
 		},
 		"plugins": [
 			{

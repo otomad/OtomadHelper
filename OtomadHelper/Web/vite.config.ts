@@ -55,6 +55,12 @@ export default defineConfig({
 					"react-i18next": [
 						"useTranslation",
 					],
+					"zustand": [
+						["create", "createStore"],
+					],
+					"zustand/middleware": [
+						"persist",
+					],
 				},
 			],
 			dirs: [
