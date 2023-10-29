@@ -133,9 +133,13 @@ const SettingsCard: FC<{
 	trailingIcon?: string;
 	/** 组件形态。 */
 	type?: "container" | "button" | "expander";
-}, HTMLElement> = ({ icon = "placeholder", heading, caption, trailingIcon = "chevron_right", children, type = "container", ...htmlAttrs }) => {
+}, HTMLElement> = ({ icon = "placeholder", heading, caption, trailingIcon = "chevron_right", children, type = "container", className, ...htmlAttrs }) => {
 	return (
-		<StyledSettingsCard as={type === "container" ? "div" : "button"} className={type} {...htmlAttrs}>
+		<StyledSettingsCard
+			as={type === "container" ? "div" : "button"}
+			className={classNames([className, type])}
+			{...htmlAttrs}
+		>
 			<Icon name={icon} />
 			<div className="text">
 				<div className="heading">{heading}</div>
