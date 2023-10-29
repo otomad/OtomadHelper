@@ -1,3 +1,4 @@
+import type { RuleSet } from "styled-components";
 import { setBorderRadius, type BorderRadiusPosition } from "./internal";
 
 export default {
@@ -40,4 +41,31 @@ export default {
 	 */
 	circle: (position: BorderRadiusPosition = "full") =>
 		setBorderRadius("100%", position),
+	/**
+	 * 创建一个渐变色的边框。
+	 * @param gradient - 渐变色。
+	 * @param borderWidth - 边框宽度。
+	 */
+	gradientBorder: (gradient: string | RuleSet<object>, borderWidth: number | string = "1px") => {
+		if (typeof borderWidth === "number") borderWidth = borderWidth + "px";
+		return css`
+			position: relative;
+			padding: ${borderWidth};
+
+			&::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				border-width: ${borderWidth};
+				border-style: solid;
+				border-color: transparent;
+				background: ${gradient} border-box;
+				-webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+				-webkit-mask-composite: xor;
+				mask-composite: exclude;
+				pointer-events: none;
+			}
+		`;
+	},
 };

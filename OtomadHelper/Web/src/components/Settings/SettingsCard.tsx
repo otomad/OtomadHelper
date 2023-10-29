@@ -54,7 +54,9 @@ const StyledSettingsCard = styled.div`
 			outline: 1px solid ${c("white", 7)};
 			background-color: ${c("white", 3)};
 
-			> * {
+			> .icon,
+			> .text,
+			&.button .trailing-icon {
 				opacity: 0.79;
 			}
 		}

@@ -22,9 +22,17 @@ export const styles = {
 export function c(cssVarName: string & {} | "white" | "black", alpha?: number) {
 	if (alpha !== undefined && (alpha < 0 || alpha > 100))
 		throw RangeError("The alpha parameter should be in range [0, 100]");
-	if (cssVarName === "white" || cssVarName === "black")
+	if (cssVarName === "white" || cssVarName === "black" || cssVarName.startsWith("#")) {
+		let rgb = (cssVarName === "white" ? "f" : "0").repeat(6);
+		if (cssVarName.startsWith("#")) {
+			cssVarName = cssVarName.slice(1);
+			if (cssVarName.length === 6) rgb = cssVarName;
+			else if (cssVarName.length === 3) rgb = Array.from("001122", i => cssVarName[+i]).join("");
+			else throw new RangeError("The color hex string length must be 3 or 6");
+		}
 		return alpha === undefined ? cssVarName :
-			"#" + (cssVarName === "white" ? "f" : "0").repeat(6) + Math.round(alpha / 100 * 255).toString(16).padStart(2, "0");
+			"#" + rgb + Math.round(alpha / 100 * 255).toString(16).padStart(2, "0");
+	}
 	return alpha === undefined ? `var(--${cssVarName})` :
 		`rgba(var(--${cssVarName}-rgb), ${alpha}%)`;
 }

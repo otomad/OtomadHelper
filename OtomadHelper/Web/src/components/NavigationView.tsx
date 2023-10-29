@@ -1,5 +1,5 @@
 const NavButton = styled(Button).attrs({
-	lite: true,
+	subtle: true,
 	icon: "global_nav_button",
 }) <{
 	/** 是否是影子？ */
@@ -89,8 +89,8 @@ const StyledNavigationView = styled.div`
 		width: 100%;
 
 		&.hairtail {
-			.title-wrapper,
-			.content {
+			> .title-wrapper,
+			> .content {
 				scrollbar-gutter: stable;
 
 				> * {
