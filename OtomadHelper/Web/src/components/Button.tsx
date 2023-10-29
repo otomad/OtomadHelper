@@ -52,33 +52,6 @@ const StyledButton = styled.button.attrs({
 		}
 	}
 
-	/* &:hover {
-		background-color: ${c("white", 8)};
-	}
-
-	&:active {
-		outline: 1px solid ${c("white", 7)};
-		background-color: ${c("white", 3)};
-
-		> .base {
-			opacity: 0.79;
-		}
-	}
-
-	&,
-	&:focus {
-		outline: 1px solid ${c("white", 9)};
-	}
-
-	&[disabled] {
-		outline: 1px solid ${c("white", 7)};
-		background-color: ${c("white", 4)};
-
-		> .base {
-			opacity: 0.36;
-		}
-	} */
-
 	${ifColorScheme.light} & {
 		${boxShadow(c("black", 5.78))};
 

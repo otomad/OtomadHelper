@@ -54,7 +54,11 @@ const StyledNavigationView = styled.div`
 			overflow-y: auto;
 
 			&.overflowing {
-				border-bottom: 1px solid ${c("white", 8)};
+				border-bottom: 1px solid ${c("white", 8.37)};
+				
+				${ifColorScheme.light} & {
+					border-bottom-color: ${c("black", 8.03)};
+				}
 			}
 		}
 
@@ -208,8 +212,8 @@ const NavigationViewLeftPanel: FC<{
 	useEventListener(window, "resize", () => {
 		const navItems = navItemsRef.current;
 		if (!navItems) return;
-		setIsNavItemsOverflowing(navItems.scrollHeight !== navItems.offsetHeight);
-	}, { immediate: true });
+		setIsNavItemsOverflowing(navItems.scrollHeight > navItems.offsetHeight);
+	}, { immediate: true }, [navItemsRef]);
 
 	return (
 		<div className={classNames(["left", paneDisplayMode, { flyout }])}>

@@ -22,7 +22,11 @@ const StyledSettingsCard = styled.div`
 
 		.caption {
 			font-size: 12px;
-			color: ${c("white", 79)};
+			color: ${c("white", 78.6)};
+
+			${ifColorScheme.light} & {
+				color: ${c("black", 60.63)};
+			}
 		}
 	}
 
@@ -44,20 +48,45 @@ const StyledSettingsCard = styled.div`
 		outline: 1px solid ${c("black", 10)};
 	}
 
+	${ifColorScheme.light} & {
+		background-color: ${c("white", 70)};
+
+		&,
+		&:focus {
+			outline: 1px solid ${c("black", 5.78)};
+		}
+	}
+
 	button& {
 		&:hover {
-			outline: 1px solid ${c("white", 9)};
-			background-color: ${c("white", 8)};
+			outline-color: ${c("white", 6.98)};
+			background-color: ${c("white", 8.37)};
 		}
 
 		&:active {
-			outline: 1px solid ${c("white", 7)};
+			outline-color: ${c("white", 6.98)};
 			background-color: ${c("white", 3)};
 
 			> .icon,
 			> .text,
 			&.button .trailing-icon {
-				opacity: 0.79;
+				opacity: 0.786;
+
+				${ifColorScheme.light} & {
+					opacity: 0.6063;
+				}
+			}
+		}
+
+		${ifColorScheme.light} & {
+			&:hover {
+				outline-color: ${c("black", 5.78)};
+				background-color: ${c("#f9f9f9", 50)};
+			}
+
+			&:active {
+				outline-color: ${c("black", 5.78)};
+				background-color: ${c("#f9f9f9", 30)};
 			}
 		}
 	}
@@ -65,14 +94,29 @@ const StyledSettingsCard = styled.div`
 	&.expander {
 		&:hover {
 			.trailing-icon {
-				background-color: ${c("white", 6)};
+				background-color: ${c("white", 6.05)};
 			}
 		}
 
 		&:active {
 			.trailing-icon {
-				background-color: ${c("white", 4)};
-				color: ${c("white", 79)};
+				background-color: ${c("white", 4.19)};
+				color: ${c("white", 78.6)};
+			}
+		}
+
+		${ifColorScheme.light} & {
+			&:hover {
+				.trailing-icon {
+					background-color: ${c("black", 3.73)};
+				}
+			}
+
+			&:active {
+				.trailing-icon {
+					background-color: ${c("black", 2.41)};
+					color: ${c("black", 60.63)};
+				}
 			}
 		}
 	}
