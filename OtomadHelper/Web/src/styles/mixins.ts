@@ -1,4 +1,4 @@
-import { BorderRadiusPosition, setBorderRadius } from "./internal";
+import { setBorderRadius, type BorderRadiusPosition } from "./internal";
 
 export default {
 	/**

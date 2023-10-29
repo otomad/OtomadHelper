@@ -10,11 +10,20 @@ const GlobalStyle = createGlobalStyle<{
 	@layer base, theme, layout, props, utilities, components, special;
 
 	:root {
-		--background-color: #2d2d2d;
+		/* --background-color: #2d2d2d;
 		--foreground-color: white;
-		/* --press-color: #636363; */
 		--accent-color: #14b2ff;
-		/* --border-color: #2a2a2a; */
+		--press-color: #636363;
+		--border-color: #2a2a2a; */
+		--background-color: #202020;
+		--foreground-color: white;
+		--accent-color: #60cdff;
+	}
+
+	:root${ifColorScheme.light} {
+		--background-color: #f3f3f3;
+		--foreground-color: #000000e5;
+		--accent-color: #005fb8;
 	}
 
 	*,
@@ -28,7 +37,7 @@ const GlobalStyle = createGlobalStyle<{
 
 	:focus,
 	:focus-visible {
-		outline: none !important;
+		outline: none;
 	}
 
 	:focus-visible {

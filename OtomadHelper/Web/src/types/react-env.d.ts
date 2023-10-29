@@ -24,6 +24,12 @@ declare global {
 	export type StateProperty<T> = [T, SetState<T>];
 	// | (T extends unknown[] ? never : T)
 
+	/**
+	 * 获取 React 组件的 Props。
+	 * @template C - React 函数组件。
+	 */
+	export type PropsOf<C> = C extends React.FC<infer P> ? P : never;
+
 	export { PayloadAction } from "@reduxjs/toolkit";
 	export { CSSProperties, ChangeEvent, ChangeEventHandler, DependencyList, EventHandler, MouseEventHandler, ReactElement, ReactNode, RefObject } from "react";
 	export { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。

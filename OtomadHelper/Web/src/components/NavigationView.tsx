@@ -7,7 +7,7 @@ const NavButton = styled(Button).attrs({
 }>`
 	width: 48px;
 	height: 40px;
-	margin: 3px 5px 0;
+	margin: 4px 5px 1px;
 	min-width: unset;
 	z-index: 10;
 
@@ -16,6 +16,13 @@ const NavButton = styled(Button).attrs({
 	` : css`
 		position: fixed;
 	`}
+`;
+
+const floatUp = keyframes`
+	from {
+		opacity: 0;
+		translate: 0 1rem;
+	}
 `;
 
 const CONTENT_MARGIN_X = 56;
@@ -35,6 +42,7 @@ const StyledNavigationView = styled.div`
 		width: 320px;
 		height: 100%;
 		flex-shrink: 0;
+		padding-bottom: 4px;
 
 		> * {
 			flex-shrink: 0;
@@ -132,6 +140,19 @@ const StyledNavigationView = styled.div`
 			&:has(.enter, .exit) {
 				overflow-y: hidden;
 			}
+
+			> * > .container {
+				margin-top: 2px;
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+
+				${forMap(20, i => css`
+					> :nth-child(${i}) {
+						animation: ${floatUp} 400ms ${125 * (i - 1)}ms ${eases.easeOutMax} backwards;
+					}
+				`)}
+			}
 		}
 
 		.title-wrapper,
@@ -164,19 +185,20 @@ const StyledPage = styled.main`
 
 const NavigationViewLeftPanel: FC<{
 	paneDisplayMode: PaneDisplayMode;
+	isFlyoutShown: boolean;
 	customContent?: ReactNode;
 	currentNavTab: StateProperty<string>;
 	navItems: (NavItem | NavBrItem)[];
-	flyout?: boolean;
-}> = ({ paneDisplayMode, customContent, currentNavTab, navItems, flyout }) => {
+	flyout: boolean;
+}> = ({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, flyout }) => {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
 	const navItemsRef = useRef<HTMLDivElement>(null);
 
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
 		if ("type" in item) return item.type === "hr" ? <hr key={index} /> : undefined;
 		const { text, icon, id } = item;
-		return <TabItem key={id} id={id} icon={icon || "placeholder"}>{text}</TabItem>;
-	}, []);
+		return <TabItem key={id} id={id} icon={icon || "placeholder"} focusable={isFlyoutShown === flyout}>{text}</TabItem>;
+	}, [isFlyoutShown]);
 
 	useEventListener(window, "resize", () => {
 		const navItems = navItemsRef.current;
@@ -280,6 +302,7 @@ const NavigationView: FC<{
 					<NavigationViewLeftPanel
 						key={i}
 						paneDisplayMode={isFlyout ? flyoutDisplayMode : paneDisplayMode}
+						isFlyoutShown={flyoutDisplayMode !== "minimal"}
 						currentNavTab={currentNavTab}
 						navItems={navItems}
 						customContent={customContent}

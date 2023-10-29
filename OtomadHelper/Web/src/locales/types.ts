@@ -1,4 +1,4 @@
-import { TOptions } from "i18next";
+import type { TOptions } from "i18next";
 import English from "./English";
 
 export type I18nArgsFunction<R extends string = string> = {

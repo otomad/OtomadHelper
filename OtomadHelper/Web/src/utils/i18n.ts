@@ -1,6 +1,6 @@
-import { TOptions } from "i18next";
+import type { TOptions } from "i18next";
 import translation from "locales/config";
-import { LocaleWithDefaultValue } from "locales/types";
+import type { LocaleWithDefaultValue } from "locales/types";
 
 const getProxy = (target: object) =>
 	new Proxy(target, {

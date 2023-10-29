@@ -11,7 +11,7 @@ export default css`
 			font-family: inherit;
 			background: none;
 			border: none;
-			outline: none !important;
+			outline: none;
 			cursor: pointer;
 			appearance: none;
 			color: inherit;

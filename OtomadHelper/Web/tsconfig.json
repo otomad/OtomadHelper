@@ -39,6 +39,7 @@
 				"validate": false,
 			}
 		],
+		"verbatimModuleSyntax": true,
 	},
 	"include": [
 		"src",

@@ -19,7 +19,7 @@ export const styles = {
  * @param alpha - Alpha 值，注意是百分比值而不是零到一之间的小数，如果留空表示不透明色。
  * @returns 返回由 var 调用的自定义属性纯色，或 rgba 封装的透明色。
  */
-export function c(cssVarName: string, alpha?: number) {
+export function c(cssVarName: string & {} | "white" | "black", alpha?: number) {
 	if (alpha !== undefined && (alpha < 0 || alpha > 100))
 		throw RangeError("The alpha parameter should be in range [0, 100]");
 	if (cssVarName === "white" || cssVarName === "black")
@@ -28,3 +28,8 @@ export function c(cssVarName: string, alpha?: number) {
 	return alpha === undefined ? `var(--${cssVarName})` :
 		`rgba(var(--${cssVarName}-rgb), ${alpha}%)`;
 }
+
+export const ifColorScheme = {
+	light: '[data-scheme="light"]',
+	dark: '[data-scheme="dark"]',
+};

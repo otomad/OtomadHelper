@@ -1,4 +1,4 @@
-import { LocaleIdentifiers } from "./types";
+import type { LocaleIdentifiers } from "./types";
 
 const SChinese: LocaleIdentifiers = {
 	translation: {

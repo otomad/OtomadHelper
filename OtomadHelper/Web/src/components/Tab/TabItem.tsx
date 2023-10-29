@@ -1,8 +1,11 @@
+const StyledTabItemWrapper = styled.div`
+	padding: 1.5px 5px 1.5px;
+`;
+
 const StyledTabItem = styled.button.attrs({
 	type: "button",
 })`
 	border-radius: 3px;
-	margin: 3px 5px 4px;
 	display: flex;
 	align-items: center;
 	padding: 9px 16px 11px;
@@ -12,10 +15,6 @@ const StyledTabItem = styled.button.attrs({
 	min-height: 40px;
 	position: relative;
 	overflow-x: hidden;
-
-	&.collapsed {
-		width: 48px;
-	}
 
 	&:hover,
 	&.active {
@@ -51,7 +50,9 @@ const TabItem: FC<{
 	active?: boolean;
 	/** 是否隐藏文本标签，仅显示图标？ */
 	collapsed?: boolean;
-}, HTMLButtonElement> = ({ icon, children, active, collapsed, id: _id, ...htmlAttrs }) => {
+	/** 是否可被聚焦？ */
+	focusable?: boolean;
+}, HTMLElement> = ({ icon, children, active, collapsed, id: _id, focusable = true, ...htmlAttrs }) => {
 	const tabItemRef = useRef<HTMLButtonElement>(null);
 
 	const onEnter = async () => {
@@ -76,10 +77,12 @@ const TabItem: FC<{
 			onEnter={onEnter}
 			onExit={onExit}
 		>
-			<StyledTabItem ref={tabItemRef} tabIndex={0} {...htmlAttrs} className={classNames({ active })}>
-				<Icon name={icon} />
-				<div className="text">{children}</div>
-			</StyledTabItem>
+			<StyledTabItemWrapper {...htmlAttrs}>
+				<StyledTabItem ref={tabItemRef} tabIndex={focusable ? 0 : -1} {...htmlAttrs} className={classNames({ active })}>
+					<Icon name={icon} />
+					<div className="text">{children}</div>
+				</StyledTabItem>
+			</StyledTabItemWrapper>
 		</Transition>
 	);
 };

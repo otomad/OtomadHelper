@@ -7,8 +7,8 @@ const StyledButton = styled.button.attrs({
 	${styles.mixins.flexCenter()};
 	padding: 4px 11px 6px;
 	border-radius: 4px;
-	border: 1px solid ${c("white", 9)};
 	background-color: ${c("white", 6)};
+	margin: 1px;
 
 	@layer components {
 		min-width: 96px;
@@ -19,7 +19,7 @@ const StyledButton = styled.button.attrs({
 	}
 
 	&:active {
-		border: 1px solid ${c("white", 7)};
+		outline: 1px solid ${c("white", 7)};
 		background-color: ${c("white", 3)};
 
 		> .base {
@@ -27,8 +27,13 @@ const StyledButton = styled.button.attrs({
 		}
 	}
 
+	&,
+	&:focus {
+		outline: 1px solid ${c("white", 9)};
+	}
+
 	&[disabled] {
-		border: 1px solid ${c("white", 7)};
+		outline: 1px solid ${c("white", 7)};
 		background-color: ${c("white", 4)};
 
 		> .base {
@@ -47,7 +52,7 @@ const StyledButton = styled.button.attrs({
 
 	${({ $lite }) => $lite && css`
 		background-color: transparent;
-		border: none !important;
+		outline: none !important;
 	`}
 `;
 
