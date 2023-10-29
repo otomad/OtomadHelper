@@ -78,10 +78,15 @@ const StyledNavigationView = styled.div`
 		&.flyout {
 			position: fixed;
 			border-radius: 0 7px 7px 0;
-			background-color: ${c("white", 3)};
+			background-color: ${c("#2c2c2c", 96)};
 			box-shadow: 0 8px 16px ${c("black", 26)};
-			backdrop-filter: blur(10px);
+			backdrop-filter: blur(60px);
 			z-index: 1;
+
+			${ifColorScheme.light} & {
+				background-color: ${c("#fcfcfc", 85)};
+				box-shadow: 0 8px 16px ${c("black", 14)};
+			}
 		}
 	}
 

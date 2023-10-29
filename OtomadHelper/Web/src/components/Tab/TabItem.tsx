@@ -18,16 +18,32 @@ const StyledTabItem = styled.button.attrs({
 
 	&:hover,
 	&.active {
-		background-color: ${c("white", 6)};
+		background-color: ${c("white", 6.05)};
+
+		${ifColorScheme.light} & {
+			background-color: ${c("black", 3.73)};
+		}
 	}
 
 	&:not(.active):active,
 	&.active:not(:active):hover {
-		background-color: ${c("white", 4)};
+		background-color: ${c("white", 4.19)};
+
+		${ifColorScheme.light} & {
+			background-color: ${c("black", 2.41)};
+		}
 	}
 
 	&:active > * {
-		opacity: 0.79;
+		opacity: 0.786;
+
+		${ifColorScheme.light} & {
+			opacity: 0.6063;
+		}
+	}
+
+	${ifColorScheme.light} & {
+
 	}
 
 	.icon {
