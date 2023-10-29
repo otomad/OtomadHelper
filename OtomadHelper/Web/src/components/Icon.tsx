@@ -4,7 +4,7 @@ const squared = styles.mixins.square("1em");
 const StyledIcon = styled.span.attrs({
 	className: "icon",
 	role: "img",
-}) <{
+})<{
 	/** 是否保持图标本身的颜色？ */
 	$filled?: boolean;
 }>`

@@ -212,20 +212,22 @@ type SameOrDifferent<T> = T | undefined | [T | undefined, T | undefined];
 
 /**
  * `animateSize` 函数的简化版，适用于更为简单的动画。
+ * @param nodeRef - HTML DOM 元素。
  * @param specified - 显式指定需要动画的是哪个方向。默认为高度动画。
  * @param duration - 指定动画时间。
  * @param easing - 指定动画缓动曲线。
+ * @param enterOptions - 在进入动画时指定其它参数。
+ * @param exitOptions - 在退出动画时指定其它参数。
  * @returns 返回 `onEnter` 和 `onExit` 两个函数。
  */
-export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "width" | "height" = "height", duration?: SameOrDifferent<number>, easing?: SameOrDifferent<string>) {
-	type Options = Parameters<typeof animateSize>[2];
-	let enter: Options, exit: Options;
+export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "width" | "height" = "height", duration?: SameOrDifferent<number>, easing?: SameOrDifferent<string>, enterOptions: AnimateSizeOptions = {}, exitOptions: AnimateSizeOptions = {}) {
+	const enter = enterOptions, exit = exitOptions;
 	if (specified === "width") {
-		enter = { startWidth: 0 };
-		exit = { endWidth: 0 };
+		enter.startWidth = 0;
+		exit.endWidth = 0;
 	} else {
-		enter = { startHeight: 0 };
-		exit = { endHeight: 0 };
+		enter.startHeight = 0;
+		exit.endHeight = 0;
 	}
 	duration = duration instanceof Array ? duration : [duration, duration];
 	easing = easing instanceof Array ? easing : [easing, easing];

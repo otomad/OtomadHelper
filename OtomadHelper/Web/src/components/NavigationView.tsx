@@ -1,7 +1,7 @@
 const NavButton = styled(Button).attrs({
 	subtle: true,
 	icon: "global_nav_button",
-}) <{
+})<{
 	/** 是否是影子？ */
 	$shadow: boolean;
 }>`
