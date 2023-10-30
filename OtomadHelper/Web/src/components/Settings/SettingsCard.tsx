@@ -9,12 +9,20 @@ const StyledSettingsCard = styled.div`
 	width: -webkit-fill-available;
 	text-align: initial;
 
+	> :not(.text) {
+		flex-shrink: 0;
+	}
+
 	.icon {
 		font-size: 16px;
 	}
 
 	.text {
 		width: 100%;
+
+		> :empty {
+			display: none;
+		}
 
 		.heading {
 			font-size: 14px;

@@ -55,7 +55,7 @@ const StyledNavigationView = styled.div`
 
 			&.overflowing {
 				border-bottom: 1px solid ${c("white", 8.37)};
-				
+
 				${ifColorScheme.light} & {
 					border-bottom-color: ${c("black", 8.03)};
 				}
@@ -158,7 +158,7 @@ const StyledNavigationView = styled.div`
 
 				${forMap(20, i => css`
 					> :nth-child(${i}) {
-						animation: ${floatUp} 400ms ${125 * (i - 1)}ms ${eases.easeOutMax} backwards;
+						animation: ${floatUp} 300ms ${125 * (i - 1)}ms ${eases.easeOutMax} backwards;
 					}
 				`)}
 			}
@@ -188,9 +188,15 @@ const StyledPage = styled.main`
 	&.enter-active {
 		opacity: 1;
 		translate: 0;
-		transition: all ${eases.easeOutMax} 250ms;
+		transition: all ${eases.easeOutMax} 300ms;
 	}
 `;
+
+const useWindowWidth = () => {
+	const [width, setWidth] = useState(window.innerWidth);
+	useEventListener(window, "resize", () => setWidth(window.innerWidth), undefined, [width]);
+	return width;
+};
 
 const NavigationViewLeftPanel: FC<{
 	paneDisplayMode: PaneDisplayMode;
@@ -202,12 +208,13 @@ const NavigationViewLeftPanel: FC<{
 }> = ({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, flyout }) => {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
 	const navItemsRef = useRef<HTMLDivElement>(null);
+	const focusable = !flyout && paneDisplayMode === "minimal" ? false : isFlyoutShown === flyout;
 
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
 		if ("type" in item) return item.type === "hr" ? <hr key={index} /> : undefined;
 		const { text, icon, id } = item;
-		return <TabItem key={id} id={id} icon={icon || "placeholder"} focusable={isFlyoutShown === flyout}>{text}</TabItem>;
-	}, [isFlyoutShown]);
+		return <TabItem key={id} id={id} icon={icon || "placeholder"} focusable={focusable}>{text}</TabItem>;
+	}, [isFlyoutShown, focusable]);
 
 	useEventListener(window, "resize", () => {
 		const navItems = navItemsRef.current;
@@ -299,8 +306,7 @@ const NavigationView: FC<{
 			setFlyoutDisplayMode(mode => mode === "expanded" ? "minimal" : "expanded");
 	}, [responsive, flyoutDisplayMode, isExpandedInExpandedMode]);
 	const hideFlyoutNavMenu = useCallback(() => void (flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal")), [flyoutDisplayMode]);
-	useEffect(hideFlyoutNavMenu, [currentNav]);
-	useEventListener(window, "resize", () => hideFlyoutNavMenu(), undefined, [hideFlyoutNavMenu]);
+	useEffect(hideFlyoutNavMenu, [currentNav, useWindowWidth()]);
 
 	return (
 		<StyledNavigationView>

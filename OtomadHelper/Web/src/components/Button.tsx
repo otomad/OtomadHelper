@@ -1,4 +1,4 @@
-const boxShadow = (color: string) => css`box-shadow: 0 0 0 1px ${color} inset;`;
+const boxShadow = (color: string) => css`box-shadow: 0 0 0 1px ${color} inset`;
 
 const StyledButton = styled.button.attrs({
 	type: "button",
@@ -7,6 +7,10 @@ const StyledButton = styled.button.attrs({
 	border-radius: 4px;
 	${styles.mixins.gradientBorder(css`linear-gradient(to bottom, ${c("white", 3)} 0%, transparent 10%)`)};
 	${boxShadow(c("white", 6.98))};
+
+	&:focus-visible {
+		${boxShadow(c("white", 6.98))}, ${styles.effects.focus(true)};
+	}
 
 	> .base {
 		${styles.mixins.square("100%")};
@@ -55,6 +59,10 @@ const StyledButton = styled.button.attrs({
 	${ifColorScheme.light} & {
 		${boxShadow(c("black", 5.78))};
 
+		&:focus-visible {
+			${boxShadow(c("black", 5.78))}, ${styles.effects.focus(true)};
+		}
+
 		&::before {
 			background: linear-gradient(to bottom, transparent 90%, ${c("black", 13)} 100%) border-box;
 		}
@@ -95,6 +103,10 @@ const StyledButton = styled.button.attrs({
 	&.subtle {
 		box-shadow: none;
 		padding: 0;
+
+		&:focus-visible {
+			${styles.effects.focus()};
+		}
 
 		.base {
 			background-color: transparent;

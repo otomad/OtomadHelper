@@ -9,7 +9,17 @@ export default function Source() {
 				<div><Button>123</Button></div>
 				<div><Button>123</Button></div>
 			</Expander>
-			<div><Button>123</Button></div>
+			<Expander heading="Test">
+				<ExpanderItem heading="Test">
+					<Button>123</Button>
+				</ExpanderItem>
+				<ExpanderItem heading="Test">
+					<Button>123</Button>
+				</ExpanderItem>
+				<ExpanderItem heading="Test">
+					<Button>123</Button>
+				</ExpanderItem>
+			</Expander>
 		</div>
 	);
 }

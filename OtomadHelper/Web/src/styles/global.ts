@@ -29,10 +29,11 @@ const GlobalStyle = createGlobalStyle<{
 	*,
 	::before,
 	::after {
-		transition: all ${eases.easeOutSmooth} 250ms, color ${eases.easeOutSmooth} ${readyDuration(100)}, fill ${eases.easeOutSmooth} ${readyDuration(100)};
+		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} ${readyDuration(100)}, fill ${eases.easeOutMax} ${readyDuration(100)};
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", "Microsoft YaHei UI", sans-serif, system-ui;
 		user-select: none;
 		box-sizing: border-box;
+		-webkit-tap-highlight-color: transparent;
 	}
 
 	:focus,
@@ -49,7 +50,7 @@ const GlobalStyle = createGlobalStyle<{
 		color: var(--foreground-color);
 		margin: 0;
 		padding: 0;
-		height: 100vh;
+		height: 100dvh;
 		overflow: hidden;
 		transition: background-color ${eases.easeOutSmooth} ${readyDuration(250)};
 		color-scheme: dark;
