@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C99DB0BB-5DCB-49F9-9ED1-563AAEFF5E67}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>OtomadHelper</RootNamespace>
     <AssemblyName>OtomadHelper</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -56,9 +56,7 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>Test\app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="APNGLib">
       <HintPath>Libraries\APNGLib\APNGLib.dll</HintPath>
@@ -139,6 +137,7 @@
     <None Include="Test\App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Web\dist\favicon.ico" />
     <EmbeddedResource Include="Web\dist\assets\index.js" />
     <EmbeddedResource Include="Assets\LoadingAnimation.apng" />
     <Content Include="Otomad Helper.ico" />
