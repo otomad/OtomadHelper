@@ -86,10 +86,12 @@ const StyledNavigationView = styled.div`
 			box-shadow: 0 8px 16px ${c("black", 26)};
 			backdrop-filter: blur(60px);
 			z-index: 1;
+			outline: 1px solid ${c("black", 20)};
 
 			${ifColorScheme.light} & {
 				background-color: ${c("#fcfcfc", 85)};
 				box-shadow: 0 8px 16px ${c("black", 14)};
+				outline: 1px solid ${c("black", 6)};
 			}
 		}
 	}
@@ -313,13 +315,6 @@ const NavigationView: FC<{
 	const hideFlyoutNavMenu = useCallback(() => void (flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal")), [flyoutDisplayMode]);
 	useEffect(hideFlyoutNavMenu, [currentNav, useWindowWidth()]);
 
-	const pageRef = useRef<HTMLElement>(null);
-	const containerItemsCount = useMemo(() => {
-		if (!pageRef.current) return 0;
-		const container = [...pageRef.current.children].find(element => element.classList.contains("container"));
-		return container?.childElementCount ?? 0;
-	}, [children]);
-
 	return (
 		<StyledNavigationView>
 			<NavButton onClick={onNavButtonClick} />
@@ -345,14 +340,14 @@ const NavigationView: FC<{
 					<TransitionGroup>
 						<CssTransition key={pageTitleKey.join()}>
 							<h1 className="title">
-								{titles.map((title, index) => <div key={index}>{title}</div>)}{containerItemsCount}
+								{titles.map((title, index) => <div key={index}>{title}</div>)}
 							</h1>
 						</CssTransition>
 					</TransitionGroup>
 				</div>
 				<div className="content">
 					<SwitchTransition>
-						<CssTransition key={pagePath} ref={pageRef}>
+						<CssTransition key={pagePath}>
 							<StyledPage>
 								{children}
 							</StyledPage>
