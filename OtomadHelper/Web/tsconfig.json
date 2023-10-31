@@ -33,6 +33,9 @@
 			"hooks/*": ["src/hooks/*"],
 			"contexts/*": ["src/contexts/*"],
 			"helpers/*": ["src/helpers/*"],
+			"services/*": ["src/services/*"],
+			"hoc/*": ["src/hoc/*"],
+			"plugins/*": ["src/plugins/*"],
 		},
 		"plugins": [
 			{

@@ -1,16 +1,19 @@
 const StyledSettingsCard = styled.div`
-	padding: 13px 15px;
-	display: flex;
-	gap: 16px;
-	align-items: center;
 	border-radius: 3px;
-	background-color: ${c("white", 5)};
-	margin: 1px;
 	width: -webkit-fill-available;
 	text-align: initial;
 
-	> :not(.text) {
-		flex-shrink: 0;
+	> .base {
+		background-color: ${c("white", 5)};
+		padding: 13px 15px;
+		display: flex;
+		gap: 16px;
+		align-items: center;
+		border-radius: inherit;
+
+		> :not(.text) {
+			flex-shrink: 0;
+		}
 	}
 
 	.icon {
@@ -53,31 +56,39 @@ const StyledSettingsCard = styled.div`
 
 	&,
 	&:focus {
-		outline: 1px solid ${c("black", 10)};
+		border: 1px solid ${c("black", 10)};
 	}
 
 	${ifColorScheme.light} & {
-		background-color: ${c("white", 70)};
+		> .base {
+			background-color: ${c("white", 70)};
+		}
 
 		&,
 		&:focus {
-			outline: 1px solid ${c("black", 5.78)};
+			border-color: ${c("black", 5.78)};
 		}
 	}
 
 	button& {
 		&:hover {
-			outline-color: ${c("white", 6.98)};
-			background-color: ${c("white", 8.37)};
+			border-color: ${c("white", 6.98)};
+
+			> .base {
+				background-color: ${c("white", 8.37)};
+			}
 		}
 
 		&:active {
-			outline-color: ${c("white", 6.98)};
-			background-color: ${c("white", 3)};
+			border-color: ${c("white", 6.98)};
 
-			> .icon,
-			> .text,
-			&.button .trailing-icon {
+			> .base {
+				background-color: ${c("white", 3)};
+			}
+
+			> .base > .icon,
+			> .base > .text,
+			&.button > .base .trailing-icon {
 				opacity: 0.786;
 
 				${ifColorScheme.light} & {
@@ -88,13 +99,19 @@ const StyledSettingsCard = styled.div`
 
 		${ifColorScheme.light} & {
 			&:hover {
-				outline-color: ${c("black", 5.78)};
-				background-color: ${c("#f9f9f9", 50)};
+				border-color: ${c("black", 5.78)};
+
+				> .base {
+					background-color: ${c("#f9f9f9", 50)};
+				}
 			}
 
 			&:active {
-				outline-color: ${c("black", 5.78)};
-				background-color: ${c("#f9f9f9", 30)};
+				border-color: ${c("black", 5.78)};
+
+				> .base {
+					background-color: ${c("#f9f9f9", 30)};
+				}
 			}
 		}
 	}
@@ -148,18 +165,20 @@ const SettingsCard: FC<{
 			className={classNames([className, type])}
 			{...htmlAttrs}
 		>
-			<Icon name={icon} />
-			<div className="text">
-				<div className="heading">{heading}</div>
-				<div className="caption">{caption}</div>
-			</div>
-			<div className="trailing">
-				{children}
-				{trailingIcon && (
-					<div className="trailing-icon">
-						<Icon name={trailingIcon} />
-					</div>
-				)}
+			<div className="base">
+				<Icon name={icon} />
+				<div className="text">
+					<div className="heading">{heading}</div>
+					<div className="caption">{caption}</div>
+				</div>
+				<div className="trailing">
+					{children}
+					{trailingIcon && (
+						<div className="trailing-icon">
+							<Icon name={trailingIcon} />
+						</div>
+					)}
+				</div>
 			</div>
 		</StyledSettingsCard>
 	);

@@ -161,6 +161,11 @@ const StyledNavigationView = styled.div`
 						animation: ${floatUp} 300ms ${125 * (i - 1)}ms ${eases.easeOutMax} backwards;
 					}
 				`)}
+				
+				&::after {
+					content: "";
+					height: 18px;
+				}
 			}
 		}
 

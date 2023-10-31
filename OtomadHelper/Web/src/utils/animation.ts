@@ -96,6 +96,13 @@ type AnimateSizeOptions = Partial<{
 	attachAnimations: [Element, Keyframes][] | false;
 	/** 不要 `overflow: hidden;`？ */
 	noCropping: boolean;
+	/** 对**获取的**元素宽高值进行像素偏移调整。 */
+	clientAdjustment: Partial<{
+		startHeight: number;
+		endHeight: number;
+		startWidth: number;
+		endWidth: number;
+	}>;
 }>;
 
 /**
@@ -126,17 +133,18 @@ export async function* animateSizeGenerator(
 		removeGlitchFrame,
 		attachAnimations,
 		noCropping = false,
+		clientAdjustment = {},
 	}: AnimateSizeOptions = {},
 ): AsyncGenerator<void, Animation | void, boolean> {
 	element = toValue(element);
 	if (!element) return;
 	// if (isPrefersReducedMotion()) duration = 0;
-	startHeight ??= element.clientHeight;
-	startWidth ??= element.clientWidth;
+	startHeight ??= element.clientHeight + (clientAdjustment.startHeight ?? 0);
+	startWidth ??= element.clientWidth + (clientAdjustment.startWidth ?? 0);
 	const _hasChangeFunc = yield;
 	// if (hasChangeFunc && awaitNextTick) await nextTick();
-	endHeight ??= element.clientHeight;
-	endWidth ??= element.clientWidth;
+	endHeight ??= element.clientHeight + (clientAdjustment.endHeight ?? 0);
+	endWidth ??= element.clientWidth + (clientAdjustment.endWidth ?? 0);
 	// if (getSize)
 	// 	if (getSize instanceof Array) [getSize[0], getSize[1]] = [endWidth, endHeight];
 	// 	else getSize.value = [endWidth, endHeight];
@@ -155,12 +163,13 @@ export async function* animateSizeGenerator(
 	if (endHeight === 0) setYPaddingIndex = 1;
 	if (startWidth === 0) setXPaddingIndex = 0;
 	if (endWidth === 0) setXPaddingIndex = 1;
+	type CSSStyleDeclarationNumberish = Partial<Record<StyleProperties, Numberish>>;
 	const setXPadding = withoutAdjustPadding === undefined || withoutAdjustPadding === "height",
 		setYPadding = withoutAdjustPadding === undefined || withoutAdjustPadding === "width";
 	if (setXPadding && isHeightChanged && setYPaddingIndex !== undefined)
-		Object.assign(keyframes[setYPaddingIndex], { paddingTop: 0, paddingBottom: 0, marginTop: 0, marginBottom: 0 });
+		Object.assign(keyframes[setYPaddingIndex], { paddingTop: 0, paddingBottom: 0, marginTop: 0, marginBottom: 0, borderTopWidth: 0, borderBottomWidth: 0 } satisfies CSSStyleDeclarationNumberish);
 	if (setYPadding && isWidthChanged && setXPaddingIndex !== undefined)
-		Object.assign(keyframes[setXPaddingIndex], { paddingLeft: 0, paddingRight: 0, marginLeft: 0, marginRight: 0 });
+		Object.assign(keyframes[setXPaddingIndex], { paddingLeft: 0, paddingRight: 0, marginLeft: 0, marginRight: 0, borderLeftWidth: 0, borderRightWidth: 0 } satisfies CSSStyleDeclarationNumberish);
 	const setTranslate = (pxes: number[]) => pxes.map(i => i + "px").join(" ");
 	if (startReverseSlideIn)
 		keyframes[0].translate = setTranslate([isWidthChanged ? endWidth : 0, isHeightChanged ? endHeight : 0]);

@@ -70,6 +70,7 @@ export default defineConfig({
 				"./src/hooks/**",
 				"./src/contexts/**",
 				"./src/stores/**",
+				"./src/hoc/**",
 			],
 			dts: "./src/types/auto-imports.d.ts",
 			defaultExportByFilename: false,

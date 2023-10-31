@@ -9,22 +9,27 @@ const ExpanderParent = styled(SettingsCard)<{
 `);
 
 const ExpanderChild = styled.div`
-	background-color: ${c("white", 3.26)};
-	outline: 1px solid ${c("black", 10)};
-	margin: 1px;
-	margin-top: 0;
-	border-radius: 0 0 3px 3px; // FIXME: border-radius 会造成 exit 动画短暂异常，暂不清楚原因。
+	border: 1px solid ${c("black", 10)};
+	border-top-width: 0;
+	border-radius: 0 0 3px 3px;
 
-	.child-items > :not(:last-child) {
-		border-bottom: 1px solid ${c("white", 8.37)};
+	.child-items {
+		background-color: ${c("white", 3.26)};
+
+		> :not(:last-child) {
+			border-bottom: 1px solid ${c("white", 8.37)};
+		}
 	}
 
 	${ifColorScheme.light} & {
-		background-color: ${c("#f6f6f6", 50)};
-		outline: 1px solid ${c("black", 5.78)};
+		border-color: ${c("black", 5.78)};
 
-		.child-items > :not(:last-child) {
-			border-bottom-color: ${c("black", 8.03)};
+		.child-items {
+			background-color: ${c("#f6f6f6", 50)};
+
+			> :not(:last-child) {
+				border-bottom-color: ${c("black", 8.03)};
+			}
 		}
 	}
 `;
@@ -35,22 +40,7 @@ const Expander: FC<PropsOf<typeof SettingsCard> & {
 	const settingsCardProps = { icon, heading, caption, children: actions };
 	const [expanded, setExpanded] = useState(false);
 	const expanderChildRef = useRef<HTMLDivElement>(null);
-	// const [onEnter, onExit] = simpleAnimateSize(expanderChildRef, "height", undefined, undefined, { startChildTranslate: "0 -100%" }, { endChildTranslate: "0 -100%" });
-
-	const onEnter = async () => {
-		const el = expanderChildRef.current;
-		if (!el) return;
-		await animateSize(el, null, { specified: "height", startHeight: 0, startChildTranslate: "0 -100%" });
-		el.dispatchEvent(new Event("transitionend"));
-	};
-
-	const onExit = async () => {
-		const el = expanderChildRef.current;
-		if (!el) return;
-		await animateSize(el, null, { specified: "height", endHeight: 0, endChildTranslate: "0 -100%" });
-		el.dispatchEvent(new Event("transitionend"));
-		el.hidden = true;
-	};
+	const [onEnter, onExit] = simpleAnimateSize(expanderChildRef, "height", 350, undefined, { startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }, { endChildTranslate: "0 -100%" });
 
 	return (
 		<div>
