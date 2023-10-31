@@ -6,22 +6,26 @@ export default function Settings() {
 
 	return (
 		<div className="container">
-			<section>
+			<Expander heading="Language" expanded>
 				{languages.map(language => (
-					<label key={language}>
-						<input type="radio" checked={language === i18n.language} onChange={e => e.target.checked && i18n.changeLanguage(language)} />
-						{language}
-					</label>
+					<div key={language}>
+						<label>
+							<input type="radio" checked={language === i18n.language} onChange={e => e.target.checked && i18n.changeLanguage(language)} />
+							{language}
+						</label>
+					</div>
 				))}
-			</section>
-			<section>
+			</Expander>
+			<Expander heading="Color scheme" expanded>
 				{schemes.map(thisScheme => (
-					<label key={thisScheme}>
-						<input type="radio" checked={scheme === thisScheme} onChange={e => e.target.checked && setScheme(thisScheme)} />
-						{thisScheme}
-					</label>
+					<div key={thisScheme}>
+						<label>
+							<input type="radio" checked={scheme === thisScheme} onChange={e => e.target.checked && setScheme(thisScheme)} />
+							{thisScheme}
+						</label>
+					</div>
 				))}
-			</section>
+			</Expander>
 		</div>
 	);
 }

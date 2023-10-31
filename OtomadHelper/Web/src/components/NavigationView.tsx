@@ -161,7 +161,7 @@ const StyledNavigationView = styled.div`
 						animation: ${floatUp} 300ms ${125 * (i - 1)}ms ${eases.easeOutMax} backwards;
 					}
 				`)}
-				
+
 				&::after {
 					content: "";
 					height: 18px;
@@ -313,6 +313,13 @@ const NavigationView: FC<{
 	const hideFlyoutNavMenu = useCallback(() => void (flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal")), [flyoutDisplayMode]);
 	useEffect(hideFlyoutNavMenu, [currentNav, useWindowWidth()]);
 
+	const pageRef = useRef<HTMLElement>(null);
+	const containerItemsCount = useMemo(() => {
+		if (!pageRef.current) return 0;
+		const container = [...pageRef.current.children].find(element => element.classList.contains("container"));
+		return container?.childElementCount ?? 0;
+	}, [children]);
+
 	return (
 		<StyledNavigationView>
 			<NavButton onClick={onNavButtonClick} />
@@ -338,14 +345,14 @@ const NavigationView: FC<{
 					<TransitionGroup>
 						<CssTransition key={pageTitleKey.join()}>
 							<h1 className="title">
-								{titles.map((title, index) => <div key={index}>{title}</div>)}
+								{titles.map((title, index) => <div key={index}>{title}</div>)}{containerItemsCount}
 							</h1>
 						</CssTransition>
 					</TransitionGroup>
 				</div>
 				<div className="content">
 					<SwitchTransition>
-						<CssTransition key={pagePath}>
+						<CssTransition key={pagePath} ref={pageRef}>
 							<StyledPage>
 								{children}
 							</StyledPage>

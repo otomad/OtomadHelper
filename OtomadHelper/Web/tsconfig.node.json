@@ -8,5 +8,6 @@
 	},
 	"include": [
 		"vite.config.ts",
-	]
+		"auto-import.config.ts",
+	],
 }

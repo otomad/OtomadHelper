@@ -1,4 +1,3 @@
-import _reduxjsToolkit from "@reduxjs/toolkit";
 import _react from "react";
 import _reactTransitionGroup from "react-transition-group";
 import { StoreApi, UseBoundStore } from "zustand";
@@ -37,6 +36,6 @@ declare global {
 	 */
 	export type ZustandState<S> = S extends UseBoundStore<StoreApi<infer T>> ? T : never;
 
-	export { CSSProperties, ChangeEvent, ChangeEventHandler, DependencyList, EventHandler, MouseEventHandler, ReactElement, ReactNode, RefObject } from "react";
+	export { CSSProperties, ChangeEvent, ChangeEventHandler, DependencyList, EventHandler, ForwardedRef, MouseEventHandler, ReactElement, ReactNode, RefObject } from "react";
 	export { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 }

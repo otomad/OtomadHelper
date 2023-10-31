@@ -6,6 +6,7 @@ import { defineConfig } from "vite";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
+import autoImportConfig from "./auto-import.config";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -27,42 +28,7 @@ export default defineConfig({
 			},
 		}),
 		autoImport({
-			imports: [
-				"react",
-				{
-					"react": [
-						["default", "React"],
-						"createContext",
-					],
-					"react-dom/client": [
-						["*", "ReactDOM"],
-					],
-					"styled-components": [
-						"styled",
-						"keyframes",
-						"css",
-						"createGlobalStyle",
-						"isStyledComponent",
-					],
-					"classnames": [
-						["default", "classNames"],
-					],
-					"react-transition-group": [
-						"SwitchTransition",
-						"TransitionGroup",
-						"Transition",
-					],
-					"react-i18next": [
-						"useTranslation",
-					],
-					"zustand": [
-						["create", "createStore"],
-					],
-					"zustand/middleware": [
-						"persist",
-					],
-				},
-			],
+			imports: autoImportConfig,
 			dirs: [
 				"./src/components/**",
 				"./src/composables/**",

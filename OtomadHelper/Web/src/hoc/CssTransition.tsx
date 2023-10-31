@@ -2,8 +2,10 @@ import { CSSTransition as _CSSTransition } from "react-transition-group";
 import type { CSSTransitionProps } from "react-transition-group/CSSTransition";
 
 // 使用 CssTransition 以和内置对象 CSSTransition 命名让位。同时解决新版 nodeRef 的问题。
-const CssTransition = (props: Partial<CSSTransitionProps>) => {
+const CssTransition = forwardRef<HTMLElement, Partial<CSSTransitionProps>>((props, ref) => {
 	const nodeRef = useRef<HTMLElement | undefined>(null);
+
+	useImperativeHandle(ref, () => nodeRef.current!, []);
 
 	return (
 		<_CSSTransition {...props} nodeRef={nodeRef} addEndListener={endListener(nodeRef)}>
@@ -18,6 +20,6 @@ const CssTransition = (props: Partial<CSSTransitionProps>) => {
 			</>
 		</_CSSTransition>
 	);
-};
+});
 
 export default CssTransition;

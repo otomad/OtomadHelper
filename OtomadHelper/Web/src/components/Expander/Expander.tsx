@@ -35,10 +35,13 @@ const ExpanderChild = styled.div`
 `;
 
 const Expander: FC<PropsOf<typeof SettingsCard> & {
+	/** 展开器右侧的其它操作控件区域。 */
 	actions?: ReactNode;
-}> = ({ icon, heading, caption, actions, children }) => {
+	/** 初始状态下是否已展开？ */
+	expanded?: boolean;
+}> = ({ icon, heading, caption, actions, expanded = false, children }) => {
 	const settingsCardProps = { icon, heading, caption, children: actions };
-	const [expanded, setExpanded] = useState(false);
+	const [internalExpanded, setInternalExpanded] = useState(expanded);
 	const expanderChildRef = useRef<HTMLDivElement>(null);
 	const [onEnter, onExit] = simpleAnimateSize(expanderChildRef, "height", 350, undefined, { startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }, { endChildTranslate: "0 -100%" });
 
@@ -47,13 +50,13 @@ const Expander: FC<PropsOf<typeof SettingsCard> & {
 			<ExpanderParent
 				{...settingsCardProps}
 				type="expander"
-				trailingIcon={expanded ? "chevron_up" : "chevron_down"}
-				onClick={() => setExpanded(expanded => !expanded)}
-				$expanded={expanded}
+				trailingIcon={internalExpanded ? "chevron_up" : "chevron_down"}
+				onClick={() => setInternalExpanded(expanded => !expanded)}
+				$expanded={internalExpanded}
 			/>
 			<Transition
 				nodeRef={expanderChildRef}
-				in={expanded}
+				in={internalExpanded}
 				addEndListener={endListener(expanderChildRef)}
 				onEnter={onEnter}
 				onExit={onExit}
