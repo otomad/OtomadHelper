@@ -57,7 +57,7 @@ const StyledTabItem = styled.button.attrs({
 	}
 `;
 
-const TabItem: FC<{
+export default function TabItem({ icon, children, active, collapsed, id: _id, focusable = true, ...htmlAttrs }: FCP<{
 	/** 图标。 */
 	icon: string;
 	/** 标识符。 */
@@ -68,7 +68,7 @@ const TabItem: FC<{
 	collapsed?: boolean;
 	/** 是否可被聚焦？ */
 	focusable?: boolean;
-}, HTMLElement> = ({ icon, children, active, collapsed, id: _id, focusable = true, ...htmlAttrs }) => {
+}, HTMLElement>) {
 	const tabItemRef = useRef<HTMLButtonElement>(null);
 
 	const onEnter = async () => {
@@ -101,6 +101,4 @@ const TabItem: FC<{
 			</StyledTabItemWrapper>
 		</Transition>
 	);
-};
-
-export default TabItem;
+}

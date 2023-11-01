@@ -137,12 +137,12 @@ const StyledButton = styled.button.attrs({
 	}
 `;
 
-const Button: FC<{
+export default function Button({ children, icon, subtle, className, ...htmlAttrs }: FCP<{
 	/** 按钮图标。 */
 	icon?: string;
 	/** 是否使用无背景按钮？ */
 	subtle?: boolean;
-}, HTMLButtonElement> = ({ children, icon, subtle, className, ...htmlAttrs }) => {
+}, HTMLButtonElement>) {
 	return (
 		<StyledButton className={[className, { subtle }]} {...htmlAttrs}>
 			<div className="base">
@@ -153,6 +153,4 @@ const Button: FC<{
 			</div>
 		</StyledButton>
 	);
-};
-
-export default Button;
+}

@@ -7,9 +7,17 @@ declare global {
 	 * React Hook 风格函数式组件类型。
 	 * @template P - 组件的 Props。
 	 * @template E - 继承某个 HTML 原生元素的所有 Attrs。
+	 * @deprecated
 	 */
-	export type FC<P = {}, E extends Element | null = null> = React.FC<Override<
-		E extends null ? { children?: ReactNode } : React.HTMLAttributes<E>, P>>;
+	export type FC<P = {}, E extends Element | null = null> = React.FC<FCP<P, E>>;
+
+	/**
+	 * React Hook 风格函数式组件的 Props 类型。
+	 * @template P - 组件的 Props。
+	 * @template E - 继承某个 HTML 原生元素的所有 Attrs。
+	 */
+	export type FCP<P = {}, E extends Element | null = null> = Override<
+		E extends null ? { children?: ReactNode } : React.HTMLAttributes<E>, P>;
 
 	/**
 	 * React useState 中 setter 函数的类型。

@@ -20,21 +20,19 @@ const StyledIcon = styled.span.attrs({
 	}
 `;
 
-const Icon: FC<{
+export default function Icon({ name, filled, ...htmlAttrs }: FCP<{
 	/** 图标文件名称。 */
 	name: string;
 	/** 是否保持图标本身的颜色？ */
 	filled?: boolean;
-}, HTMLSpanElement> = ({ name, filled, ...htmlAttrs }) => {
+}, HTMLSpanElement>) {
 	const symbolId = "#icon-" + name.replaceAll("/", "-");
 
 	return (
 		<StyledIcon $filled={filled} {...htmlAttrs}>
-			<svg aria-hidden={true}>
+			<svg aria-hidden>
 				<use href={symbolId} />
 			</svg>
 		</StyledIcon>
 	);
-};
-
-export default Icon;
+}

@@ -11,4 +11,4 @@ vite.config.ts.timestamp*
 node_modules/
 desktop.ini
 .DS_Store
-src/types/auto-imports.d.ts
+src/types/auto-*.d.ts

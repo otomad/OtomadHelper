@@ -147,7 +147,16 @@ const StyledSettingsCard = styled.div`
 	}
 `;
 
-const SettingsCard: FC<{
+export default function SettingsCard({
+	icon = "placeholder",
+	heading,
+	caption,
+	trailingIcon = "chevron_right",
+	children,
+	type = "container",
+	className,
+	...htmlAttrs
+}: FCP<{
 	/** 图标。 */
 	icon?: string;
 	/** 标题。 */
@@ -158,7 +167,7 @@ const SettingsCard: FC<{
 	trailingIcon?: string;
 	/** 组件形态。 */
 	type?: "container" | "button" | "expander";
-}, HTMLElement> = ({ icon = "placeholder", heading, caption, trailingIcon = "chevron_right", children, type = "container", className, ...htmlAttrs }) => {
+}, HTMLElement>) {
 	return (
 		<StyledSettingsCard
 			as={type === "container" ? "div" : "button"}
@@ -182,6 +191,4 @@ const SettingsCard: FC<{
 			</div>
 		</StyledSettingsCard>
 	);
-};
-
-export default SettingsCard;
+}

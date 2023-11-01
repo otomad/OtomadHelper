@@ -52,14 +52,14 @@ const StyledExpanderItem = styled.div`
 	}
 `;
 
-const ExpanderItem: FC<{
+export default function ExpanderItem({ icon, heading, caption, children }: FCP<{
 	/** 图标。 */
 	icon?: string;
 	/** 标题。 */
 	heading?: ReactNode;
 	/** 详细描述。 */
 	caption?: ReactNode;
-}> = ({ icon, heading, caption, children }) => {
+}>) {
 	return (
 		<StyledExpanderItem>
 			{icon ? <Icon name={icon} /> : <div className="icon-placeholder" />}
@@ -72,6 +72,4 @@ const ExpanderItem: FC<{
 			</div>
 		</StyledExpanderItem>
 	);
-};
-
-export default ExpanderItem;
+}

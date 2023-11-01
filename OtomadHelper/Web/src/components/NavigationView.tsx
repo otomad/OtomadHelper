@@ -205,14 +205,14 @@ const useWindowWidth = () => {
 	return width;
 };
 
-const NavigationViewLeftPanel: FC<{
+function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, flyout }: FCP<{
 	paneDisplayMode: PaneDisplayMode;
 	isFlyoutShown: boolean;
 	customContent?: ReactNode;
 	currentNavTab: StateProperty<string>;
 	navItems: (NavItem | NavBrItem)[];
 	flyout: boolean;
-}> = ({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, flyout }) => {
+}>) {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
 	const navItemsRef = useRef<HTMLDivElement>(null);
 	const focusable = !flyout && paneDisplayMode === "minimal" ? false : isFlyoutShown === flyout;
@@ -249,7 +249,7 @@ const NavigationViewLeftPanel: FC<{
 			</div>
 		</div>
 	);
-};
+}
 
 interface NavItem {
 	/** 标签文本。 */
@@ -279,7 +279,7 @@ const usePaneDisplayMode = () => {
 	return paneDisplayMode;
 };
 
-const NavigationView: FC<{
+export default function NavigationView({ currentNav, navItems = [], titles, children, customContent }: FCP<{
 	/** 当前导航页状态参数。 */
 	currentNav: StateProperty<string[]>;
 	/** 所有导航项。 */
@@ -288,7 +288,7 @@ const NavigationView: FC<{
 	titles?: string[];
 	/** 自定义区域。 */
 	customContent?: ReactNode;
-}> = ({ currentNav, navItems = [], titles, children, customContent }) => {
+}>) {
 	const currentNavTab = useStateSelector(currentNav, nav => nav[0], value => [value]);
 	const pagePath = currentNav.join("/");
 	const responsive = usePaneDisplayMode();
@@ -357,6 +357,4 @@ const NavigationView: FC<{
 			</div>
 		</StyledNavigationView>
 	);
-};
-
-export default NavigationView;
+}

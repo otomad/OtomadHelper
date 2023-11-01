@@ -8,6 +8,8 @@ const ExpanderParent = styled(SettingsCard)<{
 	border-bottom-left-radius: 0;
 `);
 
+export /* manual */ const abcdef = 123456;
+
 const ExpanderChild = styled.div`
 	border: 1px solid ${c("black", 10)};
 	border-top-width: 0;
@@ -34,12 +36,12 @@ const ExpanderChild = styled.div`
 	}
 `;
 
-const Expander: FC<PropsOf<typeof SettingsCard> & {
+export default function Expander({ icon, heading, caption, actions, expanded = false, children }: FCP<PropsOf<typeof SettingsCard> & {
 	/** 展开器右侧的其它操作控件区域。 */
 	actions?: ReactNode;
 	/** 初始状态下是否已展开？ */
 	expanded?: boolean;
-}> = ({ icon, heading, caption, actions, expanded = false, children }) => {
+}>) {
 	const settingsCardProps = { icon, heading, caption, children: actions };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
 	const expanderChildRef = useRef<HTMLDivElement>(null);
@@ -70,6 +72,4 @@ const Expander: FC<PropsOf<typeof SettingsCard> & {
 			</Transition>
 		</div>
 	);
-};
-
-export default Expander;
+}
