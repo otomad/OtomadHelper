@@ -1,0 +1,30 @@
+diff --git a/node_modules/@types/react/index.d.ts b/node_modules/@types/react/index.d.ts
+index 206251d..df0f251 100644
+--- a/node_modules/@types/react/index.d.ts
++++ b/node_modules/@types/react/index.d.ts
+@@ -7,6 +7,7 @@
+ import * as CSS from "csstype";
+ import * as PropTypes from "prop-types";
+ import { Interaction as SchedulerInteraction } from "scheduler/tracing";
++import { Argument as ClassArray } from "classnames";
+ 
+ type NativeAnimationEvent = AnimationEvent;
+ type NativeClipboardEvent = ClipboardEvent;
+@@ -1951,7 +1952,7 @@ declare namespace React {
+         // Standard HTML Attributes
+         accessKey?: string | undefined;
+         autoFocus?: boolean | undefined;
+-        className?: string | undefined;
++        className?: string | ClassArray | undefined;
+         contentEditable?: Booleanish | "inherit" | undefined;
+         contextMenu?: string | undefined;
+         dir?: string | undefined;
+@@ -2637,7 +2638,7 @@ declare namespace React {
+ 
+         // Attributes which also defined in HTMLAttributes
+         // See comment in SVGDOMPropertyConfig.js
+-        className?: string | undefined;
++        className?: string | ClassArray | undefined;
+         color?: string | undefined;
+         height?: number | string | undefined;
+         id?: string | undefined;

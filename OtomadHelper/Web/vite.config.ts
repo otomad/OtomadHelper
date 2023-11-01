@@ -17,13 +17,14 @@ export default defineConfig({
 					[
 						"babel-plugin-styled-components",
 						{
-							ssr: false,
+							ssr: true,
 							displayName: true,
 							fileName: false,
 							minify: true,
 							pure: false,
 						},
 					],
+					"babel-plugin-transform-jsx-classnames",
 				],
 			},
 		}),

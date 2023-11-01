@@ -230,9 +230,9 @@ const NavigationViewLeftPanel: FC<{
 	}, { immediate: true }, [navItemsRef]);
 
 	return (
-		<div className={classNames(["left", paneDisplayMode, { flyout }])}>
+		<div className={["left", paneDisplayMode, { flyout }]}>
 			<NavButton $shadow />
-			<div ref={navItemsRef} className={classNames(["nav-items", { overflowing: isNavItemsOverflowing }])}>
+			<div ref={navItemsRef} className={["nav-items", { overflowing: isNavItemsOverflowing }]}>
 				{customContent}
 				<TabBar current={currentNavTab} collapsed={paneDisplayMode === "compact"}>
 					{navItems.map((item, index) => {
@@ -333,7 +333,7 @@ const NavigationView: FC<{
 				);
 			})}
 			<div
-				className={classNames(["right", "hairtail", { minimal: paneDisplayMode === "minimal" }])}
+				className={["right", "hairtail", { minimal: paneDisplayMode === "minimal" }]}
 				onClick={hideFlyoutNavMenu}
 			>
 				<div className="title-wrapper">

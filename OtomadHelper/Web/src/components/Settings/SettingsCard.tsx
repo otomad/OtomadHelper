@@ -162,7 +162,7 @@ const SettingsCard: FC<{
 	return (
 		<StyledSettingsCard
 			as={type === "container" ? "div" : "button"}
-			className={classNames([className, type])}
+			className={[className, type]}
 			{...htmlAttrs}
 		>
 			<div className="base">

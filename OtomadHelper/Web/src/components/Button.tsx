@@ -7,6 +7,7 @@ const StyledButton = styled.button.attrs({
 	border-radius: 4px;
 	${styles.mixins.gradientBorder(css`linear-gradient(to bottom, ${c("white", 3)} 0%, transparent 10%)`)};
 	${boxShadow(c("white", 6.98))};
+	padding: 0.5px; // 修复边框与填充之间在特殊分辨率下的裂缝问题。
 
 	&:focus-visible {
 		${boxShadow(c("white", 6.98))}, ${styles.effects.focus(true)};
@@ -143,7 +144,7 @@ const Button: FC<{
 	subtle?: boolean;
 }, HTMLButtonElement> = ({ children, icon, subtle, className, ...htmlAttrs }) => {
 	return (
-		<StyledButton className={classNames([className, { subtle }])} {...htmlAttrs}>
+		<StyledButton className={[className, { subtle }]} {...htmlAttrs}>
 			<div className="base">
 				<div className="content">
 					{icon && <Icon name={icon} />}

@@ -94,7 +94,7 @@ const TabItem: FC<{
 			onExit={onExit}
 		>
 			<StyledTabItemWrapper {...htmlAttrs}>
-				<StyledTabItem ref={tabItemRef} tabIndex={focusable ? 0 : -1} {...htmlAttrs} className={classNames({ active })}>
+				<StyledTabItem ref={tabItemRef} tabIndex={focusable ? 0 : -1} {...htmlAttrs} className={{ active }}>
 					<Icon name={icon} />
 					<div className="text">{children}</div>
 				</StyledTabItem>
