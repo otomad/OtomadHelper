@@ -54,11 +54,7 @@ const StyledNavigationView = styled.div`
 			overflow-y: auto;
 
 			&.overflowing {
-				border-bottom: 1px solid ${c("white", 8.37)};
-
-				${ifColorScheme.light} & {
-					border-bottom-color: ${c("black", 8.03)};
-				}
+				border-bottom: 1px solid ${c("stroke-color-divider-stroke-default")};
 			}
 		}
 
@@ -82,17 +78,11 @@ const StyledNavigationView = styled.div`
 		&.flyout {
 			position: fixed;
 			border-radius: 0 7px 7px 0;
-			background-color: ${c("#2c2c2c", 96)};
-			box-shadow: 0 8px 16px ${c("black", 26)};
+			background-color: ${c("background-fill-color-acrylic-background-default")};
+			box-shadow: 0 8px 16px ${c("shadows-flyout")};
 			backdrop-filter: blur(60px);
 			z-index: 1;
-			outline: 1px solid ${c("black", 20)};
-
-			${ifColorScheme.light} & {
-				background-color: ${c("#fcfcfc", 85)};
-				box-shadow: 0 8px 16px ${c("black", 14)};
-				outline: 1px solid ${c("black", 6)};
-			}
+			outline: 1px solid ${c("stroke-color-surface-stroke-flyout")};
 		}
 	}
 

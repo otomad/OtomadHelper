@@ -1,23 +1,28 @@
-const boxShadow = (color: string) => css`box-shadow: 0 0 0 1px ${color} inset`;
+export /* manual */ const boxShadow = (color: string) => css`box-shadow: 0 0 0 1px ${color} inset`;
 
 const StyledButton = styled.button.attrs({
 	type: "button",
 })`
 	display: inline-flex;
 	border-radius: 4px;
-	${styles.mixins.gradientBorder(css`linear-gradient(to bottom, ${c("white", 3)} 0%, transparent 10%)`)};
-	${boxShadow(c("white", 6.98))};
-	padding: 0.5px; // 修复边框与填充之间在特殊分辨率下的裂缝问题。
+	--gradient-direction: bottom;
+	${styles.mixins.gradientBorder(css`linear-gradient(to var(--gradient-direction), ${c("stroke-color-control-stroke-tertiary")} 0%, transparent 10%)`)};
+	${boxShadow(c("stroke-color-control-stroke-default"))};
+	padding: 1px; // 修复边框与填充之间在特殊分辨率下的裂缝问题。
+
+	${ifColorScheme.light} & {
+		--gradient-direction: top;
+	}
 
 	&:focus-visible {
-		${boxShadow(c("white", 6.98))}, ${styles.effects.focus(true)};
+		${boxShadow(c("stroke-color-control-stroke-default"))}, ${styles.effects.focus(true)};
 	}
 
 	> .base {
 		${styles.mixins.square("100%")};
 		${styles.mixins.flexCenter()};
 		padding: 4px 11px 6px;
-		background-color: ${c("white", 6.05)};
+		background-color: ${c("fill-color-control-default")};
 		border-radius: 3px;
 	}
 
@@ -26,7 +31,7 @@ const StyledButton = styled.button.attrs({
 	}
 
 	&:hover > .base {
-		background-color: ${c("white", 8.37)};
+		background-color: ${c("fill-color-control-secondary")};
 	}
 
 	&:active {
@@ -35,10 +40,10 @@ const StyledButton = styled.button.attrs({
 		}
 
 		> .base {
-			background-color: ${c("white", 3.26)};
+			background-color: ${c("fill-color-control-tertiary")};
 
 			> .content {
-				opacity: 0.786;
+				opacity: ${c("pressed-text-opacity")};
 			}
 		}
 	}
@@ -49,48 +54,19 @@ const StyledButton = styled.button.attrs({
 		}
 
 		> .base {
-			background-color: ${c("white", 4.19)};
+			background-color: ${c("fill-color-control-disabled")};
 
 			> .content {
-				opacity: 0.3628;
+				opacity: ${c("disabled-text-opacity")};
 			}
 		}
 	}
 
-	${ifColorScheme.light} & {
-		${boxShadow(c("black", 5.78))};
-
-		&:focus-visible {
-			${boxShadow(c("black", 5.78))}, ${styles.effects.focus(true)};
-		}
-
+	/* ${ifColorScheme.light} & {
 		&::before {
-			background: linear-gradient(to bottom, transparent 90%, ${c("black", 13)} 100%) border-box;
+			background: linear-gradient(to top, ${c("stroke-color-control-stroke-tertiary")} 0%, transparent 10%) border-box;
 		}
-
-		> .base {
-			background-color: ${c("white", 70)};
-		}
-
-		&:hover > .base {
-			background-color: ${c("#f9f9f9", 50)};
-		}
-
-		&:active,
-		&[disabled] {
-			> .base {
-				background-color: ${c("#f9f9f9", 30)};
-
-				> .content {
-					opacity: 0.6063;
-				}
-			}
-		}
-
-		&[disabled] > .base > .content {
-			opacity: 0.3614;
-		}
-	}
+	} */
 
 	> .base > .content {
 		${styles.mixins.flexCenter()};
@@ -110,7 +86,7 @@ const StyledButton = styled.button.attrs({
 		}
 
 		.base {
-			background-color: transparent;
+			background-color: ${c("fill-color-subtle-transparent")};
 		}
 
 		&::before {
@@ -118,21 +94,11 @@ const StyledButton = styled.button.attrs({
 		}
 
 		&:hover > .base {
-			background-color: ${c("white", 6.05)};
+			background-color: ${c("fill-color-subtle-secondary")};
 		}
 
 		&:active > .base {
-			background-color: ${c("white", 4.19)};
-		}
-
-		${ifColorScheme.light} & {
-			&:hover > .base {
-				background-color: ${c("black", 3.73)};
-			}
-
-			&:active > .base {
-				background-color: ${c("black", 2.41)};
-			}
+			background-color: ${c("fill-color-subtle-tertiary")};
 		}
 	}
 `;

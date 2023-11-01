@@ -1,6 +1,6 @@
-import _react from "react";
-import _reactTransitionGroup from "react-transition-group";
-import { StoreApi, UseBoundStore } from "zustand";
+import type React from "react";
+import type _ReactTransitionGroup from "react-transition-group";
+import type { StoreApi, UseBoundStore } from "zustand";
 
 declare global {
 	/**
@@ -23,13 +23,14 @@ declare global {
 	 * React useState 中 setter 函数的类型。
 	 * @template T - 参数类型。
 	 */
-	export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
+	export type SetState<T> = (value: T) => unknown | ((value: (prevState: T) => unknown) => unknown);
+	// React.Dispatch<React.SetStateAction<T>>;
 
 	/**
 	 * useState 的返回值，即包含表示当前值以及设定该值的函数的元组。可用于实现双向绑定。
 	 * @template T - 参数类型。
 	 */
-	export type StateProperty<T> = [T, SetState<T>];
+	export type StateProperty<T> = [get?: T, set?: SetState<T>];
 	// | (T extends unknown[] ? never : T)
 
 	/**
@@ -44,6 +45,6 @@ declare global {
 	 */
 	export type ZustandState<S> = S extends UseBoundStore<StoreApi<infer T>> ? T : never;
 
-	export { CSSProperties, ChangeEvent, ChangeEventHandler, DependencyList, EventHandler, ForwardedRef, MouseEventHandler, ReactElement, ReactNode, RefObject } from "react";
-	export { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
+	export type { CSSProperties, ChangeEvent, ChangeEventHandler, DependencyList, EventHandler, ForwardedRef, MouseEventHandler, ReactElement, ReactNode, RefObject } from "react";
+	export type { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 }

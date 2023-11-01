@@ -30,11 +30,7 @@ const StyledExpanderItem = styled.div`
 
 		.caption {
 			font-size: 12px;
-			color: ${c("white", 78.6)};
-
-			${ifColorScheme.light} & {
-				color: ${c("black", 60.63)};
-			}
+			color: ${c("fill-color-text-secondary")};
 		}
 	}
 

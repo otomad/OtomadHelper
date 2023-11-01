@@ -11,6 +11,13 @@ export default {
 		justify-content: center;
 	`,
 	/**
+	 * 一键弹性网格布局加居中元素 (grid - center)。
+	 */
+	gridCenter: () => css`
+		display: grid;
+		place-items: center;
+	`,
+	/**
 	 * 变成正方形。长宽均相等。
 	 * @param size - 长度。
 	 * @param withSizeVar - 是否生成一个名为 `--size` 的 CSS 自定义属性以使其它组件更方便的修改尺寸？

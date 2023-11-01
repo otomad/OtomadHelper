@@ -30,7 +30,7 @@ const StyledTabBar = styled.div`
 	hr {
 		margin: 4px 0;
 		border: none;
-		border-bottom: 1px solid ${c("white", 8)};
+		border-bottom: 1px solid ${c("stroke-color-divider-stroke-default")};
 	}
 
 	.items {
@@ -127,7 +127,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 						React.cloneElement(child, {
 							collapsed,
 							active: current === id,
-							onClick: () => setCurrent(id),
+							onClick: () => setCurrent?.(id),
 						})
 					);
 				})}

@@ -171,7 +171,7 @@ module.exports = {
 		}],
 		"@typescript-eslint/no-useless-constructor": "error",
 		"react-refresh/only-export-components": [
-			"warn",
+			"off",
 			{ allowConstantExport: true },
 		],
 		"react-hooks/exhaustive-deps": "off",

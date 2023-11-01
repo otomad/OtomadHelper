@@ -1,10 +1,14 @@
+import { boxShadow } from "components/Button";
+
 const StyledSettingsCard = styled.div`
 	border-radius: 3px;
 	width: -webkit-fill-available;
 	text-align: initial;
+	${boxShadow(c("stroke-color-card-stroke-default"))};
+	padding: 1px;
 
 	> .base {
-		background-color: ${c("white", 5)};
+		background-color: ${c("background-fill-color-card-background-default")};
 		padding: 13px 15px;
 		display: flex;
 		gap: 16px;
@@ -33,11 +37,7 @@ const StyledSettingsCard = styled.div`
 
 		.caption {
 			font-size: 12px;
-			color: ${c("white", 78.6)};
-
-			${ifColorScheme.light} & {
-				color: ${c("black", 60.63)};
-			}
+			color: ${c("fill-color-text-secondary")};
 		}
 	}
 
@@ -54,64 +54,25 @@ const StyledSettingsCard = styled.div`
 		}
 	}
 
-	&,
-	&:focus {
-		border: 1px solid ${c("black", 10)};
-	}
-
-	${ifColorScheme.light} & {
-		> .base {
-			background-color: ${c("white", 70)};
-		}
-
-		&,
-		&:focus {
-			border-color: ${c("black", 5.78)};
-		}
-	}
-
 	button& {
-		&:hover {
-			border-color: ${c("white", 6.98)};
+		&:hover,
+		&:active {
+			${boxShadow(c("stroke-color-control-stroke-default"))};
+		}
 
-			> .base {
-				background-color: ${c("white", 8.37)};
-			}
+		&:hover > .base {
+			background-color: ${c("fill-color-control-secondary")};
 		}
 
 		&:active {
-			border-color: ${c("white", 6.98)};
-
 			> .base {
-				background-color: ${c("white", 3)};
+				background-color: ${c("fill-color-control-tertiary")};
 			}
 
 			> .base > .icon,
 			> .base > .text,
 			&.button > .base .trailing-icon {
-				opacity: 0.786;
-
-				${ifColorScheme.light} & {
-					opacity: 0.6063;
-				}
-			}
-		}
-
-		${ifColorScheme.light} & {
-			&:hover {
-				border-color: ${c("black", 5.78)};
-
-				> .base {
-					background-color: ${c("#f9f9f9", 50)};
-				}
-			}
-
-			&:active {
-				border-color: ${c("black", 5.78)};
-
-				> .base {
-					background-color: ${c("#f9f9f9", 30)};
-				}
+				opacity: ${c("pressed-text-opacity")}
 			}
 		}
 	}
@@ -119,29 +80,14 @@ const StyledSettingsCard = styled.div`
 	&.expander {
 		&:hover {
 			.trailing-icon {
-				background-color: ${c("white", 6.05)};
+				background-color: ${c("fill-color-subtle-secondary")};
 			}
 		}
 
 		&:active {
 			.trailing-icon {
-				background-color: ${c("white", 4.19)};
-				color: ${c("white", 78.6)};
-			}
-		}
-
-		${ifColorScheme.light} & {
-			&:hover {
-				.trailing-icon {
-					background-color: ${c("black", 3.73)};
-				}
-			}
-
-			&:active {
-				.trailing-icon {
-					background-color: ${c("black", 2.41)};
-					color: ${c("black", 60.63)};
-				}
+				background-color: ${c("fill-color-subtle-tertiary")};
+				color: ${c("fill-color-text-secondary")};
 			}
 		}
 	}

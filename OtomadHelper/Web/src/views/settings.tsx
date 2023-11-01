@@ -8,22 +8,16 @@ export default function Settings() {
 		<div className="container">
 			<Expander heading="Language" expanded>
 				{languages.map(language => (
-					<div key={language}>
-						<label>
-							<input type="radio" checked={language === i18n.language} onChange={e => e.target.checked && i18n.changeLanguage(language)} />
-							{language}
-						</label>
-					</div>
+					<RadioButton key={language} id={language} value={[i18n.language, i18n.changeLanguage]}>
+						{language}
+					</RadioButton>
 				))}
 			</Expander>
 			<Expander heading="Color scheme" expanded>
 				{schemes.map(thisScheme => (
-					<div key={thisScheme}>
-						<label>
-							<input type="radio" checked={scheme === thisScheme} onChange={e => e.target.checked && setScheme(thisScheme)} />
-							{thisScheme}
-						</label>
-					</div>
+					<RadioButton key={thisScheme} id={thisScheme} value={[scheme, setScheme]}>
+						{thisScheme}
+					</RadioButton>
 				))}
 			</Expander>
 		</div>

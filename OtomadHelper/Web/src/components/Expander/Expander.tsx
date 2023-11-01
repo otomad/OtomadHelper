@@ -11,27 +11,15 @@ const ExpanderParent = styled(SettingsCard)<{
 export /* manual */ const abcdef = 123456;
 
 const ExpanderChild = styled.div`
-	border: 1px solid ${c("black", 10)};
+	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-top-width: 0;
 	border-radius: 0 0 3px 3px;
 
 	.child-items {
-		background-color: ${c("white", 3.26)};
+		background-color: ${c("background-fill-color-card-background-secondary")};
 
 		> :not(:last-child) {
-			border-bottom: 1px solid ${c("white", 8.37)};
-		}
-	}
-
-	${ifColorScheme.light} & {
-		border-color: ${c("black", 5.78)};
-
-		.child-items {
-			background-color: ${c("#f6f6f6", 50)};
-
-			> :not(:last-child) {
-				border-bottom-color: ${c("black", 8.03)};
-			}
+			border-bottom: 1px solid ${c("stroke-color-divider-stroke-default")};
 		}
 	}
 `;

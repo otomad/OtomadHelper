@@ -1,3 +1,4 @@
+import { globalColors } from "./colors";
 import eases from "./eases";
 import reset from "./reset";
 
@@ -25,6 +26,8 @@ const GlobalStyle = createGlobalStyle<{
 		--foreground-color: #000000e5;
 		--accent-color: #005fb8;
 	}
+
+	${globalColors()};
 
 	*,
 	::before,

@@ -2,9 +2,10 @@
  * 转发 styles 目录中的模块。
  */
 
-import eases from "../styles/eases";
-import effects from "../styles/effects";
-import mixins from "../styles/mixins";
+import type { ColorNames } from "styles/colors";
+import eases from "styles/eases";
+import effects from "styles/effects";
+import mixins from "styles/mixins";
 
 export { eases };
 
@@ -19,7 +20,7 @@ export const styles = {
  * @param alpha - Alpha 值，注意是百分比值而不是零到一之间的小数，如果留空表示不透明色。
  * @returns 返回由 var 调用的自定义属性纯色，或 rgba 封装的透明色。
  */
-export function c(cssVarName: string & {} | "white" | "black", alpha?: number) {
+export function c(cssVarName: string & {} | "white" | "black" | ColorNames, alpha?: number) {
 	if (alpha !== undefined && (alpha < 0 || alpha > 100))
 		throw RangeError("The alpha parameter should be in range [0, 100]");
 	if (cssVarName === "white" || cssVarName === "black" || cssVarName.startsWith("#")) {
