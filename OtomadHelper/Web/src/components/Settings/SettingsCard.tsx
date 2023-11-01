@@ -1,4 +1,5 @@
 import { boxShadow } from "components/Button";
+import { styledExpanderItemBase, styledExpanderItemContent } from "components/Expander/ExpanderItem";
 
 const StyledSettingsCard = styled.div`
 	border-radius: 3px;
@@ -9,50 +10,12 @@ const StyledSettingsCard = styled.div`
 
 	> .base {
 		background-color: ${c("background-fill-color-card-background-default")};
+		${styledExpanderItemBase};
 		padding: 13px 15px;
-		display: flex;
-		gap: 16px;
-		align-items: center;
 		border-radius: inherit;
-
-		> :not(.text) {
-			flex-shrink: 0;
-		}
 	}
 
-	.icon {
-		font-size: 16px;
-	}
-
-	.text {
-		width: 100%;
-
-		> :empty {
-			display: none;
-		}
-
-		.heading {
-			font-size: 14px;
-		}
-
-		.caption {
-			font-size: 12px;
-			color: ${c("fill-color-text-secondary")};
-		}
-	}
-
-	.trailing {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-
-		.trailing-icon {
-			${styles.mixins.square("30px")};
-			${styles.mixins.flexCenter()};
-			margin-right: -7px;
-			border-radius: 3px;
-		}
-	}
+	${styledExpanderItemContent};
 
 	button& {
 		&:hover,
@@ -74,6 +37,10 @@ const StyledSettingsCard = styled.div`
 			&.button > .base .trailing-icon {
 				opacity: ${c("pressed-text-opacity")}
 			}
+		}
+		
+		&:focus-visible {
+			${boxShadow(c("stroke-color-control-stroke-default"))}, ${styles.effects.focus(true)};
 		}
 	}
 

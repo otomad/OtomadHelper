@@ -1,8 +1,6 @@
-export /* manual */ const boxShadow = (color: string) => css`box-shadow: 0 0 0 1px ${color} inset`;
+export /* internal */ const boxShadow = (color: string) => css`box-shadow: 0 0 0 1px ${color} inset`;
 
-const StyledButton = styled.button.attrs({
-	type: "button",
-})`
+const StyledButton = styled.button`
 	display: inline-flex;
 	border-radius: 4px;
 	--gradient-direction: bottom;
@@ -62,12 +60,6 @@ const StyledButton = styled.button.attrs({
 		}
 	}
 
-	/* ${ifColorScheme.light} & {
-		&::before {
-			background: linear-gradient(to top, ${c("stroke-color-control-stroke-tertiary")} 0%, transparent 10%) border-box;
-		}
-	} */
-
 	> .base > .content {
 		${styles.mixins.flexCenter()};
 		gap: 8px;
@@ -110,7 +102,7 @@ export default function Button({ children, icon, subtle, className, ...htmlAttrs
 	subtle?: boolean;
 }, HTMLButtonElement>) {
 	return (
-		<StyledButton className={[className, { subtle }]} {...htmlAttrs}>
+		<StyledButton type="button" className={[className, { subtle }]} {...htmlAttrs}>
 			<div className="base">
 				<div className="content">
 					{icon && <Icon name={icon} />}

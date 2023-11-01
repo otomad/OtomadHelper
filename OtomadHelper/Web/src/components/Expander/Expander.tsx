@@ -8,14 +8,14 @@ const ExpanderParent = styled(SettingsCard)<{
 	border-bottom-left-radius: 0;
 `);
 
-export /* manual */ const abcdef = 123456;
+export /* internal */ const abcdef = 123456;
 
 const ExpanderChild = styled.div`
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-top-width: 0;
 	border-radius: 0 0 3px 3px;
 
-	.child-items {
+	.expander-child-items {
 		background-color: ${c("background-fill-color-card-background-secondary")};
 
 		> :not(:last-child) {
@@ -53,7 +53,7 @@ export default function Expander({ icon, heading, caption, actions, expanded = f
 				unmountOnExit
 			>
 				<ExpanderChild ref={expanderChildRef}>
-					<div className="child-items">
+					<div className="expander-child-items">
 						{children}
 					</div>
 				</ExpanderChild>

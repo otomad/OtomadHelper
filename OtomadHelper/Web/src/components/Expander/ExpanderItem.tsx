@@ -1,14 +1,16 @@
-const StyledExpanderItem = styled.div`
-	padding: 7px 15px;
-	padding-right: 47px;
+export /* internal */ const styledExpanderItemBase = css`
+	padding: 7px 47px;
 	display: flex;
 	gap: 16px;
 	align-items: center;
+	min-height: 48px;
 
 	> :not(.text) {
 		flex-shrink: 0;
 	}
+`;
 
+export /* internal */ const styledExpanderItemContent = css`
 	.icon {
 		font-size: 16px;
 	}
@@ -46,6 +48,13 @@ const StyledExpanderItem = styled.div`
 			border-radius: 3px;
 		}
 	}
+`;
+
+const StyledExpanderItem = styled.div`
+	${styledExpanderItemBase};
+	padding-left: 15px;
+	
+	${styledExpanderItemContent};
 `;
 
 export default function ExpanderItem({ icon, heading, caption, children }: FCP<{

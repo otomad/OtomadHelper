@@ -2,9 +2,7 @@ const StyledTabItemWrapper = styled.div`
 	padding: 1.5px 5px 1.5px;
 `;
 
-const StyledTabItem = styled.button.attrs({
-	type: "button",
-})`
+const StyledTabItem = styled.button`
 	border-radius: 3px;
 	display: flex;
 	align-items: center;
@@ -78,7 +76,13 @@ export default function TabItem({ icon, children, active, collapsed, id: _id, fo
 			onExit={onExit}
 		>
 			<StyledTabItemWrapper {...htmlAttrs}>
-				<StyledTabItem ref={tabItemRef} tabIndex={focusable ? 0 : -1} {...htmlAttrs} className={{ active }}>
+				<StyledTabItem
+					type="button"
+					ref={tabItemRef}
+					tabIndex={focusable ? 0 : -1}
+					{...htmlAttrs}
+					className={{ active }}
+				>
 					<Icon name={icon} />
 					<div className="text">{children}</div>
 				</StyledTabItem>
