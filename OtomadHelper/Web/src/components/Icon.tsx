@@ -20,19 +20,23 @@ const StyledIcon = styled.span.attrs({
 	}
 `;
 
-export default function Icon({ name, filled, ...htmlAttrs }: FCP<{
+const Icon = forwardRef(({ name, filled, ...htmlAttrs }: FCP<{
 	/** 图标文件名称。 */
 	name: string;
 	/** 是否保持图标本身的颜色？ */
 	filled?: boolean;
-}, HTMLSpanElement>) {
+}, HTMLSpanElement>, ref: ForwardedRef<HTMLSpanElement>) => {
+	if (!name) return <span hidden />;
+
 	const symbolId = "#icon-" + name.replaceAll("/", "-");
 
 	return (
-		<StyledIcon $filled={filled} {...htmlAttrs}>
+		<StyledIcon $filled={filled} {...htmlAttrs} ref={ref}>
 			<svg aria-hidden>
 				<use href={symbolId} />
 			</svg>
 		</StyledIcon>
 	);
-}
+});
+
+export default Icon;

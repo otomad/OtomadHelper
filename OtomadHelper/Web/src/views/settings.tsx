@@ -3,6 +3,8 @@ export default function Settings() {
 	const languages = Object.keys(i18n.options.resources ?? {});
 	const schemes = ["light", "dark", "auto"] as const;
 	const { scheme, setScheme } = useColorMode();
+	const [checked, setChecked] = useState(false);
+	const [ind, setInd] = useState(false);
 
 	return (
 		<div className="container">
@@ -19,6 +21,10 @@ export default function Settings() {
 						{thisScheme}
 					</RadioButton>
 				))}
+			</Expander>
+			<Expander heading="Test" expanded>
+				<Checkbox value={[checked, setChecked]} indeterminate={[ind, setInd]}>复选框</Checkbox>
+				<Checkbox value={[ind, setInd]}>不定状态</Checkbox>
 			</Expander>
 		</div>
 	);

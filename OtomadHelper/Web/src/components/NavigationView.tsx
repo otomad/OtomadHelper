@@ -169,8 +169,6 @@ const StyledNavigationView = styled.div`
 `;
 
 const StyledPage = styled.main`
-	height: 100%;
-
 	&.exit {
 		opacity: 0;
 		translate: 0 -2rem;

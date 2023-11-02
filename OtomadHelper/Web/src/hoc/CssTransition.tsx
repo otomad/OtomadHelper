@@ -22,6 +22,6 @@ const CssTransition = forwardRef<HTMLElement, Partial<CSSTransitionProps>>((prop
 			</>
 		</_CSSTransition>
 	);
-});
+}) as FC<Partial<CSSTransitionProps>>;
 
 export default CssTransition;

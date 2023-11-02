@@ -26,18 +26,18 @@ const StyledRadioButtonLabel = styled.label`
 		scale: 0;
 	}
 
-	.radio {
+	.base {
 		${styles.mixins.square("18px")};
 		${styles.mixins.circle()};
 		background-color: ${c("fill-color-control-alt-secondary")};
 		outline: 1px solid ${c("stroke-color-control-strong-stroke-default")};
 	}
 
-	&:hover .radio {
+	&:hover .base {
 		background-color: ${c("fill-color-control-alt-tertiary")};
 	}
 
-	&:active .radio {
+	&:active .base {
 		background-color: ${c("fill-color-control-alt-quarternary")};
 		outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
 
@@ -47,7 +47,7 @@ const StyledRadioButtonLabel = styled.label`
 	}
 
 	input[disabled] ~ {
-		.radio {
+		.base {
 			background-color: ${c("fill-color-control-alt-disabled")};
 			outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
 		}
@@ -58,7 +58,7 @@ const StyledRadioButtonLabel = styled.label`
 	}
 
 	input:checked ~ {
-		.radio {
+		.base {
 			background-color: ${c("accent-color")};
 			outline-color: ${c("accent-color")};
 
@@ -68,15 +68,23 @@ const StyledRadioButtonLabel = styled.label`
 		}
 	}
 
-	&:hover input:checked ~ .radio .bullet {
-		scale: ${10 / 18};
+	&:hover input:checked ~ .base {
+		opacity: 0.9;
+
+		.bullet {
+			scale: ${10 / 18};
+		}
 	}
 
-	&:active input:checked ~ .radio .bullet {
-		scale: ${6 / 18};
+	&:active input:checked ~ .base {
+		opacity: 0.8;
+
+		.bullet {
+			scale: ${6 / 18};
+		}
 	}
 
-	input:checked[disabled] ~ .radio {
+	input:checked[disabled] ~ .base {
 		background-color: ${c("stroke-color-control-strong-stroke-disabled")};
 		outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
 	}
@@ -84,24 +92,30 @@ const StyledRadioButtonLabel = styled.label`
 	&:focus-visible {
 		box-shadow: none;
 
-		.radio {
+		.base {
 			${styles.effects.focus()};
 		}
 	}
 `;
 
-export default function RadioButton<T>({ children, id, value: [curValue, setValue] }: FCP<{
+export default function RadioButton<T>({ children, id, value: [curValue, setValue], disabled }: FCP<{
 	/** 标识符。 */
 	id: T;
 	/** 当前单选框组中选中的值。 */
 	value: StateProperty<T>;
+	/** 已禁用？ */
+	disabled?: boolean;
 }>) {
+	const labelRef = useRef<HTMLLabelElement>(null);
 	const checked = curValue === id;
+	const handleCheck = (checked: boolean = true) => checked && setValue?.(id);
+
+	useOnFormKeydown(labelRef, "radio", handleCheck);
 
 	return (
-		<StyledRadioButtonLabel tabIndex={checked ? 0 : -1}>
-			<input type="radio" checked={checked} onChange={e => e.target.checked && setValue?.(id)} />
-			<div className="radio">
+		<StyledRadioButtonLabel tabIndex={checked ? 0 : -1} ref={labelRef}>
+			<input type="radio" checked={checked} onChange={e => handleCheck(e.target.checked)} disabled={disabled} />
+			<div className="base">
 				<div className="bullet" />
 			</div>
 			<span className="text">{children}</span>
