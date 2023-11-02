@@ -63,6 +63,10 @@ const StyledNavigationView = styled.div`
 			overflow-x: hidden;
 		}
 
+		&:is(.compact, .minimal):not(.flyout) .nav-items::-webkit-scrollbar {
+			width: 0;
+		}
+
 		&.compact {
 			width: ${COMPACT_WIDTH}px;
 		}
