@@ -12,12 +12,18 @@ using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ScriptPortal.MediaSoftware.Skins;
+using System.IO.Packaging;
 
 namespace OtomadHelper.Module {
 	public partial class MainDock : UserControl {
 		public MainDock() {
 			InitializeComponent();
 			Dock = DockStyle.Fill;
+#if VEGAS_ENV
+			BackColor = Skins.Colors.ButtonFace;
+			ForeColor = Skins.Colors.ButtonText;
+#endif
 			InitLoadingAnimation();
 			Browser.EnsureCoreWebView2Async();
 		}

@@ -4,6 +4,7 @@ using OtomadHelper.Module;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using OtomadHelper.Helpers;
 
 namespace OtomadHelper.Module {
 	public class OtomadHelperModule : ICustomCommandModule {
@@ -13,11 +14,17 @@ namespace OtomadHelper.Module {
 		internal const string INTERNAL_NAME = "OtomadHelperInternal";
 		internal const string DISPLAY_NAME = "Otomad Helper";
 
+		internal static string CustomModulePath { get {
+			return Assembly.GetExecutingAssembly().Location;
+		} }
+		internal string VegasAppDataPath { get {
+			return vegas.GetApplicationDataPath(Environment.SpecialFolder.ApplicationData);
+		} }
+
 		public void InitializeModule(Vegas myVegas) {
 			vegas = myVegas;
 			customCommandModule.MenuItemName = DISPLAY_NAME;
-			customCommandModule.IconFile =
-				Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Otomad Helper.png");;
+			customCommandModule.IconFile = SaveAndGetIconPath();
 		}
 
 		public ICollection GetCustomCommands() {
@@ -35,10 +42,16 @@ namespace OtomadHelper.Module {
 			if (!vegas.ActivateDockView(INTERNAL_NAME)) {
 				OtomadHelperDock dock = new OtomadHelperDock {
 					AutoLoadCommand = customCommandModule,
-					PersistDockWindowState = true
+					PersistDockWindowState = true,
 				};
 				vegas.LoadDockView(dock);
 			}
+		}
+
+		private string SaveAndGetIconPath() {
+			string localIconPath = Path.Combine(VegasAppDataPath, "Otomad Helper.png");
+			ResourceHelper.WriteResourceToFile("Assets.ToolbarIcon.png", localIconPath);
+			return localIconPath;
 		}
 	}
 }
