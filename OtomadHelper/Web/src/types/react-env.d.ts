@@ -3,6 +3,12 @@ import type React from "react";
 import type _ReactTransitionGroup from "react-transition-group";
 import type { StoreApi, UseBoundStore } from "zustand";
 
+declare module "react" {
+	interface HTMLAttributes {
+		disabled?: boolean;
+	}
+}
+
 declare global {
 	/**
 	 * React Hook 风格函数式组件类型。

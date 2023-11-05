@@ -8,7 +8,6 @@ const StyledTabItem = styled.button`
 	align-items: center;
 	padding: 9px 16px 11px;
 	gap: 16px;
-	cursor: pointer;
 	width: -webkit-fill-available;
 	min-height: 40px;
 	position: relative;

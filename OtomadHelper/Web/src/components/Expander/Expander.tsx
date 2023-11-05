@@ -3,10 +3,19 @@ import SettingsCard from "../Settings/SettingsCard";
 const ExpanderParent = styled(SettingsCard)<{
 	/** 已展开？ */
 	$expanded?: boolean;
-}>(({ $expanded }) => $expanded && css`
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 0;
-`);
+}>(({ $expanded }) => {
+	const sharpBottom = css`
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+	`;
+	return $expanded && css`
+		${sharpBottom};
+		
+		> .base {
+			${sharpBottom};
+		}
+	`;
+});
 
 export /* internal */ const abcdef = 123456;
 

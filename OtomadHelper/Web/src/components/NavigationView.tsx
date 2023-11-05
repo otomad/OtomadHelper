@@ -38,7 +38,7 @@ const StyledNavigationView = styled.div`
 		flex-direction: column;
 	}
 
-	.left {
+	> .left {
 		width: 320px;
 		height: 100%;
 		flex-shrink: 0;
@@ -90,7 +90,7 @@ const StyledNavigationView = styled.div`
 		}
 	}
 
-	.right {
+	> .right {
 		width: 100%;
 
 		&.hairtail {

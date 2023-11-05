@@ -12,7 +12,7 @@ const StyledSettingsCard = styled.div`
 		background-color: ${c("background-fill-color-card-background-default")};
 		${styledExpanderItemBase};
 		padding: 13px 15px;
-		border-radius: inherit;
+		border-radius: 2px;
 	}
 
 	${styledExpanderItemContent};

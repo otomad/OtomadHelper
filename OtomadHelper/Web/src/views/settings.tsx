@@ -7,6 +7,8 @@ export default function Settings() {
 	const [ind, setInd] = useState(false);
 	const checkboxes = "foo,bar,baz".split(",");
 	const [checks, setChecks] = useState<string[]>([]);
+	const [on, setOn] = useState(false);
+	const [disabled, setDisabled] = useState(false);
 
 	return (
 		<div className="container">
@@ -24,11 +26,15 @@ export default function Settings() {
 					</RadioButton>
 				))}
 			</Expander>
-			<Expander heading="Test" expanded>
+			<Expander heading="Test">
 				<Checkbox value={[checked, setChecked]} indeterminate={[ind, setInd]}>复选框</Checkbox>
 				<Checkbox value={[ind, setInd]}>不定状态</Checkbox>
 				{checkboxes.map(check =>
 					<Checkbox key={check} id={check} value={[checks, setChecks]}>{check}</Checkbox>)}
+			</Expander>
+			<Expander heading="Test" expanded>
+				<ToggleSwitch on={[on, setOn]} disabled={disabled} />
+				<ToggleSwitch on={[disabled, setDisabled]} />
 			</Expander>
 		</div>
 	);

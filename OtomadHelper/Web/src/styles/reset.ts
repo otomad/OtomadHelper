@@ -12,7 +12,7 @@ export default css`
 			background: none;
 			border: none;
 			outline: none;
-			cursor: pointer;
+			cursor: default;
 			appearance: none;
 			color: inherit;
 		}
@@ -33,6 +33,7 @@ export default css`
 		[disabled],
 		:disabled {
 			cursor: not-allowed;
+			pointer-events: none;
 		}
 
 		h1,
