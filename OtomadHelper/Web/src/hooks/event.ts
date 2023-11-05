@@ -1,3 +1,50 @@
+export function useMountEffect(effect: React.EffectCallback) {
+	useEffect(effect, []);
+}
+
+/**
+ * 获取某个值之前的值。
+ * @param value - 值对象。
+ * @returns 先前的值。
+ */
+export function usePrevious<T>(value: T): T | undefined {
+	const ref = useRef<T>();
+	useEffect(() => {
+		ref.current = value;
+	});
+	return ref.current;
+}
+
+const usePreviousDeps = (deps: ChangeEffectDeps): ChangeEffectDeps => {
+	const prevRef = useRef(deps);
+	useEffect(() => {
+		prevRef.current = deps;
+	}, deps);
+	return prevRef.current;
+};
+
+const useUpdateEffect: typeof useEffect = (effect, deps) => {
+	const firstMount = useRef(true);
+	useEffect(() => {
+		if (firstMount.current) {
+			firstMount.current = false;
+			return;
+		}
+		effect();
+	}, deps);
+};
+
+type ChangeEffectDeps = ReadonlyArray<unknown>;
+export const useChangeEffect = (
+	effect: (...prevValue: ChangeEffectDeps) => void,
+	deps: ChangeEffectDeps,
+): void => {
+	const prevValue = usePreviousDeps(deps);
+	useUpdateEffect(() => {
+		effect(...prevValue);
+	}, deps);
+};
+
 type Options = Partial<{
 	/** 是否立即调用？ */
 	immediate: boolean;

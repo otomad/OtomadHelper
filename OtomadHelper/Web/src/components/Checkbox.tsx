@@ -99,6 +99,8 @@ const StyledRadioButtonLabel = styled.label`
 	}
 `;
 
+const timeoutExit0 = { exit: 0 } as const;
+
 interface SharedProps {
 	/** 已禁用？ */
 	disabled?: boolean;
@@ -111,21 +113,35 @@ export default function Checkbox<T>(props: FCP<{
 	id: T;
 	/** 当前单选框组中选中的值数组。 */
 	value: StateProperty<T[]>;
+	/** 状态改变事件。 */
+	onChange?: (e: { id: T; value: T[]; checkState: CheckState; checked: boolean }) => void;
 } & SharedProps>): JSX.Element;
 export default function Checkbox(props: FCP<{
 	/** 当前单选框是否被选中？ */
 	value: StateProperty<boolean>;
+	/** 状态改变事件。 */
+	onChange?: (e: { checkState: CheckState; checked: boolean }) => void;
 } & SharedProps>): JSX.Element;
-export default function Checkbox<T>({ children, id, value: [value, setValue], disabled, indeterminate: [indeterminate, setIndeterminate] = [] }: FCP<{
-	/** 标识符。 */
+export default function Checkbox<T>({ children, id, value: [value, setValue], disabled, indeterminate: [indeterminate, setIndeterminate] = [], onChange }: FCP<{
 	id?: T;
-	/** 当前单选框组中选中的值数组。 */
 	value: StateProperty<T[]> | StateProperty<boolean>;
+	onChange?: (e: { id: T; value: T[]; checkState: CheckState; checked: boolean }) => void;
 } & SharedProps>) {
 	const labelRef = useRef<HTMLLabelElement>(null);
 	const checkboxRef = useRef<HTMLInputElement>(null);
 	const singleMode = id === undefined;
-	const checked = indeterminate ? false : singleMode ? !!value : value === id;
+	const checked = indeterminate ? false : singleMode ? !!value : (value as T[]).includes(id);
+
+	const handleChange = (checked: boolean, indeterminate: boolean) => {
+		const checkbox = checkboxRef.current;
+		if (!checkbox) return;
+		const checkState: CheckState = indeterminate ? "indeterminate" : checked ? "checked" : "unchecked";
+		if (!singleMode)
+			onChange?.({ id, value: value as T[], checked, checkState });
+		else
+			(onChange as Function)?.({ checked, checkState });
+	};
+
 	const handleCheck = (checked?: boolean) => {
 		checked ??= !checkboxRef.current?.checked;
 		if (indeterminate && !checked) {
@@ -143,6 +159,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 			(setValue as SetStateNarrow<boolean>)?.(checked);
 	};
 
+	useChangeEffect(() => handleChange(checked, !!indeterminate), [checked, indeterminate]);
 	useEffect(() => { checkboxRef.current && (checkboxRef.current.indeterminate = !!indeterminate); }, [checkboxRef, indeterminate]);
 	useOnFormKeydown(labelRef, "checkbox", handleCheck);
 	const getCheckMarkName = useCallback(() => indeterminate ? "dash" : checked ? "accept" : "", [indeterminate, checked]);
@@ -151,7 +168,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	useEffect(() => {
 		setCheckMarkName(getCheckMarkName());
 	}, [indeterminate, checked]);
-	const switchTransitionMode = prevCheckMarkName === "" ? "in-out" : "out-in";
+	const switchTransitionTimeout = prevCheckMarkName === "" ? timeoutExit0 : undefined;
 
 	return (
 		<StyledRadioButtonLabel tabIndex={0} ref={labelRef}>
@@ -163,8 +180,8 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 				ref={checkboxRef}
 			/>
 			<div className="base">
-				<SwitchTransition mode={switchTransitionMode}>
-					<CssTransition key={checkMarkName}>
+				<SwitchTransition>
+					<CssTransition key={checkMarkName} timeout={switchTransitionTimeout}>
 						<Icon name={checkMarkName} />
 					</CssTransition>
 				</SwitchTransition>

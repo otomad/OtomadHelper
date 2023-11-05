@@ -98,17 +98,24 @@ const StyledRadioButtonLabel = styled.label`
 	}
 `;
 
-export default function RadioButton<T>({ children, id, value: [curValue, setValue], disabled }: FCP<{
+export default function RadioButton<T>({ children, id, value: [value, setValue], disabled, onChange }: FCP<{
 	/** 标识符。 */
 	id: T;
 	/** 当前单选框组中选中的值。 */
 	value: StateProperty<T>;
 	/** 已禁用？ */
 	disabled?: boolean;
+	/** 状态改变事件。 */
+	onChange?: (e: { id: T; value: T; checked: boolean }) => void;
 }>) {
 	const labelRef = useRef<HTMLLabelElement>(null);
-	const checked = curValue === id;
-	const handleCheck = (checked: boolean = true) => checked && setValue?.(id);
+	const checked = value === id;
+	const handleCheck = (checked: boolean = true) => {
+		if (checked) {
+			setValue?.(id);
+			onChange?.({ id, value: id, checked });
+		}
+	};
 
 	useOnFormKeydown(labelRef, "radio", handleCheck);
 
