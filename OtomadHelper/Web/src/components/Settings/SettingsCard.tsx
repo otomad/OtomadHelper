@@ -1,12 +1,10 @@
-import { boxShadow } from "components/Button";
 import { styledExpanderItemBase, styledExpanderItemContent } from "components/Expander/ExpanderItem";
 
 const StyledSettingsCard = styled.div`
 	border-radius: 3px;
 	width: -webkit-fill-available;
 	text-align: initial;
-	${boxShadow(c("stroke-color-card-stroke-default"))};
-	padding: 1px;
+	border: 1px solid ${c("stroke-color-card-stroke-default")};
 
 	> .base {
 		background-color: ${c("background-fill-color-card-background-default")};
@@ -20,7 +18,7 @@ const StyledSettingsCard = styled.div`
 	button& {
 		&:hover,
 		&:active {
-			${boxShadow(c("stroke-color-control-stroke-default"))};
+			border-color: ${c("stroke-color-control-stroke-default")};
 		}
 
 		&:hover > .base {
@@ -37,10 +35,6 @@ const StyledSettingsCard = styled.div`
 			&.button > .base .trailing-icon {
 				opacity: ${c("pressed-text-opacity")}
 			}
-		}
-		
-		&:focus-visible {
-			${boxShadow(c("stroke-color-control-stroke-default"))}, ${styles.effects.focus(true)};
 		}
 	}
 

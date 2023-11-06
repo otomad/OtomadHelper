@@ -244,21 +244,25 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 	exit.duration = duration[1];
 	enter.easing = easing[0];
 	exit.easing = easing[1];
+	
+	const ANIMATE_SIZE_END_EVENT = "animatesizeend"; // 这里我们使用一个自定义的事件，以防原生 CSS 过渡动画结束时干扰运行。
 
 	const onEnter = async () => {
 		const el = nodeRef.current;
 		if (!el) return;
 		await animateSize(el, null, enter);
-		el.dispatchEvent(new Event("transitionend"));
+		el.dispatchEvent(new Event(ANIMATE_SIZE_END_EVENT));
 	};
 
 	const onExit = async () => {
 		const el = nodeRef.current;
 		if (!el) return;
 		await animateSize(el, null, exit);
-		el.dispatchEvent(new Event("transitionend"));
+		el.dispatchEvent(new Event(ANIMATE_SIZE_END_EVENT));
 		el.hidden = true;
 	};
+	
+	const endListener = (done: () => void) => nodeRef.current?.addEventListener(ANIMATE_SIZE_END_EVENT, done, false);
 
-	return [onEnter, onExit];
+	return [onEnter, onExit, endListener] as const;
 }

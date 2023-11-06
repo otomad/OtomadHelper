@@ -1,19 +1,14 @@
-export /* internal */ const boxShadow = (color: string) => css`box-shadow: 0 0 0 1px ${color} inset`;
-
 const StyledButton = styled.button`
 	display: inline-flex;
 	border-radius: 4px;
-	--gradient-direction: bottom;
-	${styles.mixins.gradientBorder(css`linear-gradient(to var(--gradient-direction), ${c("stroke-color-control-stroke-tertiary")} 0%, transparent 10%)`)};
-	${boxShadow(c("stroke-color-control-stroke-default"))};
-	padding: 1px; // 修复边框与填充之间在特殊分辨率下的裂缝问题。
+	border: 1px solid ${c("stroke-color-control-stroke-default")};
 
-	${ifColorScheme.light} & {
-		--gradient-direction: top;
+	${ifColorScheme.dark} &:not(:active, [disabled]) {
+		border-top-color: ${c("stroke-color-control-stroke-secondary")};
 	}
 
-	&:focus-visible {
-		${boxShadow(c("stroke-color-control-stroke-default"))}, ${styles.effects.focus(true)};
+	${ifColorScheme.light} &:not(:active, [disabled]) {
+		border-bottom-color: ${c("stroke-color-control-stroke-secondary")};
 	}
 
 	> .base {
@@ -32,31 +27,19 @@ const StyledButton = styled.button`
 		background-color: ${c("fill-color-control-secondary")};
 	}
 
-	&:active {
-		&::before {
-			opacity: 0;
-		}
+	&:active > .base {
+		background-color: ${c("fill-color-control-tertiary")};
 
-		> .base {
-			background-color: ${c("fill-color-control-tertiary")};
-
-			> .content {
-				opacity: ${c("pressed-text-opacity")};
-			}
+		> .content {
+			opacity: ${c("pressed-text-opacity")};
 		}
 	}
 
-	&[disabled] {
-		&::before {
-			opacity: 0;
-		}
+	&[disabled] > .base {
+		background-color: ${c("fill-color-control-disabled")};
 
-		> .base {
-			background-color: ${c("fill-color-control-disabled")};
-
-			> .content {
-				opacity: ${c("disabled-text-opacity")};
-			}
+		> .content {
+			opacity: ${c("disabled-text-opacity")};
 		}
 	}
 
@@ -70,12 +53,8 @@ const StyledButton = styled.button`
 	}
 
 	&.subtle {
-		box-shadow: none;
+		border: none;
 		padding: 0;
-
-		&:focus-visible {
-			${styles.effects.focus()};
-		}
 
 		.base {
 			background-color: ${c("fill-color-subtle-transparent")};
