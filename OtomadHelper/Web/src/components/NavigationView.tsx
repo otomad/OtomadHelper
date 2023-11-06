@@ -77,6 +77,10 @@ const StyledNavigationView = styled.div`
 			&:not(.flyout) {
 				translate: -${COMPACT_WIDTH}px;
 			}
+			
+			&.flyout .nav-items::-webkit-scrollbar {
+				width: 0;
+			}
 		}
 
 		&.flyout {
