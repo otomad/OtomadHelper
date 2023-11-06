@@ -7,17 +7,17 @@ const StyledToggleSwitchLabel = styled.label`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	
+
 	.right {
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		
+
 		.text {
 			width: unset !important;
 		}
 	}
-	
+
 	.expander-child-items & {
 		${styledExpanderItemBase};
 		${styledExpanderItemContent};
@@ -36,7 +36,7 @@ const StyledToggleSwitchLabel = styled.label`
 		background-color: ${c("fill-color-control-alt-secondary")};
 		position: relative;
 	}
-	
+
 	.thumb {
 		${styles.mixins.square(`${THUMB_SIZE}px`)};
 		${styles.mixins.oval()};
@@ -48,7 +48,7 @@ const StyledToggleSwitchLabel = styled.label`
 
 	&:hover .base {
 		background-color: ${c("fill-color-control-alt-tertiary")};
-		
+
 		.thumb {
 			scale: calc(14 / ${THUMB_SIZE});
 		}
@@ -56,7 +56,7 @@ const StyledToggleSwitchLabel = styled.label`
 
 	&:active .base {
 		background-color: ${c("fill-color-control-alt-quarternary")};
-		
+
 		.thumb {
 			scale: calc(14 / ${THUMB_SIZE});
 			width: ${THUMB_PRESSED_WIDTH}px;
@@ -71,11 +71,11 @@ const StyledToggleSwitchLabel = styled.label`
 		.base {
 			background-color: ${c("fill-color-control-alt-disabled")};
 		}
-		
+
 		.thumb {
 			background-color: ${c("fill-color-text-disabled")};
 		}
-		
+
 		.text {
 			color: ${c("fill-color-text-disabled")};
 		}
@@ -89,7 +89,7 @@ const StyledToggleSwitchLabel = styled.label`
 		.base {
 			background-color: ${c("accent-color")};
 		}
-		
+
 		.thumb {
 			background-color: ${c("fill-color-text-on-accent-primary")};
 			outline: 1px solid ${c("stroke-color-control-stroke-secondary")};
@@ -102,7 +102,7 @@ const StyledToggleSwitchLabel = styled.label`
 
 		&:active {
 			opacity: 0.8;
-			
+
 			.thumb {
 				left: calc(100% - ${THUMB_PRESSED_WIDTH}px);
 			}
@@ -116,7 +116,7 @@ const StyledToggleSwitchLabel = styled.label`
 			.base {
 				background-color: ${c("stroke-color-control-strong-stroke-disabled")};
 			}
-			
+
 			.thumb {
 				background-color: ${c("fill-color-text-on-accent-disabled")};
 			}
@@ -131,20 +131,51 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 	disabled?: boolean;
 }>) {
 	const textLabel = on ? "On" : "Off";
-	
-	const handleCheck = () => {
-		if (disabled) return;
-		setOn?.(!on);
+	const [isDraging, setIsDraging] = useState(false);
+
+	const handleCheck = (on: boolean) => {
+		if (!isDraging) setOn?.(on);
+		setIsDraging(false);
 	};
 
+	const onThumbDown = useCallback<PointerEventHandler<HTMLDivElement>>(e => {
+		const thumb = e.currentTarget;
+		const control = thumb.parentElement!;
+		const controlRect = control.getBoundingClientRect();
+		const left = controlRect.left, max = controlRect.width - THUMB_PRESSED_WIDTH;
+		const x = e.pageX - left - thumb.offsetLeft;
+		const firstTime = new Date().getTime();
+		const pointerMove = (e: PointerEvent) => {
+			thumb.style.left = clamp(e.pageX - left - x, 0, max) + "px";
+			// 注意：直接使用 styled-components 的参数改变会影响性能。
+			thumb.style.transition = "none";
+		};
+		const pointerUp = (e: PointerEvent) => {
+			document.removeEventListener("pointermove", pointerMove);
+			document.removeEventListener("pointerup", pointerUp);
+			const isOn = e.pageX - x > left + max / 2;
+			handleCheck(isOn);
+			thumb.style.removeProperty("left");
+			thumb.style.removeProperty("transition");
+			const lastTime = new Date().getTime();
+			setIsDraging(lastTime - firstTime > 200); // 定义识别为拖动而不是点击的时间差。
+		};
+		document.addEventListener("pointermove", pointerMove);
+		document.addEventListener("pointerup", pointerUp);
+	}, []);
+
 	return (
-		<StyledToggleSwitchLabel className={{ active: on }} disabled={disabled} onClick={handleCheck}>
+		<StyledToggleSwitchLabel
+			className={{ active: on }}
+			disabled={disabled}
+			onClick={() => handleCheck(!on)}
+		>
 			<div className="text">{children}</div>
 			<div className="right">
 				<span className="text">{textLabel}</span>
 				<div className="stroke">
 					<div className="base">
-						<div className="thumb" />
+						<div className="thumb" onPointerDown={onThumbDown} />
 					</div>
 				</div>
 			</div>

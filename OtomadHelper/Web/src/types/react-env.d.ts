@@ -53,6 +53,6 @@ declare global {
 	export type ZustandState<S> = S extends UseBoundStore<StoreApi<infer T>> ? T : never;
 
 	export type { Draft } from "immer";
-	export type { CSSProperties, ChangeEvent, ChangeEventHandler, DependencyList, EventHandler, ForwardedRef, KeyboardEventHandler, MouseEventHandler, ReactElement, ReactNode, RefObject } from "react";
+	export type { CSSProperties, ChangeEvent, ChangeEventHandler, DependencyList, EventHandler, ForwardedRef, KeyboardEventHandler, MouseEventHandler, PointerEventHandler, ReactElement, ReactNode, RefObject } from "react";
 	export type { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 }
