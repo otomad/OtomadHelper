@@ -25,7 +25,7 @@ const floatUp = keyframes`
 	}
 `;
 
-const CONTENT_MARGIN_X = 56;
+const CONTENT_MARGIN_X = 20;
 const TITLE_LINE_HEIGHT = 40;
 const COMPACT_WIDTH = 58;
 
@@ -105,10 +105,14 @@ const StyledNavigationView = styled.div`
 				}
 			}
 		}
+		
+		&.minimal > .title-wrapper {
+			margin-top: 36px;
+		}
 
 		.title-wrapper {
 			position: relative;
-			margin: 22px 0 18px;
+			margin: 12px 0 8px;
 			font-weight: 600;
 			overflow: hidden;
 			flex-shrink: 0;
@@ -263,8 +267,8 @@ interface NavBrItem {
 
 type PaneDisplayMode = "expanded" | "compact" | "minimal";
 const getPaneDisplayMode = (): PaneDisplayMode =>
-	window.innerWidth < 670 ? "minimal" :
-	window.innerWidth < 865 ? "compact" : "expanded";
+	window.innerWidth < 641 ? "minimal" :
+	window.innerWidth < 1008 ? "compact" : "expanded";
 const usePaneDisplayMode = () => {
 	const [paneDisplayMode, setPaneDisplayMode] = useState<PaneDisplayMode>(getPaneDisplayMode());
 	useEventListener(window, "resize", () => setPaneDisplayMode(getPaneDisplayMode()));
