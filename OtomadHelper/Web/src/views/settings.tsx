@@ -3,8 +3,9 @@ export default function Settings() {
 	const languages = Object.keys(i18n.options.resources ?? {});
 	const schemes = ["light", "dark", "auto"] as const;
 	const { scheme, setScheme } = useColorMode();
-	const [checked, setChecked] = useState(false);
-	const [ind, setInd] = useState(false);
+	const [checked, setChecked] = useState<CheckState>("unchecked");
+	const checkStates = ["unchecked", "checked", "indeterminate"] as const satisfies readonly CheckState[];
+	const [checkStatesI, setCheckStatesI] = useState(0);
 	const checkboxes = "foo,bar,baz".split(",");
 	const [checks, setChecks] = useState<string[]>([]);
 	const [on, setOn] = useState(false);
@@ -27,8 +28,9 @@ export default function Settings() {
 				))}
 			</Expander>
 			<Expander heading="Test">
-				<Checkbox value={[checked, setChecked]} indeterminate={[ind, setInd]}>复选框</Checkbox>
-				<Checkbox value={[ind, setInd]}>不定状态</Checkbox>
+				<Checkbox value={[checked, setChecked]}>复选框</Checkbox>
+				<Checkbox value={[checked === "indeterminate", (ind: boolean) => setChecked(ind ? "indeterminate" : "unchecked")]}>不定状态</Checkbox>
+				<Checkbox value={[checkStates[checkStatesI], () => setCheckStatesI(i => (i + 1) % 3)]}>切换</Checkbox>
 				{checkboxes.map(check =>
 					<Checkbox key={check} id={check} value={[checks, setChecks]}>{check}</Checkbox>)}
 			</Expander>

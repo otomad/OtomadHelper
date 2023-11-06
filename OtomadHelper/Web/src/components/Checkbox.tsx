@@ -104,8 +104,6 @@ const timeoutExit0 = { exit: 0 } as const;
 interface SharedProps {
 	/** 已禁用？ */
 	disabled?: boolean;
-	/** 是否是不定状态/半选状态？ */
-	indeterminate?: StateProperty<boolean>;
 }
 
 export default function Checkbox<T>(props: FCP<{
@@ -122,24 +120,31 @@ export default function Checkbox(props: FCP<{
 	/** 状态改变事件。 */
 	onChange?: (e: { checkState: CheckState; checked: boolean }) => void;
 } & SharedProps>): JSX.Element;
-export default function Checkbox<T>({ children, id, value: [value, setValue], disabled, indeterminate: [indeterminate, setIndeterminate] = [], onChange }: FCP<{
+export default function Checkbox(props: FCP<{
+	/** 复选状态。 */
+	value: StateProperty<CheckState>;
+	/** 状态改变事件。 */
+	onChange?: (e: { checkState: CheckState; checked: boolean | null }) => void;
+} & SharedProps>): JSX.Element;
+export default function Checkbox<T>({ children, id, value: [value, setValue], disabled, onChange }: FCP<{
 	id?: T;
-	value: StateProperty<T[]> | StateProperty<boolean>;
-	onChange?: (e: { id: T; value: T[]; checkState: CheckState; checked: boolean }) => void;
+	value: StateProperty<T[]> | StateProperty<boolean> | StateProperty<CheckState>;
+	onChange?: Function;
 } & SharedProps>) {
 	const labelRef = useRef<HTMLLabelElement>(null);
 	const checkboxRef = useRef<HTMLInputElement>(null);
-	const singleMode = id === undefined;
-	const checked = indeterminate ? false : singleMode ? !!value : (value as T[]).includes(id);
+	const singleMode = id === undefined, checkStateMode = typeof value === "string";
+	const checked = checkStateMode ? value === "checked" : singleMode ? !!value : (value as T[]).includes(id);
+	const indeterminate = value === "indeterminate";
 
 	const handleChange = (checked: boolean, indeterminate: boolean) => {
 		const checkbox = checkboxRef.current;
 		if (!checkbox) return;
 		const checkState: CheckState = indeterminate ? "indeterminate" : checked ? "checked" : "unchecked";
-		if (!singleMode)
-			onChange?.({ id, value: value as T[], checked, checkState });
+		if (singleMode)
+			onChange?.({ checked: indeterminate ? null : checked, checkState });
 		else
-			(onChange as Function)?.({ checked, checkState });
+			onChange?.({ id, value: value as T[], checked, checkState });
 	};
 
 	const handleCheck = (checked?: boolean) => {
@@ -148,19 +153,21 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 			checkboxRef.current && (checkboxRef.current.checked = true);
 			checked = true;
 		}
-		setIndeterminate?.(false);
-		if (!singleMode)
+		const checkState: CheckState = checked ? "checked" : "unchecked";
+		if (checkStateMode)
+			(setValue as SetStateNarrow<CheckState>)?.(checkState);
+		else if (singleMode)
+			(setValue as SetStateNarrow<boolean>)?.(checked);
+		else
 			(setValue as SetStateNarrow<T[]>)?.(produce(values => {
 				const draftedId = id as Draft<T>;
 				if (checked) values.push(draftedId);
 				else arrayRemoveAllItem(values, draftedId);
 			}));
-		else
-			(setValue as SetStateNarrow<boolean>)?.(checked);
 	};
 
-	useChangeEffect(() => handleChange(checked, !!indeterminate), [checked, indeterminate]);
-	useEffect(() => { checkboxRef.current && (checkboxRef.current.indeterminate = !!indeterminate); }, [checkboxRef, indeterminate]);
+	useChangeEffect(() => handleChange(checked, indeterminate), [indeterminate, checked]);
+	useEffect(() => { checkboxRef.current && (checkboxRef.current.indeterminate = indeterminate); }, [checkboxRef, indeterminate]);
 	useOnFormKeydown(labelRef, "checkbox", handleCheck);
 	const getCheckMarkName = useCallback(() => indeterminate ? "dash" : checked ? "accept" : "", [indeterminate, checked]);
 	const [checkMarkName, setCheckMarkName] = useState(getCheckMarkName());
