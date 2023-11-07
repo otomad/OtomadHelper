@@ -1,6 +1,6 @@
 import type { LocaleIdentifiers } from "./types";
 
-const SChinese: LocaleIdentifiers = {
+const SChinese = {
 	translation: {
 		source: "素材",
 		midi: "MIDI",
@@ -13,8 +13,7 @@ const SChinese: LocaleIdentifiers = {
 		tools: "工具",
 		mosh: "抹失",
 		settings: "设置",
-		otomadOrYtpmv: "音MAD/YTPMV",
 	},
-};
+} as const satisfies LocaleIdentifiers;
 
 export default SChinese;

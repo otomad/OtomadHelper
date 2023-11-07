@@ -41,7 +41,7 @@ export function useOnFormKeydown(element: RefObject<HTMLElement>, type: "radio" 
 			}
 			thatComponent ??= thisComponent;
 			thatComponent.focus();
-			if (type === "radio") thatComponent.dispatchEvent(new Event(CUTSOM_CHANGE_EVENT));
+			if (type === "radio") thatComponent.dispatchEvent(new CustomEvent(CUTSOM_CHANGE_EVENT));
 		};
 
 		const onKeyup = (e: KeyboardEvent) => {

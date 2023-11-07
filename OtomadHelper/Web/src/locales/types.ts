@@ -1,5 +1,6 @@
 import type { TOptions } from "i18next";
 import English from "./English";
+import SChinese from "./SChinese";
 
 export type I18nArgsFunction<R extends string = string> = {
 	(options: TOptions): R;
@@ -16,5 +17,5 @@ type DiscardConstString<L> = {
 	[key in keyof L]: L[key] extends object ? DiscardConstString<L[key]> : string;
 };
 
-export type LocaleWithDefaultValue = NestLocaleWithDefaultValue<typeof English["translation"]>;
+export type LocaleWithDefaultValue = NestLocaleWithDefaultValue<typeof SChinese["translation"]>;
 export type LocaleIdentifiers = DiscardConstString<typeof English>;
