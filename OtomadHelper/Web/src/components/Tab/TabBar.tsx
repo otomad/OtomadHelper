@@ -7,21 +7,25 @@ const Indicator = styled.div<{
 	$noTransition?: boolean;
 	/** 位置（上方向和下方向距离容器的距离元组）。 */
 	$position?: TwoD;
+	/** 纵向的选项卡？ */
+	$vertical?: boolean;
 }>`
 	${styles.mixins.oval()}
-	width: ${THICKNESS}px;
+	${({ $vertical }) => $vertical ? "width" : "height"}: ${THICKNESS}px;
 	background-color: ${c("accent-color")};
 	position: absolute;
-	left: 5px;
+	${({ $vertical }) => $vertical ? css`left: 5px` : css`bottom: 0`};
 	${({ $noTransition }) => $noTransition && css`transition: none`};
-	${({ $position }) => $position && css`
-		top: ${$position[0]}px;
-		bottom: ${$position[1]}px;
+	${({ $position, $vertical }) => $position && css`
+		${$vertical ? "top" : "left"}: ${$position[0]}px;
+		${$vertical ? "bottom" : "right"}: ${$position[1]}px;
 	`};
 `;
 
 const StyledTabBar = styled.div`
-	position: relative;
+	> .scroll {
+		position: relative;
+	}
 
 	&:has(.active:active) ${Indicator} {
 		scale: 1 0.5;
@@ -34,6 +38,10 @@ const StyledTabBar = styled.div`
 	}
 
 	.items {
+		> * {
+			flex-shrink: 0;
+		}
+
 		.enter {
 			opacity: 0;
 		}
@@ -49,13 +57,34 @@ const StyledTabBar = styled.div`
 			transition: opacity 500ms ease-in;
 		}
 	}
+
+	&.horizontal {
+		width: 100%;
+		overflow-x: auto;
+		margin: -4px;
+		padding: 4px;
+		
+		&::-webkit-scrollbar {
+			height: 0;
+		}
+		
+		> .scroll {
+			width: min-content;
+		}
+
+		.items {
+			display: flex;
+		}
+	}
 `;
 
-export default function TabBar<T extends string = string>({ current: [current, setCurrent], collapsed, children }: FCP<{
+export default function TabBar<T extends string = string>({ current: [current, setCurrent], collapsed, children, vertical }: FCP<{
 	/** 当前选中项标识符。 */
 	current: StateProperty<T>;
 	/** 是否隐藏文本标签，仅显示图标？ */
 	collapsed?: boolean;
+	/** 是否使用纵向的 NavigationView 样式？ */
+	vertical?: boolean;
 }>) {
 	const indicator = useRef<HTMLDivElement>(null);
 	const [position, _setPosition] = useState<TwoD>([NaN, NaN]);
@@ -70,7 +99,9 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		type TabBarMovement = "previous" | "next" | "appear" | "disappear" | "none";
 		let movement: TabBarMovement = "none";
 		const entireRect = ind.parentElement!.getBoundingClientRect();
-		const entire1 = entireRect.top, entire2 = entireRect.bottom, entireLength = entire2 - entire1;
+		const entire1 = entireRect[vertical ? "top" : "left"],
+			entire2 = entireRect[vertical ? "bottom" : "right"],
+			entireLength = entire2 - entire1;
 		const setPosition = setStateInterceptor(_setPosition, ([pos1, pos2]: TwoD) => [pos1, entireLength - pos2] as TwoD);
 		const [entry1, entry2] = position;
 		if (entry1 + entry2 >= entireLength || !Number.isFinite(entry1) || !Number.isFinite(entry2))
@@ -84,7 +115,8 @@ export default function TabBar<T extends string = string>({ current: [current, s
 			return;
 		}
 		const targetRect = activeTabItem.getBoundingClientRect();
-		let target1 = targetRect.top - entire1, target2 = targetRect.bottom - entire1;
+		let target1 = targetRect[vertical ? "top" : "left"] - entire1,
+			target2 = targetRect[vertical ? "bottom" : "right"] - entire1;
 		const targetOffset = (target2 - target1 - LENGTH) / 2;
 		if (targetOffset > 0) target1 += targetOffset, target2 -= targetOffset;
 		if (movement === "appear") {
@@ -118,21 +150,23 @@ export default function TabBar<T extends string = string>({ current: [current, s
 	}, [current, children]);
 
 	return (
-		<StyledTabBar>
-			<div className="items">
-				{React.Children.map(children, child => {
-					if (!isReactInstance(child, TabItem)) return child;
-					const id = child.props.id as T;
-					return (
-						React.cloneElement(child, {
-							collapsed,
-							active: current === id,
-							onClick: () => setCurrent?.(id),
-						})
-					);
-				})}
+		<StyledTabBar className={[vertical ? "vertical" : "horizontal"]}>
+			<div className="scroll">
+				<div className="items">
+					{React.Children.map(children, child => {
+						if (!isReactInstance(child, TabItem)) return child;
+						const id = child.props.id as T;
+						return (
+							React.cloneElement(child, {
+								collapsed,
+								active: current === id,
+								onClick: () => setCurrent?.(id),
+							})
+						);
+					})}
+				</div>
+				<Indicator ref={indicator} $position={position} $noTransition={noIndicatorTransition} $vertical={vertical} />
 			</div>
-			<Indicator ref={indicator} $position={position} $noTransition={noIndicatorTransition} />
 		</StyledTabBar>
 	);
 }

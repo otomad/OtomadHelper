@@ -1,25 +1,40 @@
 diff --git a/node_modules/babel-plugin-styled-components/lib/utils/detectors.js b/node_modules/babel-plugin-styled-components/lib/utils/detectors.js
-index 3ad71f3..aaae80e 100644
+index 3ad71f3..5eb3960 100644
 --- a/node_modules/babel-plugin-styled-components/lib/utils/detectors.js
 +++ b/node_modules/babel-plugin-styled-components/lib/utils/detectors.js
 @@ -14,6 +14,7 @@ const isValidTopLevelImport = (x, state) => {
  exports.isValidTopLevelImport = isValidTopLevelImport;
  const localNameCache = {};
  const importLocalName = (name, state, options = {}) => {
-+  return 'styled';
++  return name === 'default' ? 'styled' : name;
    const {
      cacheIdentifier,
      bypassCache = false
 diff --git a/node_modules/babel-plugin-styled-components/lib/utils/getName.js b/node_modules/babel-plugin-styled-components/lib/utils/getName.js
-index 90d17cc..4347a34 100644
+index 90d17cc..d71401f 100644
 --- a/node_modules/babel-plugin-styled-components/lib/utils/getName.js
 +++ b/node_modules/babel-plugin-styled-components/lib/utils/getName.js
-@@ -46,6 +46,7 @@ var _default = t => path => {
+@@ -46,6 +46,8 @@ var _default = t => path => {
    }
-
+ 
    // identifiers are the only thing we can reliably get a name from
 -  return t.isIdentifier(namedNode) ? namedNode.name : undefined;
 +  const name = t.isIdentifier(namedNode) ? namedNode.name : undefined;
-+  return name.replaceAll(/^Styled(?=[A-Z0-9])/g, "").replaceAll(/(?<!^)([A-Z])/g, "-$1").toLowerCase();
++  const kebab = name.replaceAll(/^Styled(?=[A-Z0-9])/g, "").replaceAll(/(?<!^)([A-Z])/g, "-$1").toLowerCase();
++  return kebab + " " + kebab;
  };
  exports.default = _default;
+diff --git a/node_modules/babel-plugin-styled-components/lib/visitors/displayNameAndId.js b/node_modules/babel-plugin-styled-components/lib/visitors/displayNameAndId.js
+index 5a8c910..773e0cd 100644
+--- a/node_modules/babel-plugin-styled-components/lib/visitors/displayNameAndId.js
++++ b/node_modules/babel-plugin-styled-components/lib/visitors/displayNameAndId.js
+@@ -124,7 +124,7 @@ var _default = t => (path, state) => {
+   // styled(x).withConfig({})
+   (0, _detectors.isStyled)(t)(path.node.callee, state) && t.isMemberExpression(path.node.callee.callee) && path.node.callee.callee.property && path.node.callee.callee.property.name && path.node.callee.callee.property.name === 'withConfig' && path.node.callee.arguments.length && Array.isArray(path.node.callee.arguments[0].properties) && !path.node.callee.arguments[0].properties.some(prop => ['displayName', 'componentId'].includes(prop.key.name))) {
+     const displayName = (0, _options.useDisplayName)(state) && getDisplayName(t)(path, (0, _options.useFileName)(state) && state);
+-    addConfig(t)(path, displayName && displayName.replace(/[^_a-zA-Z0-9-]/g, ''), (0, _options.useSSR)(state) && getComponentId(state));
++    addConfig(t)(path, displayName, (0, _options.useSSR)(state) && getComponentId(state));
+   }
+ };
+ exports.default = _default;
+\ No newline at end of file

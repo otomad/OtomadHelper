@@ -177,7 +177,7 @@ export async function* animateSizeGenerator(
 		keyframes[1].translate = setTranslate([isWidthChanged ? startWidth : 0, isHeightChanged ? startHeight : 0]);
 	Object.assign(keyframes[0], startStyle);
 	Object.assign(keyframes[1], endStyle);
-	const animationOptions: KeyframeAnimationOptions = { duration, easing };
+	const animationOptions: KeyframeAnimationOptions = { duration, easing, fill: "forwards", composite: "replace" };
 	const htmlElement = element as HTMLElement;
 	if (!noCropping) htmlElement.style.overflow = "hidden";
 	const result = element.animate(keyframes, animationOptions);
@@ -259,7 +259,7 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 		if (!el) return;
 		await animateSize(el, null, exit);
 		el.dispatchEvent(new CustomEvent(ANIMATE_SIZE_END_EVENT));
-		el.hidden = true;
+		// el.hidden = true;
 	};
 
 	const endListener = (done: () => void) => nodeRef.current?.addEventListener(ANIMATE_SIZE_END_EVENT, done, false);

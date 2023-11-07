@@ -23,6 +23,7 @@ const ExpanderChild = styled.div`
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-top-width: 0;
 	border-radius: 0 0 3px 3px;
+	overflow: hidden;
 
 	.expander-child-items {
 		background-color: ${c("background-fill-color-card-background-secondary")};

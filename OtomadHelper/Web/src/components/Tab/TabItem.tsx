@@ -1,5 +1,7 @@
 const StyledTabItemWrapper = styled.div`
-	padding: 1.5px 5px 1.5px;
+	.tab-bar.vertical & {
+		padding: 1.5px 5px 1.5px;
+	}
 `;
 
 const StyledTabItem = styled.button`
@@ -12,19 +14,21 @@ const StyledTabItem = styled.button`
 	min-height: 40px;
 	position: relative;
 	overflow-x: hidden;
+	
+	.tab-bar.vertical & {
+		&:hover,
+		&.active {
+			background-color: ${c("fill-color-subtle-secondary")};
+		}
 
-	&:hover,
-	&.active {
-		background-color: ${c("fill-color-subtle-secondary")};
-	}
+		&:not(.active):active,
+		&.active:not(:active):hover {
+			background-color: ${c("fill-color-subtle-tertiary")};
+		}
 
-	&:not(.active):active,
-	&.active:not(:active):hover {
-		background-color: ${c("fill-color-subtle-tertiary")};
-	}
-
-	&:active > * {
-		opacity: ${c("pressed-text-opacity")}
+		&:active > * {
+			opacity: ${c("pressed-text-opacity")}
+		}
 	}
 
 	.icon {
@@ -36,11 +40,23 @@ const StyledTabItem = styled.button`
 		white-space: nowrap;
 		line-height: 20px;
 	}
+
+	.tab-bar.horizontal & {
+		padding: 20px 12px;
+		
+		&:hover {
+			color: ${c("fill-color-text-secondary")};
+		}
+		
+		&:active {
+			color: ${c("fill-color-text-tertiary")};
+		}
+	}
 `;
 
 export default function TabItem({ icon, children, active, collapsed, id: _id, focusable = true, ...htmlAttrs }: FCP<{
 	/** 图标。 */
-	icon: string;
+	icon?: string;
 	/** 标识符。 */
 	id: string;
 	/** 是否活跃状态？ */
@@ -82,7 +98,7 @@ export default function TabItem({ icon, children, active, collapsed, id: _id, fo
 					{...htmlAttrs}
 					className={{ active }}
 				>
-					<Icon name={icon} />
+					{icon && <Icon name={icon} />}
 					<div className="text">{children}</div>
 				</StyledTabItem>
 			</StyledTabItemWrapper>

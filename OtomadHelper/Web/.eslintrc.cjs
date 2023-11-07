@@ -175,6 +175,7 @@ module.exports = {
 			{ allowConstantExport: true },
 		],
 		"react-hooks/exhaustive-deps": "off",
+		"react-hooks/rules-of-hooks": "off",
 		"react/react-in-jsx-scope": "off",
 		"react/prop-types": "off",
 		"react/jsx-no-undef": "off",

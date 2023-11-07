@@ -234,14 +234,14 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 			<NavButton $shadow />
 			<div ref={navItemsRef} className={["nav-items", { overflowing: isNavItemsOverflowing }]}>
 				{customContent}
-				<TabBar current={currentNavTab} collapsed={paneDisplayMode === "compact"}>
+				<TabBar current={currentNavTab} collapsed={paneDisplayMode === "compact"} vertical>
 					{navItems.map((item, index) => {
 						if (!item.bottom) return getNavItemNode(item, index);
 					})}
 				</TabBar>
 			</div>
 			<div className="nav-items-bottom">
-				<TabBar current={currentNavTab} collapsed={paneDisplayMode === "compact"}>
+				<TabBar current={currentNavTab} collapsed={paneDisplayMode === "compact"} vertical>
 					{navItems.map((item, index) => {
 						if (item.bottom) return getNavItemNode(item, index);
 					})}
