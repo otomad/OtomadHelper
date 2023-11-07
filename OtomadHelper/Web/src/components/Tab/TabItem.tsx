@@ -11,10 +11,10 @@ const StyledTabItem = styled.button`
 	padding: 9px 16px 11px;
 	gap: 16px;
 	width: -webkit-fill-available;
-	min-height: 40px;
+	min-height: 30px;
 	position: relative;
 	overflow-x: hidden;
-	
+
 	.tab-bar.vertical & {
 		&:hover,
 		&.active {
@@ -41,20 +41,36 @@ const StyledTabItem = styled.button`
 		line-height: 20px;
 	}
 
+	.fill {
+		width: 100%;
+		text-align: left;
+	}
+
+	.badge-wrapper {
+		position: relative;
+
+		.badge {
+			position: absolute;
+			right: 0;
+			top: 0;
+			translate: 50% -50%;
+		}
+	}
+
 	.tab-bar.horizontal & {
-		padding: 20px 12px;
-		
+		padding: 14px 12px;
+
 		&:hover {
 			color: ${c("fill-color-text-secondary")};
 		}
-		
+
 		&:active {
 			color: ${c("fill-color-text-tertiary")};
 		}
 	}
 `;
 
-export default function TabItem({ icon, children, active, collapsed, id: _id, focusable = true, ...htmlAttrs }: FCP<{
+export default function TabItem({ icon, children, active, collapsed, id: _id, focusable = true, badge, vertical, ...htmlAttrs }: FCP<{
 	/** 图标。 */
 	icon?: string;
 	/** 标识符。 */
@@ -65,6 +81,10 @@ export default function TabItem({ icon, children, active, collapsed, id: _id, fo
 	collapsed?: boolean;
 	/** 是否可被聚焦？ */
 	focusable?: boolean;
+	/** 角标。 */
+	badge?: string | number;
+	/** 是否使用纵向的 NavigationView 样式？ */
+	vertical?: boolean;
 }, HTMLElement>) {
 	const tabItemRef = useRef<HTMLButtonElement>(null);
 
@@ -82,6 +102,9 @@ export default function TabItem({ icon, children, active, collapsed, id: _id, fo
 		el.dispatchEvent(new Event("transitionend"));
 	};
 
+	const BadgeItem = useCallback(({ hidden }: { hidden?: boolean }) =>
+		<Badge status="asterisk" hidden={badge === undefined || hidden}>{badge}</Badge>, [badge]);
+
 	return (
 		<Transition
 			nodeRef={tabItemRef}
@@ -98,8 +121,17 @@ export default function TabItem({ icon, children, active, collapsed, id: _id, fo
 					{...htmlAttrs}
 					className={{ active }}
 				>
-					{icon && <Icon name={icon} />}
-					<div className="text">{children}</div>
+					{icon && (
+						<div className="badge-wrapper">
+							<Icon name={icon} />
+							<BadgeItem hidden={!(vertical && collapsed)} />
+						</div>
+					)}
+					<div className="badge-wrapper fill">
+						<div className="text">{children}</div>
+						{!vertical && <BadgeItem />}
+					</div>
+					{vertical && <BadgeItem />}
 				</StyledTabItem>
 			</StyledTabItemWrapper>
 		</Transition>

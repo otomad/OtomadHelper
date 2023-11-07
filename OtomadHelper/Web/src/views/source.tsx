@@ -8,7 +8,7 @@ export default function Source() {
 			<TabBar current={[source, setSource]}>
 				<TabItem id="events">Track events</TabItem>
 				<TabItem id="media">Media</TabItem>
-				<TabItem id="file">Select files</TabItem>
+				<TabItem id="file">Select file</TabItem>
 			</TabBar>
 			<SettingsCard heading="Trim" caption="Adjust start or end time of the specified source" type="button" />
 			<Expander heading="Generate at" caption="Specify when to start generating from the project">

@@ -2,7 +2,6 @@ import "virtual:svg-icons-register";
 
 const squared = styles.mixins.square("1em");
 const StyledIcon = styled.span.attrs({
-	className: "icon",
 	role: "img",
 })<{
 	/** 是否保持图标本身的颜色？ */
@@ -20,12 +19,12 @@ const StyledIcon = styled.span.attrs({
 	}
 `;
 
-const Icon = forwardRef(({ name, filled, ...htmlAttrs }: FCP<{
+export default forwardRef(function Icon({ name, filled, ...htmlAttrs }: FCP<{
 	/** 图标文件名称。 */
 	name: string;
 	/** 是否保持图标本身的颜色？ */
 	filled?: boolean;
-}, HTMLSpanElement>, ref: ForwardedRef<HTMLSpanElement>) => {
+}, HTMLSpanElement>, ref: ForwardedRef<HTMLSpanElement>) {
 	if (!name) return <span hidden />;
 
 	const symbolId = "#icon-" + name.replaceAll("/", "-");
@@ -38,5 +37,3 @@ const Icon = forwardRef(({ name, filled, ...htmlAttrs }: FCP<{
 		</StyledIcon>
 	);
 });
-
-export default Icon;

@@ -41,21 +41,6 @@ const StyledTabBar = styled.div`
 		> * {
 			flex-shrink: 0;
 		}
-
-		.enter {
-			opacity: 0;
-		}
-		.enter-active {
-			opacity: 1;
-			transition: opacity 500ms ease-in;
-		}
-		.exit {
-			opacity: 1;
-		}
-		.exit-active {
-			opacity: 0;
-			transition: opacity 500ms ease-in;
-		}
 	}
 
 	&.horizontal {
@@ -159,6 +144,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 						return (
 							React.cloneElement(child, {
 								collapsed,
+								vertical,
 								active: current === id,
 								onClick: () => setCurrent?.(id),
 							})
