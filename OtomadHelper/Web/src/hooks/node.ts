@@ -12,7 +12,7 @@ export function useForceUpdate() {
  * @param type - 类型：单选框或复选框。
  * @param handleCheck - 改变勾选状态事件。
  */
-export function useOnFormKeydown(element: RefObject<HTMLElement>, type: "radio" | "checkbox", handleCheck: (checked?: boolean) => void) {
+export function useOnFormKeyDown(element: RefObject<HTMLElement>, type: "radio" | "checkbox", handleCheck: (checked?: boolean) => void) {
 	useEffect(() => {
 		const el = element.current;
 		const CUTSOM_CHANGE_EVENT = "customchange";

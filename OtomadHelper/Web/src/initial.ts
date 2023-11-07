@@ -15,7 +15,7 @@ export default function initial() {
 		window.addEventListener("contextmenu", e => e.preventDefault());
 		// #endregion
 
-		// #region 阻止网页键盘按键和鼠标滚轮缩放。
+		// #region 阻止网页键盘按键和鼠标滚轮缩放
 		window.addEventListener("keydown", e => {
 			if (e.ctrlKey && ["Equal", "Minus", "NumpadAdd", "NumpadSubtract"].includes(e.code))
 				e.preventDefault();
@@ -29,4 +29,11 @@ export default function initial() {
 		});
 		// #endregion
 	}
+
+	// #region 默认阻止将文件拖放到网页
+	addEventListeners(window, "dragover", "drop", e => {
+		if (e.dataTransfer) e.dataTransfer.dropEffect = "none";
+		e.preventDefault();
+	});
+	// #endregion
 }

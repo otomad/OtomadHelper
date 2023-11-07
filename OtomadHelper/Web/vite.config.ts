@@ -38,6 +38,7 @@ export default defineConfig({
 				"./src/contexts/**",
 				"./src/stores/**",
 				"./src/hoc/**",
+				"./src/classes/**",
 			],
 			dts: "./src/types/auto-imports.d.ts",
 			defaultExportByFilename: false,

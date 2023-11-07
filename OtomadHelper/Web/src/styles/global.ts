@@ -1,6 +1,7 @@
 import { globalColors } from "./colors";
 import eases from "./eases";
 import reset from "./reset";
+import forceCursors from "./force-cursor";
 
 const readyDuration = (duration: number) => ({ $ready }: { $ready?: boolean }) => $ready ? `${duration}ms` : "0s";
 
@@ -9,23 +10,6 @@ const GlobalStyle = createGlobalStyle<{
 	$ready?: boolean;
 }>`
 	@layer base, theme, layout, props, utilities, components, special;
-
-	:root {
-		/* --background-color: #2d2d2d;
-		--foreground-color: white;
-		--accent-color: #14b2ff;
-		--press-color: #636363;
-		--border-color: #2a2a2a; */
-		--background-color: #202020;
-		--foreground-color: white;
-		--accent-color: #60cdff;
-	}
-
-	:root${ifColorScheme.light} {
-		--background-color: #f3f3f3;
-		--foreground-color: #000000e5;
-		--accent-color: #005fb8;
-	}
 
 	${globalColors()};
 
@@ -66,6 +50,17 @@ const GlobalStyle = createGlobalStyle<{
 	#root {
 		display: contents;
 	}
+	
+	${() => {
+		return forceCursors.map(cursor => css`
+			body[data-cursor="${cursor}"] {
+				&,
+				* {
+					cursor: ${cursor} !important;
+				}
+			}
+		`);
+	}}
 
 	${reset}
 `;

@@ -132,6 +132,12 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 }>) {
 	const textLabel = on ? "On" : "Off";
 	const [isDraging, setIsDraging] = useState(false);
+	const [thumbLeft, setThumbLeft] = useState<number>();
+	// 注意：直接使用 styled-components 的参数改变会影响性能。
+	const thumbStyle = useMemo(() => thumbLeft === undefined ? undefined : {
+		left: thumbLeft + "px",
+		transition: "none",
+	} as CSSProperties, [thumbLeft]);
 
 	const handleCheck = (on: boolean) => {
 		if (!isDraging) setOn?.(on);
@@ -146,17 +152,14 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 		const x = e.pageX - left - thumb.offsetLeft;
 		const firstTime = new Date().getTime();
 		const pointerMove = (e: PointerEvent) => {
-			thumb.style.left = clamp(e.pageX - left - x, 0, max) + "px";
-			// 注意：直接使用 styled-components 的参数改变会影响性能。
-			thumb.style.transition = "none";
+			setThumbLeft(clamp(e.pageX - left - x, 0, max));
 		};
 		const pointerUp = (e: PointerEvent) => {
 			document.removeEventListener("pointermove", pointerMove);
 			document.removeEventListener("pointerup", pointerUp);
 			const isOn = e.pageX - x > left + max / 2;
 			handleCheck(isOn);
-			thumb.style.removeProperty("left");
-			thumb.style.removeProperty("transition");
+			setThumbLeft(undefined);
 			const lastTime = new Date().getTime();
 			setIsDraging(lastTime - firstTime > 200); // 定义识别为拖动而不是点击的时间差。
 		};
@@ -175,7 +178,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 				<span className="text">{textLabel}</span>
 				<div className="stroke">
 					<div className="base">
-						<div className="thumb" onPointerDown={onThumbDown} />
+						<div className="thumb" style={thumbStyle} onPointerDown={onThumbDown} />
 					</div>
 				</div>
 			</div>

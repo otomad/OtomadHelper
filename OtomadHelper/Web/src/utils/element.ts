@@ -15,7 +15,8 @@ export function isReactInstance<T extends ReactElementType>(node: ReactNode, ele
  * 同时阻止事件冒泡和默认方法。
  * @param event - 事件。
  */
-export function stopEvent(event: Event) {
+export function stopEvent(event: Pick<Event, "preventDefault" | "stopPropagation">) {
+	// 池沼 React 自行声明的 Event 类型与内置 Event 类型不匹配。
 	event.preventDefault();
 	event.stopPropagation();
 }

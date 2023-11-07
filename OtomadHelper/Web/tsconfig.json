@@ -36,6 +36,7 @@
 			"services/*": ["src/services/*"],
 			"hoc/*": ["src/hoc/*"],
 			"plugins/*": ["src/plugins/*"],
+			"classes/*": ["src/classes/*"],
 		},
 		"plugins": [
 			{

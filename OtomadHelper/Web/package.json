@@ -18,6 +18,7 @@
 		"i18next": "^23.6.0",
 		"i18next-browser-languagedetector": "^7.1.0",
 		"immer": "^10.0.3",
+		"lodash-es": "^4.17.21",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-flip-move": "^3.0.5",
@@ -29,6 +30,7 @@
 	},
 	"devDependencies": {
 		"@styled/typescript-styled-plugin": "^1.0.0",
+		"@types/lodash-es": "^4.17.11",
 		"@types/react": "^18.2.33",
 		"@types/react-dom": "^18.2.14",
 		"@types/react-transition-group": "^4.4.8",

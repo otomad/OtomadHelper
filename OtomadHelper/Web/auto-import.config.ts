@@ -45,6 +45,9 @@ export default [
 		"react-flip-move": [
 			["default", "FlipMove"],
 		],
+		"lodash-es": [
+			["*", "lodash"],
+		],
 	},
 	/* {
 		from: "react",

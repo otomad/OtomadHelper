@@ -9,6 +9,21 @@ declare module "react" {
 	}
 }
 
+declare module "csstype" {
+	interface Properties {
+		/**
+		 * **Custom properties** (sometimes referred to as **CSS variables** or
+		 * **cascading variables**) are entities defined by CSS authors that contain
+		 * specific values to be reused throughout a document. They are set using
+		 * custom property notation (e.g., `--main-color: black;`) and are accessed
+		 * using the `var()` function (e.g., `color: var(--main-color);`).
+		 *
+		 * @see https://developer.mozilla.org/docs/Web/CSS/Using_CSS_custom_properties
+		 */
+		[customProperty: `--${string}`]: string | number | undefined;
+	}
+}
+
 declare global {
 	/**
 	 * React Hook 风格函数式组件类型。
@@ -53,6 +68,6 @@ declare global {
 	export type ZustandState<S> = S extends UseBoundStore<StoreApi<infer T>> ? T : never;
 
 	export type { Draft } from "immer";
-	export type { CSSProperties, ChangeEvent, ChangeEventHandler, DependencyList, EventHandler, ForwardedRef, KeyboardEventHandler, MouseEventHandler, PointerEventHandler, ReactElement, ReactNode, RefObject } from "react";
+	export type { CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, ForwardedRef, KeyboardEventHandler, MouseEventHandler, PointerEventHandler, ReactElement, ReactNode, RefObject } from "react";
 	export type { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 }

@@ -117,7 +117,7 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 		}
 	};
 
-	useOnFormKeydown(labelRef, "radio", handleCheck);
+	useOnFormKeyDown(labelRef, "radio", handleCheck);
 
 	return (
 		<StyledRadioButtonLabel tabIndex={checked ? 0 : -1} ref={labelRef}>
