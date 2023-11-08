@@ -23,7 +23,13 @@ const StyledBadge = styled.div<{
 	padding: 0 3px;
 	flex-shrink: 0;
 	text-align: center;
-	${({ $hidden }) => $hidden && css`scale: 0`};
+	scale: 0;
+
+	&.appear,
+	&.enter,
+	&.enter-done {
+		scale: 1;
+	}
 
 	${({ $status }) => css`
 		background-color: ${c(backgroundColors[$status])};
@@ -43,12 +49,10 @@ export default forwardRef(function Badge({ children, status = "info", hidden, ..
 	hidden?: boolean;
 }, HTMLDivElement>, ref: ForwardedRef<HTMLDivElement>) {
 	return (
-		<Transition nodeRef={ref} in={!hidden} unmountOnExit timeout={250}>
-			{transitionStatus => (
-				<StyledBadge $status={status} $hidden={["exited", "exiting"].includes(transitionStatus)} ref={ref} {...htmlAttrs}>
-					<span>{children}</span>
-				</StyledBadge>
-			)}
-		</Transition>
+		<CssTransition in={!hidden} unmountOnExit appear>
+			<StyledBadge $status={status} ref={ref} {...htmlAttrs}>
+				<span>{children}</span>
+			</StyledBadge>
+		</CssTransition>
 	);
 });
