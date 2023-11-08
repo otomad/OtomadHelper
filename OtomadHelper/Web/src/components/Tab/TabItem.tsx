@@ -8,14 +8,15 @@ const StyledTabItem = styled.button`
 	border-radius: 3px;
 	display: flex;
 	align-items: center;
-	padding: 9px 16px 11px;
-	gap: 16px;
 	width: -webkit-fill-available;
 	min-height: 30px;
 	position: relative;
 	overflow-x: hidden;
 
 	.tab-bar.vertical & {
+		padding: 9px 16px 11px;
+		gap: 16px;
+		
 		&:hover,
 		&.active {
 			background-color: ${c("fill-color-subtle-secondary")};
@@ -59,6 +60,7 @@ const StyledTabItem = styled.button`
 
 	.tab-bar.horizontal & {
 		padding: 14px 12px;
+		gap: 8px;
 
 		&:hover {
 			color: ${c("fill-color-text-secondary")};

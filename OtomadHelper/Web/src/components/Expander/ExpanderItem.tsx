@@ -8,6 +8,10 @@ export /* internal */ const styledExpanderItemBase = css`
 	> :not(.text) {
 		flex-shrink: 0;
 	}
+
+	> .text {
+		font-size: 14px;
+	}
 `;
 
 export /* internal */ const styledExpanderItemContent = css`
@@ -53,7 +57,7 @@ export /* internal */ const styledExpanderItemContent = css`
 const StyledExpanderItem = styled.div`
 	${styledExpanderItemBase};
 	padding-left: 15px;
-	
+
 	${styledExpanderItemContent};
 `;
 

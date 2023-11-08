@@ -1,31 +1,27 @@
 // const thumbnail = "https://app/thumbnail/D:/Downloads/test.mp4";
 
 export default function Source() {
-	const [source, setSource] = useState("events");
-	
+	const [source, setSource] = useState("trackEvent");
+	const [startTime, setStartTime] = useState("projectStart");
+
 	return (
 		<div className="container">
 			<TabBar current={[source, setSource]}>
-				<TabItem id="events">Track events</TabItem>
-				<TabItem id="media">Media</TabItem>
-				<TabItem id="file">Select file</TabItem>
+				<TabItem id="trackEvent" icon="placeholder">{t.trackEvent}</TabItem>
+				<TabItem id="projectMedia" icon="placeholder">{t.projectMedia}</TabItem>
+				<TabItem id="browseFile" icon="placeholder">{t.browseFile}</TabItem>
 			</TabBar>
-			<SettingsCard heading="Trim" caption="Adjust start or end time of the specified source" type="button" />
-			<Expander heading="Generate at" caption="Specify when to start generating from the project">
-				<div><Button>123</Button></div>
-				<div><Button>123</Button></div>
-				<div><Button>123</Button></div>
+			<SettingsCard heading={t.trim} caption={t.descriptions.trim} type="button" />
+			<Expander heading={t.startTime} caption={t.descriptions.startTime}>
+				<RadioButton value={[startTime, setStartTime]} id="projectStart">{t.generateAtBegin}</RadioButton>
+				<RadioButton value={[startTime, setStartTime]} id="cursor">{t.generateAtCursor}</RadioButton>
+				<RadioButton value={[startTime, setStartTime]} id="custom">{t.custom}</RadioButton>
 			</Expander>
-			<Expander heading="Test">
-				<ExpanderItem heading="Test">
-					<Button>123</Button>
-				</ExpanderItem>
-				<ExpanderItem heading="Test">
-					<Button>123</Button>
-				</ExpanderItem>
-				<ExpanderItem heading="Test">
-					<Button>123</Button>
-				</ExpanderItem>
+			<Subheader>{t.moreOptions}</Subheader>
+			<Expander heading={t.advanced} expanded>
+				<ToggleSwitch on={[true]}>{t.belowTopAdjustmentTracks}</ToggleSwitch>
+				<ToggleSwitch on={[false]}>{t.removeSourceEventsAfterCompletion}</ToggleSwitch>
+				<ToggleSwitch on={[false]}>{t.selectAllEventsGenerated}</ToggleSwitch>
 			</Expander>
 		</div>
 	);
