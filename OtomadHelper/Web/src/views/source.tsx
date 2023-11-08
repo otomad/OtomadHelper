@@ -12,7 +12,7 @@ export default function Source() {
 				<TabItem id="browseFile" icon="placeholder">{t.browseFile}</TabItem>
 			</TabBar>
 			<SettingsCard heading={t.trim} caption={t.descriptions.trim} type="button" />
-			<Expander heading={t.startTime} caption={t.descriptions.startTime}>
+			<Expander heading={t.startTime} caption={t.descriptions.startTime} checkInfo={startTime}>
 				<RadioButton value={[startTime, setStartTime]} id="projectStart">{t.generateAtBegin}</RadioButton>
 				<RadioButton value={[startTime, setStartTime]} id="cursor">{t.generateAtCursor}</RadioButton>
 				<RadioButton value={[startTime, setStartTime]} id="custom">{t.custom}</RadioButton>

@@ -43,7 +43,7 @@ export /* internal */ const styledExpanderItemContent = css`
 	.trailing {
 		display: flex;
 		align-items: center;
-		gap: 10px;
+		gap: 14px;
 
 		.trailing-icon {
 			${styles.mixins.square("30px")};
