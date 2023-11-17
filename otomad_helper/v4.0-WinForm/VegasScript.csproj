@@ -247,6 +247,12 @@
     <Compile Include="SelectIntervalForm.Designer.cs">
       <DependentUpon>SelectIntervalForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TestDarkModeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestDarkModeForm.Designer.cs">
+      <DependentUpon>TestDarkModeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TimecodeBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -321,6 +327,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SelectIntervalForm.resx">
       <DependentUpon>SelectIntervalForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestDarkModeForm.resx">
+      <DependentUpon>TestDarkModeForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include=".editorconfig" />
     <None Include="app.manifest" />
