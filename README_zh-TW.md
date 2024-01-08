@@ -13,13 +13,13 @@
 
 本腳本基於原作者 [@Chaosinism](https://github.com/Chaosinism) 的開原始程式碼二次開發，此外使用了 NAudio 庫。
 
-也可以製作 YTP、聲呐效果、幻術故障/數據抹失。未來也可用於製作歌詞/卡拉OK、人力/Rap、原音系戰法。
+也可以製作 YTP、聲呐效果、資料狂舞。未來也可用於製作歌詞/卡拉OK、人力/Rap、原音系戰法。
 
 未來也會增加商城功能用於下載其他使用者製作的範本等相關素材。
 
 YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
-嚜踵藪璩沬妷是一種磨損素材以產生故障效果的技術。數據抹失的相關功能參考自 [Vegas 數據抹失](https://github.com/delthas/vegas-datamosh)。
+嚜踵貲炓狅橆緹懿種熥鐹礳隕嫊豺鉯滻泩詁瘴滧輠菂嵙攲。資料狂舞的相關功能參考自 [Vegas 資料狂舞](https://github.com/delthas/vegas-datamosh)。
 
 鏡頭搖晃功能參考自 [Vegas 搖晃腳本](https://github.com/tmarplatt/VegasScripts)。
 
@@ -36,7 +36,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 您也可以閱讀 [@Evauation](https://github.com/Evauation) 的[說明文件](https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng)並觀看 [@Cassidy](https://github.com/composition-cassidy) 的[教程影片](https://www.youtube.com/watch?v=8vSpzgL_86A)*（英語）*。
 
-[點擊此處查看數據抹失的使用介紹](Datamosh/README.md)。您也可以[觀看影片](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英語）*。
+[點擊此處查看資料狂舞的使用介紹](Datamosh/README.md)。您也可以[觀看影片](https://www.youtube.com/watch?v=6D2lW6H0bb8)*（英語）*。
 
 ### 安裝
 1. [下載](https://github.com/otomad/OtomadHelper/releases/latest)最新版腳本。
@@ -49,10 +49,10 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 	4. 點擊確定按鈕即可。
 4. 打開您的 Vegas Pro 來啟動腳本。選擇功能表列 *工具 > 腳本化 > Otomad Helper*。
 
-#### 數據抹失擴展包
-如果需要使用數據抹失的全部功能，需要安裝數據抹失擴展包方可使用。
+#### 資料狂舞擴展包
+如果需要使用資料狂舞的全部功能，需要安裝資料狂舞擴展包方可使用。
 
-1. [下載](https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh)數據抹失擴展包。
+1. [下載](https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh)資料狂舞擴展包。
 2. 解壓檔案並將 `_internal` 資料夾移動到腳本 `Otomad Helper.cs` 所在的相同目錄下。
 
 ### **相容性**
@@ -106,7 +106,7 @@ Vegas Pro 17、18、19、20、21 測試**正常**。
 	<!-- 如果您不使用移調插件這個調音算法，您可以忽略該許可權。 -->
 	> 路徑：HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
 	
-	數據抹失的相關配置儲存在登錄檔中。
+	資料狂舞的相關配置儲存在登錄檔中。
 	> 路徑：HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets
 
 ### 參考
@@ -118,7 +118,7 @@ Vegas Pro 17、18、19、20、21 測試**正常**。
 * [Vegas Pro 腳本**論壇**](https://www.vegascreativesoftware.info/us/vegas-pro-forum/scripting/)
 * [Opulos 的**帶有透明通道的顔色選取器**](https://sourceforge.net/projects/alpha-color-dialog/)
 * [Ookii Dialogs WinForms 的**進度條對話方塊**](https://github.com/ookii-dialogs/ookii-dialogs-winforms)
-* [Delthas 的 **Vegas 數據抹失**](https://github.com/delthas/vegas-datamosh)
+* [Delthas 的 **Vegas 資料狂舞**](https://github.com/delthas/vegas-datamosh)
 * [Tmarplatt 的 **Vegas 搖晃腳本**](https://github.com/tmarplatt/VegasScripts)
 
 <!-- ### 圖示

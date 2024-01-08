@@ -19,7 +19,7 @@ Cửa hàng (Store) sẽ được hỗ trợ tải các template liên quan tron
 
 Các tính năng liên quan của YTP đề cập đến ở [YTP+](https://github.com/YTP-Plus).
 
-Datą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍mo̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́sh là một kĩ thuật làm biến dạng video để tạo hiệu ứng glitch. Các tính năng liên quan của Datamosh đề cập đến ở [vegas-datamosh](https://github.com/delthas/vegas-datamosh).
+Ða̵̝̻͔͎͋̇͑̆ƭą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍₥o̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́ƨλ ℓà ₥ộƭ ƙĩ ƭλúậƭ ℓà₥ βïếñ δạñϱ Ʋïδèô để ƭạô λïệú ứñϱ ϱℓïƭçλ. Các tính năng liên quan của Datamosh đề cập đến ở [vegas-datamosh](https://github.com/delthas/vegas-datamosh).
 
 Tính năng Camera Shake đề cập đến ở [VegasShakeScript](https://github.com/tmarplatt/VegasScripts).
 

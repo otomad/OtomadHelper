@@ -19,7 +19,7 @@ YTP・ソナーエフェクト・データモッシュも作れます。将来�
 
 YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照しています。
 
-縺ﾃﾞ繧ｰﾀ繝ﾓ譌ｯ縲｢ｼ譛ｭ･は素材に損傷を与えてグリッチ効果を作成する技術です。データモッシュの関連機能は [Vegas データモッシュ](https://github.com/delthas/vegas-datamosh)から参照しています。
+縺ﾃﾞ繧ｰﾀ繝ﾓ譌ｯ縲｢ｼ譛ｭ･ﾚよ素木オﾚﾆ才員傷を与ぇτ勹″⺉⺍于交力果をイ乍成すゑ才支彳朮テτ″す。データモッシュの関連機能は [Vegas データモッシュ](https://github.com/delthas/vegas-datamosh)から参照しています。
 
 手ぶれ機能とは [Vegas シェイク スクリプト](https://github.com/tmarplatt/VegasScripts)から参照しています。
 

@@ -13,13 +13,13 @@
 
 本脚本基于原作者 [@Chaosinism](https://github.com/Chaosinism) 的开源代码二次开发，此外使用了 NAudio 库。
 
-也可以制作 YTP、声呐效果、幻术故障/数据抹失。未来也可用于制作歌词/卡拉OK、人力/Rap、原音系战法。
+也可以制作 YTP、声呐效果、数据抹失。未来也可用于制作歌词/卡拉OK、人力/Rap、原音系战法。
 
 未来也会增加商城功能用于下载其他用户制作的模板等相关素材。
 
 YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 
-锘挎藪琚沬妷是一种磨损素材以产生故障效果的技术。数据抹失的相关功能参考自 [Vegas 数据抹失](https://github.com/delthas/vegas-datamosh)。
+锘挎薮琚沬妷缇㊀種嗵過礳陨嫊豺姒浐泩诂瘴効淉菂攲朮。数据抹失的相关功能参考自 [Vegas 数据抹失](https://github.com/delthas/vegas-datamosh)。
 
 镜头摇晃功能参考自 [Vegas 摇晃脚本](https://github.com/tmarplatt/VegasScripts)。
 
