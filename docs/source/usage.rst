@@ -6,7 +6,7 @@ Usage
 Installation
 ------------
 
-1. `Download <https://github.com/otomad/OtomadHelper/releases/latest>`__
+1. `Download <https://otomad.github.io/otomad/link/OtomadHelper.html#latest>`__
    the latest version of this script.
 2. Unzip **ALL** the files in the zip file you’ve just downloaded to the
    “Script Menu” folder in the Vegas installation directory.
@@ -51,7 +51,5 @@ use it
    of tasks for your projects, making the chore of editing certain clips
    to applying different effects easier said than done.
 
-..
-
-   To learn more about the features of Otomad Helper, click on any of
-   the following pages below
+To learn more about the features of Otomad Helper, click on any of
+the following pages below
