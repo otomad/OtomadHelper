@@ -1,22 +1,17 @@
-Welcome to Lumache's documentation!
+Welcome to the Otomad Helper documentation!
 ===================================
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+**Otomad Helper** for Vegas, designed to allow Vegas to accept MIDI files as input, and automatically generate YTPMV/Otomad tracks.
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+Check out the :doc:`usage` section for further information, including how to :ref:`installation` the extension.
 
 .. note::
 
-   This project is under active development.
+  This project is under active development.
 
 Contents
 --------
 
 .. toctree::
 
-   usage
-   api
+  usage
