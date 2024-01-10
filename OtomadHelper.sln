@@ -5,8 +5,6 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtomadHelper", "OtomadHelper\OtomadHelper.csproj", "{C99DB0BB-5DCB-49F9-9ED1-563AAEFF5E67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtomadHelper.Dialogs", "OtomadHelper.Dialogs\OtomadHelper.Dialogs.csproj", "{F332D3FC-3A7B-4FCC-BD69-1786CB2C704E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,14 +21,6 @@ Global
 		{C99DB0BB-5DCB-49F9-9ED1-563AAEFF5E67}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C99DB0BB-5DCB-49F9-9ED1-563AAEFF5E67}.Release|x64.ActiveCfg = Release|x64
 		{C99DB0BB-5DCB-49F9-9ED1-563AAEFF5E67}.Release|x64.Build.0 = Release|x64
-		{F332D3FC-3A7B-4FCC-BD69-1786CB2C704E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F332D3FC-3A7B-4FCC-BD69-1786CB2C704E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F332D3FC-3A7B-4FCC-BD69-1786CB2C704E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F332D3FC-3A7B-4FCC-BD69-1786CB2C704E}.Debug|x64.Build.0 = Debug|Any CPU
-		{F332D3FC-3A7B-4FCC-BD69-1786CB2C704E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F332D3FC-3A7B-4FCC-BD69-1786CB2C704E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F332D3FC-3A7B-4FCC-BD69-1786CB2C704E}.Release|x64.ActiveCfg = Release|Any CPU
-		{F332D3FC-3A7B-4FCC-BD69-1786CB2C704E}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
