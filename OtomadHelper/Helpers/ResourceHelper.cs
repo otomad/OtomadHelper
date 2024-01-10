@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack;
 using System.Drawing;
+using System.Diagnostics;
+using System.Windows.Media.Imaging;
 
 namespace OtomadHelper.Helpers {
 	internal static class ResourceHelper {
@@ -28,11 +30,23 @@ namespace OtomadHelper.Helpers {
 		/// 获取本地文件的缩略图。
 		/// </summary>
 		/// <param name="filePath">本地文件路径。</param>
-		/// <returns>文件的大缩略图。</returns>
-		public static Bitmap GetFileThumbnail(string filePath) {
+		/// <param name="hasThumbnail">返回是否有缩略图，而不是图标。</param>
+		/// <returns>文件的大缩略图。如果没有则会返回文件图标。</returns>
+		public static BitmapSource GetFileThumbnail(string filePath, out bool hasThumbnail) {
 			ShellFile shellFile = ShellFile.FromFilePath(filePath);
-			Bitmap thumb = shellFile.Thumbnail.ExtraLargeBitmap;
-			return thumb;
+			shellFile.Thumbnail.AllowBiggerSize = true;
+			shellFile.Thumbnail.FormatOption = ShellThumbnailFormatOption.ThumbnailOnly;
+			try {
+				BitmapSource thumb = shellFile.Thumbnail.ExtraLargeBitmapSource;
+				hasThumbnail = true;
+				return thumb;
+			} catch (InvalidOperationException e) {
+				hasThumbnail = false;
+				Debug.WriteLine(e.Message);
+				shellFile.Thumbnail.FormatOption = ShellThumbnailFormatOption.Default;
+				BitmapSource thumb = shellFile.Thumbnail.ExtraLargeBitmapSource;
+				return thumb;
+			}
 		}
 
 		/// <summary>

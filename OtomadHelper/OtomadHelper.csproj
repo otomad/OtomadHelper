@@ -64,11 +64,14 @@
 		</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>Test\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="APNGLib">
       <HintPath>Libraries\APNGLib\APNGLib.dll</HintPath>

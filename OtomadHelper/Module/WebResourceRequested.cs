@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using System.Windows.Media.Imaging;
 
 namespace OtomadHelper.Module {
 	/// <summary>
@@ -110,9 +111,12 @@ namespace OtomadHelper.Module {
 
 		private static void Handler_Thumbnail(WebView2 webView, CoreWebView2WebResourceRequestedEventArgs args, string filePath) {
 			filePath = filePath.Replace("/", "\\");
-			Bitmap thumb = ResourceHelper.GetFileThumbnail(filePath);
+			bool hasThumbnail;
+			BitmapSource thumb = ResourceHelper.GetFileThumbnail(filePath, out hasThumbnail);
+			PngBitmapEncoder encoder = new PngBitmapEncoder();
 			MemoryStream memoryStream = new MemoryStream();
-			thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+			encoder.Frames.Add(BitmapFrame.Create(thumb));
+			encoder.Save(memoryStream);
 			ManagedStream managedStream = new ManagedStream(memoryStream);
 			string headers = "image/png";
 			args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(managedStream, 200, "OK", headers);

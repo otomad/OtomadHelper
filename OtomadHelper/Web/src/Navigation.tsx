@@ -12,7 +12,8 @@ export default function Navigation() {
 	const pageTitles = currentNav.map(page => t[page]);
 	const pagePath = currentNav.join("/");
 	const navItems = ["source", "midi", "audio", "visual", "track", "sonar", "shupelunker", "ytp"];
-	const bottomNavItems = ["tools", "settings"] as const;
+	const navToolItems = ["mosh", "tools"];
+	const bottomNavItems = ["settings"] as const;
 	const modes = ["otomadOrYtpmv", "ytp", "shupelunker"] as const;
 	type Mode = typeof modes[number];
 	const Page = pages[`./views/${pagePath}.tsx`] ?? EmptyPage;
@@ -23,6 +24,8 @@ export default function Navigation() {
 				currentNav={[currentNav, setCurrentNav]}
 				navItems={[
 					...navItems.map(item => ({ text: t[item], id: item })),
+					{ type: "hr" },
+					...navToolItems.map(item => ({ text: t[item], id: item })),
 					...bottomNavItems.map(item => ({ text: t[item], id: item, bottom: true })),
 				]}
 				titles={pageTitles}

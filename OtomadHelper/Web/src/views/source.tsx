@@ -1,5 +1,3 @@
-// const thumbnail = "https://app/thumbnail/D:/Downloads/test.mp4";
-
 export default function Source() {
 	const [source, setSource] = useState("trackEvent");
 	const [startTime, setStartTime] = useState("projectStart");
@@ -16,6 +14,7 @@ export default function Source() {
 				<TabItem id="projectMedia" icon="placeholder">{t.projectMedia}</TabItem>
 				<TabItem id="browseFile" icon="placeholder">{t.browseFile}</TabItem>
 			</TabBar>
+			<TestThumbnail />
 			<SettingsCard heading={t.trim} caption={t.descriptions.trim} type="button" />
 			<Expander heading={t.startTime} caption={t.descriptions.startTime} checkInfo={startTimes.find(item => item.id === startTime)?.name}>
 				{startTimes.map(item =>

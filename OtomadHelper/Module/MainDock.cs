@@ -21,8 +21,8 @@ namespace OtomadHelper.Module {
 		public MainDock() {
 			InitializeComponent();
 			Dock = DockStyle.Fill;
-			var window = new MainWindow();
-			window.Show();
+			//var window = new MainWindow();
+			//window.Show();
 
 #if VEGAS_ENV
 			BackColor = Skins.Colors.ButtonFace;
