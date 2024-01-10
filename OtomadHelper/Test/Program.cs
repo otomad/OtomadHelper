@@ -10,7 +10,7 @@ namespace OtomadHelper.Test {
 		/// 应用程序的主入口点。
 		/// </summary>
 		[STAThread]
-		static void Main2() {
+		static void Main() {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new TestForm());

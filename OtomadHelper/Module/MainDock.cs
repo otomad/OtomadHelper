@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using OtomadHelper.Helpers;
+using OtomadHelper.Test;
 using APNGLib;
 using System;
 using System.Collections.Generic;
@@ -14,16 +15,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ScriptPortal.MediaSoftware.Skins;
 using System.IO.Packaging;
-using OtomadHelper.Test;
 
 namespace OtomadHelper.Module {
 	public partial class MainDock : UserControl {
 		public MainDock() {
 			InitializeComponent();
 			Dock = DockStyle.Fill;
-			//var dialog = new TestDialog();
-			//dialog.Show();
-			//return
+			var window = new MainWindow();
+			window.Show();
 
 #if VEGAS_ENV
 			BackColor = Skins.Colors.ButtonFace;

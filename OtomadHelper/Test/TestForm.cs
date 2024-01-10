@@ -19,6 +19,9 @@ namespace OtomadHelper.Test {
 			mainDock = new MainDock();
 			Controls.Add(mainDock);
 			Icon = Properties.Resources.OtomadHelper;
+
+			//var window = new MainWindow();
+			//window.Show();
 		}
 	}
 }

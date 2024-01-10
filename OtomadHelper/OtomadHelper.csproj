@@ -57,14 +57,18 @@
     <LangVersion>12.0</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>Test\app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <ProjectTypeGuids>
 			{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}
 		</ProjectTypeGuids>
   </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="APNGLib">
       <HintPath>Libraries\APNGLib\APNGLib.dll</HintPath>
@@ -98,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ResourceHelper.cs" />
+    <Compile Include="Interop\PInvoke.cs" />
     <Compile Include="Module\MainDock.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -109,11 +114,8 @@
     </Compile>
     <Compile Include="Module\OtomadHelperModule.cs" />
     <Compile Include="Module\WebResourceRequested.cs" />
-    <Compile Include="Test\App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Test\TestDialog.xaml.cs">
-      <DependentUpon>TestDialog.xaml</DependentUpon>
+    <Compile Include="Test\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Test\TestForm.cs">
       <SubType>Form</SubType>
@@ -161,9 +163,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="MicaWPF">
-      <Version>6.2.5</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell">
       <Version>1.1.5</Version>
     </PackageReference>
@@ -175,13 +174,9 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="Test\App.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Test\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
-    <Page Include="Test\TestDialog.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
