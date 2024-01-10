@@ -5,13 +5,15 @@ const ExpanderParent = styled(SettingsCard)<{
 	$expanded?: boolean;
 }>`
 	.check-info {
-		&.enter,
-		&.exit-active {
+		&.exit-active,
+		&.exit-done {
 			opacity: 0;
 			translate: 0 16px;
 		}
-		&.enter-active {
+		&.enter-active,
+		&.enter-done {
 			opacity: 1;
+			translate: 0;
 		}
 	}
 
@@ -71,7 +73,7 @@ export default function Expander({ icon, heading, caption, actions, expanded = f
 			>
 				{actions}
 				{checkInfo && (
-					<CssTransition in={!internalExpanded} unmountOnExit>
+					<CssTransition in={!internalExpanded}>
 						<div className="check-info">{checkInfo}</div>
 					</CssTransition>
 				)}

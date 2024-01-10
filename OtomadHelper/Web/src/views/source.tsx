@@ -3,6 +3,11 @@
 export default function Source() {
 	const [source, setSource] = useState("trackEvent");
 	const [startTime, setStartTime] = useState("projectStart");
+	const startTimes = [
+		{ id: "projectStart", name: t.generateAtBegin },
+		{ id: "cursor", name: t.generateAtCursor },
+		{ id: "custom", name: t.custom },
+	];
 
 	return (
 		<div className="container">
@@ -12,10 +17,9 @@ export default function Source() {
 				<TabItem id="browseFile" icon="placeholder">{t.browseFile}</TabItem>
 			</TabBar>
 			<SettingsCard heading={t.trim} caption={t.descriptions.trim} type="button" />
-			<Expander heading={t.startTime} caption={t.descriptions.startTime} checkInfo={startTime}>
-				<RadioButton value={[startTime, setStartTime]} id="projectStart">{t.generateAtBegin}</RadioButton>
-				<RadioButton value={[startTime, setStartTime]} id="cursor">{t.generateAtCursor}</RadioButton>
-				<RadioButton value={[startTime, setStartTime]} id="custom">{t.custom}</RadioButton>
+			<Expander heading={t.startTime} caption={t.descriptions.startTime} checkInfo={startTimes.find(item => item.id === startTime)?.name}>
+				{startTimes.map(item =>
+					<RadioButton value={[startTime, setStartTime]} id={item.id} key={item.id}>{item.name}</RadioButton>)}
 			</Expander>
 			<Subheader>{t.moreOptions}</Subheader>
 			<Expander heading={t.advanced} expanded>
