@@ -1,5 +1,6 @@
 const English = {
 	translation: {
+		home: "Home",
 		source: "Source",
 		midi: "MIDI",
 		audio: "Audio",
@@ -8,8 +9,10 @@ const English = {
 		ytp: "YTP",
 		sonar: "Sonar",
 		shupelunker: "Shupelunker",
+		shupelunker_full: "Shupelunker Tactics",
 		tools: "Tools",
 		mosh: "Mosh",
+		mosh_full: "Datamosh",
 		settings: "Settings",
 		trackEvent: "Track event",
 		projectMedia: "Project media",
@@ -23,9 +26,14 @@ const English = {
 		belowTopAdjustmentTracks: "Below top adjustment tracks",
 		removeSourceEventsAfterCompletion: "Remove source events after completion",
 		selectAllEventsGenerated: "Select all events generated",
+		randomOffsetForTracks: "Use random offsets for different tracks",
 		generateAtBegin: "Project start",
 		generateAtCursor: "Cursor",
 		custom: "Custom",
+		chart: "Chart",
+		ust: "UST",
+		refOtherTracks: "Refer to other tracks",
+		pureNotes: "Pure notes",
 		descriptions: {
 			trim: "Adjust start or end time of the specified source",
 			startTime: "Specify when to start generating from the project",

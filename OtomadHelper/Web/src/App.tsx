@@ -1,4 +1,4 @@
-import Navigation from "@/Navigation.tsx";
+import ShellPage from "@/ShellPage.tsx";
 import GlobalStyle from "./styles/global.ts";
 
 export default function App() {
@@ -12,7 +12,7 @@ export default function App() {
 	return (
 		<>
 			<GlobalStyle $ready={ready} />
-			<Navigation />
+			<ShellPage />
 		</>
 	);
 }

@@ -25,6 +25,7 @@ export default function Source() {
 				<ToggleSwitch on={[true]}>{t.belowTopAdjustmentTracks}</ToggleSwitch>
 				<ToggleSwitch on={[false]}>{t.removeSourceEventsAfterCompletion}</ToggleSwitch>
 				<ToggleSwitch on={[false]}>{t.selectAllEventsGenerated}</ToggleSwitch>
+				<ToggleSwitch on={[false]}>{t.randomOffsetForTracks}</ToggleSwitch>
 			</Expander>
 		</div>
 	);
