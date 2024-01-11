@@ -10,6 +10,7 @@ const ExpanderParent = styled(SettingsCard)<{
 			opacity: 0;
 			translate: 0 16px;
 		}
+
 		&.enter-active,
 		&.enter-done {
 			opacity: 1;
