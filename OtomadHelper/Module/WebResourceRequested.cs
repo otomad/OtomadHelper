@@ -77,7 +77,10 @@ namespace OtomadHelper.Module {
 						path = Uri.UnescapeDataString(path);
 						switch (virtualPath) {
 							case "thumbnail":
-								Handler_Thumbnail(webView, args, path);
+								Handler_Thumbnail(webView, args, path, false);
+								return;
+							case "fileicon":
+								Handler_Thumbnail(webView, args, path, true);
 								return;
 							default:
 								break;
@@ -103,16 +106,17 @@ namespace OtomadHelper.Module {
 							break;
 						}
 					args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(managedStream, 200, "OK", headers);
+				} catch (InvalidOperationException e) {
+					args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(null, 415, e.Message, "");
 				} catch (Exception) {
 					args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(null, 404, "Not found", "");
 				}
 			};
 		}
 
-		private static void Handler_Thumbnail(WebView2 webView, CoreWebView2WebResourceRequestedEventArgs args, string filePath) {
+		private static void Handler_Thumbnail(WebView2 webView, CoreWebView2WebResourceRequestedEventArgs args, string filePath, bool allowIcon = false) {
 			filePath = filePath.Replace("/", "\\");
-			bool hasThumbnail;
-			BitmapSource thumb = ResourceHelper.GetFileThumbnail(filePath, out hasThumbnail);
+			BitmapSource thumb = ResourceHelper.GetFileThumbnail(filePath, allowIcon);
 			PngBitmapEncoder encoder = new PngBitmapEncoder();
 			MemoryStream memoryStream = new MemoryStream();
 			encoder.Frames.Add(BitmapFrame.Create(thumb));

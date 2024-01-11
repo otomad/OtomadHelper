@@ -30,23 +30,15 @@ namespace OtomadHelper.Helpers {
 		/// 获取本地文件的缩略图。
 		/// </summary>
 		/// <param name="filePath">本地文件路径。</param>
-		/// <param name="hasThumbnail">返回是否有缩略图，而不是图标。</param>
-		/// <returns>文件的大缩略图。如果没有则会返回文件图标。</returns>
-		public static BitmapSource GetFileThumbnail(string filePath, out bool hasThumbnail) {
+		/// <param name="allowIcon">当没有缩略图时是否允许返回文件图标？</param>
+		/// <exception cref="InvalidOperationException">如果指定文件没有缩略图只有图标，在 <paramref name="allowIcon"/> 为 false 时则会报错。</exception>
+		/// <returns>文件的大缩略图。</returns>
+		public static BitmapSource GetFileThumbnail(string filePath, bool allowIcon = false) {
 			ShellFile shellFile = ShellFile.FromFilePath(filePath);
 			shellFile.Thumbnail.AllowBiggerSize = true;
-			shellFile.Thumbnail.FormatOption = ShellThumbnailFormatOption.ThumbnailOnly;
-			try {
-				BitmapSource thumb = shellFile.Thumbnail.ExtraLargeBitmapSource;
-				hasThumbnail = true;
-				return thumb;
-			} catch (InvalidOperationException e) {
-				hasThumbnail = false;
-				Debug.WriteLine(e.Message);
-				shellFile.Thumbnail.FormatOption = ShellThumbnailFormatOption.Default;
-				BitmapSource thumb = shellFile.Thumbnail.ExtraLargeBitmapSource;
-				return thumb;
-			}
+			shellFile.Thumbnail.FormatOption = allowIcon ? ShellThumbnailFormatOption.Default : ShellThumbnailFormatOption.ThumbnailOnly;
+			BitmapSource thumb = shellFile.Thumbnail.ExtraLargeBitmapSource;
+			return thumb;
 		}
 
 		/// <summary>
