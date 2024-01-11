@@ -8,9 +8,9 @@ using OtomadHelper.Helpers;
 
 namespace OtomadHelper.Module {
 	public class OtomadHelperModule : ICustomCommandModule {
-		public Vegas vegas = null;
+		public Vegas vegas = null!;
 		private readonly CustomCommand customCommandModule =
-			new CustomCommand(CommandCategory.View, DISPLAY_NAME); // 这将显示在“查看”菜单的扩展下。
+			new(CommandCategory.View, DISPLAY_NAME); // 这将显示在“查看”菜单的扩展下。
 		internal const string INTERNAL_NAME = "OtomadHelperInternal";
 		internal const string DISPLAY_NAME = "Otomad Helper";
 

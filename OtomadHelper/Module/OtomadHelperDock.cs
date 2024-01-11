@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace OtomadHelper.Module {
 	public class OtomadHelperDock : DockableControl {
-		private MainDock mainDock;
+		private MainDock? mainDock;
 		internal Vegas vegas { get { return myVegas; } }
 
 		public OtomadHelperDock() : base(OtomadHelperModule.INTERNAL_NAME) {
@@ -21,7 +21,7 @@ namespace OtomadHelper.Module {
 
 		protected override void OnLoad(EventArgs args) {
 			if (mainDock != null) Controls.Remove(mainDock);
-			mainDock = new MainDock();
+			mainDock = new();
 			Controls.Add(mainDock);
 
 			//vegas.TrackEventStateChanged += HandleTrackEventChanged;

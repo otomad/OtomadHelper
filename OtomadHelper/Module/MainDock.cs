@@ -21,7 +21,7 @@ namespace OtomadHelper.Module {
 		public MainDock() {
 			InitializeComponent();
 			Dock = DockStyle.Fill;
-			//var window = new MainWindow();
+			//MainWindow window = new();
 			//window.Show();
 
 #if VEGAS_ENV
@@ -43,10 +43,10 @@ namespace OtomadHelper.Module {
 			Browser.Visible = true;
 		}
 
-		private APNGBox LoadingAnimationPicture;
+		private APNGBox LoadingAnimationPicture = null!;
 		private void InitLoadingAnimation() {
 			try {
-				APNG apng = new APNG();
+				APNG apng = new();
 				Stream fileStream = ResourceHelper.GetEmbeddedResource("Assets.LoadingAnimation.apng");
 				apng.Load(fileStream);
 				LoadingAnimationPicture = new APNGBox(apng) {

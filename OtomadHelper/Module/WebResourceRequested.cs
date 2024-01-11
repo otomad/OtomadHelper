@@ -87,8 +87,8 @@ namespace OtomadHelper.Module {
 						}
 					}
 					Stream fileStream = ResourceHelper.GetEmbeddedResource(assetsFilePath);
-					ManagedStream managedStream = new ManagedStream(fileStream);
-					Dictionary<string, string> contentTypes = new Dictionary<string, string> {
+					ManagedStream managedStream = new(fileStream);
+					Dictionary<string, string> contentTypes = new() {
 						{ "html", "text/html" },
 						{ "js", "application/javascript" },
 						{ "css", "text/css" },
@@ -117,11 +117,11 @@ namespace OtomadHelper.Module {
 		private static void Handler_Thumbnail(WebView2 webView, CoreWebView2WebResourceRequestedEventArgs args, string filePath, bool allowIcon = false) {
 			filePath = filePath.Replace("/", "\\");
 			BitmapSource thumb = ResourceHelper.GetFileThumbnail(filePath, allowIcon);
-			PngBitmapEncoder encoder = new PngBitmapEncoder();
-			MemoryStream memoryStream = new MemoryStream();
+			PngBitmapEncoder encoder = new();
+			MemoryStream memoryStream = new();
 			encoder.Frames.Add(BitmapFrame.Create(thumb));
 			encoder.Save(memoryStream);
-			ManagedStream managedStream = new ManagedStream(memoryStream);
+			ManagedStream managedStream = new(memoryStream);
 			string headers = "image/png";
 			args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(managedStream, 200, "OK", headers);
 		}
