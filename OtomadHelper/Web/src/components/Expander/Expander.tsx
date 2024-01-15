@@ -5,6 +5,8 @@ const ExpanderParent = styled(SettingsCard)<{
 	$expanded?: boolean;
 }>`
 	.check-info {
+		font-size: 14px;
+
 		&.exit-active,
 		&.exit-done {
 			opacity: 0;

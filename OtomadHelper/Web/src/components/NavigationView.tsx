@@ -170,6 +170,10 @@ const StyledNavigationView = styled.div`
 					content: "";
 					height: 18px;
 				}
+				
+				.card.media-pool > .base {
+					padding: 2px;
+				}
 			}
 		}
 

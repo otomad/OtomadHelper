@@ -10,6 +10,10 @@ const StyledIcon = styled.span.attrs({
 	${squared};
 	display: inline-flex;
 
+	:where(&) {
+		font-size: 16px;
+	}
+
 	svg {
 		${squared};
 

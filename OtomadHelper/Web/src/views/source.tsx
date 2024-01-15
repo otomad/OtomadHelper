@@ -9,13 +9,15 @@ export default function Source() {
 
 	return (
 		<div className="container">
-			<TabBar current={[source, setSource]}>
-				<TabItem id="trackEvent" icon="placeholder">{t.trackEvent}</TabItem>
-				<TabItem id="projectMedia" icon="placeholder">{t.projectMedia}</TabItem>
-				<TabItem id="browseFile" icon="placeholder">{t.browseFile}</TabItem>
-			</TabBar>
-			<TestThumbnail />
-			<SettingsCard heading={t.trim} caption={t.descriptions.trim} type="button" />
+			<Card className="media-pool">
+				<TabBar current={[source, setSource]}>
+					<TabItem id="trackEvent" icon="placeholder">{t.trackEvent}</TabItem>
+					<TabItem id="projectMedia" icon="placeholder">{t.projectMedia}</TabItem>
+					<TabItem id="browseFile" icon="placeholder">{t.browseFile}</TabItem>
+				</TabBar>
+				<TestThumbnail />
+			</Card>
+			<Expander heading={t.trim} caption={t.descriptions.trim} />
 			<Expander heading={t.startTime} caption={t.descriptions.startTime} checkInfo={startTimes.find(item => item.id === startTime)?.name}>
 				{startTimes.map(item =>
 					<RadioButton value={[startTime, setStartTime]} id={item.id} key={item.id}>{item.name}</RadioButton>)}

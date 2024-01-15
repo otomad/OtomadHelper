@@ -16,7 +16,7 @@ const StyledTabItem = styled.button`
 	.tab-bar.vertical & {
 		padding: 9px 16px 11px;
 		gap: 16px;
-		
+
 		&:hover,
 		&.active {
 			background-color: ${c("fill-color-subtle-secondary")};
@@ -40,6 +40,11 @@ const StyledTabItem = styled.button`
 	.text {
 		white-space: nowrap;
 		line-height: 20px;
+		font-size: 16px;
+
+		.tab-bar.horizontal & {
+			font-size: 14px;
+		}
 	}
 
 	.fill {
@@ -63,11 +68,21 @@ const StyledTabItem = styled.button`
 		gap: 8px;
 
 		&:hover {
-			color: ${c("fill-color-text-secondary")};
+			opacity: 0.79; // 使用 opacity 而并非 color 是因为 svg 动画变换速度比文字慢的异常。
 		}
 
 		&:active {
-			color: ${c("fill-color-text-tertiary")};
+			opacity: 0.54;
+		}
+
+		${ifColorScheme.light} & {
+			&:hover {
+				opacity: 0.61;
+			}
+
+			&:active {
+				opacity: 0.45;
+			}
 		}
 	}
 `;

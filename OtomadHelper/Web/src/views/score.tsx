@@ -1,4 +1,4 @@
-export default function Midi() {
+export default function Score() {
 	const [format, setFormat] = useState("midi");
 
 	return (

@@ -13,7 +13,7 @@ export default function ShellPage() {
 	const [mode, setMode] = useState<Mode>("otomadOrYtpmv");
 	const pageTitles = currentNav.map(page => $t(page, { context: "full" }));
 	const pagePath = currentNav.join("/");
-	const navItems = ["home", "source", "chart", "audio", "visual", "track", "sonar", "shupelunker", "ytp"];
+	const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "shupelunker", "ytp"];
 	const navToolItems = ["mosh", "tools"];
 	const bottomNavItems = ["settings"] as const;
 	const modes = ["otomadOrYtpmv", "ytp", "shupelunker"] as const;

@@ -32,10 +32,12 @@ export /* internal */ const styledExpanderItemContent = css`
 
 		.heading {
 			font-size: 14px;
+			line-height: 20px;
 		}
 
 		.caption {
 			font-size: 12px;
+			line-height: 16px;
 			color: ${c("fill-color-text-secondary")};
 		}
 	}

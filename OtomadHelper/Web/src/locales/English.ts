@@ -30,7 +30,7 @@ const English = {
 		generateAtBegin: "Project start",
 		generateAtCursor: "Cursor",
 		custom: "Custom",
-		chart: "Chart",
+		score: "Score",
 		ust: "UST",
 		refOtherTracks: "Refer to other tracks",
 		pureNotes: "Pure notes",

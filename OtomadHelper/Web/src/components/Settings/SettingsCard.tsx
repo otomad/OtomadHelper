@@ -1,19 +1,13 @@
+import { StyledCard } from "components/Card";
 import { styledExpanderItemBase, styledExpanderItemContent } from "components/Expander/ExpanderItem";
 
-const StyledSettingsCard = styled.div`
-	border-radius: 3px;
-	width: -webkit-fill-available;
-	text-align: initial;
-	border: 1px solid ${c("stroke-color-card-stroke-default")};
+const StyledSettingsCard = styled(StyledCard)`
+	${styledExpanderItemContent};
 
 	> .base {
-		background-color: ${c("background-fill-color-card-background-default")};
 		${styledExpanderItemBase};
 		padding: 13px 15px;
-		border-radius: 2px;
 	}
-
-	${styledExpanderItemContent};
 
 	button& {
 		&:hover,

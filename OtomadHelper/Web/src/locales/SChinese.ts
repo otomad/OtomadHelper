@@ -32,7 +32,7 @@ const SChinese = {
 		generateAtBegin: "项目开始处",
 		generateAtCursor: "光标处",
 		custom: "自定义",
-		chart: "谱面",
+		score: "乐谱",
 		ust: "UST",
 		refOtherTracks: "引用其它轨道",
 		pureNotes: "纯音符",
