@@ -11,7 +11,7 @@ function EmptyPage() {
 export default function ShellPage() {
 	const [currentNav, setCurrentNav] = useState(["source"]);
 	const [mode, setMode] = useState<Mode>("otomadOrYtpmv");
-	const pageTitles = currentNav.map(page => $t(page, { context: "full" }));
+	const pageTitles = currentNav.map(page => $t("titles." + page, { context: "full" }));
 	const pagePath = currentNav.join("/");
 	const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "shupelunker", "ytp"];
 	const navToolItems = ["mosh", "tools"];
@@ -25,10 +25,10 @@ export default function ShellPage() {
 			<NavigationView
 				currentNav={[currentNav, setCurrentNav]}
 				navItems={[
-					...navItems.map(item => ({ text: t[item], id: item })),
+					...navItems.map(item => ({ text: t.titles[item], id: item })),
 					{ type: "hr" },
-					...navToolItems.map(item => ({ text: t[item], id: item })),
-					...bottomNavItems.map(item => ({ text: t[item], id: item, bottom: true })),
+					...navToolItems.map(item => ({ text: t.titles[item], id: item })),
+					...bottomNavItems.map(item => ({ text: t.titles[item], id: item, bottom: true })),
 				]}
 				titles={pageTitles}
 			>
