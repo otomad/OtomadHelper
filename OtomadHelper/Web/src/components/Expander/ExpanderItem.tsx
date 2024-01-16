@@ -1,9 +1,12 @@
 export /* internal */ const styledExpanderItemBase = css`
-	padding: 7px 47px;
 	display: flex;
 	gap: 16px;
 	align-items: center;
 	min-height: 48px;
+
+	:where(&) {
+		padding: 7px 47px;
+	}
 
 	> :not(.text) {
 		flex-shrink: 0;

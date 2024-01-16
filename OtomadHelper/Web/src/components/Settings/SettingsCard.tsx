@@ -6,7 +6,6 @@ const StyledSettingsCard = styled(StyledCard)`
 
 	> .base {
 		${styledExpanderItemBase};
-		padding: 13px 15px;
 	}
 
 	button& {
