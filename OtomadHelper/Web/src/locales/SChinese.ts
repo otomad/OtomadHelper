@@ -17,6 +17,7 @@ const SChinese = {
 			mosh_full: "数据抹失",
 			tools: "工具",
 			settings: "设置",
+			track_other: undefined,
 		},
 		source: {
 			trackEvent: "轨道剪辑",

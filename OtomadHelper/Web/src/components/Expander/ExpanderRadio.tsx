@@ -1,3 +1,47 @@
-export default function ExpanderRadio() {
-
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, children, ...settingsCardProps }: FCP<PropsOf<typeof SettingsCard> & {
+	/** 选项列表。 */
+	items: T[];
+	/** 当前选中值的 ID。 */
+	value: StateProperty<string>;
+	/**
+	 * 当前选中状态的显示的条件。
+	 * - 如果为字符串，则显示该固定字符串。
+	 * - 如果为 true，表示根据 idField 和 nameField 属性来判断或固定当前选中的 ID。
+	 * - 如果为 `{ id: string; name: string }`，则根据当前状态的对象查找所需的名称值。
+	 * - 如果为回调函数，则通过回调函数获取所需的值。
+	 */
+	checkInfoCondition?: string | { id: string; name: string } | true | ((value: string | undefined, items: T[]) => string);
+	/**
+	 * 单选项目的 ID 字段。
+	 * - 如果为字符串，表示为当前选中对象的指定字段名称的值。
+	 * - 如果为回调函数，则通过回调函数获取所需的值。
+	 * - 如果为 true，表示选中项目就是字符串，则 ID 可直接使用之。
+	 */
+	idField: string | ((item: T) => string) | true;
+	/**
+	 * 单选项目的名称字段。
+	 * - 如果为字符串，表示为当前选中对象的指定字段名称的值。
+	 * - 如果为回调函数，则通过回调函数获取所需的值。
+	 * - 如果为 true，表示选中项目就是字符串，则名称可直接使用之。
+	 */
+	nameField: string | ((item: T) => string) | true;
+}>) {
+	const items = _items as AnyObject[];
+	const getItemField = (item: T, fieldName: "id" | "name") => {
+		const field = fieldName === "name" ? nameField : idField;
+		return typeof field === "string" ? (item as AnyObject)[field] : typeof field === "function" ? field(item) : item;
+	};
+	const checkInfo = !checkInfoCondition ? undefined :
+		typeof checkInfoCondition === "string" ? checkInfoCondition :
+		checkInfoCondition === true ? typeof idField === "string" && typeof nameField === "string" ?
+			items.find(item => item[idField] === value)?.[nameField] : value :
+		typeof checkInfoCondition === "function" ? checkInfoCondition(value, items) :
+		items.find(item => item[checkInfoCondition.id] === value)?.[checkInfoCondition.name];
+	return (
+		<Expander {...settingsCardProps} checkInfo={checkInfo}>
+			{items.map(item =>
+				<RadioButton value={[value, setValue]} id={getItemField(item, "id")} key={getItemField(item, "id")}>{getItemField(item, "name")}</RadioButton>)}
+			{children}
+		</Expander>
+	);
 }

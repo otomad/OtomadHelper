@@ -18,10 +18,14 @@ export default function Source() {
 				<TestThumbnail />
 			</Card>
 			<Expander heading={t.source.trim} caption={t.descriptions.source.trim} />
-			<Expander heading={t.source.startTime} caption={t.descriptions.source.startTime} checkInfo={startTimes.find(item => item.id === startTime)?.name}>
-				{startTimes.map(item =>
-					<RadioButton value={[startTime, setStartTime]} id={item.id} key={item.id}>{item.name}</RadioButton>)}
-			</Expander>
+			<ExpanderRadio
+				heading={t.source.startTime}
+				caption={t.descriptions.source.startTime}
+				items={startTimes}
+				value={[startTime, setStartTime]}
+				idField="id"
+				nameField="name"
+			/>
 			<Subheader>{t.subheader.moreOptions}</Subheader>
 			<Expander heading={t.subheader.advanced} expanded>
 				<ToggleSwitch on={[true]}>{t.source.belowTopAdjustmentTracks}</ToggleSwitch>

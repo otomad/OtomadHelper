@@ -1,4 +1,4 @@
-import { t as $t } from "i18next";
+// import { t as $t } from "i18next";
 
 const pages = import.meta.glob<FC>("./views/*.tsx", { import: "default", eager: true });
 
@@ -11,7 +11,7 @@ function EmptyPage() {
 export default function ShellPage() {
 	const [currentNav, setCurrentNav] = useState(["source"]);
 	const [mode, setMode] = useState<Mode>("otomadOrYtpmv");
-	const pageTitles = currentNav.map(page => $t("titles." + page, { context: "full" }));
+	const pageTitles = currentNav.map(page => t.titles[page]({ context: "full" }));
 	const pagePath = currentNav.join("/");
 	const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "shupelunker", "ytp"];
 	const navToolItems = ["mosh", "tools"];

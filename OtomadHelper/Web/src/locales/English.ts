@@ -7,6 +7,7 @@ const English = {
 			audio: "Audio",
 			visual: "Visual",
 			track: "Track",
+			track_other: "Tracks",
 			sonar: "Sonar",
 			shupelunker: "Shupelunker",
 			shupelunker_full: "Shupelunker Tactics",

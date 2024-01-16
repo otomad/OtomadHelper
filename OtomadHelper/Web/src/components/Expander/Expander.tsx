@@ -1,5 +1,3 @@
-import SettingsCard from "../Settings/SettingsCard";
-
 const ExpanderParent = styled(SettingsCard)<{
 	/** 已展开？ */
 	$expanded?: boolean;

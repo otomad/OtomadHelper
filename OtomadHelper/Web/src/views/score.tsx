@@ -26,19 +26,33 @@ export default function Score() {
 			</Card>
 			<Subheader>{t.subheader.config}</Subheader>
 			<Expander heading={t.source.trim} caption={t.descriptions.score.trim} />
-			<Expander heading={t.score.encoding} caption={t.descriptions.score.encoding} checkInfo={encoding}>
-				{encodings.map(item =>
-					<RadioButton value={[encoding, setEncoding]} id={item} key={item}>{item}</RadioButton>)}
-			</Expander>
-			<Expander heading={t.score.bpm} caption={t.descriptions.score.bpm} checkInfo={bpmUsings.find(item => item.id === bpmUsing)?.name}>
-				{bpmUsings.map(item =>
-					<RadioButton value={[bpmUsing, setBpmUsing]} id={item.id} key={item.id}>{item.name}</RadioButton>)}
-			</Expander>
+			<ExpanderRadio
+				heading={t.score.encoding}
+				caption={t.descriptions.score.encoding}
+				items={encodings}
+				value={[encoding, setEncoding]}
+				idField
+				nameField
+			/>
+			<ExpanderRadio
+				heading={t.score.bpm}
+				caption={t.descriptions.score.bpm}
+				items={bpmUsings}
+				value={[bpmUsing, setBpmUsing]}
+				idField="id"
+				nameField="name"
+			/>
 			<SettingsCard heading={t.score.timeSignature} trailingIcon="">{timeSignature}</SettingsCard>
-			<Expander heading={t.score.constraint} caption={t.descriptions.score.constraint} checkInfo={t.score[constraintNoteLength]}>
-				{constraintNoteLengths.map(item =>
-					<RadioButton value={[constraintNoteLength, setConstraintNoteLength]} id={item} key={item}>{t.score[item]}</RadioButton>)}
-			</Expander>
+			<ExpanderRadio
+				heading={t.score.constraint}
+				caption={t.descriptions.score.constraint}
+				items={constraintNoteLengths}
+				value={[constraintNoteLength, setConstraintNoteLength]}
+				idField
+				nameField={item => t.score[item]}
+				checkInfoCondition={t.score[constraintNoteLength]}
+			/>
+			<Subheader>{t(2).titles.track}</Subheader>
 		</div>
 	);
 }

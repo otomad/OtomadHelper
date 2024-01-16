@@ -17,7 +17,9 @@ type NestLocaleWithDefaultValue<L> = {
 		NestLocaleWithDefaultValue<L[key]>;
 } & UnknownKeyDeclaration;
 type DiscardConstString<L> = {
-	[key in keyof L]: L[key] extends object ? DiscardConstString<L[key]> : string;
+	[key in keyof L]:
+		L[key] extends object ? DiscardConstString<L[key]> :
+		key extends `${string}_other` ? string | undefined : string;
 };
 
 export type LocaleWithDefaultValue = NestLocaleWithDefaultValue<typeof SChinese["translation"]>;

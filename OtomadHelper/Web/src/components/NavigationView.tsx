@@ -162,7 +162,7 @@ const StyledNavigationView = styled.div`
 
 				${forMap(20, i => css`
 					> :nth-child(${i}) {
-						animation: ${floatUp} 300ms ${125 * (i - 1)}ms ${eases.easeOutMax} backwards;
+						animation: ${floatUp} 300ms ${50 * (i - 1)}ms ${eases.easeOutMax} backwards;
 					}
 				`)}
 
