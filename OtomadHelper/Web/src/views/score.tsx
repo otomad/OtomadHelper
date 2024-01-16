@@ -1,17 +1,18 @@
+const bpmUsings = [
+	{ id: "dynamicMidi", name: t.score.dynamicMidiTempo },
+	{ id: "midi", name: t.score.midiTempo },
+	{ id: "project", name: t.score.projectTempo },
+	{ id: "custom", name: t.custom },
+];
+const constraintNoteLengths = ["unconstrainted", "constraintMaxLength", "constraintFixedLength"];
+const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"];
+
 export default function Score() {
 	const [format, setFormat] = useState("midi");
 	const [bpmUsing, setBpmUsing] = useState("dynamicMidi");
-	const bpmUsings = [
-		{ id: "dynamicMidi", name: t.score.dynamicMidiTempo },
-		{ id: "midi", name: t.score.midiTempo },
-		{ id: "project", name: t.score.projectTempo },
-		{ id: "custom", name: t.custom },
-	];
 	const timeSignature = "4/4";
 	const [constraintNoteLength, setConstraintNoteLength] = useState("unconstrainted");
-	const constraintNoteLengths = ["unconstrainted", "constraintMaxLength", "constraintFixedLength"];
-	const [encoding, setEncoding] = useState("UTF-8");
-	const encodings = ["UTF-8", "GBK", "Shift-JIS"];
+	const [encoding, setEncoding] = useState("ANSI");
 
 	return (
 		<div className="container">

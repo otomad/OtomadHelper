@@ -2,8 +2,8 @@ export default function Source() {
 	const [source, setSource] = useState("trackEvent");
 	const [startTime, setStartTime] = useState("projectStart");
 	const startTimes = [
-		{ id: "projectStart", name: t.source.generateAtBegin },
-		{ id: "cursor", name: t.source.generateAtCursor },
+		{ id: "projectStart", name: t.source.startTime.projectStart },
+		{ id: "cursor", name: t.source.startTime.cursor },
 		{ id: "custom", name: t.custom },
 	];
 

@@ -5,8 +5,8 @@
 	"type": "module",
 	"main": "./dist/index.html",
 	"scripts": {
-		"dev": "vite --host",
-		"build": "tsc && vite build",
+		"dev": "vite --host --force",
+		"build": "tsc && vite build --force",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
 		"postinstall": "patch-package"

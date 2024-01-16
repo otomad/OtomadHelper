@@ -11,6 +11,9 @@ type IncludesInterpolation<S extends string> = S extends `${string}{{${string}` 
 type NestLocaleWithDefaultValue<L> = {
 	[key in keyof L]:
 		L[key] extends string ? IncludesInterpolation<L[key]> :
+		L[key] extends { _: infer D } ?
+			D extends string ? D & NestLocaleWithDefaultValue<L[key]> & IncludesInterpolation<D> :
+			NestLocaleWithDefaultValue<L[key]> :
 		NestLocaleWithDefaultValue<L[key]>;
 } & UnknownKeyDeclaration;
 type DiscardConstString<L> = {
