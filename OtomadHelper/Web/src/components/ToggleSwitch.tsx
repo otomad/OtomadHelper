@@ -130,7 +130,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 	/** 禁用？ */
 	disabled?: boolean;
 }>) {
-	const textLabel = on ? "On" : "Off";
+	const textLabel = on ? t.on : t.off;
 	const [isDraging, setIsDraging] = useState(false);
 	const [thumbLeft, setThumbLeft] = useState<number>();
 	// 注意：直接使用 styled-components 的参数改变会影响性能。
@@ -145,6 +145,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 	};
 
 	const onThumbDown = useCallback<PointerEventHandler<HTMLDivElement>>(e => {
+		stopEvent(e);
 		const thumb = e.currentTarget;
 		const control = thumb.parentElement!;
 		const controlRect = control.getBoundingClientRect();
@@ -171,7 +172,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 		<StyledToggleSwitchLabel
 			className={{ active: on }}
 			disabled={disabled}
-			onClick={() => handleCheck(!on)}
+			onClick={e => { stopEvent(e); handleCheck(!on); }}
 		>
 			<div className="text">{children}</div>
 			<div className="right">

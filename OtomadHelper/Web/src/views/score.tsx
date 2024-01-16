@@ -42,7 +42,7 @@ export default function Score() {
 				idField="id"
 				nameField="name"
 			/>
-			<SettingsCard heading={t.score.timeSignature} trailingIcon="">{timeSignature}</SettingsCard>
+			<SettingsCard heading={t.score.timeSignature} trailingIcon>{timeSignature}</SettingsCard>
 			<ExpanderRadio
 				heading={t.score.constraint}
 				caption={t.descriptions.score.constraint}

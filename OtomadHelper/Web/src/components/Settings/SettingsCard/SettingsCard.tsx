@@ -63,8 +63,8 @@ export default function SettingsCard({
 	heading?: ReactNode;
 	/** 详细描述。 */
 	caption?: ReactNode;
-	/** 尾随图标。使用空字符串表示禁用。 */
-	trailingIcon?: string;
+	/** 尾随图标。使用空字符串或布尔类型表示禁用。 */
+	trailingIcon?: string | boolean;
 	/** 组件形态。 */
 	type?: "container" | "button" | "expander";
 }, HTMLElement>) {
@@ -82,7 +82,7 @@ export default function SettingsCard({
 				</div>
 				<div className="trailing">
 					{children}
-					{trailingIcon && (
+					{trailingIcon && typeof trailingIcon === "string" && (
 						<div className="trailing-icon">
 							<Icon name={trailingIcon} />
 						</div>
