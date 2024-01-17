@@ -139,7 +139,8 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 		transition: "none",
 	} as CSSProperties, [thumbLeft]);
 
-	const handleCheck = (on: boolean) => {
+	const handleCheck = (on: boolean, e?: MouseEvent) => {
+		stopEvent(e);
 		if (!isDraging) setOn?.(on);
 		setIsDraging(false);
 	};
@@ -172,7 +173,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 		<StyledToggleSwitchLabel
 			className={{ active: on }}
 			disabled={disabled}
-			onClick={e => { stopEvent(e); handleCheck(!on); }}
+			onClick={e => handleCheck(!on, e)}
 		>
 			<div className="text">{children}</div>
 			<div className="right">

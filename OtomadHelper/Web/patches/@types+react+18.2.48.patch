@@ -1,5 +1,5 @@
 diff --git a/node_modules/@types/react/index.d.ts b/node_modules/@types/react/index.d.ts
-index 66da98f..e0ebc82 100644
+index 66da98f..a02cb80 100644
 --- a/node_modules/@types/react/index.d.ts
 +++ b/node_modules/@types/react/index.d.ts
 @@ -7,6 +7,7 @@
@@ -10,6 +10,96 @@ index 66da98f..e0ebc82 100644
  
  type NativeAnimationEvent = AnimationEvent;
  type NativeClipboardEvent = ClipboardEvent;
+@@ -1267,19 +1268,19 @@ declare namespace React {
+      */
+     interface SyntheticEvent<T = Element, E = Event> extends BaseSyntheticEvent<E, EventTarget & T, EventTarget> {}
+ 
+-    interface ClipboardEvent<T = Element> extends SyntheticEvent<T, NativeClipboardEvent> {
++    interface ClipboardEvent<T = Element> extends SyntheticEvent<T, NativeClipboardEvent>, globalThis.ClipboardEvent {
+         clipboardData: DataTransfer;
+     }
+ 
+-    interface CompositionEvent<T = Element> extends SyntheticEvent<T, NativeCompositionEvent> {
++    interface CompositionEvent<T = Element> extends SyntheticEvent<T, NativeCompositionEvent>, globalThis.CompositionEvent {
+         data: string;
+     }
+ 
+-    interface DragEvent<T = Element> extends MouseEvent<T, NativeDragEvent> {
++    interface DragEvent<T = Element> extends MouseEvent<T, NativeDragEvent>, globalThis.DragEvent {
+         dataTransfer: DataTransfer;
+     }
+ 
+-    interface PointerEvent<T = Element> extends MouseEvent<T, NativePointerEvent> {
++    interface PointerEvent<T = Element> extends MouseEvent<T, NativePointerEvent>, globalThis.PointerEvent {
+         pointerId: number;
+         pressure: number;
+         tangentialPressure: number;
+@@ -1292,7 +1293,7 @@ declare namespace React {
+         isPrimary: boolean;
+     }
+ 
+-    interface FocusEvent<Target = Element, RelatedTarget = Element> extends SyntheticEvent<Target, NativeFocusEvent> {
++    interface FocusEvent<Target = Element, RelatedTarget = Element> extends SyntheticEvent<Target, NativeFocusEvent>, globalThis.FocusEvent {
+         relatedTarget: (EventTarget & RelatedTarget) | null;
+         target: EventTarget & Target;
+     }
+@@ -1324,7 +1325,7 @@ declare namespace React {
+         | "Symbol"
+         | "SymbolLock";
+ 
+-    interface KeyboardEvent<T = Element> extends UIEvent<T, NativeKeyboardEvent> {
++    interface KeyboardEvent<T = Element> extends UIEvent<T, NativeKeyboardEvent>, globalThis.KeyboardEvent {
+         altKey: boolean;
+         /** @deprecated */
+         charCode: number;
+@@ -1349,7 +1350,7 @@ declare namespace React {
+         which: number;
+     }
+ 
+-    interface MouseEvent<T = Element, E = NativeMouseEvent> extends UIEvent<T, E> {
++    interface MouseEvent<T = Element, E = NativeMouseEvent> extends UIEvent<T, E>, globalThis.MouseEvent {
+         altKey: boolean;
+         button: number;
+         buttons: number;
+@@ -1371,7 +1372,7 @@ declare namespace React {
+         shiftKey: boolean;
+     }
+ 
+-    interface TouchEvent<T = Element> extends UIEvent<T, NativeTouchEvent> {
++    interface TouchEvent<T = Element> extends UIEvent<T, NativeTouchEvent>, globalThis.TouchEvent {
+         altKey: boolean;
+         changedTouches: TouchList;
+         ctrlKey: boolean;
+@@ -1385,25 +1386,25 @@ declare namespace React {
+         touches: TouchList;
+     }
+ 
+-    interface UIEvent<T = Element, E = NativeUIEvent> extends SyntheticEvent<T, E> {
++    interface UIEvent<T = Element, E = NativeUIEvent> extends SyntheticEvent<T, E>, globalThis.UIEvent {
+         detail: number;
+         view: AbstractView;
+     }
+ 
+-    interface WheelEvent<T = Element> extends MouseEvent<T, NativeWheelEvent> {
++    interface WheelEvent<T = Element> extends MouseEvent<T, NativeWheelEvent>, globalThis.WheelEvent {
+         deltaMode: number;
+         deltaX: number;
+         deltaY: number;
+         deltaZ: number;
+     }
+ 
+-    interface AnimationEvent<T = Element> extends SyntheticEvent<T, NativeAnimationEvent> {
++    interface AnimationEvent<T = Element> extends SyntheticEvent<T, NativeAnimationEvent>, globalThis.AnimationEvent {
+         animationName: string;
+         elapsedTime: number;
+         pseudoElement: string;
+     }
+ 
+-    interface TransitionEvent<T = Element> extends SyntheticEvent<T, NativeTransitionEvent> {
++    interface TransitionEvent<T = Element> extends SyntheticEvent<T, NativeTransitionEvent>, globalThis.TransitionEvent {
+         elapsedTime: number;
+         propertyName: string;
+         pseudoElement: string;
 @@ -1968,7 +1969,7 @@ declare namespace React {
          // Standard HTML Attributes
          accessKey?: string | undefined;
@@ -28,3 +118,12 @@ index 66da98f..e0ebc82 100644
          color?: string | undefined;
          height?: number | string | undefined;
          id?: string | undefined;
+@@ -3196,7 +3197,7 @@ declare namespace React {
+     // https://github.com/nikeee/2048-typescript/blob/master/2048/js/touch.d.ts
+     // ----------------------------------------------------------------------
+ 
+-    interface AbstractView {
++    interface AbstractView extends Window {
+         styleMedia: StyleMedia;
+         document: Document;
+     }

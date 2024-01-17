@@ -174,9 +174,9 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 				}}
 				onKeyDown={onKeyDown}
 			>
-				<div className="track" onPointerDown={onTrackDown as never} />
+				<div className="track" onPointerDown={onTrackDown} />
 				<div className="passed" />
-				<div className="thumb" onPointerDown={onThumbDown as never} />
+				<div className="thumb" onPointerDown={onThumbDown} />
 			</StyledSlider>
 		</div>
 	);
