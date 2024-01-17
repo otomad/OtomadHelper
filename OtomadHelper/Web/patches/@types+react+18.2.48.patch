@@ -1,5 +1,5 @@
 diff --git a/node_modules/@types/react/index.d.ts b/node_modules/@types/react/index.d.ts
-index 206251d..df0f251 100644
+index 66da98f..e0ebc82 100644
 --- a/node_modules/@types/react/index.d.ts
 +++ b/node_modules/@types/react/index.d.ts
 @@ -7,6 +7,7 @@
@@ -10,16 +10,16 @@ index 206251d..df0f251 100644
  
  type NativeAnimationEvent = AnimationEvent;
  type NativeClipboardEvent = ClipboardEvent;
-@@ -1951,7 +1952,7 @@ declare namespace React {
+@@ -1968,7 +1969,7 @@ declare namespace React {
          // Standard HTML Attributes
          accessKey?: string | undefined;
          autoFocus?: boolean | undefined;
 -        className?: string | undefined;
 +        className?: string | ClassArray | undefined;
-         contentEditable?: Booleanish | "inherit" | undefined;
+         contentEditable?: Booleanish | "inherit" | "plaintext-only" | undefined;
          contextMenu?: string | undefined;
          dir?: string | undefined;
-@@ -2637,7 +2638,7 @@ declare namespace React {
+@@ -2654,7 +2655,7 @@ declare namespace React {
  
          // Attributes which also defined in HTMLAttributes
          // See comment in SVGDOMPropertyConfig.js
