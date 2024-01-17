@@ -1,0 +1,48 @@
+diff --git a/node_modules/babel-plugin-transform-jsx-classnames/cx.js b/node_modules/babel-plugin-transform-jsx-classnames/cx.js
+index f743a8d..211e2cc 100644
+--- a/node_modules/babel-plugin-transform-jsx-classnames/cx.js
++++ b/node_modules/babel-plugin-transform-jsx-classnames/cx.js
+@@ -1,6 +1,7 @@
+ 'use strict'
+ 
+ var HAS_OWN = {}.hasOwnProperty
++function kebabize(str) { return str.replaceAll(/(?<!^)([A-Z])/g, '-$1').toLowerCase() }
+ 
+ function getClass(arg) {
+   if (typeof arg === 'string') return arg
+@@ -12,7 +13,7 @@ function getClass(arg) {
+       if ((s = arg[k]))
+         if ((s = getClass(s))) {
+           if (className) className += ' '
+-          className += s
++          className += kebabize(s)
+         }
+     }
+     return className
+@@ -23,7 +24,7 @@ function getClass(arg) {
+         /* istanbul ignore next */
+         if (HAS_OWN.call(arg, s)) {
+           if (className) className += ' '
+-          className += s
++          className += kebabize(s)
+         }
+       }
+     }
+@@ -46,7 +47,7 @@ module.exports = function (arg0) {
+           /* istanbul ignore next */
+           if (HAS_OWN.call(arg0, str)) {
+             if (className) className += ' '
+-            className += str
++            className += kebabize(str)
+           }
+         }
+       }
+@@ -58,7 +59,7 @@ module.exports = function (arg0) {
+     if ((str = arguments[i]))
+       if ((str = getClass(str))) {
+         if (className) className += ' '
+-        className += str
++        className += kebabize(str)
+       }
+   }
+   return className

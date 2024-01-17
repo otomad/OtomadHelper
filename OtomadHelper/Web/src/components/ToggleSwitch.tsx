@@ -124,11 +124,13 @@ const StyledToggleSwitchLabel = styled.label`
 	}
 `;
 
-export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FCP<{
+export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], children }: FCP<{
 	/** 打开？ */
 	on: StateProperty<boolean>;
 	/** 禁用？ */
 	disabled?: boolean;
+	/** 向父组件通信当前切换开关是否已经按下。 */
+	isPressing?: StateProperty<boolean>;
 }>) {
 	const textLabel = on ? t.on : t.off;
 	const [isDraging, setIsDraging] = useState(false);
@@ -147,6 +149,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 
 	const onThumbDown = useCallback<PointerEventHandler<HTMLDivElement>>(e => {
 		stopEvent(e);
+		setIsPressing?.(true);
 		const thumb = e.currentTarget;
 		const control = thumb.parentElement!;
 		const controlRect = control.getBoundingClientRect();
@@ -164,6 +167,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 			setThumbLeft(undefined);
 			const lastTime = new Date().getTime();
 			setIsDraging(lastTime - firstTime > 200); // 定义识别为拖动而不是点击的时间差。
+			nextAnimationTick().then(() => setIsPressing?.(false));
 		};
 		document.addEventListener("pointermove", pointerMove);
 		document.addEventListener("pointerup", pointerUp);
@@ -178,7 +182,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, children }: FC
 			<div className="text">{children}</div>
 			<div className="right">
 				<span className="text">{textLabel}</span>
-				<div className="stroke">
+				<div className={["stroke", "toggle-switch-base", { isPressing }]}>
 					<div className="base">
 						<div className="thumb" style={thumbStyle} onPointerDown={onThumbDown} />
 					</div>

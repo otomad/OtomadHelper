@@ -5,8 +5,8 @@
 	"type": "module",
 	"main": "./dist/index.html",
 	"scripts": {
-		"dev": "vite --host",
-		"build": "tsc && vite build",
+		"dev": "vite --host --force",
+		"build": "tsc && vite build --force",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
 		"postinstall": "patch-package"
@@ -32,7 +32,7 @@
 		"@styled/typescript-styled-plugin": "^1.0.0",
 		"@types/lodash-es": "^4.17.11",
 		"@types/react": "^18.2.48",
-		"@types/react-dom": "^18.2.18",
+		"@types/react-dom": "^18.2.14",
 		"@types/react-transition-group": "^4.4.8",
 		"@typescript-eslint/eslint-plugin": "^6.8.0",
 		"@typescript-eslint/parser": "^6.8.0",
