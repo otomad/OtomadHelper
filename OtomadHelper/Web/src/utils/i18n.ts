@@ -1,7 +1,7 @@
 import type { TOptions } from "i18next";
 import translation from "locales/config";
 import type { LocaleWithDefaultValue } from "locales/types";
-const i18nItemSymbol = Symbol.for("i18nItem");
+const I18N_ITEM_SYMBOL = Symbol.for("i18n_item");
 
 const getProxy = (target: object) =>
 	new Proxy(target, {
@@ -33,7 +33,7 @@ const getProxy = (target: object) =>
 			};
 			const getWithArgsFunction = (...prefixes: string[]) => {
 				const func = (options: TOptions) => translate(prefixes, options);
-				func[i18nItemSymbol] = true;
+				func[I18N_ITEM_SYMBOL] = true;
 				return func;
 			};
 			const getWithArgsProxy = (...parents: string[]) => {
@@ -50,7 +50,7 @@ const getProxy = (target: object) =>
 						if (typeof currentName === "string")
 							return getWithArgsProxy(...parents, currentName);
 						if (typeof currentName === "symbol")
-							return target[currentName as typeof i18nItemSymbol];
+							return target[currentName as typeof I18N_ITEM_SYMBOL];
 					},
 				});
 			};

@@ -118,6 +118,19 @@ const SChinese = {
 			},
 			newTrack: "新增轨道",
 		},
+		settings: {
+			language: {
+				_: "语言",
+				en: "英语",
+				"zh-CN": "简体中文",
+			},
+			colorScheme: {
+				_: "配色方案",
+				light: "浅色",
+				dark: "深色",
+				auto: "自动",
+			},
+		},
 		descriptions: {
 			source: {
 				trim: "调整指定素材的开始或结束时间",

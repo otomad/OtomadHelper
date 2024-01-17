@@ -6,20 +6,24 @@ export default function Settings() {
 
 	return (
 		<div className="container">
-			<Expander heading="Language" expanded>
-				{languages.map(language => (
-					<RadioButton key={language} id={language} value={[i18n.language, i18n.changeLanguage]}>
-						{language}
-					</RadioButton>
-				))}
-			</Expander>
-			<Expander heading="Color scheme" expanded>
-				{schemes.map(thisScheme => (
-					<RadioButton key={thisScheme} id={thisScheme} value={[scheme, setScheme]}>
-						{thisScheme}
-					</RadioButton>
-				))}
-			</Expander>
+			<ExpanderRadio
+				heading={t.settings.language}
+				items={languages}
+				expanded
+				value={[i18n.language, i18n.changeLanguage]}
+				idField
+				nameField={item => t.settings.language[item]}
+				checkInfoCondition={item => t.settings.language[item!]}
+			/>
+			<ExpanderRadio
+				heading={t.settings.colorScheme}
+				items={schemes}
+				expanded
+				value={[scheme, setScheme as SetState<string>]}
+				idField
+				nameField={item => t.settings.colorScheme[item]}
+				checkInfoCondition={item => t.settings.colorScheme[item!]}
+			/>
 		</div>
 	);
 }

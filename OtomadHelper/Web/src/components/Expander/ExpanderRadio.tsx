@@ -1,6 +1,6 @@
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, children, ...settingsCardProps }: FCP<PropsOf<typeof SettingsCard> & {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
 	/** 选项列表。 */
-	items: T[];
+	items: readonly T[];
 	/** 当前选中值的 ID。 */
 	value: StateProperty<string>;
 	/**

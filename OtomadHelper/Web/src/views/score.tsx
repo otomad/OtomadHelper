@@ -1,17 +1,17 @@
 const bpmUsings = [
-	{ id: "dynamicMidi", name: t.score.dynamicMidiTempo },
-	{ id: "midi", name: t.score.midiTempo },
-	{ id: "project", name: t.score.projectTempo },
+	{ id: "dynamicMidi", name: t.score.bpm.dynamicMidi },
+	{ id: "midi", name: t.score.bpm.midi },
+	{ id: "project", name: t.score.bpm.project },
 	{ id: "custom", name: t.custom },
-];
-const constraintNoteLengths = ["unconstrainted", "constraintMaxLength", "constraintFixedLength"];
-const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"];
+] as const;
+const constraintNoteLengths = ["none", "max", "fixed"] as const;
+const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"] as const;
 
 export default function Score() {
 	const [format, setFormat] = useState("midi");
 	const [bpmUsing, setBpmUsing] = useState("dynamicMidi");
 	const timeSignature = "4/4";
-	const [constraintNoteLength, setConstraintNoteLength] = useState("unconstrainted");
+	const [constraintNoteLength, setConstraintNoteLength] = useState("none");
 	const [encoding, setEncoding] = useState("ANSI");
 
 	return (
@@ -49,8 +49,8 @@ export default function Score() {
 				items={constraintNoteLengths}
 				value={[constraintNoteLength, setConstraintNoteLength]}
 				idField
-				nameField={item => t.score[item]}
-				checkInfoCondition={t.score[constraintNoteLength]}
+				nameField={item => t.score.constraint[item]}
+				checkInfoCondition={t.score.constraint[constraintNoteLength]}
 			/>
 			<Subheader>{t(2).titles.track}</Subheader>
 		</div>

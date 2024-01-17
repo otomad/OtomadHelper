@@ -116,6 +116,19 @@ const English = {
 			},
 			newTrack: "New track",
 		},
+		settings: {
+			language: {
+				_: "Language",
+				en: "English",
+				"zh-CN": "Simplified Chinese",
+			},
+			colorScheme: {
+				_: "Color scheme",
+				light: "Light",
+				dark: "Dark",
+				auto: "Auto",
+			},
+		},
 		descriptions: {
 			source: {
 				trim: "Adjust start or end time of the specified source",
