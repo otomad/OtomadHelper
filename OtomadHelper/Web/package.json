@@ -9,7 +9,8 @@
 		"build": "tsc && vite build --force",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
-		"postinstall": "patch-package"
+		"postinstall": "patch-package",
+		"compact-svg": "tsx src/scripts/compact-svg.ts"
 	},
 	"author": "Ranne",
 	"license": "GPL",

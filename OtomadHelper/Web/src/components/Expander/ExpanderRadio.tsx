@@ -24,17 +24,21 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	 * - 如果为回调函数，则通过回调函数获取所需的值。
 	 * - 如果为 true，表示选中项目就是字符串，则名称可直接使用之。
 	 */
-	nameField: string | ((item: T) => string) | true;
+	nameField: string | ((item: T) => string) | true | object;
 }>) {
 	const items = _items as AnyObject[];
 	const getItemField = (item: T, fieldName: "id" | "name") => {
 		const field = fieldName === "name" ? nameField : idField;
-		return typeof field === "string" ? (item as AnyObject)[field] : typeof field === "function" ? field(item) : item;
+		return isI18nItem(field) ? field[item as string] :
+			typeof field === "string" ? (item as AnyObject)[field] :
+			typeof field === "function" ? field(item) :
+			item;
 	};
 	const checkInfo = !checkInfoCondition ? undefined :
 		typeof checkInfoCondition === "string" ? checkInfoCondition :
 		checkInfoCondition === true ? typeof idField === "string" && typeof nameField === "string" ?
-			items.find(item => item[idField] === value)?.[nameField] : value :
+			items.find(item => item[idField] === value)?.[nameField] :
+			idField === true && isI18nItem(nameField) ? nameField[value!] : value :
 		typeof checkInfoCondition === "function" ? checkInfoCondition(value, items) :
 		items.find(item => item[checkInfoCondition.id] === value)?.[checkInfoCondition.name];
 	return (

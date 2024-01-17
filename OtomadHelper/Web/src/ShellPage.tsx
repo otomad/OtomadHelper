@@ -1,5 +1,3 @@
-// import { t as $t } from "i18next";
-
 const pages = import.meta.glob<FC>("./views/*.tsx", { import: "default", eager: true });
 
 function EmptyPage() {
@@ -25,10 +23,10 @@ export default function ShellPage() {
 			<NavigationView
 				currentNav={[currentNav, setCurrentNav]}
 				navItems={[
-					...navItems.map(item => ({ text: t.titles[item], id: item })),
+					...navItems.map(item => ({ text: t.titles[item], id: item, icon: item })),
 					{ type: "hr" },
-					...navToolItems.map(item => ({ text: t.titles[item], id: item })),
-					...bottomNavItems.map(item => ({ text: t.titles[item], id: item, bottom: true })),
+					...navToolItems.map(item => ({ text: t.titles[item], id: item, icon: item })),
+					...bottomNavItems.map(item => ({ text: t.titles[item], id: item, icon: item, bottom: true })),
 				]}
 				titles={pageTitles}
 			>

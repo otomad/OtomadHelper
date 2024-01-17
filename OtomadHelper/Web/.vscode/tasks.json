@@ -17,5 +17,16 @@
 			"label": "npm: dev",
 			"detail": "vite",
 		},
+		{
+			"type": "npm",
+			"script": "compact-svg -- ${file}",
+			"problemMatcher": [],
+			"label": "Compact SVG",
+			"detail": "Remove excess parts from SVG - 压缩 SVG",
+			"presentation": {
+				"reveal": "never",
+				"close": true
+			}
+		},
 	],
 }

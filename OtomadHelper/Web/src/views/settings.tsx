@@ -12,8 +12,7 @@ export default function Settings() {
 				expanded
 				value={[i18n.language, i18n.changeLanguage]}
 				idField
-				nameField={item => t.settings.language[item]}
-				checkInfoCondition={item => t.settings.language[item!]}
+				nameField={t.settings.language}
 			/>
 			<ExpanderRadio
 				heading={t.settings.colorScheme}
@@ -21,8 +20,7 @@ export default function Settings() {
 				expanded
 				value={[scheme, setScheme as SetState<string>]}
 				idField
-				nameField={item => t.settings.colorScheme[item]}
-				checkInfoCondition={item => t.settings.colorScheme[item!]}
+				nameField={t.settings.colorScheme}
 			/>
 		</div>
 	);

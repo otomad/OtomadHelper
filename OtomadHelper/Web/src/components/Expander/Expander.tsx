@@ -28,6 +28,10 @@ const ExpanderParent = styled(SettingsCard)<{
 
 			> .base {
 				${sharpBottom};
+				
+				> .trailing > .trailing-icon > * {
+					rotate: -180deg;
+				}
 			}
 		`;
 	}}
@@ -68,7 +72,7 @@ export default function Expander({ icon, heading, caption, actions, expanded = f
 			<ExpanderParent
 				{...settingsCardProps}
 				type="expander"
-				trailingIcon={internalExpanded ? "chevron_up" : "chevron_down"}
+				trailingIcon="chevron_down"
 				onClick={() => setInternalExpanded(expanded => !expanded)}
 				$expanded={internalExpanded}
 			>

@@ -40,11 +40,7 @@ const StyledTabItem = styled.button`
 	.text {
 		white-space: nowrap;
 		line-height: 20px;
-		font-size: 16px;
-
-		.tab-bar.horizontal & {
-			font-size: 14px;
-		}
+		font-size: 14px;
 	}
 
 	.fill {

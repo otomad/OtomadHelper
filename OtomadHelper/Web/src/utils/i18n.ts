@@ -3,6 +3,10 @@ import translation from "locales/config";
 import type { LocaleWithDefaultValue } from "locales/types";
 const I18N_ITEM_SYMBOL = Symbol.for("i18n_item");
 
+export function isI18nItem(newChild: Any): newChild is Record<string, string> {
+	return newChild?.[I18N_ITEM_SYMBOL];
+}
+
 const getProxy = (target: object) =>
 	new Proxy(target, {
 		get(target, rootName) {
@@ -66,4 +70,3 @@ const targetFunction = (options?: number | bigint | TOptions) => {
 /** 获取本地化字符串对象。 */
 export const t = getProxy(targetFunction) as LocaleDictionary & typeof targetFunction;
 Object.freeze(t);
-(globalThis as AnyObject).t = t;
