@@ -182,7 +182,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 			<div className="text">{children}</div>
 			<div className="right">
 				<span className="text">{textLabel}</span>
-				<div className={["stroke", "toggle-switch-base", { isPressing }]}>
+				<div className={["stroke", "toggle-switch-base", { pressing: isPressing }]}>
 					<div className="base">
 						<div className="thumb" style={thumbStyle} onPointerDown={onThumbDown} />
 					</div>

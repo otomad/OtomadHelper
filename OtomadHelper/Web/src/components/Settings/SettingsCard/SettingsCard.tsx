@@ -18,7 +18,7 @@ const StyledSettingsCard = styled(StyledCard)`
 			background-color: ${c("fill-color-control-secondary")};
 		}
 
-		&:has(.trailing :is(.toggle-switch-base):not(:active)):active {
+		&:has(.trailing :is(.toggle-switch-base):not(:active, .pressing, .pressed)):active {
 			> .base {
 				background-color: ${c("fill-color-control-tertiary")};
 			}
