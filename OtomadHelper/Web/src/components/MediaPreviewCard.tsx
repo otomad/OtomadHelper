@@ -1,4 +1,4 @@
-import exampleThumbnail from "assets/images/ヨハネの氷.png";
+import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
 
 const StyledMediaPreviewCard = styled(Card)<{
 	/** 启用？ */
