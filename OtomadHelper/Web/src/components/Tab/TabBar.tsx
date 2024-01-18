@@ -1,6 +1,6 @@
 const THICKNESS = 3;
-const LENGTH = 16;
-const DELAY = 100;
+const LENGTH = 20;
+const DELAY = 200;
 
 const Indicator = styled.div<{
 	/** 是否禁用过渡动画？ */

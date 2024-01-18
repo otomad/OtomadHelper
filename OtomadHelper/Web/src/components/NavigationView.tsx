@@ -5,7 +5,7 @@ const NavButton = styled(Button).attrs({
 	/** 是否是影子？ */
 	$shadow: boolean;
 }>`
-	width: 48px;
+	width: 52px;
 	height: 40px;
 	margin: 4px 5px 1px;
 	min-width: unset;
@@ -27,7 +27,7 @@ const floatUp = keyframes`
 
 const CONTENT_MARGIN_X = 20;
 const TITLE_LINE_HEIGHT = 40;
-const COMPACT_WIDTH = 58;
+const COMPACT_WIDTH = 62;
 
 const StyledNavigationView = styled.div`
 	${styles.mixins.square("100%")};

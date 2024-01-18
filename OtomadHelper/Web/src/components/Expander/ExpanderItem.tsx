@@ -18,12 +18,8 @@ export /* internal */ const styledExpanderItemBase = css`
 `;
 
 export /* internal */ const styledExpanderItemContent = css`
-	.icon {
-		font-size: 16px;
-	}
-
 	.icon-placeholder {
-		${styles.mixins.square("16px")};
+		${styles.mixins.square("20px")};
 	}
 
 	.text {

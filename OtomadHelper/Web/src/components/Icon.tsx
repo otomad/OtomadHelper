@@ -11,7 +11,7 @@ const StyledIcon = styled.span.attrs({
 	display: inline-flex;
 
 	:where(&) {
-		font-size: 16px;
+		font-size: 20px;
 	}
 
 	svg {
