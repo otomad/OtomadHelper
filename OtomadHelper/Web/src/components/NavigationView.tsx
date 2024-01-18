@@ -77,7 +77,7 @@ const StyledNavigationView = styled.div`
 			&:not(.flyout) {
 				translate: -${COMPACT_WIDTH}px;
 			}
-			
+
 			&.flyout .nav-items::-webkit-scrollbar {
 				width: 0;
 			}
@@ -109,7 +109,7 @@ const StyledNavigationView = styled.div`
 				}
 			}
 		}
-		
+
 		&.minimal > .title-wrapper {
 			margin-top: 36px;
 		}
@@ -128,6 +128,7 @@ const StyledNavigationView = styled.div`
 
 		.title {
 			font-size: 28px;
+			font-weight: 600;
 			position: absolute;
 			transition: all ${eases.easeOutSmooth} 500ms;
 			display: flex;
@@ -170,7 +171,7 @@ const StyledNavigationView = styled.div`
 					content: "";
 					height: 18px;
 				}
-				
+
 				.card.media-pool > .base {
 					padding: 2px;
 				}
@@ -200,6 +201,14 @@ const StyledPage = styled.main`
 		opacity: 1;
 		translate: 0;
 		transition: all ${eases.easeOutMax} 300ms;
+	}
+
+	&:has(.empty-message) {
+		height: calc(100% - 2px);
+
+		> * {
+			height: 100%;
+		}
 	}
 `;
 

@@ -51,6 +51,10 @@ export /* internal */ const styledExpanderItemContent = css`
 			${styles.mixins.flexCenter()};
 			margin-right: -7px;
 			border-radius: 3px;
+
+			.icon {
+				font-size: 16px;
+			}
 		}
 	}
 `;

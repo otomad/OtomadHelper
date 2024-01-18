@@ -2,6 +2,7 @@ const StyledButton = styled.button`
 	display: inline-flex;
 	border-radius: 4px;
 	border: 1px solid ${c("stroke-color-control-stroke-default")};
+	min-height: 32px;
 
 	${ifColorScheme.dark} &:not(:active, [disabled]) {
 		border-top-color: ${c("stroke-color-control-stroke-secondary")};
@@ -43,13 +44,8 @@ const StyledButton = styled.button`
 		}
 	}
 
-	> .base > .content {
-		${styles.mixins.flexCenter()};
-		gap: 8px;
-
-		> span:empty {
-			display: none;
-		}
+	> .base > .content > span:empty {
+		display: none;
 	}
 
 	&.subtle {
@@ -83,10 +79,10 @@ export default function Button({ children, icon, subtle, className, ...htmlAttrs
 	return (
 		<StyledButton type="button" className={[className, { subtle }]} {...htmlAttrs}>
 			<div className="base">
-				<div className="content">
+				<StackPanel className="content">
 					{icon && <Icon name={icon} />}
 					<span>{children}</span>
-				</div>
+				</StackPanel>
 			</div>
 		</StyledButton>
 	);

@@ -7,11 +7,12 @@ const StyledToggleSwitchLabel = styled.label`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 12px;
 
 	.right {
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		gap: inherit;
 
 		.text {
 			width: unset !important;
@@ -125,13 +126,15 @@ const StyledToggleSwitchLabel = styled.label`
 	}
 `;
 
-export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], children }: FCP<{
+export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, children }: FCP<{
 	/** 打开？ */
 	on: StateProperty<boolean>;
 	/** 禁用？ */
 	disabled?: boolean;
 	/** 向父组件通信当前切换开关是否已经按下。 */
 	isPressing?: StateProperty<boolean>;
+	/** 隐藏“开/关”文本标签？ */
+	hideLabel?: boolean;
 }>) {
 	const textLabel = on ? t.on : t.off;
 	const [isDraging, setIsDraging] = useState(false);
@@ -182,7 +185,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 		>
 			<div className="text">{children}</div>
 			<div className="right">
-				<span className="text">{textLabel}</span>
+				{!hideLabel && <span className="text">{textLabel}</span>}
 				<div className={["stroke", "toggle-switch-base", { pressing: isPressing }]}>
 					<div className="base">
 						<div className="thumb" style={thumbStyle} onPointerDown={onThumbDown} />

@@ -35,6 +35,7 @@ const English = {
 		on: "On",
 		off: "Off",
 		custom: "Custom",
+		enabled: "Enabled",
 		enable: "Enable",
 		subheader: {
 			moreOptions: "More options",
@@ -66,10 +67,10 @@ const English = {
 			preview: "Preview",
 			stretch: {
 				_: "Stretch",
-				noStretching: "No Stretching",
-				flexingAndExtending: "Flexing & Extending",
-				extendingOnly: "Extending Only",
-				flexingOnly: "Flexing Only",
+				noStretching: "No stretching",
+				flexingAndExtending: "Flexing & extending",
+				extendingOnly: "Extending only",
+				flexingOnly: "Flexing only",
 			},
 			loop: "Loop",
 			normalize: "Normalize",
@@ -136,7 +137,7 @@ const English = {
 				startTime: "Specify when to start generating from the project",
 			},
 			score: {
-				trim: "Select the generation time range of the score",
+				trim: "Intercept the generation time range of the score",
 				bpm: "Specify the beats per minute",
 				constraint: "Controls the note output length from the score",
 				encoding: "Specify the text encoding of the file",
@@ -156,7 +157,7 @@ const English = {
 				glissando: "Creates a swirl effect if the note pitch bends or slides",
 				autoPan: "Pans the audio using envelope automation",
 				mappingVelocity: "Map the attack velocity of notes to the specified item",
-				transformOfx: "Miscz is a pixel hard edge plugin, Enable to add keyframe properties to TransformOFX in this plugin",
+				transformOfx: "Miscz is a pixel hard edge plugin, enable to add keyframe properties to TransformOFX of this plugin",
 				tuning: {
 					stretchAttributes: "More config about the select tunning method",
 					resample: "Lock stretch and pitch, adjust the stretch to change the pitch",
@@ -167,6 +168,21 @@ const English = {
 					prve: "Make your promotion video more rhythmic",
 					staff: "Use custom patterns as notes to draw visuals similar fashion to piano staff sheets",
 				},
+			},
+		},
+		empty: {
+			audioDisabled: {
+				heading: "Audio disabled",
+				caption: "Enable to generate audios",
+			},
+			visualDisabled: {
+				heading: "Visual disabled",
+				caption: "Enable to generate visuals",
+			},
+			ytpEnabled: {
+				heading: "YTP enabled, all other related parameters are unavailable",
+				caption: "Disable YTP feature to use and adjust other parameters",
+				ok: "Disable YTP",
 			},
 		},
 	},

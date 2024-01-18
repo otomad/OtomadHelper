@@ -5,7 +5,7 @@ const SChinese = {
 		titles: {
 			home: "主页",
 			source: "素材",
-			score: "乐谱",
+			score: "乐曲",
 			audio: "音频",
 			visual: "视频",
 			track: "轨道",
@@ -37,6 +37,7 @@ const SChinese = {
 		on: "开",
 		off: "关",
 		custom: "自定义",
+		enabled: "启用",
 		enable: "启用",
 		subheader: {
 			moreOptions: "更多选项",
@@ -138,9 +139,9 @@ const SChinese = {
 				startTime: "指定何时从项目开始生成",
 			},
 			score: {
-				trim: "选取乐曲生成的时间范围",
+				trim: "截取乐曲生成的时间范围",
 				bpm: "指定每分钟多少拍",
-				constraint: "控制乐谱中的音符输出长度",
+				constraint: "控制乐曲中的音符输出长度",
 				encoding: "指定文件的文本编码",
 			},
 			audioVisual: {
@@ -154,7 +155,7 @@ const SChinese = {
 				},
 				legato: "填补音符与音符之间的间隙",
 				multitrackForChords: "为和弦生成多个音轨",
-				createGroups: "将一个音符表示的视频与音频剪辑创建分组",
+				createGroups: "将一个音符所表示的视频与音频剪辑创建分组",
 				glissando: "在弯音或滑音时产生漩涡效果",
 				autoPan: "自动化控制音频的声像包络",
 				mappingVelocity: "将音符的击键力度映射到指定项目",
@@ -169,6 +170,21 @@ const SChinese = {
 					prve: "让你的映像更带有节奏感",
 					staff: "以自定义图案为音符，画出与钢琴五线谱类似风格的视觉效果",
 				},
+			},
+		},
+		empty: {
+			audioDisabled: {
+				heading: "已关闭音频",
+				caption: "启用以生成音频",
+			},
+			visualDisabled: {
+				heading: "已关闭视频",
+				caption: "启用以生成视频",
+			},
+			ytpEnabled: {
+				heading: "已启用 YTP，其它相关参数均不可用",
+				caption: "禁用 YTP 功能以使用并调整其它参数",
+				ok: "禁用 YTP",
 			},
 		},
 	},

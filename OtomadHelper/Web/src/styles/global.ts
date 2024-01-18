@@ -1,7 +1,7 @@
 import { globalColors } from "./colors";
 import eases from "./eases";
-import reset from "./reset";
 import forceCursors from "./force-cursor";
+import reset from "./reset";
 
 const readyDuration = (duration: number) => ({ $ready }: { $ready?: boolean }) => $ready ? `${duration}ms` : "0s";
 
@@ -32,6 +32,10 @@ const GlobalStyle = createGlobalStyle<{
 		${styles.effects.focus()};
 	}
 
+	html {
+		font-size: 14px;
+	}
+
 	body {
 		background-color: var(--background-color);
 		color: var(--foreground-color);
@@ -50,7 +54,7 @@ const GlobalStyle = createGlobalStyle<{
 	#root {
 		display: contents;
 	}
-	
+
 	${() => {
 		return forceCursors.map(cursor => css`
 			body[data-cursor="${cursor}"] {

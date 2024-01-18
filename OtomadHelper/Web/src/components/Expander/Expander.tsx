@@ -28,7 +28,7 @@ const ExpanderParent = styled(SettingsCard)<{
 
 			> .base {
 				${sharpBottom};
-				
+
 				> .trailing > .trailing-icon > * {
 					rotate: -180deg;
 				}
