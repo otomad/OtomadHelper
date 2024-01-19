@@ -171,13 +171,9 @@ const English = {
 			},
 		},
 		empty: {
-			audioDisabled: {
-				heading: "Audio disabled",
-				caption: "Enable to generate audios",
-			},
-			visualDisabled: {
-				heading: "Visual disabled",
-				caption: "Enable to generate visuals",
+			disabled: {
+				heading: "{{name, capitalize}} disabled",
+				caption: "Enable to generate the {{name, lowercase}}",
 			},
 			ytpEnabled: {
 				heading: "YTP enabled, all other related parameters are unavailable",

@@ -1,3 +1,5 @@
+import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
+
 export /* internal */ const stretches = ["noStretching", "flexingAndExtending", "extendingOnly", "flexingOnly"] as const;
 export /* internal */ const legatos = ["portato", "upToOneBeat", "upToOneBar", "unlimited"] as const;
 
@@ -18,14 +20,14 @@ export default function Visual() {
 
 	return (
 		<div className="container">
-			<MediaPreviewCard stream="visual" fileName="我的视频.mp4" enabled={[enabled, setEnabled]} />
+			<SettingsPageControlMedia stream="visual" fileName="我的视频.mp4" enabled={[enabled, setEnabled]} thumbnail={exampleThumbnail} />
 
 			{!enabled ? (
 				<EmptyMessage
 					key="disabled"
 					icon="visual"
-					heading={t.empty.visualDisabled.heading}
-					caption={t.empty.visualDisabled.caption}
+					heading={t.empty.disabled.heading({ name: t.titles.visual })}
+					caption={t.empty.disabled.caption({ name: t.titles.visual })}
 				>
 					<Button onClick={() => setEnabled(true)}>{t.enable}</Button>
 				</EmptyMessage>

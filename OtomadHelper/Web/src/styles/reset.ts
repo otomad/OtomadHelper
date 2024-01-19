@@ -45,5 +45,18 @@ export default css`
 		p {
 			margin: 0;
 		}
+
+		a {
+			color: ${c("accent-color")};
+			cursor: pointer;
+
+			&:hover {
+				opacity: 0.8;
+			}
+
+			&:active {
+				opacity: 0.5;
+			}
+		}
 	}
 `;

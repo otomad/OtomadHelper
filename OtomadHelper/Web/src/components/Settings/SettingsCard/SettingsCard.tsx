@@ -6,6 +6,10 @@ const StyledSettingsCard = styled(StyledCard)`
 
 	> .base {
 		${styledExpanderItemBase};
+
+		.select-info {
+			color: ${c("accent-color")};
+		}
 	}
 
 	button& {
@@ -52,6 +56,7 @@ export default function SettingsCard({
 	icon = "placeholder",
 	heading,
 	caption,
+	selectInfo,
 	trailingIcon = "chevron_right",
 	children,
 	type = "container",
@@ -64,6 +69,8 @@ export default function SettingsCard({
 	heading?: ReactNode;
 	/** 详细描述。 */
 	caption?: ReactNode;
+	/** 指定轨道或轨道事件的选择情况。 */
+	selectInfo?: ReactNode;
 	/** 尾随图标。使用空字符串或布尔类型表示禁用。 */
 	trailingIcon?: string | boolean;
 	/** 组件形态。 */
@@ -80,6 +87,7 @@ export default function SettingsCard({
 				<div className="text">
 					<div className="heading">{heading}</div>
 					<div className="caption">{caption}</div>
+					<div className="caption select-info">{selectInfo}</div>
 				</div>
 				<div className="trailing">
 					{children}

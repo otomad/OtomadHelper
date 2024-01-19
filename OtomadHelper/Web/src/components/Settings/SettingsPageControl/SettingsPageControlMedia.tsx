@@ -1,6 +1,4 @@
-import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
-
-const StyledMediaPreviewCard = styled(Card)<{
+const StyledSettingsPageControlMedia = styled(Card)<{
 	/** 启用？ */
 	$enabled: boolean;
 }>`
@@ -29,33 +27,11 @@ const StyledMediaPreviewCard = styled(Card)<{
 		}
 	}
 
-	.preview-img-wrapper {
-		display: inline-block;
-		position: relative;
-		max-width: 280px;
-		height: 120px;
-		border-radius: 3px;
-		overflow: hidden;
-		flex-shrink: 0;
-
-		img {
-			${styles.mixins.square("100%")};
-			object-fit: cover;
-		}
-
-		.stroke {
-			position: absolute;
-			inset: 0;
-			border-radius: inherit;
-			box-shadow: 0 0 0 1px #00000019 inset;
-		}
-
-		.icon {
-			position: absolute;
-			bottom: 8px;
-			left: 10px;
-			font-size: 36px;
-		}
+	.settings-page-control-preview-image .icon {
+		position: absolute;
+		bottom: 8px;
+		left: 10px;
+		font-size: 36px;
 	}
 
 	img.background {
@@ -69,7 +45,7 @@ const StyledMediaPreviewCard = styled(Card)<{
 	}
 
 	${({ $enabled }) => !$enabled && css`
-		.preview-img-wrapper img {
+		.settings-page-control-preview-image img {
 			filter: grayscale(1);
 		}
 
@@ -79,22 +55,22 @@ const StyledMediaPreviewCard = styled(Card)<{
 	`};
 `;
 
-export default function MediaPreviewCard({ stream, fileName, enabled }: FCP<{
+export default function SettingsPageControlMedia({ stream, fileName, enabled, thumbnail }: FCP<{
 	/** 选择是音频还是视频？ */
 	stream: "audio" | "visual";
 	/** 文件名。 */
 	fileName: string;
 	/** 启用？ */
 	enabled: StateProperty<boolean>;
+	/** 缩略图。 */
+	thumbnail: string;
 }>) {
 	return (
-		<StyledMediaPreviewCard $enabled={enabled[0] ?? true}>
-			<img className="background" src={exampleThumbnail} />
-			<div className="preview-img-wrapper">
-				<img src={exampleThumbnail} alt="thumbnail" />
-				<div className="stroke" />
+		<StyledSettingsPageControlMedia $enabled={enabled[0] ?? true}>
+			<img className="background" src={thumbnail} />
+			<SettingsPageControlPreviewImage image={thumbnail}>
 				<Icon name={"colored/" + stream} filled />
-			</div>
+			</SettingsPageControlPreviewImage>
 			<div className="right">
 				<p>{fileName}</p>
 				<div className="bottom">
@@ -107,6 +83,6 @@ export default function MediaPreviewCard({ stream, fileName, enabled }: FCP<{
 					<Button icon="play">{t.audioVisual.preview}</Button>
 				</div>
 			</div>
-		</StyledMediaPreviewCard>
+		</StyledSettingsPageControlMedia>
 	);
 }

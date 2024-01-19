@@ -173,13 +173,9 @@ const SChinese = {
 			},
 		},
 		empty: {
-			audioDisabled: {
-				heading: "已关闭音频",
-				caption: "启用以生成音频",
-			},
-			visualDisabled: {
-				heading: "已关闭视频",
-				caption: "启用以生成视频",
+			disabled: {
+				heading: "已关闭 {{name, lowercase}}",
+				caption: "启用以生成 {{name, lowercase}}",
 			},
 			ytpEnabled: {
 				heading: "已启用 YTP，其它相关参数均不可用",
