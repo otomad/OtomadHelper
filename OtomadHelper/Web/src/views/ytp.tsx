@@ -25,7 +25,11 @@ export default function Ytp() {
 				</EmptyMessage>
 			) : (
 				<>
-
+					<Subheader>{t.subheader.parameters}</Subheader>
+					<SettingsCard heading={t.ytp.constraint} caption={t.descriptions.ytp.constraint} icon="constraint" />
+					<SettingsCard heading={t.ytp.clips} caption={t.descriptions.ytp.clips} icon="number" />
+					<Subheader>{t.audioVisual.effects}</Subheader>
+					<Expander heading={t.ytp.effects} caption={t.descriptions.ytp.effects} icon="sparkle" />
 				</>
 			)}
 		</div>

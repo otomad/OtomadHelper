@@ -57,7 +57,7 @@ export default function SettingsCard({
 	heading,
 	caption,
 	selectInfo,
-	trailingIcon = "chevron_right",
+	trailingIcon,
 	children,
 	type = "container",
 	className,
@@ -76,6 +76,9 @@ export default function SettingsCard({
 	/** 组件形态。 */
 	type?: "container" | "button" | "expander";
 }, HTMLElement>) {
+	trailingIcon ??= type === "button" ? "chevron_right" :
+		type === "expander" ? "chevron_down" : undefined;
+
 	return (
 		<StyledSettingsCard
 			as={type === "container" ? "div" : "button"}

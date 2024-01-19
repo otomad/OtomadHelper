@@ -87,7 +87,7 @@ const SChinese = {
 			},
 			multitrackForChords: "复音多轨",
 			createGroups: "创建分组",
-			glissando: "滑音效果",
+			glissando: "弯音效果",
 			autoPan: "自动声像",
 			mappingVelocity: "映射力度",
 			transformOfx: "变换效果插件",
@@ -119,6 +119,11 @@ const SChinese = {
 				staff: "五线谱视觉效果",
 			},
 			newTrack: "新增轨道",
+		},
+		ytp: {
+			constraint: "限制长度",
+			clips: "剪辑数目",
+			effects: "YTP 效果",
 		},
 		settings: {
 			language: {
@@ -167,9 +172,14 @@ const SChinese = {
 					basePitch: "指定音频事件的原始音高是多少",
 				},
 				effects: {
-					prve: "让你的映像更带有节奏感",
+					prve: "让你的画面更带有节奏感",
 					staff: "以自定义图案为音符，画出与钢琴五线谱类似风格的视觉效果",
 				},
+			},
+			ytp: {
+				constraint: "控制要生成的剪辑的长度",
+				clips: "要生成剪辑的数目",
+				effects: "指定 YTP 的效果",
 			},
 		},
 		empty: {

@@ -1,23 +1,23 @@
-const bpmUsings = [
+export /* internal */ const bpmUsings = [
 	{ id: "dynamicMidi", name: t.score.bpm.dynamicMidi },
 	{ id: "midi", name: t.score.bpm.midi },
 	{ id: "project", name: t.score.bpm.project },
 	{ id: "custom", name: t.custom },
 ] as const;
-const constraintNoteLengths = ["none", "max", "fixed"] as const;
-const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"] as const;
+export /* internal */ const constraintNoteLengths = ["none", "max", "fixed"] as const;
+export /* internal */ const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"] as const;
 
 export default function Score() {
-	const [format, setFormat] = useState("midi");
-	const [bpmUsing, setBpmUsing] = useState("dynamicMidi");
-	const timeSignature = "4/4";
-	const [constraintNoteLength, setConstraintNoteLength] = useState("none");
-	const [encoding, setEncoding] = useState("ANSI");
+	const format = selectConfig(c => c.score.format);
+	const encoding = selectConfig(c => c.score.encoding);
+	const bpmUsing = selectConfig(c => c.score.bpmUsing);
+	const [timeSignature] = selectConfig(c => c.score.timeSignature);
+	const constraintNoteLength = selectConfig(c => c.score.constraintNoteLength);
 
 	return (
 		<div className="container">
 			<Card className="media-pool">
-				<TabBar current={[format, setFormat]}>
+				<TabBar current={format}>
 					<TabItem id="midi" icon="midi">{t.score.midi}</TabItem>
 					<TabItem id="ust" icon="ust">{t.score.ust}</TabItem>
 					<TabItem id="refOtherTracks" icon="ref_other_tracks">{t.score.refOtherTracks}</TabItem>
@@ -32,7 +32,7 @@ export default function Score() {
 				caption={t.descriptions.score.encoding}
 				icon="globe"
 				items={encodings}
-				value={[encoding, setEncoding]}
+				value={encoding}
 				idField
 				nameField
 			/>
@@ -41,17 +41,17 @@ export default function Score() {
 				caption={t.descriptions.score.bpm}
 				icon="speed"
 				items={bpmUsings}
-				value={[bpmUsing, setBpmUsing]}
+				value={bpmUsing as StateProperty<string>}
 				idField="id"
 				nameField="name"
 			/>
-			<SettingsCard heading={t.score.timeSignature} trailingIcon icon="health">{timeSignature}</SettingsCard>
+			<SettingsCard heading={t.score.timeSignature} icon="health">{timeSignature}</SettingsCard>
 			<ExpanderRadio
 				heading={t.score.constraint}
 				caption={t.descriptions.score.constraint}
 				icon="constraint"
 				items={constraintNoteLengths}
-				value={[constraintNoteLength, setConstraintNoteLength]}
+				value={constraintNoteLength}
 				idField
 				nameField={t.score.constraint}
 			/>

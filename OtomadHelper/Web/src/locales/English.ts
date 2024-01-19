@@ -118,6 +118,11 @@ const English = {
 			},
 			newTrack: "New track",
 		},
+		ytp: {
+			constraint: "Constraint length",
+			clips: "Clips",
+			effects: "YTP Effects",
+		},
 		settings: {
 			language: {
 				_: "Language",
@@ -165,9 +170,14 @@ const English = {
 					basePitch: "Specify what is the base pitch of the audio event",
 				},
 				effects: {
-					prve: "Make your promotion video more rhythmic",
+					prve: "Make your visuals more rhythmic",
 					staff: "Use custom patterns as notes to draw visuals similar fashion to piano staff sheets",
 				},
+			},
+			ytp: {
+				constraint: "Controls the length for the clip to generate",
+				clips: "The value of clips generated",
+				effects: "Specify the effects for YTP",
 			},
 		},
 		empty: {
