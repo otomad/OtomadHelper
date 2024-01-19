@@ -2,7 +2,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	/** 选项列表。 */
 	items: readonly T[];
 	/** 当前选中值的 ID。 */
-	value: StateProperty<string>;
+	value: T extends string ? StateProperty<T> : StateProperty<string>;
 	/**
 	 * 当前选中状态的显示的条件。
 	 * - 如果为字符串，则显示该固定字符串。
@@ -44,7 +44,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	return (
 		<Expander {...settingsCardProps} checkInfo={checkInfo}>
 			{items.map(item =>
-				<RadioButton value={[value, setValue]} id={getItemField(item, "id")} key={getItemField(item, "id")}>{getItemField(item, "name")}</RadioButton>)}
+				<RadioButton value={[value as T, setValue]} id={getItemField(item, "id")} key={getItemField(item, "id")}>{getItemField(item, "name")}</RadioButton>)}
 			{children}
 		</Expander>
 	);

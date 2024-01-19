@@ -8,13 +8,14 @@ export function useStoreSelector<Store extends UseBoundStore<StoreApi<Any>>, Fie
 
 	const paths = pathString.split("."), lastPath = paths.at(-1)!;
 	const getParent = (root: States) => {
-		let parent: Any;
+		let parent = root;
 		for (let i = 0; i < paths.length - 1; i++)
-			parent = root[paths[i]];
+			parent = parent[paths[i]];
 		return parent;
 	};
 
 	const getter = getParent(store())[lastPath];
-	const setter = (value: unknown) => store.setState((root: States) => void (getParent(root)[lastPath] = value));
+	const setter = (value: unknown) => store.setState((root: States) => void (getParent(root)[lastPath] =
+		typeof value === "function" ? value(getter) : value));
 	return [getter, setter] as StatePropertyNonNull<Field>;
 }

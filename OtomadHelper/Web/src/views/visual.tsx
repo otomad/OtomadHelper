@@ -1,25 +1,20 @@
-const stretches = ["noStretching", "flexingAndExtending", "extendingOnly", "flexingOnly"] as const;
-const legatos = ["portato", "upToOneBeat", "upToOneBar", "unlimited"] as const;
+export /* internal */ const stretches = ["noStretching", "flexingAndExtending", "extendingOnly", "flexingOnly"] as const;
+export /* internal */ const legatos = ["portato", "upToOneBeat", "upToOneBar", "unlimited"] as const;
 
 export default function Visual() {
-	// const config = useConfig();
-	// const { enabled } = config.visual;
-	// const setEnabled = (v: boolean) => useConfig.setState(c => void (c.visual.enabled = v));
-	const [enabled, setEnabled] = useStoreSelector(useConfig, config => config.visual.enabled);
-
-	// const [enabled, setEnabled] = useState(true);
-	const [ytpEnabled, setYtpEnabled] = useState(false);
-	const stretch = useState("noStretching");
-	const loop = useState(false);
-	const staticVisual = useState(false);
-	const noLengthening = useState(false);
-	const legato = useState("upToOneBeat");
-	const multitrackForChords = useState(false);
-	const createGroups = useState(true);
-	const glissando = useState(false);
-	const mappingVelocity = useState(false);
-	const transformOfx = useState(false);
-	const enableStaffVisualizer = useState(false);
+	const [enabled, setEnabled] = selectConfig(c => c.visual.enabled);
+	const [ytpEnabled, setYtpEnabled] = selectConfig(c => c.ytp.enabled);
+	const stretch = selectConfig(c => c.visual.stretch);
+	const loop = selectConfig(c => c.visual.loop);
+	const staticVisual = selectConfig(c => c.visual.staticVisual);
+	const noLengthening = selectConfig(c => c.visual.noLengthening);
+	const legato = selectConfig(c => c.visual.legato);
+	const multitrackForChords = selectConfig(c => c.visual.multitrackForChords);
+	const createGroups = selectConfig(c => c.createGroups);
+	const glissando = selectConfig(c => c.visual.glissando);
+	const mappingVelocity = selectConfig(c => c.visual.mappingVelocity);
+	const transformOfx = selectConfig(c => c.visual.transformOfx);
+	const enableStaffVisualizer = selectConfig(c => c.visual.enableStaffVisualizer);
 
 	return (
 		<div className="container">
