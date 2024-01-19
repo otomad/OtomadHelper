@@ -52,7 +52,7 @@ const StyledMediaPreviewCard = styled(Card)<{
 
 		.icon {
 			position: absolute;
-			bottom: 10px;
+			bottom: 8px;
 			left: 10px;
 			font-size: 36px;
 		}
@@ -87,15 +87,13 @@ export default function MediaPreviewCard({ stream, fileName, enabled }: FCP<{
 	/** 启用？ */
 	enabled: StateProperty<boolean>;
 }>) {
-	const icon = stream === "audio" ? "colored/media_player" : "colored/photo";
-
 	return (
 		<StyledMediaPreviewCard $enabled={enabled[0] ?? true}>
 			<img className="background" src={exampleThumbnail} />
 			<div className="preview-img-wrapper">
 				<img src={exampleThumbnail} alt="thumbnail" />
 				<div className="stroke" />
-				<Icon name={icon} filled />
+				<Icon name={"colored/" + stream} filled />
 			</div>
 			<div className="right">
 				<p>{fileName}</p>
