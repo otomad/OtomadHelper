@@ -23,7 +23,6 @@ const StyledEmptyMessage = styled.div`
 	}
 
 	> p {
-		font-size: 14px;
 		color: ${c("fill-color-text-tertiary")}
 	}
 `;

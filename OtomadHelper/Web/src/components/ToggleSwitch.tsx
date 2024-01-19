@@ -16,7 +16,6 @@ const StyledToggleSwitchLabel = styled.label`
 
 		.text {
 			width: unset !important;
-			font-size: 14px;
 		}
 	}
 

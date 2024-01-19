@@ -54,6 +54,11 @@ declare global {
 	 */
 	export type StateProperty<T> = [get?: T, set?: SetState<T>];
 	// | (T extends unknown[] ? never : T)
+	/**
+	 * useState 的返回值，即包含表示当前值以及设定该值的函数的元组。可用于实现双向绑定。但参数不可空。
+	 * @template T - 参数类型。
+	 */
+	export type StatePropertyNonNull<T> = [get: T, set: SetState<T>];
 
 	/**
 	 * 获取 React 组件的 Props。
@@ -65,7 +70,7 @@ declare global {
 	 * 获取 Zustand 状态管理的参数类型。
 	 * @template S - Zustand 存储对象。
 	 */
-	export type ZustandState<S> = S extends UseBoundStore<StoreApi<infer T>> ? T : never;
+	export type ZustandState<S> = NonNull<S extends UseBoundStore<StoreApi<infer T>> ? T : never>;
 
 	export type { Draft } from "immer";
 	export type { CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, ForwardedRef, KeyboardEventHandler, MouseEventHandler, PointerEventHandler, ReactElement, ReactNode, RefObject } from "react";

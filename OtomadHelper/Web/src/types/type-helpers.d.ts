@@ -31,7 +31,7 @@ declare global {
 	 * 与自带类型帮手 `NonNullable` 的功能实现不一致，结果可能略有不同。
 	 * @template T - 可能带空的类型。
 	 */
-	type NonNull<T> = Exclude<T, undefined | null>;
+	type NonNull<T> = Exclude<T, undefined | null | void>;
 
 	/**
 	 * 类似 `NonNull`，但是还会把其它虚值如 false、""、±0、±0n 也一同去掉。

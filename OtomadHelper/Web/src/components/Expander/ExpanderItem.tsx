@@ -11,10 +11,6 @@ export /* internal */ const styledExpanderItemBase = css`
 	> :not(.text) {
 		flex-shrink: 0;
 	}
-
-	> .text {
-		font-size: 14px;
-	}
 `;
 
 export /* internal */ const styledExpanderItemContent = css`
@@ -30,7 +26,6 @@ export /* internal */ const styledExpanderItemContent = css`
 		}
 
 		.heading {
-			font-size: 14px;
 			line-height: 20px;
 		}
 
@@ -44,7 +39,7 @@ export /* internal */ const styledExpanderItemContent = css`
 	.trailing {
 		display: flex;
 		align-items: center;
-		gap: 14px;
+		gap: 1rem;
 
 		.trailing-icon {
 			${styles.mixins.square("30px")};

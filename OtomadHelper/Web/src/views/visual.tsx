@@ -2,7 +2,12 @@ const stretches = ["noStretching", "flexingAndExtending", "extendingOnly", "flex
 const legatos = ["portato", "upToOneBeat", "upToOneBar", "unlimited"] as const;
 
 export default function Visual() {
-	const [enabled, setEnabled] = useState(true);
+	// const config = useConfig();
+	// const { enabled } = config.visual;
+	// const setEnabled = (v: boolean) => useConfig.setState(c => void (c.visual.enabled = v));
+	const [enabled, setEnabled] = useStoreSelector(useConfig, config => config.visual.enabled);
+
+	// const [enabled, setEnabled] = useState(true);
 	const [ytpEnabled, setYtpEnabled] = useState(false);
 	const stretch = useState("noStretching");
 	const loop = useState(false);

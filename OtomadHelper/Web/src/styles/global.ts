@@ -16,7 +16,7 @@ const GlobalStyle = createGlobalStyle<{
 	*,
 	::before,
 	::after {
-		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} ${readyDuration(100)}, fill ${eases.easeOutMax} ${readyDuration(100)};
+		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} ${readyDuration(100)}, fill ${eases.easeOutMax} ${readyDuration(100)}, font-size ${eases.easeOutMax} ${readyDuration(250)};
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", "Microsoft YaHei UI", sans-serif, system-ui;
 		user-select: none;
 		box-sizing: border-box;
