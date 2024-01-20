@@ -15,14 +15,14 @@ export default function Ytp() {
 					heading={t.empty.disabled.heading({ name: t.titles.ytp })}
 					caption={t.empty.disabled.caption({ name: t.titles.ytp })}
 				>
-					<Button onClick={() => setEnabled(true)}>{t.enable}</Button>
+					<Button onClick={() => setEnabled(true)} accent>{t.enable}</Button>
 				</EmptyMessage>
 			) : (
 				<>
 					<Subheader>{t.subheader.parameters}</Subheader>
 					<SettingsCard heading={t.ytp.constraint} caption={t.descriptions.ytp.constraint} icon="constraint" />
 					<SettingsCard heading={t.ytp.clips} caption={t.descriptions.ytp.clips} icon="number" />
-					<Subheader>{t.audioVisual.effects}</Subheader>
+					<Subheader>{t.subheader.effects}</Subheader>
 					<Expander heading={t.ytp.effects} caption={t.descriptions.ytp.effects} icon="sparkle" />
 				</>
 			)}

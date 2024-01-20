@@ -128,6 +128,21 @@ export function arrayToRemoveFalsy<T>(array: T[]) {
 	return array.filter(item => item) as NonFalsy<T>[];
 }
 
+/**
+ * 判断两个数组是否相等，包括位置顺序。
+ * @returns 两个数组是否相等？
+ */
+export function arrayEquals<T>(a: T[], b: T[]) {
+	if (a === b) return true;
+	if (!a || !b) return false;
+	if (a.length !== b.length) return false;
+
+	for (let i = 0; i < a.length; i++)
+		if (a[i] !== b[i])
+			return false;
+	return true;
+}
+
 // #region Tuples
 /** 创建可供 TypeScript 正确识别的一元组。 */
 export function Tuple<T>(arg1: T): [T];

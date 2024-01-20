@@ -1,9 +1,13 @@
 import type { ColorScheme } from "helpers/color-mode";
 
-export const useColorModeStore = createStore<{
+interface IColorMode {
 	scheme: ColorScheme;
 	setScheme: (scheme: ColorScheme) => void;
-}>()(persist(set => ({
-	scheme: "auto",
-	setScheme: scheme => set({ scheme }),
-}), { name: "colorMode" }));
+}
+
+export const useColorModeStore = createStore<IColorMode>()(
+	persist(set => ({
+		scheme: "auto",
+		setScheme: scheme => set({ scheme }),
+	}), { name: "colorMode" }),
+);

@@ -28,6 +28,7 @@ const colors = {
 	"fill-color-control-alt-tertiary": ["rgba(0, 0, 0, 0.06)", "rgba(255, 255, 255, 0.04)"],
 	"fill-color-control-alt-quarternary": ["rgba(0, 0, 0, 0.09)", "rgba(255, 255, 255, 0.07)"],
 	"fill-color-control-alt-disabled": ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0)"],
+	"fill-color-accent-disabled": ["rgba(0, 0, 0, 0.22)", "rgba(255, 255, 255, 0.16)"],
 	"fill-color-system-critical": ["rgb(196, 43, 28)", "rgb(255, 153, 164)"],
 	"fill-color-system-success": ["rgb(15, 123, 15)", "rgb(108, 203, 95)"],
 	"fill-color-system-attention": ["rgb(0, 95, 183)", "rgb(96, 205, 255)"],

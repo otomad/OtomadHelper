@@ -25,11 +25,20 @@ const floatUp = keyframes`
 	}
 `;
 
+const jumpLeft = keyframes`
+	from {
+		opacity: 0;
+		translate: 20%;
+	}
+`;
+
 const CONTENT_MARGIN_X = 20;
 const TITLE_LINE_HEIGHT = 40;
 const COMPACT_WIDTH = 62;
 
-const StyledNavigationView = styled.div`
+const StyledNavigationView = styled.div<{
+	$transitionName: string;
+}>`
 	${styles.mixins.square("100%")};
 	display: flex;
 
@@ -132,7 +141,20 @@ const StyledNavigationView = styled.div`
 			position: absolute;
 			transition: all ${eases.easeOutSmooth} 500ms;
 			display: flex;
-			gap: 8px;
+			align-items: center;
+			gap: 14px;
+
+			> .parent {
+				color: ${c("fill-color-text-secondary")};
+
+				&:hover {
+					color: ${c("foreground-color")};
+				}
+
+				&:active {
+					color: ${c("fill-color-text-tertiary")};
+				}
+			}
 
 			&.exit {
 				translate: 0 -${TITLE_LINE_HEIGHT}px;
@@ -149,10 +171,14 @@ const StyledNavigationView = styled.div`
 
 		.content {
 			height: 100%;
-			overflow-y: auto;
+			overflow: hidden auto;
 
 			&:has(.enter, .exit) {
 				overflow-y: hidden;
+			}
+
+			&:has(.empty-message) {
+				overflow: hidden;
 			}
 
 			> * > .container {
@@ -161,9 +187,10 @@ const StyledNavigationView = styled.div`
 				flex-direction: column;
 				gap: 6px;
 
-				${forMap(20, i => css`
+				${({ $transitionName }) => forMap(20, i => css`
 					> :nth-child(${i}) {
-						animation: ${floatUp} 300ms ${50 * (i - 1)}ms ${eases.easeOutMax} backwards;
+						animation: ${$transitionName === "jump" ? floatUp : ""}
+							300ms ${50 * (i - 1)}ms ${eases.easeOutMax} backwards;
 					}
 				`)}
 
@@ -186,21 +213,42 @@ const StyledNavigationView = styled.div`
 `;
 
 const StyledPage = styled.main`
-	&.exit {
+	.jump > &.exit {
 		opacity: 0;
 		translate: 0 -2rem;
 		transition: all ${eases.easeOutMax} 83ms;
 	}
 
-	&.enter {
+	.jump > &.enter {
 		opacity: 0;
 		translate: 0 5rem;
 	}
 
-	&.enter-active {
+	.jump > &.enter-active {
 		opacity: 1;
 		translate: 0;
 		transition: all ${eases.easeOutMax} 300ms;
+	}
+
+	.forward > &.exit,
+	.backward > &.exit {
+		transition: all ${eases.easeInExpo} 300ms;
+	}
+
+	.forward > &.exit,
+	.backward > &.enter {
+		translate: -20%;
+	}
+
+	.forward > &.enter,
+	.backward > &.exit {
+		translate: 20%;
+	}
+
+	.forward > &.enter-active,
+	.backward > &.enter-active {
+		translate: 0;
+		transition: all ${eases.easeInExpo} 300ms;
 	}
 
 	&:has(.empty-message) {
@@ -264,6 +312,22 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	);
 }
 
+const StyledBreadCrumbChevronRight = styled.div`
+	${styles.mixins.flexCenter()};
+	margin-top: 4px;
+
+	.icon {
+		font-size: 13px;
+		color: ${c("fill-color-text-secondary")};
+	}
+`;
+
+const BreadCrumbChevronRight = () => (
+	<StyledBreadCrumbChevronRight>
+		<Icon name="chevron_right" />
+	</StyledBreadCrumbChevronRight>
+);
+
 interface NavItem {
 	/** 标签文本。 */
 	text: string;
@@ -292,15 +356,17 @@ const usePaneDisplayMode = () => {
 	return paneDisplayMode;
 };
 
-export default function NavigationView({ currentNav, navItems = [], titles, children, customContent }: FCP<{
+export default function NavigationView({ currentNav, navItems = [], titles, transitionName = "", children, customContent }: FCP<{
 	/** 当前导航页状态参数。 */
 	currentNav: StateProperty<string[]>;
 	/** 所有导航项。 */
 	navItems?: (NavItem | NavBrItem)[];
 	/** 面包屑导航标题数组。 */
-	titles?: string[];
+	titles?: { name: string; link?: string[] }[];
 	/** 自定义区域。 */
 	customContent?: ReactNode;
+	/** 页面过渡名称。 */
+	transitionName?: string;
 }>) {
 	const currentNavTab = useStateSelector(currentNav, nav => nav[0], value => [value]);
 	const pagePath = currentNav.join("/");
@@ -314,7 +380,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, chil
 	const currentNavItem = useMemo(() =>
 		navItems.find(item => !("type" in item) && item.id === currentNavTab[0]) as NavItem,
 	[currentNav, navItems]);
-	titles ??= [currentNavItem?.text ?? ""];
+	titles ??= [{ name: currentNavItem?.text ?? "" }];
 
 	const previousPageTitleKey = useRef<typeof pageTitleKey>();
 	const pageTitleKey: [string, number] = [currentNavItem?.id ?? "", new Date().valueOf()];
@@ -330,7 +396,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, chil
 	useEffect(hideFlyoutNavMenu, [currentNav, useWindowWidth()]);
 
 	return (
-		<StyledNavigationView>
+		<StyledNavigationView $transitionName={transitionName}>
 			<NavButton onClick={onNavButtonClick} />
 			{forMap(2, i => {
 				const isFlyout = i === 2;
@@ -354,14 +420,27 @@ export default function NavigationView({ currentNav, navItems = [], titles, chil
 					<TransitionGroup>
 						<CssTransition key={pageTitleKey.join()}>
 							<h1 className="title">
-								{titles.map((title, index) => <div key={index}>{title}</div>)}
+								{titles.flatMap((title, i, { length }) => {
+									const last = i === length - 1;
+									const crumb = (
+										<div
+											key={i}
+											className={{ parent: !last }}
+											onClick={() => title.link?.length && currentNav[1]?.(title.link)}
+										>
+											{title.name}
+										</div>
+									);
+									return last ? crumb : [crumb, <BreadCrumbChevronRight key={i + "-chevron"} />];
+								})}
 							</h1>
 						</CssTransition>
 					</TransitionGroup>
 				</div>
-				<div className="content" ref={pageContent}>
+				<div className={["content", transitionName]} ref={pageContent}>
 					<SwitchTransition>
 						<CssTransition key={pagePath} onExited={() => pageContent.current?.scrollTo(0, 0)}>
+							{/* BUG: 动画时间异常随机。 */}
 							<StyledPage>
 								{children}
 							</StyledPage>

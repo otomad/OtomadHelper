@@ -17,7 +17,8 @@ const SChinese = {
 			mosh_full: "数据抹失",
 			tools: "工具",
 			settings: "设置",
-			track_other: undefined,
+			prve: "映像节奏视觉效果",
+			staff: "五线谱视觉效果",
 		},
 		source: {
 			trackEvent: "轨道剪辑",
@@ -45,6 +46,7 @@ const SChinese = {
 			advanced: "高级",
 			config: "配置",
 			parameters: "参数",
+			effects: "效果",
 		},
 		score: {
 			midi: "MIDI",
@@ -113,11 +115,6 @@ const SChinese = {
 					duration: "持续时间",
 					adjustAudioToBasePitch: "使音频调整到主音高",
 				},
-			},
-			effects: {
-				_: "效果",
-				prve: "映像节奏视觉效果",
-				staff: "五线谱视觉效果",
 			},
 			newTrack: "新增轨道",
 		},
@@ -192,7 +189,8 @@ const SChinese = {
 			ytpEnabled: {
 				heading: "已启用 YTP，其它相关参数均不可用",
 				caption: "禁用 YTP 功能以使用并调整其它参数",
-				ok: "禁用 YTP",
+				disableYtp: "禁用 YTP",
+				gotoYtp: "转到 YTP",
 			},
 		},
 	},

@@ -16,6 +16,8 @@ const English = {
 			mosh_full: "Datamosh",
 			tools: "Tools",
 			settings: "Settings",
+			prve: "PV Rhythm Visual Effect",
+			staff: "Staff Visual Effect",
 		},
 		source: {
 			trackEvent: "Track event",
@@ -43,6 +45,7 @@ const English = {
 			advanced: "Advanced",
 			config: "Config",
 			parameters: "Parameters",
+			effects: "Effects",
 		},
 		score: {
 			midi: "MIDI",
@@ -111,11 +114,6 @@ const English = {
 					duration: "Duration",
 					adjustAudioToBasePitch: "Adjust audio to base pitch",
 				},
-			},
-			effects: {
-				_: "Effects",
-				prve: "PV Rhythm Visual Effect",
-				staff: "Staff Visual Effect",
 			},
 			newTrack: "New track",
 		},
@@ -190,7 +188,8 @@ const English = {
 			ytpEnabled: {
 				heading: "YTP enabled, all other related parameters are unavailable",
 				caption: "Disable YTP feature to use and adjust other parameters",
-				ok: "Disable YTP",
+				disableYtp: "Disable YTP",
+				gotoYtp: "Go to YTP",
 			},
 		},
 	},

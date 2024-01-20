@@ -18,6 +18,8 @@ export default function Visual() {
 	const transformOfx = selectConfig(c => c.visual.transformOfx);
 	const enableStaffVisualizer = selectConfig(c => c.visual.enableStaffVisualizer);
 
+	const { changePage, pushPage } = usePageStore();
+
 	return (
 		<div className="container">
 			<SettingsPageControlMedia stream="visual" fileName="我的视频.mp4" enabled={[enabled, setEnabled]} thumbnail={exampleThumbnail} />
@@ -29,7 +31,7 @@ export default function Visual() {
 					heading={t.empty.disabled.heading({ name: t.titles.visual })}
 					caption={t.empty.disabled.caption({ name: t.titles.visual })}
 				>
-					<Button onClick={() => setEnabled(true)}>{t.enable}</Button>
+					<Button onClick={() => setEnabled(true)} accent>{t.enable}</Button>
 				</EmptyMessage>
 			) : ytpEnabled ? (
 				<EmptyMessage
@@ -38,7 +40,10 @@ export default function Visual() {
 					heading={t.empty.ytpEnabled.heading}
 					caption={t.empty.ytpEnabled.caption}
 				>
-					<Button onClick={() => setYtpEnabled(false)}>{t.empty.ytpEnabled.ok}</Button>
+					<StackPanel>
+						<Button onClick={() => setYtpEnabled(false)}>{t.empty.ytpEnabled.disableYtp}</Button>
+						<Button onClick={() => changePage(["ytp"])} accent>{t.empty.ytpEnabled.gotoYtp}</Button>
+					</StackPanel>
 				</EmptyMessage>
 			) : (
 				<>
@@ -78,9 +83,9 @@ export default function Visual() {
 					</SettingsCard>
 					<SettingsCardToggleSwitch heading={t.audioVisual.transformOfx} caption={t.descriptions.audioVisual.transformOfx} icon="transform_ofx" on={transformOfx} />
 
-					<Subheader>{t.audioVisual.effects}</Subheader>
-					<SettingsCard heading={t.audioVisual.effects.prve} caption={t.descriptions.audioVisual.effects.prve} type="button" icon="sparkle" />
-					<SettingsCard heading={t.audioVisual.effects.staff} caption={t.descriptions.audioVisual.effects.staff} type="button" icon="g_clef">
+					<Subheader>{t.subheader.effects}</Subheader>
+					<SettingsCard heading={t.titles.prve} caption={t.descriptions.audioVisual.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")} />
+					<SettingsCard heading={t.titles.staff} caption={t.descriptions.audioVisual.effects.staff} type="button" icon="g_clef">
 						<ToggleSwitch on={enableStaffVisualizer} />
 					</SettingsCard>
 

@@ -6,6 +6,8 @@ export type I18nArgsFunction<R extends string = string> = {
 	(options: TOptions): R;
 };
 type UnknownKeyDeclaration = Readonly<Record<string, string & I18nArgsFunction>>;
+type KeyWithOther<T> = T extends `${infer _}_other` ? T : never;
+type KeyWithNoOther<T> = T extends `${infer _}_other` ? never : T;
 
 type IncludesInterpolation<S extends string> = S extends `${string}{{${string}` ? S & I18nArgsFunction<S> : S;
 type NestLocaleWithDefaultValue<L> = {
@@ -17,9 +19,9 @@ type NestLocaleWithDefaultValue<L> = {
 		NestLocaleWithDefaultValue<L[key]>;
 } & UnknownKeyDeclaration;
 type DiscardConstString<L> = {
-	[key in keyof L]:
-		L[key] extends object ? DiscardConstString<L[key]> :
-		key extends `${string}_other` ? string | undefined : string;
+	[key in KeyWithNoOther<keyof L>]: L[key] extends object ? DiscardConstString<L[key]> : string;
+} & {
+	[key in KeyWithOther<keyof L>]?: string;
 };
 
 export type LocaleWithDefaultValue = NestLocaleWithDefaultValue<typeof SChinese["translation"]>;
