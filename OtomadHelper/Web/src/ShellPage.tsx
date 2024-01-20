@@ -1,9 +1,7 @@
 const pages = import.meta.glob<FC>("./views/*.tsx", { import: "default", eager: true });
 
 function EmptyPage() {
-	return (
-		<h1>功能研发中……</h1>
-	);
+	return <EmptyMessage icon="settings" heading="功能研发中" />;
 }
 
 export default function ShellPage() {

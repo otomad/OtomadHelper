@@ -309,6 +309,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, chil
 	const [isExpandedInExpandedMode, setIsExpandedInExpandedMode] = useState(true);
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
+	const pageContent = useRef<HTMLDivElement | null>(null);
 
 	const currentNavItem = useMemo(() =>
 		navItems.find(item => !("type" in item) && item.id === currentNavTab[0]) as NavItem,
@@ -358,9 +359,9 @@ export default function NavigationView({ currentNav, navItems = [], titles, chil
 						</CssTransition>
 					</TransitionGroup>
 				</div>
-				<div className="content">
+				<div className="content" ref={pageContent}>
 					<SwitchTransition>
-						<CssTransition key={pagePath}>
+						<CssTransition key={pagePath} onExited={() => pageContent.current?.scrollTo(0, 0)}>
 							<StyledPage>
 								{children}
 							</StyledPage>
