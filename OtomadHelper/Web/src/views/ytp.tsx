@@ -5,13 +5,7 @@ export default function Ytp() {
 
 	return (
 		<div className="container">
-			<SettingsPageControl image={ytpImage}>
-				<p>
-					YTP is for creating YTPs using various effects known in the YTP Genre. YTP supports multisource.
-					<br /><br />
-					<a>Learn more about YTP</a>
-				</p>
-			</SettingsPageControl>
+			<SettingsPageControl image={ytpImage} learnMoreLink="">{t.descriptions.ytp}</SettingsPageControl>
 			<SettingsCardToggleSwitch heading={t.enabled} selectInfo="1 media source has been selected" icon="enabled" on={[enabled, setEnabled]} />
 
 			{!enabled ? (

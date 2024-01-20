@@ -39,6 +39,7 @@ const SChinese = {
 		custom: "自定义",
 		enabled: "启用",
 		enable: "启用",
+		learnMore: "了解更多",
 		subheader: {
 			moreOptions: "更多选项",
 			advanced: "高级",
@@ -177,6 +178,7 @@ const SChinese = {
 				},
 			},
 			ytp: {
+				_: "YTP (YouTube Poop) 用于使用 YTP 体裁中已知的各种效果来创建荒谬的视频。\nYTP 支持多素材。",
 				constraint: "控制要生成的剪辑的长度",
 				clips: "要生成剪辑的数目",
 				effects: "指定 YTP 的效果",

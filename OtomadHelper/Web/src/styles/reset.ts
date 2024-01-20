@@ -49,6 +49,7 @@ export default css`
 		a {
 			color: ${c("accent-color")};
 			cursor: pointer;
+			text-decoration: none;
 
 			&:hover {
 				opacity: 0.8;

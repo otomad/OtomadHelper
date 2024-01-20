@@ -4,7 +4,7 @@ import type { LocaleWithDefaultValue } from "locales/types";
 const I18N_ITEM_SYMBOL = Symbol.for("i18n_item");
 
 export function isI18nItem(newChild: Any): newChild is Record<string, string> {
-	return newChild?.[I18N_ITEM_SYMBOL];
+	return !!newChild?.[I18N_ITEM_SYMBOL];
 }
 
 const getProxy = (target: object) =>

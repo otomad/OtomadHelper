@@ -37,6 +37,7 @@ const English = {
 		custom: "Custom",
 		enabled: "Enabled",
 		enable: "Enable",
+		learnMore: "Learn more",
 		subheader: {
 			moreOptions: "More options",
 			advanced: "Advanced",
@@ -175,6 +176,7 @@ const English = {
 				},
 			},
 			ytp: {
+				_: "YTP (YouTube Poop) is for creating nonsensical videos using various effects known in the YTP genre.\nYTP supports multisource.",
 				constraint: "Controls the length for the clip to generate",
 				clips: "The value of clips generated",
 				effects: "Specify the effects for YTP",
