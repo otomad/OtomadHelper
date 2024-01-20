@@ -1,4 +1,22 @@
 /**
+ * 移除指定 DOM 元素正在进行的所有动画。
+ * @param elements - HTML DOM 元素。
+ * @returns 是否有移除动画。
+ */
+export function removeExistAnimations(...elements: Element[]) {
+	let hasExistAnimations = false;
+	for (const element of elements) {
+		if (!element) continue;
+		const existAnimations = element.getAnimations();
+		if (existAnimations.length !== 0) {
+			hasExistAnimations = true;
+			existAnimations.forEach(animation => animation.cancel());
+		}
+	}
+	return hasExistAnimations;
+}
+
+/**
  * 等待下一时刻 CSS 动画更新刷新。
  * @returns 空承诺。
  */
@@ -103,6 +121,8 @@ type AnimateSizeOptions = Partial<{
 		startWidth: number;
 		endWidth: number;
 	}>;
+	/** 在动画之前移出该元素及其子元素现有的动画？以解决当用户快速点击两次连续触发两次本动画从而引发的样式异常。 */
+	removePreviousAnimations: boolean;
 }>;
 
 /**
@@ -134,6 +154,7 @@ export async function* animateSizeGenerator(
 		attachAnimations,
 		noCropping = false,
 		clientAdjustment = {},
+		removePreviousAnimations = false,
 	}: AnimateSizeOptions = {},
 ): AsyncGenerator<void, Animation | void, boolean> {
 	element = toValue(element);
@@ -143,6 +164,7 @@ export async function* animateSizeGenerator(
 	startWidth ??= element.clientWidth + (clientAdjustment.startWidth ?? 0);
 	const _hasChangeFunc = yield;
 	// if (hasChangeFunc && awaitNextTick) await nextTick();
+	if (removePreviousAnimations) removeExistAnimations(element, element.children[0]);
 	endHeight ??= element.clientHeight + (clientAdjustment.endHeight ?? 0);
 	endWidth ??= element.clientWidth + (clientAdjustment.endWidth ?? 0);
 	// if (getSize)
@@ -195,7 +217,7 @@ export async function* animateSizeGenerator(
 		], animationOptions);
 		if (attachAnimations) attachAnimations.forEach(group => group[0]?.animate(group[1], animationOptions));
 	}
-	return result.finished;
+	return result.finished.catch(() => { });
 }
 
 /**
@@ -244,6 +266,7 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 	exit.duration = duration[1];
 	enter.easing = easing[0];
 	exit.easing = easing[1];
+	enter.removePreviousAnimations = true;
 
 	const ANIMATE_SIZE_END_EVENT = "animatesizeend"; // 这里我们使用一个自定义的事件，以防原生 CSS 过渡动画结束时干扰运行。
 
