@@ -36,6 +36,9 @@ export default [
 		"zustand/middleware": [
 			"persist",
 		],
+		"zustand/middleware/immer": [
+			["immer", "zustandImmer"],
+		],
 		"immer": [
 			"produce",
 		],

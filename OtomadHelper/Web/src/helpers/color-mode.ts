@@ -6,10 +6,10 @@ const changeColorScheme = (isLight?: boolean | ColorScheme) => {
 	if (isLight === undefined) isLight = lightModePreference.matches;
 	document.documentElement.dataset.scheme = isLight ? "light" : "dark";
 };
-const getUserColorScheme = () => useColorMode.getState().scheme;
+const getUserColorScheme = () => useColorModeStore.getState().scheme;
 
 export function initColorMode() {
 	lightModePreference.addEventListener("change", e => getUserColorScheme() === "auto" && changeColorScheme(e.matches));
 	changeColorScheme(getUserColorScheme());
-	useColorMode.subscribe(({ scheme }) => changeColorScheme(scheme));
+	useColorModeStore.subscribe(({ scheme }) => changeColorScheme(scheme));
 }

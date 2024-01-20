@@ -2,7 +2,7 @@ export default function Settings() {
 	const { i18n } = useTranslation();
 	const languages = Object.keys(i18n.options.resources ?? {});
 	const schemes = ["light", "dark", "auto"] as const;
-	const { scheme, setScheme } = useColorMode();
+	const { scheme, setScheme } = useColorModeStore();
 
 	return (
 		<div className="container">

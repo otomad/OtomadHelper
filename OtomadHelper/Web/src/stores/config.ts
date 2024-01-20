@@ -1,7 +1,6 @@
 import type { bpmUsings, constraintNoteLengths, encodings } from "views/score";
 import type { startTimes } from "views/source";
 import type { legatos, stretches } from "views/visual";
-import { immer } from "zustand/middleware/immer";
 
 type StartTime = typeof startTimes[number]["id"];
 type BpmUsing = typeof bpmUsings[number]["id"];
@@ -43,10 +42,11 @@ interface IConfig {
 	ytp: {
 		enabled: boolean;
 	};
+	toJson(): string; // 如果叫 toJSON 则会和 JSON 内置参数重名导致递归错误。
 }
 
-export const useConfig = createStore<IConfig>()(
-	immer(_set => ({
+export const useConfigStore = createStore<IConfig>()(
+	zustandImmer((_set, get) => ({
 		source: {
 			source: "trackEvent",
 			startTime: "projectStart",
@@ -79,7 +79,9 @@ export const useConfig = createStore<IConfig>()(
 		ytp: {
 			enabled: false,
 		},
+		toJson: () => JSON.stringify(get()),
 	})),
 );
 
-export const selectConfig = <T>(path: (state: IConfig) => T) => useStoreSelector(useConfig, path);
+export const selectConfig = <T>(path: (state: IConfig) => T) => useStoreSelector(useConfigStore, path);
+(globalThis as AnyObject).config = useConfigStore;
