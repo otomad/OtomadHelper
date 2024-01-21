@@ -22,7 +22,7 @@ const StyledListView = styled.div`
 	}
 `;
 
-export function ListView<T extends string = string>({ view, children, current: [current, setCurrent] }: FCP<{
+export default function ListView<T extends string = string>({ view, current: [current, setCurrent], children }: FCP<{
 	/** 显示方式：平铺、列表。 */
 	view: "list" | "tile";
 	/** 当前选中项标识符。 */

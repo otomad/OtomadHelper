@@ -136,6 +136,10 @@ const StyledNavigationView = styled.div<{
 			display: flex;
 			align-items: center;
 			gap: 14px;
+			
+			* {
+				white-space: nowrap;
+			}
 
 			> .parent {
 				color: ${c("fill-color-text-secondary")};

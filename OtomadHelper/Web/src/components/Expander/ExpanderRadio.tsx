@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, captionField, view = false, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, captionField, view = false, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
 	/** 选项列表。 */
 	items: readonly T[];
 	/** 当前选中值的 ID。 */
@@ -29,17 +29,20 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	nameField: FieldType<T> | object;
 	/** 单选项目的图标字段。 */
 	iconField?: FieldType<T>;
+	/** 单选项目的图片字段。 */
+	imageField?: FieldType<T> | ((item: T) => ReactNode);
 	/** 单选项目的详细描述字段。 */
 	captionField?: FieldType<T>;
 	/** 使用列表视图组件而不是单选框。 */
-	view?: "list" | "tile" | false;
+	view?: "list" | "tile" | "grid" | false;
 }>) {
 	const items = _items as AnyObject[];
-	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "caption"): Any => {
+	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "image" | "caption"): Any => {
 		const field = {
 			name: nameField,
 			id: idField,
 			icon: iconField,
+			image: imageField,
 			caption: captionField,
 		}[fieldName];
 		return !field ? undefined :
@@ -59,7 +62,12 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 		<Expander {...settingsCardProps} checkInfo={checkInfo}>
 			{!view ? items.map(item =>
 				<RadioButton value={[value as T, setValue]} id={getItemField(item, "id")} key={getItemField(item, "id")}>{getItemField(item, "name")}</RadioButton>) :
-			(
+			view === "grid" ? (
+				<GridView current={[value as T, setValue]}>
+					{items.map(item =>
+						<GridViewItem id={getItemField(item, "id")} key={getItemField(item, "id")} image={getItemField(item, "image")}>{getItemField(item, "name")}</GridViewItem>)}
+				</GridView>
+			) : (
 				<ListView view="tile" current={[value as T, setValue]}>
 					{items.map(item =>
 						<ListViewItem id={getItemField(item, "id")} key={getItemField(item, "id")} icon={getItemField(item, "icon")} caption={getItemField(item, "caption")}>{getItemField(item, "name")}</ListViewItem>)}

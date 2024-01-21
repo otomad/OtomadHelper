@@ -61,7 +61,7 @@ const StyledListViewItem = styled.div`
 	}
 `;
 
-export function ListViewItem({ image, icon, id: _id, active = false, caption, children, className, ...htmlAttrs }: FCP<{
+export default function ListViewItem({ image, icon, id: _id, active = false, caption, children, className, ...htmlAttrs }: FCP<{
 	/** 图片。 */
 	image?: string;
 	/** 图标。如有图片时会被代替。 */

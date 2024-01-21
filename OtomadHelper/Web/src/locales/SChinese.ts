@@ -41,6 +41,7 @@ const SChinese = {
 		enabled: "启用",
 		enable: "启用",
 		learnMore: "了解更多",
+		condition: "条件",
 		subheader: {
 			moreOptions: "更多选项",
 			advanced: "高级",
@@ -123,6 +124,23 @@ const SChinese = {
 			clips: "剪辑数目",
 			effects: "YTP效果",
 		},
+		prve: {
+			classes: {
+				flip: "翻转类",
+				rotation: "旋转类",
+				scale: "缩放类",
+				mirror: "镜像类",
+				invert: "反转类",
+				hue: "色相类",
+				monochrome: "单色类",
+				time: "时间类",
+				time2: "时间类 2",
+				ec: "扩缩类",
+				swing: "摇摆类",
+				blur: "模糊类",
+				wipe: "擦除类",
+			},
+		},
 		settings: {
 			language: {
 				_: "语言",
@@ -137,6 +155,7 @@ const SChinese = {
 			},
 		},
 		descriptions: {
+			condition: "指定当满足何条件时才会应用下述配置",
 			source: {
 				trim: "调整指定素材的开始或结束时间",
 				startTime: "指定何时从项目开始生成",

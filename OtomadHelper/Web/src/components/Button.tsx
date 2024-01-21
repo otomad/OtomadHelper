@@ -56,11 +56,11 @@ const StyledButton = styled.button<{
 		}
 
 		&:hover {
-			background-color: rgb(from ${c("fill-color")} r g b / 90%);
+			background-color: ${c("fill-color", 90)};
 		}
 
 		&:active {
-			background-color: rgb(from ${c("fill-color")} r g b / 80%);
+			background-color: ${c("fill-color", 80)};
 		}
 
 		&[disabled] {

@@ -40,6 +40,7 @@ const English = {
 		enabled: "Enabled",
 		enable: "Enable",
 		learnMore: "Learn more",
+		condition: "Condition",
 		subheader: {
 			moreOptions: "More options",
 			advanced: "Advanced",
@@ -122,6 +123,23 @@ const English = {
 			clips: "Clips",
 			effects: "YTP Effects",
 		},
+		prve: {
+			classes: {
+				flip: "Flip Class",
+				rotation: "Rotation Class",
+				scale: "Scale Class",
+				mirror: "Mirror Class",
+				invert: "Invert Class",
+				hue: "Hue Class",
+				monochrome: "Monochrome Class",
+				time: "Time Class",
+				time2: "Time Class 2",
+				ec: "Expansion & Compression Class",
+				swing: "Swing Class",
+				blur: "Blur Class",
+				wipe: "Wipe Class",
+			},
+		},
 		settings: {
 			language: {
 				_: "Language",
@@ -136,6 +154,7 @@ const English = {
 			},
 		},
 		descriptions: {
+			condition: "Specify when the following configuration will be applied",
 			source: {
 				trim: "Adjust start or end time of the specified source",
 				startTime: "Specify when to start generating from the project",
