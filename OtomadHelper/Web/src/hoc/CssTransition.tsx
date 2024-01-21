@@ -13,7 +13,7 @@ const CssTransition = forwardRef<HTMLElement, Partial<CSSTransitionProps>>((prop
 	useImperativeHandle(ref, () => nodeRef.current!, []);
 
 	return (
-		<_CSSTransition {...props} nodeRef={nodeRef} addEndListener={endListener(nodeRef)}>
+		<_CSSTransition {...props} {...(props.timeout !== undefined ? { timeout: props.timeout } : { nodeRef, addEndListener: endListener(nodeRef) })}>
 			<>
 				{
 					React.Children.map(props.children as ReactNode, child => {

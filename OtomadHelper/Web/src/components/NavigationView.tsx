@@ -248,7 +248,7 @@ const StyledPage = styled.main`
 	.forward > &.enter-active,
 	.backward > &.enter-active {
 		translate: 0;
-		transition: all ${eases.easeInExpo} 300ms;
+		transition: all ${eases.easeOutExpo} 300ms;
 	}
 
 	&:has(.empty-message) {
@@ -440,7 +440,6 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 				<div className={["content", transitionName]} ref={pageContent}>
 					<SwitchTransition>
 						<CssTransition key={pagePath} onExited={() => pageContent.current?.scrollTo(0, 0)}>
-							{/* BUG: 动画时间异常随机。 */}
 							<StyledPage>
 								{children}
 							</StyledPage>

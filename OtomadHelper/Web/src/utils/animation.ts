@@ -62,9 +62,15 @@ export function endListener(): (node: HTMLElement, done: () => void) => void;
  */
 export function endListener(nodeRef: RefObject<HTMLElement | undefined>): (done: () => void) => void;
 export function endListener(nodeRef?: RefObject<HTMLElement | undefined>) {
+	const getListener = (node: HTMLElement | null | undefined, done: () => void) => {
+		node?.addEventListener("transitionend", e => {
+			if (e.target !== e.currentTarget) return;
+			done();
+		}, false);
+	};
 	return !nodeRef ?
-		(node: HTMLElement, done: () => void) => node.addEventListener("transitionend", done, false) :
-		(done: () => void) => nodeRef.current?.addEventListener("transitionend", done, false);
+		(node: HTMLElement, done: () => void) => getListener(node, done) :
+		(done: () => void) => getListener(nodeRef.current, done);
 }
 
 type StyleProperties = string & keyof FilterValueType<CSSStyleDeclaration, string>;
