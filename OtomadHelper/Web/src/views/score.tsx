@@ -1,10 +1,14 @@
 export /* internal */ const bpmUsings = [
-	{ id: "dynamicMidi", name: t.score.bpm.dynamicMidi },
-	{ id: "midi", name: t.score.bpm.midi },
-	{ id: "project", name: t.score.bpm.project },
-	{ id: "custom", name: t.custom },
+	{ id: "dynamicMidi", name: t.score.bpm.dynamicMidi, icon: "dynamic_midi" },
+	{ id: "midi", name: t.score.bpm.midi, icon: "midi" },
+	{ id: "project", name: t.score.bpm.project, icon: "veg_file" },
+	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
-export /* internal */ const constraintNoteLengths = ["none", "max", "fixed"] as const;
+export /* internal */ const constraintNoteLengths = [
+	{ id: "none", icon: "prohibited" },
+	{ id: "max", icon: "less_or_equal" },
+	{ id: "fixed", icon: "equal" },
+] as const;
 export /* internal */ const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"] as const;
 
 export default function Score() {
@@ -42,8 +46,10 @@ export default function Score() {
 				icon="speed"
 				items={bpmUsings}
 				value={bpmUsing as StateProperty<string>}
+				view="tile"
 				idField="id"
 				nameField="name"
+				iconField="icon"
 			/>
 			<SettingsCard heading={t.score.timeSignature} icon="health">{timeSignature}</SettingsCard>
 			<ExpanderRadio
@@ -51,9 +57,11 @@ export default function Score() {
 				caption={t.descriptions.score.constraint}
 				icon="constraint"
 				items={constraintNoteLengths}
-				value={constraintNoteLength}
-				idField
+				value={constraintNoteLength as StateProperty<string>}
+				view="tile"
+				idField="id"
 				nameField={t.score.constraint}
+				iconField="icon"
 			/>
 
 			<Subheader>{t(2).titles.track}</Subheader>

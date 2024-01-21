@@ -4,10 +4,10 @@ import type { legatos, stretches } from "views/visual";
 
 type StartTime = typeof startTimes[number]["id"];
 type BpmUsing = typeof bpmUsings[number]["id"];
-type ConstraintNoteLength = typeof constraintNoteLengths[number];
+type ConstraintNoteLength = typeof constraintNoteLengths[number]["id"];
 type Encoding = typeof encodings[number];
-type Stretch = typeof stretches[number];
-type Legato = typeof legatos[number];
+type Stretch = typeof stretches[number]["id"];
+type Legato = typeof legatos[number]["id"];
 
 interface IConfig {
 	source: {

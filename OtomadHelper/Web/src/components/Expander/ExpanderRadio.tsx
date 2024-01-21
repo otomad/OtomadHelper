@@ -35,7 +35,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	view?: "list" | "tile" | false;
 }>) {
 	const items = _items as AnyObject[];
-	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "caption") => {
+	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "caption"): Any => {
 		const field = {
 			name: nameField,
 			id: idField,
@@ -43,7 +43,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 			caption: captionField,
 		}[fieldName];
 		return !field ? undefined :
-			isI18nItem(field) ? field[item as string] :
+			isI18nItem(field) ? field[getItemField(item, "id")] :
 			typeof field === "string" ? (item as AnyObject)[field] :
 			typeof field === "function" ? field(item) :
 			item;
@@ -52,7 +52,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 		typeof checkInfoCondition === "string" ? checkInfoCondition :
 		checkInfoCondition === true ? typeof idField === "string" && typeof nameField === "string" ?
 			items.find(item => item[idField] === value)?.[nameField] :
-			idField === true && isI18nItem(nameField) ? nameField[value!] : value :
+			idField && isI18nItem(nameField) ? nameField[value!] : value :
 		typeof checkInfoCondition === "function" ? checkInfoCondition(value, items) :
 		items.find(item => item[checkInfoCondition.id] === value)?.[checkInfoCondition.name];
 	return (

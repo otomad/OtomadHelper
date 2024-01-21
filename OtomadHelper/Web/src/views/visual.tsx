@@ -1,7 +1,17 @@
 import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
 
-export /* internal */ const stretches = ["noStretching", "flexingAndExtending", "extendingOnly", "flexingOnly"] as const;
-export /* internal */ const legatos = ["portato", "upToOneBeat", "upToOneBar", "unlimited"] as const;
+export /* internal */ const stretches = [
+	{ id: "noStretching", icon: "prohibited" },
+	{ id: "flexingAndExtending", icon: "arrow_move" },
+	{ id: "extendingOnly", icon: "arrow_fit" },
+	{ id: "flexingOnly", icon: "arrow_fit_in" },
+] as const;
+export /* internal */ const legatos = [
+	{ id: "portato", icon: "prohibited" },
+	{ id: "upToOneBeat", icon: "quarter_note" },
+	{ id: "upToOneBar", icon: "music_bar" },
+	{ id: "unlimited", icon: "infinity" },
+] as const;
 
 export default function Visual() {
 	const [enabled, setEnabled] = selectConfig(c => c.visual.enabled);
@@ -52,9 +62,11 @@ export default function Visual() {
 						caption={t.descriptions.audioVisual.stretch}
 						icon="stretch"
 						items={stretches}
-						value={stretch}
-						idField
+						value={stretch as StateProperty<string>}
+						view="tile"
+						idField="id"
 						nameField={t.audioVisual.stretch}
+						iconField="icon"
 					/>
 					<SettingsCardToggleSwitch heading={t.audioVisual.loop} caption={t.descriptions.audioVisual.loop} icon="loop" on={loop} />
 					<SettingsCardToggleSwitch heading={t.audioVisual.staticVisual} caption={t.descriptions.audioVisual.staticVisual} icon="visual" on={staticVisual} />
@@ -64,9 +76,11 @@ export default function Visual() {
 						caption={t.descriptions.audioVisual.legato}
 						icon="legato"
 						items={legatos}
-						value={legato}
-						idField
+						value={legato as StateProperty<string>}
+						view="tile"
+						idField="id"
 						nameField={t.audioVisual.legato}
+						iconField="icon"
 					/>
 					<SettingsCardToggleSwitch heading={t.audioVisual.multitrackForChords} caption={t.descriptions.audioVisual.multitrackForChords} icon="chords" on={multitrackForChords} />
 					<SettingsCardToggleSwitch heading={t.audioVisual.createGroups} caption={t.descriptions.audioVisual.createGroups} icon="group_object" on={createGroups} />
@@ -81,7 +95,7 @@ export default function Visual() {
 					<SettingsCard heading={t.audioVisual.mappingVelocity} caption={t.descriptions.audioVisual.mappingVelocity} icon="signal" type="button">
 						<ToggleSwitch on={mappingVelocity} />
 					</SettingsCard>
-					<SettingsCardToggleSwitch heading={t.audioVisual.transformOfx} caption={t.descriptions.audioVisual.transformOfx} icon="transform_ofx" on={transformOfx} />
+					<SettingsCardToggleSwitch heading={t.audioVisual.transformOfx} caption={t.descriptions.audioVisual.transformOfx} icon="zoom_fit" on={transformOfx} />
 
 					<Subheader>{t.subheader.effects}</Subheader>
 					<SettingsCard heading={t.titles.prve} caption={t.descriptions.audioVisual.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")} />
