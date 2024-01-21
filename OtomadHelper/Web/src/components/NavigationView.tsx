@@ -25,13 +25,6 @@ const floatUp = keyframes`
 	}
 `;
 
-const jumpLeft = keyframes`
-	from {
-		opacity: 0;
-		translate: 20%;
-	}
-`;
-
 const CONTENT_MARGIN_X = 20;
 const TITLE_LINE_HEIGHT = 40;
 const COMPACT_WIDTH = 62;
@@ -187,13 +180,6 @@ const StyledNavigationView = styled.div<{
 				flex-direction: column;
 				gap: 6px;
 
-				${({ $transitionName }) => forMap(20, i => css`
-					> :nth-child(${i}) {
-						animation: ${$transitionName === "jump" ? floatUp : ""}
-							300ms ${50 * (i - 1)}ms ${eases.easeOutMax} backwards;
-					}
-				`)}
-
 				&::after {
 					content: "";
 					height: 18px;
@@ -202,6 +188,13 @@ const StyledNavigationView = styled.div<{
 				.card.media-pool > .base {
 					padding: 2px;
 				}
+
+				${({ $transitionName }) => forMap(20, i => css`
+					> :nth-child(${i}) {
+						animation: ${$transitionName === "jump" ? floatUp : ""}
+							300ms ${50 * (i - 1)}ms ${eases.easeOutMax} backwards;
+					}
+				`)}
 			}
 		}
 

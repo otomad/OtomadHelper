@@ -35,6 +35,11 @@ export default function EmptyMessage({ icon, heading, caption, children }: FCP<{
 	/** 详细描述。 */
 	caption?: ReactNode;
 }>) {
+	const { resetTransition } = usePageStore();
+	useMountEffect(() => {
+		resetTransition();
+	});
+
 	return (
 		<StyledEmptyMessage>
 			{icon && <Icon name={icon} />}

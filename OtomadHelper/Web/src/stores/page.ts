@@ -1,12 +1,13 @@
 interface IPage {
 	page: string[];
 	prevPage: string[];
+	transition: "forward" | "backward" | "jump" | "";
 	getPagePath(): string;
 	changePage: SetState<string[]>;
 	pushPage(...pages: string[]): void;
 	canBack(): boolean;
 	back(): void;
-	getTransition(): "forward" | "backward" | "jump" | "";
+	resetTransition(): void;
 }
 
 export const usePageStore = createStore<IPage>()(
@@ -21,18 +22,30 @@ export const usePageStore = createStore<IPage>()(
 			setPageInternal(pages);
 		}
 
+		function getTransition(page: string[], nextPage: string[]) {
+			for (let i = 0; i < Math.max(page.length, nextPage.length); i++) {
+				const crumb = page[i], nextCrumb = nextPage[i];
+				if (!crumb) return "forward";
+				if (!nextCrumb) return "backward";
+				if (crumb !== nextCrumb) return "jump";
+			}
+			return "";
+		}
+
 		function setPageInternal(nextPage: string[]) {
-			const page = get().page;
+			const { page } = get();
 			if (arrayEquals(page, nextPage)) return;
 			set(() => ({
 				prevPage: page,
 				page: nextPage,
+				transition: getTransition(page, nextPage),
 			}));
 		}
 
 		return {
 			page,
 			prevPage: page,
+			transition: "forward",
 			getPagePath: () => get().page.join("/"),
 			changePage: changePage as SetState<string[]>,
 			pushPage: (...pages) => setPageInternal([...get().page, ...pages]),
@@ -44,16 +57,10 @@ export const usePageStore = createStore<IPage>()(
 					setPageInternal(page);
 				}
 			},
-			getTransition() {
-				const { prevPage, page } = get();
-				for (let i = 0; i < Math.max(prevPage.length, page.length); i++) {
-					const prevCrumb = prevPage[i], crumb = page[i];
-					if (!prevCrumb) return "forward";
-					if (!crumb) return "backward";
-					if (prevCrumb !== crumb) return "jump";
-				}
-				return "";
-			},
+			resetTransition: () => set(() => ({ transition: "jump" })),
 		};
-	}, { name: "page" }),
+	}, {
+		name: "page",
+		partialize: state => ({ page: state.page }),
+	}),
 );

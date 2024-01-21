@@ -5,7 +5,7 @@ function EmptyPage() {
 }
 
 export default function ShellPage() {
-	const { page, changePage, getPagePath, getTransition } = usePageStore();
+	const { page, changePage, getPagePath, transition } = usePageStore();
 	const [mode, setMode] = useState<Mode>("otomadOrYtpmv");
 	const pageTitles = page.map((crumb, i, { length }) => ({
 		name: t.titles[crumb]({ context: "full" }),
@@ -28,7 +28,7 @@ export default function ShellPage() {
 				...bottomNavItems.map(item => ({ text: t.titles[item], id: item, icon: item, bottom: true })),
 			]}
 			titles={pageTitles}
-			transitionName={getTransition()}
+			transitionName={transition}
 		>
 			<Page />
 		</NavigationView>
