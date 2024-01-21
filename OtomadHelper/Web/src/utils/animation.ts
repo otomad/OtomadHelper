@@ -129,6 +129,8 @@ type AnimateSizeOptions = Partial<{
 	}>;
 	/** 在动画之前移出该元素及其子元素现有的动画？以解决当用户快速点击两次连续触发两次本动画从而引发的样式异常。 */
 	removePreviousAnimations: boolean;
+	/** 动画完成后保持样式。 */
+	fillForward: boolean;
 }>;
 
 /**
@@ -161,6 +163,7 @@ export async function* animateSizeGenerator(
 		noCropping = false,
 		clientAdjustment = {},
 		removePreviousAnimations = false,
+		fillForward = false,
 	}: AnimateSizeOptions = {},
 ): AsyncGenerator<void, Animation | void, boolean> {
 	element = toValue(element);
@@ -205,7 +208,7 @@ export async function* animateSizeGenerator(
 		keyframes[1].translate = setTranslate([isWidthChanged ? startWidth : 0, isHeightChanged ? startHeight : 0]);
 	Object.assign(keyframes[0], startStyle);
 	Object.assign(keyframes[1], endStyle);
-	const animationOptions: KeyframeAnimationOptions = { duration, easing, fill: "forwards", composite: "replace" };
+	const animationOptions: KeyframeAnimationOptions = { duration, easing, fill: fillForward ? "forwards" : undefined, composite: "replace" };
 	const htmlElement = element as HTMLElement;
 	if (!noCropping) htmlElement.style.overflow = "hidden";
 	const result = element.animate(keyframes, animationOptions);
@@ -273,6 +276,7 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 	enter.easing = easing[0];
 	exit.easing = easing[1];
 	enter.removePreviousAnimations = true;
+	exit.fillForward = true;
 
 	const ANIMATE_SIZE_END_EVENT = "animatesizeend"; // 这里我们使用一个自定义的事件，以防原生 CSS 过渡动画结束时干扰运行。
 

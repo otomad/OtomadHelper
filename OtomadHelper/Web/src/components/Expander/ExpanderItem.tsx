@@ -5,7 +5,7 @@ export /* internal */ const styledExpanderItemBase = css`
 	min-height: 48px;
 
 	:where(&) {
-		padding: 7px 47px;
+		padding: 7px 51px;
 	}
 
 	> :not(.text) {

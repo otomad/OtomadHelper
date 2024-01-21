@@ -1,4 +1,6 @@
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
+type FieldType<T> = string | ((item: T) => string) | true;
+
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, captionField, view = false, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
 	/** 选项列表。 */
 	items: readonly T[];
 	/** 当前选中值的 ID。 */
@@ -17,19 +19,31 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	 * - 如果为回调函数，则通过回调函数获取所需的值。
 	 * - 如果为 true，表示选中项目就是字符串，则 ID 可直接使用之。
 	 */
-	idField: string | ((item: T) => string) | true;
+	idField: FieldType<T>;
 	/**
 	 * 单选项目的名称字段。
 	 * - 如果为字符串，表示为当前选中对象的指定字段名称的值。
 	 * - 如果为回调函数，则通过回调函数获取所需的值。
 	 * - 如果为 true，表示选中项目就是字符串，则名称可直接使用之。
 	 */
-	nameField: string | ((item: T) => string) | true | object;
+	nameField: FieldType<T> | object;
+	/** 单选项目的图标字段。 */
+	iconField?: FieldType<T>;
+	/** 单选项目的详细描述字段。 */
+	captionField?: FieldType<T>;
+	/** 使用列表视图组件而不是单选框。 */
+	view?: "list" | "tile" | false;
 }>) {
 	const items = _items as AnyObject[];
-	const getItemField = (item: T, fieldName: "id" | "name") => {
-		const field = fieldName === "name" ? nameField : idField;
-		return isI18nItem(field) ? field[item as string] :
+	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "caption") => {
+		const field = {
+			name: nameField,
+			id: idField,
+			icon: iconField,
+			caption: captionField,
+		}[fieldName];
+		return !field ? undefined :
+			isI18nItem(field) ? field[item as string] :
 			typeof field === "string" ? (item as AnyObject)[field] :
 			typeof field === "function" ? field(item) :
 			item;
@@ -43,8 +57,14 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 		items.find(item => item[checkInfoCondition.id] === value)?.[checkInfoCondition.name];
 	return (
 		<Expander {...settingsCardProps} checkInfo={checkInfo}>
-			{items.map(item =>
-				<RadioButton value={[value as T, setValue]} id={getItemField(item, "id")} key={getItemField(item, "id")}>{getItemField(item, "name")}</RadioButton>)}
+			{!view ? items.map(item =>
+				<RadioButton value={[value as T, setValue]} id={getItemField(item, "id")} key={getItemField(item, "id")}>{getItemField(item, "name")}</RadioButton>) :
+			(
+				<ListView view="tile" current={[value as T, setValue]}>
+					{items.map(item =>
+						<ListViewItem id={getItemField(item, "id")} key={getItemField(item, "id")} icon={getItemField(item, "icon")} caption={getItemField(item, "caption")}>{getItemField(item, "name")}</ListViewItem>)}
+				</ListView>
+			)}
 			{children}
 		</Expander>
 	);

@@ -46,8 +46,8 @@ const ExpanderChild = styled.div`
 	.expander-child-items {
 		background-color: ${c("background-fill-color-card-background-secondary")};
 
-		> :not(:last-child) {
-			border-bottom: 1px solid ${c("stroke-color-divider-stroke-default")};
+		> :not(:first-child) {
+			border-top: 1px solid ${c("stroke-color-divider-stroke-default")};
 		}
 	}
 `;

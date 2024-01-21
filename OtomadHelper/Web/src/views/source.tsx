@@ -1,7 +1,7 @@
 export /* internal */ const startTimes = [
-	{ id: "projectStart", name: t.source.startTime.projectStart },
-	{ id: "cursor", name: t.source.startTime.cursor },
-	{ id: "custom", name: t.custom },
+	{ id: "projectStart", name: t.source.startTime.projectStart, icon: "arrow_export" },
+	{ id: "cursor", name: t.source.startTime.cursor, icon: "text_cursor" },
+	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
 
 export default function Source() {
@@ -24,14 +24,22 @@ export default function Source() {
 			</Card>
 
 			<Expander heading={t.source.trim} caption={t.descriptions.source.trim} icon="trim" />
+			{/* <Expander heading={t.source.startTime} caption={t.descriptions.source.startTime} icon="start_point">
+				<ListView view="tile" current={startTime}>
+					{startTimes.map(item =>
+						<ListViewItem id={item.id} key={item.id} icon={item.icon}>{item.name}</ListViewItem>)}
+				</ListView>
+			</Expander> */}
 			<ExpanderRadio
 				heading={t.source.startTime}
 				caption={t.descriptions.source.startTime}
 				icon="start_point"
 				items={startTimes}
 				value={startTime as StateProperty<string>}
+				view="tile"
 				idField="id"
 				nameField="name"
+				iconField="icon"
 			/>
 
 			<Subheader>{t.subheader.moreOptions}</Subheader>

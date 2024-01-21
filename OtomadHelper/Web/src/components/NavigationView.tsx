@@ -113,7 +113,7 @@ const StyledNavigationView = styled.div<{
 		}
 
 		&.minimal > .title-wrapper {
-			margin-top: 36px;
+			margin-top: 40px;
 		}
 
 		.title-wrapper {
