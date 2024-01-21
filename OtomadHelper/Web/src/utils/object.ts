@@ -13,6 +13,20 @@ export function forMap<T>(length: number, callback: (index: number) => T, flat: 
 }
 
 /**
+ * 从开始到结束数值 map 数组。
+ * @param start - 开始数值。
+ * @param end - 结束数值。
+ * @param callback - map 回调函数。
+ * @returns 重复指定次数对象的数组。
+ */
+export function forMapFromTo<T>(start: number, end: number, callback: (index: number) => T) {
+	const result: T[] = [];
+	for (let i = start; i <= end; i++)
+		result.push(callback(i));
+	return result;
+}
+
+/**
  * 判断对象是否包含该键名，同时对类型捍卫。
  * @param obj - 对象。
  * @param k - 键名。

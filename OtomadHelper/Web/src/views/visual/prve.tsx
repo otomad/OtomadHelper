@@ -2,12 +2,12 @@ import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
 
 const prves = [
 	{ class: "flip", icon: "placeholder", effects: ["hFlip", "vFlip", "ccwFlip", "cwFlip"] },
-	{ class: "rotation", icon: "placeholder", effects: [] },
-	{ class: "scale", icon: "placeholder", effects: [] },
-	{ class: "mirror", icon: "placeholder", effects: [] },
-	{ class: "invert", icon: "placeholder", effects: [] },
-	{ class: "hue", icon: "placeholder", effects: [] },
-	{ class: "monochrome", icon: "placeholder", effects: [] },
+	{ class: "rotation", icon: "placeholder", effects: ["ccwRotate", "cwRotate", "turned"] },
+	{ class: "scale", icon: "placeholder", effects: ["zoomOutIn"] },
+	{ class: "mirror", icon: "placeholder", effects: ["hMirror", "vMirror", "ccwMirror", "cwMirror"] },
+	{ class: "invert", icon: "placeholder", effects: ["negative", "luminInvert"] },
+	{ class: "hue", icon: "placeholder", effects: ["hueInvert", ...forMapFromTo(3, 8, i => "stepChangeHue" + i)] },
+	{ class: "monochrome", icon: "placeholder", effects: ["monochrome"] },
 	{ class: "time", icon: "placeholder", effects: [] },
 	{ class: "time2", icon: "placeholder", effects: [] },
 	{ class: "ec", icon: "placeholder", effects: [] },
@@ -16,11 +16,18 @@ const prves = [
 	{ class: "wipe", icon: "placeholder", effects: [] },
 ];
 
+const StyledContainer = styled.div`
+	.grid-view-item .image-wrapper {
+		width: 200px;
+		height: 112px;
+	}
+`;
+
 export default function Prve() {
-	const selectPrve = useState("");
+	const selectPrve = useState("normal");
 
 	return (
-		<div className="container">
+		<StyledContainer>
 			<Expander heading={t.condition} caption={t.descriptions.condition} icon="filter" />
 			<div>
 				<Button>从其它参数复制至此</Button>
@@ -42,6 +49,6 @@ export default function Prve() {
 						<PreviewPrve key={name} thumbnail={exampleThumbnail} name={name} />}
 				/>
 			))}
-		</div>
+		</StyledContainer>
 	);
 }

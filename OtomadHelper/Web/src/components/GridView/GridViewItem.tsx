@@ -17,17 +17,15 @@ const StyledGridViewItem = styled.div`
 		position: absolute;
 		inset: 0;
 		border-radius: inherit;
-	}
-
-	&:hover .base {
-		background-color: ${c("fill-color-subtle-secondary")};
+		pointer-events: none;
 	}
 
 	&:hover .selection {
 		box-shadow: 0 0 0 1px ${c("stroke-color-control-stroke-on-accent-tertiary")} inset;
+		background-color: ${c("fill-color-subtle-secondary")};
 	}
 
-	&:active .base {
+	&:active .selection {
 		background-color: ${c("fill-color-subtle-tertiary")};
 	}
 
