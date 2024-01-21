@@ -56,8 +56,8 @@ const SChinese = {
 			encoding: "编码",
 			bpm: {
 				_: "BPM",
-				dynamicMidi: "动态 MIDI 速度",
-				midi: "MIDI 速度",
+				dynamicMidi: "动态MIDI速度",
+				midi: "MIDI速度",
 				project: "项目速度",
 			},
 			timeSignature: "节拍",
@@ -121,7 +121,7 @@ const SChinese = {
 		ytp: {
 			constraint: "限制长度",
 			clips: "剪辑数目",
-			effects: "YTP 效果",
+			effects: "YTP效果",
 		},
 		settings: {
 			language: {
@@ -162,7 +162,7 @@ const SChinese = {
 				glissando: "在弯音或滑音时产生漩涡效果",
 				autoPan: "自动化控制音频的声像包络",
 				mappingVelocity: "将音符的击键力度映射到指定项目",
-				transformOfx: "Miscz 是一款像素硬边缘插件，开启以向此插件中的 TransformOFX 添加关键帧属性",
+				transformOfx: "Miscz是一款像素硬边缘插件，开启以向此插件中的TransformOFX添加关键帧属性",
 				tuning: {
 					stretchAttributes: "有关选中调音方法的更多配置",
 					resample: "锁定伸缩与音调，调整伸缩以改变音调",
@@ -175,22 +175,22 @@ const SChinese = {
 				},
 			},
 			ytp: {
-				_: "YTP (YouTube Poop) 用于使用 YTP 体裁中已知的各种效果来创建荒谬的视频。\nYTP 支持多素材。",
+				_: "YTP(YouTube Poop)用于使用YTP体裁中各种已知的效果来创建荒谬的视频。\nYTP支持多素材。",
 				constraint: "控制要生成的剪辑的长度",
 				clips: "要生成剪辑的数目",
-				effects: "指定 YTP 的效果",
+				effects: "指定YTP的效果",
 			},
 		},
 		empty: {
 			disabled: {
-				heading: "已关闭 {{name, lowercase}}",
-				caption: "启用以生成 {{name, lowercase}}",
+				heading: "已关闭{{name, lowercase}}",
+				caption: "启用以生成{{name, lowercase}}",
 			},
 			ytpEnabled: {
-				heading: "已启用 YTP，其它相关参数均不可用",
-				caption: "禁用 YTP 功能以使用并调整其它参数",
-				disableYtp: "禁用 YTP",
-				gotoYtp: "转到 YTP",
+				heading: "已启用YTP，其它相关参数均不可用",
+				caption: "禁用YTP功能以使用并调整其它参数",
+				disableYtp: "禁用YTP",
+				gotoYtp: "转到YTP",
 			},
 		},
 	},

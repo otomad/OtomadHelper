@@ -1,5 +1,6 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import { spacing } from "pangu";
 import { initReactI18next } from "react-i18next";
 import en from "./English";
 import zhCN from "./SChinese";
@@ -10,6 +11,12 @@ i18n
 	.use(LanguageDetector)
 	// 注入 react-i18next 实例
 	.use(initReactI18next)
+	// 盘古插件，在东亚文字与西方文字之间插入空格
+	.use({
+		type: "postProcessor",
+		name: "pangu",
+		process: (value: string) => spacing(value),
+	})
 	// 初始化 i18next
 	// 配置参数的文档: https://www.i18next.com/overview/configuration-options
 	.init({
@@ -27,6 +34,7 @@ i18n
 				return value;
 			},
 		},
+		postProcess: ["pangu"],
 		resources: {
 			en,
 			"zh-CN": zhCN,
