@@ -1,8 +1,9 @@
 function replaceLfToBr(longText: string) {
+	let brKey = 0;
 	return longText
 		.replaceAll(/\r\n|\n\r|\r/g, "\n")
 		.split("\n")
-		.flatMap((line, i, { length }) => i === length - 1 ? line : [line, <br key={i} />])
+		.flatMap((line, i, { length }) => i === length - 1 ? line : [line, <br key={brKey++} />])
 		.filter(line => typeof line === "string" ? line.trim() : true);
 }
 
@@ -11,8 +12,7 @@ function replaceLfToBr(longText: string) {
  */
 export default function Preserves({ children }: FCP) {
 	return React.Children.map(children, child => {
-		if (typeof child === "string") return replaceLfToBr(child);
-		else if (isI18nItem(child)) return replaceLfToBr(child.toString());
+		if (typeof child === "string" || isI18nItem(child)) return replaceLfToBr(child.toString());
 		else return child;
 	});
 }
