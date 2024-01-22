@@ -10,7 +10,7 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 
 	return (
 		<SettingsCard type="button" {...settingsCardProps} trailingIcon={trailingIcon} onClick={onClick}>
-			<ToggleSwitch on={[on, setOn]} disabled={disabled} isPressing={[isToggleSwitchPressing, setIsToggleSwitchPressing]} />
+			<ToggleSwitch as="label" on={[on, setOn]} disabled={disabled} isPressing={[isToggleSwitchPressing, setIsToggleSwitchPressing]} tabIndex={-1} />
 			{children}
 		</SettingsCard>
 	);

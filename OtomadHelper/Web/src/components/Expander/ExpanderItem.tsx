@@ -46,6 +46,7 @@ export /* internal */ const styledExpanderItemContent = css`
 			${styles.mixins.flexCenter()};
 			margin-right: -7px;
 			border-radius: 3px;
+			flex-shrink: 0;
 
 			.icon {
 				font-size: 16px;

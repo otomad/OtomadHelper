@@ -7,13 +7,13 @@ const prves = [
 	{ class: "mirror", icon: "placeholder", effects: ["hMirror", "vMirror", "ccwMirror", "cwMirror"] },
 	{ class: "invert", icon: "placeholder", effects: ["negative", "luminInvert"] },
 	{ class: "hue", icon: "placeholder", effects: ["hueInvert", ...forMapFromTo(3, 8, i => "stepChangeHue" + i)] },
-	{ class: "monochrome", icon: "placeholder", effects: ["monochrome"] },
-	{ class: "time", icon: "placeholder", effects: [] },
-	{ class: "time2", icon: "placeholder", effects: [] },
-	{ class: "ec", icon: "placeholder", effects: [] },
-	{ class: "swing", icon: "placeholder", effects: [] },
-	{ class: "blur", icon: "placeholder", effects: [] },
-	{ class: "wipe", icon: "placeholder", effects: [] },
+	{ class: "chromatic", icon: "placeholder", effects: ["chromatic"] },
+	{ class: "time", icon: "placeholder", effects: ["pingpong", "whirl"] },
+	{ class: "time2", icon: "placeholder", effects: ["sharpRewind", "wobblePeriod"] },
+	{ class: "ec", icon: "placeholder", effects: ["vExpansion", "vExpansionBounce", "vCompression", "vCompressionBounce", "vBounce", "slantDown", "slantUp", "puyo"] },
+	{ class: "swing", icon: "placeholder", effects: ["pendulum"] },
+	{ class: "blur", icon: "placeholder", effects: ["gaussianBlur", "radialBlur"] },
+	{ class: "wipe", icon: "placeholder", effects: ["wipeRight", "splitVOut"] },
 ];
 
 const StyledContainer = styled.div`

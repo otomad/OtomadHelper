@@ -1,7 +1,7 @@
 import "virtual:svg-icons-register";
 
 const squared = styles.mixins.square("1em");
-const StyledIcon = styled.span.attrs({
+const StyledIcon = styled.i.attrs({
 	role: "img",
 })<{
 	/** 是否保持图标本身的颜色？ */
@@ -32,9 +32,10 @@ export default forwardRef(function Icon({ name, filled, ...htmlAttrs }: FCP<{
 	if (!name) return <span hidden />;
 
 	const symbolId = "#icon-" + name.replaceAll("/", "-");
+	const ariaDescription = new VariableName(name).words;
 
 	return (
-		<StyledIcon $filled={filled} {...htmlAttrs} ref={ref}>
+		<StyledIcon $filled={filled} {...htmlAttrs} ref={ref} role="img" aria-description={ariaDescription}>
 			<svg aria-hidden>
 				<use href={symbolId} />
 			</svg>

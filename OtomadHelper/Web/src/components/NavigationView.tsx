@@ -373,6 +373,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 	const pageContent = useRef<HTMLDivElement | null>(null);
+	const scrollToTop = useCallback(() => pageContent.current?.scrollTo({ top: 0, left: 0, behavior: "instant" }), [pageContent]);
 
 	const currentNavItem = useMemo(() =>
 		navItems.find(item => !("type" in item) && item.id === currentNavTab[0]) as NavItem,
@@ -436,7 +437,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 				</div>
 				<div className={["content", transitionName]} ref={pageContent}>
 					<SwitchTransition>
-						<CssTransition key={pagePath} onExited={() => pageContent.current?.scrollTo(0, 0)}>
+						<CssTransition key={pagePath} onExited={scrollToTop}>
 							<StyledPage>
 								{children}
 							</StyledPage>

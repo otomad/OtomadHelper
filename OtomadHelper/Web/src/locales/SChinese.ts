@@ -132,7 +132,7 @@ const SChinese = {
 				mirror: "镜像类",
 				invert: "反转类",
 				hue: "色相类",
-				monochrome: "单色类",
+				chromatic: "单色类",
 				time: "时间类",
 				time2: "时间类 2",
 				ec: "扩缩类",

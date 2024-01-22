@@ -52,7 +52,7 @@ const ExpanderChild = styled.div`
 	}
 `;
 
-export default function Expander({ icon, heading, caption, actions, expanded = false, children, checkInfo }: FCP<PropsOf<typeof SettingsCard> & {
+export default function Expander({ icon, heading, caption, actions, expanded = false, children, checkInfo, selectInfo }: FCP<PropsOf<typeof SettingsCard> & {
 	/** 展开器右侧的其它操作控件区域。 */
 	actions?: ReactNode;
 	/** 初始状态下是否已展开？ */
@@ -60,7 +60,7 @@ export default function Expander({ icon, heading, caption, actions, expanded = f
 	/** 展开器中的单选框或复选框的选中情况的显示文本，仅在展开器关闭时才会显示。 */
 	checkInfo?: string;
 }>) {
-	const settingsCardProps = { icon, heading, caption };
+	const settingsCardProps = { icon, heading, caption, selectInfo };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
 	const expanderChildRef = useRef<HTMLDivElement>(null);
 	const [onEnter, onExit, endListener] = simpleAnimateSize(expanderChildRef, "height", 350, undefined, { startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }, { endChildTranslate: "0 -100%" });

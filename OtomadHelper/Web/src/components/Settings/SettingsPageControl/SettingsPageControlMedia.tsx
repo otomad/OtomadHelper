@@ -43,6 +43,10 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 		object-fit: cover;
 		pointer-events: none;
 	}
+	
+	.toggle-switch-label {
+		width: auto;
+	}
 
 	${({ $enabled }) => !$enabled && css`
 		.settings-page-control-preview-image img {

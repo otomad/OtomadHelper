@@ -1,4 +1,4 @@
-const StyledListViewItem = styled.div`
+const StyledListViewItem = styled.button`
 	padding: 2px 4px;
 
 	.base {
@@ -31,15 +31,17 @@ const StyledListViewItem = styled.div`
 		&::before {
 			scale: 1 0.625;
 		}
-		
+
 		> * {
 			opacity: ${c("pressed-text-opacity")}
 		}
 	}
-	
+
 	&:not(.active) .base::before {
 		scale: 1 0;
 	}
+
+	${styles.mixins.forwardFocusRing()};
 
 	.text {
 		display: flex;
@@ -72,9 +74,9 @@ export default function ListViewItem({ image, icon, id: _id, active = false, cap
 	active?: boolean;
 	/** 详细描述。 */
 	caption?: ReactNode;
-}, HTMLDivElement>) {
+}, HTMLButtonElement>) {
 	return (
-		<StyledListViewItem className={[className, { active }]} {...htmlAttrs}>
+		<StyledListViewItem className={[className, { active }]} tabIndex={0} {...htmlAttrs}>
 			<div className="base">
 				{(image || icon) &&
 					<div className="image-wrapper">

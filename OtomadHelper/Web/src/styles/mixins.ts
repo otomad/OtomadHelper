@@ -75,4 +75,17 @@ export default {
 			}
 		`;
 	},
+	/**
+	 * 取消父元素的聚焦环样式，转发到一个子元素上应用聚焦环样式。
+	 * @param childClassName - 子元素类名。
+	 */
+	forwardFocusRing: (childClassName: string = "base") => css`
+		&:focus-visible {
+			box-shadow: none;
+
+			.${childClassName} {
+				${styles.effects.focus()};
+			}
+		}
+	`,
 };

@@ -1,4 +1,4 @@
-const StyledGridViewItem = styled.div`
+const StyledGridViewItem = styled.button`
 	:where(.image-wrapper) {
 		${styles.mixins.square("112px")};
 	}
@@ -11,6 +11,7 @@ const StyledGridViewItem = styled.div`
 
 	.heading {
 		margin-top: 2px;
+		text-align: left;
 	}
 
 	.selection {
@@ -46,6 +47,8 @@ const StyledGridViewItem = styled.div`
 			0 0 0 2px ${c("accent-color", 80)} inset,
 			0 0 0 3px ${c("fill-color-control-solid-default")} inset;
 	}
+
+	${styles.mixins.forwardFocusRing()};
 `;
 
 export default function GridViewItem({ image, id: _id, active = false, children, className, ...htmlAttrs }: FCP<{
@@ -55,9 +58,9 @@ export default function GridViewItem({ image, id: _id, active = false, children,
 	id: string;
 	/** 是否活跃状态？ */
 	active?: boolean;
-}, HTMLDivElement>) {
+}, HTMLButtonElement>) {
 	return (
-		<StyledGridViewItem className={[className, { active }]} {...htmlAttrs}>
+		<StyledGridViewItem className={[className, { active }]} tabIndex={0} {...htmlAttrs}>
 			<div className="base">
 				<div className="image-wrapper">
 					{typeof image === "string" ? <img src={image} /> : image}

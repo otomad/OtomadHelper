@@ -57,4 +57,8 @@ declare global {
 	 * 默认情况下，当使用 `setTimeout()` 或 `setInterval()` 调度计时器时，只要计时器处于活动状态，Node.js 事件循环就会继续运行。这些函数返回的每个 `Timeout` 对象都导出 `timeout.ref()` 和 `timeout.unref()` 函数，它们可用于控制此默认行为。
 	 */
 	interface Timeout extends NodeJS.Timeout { }
+	/**
+	 * 内置计时器对象。
+	 */
+	interface Timer extends NodeJS.Timer { }
 }

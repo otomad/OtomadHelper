@@ -1,6 +1,7 @@
 import type _Immer from "immer";
 import type React from "react";
 import type _ReactTransitionGroup from "react-transition-group";
+import type _StyledComponents from "styled-components";
 import type { StoreApi, UseBoundStore } from "zustand";
 
 declare module "react" {
@@ -75,4 +76,5 @@ declare global {
 	export type { Draft } from "immer";
 	export type { CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, ForwardedRef, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, ReactElement, ReactNode, RefObject } from "react";
 	export type { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
+	export type { WebTarget } from "styled-components";
 }

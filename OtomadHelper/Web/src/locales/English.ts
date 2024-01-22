@@ -131,7 +131,7 @@ const English = {
 				mirror: "Mirror Class",
 				invert: "Invert Class",
 				hue: "Hue Class",
-				monochrome: "Monochrome Class",
+				chromatic: "Monochrome Class",
 				time: "Time Class",
 				time2: "Time Class 2",
 				ec: "Expansion & Compression Class",

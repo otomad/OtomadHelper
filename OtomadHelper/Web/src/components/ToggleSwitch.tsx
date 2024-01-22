@@ -3,11 +3,16 @@ import { styledExpanderItemBase, styledExpanderItemContent } from "components/Ex
 const THUMB_SIZE = 18;
 const THUMB_PRESSED_WIDTH = 22;
 
-const StyledToggleSwitchLabel = styled.label`
+const StyledToggleSwitchLabel = styled.button`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 12px;
+	text-align: left;
+
+	:where(&) {
+		width: 100%;
+	}
 
 	.right {
 		display: flex;
@@ -82,6 +87,8 @@ const StyledToggleSwitchLabel = styled.label`
 		}
 	}
 
+	${styles.mixins.forwardFocusRing("toggle-switch-base")};
+
 	&.active {
 		.stroke {
 			border-color: ${c("accent-color")};
@@ -125,7 +132,7 @@ const StyledToggleSwitchLabel = styled.label`
 	}
 `;
 
-export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, children }: FCP<{
+export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, children, ...htmlAttrs }: FCP<{
 	/** 打开？ */
 	on: StateProperty<boolean>;
 	/** 禁用？ */
@@ -134,7 +141,9 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	isPressing?: StateProperty<boolean>;
 	/** 隐藏“开/关”文本标签？ */
 	hideLabel?: boolean;
-}>) {
+	/** 改变标签名称。 */
+	as?: WebTarget;
+}, HTMLElement>) {
 	const textLabel = on ? t.on : t.off;
 	const [isDraging, setIsDraging] = useState(false);
 	const [thumbLeft, setThumbLeft] = useState<number>();
@@ -178,9 +187,12 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 
 	return (
 		<StyledToggleSwitchLabel
+			as={as as "button"}
 			className={{ active: on }}
 			disabled={disabled}
 			onClick={e => handleCheck(!on, e)}
+			tabIndex={0}
+			{...htmlAttrs}
 		>
 			<div className="text">{children}</div>
 			<div className="right">

@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-const getDuration = (frames: number) => frames * 375 + "ms";
+export /* internal */ const getDuration = (frames: number) => frames * 375 + "ms";
 
 const StyledPreviewPrve = styled.div<{
 	/** 效果名称。 */
@@ -12,8 +12,8 @@ const StyledPreviewPrve = styled.div<{
 		object-fit: cover;
 		position: absolute;
 	}
-	
-	.grid-view-item:not(:hover) & img {
+
+	.grid-view-item:not(:hover, :focus-visible) & img {
 		animation: none;
 	}
 
@@ -114,34 +114,22 @@ const StyledPreviewPrve = styled.div<{
 				}
 			`,
 			hMirror: css`
-				img:nth-child(1) {
-					scale: -1 1;
-					animation: ${keyframes`
-						0%, 100% { scale: -1 1; }
-						50% { scale: 1; }
-					`} ${getDuration(2)} step-start infinite;
-				}
 				img:nth-child(2) {
 					clip-path: inset(0 50% 0 0);
+					scale: -1 1;
 					animation: ${keyframes`
-						0%, 100% { clip-path: inset(0 50% 0 0); }
-						50% { clip-path: inset(0 0 0 50%); scale: -1 1; }
+						0%, 100% { clip-path: inset(0 50% 0 0); scale: -1 1; }
+						50% { clip-path: inset(0 0 0 50%); }
 					`} ${getDuration(2)} step-start infinite both;
 				}
 			`,
 			vMirror: css`
-				img:nth-child(1) {
-					scale: 1 -1;
-					animation: ${keyframes`
-						0%, 100% { scale: 1 -1; }
-						50% { scale: 1; }
-					`} ${getDuration(2)} step-start infinite;
-				}
 				img:nth-child(2) {
 					clip-path: inset(0 0 50% 0);
+					scale: 1 -1;
 					animation: ${keyframes`
-						0%, 100% { clip-path: inset(0 0 50% 0); }
-						50% { clip-path: inset(50% 0 0 0); scale: 1 -1; }
+						0%, 100% { clip-path: inset(0 0 50% 0); scale: 1 -1; }
+						50% { clip-path: inset(50% 0 0 0); }
 					`} ${getDuration(2)} step-start infinite both;
 				}
 			`,
@@ -150,20 +138,16 @@ const StyledPreviewPrve = styled.div<{
 					clip-path: inset(0 50% 0 0);
 					scale: -1 1;
 					animation: ${keyframes`
-						0%, 100% { clip-path: inset(0 50% 0 0); }
-						25% { clip-path: inset(0 0 0 50%); }
-						50% { clip-path: inset(0 0 0 50%); }
-						75% { clip-path: inset(0 50% 0 0); }
+						0%, 75%, 100% { clip-path: inset(0 50% 0 0); }
+						25%, 50% { clip-path: inset(0 0 0 50%); }
 					`} ${getDuration(4)} step-start infinite;
 				}
 				img:nth-child(3) {
 					clip-path: inset(50% 0 0 0);
 					scale: 1 -1;
 					animation: ${keyframes`
-						0%, 100% { clip-path: inset(50% 0 0 0); }
-						25% { clip-path: inset(50% 0 0 0); }
-						50% { clip-path: inset(0 0 50% 0); }
-						75% { clip-path: inset(0 0 50% 0); }
+						0%, 25%, 100% { clip-path: inset(50% 0 0 0); }
+						50%, 75% { clip-path: inset(0 0 50% 0); }
 					`} ${getDuration(4)} step-start infinite;
 				}
 				img:nth-child(4) {
@@ -182,20 +166,16 @@ const StyledPreviewPrve = styled.div<{
 					clip-path: inset(0 0 0 50%);
 					scale: -1 1;
 					animation: ${keyframes`
-						0%, 100% { clip-path: inset(0 0 0 50%); }
-						25% { clip-path: inset(0 0 0 50%); }
-						50% { clip-path: inset(0 50% 0 0); }
-						75% { clip-path: inset(0 50% 0 0); }
+						0%, 25%, 100% { clip-path: inset(0 0 0 50%); }
+						50%, 75% { clip-path: inset(0 50% 0 0); }
 					`} ${getDuration(4)} step-start infinite;
 				}
 				img:nth-child(3) {
 					clip-path: inset(0 0 50% 0);
 					scale: 1 -1;
 					animation: ${keyframes`
-						0%, 100% { clip-path: inset(0 0 50% 0); }
-						25% { clip-path: inset(50% 0 0 0); }
-						50% { clip-path: inset(50% 0 0 0); }
-						75% { clip-path: inset(0 0 50% 0); }
+						0%, 75%, 100% { clip-path: inset(0 0 50% 0); }
+						25%, 50% { clip-path: inset(50% 0 0 0); }
 					`} ${getDuration(4)} step-start infinite;
 				}
 				img:nth-child(4) {
@@ -236,13 +216,129 @@ const StyledPreviewPrve = styled.div<{
 					`} ${getDuration(2)} step-start infinite;
 				}
 			`,
-			monochrome: css`
+			chromatic: css`
 				img {
 					filter: grayscale(1);
 					animation: ${keyframes`
 						0%, 100% { filter: grayscale(1); }
 						50% { filter: none; }
 					`} ${getDuration(2)} step-start infinite;
+				}
+			`,
+			vExpansion: css`
+				img {
+					transform-origin: center bottom;
+					scale: 1 0.75;
+					animation: ${keyframes`
+						from { scale: 1 0.75; }
+						to { scale: 1; }
+					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
+				}
+			`,
+			vExpansionBounce: css`
+				img {
+					transform-origin: center bottom;
+					scale: 1 0.75;
+					animation: ${keyframes`
+						from { scale: 1 0.75; }
+						to { scale: 1; }
+					`} ${getDuration(1)} ${eases.easeOutMax} alternate infinite;
+				}
+			`,
+			vCompression: css`
+				img {
+					transform-origin: center bottom;
+					animation: ${keyframes`
+						from { scale: 1; }
+						to { scale: 1 0.75; }
+					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
+				}
+			`,
+			vCompressionBounce: css`
+				img {
+					transform-origin: center bottom;
+					animation: ${keyframes`
+						from { scale: 1; }
+						to { scale: 1 0.75; }
+					`} ${getDuration(1)} ${eases.easeOutMax} alternate infinite;
+				}
+			`,
+			vBounce: css`
+				img {
+					scale: 1 0.5;
+					animation: ${keyframes`
+						from { scale: 1 0.5; }
+						to { scale: 1; }
+					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
+				}
+			`,
+			slantDown: css`
+				img {
+					transform: skewX(25deg) scaleX(0.5);
+					transform-origin: center bottom;
+					animation: ${keyframes`
+						0%, 100% { transform: skewX(25deg) scaleX(0.5); }
+						25%, 75% { transform: scale(0.5); }
+						50% { transform: skewX(-25deg) scaleX(0.5); }
+					`} ${getDuration(4)} ${eases.easeOutMax} infinite;
+				}
+			`,
+			slantUp: css`
+				img {
+					transform: skewX(25deg) scale(0.5);
+					transform-origin: center bottom;
+					animation: ${keyframes`
+						0%, 100% { transform: skewX(25deg) scale(0.5); }
+						25%, 75% { transform: scaleX(0.5); }
+						50% { transform: skewX(-25deg) scale(0.5); }
+					`} ${getDuration(4)} ${eases.easeOutMax} infinite;
+				}
+			`,
+			puyo: css`
+				img {
+					scale: 1 0.75;
+					animation: ${keyframes`
+						0%, 100% { scale: 1 0.75; }
+						50% { scale: 0.75 1; }
+					`} ${getDuration(2)} ${eases.easeOutMax} infinite;
+				}
+			`,
+			pendulum: css`
+				img {
+					scale: 0.5;
+					rotate: -25deg;
+					animation: ${keyframes`
+						0%, 100% { rotate: -25deg; }
+						50% { rotate: 25deg; }
+					`} ${getDuration(2)} ${eases.easeOutMax} infinite;
+				}
+			`,
+			gaussianBlur: css`
+				img {
+					filter: blur(5px);
+					animation: ${keyframes`
+						from { filter: blur(5px); }
+						to { filter: blur(0); }
+					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
+				}
+			`,
+			wipeRight: css`
+				img {
+					clip-path: inset(0 75% 0 0);
+					animation: ${keyframes`
+						0% { clip-path: inset(0 100% 0 0); }
+						50% { clip-path: inset(0 0 0 0); }
+						100% { clip-path: inset(0 0 0 100%); }
+					`} ${getDuration(2)} ${eases.easeOutMax} infinite;
+				}
+			`,
+			splitVOut: css`
+				img {
+					clip-path: inset(25% 0 25% 0);
+					animation: ${keyframes`
+						from { clip-path: inset(25% 0 25% 0); }
+						to { clip-path: inset(0 0 0 0); }
+					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
 				}
 			`,
 		}[$name];

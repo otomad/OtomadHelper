@@ -78,13 +78,7 @@ const StyledSlider = styled.div`
 		scale: ${10 / 20} !important;
 	}
 
-	&:focus-visible {
-		box-shadow: none;
-
-		.thumb {
-			${styles.effects.focus()};
-		}
-	}
+	${styles.mixins.forwardFocusRing("thumb")};
 `;
 
 export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, keyStep = 1, onChanging, onChanged }: FCP<{
@@ -156,7 +150,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 		onChanging?.(value);
 		onThumbDown(e, true); // 再去调用拖拽滑块的事件。
 	}, []);
-	
+
 	const onKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(e => {
 		const movePrev = e.code === "ArrowUp" || e.code === "ArrowLeft";
 		const moveNext = e.code === "ArrowDown" || e.code === "ArrowRight";

@@ -1,8 +1,17 @@
 diff --git a/node_modules/react-dom/cjs/react-dom.development.js b/node_modules/react-dom/cjs/react-dom.development.js
-index e4ed5ae..4053c92 100644
+index e4ed5ae..e878594 100644
 --- a/node_modules/react-dom/cjs/react-dom.development.js
 +++ b/node_modules/react-dom/cjs/react-dom.development.js
-@@ -14901,6 +14901,10 @@ function warnOnFunctionType(returnFiber) {
+@@ -10795,6 +10795,8 @@ var updatedAncestorInfo = function () {};
+   var didWarn$1 = {};
+ 
+   validateDOMNesting = function (childTag, childText, ancestorInfo) {
++    return; // Stop reporting the fucking errors, I insist on writing the invalid htmls.
++
+     ancestorInfo = ancestorInfo || emptyAncestorInfo;
+     var parentInfo = ancestorInfo.current;
+     var parentTag = parentInfo && parentInfo.tag;
+@@ -14901,6 +14903,10 @@ function warnOnFunctionType(returnFiber) {
    }
  }
  
@@ -13,7 +22,7 @@ index e4ed5ae..4053c92 100644
  function resolveLazy(lazyType) {
    var payload = lazyType._payload;
    var init = lazyType._init;
-@@ -15093,7 +15097,7 @@ function ChildReconciler(shouldTrackSideEffects) {
+@@ -15093,7 +15099,7 @@ function ChildReconciler(shouldTrackSideEffects) {
    }
  
    function createChild(returnFiber, newChild, lanes) {
@@ -22,7 +31,7 @@ index e4ed5ae..4053c92 100644
        // Text nodes don't have keys. If the previous node is implicitly keyed
        // we can continue to replace it without aborting even if it is not a text
        // node.
-@@ -15152,7 +15156,7 @@ function ChildReconciler(shouldTrackSideEffects) {
+@@ -15152,7 +15158,7 @@ function ChildReconciler(shouldTrackSideEffects) {
      // Update the fiber if the keys match, otherwise return null.
      var key = oldFiber !== null ? oldFiber.key : null;
  
@@ -31,7 +40,7 @@ index e4ed5ae..4053c92 100644
        // Text nodes don't have keys. If the previous node is implicitly keyed
        // we can continue to replace it without aborting even if it is not a text
        // node.
-@@ -15212,7 +15216,7 @@ function ChildReconciler(shouldTrackSideEffects) {
+@@ -15212,7 +15218,7 @@ function ChildReconciler(shouldTrackSideEffects) {
    }
  
    function updateFromMap(existingChildren, returnFiber, newIdx, newChild, lanes) {
@@ -40,7 +49,7 @@ index e4ed5ae..4053c92 100644
        // Text nodes don't have keys, so we neither have to check the old nor
        // new node for the key. If both are text nodes, they match.
        var matchedFiber = existingChildren.get(newIdx) || null;
-@@ -15828,7 +15832,7 @@ function ChildReconciler(shouldTrackSideEffects) {
+@@ -15828,7 +15834,7 @@ function ChildReconciler(shouldTrackSideEffects) {
        throwOnInvalidObjectType(returnFiber, newChild);
      }
  
@@ -50,7 +59,7 @@ index e4ed5ae..4053c92 100644
      }
  
 diff --git a/node_modules/react-dom/cjs/react-dom.production.min.js b/node_modules/react-dom/cjs/react-dom.production.min.js
-index 7bbc786..29780e8 100644
+index 7bbc786..16a22f9 100644
 --- a/node_modules/react-dom/cjs/react-dom.production.min.js
 +++ b/node_modules/react-dom/cjs/react-dom.production.min.js
 @@ -149,17 +149,18 @@ function qh(a,b,c,d){a=b.state;"function"===typeof b.componentWillReceiveProps&&

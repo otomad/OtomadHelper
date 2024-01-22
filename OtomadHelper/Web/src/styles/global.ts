@@ -21,6 +21,7 @@ const GlobalStyle = createGlobalStyle<{
 		user-select: none;
 		box-sizing: border-box;
 		-webkit-tap-highlight-color: transparent;
+		scroll-behavior: smooth;
 	}
 
 	:focus,

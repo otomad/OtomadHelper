@@ -74,14 +74,8 @@ const StyledRadioButtonLabel = styled.label`
 		background-color: ${c("stroke-color-control-strong-stroke-disabled")};
 		outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
 	}
-
-	&:focus-visible {
-		box-shadow: none;
-
-		.base {
-			${styles.effects.focus()};
-		}
-	}
+	
+	${styles.mixins.forwardFocusRing()};
 
 	.base .icon {
 		&.enter {

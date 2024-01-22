@@ -1,6 +1,7 @@
 const StyledGridView = styled.div`
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, 200px);
+	justify-content: center;
 	gap: 4px;
 
 	.expander-child-items & {

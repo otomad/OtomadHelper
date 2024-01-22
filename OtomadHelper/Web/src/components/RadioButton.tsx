@@ -89,13 +89,7 @@ const StyledRadioButtonLabel = styled.label`
 		outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
 	}
 
-	&:focus-visible {
-		box-shadow: none;
-
-		.base {
-			${styles.effects.focus()};
-		}
-	}
+	${styles.mixins.forwardFocusRing()};
 `;
 
 export default function RadioButton<T>({ children, id, value: [value, setValue], disabled, onChange }: FCP<{
