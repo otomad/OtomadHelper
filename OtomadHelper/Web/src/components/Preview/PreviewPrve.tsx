@@ -328,10 +328,19 @@ const StyledPreviewPrve = styled.div<{
 			gaussianBlur: css`
 				img {
 					filter: blur(5px);
+					scale: 1.05;
 					animation: ${keyframes`
-						from { filter: blur(5px); }
+						from { filter: blur(5px); scale: 1.05; }
 						to { filter: blur(0); }
 					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
+				}
+			`,
+			radialBlur: css`
+				img:nth-child(2) {
+					animation: ${keyframes`
+						from { opacity: 1; }
+						to { opacity: 0; }
+					`} ${getDuration(1)} linear infinite;
 				}
 			`,
 			wipeRight: css`
@@ -368,7 +377,14 @@ export default function PreviewPrve({ thumbnail, name }: FCP<{
 		vMirror: 2,
 		ccwMirror: 4,
 		cwMirror: 4,
+		radialBlur: 2,
 	}[name] ?? 1;
+
+	const canvasFilters = useCanvasFilter(thumbnail);
+
+	const alterImage = {
+		radialBlur: canvasFilters?.radialBlur,
+	}[name];
 
 	const animatedImage = {
 		pingpong: Tuple(prvePingpongImage, prvePingpongStaticImage),
@@ -379,7 +395,7 @@ export default function PreviewPrve({ thumbnail, name }: FCP<{
 		<StyledPreviewPrve $name={name}>
 			{forMap(imageCount, i => animatedImage ?
 				<HoverToChangeImg key={i} animatedSrc={animatedImage[0]} staticSrc={animatedImage[1]} /> :
-				<img key={i} src={thumbnail} draggable={false} />)}
+				<img key={i} src={name === "radialBlur" && i === 2 ? alterImage : thumbnail} draggable={false} />)}
 		</StyledPreviewPrve>
 	);
 }

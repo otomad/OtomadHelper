@@ -51,6 +51,77 @@ const filters = {
 			}
 		return newImageData;
 	},
+	radialBlur(imageData: ImageData) {
+		const { width, height, data: pixels } = imageData;
+		const newImageData = cloneImageData(imageData);
+		const { data: newPixels } = newImageData;
+		const iteration = 5, angle = 10;
+		const radian = angle / 180 * Math.PI;
+		const midX = width / 2, midY = height / 2;
+		for (let i = 0; i < height; i++)
+			for (let j = 0; j < width; j++) {
+				let xoffsetCCW: number, yoffsetCCW: number, xoffsetCW: number, yoffsetCW: number;
+				xoffsetCCW = xoffsetCW = j - midX;
+				yoffsetCCW = yoffsetCW = i - midY;
+
+				let rSum: number, gSum: number, bSum: number, aSum: number;
+				rSum = gSum = bSum = aSum = 0;
+				let count = 0;
+
+				count++;
+				const index = getPixelIndex(width, j, i);
+				rSum += pixels[index];
+				gSum += pixels[index + 1];
+				bSum += pixels[index + 2];
+				aSum += pixels[index + 3];
+
+				for (let k = 0; k < iteration; k++) {
+					let xoffset = xoffsetCCW; // 逆时针（正向）偏移
+					let yoffset = yoffsetCCW;
+
+					// 插值算坐标
+					xoffsetCCW = xoffset - radian * yoffset / iteration - radian ** 2 * xoffset / iteration ** 2;
+					yoffsetCCW = yoffset - radian * xoffset / iteration - radian ** 2 * yoffsetCCW / iteration ** 2;
+
+					let i0 = yoffsetCCW + midY;
+					let j0 = xoffsetCCW + midX;
+
+					if (i0 >= 0 && i0 < height && j0 >= 0 && j0 < width) {
+						count++;
+						const index = getPixelIndex(width, j0, i0);
+						rSum += pixels[index];
+						gSum += pixels[index + 1];
+						bSum += pixels[index + 2];
+						aSum += pixels[index + 3];
+					}
+
+					// 顺时针偏移
+					xoffset = xoffsetCW;
+					yoffset = yoffsetCW;
+
+					xoffsetCW = xoffset + radian * yoffset / iteration - radian ** 2 * xoffset / iteration ** 2;
+					yoffsetCW = yoffset - radian * xoffset / iteration ** 2 - radian ** 2 * yoffset / iteration ** 2;
+
+					i0 = yoffsetCW + midY;
+					j0 = xoffsetCW + midX;
+
+					if (i0 >= 0 && i0 < height && j0 >= 0 && j0 < width) {
+						count++;
+						const index = getPixelIndex(width, j0, i0);
+						rSum += pixels[index];
+						gSum += pixels[index + 1];
+						bSum += pixels[index + 2];
+						aSum += pixels[index + 3];
+					}
+				}
+				
+				newPixels[index] = rSum / count + 0.5;
+				newPixels[index + 1] = gSum / count + 0.5;
+				newPixels[index + 2] = bSum / count + 0.5;
+				newPixels[index + 3] = aSum / count + 0.5;
+			}
+		return newImageData;
+	},
 };
 
 interface ISaved {
