@@ -40,7 +40,7 @@ const filters = {
 			for (let x = 0; x < width; x++) {
 				const distance = toCenter(x, y), radian = getRadian(x, y);
 				if (distance > radius) continue;
-				const newDistance = (distance / radius) ** 2.5 * radius;
+				const newDistance = Math.asin(distance / radius) * 2 * radius / Math.PI;
 				const newX = newDistance * Math.cos(radian) + centerX, newY = newDistance * Math.sin(radian) + centerY;
 				const i = getPixelIndex(width, x, y);
 				const newI = getPixelIndex(width, newX, newY);
