@@ -16,18 +16,11 @@ const prves = [
 	{ class: "wipe", icon: "placeholder", effects: ["wipeRight", "splitVOut"] },
 ];
 
-const StyledContainer = styled.div`
-	.grid-view-item .image-wrapper {
-		width: 200px;
-		height: 112px;
-	}
-`;
-
 export default function Prve() {
 	const selectPrve = useState("normal");
 
 	return (
-		<StyledContainer>
+		<div className="container">
 			<Expander heading={t.condition} caption={t.descriptions.condition} icon="filter" />
 			<div>
 				<Button>从其它参数复制至此</Button>
@@ -49,6 +42,6 @@ export default function Prve() {
 						<PreviewPrve key={name} thumbnail={exampleThumbnail} name={name} />}
 				/>
 			))}
-		</StyledContainer>
+		</div>
 	);
 }

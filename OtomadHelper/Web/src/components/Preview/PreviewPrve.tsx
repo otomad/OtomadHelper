@@ -1,8 +1,13 @@
+/* eslint-disable indent */
 import prvePingpongImage from "assets/images/effects/prve_pingpong.gif";
 import prveWhirlImage from "assets/images/effects/prve_whirl.gif";
+import { freezeframes } from "helpers/freezeframe";
+const prvePingpongStaticImage = freezeframes["effects/prve_pingpong.gif"];
+const prveWhirlStaticImage = freezeframes["effects/prve_whirl.gif"];
 
-/* eslint-disable indent */
 export /* internal */ const getDuration = (frames: number) => frames * 375 + "ms";
+
+const fakeAnimation = keyframes``;
 
 const StyledPreviewPrve = styled.div<{
 	/** 效果名称。 */
@@ -14,6 +19,10 @@ const StyledPreviewPrve = styled.div<{
 		${styles.mixins.square("100%")};
 		object-fit: cover;
 		position: absolute;
+	}
+
+	.animated-image {
+		animation: ${fakeAnimation} 1s infinite;
 	}
 
 	.grid-view-item:not(:hover, :focus-visible) & img {
@@ -362,15 +371,30 @@ export default function PreviewPrve({ thumbnail, name }: FCP<{
 	}[name] ?? 1;
 
 	const animatedImage = {
-		pingpong: prvePingpongImage,
-		whirl: prveWhirlImage,
+		pingpong: Tuple(prvePingpongImage, prvePingpongStaticImage),
+		whirl: Tuple(prveWhirlImage, prveWhirlStaticImage),
 	}[name];
 
 	return (
 		<StyledPreviewPrve $name={name}>
 			{forMap(imageCount, i => animatedImage ?
-				<ReactFreezeframe key={i} src={animatedImage} /> :
+				<HoverToChangeImg key={i} animatedSrc={animatedImage[0]} staticSrc={animatedImage[1]} /> :
 				<img key={i} src={thumbnail} draggable={false} />)}
 		</StyledPreviewPrve>
 	);
+}
+
+function HoverToChangeImg({ staticSrc, animatedSrc }: FCP<{
+	/** 静态图片地址。 */
+	staticSrc: string;
+	/** 动态图片地址。 */
+	animatedSrc: string;
+}>) {
+	const [isHovered, setIsHovered] = useState(false);
+	const img = useRef<HTMLImageElement | null>(null);
+
+	useEventListener(img, "animationstart", () => setIsHovered(true));
+	useEventListener(img, "animationcancel", () => setIsHovered(false));
+
+	return <img src={isHovered ? animatedSrc : staticSrc} draggable={false} className="animated-image" ref={img} />;
 }

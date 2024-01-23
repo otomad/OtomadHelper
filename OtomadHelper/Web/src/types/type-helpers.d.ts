@@ -97,5 +97,5 @@ declare global {
 	/**
 	 * 可能是 Ref 包装的类型对象也可能是其类型本身。
 	 */
-	type MaybeRef<T> = RefObject<T> | T;
+	type MaybeRef<T> = RefObject<T> | MutableRefObject<T> | T;
 }
