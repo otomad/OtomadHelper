@@ -1,3 +1,6 @@
+import prvePingpongImage from "assets/images/effects/prve_pingpong.gif";
+import prveWhirlImage from "assets/images/effects/prve_whirl.gif";
+
 /* eslint-disable indent */
 export /* internal */ const getDuration = (frames: number) => frames * 375 + "ms";
 
@@ -277,10 +280,10 @@ const StyledPreviewPrve = styled.div<{
 					transform: skewX(25deg) scaleX(0.5);
 					transform-origin: center bottom;
 					animation: ${keyframes`
-						0%, 100% { transform: skewX(25deg) scaleX(0.5); }
-						25%, 75% { transform: scale(0.5); }
-						50% { transform: skewX(-25deg) scaleX(0.5); }
-					`} ${getDuration(4)} ${eases.easeOutMax} infinite;
+						0% { transform: skewX(25deg) scaleX(0.5); }
+						50% { transform: scale(0.5); animation-timing-function: ${eases.easeOutMax}; }
+						100% { transform: skewX(-25deg) scaleX(0.5); }
+					`} ${getDuration(2)} ${eases.easeInMax} alternate infinite;
 				}
 			`,
 			slantUp: css`
@@ -288,10 +291,10 @@ const StyledPreviewPrve = styled.div<{
 					transform: skewX(25deg) scale(0.5);
 					transform-origin: center bottom;
 					animation: ${keyframes`
-						0%, 100% { transform: skewX(25deg) scale(0.5); }
-						25%, 75% { transform: scaleX(0.5); }
-						50% { transform: skewX(-25deg) scale(0.5); }
-					`} ${getDuration(4)} ${eases.easeOutMax} infinite;
+						0%, { transform: skewX(25deg) scale(0.5); }
+						50% { transform: scaleX(0.5); animation-timing-function: ${eases.easeInMax}; }
+						100% { transform: skewX(-25deg) scale(0.5); }
+					`} ${getDuration(2)} ${eases.easeOutMax} alternate infinite;
 				}
 			`,
 			puyo: css`
@@ -358,9 +361,15 @@ export default function PreviewPrve({ thumbnail, name }: FCP<{
 		cwMirror: 4,
 	}[name] ?? 1;
 
+	const animatedImage = {
+		pingpong: prvePingpongImage,
+		whirl: prveWhirlImage,
+	}[name];
+
 	return (
 		<StyledPreviewPrve $name={name}>
-			{forMap(imageCount, i =>
+			{forMap(imageCount, i => animatedImage ?
+				<ReactFreezeframe key={i} src={animatedImage} /> :
 				<img key={i} src={thumbnail} draggable={false} />)}
 		</StyledPreviewPrve>
 	);

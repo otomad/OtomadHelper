@@ -53,48 +53,59 @@ const filters = {
 	},
 };
 
-const saved = {
-	imagePath: "",
-	filters: {} as FilterBlobs,
-};
-
-export async function getCanvasFilter(imagePath: string) {
-	if (imagePath === saved.imagePath) return saved.filters;
-	else {
-		saved.imagePath = imagePath;
-		for (const url of Object.values(saved.filters))
-			URL.revokeObjectURL(url);
-	}
-
-	const canvas = document.createElement("canvas");
-	const context = canvas.getContext("2d")!;
-
-	const image = new Image();
-	await new Promise(resolve => {
-		image.onload = resolve;
-		image.src = imagePath;
-	});
-	canvas.width = image.width;
-	canvas.height = image.height;
-	context.drawImage(image, 0, 0);
-
-	const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-	for (const [name, filter] of Object.entries(filters)) {
-		const newImageData = filter(imageData);
-		context.putImageData(newImageData, 0, 0);
-		const blob = await new Promise<string>(resolve => canvas.toBlob(blob => resolve(URL.createObjectURL(blob!))));
-		saved.filters[name as FilterType] = blob;
-	}
-
-	return saved.filters;
+interface ISaved {
+	imagePath: string;
+	filters: FilterBlobs;
+	setImagePath(imagePath: string): void;
+	setFilter(name: FilterType, blob: string): void;
 }
 
-export function useCanvasFilter(imagePath: string) {
-	const [canvasFilter, setCanvasFilter] = useState<FilterBlobs>({} as FilterBlobs);
+const useSaved = createStore<ISaved>()(
+	zustandImmer(set => ({
+		imagePath: "",
+		filters: {} as FilterBlobs,
+		setImagePath: imagePath => set(() => ({ imagePath })),
+		setFilter: (name, blob) => set(saved => void (saved.filters[name] = blob)),
+	})),
+);
 
-	useEffect(() => {
-		getCanvasFilter(imagePath).then(r => { setCanvasFilter(r); });
+export function useCanvasFilter(imagePath: string) {
+	const saved = useSaved();
+
+	const getCanvasFilter = useCallback(async (imagePath: string) => {
+		if (imagePath === useSaved.getState().imagePath) return saved.filters;
+		else {
+			saved.setImagePath(imagePath);
+			for (const url of Object.values(saved.filters))
+				URL.revokeObjectURL(url);
+		}
+
+		const canvas = document.createElement("canvas");
+		const context = canvas.getContext("2d")!;
+
+		const image = new Image();
+		await new Promise(resolve => {
+			image.onload = resolve;
+			image.src = imagePath;
+		});
+		canvas.width = image.width;
+		canvas.height = image.height;
+		context.drawImage(image, 0, 0);
+
+		const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+		for (const [name, filter] of entries(filters)) {
+			const newImageData = filter(imageData);
+			context.putImageData(newImageData, 0, 0);
+			const blob = await new Promise<string>(resolve => canvas.toBlob(blob => resolve(URL.createObjectURL(blob!))));
+			saved.setFilter(name, blob);
+		}
+
+		return useSaved.getState().filters;
 	}, [imagePath]);
 
-	return canvasFilter;
+	useEffect(() => {
+		getCanvasFilter(imagePath);
+	}, [imagePath]);
+
+	return saved.filters;
 }

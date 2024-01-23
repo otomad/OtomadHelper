@@ -1,0 +1,32 @@
+diff --git a/node_modules/react-freezeframe/dist/ReactFreezeframe.d.ts b/node_modules/react-freezeframe/dist/ReactFreezeframe.d.ts
+new file mode 100644
+index 0000000..7469370
+--- /dev/null
++++ b/node_modules/react-freezeframe/dist/ReactFreezeframe.d.ts
+@@ -0,0 +1,26 @@
++import React, { Component } from 'react';
++import Freezeframe from 'freezeframe';
++import { FreezeframeOptions, Freeze } from 'freezeframe/types';
++export declare type Props = {
++    src?: string;
++    options?: FreezeframeOptions;
++    onStart?: (items: Freeze[], isPlaying: boolean) => void;
++    onStop?: (items: Freeze[], isPlaying: boolean) => void;
++    onToggle?: (items: Freeze[], isPlaying: boolean) => void;
++} & React.ImgHTMLAttributes<HTMLElement>; 
++export declare type State = {
++    isPlaying: boolean;
++};
++declare class ReactFreezeframe extends Component<Props, State> {
++    $freezeframe?: Freezeframe;
++    props: Props;
++    private freeze;
++    constructor(props: Props);
++    componentDidMount(): void;
++    componenWillUnmount(): void;
++    render(): JSX.Element;
++    start(): void;
++    stop(): void;
++    toggle(): void;
++}
++export default ReactFreezeframe;

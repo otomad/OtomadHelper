@@ -51,6 +51,9 @@ export default [
 		"lodash-es": [
 			["*", "lodash"],
 		],
+		"react-freezeframe": [
+			["default", "ReactFreezeframe"],
+		],
 	},
 	/* {
 		from: "react",

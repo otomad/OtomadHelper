@@ -108,10 +108,9 @@ export default function PreviewYtp({ thumbnail, name }: FCP<{
 		mirror: 2,
 	}[name] ?? 1;
 
-	const forceUpdate = useForceUpdate();
 	const canvasFilters = useCanvasFilter(thumbnail);
 
-	const alterImages: Record<string, string> = {
+	const alterImage = {
 		chorus: ytpChorusImage,
 		changePitch: ytpChangePitchImage,
 		reverse: ytpReverseImage,
@@ -120,19 +119,7 @@ export default function PreviewYtp({ thumbnail, name }: FCP<{
 
 		vibrato: canvasFilters?.vibrato,
 		spherize: canvasFilters?.spherize,
-	};
-	const alterImage = alterImages[name];
-
-	const repeatRef = useRef<Timer>();
-	useEffect(() => {
-		repeatRef.current = setInterval(() => {
-			console.log(1);
-			if (document.querySelector<HTMLImageElement>("[data-name=vibrato]")?.src.startsWith("blob") === false ||
-				document.querySelector<HTMLImageElement>("[data-name=spherize]")?.src.startsWith("blob") === false)
-				forceUpdate();
-			else clearInterval(repeatRef.current);
-		}, 100);
-	}); // BUG: 刷新bug。
+	}[name];
 
 	return (
 		<StyledPreviewYtp $name={name}>
