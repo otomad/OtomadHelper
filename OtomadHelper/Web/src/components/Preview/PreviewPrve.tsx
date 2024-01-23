@@ -14,6 +14,7 @@ const StyledPreviewPrve = styled.div<{
 	$name: string;
 }>`
 	${styles.mixins.square("100%")};
+	container: preview-prve / size;
 
 	img {
 		${styles.mixins.square("100%")};
@@ -87,23 +88,27 @@ const StyledPreviewPrve = styled.div<{
 			`,
 			ccwRotate: css`
 				img {
-					rotate: -90deg;
+					transform: translate(calc((100cqw - 100cqh) / 2), calc((100cqw - 100cqh) / -2)) rotate(-90deg);
+					width: 100cqh;
+					height: 100cqw;
 					animation: ${keyframes`
-						0%, 100% { rotate: -90deg; }
-						25% { rotate: -180deg; }
-						50% { rotate: -270deg; }
-						75% { rotate: 0deg; }
+						0%, 100% { transform: translate(calc((100cqw - 100cqh) / 2), calc((100cqw - 100cqh) / -2)) rotate(-90deg); width: 100cqh; height: 100cqw; }
+						25% { transform: rotate(-180deg); width: 100%; height: 100%; }
+						50% { transform: translate(calc((100cqw - 100cqh) / 2), calc((100cqw - 100cqh) / -2)) rotate(-270deg); width: 100cqh; height: 100cqw; }
+						75% { transform: rotate(0deg); width: 100%; height: 100%; }
 					`} ${getDuration(4)} step-start infinite;
 				}
 			`,
 			cwRotate: css`
 				img {
-					rotate: 90deg;
+					transform: translate(calc((100cqw - 100cqh) / 2), calc((100cqw - 100cqh) / -2)) rotate(90deg);
+					width: 100cqh;
+					height: 100cqw;
 					animation: ${keyframes`
-						0%, 100% { rotate: 90deg; }
-						25% { rotate: 180deg; }
-						50% { rotate: 270deg; }
-						75% { rotate: 0deg; }
+						0%, 100% { transform: translate(calc((100cqw - 100cqh) / 2), calc((100cqw - 100cqh) / -2)) rotate(90deg); width: 100cqh; height: 100cqw; }
+						25% { transform: rotate(180deg); width: 100%; height: 100%; }
+						50% { transform: translate(calc((100cqw - 100cqh) / 2), calc((100cqw - 100cqh) / -2)) rotate(270deg); width: 100cqh; height: 100cqw; }
+						75% { transform: rotate(0deg); width: 100%; height: 100%; }
 					`} ${getDuration(4)} step-start infinite;
 				}
 			`,

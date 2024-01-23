@@ -1,6 +1,7 @@
 const StyledGridViewItem = styled.button`
 	:where(.image-wrapper) {
-		${styles.mixins.square("112px")};
+		width: 100%;
+		height: 112px;
 	}
 
 	.base {
