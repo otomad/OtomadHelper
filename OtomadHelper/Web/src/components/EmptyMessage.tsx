@@ -35,10 +35,21 @@ export default function EmptyMessage({ icon, heading, caption, children }: FCP<{
 	/** 详细描述。 */
 	caption?: ReactNode;
 }>) {
+	const debounceTimeout = useRef<Timeout>();
+	const debouncing = useRef(false);
 	const { resetTransition } = usePageStore();
-	useMountEffect(() => {
-		resetTransition();
-	});
+	useEffect(() => {
+		debouncing.current = true;
+		debounceTimeout.current = setTimeout(() => debouncing.current = false, 100);
+		return () => {
+			if (!debouncing.current) {
+				console.log(456);
+				resetTransition();
+			}
+			clearTimeout(debounceTimeout.current);
+			debouncing.current = false;
+		};
+	}, []);
 
 	return (
 		<StyledEmptyMessage>

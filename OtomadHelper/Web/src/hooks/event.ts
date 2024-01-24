@@ -2,6 +2,10 @@ export function useMountEffect(effect: React.EffectCallback) {
 	useEffect(effect, []);
 }
 
+export function useUnmountEffect(effect: NonNull<ReturnType<React.EffectCallback>>) {
+	useEffect(() => effect, []);
+}
+
 /**
  * 获取某个值之前的值。
  * @param value - 值对象。
