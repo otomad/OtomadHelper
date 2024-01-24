@@ -35,24 +35,19 @@ export default function EmptyMessage({ icon, heading, caption, children }: FCP<{
 	/** 详细描述。 */
 	caption?: ReactNode;
 }>) {
-	const debounceTimeout = useRef<Timeout>();
-	const debouncing = useRef(false);
 	const { resetTransition } = usePageStore();
+	const el = useRef<HTMLDivElement | null>(null);
 	useEffect(() => {
-		debouncing.current = true;
-		debounceTimeout.current = setTimeout(() => debouncing.current = false, 100);
-		return () => {
-			if (!debouncing.current) {
-				console.log(456);
-				resetTransition();
-			}
-			clearTimeout(debounceTimeout.current);
-			debouncing.current = false;
-		};
+		const container = el.current?.parentElement;
+		if (container)
+			for (const child of container.children)
+				if (child instanceof HTMLElement && child !== el.current)
+					child.style.animation = "none";
+		resetTransition();
 	}, []);
 
 	return (
-		<StyledEmptyMessage>
+		<StyledEmptyMessage ref={el}>
 			{icon && <Icon name={icon} />}
 			<h2>{heading}</h2>
 			<p>{caption}</p>
