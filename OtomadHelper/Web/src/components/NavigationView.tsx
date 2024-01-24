@@ -136,21 +136,9 @@ const StyledNavigationView = styled.div<{
 			display: flex;
 			align-items: center;
 			gap: 14px;
-			
+
 			* {
 				white-space: nowrap;
-			}
-
-			> .parent {
-				color: ${c("fill-color-text-secondary")};
-
-				&:hover {
-					color: ${c("foreground-color")};
-				}
-
-				&:active {
-					color: ${c("fill-color-text-tertiary")};
-				}
 			}
 
 			&.exit {
@@ -164,13 +152,54 @@ const StyledNavigationView = styled.div<{
 			&.enter-active {
 				translate: 0;
 			}
+
+			> div {
+				display: contents;
+
+				.enter,
+				.exit-active {
+					translate: 20px;
+					opacity: 0;
+				}
+
+				.enter-active {
+					translate: 0;
+					opacity: 1;
+					transition-delay: 200ms;
+					transition-duration: 300ms;
+
+					&.crumb {
+						transition-delay: 300ms;
+					}
+				}
+
+				.exit-active {
+					transition-timing-function: ${eases.easeInMax};
+
+					&.bread-crumb-chevron-right {
+						transition-delay: 50ms;
+					}
+				}
+
+				> .parent {
+					color: ${c("fill-color-text-secondary")};
+
+					&:hover {
+						color: ${c("foreground-color")};
+					}
+
+					&:active {
+						color: ${c("fill-color-text-tertiary")};
+					}
+				}
+			}
 		}
 
 		.content {
 			height: 100%;
 			overflow: hidden auto;
 
-			&:has(.enter, .exit) {
+			&:has(> .enter, > .exit) {
 				overflow-y: hidden;
 			}
 
@@ -319,11 +348,11 @@ const StyledBreadCrumbChevronRight = styled.div`
 	}
 `;
 
-const BreadCrumbChevronRight = () => (
-	<StyledBreadCrumbChevronRight>
+const BreadCrumbChevronRight = forwardRef<HTMLDivElement>((_, ref) => (
+	<StyledBreadCrumbChevronRight ref={ref}>
 		<Icon name="chevron_right" />
 	</StyledBreadCrumbChevronRight>
-);
+));
 
 interface NavItem {
 	/** 标签文本。 */
@@ -418,19 +447,24 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 					<TransitionGroup>
 						<CssTransition key={pageTitleKey.join()}>
 							<h1 className="title">
-								{titles.flatMap((title, i, { length }) => {
-									const last = i === length - 1;
-									const crumb = (
-										<div
-											key={i}
-											className={{ parent: !last }}
-											onClick={() => title.link?.length && currentNav[1]?.(title.link)}
-										>
-											{title.name}
-										</div>
-									);
-									return last ? crumb : [crumb, <BreadCrumbChevronRight key={i + "-chevron"} />];
-								})}
+								<TransitionGroup>
+									{titles.flatMap((title, i, { length }) => {
+										const last = i === length - 1;
+										const crumb = (
+											<div
+												key={i}
+												className={["crumb", { parent: !last }]}
+												onClick={() => title.link?.length && currentNav[1]?.(title.link)}
+											>
+												{title.name}
+											</div>
+										);
+										const result = [crumb];
+										if (!last) result.push(<BreadCrumbChevronRight key={i + "-chevron"} />);
+										return result.map((node, j) =>
+											<CssTransition key={i + "-" + j}>{node}</CssTransition>);
+									})}
+								</TransitionGroup>
 							</h1>
 						</CssTransition>
 					</TransitionGroup>

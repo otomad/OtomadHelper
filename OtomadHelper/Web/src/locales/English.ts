@@ -9,6 +9,8 @@ const English = {
 			track: "Track",
 			track_other: "Tracks",
 			sonar: "Sonar",
+			notation: "Notation",
+			notation_full: "Pitch Notation",
 			shupelunker: "Shupelunker",
 			shupelunker_full: "Shupelunker Tactics",
 			ytp: "YTP",

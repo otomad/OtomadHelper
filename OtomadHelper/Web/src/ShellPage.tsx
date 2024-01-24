@@ -11,7 +11,7 @@ export default function ShellPage() {
 		name: t.titles[crumb]({ context: "full" }),
 		link: i === length - 1 ? undefined : page.slice(0, i + 1),
 	}));
-	const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "shupelunker", "ytp"];
+	const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "notation", "shupelunker", "ytp"];
 	const navToolItems = ["mosh", "tools"];
 	const bottomNavItems = ["settings"] as const;
 	const modes = ["otomadOrYtpmv", "ytp", "shupelunker"] as const;
