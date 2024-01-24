@@ -1,22 +1,79 @@
+const navButtonSize = { width: 44, height: 40 };
+
 const NavButton = styled(Button).attrs({
 	subtle: true,
-	icon: "global_nav_button",
-})<{
-	/** 是否是影子？ */
-	$shadow: boolean;
-}>`
-	width: 52px;
-	height: 40px;
-	margin: 4px 5px 1px;
+})`
+	width: ${navButtonSize.width}px;
+	height: ${navButtonSize.height}px;
 	min-width: unset;
+	position: absolute;
+	/* z-index: 10;
+	position: fixed; */
+`;
+
+/* const NavButtonShadow = styled.div`
+	width: ${navButtonSize.width}px;
+	height: ${navButtonSize.height}px;
+	visibility: hidden;
+`; */
+
+const StyledTopLeftButtons = styled.div`
+	height: ${navButtonSize.height}px;
+	margin: 4px 5px 1px 9px;
 	z-index: 10;
 
-	${({ $shadow }) => $shadow ? css`
-		visibility: hidden;
-	` : css`
+	&.vertical {
+		height: ${navButtonSize.height * 2}px;
+		margin-left: 5px;
+
+		.nav-button {
+			width: 52px;
+		}
+	}
+
+	&:not(.shadow) {
 		position: fixed;
-	`}
+		z-index: 11;
+	}
+
+	.base {
+		position: relative;
+	}
+
+	&:not(.vertical) .nav-button:nth-of-type(2) {
+		top: 0;
+		left: ${navButtonSize.width}px;
+	}
+
+	&.vertical .nav-button:nth-of-type(2) {
+		top: ${navButtonSize.height}px;
+		left: 0;
+	}
 `;
+
+function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNavButton }: FCP<{
+	/** 是否是影子？ */
+	shadow?: boolean;
+	/** 导航面板显示模式。 */
+	paneDisplayMode: PaneDisplayMode;
+	/** 能否返回？ */
+	canBack?: boolean;
+	/** 点击返回按钮事件。 */
+	onBack?: () => void;
+	/** 点击汉堡菜单按钮事件。 */
+	onNavButton?: () => void;
+}>) {
+	return (
+		<StyledTopLeftButtons className={{ shadow, vertical: paneDisplayMode === "compact" }}>
+			{!shadow && (
+				<div className="base">
+					<NavButton icon="back" disabled={!canBack} onClick={onBack} />
+					<NavButton icon="global_nav_button" onClick={onNavButton} />
+				</div>
+			)}
+		</StyledTopLeftButtons>
+	);
+}
 
 const floatUp = keyframes`
 	from {
@@ -109,6 +166,14 @@ const StyledNavigationView = styled.div<{
 					max-width: 1000px;
 					margin: 0 auto;
 				}
+			}
+		}
+
+		&.show-flyout {
+			*,
+			::before,
+			::after {
+				pointer-events: none !important;
 			}
 		}
 
@@ -292,13 +357,15 @@ const useWindowWidth = () => {
 	return width;
 };
 
-function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, flyout }: FCP<{
+function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, navItemsId, flyout, isCompact }: FCP<{
 	paneDisplayMode: PaneDisplayMode;
 	isFlyoutShown: boolean;
 	customContent?: ReactNode;
 	currentNavTab: StateProperty<string>;
 	navItems: (NavItem | NavBrItem)[];
+	navItemsId?: string;
 	flyout: boolean;
+	isCompact: boolean;
 }>) {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
 	const navItemsRef = useRef<HTMLDivElement>(null);
@@ -316,10 +383,20 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 		setIsNavItemsOverflowing(navItems.scrollHeight > navItems.offsetHeight);
 	}, { immediate: true }, [navItemsRef]);
 
+	const onNavItemsScroll = useCallback<UIEventHandler<HTMLDivElement>>(e => {
+		const currentElement = e.currentTarget;
+		const { scrollTop, dataset: { navItemsId } } = currentElement;
+		if (!navItemsId) return;
+		document.querySelectorAll(`[data-nav-items-id="${navItemsId}"]`).forEach(element => {
+			if (element === currentElement) return;
+			element.scrollTo({ top: scrollTop, behavior: "instant" });
+		});
+	}, []);
+
 	return (
 		<div className={["left", paneDisplayMode, { flyout }]}>
-			<NavButton $shadow />
-			<div ref={navItemsRef} className={["nav-items", { overflowing: isNavItemsOverflowing }]}>
+			<TopLeftButtons shadow paneDisplayMode={isCompact ? "compact" : paneDisplayMode} />
+			<div ref={navItemsRef} data-nav-items-id={navItemsId} className={["nav-items", { overflowing: isNavItemsOverflowing }]} onScroll={onNavItemsScroll}>
 				{customContent}
 				<TabBar current={currentNavTab} collapsed={paneDisplayMode === "compact"} vertical>
 					{navItems.map((item, index) => {
@@ -382,7 +459,7 @@ const usePaneDisplayMode = () => {
 	return paneDisplayMode;
 };
 
-export default function NavigationView({ currentNav, navItems = [], titles, transitionName = "", children, customContent }: FCP<{
+export default function NavigationView({ currentNav, navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack }: FCP<{
 	/** 当前导航页状态参数。 */
 	currentNav: StateProperty<string[]>;
 	/** 所有导航项。 */
@@ -393,6 +470,10 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	customContent?: ReactNode;
 	/** 页面过渡名称。 */
 	transitionName?: string;
+	/** 能否返回？ */
+	canBack?: boolean;
+	/** 点击返回按钮事件。 */
+	onBack?: () => void;
 }>) {
 	const currentNavTab = useStateSelector(currentNav, nav => nav[0], value => [value]);
 	const pagePath = currentNav.join("/");
@@ -403,6 +484,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 	const pageContent = useRef<HTMLDivElement | null>(null);
 	const scrollToTop = useCallback(() => pageContent.current?.scrollTo({ top: 0, left: 0, behavior: "instant" }), [pageContent]);
+	const navItemsId = useId();
 
 	const currentNavItem = useMemo(() =>
 		navItems.find(item => !("type" in item) && item.id === currentNavTab[0]) as NavItem,
@@ -424,7 +506,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 
 	return (
 		<StyledNavigationView $transitionName={transitionName}>
-			<NavButton onClick={onNavButtonClick} />
+			<TopLeftButtons paneDisplayMode={paneDisplayMode} onNavButton={onNavButtonClick} onBack={onBack} canBack={canBack} />
 			{forMap(2, i => {
 				const isFlyout = i === 2;
 				return (
@@ -434,13 +516,22 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 						isFlyoutShown={flyoutDisplayMode !== "minimal"}
 						currentNavTab={currentNavTab}
 						navItems={navItems}
+						navItemsId={navItemsId}
 						customContent={customContent}
 						flyout={isFlyout}
+						isCompact={paneDisplayMode === "compact"}
 					/>
 				);
 			})}
 			<div
-				className={["right", "hairtail", { minimal: paneDisplayMode === "minimal" }]}
+				className={[
+					"right",
+					"hairtail",
+					{
+						minimal: paneDisplayMode === "minimal",
+						showFlyout: flyoutDisplayMode !== "minimal",
+					},
+				]}
 				onClick={hideFlyoutNavMenu}
 			>
 				<div className="title-wrapper">

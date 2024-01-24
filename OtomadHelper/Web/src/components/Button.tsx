@@ -34,7 +34,7 @@ const StyledButton = styled.button<{
 		background-color: ${c("fill-color-control-default")};
 		border-color: ${c("stroke-color-control-stroke-default")};
 
-		${ifColorScheme.dark} &:not(:active, [disabled]) {?
+		${ifColorScheme.dark} &:not(:active, [disabled]) {
 			border-top-color: ${c("stroke-color-control-stroke-secondary")};
 		}
 

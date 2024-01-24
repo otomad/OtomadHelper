@@ -52,7 +52,7 @@ export const usePageStore = createStore<IPage>()(
 			canBack: () => get().page.length > 1,
 			back() {
 				if (get().canBack()) {
-					const page = get().page;
+					const page = get().page.slice();
 					page.pop();
 					setPageInternal(page);
 				}

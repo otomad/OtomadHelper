@@ -21,7 +21,7 @@ export default function SettingsPageControl({ image, learnMoreLink, children }: 
 						<br /><br />
 						{learnMoreLink ?
 							<a href={learnMoreLink} target="_blank" rel="noreferrer">{t.learnMore}</a> :
-							<a href="javascript:void(0);">{t.learnMore}</a>
+							<a>{t.learnMore}</a>
 						}
 					</>
 				)}

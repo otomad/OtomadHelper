@@ -23,6 +23,8 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 			> .bottom {
 				display: flex;
 				justify-content: space-between;
+				flex-wrap: wrap;
+				gap: 12px;
 			}
 		}
 	}

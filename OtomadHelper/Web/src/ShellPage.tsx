@@ -5,7 +5,7 @@ function EmptyPage() {
 }
 
 export default function ShellPage() {
-	const { page, changePage, getPagePath, transition } = usePageStore();
+	const { page, changePage, getPagePath, transition, canBack, back } = usePageStore();
 	const [mode, setMode] = useState<Mode>("otomadOrYtpmv");
 	const pageTitles = page.map((crumb, i, { length }) => ({
 		name: t.titles[crumb]({ context: "full" }),
@@ -29,6 +29,8 @@ export default function ShellPage() {
 			]}
 			titles={pageTitles}
 			transitionName={transition}
+			canBack={canBack()}
+			onBack={back}
 		>
 			<Page />
 		</NavigationView>
