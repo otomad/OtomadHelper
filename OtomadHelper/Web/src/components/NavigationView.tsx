@@ -7,15 +7,7 @@ const NavButton = styled(Button).attrs({
 	height: ${navButtonSize.height}px;
 	min-width: unset;
 	position: absolute;
-	/* z-index: 10;
-	position: fixed; */
 `;
-
-/* const NavButtonShadow = styled.div`
-	width: ${navButtonSize.width}px;
-	height: ${navButtonSize.height}px;
-	visibility: hidden;
-`; */
 
 const StyledTopLeftButtons = styled.div`
 	height: ${navButtonSize.height}px;
