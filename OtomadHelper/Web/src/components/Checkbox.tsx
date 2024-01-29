@@ -74,7 +74,7 @@ const StyledRadioButtonLabel = styled.label`
 		background-color: ${c("stroke-color-control-strong-stroke-disabled")};
 		outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
 	}
-	
+
 	${styles.mixins.forwardFocusRing()};
 
 	.base .icon {
@@ -92,8 +92,6 @@ const StyledRadioButtonLabel = styled.label`
 		}
 	}
 `;
-
-const timeoutExit0 = { exit: 0 } as const;
 
 interface SharedProps {
 	/** 已禁用？ */
@@ -169,7 +167,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	useEffect(() => {
 		setCheckMarkName(getCheckMarkName());
 	}, [indeterminate, checked]);
-	const switchTransitionTimeout = prevCheckMarkName === "" ? timeoutExit0 : undefined;
+	const switchTransitionTimeout = prevCheckMarkName === "" ? 70 : undefined;
 
 	return (
 		<StyledRadioButtonLabel tabIndex={0} ref={labelRef}>
