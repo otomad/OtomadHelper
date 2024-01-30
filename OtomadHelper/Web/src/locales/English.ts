@@ -19,7 +19,7 @@ const English = {
 			tools: "Tools",
 			settings: "Settings",
 			prve: "PV Rhythm Visual Effect",
-			staff: "Staff Visual Effect",
+			staff: "Staff Visualizer",
 		},
 		source: {
 			trackEvent: "Track event",

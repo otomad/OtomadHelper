@@ -10,7 +10,7 @@ const SChinese = {
 			visual: "视频",
 			track: "轨道",
 			sonar: "声呐",
-			notation: "音记",
+			notation: "音名",
 			notation_full: "音高记号",
 			shupelunker: "原音系",
 			shupelunker_full: "原音系战法",
@@ -20,7 +20,7 @@ const SChinese = {
 			tools: "工具",
 			settings: "设置",
 			prve: "映像节奏视觉效果",
-			staff: "五线谱视觉效果",
+			staff: "五线谱可视化",
 		},
 		source: {
 			trackEvent: "轨道剪辑",
