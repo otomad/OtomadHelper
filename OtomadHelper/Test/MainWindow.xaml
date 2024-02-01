@@ -4,7 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:local="clr-namespace:OtomadHelper.Test"
-	xmlns:c="clr-namespace:OtomadHelper.Controls"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Title="MainWindow"
 	Width="800"

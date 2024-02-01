@@ -98,8 +98,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\BackdropWindow.cs" />
-    <Compile Include="Controls\ContentDialog.xaml.cs">
+    <Compile Include="WPF\Controls\BackdropWindow.cs" />
+    <Compile Include="WPF\Controls\Button.xaml.cs">
+      <DependentUpon>Button.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\Controls\ContentDialog.xaml.cs">
       <DependentUpon>ContentDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ResourceHelper.cs" />
@@ -178,13 +181,29 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\ContentDialog.xaml">
+    <Page Include="WPF\Controls\Button.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Controls\ContentDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Test\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\Controls\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\Styles\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\Styles\DarkTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

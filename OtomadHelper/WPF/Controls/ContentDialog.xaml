@@ -1,0 +1,69 @@
+<c:BackdropWindow
+	x:Class="OtomadHelper.WPF.Controls.ContentDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Title="ContentDialog"
+	Width="800"
+	BorderBrush="{DynamicResource CardStroke}"
+	BorderThickness="1"
+	SizeToContent="Height"
+	ResizeMode="NoResize"
+	ShowInTaskbar="True"
+	WindowStartupLocation="CenterScreen"
+	mc:Ignorable="d">
+	<c:BackdropWindow.Resources>
+		<Style TargetType="TextBlock">
+			<Setter Property="TextWrapping" Value="Wrap" />
+			<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+		</Style>
+		<Style TargetType="TextBlock" x:Key="Title" BasedOn="{StaticResource {x:Type TextBlock}}">
+			<Setter Property="FontSize" Value="20" />
+			<Setter Property="FontWeight" Value="SemiBold" />
+		</Style>
+		<Style TargetType="TextBlock" x:Key="Body" BasedOn="{StaticResource {x:Type TextBlock}}">
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="Margin" Value="0,12,0,0" />
+		</Style>
+
+		<Style TargetType="Border" x:Key="ContentWrapper">
+			<Setter Property="Padding" Value="24" />
+		</Style>
+		<Style TargetType="Border" x:Key="ButtonGrid">
+			<Setter Property="Padding" Value="24" />
+			<Setter Property="BorderBrush" Value="{DynamicResource CardStroke}" />
+			<Setter Property="BorderThickness" Value="0,2,0,0" />
+			<Setter Property="Background" Value="{DynamicResource SurfaceOverlayBackground}" />
+		</Style>
+		<Style TargetType="Button">
+			<Setter Property="Height" Value="32" />
+		</Style>
+	</c:BackdropWindow.Resources>
+	
+	<StackPanel Orientation="Vertical">
+		<Border Style="{StaticResource ContentWrapper}">
+			<StackPanel Orientation="Vertical">
+				<TextBlock Style="{StaticResource Title}">Title</TextBlock>
+				<TextBlock Style="{StaticResource Body}">
+				This is body text. Windows 11 marks a visual evolution of the operating system. We have evolved our design language alongside with Fluent to create a design which is human, universal and truly feels like Windows. 
+
+				The design principles below have guided us throughout the journey of making Windows the best-in-class implementation of Fluent.
+				</TextBlock>
+			</StackPanel>
+		</Border>
+		<Border Style="{StaticResource ButtonGrid}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="8" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+
+				<c:Button Grid.Column="0" Text="OK" Click="Button_Click" />
+				<c:Button Grid.Column="2" Text="Cancel" Click="Button_Click" />
+			</Grid>
+		</Border>
+	</StackPanel>
+</c:BackdropWindow>

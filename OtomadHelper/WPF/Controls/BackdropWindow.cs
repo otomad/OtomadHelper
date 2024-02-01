@@ -19,8 +19,10 @@ using static OtomadHelper.Interop.PInvoke.Methods;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Windows.Shell;
+using OtomadHelper.Properties;
+using System.Diagnostics;
 
-namespace OtomadHelper.Controls;
+namespace OtomadHelper.WPF.Controls;
 
 /// <summary>
 /// BackdropWindow.xaml 的交互逻辑
@@ -80,8 +82,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		bool isDarkTheme = ShouldAppsUseDarkMode();
 		int flag = isDarkTheme ? 1 : 0;
 		SetWindowAttribute(Handle, DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, flag);
-		//Application.Current.Resources["ForegroundColor"] = isDarkTheme ? Colors.White : Colors.Black;
-		//Application.Current.Resources["ForegroundBrush"] = isDarkTheme ? Brushes.White : Brushes.Black;
+		SetCurrentThemeResource(isDarkTheme);
 	}
 
 	public DWM_SYSTEMBACKDROP_TYPE SystemBackdropType {
@@ -104,6 +105,11 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 
 	protected virtual void OnPropertyChanged(string propertyName) {
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	}
+
+	protected void SetCurrentThemeResource(bool isDarkTheme) {
+		Resources.MergedDictionaries.Clear();
+		Resources.MergedDictionaries.Add(new() { Source = new($"pack://application:,,,/Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", UriKind.Absolute) });
 	}
 
 	private void InitializeComponent() {

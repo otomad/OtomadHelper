@@ -12,12 +12,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace OtomadHelper.Controls;
+namespace OtomadHelper.WPF.Controls;
 /// <summary>
 /// ContentDialog.xaml 的交互逻辑
 /// </summary>
 public partial class ContentDialog : BackdropWindow {
 	public ContentDialog() {
 		InitializeComponent();
+	}
+
+	public new static bool? Show() {
+		ContentDialog dialog = new();
+		return dialog.ShowDialog();
+	}
+
+	private void Button_Click(object sender, RoutedEventArgs e) {
+		Close();
 	}
 }

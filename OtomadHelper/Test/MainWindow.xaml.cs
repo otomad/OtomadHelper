@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static OtomadHelper.Interop.PInvoke.ParameterTypes;
 using static OtomadHelper.Interop.PInvoke.Methods;
-using OtomadHelper.Controls;
+using OtomadHelper.WPF.Controls;
 
 namespace OtomadHelper.Test {
 	/// <summary>
