@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 namespace OtomadHelper.Interop {
 	public class PInvoke {
 		public class ParameterTypes {
-			/*
 			[Flags]
-			enum DWM_SYSTEMBACKDROP_TYPE
-			{
-				DWMSBT_MAINWINDOW = 2, // Mica
-				DWMSBT_TRANSIENTWINDOW = 3, // Acrylic
-				DWMSBT_TABBEDWINDOW = 4 // Tabbed
+			public enum DWM_SYSTEMBACKDROP_TYPE {
+				/// <summary>Mica</summary>
+				DWMSBT_MAINWINDOW = 2,
+				/// <summary>Acrylic</summary>
+				DWMSBT_TRANSIENTWINDOW = 3,
+				/// <summary>MicaAlt</summary>
+				DWMSBT_TABBEDWINDOW = 4
 			}
-			*/
 
 			[Flags]
 			public enum DWMWINDOWATTRIBUTE {
@@ -26,10 +26,22 @@ namespace OtomadHelper.Interop {
 
 			[StructLayout(LayoutKind.Sequential)]
 			public struct MARGINS {
-				public int cxLeftWidth;      // width of left border that retains its size
-				public int cxRightWidth;     // width of right border that retains its size
-				public int cyTopHeight;      // height of top border that retains its size
-				public int cyBottomHeight;   // height of bottom border that retains its size
+				/// <summary>
+				/// width of left border that retains its size
+				/// </summary>
+				public int cxLeftWidth;
+				/// <summary>
+				/// width of right border that retains its size
+				/// </summary>
+				public int cxRightWidth;
+				/// <summary>
+				/// height of top border that retains its size
+				/// </summary>
+				public int cyTopHeight;
+				/// <summary>
+				/// height of bottom border that retains its size
+				/// </summary>
+				public int cyBottomHeight;
 			};
 		}
 

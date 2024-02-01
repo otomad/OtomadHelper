@@ -1,4 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 using OtomadHelper.Helpers;
 using System;
@@ -66,15 +66,15 @@ namespace OtomadHelper.Module {
 		internal static void Handler(WebView2 webView) {
 			const string HOST = "https://app/*";
 			webView.CoreWebView2.AddWebResourceRequestedFilter(HOST, CoreWebView2WebResourceContext.All);
-			webView.CoreWebView2.WebResourceRequested += (object sender, CoreWebView2WebResourceRequestedEventArgs args) => {
+			webView.CoreWebView2.WebResourceRequested += (sender, args) => {
 				string file = args.Request.Uri.Substring(HOST.Length - 1);
+				file = Uri.UnescapeDataString(file);
 				string[] fileSlug = file.Split('/');
 				string virtualPath = fileSlug.FirstOrDefault();
 				string assetsFilePath = "Web.dist." + file.Replace("/", ".");
 				try {
 					if (virtualPath != null) {
 						string path = string.Join("/", fileSlug.Skip(1));
-						path = Uri.UnescapeDataString(path);
 						switch (virtualPath) {
 							case "thumbnail":
 								Handler_Thumbnail(webView, args, path, false);
@@ -90,10 +90,11 @@ namespace OtomadHelper.Module {
 					ManagedStream managedStream = new(fileStream);
 					Dictionary<string, string> contentTypes = new() {
 						{ "html", "text/html" },
-						{ "js", "application/javascript" },
+						{ "js", "text/javascript" },
 						{ "css", "text/css" },
 						{ "jpg", "image/jpeg" },
 						{ "png", "image/png" },
+						{ "gif", "image/gif" },
 						{ "svg", "image/svg+xml" },
 						{ "manifest", "text/cache-manifest" },
 						{ "woff", "font/woff" },
@@ -102,9 +103,10 @@ namespace OtomadHelper.Module {
 					string headers = "application/octet-stream";
 					foreach (KeyValuePair<string, string> item in contentTypes)
 						if (assetsFilePath.EndsWith("." + item.Key)) {
-							headers = "Content-Type: " + item.Value;
+							headers = item.Value;
 							break;
 						}
+					headers = "Content-Type: " + headers;
 					args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(managedStream, 200, "OK", headers);
 				} catch (InvalidOperationException e) {
 					args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(null, 415, e.Message, "");

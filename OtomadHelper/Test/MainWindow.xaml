@@ -1,19 +1,18 @@
-﻿<Window
+<c:BackdropWindow
 	x:Class="OtomadHelper.Test.MainWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:local="clr-namespace:OtomadHelper.Test"
+	xmlns:c="clr-namespace:OtomadHelper.Controls"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Title="MainWindow"
 	Width="800"
 	Height="450"
-	Background="Transparent"
-	Loaded="Window_Loaded"
 	ResizeMode="NoResize"
 	ShowInTaskbar="False"
 	mc:Ignorable="d">
-	<WindowChrome.WindowChrome>
+	<!--<WindowChrome.WindowChrome>
 		<WindowChrome
 			CaptionHeight="20"
 			CornerRadius="0"
@@ -21,7 +20,7 @@
 			ResizeBorderThickness="8"
 			NonClientFrameEdges="Right"
 			UseAeroCaptionButtons="True" />
-	</WindowChrome.WindowChrome>
+	</WindowChrome.WindowChrome>-->
 
 	<StackPanel Margin="16,48,16,16">
 		<StackPanel.Resources>
@@ -34,4 +33,4 @@
 		<RadioButton x:Name="MicaRadio" Checked="RadioButton_Checked" Tag="2">Mica</RadioButton>
 		<RadioButton x:Name="MicaAltRadio" Checked="RadioButton_Checked" Tag="4">MicaAlt</RadioButton>
 	</StackPanel>
-</Window>
+</c:BackdropWindow>

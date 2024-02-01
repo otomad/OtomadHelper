@@ -1,4 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Core;
 using OtomadHelper.Helpers;
 using OtomadHelper.Test;
 using APNGLib;
@@ -21,8 +21,8 @@ namespace OtomadHelper.Module {
 		public MainDock() {
 			InitializeComponent();
 			Dock = DockStyle.Fill;
-			//MainWindow window = new();
-			//window.Show();
+			MainWindow window = new();
+			window.Show();
 
 #if VEGAS_ENV
 			BackColor = Skins.Colors.ButtonFace;
