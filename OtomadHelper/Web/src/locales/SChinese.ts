@@ -15,6 +15,7 @@ const SChinese = {
 			shupelunker: "原音系",
 			shupelunker_full: "原音系战法",
 			ytp: "YTP",
+			ytp_full: "YTP",
 			mosh: "抹失",
 			mosh_full: "数据抹失",
 			tools: "工具",
@@ -196,7 +197,7 @@ const SChinese = {
 				},
 			},
 			ytp: {
-				_: "YTP(YouTube Poop)用于使用YTP体裁中各种已知的效果来创建荒谬的视频。\nYTP支持多素材。",
+				_: "YTP(YouTube Poop)用于使用YTP类型中各种已知的效果来创建荒谬的视频。\nYTP是一种新达达主义的艺术形式，由大量视频剪辑而成的视频混剪组成，目的是迷惑、震惊或娱乐观众。这些素材可以全部混合在一起形成一个无厘头的交叉故事，也可以只是重复播放人物奇怪的手势。\nYTP支持多素材。",
 				constraint: "控制要生成的剪辑的长度",
 				clips: "要生成剪辑的数目",
 				effects: "指定YTP的效果",

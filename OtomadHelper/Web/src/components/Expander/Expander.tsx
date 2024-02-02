@@ -16,6 +16,10 @@ const ExpanderParent = styled(SettingsCard)<{
 		}
 	}
 
+	&:active > .base > .trailing > .trailing-icon > * {
+		translate: 0 ${({ $expanded }) => $expanded ? 2 : -2}px;
+	}
+
 	${({ $expanded }) => {
 		const sharpBottom = css`
 			border-bottom-right-radius: 0;

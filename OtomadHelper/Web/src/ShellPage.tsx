@@ -24,8 +24,8 @@ export default function ShellPage() {
 			navItems={[
 				...navItems.map(item => ({ text: t.titles[item], id: item, icon: item })),
 				{ type: "hr" },
-				...navToolItems.map(item => ({ text: t.titles[item], id: item, icon: item })),
-				...bottomNavItems.map(item => ({ text: t.titles[item], id: item, icon: item, bottom: true })),
+				...navToolItems.map(item => ({ text: t(2).titles[item], id: item, icon: item })),
+				...bottomNavItems.map(item => ({ text: t(2).titles[item], id: item, icon: item, bottom: true })),
 			]}
 			titles={pageTitles}
 			transitionName={transition}
