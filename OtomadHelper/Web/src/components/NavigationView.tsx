@@ -451,7 +451,7 @@ const usePaneDisplayMode = () => {
 	return paneDisplayMode;
 };
 
-export default function NavigationView({ currentNav, navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack }: FCP<{
+export default function NavigationView({ currentNav, navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, ...htmlAttrs }: FCP<{
 	/** 当前导航页状态参数。 */
 	currentNav: StateProperty<string[]>;
 	/** 所有导航项。 */
@@ -466,7 +466,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	canBack?: boolean;
 	/** 点击返回按钮事件。 */
 	onBack?: () => void;
-}>) {
+}, HTMLDivElement>) {
 	const currentNavTab = useStateSelector(currentNav, nav => nav[0], value => [value]);
 	const pagePath = currentNav.join("/");
 	const responsive = usePaneDisplayMode();
@@ -497,7 +497,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	useEffect(hideFlyoutNavMenu, [currentNav, useWindowWidth()]);
 
 	return (
-		<StyledNavigationView $transitionName={transitionName}>
+		<StyledNavigationView $transitionName={transitionName} {...htmlAttrs}>
 			<TopLeftButtons paneDisplayMode={paneDisplayMode} onNavButton={onNavButtonClick} onBack={onBack} canBack={canBack} />
 			{forMap(2, i => {
 				const isFlyout = i === 2;

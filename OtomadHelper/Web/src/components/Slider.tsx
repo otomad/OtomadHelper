@@ -16,7 +16,7 @@ const StyledSlider = styled.div`
 
 	.track {
 		height: var(--thumb-size);
-		padding: ${thumbSizeHalf};
+		padding: ${thumbSizeHalf} 0;
 
 		&::after {
 			display: block;
@@ -37,7 +37,7 @@ const StyledSlider = styled.div`
 		margin-top: 0;
 		transition: none;
 		pointer-events: none;
-		margin: ${thumbSizeHalf};
+		margin: ${thumbSizeHalf} 0;
 	}
 
 	.passed {
@@ -81,7 +81,7 @@ const StyledSlider = styled.div`
 	${styles.mixins.forwardFocusRing("thumb")};
 `;
 
-export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, keyStep = 1, onChanging, onChanged }: FCP<{
+export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, step, keyStep = 1, onChanging, onChanged }: FCP<{
 	/** 当前值。 */
 	value: StateProperty<number>;
 	/** 滑块最小值。 */
@@ -90,6 +90,8 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 	max?: number;
 	/** 滑块默认值。当单击鼠标中键或触摸屏长按组件时还原默认值。 */
 	defaultValue?: number;
+	/** 滑块有效的增量值。 */
+	step?: number;
 	/** 指定当按下键盘方向按键时，滑块单次调整的值。 */
 	keyStep?: number;
 	/** 当滑块拖动时即触发事件。 */
@@ -111,7 +113,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 	const sharpValue = useMemo(() => restrict(value, 0), [value, min, max]);
 	const smoothValue = useSmoothValue(sharpValue, 0.5); // 修改这个参数可以调整滑动条的平滑移动值。
 
-	const resetDefault = useCallback((e: PointerEvent) => {
+	const resetDefault = useCallback((e: MouseEvent) => {
 		e.preventDefault();
 		if (defaultValue !== undefined && Number.isFinite(defaultValue)) {
 			setValue?.(defaultValue);
@@ -120,15 +122,23 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 		}
 	}, []);
 
+	const clampValue = useCallback((value: number) => {
+		value = clamp(value, min, max);
+		if (step !== undefined)
+			value = Math.floor((value - min) / step) * step + min;
+		return value;
+	}, [min, max, step]);
+
 	const onThumbDown = useCallback((e: PointerEvent, triggerByTrack: boolean = false) => {
-		if (e.button === 1) { resetDefault(e); return; }
+		if (e.button) { resetDefault(e); return; }
 		const thumb = (e.currentTarget as HTMLDivElement).parentElement!.querySelector(".thumb") as HTMLDivElement;
+		const thumbSize = thumb.offsetWidth;
 		const track = thumb.parentElement!.querySelector(".track")!;
 		const { left, width } = track.getBoundingClientRect();
-		const x = triggerByTrack ? 0 : e.clientX - left - thumb.offsetLeft - thumb.offsetWidth / 2;
+		const x = triggerByTrack ? 0 : e.clientX - left - thumb.offsetLeft;
 		const pointerMove = lodash.debounce((e: PointerEvent) => {
-			const position = clamp(e.clientX - left - x, 0, width);
-			const value = map(position, 0, width, min, max);
+			const position = clamp(e.clientX - left - x, 0, width - thumbSize);
+			const value = clampValue(map(position, 0, width - thumbSize, min, max));
 			setValue?.(value);
 			onChanging?.(value);
 		});
@@ -141,11 +151,13 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 		document.addEventListener("pointerup", pointerUp);
 	}, []);
 
-	const onTrackDown = useCallback((e: PointerEvent) => {
-		if (e.button === 1) { resetDefault(e); return; }
+	const onTrackDown = useCallback<PointerEventHandler>(e => {
+		if (e.button) { resetDefault(e); return; }
 		const track = e.currentTarget as HTMLDivElement;
-		const { left, width } = track.getBoundingClientRect();
-		const value = map(e.clientX - left, 0, width, min, max);
+		const thumb = track.parentElement!.querySelector(".thumb") as HTMLDivElement;
+		const thumbSizeHalf = thumb.offsetWidth / 2;
+		const { width } = track.getBoundingClientRect();
+		const value = clampValue(map(e.nativeEvent.offsetX, thumbSizeHalf, width - thumbSizeHalf, min, max));
 		setValue?.(value);
 		onChanging?.(value);
 		onThumbDown(e, true); // 再去调用拖拽滑块的事件。
@@ -156,7 +168,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 		const moveNext = e.code === "ArrowDown" || e.code === "ArrowRight";
 		if (!movePrev && !moveNext) return;
 		stopEvent(e);
-		setValue?.(clamp(value + (movePrev ? -1 : 1) * keyStep, min, max));
+		setValue?.(clampValue(value + (movePrev ? -1 : 1) * keyStep));
 	}, [value]);
 
 	return (
@@ -167,6 +179,8 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 					"--value": smoothValue,
 				}}
 				onKeyDown={onKeyDown}
+				onAuxClick={resetDefault}
+				onContextMenu={stopEvent}
 			>
 				<div className="track" onPointerDown={onTrackDown} />
 				<div className="passed" />

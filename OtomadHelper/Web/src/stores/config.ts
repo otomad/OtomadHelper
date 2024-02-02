@@ -42,6 +42,10 @@ interface IConfig {
 	ytp: {
 		enabled: boolean;
 	};
+	settings: {
+		uiScale: number;
+		devMode: boolean;
+	};
 	toJson(): string; // 如果叫 toJSON 则会和 JSON 内置参数重名导致递归错误。
 }
 
@@ -78,6 +82,10 @@ export const useConfigStore = createStore<IConfig>()(
 		createGroups: true,
 		ytp: {
 			enabled: false,
+		},
+		settings: {
+			uiScale: 100,
+			devMode: import.meta.env.DEV,
 		},
 		toJson: () => JSON.stringify(get()),
 	})),

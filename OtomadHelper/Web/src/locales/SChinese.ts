@@ -15,7 +15,7 @@ const SChinese = {
 			shupelunker: "原音系",
 			shupelunker_full: "原音系战法",
 			ytp: "YTP",
-			ytp_full: "YTP",
+			ytp_full: "YouTube Poop",
 			mosh: "抹失",
 			mosh_full: "数据抹失",
 			tools: "工具",
@@ -156,6 +156,8 @@ const SChinese = {
 				dark: "深色",
 				auto: "自动",
 			},
+			uiScale: "界面缩放",
+			devMode: "开发者模式",
 		},
 		descriptions: {
 			condition: "指定当满足何条件时才会应用下述配置",
@@ -167,7 +169,7 @@ const SChinese = {
 				trim: "截取乐曲生成的时间范围",
 				bpm: "指定每分钟多少拍",
 				constraint: "控制乐曲中的音符输出长度",
-				encoding: "指定文件的文本编码",
+				encoding: "指定读取文件的文本编码",
 			},
 			audioVisual: {
 				stretch: "开启后，将拉伸剪辑而不是改变剪辑的持续时间",
@@ -197,7 +199,7 @@ const SChinese = {
 				},
 			},
 			ytp: {
-				_: "YTP(YouTube Poop)用于使用YTP类型中各种已知的效果来创建荒谬的视频。\nYTP是一种新达达主义的艺术形式，由大量视频剪辑而成的视频混剪组成，目的是迷惑、震惊或娱乐观众。这些素材可以全部混合在一起形成一个无厘头的交叉故事，也可以只是重复播放人物奇怪的手势。\nYTP支持多素材。",
+				_: "YouTube Poop(YTP)用于使用YTP类型中各种已知的效果来创建荒谬的视频。\nYTP是一种新达达主义的艺术形式，由大量视频剪辑而成的视频混剪组成，目的是迷惑、震惊或娱乐观众。这些素材可以全部混合在一起形成一个无厘头的交叉故事，也可以只是重复播放人物奇怪的手势。\nYTP支持多素材。",
 				constraint: "控制要生成的剪辑的长度",
 				clips: "要生成剪辑的数目",
 				effects: "指定YTP的效果",

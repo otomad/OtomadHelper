@@ -17,6 +17,7 @@ export default function ShellPage() {
 	const modes = ["otomadOrYtpmv", "ytp", "shupelunker"] as const;
 	type Mode = typeof modes[number];
 	const Page = pages[`./views/${getPagePath()}.tsx`] ?? EmptyPage;
+	const [uiScale] = selectConfig(c => c.settings.uiScale);
 
 	return (
 		<NavigationView
@@ -31,6 +32,7 @@ export default function ShellPage() {
 			transitionName={transition}
 			canBack={canBack()}
 			onBack={back}
+			style={{ zoom: uiScale === 100 ? undefined : uiScale / 100 }}
 		>
 			<Page />
 		</NavigationView>

@@ -2,7 +2,7 @@ import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
 
 export /* internal */ const stretches = [
 	{ id: "noStretching", icon: "prohibited" },
-	{ id: "flexingAndExtending", icon: "arrow_move" },
+	{ id: "flexingAndExtending", icon: "arrow_fit_both" },
 	{ id: "extendingOnly", icon: "arrow_fit" },
 	{ id: "flexingOnly", icon: "arrow_fit_in" },
 ] as const;
@@ -92,9 +92,15 @@ export default function Visual() {
 							<ToggleSwitch on={glissando} />
 						}
 					/>
-					<SettingsCard heading={t.audioVisual.mappingVelocity} caption={t.descriptions.audioVisual.mappingVelocity} icon="signal" type="button">
-						<ToggleSwitch on={mappingVelocity} />
-					</SettingsCard>
+					<Expander
+						heading={t.audioVisual.mappingVelocity}
+						caption={t.descriptions.audioVisual.mappingVelocity}
+						icon="signal"
+						type="button"
+						actions={
+							<ToggleSwitch on={mappingVelocity} />
+						}
+					/>
 					<SettingsCardToggleSwitch heading={t.audioVisual.transformOfx} caption={t.descriptions.audioVisual.transformOfx} icon="zoom_fit" on={transformOfx} />
 
 					<Subheader>{t.subheader.effects}</Subheader>

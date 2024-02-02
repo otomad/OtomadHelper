@@ -17,7 +17,7 @@ const English = {
 			ytp_full: "YouTube Poop",
 			mosh: "Mosh",
 			mosh_other: "Moshes",
-			mosh_full: "Datamoshing",
+			mosh_full: "Datamoshes",
 			tools: "Tools",
 			settings: "Settings",
 			prve: "PV Rhythm Visual Effect",
@@ -156,6 +156,8 @@ const English = {
 				dark: "Dark",
 				auto: "Auto",
 			},
+			uiScale: "UI scale",
+			devMode: "Developer mode",
 		},
 		descriptions: {
 			condition: "Specify when the following configuration will be applied",
@@ -167,7 +169,7 @@ const English = {
 				trim: "Intercept the generation time range of the score",
 				bpm: "Specify the beats per minute",
 				constraint: "Controls the note output length from the score",
-				encoding: "Specify the text encoding of the file",
+				encoding: "Specify the text encoding for reading the file",
 			},
 			audioVisual: {
 				stretch: "When on, the clip will be stretched instead of changing its duration",
@@ -197,7 +199,7 @@ const English = {
 				},
 			},
 			ytp: {
-				_: "YTP (YouTube Poop) is for creating nonsensical videos using various effects known in the YTP genre.\nYTP is a Neo-Dada art form consisting of video remixes that are edited from a large array of video clips in order to confuse, stun or amuse the viewer. The sources can be mashed all together into a nonsensical Crossover story, or just repeat footage of the characters gesticulating oddly.\nYTP supports multisource.",
+				_: "YouTube Poop (YTP) is for creating nonsensical videos using various effects known in the YTP genre.\nYTP is a Neo-Dada art form consisting of video remixes that are edited from a large array of video clips in order to confuse, stun or amuse the viewer. The sources can be mashed all together into a nonsensical Crossover story, or just repeat footage of the characters gesticulating oddly.\nYTP supports multisource.",
 				constraint: "Controls the length for the clip to generate",
 				clips: "The value of clips generated",
 				effects: "Specify the effects for YTP",

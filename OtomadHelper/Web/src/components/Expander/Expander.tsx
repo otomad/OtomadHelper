@@ -56,13 +56,15 @@ const ExpanderChild = styled.div`
 	}
 `;
 
-export default function Expander({ icon, heading, caption, actions, expanded = false, children, checkInfo, selectInfo }: FCP<PropsOf<typeof SettingsCard> & {
+export default function Expander({ icon, heading, caption, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, selectInfo }: FCP<PropsOf<typeof SettingsCard> & {
 	/** 展开器右侧的其它操作控件区域。 */
 	actions?: ReactNode;
 	/** 初始状态下是否已展开？ */
 	expanded?: boolean;
 	/** 展开器中的单选框或复选框的选中情况的显示文本，仅在展开器关闭时才会显示。 */
 	checkInfo?: string;
+	/** 无论展开器开启或关闭，一律显示选中情况的显示文本。 */
+	alwaysShowCheckInfo?: boolean;
 }>) {
 	const settingsCardProps = { icon, heading, caption, selectInfo };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
@@ -80,7 +82,7 @@ export default function Expander({ icon, heading, caption, actions, expanded = f
 			>
 				{actions}
 				{checkInfo && (
-					<CssTransition in={!internalExpanded}>
+					<CssTransition in={!internalExpanded || alwaysShowCheckInfo}>
 						<div className="check-info">{checkInfo}</div>
 					</CssTransition>
 				)}
