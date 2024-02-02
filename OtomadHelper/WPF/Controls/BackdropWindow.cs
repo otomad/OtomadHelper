@@ -109,7 +109,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 
 	protected void SetCurrentThemeResource(bool isDarkTheme) {
 		Resources.MergedDictionaries.Clear();
-		Resources.MergedDictionaries.Add(new() { Source = new($"pack://application:,,,/Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", UriKind.Absolute) });
+		Resources.MergedDictionaries.Add(new() { Source = new($"pack://application:,,,/OtomadHelper;component/Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", UriKind.Absolute) });
 	}
 
 	private void InitializeComponent() {

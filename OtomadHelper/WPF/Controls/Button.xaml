@@ -14,6 +14,7 @@
 			<Setter Property="BorderBrush" Value="{DynamicResource ControlElevation}" />
 			<Setter Property="Background" Value="{DynamicResource ControlBackground}" />
 			<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+			<Setter Property="FontSize" Value="14" />
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="Button">
@@ -21,7 +22,7 @@
 							Padding="8"
 							BorderBrush="{TemplateBinding BorderBrush}"
 							Background="{TemplateBinding Background}"
-							BorderThickness="1"
+							BorderThickness="{TemplateBinding BorderThickness}"
 							CornerRadius="4">
 							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
 						</Border>
@@ -37,10 +38,44 @@
 					<Setter Property="Background" Value="{DynamicResource ControlBackgroundTertiary}" />
 					<Setter Property="Foreground">
 						<Setter.Value>
-							<SolidColorBrush Color="{DynamicResource ForegroundColor}" Opacity="0.6063" />
+							<SolidColorBrush Color="{DynamicResource ForegroundColor}" Opacity="{DynamicResource ControlPressedOpacity}" />
 						</Setter.Value>
 					</Setter>
 				</Trigger>
+				<Trigger Property="IsDefault" Value="True">
+					<Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevation}" />
+					<Setter Property="BorderThickness" Value="0" />
+					<Setter Property="Background" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
+					<Setter Property="Foreground" Value="{DynamicResource TextOnAccentForegroundBrush}" />
+				</Trigger>
+				<MultiTrigger>
+					<MultiTrigger.Conditions>
+						<Condition Property="IsDefault" Value="True" />
+						<Condition Property="IsMouseOver" Value="True" />
+					</MultiTrigger.Conditions>
+					<Setter Property="Background">
+						<Setter.Value>
+							<SolidColorBrush Opacity="0.9" Color="{Binding Source={x:Static SystemParameters.WindowGlassColor}}" />
+						</Setter.Value>
+					</Setter>
+				</MultiTrigger>
+				<MultiTrigger>
+					<MultiTrigger.Conditions>
+						<Condition Property="IsDefault" Value="True" />
+						<Condition Property="IsPressed" Value="True" />
+					</MultiTrigger.Conditions>
+					<Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeOnAccent}" />
+					<Setter Property="Background">
+						<Setter.Value>
+							<SolidColorBrush Opacity="0.8" Color="{Binding Source={x:Static SystemParameters.WindowGlassColor}}" />
+						</Setter.Value>
+					</Setter>
+					<Setter Property="Foreground">
+						<Setter.Value>
+							<SolidColorBrush Color="{DynamicResource TextOnAccentForegroundColor}" Opacity="{DynamicResource ControlPressedOpacityOnAccent}" />
+						</Setter.Value>
+					</Setter>
+				</MultiTrigger>
 			</Style.Triggers>
 		</Style>
 	</UserControl.Resources>

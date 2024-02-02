@@ -24,7 +24,11 @@ public partial class MainDock : UserControl {
 		Dock = DockStyle.Fill;
 		//MainWindow window = new();
 		//window.Show();
-		ContentDialog.Show();
+		new ContentDialog("幸福倒计时", "即将升级 Windows 到最新版本！", new ContentDialogButtonItem[] {
+			new("草", DialogResult.Abort),
+			new("走", DialogResult.Retry),
+			new("忽略", DialogResult.Ignore, true),
+		}).ShowDialog();
 
 #if VEGAS_ENV
 		BackColor = Skins.Colors.ButtonFace;

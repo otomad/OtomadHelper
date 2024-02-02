@@ -1,6 +1,7 @@
 <ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:s="clr-namespace:System;assembly=mscorlib">
 	<Color x:Key="ForegroundColor">White</Color>
 	<SolidColorBrush x:Key="ForegroundBrush" Color="{DynamicResource ForegroundColor}" />
 	<SolidColorBrush x:Key="CardStroke" Color="#19000000" />
@@ -9,8 +10,17 @@
 	<SolidColorBrush x:Key="ControlBackgroundSecondary" Color="#15FFFFFF" />
 	<SolidColorBrush x:Key="ControlBackgroundTertiary" Color="#08FFFFFF" />
 	<SolidColorBrush x:Key="ControlStroke" Color="#11FFFFFF" />
+	<SolidColorBrush x:Key="ControlStrokeOnAccent" Color="#14FFFFFF" />
+	<s:Double x:Key="ControlPressedOpacity">0.786</s:Double>
+	<s:Double x:Key="ControlPressedOpacityOnAccent">0.5</s:Double>
 	<LinearGradientBrush x:Key="ControlElevation" StartPoint="0.5,0" EndPoint="0.5,1">
 		<GradientStop Color="#17FFFFFF" Offset="0"/>
 		<GradientStop Color="#11FFFFFF" Offset="0.1"/>
 	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="AccentControlElevation" StartPoint="0.5,0" EndPoint="0.5,1">
+		<GradientStop Color="#14FFFFFF" Offset="0.9"/>
+		<GradientStop Color="#23000000" Offset="1"/>
+	</LinearGradientBrush>
+	<Color x:Key="TextOnAccentForegroundColor">White</Color>
+	<SolidColorBrush x:Key="TextOnAccentForegroundBrush" Color="{DynamicResource TextOnAccentForegroundColor}" />
 </ResourceDictionary>

@@ -40,30 +40,47 @@
 		<Style TargetType="Button">
 			<Setter Property="Height" Value="32" />
 		</Style>
+
+		<Style TargetType="TextBlock" x:Key="ShadingIcon">
+			<Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol" />
+			<Setter Property="FontSize" Value="96" />
+			<Setter Property="Canvas.Left" Value="-15" />
+			<Setter Property="Canvas.Top" Value="-20" />
+			<Setter Property="Foreground">
+				<Setter.Value>
+					<SolidColorBrush Color="{DynamicResource ForegroundColor}" Opacity="0.2" />
+				</Setter.Value>
+			</Setter>
+			<Style.Triggers>
+				<EventTrigger RoutedEvent="Loaded">
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="00:00:02">
+								<DoubleAnimation.EasingFunction>
+									<CubicEase EasingMode="EaseInOut" />
+								</DoubleAnimation.EasingFunction>
+							</DoubleAnimation>
+						</Storyboard>
+					</BeginStoryboard>
+				</EventTrigger>
+			</Style.Triggers>
+		</Style>
 	</c:BackdropWindow.Resources>
-	
-	<StackPanel Orientation="Vertical">
-		<Border Style="{StaticResource ContentWrapper}">
-			<StackPanel Orientation="Vertical">
-				<TextBlock Style="{StaticResource Title}">Title</TextBlock>
-				<TextBlock Style="{StaticResource Body}">
-				This is body text. Windows 11 marks a visual evolution of the operating system. We have evolved our design language alongside with Fluent to create a design which is human, universal and truly feels like Windows. 
 
-				The design principles below have guided us throughout the journey of making Windows the best-in-class implementation of Fluent.
-				</TextBlock>
-			</StackPanel>
-		</Border>
-		<Border Style="{StaticResource ButtonGrid}">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="8" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-
-				<c:Button Grid.Column="0" Text="OK" Click="Button_Click" />
-				<c:Button Grid.Column="2" Text="Cancel" Click="Button_Click" />
-			</Grid>
-		</Border>
-	</StackPanel>
+	<Grid>
+		<Canvas>
+			<TextBlock Style="{StaticResource ShadingIcon}" Text="&#xe946;" />
+		</Canvas>
+		<StackPanel Orientation="Vertical">
+			<Border Style="{StaticResource ContentWrapper}">
+				<StackPanel Orientation="Vertical">
+					<TextBlock x:Name="TitleLbl" Style="{StaticResource Title}" />
+					<TextBlock x:Name="BodyLbl" Style="{StaticResource Body}" />
+				</StackPanel>
+			</Border>
+			<Border Style="{StaticResource ButtonGrid}">
+				<Grid x:Name="ButtonGrid" />
+			</Border>
+		</StackPanel>
+	</Grid>
 </c:BackdropWindow>
