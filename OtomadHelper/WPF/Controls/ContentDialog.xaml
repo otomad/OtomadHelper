@@ -42,7 +42,8 @@
 		</Style>
 
 		<Style TargetType="TextBlock" x:Key="ShadingIcon">
-			<Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol" />
+			<Setter Property="FontFamily" Value="pack://application:,,,/OtomadHelper;component/Resources/#Segoe Fluent Icons" />
+			<!--<Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol" />-->
 			<Setter Property="FontSize" Value="96" />
 			<Setter Property="Canvas.Left" Value="-15" />
 			<Setter Property="Canvas.Top" Value="-20" />

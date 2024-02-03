@@ -22,6 +22,7 @@ namespace OtomadHelper.WPF.Controls;
 /// <summary>
 /// Button.xaml 的交互逻辑
 /// </summary>
+[ContentProperty(nameof(Text))]
 public partial class Button : UserControl {
 	public Button() {
 		InitializeComponent();

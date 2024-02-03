@@ -23,4 +23,6 @@
 	</LinearGradientBrush>
 	<Color x:Key="TextOnAccentForegroundColor">White</Color>
 	<SolidColorBrush x:Key="TextOnAccentForegroundBrush" Color="{DynamicResource TextOnAccentForegroundColor}" />
+	<s:Double x:Key="AccentSecondaryOpacity">0.9</s:Double>
+	<s:Double x:Key="AccentTertiaryOpacity">0.8</s:Double>
 </ResourceDictionary>

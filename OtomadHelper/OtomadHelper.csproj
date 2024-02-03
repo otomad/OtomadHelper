@@ -153,6 +153,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\SegoeIcons.ttf" />
     <None Include="Test\app.manifest" />
   </ItemGroup>
   <ItemGroup>
@@ -179,9 +180,7 @@
       <Version>2.2.1</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="WPF\Controls\Button.xaml">
       <SubType>Designer</SubType>

@@ -1,4 +1,4 @@
-﻿# editorconfig.org
+# editorconfig.org
 root = true
 
 [*]
@@ -18,6 +18,11 @@ indent_style = space
 indent_size = 2
 
 [*.cs]
+charset = utf-8
+indent_style = tab
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
 
 # CS8632: 只能在 "#nullable" 注释上下文内的代码中使用可为 null 的引用类型的注释。
 dotnet_diagnostic.CS8632.severity = silent

@@ -21,6 +21,8 @@ using System.ComponentModel;
 using System.Windows.Shell;
 using OtomadHelper.Properties;
 using System.Diagnostics;
+using System.Reflection;
+using OtomadHelper.Module;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -109,7 +111,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 
 	protected void SetCurrentThemeResource(bool isDarkTheme) {
 		Resources.MergedDictionaries.Clear();
-		Resources.MergedDictionaries.Add(new() { Source = new($"pack://application:,,,/OtomadHelper;component/Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", UriKind.Absolute) });
+		Resources.MergedDictionaries.Add(new() { Source = new($"pack://application:,,,/{OtomadHelperModule.ASSEMBLY_NAME};component/Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", UriKind.Absolute) });
 	}
 
 	private void InitializeComponent() {
