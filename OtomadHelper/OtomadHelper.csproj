@@ -70,9 +70,6 @@
     <Reference Include="APNGLib">
       <HintPath>Libraries\APNGLib\APNGLib.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio">
-      <HintPath>Libraries\NAudio\NAudio.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="ScriptPortal.MediaSoftware.Skins">
@@ -177,6 +174,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>1.0.2088.41</Version>
+    </PackageReference>
+    <PackageReference Include="NAudio">
+      <Version>2.2.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
