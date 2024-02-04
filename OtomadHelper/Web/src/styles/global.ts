@@ -17,11 +17,35 @@ const GlobalStyle = createGlobalStyle<{
 	::before,
 	::after {
 		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} ${readyDuration(100)}, fill ${eases.easeOutMax} ${readyDuration(100)}, font-size ${eases.easeOutMax} ${readyDuration(250)};
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", "Microsoft YaHei UI", sans-serif, system-ui;
+		font-family: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", sans-serif;
 		user-select: none;
 		box-sizing: border-box;
 		-webkit-tap-highlight-color: transparent;
 		scroll-behavior: smooth;
+	}
+
+	:lang(zh-Hant) {
+		&,
+		&::before,
+		&::after {
+			font-family: "Segoe UI Variable Text", "Segoe UI", "Microsoft JhengHei", "Microsoft YaHei UI", sans-serif;
+		}
+	}
+
+	:lang(ja) {
+		&,
+		&::before,
+		&::after {
+			font-family: "Segoe UI Variable Text", "Segoe UI", "Yu Gothic UI", "Meiryo UI", "MS UI Gothic", "Microsoft YaHei UI", sans-serif;
+		}
+	}
+
+	:lang(ko) {
+		&,
+		&::before,
+		&::after {
+			font-family: "Segoe UI Variable Text", "Segoe UI", "Malgun Gothic", "Microsoft YaHei UI", sans-serif;
+		}
 	}
 
 	:focus,

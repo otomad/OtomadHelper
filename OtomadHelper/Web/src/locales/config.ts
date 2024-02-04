@@ -3,6 +3,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { spacing } from "pangu";
 import { initReactI18next } from "react-i18next";
 import en from "./English";
+import ja from "./Japanese";
 import zhCN from "./SChinese";
 
 i18n
@@ -38,6 +39,7 @@ i18n
 		resources: {
 			en,
 			"zh-CN": zhCN,
+			ja,
 		},
 	});
 

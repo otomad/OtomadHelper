@@ -54,7 +54,9 @@ const English = {
 		},
 		score: {
 			midi: "MIDI",
+			midiFile: "MIDI Sequence File",
 			ust: "UST",
+			ustFile: "UTAU Sequence Text File",
 			refOtherTracks: "Refer to other tracks",
 			pureNotes: "Pure notes",
 			encoding: "Encoding",
@@ -102,7 +104,7 @@ const English = {
 				_: "Tunning",
 				tuningMethod: "Tuning method",
 				stretchAttributes: "Stretch attributes",
-				alternativeForOutOrRange: "If out of range",
+				alternativeForOutOfRange: "If out of range",
 				resample: "Resample",
 				preserveFormant: "Preserve formant",
 				basePitch: "Base pitch",
@@ -149,6 +151,7 @@ const English = {
 				_: "Language",
 				en: "English",
 				"zh-CN": "Simplified Chinese",
+				ja: "Japanese",
 			},
 			colorScheme: {
 				_: "Color scheme",
@@ -199,7 +202,7 @@ const English = {
 				},
 			},
 			ytp: {
-				_: "YouTube Poop (YTP) is for creating nonsensical videos using various effects known in the YTP genre.\nYTP is a Neo-Dada art form consisting of video remixes that are edited from a large array of video clips in order to confuse, stun or amuse the viewer. The sources can be mashed all together into a nonsensical Crossover story, or just repeat footage of the characters gesticulating oddly.\nYTP supports multisource.",
+				_: "YouTube Poop (YTP) is for creating nonsensical videos using various effects known in the YTP genre.\nYTP is a Neo-Dada art form, is absurdist remixes that ape and mock the lowest technical and aesthetic standards of remix culture to comment on remix culture itself. It consists of video remixes that are edited from a large array of video clips in order to confuse, stun or amuse the viewer. The sources can be mashed all together into a nonsensical Crossover story, or just repeat footage of the characters gesticulating oddly.\nYTP supports multisource.",
 				constraint: "Controls the length for the clip to generate",
 				clips: "The value of clips generated",
 				effects: "Specify the effects for YTP",
