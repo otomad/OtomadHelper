@@ -1,6 +1,6 @@
 import type { StoreApi, UseBoundStore } from "zustand";
 
-export function useStoreSelector<Store extends UseBoundStore<StoreApi<Any>>, Field>(store: Store, path: (state: ZustandState<Store>) => Field) {
+function getStorePath<Store extends UseBoundStore<StoreApi<Any>>, Field>(store: Store, path: (state: ZustandState<Store>) => Field) {
 	type States = ZustandState<Store>;
 	const pathContents = path.toString().split("=>").map(i => i.replaceAll(/\s/g, ""));
 	const rootParamName = pathContents[0].replace(/^\(|\)$/g, "").split(",")[0];
@@ -14,8 +14,27 @@ export function useStoreSelector<Store extends UseBoundStore<StoreApi<Any>>, Fie
 		return parent;
 	};
 
+	return { getParent, lastPath };
+}
+
+export function useStoreSelector<Store extends UseBoundStore<StoreApi<Any>>, Field>(store: Store, path: (state: ZustandState<Store>) => Field) {
+	type States = ZustandState<Store>;
+	const { getParent, lastPath } = getStorePath(store, path);
+
 	const getter = getParent(store())[lastPath];
 	const setter = (value: unknown) => store.setState((root: States) => void (getParent(root)[lastPath] =
 		typeof value === "function" ? value(getter) : value));
 	return [getter, setter] as StatePropertyNonNull<Field>;
+}
+
+export function subscribeStoreWithSelector<Store extends UseBoundStore<StoreApi<Any>>, Field>(store: Store, path: (state: ZustandState<Store>) => Field, listener: (prop: Field, prevProp: Field, state: ZustandState<Store>, prevState: ZustandState<Store>) => void) {
+	type States = ZustandState<Store>;
+	const { getParent, lastPath } = getStorePath(store, path);
+
+	store.subscribe((state: States, prevState: States) => {
+		const currentProp = getParent(state)[lastPath];
+		const previousProp = getParent(prevState)[lastPath];
+		if (currentProp !== previousProp)
+			listener(currentProp, previousProp, state, prevState);
+	});
 }

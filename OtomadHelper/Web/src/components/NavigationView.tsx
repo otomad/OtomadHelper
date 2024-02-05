@@ -442,12 +442,15 @@ interface NavBrItem {
 }
 
 type PaneDisplayMode = "expanded" | "compact" | "minimal";
-const getPaneDisplayMode = (): PaneDisplayMode =>
-	window.innerWidth < 641 ? "minimal" :
-	window.innerWidth < 1008 ? "compact" : "expanded";
+const getPaneDisplayMode = (zoom: number = 1): PaneDisplayMode =>
+	window.innerWidth < 641 * zoom ? "minimal" :
+	window.innerWidth < 1008 * zoom ? "compact" : "expanded";
 const usePaneDisplayMode = () => {
-	const [paneDisplayMode, setPaneDisplayMode] = useState<PaneDisplayMode>(getPaneDisplayMode());
-	useEventListener(window, "resize", () => setPaneDisplayMode(getPaneDisplayMode()));
+	const { getUiScale1 } = useConfigStore().settings;
+	const [paneDisplayMode, setPaneDisplayMode] = useState<PaneDisplayMode>(getPaneDisplayMode(getUiScale1()));
+	const onResize = () => setPaneDisplayMode(getPaneDisplayMode(getUiScale1()));
+	useEventListener(window, "resize", onResize);
+	subscribeStoreWithSelector(useConfigStore, c => c.settings.uiScale, onResize);
 	return paneDisplayMode;
 };
 
