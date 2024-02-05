@@ -23,10 +23,10 @@ export default function Ytp() {
 				</EmptyMessage>
 			) : (
 				<>
-					<Subheader>{t.subheader.parameters}</Subheader>
+					<Subheader>{t.subheaders.parameters}</Subheader>
 					<SettingsCard heading={t.ytp.constraint} caption={t.descriptions.ytp.constraint} icon="constraint" />
 					<SettingsCard heading={t.ytp.clips} caption={t.descriptions.ytp.clips} icon="number" />
-					<Subheader>{t.subheader.effects}</Subheader>
+					<Subheader>{t.subheaders.effects}</Subheader>
 					<Expander heading={t.ytp.effects} caption={t.descriptions.ytp.effects} icon="sparkle" checkInfo={selectEffects[0]}>
 						<GridView current={selectEffects}>
 							{effects.map(name => (

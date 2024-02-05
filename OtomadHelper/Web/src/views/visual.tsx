@@ -103,13 +103,13 @@ export default function Visual() {
 					/>
 					<SettingsCardToggleSwitch heading={t.audioVisual.transformOfx} caption={t.descriptions.audioVisual.transformOfx} icon="zoom_fit" on={transformOfx} />
 
-					<Subheader>{t.subheader.effects}</Subheader>
+					<Subheader>{t.subheaders.effects}</Subheader>
 					<SettingsCard heading={t.titles.prve} caption={t.descriptions.audioVisual.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")} />
 					<SettingsCard heading={t.titles.staff} caption={t.descriptions.audioVisual.effects.staff} type="button" icon="g_clef">
 						<ToggleSwitch on={enableStaffVisualizer} />
 					</SettingsCard>
 
-					<Subheader>{t.subheader.parameters}</Subheader>
+					<Subheader>{t.subheaders.parameters}</Subheader>
 				</>
 			)}
 		</div>

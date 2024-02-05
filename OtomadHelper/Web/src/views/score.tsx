@@ -29,7 +29,7 @@ export default function Score() {
 				</TabBar>
 			</Card>
 
-			<Subheader>{t.subheader.config}</Subheader>
+			<Subheader>{t.subheaders.config}</Subheader>
 			<Expander heading={t.source.trim} caption={t.descriptions.score.trim} icon="trim" />
 			<ExpanderRadio
 				heading={t.score.encoding}

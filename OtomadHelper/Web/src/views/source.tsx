@@ -42,8 +42,8 @@ export default function Source() {
 				iconField="icon"
 			/>
 
-			<Subheader>{t.subheader.moreOptions}</Subheader>
-			<Expander heading={t.subheader.advanced} expanded icon="more">
+			<Subheader>{t.subheaders.moreOptions}</Subheader>
+			<Expander heading={t.subheaders.advanced} expanded icon="more">
 				<ToggleSwitch on={belowTopAdjustmentTracks}>{t.source.belowTopAdjustmentTracks}</ToggleSwitch>
 				<ToggleSwitch on={removeSourceEventsAfterCompletion}>{t.source.removeSourceEventsAfterCompletion}</ToggleSwitch>
 				<ToggleSwitch on={selectAllEventsGenerated}>{t.source.selectAllEventsGenerated}</ToggleSwitch>
