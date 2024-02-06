@@ -7,13 +7,6 @@ import eases from "styles/eases";
 import effects from "styles/effects";
 import mixins from "styles/mixins";
 
-export { eases };
-
-export const styles = {
-	mixins,
-	effects,
-};
-
 /**
  * 调用主题色。
  * @param cssVarName - 颜色的 CSS 属性名称，不必加前面的“--”。也可以是 white 或 black。
@@ -41,4 +34,21 @@ export function c(cssVarName: string & {} | "white" | "black" | ColorNames, alph
 export const ifColorScheme = {
 	light: '[data-scheme="light"]',
 	dark: '[data-scheme="dark"]',
+};
+
+/**
+ * 根据字符串或数字获取对应的 CSS 样式值。
+ * @param value - 如果传入的值为数字，则返回其对应像素值；如果传入的值为字符串，则保留原字符串值。
+ * @returns 对应的 CSS 样式值。
+ */
+function toValue(value: string | number) {
+	return typeof value === "number" ? value + "px" : value;
+}
+
+export { eases };
+
+export const styles = {
+	mixins,
+	effects,
+	toValue,
 };

@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, captionField, view = false, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, captionField, view = false, $itemWidth, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
 	/** 选项列表。 */
 	items: readonly T[];
 	/** 当前选中值的 ID。 */
@@ -33,8 +33,10 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	imageField?: FieldType<T> | ((item: T) => ReactNode);
 	/** 单选项目的详细描述字段。 */
 	captionField?: FieldType<T>;
-	/** 使用列表视图组件而不是单选框。 */
+	/** 使用列表/平铺/网格视图组件而不是单选框。 */
 	view?: "list" | "tile" | "grid" | false;
+	/** 使用网格视图组件时子元素图片的宽度。 */
+	$itemWidth?: number;
 }>) {
 	const items = _items as AnyObject[];
 	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "image" | "caption"): Any => {
@@ -63,9 +65,9 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 			{!view ? items.map(item =>
 				<RadioButton value={[value as T, setValue]} id={getItemField(item, "id")} key={getItemField(item, "id")}>{getItemField(item, "name")}</RadioButton>) :
 			view === "grid" ? (
-				<GridView current={[value as T, setValue]}>
+				<GridView current={[value as T, setValue]} $itemWidth={$itemWidth}>
 					{items.map(item =>
-						<GridViewItem id={getItemField(item, "id")} key={getItemField(item, "id")} image={getItemField(item, "image")}>{getItemField(item, "name")}</GridViewItem>)}
+						<GridViewItem id={getItemField(item, "id")} key={getItemField(item, "id")} image={getItemField(item, "image")} icon={getItemField(item, "icon")}>{getItemField(item, "name")}</GridViewItem>)}
 				</GridView>
 			) : (
 				<ListView view="tile" current={[value as T, setValue]}>

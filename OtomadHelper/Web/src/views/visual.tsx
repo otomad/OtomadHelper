@@ -1,3 +1,7 @@
+import legatoPortatoImage from "assets/images/legato_config/legato_portato.png";
+import legatoUnlimitedImage from "assets/images/legato_config/legato_unlimited.png";
+import legatoUpTo1BarImage from "assets/images/legato_config/legato_up_to_1bar.png";
+import legatoUpTo1BeatImage from "assets/images/legato_config/legato_up_to_1beat.png";
 import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
 
 export /* internal */ const stretches = [
@@ -7,10 +11,10 @@ export /* internal */ const stretches = [
 	{ id: "flexingOnly", icon: "arrow_fit_in" },
 ] as const;
 export /* internal */ const legatos = [
-	{ id: "portato", icon: "prohibited" },
-	{ id: "upToOneBeat", icon: "quarter_note" },
-	{ id: "upToOneBar", icon: "music_bar" },
-	{ id: "unlimited", icon: "infinity" },
+	{ id: "portato", icon: "prohibited", image: legatoPortatoImage },
+	{ id: "upToOneBeat", icon: "quarter_note", image: legatoUpTo1BeatImage },
+	{ id: "upToOneBar", icon: "music_bar", image: legatoUpTo1BarImage },
+	{ id: "unlimited", icon: "infinity", image: legatoUnlimitedImage },
 ] as const;
 
 export default function Visual() {
@@ -77,10 +81,12 @@ export default function Visual() {
 						icon="legato"
 						items={legatos}
 						value={legato as StateProperty<string>}
-						view="tile"
+						view="grid"
 						idField="id"
 						nameField={t.audioVisual.legato}
 						iconField="icon"
+						imageField="image"
+						$itemWidth={566 / 196 * GRID_VIEW_ITEM_HEIGHT}
 					/>
 					<SettingsCardToggleSwitch heading={t.audioVisual.multitrackForChords} caption={t.descriptions.audioVisual.multitrackForChords} icon="chords" on={multitrackForChords} />
 					<SettingsCardToggleSwitch heading={t.audioVisual.createGroups} caption={t.descriptions.audioVisual.createGroups} icon="group_object" on={createGroups} />

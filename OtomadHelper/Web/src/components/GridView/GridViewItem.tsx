@@ -1,7 +1,9 @@
+export const GRID_VIEW_ITEM_HEIGHT = 112;
+
 const StyledGridViewItem = styled.button`
 	:where(.image-wrapper) {
 		width: 100%;
-		height: 112px;
+		height: ${GRID_VIEW_ITEM_HEIGHT}px;
 	}
 
 	.base {
@@ -11,8 +13,11 @@ const StyledGridViewItem = styled.button`
 	}
 
 	.heading {
-		margin-top: 2px;
+		margin: 5px 0;
 		text-align: left;
+		display: flex;
+		align-items: center;
+		gap: 10px;
 	}
 
 	.selection {
@@ -52,9 +57,16 @@ const StyledGridViewItem = styled.button`
 	${styles.mixins.forwardFocusRing()};
 `;
 
-export default function GridViewItem({ image, id: _id, active = false, children, className, ...htmlAttrs }: FCP<{
+const DefaultImage = styled.img`
+	${styles.mixins.square("100%")};
+	object-fit: cover;
+`;
+
+export default function GridViewItem({ image, icon, id: _id, active = false, children, className, ...htmlAttrs }: FCP<{
 	/** 图片。 */
 	image?: string | ReactNode;
+	/** 图标。 */
+	icon?: string;
 	/** 标识符。 */
 	id: string;
 	/** 是否活跃状态？ */
@@ -64,11 +76,14 @@ export default function GridViewItem({ image, id: _id, active = false, children,
 		<StyledGridViewItem className={[className, { active }]} tabIndex={0} {...htmlAttrs}>
 			<div className="base">
 				<div className="image-wrapper">
-					{typeof image === "string" ? <img src={image} /> : image}
+					{typeof image === "string" ? <DefaultImage src={image} draggable={false} /> : image}
 				</div>
 				<div className="selection" />
 			</div>
-			<p className="heading">{children}</p>
+			<div className="heading">
+				{icon && <Icon name={icon} />}
+				<p>{children}</p>
+			</div>
 		</StyledGridViewItem>
 	);
 }
