@@ -17,15 +17,18 @@ export default function Score() {
 	const bpmUsing = selectConfig(c => c.score.bpmUsing);
 	const [timeSignature] = selectConfig(c => c.score.timeSignature);
 	const constraintNoteLength = selectConfig(c => c.score.constraintNoteLength);
+	const getEncodingName = useCallback((value: string | undefined) =>
+		value === "ANSI" ? `${t.systemDefault} (${value})` : value!, []);
 
 	return (
 		<div className="container">
 			<Card className="media-pool">
 				<TabBar current={format}>
 					<TabItem id="midi" icon="midi">{t.score.midi}</TabItem>
-					<TabItem id="ust" icon="ust">{t.score.ust}</TabItem>
+					<TabItem id="st" icon="ust">{t.score.st}</TabItem>
 					<TabItem id="refOtherTracks" icon="ref_other_tracks">{t.score.refOtherTracks}</TabItem>
 					<TabItem id="pureNotes" icon="quarter_note">{t.score.pureNotes}</TabItem>
+					<TabItem id="tts" icon="narrator">{t.score.tts}</TabItem>
 				</TabBar>
 			</Card>
 
@@ -38,7 +41,8 @@ export default function Score() {
 				items={encodings}
 				value={encoding}
 				idField
-				nameField
+				nameField={getEncodingName}
+				checkInfoCondition={getEncodingName}
 			/>
 			<ExpanderRadio
 				heading={t.score.bpm}

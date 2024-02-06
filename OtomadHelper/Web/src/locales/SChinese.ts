@@ -10,8 +10,7 @@ const SChinese = {
 			visual: "画面",
 			track: "轨道",
 			sonar: "声呐",
-			notation: "记谱",
-			notation_full: "音高记谱法",
+			lyrics: "歌词",
 			shupelunker: "原音系",
 			shupelunker_full: "原音系战法",
 			ytp: "YTP",
@@ -45,6 +44,9 @@ const SChinese = {
 		enable: "启用",
 		learnMore: "了解更多",
 		condition: "条件",
+		underConstruction: "功能研发中⋯⋯",
+		allFiles: "所有文件",
+		systemDefault: "系统默认",
 		subheaders: {
 			moreOptions: "更多选项",
 			advanced: "高级",
@@ -55,9 +57,11 @@ const SChinese = {
 		score: {
 			midi: "MIDI",
 			midiFile: "MIDI 序列文件",
-			ust: "UST",
+			st: "序列文本",
 			ustFile: "UTAU 序列文本文件",
+			vsqFile: "Vocaloid 序列文件",
 			refOtherTracks: "引用其它轨道",
+			tts: "文字转语音",
 			pureNotes: "纯音符",
 			encoding: "编码",
 			bpm: {
@@ -104,7 +108,7 @@ const SChinese = {
 				_: "调音",
 				tuningMethod: "调音方法",
 				stretchAttributes: "拉伸属性",
-				alternativeForOutOfRange: "超出音域替代方法",
+				alternativeForExceedsTheRange: "超出音域替代方法",
 				resample: "重采样音频",
 				preserveFormant: "保持共振峰",
 				basePitch: "原始音高",
@@ -147,20 +151,30 @@ const SChinese = {
 			},
 		},
 		settings: {
+			about: {
+				_: "关于",
+				checkForUpdates: "检查更新",
+			},
 			language: {
 				_: "语言",
 				en: "英语",
 				"zh-CN": "简体中文",
 				ja: "日语",
 			},
-			colorScheme: {
-				_: "配色方案",
-				light: "浅色",
-				dark: "深色",
-				auto: "自动",
+			appearance: {
+				_: "外观",
+				colorScheme: {
+					_: "配色方案",
+					light: "浅色",
+					dark: "深色",
+					auto: "自动",
+				},
+				uiScale: "界面缩放",
 			},
-			uiScale: "界面缩放",
-			devMode: "开发者模式",
+			dev: {
+				_: "开发",
+				devMode: "开发者模式",
+			},
 		},
 		descriptions: {
 			condition: "指定当满足何条件时才会应用下述配置",

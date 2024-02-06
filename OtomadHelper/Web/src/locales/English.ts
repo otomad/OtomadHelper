@@ -9,8 +9,7 @@ const English = {
 			track: "Track",
 			track_other: "Tracks",
 			sonar: "Sonar",
-			notation: "Notation",
-			notation_full: "Pitch Notation",
+			lyrics: "Lyrics",
 			shupelunker: "Shupelunker",
 			shupelunker_full: "Shupelunker Tactics",
 			ytp: "YTP",
@@ -45,6 +44,9 @@ const English = {
 		enable: "Enable",
 		learnMore: "Learn more",
 		condition: "Condition",
+		underConstruction: "Under construction…",
+		allFiles: "All Files",
+		systemDefault: "System default",
 		subheaders: {
 			moreOptions: "More options",
 			advanced: "Advanced",
@@ -54,10 +56,12 @@ const English = {
 		},
 		score: {
 			midi: "MIDI",
-			midiFile: "MIDI Sequence File",
-			ust: "UST",
-			ustFile: "UTAU Sequence Text File",
+			midiFile: "MIDI Sequence Files",
+			st: "Sequence text",
+			ustFile: "UTAU/OpenUTAU Sequence Text Files",
+			vsqFile: "Vocaloid Sequence Files",
 			refOtherTracks: "Refer to other tracks",
+			tts: "Text to speech",
 			pureNotes: "Pure notes",
 			encoding: "Encoding",
 			bpm: {
@@ -104,7 +108,7 @@ const English = {
 				_: "Tunning",
 				tuningMethod: "Tuning method",
 				stretchAttributes: "Stretch attributes",
-				alternativeForOutOfRange: "If out of range",
+				alternativeForExceedsTheRange: "If exceeds the range",
 				resample: "Resample",
 				preserveFormant: "Preserve formant",
 				basePitch: "Base pitch",
@@ -147,20 +151,30 @@ const English = {
 			},
 		},
 		settings: {
+			about: {
+				_: "About",
+				checkForUpdates: "Check for updates",
+			},
 			language: {
 				_: "Language",
 				en: "English",
 				"zh-CN": "Simplified Chinese",
 				ja: "Japanese",
 			},
-			colorScheme: {
-				_: "Color scheme",
-				light: "Light",
-				dark: "Dark",
-				auto: "Auto",
+			appearance: {
+				_: "Appearance",
+				colorScheme: {
+					_: "Color scheme",
+					light: "Light",
+					dark: "Dark",
+					auto: "Auto",
+				},
+				uiScale: "UI scale",
 			},
-			uiScale: "UI scale",
-			devMode: "Developer mode",
+			dev: {
+				_: "Dev",
+				devMode: "Developer mode",
+			},
 		},
 		descriptions: {
 			condition: "Specify when the following configuration will be applied",
