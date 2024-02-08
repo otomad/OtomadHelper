@@ -8,6 +8,7 @@ export default function Settings() {
 	const schemes = ["light", "dark", "auto"] as const;
 	const { scheme, setScheme } = useColorModeStore();
 	const uiScale = selectConfig(c => c.settings.uiScale);
+	const hideFeatureTips = selectConfig(c => c.settings.hideFeatureTips);
 	const devMode = selectConfig(c => c.settings.devMode);
 
 	return (
@@ -52,6 +53,9 @@ export default function Settings() {
 					<Slider value={uiScale} min={50} max={200} defaultValue={100} step={1} />
 				</ExpanderChildWrapper>
 			</Expander>
+
+			<Subheader>{t.subheaders.config}</Subheader>
+			<SettingsCardToggleSwitch heading={t.settings.config.hideFeatureTips} icon="chat_help_off" on={hideFeatureTips} />
 
 			<Subheader>{t.settings.dev}</Subheader>
 			<SettingsCardToggleSwitch heading={t.settings.dev.devMode} icon="devtools" on={devMode} />

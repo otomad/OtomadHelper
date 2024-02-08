@@ -11,6 +11,9 @@ export default function SettingsPageControl({ image, learnMoreLink, children }: 
 	/** “了解更多”链接地址。 */
 	learnMoreLink?: string;
 }>) {
+	const [hideFeatureTips] = selectConfig(c => c.settings.hideFeatureTips);
+	if (hideFeatureTips) return;
+
 	const LearnMore = learnMoreLink ? OpenLink : "a";
 
 	return (

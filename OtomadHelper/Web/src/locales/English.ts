@@ -50,7 +50,7 @@ const English = {
 		subheaders: {
 			moreOptions: "More options",
 			advanced: "Advanced",
-			config: "Config",
+			config: "Configuration",
 			parameters: "Parameters",
 			effects: "Effects",
 		},
@@ -170,6 +170,9 @@ const English = {
 					auto: "Auto",
 				},
 				uiScale: "UI scale",
+			},
+			config: {
+				hideFeatureTips: "Hide feature tips",
 			},
 			dev: {
 				_: "Dev",

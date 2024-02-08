@@ -171,6 +171,9 @@ const SChinese = {
 				},
 				uiScale: "界面缩放",
 			},
+			config: {
+				hideFeatureTips: "隐藏功能贴士",
+			},
 			dev: {
 				_: "开发",
 				devMode: "开发者模式",
