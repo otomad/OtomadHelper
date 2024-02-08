@@ -15,6 +15,9 @@ export default function Settings() {
 			<Expander heading={t.settings.about} icon="info">
 				<ExpanderChildWrapper>
 					<p>Otomad Helper<br />v7.0</p>
+					<div>
+						<OpenLink>仓库地址</OpenLink>
+					</div>
 					<Button>{t.settings.about.checkForUpdates}</Button>
 				</ExpanderChildWrapper>
 			</Expander>

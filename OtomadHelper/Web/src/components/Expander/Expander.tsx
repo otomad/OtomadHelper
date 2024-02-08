@@ -1,7 +1,9 @@
-const ExpanderParent = styled(SettingsCard)<{
+const ExpanderParent = styled(SettingsCard) <{
 	/** 已展开？ */
 	$expanded?: boolean;
 }>`
+	backdrop-filter: blur(4px);
+
 	.check-info {
 		&.exit-active,
 		&.exit-done {
@@ -27,6 +29,10 @@ const ExpanderParent = styled(SettingsCard)<{
 		`;
 		return $expanded && css`
 			${sharpBottom};
+
+			position: sticky;
+			top: -1px;
+			z-index: 5;
 
 			> .base {
 				${sharpBottom};

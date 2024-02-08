@@ -11,6 +11,8 @@ export default function SettingsPageControl({ image, learnMoreLink, children }: 
 	/** “了解更多”链接地址。 */
 	learnMoreLink?: string;
 }>) {
+	const LearnMore = learnMoreLink ? OpenLink : "a";
+
 	return (
 		<StyledSettingsPageControl>
 			<SettingsPageControlPreviewImage image={image} />
@@ -19,10 +21,7 @@ export default function SettingsPageControl({ image, learnMoreLink, children }: 
 				{learnMoreLink !== undefined && (
 					<>
 						<br /><br />
-						{learnMoreLink ?
-							<a href={learnMoreLink} target="_blank" rel="noreferrer">{t.learnMore}</a> :
-							<a>{t.learnMore}</a>
-						}
+						<LearnMore>{t.learnMore}</LearnMore>
 					</>
 				)}
 			</p>

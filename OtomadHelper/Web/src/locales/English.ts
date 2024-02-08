@@ -221,6 +221,11 @@ const English = {
 				clips: "The value of clips generated",
 				effects: "Specify the effects for YTP",
 			},
+			mosh: {
+				normal: "Datamosh is a technique of damaging clips to create glitchy effects.",
+				glitchy: "Ða̵̝̻͔͎͋̇͑̆ƭą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍₥o̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́ƨλ ïƨ á ƭèçλñï9úè ôƒ δá₥áϱïñϱ çℓïƥƨ ƭô çřèáƭè ϱℓïƭçλ¥ èƒƒèçƭƨ.",
+				additional: "In video art, one technique used is datamoshing. Where two videos are interleaved so intermediate frames are interpolated from two separate sources. And exploits the difference in how the separate video codecs process motion and color information.",
+			},
 		},
 		empty: {
 			disabled: {

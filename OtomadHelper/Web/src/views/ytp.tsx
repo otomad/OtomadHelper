@@ -1,7 +1,7 @@
 import ytpImage from "assets/images/yoooo_a_boom.jpg";
 import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
 
-const effects = ["chorus", "changePitch", "vibrato", "reverse", "delay", "changeSpeed", "changeHue", "rotateHue", "monochrome", "negative", "repeatRapidly", "randomTuning", "upsize", "spherize", "mirror", "highContrast", "oversaturation", "emphasizeThrice"];
+const effects = ["chorus", "delay", "changePitch", "reverse", "changeSpeed", "vibrato", "changeHue", "rotateHue", "monochrome", "negative", "repeatRapidly", "randomTuning", "upsize", "spherize", "mirror", "highContrast", "oversaturation", "emphasizeThrice"];
 
 export default function Ytp() {
 	const [enabled, setEnabled] = selectConfig(c => c.ytp.enabled);
