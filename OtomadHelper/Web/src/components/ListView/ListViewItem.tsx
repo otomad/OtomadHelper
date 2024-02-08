@@ -74,7 +74,7 @@ export default function ListViewItem({ image, icon, id: _id, active = false, cap
 	active?: boolean;
 	/** 详细描述。 */
 	caption?: ReactNode;
-}, HTMLButtonElement>) {
+}, "button">) {
 	return (
 		<StyledListViewItem className={[className, { active }]} tabIndex={0} {...htmlAttrs}>
 			<div className="base">

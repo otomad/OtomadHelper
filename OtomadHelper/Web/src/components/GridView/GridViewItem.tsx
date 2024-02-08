@@ -71,7 +71,7 @@ export default function GridViewItem({ image, icon, id: _id, active = false, chi
 	id: string;
 	/** 是否活跃状态？ */
 	active?: boolean;
-}, HTMLButtonElement>) {
+}, "button">) {
 	return (
 		<StyledGridViewItem className={[className, { active }]} tabIndex={0} {...htmlAttrs}>
 			<div className="base">

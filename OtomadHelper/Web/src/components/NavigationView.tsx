@@ -469,7 +469,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	canBack?: boolean;
 	/** 点击返回按钮事件。 */
 	onBack?: () => void;
-}, HTMLDivElement>) {
+}, "div">) {
 	const currentNavTab = useStateSelector(currentNav, nav => nav[0], value => [value]);
 	const pagePath = currentNav.join("/");
 	const responsive = usePaneDisplayMode();

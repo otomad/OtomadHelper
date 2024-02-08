@@ -3,6 +3,10 @@ const StyledSettingsPageControl = styled.div`
 	gap: 16px;
 	margin-bottom: 16px;
 	padding: 0 1px;
+
+	p:is(:lang(zh), :lang(ja), :lang(ko)) {
+		text-align: justify;
+	}
 `;
 
 export default function SettingsPageControl({ image, learnMoreLink, children }: FCP<{

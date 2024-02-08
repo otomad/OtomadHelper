@@ -29,9 +29,9 @@ declare global {
 	/**
 	 * React Hook 风格函数式组件类型。
 	 * @template P - 组件的 Props。
-	 * @template E - 继承某个 HTML 原生元素的所有 Attrs。
+	 * @template T - 继承某个 HTML 原生元素的所有 Attrs。
 	 */
-	export type FC<P = {}, E extends Element | null = null> = React.FC<FCP<P, E>>;
+	export type FC<P = {}, T extends string | null = null> = React.FC<FCP<P, T>>;
 
 	type GetTagFromElement<E> = { [T in keyof HTMLElementTagNameMap]: HTMLElementTagNameMap[T] extends E ? E extends HTMLElementTagNameMap[T] ? T : never : never }[keyof HTMLElementTagNameMap];
 	type GetAttributesFromTag<T> = React.ReactDOM[T] extends React.DetailedHTMLFactory<infer A, Any> ? A : never;
@@ -39,11 +39,20 @@ declare global {
 
 	/**
 	 * React Hook 风格函数式组件的 Props 类型。
+	 * @deprecated
 	 * @template P - 组件的 Props。
 	 * @template E - 继承某个 HTML 原生元素的所有 Attrs。
 	 */
-	export type FCP<P = {}, E extends Element | null = null> = Override<
+	export type FCP_Element<P = {}, E extends Element | null = null> = Override<
 		E extends null ? { children?: ReactNode } : GetAttributesFromElement<E>, P>;
+
+	/**
+	 * React Hook 风格函数式组件的 Props 类型。
+	 * @template P - 组件的 Props。
+	 * @template T - 继承某个 HTML 原生元素的所有 Attrs。
+	 */
+	export type FCP<P = {}, T extends string | null = null> = Override<
+		T extends null ? { children?: ReactNode } : GetAttributesFromTag<T>, P>;
 
 	/**
 	 * React useState 中 setter 函数的类型。

@@ -47,7 +47,7 @@ export default forwardRef(function Badge({ children, status = "info", hidden, ..
 	status?: Status;
 	/** 隐藏？ */
 	hidden?: boolean;
-}, HTMLDivElement>, ref: ForwardedRef<HTMLDivElement>) {
+}, "div">, ref: ForwardedRef<HTMLDivElement>) {
 	return (
 		<CssTransition in={!hidden} unmountOnExit appear>
 			<StyledBadge $status={status} ref={ref} {...htmlAttrs}>

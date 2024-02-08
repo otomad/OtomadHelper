@@ -75,7 +75,7 @@ export default function SettingsCard({
 	trailingIcon?: string | boolean;
 	/** 组件形态。 */
 	type?: "container" | "button" | "expander";
-}, HTMLElement>) {
+}, "div">) {
 	trailingIcon ??= type === "button" ? "chevron_right" :
 		type === "expander" ? "chevron_down" : undefined;
 

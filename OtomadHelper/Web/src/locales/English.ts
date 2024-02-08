@@ -160,6 +160,7 @@ const English = {
 				en: "English",
 				"zh-CN": "Simplified Chinese",
 				ja: "Japanese",
+				vi: "Vietnamese",
 			},
 			appearance: {
 				_: "Appearance",
@@ -217,6 +218,12 @@ const English = {
 					prve: "Make your visuals more rhythmic",
 					staff: "Use custom patterns as notes to draw visuals similar fashion to piano staff sheets",
 				},
+			},
+			sonar: {
+				_: "Sonar is utilizing the shapes of Cookie Cutter to create beat-style visuals for drum kits.",
+			},
+			shupelunker: {
+				_: "Shupelunker Tactics are an untuned otomad tactic. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, that is, the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” will be generated. It is also untuned, and allows you to choose where the clip is cut (usually at a dialogue), with audio stretching and rewinding often used, as well as adding sixteenth to sixty-fourth rest notes. During the production, the source clips will be aligned with the rhythm for singing sense.",
 			},
 			ytp: {
 				_: "YouTube Poop (YTP) is for creating nonsensical videos using various effects known in the YTP genre. YTP supports multisource.\nYTP is a Neo-Dada art form, which is absurdist remixes that ape and mock the lowest technical and aesthetic standards of remix culture to comment on remix culture itself. It consists of video remixes that are edited from a large array of video clips in order to confuse, stun or amuse the viewer. The sources can be mashed all together into a nonsensical Crossover story, or just repeat footage of the characters gesticulating oddly.",

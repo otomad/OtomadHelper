@@ -97,7 +97,7 @@ export default function TabItem({ icon, children, active = false, collapsed, id:
 	badge?: string | number;
 	/** 是否使用纵向的 NavigationView 样式？ */
 	vertical?: boolean;
-}, HTMLElement>) {
+}, "section">) {
 	const tabItemRef = useRef<HTMLButtonElement>(null);
 
 	const onEnter = async () => {

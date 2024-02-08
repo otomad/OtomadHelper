@@ -5,6 +5,7 @@ import { initReactI18next } from "react-i18next";
 import en from "./English";
 import ja from "./Japanese";
 import zhCN from "./SChinese";
+import vi from "./Vietnamese";
 
 i18n
 	// 检测用户当前使用的语言
@@ -40,6 +41,7 @@ i18n
 			en,
 			"zh-CN": zhCN,
 			ja,
+			vi,
 		},
 	});
 

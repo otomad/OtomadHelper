@@ -143,7 +143,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	hideLabel?: boolean;
 	/** 改变标签名称。 */
 	as?: WebTarget;
-}, HTMLElement>) {
+}, "button">) {
 	const textLabel = on ? t.on : t.off;
 	const [isDraging, setIsDraging] = useState(false);
 	const [thumbLeft, setThumbLeft] = useState<number>();

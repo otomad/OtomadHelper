@@ -11,7 +11,7 @@ export /* internal */ const StyledCard = styled.div`
 	}
 `;
 
-export default function Card({ children, ...htmlAttrs }: FCP<{}, HTMLDivElement>) {
+export default function Card({ children, ...htmlAttrs }: FCP<{}, "div">) {
 	return (
 		<StyledCard {...htmlAttrs}>
 			<div className="base">

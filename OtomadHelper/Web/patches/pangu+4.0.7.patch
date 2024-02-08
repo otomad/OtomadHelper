@@ -1,0 +1,40 @@
+diff --git a/node_modules/pangu/dist/browser/pangu.js b/node_modules/pangu/dist/browser/pangu.js
+index 7efbaf8..8639927 100644
+--- a/node_modules/pangu/dist/browser/pangu.js
++++ b/node_modules/pangu/dist/browser/pangu.js
+@@ -610,6 +610,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
+   var S_A = /(%)([A-Za-z])/g;
+   var MIDDLE_DOT = /([ ]*)([\u00b7\u2022\u2027])([ ]*)/g;
+   
++  function convertToFullwidth(symbols) {
++    return symbols.replace(/~/g, '～').replace(/!/g, '！').replace(/;/g, '；').replace(/:/g, '：').replace(/,/g, '，').replace(/\./g, '。').replace(/\?/g, '？');
++  }
++
+   var Pangu = function () {
+     function Pangu() {
+       _classCallCheck(this, Pangu);
+@@ -619,9 +623,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
+ 
+     _createClass(Pangu, [{
+       key: "convertToFullwidth",
+-      value: function convertToFullwidth(symbols) {
+-        return symbols.replace(/~/g, '～').replace(/!/g, '！').replace(/;/g, '；').replace(/:/g, '：').replace(/,/g, '，').replace(/\./g, '。').replace(/\?/g, '？');
+-      }
++      value: convertToFullwidth
+     }, {
+       key: "spacing",
+       value: function spacing(text) {
+@@ -637,11 +639,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
+         var self = this;
+         var newText = text;
+         newText = newText.replace(CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK, function (match, leftCjk, symbols, rightCjk) {
+-          var fullwidthSymbols = self.convertToFullwidth(symbols);
++          var fullwidthSymbols = convertToFullwidth(symbols);
+           return "".concat(leftCjk).concat(fullwidthSymbols).concat(rightCjk);
+         });
+         newText = newText.replace(CONVERT_TO_FULLWIDTH_CJK_SYMBOLS, function (match, cjk, symbols) {
+-          var fullwidthSymbols = self.convertToFullwidth(symbols);
++          var fullwidthSymbols = convertToFullwidth(symbols);
+           return "".concat(cjk).concat(fullwidthSymbols);
+         });
+         newText = newText.replace(DOTS_CJK, '$1 $2');

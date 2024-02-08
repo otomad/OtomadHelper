@@ -28,7 +28,7 @@ export default forwardRef(function Icon({ name, filled, ...htmlAttrs }: FCP<{
 	name: string;
 	/** 是否保持图标本身的颜色？ */
 	filled?: boolean;
-}, HTMLSpanElement>, ref: ForwardedRef<HTMLSpanElement>) {
+}, "span">, ref: ForwardedRef<HTMLSpanElement>) {
 	if (!name) return <span hidden />;
 
 	const symbolId = "#icon-" + name.replaceAll("/", "-");

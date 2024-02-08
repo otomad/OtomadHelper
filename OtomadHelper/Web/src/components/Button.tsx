@@ -110,8 +110,7 @@ export default function Button({ children, icon, subtle, accent, className, ...h
 	subtle?: boolean;
 	/** 是否按钮附着强调色？ */
 	accent?: boolean | "critical" | "success" | "attention" | "caution";
-
-}, HTMLButtonElement>) {
+}, "button">) {
 	const fillColorName = !accent ? undefined : accent === true ? "accent-color" : `fill-color-system-${accent}`;
 
 	return (
