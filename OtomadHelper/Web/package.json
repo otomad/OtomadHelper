@@ -4,6 +4,15 @@
 	"description": "The front-end part of Otomad Helper script.",
 	"type": "module",
 	"main": "./dist/index.html",
+	"module": "esnext",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/otomad/OtomadHelper.git"
+	},
+	"homepage": "https://otomadhelper.readthedocs.io/",
+	"bugs": "https://github.com/otomad/OtomadHelper/issues",
+	"author": "Ranne",
+	"license": "GPL-3.0-only",
 	"scripts": {
 		"dev": "vite --host --force",
 		"build": "tsc && vite build --force",
@@ -12,8 +21,6 @@
 		"postinstall": "patch-package",
 		"compact-svg": "tsx src/scripts/compact-svg.ts"
 	},
-	"author": "Ranne",
-	"license": "GPL",
 	"dependencies": {
 		"classnames": "^2.3.2",
 		"i18next": "^23.6.0",

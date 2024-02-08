@@ -17,7 +17,7 @@ export default function Settings() {
 				<ExpanderChildWrapper>
 					<p>Otomad Helper<br />v7.0</p>
 					<div>
-						<OpenLink>仓库地址</OpenLink>
+						<OpenLink href="https://github.com/otomad/OtomadHelper">仓库地址</OpenLink>
 					</div>
 					<Button>{t.settings.about.checkForUpdates}</Button>
 				</ExpanderChildWrapper>

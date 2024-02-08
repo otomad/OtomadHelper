@@ -33,13 +33,17 @@ declare global {
 	 */
 	export type FC<P = {}, E extends Element | null = null> = React.FC<FCP<P, E>>;
 
+	type GetTagFromElement<E> = { [T in keyof HTMLElementTagNameMap]: HTMLElementTagNameMap[T] extends E ? E extends HTMLElementTagNameMap[T] ? T : never : never }[keyof HTMLElementTagNameMap];
+	type GetAttributesFromTag<T> = React.ReactDOM[T] extends React.DetailedHTMLFactory<infer A, Any> ? A : never;
+	type GetAttributesFromElement<E> = GetAttributesFromTag<GetTagFromElement<E>>;
+
 	/**
 	 * React Hook 风格函数式组件的 Props 类型。
 	 * @template P - 组件的 Props。
 	 * @template E - 继承某个 HTML 原生元素的所有 Attrs。
 	 */
 	export type FCP<P = {}, E extends Element | null = null> = Override<
-		E extends null ? { children?: ReactNode } : React.HTMLAttributes<E>, P>;
+		E extends null ? { children?: ReactNode } : GetAttributesFromElement<E>, P>;
 
 	/**
 	 * React useState 中 setter 函数的类型。
