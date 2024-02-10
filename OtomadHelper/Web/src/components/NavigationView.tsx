@@ -18,7 +18,7 @@ const StyledTopLeftButtons = styled.div`
 		height: ${navButtonSize.height * 2}px;
 		margin-left: 5px;
 
-		.nav-button {
+		${NavButton} {
 			width: 52px;
 		}
 	}
@@ -32,12 +32,12 @@ const StyledTopLeftButtons = styled.div`
 		position: relative;
 	}
 
-	&:not(.vertical) .nav-button:nth-of-type(2) {
+	&:not(.vertical) ${NavButton}:nth-of-type(2) {
 		top: 0;
 		left: ${navButtonSize.width}px;
 	}
 
-	&.vertical .nav-button:nth-of-type(2) {
+	&.vertical ${NavButton}:nth-of-type(2) {
 		top: ${navButtonSize.height}px;
 		left: 0;
 	}
@@ -140,7 +140,7 @@ const StyledNavigationView = styled.div<{
 			background-color: ${c("background-fill-color-acrylic-background-default")};
 			box-shadow: 0 8px 16px ${c("shadows-flyout")};
 			backdrop-filter: blur(60px);
-			z-index: 1;
+			z-index: 8;
 			outline: 1px solid ${c("stroke-color-surface-stroke-flyout")};
 		}
 	}
