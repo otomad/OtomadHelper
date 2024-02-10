@@ -24,11 +24,11 @@ export default function Score() {
 		<div className="container">
 			<Card className="media-pool">
 				<TabBar current={format}>
-					<TabItem id="midi" icon="midi">{t.score.midi}</TabItem>
-					<TabItem id="st" icon="ust">{t.score.st}</TabItem>
-					<TabItem id="refOtherTracks" icon="ref_other_tracks">{t.score.refOtherTracks}</TabItem>
-					<TabItem id="pureNotes" icon="quarter_note">{t.score.pureNotes}</TabItem>
-					<TabItem id="tts" icon="narrator">{t.score.tts}</TabItem>
+					<TabBar.Item id="midi" icon="midi">{t.score.midi}</TabBar.Item>
+					<TabBar.Item id="st" icon="ust">{t.score.st}</TabBar.Item>
+					<TabBar.Item id="refOtherTracks" icon="ref_other_tracks">{t.score.refOtherTracks}</TabBar.Item>
+					<TabBar.Item id="pureNotes" icon="quarter_note">{t.score.pureNotes}</TabBar.Item>
+					<TabBar.Item id="tts" icon="narrator">{t.score.tts}</TabBar.Item>
 				</TabBar>
 			</Card>
 

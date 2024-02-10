@@ -186,8 +186,7 @@ const StyledNavigationView = styled.div<{
 		}
 
 		.title {
-			font-size: 28px;
-			font-weight: 600;
+			${styles.effects.text.title};
 			position: absolute;
 			transition: all ${eases.easeOutSmooth} 500ms;
 			display: flex;
@@ -366,7 +365,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
 		if ("type" in item) return item.type === "hr" ? <hr key={index} /> : undefined;
 		const { text, icon, id } = item;
-		return <TabItem key={id} id={id} icon={icon || "placeholder"} focusable={focusable}>{text}</TabItem>;
+		return <TabBar.Item key={id} id={id} icon={icon || "placeholder"} focusable={focusable}>{text}</TabBar.Item>;
 	}, [isFlyoutShown, focusable]);
 
 	useEventListener(window, "resize", () => {

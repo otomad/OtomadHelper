@@ -16,9 +16,9 @@ export default function Source() {
 		<div className="container">
 			<Card className="media-pool">
 				<TabBar current={source}>
-					<TabItem id="trackEvent" icon="track_event">{t.source.trackEvent}</TabItem>
-					<TabItem id="projectMedia" icon="media">{t.source.projectMedia}</TabItem>
-					<TabItem id="browseFile" icon="open_file">{t.source.browseFile}</TabItem>
+					<TabBar.Item id="trackEvent" icon="track_event">{t.source.trackEvent}</TabBar.Item>
+					<TabBar.Item id="projectMedia" icon="media">{t.source.projectMedia}</TabBar.Item>
+					<TabBar.Item id="browseFile" icon="open_file">{t.source.browseFile}</TabBar.Item>
 				</TabBar>
 				<TestThumbnail />
 			</Card>
@@ -27,7 +27,7 @@ export default function Source() {
 			{/* <Expander heading={t.source.startTime} caption={t.descriptions.source.startTime} icon="start_point">
 				<ListView view="tile" current={startTime}>
 					{startTimes.map(item =>
-						<ListViewItem id={item.id} key={item.id} icon={item.icon}>{item.name}</ListViewItem>)}
+						<ListView.Item id={item.id} key={item.id} icon={item.icon}>{item.name}</ListView.Item>)}
 				</ListView>
 			</Expander> */}
 			<ExpanderRadio

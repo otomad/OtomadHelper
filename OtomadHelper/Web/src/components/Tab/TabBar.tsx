@@ -1,3 +1,5 @@
+import TabItem from "./TabItem";
+
 const THICKNESS = 3;
 const LENGTH = 20;
 const DELAY = 200;
@@ -48,11 +50,11 @@ const StyledTabBar = styled.div`
 		overflow-x: auto;
 		margin: -4px;
 		padding: 4px;
-		
+
 		&::-webkit-scrollbar {
 			height: 0;
 		}
-		
+
 		> .scroll {
 			width: min-content;
 		}
@@ -156,3 +158,5 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		</StyledTabBar>
 	);
 }
+
+TabBar.Item = TabItem;

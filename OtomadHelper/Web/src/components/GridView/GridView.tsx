@@ -1,3 +1,5 @@
+import GridViewItem from "./GridViewItem";
+
 const StyledGridView = styled.div<{
 	/** 子元素图片的宽度。默认为 200px。 */
 	$itemWidth?: number;
@@ -33,3 +35,5 @@ export default function GridView<T extends string = string>({ current: [current,
 		</StyledGridView>
 	);
 }
+
+GridView.Item = GridViewItem;

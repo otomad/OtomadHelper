@@ -11,7 +11,7 @@ const StyledIcon = styled.i.attrs({
 	display: inline-flex;
 
 	:where(&) {
-		font-size: 20px;
+		${styles.effects.text.icon};
 	}
 
 	svg {

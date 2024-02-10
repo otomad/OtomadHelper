@@ -1,14 +1,17 @@
 import { initColorMode } from "helpers/color-mode";
+import { initFonts } from "styles/fonts";
 
 const isProdMode = () => !useConfigStore.getState().settings.devMode;
 
 /**
  * 在网页 DOM 加载之前执行。
  */
-export default function initial() {
+export default async function initial() {
 	// #region 配色方案
 	initColorMode();
 	// #endregion
+
+	await initFonts();
 
 	// #region 阻止网页单击右键菜单
 	window.addEventListener("contextmenu", e => {

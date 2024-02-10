@@ -67,12 +67,12 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 			view === "grid" ? (
 				<GridView current={[value as T, setValue]} $itemWidth={$itemWidth}>
 					{items.map(item =>
-						<GridViewItem id={getItemField(item, "id")} key={getItemField(item, "id")} image={getItemField(item, "image")} icon={getItemField(item, "icon")}>{getItemField(item, "name")}</GridViewItem>)}
+						<GridView.Item id={getItemField(item, "id")} key={getItemField(item, "id")} image={getItemField(item, "image")} icon={getItemField(item, "icon")}>{getItemField(item, "name")}</GridView.Item>)}
 				</GridView>
 			) : (
 				<ListView view="tile" current={[value as T, setValue]}>
 					{items.map(item =>
-						<ListViewItem id={getItemField(item, "id")} key={getItemField(item, "id")} icon={getItemField(item, "icon")} caption={getItemField(item, "caption")}>{getItemField(item, "name")}</ListViewItem>)}
+						<ListView.Item id={getItemField(item, "id")} key={getItemField(item, "id")} icon={getItemField(item, "icon")} caption={getItemField(item, "caption")}>{getItemField(item, "name")}</ListView.Item>)}
 				</ListView>
 			)}
 			{children}

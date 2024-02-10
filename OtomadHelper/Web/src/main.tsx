@@ -4,7 +4,7 @@ import App from "./App.tsx";
 import initial from "./initial.ts";
 import "./locales/config.ts";
 
-initial();
+await initial();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>

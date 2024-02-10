@@ -18,8 +18,7 @@ const StyledEmptyMessage = styled.div`
 	}
 
 	> h2 {
-		font-weight: 600;
-		font-size: 28px;
+		${styles.effects.text.title};
 	}
 
 	> p {

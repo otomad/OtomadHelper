@@ -62,7 +62,7 @@ const DefaultImage = styled.img`
 	object-fit: cover;
 `;
 
-export default function GridViewItem({ image, icon, id: _id, active = false, children, className, ...htmlAttrs }: FCP<{
+export /* internal */ default function GridViewItem({ image, icon, id: _id, active = false, children, className, ...htmlAttrs }: FCP<{
 	/** 图片。 */
 	image?: string | ReactNode;
 	/** 图标。 */

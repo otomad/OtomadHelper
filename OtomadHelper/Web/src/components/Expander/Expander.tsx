@@ -1,3 +1,5 @@
+import ExpanderItem from "./ExpanderItem";
+
 const ExpanderParent = styled(SettingsCard) <{
 	/** 已展开？ */
 	$expanded?: boolean;
@@ -110,3 +112,5 @@ export default function Expander({ icon, heading, caption, actions, expanded = f
 		</div>
 	);
 }
+
+Expander.Item = ExpanderItem;

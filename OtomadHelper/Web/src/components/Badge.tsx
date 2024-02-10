@@ -16,10 +16,10 @@ const StyledBadge = styled.div<{
 	$hidden?: boolean;
 }>`
 	${styles.mixins.oval()};
+	${styles.effects.text.caption};
 	height: 16px;
 	min-width: 16px;
 	background-color: ${c("fill-color-system-solid-neutral-background")};
-	font-size: 12px;
 	padding: 0 3px;
 	flex-shrink: 0;
 	text-align: center;

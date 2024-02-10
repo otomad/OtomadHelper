@@ -30,8 +30,7 @@ export /* internal */ const styledExpanderItemContent = css`
 		}
 
 		.caption {
-			font-size: 12px;
-			line-height: 16px;
+			${styles.effects.text.caption};
 			color: ${c("fill-color-text-secondary")};
 		}
 	}
@@ -62,7 +61,7 @@ const StyledExpanderItem = styled.div`
 	${styledExpanderItemContent};
 `;
 
-export default function ExpanderItem({ icon, heading, caption, children }: FCP<{
+export /* internal */ default function ExpanderItem({ icon, heading, caption, children }: FCP<{
 	/** 图标。 */
 	icon?: string;
 	/** 标题。 */

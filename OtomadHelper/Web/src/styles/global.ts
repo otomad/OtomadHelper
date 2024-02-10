@@ -3,8 +3,6 @@ import eases from "./eases";
 import forceCursors from "./force-cursor";
 import reset from "./reset";
 
-const readyDuration = (duration: number) => ({ $ready }: { $ready?: boolean }) => $ready ? `${duration}ms` : "0s";
-
 const GlobalStyle = createGlobalStyle<{
 	/** 页面已完成加载？ */
 	$ready?: boolean;
@@ -16,19 +14,21 @@ const GlobalStyle = createGlobalStyle<{
 	*,
 	::before,
 	::after {
-		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} ${readyDuration(100)}, fill ${eases.easeOutMax} ${readyDuration(100)}, font-size ${eases.easeOutMax} ${readyDuration(250)};
-		font-family: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", sans-serif;
+		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms;
+		font-family: "Segoe UI Variable", "Segoe UI", "Microsoft YaHei UI", sans-serif;
 		user-select: none;
 		box-sizing: border-box;
 		-webkit-tap-highlight-color: transparent;
 		scroll-behavior: smooth;
+
+		${({ $ready }) => !$ready && css`transition: none !important;`}
 	}
 
 	:lang(zh-Hant) {
 		&,
 		&::before,
 		&::after {
-			font-family: "Segoe UI Variable Text", "Segoe UI", "Microsoft JhengHei", "Microsoft YaHei UI", sans-serif;
+			font-family: "Segoe UI Variable", "Segoe UI", "Microsoft JhengHei", "Microsoft YaHei UI", sans-serif;
 		}
 	}
 
@@ -36,7 +36,7 @@ const GlobalStyle = createGlobalStyle<{
 		&,
 		&::before,
 		&::after {
-			font-family: "Segoe UI Variable Text", "Segoe UI", "Yu Gothic UI", "Meiryo UI", "MS UI Gothic", "Microsoft YaHei UI", sans-serif;
+			font-family: "Segoe UI Variable", "Segoe UI", "Yu Gothic UI", "Meiryo UI", "MS UI Gothic", "Microsoft YaHei UI", sans-serif;
 		}
 	}
 
@@ -44,7 +44,7 @@ const GlobalStyle = createGlobalStyle<{
 		&,
 		&::before,
 		&::after {
-			font-family: "Segoe UI Variable Text", "Segoe UI", "Malgun Gothic", "Microsoft YaHei UI", sans-serif;
+			font-family: "Segoe UI Variable", "Segoe UI", "Malgun Gothic", "Microsoft YaHei UI", sans-serif;
 		}
 	}
 
@@ -58,7 +58,8 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	html {
-		font-size: 14px;
+		${styles.effects.text.body};
+		line-height: normal;
 	}
 
 	body {
@@ -68,7 +69,6 @@ const GlobalStyle = createGlobalStyle<{
 		padding: 0;
 		height: 100dvh;
 		overflow: hidden;
-		transition: background-color ${eases.easeOutSmooth} ${readyDuration(250)};
 		color-scheme: dark;
 
 		${ifColorScheme.light} & {

@@ -30,13 +30,13 @@ export default function Ytp() {
 					<Expander heading={t.ytp.effects} caption={t.descriptions.ytp.effects} icon="sparkle" checkInfo={selectEffects[0]}>
 						<GridView current={selectEffects}>
 							{effects.map(name => (
-								<GridViewItem
+								<GridView.Item
 									key={name}
 									id={name}
 									image={<PreviewYtp thumbnail={exampleThumbnail} name={name} />}
 								>
 									{name}
-								</GridViewItem>
+								</GridView.Item>
 							))}
 						</GridView>
 					</Expander>
