@@ -1,12 +1,19 @@
+import glitchCursor from "assets/cursurs/glitch_cursor.ani";
 import tipsImage from "assets/images/tips/datamoshing.jpg";
 
 export default function Mosh() {
+	const tipsEl = useRef<HTMLDivElement | null>(null);
+	useAniCursor(tipsEl, glitchCursor);
+
 	return (
 		<div className="container">
-			<SettingsPageControl image={tipsImage} learnMoreLink="">
-				<GlitchyText normal={t.descriptions.mosh.normal} glitchy={t.descriptions.mosh.glitchy} />
-				{t.descriptions.mosh.additional}
-			</SettingsPageControl>
+			<Fragment>
+				<SettingsPageControl image={tipsImage} learnMoreLink="" style={{ cursor: `url(${glitchCursor}) 8 8, default` }} ref={tipsEl}>
+					<GlitchyText normal={t.descriptions.mosh.normal} glitchy={t.descriptions.mosh.glitchy} />
+					<br />
+					{t.descriptions.mosh.additional}
+				</SettingsPageControl>
+			</Fragment>
 		</div>
 	);
 }

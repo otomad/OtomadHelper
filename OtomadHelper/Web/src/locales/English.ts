@@ -236,6 +236,9 @@ const English = {
 				glitchy: "Ða̵̝̻͔͎͋̇͑̆ƭą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍₥o̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́ƨλ ïƨ á ƭèçλñï9úè ôƒ δá₥áϱïñϱ çℓïƥƨ ƭô çřèáƭè ϱℓïƭçλ¥ èƒƒèçƭƨ.",
 				additional: "In video art, one technique used is datamoshing. Where two videos are interleaved so intermediate frames are interpolated from two separate sources. And exploits the difference in how the separate video codecs process motion and color information.",
 			},
+			staff: {
+				_: "Staff Visualizer is to use custom patterns as notes to draw visuals similar fashion to piano staff sheets based on the melody of the score.\nThis visual effect style mimics the videos of YouTuber @grantwoolard, who featured the use of musicians' avatars to draw the piano staff sheets of classical music.",
+			},
 		},
 		empty: {
 			disabled: {

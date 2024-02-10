@@ -1,6 +1,7 @@
 const StyledGlitchyText = styled.div`
-	position: relative;
+	// position: relative;
 	width: fit-content;
+	display: inline-block;
 
 	.shadow {
 		visibility: hidden;

@@ -62,4 +62,8 @@ export default defineConfig({
 			},
 		},
 	},
+	assetsInclude: [
+		"**/*.cur",
+		"**/*.ani",
+	],
 });

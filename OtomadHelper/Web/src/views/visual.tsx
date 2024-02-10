@@ -111,7 +111,7 @@ export default function Visual() {
 
 					<Subheader>{t.subheaders.effects}</Subheader>
 					<SettingsCard heading={t.titles.prve} caption={t.descriptions.audioVisual.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")} />
-					<SettingsCard heading={t.titles.staff} caption={t.descriptions.audioVisual.effects.staff} type="button" icon="g_clef">
+					<SettingsCard heading={t.titles.staff} caption={t.descriptions.audioVisual.effects.staff} type="button" icon="g_clef" onClick={() => pushPage("staff")}>
 						<ToggleSwitch on={enableStaffVisualizer} />
 					</SettingsCard>
 
