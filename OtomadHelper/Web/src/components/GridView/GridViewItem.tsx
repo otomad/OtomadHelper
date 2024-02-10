@@ -62,7 +62,7 @@ const DefaultImage = styled.img`
 	object-fit: cover;
 `;
 
-export /* internal */ default function GridViewItem({ image, icon, id: _id, active = false, children, className, ...htmlAttrs }: FCP<{
+export /* internal */ default function GridViewItem({ image, icon, id: _id, active = false, children, className, caption, ...htmlAttrs }: FCP<{
 	/** 图片。 */
 	image?: string | ReactNode;
 	/** 图标。 */
@@ -71,6 +71,8 @@ export /* internal */ default function GridViewItem({ image, icon, id: _id, acti
 	id: string;
 	/** 是否活跃状态？ */
 	active?: boolean;
+	/** 详细描述。 */
+	caption?: ReactNode;
 }, "button">) {
 	return (
 		<StyledGridViewItem className={[className, { active }]} tabIndex={0} {...htmlAttrs}>
@@ -82,7 +84,10 @@ export /* internal */ default function GridViewItem({ image, icon, id: _id, acti
 			</div>
 			<div className="heading">
 				{icon && <Icon name={icon} />}
-				<p>{children}</p>
+				<div className="text">
+					<p className="heading">{children}</p>
+					<p className="caption">{caption}</p>
+				</div>
 			</div>
 		</StyledGridViewItem>
 	);

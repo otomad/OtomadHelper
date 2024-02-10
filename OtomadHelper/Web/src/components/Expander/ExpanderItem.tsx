@@ -13,14 +13,8 @@ export /* internal */ const styledExpanderItemBase = css`
 	}
 `;
 
-export /* internal */ const styledExpanderItemContent = css`
-	.icon-placeholder {
-		${styles.mixins.square("20px")};
-	}
-
+export /* internal */ const styledExpanderItemText = css`
 	.text {
-		width: 100%;
-
 		> :empty {
 			display: none;
 		}
@@ -33,6 +27,18 @@ export /* internal */ const styledExpanderItemContent = css`
 			${styles.effects.text.caption};
 			color: ${c("fill-color-text-secondary")};
 		}
+	}
+`;
+
+export /* internal */ const styledExpanderItemContent = css`
+	.icon-placeholder {
+		${styles.mixins.square("20px")};
+	}
+
+	${styledExpanderItemText};
+
+	.text {
+		width: 100%;
 	}
 
 	.trailing {
@@ -73,8 +79,8 @@ export /* internal */ default function ExpanderItem({ icon, heading, caption, ch
 		<StyledExpanderItem>
 			{icon ? <Icon name={icon} /> : <div className="icon-placeholder" />}
 			<div className="text">
-				<div className="heading">{heading}</div>
-				<div className="caption">{caption}</div>
+				<p className="heading">{heading}</p>
+				<p className="caption">{caption}</p>
 			</div>
 			<div className="trailing">
 				{children}

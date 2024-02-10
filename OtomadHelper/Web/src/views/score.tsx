@@ -17,8 +17,6 @@ export default function Score() {
 	const bpmUsing = selectConfig(c => c.score.bpmUsing);
 	const [timeSignature] = selectConfig(c => c.score.timeSignature);
 	const constraintNoteLength = selectConfig(c => c.score.constraintNoteLength);
-	const getEncodingName = useCallback((value: string | undefined) =>
-		value === "ANSI" ? `${t.systemDefault} (${value})` : value!, []);
 
 	return (
 		<div className="container">
@@ -41,8 +39,9 @@ export default function Score() {
 				items={encodings}
 				value={encoding}
 				idField
-				nameField={getEncodingName}
-				checkInfoCondition={getEncodingName}
+				nameField
+				checkInfoCondition
+				captionField={value => value === "ANSI" ? t.systemDefault : undefined}
 			/>
 			<ExpanderRadio
 				heading={t.score.bpm}

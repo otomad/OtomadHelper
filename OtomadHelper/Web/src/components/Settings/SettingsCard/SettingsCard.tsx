@@ -88,9 +88,9 @@ export default function SettingsCard({
 			<div className="base">
 				<Icon name={icon} />
 				<div className="text">
-					<div className="heading">{heading}</div>
-					<div className="caption">{caption}</div>
-					<div className="caption select-info">{selectInfo}</div>
+					<p className="heading">{heading}</p>
+					<p className="caption">{caption}</p>
+					<p className="caption select-info">{selectInfo}</p>
 				</div>
 				<div className="trailing">
 					{children}

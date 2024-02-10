@@ -1,4 +1,4 @@
-type FieldType<T> = string | ((item: T) => string) | true;
+type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
 export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, captionField, view = false, $itemWidth, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
 	/** 选项列表。 */
@@ -63,11 +63,11 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	return (
 		<Expander {...settingsCardProps} checkInfo={checkInfo}>
 			{!view ? items.map(item =>
-				<RadioButton value={[value as T, setValue]} id={getItemField(item, "id")} key={getItemField(item, "id")}>{getItemField(item, "name")}</RadioButton>) :
+				<RadioButton value={[value as T, setValue]} id={getItemField(item, "id")} key={getItemField(item, "id")} caption={getItemField(item, "caption")}>{getItemField(item, "name")}</RadioButton>) :
 			view === "grid" ? (
 				<GridView current={[value as T, setValue]} $itemWidth={$itemWidth}>
 					{items.map(item =>
-						<GridView.Item id={getItemField(item, "id")} key={getItemField(item, "id")} image={getItemField(item, "image")} icon={getItemField(item, "icon")}>{getItemField(item, "name")}</GridView.Item>)}
+						<GridView.Item id={getItemField(item, "id")} key={getItemField(item, "id")} image={getItemField(item, "image")} icon={getItemField(item, "icon")} caption={getItemField(item, "caption")}>{getItemField(item, "name")}</GridView.Item>)}
 				</GridView>
 			) : (
 				<ListView view="tile" current={[value as T, setValue]}>

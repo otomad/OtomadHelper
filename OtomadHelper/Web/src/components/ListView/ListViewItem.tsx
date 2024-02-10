@@ -1,3 +1,5 @@
+import { styledExpanderItemText } from "components/Expander/ExpanderItem";
+
 const StyledListViewItem = styled.button`
 	padding: 2px 4px;
 
@@ -43,19 +45,7 @@ const StyledListViewItem = styled.button`
 
 	${styles.mixins.forwardFocusRing()};
 
-	.text {
-		display: flex;
-		flex-direction: column;
-
-		.heading {
-			line-height: 20px;
-		}
-
-		.caption {
-			${styles.effects.text.caption};
-			color: ${c("fill-color-text-secondary")};
-		}
-	}
+	${styledExpanderItemText};
 
 	.image-wrapper {
 		${styles.mixins.flexCenter()};

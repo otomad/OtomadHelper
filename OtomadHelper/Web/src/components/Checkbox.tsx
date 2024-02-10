@@ -1,4 +1,4 @@
-import { styledExpanderItemBase, styledExpanderItemContent } from "components/Expander/ExpanderItem";
+import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemText } from "components/Expander/ExpanderItem";
 
 const checkedOrInd = ":is(:checked, :indeterminate)";
 
@@ -14,6 +14,8 @@ const StyledRadioButtonLabel = styled.label`
 	.text {
 		padding-bottom: 1px;
 	}
+
+	${styledExpanderItemText};
 
 	.expander-child-items & {
 		${styledExpanderItemBase};
@@ -96,6 +98,8 @@ const StyledRadioButtonLabel = styled.label`
 interface SharedProps {
 	/** 已禁用？ */
 	disabled?: boolean;
+	/** 详细描述。 */
+	caption?: ReactNode;
 }
 
 export default function Checkbox<T>(props: FCP<{
@@ -118,7 +122,7 @@ export default function Checkbox(props: FCP<{
 	/** 状态改变事件。 */
 	onChange?: (e: { checkState: CheckState; checked: boolean | null }) => void;
 } & SharedProps>): JSX.Element;
-export default function Checkbox<T>({ children, id, value: [value, setValue], disabled, onChange }: FCP<{
+export default function Checkbox<T>({ children, id, value: [value, setValue], disabled, onChange, caption }: FCP<{
 	id?: T;
 	value: StateProperty<T[]> | StateProperty<boolean> | StateProperty<CheckState>;
 	onChange?: Function;
@@ -185,7 +189,10 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 					</CssTransition>
 				</SwitchTransition>
 			</div>
-			<span className="text">{children}</span>
+			<div className="text">
+				<p className="heading">{children}</p>
+				<p className="caption">{caption}</p>
+			</div>
 		</StyledRadioButtonLabel>
 	);
 }

@@ -1,4 +1,4 @@
-import { styledExpanderItemBase, styledExpanderItemContent } from "components/Expander/ExpanderItem";
+import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemText } from "components/Expander/ExpanderItem";
 
 const THUMB_SIZE = 18;
 const THUMB_PRESSED_WIDTH = 22;
@@ -23,6 +23,8 @@ const StyledToggleSwitchLabel = styled.button`
 			width: unset !important;
 		}
 	}
+
+	${styledExpanderItemText};
 
 	.expander-child-items & {
 		${styledExpanderItemBase};
@@ -132,7 +134,7 @@ const StyledToggleSwitchLabel = styled.button`
 	}
 `;
 
-export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, children, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, caption, children, ...htmlAttrs }: FCP<{
 	/** 打开？ */
 	on: StateProperty<boolean>;
 	/** 禁用？ */
@@ -143,6 +145,8 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	hideLabel?: boolean;
 	/** 改变标签名称。 */
 	as?: WebTarget;
+	/** 详细描述。 */
+	caption?: ReactNode;
 }, "button">) {
 	const textLabel = on ? t.on : t.off;
 	const [isDraging, setIsDraging] = useState(false);
@@ -194,7 +198,10 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 			tabIndex={0}
 			{...htmlAttrs}
 		>
-			<div className="text">{children}</div>
+			<div className="text">
+				<p className="heading">{children}</p>
+				<p className="caption">{caption}</p>
+			</div>
 			<div className="right">
 				{!hideLabel && <span className="text">{textLabel}</span>}
 				<div className={["stroke", "toggle-switch-base", { pressing: isPressing }]}>
