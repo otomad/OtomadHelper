@@ -8,6 +8,7 @@ export default [
 		"react": [
 			["default", "React"],
 			"createContext",
+			"Fragment",
 		],
 		"react-dom/client": [
 			["*", "ReactDOM"],
