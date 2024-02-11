@@ -106,3 +106,12 @@ export function isRef<T>(ref: MaybeRef<T>): ref is RefObject<T> {
 export function toValue<T>(ref: MaybeRef<T>): T {
 	return isRef(ref) ? ref.current! : ref;
 }
+
+/**
+ * 创建一个 HTML DOM 元素的引用，不必再初始化为 null 了。
+ * @param initialValue - 初始值，一般都为空。
+ * @returns HTML DOM 元素的引用。
+ */
+export function useDomRef<E extends Element>(initialValue: E | null = null) {
+	return useRef<E | null>(initialValue);
+}

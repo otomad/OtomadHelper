@@ -1,5 +1,6 @@
 import { globalColors } from "./colors";
 import eases from "./eases";
+import fakeAnimations from "./fake-animations";
 import forceCursors from "./force-cursor";
 import reset from "./reset";
 
@@ -10,6 +11,7 @@ const GlobalStyle = createGlobalStyle<{
 	@layer base, theme, layout, props, utilities, components, special;
 
 	${globalColors()};
+	${fakeAnimations};
 
 	*,
 	::before,

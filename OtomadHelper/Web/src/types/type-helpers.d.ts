@@ -98,4 +98,9 @@ declare global {
 	 * 可能是 Ref 包装的类型对象也可能是其类型本身。
 	 */
 	type MaybeRef<T> = RefObject<T> | MutableRefObject<T> | T;
+
+	/**
+	 * HTML DOM 元素的引用。
+	 */
+	type DomRef<E extends Element> = MutableRefObject<E | null>;
 }

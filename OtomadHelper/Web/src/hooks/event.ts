@@ -1,9 +1,19 @@
-export function useMountEffect(effect: React.EffectCallback) {
+import type { EffectCallback } from "react";
+type EffectCallbackWithAsync = EffectCallback | (() => (() => Promise<void>) | void);
+
+export function useMountEffect(effect: EffectCallback) {
 	useEffect(effect, []);
 }
 
-export function useUnmountEffect(effect: NonNull<ReturnType<React.EffectCallback>>) {
-	useEffect(() => effect, []);
+export function useUnmountEffect(effect: NonNull<ReturnType<EffectCallbackWithAsync>>) {
+	useEffect(() => () => void effect(), []);
+}
+
+/**
+ * @remarks 此时不能返回一个回调函数来表示卸载事件。
+ */
+export function useAsyncEffect(effect: () => Promise<void> | void, deps?: DependencyList | undefined) {
+	useEffect(() => void effect(), deps);
 }
 
 /**

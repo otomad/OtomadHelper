@@ -35,7 +35,7 @@ export default function EmptyMessage({ icon, heading, caption, children }: FCP<{
 	caption?: ReactNode;
 }>) {
 	const { resetTransition } = usePageStore();
-	const el = useRef<HTMLDivElement | null>(null);
+	const el = useDomRef<HTMLDivElement>();
 	useEffect(() => {
 		const container = el.current?.parentElement;
 		if (container)

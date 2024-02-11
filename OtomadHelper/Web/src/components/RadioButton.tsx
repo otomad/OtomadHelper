@@ -106,7 +106,7 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 	/** 详细描述。 */
 	caption?: ReactNode;
 }>) {
-	const labelRef = useRef<HTMLLabelElement>(null);
+	const labelRef = useDomRef<HTMLLabelElement>();
 	const checked = value === id;
 	const handleCheck = (checked: boolean = true) => {
 		if (checked) {

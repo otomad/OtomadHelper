@@ -1,6 +1,6 @@
 export const freezeframes = {} as Record<string, string>;
 
-const images = import.meta.glob<string>("../assets/images/**/*.gif", { import: "default", eager: true });
+const images = import.meta.glob<string>("/src/assets/images/**/*.gif", { import: "default", eager: true });
 const canvas = document.createElement("canvas");
 const context = canvas.getContext("2d")!;
 for (const [key, imageSrc] of Object.entries(images)) {
@@ -13,5 +13,5 @@ for (const [key, imageSrc] of Object.entries(images)) {
 	canvas.height = image.height;
 	context.drawImage(image, 0, 0);
 	const dataUrl = canvas.toDataURL();
-	freezeframes[key.replace("../assets/images/", "")] = dataUrl;
+	freezeframes[key.replace("/src/assets/images/", "")] = dataUrl;
 }

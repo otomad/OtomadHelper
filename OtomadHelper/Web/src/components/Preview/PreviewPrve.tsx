@@ -7,8 +7,6 @@ const prveWhirlStaticImage = freezeframes["effects/prve_whirl.gif"];
 
 export /* internal */ const getDuration = (frames: number) => frames * 375 + "ms";
 
-const fakeAnimation = keyframes``;
-
 const StyledPreviewPrve = styled.div<{
 	/** 效果名称。 */
 	$name: string;
@@ -23,7 +21,7 @@ const StyledPreviewPrve = styled.div<{
 	}
 
 	.animated-image {
-		animation: ${fakeAnimation} 1s infinite;
+		animation: Hover 1s infinite;
 	}
 
 	.grid-view-item:not(:hover, :focus-visible) & img {
@@ -412,7 +410,7 @@ function HoverToChangeImg({ staticSrc, animatedSrc }: FCP<{
 	animatedSrc: string;
 }>) {
 	const [isHovered, setIsHovered] = useState(false);
-	const img = useRef<HTMLImageElement | null>(null);
+	const img = useDomRef<HTMLImageElement>();
 
 	useEventListener(img, "animationstart", () => setIsHovered(true));
 	useEventListener(img, "animationcancel", () => setIsHovered(false));

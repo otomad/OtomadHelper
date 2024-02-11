@@ -1,4 +1,5 @@
 import type _Immer from "immer";
+import type _LottieWeb from "lottie-web";
 import type React from "react";
 import type _ReactTransitionGroup from "react-transition-group";
 import type _StyledComponents from "styled-components";
@@ -87,6 +88,7 @@ declare global {
 	export type ZustandState<S> = NonNull<S extends UseBoundStore<StoreApi<infer T>> ? T : never>;
 
 	export type { Draft } from "immer";
+	export type { AnimationItem } from "lottie-web";
 	export type { CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, ForwardedRef, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, ReactElement, ReactNode, RefObject, UIEventHandler } from "react";
 	export type { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 	export type { WebTarget } from "styled-components";

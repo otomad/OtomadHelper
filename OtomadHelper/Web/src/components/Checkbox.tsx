@@ -127,8 +127,8 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	value: StateProperty<T[]> | StateProperty<boolean> | StateProperty<CheckState>;
 	onChange?: Function;
 } & SharedProps>) {
-	const labelRef = useRef<HTMLLabelElement>(null);
-	const checkboxRef = useRef<HTMLInputElement>(null);
+	const labelRef = useDomRef<HTMLLabelElement>();
+	const checkboxRef = useDomRef<HTMLInputElement>();
 	const singleMode = id === undefined, checkStateMode = typeof value === "string";
 	const checked = checkStateMode ? value === "checked" : singleMode ? !!value : (value as T[]).includes(id);
 	const indeterminate = value === "indeterminate";

@@ -359,13 +359,23 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	isCompact: boolean;
 }>) {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
-	const navItemsRef = useRef<HTMLDivElement>(null);
+	const navItemsRef = useDomRef<HTMLDivElement>();
 	const focusable = !flyout && paneDisplayMode === "minimal" ? false : isFlyoutShown === flyout;
 
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
 		if ("type" in item) return item.type === "hr" ? <hr key={index} /> : undefined;
-		const { text, icon, id } = item;
-		return <TabBar.Item key={id} id={id} icon={icon || "placeholder"} focusable={focusable}>{text}</TabBar.Item>;
+		const { text, icon, animatedIcon, id } = item;
+		return (
+			<TabBar.Item
+				key={id}
+				id={id}
+				icon={icon || (!animatedIcon ? "placeholder" : undefined)}
+				animatedIcon={animatedIcon}
+				focusable={focusable}
+			>
+				{text}
+			</TabBar.Item>
+		);
 	}, [isFlyoutShown, focusable]);
 
 	useEventListener(window, "resize", () => {
@@ -427,6 +437,8 @@ interface NavItem {
 	text: string;
 	/** 图标。 */
 	icon?: string;
+	/** 动态图标。 */
+	animatedIcon?: string;
 	/** 标识符。 */
 	id: string;
 	/** 是否将其放置于导航面板底部。 */
@@ -476,7 +488,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	const [isExpandedInExpandedMode, setIsExpandedInExpandedMode] = useState(true);
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
-	const pageContent = useRef<HTMLDivElement | null>(null);
+	const pageContent = useDomRef<HTMLDivElement>();
 	const scrollToTop = useCallback(() => pageContent.current?.scrollTo({ top: 0, left: 0, behavior: "instant" }), [pageContent]);
 	const navItemsId = useId();
 

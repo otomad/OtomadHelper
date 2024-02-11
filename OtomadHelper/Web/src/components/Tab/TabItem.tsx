@@ -32,7 +32,8 @@ const StyledTabItem = styled.button`
 		}
 	}
 
-	.icon {
+	.icon,
+	.animated-icon {
 		display: flex;
 		margin-bottom: -1px;
 	}
@@ -80,11 +81,21 @@ const StyledTabItem = styled.button`
 			}
 		}
 	}
+
+	&:active .animated-icon {
+		--state: pressed;
+	}
+
+	&.active .animated-icon {
+		--selected: true;
+	}
 `;
 
-export /* internal */ default function TabItem({ icon, children, active = false, collapsed, id: _id, focusable = true, badge, vertical, ...htmlAttrs }: FCP<{
+export /* internal */ default function TabItem({ icon, animatedIcon, children, active = false, collapsed, id: _id, focusable = true, badge, vertical, ...htmlAttrs }: FCP<{
 	/** 图标。 */
 	icon?: string;
+	/** 动态图标。 */
+	animatedIcon?: string;
 	/** 标识符。 */
 	id: string;
 	/** 是否活跃状态？ */
@@ -98,7 +109,7 @@ export /* internal */ default function TabItem({ icon, children, active = false,
 	/** 是否使用纵向的 NavigationView 样式？ */
 	vertical?: boolean;
 }, "section">) {
-	const tabItemRef = useRef<HTMLButtonElement>(null);
+	const tabItemRef = useDomRef<HTMLButtonElement>();
 
 	const onEnter = async () => {
 		const el = tabItemRef.current;
@@ -133,9 +144,10 @@ export /* internal */ default function TabItem({ icon, children, active = false,
 					{...htmlAttrs}
 					className={{ active }}
 				>
-					{icon && (
+					{(icon || animatedIcon) && (
 						<div className="badge-wrapper">
-							<Icon name={icon} />
+							{icon && !animatedIcon && <Icon name={icon} />}
+							{animatedIcon && <AnimatedIcon name={animatedIcon} />}
 							<BadgeItem hidden={!(vertical && collapsed)} />
 						</div>
 					)}
