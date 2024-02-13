@@ -8,7 +8,7 @@ export default function Mosh() {
 	return (
 		<div className="container">
 			<Contents>
-				<SettingsPageControl image={tipsImage} learnMoreLink="" style={{ cursor: `url(${glitchCursor}) 8 8, default` }} ref={tipsEl}>
+				<SettingsPageControl image={tipsImage} learnMoreLink="" clearFloat ref={tipsEl}>
 					<GlitchyText normal={t.descriptions.mosh.normal} glitchy={t.descriptions.mosh.glitchy} />
 					<br />
 					{t.descriptions.mosh.additional}

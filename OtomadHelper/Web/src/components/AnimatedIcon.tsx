@@ -41,6 +41,14 @@ const StyledAnimatedIcon = styled.div`
 				fill: currentColor;
 				stroke: currentColor;
 			}
+
+			* {
+				overflow: visible;
+			}
+
+			svg > g {
+				clip-path: none;
+			}
 		}
 	}
 `;

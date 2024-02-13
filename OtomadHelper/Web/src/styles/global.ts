@@ -23,7 +23,9 @@ const GlobalStyle = createGlobalStyle<{
 		-webkit-tap-highlight-color: transparent;
 		scroll-behavior: smooth;
 
-		${({ $ready }) => !$ready && css`transition: none !important;`}
+		${({ $ready }) => !$ready && css`
+			transition: all ${eases.easeOutMax} 250ms, color 0s, fill 0s, font-size 0s;
+		`}
 	}
 
 	:lang(zh-Hant) {
@@ -76,6 +78,10 @@ const GlobalStyle = createGlobalStyle<{
 		${ifColorScheme.light} & {
 			color-scheme: light;
 		}
+
+		${({ $ready }) => !$ready && css`
+			transition: background-color 0s;
+		`}
 	}
 
 	#root {

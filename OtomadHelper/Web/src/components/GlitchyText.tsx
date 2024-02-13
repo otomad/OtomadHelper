@@ -1,14 +1,29 @@
 const StyledGlitchyText = styled.div`
-	// position: relative;
+	position: relative;
 	width: fit-content;
 	display: inline-block;
 
+	* {
+		transition: none;
+	}
+
 	.shadow {
+		visibility: visible;
+	}
+
+	.normal {
+		position: absolute;
 		visibility: hidden;
 	}
 
-	.visible {
-		position: absolute;
+	&:hover {
+		.shadow {
+			visibility: hidden;
+		}
+
+		.normal {
+			visibility: visible;
+		}
 	}
 `;
 
@@ -25,7 +40,7 @@ export default function GlitchyText({ normal, glitchy }: FCP<{
 			onMouseEnter={() => setIsInstructionHovered(true)}
 			onMouseLeave={() => setIsInstructionHovered(false)}
 		>
-			<p className="visible">{isInstructionHovered ? normal : glitchy}</p>
+			<p className="normal">{normal}</p>
 			<p className="shadow">{glitchy}</p>
 		</StyledGlitchyText>
 	);
