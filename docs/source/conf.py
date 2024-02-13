@@ -6,8 +6,8 @@ project = "Otomad Helper"
 copyright = "2024, Otomad"
 author = "Otomad"
 
-release = "0.1"
-version = "0.1.0"
+release = "7.9"
+version = "7.9.0"
 
 # -- General configuration
 

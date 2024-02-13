@@ -1,0 +1,34 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Update i18n",
+			"type": "shell",
+			"command": "update-i18n.bat",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+			}
+		},
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "build.bat",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+			}
+		},
+		{
+			"label": "View",
+			"type": "shell",
+			"command": "view.bat",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+			}
+		}
+	]
+}
