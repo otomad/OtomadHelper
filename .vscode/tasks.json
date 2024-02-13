@@ -28,6 +28,12 @@
 			"problemMatcher": [],
 			"group": {
 				"kind": "build",
+			},
+			"presentation": {
+				"reveal": "never",
+				"close": true,
+				"revealProblems": "never",
+				"showReuseMessage": false
 			}
 		}
 	]

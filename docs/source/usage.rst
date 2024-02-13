@@ -13,8 +13,7 @@ Installation
 
 3. Make sure that the DLL file ``(DLL\NAudio.dll)`` is not locked.
 
-.. note::
-  **Specific steps:**
+.. admonition:: Specific steps
 
   1. In the Vegas installation directory, enter folder ``Script Menu\DLL``.
   2. Right-click the NAudio.dll file and select Properties.

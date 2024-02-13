@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Otomad Helper 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-13 20:22+0800\n"
+"POT-Creation-Date: 2024-02-13 21:28+0800\n"
 "PO-Revision-Date: 2024-02-13 17:08+0800\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
@@ -20,15 +20,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
 
-#: ../../source/usage.rst:2 ea041daa98f84a679c8c395ccba56958
+#: ../../source/usage.rst:2 8102df357d97475388698029536e054c
 msgid "Usage"
 msgstr "用法"
 
-#: ../../source/usage.rst:7 080bce79c9b6481fa1961764c0919ae4
+#: ../../source/usage.rst:7 f737b9dc1f2e49bb9e8278614e16fccc
 msgid "Installation"
 msgstr "安装"
 
-#: ../../source/usage.rst:9 2749d83eba8a46438ec0d84d3fac5696
+#: ../../source/usage.rst:9 5a3d01614e9a4bcdba188b68dd755884
 msgid ""
 "`Download "
 "<https://otomad.github.io/otomad/link/OtomadHelper.html#latest>`_ the "
@@ -37,57 +37,57 @@ msgstr ""
 "`下载 "
 "<https://otomad.github.io/otomad/link/OtomadHelper.html#latest>`_最新版脚本。"
 
-#: ../../source/usage.rst:10 5aed733409154583bf3891967d0d7496
+#: ../../source/usage.rst:10 818ae3cb2b884fbb82b8165c8ae1a4d0
 msgid ""
 "Unzip **ALL** the files in the zip file you’ve just downloaded to the "
 "“Script Menu” folder in the Vegas installation directory."
 msgstr "将您刚刚下载到的 zip 文件中的**所有**文件解压缩到Vegas 安装目录中的“Script Menu”文件夹中。"
 
-#: ../../source/usage.rst:12 eac866a8e01643d391123012369a4dae
+#: ../../source/usage.rst:12 e6a2c67880444404957f543b57066e93
 msgid "(ie. C:\\\\Program Files\\\\VEGAS\\\\VEGAS Pro 20.0\\\\Script Menu)"
 msgstr "(例：C:\\\\Program Files\\\\VEGAS\\\\VEGAS Pro 20.0\\\\Script Menu)"
 
-#: ../../source/usage.rst:14 df320f26ce5f4a778188242877b5df7c
+#: ../../source/usage.rst:14 d513ed7d44bd400eaf88bc6e1986323c
 msgid "Make sure that the DLL file ``(DLL\\NAudio.dll)`` is not locked."
 msgstr "请确保 DLL 文件 ``(DLL\\NAudio.dll)`` 未锁定。"
 
-#: ../../source/usage.rst:17 c3c2dcd3a20c402aa519cd2e873c14d6
-msgid "**Specific steps:**"
-msgstr "**具体步骤：**"
+#: ../../source/usage.rst:16 379da031da56417dbeb943ca0af9bc1c
+msgid "Specific steps"
+msgstr "具体步骤"
 
-#: ../../source/usage.rst:19 968a39ff1e4d417e84c301bae15e4765
+#: ../../source/usage.rst:18 df0b2846430d4695ba838d0f6538d722
 msgid "In the Vegas installation directory, enter folder ``Script Menu\\DLL``."
 msgstr "在 Vegas 安装目录中，进入 ``Script Menu\\DLL`` 文件夹。"
 
-#: ../../source/usage.rst:20 60dcd68123b54a15bc86dea827f06c2d
+#: ../../source/usage.rst:19 0254e40e9fba4885b219716c19bf7806
 msgid "Right-click the NAudio.dll file and select Properties."
 msgstr "右键单击 NAudio.dll 文件，然后选择“属性”。"
 
-#: ../../source/usage.rst:21 0efc57cfe3654caca0f2620537b8becb
+#: ../../source/usage.rst:20 f0be322c0312481aae056b24c730817b
 msgid "If you see the “Unlock” button or checkbox, click or check it."
 msgstr "如果您看到“解锁”按钮或复选框，请单击或选中它。"
 
-#: ../../source/usage.rst:22 907bf80ea7bc47debba73d8753636260
+#: ../../source/usage.rst:21 0563eb1036c54d5683319c105375b926
 msgid "Click OK button and you’re done."
 msgstr "单击“确定”按钮，您就完成了。"
 
-#: ../../source/usage.rst:24 02e4301122af4bfa8cc26348c505c254
+#: ../../source/usage.rst:23 8944974ccd7443e3adb4c3dead5ae195
 msgid ""
 "Open Vegas Pro to launch it. Select menu *Tools > Scripting > Otomad "
 "Helper* to open."
 msgstr "打开 Vegas Pro 来启动。选择菜单 *工具 > 脚本化 > Otomad Helper* 打开。"
 
-#: ../../source/usage.rst:27 7dda614631804ecaad7e7cac8ac57a86
+#: ../../source/usage.rst:26 0991f401c40842f09af6fac821ea34ba
 msgid "Using Otomad Helper"
 msgstr "使用 Otomad Helper"
 
-#: ../../source/usage.rst:29 b0956261aaa04f309016b02a88077be1
+#: ../../source/usage.rst:28 fa9e2443a03e4d4c93fb27b22885bbfa
 msgid ""
 "Using Otomad Helper is pretty straightforward from here. Here’s how to "
 "use it."
 msgstr "从这里开始，使用 Otomad Helper 非常简单。以下是使用方法。"
 
-#: ../../source/usage.rst:31 bc869bfa6d04474abd0b7432599359fc
+#: ../../source/usage.rst:30 16f1ebec950043d9834688a16270c893
 msgid ""
 "You *import and use a MIDI file to configure and generate the clips you "
 "want*. You should use a MIDI which **created by yourself** and not "
@@ -97,26 +97,26 @@ msgstr ""
 "您可以*导入并使用 MIDI 文件来配置和生成所需的剪辑*。你应该使用**你自己创建的** MIDI，而不是其他人的。这太不礼貌了。不要做音 "
 "MIDI 或者不是你创造的任何形式的混音。"
 
-#: ../../source/usage.rst:32 d65a37819ba44ee5b38ecb2fd21b5021
+#: ../../source/usage.rst:31 f975c8fed854429dab79c1102d21f3d7
 msgid ""
 "You need to *have a clip selected in the timeline* in order to generate "
 "anything from the MIDI onto Vegas Pro."
 msgstr "您需要*在时间轴中选择一个剪辑*，以便在 Vegas Pro 中生成 MIDI 中的任何内容。"
 
-#: ../../source/usage.rst:34 35af8baa4df84f119ee64c78e4b2538c
+#: ../../source/usage.rst:33 a27dfbd56e534e798f4e28399a268ae0
 msgid ""
 "Alternatively, you can use a clip or source from your computer to be used"
 " for generating the MIDI."
 msgstr "或者您可以使用电脑中的剪辑或素材来生成 MIDI。"
 
-#: ../../source/usage.rst:36 64c945144c98419bb9f7a11ac47cf25d
+#: ../../source/usage.rst:35 76af7fe9de9f4ca9983c2cb01cabbbd0
 msgid ""
 "The Audio and Video tabs will allow you to edit the settings of how the "
 "clips are generated, there is a variety of settings, play with them and "
 "tweak them to sort your needs for the start of your creation."
 msgstr "“音频”和“视频”选项卡将允许您编辑剪辑的生成设置，有各种设置，玩弄它们并对它们进行调整，以便在开始创建时对您的需求进行排序。"
 
-#: ../../source/usage.rst:37 d149454bc8ce4e80b87af552aba92108
+#: ../../source/usage.rst:36 49b2fee0e3344aaf9a52db2d5f5ec650
 msgid ""
 "There is also a variety of tools to help work on the most ludicrous of "
 "tasks for your projects, making the chore of editing certain clips to "
