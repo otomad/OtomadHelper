@@ -9,130 +9,116 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Otomad Helper 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-13 17:02+0800\n"
+"POT-Creation-Date: 2024-02-13 20:22+0800\n"
 "PO-Revision-Date: 2024-02-13 17:08+0800\n"
 "Last-Translator: \n"
-"Language-Team: zh_CN <LL@li.org>\n"
 "Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.14.0\n"
-"X-Generator: Poedit 3.4.2\n"
 
-#: ../../source/usage.rst:2 9f5a4d6d348b4de68c5159e38176308b
+#: ../../source/usage.rst:2 ea041daa98f84a679c8c395ccba56958
 msgid "Usage"
 msgstr "用法"
 
-#: ../../source/usage.rst:7 a8a0399d1cb845e6a4d9e6d144592c86
+#: ../../source/usage.rst:7 080bce79c9b6481fa1961764c0919ae4
 msgid "Installation"
 msgstr "安装"
 
-#: ../../source/usage.rst:9 4228c77bbe9c4205ab8f4ba181654bce
+#: ../../source/usage.rst:9 2749d83eba8a46438ec0d84d3fac5696
 msgid ""
-"`Download <https://otomad.github.io/otomad/link/OtomadHelper.html#latest>`__ "
-"the latest version of this script."
+"`Download "
+"<https://otomad.github.io/otomad/link/OtomadHelper.html#latest>`_ the "
+"latest version of this script."
 msgstr ""
-"`下载 <https://otomad.github.io/otomad/link/OtomadHelper.html#latest>`__ 最新"
-"版脚本。"
+"`下载 "
+"<https://otomad.github.io/otomad/link/OtomadHelper.html#latest>`_最新版脚本。"
 
-#: ../../source/usage.rst:10 4baee59bbbfb447da1d1f81915a37858
+#: ../../source/usage.rst:10 5aed733409154583bf3891967d0d7496
 msgid ""
 "Unzip **ALL** the files in the zip file you’ve just downloaded to the "
 "“Script Menu” folder in the Vegas installation directory."
-msgstr ""
-"将您刚刚下载到的 zip 文件中的**所有**文件解压缩到Vegas 安装目录中的“Script "
-"Menu”文件夹中。"
+msgstr "将您刚刚下载到的 zip 文件中的**所有**文件解压缩到Vegas 安装目录中的“Script Menu”文件夹中。"
 
-#: ../../source/usage.rst:12 9422fca8558d42dca1c4c6ccd90b9863
+#: ../../source/usage.rst:12 eac866a8e01643d391123012369a4dae
 msgid "(ie. C:\\\\Program Files\\\\VEGAS\\\\VEGAS Pro 20.0\\\\Script Menu)"
 msgstr "(例：C:\\\\Program Files\\\\VEGAS\\\\VEGAS Pro 20.0\\\\Script Menu)"
 
-#: ../../source/usage.rst:14 42c102e241d649fa8b0ff3bab77c0499
+#: ../../source/usage.rst:14 df320f26ce5f4a778188242877b5df7c
 msgid "Make sure that the DLL file ``(DLL\\NAudio.dll)`` is not locked."
 msgstr "请确保 DLL 文件 ``(DLL\\NAudio.dll)`` 未锁定。"
 
-#: ../../source/usage.rst:17 e118cc091e27444bb3b73be761c9ccfa
+#: ../../source/usage.rst:17 c3c2dcd3a20c402aa519cd2e873c14d6
 msgid "**Specific steps:**"
 msgstr "**具体步骤：**"
 
-#: ../../source/usage.rst:19 921303e66dd44ca487fd95597b702891
+#: ../../source/usage.rst:19 968a39ff1e4d417e84c301bae15e4765
 msgid "In the Vegas installation directory, enter folder ``Script Menu\\DLL``."
 msgstr "在 Vegas 安装目录中，进入 ``Script Menu\\DLL`` 文件夹。"
 
-#: ../../source/usage.rst:20 7a82ea957a194f7f9ecc64552232052f
+#: ../../source/usage.rst:20 60dcd68123b54a15bc86dea827f06c2d
 msgid "Right-click the NAudio.dll file and select Properties."
 msgstr "右键单击 NAudio.dll 文件，然后选择“属性”。"
 
-#: ../../source/usage.rst:21 d5c6b35404bc484fa83c6a70d4bc3888
+#: ../../source/usage.rst:21 0efc57cfe3654caca0f2620537b8becb
 msgid "If you see the “Unlock” button or checkbox, click or check it."
 msgstr "如果您看到“解锁”按钮或复选框，请单击或选中它。"
 
-#: ../../source/usage.rst:22 d5cf0d950c634329817645b83e96bce5
+#: ../../source/usage.rst:22 907bf80ea7bc47debba73d8753636260
 msgid "Click OK button and you’re done."
 msgstr "单击“确定”按钮，您就完成了。"
 
-#: ../../source/usage.rst:24 eb371b0eb6444ebe9fc54f708d4d4f66
+#: ../../source/usage.rst:24 02e4301122af4bfa8cc26348c505c254
 msgid ""
-"Open Vegas Pro to launch it. Select menu *Tools > Scripting > Otomad Helper* "
-"to open."
+"Open Vegas Pro to launch it. Select menu *Tools > Scripting > Otomad "
+"Helper* to open."
 msgstr "打开 Vegas Pro 来启动。选择菜单 *工具 > 脚本化 > Otomad Helper* 打开。"
 
-#: ../../source/usage.rst:27 2d2eda35e6d94e4f896e5a85b83f0070
+#: ../../source/usage.rst:27 7dda614631804ecaad7e7cac8ac57a86
 msgid "Using Otomad Helper"
 msgstr "使用 Otomad Helper"
 
-#: ../../source/usage.rst:29 8d0bc7ec5b494622b0d9fde51f852319
+#: ../../source/usage.rst:29 b0956261aaa04f309016b02a88077be1
 msgid ""
-"Using Otomad Helper is pretty straightforward from here. Here’s how to use "
-"it."
+"Using Otomad Helper is pretty straightforward from here. Here’s how to "
+"use it."
 msgstr "从这里开始，使用 Otomad Helper 非常简单。以下是使用方法。"
 
-#: ../../source/usage.rst:31 6cb078dab7994575b8f928005515b402
+#: ../../source/usage.rst:31 bc869bfa6d04474abd0b7432599359fc
 msgid ""
 "You *import and use a MIDI file to configure and generate the clips you "
-"want*. You should use a MIDI which **created by yourself** and not someone "
-"else. It’s discourteous. Don’t create YTPMIDIs/OTOMIDIs or any form of remix "
-"you didn’t create."
+"want*. You should use a MIDI which **created by yourself** and not "
+"someone else. It’s discourteous. Don’t create YTPMIDIs/OTOMIDIs or any "
+"form of remix you didn’t create."
 msgstr ""
-"您可以*导入并使用 MIDI 文件来配置和生成所需的剪辑*。你应该使用**你自己创建的"
-"** MIDI，而不是其他人的。这太不礼貌了。不要做音 MIDI 或者不是你创造的任何形式"
-"的混音。"
+"您可以*导入并使用 MIDI 文件来配置和生成所需的剪辑*。你应该使用**你自己创建的** MIDI，而不是其他人的。这太不礼貌了。不要做音 "
+"MIDI 或者不是你创造的任何形式的混音。"
 
-#: ../../source/usage.rst:32 9604e711d03b411282b42e32f5529ace
+#: ../../source/usage.rst:32 d65a37819ba44ee5b38ecb2fd21b5021
 msgid ""
 "You need to *have a clip selected in the timeline* in order to generate "
 "anything from the MIDI onto Vegas Pro."
-msgstr ""
-"您需要*在时间轴中选择一个剪辑*，以便在 Vegas Pro 中生成 MIDI 中的任何内容。"
+msgstr "您需要*在时间轴中选择一个剪辑*，以便在 Vegas Pro 中生成 MIDI 中的任何内容。"
 
-#: ../../source/usage.rst:34 5c7b72636fa8442b9ef7a9bd8b6d3f08
+#: ../../source/usage.rst:34 35af8baa4df84f119ee64c78e4b2538c
 msgid ""
-"Alternatively, you can use a clip or source from your computer to be used "
-"for generating the MIDI."
+"Alternatively, you can use a clip or source from your computer to be used"
+" for generating the MIDI."
 msgstr "或者您可以使用电脑中的剪辑或素材来生成 MIDI。"
 
-#: ../../source/usage.rst:36 ecae2d52325c444e9b539dbbe9f8c09c
+#: ../../source/usage.rst:36 64c945144c98419bb9f7a11ac47cf25d
 msgid ""
 "The Audio and Video tabs will allow you to edit the settings of how the "
 "clips are generated, there is a variety of settings, play with them and "
 "tweak them to sort your needs for the start of your creation."
-msgstr ""
-"“音频”和“视频”选项卡将允许您编辑剪辑的生成设置，有各种设置，玩弄它们并对它们"
-"进行调整，以便在开始创建时对您的需求进行排序。"
+msgstr "“音频”和“视频”选项卡将允许您编辑剪辑的生成设置，有各种设置，玩弄它们并对它们进行调整，以便在开始创建时对您的需求进行排序。"
 
-#: ../../source/usage.rst:37 2bcbddef2b9b4892909166cbede6b842
+#: ../../source/usage.rst:37 d149454bc8ce4e80b87af552aba92108
 msgid ""
-"There is also a variety of tools to help work on the most ludicrous of tasks "
-"for your projects, making the chore of editing certain clips to applying "
-"different effects easier said than done."
-msgstr ""
-"还有各种工具可以帮助你完成项目中最荒唐的任务，使编辑某些片段以应用不同效果的"
-"繁琐工作不再说起来容易做起来难。"
-
-#: ../../source/usage.rst:39 0834c16d02cc4dd09c46204656c9def1
-msgid ""
-"To learn more about the features of Otomad Helper, click on any of the "
-"following pages below..."
-msgstr "要了解关于 Otomad Helper 的更多功能，请单击下方的任意页面……"
+"There is also a variety of tools to help work on the most ludicrous of "
+"tasks for your projects, making the chore of editing certain clips to "
+"applying different effects easier said than done."
+msgstr "还有各种工具可以帮助你完成项目中最荒唐的任务，使编辑某些片段以应用不同效果的繁琐工作不再说起来容易做起来难。"
