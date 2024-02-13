@@ -35,7 +35,7 @@ html_theme = "sphinx_rtd_theme"
 epub_show_urls = "footnote"
 
 # multi-language docs
-language = 'en'
+language = "en"
 locale_dirs = ["../locales/"]  # path is example but recommended.
 gettext_compact = False  # optional.
 gettext_uuid = True  # optional.
