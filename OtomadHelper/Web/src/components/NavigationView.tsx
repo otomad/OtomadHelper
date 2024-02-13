@@ -60,7 +60,7 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 			{!shadow && (
 				<div className="base">
 					<NavButton animatedIcon="back" disabled={!canBack} onClick={onBack} />
-					<NavButton icon="global_nav_button" onClick={onNavButton} />
+					<NavButton animatedIcon="global_nav_button" onClick={onNavButton} />
 				</div>
 			)}
 		</StyledTopLeftButtons>

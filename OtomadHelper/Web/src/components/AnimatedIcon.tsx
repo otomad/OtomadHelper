@@ -39,7 +39,10 @@ const StyledAnimatedIcon = styled.div`
 
 			&:not(.filled) * {
 				fill: currentColor;
-				stroke: currentColor;
+
+				&[stroke] {
+					stroke: currentColor;
+				}
 			}
 
 			* {
