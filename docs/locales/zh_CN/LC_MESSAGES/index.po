@@ -7,9 +7,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Otomad Helper 0.1.0\n"
+"Project-Id-Version: Otomad Helper 8.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-13 21:02+0800\n"
+"POT-Creation-Date: 2024-02-13 23:28+0800\n"
 "PO-Revision-Date: 2024-02-13 17:50+0800\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
@@ -20,50 +20,52 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
 
-#: ../../source/index.rst:2 a0922f8648584d6684b23864d988ccc7
+#: ../../source/index.rst:2 a2e4e227d2a540a8b69f7474f6825373
 msgid "Welcome to Otomad Helper Documentation!"
 msgstr "欢迎来到 Otomad Helper 说明文档！"
 
-#: ../../source/index.rst:4 694f0955a97a40a3ad401c7ddac2f241
+#: ../../source/index.rst:4 3897fef5678e43c6891fe42e8e58d37d
 msgid ""
 "**Otomad Helper** for Vegas, designed to allow Vegas to accept MIDI files"
 " as input, and automatically generate YTPMV/Otomad tracks."
 msgstr "音 MAD 助手，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。"
 
-#: ../../source/index.rst:6 220b5c3c7cbf44b8a9787190c7f359d8
+#: ../../source/index.rst:6 d9b83adfecfd43dc94da676755f3e13e
 msgid ""
-"Check out the :doc:`usage` section for further information, including how"
-" to :ref:`installation` the extension."
-msgstr "查看:doc:`usage`部分以了解更多信息，包括如何:ref:`installation`该扩展。"
+"Check out the :doc:`usage <usage>` section for further information, "
+"including how to :ref:`install <installation>` the extension."
+msgstr ""
+"查看:doc:`用法 <usage>`部分以了解更多信息，包括如何:ref:`安装 "
+"<installation>`该扩展。"
 
-#: ../../source/index.rst:10 869f040d712e48f98317b8cd481b4963
+#: ../../source/index.rst:10 b588ae864ed5442fb81189467315908b
 msgid "This project is under active development."
 msgstr "该项目正在积极开发中。"
 
-#: ../../source/index.rst:13 1c93923d4ef84b60968019d6e4b478ce
+#: ../../source/index.rst:13 50d093b73aea43ffb5e9a9ce7cbeebc7
 msgid "Languages"
 msgstr "语言"
 
-#: ../../source/index.rst:15 c1268036a5b74d9ea02e5d1d170f04eb
+#: ../../source/index.rst:15 0d21d0d0eae3468c9acbfd6b500c62fd
 msgid ""
 "You can also click on the “Read the Docs” menu on the bottom left corner "
 "of any page to switch languages."
 msgstr "您也可以在任意页面点击左下角的“Read the Docs”菜单来切换语言。"
 
-#: ../../source/index.rst:20 a31f865ae59b460ca2f2a9ac05b52289
+#: ../../source/index.rst:20 2e756aafb053423c8cd592755855f99a
 msgid "**English**"
 msgstr "`English </>`_"
 
-#: ../../source/index.rst:21 2b899fd1b0494404b72045315a525b6c
+#: ../../source/index.rst:21 a23672b55ab1402ca5b65b3e64e87d71
 msgid "`简体中文 </zh_CN>`_"
 msgstr "**简体中文**"
 
-#: ../../source/index.rst:23 3a8edef308b5499087c54574bbe9a9d3
+#: ../../source/index.rst:23 3aa59590de3246a58a672c32e8a0ead7
 msgid ""
 "To learn more about the features of Otomad Helper, click on any of the "
 "following pages below..."
 msgstr "要了解关于 Otomad Helper 的更多功能，请单击下方的任意页面……"
 
-#: ../../source/index.rst:26 426ed4fd03c9425290a0f98ac4aaa667
+#: ../../source/index.rst:26 a8ae8bc48cfe493cb47aab0523240c02
 msgid "Contents"
 msgstr "目录"

@@ -3,7 +3,7 @@ Welcome to Otomad Helper Documentation!
 
 **Otomad Helper** for Vegas, designed to allow Vegas to accept MIDI files as input, and automatically generate YTPMV/Otomad tracks.
 
-Check out the :doc:`usage` section for further information, including how to :ref:`installation` the extension.
+Check out the :doc:`usage <usage>` section for further information, including how to :ref:`install <installation>` the extension.
 
 .. warning::
 
