@@ -43,7 +43,14 @@ const StyledAnimatedIcon = styled.div`
 	}
 `;
 
-export default function AnimatedIcon({ loop = false, autoplay = false, name, hidden = false, speed = 1, state: _state = [], filled = false, onInit, onClick, onPress, onLift, ...htmlAttrs }: FCP<{
+class InterruptLottieError extends Error {
+	constructor() {
+		super("Lottie animation playing has been interrupted");
+		this.name = this.constructor.name;
+	}
+}
+
+export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false, name, hidden = false, speed = 1, filled = false, onInit, onClick, ...htmlAttrs }: FCP<{
 	/** 循环播放？ */
 	loop?: boolean;
 	/** 自动播放？ */
@@ -55,20 +62,21 @@ export default function AnimatedIcon({ loop = false, autoplay = false, name, hid
 	/** 播放速度。 */
 	speed?: number;
 	/** 状态信息。参数依次为：标记、循环、速度。 */
-	state?: AnimatedIconState;
+	// state?: AnimatedIconState;
 	/** 是否保持图标本身的颜色。 */
 	filled?: boolean;
 	/** 初始化事件。 */
 	onInit?: (anim?: AnimationItem) => void;
 	/** 点击事件。 */
 	onClick?: (anim?: AnimationItem) => void;
-	/** 按下事件。 */
-	onPress?: (anim?: AnimationItem) => void;
-	/** 弹起事件。 */
-	onLift?: (anim?: AnimationItem) => void;
-}, "div">) {
+}, "div">, ref: ForwardedRef<{
+	play: () => void;
+	pause: () => void;
+	stop: () => void;
+}>) {
 	const animationItem = useRef<AnimationItem>();
 	const iconBox = useDomRef<HTMLDivElement>();
+	const markerSequenceRejects = useRef<(() => void)[]>([]);
 
 	/**
 	 * 获取以文件名形式的图标。
@@ -92,15 +100,18 @@ export default function AnimatedIcon({ loop = false, autoplay = false, name, hid
 	/**
 	 * 点击图标交互事件。
 	 */
-	const handleClick = useCallback(() => {
+	const handleClick = () => {
 		if (!animationItem.current) return;
 		onClick?.(animationItem.current);
-	}, [animationItem]);
+	};
 
-	const stop = useCallback(() => animationItem.current?.stop(), [animationItem]);
-	const play = useCallback(() => animationItem.current?.play(), [animationItem]);
-	const pause = useCallback(() => animationItem.current?.pause(), [animationItem]);
-	const handleSpeedChange = useCallback(() => animationItem.current?.setSpeed(speed), [animationItem, speed]);
+	const stop = () => animationItem.current?.stop();
+	const play = () => animationItem.current?.play();
+	const pause = () => animationItem.current?.pause();
+	const handleSpeedChange = () => animationItem.current?.setSpeed(speed);
+	const findMarker = (callback: string | ((name: string) => boolean)) =>
+		animationItem.current?.markers.find(m =>
+			typeof callback === "function" ? callback(m.payload.name) : m.payload.name === callback);
 
 	/**
 	 * 控制状态信息。
@@ -122,32 +133,60 @@ export default function AnimatedIcon({ loop = false, autoplay = false, name, hid
 			if (speed === 0) anim.pause();
 			else anim.play();
 		else {
-			console.log(marker);
-			let markerItem = anim.markers.find(m => m.payload.name === marker);
+			let markerItem = findMarker(marker);
 			if (!markerItem)
-				if (Object.is(speed, -0)) markerItem = anim.markers.find(m => m.payload.name.endsWith("To" + marker));
-				else if (Object.is(speed, 0)) markerItem = anim.markers.find(m => m.payload.name.startsWith(marker + "To"));
+				if (Object.is(speed, -0)) markerItem = findMarker(m => m.endsWith("To" + marker));
+				else if (Object.is(speed, 0)) markerItem = findMarker(m => m.startsWith(marker + "To"));
 			if (markerItem) {
+				markerSequenceRejects.current.forEach(reject => reject());
+				markerSequenceRejects.current = [];
 				const marker = markerItem.payload.name;
 				if (Object.is(speed, 0)) anim.goToAndStop(marker, true);
-				else if (Object.is(speed, -0)) anim.goToAndStop(markerItem.time + markerItem.duration - 1, true);
+				else if (Object.is(speed, -0)) anim.goToAndStop(markerItem.time + markerItem.duration, true);
 				else anim.goToAndPlay(marker, true);
 			}
-			// TODO: 指定 fallback 机制。
+			if (!markerItem)
+				if (marker === "NormalToSelected")
+					playMarkerSequence("NormalToPressed", "PressedToSelected");
+				else if (marker === "PressedSelectedToNormal")
+					playMarkerSequence("PressedSelectedToSelected", "SelectedToNormal");
+				else if (marker === "PressedToPressedSelected" && findMarker("PressedSelectedToSelected"))
+					anim.goToAndStop("PressedSelectedToSelected", true);
+				else if (marker === "PressedSelectedToPressed" && findMarker("PressedToNormal"))
+					anim.goToAndStop("PressedToNormal", true);
 		}
 	}
 
-	useEffect(() => handleSpeedChange(), [speed]);
-	// useEffect(() => handleStateChange(state), [state]);
+	async function playMarkerSequence(...markers: string[]) {
+		const anim = animationItem.current;
+		if (!anim) return;
+		markers = markers.filter(m => findMarker(m));
+		for (const marker of markers)
+			try {
+				await new Promise<void>((resolve, reject) => {
+					const interrupt = () => reject(new InterruptLottieError());
+					const onComplete = () => {
+						anim.removeEventListener("complete", onComplete);
+						arrayRemoveItem(markerSequenceRejects.current, interrupt);
+						resolve();
+					};
+					anim.addEventListener("complete", onComplete);
+					anim.goToAndPlay(marker, true);
+					markerSequenceRejects.current.push(interrupt);
+				});
+			} catch (error) {
+				if (error instanceof InterruptLottieError) break;
+				else throw error;
+			}
+	}
 
-	const previousAnimationName = useRef(""); // TODO: 修改 AEP 之后稍后改成 "normal"。
+	useEffect(() => handleSpeedChange(), [speed]);
+
+	const previousAnimationName = useRef("Normal");
 	useEventListener(iconBox, "animationstart", e => {
 		const [previous, current] = [previousAnimationName.current, e.animationName];
-		if (previous) {
-			if (!current || previous === current) return;
-			handleStateChange({ marker: `${previous}To${current}`, speed: 1 });
-		} else if (current)
-			handleStateChange({ marker: `${current}`, speed: -0 });
+		if (!current || previous === current) return;
+		handleStateChange({ marker: `${previous}To${current}`, speed: 1 });
 
 		previousAnimationName.current = e.animationName;
 	});
@@ -158,10 +197,14 @@ export default function AnimatedIcon({ loop = false, autoplay = false, name, hid
 	 */
 	function onAnimationCreated(anim: AnimationItem) {
 		animationItem.current = anim;
+		handleStateChange({ marker: previousAnimationName.current, speed: -0 });
 		handleSpeedChange();
-		// handleStateChange(_state);
 		onInit?.(anim);
 	}
+
+	useImperativeHandle(ref, () => ({
+		play, pause, stop,
+	}), []);
 
 	return (
 		<StyledAnimatedIcon {...htmlAttrs}>
@@ -177,4 +220,4 @@ export default function AnimatedIcon({ loop = false, autoplay = false, name, hid
 			</div>
 		</StyledAnimatedIcon>
 	);
-}
+});

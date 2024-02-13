@@ -2,6 +2,7 @@ const colors = {
 	"background-color": ["#f3f3f3", "#202020"],
 	"foreground-color": ["rgba(0, 0, 0, 0.9)", "rgb(255, 255, 255)"], // fill-color-text-primary
 	"accent-color": ["#005fb8", "#60cdff"],
+	"fill-color-text-primary-for-lottie": ["rgba(24, 24, 24)", "rgb(255, 255, 255)"],
 	"fill-color-text-secondary": ["rgba(0, 0, 0, 0.61)", "rgba(255, 255, 255, 0.79)"],
 	"fill-color-text-tertiary": ["rgba(0, 0, 0, 0.45)", "rgba(255, 255, 255, 0.54)"],
 	"fill-color-text-disabled": ["rgba(0, 0, 0, 0.36)", "rgba(255, 255, 255, 0.36)"],

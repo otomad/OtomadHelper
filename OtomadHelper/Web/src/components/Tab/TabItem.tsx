@@ -38,6 +38,10 @@ const StyledTabItem = styled.button`
 		margin-bottom: -1px;
 	}
 
+	.animated-icon {
+		color: ${c("fill-color-text-primary-for-lottie")};
+	}
+
 	.text {
 		white-space: nowrap;
 		line-height: 20px;
