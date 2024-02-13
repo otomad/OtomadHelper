@@ -19,6 +19,10 @@ const StyledButton = styled.button<{
 
 		> .content {
 			opacity: ${c("pressed-text-opacity")};
+
+			.animated-icon {
+				--state: pressed;
+			}
 		}
 	}
 
@@ -103,9 +107,11 @@ const StyledButton = styled.button<{
 	}
 `;
 
-export default function Button({ children, icon, subtle, accent, className, ...htmlAttrs }: FCP<{
+export default function Button({ children, icon, animatedIcon, subtle, accent, className, ...htmlAttrs }: FCP<{
 	/** 按钮图标。 */
 	icon?: string;
+	/** 按钮动态图标。 */
+	animatedIcon?: string;
 	/** 是否使用无背景按钮？ */
 	subtle?: boolean;
 	/** 是否按钮附着强调色？ */
@@ -117,6 +123,7 @@ export default function Button({ children, icon, subtle, accent, className, ...h
 		<StyledButton type="button" className={[className, { subtle }]} $fillColorName={fillColorName} {...htmlAttrs}>
 			<StackPanel className="content">
 				{icon && <Icon name={icon} />}
+				{animatedIcon && <AnimatedIcon name={animatedIcon} />}
 				<span>{children}</span>
 			</StackPanel>
 		</StyledButton>

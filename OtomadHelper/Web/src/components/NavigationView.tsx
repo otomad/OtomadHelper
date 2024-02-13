@@ -59,7 +59,7 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 		<StyledTopLeftButtons className={{ shadow, vertical: paneDisplayMode === "compact" }}>
 			{!shadow && (
 				<div className="base">
-					<NavButton icon="back" disabled={!canBack} onClick={onBack} />
+					<NavButton animatedIcon="back" disabled={!canBack} onClick={onBack} />
 					<NavButton icon="global_nav_button" onClick={onNavButton} />
 				</div>
 			)}

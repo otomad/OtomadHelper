@@ -4,6 +4,8 @@ const StyledAnimatedIcon = styled.div`
 		--selected: false;
 	}
 
+	display: contents;
+
 	&,
 	.icon-box,
 	.lottie {
@@ -142,7 +144,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 				markerSequenceRejects.current = [];
 				const marker = markerItem.payload.name;
 				if (Object.is(speed, 0)) anim.goToAndStop(marker, true);
-				else if (Object.is(speed, -0)) anim.goToAndStop(markerItem.time + markerItem.duration, true);
+				else if (Object.is(speed, -0)) anim.goToAndStop(markerItem.time + markerItem.duration - 1, true);
 				else anim.goToAndPlay(marker, true);
 			}
 			if (!markerItem)
@@ -197,7 +199,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	 */
 	function onAnimationCreated(anim: AnimationItem) {
 		animationItem.current = anim;
-		handleStateChange({ marker: previousAnimationName.current, speed: -0 });
+		handleStateChange({ marker: previousAnimationName.current, speed: 0 });
 		handleSpeedChange();
 		onInit?.(anim);
 	}

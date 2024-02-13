@@ -9,7 +9,7 @@ const navToolItems = ["mosh", "tools"];
 const bottomNavItems = ["settings"] as const;
 const modes = ["otomadOrYtpmv", "ytp", "shupelunker"] as const;
 
-const DEV_hasAnimatedIconItems = ["sonar"];
+const DEV_hasAnimatedIconItems = ["sonar", "home"];
 const DEV_ifHasAnim = (item: string) => DEV_hasAnimatedIconItems.includes(item) ? item : undefined;
 
 export default function ShellPage() {
