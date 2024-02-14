@@ -15,6 +15,7 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 			display: flex;
 			flex-direction: column;
 			width: 100%;
+			z-index: 0; // 如果不设置此，则为默认 auto，子元素出现渲染层级异常的奇怪现象（可能仅 Chromium 存在）。
 
 			> p {
 				height: 100%;
