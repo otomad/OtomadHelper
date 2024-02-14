@@ -45,7 +45,7 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 		object-fit: cover;
 		pointer-events: none;
 	}
-	
+
 	.toggle-switch-label {
 		width: auto;
 	}
@@ -86,7 +86,7 @@ export default function SettingsPageControlMedia({ stream, fileName, enabled, th
 							{t.enabled}
 						</StackPanel>
 					</ToggleSwitch>
-					<Button icon="play">{t.audioVisual.preview}</Button>
+					<Button icon="play">{t.stream.preview}</Button>
 				</div>
 			</div>
 		</StyledSettingsPageControlMedia>

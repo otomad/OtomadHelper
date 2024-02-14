@@ -78,7 +78,7 @@ const English = {
 				fixed: "Fixed length",
 			},
 		},
-		audioVisual: {
+		stream: {
 			preview: "Preview",
 			stretch: {
 				_: "Stretch",
@@ -192,7 +192,7 @@ const English = {
 				constraint: "Controls the note output length from the score",
 				encoding: "Specify the text encoding for reading the file",
 			},
-			audioVisual: {
+			stream: {
 				stretch: "When on, the clip will be stretched instead of changing its duration",
 				loop: "When the clip is lengthened to the end of the source media, playback will start over",
 				normalize: "Normalize the audio, useful if the audio is quiet",

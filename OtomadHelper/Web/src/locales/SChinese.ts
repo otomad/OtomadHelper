@@ -78,7 +78,7 @@ const SChinese = {
 				fixed: "固定长度",
 			},
 		},
-		audioVisual: {
+		stream: {
 			preview: "预览",
 			stretch: {
 				_: "拉伸",
@@ -192,7 +192,7 @@ const SChinese = {
 				constraint: "控制乐曲中的音符输出长度",
 				encoding: "指定读取文件的文本编码",
 			},
-			audioVisual: {
+			stream: {
 				stretch: "开启后，将拉伸剪辑而不是改变剪辑的持续时间",
 				loop: "当剪辑延长到源媒体的末尾后，将会重头开始播放",
 				normalize: "如果音频太安静则很有用",
