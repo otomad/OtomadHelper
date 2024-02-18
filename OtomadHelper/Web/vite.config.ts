@@ -56,11 +56,17 @@ export default defineConfig({
 		target: "ESNext",
 		rollupOptions: {
 			output: {
-				entryFileNames: "assets/[name].js",
-				chunkFileNames: "assets/[name].js",
+				entryFileNames: "chunks/[name].js",
+				chunkFileNames: "chunks/[name].js",
 				assetFileNames: "assets/[name]-[hash].[ext]",
+				manualChunks(id) {
+					if (id.includes("node_modules")) return "vendor";
+					else if (id.includes("svg-icons-register")) return "svgs";
+					else if (id.includes("assets/lotties")) return "lotties";
+				},
 			},
 		},
+		chunkSizeWarningLimit: 500_000, // 500MB
 	},
 	assetsInclude: [
 		"**/*.cur",
