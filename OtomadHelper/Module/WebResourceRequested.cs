@@ -96,9 +96,17 @@ internal class ManagedStream : Stream {
 					{ "png", "image/png" },
 					{ "gif", "image/gif" },
 					{ "svg", "image/svg+xml" },
+					{ "webp", "image/webp" },
+					{ "apng", "image/apng" },
+					{ "ico", "image/x-icon" },
+					{ "cur", "image/vnd.microsoft.icon" },
+					{ "bmp", "image/bmp" },
 					{ "manifest", "text/cache-manifest" },
 					{ "woff", "font/woff" },
 					{ "woff2", "font/woff2" },
+					{ "ttf", "font/ttf" },
+					{ "json", "application/json" },
+					{ "ani", "application/x-navi-animation" },
 				};
 				string headers = "application/octet-stream";
 				foreach (KeyValuePair<string, string> item in contentTypes)

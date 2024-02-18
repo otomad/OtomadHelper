@@ -27,7 +27,11 @@ export default async function initial() {
 	// #region 阻止网页键盘按键和鼠标滚轮缩放
 	window.addEventListener("keydown", e => {
 		if (isProdMode())
-			if (e.ctrlKey && ["Equal", "Minus", "NumpadAdd", "NumpadSubtract"].includes(e.code))
+			if (
+				e.ctrlKey && ["Equal", "Minus", "NumpadAdd", "NumpadSubtract"].includes(e.code) ||
+				e.code === "F12" ||
+				e.ctrlKey && e.shiftKey && ["KeyC", "KeyI"].includes(e.code)
+			)
 				e.preventDefault();
 	});
 	document.addEventListener("wheel", function (e) {
