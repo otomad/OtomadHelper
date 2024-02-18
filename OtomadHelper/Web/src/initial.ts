@@ -1,5 +1,6 @@
 import { initColorMode } from "helpers/color-mode";
 import { initFonts } from "styles/fonts";
+import { initLayers } from "styles/layers";
 
 const isProdMode = () => !useConfigStore.getState().settings.devMode;
 
@@ -11,7 +12,10 @@ export default async function initial() {
 	initColorMode();
 	// #endregion
 
+	// #region 预加载样式
+	initLayers();
 	await initFonts();
+	// #endregion
 
 	// #region 阻止网页单击右键菜单
 	window.addEventListener("contextmenu", e => {

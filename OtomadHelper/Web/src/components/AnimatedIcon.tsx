@@ -45,10 +45,6 @@ const StyledAnimatedIcon = styled.div`
 				}
 			}
 
-			* {
-				overflow: visible;
-			}
-
 			svg > g {
 				clip-path: none;
 			}

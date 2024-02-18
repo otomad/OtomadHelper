@@ -1,6 +1,6 @@
 {
 	"name": "otomad-helper",
-	"version": "7.0",
+	"version": "8.0",
 	"description": "The front-end part of Otomad Helper script.",
 	"type": "module",
 	"main": "./dist/index.html",

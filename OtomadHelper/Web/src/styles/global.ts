@@ -8,8 +8,6 @@ const GlobalStyle = createGlobalStyle<{
 	/** 页面已完成加载？ */
 	$ready?: boolean;
 }>`
-	@layer base, theme, layout, props, utilities, components, special;
-
 	${globalColors()};
 	${fakeAnimations};
 

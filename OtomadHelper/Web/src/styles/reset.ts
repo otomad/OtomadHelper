@@ -59,5 +59,10 @@ export default css`
 				opacity: 0.5;
 			}
 		}
+
+		svg,
+		svg * {
+			overflow: visible;
+		}
 	}
 `;

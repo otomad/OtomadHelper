@@ -19,6 +19,14 @@ export default function ShellPage() {
 	}));
 	const Page = pages[`/src/views/${getPagePath()}.tsx`] ?? EmptyPage;
 	const [uiScale] = selectConfig(c => c.settings.uiScale);
+	const documentTitle = (() => {
+		const lastPage = page.at(-1);
+		return (lastPage ? t.titles[lastPage] + " - " : "") + import.meta.env.VITE_APP_NAME;
+	})();
+
+	useEffect(() => {
+		document.title = documentTitle;
+	}, [documentTitle]);
 
 	return (
 		<NavigationView
