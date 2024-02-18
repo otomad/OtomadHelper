@@ -167,6 +167,11 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 					anim.goToAndStop("PressedSelectedToSelected", true);
 				else if (marker === "PressedSelectedToPressed" && findMarker("PressedToNormal"))
 					anim.goToAndStop("PressedToNormal", true);
+				else {
+					markerItem = findMarker(m => m.startsWith(marker + "To"));
+					if (markerItem)
+						anim.goToAndStop(markerItem.payload.name, true);
+				}
 		}
 	}
 
