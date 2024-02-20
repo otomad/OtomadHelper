@@ -47,6 +47,7 @@ const English = {
 		underConstruction: "Under construction…",
 		allFiles: "All Files",
 		systemDefault: "System default",
+		complete: "Complete",
 		subheaders: {
 			moreOptions: "More options",
 			advanced: "Advanced",

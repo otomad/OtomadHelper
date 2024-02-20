@@ -153,7 +153,7 @@ const StyledNavigationView = styled.div<{
 
 		&.hairtail {
 			> .title-wrapper,
-			> .content {
+			> .page-content {
 				scrollbar-gutter: stable;
 
 				> * {
@@ -184,7 +184,20 @@ const StyledNavigationView = styled.div<{
 			flex-shrink: 0;
 
 			> div {
+				width: 100%;
 				height: ${TITLE_LINE_HEIGHT}px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				> div {
+					${styles.mixins.square("100%")};
+				}
+
+				.command-bar {
+					height: 100%;
+					flex-shrink: 0;
+				}
 			}
 		}
 
@@ -254,7 +267,7 @@ const StyledNavigationView = styled.div<{
 			}
 		}
 
-		.content {
+		.page-content {
 			height: 100%;
 			overflow: hidden auto;
 
@@ -291,7 +304,7 @@ const StyledNavigationView = styled.div<{
 		}
 
 		.title-wrapper,
-		.content {
+		.page-content {
 			padding: 0 ${CONTENT_MARGIN_X}px;
 		}
 	}
@@ -480,7 +493,7 @@ const usePaneDisplayMode = () => {
 	return paneDisplayMode;
 };
 
-export default function NavigationView({ currentNav, navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, ...htmlAttrs }: FCP<{
+export default function NavigationView({ currentNav, navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, ...htmlAttrs }: FCP<{
 	/** 当前导航页状态参数。 */
 	currentNav: StateProperty<string[]>;
 	/** 所有导航项。 */
@@ -495,6 +508,8 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	canBack?: boolean;
 	/** 点击返回按钮事件。 */
 	onBack?: () => void;
+	/** 命令栏，可选。 */
+	commandBar?: ReactNode;
 }, "div">) {
 	const currentNavTab = useStateSelector(currentNav, nav => nav[0], value => [value]);
 	const pagePath = currentNav.join("/");
@@ -556,32 +571,37 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 				onClick={hideFlyoutNavMenu}
 			>
 				<div className="title-wrapper">
-					<TransitionGroup>
-						<CssTransition key={pageTitleKey.join()}>
-							<h1 className="title">
-								<TransitionGroup>
-									{titles.flatMap((title, i, { length }) => {
-										const last = i === length - 1;
-										const crumb = (
-											<div
-												key={i}
-												className={["crumb", { parent: !last }]}
-												onClick={() => title.link?.length && currentNav[1]?.(title.link)}
-											>
-												{title.name}
-											</div>
-										);
-										const result = [crumb];
-										if (!last) result.push(<BreadCrumbChevronRight key={i + "-chevron"} />);
-										return result.map((node, j) =>
-											<CssTransition key={i + "-" + j}>{node}</CssTransition>);
-									})}
-								</TransitionGroup>
-							</h1>
-						</CssTransition>
-					</TransitionGroup>
+					<div>
+						<TransitionGroup>
+							<CssTransition key={pageTitleKey.join()}>
+								<h1 className="title">
+									<TransitionGroup>
+										{titles.flatMap((title, i, { length }) => {
+											const last = i === length - 1;
+											const crumb = (
+												<div
+													key={i}
+													className={["crumb", { parent: !last }]}
+													onClick={() => title.link?.length && currentNav[1]?.(title.link)}
+												>
+													{title.name}
+												</div>
+											);
+											const result = [crumb];
+											if (!last) result.push(<BreadCrumbChevronRight key={i + "-chevron"} />);
+											return result.map((node, j) =>
+												<CssTransition key={i + "-" + j}>{node}</CssTransition>);
+										})}
+									</TransitionGroup>
+								</h1>
+							</CssTransition>
+						</TransitionGroup>
+						<section className="command-bar">
+							{commandBar}
+						</section>
+					</div>
 				</div>
-				<div className={["content", transitionName]} ref={pageContent}>
+				<div className={["page-content", transitionName]} ref={pageContent}>
 					<SwitchTransition>
 						<CssTransition key={pagePath} onExited={scrollToTop}>
 							<StyledPage>

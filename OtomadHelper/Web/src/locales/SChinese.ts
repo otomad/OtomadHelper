@@ -47,6 +47,7 @@ const SChinese = {
 		underConstruction: "功能研发中⋯⋯",
 		allFiles: "所有文件",
 		systemDefault: "系统默认",
+		complete: "完成",
 		subheaders: {
 			moreOptions: "更多选项",
 			advanced: "高级",

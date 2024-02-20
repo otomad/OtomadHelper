@@ -11,6 +11,10 @@ const bottomNavItems = ["settings"] as const;
 const DEV_hasAnimatedIconItems = ["sonar", "home", "settings", "tools", "audio", "ytp", "mosh"];
 const DEV_ifHasAnim = (item: string) => DEV_hasAnimatedIconItems.includes(item) ? item : undefined;
 
+function isCompleteAvailable(page: string) {
+	return !["mosh", "tools", "settings"].includes(page);
+}
+
 export default function ShellPage() {
 	const { page, changePage, getPagePath, transition, canBack, back } = usePageStore();
 	const pageTitles = page.map((crumb, i, { length }) => ({
@@ -23,6 +27,7 @@ export default function ShellPage() {
 		const lastPage = page.at(-1);
 		return (lastPage ? t.titles[lastPage] + " - " : "") + import.meta.env.VITE_APP_NAME;
 	})();
+	const completeDisabled = !isCompleteAvailable(page[0]);
 
 	useEffect(() => {
 		document.title = documentTitle;
@@ -41,6 +46,11 @@ export default function ShellPage() {
 			transitionName={transition}
 			canBack={canBack()}
 			onBack={back}
+			commandBar={
+				<CommandBar onClick={() => completeDisabled && alert("Cannot complete!")}>
+					<Button icon="checkmark" subtle disabled={completeDisabled}>{t.complete}</Button>
+				</CommandBar>
+			}
 			style={{ zoom: uiScale === 100 ? undefined : uiScale / 100 }}
 		>
 			<Page />
