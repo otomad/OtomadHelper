@@ -25,7 +25,7 @@ export default function ShellPage() {
 	const [uiScale] = selectConfig(c => c.settings.uiScale);
 	const documentTitle = (() => {
 		const lastPage = page.at(-1);
-		return (lastPage ? t.titles[lastPage] + " - " : "") + import.meta.env.VITE_APP_NAME;
+		return (lastPage ? t.titles[lastPage]({ context: "full" }) + " - " : "") + import.meta.env.VITE_APP_NAME;
 	})();
 	const completeDisabled = !isCompleteAvailable(page[0]);
 
