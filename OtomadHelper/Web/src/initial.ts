@@ -1,6 +1,7 @@
 import { initColorMode } from "helpers/color-mode";
 import { initFonts } from "styles/fonts";
 import { initLayers } from "styles/layers";
+import { initArrayExtensions } from "utils/array";
 
 const isProdMode = () => !useConfigStore.getState().settings.devMode;
 
@@ -8,6 +9,10 @@ const isProdMode = () => !useConfigStore.getState().settings.devMode;
  * 在网页 DOM 加载之前执行。
  */
 export default async function initial() {
+	// #region 扩展方法
+	initArrayExtensions();
+	// #endregion
+
 	// #region 配色方案
 	initColorMode();
 	// #endregion

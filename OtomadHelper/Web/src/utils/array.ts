@@ -1,101 +1,99 @@
+/// <reference path="array.d.ts" />
+
 /*
  * JS Array 又不自带删除方法，想用 prototype 扩展语法，问题是又不推荐使用。
  */
 
-/**
- * 删除数组指定索引值的项目。
- * @param array - 数组。
- * @param index - 索引值。
- */
-export function arrayRemoveAt<T>(array: T[], index: number): void {
-	array.splice(index, 1);
-}
+export /* internal */ function initArrayExtensions() {
+	Array.prototype.removeAt = function (index) {
+		this.splice(index, 1);
+	};
 
-/**
- * 删除数组的指定项目，如有多个重复项目只删除第一个。
- * @param array - 数组。
- * @param item - 项目。
- * @returns 是否成功删除。
- */
-export function arrayRemoveItem<T>(array: T[], item: T): boolean {
-	const index = array.indexOf(item);
-	if (index === -1) return false;
-	array.splice(index, 1);
-	return true;
-}
+	Array.prototype.removeItem = function (item) {
+		const index = this.indexOf(item);
+		if (index === -1) return false;
+		this.splice(index, 1);
+		return true;
+	};
 
-/**
- * 删除数组的所有指定项目。
- * @param array - 数组。
- * @param item - 项目。
- */
-export function arrayRemoveAllItem<T>(array: T[], item: T) {
-	while (true) {
-		const index = array.indexOf(item);
-		if (index === -1) return;
-		array.splice(index, 1);
-	}
-}
+	Array.prototype.removeAllItem = function (item) {
+		while (true) {
+			const index = this.indexOf(item);
+			if (index === -1) return;
+			this.splice(index, 1);
+		}
+	};
 
-/**
- * 仅在数组不包含该项目时，在数组末尾追加该项目。
- * @param array - 数组。
- * @param item - 项目。
- */
-export function arrayPushDistinct<T>(array: T[], item: T) {
-	if (!array.includes(item))
-		array.push(item);
-}
+	Array.prototype.pushDistinct = function (item) {
+		if (!this.includes(item))
+			this.push(item);
+	};
 
-/**
- * 清空数组。
- * @param array - 数组。
- */
-export function arrayClearAll<T>(array: T[]): void {
-	array.splice(0, Infinity);
-}
+	Array.prototype.clearAll = function () {
+		this.splice(0, Infinity);
+	};
 
-/**
- * 将源数组清空后重新注入新的数据。
- * @param array - 源数组。
- * @param items - 新的数据。
- */
-export function arrayRelist<T>(array: T[], items: Iterable<T>): void {
-	array.splice(0, Infinity, ...items);
-}
+	Array.prototype.relist = function (items) {
+		this.splice(0, Infinity, ...items);
+	};
 
-/**
- * 切换数组是否包含项目。如果数组包含该项目则移除，反之则添加。
- * @param array - 数组。
- * @param item - 项目。
- */
-export function arrayToggle<T>(array: T[], item: T): void {
-	const index = array.indexOf(item);
-	if (index === -1)
-		array.push(item);
-	else
-		arrayRemoveAt(array, index);
+	Array.prototype.toggle = function (item) {
+		const index = this.indexOf(item);
+		if (index === -1)
+			this.push(item);
+		else
+			arrayRemoveAt(this, index);
+	};
+
+	Array.prototype.mapObject = function (callbackFn) {
+		const array = this;
+		return Object.fromEntries(array.map((value, index, array) => callbackFn(value, index, array)));
+	};
+
+	Array.prototype.toRemoveDuplicates = function () {
+		return [...new Set(this)];
+	};
+
+	/**
+	 * 返回一个新数组，该数组将被剔除任何虚值，如 undefined、null、false、""、±0、±0n。
+	 * @param this - 源数组。
+	 * @returns 不包含任何虚值的新数组。
+	 */
+	Array.prototype.toRemoveFalsy = function () {
+		return this.filter(item => item);
+	};
+
+	/**
+	 * 判断两个数组是否相等，包括位置顺序。
+	 * @returns 两个数组是否相等？
+	 */
+	Array.prototype.equals = function (another) {
+		if (this === another) return true;
+		if (!this || !another) return false;
+		if (this.length !== another.length) return false;
+
+		for (let i = 0; i < this.length; i++)
+			if (this[i] !== another[i])
+				return false;
+		return true;
+	};
+
+	const protoKeys = Object.keys(Array.prototype);
+	for (const protoKey of protoKeys)
+		Object.defineProperty(Array.prototype, protoKey, {
+			enumerable: false,
+		});
 }
 
 /**
  * 通过一个常量数组映射到一个对象。
  * @remarks 此 JSDoc 的 `@param` 部分参数后故意没加 “-”，否则会出现 bug。
- * @param array **常量**字符串数组。
+ * @param this **常量**字符串数组。
  * @param callbackFn 生成作为对象的值。
  * @returns 映射的对象。
  */
-export function arrayMapObjectConst<const T extends string, U>(array: T[], callbackFn: (value: T, index: number, array: T[]) => U) {
+export function mapObjectConst<const T extends string, U>(array: T[], callbackFn: (value: T, index: number, array: T[]) => U) {
 	return Object.fromEntries(array.map((value, index, array) => ([value, callbackFn(value, index, array)] as [T, U]))) as Record<T, U>;
-}
-
-/**
- * 通过一个任意数组映射到一个对象。
- * @param array - 任意数组。
- * @param callbackFn - 生成作为对象的键值对元组。
- * @returns 映射的对象。
- */
-export function arrayMapObject<T, K extends ObjectKey, U>(array: T[], callbackFn: (value: T, index: number, array: T[]) => [K, U]) {
-	return Object.fromEntries(array.map((value, index, array) => callbackFn(value, index, array))) as Record<K, U>;
 }
 
 /**
@@ -108,39 +106,6 @@ export function arrayMapObject<T, K extends ObjectKey, U>(array: T[], callbackFn
  */
 export function enumerate<T>(array: T[], start: number = 0) {
 	return array.map((value, index, array) => [index + start, value, array] as const);
-}
-
-/**
- * 数组去重。
- * @param array - 数组。
- * @returns 注意是会返回一个新的数组。
- */
-export function arrayToRemoveDuplicates<T>(array: T[]) {
-	return [...new Set(array)];
-}
-
-/**
- * 返回一个新数组，该数组将被剔除任何虚值，如 undefined、null、false、""、±0、±0n。
- * @param array - 源数组。
- * @returns 不包含任何虚值的新数组。
- */
-export function arrayToRemoveFalsy<T>(array: T[]) {
-	return array.filter(item => item) as NonFalsy<T>[];
-}
-
-/**
- * 判断两个数组是否相等，包括位置顺序。
- * @returns 两个数组是否相等？
- */
-export function arrayEquals<T>(a: T[], b: T[]) {
-	if (a === b) return true;
-	if (!a || !b) return false;
-	if (a.length !== b.length) return false;
-
-	for (let i = 0; i < a.length; i++)
-		if (a[i] !== b[i])
-			return false;
-	return true;
 }
 
 // #region Tuples

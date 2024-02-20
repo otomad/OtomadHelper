@@ -181,7 +181,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 					const interrupt = () => reject(new InterruptLottieError());
 					const onComplete = () => {
 						anim.removeEventListener("complete", onComplete);
-						arrayRemoveItem(markerSequenceRejects.current, interrupt);
+						markerSequenceRejects.current.removeItem(interrupt);
 						resolve();
 					};
 					anim.addEventListener("complete", onComplete);

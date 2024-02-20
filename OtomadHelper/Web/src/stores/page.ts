@@ -34,7 +34,7 @@ export const usePageStore = createStore<IPage>()(
 
 		function setPageInternal(nextPage: string[]) {
 			const { page } = get();
-			if (arrayEquals(page, nextPage)) return;
+			if (page.equals(nextPage)) return;
 			set(() => ({
 				prevPage: page,
 				page: nextPage,

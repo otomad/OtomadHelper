@@ -158,7 +158,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 			(setValue as SetStateNarrow<T[]>)?.(produce(values => {
 				const draftedId = id as Draft<T>;
 				if (checked) values.push(draftedId);
-				else arrayRemoveAllItem(values, draftedId);
+				else values.removeAllItem(draftedId);
 			}));
 	};
 

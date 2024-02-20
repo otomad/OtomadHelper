@@ -170,6 +170,7 @@ module.exports = {
 			"asyncArrow": "always",
 		}],
 		"@typescript-eslint/no-useless-constructor": "error",
+		"@typescript-eslint/no-this-alias": "off",
 		"react-refresh/only-export-components": [
 			"off",
 			{ allowConstantExport: true },
