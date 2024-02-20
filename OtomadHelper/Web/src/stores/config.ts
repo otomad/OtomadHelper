@@ -34,7 +34,6 @@ interface IConfig {
 		legato: Legato;
 		multitrackForChords: boolean;
 		glissando: boolean;
-		mappingVelocity: boolean;
 		transformOfx: boolean;
 		enableStaffVisualizer: boolean;
 	};
@@ -77,7 +76,6 @@ export const useConfigStore = createStore<IConfig>()(
 			legato: "upToOneBeat",
 			multitrackForChords: false,
 			glissando: false,
-			mappingVelocity: false,
 			transformOfx: false,
 			enableStaffVisualizer: false,
 		},

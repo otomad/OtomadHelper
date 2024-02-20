@@ -28,7 +28,6 @@ export default function Visual() {
 	const multitrackForChords = selectConfig(c => c.visual.multitrackForChords);
 	const createGroups = selectConfig(c => c.createGroups);
 	const glissando = selectConfig(c => c.visual.glissando);
-	const mappingVelocity = selectConfig(c => c.visual.mappingVelocity);
 	const transformOfx = selectConfig(c => c.visual.transformOfx);
 	const enableStaffVisualizer = selectConfig(c => c.visual.enableStaffVisualizer);
 
@@ -44,6 +43,7 @@ export default function Visual() {
 					icon="visual"
 					heading={t.empty.disabled.heading({ name: t.titles.visual })}
 					caption={t.empty.disabled.caption({ name: t.titles.visual })}
+					iconOff
 				>
 					<Button onClick={() => setEnabled(true)} accent>{t.enable}</Button>
 				</EmptyMessage>

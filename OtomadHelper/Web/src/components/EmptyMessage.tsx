@@ -13,7 +13,8 @@ const StyledEmptyMessage = styled.div`
 	animation-name: ${scaleIn} !important;
 	text-align: center;
 
-	> .icon {
+	> .icon,
+	> .icon-off {
 		font-size: 48px;
 	}
 
@@ -26,16 +27,19 @@ const StyledEmptyMessage = styled.div`
 	}
 `;
 
-export default function EmptyMessage({ icon, heading, caption, children }: FCP<{
+export default function EmptyMessage({ icon, heading, caption, iconOff = false, children }: FCP<{
 	/** 图标。 */
 	icon?: string;
 	/** 标题。 */
 	heading?: ReactNode;
 	/** 详细描述。 */
 	caption?: ReactNode;
+	/** 在图标上画斜线？ */
+	iconOff?: boolean;
 }>) {
 	const { resetTransition } = usePageStore();
 	const el = useDomRef<HTMLDivElement>();
+	const IconEl = iconOff ? IconOff : Icon;
 	useEffect(() => {
 		const container = el.current?.parentElement;
 		if (container)
@@ -47,7 +51,7 @@ export default function EmptyMessage({ icon, heading, caption, children }: FCP<{
 
 	return (
 		<StyledEmptyMessage ref={el}>
-			{icon && <Icon name={icon} />}
+			{icon && <IconEl name={icon} />}
 			<h2>{heading}</h2>
 			<p>{caption}</p>
 			{children}

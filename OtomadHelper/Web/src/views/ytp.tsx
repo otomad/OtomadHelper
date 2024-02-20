@@ -18,6 +18,7 @@ export default function Ytp() {
 					icon="ytp"
 					heading={t.empty.disabled.heading({ name: t.titles.ytp })}
 					caption={t.empty.disabled.caption({ name: t.titles.ytp })}
+					iconOff
 				>
 					<Button onClick={() => setEnabled(true)} accent>{t.enable}</Button>
 				</EmptyMessage>

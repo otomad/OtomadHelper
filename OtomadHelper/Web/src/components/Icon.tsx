@@ -23,6 +23,10 @@ const StyledIcon = styled.i.attrs({
 	}
 `;
 
+export function getIconSymbolId(name: string) {
+	return "#icon-" + name.replaceAll("/", "-");
+}
+
 export default forwardRef(function Icon({ name, filled, ...htmlAttrs }: FCP<{
 	/** 图标文件名称。 */
 	name: string;
@@ -31,7 +35,7 @@ export default forwardRef(function Icon({ name, filled, ...htmlAttrs }: FCP<{
 }, "span">, ref: ForwardedRef<HTMLSpanElement>) {
 	if (!name) return <span hidden />;
 
-	const symbolId = "#icon-" + name.replaceAll("/", "-");
+	const symbolId = getIconSymbolId(name);
 	const ariaDescription = new VariableName(name).words;
 
 	return (
