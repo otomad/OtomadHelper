@@ -103,7 +103,7 @@ const English = {
 			createGroups: "Group",
 			glissando: "Glissando",
 			autoPan: "Pan",
-			mappingVelocity: "Velocity",
+			mapping: "Mapping",
 			transformOfx: "TransformOFX",
 			tuning: {
 				_: "Tunning",
@@ -207,7 +207,7 @@ const English = {
 				createGroups: "Create groups for video and audio clips represented by one note",
 				glissando: "Creates a swirl effect if the note pitch bends or slides",
 				autoPan: "Pans the audio using envelope automation",
-				mappingVelocity: "Map the attack velocity of notes to the specified item",
+				mapping: "Map the properties of notes to the specified item",
 				transformOfx: "Miscz is a pixel hard edge plugin, enable to add keyframe properties to TransformOFX of this plugin",
 				tuning: {
 					stretchAttributes: "More config about the select tunning method",

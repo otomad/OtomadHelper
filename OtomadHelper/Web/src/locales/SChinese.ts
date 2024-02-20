@@ -103,7 +103,7 @@ const SChinese = {
 			createGroups: "创建分组",
 			glissando: "弯音效果",
 			autoPan: "自动声像",
-			mappingVelocity: "映射力度",
+			mapping: "映射",
 			transformOfx: "变换效果插件",
 			tuning: {
 				_: "调音",
@@ -207,7 +207,7 @@ const SChinese = {
 				createGroups: "将一个音符所表示的视频与音频剪辑创建分组",
 				glissando: "在弯音或滑音时产生漩涡效果",
 				autoPan: "自动化控制音频的声像包络",
-				mappingVelocity: "将音符的击键力度映射到指定项目",
+				mapping: "将音符的参数映射到指定项目",
 				transformOfx: "Miscz是一款像素硬边缘插件，开启以向此插件中的TransformOFX添加关键帧属性",
 				tuning: {
 					stretchAttributes: "有关选中调音方法的更多配置",

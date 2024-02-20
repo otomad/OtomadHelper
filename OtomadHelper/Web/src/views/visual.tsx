@@ -98,15 +98,6 @@ export default function Visual() {
 							<ToggleSwitch on={glissando} />
 						}
 					/>
-					<Expander
-						heading={t.stream.mappingVelocity}
-						caption={t.descriptions.stream.mappingVelocity}
-						icon="signal"
-						type="button"
-						actions={
-							<ToggleSwitch on={mappingVelocity} />
-						}
-					/>
 					<SettingsCardToggleSwitch heading={t.stream.transformOfx} caption={t.descriptions.stream.transformOfx} icon="zoom_fit" on={transformOfx} />
 
 					<Subheader>{t.subheaders.effects}</Subheader>
@@ -116,6 +107,12 @@ export default function Visual() {
 					</SettingsCard>
 
 					<Subheader>{t.subheaders.parameters}</Subheader>
+					<SettingsCard
+						heading={t.stream.mapping}
+						caption={t.descriptions.stream.mapping}
+						icon="mapping"
+						type="button"
+					/>
 				</>
 			)}
 		</div>
