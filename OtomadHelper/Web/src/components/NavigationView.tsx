@@ -1,4 +1,7 @@
 const navButtonSize = { width: 44, height: 40 };
+const CONTENT_ITEMS_ASSUMED_COUNT = 20;
+const NAV_ITEMS_ASSUMED_COUNT = 20;
+const NAV_ITEMS_BOTTOM_ASSUMED_COUNT = 3;
 
 const NavButton = styled(Button).attrs({
 	subtle: true,
@@ -278,7 +281,7 @@ const StyledNavigationView = styled.div<{
 					padding: 2px;
 				}
 
-				${({ $transitionName }) => forMap(20, i => css`
+				${({ $transitionName }) => forMap(CONTENT_ITEMS_ASSUMED_COUNT, i => css`
 					> :nth-child(${i}) {
 						animation: ${$transitionName === "jump" ? floatUp : ""}
 							300ms ${50 * (i - 1)}ms ${eases.easeOutMax} backwards;
@@ -292,6 +295,18 @@ const StyledNavigationView = styled.div<{
 			padding: 0 ${CONTENT_MARGIN_X}px;
 		}
 	}
+
+	${() => {
+		const selectors = forMap(NAV_ITEMS_ASSUMED_COUNT, i =>
+			`&:has(.nav-items .tab-item-wrapper:nth-of-type(${i}) .tab-item:active) .nav-items .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`);
+		selectors.push(...forMap(NAV_ITEMS_BOTTOM_ASSUMED_COUNT, i =>
+			`&:has(.nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item:active) .nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`));
+		return css`
+			${selectors.join(",")} {
+				--state: pressed;
+			}
+		`;
+	}}
 `;
 
 const StyledPage = styled.main`
