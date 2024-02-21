@@ -52,11 +52,86 @@ const StyledAnimatedIcon = styled.div`
 	}
 `;
 
-class InterruptLottieError extends Error {
-	constructor() {
-		super("Lottie animation playing has been interrupted");
-		this.name = this.constructor.name;
+type LottieStateMarker = `${string}To${string}`;
+
+function useLottieSequence(animationItem: MutableRefObject<AnimationItem | undefined>) {
+	const [sequence, setSequence] = useImmer<LottieStateMarker[]>([]);
+
+	function findMarker(callback: string | ((name: string) => boolean)) {
+		return animationItem.current?.markers.find(m =>
+			typeof callback === "function" ? callback(m.payload.name) : m.payload.name === callback);
 	}
+
+	function getMarkerFromTo(marker: LottieStateMarker) {
+		return marker.match(/(?<from>.*)To(?<to>[^a-z].*)/)?.groups as { from: string; to: string };
+	}
+
+	function push(...state: LottieStateMarker[]) {
+		setSequence(sequence => {
+			const isPaused = !sequence.length;
+			sequence.push(...state);
+			for (let index = sequence.length - 1; index >= 1; index--) {
+				const state = sequence[index];
+				const previouses = sequence.slice(0, index);
+				const duplicateIndex = previouses.indexOf(state);
+				if (duplicateIndex !== -1) {
+					const deleteCount = index - duplicateIndex;
+					sequence.splice(duplicateIndex, deleteCount);
+					index = duplicateIndex;
+				}
+			}
+			const lastTo = getMarkerFromTo(sequence.at(-1)!).to;
+			for (let index = 0; index < sequence.length; index++) {
+				const state = sequence[index];
+				const { from } = getMarkerFromTo(state);
+				const marker = `${from}To${lastTo}` as LottieStateMarker;
+				if (findMarker(marker)) {
+					sequence.splice(index, sequence.length - index, marker);
+					break;
+				}
+			}
+
+			const anim = animationItem.current;
+			if (isPaused && anim && state[0])
+				anim.goToAndPlay(state[0], true);
+			return sequence;
+		});
+	}
+
+	function clearAll() {
+		setSequence(sequence => (sequence.clearAll(), sequence));
+	}
+
+	function shift() {
+		setSequence(sequence => (sequence.shift(), sequence));
+	}
+
+	function goToAndStop(state: LottieStateMarker | number, reversed: boolean = false) {
+		clearAll();
+		const anim = animationItem.current;
+		if (!anim) return;
+		if (typeof state === "string")
+			if (!reversed) anim.goToAndStop(state);
+			else {
+				const markerItem = findMarker(state);
+				if (markerItem)
+					anim.goToAndStop(markerItem.time + markerItem.duration - 1);
+			}
+		else anim.goToAndStop(state);
+	}
+
+	function onAnimationComplete() {
+		setSequence(sequence => {
+			sequence.shift();
+			const nextState = sequence[0];
+			const anim = animationItem.current;
+			if (nextState && anim)
+				anim.goToAndPlay(nextState, true);
+			return sequence;
+		});
+	}
+
+	return { sequence, findMarker, push, clearAll, shift, goToAndStop, onAnimationComplete };
 }
 
 export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false, name, hidden = false, speed = 1, filled = false, onInit, onClick, ...htmlAttrs }: FCP<{
@@ -85,7 +160,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 }>) {
 	const animationItem = useRef<AnimationItem>();
 	const iconBox = useDomRef<HTMLDivElement>();
-	const markerSequenceRejects = useRef<(() => void)[]>([]);
+	const { findMarker, onAnimationComplete, ...sequence } = useLottieSequence(animationItem);
 
 	/**
 	 * 获取以文件名形式的图标。
@@ -94,15 +169,11 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 		if (typeof name !== "string")
 			return name;
 		try {
-			const iconsImport = import.meta.glob<string>("/src/assets/lotties/**/**.json", {
-				as: "raw",
-				eager: true,
-			});
+			const iconsImport = import.meta.glob<string>("/src/assets/lotties/**/**.json", { as: "raw", eager: true });
 			const rawIcon = iconsImport[`/src/assets/lotties/${name}.json`];
 			return JSON.parse(rawIcon);
 		} catch (e) {
-			// eslint-disable-next-line no-console
-			console.error(`Lottie file '${name}' doesn't exist in 'assets/lotties'`, e);
+			console.error(`Lottie file "${name}" doesn't exist in "assets/lotties"`, e);
 		}
 	}, [name]);
 
@@ -118,9 +189,6 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	const play = () => animationItem.current?.play();
 	const pause = () => animationItem.current?.pause();
 	const handleSpeedChange = () => animationItem.current?.setSpeed(speed);
-	const findMarker = (callback: string | ((name: string) => boolean)) =>
-		animationItem.current?.markers.find(m =>
-			typeof callback === "function" ? callback(m.payload.name) : m.payload.name === callback);
 
 	/**
 	 * 控制状态信息。
@@ -147,51 +215,25 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 				if (Object.is(speed, -0)) markerItem = findMarker(m => m.endsWith("To" + marker));
 				else if (Object.is(speed, 0)) markerItem = findMarker(m => m.startsWith(marker + "To"));
 			if (markerItem) {
-				markerSequenceRejects.current.forEach(reject => reject());
-				markerSequenceRejects.current = [];
-				const marker = markerItem.payload.name;
-				if (Object.is(speed, 0)) anim.goToAndStop(marker, true);
-				else if (Object.is(speed, -0)) anim.goToAndStop(markerItem.time + markerItem.duration - 1, true);
-				else anim.goToAndPlay(marker, true);
+				const marker = markerItem.payload.name as LottieStateMarker;
+				if (speed === 0) sequence.goToAndStop(marker, Object.is(speed, -0));
+				else sequence.push(marker);
 			}
 			if (!markerItem)
 				if (marker === "NormalToSelected")
-					playMarkerSequence("NormalToPressed", "PressedToSelected");
+					sequence.push("NormalToPressed", "PressedToSelected");
 				else if (marker === "PressedSelectedToNormal")
-					playMarkerSequence("PressedSelectedToSelected", "SelectedToNormal");
+					sequence.push("PressedSelectedToSelected", "SelectedToNormal");
 				else if (marker === "PressedToPressedSelected" && findMarker("PressedSelectedToSelected"))
-					anim.goToAndStop("PressedSelectedToSelected", true);
+					sequence.goToAndStop("PressedSelectedToSelected");
 				else if (marker === "PressedSelectedToPressed" && findMarker("PressedToNormal"))
-					anim.goToAndStop("PressedToNormal", true);
+					sequence.goToAndStop("PressedToNormal");
 				else {
 					markerItem = findMarker(m => m.startsWith(marker + "To"));
 					if (markerItem)
-						anim.goToAndStop(markerItem.payload.name, true);
+						sequence.goToAndStop(markerItem.payload.name as LottieStateMarker);
 				}
 		}
-	}
-
-	async function playMarkerSequence(...markers: string[]) {
-		const anim = animationItem.current;
-		if (!anim) return;
-		markers = markers.filter(m => findMarker(m));
-		for (const marker of markers)
-			try {
-				await new Promise<void>((resolve, reject) => {
-					const interrupt = () => reject(new InterruptLottieError());
-					const onComplete = () => {
-						anim.removeEventListener("complete", onComplete);
-						markerSequenceRejects.current.removeItem(interrupt);
-						resolve();
-					};
-					anim.addEventListener("complete", onComplete);
-					anim.goToAndPlay(marker, true);
-					markerSequenceRejects.current.push(interrupt);
-				});
-			} catch (error) {
-				if (error instanceof InterruptLottieError) break;
-				else throw error;
-			}
 	}
 
 	useEffect(() => handleSpeedChange(), [speed]);
@@ -211,6 +253,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	 */
 	function onAnimationCreated(anim: AnimationItem) {
 		animationItem.current = anim;
+		anim.addEventListener("complete", onAnimationComplete);
 		handleStateChange({ marker: previousAnimationName.current, speed: 0 });
 		handleSpeedChange();
 		onInit?.(anim);
