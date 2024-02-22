@@ -42,7 +42,7 @@ export /* internal */ function initArrayExtensions() {
 		if (index === -1)
 			this.push(item);
 		else
-			arrayRemoveAt(this, index);
+			this.removeAt(index);
 	};
 
 	Array.prototype.mapObject = function (callbackFn) {
