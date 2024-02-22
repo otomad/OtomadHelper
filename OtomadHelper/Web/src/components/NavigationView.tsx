@@ -311,9 +311,9 @@ const StyledNavigationView = styled.div<{
 
 	${() => {
 		const selectors = forMap(NAV_ITEMS_ASSUMED_COUNT, i =>
-			`&:has(.nav-items .tab-item-wrapper:nth-of-type(${i}) .tab-item:active) .nav-items .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`);
+			`&:has(.nav-items .tab-item-wrapper:nth-of-type(${i}) .tab-item:active:hover) .nav-items .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`);
 		selectors.push(...forMap(NAV_ITEMS_BOTTOM_ASSUMED_COUNT, i =>
-			`&:has(.nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item:active) .nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`));
+			`&:has(.nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item:active:hover) .nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`));
 		return css`
 			${selectors.join(",")} {
 				--state: pressed;

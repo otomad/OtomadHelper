@@ -53,6 +53,7 @@ const StyledAnimatedIcon = styled.div`
 `;
 
 type LottieStateMarker = `${string}To${string}`;
+type MarkerFromTo = Partial<{ from: string; to: string }> | undefined;
 
 function useLottieSequence(animationItem: MutableRefObject<AnimationItem | undefined>) {
 	const [sequence, setSequence] = useImmer<LottieStateMarker[]>([]);
@@ -63,7 +64,7 @@ function useLottieSequence(animationItem: MutableRefObject<AnimationItem | undef
 	}
 
 	function getMarkerFromTo(marker: LottieStateMarker) {
-		return marker.match(/(?<from>.*)To(?<to>[^a-z].*)/)?.groups as { from: string; to: string };
+		return marker.match(/(?<from>.*)To(?<to>[^a-z].*)/)?.groups as MarkerFromTo;
 	}
 
 	function push(...state: LottieStateMarker[]) {
@@ -80,30 +81,33 @@ function useLottieSequence(animationItem: MutableRefObject<AnimationItem | undef
 					index = duplicateIndex;
 				}
 			}
-			const lastTo = getMarkerFromTo(sequence.at(-1)!).to;
-			for (let index = 0; index < sequence.length; index++) {
-				const state = sequence[index];
-				const { from } = getMarkerFromTo(state);
-				const marker = `${from}To${lastTo}` as LottieStateMarker;
-				if (findMarker(marker)) {
-					sequence.splice(index, sequence.length - index, marker);
-					break;
-				}
+			spliced: while (true) {
+				let { length } = sequence;
+				while (--length)
+					for (let i = 0, j = length; j < sequence.length; i++, j++) {
+						const first = getMarkerFromTo(sequence[i]), last = getMarkerFromTo(sequence[j]);
+						if (!first?.from || !last?.to) continue;
+						const marker: LottieStateMarker = `${first.from}To${last.to}`;
+						if (findMarker(marker) && (i !== 0 || i === 0 && marker === sequence[i])) {
+							sequence.splice(i, length, marker);
+							break spliced;
+						}
+					}
+				break;
 			}
 
 			const anim = animationItem.current;
 			if (isPaused && anim && state[0])
 				anim.goToAndPlay(state[0], true);
-			return sequence;
 		});
 	}
 
 	function clearAll() {
-		setSequence(sequence => (sequence.clearAll(), sequence));
+		setSequence(sequence => void sequence.clearAll());
 	}
 
 	function shift() {
-		setSequence(sequence => (sequence.shift(), sequence));
+		setSequence(sequence => void sequence.shift());
 	}
 
 	function goToAndStop(state: LottieStateMarker | number, reversed: boolean = false) {
@@ -127,7 +131,6 @@ function useLottieSequence(animationItem: MutableRefObject<AnimationItem | undef
 			const anim = animationItem.current;
 			if (nextState && anim)
 				anim.goToAndPlay(nextState, true);
-			return sequence;
 		});
 	}
 
