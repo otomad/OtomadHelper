@@ -1,0 +1,34 @@
+diff --git a/node_modules/vite/client.d.ts b/node_modules/vite/client.d.ts
+index 0f2c3db..82dc540 100644
+--- a/node_modules/vite/client.d.ts
++++ b/node_modules/vite/client.d.ts
+@@ -130,9 +130,9 @@ declare module '*.gif' {
+   const src: string
+   export default src
+ }
+-declare module '*.svg' {
+-  const src: string
+-  export default src
++declare module '*.svg' { // Using with vite-plugin-svgr
++  const SvgElement: typeof import('*.svg?react')['default']
++  export default SvgElement
+ }
+ declare module '*.ico' {
+   const src: string
+@@ -147,6 +147,16 @@ declare module '*.avif' {
+   export default src
+ }
+ 
++// cursors
++declare module '*.cur' {
++  const src: string
++  export default src
++}
++declare module '*.ani' {
++  const src: string
++  export default src
++}
++
+ // media
+ declare module '*.mp4' {
+   const src: string

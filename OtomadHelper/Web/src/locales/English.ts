@@ -1,5 +1,8 @@
 const English = {
 	translation: {
+		__translator__: "",
+		colon: ": ",
+		semicolon: "; ",
 		titles: {
 			home: "Home",
 			source: "Source",
@@ -154,8 +157,15 @@ const English = {
 		},
 		settings: {
 			about: {
-				_: "About",
 				checkForUpdates: "Check for updates",
+				repositoryLink: "Repository link",
+				documentation: "Documentation",
+				version: "Version",
+				author: "Author",
+				__author__: "Ranne",
+				originalAuthor: "Original author",
+				__originalAuthor__: "Chaosinism",
+				translator: "Translator",
 			},
 			language: {
 				_: "Language",
@@ -175,7 +185,7 @@ const English = {
 				uiScale: "UI scale",
 			},
 			config: {
-				hideFeatureTips: "Hide feature tips",
+				hideUseTips: "Hide use tips",
 			},
 			dev: {
 				_: "Dev",
@@ -240,6 +250,9 @@ const English = {
 			},
 			staff: {
 				_: "Staff Visualizer is to use custom patterns as notes to draw visuals similar fashion to piano staff sheets based on the melody of the score.\nThis visual effect style mimics the videos of YouTuber @grantwoolard, who featured the use of musicians' avatars to draw the piano staff sheets of classical music.",
+			},
+			settings: {
+				about: "Otomad Helper for Vegas, designed to allow Vegas to accept scores like MIDI files as input, and automatically generate YTPMV/Otomad tracks.",
 			},
 		},
 		empty: {

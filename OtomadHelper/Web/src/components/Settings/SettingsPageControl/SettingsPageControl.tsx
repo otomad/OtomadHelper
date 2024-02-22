@@ -31,8 +31,8 @@ export default forwardRef(function SettingsPageControl({ image, learnMoreLink, c
 	/** 清除浮动。 */
 	clearFloat?: boolean;
 }, "div">, ref: ForwardedRef<HTMLDivElement>) {
-	const [hideFeatureTips] = selectConfig(c => c.settings.hideFeatureTips);
-	if (hideFeatureTips) return;
+	const [hideUseTips] = selectConfig(c => c.settings.hideUseTips);
+	if (hideUseTips) return;
 
 	const LearnMore = learnMoreLink ? OpenLink : "a";
 	const TextWrapper = clearFloat ? "p" : Fragment;

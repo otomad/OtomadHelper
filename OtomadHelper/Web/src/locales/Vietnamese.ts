@@ -2,6 +2,7 @@ import type { LocaleIdentifiers } from "./types";
 
 const Vietnamese = {
 	translation: {
+		__translator__: "Cyahega",
 		titles: {
 			home: "Trang chủ",
 			source: "Nguồn",

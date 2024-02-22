@@ -90,7 +90,7 @@ const StyledButton = styled.button<{
 
 	&.subtle {
 		border: none;
-		padding: 0;
+		padding: 0 11px;
 		background-color: ${c("fill-color-subtle-transparent")};
 
 		&::before {

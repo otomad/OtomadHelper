@@ -18,12 +18,19 @@ const StyledEmptyMessage = styled.div`
 		font-size: 48px;
 	}
 
-	> h2 {
-		${styles.effects.text.title};
-	}
+	> header {
+		> h2 {
+			${styles.effects.text.title};
 
-	> p {
-		color: ${c("fill-color-text-tertiary")}
+			+ p {
+				margin-top: 5px;
+			}
+		}
+
+		> p {
+			${styles.effects.text.custom(14, 20, "regular", "small")};
+			color: ${c("fill-color-text-tertiary")}
+		}
 	}
 `;
 
@@ -52,8 +59,10 @@ export default function EmptyMessage({ icon, heading, caption, iconOff = false, 
 	return (
 		<StyledEmptyMessage ref={el}>
 			{icon && <IconEl name={icon} />}
-			<h2>{heading}</h2>
-			<p>{caption}</p>
+			<header>
+				<h2>{heading}</h2>
+				<p>{caption}</p>
+			</header>
 			{children}
 		</StyledEmptyMessage>
 	);

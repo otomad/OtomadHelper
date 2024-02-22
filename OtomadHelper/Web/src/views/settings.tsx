@@ -8,20 +8,12 @@ export default function Settings() {
 	const schemes = ["light", "dark", "auto"] as const;
 	const { scheme, setScheme } = useColorModeStore();
 	const uiScale = selectConfig(c => c.settings.uiScale);
-	const hideFeatureTips = selectConfig(c => c.settings.hideFeatureTips);
+	const hideUseTips = selectConfig(c => c.settings.hideUseTips);
 	const devMode = selectConfig(c => c.settings.devMode);
 
 	return (
 		<div className="container">
-			<Expander heading={t.settings.about} icon="info">
-				<ExpanderChildWrapper>
-					<p>Otomad Helper<br />v7.0</p>
-					<div>
-						<OpenLink href="https://github.com/otomad/OtomadHelper">仓库地址</OpenLink>
-					</div>
-					<Button>{t.settings.about.checkForUpdates}</Button>
-				</ExpanderChildWrapper>
-			</Expander>
+			<SettingsAbout />
 			<ExpanderRadio
 				heading={t.settings.language}
 				icon="globe"
@@ -55,7 +47,7 @@ export default function Settings() {
 			</Expander>
 
 			<Subheader>{t.subheaders.config}</Subheader>
-			<SettingsCardToggleSwitch heading={t.settings.config.hideFeatureTips} icon="chat_help_off" on={hideFeatureTips} />
+			<SettingsCardToggleSwitch heading={t.settings.config.hideUseTips} icon="chat_help_off" on={hideUseTips} />
 
 			<Subheader>{t.settings.dev}</Subheader>
 			<SettingsCardToggleSwitch heading={t.settings.dev.devMode} icon="devtools" on={devMode} />

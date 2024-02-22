@@ -25,7 +25,7 @@ export default function IconOff({ name }: FCP<{
 		<StyledIconOff>
 			<svg width={16} height={16} viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
 				<mask id={maskId}>
-					<g dangerouslySetInnerHTML={{ __html: svgPath }} />
+					<g fill="white" dangerouslySetInnerHTML={{ __html: svgPath }} />
 					<g
 						fill="none" strokeDasharray={26} strokeDashoffset={26} strokeLinecap="round" strokeLinejoin="round"
 						strokeWidth={1}

@@ -14,7 +14,7 @@ const GlobalStyle = createGlobalStyle<{
 	*,
 	::before,
 	::after {
-		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms;
+		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 0s, fill ${eases.easeOutMax} 0s;
 		font-family: "Segoe UI Variable", "Segoe UI", "Microsoft YaHei UI", sans-serif;
 		user-select: none;
 		box-sizing: border-box;
