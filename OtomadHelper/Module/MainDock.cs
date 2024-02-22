@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -41,6 +42,12 @@ public partial class MainDock : UserControl {
 	private void Browser_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e) {
 		ManagedStream.Handler(Browser);
 		Browser.Source = new Uri("http://app/index.html"); // "http://www.sunchateau.com/free/ua.htm"
+		Browser.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
+	}
+
+	private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e) {
+		e.Handled = true;
+		Process.Start(e.Uri);
 	}
 
 	private void Browser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e) {
