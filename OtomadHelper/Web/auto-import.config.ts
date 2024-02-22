@@ -13,6 +13,9 @@ export default [
 		"react-dom/client": [
 			["*", "ReactDOM"],
 		],
+		"react-dom": [
+			"createPortal",
+		],
 		"styled-components": [
 			"styled",
 			"keyframes",

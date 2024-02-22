@@ -68,6 +68,8 @@ export default function Score() {
 			/>
 
 			<Subheader>{t(2).titles.track}</Subheader>
+
+			<DragToImport>{t.titles.score}</DragToImport>
 		</div>
 	);
 }

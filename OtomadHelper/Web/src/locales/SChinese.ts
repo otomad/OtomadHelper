@@ -48,6 +48,7 @@ const SChinese = {
 		allFiles: "所有文件",
 		systemDefault: "系统默认",
 		complete: "完成",
+		dragToImport: "拖放以导入{{item, lowercase}}",
 		subheaders: {
 			moreOptions: "更多选项",
 			advanced: "高级",

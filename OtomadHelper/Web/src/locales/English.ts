@@ -48,6 +48,7 @@ const English = {
 		allFiles: "All Files",
 		systemDefault: "System default",
 		complete: "Complete",
+		dragToImport: "Drag and drop to import the {{item, lowercase}}",
 		subheaders: {
 			moreOptions: "More options",
 			advanced: "Advanced",

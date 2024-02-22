@@ -49,6 +49,7 @@ export default function Source() {
 				<ToggleSwitch on={selectAllEventsGenerated}>{t.source.selectAllEventsGenerated}</ToggleSwitch>
 				<ToggleSwitch on={randomOffsetForTracks}>{t.source.randomOffsetForTracks}</ToggleSwitch>
 			</Expander>
+			<DragToImport>{t.titles.source}</DragToImport>
 		</div>
 	);
 }

@@ -88,4 +88,17 @@ export default {
 			}
 		}
 	`,
+	/**
+	 * 将元素占满整个屏幕。
+	 *
+	 * 将长宽均设为 100% 视窗宽高度值。
+	 * @param position - 指定元素的 position 属性。
+	 */
+	fullscreen: (position: "fixed" | "absolute" = "fixed") => css`
+		position: ${position};
+		top: 0;
+		left: 0;
+		width: 100dvw;
+		height: 100dvh;
+	`,
 };
