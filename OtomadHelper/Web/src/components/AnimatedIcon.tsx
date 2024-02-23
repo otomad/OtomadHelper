@@ -1,4 +1,7 @@
-const StyledAnimatedIcon = styled.div`
+const StyledAnimatedIcon = styled.div<{
+	/** 是否 `overflow: hidden`？ */
+	$clipped?: boolean;
+}>`
 	@layer props {
 		--state: normal;
 		--selected: false;
@@ -48,6 +51,13 @@ const StyledAnimatedIcon = styled.div`
 			svg > g {
 				clip-path: none;
 			}
+
+			${({ $clipped }) => $clipped && css`
+				svg,
+				svg * {
+					overflow: hidden;
+				}
+			`}
 		}
 	}
 `;
@@ -168,7 +178,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	/**
 	 * 获取以文件名形式的图标。
 	 */
-	const animationData = useMemo<object>(() => {
+	const animationData = useMemo<AnyObject>(() => {
 		if (typeof name !== "string")
 			return name;
 		try {
@@ -179,6 +189,8 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 			console.error(`Lottie file "${name}" doesn't exist in "assets/lotties"`, e);
 		}
 	}, [name]);
+
+	const clipped = useMemo(() => !!animationData.metadata?.customProps?.clipped, [name]);
 
 	/**
 	 * 点击图标交互事件。
@@ -267,7 +279,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	}), []);
 
 	return (
-		<StyledAnimatedIcon {...htmlAttrs}>
+		<StyledAnimatedIcon $clipped={clipped} {...htmlAttrs}>
 			<div ref={iconBox} className="icon-box" onClick={handleClick}>
 				<Lottie
 					className={{ filled }}

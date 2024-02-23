@@ -1,8 +1,15 @@
 diff --git a/node_modules/lottie-web/index.d.ts b/node_modules/lottie-web/index.d.ts
-index a018fbc..d8d72ba 100644
+index a018fbc..b8d735f 100644
 --- a/node_modules/lottie-web/index.d.ts
 +++ b/node_modules/lottie-web/index.d.ts
-@@ -72,6 +72,13 @@ export type AnimationItem = {
+@@ -66,12 +66,20 @@ export type AnimationItem = {
+     autoplay: boolean;
+     loop: boolean | number;
+     renderer: any;
++    animationData: any;
+     animationID: string;
+     assetsPath: string;
+     timeCompleted: number;
      segmentPos: number;
      isSubframeEnabled: boolean;
      segments: AnimationSegment | AnimationSegment[];
