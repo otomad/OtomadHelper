@@ -109,33 +109,33 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 	if (value > max)
 		throw new RangeError("The value of Slider is greater than the maximum value. " + errorInfo);
 
-	const restrict = useCallback((n: number | undefined, nanValue: number) => Number.isFinite(n) ? clamp(map(n!, min, max, 0, 1), 0, 1) : nanValue, [min, max]);
+	const restrict = (n: number | undefined, nanValue: number) => Number.isFinite(n) ? clamp(map(n!, min, max, 0, 1), 0, 1) : nanValue;
 	const sharpValue = useMemo(() => restrict(value, 0), [value, min, max]);
 	const smoothValue = useSmoothValue(sharpValue, 0.5); // 修改这个参数可以调整滑动条的平滑移动值。
 
-	const resetDefault = useCallback((e: MouseEvent) => {
+	function resetToDefault(e: MouseEvent) {
 		e.preventDefault();
 		if (defaultValue !== undefined && Number.isFinite(defaultValue)) {
 			setValue?.(defaultValue);
 			onChanging?.(defaultValue);
 			onChanged?.(defaultValue);
 		}
-	}, []);
+	}
 
-	const clampValue = useCallback((value: number) => {
+	function clampValue(value: number) {
 		value = clamp(value, min, max);
 		if (step !== undefined)
 			value = Math.floor((value - min) / step) * step + min;
 		return value;
-	}, [min, max, step]);
+	}
 
-	const onThumbDown = useCallback((e: PointerEvent, triggerByTrack: boolean = false) => {
-		if (e.button) { resetDefault(e); return; }
+	function onThumbDown(e: PointerEvent, triggerByTrack: boolean = false) {
+		if (e.button) { resetToDefault(e); return; }
 		const thumb = (e.currentTarget as HTMLDivElement).parentElement!.querySelector(".thumb") as HTMLDivElement;
 		const thumbSize = thumb.offsetWidth;
 		const track = thumb.parentElement!.querySelector(".track")!;
 		const { left, width } = track.getBoundingClientRect();
-		const x = triggerByTrack ? 0 : e.clientX - left - thumb.offsetLeft;
+		const x = triggerByTrack ? thumbSize / 2 : e.clientX - left - thumb.offsetLeft;
 		const pointerMove = lodash.debounce((e: PointerEvent) => {
 			const position = clamp(e.clientX - left - x, 0, width - thumbSize);
 			const value = clampValue(map(position, 0, width - thumbSize, min, max));
@@ -149,10 +149,10 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 		};
 		document.addEventListener("pointermove", pointerMove);
 		document.addEventListener("pointerup", pointerUp);
-	}, []);
+	}
 
 	const onTrackDown = useCallback<PointerEventHandler>(e => {
-		if (e.button) { resetDefault(e); return; }
+		if (e.button) { resetToDefault(e); return; }
 		const track = e.currentTarget as HTMLDivElement;
 		const thumb = track.parentElement!.querySelector(".thumb") as HTMLDivElement;
 		const thumbSizeHalf = thumb.offsetWidth / 2;
@@ -179,7 +179,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 					"--value": smoothValue,
 				}}
 				onKeyDown={onKeyDown}
-				onAuxClick={resetDefault}
+				onAuxClick={resetToDefault}
 				onContextMenu={stopEvent}
 			>
 				<div className="track" onPointerDown={onTrackDown} />
