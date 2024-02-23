@@ -21,7 +21,11 @@ const StyledSettingsAbout = styled.div`
 		> div {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 10px;
+			column-gap: 10px;
+
+			> * {
+				display: inline-block;
+			}
 		}
 
 		.pairs {
