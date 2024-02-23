@@ -34,6 +34,7 @@
 			this.Browser.DefaultBackgroundColor = System.Drawing.Color.White;
 			this.Browser.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Browser.Location = new System.Drawing.Point(0, 0);
+			this.Browser.Margin = new System.Windows.Forms.Padding(0);
 			this.Browser.Name = "Browser";
 			this.Browser.Size = new System.Drawing.Size(600, 300);
 			this.Browser.TabIndex = 0;
@@ -57,6 +58,6 @@
 
 		#endregion
 
-		private Microsoft.Web.WebView2.WinForms.WebView2 Browser;
+		public Microsoft.Web.WebView2.WinForms.WebView2 Browser;
 	}
 }

@@ -163,6 +163,9 @@
     <None Include="Test\App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Test\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Web\dist\**" />
     <EmbeddedResource Include="Assets\**" />
     <Content Include="Otomad Helper.ico" />

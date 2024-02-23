@@ -36,13 +36,20 @@ public partial class MainDock : UserControl {
 		ForeColor = Skins.Colors.ButtonText;
 #endif
 		InitLoadingAnimation();
-		Browser.EnsureCoreWebView2Async();
+		CoreWebView2_LoadEnvironment();
+	}
+
+	private async void CoreWebView2_LoadEnvironment() {
+		CoreWebView2EnvironmentOptions options = new("--enable-features=OverlayScrollbar,msEdgeFluentOverlayScrollbar,msOverlayScrollbarWinStyleAnimation");
+		CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(null, null, options);
+		await Browser.EnsureCoreWebView2Async(environment);
 	}
 
 	private void Browser_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e) {
 		ManagedStream.Handler(Browser);
 		Browser.Source = new Uri("http://app/index.html"); // "http://www.sunchateau.com/free/ua.htm"
 		Browser.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
+		Browser.CoreWebView2.DocumentTitleChanged += (sender, e) => DocumentTitleChanged?.Invoke(Browser.CoreWebView2.DocumentTitle);
 	}
 
 	private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e) {
@@ -70,4 +77,7 @@ public partial class MainDock : UserControl {
 			LoadingAnimationPicture.Start();
 		} catch (Exception) { }
 	}
+
+	public delegate void DocumentTitleChangedEventHandler(string title);
+	public event DocumentTitleChangedEventHandler? DocumentTitleChanged;
 }

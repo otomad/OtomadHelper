@@ -32,6 +32,7 @@
 			this.ClientSize = new System.Drawing.Size(1262, 673);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.Name = "TestForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Otomad Helper - Test Form";
 			this.ResumeLayout(false);
 

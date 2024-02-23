@@ -19,6 +19,7 @@ namespace OtomadHelper.Test {
 			mainDock = new MainDock();
 			Controls.Add(mainDock);
 			Icon = Properties.Resources.OtomadHelper;
+			mainDock.DocumentTitleChanged += title => Text = title;
 
 			//var window = new MainWindow();
 			//window.Show();
