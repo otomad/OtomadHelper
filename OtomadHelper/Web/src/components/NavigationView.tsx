@@ -301,6 +301,10 @@ const StyledNavigationView = styled.div<{
 					}
 				`)}
 			}
+
+			> .exit > .container > * {
+				animation: none !important;
+			}
 		}
 
 		.title-wrapper,
