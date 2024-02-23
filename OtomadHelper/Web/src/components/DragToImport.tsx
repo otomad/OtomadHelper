@@ -51,7 +51,11 @@ export default function DragToImport({ children }: FCP<{
 	function onDragOver(e: DragEvent) {
 		if (!e.dataTransfer) return;
 		stopEvent(e);
-		e.dataTransfer.dropEffect = "link";
+		if (e.dataTransfer.items[0]?.kind !== "file") {
+			e.dataTransfer.dropEffect = "none";
+			return;
+		}
+		e.dataTransfer.dropEffect = "copy";
 		console.log(e.dataTransfer.items[0]); // WARN: 发行时移除。
 		setShown(true);
 	}

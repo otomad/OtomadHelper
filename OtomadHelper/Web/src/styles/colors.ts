@@ -67,7 +67,7 @@ const colors = {
 	"background-fill-color-card-background-default": ["rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.05)"],
 	"background-fill-color-card-background-secondary": ["rgba(246, 246, 246, 0.5)", "rgba(255, 255, 255, 0.03)"],
 	"background-fill-color-card-background-tertiary": ["rgb(255, 255, 255)", "rgba(255, 255, 255, 0.07)"],
-	"background-fill-color-smoke-default": ["rgba(0, 0, 0, 0.3)", "rgba(0, 0, 0, 0.3)"],
+	"background-fill-color-smoke-default": ["rgba(255, 255, 255, 0.3)", "rgba(0, 0, 0, 0.3)"],
 	"background-fill-color-layer-default": ["rgba(255, 255, 255, 0.5)", "rgba(58, 58, 58, 0.3)"],
 	"background-fill-color-layer-alt": ["rgb(255, 255, 255)", "rgba(255, 255, 255, 0.05)"],
 	"background-fill-color-layer-on-acrylic-default": ["rgba(255, 255, 255, 0.25)", "rgba(255, 255, 255, 0.04)"],

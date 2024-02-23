@@ -35,7 +35,7 @@ const StyledSlider = styled.div`
 		position: absolute;
 		top: 0;
 		margin-top: 0;
-		transition: none;
+		transition: background-color ${eases.easeOutMax} 250ms;
 		pointer-events: none;
 		margin: ${thumbSizeHalf} 0;
 	}

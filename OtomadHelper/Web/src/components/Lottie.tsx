@@ -5,7 +5,7 @@ const LavContainer = styled.div.attrs({
 })`
 	&,
 	* {
-		transition: none;
+		transition: color ${eases.easeOutMax} 100ms;
 	}
 `;
 
