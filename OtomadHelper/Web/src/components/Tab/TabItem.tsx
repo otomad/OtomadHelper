@@ -1,6 +1,6 @@
 const StyledTabItemWrapper = styled.div`
 	.tab-bar.vertical & {
-		padding: 1.5px 5px 1.5px;
+		padding: 1.5px 5px;
 	}
 `;
 

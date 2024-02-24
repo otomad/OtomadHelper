@@ -34,13 +34,9 @@ const StyledSlider = styled.div`
 	.passed {
 		position: absolute;
 		top: 0;
-		margin-top: 0;
 		transition: background-color ${eases.easeOutMax} 250ms;
 		pointer-events: none;
 		margin: ${thumbSizeHalf} 0;
-	}
-
-	.passed {
 		width: ${valueCalc};
 		background-color: ${c("accent-color")};
 	}

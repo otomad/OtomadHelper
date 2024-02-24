@@ -68,7 +68,7 @@ export default {
 				border-style: solid;
 				border-color: transparent;
 				background: ${gradient} border-box;
-				-webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+				-webkit-mask: linear-gradient(white 0 0) padding-box, linear-gradient(white 0 0);
 				-webkit-mask-composite: xor;
 				mask-composite: exclude;
 				pointer-events: none;

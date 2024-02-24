@@ -39,6 +39,7 @@ const StyledAnimatedIcon = styled.div<{
 		.lottie {
 			${styles.effects.text.icon};
 			${styles.mixins.square("1em")};
+			color: red;
 
 			&:not(.filled) * {
 				fill: currentColor;

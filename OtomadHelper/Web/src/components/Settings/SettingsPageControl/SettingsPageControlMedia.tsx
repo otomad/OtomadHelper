@@ -42,7 +42,7 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 		position: absolute;
 		inset: 0;
 		filter: blur(30px);
-		opacity: 30%;
+		opacity: 0.3;
 		object-fit: cover;
 		pointer-events: none;
 	}

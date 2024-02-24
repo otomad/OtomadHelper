@@ -32,6 +32,19 @@ const StyledRadioButtonLabel = styled.label`
 		.icon {
 			font-size: 12px;
 			color: ${c("fill-color-text-on-accent-primary")};
+			
+			&.enter {
+				clip-path: inset(0 100% 0 0);
+			}
+
+			&.enter-active,
+			&.exit {
+				clip-path: inset(0 0 0 0);
+			}
+
+			&.exit-active {
+				clip-path: inset(0 0 0 100%);
+			}
 		}
 	}
 
@@ -78,21 +91,6 @@ const StyledRadioButtonLabel = styled.label`
 	}
 
 	${styles.mixins.forwardFocusRing()};
-
-	.base .icon {
-		&.enter {
-			clip-path: inset(0 100% 0 0);
-		}
-
-		&.enter-active,
-		&.exit {
-			clip-path: inset(0 0 0 0);
-		}
-
-		&.exit-active {
-			clip-path: inset(0 0 0 100%);
-		}
-	}
 `;
 
 interface SharedProps {

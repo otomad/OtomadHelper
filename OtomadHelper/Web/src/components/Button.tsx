@@ -7,7 +7,6 @@ const StyledButton = styled.button<{
 	border-radius: 4px;
 	border: 1px solid;
 	padding: 4px 11px 6px;
-	border-radius: 3px;
 	min-height: 30px;
 
 	&:hover {

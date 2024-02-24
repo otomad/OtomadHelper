@@ -1,0 +1,15 @@
+diff --git a/node_modules/postcss-styled-syntax/lib/tokenizer.js b/node_modules/postcss-styled-syntax/lib/tokenizer.js
+index 92da2ef..cc53e0c 100644
+--- a/node_modules/postcss-styled-syntax/lib/tokenizer.js
++++ b/node_modules/postcss-styled-syntax/lib/tokenizer.js
+@@ -317,6 +317,10 @@ function tokenizer(input, options = {}) {
+ 
+ 					currentToken = ['comment', css.slice(pos, next + 1), pos, next];
+ 					pos = next;
++				} else if (code === SLASH && css.charCodeAt(pos + 1) === SLASH) {
++					next = css.indexOf('\n', pos + 2);
++					currentToken = ['comment', css.slice(pos, next + 1) + " */", pos, next];
++					pos = next;
+ 				} else {
+ 					RE_WORD_END.lastIndex = pos + 1;
+ 					RE_WORD_END.test(css);

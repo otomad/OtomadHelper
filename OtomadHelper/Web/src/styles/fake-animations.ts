@@ -7,4 +7,7 @@ const fakeAnimations = [
 	"PressedSelected",
 ];
 
-export default fakeAnimations.map(identifier => css`@keyframes ${identifier} {}`);
+export default fakeAnimations.map(identifier => css`
+	// stylelint-disable-next-line block-no-empty
+	@keyframes ${identifier} {}
+`);
