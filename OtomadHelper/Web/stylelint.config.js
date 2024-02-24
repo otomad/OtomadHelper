@@ -9,6 +9,7 @@ export default {
 	customSyntax: "postcss-styled-syntax",
 	plugins: [
 		"stylelint-order",
+		"@stylistic/stylelint-plugin",
 	],
 	rules: {
 		// "media-feature-name-no-vendor-prefix": true, // 不要使用已被 autoprefixer 支持的浏览器前缀。
@@ -16,21 +17,23 @@ export default {
 		"selector-no-vendor-prefix": true,
 		"property-no-vendor-prefix": null,
 		"value-no-vendor-prefix": null,
-		/// "color-hex-case": "lower", // 颜色值要小写。
+		"@stylistic/color-hex-case": "lower", // 颜色值要小写。
 		"color-hex-length": "short", // 颜色值能短则短。
 		"color-named": "always-where-possible", // 颜色若有名字则必须写为其名字。
 		// "function-disallowed-list": [/^rgb/, /^hsl/, /^hwb/], // 只允许用 16 进制表示颜色，不允许使用 rgb、rgba 等表示颜色。
-		/// "indentation": "tab",
+		// "@stylistic/indentation": ["tab", { baseIndentLevel: "auto" }],
 		"length-zero-no-unit": true,
 		"value-keyword-case": null, // 与 v-bind 冲突了。
-		/// "value-list-comma-newline-after": null,
-		/// "max-line-length": null,
-		/// "no-eol-whitespace": [true, { "ignore": ["empty-lines"] }],
+		"@stylistic/value-list-comma-newline-after": null,
+		"@stylistic/max-line-length": null,
+		"@stylistic/no-eol-whitespace": [true, { "ignore": ["empty-lines"] }],
 		"no-descending-specificity": null,
 		"function-url-quotes": "always",
-		/// "string-quotes": "double",
-		/// "block-opening-brace-space-before": "always",
-		/// "block-closing-brace-empty-line-before": "never",
+		"@stylistic/string-quotes": "double",
+		"@stylistic/block-opening-brace-space-before": "always",
+		// "@stylistic/block-closing-brace-empty-line-before": "never",
+		"@stylistic/number-leading-zero": "always",
+		"@stylistic/unit-case": "lower",
 		"import-notation": null,
 		"at-rule-no-unknown": null,
 		"function-no-unknown": null,

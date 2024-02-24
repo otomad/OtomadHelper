@@ -43,6 +43,7 @@
 	"devDependencies": {
 		"@styled/typescript-styled-plugin": "^1.0.0",
 		"@stylistic/eslint-plugin": "^1.6.2",
+		"@stylistic/stylelint-plugin": "^2.1.0",
 		"@types/lodash-es": "^4.17.11",
 		"@types/pangu": "^4.0.2",
 		"@types/react": "^18.2.48",
