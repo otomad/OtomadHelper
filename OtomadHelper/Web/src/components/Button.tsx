@@ -44,11 +44,14 @@ const StyledButton = styled.button<{
 		${ifColorScheme.light} &:not(:active, [disabled]) {
 			border-bottom-color: ${c("stroke-color-control-stroke-secondary")};
 		}
-	` : css`
+` : css`
 		--fill-color: ${c($fillColorName)};
-		color: ${c("fill-color-text-on-accent-primary")};
 		background-color: ${c($fillColorName)};
 		border-color: ${c("stroke-color-control-stroke-on-accent-default")};
+
+		* {
+			color: ${c("fill-color-text-on-accent-primary")};
+		}
 
 		${ifColorScheme.dark} &:not(:active, [disabled]) {
 			border-top-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
@@ -77,7 +80,7 @@ const StyledButton = styled.button<{
 				color: ${c("foreground-color")};
 			}
 		}
-	`}
+`}
 
 	@layer components {
 		min-width: 96px;

@@ -8,7 +8,7 @@ const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar"
 const navToolItems = ["mosh", "tools"];
 const bottomNavItems = ["settings"] as const;
 
-const DEV_hasAnimatedIconItems = ["sonar", "home", "settings", "tools", "audio", "ytp", "mosh", "track", "source"];
+const DEV_hasAnimatedIconItems = ["sonar", "home", "settings", "tools", "audio", "ytp", "mosh", "track", "source", "visual"];
 const DEV_ifHasAnim = (item: string) => DEV_hasAnimatedIconItems.includes(item) ? item : undefined;
 
 function isCompleteAvailable(page: string) {
@@ -46,11 +46,11 @@ export default function ShellPage() {
 			transitionName={transition}
 			canBack={canBack()}
 			onBack={back}
-			commandBar={
+			commandBar={(
 				<CommandBar onClick={() => completeDisabled && alert("Cannot complete!")}>
 					<Button icon="checkmark" subtle disabled={completeDisabled}>{t.complete}</Button>
 				</CommandBar>
-			}
+			)}
 			style={{ zoom: uiScale === 100 ? undefined : uiScale / 100 }}
 		>
 			<Page />

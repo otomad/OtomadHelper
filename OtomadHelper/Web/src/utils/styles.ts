@@ -6,6 +6,7 @@ import type { ColorNames } from "styles/colors";
 import eases from "styles/eases";
 import effects from "styles/effects";
 import mixins from "styles/mixins";
+import { STATUS_PREFIX, type AvailableLottieStatus } from "styles/fake-animations";
 
 /**
  * 调用主题色。
@@ -51,4 +52,9 @@ export const styles = {
 	mixins,
 	effects,
 	toValue,
+};
+
+export const useLottieStatus = {
+	name: (status: AvailableLottieStatus) => css`animation-name: ${STATUS_PREFIX}${status};`,
+	animation: (status: AvailableLottieStatus) => css`animation: ${STATUS_PREFIX}${status} 1s infinite;`,
 };

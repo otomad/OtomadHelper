@@ -1,9 +1,5 @@
 import { STATUS_PREFIX } from "styles/fake-animations";
 
-const setAnimationName = (status: string) => css`
-	animation-name: ${STATUS_PREFIX}${status};
-`;
-
 const StyledAnimatedIcon = styled.div<{
 	/** 是否 `overflow: hidden`？ */
 	$clipped?: boolean;
@@ -27,19 +23,19 @@ const StyledAnimatedIcon = styled.div<{
 		animation: 1s infinite;
 
 		@container style(--state: normal) {
-			${setAnimationName("Normal")};
+			${useLottieStatus.name("Normal")};
 		}
 
 		@container style(--state: pressed) {
-			${setAnimationName("Pressed")};
+			${useLottieStatus.name("Pressed")};
 		}
 
 		@container style(--state: normal) and style(--selected: true) {
-			${setAnimationName("Selected")};
+			${useLottieStatus.name("Selected")};
 		}
 
 		@container style(--state: pressed) and style(--selected: true) {
-			${setAnimationName("PressedSelected")};
+			${useLottieStatus.name("PressedSelected")};
 		}
 
 		.lottie {

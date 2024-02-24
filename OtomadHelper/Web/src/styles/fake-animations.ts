@@ -1,4 +1,5 @@
 export const STATUS_PREFIX = "-status-";
+export type AvailableLottieStatus = typeof fakeAnimations[number];
 
 const fakeAnimations = [
 	"Normal",
@@ -7,7 +8,7 @@ const fakeAnimations = [
 	"Selected",
 	"HoverSelected",
 	"PressedSelected",
-];
+] as const;
 
 export default fakeAnimations.map(identifier => css`
 	// stylelint-disable-next-line block-no-empty
