@@ -32,3 +32,8 @@ Datamosh is a technique of damaging clips to create glitchy effects.
 Datamosh là một kĩ thuật làm biến dạng video để tạo hiệu ứng glitch.
 
 ])4t4m0sh |_4\` m0^.t kj~ thu4^.t |_4\`m |313^'n ])4.ng vj])30 +)3^? t4.0 hj3^.u u"ng g|1tch.
+
+### Indonesian: (...Same as English)
+Datamosh ada teknik yang membuat video kalian jadi ancur dan nge-glitch.
+
+Đátá๓ơšի áđá tεкดίк ўáดg ๓ε๓طůát vίđεơ кáլίáด ذáđί áด¢ůя đáด ดgε-gլίt¢ի.
