@@ -1,3 +1,9 @@
+import { STATUS_PREFIX } from "styles/fake-animations";
+
+const setAnimationName = (status: string) => css`
+	animation-name: ${STATUS_PREFIX}${status};
+`;
+
 const StyledAnimatedIcon = styled.div<{
 	/** 是否 `overflow: hidden`？ */
 	$clipped?: boolean;
@@ -21,19 +27,19 @@ const StyledAnimatedIcon = styled.div<{
 		animation: 1s infinite;
 
 		@container style(--state: normal) {
-			animation-name: Normal;
+			${setAnimationName("Normal")};
 		}
 
 		@container style(--state: pressed) {
-			animation-name: Pressed;
+			${setAnimationName("Pressed")};
 		}
 
 		@container style(--state: normal) and style(--selected: true) {
-			animation-name: Selected;
+			${setAnimationName("Selected")};
 		}
 
 		@container style(--state: pressed) and style(--selected: true) {
-			animation-name: PressedSelected;
+			${setAnimationName("PressedSelected")};
 		}
 
 		.lottie {
@@ -58,7 +64,7 @@ const StyledAnimatedIcon = styled.div<{
 				svg * {
 					overflow: hidden;
 				}
-			`}
+`}
 		}
 	}
 `;
@@ -256,11 +262,13 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 
 	const previousAnimationName = useRef("Normal");
 	useEventListener(iconBox, "animationstart", e => {
-		const [previous, current] = [previousAnimationName.current, e.animationName];
+		let [previous, current] = [previousAnimationName.current, e.animationName];
+		if (!current.startsWith(STATUS_PREFIX)) return;
+		current = current.replace(STATUS_PREFIX, "");
 		if (!current || previous === current) return;
 		handleStateChange({ marker: `${previous}To${current}`, speed: 1 });
 
-		previousAnimationName.current = e.animationName;
+		previousAnimationName.current = current;
 	});
 
 	/**

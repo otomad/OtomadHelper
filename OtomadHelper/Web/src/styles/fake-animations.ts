@@ -1,3 +1,5 @@
+export const STATUS_PREFIX = "-status-";
+
 const fakeAnimations = [
 	"Normal",
 	"Hover",
@@ -9,5 +11,5 @@ const fakeAnimations = [
 
 export default fakeAnimations.map(identifier => css`
 	// stylelint-disable-next-line block-no-empty
-	@keyframes ${identifier} {}
+	@keyframes ${STATUS_PREFIX}${identifier} {}
 `);
