@@ -179,6 +179,10 @@ export default [
 			}],
 			"@typescript-eslint/no-useless-constructor": "error",
 			"@typescript-eslint/no-this-alias": "off",
+			"@typescript-eslint/indent": ["error", "tab", {
+				"SwitchCase": 1,
+				"flatTernaryExpressions": true,
+			}],
 			"react-refresh/only-export-components": [
 				"off",
 				{ allowConstantExport: true },
@@ -284,6 +288,12 @@ export default [
 		files: ["*.config.js"],
 		rules: {
 			"quote-props": "off",
+		},
+	},
+	{
+		files: ["**/*.d.ts"],
+		rules: {
+			"@typescript-eslint/no-explicit-any": "off",
 		},
 	},
 ];
