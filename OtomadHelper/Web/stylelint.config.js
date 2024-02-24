@@ -1,4 +1,4 @@
-// 标记为 /// 的配置在 StyleLint 16 中被移除，等待以后修正。
+import propertiesOrder from "./stylelint-properties-order.js";
 
 /** @type {import("stylelint").Config} */
 export default {
@@ -76,6 +76,6 @@ export default {
 			// "at-rules", // <-- important, `@media` should go before `&:pseudo`
 			"rules",
 		],
-		"order/properties-order": [[], { "severity": "warning" }],
+		"order/properties-order": [propertiesOrder, { "unspecified": "bottom", "severity": "warning" }],
 	},
 };

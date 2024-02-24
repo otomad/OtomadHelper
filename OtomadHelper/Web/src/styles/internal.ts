@@ -2,7 +2,7 @@ export type BorderRadiusPosition = "top-left" | "left-top" | "top-right" | "righ
 
 export function setBorderRadius(radius: string, position: BorderRadiusPosition) {
 	const positions: Record<BorderRadiusPosition, string> = {
-		/* eslint-disable quote-props */
+		/* eslint-disable @stylistic/quote-props */
 		"top-left": `${radius} 0 0 0`,
 		"left-top": `${radius} 0 0 0`,
 		"top-right": `0 ${radius} 0 0`,
@@ -26,7 +26,7 @@ export function setBorderRadius(radius: string, position: BorderRadiusPosition) 
 		"nwse": `${radius} 0`, // 这种情况真不知道用什么词称呼，暂且用这个代替。
 		"nesw": `0 ${radius} 0`, // 这种情况真不知道用什么词称呼，暂且用这个代替。
 		"full": `${radius}`,
-		/* eslint-enable quote-props */
+		/* eslint-enable @stylistic/quote-props */
 	};
 	return css`
 		border-radius: ${positions[position]};

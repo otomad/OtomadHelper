@@ -1,12 +1,12 @@
 export /* internal */ const StyledCard = styled.div`
-	border-radius: 3px;
 	width: -webkit-fill-available;
 	text-align: initial;
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
+	border-radius: 3px;
 
 	> .base {
-		background-color: ${c("background-fill-color-card-background-default")};
 		padding: 13px 15px;
+		background-color: ${c("background-fill-color-card-background-default")};
 		border-radius: 2px;
 	}
 `;

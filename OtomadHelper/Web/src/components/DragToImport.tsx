@@ -1,10 +1,10 @@
 const StyledDragToImport = styled.div`
 	${styles.mixins.fullscreen()};
 	z-index: 80;
-	background-color: ${c("background-fill-color-smoke-default")};
-	opacity: 0;
 	padding: 1rem;
+	background-color: ${c("background-fill-color-smoke-default")};
 	scale: 1.05;
+	opacity: 0;
 
 	* {
 		pointer-events: none;
@@ -13,9 +13,9 @@ const StyledDragToImport = styled.div`
 	.box {
 		${styles.mixins.flexCenter()};
 		${styles.mixins.square("100%")};
+		overflow: hidden;
 		border: 2px dashed ${c("fill-color-text-secondary")};
 		border-radius: 5px;
-		overflow: hidden;
 
 		.empty-message {
 			scale: 1.1;
@@ -32,10 +32,10 @@ const StyledDragToImport = styled.div`
 
 	&.enter-active,
 	&.enter-done {
-		opacity: 1;
 		padding: 1rem;
-		backdrop-filter: blur(4px);
 		scale: 1;
+		opacity: 1;
+		backdrop-filter: blur(4px);
 
 		.empty-message {
 			scale: 1;

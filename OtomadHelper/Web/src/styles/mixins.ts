@@ -7,8 +7,8 @@ export default {
 	 */
 	flexCenter: () => css`
 		display: flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 	`,
 	/**
 	 * 一键弹性网格布局加居中元素 (grid - center)。
@@ -22,7 +22,7 @@ export default {
 	 * @param size - 长度。
 	 * @param withSizeVar - 是否生成一个名为 `--size` 的 CSS 自定义属性以使其它组件更方便的修改尺寸？
 	 */
-	square: (size: string, withSizeVar: boolean = false) => (
+	square: (size: string, withSizeVar: boolean = false) =>
 		!withSizeVar ?
 			css`
 				width: ${size};
@@ -32,8 +32,7 @@ export default {
 				--size: ${size};
 				width: var(--size);
 				height: var(--size);
-			`
-	),
+			`,
 	/**
 	 * 变成椭圆形。
 	 * 将 border-radius 设为一个非常大的值。
@@ -63,15 +62,15 @@ export default {
 				content: "";
 				position: absolute;
 				inset: 0;
-				border-radius: inherit;
+				background: ${gradient} border-box;
 				border-width: ${borderWidth};
 				border-style: solid;
 				border-color: transparent;
-				background: ${gradient} border-box;
+				border-radius: inherit;
+				pointer-events: none;
 				-webkit-mask: linear-gradient(white 0 0) padding-box, linear-gradient(white 0 0);
 				-webkit-mask-composite: xor;
 				mask-composite: exclude;
-				pointer-events: none;
 			}
 		`;
 	},

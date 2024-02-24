@@ -17,12 +17,12 @@ const StyledBadge = styled.div<{
 }>`
 	${styles.mixins.oval()};
 	${styles.effects.text.caption};
-	height: 16px;
-	min-width: 16px;
-	background-color: ${c("fill-color-system-solid-neutral-background")};
-	padding: 0 3px;
 	flex-shrink: 0;
+	min-width: 16px;
+	height: 16px;
+	padding: 0 3px;
 	text-align: center;
+	background-color: ${c("fill-color-system-solid-neutral-background")};
 	scale: 0;
 
 	&.appear,
@@ -32,8 +32,8 @@ const StyledBadge = styled.div<{
 	}
 
 	${({ $status }) => css`
-		background-color: ${c(backgroundColors[$status])};
 		color: ${c($status === "neutual" ? "foreground-color" : "fill-color-text-on-accent-primary")};
+		background-color: ${c(backgroundColors[$status])};
 	`}
 
 	span {

@@ -14,12 +14,12 @@ const GlobalStyle = createGlobalStyle<{
 	*,
 	::before,
 	::after {
-		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms;
+		box-sizing: border-box;
+		scroll-behavior: smooth;
 		font-family: "Segoe UI Variable", "Segoe UI", "Microsoft YaHei UI", sans-serif;
 		user-select: none;
-		box-sizing: border-box;
+		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms;
 		-webkit-tap-highlight-color: transparent;
-		scroll-behavior: smooth;
 
 		:where(&) {
 			color: var(--foreground-color);
@@ -69,13 +69,13 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	body {
-		background-color: var(--background-color);
+		height: 100dvh;
 		margin: 0;
 		padding: 0;
-		height: 100dvh;
 		overflow: hidden;
-		color-scheme: dark;
 		color: var(--foreground-color);
+		background-color: var(--background-color);
+		color-scheme: dark;
 
 		${ifColorScheme.light} & {
 			color-scheme: light;

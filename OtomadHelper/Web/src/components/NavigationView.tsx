@@ -6,16 +6,16 @@ const NAV_ITEMS_BOTTOM_ASSUMED_COUNT = 3;
 const NavButton = styled(Button).attrs({
 	subtle: true,
 })`
-	width: ${navButtonSize.width}px;
-	height: ${navButtonSize.height}px;
-	min-width: unset;
 	position: absolute;
+	width: ${navButtonSize.width}px;
+	min-width: unset;
+	height: ${navButtonSize.height}px;
 `;
 
 const StyledTopLeftButtons = styled.div`
+	z-index: 10;
 	height: ${navButtonSize.height}px;
 	margin: 4px 5px 1px 9px;
-	z-index: 10;
 
 	&.vertical {
 		height: ${navButtonSize.height * 2}px;
@@ -93,9 +93,9 @@ const StyledNavigationView = styled.div<{
 	}
 
 	> .left {
+		flex-shrink: 0;
 		width: 320px;
 		height: 100%;
-		flex-shrink: 0;
 		padding-bottom: 4px;
 
 		> * {
@@ -103,8 +103,8 @@ const StyledNavigationView = styled.div<{
 		}
 
 		.nav-items {
-			height: 100%;
 			flex-shrink: 1;
+			height: 100%;
 			overflow-y: auto;
 
 			&.overflowing {
@@ -139,12 +139,12 @@ const StyledNavigationView = styled.div<{
 
 		&.flyout {
 			position: fixed;
-			border-radius: 0 7px 7px 0;
+			z-index: 8;
 			background-color: ${c("background-fill-color-acrylic-background-default")};
+			border-radius: 0 7px 7px 0;
+			outline: 1px solid ${c("stroke-color-surface-stroke-flyout")};
 			box-shadow: 0 8px 16px ${c("shadows-flyout")};
 			backdrop-filter: blur(60px);
-			z-index: 8;
-			outline: 1px solid ${c("stroke-color-surface-stroke-flyout")};
 		}
 	}
 
@@ -178,25 +178,25 @@ const StyledNavigationView = styled.div<{
 
 		.title-wrapper {
 			position: relative;
-			margin: 12px 0 8px;
-			font-weight: 600;
-			overflow: hidden;
 			flex-shrink: 0;
+			margin: 12px 0 8px;
+			overflow: hidden;
+			font-weight: 600;
 
 			> div {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
 				width: 100%;
 				height: ${TITLE_LINE_HEIGHT}px;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
 
 				> div {
 					${styles.mixins.square("100%")};
 				}
 
 				.command-bar {
-					height: 100%;
 					flex-shrink: 0;
+					height: 100%;
 				}
 			}
 		}
@@ -204,10 +204,10 @@ const StyledNavigationView = styled.div<{
 		.title {
 			${styles.effects.text.title};
 			position: absolute;
-			transition: all ${eases.easeOutSmooth} 500ms;
 			display: flex;
-			align-items: center;
 			gap: 14px;
+			align-items: center;
+			transition: all ${eases.easeOutSmooth} 500ms;
 
 			* {
 				white-space: nowrap;
@@ -280,10 +280,10 @@ const StyledNavigationView = styled.div<{
 			}
 
 			> * > .container {
-				margin-top: 2px;
 				display: flex;
 				flex-direction: column;
 				gap: 6px;
+				margin-top: 2px;
 
 				&::after {
 					content: "";
@@ -328,19 +328,19 @@ const StyledNavigationView = styled.div<{
 
 const StyledPage = styled.main`
 	.jump > &.exit {
-		opacity: 0;
 		translate: 0 -2rem;
+		opacity: 0;
 		transition: all ${eases.easeOutMax} 83ms;
 	}
 
 	.jump > &.enter {
-		opacity: 0;
 		translate: 0 5rem;
+		opacity: 0;
 	}
 
 	.jump > &.enter-active {
-		opacity: 1;
 		translate: 0;
+		opacity: 1;
 		transition: all ${eases.easeOutMax} 300ms;
 	}
 
@@ -453,8 +453,8 @@ const StyledBreadCrumbChevronRight = styled.div`
 	margin-top: 4px;
 
 	.icon {
-		font-size: 13px;
 		color: ${c("fill-color-text-secondary")};
+		font-size: 13px;
 	}
 `;
 
@@ -481,7 +481,7 @@ interface NavBrItem {
 	/** 类型：分割线。 */
 	type: "hr";
 	/** 是否将其放置于导航面板底部。 */
-	bottom ?: boolean;
+	bottom?: boolean;
 }
 
 type PaneDisplayMode = "expanded" | "compact" | "minimal";

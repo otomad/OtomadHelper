@@ -1,7 +1,7 @@
 const StyledGlitchyText = styled.div`
 	position: relative;
-	width: fit-content;
 	display: inline-block;
+	width: fit-content;
 
 	* {
 		transition: none;
@@ -33,13 +33,8 @@ export default function GlitchyText({ normal, glitchy }: FCP<{
 	/** 故障文本。 */
 	glitchy: string;
 }>) {
-	const [isInstructionHovered, setIsInstructionHovered] = useState(false);
-
 	return (
-		<StyledGlitchyText
-			onMouseEnter={() => setIsInstructionHovered(true)}
-			onMouseLeave={() => setIsInstructionHovered(false)}
-		>
+		<StyledGlitchyText>
 			<p className="normal">{normal}</p>
 			<p className="shadow">{glitchy}</p>
 		</StyledGlitchyText>

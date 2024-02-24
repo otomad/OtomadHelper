@@ -19,9 +19,9 @@ const StyledSlider = styled.div`
 		padding: ${thumbSizeHalf} 0;
 
 		&::after {
+			content: "";
 			display: block;
 			background-color: ${c("fill-color-control-strong-default")};
-			content: "";
 		}
 	}
 
@@ -34,11 +34,11 @@ const StyledSlider = styled.div`
 	.passed {
 		position: absolute;
 		top: 0;
-		transition: background-color ${eases.easeOutMax} 250ms;
-		pointer-events: none;
-		margin: ${thumbSizeHalf} 0;
 		width: ${valueCalc};
+		margin: ${thumbSizeHalf} 0;
 		background-color: ${c("accent-color")};
+		pointer-events: none;
+		transition: background-color ${eases.easeOutMax} 250ms;
 	}
 
 	.thumb {
@@ -49,19 +49,19 @@ const StyledSlider = styled.div`
 		top: calc(var(--track-thickness) / 2);
 		left: ${valueCalc};
 		background-color: ${c("fill-color-control-solid-default")};
-		transition: all ${eases.easeOutMax} 250ms, left 0s;
 		box-shadow:
 			0 0 0 1px ${c("stroke-color-control-stroke-default")},
 			0 1px 0 ${c("stroke-color-control-stroke-default")};
+		transition: all ${eases.easeOutMax} 250ms, left 0s;
 
 		&::after {
+			content: "";
 			${styles.mixins.square("100%")};
 			${styles.mixins.circle()};
 			display: block;
 			background-color: ${c("accent-color")};
-			transition: all ${eases.easeOutMax} 250ms, scale ${eases.easeOutBack} 250ms;
-			content: "";
 			scale: ${12 / 20};
+			transition: all ${eases.easeOutMax} 250ms, scale ${eases.easeOutBack} 250ms;
 		}
 
 		&:hover::after {

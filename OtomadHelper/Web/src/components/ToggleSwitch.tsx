@@ -5,9 +5,9 @@ const THUMB_PRESSED_WIDTH = 22;
 
 const StyledToggleSwitchLabel = styled.button`
 	display: flex;
-	align-items: center;
-	justify-content: space-between;
 	gap: 12px;
+	justify-content: space-between;
+	align-items: center;
 	text-align: left;
 
 	:where(&) {
@@ -16,8 +16,8 @@ const StyledToggleSwitchLabel = styled.button`
 
 	.right {
 		display: flex;
-		align-items: center;
 		gap: inherit;
+		align-items: center;
 
 		.text {
 			width: unset !important;
@@ -35,22 +35,22 @@ const StyledToggleSwitchLabel = styled.button`
 		${styles.mixins.oval()};
 		width: 40px;
 		height: 20px;
-		border: 1px solid ${c("stroke-color-control-strong-stroke-default")};
 		overflow: hidden;
+		border: 1px solid ${c("stroke-color-control-strong-stroke-default")};
 	}
 
 	.base {
 		${styles.mixins.square("100%")};
-		background-color: ${c("fill-color-control-alt-secondary")};
 		position: relative;
+		background-color: ${c("fill-color-control-alt-secondary")};
 	}
 
 	.thumb {
 		${styles.mixins.square(`${THUMB_SIZE}px`)};
 		${styles.mixins.oval()};
-		background-color: ${c("fill-color-text-secondary")};
 		position: absolute;
 		left: 0;
+		background-color: ${c("fill-color-text-secondary")};
 		scale: calc(12 / ${THUMB_SIZE});
 	}
 
@@ -66,8 +66,8 @@ const StyledToggleSwitchLabel = styled.button`
 		background-color: ${c("fill-color-control-alt-quarternary")};
 
 		.thumb {
-			scale: calc(14 / ${THUMB_SIZE});
 			width: ${THUMB_PRESSED_WIDTH}px;
+			scale: calc(14 / ${THUMB_SIZE});
 		}
 	}
 
@@ -101,9 +101,9 @@ const StyledToggleSwitchLabel = styled.button`
 		}
 
 		.thumb {
+			left: calc(100% - ${THUMB_SIZE}px);
 			background-color: ${c("fill-color-text-on-accent-primary")};
 			outline: 1px solid ${c("stroke-color-control-stroke-secondary")};
-			left: calc(100% - ${THUMB_SIZE}px);
 		}
 
 		&:hover {

@@ -3,9 +3,9 @@ const StackPanel = styled.div<{
 	$gap?: string | number;
 }>`
 	display: flex;
-	align-items: center;
-	gap: ${({ $gap = 8 }) => typeof $gap === "number" ? $gap + "px" : $gap};
 	flex-direction: ${({ $direction = "horizontal" }) => $direction === "vertical" ? "column" : "row"};
+	gap: ${({ $gap = 8 }) => typeof $gap === "number" ? $gap + "px" : $gap};
+	align-items: center;
 
 	.icon {
 		font-size: 16px;

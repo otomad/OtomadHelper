@@ -4,8 +4,8 @@ const checkedOrInd = ":is(:checked, :indeterminate)";
 
 const StyledRadioButtonLabel = styled.label`
 	display: flex;
-	align-items: center;
 	gap: 8px;
+	align-items: center;
 
 	input {
 		display: none;
@@ -25,13 +25,13 @@ const StyledRadioButtonLabel = styled.label`
 	.base {
 		${styles.mixins.square("18px")};
 		${styles.mixins.gridCenter()};
-		border-radius: 3px;
 		background-color: ${c("fill-color-control-alt-secondary")};
+		border-radius: 3px;
 		outline: 1px solid ${c("stroke-color-control-strong-stroke-default")};
 
 		.icon {
-			font-size: 12px;
 			color: ${c("fill-color-text-on-accent-primary")};
+			font-size: 12px;
 			
 			&.enter {
 				clip-path: inset(0 100% 0 0);

@@ -4,10 +4,10 @@ const StyledButton = styled.button<{
 }>`
 	${styles.mixins.flexCenter()};
 	display: inline-flex;
-	border-radius: 4px;
-	border: 1px solid;
-	padding: 4px 11px 6px;
 	min-height: 30px;
+	padding: 4px 11px 6px;
+	border: 1px solid;
+	border-radius: 4px;
 
 	&:hover {
 		background-color: ${c("fill-color-control-secondary")};
@@ -46,9 +46,9 @@ const StyledButton = styled.button<{
 		}
 	` : css`
 		--fill-color: ${c($fillColorName)};
+		color: ${c("fill-color-text-on-accent-primary")};
 		background-color: ${c($fillColorName)};
 		border-color: ${c("stroke-color-control-stroke-on-accent-default")};
-		color: ${c("fill-color-text-on-accent-primary")};
 
 		${ifColorScheme.dark} &:not(:active, [disabled]) {
 			border-top-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
@@ -88,9 +88,9 @@ const StyledButton = styled.button<{
 	}
 
 	&.subtle {
-		border: none;
 		padding: 0 11px;
 		background-color: ${c("fill-color-subtle-transparent")};
+		border: none;
 
 		&::before {
 			display: none;

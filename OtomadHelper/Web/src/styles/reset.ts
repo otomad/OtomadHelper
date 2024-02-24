@@ -7,14 +7,14 @@ export default css`
 		button {
 			margin: 0;
 			padding: 0;
-			font-size: inherit;
+			color: inherit;
 			font-family: inherit;
+			font-size: inherit;
 			background: none;
 			border: none;
 			outline: none;
 			cursor: default;
 			appearance: none;
-			color: inherit;
 		}
 
 		// 合计着图片和视频默认居然是行内元素，导致 block 下方的空隙就是你造成的是吧？
@@ -48,8 +48,8 @@ export default css`
 
 		a {
 			color: ${c("accent-color")};
-			cursor: pointer;
 			text-decoration: none;
+			cursor: pointer;
 
 			&:hover {
 				opacity: 0.8;
