@@ -7,4 +7,5 @@
 	"less.validate": false,
 	"scss.validate": false,
 	"typescript.tsdk": "node_modules\\typescript\\lib",
+	"eslint.experimental.useFlatConfig": true,
 }

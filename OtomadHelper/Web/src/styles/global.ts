@@ -75,6 +75,7 @@ const GlobalStyle = createGlobalStyle<{
 		height: 100dvh;
 		overflow: hidden;
 		color-scheme: dark;
+		color: var(--foreground-color);
 
 		${ifColorScheme.light} & {
 			color-scheme: light;
