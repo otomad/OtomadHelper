@@ -41,14 +41,17 @@ const StyledAnimatedIcon = styled.div<{
 		.lottie {
 			${styles.effects.text.icon};
 			${styles.mixins.square("1em")};
+			
+			&:not(.filled) {
+				:not(.luminance-mask *) {
+					fill: currentColor;
+				}
 
-			&:not(.filled) * {
-				fill: currentColor;
-
-				&[stroke] {
+				[stroke] {
 					stroke: currentColor;
 				}
 			}
+
 
 			svg > g {
 				clip-path: none;
@@ -59,7 +62,7 @@ const StyledAnimatedIcon = styled.div<{
 				svg * {
 					overflow: hidden;
 				}
-`}
+			`}
 		}
 	}
 `;

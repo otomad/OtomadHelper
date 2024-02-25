@@ -24,6 +24,7 @@ export default function Lottie({ loop = false, autoplay = false, animationData, 
 
 	useMountEffect(() => {
 		if (!lavContainer.current) return;
+
 		const anim = lottie.loadAnimation({
 			container: lavContainer.current,
 			renderer: "svg",
@@ -36,8 +37,8 @@ export default function Lottie({ loop = false, autoplay = false, animationData, 
 		if (svgEl) {
 			const luminanceMasks = svgEl.querySelectorAll<SVGUseElement>("[mask-type=luminance] use");
 			for (const use of luminanceMasks) {
-				const lottieElementSelector = use.href.animVal;
-				svgEl.querySelector(lottieElementSelector)?.classList.add("luminance-mask");
+				const lottieElementId = use.href.animVal;
+				svgEl.querySelector(lottieElementId)?.classList.add("luminance-mask");
 			}
 		}
 
