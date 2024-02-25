@@ -21,6 +21,10 @@ const GlobalStyle = createGlobalStyle<{
 		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms;
 		-webkit-tap-highlight-color: transparent;
 
+		/* :where(&) {
+			color: var(--foreground-color);
+		} */
+
 		${({ $ready }) => !$ready && css`
 			transition: all ${eases.easeOutMax} 250ms, color 0s, fill 0s, font-size 0s;
 		`}

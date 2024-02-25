@@ -2,7 +2,7 @@ export type ColorScheme = "light" | "dark" | "auto";
 const lightModePreference = window.matchMedia("(prefers-color-scheme: light)");
 
 let lastClickMouseEvent: MouseEvent | undefined;
-document.addEventListener("click", e => lastClickMouseEvent = e);
+document.addEventListener("click", e => lastClickMouseEvent = e, true);
 
 const changeColorScheme = (isLight?: boolean | ColorScheme) => {
 	if (typeof isLight === "string")
