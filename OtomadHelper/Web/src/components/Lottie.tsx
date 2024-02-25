@@ -31,6 +31,16 @@ export default function Lottie({ loop = false, autoplay = false, animationData, 
 			autoplay,
 			animationData,
 		});
+
+		const svgEl = lavContainer.current.firstElementChild;
+		if (svgEl) {
+			const luminanceMasks = svgEl.querySelectorAll<SVGUseElement>("[mask-type=luminance] use");
+			for (const use of luminanceMasks) {
+				const lottieElementSelector = use.href.animVal;
+				svgEl.querySelector(lottieElementSelector)?.classList.add("luminance-mask");
+			}
+		}
+
 		setAnim(anim);
 		onAnimCreated?.(anim);
 	});

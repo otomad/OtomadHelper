@@ -5,17 +5,17 @@ const StyledTabItemWrapper = styled.div`
 `;
 
 const StyledTabItem = styled.button`
-	border-radius: 3px;
+	position: relative;
 	display: flex;
 	align-items: center;
 	width: -webkit-fill-available;
 	min-height: 30px;
-	position: relative;
 	overflow-x: hidden;
+	border-radius: 3px;
 
 	.tab-bar.vertical & {
-		padding: 9px 16px 11px;
 		gap: 16px;
+		padding: 9px 16px 11px;
 
 		&:hover,
 		&.active {
@@ -39,12 +39,15 @@ const StyledTabItem = styled.button`
 	}
 
 	.animated-icon {
-		color: ${c("fill-color-text-primary-for-lottie")};
+		&,
+		* {
+			color: ${c("fill-color-text-primary-for-lottie")};
+		}
 	}
 
 	.text {
-		white-space: nowrap;
 		line-height: 20px;
+		white-space: nowrap;
 	}
 
 	.fill {
@@ -57,15 +60,15 @@ const StyledTabItem = styled.button`
 
 		.badge {
 			position: absolute;
-			right: 0;
 			top: 0;
+			right: 0;
 			translate: 50% -50%;
 		}
 	}
 
 	.tab-bar.horizontal & {
-		padding: 14px 12px;
 		gap: 8px;
+		padding: 14px 12px;
 
 		&:hover {
 			opacity: 0.79; // 使用 opacity 而并非 color 是因为 svg 动画变换速度比文字慢的异常。

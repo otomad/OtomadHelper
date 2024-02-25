@@ -8,7 +8,7 @@ const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar"
 const navToolItems = ["mosh", "tools"];
 const bottomNavItems = ["settings"] as const;
 
-const DEV_hasAnimatedIconItems = ["sonar", "home", "settings", "tools", "audio", "ytp", "mosh", "track", "source", "visual"];
+const DEV_hasAnimatedIconItems = ["sonar", "home", "settings", "tools", "audio", "ytp", "mosh", "track", "source", "visual", "lyrics", "shupelunker"];
 const DEV_ifHasAnim = (item: string) => DEV_hasAnimatedIconItems.includes(item) ? item : undefined;
 
 function isCompleteAvailable(page: string) {
