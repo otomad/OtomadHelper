@@ -46,6 +46,16 @@ i18n
 	});
 
 document.documentElement.lang = i18n.language;
-i18n.on("languageChanged", lng => document.documentElement.lang = lng);
+
+export function changeLanguage(lng: string) {
+	startViewTransition(async () => {
+		await i18n.changeLanguage(lng);
+		document.documentElement.lang = lng;
+	}, {
+		clipPath: ["inset(0 0 100%)", "inset(0)"],
+	}, {
+		duration: 500,
+	});
+}
 
 export default i18n;

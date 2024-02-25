@@ -1,3 +1,5 @@
+import { changeLanguage } from "locales/config";
+
 const ExpanderChildWrapper = styled.div`
 	padding: 21px 51px;
 `;
@@ -19,7 +21,7 @@ export default function Settings() {
 				icon="globe"
 				items={languages}
 				expanded
-				value={[i18n.language, i18n.changeLanguage]}
+				value={[i18n.language, changeLanguage]}
 				idField
 				nameField={t.settings.language}
 			/>

@@ -21,10 +21,6 @@ const GlobalStyle = createGlobalStyle<{
 		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms;
 		-webkit-tap-highlight-color: transparent;
 
-		:where(&) {
-			color: var(--foreground-color);
-		}
-
 		${({ $ready }) => !$ready && css`
 			transition: all ${eases.easeOutMax} 250ms, color 0s, fill 0s, font-size 0s;
 		`}
@@ -88,6 +84,31 @@ const GlobalStyle = createGlobalStyle<{
 
 	#root {
 		display: contents;
+	}
+
+	// Color Mode transition
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		mix-blend-mode: normal;
+		transition: none !important;
+		animation: none !important;
+	}
+
+	::view-transition-old(*),
+	::view-transition-new(*),
+	::view-transition-old(*::before),
+	::view-transition-new(*::after) {
+		transition: none !important;
+	}
+
+	::view-transition-old(root),
+	${ifColorScheme.dark}.changing-color-scheme::view-transition-new(root) {
+		z-index: 1;
+	}
+
+	::view-transition-new(root),
+	${ifColorScheme.dark}.changing-color-scheme::view-transition-old(root) {
+		z-index: 2147483646;
 	}
 
 	${() => {

@@ -1,6 +1,6 @@
 {
 	"editor.codeActionsOnSave": {
-		"source.fixAll": "explicit",
+		// "source.fixAll": "explicit",
 		"source.sortImports": "explicit"
 	},
 	"css.validate": false,
