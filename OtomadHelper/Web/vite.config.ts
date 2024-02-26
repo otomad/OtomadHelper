@@ -52,6 +52,7 @@ export default defineConfig({
 		}),
 		tsconfigPaths(),
 	],
+	base: "",
 	build: {
 		target: "ESNext",
 		rollupOptions: {
