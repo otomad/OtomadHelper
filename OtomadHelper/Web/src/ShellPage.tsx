@@ -8,9 +8,6 @@ const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar"
 const navToolItems = ["mosh", "tools"];
 const bottomNavItems = ["settings"] as const;
 
-const DEV_hasAnimatedIconItems = ["sonar", "home", "settings", "tools", "audio", "ytp", "mosh", "track", "source", "visual", "lyrics", "shupelunker"];
-const DEV_ifHasAnim = (item: string) => DEV_hasAnimatedIconItems.includes(item) ? item : undefined;
-
 function isCompleteAvailable(page: string) {
 	return !["mosh", "tools", "settings"].includes(page);
 }
@@ -37,10 +34,10 @@ export default function ShellPage() {
 		<NavigationView
 			currentNav={[page, changePage]}
 			navItems={[
-				...navItems.map(item => ({ text: t.titles[item], id: item, icon: item, animatedIcon: DEV_ifHasAnim(item) })),
+				...navItems.map(item => ({ text: t.titles[item], id: item, animatedIcon: item })),
 				{ type: "hr" },
-				...navToolItems.map(item => ({ text: t(2).titles[item], id: item, icon: item, animatedIcon: DEV_ifHasAnim(item) })),
-				...bottomNavItems.map(item => ({ text: t(2).titles[item], id: item, icon: item, animatedIcon: DEV_ifHasAnim(item), bottom: true })),
+				...navToolItems.map(item => ({ text: t(2).titles[item], id: item, animatedIcon: item })),
+				...bottomNavItems.map(item => ({ text: t(2).titles[item], id: item, animatedIcon: item, bottom: true })),
 			]}
 			titles={pageTitles}
 			transitionName={transition}
