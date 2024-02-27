@@ -55,4 +55,11 @@ export default async function initial() {
 		e.preventDefault();
 	});
 	// #endregion
+
+	// #region 本机端代码向网页端通信事件
+	window.chrome ??= {};
+	window.chrome.webview?.addEventListener("message", e => {
+		console.log(e);
+	});
+	// #endregion
 }

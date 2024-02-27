@@ -23,8 +23,7 @@
  * that have meaning in JavaScript like toJSON and Symbol.toPrimitive. Add more to the array as
  * required.
  */
-export interface HostObjectAsyncProxyBase
-{
+export interface HostObjectAsyncProxyBase {
 	[key: string]: Promise<any> | any;
 
 	/**
@@ -32,7 +31,7 @@ export interface HostObjectAsyncProxyBase
 	 * All parameters are converted to call the host object method.
 	 * @param argArray An array of arguments to pass to the host object method invocation.
 	 * @returns A promise representing the converted value of the return value of the
-	 *          host object method invocation.
+	 * host object method invocation.
 	 */
 	applyHostFunction(argArray?: any): Promise<any>;
 
@@ -44,7 +43,7 @@ export interface HostObjectAsyncProxyBase
 	 * instead.
 	 * @param propertyName String name of the property of which to get the value.
 	 * @returns A promise representing the converted value of the property of the host
-	 *          object's property.
+	 * object's property.
 	 */
 	getHostProperty(propertyName: string): Promise<any>;
 
@@ -65,7 +64,7 @@ export interface HostObjectAsyncProxyBase
 	 * @param propertyName Name of the property of which to set the value.
 	 * @param propertyValue Value to set the property.
 	 * @returns A promise representing the converted value of the property of the host object's
-	 *          property. This promise only resolves after the property value has been changed.
+	 * property. This promise only resolves after the property value has been changed.
 	 */
 	setHostProperty(propertyName: string, propertyValue: any): Promise<any>;
 
@@ -78,7 +77,7 @@ export interface HostObjectAsyncProxyBase
 	 * @param propertyName Name of the property to get the value of.
 	 * @param propertyValue Value to set the property to.
 	 * @returns A promise representing the value of the property after it is set. This promise
-	 *          only resolves after the property changes value.
+	 * only resolves after the property changes value.
 	 */
 	setLocalProperty(propertyName: string, propertyValue: any): any;
 }
@@ -99,8 +98,7 @@ export interface HostObjectAsyncProxyBase
  * the JavaScript engine of the current document. This defaults to including optional methods that
  * have meaning in JavaScript like toJSON and Symbol.toPrimitive. Add more to the array as required.
  */
-export interface HostObjectAsyncProxy extends HostObjectAsyncProxyBase
-{
+export interface HostObjectAsyncProxy extends HostObjectAsyncProxyBase {
 	[key: string]: Promise<any> | any;
 
 	/**
@@ -121,8 +119,7 @@ export interface HostObjectAsyncProxy extends HostObjectAsyncProxyBase
  * asynchronous proxy for object is available to your web-side code, by using
  * chrome.webview.hostObjects.myObject.
  */
-export type HostObjectsAsyncRoot =
-{
+export interface HostObjectsAsyncRoot extends HostObjects {
 	/**
 	 * Contains options applicable to CoreWebView2.AddHostObjectToScript added script proxies.
 	 */
@@ -140,16 +137,25 @@ export type HostObjectsAsyncRoot =
 	/**
 	 * Performs a best effort garbage collection on host object proxies that are no longer in use.
 	 */
-	cleanupSome() : void;
-} & {
+	cleanupSome(): void;
+}
+
+/**
+ * Contains asynchronous proxies for all host objects added via CoreWebView2.AddHostObjectToScript
+ * as well as options to configure those proxies, and the container for synchronous proxies.
+ *
+ * If you call coreWebView2.AddHostObjectToScript("myObject", object); in your native code, an
+ * asynchronous proxy for object is available to your web-side code, by using
+ * chrome.webview.hostObjects.myObject.
+ */
+export interface HostObjects {
 	[key: string]: HostObjectAsyncProxy;
-};
+}
 
 /**
  * Contains options applicable to CoreWebView2.AddHostObjectToScript added script proxies.
  */
-export interface HostObjectsOptions
-{
+export interface HostObjectsOptions {
 	/**
 	 * When calling a method on a synchronous proxy, the result should also be a synchronous
 	 * proxy. But in some cases, the sync or async context is lost (for example, when providing
@@ -217,8 +223,7 @@ export interface HostObjectsOptions
  * synchronous proxy for object is available to your web-side code, by using
  * chrome.webview.hostObjects.sync.myObject.
  */
-export interface HostObjectsSyncRoot
-{
+export interface HostObjectsSyncRoot {
 	[key: string]: HostObjectSyncProxy;
 }
 
@@ -234,8 +239,7 @@ export interface HostObjectsSyncRoot
  * defaults to including optional methods that have meaning in JavaScript like toJSON and
  * Symbol.toPrimitive. Add more to the array as required.
  */
-export interface HostObjectSyncProxy extends CallableFunction
-{
+export interface HostObjectSyncProxy extends CallableFunction {
 	[key: string]: any;
 
 	/**
@@ -303,8 +307,7 @@ export interface HostObjectSyncProxy extends CallableFunction
  * Event object for the chrome.webview.sharedbufferreceived event. This event is dispatched
  * when CoreWebView2.PostSharedBufferToScript is successfully called.
  */
-export interface SharedBufferReceivedEvent extends Event
-{
+export interface SharedBufferReceivedEvent extends Event {
 	/**
 	 * An object that is the result of parsing the additionalDataAsJson parameter to
 	 * CoreWebView2.PostSharedBufferToScript as a JSON string. This property will be undefined
@@ -323,34 +326,37 @@ export interface SharedBufferReceivedEvent extends Event
 	 * called with the buffer set to ReadOnly, then only read access is allowed to the buffer.
 	 * If you try to modify the content in a read-only buffer, it will cause an access violation
 	 * in the WebView renderer process and crash the renderer process.
-	 * @returns An ArrayBuffer over the shared buffer passed to
-	 *          CoreWebView2.PostSharedBufferToScript
+	 * @returns An ArrayBuffer over the shared buffer passed to CoreWebView2.PostSharedBufferToScript
 	 */
 	getBuffer(): ArrayBuffer;
 }
 
-interface WebViewEventListenerObject {
-	handleEvent(object: Event & { data?: any }): void;
+export interface WebViewEvent extends Event {
+	data?: any;
 }
 
-interface WebViewEventListener
-{
-	(evt: Event & { data?: any }): void;
+interface WebViewEventListenerObject {
+	handleEvent(object: WebViewEvent): void;
+}
+
+interface WebViewEventListener {
+	(evt: WebViewEvent): void;
 }
 
 /**
  * WebView2 augments the standard DOM event listener event with an additional data field. This field
  * contains any JSON encoded passed from the host via PostWebMessageAsJson.
- * See https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.1722.45#postwebmessageasjson
+ * @see https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.1722.45#postwebmessageasjson
  */
 type WebViewEventListenerOrEventListenerObject = WebViewEventListener | WebViewEventListenerObject;
+
+type WebViewEventTypes = "message";
 
 /**
  * window.chrome.webview is the class to access the WebView2-specific APIs that are available
  * to the script running within WebView2 Runtime.
  */
-export interface WebView extends EventTarget
-{
+export interface WebView extends EventTarget {
 	/**
 	 * Contains asynchronous proxies for all host objects added via CoreWebView2.AddHostObjectToScript
 	 * as well as options to configure those proxies, and the container for synchronous proxies.
@@ -373,9 +379,10 @@ export interface WebView extends EventTarget
 	 * @param options Options to control how the event is handled.
 	 */
 	addEventListener(
-		type: string,
+		type: WebViewEventTypes,
 		listener: WebViewEventListenerOrEventListenerObject,
-		options?: boolean | AddEventListenerOptions): void;
+		options?: boolean | AddEventListenerOptions,
+	): void;
 
 	/**
 	 * When the page calls postMessage, the message parameter is converted to JSON and is posted
@@ -385,9 +392,9 @@ export interface WebView extends EventTarget
 	 * or from a child frame. See CoreWebView2.WebMessageReceived( Win32/C++, .NET, WinRT).
 	 * See CoreWebView2Frame.WebMessageReceived( Win32/C++, .NET, WinRT).
 	 * @param message The message to send to the WebView2 host. This can be any object that can be
-	 *                serialized to JSON.
+	 * serialized to JSON.
 	 */
-	postMessage(message: any) : void;
+	postMessage(message: any): void;
 
 	/**
 	 * Call with the ArrayBuffer from the chrome.webview.sharedbufferreceived event to release the
@@ -404,16 +411,25 @@ export interface WebView extends EventTarget
 	 * @param options Options to control how the event is handled.
 	 */
 	removeEventListener(
-		type: string,
+		type: WebViewEventTypes,
 		listener: WebViewEventListenerOrEventListenerObject,
-		options?: boolean | EventListenerOptions): void;
+		options?: boolean | EventListenerOptions,
+	): void;
 }
 
 // Global object
 declare global {
 	interface Window {
+		/**
+		 * Get the Chrome instance, only available in Chromium browsers.
+		 */
 		chrome: {
-			webview: WebView;
+			/**
+			 * Access the WebView2-specific APIs that are available to the script running within WebView2 Runtime.
+			 *
+			 * If running in a Chromium browser directly, you will get an undefined.
+			 */
+			webview?: WebView;
 		};
 	}
 }
