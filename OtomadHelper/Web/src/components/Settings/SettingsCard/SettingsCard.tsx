@@ -21,6 +21,7 @@ const StyledSettingsCard = styled(StyledCard)`
 		&:hover > .base {
 			background-color: ${c("fill-color-control-secondary")};
 		}
+		// TODO: disabled 样式。
 
 		&:not(:has(.trailing .toggle-switch-base)):active,
 		&:has(.trailing .toggle-switch-base:not(:active, .pressing, .pressed)):active {

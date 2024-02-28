@@ -10,7 +10,7 @@ export default function Ytp() {
 	return (
 		<div className="container">
 			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.ytp}</SettingsPageControl>
-			<SettingsCardToggleSwitch heading={t.enabled} selectInfo="1 media source has been selected" icon="enabled" on={[enabled, setEnabled]} />
+			<SettingsCardToggleSwitch heading={t.enabled} selectInfo={t(1).selectInfo.source} icon="enabled" on={[enabled, setEnabled]} />
 
 			{!enabled ? (
 				<EmptyMessage
