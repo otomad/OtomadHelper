@@ -9,14 +9,14 @@ const ExpanderParent = styled(SettingsCard) <{
 	.check-info {
 		&.exit-active,
 		&.exit-done {
-			opacity: 0;
 			translate: 0 16px;
+			opacity: 0;
 		}
 
 		&.enter-active,
 		&.enter-done {
-			opacity: 1;
 			translate: 0;
+			opacity: 1;
 		}
 	}
 
@@ -50,10 +50,10 @@ const ExpanderParent = styled(SettingsCard) <{
 export /* internal */ const abcdef = 123456;
 
 const ExpanderChild = styled.div`
+	overflow: hidden;
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-top-width: 0;
 	border-radius: 0 0 3px 3px;
-	overflow: hidden;
 
 	.expander-child-items {
 		background-color: ${c("background-fill-color-card-background-secondary")};

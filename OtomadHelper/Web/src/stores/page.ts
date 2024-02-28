@@ -33,6 +33,7 @@ export const usePageStore = createStore<IPage>()(
 		}
 
 		function setPageInternal(nextPage: string[]) {
+			document.getElementById(STOP_TRANSITION_ID)?.remove();
 			const { page } = get();
 			if (page.equals(nextPage)) return;
 			set(() => ({

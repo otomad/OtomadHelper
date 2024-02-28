@@ -300,6 +300,8 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 	return [onEnter, onExit, endListener] as const;
 }
 
+export const STOP_TRANSITION_ID = "stop-transition";
+
 /**
  * 为整个页面添加视图过渡动画。
  * @param changeFunc - 使页面变化的回调函数。
@@ -307,23 +309,23 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
  * @param options - 动画选项。
  * @returns 在动画播放完成之后可执行析构函数。
  */
-export async function startViewTransition(changeFunc: () => MaybePromise<void | unknown>, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions = {}) {
+export async function startViewTransition(changeFunc: () => MaybePromise<void>, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions = {}) {
 	if (!("startViewTransition" in document)) {
 		await changeFunc();
 		return;
 	}
 
 	const style = document.createElement("style");
+	style.id = STOP_TRANSITION_ID;
 	style.textContent = String(css`
 		*,
 		*::before,
 		*::after {
 			-webkit-transition: none !important;
 			-moz-transition: none !important;
-			-o-transition: none !important;
 			-ms-transition: none !important;
+			-o-transition: none !important;
 			transition: none !important;
-			will-change: background;
 		}
 	`);
 	document.head.appendChild(style);
@@ -332,7 +334,6 @@ export async function startViewTransition(changeFunc: () => MaybePromise<void | 
 	options.easing ??= eases.easeInOutSmooth;
 	options.pseudoElement ??= "::view-transition-new(root)";
 
-	// @ts-expect-error: Transition API
 	const transition = document.startViewTransition(changeFunc);
 	await transition.ready;
 
