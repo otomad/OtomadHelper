@@ -43,6 +43,19 @@ public partial class MainDock : UserControl {
 		CoreWebView2EnvironmentOptions options = new("--enable-features=OverlayScrollbar,msEdgeFluentOverlayScrollbar,msOverlayScrollbarWinStyleAnimation");
 		CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(null, null, options);
 		await Browser.EnsureCoreWebView2Async(environment);
+		CoreWebView2Settings settings = Browser.CoreWebView2.Settings;
+		settings.AreBrowserAcceleratorKeysEnabled = false;
+		//settings.AreDefaultContextMenusEnabled = false;
+		//settings.AreDefaultScriptDialogsEnabled = false;
+		//settings.AreDevToolsEnabled = false;
+		settings.IsBuiltInErrorPageEnabled = false;
+		settings.IsGeneralAutofillEnabled = false;
+		settings.IsPasswordAutosaveEnabled = false;
+		settings.IsPinchZoomEnabled = false;
+		settings.IsReputationCheckingRequired = false;
+		settings.IsStatusBarEnabled = false;
+		settings.IsSwipeNavigationEnabled = false;
+		//settings.IsZoomControlEnabled = false;
 	}
 
 	private void Browser_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e) {
