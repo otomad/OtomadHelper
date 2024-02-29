@@ -47,15 +47,22 @@ i18n
 
 document.documentElement.lang = i18n.language;
 
-export function changeLanguage(lng: string) {
-	startViewTransition(async () => {
-		await i18n.changeLanguage(lng);
-		document.documentElement.lang = lng;
-	}, {
-		clipPath: ["inset(0 0 100%)", "inset(0)"],
-	}, {
-		duration: 500,
-	});
+export function useLanguage(): StateProperty<string> {
+	const [language, setLanguage] = useState(i18n.language);
+
+	function changeLanguage(lng: string) {
+		setLanguage(lng);
+		startViewTransition(async () => {
+			await i18n.changeLanguage(lng);
+			document.documentElement.lang = lng;
+		}, {
+			clipPath: ["inset(0 0 100%)", "inset(0)"],
+		}, {
+			duration: 500,
+		});
+	}
+
+	return [language, changeLanguage];
 }
 
 export default i18n;

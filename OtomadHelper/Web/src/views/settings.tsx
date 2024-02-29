@@ -1,4 +1,4 @@
-import { changeLanguage } from "locales/config";
+import { useLanguage } from "locales/config";
 
 const ExpanderChildWrapper = styled.div`
 	padding: 21px 51px;
@@ -6,6 +6,7 @@ const ExpanderChildWrapper = styled.div`
 
 export default function Settings() {
 	const { i18n } = useTranslation();
+	const [language, setLanguage] = useLanguage();
 	const languages = Object.keys(i18n.options.resources ?? {});
 	const schemes = ["light", "dark", "auto"] as const;
 	const { scheme, setScheme } = useColorModeStore();
@@ -21,7 +22,7 @@ export default function Settings() {
 				icon="globe"
 				items={languages}
 				expanded
-				value={[i18n.language, changeLanguage]}
+				value={[language, setLanguage]}
 				idField
 				nameField={t.settings.language}
 			/>

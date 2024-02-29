@@ -47,6 +47,8 @@ ignoreWords:
   - cyahega
   - qo
   - zh
+  - fcp
+  - fc
 flagWords:
   - colour -> color
   - canot -> cannot

@@ -30,8 +30,7 @@ export default function Score() {
 				</TabBar>
 			</Card>
 
-			{/* TODO: 下行应该会被删除。 */}
-			<Subheader>{t.subheaders.config}</Subheader>
+			<Subheader>{t.subheaders.config}</Subheader>{/* TODO: 下行应该会被删除。 */}
 			<Expander heading={t.source.trim} caption={t.descriptions.score.trim} icon="trim" />
 			<ExpanderRadio
 				heading={t.score.encoding}

@@ -2,8 +2,8 @@ import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemTe
 
 const StyledRadioButtonLabel = styled.label`
 	display: flex;
-	align-items: center;
 	gap: 8px;
+	align-items: center;
 
 	input {
 		display: none;
@@ -94,7 +94,7 @@ const StyledRadioButtonLabel = styled.label`
 	${styles.mixins.forwardFocusRing()};
 `;
 
-export default function RadioButton<T>({ children, id, value: [value, setValue], disabled, onChange, caption }: FCP<{
+export default function RadioButton<T>({ children, id, value: [value, setValue], disabled, onChange, caption, ...htmlAttrs }: FCP<{
 	/** 标识符。 */
 	id: T;
 	/** 当前单选框组中选中的值。 */
@@ -105,7 +105,7 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 	onChange?: (e: { id: T; value: T; checked: boolean }) => void;
 	/** 详细描述。 */
 	caption?: ReactNode;
-}>) {
+}, "label">) {
 	const labelRef = useDomRef<HTMLLabelElement>();
 	const checked = value === id;
 	const handleCheck = (checked: boolean = true) => {
@@ -118,7 +118,7 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 	useOnFormKeyDown(labelRef, "radio", handleCheck);
 
 	return (
-		<StyledRadioButtonLabel tabIndex={checked ? 0 : -1} ref={labelRef}>
+		<StyledRadioButtonLabel tabIndex={checked ? 0 : -1} ref={labelRef} {...htmlAttrs}>
 			<input type="radio" checked={checked} onChange={e => handleCheck(e.target.checked)} disabled={disabled} />
 			<div className="base">
 				<div className="bullet" />

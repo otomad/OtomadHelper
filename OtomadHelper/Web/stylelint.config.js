@@ -64,7 +64,6 @@ export default {
 		"rule-empty-line-before": null,
 		"no-invalid-double-slash-comments": null,
 		"number-max-precision": null,
-		"@stylistic/jsx-one-expression-per-line": [true, { "allow": "single-child" }],
 		"order/order": [
 			{
 				"type": "at-rule",

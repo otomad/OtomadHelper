@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, captionField, view = false, $itemWidth, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, captionField, view = false, $itemWidth, onItemClick, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
 	/** 选项列表。 */
 	items: readonly T[];
 	/** 当前选中值的 ID。 */
@@ -37,6 +37,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	view?: "list" | "tile" | "grid" | false;
 	/** 使用网格视图组件时子元素图片的宽度。 */
 	$itemWidth?: number;
+	onItemClick?: MouseEventHandler<HTMLElement>;
 }>) {
 	const items = _items as AnyObject[];
 	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "image" | "caption"): Any => {
@@ -62,17 +63,44 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 		items.find(item => item[checkInfoCondition.id] === value)?.[checkInfoCondition.name];
 	return (
 		<Expander {...settingsCardProps} checkInfo={checkInfo}>
-			{!view ? items.map(item =>
-				<RadioButton value={[value as T, setValue]} id={getItemField(item, "id")} key={getItemField(item, "id")} caption={getItemField(item, "caption")}>{getItemField(item, "name")}</RadioButton>) :
-			view === "grid" ? (
+			{!view ? items.map(item => (
+				<RadioButton
+					value={[value as T, setValue]}
+					id={getItemField(item, "id")}
+					key={getItemField(item, "id")}
+					caption={getItemField(item, "caption")}
+					onClick={onItemClick}
+				>
+					{getItemField(item, "name")}
+				</RadioButton>
+			)) : view === "grid" ? (
 				<GridView current={[value as T, setValue]} $itemWidth={$itemWidth}>
-					{items.map(item =>
-						<GridView.Item id={getItemField(item, "id")} key={getItemField(item, "id")} image={getItemField(item, "image")} icon={getItemField(item, "icon")} caption={getItemField(item, "caption")}>{getItemField(item, "name")}</GridView.Item>)}
+					{items.map(item => (
+						<GridView.Item
+							id={getItemField(item, "id")}
+							key={getItemField(item, "id")}
+							image={getItemField(item, "image")}
+							icon={getItemField(item, "icon")}
+							caption={getItemField(item, "caption")}
+							onClick={onItemClick}
+						>
+							{getItemField(item, "name")}
+						</GridView.Item>
+					))}
 				</GridView>
 			) : (
 				<ListView view="tile" current={[value as T, setValue]}>
-					{items.map(item =>
-						<ListView.Item id={getItemField(item, "id")} key={getItemField(item, "id")} icon={getItemField(item, "icon")} caption={getItemField(item, "caption")}>{getItemField(item, "name")}</ListView.Item>)}
+					{items.map(item => (
+						<ListView.Item
+							id={getItemField(item, "id")}
+							key={getItemField(item, "id")}
+							icon={getItemField(item, "icon")}
+							caption={getItemField(item, "caption")}
+							onClick={onItemClick}
+						>
+							{getItemField(item, "name")}
+						</ListView.Item>
+					))}
 				</ListView>
 			)}
 			{children}
