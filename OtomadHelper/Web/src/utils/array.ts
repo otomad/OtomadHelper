@@ -3,87 +3,86 @@
 /*
  * JS Array 又不自带删除方法，想用 prototype 扩展语法，问题是又不推荐使用。
  */
+// #region Init array extensions
+Array.prototype.removeAt = function (index) {
+	this.splice(index, 1);
+};
 
-export /* internal */ function initArrayExtensions() {
-	Array.prototype.removeAt = function (index) {
-		this.splice(index, 1);
-	};
+Array.prototype.removeItem = function (item) {
+	const index = this.indexOf(item);
+	if (index === -1) return false;
+	this.splice(index, 1);
+	return true;
+};
 
-	Array.prototype.removeItem = function (item) {
+Array.prototype.removeAllItem = function (item) {
+	while (true) {
 		const index = this.indexOf(item);
-		if (index === -1) return false;
+		if (index === -1) return;
 		this.splice(index, 1);
-		return true;
-	};
+	}
+};
 
-	Array.prototype.removeAllItem = function (item) {
-		while (true) {
-			const index = this.indexOf(item);
-			if (index === -1) return;
-			this.splice(index, 1);
-		}
-	};
+Array.prototype.pushDistinct = function (item) {
+	if (!this.includes(item))
+		this.push(item);
+};
 
-	Array.prototype.pushDistinct = function (item) {
-		if (!this.includes(item))
-			this.push(item);
-	};
+Array.prototype.clearAll = function () {
+	this.splice(0, Infinity);
+};
 
-	Array.prototype.clearAll = function () {
-		this.splice(0, Infinity);
-	};
+Array.prototype.relist = function (items) {
+	this.splice(0, Infinity, ...items);
+};
 
-	Array.prototype.relist = function (items) {
-		this.splice(0, Infinity, ...items);
-	};
+Array.prototype.toggle = function (item) {
+	const index = this.indexOf(item);
+	if (index === -1)
+		this.push(item);
+	else
+		this.removeAt(index);
+};
 
-	Array.prototype.toggle = function (item) {
-		const index = this.indexOf(item);
-		if (index === -1)
-			this.push(item);
-		else
-			this.removeAt(index);
-	};
+Array.prototype.mapObject = function (callbackFn) {
+	const array = this;
+	return Object.fromEntries(array.map((value, index, array) => callbackFn(value, index, array)));
+};
 
-	Array.prototype.mapObject = function (callbackFn) {
-		const array = this;
-		return Object.fromEntries(array.map((value, index, array) => callbackFn(value, index, array)));
-	};
+Array.prototype.toRemoveDuplicates = function () {
+	return [...new Set(this)];
+};
 
-	Array.prototype.toRemoveDuplicates = function () {
-		return [...new Set(this)];
-	};
+/**
+ * 返回一个新数组，该数组将被剔除任何虚值，如 undefined、null、false、""、±0、±0n。
+ * @param this - 源数组。
+ * @returns 不包含任何虚值的新数组。
+ */
+Array.prototype.toRemoveFalsy = function () {
+	return this.filter(item => item);
+};
 
-	/**
-	 * 返回一个新数组，该数组将被剔除任何虚值，如 undefined、null、false、""、±0、±0n。
-	 * @param this - 源数组。
-	 * @returns 不包含任何虚值的新数组。
-	 */
-	Array.prototype.toRemoveFalsy = function () {
-		return this.filter(item => item);
-	};
+/**
+ * 判断两个数组是否相等，包括位置顺序。
+ * @returns 两个数组是否相等？
+ */
+Array.prototype.equals = function (another) {
+	if (this === another) return true;
+	if (!this || !another) return false;
+	if (this.length !== another.length) return false;
 
-	/**
-	 * 判断两个数组是否相等，包括位置顺序。
-	 * @returns 两个数组是否相等？
-	 */
-	Array.prototype.equals = function (another) {
-		if (this === another) return true;
-		if (!this || !another) return false;
-		if (this.length !== another.length) return false;
+	for (let i = 0; i < this.length; i++)
+		if (this[i] !== another[i])
+			return false;
+	return true;
+};
 
-		for (let i = 0; i < this.length; i++)
-			if (this[i] !== another[i])
-				return false;
-		return true;
-	};
-
-	const protoKeys = Object.keys(Array.prototype);
-	for (const protoKey of protoKeys)
-		Object.defineProperty(Array.prototype, protoKey, {
-			enumerable: false,
-		});
-}
+const protoKeys = Object.keys(Array.prototype);
+for (const protoKey of protoKeys)
+	Object.defineProperty(Array.prototype, protoKey, {
+		enumerable: false,
+	});
+// #endregion
 
 /**
  * 通过一个常量数组映射到一个对象。

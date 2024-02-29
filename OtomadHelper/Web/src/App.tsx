@@ -3,7 +3,10 @@ import GlobalStyle from "./styles/global.ts";
 
 export default function App() {
 	const [ready, setReady] = useState(false);
-	useEffect(() => void delay(100).then(() => setReady(true)));
+	useMountEffect(() => {
+		delay(100).then(() => setReady(true));
+		document.documentElement.style.removeProperty("background-color");
+	});
 
 	const { i18n } = useTranslation();
 	const forceUpdate = useForceUpdate();

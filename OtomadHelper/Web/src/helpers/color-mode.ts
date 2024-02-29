@@ -8,7 +8,7 @@ const changeColorScheme = (isLight?: boolean | ColorScheme) => {
 	if (typeof isLight === "string")
 		isLight = isLight === "light" ? true : isLight === "dark" ? false : undefined;
 	if (isLight === undefined) isLight = lightModePreference.matches;
-	const updateThemeSettings = () => document.documentElement.dataset.scheme = isLight ? "light" : "dark";
+	const updateThemeSettings = () => void (document.documentElement.dataset.scheme = isLight ? "light" : "dark");
 
 	if (!lastClickMouseEvent) updateThemeSettings();
 	else {
@@ -33,8 +33,8 @@ const changeColorScheme = (isLight?: boolean | ColorScheme) => {
 };
 const getUserColorScheme = () => useColorModeStore.getState().scheme;
 
-export function initColorMode() {
-	lightModePreference.addEventListener("change", e => getUserColorScheme() === "auto" && changeColorScheme(e.matches));
-	changeColorScheme(getUserColorScheme());
-	useColorModeStore.subscribe(({ scheme }) => changeColorScheme(scheme));
-}
+// #region Init color mode
+lightModePreference.addEventListener("change", e => getUserColorScheme() === "auto" && changeColorScheme(e.matches));
+changeColorScheme(getUserColorScheme());
+useColorModeStore.subscribe(({ scheme }) => changeColorScheme(scheme));
+// #endregion

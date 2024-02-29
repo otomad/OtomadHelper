@@ -49,6 +49,7 @@ ignoreWords:
   - zh
   - fcp
   - fc
+  - endregion
 flagWords:
   - colour -> color
   - canot -> cannot

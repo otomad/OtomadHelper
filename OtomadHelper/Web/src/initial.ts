@@ -1,65 +1,52 @@
-import { initColorMode } from "helpers/color-mode";
-import { initFonts } from "styles/fonts";
-import { initLayers } from "styles/layers";
-import { initArrayExtensions } from "utils/array";
+import "helpers/color-mode";
+import "styles/fonts";
+import "styles/layers";
+import "utils/array";
 
 const isProdMode = () => !useConfigStore.getState().settings.devMode;
 
+// #region Initial
 /**
  * 在网页 DOM 加载之前执行。
  */
-export default async function initial() {
-	// #region 扩展方法
-	initArrayExtensions();
-	// #endregion
-
-	// #region 配色方案
-	initColorMode();
-	// #endregion
-
-	// #region 预加载样式
-	initLayers();
-	await initFonts();
-	// #endregion
-
-	// #region 阻止网页单击右键菜单
-	window.addEventListener("contextmenu", e => {
-		if (isProdMode())
-			e.preventDefault();
-	});
-	// #endregion
-
-	// #region 阻止网页键盘按键和鼠标滚轮缩放
-	window.addEventListener("keydown", e => {
-		if (isProdMode())
-			if (
-				e.ctrlKey && ["Equal", "Minus", "NumpadAdd", "NumpadSubtract"].includes(e.code) ||
-				e.code === "F12" ||
-				e.ctrlKey && e.shiftKey && ["KeyC", "KeyI"].includes(e.code)
-			)
-				e.preventDefault();
-	});
-	document.addEventListener("wheel", function (e) {
-		if (isProdMode())
-			if (e.ctrlKey)
-				e.preventDefault();
-	}, {
-		capture: false,
-		passive: false,
-	});
-	// #endregion
-
-	// #region 默认阻止将文件拖放到网页
-	addEventListeners(window, "dragover", "drop", e => {
-		if (e.dataTransfer) e.dataTransfer.dropEffect = "none";
+// #region 阻止网页单击右键菜单
+window.addEventListener("contextmenu", e => {
+	if (isProdMode())
 		e.preventDefault();
-	});
-	// #endregion
+});
+// #endregion
 
-	// #region 本机端代码向网页端通信事件
-	window.chrome ??= {};
-	window.chrome.webview?.addEventListener("message", e => {
-		console.log(e);
-	});
-	// #endregion
-}
+// #region 阻止网页键盘按键和鼠标滚轮缩放
+window.addEventListener("keydown", e => {
+	if (isProdMode())
+		if (
+			e.ctrlKey && ["Equal", "Minus", "NumpadAdd", "NumpadSubtract"].includes(e.code) ||
+			e.code === "F12" ||
+			e.ctrlKey && e.shiftKey && ["KeyC", "KeyI"].includes(e.code)
+		)
+			e.preventDefault();
+});
+document.addEventListener("wheel", function (e) {
+	if (isProdMode())
+		if (e.ctrlKey)
+			e.preventDefault();
+}, {
+	capture: false,
+	passive: false,
+});
+// #endregion
+
+// #region 默认阻止将文件拖放到网页
+addEventListeners(window, "dragover", "drop", e => {
+	if (e.dataTransfer) e.dataTransfer.dropEffect = "none";
+	e.preventDefault();
+});
+// #endregion
+
+// #region 本机端代码向网页端通信事件
+window.chrome ??= {};
+window.chrome.webview?.addEventListener("message", e => {
+	console.log(e);
+});
+// #endregion
+// #endregion

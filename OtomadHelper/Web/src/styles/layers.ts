@@ -8,8 +8,8 @@ export const layers = css`
 	@layer base, theme, layout, props, utilities, components, special;
 `;
 
-export function initLayers() {
-	const style = document.createElement("style");
-	style.textContent = layers.toString();
-	document.head.append(style);
-}
+// #region Init layers
+const style = document.createElement("style");
+style.textContent = layers.toString();
+document.head.append(style);
+// #endregion
