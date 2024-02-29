@@ -8,23 +8,30 @@ const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar"
 const navToolItems = ["mosh", "tools"];
 const bottomNavItems = ["settings"] as const;
 
-function isCompleteAvailable(page: string) {
-	return !["mosh", "tools", "settings"].includes(page);
-}
+const isCompleteAvailable = (page: string[]) => !["mosh", "tools", "settings"].includes(page[0]);
+const isAutoLayoutTracks = (page: string[]) => page.length >= 2 && page[0] === "track";
 
 export default function ShellPage() {
-	const { page, changePage, getPagePath, transition, canBack, back } = usePageStore();
-	const pageTitles = page.map((crumb, i, { length }) => ({
-		name: t.titles[crumb]({ context: "full" }),
-		link: i === length - 1 ? undefined : page.slice(0, i + 1),
-	}));
+	const { page, changePage, getPagePath, transition, canBack, back, reset } = usePageStore();
+	const pageTitles = page.map((crumb, i, { length }) => {
+		try {
+			return {
+				name: t.titles[crumb]({ context: "full" }),
+				link: i === length - 1 ? undefined : page.slice(0, i + 1),
+			};
+		} catch (error) {
+			reset();
+			throw error;
+		}
+	});
 	const Page = pages[`/src/views/${getPagePath()}.tsx`] ?? EmptyPage;
 	const [uiScale] = selectConfig(c => c.settings.uiScale);
 	const documentTitle = (() => {
 		const lastPage = page.at(-1);
 		return (lastPage ? t.titles[lastPage]({ context: "full" }) + " - " : "") + import.meta.env.VITE_APP_NAME;
 	})();
-	const completeDisabled = !isCompleteAvailable(page[0]);
+	const completeDisabled = !isCompleteAvailable(page);
+	const autoLayoutTracksMode = isAutoLayoutTracks(page);
 
 	useEffect(() => {
 		document.title = documentTitle;
@@ -45,7 +52,15 @@ export default function ShellPage() {
 			onBack={back}
 			commandBar={(
 				<CommandBar onClick={() => completeDisabled && alert("Cannot complete!")}>
-					<Button icon="checkmark" subtle disabled={completeDisabled}>{t.complete}</Button>
+					{
+						autoLayoutTracksMode ? (
+							<>
+								<Button icon="save" subtle onClick={back}>{t.save}</Button>
+								<Button icon="checkmark" subtle>{t.track.applyToSelectedTracks}</Button>
+							</>
+						) :
+							<Button icon="checkmark" subtle disabled={completeDisabled}>{t.complete}</Button>
+					}
 				</CommandBar>
 			)}
 			style={{ zoom: uiScale === 100 ? undefined : uiScale / 100 }}

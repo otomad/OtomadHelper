@@ -16,4 +16,9 @@
 		"typescript",
 		"typescriptreact",
 	],
+	"cSpell.import": [
+		"${workspaceFolder}/.vscode/cspell.config.yaml"
+	],
+	"cSpell.language": "en,vi",
+	"cSpell.minWordLength": 1,
 }

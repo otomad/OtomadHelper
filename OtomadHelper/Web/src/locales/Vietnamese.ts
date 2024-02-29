@@ -35,6 +35,7 @@ const Vietnamese = {
 		descriptions: {
 			mosh: {
 				normal: "Datamosh là một kĩ thuật làm biến dạng video để tạo hiệu ứng glitch.",
+				// cspell:disable-next-line
 				glitchy: addWjBetweenEachChar("])4t4m0sh |_4` m0^.t kj~ thu4^.t |_4`m |313^'n ])4.ng vj])30 +)3^? t4.0 hj3^.u u\"ng g|1tch."),
 				additional: "Trong nghệ thuật video, một kỹ thuật được sử dụng là khai thác dữ liệu. Hai trong số các video được xen kẽ, vì vậy khung hình trung gian được nội suy từ hai nguồn riêng biệt. Và tận dụng sự khác biệt trong cách codec video độc lập xử lý thông tin chuyển động và màu sắc.",
 			},

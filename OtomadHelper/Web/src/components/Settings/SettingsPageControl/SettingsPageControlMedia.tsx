@@ -3,8 +3,8 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 	$enabled: boolean;
 }>`
 	position: relative;
-	overflow: hidden;
 	flex-shrink: 0;
+	overflow: hidden;
 
 	.base {
 		display: flex;
@@ -12,10 +12,10 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 
 
 		> .right {
+			z-index: 0; // 如果不设置此，则为默认 auto，子元素出现渲染层级异常的奇怪现象（可能仅 Chromium 存在）。
 			display: flex;
 			flex-direction: column;
 			width: 100%;
-			z-index: 0; // 如果不设置此，则为默认 auto，子元素出现渲染层级异常的奇怪现象（可能仅 Chromium 存在）。
 
 			> p {
 				height: 100%;
@@ -23,9 +23,9 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 
 			> .bottom {
 				display: flex;
-				justify-content: space-between;
 				flex-wrap: wrap;
 				gap: 12px;
+				justify-content: space-between;
 			}
 		}
 	}
@@ -41,9 +41,9 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 		${styles.mixins.square("100%")};
 		position: absolute;
 		inset: 0;
-		filter: blur(30px);
-		opacity: 0.3;
 		object-fit: cover;
+		opacity: 0.3;
+		filter: blur(30px);
 		pointer-events: none;
 	}
 

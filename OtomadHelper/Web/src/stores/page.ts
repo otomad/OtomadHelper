@@ -8,7 +8,11 @@ interface IPage {
 	canBack(): boolean;
 	back(): void;
 	resetTransition(): void;
+	reset(): void;
+	isAlerted404: boolean;
 }
+
+const NAME = "page";
 
 export const usePageStore = createStore<IPage>()(
 	persist((set, get) => {
@@ -59,9 +63,17 @@ export const usePageStore = createStore<IPage>()(
 				}
 			},
 			resetTransition: () => set(() => ({ transition: "jump" })),
+			reset() {
+				if (!get().isAlerted404)
+					alert("404 Not Found!");
+				get().isAlerted404 = true;
+				localStorage.removeItem(NAME);
+				location.reload();
+			},
+			isAlerted404: false,
 		};
 	}, {
-		name: "page",
+		name: NAME,
 		partialize: state => ({ page: state.page }),
 	}),
 );

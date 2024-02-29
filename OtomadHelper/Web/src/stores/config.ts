@@ -38,6 +38,9 @@ interface IConfig {
 		enableStaffVisualizer: boolean;
 	};
 	createGroups: boolean;
+	track: {
+		layout: boolean;
+	};
 	ytp: {
 		enabled: boolean;
 	};
@@ -80,6 +83,9 @@ export const useConfigStore = createStore<IConfig>()(
 			enableStaffVisualizer: false,
 		},
 		createGroups: true,
+		track: {
+			layout: false,
+		},
 		ytp: {
 			enabled: false,
 		},

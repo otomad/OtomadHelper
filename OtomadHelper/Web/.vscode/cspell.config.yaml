@@ -1,0 +1,56 @@
+version: "0.2"
+ignorePaths: []
+dictionaryDefinitions: []
+dictionaries: []
+import: []
+language: en,vi
+words:
+  - automator
+  - beziér
+  - datamix
+  - datamixing
+  - datamosh
+  - datamoshes
+  - datamoshing
+  - geq
+  - immer
+  - keyframes
+  - miscz
+  - multilayering
+  - multisource
+  - multitrack
+  - ofx
+  - otomad
+  - otomads
+  - partialize
+  - portato
+  - prelisten
+  - prerenders
+  - prve
+  - pv
+  - shupelunker
+  - subclips
+  - subheaders
+  - tts
+  - ust
+  - utau
+  - vocaloid
+  - vsq
+  - wj
+  - ytp
+  - ytpmv
+  - zustand
+ignoreWords:
+  - ranne
+  - chaosinism
+  - grantwoolard
+  - cyahega
+  - qo
+  - zh
+flagWords:
+  - colour -> color
+  - canot -> cannot
+  - cancelled -> canceled
+  - tunning -> tuning
+  - seting -> setting
+  - od -> of

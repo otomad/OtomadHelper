@@ -1,3 +1,4 @@
+/* eslint-disable @stylistic/indent */
 import type { TOptions } from "i18next";
 import English from "./English";
 import SChinese from "./SChinese";
@@ -5,9 +6,10 @@ import SChinese from "./SChinese";
 export type I18nArgsFunction<R extends string = string> = {
 	(options: TOptions): R;
 };
+type PluralContexts = "other" | "zero";
 type UnknownKeyDeclaration = Readonly<Record<string, string & I18nArgsFunction>>;
-type KeyWithOther<T> = T extends `${infer _}_other` ? T : never;
-type KeyWithNoOther<T> = T extends `${infer _}_other` ? never : T;
+type KeyWithOther<T> = T extends `${infer _}_${PluralContexts}` ? T : never;
+type KeyWithoutOther<T> = T extends `${infer _}_${PluralContexts}` ? never : T;
 
 type IncludesInterpolation<S extends string> = S extends `${string}{{${string}` ? S & I18nArgsFunction<S> : S;
 type NestLocaleWithDefaultValue<L> = {
@@ -19,7 +21,7 @@ type NestLocaleWithDefaultValue<L> = {
 		NestLocaleWithDefaultValue<L[key]>;
 } & UnknownKeyDeclaration;
 type DiscardConstString<L> = {
-	[key in KeyWithNoOther<keyof L>]: L[key] extends object ? DiscardConstString<L[key]> : string;
+	[key in KeyWithoutOther<keyof L>]: L[key] extends object ? DiscardConstString<L[key]> : string;
 } & {
 	[key in KeyWithOther<keyof L>]?: string;
 };
