@@ -19,7 +19,7 @@ Toko akan didukung untuk mengunduh templat terkait di masa mendatang.
 
 Fitur YTP mengacu pada [YTP+](https://github.com/YTP-Plus).
 
-Datą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍mo̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́sh ada teknik yang membuat video kalian jadi ancur dan nge-glitch. Fitur terkait dari Datamosh mengacu pada [vegas-datamosh](https://github.com/delthas/vegas-datamosh).
+Ða̵̝̻͔͎͋̇͑̆ƭą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̍๓o̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́ƨի áđá tεкดίк ўáดg ๓ε๓طůát vίđεơ кáլίáด ذáđί áด¢ůя đáด ดgε-gլίt¢ի. Fitur terkait dari Datamosh mengacu pada [vegas-datamosh](https://github.com/delthas/vegas-datamosh).
 
 Fitur terkait dari Camera shake mengacu pada [VegasShakeScript](https://github.com/tmarplatt/VegasScripts).
 

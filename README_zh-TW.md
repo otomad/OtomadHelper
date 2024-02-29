@@ -19,7 +19,7 @@
 
 YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
-嚜踵貲炓狅橆緹懿種熥鐹礳隕嫊豺鉯滻泩詁瘴滧輠菂嵙攲。資料狂舞的相關功能參考自 [Vegas 資料狂舞](https://github.com/delthas/vegas-datamosh)。
+嚜輯貲炓狅橆緹懿種熥鐹礳隕嫊豺鉯滻泩詁瘴滧輠菂嵙攲。資料狂舞的相關功能參考自 [Vegas 資料狂舞](https://github.com/delthas/vegas-datamosh)。
 
 鏡頭搖晃功能參考自 [Vegas 搖晃腳本](https://github.com/tmarplatt/VegasScripts)。
 

@@ -19,7 +19,7 @@ Cửa hàng (Store) sẽ được hỗ trợ tải các template liên quan tron
 
 Các tính năng liên quan của YTP đề cập đến ở [YTP+](https://github.com/YTP-Plus).
 
-Ða̵̝̻͔͎͋̇͑̆ƭą̬͉̫̐͑̓̄ͅa̸͎͇͗̌͂̈̀ą̸̝̼̦̤̇̐ǎ̛͍́̑a̸̲͙͛̐̄̎̚͜a̢̨̝̟͎̾̔̊ǎ̤̞͈͑a͈̪̣̍₥o̻̪̬̘̲͆͂͠o̸͍̞͔̓̆̊̀o̗͊̇̇̈́̇ǫ͇͗̏̕͜ơ̬͍͚̦̯̓̊͌ò͈̦̫̈́̓o̦̣̲̊̀o̪̪͚̺̘͛̽̏̈́ƨλ ℓà ₥ộƭ ƙĩ ƭλúậƭ ℓà₥ βïếñ δạñϱ Ʋïδèô để ƭạô λïệú ứñϱ ϱℓïƭçλ. Các tính năng liên quan của Datamosh đề cập đến ở [vegas-datamosh](https://github.com/delthas/vegas-datamosh).
+])4t4m0sh |_4\` m0^.t kj~ thu4^.t |_4\`m |313^'n ])4.ng vj])30 +)3^? t4.0 hj3^.u u"ng g|1tch. Các tính năng liên quan của Datamosh đề cập đến ở [vegas-datamosh](https://github.com/delthas/vegas-datamosh).
 
 Tính năng Camera Shake đề cập đến ở [VegasShakeScript](https://github.com/tmarplatt/VegasScripts).
 
