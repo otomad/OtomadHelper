@@ -1,6 +1,5 @@
 import "helpers/color-mode";
 import "styles/fonts";
-import "styles/layers";
 import "utils/array";
 
 const isProdMode = () => !useConfigStore.getState().settings.devMode;

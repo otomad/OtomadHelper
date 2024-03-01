@@ -8,10 +8,13 @@ const changeColorScheme = (isLight?: boolean | ColorScheme) => {
 	if (typeof isLight === "string")
 		isLight = isLight === "light" ? true : isLight === "dark" ? false : undefined;
 	if (isLight === undefined) isLight = lightModePreference.matches;
-	const updateThemeSettings = () => void (document.documentElement.dataset.scheme = isLight ? "light" : "dark");
+	const updateThemeSettings = () => document.documentElement.dataset.scheme = isLight ? "light" : "dark";
+	const afterUpdateThemeSettings = () => useColorModeStore.setState(() => ({ backgroundColor: getComputedStyle(document.body).backgroundColor }));
 
-	if (!lastClickMouseEvent) updateThemeSettings();
-	else {
+	if (!lastClickMouseEvent) {
+		updateThemeSettings();
+		setTimeout(afterUpdateThemeSettings, 1000);
+	} else {
 		const { x, y } = lastClickMouseEvent;
 		const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
 		const clipPath = [
@@ -28,6 +31,7 @@ const changeColorScheme = (isLight?: boolean | ColorScheme) => {
 			pseudoElement: isLight ? "::view-transition-new(root)" : "::view-transition-old(root)",
 		}).then(() => {
 			document.documentElement.classList.remove(CHANGING_COLOR_SCHEME_CLASS);
+			afterUpdateThemeSettings();
 		});
 	}
 };
@@ -36,5 +40,5 @@ const getUserColorScheme = () => useColorModeStore.getState().scheme;
 // #region Init color mode
 lightModePreference.addEventListener("change", e => getUserColorScheme() === "auto" && changeColorScheme(e.matches));
 changeColorScheme(getUserColorScheme());
-useColorModeStore.subscribe(({ scheme }) => changeColorScheme(scheme));
+useColorModeStore.subscribe(state => state.scheme, scheme => changeColorScheme(scheme));
 // #endregion

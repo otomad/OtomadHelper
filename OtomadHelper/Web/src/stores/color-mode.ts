@@ -3,11 +3,15 @@ import type { ColorScheme } from "helpers/color-mode";
 interface IColorMode {
 	scheme: ColorScheme;
 	setScheme: (scheme: ColorScheme) => void;
+	backgroundColor: string;
 }
 
 export const useColorModeStore = createStore<IColorMode>()(
-	persist(set => ({
-		scheme: "auto",
-		setScheme: scheme => set({ scheme }),
-	}), { name: "colorMode" }),
+	subscribeWithSelector(
+		persist(set => ({
+			scheme: "auto",
+			setScheme: scheme => set({ scheme }),
+			backgroundColor: "black",
+		}), { name: "colorMode" }),
+	),
 );

@@ -309,7 +309,7 @@ export const STOP_TRANSITION_ID = "stop-transition";
  * @param options - 动画选项。
  * @returns 在动画播放完成之后可执行析构函数。
  */
-export async function startViewTransition(changeFunc: () => MaybePromise<void>, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions = {}) {
+export async function startViewTransition(changeFunc: () => MaybePromise<void | unknown>, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions = {}) {
 	if (!("startViewTransition" in document)) {
 		await changeFunc();
 		return;

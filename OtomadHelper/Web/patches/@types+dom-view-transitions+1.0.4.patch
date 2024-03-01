@@ -1,0 +1,11 @@
+diff --git a/node_modules/@types/dom-view-transitions/index.d.ts b/node_modules/@types/dom-view-transitions/index.d.ts
+index e3cdbe8..897bbc3 100644
+--- a/node_modules/@types/dom-view-transitions/index.d.ts
++++ b/node_modules/@types/dom-view-transitions/index.d.ts
+@@ -1,5 +1,5 @@
+ interface Document {
+-    startViewTransition(updateCallback: () => Promise<void> | void): ViewTransition;
++    startViewTransition(updateCallback: () => Promise<void | unknown> | void | unknown): ViewTransition;
+ }
+ 
+ interface ViewTransition {

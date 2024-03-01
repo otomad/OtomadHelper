@@ -1,4 +1,3 @@
-/* eslint-disable quote-props */
 import type autoImport from "unplugin-auto-import/vite";
 type AutoImportOptionsImports = NonNullable<Parameters<typeof autoImport>[0]>["imports"];
 
@@ -39,6 +38,7 @@ export default [
 		],
 		"zustand/middleware": [
 			"persist",
+			"subscribeWithSelector",
 		],
 		"zustand/middleware/immer": [
 			["immer", "zustandImmer"],

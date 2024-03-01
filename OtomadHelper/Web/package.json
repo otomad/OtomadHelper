@@ -1,7 +1,7 @@
 {
 	"name": "otomad-helper",
 	"version": "8.0",
-	"description": "The front-end part of Otomad Helper script.",
+	"description": "The front-end part of Otomad Helper extension.",
 	"type": "module",
 	"main": "./dist/index.html",
 	"module": "esnext",
@@ -14,8 +14,8 @@
 	"author": "Ranne",
 	"license": "GPL-3.0-only",
 	"scripts": {
-		"dev": "vite --host --force",
-		"build": "tsc && vite build --force",
+		"dev": "vite --host",
+		"build": "tsc && vite build ",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"lint:css": "stylelint './src/**/*.{js,jsx,ts,tsx}'",
 		"release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
@@ -62,10 +62,12 @@
 		"stylelint": "^16.2.1",
 		"stylelint-config-standard": "^36.0.0",
 		"stylelint-order": "^6.0.4",
+		"terser": "^5.28.1",
 		"typescript": "^5.1.6",
 		"typescript-eslint": "^7.0.2",
 		"unplugin-auto-import": "^0.16.7",
 		"vite": "^4.4.5",
+		"vite-plugin-html-minifier": "^1.0.3",
 		"vite-plugin-svg-icons": "^2.0.1",
 		"vite-plugin-svgr": "^4.1.0",
 		"vite-tsconfig-paths": "^4.2.1"

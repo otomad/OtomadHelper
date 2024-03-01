@@ -292,7 +292,7 @@ export default [
 		},
 	},
 	{
-		files: ["*.config.js"],
+		files: ["*.config.{js,ts}"],
 		rules: {
 			"@stylistic/quote-props": "off",
 		},
@@ -302,5 +302,13 @@ export default [
 		rules: {
 			"@typescript-eslint/no-explicit-any": "off",
 		},
+	},
+	{
+		ignores: [
+			"dist/*",
+			".output/*",
+			"node_modules/*",
+			"**/dist/*",
+		],
 	},
 ];

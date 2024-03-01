@@ -7,6 +7,7 @@ language: en,vi
 words:
   - automator
   - beziér
+  - composables
   - datamix
   - datamixing
   - datamosh
@@ -15,6 +16,7 @@ words:
   - geq
   - immer
   - keyframes
+  - lotties
   - miscz
   - multilayering
   - multisource
@@ -50,6 +52,7 @@ ignoreWords:
   - fcp
   - fc
   - endregion
+  - moz
 flagWords:
   - colour -> color
   - canot -> cannot

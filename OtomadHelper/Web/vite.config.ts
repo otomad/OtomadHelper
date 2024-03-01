@@ -1,8 +1,8 @@
-/* eslint-disable quote-props */
 import react from "@vitejs/plugin-react";
 import path from "path";
 import autoImport from "unplugin-auto-import/vite";
 import { defineConfig } from "vite";
+import htmlMinifier from "vite-plugin-html-minifier";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -51,6 +51,21 @@ export default defineConfig({
 			include: "**/*.svg",
 		}),
 		tsconfigPaths(),
+		htmlMinifier({
+			minify: {
+				collapseWhitespace: true,
+				keepClosingSlash: false,
+				removeComments: true,
+				removeRedundantAttributes: true,
+				removeScriptTypeAttributes: true,
+				removeStyleLinkTypeAttributes: true,
+				removeEmptyAttributes: true,
+				useShortDoctype: true,
+				minifyCSS: false,
+				minifyJS: true,
+				minifyURLs: true,
+			},
+		}),
 	],
 	base: "",
 	build: {
@@ -65,9 +80,21 @@ export default defineConfig({
 					else if (id.includes("svg-icons-register")) return "svgs";
 					else if (id.includes("assets/lotties")) return "lotties";
 				}, */
+				banner:
+`/*!
+ * Otomad Helper
+ * @homepage https://otomadhelper.readthedocs.io/
+ * @repository https://github.com/otomad/OtomadHelper
+ * @license GPL 3.0
+ * @author Ranne
+ */`,
 			},
 		},
 		chunkSizeWarningLimit: 500_000, // 500MB
+		minify: "terser",
+		terserOptions: {
+			keep_classnames: true,
+		},
 	},
 	assetsInclude: [
 		"**/*.cur",
