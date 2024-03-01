@@ -18,12 +18,12 @@ const StyledTabItem = styled.button`
 		padding: 9px 16px 11px;
 
 		&:hover,
-		&.active {
+		&.selected {
 			background-color: ${c("fill-color-subtle-secondary")};
 		}
 
-		&:not(.active):active,
-		&.active:not(:active):hover {
+		&:not(.selected):active,
+		&.selected:not(:active):hover {
 			background-color: ${c("fill-color-subtle-tertiary")};
 		}
 
@@ -93,20 +93,20 @@ const StyledTabItem = styled.button`
 		--state: pressed;
 	}
 
-	&.active .animated-icon {
+	&.selected .animated-icon {
 		--selected: true;
 	}
 `;
 
-export /* internal */ default function TabItem({ icon, animatedIcon, children, active = false, collapsed, id: _id, focusable = true, badge, vertical, ...htmlAttrs }: FCP<{
+export /* internal */ default function TabItem({ icon, animatedIcon, children, selected = false, collapsed, id: _id, focusable = true, badge, vertical, ...htmlAttrs }: FCP<{
 	/** 图标。 */
 	icon?: string;
 	/** 动态图标。 */
 	animatedIcon?: string;
 	/** 标识符。 */
 	id: string;
-	/** 是否活跃状态？ */
-	active?: boolean;
+	/** 是否已选中？ */
+	selected?: boolean;
 	/** 是否隐藏文本标签，仅显示图标？ */
 	collapsed?: boolean;
 	/** 是否可被聚焦？ */
@@ -149,7 +149,7 @@ export /* internal */ default function TabItem({ icon, animatedIcon, children, a
 					ref={tabItemRef}
 					tabIndex={focusable ? 0 : -1}
 					{...htmlAttrs}
-					className={{ active }}
+					className={{ selected }}
 				>
 					{(icon || animatedIcon) && (
 						<div className="badge-wrapper">

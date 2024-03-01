@@ -4,7 +4,9 @@ const THICKNESS = 3;
 const LENGTH = 20;
 const DELAY = 200;
 
-const Indicator = styled.div<{
+const Indicator = styled.div.attrs((({ $vertical }: { $vertical: boolean }) => ({
+	className: $vertical ? "vertical" : "horizontal",
+})) as Any)<{
 	/** 是否禁用过渡动画？ */
 	$noTransition?: boolean;
 	/** 位置（上方向和下方向距离容器的距离元组）。 */
@@ -29,8 +31,12 @@ const StyledTabBar = styled.div`
 		position: relative;
 	}
 
-	&:has(.active:active) ${Indicator} {
+	&:has(.selected:active) ${Indicator} {
 		scale: 1 0.5;
+
+		&.horizontal {
+			scale: 0.5 1;
+		}
 	}
 
 	hr {
@@ -93,15 +99,15 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		const [entry1, entry2] = position;
 		if (entry1 + entry2 >= entireLength || !Number.isFinite(entry1) || !Number.isFinite(entry2))
 			movement = "appear";
-		const activeTabItem = ind.previousElementSibling!.querySelector(".active");
-		if (!activeTabItem) {
+		const selectedTabItem = ind.previousElementSibling!.querySelector(".selected");
+		if (!selectedTabItem) {
 			if (movement === "appear") return;
 			movement = "disappear";
 			const center = (entry1 + entireLength - entry2) / 2;
 			setPosition([center, center - 1]);
 			return;
 		}
-		const targetRect = activeTabItem.getBoundingClientRect();
+		const targetRect = selectedTabItem.getBoundingClientRect();
 		let target1 = targetRect[vertical ? "top" : "left"] - entire1,
 			target2 = targetRect[vertical ? "bottom" : "right"] - entire1;
 		const targetOffset = (target2 - target1 - LENGTH) / 2;
@@ -147,7 +153,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 							React.cloneElement(child, {
 								collapsed,
 								vertical,
-								active: current === id,
+								selected: current === id,
 								onClick: () => setCurrent?.(id),
 							})
 						);

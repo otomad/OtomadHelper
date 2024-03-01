@@ -91,7 +91,7 @@ const StyledToggleSwitchLabel = styled.button`
 
 	${styles.mixins.forwardFocusRing("toggle-switch-base")};
 
-	&.active {
+	&.selected {
 		.stroke {
 			border-color: ${c("accent-color")};
 		}
@@ -192,7 +192,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	return (
 		<StyledToggleSwitchLabel
 			as={as as "button"}
-			className={{ active: on }}
+			className={{ selected: on }}
 			disabled={disabled}
 			onClick={e => handleCheck(!on, e)}
 			tabIndex={0}

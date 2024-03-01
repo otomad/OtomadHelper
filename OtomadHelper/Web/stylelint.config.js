@@ -70,7 +70,7 @@ export default {
 				"name": "include",
 				"hasBlock": false,
 			},
-			"dollar-variables",
+			// "dollar-variables",
 			"custom-properties",
 			"declarations",
 			// "at-rules", // <-- important, `@media` should go before `&:pseudo`

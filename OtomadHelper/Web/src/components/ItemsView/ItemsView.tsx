@@ -21,7 +21,7 @@ const StyledItemsView = styled.div<{
 			grid-template-columns: repeat(1, 1fr);
 		}
 	}
-	
+
 	&.grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, ${({ $itemWidth = 200 }) => styles.toValue($itemWidth)});
@@ -33,7 +33,7 @@ const StyledItemsView = styled.div<{
 		&.tile {
 			padding: 7px 35px;
 		}
-		
+
 		&.grid {
 			padding: 7px;
 		}
@@ -55,7 +55,7 @@ export default function ItemsView<T extends string = string>({ view, current: [c
 				const id = child.props.id as T;
 				return (
 					React.cloneElement(child, {
-						active: current === id,
+						selected: current === id,
 						view,
 						onClick: () => setCurrent?.(id),
 					})

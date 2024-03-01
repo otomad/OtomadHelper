@@ -44,19 +44,19 @@ const StyledItemsViewItem = styled.button<{
 			background-color: ${c("fill-color-subtle-tertiary")};
 		}
 
-		&.active .selection {
+		&.selected .selection {
 			box-shadow:
 				0 0 0 2px ${c("accent-color")} inset,
 				0 0 0 3px ${c("fill-color-control-solid-default")} inset;
 		}
 
-		&.active:hover .selection {
+		&.selected:hover .selection {
 			box-shadow:
 				0 0 0 2px ${c("accent-color", 90)} inset,
 				0 0 0 3px ${c("fill-color-control-solid-default")} inset;
 		}
 
-		&.active:active .selection {
+		&.selected:active .selection {
 			box-shadow:
 				0 0 0 2px ${c("accent-color", 80)} inset,
 				0 0 0 3px ${c("fill-color-control-solid-default")} inset;
@@ -100,7 +100,7 @@ const StyledItemsViewItem = styled.button<{
 			}
 		}
 
-		&:not(.active) .base::before {
+		&:not(.selected) .base::before {
 			scale: 1 0;
 		}
 
@@ -117,15 +117,15 @@ const DefaultImage = styled.img`
 	object-fit: cover;
 `;
 
-export /* internal */ default function ItemsViewItem({ image, icon, id: _id, active = false, caption, view, children, className, ...htmlAttrs }: FCP<{
+export /* internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, caption, view, children, className, ...htmlAttrs }: FCP<{
 	/** 图片。 */
 	image?: string | ReactNode;
 	/** 图标。 */
 	icon?: string;
 	/** 标识符。 */
 	id: string;
-	/** 是否活跃状态？ */
-	active?: boolean;
+	/** 是否已选中？ */
+	selected?: boolean;
 	/** 详细描述。 */
 	caption?: ReactNode;
 	/** @private 显示方式：列表、平铺、网格。 */
@@ -139,7 +139,7 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, act
 	);
 
 	return (
-		<StyledItemsViewItem $view={view!} className={[className, view, { active }]} tabIndex={0} {...htmlAttrs}>
+		<StyledItemsViewItem $view={view!} className={[className, view, { selected }]} tabIndex={0} {...htmlAttrs}>
 			<div className="base">
 				{view === "grid" ? (
 					<>
