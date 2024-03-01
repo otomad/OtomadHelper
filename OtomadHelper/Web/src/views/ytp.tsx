@@ -29,17 +29,17 @@ export default function Ytp() {
 					<SettingsCard heading={t.ytp.clips} caption={t.descriptions.ytp.clips} icon="number" />
 					<Subheader>{t.subheaders.effects}</Subheader>
 					<Expander heading={t.ytp.effects} caption={t.descriptions.ytp.effects} icon="sparkle" checkInfo={selectEffects[0]}>
-						<GridView current={selectEffects}>
+						<ItemsView view="grid" current={selectEffects}>
 							{effects.map(name => (
-								<GridView.Item
+								<ItemsView.Item
 									key={name}
 									id={name}
 									image={<PreviewYtp thumbnail={exampleThumbnail} name={name} />}
 								>
 									{name}
-								</GridView.Item>
+								</ItemsView.Item>
 							))}
-						</GridView>
+						</ItemsView>
 					</Expander>
 				</>
 			)}

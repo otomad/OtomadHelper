@@ -14,8 +14,8 @@ const Indicator = styled.div<{
 }>`
 	${styles.mixins.oval()}
 	${({ $vertical }) => $vertical ? "width" : "height"}: ${THICKNESS}px;
-	background-color: ${c("accent-color")};
 	position: absolute;
+	background-color: ${c("accent-color")};
 	${({ $vertical }) => $vertical ? css`left: 5px` : css`bottom: 0`};
 	${({ $noTransition }) => $noTransition && css`transition: none`};
 	${({ $position, $vertical }) => $position && css`
@@ -47,9 +47,9 @@ const StyledTabBar = styled.div`
 
 	&.horizontal {
 		width: 100%;
-		overflow-x: auto;
 		margin: -4px;
 		padding: 4px;
+		overflow-x: auto;
 
 		&::-webkit-scrollbar {
 			height: 0;
@@ -115,7 +115,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 			setPosition([target1, target2]);
 			return;
 		}
-		const movementSign = (entry1 + entireLength - entry2) - (target1 + target2);
+		const movementSign = entry1 + entireLength - entry2 - (target1 + target2);
 		movement = movementSign > 0 ? "previous" : movementSign < 0 ? "next" : "none";
 		if (movement === "none") return;
 		const setPosition1 = () => _setPosition(([_, pos2]) => [target1, pos2]);

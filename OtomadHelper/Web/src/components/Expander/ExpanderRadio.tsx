@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, captionField, view = false, $itemWidth, onItemClick, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, captionField, view = false, $itemWidth, radioGroup, onItemClick, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
 	/** 选项列表。 */
 	items: readonly T[];
 	/** 当前选中值的 ID。 */
@@ -37,6 +37,8 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	view?: "list" | "tile" | "grid" | false;
 	/** 使用网格视图组件时子元素图片的宽度。 */
 	$itemWidth?: number;
+	/** 单选框分组，可选。 */
+	radioGroup?: string;
 	onItemClick?: MouseEventHandler<HTMLElement>;
 }>) {
 	const items = _items as AnyObject[];
@@ -69,14 +71,15 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 					id={getItemField(item, "id")}
 					key={getItemField(item, "id")}
 					caption={getItemField(item, "caption")}
+					radioGroup={radioGroup}
 					onClick={onItemClick}
 				>
 					{getItemField(item, "name")}
 				</RadioButton>
-			)) : view === "grid" ? (
-				<GridView current={[value as T, setValue]} $itemWidth={$itemWidth}>
+			)) : (
+				<ItemsView view={view} current={[value as T, setValue]} $itemWidth={$itemWidth}>
 					{items.map(item => (
-						<GridView.Item
+						<ItemsView.Item
 							id={getItemField(item, "id")}
 							key={getItemField(item, "id")}
 							image={getItemField(item, "image")}
@@ -85,23 +88,9 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 							onClick={onItemClick}
 						>
 							{getItemField(item, "name")}
-						</GridView.Item>
+						</ItemsView.Item>
 					))}
-				</GridView>
-			) : (
-				<ListView view="tile" current={[value as T, setValue]}>
-					{items.map(item => (
-						<ListView.Item
-							id={getItemField(item, "id")}
-							key={getItemField(item, "id")}
-							icon={getItemField(item, "icon")}
-							caption={getItemField(item, "caption")}
-							onClick={onItemClick}
-						>
-							{getItemField(item, "name")}
-						</ListView.Item>
-					))}
-				</ListView>
+				</ItemsView>
 			)}
 			{children}
 		</Expander>

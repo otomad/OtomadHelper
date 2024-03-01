@@ -25,10 +25,10 @@ export default function Source() {
 
 			<Expander heading={t.source.trim} caption={t.descriptions.source.trim} icon="trim" />
 			{/* <Expander heading={t.source.startTime} caption={t.descriptions.source.startTime} icon="start_point">
-				<ListView view="tile" current={startTime}>
+				<ItemsView view="tile" current={startTime}>
 					{startTimes.map(item =>
-						<ListView.Item id={item.id} key={item.id} icon={item.icon}>{item.name}</ListView.Item>)}
-				</ListView>
+						<ItemsView.Item id={item.id} key={item.id} icon={item.icon}>{item.name}</ItemsView.Item>)}
+				</ItemsView>
 			</Expander> */}
 			<ExpanderRadio
 				heading={t.source.startTime}

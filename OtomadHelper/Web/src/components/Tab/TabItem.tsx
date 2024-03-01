@@ -113,7 +113,7 @@ export /* internal */ default function TabItem({ icon, animatedIcon, children, a
 	focusable?: boolean;
 	/** 角标。 */
 	badge?: string | number;
-	/** 是否使用纵向的 NavigationView 样式？ */
+	/** @private 是否使用纵向的 NavigationView 样式？ */
 	vertical?: boolean;
 }, "section">) {
 	const tabItemRef = useDomRef<HTMLButtonElement>();
