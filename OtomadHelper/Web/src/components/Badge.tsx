@@ -17,18 +17,17 @@ const StyledBadge = styled.div<{
 	${styles.mixins.oval()};
 	${styles.mixins.flexCenter()};
 	${styles.effects.text.caption};
+	display: inline-flex;
 	flex-shrink: 0;
 	min-width: 16px;
 	height: 16px;
 	padding: 0 3px;
 	text-align: center;
 	background-color: ${c("fill-color-system-solid-neutral-background")};
-	scale: 0;
+	scale: 1;
 
-	&.appear,
-	&.enter,
-	&.enter-done {
-		scale: 1;
+	${tgs()} {
+		scale: 0;
 	}
 
 	${({ $status }) => css`
@@ -60,4 +59,3 @@ export default forwardRef(function Badge({ children, status = "info", hidden, ..
 		</CssTransition>
 	);
 });
-// BUG: N 多。

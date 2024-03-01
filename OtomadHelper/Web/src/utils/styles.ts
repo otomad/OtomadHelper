@@ -5,8 +5,8 @@
 import type { ColorNames } from "styles/colors";
 import eases from "styles/eases";
 import effects from "styles/effects";
-import mixins from "styles/mixins";
 import { STATUS_PREFIX, type AvailableLottieStatus } from "styles/fake-animations";
+import mixins from "styles/mixins";
 
 /**
  * 调用主题色。
@@ -58,3 +58,35 @@ export const useLottieStatus = {
 	name: (status: AvailableLottieStatus) => css`animation-name: ${STATUS_PREFIX}${status};`,
 	animation: (status: AvailableLottieStatus) => css`animation: ${STATUS_PREFIX}${status} 1s infinite;`,
 };
+
+enum TransitionGroupState {
+	appear = 1 << 0,
+	enter = 1 << 1,
+	exit = 1 << 2,
+
+	enterExit = 1 << 1 | 1 << 2,
+	all = 1 << 0 | 1 << 1 | 1 << 2,
+}
+
+/**
+ * 为 React Transition Group 离谱的理念而生成的状态选择器规则。
+ * @param states - 过渡组的状态，包含出现、进入、退出各自的按位与值。
+ * @param name - 可选的过渡组动画名称，留空表示不包含。
+ * @returns 生成的状态选择器。
+ */
+export function tgs(states: TransitionGroupState = TransitionGroupState.all, name: string = "") {
+	if (name) name += "-";
+	const selectors: string[] = [];
+	if (states & TransitionGroupState.appear)
+		selectors.push(`&.${name}appear:not(.${name}appear-active)`);
+	if (states & TransitionGroupState.enter)
+		selectors.push(`&.${name}enter:not(.${name}enter-active)`);
+	if (states & TransitionGroupState.exit)
+		selectors.push(`&:is(.${name}exit-active, .${name}exit-done)`);
+	return selectors.join(", ");
+}
+tgs.appear = TransitionGroupState.appear;
+tgs.enter = TransitionGroupState.enter;
+tgs.exit = TransitionGroupState.exit;
+tgs.enterExit = TransitionGroupState.enterExit;
+tgs.all = TransitionGroupState.all;

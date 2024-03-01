@@ -90,6 +90,15 @@ const GlobalStyle = createGlobalStyle<{
 		display: contents;
 	}
 
+	.enter:not(.enter-active),
+	.appear:not(.appear-active) {
+		&,
+		&::before,
+		&::after {
+			transition: none !important;
+		}
+	}
+
 	// Color Mode transition
 	::view-transition-old(root),
 	::view-transition-new(root) {

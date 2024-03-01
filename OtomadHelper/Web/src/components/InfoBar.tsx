@@ -52,7 +52,7 @@ export default function InfoBar({ status = "info", title, children, ...htmlAttrs
 	return (
 		<StyledInfoBar $status={status} {...htmlAttrs}>
 			{status && <Badge status={status} />}
-			<div className="title">{title}</div>
+			{title && <div className="title">{title}</div>}
 			<div className="text">{children}</div>
 		</StyledInfoBar>
 	);

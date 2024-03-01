@@ -3,6 +3,7 @@ import "styles/fonts";
 import "utils/array";
 
 const isProdMode = () => !useConfigStore.getState().settings.devMode;
+const global = globalThis as AnyObject;
 
 // #region Initial
 /**
@@ -40,6 +41,13 @@ addEventListeners(window, "dragover", "drop", e => {
 	if (e.dataTransfer) e.dataTransfer.dropEffect = "none";
 	e.preventDefault();
 });
+// #endregion
+
+// #region 开发环境找编译后样式
+if (import.meta.env.DEV)
+	global.findCss = function (component: string) {
+		return [...document.head.querySelector("style[data-styled]")?.childNodes as NodeListOf<Text> ?? []].find(rule => rule.textContent?.includes(component));
+	};
 // #endregion
 
 // #region 本机端代码向网页端通信事件

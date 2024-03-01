@@ -7,16 +7,9 @@ const ExpanderParent = styled(SettingsCard) <{
 	backdrop-filter: blur(4px);
 
 	.check-info {
-		&.exit-active,
-		&.exit-done {
+		${tgs()} {
 			translate: 0 16px;
 			opacity: 0;
-		}
-
-		&.enter-active,
-		&.enter-done {
-			translate: 0;
-			opacity: 1;
 		}
 	}
 
@@ -46,8 +39,6 @@ const ExpanderParent = styled(SettingsCard) <{
 		`;
 	}}
 `;
-
-export /* internal */ const abcdef = 123456;
 
 const ExpanderChild = styled.div`
 	overflow: hidden;
@@ -90,7 +81,7 @@ export default function Expander({ icon, heading, caption, actions, expanded = f
 			>
 				{actions}
 				{checkInfo && (
-					<CssTransition in={!internalExpanded || alwaysShowCheckInfo}>
+					<CssTransition in={!internalExpanded || alwaysShowCheckInfo} unmountOnExit>
 						<div className="check-info">{checkInfo}</div>
 					</CssTransition>
 				)}

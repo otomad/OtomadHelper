@@ -55,6 +55,7 @@ ignoreWords:
   - fc
   - endregion
   - moz
+  - tgs
 flagWords:
   - colour -> color
   - canot -> cannot

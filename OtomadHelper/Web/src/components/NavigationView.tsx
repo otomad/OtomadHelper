@@ -319,7 +319,7 @@ const StyledNavigationView = styled.div<{
 		selectors.push(...forMap(NAV_ITEMS_BOTTOM_ASSUMED_COUNT, i =>
 			`&:has(.nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item:active:hover) .nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`));
 		return css`
-			${selectors.join(",")} {
+			${selectors.join(", ")} {
 				--state: pressed;
 			}
 		`;
