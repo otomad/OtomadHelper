@@ -44,7 +44,7 @@ const StyledButton = styled.button<{
 		${ifColorScheme.light} &:not(:active, [disabled]) {
 			border-bottom-color: ${c("stroke-color-control-stroke-secondary")};
 		}
-` : css`
+	` : css`
 		--fill-color: ${c($fillColorName)};
 		background-color: ${c($fillColorName)};
 		border-color: ${c("stroke-color-control-stroke-on-accent-default")};
@@ -80,7 +80,7 @@ const StyledButton = styled.button<{
 				color: ${c("foreground-color")};
 			}
 		}
-`}
+	`}
 
 	@layer components {
 		min-width: 96px;
@@ -90,7 +90,8 @@ const StyledButton = styled.button<{
 		display: none;
 	}
 
-	&.subtle {
+	&.subtle,
+	&.hyperlink {
 		padding: 0 11px;
 		background-color: ${c("fill-color-subtle-transparent")};
 		border: none;
@@ -107,22 +108,29 @@ const StyledButton = styled.button<{
 			background-color: ${c("fill-color-subtle-tertiary")};
 		}
 	}
+
+	&.hyperlink {
+		color: ${c("accent-color")};
+		cursor: pointer;
+	}
 `;
 
-export default function Button({ children, icon, animatedIcon, subtle, accent, className, ...htmlAttrs }: FCP<{
+export default function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, className, ...htmlAttrs }: FCP<{
 	/** 按钮图标。 */
 	icon?: string;
 	/** 按钮动态图标。 */
 	animatedIcon?: string;
 	/** 是否使用无背景按钮？ */
 	subtle?: boolean;
+	/** 是否使用超链接按钮？ */
+	hyperlink?: boolean;
 	/** 是否按钮附着强调色？ */
 	accent?: boolean | "critical" | "success" | "attention" | "caution";
 }, "button">) {
 	const fillColorName = !accent ? undefined : accent === true ? "accent-color" : `fill-color-system-${accent}`;
 
 	return (
-		<StyledButton type="button" className={[className, { subtle }]} $fillColorName={fillColorName} {...htmlAttrs}>
+		<StyledButton type="button" className={[className, { subtle, hyperlink }]} $fillColorName={fillColorName} {...htmlAttrs}>
 			<StackPanel className="content">
 				{icon && <Icon name={icon} />}
 				{animatedIcon && <AnimatedIcon name={animatedIcon} />}

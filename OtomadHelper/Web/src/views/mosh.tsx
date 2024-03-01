@@ -1,4 +1,4 @@
-import glitchCursor from "assets/cursurs/glitch_cursor.ani";
+import glitchCursor from "assets/cursors/glitch_cursor.ani";
 import tipsImage from "assets/images/tips/datamoshing.jpg";
 
 export default function Mosh() {
@@ -14,8 +14,8 @@ export default function Mosh() {
 					{t.descriptions.mosh.additional}
 				</SettingsPageControl>
 			</Contents>
-			<SettingsCard heading={t.mosh.datamosh} caption={t.descriptions.mosh.datamosh} type="button" icon="shuffle" />
-			<SettingsCard heading={t.mosh.datamix} caption={t.descriptions.mosh.datamix} type="button" icon="datamix" />
+			<SettingsCard heading={t.mosh.datamosh} caption={t.descriptions.mosh.datamosh} type="button" icon="shuffle" disabled />
+			<SettingsCard heading={t.mosh.datamix} caption={t.descriptions.mosh.datamix} type="button" icon="datamix" disabled />
 			<SettingsCard heading={t.mosh.layer} caption={t.descriptions.mosh.layer} type="button" icon="track" selectInfo={t(1).selectInfo.videoEvent} />
 			<SettingsCard heading={t.mosh.render} caption={t.descriptions.mosh.render} type="button" icon="movie" />
 			<SettingsCard heading={t.mosh.scramble} caption={t.descriptions.mosh.scramble} type="button" icon="cut" selectInfo={t(1).selectInfo.trackEvent} />
@@ -23,7 +23,7 @@ export default function Mosh() {
 			<SettingsCard heading={t.mosh.stutter} caption={t.descriptions.mosh.stutter} type="button" icon="stutter" selectInfo={t(1).selectInfo.trackEvent} />
 			<SettingsCard heading={t.mosh.shake} caption={t.descriptions.mosh.shake} type="button" icon="vibrate" selectInfo={t(1).selectInfo.videoEvent} />
 			<div>
-				<Button subtle>指定数据抹失片段目录</Button>
+				<Button hyperlink>指定数据抹失片段目录</Button>
 			</div>
 		</div>
 	);

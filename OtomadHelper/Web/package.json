@@ -14,8 +14,8 @@
 	"author": "Ranne",
 	"license": "GPL-3.0-only",
 	"scripts": {
-		"dev": "vite --host",
-		"build": "tsc && vite build ",
+		"dev": "vite --host --force",
+		"build": "tsc && vite build --force",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"lint:css": "stylelint './src/**/*.{js,jsx,ts,tsx}'",
 		"release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",

@@ -11,7 +11,7 @@ export const useColorModeStore = createStore<IColorMode>()(
 		persist(set => ({
 			scheme: "auto",
 			setScheme: scheme => set({ scheme }),
-			backgroundColor: "black",
+			backgroundColor: "#202020",
 		}), { name: "colorMode" }),
 	),
 );

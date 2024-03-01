@@ -12,6 +12,14 @@ const StyledSettingsCard = styled(StyledCard)`
 		}
 	}
 
+	&[disabled] > .base {
+		background-color: ${c("fill-color-control-disabled")};
+
+		> * {
+			opacity: ${c("disabled-text-opacity")};
+		}
+	}
+
 	button& {
 		&:hover,
 		&:active {
@@ -21,7 +29,6 @@ const StyledSettingsCard = styled(StyledCard)`
 		&:hover > .base {
 			background-color: ${c("fill-color-control-secondary")};
 		}
-		// TODO: disabled 样式。
 
 		&:not(:has(.trailing .toggle-switch-base)):active,
 		&:has(.trailing .toggle-switch-base:not(:active, .pressing, .pressed)):active {
@@ -46,8 +53,8 @@ const StyledSettingsCard = styled(StyledCard)`
 
 		&:active {
 			.trailing-icon {
-				background-color: ${c("fill-color-subtle-tertiary")};
 				color: ${c("fill-color-text-secondary")};
+				background-color: ${c("fill-color-subtle-tertiary")};
 			}
 		}
 	}

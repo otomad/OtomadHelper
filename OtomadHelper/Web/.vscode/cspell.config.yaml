@@ -5,6 +5,7 @@ dictionaries: []
 import: []
 language: en,vi
 words:
+  - ani
   - automator
   - beziér
   - composables
