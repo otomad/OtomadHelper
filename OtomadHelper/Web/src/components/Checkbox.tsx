@@ -1,6 +1,7 @@
 import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemText } from "components/Expander/ExpanderItem";
 
 const checkedOrInd = ":is(:checked, :indeterminate)";
+const iconExiting = ":has(.icon.exit)";
 
 const StyledRadioButtonLabel = styled.label`
 	display: flex;
@@ -32,17 +33,13 @@ const StyledRadioButtonLabel = styled.label`
 		.icon {
 			color: ${c("fill-color-text-on-accent-primary")};
 			font-size: 12px;
-			
-			&.enter {
+			clip-path: inset(0);
+
+			${tgs(tgs.enter)} {
 				clip-path: inset(0 100% 0 0);
 			}
 
-			&.enter-active,
-			&.exit {
-				clip-path: inset(0 0 0 0);
-			}
-
-			&.exit-active {
+			${tgs(tgs.exit)} {
 				clip-path: inset(0 0 0 100%);
 			}
 		}
@@ -68,7 +65,8 @@ const StyledRadioButtonLabel = styled.label`
 		}
 	}
 
-	input${checkedOrInd} ~ .base {
+	input${checkedOrInd} ~ .base,
+	.base${iconExiting} {
 		background-color: ${c("accent-color")};
 		outline-color: ${c("accent-color")};
 	}
@@ -77,7 +75,8 @@ const StyledRadioButtonLabel = styled.label`
 		opacity: 0.9;
 	}
 
-	&:active input${checkedOrInd} ~ .base {
+	&:active input${checkedOrInd} ~ .base,
+	&:is(:hover, :active) .base${iconExiting} {
 		opacity: 0.8;
 
 		.icon {
@@ -165,11 +164,9 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	useOnFormKeyDown(labelRef, "checkbox", handleCheck);
 	const getCheckMarkName = useCallback(() => indeterminate ? "dash" : checked ? "accept" : "", [indeterminate, checked]);
 	const [checkMarkName, setCheckMarkName] = useState(getCheckMarkName());
-	const prevCheckMarkName = usePrevious(checkMarkName);
 	useEffect(() => {
 		setCheckMarkName(getCheckMarkName());
 	}, [indeterminate, checked]);
-	const switchTransitionTimeout = prevCheckMarkName === "" ? 70 : undefined;
 
 	return (
 		<StyledRadioButtonLabel tabIndex={0} ref={labelRef}>
@@ -182,7 +179,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 			/>
 			<div className="base">
 				<SwitchTransition>
-					<CssTransition key={checkMarkName} timeout={switchTransitionTimeout}>
+					<CssTransition key={checkMarkName}>
 						<Icon name={checkMarkName} />
 					</CssTransition>
 				</SwitchTransition>

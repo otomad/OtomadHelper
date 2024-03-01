@@ -3,8 +3,7 @@ const StyledDragToImport = styled.div`
 	z-index: 80;
 	padding: 1rem;
 	background-color: ${c("background-fill-color-smoke-default")};
-	scale: 1.05;
-	opacity: 0;
+	backdrop-filter: blur(4px);
 
 	* {
 		pointer-events: none;
@@ -18,8 +17,6 @@ const StyledDragToImport = styled.div`
 		border-radius: 5px;
 
 		.empty-message {
-			scale: 1.1;
-
 			h2 {
 				${styles.effects.text.titleLarge};
 			}
@@ -30,15 +27,12 @@ const StyledDragToImport = styled.div`
 		}
 	}
 
-	&.enter-active,
-	&.enter-done {
-		padding: 1rem;
-		scale: 1;
-		opacity: 1;
-		backdrop-filter: blur(4px);
+	${tgs()} {
+		scale: 1.05;
+		opacity: 0;
 
 		.empty-message {
-			scale: 1;
+			scale: 1.1;
 		}
 	}
 `;

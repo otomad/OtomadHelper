@@ -1,5 +1,5 @@
 export default function Home() {
-	const [shown, setShown] = useState(true);
+	const [shown, setShown] = useState(false);
 
 	return (
 		<div className="container">
@@ -8,7 +8,6 @@ export default function Home() {
 
 			<div>
 				<p>123123</p>
-				<Badge hidden={!shown} />
 			</div>
 		</div>
 	);

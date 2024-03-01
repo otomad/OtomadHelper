@@ -207,22 +207,18 @@ const StyledNavigationView = styled.div<{
 			display: flex;
 			gap: 14px;
 			align-items: center;
-			transition: all ${eases.easeOutSmooth} 500ms;
+			transition: all ${eases.easeOutSmooth} 750ms;
 
 			* {
 				white-space: nowrap;
 			}
 
-			&.exit {
+			${tgs(tgs.exit)} {
 				translate: 0 -${TITLE_LINE_HEIGHT}px;
 			}
 
-			&.enter {
+			${tgs(tgs.enter)} {
 				translate: 0 ${TITLE_LINE_HEIGHT}px;
-			}
-
-			&.enter-active {
-				translate: 0;
 			}
 
 			> div {
