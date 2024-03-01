@@ -1,5 +1,4 @@
 import type { ColorNames } from "styles/colors";
-type Status = "neutual" | "info" | "asterisk" | "warning" | "success" | "error";
 const backgroundColors: Record<Status, ColorNames> = {
 	neutual: "fill-color-system-solid-neutral-background",
 	info: "fill-color-system-solid-neutral",
@@ -16,6 +15,7 @@ const StyledBadge = styled.div<{
 	$hidden?: boolean;
 }>`
 	${styles.mixins.oval()};
+	${styles.mixins.flexCenter()};
 	${styles.effects.text.caption};
 	flex-shrink: 0;
 	min-width: 16px;
@@ -40,6 +40,10 @@ const StyledBadge = styled.div<{
 		position: relative;
 		top: -0.5px;
 	}
+
+	.icon {
+		font-size: 12px;
+	}
 `;
 
 export default forwardRef(function Badge({ children, status = "info", hidden, ...htmlAttrs }: FCP<{
@@ -51,8 +55,9 @@ export default forwardRef(function Badge({ children, status = "info", hidden, ..
 	return (
 		<CssTransition in={!hidden} unmountOnExit appear>
 			<StyledBadge $status={status} ref={ref} {...htmlAttrs}>
-				<span>{children}</span>
+				{children ? <span>{children}</span> : <Icon name={"badge/" + (status === "neutual" ? "info" : status)} />}
 			</StyledBadge>
 		</CssTransition>
 	);
 });
+// BUG: N 多。

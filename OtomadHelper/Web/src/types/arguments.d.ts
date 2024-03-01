@@ -10,4 +10,6 @@ declare global {
 	type CheckState = "unchecked" | "indeterminate" | "checked";
 
 	type AnimatedIconState = AnimatedIconStateNS.Tuple | AnimatedIconStateNS.Object;
+
+	type Status = "neutual" | "info" | "asterisk" | "warning" | "success" | "error";
 }

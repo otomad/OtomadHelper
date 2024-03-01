@@ -7,13 +7,14 @@ export default function Mosh() {
 
 	return (
 		<div className="container">
-			<Contents>
+			<div>
 				<SettingsPageControl image={tipsImage} learnMoreLink="" clearFloat ref={tipsEl}>
 					<GlitchyText normal={t.descriptions.mosh.normal} glitchy={t.descriptions.mosh.glitchy} />
 					<br />
 					{t.descriptions.mosh.additional}
 				</SettingsPageControl>
-			</Contents>
+			</div>
+			<InfoBar title="警告" status="warning">未安装插件，请先下载扩展包！</InfoBar>
 			<SettingsCard heading={t.mosh.datamosh} caption={t.descriptions.mosh.datamosh} type="button" icon="shuffle" disabled />
 			<SettingsCard heading={t.mosh.datamix} caption={t.descriptions.mosh.datamix} type="button" icon="datamix" disabled />
 			<SettingsCard heading={t.mosh.layer} caption={t.descriptions.mosh.layer} type="button" icon="track" selectInfo={t(1).selectInfo.videoEvent} />

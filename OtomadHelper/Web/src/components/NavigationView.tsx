@@ -201,7 +201,7 @@ const StyledNavigationView = styled.div<{
 			}
 		}
 
-		.title {
+		.title-wrapper .title {
 			${styles.effects.text.title};
 			position: absolute;
 			display: flex;
