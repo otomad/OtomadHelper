@@ -50,7 +50,7 @@ export const usePageStore = createStore<IPage>()(
 		return {
 			page,
 			prevPage: page,
-			transition: "forward",
+			transition: "jump",
 			getPagePath: () => get().page.join("/"),
 			changePage: changePage as SetState<string[]>,
 			pushPage: (...pages) => setPageInternal([...get().page, ...pages]),

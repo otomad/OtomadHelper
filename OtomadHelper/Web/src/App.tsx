@@ -16,6 +16,7 @@ export default function App() {
 		<>
 			<GlobalStyle $ready={ready} />
 			<ShellPage />
+			<div id="portals" />
 		</>
 	);
 }

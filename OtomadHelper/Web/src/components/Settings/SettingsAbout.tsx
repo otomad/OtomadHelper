@@ -8,9 +8,9 @@ const StyledSettingsAbout = styled.div`
 	margin-bottom: 10px;
 
 	.logo {
-		fill: currentColor;
 		width: 150px;
 		height: auto;
+		fill: currentColor;
 	}
 
 	.right {
