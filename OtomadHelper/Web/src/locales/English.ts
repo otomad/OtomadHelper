@@ -356,12 +356,12 @@ const English = {
 		},
 		empty: {
 			disabled: {
-				heading: "{{name, capitalize}} disabled",
-				caption: "Enable to generate the {{name, lowercase}}",
+				title: "{{name, capitalize}} disabled",
+				details: "Enable to generate the {{name, lowercase}}",
 			},
 			ytpEnabled: {
-				heading: "YTP enabled, all other related parameters are unavailable",
-				caption: "Disable YTP feature to use and adjust other parameters",
+				title: "YTP enabled, all other related parameters are unavailable",
+				details: "Disable YTP feature to use and adjust other parameters",
 				disableYtp: "Disable YTP",
 				gotoYtp: "Go to YTP",
 			},

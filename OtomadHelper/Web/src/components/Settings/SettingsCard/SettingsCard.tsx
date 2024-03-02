@@ -62,8 +62,8 @@ const StyledSettingsCard = styled(StyledCard)`
 
 export default function SettingsCard({
 	icon = "placeholder",
-	heading,
-	caption,
+	title,
+	details,
 	selectInfo,
 	trailingIcon,
 	children,
@@ -74,9 +74,9 @@ export default function SettingsCard({
 	/** 图标。 */
 	icon?: string;
 	/** 标题。 */
-	heading?: ReactNode;
+	title?: ReactNode;
 	/** 详细描述。 */
-	caption?: ReactNode;
+	details?: ReactNode;
 	/** 指定轨道或轨道事件的选择情况。 */
 	selectInfo?: ReactNode;
 	/** 尾随图标。使用空字符串或布尔类型表示禁用。 */
@@ -96,9 +96,9 @@ export default function SettingsCard({
 			<div className="base">
 				<Icon name={icon} />
 				<div className="text">
-					<p className="heading">{heading}</p>
-					<p className="caption">{caption}</p>
-					<p className="caption select-info">{selectInfo}</p>
+					<p className="title">{title}</p>
+					<p className="details">{details}</p>
+					<p className="details select-info">{selectInfo}</p>
 				</div>
 				<div className="trailing">
 					{children}

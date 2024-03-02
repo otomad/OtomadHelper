@@ -21,7 +21,7 @@ export default function Prve() {
 
 	return (
 		<div className="container">
-			<Expander heading={t.condition} caption={t.descriptions.condition} icon="filter" />
+			<Expander title={t.condition} details={t.descriptions.condition} icon="filter" />
 			<div>
 				<Button>从其它参数复制至此</Button>
 			</div>
@@ -31,7 +31,7 @@ export default function Prve() {
 			{prves.map(({ class: klass, icon, effects }) => (
 				<ExpanderRadio
 					key={klass}
-					heading={t.prve.classes[klass]}
+					title={t.prve.classes[klass]}
 					icon={icon}
 					items={["normal", ...effects]}
 					value={selectPrve as StateProperty<string>}

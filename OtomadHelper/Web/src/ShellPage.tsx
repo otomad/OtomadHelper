@@ -1,7 +1,7 @@
 const pages = import.meta.glob<FC>("/src/views/**/*.tsx", { import: "default", eager: true });
 
 function EmptyPage() {
-	return <EmptyMessage icon="settings" heading={t.underConstruction} />;
+	return <EmptyMessage icon="settings" title={t.underConstruction} />;
 }
 
 const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "lyrics", "shupelunker", "ytp"];

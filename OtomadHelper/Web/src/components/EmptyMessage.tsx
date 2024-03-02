@@ -34,13 +34,13 @@ const StyledEmptyMessage = styled.div`
 	}
 `;
 
-export default function EmptyMessage({ icon, heading, caption, iconOff = false, children }: FCP<{
+export default function EmptyMessage({ icon, title, details, iconOff = false, children }: FCP<{
 	/** 图标。 */
 	icon?: string;
 	/** 标题。 */
-	heading?: ReactNode;
+	title?: ReactNode;
 	/** 详细描述。 */
-	caption?: ReactNode;
+	details?: ReactNode;
 	/** 在图标上画斜线？ */
 	iconOff?: boolean;
 }>) {
@@ -60,8 +60,8 @@ export default function EmptyMessage({ icon, heading, caption, iconOff = false, 
 		<StyledEmptyMessage ref={el}>
 			{icon && <IconEl name={icon} />}
 			<header>
-				<h2>{heading}</h2>
-				<p>{caption}</p>
+				<h2>{title}</h2>
+				<p>{details}</p>
 			</header>
 			{children}
 		</StyledEmptyMessage>

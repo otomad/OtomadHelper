@@ -10,14 +10,14 @@ export default function Ytp() {
 	return (
 		<div className="container">
 			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.ytp}</SettingsPageControl>
-			<SettingsCardToggleSwitch heading={t.enabled} selectInfo={t(1).selectInfo.source} icon="enabled" on={[enabled, setEnabled]} />
+			<SettingsCardToggleSwitch title={t.enabled} selectInfo={t(1).selectInfo.source} icon="enabled" on={[enabled, setEnabled]} />
 
 			{!enabled ? (
 				<EmptyMessage
 					key="disabled"
 					icon="ytp"
-					heading={t.empty.disabled.heading({ name: t.titles.ytp })}
-					caption={t.empty.disabled.caption({ name: t.titles.ytp })}
+					title={t.empty.disabled.title({ name: t.titles.ytp })}
+					details={t.empty.disabled.details({ name: t.titles.ytp })}
 					iconOff
 				>
 					<Button onClick={() => setEnabled(true)} accent>{t.enable}</Button>
@@ -25,10 +25,10 @@ export default function Ytp() {
 			) : (
 				<>
 					<Subheader>{t.subheaders.parameters}</Subheader>
-					<SettingsCard heading={t.ytp.constraint} caption={t.descriptions.ytp.constraint} icon="constraint" />
-					<SettingsCard heading={t.ytp.clips} caption={t.descriptions.ytp.clips} icon="number" />
+					<SettingsCard title={t.ytp.constraint} details={t.descriptions.ytp.constraint} icon="constraint" />
+					<SettingsCard title={t.ytp.clips} details={t.descriptions.ytp.clips} icon="number" />
 					<Subheader>{t.subheaders.effects}</Subheader>
-					<Expander heading={t.ytp.effects} caption={t.descriptions.ytp.effects} icon="sparkle" checkInfo={selectEffects[0]}>
+					<Expander title={t.ytp.effects} details={t.descriptions.ytp.effects} icon="sparkle" checkInfo={selectEffects[0]}>
 						<ItemsView view="grid" current={selectEffects}>
 							{effects.map(name => (
 								<ItemsView.Item

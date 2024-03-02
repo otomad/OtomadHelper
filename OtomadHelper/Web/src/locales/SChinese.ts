@@ -346,12 +346,12 @@ const SChinese = {
 		},
 		empty: {
 			disabled: {
-				heading: "已关闭{{name, lowercase}}",
-				caption: "启用以生成{{name, lowercase}}",
+				title: "已关闭{{name, lowercase}}",
+				details: "启用以生成{{name, lowercase}}",
 			},
 			ytpEnabled: {
-				heading: "已启用YTP，其它相关参数均不可用",
-				caption: "禁用YTP功能以使用并调整其它参数",
+				title: "已启用YTP，其它相关参数均不可用",
+				details: "禁用YTP功能以使用并调整其它参数",
 				disableYtp: "禁用YTP",
 				gotoYtp: "转到YTP",
 			},

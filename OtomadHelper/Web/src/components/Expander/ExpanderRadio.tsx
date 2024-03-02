@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, captionField, view = false, $itemWidth, radioGroup, onItemClick, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, $itemWidth, radioGroup, onItemClick, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
 	/** 选项列表。 */
 	items: readonly T[];
 	/** 当前选中值的 ID。 */
@@ -32,7 +32,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	/** 单选项目的图片字段。 */
 	imageField?: FieldType<T> | ((item: T) => ReactNode);
 	/** 单选项目的详细描述字段。 */
-	captionField?: FieldType<T>;
+	detailsField?: FieldType<T>;
 	/** 使用列表/平铺/网格视图组件而不是单选框。 */
 	view?: "list" | "tile" | "grid" | false;
 	/** 使用网格视图组件时子元素图片的宽度。 */
@@ -42,13 +42,13 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	onItemClick?: MouseEventHandler<HTMLElement>;
 }>) {
 	const items = _items as AnyObject[];
-	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "image" | "caption"): Any => {
+	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "image" | "details"): Any => {
 		const field = {
 			name: nameField,
 			id: idField,
 			icon: iconField,
 			image: imageField,
-			caption: captionField,
+			details: detailsField,
 		}[fieldName];
 		return !field ? undefined :
 			isI18nItem(field) ? field[getItemField(item, "id")] :
@@ -70,7 +70,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 					value={[value as T, setValue]}
 					id={getItemField(item, "id")}
 					key={getItemField(item, "id")}
-					caption={getItemField(item, "caption")}
+					details={getItemField(item, "details")}
 					radioGroup={radioGroup}
 					onClick={onItemClick}
 				>
@@ -84,7 +84,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 							key={getItemField(item, "id")}
 							image={getItemField(item, "image")}
 							icon={getItemField(item, "icon")}
-							caption={getItemField(item, "caption")}
+							details={getItemField(item, "details")}
 							onClick={onItemClick}
 						>
 							{getItemField(item, "name")}

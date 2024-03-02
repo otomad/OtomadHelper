@@ -8,8 +8,8 @@ export default function Track() {
 		<div className="container">
 			<Subheader>{t.track.layout}</Subheader>
 			<SettingsCardToggleSwitch
-				heading={t.track.useInGeneration}
-				caption={t.descriptions.track.useInGeneration}
+				title={t.track.useInGeneration}
+				details={t.descriptions.track.useInGeneration}
 				selectInfo={
 					!layout[0] ? t(selectedTracks).selectInfo.videoTrack :
 					multitrackForChordsInVisual ? t(selectedTracks).selectInfo.videoTrackGeneratedGeq :
@@ -18,12 +18,12 @@ export default function Track() {
 				icon="enabled"
 				on={layout}
 			/>
-			<SettingsCard heading={t.track.grid} type="button" icon="grid" onClick={() => pushPage("grid")} />
-			<SettingsCard heading={t.track.box3d} type="button" icon="cube" />
-			<SettingsCard heading={t.track.gradient} caption={t.descriptions.track.gradient} type="button" icon="highlight" />
+			<SettingsCard title={t.track.grid} type="button" icon="grid" onClick={() => pushPage("grid")} />
+			<SettingsCard title={t.track.box3d} type="button" icon="cube" />
+			<SettingsCard title={t.track.gradient} details={t.descriptions.track.gradient} type="button" icon="highlight" />
 
 			<Subheader>{t.stream.legato}</Subheader>
-			<Expander heading={t.track.legato} caption={t.descriptions.track.legato} icon="legato" />
+			<Expander title={t.track.legato} details={t.descriptions.track.legato} icon="legato" />
 
 			<Subheader>{t.track.clear}</Subheader>
 			<StackPanel $direction="horizontal">

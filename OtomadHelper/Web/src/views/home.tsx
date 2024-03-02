@@ -4,7 +4,7 @@ export default function Home() {
 	return (
 		<div className="container">
 			<InfoBar>This page is for testing components currently.</InfoBar>
-			<SettingsCardToggleSwitch heading="Shown" icon="enabled" on={[shown, setShown]} />
+			<SettingsCardToggleSwitch title="Shown" icon="enabled" on={[shown, setShown]} />
 
 			<div>
 				<p>123123</p>

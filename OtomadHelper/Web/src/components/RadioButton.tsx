@@ -94,7 +94,7 @@ const StyledRadioButtonLabel = styled.label`
 	${styles.mixins.forwardFocusRing()};
 `;
 
-export default function RadioButton<T>({ children, id, value: [value, setValue], disabled, onChange, caption, radioGroup, ...htmlAttrs }: FCP<{
+export default function RadioButton<T>({ children, id, value: [value, setValue], disabled, onChange, details, radioGroup, ...htmlAttrs }: FCP<{
 	/** 标识符。 */
 	id: T;
 	/** 当前单选框组中选中的值。 */
@@ -104,7 +104,7 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 	/** 状态改变事件。 */
 	onChange?: (e: { id: T; value: T; checked: boolean }) => void;
 	/** 详细描述。 */
-	caption?: ReactNode;
+	details?: ReactNode;
 	/** 单选框分组，可选。 */
 	radioGroup?: string;
 }, "label">) {
@@ -126,8 +126,8 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 				<div className="bullet" />
 			</div>
 			<div className="text">
-				<p className="heading">{children}</p>
-				<p className="caption">{caption}</p>
+				<p className="title">{children}</p>
+				<p className="details">{details}</p>
 			</div>
 		</StyledRadioButtonLabel>
 	);

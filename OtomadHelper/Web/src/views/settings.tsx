@@ -18,7 +18,7 @@ export default function Settings() {
 		<div className="container">
 			<SettingsAbout />
 			<ExpanderRadio
-				heading={t.settings.language}
+				title={t.settings.language}
 				icon="globe"
 				items={languages}
 				expanded
@@ -29,7 +29,7 @@ export default function Settings() {
 
 			<Subheader>{t.settings.appearance}</Subheader>
 			<ExpanderRadio
-				heading={t.settings.appearance.colorScheme}
+				title={t.settings.appearance.colorScheme}
 				icon="paint_brush"
 				items={schemes}
 				expanded
@@ -38,7 +38,7 @@ export default function Settings() {
 				nameField={t.settings.appearance.colorScheme}
 			/>
 			<Expander
-				heading={t.settings.appearance.uiScale}
+				title={t.settings.appearance.uiScale}
 				icon="zoom_in"
 				checkInfo={uiScale[0] + "%"}
 				alwaysShowCheckInfo
@@ -50,10 +50,10 @@ export default function Settings() {
 			</Expander>
 
 			<Subheader>{t.subheaders.config}</Subheader>
-			<SettingsCardToggleSwitch heading={t.settings.config.hideUseTips} icon="chat_help_off" on={hideUseTips} />
+			<SettingsCardToggleSwitch title={t.settings.config.hideUseTips} icon="chat_help_off" on={hideUseTips} />
 
 			<Subheader>{t.settings.dev}</Subheader>
-			<SettingsCardToggleSwitch heading={t.settings.dev.devMode} icon="devtools" on={devMode} />
+			<SettingsCardToggleSwitch title={t.settings.dev.devMode} icon="devtools" on={devMode} />
 		</div>
 	);
 }

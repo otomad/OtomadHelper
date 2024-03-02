@@ -56,7 +56,7 @@ export default function SettingsAbout() {
 					</div>
 				</div>
 			</StyledSettingsAbout>
-			<SettingsCard heading={t.settings.about.version} icon="sync">
+			<SettingsCard title={t.settings.about.version} icon="sync">
 				<p>{VERSION}</p>
 				<Button>{t.settings.about.checkForUpdates}</Button>
 			</SettingsCard>

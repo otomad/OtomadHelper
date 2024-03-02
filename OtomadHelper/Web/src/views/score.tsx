@@ -31,21 +31,21 @@ export default function Score() {
 			</Card>
 
 			<Subheader>{t.subheaders.config}</Subheader>{/* TODO: 该行应该会被删除。 */}
-			<Expander heading={t.source.trim} caption={t.descriptions.score.trim} icon="trim" />
+			<Expander title={t.source.trim} details={t.descriptions.score.trim} icon="trim" />
 			<ExpanderRadio
-				heading={t.score.encoding}
-				caption={t.descriptions.score.encoding}
+				title={t.score.encoding}
+				details={t.descriptions.score.encoding}
 				icon="globe"
 				items={encodings}
 				value={encoding}
 				idField
 				nameField
 				checkInfoCondition
-				captionField={value => value === "ANSI" ? t.systemDefault : undefined}
+				detailsField={value => value === "ANSI" ? t.systemDefault : undefined}
 			/>
 			<ExpanderRadio
-				heading={t.score.bpm}
-				caption={t.descriptions.score.bpm}
+				title={t.score.bpm}
+				details={t.descriptions.score.bpm}
 				icon="speed"
 				items={bpmUsings}
 				value={bpmUsing as StateProperty<string>}
@@ -54,10 +54,10 @@ export default function Score() {
 				nameField="name"
 				iconField="icon"
 			/>
-			<SettingsCard heading={t.score.timeSignature} icon="health">{timeSignature}</SettingsCard>
+			<SettingsCard title={t.score.timeSignature} icon="health">{timeSignature}</SettingsCard>
 			<ExpanderRadio
-				heading={t.score.constraint}
-				caption={t.descriptions.score.constraint}
+				title={t.score.constraint}
+				details={t.descriptions.score.constraint}
 				icon="constraint"
 				items={constraintNoteLengths}
 				value={constraintNoteLength as StateProperty<string>}

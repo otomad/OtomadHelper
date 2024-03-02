@@ -117,7 +117,7 @@ const DefaultImage = styled.img`
 	object-fit: cover;
 `;
 
-export /* internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, caption, view, children, className, ...htmlAttrs }: FCP<{
+export /* internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, details, view, children, className, ...htmlAttrs }: FCP<{
 	/** 图片。 */
 	image?: string | ReactNode;
 	/** 图标。 */
@@ -127,14 +127,14 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 	/** 是否已选中？ */
 	selected?: boolean;
 	/** 详细描述。 */
-	caption?: ReactNode;
+	details?: ReactNode;
 	/** @private 显示方式：列表、平铺、网格。 */
 	view?: "list" | "tile" | "grid";
 }, "button">) {
 	const textPart = (
 		<div className="text">
-			<p className="heading">{children}</p>
-			<p className="caption">{caption}</p>
+			<p className="title">{children}</p>
+			<p className="details">{details}</p>
 		</div>
 	);
 

@@ -41,8 +41,8 @@ export default function Visual() {
 				<EmptyMessage
 					key="disabled"
 					icon="visual"
-					heading={t.empty.disabled.heading({ name: t.titles.visual })}
-					caption={t.empty.disabled.caption({ name: t.titles.visual })}
+					title={t.empty.disabled.title({ name: t.titles.visual })}
+					details={t.empty.disabled.details({ name: t.titles.visual })}
 					iconOff
 				>
 					<Button onClick={() => setEnabled(true)} accent>{t.enable}</Button>
@@ -51,8 +51,8 @@ export default function Visual() {
 				<EmptyMessage
 					key="ytpEnabled"
 					icon="ytp"
-					heading={t.empty.ytpEnabled.heading}
-					caption={t.empty.ytpEnabled.caption}
+					title={t.empty.ytpEnabled.title}
+					details={t.empty.ytpEnabled.details}
 				>
 					<StackPanel>
 						<Button onClick={() => setYtpEnabled(false)}>{t.empty.ytpEnabled.disableYtp}</Button>
@@ -62,8 +62,8 @@ export default function Visual() {
 			) : (
 				<>
 					<ExpanderRadio
-						heading={t.stream.stretch}
-						caption={t.descriptions.stream.stretch}
+						title={t.stream.stretch}
+						details={t.descriptions.stream.stretch}
 						icon="stretch"
 						items={stretches}
 						value={stretch as StateProperty<string>}
@@ -72,12 +72,12 @@ export default function Visual() {
 						nameField={t.stream.stretch}
 						iconField="icon"
 					/>
-					<SettingsCardToggleSwitch heading={t.stream.loop} caption={t.descriptions.stream.loop} icon="loop" on={loop} />
-					<SettingsCardToggleSwitch heading={t.stream.staticVisual} caption={t.descriptions.stream.staticVisual} icon="visual" on={staticVisual} />
-					<SettingsCardToggleSwitch heading={t.stream.noLengthening} caption={t.descriptions.stream.noLengthening.visual} icon="no_lengthening" on={noLengthening} />
+					<SettingsCardToggleSwitch title={t.stream.loop} details={t.descriptions.stream.loop} icon="loop" on={loop} />
+					<SettingsCardToggleSwitch title={t.stream.staticVisual} details={t.descriptions.stream.staticVisual} icon="visual" on={staticVisual} />
+					<SettingsCardToggleSwitch title={t.stream.noLengthening} details={t.descriptions.stream.noLengthening.visual} icon="no_lengthening" on={noLengthening} />
 					<ExpanderRadio
-						heading={t.stream.legato}
-						caption={t.descriptions.stream.legato}
+						title={t.stream.legato}
+						details={t.descriptions.stream.legato}
 						icon="legato"
 						items={legatos}
 						value={legato as StateProperty<string>}
@@ -88,28 +88,28 @@ export default function Visual() {
 						imageField="image"
 						$itemWidth={566 / 196 * GRID_VIEW_ITEM_HEIGHT}
 					/>
-					<SettingsCardToggleSwitch heading={t.stream.multitrackForChords} caption={t.descriptions.stream.multitrackForChords} icon="chords" on={multitrackForChords} />
-					<SettingsCardToggleSwitch heading={t.stream.createGroups} caption={t.descriptions.stream.createGroups} icon="group_object" on={createGroups} />
+					<SettingsCardToggleSwitch title={t.stream.multitrackForChords} details={t.descriptions.stream.multitrackForChords} icon="chords" on={multitrackForChords} />
+					<SettingsCardToggleSwitch title={t.stream.createGroups} details={t.descriptions.stream.createGroups} icon="group_object" on={createGroups} />
 					<Expander
-						heading={t.stream.glissando}
-						caption={t.descriptions.stream.glissando}
+						title={t.stream.glissando}
+						details={t.descriptions.stream.glissando}
 						icon="swirl"
 						actions={
 							<ToggleSwitch on={glissando} />
 						}
 					/>
-					<SettingsCardToggleSwitch heading={t.stream.transformOfx} caption={t.descriptions.stream.transformOfx} icon="zoom_fit" on={transformOfx} />
+					<SettingsCardToggleSwitch title={t.stream.transformOfx} details={t.descriptions.stream.transformOfx} icon="zoom_fit" on={transformOfx} />
 
 					<Subheader>{t.subheaders.effects}</Subheader>
-					<SettingsCard heading={t.titles.prve} caption={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")} />
-					<SettingsCard heading={t.titles.staff} caption={t.descriptions.stream.effects.staff} type="button" icon="g_clef" onClick={() => pushPage("staff")}>
+					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")} />
+					<SettingsCard title={t.titles.staff} details={t.descriptions.stream.effects.staff} type="button" icon="g_clef" onClick={() => pushPage("staff")}>
 						<ToggleSwitch on={enableStaffVisualizer} />
 					</SettingsCard>
 
 					<Subheader>{t.subheaders.parameters}</Subheader>
 					<SettingsCard
-						heading={t.stream.mapping}
-						caption={t.descriptions.stream.mapping}
+						title={t.stream.mapping}
+						details={t.descriptions.stream.mapping}
 						icon="mapping"
 						type="button"
 					/>

@@ -19,11 +19,11 @@ export /* internal */ const styledExpanderItemText = css`
 			display: none;
 		}
 
-		.heading {
+		.title {
 			line-height: 20px;
 		}
 
-		.caption {
+		.details {
 			${styles.effects.text.caption};
 			color: ${c("fill-color-text-secondary")};
 		}
@@ -67,20 +67,20 @@ const StyledExpanderItem = styled.div`
 	${styledExpanderItemContent};
 `;
 
-export /* internal */ default function ExpanderItem({ icon, heading, caption, children }: FCP<{
+export /* internal */ default function ExpanderItem({ icon, title, details, children }: FCP<{
 	/** 图标。 */
 	icon?: string;
 	/** 标题。 */
-	heading?: ReactNode;
+	title?: ReactNode;
 	/** 详细描述。 */
-	caption?: ReactNode;
+	details?: ReactNode;
 }>) {
 	return (
 		<StyledExpanderItem>
 			{icon ? <Icon name={icon} /> : <div className="icon-placeholder" />}
 			<div className="text">
-				<p className="heading">{heading}</p>
-				<p className="caption">{caption}</p>
+				<p className="title">{title}</p>
+				<p className="details">{details}</p>
 			</div>
 			<div className="trailing">
 				{children}

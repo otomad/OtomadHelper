@@ -23,16 +23,16 @@ export default function Source() {
 				<TestThumbnail />
 			</Card>
 
-			<Expander heading={t.source.trim} caption={t.descriptions.source.trim} icon="trim" />
-			{/* <Expander heading={t.source.startTime} caption={t.descriptions.source.startTime} icon="start_point">
+			<Expander title={t.source.trim} details={t.descriptions.source.trim} icon="trim" />
+			{/* <Expander title={t.source.startTime} details={t.descriptions.source.startTime} icon="start_point">
 				<ItemsView view="tile" current={startTime}>
 					{startTimes.map(item =>
 						<ItemsView.Item id={item.id} key={item.id} icon={item.icon}>{item.name}</ItemsView.Item>)}
 				</ItemsView>
 			</Expander> */}
 			<ExpanderRadio
-				heading={t.source.startTime}
-				caption={t.descriptions.source.startTime}
+				title={t.source.startTime}
+				details={t.descriptions.source.startTime}
 				icon="start_point"
 				items={startTimes}
 				value={startTime as StateProperty<string>}
@@ -43,7 +43,7 @@ export default function Source() {
 			/>
 
 			<Subheader>{t.subheaders.moreOptions}</Subheader>
-			<Expander heading={t.subheaders.advanced} expanded icon="more">
+			<Expander title={t.subheaders.advanced} expanded icon="more">
 				<ToggleSwitch on={belowTopAdjustmentTracks}>{t.source.belowTopAdjustmentTracks}</ToggleSwitch>
 				<ToggleSwitch on={removeSourceEventsAfterCompletion}>{t.source.removeSourceEventsAfterCompletion}</ToggleSwitch>
 				<ToggleSwitch on={selectAllEventsGenerated}>{t.source.selectAllEventsGenerated}</ToggleSwitch>
