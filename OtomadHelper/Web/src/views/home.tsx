@@ -9,7 +9,9 @@ export default function Home() {
 
 			<div>
 				<p>123123</p>
-				<TextBox value={[text, setText]} type="number" placeholder="fuck world!" suffix="px" disabled={shown} />
+				<Tooltip title="hehe">
+					<TextBox value={[text, setText]} type="number" placeholder="fuck world!" suffix="px" disabled={shown} />
+				</Tooltip>
 			</div>
 		</div>
 	);

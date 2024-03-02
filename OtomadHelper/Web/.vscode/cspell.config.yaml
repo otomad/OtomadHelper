@@ -37,6 +37,7 @@ words:
   - subclips
   - subheaders
   - tts
+  - unhover
   - ust
   - utau
   - vocaloid
@@ -57,6 +58,8 @@ ignoreWords:
   - endregion
   - moz
   - tgs
+  - dvw
+  - dvh
 flagWords:
   - colour -> color
   - canot -> cannot

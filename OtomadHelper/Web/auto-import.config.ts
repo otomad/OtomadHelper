@@ -6,6 +6,7 @@ export default [
 	{
 		"react": [
 			["default", "React"],
+			["createElement", "h"],
 			"createContext",
 			"Fragment",
 		],

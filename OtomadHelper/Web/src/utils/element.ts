@@ -21,3 +21,21 @@ export function stopEvent(event?: Pick<Event, "preventDefault" | "stopPropagatio
 	event.preventDefault();
 	event.stopPropagation();
 }
+
+export function hasRefInReactNode(reactNode: unknown): reactNode is { ref: MutableRefObject<HTMLElement> } {
+	return !!(reactNode && typeof reactNode === "object" && "ref" in reactNode && reactNode.ref);
+}
+
+export function cloneRef(children: ReactNode, nodeRef: MutableRefObject<HTMLElement | null>) {
+	return h(
+		Fragment,
+		null,
+		React.Children.map(children, child => {
+			if (hasRefInReactNode(child))
+				useImperativeHandle(child.ref, () => nodeRef.current!, []);
+			return React.cloneElement(child as ReactElement, {
+				ref: nodeRef,
+			});
+		}),
+	);
+}

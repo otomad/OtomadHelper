@@ -62,23 +62,20 @@ function Spinner({ disabled, onSpin, onRelease }: FCP<{
 	onRelease?: BaseEventHandler;
 }>) {
 	const repeatTimeout = useRef<Timeout>();
-	const clearRepeatTimeout = () => clearInterval(repeatTimeout.current);
+	const clearRepeatInterval = () => clearInterval(repeatTimeout.current);
 
 	const handleRelease = useCallback<MouseEventHandler & KeyboardEventHandler>(e => {
-		clearRepeatTimeout();
+		clearRepeatInterval();
 		onRelease?.(e);
 	}, [onRelease]);
 
 	const handlePress = useCallback((spin: SpinValue) => {
 		onSpin?.(spin);
-		clearRepeatTimeout();
+		clearRepeatInterval();
 		const startTime = Date.now();
-		let triggered = false;
 		repeatTimeout.current = setInterval(() => {
-			if (triggered || Date.now() - startTime > 350) {
-				triggered = true;
+			if (Date.now() - startTime > 350)
 				onSpin?.(spin);
-			}
 		}, 50);
 	}, [onSpin]);
 
