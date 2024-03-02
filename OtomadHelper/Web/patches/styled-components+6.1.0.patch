@@ -1,3 +1,16 @@
+diff --git a/node_modules/styled-components/dist/constructors/constructWithOptions.d.ts b/node_modules/styled-components/dist/constructors/constructWithOptions.d.ts
+index b8a0828..4d5857e 100644
+--- a/node_modules/styled-components/dist/constructors/constructWithOptions.d.ts
++++ b/node_modules/styled-components/dist/constructors/constructWithOptions.d.ts
+@@ -11,7 +11,7 @@ type AttrsTarget<R extends Runtime, T extends Attrs<any>, FallbackTarget extends
+ } ? RuntimeTarget extends KnownTarget ? RuntimeTarget : FallbackTarget : FallbackTarget;
+ export interface Styled<R extends Runtime, Target extends StyledTarget<R>, OuterProps extends object, OuterStatics extends object = BaseObject> {
+     <Props extends object = BaseObject, Statics extends object = BaseObject>(initialStyles: Styles<Substitute<OuterProps, NoInfer<Props>>>, ...interpolations: Interpolation<Substitute<OuterProps, NoInfer<Props>>>[]): IStyledComponent<R, Substitute<OuterProps, Props>> & OuterStatics & Statics & (R extends 'web' ? (Target extends string ? {} : Target) : {});
+-    attrs: <Props extends object = BaseObject, PrivateMergedProps extends object = Substitute<OuterProps, Props>, PrivateAttrsArg extends Attrs<PrivateMergedProps> = Attrs<PrivateMergedProps>, PrivateResolvedTarget extends StyledTarget<R> = AttrsTarget<R, PrivateAttrsArg, Target>>(attrs: PrivateAttrsArg) => Styled<R, PrivateResolvedTarget, PrivateResolvedTarget extends KnownTarget ? Substitute<Substitute<OuterProps, React.ComponentPropsWithRef<PrivateResolvedTarget>>, Props> : PrivateMergedProps, OuterStatics>;
++    attrs: <Props extends object = BaseObject, PrivateMergedProps extends object = Substitute<OuterProps, Props> & Record<string, any>, PrivateAttrsArg extends Attrs<PrivateMergedProps> = Attrs<PrivateMergedProps>, PrivateResolvedTarget extends StyledTarget<R> = AttrsTarget<R, PrivateAttrsArg, Target>>(attrs: PrivateAttrsArg) => Styled<R, PrivateResolvedTarget, PrivateResolvedTarget extends KnownTarget ? Substitute<Substitute<OuterProps, React.ComponentPropsWithRef<PrivateResolvedTarget>>, Props> : PrivateMergedProps, OuterStatics>;
+     withConfig: (config: StyledOptions<R, OuterProps>) => Styled<R, Target, OuterProps, OuterStatics>;
+ }
+ export default function constructWithOptions<R extends Runtime, Target extends StyledTarget<R>, OuterProps extends object = Target extends KnownTarget ? React.ComponentPropsWithRef<Target> : BaseObject, OuterStatics extends object = BaseObject>(componentConstructor: IStyledComponentFactory<R, StyledTarget<R>, object, any>, tag: StyledTarget<R>, options?: StyledOptions<R, OuterProps>): Styled<R, Target, OuterProps, OuterStatics>;
 diff --git a/node_modules/styled-components/dist/styled-components.browser.esm.js b/node_modules/styled-components/dist/styled-components.browser.esm.js
 index 5efee9b..ddcf306 100644
 --- a/node_modules/styled-components/dist/styled-components.browser.esm.js

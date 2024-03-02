@@ -4,9 +4,9 @@ const THICKNESS = 3;
 const LENGTH = 20;
 const DELAY = 200;
 
-const Indicator = styled.div.attrs((({ $vertical }: { $vertical: boolean }) => ({
+const Indicator = styled.div.attrs(({ $vertical }) => ({
 	className: $vertical ? "vertical" : "horizontal",
-})) as Any)<{
+}))<{
 	/** 是否禁用过渡动画？ */
 	$noTransition?: boolean;
 	/** 位置（上方向和下方向距离容器的距离元组）。 */
