@@ -8,6 +8,7 @@ export default function Home() {
 
 			<div>
 				<p>123123</p>
+				<InfoBar title="The quick brown fox jumps over a lazy dog">The quick brown fox jumps over a lazy dog The quick brown fox jumps over a lazy dog</InfoBar>
 			</div>
 		</div>
 	);

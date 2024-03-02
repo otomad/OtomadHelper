@@ -11,5 +11,5 @@ declare global {
 
 	type AnimatedIconState = AnimatedIconStateNS.Tuple | AnimatedIconStateNS.Object;
 
-	type Status = "neutual" | "info" | "asterisk" | "warning" | "success" | "error";
+	type Status = "neutual" | "accent" | "info" | "asterisk" | "warning" | "success" | "error";
 }

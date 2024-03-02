@@ -43,15 +43,15 @@ export /* internal */ const styledExpanderItemContent = css`
 
 	.trailing {
 		display: flex;
-		align-items: center;
 		gap: 1rem;
+		align-items: center;
 
 		.trailing-icon {
 			${styles.mixins.square("30px")};
 			${styles.mixins.flexCenter()};
+			flex-shrink: 0;
 			margin-right: -7px;
 			border-radius: 3px;
-			flex-shrink: 0;
 
 			.icon {
 				font-size: 16px;

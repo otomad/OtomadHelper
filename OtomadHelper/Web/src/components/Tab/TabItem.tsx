@@ -133,7 +133,7 @@ export /* internal */ default function TabItem({ icon, animatedIcon, children, s
 	};
 
 	const BadgeItem = useCallback(({ hidden }: { hidden?: boolean }) =>
-		<Badge status="asterisk" hidden={badge === undefined || hidden}>{badge}</Badge>, [badge]);
+		<Badge status="accent" hidden={badge === undefined || hidden}>{badge}</Badge>, [badge]);
 
 	return (
 		<Transition

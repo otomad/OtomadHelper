@@ -1,6 +1,7 @@
 import type { ColorNames } from "styles/colors";
 const backgroundColors: Record<Status, ColorNames> = {
 	neutual: "fill-color-system-solid-neutral-background",
+	accent: "accent-color",
 	info: "fill-color-system-solid-neutral",
 	asterisk: "fill-color-system-attention",
 	warning: "fill-color-system-caution",
@@ -51,10 +52,11 @@ export default forwardRef(function Badge({ children, status = "info", hidden, ..
 	/** 隐藏？ */
 	hidden?: boolean;
 }, "div">, ref: ForwardedRef<HTMLDivElement>) {
+	const iconName = `badge/${["neutual", "accent"].includes(status) ? "info" : status}`;
 	return (
 		<CssTransition in={!hidden} unmountOnExit appear>
 			<StyledBadge $status={status} ref={ref} {...htmlAttrs}>
-				{children ? <span>{children}</span> : <Icon name={"badge/" + (status === "neutual" ? "info" : status)} />}
+				{children ? <span>{children}</span> : <Icon name={iconName} />}
 			</StyledBadge>
 		</CssTransition>
 	);

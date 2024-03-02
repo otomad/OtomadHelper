@@ -1,6 +1,7 @@
 import type { ColorNames } from "styles/colors";
-type InfoBarStatus = Exclude<Status, "neutual">;
-const backgroundColors: Record<InfoBarStatus, ColorNames> = {
+const backgroundColors: Record<Status, ColorNames> = {
+	neutual: "fill-color-system-neutral-background",
+	accent: "background-fill-color-card-background-secondary",
 	info: "background-fill-color-card-background-secondary",
 	asterisk: "fill-color-system-attention-background",
 	warning: "fill-color-system-caution-background",
@@ -10,10 +11,10 @@ const backgroundColors: Record<InfoBarStatus, ColorNames> = {
 
 const StyledInfoBar = styled.div<{
 	/** 角标的状态，即颜色。 */
-	$status: InfoBarStatus;
+	$status: Status;
 }>`
 	display: flex;
-	gap: 13px;
+	column-gap: 13px;
 	align-items: flex-start;
 	padding: 14px 13px;
 	background-color: ${c("background-fill-color-card-background-secondary")};
@@ -28,14 +29,21 @@ const StyledInfoBar = styled.div<{
 		text-align: justify;
 	}
 
+	.text-part {
+		display: flex;
+		flex-wrap: wrap;
+		column-gap: inherit;
+	}
+
 	.title,
 	.text {
-		line-height: 18px;
+		display: inline-block;
+		line-height: 20px;
 	}
 
 	.badge {
 		${styles.mixins.square("16px")};
-		margin-top: ${(20 - 18) / 2}px;
+		margin-top: ${(20 - 16) / 2}px;
 	}
 
 	${({ $status }) => css`
@@ -43,17 +51,19 @@ const StyledInfoBar = styled.div<{
 	`}
 `;
 
-export default function InfoBar({ status = "info", title, children, ...htmlAttrs }: FCP<{
+export default function InfoBar({ status = "accent", title, children, ...htmlAttrs }: FCP<{
 	/** 角标的状态，即颜色。 */
-	status?: InfoBarStatus;
+	status?: Status;
 	/** 标题。 */
 	title?: string;
 }, "div">) {
 	return (
 		<StyledInfoBar $status={status} {...htmlAttrs}>
 			{status && <Badge status={status} />}
-			{title && <div className="title">{title}</div>}
-			<div className="text">{children}</div>
+			<div className="text-part">
+				{title && <div className="title">{title}</div>}
+				<div className="text">{children}</div>
+			</div>
 		</StyledInfoBar>
 	);
 }
