@@ -7,6 +7,7 @@ const CommandBar = styled.div`
 	border-radius: 6px;
 
 	> * {
+		${styles.effects.text.body};
 		height: 100%;
 	}
 `;

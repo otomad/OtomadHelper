@@ -51,15 +51,19 @@ export default function ShellPage() {
 			canBack={canBack()}
 			onBack={back}
 			commandBar={(
-				<CommandBar onClick={() => completeDisabled && alert("Cannot complete!")}>
+				<CommandBar>
 					{
 						autoLayoutTracksMode ? (
 							<>
 								<Button icon="save" subtle onClick={back}>{t.save}</Button>
-								<Button icon="checkmark" subtle>{t.track.applyToSelectedTracks}</Button>
+								<Button icon="arrow_sync_checkmark" subtle>{t.track.applyToSelectedTracks}</Button>
 							</>
-						) :
-							<Button icon="checkmark" subtle disabled={completeDisabled}>{t.complete}</Button>
+						) : (
+							<DisabledButtonWrapper disabled={completeDisabled} onClick={() => completeDisabled && alert("Cannot complete!")}>
+								<Button icon="checkmark" subtle disabled={completeDisabled}>{t.complete}</Button>
+							</DisabledButtonWrapper>
+						)
+
 					}
 				</CommandBar>
 			)}

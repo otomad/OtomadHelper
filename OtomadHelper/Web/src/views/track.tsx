@@ -18,7 +18,7 @@ export default function Track() {
 				icon="enabled"
 				on={layout}
 			/>
-			<SettingsCard title={t.track.grid} type="button" icon="grid" onClick={() => pushPage("grid")} />
+			<SettingsCard title={t.track.grid} type="button" icon="grid" onClick={() => pushPage("home")} />
 			<SettingsCard title={t.track.box3d} type="button" icon="cube" />
 			<SettingsCard title={t.track.gradient} details={t.descriptions.track.gradient} type="button" icon="highlight" />
 

@@ -23,6 +23,7 @@ const StyledInfoBar = styled.div<{
 
 	.title {
 		${styles.effects.text.bodyStrong};
+		${styles.mixins.hideIfEmpty()};
 	}
 
 	.text:is(:lang(zh), :lang(ja), :lang(ko)) {
@@ -51,17 +52,17 @@ const StyledInfoBar = styled.div<{
 	`}
 `;
 
-export default function InfoBar({ status = "accent", title, children, ...htmlAttrs }: FCP<{
-	/** 角标的状态，即颜色。 */
+export default function InfoBar({ status, title, children, ...htmlAttrs }: FCP<{
+	/** 角标的状态，颜色和图标。 */
 	status?: Status;
 	/** 标题。 */
 	title?: string;
 }, "div">) {
 	return (
-		<StyledInfoBar $status={status} {...htmlAttrs}>
+		<StyledInfoBar $status={status ?? "info"} {...htmlAttrs}>
 			{status && <Badge status={status} />}
 			<div className="text-part">
-				{title && <div className="title">{title}</div>}
+				<div className="title">{title}</div>
 				<div className="text">{children}</div>
 			</div>
 		</StyledInfoBar>

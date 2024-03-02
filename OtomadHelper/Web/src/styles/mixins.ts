@@ -100,4 +100,12 @@ export default {
 		width: 100dvw;
 		height: 100dvh;
 	`,
+	/**
+	 * 当元素为空时隐藏元素。
+	 */
+	hideIfEmpty: () => css`
+		&:empty {
+			display: none;
+		}
+	`,
 };

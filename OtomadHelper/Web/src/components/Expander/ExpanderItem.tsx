@@ -15,8 +15,8 @@ export /* internal */ const styledExpanderItemBase = css`
 
 export /* internal */ const styledExpanderItemText = css`
 	.text {
-		> :empty {
-			display: none;
+		> * {
+			${styles.mixins.hideIfEmpty()};
 		}
 
 		.title {

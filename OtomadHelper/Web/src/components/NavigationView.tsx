@@ -141,7 +141,7 @@ const StyledNavigationView = styled.div<{
 			position: fixed;
 			z-index: 8;
 			background-color: ${c("background-fill-color-acrylic-background-default")};
-			border-radius: 0 7px 7px 0;
+			border-radius: 0 8px 8px 0;
 			outline: 1px solid ${c("stroke-color-surface-stroke-flyout")};
 			box-shadow: 0 8px 16px ${c("shadows-flyout")};
 			backdrop-filter: blur(60px);
@@ -311,9 +311,9 @@ const StyledNavigationView = styled.div<{
 
 	${() => {
 		const selectors = forMap(NAV_ITEMS_ASSUMED_COUNT, i =>
-			`&:has(.nav-items .tab-item-wrapper:nth-of-type(${i}) .tab-item:active:hover) .nav-items .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`);
+			`&:has(.nav-items .tab-item-wrapper:nth-of-type(${i}) .tab-item:active) .nav-items .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`);
 		selectors.push(...forMap(NAV_ITEMS_BOTTOM_ASSUMED_COUNT, i =>
-			`&:has(.nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item:active:hover) .nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`));
+			`&:has(.nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item:active) .nav-items-bottom .tab-item-wrapper:nth-of-type(${i}) .tab-item .animated-icon`));
 		return css`
 			${selectors.join(", ")} {
 				--state: pressed;

@@ -87,9 +87,12 @@ declare global {
 	 */
 	export type ZustandState<S> = NonNull<S extends UseBoundStore<StoreApi<infer T>> ? T : never>;
 
+	interface BaseEvent<T = Element> extends React.SyntheticEvent<T>, Event { }
+	export type BaseEventHandler<T = Element> = EventHandler<BaseEvent<T>>;
+
 	export type { Draft } from "immer";
 	export type { AnimationItem } from "lottie-web";
-	export type { CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, ForwardedRef, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, ReactElement, ReactNode, RefObject, UIEventHandler } from "react";
+	export type { CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, FormEventHandler, ForwardedRef, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, ReactElement, ReactNode, RefObject, UIEventHandler } from "react";
 	export type { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 	export type { WebTarget } from "styled-components";
 }

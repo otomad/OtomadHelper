@@ -86,8 +86,8 @@ const StyledButton = styled.button<{
 		min-width: 96px;
 	}
 
-	> .content > span:empty {
-		display: none;
+	> .content > span {
+		${styles.mixins.hideIfEmpty()};
 	}
 
 	&.subtle,

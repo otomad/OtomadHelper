@@ -89,7 +89,7 @@ const StyledTabItem = styled.button`
 		}
 	}
 
-	&:active:hover .animated-icon {
+	&:active .animated-icon {
 		--state: pressed;
 	}
 

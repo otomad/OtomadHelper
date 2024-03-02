@@ -27,6 +27,10 @@ const StyledBadge = styled.div<{
 	background-color: ${c("fill-color-system-solid-neutral-background")};
 	scale: 1;
 
+	&.icon-only {
+		width: 16px;
+	}
+
 	${tgs()} {
 		scale: 0;
 	}
@@ -55,7 +59,7 @@ export default forwardRef(function Badge({ children, status = "info", hidden, ..
 	const iconName = `badge/${["neutual", "accent"].includes(status) ? "info" : status}`;
 	return (
 		<CssTransition in={!hidden} unmountOnExit appear>
-			<StyledBadge $status={status} ref={ref} {...htmlAttrs}>
+			<StyledBadge $status={status} ref={ref} className={{ iconOnly: !children }} {...htmlAttrs}>
 				{children ? <span>{children}</span> : <Icon name={iconName} />}
 			</StyledBadge>
 		</CssTransition>

@@ -10,8 +10,8 @@ const StyledEmptyMessage = styled.div`
 	flex-direction: column;
 	gap: 12px;
 	height: 100%;
-	animation-name: ${scaleIn} !important;
 	text-align: center;
+	animation-name: ${scaleIn} !important;
 
 	> .icon,
 	> .icon-off {
