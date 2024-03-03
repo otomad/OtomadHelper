@@ -41,7 +41,7 @@ const StyledTabItem = styled.button`
 	.animated-icon {
 		&,
 		* {
-			color: ${c("fill-color-text-primary-for-lottie")};
+			color: ${c("fill-color-text-primary-solid")};
 		}
 	}
 

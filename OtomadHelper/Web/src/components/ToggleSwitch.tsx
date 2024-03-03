@@ -52,6 +52,7 @@ const StyledToggleSwitchLabel = styled.button`
 		left: 0;
 		background-color: ${c("fill-color-text-secondary")};
 		scale: calc(12 / ${THUMB_SIZE});
+		touch-action: pinch-zoom;
 	}
 
 	&:hover .base {
@@ -149,7 +150,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	details?: ReactNode;
 }, "button">) {
 	const textLabel = on ? t.on : t.off;
-	const [isDraging, setIsDraging] = useState(false);
+	const [isDragging, setIsDragging] = useState(false);
 	const [thumbLeft, setThumbLeft] = useState<number>();
 	// 注意：直接使用 styled-components 的参数改变会影响性能。
 	const thumbStyle = useMemo(() => thumbLeft === undefined ? undefined : {
@@ -159,8 +160,8 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 
 	const handleCheck = (on: boolean, e?: MouseEvent) => {
 		stopEvent(e);
-		if (!isDraging) setOn?.(on);
-		setIsDraging(false);
+		if (!isDragging) setOn?.(on);
+		setIsDragging(false);
 	};
 
 	const onThumbDown = useCallback<PointerEventHandler<HTMLDivElement>>(e => {
@@ -182,7 +183,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 			handleCheck(isOn);
 			setThumbLeft(undefined);
 			const lastTime = new Date().getTime();
-			setIsDraging(lastTime - firstTime > 200); // 定义识别为拖动而不是点击的时间差。
+			setIsDragging(lastTime - firstTime > 200); // 定义识别为拖动而不是点击的时间差。
 			nextAnimationTick().then(() => setIsPressing?.(false));
 		};
 		document.addEventListener("pointermove", pointerMove);

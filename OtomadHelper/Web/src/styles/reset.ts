@@ -58,4 +58,12 @@ export default css`
 			overflow: visible;
 		}
 	}
+
+	@media (forced-colors: active) or (prefers-contrast: more) {
+		*,
+		::before,
+		::after {
+			backdrop-filter: none !important;
+		}
+	}
 `;

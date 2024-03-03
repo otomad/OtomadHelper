@@ -8,6 +8,10 @@ const changeColorScheme = (isLight?: boolean | ColorScheme, mode: "initial" | "a
 	if (typeof isLight === "string")
 		isLight = isLight === "light" ? true : isLight === "dark" ? false : undefined;
 	if (isLight === undefined) isLight = lightModePreference.matches;
+	const isPreviousLight = (() => {
+		const { scheme } = document.documentElement.dataset;
+		return ["light", "dark"].includes(scheme!) ? scheme === "light" : undefined;
+	})();
 	const updateThemeSettings = () => document.documentElement.dataset.scheme = isLight ? "light" : "dark";
 	const afterUpdateThemeSettings = () => {
 		const { backgroundColor } = getComputedStyle(document.body);
@@ -20,6 +24,10 @@ const changeColorScheme = (isLight?: boolean | ColorScheme, mode: "initial" | "a
 		return;
 	} else if (mode === "auto")
 		lastClickMouseEvent = undefined;
+	if (isPreviousLight === isLight) {
+		afterUpdateThemeSettings();
+		return;
+	}
 
 	const { x, y } = lastClickMouseEvent ?? { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 	const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
