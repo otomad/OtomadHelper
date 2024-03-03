@@ -2,6 +2,8 @@ import type _Immer from "immer";
 import type _LottieWeb from "lottie-web";
 import type React from "react";
 import type _ReactTransitionGroup from "react-transition-group";
+import type * as ReactTransitionGroupCssTransition from "react-transition-group/CSSTransition";
+import type * as ReactTransitionGroupTransition from "react-transition-group/Transition";
 import type _StyledComponents from "styled-components";
 import type { StoreApi, UseBoundStore } from "zustand";
 
@@ -90,9 +92,15 @@ declare global {
 	interface BaseEvent<T = Element> extends React.SyntheticEvent<T>, Event { }
 	export type BaseEventHandler<T = Element> = EventHandler<BaseEvent<T>>;
 
+	export type ElementTagNameMap = HTMLElementTagNameMap & SVGElementTagNameMap & MathMLElementTagNameMap & HTMLElementDeprecatedTagNameMap;
+	export type ForwardedRef<T> = T extends keyof ElementTagNameMap ? React.ForwardedRef<ElementTagNameMap[T]> : React.ForwardedRef<T>;
+
+	export type CSSTransitionProps = Partial<ReactTransitionGroupCssTransition.CSSTransitionProps>;
+	export type TransitionProps = Partial<ReactTransitionGroupTransition.TransitionProps>;
+
 	export type { Draft } from "immer";
 	export type { AnimationItem } from "lottie-web";
-	export type { CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, FormEventHandler, ForwardedRef, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, ReactElement, ReactNode, RefObject, UIEventHandler } from "react";
+	export type { CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, FormEventHandler, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, ReactElement, ReactNode, RefObject, UIEventHandler } from "react";
 	export type { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
 	export type { WebTarget } from "styled-components";
 }

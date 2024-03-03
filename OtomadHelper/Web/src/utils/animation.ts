@@ -120,6 +120,8 @@ type AnimateSizeOptions = Partial<{
 	attachAnimations: [Element, Keyframes][] | false;
 	/** 不要 `overflow: hidden;`？ */
 	noCropping: boolean;
+	/** 在动画结束后保持 `overflow: hidden;`？仅在 `noCropping` 为 false 时有效。 */
+	keepCroppingAtEnd: boolean;
 	/** 对**获取的**元素宽高值进行像素偏移调整。 */
 	clientAdjustment: Partial<{
 		startHeight: number;
@@ -161,6 +163,7 @@ export async function* animateSizeGenerator(
 		removeGlitchFrame,
 		attachAnimations,
 		noCropping = false,
+		keepCroppingAtEnd = false,
 		clientAdjustment = {},
 		removePreviousAnimations = false,
 		fillForward = false,
@@ -212,7 +215,7 @@ export async function* animateSizeGenerator(
 	const htmlElement = element as HTMLElement;
 	if (!noCropping) htmlElement.style.overflow = "hidden";
 	const result = element.animate(keyframes, animationOptions);
-	if (!noCropping) result.addEventListener("finish", () => htmlElement.style.removeProperty("overflow"));
+	if (!noCropping && !keepCroppingAtEnd) result.addEventListener("finish", () => htmlElement.style.removeProperty("overflow"));
 	if (startChildTranslate || endChildTranslate || attachAnimations) {
 		const onlyChild = element.children[0]; // 只取唯一一个子元素。
 		if (onlyChild && element instanceof HTMLElement && removeGlitchFrame) {
@@ -289,7 +292,6 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 		await animateSize(el, null, enter);
 		if (currentAnimationThread.current === thisThread)
 			el.dispatchEvent(new CustomEvent(ANIMATE_SIZE_END_EVENT));
-		else console.warn("enter was canceled");
 	};
 
 	const onExit = async () => {
@@ -301,7 +303,6 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 		if (currentAnimationThread.current === thisThread)
 			el.dispatchEvent(new CustomEvent(ANIMATE_SIZE_END_EVENT));
 		// el.hidden = true;
-		else console.warn("exit was canceled");
 	};
 
 	const endListener = (done: () => void) => nodeRef.current?.addEventListener(ANIMATE_SIZE_END_EVENT, done, false);

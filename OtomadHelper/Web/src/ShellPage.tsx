@@ -1,7 +1,7 @@
 const pages = import.meta.glob<FC>("/src/views/**/*.tsx", { import: "default", eager: true });
 
 function EmptyPage() {
-	return <EmptyMessage icon="settings" title={t.underConstruction} />;
+	return <EmptyMessage icon="settings" title={t.underConstruction} spinAtBegin />;
 }
 
 const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "lyrics", "shupelunker", "ytp"];
@@ -30,12 +30,13 @@ export default function ShellPage() {
 		const lastPage = page.at(-1);
 		return (lastPage ? t.titles[lastPage]({ context: "full" }) + " - " : "") + import.meta.env.VITE_APP_NAME;
 	})();
-	const completeDisabled = !isCompleteAvailable(page);
-	const autoLayoutTracksMode = isAutoLayoutTracks(page);
 
 	useEffect(() => {
 		document.title = documentTitle;
 	}, [documentTitle]);
+
+	const completeDisabled = !isCompleteAvailable(page);
+	const autoLayoutTracksMode = isAutoLayoutTracks(page);
 
 	return (
 		<NavigationView
@@ -53,17 +54,12 @@ export default function ShellPage() {
 			commandBar={(
 				<CommandBar>
 					{
-						autoLayoutTracksMode ? (
-							<>
-								<Button icon="save" subtle onClick={back}>{t.save}</Button>
-								<Button icon="arrow_sync_checkmark" subtle>{t.track.applyToSelectedTracks}</Button>
-							</>
-						) : (
-							<DisabledButtonWrapper disabled={completeDisabled} onClick={() => completeDisabled && alert("Cannot complete!")}>
-								<Button icon="checkmark" subtle disabled={completeDisabled}>{t.complete}</Button>
-							</DisabledButtonWrapper>
-						)
-
+						...(autoLayoutTracksMode ? [
+							<CommandBar.Item key="save" icon="save" onClick={back}>{t.save}</CommandBar.Item>,
+							<CommandBar.Item key="applyToSelectedTracks" icon="arrow_sync_checkmark">{t.track.applyToSelectedTracks}</CommandBar.Item>,
+						] : [
+							<CommandBar.Item key="complete" icon="checkmark" disabled={completeDisabled} canBeDisabled onClick={() => completeDisabled && alert("Cannot complete!")}>{t.complete}</CommandBar.Item>,
+						])
 					}
 				</CommandBar>
 			)}

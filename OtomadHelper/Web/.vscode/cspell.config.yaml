@@ -23,6 +23,7 @@ words:
   - multisource
   - multitrack
   - neutual
+  - numberish
   - ofx
   - otomad
   - otomads
@@ -60,6 +61,11 @@ ignoreWords:
   - tgs
   - dvw
   - dvh
+  - stylelint
+  - unplugin
+  - pangu
+  - tsc
+  - svgr
 flagWords:
   - colour -> color
   - canot -> cannot

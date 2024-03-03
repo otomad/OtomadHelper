@@ -30,7 +30,7 @@ export default forwardRef(function SettingsPageControl({ image, learnMoreLink, c
 	learnMoreLink?: string;
 	/** 清除浮动。 */
 	clearFloat?: boolean;
-}, "div">, ref: ForwardedRef<HTMLDivElement>) {
+}, "div">, ref: ForwardedRef<"div">) {
 	const [hideUseTips] = selectConfig(c => c.settings.hideUseTips);
 	if (hideUseTips) return;
 
@@ -44,7 +44,8 @@ export default forwardRef(function SettingsPageControl({ image, learnMoreLink, c
 				<Preserves>{children}</Preserves>
 				{learnMoreLink !== undefined && (
 					<>
-						<br /><br />
+						<br />
+						<br />
 						<LearnMore>{t.learnMore}</LearnMore>
 					</>
 				)}

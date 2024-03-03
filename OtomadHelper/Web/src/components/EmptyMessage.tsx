@@ -5,6 +5,12 @@ const scaleIn = keyframes`
 	}
 `;
 
+const spin = keyframes`
+	from {
+		rotate: -1turn;
+	}
+`;
+
 const StyledEmptyMessage = styled.div`
 	${styles.mixins.flexCenter()}
 	flex-direction: column;
@@ -16,6 +22,10 @@ const StyledEmptyMessage = styled.div`
 	> .icon,
 	> .icon-off {
 		font-size: 48px;
+
+		&.spin {
+			animation: ${spin} 750ms ${eases.easeOutSmooth};
+		}
 	}
 
 	> header {
@@ -34,7 +44,7 @@ const StyledEmptyMessage = styled.div`
 	}
 `;
 
-export default function EmptyMessage({ icon, title, details, iconOff = false, children }: FCP<{
+export default function EmptyMessage({ icon, title, details, iconOff = false, spinAtBegin = false, children }: FCP<{
 	/** 图标。 */
 	icon?: string;
 	/** 标题。 */
@@ -43,6 +53,8 @@ export default function EmptyMessage({ icon, title, details, iconOff = false, ch
 	details?: ReactNode;
 	/** 在图标上画斜线？ */
 	iconOff?: boolean;
+	/** 开始时图标陀螺旋。 */
+	spinAtBegin?: boolean;
 }>) {
 	const { resetTransition } = usePageStore();
 	const el = useDomRef<HTMLDivElement>();
@@ -58,7 +70,7 @@ export default function EmptyMessage({ icon, title, details, iconOff = false, ch
 
 	return (
 		<StyledEmptyMessage ref={el}>
-			{icon && <IconEl name={icon} />}
+			{icon && <IconEl className={{ spin: spinAtBegin }} name={icon} />}
 			<header>
 				<h2>{title}</h2>
 				<p>{details}</p>

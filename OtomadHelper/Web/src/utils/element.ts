@@ -22,11 +22,11 @@ export function stopEvent(event?: Pick<Event, "preventDefault" | "stopPropagatio
 	event.stopPropagation();
 }
 
-export function hasRefInReactNode(reactNode: unknown): reactNode is { ref: MutableRefObject<HTMLElement> } {
+export function hasRefInReactNode(reactNode: unknown): reactNode is { ref: MutableRefObject<Element> } {
 	return !!(reactNode && typeof reactNode === "object" && "ref" in reactNode && reactNode.ref);
 }
 
-export function cloneRef(children: ReactNode, nodeRef: MutableRefObject<HTMLElement | null>) {
+export function cloneRef(children: ReactNode, nodeRef: MutableRefObject<Element | null>) {
 	return h(
 		Fragment,
 		null,

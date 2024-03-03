@@ -55,7 +55,7 @@ export default forwardRef(function Badge({ children, status = "info", hidden, ..
 	status?: Status;
 	/** 隐藏？ */
 	hidden?: boolean;
-}, "div">, ref: ForwardedRef<HTMLDivElement>) {
+}, "div">, ref: ForwardedRef<"div">) {
 	const iconName = `badge/${["neutual", "accent"].includes(status) ? "info" : status}`;
 	return (
 		<CssTransition in={!hidden} unmountOnExit appear>

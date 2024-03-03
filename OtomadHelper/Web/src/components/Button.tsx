@@ -115,7 +115,7 @@ const StyledButton = styled.button<{
 	}
 `;
 
-export default function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, className, ...htmlAttrs }: FCP<{
+export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, className, ...htmlAttrs }: FCP<{
 	/** 按钮图标。 */
 	icon?: string;
 	/** 按钮动态图标。 */
@@ -126,11 +126,11 @@ export default function Button({ children, icon, animatedIcon, subtle, hyperlink
 	hyperlink?: boolean;
 	/** 是否按钮附着强调色？ */
 	accent?: boolean | "critical" | "success" | "attention" | "caution";
-}, "button">) {
+}, "button">, ref: ForwardedRef<"button">) {
 	const fillColorName = !accent ? undefined : accent === true ? "accent-color" : `fill-color-system-${accent}`;
 
 	return (
-		<StyledButton type="button" className={[className, { subtle, hyperlink }]} $fillColorName={fillColorName} {...htmlAttrs}>
+		<StyledButton ref={ref} type="button" className={[className, { subtle, hyperlink }]} $fillColorName={fillColorName} {...htmlAttrs}>
 			<StackPanel className="content">
 				{icon && <Icon name={icon} />}
 				{animatedIcon && <AnimatedIcon name={animatedIcon} />}
@@ -138,4 +138,4 @@ export default function Button({ children, icon, animatedIcon, subtle, hyperlink
 			</StackPanel>
 		</StyledButton>
 	);
-}
+});
