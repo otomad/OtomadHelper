@@ -92,6 +92,7 @@ internal class ManagedStream : Stream {
 					{ "html", "text/html" },
 					{ "js", "text/javascript" },
 					{ "css", "text/css" },
+					{ "appcache", "text/cache-manifest" },
 					{ "jpg", "image/jpeg" },
 					{ "png", "image/png" },
 					{ "gif", "image/gif" },
@@ -101,11 +102,11 @@ internal class ManagedStream : Stream {
 					{ "ico", "image/x-icon" },
 					{ "cur", "image/vnd.microsoft.icon" },
 					{ "bmp", "image/bmp" },
-					{ "manifest", "text/cache-manifest" },
 					{ "woff", "font/woff" },
 					{ "woff2", "font/woff2" },
 					{ "ttf", "font/ttf" },
 					{ "json", "application/json" },
+					{ "manifest", "application/manifest+json" },
 					{ "ani", "application/x-navi-animation" },
 				};
 				string headers = "application/octet-stream";
@@ -114,7 +115,12 @@ internal class ManagedStream : Stream {
 						headers = item.Value;
 						break;
 					}
-				headers = "Content-Type: " + headers;
+				headers = $"""
+					HTTP/1.1 200 OK
+					Cache-Control: public, max-age=1200
+					Age: 1200
+					Content-Type: {headers}
+					""";
 				args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(managedStream, 200, "OK", headers);
 			} catch (InvalidOperationException e) {
 				args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(null, 415, e.Message, "");
