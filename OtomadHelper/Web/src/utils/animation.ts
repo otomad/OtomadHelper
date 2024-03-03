@@ -279,20 +279,29 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 	exit.fillForward = true;
 
 	const ANIMATE_SIZE_END_EVENT = "animatesizeend"; // 这里我们使用一个自定义的事件，以防原生 CSS 过渡动画结束时干扰运行。
+	const currentAnimationThread = useRef<symbol>();
 
 	const onEnter = async () => {
 		const el = nodeRef.current;
 		if (!el) return;
+		const thisThread = Symbol("enter");
+		currentAnimationThread.current = thisThread;
 		await animateSize(el, null, enter);
-		el.dispatchEvent(new CustomEvent(ANIMATE_SIZE_END_EVENT));
+		if (currentAnimationThread.current === thisThread)
+			el.dispatchEvent(new CustomEvent(ANIMATE_SIZE_END_EVENT));
+		else console.warn("enter was canceled");
 	};
 
 	const onExit = async () => {
 		const el = nodeRef.current;
 		if (!el) return;
+		const thisThread = Symbol("exit");
+		currentAnimationThread.current = thisThread;
 		await animateSize(el, null, exit);
-		el.dispatchEvent(new CustomEvent(ANIMATE_SIZE_END_EVENT));
+		if (currentAnimationThread.current === thisThread)
+			el.dispatchEvent(new CustomEvent(ANIMATE_SIZE_END_EVENT));
 		// el.hidden = true;
+		else console.warn("exit was canceled");
 	};
 
 	const endListener = (done: () => void) => nodeRef.current?.addEventListener(ANIMATE_SIZE_END_EVENT, done, false);

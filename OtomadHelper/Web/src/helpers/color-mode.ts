@@ -4,12 +4,22 @@ const lightModePreference = window.matchMedia("(prefers-color-scheme: light)");
 let lastClickMouseEvent: MouseEvent | undefined;
 document.addEventListener("click", e => lastClickMouseEvent = e, true);
 
-const changeColorScheme = (isLight?: boolean | ColorScheme) => {
+const changeColorScheme = (isLight?: boolean | ColorScheme, mode: "initial" | "auto" | "manual" = "manual") => {
 	if (typeof isLight === "string")
 		isLight = isLight === "light" ? true : isLight === "dark" ? false : undefined;
 	if (isLight === undefined) isLight = lightModePreference.matches;
 	const updateThemeSettings = () => document.documentElement.dataset.scheme = isLight ? "light" : "dark";
-	const afterUpdateThemeSettings = () => useColorModeStore.setState(() => ({ backgroundColor: getComputedStyle(document.body).backgroundColor }));
+	const afterUpdateThemeSettings = () => {
+		const { backgroundColor } = getComputedStyle(document.body);
+		if (backgroundColor !== "rgba(0, 0, 0, 0)")
+			useColorModeStore.setState(() => ({ backgroundColor }));
+	};
+
+	if (mode === "initial") {
+		updateThemeSettings();
+		return;
+	} else if (mode === "auto")
+		lastClickMouseEvent = undefined;
 
 	const { x, y } = lastClickMouseEvent ?? { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 	const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
@@ -33,7 +43,7 @@ const changeColorScheme = (isLight?: boolean | ColorScheme) => {
 const getUserColorScheme = () => useColorModeStore.getState().scheme;
 
 // #region Init color mode
-lightModePreference.addEventListener("change", e => getUserColorScheme() === "auto" && changeColorScheme(e.matches));
-changeColorScheme(getUserColorScheme());
+lightModePreference.addEventListener("change", e => getUserColorScheme() === "auto" && changeColorScheme(e.matches, "auto"));
+changeColorScheme(getUserColorScheme(), "initial");
 useColorModeStore.subscribe(state => state.scheme, scheme => changeColorScheme(scheme));
 // #endregion

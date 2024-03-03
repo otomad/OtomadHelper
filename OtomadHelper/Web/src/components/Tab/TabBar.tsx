@@ -82,6 +82,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 	const indicator = useDomRef<HTMLDivElement>();
 	const [position, _setPosition] = useState<TwoD>([NaN, NaN]);
 	const [noIndicatorTransition, setNoIndicatorTransition] = useState(false);
+	const updateIndicatorThread = useRef<symbol>();
 
 	/**
 	 * 更新选项卡指示器。
@@ -127,13 +128,17 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		const setPosition1 = () => _setPosition(([_, pos2]) => [target1, pos2]);
 		const setPosition2 = () => setPosition(([pos1]) => [pos1, target2]);
 		const delayTime = () => delay(DELAY);
+		const thisThread = Symbol("update");
+		updateIndicatorThread.current = thisThread;
 		if (movement === "previous") {
 			setPosition1();
 			await delayTime();
+			if (updateIndicatorThread.current !== thisThread) return;
 			setPosition2();
 		} else if (movement === "next") {
 			setPosition2();
 			await delayTime();
+			if (updateIndicatorThread.current !== thisThread) return;
 			setPosition1();
 		}
 	}, [position]);
