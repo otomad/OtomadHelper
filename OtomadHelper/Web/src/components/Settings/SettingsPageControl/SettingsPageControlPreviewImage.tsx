@@ -26,7 +26,7 @@ export default function SettingsPageControlPreviewImage({ image, children }: FCP
 }>) {
 	return (
 		<StyledSettingsPageControlPreviewImage>
-			<img src={image} alt="preview" />
+			<img src={image} alt="preview" draggable={false} decoding="sync" loading="eager" />
 			<div className="stroke" />
 			{children}
 		</StyledSettingsPageControlPreviewImage>

@@ -10,6 +10,11 @@ export default css`
 			display: inline-block;
 		}
 
+		figure {
+			all: unset;
+			display: block;
+		}
+
 		// 合计着图片和视频默认居然是行内元素，导致 block 下方的空隙就是你造成的是吧？
 		img,
 		video,

@@ -48,7 +48,7 @@ export default forwardRef(function SettingsPageControl({ image, learnMoreLink, c
 				<Preserves>{children}</Preserves>
 				{learnMoreLink !== undefined && (
 					<>
-						{forMap(image ? 2 : 0, () => <br />)}
+						<Br repeat={image ? 2 : 0} />
 						<LearnMore>{t.learnMore}</LearnMore>
 					</>
 				)}

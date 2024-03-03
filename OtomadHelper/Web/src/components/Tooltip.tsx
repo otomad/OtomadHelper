@@ -14,12 +14,12 @@ const StyledTooltip = styled.div`
 		overflow-wrap: break-word;
 		background-color: ${c("background-fill-color-acrylic-background-default")};
 		border: 1px solid ${c("stroke-color-surface-stroke-flyout")};
-		border-radius: 4px;
+		border-radius: 3px;
 		box-shadow: 0 4px 8px ${c("shadows-flyout")};
 		backdrop-filter: blur(60px);
 
 		&:has(img) {
-			border-radius: 6px;
+			border-radius: 5px;
 		}
 	}
 
@@ -115,21 +115,21 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 	);
 }
 
-const StyledTooltipContent = styled.div`
+const StyledTooltipContent = styled.figure`
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
 
 	img {
 		max-width: 250px;
-		border-radius: 4px;
+		border-radius: 3px;
 
-		&:has(~ .caption:empty) {
+		&:has(~ figcaption:empty) {
 			margin: 0 -2px;
 		}
 	}
 
-	.caption {
+	figcaption {
 		${styles.mixins.hideIfEmpty()};
 	}
 `;
@@ -137,11 +137,11 @@ const StyledTooltipContent = styled.div`
 function TooltipContent({ image, children, ...htmlAttrs }: FCP<{
 	/** 图片。 */
 	image?: string;
-}, "div">) {
+}, "figure">) {
 	return (
 		<StyledTooltipContent {...htmlAttrs}>
 			{image && <img src={image} />}
-			<p className="caption">{children}</p>
+			<figcaption>{children}</figcaption>
 		</StyledTooltipContent>
 	);
 }

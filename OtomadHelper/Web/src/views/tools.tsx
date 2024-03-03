@@ -1,12 +1,7 @@
-const StyledDescription = styled.p`
-	margin-bottom: 10px;
-`;
-
 export default function Tools() {
 	return (
 		<div className="container">
 			<SettingsPageControl learnMoreLink="">{t.descriptions.tools}</SettingsPageControl>
-			{/* <StyledDescription>{t.descriptions.tools}</StyledDescription> */}
 			<SettingsCard title={t.tools.selector} details={t.descriptions.tools.selector} type="button" icon="search" selectInfo={t(1).selectInfo.trackEvent} />
 			<SettingsCard title={t.tools.replacer} details={t.descriptions.tools.replacer} type="button" icon="replace" />
 			<SettingsCard

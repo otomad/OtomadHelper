@@ -3,7 +3,7 @@ function replaceLfToBr(longText: string) {
 	return longText
 		.replaceAll(/\r\n|\n\r|\r/g, "\n")
 		.split("\n")
-		.flatMap((line, i, { length }) => i === length - 1 ? line : [line, <br key={brKey++} />])
+		.flatMap((line, i, { length }) => i === length - 1 ? line : [line, <Br key={brKey++} />])
 		.filter(line => typeof line === "string" ? line.trim() : true);
 }
 
@@ -15,4 +15,11 @@ export default function Preserves({ children }: FCP) {
 		if (typeof child === "string" || isI18nItem(child)) return replaceLfToBr(child.toString());
 		else return child;
 	});
+}
+
+export function Br({ repeat = 1, ...htmlAttrs }: FCP<{
+	/** 重复次数。 */
+	repeat?: number;
+}, "br">) {
+	return forMap(repeat, i => <br key={i} {...htmlAttrs} />);
 }
