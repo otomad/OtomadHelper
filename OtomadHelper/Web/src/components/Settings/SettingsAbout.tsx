@@ -1,4 +1,5 @@
-import Logo from "assets/svg/Otomad Helper.svg";
+import ColoredLogo from "assets/svg/Otomad Helper Colored.svg";
+import MonoLogo from "assets/svg/Otomad Helper.svg";
 
 const VERSION = "v7.9";
 
@@ -8,9 +9,18 @@ const StyledSettingsAbout = styled.div`
 	margin-bottom: 10px;
 
 	.logo {
+		display: none;
 		width: 150px;
 		height: auto;
-		fill: currentColor;
+
+		${ifColorScheme.light} &.light {
+			display: block;
+		}
+
+		${ifColorScheme.dark} &.dark {
+			display: block;
+			fill: currentColor;
+		}
 	}
 
 	.right {
@@ -44,7 +54,8 @@ export default function SettingsAbout() {
 	return (
 		<>
 			<StyledSettingsAbout>
-				<Logo className="logo" />
+				<MonoLogo className="logo dark" />
+				<ColoredLogo className="logo light" />
 				<div className="right">
 					<p>{t.descriptions.settings.about}</p>
 					<div className="pairs">
