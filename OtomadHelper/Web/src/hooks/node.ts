@@ -15,7 +15,7 @@ export function useForceUpdate() {
 export function useOnFormKeyDown(element: RefObject<HTMLElement>, type: "radio" | "checkbox", handleCheck: (checked?: boolean) => void) {
 	useEffect(() => {
 		const el = element.current;
-		const CUTSOM_CHANGE_EVENT = "customchange";
+		const CUSTOM_CHANGE_EVENT = "customchange";
 		if (!el) return;
 
 		const onKeydown = (e: KeyboardEvent) => {
@@ -41,7 +41,7 @@ export function useOnFormKeyDown(element: RefObject<HTMLElement>, type: "radio" 
 			}
 			thatComponent ??= thisComponent;
 			thatComponent.focus();
-			if (type === "radio") thatComponent.dispatchEvent(new CustomEvent(CUTSOM_CHANGE_EVENT));
+			if (type === "radio") thatComponent.dispatchEvent(new CustomEvent(CUSTOM_CHANGE_EVENT));
 		};
 
 		const onKeyup = (e: KeyboardEvent) => {
@@ -55,12 +55,12 @@ export function useOnFormKeyDown(element: RefObject<HTMLElement>, type: "radio" 
 
 		el.addEventListener("keydown", onKeydown);
 		el.addEventListener("keyup", onKeyup);
-		el.addEventListener(CUTSOM_CHANGE_EVENT, onCustomChange);
+		el.addEventListener(CUSTOM_CHANGE_EVENT, onCustomChange);
 
 		return () => {
 			el.removeEventListener("keydown", onKeydown);
 			el.removeEventListener("keyup", onKeyup);
-			el.removeEventListener(CUTSOM_CHANGE_EVENT, onCustomChange);
+			el.removeEventListener(CUSTOM_CHANGE_EVENT, onCustomChange);
 		};
-	}, [element]);
+	}, []);
 }

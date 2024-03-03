@@ -25,6 +25,7 @@ export function keys<K extends object>(obj: K) {
 
 /**
  * 创建一个重复指定次数对象的数组，用于循环创建组件。
+ *
  * 但是只需关心循环次数，不关心数组的内容。
  * @template T - 要重复的对象类型。
  * @param length - 循环次数。
@@ -95,7 +96,7 @@ export function useStateSelector<T, U>(stateProperty: StateProperty<T>, getter: 
  * @returns - 是否是 Ref 包装对象。
  */
 export function isRef<T>(ref: MaybeRef<T>): ref is RefObject<T> {
-	return ref && "current" in (ref as object) && Object.keys(ref).length === 1;
+	return ref && Object.hasOwn(ref, "current") && Object.keys(ref).length === 1;
 }
 
 /**

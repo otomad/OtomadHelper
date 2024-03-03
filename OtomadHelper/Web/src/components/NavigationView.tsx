@@ -296,6 +296,10 @@ const StyledNavigationView = styled.div<{
 							300ms ${50 * (i - 1)}ms ${eases.easeOutMax} backwards;
 					}
 				`)}
+
+				> .contents > * {
+					animation: inherit;
+				}
 			}
 
 			> .exit > .container > * {
@@ -410,7 +414,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 		const navItems = navItemsRef.current;
 		if (!navItems) return;
 		setIsNavItemsOverflowing(navItems.scrollHeight > navItems.offsetHeight);
-	}, { immediate: true }, [navItemsRef]);
+	}, { immediate: true });
 
 	const onNavItemsScroll = useCallback<UIEventHandler<HTMLDivElement>>(e => {
 		const currentElement = e.currentTarget;

@@ -1,7 +1,11 @@
-import legatoPortatoImage from "assets/images/legato_config/legato_portato.png";
-import legatoUnlimitedImage from "assets/images/legato_config/legato_unlimited.png";
-import legatoUpTo1BarImage from "assets/images/legato_config/legato_up_to_1bar.png";
-import legatoUpTo1BeatImage from "assets/images/legato_config/legato_up_to_1beat.png";
+import legatoPortatoImage from "assets/images/tutorials/legato_config/legato_portato.png";
+import legatoUnlimitedImage from "assets/images/tutorials/legato_config/legato_unlimited.png";
+import legatoUpTo1BarImage from "assets/images/tutorials/legato_config/legato_up_to_1bar.png";
+import legatoUpTo1BeatImage from "assets/images/tutorials/legato_config/legato_up_to_1beat.png";
+import loopImage from "assets/images/tutorials/visual/loop.png";
+import noLengtheningImage from "assets/images/tutorials/visual/no_lengthening.png";
+import staticVisualImage from "assets/images/tutorials/visual/static.png";
+import stretchImage from "assets/images/tutorials/visual/stretch.png";
 import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
 
 export /* internal */ const stretches = [
@@ -61,20 +65,28 @@ export default function Visual() {
 				</EmptyMessage>
 			) : (
 				<>
-					<ExpanderRadio
-						title={t.stream.stretch}
-						details={t.descriptions.stream.stretch}
-						icon="stretch"
-						items={stretches}
-						value={stretch as StateProperty<string>}
-						view="tile"
-						idField="id"
-						nameField={t.stream.stretch}
-						iconField="icon"
-					/>
-					<SettingsCardToggleSwitch title={t.stream.loop} details={t.descriptions.stream.loop} icon="loop" on={loop} />
-					<SettingsCardToggleSwitch title={t.stream.staticVisual} details={t.descriptions.stream.staticVisual} icon="visual" on={staticVisual} />
-					<SettingsCardToggleSwitch title={t.stream.noLengthening} details={t.descriptions.stream.noLengthening.visual} icon="no_lengthening" on={noLengthening} />
+					<Tooltip title={<Tooltip.Content image={stretchImage} />} placement="y">
+						<ExpanderRadio
+							title={t.stream.stretch}
+							details={t.descriptions.stream.stretch}
+							icon="stretch"
+							items={stretches}
+							value={stretch as StateProperty<string>}
+							view="tile"
+							idField="id"
+							nameField={t.stream.stretch}
+							iconField="icon"
+						/>
+					</Tooltip>
+					<Tooltip title={<Tooltip.Content image={loopImage} />} placement="y">
+						<SettingsCardToggleSwitch title={t.stream.loop} details={t.descriptions.stream.loop} icon="loop" on={loop} />
+					</Tooltip>
+					<Tooltip title={<Tooltip.Content image={staticVisualImage} />} placement="y">
+						<SettingsCardToggleSwitch title={t.stream.staticVisual} details={t.descriptions.stream.staticVisual} icon="visual" on={staticVisual} />
+					</Tooltip>
+					<Tooltip title={<Tooltip.Content image={noLengtheningImage} />} placement="y">
+						<SettingsCardToggleSwitch title={t.stream.noLengthening} details={t.descriptions.stream.noLengthening.visual} icon="no_lengthening" on={noLengthening} />
+					</Tooltip>
 					<ExpanderRadio
 						title={t.stream.legato}
 						details={t.descriptions.stream.legato}

@@ -17,6 +17,10 @@ const StyledTooltip = styled.div`
 		border-radius: 4px;
 		box-shadow: 0 4px 8px ${c("shadows-flyout")};
 		backdrop-filter: blur(60px);
+
+		&:has(img) {
+			border-radius: 6px;
+		}
 	}
 
 	${tgs()} .base {
@@ -55,16 +59,23 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 	timeout?: number;
 }>) {
 	const [shown, setShown] = useState(false);
-	const contentsDom = useDomRef<HTMLDivElement>();
+	const [contentsDom, setContentsDom] = useState<HTMLDivElement | null>(null); // Use state instead of ref to make sure change it to rerender.
 	const tooltipWrapper = useDomRef<HTMLDivElement>();
 	const [actualPlacement, setActualPlacement] = useState(placement);
 	const [position, setPosition] = useState<CSSProperties>();
 	const shownTimeout = useRef<Timeout>();
 
-	const handleHover = () => {
+	const dom = useMemo(() => {
+		let dom = contentsDom?.firstElementChild;
+		while (dom && (getComputedStyle(dom).display === "contents" || dom.classList.contains("expander")))
+			dom = dom.firstElementChild;
+		return dom as HTMLElement | null;
+	}, [contentsDom]);
+
+	const handleHover = (e: MouseEvent) => {
 		clearTimeout(shownTimeout.current);
+		if (!dom || !isInPath(e, dom)) return;
 		shownTimeout.current = setTimeout(async () => {
-			const dom = contentsDom.current?.firstElementChild;
 			if (!dom) return;
 			const options = getPosition(dom, placement, offset);
 			setActualPlacement(options.placement);
@@ -82,9 +93,13 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 		setShown(false);
 	};
 
+	useEventListener(dom, "mouseenter", handleHover, undefined, [contentsDom]);
+	useEventListener(dom, "mouseleave", handleUnhover, undefined, [contentsDom]);
+	useEventListener(dom, "click", handleUnhover, undefined, [contentsDom]);
+
 	return (
 		<>
-			<Contents ref={contentsDom} onMouseEnter={handleHover} onMouseLeave={handleUnhover}>
+			<Contents ref={newRef => setContentsDom(newRef)}>
 				{children}
 			</Contents>
 			<Portal>
@@ -99,3 +114,36 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 		</>
 	);
 }
+
+const StyledTooltipContent = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+
+	img {
+		max-width: 250px;
+		border-radius: 4px;
+
+		&:has(~ .caption:empty) {
+			margin: 0 -2px;
+		}
+	}
+
+	.caption {
+		${styles.mixins.hideIfEmpty()};
+	}
+`;
+
+function TooltipContent({ image, children, ...htmlAttrs }: FCP<{
+	/** 图片。 */
+	image?: string;
+}, "div">) {
+	return (
+		<StyledTooltipContent {...htmlAttrs}>
+			{image && <img src={image} />}
+			<p className="caption">{children}</p>
+		</StyledTooltipContent>
+	);
+}
+
+Tooltip.Content = TooltipContent;

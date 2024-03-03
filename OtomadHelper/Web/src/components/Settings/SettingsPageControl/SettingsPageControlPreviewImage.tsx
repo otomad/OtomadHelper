@@ -1,11 +1,11 @@
 const StyledSettingsPageControlPreviewImage = styled.div`
-	display: inline-block;
 	position: relative;
+	display: inline-block;
+	flex-shrink: 0;
 	max-width: 280px;
 	height: 120px;
-	border-radius: 3px;
 	overflow: hidden;
-	flex-shrink: 0;
+	border-radius: 3px;
 
 	img {
 		${styles.mixins.square("100%")};

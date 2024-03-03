@@ -50,8 +50,8 @@ const changeColorScheme = (isLight?: boolean | ColorScheme, mode: "initial" | "a
 };
 const getUserColorScheme = () => useColorModeStore.getState().scheme;
 
-// #region Init color mode
-lightModePreference.addEventListener("change", e => getUserColorScheme() === "auto" && changeColorScheme(e.matches, "auto"));
-changeColorScheme(getUserColorScheme(), "initial");
-useColorModeStore.subscribe(state => state.scheme, scheme => changeColorScheme(scheme));
-// #endregion
+{ // Init color mode
+	lightModePreference.addEventListener("change", e => getUserColorScheme() === "auto" && changeColorScheme(e.matches, "auto"));
+	changeColorScheme(getUserColorScheme(), "initial");
+	useColorModeStore.subscribe(state => state.scheme, scheme => changeColorScheme(scheme));
+}

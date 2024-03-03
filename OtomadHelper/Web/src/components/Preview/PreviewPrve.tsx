@@ -24,7 +24,7 @@ const StyledPreviewPrve = styled.div<{
 		${useLottieStatus.animation("Hover")};
 	}
 
-	.grid-view-item:not(:hover, :focus-visible) & img {
+	.items-view-item:not(:hover, :focus-visible) & img {
 		animation: none;
 	}
 

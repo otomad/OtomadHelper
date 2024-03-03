@@ -71,7 +71,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	const [onEnter, onExit, endListener] = simpleAnimateSize(expanderChildRef, "height", 350, undefined, { startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }, { endChildTranslate: "0 -100%" });
 
 	return (
-		<div>
+		<div className="expander">
 			<ExpanderParent
 				{...settingsCardProps}
 				type="expander"

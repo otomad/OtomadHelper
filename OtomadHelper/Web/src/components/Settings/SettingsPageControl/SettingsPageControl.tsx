@@ -15,6 +15,10 @@ const StyledSettingsPageControl = styled.div<{
 		margin-bottom: ${IMAGE_MARGIN}px;
 		padding: 0 1px;
 
+		&.no-image {
+			margin-bottom: 10px;
+		}
+
 		.settings-page-control-preview-image {
 			float: left;
 			margin-right: ${IMAGE_MARGIN}px;
@@ -25,7 +29,7 @@ const StyledSettingsPageControl = styled.div<{
 
 export default forwardRef(function SettingsPageControl({ image, learnMoreLink, clearFloat, children, ...htmlAttrs }: FCP<{
 	/** 图片。 */
-	image: string;
+	image?: string;
 	/** “了解更多”链接地址。 */
 	learnMoreLink?: string;
 	/** 清除浮动。 */
@@ -38,14 +42,13 @@ export default forwardRef(function SettingsPageControl({ image, learnMoreLink, c
 	const TextWrapper = clearFloat ? "p" : Fragment;
 
 	return (
-		<StyledSettingsPageControl ref={ref} $clearFloat={clearFloat} {...htmlAttrs}>
-			<SettingsPageControlPreviewImage image={image} />
+		<StyledSettingsPageControl ref={ref} $clearFloat={clearFloat} className={{ noImage: !image }} {...htmlAttrs}>
+			{image && <SettingsPageControlPreviewImage image={image} />}
 			<TextWrapper>
 				<Preserves>{children}</Preserves>
 				{learnMoreLink !== undefined && (
 					<>
-						<br />
-						<br />
+						{forMap(image ? 2 : 0, () => <br />)}
 						<LearnMore>{t.learnMore}</LearnMore>
 					</>
 				)}

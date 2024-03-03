@@ -54,6 +54,7 @@ export default [
 			["default", "FlipMove"],
 		],
 		"lodash-es": [
+			["*", "_"],
 			["*", "lodash"],
 		],
 		"react-freezeframe": [

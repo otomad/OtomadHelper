@@ -33,5 +33,5 @@ export function useAniCursor(element: MutableRefObject<HTMLElement | null>, aniU
 
 	useEffect(() => {
 		element.current && (element.current.dataset.anicursor = aniUrl);
-	}, [element, aniUrl]);
+	}, [aniUrl]);
 }

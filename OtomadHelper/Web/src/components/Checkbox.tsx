@@ -160,7 +160,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	};
 
 	useChangeEffect(() => handleChange(checked, indeterminate), [indeterminate, checked]);
-	useEffect(() => { checkboxRef.current && (checkboxRef.current.indeterminate = indeterminate); }, [checkboxRef, indeterminate]);
+	useEffect(() => { checkboxRef.current && (checkboxRef.current.indeterminate = indeterminate); }, [indeterminate]);
 	useOnFormKeyDown(labelRef, "checkbox", handleCheck);
 	const getCheckMarkName = useCallback(() => indeterminate ? "dash" : checked ? "accept" : "", [indeterminate, checked]);
 	const [checkMarkName, setCheckMarkName] = useState(getCheckMarkName());

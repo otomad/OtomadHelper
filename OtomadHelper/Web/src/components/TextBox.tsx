@@ -264,7 +264,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	const handleReleaseSpin = useCallback<BaseEventHandler<HTMLButtonElement>>(e => {
 		if (!e.currentTarget.matches(":focus-visible")) // 如果是键盘空格键按下旋钮，则不要自动聚焦到输入框。
 			inputEl.current?.focus(); // 如果是鼠标按下旋钮，则会自动聚焦到输入框。
-	}, [inputEl]);
+	}, []);
 
 	return (
 		<StyledTextBox {...htmlAttrs}>
