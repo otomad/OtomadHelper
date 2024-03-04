@@ -54,6 +54,10 @@ const GlobalStyle = createGlobalStyle<{
 		}
 	}
 
+	:where(:lang(en), :lang(ru), :lang(vi), :lang(id)) {
+		text-wrap: pretty;
+	}
+
 	:focus,
 	:focus-visible {
 		outline: none;
@@ -99,19 +103,11 @@ const GlobalStyle = createGlobalStyle<{
 		}
 	}
 
-	// Color Mode transition
+	// Color mode transition
 	::view-transition-old(root),
 	::view-transition-new(root) {
 		mix-blend-mode: normal;
-		transition: none !important;
 		animation: none !important;
-	}
-
-	::view-transition-old(*),
-	::view-transition-new(*),
-	::view-transition-old(*::before),
-	::view-transition-new(*::after) {
-		transition: none !important;
 	}
 
 	::view-transition-old(root),
