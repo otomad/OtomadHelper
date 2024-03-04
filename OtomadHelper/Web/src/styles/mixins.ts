@@ -108,4 +108,11 @@ export default {
 			display: none;
 		}
 	`,
+	/**
+	 * 开启硬件 3D。用以解决某些可能会导致变换时闪动的问题。
+	 * @remarks 这会替换或被替换掉现有的 transform 属性。
+	 */
+	enableHardware3d: () => css`
+		transform: translateZ(1px);
+	`,
 };

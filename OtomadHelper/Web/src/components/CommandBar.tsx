@@ -34,7 +34,7 @@ function CommandBarItem({ icon, children, canBeDisabled, disabled, onClick, ...b
 	canBeDisabled?: boolean;
 }, "section"> & TransitionProps) {
 	const ref = useDomRef<HTMLDivElement>();
-	const [onEnter, onExit, endListener] = simpleAnimateSize(ref, "width", 750, eases.easeInOutMax, undefined, { keepCroppingAtEnd: true });
+	const [onEnter, onExit, endListener] = simpleAnimateSize(ref, "width", 750, eases.easeInOutMax, undefined, { keepClippingAtEnd: true });
 	const { transitionAttrs, htmlAttrs } = separateTransitionAttrs(buttonAndTransitionAttrs);
 
 	const button = <Button icon={icon} subtle disabled={disabled} onClick={onClick} {...htmlAttrs}>{children}</Button>;

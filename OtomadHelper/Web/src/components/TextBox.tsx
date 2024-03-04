@@ -84,7 +84,7 @@ function Spinner({ disabled, onSpin, onRelease }: FCP<{
 			<div className="base">
 				<Button
 					subtle
-					icon="chevron_up"
+					icon="chevron_up_spinner"
 					disabled={disabled}
 					onMouseDown={() => handlePress(1)}
 					onMouseUp={handleRelease}
@@ -93,7 +93,7 @@ function Spinner({ disabled, onSpin, onRelease }: FCP<{
 				/>
 				<Button
 					subtle
-					icon="chevron_down"
+					icon="chevron_down_spinner"
 					disabled={disabled}
 					onMouseDown={() => handlePress(-1)}
 					onMouseUp={handleRelease}
@@ -205,7 +205,7 @@ const StyledTextBox = styled.div`
 		position: absolute;
 		inset: 0;
 		top: 0;
-		overflow: hidden;
+		overflow: clip;
 		border-radius: inherit;
 		pointer-events: none;
 

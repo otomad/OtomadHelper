@@ -13,6 +13,10 @@ const ExpanderParent = styled(SettingsCard) <{
 		}
 	}
 
+	> .base > .trailing > .trailing-icon > * {
+		${styles.mixins.enableHardware3d()};
+	}
+
 	&:active > .base > .trailing > .trailing-icon > * {
 		translate: 0 ${({ $expanded }) => $expanded ? 2 : -2}px;
 	}
@@ -41,7 +45,7 @@ const ExpanderParent = styled(SettingsCard) <{
 `;
 
 const ExpanderChild = styled.div`
-	overflow: hidden;
+	overflow: clip;
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-top-width: 0;
 	border-radius: 0 0 3px 3px;

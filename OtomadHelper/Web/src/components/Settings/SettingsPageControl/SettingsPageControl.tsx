@@ -4,10 +4,6 @@ const StyledSettingsPageControl = styled.div<{
 	/** 清除浮动。 */
 	$clearFloat?: boolean;
 }>`
-	&:is(:lang(zh), :lang(ja), :lang(ko)) {
-		text-align: justify;
-	}
-
 	${({ $clearFloat }) => $clearFloat ? css`
 		display: flex;
 		gap: ${IMAGE_MARGIN}px;

@@ -12,7 +12,7 @@ const StyledDragToImport = styled.div`
 	.box {
 		${styles.mixins.flexCenter()};
 		${styles.mixins.square("100%")};
-		overflow: hidden;
+		overflow: clip;
 		border: 2px dashed ${c("fill-color-text-secondary")};
 		border-radius: 5px;
 

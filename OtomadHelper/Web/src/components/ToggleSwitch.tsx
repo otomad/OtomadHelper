@@ -35,7 +35,7 @@ const StyledToggleSwitchLabel = styled.button`
 		${styles.mixins.oval()};
 		width: 40px;
 		height: 20px;
-		overflow: hidden;
+		overflow: clip;
 		border: 1px solid ${c("stroke-color-control-strong-stroke-default")};
 	}
 

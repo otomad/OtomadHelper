@@ -56,6 +56,7 @@ const GlobalStyle = createGlobalStyle<{
 
 	:where(:lang(en), :lang(ru), :lang(vi), :lang(id)) {
 		text-wrap: pretty;
+		hyphens: auto;
 	}
 
 	:focus,
@@ -76,10 +77,23 @@ const GlobalStyle = createGlobalStyle<{
 		height: 100dvh;
 		margin: 0;
 		padding: 0;
-		overflow: hidden;
+		overflow: clip;
 		color: var(--foreground-color);
+		font-kerning: normal;
+		font-synthesis: none;
+		font-variant-east-asian: proportional-width;
+		font-variant-ligatures: common-ligatures historical-ligatures contextual;
+		font-variant-numeric: proportional-nums;
+		text-rendering: optimizeLegibility;
+		tab-size: 4;
 		background-color: var(--background-color);
 		color-scheme: dark;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+
+		&:where(:lang(zh), :lang(ja), :lang(ko)) {
+			text-align: justify;
+		}
 
 		${ifColorScheme.light} & {
 			color-scheme: light;

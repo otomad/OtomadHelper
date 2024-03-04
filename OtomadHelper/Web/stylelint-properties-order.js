@@ -136,7 +136,7 @@ export default [
 	"wrap-after",
 	"wrap-flow",
 	"wrap-through",
-	
+
 	// box model 2
 	"object-fit",
 	"object-position",
@@ -201,7 +201,7 @@ export default [
 	"offset-path",
 	"offset-position",
 	"offset-rotate",
-	
+
 	// typography
 	"color",
 	"font",
@@ -301,6 +301,9 @@ export default [
 	"text-underline-position",
 	"text-wrap-mode",
 	"text-wrap-style",
+	"text-rendering",
+	"-webkit-font-smoothing",
+	"-moz-osx-font-smoothing",
 	"vertical-align",
 	"word-wrap",
 	"word-break",
@@ -336,7 +339,7 @@ export default [
 	"hyphenate-limit-last",
 	"hyphenate-limit-lines",
 	"hyphenate-limit-zone",
-	
+
 	// visual
 	"list-style",
 	"list-style-position",
@@ -361,7 +364,7 @@ export default [
 	"image-orientation",
 	"image-rendering",
 	"image-resolution",
-	
+
 	// border
 	"border",
 	"border-spacing",
@@ -434,7 +437,7 @@ export default [
 	"border-end-start-radius",
 	"border-end-end-radius",
 	"border-boundary",
-	
+
 	// visual 2
 	"outline",
 	"outline-width",
@@ -467,7 +470,7 @@ export default [
 	"touch-action",
 	"isolation",
 	"region-fragment",
-	
+
 	// clip & mask
 	"clip",
 	"clip-path",
@@ -490,7 +493,7 @@ export default [
 	"mask-type",
 	"-webkit-mask",
 	"-webkit-mask-composite",
-	
+
 	// visual 3
 	"flood-color",
 	"flood-opacity",
@@ -509,7 +512,7 @@ export default [
 	"ruby-merge",
 	"ruby-overhang",
 	"ruby-position",
-	
+
 	// media
 	"rest",
 	"rest-before",
@@ -539,7 +542,7 @@ export default [
 	"voice-rate",
 	"voice-stress",
 	"voice-volume",
-	
+
 	// animation
 	"transition",
 	"transition-delay",
@@ -567,7 +570,7 @@ export default [
 	"view-timeline-axis",
 	"view-timeline-inset",
 	"timeline-scope",
-	
+
 	// svg
 	"fill",
 	"fill-rule",
@@ -605,7 +608,7 @@ export default [
 	"shape-inside",
 	"shape-margin",
 	"shape-outside",
-	
+
 	// misc
 	"appearance",
 	"color-scheme",

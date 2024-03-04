@@ -4,7 +4,7 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 }>`
 	position: relative;
 	flex-shrink: 0;
-	overflow: hidden;
+	overflow: clip;
 
 	.base {
 		display: flex;

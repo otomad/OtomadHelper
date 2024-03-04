@@ -4,7 +4,7 @@ const StyledSettingsPageControlPreviewImage = styled.div`
 	flex-shrink: 0;
 	max-width: 280px;
 	height: 120px;
-	overflow: hidden;
+	overflow: clip;
 	border-radius: 3px;
 
 	img {

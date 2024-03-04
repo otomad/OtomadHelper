@@ -1,7 +1,7 @@
 import { STATUS_PREFIX } from "styles/fake-animations";
 
 const StyledAnimatedIcon = styled.div<{
-	/** 是否 `overflow: hidden`？ */
+	/** 是否 `overflow: clip`？ */
 	$clipped?: boolean;
 }>`
 	@layer props {
@@ -41,7 +41,7 @@ const StyledAnimatedIcon = styled.div<{
 		.lottie {
 			${styles.effects.text.icon};
 			${styles.mixins.square("1em")};
-			
+
 			&:not(.filled) {
 				:not(.luminance-mask *) {
 					fill: currentColor;
@@ -60,7 +60,7 @@ const StyledAnimatedIcon = styled.div<{
 			${({ $clipped }) => $clipped && css`
 				svg,
 				svg * {
-					overflow: hidden;
+					overflow: clip;
 				}
 			`}
 		}
@@ -187,7 +187,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 		if (typeof name !== "string")
 			return name;
 		try {
-			const iconsImport = import.meta.glob<string>("/src/assets/lotties/**/**.json", { as: "raw", eager: true });
+			const iconsImport = import.meta.glob<string>("/src/assets/lotties/**/*.json", { as: "raw", eager: true });
 			const rawIcon = iconsImport[`/src/assets/lotties/${name}.json`];
 			return JSON.parse(rawIcon);
 		} catch (e) {

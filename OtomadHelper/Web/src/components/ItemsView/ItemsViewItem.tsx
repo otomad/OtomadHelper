@@ -16,7 +16,7 @@ const StyledItemsViewItem = styled.button<{
 
 		.base {
 			position: relative;
-			overflow: hidden;
+			overflow: clip;
 			border-radius: 4px;
 		}
 

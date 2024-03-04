@@ -118,10 +118,10 @@ type AnimateSizeOptions = Partial<{
 	removeGlitchFrame: boolean;
 	/** 动画播放的同时附加其它动画，并使用与之相同的时长与缓动值。 */
 	attachAnimations: [Element, Keyframes][] | false;
-	/** 不要 `overflow: hidden;`？ */
-	noCropping: boolean;
-	/** 在动画结束后保持 `overflow: hidden;`？仅在 `noCropping` 为 false 时有效。 */
-	keepCroppingAtEnd: boolean;
+	/** 不要 `overflow: clip;`？ */
+	noClipping: boolean;
+	/** 在动画结束后保持 `overflow: clip;`？仅在 `noClipping` 为 false 时有效。 */
+	keepClippingAtEnd: boolean;
 	/** 对**获取的**元素宽高值进行像素偏移调整。 */
 	clientAdjustment: Partial<{
 		startHeight: number;
@@ -162,8 +162,8 @@ export async function* animateSizeGenerator(
 		endChildTranslate,
 		removeGlitchFrame,
 		attachAnimations,
-		noCropping = false,
-		keepCroppingAtEnd = false,
+		noClipping = false,
+		keepClippingAtEnd = false,
 		clientAdjustment = {},
 		removePreviousAnimations = false,
 		fillForward = false,
@@ -213,9 +213,9 @@ export async function* animateSizeGenerator(
 	Object.assign(keyframes[1], endStyle);
 	const animationOptions: KeyframeAnimationOptions = { duration, easing, fill: fillForward ? "forwards" : undefined, composite: "replace" };
 	const htmlElement = element as HTMLElement;
-	if (!noCropping) htmlElement.style.overflow = "hidden";
+	if (!noClipping) htmlElement.style.overflow = "clip";
 	const result = element.animate(keyframes, animationOptions);
-	if (!noCropping && !keepCroppingAtEnd) result.addEventListener("finish", () => htmlElement.style.removeProperty("overflow"));
+	if (!noClipping && !keepClippingAtEnd) result.addEventListener("finish", () => htmlElement.style.removeProperty("overflow"));
 	if (startChildTranslate || endChildTranslate || attachAnimations) {
 		const onlyChild = element.children[0]; // 只取唯一一个子元素。
 		if (onlyChild && element instanceof HTMLElement && removeGlitchFrame) {
@@ -320,7 +320,7 @@ export const STOP_TRANSITION_ID = "stop-transition";
  * @returns 在动画播放完成之后可执行析构函数。
  */
 export async function startViewTransition(changeFunc: () => MaybePromise<void | unknown>, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions = {}) {
-	if (!("startViewTransition" in document)) {
+	if (!document.startViewTransition) {
 		await changeFunc();
 		return;
 	}
@@ -335,6 +335,20 @@ export async function startViewTransition(changeFunc: () => MaybePromise<void | 
 			-moz-transition: none !important;
 			-ms-transition: none !important;
 			-o-transition: none !important;
+			transition: none !important;
+		}
+
+		::view-transition-old(root),
+		::view-transition-new(root) {
+			mix-blend-mode: normal;
+			transition: none !important;
+			animation: none !important;
+		}
+
+		::view-transition-old(*),
+		::view-transition-new(*),
+		::view-transition-old(*::before),
+		::view-transition-new(*::after) {
 			transition: none !important;
 		}
 	`);
