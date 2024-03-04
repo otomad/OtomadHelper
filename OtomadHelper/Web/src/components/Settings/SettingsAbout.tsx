@@ -1,5 +1,5 @@
 import ColoredLogo from "assets/svg/Otomad Helper Colored.svg";
-import MonoLogo from "assets/svg/Otomad Helper.svg";
+import MonoLogo from "assets/svg/Otomad Helper Mono.svg";
 
 const VERSION = "v7.9";
 
@@ -54,6 +54,7 @@ export default function SettingsAbout() {
 	return (
 		<>
 			<StyledSettingsAbout>
+				<div className="logo" />
 				<MonoLogo className="logo dark" />
 				<ColoredLogo className="logo light" />
 				<div className="right">
