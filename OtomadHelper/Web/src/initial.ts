@@ -1,4 +1,5 @@
 import "helpers/color-mode";
+import "helpers/preload";
 import "styles/fonts";
 import "utils/array";
 
