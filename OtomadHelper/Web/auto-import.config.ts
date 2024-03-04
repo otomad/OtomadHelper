@@ -15,6 +15,7 @@ export default [
 		],
 		"react-dom": [
 			"createPortal",
+			"flushSync",
 		],
 		"styled-components": [
 			"styled",

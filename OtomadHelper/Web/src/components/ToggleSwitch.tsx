@@ -184,7 +184,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 			setThumbLeft(undefined);
 			const lastTime = new Date().getTime();
 			setIsDragging(lastTime - firstTime > 200); // 定义识别为拖动而不是点击的时间差。
-			nextAnimationTick().then(() => setIsPressing?.(false));
+			nextTick().then(() => setIsPressing?.(false));
 		};
 		document.addEventListener("pointermove", pointerMove);
 		document.addEventListener("pointerup", pointerUp);

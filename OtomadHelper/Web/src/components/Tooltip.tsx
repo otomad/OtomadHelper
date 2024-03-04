@@ -82,7 +82,7 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 			setPosition(options.style);
 			setShown(true);
 			await nextAnimationTick();
-			const tooltip = tooltipWrapper.current?.firstElementChild as HTMLElement;
+			const tooltip = tooltipWrapper.current?.firstElementChild as HTMLElement; // FIXME: tooltipWrapper 获取不到 ref。
 			if (!tooltip) return;
 			setPosition(moveIntoPage(tooltip, tooltipWrapper));
 		}, timeout);
@@ -99,7 +99,7 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 
 	return (
 		<>
-			<Contents ref={newRef => setContentsDom(newRef)}>
+			<Contents ref={setContentsDom}>
 				{children}
 			</Contents>
 			<Portal>

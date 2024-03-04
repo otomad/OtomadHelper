@@ -31,6 +31,14 @@ export function nextAnimationTick() {
 }
 
 /**
+ * flushSync 允许您强制 React 同步刷新所提供回调中的任何更新。这样可以确保 DOM 立即更新。
+ * @returns 空承诺。
+ */
+export function nextTick() {
+	return new Promise<void>(resolve => flushSync(resolve));
+}
+
+/**
  * 为元素设定样式时**暂时**禁用过渡动画。
  * @param element - HTML DOM 元素。
  * @param style - CSS 样式。
