@@ -1,4 +1,7 @@
-const StyledTooltip = styled.div`
+const StyledTooltip = styled.div<{
+	/** 工具提示偏移（仅用作动画）。 */
+	$offset: number;
+}>`
 	${styles.mixins.square("0")};
 	position: fixed;
 	z-index: 80;
@@ -23,8 +26,28 @@ const StyledTooltip = styled.div`
 		}
 	}
 
-	${tgs()} .base {
-		opacity: 0;
+	${tgs()} {
+		.base {
+			opacity: 0;
+		}
+
+		${({ $offset }) => css`
+			&.top {
+				translate: 0 ${$offset}px;
+			}
+
+			&.bottom {
+				translate: 0 ${-$offset}px;
+			}
+
+			&.right {
+				translate: ${-$offset}px;
+			}
+
+			&.left {
+				translate: ${$offset}px;
+			}
+		`}
 	}
 
 	&.top {
@@ -60,7 +83,7 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 }>) {
 	const [shown, setShown] = useState(false);
 	const [contentsEl, setContentsEl] = useState<HTMLDivElement | null>(null); // Use state instead of ref to make sure change it to rerender.
-	const tooltipWrapperEl = useDomRef<HTMLDivElement>();
+	const tooltipEl = useDomRef<HTMLDivElement>();
 	const [actualPlacement, setActualPlacement] = useState(placement);
 	const [position, setPosition] = useState<CSSProperties>();
 	const shownTimeout = useRef<Timeout>();
@@ -82,9 +105,9 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 			setPosition(options.style);
 			setShown(true);
 			await nextAnimationTick();
-			const tooltip = tooltipWrapperEl.current?.firstElementChild as HTMLElement; // FIXME: tooltipWrapper 获取不到 ref。
+			const tooltip = tooltipEl.current;
 			if (!tooltip) return;
-			setPosition(moveIntoPage(tooltip, tooltipWrapperEl));
+			setPosition(moveIntoPage(tooltip, tooltip.parentElement!));
 		}, timeout);
 	};
 
@@ -104,8 +127,8 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 			</Contents>
 			<Portal>
 				<CssTransition in={shown} unmountOnExit>
-					<StyledTooltip ref={tooltipWrapperEl} className={actualPlacement} style={position}>
-						<div className="base">
+					<StyledTooltip $offset={offset} className={actualPlacement} style={position}>
+						<div className="base" ref={tooltipEl}>
 							{title}
 						</div>
 					</StyledTooltip>
@@ -146,4 +169,12 @@ function TooltipContent({ image, children, ...htmlAttrs }: FCP<{
 	);
 }
 
+type TooltipProps = Parameters<typeof Tooltip>[0];
+
+function TooltipWith(withProps: Partial<TooltipProps>) {
+	// eslint-disable-next-line react/display-name
+	return (props: TooltipProps) => <Tooltip {...withProps} {...props} />;
+}
+
 Tooltip.Content = TooltipContent;
+Tooltip.with = TooltipWith;

@@ -10,18 +10,7 @@ const CssTransition = forwardRef<HTMLElement, CSSTransitionProps>((props, ref) =
 
 	return (
 		<_CSSTransition {...props} {...(props.timeout !== undefined ? { timeout: props.timeout } : { nodeRef, addEndListener: endListener(nodeRef) })}>
-			{/* {cloneRef(props.children as ReactNode, nodeRef)} */}
-			<>
-				{
-					React.Children.map(props.children as ReactNode, child => {
-						if (hasRefInReactNode(child))
-							useImperativeHandle(child.ref, () => nodeRef.current!, []);
-						return React.cloneElement(child as ReactElement, {
-							ref: nodeRef,
-						});
-					})
-				}
-			</>
+			{cloneRef(props.children as ReactNode, nodeRef)}
 		</_CSSTransition>
 	);
 }) as FC<CSSTransitionProps>;

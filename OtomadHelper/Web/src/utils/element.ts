@@ -22,7 +22,7 @@ export function stopEvent(event?: Pick<Event, "preventDefault" | "stopPropagatio
 	event.stopPropagation();
 }
 
-export function hasRefInReactNode(reactNode: unknown): reactNode is { ref: MutableRefObject<Element> } {
+export function hasRefInReactNode(reactNode: unknown): reactNode is { ref: MutableRefObject<Element | null> } {
 	return !!(reactNode && typeof reactNode === "object" && "ref" in reactNode && reactNode.ref);
 }
 
@@ -31,8 +31,17 @@ export function cloneRef(children: ReactNode, nodeRef: MutableRefObject<Element 
 		Fragment,
 		null,
 		React.Children.map(children, child => {
-			if (hasRefInReactNode(child))
-				useImperativeHandle(child.ref, () => nodeRef.current!, []);
+			if (hasRefInReactNode(child)) {
+				// useImperativeHandle(child.ref, () => nodeRef.current!, []);
+				// child.ref.current = nodeRef.current;
+				delete (child.ref as Partial<DomRef<Element>>).current;
+				Object.defineProperty(child.ref, "current", {
+					configurable: true,
+					enumerable: true,
+					get: () => nodeRef.current,
+					set: value => nodeRef.current = value,
+				});
+			}
 			return React.cloneElement(child as ReactElement, {
 				ref: nodeRef,
 			});

@@ -76,6 +76,7 @@ export default defineConfig({
 				chunkFileNames: "chunks/[name].js",
 				assetFileNames: "assets/[name]-[hash].[ext]",
 				/* manualChunks(id) {
+					if (id.endsWith(".js")) return "../" + id;
 					if (id.includes("node_modules")) return "vendor";
 					else if (id.includes("svg-icons-register")) return "svgs";
 					else if (id.includes("assets/lotties")) return "lotties";

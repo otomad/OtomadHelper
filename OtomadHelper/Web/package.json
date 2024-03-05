@@ -16,6 +16,7 @@
 	"scripts": {
 		"dev": "vite --host --force",
 		"build": "tsc && vite build --force",
+		"preview": "vite preview",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"lint:css": "stylelint './src/**/*.{js,jsx,ts,tsx}'",
 		"release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",

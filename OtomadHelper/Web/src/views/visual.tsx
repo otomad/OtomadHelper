@@ -36,6 +36,7 @@ export default function Visual() {
 	const enableStaffVisualizer = selectConfig(c => c.visual.enableStaffVisualizer);
 
 	const { changePage, pushPage } = usePageStore();
+	const TooltipPartial = Tooltip.with({ placement: "y" });
 
 	return (
 		<div className="container">
@@ -65,7 +66,7 @@ export default function Visual() {
 				</EmptyMessage>
 			) : (
 				<>
-					<Tooltip title={<Tooltip.Content image={stretchImage} />} placement="right">
+					<TooltipPartial title={<Tooltip.Content image={stretchImage} />}>
 						<ExpanderRadio
 							title={t.stream.stretch}
 							details={t.descriptions.stream.stretch}
@@ -77,16 +78,16 @@ export default function Visual() {
 							nameField={t.stream.stretch}
 							iconField="icon"
 						/>
-					</Tooltip>
-					<Tooltip title={<Tooltip.Content image={loopImage} />} placement="y">
+					</TooltipPartial>
+					<TooltipPartial title={<Tooltip.Content image={loopImage} />}>
 						<SettingsCardToggleSwitch title={t.stream.loop} details={t.descriptions.stream.loop} icon="loop" on={loop} />
-					</Tooltip>
-					<Tooltip title={<Tooltip.Content image={staticVisualImage} />} placement="y">
+					</TooltipPartial>
+					<TooltipPartial title={<Tooltip.Content image={staticVisualImage} />}>
 						<SettingsCardToggleSwitch title={t.stream.staticVisual} details={t.descriptions.stream.staticVisual} icon="visual" on={staticVisual} />
-					</Tooltip>
-					<Tooltip title={<Tooltip.Content image={noLengtheningImage} />} placement="y">
+					</TooltipPartial>
+					<TooltipPartial title={<Tooltip.Content image={noLengtheningImage} />}>
 						<SettingsCardToggleSwitch title={t.stream.noLengthening} details={t.descriptions.stream.noLengthening.visual} icon="no_lengthening" on={noLengthening} />
-					</Tooltip>
+					</TooltipPartial>
 					<ExpanderRadio
 						title={t.stream.legato}
 						details={t.descriptions.stream.legato}

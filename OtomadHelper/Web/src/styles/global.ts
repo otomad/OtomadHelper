@@ -111,9 +111,12 @@ const GlobalStyle = createGlobalStyle<{
 	.enter:not(.enter-active),
 	.appear:not(.appear-active) {
 		&,
-		&::before,
-		&::after {
-			transition: none !important;
+		* {
+			&,
+			&::before,
+			&::after {
+				transition: none !important;
+			}
 		}
 	}
 

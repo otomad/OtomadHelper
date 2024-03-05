@@ -11,7 +11,8 @@
 			"ESNext.AsyncIterable",
 			"ES2015.Promise",
 			"DOM",
-			"DOM.Iterable"
+			"DOM.Iterable",
+			"WebWorker"
 		],
 		"jsx": "react-jsx",
 		"allowSyntheticDefaultImports": true,
@@ -37,6 +38,7 @@
 			"hoc/*": ["src/hoc/*"],
 			"plugins/*": ["src/plugins/*"],
 			"classes/*": ["src/classes/*"],
+			"workers/*": ["src/workers/*"],
 		},
 		"plugins": [
 			{

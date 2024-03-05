@@ -44,7 +44,7 @@ const StyledEmptyMessage = styled.div`
 	}
 `;
 
-export default function EmptyMessage({ icon, title, details, iconOff = false, spinAtBegin = false, children }: FCP<{
+export default function EmptyMessage({ icon, title, details, iconOff = false, spinAtBegin = false, noSideEffect = false, children }: FCP<{
 	/** 图标。 */
 	icon?: string;
 	/** 标题。 */
@@ -55,11 +55,14 @@ export default function EmptyMessage({ icon, title, details, iconOff = false, sp
 	iconOff?: boolean;
 	/** 开始时图标陀螺旋。 */
 	spinAtBegin?: boolean;
+	/** 无副作用？不会额外对视图中的样式作修改。 */
+	noSideEffect?: boolean;
 }>) {
 	const { resetTransition } = usePageStore();
 	const el = useDomRef<HTMLDivElement>();
 	const IconEl = iconOff ? IconOff : Icon;
 	useEffect(() => {
+		if (noSideEffect) return;
 		const container = el.current?.parentElement;
 		if (container)
 			for (const child of container.children)

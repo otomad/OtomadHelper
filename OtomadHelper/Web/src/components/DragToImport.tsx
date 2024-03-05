@@ -72,7 +72,7 @@ export default function DragToImport({ children }: FCP<{
 			<CssTransition in={shown} unmountOnExit>
 				<StyledDragToImport>
 					<div className="box">
-						<EmptyMessage icon="touch_pointer" title={title} />
+						<EmptyMessage icon="touch_pointer" title={title} noSideEffect />
 					</div>
 				</StyledDragToImport>
 			</CssTransition>
