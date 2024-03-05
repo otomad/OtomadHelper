@@ -321,13 +321,13 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 export const STOP_TRANSITION_ID = "stop-transition";
 
 /**
- * 为整个页面添加视图过渡动画。
+ * 为整个页面添加与颜色有关的视图过渡动画。
  * @param changeFunc - 使页面变化的回调函数。
  * @param keyframes - 动画关键帧。
  * @param options - 动画选项。
  * @returns 在动画播放完成之后可执行析构函数。
  */
-export async function startViewTransition(changeFunc: () => MaybePromise<void | unknown>, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions = {}) {
+export async function startColorViewTransition(changeFunc: () => MaybePromise<void | unknown>, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions = {}) {
 	if (!document.startViewTransition) {
 		await changeFunc();
 		return;

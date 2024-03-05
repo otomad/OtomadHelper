@@ -37,7 +37,7 @@ export const changeColorScheme = (isLight?: boolean | ColorScheme, mode: "initia
 	];
 	const CHANGING_COLOR_SCHEME_CLASS = "changing-color-scheme";
 	document.documentElement.classList.add(CHANGING_COLOR_SCHEME_CLASS);
-	startViewTransition(updateThemeSettings, {
+	startColorViewTransition(updateThemeSettings, {
 		clipPath: isLight ? clipPath : clipPath.toReversed(),
 	}, {
 		duration: 300,

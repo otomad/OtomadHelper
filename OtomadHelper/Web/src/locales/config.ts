@@ -52,7 +52,7 @@ export function useLanguage(): StateProperty<string> {
 
 	function changeLanguage(lng: string) {
 		setLanguage(lng);
-		startViewTransition(async () => {
+		startColorViewTransition(async () => {
 			await i18n.changeLanguage(lng);
 			document.documentElement.lang = lng;
 		}, {
