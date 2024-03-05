@@ -1,11 +1,13 @@
-import ShellPage from "@/ShellPage.tsx";
-import GlobalStyle from "./styles/global.ts";
+import { changeColorScheme } from "helpers/color-mode";
+import GlobalStyle from "styles/global";
+import ShellPage from "./ShellPage";
 
 export default function App() {
 	const [ready, setReady] = useState(false);
 	useMountEffect(() => {
 		delay(100).then(() => setReady(true));
 		document.documentElement.style.removeProperty("background-color");
+		changeColorScheme(undefined, "refresh");
 	});
 
 	const { i18n } = useTranslation();

@@ -115,17 +115,20 @@ internal class ManagedStream : Stream {
 						headers = item.Value;
 						break;
 					}
+				const int AGE = 1200;
 				headers = $"""
 					HTTP/1.1 200 OK
-					Cache-Control: public, max-age=1200
-					Age: 1200
 					Content-Type: {headers}
+					Cache-Control: public, max-age={AGE}
+					Age: {AGE}
+					Keep-Alive: timeout={AGE}
+					Date: {DateTime.UtcNow.ToUniversalTime():R}
 					""";
 				args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(managedStream, 200, "OK", headers);
 			} catch (InvalidOperationException e) {
 				args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(null, 415, e.Message, "");
 			} catch (Exception) {
-				args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(null, 404, "Not found", "");
+				args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(null, 404, "Not Found", "");
 			}
 		};
 	}

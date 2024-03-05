@@ -4,7 +4,7 @@ const lightModePreference = window.matchMedia("(prefers-color-scheme: light)");
 let lastClickMouseEvent: MouseEvent | undefined;
 document.addEventListener("click", e => lastClickMouseEvent = e, true);
 
-const changeColorScheme = (isLight?: boolean | ColorScheme, mode: "initial" | "auto" | "manual" = "manual") => {
+export const changeColorScheme = (isLight?: boolean | ColorScheme, mode: "initial" | "auto" | "manual" | "refresh" = "manual") => {
 	if (typeof isLight === "string")
 		isLight = isLight === "light" ? true : isLight === "dark" ? false : undefined;
 	if (isLight === undefined) isLight = lightModePreference.matches;
@@ -24,7 +24,7 @@ const changeColorScheme = (isLight?: boolean | ColorScheme, mode: "initial" | "a
 		return;
 	} else if (mode === "auto")
 		lastClickMouseEvent = undefined;
-	if (isPreviousLight === isLight) {
+	if (isPreviousLight === isLight || mode === "refresh") {
 		afterUpdateThemeSettings();
 		return;
 	}
