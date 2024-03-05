@@ -40,11 +40,13 @@ export const usePageStore = createStore<IPage>()(
 			document.getElementById(STOP_TRANSITION_ID)?.remove();
 			const { page } = get();
 			if (page.equals(nextPage)) return;
+			// document.startViewTransition(() =>
 			set(() => ({
 				prevPage: page,
 				page: nextPage,
 				transition: getTransition(page, nextPage),
 			}));
+			// );
 		}
 
 		return {
