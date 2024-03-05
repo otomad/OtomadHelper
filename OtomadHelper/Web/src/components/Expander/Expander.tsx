@@ -71,8 +71,8 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 }>) {
 	const settingsCardProps = { icon, title, details, selectInfo };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
-	const expanderChildRef = useDomRef<HTMLDivElement>();
-	const [onEnter, onExit, endListener] = simpleAnimateSize(expanderChildRef, "height", 350, undefined, { startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }, { endChildTranslate: "0 -100%" });
+	const expanderChildEl = useDomRef<HTMLDivElement>();
+	const [onEnter, onExit, endListener] = simpleAnimateSize(expanderChildEl, "height", 350, undefined, { startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }, { endChildTranslate: "0 -100%" });
 
 	return (
 		<div className="expander">
@@ -91,14 +91,14 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				)}
 			</ExpanderParent>
 			<Transition
-				nodeRef={expanderChildRef}
+				nodeRef={expanderChildEl}
 				in={internalExpanded}
 				addEndListener={endListener}
 				onEnter={onEnter}
 				onExit={onExit}
 				unmountOnExit
 			>
-				<ExpanderChild ref={expanderChildRef}>
+				<ExpanderChild ref={expanderChildEl}>
 					<div className="expander-child-items">
 						{children}
 					</div>

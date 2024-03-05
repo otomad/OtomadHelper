@@ -124,14 +124,14 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	value: StateProperty<T[]> | StateProperty<boolean> | StateProperty<CheckState>;
 	onChange?: Function;
 } & SharedProps>) {
-	const labelRef = useDomRef<HTMLLabelElement>();
-	const checkboxRef = useDomRef<HTMLInputElement>();
+	const labelEl = useDomRef<HTMLLabelElement>();
+	const checkboxEl = useDomRef<HTMLInputElement>();
 	const singleMode = id === undefined, checkStateMode = typeof value === "string";
 	const checked = checkStateMode ? value === "checked" : singleMode ? !!value : (value as T[]).includes(id);
 	const indeterminate = value === "indeterminate";
 
 	const handleChange = (checked: boolean, indeterminate: boolean) => {
-		const checkbox = checkboxRef.current;
+		const checkbox = checkboxEl.current;
 		if (!checkbox) return;
 		const checkState: CheckState = indeterminate ? "indeterminate" : checked ? "checked" : "unchecked";
 		if (singleMode)
@@ -141,9 +141,9 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	};
 
 	const handleCheck = (checked?: boolean) => {
-		checked ??= !checkboxRef.current?.checked;
+		checked ??= !checkboxEl.current?.checked;
 		if (indeterminate && !checked) {
-			checkboxRef.current && (checkboxRef.current.checked = true);
+			checkboxEl.current && (checkboxEl.current.checked = true);
 			checked = true;
 		}
 		const checkState: CheckState = checked ? "checked" : "unchecked";
@@ -160,8 +160,8 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	};
 
 	useChangeEffect(() => handleChange(checked, indeterminate), [indeterminate, checked]);
-	useEffect(() => { checkboxRef.current && (checkboxRef.current.indeterminate = indeterminate); }, [indeterminate]);
-	useOnFormKeyDown(labelRef, "checkbox", handleCheck);
+	useEffect(() => { checkboxEl.current && (checkboxEl.current.indeterminate = indeterminate); }, [indeterminate]);
+	useOnFormKeyDown(labelEl, "checkbox", handleCheck);
 	const getCheckMarkName = useCallback(() => indeterminate ? "dash" : checked ? "accept" : "", [indeterminate, checked]);
 	const [checkMarkName, setCheckMarkName] = useState(getCheckMarkName());
 	useEffect(() => {
@@ -169,13 +169,13 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	}, [indeterminate, checked]);
 
 	return (
-		<StyledRadioButtonLabel tabIndex={0} ref={labelRef}>
+		<StyledRadioButtonLabel tabIndex={0} ref={labelEl}>
 			<input
 				type="checkbox"
 				checked={checked}
 				onChange={e => handleCheck(e.target.checked)}
 				disabled={disabled}
-				ref={checkboxRef}
+				ref={checkboxEl}
 			/>
 			<div className="base">
 				<SwitchTransition>

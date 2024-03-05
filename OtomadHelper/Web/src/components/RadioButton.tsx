@@ -108,7 +108,7 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 	/** 单选框分组，可选。 */
 	radioGroup?: string;
 }, "label">) {
-	const labelRef = useDomRef<HTMLLabelElement>();
+	const labelEl = useDomRef<HTMLLabelElement>();
 	const checked = value === id;
 	const handleCheck = (checked: boolean = true) => {
 		if (checked) {
@@ -117,10 +117,10 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 		}
 	};
 
-	useOnFormKeyDown(labelRef, "radio", handleCheck);
+	useOnFormKeyDown(labelEl, "radio", handleCheck);
 
 	return (
-		<StyledRadioButtonLabel tabIndex={checked ? 0 : -1} ref={labelRef} {...htmlAttrs}>
+		<StyledRadioButtonLabel tabIndex={checked ? 0 : -1} ref={labelEl} {...htmlAttrs}>
 			<input type="radio" checked={checked} name={radioGroup} onChange={e => handleCheck(e.target.checked)} disabled={disabled} />
 			<div className="base">
 				<div className="bullet" />

@@ -79,7 +79,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 	/** 是否使用纵向的 NavigationView 样式？ */
 	vertical?: boolean;
 }>) {
-	const indicator = useDomRef<HTMLDivElement>();
+	const indicatorEl = useDomRef<HTMLDivElement>();
 	const [position, _setPosition] = useState<TwoD>([NaN, NaN]);
 	const [noIndicatorTransition, setNoIndicatorTransition] = useState(false);
 	const updateIndicatorThread = useRef<symbol>();
@@ -88,11 +88,11 @@ export default function TabBar<T extends string = string>({ current: [current, s
 	 * 更新选项卡指示器。
 	 */
 	const update = useCallback(async () => {
-		const ind = indicator.current;
-		if (!ind) return;
+		const indicator = indicatorEl.current;
+		if (!indicator) return;
 		type TabBarMovement = "previous" | "next" | "appear" | "disappear" | "none";
 		let movement: TabBarMovement = "none";
-		const entireRect = ind.parentElement!.getBoundingClientRect();
+		const entireRect = indicator.parentElement!.getBoundingClientRect();
 		const entire1 = entireRect[vertical ? "top" : "left"],
 			entire2 = entireRect[vertical ? "bottom" : "right"],
 			entireLength = entire2 - entire1;
@@ -100,7 +100,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		const [entry1, entry2] = position;
 		if (entry1 + entry2 >= entireLength || !Number.isFinite(entry1) || !Number.isFinite(entry2))
 			movement = "appear";
-		const selectedTabItem = ind.previousElementSibling!.querySelector(".selected");
+		const selectedTabItem = indicator.previousElementSibling!.querySelector(".selected");
 		if (!selectedTabItem) {
 			if (movement === "appear") return;
 			movement = "disappear";
@@ -164,7 +164,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 						);
 					})}
 				</div>
-				<Indicator ref={indicator} $position={position} $noTransition={noIndicatorTransition} $vertical={vertical} />
+				<Indicator ref={indicatorEl} $position={position} $noTransition={noIndicatorTransition} $vertical={vertical} />
 			</div>
 		</StyledTabBar>
 	);

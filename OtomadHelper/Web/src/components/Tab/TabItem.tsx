@@ -116,17 +116,17 @@ export /* internal */ default function TabItem({ icon, animatedIcon, children, s
 	/** @private 是否使用纵向的 NavigationView 样式？ */
 	vertical?: boolean;
 }, "section">) {
-	const tabItemRef = useDomRef<HTMLButtonElement>();
+	const tabItemEl = useDomRef<HTMLButtonElement>();
 
 	const onEnter = async () => {
-		const el = tabItemRef.current;
+		const el = tabItemEl.current;
 		if (!el) return;
 		await animateSize(el, () => el.classList.toggle("collapsed", false));
 		el.dispatchEvent(new Event("transitionend"));
 	};
 
 	const onExit = async () => {
-		const el = tabItemRef.current;
+		const el = tabItemEl.current;
 		if (!el) return;
 		await animateSize(el, () => el.classList.toggle("collapsed", true));
 		el.dispatchEvent(new Event("transitionend"));
@@ -137,16 +137,16 @@ export /* internal */ default function TabItem({ icon, animatedIcon, children, s
 
 	return (
 		<Transition
-			nodeRef={tabItemRef}
+			nodeRef={tabItemEl}
 			in={!collapsed}
-			addEndListener={endListener(tabItemRef)}
+			addEndListener={endListener(tabItemEl)}
 			onEnter={onEnter}
 			onExit={onExit}
 		>
 			<StyledTabItemWrapper {...htmlAttrs}>
 				<StyledTabItem
 					type="button"
-					ref={tabItemRef}
+					ref={tabItemEl}
 					tabIndex={focusable ? 0 : -1}
 					{...htmlAttrs}
 					className={{ selected }}

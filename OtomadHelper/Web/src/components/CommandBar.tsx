@@ -33,8 +33,8 @@ function CommandBarItem({ icon, children, canBeDisabled, disabled, onClick, ...b
 	/** 可被禁用的？ */
 	canBeDisabled?: boolean;
 }, "section"> & TransitionProps) {
-	const ref = useDomRef<HTMLDivElement>();
-	const [onEnter, onExit, endListener] = simpleAnimateSize(ref, "width", 750, eases.easeInOutMax, undefined, { keepClippingAtEnd: true });
+	const el = useDomRef<HTMLDivElement>();
+	const [onEnter, onExit, endListener] = simpleAnimateSize(el, "width", 750, eases.easeInOutMax, undefined, { keepClippingAtEnd: true });
 	const { transitionAttrs, htmlAttrs } = separateTransitionAttrs(buttonAndTransitionAttrs);
 
 	const button = <Button icon={icon} subtle disabled={disabled} onClick={onClick} {...htmlAttrs}>{children}</Button>;
@@ -42,13 +42,13 @@ function CommandBarItem({ icon, children, canBeDisabled, disabled, onClick, ...b
 	return (
 		<Transition
 			{...transitionAttrs}
-			nodeRef={ref}
+			nodeRef={el}
 			addEndListener={endListener}
 			onEnter={onEnter}
 			onExit={onExit}
 			unmountOnExit
 		>
-			<div ref={ref}>
+			<div ref={el}>
 				{!canBeDisabled ? button : (
 					<DisabledButtonWrapper key="complete" disabled={disabled} onClick={onClick}>
 						{button}

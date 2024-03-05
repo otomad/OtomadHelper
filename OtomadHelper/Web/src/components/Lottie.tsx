@@ -20,20 +20,20 @@ export default function Lottie({ loop = false, autoplay = false, animationData, 
 	onAnimCreated?: (anim: AnimationItem) => void;
 }, "div">) {
 	const [anim, setAnim] = useState<AnimationItem>();
-	const lavContainer = useDomRef<HTMLDivElement>();
+	const lavContainerEl = useDomRef<HTMLDivElement>();
 
 	useMountEffect(() => {
-		if (!lavContainer.current) return;
+		if (!lavContainerEl.current) return;
 
 		const anim = lottie.loadAnimation({
-			container: lavContainer.current,
+			container: lavContainerEl.current,
 			renderer: "svg",
 			loop,
 			autoplay,
 			animationData,
 		});
 
-		const svgEl = lavContainer.current.firstElementChild;
+		const svgEl = lavContainerEl.current.firstElementChild;
 		if (svgEl) {
 			const luminanceMasks = svgEl.querySelectorAll<SVGUseElement>("[mask-type=luminance] use");
 			for (const use of luminanceMasks) {
@@ -52,6 +52,6 @@ export default function Lottie({ loop = false, autoplay = false, animationData, 
 	});
 
 	return (
-		<LavContainer ref={lavContainer} {...htmlAttrs} />
+		<LavContainer ref={lavContainerEl} {...htmlAttrs} />
 	);
 }

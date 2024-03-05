@@ -410,10 +410,10 @@ function HoverToChangeImg({ staticSrc, animatedSrc }: FCP<{
 	animatedSrc: string;
 }>) {
 	const [isHovered, setIsHovered] = useState(false);
-	const img = useDomRef<HTMLImageElement>();
+	const imgEl = useDomRef<HTMLImageElement>();
 
-	useEventListener(img, "animationstart", () => setIsHovered(true));
-	useEventListener(img, "animationcancel", () => setIsHovered(false));
+	useEventListener(imgEl, "animationstart", () => setIsHovered(true));
+	useEventListener(imgEl, "animationcancel", () => setIsHovered(false));
 
-	return <img src={isHovered ? animatedSrc : staticSrc} draggable={false} className="animated-image" ref={img} />;
+	return <img src={isHovered ? animatedSrc : staticSrc} draggable={false} className="animated-image" ref={imgEl} />;
 }

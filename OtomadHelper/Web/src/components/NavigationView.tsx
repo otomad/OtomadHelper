@@ -391,7 +391,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	isCompact: boolean;
 }>) {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
-	const navItemsRef = useDomRef<HTMLDivElement>();
+	const navItemsEl = useDomRef<HTMLDivElement>();
 	const focusable = !flyout && paneDisplayMode === "minimal" ? false : isFlyoutShown === flyout;
 
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
@@ -411,7 +411,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	}, [isFlyoutShown, focusable]);
 
 	useEventListener(window, "resize", () => {
-		const navItems = navItemsRef.current;
+		const navItems = navItemsEl.current;
 		if (!navItems) return;
 		setIsNavItemsOverflowing(navItems.scrollHeight > navItems.offsetHeight);
 	}, { immediate: true });
@@ -429,7 +429,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	return (
 		<div className={["left", paneDisplayMode, { flyout }]}>
 			<TopLeftButtons shadow paneDisplayMode={isCompact ? "compact" : paneDisplayMode} />
-			<div ref={navItemsRef} data-nav-items-id={navItemsId} className={["nav-items", { overflowing: isNavItemsOverflowing }]} onScroll={onNavItemsScroll}>
+			<div ref={navItemsEl} data-nav-items-id={navItemsId} className={["nav-items", { overflowing: isNavItemsOverflowing }]} onScroll={onNavItemsScroll}>
 				{customContent}
 				<TabBar current={currentNavTab} collapsed={paneDisplayMode === "compact"} vertical>
 					{navItems.map((item, index) => {
@@ -522,8 +522,8 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	const [isExpandedInExpandedMode, setIsExpandedInExpandedMode] = useState(true);
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
-	const pageContent = useDomRef<HTMLDivElement>();
-	const scrollToTop = useCallback(() => pageContent.current?.scrollTo({ top: 0, left: 0, behavior: "instant" }), [pageContent]);
+	const pageContentEl = useDomRef<HTMLDivElement>();
+	const scrollToTop = useCallback(() => pageContentEl.current?.scrollTo({ top: 0, left: 0, behavior: "instant" }), [pageContentEl]);
 	const navItemsId = useId();
 
 	const currentNavItem = useMemo(() =>
@@ -605,7 +605,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 						</section>
 					</div>
 				</div>
-				<div className={["page-content", transitionName]} ref={pageContent}>
+				<div className={["page-content", transitionName]} ref={pageContentEl}>
 					<SwitchTransition>
 						<CssTransition key={pagePath} onExited={scrollToTop}>
 							<StyledPage>

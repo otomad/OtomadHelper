@@ -177,7 +177,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	stop: () => void;
 }>) {
 	const animationItem = useRef<AnimationItem>();
-	const iconBox = useDomRef<HTMLDivElement>();
+	const iconBoxEl = useDomRef<HTMLDivElement>();
 	const { findMarker, onAnimationComplete, ...sequence } = useLottieSequence(animationItem);
 
 	/**
@@ -259,7 +259,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	useEffect(() => handleSpeedChange(), [speed]);
 
 	const previousAnimationName = useRef("Normal");
-	useEventListener(iconBox, "animationstart", e => {
+	useEventListener(iconBoxEl, "animationstart", e => {
 		let [previous, current] = [previousAnimationName.current, e.animationName];
 		if (!current.startsWith(STATUS_PREFIX)) return;
 		current = current.replace(STATUS_PREFIX, "");
@@ -287,7 +287,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 
 	return (
 		<StyledAnimatedIcon $clipped={clipped} {...htmlAttrs}>
-			<div ref={iconBox} className="icon-box" onClick={handleClick}>
+			<div ref={iconBoxEl} className="icon-box" onClick={handleClick}>
 				<Lottie
 					className={{ filled }}
 					loop={loop}

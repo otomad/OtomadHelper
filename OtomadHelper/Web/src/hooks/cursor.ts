@@ -18,7 +18,7 @@ export function forceCursor(cursor: Cursor | null) {
  * @param aniUrl - 动态光标的路径。
  */
 export function useAniCursor(element: MutableRefObject<HTMLElement | null>, aniUrl: string) {
-	useEffect(() => void (async () => {
+	useAsyncEffect(async () => {
 		if (!document.head.querySelector(`style[data-ani-url="${aniUrl}"]`)) {
 			const response = await fetch(aniUrl);
 			const data = new Uint8Array(await response.arrayBuffer());
@@ -29,7 +29,7 @@ export function useAniCursor(element: MutableRefObject<HTMLElement | null>, aniU
 
 			document.head.appendChild(style);
 		}
-	})(), [aniUrl]);
+	}, [aniUrl]);
 
 	useEffect(() => {
 		element.current && (element.current.dataset.anicursor = aniUrl);

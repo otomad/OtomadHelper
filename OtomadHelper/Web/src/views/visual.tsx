@@ -65,7 +65,7 @@ export default function Visual() {
 				</EmptyMessage>
 			) : (
 				<>
-					<Tooltip title={<Tooltip.Content image={stretchImage} />} placement="y">
+					<Tooltip title={<Tooltip.Content image={stretchImage} />} placement="right">
 						<ExpanderRadio
 							title={t.stream.stretch}
 							details={t.descriptions.stream.stretch}

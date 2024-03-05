@@ -59,18 +59,18 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 	timeout?: number;
 }>) {
 	const [shown, setShown] = useState(false);
-	const [contentsDom, setContentsDom] = useState<HTMLDivElement | null>(null); // Use state instead of ref to make sure change it to rerender.
-	const tooltipWrapper = useDomRef<HTMLDivElement>();
+	const [contentsEl, setContentsEl] = useState<HTMLDivElement | null>(null); // Use state instead of ref to make sure change it to rerender.
+	const tooltipWrapperEl = useDomRef<HTMLDivElement>();
 	const [actualPlacement, setActualPlacement] = useState(placement);
 	const [position, setPosition] = useState<CSSProperties>();
 	const shownTimeout = useRef<Timeout>();
 
 	const dom = useMemo(() => {
-		let dom = contentsDom?.firstElementChild;
+		let dom = contentsEl?.firstElementChild;
 		while (dom && (getComputedStyle(dom).display === "contents" || dom.classList.contains("expander")))
 			dom = dom.firstElementChild;
 		return dom as HTMLElement | null;
-	}, [contentsDom]);
+	}, [contentsEl]);
 
 	const handleHover = (e: MouseEvent) => {
 		clearTimeout(shownTimeout.current);
@@ -82,9 +82,9 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 			setPosition(options.style);
 			setShown(true);
 			await nextAnimationTick();
-			const tooltip = tooltipWrapper.current?.firstElementChild as HTMLElement; // FIXME: tooltipWrapper 获取不到 ref。
+			const tooltip = tooltipWrapperEl.current?.firstElementChild as HTMLElement; // FIXME: tooltipWrapper 获取不到 ref。
 			if (!tooltip) return;
-			setPosition(moveIntoPage(tooltip, tooltipWrapper));
+			setPosition(moveIntoPage(tooltip, tooltipWrapperEl));
 		}, timeout);
 	};
 
@@ -93,18 +93,18 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 		setShown(false);
 	};
 
-	useEventListener(dom, "mouseenter", handleHover, undefined, [contentsDom]);
-	useEventListener(dom, "mouseleave", handleUnhover, undefined, [contentsDom]);
-	useEventListener(dom, "click", handleUnhover, undefined, [contentsDom]);
+	useEventListener(dom, "mouseenter", handleHover, undefined, [contentsEl]);
+	useEventListener(dom, "mouseleave", handleUnhover, undefined, [contentsEl]);
+	useEventListener(dom, "click", handleUnhover, undefined, [contentsEl]);
 
 	return (
 		<>
-			<Contents ref={setContentsDom}>
+			<Contents ref={setContentsEl}>
 				{children}
 			</Contents>
 			<Portal>
 				<CssTransition in={shown} unmountOnExit>
-					<StyledTooltip ref={tooltipWrapper} className={actualPlacement} style={position}>
+					<StyledTooltip ref={tooltipWrapperEl} className={actualPlacement} style={position}>
 						<div className="base">
 							{title}
 						</div>
