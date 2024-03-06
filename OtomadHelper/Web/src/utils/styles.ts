@@ -60,12 +60,12 @@ export const useLottieStatus = {
 };
 
 enum TransitionGroupState {
-	appear = 1 << 0,
-	enter = 1 << 1,
-	exit = 1 << 2,
+	appear = 0b001,
+	enter = 0b010,
+	exit = 0b100,
 
-	enterExit = 1 << 1 | 1 << 2,
-	all = 1 << 0 | 1 << 1 | 1 << 2,
+	enterExit = 0b110,
+	all = 0b111,
 }
 
 /**

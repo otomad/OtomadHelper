@@ -1,3 +1,5 @@
+import { flushSync as reactDomFlushSync } from "react-dom";
+
 /**
  * 移除指定 DOM 元素正在进行的所有动画。
  * @param elements - HTML DOM 元素。
@@ -30,12 +32,16 @@ export function nextAnimationTick() {
 	});
 }
 
+export function flushSync<R>(fn: () => R): R;
+export function flushSync<A, R>(fn: (a: A) => R, a: A): R;
 /**
  * flushSync 允许您强制 React 同步刷新所提供回调中的任何更新。这样可以确保 DOM 立即更新。
  * @returns 空承诺。
  */
-export function nextTick() {
-	return new Promise<void>(resolve => flushSync(resolve));
+export function flushSync(): Promise<void>;
+export function flushSync(fn?: (a: unknown) => unknown, a?: unknown) {
+	if (fn) return reactDomFlushSync(fn, a);
+	else return new Promise<void>(resolve => flushSync(resolve));
 }
 
 /**

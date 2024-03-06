@@ -21,8 +21,8 @@ export default class VariableName {
 		else if (str.includes("-"))
 			this.#words = str.split("-");
 		else {
-			const splited = str.replaceAll(/(?!^)([A-Z])/g, " $1").replaceAll(/(\d+)/g, " $1 ").replaceAll(/\s+(?=\s)|^\s+|\s+$/g, "");
-			this.#words = splited.split(" ");
+			const splitted = str.replaceAll(/(?!^)([A-Z])/g, " $1").replaceAll(/(\d+)/g, " $1 ").replaceAll(/\s+(?=\s)|^\s+|\s+$/g, "");
+			this.#words = splitted.split(" ");
 		}
 	}
 
@@ -74,28 +74,28 @@ export default class VariableName {
 	get upper() {
 		return this.#words.join("").toUpperCase();
 	}
-	
+
 	/**
 	 * 转换为单词式，空格分隔，全部小写。
 	 */
 	get words() {
 		return this.#words.join(" ").toLowerCase();
 	}
-	
+
 	/**
 	 * 转换为句子式，空格分隔，仅句首字母大写。
 	 */
 	get sentence() {
 		return this.#words.map((word, i) => !i ? capitalize(word) : word.toLowerCase()).join(" ");
 	}
-	
+
 	/**
 	 * 转换为标题式，空格分隔，所有单词首字母大写。
 	 */
 	get title() {
 		return this.#words.map(word => capitalize(word)).join(" ");
 	}
-	
+
 	/**
 	 * 转换为 CSS 自定义属性格式。
 	 */
