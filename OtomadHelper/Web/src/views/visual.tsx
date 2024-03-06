@@ -21,6 +21,8 @@ export /* internal */ const legatos = [
 	{ id: "unlimited", icon: "infinity", image: legatoUnlimitedImage },
 ] as const;
 
+const TooltipPartial = Tooltip.with({ placement: "y" });
+
 export default function Visual() {
 	const [enabled, setEnabled] = selectConfig(c => c.visual.enabled);
 	const [ytpEnabled, setYtpEnabled] = selectConfig(c => c.ytp.enabled);
@@ -36,7 +38,6 @@ export default function Visual() {
 	const enableStaffVisualizer = selectConfig(c => c.visual.enableStaffVisualizer);
 
 	const { changePage, pushPage } = usePageStore();
-	const TooltipPartial = Tooltip.with({ placement: "y" });
 
 	return (
 		<div className="container">
