@@ -20,7 +20,7 @@ export default function Lottie({ loop = false, autoplay = false, animationData, 
 	onAnimCreated?: (anim: AnimationItem) => void;
 }, "div">) {
 	const [anim, setAnim] = useState<AnimationItem>();
-	const lavContainerEl = useDomRef<HTMLDivElement>();
+	const lavContainerEl = useDomRef<"div">();
 
 	useMountEffect(() => {
 		if (!lavContainerEl.current) return;

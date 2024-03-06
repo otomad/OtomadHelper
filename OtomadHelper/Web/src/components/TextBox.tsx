@@ -245,7 +245,7 @@ export default function TextBox(props: FCP<IProps<string> & { type?: "text" }, "
 export default function TextBox(props: FCP<IProps<number> & { type?: "number" }, "div">): ReactElement;
 export default function TextBox({ value: [value, _setValue], placeholder, disabled, prefix, suffix, type = "text", ...htmlAttrs }: FCP<IProps<string> & { type?: "text" } | IProps<number> & { type?: "number" }, "div">) {
 	const inputId = useId();
-	const inputEl = useDomRef<HTMLInputElement>();
+	const inputEl = useDomRef<"input">();
 
 	const setValue = (value: string | number | ((value: string | number) => string | number | undefined) | undefined) =>
 		value === undefined || typeof value === "number" && !Number.isFinite(value) || _setValue?.(value as never);

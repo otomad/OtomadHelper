@@ -144,7 +144,7 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 				{view === "grid" ? (
 					<>
 						<div className="image-wrapper">
-							{typeof image === "string" ? <DefaultImage src={image} draggable={false} /> : image}
+							{typeof image === "string" ? <DefaultImage src={image} /> : image}
 						</div>
 						<div className="selection" />
 					</>
@@ -152,7 +152,7 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 					<>
 						{(image || icon) && (
 							<div className="image-wrapper">
-								{typeof image === "string" ? <img src={image} draggable={false} /> : icon ? <Icon name={icon} /> : undefined}
+								{typeof image === "string" ? <img src={image} /> : icon ? <Icon name={icon} /> : undefined}
 							</div>
 						)}
 						{textPart}

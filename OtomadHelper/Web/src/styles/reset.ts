@@ -28,12 +28,14 @@ export default css`
 			cursor: inherit;
 		}
 
+		// 禁用样式覆盖。
 		[disabled],
 		:disabled {
 			cursor: not-allowed;
 			pointer-events: none;
 		}
 
+		// 去除标题和段落中不应出现的边距。
 		h1,
 		h2,
 		h3,
@@ -44,6 +46,7 @@ export default css`
 			margin: 0;
 		}
 
+		// 全局超链接样式。
 		a {
 			color: ${c("accent-color")};
 			text-decoration: none;
@@ -58,9 +61,21 @@ export default css`
 			}
 		}
 
+		// 允许 SVG 元素中的形状超出其边界。
 		svg,
 		svg * {
 			overflow: visible;
+		}
+
+		// 阻止图片被拖拽。
+		img {
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			-webkit-user-drag: none;
+			// stylelint-disable-next-line property-no-unknown
+			user-drag: none;
 		}
 	}
 

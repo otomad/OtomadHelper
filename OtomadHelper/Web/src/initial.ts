@@ -1,7 +1,6 @@
 import "helpers/color-mode";
 import "styles/fonts";
 import "utils/array";
-import cacheWorker from "workers/sw-cache.ts?worker&url";
 
 const isProdMode = () => !useConfigStore.getState().settings.devMode;
 const global = globalThis as AnyObject;
@@ -10,8 +9,6 @@ const global = globalThis as AnyObject;
  * 在网页 DOM 加载之前执行。
  */
 { // Initial
-	navigator.serviceWorker.register(cacheWorker, { type: "module" }); // 似乎还是不支持。
-
 	// #region 阻止网页单击右键菜单
 	window.addEventListener("contextmenu", e => {
 		if (isProdMode())

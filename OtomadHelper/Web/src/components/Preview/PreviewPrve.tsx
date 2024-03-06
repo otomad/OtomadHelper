@@ -398,7 +398,7 @@ export default function PreviewPrve({ thumbnail, name }: FCP<{
 		<StyledPreviewPrve $name={name}>
 			{forMap(imageCount, i => animatedImage ?
 				<HoverToChangeImg key={i} animatedSrc={animatedImage[0]} staticSrc={animatedImage[1]} /> :
-				<img key={i} src={name === "radialBlur" && i === 2 ? alterImage : thumbnail} draggable={false} />)}
+				<img key={i} src={name === "radialBlur" && i === 2 ? alterImage! : thumbnail} />)}
 		</StyledPreviewPrve>
 	);
 }
@@ -410,10 +410,10 @@ function HoverToChangeImg({ staticSrc, animatedSrc }: FCP<{
 	animatedSrc: string;
 }>) {
 	const [isHovered, setIsHovered] = useState(false);
-	const imgEl = useDomRef<HTMLImageElement>();
+	const imgEl = useDomRef<"img">();
 
 	useEventListener(imgEl, "animationstart", () => setIsHovered(true));
 	useEventListener(imgEl, "animationcancel", () => setIsHovered(false));
 
-	return <img src={isHovered ? animatedSrc : staticSrc} draggable={false} className="animated-image" ref={imgEl} />;
+	return <img src={isHovered ? animatedSrc : staticSrc} className="animated-image" ref={imgEl} />;
 }

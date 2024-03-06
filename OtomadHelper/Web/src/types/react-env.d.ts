@@ -93,6 +93,7 @@ declare global {
 	export type BaseEventHandler<T = Element> = EventHandler<BaseEvent<T>>;
 
 	export type ElementTagNameMap = HTMLElementTagNameMap & SVGElementTagNameMap & MathMLElementTagNameMap & HTMLElementDeprecatedTagNameMap;
+	export type TagNameToElement<T extends keyof ElementTagNameMap | Element> = T extends keyof ElementTagNameMap ? ElementTagNameMap[T] : T;
 	export type ForwardedRef<T> = T extends keyof ElementTagNameMap ? React.ForwardedRef<ElementTagNameMap[T]> : React.ForwardedRef<T>;
 
 	export type CSSTransitionProps = Partial<ReactTransitionGroupCssTransition.CSSTransitionProps>;

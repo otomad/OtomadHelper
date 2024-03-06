@@ -74,7 +74,7 @@ export default function SettingsPageControlMedia({ stream, fileName, enabled, th
 }>) {
 	return (
 		<StyledSettingsPageControlMedia $enabled={enabled[0] ?? true}>
-			<img className="background" src={thumbnail} />
+			<Img className="background" src={thumbnail} duplicate="background" />
 			<SettingsPageControlPreviewImage image={thumbnail}>
 				<Icon name={"colored/" + stream} filled />
 			</SettingsPageControlPreviewImage>

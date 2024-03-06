@@ -8,6 +8,10 @@ using System.IO;
 using System.Reflection;
 using System.Linq;
 using System.Windows.Media.Imaging;
+using System.Threading;
+using System.Diagnostics;
+using System.Web;
+using System.Collections.Specialized;
 
 namespace OtomadHelper.Module;
 /// <summary>
@@ -67,7 +71,9 @@ internal class ManagedStream : Stream {
 		const string HOST = "https://app/*";
 		webView.CoreWebView2.AddWebResourceRequestedFilter(HOST, CoreWebView2WebResourceContext.All);
 		webView.CoreWebView2.WebResourceRequested += (sender, args) => {
-			string file = args.Request.Uri.Substring(HOST.Length - 1);
+			Uri uri = new(args.Request.Uri);
+			NameValueCollection query = HttpUtility.ParseQueryString(uri.Query); // 暂未使用
+			string file = uri.AbsolutePath.Substring(1);
 			file = Uri.UnescapeDataString(file);
 			string[] fileSlug = file.Split('/');
 			string virtualPath = fileSlug.FirstOrDefault();
@@ -119,7 +125,7 @@ internal class ManagedStream : Stream {
 				headers = $"""
 					HTTP/1.1 200 OK
 					Content-Type: {headers}
-					Cache-Control: public, max-age={AGE}
+					Cache-Control: max-age={AGE}
 					Age: {AGE}
 					Keep-Alive: timeout={AGE}
 					Date: {DateTime.UtcNow.ToUniversalTime():R}

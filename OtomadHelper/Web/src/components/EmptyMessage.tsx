@@ -59,7 +59,7 @@ export default function EmptyMessage({ icon, title, details, iconOff = false, sp
 	noSideEffect?: boolean;
 }>) {
 	const { resetTransition } = usePageStore();
-	const el = useDomRef<HTMLDivElement>();
+	const el = useDomRef<"div">();
 	const IconEl = iconOff ? IconOff : Icon;
 	useEffect(() => {
 		if (noSideEffect) return;

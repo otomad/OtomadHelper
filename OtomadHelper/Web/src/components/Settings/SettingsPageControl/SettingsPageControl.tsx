@@ -1,3 +1,4 @@
+import { PREVIEW_IMAGE_HEIGHT } from "./SettingsPageControlPreviewImage";
 const IMAGE_MARGIN = 16;
 
 const StyledSettingsPageControl = styled.div<{
@@ -21,6 +22,11 @@ const StyledSettingsPageControl = styled.div<{
 			margin-bottom: 5px;
 		}
 	`}
+
+	.settings-page-control-preview-image :where(img) {
+		width: ${PREVIEW_IMAGE_HEIGHT / 9 * 16}px;
+		height: ${PREVIEW_IMAGE_HEIGHT}px;
+	}
 `;
 
 export default forwardRef(function SettingsPageControl({ image, learnMoreLink, clearFloat, children, ...htmlAttrs }: FCP<{

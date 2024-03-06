@@ -33,7 +33,7 @@ function CommandBarItem({ icon, children, canBeDisabled, disabled, onClick, ...b
 	/** 可被禁用的？ */
 	canBeDisabled?: boolean;
 }, "section"> & TransitionProps) {
-	const el = useDomRef<HTMLDivElement>();
+	const el = useDomRef<"div">();
 	const [onEnter, onExit, endListener] = simpleAnimateSize(el, "width", 750, eases.easeInOutMax, undefined, { keepClippingAtEnd: true });
 	const { transitionAttrs, htmlAttrs } = separateTransitionAttrs(buttonAndTransitionAttrs);
 

@@ -391,7 +391,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	isCompact: boolean;
 }>) {
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
-	const navItemsEl = useDomRef<HTMLDivElement>();
+	const navItemsEl = useDomRef<"div">();
 	const focusable = !flyout && paneDisplayMode === "minimal" ? false : isFlyoutShown === flyout;
 
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
@@ -522,7 +522,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	const [isExpandedInExpandedMode, setIsExpandedInExpandedMode] = useState(true);
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
-	const pageContentEl = useDomRef<HTMLDivElement>();
+	const pageContentEl = useDomRef<"div">();
 	const scrollToTop = useCallback(() => pageContentEl.current?.scrollTo({ top: 0, left: 0, behavior: "instant" }), [pageContentEl]);
 	const navItemsId = useId();
 

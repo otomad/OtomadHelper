@@ -116,7 +116,7 @@ export /* internal */ default function TabItem({ icon, animatedIcon, children, s
 	/** @private 是否使用纵向的 NavigationView 样式？ */
 	vertical?: boolean;
 }, "section">) {
-	const tabItemEl = useDomRef<HTMLButtonElement>();
+	const tabItemEl = useDomRef<"button">();
 
 	const onEnter = async () => {
 		const el = tabItemEl.current;

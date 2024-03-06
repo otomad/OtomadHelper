@@ -82,8 +82,8 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 	timeout?: number;
 }>) {
 	const [shown, setShown] = useState(false);
-	const [contentsEl, setContentsEl] = useState<HTMLDivElement | null>(null); // Use state instead of ref to make sure change it to rerender.
-	const tooltipEl = useDomRef<HTMLDivElement>();
+	const [contentsEl, setContentsEl] = useDomRefState<"div">(); // Use state instead of ref to make sure change it to rerender.
+	const tooltipEl = useDomRef<"div">();
 	const [actualPlacement, setActualPlacement] = useState(placement);
 	const [position, setPosition] = useState<CSSProperties>();
 	const shownTimeout = useRef<Timeout>();
@@ -163,7 +163,7 @@ function TooltipContent({ image, children, ...htmlAttrs }: FCP<{
 }, "figure">) {
 	return (
 		<StyledTooltipContent {...htmlAttrs}>
-			{image && <img src={image} />}
+			{image && <Img src={image} />}
 			<figcaption>{children}</figcaption>
 		</StyledTooltipContent>
 	);

@@ -124,7 +124,7 @@ export default function PreviewYtp({ thumbnail, name }: FCP<{
 	return (
 		<StyledPreviewYtp $name={name}>
 			{forMap(imageCount, i =>
-				<img key={i} data-name={name} src={alterImage || thumbnail} draggable={false} />)}
+				<img key={i} data-name={name} src={alterImage || thumbnail} />)}
 		</StyledPreviewYtp>
 	);
 }

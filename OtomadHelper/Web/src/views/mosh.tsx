@@ -2,7 +2,7 @@ import glitchCursor from "assets/cursors/glitch_cursor.ani";
 import tipsImage from "assets/images/tips/datamoshing.jpg";
 
 export default function Mosh() {
-	const tipsEl = useDomRef<HTMLDivElement>();
+	const tipsEl = useDomRef<"div">();
 	useAniCursor(tipsEl, glitchCursor);
 
 	return (

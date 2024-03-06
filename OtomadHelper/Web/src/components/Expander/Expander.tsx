@@ -71,7 +71,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 }>) {
 	const settingsCardProps = { icon, title, details, selectInfo };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
-	const expanderChildEl = useDomRef<HTMLDivElement>();
+	const expanderChildEl = useDomRef<"div">();
 	const [onEnter, onExit, endListener] = simpleAnimateSize(expanderChildEl, "height", 350, undefined, { startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }, { endChildTranslate: "0 -100%" });
 
 	return (

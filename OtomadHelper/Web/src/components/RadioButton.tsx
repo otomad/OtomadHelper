@@ -108,7 +108,7 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 	/** 单选框分组，可选。 */
 	radioGroup?: string;
 }, "label">) {
-	const labelEl = useDomRef<HTMLLabelElement>();
+	const labelEl = useDomRef<"label">();
 	const checked = value === id;
 	const handleCheck = (checked: boolean = true) => {
 		if (checked) {

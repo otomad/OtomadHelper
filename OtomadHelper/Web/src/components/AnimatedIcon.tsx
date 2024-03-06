@@ -177,7 +177,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	stop: () => void;
 }>) {
 	const animationItem = useRef<AnimationItem>();
-	const iconBoxEl = useDomRef<HTMLDivElement>();
+	const iconBoxEl = useDomRef<"div">();
 	const { findMarker, onAnimationComplete, ...sequence } = useLottieSequence(animationItem);
 
 	/**

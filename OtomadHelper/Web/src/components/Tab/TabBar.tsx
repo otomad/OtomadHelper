@@ -79,7 +79,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 	/** 是否使用纵向的 NavigationView 样式？ */
 	vertical?: boolean;
 }>) {
-	const indicatorEl = useDomRef<HTMLDivElement>();
+	const indicatorEl = useDomRef<"div">();
 	const [position, _setPosition] = useState<TwoD>([NaN, NaN]);
 	const [noIndicatorTransition, setNoIndicatorTransition] = useState(false);
 	const updateIndicatorThread = useRef<symbol>();

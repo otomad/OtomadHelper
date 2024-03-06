@@ -24,6 +24,15 @@ export function keys<K extends object>(obj: K) {
 }
 
 /**
+ * 将所有可枚举自身属性的值从一个或多个源对象复制到目标对象。返回目标对象。
+ * @param target — 要复制到的目标对象。
+ * @param sources — 要从中复制属性的源对象。
+ */
+export function assign<T extends object>(target: T, ...sources: Partial<T>[]): T {
+	return Object.assign(target, ...sources);
+}
+
+/**
  * 创建一个重复指定次数对象的数组，用于循环创建组件。
  *
  * 但是只需关心循环次数，不关心数组的内容。
@@ -113,6 +122,17 @@ export function toValue<T>(ref: MaybeRef<T>): T {
  * @param initialValue - 初始值，一般都为空。
  * @returns HTML DOM 元素的引用。
  */
-export function useDomRef<E extends Element>(initialValue: E | null = null) {
-	return useRef<E | null>(initialValue);
+export function useDomRef<E extends keyof ElementTagNameMap | Element>(initialValue: TagNameToElement<E> | null = null) {
+	return useRef<TagNameToElement<E> | null>(initialValue);
+}
+
+/**
+ * 创建一个 HTML DOM 元素的引用的状态，不必再初始化为 null 了。
+ *
+ * **注意：**这将会返回一个 `StateProperty`，即对引用的修改也会引发组件重新渲染。
+ * @param initialValue - 初始值，一般都为空。
+ * @returns HTML DOM 元素的引用的状态。
+ */
+export function useDomRefState<E extends keyof ElementTagNameMap | Element>(initialValue: TagNameToElement<E> | null = null) {
+	return useState<TagNameToElement<E> | null>(initialValue);
 }
