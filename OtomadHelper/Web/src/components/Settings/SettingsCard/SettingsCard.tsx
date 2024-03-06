@@ -72,7 +72,7 @@ export default function SettingsCard({
 	...htmlAttrs
 }: FCP<{
 	/** 图标。 */
-	icon?: string;
+	icon?: DeclaredIcons;
 	/** 标题。 */
 	title?: ReactNode;
 	/** 详细描述。 */
@@ -80,7 +80,7 @@ export default function SettingsCard({
 	/** 指定轨道或轨道事件的选择情况。 */
 	selectInfo?: ReactNode;
 	/** 尾随图标。使用空字符串或布尔类型表示禁用。 */
-	trailingIcon?: string | boolean;
+	trailingIcon?: DeclaredIcons | "" | boolean;
 	/** 组件形态。 */
 	type?: "container" | "button" | "expander";
 }, "div">) {

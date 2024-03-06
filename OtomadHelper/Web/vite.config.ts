@@ -7,6 +7,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
 import autoImportConfig from "./auto-import.config";
+import globalized from "./src/plugins/vite/globalized";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -43,6 +44,7 @@ export default defineConfig({
 			dts: "./src/types/auto-imports.d.ts",
 			defaultExportByFilename: false,
 		}),
+		globalized(),
 		createSvgIconsPlugin({
 			iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],
 			symbolId: "icon-[dir]-[name]",

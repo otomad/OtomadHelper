@@ -121,7 +121,7 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 	/** 图片。 */
 	image?: string | ReactNode;
 	/** 图标。 */
-	icon?: string;
+	icon?: DeclaredIcons;
 	/** 标识符。 */
 	id: string;
 	/** 是否已选中？ */

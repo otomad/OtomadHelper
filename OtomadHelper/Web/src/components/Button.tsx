@@ -117,9 +117,9 @@ const StyledButton = styled.button<{
 
 export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, className, ...htmlAttrs }: FCP<{
 	/** 按钮图标。 */
-	icon?: string;
+	icon?: DeclaredIcons;
 	/** 按钮动态图标。 */
-	animatedIcon?: string;
+	animatedIcon?: DeclaredLotties;
 	/** 是否使用无背景按钮？ */
 	subtle?: boolean;
 	/** 是否使用超链接按钮？ */

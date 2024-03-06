@@ -17,7 +17,7 @@ const StyledIconOff = styled.div`
 
 export default function IconOff({ name }: FCP<{
 	/** 图标。 */
-	name: string;
+	name: DeclaredIcons;
 }>) {
 	const [svgPath, setSvgPath] = useState("");
 	const symbolId = getIconSymbolId(name);

@@ -46,7 +46,7 @@ const StyledEmptyMessage = styled.div`
 
 export default function EmptyMessage({ icon, title, details, iconOff = false, spinAtBegin = false, noSideEffect = false, children }: FCP<{
 	/** 图标。 */
-	icon?: string;
+	icon?: DeclaredIcons;
 	/** 标题。 */
 	title?: ReactNode;
 	/** 详细描述。 */

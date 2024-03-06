@@ -29,7 +29,7 @@ export default function CommandBar({ children, ...htmlAttrs }: FCP<{}, "div">) {
 
 function CommandBarItem({ icon, children, canBeDisabled, disabled, onClick, ...buttonAndTransitionAttrs }: FCP<{
 	/** 按钮图标。 */
-	icon?: string;
+	icon?: DeclaredIcons;
 	/** 可被禁用的？ */
 	canBeDisabled?: boolean;
 }, "section"> & TransitionProps) {

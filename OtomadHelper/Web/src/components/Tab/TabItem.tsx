@@ -100,9 +100,9 @@ const StyledTabItem = styled.button`
 
 export /* internal */ default function TabItem({ icon, animatedIcon, children, selected = false, collapsed, id: _id, focusable = true, badge, vertical, ...htmlAttrs }: FCP<{
 	/** 图标。 */
-	icon?: string;
+	icon?: DeclaredIcons;
 	/** 动态图标。 */
-	animatedIcon?: string;
+	animatedIcon?: DeclaredLotties;
 	/** 标识符。 */
 	id: string;
 	/** 是否已选中？ */

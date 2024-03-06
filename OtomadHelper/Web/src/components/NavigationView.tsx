@@ -468,9 +468,9 @@ interface NavItem {
 	/** 标签文本。 */
 	text: string;
 	/** 图标。 */
-	icon?: string;
+	icon?: DeclaredIcons;
 	/** 动态图标。 */
-	animatedIcon?: string;
+	animatedIcon?: DeclaredLotties;
 	/** 标识符。 */
 	id: string;
 	/** 是否将其放置于导航面板底部。 */

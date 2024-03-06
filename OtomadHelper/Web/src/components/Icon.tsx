@@ -29,7 +29,7 @@ export function getIconSymbolId(name: string) {
 
 export default forwardRef(function Icon({ name, filled, ...htmlAttrs }: FCP<{
 	/** 图标文件名称。 */
-	name: string;
+	name: DeclaredIcons;
 	/** 是否保持图标本身的颜色？ */
 	filled?: boolean;
 }, "span">, ref: ForwardedRef<"span">) {

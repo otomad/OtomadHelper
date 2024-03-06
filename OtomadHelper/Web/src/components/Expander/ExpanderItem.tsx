@@ -69,7 +69,7 @@ const StyledExpanderItem = styled.div`
 
 export /* internal */ default function ExpanderItem({ icon, title, details, children }: FCP<{
 	/** 图标。 */
-	icon?: string;
+	icon?: DeclaredIcons;
 	/** 标题。 */
 	title?: ReactNode;
 	/** 详细描述。 */
