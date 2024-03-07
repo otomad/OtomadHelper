@@ -15,7 +15,7 @@ using System.Collections.Specialized;
 
 namespace OtomadHelper.Module;
 /// <summary>
-/// Reading of response content stream happens asynchronously, and WebView2 does not 
+/// Reading of response content stream happens asynchronously, and WebView2 does not
 /// directly dispose the stream once it read. Therefore, use the following stream
 /// class, which properly disposes when WebView2 has read all data.For details, see
 /// <a href="https://github.com/MicrosoftEdge/WebView2Feedback/issues/2513">
@@ -105,8 +105,8 @@ internal class ManagedStream : Stream {
 					{ "svg", "image/svg+xml" },
 					{ "webp", "image/webp" },
 					{ "apng", "image/apng" },
-					{ "ico", "image/x-icon" },
-					{ "cur", "image/vnd.microsoft.icon" },
+					{ "ico", "image/vnd.microsoft.icon" },
+					{ "cur", "image/x-win-bitmap" },
 					{ "bmp", "image/bmp" },
 					{ "woff", "font/woff" },
 					{ "woff2", "font/woff2" },
