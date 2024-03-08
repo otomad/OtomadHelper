@@ -42,7 +42,7 @@ export default function DragToImport({ children }: FCP<{
 }>) {
 	const [shown, setShown] = useState(false);
 
-	function onDragOver(e: DragEvent) {
+	/* function onDragOver(e: DragEvent) {
 		if (!e.dataTransfer) return;
 		stopEvent(e);
 		if (e.dataTransfer.items[0]?.kind !== "file") {
@@ -63,14 +63,18 @@ export default function DragToImport({ children }: FCP<{
 	useEventListener(document, "dragstart", onDragOver);
 	useEventListener(document, "dragleave", onDragEnd);
 	useEventListener(document, "dragend", onDragEnd);
-	useEventListener(document, "drop", onDragEnd);
+	useEventListener(document, "drop", onDragEnd); */
+
+	useListen("host:dragOver", e => {
+		setShown(e.isDragging);
+	});
 
 	const title = t.dragToImport({ item: children });
 
 	return (
 		<Portal>
 			<CssTransition in={shown} unmountOnExit>
-				<StyledDragToImport>
+				<StyledDragToImport onMouseUp={() => setShown(false)}>
 					<div className="box">
 						<EmptyMessage icon="touch_pointer" title={title} noSideEffect />
 					</div>

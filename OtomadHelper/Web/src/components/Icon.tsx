@@ -36,7 +36,7 @@ export default forwardRef(function Icon({ name, filled, ...htmlAttrs }: FCP<{
 	if (!name) return <span hidden />;
 
 	const symbolId = getIconSymbolId(name);
-	const ariaDescription = new VariableName(name).words;
+	const ariaDescription = name.replaceAll("_", " ").replaceAll("/", ": ");
 
 	return (
 		<StyledIcon $filled={filled} {...htmlAttrs} ref={ref} role="img" aria-description={ariaDescription}>

@@ -429,7 +429,7 @@ declare global {
 			 *
 			 * If running in a Chromium browser directly, you will get an undefined.
 			 */
-			webview?: WebView;
+			webview: WebView;
 		};
 	}
 }

@@ -1,4 +1,5 @@
 import "helpers/color-mode";
+import "services/index";
 import "styles/fonts";
 import "utils/array";
 
@@ -48,12 +49,5 @@ const global = globalThis as AnyObject;
 		global.findCss = function (component: string) {
 			return [...document.head.querySelector("style[data-styled]")?.childNodes as NodeListOf<Text> ?? []].find(rule => rule.textContent?.includes(component));
 		};
-	// #endregion
-
-	// #region 本机端代码向网页端通信事件
-	window.chrome ??= {};
-	window.chrome.webview?.addEventListener("message", e => {
-		console.log(e);
-	});
 	// #endregion
 }

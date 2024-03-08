@@ -101,7 +101,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bridges\Bridge.cs" />
+    <Compile Include="Helpers\Extensions_Misc.cs" />
     <Compile Include="Helpers\Extensions_Collection.cs" />
+    <Compile Include="Models\DragOver.cs" />
+    <Compile Include="Models\IWebMessageEvent.cs" />
     <Compile Include="WPF\Controls\BackdropWindow.cs" />
     <Compile Include="WPF\Controls\Button.xaml.cs">
       <DependentUpon>Button.xaml</DependentUpon>
@@ -188,8 +192,13 @@
     <PackageReference Include="NAudio">
       <Version>2.2.1</Version>
     </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>8.0.2</Version>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="WPF\Controls\Button.xaml">
       <SubType>Designer</SubType>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -47,11 +47,9 @@ namespace OtomadHelper.Helpers {
 		/// <param name="resourcePath">嵌入的资源文件路径。</param>
 		/// <param name="filePath">本地文件路径。</param>
 		public static void WriteResourceToFile(string resourcePath, string filePath) {
-			using (Stream resource = GetEmbeddedResource(resourcePath)) {
-				using (FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write)) {
-					resource.CopyTo(file);
-				}
-			}
+			using Stream resource = GetEmbeddedResource(resourcePath);
+			using FileStream file = new(filePath, FileMode.Create, FileAccess.Write);
+			resource.CopyTo(file);
 		}
 	}
 }

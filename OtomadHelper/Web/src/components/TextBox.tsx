@@ -84,7 +84,7 @@ function Spinner({ disabled, onSpin, onRelease }: FCP<{
 			<div className="base">
 				<Button
 					subtle
-					icon="chevron_up_spinner"
+					icon="spinner/chevron_up"
 					disabled={disabled}
 					onMouseDown={() => handlePress(1)}
 					onMouseUp={handleRelease}
@@ -93,7 +93,7 @@ function Spinner({ disabled, onSpin, onRelease }: FCP<{
 				/>
 				<Button
 					subtle
-					icon="chevron_down_spinner"
+					icon="spinner/chevron_down"
 					disabled={disabled}
 					onMouseDown={() => handlePress(-1)}
 					onMouseUp={handleRelease}
