@@ -2,7 +2,11 @@ import type { LocaleIdentifiers } from "./types";
 
 const SChinese = {
 	translation: {
-		__translator__: "",
+		metadata: {
+			__translator__: "",
+			name: "简体中文",
+			culture: "zh-CN",
+		},
 		colon: "：",
 		semicolon: "；",
 		titles: {
@@ -341,7 +345,7 @@ const SChinese = {
 				_: "五线谱可视化是以自定义图案为音符，根据乐曲旋律来画出与钢琴五线谱类似风格的视觉效果。\n该视觉效果风格模仿自YouTube视频作者@grantwoolard，他的特色是使用音乐家的头像来画出经典音乐的五线谱。",
 			},
 			settings: {
-				about: "音MAD助手，旨在使Vegas接受乐谱如MIDI序列文件作为输入，自动生成音MAD / YTPMV的轨道。",
+				about: "音MAD助手，Vegas Pro的音MAD / YTPMV / YTP扩展程序，旨在使Vegas接受乐谱如MIDI序列文件作为输入，自动生成音MAD / YTPMV的轨道。",
 			},
 		},
 		empty: {

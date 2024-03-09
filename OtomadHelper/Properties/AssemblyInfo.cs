@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("Otomad Helper")]
-[assembly: AssemblyDescription("YTPMV/YTP/Otomad Extension for Vegas Pro.")]
+[assembly: AssemblyDescription("YTPMV/YTP/Otomad Extension for Vegas Pro")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("OTOMAD+")]
 [assembly: AssemblyProduct("Otomad Helper")]

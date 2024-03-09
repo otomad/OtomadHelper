@@ -27,6 +27,7 @@ const getProxy = (target: object) =>
 			};
 			const getMissingKey = (key: string) => {
 				const displayValue = `<${key}>`;
+				console.error("Missing translation key: " + key);
 				return displayValue;
 			};
 			const translate = (keys: string[], options?: TOptions) => {

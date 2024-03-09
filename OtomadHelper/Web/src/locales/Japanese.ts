@@ -2,6 +2,11 @@ import type { LocaleIdentifiers } from "./types";
 
 const Japanese = {
 	translation: {
+		metadata: {
+			__translator__: "",
+			name: "日本語",
+			culture: "ja-JP",
+		},
 		titles: {
 			home: "ホーム",
 			source: "素材",
@@ -34,6 +39,7 @@ const Japanese = {
 		descriptions: {
 			mosh: {
 				normal: "データモッシュは素材に損傷を与えてグリッチ効果を作成する技術です。",
+				// cspell:disable-next-line
 				glitchy: "繝ﾃﾞ繧ｰﾀ縺ﾓ薙ｯ橸｢ｼ縲ｭ･ﾚよ素木オﾚﾆ才員傷を与ぇτ勹″⺉⺍于交力果をイ乍成すゑ才支彳朮テτ″す。",
 				additional: "ビデオ・アートでは、2つの映像がインターリーブされ、中間フレームが2つの別々のソースから補間される、「データモッシュ」という手法がある。これは、それぞれのビデオコーデックが動きや色情報をどのように処理するかの違いを利用する。",
 			},

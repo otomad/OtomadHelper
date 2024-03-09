@@ -47,7 +47,7 @@ export default function SettingsAbout() {
 		[t.settings.about.author, t.settings.about.__author__],
 		[t.settings.about.originalAuthor, t.settings.about.__originalAuthor__],
 	]);
-	if (t.__translator__.toString()) pairs.set(t.settings.about.translator, t.__translator__);
+	if (t.metadata.__translator__.toString()) pairs.set(t.settings.about.translator, t.metadata.__translator__);
 	const { version } = useAboutApp();
 
 	return (

@@ -2,7 +2,11 @@ import type { LocaleIdentifiers } from "./types";
 
 const Vietnamese = {
 	translation: {
-		__translator__: "Cyahega",
+		metadata: {
+			__translator__: "Cyahega",
+			name: "Tiếng Việt",
+			culture: "vi-VN",
+		},
 		titles: {
 			home: "Trang chủ",
 			source: "Nguồn",
