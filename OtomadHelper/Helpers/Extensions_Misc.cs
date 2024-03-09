@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
 namespace OtomadHelper.Helpers;
+
 public static partial class Extensions {
 	/// <summary>
 	/// 将拖放文件事件参数转换为拖放的文件名称数组。如果拖放的不是文件，返回空数组。

@@ -1,16 +1,11 @@
-﻿using System;
 using ScriptPortal.Vegas;
-using OtomadHelper.Module;
-using System.Collections;
-using System.IO;
-using System.Reflection;
-using OtomadHelper.Helpers;
 
 namespace OtomadHelper.Module;
+
 public class OtomadHelperModule : ICustomCommandModule {
 	public Vegas vegas = null!;
 	private readonly CustomCommand customCommandModule =
-		new(CommandCategory.View, DISPLAY_NAME); // 这将显示在“查看”菜单的扩展下。
+		new(CommandCategory.View, DISPLAY_NAME); // 这将显示在“查看”菜单的“扩展”下。
 	internal const string INTERNAL_NAME = "OtomadHelperInternal";
 	internal const string DISPLAY_NAME = "Otomad Helper";
 	internal const string ASSEMBLY_NAME = "OtomadHelper";
@@ -50,7 +45,7 @@ public class OtomadHelperModule : ICustomCommandModule {
 	}
 
 	private string SaveAndGetIconPath() {
-		string localIconPath = Path.Combine(VegasAppDataPath, "Otomad Helper.png");
+		string localIconPath = Path.r(VegasAppDataPath, "Otomad Helper.png");
 		ResourceHelper.WriteResourceToFile("Assets.ToolbarIcon.png", localIconPath);
 		return localIconPath;
 	}

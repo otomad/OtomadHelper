@@ -1,17 +1,5 @@
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
-using OtomadHelper.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Reflection;
-using System.Linq;
-using System.Windows.Media.Imaging;
-using System.Threading;
-using System.Diagnostics;
-using System.Web;
-using System.Collections.Specialized;
 
 namespace OtomadHelper.Module;
 /// <summary>
@@ -94,37 +82,32 @@ internal class ManagedStream : Stream {
 				}
 				Stream fileStream = ResourceHelper.GetEmbeddedResource(assetsFilePath);
 				ManagedStream managedStream = new(fileStream);
-				Dictionary<string, string> contentTypes = new() {
-					{ "html", "text/html" },
-					{ "js", "text/javascript" },
-					{ "css", "text/css" },
-					{ "appcache", "text/cache-manifest" },
-					{ "jpg", "image/jpeg" },
-					{ "png", "image/png" },
-					{ "gif", "image/gif" },
-					{ "svg", "image/svg+xml" },
-					{ "webp", "image/webp" },
-					{ "apng", "image/apng" },
-					{ "ico", "image/vnd.microsoft.icon" },
-					{ "cur", "image/x-win-bitmap" },
-					{ "bmp", "image/bmp" },
-					{ "woff", "font/woff" },
-					{ "woff2", "font/woff2" },
-					{ "ttf", "font/ttf" },
-					{ "json", "application/json" },
-					{ "manifest", "application/manifest+json" },
-					{ "ani", "application/x-navi-animation" },
+				string contentType = new Path(file).Extension switch {
+					"html" => "text/html",
+					"js" => "text/javascript",
+					"css" => "text/css",
+					"appcache" => "text/cache-manifest",
+					"jpg" => "image/jpeg",
+					"png" => "image/png",
+					"gif" => "image/gif",
+					"svg" => "image/svg+xml",
+					"webp" => "image/webp",
+					"apng" => "image/apng",
+					"ico" => "image/vnd.microsoft.icon",
+					"cur" => "image/x-win-bitmap",
+					"bmp" => "image/bmp",
+					"woff" => "font/woff",
+					"woff2" => "font/woff2",
+					"ttf" => "font/ttf",
+					"json" => "application/json",
+					"manifest" => "application/manifest+json",
+					"ani" => "application/x-navi-animation",
+					_ => "application/octet-stream",
 				};
-				string headers = "application/octet-stream";
-				foreach (KeyValuePair<string, string> item in contentTypes)
-					if (assetsFilePath.EndsWith("." + item.Key)) {
-						headers = item.Value;
-						break;
-					}
 				const int AGE = 1200;
-				headers = $"""
+				string headers = $"""
 					HTTP/1.1 200 OK
-					Content-Type: {headers}
+					Content-Type: {contentType}
 					Cache-Control: max-age={AGE}
 					Age: {AGE}
 					Keep-Alive: timeout={AGE}

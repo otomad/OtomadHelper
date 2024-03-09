@@ -1,29 +1,14 @@
-using Microsoft.Web.WebView2.Core;
-using OtomadHelper.Helpers;
-using OtomadHelper.Test;
-using OtomadHelper.WPF.Controls;
-using APNGLib;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Resources;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 using System.Windows.Forms;
-using ScriptPortal.MediaSoftware.Skins;
-using System.IO.Packaging;
+using APNGLib;
+using Microsoft.Web.WebView2.Core;
 using OtomadHelper.Bridges;
-using Microsoft.Win32;
 using OtomadHelper.Models;
-using System.Net.Mime;
+using ScriptPortal.MediaSoftware.Skins;
 
 namespace OtomadHelper.Module;
+
 public partial class MainDock : UserControl {
 	public MainDock() {
 		InitializeComponent();
@@ -110,26 +95,29 @@ public partial class MainDock : UserControl {
 		if (filenames.Length < 1) return;
 		e.Effect = DragDropEffects.All;
 		string filename = filenames[0];
-		bool isDirectory = File.GetAttributes(filename).HasFlag(FileAttributes.Directory);
-		string extension = Path.GetExtension(filename).ToLower();
+		Path path = new(filename);
+		bool isDirectory = path.IsDirectory;
+		string extension = path.DotExtension;
 		using RegistryKey? registryKey = Registry.ClassesRoot.OpenSubKey(extension);
 		string contentType = (string)(registryKey?.GetValue("Content Type") ?? "");
 		PostWebMessage(new DragOver() {
-			Extension = extension,
-			ContentType = contentType,
-			IsDirectory = isDirectory,
-			IsDragging = true,
+			extension = extension,
+			contentType = contentType,
+			isDirectory = isDirectory,
+			isDragging = true,
 		});
 	}
 
 	private void Browser_DragLeave() {
 		PostWebMessage(new DragOver() {
-			IsDragging = false,
+			isDragging = false,
 		});
 	}
 
-	private readonly JsonSerializerOptions jsonOptions = new() {
+	private static readonly JsonSerializerOptions jsonOptions = new() {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+		IncludeFields = true,
+		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 	};
 
 	public void PostWebMessage<T>(T message) where T : BaseWebMessageEvent {

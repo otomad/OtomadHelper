@@ -1,28 +1,19 @@
-using OtomadHelper.Module;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
+using OtomadHelper.Module;
 
-namespace OtomadHelper.Test {
-	public partial class TestForm : Form {
-		private readonly MainDock mainDock;
+namespace OtomadHelper.Test;
 
-		public TestForm() {
-			InitializeComponent();
-			mainDock = new MainDock();
-			Controls.Add(mainDock);
-			Icon = Properties.Resources.OtomadHelper;
-			mainDock.DocumentTitleChanged += title => Text = title;
+public partial class TestForm : Form {
+	private readonly MainDock mainDock;
 
-			//var window = new MainWindow();
-			//window.Show();
-		}
+	public TestForm() {
+		InitializeComponent();
+		mainDock = new MainDock();
+		Controls.Add(mainDock);
+		Icon = Properties.Resources.OtomadHelper;
+		mainDock.DocumentTitleChanged += title => Text = title;
+
+		//var window = new MainWindow();
+		//window.Show();
 	}
 }
