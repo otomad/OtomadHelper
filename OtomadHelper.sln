@@ -8,6 +8,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{36E3767D-DBA8-4AE6-9AED-C9E8832F0B0A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		version.txt = version.txt
+		versioning.ps1 = versioning.ps1
 	EndProjectSection
 EndProject
 Global

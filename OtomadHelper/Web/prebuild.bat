@@ -1,0 +1,1 @@
+powershell ..\..\versioning.ps1

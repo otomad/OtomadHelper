@@ -1,9 +1,11 @@
+Set-location $PSScriptRoot
+
 function Get-ContentRaw {
 	Param (
 		[String] $file
 	)
 
-	return Get-Content -Path $file -Encoding UTF8 -Raw
+	return (Get-Content -Path $file -Encoding UTF8 -Raw).Trim()
 }
 
 function Set-ContentRaw {
@@ -16,14 +18,19 @@ function Set-ContentRaw {
 	[IO.File]::WriteAllLines((Join-Path $pwd $file), $content, $utf8NoBomEncoding)
 }
 
-$file = .\version.txt
-$version = (Get-ContentRaw $file).Trim().Split(".") | % {iex $_}
+$file = ".\version.txt"
+$version = (Get-ContentRaw $file).Split(".") | % {iex $_}
 $version[2]++
 $version = $version -Join "."
 Write-Output $version
 Set-ContentRaw $file $version
 
-$file = .\OtomadHelper\Properties\AssemblyInfo.cs
-$csProperty = Get-ContentRaw $file
-$csProperty = [Regex]::Replace($csProperty, "(?<=Assembly(File)?Version\(`")[^\*]+?(?=`"\))", $version)
-Set-ContentRaw $file $version
+$file = ".\OtomadHelper\Properties\AssemblyInfo.cs"
+$csAssemblyInfo = Get-ContentRaw $file
+$csAssemblyInfo = [Regex]::Replace($csAssemblyInfo, "(?<=Assembly(File)?Version\(`")[^\*]+?(?=`"\))", $version)
+Set-ContentRaw $file $csAssemblyInfo
+
+$file = ".\OtomadHelper\Web\package.json"
+$jsPackage = Get-ContentRaw $file
+$jsPackage = [Regex]::Replace($jsPackage, "(?<=`"version`": `").*(?=`")", $version)
+Set-ContentRaw $file $jsPackage

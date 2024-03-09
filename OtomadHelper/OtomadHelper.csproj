@@ -225,4 +225,7 @@
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>powershell ..\..\..\versioning.ps1</PreBuildEvent>
+  </PropertyGroup>
 </Project>

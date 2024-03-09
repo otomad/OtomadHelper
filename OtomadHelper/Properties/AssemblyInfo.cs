@@ -33,5 +33,5 @@ using System.Runtime.InteropServices;
 //通过使用 "*"，如下所示:
 // [assembly: AssemblyVersion("1.0.*")]
 //但高版本用不了这个自动生成。
-[assembly: AssemblyVersion("7.9.0")]
-[assembly: AssemblyFileVersion("7.9.0")]
+[assembly: AssemblyVersion("7.9.18")]
+[assembly: AssemblyFileVersion("7.9.18")]

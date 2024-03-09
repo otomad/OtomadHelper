@@ -1,6 +1,6 @@
 {
 	"name": "otomad-helper",
-	"version": "8.0",
+	"version": "7.9.18",
 	"description": "The front-end part of Otomad Helper extension.",
 	"type": "module",
 	"main": "./dist/index.html",
@@ -17,10 +17,12 @@
 		"dev": "vite --host",
 		"build": "tsc && vite build",
 		"preview": "vite preview",
+		"predev": "prebuild.bat",
+		"prebuild": "prebuild.bat",
+		"postinstall": "patch-package",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"lint:css": "stylelint './src/**/*.{js,jsx,ts,tsx}'",
 		"release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
-		"postinstall": "patch-package",
 		"compact-svg": "tsx src/scripts/compact-svg.ts"
 	},
 	"dependencies": {
