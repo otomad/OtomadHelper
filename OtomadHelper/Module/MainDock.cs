@@ -95,7 +95,8 @@ public partial class MainDock : UserControl {
 		if (LoadingAnimationPicture.Visible) return; // 初始化动画时不应响应拖拽事件。
 		string[] filenames = e.GetFileNames();
 		if (filenames.Length < 1) return;
-		e.Effect = DragDropEffects.All;
+		e.Effect = e.AllowedEffect & DragDropEffects.Copy;
+		DropTargetHelper.DragEnter(this, e.Data, new Point(e.X, e.Y), e.Effect, "Import to %1", "Here");
 		string filename = filenames[0];
 		Path path = new(filename);
 		bool isDirectory = path.IsDirectory;
@@ -114,5 +115,11 @@ public partial class MainDock : UserControl {
 		PostWebMessage(new DragOver() {
 			isDragging = false,
 		});
+		DropTargetHelper.DragLeave(this);
+	}
+
+	private void Browser_DragOver(object sender, DragEventArgs e) {
+		e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? e.AllowedEffect & DragDropEffects.Copy : DragDropEffects.None;
+		DropTargetHelper.DragOver(new Point(e.X, e.Y), e.Effect);
 	}
 }

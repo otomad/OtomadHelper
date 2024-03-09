@@ -42,8 +42,6 @@ namespace OtomadHelper.Module {
 			this.Browser.ZoomFactor = 1D;
 			this.Browser.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.Browser_CoreWebView2InitializationCompleted);
 			this.Browser.NavigationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs>(this.Browser_NavigationCompleted);
-			this.Browser.DragDrop += new System.Windows.Forms.DragEventHandler(this.Browser_DragEnter);
-			this.Browser.DragEnter += new System.Windows.Forms.DragEventHandler(this.Browser_DragEnter);
 			// 
 			// MainDock
 			// 
@@ -55,6 +53,7 @@ namespace OtomadHelper.Module {
 			this.Name = "MainDock";
 			this.Size = new System.Drawing.Size(600, 300);
 			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Browser_DragEnter);
+			this.DragOver += new System.Windows.Forms.DragEventHandler(this.Browser_DragOver);
 			((System.ComponentModel.ISupportInitialize)(this.Browser)).EndInit();
 			this.ResumeLayout(false);
 
