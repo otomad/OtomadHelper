@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("Otomad Helper")]
-[assembly: AssemblyDescription("Scripts for Magix Vegas. Assisted in generating YTPMV/YTP/Otomad/音MAD.")]
+[assembly: AssemblyDescription("YTPMV/YTP/Otomad Extension for Vegas Pro.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("OTOMAD+")]
 [assembly: AssemblyProduct("Otomad Helper")]
@@ -32,5 +32,6 @@ using System.Runtime.InteropServices;
 //可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值
 //通过使用 "*"，如下所示:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("7.0.0.0")]
-[assembly: AssemblyFileVersion("7.0.0.0")]
+//但高版本用不了这个自动生成。
+[assembly: AssemblyVersion("7.9.0")]
+[assembly: AssemblyFileVersion("7.9.0")]
