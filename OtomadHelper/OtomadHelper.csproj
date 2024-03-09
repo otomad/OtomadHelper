@@ -106,6 +106,7 @@
   <ItemGroup>
     <Compile Include="Bridges\Bridge.cs" />
     <Compile Include="GlobalUsing.cs" />
+    <Compile Include="Helpers\I18n.cs" />
     <Compile Include="Helpers\WebView2BetterBridge.cs" />
     <Compile Include="Helpers\Extensions_Misc.cs" />
     <Compile Include="Helpers\Extensions_Collection.cs" />
@@ -148,6 +149,8 @@
     <EmbeddedResource Include="Module\MainDock.resx">
       <DependentUpon>MainDock.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.zh-CN.resx" />
+    <EmbeddedResource Include="Properties\Resources.en-US.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

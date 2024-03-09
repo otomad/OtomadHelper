@@ -84,7 +84,7 @@ public class BetterBridge {
 public static class MessageSender {
 	private static WebView2? webView2;
 
-	public static WebView2 SetPostWebMessageWebView2 { set => webView2 = value; }
+	public static WebView2 PostWebMessage_SetWebView2 { set => webView2 = value; }
 
 	private static readonly JsonSerializerOptions jsonOptions = new() {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

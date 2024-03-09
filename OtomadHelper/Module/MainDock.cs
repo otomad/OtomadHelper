@@ -31,7 +31,7 @@ public partial class MainDock : UserControl {
 		ForeColor = Skins.Colors.ButtonText;
 #endif
 		InitLoadingAnimation();
-		SetPostWebMessageWebView2 = Browser;
+		PostWebMessage_SetWebView2 = Browser;
 		CoreWebView2_LoadEnvironment();
 	}
 
@@ -96,7 +96,7 @@ public partial class MainDock : UserControl {
 		string[] filenames = e.GetFileNames();
 		if (filenames.Length < 1) return;
 		e.Effect = e.AllowedEffect & DragDropEffects.Copy;
-		DropTargetHelper.DragEnter(this, e.Data, new Point(e.X, e.Y), e.Effect, "Import to %1", "Here");
+		DropTargetHelper.DragEnter(this, e.Data, new Point(e.X, e.Y), e.Effect, t("ImportToHereAction"), t("ImportToHereTarget"));
 		string filename = filenames[0];
 		Path path = new(filename);
 		bool isDirectory = path.IsDirectory;
