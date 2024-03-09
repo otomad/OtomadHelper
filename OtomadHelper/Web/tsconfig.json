@@ -22,7 +22,6 @@
 		"noEmit": true,
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["src/*"],
 			"assets/*": ["src/assets/*"],
 			"components/*": ["src/components/*"],
 			"views/*": ["src/views/*"],
@@ -39,6 +38,7 @@
 			"plugins/*": ["src/plugins/*"],
 			"classes/*": ["src/classes/*"],
 			"workers/*": ["src/workers/*"],
+			"web/*": ["./*"],
 		},
 		"plugins": [
 			{

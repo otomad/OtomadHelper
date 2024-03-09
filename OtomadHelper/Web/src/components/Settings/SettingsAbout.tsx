@@ -1,8 +1,6 @@
 import ColoredLogo from "assets/svg/Otomad Helper Colored.svg";
 import MonoLogo from "assets/svg/Otomad Helper Mono.svg";
 
-const VERSION = "v7.9";
-
 const StyledSettingsAbout = styled.div`
 	display: flex;
 	gap: 16px;
@@ -50,6 +48,7 @@ export default function SettingsAbout() {
 		[t.settings.about.originalAuthor, t.settings.about.__originalAuthor__],
 	]);
 	if (t.__translator__.toString()) pairs.set(t.settings.about.translator, t.__translator__);
+	const { version } = useAboutApp();
 
 	return (
 		<>
@@ -69,7 +68,7 @@ export default function SettingsAbout() {
 				</div>
 			</StyledSettingsAbout>
 			<SettingsCard title={t.settings.about.version} icon="sync">
-				<p>{VERSION}</p>
+				<p>v{version}</p>
 				<Button>{t.settings.about.checkForUpdates}</Button>
 			</SettingsCard>
 		</>

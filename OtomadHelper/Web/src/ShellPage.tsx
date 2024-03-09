@@ -26,9 +26,10 @@ export default function ShellPage() {
 	});
 	const Page = pages[`/src/views/${getPagePath()}.tsx`] ?? EmptyPage;
 	const [uiScale] = selectConfig(c => c.settings.uiScale);
+	const { appName } = useAboutApp();
 	const documentTitle = (() => {
 		const lastPage = page.at(-1);
-		return (lastPage ? t.titles[lastPage]({ context: "full" }) + " - " : "") + import.meta.env.VITE_APP_NAME;
+		return (lastPage ? t.titles[lastPage]({ context: "full" }) + " - " : "") + appName;
 	})();
 
 	useEffect(() => {

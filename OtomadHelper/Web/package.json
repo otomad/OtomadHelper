@@ -1,6 +1,7 @@
 {
 	"name": "otomad-helper",
-	"version": "7.9.18",
+	"displayName": "Otomad Helper",
+	"version": "7.9.20",
 	"description": "The front-end part of Otomad Helper extension.",
 	"type": "module",
 	"main": "./dist/index.html",

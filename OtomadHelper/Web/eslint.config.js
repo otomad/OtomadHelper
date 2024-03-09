@@ -218,7 +218,7 @@ export default [
 				"afterOpening": "never",
 				"beforeClosing": "never",
 			}],
-			"@stylistic/jsx-one-expression-per-line": ["error", { "allow": "single-child" }],
+			"@stylistic/jsx-one-expression-per-line": "off",
 			"react/self-closing-comp": ["error", { "component": true }],
 			"no-restricted-properties": ["error", {
 				object: "arguments",
