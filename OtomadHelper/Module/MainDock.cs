@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using APNGLib;
 using Microsoft.Web.WebView2.Core;
 using OtomadHelper.Bridges;
+using OtomadHelper.Helpers.WebView2BetterBridge;
 using OtomadHelper.Models;
 using ScriptPortal.MediaSoftware.Skins;
 
@@ -30,6 +31,7 @@ public partial class MainDock : UserControl {
 		ForeColor = Skins.Colors.ButtonText;
 #endif
 		InitLoadingAnimation();
+		SetPostWebMessageWebView2 = Browser;
 		CoreWebView2_LoadEnvironment();
 	}
 
@@ -57,7 +59,7 @@ public partial class MainDock : UserControl {
 		Browser.Source = new Uri("http://app/index.html"); // "http://www.sunchateau.com/free/ua.htm"
 		Browser.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
 		Browser.CoreWebView2.DocumentTitleChanged += (sender, e) => DocumentTitleChanged?.Invoke(Browser.CoreWebView2.DocumentTitle);
-		Browser.CoreWebView2.AddHostObjectToScript("bridge", new Bridge());
+		Browser.CoreWebView2.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
 	}
 
 	private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e) {
@@ -112,15 +114,5 @@ public partial class MainDock : UserControl {
 		PostWebMessage(new DragOver() {
 			isDragging = false,
 		});
-	}
-
-	private static readonly JsonSerializerOptions jsonOptions = new() {
-		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-		IncludeFields = true,
-		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-	};
-
-	public void PostWebMessage<T>(T message) where T : BaseWebMessageEvent {
-		Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message, jsonOptions));
 	}
 }

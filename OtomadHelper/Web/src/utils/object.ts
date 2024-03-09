@@ -136,3 +136,10 @@ export function useDomRef<E extends keyof ElementTagNameMap | Element>(initialVa
 export function useDomRefState<E extends keyof ElementTagNameMap | Element>(initialValue: TagNameToElement<E> | null = null) {
 	return useState<TagNameToElement<E> | null>(initialValue);
 }
+
+/**
+ * 返回全局环境，用于定义全局变量。
+ *
+ * 同时规避 TypeScript 的警告。
+ */
+export const globals = globalThis as AnyObject;

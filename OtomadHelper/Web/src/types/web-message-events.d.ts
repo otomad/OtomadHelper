@@ -8,6 +8,11 @@ declare global {
 		} | {
 			isDragging: false;
 		};
+
+		export interface ConsoleLog {
+			severity: "log" | "error" | "warn";
+			message: string;
+		}
 	}
 }
 

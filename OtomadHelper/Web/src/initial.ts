@@ -1,7 +1,7 @@
 import "helpers/color-mode";
-import "services/index";
 import "styles/fonts";
 import "utils/array";
+import "utils/bridge";
 
 const isProdMode = () => !useConfigStore.getState().settings.devMode;
 const global = globalThis as AnyObject;

@@ -22,3 +22,4 @@ global using static OtomadHelper.Interop.PInvoke;
 
 global using Path = OtomadHelper.Helpers.Path;
 global using DialogResult = System.Windows.Forms.DialogResult;
+global using static OtomadHelper.Helpers.WebView2BetterBridge.MessageSender;

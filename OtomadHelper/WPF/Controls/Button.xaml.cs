@@ -18,7 +18,7 @@ public partial class Button : UserControl {
 		set => BtnText.Text = value;
 	}
 
-	public DialogResult DialogResult { get; set; }
+	public string DialogResult { get; set; } = "";
 
 	private static readonly RoutedEvent ClickRoutedEvent =
 		EventManager.RegisterRoutedEvent(nameof(Click), RoutingStrategy.Bubble, typeof(EventHandler<RoutedEventArgs>), typeof(Button));

@@ -12,7 +12,7 @@
 	SizeToContent="Height"
 	ResizeMode="NoResize"
 	ShowInTaskbar="True"
-	WindowStartupLocation="CenterScreen"
+	WindowStartupLocation="CenterOwner"
 	mc:Ignorable="d">
 	<c:BackdropWindow.Resources>
 		<Style TargetType="TextBlock">

@@ -6,7 +6,7 @@ namespace OtomadHelper.WPF.Controls;
 /// ContentDialog.xaml 的交互逻辑
 /// </summary>
 public partial class ContentDialog : BackdropWindow {
-	public new DialogResult DialogResult { get; set; } = DialogResult.Cancel;
+	public new string DialogResult { get; set; } = "cancel";
 
 	public ContentDialog(string title, string body, IEnumerable<ContentDialogButtonItem> buttons) {
 		InitializeComponent();
@@ -15,7 +15,7 @@ public partial class ContentDialog : BackdropWindow {
 		Buttons = buttons;
 	}
 
-	public new DialogResult ShowDialog() {
+	public new string ShowDialog() {
 		base.ShowDialog();
 		return DialogResult;
 	}
@@ -58,12 +58,12 @@ public partial class ContentDialog : BackdropWindow {
 	}
 }
 
-public struct ContentDialogButtonItem {
+public class ContentDialogButtonItem {
 	public string Text;
-	public DialogResult DialogResult;
-	public bool IsDefault;
+	public string DialogResult;
+	public bool IsDefault = false;
 
-	public ContentDialogButtonItem(string text, DialogResult dialogResult = DialogResult.Cancel, bool isDefault = false) {
+	public ContentDialogButtonItem(string text, string dialogResult = "cancel", bool isDefault = false) {
 		Text = text;
 		DialogResult = dialogResult;
 		IsDefault = isDefault;

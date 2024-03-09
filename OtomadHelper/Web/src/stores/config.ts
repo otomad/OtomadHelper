@@ -100,4 +100,4 @@ export const useConfigStore = createStore<IConfig>()(
 );
 
 export const selectConfig = <T>(path: (state: IConfig) => T) => useStoreSelector(useConfigStore, path);
-(globalThis as AnyObject).config = useConfigStore;
+globals.config = useConfigStore;

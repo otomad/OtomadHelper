@@ -103,9 +103,11 @@
   <ItemGroup>
     <Compile Include="Bridges\Bridge.cs" />
     <Compile Include="GlobalUsing.cs" />
+    <Compile Include="Helpers\WebView2BetterBridge.cs" />
     <Compile Include="Helpers\Extensions_Misc.cs" />
     <Compile Include="Helpers\Extensions_Collection.cs" />
     <Compile Include="Helpers\Path.cs" />
+    <Compile Include="Models\ConsoleLog.cs" />
     <Compile Include="Models\DragOver.cs" />
     <Compile Include="Models\IWebMessageEvent.cs" />
     <Compile Include="WPF\Controls\BackdropWindow.cs" />
