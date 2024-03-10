@@ -1,11 +1,11 @@
-diff --git a/node_modules/pangu/dist/browser/pangu.js b/node_modules/pangu/dist/browser/pangu.js
-index 7efbaf8..8639927 100644
---- a/node_modules/pangu/dist/browser/pangu.js
-+++ b/node_modules/pangu/dist/browser/pangu.js
+diff --git a/dist/browser/pangu.js b/dist/browser/pangu.js
+index 7efbaf8edb730a33e9b671be459847f755880a21..349ae7b86b566095699508ee91af85e70856284b 100644
+--- a/dist/browser/pangu.js
++++ b/dist/browser/pangu.js
 @@ -610,6 +610,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    var S_A = /(%)([A-Za-z])/g;
    var MIDDLE_DOT = /([ ]*)([\u00b7\u2022\u2027])([ ]*)/g;
-   
+ 
 +  function convertToFullwidth(symbols) {
 +    return symbols.replace(/~/g, '～').replace(/!/g, '！').replace(/;/g, '；').replace(/:/g, '：').replace(/,/g, '，').replace(/\./g, '。').replace(/\?/g, '？');
 +  }

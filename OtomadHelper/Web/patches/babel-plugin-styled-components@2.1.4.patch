@@ -1,7 +1,7 @@
-diff --git a/node_modules/babel-plugin-styled-components/lib/utils/detectors.js b/node_modules/babel-plugin-styled-components/lib/utils/detectors.js
-index 3ad71f3..5eb3960 100644
---- a/node_modules/babel-plugin-styled-components/lib/utils/detectors.js
-+++ b/node_modules/babel-plugin-styled-components/lib/utils/detectors.js
+diff --git a/lib/utils/detectors.js b/lib/utils/detectors.js
+index 3ad71f3ff1135fb035ea2f4e72f8af1c5ed28f83..e5c7d3ab101c513a72612fe2a00f255e0c735cdd 100644
+--- a/lib/utils/detectors.js
++++ b/lib/utils/detectors.js
 @@ -14,6 +14,7 @@ const isValidTopLevelImport = (x, state) => {
  exports.isValidTopLevelImport = isValidTopLevelImport;
  const localNameCache = {};
@@ -10,10 +10,10 @@ index 3ad71f3..5eb3960 100644
    const {
      cacheIdentifier,
      bypassCache = false
-diff --git a/node_modules/babel-plugin-styled-components/lib/utils/getName.js b/node_modules/babel-plugin-styled-components/lib/utils/getName.js
-index 90d17cc..ee3e846 100644
---- a/node_modules/babel-plugin-styled-components/lib/utils/getName.js
-+++ b/node_modules/babel-plugin-styled-components/lib/utils/getName.js
+diff --git a/lib/utils/getName.js b/lib/utils/getName.js
+index 90d17cc65080b7909ac051734652dc28887c04ec..bae47985316462a22c45ded34365bcd8c78a8c73 100644
+--- a/lib/utils/getName.js
++++ b/lib/utils/getName.js
 @@ -46,6 +46,7 @@ var _default = t => path => {
    }
  

@@ -1,7 +1,7 @@
-diff --git a/node_modules/vite/client.d.ts b/node_modules/vite/client.d.ts
-index 0f2c3db..82dc540 100644
---- a/node_modules/vite/client.d.ts
-+++ b/node_modules/vite/client.d.ts
+diff --git a/client.d.ts b/client.d.ts
+index 0f2c3db286d82fa5f2912046cae9ce15d19b0514..82dc540d0d704ad874ba2da55597341d7dcb538b 100644
+--- a/client.d.ts
++++ b/client.d.ts
 @@ -130,9 +130,9 @@ declare module '*.gif' {
    const src: string
    export default src

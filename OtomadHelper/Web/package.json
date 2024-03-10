@@ -20,10 +20,9 @@
 		"preview": "vite preview",
 		"predev": "prebuild.bat",
 		"prebuild": "prebuild.bat",
-		"postinstall": "patch-package",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"lint:css": "stylelint './src/**/*.{js,jsx,ts,tsx}'",
-		"release": "npm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
+		"release": "pnpm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
 		"compact-svg": "tsx src/scripts/compact-svg.ts"
 	},
 	"dependencies": {
@@ -62,7 +61,6 @@
 		"eslint-plugin-react": "^7.33.2",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.5",
-		"patch-package": "^8.0.0",
 		"postcss-styled-syntax": "^0.6.4",
 		"stylelint": "^16.2.1",
 		"stylelint-config-standard": "^36.0.0",
@@ -76,5 +74,23 @@
 		"vite-plugin-svg-icons": "^2.0.1",
 		"vite-plugin-svgr": "^4.1.0",
 		"vite-tsconfig-paths": "^4.2.1"
+	},
+	"pnpm": {
+		"patchedDependencies": {
+			"@types/dom-view-transitions@1.0.4": "patches/@types__dom-view-transitions@1.0.4.patch",
+			"@types/react@18.2.48": "patches/@types__react@18.2.48.patch",
+			"babel-plugin-styled-components@2.1.4": "patches/babel-plugin-styled-components@2.1.4.patch",
+			"babel-plugin-transform-jsx-classnames@1.2.2": "patches/babel-plugin-transform-jsx-classnames@1.2.2.patch",
+			"lottie-web@5.12.2": "patches/lottie-web@5.12.2.patch",
+			"pangu@4.0.7": "patches/pangu@4.0.7.patch",
+			"postcss@8.4.35": "patches/postcss@8.4.35.patch",
+			"postcss-selector-parser@6.0.15": "patches/postcss-selector-parser@6.0.15.patch",
+			"postcss-styled-syntax@0.6.4": "patches/postcss-styled-syntax@0.6.4.patch",
+			"react@18.2.0": "patches/react@18.2.0.patch",
+			"react-dom@18.2.0": "patches/react-dom@18.2.0.patch",
+			"react-flip-move@3.0.5": "patches/react-flip-move@3.0.5.patch",
+			"styled-components@6.1.0": "patches/styled-components@6.1.0.patch",
+			"vite@4.4.11": "patches/vite@4.4.11.patch"
+		}
 	}
 }

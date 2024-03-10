@@ -1,7 +1,7 @@
-diff --git a/node_modules/postcss-styled-syntax/lib/tokenizer.js b/node_modules/postcss-styled-syntax/lib/tokenizer.js
-index 92da2ef..cc53e0c 100644
---- a/node_modules/postcss-styled-syntax/lib/tokenizer.js
-+++ b/node_modules/postcss-styled-syntax/lib/tokenizer.js
+diff --git a/lib/tokenizer.js b/lib/tokenizer.js
+index 92da2efb07cb30f112c2838136e7af8071609311..cc53e0c0d73648795d41cc0080784becc6b89863 100644
+--- a/lib/tokenizer.js
++++ b/lib/tokenizer.js
 @@ -317,6 +317,10 @@ function tokenizer(input, options = {}) {
  
  					currentToken = ['comment', css.slice(pos, next + 1), pos, next];

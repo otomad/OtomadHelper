@@ -20,7 +20,7 @@ function Set-ContentRaw {
 
 $file = ".\version.txt"
 $version = (Get-ContentRaw $file).Split(".") | % {iex $_}
-$version[2]++
+# $version[2]++
 $version = $version -Join "."
 Write-Output $version
 Set-ContentRaw $file $version

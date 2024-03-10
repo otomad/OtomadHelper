@@ -1,7 +1,7 @@
-diff --git a/node_modules/react/cjs/react.development.js b/node_modules/react/cjs/react.development.js
-index 304b87e..b845654 100644
---- a/node_modules/react/cjs/react.development.js
-+++ b/node_modules/react/cjs/react.development.js
+diff --git a/cjs/react.development.js b/cjs/react.development.js
+index 304b87e565bb9f12cc39f06ab5b35aad4a1a4d5c..b845654ca49fac8d6bd65d2dda8721ea37e741af 100644
+--- a/cjs/react.development.js
++++ b/cjs/react.development.js
 @@ -1015,6 +1015,10 @@ function getElementKey(element, index) {
    return index.toString(36);
  }
@@ -22,10 +22,10 @@ index 304b87e..b845654 100644
      invokeCallback = true;
    } else {
      switch (type) {
-diff --git a/node_modules/react/cjs/react.production.min.js b/node_modules/react/cjs/react.production.min.js
-index 4953982..ddd5cbf 100644
---- a/node_modules/react/cjs/react.production.min.js
-+++ b/node_modules/react/cjs/react.production.min.js
+diff --git a/cjs/react.production.min.js b/cjs/react.production.min.js
+index 495398276525cb607c3b14f97dcf547b6d501e8f..ddd5cbf3979c5a592f5c52995a687b49a78f7580 100644
+--- a/cjs/react.production.min.js
++++ b/cjs/react.production.min.js
 @@ -13,7 +13,8 @@ E.prototype.setState=function(a,b){if("object"!==typeof a&&"function"!==typeof a
  H.constructor=G;C(H,E.prototype);H.isPureReactComponent=!0;var I=Array.isArray,J=Object.prototype.hasOwnProperty,K={current:null},L={key:!0,ref:!0,__self:!0,__source:!0};
  function M(a,b,e){var d,c={},k=null,h=null;if(null!=b)for(d in void 0!==b.ref&&(h=b.ref),void 0!==b.key&&(k=""+b.key),b)J.call(b,d)&&!L.hasOwnProperty(d)&&(c[d]=b[d]);var g=arguments.length-2;if(1===g)c.children=e;else if(1<g){for(var f=Array(g),m=0;m<g;m++)f[m]=arguments[m+2];c.children=f}if(a&&a.defaultProps)for(d in g=a.defaultProps,g)void 0===c[d]&&(c[d]=g[d]);return{$$typeof:l,type:a,key:k,ref:h,props:c,_owner:K.current}}

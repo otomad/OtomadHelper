@@ -1,7 +1,7 @@
-diff --git a/node_modules/@types/react/index.d.ts b/node_modules/@types/react/index.d.ts
-index 66da98f..a02cb80 100644
---- a/node_modules/@types/react/index.d.ts
-+++ b/node_modules/@types/react/index.d.ts
+diff --git a/index.d.ts b/index.d.ts
+index 66da98fd09f3d69c6f7cefe7eb35c0e8e3a56ea3..a02cb80f1ac5d6c2897f200a5a370aa873745f78 100644
+--- a/index.d.ts
++++ b/index.d.ts
 @@ -7,6 +7,7 @@
  import * as CSS from "csstype";
  import * as PropTypes from "prop-types";

@@ -1,0 +1,12 @@
+diff --git a/typings/react-flip-move.d.ts b/typings/react-flip-move.d.ts
+index cd80c41b1c5d8d159a26c1284ec475de67918802..b95a1b03bae127053ef6e0b17adc090c926cf5f9 100644
+--- a/typings/react-flip-move.d.ts
++++ b/typings/react-flip-move.d.ts
+@@ -6,7 +6,6 @@
+ 
+ import { Component, ReactElement } from 'react';
+ 
+-export as namespace FlipMove;
+ export default FlipMove;
+ 
+ declare class FlipMove extends Component<FlipMove.FlipMoveProps, any> { }

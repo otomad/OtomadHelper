@@ -1,7 +1,7 @@
-diff --git a/node_modules/babel-plugin-transform-jsx-classnames/cx.js b/node_modules/babel-plugin-transform-jsx-classnames/cx.js
-index f743a8d..211e2cc 100644
---- a/node_modules/babel-plugin-transform-jsx-classnames/cx.js
-+++ b/node_modules/babel-plugin-transform-jsx-classnames/cx.js
+diff --git a/cx.js b/cx.js
+index f743a8df9375d8919d473dacab9640c6e66752c1..211e2cc53d22dc4b2517ffbbd4653dd1c6194cfb 100644
+--- a/cx.js
++++ b/cx.js
 @@ -1,6 +1,7 @@
  'use strict'
  
