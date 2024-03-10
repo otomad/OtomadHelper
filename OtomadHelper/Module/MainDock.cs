@@ -60,6 +60,9 @@ public partial class MainDock : UserControl {
 		Browser.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
 		Browser.CoreWebView2.DocumentTitleChanged += (sender, e) => DocumentTitleChanged?.Invoke(Browser.CoreWebView2.DocumentTitle);
 		Browser.CoreWebView2.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
+#if DEBUG
+		Browser.CoreWebView2.OpenDevToolsWindow();
+#endif
 	}
 
 	private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e) {
@@ -93,12 +96,12 @@ public partial class MainDock : UserControl {
 
 	private void Browser_DragEnter(object sender, DragEventArgs e) {
 		if (LoadingAnimationPicture.Visible) return; // 初始化动画时不应响应拖拽事件。
-		string[] filenames = e.GetFileNames();
-		if (filenames.Length < 1) return;
+		string[] files = e.GetFileNames();
+		if (files.Length < 1) return;
+		string fullPath = files[0];
+		Path path = new(fullPath);
 		e.Effect = e.AllowedEffect & DragDropEffects.Copy;
-		DropTargetHelper.DragEnter(this, e.Data, new Point(e.X, e.Y), e.Effect, t("ImportToHereAction"), t("ImportToHereTarget"));
-		string filename = filenames[0];
-		Path path = new(filename);
+		DropTargetHelper.DragEnter(this, e.Data, new Point(e.X, e.Y), e.Effect, t("ImportToHere"), path.FullFileName);
 		bool isDirectory = path.IsDirectory;
 		string extension = path.DotExtension;
 		using RegistryKey? registryKey = Registry.ClassesRoot.OpenSubKey(extension);

@@ -11,10 +11,17 @@ namespace OtomadHelper.WPF.Controls;
 /// BackdropWindow.xaml 的交互逻辑
 /// </summary>
 public partial class BackdropWindow : Window, INotifyPropertyChanged {
-	protected IntPtr Handle => new WindowInteropHelper(this).Handle;
+	protected WindowInteropHelper helper;
+	protected IntPtr Handle => helper.Handle;
 
 	public BackdropWindow() {
 		InitializeComponent();
+		helper = new(this);
+	}
+
+	public IntPtr OwnerHandle {
+		get => helper.Owner;
+		set => helper.Owner = value;
 	}
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {

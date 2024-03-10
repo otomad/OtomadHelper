@@ -8,7 +8,7 @@ type ReactElementType = string | React.JSXElementConstructor<Any>;
  */
 export function isReactInstance<T extends ReactElementType>(node: ReactNode, element: T):
 	node is ReactElement<T extends React.FC<infer P> ? P : unknown, T> {
-	return React.isValidElement(node) && node.type === element;
+	return React.isValidElement(node) && _.isObject(node) && "type" in node && node.type === element;
 }
 
 /**
@@ -30,7 +30,7 @@ export function cloneRef(children: ReactNode, nodeRef: MutableRefObject<Element 
 	return h(
 		Fragment,
 		null,
-		React.Children.map(children, child => {
+		React.Children.map(children, (child: ReactNode) => {
 			if (hasRefInReactNode(child)) {
 				// useImperativeHandle(child.ref, () => nodeRef.current!, []);
 				// child.ref.current = nodeRef.current;

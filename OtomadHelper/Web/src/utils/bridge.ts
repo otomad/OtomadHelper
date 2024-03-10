@@ -31,12 +31,13 @@ class Bridge {
 }
 
 const EMPTY = {};
+type HostObjects = Window["chrome"]["webview"]["hostObjects"];
 export const bridges = new Proxy(EMPTY, {
 	get(_, bridgeName) {
 		if (typeof bridgeName === "symbol") throw new TypeError("Cannot use symbol as bridge name");
 		return new Bridge(bridgeName);
 	},
-}) as AnyObject;
+}) as HostObjects;
 globals.bridges = bridges;
 
 // 本机端代码向网页端通信事件
