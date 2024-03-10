@@ -1,7 +1,7 @@
 import type { LocaleIdentifiers } from "./types";
 
 const Japanese = {
-	translation: {
+	javascript: {
 		metadata: {
 			__translator__: "",
 			name: "日本語",
@@ -44,6 +44,9 @@ const Japanese = {
 				additional: "ビデオ・アートでは、2つの映像がインターリーブされ、中間フレームが2つの別々のソースから補間される、「データモッシュ」という手法がある。これは、それぞれのビデオコーデックが動きや色情報をどのように処理するかの違いを利用する。",
 			},
 		},
+	},
+	csharp: {
+		ImportToHere: "インポート %1",
 	},
 }/*  as const satisfies LocaleIdentifiers */;
 

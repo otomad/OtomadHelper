@@ -189,6 +189,9 @@ devDependencies:
   vite-tsconfig-paths:
     specifier: ^4.2.1
     version: 4.2.1(typescript@5.3.3)(vite@4.4.11)
+  xmlbuilder2:
+    specifier: ^3.1.1
+    version: 3.1.1
 
 packages:
 
@@ -833,6 +836,35 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
+    dev: true
+
+  /@oozcitak/dom@1.15.10:
+    resolution: {integrity: sha512-0JT29/LaxVgRcGKvHmSrUTEvZ8BXvZhGl2LASRUgHqDTC1M5g1pLmVv56IYNyt3bG2CUjDkc67wnyZC14pbQrQ==}
+    engines: {node: '>=8.0'}
+    dependencies:
+      '@oozcitak/infra': 1.0.8
+      '@oozcitak/url': 1.0.4
+      '@oozcitak/util': 8.3.8
+    dev: true
+
+  /@oozcitak/infra@1.0.8:
+    resolution: {integrity: sha512-JRAUc9VR6IGHOL7OGF+yrvs0LO8SlqGnPAMqyzOuFZPSZSXI7Xf2O9+awQPSMXgIWGtgUf/dA6Hs6X6ySEaWTg==}
+    engines: {node: '>=6.0'}
+    dependencies:
+      '@oozcitak/util': 8.3.8
+    dev: true
+
+  /@oozcitak/url@1.0.4:
+    resolution: {integrity: sha512-kDcD8y+y3FCSOvnBI6HJgl00viO/nGbQoCINmQ0h98OhnGITrWR3bOGfwYCthgcrV8AnTJz8MzslTQbC3SOAmw==}
+    engines: {node: '>=8.0'}
+    dependencies:
+      '@oozcitak/infra': 1.0.8
+      '@oozcitak/util': 8.3.8
+    dev: true
+
+  /@oozcitak/util@8.3.8:
+    resolution: {integrity: sha512-T8TbSnGsxo6TDBJx/Sgv/BlVJL3tshxZP7Aq5R1mSnM5OcHY2dQaxLMu2+E8u3gN0MLOzdjurqN4ZRVuzQycOQ==}
+    engines: {node: '>=8.0'}
     dev: true
 
   /@pkgjs/parseargs@0.11.0:
@@ -1503,6 +1535,12 @@ packages:
     dependencies:
       normalize-path: 3.0.0
       picomatch: 2.3.1
+    dev: true
+
+  /argparse@1.0.10:
+    resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
+    dependencies:
+      sprintf-js: 1.0.3
     dev: true
 
   /argparse@2.0.1:
@@ -2496,6 +2534,12 @@ packages:
       eslint-visitor-keys: 3.4.3
     dev: true
 
+  /esprima@4.0.1:
+    resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
+    engines: {node: '>=4'}
+    hasBin: true
+    dev: true
+
   /esquery@1.5.0:
     resolution: {integrity: sha512-YQLXUplAwJgCydQ78IMJywZCceoqk1oH01OERdSAJc/7U2AylwjhSCLDEtqwg811idIS/9fIU5GjG73IgjKMVg==}
     engines: {node: '>=0.10'}
@@ -3385,6 +3429,14 @@ packages:
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+
+  /js-yaml@3.14.1:
+    resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
+    hasBin: true
+    dependencies:
+      argparse: 1.0.10
+      esprima: 4.0.1
+    dev: true
 
   /js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
@@ -4528,6 +4580,10 @@ packages:
       extend-shallow: 3.0.2
     dev: true
 
+  /sprintf-js@1.0.3:
+    resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
+    dev: true
+
   /stable@0.1.8:
     resolution: {integrity: sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w==}
     deprecated: 'Modern JS already guarantees Array#sort() is a stable sort, so this library is deprecated. See the compatibility table on MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#browser_compatibility'
@@ -5368,6 +5424,16 @@ packages:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
+    dev: true
+
+  /xmlbuilder2@3.1.1:
+    resolution: {integrity: sha512-WCSfbfZnQDdLQLiMdGUQpMxxckeQ4oZNMNhLVkcekTu7xhD4tuUDyAPoY8CwXvBYE6LwBHd6QW2WZXlOWr1vCw==}
+    engines: {node: '>=12.0'}
+    dependencies:
+      '@oozcitak/dom': 1.15.10
+      '@oozcitak/infra': 1.0.8
+      '@oozcitak/util': 8.3.8
+      js-yaml: 3.14.1
     dev: true
 
   /yallist@3.1.1:

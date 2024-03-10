@@ -1,7 +1,7 @@
 import type { LocaleIdentifiers } from "./types";
 
 const SChinese = {
-	translation: {
+	javascript: {
 		metadata: {
 			__translator__: "",
 			name: "简体中文",
@@ -360,6 +360,9 @@ const SChinese = {
 				gotoYtp: "转到YTP",
 			},
 		},
+	},
+	csharp: {
+		ImportToHere: "导入 %1",
 	},
 } as const satisfies LocaleIdentifiers;
 

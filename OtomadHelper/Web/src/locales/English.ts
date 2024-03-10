@@ -1,5 +1,5 @@
 const English = {
-	translation: {
+	javascript: {
 		metadata: {
 			__translator__: "",
 			name: "English",
@@ -370,6 +370,9 @@ const English = {
 				gotoYtp: "Go to YTP",
 			},
 		},
+	},
+	csharp: {
+		ImportToHere: "Import %1",
 	},
 } as const;
 

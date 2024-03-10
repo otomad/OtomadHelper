@@ -23,6 +23,8 @@ i18n
 	// 配置参数的文档: https://www.i18next.com/overview/configuration-options
 	.init({
 		debug: import.meta.env.DEV,
+		ns: ["javascript"],
+		defaultNS: "javascript",
 		fallbackLng: "en",
 		interpolation: {
 			escapeValue: false,

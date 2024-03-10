@@ -1,7 +1,8 @@
+import { addWjBetweenEachChar } from "utils/string";
 import type { LocaleIdentifiers } from "./types";
 
 const Vietnamese = {
-	translation: {
+	javascript: {
 		metadata: {
 			__translator__: "Cyahega",
 			name: "Tiếng Việt",
@@ -44,6 +45,9 @@ const Vietnamese = {
 				additional: "Trong nghệ thuật video, một kỹ thuật được sử dụng là khai thác dữ liệu. Hai trong số các video được xen kẽ, vì vậy khung hình trung gian được nội suy từ hai nguồn riêng biệt. Và tận dụng sự khác biệt trong cách codec video độc lập xử lý thông tin chuyển động và màu sắc.",
 			},
 		},
+	},
+	csharp: {
+		ImportToHere: "Nhập %1",
 	},
 }/*  as const satisfies LocaleIdentifiers */;
 

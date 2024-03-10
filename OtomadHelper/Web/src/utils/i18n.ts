@@ -15,7 +15,7 @@ const getProxy = (target: object) =>
 			const getParentsPrefix = (...prefixes: string[]) => prefixes.length ? prefixes.join(".") : "";
 			const getDeclarationInfo = (...keys: string[]) => {
 				const key = getParentsPrefix(...keys);
-				const raw = translation.getResource("en", "translation", key) as string | object;
+				const raw = translation.getResource("en", "javascript", key) as string | object;
 				return {
 					isCategory: typeof raw === "object",
 					includesInterpolation: typeof raw === "string" && raw.includes("{{"),

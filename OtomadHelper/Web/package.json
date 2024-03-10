@@ -1,7 +1,7 @@
 {
 	"name": "otomad-helper",
 	"displayName": "Otomad Helper",
-	"version": "7.9.60",
+	"version": "7.9.0",
 	"description": "The front-end part of Otomad Helper extension.",
 	"type": "module",
 	"main": "./dist/index.html",
@@ -73,7 +73,8 @@
 		"vite-plugin-html-minifier": "^1.0.3",
 		"vite-plugin-svg-icons": "^2.0.1",
 		"vite-plugin-svgr": "^4.1.0",
-		"vite-tsconfig-paths": "^4.2.1"
+		"vite-tsconfig-paths": "^4.2.1",
+		"xmlbuilder2": "^3.1.1"
 	},
 	"pnpm": {
 		"patchedDependencies": {

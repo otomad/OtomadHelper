@@ -26,5 +26,5 @@ type DiscardConstString<L> = {
 	[key in KeyWithOther<keyof L>]?: string;
 };
 
-export type LocaleWithDefaultValue = NestLocaleWithDefaultValue<typeof SChinese["translation"]>;
+export type LocaleWithDefaultValue = NestLocaleWithDefaultValue<typeof SChinese["javascript"]>;
 export type LocaleIdentifiers = DiscardConstString<typeof English>;

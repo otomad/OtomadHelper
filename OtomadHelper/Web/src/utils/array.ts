@@ -53,19 +53,10 @@
 		return [...new Set(this)];
 	};
 
-	/**
-	 * 返回一个新数组，该数组将被剔除任何虚值，如 undefined、null、false、""、±0、±0n。
-	 * @param this - 源数组。
-	 * @returns 不包含任何虚值的新数组。
-	 */
 	Array.prototype.toRemoveFalsy = function () {
 		return this.filter(item => item);
 	};
 
-	/**
-	 * 判断两个数组是否相等，包括位置顺序。
-	 * @returns 两个数组是否相等？
-	 */
 	Array.prototype.equals = function (another) {
 		if (this === another) return true;
 		if (!this || !another) return false;
