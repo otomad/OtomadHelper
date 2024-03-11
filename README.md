@@ -20,7 +20,7 @@
   <p align="center">
     YTPMV/YTP/Otomad Extension for Vegas Pro
     <br />
-    <a href="https://github.com/otomad/OtomadHelper"><strong>Explore the docs »</strong></a>
+    <a href="https://otomadhelper.readthedocs.io/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/otomad/OtomadHelper">Watch Tutorial</a>
