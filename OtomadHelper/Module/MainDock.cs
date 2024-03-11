@@ -1,5 +1,4 @@
 using System.Drawing;
-using System.Text.Json.Serialization;
 using System.Windows.Forms;
 using APNGLib;
 using Microsoft.Web.WebView2.Core;
@@ -15,8 +14,8 @@ public partial class MainDock : UserControl {
 		InitializeComponent();
 		Dock = DockStyle.Fill;
 
-		DragDrop += (sender, e) => Browser_DragLeave();
-		DragLeave += (sender, e) => Browser_DragLeave();
+		DragDrop += (sender, e) => MainDock_DragLeave();
+		DragLeave += (sender, e) => MainDock_DragLeave();
 
 		//MainWindow window = new();
 		//window.Show();
@@ -70,10 +69,15 @@ public partial class MainDock : UserControl {
 		Process.Start(e.Uri);
 	}
 
-	private void Browser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e) {
-		LoadingAnimationPicture.Visible = false;
-		LoadingAnimationPicture.Stop();
-		Browser.Visible = true;
+	private async void Browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
+		string message = e.TryGetWebMessageAsString();
+		if (message == "initialized") {
+			await Task.Delay(500);
+			LoadingAnimationPicture.Visible = false;
+			LoadingAnimationPicture.Stop();
+			SplashContainer.Visible = false;
+			Browser.Visible = true;
+		}
 	}
 
 	private APNGBox LoadingAnimationPicture = null!;
@@ -86,7 +90,7 @@ public partial class MainDock : UserControl {
 				Location = new Point((Width - (int)apng.Width) / 2, (Height - (int)apng.Height) / 2),
 				Anchor = AnchorStyles.None,
 			};
-			Controls.Add(LoadingAnimationPicture);
+			SplashContainer.Controls.Add(LoadingAnimationPicture);
 			LoadingAnimationPicture.Start();
 		} catch (Exception) { }
 	}
@@ -94,7 +98,7 @@ public partial class MainDock : UserControl {
 	public delegate void DocumentTitleChangedEventHandler(string title);
 	public event DocumentTitleChangedEventHandler? DocumentTitleChanged;
 
-	private void Browser_DragEnter(object sender, DragEventArgs e) {
+	private void MainDock_DragEnter(object sender, DragEventArgs e) {
 		if (LoadingAnimationPicture.Visible) return; // 初始化动画时不应响应拖拽事件。
 		string[] files = e.GetFileNames();
 		if (files.Length < 1) return;
@@ -114,14 +118,14 @@ public partial class MainDock : UserControl {
 		});
 	}
 
-	private void Browser_DragLeave() {
+	private void MainDock_DragLeave() {
 		PostWebMessage(new DragOver() {
 			isDragging = false,
 		});
 		DropTargetHelper.DragLeave(this);
 	}
 
-	private void Browser_DragOver(object sender, DragEventArgs e) {
+	private void MainDock_DragOver(object sender, DragEventArgs e) {
 		e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? e.AllowedEffect & DragDropEffects.Copy : DragDropEffects.None;
 		DropTargetHelper.DragOver(new Point(e.X, e.Y), e.Effect);
 	}

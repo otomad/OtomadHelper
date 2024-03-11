@@ -17,17 +17,19 @@ public partial class ContentDialog : BackdropWindow {
 		Buttons = buttons;
 		IconName = "Info";
 
-		Type dialogResultType = buttons.Cast<dynamic>().FirstOrDefault(button => button?.DialogResult is not null)?.DialogResult?.GetType();
-		if (dialogResultType == typeof(string)) DialogResult = "cancel";
-		else if (dialogResultType == typeof(DialogResult)) DialogResult = System.Windows.Forms.DialogResult.Cancel;
-		else if (dialogResultType == typeof(bool)) DialogResult = false;
+		Type? dialogResultType = buttons.Cast<dynamic>().FirstOrDefault(button => button?.DialogResult is not null)?.DialogResult?.GetType();
+		if (dialogResultType is not null) {
+			if (dialogResultType == typeof(string)) DialogResult = "cancel";
+			else if (dialogResultType == typeof(DialogResult)) DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			else if (dialogResultType == typeof(bool)) DialogResult = false;
+		}
 	}
 
 	protected ContentDialog(string title, string body, string iconName, IEnumerable buttons) : this(title, body, buttons) {
 		IconName = iconName;
 	}
 
-	protected new dynamic ShowDialog() {
+	protected new dynamic? ShowDialog() {
 		base.ShowDialog();
 		return DialogResult;
 	}
@@ -107,11 +109,11 @@ public class ContentDialog<R> : ContentDialog {
 	public ContentDialog(string title, string body, string iconName, IEnumerable<ContentDialogButtonItem<R>> buttons) : base(title, body, iconName, buttons) { }
 
 	public new R DialogResult {
-		get => (R)base.DialogResult;
+		get => (R)base.DialogResult!;
 		set => base.DialogResult = value;
 	}
 
-	public new R ShowDialog() => (R)base.ShowDialog();
+	public new R ShowDialog() => (R)base.ShowDialog()!;
 }
 
 public class ContentDialogButtonItem<R> {

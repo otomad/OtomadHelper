@@ -24,36 +24,50 @@ namespace OtomadHelper.Module {
 		/// </summary>
 		private void InitializeComponent() {
 			this.Browser = new Microsoft.Web.WebView2.WinForms.WebView2();
+			this.SplashContainer = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.Browser)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// Browser
 			// 
 			this.Browser.AllowExternalDrop = false;
+			this.Browser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.Browser.CreationProperties = null;
 			this.Browser.DefaultBackgroundColor = System.Drawing.Color.White;
-			this.Browser.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.Browser.Location = new System.Drawing.Point(0, 0);
 			this.Browser.Margin = new System.Windows.Forms.Padding(0);
 			this.Browser.Name = "Browser";
 			this.Browser.Size = new System.Drawing.Size(600, 300);
 			this.Browser.TabIndex = 0;
-			this.Browser.Visible = false;
 			this.Browser.ZoomFactor = 1D;
 			this.Browser.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.Browser_CoreWebView2InitializationCompleted);
-			this.Browser.NavigationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs>(this.Browser_NavigationCompleted);
+			this.Browser.WebMessageReceived += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2WebMessageReceivedEventArgs>(this.Browser_WebMessageReceived);
+			// 
+			// SplashContainer
+			// 
+			this.SplashContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.SplashContainer.Location = new System.Drawing.Point(0, 0);
+			this.SplashContainer.Margin = new System.Windows.Forms.Padding(0);
+			this.SplashContainer.Name = "SplashContainer";
+			this.SplashContainer.Size = new System.Drawing.Size(600, 300);
+			this.SplashContainer.TabIndex = 1;
 			// 
 			// MainDock
 			// 
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.Controls.Add(this.SplashContainer);
 			this.Controls.Add(this.Browser);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.Name = "MainDock";
 			this.Size = new System.Drawing.Size(600, 300);
-			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Browser_DragEnter);
-			this.DragOver += new System.Windows.Forms.DragEventHandler(this.Browser_DragOver);
+			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainDock_DragEnter);
+			this.DragOver += new System.Windows.Forms.DragEventHandler(this.MainDock_DragOver);
 			((System.ComponentModel.ISupportInitialize)(this.Browser)).EndInit();
 			this.ResumeLayout(false);
 
@@ -62,5 +76,6 @@ namespace OtomadHelper.Module {
 		#endregion
 
 		public Microsoft.Web.WebView2.WinForms.WebView2 Browser;
+		private System.Windows.Forms.Panel SplashContainer;
 	}
 }

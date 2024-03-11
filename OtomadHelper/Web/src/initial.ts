@@ -50,4 +50,12 @@ const global = globalThis as AnyObject;
 			return [...document.head.querySelector("style[data-styled]")?.childNodes as NodeListOf<Text> ?? []].find(rule => rule.textContent?.includes(component));
 		};
 	// #endregion
+
+	// #region 页面已完全加载
+	const observer = new MutationObserver(() => {
+		window.chrome.webview.postMessage("initialized");
+		observer.disconnect();
+	});
+	observer.observe(document.getElementById("root")!, { childList: true });
+	// #endregion
 }

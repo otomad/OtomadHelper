@@ -34,7 +34,7 @@ const filters = {
 		const newImageData = cloneImageData(imageData);
 		const { data: pixels } = newImageData;
 		const centerX = width / 2, centerY = height / 2, radius = Math.min(centerX, centerY);
-		const toCenter = (x: number, y: number) => Math.sqrt((y - centerY) ** 2 + (x - centerX) ** 2);
+		const toCenter = (x: number, y: number) => Math.hypot(y - centerY, x - centerX);
 		const getRadian = (x: number, y: number) => Math.atan2(y - centerY, x - centerX);
 		for (let y = 0; y < height; y++)
 			for (let x = 0; x < width; x++) {
@@ -114,7 +114,7 @@ const filters = {
 						aSum += pixels[index + 3];
 					}
 				}
-				
+
 				newPixels[index] = rSum / count + 0.5;
 				newPixels[index + 1] = gSum / count + 0.5;
 				newPixels[index + 2] = bSum / count + 0.5;
