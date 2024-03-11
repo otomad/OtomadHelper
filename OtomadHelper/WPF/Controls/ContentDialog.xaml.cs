@@ -1,28 +1,43 @@
+using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace OtomadHelper.WPF.Controls;
+
 /// <summary>
 /// ContentDialog.xaml 的交互逻辑
 /// </summary>
 public partial class ContentDialog : BackdropWindow {
-	public new string DialogResult { get; set; } = "cancel";
+	protected new dynamic? DialogResult { get; set; }
 
-	public ContentDialog(string title, string body, IEnumerable<ContentDialogButtonItem> buttons) {
+	protected ContentDialog(string title, string body, IEnumerable buttons) {
 		InitializeComponent();
 		Title = title;
 		Body = body;
 		Buttons = buttons;
+		IconName = "Info";
+
+		Type dialogResultType = buttons.Cast<dynamic>().FirstOrDefault(button => button?.DialogResult is not null)?.DialogResult?.GetType();
+		if (dialogResultType == typeof(string)) DialogResult = "cancel";
+		else if (dialogResultType == typeof(DialogResult)) DialogResult = System.Windows.Forms.DialogResult.Cancel;
+		else if (dialogResultType == typeof(bool)) DialogResult = false;
 	}
 
-	public new string ShowDialog() {
+	protected ContentDialog(string title, string body, string iconName, IEnumerable buttons) : this(title, body, buttons) {
+		IconName = iconName;
+	}
+
+	protected new dynamic ShowDialog() {
 		base.ShowDialog();
 		return DialogResult;
 	}
 
 	public new string Title {
 		get => TitleLbl.Text;
-		set => TitleLbl.Text = value;
+		set {
+			TitleLbl.Text = value;
+			base.Title = value;
+		}
 	}
 
 	public string Body {
@@ -30,12 +45,40 @@ public partial class ContentDialog : BackdropWindow {
 		set => BodyLbl.Text = value;
 	}
 
-	private IEnumerable<ContentDialogButtonItem> Buttons {
+	public new string Icon {
+		get => IconLbl.Text;
+		set => IconLbl.Text = value;
+	}
+
+	public string IconName {
+		set {
+			value = new VariableName(value).Pascal;
+
+			if (!SegoeIconNames.TryGetValue(value, out string iconChar))
+				iconChar = SegoeIconNames["Info"];
+			Icon = iconChar;
+
+			if (Properties.Resources.ResourceManager.GetObject(value) is not Icon iconImage)
+				iconImage = Properties.Resources.Info;
+			base.Icon = iconImage.ToImageSource();
+		}
+	}
+
+	public static readonly Dictionary<string, string> SegoeIconNames = new() {
+		{ "Info", "\ue946" },
+		{ "Warning", "\ue7ba" },
+		{ "Error", "\uea39" },
+		{ "Question", "\ue9ce" },
+		{ "Locale", "\ue774" },
+	};
+
+	private IEnumerable Buttons {
 		set {
 			ButtonGrid.Children.Clear();
 			ButtonGrid.ColumnDefinitions.Clear();
-			int count = value.Count();
-			foreach ((ContentDialogButtonItem button, int index) in value.WithIndex()) {
+			IEnumerable<dynamic> buttons = value.Cast<dynamic>();
+			int count = buttons.Count();
+			foreach ((dynamic button, int index) in buttons.WithIndex()) {
 				ButtonGrid.ColumnDefinitions.Add(new() { Width = new(1, GridUnitType.Star) });
 				if (index != count - 1)
 					ButtonGrid.ColumnDefinitions.Add(new() { Width = new(8) });
@@ -58,12 +101,25 @@ public partial class ContentDialog : BackdropWindow {
 	}
 }
 
-public class ContentDialogButtonItem {
+public class ContentDialog<R> : ContentDialog {
+	public ContentDialog(string title, string body, IEnumerable<ContentDialogButtonItem<R>> buttons) : base(title, body, buttons) { }
+
+	public ContentDialog(string title, string body, string iconName, IEnumerable<ContentDialogButtonItem<R>> buttons) : base(title, body, iconName, buttons) { }
+
+	public new R DialogResult {
+		get => (R)base.DialogResult;
+		set => base.DialogResult = value;
+	}
+
+	public new R ShowDialog() => (R)base.ShowDialog();
+}
+
+public class ContentDialogButtonItem<R> {
 	public string Text;
-	public string DialogResult;
+	public R DialogResult;
 	public bool IsDefault = false;
 
-	public ContentDialogButtonItem(string text, string dialogResult = "cancel", bool isDefault = false) {
+	public ContentDialogButtonItem(string text, R dialogResult, bool isDefault = false) {
 		Text = text;
 		DialogResult = dialogResult;
 		IsDefault = isDefault;

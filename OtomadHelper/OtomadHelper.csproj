@@ -7,7 +7,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProjectGuid>{C99DB0BB-5DCB-49F9-9ED1-563AAEFF5E67}</ProjectGuid>
     <RootNamespace>OtomadHelper</RootNamespace>
     <AssemblyName>OtomadHelper</AssemblyName>
@@ -16,8 +16,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <PlatformTarget>x64</PlatformTarget>
     <OutputType>WinExe</OutputType>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -27,8 +27,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PlatformTarget>x64</PlatformTarget>
     <OutputType>Library</OutputType>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -38,26 +38,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Otomad Helper.ico</ApplicationIcon>
+    <ApplicationIcon>Icons\001 - Otomad Helper.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup>
     <ProjectTypeGuids>
@@ -66,10 +50,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>Test\app.manifest</ApplicationManifest>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="APNGLib">
@@ -106,7 +86,9 @@
   <ItemGroup>
     <Compile Include="Bridges\Bridge.cs" />
     <Compile Include="GlobalUsing.cs" />
+    <Compile Include="Helpers\Extensions_Image.cs" />
     <Compile Include="Helpers\I18n.cs" />
+    <Compile Include="Helpers\VariableName.cs" />
     <Compile Include="Helpers\WebView2BetterBridge.cs" />
     <Compile Include="Helpers\Extensions_Misc.cs" />
     <Compile Include="Helpers\Extensions_Collection.cs" />
@@ -188,7 +170,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Web\dist\**" />
     <EmbeddedResource Include="Assets\**" />
-    <Content Include="Otomad Helper.ico" />
+    <Content Include="Icons\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Costura.Fody">
@@ -236,6 +218,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell ..\..\..\versioning.ps1</PreBuildEvent>
+    <PreBuildEvent>powershell $(SolutionDir)versioning.ps1</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>:: $(ProjectDir)Properties\InsertIcons.exe $(TargetPath) $(ProjectDir)Icons</PostBuildEvent>
   </PropertyGroup>
 </Project>

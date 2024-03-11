@@ -2,15 +2,22 @@ using System.Globalization;
 
 namespace OtomadHelper.Helpers;
 
-public static class I18n {
-	public static string t_SetCulture {
+public class I18n : DynamicObject {
+	public string SetCulture {
 		set {
 			CultureInfo culture = new(value);
 			Thread.CurrentThread.CurrentCulture = culture;
 		}
 	}
 
-	public static string t(string key) {
+	public string Translate(string key) {
 		return Properties.Resources.ResourceManager.GetString(key);
 	}
+
+	public override bool TryGetMember(GetMemberBinder binder, out object result) {
+		result = Translate(binder.Name);
+		return result is not null;
+	}
+
+	public static readonly dynamic t = new I18n();
 }

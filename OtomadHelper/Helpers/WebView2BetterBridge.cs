@@ -30,27 +30,54 @@ public class BetterBridge {
 	/// Called from TS/JS side works on both async and regular methods of the wrapped class!
 	/// </summary>
 	/// <param name="methodName">The method name.</param>
-	/// <param name="argsJson">The method arguments but in JSON.</param>
+	/// <param name="jsonArgsString">The method arguments but in JSON.</param>
 	/// <param name="callId">Call ID.</param>
 	/// <returns></returns>
-	public async Task<string> RunMethod(string methodName, string argsJson) {
+	public async Task<string> RunMethod(string methodName, string jsonArgsString) {
 		try {
 			// We have stored each argument as json data in an array, the array is also encoded to a string
 			// since webview can't invoke string[] array functions
-			string[]? jsonDataArray = JsonSerializer.Deserialize<string[]>(argsJson, jsonOptions);
-			if (jsonDataArray is null)
-				throw new Exception("Invalid arguments");
+			string[]? jsonArgs = JsonSerializer.Deserialize<string[]>(jsonArgsString, jsonOptions);
+			if (jsonArgs is null)
+				throw new TypeLoadException("Invalid arguments");
 
-			MethodInfo method = bridgeClassType.GetMethod(methodName);
-			ParameterInfo[] parameters = bridgeClassType.GetMethod(methodName).GetParameters();
+			bool matchedMethodName = false, matchedParameterLength = false;
+			MethodInfo[] methods = bridgeClassType.GetMethods();
+			MethodInfo? method = methods.FirstOrDefault(method => {
+				if (method.Name != methodName) return false;
+				matchedMethodName = true;
+				ParameterInfo[] parameters = method.GetParameters();
+				if (parameters.Length != jsonArgs.Length) return false;
+				matchedParameterLength = true;
+				for (int i = 0; i < parameters.Length; i++) {
+					ParameterInfo parameter = parameters[i];
+					string jsonArg = jsonArgs[i].Trim();
+					if (jsonArg == "null" || jsonArg.StartsWith("{")) continue; // null 和对象暂时无法直接判断正确类型。
+					Type type = parameter.ParameterType;
+					if (type == typeof(string) && jsonArg.StartsWith("\"")) continue;
+					else if (type == typeof(bool) && jsonArg is "true" or "false") continue;
+					else if (typeof(IEnumerable).IsAssignableFrom(type) && jsonArg.StartsWith("[")) continue;
+					else if (type.IsNumber() && Regex.IsMatch(jsonArg, @"^[-.\d]")) continue;
+					else return false;
+				}
+				return true;
+			});
 
-			if (parameters.Length != jsonDataArray.Length)
-				throw new Exception($"Wrong number of arguments, expected: {parameters.Length} but got: {jsonDataArray.Length}");
+			if (method is null) {
+				if (!matchedMethodName)
+					throw new MissingMethodException(bridgeClassType.Name, methodName);
+				else if (!matchedParameterLength)
+					throw new ArgumentException($"No overload for method \"{methodName}\" takes {jsonArgs.Length} arguments");
+				else
+					throw new ArgumentException($"Method \"{methodName}\" contains overloads of {jsonArgs.Length} parameters, but the types are not matched");
+			}
 
-			object?[] typedArgs = new object[jsonDataArray.Length];
+			ParameterInfo[] parameters = method.GetParameters();
+
+			object?[] typedArgs = new object[jsonArgs.Length];
 
 			for (int i = 0; i < typedArgs.Length; i++) {
-				object? typedObj = JsonSerializer.Deserialize(jsonDataArray[i], parameters[i].ParameterType, jsonOptions);
+				object? typedObj = JsonSerializer.Deserialize(jsonArgs[i], parameters[i].ParameterType, jsonOptions);
 				typedArgs[i] = typedObj;
 			}
 

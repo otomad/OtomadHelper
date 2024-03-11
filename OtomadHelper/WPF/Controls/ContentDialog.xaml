@@ -12,7 +12,7 @@
 	SizeToContent="Height"
 	ResizeMode="NoResize"
 	ShowInTaskbar="True"
-	WindowStartupLocation="CenterOwner"
+	WindowStartupLocation="CenterScreen"
 	mc:Ignorable="d">
 	<c:BackdropWindow.Resources>
 		<Style TargetType="TextBlock">
@@ -70,7 +70,7 @@
 
 	<Grid>
 		<Canvas>
-			<TextBlock Style="{StaticResource ShadingIcon}" Text="&#xe946;" />
+			<TextBlock x:Name="IconLbl" Style="{StaticResource ShadingIcon}" Text="&#xe946;" />
 		</Canvas>
 		<StackPanel Orientation="Vertical">
 			<Border Style="{StaticResource ContentWrapper}">
