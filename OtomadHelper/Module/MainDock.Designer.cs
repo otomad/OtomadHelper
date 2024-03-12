@@ -25,7 +25,10 @@ namespace OtomadHelper.Module {
 		private void InitializeComponent() {
 			this.Browser = new Microsoft.Web.WebView2.WinForms.WebView2();
 			this.SplashContainer = new System.Windows.Forms.Panel();
+			this.LoadingAnimationPicture = new APNGViewer.APNGBox();
 			((System.ComponentModel.ISupportInitialize)(this.Browser)).BeginInit();
+			this.SplashContainer.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.LoadingAnimationPicture)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// Browser
@@ -50,11 +53,22 @@ namespace OtomadHelper.Module {
 			this.SplashContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.SplashContainer.Controls.Add(this.LoadingAnimationPicture);
 			this.SplashContainer.Location = new System.Drawing.Point(0, 0);
 			this.SplashContainer.Margin = new System.Windows.Forms.Padding(0);
 			this.SplashContainer.Name = "SplashContainer";
 			this.SplashContainer.Size = new System.Drawing.Size(600, 300);
 			this.SplashContainer.TabIndex = 1;
+			// 
+			// LoadingAnimationPicture
+			// 
+			this.LoadingAnimationPicture.Anchor = System.Windows.Forms.AnchorStyles.None;
+			this.LoadingAnimationPicture.APNGFile = null;
+			this.LoadingAnimationPicture.Location = new System.Drawing.Point(0, 0);
+			this.LoadingAnimationPicture.Name = "LoadingAnimationPicture";
+			this.LoadingAnimationPicture.Size = new System.Drawing.Size(600, 300);
+			this.LoadingAnimationPicture.TabIndex = 0;
+			this.LoadingAnimationPicture.TabStop = false;
 			// 
 			// MainDock
 			// 
@@ -69,6 +83,8 @@ namespace OtomadHelper.Module {
 			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainDock_DragEnter);
 			this.DragOver += new System.Windows.Forms.DragEventHandler(this.MainDock_DragOver);
 			((System.ComponentModel.ISupportInitialize)(this.Browser)).EndInit();
+			this.SplashContainer.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.LoadingAnimationPicture)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -77,5 +93,6 @@ namespace OtomadHelper.Module {
 
 		public Microsoft.Web.WebView2.WinForms.WebView2 Browser;
 		private System.Windows.Forms.Panel SplashContainer;
+		private APNGViewer.APNGBox LoadingAnimationPicture;
 	}
 }

@@ -80,16 +80,13 @@ public partial class MainDock : UserControl {
 		}
 	}
 
-	private APNGBox LoadingAnimationPicture = null!;
 	private void InitLoadingAnimation() {
 		try {
 			APNG apng = new();
 			Stream fileStream = ResourceHelper.GetEmbeddedResource("Assets.LoadingAnimation.apng");
 			apng.Load(fileStream);
-			LoadingAnimationPicture = new APNGBox(apng) {
-				Location = new Point((Width - (int)apng.Width) / 2, (Height - (int)apng.Height) / 2),
-				Anchor = AnchorStyles.None,
-			};
+			LoadingAnimationPicture.APNGFile = apng;
+			LoadingAnimationPicture.Location = new Point((Width - (int)apng.Width) / 2, (Height - (int)apng.Height) / 2);
 			SplashContainer.Controls.Add(LoadingAnimationPicture);
 			LoadingAnimationPicture.Start();
 		} catch (Exception) { }
