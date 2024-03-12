@@ -35,6 +35,11 @@ export default css`
 			pointer-events: none;
 		}
 
+		// 隐藏样式覆盖 ID 选择器。
+		[hidden] {
+			display: none !important;
+		}
+
 		// 去除标题和段落中不应出现的边距。
 		h1,
 		h2,

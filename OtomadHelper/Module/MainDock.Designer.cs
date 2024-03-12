@@ -55,6 +55,7 @@ namespace OtomadHelper.Module {
 			this.SplashContainer.Name = "SplashContainer";
 			this.SplashContainer.Size = new System.Drawing.Size(600, 300);
 			this.SplashContainer.TabIndex = 1;
+			this.SplashContainer.Visible = false;
 			// 
 			// MainDock
 			// 

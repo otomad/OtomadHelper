@@ -1,4 +1,4 @@
-const thumbnail = "https://app/thumbnail/D:/Downloads/test.mp4";
+const thumbnail = "/thumbnail/D:/Downloads/test.mp4";
 
 const flip = keyframes`
 	0% {

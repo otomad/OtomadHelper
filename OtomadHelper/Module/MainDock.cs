@@ -29,7 +29,7 @@ public partial class MainDock : UserControl {
 		BackColor = Skins.Colors.ButtonFace;
 		ForeColor = Skins.Colors.ButtonText;
 #endif
-		InitLoadingAnimation();
+		//InitLoadingAnimation();
 		PostWebMessage_SetWebView2 = Browser;
 		CoreWebView2_LoadEnvironment();
 	}
@@ -55,12 +55,12 @@ public partial class MainDock : UserControl {
 
 	private void Browser_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e) {
 		ManagedStream.Handler(Browser);
-		Browser.Source = new Uri("http://app/index.html"); // "http://www.sunchateau.com/free/ua.htm"
+		Browser.Source = new Uri(ManagedStream.RESOURCE_HOST + "index.html"); // "http://www.sunchateau.com/free/ua.htm"
 		Browser.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
 		Browser.CoreWebView2.DocumentTitleChanged += (sender, e) => DocumentTitleChanged?.Invoke(Browser.CoreWebView2.DocumentTitle);
 		Browser.CoreWebView2.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
 #if DEBUG
-		Browser.CoreWebView2.OpenDevToolsWindow();
+		//Browser.CoreWebView2.OpenDevToolsWindow();
 #endif
 	}
 
@@ -69,15 +69,15 @@ public partial class MainDock : UserControl {
 		Process.Start(e.Uri);
 	}
 
-	private async void Browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
-		string message = e.TryGetWebMessageAsString();
+	private void Browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
+		/*string message = e.TryGetWebMessageAsString();
 		if (message == "initialized") {
 			await Task.Delay(500);
 			LoadingAnimationPicture.Visible = false;
 			LoadingAnimationPicture.Stop();
 			SplashContainer.Visible = false;
 			Browser.Visible = true;
-		}
+		}*/
 	}
 
 	private APNGBox LoadingAnimationPicture = null!;

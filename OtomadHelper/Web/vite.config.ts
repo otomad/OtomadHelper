@@ -1,4 +1,5 @@
 import react from "@vitejs/plugin-react";
+import { transform as transformCSS } from "lightningcss";
 import path from "path";
 import autoImport from "unplugin-auto-import/vite";
 import { defineConfig } from "vite";
@@ -63,7 +64,7 @@ export default defineConfig({
 				removeStyleLinkTypeAttributes: true,
 				removeEmptyAttributes: true,
 				useShortDoctype: true,
-				minifyCSS: false,
+				minifyCSS: (text: string) => transformCSS({ minify: true, code: Buffer.from(text), filename: "index.html" }).code.toString(),
 				minifyJS: true,
 				minifyURLs: true,
 			},

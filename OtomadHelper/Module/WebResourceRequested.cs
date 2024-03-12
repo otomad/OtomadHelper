@@ -10,9 +10,10 @@ namespace OtomadHelper.Module;
 /// CoreWebView2 does not close stream content</a>.
 /// </summary>
 internal class ManagedStream : Stream {
-	public ManagedStream(Stream s) {
-		this.s = s;
-	}
+	#region Overrides
+	private readonly Stream s;
+
+	public ManagedStream(Stream s) => this.s = s;
 
 	public override bool CanRead => s.CanRead;
 
@@ -24,17 +25,13 @@ internal class ManagedStream : Stream {
 
 	public override long Position { get => s.Position; set => s.Position = value; }
 
-	public override void Flush() {
-		throw new NotImplementedException();
-	}
+	public override long Seek(long offset, SeekOrigin origin) => s.Seek(offset, origin);
 
-	public override long Seek(long offset, SeekOrigin origin) {
-		return s.Seek(offset, origin);
-	}
+	public override void Flush() => throw new NotImplementedException();
 
-	public override void SetLength(long value) {
-		throw new NotImplementedException();
-	}
+	public override void SetLength(long value) => throw new NotImplementedException();
+
+	public override void Write(byte[] buffer, int offset, int count) => throw new NotImplementedException();
 
 	public override int Read(byte[] buffer, int offset, int count) {
 		int read = 0;
@@ -48,15 +45,12 @@ internal class ManagedStream : Stream {
 		}
 		return read;
 	}
+	#endregion
 
-	public override void Write(byte[] buffer, int offset, int count) {
-		throw new NotImplementedException();
-	}
-
-	private readonly Stream s;
+	internal const string RESOURCE_HOST = "https://app.otomadhelper.example/";
 
 	internal static void Handler(WebView2 webView) {
-		const string HOST = "https://app/*";
+		const string HOST = RESOURCE_HOST + "*";
 		webView.CoreWebView2.AddWebResourceRequestedFilter(HOST, CoreWebView2WebResourceContext.All);
 		webView.CoreWebView2.WebResourceRequested += (sender, args) => {
 			Uri uri = new(args.Request.Uri);

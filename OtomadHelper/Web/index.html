@@ -4,12 +4,28 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon" sizes="16x16 24x24 32x32 48x48 64x64" />
-	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-	<link rel="apple-touch-icon" href="/apple-touch-icon.png" type="image/png" sizes="180x180" />
+	<link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon" sizes="16x16 24x24 32x32 48x48 64x64" />
+	<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+	<link rel="apple-touch-icon" href="apple-touch-icon.png" type="image/png" sizes="180x180" />
 	<title>Otomad Helper</title>
 	<style>
 		@layer base, theme, layout, props, utilities, components, special;
+
+		body {
+			background-color: inherit;
+		}
+
+		#splash {
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 100;
+			display: grid;
+			place-items: center;
+			width: 100dvw;
+			height: 100dvh;
+			background-color: inherit;
+		}
 	</style>
 	<script>
 		document.documentElement.style.backgroundColor = JSON.parse(localStorage.colorMode ?? null)?.state.backgroundColor || "#202020";
@@ -19,6 +35,9 @@
 <body>
 	<div id="root"></div>
 	<div id="popovers"></div>
+	<div id="splash">
+		<img src="loading-animation.apng" draggable="false" />
+	</div>
 	<script type="module" src="/src/main.tsx"></script>
 </body>
 
