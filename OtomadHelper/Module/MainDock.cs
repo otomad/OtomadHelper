@@ -29,7 +29,7 @@ public partial class MainDock : UserControl {
 		BackColor = Skins.Colors.ButtonFace;
 		ForeColor = Skins.Colors.ButtonText;
 #endif
-		//InitLoadingAnimation();
+		InitLoadingAnimation();
 		PostWebMessage_SetWebView2 = Browser;
 		CoreWebView2_LoadEnvironment();
 	}
@@ -69,15 +69,15 @@ public partial class MainDock : UserControl {
 		Process.Start(e.Uri);
 	}
 
-	private void Browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
-		/*string message = e.TryGetWebMessageAsString();
+	private async void Browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
+		string message = e.TryGetWebMessageAsString();
 		if (message == "initialized") {
 			await Task.Delay(500);
 			LoadingAnimationPicture.Visible = false;
 			LoadingAnimationPicture.Stop();
 			SplashContainer.Visible = false;
 			Browser.Visible = true;
-		}*/
+		}
 	}
 
 	private APNGBox LoadingAnimationPicture = null!;

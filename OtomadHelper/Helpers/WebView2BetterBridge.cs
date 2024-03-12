@@ -1,3 +1,7 @@
+/// <summary>
+/// <see href="https://github.com/johot/WebView2-better-bridge"/>
+/// </summary>
+
 using System.Text.Json.Serialization;
 using Microsoft.Web.WebView2.WinForms;
 using OtomadHelper.Models;

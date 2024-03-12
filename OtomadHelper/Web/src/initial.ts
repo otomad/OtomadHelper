@@ -54,11 +54,6 @@ const global = globalThis as AnyObject;
 	// #region 页面已完全加载
 	const observer = new MutationObserver(() => {
 		window.chrome.webview.postMessage("initialized");
-		const splash = document.getElementById("splash")!;
-		const TRANSITION_DURATION = 250;
-		splash.animate({ opacity: [1, 0] }, { duration: TRANSITION_DURATION, easing: eases.easeInOutQuad }).finished
-			.then(() => splash.hidden = true);
-		splash.firstElementChild?.animate({ scale: [1, 0.75] }, { duration: TRANSITION_DURATION, easing: eases.easeInMax });
 		observer.disconnect();
 	});
 	observer.observe(document.getElementById("root")!, { childList: true });
