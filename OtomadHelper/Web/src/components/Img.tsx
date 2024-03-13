@@ -71,5 +71,5 @@ export default forwardRef(function Img({ src, duplicate, ...htmlAttrs }: FCP<{
 		};
 	}, [src, duplicate]);
 
-	return <Contents ref={contentsEl} />;
+	return <Contents ref={contentsEl} className="img" />;
 });

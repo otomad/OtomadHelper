@@ -82,11 +82,10 @@ public partial class MainDock : UserControl {
 
 	private void InitLoadingAnimation() {
 		try {
-			APNG apng = new();
 			Stream fileStream = ResourceHelper.GetEmbeddedResource("Assets.LoadingAnimation.apng");
-			apng.Load(fileStream);
+			APNG apng = new(fileStream);
 			LoadingAnimationPicture.APNGFile = apng;
-			LoadingAnimationPicture.Location = new Point((Width - (int)apng.Width) / 2, (Height - (int)apng.Height) / 2);
+			LoadingAnimationPicture.CenterToParent(this);
 			SplashContainer.Controls.Add(LoadingAnimationPicture);
 			LoadingAnimationPicture.Start();
 		} catch (Exception) { }
@@ -125,5 +124,9 @@ public partial class MainDock : UserControl {
 	private void MainDock_DragOver(object sender, DragEventArgs e) {
 		e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? e.AllowedEffect & DragDropEffects.Copy : DragDropEffects.None;
 		DropTargetHelper.DragOver(new Point(e.X, e.Y), e.Effect);
+	}
+
+	private void MainDock_MouseUp(object sender, MouseEventArgs e) {
+		Debug.WriteLine("MouseUp");
 	}
 }

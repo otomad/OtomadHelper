@@ -47,6 +47,7 @@ namespace OtomadHelper.Module {
 			this.Browser.ZoomFactor = 1D;
 			this.Browser.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.Browser_CoreWebView2InitializationCompleted);
 			this.Browser.WebMessageReceived += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2WebMessageReceivedEventArgs>(this.Browser_WebMessageReceived);
+			this.Browser.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainDock_MouseUp);
 			// 
 			// SplashContainer
 			// 
@@ -64,6 +65,7 @@ namespace OtomadHelper.Module {
 			// 
 			this.LoadingAnimationPicture.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.LoadingAnimationPicture.APNGFile = null;
+			this.LoadingAnimationPicture.Image = null;
 			this.LoadingAnimationPicture.Location = new System.Drawing.Point(0, 0);
 			this.LoadingAnimationPicture.Name = "LoadingAnimationPicture";
 			this.LoadingAnimationPicture.Size = new System.Drawing.Size(600, 300);

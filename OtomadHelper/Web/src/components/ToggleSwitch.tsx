@@ -3,6 +3,12 @@ import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemTe
 const THUMB_SIZE = 18;
 const THUMB_PRESSED_WIDTH = 22;
 
+// const isHoverPseudo = ":is(&:hover, .settings-card:hover .trailing &)";
+// const isPressedPseudo = ":is(&:active, .settings-card:active .trailing &)";
+// WARN: styled components bug: https://github.com/styled-components/styled-components/issues/4279
+const isHoverPseudo = "&:hover, .settings-card:hover .trailing &:only-child";
+const isPressedPseudo = "&:active, .settings-card:active .trailing &:only-child";
+
 const StyledToggleSwitchLabel = styled.button`
 	display: flex;
 	gap: 12px;
@@ -55,20 +61,24 @@ const StyledToggleSwitchLabel = styled.button`
 		touch-action: pinch-zoom;
 	}
 
-	&:hover .base {
-		background-color: ${c("fill-color-control-alt-tertiary")};
+	${isHoverPseudo} {
+		.base {
+			background-color: ${c("fill-color-control-alt-tertiary")};
 
-		.thumb {
-			scale: calc(14 / ${THUMB_SIZE});
+			.thumb {
+				scale: calc(14 / ${THUMB_SIZE});
+			}
 		}
 	}
 
-	&:active .base {
-		background-color: ${c("fill-color-control-alt-quarternary")};
+	${isPressedPseudo} {
+		.base {
+			background-color: ${c("fill-color-control-alt-quarternary")};
 
-		.thumb {
-			width: ${THUMB_PRESSED_WIDTH}px;
-			scale: calc(14 / ${THUMB_SIZE});
+			.thumb {
+				width: ${THUMB_PRESSED_WIDTH}px;
+				scale: calc(14 / ${THUMB_SIZE});
+			}
 		}
 	}
 
@@ -98,7 +108,7 @@ const StyledToggleSwitchLabel = styled.button`
 		}
 
 		.base {
-			background-color: ${c("accent-color")};
+			background-color: ${c("accent-color")} !important;
 		}
 
 		.thumb {
@@ -107,11 +117,11 @@ const StyledToggleSwitchLabel = styled.button`
 			outline: 1px solid ${c("stroke-color-control-stroke-secondary")};
 		}
 
-		&:hover {
+		${isHoverPseudo} {
 			opacity: 0.9;
 		}
 
-		&:active {
+		${isPressedPseudo} {
 			opacity: 0.8;
 
 			.thumb {
@@ -172,22 +182,24 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 		const controlRect = control.getBoundingClientRect();
 		const left = controlRect.left, max = controlRect.width - THUMB_PRESSED_WIDTH;
 		const x = e.pageX - left - thumb.offsetLeft;
-		const firstTime = new Date().getTime();
+		let isMoved = false;
 		const pointerMove = (e: PointerEvent) => {
+			isMoved = true;
 			setThumbLeft(clamp(e.pageX - left - x, 0, max));
 		};
 		const pointerUp = (e: PointerEvent) => {
-			document.removeEventListener("pointermove", pointerMove);
-			document.removeEventListener("pointerup", pointerUp);
+			thumb.releasePointerCapture(e.pointerId);
+			thumb.removeEventListener("pointermove", pointerMove);
+			thumb.removeEventListener("pointerup", pointerUp);
 			const isOn = e.pageX - x > left + max / 2;
 			handleCheck(isOn);
 			setThumbLeft(undefined);
-			const lastTime = new Date().getTime();
-			setIsDragging(lastTime - firstTime > 200); // 定义识别为拖动而不是点击的时间差。
+			setIsDragging(isMoved); // 定义识别为拖动而不是点击。
 			flushSync().then(() => setIsPressing?.(false));
 		};
-		document.addEventListener("pointermove", pointerMove);
-		document.addEventListener("pointerup", pointerUp);
+		thumb.setPointerCapture(e.pointerId);
+		thumb.addEventListener("pointermove", pointerMove);
+		thumb.addEventListener("pointerup", pointerUp);
 	}, []);
 
 	return (

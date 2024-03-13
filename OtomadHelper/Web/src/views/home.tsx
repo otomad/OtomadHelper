@@ -1,6 +1,7 @@
 export default function Home() {
 	const [shown, setShown] = useState(false);
 	const [text, setText] = useState(0);
+	const slider = useState(50);
 
 	return (
 		<div className="container">
@@ -12,6 +13,7 @@ export default function Home() {
 				<Tooltip title="hehe">
 					<TextBox value={[text, setText]} type="number" placeholder="fuck world!" suffix="px" disabled={shown} />
 				</Tooltip>
+				<Slider value={slider} />
 			</div>
 		</div>
 	);

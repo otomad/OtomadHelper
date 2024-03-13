@@ -74,7 +74,7 @@ export default function DragToImport({ children }: FCP<{
 	return (
 		<Portal>
 			<CssTransition in={shown} unmountOnExit>
-				<StyledDragToImport onMouseUp={() => setShown(false)}>
+				<StyledDragToImport onMouseDown={() => setShown(false)} onMouseUp={() => setShown(false)}>
 					<div className="box">
 						<EmptyMessage icon="touch_pointer" title={title} noSideEffect />
 					</div>

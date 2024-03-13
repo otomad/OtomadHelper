@@ -127,7 +127,8 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 
 	function onThumbDown(e: PointerEvent, triggerByTrack: boolean = false) {
 		if (e.button) { resetToDefault(e); return; }
-		const thumb = (e.currentTarget as HTMLDivElement).parentElement!.querySelector(".thumb") as HTMLDivElement;
+		const target = e.currentTarget as HTMLDivElement;
+		const thumb = target.parentElement!.querySelector(".thumb") as HTMLDivElement;
 		const thumbSize = thumb.offsetWidth;
 		const track = thumb.parentElement!.querySelector(".track")!;
 		const { left, width } = track.getBoundingClientRect();
@@ -139,12 +140,14 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 			onChanging?.(value);
 		});
 		const pointerUp = () => {
-			document.removeEventListener("pointermove", pointerMove);
-			document.removeEventListener("pointerup", pointerUp);
+			target.releasePointerCapture(e.pointerId);
+			target.removeEventListener("pointermove", pointerMove);
+			target.removeEventListener("pointerup", pointerUp);
 			onChanged?.(value!);
 		};
-		document.addEventListener("pointermove", pointerMove);
-		document.addEventListener("pointerup", pointerUp);
+		target.setPointerCapture(e.pointerId);
+		target.addEventListener("pointermove", pointerMove);
+		target.addEventListener("pointerup", pointerUp);
 	}
 
 	const onTrackDown = useCallback<PointerEventHandler>(e => {

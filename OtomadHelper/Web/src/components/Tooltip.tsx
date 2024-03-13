@@ -146,14 +146,10 @@ const StyledTooltipContent = styled.figure`
 	img {
 		max-width: 250px;
 		border-radius: 3px;
-
-		&:has(~ figcaption:empty) {
-			margin: 0 -2px;
-		}
 	}
 
-	figcaption {
-		${styles.mixins.hideIfEmpty()};
+	:only-child > img {
+		margin: 0 -2px;
 	}
 `;
 
@@ -164,7 +160,7 @@ function TooltipContent({ image, children, ...htmlAttrs }: FCP<{
 	return (
 		<StyledTooltipContent {...htmlAttrs}>
 			{image && <Img src={image} />}
-			<figcaption>{children}</figcaption>
+			{children && <figcaption>{children}</figcaption>}
 		</StyledTooltipContent>
 	);
 }
