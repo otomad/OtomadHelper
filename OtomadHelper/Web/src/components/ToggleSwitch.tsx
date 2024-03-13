@@ -7,7 +7,7 @@ const THUMB_PRESSED_WIDTH = 22;
 // const isPressedPseudo = ":is(&:active, .settings-card:active .trailing &)";
 // WARN: styled components bug: https://github.com/styled-components/styled-components/issues/4279
 const isHoverPseudo = "&:hover, .settings-card:hover .trailing &:only-child";
-const isPressedPseudo = "&:active, .settings-card:active .trailing &:only-child";
+const isPressedPseudo = "&:active, &.pressed, .settings-card:active .trailing &:only-child";
 
 const StyledToggleSwitchLabel = styled.button`
 	display: flex;
@@ -162,6 +162,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	const textLabel = on ? t.on : t.off;
 	const [isDragging, setIsDragging] = useState(false);
 	const [thumbLeft, setThumbLeft] = useState<number>();
+	const [pressed, setPressed] = useState(false);
 	// 注意：直接使用 styled-components 的参数改变会影响性能。
 	const thumbStyle = useMemo(() => thumbLeft === undefined ? undefined : {
 		left: thumbLeft + "px",
@@ -176,36 +177,40 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 
 	const onThumbDown = useCallback<PointerEventHandler<HTMLDivElement>>(e => {
 		stopEvent(e);
+		setPressed(true);
 		setIsPressing?.(true);
 		const thumb = e.currentTarget;
 		const control = thumb.parentElement!;
 		const controlRect = control.getBoundingClientRect();
 		const left = controlRect.left, max = controlRect.width - THUMB_PRESSED_WIDTH;
 		const x = e.pageX - left - thumb.offsetLeft;
-		let isMoved = false;
+		let isMoved = false, prevE: PointerEvent | undefined;
 		const pointerMove = (e: PointerEvent) => {
 			isMoved = true;
 			setThumbLeft(clamp(e.pageX - left - x, 0, max));
+			prevE = e;
 		};
 		const pointerUp = (e: PointerEvent) => {
-			thumb.releasePointerCapture(e.pointerId);
-			thumb.removeEventListener("pointermove", pointerMove);
-			thumb.removeEventListener("pointerup", pointerUp);
+			document.removeEventListener("pointermove", pointerMove);
+			document.removeEventListener("pointerup", pointerUp);
+			if (!(e instanceof MouseEvent) && prevE) e = prevE;
 			const isOn = e.pageX - x > left + max / 2;
 			handleCheck(isOn);
 			setThumbLeft(undefined);
 			setIsDragging(isMoved); // 定义识别为拖动而不是点击。
-			flushSync().then(() => setIsPressing?.(false));
+			nextAnimationTick().then(() => {
+				setPressed(false);
+				setIsPressing?.(false);
+			});
 		};
-		thumb.setPointerCapture(e.pointerId);
-		thumb.addEventListener("pointermove", pointerMove);
-		thumb.addEventListener("pointerup", pointerUp);
+		document.addEventListener("pointermove", pointerMove);
+		document.addEventListener("pointerup", pointerUp);
 	}, []);
 
 	return (
 		<StyledToggleSwitchLabel
 			as={as as "button"}
-			className={{ selected: on }}
+			className={{ selected: on, pressed }}
 			disabled={disabled}
 			onClick={e => handleCheck(!on, e)}
 			tabIndex={0}

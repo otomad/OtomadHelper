@@ -8,7 +8,7 @@ type ReactElementType = string | React.JSXElementConstructor<Any>;
  */
 export function isReactInstance<T extends ReactElementType>(node: ReactNode, element: T):
 	node is ReactElement<T extends React.FC<infer P> ? P : unknown, T> {
-	return React.isValidElement(node) && _.isObject(node) && "type" in node && node.type === element;
+	return React.isValidElement(node) && isObject(node) && "type" in node && node.type === element;
 }
 
 /**
@@ -60,7 +60,7 @@ type DetectInPathType = Node | Element | MutableRefObject<Element | null | undef
  */
 export function getPath(target: TargetType): Element[] {
 	if (isRef(target)) target = toValue(target);
-	if (_.isObject(target) && "target" in target) target = target.target;
+	if (isObject(target) && "target" in target) target = target.target;
 	if (!(target instanceof Element)) return [];
 	const path: Element[] = [];
 	while (target instanceof Element) {
@@ -79,7 +79,7 @@ export function getPath(target: TargetType): Element[] {
 export function isInPath(target: TargetType, element: DetectInPathType): boolean {
 	const path = getPath(target);
 	if (isRef(element)) element = toValue(element);
-	if (_.isObject(element) && "target" in element) element = element.target;
+	if (isObject(element) && "target" in element) element = element.target;
 	if (typeof element === "string") {
 		for (const el of path)
 			if (el.classList.contains(element))

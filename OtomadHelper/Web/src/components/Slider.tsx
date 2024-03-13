@@ -70,7 +70,8 @@ const StyledSlider = styled.div`
 	}
 
 	.track:active ~ .thumb::after,
-	.thumb:active::after {
+	.thumb:active::after,
+	.thumb.pressed::after {
 		scale: ${10 / 20} !important;
 	}
 
@@ -108,6 +109,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 	const restrict = (n: number | undefined, nanValue: number) => Number.isFinite(n) ? clamp(map(n!, min, max, 0, 1), 0, 1) : nanValue;
 	const sharpValue = useMemo(() => restrict(value, 0), [value, min, max]);
 	const smoothValue = useSmoothValue(sharpValue, 0.5); // 修改这个参数可以调整滑动条的平滑移动值。
+	const [pressed, setPressed] = useState(false);
 
 	function resetToDefault(e: MouseEvent) {
 		e.preventDefault();
@@ -127,8 +129,8 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 
 	function onThumbDown(e: PointerEvent, triggerByTrack: boolean = false) {
 		if (e.button) { resetToDefault(e); return; }
-		const target = e.currentTarget as HTMLDivElement;
-		const thumb = target.parentElement!.querySelector(".thumb") as HTMLDivElement;
+		setPressed(true);
+		const thumb = (e.currentTarget as HTMLDivElement).parentElement!.querySelector(".thumb") as HTMLDivElement;
 		const thumbSize = thumb.offsetWidth;
 		const track = thumb.parentElement!.querySelector(".track")!;
 		const { left, width } = track.getBoundingClientRect();
@@ -140,14 +142,15 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 			onChanging?.(value);
 		});
 		const pointerUp = () => {
-			target.releasePointerCapture(e.pointerId);
-			target.removeEventListener("pointermove", pointerMove);
-			target.removeEventListener("pointerup", pointerUp);
+			document.removeEventListener("pointermove", pointerMove);
+			document.removeEventListener("pointerup", pointerUp);
 			onChanged?.(value!);
+			nextAnimationTick().then(() => {
+				setPressed(false);
+			});
 		};
-		target.setPointerCapture(e.pointerId);
-		target.addEventListener("pointermove", pointerMove);
-		target.addEventListener("pointerup", pointerUp);
+		document.addEventListener("pointermove", pointerMove);
+		document.addEventListener("pointerup", pointerUp);
 	}
 
 	const onTrackDown = useCallback<PointerEventHandler>(e => {
@@ -183,7 +186,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 			>
 				<div className="track" onPointerDown={onTrackDown} />
 				<div className="passed" />
-				<div className="thumb" onPointerDown={onThumbDown} />
+				<div className={["thumb", { pressed }]} onPointerDown={onThumbDown} />
 			</StyledSlider>
 		</div>
 	);

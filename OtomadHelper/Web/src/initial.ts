@@ -51,6 +51,17 @@ const global = globalThis as AnyObject;
 		};
 	// #endregion
 
+	// #region 修复当鼠标移至视窗外时无法响应鼠标弹起事件的问题
+	document.addEventListener("pointerenter", e => {
+		if (e.buttons === 0) {
+			document.dispatchEvent(new Event("mouseup"));
+			document.dispatchEvent(new Event("pointerup"));
+			window.dispatchEvent(new Event("mouseup"));
+			window.dispatchEvent(new Event("pointerup"));
+		}
+	});
+	// #endregion
+
 	// #region 页面已完全加载
 	const observer = new MutationObserver(() => {
 		window.chrome.webview.postMessage("initialized");

@@ -143,3 +143,12 @@ export function useDomRefState<E extends keyof ElementTagNameMap | Element>(init
  * 同时规避 TypeScript 的警告。
  */
 export const globals = globalThis as AnyObject;
+
+/**
+ * 检查值是否类似对象。如果值不是“null”，并且具有“object”的“typeof”结果，则该值与 object 类似。
+ * @param value - 要检查的值。
+ * @return 如果值是对象，则返回 true，否则返回 false。
+ */
+export function isObject(value: unknown): value is object {
+	return lodash.isObjectLike(value);
+}
