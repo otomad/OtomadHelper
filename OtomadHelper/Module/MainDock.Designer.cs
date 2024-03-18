@@ -47,7 +47,6 @@ namespace OtomadHelper.Module {
 			this.Browser.ZoomFactor = 1D;
 			this.Browser.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.Browser_CoreWebView2InitializationCompleted);
 			this.Browser.WebMessageReceived += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2WebMessageReceivedEventArgs>(this.Browser_WebMessageReceived);
-			this.Browser.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainDock_MouseUp);
 			// 
 			// SplashContainer
 			// 

@@ -24,6 +24,7 @@ public partial class MainDock : UserControl {
 			new("走", DialogResult.Retry),
 			new("忽略", DialogResult.Ignore, true),
 		}).ShowDialog();*/
+		Browser.Capture = true;
 
 #if VEGAS_ENV
 		BackColor = Skins.Colors.ButtonFace;
@@ -59,6 +60,7 @@ public partial class MainDock : UserControl {
 		Browser.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
 		Browser.CoreWebView2.DocumentTitleChanged += (sender, e) => DocumentTitleChanged?.Invoke(Browser.CoreWebView2.DocumentTitle);
 		Browser.CoreWebView2.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
+		Browser.CoreWebView2.com
 #if DEBUG
 		Browser.CoreWebView2.OpenDevToolsWindow();
 #endif
@@ -124,9 +126,5 @@ public partial class MainDock : UserControl {
 	private void MainDock_DragOver(object sender, DragEventArgs e) {
 		e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? e.AllowedEffect & DragDropEffects.Copy : DragDropEffects.None;
 		DropTargetHelper.DragOver(new Point(e.X, e.Y), e.Effect);
-	}
-
-	private void MainDock_MouseUp(object sender, MouseEventArgs e) {
-		Debug.WriteLine("MouseUp");
 	}
 }

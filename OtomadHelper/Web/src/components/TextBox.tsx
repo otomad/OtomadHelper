@@ -79,6 +79,8 @@ function Spinner({ disabled, onSpin, onRelease }: FCP<{
 		}, 50);
 	}, [onSpin]);
 
+	useEventListener(document, "mouseup", handleRelease as never);
+
 	return (
 		<StyledSpinner>
 			<div className="base">
@@ -87,7 +89,6 @@ function Spinner({ disabled, onSpin, onRelease }: FCP<{
 					icon="spinner/chevron_up"
 					disabled={disabled}
 					onMouseDown={() => handlePress(1)}
-					onMouseUp={handleRelease}
 					onKeyDown={wrapKeyCode("Space", () => handlePress(1))}
 					onKeyUp={wrapKeyCode("Space", handleRelease)}
 				/>
@@ -96,7 +97,6 @@ function Spinner({ disabled, onSpin, onRelease }: FCP<{
 					icon="spinner/chevron_down"
 					disabled={disabled}
 					onMouseDown={() => handlePress(-1)}
-					onMouseUp={handleRelease}
 					onKeyDown={wrapKeyCode("Space", () => handlePress(-1))}
 					onKeyUp={wrapKeyCode("Space", handleRelease)}
 				/>
