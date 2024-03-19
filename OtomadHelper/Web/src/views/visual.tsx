@@ -20,6 +20,9 @@ export /* internal */ const legatos = [
 	{ id: "upToOneBar", icon: "music_bar", image: legatoUpTo1BarImage },
 	{ id: "unlimited", icon: "infinity", image: legatoUnlimitedImage },
 ] as const;
+export /* internal */ const transformMethods = [
+	"panCrop", "transformOfx",
+] as const;
 
 const TooltipPartial = Tooltip.with({ placement: "y" });
 
@@ -34,8 +37,9 @@ export default function Visual() {
 	const multitrackForChords = selectConfig(c => c.visual.multitrackForChords);
 	const createGroups = selectConfig(c => c.createGroups);
 	const glissando = selectConfig(c => c.visual.glissando);
-	const transformOfx = selectConfig(c => c.visual.transformOfx);
+	const transformMethod = selectConfig(c => c.visual.transformMethod);
 	const enableStaffVisualizer = selectConfig(c => c.visual.enableStaffVisualizer);
+	const enablePixelScaling = selectConfig(c => c.visual.enablePixelScaling);
 
 	const { changePage, pushPage } = usePageStore();
 
@@ -112,12 +116,23 @@ export default function Visual() {
 							<ToggleSwitch on={glissando} />
 						}
 					/>
-					<SettingsCardToggleSwitch title={t.stream.transformOfx} details={t.descriptions.stream.transformOfx} icon="zoom_fit" on={transformOfx} />
+					<ExpanderRadio
+						title={t.stream.transformMethod}
+						details={t.descriptions.stream.transformMethod}
+						icon="zoom_fit"
+						items={transformMethods}
+						value={transformMethod}
+						idField
+						nameField={t.stream.transformMethod}
+					/>
 
 					<Subheader>{t.subheaders.effects}</Subheader>
 					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")} />
 					<SettingsCard title={t.titles.staff} details={t.descriptions.stream.effects.staff} type="button" icon="g_clef" onClick={() => pushPage("staff")}>
 						<ToggleSwitch on={enableStaffVisualizer} />
+					</SettingsCard>
+					<SettingsCard title={t.titles.pixelScaling} details={t.descriptions.stream.effects.pixelScaling} type="button" icon="miscz" onClick={() => pushPage("pixel-scaling")}>
+						<ToggleSwitch on={enablePixelScaling} />
 					</SettingsCard>
 
 					<Subheader>{t.subheaders.parameters}</Subheader>

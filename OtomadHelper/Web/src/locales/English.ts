@@ -28,6 +28,7 @@ const English = {
 			settings: "Settings",
 			prve: "PV Rhythm Visual Effect",
 			staff: "Staff Visualizer",
+			pixelScaling: "Pixel Scaling",
 		},
 		source: {
 			trackEvent: "Track event",
@@ -113,7 +114,11 @@ const English = {
 			glissando: "Glissando",
 			autoPan: "Pan",
 			mapping: "Mapping",
-			transformOfx: "TransformOFX",
+			transformMethod: {
+				_: "Transform method",
+				panCrop: "Pan/Crop",
+				transformOfx: "TransformOFX",
+			},
 			tuning: {
 				_: "Tuning",
 				tuningMethod: "Tuning method",
@@ -292,7 +297,7 @@ const English = {
 				glissando: "Creates a swirl effect if the note pitch bends or slides",
 				autoPan: "Pans the audio using envelope automation",
 				mapping: "Map the properties of notes to the specified item",
-				transformOfx: "Miscz is a pixel hard edge plugin, enable to add keyframe properties to TransformOFX of this plugin",
+				transformMethod: "Specify which target properties to apply the transformed keyframes",
 				tuning: {
 					stretchAttributes: "More config about the select tuning method",
 					resample: "Lock stretch and pitch, adjust the stretch to change the pitch",
@@ -302,6 +307,7 @@ const English = {
 				effects: {
 					prve: "Make your visuals more rhythmic",
 					staff: "Use custom patterns as notes to draw visuals similar fashion to piano staff sheets",
+					pixelScaling: "Scaling using nearest neighbor hard edges amplification and interpolation algorithms",
 				},
 			},
 			track: {
@@ -348,14 +354,13 @@ const English = {
 				converters: {
 					tuningMethod: "Switches the tuning algorithm to the selected audio clips",
 					timeSignature: "Converts the selected music time signatures between 4/4, 3/4, 6/8, etc",
-					transformOfx: "Converts all Pan/Crop keyframes to TransformOFX keyframes for use by the Miscz plugin",
 				},
 			},
 			staff: {
 				_: "Staff Visualizer is to use custom patterns as notes to draw visuals similar fashion to piano staff sheets based on the melody of the score.\nThis visual effect style mimics the videos of YouTuber @grantwoolard, who featured the use of musicians’ avatars to draw the piano staff sheets of classical music.",
 			},
 			settings: {
-				about: "Otomad Helper, a YTPMV / YTP / Otomad extension for Vegas Pro, designed to allow Vegas to accept scores like MIDI files as input, and automatically generate YTPMV / Otomad tracks.",
+				about: "Otomad Helper, a YTPMV/YTP extension for Vegas Pro, designed to allow Vegas to accept scores like MIDI files as input, and automatically generate YTPMV tracks.",
 			},
 		},
 		empty: {

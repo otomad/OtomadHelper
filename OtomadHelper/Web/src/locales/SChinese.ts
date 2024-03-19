@@ -26,8 +26,9 @@ const SChinese = {
 			mosh_full: "数据抹失",
 			tools: "工具",
 			settings: "设置",
-			prve: "映像节奏视觉效果",
+			prve: "画面节奏视觉效果",
 			staff: "五线谱可视化",
+			pixelScaling: "像素硬边缘放大",
 		},
 		source: {
 			trackEvent: "轨道剪辑",
@@ -113,7 +114,11 @@ const SChinese = {
 			glissando: "弯音效果",
 			autoPan: "自动声像",
 			mapping: "映射",
-			transformOfx: "变换效果插件",
+			transformMethod: {
+				_: "变换方法",
+				panCrop: "平移/裁切",
+				transformOfx: "变换效果插件",
+			},
 			tuning: {
 				_: "调音",
 				tuningMethod: "调音方法",
@@ -283,7 +288,7 @@ const SChinese = {
 				glissando: "在弯音或滑音时产生漩涡效果",
 				autoPan: "自动化控制音频的声像包络",
 				mapping: "将音符的参数映射到指定项目",
-				transformOfx: "Miscz是一款像素硬边缘插件，开启以向此插件中的TransformOFX添加关键帧属性",
+				transformMethod: "指定在哪个目标属性上应用变换关键帧",
 				tuning: {
 					stretchAttributes: "有关选中调音方法的更多配置",
 					resample: "锁定伸缩与音调，调整伸缩以改变音调",
@@ -293,6 +298,7 @@ const SChinese = {
 				effects: {
 					prve: "让你的画面更带有节奏感",
 					staff: "以自定义图案为音符，画出与钢琴五线谱类似风格的视觉效果",
+					pixelScaling: "使用邻近硬边缘放大插值算法缩放图像",
 				},
 			},
 			track: {
@@ -331,21 +337,20 @@ const SChinese = {
 				replacer: "将多段剪辑替换为指定的新剪辑",
 				normalizer: "将选中的音频剪辑全部规范化音量",
 				subtitles: "预先设定好“字幕和文字”的预设，然后在此添加多行文本",
-				visualizer: "将选中的视频剪辑应用映像节奏视觉效果",
+				visualizer: "将选中的视频剪辑应用画面节奏视觉效果",
 				fader: "将选中的剪辑根据指定规则来调整增益（音量/不透明度）",
 				scoreExporter: "将选中轨道中的剪辑导出为乐谱序列文件",
 				flow: "使用贝塞尔曲线创建令人惊叹的动画",
 				converters: {
 					tuningMethod: "将选中的音频剪辑统一转换到指定的调音算法",
 					timeSignature: "将选中音乐的节拍在四四拍、四三拍、八六拍等之间进行转换",
-					transformOfx: "将所有平移/裁切关键帧转换成TransformOFX关键帧，以供Miscz插件使用",
 				},
 			},
 			staff: {
 				_: "五线谱可视化是以自定义图案为音符，根据乐曲旋律来画出与钢琴五线谱类似风格的视觉效果。\n该视觉效果风格模仿自YouTube视频作者@grantwoolard，他的特色是使用音乐家的头像来画出经典音乐的五线谱。",
 			},
 			settings: {
-				about: "音MAD助手，Vegas Pro的音MAD / YTPMV / YTP扩展程序，旨在使Vegas接受乐谱如MIDI序列文件作为输入，自动生成音MAD / YTPMV的轨道。",
+				about: "音MAD助手，Vegas Pro的音MAD扩展程序，旨在使Vegas接受乐谱如MIDI序列文件作为输入，自动生成音MAD的轨道。",
 			},
 		},
 		empty: {

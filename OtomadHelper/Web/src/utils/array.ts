@@ -77,7 +77,7 @@
 
 /**
  * 通过一个常量数组映射到一个对象。
- * @remarks 此 JSDoc 的 `@param` 部分参数后故意没加 “-”，否则会出现 bug。
+ * @note 此 JSDoc 的 `@param` 部分参数后故意没加 “-”，否则会出现 bug。
  * @param this **常量**字符串数组。
  * @param callbackFn 生成作为对象的值。
  * @returns 映射的对象。

@@ -11,12 +11,19 @@ const bottomNavItems = ["settings"] as const;
 const isCompleteAvailable = (page: string[]) => !["mosh", "tools", "settings"].includes(page[0]);
 const isAutoLayoutTracks = (page: string[]) => page.length >= 2 && page[0] === "track";
 
+const getTitle = (viewName: string, full: boolean = false, plural?: number) => {
+	const tp = plural !== undefined ? t(plural) : t;
+	const str = tp.titles[new VariableName(viewName).camel];
+	const ctx = full ? str({ context: "full" }) : str;
+	return ctx;
+};
+
 export default function ShellPage() {
 	const { page, changePage, getPagePath, transition, canBack, back, reset } = usePageStore();
 	const pageTitles = page.map((crumb, i, { length }) => {
 		try {
 			return {
-				name: t.titles[crumb]({ context: "full" }),
+				name: getTitle(crumb, true),
 				link: i === length - 1 ? undefined : page.slice(0, i + 1),
 			};
 		} catch (error) {
@@ -29,7 +36,7 @@ export default function ShellPage() {
 	const { appName } = useAboutApp();
 	const documentTitle = (() => {
 		const lastPage = page.at(-1);
-		return (lastPage ? t.titles[lastPage]({ context: "full" }) + " - " : "") + appName;
+		return (lastPage ? getTitle(lastPage, true) + " - " : "") + appName;
 	})();
 
 	useEffect(() => {
@@ -43,10 +50,10 @@ export default function ShellPage() {
 		<NavigationView
 			currentNav={[page, changePage]}
 			navItems={[
-				...navItems.map(item => ({ text: t.titles[item], id: item, animatedIcon: item })),
+				...navItems.map(item => ({ text: getTitle(item), id: item, animatedIcon: item })),
 				{ type: "hr" },
-				...navToolItems.map(item => ({ text: t(2).titles[item], id: item, animatedIcon: item })),
-				...bottomNavItems.map(item => ({ text: t(2).titles[item], id: item, animatedIcon: item, bottom: true })),
+				...navToolItems.map(item => ({ text: getTitle(item, false, 2), id: item, animatedIcon: item })),
+				...bottomNavItems.map(item => ({ text: getTitle(item, false, 2), id: item, animatedIcon: item, bottom: true })),
 			]}
 			titles={pageTitles}
 			transitionName={transition}

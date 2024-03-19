@@ -10,7 +10,7 @@ export function useUnmountEffect(effect: NonNull<ReturnType<EffectCallbackWithAs
 }
 
 /**
- * @remarks 此时不能返回一个回调函数来表示卸载事件。
+ * @note 此时不能返回一个回调函数来表示卸载事件。
  */
 export function useAsyncEffect(effect: () => Promise<void> | void, deps?: DependencyList | undefined) {
 	useEffect(() => void effect(), deps);

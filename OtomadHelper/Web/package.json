@@ -23,7 +23,7 @@
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"lint:css": "stylelint './src/**/*.{js,jsx,ts,tsx}'",
 		"release": "pnpm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
-		"compact-svg": "tsx src/scripts/compact-svg.ts"
+		"compact-svg": "tsx scripts/compact-svg.ts"
 	},
 	"dependencies": {
 		"ani-cursor": "^0.0.5",

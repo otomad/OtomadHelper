@@ -1,6 +1,6 @@
 import type { bpmUsings, constraintNoteLengths, encodings } from "views/score";
 import type { startTimes } from "views/source";
-import type { legatos, stretches } from "views/visual";
+import type { legatos, stretches, transformMethods } from "views/visual";
 
 type StartTime = typeof startTimes[number]["id"];
 type BpmUsing = typeof bpmUsings[number]["id"];
@@ -8,6 +8,7 @@ type ConstraintNoteLength = typeof constraintNoteLengths[number]["id"];
 type Encoding = typeof encodings[number];
 type Stretch = typeof stretches[number]["id"];
 type Legato = typeof legatos[number]["id"];
+type TransformMethod = typeof transformMethods[number];
 
 interface IConfig {
 	source: {
@@ -34,8 +35,9 @@ interface IConfig {
 		legato: Legato;
 		multitrackForChords: boolean;
 		glissando: boolean;
-		transformOfx: boolean;
+		transformMethod: TransformMethod;
 		enableStaffVisualizer: boolean;
+		enablePixelScaling: boolean;
 	};
 	createGroups: boolean;
 	track: {
@@ -79,8 +81,9 @@ export const useConfigStore = createStore<IConfig>()(
 			legato: "upToOneBeat",
 			multitrackForChords: false,
 			glissando: false,
-			transformOfx: false,
+			transformMethod: "panCrop",
 			enableStaffVisualizer: false,
+			enablePixelScaling: false,
 		},
 		createGroups: true,
 		track: {

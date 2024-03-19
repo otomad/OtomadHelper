@@ -20,7 +20,6 @@ export default function Tools() {
 				title={t.score.timeSignature} details={t.descriptions.tools.converters.timeSignature} type="button" icon="health" trailingIcon="open"
 				selectInfo={t(1).selectInfo.audioEventOnlyOne}
 			/>
-			<SettingsCard title={t.stream.transformOfx} details={t.descriptions.tools.converters.transformOfx} type="button" icon="zoom_fit" selectInfo={t(1).selectInfo.videoEvent} />
 		</div>
 	);
 }
