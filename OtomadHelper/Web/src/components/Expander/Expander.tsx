@@ -17,7 +17,7 @@ const ExpanderParent = styled(SettingsCard) <{
 		${styles.mixins.enableHardware3d()};
 	}
 
-	&:active > .base > .trailing > .trailing-icon > * {
+	&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active)):active > .base > .trailing > .trailing-icon > * {
 		translate: 0 ${({ $expanded }) => $expanded ? 2 : -2}px;
 	}
 
@@ -86,7 +86,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				{actions}
 				{checkInfo && (
 					<CssTransition in={!internalExpanded || alwaysShowCheckInfo} unmountOnExit>
-						<div className="check-info">{checkInfo}</div>
+						<div className={["check-info", TRAILING_EXEMPTION]}>{checkInfo}</div>
 					</CssTransition>
 				)}
 			</ExpanderParent>

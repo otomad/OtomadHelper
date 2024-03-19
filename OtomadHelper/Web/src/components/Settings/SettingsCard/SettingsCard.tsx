@@ -1,6 +1,8 @@
 import { StyledCard } from "components/Card";
 import { styledExpanderItemBase, styledExpanderItemContent } from "components/Expander/ExpanderItem";
 
+export const TRAILING_EXEMPTION = "trailing-exemption";
+
 const StyledSettingsCard = styled(StyledCard)`
 	${styledExpanderItemContent};
 
@@ -45,13 +47,13 @@ const StyledSettingsCard = styled(StyledCard)`
 	}
 
 	&.expander {
-		&:hover {
+		&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):hover)):hover {
 			.trailing-icon {
 				background-color: ${c("fill-color-subtle-secondary")};
 			}
 		}
 
-		&:active {
+		&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active)):active {
 			.trailing-icon {
 				color: ${c("fill-color-text-secondary")};
 				background-color: ${c("fill-color-subtle-tertiary")};
@@ -103,7 +105,7 @@ export default function SettingsCard({
 				<div className="trailing">
 					{children}
 					{trailingIcon && typeof trailingIcon === "string" && (
-						<div className="trailing-icon">
+						<div className={["trailing-icon", TRAILING_EXEMPTION]}>
 							<Icon name={trailingIcon} />
 						</div>
 					)}

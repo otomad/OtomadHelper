@@ -454,7 +454,7 @@ const StyledBreadCrumbChevronRight = styled.div`
 
 	.icon {
 		color: ${c("fill-color-text-secondary")};
-		font-size: 13px;
+		font-size: 16px;
 	}
 `;
 
