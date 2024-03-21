@@ -33,6 +33,21 @@ export default css`
 		:disabled {
 			cursor: not-allowed;
 			pointer-events: none;
+			user-select: none;
+		}
+
+		// 惰性样式覆盖。
+		[inert] {
+			&,
+			* {
+				*,
+				::before,
+				::after {
+					cursor: not-allowed;
+					pointer-events: none !important;
+					user-select: none;
+				}
+			}
 		}
 
 		// 隐藏样式覆盖 ID 选择器。
