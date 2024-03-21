@@ -60,7 +60,7 @@ const eases = {
 	easeInCirc: "cubic-bezier(0.6, 0.04, 0.98, 0.335)",
 	/**
 	 * ### 急促回弹缓入
-	 * 超过范围的三次方缓动 `(s+1)t³St²`。
+	 * 超过范围的三次方缓动 `(s+1)t³st²`。
 	 */
 	easeInBack: "cubic-bezier(0.6, -0.28, 0.735, 0.045)",
 	/**
@@ -143,7 +143,7 @@ const eases = {
 	easeOutCirc: "cubic-bezier(0.075, 0.82, 0.165, 1)",
 	/**
 	 * ### 急促回弹缓出
-	 * 超过范围的三次方缓动 `(s+1)t³St²`。
+	 * 超过范围的三次方缓动 `(s+1)t³st²`。
 	 */
 	easeOutBack: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 	/**
