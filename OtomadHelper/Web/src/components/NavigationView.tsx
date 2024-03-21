@@ -117,8 +117,8 @@ const StyledNavigationView = styled.div<{
 			overflow-x: hidden;
 		}
 
-		&:is(.compact, .minimal):not(.flyout) .nav-items::-webkit-scrollbar {
-			width: 0;
+		&:is(.compact, .minimal):not(.flyout) .nav-items {
+			${styles.mixins.noScrollbar()};
 		}
 
 		&.compact {
@@ -132,8 +132,8 @@ const StyledNavigationView = styled.div<{
 				translate: -${COMPACT_WIDTH}px;
 			}
 
-			&.flyout .nav-items::-webkit-scrollbar {
-				width: 0;
+			&.flyout .nav-items {
+				${styles.mixins.noScrollbar()};
 			}
 		}
 

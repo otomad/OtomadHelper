@@ -52,14 +52,11 @@ const StyledTabBar = styled.div`
 	}
 
 	&.horizontal {
+		${styles.mixins.noScrollbar()};
 		width: 100%;
 		margin: -4px;
 		padding: 4px;
 		overflow-x: auto;
-
-		&::-webkit-scrollbar {
-			height: 0;
-		}
 
 		> .scroll {
 			width: min-content;

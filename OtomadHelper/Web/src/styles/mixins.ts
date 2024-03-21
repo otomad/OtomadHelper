@@ -115,4 +115,21 @@ export default {
 	enableHardware3d: () => css`
 		transform: translateZ(1px);
 	`,
+	/**
+	 * 有效地隐藏滚动条。不过，元素仍然可滚动。
+	 *
+	 * 同时使用现代和旧版的声明方式支持。
+	 */
+	noScrollbar: () => css`
+		@supports (scrollbar-width: auto) {
+			scrollbar-width: none;
+		}
+
+		@supports selector(::-webkit-scrollbar) {
+			&::-webkit-scrollbar {
+				width: 0;
+				height: 0;
+			}
+		}
+	`,
 };
