@@ -8,6 +8,7 @@ words:
   - ani
   - automator
   - beziér
+  - bouncized
   - composables
   - datamix
   - datamixing
@@ -69,6 +70,8 @@ ignoreWords:
   - pangu
   - tsc
   - svgr
+  - ᵗ
+  - ᵗsin
 flagWords:
   - colour -> color
   - canot -> cannot
