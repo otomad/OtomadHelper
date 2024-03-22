@@ -140,12 +140,21 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		}
 	}, [position]);
 
+	const tabBarEl = useDomRef<"div">();
+	useEventListener(tabBarEl, "wheel", e => {
+		if (vertical) return;
+		const tabBar = e.currentTarget as HTMLDivElement;
+		if (!tabBar || tabBar.scrollWidth <= tabBar.clientWidth) return;
+		tabBar.scrollLeft += e.deltaY;
+		e.preventDefault();
+	});
+
 	useEffect(() => {
 		update();
 	}, [current, children]);
 
 	return (
-		<StyledTabBar className={[vertical ? "vertical" : "horizontal"]}>
+		<StyledTabBar className={[vertical ? "vertical" : "horizontal"]} ref={tabBarEl}>
 			<div className="scroll">
 				<div className="items">
 					{React.Children.map(children, child => {

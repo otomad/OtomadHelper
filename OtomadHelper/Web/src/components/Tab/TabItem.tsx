@@ -132,6 +132,13 @@ export /* internal */ default function TabItem({ icon, animatedIcon, children, s
 		el.dispatchEvent(new Event("transitionend"));
 	};
 
+	const scrollIntoView = () => {
+		if (selected)
+			tabItemEl.current?.scrollIntoViewIfNeeded();
+	};
+
+	useEffect(() => scrollIntoView(), [selected]);
+
 	const BadgeItem = useCallback(({ hidden }: { hidden?: boolean }) =>
 		<Badge status="accent" hidden={badge === undefined || hidden}>{badge}</Badge>, [badge]);
 

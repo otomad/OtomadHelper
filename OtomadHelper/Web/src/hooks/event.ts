@@ -107,9 +107,10 @@ export function useEventListener<K extends keyof HTMLElementEventMap, E extends 
 	// 如果你想的话，也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素。
 	useEffect(() => {
 		target = toValue(target);
-		if (options.immediate) (callback as () => void)();
-		target?.addEventListener(event, callback as never);
-		return () => target?.removeEventListener(event, callback as never);
+		asserts<() => void>(callback);
+		if (options.immediate) callback();
+		target?.addEventListener(event, callback);
+		return () => target?.removeEventListener(event, callback);
 	}, deps);
 }
 
