@@ -11,6 +11,11 @@ const ExpanderParent = styled(SettingsCard) <{
 			translate: 0 16px;
 			opacity: 0;
 		}
+
+		&.enter-active {
+			transition-timing-function: ${eases.easeOutElastic};
+			transition-duration: 1250ms;
+		}
 	}
 
 	> .base > .trailing > .trailing-icon > * {
