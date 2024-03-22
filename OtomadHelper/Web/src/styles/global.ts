@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle<{
 		font-family: "Segoe UI Variable", "Segoe UI", "Microsoft YaHei UI", sans-serif;
 		hyphens: auto;
 		user-select: none;
-		transition: all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms;
+		transition: ${fallbackTransitions};
 		-webkit-tap-highlight-color: transparent;
 
 		/* :where(&) {

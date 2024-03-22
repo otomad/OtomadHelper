@@ -81,6 +81,7 @@ export default {
 	forwardFocusRing: (childClassName: string = "base") => css`
 		&:focus-visible {
 			box-shadow: none;
+			transition: inherit;
 
 			.${childClassName} {
 				${styles.effects.focus()};

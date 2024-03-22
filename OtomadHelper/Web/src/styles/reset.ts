@@ -70,6 +70,7 @@ export default css`
 		a {
 			color: ${c("accent-color")};
 			text-decoration: none;
+			border-radius: 3px;
 			cursor: pointer;
 
 			&:hover {

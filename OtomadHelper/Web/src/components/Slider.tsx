@@ -52,7 +52,7 @@ const StyledSlider = styled.div`
 		box-shadow:
 			0 0 0 1px ${c("stroke-color-control-stroke-default")},
 			0 1px 0 ${c("stroke-color-control-stroke-default")};
-		transition: all ${eases.easeOutMax} 250ms, left 0s;
+		transition: ${fallbackTransitions}, left 0s;
 
 		&::after {
 			content: "";
@@ -61,7 +61,7 @@ const StyledSlider = styled.div`
 			display: block;
 			background-color: ${c("accent-color")};
 			scale: ${12 / 20};
-			transition: all ${eases.easeOutMax} 250ms, scale ${eases.easeOutBack} 250ms;
+			transition: ${fallbackTransitions}, scale ${eases.easeOutBackSmooth} 250ms;
 		}
 
 		&:hover::after {

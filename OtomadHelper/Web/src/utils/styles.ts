@@ -8,6 +8,8 @@ import effects from "styles/effects";
 import { STATUS_PREFIX, type AvailableLottieStatus } from "styles/fake-animations";
 import mixins from "styles/mixins";
 
+export const fallbackTransitions = `all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms`;
+
 /**
  * 调用主题色。
  * @param cssVarName - 颜色的 CSS 属性名称，不必加前面的“--”。也可以是 white 或 black。
