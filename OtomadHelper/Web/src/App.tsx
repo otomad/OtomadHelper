@@ -4,10 +4,15 @@ import ShellPage from "./ShellPage";
 
 export default function App() {
 	const [ready, setReady] = useState(false);
+
 	useMountEffect(() => {
 		delay(100).then(() => setReady(true));
 		document.documentElement.style.removeProperty("background-color");
 		changeColorScheme(undefined, "refresh");
+	});
+
+	useEffect(() => {
+		updateOrCreateMetaTag("description", t.descriptions.settings.about);
 	});
 
 	const { i18n } = useTranslation();

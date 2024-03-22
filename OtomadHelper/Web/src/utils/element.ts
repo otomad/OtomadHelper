@@ -107,3 +107,22 @@ export function isElementContents(element: Element | undefined | null) {
 export function isElementHidden(element: Element | undefined | null): element is undefined | null {
 	return !element || (element as HTMLElement).hidden || getComputedStyle(element).display === "none" || getComputedStyle(element).visibility !== "visible";
 }
+
+/**
+ * 创建或更新一个 `<meta>` 标签。
+ * @param name - `<meta>` 标签的名称。
+ * @param content - `<meta>` 标签的内容。
+ */
+export function updateOrCreateMetaTag(name: string, content: string) {
+	// 尝试找到已存在的 meta 标签
+	let meta = document.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
+
+	if (meta) // 如果标签已存在，更新它的内容
+		meta.content = content;
+	else { // 如果标签不存在，创建一个新的标签并设置其属性
+		meta = document.createElement("meta");
+		meta.name = name;
+		meta.content = content;
+		document.head.appendChild(meta);
+	}
+}

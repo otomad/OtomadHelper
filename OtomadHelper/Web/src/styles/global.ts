@@ -27,7 +27,7 @@ const GlobalStyle = createGlobalStyle<{
 		} */
 
 		${({ $ready }) => !$ready && css`
-			transition: all ${eases.easeOutMax} 250ms, color 0s, fill 0s, font-size 0s;
+			transition: all ${eases.easeOutMax} 250ms, color 0s, fill 0s, font-size 0s, tab-size 0s;
 		`}
 	}
 
