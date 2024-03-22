@@ -89,3 +89,21 @@ export function isInPath(target: TargetType, element: DetectInPathType): boolean
 	if (!(element instanceof Element)) return false;
 	return path.includes(element);
 }
+
+/**
+ * 指定元素是否显示为 contents？
+ * @param element - HTML DOM 元素。
+ * @returns 指定元素是否显示为 contents？
+ */
+export function isElementContents(element: Element | undefined | null) {
+	return !!(element && getComputedStyle(element).display === "contents");
+}
+
+/**
+ * 指定元素是否已隐藏？
+ * @param element - HTML DOM 元素。
+ * @returns 指定元素是否已隐藏？
+ */
+export function isElementHidden(element: Element | undefined | null): element is undefined | null {
+	return !element || (element as HTMLElement).hidden || getComputedStyle(element).display === "none" || getComputedStyle(element).visibility !== "visible";
+}

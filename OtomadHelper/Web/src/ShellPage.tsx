@@ -19,7 +19,7 @@ const getTitle = (viewName: string, full: boolean = false, plural?: number) => {
 };
 
 export default function ShellPage() {
-	const { page, changePage, getPagePath, transition, canBack, back, reset } = usePageStore();
+	const { page, changePage, getPagePath, transition, canBack, back, reset, setPageContentId, poppedScroll } = usePageStore();
 	const pageTitles = page.map((crumb, i, { length }) => {
 		try {
 			return {
@@ -35,9 +35,11 @@ export default function ShellPage() {
 	const [uiScale] = selectConfig(c => c.settings.uiScale);
 	const { appName } = useAboutApp();
 	const documentTitle = (() => {
-		const lastPage = page.at(-1);
+		const lastPage = page.last();
 		return (lastPage ? getTitle(lastPage, true) + " - " : "") + appName;
 	})();
+	const pageContentId = useId();
+	setPageContentId(pageContentId);
 
 	useEffect(() => {
 		document.title = documentTitle;
@@ -59,6 +61,8 @@ export default function ShellPage() {
 			transitionName={transition}
 			canBack={canBack()}
 			onBack={back}
+			pageContentId={pageContentId}
+			poppedScroll={poppedScroll}
 			commandBar={(
 				<CommandBar>
 					{

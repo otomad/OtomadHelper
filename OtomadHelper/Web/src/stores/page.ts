@@ -1,7 +1,19 @@
+export interface PageScroll {
+	readonly page: string;
+	readonly elementIndex: number;
+	readonly offsetY: number;
+}
+
+type PageScrollList = (PageScroll | undefined)[];
+
+type PageTransitionName = "forward" | "backward" | "jump" | "";
+
 interface IPage {
 	page: string[];
 	prevPage: string[];
-	transition: "forward" | "backward" | "jump" | "";
+	transition: PageTransitionName;
+	scrolls: PageScrollList;
+	poppedScroll?: PageScroll;
 	getPagePath(): string;
 	changePage: SetState<string[]>;
 	pushPage(...pages: string[]): void;
@@ -10,6 +22,8 @@ interface IPage {
 	resetTransition(): void;
 	reset(): void;
 	isAlerted404: boolean;
+	pageContentId?: string;
+	setPageContentId(value: string): void;
 }
 
 const NAME = "page";
@@ -17,6 +31,7 @@ const NAME = "page";
 export const usePageStore = createStore<IPage>()(
 	persist((set, get) => {
 		const page = ["source"];
+		const scrolls: PageScrollList = [];
 
 		function changePage(pages: string[]): void;
 		function changePage(setStateAction: (prevPage: string[]) => string[]): void;
@@ -36,15 +51,71 @@ export const usePageStore = createStore<IPage>()(
 			return "";
 		}
 
+		function getScrolls(transition: PageTransitionName, nextPage: string[]) {
+			const { scrolls: prevScrolls, poppedScroll: prevPoppedScroll, page: prevPage, pageContentId } = get();
+			const prevLastPage = prevPage.last();
+			let scrolls: PageScrollList, poppedScroll: PageScroll | undefined;
+			const findScroll = (page: string) => prevScrolls.findLast(scroll => scroll?.page === page);
+			switch (transition) {
+				case "jump":
+					scrolls = [];
+					break;
+				case "":
+				default:
+					poppedScroll = prevPoppedScroll;
+					scrolls = prevScrolls;
+					break;
+				case "backward": {
+					const nextPageCopy = nextPage.slice();
+					const lastPage = nextPageCopy.pop()!;
+					poppedScroll = findScroll(lastPage);
+					scrolls = nextPageCopy.map(page => findScroll(page));
+					break;
+				}
+				case "forward":
+					scrolls = nextPage.map(page => {
+						if (page !== prevLastPage) return findScroll(page);
+
+						if (!pageContentId) return;
+						const pageContentEl = document.getElementById(pageContentId);
+						if (!pageContentEl) return;
+						const begin = pageContentEl.getBoundingClientRect().top;
+						const containerEl = pageContentEl?.querySelector<HTMLElement>(":scope > main > .container");
+						if (!containerEl) return;
+						let i = -1;
+						for (let child of containerEl.children) {
+							i++;
+							while (isElementContents(child))
+								child = child.firstElementChild!;
+							asserts<HTMLElement>(child);
+							if (isElementHidden(child)) continue;
+							let { top, bottom } = child.getBoundingClientRect();
+							top -= begin;
+							bottom -= begin;
+							if (bottom <= 0) continue;
+							return {
+								page,
+								elementIndex: i,
+								offsetY: -top,
+							};
+						}
+					});
+					break;
+			}
+			return { scrolls, poppedScroll };
+		}
+
 		function setPageInternal(nextPage: string[]) {
 			document.getElementById(STOP_TRANSITION_ID)?.remove();
 			const { page } = get();
 			if (page.equals(nextPage)) return;
+			const transition = getTransition(page, nextPage);
 			// document.startViewTransition(() =>
 			set(() => ({
 				prevPage: page,
 				page: nextPage,
-				transition: getTransition(page, nextPage),
+				transition,
+				...getScrolls(transition, nextPage),
 			}));
 			// );
 		}
@@ -53,6 +124,8 @@ export const usePageStore = createStore<IPage>()(
 			page,
 			prevPage: page,
 			transition: "forward",
+			scrolls,
+			poppedScroll: undefined,
 			getPagePath: () => get().page.join("/"),
 			changePage: changePage as SetState<string[]>,
 			pushPage: (...pages) => setPageInternal([...get().page, ...pages]),
@@ -64,7 +137,7 @@ export const usePageStore = createStore<IPage>()(
 					setPageInternal(page);
 				}
 			},
-			resetTransition: () => set(() => ({ transition: "jump" })),
+			resetTransition: () => set({ transition: "jump" }),
 			reset() {
 				if (!get().isAlerted404)
 					alert("404 Not Found!");
@@ -73,6 +146,8 @@ export const usePageStore = createStore<IPage>()(
 				location.reload();
 			},
 			isAlerted404: false,
+			pageContentId: undefined,
+			setPageContentId: pageContentId => get().pageContentId !== pageContentId && set({ pageContentId }),
 		};
 	}, {
 		name: NAME,

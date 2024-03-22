@@ -65,4 +65,11 @@ declare interface Array<T> {
 	 * @returns 两个数组是否相等？
 	 */
 	equals(another: T[]): boolean;
+
+	/**
+	 * 获取数组的最后一个元素。
+	 * @note 如果数组为空，则会返回 undefined。不过在 TypeScript 类型层面会隐式去空，即与直接在 `[]` 使用索引值访问元素时获得的类型保持一致。但如果数组的类型本来就包含 undefined，则不会去空。
+	 * @return 数组的最后一个元素。
+	 */
+	last(): T;
 }

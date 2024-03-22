@@ -1,3 +1,5 @@
+import type { PageScroll } from "stores/page";
+
 const navButtonSize = { width: 44, height: 40 };
 const CONTENT_ITEMS_ASSUMED_COUNT = 20;
 const NAV_ITEMS_ASSUMED_COUNT = 20;
@@ -497,7 +499,7 @@ const usePaneDisplayMode = () => {
 	return paneDisplayMode;
 };
 
-export default function NavigationView({ currentNav, navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, ...htmlAttrs }: FCP<{
+export default function NavigationView({ currentNav, navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, pageContentId, poppedScroll, ...htmlAttrs }: FCP<{
 	/** 当前导航页状态参数。 */
 	currentNav: StateProperty<string[]>;
 	/** 所有导航项。 */
@@ -514,6 +516,10 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	onBack?: () => void;
 	/** 命令栏，可选。 */
 	commandBar?: ReactNode;
+	/** 手动指定页面内容元素的 ID。 */
+	pageContentId?: string;
+	/** 出栈的页面滚动值。 */
+	poppedScroll?: PageScroll;
 }, "div">) {
 	const currentNavTab = useStateSelector(currentNav, nav => nav[0], value => [value]);
 	const pagePath = currentNav.join("/");
@@ -523,7 +529,23 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 	const pageContentEl = useDomRef<"div">();
-	const scrollToTop = useCallback(() => pageContentEl.current?.scrollTo({ top: 0, left: 0, behavior: "instant" }), [pageContentEl]);
+	const scrollToTopOrPrevious = () => {
+		const pageContent = pageContentEl.current;
+		if (!pageContent) return;
+		const container = pageContent.firstElementChild?.firstElementChild;
+		while (poppedScroll && container?.classList.contains("container")) { // Cheat `if` as `while` to use `break` in it.
+			let child = container.children[poppedScroll.elementIndex] as HTMLElement | undefined;
+			while (isElementContents(child))
+				child = child!.firstElementChild as HTMLElement;
+			if (isElementHidden(child)) break;
+			let { offsetY } = poppedScroll;
+			if (child.offsetHeight < offsetY) offsetY = child.offsetHeight;
+			child.scrollIntoView({ behavior: "instant" });
+			pageContent.scrollBy({ top: offsetY, behavior: "instant" });
+			return;
+		}
+		pageContent.scrollTo({ top: 0, left: 0, behavior: "instant" });
+	};
 	const navItemsId = useId();
 
 	const currentNavItem = useMemo(() =>
@@ -536,12 +558,12 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	if (pageTitleKey[0] === previousPageTitleKey.current?.[0]) pageTitleKey[1] = previousPageTitleKey.current?.[1];
 	previousPageTitleKey.current = pageTitleKey;
 
-	const onNavButtonClick = useCallback(() => {
+	const onNavButtonClick = () => {
 		responsive === "expanded" ?
 			setIsExpandedInExpandedMode(expanded => !expanded) :
 			setFlyoutDisplayMode(mode => mode === "expanded" ? "minimal" : "expanded");
-	}, [responsive, flyoutDisplayMode, isExpandedInExpandedMode]);
-	const hideFlyoutNavMenu = useCallback(() => void (flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal")), [flyoutDisplayMode]);
+	};
+	const hideFlyoutNavMenu = () => void (flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal"));
 	useEffect(hideFlyoutNavMenu, [currentNav, useWindowWidth()]);
 
 	return (
@@ -605,9 +627,9 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 						</section>
 					</div>
 				</div>
-				<div className={["page-content", transitionName]} ref={pageContentEl}>
+				<div className={["page-content", transitionName]} ref={pageContentEl} id={pageContentId}>
 					<SwitchTransition>
-						<CssTransition key={pagePath} onExited={scrollToTop}>
+						<CssTransition key={pagePath} onEnter={scrollToTopOrPrevious}>
 							<StyledPage>
 								{children}
 							</StyledPage>

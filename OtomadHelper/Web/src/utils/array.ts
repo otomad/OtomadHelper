@@ -68,6 +68,10 @@
 		return true;
 	};
 
+	Array.prototype.last = function () {
+		return this.at(-1);
+	};
+
 	const protoKeys = Object.keys(Array.prototype);
 	for (const protoKey of protoKeys)
 		Object.defineProperty(Array.prototype, protoKey, {

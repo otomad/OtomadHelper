@@ -148,7 +148,7 @@ export function addEventListeners<K extends keyof HTMLElementEventMap, E extends
  */
 export function addEventListeners<K extends keyof HTMLElementEventMap, E extends HTMLElement>(...args: [element: E, ...types: K[], listener: (this: E, ev: HTMLElementEventMap[K]) => void]): void {
 	const element = args[0];
-	const listener = args.at(-1) as Parameters<typeof addEventListeners>[1];
+	const listener = args.last() as Parameters<typeof addEventListeners>[1];
 	const types = args.slice(1, -1) as K[];
 	types.forEach(type => element.addEventListener(type, listener as never));
 }

@@ -152,3 +152,9 @@ export const globals = globalThis as AnyObject;
 export function isObject(value: unknown): value is object {
 	return lodash.isObjectLike(value);
 }
+
+/**
+ * 断言指定的对象。注意由于 TypeScript 的限制，它只能缩小类型。
+ * @param object - 要断言的对象。
+ */
+export function asserts<T>(object: unknown): asserts object is T { }
