@@ -3,6 +3,7 @@ export /* internal */ const styledExpanderItemBase = css`
 	gap: 16px;
 	align-items: center;
 	min-height: 48px;
+	overflow-x: clip;
 
 	:where(&) {
 		padding: 7px 51px;

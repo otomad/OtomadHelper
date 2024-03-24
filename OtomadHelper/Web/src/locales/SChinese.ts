@@ -293,7 +293,7 @@ const SChinese = {
 					stretchAttributes: "有关选中调音方法的更多配置",
 					resample: "锁定伸缩与音调，调整伸缩以改变音调",
 					preserveFormant: "调音时保持音色不变",
-					basePitch: "指定音频事件的原始音高是多少",
+					basePitch: "指定音频剪辑的原始音高是多少",
 				},
 				effects: {
 					prve: "让你的画面更带有节奏感",

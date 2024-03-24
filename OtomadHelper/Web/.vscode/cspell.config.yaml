@@ -72,6 +72,8 @@ ignoreWords:
   - svgr
   - ᵗ
   - ᵗsin
+  - cqw
+  - cqh
 flagWords:
   - colour -> color
   - canot -> cannot

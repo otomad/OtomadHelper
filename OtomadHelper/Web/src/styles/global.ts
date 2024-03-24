@@ -87,6 +87,7 @@ const GlobalStyle = createGlobalStyle<{
 		text-rendering: optimizeLegibility;
 		tab-size: 4;
 		background-color: var(--background-color);
+		transition: ${fallbackTransitions}, width 0s, height 0s;
 		color-scheme: dark;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;

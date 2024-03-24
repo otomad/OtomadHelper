@@ -29,6 +29,7 @@ interface IPage {
 const NAME = "page";
 
 export const usePageStore = createStore<IPage>()(
+	// @ts-ignore TypeScript 脑子抽风了。
 	persist((set, get) => {
 		const page = ["source"];
 		const scrolls: PageScrollList = [];
@@ -82,12 +83,10 @@ export const usePageStore = createStore<IPage>()(
 						const begin = pageContentEl.getBoundingClientRect().top;
 						const containerEl = pageContentEl?.querySelector<HTMLElement>(":scope > main > .container");
 						if (!containerEl) return;
-						let i = -1;
-						for (let child of containerEl.children) {
-							i++;
+						for (let i = 0; i < containerEl.children.length; i++) {
+							let child = containerEl.children[i];
 							while (isElementContents(child))
 								child = child.firstElementChild!;
-							asserts<HTMLElement>(child);
 							if (isElementHidden(child)) continue;
 							let { top, bottom } = child.getBoundingClientRect();
 							top -= begin;
@@ -128,7 +127,7 @@ export const usePageStore = createStore<IPage>()(
 			poppedScroll: undefined,
 			getPagePath: () => get().page.join("/"),
 			changePage: changePage as SetState<string[]>,
-			pushPage: (...pages) => setPageInternal([...get().page, ...pages]),
+			pushPage: lodash.throttle((...pages) => setPageInternal([...get().page, ...pages]), 700, { trailing: false }),
 			canBack: () => get().page.length > 1,
 			back() {
 				if (get().canBack()) {
@@ -148,7 +147,7 @@ export const usePageStore = createStore<IPage>()(
 			isAlerted404: false,
 			pageContentId: undefined,
 			setPageContentId: pageContentId => get().pageContentId !== pageContentId && set({ pageContentId }),
-		};
+		} satisfies IPage;
 	}, {
 		name: NAME,
 		partialize: state => ({ page: state.page }),

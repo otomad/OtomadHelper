@@ -329,6 +329,19 @@ const StyledNavigationView = styled.div<{
 `;
 
 const StyledPage = styled.main`
+	&:has(.empty-message) {
+		height: calc(100% - 2px);
+
+		> * {
+			height: 100%;
+		}
+	}
+
+	&.exit {
+		pointer-events: none; // 防止用户快速连击按钮进入子页面。
+	}
+
+	// #region 页面过渡
 	.jump > &.exit {
 		translate: 0 -2rem;
 		opacity: 0;
@@ -366,14 +379,7 @@ const StyledPage = styled.main`
 		translate: 0;
 		transition: all ${eases.easeOutExpo} 300ms;
 	}
-
-	&:has(.empty-message) {
-		height: calc(100% - 2px);
-
-		> * {
-			height: 100%;
-		}
-	}
+	// #endregion
 `;
 
 const useWindowWidth = () => {
