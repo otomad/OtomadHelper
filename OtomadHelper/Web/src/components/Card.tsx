@@ -1,5 +1,5 @@
 export /* internal */ const StyledCard = styled.div`
-	width: 100%; // BUG: 100% 会造成横向 TAB 那里超出宽度；100cqw 会造成 sticky 后的 backdrop-filter blur 渲染异常。
+	width: 100cqw; // BUG: 100% 会造成横向 TAB 那里超出宽度；100cqw 会造成 sticky 后的 backdrop-filter blur 渲染异常。
 	text-align: initial;
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-radius: 3px;

@@ -329,6 +329,8 @@ const StyledNavigationView = styled.div<{
 `;
 
 const StyledPage = styled.main`
+	container: page / inline-size;
+
 	&:has(.empty-message) {
 		height: calc(100% - 2px);
 
