@@ -1,7 +1,8 @@
 {
 	"editor.codeActionsOnSave": {
-		// "source.fixAll": "explicit",
-		"source.sortImports": "explicit"
+		"source.fixAll": "explicit",
+		"source.fixAll.stylelint": "never",
+		"source.sortImports": "explicit",
 	},
 	"css.validate": false,
 	"less.validate": false,

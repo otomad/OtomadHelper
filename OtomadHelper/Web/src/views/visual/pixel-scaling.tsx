@@ -4,7 +4,7 @@ export default function PixelScaling() {
 	const [enabled, setEnabled] = selectConfig(c => c.visual.enablePixelScaling);
 	const [scaleFactor, setScaleFactor] = useState(100);
 	const [autoScaleFactor, setAutoScaleFactor] = useState(true);
-	const debugMode = useState(false);
+	const [replaceSource, setReplaceSource] = useState(true);
 
 	return (
 		<div className="container">
@@ -35,7 +35,7 @@ export default function PixelScaling() {
 							<Slider value={[scaleFactor, setScaleFactor]} step={1} disabled={autoScaleFactor} />
 						</Expander.ChildWrapper>
 					</Expander>
-					<SettingsCardToggleSwitch title="调试模式" icon="devtools" on={debugMode} />
+					<SettingsCardToggleSwitch title="替换原素材" icon="replace" on={[replaceSource, setReplaceSource]} />
 				</>
 			)}
 		</div>
