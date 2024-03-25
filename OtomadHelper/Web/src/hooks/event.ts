@@ -37,14 +37,14 @@ const usePreviousDeps = (deps: ChangeEffectDeps): ChangeEffectDeps => {
 	return prevRef.current;
 };
 
-const useUpdateEffect: typeof useEffect = (effect, deps) => {
-	const firstMount = useRef(true);
+export const useUpdateEffect: typeof useEffect = (effect, deps) => {
+	const isInitialMount = useRef(true);
+
 	useEffect(() => {
-		if (firstMount.current) {
-			firstMount.current = false;
-			return;
-		}
-		effect();
+		if (isInitialMount.current)
+			isInitialMount.current = false;
+		else
+			return effect();
 	}, deps);
 };
 

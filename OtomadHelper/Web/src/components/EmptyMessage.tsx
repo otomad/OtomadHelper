@@ -58,7 +58,6 @@ export default function EmptyMessage({ icon, title, details, iconOff = false, sp
 	/** 无副作用？不会额外对视图中的样式作修改。 */
 	noSideEffect?: boolean;
 }>) {
-	const { resetTransition, isChangePageCooldown } = usePageStore();
 	const el = useDomRef<"div">();
 	const IconEl = iconOff ? IconOff : Icon;
 	useEffect(() => {
@@ -68,8 +67,6 @@ export default function EmptyMessage({ icon, title, details, iconOff = false, sp
 			for (const child of container.children)
 				if (child instanceof HTMLElement && child !== el.current)
 					child.style.animation = "none";
-		if (!isChangePageCooldown)
-			resetTransition();
 	}, []);
 
 	return (

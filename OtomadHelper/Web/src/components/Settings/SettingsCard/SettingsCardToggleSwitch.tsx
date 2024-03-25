@@ -1,8 +1,10 @@
-export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, children, trailingIcon, onClick, ...settingsCardProps }: FCP<PropsOf<typeof SettingsCard> & {
+export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, children, trailingIcon, resetTransitionOnChanging, onClick, ...settingsCardProps }: FCP<PropsOf<typeof SettingsCard> & {
 	/** 打开？ */
 	on: StateProperty<boolean>;
 	/** 禁用？ */
 	disabled?: boolean;
+	/** 在切换开关时重设页面的过渡效果。 */
+	resetTransitionOnChanging?: boolean;
 }>) {
 	const [isToggleSwitchPressing, setIsToggleSwitchPressing] = useState(false);
 	trailingIcon ||= "";
@@ -21,6 +23,7 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 				on={[on, setOn]}
 				isPressing={[isToggleSwitchPressing, setIsToggleSwitchPressing]}
 				tabIndex={-1}
+				resetTransitionOnChanging={resetTransitionOnChanging}
 			/>
 			{children}
 		</SettingsCard>

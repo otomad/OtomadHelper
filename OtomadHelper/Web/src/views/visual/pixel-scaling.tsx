@@ -9,7 +9,7 @@ export default function PixelScaling() {
 	return (
 		<div className="container">
 			<SettingsPageControl image={tipsImage} learnMoreLink="" />
-			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={[enabled, setEnabled]} />
+			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={[enabled, setEnabled]} resetTransitionOnChanging />
 
 			{!enabled ? (
 				<EmptyMessage

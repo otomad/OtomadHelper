@@ -10,7 +10,7 @@ export default function Ytp() {
 	return (
 		<div className="container">
 			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.ytp}</SettingsPageControl>
-			<SettingsCardToggleSwitch title={t.enabled} selectInfo={t(1).selectInfo.source} icon="enabled" on={[enabled, setEnabled]} />
+			<SettingsCardToggleSwitch title={t.enabled} selectInfo={t(1).selectInfo.source} icon="enabled" on={[enabled, setEnabled]} resetTransitionOnChanging />
 
 			{!enabled ? (
 				<EmptyMessage

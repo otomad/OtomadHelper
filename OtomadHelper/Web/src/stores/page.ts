@@ -24,12 +24,9 @@ interface IPage {
 	isAlerted404: boolean;
 	pageContentId?: string;
 	setPageContentId(value: string): void;
-	isChangePageCooldown: boolean;
-	changePageCooldownTimeout?: Timeout;
 }
 
 const NAME = "page";
-const CHANGE_PAGE_COOLDOWN_TIMEOUT = 700;
 
 export const usePageStore = createStore<IPage>()(
 	// @ts-ignore TypeScript 脑子抽风了。
@@ -109,16 +106,13 @@ export const usePageStore = createStore<IPage>()(
 
 		function setPageInternal(nextPage: string[]) {
 			document.getElementById(STOP_TRANSITION_ID)?.remove();
-			const { page, changePageCooldownTimeout } = get();
+			const { page } = get();
 			if (page.equals(nextPage)) return;
 			const transition = getTransition(page, nextPage);
-			clearTimeout(changePageCooldownTimeout);
 			// document.startViewTransition(() =>
 			set({
 				prevPage: page,
 				page: nextPage,
-				isChangePageCooldown: true,
-				changePageCooldownTimeout: setTimeout(() => set({ isChangePageCooldown: false }), CHANGE_PAGE_COOLDOWN_TIMEOUT),
 				transition,
 				...getScrolls(transition, nextPage),
 			});
@@ -153,8 +147,6 @@ export const usePageStore = createStore<IPage>()(
 			isAlerted404: false,
 			pageContentId: undefined,
 			setPageContentId: pageContentId => get().pageContentId !== pageContentId && set({ pageContentId }),
-			isChangePageCooldown: false,
-			changePageCooldownTimeout: undefined,
 		} satisfies IPage;
 	}, {
 		name: NAME,

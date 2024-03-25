@@ -145,7 +145,7 @@ const StyledToggleSwitchLabel = styled.button`
 	}
 `;
 
-export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, details, children, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, details, resetTransitionOnChanging = false, children, ...htmlAttrs }: FCP<{
 	/** 打开？ */
 	on: StateProperty<boolean>;
 	/** 禁用？ */
@@ -158,6 +158,8 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	as?: WebTarget;
 	/** 详细描述。 */
 	details?: ReactNode;
+	/** 在切换开关时重设页面的过渡效果。 */
+	resetTransitionOnChanging?: boolean;
 }, "button">) {
 	const textLabel = on ? t.on : t.off;
 	const [isDragging, setIsDragging] = useState(false);
@@ -168,6 +170,12 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 		left: thumbLeft + "px",
 		transition: "none",
 	} as CSSProperties, [thumbLeft]);
+
+	const { resetTransition } = usePageStore();
+	useUpdateEffect(() => {
+		if (resetTransitionOnChanging)
+			resetTransition();
+	}, [resetTransitionOnChanging, resetTransition]);
 
 	const handleCheck = (on: boolean, e?: MouseEvent) => {
 		stopEvent(e);
