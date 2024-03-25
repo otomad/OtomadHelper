@@ -175,7 +175,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	useUpdateEffect(() => {
 		if (resetTransitionOnChanging)
 			resetTransition();
-	}, [resetTransitionOnChanging, resetTransition]);
+	}, [resetTransitionOnChanging, resetTransition, on, disabled]);
 
 	const handleCheck = (on: boolean, e?: MouseEvent) => {
 		stopEvent(e);
