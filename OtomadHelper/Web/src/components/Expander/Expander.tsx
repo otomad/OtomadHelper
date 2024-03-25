@@ -64,6 +64,10 @@ const ExpanderChild = styled.div`
 	}
 `;
 
+const ExpanderChildWrapper = styled.div`
+	padding: 21px 51px;
+`;
+
 export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, selectInfo }: FCP<PropsOf<typeof SettingsCard> & {
 	/** 展开器右侧的其它操作控件区域。 */
 	actions?: ReactNode;
@@ -114,3 +118,4 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 }
 
 Expander.Item = ExpanderItem;
+Expander.ChildWrapper = ExpanderChildWrapper;

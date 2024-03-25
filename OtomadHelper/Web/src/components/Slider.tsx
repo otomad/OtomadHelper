@@ -75,10 +75,21 @@ const StyledSlider = styled.div`
 		scale: ${10 / 20} !important;
 	}
 
+	&[disabled] {
+		.track::after {
+			background-color: ${c("fill-color-control-strong-disabled")};
+		}
+
+		.passed,
+		.thumb::after {
+			background-color: ${c("fill-color-accent-disabled")};
+		}
+	}
+
 	${styles.mixins.forwardFocusRing("thumb")};
 `;
 
-export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, step, keyStep = 1, onChanging, onChanged }: FCP<{
+export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, step, keyStep = 1, disabled = false, onChanging, onChanged }: FCP<{
 	/** 当前值。 */
 	value: StateProperty<number>;
 	/** 滑块最小值。 */
@@ -91,6 +102,8 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 	step?: number;
 	/** 指定当按下键盘方向按键时，滑块单次调整的值。 */
 	keyStep?: number;
+	/** 已被禁用？ */
+	disabled?: boolean;
 	/** 当滑块拖动时即触发事件。 */
 	onChanging?: (value: number) => void;
 	/** 当滑块拖动完成抬起后才触发事件。 */
@@ -180,6 +193,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 				style={{
 					"--value": smoothValue,
 				}}
+				disabled={disabled}
 				onKeyDown={onKeyDown}
 				onAuxClick={resetToDefault}
 				onContextMenu={stopEvent}

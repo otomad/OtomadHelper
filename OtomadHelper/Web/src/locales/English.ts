@@ -58,6 +58,7 @@ const English = {
 		complete: "Complete",
 		dragToImport: "Drag and drop to import the {{item, lowercase}}",
 		save: "Save",
+		auto: "Auto",
 		subheaders: {
 			moreOptions: "More options",
 			advanced: "Advanced",
@@ -232,6 +233,9 @@ const English = {
 				blur: "Blur Class",
 				wipe: "Wipe Class",
 			},
+		},
+		pixelScaling: {
+			scaleFactor: "Scale factor",
 		},
 		settings: {
 			about: {

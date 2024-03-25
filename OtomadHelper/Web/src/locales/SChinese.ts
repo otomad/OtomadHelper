@@ -58,6 +58,7 @@ const SChinese = {
 		complete: "完成",
 		dragToImport: "拖放以导入{{item, lowercase}}",
 		save: "保存",
+		auto: "自动",
 		subheaders: {
 			moreOptions: "更多选项",
 			advanced: "高级",
@@ -223,6 +224,9 @@ const SChinese = {
 				blur: "模糊类",
 				wipe: "擦除类",
 			},
+		},
+		pixelScaling: {
+			scaleFactor: "缩放因子",
 		},
 		settings: {
 			about: {

@@ -37,7 +37,7 @@ export default {
 		const value = `0 0 0 2px ${c("stroke-color-focus-stroke-inner")}, 0 0 0 4px ${c("stroke-color-focus-stroke-outer")}`;
 		return valueOnly ? value : css`
 			box-shadow: ${value};
-			transition: ${fallbackTransitions}, box-shadow cubic-bezier(0.8, 2.15, 0.67, 1) 400ms; // TODO: 变量化，非硬编码。
+			transition: ${fallbackTransitions}, box-shadow cubic-bezier(0.8, 2.15, 0.67, 1) 300ms; // TODO: 变量化，非硬编码。
 		`;
 	},
 	/**

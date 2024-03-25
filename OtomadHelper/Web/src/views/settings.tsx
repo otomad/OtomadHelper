@@ -1,9 +1,5 @@
 import { useLanguage } from "locales/config";
 
-const ExpanderChildWrapper = styled.div`
-	padding: 21px 51px;
-`;
-
 export default function Settings() {
 	const { i18n } = useTranslation();
 	const [language, setLanguage] = useLanguage();
@@ -44,9 +40,9 @@ export default function Settings() {
 				alwaysShowCheckInfo
 				expanded
 			>
-				<ExpanderChildWrapper>
+				<Expander.ChildWrapper>
 					<Slider value={uiScale} min={50} max={200} defaultValue={100} step={1} />
-				</ExpanderChildWrapper>
+				</Expander.ChildWrapper>
 			</Expander>
 
 			<Subheader>{t.subheaders.config}</Subheader>
