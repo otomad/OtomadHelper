@@ -53,7 +53,6 @@ export default function SettingsAbout() {
 	return (
 		<>
 			<StyledSettingsAbout>
-				<div className="logo" />
 				<MonoLogo className="logo dark" />
 				<ColoredLogo className="logo light" />
 				<div className="right">

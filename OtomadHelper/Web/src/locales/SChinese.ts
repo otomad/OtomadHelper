@@ -59,6 +59,8 @@ const SChinese = {
 		dragToImport: "拖放以导入{{item, lowercase}}",
 		save: "保存",
 		auto: "自动",
+		back: "返回",
+		navigation: "导航",
 		subheaders: {
 			moreOptions: "更多选项",
 			advanced: "高级",

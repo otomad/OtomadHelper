@@ -59,6 +59,8 @@ const English = {
 		dragToImport: "Drag and drop to import the {{item, lowercase}}",
 		save: "Save",
 		auto: "Auto",
+		back: "Back",
+		navigation: "Navigation",
 		subheaders: {
 			moreOptions: "More options",
 			advanced: "Advanced",

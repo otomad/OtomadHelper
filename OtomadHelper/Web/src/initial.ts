@@ -1,5 +1,6 @@
 import "helpers/color-mode";
 import "styles/fonts";
+import "styles/properties";
 import "utils/array";
 import "utils/bridge";
 
@@ -19,6 +20,7 @@ const global = globalThis as AnyObject;
 
 	// #region 阻止网页键盘按键和鼠标滚轮缩放
 	window.addEventListener("keydown", e => {
+		// 仅生产模式下禁用
 		if (isProdMode())
 			if (
 				e.ctrlKey && ["Equal", "Minus", "NumpadAdd", "NumpadSubtract"].includes(e.code) ||
@@ -26,6 +28,11 @@ const global = globalThis as AnyObject;
 				e.ctrlKey && e.shiftKey && ["KeyC", "KeyI"].includes(e.code)
 			)
 				e.preventDefault();
+		// 任何模式下均禁用
+		if (
+			e.altKey && ["ArrowLeft", "ArrowRight"].includes(e.code)
+		)
+			e.preventDefault();
 	});
 	document.addEventListener("wheel", function (e) {
 		if (isProdMode())

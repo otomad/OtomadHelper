@@ -71,7 +71,7 @@ const StyledTooltip = styled.div<{
 	}
 `;
 
-export default function Tooltip({ title, placement, offset = 10, timeout = 500, children }: FCP<{
+export default function Tooltip({ title, placement, offset = 10, timeout = 500, disabled = false, children }: FCP<{
 	/** 工具提示内容。 */
 	title: ReactNode;
 	/** 工具提示方向。 */
@@ -80,7 +80,11 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 	offset?: number;
 	/** 延时显示。 */
 	timeout?: number;
+	/** 不显示工具提示？ */
+	disabled?: boolean;
 }>) {
+	if (disabled) return <Contents>{children}</Contents>;
+
 	const [shown, setShown] = useState(false);
 	const [contentsEl, setContentsEl] = useDomRefState<"div">(); // Use state instead of ref to make sure change it to rerender.
 	const tooltipEl = useDomRef<"div">();
@@ -96,6 +100,7 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 	}, [contentsEl]);
 
 	const handleHover = (e: MouseEvent) => {
+		console.log(placement);
 		clearTimeout(shownTimeout.current);
 		if (!dom || !isInPath(e, dom)) return;
 		shownTimeout.current = setTimeout(async () => {
@@ -116,13 +121,13 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 		setShown(false);
 	};
 
-	useEventListener(dom, "mouseenter", handleHover, undefined, [contentsEl]);
+	useEventListener(dom, "mouseenter", handleHover, undefined, [contentsEl, title, placement, offset, timeout, disabled, children]);
 	useEventListener(dom, "mouseleave", handleUnhover, undefined, [contentsEl]);
 	useEventListener(dom, "click", handleUnhover, undefined, [contentsEl]);
 
 	return (
 		<>
-			<Contents ref={setContentsEl}>
+			<Contents className="tooltip-child-wrapper" ref={setContentsEl}>
 				{children}
 			</Contents>
 			<Portal>

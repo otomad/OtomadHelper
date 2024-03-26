@@ -32,14 +32,17 @@ function useTypography(fontSize: number, lineHeight?: number, weight: keyof type
 	`;
 }
 
+const easeOutFocusRingBack = "cubic-bezier(0.8, 2.15, 0.67, 1)";
+
 export default {
-	focus: (valueOnly: boolean = false) => {
-		const value = `0 0 0 2px ${c("stroke-color-focus-stroke-inner")}, 0 0 0 4px ${c("stroke-color-focus-stroke-outer")}`;
-		return valueOnly ? value : css`
-			box-shadow: ${value};
-			transition: ${fallbackTransitions}, box-shadow cubic-bezier(0.8, 2.15, 0.67, 1) 300ms; // TODO: 变量化，非硬编码。
-		`;
-	},
+	focus: () => css`
+		--focus-ring-length-outer: 4px;
+		--focus-ring-length-inner: 2px;
+		box-shadow:
+			0 0 0 var(--focus-ring-length-inner) ${c("stroke-color-focus-stroke-inner")},
+			0 0 0 var(--focus-ring-length-outer) ${c("stroke-color-focus-stroke-outer")};
+		transition: ${fallbackTransitions}, box-shadow 0s, --focus-ring-length-outer ${easeOutFocusRingBack} 350ms, --focus-ring-length-inner ${eases.easeOutMax} 250ms;
+	`,
 	/**
 	 * 指定 Segoe UI Variable 字体的字号、字重、行高和光学尺寸轴 (Optical Size axis) 参数。
 	 */

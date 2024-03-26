@@ -55,6 +55,21 @@ const GlobalStyle = createGlobalStyle<{
 		}
 	}
 
+	code,
+	pre,
+	kbd,
+	samp,
+	xmp {
+		&,
+		* {
+			&,
+			&::before,
+			&::after {
+				font-family: "Cascadia Code", "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
+			}
+		}
+	}
+
 	:where(:lang(en), :lang(ru), :lang(vi), :lang(id)) {
 		text-wrap: pretty;
 	}

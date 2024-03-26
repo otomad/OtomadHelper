@@ -37,12 +37,12 @@ const StyledTopLeftButtons = styled.div`
 		position: relative;
 	}
 
-	&:not(.vertical) ${NavButton}:nth-of-type(2) {
+	&:not(.vertical) :nth-of-type(2) > ${NavButton} {
 		top: 0;
 		left: ${navButtonSize.width}px;
 	}
 
-	&.vertical ${NavButton}:nth-of-type(2) {
+	&.vertical :nth-of-type(2) > ${NavButton} {
 		top: ${navButtonSize.height}px;
 		left: 0;
 	}
@@ -60,12 +60,27 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 	/** 点击汉堡菜单按钮事件。 */
 	onNavButton?: () => void;
 }>) {
+	const vertical = paneDisplayMode === "compact";
+	const tooltipPlacement: Placement = vertical ? "right" : "bottom";
+
+	useEventListener(window, "keydown", e => {
+		if (e.altKey && e.code === "ArrowLeft") onBack?.();
+		else if (e.altKey && e.code === "KeyH") onNavButton?.();
+	});
+
+	const TooltipTitle = ({ title, shortcut }: { title: string; shortcut: string }) =>
+		<>{title}<code style={{ marginLeft: "0.25em" }}>({shortcut})</code></>;
+
 	return (
-		<StyledTopLeftButtons className={{ shadow, vertical: paneDisplayMode === "compact" }}>
+		<StyledTopLeftButtons className={{ shadow, vertical }}>
 			{!shadow && (
 				<div className="base">
-					<NavButton animatedIcon="back" disabled={!canBack} onClick={onBack} aria-label="Back" />
-					<NavButton animatedIcon="global_nav_button" onClick={onNavButton} aria-label="Menu" />
+					<Tooltip placement={tooltipPlacement} title={<TooltipTitle title={t.back} shortcut="Alt + ←" />}>
+						<NavButton animatedIcon="back" disabled={!canBack} onClick={onBack} aria-label="Back" />
+					</Tooltip>
+					<Tooltip placement={tooltipPlacement} title={<TooltipTitle title={t.navigation} shortcut="Alt + H" />}>
+						<NavButton animatedIcon="global_nav_button" onClick={onNavButton} aria-label="Navigation" />
+					</Tooltip>
 				</div>
 			)}
 		</StyledTopLeftButtons>
