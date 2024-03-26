@@ -1,4 +1,4 @@
-import tipsImage from "assets/images/tips/dirt_background_je2.png";
+import tipsImage from "assets/images/tips/end_stone_with_sword.png";
 
 export default function PixelScaling() {
 	const [enabled, setEnabled] = selectConfig(c => c.visual.enablePixelScaling);
@@ -8,7 +8,7 @@ export default function PixelScaling() {
 
 	return (
 		<div className="container">
-			<SettingsPageControl image={tipsImage} learnMoreLink="" />
+			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.pixelScaling}</SettingsPageControl>
 			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={[enabled, setEnabled]} resetTransitionOnChanging />
 
 			{!enabled ? (
@@ -35,7 +35,7 @@ export default function PixelScaling() {
 							<Slider value={[scaleFactor, setScaleFactor]} step={1} disabled={autoScaleFactor} />
 						</Expander.ChildWrapper>
 					</Expander>
-					<SettingsCardToggleSwitch title="替换原素材" icon="replace" on={[replaceSource, setReplaceSource]} />
+					<SettingsCardToggleSwitch title={t.pixelScaling.replaceSourceMedia} icon="replace" on={[replaceSource, setReplaceSource]} />
 				</>
 			)}
 		</div>

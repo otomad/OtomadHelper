@@ -238,6 +238,7 @@ const English = {
 		},
 		pixelScaling: {
 			scaleFactor: "Scale factor",
+			replaceSourceMedia: "Replace source media",
 		},
 		settings: {
 			about: {
@@ -364,6 +365,9 @@ const English = {
 			},
 			staff: {
 				_: "Staff Visualizer is to use custom patterns as notes to draw visuals similar fashion to piano staff sheets based on the melody of the score.\nThis visual effect style mimics the videos of YouTuber @grantwoolard, who featured the use of musicians’ avatars to draw the piano staff sheets of classical music.",
+			},
+			pixelScaling: {
+				_: "Pixel Scaling feature can enlarge and replace the pixel image of the source with a new image to avoid the pixel distortion problem caused by the original pixel image rescaling using smooth gradients algorithm due to Vegas Pan/Crop. To use it, you could add FFmpeg to system environment variable, or you could directly install Datamosh extension pack.\nPixel Scaling feature will use FFmpeg to enlarge the source file using the nearest neighbor interpolation algorithm to fit the current project size, and then replace the source media file in Vegas with the newly generated media file. The newly generated file will be identified by adding the suffix “_Scaled” to its name. The feature theoretically supports any image/video file format, and also supports image sequence files imported into Vegas through conventional methods.",
 			},
 			settings: {
 				about: "Otomad Helper, a YTPMV/YTP extension for Vegas Pro, designed to allow Vegas to accept scores like MIDI files as input, and automatically generate YTPMV tracks.",
