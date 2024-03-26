@@ -83,8 +83,6 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 	/** 不显示工具提示？ */
 	disabled?: boolean;
 }>) {
-	if (disabled) return <Contents>{children}</Contents>;
-
 	const [shown, setShown] = useState(false);
 	const [contentsEl, setContentsEl] = useDomRefState<"div">(); // Use state instead of ref to make sure change it to rerender.
 	const tooltipEl = useDomRef<"div">();
@@ -130,15 +128,17 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 			<Contents className="tooltip-child-wrapper" ref={setContentsEl}>
 				{children}
 			</Contents>
-			<Portal>
-				<CssTransition in={shown} unmountOnExit>
-					<StyledTooltip $offset={offset} className={actualPlacement} style={position}>
-						<div className="base" ref={tooltipEl}>
-							{title}
-						</div>
-					</StyledTooltip>
-				</CssTransition>
-			</Portal>
+			{!disabled && (
+				<Portal>
+					<CssTransition in={shown} unmountOnExit>
+						<StyledTooltip $offset={offset} className={actualPlacement} style={position}>
+							<div className="base" ref={tooltipEl}>
+								{title}
+							</div>
+						</StyledTooltip>
+					</CssTransition>
+				</Portal>
+			)}
 		</>
 	);
 }

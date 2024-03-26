@@ -143,35 +143,37 @@ export /* internal */ default function TabItem({ icon, animatedIcon, children, s
 		<Badge status="accent" hidden={badge === undefined || hidden}>{badge}</Badge>, [badge]);
 
 	return (
-		<Transition
-			nodeRef={tabItemEl}
-			in={!collapsed}
-			addEndListener={endListener(tabItemEl)}
-			onEnter={onEnter}
-			onExit={onExit}
-		>
-			<StyledTabItemWrapper {...htmlAttrs}>
-				<StyledTabItem
-					type="button"
-					ref={tabItemEl}
-					tabIndex={focusable ? 0 : -1}
-					{...htmlAttrs}
-					className={{ selected }}
-				>
-					{(icon || animatedIcon) && (
-						<div className="badge-wrapper">
-							{icon && !animatedIcon && <Icon name={icon} />}
-							{animatedIcon && <AnimatedIcon name={animatedIcon} />}
-							<BadgeItem hidden={!(vertical && collapsed)} />
+		<Tooltip placement="right" offset={5} disabled={!collapsed} title={children}>
+			<Transition
+				nodeRef={tabItemEl}
+				in={!collapsed}
+				addEndListener={endListener(tabItemEl)}
+				onEnter={onEnter}
+				onExit={onExit}
+			>
+				<StyledTabItemWrapper {...htmlAttrs}>
+					<StyledTabItem
+						type="button"
+						ref={tabItemEl}
+						tabIndex={focusable ? 0 : -1}
+						{...htmlAttrs}
+						className={{ selected }}
+					>
+						{(icon || animatedIcon) && (
+							<div className="badge-wrapper">
+								{icon && !animatedIcon && <Icon name={icon} />}
+								{animatedIcon && <AnimatedIcon name={animatedIcon} />}
+								<BadgeItem hidden={!(vertical && collapsed)} />
+							</div>
+						)}
+						<div className="badge-wrapper fill">
+							<div className="text">{children}</div>
+							{!vertical && <BadgeItem />}
 						</div>
-					)}
-					<div className="badge-wrapper fill">
-						<div className="text">{children}</div>
-						{!vertical && <BadgeItem />}
-					</div>
-					{vertical && <BadgeItem />}
-				</StyledTabItem>
-			</StyledTabItemWrapper>
-		</Transition>
+						{vertical && <BadgeItem />}
+					</StyledTabItem>
+				</StyledTabItemWrapper>
+			</Transition>
+		</Tooltip>
 	);
 }
