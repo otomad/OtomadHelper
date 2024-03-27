@@ -68,8 +68,8 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 		else if (e.altKey && e.code === "KeyH") onNavButton?.();
 	});
 
-	const TooltipTitle = ({ title, shortcut }: { title: string; shortcut: string }) =>
-		<>{title}<code style={{ marginLeft: "0.25em" }}>({shortcut})</code></>;
+	const TooltipTitle = useCallback(({ title, shortcut }: { title: string; shortcut: string }) =>
+		<>{title}<code style={{ marginLeft: "0.25em" }}>({shortcut})</code></>, []);
 
 	return (
 		<StyledTopLeftButtons className={{ shadow, vertical }}>
