@@ -19,7 +19,7 @@ const getTitle = (viewName: string, full: boolean = false, plural?: number) => {
 };
 
 export default function ShellPage() {
-	const { page, changePage, getPagePath, transition, canBack, back, reset, setPageContentId, poppedScroll } = usePageStore();
+	const { page, changePage, pagePath, transition, canBack, back, reset, setPageContentId, poppedScroll } = usePageStore();
 	const pageTitles = page.map((crumb, i, { length }) => {
 		try {
 			return {
@@ -31,7 +31,7 @@ export default function ShellPage() {
 			throw error;
 		}
 	});
-	const Page = pages[`/src/views/${getPagePath()}.tsx`] ?? EmptyPage;
+	const Page = pages[`/src/views/${pagePath}.tsx`] ?? EmptyPage;
 	const [uiScale] = selectConfig(c => c.settings.uiScale);
 	const { appName } = useAboutApp();
 	const documentTitle = (() => {
@@ -59,7 +59,7 @@ export default function ShellPage() {
 			]}
 			titles={pageTitles}
 			transitionName={transition}
-			canBack={canBack()}
+			canBack={canBack}
 			onBack={back}
 			pageContentId={pageContentId}
 			poppedScroll={poppedScroll}

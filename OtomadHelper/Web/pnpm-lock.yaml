@@ -47,6 +47,9 @@ patchedDependencies:
   vite@4.4.11:
     hash: 2dydg5n5mrql3fv5yyrdimimh4
     path: patches/vite@4.4.11.patch
+  zustand@4.4.4:
+    hash: ue3qhdvyi6u6j4qhf6osmxaulm
+    path: patches/zustand@4.4.4.patch
 
 dependencies:
   ani-cursor:
@@ -99,7 +102,7 @@ dependencies:
     version: 0.9.0(immer@10.0.3)(react@18.2.0)
   zustand:
     specifier: ^4.4.4
-    version: 4.4.4(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0)
+    version: 4.4.4(patch_hash=ue3qhdvyi6u6j4qhf6osmxaulm)(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0)
 
 devDependencies:
   '@styled/typescript-styled-plugin':
@@ -5561,7 +5564,7 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zustand@4.4.4(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0):
+  /zustand@4.4.4(patch_hash=ue3qhdvyi6u6j4qhf6osmxaulm)(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0):
     resolution: {integrity: sha512-5UTUIAiHMNf5+mFp7/AnzJXS7+XxktULFN0+D1sCiZWyX7ZG+AQpqs2qpYrynRij4QvoDdCD+U+bmg/cG3Ucxw==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
@@ -5581,3 +5584,4 @@ packages:
       react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
+    patched: true

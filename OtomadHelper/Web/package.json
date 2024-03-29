@@ -91,7 +91,8 @@
 			"react-dom@18.2.0": "patches/react-dom@18.2.0.patch",
 			"react-flip-move@3.0.5": "patches/react-flip-move@3.0.5.patch",
 			"styled-components@6.1.0": "patches/styled-components@6.1.0.patch",
-			"vite@4.4.11": "patches/vite@4.4.11.patch"
+			"vite@4.4.11": "patches/vite@4.4.11.patch",
+			"zustand@4.4.4": "patches/zustand@4.4.4.patch"
 		}
 	}
 }

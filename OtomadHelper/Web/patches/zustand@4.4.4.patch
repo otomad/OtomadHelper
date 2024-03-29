@@ -1,0 +1,60 @@
+diff --git a/esm/vanilla.js b/esm/vanilla.js
+index 9dff6951c4a586eeac69b9cad606657af9d48450..99c44238e52f0b8de1df3b04746b81973d5b10fe 100644
+--- a/esm/vanilla.js
++++ b/esm/vanilla.js
+@@ -6,6 +6,15 @@ const createStoreImpl = (createState) => {
+     if (!Object.is(nextState, state)) {
+       const previousState = state;
+       state = (replace != null ? replace : typeof nextState !== "object") ? nextState : Object.assign({}, state, nextState);
++      // copy getters
++      if (typeof state === 'object' && state !== null) {
++        for (const key in previousState) {
++          const descriptor = Object.getOwnPropertyDescriptor(previousState, key);
++          if (descriptor?.get) {
++            Reflect.defineProperty(state, key, descriptor);
++          }
++        }
++      }
+       listeners.forEach((listener) => listener(state, previousState));
+     }
+   };
+diff --git a/esm/vanilla.mjs b/esm/vanilla.mjs
+index 89bcc9023e7468b9e68fb1f7b8ed87332da57150..3812c275edda35c0d9e43a73f1e86e4f458abb6c 100644
+--- a/esm/vanilla.mjs
++++ b/esm/vanilla.mjs
+@@ -6,6 +6,15 @@ const createStoreImpl = (createState) => {
+     if (!Object.is(nextState, state)) {
+       const previousState = state;
+       state = (replace != null ? replace : typeof nextState !== "object") ? nextState : Object.assign({}, state, nextState);
++      // copy getters
++      if (typeof state === 'object' && state !== null) {
++        for (const key in previousState) {
++          const descriptor = Object.getOwnPropertyDescriptor(previousState, key);
++          if (descriptor?.get) {
++            Reflect.defineProperty(state, key, descriptor);
++          }
++        }
++      }
+       listeners.forEach((listener) => listener(state, previousState));
+     }
+   };
+diff --git a/vanilla.js b/vanilla.js
+index ac2f3ebc77830ab7a827a7595fe10bb695d308e8..1fee25b42482469704b0919f8708894a75210b8e 100644
+--- a/vanilla.js
++++ b/vanilla.js
+@@ -8,6 +8,15 @@ var createStoreImpl = function createStoreImpl(createState) {
+     if (!Object.is(nextState, state)) {
+       var _previousState = state;
+       state = (replace != null ? replace : typeof nextState !== 'object') ? nextState : Object.assign({}, state, nextState);
++      // copy getters
++      if (typeof state === 'object' && state !== null) {
++        for (var key in _previousState) {
++          var descriptor = Object.getOwnPropertyDescriptor(_previousState, key);
++          if (descriptor && descriptor.get) {
++            Reflect.defineProperty(state, key, descriptor);
++          }
++        }
++      }
+       listeners.forEach(function (listener) {
+         return listener(state, _previousState);
+       });

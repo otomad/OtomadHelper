@@ -1,4 +1,4 @@
-import tipsImage from "assets/images/tips/end_stone_with_sword.png";
+import tipsImage from "assets/images/tips/sand_with_sword.png";
 
 export default function PixelScaling() {
 	const [enabled, setEnabled] = selectConfig(c => c.visual.enablePixelScaling);

@@ -14,10 +14,10 @@ interface IPage {
 	transition: PageTransitionName;
 	scrolls: PageScrollList;
 	poppedScroll?: PageScroll;
-	getPagePath(): string;
+	pagePath: string;
 	changePage: SetState<string[]>;
 	pushPage(...pages: string[]): void;
-	canBack(): boolean;
+	canBack: boolean;
 	back(): void;
 	resetTransition(): void;
 	reset(): void;
@@ -125,12 +125,12 @@ export const usePageStore = createStore<IPage>()(
 			transition: "forward",
 			scrolls,
 			poppedScroll: undefined,
-			getPagePath: () => get().page.join("/"),
+			get pagePath() { return get().page.join("/"); },
 			changePage: changePage as SetState<string[]>,
 			pushPage: lodash.throttle((...pages) => setPageInternal([...get().page, ...pages]), 700, { trailing: false }),
-			canBack: () => get().page.length > 1,
+			get canBack() { return get().page.length > 1; },
 			back() {
-				if (get().canBack()) {
+				if (get().canBack) {
 					const page = get().page.slice();
 					page.pop();
 					setPageInternal(page);
