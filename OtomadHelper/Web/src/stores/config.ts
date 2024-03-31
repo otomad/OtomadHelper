@@ -40,9 +40,6 @@ interface IConfig {
 		enablePixelScaling: boolean;
 	};
 	createGroups: boolean;
-	track: {
-		layout: boolean;
-	};
 	ytp: {
 		enabled: boolean;
 	};
@@ -86,9 +83,6 @@ export const useConfigStore = createStore<IConfig>()(
 			enablePixelScaling: false,
 		},
 		createGroups: true,
-		track: {
-			layout: false,
-		},
 		ytp: {
 			enabled: false,
 		},

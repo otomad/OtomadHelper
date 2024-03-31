@@ -1,4 +1,4 @@
-const English = {
+export default {
 	javascript: {
 		metadata: {
 			__translator__: "",
@@ -206,18 +206,6 @@ const English = {
 			trackEventOnlyOne: "You must select exactly ONE track event, not more or less",
 			videoEventOnlyOne: "You must select exactly ONE video track event, not more or less",
 			audioEventOnlyOne: "You must select exactly ONE audio track event, not more or less",
-			trackGenerated: "{{count}} track will be generated",
-			trackGenerated_other: "{{count}} tracks will be generated",
-			videoTrackGenerated: "{{count}} video track will be generated",
-			videoTrackGenerated_other: "{{count}} video tracks will be generated",
-			audioTrackGenerated: "{{count}} audio track will be generated",
-			audioTrackGenerated_other: "{{count}} audio tracks will be generated",
-			trackGeneratedGeq: "{{count}} or more tracks will be generated",
-			trackGeneratedGeq_zero: "{{count}} tracks will be generated",
-			videoTrackGeneratedGeq: "{{count}} or more video tracks will be generated",
-			videoTrackGeneratedGeq_zero: "{{count}} video tracks will be generated",
-			audioTrackGeneratedGeq: "{{count}} or more audio tracks will be generated",
-			audioTrackGeneratedGeq_zero: "{{count}} audio tracks will be generated",
 		},
 		prve: {
 			classes: {
@@ -390,5 +378,3 @@ const English = {
 		ImportToHere: "Import %1",
 	},
 } as const;
-
-export default English;

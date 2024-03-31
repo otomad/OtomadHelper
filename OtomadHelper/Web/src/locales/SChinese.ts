@@ -199,16 +199,6 @@ const SChinese = {
 			trackEventOnlyOne: "必须恰好选中1段轨道剪辑，不得多选或少选",
 			videoEventOnlyOne: "必须恰好选中1段视频轨道剪辑，不得多选或少选",
 			audioEventOnlyOne: "必须恰好选中1段音频轨道剪辑，不得多选或少选",
-			trackGenerated: "将会生成{{count}}条轨道",
-			videoTrackGenerated: "将会生成{{count}}条视频轨道",
-			audioTrackGenerated: "将会生成{{count}}条音频轨道",
-			trackGeneratedGeq: "将会生成{{count}}条及以上的轨道",
-			trackGeneratedGeq_zero: "将会生成{{count}}条轨道",
-			videoTrackGeneratedGeq: "将会生成{{count}}条及以上的视频轨道",
-			videoTrackGeneratedGeq_zero: "将会生成{{count}}条视频轨道",
-			audioTrackGeneratedGeq: "将会生成{{count}}条及以上的音频轨道",
-			audioTrackGeneratedGeq_zero: "将会生成{{count}}条音频轨道",
-
 		},
 		prve: {
 			classes: {
