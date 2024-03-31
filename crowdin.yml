@@ -1,5 +1,5 @@
 bundles:
   - 2
 files:
-  - source: /OtomadHelper/Web/src/locales/English.ts
+  - source: /OtomadHelper/Web/src/locales/English.*
     translation: /OtomadHelper/Web/src/locales/%language%.ts
