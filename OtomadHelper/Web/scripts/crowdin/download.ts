@@ -4,7 +4,8 @@ import { copyFile, mkdir, readdir, rm, stat } from "fs/promises";
 import https from "https";
 import { tmpdir } from "os";
 import { join, resolve } from "path";
-import { fgGreen, translationsApi } from "./crowdin";
+import consoleColors from "../console-colors";
+import { translationsApi } from "./crowdin";
 import { projectId } from "./token";
 
 const __dirname = import.meta.dirname;
@@ -89,4 +90,4 @@ await Promise.all([
 	remove(filePath),
 	remove(extractedPath),
 ]);
-console.log(fgGreen + "Download successfully!");
+console.log(consoleColors.foreground.green + "Download successfully!" + consoleColors.reset);

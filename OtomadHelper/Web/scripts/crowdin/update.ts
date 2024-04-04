@@ -1,6 +1,7 @@
 import { readFile, readdir } from "fs/promises";
 import { resolve } from "path";
-import { fgGreen, sourceFilesApi, uploadStorageApi } from "./crowdin";
+import consoleColors from "../console-colors";
+import { sourceFilesApi, uploadStorageApi } from "./crowdin";
 import { projectId } from "./token";
 
 const __dirname = import.meta.dirname;
@@ -32,4 +33,4 @@ const file = await (async () => {
 const fileContent = await readFile(file, "utf-8");
 
 updateFile(projectId, `${SOURCE_LANGUAGE}.json`, fileContent);
-console.log(fgGreen + "Update successfully!");
+console.log(consoleColors.foreground.green + "Update successfully!" + consoleColors.reset);
