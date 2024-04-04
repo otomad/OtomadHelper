@@ -158,7 +158,10 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	as?: WebTarget;
 	/** 详细描述。 */
 	details?: ReactNode;
-	/** 在切换开关时重设页面的过渡效果。 */
+	/**
+	 * 在切换开关时重设页面的过渡效果。
+	 * @note 这是一个业务逻辑，但是出现在了基础组件中。
+	 */
 	resetTransitionOnChanging?: boolean;
 }, "button">) {
 	const textLabel = on ? t.on : t.off;

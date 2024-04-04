@@ -1,8 +1,58 @@
 diff --git a/dist/browser/pangu.js b/dist/browser/pangu.js
-index 7efbaf8edb730a33e9b671be459847f755880a21..349ae7b86b566095699508ee91af85e70856284b 100644
+index 7efbaf8edb730a33e9b671be459847f755880a21..63cc9212ad7e6b6ebfa5ba91f41cb55d13dd2ff3 100644
 --- a/dist/browser/pangu.js
 +++ b/dist/browser/pangu.js
-@@ -610,6 +610,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
+@@ -6,6 +6,7 @@
+  * @license: MIT
+  * @author: Vinta Chen <vinta.chen@gmail.com> (https://github.com/vinta)
+  */
++const PUNCSP = "\u2008";
+ (function webpackUniversalModuleDefinition(root, factory) {
+ 	if(typeof exports === 'object' && typeof module === 'object')
+ 		module.exports = factory();
+@@ -304,7 +305,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
+                 var testNewText = this.spacing(testText);
+ 
+                 if (testText !== testNewText) {
+-                  previousSibling.data = "".concat(previousSibling.data, " ");
++                  previousSibling.data = "".concat(previousSibling.data, PUNCSP);
+                 }
+               }
+             }
+@@ -318,7 +319,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
+                 var _testNewText = this.spacing(_testText);
+ 
+                 if (_testText !== _testNewText) {
+-                  nextSibling.data = " ".concat(nextSibling.data);
++                  nextSibling.data = PUNCSP.concat(nextSibling.data);
+                 }
+               }
+             }
+@@ -370,19 +371,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
+                   if (nextNode.nodeName.search(this.ignoredTags) === -1 && nextNode.nodeName.search(this.blockTags) === -1) {
+                     if (nextTextNode.previousSibling) {
+                       if (nextTextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1) {
+-                        nextTextNode.data = " ".concat(nextTextNode.data);
++                        nextTextNode.data = PUNCSP.concat(nextTextNode.data);
+                       }
+                     } else {
+                       if (!this.canIgnoreNode(nextTextNode)) {
+-                        nextTextNode.data = " ".concat(nextTextNode.data);
++                        nextTextNode.data = PUNCSP.concat(nextTextNode.data);
+                       }
+                     }
+                   }
+                 } else if (currentNode.nodeName.search(this.spaceSensitiveTags) === -1) {
+-                  currentTextNode.data = "".concat(currentTextNode.data, " ");
++                  currentTextNode.data = "".concat(currentTextNode.data, PUNCSP);
+                 } else {
+                   var panguSpace = document.createElement('pangu');
+-                  panguSpace.innerHTML = ' ';
++                  panguSpace.innerHTML = PUNCSP;
+ 
+                   if (nextNode.previousSibling) {
+                     if (nextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1) {
+@@ -610,6 +611,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
    var S_A = /(%)([A-Za-z])/g;
    var MIDDLE_DOT = /([ ]*)([\u00b7\u2022\u2027])([ ]*)/g;
  
@@ -13,7 +63,7 @@ index 7efbaf8edb730a33e9b671be459847f755880a21..349ae7b86b566095699508ee91af85e7
    var Pangu = function () {
      function Pangu() {
        _classCallCheck(this, Pangu);
-@@ -619,9 +623,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
+@@ -619,9 +624,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
  
      _createClass(Pangu, [{
        key: "convertToFullwidth",
@@ -24,7 +74,7 @@ index 7efbaf8edb730a33e9b671be459847f755880a21..349ae7b86b566095699508ee91af85e7
      }, {
        key: "spacing",
        value: function spacing(text) {
-@@ -637,11 +639,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
+@@ -637,37 +640,37 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
          var self = this;
          var newText = text;
          newText = newText.replace(CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK, function (match, leftCjk, symbols, rightCjk) {
@@ -37,4 +87,46 @@ index 7efbaf8edb730a33e9b671be459847f755880a21..349ae7b86b566095699508ee91af85e7
 +          var fullwidthSymbols = convertToFullwidth(symbols);
            return "".concat(cjk).concat(fullwidthSymbols);
          });
-         newText = newText.replace(DOTS_CJK, '$1 $2');
+-        newText = newText.replace(DOTS_CJK, '$1 $2');
++        newText = newText.replace(DOTS_CJK, `$1${PUNCSP}$2`);
+         newText = newText.replace(FIX_CJK_COLON_ANS, '$1：$2');
+-        newText = newText.replace(CJK_QUOTE, '$1 $2');
+-        newText = newText.replace(QUOTE_CJK, '$1 $2');
++        newText = newText.replace(CJK_QUOTE, `$1${PUNCSP}$2`);
++        newText = newText.replace(QUOTE_CJK, `$1${PUNCSP}$2`);
+         newText = newText.replace(FIX_QUOTE_ANY_QUOTE, '$1$2$3');
+-        newText = newText.replace(CJK_SINGLE_QUOTE_BUT_POSSESSIVE, '$1 $2');
+-        newText = newText.replace(SINGLE_QUOTE_CJK, '$1 $2');
++        newText = newText.replace(CJK_SINGLE_QUOTE_BUT_POSSESSIVE, `$1${PUNCSP}$2`);
++        newText = newText.replace(SINGLE_QUOTE_CJK, `$1${PUNCSP}$2`);
+         newText = newText.replace(FIX_POSSESSIVE_SINGLE_QUOTE, "$1's");
+-        newText = newText.replace(HASH_ANS_CJK_HASH, '$1 $2$3$4 $5');
+-        newText = newText.replace(CJK_HASH, '$1 $2');
+-        newText = newText.replace(HASH_CJK, '$1 $3');
+-        newText = newText.replace(CJK_OPERATOR_ANS, '$1 $2 $3');
+-        newText = newText.replace(ANS_OPERATOR_CJK, '$1 $2 $3');
++        newText = newText.replace(HASH_ANS_CJK_HASH, `$1${PUNCSP}$2$3$4${PUNCSP}$5`);
++        newText = newText.replace(CJK_HASH, `$1${PUNCSP}$2`);
++        newText = newText.replace(HASH_CJK, `$1${PUNCSP}$3`);
++        newText = newText.replace(CJK_OPERATOR_ANS, `$1${PUNCSP}$2${PUNCSP}$3`);
++        newText = newText.replace(ANS_OPERATOR_CJK, `$1${PUNCSP}$2${PUNCSP}$3`);
+         newText = newText.replace(FIX_SLASH_AS, '$1$2');
+         newText = newText.replace(FIX_SLASH_AS_SLASH, '$1$2$3');
+-        newText = newText.replace(CJK_LEFT_BRACKET, '$1 $2');
+-        newText = newText.replace(RIGHT_BRACKET_CJK, '$1 $2');
++        newText = newText.replace(CJK_LEFT_BRACKET, `$1${PUNCSP}$2`);
++        newText = newText.replace(RIGHT_BRACKET_CJK, `$1${PUNCSP}$2`);
+         newText = newText.replace(FIX_LEFT_BRACKET_ANY_RIGHT_BRACKET, '$1$2$3');
+-        newText = newText.replace(ANS_CJK_LEFT_BRACKET_ANY_RIGHT_BRACKET, '$1 $2$3$4');
+-        newText = newText.replace(LEFT_BRACKET_ANY_RIGHT_BRACKET_ANS_CJK, '$1$2$3 $4');
++        newText = newText.replace(ANS_CJK_LEFT_BRACKET_ANY_RIGHT_BRACKET, `$1${PUNCSP}$2$3$4`);
++        newText = newText.replace(LEFT_BRACKET_ANY_RIGHT_BRACKET_ANS_CJK, `$1$2$3${PUNCSP}$4`);
+         newText = newText.replace(AN_LEFT_BRACKET, '$1 $2');
+         newText = newText.replace(RIGHT_BRACKET_AN, '$1 $2');
+-        newText = newText.replace(CJK_ANS, '$1 $2');
+-        newText = newText.replace(ANS_CJK, '$1 $2');
++        newText = newText.replace(CJK_ANS, `$1${PUNCSP}$2`);
++        newText = newText.replace(ANS_CJK, `$1${PUNCSP}$2`);
+         newText = newText.replace(S_A, '$1 $2');
+         newText = newText.replace(MIDDLE_DOT, '・');
+         return newText;

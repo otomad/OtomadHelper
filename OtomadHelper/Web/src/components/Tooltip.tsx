@@ -98,7 +98,6 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 	}, [contentsEl]);
 
 	const handleHover = (e: MouseEvent) => {
-		console.log(placement);
 		clearTimeout(shownTimeout.current);
 		if (!dom || !isInPath(e, dom)) return;
 		shownTimeout.current = setTimeout(async () => {

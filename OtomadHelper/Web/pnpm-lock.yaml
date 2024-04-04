@@ -21,7 +21,7 @@ patchedDependencies:
     hash: urdo465qcktf5jshudaoriujbq
     path: patches/lottie-web@5.12.2.patch
   pangu@4.0.7:
-    hash: u2zvsskcrp46nv4sumi5wcln2u
+    hash: kommaei6mdnwkhfyu555is7zfe
     path: patches/pangu@4.0.7.patch
   postcss-selector-parser@6.0.15:
     hash: ivpuqdiu4ncrv7b4a2vnqwb7pu
@@ -78,7 +78,7 @@ dependencies:
     version: 3.0.1
   pangu:
     specifier: ^4.0.7
-    version: 4.0.7(patch_hash=u2zvsskcrp46nv4sumi5wcln2u)
+    version: 4.0.7(patch_hash=kommaei6mdnwkhfyu555is7zfe)
   react:
     specifier: ^18.2.0
     version: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
@@ -4038,7 +4038,7 @@ packages:
       p-limit: 3.1.0
     dev: true
 
-  /pangu@4.0.7(patch_hash=u2zvsskcrp46nv4sumi5wcln2u):
+  /pangu@4.0.7(patch_hash=kommaei6mdnwkhfyu555is7zfe):
     resolution: {integrity: sha512-weZKJIwwy5gjt4STGVUH9bix3BGk7wZ2ahtIypwe3e/mllsrIZIvtfLx1dPX56GcpZFOCFKmeqI1qVuB9enRzA==}
     hasBin: true
     dev: false
