@@ -63,6 +63,8 @@ export default function SettingsAbout() {
 					<div>
 						<OpenLink href="https://otomadhelper.readthedocs.io/">{t.settings.about.documentation}</OpenLink>
 						<OpenLink href="https://github.com/otomad/OtomadHelper">{t.settings.about.repositoryLink}</OpenLink>
+						<OpenLink href="https://crowdin.com/project/otomadhelper">{t.settings.about.translation}</OpenLink>
+						<OpenLink href="https://github.com/otomad/OtomadHelper/issues">{t.settings.about.feedback}</OpenLink>
 					</div>
 				</div>
 			</StyledSettingsAbout>

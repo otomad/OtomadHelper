@@ -233,6 +233,8 @@ export default {
 				checkForUpdates: "Check for updates",
 				repositoryLink: "Repository link",
 				documentation: "Documentation",
+				translation: "Contribute translation",
+				feedback: "Feedback",
 				version: "Version",
 				author: "Author",
 				__author__: "Ranne",

@@ -4,8 +4,8 @@ import { copyFile, mkdir, readdir, rm, stat } from "fs/promises";
 import https from "https";
 import { tmpdir } from "os";
 import { join, resolve } from "path";
+import { fgGreen, translationsApi } from "./crowdin";
 import { projectId } from "./token";
-import translationsApi from "./translationsApi";
 
 const __dirname = import.meta.dirname;
 
@@ -89,3 +89,4 @@ await Promise.all([
 	remove(filePath),
 	remove(extractedPath),
 ]);
+console.log(fgGreen + "Download successfully!");

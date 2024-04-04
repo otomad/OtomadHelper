@@ -3,6 +3,6 @@ import { token } from "./token";
 
 const Crowdin = (crowdin as unknown as { default: typeof crowdin }).default;
 
-const { translationsApi } = new Crowdin({ token });
+export const { translationsApi, uploadStorageApi, sourceFilesApi } = new Crowdin({ token });
 
-export default translationsApi;
+export const fgGreen = "\x1b[32m";

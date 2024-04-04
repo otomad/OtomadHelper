@@ -150,6 +150,6 @@ export const usePageStore = createStore<IPage>()(
 		} satisfies IPage;
 	}, {
 		name: NAME,
-		partialize: state => ({ page: state.page }),
+		partialize: state => ({ page: state.page }), // BUG: 刷新后记不住，它和 getter 不相容。
 	}),
 );

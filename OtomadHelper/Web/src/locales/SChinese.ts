@@ -226,6 +226,8 @@ const SChinese = {
 				checkForUpdates: "检查更新",
 				repositoryLink: "仓库地址",
 				documentation: "说明文档",
+				translation: "贡献翻译",
+				feedback: "反馈建议",
 				version: "版本",
 				author: "作者",
 				__author__: "兰音",
