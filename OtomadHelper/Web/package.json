@@ -44,6 +44,7 @@
 		"zustand": "^4.4.4"
 	},
 	"devDependencies": {
+		"@crowdin/crowdin-api-client": "^1.33.0",
 		"@styled/typescript-styled-plugin": "^1.0.0",
 		"@stylistic/eslint-plugin": "^1.6.2",
 		"@stylistic/stylelint-plugin": "^2.1.0",
@@ -60,6 +61,7 @@
 		"eslint-plugin-react": "^7.33.2",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.5",
+		"extract-zip": "^2.0.1",
 		"lightningcss": "^1.24.0",
 		"postcss-styled-syntax": "^0.6.4",
 		"stylelint": "^16.2.1",

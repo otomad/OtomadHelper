@@ -12,3 +12,4 @@ node_modules/
 desktop.ini
 .DS_Store
 src/types/auto-*.d.ts
+scripts/crowdin/token.ts

@@ -19,6 +19,10 @@ declare global {
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/scrollIntoViewIfNeeded) */
 		scrollIntoViewIfNeeded(centerIfNeeded?: boolean): void;
 	}
+
+	interface ImportMeta {
+		dirname: string;
+	}
 }
 
 declare module "csstype" {
