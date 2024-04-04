@@ -1,6 +1,6 @@
 import extract from "extract-zip";
 import { createWriteStream, existsSync } from "fs";
-import { copyFile, mkdir, readdir, stat } from "fs/promises";
+import { copyFile, mkdir, readdir, rm, stat } from "fs/promises";
 import https from "https";
 import { tmpdir } from "os";
 import { join, resolve } from "path";
@@ -69,7 +69,10 @@ async function moveLocaleFiles(extractedPath: string, projectFolderName: string)
 	while (true) {
 		const files = await readdir(projectPath);
 		if (projectPath === resolve(projectPath, "/")) throw new Error("Could not find project path");
-		if (files.includes(projectFolderName)) break;
+		if (files.includes(projectFolderName)) {
+			projectPath = resolve(projectPath, projectFolderName);
+			break;
+		}
 		projectPath = resolve(projectPath, "..");
 	}
 	await mergeFolders(path, projectPath);
@@ -81,3 +84,8 @@ await downloadFile(downloadUrl, filePath);
 const extractedPath = resolve(tmpdir(), "l10n");
 await extractZip(filePath, extractedPath);
 await moveLocaleFiles(extractedPath, "Web");
+const remove = (path: string) => rm(path, { recursive: true, force: true });
+await Promise.all([
+	remove(filePath),
+	remove(extractedPath),
+]);
