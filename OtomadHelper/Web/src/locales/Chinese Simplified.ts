@@ -1,6 +1,6 @@
 import type { LocaleIdentifiers } from "./types";
 
-const SChinese = {
+export default {
 	javascript: {
 		metadata: {
 			__translator__: "",
@@ -15,20 +15,20 @@ const SChinese = {
 			score: "乐曲",
 			audio: "音频",
 			visual: "画面",
-			track: "轨道",
 			sonar: "声呐",
 			lyrics: "歌词",
 			shupelunker: "原音系",
 			shupelunker_full: "原音系战法",
 			ytp: "YTP",
 			ytp_full: "YouTube Poop",
-			mosh: "抹失",
 			mosh_full: "数据抹失",
 			tools: "工具",
 			settings: "设置",
 			prve: "画面节奏视觉效果",
 			staff: "五线谱可视化",
 			pixelScaling: "像素硬边缘放大",
+			track: "轨道",
+			mosh: "抹失",
 		},
 		source: {
 			trackEvent: "轨道剪辑",
@@ -72,8 +72,8 @@ const SChinese = {
 			midi: "MIDI",
 			midiFile: "MIDI 序列文件",
 			st: "序列文本",
-			ustFile: "UTAU 序列文本文件",
-			vsqFile: "Vocaloid 序列文件",
+			ustFile: "UTAU/OpenUTAU序列文本文件",
+			vsqFile: "Vocaloid序列文件",
 			refOtherTracks: "引用其它轨道",
 			tts: "文字转语音",
 			pureNotes: "纯音符",
@@ -148,7 +148,6 @@ const SChinese = {
 		},
 		track: {
 			layout: "布局",
-			useInGeneration: "在生成中应用",
 			grid: "网格布局",
 			box3d: "3D方盒布局",
 			gradient: "渐变轨道",
@@ -189,6 +188,9 @@ const SChinese = {
 			converters: "转换",
 		},
 		selectInfo: {
+			trackEventOnlyOne: "必须恰好选中1段轨道剪辑，不得多选或少选",
+			videoEventOnlyOne: "必须恰好选中1段视频轨道剪辑，不得多选或少选",
+			audioEventOnlyOne: "必须恰好选中1段音频轨道剪辑，不得多选或少选",
 			source: "已选中{{count}}项媒体素材",
 			track: "已选中{{count}}条轨道",
 			videoTrack: "已选中{{count}}条视频轨道",
@@ -196,9 +198,6 @@ const SChinese = {
 			trackEvent: "已选中{{count}}段轨道剪辑",
 			videoEvent: "已选中{{count}}段视频轨道剪辑",
 			audioEvent: "已选中{{count}}段音频轨道剪辑",
-			trackEventOnlyOne: "必须恰好选中1段轨道剪辑，不得多选或少选",
-			videoEventOnlyOne: "必须恰好选中1段视频轨道剪辑，不得多选或少选",
-			audioEventOnlyOne: "必须恰好选中1段音频轨道剪辑，不得多选或少选",
 		},
 		prve: {
 			classes: {
@@ -301,7 +300,6 @@ const SChinese = {
 				},
 			},
 			track: {
-				useInGeneration: "在生成的轨道中应用，而不是在选中的轨道中应用",
 				gradient: "使视频轨道在布局中具有渐变样式的颜色效果",
 				legato: "填补轨道剪辑中的间隙",
 			},
@@ -372,5 +370,3 @@ const SChinese = {
 		ImportToHere: "导入 %1",
 	},
 } as const satisfies LocaleIdentifiers;
-
-export default SChinese;

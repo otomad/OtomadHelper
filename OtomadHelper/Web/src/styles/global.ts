@@ -96,7 +96,6 @@ const GlobalStyle = createGlobalStyle<{
 		color: var(--foreground-color);
 		font-kerning: normal;
 		font-synthesis: none;
-		font-variant-east-asian: proportional-width;
 		font-variant-ligatures: common-ligatures historical-ligatures contextual;
 		font-variant-numeric: proportional-nums;
 		text-rendering: optimizeLegibility;

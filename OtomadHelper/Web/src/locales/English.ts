@@ -148,7 +148,6 @@ export default {
 		},
 		track: {
 			layout: "Layout",
-			useInGeneration: "Use in generation",
 			grid: "Grid Layout",
 			box3d: "3D Box Layout",
 			gradient: "Gradient Tracks",
@@ -308,7 +307,6 @@ export default {
 				},
 			},
 			track: {
-				useInGeneration: "Uses in generated tracks instead of selected tracks",
 				gradient: "Makes the video tracks have a gradient style color effect in your layout",
 				legato: "Fills the gaps between the track clips",
 			},
@@ -316,7 +314,7 @@ export default {
 				_: "Sonar is utilizing the shapes of Cookie Cutter to create beat-style visuals for drum kits.",
 			},
 			shupelunker: {
-				_: "Shupelunker Tactics are an untuned otomad tactic. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, that is, the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” will be generated. It is also untuned, and allows you to choose where the clip is cut (usually at a dialogue), with audio stretching and rewinding often used, as well as adding sixteenth to sixty-fourth rest notes. During the production, the clips will be aligned with the rhythm for singing sense.",
+				_: "Shupelunker Tactics are an untuned YTPMV tactic. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, that is, the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” will be generated. It is also untuned, and allows you to choose where the clip is cut (usually at a dialogue), with audio stretching and rewinding often used, as well as adding sixteenth to sixty-fourth rest notes. During the production, the clips will be aligned with the rhythm for singing sense.",
 			},
 			ytp: {
 				_: "YouTube Poop (YTP) is for creating nonsensical videos using various effects known in the YTP genre. YTP supports multi-source.\nYTP is a Neo-Dada art form, which is absurdist remixes that ape and mock the lowest technical and aesthetic standards of remix culture to comment on remix culture itself. It consists of video remixes that are edited from a large array of video clips in order to confuse, stun or amuse the viewer. The sources can be mashed all together into a nonsensical Crossover story, or just repeat footage of the characters gesticulating oddly.",
@@ -339,7 +337,7 @@ export default {
 				shake: "Shakes or wiggles the clips by using Pan/Crop",
 			},
 			tools: {
-				_: "These QoL functions make creating YTPMVs/Otomads a little less painful for working with or setting up. These don’t require any adjustments to any of the previous parameters.",
+				_: "These QoL functions make creating YTPMVs a little less painful for working with or setting up. These don’t require any adjustments to any of the previous parameters.",
 				selector: "Finds and selects all clips that match the specified",
 				replacer: "Replaces multiple clips with specified new clips",
 				normalizer: "Normalizes all selected audio clips volume",
