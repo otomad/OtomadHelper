@@ -1,7 +1,7 @@
 /* eslint-disable @stylistic/indent */
 import type { TOptions } from "i18next";
+import SChinese from "./Chinese Simplified";
 import English from "./English";
-import SChinese from "./SChinese";
 
 export type I18nArgsFunction<R extends string = string> = {
 	(options: TOptions): R;
@@ -26,5 +26,5 @@ type DiscardConstString<L> = {
 	[key in KeyWithOther<keyof L>]?: string;
 };
 
-export type LocaleWithDefaultValue = NestLocaleWithDefaultValue<typeof SChinese["javascript"]>;
+export type LocaleWithDefaultValue = NestLocaleWithDefaultValue<typeof Chinese Simplified["javascript"]>;
 export type LocaleIdentifiers = DiscardConstString<typeof English>;

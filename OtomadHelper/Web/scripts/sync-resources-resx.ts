@@ -5,9 +5,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 import { create } from "xmlbuilder2";
 
+import zhCN from "../src/locales/Chinese Simplified";
 import en from "../src/locales/English";
 import ja from "../src/locales/Japanese";
-import zhCN from "../src/locales/SChinese";
 import vi from "../src/locales/Vietnamese";
 
 const templateString = await readFile(resolve(__dirname, "Resources.resx.template.xml"), "utf-8");
