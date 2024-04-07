@@ -5,7 +5,7 @@ export default function Home() {
 
 	return (
 		<div className="container">
-			<InfoBar status="accent">This page is for testing components currently.</InfoBar>
+			<InfoBar status="accent" title="Info">This page is for testing components currently. The quick brown fox jumps over a lazy dog.</InfoBar>
 			<SettingsCardToggleSwitch title="Shown" icon="enabled" on={[shown, setShown]} />
 
 			<div>

@@ -16,7 +16,8 @@ const StyledInfoBar = styled.div<{
 	display: flex;
 	column-gap: 13px;
 	align-items: flex-start;
-	padding: 14px 13px;
+	padding: 13px 15px;
+	overflow-x: clip;
 	background-color: ${c("background-fill-color-card-background-secondary")};
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-radius: 3px;
@@ -32,14 +33,45 @@ const StyledInfoBar = styled.div<{
 
 	.text-part {
 		display: flex;
-		flex-wrap: wrap;
 		column-gap: inherit;
+		width: 100%;
+
+		.title,
+		.text {
+			display: inline-block;
+			line-height: 20px;
+		}
+
+		.text {
+			width: 100%;
+			white-space: nowrap;
+		}
+
+		.buttons {
+			${styles.mixins.hideIfEmpty()};
+			display: flex;
+			gap: 4px;
+			margin-block: -6px;
+			margin-inline-end: -4px;
+			transition: ${fallbackTransitions}, margin 0s;
+		}
+
+		> :not(.text) {
+			flex-shrink: 0;
+		}
 	}
 
-	.title,
-	.text {
-		display: inline-block;
-		line-height: 20px;
+	&.multiline .text-part {
+		flex-direction: column;
+
+		.text {
+			white-space: normal;
+		}
+
+		.buttons {
+			margin-block: 13px 0;
+			margin-inline-end: 0;
+		}
 	}
 
 	.badge {
@@ -52,17 +84,36 @@ const StyledInfoBar = styled.div<{
 	`}
 `;
 
-export default function InfoBar({ status, title, children, button, ...htmlAttrs }: FCP<{
+export default function InfoBar({ status, title, children, button, className, ...htmlAttrs }: FCP<{
 	/** 角标的状态，颜色和图标。 */
 	status?: Status;
 	/** 标题。 */
 	title?: string;
-	/** 按钮。 */
+	/** 尾随按钮。 */
 	button?: ReactNode;
 }, "div">) {
-	// TODO: ResizeObserver
+	const [multiline, setMultiline] = useState(false);
+	const infoBarEl = useDomRef<"div">();
+
+	useMountEffect(() => {
+		if (!infoBarEl.current) return;
+		const observer = new ResizeObserver(([{ target }]) => {
+			setMultiline(multiline => {
+				const getMultiline = () => target.scrollWidth > target.clientWidth;
+				if (!multiline) return getMultiline();
+
+				target.classList.remove("multiline");
+				const result = getMultiline();
+				target.classList.add("multiline");
+				return result;
+			});
+		});
+		observer.observe(infoBarEl.current);
+		return () => observer.disconnect();
+	});
+
 	return (
-		<StyledInfoBar $status={status ?? "info"} {...htmlAttrs}>
+		<StyledInfoBar ref={infoBarEl} $status={status ?? "info"} className={[className, { multiline }]} {...htmlAttrs}>
 			{status && <Badge status={status} />}
 			<div className="text-part">
 				<div className="title">{title}</div>
