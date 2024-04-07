@@ -31,6 +31,7 @@ const StyledEmptyMessage = styled.div`
 	> header {
 		> h2 {
 			${styles.effects.text.title};
+			text-wrap: balance;
 
 			+ p {
 				margin-top: 5px;

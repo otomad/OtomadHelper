@@ -91,3 +91,5 @@ await Promise.all([
 	remove(extractedPath),
 ]);
 console.log(consoleColors.foreground.green + "Download successfully!" + consoleColors.reset);
+
+await import("../sync-resources-resx.ts");
