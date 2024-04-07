@@ -1,25 +1,41 @@
 import type { EffectCallback } from "react";
 type EffectCallbackWithAsync = EffectCallback | (() => (() => Promise<void>) | void);
 
+/**
+ * Hook to run an effect when the component mounts.
+ * @param effect - The effect to run when the component mounts.
+ */
 export function useMountEffect(effect: EffectCallback) {
 	useEffect(effect, []);
 }
 
+/**
+ * Hook to run an effect when the component unmounts.
+ * @param effect - The effect to run when the component unmounts.
+ */
 export function useUnmountEffect(effect: NonNull<ReturnType<EffectCallbackWithAsync>>) {
 	useEffect(() => () => void effect(), []);
 }
 
 /**
- * @note 此时不能返回一个回调函数来表示卸载事件。
+ * Asynchronous effect hook.
+ *
+ * This hook allows you to execute an asynchronous effect when the component is mounted or when the specified dependencies change.
+ *
+ * @note In this hook, you cannot return a callback function to represent the effect to run when the component unmounts.
+ *
+ * @param effect - The asynchronous effect to be executed. It can be a function that returns a Promise or a void function.
+ * @param deps - An optional array of dependencies. If provided, the effect will be re-executed when any of the dependencies change.
  */
 export function useAsyncEffect(effect: () => Promise<void> | void, deps?: DependencyList | undefined) {
 	useEffect(() => void effect(), deps);
 }
 
 /**
- * 获取某个值之前的值。
- * @param value - 值对象。
- * @returns 先前的值。
+ * Hook to store the previous value of a state variable.
+ *
+ * @param value - The current value of the state variable.
+ * @returns The previous value of the state variable, or `undefined` if it has not been set yet.
  */
 export function usePrevious<T>(value: T): T | undefined {
 	const ref = useRef<T>();
@@ -37,6 +53,14 @@ const usePreviousDeps = (deps: ChangeEffectDeps): ChangeEffectDeps => {
 	return prevRef.current;
 };
 
+/**
+ * A custom hook that allows you to use the `useEffect` hook with an optional dependency array.
+ * This hook will only execute the effect function when the dependency array changes, and will not execute it on the initial render.
+ *
+ * @param effect - The effect function to be executed.
+ * @param deps - An optional array of dependencies. If provided, the effect function will be re-executed whenever any of the dependencies change.
+ * @returns Nothing. This hook is designed to be used with the `useEffect` hook to control when the effect function is executed.
+ */
 export const useUpdateEffect: typeof useEffect = (effect, deps) => {
 	const isInitialMount = useRef(true);
 
@@ -49,6 +73,13 @@ export const useUpdateEffect: typeof useEffect = (effect, deps) => {
 };
 
 type ChangeEffectDeps = ReadonlyArray<unknown>;
+/**
+ * A custom React Hook that allows you to use the `useEffect` hook with a function that takes previous values as arguments.
+ *
+ * @param effect - The function to be executed when the dependencies change. This function should take previous values as arguments.
+ * @param deps - The dependencies for the effect.
+ * @returns Nothing. This hook is used to modify the behavior of the `useEffect` hook.
+ */
 export const useChangeEffect = (
 	effect: (...prevValue: ChangeEffectDeps) => void,
 	deps: ChangeEffectDeps,

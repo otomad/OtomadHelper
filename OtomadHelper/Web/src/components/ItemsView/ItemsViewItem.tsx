@@ -25,7 +25,7 @@ const StyledItemsViewItem = styled.button<{
 			gap: 10px;
 			align-items: center;
 			margin: 5px 0;
-			text-align: left;
+			text-align: start;
 		}
 
 		.selection {
@@ -77,9 +77,9 @@ const StyledItemsViewItem = styled.button<{
 				${styles.mixins.oval()};
 				content: "";
 				position: absolute;
-				left: 0;
-				width: 3px;
-				height: ${100 / 3}%;
+				inset-inline-start: 0;
+				block-size: ${100 / 3}%;
+				inline-size: 3px;
 				background-color: ${c("accent-color")};
 			}
 		}
