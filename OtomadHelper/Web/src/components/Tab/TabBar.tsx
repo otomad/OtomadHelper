@@ -15,20 +15,21 @@ const Indicator = styled.div.attrs(({ $vertical }) => ({
 	$vertical?: boolean;
 }>`
 	${styles.mixins.oval()}
-	${({ $vertical }) => $vertical ? "width" : "height"}: ${THICKNESS}px;
+	${({ $vertical }) => $vertical ? "inline" : "block"}-size: ${THICKNESS}px;
 	position: absolute;
 	background-color: ${c("accent-color")};
-	${({ $vertical }) => $vertical ? css`left: 5px` : css`bottom: 0`};
+	${({ $vertical }) => $vertical ? css`inset-inline-start: 5px` : css`inset-block-end: 0`};
 	${({ $noTransition }) => $noTransition && css`transition: none`};
 	${({ $position, $vertical }) => $position && css`
-		${$vertical ? "top" : "left"}: ${$position[0]}px;
-		${$vertical ? "bottom" : "right"}: ${$position[1]}px;
+		${$vertical ? "inset-block-start" : "left"}: ${$position[0]}px;
+		${$vertical ? "inset-block-end" : "right"}: ${$position[1]}px;
 	`};
 `;
 
 const StyledTabBar = styled.div`
 	> .scroll {
 		position: relative;
+		overscroll-behavior: contain;
 	}
 
 	&:has(.selected:active) ${Indicator} {

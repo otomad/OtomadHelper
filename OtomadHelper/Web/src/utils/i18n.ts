@@ -71,3 +71,11 @@ const targetFunction = (options?: number | bigint | TOptions) => {
 /** 获取本地化字符串对象。 */
 export const t = getProxy(targetFunction) as LocaleDictionary & typeof targetFunction;
 Object.freeze(t);
+
+/**
+ * 获取当前页面是否是从右往左书写（如阿拉伯语）而不是从左往右书写（如英语）。
+ * @returns 当前页面的横向书写方向是不是从右往左书写？
+ */
+export function isRtl() {
+	return getComputedStyle(document.documentElement).direction === "rtl";
+}

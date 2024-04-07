@@ -60,6 +60,10 @@ const StyledSettingsCard = styled(StyledCard)`
 			}
 		}
 	}
+
+	&:dir(rtl) .trailing-icon {
+		scale: -1 1;
+	}
 `;
 
 export default function SettingsCard({

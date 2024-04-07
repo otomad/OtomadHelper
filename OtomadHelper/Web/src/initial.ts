@@ -4,7 +4,7 @@ import "styles/properties";
 import "utils/array";
 import "utils/bridge";
 
-const isProdMode = () => !useConfigStore.getState().settings.devMode;
+const isProdMode = () => !useDevStore.getState().devMode;
 const global = globalThis as AnyObject;
 
 /**

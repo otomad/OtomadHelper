@@ -47,12 +47,12 @@ const StyledSlider = styled.div`
 		${styles.mixins.flexCenter()};
 		position: absolute;
 		top: calc(var(--track-thickness) / 2);
-		left: ${valueCalc};
+		inset-inline-start: ${valueCalc};
 		background-color: ${c("fill-color-control-solid-default")};
 		box-shadow:
 			0 0 0 1px ${c("stroke-color-control-stroke-default")},
 			0 1px 0 ${c("stroke-color-control-stroke-default")};
-		transition: ${fallbackTransitions}, left 0s;
+		transition: ${fallbackTransitions}, inset-inline-start 0s;
 
 		&::after {
 			content: "";
@@ -150,7 +150,8 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 		const x = triggerByTrack ? thumbSize / 2 : e.clientX - left - thumb.offsetLeft;
 		const pointerMove = lodash.debounce((e: PointerEvent) => {
 			const position = clamp(e.clientX - left - x, 0, width - thumbSize);
-			const value = clampValue(map(position, 0, width - thumbSize, min, max));
+			let value = clampValue(map(position, 0, width - thumbSize, min, max));
+			if (isRtl()) value = max - value + min;
 			setValue?.(value);
 			onChanging?.(value);
 		});
@@ -172,7 +173,8 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 		const thumb = track.parentElement!.querySelector(".thumb") as HTMLDivElement;
 		const thumbSizeHalf = thumb.offsetWidth / 2;
 		const { width } = track.getBoundingClientRect();
-		const value = clampValue(map(e.nativeEvent.offsetX, thumbSizeHalf, width - thumbSizeHalf, min, max));
+		let value = clampValue(map(e.nativeEvent.offsetX, thumbSizeHalf, width - thumbSizeHalf, min, max));
+		if (isRtl()) value = max - value + min;
 		setValue?.(value);
 		onChanging?.(value);
 		onThumbDown(e, true); // 再去调用拖拽滑块的事件。

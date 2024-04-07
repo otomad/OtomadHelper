@@ -4,6 +4,7 @@ import tipsImage from "assets/images/tips/datamoshing.jpg";
 export default function Mosh() {
 	const tipsEl = useDomRef<"div">();
 	useAniCursor(tipsEl, glitchCursor);
+	const { changePage } = usePageStore();
 
 	return (
 		<div className="container">
@@ -14,7 +15,9 @@ export default function Mosh() {
 					{t.descriptions.mosh.additional}
 				</SettingsPageControl>
 			</div>
-			<InfoBar title="警告" status="warning">未安装插件，请先下载扩展包！</InfoBar>
+			<InfoBar title={t.infoBar.warning} status="warning" button={<Button>{t.mosh.install}</Button>}>
+				{t.descriptions.mosh.notInstalled}
+			</InfoBar>
 			<SettingsCard title={t.mosh.datamosh} details={t.descriptions.mosh.datamosh} type="button" icon="shuffle" disabled />
 			<SettingsCard title={t.mosh.datamix} details={t.descriptions.mosh.datamix} type="button" icon="datamix" disabled />
 			<SettingsCard title={t.mosh.layer} details={t.descriptions.mosh.layer} type="button" icon="track" selectInfo={t(1).selectInfo.videoEvent} />
@@ -24,7 +27,7 @@ export default function Mosh() {
 			<SettingsCard title={t.mosh.stutter} details={t.descriptions.mosh.stutter} type="button" icon="stutter" selectInfo={t(1).selectInfo.trackEvent} />
 			<SettingsCard title={t.mosh.shake} details={t.descriptions.mosh.shake} type="button" icon="vibrate" selectInfo={t(1).selectInfo.videoEvent} />
 			<div>
-				<Button hyperlink>指定数据抹失片段目录</Button>
+				<Button hyperlink onClick={() => changePage(["settings"])}>{t.mosh.specifyClipsFolder}</Button>
 			</div>
 		</div>
 	);

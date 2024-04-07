@@ -61,6 +61,9 @@ export default {
 		auto: "Auto",
 		back: "Back",
 		navigation: "Navigation",
+		infoBar: {
+			warning: "Warning",
+		},
 		subheaders: {
 			moreOptions: "More options",
 			advanced: "Advanced",
@@ -175,6 +178,8 @@ export default {
 			automator: "Automating",
 			stutter: "Stuttering",
 			shake: "Shaking",
+			specifyClipsFolder: "Specify Datamosh clips folder",
+			install: "Download Datamosh Extension Pack",
 		},
 		tools: {
 			selector: "Selector",
@@ -264,6 +269,7 @@ export default {
 			dev: {
 				_: "Dev",
 				devMode: "Developer mode",
+				rtl: "Layout direction right-to-left",
 			},
 		},
 		descriptions: {
@@ -314,7 +320,7 @@ export default {
 				_: "Sonar is utilizing the shapes of Cookie Cutter to create beat-style visuals for drum kits.",
 			},
 			shupelunker: {
-				_: "Shupelunker Tactics are an untuned YTPMV tactic. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, that is, the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” will be generated. It is also untuned, and allows you to choose where the clip is cut (usually at a dialogue), with audio stretching and rewinding often used, as well as adding sixteenth to sixty-fourth rest notes. During the production, the clips will be aligned with the rhythm for singing sense.",
+				_: "Shupelunker Tactics is an non-tuned YTPMV tactics. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, that is, the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” will be generated. It is also non-tuned, and allows you to choose where the clip is cut (usually at a dialogue), with audio stretching and rewinding often used, as well as adding sixteenth to sixty-fourth rest notes. During the production, the clips will be aligned with the rhythm for singing sense.",
 			},
 			ytp: {
 				_: "YouTube Poop (YTP) is for creating nonsensical videos using various effects known in the YTP genre. YTP supports multi-source.\nYTP is a Neo-Dada art form, which is absurdist remixes that ape and mock the lowest technical and aesthetic standards of remix culture to comment on remix culture itself. It consists of video remixes that are edited from a large array of video clips in order to confuse, stun or amuse the viewer. The sources can be mashed all together into a nonsensical Crossover story, or just repeat footage of the characters gesticulating oddly.",
@@ -335,6 +341,7 @@ export default {
 				automator: "Adds random keyframes every frame automatically for each effect you added to the video clips",
 				stutter: "Stutters the clips by forwarding and reversing them in randomized intervals",
 				shake: "Shakes or wiggles the clips by using Pan/Crop",
+				notInstalled: "The Datamosh Extension Pack is not installed and will not be available for full features until it is downloaded.",
 			},
 			tools: {
 				_: "These QoL functions make creating YTPMVs a little less painful for working with or setting up. These don’t require any adjustments to any of the previous parameters.",
@@ -355,7 +362,7 @@ export default {
 				_: "Staff Visualizer is to use custom patterns as notes to draw visuals similar fashion to piano staff sheets based on the melody of the score.\nThis visual effect style mimics the videos of YouTuber @grantwoolard, who featured the use of musicians’ avatars to draw the piano staff sheets of classical music.",
 			},
 			pixelScaling: {
-				_: "Pixel Scaling feature can enlarge and replace the pixel image of the source with a new image to avoid the pixel distortion problem caused by the original pixel image rescaling using smooth gradients algorithm due to Vegas Pan/Crop. To use it, you could add FFmpeg to system environment variable, or you could directly install Datamosh extension pack.\nPixel Scaling feature will use FFmpeg to enlarge the source file using the nearest neighbor interpolation algorithm to fit the current project size, and then replace the source media file in Vegas with the newly generated media file. The newly generated file will be identified by adding the suffix “_Scaled” to its name. The feature theoretically supports any image/video file format, and also supports image sequence files imported into Vegas through conventional methods.",
+				_: "Pixel Scaling feature can enlarge and replace the pixel image of the source with a new image to avoid the pixel distortion problem caused by the original pixel image rescaling using smooth gradients algorithm due to Vegas Pan/Crop. To use it, you could add FFmpeg to system environment variable, or you could directly install Datamosh Extension Pack.\nPixel Scaling feature will use FFmpeg to enlarge the source file using the nearest neighbor interpolation algorithm to fit the current project size, and then replace the source media file in Vegas with the newly generated media file. The newly generated file will be identified by adding the suffix “_Scaled” to its name. The feature theoretically supports any image/video file format, and also supports image sequence files imported into Vegas through conventional methods.",
 			},
 			settings: {
 				about: "Otomad Helper, a YTPMV/YTP extension for Vegas Pro, designed to allow Vegas to accept scores like MIDI files as input, and automatically generate YTPMV tracks.",

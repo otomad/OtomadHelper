@@ -52,18 +52,22 @@ const StyledInfoBar = styled.div<{
 	`}
 `;
 
-export default function InfoBar({ status, title, children, ...htmlAttrs }: FCP<{
+export default function InfoBar({ status, title, children, button, ...htmlAttrs }: FCP<{
 	/** 角标的状态，颜色和图标。 */
 	status?: Status;
 	/** 标题。 */
 	title?: string;
+	/** 按钮。 */
+	button?: ReactNode;
 }, "div">) {
+	// TODO: ResizeObserver
 	return (
 		<StyledInfoBar $status={status ?? "info"} {...htmlAttrs}>
 			{status && <Badge status={status} />}
 			<div className="text-part">
 				<div className="title">{title}</div>
 				<div className="text">{children}</div>
+				<div className="buttons">{button}</div>
 			</div>
 		</StyledInfoBar>
 	);

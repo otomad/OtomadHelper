@@ -61,6 +61,9 @@ export default {
 		auto: "自动",
 		back: "返回",
 		navigation: "导航",
+		infoBar: {
+			warning: "警告",
+		},
 		subheaders: {
 			moreOptions: "更多选项",
 			advanced: "高级",
@@ -175,6 +178,8 @@ export default {
 			automator: "自动生效",
 			stutter: "结巴效果",
 			shake: "镜头摇晃",
+			specifyClipsFolder: "指定数据抹失片段文件夹",
+			install: "下载数据抹失扩展包",
 		},
 		tools: {
 			selector: "选择轨道剪辑",
@@ -257,6 +262,7 @@ export default {
 			dev: {
 				_: "开发",
 				devMode: "开发者模式",
+				rtl: "从右到左的布局方向",
 			},
 		},
 		descriptions: {
@@ -327,6 +333,7 @@ export default {
 				automator: "自动为添加到视频剪辑中的每一种效果在每帧添加随机关键帧",
 				stutter: "通过以随机间隔的正放和倒放来口吃剪辑",
 				shake: "使用平移/裁切来摇晃或摆动剪辑",
+				notInstalled: "未安装数据抹失扩展包，下载后方可使用全部功能。",
 			},
 			tools: {
 				_: "以下辅助功能使创作音MAD对使用或调参数时不那么痛苦。它们不需要对先前的任何参数进行任何调整。",

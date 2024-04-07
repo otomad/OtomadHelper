@@ -14,7 +14,7 @@ const StyledToggleSwitchLabel = styled.button`
 	gap: 12px;
 	justify-content: space-between;
 	align-items: center;
-	text-align: left;
+	text-align: start;
 
 	:where(&) {
 		width: 100%;
@@ -55,7 +55,7 @@ const StyledToggleSwitchLabel = styled.button`
 		${styles.mixins.square(`${THUMB_SIZE}px`)};
 		${styles.mixins.oval()};
 		position: absolute;
-		left: 0;
+		inset-inline-start: 0;
 		background-color: ${c("fill-color-text-secondary")};
 		scale: calc(12 / ${THUMB_SIZE});
 		touch-action: pinch-zoom;
@@ -112,7 +112,7 @@ const StyledToggleSwitchLabel = styled.button`
 		}
 
 		.thumb {
-			left: calc(100% - ${THUMB_SIZE}px);
+			inset-inline-start: calc(100% - ${THUMB_SIZE}px);
 			background-color: ${c("fill-color-text-on-accent-primary")};
 			outline: 1px solid ${c("stroke-color-control-stroke-secondary")};
 		}
@@ -125,7 +125,7 @@ const StyledToggleSwitchLabel = styled.button`
 			opacity: 0.8;
 
 			.thumb {
-				left: calc(100% - ${THUMB_PRESSED_WIDTH}px);
+				inset-inline-start: calc(100% - ${THUMB_PRESSED_WIDTH}px);
 			}
 		}
 
@@ -170,7 +170,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	const [pressed, setPressed] = useState(false);
 	// 注意：直接使用 styled-components 的参数改变会影响性能。
 	const thumbStyle = useMemo(() => thumbLeft === undefined ? undefined : {
-		left: thumbLeft + "px",
+		insetInlineStart: thumbLeft + "px",
 		transition: "none",
 	} as CSSProperties, [thumbLeft]);
 
@@ -198,14 +198,17 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 		let isMoved = false, prevE: PointerEvent | undefined;
 		const pointerMove = (e: PointerEvent) => {
 			isMoved = true;
-			setThumbLeft(clamp(e.pageX - left - x, 0, max));
+			let value = clamp(e.pageX - left - x, 0, max);
+			if (isRtl()) value = max - value;
+			setThumbLeft(value);
 			prevE = e;
 		};
 		const pointerUp = (e: PointerEvent) => {
 			document.removeEventListener("pointermove", pointerMove);
 			document.removeEventListener("pointerup", pointerUp);
 			if (!(e instanceof MouseEvent) && prevE) e = prevE;
-			const isOn = e.pageX - x > left + max / 2;
+			let isOn = e.pageX - x > left + max / 2;
+			if (isRtl()) isOn = !isOn;
 			handleCheck(isOn);
 			setThumbLeft(undefined);
 			setIsDragging(isMoved); // 定义识别为拖动而不是点击。

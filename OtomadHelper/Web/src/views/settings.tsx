@@ -8,7 +8,9 @@ export default function Settings() {
 	const { scheme, setScheme } = useColorModeStore();
 	const uiScale = selectConfig(c => c.settings.uiScale);
 	const hideUseTips = selectConfig(c => c.settings.hideUseTips);
-	const devMode = selectConfig(c => c.settings.devMode);
+
+	// Dev mode
+	const { devMode, rtl } = useStoreState(useDevStore);
 
 	return (
 		<div className="container">
@@ -50,6 +52,7 @@ export default function Settings() {
 
 			<Subheader>{t.settings.dev}</Subheader>
 			<SettingsCardToggleSwitch title={t.settings.dev.devMode} icon="devtools" on={devMode} />
+			<SettingsCardToggleSwitch title={t.settings.dev.rtl} icon="text_paragraph_direction_left" on={rtl} />
 		</div>
 	);
 }

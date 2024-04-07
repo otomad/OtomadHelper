@@ -47,7 +47,6 @@ interface IConfig {
 		uiScale: number;
 		getUiScale1(): number;
 		hideUseTips: boolean;
-		devMode: boolean;
 	};
 	toJson(): string; // 如果叫 toJSON 则会和 JSON 内置参数重名导致递归错误。
 }
@@ -90,7 +89,6 @@ export const useConfigStore = createStore<IConfig>()(
 			uiScale: 100,
 			getUiScale1: () => get().settings.uiScale / 100,
 			hideUseTips: false,
-			devMode: import.meta.env.DEV,
 		},
 		toJson: () => JSON.stringify(get()),
 	})),

@@ -106,6 +106,9 @@ export function getPosition(rect: MaybeRef<DOMRect | Element>, placement?: Place
 	rect = toValue(rect);
 	flyoutRect = toValue(flyoutRect);
 	if (rect instanceof Element) rect = rect.getBoundingClientRect();
+	if (isRtl())
+		if (placement === "left") placement = "right";
+		else if (placement === "right") placement = "left";
 	if (!placement || placement === "x" || placement === "y") { // 如果缺省工具提示放置位置，则会寻找离页边最远的方向。
 		const toPageDistance = [rect.top, window.innerHeight - rect.bottom, window.innerWidth - rect.right, rect.left];
 		if (placement === "x") toPageDistance[0] = toPageDistance[1] = -Infinity;

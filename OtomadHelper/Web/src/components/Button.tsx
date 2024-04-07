@@ -1,6 +1,8 @@
 const StyledButton = styled.button<{
 	/** 背景填充颜色名称。 */
 	$fillColorName?: string;
+	/** 是否根据书写方向来改变图标的朝向？ */
+	$dirBased?: boolean;
 }>`
 	${styles.mixins.flexCenter()};
 	display: inline-flex;
@@ -113,9 +115,18 @@ const StyledButton = styled.button<{
 		color: ${c("accent-color")};
 		cursor: pointer;
 	}
+
+	${({ $dirBased }) => $dirBased && css`
+		&:dir(rtl) {
+			.icon,
+			.animated-icon .icon-box {
+				scale: -1 1;
+			}
+		}
+	`}
 `;
 
-export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, className, ...htmlAttrs }: FCP<{
+export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBased, className, ...htmlAttrs }: FCP<{
 	/** 按钮图标。 */
 	icon?: DeclaredIcons;
 	/** 按钮动态图标。 */
@@ -126,11 +137,20 @@ export default forwardRef(function Button({ children, icon, animatedIcon, subtle
 	hyperlink?: boolean;
 	/** 是否按钮附着强调色？ */
 	accent?: boolean | "critical" | "success" | "attention" | "caution";
+	/** 是否根据书写方向来改变图标的朝向？ */
+	dirBased?: boolean;
 }, "button">, ref: ForwardedRef<"button">) {
 	const fillColorName = !accent ? undefined : accent === true ? "accent-color" : `fill-color-system-${accent}`;
 
 	return (
-		<StyledButton ref={ref} type="button" className={[className, { subtle, hyperlink }]} $fillColorName={fillColorName} {...htmlAttrs}>
+		<StyledButton
+			ref={ref}
+			type="button"
+			className={[className, { subtle, hyperlink }]}
+			$fillColorName={fillColorName}
+			$dirBased={dirBased}
+			{...htmlAttrs}
+		>
 			<StackPanel className="content">
 				{icon && <Icon name={icon} />}
 				{animatedIcon && <AnimatedIcon name={animatedIcon} />}

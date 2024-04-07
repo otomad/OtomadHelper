@@ -52,7 +52,7 @@ const StyledTabItem = styled.button`
 
 	.fill {
 		width: 100%;
-		text-align: left;
+		text-align: start;
 	}
 
 	.badge-wrapper {
@@ -63,6 +63,12 @@ const StyledTabItem = styled.button`
 			top: 0;
 			right: 0;
 			translate: 50% -50%;
+
+			&:dir(rtl) {
+				right: auto;
+				left: 0;
+				translate: -50% -50%;
+			}
 		}
 	}
 

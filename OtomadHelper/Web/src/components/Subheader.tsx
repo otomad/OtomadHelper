@@ -1,5 +1,6 @@
 const Subheader = styled.h4`
-	margin: 10px 2px 4px;
+	margin-block: 10px 4px;
+	margin-inline: 2px;
 	font-weight: 600;
 
 	&:first-child {

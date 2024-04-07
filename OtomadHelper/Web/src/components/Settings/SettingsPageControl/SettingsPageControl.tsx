@@ -11,17 +11,17 @@ const StyledSettingsPageControl = styled.div<{
 	${({ $clearFloat }) => !$clearFloat && css`
 		// @container page (width < 675px) {
 			display: block;
-			margin-bottom: ${IMAGE_MARGIN}px;
+			margin-block-end: ${IMAGE_MARGIN}px;
 			padding: 0 1px;
 
 			&.no-image {
-				margin-bottom: 10px;
+				margin-block-end: 10px;
 			}
 
 			.settings-page-control-preview-image {
-				float: left;
-				margin-right: ${IMAGE_MARGIN}px;
-				margin-bottom: 5px;
+				float: inline-start;
+				margin-block-end: 5px;
+				margin-inline-end: ${IMAGE_MARGIN}px;
 			}
 		// }
 	`}

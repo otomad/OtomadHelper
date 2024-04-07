@@ -17,6 +17,15 @@ function getStorePath<Store extends UseBoundStore<StoreApi<Any>>, Field>(store: 
 	return { getParent, lastPath };
 }
 
+/**
+ * A hook that allows you to select a specific part of the store's state using a path function.
+ *
+ * @note The store must be used with zustand **immer** middleware!
+ *
+ * @param store - The store instance to select from.
+ * @param path - A function that takes the store's state as an argument and returns the path to the desired state property.
+ * @returns A tuple containing the selected state property and a setter function to update it.
+ */
 export function useStoreSelector<Store extends UseBoundStore<StoreApi<Any>>, Field>(store: Store, path: (state: ZustandState<Store>) => Field) {
 	type States = ZustandState<Store>;
 	const { getParent, lastPath } = getStorePath(store, path);
@@ -27,6 +36,13 @@ export function useStoreSelector<Store extends UseBoundStore<StoreApi<Any>>, Fie
 	return [getter, setter] as StatePropertyNonNull<Field>;
 }
 
+/**
+ * Subscribes to a specific part of the store's state using a path function.
+ *
+ * @param store - The store instance to subscribe from.
+ * @param path - A function that takes the store's state as an argument and returns the path to the desired state property.
+ * @param listener - A function that will be called whenever the selected state property changes.
+ */
 export function subscribeStoreWithSelector<Store extends UseBoundStore<StoreApi<Any>>, Field>(store: Store, path: (state: ZustandState<Store>) => Field, listener: (prop: Field, prevProp: Field, state: ZustandState<Store>, prevState: ZustandState<Store>) => void) {
 	type States = ZustandState<Store>;
 	const { getParent, lastPath } = getStorePath(store, path);
@@ -37,4 +53,32 @@ export function subscribeStoreWithSelector<Store extends UseBoundStore<StoreApi<
 		if (currentProp !== previousProp)
 			listener(currentProp, previousProp, state, prevState);
 	});
+}
+
+/**
+ * A hook that allows you to select a specific part of the store's state using a path function.
+ * And then you can get or set the selected state property, just like use it in React `useState` hook.
+ *
+ * @param store - The store instance to select from.
+ * @returns A proxy object that provides read and write access to the selected state property.
+ */
+export function useStoreState<Store extends UseBoundStore<StoreApi<Any>>>(store: Store) {
+	type State = ZustandState<Store>;
+	let state: State;
+	try {
+		state = store(); // In a React function component or a React hook
+	} catch (error) {
+		state = store.getState(); // In vanilla JavaScript
+	}
+	return new Proxy(state, {
+		get(state, property) {
+			if (!(property in state)) return [];
+			return [state[property], (value: unknown) => store.setState((newState: State) => {
+				const newValue = typeof value === "function" ? value(newState[property]) : value;
+				return { [property]: newValue };
+			})];
+		},
+	}) as {
+		[property in keyof State]: StateProperty<State[property]>;
+	};
 }

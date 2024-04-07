@@ -41,6 +41,7 @@ export default {
 				cursor: "Con trỏ",
 			},
 		},
+		infoBar: {},
 		subheaders: {},
 		score: {
 			bpm: {},

@@ -10,6 +10,11 @@ const StyledDisabledButtonWrapper = styled.div`
 		top: -2px;
 		right: -2px;
 		cursor: pointer;
+
+		&:dir(rtl) {
+			right: auto;
+			left: -2px;
+		}
 	}
 `;
 

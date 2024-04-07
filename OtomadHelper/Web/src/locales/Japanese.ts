@@ -32,6 +32,7 @@ export default {
 		source: {
 			startTime: {},
 		},
+		infoBar: {},
 		subheaders: {},
 		score: {
 			bpm: {},

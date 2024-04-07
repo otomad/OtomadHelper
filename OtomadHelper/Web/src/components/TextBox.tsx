@@ -5,8 +5,8 @@ const StyledSpinner = styled.div`
 
 	${styles.mixins.flexCenter()};
 	position: absolute;
-	top: 50%;
-	right: 16px;
+	inset-block-start: 50%;
+	inset-inline-end: 16px;
 	z-index: 2;
 	contain: size;
 
@@ -89,6 +89,7 @@ function Spinner({ disabled, onSpin, onRelease }: FCP<{
 					icon="spinner/chevron_up"
 					disabled={disabled}
 					onMouseDown={() => handlePress(1)}
+					onMouseUp={handleRelease}
 					onKeyDown={wrapKeyCode("Space", () => handlePress(1))}
 					onKeyUp={wrapKeyCode("Space", handleRelease)}
 				/>
@@ -97,6 +98,7 @@ function Spinner({ disabled, onSpin, onRelease }: FCP<{
 					icon="spinner/chevron_down"
 					disabled={disabled}
 					onMouseDown={() => handlePress(-1)}
+					onMouseUp={handleRelease}
 					onKeyDown={wrapKeyCode("Space", () => handlePress(-1))}
 					onKeyUp={wrapKeyCode("Space", handleRelease)}
 				/>
@@ -142,19 +144,19 @@ const StyledTextBox = styled.div`
 	}
 
 	.prefix {
-		margin-right: -4px;
-		padding-left: 12px;
+		margin-inline-end: -4px;
+		padding-inline-start: 12px;
 	}
 
 	.suffix {
-		margin-left: -4px;
-		padding-right: 12px;
+		margin-inline-start: -4px;
+		padding-inline-end: 12px;
 	}
 
 	.spinner-icon {
 		position: relative;
-		margin-left: -6px;
-		padding-right: 6px;
+		margin-inline-start: -6px;
+		padding-inline-end: 6px;
 	}
 
 	.prefix,
@@ -162,7 +164,7 @@ const StyledTextBox = styled.div`
 	.spinner-icon {
 		${styles.mixins.hideIfEmpty()};
 		${styles.mixins.gridCenter()};
-		margin-bottom: 1px;
+		margin-block-end: 1px;
 	}
 
 	&:hover {
@@ -197,14 +199,13 @@ const StyledTextBox = styled.div`
 		}
 
 		.spinner-icon {
-			margin-left: 10px;
+			margin-inline-start: 10px;
 		}
 	}
 
 	.stripes {
 		position: absolute;
 		inset: 0;
-		top: 0;
 		overflow: clip;
 		border-radius: inherit;
 		pointer-events: none;
@@ -262,6 +263,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	}, [value]);
 
 	const handleReleaseSpin = useCallback<BaseEventHandler<HTMLButtonElement>>(e => {
+		if (!(e.currentTarget instanceof HTMLElement)) return;
 		if (!e.currentTarget.matches(":focus-visible")) // 如果是键盘空格键按下旋钮，则不要自动聚焦到输入框。
 			inputEl.current?.focus(); // 如果是鼠标按下旋钮，则会自动聚焦到输入框。
 	}, []);
