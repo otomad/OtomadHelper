@@ -1,7 +1,21 @@
+/**
+ * Returns the index of a pixel in the image data given its x and y coordinates.
+ *
+ * @param width - The width of the image data.
+ * @param x - The x coordinate of the pixel.
+ * @param y - The y coordinate of the pixel.
+ * @returns The index of the pixel in the image data.
+ */
 function getPixelIndex(width: number, x: number, y: number) {
 	return ((y | 0) * width + (x | 0)) * 4;
 }
 
+/**
+ * Clones an ImageData object.
+ *
+ * @param imageData - The ImageData object to be cloned.
+ * @returns A new ImageData object with the same data, width, height, and color space as the original.
+ */
 function cloneImageData(imageData: ImageData) {
 	return new ImageData(new Uint8ClampedArray(imageData.data), imageData.width, imageData.height, { colorSpace: imageData.colorSpace });
 }
@@ -10,6 +24,11 @@ type FilterType = keyof typeof filters;
 type FilterBlobs = Record<FilterType, string>;
 
 const filters = {
+	/**
+	 * Apply a **Vibrato** effect to the specified image data.
+	 * @param imageData - The ImageData object of the image in the canvas.
+	 * @returns A new ImageData object with the effect applied.
+	 */
 	vibrato(imageData: ImageData) {
 		const { width, height, data: originalPixels } = imageData;
 		const newImageData = cloneImageData(imageData);
@@ -29,6 +48,11 @@ const filters = {
 			}
 		return newImageData;
 	},
+	/**
+	 * Apply a **Spherize** effect to the specified image data.
+	 * @param imageData - The ImageData object of the image in the canvas.
+	 * @returns A new ImageData object with the effect applied.
+	 */
 	spherize(imageData: ImageData) {
 		const { width, height, data: originalPixels } = imageData;
 		const newImageData = cloneImageData(imageData);
@@ -51,6 +75,11 @@ const filters = {
 			}
 		return newImageData;
 	},
+	/**
+	 * Apply a **Radial Blur** effect to the specified image data.
+	 * @param imageData - The ImageData object of the image in the canvas.
+	 * @returns A new ImageData object with the effect applied.
+	 */
 	radialBlur(imageData: ImageData) {
 		const { width, height, data: pixels } = imageData;
 		const newImageData = cloneImageData(imageData);
@@ -140,6 +169,12 @@ const useSaved = createStore<ISaved>()(
 	})),
 );
 
+/**
+ * Returns a function that applies a set of image filters to an image.
+ *
+ * @param imagePath - The path of the image to be filtered.
+ * @returns A map of filter names to their corresponding URLs.
+ */
 export function useCanvasFilter(imagePath: string) {
 	const saved = useSaved();
 
