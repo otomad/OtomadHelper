@@ -7,7 +7,6 @@ const StyledSettingsPageControl = styled.div<{
 }>`
 	display: flex;
 	gap: ${IMAGE_MARGIN}px;
-	margin-block-end: ${IMAGE_MARGIN}px;
 
 	${({ $clearFloat }) => !$clearFloat && css`
 		display: block;

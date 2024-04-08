@@ -62,11 +62,11 @@ const usePreviousDeps = (deps: ChangeEffectDeps): ChangeEffectDeps => {
  * @returns Nothing. This hook is designed to be used with the `useEffect` hook to control when the effect function is executed.
  */
 export const useUpdateEffect: typeof useEffect = (effect, deps) => {
-	const isInitialMount = useRef(true);
+	const initialMountCountdown = useRef(import.meta.env.DEV ? 2 : 1); // 开发环境下由于 React 的严格模式会渲染两次，因此多增加一次计数。
 
 	useEffect(() => {
-		if (isInitialMount.current)
-			isInitialMount.current = false;
+		if (initialMountCountdown.current > 0)
+			initialMountCountdown.current--;
 		else
 			return effect();
 	}, deps);
