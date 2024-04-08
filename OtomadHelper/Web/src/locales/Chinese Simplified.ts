@@ -374,6 +374,6 @@ export default {
 		},
 	},
 	csharp: {
-		ImportToHere: "导入 %1",
+		importToHere: "导入 %1",
 	},
 } as const satisfies LocaleIdentifiers;

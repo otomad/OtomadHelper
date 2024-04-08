@@ -114,6 +114,6 @@ export default {
 		},
 	},
 	csharp: {
-		ImportToHere: "Nhập %1",
+		importToHere: "Nhập %1",
 	},
 } as const satisfies LocaleIdentifiers;

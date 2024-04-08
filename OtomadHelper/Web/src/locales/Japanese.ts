@@ -105,6 +105,6 @@ export default {
 		},
 	},
 	csharp: {
-		ImportToHere: "インポート %1",
+		importToHere: "インポート %1",
 	},
 } as const satisfies LocaleIdentifiers;

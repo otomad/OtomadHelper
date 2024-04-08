@@ -4,16 +4,31 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 import { create } from "xmlbuilder2";
+import VariableName from "../src/classes/VariableName";
 
 import zhCN from "../src/locales/Chinese Simplified";
 import en from "../src/locales/English";
 import ja from "../src/locales/Japanese";
 import vi from "../src/locales/Vietnamese";
+const allLanguages = { en, zhCN, ja, vi };
 
 const templateString = await readFile(resolve(__dirname, "Resources.resx.template.xml"), "utf-8");
 const template = create(templateString);
 
-const languages = Object.entries({ en, zhCN, ja, vi }).map(([code, lang]) => ({ code, culture: lang.javascript.metadata.culture, dictionary: lang.csharp }));
+function flattenObject(object: AnyObject, context: string[] = []) {
+	const convertKey = (context: string[]) => context.map(key => new VariableName(key).pascal).join(".");
+	const result = {} as Record<string, string>;
+	for (const [key, value] of Object.entries(object)) {
+		const newContext = [...context, key];
+		if (value && typeof value === "object")
+			Object.assign(result, flattenObject(value, newContext));
+		else
+			result[convertKey(newContext)] = value;
+	}
+	return result;
+}
+
+const languages = Object.entries(allLanguages).map(([code, lang]) => ({ code, culture: lang.javascript.metadata.culture, dictionary: flattenObject(lang.csharp) }));
 for (const language of languages) {
 	const xml = create(template.options).import(template);
 	const root = xml.root();

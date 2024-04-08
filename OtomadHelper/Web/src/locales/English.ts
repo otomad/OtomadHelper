@@ -382,6 +382,6 @@ export default {
 		},
 	},
 	csharp: {
-		ImportToHere: "Import %1",
+		importToHere: "Import %1",
 	},
 } as const;
