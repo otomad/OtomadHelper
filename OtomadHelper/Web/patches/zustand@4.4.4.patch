@@ -1,3 +1,95 @@
+diff --git a/esm/middleware.js b/esm/middleware.js
+index fcaa0c891e0a50afaebfb11da2076a3b1901534d..a5e30da8b9584ce0a822bab7b9fcb8ebccd28a83 100644
+--- a/esm/middleware.js
++++ b/esm/middleware.js
+@@ -313,10 +313,16 @@ const oldImpl = (config, baseOptions) => (set, get, api) => {
+     deserialize: JSON.parse,
+     partialize: (state) => state,
+     version: 0,
+-    merge: (persistedState, currentState) => ({
+-      ...currentState,
+-      ...persistedState
+-    }),
++    merge: (persistedState, currentState) => {
++      // Do not use spread operator because it does not work with the getter and setter.
++      const resultState = {};
++      for (const state of [currentState, persistedState]) {
++        for (const key in state) {
++          Reflect.defineProperty(resultState, key, Object.getOwnPropertyDescriptor(state, key));
++        }
++      }
++      return resultState;
++    },
+     ...baseOptions
+   };
+   let hasHydrated = false;
+@@ -447,10 +453,16 @@ const newImpl = (config, baseOptions) => (set, get, api) => {
+     storage: createJSONStorage(() => localStorage),
+     partialize: (state) => state,
+     version: 0,
+-    merge: (persistedState, currentState) => ({
+-      ...currentState,
+-      ...persistedState
+-    }),
++    merge: (persistedState, currentState) => {
++      // Do not use spread operator because it does not work with the getter and setter.
++      const resultState = {};
++      for (const state of [currentState, persistedState]) {
++        for (const key in state) {
++          Reflect.defineProperty(resultState, key, Object.getOwnPropertyDescriptor(state, key));
++        }
++      }
++      return resultState;
++    },
+     ...baseOptions
+   };
+   let hasHydrated = false;
+diff --git a/esm/middleware.mjs b/esm/middleware.mjs
+index c0b9cadd4ebbfa99de7f364a765bb864e9f0e1b2..617af02a40b25aa3b812275549cd5002764ad5b3 100644
+--- a/esm/middleware.mjs
++++ b/esm/middleware.mjs
+@@ -313,10 +313,16 @@ const oldImpl = (config, baseOptions) => (set, get, api) => {
+     deserialize: JSON.parse,
+     partialize: (state) => state,
+     version: 0,
+-    merge: (persistedState, currentState) => ({
+-      ...currentState,
+-      ...persistedState
+-    }),
++    merge: (persistedState, currentState) => {
++      // Do not use spread operator because it does not work with the getter and setter.
++      const resultState = {};
++      for (const state of [currentState, persistedState]) {
++        for (const key in state) {
++          Reflect.defineProperty(resultState, key, Object.getOwnPropertyDescriptor(state, key));
++        }
++      }
++      return resultState;
++    },
+     ...baseOptions
+   };
+   let hasHydrated = false;
+@@ -447,10 +453,16 @@ const newImpl = (config, baseOptions) => (set, get, api) => {
+     storage: createJSONStorage(() => localStorage),
+     partialize: (state) => state,
+     version: 0,
+-    merge: (persistedState, currentState) => ({
+-      ...currentState,
+-      ...persistedState
+-    }),
++    merge: (persistedState, currentState) => {
++      // Do not use spread operator because it does not work with the getter and setter.
++      const resultState = {};
++      for (const state of [currentState, persistedState]) {
++        for (const key in state) {
++          Reflect.defineProperty(resultState, key, Object.getOwnPropertyDescriptor(state, key));
++        }
++      }
++      return resultState;
++    },
+     ...baseOptions
+   };
+   let hasHydrated = false;
 diff --git a/esm/vanilla.js b/esm/vanilla.js
 index 9dff6951c4a586eeac69b9cad606657af9d48450..99c44238e52f0b8de1df3b04746b81973d5b10fe 100644
 --- a/esm/vanilla.js
@@ -38,6 +130,19 @@ index 89bcc9023e7468b9e68fb1f7b8ed87332da57150..3812c275edda35c0d9e43a73f1e86e4f
        listeners.forEach((listener) => listener(state, previousState));
      }
    };
+diff --git a/middleware.js b/middleware.js
+index 42da762db35f00ecd7e6dc62c62da89db7d55afa..e874b121289a6f7dc22133e51df1fdaa0d0f3f2c 100644
+--- a/middleware.js
++++ b/middleware.js
+@@ -6,7 +6,7 @@ function _extends() {
+       var source = arguments[i];
+       for (var key in source) {
+         if (Object.prototype.hasOwnProperty.call(source, key)) {
+-          target[key] = source[key];
++          Reflect.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+         }
+       }
+     }
 diff --git a/vanilla.js b/vanilla.js
 index ac2f3ebc77830ab7a827a7595fe10bb695d308e8..1fee25b42482469704b0919f8708894a75210b8e 100644
 --- a/vanilla.js

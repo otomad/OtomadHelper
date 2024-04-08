@@ -14,10 +14,10 @@ interface IPage {
 	transition: PageTransitionName;
 	scrolls: PageScrollList;
 	poppedScroll?: PageScroll;
-	pagePath: string;
+	readonly pagePath: string;
 	changePage: SetState<string[]>;
 	pushPage(...pages: string[]): void;
-	canBack: boolean;
+	readonly canBack: boolean;
 	back(): void;
 	resetTransition(): void;
 	reset(): void;
@@ -150,6 +150,6 @@ export const usePageStore = createStore<IPage>()(
 		} satisfies IPage;
 	}, {
 		name: NAME,
-		partialize: state => ({ page: state.page }), // BUG: 刷新后记不住，它和 getter 不相容。
+		partialize: state => ({ page: state.page }),
 	}),
 );
