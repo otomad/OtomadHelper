@@ -19,9 +19,11 @@ export function forceCursor(cursor: Cursor | null) {
  */
 export function useAniCursor(element: MutableRefObject<HTMLElement | null>, aniUrl: string) {
 	useAsyncEffect(async () => {
-		if (!document.head.querySelector(`style[data-ani-url="${aniUrl}"]`)) {
+		const isCreated = () => !!document.head.querySelector(`style[data-ani-url="${aniUrl}"]`);
+		if (!isCreated()) {
 			const response = await fetch(aniUrl);
 			const data = new Uint8Array(await response.arrayBuffer());
+			if (isCreated()) return;
 
 			const style = document.createElement("style");
 			style.dataset.aniUrl = aniUrl;

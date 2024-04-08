@@ -19,10 +19,10 @@ export default function Lottie({ loop = false, autoplay = false, animationData, 
 	/** 动画创建完成事件。 */
 	onAnimCreated?: (anim: AnimationItem) => void;
 }, "div">) {
-	const [anim, setAnim] = useState<AnimationItem>();
+	const [_anim, setAnim] = useState<AnimationItem>();
 	const lavContainerEl = useDomRef<"div">();
 
-	useMountEffect(() => {
+	useEffect(() => {
 		if (!lavContainerEl.current) return;
 
 		const anim = lottie.loadAnimation({
@@ -44,12 +44,13 @@ export default function Lottie({ loop = false, autoplay = false, animationData, 
 
 		setAnim(anim);
 		onAnimCreated?.(anim);
-	});
-
-	useUnmountEffect(async () => {
-		await delay(1000); // 等待界面过渡动画时间。
-		anim?.destroy();
-	});
+		
+		return () => {
+			// await delay(1000); // 等待界面过渡动画时间。
+			anim?.destroy();
+			svgEl?.remove();
+		};
+	}, []);
 
 	return (
 		<LavContainer ref={lavContainerEl} {...htmlAttrs} />
