@@ -171,7 +171,7 @@ export default {
 		},
 		mosh: {
 			datamosh: "数据抹失",
-			datamix: "数据抹拭",
+			datamix: "数据抿拭",
 			layer: "多层叠化",
 			render: "预渲染化",
 			scramble: "随机扰乱",

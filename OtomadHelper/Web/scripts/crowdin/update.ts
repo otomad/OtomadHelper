@@ -34,4 +34,4 @@ const fileContent = await readFile(file, "utf-8");
 
 updateFile(projectId, `${SOURCE_LANGUAGE}.json`, fileContent);
 console.log(consoleColors.foreground.green + "Update successfully!" + consoleColors.reset);
-console.log("Please visit to start translation: https://crowdin.com/project/otomadhelper");
+console.log("Please visit to start translation: " + consoleColors.foreground.blue + "https://crowdin.com/project/otomadhelper" + consoleColors.reset);
