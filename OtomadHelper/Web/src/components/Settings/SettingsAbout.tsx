@@ -70,8 +70,20 @@ export default function SettingsAbout() {
 			</StyledSettingsAbout>
 			<SettingsCard title={t.settings.about.version} icon="sync">
 				<p>v{version}</p>
-				<Button>{t.settings.about.checkForUpdates}</Button>
+				<Button onClick={() => checkForUpdates(version)}>{t.settings.about.checkForUpdates}</Button>
 			</SettingsCard>
 		</>
 	);
+}
+
+async function checkForUpdates(currentVersion: string) {
+	const byApi = fetch("https://api.github.com/repos/otomad/OtomadHelper/releases/latest")
+		.then(res => res.json())
+		.then(data => data.tag_name as string);
+	const byRaw = fetch("https://raw.githubusercontent.com/otomad/OtomadHelper/webview2/version.txt")
+		.then(res => res.text())
+		.then(data => data.trim());
+	const tagName = await Promise.race([byApi, byRaw]);
+	const compare = new Version(tagName).compareTo(currentVersion);
+	console.log(tagName, compare);
 }
