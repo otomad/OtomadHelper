@@ -1,5 +1,12 @@
 import type { StoreApi, UseBoundStore } from "zustand";
 
+/**
+ * Function that extracts the path from a given function and returns the corresponding parts of the store's state.
+ *
+ * @param store - The store instance to select from.
+ * @param path - A function that takes the store's state as an argument and returns the path to the desired state property.
+ * @returns A function that returns the parent state object up to the specified path.
+ */
 function getStorePath<Store extends UseBoundStore<StoreApi<Any>>, Field>(store: Store, path: (state: ZustandState<Store>) => Field) {
 	type States = ZustandState<Store>;
 	const pathContents = path.toString().split("=>").map(i => i.replaceAll(/\s/g, ""));
@@ -30,9 +37,14 @@ export function useStoreSelector<Store extends UseBoundStore<StoreApi<Any>>, Fie
 	type States = ZustandState<Store>;
 	const { getParent, lastPath } = getStorePath(store, path);
 
-	const getter = getParent(store())[lastPath];
-	const setter = (value: unknown) => store.setState((root: States) => void (getParent(root)[lastPath] =
-		typeof value === "function" ? value(getter) : value));
+	const state = store();
+	if (!state) throw new Error("You are using useStoreSelector hook with a zustand store that is not being used with zustand immer middleware");
+	const getter = getParent(state)[lastPath];
+	const setter = (value: unknown) => {
+		store.setState((root: States) => {
+			getParent(root)[lastPath] = typeof value === "function" ? value(getter) : value;
+		});
+	};
 	return [getter, setter] as StatePropertyNonNull<Field>;
 }
 
