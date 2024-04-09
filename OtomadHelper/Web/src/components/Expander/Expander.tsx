@@ -1,6 +1,6 @@
 import ExpanderItem from "./ExpanderItem";
 
-const ExpanderParent = styled(SettingsCard) <{
+const ExpanderParent = styled(SettingsCard)<{
 	/** 已展开？ */
 	$expanded?: boolean;
 }>`

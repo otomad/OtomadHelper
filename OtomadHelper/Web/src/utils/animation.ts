@@ -300,7 +300,7 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 
 	const onEnter = async (el: HTMLElement) => {
 		// const el = nodeRef.current;
-		if (!el) return;
+		if (!el) throw new Error(); // BUG: 有概率无法正常获取
 		const thisThread = Symbol("enter");
 		currentAnimationThread.current = thisThread;
 		await animateSize(el, null, enter);
@@ -310,7 +310,7 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 
 	const onExit = async (el: HTMLElement) => {
 		// const el = nodeRef.current;
-		if (!el) return;
+		if (!el) throw new Error(); // BUG: 有概率无法正常获取
 		const thisThread = Symbol("exit");
 		currentAnimationThread.current = thisThread;
 		await animateSize(el, null, exit);

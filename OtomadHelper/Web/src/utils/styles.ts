@@ -71,7 +71,10 @@ enum TransitionGroupState {
 }
 
 /**
- * 为 React Transition Group 离谱的理念而生成的状态选择器规则。
+ * 为 React Transition Group 离谱的选择器而生成的状态选择器规则。
+ *
+ * 不过尝试经魔改源码，额外增加一个 enter-from 状态后，发现并不好使，不知道具体原因。
+ *
  * @param states - 过渡组的状态，包含出现、进入、退出各自的按位与值。
  * @param name - 可选的过渡组动画名称，留空表示不包含。
  * @returns 生成的状态选择器。
