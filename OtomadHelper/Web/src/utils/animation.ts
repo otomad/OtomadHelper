@@ -269,7 +269,7 @@ type SameOrDifferent<T> = T | undefined | [T | undefined, T | undefined];
 
 /**
  * `animateSize` 函数的简化版，适用于更为简单的动画。
- * @param nodeRef - HTML DOM 元素。
+ * @param nodeRef - HTML DOM 元素。// TODO: Remove nodeRef
  * @param specified - 显式指定需要动画的是哪个方向。默认为高度动画。
  * @param duration - 指定动画时间。
  * @param easing - 指定动画缓动曲线。
@@ -298,8 +298,8 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 	const ANIMATE_SIZE_END_EVENT = "animatesizeend"; // 这里我们使用一个自定义的事件，以防原生 CSS 过渡动画结束时干扰运行。
 	const currentAnimationThread = useRef<symbol>();
 
-	const onEnter = async () => {
-		const el = nodeRef.current;
+	const onEnter = async (el: HTMLElement) => {
+		// const el = nodeRef.current;
 		if (!el) return;
 		const thisThread = Symbol("enter");
 		currentAnimationThread.current = thisThread;
@@ -308,8 +308,8 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 			el.dispatchEvent(new CustomEvent(ANIMATE_SIZE_END_EVENT));
 	};
 
-	const onExit = async () => {
-		const el = nodeRef.current;
+	const onExit = async (el: HTMLElement) => {
+		// const el = nodeRef.current;
 		if (!el) return;
 		const thisThread = Symbol("exit");
 		currentAnimationThread.current = thisThread;
@@ -319,7 +319,7 @@ export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "w
 		// el.hidden = true;
 	};
 
-	const endListener = (done: () => void) => nodeRef.current?.addEventListener(ANIMATE_SIZE_END_EVENT, done, false);
+	const endListener = (node: HTMLElement, done: () => void) => node?.addEventListener(ANIMATE_SIZE_END_EVENT, done, false);
 
 	return [onEnter, onExit, endListener] as const;
 }

@@ -153,7 +153,6 @@ export /* internal */ default function TabItem({ icon, animatedIcon, children, s
 			<Transition
 				nodeRef={tabItemEl}
 				in={!collapsed}
-				addEndListener={endListener(tabItemEl)}
 				onEnter={onEnter}
 				onExit={onExit}
 			>

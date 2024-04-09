@@ -124,7 +124,9 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	.enter:not(.enter-active),
-	.appear:not(.appear-active) {
+	.appear:not(.appear-active),
+	.enter-before,
+	.appear-before {
 		&,
 		* {
 			&,

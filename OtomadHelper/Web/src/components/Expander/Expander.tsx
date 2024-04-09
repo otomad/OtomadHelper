@@ -100,7 +100,6 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				)}
 			</ExpanderParent>
 			<Transition
-				nodeRef={expanderChildEl}
 				in={internalExpanded}
 				addEndListener={endListener}
 				onEnter={onEnter}
