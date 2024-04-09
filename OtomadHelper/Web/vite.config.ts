@@ -12,6 +12,9 @@ import globalized from "./src/plugins/vite/globalized";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+	optimizeDeps: {
+		exclude: ["react-transition-group"],
+	},
 	plugins: [
 		react({
 			babel: {

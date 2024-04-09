@@ -30,6 +30,7 @@ export default [
 			"SwitchTransition",
 			"TransitionGroup",
 			"Transition",
+			"CssTransition",
 		],
 		"react-i18next": [
 			"useTranslation",

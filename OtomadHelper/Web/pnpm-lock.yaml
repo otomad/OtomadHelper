@@ -92,8 +92,8 @@ dependencies:
     specifier: ^13.3.1
     version: 13.3.1(i18next@23.6.0)(react-dom@18.2.0)(react@18.2.0)
   react-transition-group:
-    specifier: ^4.4.5
-    version: 4.4.5(react-dom@18.2.0)(react@18.2.0)
+    specifier: file:/react-transition-group/
+    version: file:../../../../../../react-transition-group(react-dom@18.2.0)(react@18.2.0)
   styled-components:
     specifier: ^6.1.0
     version: 6.1.0(patch_hash=u4xkbhpdv4ap4jugontcjkukra)(react-dom@18.2.0)(react@18.2.0)
@@ -4462,20 +4462,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /react-transition-group@4.4.5(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
-    peerDependencies:
-      react: '>=16.6.0'
-      react-dom: '>=16.6.0'
-    dependencies:
-      '@babel/runtime': 7.23.2
-      dom-helpers: 5.2.1
-      loose-envify: 1.4.0
-      prop-types: 15.8.1
-      react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
-      react-dom: 18.2.0(patch_hash=iqbtjkk4lenfn3fvpm3rgankea)(react@18.2.0)
-    dev: false
-
   /react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym):
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
@@ -5724,3 +5710,19 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
     patched: true
+
+  file:../../../../../../react-transition-group(react-dom@18.2.0)(react@18.2.0):
+    resolution: {directory: ../../../../../../react-transition-group, type: directory}
+    id: file:../../../../../../react-transition-group
+    name: react-transition-group
+    peerDependencies:
+      react: '>=16.6.0'
+      react-dom: '>=16.6.0'
+    dependencies:
+      '@babel/runtime': 7.23.2
+      dom-helpers: 5.2.1
+      loose-envify: 1.4.0
+      prop-types: 15.8.1
+      react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
+      react-dom: 18.2.0(patch_hash=iqbtjkk4lenfn3fvpm3rgankea)(react@18.2.0)
+    dev: false
