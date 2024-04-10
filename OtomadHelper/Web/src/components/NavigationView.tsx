@@ -360,8 +360,12 @@ const StyledPage = styled.main`
 		pointer-events: none; // 防止用户快速连击按钮进入子页面。
 	}
 
+	&.exit-done {
+		display: none;
+	}
+
 	// #region 页面过渡
-	.jump > &.exit {
+	.jump > &:is(.exit, .exit-done) {
 		translate: 0 -2rem;
 		opacity: 0;
 		transition: all ${eases.easeOutMax} 83ms;
@@ -383,7 +387,7 @@ const StyledPage = styled.main`
 		transition: all ${eases.easeInExpo} 300ms;
 	}
 
-	.forward > &.exit,
+	.forward > &:is(.exit, .exit-done),
 	.backward > &.enter {
 		translate: -20%;
 
@@ -393,7 +397,7 @@ const StyledPage = styled.main`
 	}
 
 	.forward > &.enter,
-	.backward > &.exit {
+	.backward > &:is(.exit, .exit-done) {
 		translate: 20%;
 
 		&:dir(rtl) {
@@ -565,7 +569,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	const scrollToTopOrPrevious = () => {
 		const pageContent = pageContentEl.current;
 		if (!pageContent) return;
-		const container = pageContent.firstElementChild?.firstElementChild;
+		const container = pageContent.lastElementChild?.firstElementChild;
 		while (poppedScroll && container?.classList.contains("container")) { // Cheat `if` as `while` to use `break` in it.
 			let child = container.children[poppedScroll.elementIndex] as HTMLElement | undefined;
 			while (isElementContents(child))
@@ -631,37 +635,39 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 			>
 				<div className="title-wrapper">
 					<div>
-						<TransitionGroup>
-							<CssTransition key={pageTitleKey.join()}>
-								<h1 className="title">
-									<TransitionGroup>
-										{titles.flatMap((title, i, { length }) => {
-											const last = i === length - 1;
-											const crumb = (
-												<div
-													key={i}
-													className={["crumb", { parent: !last }]}
-													onClick={() => title.link?.length && currentNav[1]?.(title.link)}
-												>
-													{title.name}
-												</div>
-											);
-											const result = [crumb];
-											if (!last) result.push(<BreadCrumbChevronRight key={i + "-chevron"} />);
-											return result.map((node, j) =>
-												<CssTransition key={i + "-" + j}>{node}</CssTransition>);
-										})}
-									</TransitionGroup>
-								</h1>
-							</CssTransition>
-						</TransitionGroup>
+						<div>
+							<SwitchTransition mode="default">
+								<CssTransition key={pageTitleKey.join()}>
+									<h1 className="title">
+										<TransitionGroup>
+											{titles.flatMap((title, i, { length }) => {
+												const last = i === length - 1;
+												const crumb = (
+													<div
+														key={i}
+														className={["crumb", { parent: !last }]}
+														onClick={() => title.link?.length && currentNav[1]?.(title.link)}
+													>
+														{title.name}
+													</div>
+												);
+												const result = [crumb];
+												if (!last) result.push(<BreadCrumbChevronRight key={i + "-chevron"} />);
+												return result.map((node, j) =>
+													<CssTransition key={i + "-" + j}>{node}</CssTransition>);
+											})}
+										</TransitionGroup>
+									</h1>
+								</CssTransition>
+							</SwitchTransition>
+						</div>
 						<section className="command-bar">
 							{commandBar}
 						</section>
 					</div>
 				</div>
 				<div className={["page-content", transitionName]} ref={pageContentEl} id={pageContentId}>
-					<SwitchTransition>
+					<SwitchTransition mode={transitionName === "jump" ? "out-in" : "out-in-preload"}>
 						<CssTransition key={pagePath} onEnter={scrollToTopOrPrevious}>
 							<StyledPage>
 								{children}

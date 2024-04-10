@@ -158,3 +158,7 @@ export function isObject(value: unknown): value is object {
  * @param object - 要断言的对象。
  */
 export function asserts<T>(object: unknown): asserts object is T { }
+
+export function isUndefinedNullNaN(object: unknown): object is undefined | null {
+	return [undefined, null, NaN].includes(object as never);
+}

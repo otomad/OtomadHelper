@@ -21,8 +21,8 @@ const Indicator = styled.div.attrs(({ $vertical }) => ({
 	${({ $vertical }) => $vertical ? css`inset-inline-start: 5px` : css`inset-block-end: 0`};
 	${({ $noTransition }) => $noTransition && css`transition: none`};
 	${({ $position, $vertical }) => $position && css`
-		${$vertical ? "inset-block-start" : "left"}: ${$position[0]}px;
-		${$vertical ? "inset-block-end" : "right"}: ${$position[1]}px;
+		${$vertical ? "inset-block-start" : "left"}: ${$position[0] ?? 0}px;
+		${$vertical ? "inset-block-end" : "right"}: ${isUndefinedNullNaN($position[1]) ? "100%" : $position[1] + "px"};
 	`};
 `;
 
@@ -90,6 +90,22 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		if (!indicator) return;
 		type TabBarMovement = "previous" | "next" | "appear" | "disappear" | "none";
 		let movement: TabBarMovement = "none";
+		if (!indicator.offsetParent) { // If the indicator (and its ancestors) are hidden
+			_setPosition([NaN, NaN]);
+			const hiddenElement = getPath(indicator).find(element => getComputedStyle(element).display === "none");
+			if (!hiddenElement) return;
+			const MAX_WAITING_TIME = 10_000, observeTime = Date.now();
+			const observer = new MutationObserver(() => {
+				if (indicator.offsetParent) {
+					observer.disconnect();
+					update();
+				}
+				if (Date.now() - observeTime > MAX_WAITING_TIME)
+					observer.disconnect();
+			});
+			observer.observe(hiddenElement, { attributeFilter: ["class"] });
+			return;
+		}
 		const entireRect = indicator.parentElement!.getBoundingClientRect();
 		const entire1 = entireRect[vertical ? "top" : "left"],
 			entire2 = entireRect[vertical ? "bottom" : "right"],
