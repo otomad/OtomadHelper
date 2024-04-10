@@ -23,8 +23,8 @@
 		"lint:css": "stylelint './src/**/*.{js,jsx,ts,tsx}'",
 		"release": "pnpm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
 		"compact-svg": "tsx scripts/compact-svg.ts",
-		"crowdin-update": "tsx scripts/crowdin/update.ts",
-		"crowdin-download": "tsx scripts/crowdin/download.ts"
+		"crowdin:update": "tsx scripts/crowdin/update.ts",
+		"crowdin:download": "tsx scripts/crowdin/download.ts"
 	},
 	"dependencies": {
 		"ani-cursor": "^0.0.5",
