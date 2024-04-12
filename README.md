@@ -1,9 +1,9 @@
 <a name="readme-top"></a>
 
-[![MIT License][state-shield]][download-url]
-[![MIT License][version-shield]][download-url]
-[![MIT License][download-shield]][download-url]
-[![MIT License][license-shield]][license-url]  
+[![State][state-shield]][download-url]
+[![Version][version-shield]][download-url]
+[![Downloads][download-shield]][download-url]
+[![GPL-3.0][license-shield]][license-url]  
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -34,6 +34,44 @@
     <a href="https://crowdin.com/project/otomadhelper">Contribute Translation</a>
   </p>
 </div>
+
+
+
+> [!IMPORTANT]
+>
+> #### THIS IS NOT THE APPLICATION PROGRAM, THESE ARE THE SOURCE FILES
+>
+> If you are looking to download Otomad Helper, please click the button below.
+>
+> [![Download][get-the-download-link-now-shield]][download-url]
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-otomad-helper">About Otomad Helper</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
 
 
@@ -136,7 +174,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the GPL 3.0 License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -186,6 +224,8 @@ Project Link: [https://github.com/otomad/OtomadHelper](https://github.com/otomad
 [ja-translation-url]: https://crowdin.com/project/otomadhelper/ja
 [vi-translation-shield]: https://img.shields.io/badge/dynamic/json?color=blue&label=Tiếng%20Việt&style=for-the-badge&logo=crowdin&query=%24.progress[?(@.data.languageId==%27vi%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16002405-661336.json
 [vi-translation-url]: https://crowdin.com/project/otomadhelper/vi
+
+[get-the-download-link-now-shield]: https://img.shields.io/badge/-Get%20the%20download%20link%20now!-8250df?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+
 
 [product-screenshot]: images/screenshot.png
 [technology-stacks]: https://skillicons.dev/icons?i=cs,dotnet,powershell,ts,react,styledcomponents,vite,ae
