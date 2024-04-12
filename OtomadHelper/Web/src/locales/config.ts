@@ -2,6 +2,7 @@ import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { spacing } from "pangu";
 import { initReactI18next } from "react-i18next";
+
 import zhCN from "./Chinese Simplified";
 import en from "./English";
 import ja from "./Japanese";
@@ -48,6 +49,7 @@ i18n
 	});
 
 document.documentElement.lang = i18n.language;
+document.dir = i18n.dir();
 
 export function useLanguage(): StateProperty<string> {
 	const [language, setLanguage] = useState(i18n.language);
@@ -56,7 +58,9 @@ export function useLanguage(): StateProperty<string> {
 		setLanguage(lng);
 		startColorViewTransition(async () => {
 			await i18n.changeLanguage(lng);
+			const dir = i18n.dir();
 			document.documentElement.lang = lng;
+			document.dir = dir;
 		}, {
 			clipPath: ["inset(0 0 100%)", "inset(0)"],
 		}, {
