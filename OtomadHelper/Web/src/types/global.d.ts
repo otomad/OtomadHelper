@@ -61,4 +61,26 @@ declare global {
 	 * 内置计时器对象。
 	 */
 	interface Timer extends NodeJS.Timer { }
+	interface Window {
+		/**
+		 * 仅在 Internet Explorer 中可用的 ActiveX 对象，高版本浏览器则会返回 undefined。
+		 */
+		ActiveXObject: undefined;
+	}
+	interface Document {
+		/**
+		 * 在 Internet Explorer 中可用的文本选中对象。
+		 *
+		 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/getSelection)
+		 */
+		selection: Selection | null;
+	}
+	interface ScreenOrientation {
+		/**
+		 * `ScreenOrientation` 接口的 `lock()` 属性将包含文档的方向锁定为指定的方向。
+		 *
+		 * 堂堂 VSCode 把这个定义给删了。
+		 */
+		lock(type: "any" | "natural" | "landscape" | "portrait" | OrientationType): Promise<void>;
+	}
 }

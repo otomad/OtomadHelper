@@ -104,7 +104,7 @@ const StyledTabItem = styled.button`
 	}
 `;
 
-export /* internal */ default function TabItem({ icon, animatedIcon, children, selected = false, collapsed, id: _id, focusable = true, badge, vertical, ...htmlAttrs }: FCP<{
+export /* internal */ default function TabItem({ icon, animatedIcon, children, selected = false, collapsed, id: _id, focusable = true, badge, _vertical: vertical, ...htmlAttrs }: FCP<{
 	/** 图标。 */
 	icon?: DeclaredIcons;
 	/** 动态图标。 */
@@ -120,7 +120,7 @@ export /* internal */ default function TabItem({ icon, animatedIcon, children, s
 	/** 角标。 */
 	badge?: string | number;
 	/** @private 是否使用纵向的 NavigationView 样式？ */
-	vertical?: boolean;
+	_vertical?: boolean;
 }, "section">) {
 	const tabItemEl = useDomRef<"button">();
 

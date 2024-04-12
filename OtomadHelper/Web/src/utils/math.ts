@@ -1,11 +1,17 @@
 /**
  * 把一个值限制在一个上限和下限之间，当这个值超过最小值和最大值的范围时，在最小值和最大值之间选择一个值使用。
- * @param val - 首选值。
+ * @param value - 首选值。
  * @param min - 最小值。
  * @param max - 最大值。
  * @returns 限制在范围内的值。
  */
-export const clamp = (val: number, min: number, max: number) => Math.min(Math.max(val, min), max);
+export function clamp<TNumber extends number | bigint>(value: TNumber, min?: TNumber, max?: TNumber) {
+	if (min !== undefined && max !== undefined && min > max)
+		throw new Error(`Invalid min or max value, the min value cannot greater than the max value, got range ${min} ~ ${max}`);
+	if (min !== undefined && value < min) value = min;
+	if (max !== undefined && value > max) value = max;
+	return value;
+}
 
 /**
  * ### 不准温度计
@@ -20,7 +26,7 @@ export const clamp = (val: number, min: number, max: number) => Math.min(Math.ma
  * @returns 转换后的新标度数值。
  */
 export function map(x: number, min: number, max: number, a: number, b: number) {
-	return ((b - a) * (x - min) / (max - min)) + a;
+	return (b - a) * (x - min) / (max - min) + a;
 }
 
 /**

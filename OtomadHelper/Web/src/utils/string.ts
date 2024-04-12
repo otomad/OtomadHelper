@@ -1,16 +1,33 @@
-/**
- * 在每两个字符之间添加零宽连字 (Word Joiner / No Breaking)。
- * @param str - 字符串。
- * @returns 连字后的字符串。
- */
-export function addWjBetweenEachChar(str: string) {
-	const WJ = "\u2060";
-	let prevChar: string | undefined;
-	return Array.from(str).flatMap(curChar => {
-		const isChar = (char: string) => prevChar === char || curChar === char;
-		let valid = true;
-		if (!prevChar || isChar(" ") || isChar(WJ)) valid = false;
-		prevChar = curChar;
-		return [valid && WJ, curChar];
-	}).filter(char => char).join("");
+/// <reference path="string.d.ts" />
+
+{ // Init string extensions
+	String.prototype.countChar = function (...chars) {
+		let count = 0;
+		for (const char of this)
+			if (chars.includes(char))
+				count++;
+		return count;
+	};
+
+	String.prototype.reverse = function () {
+		return Array.from(this).reverse().join("");
+	};
+
+	String.prototype.toBoolean = function () {
+		return this.trim().toLowerCase() !== "false";
+	};
+
+	String.prototype.toArray = function () {
+		return Array.from(this);
+	};
+
+	String.prototype.inTwo = function (sep = ",") {
+		return Array.from(this).join(sep);
+	};
+
+	String.prototype.in = function (...list) {
+		return list.includes(this as never);
+	};
+
+	makePrototypeKeysNonEnumerable(String);
 }

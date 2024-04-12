@@ -162,3 +162,21 @@ export function asserts<T>(object: unknown): asserts object is T { }
 export function isUndefinedNullNaN(object: unknown): object is undefined | null {
 	return [undefined, null, NaN].includes(object as never);
 }
+
+export function makePrototypeKeysNonEnumerable(constructor: new (...args: Any) => Any) {
+	const protoKeys = Object.keys(constructor.prototype);
+	for (const protoKey of protoKeys)
+		Object.defineProperty(constructor.prototype, protoKey, {
+			enumerable: false,
+		});
+}
+
+/**
+ * @deprecated 等待 React 19 发布，支持 ref as a prop 之后，即可删除本函数。
+ */
+export function functionModule<F extends Function, O>(
+	func: F,
+	object: O,
+) {
+	return Object.assign(func, object) as F & Readonly<O>;
+}

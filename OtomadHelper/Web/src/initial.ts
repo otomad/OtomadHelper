@@ -1,7 +1,9 @@
+import "utils/array";
+import "utils/string";
+
 import "helpers/color-mode";
 import "styles/fonts";
 import "styles/properties";
-import "utils/array";
 import "utils/bridge";
 
 const isProdMode = () => !useDevStore.getState().devMode;

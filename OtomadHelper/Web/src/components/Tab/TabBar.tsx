@@ -180,7 +180,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 						return (
 							React.cloneElement(child, {
 								collapsed,
-								vertical,
+								_vertical: vertical,
 								selected: current === id,
 								onClick: () => setCurrent?.(id),
 							})

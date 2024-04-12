@@ -56,7 +56,7 @@ export default function ItemsView<T extends string = string>({ view, current: [c
 				return (
 					React.cloneElement(child, {
 						selected: current === id,
-						view,
+						_view: view,
 						onClick: () => setCurrent?.(id),
 					})
 				);

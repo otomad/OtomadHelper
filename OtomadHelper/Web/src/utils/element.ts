@@ -73,7 +73,7 @@ export function getPath(target: TargetType): Element[] {
 /**
  * 根据鼠标事件的目标节点，查找要查询的元素是否是或是其祖先节点。比如查找元素是否被点击等。
  * @param target - 点击事件中的目标 HTML DOM 节点。
- * @param element - 要查找的冒泡 HTML DOM 节点。如果为字符串则表示要查询的类名。
+ * @param element - 要查找的冒泡 HTML DOM 节点。如果为字符串则表示要查询的 CSS 选择器。
  * @returns 要查询的元素是或是其祖先节点。
  */
 export function isInPath(target: TargetType, element: DetectInPathType): boolean {
@@ -82,7 +82,7 @@ export function isInPath(target: TargetType, element: DetectInPathType): boolean
 	if (isObject(element) && "target" in element) element = element.target;
 	if (typeof element === "string") {
 		for (const el of path)
-			if (el.classList.contains(element))
+			if (el.matches(element))
 				return true;
 		return false;
 	}

@@ -72,4 +72,24 @@ declare interface Array<T> {
 	 * @return 数组的最后一个元素。
 	 */
 	last(): T;
+
+	/**
+	 * 数组去重。这会返回一个新的数组。
+	 */
+	toDistinct(): T[];
+
+	/**
+	 * 数组去重。这会修改原始数组。
+	 */
+	distinct(): void;
+
+	/**
+	 * 去除数组中的 undefined、null、NaN 以及仅包含空白字符的字符串。这会返回一个新的数组。
+	 */
+	toTrimmed(): T[];
+
+	/**
+	 * 去除数组中的 undefined、null、NaN 以及仅包含空白字符的字符串。这会修改原始数组。
+	 */
+	trim(): void;
 }

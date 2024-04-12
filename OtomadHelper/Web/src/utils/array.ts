@@ -71,12 +71,24 @@
 	Array.prototype.last = function () {
 		return this.at(-1);
 	};
+	
+	Array.prototype.toDistinct = function () {
+		return [...new Set(this)];
+	};
+	
+	Array.prototype.distinct = function () {
+		return this.relist(new Set(this));
+	};
+	
+	Array.prototype.toTrimmed = function () {
+		return this.filter(item => !(isUndefinedNullNaN(item) || typeof item === "string" && item.trim() === ""));
+	};
+	
+	Array.prototype.trim = function () {
+		return this.relist(this.toTrimmed());
+	};
 
-	const protoKeys = Object.keys(Array.prototype);
-	for (const protoKey of protoKeys)
-		Object.defineProperty(Array.prototype, protoKey, {
-			enumerable: false,
-		});
+	makePrototypeKeysNonEnumerable(Array);
 }
 
 /**

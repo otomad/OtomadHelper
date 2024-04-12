@@ -11,7 +11,7 @@ export default function Home() {
 			<div>
 				<p>123123</p>
 				<Tooltip title="hehe">
-					<TextBox value={[text, setText]} type="number" placeholder="fuck world!" suffix="px" disabled={shown} />
+					<TextBox.Number value={[text, setText]} placeholder="fuck world!" suffix="px" disabled={shown} decimalPlaces={3} />
 				</Tooltip>
 				<Slider value={slider} />
 			</div>
