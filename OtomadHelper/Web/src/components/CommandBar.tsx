@@ -1,3 +1,5 @@
+import type { TransitionProps } from "react-transition-group";
+
 const StyledCommandBar = styled.div`
 	// box-shadow: 0 8px 16px ${c("shadows-flyout")};
 	padding: 4px;
@@ -33,29 +35,26 @@ function CommandBarItem({ icon, children, canBeDisabled, disabled, onClick, ...b
 	/** 可被禁用的？ */
 	canBeDisabled?: boolean;
 }, "section"> & TransitionProps) {
-	const el = useDomRef<"div">();
-	const [onEnter, onExit, endListener] = simpleAnimateSize(el, "width", 750, eases.easeInOutMax, undefined, { keepClippingAtEnd: true });
 	const { transitionAttrs, htmlAttrs } = separateTransitionAttrs(buttonAndTransitionAttrs);
 
 	const button = <Button icon={icon} subtle disabled={disabled} onClick={onClick} {...htmlAttrs}>{children}</Button>;
 
 	return (
-		<Transition
+		<Transitions.Size
 			{...transitionAttrs}
-			nodeRef={el}
-			addEndListener={endListener}
-			onEnter={onEnter}
-			onExit={onExit}
-			unmountOnExit
+			specified="width"
+			duration={750}
+			easing={eases.easeInOutMax}
+			exitOptions={{ keepClippingAtEnd: true }}
 		>
-			<div ref={el}>
+			<div>
 				{!canBeDisabled ? button : (
 					<DisabledButtonWrapper key="complete" disabled={disabled} onClick={onClick}>
 						{button}
 					</DisabledButtonWrapper>
 				)}
 			</div>
-		</Transition>
+		</Transitions.Size>
 	);
 }
 
@@ -66,7 +65,7 @@ function separateTransitionAttrs(buttonAndTransitionAttrs: object) {
 	for (const [key, value] of entries(buttonAndTransitionAttrs))
 		if (transitionAttrKeys.includes(key)) transitionAttrs[key] = value;
 		else htmlAttrs[key] = value;
-	return { transitionAttrs: transitionAttrs as object, htmlAttrs };
+	return { transitionAttrs, htmlAttrs };
 }
 
 CommandBar.Item = CommandBarItem;

@@ -93,7 +93,7 @@ type Keyframes = Keyframe[];
 type DimensionAxis = "height" | "width" | "both";
 type MaybePromise<T> = T | Promise<T>;
 
-type AnimateSizeOptions = Partial<{
+export type AnimateSizeOptions = Partial<{
 	/** 显式指定初始高度（可选）。 */
 	startHeight: number;
 	/** 显式指定结束高度（可选）。 */
@@ -265,11 +265,10 @@ export async function animateSize(
 	return animation.value;
 }
 
-type SameOrDifferent<T> = T | undefined | [T | undefined, T | undefined];
+export type SameOrDifferent<T> = T | undefined | [T | undefined, T | undefined];
 
 /**
  * `animateSize` 函数的简化版，适用于更为简单的动画。
- * @param nodeRef - HTML DOM 元素。// TODO: Remove nodeRef
  * @param specified - 显式指定需要动画的是哪个方向。默认为高度动画。
  * @param duration - 指定动画时间。
  * @param easing - 指定动画缓动曲线。
@@ -277,7 +276,7 @@ type SameOrDifferent<T> = T | undefined | [T | undefined, T | undefined];
  * @param exitOptions - 在退出动画时指定其它参数。
  * @returns 返回 `onEnter` 和 `onExit` 两个函数。
  */
-export function simpleAnimateSize(nodeRef: RefObject<HTMLElement>, specified: "width" | "height" = "height", duration?: SameOrDifferent<number>, easing?: SameOrDifferent<string>, enterOptions: AnimateSizeOptions = {}, exitOptions: AnimateSizeOptions = {}) {
+export function simpleAnimateSize(specified: "width" | "height" = "height", duration?: SameOrDifferent<number>, easing?: SameOrDifferent<string>, enterOptions: AnimateSizeOptions = {}, exitOptions: AnimateSizeOptions = {}) {
 	const enter = enterOptions, exit = exitOptions;
 	if (specified === "width") {
 		enter.startWidth = 0;

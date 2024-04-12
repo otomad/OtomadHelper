@@ -80,8 +80,6 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 }>) {
 	const settingsCardProps = { icon, title, details, selectInfo };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
-	const expanderChildEl = useDomRef<"div">();
-	const [onEnter, onExit, endListener] = simpleAnimateSize(expanderChildEl, "height", 350, undefined, { startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }, { endChildTranslate: "0 -100%" });
 
 	return (
 		<div className="expander">
@@ -99,19 +97,19 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 					</CssTransition>
 				)}
 			</ExpanderParent>
-			<Transition
+			<Transitions.Size
 				in={internalExpanded}
-				addEndListener={endListener}
-				onEnter={onEnter}
-				onExit={onExit}
-				unmountOnExit
+				specified="height"
+				duration={350}
+				enterOptions={{ startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }}
+				exitOptions={{ endChildTranslate: "0 -100%" }}
 			>
-				<ExpanderChild ref={expanderChildEl}>
+				<ExpanderChild>
 					<div className="expander-child-items">
 						{children}
 					</div>
 				</ExpanderChild>
-			</Transition>
+			</Transitions.Size>
 		</div>
 	);
 }
