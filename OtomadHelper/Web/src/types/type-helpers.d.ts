@@ -103,4 +103,17 @@ declare global {
 	 * HTML DOM 元素的引用。
 	 */
 	type DomRef<E extends Element> = MutableRefObject<E | null>;
+
+	/**
+	 * 根据指定的参数列表及返回值获得一个函数的类型。
+	 * @template TArgs - 函数的参数列表的元组。
+	 * @template TRet - 函数的返回值，留空表示无返回值 `void`。
+	 */
+	type Func<TArgs extends Iterable<any> | ArrayLike<any> = [], TRet = void> = (...args: TArgs) => TRet;
+
+	/**
+	 * 将函数的参数列表全部变为可空。
+	 * @template TFunc - 源函数。
+	 */
+	type PartialArgsFunc<TFunc extends AnyFunction> = Func<Partial<Parameters<TFunc>>, ReturnType<TFunc>>;
 }

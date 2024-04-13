@@ -163,7 +163,7 @@ export function isUndefinedNullNaN(object: unknown): object is undefined | null 
 	return [undefined, null, NaN].includes(object as never);
 }
 
-export function makePrototypeKeysNonEnumerable(constructor: new (...args: Any) => Any) {
+export function makePrototypeKeysNonEnumerable(constructor: AnyConstructor) {
 	const protoKeys = Object.keys(constructor.prototype);
 	for (const protoKey of protoKeys)
 		Object.defineProperty(constructor.prototype, protoKey, {

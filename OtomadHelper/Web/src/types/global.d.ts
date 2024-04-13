@@ -24,11 +24,15 @@ declare global {
 	/**
 	 * 管它是啥反正是对象就是了。
 	 */
-	type AnyObject = Record<ObjectKey, Any>;
+	type AnyObject = Record<ObjectKey, any>;
 	/**
 	 * 消除函数参数具有隐式 any 类型的警告。
 	 */
-	type AnyFunction = (...args: Any[]) => Any;
+	type AnyFunction = (...args: any[]) => any;
+	/**
+	 * 任何类的构造器。
+	 */
+	type AnyConstructor = new (...args: any[]) => any;
 	/**
 	 * 为什么 Record 还需要手动指定键的类型？多此一举。
 	 * @template T - 值的类型。

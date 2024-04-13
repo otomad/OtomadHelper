@@ -1,9 +1,8 @@
 function replaceLfToBr(longText: string) {
-	let brKey = 0;
 	return longText
 		.replaceAll(/\r\n|\n\r|\r/g, "\n")
 		.split("\n")
-		.flatMap((line, i, { length }) => i === length - 1 ? line : [line, <Br key={brKey++} />])
+		.flatMap((line, i) => i ? [<br key={i} />, line] : line)
 		.filter(line => typeof line === "string" ? line.trim() : true);
 }
 

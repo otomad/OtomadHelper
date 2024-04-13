@@ -232,7 +232,7 @@ const StyledTextBox = styled.div`
 	}
 `;
 
-const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeholder, disabled, prefix, suffix, _spinner: spinner, onChange, onInput, ...htmlAttrs }: FCP<{
+const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeholder, disabled, prefix, suffix, _spinner: spinner, onChange, onInput, onKeyDown, ...htmlAttrs }: FCP<{
 	/** 输入框的值。 */
 	value: StateProperty<string>;
 	/** 内容占位符。 */
@@ -247,6 +247,8 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 	onChange?: BaseEventHandler<HTMLInputElement>;
 	/** 文本键盘输入事件。 */
 	onInput?: (newText: string, el: HTMLInputElement, ...event: Parameters<FormEventHandler<HTMLInputElement>>) => boolean | string | void;
+	/** 键盘按下事件。 */
+	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 }, "div">, ref: ForwardedRef<"input">) {
 	const inputId = useId();
 	const inputEl = useDomRef<"input">();
@@ -271,6 +273,7 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 	}, [value, setValue]);
 
 	const handleKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(e => {
+		onKeyDown?.(e);
 		if (e.key === "Enter") { // Don't use `e.code` or NumpadEnter won't work
 			inputEl.current?.blur();
 			stopEvent(e);
@@ -391,20 +394,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 		if (newValue !== oldValue) updateDisplayValue(value);
 	}, [value, decimalPlaces]);
 
-	const handlePressSpin = useCallback((spinValue: NumberLike) => {
-		setValue(value => {
-			if (!(typeof value === "number" || typeof value === "bigint")) return undefined;
-			const spin = typeof value === "bigint" ? BigInt(spinValue) : spinValue;
-			const newValue = ((value as number) + (spin as number)) as TNumber;
-			updateDisplayValue(newValue);
-			return newValue;
-		});
-	}, [value]);
-
-	const handleReleaseSpin = useCallback<BaseEventHandler<HTMLButtonElement>>(e => {
-		if (!(e.currentTarget instanceof HTMLElement)) return;
-		if (!e.currentTarget.matches(":focus-visible")) // 如果是键盘空格键按下旋钮，则不要自动聚焦到输入框。
-			inputEl.current?.focus(); // 如果是鼠标按下旋钮，则会自动聚焦到输入框。
+	const setCaretToPoint = () => {
 		if (inputEl.current) {
 			const pointIndex = inputEl.current.value.indexOf(".");
 			let offset = 0;
@@ -420,7 +410,36 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 			}
 			Caret.set(inputEl, pointIndex + offset);
 		}
+	};
+
+	const handlePressSpin = useCallback((spinValue: NumberLike) => {
+		setValue(value => {
+			if (!(typeof value === "number" || typeof value === "bigint")) return undefined;
+			const spin = typeof value === "bigint" ? BigInt(spinValue) : spinValue;
+			const newValue = ((value as number) + (spin as number)) as TNumber;
+			updateDisplayValue(newValue);
+			return newValue;
+		});
+	}, [value]);
+
+	const handleReleaseSpin = useCallback<BaseEventHandler<HTMLButtonElement>>(e => {
+		if (!(e.currentTarget instanceof HTMLElement)) return;
+		if (!e.currentTarget.matches(":focus-visible")) // 如果是键盘空格键按下旋钮，则不要自动聚焦到输入框。
+			inputEl.current?.focus(); // 如果是鼠标按下旋钮，则会自动聚焦到输入框。
+		setCaretToPoint();
 	}, [spinnerStep]);
+
+	const handleKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(e => {
+		const baseStep = spinnerStep ?? 1;
+		let step;
+		if (e.code === "ArrowUp") step = baseStep;
+		else if (e.code === "ArrowDown") step = -baseStep;
+		if (step) {
+			handlePressSpin(step);
+			setTimeout(() => setCaretToPoint());
+			stopEvent(e);
+		}
+	}, [spinnerStep, handlePressSpin]);
 
 	return (
 		<TextBox
@@ -430,6 +449,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 			ref={inputEl}
 			onChange={handleBlurChange}
 			onInput={handleInput}
+			onKeyDown={handleKeyDown}
 			_spinner={inputId => (
 				<>
 					<label className="spinner-icon" htmlFor={inputId}>
