@@ -71,19 +71,19 @@
 	Array.prototype.last = function () {
 		return this.at(-1);
 	};
-	
+
 	Array.prototype.toDistinct = function () {
 		return [...new Set(this)];
 	};
-	
+
 	Array.prototype.distinct = function () {
 		return this.relist(new Set(this));
 	};
-	
+
 	Array.prototype.toTrimmed = function () {
 		return this.filter(item => !(isUndefinedNullNaN(item) || typeof item === "string" && item.trim() === ""));
 	};
-	
+
 	Array.prototype.trim = function () {
 		return this.relist(this.toTrimmed());
 	};
@@ -100,18 +100,6 @@
  */
 export function mapObjectConst<const T extends string, U>(array: T[], callbackFn: (value: T, index: number, array: T[]) => U) {
 	return Object.fromEntries(array.map((value, index, array) => ([value, callbackFn(value, index, array)] as [T, U]))) as Record<T, U>;
-}
-
-/**
- * 类似于 Python 的 `enumerate` 函数。
- *
- * `enumerate()` 函数用于将一个可遍历的数据对象（如列表、元组或字符串）组合为一个索引序列，同时列出数据和数据下标，一般用在 for...of 循环当中。
- * @param array - 一个序列、迭代器或其他支持迭代对象。
- * @param start - 下标起始位置的值，默认为 0。
- * @returns 返回依次包含索引值、元素值、源数组的元组。
- */
-export function enumerate<T>(array: T[], start: number = 0) {
-	return array.map((value, index, array) => [index + start, value, array] as const);
 }
 
 // #region Tuples
