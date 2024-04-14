@@ -60,7 +60,6 @@ public partial class MainDock : UserControl {
 		Browser.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
 		Browser.CoreWebView2.DocumentTitleChanged += (sender, e) => DocumentTitleChanged?.Invoke(Browser.CoreWebView2.DocumentTitle);
 		Browser.CoreWebView2.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
-		Browser.CoreWebView2.com
 #if DEBUG
 		Browser.CoreWebView2.OpenDevToolsWindow();
 #endif

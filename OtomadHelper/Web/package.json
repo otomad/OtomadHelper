@@ -74,7 +74,6 @@
 		"typescript-eslint": "^7.6.0",
 		"unplugin-auto-import": "^0.17.5",
 		"vite": "^5.2.8",
-		"vite-plugin-compression2": "^1.0.0",
 		"vite-plugin-html-minifier": "^1.0.3",
 		"vite-plugin-svg-icons": "^2.0.1",
 		"vite-plugin-svgr": "^4.2.0",

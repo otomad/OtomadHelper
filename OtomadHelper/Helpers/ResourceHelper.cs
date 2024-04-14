@@ -11,9 +11,13 @@ internal static class ResourceHelper {
 	public static Stream GetEmbeddedResource(string resourcePath) {
 		Assembly assembly = Assembly.GetExecutingAssembly();
 		string assetsFilePath = assembly.GetName().Name + "." + resourcePath; // 你可以设置断点看看这里的值。
-		if (assembly.GetManifestResourceInfo(assetsFilePath) == null)
+		if (!IsResourceExist(assetsFilePath)) // Check for gzip file
+			assetsFilePath += ".gz";
+		if (!IsResourceExist(assetsFilePath))
 			throw new FileNotFoundException("Cannot find embedded resource: " + assetsFilePath);
 		return assembly.GetManifestResourceStream(assetsFilePath);
+
+		bool IsResourceExist(string filePath) => assembly.GetManifestResourceInfo(filePath) != null;
 	}
 
 	/// <summary>

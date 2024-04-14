@@ -3,7 +3,6 @@ import { transform as transformCSS } from "lightningcss";
 import path from "path";
 import autoImport from "unplugin-auto-import/vite";
 import { defineConfig } from "vite";
-import { compression } from "vite-plugin-compression2";
 import htmlMinifier from "vite-plugin-html-minifier";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
@@ -70,11 +69,11 @@ export default defineConfig({
 				minifyURLs: true,
 			},
 		}),
-		compression({
+		/* compression({
 			skipIfLargerOrEqual: true,
 			deleteOriginalAssets: true,
 			include: [/\.(x?html?|mht(ml)?|hta|md|css|s[ca]ss|less|styl|[mc]?[jt]sx?|json[5c]?|ya?ml|xa?ml|toml|ini|config|map|(web)?manifest|appcache|[to]tf|ttc|vtt|svg|bmp|ico|cur|ani)$/iu],
-		}),
+		}), */
 	],
 	base: "",
 	publicDir: "src/public",
