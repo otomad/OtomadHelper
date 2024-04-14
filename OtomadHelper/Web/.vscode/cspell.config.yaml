@@ -6,6 +6,8 @@ import: []
 language: en,vi
 words:
   - ani
+  - apng
+  - appcache
   - automator
   - beziér
   - bouncized
@@ -26,11 +28,14 @@ words:
   - endregion
   - extralight
   - geq
+  - hta
   - immer
   - kbd
   - keyframes
   - lotties
   - ltr
+  - mht
+  - mhtml
   - miscz
   - moz
   - multilayering
@@ -39,6 +44,7 @@ words:
   - neutual
   - numberish
   - ofx
+  - otf
   - otomad
   - otomads
   - pangu
@@ -55,11 +61,13 @@ words:
   - segoe
   - shupelunker
   - spherize
+  - styl
   - stylelint
   - subclips
   - subheaders
   - svgr
   - tsc
+  - ttc
   - tts
   - ultrabold
   - unhover
@@ -67,8 +75,10 @@ words:
   - ust
   - utau
   - vite
+  - vnd
   - vocaloid
   - vsq
+  - vtt
   - wj
   - xmp
   - ytp
@@ -98,3 +108,4 @@ flagWords:
   - pesudo -> pseudo
   - exitting -> exiting
   - trailling -> trailing
+  - condif -> config

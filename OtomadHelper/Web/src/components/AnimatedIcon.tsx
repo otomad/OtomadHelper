@@ -187,7 +187,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 		if (typeof name !== "string")
 			return name;
 		try {
-			const iconsImport = import.meta.glob<string>("/src/assets/lotties/**/*.json", { as: "raw", eager: true });
+			const iconsImport = import.meta.glob<string>("/src/assets/lotties/**/*.json", { query: "?raw", import: "default", eager: true });
 			const rawIcon = iconsImport[`/src/assets/lotties/${name}.json`];
 			return JSON.parse(rawIcon);
 		} catch (e) {

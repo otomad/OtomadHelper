@@ -13,9 +13,6 @@ import globalized from "./src/plugins/vite/globalized";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	/* optimizeDeps: {
-		exclude: ["react-transition-group"],
-	}, */
 	plugins: [
 		react({
 			babel: {
@@ -76,6 +73,7 @@ export default defineConfig({
 		compression({
 			skipIfLargerOrEqual: true,
 			deleteOriginalAssets: true,
+			include: [/\.(x?html?|mht(ml)?|hta|md|css|s[ca]ss|less|styl|[mc]?[jt]sx?|json[5c]?|ya?ml|xa?ml|toml|ini|config|map|(web)?manifest|appcache|[to]tf|ttc|vtt|svg|bmp|ico|cur|ani)$/iu],
 		}),
 	],
 	base: "",
