@@ -1,16 +1,16 @@
 diff --git a/index.d.ts b/index.d.ts
-index 66da98fd09f3d69c6f7cefe7eb35c0e8e3a56ea3..a02cb80f1ac5d6c2897f200a5a370aa873745f78 100644
+index 25bc72acab41076de886dd83a3f76536fc659502..f6931fa37847e587bb80167cbbdf3f62e5e5210e 100644
 --- a/index.d.ts
 +++ b/index.d.ts
-@@ -7,6 +7,7 @@
+@@ -6,6 +6,7 @@
+ 
  import * as CSS from "csstype";
  import * as PropTypes from "prop-types";
- import { Interaction as SchedulerInteraction } from "scheduler/tracing";
 +import { Argument as ClassArray } from "classnames";
  
  type NativeAnimationEvent = AnimationEvent;
  type NativeClipboardEvent = ClipboardEvent;
-@@ -1267,19 +1268,19 @@ declare namespace React {
+@@ -2142,19 +2143,19 @@ declare namespace React {
       */
      interface SyntheticEvent<T = Element, E = Event> extends BaseSyntheticEvent<E, EventTarget & T, EventTarget> {}
  
@@ -34,7 +34,7 @@ index 66da98fd09f3d69c6f7cefe7eb35c0e8e3a56ea3..a02cb80f1ac5d6c2897f200a5a370aa8
          pointerId: number;
          pressure: number;
          tangentialPressure: number;
-@@ -1292,7 +1293,7 @@ declare namespace React {
+@@ -2167,7 +2168,7 @@ declare namespace React {
          isPrimary: boolean;
      }
  
@@ -43,7 +43,7 @@ index 66da98fd09f3d69c6f7cefe7eb35c0e8e3a56ea3..a02cb80f1ac5d6c2897f200a5a370aa8
          relatedTarget: (EventTarget & RelatedTarget) | null;
          target: EventTarget & Target;
      }
-@@ -1324,7 +1325,7 @@ declare namespace React {
+@@ -2199,7 +2200,7 @@ declare namespace React {
          | "Symbol"
          | "SymbolLock";
  
@@ -52,7 +52,7 @@ index 66da98fd09f3d69c6f7cefe7eb35c0e8e3a56ea3..a02cb80f1ac5d6c2897f200a5a370aa8
          altKey: boolean;
          /** @deprecated */
          charCode: number;
-@@ -1349,7 +1350,7 @@ declare namespace React {
+@@ -2224,7 +2225,7 @@ declare namespace React {
          which: number;
      }
  
@@ -61,7 +61,7 @@ index 66da98fd09f3d69c6f7cefe7eb35c0e8e3a56ea3..a02cb80f1ac5d6c2897f200a5a370aa8
          altKey: boolean;
          button: number;
          buttons: number;
-@@ -1371,7 +1372,7 @@ declare namespace React {
+@@ -2246,7 +2247,7 @@ declare namespace React {
          shiftKey: boolean;
      }
  
@@ -70,7 +70,7 @@ index 66da98fd09f3d69c6f7cefe7eb35c0e8e3a56ea3..a02cb80f1ac5d6c2897f200a5a370aa8
          altKey: boolean;
          changedTouches: TouchList;
          ctrlKey: boolean;
-@@ -1385,25 +1386,25 @@ declare namespace React {
+@@ -2260,25 +2261,25 @@ declare namespace React {
          touches: TouchList;
      }
  
@@ -100,7 +100,7 @@ index 66da98fd09f3d69c6f7cefe7eb35c0e8e3a56ea3..a02cb80f1ac5d6c2897f200a5a370aa8
          elapsedTime: number;
          propertyName: string;
          pseudoElement: string;
-@@ -1968,7 +1969,7 @@ declare namespace React {
+@@ -2841,7 +2842,7 @@ declare namespace React {
          // Standard HTML Attributes
          accessKey?: string | undefined;
          autoFocus?: boolean | undefined;
@@ -109,7 +109,7 @@ index 66da98fd09f3d69c6f7cefe7eb35c0e8e3a56ea3..a02cb80f1ac5d6c2897f200a5a370aa8
          contentEditable?: Booleanish | "inherit" | "plaintext-only" | undefined;
          contextMenu?: string | undefined;
          dir?: string | undefined;
-@@ -2654,7 +2655,7 @@ declare namespace React {
+@@ -3590,7 +3591,7 @@ declare namespace React {
  
          // Attributes which also defined in HTMLAttributes
          // See comment in SVGDOMPropertyConfig.js
@@ -118,7 +118,7 @@ index 66da98fd09f3d69c6f7cefe7eb35c0e8e3a56ea3..a02cb80f1ac5d6c2897f200a5a370aa8
          color?: string | undefined;
          height?: number | string | undefined;
          id?: string | undefined;
-@@ -3196,7 +3197,7 @@ declare namespace React {
+@@ -4147,7 +4148,7 @@ declare namespace React {
      // https://github.com/nikeee/2048-typescript/blob/master/2048/js/touch.d.ts
      // ----------------------------------------------------------------------
  

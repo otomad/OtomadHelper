@@ -12,6 +12,8 @@ words:
   - ccw
   - composables
   - cooldown
+  - cqh
+  - cqw
   - cw
   - datamix
   - datamixing
@@ -19,6 +21,9 @@ words:
   - datamoshes
   - datamoshing
   - demibold
+  - dvh
+  - dvw
+  - endregion
   - extralight
   - geq
   - immer
@@ -27,6 +32,7 @@ words:
   - lotties
   - ltr
   - miscz
+  - moz
   - multilayering
   - multisource
   - multitrack
@@ -35,6 +41,7 @@ words:
   - ofx
   - otomad
   - otomads
+  - pangu
   - partialize
   - pingpong
   - portato
@@ -48,13 +55,18 @@ words:
   - segoe
   - shupelunker
   - spherize
+  - stylelint
   - subclips
   - subheaders
+  - svgr
+  - tsc
   - tts
   - ultrabold
   - unhover
+  - unplugin
   - ust
   - utau
+  - vite
   - vocaloid
   - vsq
   - wj
@@ -71,20 +83,9 @@ ignoreWords:
   - zh
   - fcp
   - fc
-  - endregion
-  - moz
   - tgs
-  - dvw
-  - dvh
-  - stylelint
-  - unplugin
-  - pangu
-  - tsc
-  - svgr
   - ᵗ
   - ᵗsin
-  - cqw
-  - cqh
 flagWords:
   - colour -> color
   - canot -> cannot

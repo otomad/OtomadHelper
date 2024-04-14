@@ -1,5 +1,5 @@
 diff --git a/esm/middleware.js b/esm/middleware.js
-index fcaa0c891e0a50afaebfb11da2076a3b1901534d..a5e30da8b9584ce0a822bab7b9fcb8ebccd28a83 100644
+index c2c91bcd61428dbeb0b265eabdd6fa650ba18f9f..e41f53c19df2597b96d1181056ac9e45695010ec 100644
 --- a/esm/middleware.js
 +++ b/esm/middleware.js
 @@ -313,10 +313,16 @@ const oldImpl = (config, baseOptions) => (set, get, api) => {
@@ -45,7 +45,7 @@ index fcaa0c891e0a50afaebfb11da2076a3b1901534d..a5e30da8b9584ce0a822bab7b9fcb8eb
    };
    let hasHydrated = false;
 diff --git a/esm/middleware.mjs b/esm/middleware.mjs
-index c0b9cadd4ebbfa99de7f364a765bb864e9f0e1b2..617af02a40b25aa3b812275549cd5002764ad5b3 100644
+index ad4efa92479334abc2c54f403ad231807b96a0d3..8581c1c5d0adf844d29acdb23f8e1fac369b78d7 100644
 --- a/esm/middleware.mjs
 +++ b/esm/middleware.mjs
 @@ -313,10 +313,16 @@ const oldImpl = (config, baseOptions) => (set, get, api) => {
@@ -91,13 +91,13 @@ index c0b9cadd4ebbfa99de7f364a765bb864e9f0e1b2..617af02a40b25aa3b812275549cd5002
    };
    let hasHydrated = false;
 diff --git a/esm/vanilla.js b/esm/vanilla.js
-index 9dff6951c4a586eeac69b9cad606657af9d48450..99c44238e52f0b8de1df3b04746b81973d5b10fe 100644
+index 25c56467d1778ca2a63364c85e211b5061422094..17d791bb8bbe2e6abeb7d3682e5a1485f6d32525 100644
 --- a/esm/vanilla.js
 +++ b/esm/vanilla.js
 @@ -6,6 +6,15 @@ const createStoreImpl = (createState) => {
      if (!Object.is(nextState, state)) {
        const previousState = state;
-       state = (replace != null ? replace : typeof nextState !== "object") ? nextState : Object.assign({}, state, nextState);
+       state = (replace != null ? replace : typeof nextState !== "object" || nextState === null) ? nextState : Object.assign({}, state, nextState);
 +      // copy getters
 +      if (typeof state === 'object' && state !== null) {
 +        for (const key in previousState) {
@@ -111,13 +111,13 @@ index 9dff6951c4a586eeac69b9cad606657af9d48450..99c44238e52f0b8de1df3b04746b8197
      }
    };
 diff --git a/esm/vanilla.mjs b/esm/vanilla.mjs
-index 89bcc9023e7468b9e68fb1f7b8ed87332da57150..3812c275edda35c0d9e43a73f1e86e4f458abb6c 100644
+index 3427839341ff0ab88e279054c5c941d0ae8c9f12..d65bed7bf131293712672c1ef2210ac77830f434 100644
 --- a/esm/vanilla.mjs
 +++ b/esm/vanilla.mjs
 @@ -6,6 +6,15 @@ const createStoreImpl = (createState) => {
      if (!Object.is(nextState, state)) {
        const previousState = state;
-       state = (replace != null ? replace : typeof nextState !== "object") ? nextState : Object.assign({}, state, nextState);
+       state = (replace != null ? replace : typeof nextState !== "object" || nextState === null) ? nextState : Object.assign({}, state, nextState);
 +      // copy getters
 +      if (typeof state === 'object' && state !== null) {
 +        for (const key in previousState) {
@@ -130,36 +130,3 @@ index 89bcc9023e7468b9e68fb1f7b8ed87332da57150..3812c275edda35c0d9e43a73f1e86e4f
        listeners.forEach((listener) => listener(state, previousState));
      }
    };
-diff --git a/middleware.js b/middleware.js
-index 42da762db35f00ecd7e6dc62c62da89db7d55afa..e874b121289a6f7dc22133e51df1fdaa0d0f3f2c 100644
---- a/middleware.js
-+++ b/middleware.js
-@@ -6,7 +6,7 @@ function _extends() {
-       var source = arguments[i];
-       for (var key in source) {
-         if (Object.prototype.hasOwnProperty.call(source, key)) {
--          target[key] = source[key];
-+          Reflect.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-         }
-       }
-     }
-diff --git a/vanilla.js b/vanilla.js
-index ac2f3ebc77830ab7a827a7595fe10bb695d308e8..1fee25b42482469704b0919f8708894a75210b8e 100644
---- a/vanilla.js
-+++ b/vanilla.js
-@@ -8,6 +8,15 @@ var createStoreImpl = function createStoreImpl(createState) {
-     if (!Object.is(nextState, state)) {
-       var _previousState = state;
-       state = (replace != null ? replace : typeof nextState !== 'object') ? nextState : Object.assign({}, state, nextState);
-+      // copy getters
-+      if (typeof state === 'object' && state !== null) {
-+        for (var key in _previousState) {
-+          var descriptor = Object.getOwnPropertyDescriptor(_previousState, key);
-+          if (descriptor && descriptor.get) {
-+            Reflect.defineProperty(state, key, descriptor);
-+          }
-+        }
-+      }
-       listeners.forEach(function (listener) {
-         return listener(state, _previousState);
-       });
