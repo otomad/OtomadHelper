@@ -368,7 +368,7 @@ const StyledPage = styled.main`
 	.jump > &:is(.exit, .exit-done) {
 		translate: 0 -2rem;
 		opacity: 0;
-		transition: all ${eases.easeOutMax} 83ms;
+		transition: all ${eases.easeInExpo} 150ms;
 	}
 
 	.jump > &.enter {
@@ -379,7 +379,7 @@ const StyledPage = styled.main`
 	.jump > &.enter-active {
 		translate: 0;
 		opacity: 1;
-		transition: all ${eases.easeOutMax} 300ms;
+		transition: all ${eases.easeOutExpo} 500ms;
 	}
 
 	.forward > &.exit,
