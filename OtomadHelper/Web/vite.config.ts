@@ -3,6 +3,7 @@ import { transform as transformCSS } from "lightningcss";
 import path from "path";
 import autoImport from "unplugin-auto-import/vite";
 import { defineConfig } from "vite";
+import { compression } from "vite-plugin-compression2";
 import htmlMinifier from "vite-plugin-html-minifier";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
@@ -72,8 +73,13 @@ export default defineConfig({
 				minifyURLs: true,
 			},
 		}),
+		compression({
+			skipIfLargerOrEqual: true,
+			deleteOriginalAssets: true,
+		}),
 	],
 	base: "",
+	publicDir: "src/public",
 	build: {
 		target: "ESNext",
 		rollupOptions: {
