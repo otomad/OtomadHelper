@@ -64,7 +64,7 @@ export const useConfigStore = createStore<IConfig>()(
 		score: {
 			format: "midi",
 			encoding: "ANSI",
-			bpmUsing: "dynamicMidi",
+			bpmUsing: "variableMidi",
 			timeSignature: "4/4",
 			constraintNoteLength: "none",
 		},

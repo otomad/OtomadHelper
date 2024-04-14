@@ -83,8 +83,8 @@ export default {
 			encoding: "Encoding",
 			bpm: {
 				_: "BPM",
-				dynamicMidi: "Dynamic MIDI tempo",
-				midi: "MIDI tempo",
+				variableMidi: "Variable MIDI tempo",
+				constantMidi: "Constant MIDI tempo",
 				project: "Project tempo",
 			},
 			timeSignature: "Time signature",

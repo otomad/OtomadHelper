@@ -1,5 +1,5 @@
 export /* internal */ const bpmUsings = [
-	{ id: "dynamicMidi", name: t.score.bpm.dynamicMidi, icon: "dynamic_midi" },
+	{ id: "variableMidi", name: t.score.bpm.variableMidi, icon: "variable_midi" },
 	{ id: "midi", name: t.score.bpm.midi, icon: "midi" },
 	{ id: "project", name: t.score.bpm.project, icon: "veg_file" },
 	{ id: "custom", name: t.custom, icon: "edit" },

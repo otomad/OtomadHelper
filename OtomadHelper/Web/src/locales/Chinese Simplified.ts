@@ -83,8 +83,8 @@ export default {
 			encoding: "编码",
 			bpm: {
 				_: "BPM",
-				dynamicMidi: "动态MIDI速度",
-				midi: "MIDI速度",
+				variableMidi: "可变MIDI速度",
+				constantMidi: "恒定MIDI速度",
 				project: "项目速度",
 			},
 			timeSignature: "节拍",
