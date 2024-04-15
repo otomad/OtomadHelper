@@ -225,7 +225,7 @@ const StyledNavigationView = styled.div<{
 			display: flex;
 			gap: 14px;
 			align-items: center;
-			transition: all ${eases.easeOutSmooth} 750ms;
+			transition: all ${eases.easeOutSmooth} 1000ms;
 
 			* {
 				white-space: nowrap;

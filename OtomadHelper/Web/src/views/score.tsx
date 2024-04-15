@@ -1,6 +1,6 @@
 export /* internal */ const bpmUsings = [
 	{ id: "variableMidi", name: t.score.bpm.variableMidi, icon: "variable_midi" },
-	{ id: "midi", name: t.score.bpm.midi, icon: "midi" },
+	{ id: "constantMidi", name: t.score.bpm.constantMidi, icon: "midi" },
 	{ id: "project", name: t.score.bpm.project, icon: "veg_file" },
 	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;

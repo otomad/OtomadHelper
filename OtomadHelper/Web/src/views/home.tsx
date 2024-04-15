@@ -1,7 +1,6 @@
 export default function Home() {
 	const [shown, setShown] = useState(false);
-	const [text, setText] = useState(0);
-	const slider = useState(50);
+	const [text, setText] = useState("foo");
 
 	return (
 		<div className="container">
@@ -9,11 +8,13 @@ export default function Home() {
 			<SettingsCardToggleSwitch title="Shown" icon="enabled" on={[shown, setShown]} />
 
 			<div>
-				<p>123123</p>
-				<Tooltip title="hehe">
-					<TextBox.Number value={[text, setText]} placeholder="fuck world!" suffix="px" disabled={shown} decimalPlaces={3} />
-				</Tooltip>
-				<Slider value={slider} />
+				<Segmented current={[text, setText]}>
+					<Segmented.Item icon="placeholder" id="foo">foo</Segmented.Item>
+					<Segmented.Item icon="placeholder" id="bar">bar</Segmented.Item>
+					<Segmented.Item icon="placeholder" id="baz">baz</Segmented.Item>
+					<Segmented.Item icon="placeholder" id="hello">hello</Segmented.Item>
+					<Segmented.Item icon="placeholder" id="world">world</Segmented.Item>
+				</Segmented>
 			</div>
 		</div>
 	);

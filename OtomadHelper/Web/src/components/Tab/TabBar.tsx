@@ -177,14 +177,12 @@ export default function TabBar<T extends string = string>({ current: [current, s
 					{React.Children.map(children, child => {
 						if (!isReactInstance(child, TabItem)) return child;
 						const id = child.props.id as T;
-						return (
-							React.cloneElement(child, {
-								collapsed,
-								_vertical: vertical,
-								selected: current === id,
-								onClick: () => setCurrent?.(id),
-							})
-						);
+						return React.cloneElement(child, {
+							collapsed,
+							_vertical: vertical,
+							selected: current === id,
+							onClick: () => setCurrent?.(id),
+						});
 					})}
 				</div>
 				<Indicator ref={indicatorEl} $position={position} $noTransition={noIndicatorTransition} $vertical={vertical} />

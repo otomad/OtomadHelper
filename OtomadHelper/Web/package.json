@@ -15,7 +15,7 @@
 	"author": "Ranne",
 	"license": "GPL-3.0-only",
 	"scripts": {
-		"dev": "vite --host --force",
+		"dev": "vite --host",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prebuild": "scripts\\prebuild.bat",

@@ -53,13 +53,11 @@ export default function ItemsView<T extends string = string>({ view, current: [c
 			{React.Children.map(children, child => {
 				if (!isReactInstance(child, ItemsViewItem)) return child;
 				const id = child.props.id as T;
-				return (
-					React.cloneElement(child, {
-						selected: current === id,
-						_view: view,
-						onClick: () => setCurrent?.(id),
-					})
-				);
+				return React.cloneElement(child, {
+					selected: current === id,
+					_view: view,
+					onClick: () => setCurrent?.(id),
+				});
 			})}
 		</StyledItemsView>
 	);

@@ -98,6 +98,12 @@ declare global {
 	export type PropsOf<C> = C extends React.FC<infer P> ? P : never;
 
 	/**
+	 * Get React Element type for the React component.
+	 * @template C - React functional component.
+	 */
+	export type GetReactElementFromFC<T> = ReactElement<PropsOf<T>, T>;
+
+	/**
 	 * Get the parameter types for Zustand store state.
 	 * @template S - Zustand store object。
 	 */
