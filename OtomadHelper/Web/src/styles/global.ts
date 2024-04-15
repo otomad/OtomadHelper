@@ -5,7 +5,7 @@ import forceCursors from "./force-cursor";
 import reset from "./reset";
 
 const GlobalStyle = createGlobalStyle<{
-	/** 页面已完成加载？ */
+	/** The page has completed loading? */
 	$ready?: boolean;
 }>`
 	${globalColors()};

@@ -6,13 +6,14 @@ namespace AnimatedIconStateNS {
 }
 
 declare global {
-	/** 复选框选中状态。 */
+	/** Check box selection status. */
 	type CheckState = "unchecked" | "indeterminate" | "checked";
 
 	type AnimatedIconState = AnimatedIconStateNS.Tuple | AnimatedIconStateNS.Object;
 
+	/** The status of info bar, badge, etc. */
 	type Status = "neutual" | "accent" | "info" | "asterisk" | "warning" | "success" | "error";
 
-	/** 工具提示、浮窗等的放置位置方向。 */
+	/** The placement of tooltips, flyouts, etc. */
 	type Placement = "top" | "right" | "bottom" | "left" | "x" | "y";
 }

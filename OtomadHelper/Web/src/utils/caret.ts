@@ -1,11 +1,11 @@
 /**
- * 文本光标辅助操作对象。
+ * Text cursor assisted operation object.
  */
 export const Caret = {
 	/**
-	 * 获取文本光标的坐标。
-	 * @param input - 输入框元素（如果有）。
-	 * @returns 文本光标的坐标。
+	 * Get the index of the text cursor.
+	 * @param input - Input elements (if has).
+	 * @returns The index of the text cursor.
 	 */
 	get(input?: MaybeRef<HTMLInputElement>) {
 		if (input) {
@@ -18,9 +18,9 @@ export const Caret = {
 	},
 
 	/**
-	 * 设置文本光标的坐标。
-	 * @param element HTML DOM 元素。
-	 * @param offset 文本光标的坐标。
+	 * Set the index of the text cursor.
+	 * @param element HTML DOM element.
+	 * @param offset The index of the text cursor.
 	 */
 	set(element: MaybeRef<Element>, offset: number | undefined | null) {
 		if (offset == null) return;
@@ -49,9 +49,9 @@ export const Caret = {
 	},
 
 	/**
-	 * 清除文本选择。
+	 * Clear text selection.
 	 *
-	 * 注意是不选择文本，而不是将选择文本删除。
+	 * Note that the text should be deselected instead of being deleted.
 	 */
 	clear() {
 		if (window.getSelection) {
@@ -65,9 +65,9 @@ export const Caret = {
 };
 
 /**
- * 将文本插入指定文本框中光标的位置，如果选中了文本，则替换之。
- * @param input - 输入框。
- * @param text - 插入的文字。
+ * Insert the text into the specified text box at the cursor position, and if text is selected, replace it.
+ * @param input - Input box.
+ * @param text - Insert text.
  */
 export function insertTextToTextBox(input: MaybeRef<HTMLInputElement | HTMLTextAreaElement>, text: string = "") {
 	input = toValue(input);

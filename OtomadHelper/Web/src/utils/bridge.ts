@@ -40,7 +40,7 @@ export const bridges = new Proxy(EMPTY, {
 }) as HostObjects;
 globals.bridges = bridges;
 
-// 本机端代码向网页端通信事件
+// Event of communication from native code to web page
 window.chrome ??= new VirtualObject();
 window.chrome.webview ??= new VirtualObject();
 window.chrome.webview.addEventListener("message", e => {

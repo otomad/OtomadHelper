@@ -1,39 +1,40 @@
 /**
- * 点类。
+ * Point class.
  */
 export default class Point {
 	constructor(public x: number, public y: number) { }
 
 	/**
-	 * 求两点间距离。
-	 * @param point - 另一个点。
-	 * @returns 距离。
+	 * Find the distance between two points.
+	 * @param point - Another point.
+	 * @returns Distance.
 	 */
 	distance(point: Point): number {
 		return Math.hypot(point.x - this.x, point.y - this.y);
 	}
 
 	/**
-	 * 求两点间 X 轴距离。
-	 * @param point - 另一个点。
-	 * @returns X 轴距离。
+	 * Find the X-axis distance between two points.
+	 * @param point - Another point.
+	 * @returns X-axis distance.
 	 */
 	distanceX(point: Point): number {
 		return point.x - this.x;
 	}
 
 	/**
-	 * 求两点间 Y 轴距离。
-	 * @param point - 另一个点。
-	 * @returns Y 轴距离。
+	 * Find the Y-axis distance between two points.
+	 * @param point - Another point.
+	 * @returns Y-axis distance.
 	 */
 	distanceY(point: Point): number {
 		return point.y - this.y;
 	}
 
 	/**
-	 * 返回对象的字符串表示形式。
-	 * @returns 对象的字符串表示形式。
+	 * Returns a string representation of an object.
+	 * @override
+	 * @returns A string representing the object.
 	 */
 	toString() {
 		return `(${this.x}, ${this.y})`;

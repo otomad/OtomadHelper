@@ -44,7 +44,7 @@ export default {
 		transition: ${fallbackTransitions}, box-shadow 0s, --focus-ring-length-outer ${easeOutFocusRingBack} 350ms, --focus-ring-length-inner ${eases.easeOutMax} 250ms;
 	`,
 	/**
-	 * 指定 Segoe UI Variable 字体的字号、字重、行高和光学尺寸轴 (Optical Size axis) 参数。
+	 * Specify the **font size**, **weight**, **line height**, and **optical size axis** parameters of *Segoe UI Variable* font.
 	 */
 	text: {
 		caption: useTypography(12, 16, "regular", "small"),

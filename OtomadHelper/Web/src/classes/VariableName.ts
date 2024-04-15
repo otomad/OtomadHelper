@@ -1,7 +1,7 @@
 /**
- * 变量名辅助类。
+ * Variable name helper class.
  *
- * 用于方便地把变量名称转换成驼峰、连字符等。
+ * Used to easily convert a variable name into camelCase, kebab-case, and so on.
  */
 export default class VariableName {
 	#words: string[] = [];
@@ -11,8 +11,8 @@ export default class VariableName {
 	}
 
 	/**
-	 * 重新设值。
-	 * @param str - 任意形式的变量名。
+	 * Reset the value.
+	 * @param str - Any form of variable name.
 	 */
 	set value(str: string) {
 		str = str.trim();
@@ -27,77 +27,77 @@ export default class VariableName {
 	}
 
 	/**
-	 * 转换为连字符式。
+	 * Convert to kebab-case.
 	 */
 	get kebab() {
 		return this.#words.join("-").toLowerCase();
 	}
 
 	/**
-	 * 转换为下划线式。
+	 * Convert to snake_case.
 	 */
 	get snake() {
 		return this.#words.join("_").toLowerCase();
 	}
 
 	/**
-	 * 转换为常量式。
+	 * Convert to CONSTANT_CASE.
 	 */
 	get const() {
 		return this.#words.join("_").toUpperCase();
 	}
 
 	/**
-	 * 转换为大驼峰式。
+	 * Convert to PascalCase.
 	 */
 	get pascal() {
 		return this.#words.map(word => capitalize(word)).join("");
 	}
 
 	/**
-	 * 转换为小驼峰式。
+	 * Convert to camelCase.
 	 */
 	get camel() {
 		return this.#words.map((word, i) => i ? capitalize(word) : word.toLowerCase()).join("");
 	}
 
 	/**
-	 * 转换为小写字母式，且无任何分隔符。
+	 * Convert to lowercase without any separators.
 	 */
 	get lower() {
 		return this.#words.join("").toLowerCase();
 	}
 
 	/**
-	 * 转换为大写字母式，且无任何分隔符。
+	 * Convert to UPPERCASE without any separators.
 	 */
 	get upper() {
 		return this.#words.join("").toUpperCase();
 	}
 
 	/**
-	 * 转换为单词式，空格分隔，全部小写。
+	 * Convert to word case, separated by spaces, all in lowercase.
 	 */
 	get words() {
 		return this.#words.join(" ").toLowerCase();
 	}
 
 	/**
-	 * 转换为句子式，空格分隔，仅句首字母大写。
+	 * Convert to Sentence case, separated by spaces, with only the first letter of the sentence capitalized.
 	 */
 	get sentence() {
 		return this.#words.map((word, i) => !i ? capitalize(word) : word.toLowerCase()).join(" ");
 	}
 
 	/**
-	 * 转换为标题式，空格分隔，所有单词首字母大写。
+	 * Convert to Title Case, separated by spaces, with all first letters of words capitalized.
 	 */
 	get title() {
 		return this.#words.map(word => capitalize(word)).join(" ");
 	}
 
 	/**
-	 * 转换为 CSS 自定义属性格式。
+	 * Convert to --css-custom-property-name-form, which is kebab-case with two dashes as a prefix.
 	 */
 	get cssVar() {
 		return "--" + this.kebab;
@@ -105,9 +105,9 @@ export default class VariableName {
 }
 
 /**
- * 将单词转换为首字母大写，其它字母为小写。
- * @param str - 单词。
- * @returns 首字母大写，其它字母为小写的单词。
+ * Convert a word to uppercase the first letter and lowercase other letters.
+ * @param str - Word.
+ * @returns Capitalize the first letter and lowercase other letters.
  */
 function capitalize(str: string) {
 	return str[0].toUpperCase() + str.slice(1).toLowerCase();

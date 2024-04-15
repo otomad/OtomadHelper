@@ -10,6 +10,7 @@ words:
   - appcache
   - automator
   - beziér
+  - booleanish
   - bouncized
   - ccw
   - composables
@@ -27,9 +28,12 @@ words:
   - dvw
   - endregion
   - extralight
+  - flyouts
   - geq
   - hta
   - immer
+  - jsdoc
+  - jsdocs
   - kbd
   - keyframes
   - lotties
@@ -48,6 +52,7 @@ words:
   - otomad
   - otomads
   - pangu
+  - parameterless
   - partialize
   - pingpong
   - portato
@@ -72,6 +77,7 @@ words:
   - ultrabold
   - unhover
   - unplugin
+  - unsmooth
   - ust
   - utau
   - vite

@@ -4,7 +4,16 @@ const lightModePreference = window.matchMedia("(prefers-color-scheme: light)");
 let lastClickMouseEvent: MouseEvent | undefined;
 document.addEventListener("click", e => lastClickMouseEvent = e, true);
 
-export const changeColorScheme = (isLight?: boolean | ColorScheme, mode: "initial" | "auto" | "manual" | "refresh" = "manual") => {
+/**
+ * Changes the color scheme of the website.
+ * @param isLight - Whether to use the light color scheme or the dark color scheme. If not specified, the color scheme will be automatically determined based on the user's system preferences.
+ * @param mode - The mode to use when changing the color scheme. Possible values are:
+ * - `"initial"`: The color scheme will be updated immediately without any animation.
+ * - `"auto"`: The color scheme will be updated based on the user's system preferences.
+ * - `"manual"`: The color scheme will be updated with an animation.
+ * - `"refresh"`: The color scheme will be updated with an animation, even if it is already set to the desired value.
+ */
+export function changeColorScheme(isLight?: boolean | ColorScheme, mode: "initial" | "auto" | "manual" | "refresh" = "manual") {
 	if (typeof isLight === "string")
 		isLight = isLight === "light" ? true : isLight === "dark" ? false : undefined;
 	if (isLight === undefined) isLight = lightModePreference.matches;
@@ -47,7 +56,7 @@ export const changeColorScheme = (isLight?: boolean | ColorScheme, mode: "initia
 		document.documentElement.classList.remove(CHANGING_COLOR_SCHEME_CLASS);
 		afterUpdateThemeSettings();
 	});
-};
+}
 const getUserColorScheme = () => useColorModeStore.getState().scheme;
 
 { // Init color mode

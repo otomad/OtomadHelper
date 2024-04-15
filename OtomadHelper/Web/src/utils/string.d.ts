@@ -1,47 +1,47 @@
 declare interface String {
 	/**
-	 * 在字符串查找指定字符的数目。
+	 * Find the number of times a specified character appears in a string.
 	 *
-	 * @param chars - 要查找的字符们。
-	 * @returns 查找指定字符的数目。
+	 * @param chars - The characters to search for.
+	 * @returns Find the number of specified characters.
 	 */
 	countChar(...chars: string[]): number;
 
 	/**
-	 * 颠倒字符串的顺序。
+	 * Reverse the order of strings.
 	 *
-	 * 使用 `Array.from()` 可以避免 Unicode BMP 外的其它字符不能正常翻转的问题。
+	 * Using `Array.from()` can avoid the problem of characters other than Unicode BMP not be reversed properly.
 	 *
-	 * @returns 颠倒后的字符串。
+	 * @returns Reversed string.
 	 */
 	reverse(): string;
 
 	/**
-	 * 字符串转布尔型。
+	 * Convert the string to a boolean.
 	 *
-	 * 用以解决类似 `"false" == false` 为 false 这样的问题。
+	 * Used to solve problems such as `"false" == false` being false.
 	 *
-	 * @returns 布尔型。
+	 * @returns Boolean.
 	 */
 	toBoolean(): boolean;
 
 	/**
-	 * 字符串转类似 C 的字符数组，即数组的每一项对应字符串的每一个字符。
-	 * @returns 包含源字符串中各字符的字符串形式的数组。
+	 * Convert a string to a character array similar to C, where each item in the array corresponds to each character in the string.
+	 * @returns An array in string form containing each character in the source string.
 	 */
 	toArray(): string[];
 
 	/**
-	 * 字符串两两字符间插一个字符。
-	 * @param sep - 分隔符。默认为 `,`。
-	 * @returns 处理后的字符串。
+	 * Insert a character between every two characters in a string.
+	 * @param sep - Separator. The default is `,`.
+	 * @returns The processed string.
 	 */
 	inTwo(sep?: string): string;
 
 	/**
-	 * 字符串是否为参数列表中的某个字符串。
-	 * @param list - 要测试是否包含的字符串数组。
-	 * @returns 已包含。
+	 * Is the string a certain string in the function parameters.
+	 * @param list - To test whether a string array is included.
+	 * @returns Included.
 	 */
 	in<const T extends string>(...list: (T | undefined | null)[]): this is T;
 }

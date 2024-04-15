@@ -49,7 +49,7 @@
 		return Object.fromEntries(array.map((value, index, array) => callbackFn(value, index, array)));
 	};
 
-	Array.prototype.toRemoveDuplicates = function () {
+	Array.prototype.toDeduplicated = function () {
 		return [...new Set(this)];
 	};
 
@@ -72,11 +72,7 @@
 		return this.at(-1);
 	};
 
-	Array.prototype.toDistinct = function () {
-		return [...new Set(this)];
-	};
-
-	Array.prototype.distinct = function () {
+	Array.prototype.deduplicate = function () {
 		return this.relist(new Set(this));
 	};
 

@@ -3,7 +3,7 @@ import { setBorderRadius, type BorderRadiusPosition } from "./internal";
 
 export default {
 	/**
-	 * 一键弹性布局加居中元素 (flex - center - center)。
+	 * Center the element with the **flex** layout (flex - center - center).
 	 */
 	flexCenter: () => css`
 		display: flex;
@@ -11,16 +11,18 @@ export default {
 		align-items: center;
 	`,
 	/**
-	 * 一键弹性网格布局加居中元素 (grid - center)。
+	 * Center the element with the **grid** layout (grid - center).
 	 */
 	gridCenter: () => css`
 		display: grid;
 		place-items: center;
 	`,
 	/**
-	 * 变成正方形。长宽均相等。
-	 * @param size - 长度。
-	 * @param withSizeVar - 是否生成一个名为 `--size` 的 CSS 自定义属性以使其它组件更方便地修改尺寸？
+	 * Become a square.
+	 *
+	 * Equal in width and height.
+	 * @param size - Side length.
+	 * @param withSizeVar - Create a CSS custom property named `--size` to make it easier for other components to modify its size?
 	 */
 	square: (size: string, withSizeVar: boolean = false) =>
 		!withSizeVar ?
@@ -34,23 +36,25 @@ export default {
 				height: var(--size);
 			`,
 	/**
-	 * 变成椭圆形。
-	 * 将 border-radius 设为一个非常大的值。
-	 * @param position - 圆角的位置。
+	 * Become a oval.
+	 *
+	 * Set border radius to a very large value.
+	 * @param position - The position of the rounded corners.
 	 */
 	oval: (position: BorderRadiusPosition = "full") =>
 		setBorderRadius("calc(infinity * 1px)", position),
 	/**
-	 * 变成圆形。
-	 * 将 border-radius 设为 100%。
-	 * @param position - 圆角的位置。
+	 * Become a circle.
+	 *
+	 * Set border radius to 100%.
+	 * @param position - The position of the rounded corners.
 	 */
 	circle: (position: BorderRadiusPosition = "full") =>
 		setBorderRadius("100%", position),
 	/**
-	 * 创建一个渐变色的边框。
-	 * @param gradient - 渐变色。
-	 * @param borderWidth - 边框宽度。
+	 * Create a gradient border.
+	 * @param gradient - Gradient color.
+	 * @param borderWidth - Border width.
 	 */
 	gradientBorder: (gradient: string | RuleSet<object>, borderWidth: number | string = "1px") => {
 		if (typeof borderWidth === "number") borderWidth = borderWidth + "px";
@@ -75,8 +79,8 @@ export default {
 		`;
 	},
 	/**
-	 * 取消父元素的聚焦环样式，转发到一个子元素上应用聚焦环样式。
-	 * @param childClassName - 子元素类名。
+	 * Cancel the focus ring style of the parent element, and forward it to a child element to apply the focus ring style.
+	 * @param childClassName - Child element class name.
 	 */
 	forwardFocusRing: (childClassName: string = "base") => css`
 		&:focus-visible {
@@ -89,10 +93,10 @@ export default {
 		}
 	`,
 	/**
-	 * 将元素占满整个屏幕。
+	 * Fill the element to the entire screen.
 	 *
-	 * 将长宽均设为 100% 视窗宽高度值。
-	 * @param position - 指定元素的 position 属性。
+	 * Set both width and height to 100% of the window width and height value.
+	 * @param position - Specify the `position` property of the element.
 	 */
 	fullscreen: (position: "fixed" | "absolute" = "fixed") => css`
 		position: ${position};
@@ -102,7 +106,7 @@ export default {
 		height: 100dvh;
 	`,
 	/**
-	 * 当元素为空时隐藏元素。
+	 * Hide the element when it is empty.
 	 */
 	hideIfEmpty: () => css`
 		&:empty {
@@ -110,16 +114,16 @@ export default {
 		}
 	`,
 	/**
-	 * 开启硬件 3D。用以解决某些可能会导致变换时闪动的问题。
-	 * @note 这会替换或被替换掉现有的 transform 属性。
+	 * Enable hardware 3D. Used to solve certain problems that may cause flickering during transitions.
+	 * @note This will replace or be replaced with existing transform properties.
 	 */
 	enableHardware3d: () => css`
 		transform: translateZ(1px);
 	`,
 	/**
-	 * 有效地隐藏滚动条。不过，元素仍然可滚动。
+	 * Effectively hide the scroll bar. However, the elements are still scrollable.
 	 *
-	 * 同时使用现代和旧版的声明方式支持。
+	 * Support both modern and legacy declaration simultaneously.
 	 */
 	noScrollbar: () => css`
 		@supports (scrollbar-width: auto) {

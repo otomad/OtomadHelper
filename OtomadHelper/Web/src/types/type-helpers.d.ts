@@ -2,9 +2,9 @@ export { };
 
 declare global {
 	/**
-	 * 从一个接口中筛选值为指定类型的子集接口。
-	 * @template Source - 源接口。
-	 * @template Condition - 筛选值的类型。
+	 * Filter subset interfaces with values of the specified type from an interface.
+	 * @template Source - Source interface.
+	 * @template Condition - Filter the type of value.
 	 */
 	type FilterValueType<Source, Condition> = Pick<
 		Source,
@@ -14,53 +14,55 @@ declare global {
 	>;
 
 	/**
-	 * 移除只读修饰符。
-	 * @template T - 源对象。
+	 * Remove read-only modifiers.
+	 * @template T - Source object.
 	 */
 	type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 
 	/**
-	 * 深层移除只读修饰符。
-	 * @template T - 源对象。
+	 * Deeply remove read-only modifiers.
+	 * @template T - Source object.
 	 */
 	type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
 
 	/**
-	 * 类型去空。相当于 `!`。
+	 * Non-null type. Similar to `!`.
 	 *
-	 * 与自带类型帮手 `NonNullable` 的功能实现不一致，结果可能略有不同。
-	 * @template T - 可能带空的类型。
+	 * The functionality implementation of the built-in type helper `NonNullable` is inconsistent,
+	 * and the results may be slightly different.
+	 * @template T - Possible empty types.
 	 */
 	type NonNull<T> = Exclude<T, undefined | null | void>;
 
 	/**
-	 * 类似 `NonNull`，但是还会把其它虚值如 false、""、±0、±0n 也一同去掉。
-	 * @template T - 可能带虚值的类型。
+	 * Similar to `NonNull`, but also removes other falsy values such as false, "", ±0, ±0n.
+	 * @template T - Possible falsy types.
 	 */
 	type NonFalsy<T> = Exclude<T, undefined | null | false | "" | 0 | 0n>;
 
 	/**
-	 * 重写某个对象部分字段的类型。
-	 * @template T - 源对象。
-	 * @template U - 重写后的字段及其类型。
+	 * Override the type of partial field for a certain object.
+	 * @template T - Source object.
+	 * @template U - Overridden fields and their types.
 	 */
 	type Override<T, U> = Omit<T, keyof U> & U;
 
 	/**
-	 * 获取组件的 Props。
-	 * @template T - Vue 组件。
+	 * Get the Props of the component.
+	 * @template T - Vue component.
 	 */
 	type ComponentProps<T> = Omit<InstanceType<T>["$props"], keyof VNodeProps>;
 
 	/**
-	 * 去除 Ref 的类型。
-	 * @template R - 可能为 Ref 的类型。
+	 * Remove the type of Ref.
+	 * @template R - May be of Ref type.
 	 */
 	type Unref<R> = R extends MaybeRefOrGetter<infer U> ? U : T;
 
 	/**
-	 * 删除 T 的索引签名，只使用已知的属性键名。例如从枚举类型中删除 `[x: string]`。
-	 * @template T - 源对象。
+	 * Remove the index signature of T and only use known attribute key names.
+	 * For example, removing `[x: string]` from an enumeration type.
+	 * @template T - Source object.
 	 */
 	type KnownKeys<T> = keyof {
 		[K in keyof T]:
@@ -71,8 +73,8 @@ declare global {
 	};
 
 	/**
-	 * 将对象的所有键大驼峰化。
-	 * @template T - 源对象。
+	 * Capitalize all keys of an object.
+	 * @template T - Source object.
 	 */
 	type CapitalizeObject<T extends object> = {
 		[key in keyof T as Capitalize<key>]:
@@ -81,39 +83,42 @@ declare global {
 	} & T;
 
 	/**
-	 * 类似 `keyof` 关键字，只不过返回的是值的类型集合而不是键的类型集合。
-	 * @template T - 源对象。
+	 * Similar to the keyword 'keyof', it only returns a set of value types rather than a set of key types.
+	 * @template T - Source object.
 	 */
-	type ValueOf<T extends object> = T[keyof T];
+	type ValueOf<T extends object> =
+		T extends ArrayLike<infer U> ? U :
+		T extends Iterable<infer U> ? U :
+		T[keyof T];
 
 	/**
-	 * 深度只读对象。
-	 * @template T - 源对象。
+	 * Deep read-only object.
+	 * @template T - Source object.
 	 */
 	type DeepReadonly<T> = Readonly<{
 		[key in keyof T]: DeepReadonly<T[key]>;
 	}>;
 
 	/**
-	 * 可能是 Ref 包装的类型对象也可能是其类型本身。
+	 * Maybe the type object of the Ref packaging or its type itself.
 	 */
 	type MaybeRef<T> = RefObject<T> | MutableRefObject<T> | T;
 
 	/**
-	 * HTML DOM 元素的引用。
+	 * Reference to HTML DOM element.
 	 */
 	type DomRef<E extends Element> = MutableRefObject<E | null>;
 
 	/**
-	 * 根据指定的参数列表及返回值获得一个函数的类型。
-	 * @template TArgs - 函数的参数列表的元组。
-	 * @template TRet - 函数的返回值，留空表示无返回值 `void`。
+	 * Get the type of a function based on the specified parameters and return value.
+	 * @template TArgs - The tuple of the function parameters.
+	 * @template TRet - The return value of a function, leaving blank indicates no return value `void`.
 	 */
 	type Func<TArgs extends Iterable<any> | ArrayLike<any> = [], TRet = void> = (...args: TArgs) => TRet;
 
 	/**
-	 * 将函数的参数列表全部变为可空。
-	 * @template TFunc - 源函数。
+	 * Make all the parameters nullable in the function.
+	 * @template TFunc - Source function.
 	 */
 	type PartialArgsFunc<TFunc extends AnyFunction> = Func<Partial<Parameters<TFunc>>, ReturnType<TFunc>>;
 }

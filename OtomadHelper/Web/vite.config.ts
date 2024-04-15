@@ -1,6 +1,6 @@
 import react from "@vitejs/plugin-react";
 import { transform as transformCSS } from "lightningcss";
-import path from "path";
+import { resolve as _resolve } from "path";
 import autoImport from "unplugin-auto-import/vite";
 import { defineConfig } from "vite";
 import htmlMinifier from "vite-plugin-html-minifier";
@@ -9,6 +9,8 @@ import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
 import autoImportConfig from "./auto-import.config";
 import globalized from "./src/plugins/vite/globalized";
+
+const resolve = (...paths: string[]) => _resolve(__dirname, ...paths);
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -47,7 +49,7 @@ export default defineConfig({
 		}),
 		globalized(),
 		createSvgIconsPlugin({
-			iconDirs: [path.resolve(process.cwd(), "src/assets/icons")],
+			iconDirs: [resolve("src/assets/icons")],
 			symbolId: "icon-[dir]-[name]",
 		}),
 		svgr({

@@ -105,10 +105,11 @@ const filters = {
 				aSum += pixels[index + 3];
 
 				for (let k = 0; k < iteration; k++) {
-					let xoffset = xoffsetCCW; // 逆时针（正向）偏移
+					// Counterclockwise (forward) offset
+					let xoffset = xoffsetCCW;
 					let yoffset = yoffsetCCW;
 
-					// 插值算坐标
+					// Calculate coordinates through interpolation
 					xoffsetCCW = xoffset - radian * yoffset / iteration - radian ** 2 * xoffset / iteration ** 2;
 					yoffsetCCW = yoffset - radian * xoffset / iteration - radian ** 2 * yoffsetCCW / iteration ** 2;
 
@@ -124,7 +125,7 @@ const filters = {
 						aSum += pixels[index + 3];
 					}
 
-					// 顺时针偏移
+					// Clockwise offset
 					xoffset = xoffsetCW;
 					yoffset = yoffsetCW;
 

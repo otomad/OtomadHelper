@@ -2,8 +2,8 @@ import { convertAniBinaryToCSS } from "ani-cursor";
 import type { Cursor } from "styles/force-cursor";
 
 /**
- * 强行指定鼠标光标样式。
- * @param cursor - 光标样式。如为 null 表示清除。
+ * Forcefully specify the mouse cursor style.
+ * @param cursor - Cursor style. If it is null, it will restore to the default.
  */
 export function forceCursor(cursor: Cursor | null) {
 	if (!cursor)
@@ -13,9 +13,9 @@ export function forceCursor(cursor: Cursor | null) {
 }
 
 /**
- * 使用动态光标。
- * @param element - HTML DOM 元素的引用。
- * @param aniUrl - 动态光标的路径。
+ * Use animated mouse cursor (.ani).
+ * @param element - HTML DOM element reference.
+ * @param aniUrl - The path of the animated mouse cursor.
  */
 export function useAniCursor(element: MutableRefObject<HTMLElement | null>, aniUrl: string) {
 	useAsyncEffect(async () => {

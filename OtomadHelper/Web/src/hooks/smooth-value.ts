@@ -1,11 +1,11 @@
 import Point from "classes/Point";
 
 /**
- * 根据一个数值、数组、点创建一个平滑的响应式引用变量。
- * @param current - 不平滑的当前值。
- * @param speed - 平滑速度。
- * @returns 平滑值响应式引用变量。
- * @see https://codepen.io/nanonansen/pen/oRWmaY 参考自视差平滑移动。
+ * Create a smooth responsive reference variable based on a numerical value, array, or point.
+ * @param current - Unsmooth current value.
+ * @param speed - Smooth speed.
+ * @returns Smooth value state variable.
+ * @see https://codepen.io/nanonansen/pen/oRWmaY Reference: Parallax smooth movement.
  */
 export function useSmoothValue<T extends number | number[] | Point>(current: T, speed: number) {
 	if (speed <= 0 || speed > 1)

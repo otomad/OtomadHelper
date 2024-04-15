@@ -68,13 +68,13 @@ const targetFunction = (options?: number | bigint | TOptions) => {
 	else if (typeof options === "number" || typeof options === "bigint") options = { count: Number(options) };
 	return getProxy(options);
 };
-/** 获取本地化字符串对象。 */
+/** Get localize string objects. */
 export const t = getProxy(targetFunction) as LocaleDictionary & typeof targetFunction;
 Object.freeze(t);
 
 /**
- * 获取当前页面是否是从右往左书写（如阿拉伯语）而不是从左往右书写（如英语）。
- * @returns 当前页面的横向书写方向是不是从右往左书写？
+ * Check if the current page is written from right to left (such as in Arabic) rather than from left to right (such as in English).
+ * @returns Is the horizontal writing direction of the current page written from right to left?
  */
 export function isRtl() {
 	return getComputedStyle(document.documentElement).direction === "rtl";

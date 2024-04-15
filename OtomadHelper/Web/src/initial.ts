@@ -10,19 +10,19 @@ const isProdMode = () => !useDevStore.getState().devMode;
 const global = globalThis as AnyObject;
 
 /**
- * 在网页 DOM 加载之前执行。
+ * Run before the web DOM is loading
  */
 { // Initial
-	// #region 阻止网页单击右键菜单
+	// #region Prevent context menu triggers by right-clicking
 	window.addEventListener("contextmenu", e => {
 		if (isProdMode())
 			e.preventDefault();
 	});
 	// #endregion
 
-	// #region 阻止网页键盘按键和鼠标滚轮缩放
+	// #region Prevent zoom by keyboard keys and mouse wheel
 	window.addEventListener("keydown", e => {
-		// 仅生产模式下禁用
+		// Disabled only in prod mode
 		if (isProdMode())
 			if (
 				e.ctrlKey && ["Equal", "Minus", "NumpadAdd", "NumpadSubtract"].includes(e.code) ||
@@ -30,7 +30,7 @@ const global = globalThis as AnyObject;
 				e.ctrlKey && e.shiftKey && ["KeyC", "KeyI"].includes(e.code)
 			)
 				e.preventDefault();
-		// 任何模式下均禁用
+		// Disabled in any mode
 		if (
 			e.altKey && ["ArrowLeft", "ArrowRight"].includes(e.code)
 		)
@@ -46,21 +46,21 @@ const global = globalThis as AnyObject;
 	});
 	// #endregion
 
-	// #region 默认阻止将文件拖放到网页
+	// #region Prevent drag and drop by default
 	addEventListeners(window, "dragover", "drop", e => {
 		if (e.dataTransfer) e.dataTransfer.dropEffect = "none";
 		e.preventDefault();
 	});
 	// #endregion
 
-	// #region 开发环境找编译后样式
+	// #region Find compiled CSS styles in dev mode
 	if (import.meta.env.DEV)
 		global.findCss = function (component: string) {
 			return [...document.head.querySelector("style[data-styled]")?.childNodes as NodeListOf<Text> ?? []].find(rule => rule.textContent?.includes(component));
 		};
 	// #endregion
 
-	// #region 修复当鼠标移至视窗外时无法响应鼠标弹起事件的问题
+	// #region Fix no mouseup event responded when the mouse is moved outside the window
 	document.addEventListener("pointerenter", e => {
 		if (e.buttons === 0) {
 			document.dispatchEvent(new Event("mouseup"));
@@ -71,7 +71,7 @@ const global = globalThis as AnyObject;
 	});
 	// #endregion
 
-	// #region 页面已完全加载
+	// #region The page is fully loaded
 	const observer = new MutationObserver(() => {
 		window.chrome.webview.postMessage("initialized");
 		observer.disconnect();

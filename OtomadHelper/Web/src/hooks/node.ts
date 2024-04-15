@@ -1,16 +1,22 @@
 /**
- * 创建一个强制更新的函数。
- * @returns - 强制更新函数。
+ * A custom hook that returns a function that triggers a re-render of the component.
+ *
+ * This is useful when you need to force a re-render of a component without using the `useState` hook.
+ *
+ * @returns A function that triggers a re-render of the component.
  */
 export function useForceUpdate() {
 	return React.useReducer(() => ({}), {})[1] as () => void;
 }
 
 /**
- * 控制在单选框和复选框中按下键盘按键的事件。
- * @param element - HTML DOM 元素。
- * @param type - 类型：单选框或复选框。
- * @param handleCheck - 改变勾选状态事件。
+ * A custom hook that controls the keyboard events for radio and checkbox elements.
+ *
+ * @param element - A reference to the HTML DOM element.
+ * @param type - The type of the element, either "radio" or "checkbox".
+ * @param handleCheck - A function that handles the change of the checkbox or radio button state.
+ *
+ * @returns A cleanup function that removes the event listeners when the component unmounts.
  */
 export function useOnFormKeyDown(element: RefObject<HTMLElement>, type: "radio" | "checkbox", handleCheck: (checked?: boolean) => void) {
 	useEffect(() => {

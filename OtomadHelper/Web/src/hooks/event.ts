@@ -91,51 +91,106 @@ export const useChangeEffect = (
 };
 
 type Options = Partial<{
-	/** 是否立即调用？ */
+	/** Call the callback function immediately upon declaration. */
 	immediate: boolean;
 }>;
 
 /**
- * 我们可以将添加和清除 DOM 事件监听器的逻辑也封装进一个组合式函数中。
- * @param target - 窗体对象，注意必须是字符串。
- * @param event - 事件。
- * @param callback - 回调函数。
- * @param options - 其它选项。
+ * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
+ *
+ * @template K - The type of the event to listen for, must be a key of `WindowEventMap`.
+ *
+ * @param target - The window instance.
+ * @param event - The type of the event to listen for. Must be a key of `WindowEventMap`.
+ * @param callback - The function to be called when the event is triggered.
+ * @param options - An optional object containing an `immediate` property, which when `true`, will immediately call the `callback` function when the event listener is added.
+ * @param deps - An optional array of dependencies. When any of the dependencies change, the event listener will be added or removed.
+ *
+ * @example
+ * ```typescript
+ * useEventListener(myDivElRef, "keydown", event => {
+ * 	console.log(`Event type: ${event.type}`);
+ * });
+ * ```
  */
 export function useEventListener<K extends keyof WindowEventMap>(target: Window, event: K, callback: (this: Window, ev: WindowEventMap[K]) => void, options?: Options, deps?: DependencyList): void;
 /**
- * 我们可以将添加和清除 DOM 事件监听器的逻辑也封装进一个组合式函数中。
- * @param target - 文档对象，注意必须是字符串。
- * @param event - 事件。
- * @param callback - 回调函数。
- * @param options - 其它选项。
+ * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
+ *
+ * @template K - The type of the event to listen for, must be a key of `DocumentEventMap`.
+ *
+ * @param target - The document instance.
+ * @param event - The type of the event to listen for. Must be a key of `DocumentEventMap`.
+ * @param callback - The function to be called when the event is triggered.
+ * @param options - An optional object containing an `immediate` property, which when `true`, will immediately call the `callback` function when the event listener is added.
+ * @param deps - An optional array of dependencies. When any of the dependencies change, the event listener will be added or removed.
+ *
+ * @example
+ * ```typescript
+ * useEventListener(myDivElRef, "keydown", event => {
+ * 	console.log(`Event type: ${event.type}`);
+ * });
+ * ```
  */
 export function useEventListener<K extends keyof DocumentEventMap>(target: Document, event: K, callback: (this: Document, ev: DocumentEventMap[K]) => void, options?: Options, deps?: DependencyList): void;
 /**
- * 我们可以将添加和清除 DOM 事件监听器的逻辑也封装进一个组合式函数中。
- * @param target - HTML DOM 元素。
- * @param event - 事件。
- * @param callback - 回调函数。
- * @param options - 其它选项。
+ * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
+ *
+ * @template K - The type of the event to listen for, must be a key of `HTMLElementEventMap`.
+ *
+ * @param target - The target HTML DOM element to listen for the event.
+ * @param event - The type of the event to listen for. Must be a key of `HTMLElementEventMap`.
+ * @param callback - The function to be called when the event is triggered.
+ * @param options - An optional object containing an `immediate` property, which when `true`, will immediately call the `callback` function when the event listener is added.
+ * @param deps - An optional array of dependencies. When any of the dependencies change, the event listener will be added or removed.
+ *
+ * @example
+ * ```typescript
+ * useEventListener(myDivElRef, "keydown", event => {
+ * 	console.log(`Event type: ${event.type}`);
+ * });
+ * ```
  */
 export function useEventListener<K extends keyof HTMLElementEventMap, E extends HTMLElement>(target: E | null, event: K, callback: (this: E, ev: HTMLElementEventMap[K]) => void, options?: Options, deps?: DependencyList): void;
 /**
- * 我们可以将添加和清除 DOM 事件监听器的逻辑也封装进一个组合式函数中。
- * @param target - HTML DOM 元素的引用。
- * @param event - 事件。
- * @param callback - 回调函数。
- * @param options - 其它选项。
+ * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
+ *
+ * @template K - The type of the event to listen for, must be a key of `HTMLElementEventMap`.
+ *
+ * @param target - The target HTML DOM element reference to listen for the event.
+ * @param event - The type of the event to listen for. Must be a key of `HTMLElementEventMap`.
+ * @param callback - The function to be called when the event is triggered.
+ * @param options - An optional object containing an `immediate` property, which when `true`, will immediately call the `callback` function when the event listener is added.
+ * @param deps - An optional array of dependencies. When any of the dependencies change, the event listener will be added or removed.
+ *
+ * @example
+ * ```typescript
+ * useEventListener(myDivElRef, "keydown", event => {
+ * 	console.log(`Event type: ${event.type}`);
+ * });
+ * ```
  */
 export function useEventListener<K extends keyof HTMLElementEventMap, E extends HTMLElement>(target: MutableRefObject<E | null>, event: K, callback: (this: E, ev: HTMLElementEventMap[K]) => void, options?: Options, deps?: DependencyList): void;
 /**
- * 我们可以将添加和清除 DOM 事件监听器的逻辑也封装进一个组合式函数中。
- * @param target - HTML DOM 元素。
- * @param event - 事件。
- * @param callback - 回调函数。
- * @param options - 其它选项。
+ * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
+ *
+ * @template K - The type of the event to listen for, must be a key of `HTMLElementEventMap`.
+ *
+ * @param target - The target element to listen for the event. Can be an `HTMLElement`, `Window`, `Document`, or `null`.
+ * @param event - The type of the event to listen for. Must be a key of `HTMLElementEventMap`.
+ * @param callback - The function to be called when the event is triggered.
+ * @param options - An optional object containing an `immediate` property, which when `true`, will immediately call the `callback` function when the event listener is added.
+ * @param deps - An optional array of dependencies. When any of the dependencies change, the event listener will be added or removed.
+ *
+ * @example
+ * ```typescript
+ * useEventListener(myDivElRef, "keydown", event => {
+ * 	console.log(`Event type: ${event.type}`);
+ * });
+ * ```
  */
 export function useEventListener<K extends keyof HTMLElementEventMap, E extends HTMLElement>(target: E | Window | Document | null, event: K, callback: (this: E, ev: HTMLElementEventMap[K]) => void, options: Options = {}, deps: DependencyList = []): void {
-	// 如果你想的话，也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素。
+	// If you want, you can also use CSS selectors in string form to find the target DOM element.
 	useEffect(() => {
 		target = toValue(target);
 		asserts<() => void>(callback);
@@ -146,37 +201,73 @@ export function useEventListener<K extends keyof HTMLElementEventMap, E extends 
 }
 
 /**
- * 能同时监听多个事件，相当于多次重复调用 `addEventListener` 使用相同的回调函数但不同的事件类型。
- * @template K - 窗体事件枚举类型。
- * @param element - 窗体对象。
- * @param listener - 监听事件回调函数。
- * @param types - 监听事件数组。
+ * Adds an event listener to the specified node for the specified multiple event types simultaneously.
+ *
+ * @template K - The type of the event to listen for.
+ *
+ * @param element - The window instance to which the event listeners will be added.
+ * @param types - The event types to listen for.
+ * @param listener - The function to be called when the specified event occurs.
+ *
+ * @example
+ * ```typescript
+ * addEventListeners(document.body, "click", "keydown", (event: Event) => {
+ *   console.log(`Event type: ${event.type}`);
+ * });
+ * ```
  */
 export function addEventListeners<K extends keyof WindowEventMap>(...args: [element: Window, ...types: K[], listener: (this: Window, ev: WindowEventMap[K]) => void]): void;
 /**
- * 能同时监听多个事件，相当于多次重复调用 `addEventListener` 使用相同的回调函数但不同的事件类型。
- * @template K - 文档事件枚举类型。
- * @param element - 文档对象。
- * @param listener - 监听事件回调函数。
- * @param types - 监听事件数组。
+ * Adds an event listener to the specified node for the specified multiple event types simultaneously.
+ *
+ * @template K - The type of the event to listen for.
+ *
+ * @param element - The document instance to which the event listeners will be added.
+ * @param types - The event types to listen for.
+ * @param listener - The function to be called when the specified event occurs.
+ *
+ * @example
+ * ```typescript
+ * addEventListeners(document.body, "click", "keydown", (event: Event) => {
+ *   console.log(`Event type: ${event.type}`);
+ * });
+ * ```
  */
 export function addEventListeners<K extends keyof DocumentEventMap>(...args: [element: Document, ...types: K[], listener: (this: Document, ev: DocumentEventMap[K]) => void]): void;
 /**
- * 能同时监听多个事件，相当于多次重复调用 `addEventListener` 使用相同的回调函数但不同的事件类型。
- * @template K - HTML DOM 元素事件枚举类型。
- * @template E - HTML DOM 元素类型。
- * @param element - HTML DOM 元素。
- * @param listener - 监听事件回调函数。
- * @param types - 监听事件数组。
+ * Adds an event listener to the specified node for the specified multiple event types simultaneously.
+ *
+ * @template K - The type of the event to listen for.
+ * @template E - The type of HTML DOM element.
+ *
+ * @param element - The HTML element to which the event listeners will be added.
+ * @param types - The event types to listen for.
+ * @param listener - The function to be called when the specified event occurs.
+ *
+ * @example
+ * ```typescript
+ * addEventListeners(document.body, "click", "keydown", (event: Event) => {
+ * 	console.log(`Event type: ${event.type}`);
+ * });
+ * ```
  */
 export function addEventListeners<K extends keyof HTMLElementEventMap, E extends HTMLElement>(...args: [element: E, ...types: K[], listener: (this: E, ev: HTMLElementEventMap[K]) => void]): void;
 /**
- * 能同时监听多个事件，相当于多次重复调用 `addEventListener` 使用相同的回调函数但不同的事件类型。
- * @template K - HTML DOM 元素事件枚举类型。
- * @template E - HTML DOM 元素类型。
- * @param element - HTML DOM 元素。
- * @param listener - 监听事件回调函数。
- * @param types - 监听事件数组。
+ * Adds an event listener to the specified node for the specified multiple event types simultaneously.
+ *
+ * @template K - The type of the event to listen for.
+ * @template E - The type of HTML DOM element.
+ *
+ * @param element - The HTML element to which the event listeners will be added.
+ * @param types - The event types to listen for.
+ * @param listener - The function to be called when the specified event occurs.
+ *
+ * @example
+ * ```typescript
+ * addEventListeners(document.body, "click", "keydown", (event: Event) => {
+ *   console.log(`Event type: ${event.type}`);
+ * });
+ * ```
  */
 export function addEventListeners<K extends keyof HTMLElementEventMap, E extends HTMLElement>(...args: [element: E, ...types: K[], listener: (this: E, ev: HTMLElementEventMap[K]) => void]): void {
 	const element = args[0];

@@ -1,95 +1,91 @@
 declare interface Array<T> {
 	/**
-	 * 删除数组指定索引值的项目。
-	 * @param index - 索引值。
+	 * Delete the item in the array with the specified index value.
+	 * @param index - Index value.
 	 */
 	removeAt(index: number): void;
 
 	/**
-	 * 删除数组的指定项目，如有多个重复项目只删除第一个。
-	 * @param item - 项目。
-	 * @returns 是否成功删除。
+	 * Delete the specified item in the array. If there are multiple duplicate items, only the first one will be deleted.
+	 * @param item - Item.
+	 * @returns Successfully deleted?
 	 */
 	removeItem(item: T): boolean;
 
 	/**
-	 * 删除数组的所有指定项目。
-	 * @param item - 项目。
+	 * Delete all specified items in the array.
+	 * @param item - Item.
 	 */
 	removeAllItem(item: T): void;
 
 	/**
-	 * 仅在数组不包含该项目时，在数组末尾追加该项目。
-	 * @param item - 项目。
+	 * Append the item to the end of the array only if it is not included.
+	 * @param item - Item.
 	 */
 	pushDistinct(item: T): void;
 
 	/**
-	 * 清空数组。
+	 * Empty the array.
 	 */
 	clearAll(): void;
 
 	/**
-	 * 将源数组清空，然后重新注入新的数据。
-	 * @param items - 新的数据。
+	 * Empty the source array and then inject new data.
+	 * @param items - New data.
 	 */
 	relist(items: Iterable<T>): void;
 
 	/**
-	 * 切换数组是否包含项目。如果数组包含该项目则移除，反之则添加。
-	 * @param item - 项目。
+	 * Toggle the item whether the array contains it.
+	 * If the array contains the item, remove it; otherwise, add it.
+	 * @param item - Item.
 	 */
 	toggle(item: T): void;
 
 	/**
-	 * 通过一个任意数组映射到一个对象。
-	 * @param callbackFn - 生成作为对象的键值对元组。
-	 * @returns 映射的对象。
+	 * Map to an object through any array.
+	 * @param callbackFn - Generate key value tuples as objects.
+	 * @returns The mapped object.
 	 */
 	mapObject<K extends ObjectKey, U>(callbackFn: (value: T, index: number, array: T[]) => [K, U]): Record<T, U>;
 
 	/**
-	 * 数组去重。
-	 * @returns 注意是会返回一个新的数组。
+	 * Array deduplication. This will return a new array.
+	 * @returns Note that a new array will be returned.
 	 */
-	toRemoveDuplicates(): T[];
+	toDeduplicated(): T[];
 
 	/**
-	 * 返回一个新数组，该数组将被剔除任何虚值，如 undefined、null、false、""、±0、±0n。
-	 * @returns 不包含任何虚值的新数组。
+	 * Returns a new array that will exclude any falsy values, such as undefined, null, false, "", ±0, ±0n。
+	 * @returns A new array without any falsy values.
 	 */
 	toRemoveFalsy(): NonFalsy<T>[];
 
 	/**
-	 * 判断两个数组是否相等，包括位置顺序。
-	 * @returns 两个数组是否相等？
+	 * Determine whether two arrays are equal, including positional order.
+	 * @returns Are two arrays equal?
 	 */
 	equals(another: T[]): boolean;
 
 	/**
-	 * 获取数组的最后一个元素。
-	 * @note 如果数组为空，则会返回 undefined。不过在 TypeScript 类型层面会隐式去空，即与直接在 `[]` 使用索引值访问元素时获得的类型保持一致。但如果数组的类型本来就包含 undefined，则不会去空。
-	 * @return 数组的最后一个元素。
+	 * Get the last element of the array.
+	 * @note If the array is empty, it will return undefined. However, at the TypeScript type level, there is an implicit empty removal, which is consistent with the type got when accessing elements directly using index values in `[]`. But if the type of the array already contains undefined, it will not remove empty.
+	 * @return The last element of the array.
 	 */
 	last(): T;
 
 	/**
-	 * 数组去重。这会返回一个新的数组。
+	 * Array deduplication. This will modify the original array.
 	 */
-	toDistinct(): T[];
+	deduplicate(): void;
 
 	/**
-	 * 数组去重。这会修改原始数组。
-	 */
-	distinct(): void;
-
-	/**
-	 * 去除数组中的 undefined、null、NaN 以及仅包含空白字符的字符串。这会返回一个新的数组。
+	 * Remove undefined, null, NaN, and strings containing only white space characters from the array. This will return a new array.
 	 */
 	toTrimmed(): T[];
 
 	/**
-	 * 去除数组中的 undefined、null、NaN 以及仅包含空白字符的字符串。这会修改原始数组。
+	 * Remove undefined, null, NaN, and strings containing only white space characters from the array. This will modify the original array.
 	 */
 	trim(): void;
 }
