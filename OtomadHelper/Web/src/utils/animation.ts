@@ -33,14 +33,13 @@ export function nextAnimationTick() {
 }
 
 export function flushSync<R>(fn: () => R): R;
-export function flushSync<A, R>(fn: (a: A) => R, a: A): R;
 /**
  * flushSync 允许您强制 React 同步刷新所提供回调中的任何更新。这样可以确保 DOM 立即更新。
  * @returns 空承诺。
  */
 export function flushSync(): Promise<void>;
-export function flushSync(fn?: (a: unknown) => unknown, a?: unknown) {
-	if (fn) return reactDomFlushSync(fn, a);
+export function flushSync(fn?: () => unknown) {
+	if (fn) return reactDomFlushSync(fn);
 	else return new Promise<void>(resolve => flushSync(resolve));
 }
 
