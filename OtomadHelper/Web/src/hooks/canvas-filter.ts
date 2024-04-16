@@ -81,6 +81,45 @@ const filters = {
 	 * @returns A new ImageData object with the effect applied.
 	 */
 	radialBlur(imageData: ImageData) {
+		const { width, height } = imageData;
+		const newImageData = cloneImageData(imageData);
+		const { data: pixels } = newImageData;
+		const centerX = Math.round(width / 2), centerY = Math.round(height / 2);
+
+		function* around() {
+			let radius = 0;
+			while (++radius) {
+				const points: DeepReadonly<{ point: TwoD; related: TwoD }>[] = [];
+				let x = centerX - radius, y = centerY - radius;
+				const addPoint = (x: number, y: number) => {
+					if (x < 0 || x >= width || y < 0 || y >= height) return;
+					const point = [x, y] as const;
+					const related = [Math.round(x + (centerX - x) / radius), Math.round(y + (centerY - y) / radius)] as const;
+					points.push({ point, related });
+				};
+				for (; x < centerX + radius; x++) addPoint(x, y);
+				for (; y < centerY + radius; y++) addPoint(x, y);
+				for (; x > centerX - radius; x--) addPoint(x, y);
+				for (; y > centerY - radius; y--) addPoint(x, y);
+				if (!points.length) break;
+				yield points;
+			}
+		}
+
+		const SOURCE_PROPORTION = 0.05;
+		for (const hoop of around())
+			for (const { point: [x, y], related: [relatedX, relatedY] } of hoop) {
+				const i = getPixelIndex(width, x, y);
+				const relatedI = getPixelIndex(width, relatedX, relatedY);
+				pixels[i] = pixels[i] * SOURCE_PROPORTION + pixels[relatedI] * (1 - SOURCE_PROPORTION);
+				pixels[i + 1] = pixels[i + 1] * SOURCE_PROPORTION + pixels[relatedI + 1] * (1 - SOURCE_PROPORTION);
+				pixels[i + 2] = pixels[i + 2] * SOURCE_PROPORTION + pixels[relatedI + 2] * (1 - SOURCE_PROPORTION);
+				pixels[i + 3] = pixels[i + 3] * SOURCE_PROPORTION + pixels[relatedI + 3] * (1 - SOURCE_PROPORTION);
+			}
+
+		return newImageData;
+	},
+	radialBlur1(imageData: ImageData) {
 		const { width, height, data: pixels } = imageData;
 		const newImageData = cloneImageData(imageData);
 		const { data: newPixels } = newImageData;
