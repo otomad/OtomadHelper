@@ -14,7 +14,17 @@ const StyledItemsViewItem = styled.button<{
 			height: ${GRID_VIEW_ITEM_HEIGHT}px;
 		}
 
-		.base {
+		.image-wrapper {
+			position: relative;
+
+			.checkbox-label {
+				position: absolute;
+				inset-block-start: 6px;
+				inset-inline-end: 6px;
+			}
+		}
+
+		> .base {
 			position: relative;
 			overflow: clip;
 			border-radius: 4px;
@@ -33,6 +43,10 @@ const StyledItemsViewItem = styled.button<{
 			inset: 0;
 			border-radius: inherit;
 			pointer-events: none;
+		}
+
+		&:not(.selected) .selection {
+			transition: ${fallbackTransitions}, box-shadow ${eases.easeInSmooth} 250ms;
 		}
 
 		&:hover .selection {
@@ -64,7 +78,7 @@ const StyledItemsViewItem = styled.button<{
 	` : css`
 		padding: 2px 4px;
 
-		.base {
+		> .base {
 			position: relative;
 			display: flex;
 			gap: 16px;
@@ -84,11 +98,11 @@ const StyledItemsViewItem = styled.button<{
 			}
 		}
 
-		&:hover .base {
+		&:hover > .base {
 			background-color: ${c("fill-color-subtle-secondary")};
 		}
 
-		&:active .base {
+		&:active > .base {
 			background-color: ${c("fill-color-subtle-tertiary")};
 
 			&::before {
@@ -100,8 +114,12 @@ const StyledItemsViewItem = styled.button<{
 			}
 		}
 
-		&:not(.selected) .base::before {
+		&:not(.selected) > .base::before {
 			scale: 1 0;
+		}
+
+		&:has(.checkbox-label) > .base::before {
+			display: none;
 		}
 
 		${styledExpanderItemText};
@@ -110,6 +128,14 @@ const StyledItemsViewItem = styled.button<{
 			${styles.mixins.flexCenter()};
 		}
 	`}
+
+	.text > * {
+		${styles.effects.text.body};
+	}
+
+	&.selected .text .title {
+		${styles.effects.text.bodyStrong};
+	}
 `;
 
 const DefaultImage = styled.img`
@@ -117,7 +143,7 @@ const DefaultImage = styled.img`
 	object-fit: cover;
 `;
 
-export /* internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, details, _view: view, children, className, ...htmlAttrs }: FCP<{
+export /* internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, details, _view: view, _multiple: multiple, children, className, ...htmlAttrs }: FCP<{
 	/** 图片。 */
 	image?: string | ReactNode;
 	/** 图标。 */
@@ -130,6 +156,8 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 	details?: ReactNode;
 	/** @private 显示方式：列表、平铺、网格。 */
 	_view?: "list" | "tile" | "grid";
+	/** @private 多选模式？ */
+	_multiple?: boolean;
 }, "button">) {
 	const textPart = (
 		<div className="text">
@@ -137,6 +165,7 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 			<p className="details">{details}</p>
 		</div>
 	);
+	const checkbox = multiple && <Checkbox value={[selected]} plain />;
 
 	return (
 		<StyledItemsViewItem $view={view!} className={[className, view, { selected }]} tabIndex={0} {...htmlAttrs}>
@@ -145,11 +174,13 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 					<>
 						<div className="image-wrapper">
 							{typeof image === "string" ? <DefaultImage src={image} /> : image}
+							{checkbox}
 						</div>
 						<div className="selection" />
 					</>
 				) : (
 					<>
+						{checkbox}
 						{(image || icon) && (
 							<div className="image-wrapper">
 								{typeof image === "string" ? <img src={image} /> : icon ? <Icon name={icon} /> : undefined}

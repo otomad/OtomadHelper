@@ -16,6 +16,7 @@
 	"license": "GPL-3.0-only",
 	"scripts": {
 		"dev": "vite --host",
+		"dev-force": "vite --host --force",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prebuild": "scripts\\prebuild.bat",

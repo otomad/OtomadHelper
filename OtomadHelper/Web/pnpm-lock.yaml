@@ -9,7 +9,7 @@ patchedDependencies:
     hash: xlbuveog44mqwrxh4hesouatfi
     path: patches/@types__dom-view-transitions@1.0.4.patch
   '@types/react@18.2.78':
-    hash: uzfhp335qzsi3xgryoo5zxovrm
+    hash: elhs2bm6qbyerx2izl4w7ytzby
     path: patches/@types__react@18.2.78.patch
   babel-plugin-styled-components@2.1.4:
     hash: lj4emmbuiuzlg5edtbjplsude4
@@ -128,7 +128,7 @@ devDependencies:
     version: 4.0.2
   '@types/react':
     specifier: ^18.2.78
-    version: 18.2.78(patch_hash=uzfhp335qzsi3xgryoo5zxovrm)
+    version: 18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby)
   '@types/react-dom':
     specifier: ^18.2.25
     version: 18.2.25
@@ -1335,16 +1335,16 @@ packages:
   /@types/react-dom@18.2.25:
     resolution: {integrity: sha512-o/V48vf4MQh7juIKZU2QGDfli6p1+OOi5oXx36Hffpc9adsHeXjVp8rHuPkjd8VT8sOJ2Zp05HR7CdpGTIUFUA==}
     dependencies:
-      '@types/react': 18.2.78(patch_hash=uzfhp335qzsi3xgryoo5zxovrm)
+      '@types/react': 18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby)
     dev: true
 
   /@types/react-transition-group@4.4.10:
     resolution: {integrity: sha512-hT/+s0VQs2ojCX823m60m5f0sL5idt9SO6Tj6Dg+rdphGPIeJbJ6CxvBYkgkGKrYeDjvIpKTR38UzmtHJOGW3Q==}
     dependencies:
-      '@types/react': 18.2.78(patch_hash=uzfhp335qzsi3xgryoo5zxovrm)
+      '@types/react': 18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby)
     dev: true
 
-  /@types/react@18.2.78(patch_hash=uzfhp335qzsi3xgryoo5zxovrm):
+  /@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby):
     resolution: {integrity: sha512-qOwdPnnitQY4xKlKayt42q5W5UQrSHjgoXNVEtxeqdITJ99k4VXJOP3vt8Rkm9HmgJpH50UNU+rlqfkfWOqp0A==}
     dependencies:
       '@types/prop-types': 15.7.12
@@ -5906,7 +5906,7 @@ packages:
       react:
         optional: true
     dependencies:
-      '@types/react': 18.2.78(patch_hash=uzfhp335qzsi3xgryoo5zxovrm)
+      '@types/react': 18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby)
       immer: 10.0.4
       react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
       use-sync-external-store: 1.2.0(react@18.2.0)

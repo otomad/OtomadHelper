@@ -1,9 +1,13 @@
 import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemText } from "components/Expander/ExpanderItem";
 
 const checkedOrInd = ":is(:checked, :indeterminate)";
+const unchecked = ":not(:checked, :indeterminate)";
 const iconExiting = ":has(.icon.exit)";
 
-const StyledRadioButtonLabel = styled.label`
+const StyledCheckboxLabel = styled.label<{
+	/** 是否仅包含复选框本身，不包含文本标签？ */
+	$plain?: boolean;
+}>`
 	display: flex;
 	gap: 8px;
 	align-items: center;
@@ -18,10 +22,12 @@ const StyledRadioButtonLabel = styled.label`
 
 	${styledExpanderItemText};
 
-	.expander-child-items & {
-		${styledExpanderItemBase};
-		${styledExpanderItemContent};
-	}
+	${({ $plain }) => !$plain && css`
+		.expander-child-items & {
+			${styledExpanderItemBase};
+			${styledExpanderItemContent};
+		}
+	`}
 
 	.base {
 		${styles.mixins.square("18px")};
@@ -45,16 +51,42 @@ const StyledRadioButtonLabel = styled.label`
 		}
 	}
 
-	&:hover .base {
-		background-color: ${c("fill-color-control-alt-tertiary")};
+	input${checkedOrInd} ~ .base,
+	.base${iconExiting} {
+		background-color: ${c("accent-color")} !important;
+		outline-color: ${c("accent-color")} !important;
 	}
 
-	&:active .base {
-		background-color: ${c("fill-color-control-alt-quarternary")};
-		outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
+	&:hover,
+	.items-view-item:hover & {
+		input${unchecked} ~ .base {
+			background-color: ${c("fill-color-control-alt-tertiary")};
+		}
+
+		input${checkedOrInd} ~ .base {
+			opacity: 0.9;
+		}
 	}
 
-	input[disabled] ~ {
+	&:active,
+	.items-view-item:active & {
+		input${unchecked} ~ .base {
+			background-color: ${c("fill-color-control-alt-quarternary")};
+			outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
+		}
+	}
+
+	&:active input${checkedOrInd} ~ .base,
+	.items-view-item:active & input${checkedOrInd} ~ .base,
+	&:is(:hover, :active) .base${iconExiting} {
+		opacity: 0.8;
+
+		.icon {
+			color: ${c("fill-color-text-on-accent-secondary")};
+		}
+	}
+
+	input${unchecked}[disabled] ~ {
 		.base {
 			background-color: ${c("fill-color-control-alt-disabled")};
 			outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
@@ -65,28 +97,13 @@ const StyledRadioButtonLabel = styled.label`
 		}
 	}
 
-	input${checkedOrInd} ~ .base,
-	.base${iconExiting} {
-		background-color: ${c("accent-color")};
-		outline-color: ${c("accent-color")};
-	}
-
-	&:hover input${checkedOrInd} ~ .base {
-		opacity: 0.9;
-	}
-
-	&:active input${checkedOrInd} ~ .base,
-	&:is(:hover, :active) .base${iconExiting} {
-		opacity: 0.8;
-
-		.icon {
-			color: ${c("fill-color-text-on-accent-secondary")};
-		}
-	}
-
 	input${checkedOrInd}[disabled] ~ .base {
-		background-color: ${c("stroke-color-control-strong-stroke-disabled")};
-		outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
+		background-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
+		outline-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
+	}
+
+	.items-view-item:active & {
+		pointer-events: none;
 	}
 
 	${styles.mixins.forwardFocusRing()};
@@ -97,6 +114,8 @@ interface SharedProps {
 	disabled?: boolean;
 	/** 详细描述。 */
 	details?: ReactNode;
+	/** 是否仅包含复选框本身，不包含文本标签？ */
+	plain?: boolean;
 }
 
 export default function Checkbox<T>(props: FCP<{
@@ -119,7 +138,7 @@ export default function Checkbox(props: FCP<{
 	/** 状态改变事件。 */
 	onChange?: (e: { checkState: CheckState; checked: boolean | null }) => void;
 } & SharedProps>): JSX.Element;
-export default function Checkbox<T>({ children, id, value: [value, setValue], disabled, onChange, details }: FCP<{
+export default function Checkbox<T>({ children, id, value: [value, setValue], disabled = false, onChange, details, plain = false }: FCP<{
 	id?: T;
 	value: StateProperty<T[]> | StateProperty<boolean> | StateProperty<CheckState>;
 	onChange?: Function;
@@ -169,7 +188,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	}, [indeterminate, checked]);
 
 	return (
-		<StyledRadioButtonLabel tabIndex={0} ref={labelEl}>
+		<StyledCheckboxLabel tabIndex={0} ref={labelEl} $plain={plain}>
 			<input
 				type="checkbox"
 				checked={checked}
@@ -184,10 +203,12 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 					</CssTransition>
 				</SwitchTransition>
 			</div>
-			<div className="text">
-				<p className="title">{children}</p>
-				<p className="details">{details}</p>
-			</div>
-		</StyledRadioButtonLabel>
+			{!plain && (
+				<div className="text">
+					<p className="title">{children}</p>
+					<p className="details">{details}</p>
+				</div>
+			)}
+		</StyledCheckboxLabel>
 	);
 }

@@ -5,7 +5,15 @@ const effects = ["chorus", "delay", "changePitch", "reverse", "changeSpeed", "vi
 
 export default function Ytp() {
 	const [enabled, setEnabled] = selectConfig(c => c.ytp.enabled);
-	const selectEffects = useState("");
+	const [selectEffects, setSelectEffects] = useState<string[]>([]);
+	const selectEffectCount = selectEffects.length;
+	const selectAll: StatePropertyNonNull<CheckState> = [
+		!selectEffectCount ? "unchecked" : selectEffectCount === effects.length ? "checked" : "indeterminate",
+		(checkState: CheckState) => {
+			if (checkState === "unchecked") setSelectEffects([]);
+			else if (checkState === "checked") setSelectEffects(effects);
+		},
+	];
 
 	return (
 		<div className="container">
@@ -28,8 +36,14 @@ export default function Ytp() {
 					<SettingsCard title={t.ytp.constraint} details={t.descriptions.ytp.constraint} icon="constraint" />
 					<SettingsCard title={t.ytp.clips} details={t.descriptions.ytp.clips} icon="number" />
 					<Subheader>{t.subheaders.effects}</Subheader>
-					<Expander title={t.ytp.effects} details={t.descriptions.ytp.effects} icon="sparkle" checkInfo={selectEffects[0]}>
-						<ItemsView view="grid" current={selectEffects}>
+					<Expander
+						title={t.ytp.effects}
+						details={t.descriptions.ytp.effects}
+						icon="sparkle"
+						actions={<Badge hidden={!selectEffectCount}>{selectEffectCount}</Badge>}
+					>
+						<Checkbox value={selectAll}>{t.selectAll}</Checkbox>
+						<ItemsView view="grid" current={[selectEffects, setSelectEffects]} multiple>
 							{effects.map(name => (
 								<ItemsView.Item
 									key={name}

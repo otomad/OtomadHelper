@@ -1,3 +1,5 @@
+import SegmentedItem from "./SegmentedItem";
+
 const THUMB_BORDER_WIDTH = 1;
 const ITEM_BASE_MARGIN_X_WIDTH = 3;
 const ITEM_BASE_PADDING_X_WIDTH = 11.5;
@@ -140,27 +142,12 @@ const StyledSegmented = styled.div<{
 	}
 `;
 
-function SegmentedItem({ icon, children, className, onClick }: FCP<{
-	/** Icon, optional. */
-	icon?: DeclaredIcons;
-	/** Identifier. */
-	id: string;
-}, "div">) {
-	return (
-		<div className={["item", className]} onClick={onClick}>
-			<div className="base">
-				{icon && <Icon name={icon} />}
-				{children && <p>{children}</p>}
-			</div>
-		</div>
-	);
-}
-
 export default function Segmented<T extends string = string>({ current: [current, setCurrent], children }: FCP<{
 	/** The identifier of the selected segmented item. */
 	current: StateProperty<T>;
 }>) {
-	const items = React.Children.toArray(children) as GetReactElementFromFC<typeof SegmentedItem>[];
+	const items = React.Children.toArray(children).filter(child => isReactInstance(child, SegmentedItem)) as
+		GetReactElementFromFC<typeof SegmentedItem>[];
 	const itemCount = items.length;
 	const selectedIndex = items.findIndex(item => item.props.id === current);
 

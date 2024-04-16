@@ -61,6 +61,8 @@ export default {
 		auto: "Auto",
 		back: "Back",
 		navigation: "Navigation",
+		selectAll: "Select all",
+		invertSelection: "Invert selection",
 		infoBar: {
 			warning: "Warning",
 		},

@@ -40,23 +40,44 @@ const StyledItemsView = styled.div<{
 	}
 `;
 
-export default function ItemsView<T extends string = string>({ view, current: [current, setCurrent], $itemWidth, children }: FCP<{
+export default function ItemsView<
+	M extends boolean,
+	T extends (M extends true ? string[] : string),
+>({ view, current: [current, setCurrent], $itemWidth, multiple = false as M, children }: FCP<{
 	/** 显示方式：列表、平铺、网格。 */
 	view: "list" | "tile" | "grid";
 	/** 当前选中项标识符。 */
 	current: StateProperty<T>;
 	/** 网格视图下，子元素图片的宽度。 */
 	$itemWidth?: number;
+	/** 多选模式？ */
+	multiple?: M;
 }>) {
+	const isSelected = (id: string) => {
+		if (multiple)
+			if (Array.isArray(current)) return current.includes(id);
+			else return false;
+		else return current === id;
+	};
+
+	const handleClick = (id: string) => {
+		setCurrent?.((
+			!multiple ? id : produce((draft: string[]) => {
+				draft.toggle(id);
+			})
+		) as T);
+	};
+
 	return (
 		<StyledItemsView className={[view]} $itemWidth={$itemWidth}>
 			{React.Children.map(children, child => {
 				if (!isReactInstance(child, ItemsViewItem)) return child;
-				const id = child.props.id as T;
+				const id = child.props.id;
 				return React.cloneElement(child, {
-					selected: current === id,
+					selected: isSelected(id),
 					_view: view,
-					onClick: () => setCurrent?.(id),
+					_multiple: multiple,
+					onClick: () => handleClick(id),
 				});
 			})}
 		</StyledItemsView>

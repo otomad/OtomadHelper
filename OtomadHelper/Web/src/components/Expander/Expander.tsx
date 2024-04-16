@@ -74,7 +74,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	/** 初始状态下是否已展开？ */
 	expanded?: boolean;
 	/** 展开器中的单选框或复选框的选中情况的显示文本，仅在展开器关闭时才会显示。 */
-	checkInfo?: string;
+	checkInfo?: Readable;
 	/** 无论展开器开启或关闭，一律显示选中情况的显示文本。 */
 	alwaysShowCheckInfo?: boolean;
 }>) {
@@ -91,7 +91,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				$expanded={internalExpanded}
 			>
 				{actions}
-				{checkInfo && (
+				{checkInfo != null && (
 					<CssTransition in={!internalExpanded || alwaysShowCheckInfo} unmountOnExit>
 						<div className={["check-info", TRAILING_EXEMPTION]}>{checkInfo}</div>
 					</CssTransition>

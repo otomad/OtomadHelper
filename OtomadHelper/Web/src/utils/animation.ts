@@ -67,14 +67,16 @@ export function delay(ms: number): Promise<void> {
 
 /**
  * 用于获取元素动画在何时结束，以助于自动获取动画时间。
+ * @deprecated
  */
 export function endListener(): (node: HTMLElement, done: () => void) => void;
 /**
  * 用于获取元素动画在何时结束，以助于自动获取动画时间。
+ * @deprecated
  * @param nodeRef - 获取的子元素引用对象。
  */
 export function endListener(nodeRef: RefObject<HTMLElement | undefined>): (done: () => void) => void;
-export function endListener(nodeRef?: RefObject<HTMLElement | undefined>) {
+export function endListener(nodeRef?: RefObject<HTMLElement | undefined>) { // DELETE: 引入新版 react transition group 之后可删除。
 	const getListener = (node: HTMLElement | null | undefined, done: () => void) => {
 		node?.addEventListener("transitionend", e => {
 			if (e.target !== e.currentTarget) return;
@@ -298,7 +300,7 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 
 	const onEnter = async (el: HTMLElement) => {
 		// const el = nodeRef.current;
-		if (!el) throw new Error(); // BUG: 有概率无法正常获取
+		if (!el) return;
 		const thisThread = Symbol("enter");
 		currentAnimationThread.current = thisThread;
 		await animateSize(el, null, enter);
@@ -308,7 +310,7 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 
 	const onExit = async (el: HTMLElement) => {
 		// const el = nodeRef.current;
-		if (!el) throw new Error(); // BUG: 有概率无法正常获取
+		if (!el) return;
 		const thisThread = Symbol("exit");
 		currentAnimationThread.current = thisThread;
 		await animateSize(el, null, exit);
@@ -317,7 +319,13 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 		// el.hidden = true;
 	};
 
-	const endListener = (node: HTMLElement, done: () => void) => node?.addEventListener(ANIMATE_SIZE_END_EVENT, done, false);
+	const endListener = (node: HTMLElement, done: () => void) => {
+		const listener = () => {
+			node?.removeEventListener(ANIMATE_SIZE_END_EVENT, listener, false);
+			done();
+		};
+		node?.addEventListener(ANIMATE_SIZE_END_EVENT, listener, false);
+	};
 
 	return [onEnter, onExit, endListener] as const;
 }

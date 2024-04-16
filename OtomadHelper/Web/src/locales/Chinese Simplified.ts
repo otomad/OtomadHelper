@@ -61,6 +61,8 @@ export default {
 		auto: "自动",
 		back: "返回",
 		navigation: "导航",
+		selectAll: "全选",
+		invertSelection: "反选",
 		infoBar: {
 			warning: "警告",
 		},

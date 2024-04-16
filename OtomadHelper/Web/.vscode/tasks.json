@@ -19,6 +19,14 @@
 		},
 		{
 			"type": "npm",
+			"script": "dev-force",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: dev-force",
+			"detail": "vite",
+		},
+		{
+			"type": "npm",
 			"script": "compact-svg -- ${file}",
 			"problemMatcher": [],
 			"label": "Compact SVG",
