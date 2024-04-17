@@ -13,6 +13,7 @@
 	ResizeMode="NoResize"
 	ShowInTaskbar="True"
 	WindowStartupLocation="CenterScreen"
+	TitleBarType="WindowChrome"
 	mc:Ignorable="d">
 	<c:BackdropWindow.Resources>
 		<Style TargetType="TextBlock">

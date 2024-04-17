@@ -4,6 +4,7 @@ using System.Windows.Media;
 using System.ComponentModel;
 using System.Windows.Shell;
 using OtomadHelper.Module;
+using System.Windows.Input;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -24,12 +25,18 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		set => helper.Owner = value;
 	}
 
+	private void InitializeComponent() {
+		Background = Brushes.Transparent;
+		Loaded += Window_Loaded;
+	}
+
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
 		RefreshFrame();
 		RefreshDarkMode();
-		SystemBackdropType = DWM_SYSTEMBACKDROP_TYPE.DWMSBT_TRANSIENTWINDOW;
+		SetSystemBackdropType(SystemBackdropType);
 	}
 
+	#region Set backdrop type
 	protected void RefreshFrame() {
 		IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
 		HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
@@ -39,13 +46,13 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 			cxLeftWidth = -1,
 			cxRightWidth = -1,
 			cyTopHeight = -1,
-			cyBottomHeight = -1
+			cyBottomHeight = -1,
 		};
 
 		ExtendFrame(mainWindowSrc.Handle, margins);
 	}
 
-	//[DllImport("UXTheme.dll", SetLastError = true, EntryPoint = "#132")] // Windows 1903 之后用不了。
+	//[DllImport("UXTheme.dll", SetLastError = true, EntryPoint = "#132")] // Not available after Windows 1903.
 	protected static bool ShouldAppsUseDarkMode() {
 		using RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
 		object? value = key?.GetValue("AppsUseLightTheme");
@@ -71,16 +78,22 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	protected void RefreshDarkMode() {
 		bool isDarkTheme = ShouldAppsUseDarkMode();
 		int flag = isDarkTheme ? 1 : 0;
-		SetWindowAttribute(Handle, DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, flag);
+		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, flag);
 		SetCurrentThemeResource(isDarkTheme);
 	}
 
-	public DWM_SYSTEMBACKDROP_TYPE SystemBackdropType {
-		set => SetSystemBackdropType(value);
+	private const SystemBackdropType DEFAULT_SYSTEM_BACKDROP_TYPE = SystemBackdropType.TransientWindow;
+	public static readonly DependencyProperty SystemBackdropTypeProperty = DependencyProperty.Register(
+		nameof(SystemBackdropType), typeof(SystemBackdropType), typeof(BackdropWindow), new PropertyMetadata(DEFAULT_SYSTEM_BACKDROP_TYPE, SystemBackdropTypeChangedCallback));
+	public SystemBackdropType SystemBackdropType { get => (SystemBackdropType)GetValue(SystemBackdropTypeProperty); set => SetValue(SystemBackdropTypeProperty, value); }
+
+	protected void SetSystemBackdropType(SystemBackdropType systemBackdropType) {
+		SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (int)systemBackdropType);
 	}
 
-	protected void SetSystemBackdropType(DWM_SYSTEMBACKDROP_TYPE systemBackdropType) {
-		SetWindowAttribute(Handle, DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, (int)systemBackdropType);
+	private static void SystemBackdropTypeChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		if (sender is not BackdropWindow window) return;
+		window.SetSystemBackdropType((SystemBackdropType)e.NewValue);
 	}
 
 	protected static readonly RoutedEvent ThemeChangeEvent =
@@ -101,17 +114,68 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		Resources.MergedDictionaries.Clear();
 		Resources.MergedDictionaries.Add(new() { Source = new($"pack://application:,,,/{OtomadHelperModule.ASSEMBLY_NAME};component/Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", UriKind.Absolute) });
 	}
+	#endregion
 
-	private void InitializeComponent() {
-		Background = Brushes.Transparent;
-		Loaded += Window_Loaded;
-		WindowChrome.SetWindowChrome(this, new() {
-			CaptionHeight = 20,
-			CornerRadius = new(0),
-			GlassFrameThickness = new(-1),
-			ResizeBorderThickness = new(8),
-			NonClientFrameEdges = NonClientFrameEdges.Right,
-			UseAeroCaptionButtons = true,
-		});
+	#region Extends content into title bar
+	public static readonly DependencyProperty TitleBarTypeProperty = DependencyProperty.Register(
+		nameof(TitleBarType), typeof(TitleBarType), typeof(BackdropWindow), new PropertyMetadata(TitleBarType.System, EnableWindowChromeChangedCallback));
+	public TitleBarType TitleBarType { get => (TitleBarType)GetValue(TitleBarTypeProperty); set => SetValue(TitleBarTypeProperty, value); }
+
+	private static void EnableWindowChromeChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		if (sender is not BackdropWindow window) return;
+		if (e.NewValue is not TitleBarType value) return;
+		switch (value) {
+			case TitleBarType.WindowChrome:
+				WindowChrome.SetWindowChrome(window, new() {
+					CaptionHeight = 54, // Default: 20
+					CornerRadius = new(0),
+					GlassFrameThickness = new(-1),
+					ResizeBorderThickness = new(8, 0, 8, 8),
+					NonClientFrameEdges = NonClientFrameEdges.Right,
+					UseAeroCaptionButtons = true,
+				});
+				break;
+			case TitleBarType.WindowChromeNoTitleBar:
+				WindowChrome.SetWindowChrome(window, new() {
+					CaptionHeight = 0,
+					CornerRadius = new(0),
+					GlassFrameThickness = new(-1),
+					ResizeBorderThickness = new(0),
+				});
+				window.WindowStyle = WindowStyle.None;
+				window.ResizeMode = ResizeMode.CanResize;
+				break;
+			case TitleBarType.Borderless:
+				RemoveWindowChrome();
+				window.AllowsTransparency = true;
+				window.WindowStyle = WindowStyle.None;
+				break;
+			case TitleBarType.System:
+			default:
+				RemoveWindowChrome();
+				break;
+		}
+
+		void RemoveWindowChrome() => WindowChrome.SetWindowChrome(window, null);
 	}
+
+	protected override void OnKeyDown(KeyEventArgs e) {
+		if (TitleBarType == TitleBarType.WindowChromeNoTitleBar) {
+			if (Keyboard.Modifiers == ModifierKeys.Alt && e.SystemKey == Key.Space) {
+				e.Handled = true;
+				return;
+			}
+		}
+		if (e.Key == Key.Escape)
+			this.Vanish();
+		base.OnKeyDown(e);
+	}
+	#endregion
+}
+
+public enum TitleBarType {
+	System,
+	Borderless,
+	WindowChrome,
+	WindowChromeNoTitleBar,
 }

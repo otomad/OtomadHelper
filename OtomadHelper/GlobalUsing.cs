@@ -20,6 +20,7 @@ global using Microsoft.Win32;
 
 global using OtomadHelper.Helpers;
 
+global using static OtomadHelper.Helpers.Extensions;
 global using static OtomadHelper.Helpers.I18n;
 global using static OtomadHelper.Helpers.WebView2BetterBridge.MessageSender;
 global using static OtomadHelper.Interop.PInvoke;

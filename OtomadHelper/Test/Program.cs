@@ -10,6 +10,8 @@ internal static class Program {
 	static void Main() {
 		Application.EnableVisualStyles();
 		Application.SetCompatibleTextRenderingDefault(false);
-		Application.Run(new TestForm());
+		//Application.Run(new TestForm());
+		Application.Run(new TestControls());
+		//new WPF.Controls.ContentDialog<string>("Title", "Body", new WPF.Controls.ContentDialogButtonItem<string>[] { new WPF.Controls.ContentDialogButtonItem<string>("OK", "ok", true) }).ShowDialog();
 	}
 }

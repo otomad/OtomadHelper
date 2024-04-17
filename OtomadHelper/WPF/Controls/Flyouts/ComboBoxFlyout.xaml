@@ -1,0 +1,23 @@
+<c:BackdropWindow
+	x:Class="OtomadHelper.WPF.Controls.Flyouts.ComboBoxFlyout"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Width="200"
+	BorderBrush="{DynamicResource CardStroke}"
+	BorderThickness="1"
+	SizeToContent="Height"
+	ResizeMode="NoResize"
+	ShowInTaskbar="False"
+	WindowStartupLocation="Manual"
+	TitleBarType="WindowChromeNoTitleBar"
+	Deactivated="Window_Deactivated"
+	mc:Ignorable="d">
+
+	<StackPanel Orientation="Vertical">
+		<TextBlock>Hello</TextBlock>
+		<TextBlock>World</TextBlock>
+	</StackPanel>
+</c:BackdropWindow>
