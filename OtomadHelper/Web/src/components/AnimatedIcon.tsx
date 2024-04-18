@@ -217,7 +217,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 		const anim = animationItem.current;
 		if (!anim) return;
 		let marker: string | undefined, loop: boolean | undefined, speed: number | undefined;
-		if (state instanceof Array)
+		if (Array.isArray(state))
 			[marker, loop, speed] = state;
 		else
 			({ marker, loop, speed } = state);

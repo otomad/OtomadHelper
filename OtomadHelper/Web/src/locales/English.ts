@@ -66,6 +66,10 @@ export default {
 		infoBar: {
 			warning: "Warning",
 		},
+		selectionMode: {
+			single: "Single",
+			multiple: "Multiple",
+		},
 		subheaders: {
 			moreOptions: "More options",
 			advanced: "Advanced",

@@ -5,6 +5,7 @@ const ITEM_BASE_MARGIN_X_WIDTH = 3;
 const ITEM_BASE_PADDING_X_WIDTH = 11.5;
 const ITEM_BASE_ADJUSTED_PADDING_X_WIDTH = ITEM_BASE_PADDING_X_WIDTH + ITEM_BASE_MARGIN_X_WIDTH;
 const THUMB_TRANSITION_OPTION = `${eases.easeOutSmooth} 350ms`;
+const SEGMENTED_ITEM_PRESSED_SCALE = 0.95;
 
 const StyledSegmented = styled.div<{
 	/** The child item count. */
@@ -34,13 +35,17 @@ const StyledSegmented = styled.div<{
 			> .base {
 				${styles.mixins.flexCenter()};
 				gap: 10px;
-				padding: 7px ${ITEM_BASE_PADDING_X_WIDTH}px;
+				padding: 4px ${ITEM_BASE_PADDING_X_WIDTH}px;
 				border-radius: 2px;
 			}
 
 			p {
 				${styles.effects.text.body};
 				text-align: center;
+			}
+
+			.icon {
+				font-size: 16px;
 			}
 		}
 	}
@@ -52,6 +57,7 @@ const StyledSegmented = styled.div<{
 
 		&:active > .base {
 			background-color: ${c("fill-color-subtle-tertiary")};
+			scale: ${SEGMENTED_ITEM_PRESSED_SCALE};
 
 			> * {
 				opacity: ${c("pressed-text-opacity")};
@@ -150,6 +156,7 @@ export default function Segmented<T extends string = string>({ current: [current
 		GetReactElementFromFC<typeof SegmentedItem>[];
 	const itemCount = items.length;
 	const selectedIndex = items.findIndex(item => item.props.id === current);
+	const setCurrentByIndex = (index: number) => items[index] && setCurrent?.(items[index].props.id as T);
 
 	const handleDrag = useCallback<PointerEventHandler<HTMLDivElement>>(e => {
 		const thumb = e.currentTarget;
@@ -159,7 +166,7 @@ export default function Segmented<T extends string = string>({ current: [current
 			const { left: trackLeft, width: trackWidth } = track.getBoundingClientRect();
 			let index = Math.floor((e.clientX - trackLeft) / trackWidth * itemCount);
 			if (isRtl()) index = itemCount - 1 - index;
-			if (items[index]) setCurrent?.(items[index].props.id as T);
+			setCurrentByIndex(index);
 		};
 		const pointerUp = () => {
 			document.removeEventListener("pointermove", pointerMove);
@@ -168,6 +175,14 @@ export default function Segmented<T extends string = string>({ current: [current
 		document.addEventListener("pointermove", pointerMove);
 		document.addEventListener("pointerup", pointerUp);
 	}, [children]);
+
+	const handleArrowKeyDown = useDebounceCallback<KeyboardEventHandler<HTMLDivElement>>(e => {
+		const direction = ["ArrowRight", "ArrowDown"].includes(e.code) ? 1 :
+			["ArrowLeft", "ArrowUp"].includes(e.code) ? -1 : 0;
+		if (!direction) return;
+		const newIndex = PNMod(selectedIndex + direction, itemCount);
+		setCurrentByIndex(newIndex);
+	}, [children, current]);
 
 	return (
 		<StyledSegmented $itemCount={itemCount} $selectedIndex={selectedIndex}>
@@ -180,7 +195,7 @@ export default function Segmented<T extends string = string>({ current: [current
 					});
 				})}
 			</div>
-			<div className="thumb" onPointerDown={handleDrag} />
+			<div className="thumb" onPointerDown={handleDrag} tabIndex={0} onKeyDown={handleArrowKeyDown} />
 			<div className="thumb-content">
 				{items.map(child => React.cloneElement(child))}
 			</div>

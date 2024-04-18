@@ -195,7 +195,7 @@ export async function* animateSizeGenerator(
 	endHeight ??= element.clientHeight + (clientAdjustment.endHeight ?? 0);
 	endWidth ??= element.clientWidth + (clientAdjustment.endWidth ?? 0);
 	// if (getSize)
-	// 	if (getSize instanceof Array) [getSize[0], getSize[1]] = [endWidth, endHeight];
+	// 	if (Array.isArray(getSize)) [getSize[0], getSize[1]] = [endWidth, endHeight];
 	// 	else getSize.value = [endWidth, endHeight];
 	// if (getRect)
 	// 	getRect.value = element.getBoundingClientRect();
@@ -244,7 +244,7 @@ export async function* animateSizeGenerator(
 		], animationOptions);
 		if (attachAnimations) attachAnimations.forEach(group => group[0]?.animate(group[1], animationOptions));
 	}
-	return result.finished.catch(() => { });
+	return result.finished.catch(noop);
 }
 
 /**
@@ -286,8 +286,8 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 		enter.startHeight = 0;
 		exit.endHeight = 0;
 	}
-	duration = duration instanceof Array ? duration : [duration, duration];
-	easing = easing instanceof Array ? easing : [easing, easing];
+	duration = Array.isArray(duration) ? duration : [duration, duration];
+	easing = Array.isArray(easing) ? easing : [easing, easing];
 	enter.duration = duration[0];
 	exit.duration = duration[1];
 	enter.easing = easing[0];

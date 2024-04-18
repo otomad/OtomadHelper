@@ -7,13 +7,7 @@ export default function Ytp() {
 	const [enabled, setEnabled] = selectConfig(c => c.ytp.enabled);
 	const [selectEffects, setSelectEffects] = useState<string[]>([]);
 	const selectEffectCount = selectEffects.length;
-	const selectAll: StatePropertyNonNull<CheckState> = [
-		!selectEffectCount ? "unchecked" : selectEffectCount === effects.length ? "checked" : "indeterminate",
-		(checkState: CheckState) => {
-			if (checkState === "unchecked") setSelectEffects([]);
-			else if (checkState === "checked") setSelectEffects(effects);
-		},
-	];
+	const selectAll = useSelectAll([selectEffects, setSelectEffects], effects);
 
 	return (
 		<div className="container">

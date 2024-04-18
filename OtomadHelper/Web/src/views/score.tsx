@@ -10,6 +10,55 @@ export /* internal */ const constraintNoteLengths = [
 	{ id: "fixed", icon: "equal" },
 ] as const;
 export /* internal */ const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"] as const;
+/** @deprecated Test only! */
+const tracks = [
+	{ channel: 1, name: "Lead", noteCount: 100, beginNote: "C5", pan: "Variably begin with left", isDrumKit: false, inst: "Sawtooth" },
+	{ channel: 2, name: "Chords", noteCount: 50, beginNote: "C#5", pan: "Right", isDrumKit: false, inst: "Strings" },
+	{ channel: 10, name: "Drums", noteCount: 150, beginNote: "A3", pan: "Center", isDrumKit: true, inst: "Piano" },
+];
+
+const TrackToolbar = styled.div`
+	justify-content: space-between;
+	margin-inline-start: 3px;
+
+	&,
+	.left .content {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+
+	.left .content {
+		${tgs()} {
+			scale: 0.85;
+			opacity: 0;
+		}
+
+		.button {
+			min-width: unset;
+
+			.icon {
+				font-size: 20px;
+			}
+		}
+	}
+
+	+ .items-view .track-details .row {
+		display: flex;
+		flex-wrap: wrap;
+		column-gap: 12px;
+
+		> * {
+			display: flex;
+			column-gap: 5px;
+			align-items: center;
+
+			.icon {
+				font-size: 12px;
+			}
+		}
+	}
+`;
 
 export default function Score() {
 	const format = selectConfig(c => c.score.format);
@@ -17,6 +66,23 @@ export default function Score() {
 	const bpmUsing = selectConfig(c => c.score.bpmUsing);
 	const [timeSignature] = selectConfig(c => c.score.timeSignature);
 	const constraintNoteLength = selectConfig(c => c.score.constraintNoteLength);
+	const [isMultipleSelectionMode, setIsMultipleSelectionMode] = selectConfig(c => c.score.isMultipleSelectionMode);
+	const selectionMode = useStateSelector(
+		[isMultipleSelectionMode, setIsMultipleSelectionMode],
+		multiple => multiple ? "multiple" : "single",
+		selectionMode => selectionMode === "multiple",
+	);
+
+	const [selectedTrack, setSelectedTrack] = useState<number | number[]>(0);
+	useEffect(() => setSelectedTrack(selectedTrack => {
+		if (isMultipleSelectionMode && !Array.isArray(selectedTrack))
+			return [selectedTrack];
+		else if (!isMultipleSelectionMode && Array.isArray(selectedTrack))
+			return selectedTrack.at(-1) ?? 0;
+		else // Actually the multiple selection mode doesn't be changed and unexpected trigger this effect.
+			return selectedTrack;
+	}), [isMultipleSelectionMode]);
+	const selectAll = useSelectAll([selectedTrack, setSelectedTrack] as StateProperty<number[]>, tracks.map((_, index) => index));
 
 	return (
 		<div className="container">
@@ -68,6 +134,47 @@ export default function Score() {
 			/>
 
 			<Subheader>{t(2).titles.track}</Subheader>
+			<TrackToolbar>
+				<div className="left">
+					<CssTransition in={isMultipleSelectionMode} unmountOnExit>
+						<div className="content">
+							<Checkbox value={selectAll}>{t.selectAll}</Checkbox>
+							<Button subtle icon="invert_selection" onClick={selectAll[2]}>{t.invertSelection}</Button>
+							<Badge>{(selectedTrack as number[]).length ?? 1}</Badge>
+						</div>
+					</CssTransition>
+				</div>
+				<Segmented current={selectionMode}>
+					<Segmented.Item id="single" icon="single_select">{t.selectionMode.single}</Segmented.Item>
+					<Segmented.Item id="multiple" icon="multiselect">{t.selectionMode.multiple}</Segmented.Item>
+				</Segmented>
+			</TrackToolbar>
+			<ItemsView view="list" multiple={isMultipleSelectionMode} current={[selectedTrack, setSelectedTrack]}>
+				{tracks.map((track, index) => (
+					<ItemsView.Item
+						key={index}
+						id={index}
+						details={(
+							<div className="track-details">
+								<div className="row">
+									<p><Icon name="music_note" />Note count: {track.noteCount}</p>
+									<p><Icon name="start_point" />Begin note: {track.beginNote}</p>
+									<p><Icon name="stereo" />Pan: {track.pan}</p>
+								</div>
+								<div className="row">
+									{track.isDrumKit && <p><Icon name="drum" />Drum kit</p>}
+									<p><Icon name="score" />Inst: {track.inst}</p>
+								</div>
+							</div>
+						)}
+					>
+						<StackPanel $direction="horizontal">
+							{track.channel != null && <Badge>{track.channel}</Badge>}
+							<span>{track.name}</span>
+						</StackPanel>
+					</ItemsView.Item>
+				))}
+			</ItemsView>
 
 			<DragToImport>{t.titles.score}</DragToImport>
 		</div>

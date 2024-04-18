@@ -105,6 +105,7 @@ ignoreWords:
   - tgs
   - ᵗ
   - ᵗsin
+  - pn
 flagWords:
   - colour -> color
   - canot -> cannot

@@ -25,6 +25,7 @@ interface IConfig {
 		bpmUsing: BpmUsing;
 		timeSignature: string;
 		constraintNoteLength: ConstraintNoteLength;
+		isMultipleSelectionMode: boolean;
 	};
 	visual: {
 		enabled: boolean;
@@ -67,6 +68,7 @@ export const useConfigStore = createStore<IConfig>()(
 			bpmUsing: "variableMidi",
 			timeSignature: "4/4",
 			constraintNoteLength: "none",
+			isMultipleSelectionMode: false,
 		},
 		visual: {
 			enabled: true,

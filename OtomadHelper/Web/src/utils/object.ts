@@ -73,7 +73,7 @@ export const hasKey = <T extends object>(obj: T, k: keyof Any): k is keyof T => 
  * 对 useState 中的 setter 函数进行拦截。
  * @param setter - useState 中的 setter 函数。
  * @param interceptor - 拦截器。
- * @returns - 生成的新 setter 函数。
+ * @returns 生成的新 setter 函数。
  */
 export function setStateInterceptor<T>(setter: SetState<T>, interceptor: (userInput: Any) => T) {
 	return (userInput: React.SetStateAction<T>) => {
@@ -90,7 +90,7 @@ export function setStateInterceptor<T>(setter: SetState<T>, interceptor: (userIn
  * @param stateProperty - 原 useState。
  * @param getter - 映射到新的 getter。
  * @param setter - 映射到新的 setter。
- * @returns - 新的 useState。
+ * @returns 新的 useState。
  */
 export function useStateSelector<T, U>(stateProperty: StateProperty<T>, getter: (original: T) => U, setter: (userInput: U) => T) {
 	return [
@@ -102,7 +102,7 @@ export function useStateSelector<T, U>(stateProperty: StateProperty<T>, getter: 
 /**
  * 判断一个变量是否是 Ref 包装对象。
  * @param ref - Ref 包装对象。
- * @returns - 是否是 Ref 包装对象。
+ * @returns 是否是 Ref 包装对象。
  */
 export function isRef<T>(ref: MaybeRef<T>): ref is RefObject<T> {
 	return ref && Object.hasOwn(ref, "current") && Object.keys(ref).length === 1;
@@ -170,6 +170,13 @@ export function makePrototypeKeysNonEnumerable(constructor: AnyConstructor) {
 			enumerable: false,
 		});
 }
+
+/**
+ * A no-operation function that returns undefined regardless of the arguments it receives.
+ *
+ * @return undefined
+ */
+export const noop = lodash.noop;
 
 /**
  * @deprecated 等待 React 19 发布，支持 ref as a prop 之后，即可删除本函数。

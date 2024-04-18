@@ -275,3 +275,46 @@ export function addEventListeners<K extends keyof HTMLElementEventMap, E extends
 	const types = args.slice(1, -1) as K[];
 	types.forEach(type => element.addEventListener(type, listener as never));
 }
+
+/**
+ * A custom React Hook that allows you to debounce a function call.
+ *
+ * @template T - The type of the function to debounce.
+ * @param callback - The function to debounce.
+ * @param deps - The dependencies for the effect.
+ * @param wait - The number of milliseconds to delay.
+ * @returns A new debounced function.
+ */
+export function useDebounceCallback<T extends AnyFunction>(callback: T, deps: DependencyList, wait?: number) {
+	return useCallback(lodash.debounce(callback, wait), deps);
+}
+
+/**
+ * A custom React Hook that allows you to throttle a function call.
+ *
+ * @template T - The type of the function to throttle.
+ * @param callback - The function to throttle.
+ * @param deps - The dependencies for the effect.
+ * @param wait - The number of milliseconds to wait before calling the function.
+ * @returns A new throttled function.
+ */
+export function useThrottleCallback<T extends AnyFunction>(callback: T, deps: DependencyList, wait?: number) {
+	return useCallback(lodash.throttle(callback, wait), deps);
+}
+
+export function useSelectAll<T>([selected, setSelected]: StateProperty<T[]>, allSelection: T[]) {
+	selected ??= [];
+	setSelected ??= noop;
+	return [
+		!selected.length ? "unchecked" : selected.length === allSelection.length ? "checked" : "indeterminate",
+		(checkState: CheckState) => {
+			if (checkState === "unchecked") setSelected([]);
+			else if (checkState === "checked") setSelected(allSelection.slice());
+		},
+		() => {
+			// @ts-expect-error Set.prototype.difference works on Chromium >= 122.
+			const invertedItems = new Set(allSelection).difference(new Set(selected));
+			setSelected(Array.from(invertedItems));
+		},
+	] as unknown as StatePropertyNonNull<CheckState> & { 2: () => void };
+}

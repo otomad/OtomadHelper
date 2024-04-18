@@ -98,6 +98,14 @@ const StyledItemsViewItem = styled.button<{
 			}
 		}
 
+		main.page > .container > .items-view > & {
+			padding-inline: 0;
+
+			> .base {
+				padding-inline: 16px;
+			}
+		}
+
 		&:hover > .base {
 			background-color: ${c("fill-color-subtle-secondary")};
 		}
@@ -149,7 +157,7 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 	/** 图标。 */
 	icon?: DeclaredIcons;
 	/** 标识符。 */
-	id: string;
+	id: ObjectKey;
 	/** 是否已选中？ */
 	selected?: boolean;
 	/** 详细描述。 */

@@ -42,7 +42,7 @@ const StyledItemsView = styled.div<{
 
 export default function ItemsView<
 	M extends boolean,
-	T extends (M extends true ? string[] : string),
+	T extends (M extends true ? ObjectKey[] : ObjectKey),
 >({ view, current: [current, setCurrent], $itemWidth, multiple = false as M, children }: FCP<{
 	/** 显示方式：列表、平铺、网格。 */
 	view: "list" | "tile" | "grid";
@@ -53,16 +53,16 @@ export default function ItemsView<
 	/** 多选模式？ */
 	multiple?: M;
 }>) {
-	const isSelected = (id: string) => {
+	const isSelected = (id: ObjectKey) => {
 		if (multiple)
 			if (Array.isArray(current)) return current.includes(id);
 			else return false;
 		else return current === id;
 	};
 
-	const handleClick = (id: string) => {
+	const handleClick = (id: ObjectKey) => {
 		setCurrent?.((
-			!multiple ? id : produce((draft: string[]) => {
+			!multiple ? id : produce((draft: ObjectKey[]) => {
 				draft.toggle(id);
 			})
 		) as T);

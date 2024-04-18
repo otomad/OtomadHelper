@@ -130,7 +130,7 @@ export function getPosition(rect: MaybeRef<DOMRect | Element>, placement?: Place
 		position = [rect.right + offset, rect.top + rect.height / 2];
 	if (flyoutRect) {
 		if (flyoutRect instanceof Element) flyoutRect = flyoutRect.getBoundingClientRect();
-		else if (flyoutRect instanceof Array) flyoutRect = { width: flyoutRect[0], height: flyoutRect[1] } as DOMRect;
+		else if (Array.isArray(flyoutRect)) flyoutRect = { width: flyoutRect[0], height: flyoutRect[1] } as DOMRect;
 		if (placement === "top")
 			position = [position[0] - flyoutRect.width / 2, position[1] - flyoutRect.height];
 		else if (placement === "bottom")
