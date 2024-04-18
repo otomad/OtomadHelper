@@ -33,10 +33,12 @@ export default {
 			startTime: {},
 		},
 		infoBar: {},
+		selectionMode: {},
 		subheaders: {},
 		score: {
 			bpm: {},
 			constraint: {},
+			pan: {},
 		},
 		stream: {
 			stretch: {},

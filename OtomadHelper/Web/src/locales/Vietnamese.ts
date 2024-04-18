@@ -42,10 +42,12 @@ export default {
 			},
 		},
 		infoBar: {},
+		selectionMode: {},
 		subheaders: {},
 		score: {
 			bpm: {},
 			constraint: {},
+			pan: {},
 		},
 		stream: {
 			stretch: {},

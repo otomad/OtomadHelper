@@ -63,6 +63,7 @@ export default {
 		navigation: "Navigation",
 		selectAll: "Select all",
 		invertSelection: "Invert selection",
+		variableBeginWith: "Variable beginning with {{first, lowercase}}",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -100,6 +101,16 @@ export default {
 				max: "Max length",
 				fixed: "Fixed length",
 			},
+			noteCount: "Note count",
+			beginNote: "Begin note",
+			pan: {
+				_: "Pan",
+				left: "Left",
+				right: "Right",
+				center: "Center",
+			},
+			instrument: "Instrument",
+			drumKit: "Drum kit",
 		},
 		stream: {
 			preview: "Preview",

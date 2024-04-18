@@ -63,8 +63,13 @@ export default {
 		navigation: "导航",
 		selectAll: "全选",
 		invertSelection: "反选",
+		variableBeginWith: "{{first, capitalize}}起始的可变值",
 		infoBar: {
 			warning: "警告",
+		},
+		selectionMode: {
+			single: "单选",
+			multiple: "多选",
 		},
 		subheaders: {
 			moreOptions: "更多选项",
@@ -96,6 +101,16 @@ export default {
 				max: "最大长度",
 				fixed: "固定长度",
 			},
+			noteCount: "音符数",
+			beginNote: "起音",
+			pan: {
+				_: "声像",
+				left: "左",
+				right: "右",
+				center: "中",
+			},
+			instrument: "乐器",
+			drumKit: "鼓组",
 		},
 		stream: {
 			preview: "预览",

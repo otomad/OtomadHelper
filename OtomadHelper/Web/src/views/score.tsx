@@ -12,9 +12,9 @@ export /* internal */ const constraintNoteLengths = [
 export /* internal */ const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"] as const;
 /** @deprecated Test only! */
 const tracks = [
-	{ channel: 1, name: "Lead", noteCount: 100, beginNote: "C5", pan: "Variably begin with left", isDrumKit: false, inst: "Sawtooth" },
-	{ channel: 2, name: "Chords", noteCount: 50, beginNote: "C#5", pan: "Right", isDrumKit: false, inst: "Strings" },
-	{ channel: 10, name: "Drums", noteCount: 150, beginNote: "A3", pan: "Center", isDrumKit: true, inst: "Piano" },
+	{ channel: 1, name: "Lead", noteCount: 100, beginNote: "C5", pan: t.variableBeginWith({ first: t.score.pan.left }), isDrumKit: false, inst: "Sawtooth" },
+	{ channel: 2, name: "Chords", noteCount: 50, beginNote: "C#5", pan: t.score.pan.right, isDrumKit: false, inst: "Strings" },
+	{ channel: 10, name: "Drums", noteCount: 150, beginNote: "A3", pan: t.score.pan.center, isDrumKit: true, inst: "Piano" },
 ];
 
 const TrackToolbar = styled.div`
@@ -133,48 +133,52 @@ export default function Score() {
 				iconField="icon"
 			/>
 
-			<Subheader>{t(2).titles.track}</Subheader>
-			<TrackToolbar>
-				<div className="left">
-					<CssTransition in={isMultipleSelectionMode} unmountOnExit>
-						<div className="content">
-							<Checkbox value={selectAll}>{t.selectAll}</Checkbox>
-							<Button subtle icon="invert_selection" onClick={selectAll[2]}>{t.invertSelection}</Button>
-							<Badge>{(selectedTrack as number[]).length ?? 1}</Badge>
+			{!!tracks.length && (
+				<>
+					<Subheader>{t(2).titles.track}</Subheader>
+					<TrackToolbar>
+						<div className="left">
+							<CssTransition in={isMultipleSelectionMode} unmountOnExit>
+								<div className="content">
+									<Checkbox value={selectAll}>{t.selectAll}</Checkbox>
+									<Button subtle icon="invert_selection" onClick={selectAll[2]}>{t.invertSelection}</Button>
+									<Badge>{(selectedTrack as number[]).length ?? 1}</Badge>
+								</div>
+							</CssTransition>
 						</div>
-					</CssTransition>
-				</div>
-				<Segmented current={selectionMode}>
-					<Segmented.Item id="single" icon="single_select">{t.selectionMode.single}</Segmented.Item>
-					<Segmented.Item id="multiple" icon="multiselect">{t.selectionMode.multiple}</Segmented.Item>
-				</Segmented>
-			</TrackToolbar>
-			<ItemsView view="list" multiple={isMultipleSelectionMode} current={[selectedTrack, setSelectedTrack]}>
-				{tracks.map((track, index) => (
-					<ItemsView.Item
-						key={index}
-						id={index}
-						details={(
-							<div className="track-details">
-								<div className="row">
-									<p><Icon name="music_note" />Note count: {track.noteCount}</p>
-									<p><Icon name="start_point" />Begin note: {track.beginNote}</p>
-									<p><Icon name="stereo" />Pan: {track.pan}</p>
-								</div>
-								<div className="row">
-									{track.isDrumKit && <p><Icon name="drum" />Drum kit</p>}
-									<p><Icon name="score" />Inst: {track.inst}</p>
-								</div>
-							</div>
-						)}
-					>
-						<StackPanel $direction="horizontal">
-							{track.channel != null && <Badge>{track.channel}</Badge>}
-							<span>{track.name}</span>
-						</StackPanel>
-					</ItemsView.Item>
-				))}
-			</ItemsView>
+						<Segmented current={selectionMode}>
+							<Segmented.Item id="single" icon="single_select">{t.selectionMode.single}</Segmented.Item>
+							<Segmented.Item id="multiple" icon="multiselect">{t.selectionMode.multiple}</Segmented.Item>
+						</Segmented>
+					</TrackToolbar>
+					<ItemsView view="list" multiple={isMultipleSelectionMode} current={[selectedTrack, setSelectedTrack]}>
+						{tracks.map((track, index) => (
+							<ItemsView.Item
+								key={index}
+								id={index}
+								details={(
+									<div className="track-details">
+										<div className="row">
+											<p><Icon name="music_note" />{t.score.noteCount}{t.colon}{track.noteCount}</p>
+											<p><Icon name="start_point" />{t.score.beginNote}{t.colon}{track.beginNote}</p>
+											<p><Icon name="stereo" />{t.score.pan}{t.colon}{track.pan}</p>
+										</div>
+										<div className="row">
+											{track.isDrumKit && <p><Icon name="drum" />{t.score.drumKit}</p>}
+											<p><Icon name="score" />{t.score.instrument}{t.colon}{track.inst}</p>
+										</div>
+									</div>
+								)}
+							>
+								<StackPanel $direction="horizontal">
+									{track.channel != null && <Badge>{track.channel}</Badge>}
+									<span>{track.name}</span>
+								</StackPanel>
+							</ItemsView.Item>
+						))}
+					</ItemsView>
+				</>
+			)}
 
 			<DragToImport>{t.titles.score}</DragToImport>
 		</div>
