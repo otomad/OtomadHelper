@@ -113,8 +113,21 @@ const StyledNavigationView = styled.div<{
 	> .left {
 		flex-shrink: 0;
 		width: 320px;
+		max-width: calc(100dvw / var(--zoom));
 		height: 100%;
 		padding-bottom: 4px;
+
+		@media (horizontal-viewport-segments: 2) {
+			width: calc((env(viewport-segment-left 1 0) - env(viewport-segment-left 0 0)) / var(--zoom, 1));
+
+			&.expanded:not(.flyout) {
+				padding-inline-end: calc((env(viewport-segment-left 1 0) - env(viewport-segment-right 0 0)) / var(--zoom, 1));
+			}
+
+			&.expanded.flyout {
+				width: calc((env(viewport-segment-right 0 0) - env(viewport-segment-left 0 0)) / var(--zoom, 1));
+			}
+		}
 
 		> * {
 			flex-shrink: 0;

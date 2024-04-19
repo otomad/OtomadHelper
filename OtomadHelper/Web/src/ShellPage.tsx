@@ -33,6 +33,7 @@ export default function ShellPage() {
 	});
 	const Page = pages[`/src/views/${pagePath}.tsx`] ?? EmptyPage;
 	const [uiScale] = selectConfig(c => c.settings.uiScale);
+	const zoom = uiScale === 100 ? undefined : uiScale / 100;
 	const { appName } = useAboutApp();
 	const documentTitle = (() => {
 		const lastPage = page.last();
@@ -75,7 +76,7 @@ export default function ShellPage() {
 					}
 				</CommandBar>
 			)}
-			style={{ zoom: uiScale === 100 ? undefined : uiScale / 100 }}
+			style={{ zoom, "--zoom": zoom }}
 		>
 			<Page />
 		</NavigationView>
