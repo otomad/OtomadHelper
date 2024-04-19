@@ -151,19 +151,23 @@ export default function Score() {
 							<Segmented.Item id="multiple" icon="multiselect">{t.selectionMode.multiple}</Segmented.Item>
 						</Segmented>
 					</TrackToolbar>
-					<ItemsView view="grid-list" multiple={isMultipleSelectionMode} current={[selectedTrack, setSelectedTrack]}>
+					<ItemsView view="list" multiple={isMultipleSelectionMode} current={[selectedTrack, setSelectedTrack]}>
 						{tracks.map((track, index) => (
 							<ItemsView.Item
 								key={index}
 								id={index}
 								details={(
-									<>
-										<p><Icon name="music_note" />{t.score.noteCount}{t.colon}{track.noteCount}</p>
-										<p><Icon name="start_point" />{t.score.beginNote}{t.colon}{track.beginNote}</p>
-										<p><Icon name="stereo" />{t.score.pan}{t.colon}{track.pan}</p>
-										{track.isDrumKit && <p><Icon name="drum" />{t.score.drumKit}</p>}
-										<p><Icon name="score" />{t.score.instrument}{t.colon}{track.inst}</p>
-									</>
+									<div className="track-details">
+										<div className="row">
+											<p><Icon name="music_note" />{t.score.noteCount}{t.colon}{track.noteCount}</p>
+											<p><Icon name="start_point" />{t.score.beginNote}{t.colon}{track.beginNote}</p>
+											<p><Icon name="stereo" />{t.score.pan}{t.colon}{track.pan}</p>
+										</div>
+										<div className="row">
+											{track.isDrumKit && <p><Icon name="drum" />{t.score.drumKit}</p>}
+											<p><Icon name="score" />{t.score.instrument}{t.colon}{track.inst}</p>
+										</div>
+									</div>
 								)}
 							>
 								<StackPanel $direction="horizontal">

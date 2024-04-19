@@ -75,7 +75,7 @@ const StyledItemsViewItem = styled.button<{
 				0 0 0 2px ${c("accent-color", 80)} inset,
 				0 0 0 3px ${c("fill-color-control-solid-default")} inset;
 		}
-	` : $view.in("list", "tile") ? css`
+	` : css`
 		padding: 2px 4px;
 
 		> .base {
@@ -135,8 +135,6 @@ const StyledItemsViewItem = styled.button<{
 		.image-wrapper {
 			${styles.mixins.flexCenter()};
 		}
-	` : `
-
 	`}
 
 	.text > * {
@@ -176,48 +174,35 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 		</div>
 	);
 	const checkbox = multiple && <Checkbox value={[selected]} plain />;
-	const imageOrIcon = (image || icon) && (
-		<div className="image-wrapper">
-			{typeof image === "string" ? <img src={image} /> : icon ? <Icon name={icon} /> : undefined}
-		</div>
-	);
 
 	return (
 		<StyledItemsViewItem $view={view!} className={[className, view, { selected }]} tabIndex={0} {...htmlAttrs}>
-			{view !== "grid-list" && (
-				<div className="base">
-					{view === "grid" ? (
-						<>
-							<div className="image-wrapper">
-								{typeof image === "string" ? <DefaultImage src={image} /> : image}
-								{checkbox}
-							</div>
-							<div className="selection" />
-						</>
-					) : (
-						<>
+			<div className="base">
+				{view === "grid" ? (
+					<>
+						<div className="image-wrapper">
+							{typeof image === "string" ? <DefaultImage src={image} /> : image}
 							{checkbox}
-							{imageOrIcon}
-							{textPart}
-						</>
-					)}
-				</div>
-			)}
+						</div>
+						<div className="selection" />
+					</>
+				) : (
+					<>
+						{checkbox}
+						{(image || icon) && (
+							<div className="image-wrapper">
+								{typeof image === "string" ? <img src={image} /> : icon ? <Icon name={icon} /> : undefined}
+							</div>
+						)}
+						{textPart}
+					</>
+				)}
+			</div>
 			{view === "grid" && (
 				<div className="text-part">
 					{icon && <Icon name={icon} />}
 					{textPart}
 				</div>
-			)}
-			{view === "grid-list" && (
-				<>
-					{checkbox}
-					{imageOrIcon}
-					<div className="items">
-						{children}
-						{details}
-					</div>
-				</>
 			)}
 		</StyledItemsViewItem>
 	);

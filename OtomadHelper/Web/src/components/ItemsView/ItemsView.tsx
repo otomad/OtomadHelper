@@ -29,10 +29,6 @@ const StyledItemsView = styled.div<{
 		justify-content: center;
 	}
 
-	&.grid-list {
-		display: grid;
-	}
-
 	.expander-child-items & {
 		&.tile {
 			padding: 7px 35px;
