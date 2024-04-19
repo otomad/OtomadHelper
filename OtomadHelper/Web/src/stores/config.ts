@@ -10,7 +10,7 @@ type Stretch = typeof stretches[number]["id"];
 type Legato = typeof legatos[number]["id"];
 type TransformMethod = typeof transformMethods[number];
 
-interface IConfig {
+interface ConfigState {
 	source: {
 		source: string;
 		startTime: StartTime;
@@ -52,7 +52,7 @@ interface IConfig {
 	toJson(): string; // 如果叫 toJSON 则会和 JSON 内置参数重名导致递归错误。
 }
 
-export const useConfigStore = createStore<IConfig>()(
+export const useConfigStore = createStore<ConfigState>()(
 	zustandImmer((_set, get) => ({
 		source: {
 			source: "trackEvent",
@@ -96,5 +96,5 @@ export const useConfigStore = createStore<IConfig>()(
 	})),
 );
 
-export const selectConfig = <T>(path: (state: IConfig) => T) => useStoreSelector(useConfigStore, path);
+export const selectConfig = <T>(path: (state: ConfigState) => T) => useStoreSelector(useConfigStore, path);
 globals.config = useConfigStore;

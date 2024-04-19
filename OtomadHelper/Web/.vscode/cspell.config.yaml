@@ -70,6 +70,8 @@ words:
   - styl
   - stylelint
   - subclips
+  - subgrid
+  - subgrids
   - subheaders
   - svgr
   - tsc

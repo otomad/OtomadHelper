@@ -126,3 +126,13 @@ export function updateOrCreateMetaTag(name: string, content: string) {
 		document.head.appendChild(meta);
 	}
 }
+
+/**
+ * Returns the index of the given element in the child list of its parent, or -1 if the element has no parent.
+ * @param element - HTML DOM element.
+ * @returns The index of the given element in the child list of its parent.
+ */
+export function getElementIndex(element: Element) {
+	if (!element.parentElement) return -1;
+	return [...element.parentElement.children].indexOf(element);
+}

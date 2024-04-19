@@ -43,18 +43,35 @@ const TrackToolbar = styled.div`
 		}
 	}
 
-	+ .items-view .track-details .row {
-		display: flex;
-		flex-wrap: wrap;
-		column-gap: 12px;
-
-		> * {
+	+ .items-view {
+		.title {
 			display: flex;
-			column-gap: 5px;
-			align-items: center;
+			gap: 8px;
+			align-items: baseline;
+			margin-block: -1px 3.5px;
 
-			.icon {
-				font-size: 12px;
+			.badge-wrapper {
+				display: inline-block;
+			}
+		}
+
+		.details .row {
+			&,
+			> .contents {
+				display: flex;
+				flex-wrap: wrap;
+				column-gap: 12px;
+
+				> p {
+					display: flex;
+					column-gap: 5px;
+					align-items: center;
+					white-space: nowrap;
+
+					.icon {
+						font-size: 12px;
+					}
+				}
 			}
 		}
 	}
@@ -157,23 +174,23 @@ export default function Score() {
 								key={index}
 								id={index}
 								details={(
-									<div className="track-details">
-										<div className="row">
+									<>
+										<SubgridLayout className="row" name="score-track-note-details">
 											<p><Icon name="music_note" />{t.score.noteCount}{t.colon}{track.noteCount}</p>
 											<p><Icon name="start_point" />{t.score.beginNote}{t.colon}{track.beginNote}</p>
 											<p><Icon name="stereo" />{t.score.pan}{t.colon}{track.pan}</p>
-										</div>
-										<div className="row">
+										</SubgridLayout>
+										<SubgridLayout className="row" name="score-track-note-details">
 											{track.isDrumKit && <p><Icon name="drum" />{t.score.drumKit}</p>}
-											<p><Icon name="score" />{t.score.instrument}{t.colon}{track.inst}</p>
-										</div>
-									</div>
+											<p className="span-to-end"><Icon name="score" />{t.score.instrument}{t.colon}{track.inst}</p>
+										</SubgridLayout>
+									</>
 								)}
 							>
-								<StackPanel $direction="horizontal">
-									{track.channel != null && <Badge>{track.channel}</Badge>}
+								<SubgridLayout name="score-track-name">
+									{track.channel != null && <div className="badge-wrapper"><Badge transitionOnAppear={false}>{track.channel}</Badge></div>}
 									<span>{track.name}</span>
-								</StackPanel>
+								</SubgridLayout>
 							</ItemsView.Item>
 						))}
 					</ItemsView>

@@ -50,15 +50,17 @@ const StyledBadge = styled.div<{
 	}
 `;
 
-export default forwardRef(function Badge({ children, status = "info", hidden, ...htmlAttrs }: FCP<{
+export default forwardRef(function Badge({ children, status = "info", hidden, transitionOnAppear = true, ...htmlAttrs }: FCP<{
 	/** 角标的状态，即颜色。 */
 	status?: Status;
 	/** 隐藏？ */
 	hidden?: boolean;
+	/** Play transition when the badge is appeared? */
+	transitionOnAppear?: boolean;
 }, "div">, ref: ForwardedRef<"div">) {
 	const iconName = `badge/${["neutual", "accent"].includes(status) ? "info" : status}`;
 	return (
-		<CssTransition in={!hidden} unmountOnExit appear>
+		<CssTransition in={!hidden} unmountOnExit appear={transitionOnAppear}>
 			<StyledBadge $status={status} ref={ref} className={{ iconOnly: !children }} {...htmlAttrs}>
 				{children != null ? <span>{children}</span> : <Icon name={iconName} />}
 			</StyledBadge>

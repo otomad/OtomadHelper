@@ -193,14 +193,14 @@ const filters = {
 	},
 };
 
-interface ISaved {
+interface SavedState {
 	imagePath: string;
 	filters: FilterBlobs;
 	setImagePath(imagePath: string): void;
 	setFilter(name: FilterType, blob: string): void;
 }
 
-const useSaved = createStore<ISaved>()(
+const useSaved = createStore<SavedState>()(
 	zustandImmer(set => ({
 		imagePath: "",
 		filters: {} as FilterBlobs,

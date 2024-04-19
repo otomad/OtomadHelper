@@ -135,6 +135,10 @@ const StyledItemsViewItem = styled.button<{
 		.image-wrapper {
 			${styles.mixins.flexCenter()};
 		}
+
+		/* .text {
+			width: 100%;
+		} */
 	`}
 
 	.text > * {

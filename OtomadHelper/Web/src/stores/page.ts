@@ -8,7 +8,7 @@ type PageScrollList = (PageScroll | undefined)[];
 
 type PageTransitionName = "forward" | "backward" | "jump" | "";
 
-interface IPage {
+interface PageState {
 	page: string[];
 	prevPage: string[];
 	transition: PageTransitionName;
@@ -28,7 +28,7 @@ interface IPage {
 
 const NAME = "page";
 
-export const usePageStore = createStore<IPage>()(
+export const usePageStore = createStore<PageState>()(
 	// @ts-ignore TypeScript 脑子抽风了。
 	persist((set, get) => {
 		const page = ["source"];
@@ -147,7 +147,7 @@ export const usePageStore = createStore<IPage>()(
 			isAlerted404: false,
 			pageContentId: undefined,
 			setPageContentId: pageContentId => get().pageContentId !== pageContentId && set({ pageContentId }),
-		} satisfies IPage;
+		} satisfies PageState;
 	}, {
 		name: NAME,
 		partialize: state => ({ page: state.page }),
