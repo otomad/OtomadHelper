@@ -4,7 +4,7 @@ export const GRID_VIEW_ITEM_HEIGHT = 112;
 
 const StyledItemsViewItem = styled.button<{
 	/** 显示方式：列表、平铺、网格。 */
-	$view: "list" | "tile" | "grid";
+	$view: ItemView;
 }>`
 	${styles.mixins.forwardFocusRing()};
 
@@ -75,7 +75,7 @@ const StyledItemsViewItem = styled.button<{
 				0 0 0 2px ${c("accent-color", 80)} inset,
 				0 0 0 3px ${c("fill-color-control-solid-default")} inset;
 		}
-	` : css`
+	` : $view.in("list", "tile") ? css`
 		padding: 2px 4px;
 
 		> .base {
@@ -135,6 +135,8 @@ const StyledItemsViewItem = styled.button<{
 		.image-wrapper {
 			${styles.mixins.flexCenter()};
 		}
+	` : `
+
 	`}
 
 	.text > * {
@@ -163,7 +165,7 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 	/** 详细描述。 */
 	details?: ReactNode;
 	/** @private 显示方式：列表、平铺、网格。 */
-	_view?: "list" | "tile" | "grid";
+	_view?: ItemView;
 	/** @private 多选模式？ */
 	_multiple?: boolean;
 }, "button">) {
@@ -174,35 +176,48 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 		</div>
 	);
 	const checkbox = multiple && <Checkbox value={[selected]} plain />;
+	const imageOrIcon = (image || icon) && (
+		<div className="image-wrapper">
+			{typeof image === "string" ? <img src={image} /> : icon ? <Icon name={icon} /> : undefined}
+		</div>
+	);
 
 	return (
 		<StyledItemsViewItem $view={view!} className={[className, view, { selected }]} tabIndex={0} {...htmlAttrs}>
-			<div className="base">
-				{view === "grid" ? (
-					<>
-						<div className="image-wrapper">
-							{typeof image === "string" ? <DefaultImage src={image} /> : image}
-							{checkbox}
-						</div>
-						<div className="selection" />
-					</>
-				) : (
-					<>
-						{checkbox}
-						{(image || icon) && (
+			{view !== "grid-list" && (
+				<div className="base">
+					{view === "grid" ? (
+						<>
 							<div className="image-wrapper">
-								{typeof image === "string" ? <img src={image} /> : icon ? <Icon name={icon} /> : undefined}
+								{typeof image === "string" ? <DefaultImage src={image} /> : image}
+								{checkbox}
 							</div>
-						)}
-						{textPart}
-					</>
-				)}
-			</div>
+							<div className="selection" />
+						</>
+					) : (
+						<>
+							{checkbox}
+							{imageOrIcon}
+							{textPart}
+						</>
+					)}
+				</div>
+			)}
 			{view === "grid" && (
 				<div className="text-part">
 					{icon && <Icon name={icon} />}
 					{textPart}
 				</div>
+			)}
+			{view === "grid-list" && (
+				<>
+					{checkbox}
+					{imageOrIcon}
+					<div className="items">
+						{children}
+						{details}
+					</div>
+				</>
 			)}
 		</StyledItemsViewItem>
 	);

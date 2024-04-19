@@ -29,6 +29,10 @@ const StyledItemsView = styled.div<{
 		justify-content: center;
 	}
 
+	&.grid-list {
+		display: grid;
+	}
+
 	.expander-child-items & {
 		&.tile {
 			padding: 7px 35px;
@@ -45,7 +49,7 @@ export default function ItemsView<
 	T extends (M extends true ? ObjectKey[] : ObjectKey),
 >({ view, current: [current, setCurrent], $itemWidth, multiple = false as M, children }: FCP<{
 	/** 显示方式：列表、平铺、网格。 */
-	view: "list" | "tile" | "grid";
+	view: ItemView;
 	/** 当前选中项标识符。 */
 	current: StateProperty<T>;
 	/** 网格视图下，子元素图片的宽度。 */

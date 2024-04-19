@@ -16,4 +16,7 @@ declare global {
 
 	/** The placement of tooltips, flyouts, etc. */
 	type Placement = "top" | "right" | "bottom" | "left" | "x" | "y";
+
+	/** Item view mode. */
+	type ItemView = "list" | "tile" | "grid" | "grid-list";
 }
