@@ -84,6 +84,11 @@
 		return this.relist(this.toTrimmed());
 	};
 
+	Array.prototype.swap = function (index1, index2) {
+		[this[index1], this[index2]] = [this[index2], this[index1]];
+		return this;
+	};
+
 	makePrototypeKeysNonEnumerable(Array);
 }
 

@@ -88,4 +88,11 @@ declare interface Array<T> {
 	 * Remove undefined, null, NaN, and strings containing only white space characters from the array. This will modify the original array.
 	 */
 	trim(): void;
+
+	/**
+	 * Swap two items by their index in the array. This will modify the original array.
+	 * @param index1 - The index of the first item.
+	 * @param index2 - The index of the second item.
+	 */
+	swap(index1: number, index2: number): T[];
 }

@@ -29,5 +29,13 @@
 		return list.includes(this as never);
 	};
 
+	String.prototype.removeSpace = function () {
+		return this.replace(/\s/g, "");
+	};
+
+	String.prototype.holeString = function (start, end) {
+		return this.slice(0, start) + this.slice(end);
+	};
+
 	makePrototypeKeysNonEnumerable(String);
 }

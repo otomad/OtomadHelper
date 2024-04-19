@@ -167,7 +167,8 @@ export function makePrototypeKeysNonEnumerable(constructor: AnyConstructor) {
 	const protoKeys = Object.keys(constructor.prototype);
 	for (const protoKey of protoKeys)
 		Object.defineProperty(constructor.prototype, protoKey, {
-			enumerable: false,
+			configurable: true, // Allowed to be overridden, if it has the same name as the ECMAScript method in the future.
+			enumerable: false, // Do not print when being used in for in loops.
 		});
 }
 
