@@ -312,7 +312,6 @@ export function useSelectAll<T>([selected, setSelected]: StateProperty<T[]>, all
 			else if (checkState === "checked") setSelected(allSelection.slice());
 		},
 		() => {
-			// @ts-expect-error Set.prototype.difference works on Chromium >= 122.
 			const invertedItems = new Set(allSelection).difference(new Set(selected));
 			setSelected(Array.from(invertedItems));
 		},

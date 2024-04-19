@@ -68,27 +68,4 @@ declare global {
 	 * Built in timer object.
 	 */
 	interface Timer extends NodeJS.Timer { }
-	interface Window {
-		/**
-		 * The ActiveX object that is only available in Internet Explorer, higher versions of browsers will return undefined.
-		 */
-		ActiveXObject: undefined;
-	}
-	interface Document {
-		/**
-		 * Text selection objects available in Internet Explorer.
-		 *
-		 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/getSelection)
-		 */
-		selection: Selection | null;
-	}
-	interface ScreenOrientation {
-		/**
-		 * The `lock()` property of the `ScreenOrientation` interface locks the orientation of the containing document to the specified orientation.
-		 * @note I don't know why VSCode removes this property definition.
-		 * @param type - An orientation lock type.
-		 * @returns A Promise that resolves after locking succeeds.
-		 */
-		lock(type: "any" | "natural" | "landscape" | "portrait" | OrientationType): Promise<void>;
-	}
 }
