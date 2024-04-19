@@ -4,20 +4,27 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:f="clr-namespace:OtomadHelper.WPF.Controls.Flyouts"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	Width="200"
 	BorderBrush="{DynamicResource CardStroke}"
 	BorderThickness="1"
-	SizeToContent="Height"
+	Deactivated="Window_Deactivated"
 	ResizeMode="NoResize"
 	ShowInTaskbar="False"
-	WindowStartupLocation="Manual"
+	SizeToContent="Height"
 	TitleBarType="WindowChromeNoTitleBar"
-	Deactivated="Window_Deactivated"
-	mc:Ignorable="d">
+	WindowStartupLocation="Manual"
+	mc:Ignorable="d"
+	Loaded="ComboBoxFlyout_Loaded">
+	<c:BackdropWindow.Resources>
+		<Thickness x:Key="Margin">4</Thickness>
+		<Style TargetType="StackPanel">
+			<Setter Property="Orientation" Value="Vertical" />
+			<Setter Property="Margin" Value="{StaticResource Margin}" />
+		</Style>
+	</c:BackdropWindow.Resources>
 
-	<StackPanel Orientation="Vertical">
-		<TextBlock>Hello</TextBlock>
-		<TextBlock>World</TextBlock>
-	</StackPanel>
+	<StackPanel x:Name="Container" Orientation="Vertical" />
 </c:BackdropWindow>

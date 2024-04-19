@@ -14,15 +14,17 @@
 	<s:Double x:Key="ControlPressedOpacity">0.786</s:Double>
 	<s:Double x:Key="ControlPressedOpacityOnAccent">0.5</s:Double>
 	<LinearGradientBrush x:Key="ControlElevation" StartPoint="0.5,0" EndPoint="0.5,1">
-		<GradientStop Color="#17FFFFFF" Offset="0"/>
-		<GradientStop Color="#11FFFFFF" Offset="0.1"/>
+		<GradientStop Offset="0" Color="#17FFFFFF" />
+		<GradientStop Offset="0.1" Color="#11FFFFFF" />
 	</LinearGradientBrush>
 	<LinearGradientBrush x:Key="AccentControlElevation" StartPoint="0.5,0" EndPoint="0.5,1">
-		<GradientStop Color="#14FFFFFF" Offset="0.9"/>
-		<GradientStop Color="#23000000" Offset="1"/>
+		<GradientStop Offset="0.9" Color="#14FFFFFF" />
+		<GradientStop Offset="1" Color="#23000000" />
 	</LinearGradientBrush>
 	<Color x:Key="TextOnAccentForegroundColor">White</Color>
 	<SolidColorBrush x:Key="TextOnAccentForegroundBrush" Color="{DynamicResource TextOnAccentForegroundColor}" />
 	<s:Double x:Key="AccentSecondaryOpacity">0.9</s:Double>
 	<s:Double x:Key="AccentTertiaryOpacity">0.8</s:Double>
+	<SolidColorBrush x:Key="FillColorSubtleSecondary" Color="#0FFFFFFF" />
+	<SolidColorBrush x:Key="FillColorSubtleTertiary" Color="#0AFFFFFF" />
 </ResourceDictionary>

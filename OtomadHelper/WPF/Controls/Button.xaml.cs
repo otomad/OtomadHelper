@@ -13,10 +13,9 @@ public partial class Button : UserControl {
 		Btn.Click += (sender, e) => RaiseEvent(new RoutedEventArgs(ClickRoutedEvent, this));
 	}
 
-	public string Text {
-		get => BtnText.Text;
-		set => BtnText.Text = value;
-	}
+	public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+		nameof(Text), typeof(string), typeof(Button), new PropertyMetadata(""));
+	public string Text { get => (string)GetValue(TextProperty); set => SetValue(TextProperty, value); }
 
 	public object DialogResult { get; set; } = "";
 
@@ -28,8 +27,7 @@ public partial class Button : UserControl {
 		remove => RemoveHandler(ClickRoutedEvent, value);
 	}
 
-	public bool IsDefault {
-		get => Btn.IsDefault;
-		set => Btn.IsDefault = value;
-	}
+	public static readonly DependencyProperty IsDefaultProperty = DependencyProperty.Register(
+		nameof(IsDefault), typeof(bool), typeof(Button), new PropertyMetadata(false));
+	public bool IsDefault { get => (bool)GetValue(IsDefaultProperty); set => SetValue(IsDefaultProperty, value); }
 }

@@ -137,6 +137,9 @@
     <Compile Include="WPF\Controls\Flyouts\ComboBoxFlyout.xaml.cs">
       <DependentUpon>ComboBoxFlyout.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WPF\Controls\Flyouts\ComboBoxItem.xaml.cs">
+      <DependentUpon>ComboBoxItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPF\Controls\NotifiedUserControl.cs" />
     <EmbeddedResource Include="Module\MainDock.resx">
       <DependentUpon>MainDock.cs</DependentUpon>
@@ -222,6 +225,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WPF\Controls\Flyouts\ComboBoxFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Controls\Flyouts\ComboBoxItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -13,6 +13,8 @@ using OtomadHelper.WPF.Controls.Flyouts;
 namespace OtomadHelper.Test;
 public partial class TestControls : Form {
 	private readonly List<System.Windows.Window> flyouts = new();
+	private readonly string[] list = { "foo", "bar", "baz", "hello", "world" };
+	private string selected = "foo";
 
 	public TestControls() {
 		InitializeComponent();
@@ -23,13 +25,15 @@ public partial class TestControls : Form {
 		Point location = control.PointToScreen(Point.Empty);
 		(double dpiX, double dpiY) = this.GetDpi();
 
-		ComboBoxFlyout flyout = new() {
+		ComboBoxFlyout flyout = new(list, selected) {
 			Left = location.X / dpiX,
 			Top = location.Y / dpiY,
 			Width = control.Width / dpiX,
+			ItemHeight = control.Height / dpiY,
 		};
 		flyouts.Add(flyout);
 		flyout.ShowDialog();
+		ComboBoxBtn.Text = selected = flyout.Selected;
 	}
 
 	protected override void WndProc(ref Message m) {

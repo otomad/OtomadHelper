@@ -2,7 +2,7 @@
 	x:Class="OtomadHelper.WPF.Controls.Button"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:System="clr-namespace:System;assembly=mscorlib"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -20,9 +20,8 @@
 							Margin="-3"
 							RadiusX="7"
 							RadiusY="7"
-							StrokeThickness="2"
-							Stroke="{DynamicResource ForegroundBrush}">
-						</Rectangle>
+							Stroke="{DynamicResource ForegroundBrush}"
+							StrokeThickness="2" />
 					</ControlTemplate>
 				</Setter.Value>
 			</Setter>
@@ -116,7 +115,7 @@
 			</Style.Triggers>
 		</Style>
 	</UserControl.Resources>
-	<Button x:Name="Btn">
-		<AccessText x:Name="BtnText" />
+	<Button x:Name="Btn" IsDefault="{Binding Path=IsDefault, RelativeSource={RelativeSource AncestorType=UserControl}}">
+		<AccessText x:Name="BtnText" Text="{Binding Path=Text, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 	</Button>
 </UserControl>
