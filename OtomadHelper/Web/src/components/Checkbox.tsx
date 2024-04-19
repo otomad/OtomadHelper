@@ -198,7 +198,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 			/>
 			<div className="base">
 				<SwitchTransition>
-					<CssTransition key={checkMarkName}>
+					<CssTransition key={checkMarkName} maxTimeout={500}>
 						<Icon name={checkMarkName} />
 					</CssTransition>
 				</SwitchTransition>
