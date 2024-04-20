@@ -117,7 +117,7 @@ const StyledNavigationView = styled.div<{
 		height: 100%;
 		padding-bottom: 4px;
 
-		@media (horizontal-viewport-segments: 2) {
+		@media (horizontal-viewport-segments >= 2) {
 			width: calc((env(viewport-segment-left 1 0) - env(viewport-segment-left 0 0)) / var(--zoom, 1));
 
 			&.expanded:not(.flyout) {
