@@ -1,11 +1,15 @@
+/**
+ * `Portal` lets you render some children into a different part of the DOM.
+ */
 export default function Portal({ container = "#popovers", children }: FCP<{
 	/**
-	 * 某个已经存在的 DOM 节点，例如由 `document.getElementById()` 返回的节点。在更新过程中传递不同的 DOM 节点将导致 portal 内容被重建。
+	 * Some DOM node, such as those returned by document.getElementById(). The node must already exist.
+	 * Passing a different DOM node during an update will cause the portal content to be recreated.
 	 *
-	 * 此外也支持直接传递字符串，将会自动调用 `document.querySelector()`。
+	 * In addition, passing strings directly is also supported, and `document.querySelector()` will be called automatically.
 	 */
 	container?: Element | DocumentFragment | string;
-}>) {
+}>): React.ReactPortal {
 	if (typeof container === "string")
 		container = document.querySelector(container)!;
 

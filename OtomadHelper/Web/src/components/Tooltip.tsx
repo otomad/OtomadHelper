@@ -1,5 +1,5 @@
 const StyledTooltip = styled.div<{
-	/** 工具提示偏移（仅用作动画）。 */
+	/** Tooltip offset (animation only). */
 	$offset: number;
 }>`
 	${styles.mixins.square("0")};
@@ -80,15 +80,15 @@ const StyledTooltip = styled.div<{
 `;
 
 export default function Tooltip({ title, placement, offset = 10, timeout = 500, disabled = false, children }: FCP<{
-	/** 工具提示内容。 */
+	/** Tooltip content. */
 	title: ReactNode;
-	/** 工具提示方向。 */
+	/** Tooltip placement. */
 	placement?: Placement;
-	/** 工具提示偏移。 */
+	/** Tooltip offset. */
 	offset?: number;
-	/** 延时显示。 */
+	/** Delayed display time. */
 	timeout?: number;
-	/** 不显示工具提示？ */
+	/** Do not show the tooltip? */
 	disabled?: boolean;
 }>) {
 	const [shown, setShown] = useState(false);
@@ -166,7 +166,7 @@ const StyledTooltipContent = styled.figure`
 `;
 
 function TooltipContent({ image, children, ...htmlAttrs }: FCP<{
-	/** 图片。 */
+	/** Image. */
 	image?: string;
 }, "figure">) {
 	return (

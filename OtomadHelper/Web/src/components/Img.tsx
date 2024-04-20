@@ -43,9 +43,9 @@ function resetImageAttributes(image: HTMLImageElement, withAttrs: FCP<{}, "img">
 }
 
 export default forwardRef(function Img({ src, duplicate, ...htmlAttrs }: FCP<{
-	/** 图片地址。 */
+	/** Image source href. */
 	src: string;
-	/** 如果页面需要同时在不同位置包含该图片两次，请在此处指定别名以获得更好的体验。 */
+	/** If the page needs to include the image twice in different locations, please specify an alias here for a better experience. */
 	duplicate?: string;
 }, "img">, ref: ForwardedRef<"img">) {
 	const contentsEl = useDomRef<"div">();

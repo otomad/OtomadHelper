@@ -77,17 +77,17 @@ export default function SettingsCard({
 	className,
 	...htmlAttrs
 }: FCP<{
-	/** 图标。 */
+	/** Icon. */
 	icon?: DeclaredIcons;
-	/** 标题。 */
+	/** Title. */
 	title?: ReactNode;
-	/** 详细描述。 */
+	/** Detailed description. */
 	details?: ReactNode;
-	/** 指定轨道或轨道事件的选择情况。 */
+	/** Specifies the selection of tracks or track events. */
 	selectInfo?: ReactNode;
-	/** 尾随图标。使用空字符串或布尔类型表示禁用。 */
+	/** Trailing icon. Use an empty string or Boolean type to indicate disabling. */
 	trailingIcon?: DeclaredIcons | "" | boolean;
-	/** 组件形态。 */
+	/** Component form type. */
 	type?: "container" | "button" | "expander";
 }, "div">) {
 	trailingIcon ??= type === "button" ? "chevron_right" :

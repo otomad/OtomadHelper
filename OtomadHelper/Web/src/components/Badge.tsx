@@ -10,9 +10,9 @@ const backgroundColors: Record<Status, ColorNames> = {
 };
 
 const StyledBadge = styled.div<{
-	/** 角标的状态，即颜色。 */
+	/** The state of the badge, that is, the color. */
 	$status: Status;
-	/** 隐藏？ */
+	/** Hidden? */
 	$hidden?: boolean;
 }>`
 	${styles.mixins.oval()};
@@ -51,9 +51,9 @@ const StyledBadge = styled.div<{
 `;
 
 export default forwardRef(function Badge({ children, status = "info", hidden, transitionOnAppear = true, ...htmlAttrs }: FCP<{
-	/** 角标的状态，即颜色。 */
+	/** The state of the badge, that is, the color. */
 	status?: Status;
-	/** 隐藏？ */
+	/** Hidden? */
 	hidden?: boolean;
 	/** Play transition when the badge is appeared? */
 	transitionOnAppear?: boolean;

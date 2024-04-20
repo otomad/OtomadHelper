@@ -7,7 +7,7 @@ function replaceLfToBr(longText: string) {
 }
 
 /**
- * 将传入字符串中的 `\n` 自动转为 `<br />`，以保留换行符。
+ * Automatically convert `\n` in the passed string to `<br />` to preserve line breaks.
  */
 export default function Preserves({ children }: FCP) {
 	return React.Children.map(children, child => {
@@ -17,7 +17,7 @@ export default function Preserves({ children }: FCP) {
 }
 
 export function Br({ repeat = 1, ...htmlAttrs }: FCP<{
-	/** 重复次数。 */
+	/** Repeat times. */
 	repeat?: number;
 }, "br">) {
 	return forMap(repeat, i => <br key={i} {...htmlAttrs} />);

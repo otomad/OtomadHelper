@@ -105,21 +105,21 @@ const StyledTabItem = styled.button`
 `;
 
 export /* internal */ default function TabItem({ icon, animatedIcon, children, selected = false, collapsed, id: _id, focusable = true, badge, _vertical: vertical, ...htmlAttrs }: FCP<{
-	/** 图标。 */
+	/** Icon. */
 	icon?: DeclaredIcons;
-	/** 动态图标。 */
+	/** Animated icon. */
 	animatedIcon?: DeclaredLotties;
-	/** 标识符。 */
+	/** Identifier. */
 	id: string;
-	/** 是否已选中？ */
+	/** Selected? */
 	selected?: boolean;
-	/** 是否隐藏文本标签，仅显示图标？ */
+	/** Hide the text label and only show the icon? */
 	collapsed?: boolean;
-	/** 是否可被聚焦？ */
+	/** Can be focused? */
 	focusable?: boolean;
-	/** 角标。 */
+	/** Badge. */
 	badge?: string | number;
-	/** @private 是否使用纵向的 NavigationView 样式？ */
+	/** @private Use the vertical NavigationView style? */
 	_vertical?: boolean;
 }, "section">) {
 	const tabItemEl = useDomRef<"button">();

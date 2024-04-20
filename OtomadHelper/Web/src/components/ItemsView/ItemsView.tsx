@@ -1,7 +1,7 @@
 import ItemsViewItem from "./ItemsViewItem";
 
 const StyledItemsView = styled.div<{
-	/** 网格视图下，子元素图片的宽度。默认为 200px。 */
+	/** In grid view, the width of the child element image. Defaults to 200px. */
 	$itemWidth?: number;
 }>`
 	:has(> &) {
@@ -44,13 +44,13 @@ export default function ItemsView<
 	M extends boolean,
 	T extends (M extends true ? ObjectKey[] : ObjectKey),
 >({ view, current: [current, setCurrent], $itemWidth, multiple = false as M, children }: FCP<{
-	/** 显示方式：列表、平铺、网格。 */
+	/** View mode: list, tile, grid. */
 	view: ItemView;
-	/** 当前选中项标识符。 */
+	/** The identifier of the currently selected item. */
 	current: StateProperty<T>;
-	/** 网格视图下，子元素图片的宽度。 */
+	/** In grid view, the width of the child element image. */
 	$itemWidth?: number;
-	/** 多选模式？ */
+	/** Multiple selection mode? */
 	multiple?: M;
 }>) {
 	const isSelected = (id: ObjectKey) => {

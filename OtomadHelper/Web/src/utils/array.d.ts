@@ -43,7 +43,7 @@ declare interface Array<T> {
 	toggle(item: T): void;
 
 	/**
-	 * Map to an object through any array.
+	 * Map to an object via any array.
 	 * @param callbackFn - Generate key value tuples as objects.
 	 * @returns The mapped object.
 	 */

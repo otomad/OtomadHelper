@@ -4,7 +4,7 @@ const squared = styles.mixins.square("1em");
 const StyledIcon = styled.i.attrs({
 	role: "img",
 })<{
-	/** 是否保持图标本身的颜色？ */
+	/** Keep the color of the icon itself? */
 	$filled?: boolean;
 }>`
 	${squared};
@@ -28,9 +28,9 @@ export function getIconSymbolId(name: string) {
 }
 
 export default forwardRef(function Icon({ name, filled, ...htmlAttrs }: FCP<{
-	/** 图标文件名称。 */
+	/** Icon file name. */
 	name: DeclaredIcons;
-	/** 是否保持图标本身的颜色？ */
+	/** Keep the color of the icon itself? */
 	filled?: boolean;
 }, "span">, ref: ForwardedRef<"span">) {
 	if (!name) return <span hidden />;

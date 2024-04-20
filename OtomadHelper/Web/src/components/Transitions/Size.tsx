@@ -6,7 +6,7 @@ export /* internal */ default function Size({ in: shown, specified, duration, ea
 	in?: boolean;
 	/** Explicitly specify which direction needs to be animated. Defaults to height animation. */
 	specified?: "width" | "height";
-	/** Specify animation duration. */
+	/** Specify the animation duration. */
 	duration?: SameOrDifferent<number>;
 	/** Specify the animation easing curve. */
 	easing?: SameOrDifferent<string>;

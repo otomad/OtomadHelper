@@ -95,17 +95,17 @@ const StyledRadioButtonLabel = styled.label`
 `;
 
 export default function RadioButton<T>({ children, id, value: [value, setValue], disabled, onChange, details, radioGroup, ...htmlAttrs }: FCP<{
-	/** 标识符。 */
+	/** Identifier. */
 	id: T;
-	/** 当前单选框组中选中的值。 */
+	/** The selected value in the current radio button group. */
 	value: StateProperty<T>;
-	/** 已禁用？ */
+	/** Disabled? */
 	disabled?: boolean;
-	/** 状态改变事件。 */
+	/** State change event. */
 	onChange?: (e: { id: T; value: T; checked: boolean }) => void;
-	/** 详细描述。 */
+	/** Detailed description. */
 	details?: ReactNode;
-	/** 单选框分组，可选。 */
+	/** Radio button group name, optional. */
 	radioGroup?: string;
 }, "label">) {
 	const labelEl = useDomRef<"label">();

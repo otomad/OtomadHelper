@@ -1,7 +1,7 @@
 const StyledButton = styled.button<{
-	/** 背景填充颜色名称。 */
+	/** The name of the background fill color. */
 	$fillColorName?: string;
-	/** 是否根据书写方向来改变图标的朝向？ */
+	/** Is the orientation of the icon changed based on the writing direction? */
 	$dirBased?: boolean;
 }>`
 	${styles.mixins.flexCenter()};
@@ -127,17 +127,17 @@ const StyledButton = styled.button<{
 `;
 
 export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBased, className, ...htmlAttrs }: FCP<{
-	/** 按钮图标。 */
+	/** Button icon. */
 	icon?: DeclaredIcons;
-	/** 按钮动态图标。 */
+	/** Button animated icon. */
 	animatedIcon?: DeclaredLotties;
-	/** 是否使用无背景按钮？ */
+	/** Use background-less button? */
 	subtle?: boolean;
-	/** 是否使用超链接按钮？ */
+	/** Use hyperlink button? */
 	hyperlink?: boolean;
-	/** 是否按钮附着强调色？ */
+	/** Attach accent color to the button? */
 	accent?: boolean | "critical" | "success" | "attention" | "caution";
-	/** 是否根据书写方向来改变图标的朝向？ */
+	/** Is the orientation of the icon changed based on the writing direction? */
 	dirBased?: boolean;
 }, "button">, ref: ForwardedRef<"button">) {
 	const fillColorName = !accent ? undefined : accent === true ? "accent-color" : `fill-color-system-${accent}`;

@@ -1,7 +1,7 @@
 import { STATUS_PREFIX } from "styles/fake-animations";
 
 const StyledAnimatedIcon = styled.div<{
-	/** 是否 `overflow: clip`？ */
+	/** Is `overflow: clip`? */
 	$clipped?: boolean;
 }>`
 	@layer props {
@@ -153,23 +153,23 @@ function useLottieSequence(animationItem: MutableRefObject<AnimationItem | undef
 }
 
 export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false, name, hidden = false, speed = 1, filled = false, onInit, onClick, ...htmlAttrs }: FCP<{
-	/** 循环播放？ */
+	/** Loop? */
 	loop?: boolean;
-	/** 自动播放？ */
+	/** Autoplay? */
 	autoplay?: boolean;
-	/** 动画数据 JSON 或其文件名。 */
+	/** Animation data JSON or its filename. */
 	name: object | DeclaredLotties;
-	/** 隐藏？ */
+	/** Hidden? */
 	hidden?: boolean;
-	/** 播放速度。 */
+	/** Play speed. */
 	speed?: number;
-	/** 状态信息。参数依次为：标记、循环、速度。 */
+	/** Status information. Parameters are: marker, loop, speed. */
 	// state?: AnimatedIconState;
-	/** 是否保持图标本身的颜色。 */
+	/** Keep the color of the icon itself? */
 	filled?: boolean;
-	/** 初始化事件。 */
+	/** Initialization event. */
 	onInit?: (anim?: AnimationItem) => void;
-	/** 点击事件。 */
+	/** Click event. */
 	onClick?: (anim?: AnimationItem) => void;
 }, "div">, ref: ForwardedRef<{
 	play: () => void;
@@ -181,7 +181,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	const { findMarker, onAnimationComplete, ...sequence } = useLottieSequence(animationItem);
 
 	/**
-	 * 获取以文件名形式的图标。
+	 * Gets the icon as a filename.
 	 */
 	const animationData = useMemo<AnyObject>(() => {
 		if (typeof name !== "string")
@@ -198,7 +198,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	const clipped = useMemo(() => !!animationData.metadata?.customProps?.clipped, [name]);
 
 	/**
-	 * 点击图标交互事件。
+	 * Click icon interaction event.
 	 */
 	const handleClick = () => {
 		if (!animationItem.current) return;
@@ -211,7 +211,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	const handleSpeedChange = () => animationItem.current?.setSpeed(speed);
 
 	/**
-	 * 控制状态信息。
+	 * Control status information.
 	 */
 	function handleStateChange(state: AnimatedIconState) {
 		const anim = animationItem.current;
@@ -222,7 +222,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 		else
 			({ marker, loop, speed } = state);
 		if (loop !== undefined) anim.loop = loop;
-		if (speed) { // 在不为 0 时有效。
+		if (speed) { // Valid when not 0.
 			anim.playSpeed = Math.abs(speed);
 			anim.playDirection = Math.sign(speed);
 		}
@@ -270,8 +270,8 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	});
 
 	/**
-	 * 当 Lottie 动画完成加载后调用，用于获取 anim 对象。
-	 * @param anim - anim 对象。
+	 * Called when the Lottie animation completes loading, used to get the `anim` object.
+	 * @param anim - `anim` object.
 	 */
 	function onAnimationCreated(anim: AnimationItem) {
 		animationItem.current = anim;

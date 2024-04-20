@@ -1,10 +1,12 @@
 type ReactElementType = string | React.JSXElementConstructor<Any>;
 
 /**
- * 判断一个组件是否是某个组件类型的实例。
- * @param node - 组件实例。
- * @param element - 组件类、函数组件。
- * @returns - 是其实例。
+ * Determine whether a component is an instance of a certain component type.
+ * @note It seems that the specified component type appears to require placement in a separate file,
+ * rather than in the same file as where the function is invoked.
+ * @param node - Component instance.
+ * @param element - Component class or function component.
+ * @returns Is its instance?
  */
 export function isReactInstance<T extends ReactElementType>(node: ReactNode, element: T):
 	node is ReactElement<T extends React.FC<infer P> ? P : unknown, T> {
@@ -12,20 +14,31 @@ export function isReactInstance<T extends ReactElementType>(node: ReactNode, ele
 }
 
 /**
- * 同时阻止事件冒泡和默认方法。
- * @param event - 事件。
+ * Prevent event bubbling and default behavior simultaneously.
+ * @param event - Event (Vanilla JavaScript event or React wrapped event).
  */
 export function stopEvent(event?: Pick<Event, "preventDefault" | "stopPropagation">) {
 	if (!event) return;
-	// 池沼 React 自行声明的 Event 类型与内置 Event 类型不匹配。
+	// React's self-declared Event type does not match the built-in Event type.
 	event.preventDefault();
 	event.stopPropagation();
 }
 
+/**
+ * Checks if the given ReactNode has a ref property.
+ * @param reactNode - The ReactNode to check for a ref.
+ * @returns True if the ReactNode has a ref property, otherwise false.
+ */
 export function hasRefInReactNode(reactNode: unknown): reactNode is { ref: MutableRefObject<Element | null> } {
 	return !!(reactNode && typeof reactNode === "object" && "ref" in reactNode && reactNode.ref);
 }
 
+/**
+ * Clones the provided children, replacing any refs with the provided nodeRef.
+ * @param children - The ReactNode to clone and replace refs.
+ * @param nodeRef - The MutableRefObject to use as the new ref for any cloned elements with a ref.
+ * @returns The cloned children with updated refs.
+ */
 export function cloneRef(children: ReactNode, nodeRef: MutableRefObject<Element | null>) {
 	return h(
 		Fragment,
@@ -53,10 +66,12 @@ type TargetType = Node | Element | MutableRefObject<Element | null | undefined> 
 type DetectInPathType = Node | Element | MutableRefObject<Element | null | undefined> | Event | EventTarget | string | null | undefined;
 
 /**
- * 获取从指定元素节点，一直追溯到根元素的数组。
- * 用于查找事件目标并向上冒泡，找到需要的元素。
- * @param target - HTML DOM 节点。
- * @returns 从指定元素节点，一直追溯到根元素的数组。
+ * Get an array from the specified element that traces back to the root element.
+ *
+ * Used to find the event target and bubble up to find the required element.
+ *
+ * @param target - HTML DOM node.
+ * @returns An array of the specified element that traces back to the root element.
  */
 export function getPath(target: TargetType): Element[] {
 	if (isRef(target)) target = toValue(target);
@@ -71,10 +86,13 @@ export function getPath(target: TargetType): Element[] {
 }
 
 /**
- * 根据鼠标事件的目标节点，查找要查询的元素是否是或是其祖先节点。比如查找元素是否被点击等。
- * @param target - 点击事件中的目标 HTML DOM 节点。
- * @param element - 要查找的冒泡 HTML DOM 节点。如果为字符串则表示要查询的 CSS 选择器。
- * @returns 要查询的元素是或是其祖先节点。
+ * According to the target node of the mouse event, find whether the element to be queried is or is its
+ * ancestor node. For example, find whether the element is clicked, etc.
+ *
+ * @param target - The target HTML DOM node in the click event.
+ * @param element - The bubbling HTML DOM node to find. If it is a string, it represents the CSS selector
+ * to be queried.
+ * @returns The element to be queried is or is its ancestor node.
  */
 export function isInPath(target: TargetType, element: DetectInPathType): boolean {
 	const path = getPath(target);
@@ -91,35 +109,56 @@ export function isInPath(target: TargetType, element: DetectInPathType): boolean
 }
 
 /**
- * 指定元素是否显示为 contents？
- * @param element - HTML DOM 元素。
- * @returns 指定元素是否显示为 contents？
+ * Checks if the specified element is a "contents" display type.
+ *
+ * A "contents" display type means that the element will not create a new block formatting context,
+ * and its children will be part of the parent's formatting context.
+ *
+ * @param element - HTML DOM element.
+ * @returns True if the specified element is a "contents" display type, otherwise false.
  */
 export function isElementContents(element: Element | undefined | null) {
 	return !!(element && getComputedStyle(element).display === "contents");
 }
 
 /**
- * 指定元素是否已隐藏？
- * @param element - HTML DOM 元素。
- * @returns 指定元素是否已隐藏？
+ * Checks if the specified element is hidden.
+ *
+ * This function checks if the specified element is hidden by checking it and its ancestor elements for any hidden
+ * reasons, which considered hidden whether any of them have no parent, the `hidden` attribute is set to true, the
+ * `display` CSS property is set to `none`, or the `visibility` CSS property is not set to `visible`.
+ *
+ * @param element - HTML DOM element to check for hidden status.
+ * @returns True if the specified element is hidden, otherwise false.
  */
 export function isElementHidden(element: Element | undefined | null): element is undefined | null {
-	return !element || (element as HTMLElement).hidden || getComputedStyle(element).display === "none" || getComputedStyle(element).visibility !== "visible";
+	/*
+	 * In fact, there is another simpler way to determine whether it and its ancestor are hidden, which is to check
+	 * whether the offsetParent property of the specified element is null. However this way has many flaws. For example,
+	 * if the parent node of the element to be determined is the root element or node, such as `<body>`, `<head>, `<html>`,
+	 * it will be determined incorrectly. And it cannot also determine the situation of the visibility CSS property.
+	 */
+	const hiddenElement = getPath(element).find(element =>
+		!element || // Passed a empty value to the parameter
+		(element as HTMLElement).hidden || // `hidden` attribute is set to true
+		getComputedStyle(element).display === "none" || // `display` CSS property is set to `none`
+		getComputedStyle(element).visibility !== "visible", // `visibility` CSS property is set to `hidden` or `collapse`
+	);
+	return !hiddenElement;
 }
 
 /**
- * 创建或更新一个 `<meta>` 标签。
- * @param name - `<meta>` 标签的名称。
- * @param content - `<meta>` 标签的内容。
+ * Create or update a `<meta>` tag.
+ * @param name - The name of the `<meta>` tag.
+ * @param content - The content of the `<meta>` tag.
  */
 export function updateOrCreateMetaTag(name: string, content: string) {
-	// 尝试找到已存在的 meta 标签
+	// Try to find an existing meta tag
 	let meta = document.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
 
-	if (meta) // 如果标签已存在，更新它的内容
+	if (meta) // If the tag already exists, update its content
 		meta.content = content;
-	else { // 如果标签不存在，创建一个新的标签并设置其属性
+	else { // If the tag does not exist, create a new tag and set its properties
 		meta = document.createElement("meta");
 		meta.name = name;
 		meta.content = content;

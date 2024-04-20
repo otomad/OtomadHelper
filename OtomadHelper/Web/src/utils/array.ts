@@ -91,32 +91,31 @@
 
 	makePrototypeKeysNonEnumerable(Array);
 }
-
 /**
- * 通过一个常量数组映射到一个对象。
- * @note 此 JSDoc 的 `@param` 部分参数后故意没加 “-”，否则会出现 bug。
- * @param this **常量**字符串数组。
- * @param callbackFn 生成作为对象的值。
- * @returns 映射的对象。
+ * Map to an object via a constant array.
+ * @note This JSDoc deliberately does not add "-" after the `@param` parameter, otherwise bugs will occur.
+ * @param this **Constant** string array.
+ * @param callbackFn - Generate key value tuples as objects.
+ * @returns The mapped object.
  */
 export function mapObjectConst<const T extends string, U>(array: T[], callbackFn: (value: T, index: number, array: T[]) => U) {
 	return Object.fromEntries(array.map((value, index, array) => ([value, callbackFn(value, index, array)] as [T, U]))) as Record<T, U>;
 }
 
 // #region Tuples
-/** 创建可供 TypeScript 正确识别的一元组。 */
+/** Creates a singleton (1-tuple) that is correctly recognized by TypeScript. */
 export function Tuple<T>(arg1: T): [T];
-/** 创建可供 TypeScript 正确识别的二元组。 */
+/** Creates a tuple (2-tuple) that is correctly recognized by TypeScript. */
 export function Tuple<T, U>(arg1: T, arg2: U): [T, U];
-/** 创建可供 TypeScript 正确识别的三元组。 */
+/** Creates a triple (3-tuple) that is correctly recognized by TypeScript. */
 export function Tuple<T, U, V>(arg1: T, arg2: U, arg3: V): [T, U, V];
-/** 创建可供 TypeScript 正确识别的四元组。 */
+/** Creates a quadruple (4-tuple) that is correctly recognized by TypeScript. */
 export function Tuple<T, U, V, W>(arg1: T, arg2: U, arg3: V, arg4: W): [T, U, V, W];
-/** 创建可供 TypeScript 正确识别的五元组。 */
+/** Creates a quintuple (5-tuple) that is correctly recognized by TypeScript. */
 export function Tuple<T, U, V, W, X>(arg1: T, arg2: U, arg3: V, arg4: W, arg5: X): [T, U, V, W, X];
-/** 创建可供 TypeScript 正确识别的六元组。 */
+/** Creates a sextuple (6-tuple) that is correctly recognized by TypeScript. */
 export function Tuple<T, U, V, W, X, Y>(arg1: T, arg2: U, arg3: V, arg4: W, arg5: X, arg6: Y): [T, U, V, W, X, Y];
-/** 创建可供 TypeScript 正确识别的七元组。 */
+/** Creates a septuple (7-tuple) that is correctly recognized by TypeScript. */
 export function Tuple<T, U, V, W, X, Y, Z>(arg1: T, arg2: U, arg3: V, arg4: W, arg5: X, arg6: Y, arg7: Z): [T, U, V, W, X, Y, Z];
 export function Tuple(...args: unknown[]) {
 	return [...args];

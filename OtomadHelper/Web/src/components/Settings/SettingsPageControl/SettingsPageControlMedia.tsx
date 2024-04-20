@@ -1,5 +1,5 @@
 const StyledSettingsPageControlMedia = styled(Card)<{
-	/** 启用？ */
+	/** Enabled? */
 	$enabled: boolean;
 }>`
 	position: relative;
@@ -12,7 +12,7 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 
 
 		> .right {
-			z-index: 0; // 如果不设置此，则为默认 auto，子元素出现渲染层级异常的奇怪现象（可能仅 Chromium 存在）。
+			z-index: 0; // If this is not set, it will be auto by default, and the child elements will have a strange phenomenon of abnormal rendering levels (may only exist in Chromium).
 			display: flex;
 			flex-direction: column;
 			width: 100%;
@@ -63,13 +63,13 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 `;
 
 export default function SettingsPageControlMedia({ stream, fileName, enabled, thumbnail }: FCP<{
-	/** 选择是音频还是视频？ */
+	/** Audio or visual? */
 	stream: "audio" | "visual";
-	/** 文件名。 */
+	/** File name. */
 	fileName: string;
-	/** 启用？ */
+	/** Enabled? */
 	enabled: StateProperty<boolean>;
-	/** 缩略图。 */
+	/** Thumbnail. */
 	thumbnail: string;
 }>) {
 	return (

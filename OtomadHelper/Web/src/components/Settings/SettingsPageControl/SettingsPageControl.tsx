@@ -2,7 +2,7 @@ import { PREVIEW_IMAGE_HEIGHT } from "./SettingsPageControlPreviewImage";
 const IMAGE_MARGIN = 16;
 
 const StyledSettingsPageControl = styled.div<{
-	/** 清除浮动。 */
+	/** Clear float. */
 	$clearFloat?: boolean;
 }>`
 	display: flex;
@@ -39,11 +39,11 @@ const StyledSettingsPageControl = styled.div<{
 `;
 
 export default forwardRef(function SettingsPageControl({ image, learnMoreLink, clearFloat, children, ...htmlAttrs }: FCP<{
-	/** 图片。 */
+	/** Image. */
 	image?: string;
-	/** “了解更多”链接地址。 */
+	/** "Learn More" link href. */
 	learnMoreLink?: string;
-	/** 清除浮动。 */
+	/** Clear float. */
 	clearFloat?: boolean;
 }, "div">, ref: ForwardedRef<"div">) {
 	const [hideUseTips] = selectConfig(c => c.settings.hideUseTips);

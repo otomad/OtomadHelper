@@ -1,9 +1,9 @@
 import { flushSync as reactDomFlushSync } from "react-dom";
 
 /**
- * 移除指定 DOM 元素正在进行的所有动画。
- * @param elements - HTML DOM 元素。
- * @returns 是否有移除动画。
+ * Remove all animations in progress from the specified DOM element.
+ * @param elements - HTML DOM element.
+ * @returns Have any animations been removed?
  */
 export function removeExistAnimations(...elements: Element[]) {
 	let hasExistAnimations = false;
@@ -19,8 +19,8 @@ export function removeExistAnimations(...elements: Element[]) {
 }
 
 /**
- * 等待下一时刻 CSS 动画更新刷新。
- * @returns 空承诺。
+ * Wait for the next animation frame to update refresh.
+ * @returns Empty promise.
  */
 export function nextAnimationTick() {
 	return new Promise<void>(resolve => {
@@ -32,21 +32,29 @@ export function nextAnimationTick() {
 	});
 }
 
-export function flushSync<R>(fn: () => R): R;
 /**
- * flushSync 允许您强制 React 同步刷新所提供回调中的任何更新。这样可以确保 DOM 立即更新。
- * @returns 空承诺。
+ * flushSync lets you force React to flush any updates inside the provided callback synchronously.
+ * This ensures that the DOM is updated immediately.
+ * @param callback - A function. React will immediately call this callback and flush any updates it
+ * contains synchronously. It may also flush any pending updates, or Effects, or updates inside of
+ * Effects. If an update suspends as a result of this flushSync call, the fallbacks may be re-shown.
+ */
+export function flushSync<R>(callback: () => R): R;
+/**
+ * flushSync lets you force React to flush any updates inside the provided callback synchronously.
+ * This ensures that the DOM is updated immediately.
+ * @returns Empty promise.
  */
 export function flushSync(): Promise<void>;
-export function flushSync(fn?: () => unknown) {
-	if (fn) return reactDomFlushSync(fn);
+export function flushSync(callback?: () => unknown) {
+	if (callback) return reactDomFlushSync(callback);
 	else return new Promise<void>(resolve => flushSync(resolve));
 }
 
 /**
- * 为元素设定样式时**暂时**禁用过渡动画。
- * @param element - HTML DOM 元素。
- * @param style - CSS 样式。
+ * **Temporarily** disable transition animations when styling an element.
+ * @param element - HTML DOM element.
+ * @param style - CSS style.
  */
 export async function setStyleWithoutTransition(element: HTMLElement, style: CSSProperties) {
 	Object.assign(element.style, style);
@@ -56,10 +64,12 @@ export async function setStyleWithoutTransition(element: HTMLElement, style: CSS
 }
 
 /**
- * 没错，就是大名鼎鼎的延迟函数。
- * 叫 sleep 也行。
- * @param ms - 毫秒值。
- * @returns 空返回值。
+ * That's right! it's the famous **delay** function.
+ *
+ * It can also be called `sleep`.
+ *
+ * @param ms - Milliseconds.
+ * @returns Empty promise.
  */
 export function delay(ms: number): Promise<void> {
 	return new Promise(resolve => setTimeout(resolve, ms));
@@ -95,65 +105,65 @@ type DimensionAxis = "height" | "width" | "both";
 type MaybePromise<T> = T | Promise<T>;
 
 export type AnimateSizeOptions = Partial<{
-	/** 显式指定初始高度（可选）。 */
+	/** Explicitly specify the start height (optional). */
 	startHeight: number;
-	/** 显式指定结束高度（可选）。 */
+	/** Explicitly specify the end height (optional). */
 	endHeight: number;
-	/** 显式指定初始宽度（可选）。 */
+	/** Explicitly specify the start width (optional). */
 	startWidth: number;
-	/** 显式指定结束宽度（可选）。 */
+	/** Explicitly specify the end width (optional). */
 	endWidth: number;
-	/** 动画时间。 */
+	/** Animation duration. */
 	duration: number;
-	/** 动画运动曲线。默认为：平滑缓出。 */
+	/** Animation easing curves. Defaults to `ease-out-smooth`. */
 	easing: string;
-	/** 显式指定需要动画的是哪个方向。 */
+	/** Explicitly specify which direction needs to be animated. Defaults to both width and height animation. */
 	specified: DimensionAxis;
-	/** 指定**不**需要动画调整哪个方向的内/外边距值。 */
+	/** Specify the padding/margin values in which directions **not** need to be animated. */
 	withoutAdjustPadding: DimensionAxis;
-	/** 在改变回调函数后自动增加等待下一帧。 */
+	/** Automatically wait for the next tick after changing the callback function. */
 	// nextTick: boolean;
-	/** 获取最终的元素尺寸。 */
+	/** Get the final element size. */
 	// getSize: TwoD | Ref<TwoD | undefined>;
-	/** 获取最终的元素矩形。 */
+	/** Get the final element rectangle. */
 	// getRect: Ref<DOMRect | undefined>;
-	/** 显式指定初始样式（可选）。 */
+	/** Explicitly specify the start style (optional). */
 	startStyle: Keyframe;
-	/** 显式指定结束样式（可选）。 */
+	/** Explicitly specify the end style (optional). */
 	endStyle: Keyframe;
-	/** 初始从反向滑入界面。 */
+	/** Slide into the UI from the reverse direction at the start. */
 	startReverseSlideIn: boolean;
-	/** 结束从反向滑入界面。 */
+	/** Slide into the UI from the reverse direction at the end. */
 	endReverseSlideIn: boolean;
-	/** 元素的**唯一**子元素初始位移。 */
+	/** The start translation of the **only** child element of the element. */
 	startChildTranslate: Numberish;
-	/** 元素的**唯一**子元素结束位移。 */
+	/** The end translation of the **only** child element of the element. */
 	endChildTranslate: Numberish;
-	/** 是否抽掉动画的第一帧以解决可能存在的动画故障？仅在有子元素时生效。 */
+	/** Remove the first frame of the animation to resolve possible animation glitches? Only takes effect when there are child elements in it. */
 	removeGlitchFrame: boolean;
-	/** 动画播放的同时附加其它动画，并使用与之相同的时长与缓动值。 */
+	/** Attach other animations while the animation is playing, using the same duration and easing values. */
 	attachAnimations: [Element, Keyframes][] | false;
-	/** 不要 `overflow: clip;`？ */
+	/** No `overflow: clip;`? */
 	noClipping: boolean;
-	/** 在动画结束后保持 `overflow: clip;`？仅在 `noClipping` 为 false 时有效。 */
+	/** Keep `overflow: clip;` after the animation ends? Only available if `noClipping` is set to false. */
 	keepClippingAtEnd: boolean;
-	/** 对**获取的**元素宽高值进行像素偏移调整。 */
+	/** Perform pixel offset adjustment on the **obtained** element width and height values. */
 	clientAdjustment: Partial<{
 		startHeight: number;
 		endHeight: number;
 		startWidth: number;
 		endWidth: number;
 	}>;
-	/** 在动画之前移出该元素及其子元素现有的动画？以解决当用户快速点击两次连续触发两次本动画从而引发的样式异常。 */
+	/** Remove existing animations on this element and its children before animation? To solve the style exception caused when the user clicks twice quickly to trigger this animation twice in a row. */
 	removePreviousAnimations: boolean;
-	/** 动画完成后保持样式。 */
+	/** Keep the style after the animation is complete? */
 	fillForward: boolean;
 }>;
 
 /**
- * 当宽/高度值设为 auto 时的动画宽/高度的高级钩子生成器函数。
- * @param element - HTML DOM 元素。
- * @returns 最终返回动画异步承诺的生成器函数。
+ * Advanced hook generator function for animated width/height when width/height value is set to auto.
+ * @param element - HTML DOM element.
+ * @returns A generator function that returns the animation async promise.
  */
 export async function* animateSizeGenerator(
 	element: MaybeRef<Element | undefined>,
@@ -248,11 +258,11 @@ export async function* animateSizeGenerator(
 }
 
 /**
- * 当宽/高度值设为 auto 时的动画宽/高度。
- * @param element - HTML DOM 元素。
- * @param changeFunc - 使宽/高度将会改变的回调函数。
- * @param options - 配置选项。
- * @returns 动画异步承诺。
+ * Animate width/height when width/height value is set to auto.
+ * @param element - HTML DOM element.
+ * @param changeFunc - A callback function that will change the width/height.
+ * @param options - Configuration options.
+ * @returns Animation async promise.
  */
 export async function animateSize(
 	element: MaybeRef<Element | undefined>,
@@ -269,13 +279,13 @@ export async function animateSize(
 export type SameOrDifferent<T> = T | undefined | [T | undefined, T | undefined];
 
 /**
- * `animateSize` 函数的简化版，适用于更为简单的动画。
- * @param specified - 显式指定需要动画的是哪个方向。默认为高度动画。
- * @param duration - 指定动画时间。
- * @param easing - 指定动画缓动曲线。
- * @param enterOptions - 在进入动画时指定其它参数。
- * @param exitOptions - 在退出动画时指定其它参数。
- * @returns 返回 `onEnter` 和 `onExit` 两个函数。
+ * A lite version of `animateSize` function, suitable for simpler animations.
+ * @param specified - Explicitly specify which direction needs to be animated. Defaults to height animation.
+ * @param duration - Specify the animation duration.
+ * @param easing - Specify the animation easing curve.
+ * @param enterOptions - Specify other parameters when entering animation.
+ * @param exitOptions - Specify other parameters when exiting animation.
+ * @returns Returns 3 functions `onEnter`, `onExit`, `endListener`.
  */
 export function simpleAnimateSize(specified: "width" | "height" = "height", duration?: SameOrDifferent<number>, easing?: SameOrDifferent<string>, enterOptions: AnimateSizeOptions = {}, exitOptions: AnimateSizeOptions = {}) {
 	const enter = enterOptions, exit = exitOptions;
@@ -295,7 +305,8 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 	enter.removePreviousAnimations = true;
 	exit.fillForward = true;
 
-	const ANIMATE_SIZE_END_EVENT = "animatesizeend"; // 这里我们使用一个自定义的事件，以防原生 CSS 过渡动画结束时干扰运行。
+	// Here we use a custom event to prevent the native CSS transition animation from interfering with the operation when it ends.
+	const ANIMATE_SIZE_END_EVENT = "animatesizeend";
 	const currentAnimationThread = useRef<symbol>();
 
 	const onEnter = async (el: HTMLElement) => {
@@ -333,11 +344,11 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 export const STOP_TRANSITION_ID = "stop-transition";
 
 /**
- * 为整个页面添加与颜色有关的视图过渡动画。
- * @param changeFunc - 使页面变化的回调函数。
- * @param keyframes - 动画关键帧。
- * @param options - 动画选项。
- * @returns 在动画播放完成之后可执行析构函数。
+ * Add color-dependent view transition animations to the entire page.
+ * @param changeFunc - A callback function that will change the page.
+ * @param keyframes - Animation keyframes.
+ * @param options - Animation options.
+ * @returns The destructor can be executed after the animation is completed.
  */
 export async function startColorViewTransition(changeFunc: () => MaybePromise<void | unknown>, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions = {}) {
 	if (!document.startViewTransition) {

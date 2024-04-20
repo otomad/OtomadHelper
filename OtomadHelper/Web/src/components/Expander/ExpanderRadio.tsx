@@ -1,43 +1,43 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
 export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, $itemWidth, radioGroup, onItemClick, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
-	/** 选项列表。 */
+	/** List of options. */
 	items: readonly T[];
-	/** 当前选中值的 ID。 */
+	/** The identifier of the currently selected value. */
 	value: T extends string ? StateProperty<T> : StateProperty<string>;
 	/**
-	 * 当前选中状态的显示的条件。
-	 * - 如果为字符串，则显示该固定字符串。
-	 * - 如果为 true，表示根据 idField 和 nameField 属性来判断或固定当前选中的 ID。
-	 * - 如果为 `{ id: string; name: string }`，则根据当前状态的对象查找所需的名称值。
-	 * - 如果为回调函数，则通过回调函数获取所需的值。
+	 * The conditions for displaying the currently selected state.
+	 * - If it is a string, the constant string is displayed.
+	 * - If it is true, it means to determine or fix the currently selected identifier based on the idField and nameField properties.
+	 * - If it is `{ id: string; name: string }`, the required name value is looked up based on the current state of the object.
+	 * - If it is a callback function, get the required value through the callback function.
 	 */
 	checkInfoCondition?: string | { id: string; name: string } | true | ((value: string | undefined, items: T[]) => string);
 	/**
-	 * 单选项目的 ID 字段。
-	 * - 如果为字符串，表示为当前选中对象的指定字段名称的值。
-	 * - 如果为回调函数，则通过回调函数获取所需的值。
-	 * - 如果为 true，表示选中项目就是字符串，则 ID 可直接使用之。
+	 * The identifier field for the radio item.
+	 * - If it is a string, it represents the value of the specified field name of the currently selected object.
+	 * - If it is a callback function, get the required value through the callback function.
+	 * - If it is true, it means that the selected item is a string, and the identifier can be used directly.
 	 */
 	idField: FieldType<T>;
 	/**
-	 * 单选项目的名称字段。
-	 * - 如果为字符串，表示为当前选中对象的指定字段名称的值。
-	 * - 如果为回调函数，则通过回调函数获取所需的值。
-	 * - 如果为 true，表示选中项目就是字符串，则名称可直接使用之。
+	 * The name field for the radio item.
+	 * - If it is a string, it represents the value of the specified field name of the currently selected object.
+	 * - If it is a callback function, get the required value through the callback function.
+	 * - If it is true, it means that the selected item is a string, and the name can be used directly.
 	 */
 	nameField: FieldType<T> | object;
-	/** 单选项目的图标字段。 */
+	/** The icon field for the radio item. */
 	iconField?: FieldType<T>;
-	/** 单选项目的图片字段。 */
+	/** The image field for the radio item. */
 	imageField?: FieldType<T> | ((item: T) => ReactNode);
-	/** 单选项目的详细描述字段。 */
+	/** The detailed description field for the radio item. */
 	detailsField?: FieldType<T>;
-	/** 使用列表/平铺/网格视图组件而不是单选框。 */
-	view?: "list" | "tile" | "grid" | false;
-	/** 使用网格视图组件时子元素图片的宽度。 */
+	/** Use list/tile/grid view components instead of radio buttons. */
+	view?: ItemView | false;
+	/** The width of the child element image when using the grid view component. */
 	$itemWidth?: number;
-	/** 单选框分组，可选。 */
+	/** Radio button group name, optional. */
 	radioGroup?: string;
 	onItemClick?: MouseEventHandler<HTMLElement>;
 }>) {

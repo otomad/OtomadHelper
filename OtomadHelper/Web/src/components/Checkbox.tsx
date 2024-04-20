@@ -5,7 +5,7 @@ const unchecked = ":not(:checked, :indeterminate)";
 const iconExiting = ":has(.icon.exit)";
 
 const StyledCheckboxLabel = styled.label<{
-	/** 是否仅包含复选框本身，不包含文本标签？ */
+	/** Include just the checkbox itself, not the text label? */
 	$plain?: boolean;
 }>`
 	display: flex;
@@ -110,32 +110,32 @@ const StyledCheckboxLabel = styled.label<{
 `;
 
 interface SharedProps {
-	/** 已禁用？ */
+	/** Disabled? */
 	disabled?: boolean;
-	/** 详细描述。 */
+	/** Detailed description. */
 	details?: ReactNode;
-	/** 是否仅包含复选框本身，不包含文本标签？ */
+	/** Include just the checkbox itself, not the text label? */
 	plain?: boolean;
 }
 
 export default function Checkbox<T>(props: FCP<{
-	/** 标识符。 */
+	/** Identifier. */
 	id: T;
-	/** 当前单选框组中选中的值数组。 */
+	/** An array of selected values in the current checkbox group. */
 	value: StateProperty<T[]>;
-	/** 状态改变事件。 */
+	/** State change event. */
 	onChange?: (e: { id: T; value: T[]; checkState: CheckState; checked: boolean }) => void;
 } & SharedProps>): JSX.Element;
 export default function Checkbox(props: FCP<{
-	/** 当前单选框是否被选中？ */
+	/** Is the checkbox currently selected? */
 	value: StateProperty<boolean>;
-	/** 状态改变事件。 */
+	/** State change event. */
 	onChange?: (e: { checkState: CheckState; checked: boolean }) => void;
 } & SharedProps>): JSX.Element;
 export default function Checkbox(props: FCP<{
-	/** 复选状态。 */
+	/** Checked status. */
 	value: StateProperty<CheckState>;
-	/** 状态改变事件。 */
+	/** State change event. */
 	onChange?: (e: { checkState: CheckState; checked: boolean | null }) => void;
 } & SharedProps>): JSX.Element;
 export default function Checkbox<T>({ children, id, value: [value, setValue], disabled = false, onChange, details, plain = false }: FCP<{

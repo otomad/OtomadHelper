@@ -50,15 +50,15 @@ const StyledTopLeftButtons = styled.div`
 `;
 
 function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNavButton }: FCP<{
-	/** 是否是影子？ */
+	/** Is it a shadow? */
 	shadow?: boolean;
-	/** 导航面板显示模式。 */
+	/** Navigation panel display mode. */
 	paneDisplayMode: PaneDisplayMode;
-	/** 能否返回？ */
+	/** Can go back? */
 	canBack?: boolean;
-	/** 点击返回按钮事件。 */
+	/** Back button click event. */
 	onBack?: () => void;
-	/** 点击汉堡菜单按钮事件。 */
+	/** Global navigation button click event. */
 	onNavButton?: () => void;
 }>) {
 	const vertical = paneDisplayMode === "compact";
@@ -517,22 +517,22 @@ const BreadCrumbChevronRight = forwardRef<HTMLDivElement>((_, ref) => (
 ));
 
 interface NavItem {
-	/** 标签文本。 */
+	/** Label text. */
 	text: string;
-	/** 图标。 */
+	/** Icon. */
 	icon?: DeclaredIcons;
-	/** 动态图标。 */
+	/** Animated icon. */
 	animatedIcon?: DeclaredLotties;
-	/** 标识符。 */
+	/** Identifier. */
 	id: string;
-	/** 是否将其放置于导航面板底部。 */
+	/** Place it at the bottom of the navigation panel? */
 	bottom?: boolean;
 }
 
 interface NavBrItem {
-	/** 类型：分割线。 */
+	/** Type: dividing line. */
 	type: "hr";
-	/** 是否将其放置于导航面板底部。 */
+	/** Place it at the bottom of the navigation panel? */
 	bottom?: boolean;
 }
 
@@ -550,25 +550,25 @@ const usePaneDisplayMode = () => {
 };
 
 export default function NavigationView({ currentNav, navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, pageContentId, poppedScroll, ...htmlAttrs }: FCP<{
-	/** 当前导航页状态参数。 */
+	/** Current navigation page status parameters. */
 	currentNav: StateProperty<string[]>;
-	/** 所有导航项。 */
+	/** All navigation items. */
 	navItems?: (NavItem | NavBrItem)[];
-	/** 面包屑导航标题数组。 */
+	/** Array of breadcrumb navigation titles. */
 	titles?: { name: string; link?: string[] }[];
-	/** 自定义区域。 */
+	/** Custom content area. */
 	customContent?: ReactNode;
-	/** 页面过渡名称。 */
+	/** Page transition name. */
 	transitionName?: string;
-	/** 能否返回？ */
+	/** Can go back? */
 	canBack?: boolean;
-	/** 点击返回按钮事件。 */
+	/** Back button click event. */
 	onBack?: () => void;
-	/** 命令栏，可选。 */
+	/** Command bar, optional. */
 	commandBar?: ReactNode;
-	/** 手动指定页面内容元素的 ID。 */
+	/** Manually specify the identifier for the page content element. */
 	pageContentId?: string;
-	/** 出栈的页面滚动值。 */
+	/** The page scroll value popped from the stack. */
 	poppedScroll?: PageScroll;
 }, "div">) {
 	const currentNavTab = useStateSelector(currentNav, nav => nav[0], value => [value]);

@@ -28,9 +28,9 @@ const StyledGlitchyText = styled.div`
 `;
 
 export default function GlitchyText({ normal, glitchy }: FCP<{
-	/** 正常文本。 */
+	/** Normal text. */
 	normal: string;
-	/** 故障文本。 */
+	/** Glitchy text. */
 	glitchy: string;
 }>) {
 	return (

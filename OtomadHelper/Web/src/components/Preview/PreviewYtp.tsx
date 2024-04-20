@@ -6,7 +6,7 @@ import ytpReverseImage from "assets/images/effects/ytp_reverse.png";
 import { getDuration } from "./PreviewPrve";
 
 const StyledPreviewYtp = styled.div<{
-	/** 效果名称。 */
+	/** Effect name. */
 	$name: string;
 }>`
 	${styles.mixins.square("100%")};
@@ -99,9 +99,9 @@ const StyledPreviewYtp = styled.div<{
 `;
 
 export default function PreviewYtp({ thumbnail, name }: FCP<{
-	/** 缩略图。 */
+	/** Thumbnail. */
 	thumbnail: string;
-	/** 效果名称。 */
+	/** Effect name. */
 	name: string;
 }>) {
 	const imageCount = {

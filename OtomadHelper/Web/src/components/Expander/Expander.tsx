@@ -1,7 +1,7 @@
 import ExpanderItem from "./ExpanderItem";
 
 const ExpanderParent = styled(SettingsCard)<{
-	/** 已展开？ */
+	/** Expanded? */
 	$expanded?: boolean;
 }>`
 	backdrop-filter: blur(4px);
@@ -69,13 +69,13 @@ const ExpanderChildWrapper = styled.div`
 `;
 
 export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, selectInfo }: FCP<PropsOf<typeof SettingsCard> & {
-	/** 展开器右侧的其它操作控件区域。 */
+	/** The other action control area on the right side of the expander. */
 	actions?: ReactNode;
-	/** 初始状态下是否已展开？ */
+	/** Expanded initially? */
 	expanded?: boolean;
-	/** 展开器中的单选框或复选框的选中情况的显示文本，仅在展开器关闭时才会显示。 */
+	/** The text that displays the selected status of a radio button or checkbox in the expander, which is only displayed when the expander is closed. */
 	checkInfo?: Readable;
-	/** 无论展开器开启或关闭，一律显示选中情况的显示文本。 */
+	/** Regardless of whether the expander is on or off, the selected display text is always displayed. */
 	alwaysShowCheckInfo?: boolean;
 }>) {
 	const settingsCardProps = { icon, title, details, selectInfo };

@@ -8,7 +8,7 @@ const prveWhirlStaticImage = freezeframes["effects/prve_whirl.gif"];
 export /* internal */ const getDuration = (frames: number) => frames * 375 + "ms";
 
 const StyledPreviewPrve = styled.div<{
-	/** 效果名称。 */
+	/** Effect name. */
 	$name: string;
 }>`
 	${styles.mixins.square("100%")};
@@ -370,9 +370,9 @@ const StyledPreviewPrve = styled.div<{
 `;
 
 export default function PreviewPrve({ thumbnail, name }: FCP<{
-	/** 缩略图。 */
+	/** Thumbnail. */
 	thumbnail: string;
-	/** 效果名称。 */
+	/** Effect name. */
 	name: string;
 }>) {
 	const imageCount = {
@@ -404,9 +404,9 @@ export default function PreviewPrve({ thumbnail, name }: FCP<{
 }
 
 function HoverToChangeImg({ staticSrc, animatedSrc }: FCP<{
-	/** 静态图片地址。 */
+	/** Static image address. */
 	staticSrc: string;
-	/** 动态图片地址。 */
+	/** Animated picture address. */
 	animatedSrc: string;
 }>) {
 	const [isHovered, setIsHovered] = useState(false);

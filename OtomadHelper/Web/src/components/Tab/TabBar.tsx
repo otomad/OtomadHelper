@@ -7,11 +7,11 @@ const DELAY = 200;
 const Indicator = styled.div.attrs(({ $vertical }) => ({
 	className: $vertical ? "vertical" : "horizontal",
 }))<{
-	/** 是否禁用过渡动画？ */
+	/** Disable transition animation? */
 	$noTransition?: boolean;
-	/** 位置（上方向和下方向距离容器的距离元组）。 */
+	/** Position (a tuple of distances from the container in the upper and lower directions). */
 	$position?: TwoD;
-	/** 纵向的选项卡？ */
+	/** Vertical tabs? */
 	$vertical?: boolean;
 }>`
 	${styles.mixins.oval()}
@@ -70,11 +70,11 @@ const StyledTabBar = styled.div`
 `;
 
 export default function TabBar<T extends string = string>({ current: [current, setCurrent], collapsed, children, vertical }: FCP<{
-	/** 当前选中项标识符。 */
+	/** The identifier of the currently selected item. */
 	current: StateProperty<T>;
-	/** 是否隐藏文本标签，仅显示图标？ */
+	/** Hide the text label and only show the icon? */
 	collapsed?: boolean;
-	/** 是否使用纵向的 NavigationView 样式？ */
+	/** Use the vertical NavigationView style? */
 	vertical?: boolean;
 }>) {
 	const indicatorEl = useDomRef<"div">();
@@ -83,7 +83,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 	const updateIndicatorThread = useRef<symbol>();
 
 	/**
-	 * 更新选项卡指示器。
+	 * Update the tab indicator.
 	 */
 	const update = useCallback(async () => {
 		const indicator = indicatorEl.current;

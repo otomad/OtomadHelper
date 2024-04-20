@@ -146,21 +146,21 @@ const StyledToggleSwitchLabel = styled.button`
 `;
 
 export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, details, resetTransitionOnChanging = false, children, ...htmlAttrs }: FCP<{
-	/** 打开？ */
+	/** Is on? */
 	on: StateProperty<boolean>;
-	/** 禁用？ */
+	/** Disabled */
 	disabled?: boolean;
-	/** 向父组件通信当前切换开关是否已经按下。 */
+	/** Communicates to the parent component whether the current toggle switch is pressed. */
 	isPressing?: StateProperty<boolean>;
-	/** 隐藏“开/关”文本标签？ */
+	/** Hide "on/off" text label? */
 	hideLabel?: boolean;
-	/** 改变标签名称。 */
+	/** Change the tag name. */
 	as?: WebTarget;
-	/** 详细描述。 */
+	/** Detailed description. */
 	details?: ReactNode;
 	/**
-	 * 在切换开关时重设页面的过渡效果。
-	 * @note 这是一个业务逻辑，但是出现在了基础组件中。
+	 * Reset the page's transition effect when toggling the switch.
+	 * @note This is business logic, but present in the base component.
 	 */
 	resetTransitionOnChanging?: boolean;
 }, "button">) {
@@ -168,7 +168,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	const [isDragging, setIsDragging] = useState(false);
 	const [thumbLeft, setThumbLeft] = useState<number>();
 	const [pressed, setPressed] = useState(false);
-	// 注意：直接使用 styled-components 的参数改变会影响性能。
+	// Note: Parameter changes using styled-components directly will affect performance.
 	const thumbStyle = useMemo(() => thumbLeft === undefined ? undefined : {
 		insetInlineStart: thumbLeft + "px",
 		transition: "none",
@@ -211,7 +211,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 			if (isRtl()) isOn = !isOn;
 			handleCheck(isOn);
 			setThumbLeft(undefined);
-			setIsDragging(isMoved); // 定义识别为拖动而不是点击。
+			setIsDragging(isMoved); // Define recognition as drag instead of click.
 			nextAnimationTick().then(() => {
 				setPressed(false);
 				setIsPressing?.(false);

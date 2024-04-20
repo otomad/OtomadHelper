@@ -46,17 +46,17 @@ const StyledEmptyMessage = styled.div`
 `;
 
 export default function EmptyMessage({ icon, title, details, iconOff = false, spinAtBegin = false, noSideEffect = false, children }: FCP<{
-	/** 图标。 */
+	/** Icon. */
 	icon?: DeclaredIcons;
-	/** 标题。 */
+	/** Title. */
 	title?: ReactNode;
-	/** 详细描述。 */
+	/** Detailed description. */
 	details?: ReactNode;
-	/** 在图标上画斜线？ */
+	/** Draw a slash on the icon? */
 	iconOff?: boolean;
-	/** 开始时图标陀螺旋。 */
+	/** Spinning the icon at the beginning. */
 	spinAtBegin?: boolean;
-	/** 无副作用？不会额外对视图中的样式作修改。 */
+	/** No side effects? No additional changes are made to the styles in the view. */
 	noSideEffect?: boolean;
 }>) {
 	const el = useDomRef<"div">();

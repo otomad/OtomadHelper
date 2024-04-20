@@ -30,9 +30,9 @@ export default function CommandBar({ children, ...htmlAttrs }: FCP<{}, "div">) {
 }
 
 function CommandBarItem({ icon, children, canBeDisabled, disabled, onClick, ...buttonAndTransitionAttrs }: FCP<{
-	/** 按钮图标。 */
+	/** Button icon. */
 	icon?: DeclaredIcons;
-	/** 可被禁用的？ */
+	/** Can be disabled? */
 	canBeDisabled?: boolean;
 }, "section"> & TransitionProps) {
 	const { transitionAttrs, htmlAttrs } = separateTransitionAttrs(buttonAndTransitionAttrs);

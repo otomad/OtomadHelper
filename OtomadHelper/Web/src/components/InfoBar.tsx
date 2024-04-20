@@ -10,7 +10,7 @@ const backgroundColors: Record<Status, ColorNames> = {
 };
 
 const StyledInfoBar = styled.div<{
-	/** 角标的状态，即颜色。 */
+	/** The state of the badge, that is, the color. */
 	$status: Status;
 }>`
 	display: flex;
@@ -85,11 +85,11 @@ const StyledInfoBar = styled.div<{
 `;
 
 export default function InfoBar({ status, title, children, button, className, ...htmlAttrs }: FCP<{
-	/** 角标的状态，颜色和图标。 */
+	/** The state of the badge, that is, the color and the icon. */
 	status?: Status;
-	/** 标题。 */
+	/** Title. */
 	title?: string;
-	/** 尾随按钮。 */
+	/** Trailing button(s). */
 	button?: ReactNode;
 }, "div">) {
 	const [multiline, setMultiline] = useState(false);

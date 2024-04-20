@@ -24,7 +24,7 @@ const StyledSettingsPageControlPreviewImage = styled.div`
 `;
 
 export default function SettingsPageControlPreviewImage({ image, children }: FCP<{
-	/** 图片。 */
+	/** Image. */
 	image: string;
 }>) {
 	return (

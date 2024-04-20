@@ -3,7 +3,7 @@ import { styledExpanderItemText } from "components/Expander/ExpanderItem";
 export const GRID_VIEW_ITEM_HEIGHT = 112;
 
 const StyledItemsViewItem = styled.button<{
-	/** 显示方式：列表、平铺、网格。 */
+	/** View mode: list, tile, grid. */
 	$view: ItemView;
 }>`
 	${styles.mixins.forwardFocusRing()};
@@ -156,19 +156,19 @@ const DefaultImage = styled.img`
 `;
 
 export /* internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, details, _view: view, _multiple: multiple, children, className, ...htmlAttrs }: FCP<{
-	/** 图片。 */
+	/** Image. */
 	image?: string | ReactNode;
-	/** 图标。 */
+	/** Icon. */
 	icon?: DeclaredIcons;
-	/** 标识符。 */
+	/** Identifier. */
 	id: ObjectKey;
-	/** 是否已选中？ */
+	/** Selected? */
 	selected?: boolean;
-	/** 详细描述。 */
+	/** Detailed description. */
 	details?: ReactNode;
-	/** @private 显示方式：列表、平铺、网格。 */
+	/** @private View mode: list, tile, grid. */
 	_view?: ItemView;
-	/** @private 多选模式？ */
+	/** @private Multiple selection mode? */
 	_multiple?: boolean;
 }, "button">) {
 	const textPart = (

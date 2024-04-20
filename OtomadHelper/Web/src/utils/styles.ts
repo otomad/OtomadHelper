@@ -1,5 +1,5 @@
 /*
- * 转发 styles 目录中的模块。
+ * Forward modules from the `styles` directory.
  */
 
 import type { ColorNames } from "styles/colors";
@@ -11,10 +11,10 @@ import mixins from "styles/mixins";
 export const fallbackTransitions = `all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms`;
 
 /**
- * 调用主题色。
- * @param cssVarName - 颜色的 CSS 属性名称，不必加前面的“--”。也可以是 white 或 black。
- * @param alpha - Alpha 值，注意是百分比值而不是零到一之间的小数，如果留空表示不透明色。
- * @returns 返回由 var 调用的自定义属性纯色，或 rgba 封装的透明色。
+ * Apply the theme color.
+ * @param cssVarName - The CSS property name of the color. Does not need to add "--" before it. It can also be `white` or `black`.
+ * @param alpha - Alpha value, note that it is a percentage value rather than a decimal value between 0 to 1. If left blank, it indicates an opaque color.
+ * @returns The custom property solid color called by `var()`, or the transparent color encapsulated by relative color function `rgba(from ...)`.
  */
 export function c(cssVarName: string & {} | "white" | "black" | ColorNames, alpha?: number) {
 	if (alpha !== undefined && (alpha < 0 || alpha > 100))
@@ -40,9 +40,15 @@ export const ifColorScheme = {
 };
 
 /**
- * 根据字符串或数字获取对应的 CSS 样式值。
- * @param value - 如果传入的值为数字，则返回其对应像素值；如果传入的值为字符串，则保留原字符串值。
- * @returns 对应的 CSS 样式值。
+ * Get the corresponding CSS style value based on a string or number.
+ *
+ * This function takes a value as input and returns a CSS value. If the input value is a number,
+ * it is converted to a CSS length value with the unit "px". Otherwise, the input value is returned
+ * as is. This function is used to convert the calculated position values to CSS values.
+ *
+ * @param value - If the value passed in is a number, its corresponding pixel value is returned;
+ * if the value passed in is a string, the original string value is retained.
+ * @returns The CSS value of the given value.
  */
 function toValue_css(value: string | number) {
 	return typeof value === "number" ? value + "px" : value;
@@ -71,13 +77,14 @@ enum TransitionGroupState {
 }
 
 /**
- * 为 React Transition Group 离谱的选择器而生成的状态选择器规则。
+ * The state selector rule generated for the outrageous selector of React Transition Group.
  *
- * 不过尝试经魔改源码，额外增加一个 enter-from 状态后，发现并不好使，不知道具体原因。
+ * However, after trying to modify the source code with magic and adding an additional `enter-from` state,
+ * I found it still not working well and I don't know the specific reason.
  *
- * @param states - 过渡组的状态，包含出现、进入、退出各自的按位与值。
- * @param name - 可选的过渡组动画名称，留空表示不包含。
- * @returns 生成的状态选择器。
+ * @param states - The state of the transition group, including the bitwise AND value of `appear`, `enter`, and `exit`.
+ * @param name - Optional transition group animation name, leave blank to indicate not included.
+ * @returns The generated state selector.
  */
 export function tgs(states: TransitionGroupState = TransitionGroupState.all, name: string = "") {
 	if (name) name += "-";
@@ -97,13 +104,14 @@ tgs.enterExit = TransitionGroupState.enterExit;
 tgs.all = TransitionGroupState.all;
 
 /**
- * 根据给定的工具提示方向和偏移值，获取工具提示的定位值。
- * @param rect - 目标元素尺寸矩形。
- * @param placement - 浮窗出现方向。
- * @param offset - 与目标元素距离偏移。
- * @param flyoutRect - 浮窗元素尺寸矩形。
- * @param adjustBySize - 如否则只返回该点位置（默认）；是则根据元素尺寸调整到其左上角的坐标。
- * @returns 表示工具提示位置的样式属性值。
+ * Gets the positioning value of the tooltip based on the given tooltip placement and offset value.
+ * @param rect - Target element size rectangle.
+ * @param placement - The placement in which the flyout appears.
+ * @param offset - Offset from the target element.
+ * @param flyoutRect - Flyout element size rectangle.
+ * @param adjustBySize - If false, only the position of the point will be returned (by default);
+ * if true, it will be adjusted to the coordinates of its upper left corner according to the size of the element.
+ * @returns The style attribute value that represents the tooltip position.
  */
 export function getPosition(rect: MaybeRef<DOMRect | Element>, placement?: Placement, offset: number = 10, flyoutRect?: MaybeRef<DOMRect | Element | TwoD | undefined>) {
 	rect = toValue(rect);
@@ -149,11 +157,11 @@ export function getPosition(rect: MaybeRef<DOMRect | Element>, placement?: Place
 }
 
 /**
- * 探测元素溢出。如果元素超出了页面范围，则将其移动到页面内。
+ * Detect element overflow. If the element exceeds the scope of the page, move it within the page.
  * @private
- * @param location - 元素的坐标（仅支持元组类型）。
- * @param size - 元素的尺寸（仅支持元组类型）。
- * @returns 返回移动入页面后的新坐标。
+ * @param location - The coordinates of the element (only supported on tuple types).
+ * @param size - The dimensions of the element (only supported for tuple types).
+ * @returns The new coordinates after moving into the page.
  */
 function moveIntoPage_tuple(location: TwoD, size: TwoD) {
 	const result = [...location] as typeof location;
@@ -168,30 +176,30 @@ function moveIntoPage_tuple(location: TwoD, size: TwoD) {
 }
 
 /**
- * 探测元素溢出。如果元素超出了页面范围，则将其移动到页面内。
- * @param location - 元素的元组类型坐标。
- * @param size - 元素的元组类型尺寸。
- * @returns 返回移动入页面后的新坐标。
+ * Detect element overflow. If the element exceeds the scope of the page, move it within the page.
+ * @param location - Tuple type coordinates of the element.
+ * @param size - Tuple type dimensions of the element.
+ * @returns The new coordinates after moving into the page.
  */
 export function moveIntoPage(location: MaybeRef<TwoD>, size?: MaybeRef<TwoD | DOMRect | undefined>): TwoD;
 /**
- * 探测元素溢出。如果元素超出了页面范围，则将其移动到页面内。
- * @param element - HTML DOM 元素。
- * @returns 返回移动入页面后的新坐标样式声明。
+ * Detect element overflow. If the element exceeds the scope of the page, move it within the page.
+ * @param element - HTML DOM element.
+ * @returns The new coordinate style declaration after moving into the page.
  */
 export function moveIntoPage(element: MaybeRef<HTMLElement>): { top: string; left: string };
 /**
- * 探测元素溢出。如果元素超出了页面范围，则将其移动到页面内。
- * @param measureElement - 要测量的 HTML DOM 元素。
- * @param adjustElement - 要调整位置的 HTML DOM 元素。
- * @returns 返回移动入页面后的新坐标样式声明。
+ * Detect element overflow. If the element exceeds the scope of the page, move it within the page.
+ * @param measureElement - The HTML DOM element to measure.
+ * @param adjustElement - The HTML DOM element to reposition.
+ * @returns The new coordinate style declaration after moving into the page.
  */
 export function moveIntoPage(measureElement: MaybeRef<HTMLElement>, adjustElement?: MaybeRef<HTMLElement | undefined>): { top: string; left: string };
 /**
- * 探测元素溢出。如果元素超出了页面范围，则将其移动到页面内。
- * @param location - 元素的坐标。
- * @param size - 元素的尺寸。
- * @returns 返回移动入页面后的新坐标。
+ * Detect element overflow. If the element exceeds the scope of the page, move it within the page.
+ * @param location - The coordinates of the element.
+ * @param size - The dimensions of the element.
+ * @returns The new coordinates after moving into the page.
  */
 export function moveIntoPage(location: MaybeRef<TwoD | HTMLElement>, size?: MaybeRef<TwoD | DOMRect | HTMLElement | undefined>) {
 	location = toValue(location);
@@ -216,9 +224,9 @@ export function moveIntoPage(location: MaybeRef<TwoD | HTMLElement>, size?: Mayb
 }
 
 /**
- * 将二维坐标转换为位置的样式值。
- * @param location - 二维坐标。
- * @returns 位置的样式值。
+ * Converts 2D coordinates to the location style value.
+ * @param location - 2D coordinates.
+ * @returns Location style value.
  */
 export function getLocationStyle(location: MaybeRef<TwoD>): CSSProperties {
 	location = toValue(location);

@@ -10,13 +10,13 @@ const LavContainer = styled.div.attrs({
 `;
 
 export default function Lottie({ loop = false, autoplay = false, animationData, onAnimCreated, ...htmlAttrs }: FCP<{
-	/** 循环播放？ */
+	/** Loop? */
 	loop?: boolean;
-	/** 自动播放？ */
+	/** Autoplay? */
 	autoplay?: boolean;
-	/** 动画资源。 */
+	/** Animation resource data. */
 	animationData: object;
-	/** 动画创建完成事件。 */
+	/** Animation creation completion event. */
 	onAnimCreated?: (anim: AnimationItem) => void;
 }, "div">) {
 	const [_anim, setAnim] = useState<AnimationItem>();

@@ -90,23 +90,23 @@ const StyledSlider = styled.div`
 `;
 
 export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, step, keyStep = 1, disabled = false, onChanging, onChanged }: FCP<{
-	/** 当前值。 */
+	/** Current value. */
 	value: StateProperty<number>;
-	/** 滑块最小值。 */
+	/** Slider minimum value. */
 	min?: number;
-	/** 滑块最大值。 */
+	/** Slider maximum value. */
 	max?: number;
-	/** 滑块默认值。当单击鼠标中键或触摸屏长按组件时还原默认值。 */
+	/** Slider default value. Restore defaults when clicking the mouse middle button, right button, or touchscreen long press component. */
 	defaultValue?: number;
-	/** 滑块有效的增量值。 */
+	/** Slider effective increment value. */
 	step?: number;
-	/** 指定当按下键盘方向按键时，滑块单次调整的值。 */
+	/** Specifies the value by which the slider adjusts once when a keyboard direction key is pressed. */
 	keyStep?: number;
-	/** 已被禁用？ */
+	/** Disabled */
 	disabled?: boolean;
-	/** 当滑块拖动时即触发事件。 */
+	/** The slider is dragging event. */
 	onChanging?: (value: number) => void;
-	/** 当滑块拖动完成抬起后才触发事件。 */
+	/** The slider is lifted after being dragged event. */
 	onChanged?: (value: number) => void;
 }>) {
 	const errorInfo = `The value range should be between [${min} ~ ${max}], with the current value being ${value}.`;
@@ -121,7 +121,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 
 	const restrict = (n: number | undefined, nanValue: number) => Number.isFinite(n) ? clamp(map(n!, min, max, 0, 1), 0, 1) : nanValue;
 	const sharpValue = useMemo(() => restrict(value, 0), [value, min, max]);
-	const smoothValue = useSmoothValue(sharpValue, 0.5); // 修改这个参数可以调整滑动条的平滑移动值。
+	const smoothValue = useSmoothValue(sharpValue, 0.5); // Modify this parameter to adjust the smooth movement value of the slider.
 	const [pressed, setPressed] = useState(false);
 
 	function resetToDefault(e: MouseEvent) {
@@ -177,7 +177,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 		if (isRtl()) value = max - value + min;
 		setValue?.(value);
 		onChanging?.(value);
-		onThumbDown(e, true); // 再去调用拖拽滑块的事件。
+		onThumbDown(e, true); // Then call the dragging slider event.
 	}, []);
 
 	const onKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(e => {

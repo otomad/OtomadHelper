@@ -54,13 +54,13 @@ type SpinValue = 1 | -1;
 const wrapKeyCode = (code: string, action: (e: Any) => void) => (e: KeyboardEvent) => e.code === code && action(e);
 
 function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
-	/** 禁用？ */
+	/** Disabled */
 	disabled?: boolean;
-	/** 每次点按数字上下调节旋钮时增加或减少的数值，默认为 1。 */
+	/** The value to increase or decrease each time the knob of numeric up down box is clicked. Defaults to 1. */
 	step?: NumberLike;
-	/** 当点击旋钮时的事件，点击向上时为 1，向下时为 -1。 */
+	/** Knob click event. It is 1 when the knob is clicked up and -1 when it is clicked down. */
 	onSpin?: (spinValue: NumberLike) => void;
-	/** 鼠标释放按钮事件。 */
+	/** Mouse release button event. */
 	onRelease?: BaseEventHandler;
 }>) {
 	const repeatTimeout = useRef<Timeout>();
@@ -233,21 +233,21 @@ const StyledTextBox = styled.div`
 `;
 
 const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeholder, disabled, prefix, suffix, _spinner: spinner, onChange, onInput, onKeyDown, ...htmlAttrs }: FCP<{
-	/** 输入框的值。 */
+	/** The value of the input box. */
 	value: StateProperty<string>;
-	/** 内容占位符。 */
+	/** Content placeholder. */
 	placeholder?: string;
-	/** 前缀。 */
+	/** Prefix. */
 	prefix?: string;
-	/** 后缀。 */
+	/** Suffix. */
 	suffix?: string;
-	/** @private 数字上下调节旋钮。 */
+	/** @private Numeric up down box */
 	_spinner?: (inputId: string) => ReactNode;
-	/** 文本改变事件，仅在粘贴文本或输入框失焦后触发。 */
+	/** Text change event. Only fired after pasting text or after the input box is out of focus. */
 	onChange?: BaseEventHandler<HTMLInputElement>;
-	/** 文本键盘输入事件。 */
+	/** Text keyboard input event. */
 	onInput?: (newText: string, el: HTMLInputElement, ...event: Parameters<FormEventHandler<HTMLInputElement>>) => boolean | string | void;
-	/** 键盘按下事件。 */
+	/** Keyboard press event. */
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 }, "div">, ref: ForwardedRef<"input">) {
 	const inputId = useId();
@@ -310,17 +310,17 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 
 type NumberLike = number | bigint;
 function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], disabled, decimalPlaces, keepTrailing0, min, max, spinnerStep, ...textBoxProps }: Override<PropsOf<typeof TextBox>, {
-	/** 数字的值，可以是数字或大整数类型。 */
+	/** The value of the number, which can be number or bigint type. */
 	value: StateProperty<TNumber>;
-	/** 小数点位数，缺省表示不限。 */
+	/** The number of decimal places, leaving blank means no limit. */
 	decimalPlaces?: number;
-	/** 保留小数部分的尾随零。 */
+	/** Keep trailing zeros in the fractional part? */
 	keepTrailing0?: boolean;
-	/** 限定最小值。 */
+	/** Limit of the minimum value. */
 	min?: TNumber;
-	/** 限定最大值。 */
+	/** Limit of the maximum value. */
 	max?: TNumber;
-	/** 每次点按数字上下调节旋钮时增加或减少的数值，默认为 1。 */
+	/** The value to increase or decrease each time the knob of numeric up down box is clicked. Defaults to 1. */
 	spinnerStep?: TNumber;
 }>) {
 	const inputEl = useDomRef<"input">();
@@ -330,12 +330,12 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 	const setValue = (value: TNumber | undefined | ((value: TNumber) => TNumber | undefined)) => (_setValue as SetStateNarrow<TNumber>)?.(prevValue => {
 		if (typeof value === "function") value = value(prevValue);
 		if (value == null || typeof value === "number" && !Number.isFinite(value)) return prevValue;
-		return clamp(value, min, max);
+		return clamp(value, min!, max!);
 	});
 
 	function normalizeValue(value?: NumberLike) {
 		if (isUndefinedNullNaN(value)) return "";
-		value = clamp(value, min, max);
+		value = clamp(value, min!, max!);
 		let result = normalizeNumber(value);
 		if (decimalPlaces !== undefined && typeof value === "number") {
 			if (typeof decimalPlaces !== "number" || decimalPlaces < 0 || decimalPlaces > 100)
