@@ -137,6 +137,7 @@ const GlobalStyle = createGlobalStyle<{
 		}
 	}
 
+	// stylelint-disable-next-line selector-id-pattern
 	#__svg__icons__dom__ {
 		display: none;
 	}

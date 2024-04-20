@@ -12,7 +12,7 @@ export function useSmoothValue<T extends number | number[] | Point>(current: T, 
 		throw new RangeError(`useSmoothValue speed parameter value range error. The parameter value must be within the range of (0 ~ 1], the current value is ${speed}.`);
 	const [smoothValue, setSmoothValue] = useState(current);
 	const animationId = useRef<number>();
-	const FRACTION_DIGITS = 6; // 保留 6 位小数。
+	const FRACTION_DIGITS = 6; // Round to 6 decimal places.
 	useEffect(() => {
 		const animation = () => {
 			const value = current;
