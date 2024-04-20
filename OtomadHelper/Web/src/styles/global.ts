@@ -137,6 +137,10 @@ const GlobalStyle = createGlobalStyle<{
 		}
 	}
 
+	#__svg__icons__dom__ {
+		display: none;
+	}
+
 	// Color mode transition
 	::view-transition-old(root),
 	::view-transition-new(root) {
