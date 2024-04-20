@@ -16,11 +16,10 @@ public partial class ComboBoxFlyout : BackdropWindow {
 
 	public ComboBoxFlyout(IEnumerable<string> list, string selected) : this() {
 		Selected = selected;
-		SelectedIndex = list.ToList().IndexOf(selected);
 		foreach (string item in list) {
 			ComboBoxItem comboBoxItem = new() {
 				Text = item,
-				Selected = selected == item,
+				Current = selected,
 			};
 			comboBoxItem.CurrentChanged += current => Selected = current; // TODO: set selected index.
 			comboBoxItem.Click += (sender, e) => this.Vanish();
@@ -28,22 +27,12 @@ public partial class ComboBoxFlyout : BackdropWindow {
 		}
 	}
 
-	public ComboBoxFlyout(IEnumerable<string> list, int selectedIndex) : this() {
-		SelectedIndex = selectedIndex;
-		Selected = list.ElementAtOrDefault(selectedIndex);
-		foreach ((string item, int index) in list.WithIndex()) {
-			ComboBoxItem comboBoxItem = new() {
-				Text = item,
-				Selected = selectedIndex == index,
-			};
-			comboBoxItem.CurrentChanged += current => Selected = current; // TODO: set selected index.
-			comboBoxItem.Click += (sender, e) => this.Vanish();
-			Container.Children.Add(comboBoxItem);
-		}
-	}
+	public ComboBoxFlyout(IEnumerable<string> list, int selectedIndex) : this(list, list.ElementAtOrDefault(selectedIndex)) { }
 
+	public IEnumerable<string> ItemList { get; private set; } = new string[0];
 	public string Selected { get; private set; } = "";
-	public int SelectedIndex { get; private set; } = -1;
+	public int SelectedIndex => ItemList.ToList().IndexOf(Selected);
+
 	public double ItemHeight {
 		set {
 			foreach (ComboBoxItem comboBoxItem in ComboBoxItems)

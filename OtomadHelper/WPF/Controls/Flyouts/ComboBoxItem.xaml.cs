@@ -17,17 +17,15 @@ public partial class ComboBoxItem : UserControl {
 		nameof(Text), typeof(string), typeof(BackdropWindow), new PropertyMetadata(""));
 	public string Text { get => (string)GetValue(TextProperty); set => SetValue(TextProperty, value); }
 
-	public static readonly DependencyProperty SelectedProperty = DependencyProperty.Register(
-		nameof(Selected), typeof(bool), typeof(BackdropWindow), new PropertyMetadata(false));
-	public bool Selected { get => (bool)GetValue(SelectedProperty); set => SetValue(SelectedProperty, value); }
+	public bool Selected => RadioButton.IsChecked == true;
 
 	public static readonly DependencyProperty CurrentProperty = DependencyProperty.Register(
-		nameof(Current), typeof(string), typeof(BackdropWindow), new PropertyMetadata(""));
+		nameof(Current), typeof(string), typeof(BackdropWindow), new PropertyMetadata("", DebugPropertyChanged));
 	public string Current { get => (string)GetValue(CurrentProperty); set => SetValue(CurrentProperty, value); }
 
 	private void RadioButton_Checked(object sender, RoutedEventArgs e) {
-		Current = Text;
-		CurrentChanged?.Invoke(Text);
+		//Current = Text;
+		//CurrentChanged?.Invoke(Text);
 	}
 
 	public delegate void CurrentChangedHandler(string current);
@@ -40,6 +38,6 @@ public partial class ComboBoxItem : UserControl {
 		remove => RemoveHandler(ClickRoutedEvent, value);
 	}
 	private void RadioButton_Click(object sender, RoutedEventArgs e) {
-		RaiseEvent(new RoutedEventArgs(ClickRoutedEvent, this));
+		//RaiseEvent(new RoutedEventArgs(ClickRoutedEvent, this));
 	}
 }

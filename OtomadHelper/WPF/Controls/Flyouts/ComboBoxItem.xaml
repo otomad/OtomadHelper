@@ -4,6 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:f="clr-namespace:OtomadHelper.WPF.Controls.Flyouts"
+	xmlns:cvt="clr-namespace:OtomadHelper.WPF.Converters"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	d:DesignHeight="40"
@@ -11,6 +12,7 @@
 	mc:Ignorable="d">
 	<UserControl.Resources>
 		<BooleanToVisibilityConverter x:Key="BoolToVis" />
+		<cvt:RadioStringToBooleanConverter x:Key="StringToBool" />
 		<s:Double x:Key="IndicatorRadius">1.5</s:Double>
 		<Style x:Key="ComboBoxItemButton" TargetType="RadioButton">
 			<Setter Property="Background" Value="Transparent" />
@@ -81,11 +83,11 @@
 	</UserControl.Resources>
 	<RadioButton
 		x:Name="RadioButton"
-		GroupName="ComboBoxItem"
-		IsChecked="{Binding Path=Selected, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
-		Style="{StaticResource ComboBoxItemButton}"
 		Checked="RadioButton_Checked"
-		Click="RadioButton_Click">
+		Click="RadioButton_Click"
+		GroupName="ComboBoxItem"
+		IsChecked="{Binding Current, Mode=TwoWay, Converter={StaticResource StringToBool}}"
+		Style="{StaticResource ComboBoxItemButton}">
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="12" />

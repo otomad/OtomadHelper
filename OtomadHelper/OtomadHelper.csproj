@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="Bridges\Bridge.cs" />
     <Compile Include="GlobalUsing.cs" />
+    <Compile Include="Helpers\Debugger.cs" />
     <Compile Include="Helpers\Extensions_Control.cs" />
     <Compile Include="Helpers\Extensions_Image.cs" />
     <Compile Include="Helpers\I18n.cs" />
@@ -141,6 +142,7 @@
       <DependentUpon>ComboBoxItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPF\Controls\NotifiedUserControl.cs" />
+    <Compile Include="WPF\Converters\RadioStringToBooleanConverter.cs" />
     <EmbeddedResource Include="Module\MainDock.resx">
       <DependentUpon>MainDock.cs</DependentUpon>
     </EmbeddedResource>
