@@ -44,6 +44,25 @@
 			this.removeAt(index);
 	};
 
+	Array.prototype.randomOne = function (record) {
+		if (!this.length) return null;
+		record = toValue(record);
+		let index = randBetween(0, this.length - 1);
+		if (record !== undefined) {
+			if (record.length !== this.length + 1 || record.every((n, i) => !i || n)) {
+				let last = +record[0];
+				if (!Number.isFinite(last)) last = -1;
+				record.relist(Array(this.length + 1).fill(0));
+				record[0] = last;
+			}
+			while (record[index + 1] || index === record[0])
+				index = randBetween(0, this.length - 1);
+			record[index + 1] = 1;
+			record[0] = index;
+		}
+		return this[index];
+	};
+
 	Array.prototype.mapObject = function (callbackFn) {
 		const array = this;
 		return Object.fromEntries(array.map((value, index, array) => callbackFn(value, index, array)));

@@ -43,6 +43,13 @@ declare interface Array<T> {
 	toggle(item: T): void;
 
 	/**
+	 * Returns a random item from the array.
+	 * @param record - Random records. If provided, identical items will not be drawn until all items have been randomly drawn.
+	 * @returns A random item in the array.
+	 */
+	randomOne(record?: MaybeRef<number[]>): T;
+
+	/**
 	 * Map to an object via any array.
 	 * @param callbackFn - Generate key value tuples as objects.
 	 * @returns The mapped object.
