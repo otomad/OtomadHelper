@@ -86,7 +86,8 @@ public class VariableName {
 	/// <param name="str">单词。</param>
 	/// <returns>首字母大写，其它字母为小写的单词。</returns>
 	private static string Capitalize(string str) =>
-		str[0].ToString().ToUpperInvariant() + str.Substring(1).ToLowerInvariant();
+		string.IsNullOrEmpty(str) ? "" :
+			str[0].ToString().ToUpperInvariant() + str.Substring(1).ToLowerInvariant();
 
 	public override string ToString() => string.Join(" ", words);
 
