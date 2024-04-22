@@ -1,8 +1,10 @@
 <c:BackdropWindow
 	x:Class="OtomadHelper.WPF.Controls.ContentDialog"
+	x:Name="View"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:common="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Width="800"
@@ -16,7 +18,7 @@
 	mc:Ignorable="d"
 	>
 	<c:BackdropWindow.DataContext>
-		<c:ContentDialogViewModel />
+		<c:ContentDialogViewModel x:Name="ViewModel" />
 	</c:BackdropWindow.DataContext>
 
 	<c:BackdropWindow.Resources>
@@ -120,7 +122,14 @@
 								Content="{Binding Text}"
 								DialogResult="{Binding DialogResult}"
 								IsDefault="{Binding IsDefault}"
-								/>
+								Command="{Binding ClickButtonCommand, ElementName=ViewModel}">
+								<c:Button.CommandParameter>
+									<common:MultiBindingTuple>
+										<Binding Path="DialogResult" />
+										<Binding ElementName="View" />
+									</common:MultiBindingTuple>
+								</c:Button.CommandParameter>
+							</c:Button>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>

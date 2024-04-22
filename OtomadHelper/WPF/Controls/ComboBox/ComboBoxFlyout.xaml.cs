@@ -1,10 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Xml.Linq;
 
-namespace OtomadHelper.WPF.Controls.Flyouts;
+namespace OtomadHelper.WPF.Controls;
 
 /// <summary>
 /// ComboBoxFlyout.xaml 的交互逻辑
@@ -13,15 +10,14 @@ public partial class ComboBoxFlyout : BackdropWindow {
 	public ComboBoxFlyout() {
 		InitializeComponent();
 	}
-
-	public ComboBoxFlyout(IEnumerable<string> list, string selected) : this() {
+	/*public ComboBoxFlyout(IEnumerable<string> list, string selected) : this() {
 		Selected = selected;
 		foreach (string item in list) {
 			ComboBoxItem comboBoxItem = new() {
 				Text = item,
 				Current = selected,
 			};
-			comboBoxItem.CurrentChanged += current => Selected = current; // TODO: set selected index.
+			comboBoxItem.CurrentChanged += current => Selected = current;
 			comboBoxItem.Click += (sender, e) => this.Vanish();
 			Container.Children.Add(comboBoxItem);
 		}
@@ -63,5 +59,5 @@ public partial class ComboBoxFlyout : BackdropWindow {
 				Top -= coordinates.Y;
 				break;
 			}
-	}
+	}*/
 }

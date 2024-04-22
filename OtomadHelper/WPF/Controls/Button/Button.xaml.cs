@@ -8,5 +8,5 @@ namespace OtomadHelper.WPF.Controls;
 public partial class Button : System.Windows.Controls.Button {
 	public static readonly DependencyProperty DialogResultProperty = DependencyProperty.Register(
 		nameof(DialogResult), typeof(object), typeof(Button), new PropertyMetadata(""));
-	public object DialogResult { get => (TitleBarType)GetValue(DialogResultProperty); set => SetValue(DialogResultProperty, value); }
+	public object DialogResult { get => GetValue(DialogResultProperty); set => SetValue(DialogResultProperty, value); }
 }
