@@ -5,7 +5,6 @@
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:v="clr-namespace:OtomadHelper.WPF.Converters"
 	Width="800"
 	BorderBrush="{DynamicResource CardStroke}"
 	BorderThickness="1"
@@ -21,8 +20,8 @@
 	</c:BackdropWindow.DataContext>
 
 	<c:BackdropWindow.Resources>
-		<v:ContentDialogIconNameToSymbolConverter x:Key="IconNameToSymbol" />
-		<v:ContentDialogIconNameToImageSourceConverter x:Key="IconNameToImageSource" />
+		<c:ContentDialogIconNameToSymbolConverter x:Key="IconNameToSymbol" />
+		<c:ContentDialogIconNameToImageSourceConverter x:Key="IconNameToImageSource" />
 
 		<Style TargetType="TextBlock">
 			<Setter Property="TextWrapping" Value="Wrap" />

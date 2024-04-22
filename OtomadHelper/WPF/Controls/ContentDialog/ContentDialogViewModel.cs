@@ -1,22 +1,20 @@
 using System.Collections.ObjectModel;
 
-using OtomadHelper.WPF.Converters;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace OtomadHelper.WPF.Controls;
 
-public class ContentDialogViewModel<TDialogResult> : NotifyPropertyChanged {
+public partial class ContentDialogViewModel<TDialogResult> : ObservableObject {
+	[ObservableProperty]
 	private string title = "";
-	public string Title { get => title; set => SetField(ref title, value); }
 
+	[ObservableProperty]
 	private string body = "";
-	public string Body { get => body; set => SetField(ref body, value); }
 
 	private static string DefaultIconName => ContentDialogIconNameToSymbolConverter.DefaultIconName;
+	[ObservableProperty]
+	[ContentDialogIconNameValidation]
 	private string iconName = DefaultIconName;
-	public string IconName {
-		get => iconName;
-		set => SetField(ref iconName, string.IsNullOrWhiteSpace(value) ? DefaultIconName : value);
-	}
 
 	public ObservableCollection<ContentDialogButtonItem<TDialogResult>> Buttons { get; } = new();
 }

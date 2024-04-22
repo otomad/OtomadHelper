@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace OtomadHelper.WPF.Converters;
+namespace OtomadHelper.WPF.Controls;
 
 [ValueConversion(typeof(string), typeof(ImageSource))]
 public class ContentDialogIconNameToImageSourceConverter : IValueConverter {

@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace OtomadHelper.WPF.Converters;
+namespace OtomadHelper.WPF.Controls;
 
 [ValueConversion(typeof(string), typeof(string))]
 public class ContentDialogIconNameToSymbolConverter : IValueConverter {
@@ -26,4 +26,6 @@ public class ContentDialogIconNameToSymbolConverter : IValueConverter {
 
 	public const string DefaultIconName = "Info";
 	public static string DefaultIcon => SegoeIconNames[DefaultIconName];
+
+	public static bool IsValidIconName(string iconName) => SegoeIconNames.ContainsKey(iconName);
 }
