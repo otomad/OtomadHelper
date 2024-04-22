@@ -23,4 +23,17 @@ public static partial class Extensions {
 		value = result.FirstOrDefault().Value;
 		return result.Count() > 0;
 	}
+
+	/// <summary>
+	/// Adds the elements of the specified collection to the end of the <see cref="IList"/>&lt;<typeparamref name="T"/>&gt;.
+	/// </summary>
+	/// <param name="collection">
+	/// The collection whose elements should be added to the end of the <see cref="IList"/>&lt;<typeparamref name="T"/>&gt;.
+	/// The collection itself cannot be <c>null</c>, but it can contain elements that are <c>null</c>, if type
+	/// <typeparamref name="T"/> is a reference type.
+	/// </param>
+	public static void AddRange<T>(this IList<T> list, IEnumerable<T> collection) {
+		foreach (T item in collection)
+			list.Add(item);
+	}
 }

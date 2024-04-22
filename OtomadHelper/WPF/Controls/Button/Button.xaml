@@ -1,0 +1,114 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	>
+	<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
+	<Thickness x:Key="ButtonPadding">8</Thickness>
+	<Style x:Key="ButtonFocusVisualStyle">
+		<Setter Property="Control.Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<Rectangle
+						Margin="-3"
+						RadiusX="7"
+						RadiusY="7"
+						Stroke="{DynamicResource ForegroundBrush}"
+						StrokeThickness="2"
+						/>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style TargetType="c:Button">
+		<Setter Property="MinHeight" Value="32" />
+		<Setter Property="BorderBrush" Value="{DynamicResource ControlElevation}" />
+		<Setter Property="Background" Value="{DynamicResource ControlBackground}" />
+		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+		<Setter Property="FontSize" Value="14" />
+		<Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisualStyle}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="c:Button">
+					<Border
+						Padding="{StaticResource ButtonPadding}"
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						CornerRadius="{StaticResource ButtonCornerRadius}"
+						>
+						<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Background" Value="{DynamicResource ControlBackgroundSecondary}" />
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="BorderBrush" Value="{DynamicResource ControlStroke}" />
+				<Setter Property="Background" Value="{DynamicResource ControlBackgroundTertiary}" />
+				<Setter Property="Foreground">
+					<Setter.Value>
+						<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacity}" Color="{DynamicResource ForegroundColor}" />
+					</Setter.Value>
+				</Setter>
+			</Trigger>
+			<Trigger Property="IsDefault" Value="True">
+				<Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevation}" />
+				<Setter Property="Background" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
+				<Setter Property="Foreground" Value="{DynamicResource TextOnAccentForegroundBrush}" />
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="c:Button">
+							<Grid>
+								<Border
+									Padding="{StaticResource ButtonPadding}"
+									Background="{TemplateBinding Background}"
+									CornerRadius="{StaticResource ButtonCornerRadius}"
+									>
+									<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+								</Border>
+								<Border
+									Padding="{StaticResource ButtonPadding}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									BorderThickness="{TemplateBinding BorderThickness}"
+									CornerRadius="{StaticResource ButtonCornerRadius}"
+									/>
+							</Grid>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Trigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="IsDefault" Value="True" />
+					<Condition Property="IsMouseOver" Value="True" />
+				</MultiTrigger.Conditions>
+				<Setter Property="Background">
+					<Setter.Value>
+						<SolidColorBrush Opacity="{DynamicResource AccentSecondaryOpacity}" Color="{Binding Source={x:Static SystemParameters.WindowGlassColor}}" />
+					</Setter.Value>
+				</Setter>
+			</MultiTrigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="IsDefault" Value="True" />
+					<Condition Property="IsPressed" Value="True" />
+				</MultiTrigger.Conditions>
+				<Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeOnAccent}" />
+				<Setter Property="Background">
+					<Setter.Value>
+						<SolidColorBrush Opacity="{DynamicResource AccentTertiaryOpacity}" Color="{Binding Source={x:Static SystemParameters.WindowGlassColor}}" />
+					</Setter.Value>
+				</Setter>
+				<Setter Property="Foreground">
+					<Setter.Value>
+						<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacityOnAccent}" Color="{DynamicResource TextOnAccentForegroundColor}" />
+					</Setter.Value>
+				</Setter>
+			</MultiTrigger>
+		</Style.Triggers>
+	</Style>
+</ResourceDictionary>

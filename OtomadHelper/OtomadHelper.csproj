@@ -98,20 +98,26 @@
     <Compile Include="Models\ConsoleLog.cs" />
     <Compile Include="Models\DragOver.cs" />
     <Compile Include="Models\IWebMessageEvent.cs" />
-    <Compile Include="Module\MainWPFDock.xaml.cs">
+    <None Include="Module\MainWPFDock.xaml.cs">
       <DependentUpon>MainWPFDock.xaml</DependentUpon>
-    </Compile>
+    </None>
     <Compile Include="Test\TestControls.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Test\TestControls.Designer.cs">
       <DependentUpon>TestControls.cs</DependentUpon>
     </Compile>
+    <Compile Include="WPF\Common\Command.cs" />
+    <Compile Include="WPF\Common\NamedResourceDictionary.cs" />
+    <Compile Include="WPF\Common\NotifyPropertyChanged.cs" />
     <Compile Include="WPF\Controls\BackdropWindow.cs" />
-    <Compile Include="WPF\Controls\Button.xaml.cs">
+    <Compile Include="WPF\Controls\Button\Button.xaml.cs">
       <DependentUpon>Button.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WPF\Controls\ContentDialog.xaml.cs">
+    <Compile Include="WPF\Controls\ContentDialog\ContentDialogButtonItem.cs" />
+    <Compile Include="WPF\Controls\ContentDialog\ContentDialogButtonPanel.cs" />
+    <Compile Include="WPF\Controls\ContentDialog\ContentDialogViewModel.cs" />
+    <Compile Include="WPF\Controls\ContentDialog\ContentDialog.xaml.cs">
       <DependentUpon>ContentDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ResourceHelper.cs" />
@@ -141,7 +147,8 @@
     <Compile Include="WPF\Controls\Flyouts\ComboBoxItem.xaml.cs">
       <DependentUpon>ComboBoxItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WPF\Controls\NotifiedUserControl.cs" />
+    <Compile Include="WPF\Converters\ContentDialogIconNameToImageSourceConverter.cs" />
+    <Compile Include="WPF\Converters\ContentDialogIconNameToSymbolConverter.cs" />
     <Compile Include="WPF\Converters\RadioStringToBooleanConverter.cs" />
     <EmbeddedResource Include="Module\MainDock.resx">
       <DependentUpon>MainDock.cs</DependentUpon>
@@ -192,6 +199,9 @@
     <Content Include="Icons\**" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
     <PackageReference Include="Costura.Fody">
       <Version>5.7.0</Version>
       <!--<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>-->
@@ -214,15 +224,15 @@
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Module\MainWPFDock.xaml">
+    <None Include="Module\MainWPFDock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <Page Include="WPF\Controls\Button\Button.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WPF\Controls\Button.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WPF\Controls\ContentDialog.xaml">
+    <Page Include="WPF\Controls\ContentDialog\ContentDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -231,6 +241,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WPF\Controls\Flyouts\ComboBoxItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WPF\Styles\Controls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

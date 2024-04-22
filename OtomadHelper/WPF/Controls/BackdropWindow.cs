@@ -1,10 +1,11 @@
-using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Windows.Shell;
 using OtomadHelper.Module;
 using System.Windows.Input;
+using OtomadHelper.Properties;
+using System.Windows;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -32,8 +33,23 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
 		RefreshFrame();
-		RefreshDarkMode();
+		RefreshDarkMode(isOnLoad: true);
 		SetSystemBackdropType(SystemBackdropType);
+	}
+
+	protected void SetCurrentThemeResource(bool isDarkTheme, bool isOnLoad) {
+		const string THEME_COLOR = "ThemeColor";
+		foreach (ResourceDictionary resource in Resources.MergedDictionaries)
+			if (resource is NamedResourceDictionary named && named.Name == THEME_COLOR)
+				Resources.MergedDictionaries.Remove(resource);
+
+		if (isOnLoad)
+			AddDictionary("Wpf/Styles/Controls.xaml");
+
+		AddDictionary($"Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml");
+
+		void AddDictionary(string path) =>
+			Resources.MergedDictionaries.Add(new() { Source = new($"pack://application:,,,/{OtomadHelperModule.ASSEMBLY_NAME};component/{path}", UriKind.Absolute) });
 	}
 
 	#region Set backdrop type
@@ -68,18 +84,18 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 			const int WM_SETTINGCHANGE = 0x001A;
 			if (msg == WM_SETTINGCHANGE)
 				if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
-					RefreshDarkMode();
+					RefreshDarkMode(isOnLoad: false);
 					RaiseEvent(new RoutedEventArgs(ThemeChangeEvent, this));
 				}
 			return IntPtr.Zero;
 		});
 	}
 
-	protected void RefreshDarkMode() {
+	protected void RefreshDarkMode(bool isOnLoad) {
 		bool isDarkTheme = ShouldAppsUseDarkMode();
 		int flag = isDarkTheme ? 1 : 0;
 		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, flag);
-		SetCurrentThemeResource(isDarkTheme);
+		SetCurrentThemeResource(isDarkTheme, isOnLoad);
 	}
 
 	private const SystemBackdropType DEFAULT_SYSTEM_BACKDROP_TYPE = SystemBackdropType.TransientWindow;
@@ -108,11 +124,6 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 
 	protected virtual void OnPropertyChanged(string propertyName) {
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
-
-	protected void SetCurrentThemeResource(bool isDarkTheme) {
-		Resources.MergedDictionaries.Clear();
-		Resources.MergedDictionaries.Add(new() { Source = new($"pack://application:,,,/{OtomadHelperModule.ASSEMBLY_NAME};component/Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", UriKind.Absolute) });
 	}
 	#endregion
 

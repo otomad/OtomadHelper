@@ -2,6 +2,7 @@ global using System;
 global using System.Collections;
 global using System.Collections.Generic;
 global using System.Collections.Specialized;
+global using System.ComponentModel;
 global using System.Diagnostics;
 global using System.Dynamic;
 global using System.IO;
@@ -19,10 +20,11 @@ global using System.Windows.Media.Imaging;
 global using Microsoft.Win32;
 
 global using OtomadHelper.Helpers;
+global using OtomadHelper.WPF.Common;
 
+global using static OtomadHelper.Helpers.Debugger;
 global using static OtomadHelper.Helpers.Extensions;
 global using static OtomadHelper.Helpers.I18n;
-global using static OtomadHelper.Helpers.Debugger;
 global using static OtomadHelper.Helpers.WebView2BetterBridge.MessageSender;
 global using static OtomadHelper.Interop.PInvoke;
 

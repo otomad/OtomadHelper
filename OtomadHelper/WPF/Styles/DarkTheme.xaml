@@ -1,7 +1,10 @@
-<ResourceDictionary
+<m:NamedResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:s="clr-namespace:System;assembly=mscorlib">
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
+	x:Name="ThemeColor"
+	>
 	<Color x:Key="ForegroundColor">White</Color>
 	<SolidColorBrush x:Key="ForegroundBrush" Color="{DynamicResource ForegroundColor}" />
 	<SolidColorBrush x:Key="CardStroke" Color="#19000000" />
@@ -27,4 +30,4 @@
 	<s:Double x:Key="AccentTertiaryOpacity">0.8</s:Double>
 	<SolidColorBrush x:Key="FillColorSubtleSecondary" Color="#0FFFFFFF" />
 	<SolidColorBrush x:Key="FillColorSubtleTertiary" Color="#0AFFFFFF" />
-</ResourceDictionary>
+</m:NamedResourceDictionary>
