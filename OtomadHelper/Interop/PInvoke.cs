@@ -1,6 +1,6 @@
 namespace OtomadHelper.Interop;
 
-public class PInvoke {
+public static class PInvoke {
 	/// <summary>
 	/// Flags for specifying the system-drawn backdrop material of a window, including behind the non-client area.
 	/// </summary>

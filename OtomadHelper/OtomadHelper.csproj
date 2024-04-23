@@ -107,16 +107,6 @@
 		<EmbeddedResource Include="Web\dist\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-		<PackageReference Include="Costura.Fody" Version="5.7.0">
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2088.41" />
-		<PackageReference Include="NAudio" Version="2.2.1" />
-		<PackageReference Include="System.Text.Json" Version="8.0.2" />
-	</ItemGroup>
-	<ItemGroup>
 		<Compile Remove="Module\MainWPFDock.xaml.cs" />
 		<Compile Remove="obj\x64\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
 		<Compile Remove="obj\x64\Debug\GeneratedInternalTypeHelper.g.cs" />
@@ -153,9 +143,23 @@
 		<Page Remove="Module\MainWPFDock.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="Costura.Fody" Version="5.7.0">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2478.35" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+		<PackageReference Include="NAudio" Version="2.2.1" />
+		<PackageReference Include="System.Text.Json" Version="8.0.3" />
+	</ItemGroup>
+	<ItemGroup>
 		<None Update="Properties\Settings.settings">
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="WPF\Converters\" />
 	</ItemGroup>
 </Project>

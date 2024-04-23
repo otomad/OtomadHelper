@@ -3,11 +3,7 @@ using OtomadHelper.WPF.Controls;
 namespace OtomadHelper.Bridges;
 
 public class Bridge {
-	/*public string ShowMessageBox(string title, string body, ContentDialogButtonItem<string>[] buttons) {
-		return new ContentDialog<string>(title, body, buttons).ShowDialog();
+	public string ShowMessageBox(string title, string body, ContentDialogButtonItem[] buttons, string iconName = "") {
+		return ContentDialog.ShowDialog<string>(title, body, buttons, iconName) ?? "";
 	}
-
-	public string ShowMessageBox(string title, string body, string iconName, ContentDialogButtonItem<string>[] buttons) {
-		return new ContentDialog<string>(title, body, iconName, buttons).ShowDialog();
-	}*/
 }

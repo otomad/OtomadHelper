@@ -9,7 +9,7 @@ public class MultiBindingTuple : MultiBinding {
 	}
 }
 
-public class MultiValueToTupleConverter : IMultiValueConverter {
+internal class MultiValueToTupleConverter : IMultiValueConverter {
 	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
 		int length = values.Length;
 		MethodInfo[] createTupleMethods = typeof(Tuple).GetMethods(BindingFlags.Public | BindingFlags.Static)!;

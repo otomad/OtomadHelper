@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -6,7 +5,6 @@ using System.Windows.Media;
 using System.Windows.Shell;
 
 using OtomadHelper.Module;
-using OtomadHelper.Properties;
 using OtomadHelper.WPF.Common;
 
 namespace OtomadHelper.WPF.Controls;
@@ -15,7 +13,7 @@ namespace OtomadHelper.WPF.Controls;
 /// BackdropWindow.xaml 的交互逻辑
 /// </summary>
 public partial class BackdropWindow : Window, INotifyPropertyChanged {
-	protected WindowInteropHelper helper;
+	protected readonly WindowInteropHelper helper;
 	protected IntPtr Handle => helper.Handle;
 
 	public BackdropWindow() {
@@ -34,6 +32,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	}
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
+		BindViewToViewModel();
 		RefreshFrame();
 		RefreshDarkMode(isOnLoad: true);
 		SetSystemBackdropType(SystemBackdropType);
@@ -52,6 +51,15 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 
 		void AddDictionary(string path) =>
 			Resources.MergedDictionaries.Add(new() { Source = new($"pack://application:,,,/{OtomadHelperModule.ASSEMBLY_NAME};component/{path}", UriKind.Absolute) });
+	}
+
+	private void BindViewToViewModel() {
+		if (DataContext is null) return;
+		PropertyInfo? viewProperty = DataContext.GetType().GetProperty("View");
+		if (viewProperty is not null &&
+			typeof(FrameworkElement).IsAssignableFrom(viewProperty.PropertyType) &&
+			viewProperty.SetMethod is not null)
+			viewProperty.SetMethod.Invoke(DataContext, new object[] { this });
 	}
 
 	#region Set backdrop type

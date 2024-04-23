@@ -1,6 +1,8 @@
 using System.Windows;
 using System.Windows.Controls;
 
+using OtomadHelper.Interop;
+
 namespace OtomadHelper.WPF.Controls;
 
 /// <summary>
@@ -10,30 +12,16 @@ public partial class ComboBoxFlyout : BackdropWindow {
 	public ComboBoxFlyout() {
 		InitializeComponent();
 	}
-	/*public ComboBoxFlyout(IEnumerable<string> list, string selected) : this() {
-		Selected = selected;
-		foreach (string item in list) {
-			ComboBoxItem comboBoxItem = new() {
-				Text = item,
-				Current = selected,
-			};
-			comboBoxItem.CurrentChanged += current => Selected = current;
-			comboBoxItem.Click += (sender, e) => this.Vanish();
-			Container.Children.Add(comboBoxItem);
-		}
-	}
 
-	public ComboBoxFlyout(IEnumerable<string> list, int selectedIndex) : this(list, list.ElementAtOrDefault(selectedIndex)) { }
+	public new ComboBoxViewModel DataContext => (ComboBoxViewModel)base.DataContext;
 
-	public IEnumerable<string> ItemList { get; private set; } = new string[0];
-	public string Selected { get; private set; } = "";
-	public int SelectedIndex => ItemList.ToList().IndexOf(Selected);
-
-	public double ItemHeight {
-		set {
-			foreach (ComboBoxItem comboBoxItem in ComboBoxItems)
-				comboBoxItem.Height = value;
-		}
+	public static ComboBoxFlyout Initial(IEnumerable<string> list, string selected, Bounding targetBounding) {
+		ComboBoxFlyout comboBox = new();
+		ComboBoxViewModel viewModel = comboBox.DataContext;
+		viewModel.Items.AddRange(list.Select(text => new ComboBoxViewModelItem(text, viewModel)));
+		viewModel.Selected = selected;
+		comboBox.SetTargetBounding(targetBounding);
+		return comboBox;
 	}
 
 	public new double Width {
@@ -41,23 +29,25 @@ public partial class ComboBoxFlyout : BackdropWindow {
 		set => base.Width = value + ResourceMarginX;
 	}
 
-	private Thickness ResourceMargin => (Thickness)Resources["Margin"];
+	private Thickness ResourceMargin => (Thickness)Resources["Padding"];
 	private double ResourceMarginX => ResourceMargin.Left + ResourceMargin.Right;
 
-	private void Window_Deactivated(object sender, EventArgs e) {
-		this.Vanish();
+	private void Window_Deactivated(object sender, EventArgs e) => this.Vanish();
+
+	private void SetTargetBounding(Bounding bounding) {
+		Left = bounding.Left;
+		Top = bounding.Top;
+		Width = bounding.Width;
+		ItemHeight = bounding.Height;
 	}
 
-	private IEnumerable<ComboBoxItem> ComboBoxItems => Container.Children.OfType<ComboBoxItem>();
+	public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register(
+		nameof(ItemHeight), typeof(double), typeof(ComboBoxFlyout), new PropertyMetadata(20.0));
+	public double ItemHeight { get => (double)GetValue(ItemHeightProperty); set => SetValue(ItemHeightProperty, value); }
 
 	private void ComboBoxFlyout_Loaded(object sender, RoutedEventArgs e) {
 		Left -= ResourceMargin.Left;
 		Top -= ResourceMargin.Top;
-		foreach (UIElement element in Container.Children)
-			if (element is ComboBoxItem comboBoxItem && comboBoxItem.Selected) {
-				Point coordinates = comboBoxItem.TransformToAncestor(this).Transform(new Point(0, 0));
-				Top -= coordinates.Y;
-				break;
-			}
-	}*/
+		Top -= DataContext.SelectedIndex * ItemHeight;
+	}
 }

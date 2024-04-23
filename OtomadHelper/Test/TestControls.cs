@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using OtomadHelper.Interop;
 using OtomadHelper.WPF.Controls;
 
 namespace OtomadHelper.Test;
@@ -24,16 +25,17 @@ public partial class TestControls : Form {
 		if (sender is not Control control) return;
 		Point location = control.PointToScreen(Point.Empty);
 		(double dpiX, double dpiY) = this.GetDpi();
-
-		/*ComboBoxFlyout flyout = new(list, selected) {
+		Bounding bounding = new() {
 			Left = location.X / dpiX,
 			Top = location.Y / dpiY,
 			Width = control.Width / dpiX,
-			ItemHeight = control.Height / dpiY,
+			Height = control.Height / dpiY,
 		};
+
+		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, bounding);
 		flyouts.Add(flyout);
 		flyout.ShowDialog();
-		ComboBoxBtn.Text = selected = flyout.Selected;*/
+		ComboBoxBtn.Text = selected = flyout.DataContext.Selected;
 	}
 
 	protected override void WndProc(ref Message m) {

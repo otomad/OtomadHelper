@@ -1,20 +1,23 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 
 using IconNameToSymbol = OtomadHelper.WPF.Controls.ContentDialogIconNameToSymbolConverter;
 
 namespace OtomadHelper.WPF.Controls;
 
 public partial class ContentDialogViewModel : ObservableObject {
+	public ContentDialog? View { get; set; }
+
 	[ObservableProperty]
 	private string title = "";
 
 	[ObservableProperty]
 	private string body = "";
 
+	[ObservableProperty]
 	private string iconName = IconNameToSymbol.DefaultIconName;
-	public string IconName {
-		get => iconName;
-		set => SetProperty(ref iconName, IconNameToSymbol.IsValidIconName(value) ? value : IconNameToSymbol.DefaultIconName);
+	partial void OnIconNameChanged(string? oldValue, string newValue) {
+		if (!IconNameToSymbol.IsValidIconName(newValue)) IconName = oldValue!;
 	}
 
 	public ObservableCollection<ContentDialogButtonItem> Buttons { get; } = new();
@@ -23,10 +26,8 @@ public partial class ContentDialogViewModel : ObservableObject {
 	private object? dialogResult = null;
 
 	[RelayCommand]
-	private void ClickButton(dynamic parameters) { // parameters actually type: Tuple<TDialogResult, ContentDialog>
-		dynamic dialogResult = parameters.Item1;
-		ContentDialog dialog = parameters.Item2;
+	private void ClickButton(object dialogResult) {
 		DialogResult = dialogResult;
-		dialog.Close();
+		View?.Close();
 	}
 }
