@@ -1,5 +1,5 @@
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 using OtomadHelper.Interop;
 
@@ -25,12 +25,13 @@ public partial class ComboBoxFlyout : BackdropWindow {
 	}
 
 	public new double Width {
-		get => base.Width - ResourceMarginX;
-		set => base.Width = value + ResourceMarginX;
+		get => base.Width - ResourcePaddingX;
+		set => base.Width = value + ResourcePaddingX;
 	}
 
-	private Thickness ResourceMargin => (Thickness)Resources["Padding"];
-	private double ResourceMarginX => ResourceMargin.Left + ResourceMargin.Right;
+	private Thickness ResourcePadding => (Thickness)Resources["Padding"];
+	private double ResourcePaddingX => ResourcePadding.Left + ResourcePadding.Right;
+	private double ResourcePaddingY => ResourcePadding.Top + ResourcePadding.Bottom;
 
 	private void Window_Deactivated(object sender, EventArgs e) => this.Vanish();
 
@@ -45,9 +46,110 @@ public partial class ComboBoxFlyout : BackdropWindow {
 		nameof(ItemHeight), typeof(double), typeof(ComboBoxFlyout), new PropertyMetadata(20.0));
 	public double ItemHeight { get => (double)GetValue(ItemHeightProperty); set => SetValue(ItemHeightProperty, value); }
 
-	private void ComboBoxFlyout_Loaded(object sender, RoutedEventArgs e) {
-		Left -= ResourceMargin.Left;
-		Top -= ResourceMargin.Top;
-		Top -= DataContext.SelectedIndex * ItemHeight;
+	private struct StoryboardProperty {
+		public double collapsedTop;
+		public double expandedTop;
+		public double collapsedHeight;
+		public double expandedHeight;
+	}
+
+	private StoryboardProperty storyboardProperty;
+
+	private void Window_Loaded(object sender, RoutedEventArgs e) {
+		closeStoryboardCompleted = false;
+		Left -= ResourcePadding.Left;
+		Top -= ResourcePadding.Top;
+		storyboardProperty = new() {
+			collapsedTop = Top,
+			expandedTop = Top - DataContext.SelectedIndex * ItemHeight,
+			collapsedHeight = ItemHeight + ResourcePaddingY,
+			expandedHeight = ItemHeight * DataContext.Items.Count + ResourcePaddingY,
+		};
+
+		//SizeToContent sizeToContent = SizeToContent;
+		SizeToContent = SizeToContent.Manual;
+		Height = storyboardProperty.collapsedHeight;
+		BeginStoryboard(
+			storyboardProperty.collapsedHeight,
+			storyboardProperty.expandedHeight,
+			storyboardProperty.collapsedTop,
+			storyboardProperty.expandedTop,
+			storyboardProperty.expandedTop - storyboardProperty.collapsedTop,
+			0,
+			isExit: false
+		);
+	}
+
+	private bool closeStoryboardCompleted = false;
+	private void Window_Closing(object sender, CancelEventArgs e) {
+		if (!closeStoryboardCompleted) {
+			BeginStoryboard(
+				storyboardProperty.expandedHeight,
+				storyboardProperty.collapsedHeight,
+				storyboardProperty.expandedTop,
+				storyboardProperty.collapsedTop,
+				0,
+				storyboardProperty.expandedTop - storyboardProperty.collapsedTop,
+				isExit: true,
+				Completed: () => {
+					closeStoryboardCompleted = true;
+					this.Vanish();
+				}
+			);
+			e.Cancel = true;
+		}
+	}
+
+	private void BeginStoryboard(
+		double fromHeight,
+		double toHeight,
+		double fromTop,
+		double toTop,
+		double fromChildShift,
+		double toChildShift,
+		bool isExit = false,
+		Action? Completed = null
+	) {
+		Duration duration = new(TimeSpan.FromMilliseconds(250));
+		IEasingFunction easing = (IEasingFunction)Resources["IndicatorAnimationEasingFunction"];
+		TimeSpan beginTime = isExit ? default : TimeSpan.FromMilliseconds(200);
+
+		DoubleAnimation heightAnimation = new() {
+			From = fromHeight,
+			To = toHeight,
+			Duration = duration,
+			EasingFunction = easing,
+			BeginTime = beginTime,
+		};
+		Storyboard.SetTargetName(heightAnimation, "View");
+		Storyboard.SetTargetProperty(heightAnimation, new("Height"));
+		DoubleAnimation topAnimation = new() {
+			From = fromTop,
+			To = toTop,
+			Duration = duration,
+			EasingFunction = easing,
+			BeginTime = beginTime,
+		};
+		Storyboard.SetTargetName(topAnimation, "View");
+		Storyboard.SetTargetProperty(topAnimation, new("Top"));
+		Storyboard parentStoryboard = new();
+		parentStoryboard.Children.Add(heightAnimation);
+		parentStoryboard.Children.Add(topAnimation);
+		if (Completed != null) parentStoryboard.Completed += (sender, e) => Completed();
+
+		DoubleAnimation childShiftAnimation = new() {
+			From = fromChildShift,
+			To = toChildShift,
+			Duration = duration,
+			EasingFunction = easing,
+			BeginTime = beginTime,
+		};
+		Storyboard.SetTargetName(childShiftAnimation, "ItemsControlWrapper");
+		Storyboard.SetTargetProperty(childShiftAnimation, new("(Canvas.Top)"));
+		Storyboard childStoryboard = new();
+		childStoryboard.Children.Add(childShiftAnimation);
+
+		parentStoryboard.Begin(this);
+		childStoryboard.Begin(ItemsControlWrapper);
 	}
 }

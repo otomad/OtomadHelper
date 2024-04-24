@@ -34,8 +34,10 @@ public partial class TestControls : Form {
 
 		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, bounding);
 		flyouts.Add(flyout);
-		flyout.ShowDialog();
-		ComboBoxBtn.Text = selected = flyout.DataContext.Selected;
+		flyout.Closing += (sender, e) => ComboBoxBtn.Text = selected = flyout.DataContext.Selected;
+		try {
+			flyout.ShowDialog();
+		} catch (Exception) { }
 	}
 
 	protected override void WndProc(ref Message m) {
