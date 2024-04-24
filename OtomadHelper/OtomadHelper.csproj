@@ -159,7 +159,4 @@
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="WPF\Converters\" />
-	</ItemGroup>
 </Project>

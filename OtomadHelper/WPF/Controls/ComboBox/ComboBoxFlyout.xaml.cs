@@ -25,13 +25,11 @@ public partial class ComboBoxFlyout : BackdropWindow {
 	}
 
 	public new double Width {
-		get => base.Width - ResourcePaddingX;
-		set => base.Width = value + ResourcePaddingX;
+		get => base.Width - ResourcePadding * 4;
+		set => base.Width = value + ResourcePadding * 4;
 	}
 
-	private Thickness ResourcePadding => (Thickness)Resources["Padding"];
-	private double ResourcePaddingX => ResourcePadding.Left + ResourcePadding.Right;
-	private double ResourcePaddingY => ResourcePadding.Top + ResourcePadding.Bottom;
+	private double ResourcePadding => (double)Resources["Padding"];
 
 	private void Window_Deactivated(object sender, EventArgs e) => this.Vanish();
 
@@ -57,13 +55,13 @@ public partial class ComboBoxFlyout : BackdropWindow {
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
 		closeStoryboardCompleted = false;
-		Left -= ResourcePadding.Left;
-		Top -= ResourcePadding.Top;
+		Left -= ResourcePadding * 2;
+		Top -= ResourcePadding * 2;
 		storyboardProperty = new() {
 			collapsedTop = Top,
 			expandedTop = Top - DataContext.SelectedIndex * ItemHeight,
-			collapsedHeight = ItemHeight + ResourcePaddingY,
-			expandedHeight = ItemHeight * DataContext.Items.Count + ResourcePaddingY,
+			collapsedHeight = ItemHeight + ResourcePadding * 4,
+			expandedHeight = DataContext.Items.Count * (ItemHeight + ResourcePadding * 2),
 		};
 
 		//SizeToContent sizeToContent = SizeToContent;
