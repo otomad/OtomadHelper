@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -16,9 +17,27 @@ public partial class ComboBoxViewModel : ObservableObject {
 	private void CheckRadioButton(string value) {
 		View?.Close();
 	}
+
+	[RelayCommand]
+	private void ArrowKeyDown(int direction) {
+		if (Items.Count == 0) return;
+		Selected = Items[MathEx.PNMod(SelectedIndex + direction, Items.Count)].Text;
+		View?.RefreshBindings();
+	}
+
+	[RelayCommand]
+	private void EnterKeyDown() {
+		KeyUp();
+	}
+
+	[RelayCommand]
+	private void KeyUp(KeyEventArgs? e = null) {
+		if (e is null || e.Key is Key.Space or Key.Escape)
+			View?.Close();
+	}
 }
 
-public class ComboBoxViewModelItem {
+public class ComboBoxViewModelItem : ObservableObject {
 	public ComboBoxViewModel ViewModel { get; }
 
 	public string Text { get; set; }

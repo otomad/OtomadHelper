@@ -62,6 +62,12 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 			viewProperty.SetMethod.Invoke(DataContext, new object[] { this });
 	}
 
+	public virtual void RefreshBindings() {
+		object? viewModel = DataContext;
+		DataContext = null;
+		DataContext = viewModel;
+	}
+
 	#region Set backdrop type
 	protected void RefreshFrame() {
 		IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
