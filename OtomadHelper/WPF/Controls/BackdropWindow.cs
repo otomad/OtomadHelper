@@ -36,6 +36,8 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		RefreshFrame();
 		RefreshDarkMode(isOnLoad: true);
 		SetSystemBackdropType(SystemBackdropType);
+		if (TitleBarType == TitleBarType.WindowChromeNoTitleBar)
+			SetAsToolWindowMode(Handle);
 	}
 
 	protected void SetCurrentThemeResource(bool isDarkTheme, bool isOnLoad) {

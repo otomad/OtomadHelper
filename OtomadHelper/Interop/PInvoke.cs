@@ -86,6 +86,29 @@ public static class PInvoke {
 		Last,
 	}
 
+	[Flags]
+	public enum ExtendedWindowStyles {
+		// ...
+		/// <remarks>
+		/// The window is intended to be used as a floating toolbar. A tool window has a title bar that is
+		/// shorter than a normal title bar, and the window title is drawn using a smaller font. A tool window
+		/// does not appear in the taskbar or in the dialog that appears when the user presses ALT+TAB. If a
+		/// tool window has a system menu, its icon is not displayed on the title bar. However, you can display
+		/// the system menu by right-clicking or by typing ALT+SPACE.
+		/// </remarks>
+		ToolWindow = 0x00000080,
+		// ...
+	}
+
+	public enum GetWindowLongFields {
+		// ...
+		/// <summary>
+		/// Retrieves the extended window styles.
+		/// </summary>
+		ExStyle = -20,
+		// ...
+	}
+
 	[StructLayout(LayoutKind.Sequential)]
 	public struct MARGINS {
 		/// <summary>
@@ -107,14 +130,30 @@ public static class PInvoke {
 	};
 
 	[DllImport("dwmapi.dll")]
-	internal static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS pMarInset);
+	internal static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
 
 	[DllImport("dwmapi.dll")]
-	internal static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
+	internal static extern int DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
 
-	public static int ExtendFrame(IntPtr hwnd, MARGINS margins) =>
-		DwmExtendFrameIntoClientArea(hwnd, ref margins);
+	[DllImport("user32.dll")]
+	public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, GetWindowLongFields nIndex);
 
-	public static int SetWindowAttribute(IntPtr hwnd, DwmWindowAttribute attribute, int parameter) =>
-		DwmSetWindowAttribute(hwnd, attribute, ref parameter, Marshal.SizeOf<int>());
+	[DllImport("user32.dll", SetLastError = true)]
+	public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, GetWindowLongFields nIndex, IntPtr dwNewLong);
+
+	public static int ExtendFrame(IntPtr hWnd, MARGINS margins) =>
+		DwmExtendFrameIntoClientArea(hWnd, ref margins);
+
+	public static int SetWindowAttribute(IntPtr hWnd, DwmWindowAttribute attribute, int parameter) =>
+		DwmSetWindowAttribute(hWnd, attribute, ref parameter, Marshal.SizeOf<int>());
+
+	/// <summary>
+	/// Set the window as tool window window style, to remove the window from Alt + Tab.
+	/// </summary>
+	/// <param name="hWnd">Window handle.</param>
+	public static void SetAsToolWindowMode(IntPtr hWnd) {
+		int exStyle = (int)GetWindowLongPtr(hWnd, GetWindowLongFields.ExStyle);
+		exStyle |= (int)ExtendedWindowStyles.ToolWindow;
+		SetWindowLongPtr(hWnd, GetWindowLongFields.ExStyle, (IntPtr)exStyle);
+	}
 }

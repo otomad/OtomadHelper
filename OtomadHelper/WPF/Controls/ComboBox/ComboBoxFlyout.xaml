@@ -185,49 +185,45 @@
 
 		<Style x:Key="ItemsControlWrapper" TargetType="ItemsControl">
 			<Setter Property="Padding" Value="{Binding Source={StaticResource Padding}, Converter={StaticResource DoubleToThick}, Mode=OneWay}" />
-			<Setter Property="Width" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Canvas, AncestorLevel=1}, Path=ActualWidth}" />
-			<Setter Property="Canvas.Top" Value="-40" />
 		</Style>
 	</c:BackdropWindow.Resources>
 
-	<Canvas>
-		<ItemsControl
-			x:Name="ItemsControlWrapper"
-			ItemsSource="{Binding Items}"
-			Style="{StaticResource ItemsControlWrapper}"
-			>
-			<ItemsControl.ItemsPanel>
-				<ItemsPanelTemplate>
-					<StackPanel Orientation="Vertical" />
-				</ItemsPanelTemplate>
-			</ItemsControl.ItemsPanel>
-			<ItemsControl.ItemTemplate>
-				<DataTemplate>
-					<RadioButton
-						x:Name="RadioButton"
-						Command="{Binding CheckRadioButtonCommand, ElementName=ViewModel}"
-						GroupName="ComboBoxItem"
-						IsChecked="{Binding IsChecked, Mode=TwoWay}"
-						Style="{StaticResource ComboBoxItemButton}"
-						>
-						<Grid>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="12" />
-								<ColumnDefinition Width="*" />
-							</Grid.ColumnDefinitions>
-							<Rectangle
-								x:Name="Indicator"
-								Grid.Column="0"
-								Style="{StaticResource Indicator}"
-								Visibility="{Binding IsChecked, ElementName=RadioButton, Converter={StaticResource BoolToVis}}"
-								/>
-							<TextBlock Grid.Column="1" Text="{Binding Text}" />
-						</Grid>
-					</RadioButton>
-				</DataTemplate>
-			</ItemsControl.ItemTemplate>
-		</ItemsControl>
-	</Canvas>
+	<ItemsControl
+		x:Name="ItemsControlWrapper"
+		ItemsSource="{Binding Items}"
+		Style="{StaticResource ItemsControlWrapper}"
+		>
+		<ItemsControl.ItemsPanel>
+			<ItemsPanelTemplate>
+				<StackPanel Orientation="Vertical" />
+			</ItemsPanelTemplate>
+		</ItemsControl.ItemsPanel>
+		<ItemsControl.ItemTemplate>
+			<DataTemplate>
+				<RadioButton
+					x:Name="RadioButton"
+					Command="{Binding CheckRadioButtonCommand, ElementName=ViewModel}"
+					GroupName="ComboBoxItem"
+					IsChecked="{Binding IsChecked, Mode=TwoWay}"
+					Style="{StaticResource ComboBoxItemButton}"
+					>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="12" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Rectangle
+							x:Name="Indicator"
+							Grid.Column="0"
+							Style="{StaticResource Indicator}"
+							Visibility="{Binding IsChecked, ElementName=RadioButton, Converter={StaticResource BoolToVis}}"
+							/>
+						<TextBlock Grid.Column="1" Text="{Binding Text}" />
+					</Grid>
+				</RadioButton>
+			</DataTemplate>
+		</ItemsControl.ItemTemplate>
+	</ItemsControl>
 
 
 </c:BackdropWindow>

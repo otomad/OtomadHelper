@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 using OtomadHelper.Interop;
@@ -135,19 +136,19 @@ public partial class ComboBoxFlyout : BackdropWindow {
 		parentStoryboard.Children.Add(topAnimation);
 		if (Completed != null) parentStoryboard.Completed += (sender, e) => Completed();
 
-		DoubleAnimation childShiftAnimation = new() {
+		/*DoubleAnimation translateAnimation = new() {
 			From = fromChildShift,
 			To = toChildShift,
 			Duration = duration,
 			EasingFunction = easing,
 			BeginTime = beginTime,
 		};
-		Storyboard.SetTargetName(childShiftAnimation, "ItemsControlWrapper");
-		Storyboard.SetTargetProperty(childShiftAnimation, new("(Canvas.Top)"));
+		Storyboard.SetTargetName(translateAnimation, "ItemsControlWrapper");
+		Storyboard.SetTargetProperty(translateAnimation, new("RenderTransform.(TranslateTransform.Y)"));
 		Storyboard childStoryboard = new();
-		childStoryboard.Children.Add(childShiftAnimation);
+		childStoryboard.Children.Add(translateAnimation);*/
 
 		parentStoryboard.Begin(this);
-		childStoryboard.Begin(ItemsControlWrapper);
+		//childStoryboard.Begin(ItemsControlWrapper);
 	}
 }
