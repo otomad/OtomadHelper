@@ -27,4 +27,10 @@ public static partial class Extensions {
 	/// <returns>该类型是数字类型。</returns>
 	public static bool IsNumber(this Type type) =>
 		NumericTypes.Contains(Nullable.GetUnderlyingType(type) ?? type);
+
+	public static void Swap<T>(ref T left, ref T right) {
+		T temp = left;
+		left = right;
+		right = temp;
+	}
 }

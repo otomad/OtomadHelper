@@ -9,16 +9,14 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	x:Name="View"
-	Width="200"
+	MinWidth="200"
 	BorderBrush="{DynamicResource CardStroke}"
-	BorderThickness="1"
 	Closing="Window_Closing"
 	Deactivated="Window_Deactivated"
 	Loaded="Window_Loaded"
 	ResizeMode="NoResize"
 	ShowInTaskbar="False"
-	SizeToContent="Height"
-	TitleBarType="WindowChromeNoTitleBar"
+	SizeToContent="WidthAndHeight"
 	WindowStartupLocation="Manual"
 	mc:Ignorable="d"
 	>
@@ -47,8 +45,18 @@
 	</i:Interaction.Triggers>
 
 	<c:BackdropWindow.Resources>
-		<BooleanToVisibilityConverter x:Key="BoolToVis" />
+		<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
+		<m:BooleanToVisibilityConverter
+			x:Key="BoolToHiddenVis"
+			False="Hidden"
+			True="Visible"
+			/>
 		<m:DoubleToThicknessConverter x:Key="DoubleToThick" />
+		<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
+		<m:ActualSizeToRectConverter x:Key="SizeToRect" />
+		<c:ComboBoxFlyoutIsContentToTitleBarTypeConverter x:Key="IsContentToTitleBarType" />
+		<c:ComboBoxFlyoutIsContentToSystemBackdropConverter x:Key="IsContentToBackdrop" />
+		<c:ComboBoxFlyoutIsContentToBorderThicknessConverter x:Key="IsContentToBorder" />
 
 		<s:Double x:Key="Padding">2</s:Double>
 		<s:Double x:Key="IndicatorRadius">1.5</s:Double>
@@ -65,8 +73,8 @@
 		<Style x:Key="ComboBoxItemButton" TargetType="RadioButton">
 			<Setter Property="Background" Value="Transparent" />
 			<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-			<Setter Property="Padding" Value="0,7,12,7" />
-			<Setter Property="MinHeight" Value="{Binding ItemHeight, ElementName=View}" />
+			<Setter Property="Padding" Value="0,0,12,0" />
+			<Setter Property="Height" Value="35.2" />
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="RadioButton">
@@ -185,8 +193,65 @@
 
 		<Style x:Key="ItemsControlWrapper" TargetType="ItemsControl">
 			<Setter Property="Padding" Value="{Binding Source={StaticResource Padding}, Converter={StaticResource DoubleToThick}, Mode=OneWay}" />
+			<Setter Property="Visibility" Value="{Binding IsContent, ElementName=View, Converter={StaticResource BoolToHiddenVis}, Mode=OneWay}" />
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding IsContent, ElementName=View}" Value="True">
+					<Setter Property="OpacityMask">
+						<Setter.Value>
+							<DrawingBrush
+								Stretch="None"
+								Viewport="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource SizeToRect}, Mode=OneTime}"
+								ViewportUnits="Absolute"
+								>
+								<DrawingBrush.Drawing>
+									<DrawingGroup>
+										<DrawingGroup.Children>
+											<GeometryDrawing Brush="Transparent">
+												<GeometryDrawing.Geometry>
+													<RectangleGeometry Rect="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource SizeToRect}, Mode=OneTime}" />
+												</GeometryDrawing.Geometry>
+											</GeometryDrawing>
+											<GeometryDrawing Brush="Black">
+												<GeometryDrawing.Geometry>
+													<RectangleGeometry
+														RadiusX="6"
+														RadiusY="6"
+														Rect="0,0,0,0"
+														/>
+												</GeometryDrawing.Geometry>
+											</GeometryDrawing>
+										</DrawingGroup.Children>
+									</DrawingGroup>
+								</DrawingBrush.Drawing>
+							</DrawingBrush>
+						</Setter.Value>
+					</Setter>
+				</DataTrigger>
+			</Style.Triggers>
 		</Style>
 	</c:BackdropWindow.Resources>
+
+	<c:BackdropWindow.TitleBarType>
+		<Binding
+			Converter="{StaticResource IsContentToTitleBarType}"
+			ElementName="View"
+			Path="IsContent"
+			/>
+	</c:BackdropWindow.TitleBarType>
+	<c:BackdropWindow.SystemBackdropType>
+		<Binding
+			Converter="{StaticResource IsContentToBackdrop}"
+			ElementName="View"
+			Path="IsContent"
+			/>
+	</c:BackdropWindow.SystemBackdropType>
+	<c:BackdropWindow.BorderThickness>
+		<Binding
+			Converter="{StaticResource IsContentToBorder}"
+			ElementName="View"
+			Path="IsContent"
+			/>
+	</c:BackdropWindow.BorderThickness>
 
 	<ItemsControl
 		x:Name="ItemsControlWrapper"
@@ -224,6 +289,4 @@
 			</DataTemplate>
 		</ItemsControl.ItemTemplate>
 	</ItemsControl>
-
-
 </c:BackdropWindow>

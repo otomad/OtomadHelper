@@ -29,6 +29,9 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	private void InitializeComponent() {
 		Background = Brushes.Transparent;
 		Loaded += Window_Loaded;
+		IsVisibleChanged += (sender, e) => {
+			if ((bool)e.NewValue) RaiseEvent(new RoutedEventArgs(ShowingEvent));
+		};
 	}
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
@@ -37,7 +40,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		RefreshDarkMode(isOnLoad: true);
 		SetSystemBackdropType(SystemBackdropType);
 		if (TitleBarType == TitleBarType.WindowChromeNoTitleBar)
-			SetAsToolWindowMode(Handle);
+			AddExtendedWindowStyles(Handle, ExtendedWindowStyles.ToolWindow);
 	}
 
 	protected void SetCurrentThemeResource(bool isDarkTheme, bool isOnLoad) {
@@ -143,12 +146,22 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	protected virtual void OnPropertyChanged(string propertyName) {
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
+
+	public static readonly RoutedEvent ShowingEvent = EventManager.RegisterRoutedEvent("Showing", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BackdropWindow));
+
+	public event RoutedEventHandler Showing {
+		add => AddHandler(ShowingEvent, value);
+		remove => RemoveHandler(ShowingEvent, value);
+	}
 	#endregion
 
 	#region Extends content into title bar
 	public static readonly DependencyProperty TitleBarTypeProperty = DependencyProperty.Register(
 		nameof(TitleBarType), typeof(TitleBarType), typeof(BackdropWindow), new PropertyMetadata(TitleBarType.System, EnableWindowChromeChangedCallback));
-	public TitleBarType TitleBarType { get => (TitleBarType)GetValue(TitleBarTypeProperty); set => SetValue(TitleBarTypeProperty, value); }
+	public TitleBarType TitleBarType {
+		get => (TitleBarType)GetValue(TitleBarTypeProperty);
+		set => SetValue(TitleBarTypeProperty, value);
+	}
 
 	private static void EnableWindowChromeChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
 		if (sender is not BackdropWindow window) return;

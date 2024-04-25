@@ -11,6 +11,8 @@ using System.Windows.Forms;
 using OtomadHelper.Interop;
 using OtomadHelper.WPF.Controls;
 
+using Rect = System.Windows.Rect;
+
 namespace OtomadHelper.Test;
 public partial class TestControls : Form {
 	private readonly List<System.Windows.Window> flyouts = new();
@@ -25,14 +27,14 @@ public partial class TestControls : Form {
 		if (sender is not Control control) return;
 		Point location = control.PointToScreen(Point.Empty);
 		(double dpiX, double dpiY) = this.GetDpi();
-		Bounding bounding = new() {
-			Left = location.X / dpiX,
-			Top = location.Y / dpiY,
-			Width = control.Width / dpiX,
-			Height = control.Height / dpiY,
-		};
+		Rect rect = new(
+			x: location.X / dpiX,
+			y: location.Y / dpiY,
+			width: control.Width / dpiX,
+			height: control.Height / dpiY
+		);
 
-		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, bounding);
+		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect);
 		flyouts.Add(flyout);
 		flyout.Closing += (sender, e) => ComboBoxBtn.Text = selected = flyout.DataContext.Selected;
 		try {

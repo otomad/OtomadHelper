@@ -22,7 +22,9 @@ public partial class ComboBoxViewModel : ObservableObject {
 	private void ArrowKeyDown(int direction) {
 		if (Items.Count == 0) return;
 		Selected = Items[MathEx.PNMod(SelectedIndex + direction, Items.Count)].Text;
+		if (View?.Related is not null) View.Related.DataContext.Selected = Selected;
 		View?.RefreshBindings();
+		View?.Related?.RefreshBindings();
 	}
 
 	[RelayCommand]
@@ -32,7 +34,7 @@ public partial class ComboBoxViewModel : ObservableObject {
 
 	[RelayCommand]
 	private void KeyUp(KeyEventArgs? e = null) {
-		if (e is null || e.Key is Key.Space or Key.Escape)
+		if (e is null || e.Key is Key.Space)
 			View?.Close();
 	}
 }

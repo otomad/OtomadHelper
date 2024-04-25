@@ -97,6 +97,17 @@ public static class PInvoke {
 		/// the system menu by right-clicking or by typing ALT+SPACE.
 		/// </remarks>
 		ToolWindow = 0x00000080,
+		/// <remarks>
+		/// A top-level window created with this style does not become the foreground window when the user clicks
+		/// it. The system does not bring this window to the foreground when the user minimizes or closes the
+		/// foreground window.<br />
+		/// The window should not be activated through programmatic access or via keyboard navigation by accessible
+		/// technology, such as Narrator.<br />
+		/// To activate the window, use the SetActiveWindow or SetForegroundWindow function.<br />
+		/// The window does not appear on the taskbar by default. To force the window to appear on the taskbar, use
+		/// the <b>WS_EX_APPWINDOW</b> style.
+		/// </remarks>
+		NoActivate = 0x08000000,
 		// ...
 	}
 
@@ -141,19 +152,23 @@ public static class PInvoke {
 	[DllImport("user32.dll", SetLastError = true)]
 	public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, GetWindowLongFields nIndex, IntPtr dwNewLong);
 
+	[DllImport("user32.dll")]
+	public static extern IntPtr GetActiveWindow();
+
+	[DllImport("user32.dll")]
+	public static extern IntPtr SetActiveWindow(IntPtr hWnd);
+
 	public static int ExtendFrame(IntPtr hWnd, MARGINS margins) =>
 		DwmExtendFrameIntoClientArea(hWnd, ref margins);
 
 	public static int SetWindowAttribute(IntPtr hWnd, DwmWindowAttribute attribute, int parameter) =>
 		DwmSetWindowAttribute(hWnd, attribute, ref parameter, Marshal.SizeOf<int>());
 
-	/// <summary>
-	/// Set the window as tool window window style, to remove the window from Alt + Tab.
-	/// </summary>
 	/// <param name="hWnd">Window handle.</param>
-	public static void SetAsToolWindowMode(IntPtr hWnd) {
+	public static void AddExtendedWindowStyles(IntPtr hWnd, params ExtendedWindowStyles[] styles) {
 		int exStyle = (int)GetWindowLongPtr(hWnd, GetWindowLongFields.ExStyle);
-		exStyle |= (int)ExtendedWindowStyles.ToolWindow;
+		foreach (ExtendedWindowStyles style in styles)
+			exStyle |= (int)style;
 		SetWindowLongPtr(hWnd, GetWindowLongFields.ExStyle, (IntPtr)exStyle);
 	}
 }
