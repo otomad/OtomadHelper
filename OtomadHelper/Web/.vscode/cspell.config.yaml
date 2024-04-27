@@ -13,6 +13,8 @@ words:
   - booleanish
   - bouncized
   - ccw
+  - classname
+  - classnames
   - composables
   - cooldown
   - cqh

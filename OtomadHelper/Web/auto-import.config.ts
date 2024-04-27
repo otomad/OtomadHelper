@@ -54,7 +54,7 @@ export default [
 		"react-flip-move": [
 			["default", "FlipMove"],
 		],
-		"lodash": [ // unplugin-auto-import 不能对 lodash-es 进行摇树，导致在构建时有将近一半的时间在打包 lodash-es。
+		"lodash": [ // unplugin-auto-import cannot tree-shaking for lodash-es, causing nearly half of the build time to pack lodash-es.
 			["*", "_"],
 			["*", "lodash"],
 		],
@@ -66,7 +66,7 @@ export default [
 	},
 	{
 		from: "react-transition-group",
-		imports: ["SwitchTransition", "TransitionGroup"], // CSSTransition 与原生类重名。
+		imports: ["SwitchTransition", "TransitionGroup"], // CSSTransition has the same name as a native class.
 		type: true,
 	}, */
 ] satisfies AutoImportOptionsImports;

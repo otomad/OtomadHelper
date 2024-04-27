@@ -103,10 +103,13 @@ export default defineConfig({
 			},
 		},
 		chunkSizeWarningLimit: 500_000, // 500MB
-		// minify: "terser", // smaller but slower
+		// minify: "terser", // When enabled, smaller but slower.
 		terserOptions: {
 			keep_classnames: true,
 		},
+	},
+	esbuild: {
+		keepNames: true, // When enabled, not only keep the class names, but also unexpectedly keep the function names.
 	},
 	assetsInclude: [
 		"**/*.cur",
