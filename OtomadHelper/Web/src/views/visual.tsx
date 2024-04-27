@@ -45,7 +45,7 @@ export default function Visual() {
 
 	return (
 		<div className="container">
-			<SettingsPageControlMedia stream="visual" fileName="我的视频.mp4" enabled={[enabled, setEnabled]} thumbnail={exampleThumbnail} />
+			<SettingsPageControlMedia stream="visual" fileName="ヨハネの氷.mp4" enabled={[enabled, setEnabled]} thumbnail={exampleThumbnail} />
 
 			{!enabled ? (
 				<EmptyMessage

@@ -75,29 +75,6 @@ export function delay(ms: number): Promise<void> {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-/**
- * 用于获取元素动画在何时结束，以助于自动获取动画时间。
- * @deprecated
- */
-export function endListener(): (node: HTMLElement, done: () => void) => void;
-/**
- * 用于获取元素动画在何时结束，以助于自动获取动画时间。
- * @deprecated
- * @param nodeRef - 获取的子元素引用对象。
- */
-export function endListener(nodeRef: RefObject<HTMLElement | undefined>): (done: () => void) => void;
-export function endListener(nodeRef?: RefObject<HTMLElement | undefined>) { // DELETE: 引入新版 react transition group 之后可删除。
-	const getListener = (node: HTMLElement | null | undefined, done: () => void) => {
-		node?.addEventListener("transitionend", e => {
-			if (e.target !== e.currentTarget) return;
-			done();
-		}, false);
-	};
-	return !nodeRef ?
-		(node: HTMLElement, done: () => void) => getListener(node, done) :
-		(done: () => void) => getListener(nodeRef.current, done);
-}
-
 type StyleProperties = string & keyof FilterValueType<CSSStyleDeclaration, string>;
 type Keyframe = Partial<Override<Record<StyleProperties, Numberish>, { offset: number }>>;
 type Keyframes = Keyframe[];
@@ -211,7 +188,7 @@ export async function* animateSizeGenerator(
 	// 	getRect.value = element.getBoundingClientRect();
 	let isHeightChanged = specified === "height" || specified === "both",
 		isWidthChanged = specified === "width" || specified === "both";
-	if (startHeight === endHeight) isHeightChanged = false; // 不用动了。
+	if (startHeight === endHeight) isHeightChanged = false; // No need to change.
 	if (startWidth === endWidth) isWidthChanged = false;
 	if (!isHeightChanged && !isWidthChanged) return;
 	const keyframes = [{}, {}] as Keyframes;
@@ -242,7 +219,7 @@ export async function* animateSizeGenerator(
 	const result = element.animate(keyframes, animationOptions);
 	if (!noClipping && !keepClippingAtEnd) result.addEventListener("finish", () => htmlElement.style.removeProperty("overflow"));
 	if (startChildTranslate || endChildTranslate || attachAnimations) {
-		const onlyChild = element.children[0]; // 只取唯一一个子元素。
+		const onlyChild = element.children[0]; // Take only one child element.
 		if (onlyChild && element instanceof HTMLElement && removeGlitchFrame) {
 			element.hidden = true;
 			await nextAnimationTick();

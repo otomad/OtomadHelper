@@ -113,7 +113,7 @@ export default function Score() {
 				</TabBar>
 			</Card>
 
-			<Subheader>{t.subheaders.config}</Subheader>{/* TODO: 该行应该会被删除。 */}
+			<Subheader>{t.subheaders.config}</Subheader>{/* TODO: This line should be deleted. */}
 			<Expander title={t.source.trim} details={t.descriptions.score.trim} icon="trim" />
 			<ExpanderRadio
 				title={t.score.encoding}

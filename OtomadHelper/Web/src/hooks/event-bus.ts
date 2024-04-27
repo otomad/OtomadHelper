@@ -1,7 +1,7 @@
 import mitt from "mitt";
 
 type ApplicationEvents = {
-	// 在此处定义需要全局使用的事件。
+	// Define events that need to be used globally here.
 	[host: `host:${string}` & {}]: AnyObject;
 	"host:dragOver": WebMessageEvents.DragOver;
 	"host:consoleLog": WebMessageEvents.ConsoleLog;

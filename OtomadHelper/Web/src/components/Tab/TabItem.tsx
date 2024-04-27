@@ -77,7 +77,7 @@ const StyledTabItem = styled.button`
 		padding: 14px 12px;
 
 		&:hover {
-			opacity: 0.79; // 使用 opacity 而并非 color 是因为 svg 动画变换速度比文字慢的异常。
+			opacity: 0.79;
 		}
 
 		&:active {

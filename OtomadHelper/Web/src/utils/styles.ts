@@ -120,11 +120,11 @@ export function getPosition(rect: MaybeRef<DOMRect | Element>, placement?: Place
 	if (isRtl())
 		if (placement === "left") placement = "right";
 		else if (placement === "right") placement = "left";
-	if (!placement || placement === "x" || placement === "y") { // 如果缺省工具提示放置位置，则会寻找离页边最远的方向。
+	if (!placement || placement === "x" || placement === "y") { // The default tooltip placement looks for the direction furthest from the edge of the page.
 		const toPageDistance = [rect.top, window.innerHeight - rect.bottom, window.innerWidth - rect.right, rect.left];
 		if (placement === "x") toPageDistance[0] = toPageDistance[1] = -Infinity;
 		else if (placement === "y") toPageDistance[2] = toPageDistance[3] = -Infinity;
-		const placements = ["top", "bottom", "right", "left"] as const; // 优先顺序：上、下、右、左。
+		const placements = ["top", "bottom", "right", "left"] as const; // Priority order: top, bottom, right, left.
 		placement = placements[toPageDistance.indexOf(Math.max(...toPageDistance))];
 	}
 	let position: TwoD;

@@ -29,7 +29,7 @@ interface PageState {
 const NAME = "page";
 
 export const usePageStore = createStore<PageState>()(
-	// @ts-ignore TypeScript 脑子抽风了。
+	// @ts-ignore TypeScript brain convulsion.
 	persist((set, get) => {
 		const page = ["source"];
 		const scrolls: PageScrollList = [];

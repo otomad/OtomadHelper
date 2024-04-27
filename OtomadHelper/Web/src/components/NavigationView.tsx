@@ -370,14 +370,14 @@ const StyledPage = styled.main`
 	}
 
 	&.exit {
-		pointer-events: none; // 防止用户快速连击按钮进入子页面。
+		pointer-events: none; // Prevent users from quickly clicking buttons to enter sub-pages.
 	}
 
 	&.exit-done {
 		display: none;
 	}
 
-	// #region 页面过渡
+	// #region Page transitions
 	.jump > &:is(.exit, .exit-done) {
 		translate: 0 -2rem;
 		opacity: 0;

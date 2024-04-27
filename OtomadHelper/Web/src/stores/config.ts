@@ -49,7 +49,7 @@ interface ConfigState {
 		getUiScale1(): number;
 		hideUseTips: boolean;
 	};
-	toJson(): string; // 如果叫 toJSON 则会和 JSON 内置参数重名导致递归错误。
+	toJson(): string; // If named toJSON, it will conflict to the JSON built-in parameter, causing a recursion error.
 }
 
 export const useConfigStore = createStore<ConfigState>()(

@@ -1,9 +1,9 @@
 /*
- * 在此处重置一切 CSS 默认的垃圾设置。
+ * Reset all CSS default junk configs here.
  */
 export default css`
 	@layer base {
-		// 拜拜，丑陋的原生样式。
+		// Goodbye, the ugly native style.
 		button,
 		input {
 			all: unset;
@@ -15,20 +15,20 @@ export default css`
 			display: block;
 		}
 
-		// 合计着图片和视频默认居然是行内元素，导致 block 下方的空隙就是你造成的是吧？
+		// So images and videos default to inline elements, causing the gap below the block to be caused by you, right?
 		img,
 		video,
 		picture {
 			display: block;
-			vertical-align: bottom;
+			vertical-align: bottom; // Retarded VSCode CSS propertyIgnoredDueToDisplay complains that the "vertical-align" property is ignored due to "display: block". I declare it in this global basic style now, but if a component needs to modify it to "display: inline-block" for some special needs, wouldn't this "vertical-align" property be effective?
 		}
 
-		// 标签的鼠标光标应该使用继承的样式。
+		// The mouse cursor for the label should use the inherited style.
 		label {
 			cursor: inherit;
 		}
 
-		// 禁用样式覆盖。
+		// Disabled style overrides.
 		[disabled],
 		:disabled {
 			cursor: not-allowed;
@@ -36,7 +36,7 @@ export default css`
 			user-select: none;
 		}
 
-		// 惰性样式覆盖。
+		// Inert style overrides.
 		[inert] {
 			&,
 			* {
@@ -50,12 +50,12 @@ export default css`
 			}
 		}
 
-		// 隐藏样式覆盖 ID 选择器。
+		// Hidden style overrides for the ID selector.
 		[hidden] {
 			display: none !important;
 		}
 
-		// 去除标题和段落中不应出现的边距。
+		// Remove the unexpected margins in headings and paragraphs.
 		h1,
 		h2,
 		h3,
@@ -66,7 +66,7 @@ export default css`
 			margin: 0;
 		}
 
-		// 全局超链接样式。
+		// Global hyperlink style.
 		a {
 			color: ${c("accent-color")};
 			text-decoration: none;
@@ -82,13 +82,13 @@ export default css`
 			}
 		}
 
-		// 允许 SVG 元素中的形状超出其边界。
+		// Allow shapes in SVG elements to exceed their boundaries.
 		svg,
 		svg * {
 			overflow: visible;
 		}
 
-		// 阻止图片被拖拽。
+		// Prevent images from being dragged.
 		img {
 			-webkit-user-select: none;
 			-moz-user-select: none;
@@ -100,6 +100,7 @@ export default css`
 		}
 	}
 
+	// System requested high contrast theme.
 	@media (forced-colors: active) or (prefers-contrast: more) {
 		*,
 		::before,

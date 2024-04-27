@@ -1,5 +1,5 @@
 export /* internal */ const StyledCard = styled.div`
-	width: 100cqw; // WARN: 设置页浅色模式下由于 SVG LOGO 有 filter 会导致展开器的 backdrop-filter 显示异常，是 Chromium 的问题。
+	width: 100cqw; // WARN: In the light mode of the settings page, because the SVG LOGO has a filter, the expander's backdrop-filter will display abnormally. This is a Chromium problem.
 	text-align: initial;
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-radius: 3px;

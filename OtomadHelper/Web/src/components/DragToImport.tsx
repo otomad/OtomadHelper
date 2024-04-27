@@ -50,7 +50,7 @@ export default function DragToImport({ children }: FCP<{
 			return;
 		}
 		e.dataTransfer.dropEffect = "copy";
-		console.log(e.dataTransfer.items[0]); // WARN: 发行时移除。
+		console.log(e.dataTransfer.items[0]); // WARN: Removed upon release.
 		setShown(true);
 	}
 

@@ -30,7 +30,7 @@
 			"script": "compact-svg -- ${file}",
 			"problemMatcher": [],
 			"label": "Compact SVG",
-			"detail": "Remove excess parts from SVG - 压缩 SVG",
+			"detail": "Remove excess parts from SVG",
 			"presentation": {
 				"reveal": "never",
 				"close": true
@@ -41,14 +41,14 @@
 			"script": "crowdin:update",
 			"problemMatcher": [],
 			"label": "Crowdin: Update",
-			"detail": "Update source language file to Crowdin - 将源语言文件更新到 Crowdin",
+			"detail": "Update source language file to Crowdin",
 		},
 		{
 			"type": "npm",
 			"script": "crowdin:download",
 			"problemMatcher": [],
 			"label": "Crowdin: Download",
-			"detail": "Download translated language file from Crowdin - 从 Crowdin 下载翻译好的语言文件",
+			"detail": "Download translated language file from Crowdin",
 		},
 	],
 }

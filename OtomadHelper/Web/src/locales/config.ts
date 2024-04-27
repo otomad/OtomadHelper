@@ -9,19 +9,19 @@ import ja from "./Japanese";
 import vi from "./Vietnamese";
 
 i18n
-	// 检测用户当前使用的语言
-	// 文档: https://github.com/i18next/i18next-browser-languageDetector
+	// Detect the language user used currently
+	// Docs: https://github.com/i18next/i18next-browser-languageDetector
 	.use(LanguageDetector)
-	// 注入 react-i18next 实例
+	// Inject react-i18next instance
 	.use(initReactI18next)
-	// 盘古插件，在东亚文字与西方文字之间插入空格
+	// Pangu plugin, insert spaces between East-asian word and Western word
 	.use({
 		type: "postProcessor",
 		name: "pangu",
 		process: (value: string) => spacing(value),
 	})
-	// 初始化 i18next
-	// 配置参数的文档: https://www.i18next.com/overview/configuration-options
+	// Initial i18next
+	// Docs: https://www.i18next.com/overview/configuration-options
 	.init({
 		debug: import.meta.env.DEV,
 		ns: ["javascript"],
@@ -31,7 +31,7 @@ i18n
 			escapeValue: false,
 			format(value: string, format, _lng) {
 				value = value.toString();
-				if (value.match(/[a-z]/)) { // 如果字母全大写，则视为缩略词汇而不做大小写转换。
+				if (value.match(/[a-z]/)) { // If the letters are all capital, they are treated as abbreviations without case conversion.
 					if (format === "uppercase") return value.toUpperCase();
 					if (format === "lowercase") return value.toLowerCase();
 					if (format === "capitalize") return `${value[0].toUpperCase()}${value.slice(1).toLowerCase()}`;

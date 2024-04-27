@@ -23,8 +23,8 @@ export function setBorderRadius(radius: string, position: BorderRadiusPosition) 
 		"sharp-right-bottom": `${radius} ${radius} 0 ${radius}`,
 		"sharp-bottom-left": `${radius} ${radius} ${radius} 0`,
 		"sharp-left-bottom": `${radius} ${radius} ${radius} 0`,
-		"nwse": `${radius} 0`, // 这种情况真不知道用什么词称呼，暂且用这个代替。
-		"nesw": `0 ${radius} 0`, // 这种情况真不知道用什么词称呼，暂且用这个代替。
+		"nwse": `${radius} 0`, // I really don't know what word to use to refer to this situation, use this instead.
+		"nesw": `0 ${radius} 0`, // I really don't know what word to use to refer to this situation, use this instead.
 		"full": `${radius}`,
 		/* eslint-enable @stylistic/quote-props */
 	};

@@ -44,9 +44,9 @@ export default function Lottie({ loop = false, autoplay = false, animationData, 
 
 		setAnim(anim);
 		onAnimCreated?.(anim);
-		
+
 		return () => {
-			// await delay(1000); // 等待界面过渡动画时间。
+			// await delay(1000); // Wait for the UI transition duration.
 			anim?.destroy();
 			svgEl?.remove();
 		};

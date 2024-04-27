@@ -140,7 +140,7 @@ const StyledTextBox = styled.div`
 			background-color: ${c("accent-color")};
 		}
 
-		&[disabled]::selection { // 修复输入框被禁用却仍然可以被选中文本的问题。
+		&[disabled]::selection { // Fixed the issue where text can still be selected even though the input box is disabled.
 			color: inherit;
 			background-color: transparent;
 		}
@@ -424,8 +424,8 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 
 	const handleReleaseSpin = useCallback<BaseEventHandler<HTMLButtonElement>>(e => {
 		if (!(e.currentTarget instanceof HTMLElement)) return;
-		if (!e.currentTarget.matches(":focus-visible")) // 如果是键盘空格键按下旋钮，则不要自动聚焦到输入框。
-			inputEl.current?.focus(); // 如果是鼠标按下旋钮，则会自动聚焦到输入框。
+		if (!e.currentTarget.matches(":focus-visible")) // If the knob is pressed by the space on keyboard, do not auto focus on the input box.
+			inputEl.current?.focus(); // If the knob is pressed by the mouse, it will auto focus on the input box.
 		setCaretToPoint();
 	}, [spinnerStep]);
 

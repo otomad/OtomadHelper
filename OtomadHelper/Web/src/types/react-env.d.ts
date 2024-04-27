@@ -111,6 +111,6 @@ declare global {
 	export type { Draft } from "immer";
 	export type { AnimationItem } from "lottie-web";
 	export type { CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, FormEventHandler, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, ReactElement, ReactNode, RefObject, UIEventHandler, WheelEventHandler } from "react";
-	export type { SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition 与原生类重名。
+	export type { CssTransition, SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition has the same name as a native class.
 	export type { WebTarget } from "styled-components";
 }

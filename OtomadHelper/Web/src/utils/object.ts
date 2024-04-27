@@ -191,13 +191,6 @@ export function useDomRef<TElement extends keyof ElementTagNameMap | Element>(in
 }
 
 /**
- * 创建一个 HTML DOM 元素的引用的状态，不必再初始化为 null 了。
- *
- * **注意：**这将会返回一个 `StateProperty`，即对引用的修改也会引发组件重新渲染。
- * @param initialValue - 初始值，一般都为空。
- * @returns HTML DOM 元素的引用的状态。
- */
-/**
  * Creates a hook that returns a mutable reference to an HTML DOM element without initializing it to null.
  *
  * @note This will return a `StateProperty`, meaning that modifying the reference will also cause the component to re-render.
