@@ -13,7 +13,7 @@
 		<OutputPath>bin\$(Configuration)\</OutputPath>
 		<PlatformTarget>x64</PlatformTarget>
 		<UseWPF>true</UseWPF>
-		<PreBuildEvent>:: powershell $(SolutionDir)versioning.ps1</PreBuildEvent>
+		<PreBuildEvent>powershell $(SolutionDir)versioning.ps1</PreBuildEvent>
 		<PostBuildEvent>:: $(ProjectDir)Properties\InsertIcons.exe $(TargetPath) $(ProjectDir)Icons</PostBuildEvent>
 		<ApplicationIcon>Icons\001 - Otomad Helper.ico</ApplicationIcon>
 		<ProjectTypeGuids>

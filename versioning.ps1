@@ -25,9 +25,9 @@ $version = $version -Join "."
 Write-Output $version
 Set-ContentRaw $file $version
 
-$file = ".\OtomadHelper\Properties\AssemblyInfo.cs"
+$file = ".\OtomadHelper\OtomadHelper.csproj"
 $csAssemblyInfo = Get-ContentRaw $file
-$csAssemblyInfo = [Regex]::Replace($csAssemblyInfo, "(?<=Assembly(File)?Version\(`")[^\*]+?(?=`"\))", $version)
+$csAssemblyInfo = [Regex]::Replace($csAssemblyInfo, "(?<=<(Assembly|File)Version>)[^\*]+?(?=</)", $version)
 Set-ContentRaw $file $csAssemblyInfo
 
 $file = ".\OtomadHelper\Web\package.json"
