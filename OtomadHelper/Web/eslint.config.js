@@ -268,9 +268,8 @@ export default [
 				message: "Use the exponentiation operator (**) instead.",
 			}],
 			"no-restricted-globals": ["error", {
-				object: "arguments",
-				property: "callee",
-				message: "arguments.callee is deprecated.",
+				name: "arguments",
+				message: "arguments is deprecated.",
 			}, {
 				name: "isFinite",
 				message: "Please use Number.isFinite instead.",

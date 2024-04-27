@@ -10,7 +10,6 @@ const StyledSettingsPageControl = styled.div<{
 
 	${({ $clearFloat }) => !$clearFloat && css`
 		display: block;
-		padding: 0 1px;
 
 		&.no-image {
 			margin-block-end: 10px;
@@ -32,7 +31,7 @@ const StyledSettingsPageControl = styled.div<{
 		}
 	}
 
-	p {
+	> p {
 		${styles.effects.text.body};
 		margin-block-start: -4px;
 	}

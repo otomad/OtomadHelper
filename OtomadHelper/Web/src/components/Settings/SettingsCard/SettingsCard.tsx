@@ -11,6 +11,10 @@ const StyledSettingsCard = styled(StyledCard)`
 
 		.select-info {
 			color: ${c("accent-color")};
+
+			&.invalid {
+				color: ${c("fill-color-system-critical")};
+			}
 		}
 	}
 
@@ -71,6 +75,7 @@ export default function SettingsCard({
 	title,
 	details,
 	selectInfo,
+	selectValid = true,
 	trailingIcon,
 	children,
 	type = "container",
@@ -83,8 +88,10 @@ export default function SettingsCard({
 	title?: ReactNode;
 	/** Detailed description. */
 	details?: ReactNode;
-	/** Specifies the selection of tracks or track events. */
+	/** Specifies the display string of the selection of tracks or track events. */
 	selectInfo?: ReactNode;
+	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. */
+	selectValid?: boolean | number;
 	/** Trailing icon. Use an empty string or Boolean type to indicate disabling. */
 	trailingIcon?: DeclaredIcons | "" | boolean;
 	/** Component form type. */
@@ -104,7 +111,7 @@ export default function SettingsCard({
 				<div className="text">
 					<p className="title">{title}</p>
 					<p className="details">{details}</p>
-					<p className="details select-info">{selectInfo}</p>
+					<p className={["details", "select-info", { invalid: !selectValid }]}>{selectInfo}</p>
 				</div>
 				<div className="trailing">
 					{children}
