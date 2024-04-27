@@ -82,6 +82,7 @@ export default {
 			midi: "MIDI",
 			midiFile: "MIDI Sequence Files",
 			st: "Sequence text",
+			stFile: "All Supported Sequence Text Files",
 			ustFile: "UTAU/OpenUTAU Sequence Text Files",
 			vsqFile: "Vocaloid Sequence Files",
 			refOtherTracks: "Refer to other tracks",
@@ -136,7 +137,6 @@ export default {
 			createGroups: "Create groups",
 			glissando: "Glissando",
 			autoPan: "Auto pan",
-			mapping: "Mapping",
 			transformMethod: {
 				_: "Transform method",
 				panCrop: "Pan/Crop",
@@ -165,6 +165,12 @@ export default {
 				},
 			},
 			newTrack: "New track",
+			mapping: {
+				_: "Mapping",
+			},
+			parameters: {
+				copyFromAnotherParameterScheme: "Copy from another parameter scheme to here",
+			},
 		},
 		track: {
 			layout: "Layout",
@@ -315,7 +321,6 @@ export default {
 				createGroups: "Creates groups for video and audio clips represented by one note",
 				glissando: "Creates a swirl effect if the note pitch bends or slides",
 				autoPan: "Pans the audio using envelope automation",
-				mapping: "Maps the properties of notes to the specified item",
 				transformMethod: "Specifies which target properties to apply the transformed keyframes",
 				tuning: {
 					stretchAttributes: "More config about the select tuning method",
@@ -327,6 +332,9 @@ export default {
 					prve: "Makes your visuals more rhythmic",
 					staff: "Uses custom patterns as notes to draw visuals similar fashion to piano staff sheets",
 					pixelScaling: "Scaling using nearest neighbor hard edges amplification and interpolation algorithms",
+				},
+				mapping: {
+					_: "Maps the properties of notes to the specified item",
 				},
 			},
 			track: {
@@ -382,7 +390,7 @@ export default {
 				_: "Pixel Scaling feature can enlarge and replace the pixel image of the source with a new image to avoid the pixel distortion problem caused by the original pixel image rescaling using smooth gradients algorithm due to Vegas Pan/Crop. To use it, you could add FFmpeg to system environment variable, or you could directly install Datamosh Extension Pack.\nPixel Scaling feature will use FFmpeg to enlarge the source file using the nearest neighbor interpolation algorithm to fit the current project size, and then replace the source media file in Vegas with the newly generated media file. The newly generated file will be identified by adding the suffix “_Scaled” to its name. The feature theoretically supports any image/video file format, and also supports image sequence files imported into Vegas through conventional methods.",
 			},
 			settings: {
-				about: "Otomad Helper, a YTPMV/YTP extension for Vegas Pro, designed to allow Vegas to accept scores like MIDI files as input, and automatically generate YTPMV tracks.",
+				about: "Otomad Helper, a YTPMV/YTP extension for Vegas Pro, designed to allow Vegas to accept scores like MIDI sequence files as input, and automatically generate YTPMV tracks.",
 			},
 		},
 		empty: {

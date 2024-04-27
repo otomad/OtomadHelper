@@ -116,7 +116,7 @@ export default function Visual() {
 							<ToggleSwitch on={glissando} />
 						}
 					/>
-					<ExpanderRadio
+					{/* <ExpanderRadio
 						title={t.stream.transformMethod}
 						details={t.descriptions.stream.transformMethod}
 						icon="zoom_fit"
@@ -124,7 +124,8 @@ export default function Visual() {
 						value={transformMethod}
 						idField
 						nameField={t.stream.transformMethod}
-					/>
+					/> // TODO: Change the integration method of TransformOFX into parameters, add an independent subheader and an info bar to tell user to download it.
+					*/}
 
 					<Subheader>{t.subheaders.effects}</Subheader>
 					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")} />

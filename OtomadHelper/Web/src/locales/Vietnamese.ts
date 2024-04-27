@@ -58,6 +58,8 @@ export default {
 					waveform: {},
 				},
 			},
+			mapping: {},
+			parameters: {},
 		},
 		track: {
 			legato: {},
@@ -93,6 +95,7 @@ export default {
 				noLengthening: {},
 				tuning: {},
 				effects: {},
+				mapping: {},
 			},
 			track: {},
 			sonar: {},

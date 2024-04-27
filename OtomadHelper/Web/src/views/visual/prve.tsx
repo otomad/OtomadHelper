@@ -23,7 +23,7 @@ export default function Prve() {
 		<div className="container">
 			<Expander title={t.condition} details={t.descriptions.condition} icon="filter" />
 			<div>
-				<Button>从其它参数复制至此</Button>
+				<Button>{t.stream.parameters.copyFromAnotherParameterScheme}</Button>
 			</div>
 			<Subheader>{t.subheaders.parameters}</Subheader>
 			{/* 以上内容是在参数中的，不是在此，实际中应去掉上述部分，暂时放到这以防忘记。 */}

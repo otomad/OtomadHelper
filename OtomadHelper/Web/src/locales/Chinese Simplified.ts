@@ -82,6 +82,7 @@ export default {
 			midi: "MIDI",
 			midiFile: "MIDI 序列文件",
 			st: "序列文本",
+			stFile: "所有受支持的序列文本文件",
 			ustFile: "UTAU/OpenUTAU序列文本文件",
 			vsqFile: "Vocaloid序列文件",
 			refOtherTracks: "引用其它轨道",
@@ -136,7 +137,6 @@ export default {
 			createGroups: "创建分组",
 			glissando: "弯音效果",
 			autoPan: "自动声像",
-			mapping: "映射",
 			transformMethod: {
 				_: "变换方法",
 				panCrop: "平移/裁切",
@@ -165,6 +165,12 @@ export default {
 				},
 			},
 			newTrack: "新增轨道",
+			mapping: {
+				_: "映射",
+			},
+			parameters: {
+				copyFromAnotherParameterScheme: "从另一套参数方案复制至此",
+			},
 		},
 		track: {
 			layout: "布局",
@@ -308,7 +314,6 @@ export default {
 				createGroups: "将一个音符所表示的视频与音频剪辑创建分组",
 				glissando: "在弯音或滑音时产生漩涡效果",
 				autoPan: "自动化控制音频的声像包络",
-				mapping: "将音符的参数映射到指定项目",
 				transformMethod: "指定在哪个目标属性上应用变换关键帧",
 				tuning: {
 					stretchAttributes: "有关选中调音方法的更多配置",
@@ -320,6 +325,9 @@ export default {
 					prve: "让你的画面更带有节奏感",
 					staff: "以自定义图案为音符，画出与钢琴五线谱类似风格的视觉效果",
 					pixelScaling: "使用邻近硬边缘放大插值算法缩放图像",
+				},
+				mapping: {
+					_: "将音符的参数映射到指定项目",
 				},
 			},
 			track: {
