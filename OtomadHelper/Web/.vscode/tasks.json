@@ -7,7 +7,7 @@
 			"group": "build",
 			"problemMatcher": [],
 			"label": "npm: build",
-			"detail": "tsc && vite build",
+			"detail": "vite build",
 		},
 		{
 			"type": "npm",

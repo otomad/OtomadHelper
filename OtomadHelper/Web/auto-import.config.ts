@@ -54,7 +54,7 @@ export default [
 		"react-flip-move": [
 			["default", "FlipMove"],
 		],
-		"lodash-es": [
+		"lodash": [ // unplugin-auto-import 不能对 lodash-es 进行摇树，导致在构建时有将近一半的时间在打包 lodash-es。
 			["*", "_"],
 			["*", "lodash"],
 		],

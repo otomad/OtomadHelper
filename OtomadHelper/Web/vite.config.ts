@@ -103,7 +103,7 @@ export default defineConfig({
 			},
 		},
 		chunkSizeWarningLimit: 500_000, // 500MB
-		minify: "terser",
+		// minify: "terser", // smaller but slower
 		terserOptions: {
 			keep_classnames: true,
 		},
