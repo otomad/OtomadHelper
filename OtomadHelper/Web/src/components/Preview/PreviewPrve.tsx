@@ -41,7 +41,7 @@ const StyledPreviewPrve = styled.div<{
 						})}
 					`} ${getDuration(step)} step-start infinite;
 				}
-`;
+			`;
 		}
 		return {
 			hFlip: css`
@@ -52,7 +52,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { scale: 1; }
 					`} ${getDuration(2)} step-start infinite;
 				}
-`,
+			`,
 			vFlip: css`
 				img {
 					scale: 1 -1;
@@ -61,7 +61,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { scale: 1; }
 					`} ${getDuration(2)} step-start infinite;
 				}
-`,
+			`,
 			ccwFlip: css`
 				img {
 					scale: 1 -1;
@@ -72,7 +72,7 @@ const StyledPreviewPrve = styled.div<{
 						75% { scale: 1; }
 					`} ${getDuration(4)} step-start infinite;
 				}
-`,
+			`,
 			cwFlip: css`
 				img {
 					scale: -1 1;
@@ -83,7 +83,7 @@ const StyledPreviewPrve = styled.div<{
 						75% { scale: 1; }
 					`} ${getDuration(4)} step-start infinite;
 				}
-`,
+			`,
 			ccwRotate: css`
 				img {
 					width: 100cqh;
@@ -96,7 +96,7 @@ const StyledPreviewPrve = styled.div<{
 						75% { transform: rotate(0deg); width: 100%; height: 100%; }
 					`} ${getDuration(4)} step-start infinite;
 				}
-`,
+			`,
 			cwRotate: css`
 				img {
 					width: 100cqh;
@@ -109,7 +109,7 @@ const StyledPreviewPrve = styled.div<{
 						75% { transform: rotate(0deg); width: 100%; height: 100%; }
 					`} ${getDuration(4)} step-start infinite;
 				}
-`,
+			`,
 			turned: css`
 				img {
 					rotate: 180deg;
@@ -118,7 +118,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { rotate: 0deg; }
 					`} ${getDuration(2)} step-start infinite;
 				}
-`,
+			`,
 			zoomOutIn: css`
 				img {
 					scale: 10;
@@ -127,7 +127,7 @@ const StyledPreviewPrve = styled.div<{
 						to { scale: 1; }
 					`} ${getDuration(1)} ${eases.easeOutMax} alternate infinite;
 				}
-`,
+			`,
 			hMirror: css`
 				img:nth-child(2) {
 					scale: -1 1;
@@ -137,7 +137,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { clip-path: inset(0 0 0 50%); }
 					`} ${getDuration(2)} step-start infinite both;
 				}
-`,
+			`,
 			vMirror: css`
 				img:nth-child(2) {
 					scale: 1 -1;
@@ -147,7 +147,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { clip-path: inset(50% 0 0 0); }
 					`} ${getDuration(2)} step-start infinite both;
 				}
-`,
+			`,
 			ccwMirror: css`
 				img:nth-child(2) {
 					scale: -1 1;
@@ -175,7 +175,7 @@ const StyledPreviewPrve = styled.div<{
 						75% { clip-path: inset(0 50% 50% 0); }
 					`} ${getDuration(4)} step-start infinite;
 				}
-`,
+			`,
 			cwMirror: css`
 				img:nth-child(2) {
 					scale: -1 1;
@@ -203,7 +203,7 @@ const StyledPreviewPrve = styled.div<{
 						75% { clip-path: inset(0 50% 50% 0); }
 					`} ${getDuration(4)} step-start infinite;
 				}
-`,
+			`,
 			negative: css`
 				img {
 					filter: invert(1);
@@ -212,7 +212,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { filter: none; }
 					`} ${getDuration(2)} step-start infinite;
 				}
-`,
+			`,
 			luminInvert: css`
 				img {
 					filter: invert(1) hue-rotate(180deg);
@@ -221,7 +221,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { filter: none; }
 					`} ${getDuration(2)} step-start infinite;
 				}
-`,
+			`,
 			hueInvert: css`
 				img {
 					filter: hue-rotate(180deg);
@@ -230,7 +230,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { filter: none; }
 					`} ${getDuration(2)} step-start infinite;
 				}
-`,
+			`,
 			chromatic: css`
 				img {
 					filter: grayscale(1);
@@ -239,7 +239,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { filter: none; }
 					`} ${getDuration(2)} step-start infinite;
 				}
-`,
+			`,
 			vExpansion: css`
 				img {
 					transform-origin: center bottom;
@@ -249,7 +249,7 @@ const StyledPreviewPrve = styled.div<{
 						to { scale: 1; }
 					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
 				}
-`,
+			`,
 			vExpansionBounce: css`
 				img {
 					transform-origin: center bottom;
@@ -259,7 +259,7 @@ const StyledPreviewPrve = styled.div<{
 						to { scale: 1; }
 					`} ${getDuration(1)} ${eases.easeOutMax} alternate infinite;
 				}
-`,
+			`,
 			vCompression: css`
 				img {
 					transform-origin: center bottom;
@@ -268,7 +268,7 @@ const StyledPreviewPrve = styled.div<{
 						to { scale: 1 0.75; }
 					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
 				}
-`,
+			`,
 			vCompressionBounce: css`
 				img {
 					transform-origin: center bottom;
@@ -277,7 +277,7 @@ const StyledPreviewPrve = styled.div<{
 						to { scale: 1 0.75; }
 					`} ${getDuration(1)} ${eases.easeOutMax} alternate infinite;
 				}
-`,
+			`,
 			vBounce: css`
 				img {
 					scale: 1 0.5;
@@ -286,7 +286,7 @@ const StyledPreviewPrve = styled.div<{
 						to { scale: 1; }
 					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
 				}
-`,
+			`,
 			slantDown: css`
 				img {
 					transform: skewX(25deg) scaleX(0.5);
@@ -297,7 +297,7 @@ const StyledPreviewPrve = styled.div<{
 						100% { transform: skewX(-25deg) scaleX(0.5); }
 					`} ${getDuration(2)} ${eases.easeInMax} alternate infinite;
 				}
-`,
+			`,
 			slantUp: css`
 				img {
 					transform: skewX(25deg) scale(0.5);
@@ -308,7 +308,7 @@ const StyledPreviewPrve = styled.div<{
 						100% { transform: skewX(-25deg) scale(0.5); }
 					`} ${getDuration(2)} ${eases.easeOutMax} alternate infinite;
 				}
-`,
+			`,
 			puyo: css`
 				img {
 					scale: 1 0.75;
@@ -317,7 +317,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { scale: 0.75 1; }
 					`} ${getDuration(2)} ${eases.easeOutMax} infinite;
 				}
-`,
+			`,
 			pendulum: css`
 				img {
 					scale: 0.5;
@@ -327,7 +327,7 @@ const StyledPreviewPrve = styled.div<{
 						50% { rotate: 25deg; }
 					`} ${getDuration(2)} ${eases.easeOutMax} infinite;
 				}
-`,
+			`,
 			gaussianBlur: css`
 				img {
 					scale: 1.05;
@@ -337,7 +337,7 @@ const StyledPreviewPrve = styled.div<{
 						to { filter: blur(0); }
 					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
 				}
-`,
+			`,
 			radialBlur: css`
 				img:nth-child(2) {
 					animation: ${keyframes`
@@ -345,7 +345,7 @@ const StyledPreviewPrve = styled.div<{
 						to { opacity: 0; }
 					`} ${getDuration(1)} linear infinite;
 				}
-`,
+			`,
 			wipeRight: css`
 				img {
 					clip-path: inset(0 75% 0 0);
@@ -355,7 +355,7 @@ const StyledPreviewPrve = styled.div<{
 						100% { clip-path: inset(0 0 0 100%); }
 					`} ${getDuration(2)} ${eases.easeOutMax} infinite;
 				}
-`,
+			`,
 			splitVOut: css`
 				img {
 					clip-path: inset(25% 0 25% 0);
@@ -364,7 +364,7 @@ const StyledPreviewPrve = styled.div<{
 						to { clip-path: inset(0 0 0 0); }
 					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
 				}
-`,
+			`,
 		}[$name];
 	}}
 `;
