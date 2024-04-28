@@ -26,7 +26,7 @@ declare global {
 	 */
 	type AnyObject = Record<ObjectKey, any>;
 	/**
-	 * Anu function.
+	 * Any function.
 	 */
 	type AnyFunction = (...args: any[]) => any;
 	/**
