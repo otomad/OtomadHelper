@@ -68,4 +68,8 @@ declare global {
 	 * Built in timer object.
 	 */
 	interface Timer extends NodeJS.Timer { }
+
+	interface Window {
+		isWebview: boolean;
+	}
 }
