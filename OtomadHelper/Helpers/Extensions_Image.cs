@@ -7,7 +7,7 @@ namespace OtomadHelper.Helpers;
 
 public static partial class Extensions {
 	/// <summary>
-	/// 将 <see cref="Icon"/> 转换为 <see cref="ImageSource"/>。
+	/// Convert <see cref="Icon"/> to <see cref="ImageSource"/>.
 	/// </summary>
 	/// <param name="icon"><see cref="Icon"/></param>
 	/// <returns><see cref="ImageSource"/></returns>

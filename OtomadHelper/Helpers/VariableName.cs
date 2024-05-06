@@ -1,8 +1,8 @@
 namespace OtomadHelper.Helpers;
 
 /// <summary>
-/// 变量名辅助类。<br />
-/// 用于方便地把变量名称转换成驼峰、连字符等。
+/// Variable name helper class.<br />
+/// Used to easily convert a variable name into camelCase, kebab-case, and so on.
 /// </summary>
 public class VariableName {
 	private string[] words = null!;
@@ -12,7 +12,7 @@ public class VariableName {
 	}
 
 	/// <summary>
-	/// 以任意形式的变量名重新设值。
+	/// Reset the value with any form of the variable name.
 	/// </summary>
 	public string Value {
 		set {
@@ -31,60 +31,60 @@ public class VariableName {
 	}
 
 	/// <summary>
-	/// 转换为连字符式。
+	/// Convert to kebab-case.
 	/// </summary>
 	public string Kebab => string.Join("-", words).ToLowerInvariant();
 
 	/// <summary>
-	/// 转换为下划线式。
+	/// Convert to snake_case.
 	/// </summary>
 	public string Snake => string.Join("_", words).ToLowerInvariant();
 
 	/// <summary>
-	/// 转换为常量式。
+	/// Convert to CONSTANT_CASE.
 	/// </summary>
 	public string Const => string.Join("_", words).ToUpperInvariant();
 
 	/// <summary>
-	/// 转换为大驼峰式。
+	/// Convert to PascalCase.
 	/// </summary>
 	public string Pascal => string.Join("", words.Select(Capitalize));
 
 	/// <summary>
-	/// 转换为小驼峰式。
+	/// Convert to camelCase.
 	/// </summary>
 	public string Camel => string.Join("", words.Select((word, i) => i == 0 ? word.ToLowerInvariant() : Capitalize(word)));
 
 	/// <summary>
-	/// 转换为小写字母式，且无任何分隔符。
+	/// Convert to lowercase without any separators.
 	/// </summary>
 	public string Lower => string.Join("", words).ToLowerInvariant();
 
 	/// <summary>
-	/// 转换为大写字母式，且无任何分隔符。
+	/// Convert to UPPERCASE without any separators.
 	/// </summary>
 	public string Upper => string.Join("", words).ToUpperInvariant();
 
 	/// <summary>
-	/// 转换为单词式，空格分隔，全部小写。
+	/// Convert to word case, separated by spaces, all in lowercase.
 	/// </summary>
 	public string Words => string.Join(" ", words).ToLowerInvariant();
 
 	/// <summary>
-	/// 转换为句子式，空格分隔，仅句首字母大写。
+	/// Convert to Sentence case, separated by spaces, with only the first letter of the sentence capitalized.
 	/// </summary>
 	public string Sentence => string.Join(" ", words.Select((word, i) => i != 0 ? word.ToLowerInvariant() : Capitalize(word)));
 
 	/// <summary>
-	/// 转换为标题式，空格分隔，所有单词首字母大写。
+	/// Convert to Title Case, separated by spaces, with all first letters of words capitalized.
 	/// </summary>
 	public string Title => string.Join(" ", words.Select(Capitalize));
 
 	/// <summary>
-	/// 将单词转换为首字母大写，其它字母为小写。
+	/// Convert a word to uppercase the first letter and lowercase other letters.
 	/// </summary>
-	/// <param name="str">单词。</param>
-	/// <returns>首字母大写，其它字母为小写的单词。</returns>
+	/// <param name="str">Word.</param>
+	/// <returns>Capitalize the first letter and lowercase other letters.</returns>
 	private static string Capitalize(string str) =>
 		string.IsNullOrEmpty(str) ? "" :
 			str[0].ToString().ToUpperInvariant() + str.Substring(1).ToLowerInvariant();

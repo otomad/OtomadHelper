@@ -56,7 +56,8 @@ public class BetterBridge {
 				for (int i = 0; i < parameters.Length; i++) {
 					ParameterInfo parameter = parameters[i];
 					string jsonArg = jsonArgs[i].Trim();
-					if (jsonArg == "null" || jsonArg.StartsWith("{")) continue; // null 和对象暂时无法直接判断正确类型。
+					if (jsonArg == "null" || jsonArg.StartsWith("{")) continue;
+					// Nulls and objects are temporarily unable to directly determine the correct type.
 					Type type = parameter.ParameterType;
 					if (type == typeof(string) && jsonArg.StartsWith("\"")) continue;
 					else if (type == typeof(bool) && jsonArg is "true" or "false") continue;

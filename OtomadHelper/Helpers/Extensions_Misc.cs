@@ -4,10 +4,11 @@ namespace OtomadHelper.Helpers;
 
 public static partial class Extensions {
 	/// <summary>
-	/// 将拖放文件事件参数转换为拖放的文件名称数组。如果拖放的不是文件，返回空数组。
+	/// Convert the drag-and-drop file event arguments to an array containing the file names of the drag-and-drop files.
+	/// If the drag-and-drop file is not a file, an empty array is returned.
 	/// </summary>
-	/// <param name="e">拖放事件参数。</param>
-	/// <returns>拖放的文件名称数组。</returns>
+	/// <param name="e">Drag-and-drop event arguments.</param>
+	/// <returns>Array of the file names for drag-and-drop.</returns>
 	public static string[] GetFileNames(this DragEventArgs e) {
 		string[] NOTHING = new string[0];
 		return e.Data.GetDataPresent(DataFormats.FileDrop) ? e.Data.GetData(DataFormats.FileDrop) as string[] ?? NOTHING : NOTHING;
@@ -21,13 +22,19 @@ public static partial class Extensions {
 	};
 
 	/// <summary>
-	/// 判断一个类型是否是数字（包括 <see cref="int"/>、<see cref="double"/> 等）类型。
+	/// Determine whether a type is a numeric (including <see cref="int"/>, <see cref="double"/>, etc.) type.
 	/// </summary>
-	/// <param name="type">类型。</param>
-	/// <returns>该类型是数字类型。</returns>
+	/// <param name="type">Type.</param>
+	/// <returns>The type is a numeric type.</returns>
 	public static bool IsNumber(this Type type) =>
 		NumericTypes.Contains(Nullable.GetUnderlyingType(type) ?? type);
 
+	/// <summary>
+	/// Swaps the values of two variables.
+	/// </summary>
+	/// <typeparam name="T">The type of the variables to be swapped.</typeparam>
+	/// <param name="left">The first variable.</param>
+	/// <param name="right">The second variable.</param>
 	public static void Swap<T>(ref T left, ref T right) {
 		T temp = left;
 		left = right;

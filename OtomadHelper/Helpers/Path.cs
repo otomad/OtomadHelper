@@ -3,27 +3,27 @@ using PathStatic = System.IO.Path;
 namespace OtomadHelper.Helpers;
 
 /// <summary>
-/// 路径类，用于处理路径。<br />
-/// 虽然系统自带有 <c>PathStatic</c> 类，但那是一个静态类，不怎么面向对象。
+/// Path class, used to handle paths.<br />
+/// Although the system owned the <see cref="System.IO.Path"/> class, it is a static class and not very object-oriented.
 /// </summary>
 public class Path : List<string> {
 	/// <summary>
-	/// 通过一个字符串构造一个路径类。
+	/// Construct a path class from a string.
 	/// </summary>
-	/// <param name="path">路径字符串</param>
+	/// <param name="path">Path string.</param>
 	public Path(string path) : base(path.Replace("\\", "/").TrimEnd('/').Split('/')) { }
 
 	/// <summary>
-	/// 通过一段目录数组构造一个路径类。
+	/// Construct a path class from an array of directories.
 	/// </summary>
-	/// <param name="arr">目录数组</param>
+	/// <param name="arr">Directory array.</param>
 	public Path(string[] arr) : base(arr) { }
 
 	/// <summary>
-	/// 通过输入的内容逐个拼接成一个新的路径类。
+	/// The input content is spliced one by one into a new path class.
 	/// </summary>
-	/// <param name="arr">内容</param>
-	/// <returns>新的路径类</returns>
+	/// <param name="arr">Content.</param>
+	/// <returns>A new path class.</returns>
 	public static Path r(params string[] arr) {
 		Path path = new(arr[0]);
 		for (int i = 1; i < arr.Length; i++)
@@ -36,9 +36,9 @@ public class Path : List<string> {
 	private bool isWindows = true;
 
 	/// <summary>
-	/// 是否输入为 Windows 格式路径？
-	/// 这将决定最终生成的路径的分隔符形式。
-	/// 默认为 <c>true</c>。
+	/// Is the input a Windows format path?<br />
+	/// This will determine the delimiter form of the final generated path.<br />
+	/// Defaults to <c>true</c>.
 	/// </summary>
 	public bool IsWindows {
 		get => isWindows;
@@ -49,7 +49,7 @@ public class Path : List<string> {
 	}
 
 	/// <summary>
-	/// 向上一级。
+	/// Go up one directory level.
 	/// </summary>
 	public void UpOneLevel() {
 		RemoveAt(Count - 1);
@@ -58,20 +58,20 @@ public class Path : List<string> {
 	public override string ToString() => string.Join(sep.ToString(), this as List<string>);
 
 	/// <summary>
-	/// 拷贝一份当前实例的副本。
+	/// Make a copy of the current instance.
 	/// </summary>
-	/// <returns>副本</returns>
+	/// <returns>Copy.</returns>
 	public Path Copy() => new(ToString()) { IsWindows = IsWindows };
 
 	private string GetLastItem() => this[Count - 1];
 
 	/// <summary>
-	/// 获取完整路径文本。
+	/// Get the full path text.
 	/// </summary>
 	public string FullPath => ToString();
 
 	/// <summary>
-	/// 读取或更改路径最终指向文件的文件名 + 扩展名。
+	/// Get or set the filename + extension of the file that the path ultimately points to.
 	/// </summary>
 	public string FullFileName {
 		get => GetLastItem();
@@ -81,7 +81,7 @@ public class Path : List<string> {
 	private static readonly Regex extReg = new(@"(?<=\.)[^\.\\/:\*\?""<>\|]*$");
 
 	/// <summary>
-	/// 读取或更改路径最终指向文件的扩展名，<b>不包括</b>前导的句点 “.”。
+	/// Get or set the extension of the file that the path ultimately points to, <b>excluding</b> the leading period ".".
 	/// </summary>
 	public string Extension {
 		get => DotExtension.Substring(1);
@@ -89,7 +89,7 @@ public class Path : List<string> {
 	}
 
 	/// <summary>
-	/// 读取或更改路径最终指向文件的扩展名，包括前导的句点 “.”。
+	/// Get or set the extension of the file that the path ultimately points to, including the leading period ".".
 	/// </summary>
 	public string DotExtension {
 		get => PathStatic.GetExtension(FullFileName).ToLower();
@@ -100,7 +100,7 @@ public class Path : List<string> {
 	}
 
 	/// <summary>
-	/// 读取或更改路径最终指向文件的文件名。
+	/// Get or set the filename of the file that the path ultimately points to.
 	/// </summary>
 	public string FileName {
 		get {
@@ -112,17 +112,17 @@ public class Path : List<string> {
 	}
 
 	/// <summary>
-	/// 获取路径最终指向文件所在的目录。
+	/// Get the directory where the file that the path ultimately points to is located.
 	/// </summary>
 	public string Directory => Count == 0 ? sep.ToString() : new Path(GetRange(0, Count - 1).ToArray()).ToString();
 
 	/// <summary>
-	/// 判断该文件是否存在？
+	/// Determine whether the file exists?
 	/// </summary>
 	public bool IsExist => File.Exists(FullPath);
 
 	/// <summary>
-	/// 判断该文件是否是路径？
+	/// Determine whether the path is a directory?
 	/// </summary>
 	public bool IsDirectory => File.GetAttributes(FullPath).HasFlag(FileAttributes.Directory);
 

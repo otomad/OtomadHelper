@@ -96,7 +96,7 @@ public partial class MainDock : UserControl {
 	public event DocumentTitleChangedEventHandler? DocumentTitleChanged;
 
 	private void MainDock_DragEnter(object sender, DragEventArgs e) {
-		if (LoadingAnimationPicture.Visible) return; // 初始化动画时不应响应拖拽事件。
+		if (LoadingAnimationPicture.Visible) return; // The animation should not respond to drag events when initializing it.
 		string[] files = e.GetFileNames();
 		if (files.Length < 1) return;
 		string fullPath = files[0];

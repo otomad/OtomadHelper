@@ -2,22 +2,23 @@ namespace OtomadHelper.Helpers;
 
 public static partial class Extensions {
 	/// <summary>
-	/// 在使用 <c>foreach</c> 遍历可迭代对象时，允许额外提供一个当前项的索引值以便使用。
+	/// When using <c>foreach</c> to traverse an <see cref="IEnumerable"/> object, it is allowed to provide an additional index
+	/// value of the current item for use.
 	/// </summary>
-	/// <typeparam name="T">可迭代对象的项目类型。</typeparam>
-	/// <param name="collection">可迭代对象。</param>
-	/// <returns>可调用包含当前项目和索引值的转换函数。</returns>
+	/// <typeparam name="T">The item type of the <see cref="IEnumerable"/> object.</typeparam>
+	/// <param name="collection"><see cref="IEnumerable"/> object.</param>
+	/// <returns>A conversion function can be called containing the current item and index values.</returns>
 	public static IEnumerable<(T item, int index)> WithIndex<T>(this IEnumerable<T> collection) =>
 		collection.Select((item, index) => (item, index));
 
 	/// <summary>
-	/// 获取与指定字符串键关联的值，但忽略键的大小写。
+	/// Get the value associated with the specified string key, ignoring its case.
 	/// </summary>
-	/// <typeparam name="TValue"><paramref name="dictionary"/> 的值类型。</typeparam>
+	/// <typeparam name="TValue">The value type of <paramref name="dictionary"/>.</typeparam>
 	/// <param name="dictionary"><see cref="Dictionary"/></param>
-	/// <param name="key">要获取值的键。</param>
-	/// <param name="value">如果找到指定键，则包含该键的值。</param>
-	/// <returns><paramref name="dictionary"/> 是否包含该键？不区分大小写。</returns>
+	/// <param name="key">The key to get the value from.</param>
+	/// <param name="value">If the specified key is found, returns the value containing that key.</param>
+	/// <returns><paramref name="dictionary"/> Does it contain the key? Case insensitive.</returns>
 	public static bool TryGetValueIgnoreCase<TValue>(this Dictionary<string, TValue> dictionary, string key, out TValue value) {
 		IEnumerable<KeyValuePair<string, TValue>> result = dictionary.Where(x => x.Key.ToUpperInvariant() == key.ToUpperInvariant());
 		value = result.FirstOrDefault().Value;

@@ -54,7 +54,7 @@ internal class ManagedStream : Stream {
 		webView.CoreWebView2.AddWebResourceRequestedFilter(HOST, CoreWebView2WebResourceContext.All);
 		webView.CoreWebView2.WebResourceRequested += (sender, args) => {
 			Uri uri = new(args.Request.Uri);
-			NameValueCollection query = HttpUtility.ParseQueryString(uri.Query); // 暂未使用
+			NameValueCollection query = HttpUtility.ParseQueryString(uri.Query); // Not used yet
 			string file = uri.AbsolutePath.Substring(1);
 			file = Uri.UnescapeDataString(file);
 			string[] fileSlug = file.Split('/');

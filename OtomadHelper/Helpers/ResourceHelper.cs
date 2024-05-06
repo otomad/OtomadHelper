@@ -4,13 +4,16 @@ namespace OtomadHelper.Helpers;
 
 internal static class ResourceHelper {
 	/// <summary>
-	/// 获取嵌入的资源。
+	/// Get the embedded resource.
 	/// </summary>
-	/// <param name="resourcePath">嵌入的资源文件相对于项目根目录的路径，使用“.”（点）分隔目录。</param>
-	/// <returns>资源的字节序列。</returns>
+	/// <param name="resourcePath">
+	/// The path to the embedded resource file relative to the project root directory,
+	/// using "." (dot) to separate directories.
+	/// </param>
+	/// <returns>The byte sequence of the resource.</returns>
 	public static Stream GetEmbeddedResource(string resourcePath) {
 		Assembly assembly = Assembly.GetExecutingAssembly();
-		string assetsFilePath = assembly.GetName().Name + "." + resourcePath; // 你可以设置断点看看这里的值。
+		string assetsFilePath = assembly.GetName().Name + "." + resourcePath; // You can set a breakpoint to see the value here.
 		if (!IsResourceExist(assetsFilePath)) // Check for gzip file
 			assetsFilePath += ".gz";
 		if (!IsResourceExist(assetsFilePath))
@@ -21,12 +24,14 @@ internal static class ResourceHelper {
 	}
 
 	/// <summary>
-	/// 获取本地文件的缩略图。
+	/// Get the thumbnail of a local file.
 	/// </summary>
-	/// <param name="filePath">本地文件路径。</param>
-	/// <param name="allowIcon">当没有缩略图时是否允许返回文件图标？</param>
-	/// <exception cref="InvalidOperationException">如果指定文件没有缩略图只有图标，在 <paramref name="allowIcon"/> 为 false 时则会报错。</exception>
-	/// <returns>文件的大缩略图。</returns>
+	/// <param name="filePath">Local file path.</param>
+	/// <param name="allowIcon">Allow file icon to be returned when there is no thumbnail?</param>
+	/// <exception cref="InvalidOperationException">
+	/// If the specified file has no thumbnail but only an icon, an error will be raised when <paramref name="allowIcon"/> is false.
+	/// </exception>
+	/// <returns>A large thumbnail image of the file.</returns>
 	public static BitmapSource GetFileThumbnail(string filePath, bool allowIcon = false) {
 		ShellFile shellFile = ShellFile.FromFilePath(filePath);
 		shellFile.Thumbnail.AllowBiggerSize = true;
@@ -36,10 +41,10 @@ internal static class ResourceHelper {
 	}
 
 	/// <summary>
-	/// 将嵌入的资源文件写入到本地磁盘的指定路径中。
+	/// Write the embedded resource file to the specified path on the local disk.
 	/// </summary>
-	/// <param name="resourcePath">嵌入的资源文件路径。</param>
-	/// <param name="filePath">本地文件路径。</param>
+	/// <param name="resourcePath">The path to the embedded resource file.</param>
+	/// <param name="filePath">Local file path.</param>
 	public static void WriteResourceToFile(string resourcePath, string filePath) {
 		using Stream resource = GetEmbeddedResource(resourcePath);
 		using FileStream file = new(filePath, FileMode.Create, FileAccess.Write);

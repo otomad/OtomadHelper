@@ -5,11 +5,11 @@ namespace OtomadHelper.Module;
 public class OtomadHelperModule : ICustomCommandModule {
 	public Vegas vegas = null!;
 	private readonly CustomCommand customCommandModule =
-		new(CommandCategory.View, DISPLAY_NAME); // 这将显示在“查看”菜单的“扩展”下。
+		new(CommandCategory.View, DISPLAY_NAME); // This will show in menu: View → Extensions
 	internal const string INTERNAL_NAME = "OtomadHelperInternal";
 	internal const string DISPLAY_NAME = "Otomad Helper";
 	internal const string ASSEMBLY_NAME = "OtomadHelper";
-	// 注意：不能用 Assembly.GetEntryAssembly().GetName().Name，一用 Vegas 就会闪退。
+	// Note: Cannot use Assembly.GetEntryAssembly().GetName().Name, or Vegas will crash.
 
 	internal static string CustomModulePath =>
 		Assembly.GetExecutingAssembly().Location;
