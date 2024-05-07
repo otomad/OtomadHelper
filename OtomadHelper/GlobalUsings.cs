@@ -23,6 +23,7 @@ global using CommunityToolkit.Mvvm.Input;
 global using Microsoft.Win32;
 
 global using OtomadHelper.Helpers;
+global using OtomadHelper.WPF.Common;
 
 global using static OtomadHelper.Helpers.Debugger;
 global using static OtomadHelper.Helpers.Extensions;

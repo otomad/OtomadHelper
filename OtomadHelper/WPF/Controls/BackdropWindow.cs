@@ -44,9 +44,8 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	}
 
 	protected void SetCurrentThemeResource(bool isDarkTheme, bool isOnLoad) {
-		const string THEME_COLOR = "ThemeColor";
-		foreach (ResourceDictionary resource in Resources.MergedDictionaries)
-			if (resource is NamedResourceDictionary named && named.Name == THEME_COLOR)
+		foreach (ResourceDictionary resource in Resources.MergedDictionaries.ToArray())
+			if (IsThemeColorResource(resource))
 				Resources.MergedDictionaries.Remove(resource);
 
 		if (isOnLoad)
@@ -54,17 +53,16 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 
 		AddDictionary($"Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml");
 
+		bool IsThemeColorResource(ResourceDictionary resource) =>
+			resource["ResourceDictionaryName"] is "ThemeColor";
+
 		void AddDictionary(string path) =>
 			Resources.MergedDictionaries.Add(new() { Source = ProjectUri(path) });
 	}
 
 	private void BindViewToViewModel() {
-		if (DataContext is null) return;
-		PropertyInfo? viewProperty = DataContext.GetType().GetProperty("View");
-		if (viewProperty is not null &&
-			typeof(FrameworkElement).IsAssignableFrom(viewProperty.PropertyType) &&
-			viewProperty.SetMethod is not null)
-			viewProperty.SetMethod.Invoke(DataContext, new object[] { this });
+		if (DataContext is IViewAccessibleViewModel viewModel)
+			viewModel.SetView(this);
 	}
 
 	public virtual void RefreshBindings() {
@@ -93,7 +91,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	protected static bool ShouldAppsUseDarkMode() {
 		using RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
 		object? value = key?.GetValue("AppsUseLightTheme");
-		return value is int i && i == 0;
+		return value is 0;
 	}
 
 	protected override void OnSourceInitialized(EventArgs e) {

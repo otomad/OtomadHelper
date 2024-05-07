@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace OtomadHelper.WPF.Controls;
 
-public partial class ComboBoxViewModel : ObservableObject {
+public partial class ComboBoxViewModel : ObservableObject, IViewAccessibleViewModel<ComboBoxFlyout> {
 	public ComboBoxFlyout? View { get; set; }
 
 	public ObservableCollection<ComboBoxViewModelItem> Items { get; } = new();

@@ -5,7 +5,7 @@ using IconNameToSymbol = OtomadHelper.WPF.Controls.ContentDialogIconNameToSymbol
 
 namespace OtomadHelper.WPF.Controls;
 
-public partial class ContentDialogViewModel : ObservableObject {
+public partial class ContentDialogViewModel : ObservableObject, IViewAccessibleViewModel<ContentDialog> {
 	public ContentDialog? View { get; set; }
 
 	[ObservableProperty]
