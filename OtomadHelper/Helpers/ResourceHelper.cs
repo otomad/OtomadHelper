@@ -1,5 +1,7 @@
 using Microsoft.WindowsAPICodePack.Shell;
 
+using OtomadHelper.Module;
+
 namespace OtomadHelper.Helpers;
 
 internal static class ResourceHelper {

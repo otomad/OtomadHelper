@@ -55,7 +55,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 		AddDictionary($"Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml");
 
 		void AddDictionary(string path) =>
-			Resources.MergedDictionaries.Add(new() { Source = new($"pack://application:,,,/{OtomadHelperModule.ASSEMBLY_NAME};component/{path}", UriKind.Absolute) });
+			Resources.MergedDictionaries.Add(new() { Source = ProjectUri(path) });
 	}
 
 	private void BindViewToViewModel() {

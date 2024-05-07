@@ -35,6 +35,7 @@ public static partial class Extensions {
 	/// <typeparam name="T">The type of the variables to be swapped.</typeparam>
 	/// <param name="left">The first variable.</param>
 	/// <param name="right">The second variable.</param>
+	[Obsolete("Using tuple to swap values.")]
 	public static void Swap<T>(ref T left, ref T right) {
 		T temp = left;
 		left = right;

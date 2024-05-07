@@ -188,7 +188,7 @@ public partial class ComboBoxFlyout : BackdropWindow {
 			Rect to = new(0, 0, ActualWidth, ActualHeight);
 			RectangleGeometry geometry = (RectangleGeometry)((GeometryDrawing)((DrawingGroup)((DrawingBrush)ItemsControlWrapper.OpacityMask).Drawing).Children[1]).Geometry;
 			geometry.Rect = from;
-			if (isExit) Swap(ref from, ref to);
+			if (isExit) (from, to) = (to, from);
 			RectAnimation rectAnimation = new() {
 				From = from,
 				To = to,

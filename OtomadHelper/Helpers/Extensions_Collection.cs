@@ -2,8 +2,8 @@ namespace OtomadHelper.Helpers;
 
 public static partial class Extensions {
 	/// <summary>
-	/// When using <c>foreach</c> to traverse an <see cref="IEnumerable"/> object, it is allowed to provide an additional index
-	/// value of the current item for use.
+	/// When using <c>foreach</c> to traverse an <see cref="IEnumerable"/> object,
+	/// it is allowed to provide an additional index value of the current item for use.
 	/// </summary>
 	/// <typeparam name="T">The item type of the <see cref="IEnumerable"/> object.</typeparam>
 	/// <param name="collection"><see cref="IEnumerable"/> object.</param>
@@ -14,11 +14,11 @@ public static partial class Extensions {
 	/// <summary>
 	/// Get the value associated with the specified string key, ignoring its case.
 	/// </summary>
-	/// <typeparam name="TValue">The value type of <paramref name="dictionary"/>.</typeparam>
+	/// <typeparam name="TValue">The value type of the <paramref name="dictionary"/>.</typeparam>
 	/// <param name="dictionary"><see cref="Dictionary"/></param>
 	/// <param name="key">The key to get the value from.</param>
 	/// <param name="value">If the specified key is found, returns the value containing that key.</param>
-	/// <returns><paramref name="dictionary"/> Does it contain the key? Case insensitive.</returns>
+	/// <returns>Does the <paramref name="dictionary"/> contain the key? Case insensitive.</returns>
 	public static bool TryGetValueIgnoreCase<TValue>(this Dictionary<string, TValue> dictionary, string key, out TValue value) {
 		IEnumerable<KeyValuePair<string, TValue>> result = dictionary.Where(x => x.Key.ToUpperInvariant() == key.ToUpperInvariant());
 		value = result.FirstOrDefault().Value;
