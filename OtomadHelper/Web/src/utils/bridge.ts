@@ -41,7 +41,7 @@ export const bridges = new Proxy(EMPTY, {
 globals.bridges = bridges;
 
 // Event of communication from native code to web page
-window.isWebview = !!window.chrome.webview;
+window.isWebView = !!window.chrome.webview;
 window.chrome ??= new VirtualObject();
 window.chrome.webview ??= new VirtualObject();
 window.chrome.webview.addEventListener("message", e => {

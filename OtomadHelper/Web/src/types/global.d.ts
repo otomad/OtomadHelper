@@ -35,9 +35,9 @@ declare global {
 	type AnyConstructor = new (...args: any[]) => any;
 	/**
 	 * Specify the value type of Record with any available object key types.
-	 * @template T - The type of value.
+	 * @template TValue - The type of value.
 	 */
-	type RecordValue<T> = Record<ObjectKey, T>;
+	type RecordValue<TValue> = Record<ObjectKey, TValue>;
 	/**
 	 * A tuple representing a two-dimensional point.
 	 */
@@ -70,6 +70,9 @@ declare global {
 	interface Timer extends NodeJS.Timer { }
 
 	interface Window {
-		isWebview: boolean;
+		/**
+		 * Check if it is running in the WebView environment.
+		 */
+		isWebView: boolean;
 	}
 }

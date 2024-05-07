@@ -32,35 +32,37 @@ declare module "csstype" {
 declare global {
 	/**
 	 * React Hook style functional component type.
-	 * @template P - Props of the component.
-	 * @template T - Inherit all Attrs from a native HTML element.
+	 * @template TProps - Props of the component.
+	 * @template TTagName - Inherit all Attrs from a native HTML element.
 	 */
-	export type FC<P = {}, T extends string | null = null> = React.FC<FCP<P, T>>;
+	export type FC<TProps = {}, TTagName extends string | null = null> = React.FC<FCP<TProps, TTagName>>;
 
-	type GetTagFromElement<E> = { [T in keyof HTMLElementTagNameMap]: HTMLElementTagNameMap[T] extends E ? E extends HTMLElementTagNameMap[T] ? T : never : never }[keyof HTMLElementTagNameMap];
-	type GetAttributesFromTag<T> = React.ReactDOM[T] extends React.DetailedHTMLFactory<infer A, Any> ? A : never;
-	type GetAttributesFromElement<E> = GetAttributesFromTag<GetTagFromElement<E>>;
+	type GetTagFromElement<TElement> = {
+		[Tag in keyof HTMLElementTagNameMap]: HTMLElementTagNameMap[Tag] extends TElement ? TElement extends HTMLElementTagNameMap[Tag] ? Tag : never : never;
+	}[keyof HTMLElementTagNameMap];
+	type GetAttributesFromTag<TTagName> = React.ReactDOM[TTagName] extends React.DetailedHTMLFactory<infer Attrs, Any> ? Attrs : never;
+	type GetAttributesFromElement<TElement> = GetAttributesFromTag<GetTagFromElement<TElement>>;
 
 	/**
 	 * React Hook style functional component type.
 	 * @deprecated
-	 * @template P - Props of the component.
-	 * @template E - Inherit all Attrs from a native HTML element.
+	 * @template TProps - Props of the component.
+	 * @template TElement - Inherit all Attrs from a native HTML element.
 	 */
-	export type FCP_Element<P = {}, E extends Element | null = null> = Override<
-		E extends null ? { children?: ReactNode } : GetAttributesFromElement<E>, P>;
+	export type FCP_Element<TProps = {}, TElement extends Element | null = null> = Override<
+		TElement extends null ? { children?: ReactNode } : GetAttributesFromElement<TElement>, TProps>;
 
 	/**
 	 * Props type for React Hook style functional components.
-	 * @template P - Props of the component.
-	 * @template T - Inherit all Attrs from a native HTML element.
+	 * @template TProps - Props of the component.
+	 * @template TTagName - Inherit all Attrs from a native HTML element.
 	 */
-	export type FCP<P = {}, T extends string | null = null> = Override<
-		T extends null ? { children?: ReactNode } : GetAttributesFromTag<T>, P>;
+	export type FCP<TProps = {}, TTagName extends string | null = null> = Override<
+		TTagName extends null ? { children?: ReactNode } : GetAttributesFromTag<TTagName>, TProps>;
 
 	/**
 	 * The type of setter function in React useState.
-	 * @template T - Parameter type.
+	 * @template T - Property type.
 	 */
 	export type SetState<T> = React.Dispatch<React.SetStateAction<T>> | ((value: T) => unknown);
 	// ((value: T) => unknown) | ((value: (prevState: T) => unknown) => unknown);
@@ -69,40 +71,41 @@ declare global {
 	/**
 	 * The return value of useState, which contains a tuple representing the current value and the function that sets that value.
 	 * Can be used to achieve bidirectional binding.
-	 * @template T - Parameter type.
+	 * @template T - Property type.
 	 */
 	export type StateProperty<T> = [get?: T, set?: SetState<T>];
 	// | (T extends unknown[] ? never : T)
 	/**
 	 * The return value of useState, which contains a tuple representing the current value and the function that sets that value.
-	 * Can be used to achieve bidirectional binding. But the parameter cannot be empty.
-	 * @template T - Parameter type.
+	 * Can be used to achieve bidirectional binding. But the property cannot be empty.
+	 * @template T - Property type.
 	 */
 	export type StatePropertyNonNull<T> = [get: T, set: SetState<T>];
 
 	/**
 	 * Get Props for the React component.
-	 * @template C - React functional component.
+	 * @template TComponent - React functional component.
 	 */
-	export type PropsOf<C> = C extends React.FC<infer P> ? P : never;
+	export type PropsOf<TComponent> = TComponent extends React.FC<infer P> ? P : never;
 
 	/**
 	 * Get React Element type for the React component.
-	 * @template C - React functional component.
+	 * @template TComponent - React functional component.
 	 */
-	export type GetReactElementFromFC<T> = ReactElement<PropsOf<T>, T>;
+	export type GetReactElementFromFC<TComponent> = ReactElement<PropsOf<TComponent>, TComponent>;
 
 	/**
 	 * Get the parameter types for Zustand store state.
-	 * @template S - Zustand store object。
+	 * @template TStore - Zustand store object。
 	 */
-	export type ZustandState<S> = NonNull<S extends UseBoundStore<StoreApi<infer T>> ? T : never>;
+	export type ZustandState<TStore> = NonNull<TStore extends UseBoundStore<StoreApi<infer T>> ? T : never>;
 
 	interface BaseEvent<T = Element> extends React.SyntheticEvent<T>, Event { }
 	export type BaseEventHandler<T = Element> = EventHandler<BaseEvent<T>>;
 
 	export type ElementTagNameMap = HTMLElementTagNameMap & SVGElementTagNameMap & MathMLElementTagNameMap & HTMLElementDeprecatedTagNameMap;
-	export type TagNameToElement<T extends keyof ElementTagNameMap | Element> = T extends keyof ElementTagNameMap ? ElementTagNameMap[T] : T;
+	export type TagNameToElement<TTagName extends keyof ElementTagNameMap | Element> =
+		TTagName extends keyof ElementTagNameMap ? ElementTagNameMap[TTagName] : TTagName;
 	export type ForwardedRef<T> = T extends keyof ElementTagNameMap ? React.ForwardedRef<ElementTagNameMap[T]> : React.ForwardedRef<T>;
 
 	export type CSSTransitionProps = Partial<ReactTransitionGroupCssTransition.CSSTransitionProps>;

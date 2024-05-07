@@ -3,27 +3,27 @@ export { };
 declare global {
 	/**
 	 * Filter subset interfaces with values of the specified type from an interface.
-	 * @template Source - Source interface.
-	 * @template Condition - Filter the type of value.
+	 * @template TSource - Source interface.
+	 * @template TCondition - Filter the type of value.
 	 */
-	type FilterValueType<Source, Condition> = Pick<
-		Source,
+	type FilterValueType<TSource, TCondition> = Pick<
+		TSource,
 		{
-			[K in keyof Source]: Source[K] extends Condition ? K : never
-		}[keyof Source]
+			[Key in keyof TSource]: TSource[Key] extends TCondition ? Key : never;
+		}[keyof TSource]
 	>;
 
 	/**
 	 * Remove read-only modifiers.
 	 * @template T - Source object.
 	 */
-	type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+	type Writeable<T> = { -readonly [Key in keyof T]: T[Key] };
 
 	/**
 	 * Deeply remove read-only modifiers.
 	 * @template T - Source object.
 	 */
-	type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
+	type DeepWriteable<T> = { -readonly [Key in keyof T]: DeepWriteable<T[Key]> };
 
 	/**
 	 * Non-null type. Similar to `!`.
@@ -42,34 +42,36 @@ declare global {
 
 	/**
 	 * Override the type of partial field for a certain object.
-	 * @template T - Source object.
-	 * @template U - Overridden fields and their types.
+	 * @template TSource - Source object.
+	 * @template TOverrider - Overridden fields and their types.
 	 */
-	type Override<T, U> = Omit<T, keyof U> & U;
+	type Override<TSource, TOverrider> = Omit<TSource, keyof TOverrider> & TOverrider;
 
 	/**
 	 * Get the Props of the component.
-	 * @template T - Vue component.
+	 * @template TVueComponent - Vue component.
 	 */
-	type ComponentProps<T> = Omit<InstanceType<T>["$props"], keyof VNodeProps>;
+	type ComponentProps<TVueComponent> = Omit<InstanceType<TVueComponent>["$props"], keyof VNodeProps>;
 
 	/**
 	 * Remove the type of Ref.
-	 * @template R - May be of Ref type.
+	 * @template TRef - Maybe a Ref type.
 	 */
-	type Unref<R> = R extends MaybeRefOrGetter<infer U> ? U : T;
+	type Unref<TRef> = TRef extends MaybeRef<infer Value> ? Value : TRef;
 
 	/**
 	 * Remove the index signature of T and only use known attribute key names.
+	 *
 	 * For example, removing `[x: string]` from an enumeration type.
+	 *
 	 * @template T - Source object.
 	 */
 	type KnownKeys<T> = keyof {
-		[K in keyof T]:
-		string extends K ? never :
-		number extends K ? never :
-		symbol extends K ? never :
-		K
+		[Key in keyof T]:
+		string extends Key ? never :
+		number extends Key ? never :
+		symbol extends Key ? never :
+		Key;
 	};
 
 	/**
@@ -77,9 +79,9 @@ declare global {
 	 * @template T - Source object.
 	 */
 	type CapitalizeObject<T extends object> = {
-		[key in keyof T as Capitalize<key>]:
-		T[key] extends (infer U)[] | undefined | null ? CapitalizeObject<U>[] :
-		CapitalizeObject<T[key]>;
+		[Key in keyof T as Capitalize<Key>]:
+		T[Key] extends (infer U)[] | undefined | null ? CapitalizeObject<U>[] :
+		CapitalizeObject<T[Key]>;
 	} & T;
 
 	/**
@@ -87,8 +89,8 @@ declare global {
 	 * @template T - Source object.
 	 */
 	type ValueOf<T extends object> =
-		T extends ArrayLike<infer U> ? U :
-		T extends Iterable<infer U> ? U :
+		T extends ArrayLike<infer Value> ? Value :
+		T extends Iterable<infer Value> ? Value :
 		T[keyof T];
 
 	/**
@@ -96,25 +98,30 @@ declare global {
 	 * @template T - Source object.
 	 */
 	type DeepReadonly<T> = Readonly<{
-		[key in keyof T]: DeepReadonly<T[key]>;
+		[Key in keyof T]: DeepReadonly<T[Key]>;
 	}>;
 
 	/**
 	 * Maybe the type object of the Ref packaging or its type itself.
+	 * @template TRef - Maybe a Ref type.
 	 */
-	type MaybeRef<T> = RefObject<T> | MutableRefObject<T> | T;
+	type MaybeRef<TRef> = RefObject<TRef> | MutableRefObject<TRef> | TRef;
 
 	/**
 	 * Reference to HTML DOM element.
+	 * @template TElement - HTML DOM element.
 	 */
-	type DomRef<E extends Element> = MutableRefObject<E | null>;
+	type DomRef<TElement extends Element> = MutableRefObject<TElement | null>;
 
 	/**
 	 * Get the type of a function based on the specified parameters and return value.
 	 * @template TArgs - The tuple of the function parameters.
 	 * @template TRet - The return value of a function, leaving blank indicates no return value `void`.
 	 */
-	type Func<TArgs extends Iterable<any> | ArrayLike<any> = [], TRet = void> = (...args: TArgs) => TRet;
+	type Func<
+		TArgs extends Iterable<any> | ArrayLike<any> = [],
+		TRet = void,
+	> = (...args: TArgs) => TRet;
 
 	/**
 	 * Make all the parameters nullable in the function.
