@@ -68,6 +68,10 @@ const StyledRadioButtonLabel = styled.label`
 				scale: ${8 / 18};
 			}
 		}
+
+		.text {
+			${styles.effects.text.bodyStrong};
+		}
 	}
 
 	&:hover input:checked ~ .base {

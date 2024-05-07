@@ -40,7 +40,7 @@ export default {
 				projectStart: "项目开始处",
 				cursor: "光标处",
 			},
-			belowTopAdjustmentTracks: "生成在顶部调整轨道下方",
+			belowTopAdjustmentTracks: "生成在顶层调整轨道的下方",
 			removeSourceEventsAfterCompletion: "完成后删除源轨道剪辑",
 			selectAllEventsGenerated: "完成后选中生成的所有轨道剪辑",
 			randomOffsetForTracks: "对不同的音轨使用随机的偏移时间",
@@ -80,7 +80,7 @@ export default {
 		},
 		score: {
 			midi: "MIDI",
-			midiFile: "MIDI 序列文件",
+			midiFile: "MIDI序列文件",
 			st: "序列文本",
 			stFile: "所有受支持的序列文本文件",
 			ustFile: "UTAU/OpenUTAU序列文本文件",
@@ -293,6 +293,10 @@ export default {
 			source: {
 				trim: "调整指定素材的开始或结束时间",
 				startTime: "指定何时从项目开始生成",
+				belowTopAdjustmentTracks: {
+					_: "如果在顶层有一个或多个调整轨道，将会生成在它们的下方",
+					versionRequest: "注意：此功能要求至少为VEGAS Pro 19。当前版本为 {{version}}。",
+				},
 			},
 			score: {
 				trim: "截取乐曲生成的时间范围",
@@ -379,10 +383,10 @@ export default {
 				_: "五线谱可视化是以自定义图案为音符，根据乐曲旋律来画出与钢琴五线谱类似风格的视觉效果。\n该视觉效果风格模仿自YouTube视频作者@grantwoolard，他的特色是使用音乐家的头像来画出经典音乐的五线谱。",
 			},
 			pixelScaling: {
-				_: "像素硬边缘放大功能，可以将原素材的像素画图像放大并替换为新图像，以避免Vegas自带的平移/裁切对原始像素画使用平滑渐变算法重新缩放而造成的像素失真问题。如需使用该功能，您必须提前将FFmpeg添加至系统环境变量内，或者也可以直接安装数据抹失扩展包。\n像素硬边缘放大功能会利用FFmpeg对素材原文件使用最近邻插值算法进行放大处理，以适配当前工程大小，再将Vegas内的原始媒体文件替换成新生成的媒体文件。新生成的文件会在名称中添加“_Scaled”后缀作为标识。此功能理论上支持任意图像/视频文件格式，同时也支持通过常规方式导入进Vegas的图像序列文件。",
+				_: "像素硬边缘放大功能，可以将原素材的像素画图像放大并替换为新图像，以避免VEGAS自带的平移/裁切对原始像素画使用平滑渐变算法重新缩放而造成的像素失真问题。如需使用该功能，您必须提前将FFmpeg添加至系统环境变量内，或者也可以直接安装数据抹失扩展包。\n像素硬边缘放大功能会利用FFmpeg对素材原文件使用最近邻插值算法进行放大处理，以适配当前工程大小，再将VEGAS内的原始媒体文件替换成新生成的媒体文件。新生成的文件会在名称中添加“_Scaled”后缀作为标识。此功能理论上支持任意图像/视频文件格式，同时也支持通过常规方式导入进VEGAS的图像序列文件。",
 			},
 			settings: {
-				about: "音MAD助手，Vegas Pro的音MAD扩展程序，旨在使Vegas接受乐谱如MIDI序列文件作为输入，自动生成音MAD的轨道。",
+				about: "音MAD助手，VEGAS Pro的音MAD扩展程序，旨在使VEGAS接受乐谱如MIDI序列文件作为输入，自动生成音MAD的轨道。",
 			},
 		},
 		empty: {

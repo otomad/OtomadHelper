@@ -80,7 +80,9 @@ export default {
 			dev: {},
 		},
 		descriptions: {
-			source: {},
+			source: {
+				belowTopAdjustmentTracks: {},
+			},
 			score: {},
 			stream: {
 				noLengthening: {},

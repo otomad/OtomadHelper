@@ -102,6 +102,10 @@ const StyledTabItem = styled.button`
 	&.selected .animated-icon {
 		--selected: true;
 	}
+
+	&.selected {
+		${styles.effects.text.bodyStrong};
+	}
 `;
 
 export /* internal */ default function TabItem({ icon, animatedIcon, children, selected = false, collapsed, id: _id, focusable = true, badge, _vertical: vertical, ...htmlAttrs }: FCP<{
