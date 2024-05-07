@@ -44,7 +44,12 @@ export default function Source() {
 
 			<Subheader>{t.subheaders.moreOptions}</Subheader>
 			<Expander title={t.subheaders.advanced} expanded icon="more">
-				<ToggleSwitch on={belowTopAdjustmentTracks}>{t.source.belowTopAdjustmentTracks}</ToggleSwitch>
+				<ToggleSwitch
+					on={belowTopAdjustmentTracks}
+					details={<Preserves>{t.descriptions.source.belowTopAdjustmentTracks + "\n" + t.descriptions.source.belowTopAdjustmentTracks.versionRequest({ version: 16 })}</Preserves>}
+				>
+					{t.source.belowTopAdjustmentTracks}
+				</ToggleSwitch>
 				<ToggleSwitch on={removeSourceEventsAfterCompletion}>{t.source.removeSourceEventsAfterCompletion}</ToggleSwitch>
 				<ToggleSwitch on={selectAllEventsGenerated}>{t.source.selectAllEventsGenerated}</ToggleSwitch>
 				<ToggleSwitch on={randomOffsetForTracks}>{t.source.randomOffsetForTracks}</ToggleSwitch>

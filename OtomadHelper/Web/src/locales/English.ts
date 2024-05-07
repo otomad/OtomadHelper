@@ -40,7 +40,7 @@ export default {
 				projectStart: "Project start",
 				cursor: "Cursor",
 			},
-			belowTopAdjustmentTracks: "Below top adjustment tracks",
+			belowTopAdjustmentTracks: "Generate below top adjustment tracks",
 			removeSourceEventsAfterCompletion: "Remove source events after completion",
 			selectAllEventsGenerated: "Select all events generated",
 			randomOffsetForTracks: "Use random offsets for different tracks",
@@ -300,6 +300,10 @@ export default {
 			source: {
 				trim: "Adjust start or end time of the specified source",
 				startTime: "Specify when to start generating from the project",
+				belowTopAdjustmentTracks: {
+					_: "If there are one or more adjustment tracks at the top, it will generate below them.",
+					versionRequest: "Note: This feature requires Vegas Pro ≥ 19. Current version is {{version}}.",
+				},
 			},
 			score: {
 				trim: "Intercept the generation time range of the score",
