@@ -12,7 +12,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	 * - If it is `{ id: string; name: string }`, the required name value is looked up based on the current state of the object.
 	 * - If it is a callback function, get the required value through the callback function.
 	 */
-	checkInfoCondition?: string | { id: string; name: string } | true | ((value: string | undefined, items: T[]) => string);
+	checkInfoCondition?: string | { id: string; name: string } | true | ((value: string | undefined, items: T[]) => string | undefined);
 	/**
 	 * The identifier field for the radio item.
 	 * - If it is a string, it represents the value of the specified field name of the currently selected object.

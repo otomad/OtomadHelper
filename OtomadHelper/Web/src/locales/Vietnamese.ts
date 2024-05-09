@@ -68,6 +68,7 @@ export default {
 			warning: "Nhắc nhở",
 		},
 		selectionMode: {
+			single: "Đơn lẻ",
 			multiple: "Đa chọn",
 		},
 		subheaders: {
@@ -81,6 +82,9 @@ export default {
 			midi: "MIDI",
 			midiFile: "File trình tự MIDI",
 			st: "Văn bản trình tự",
+			stFile: "Tất cả các file trình tự văn bản được hỗ trợ",
+			ustFile: "File trình tự văn bản UTAU/OpenUTAU",
+			vsqFile: "File trình tự Vocaloid",
 			bpm: {},
 			constraint: {},
 			pan: {},

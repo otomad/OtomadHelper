@@ -122,9 +122,8 @@ export default function Score() {
 				items={encodings}
 				value={encoding}
 				idField
-				nameField
-				checkInfoCondition
-				detailsField={value => value === "ANSI" ? t.systemDefault : undefined}
+				nameField={value => value === "ANSI" ? t.systemDefault : value}
+				checkInfoCondition={value => value === "ANSI" ? t.systemDefault : value}
 			/>
 			<ExpanderRadio
 				title={t.score.bpm}
