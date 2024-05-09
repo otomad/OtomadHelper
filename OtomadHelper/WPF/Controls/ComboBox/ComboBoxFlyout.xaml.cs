@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -14,29 +16,12 @@ public partial class ComboBoxFlyout : BackdropWindow {
 		InitializeComponent();
 	}
 
-	public ComboBoxFlyout(bool isContent = false) : this() {
-		IsContent = isContent;
-	}
-
 	public new ComboBoxViewModel DataContext => (ComboBoxViewModel)base.DataContext;
 
 	public static ComboBoxFlyout Initial(IEnumerable<string> list, string selected, Rect targetRect) {
 		ComboBoxFlyout comboBox = new();
 		SetDataContext(comboBox.DataContext);
 		comboBox.SetTargetRect(targetRect);
-
-		ComboBoxFlyout comboBoxContent = new(true);
-		SetDataContext(comboBoxContent.DataContext);
-		comboBoxContent.SetTargetRect(targetRect);
-
-		comboBox.Related = comboBoxContent;
-		comboBoxContent.Related = comboBox;
-		comboBox.Showing += (sender, e) => {
-			comboBoxContent.OwnerHandle = comboBox.Handle;
-			comboBoxContent.Show();
-		};
-		comboBox.Closing += (sender, e) => comboBoxContent.Vanish();
-
 		return comboBox;
 
 		void SetDataContext(ComboBoxViewModel viewModel) {
@@ -57,15 +42,8 @@ public partial class ComboBoxFlyout : BackdropWindow {
 
 	private double ResourcePadding => (double)Resources["Padding"];
 
-	private void Window_Deactivated(object sender, EventArgs e) {
-		if (!IsContent && Related?.Handle == GetActiveWindow())
-			this.Vanish();
-	}
-
-	private void Window_Activated(object sender, EventArgs e) {
-		if (IsContent && Related is not null)
-			SetActiveWindow(Related.Handle);
-	}
+	private void Window_Deactivated(object sender, EventArgs e) =>
+		this.Vanish();
 
 	private void SetTargetRect(Rect rect) {
 		Left = rect.Left;
@@ -81,55 +59,31 @@ public partial class ComboBoxFlyout : BackdropWindow {
 		set => SetValue(ItemHeightProperty, value + ResourcePadding * 2);
 	}
 
-	public static readonly DependencyProperty IsContentProperty = DependencyProperty.Register(
-		nameof(IsContent), typeof(bool), typeof(ComboBoxFlyout), new PropertyMetadata(false));
-	private bool IsContent { get => (bool)GetValue(IsContentProperty); set => SetValue(IsContentProperty, value); }
-
-	internal ComboBoxFlyout? Related { get; set; }
-
-	private struct StoryboardProperty {
+	/*private struct StoryboardProperty {
 		public double collapsedTop;
 		public double expandedTop;
 		public double collapsedHeight;
 		public double expandedHeight;
 	}
-
-	private StoryboardProperty storyboardProperty;
+	private StoryboardProperty storyboardProperty;*/
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
 		closeStoryboardCompleted = false;
 
-		if (IsContent)
-			AddExtendedWindowStyles(Handle, ExtendedWindowStyles.NoActivate);
-
 		Left -= ResourcePadding * 2;
 		Top -= ResourcePadding * 2;
-		storyboardProperty = new() {
+		Top -= Math.Max(DataContext.SelectedIndex, 0) * (ItemHeight + ResourcePadding * 2);
+		/*storyboardProperty = new() {
 			collapsedTop = Top,
 			expandedTop = Top - Math.Max(DataContext.SelectedIndex, 0) * (ItemHeight + ResourcePadding * 2),
 			collapsedHeight = ItemHeight + ResourcePadding * 4,
 			expandedHeight = DataContext.Items.Count * (ItemHeight + ResourcePadding * 2) + ResourcePadding * 2,
-		};
-
-		//SizeToContent sizeToContent = SizeToContent;
-		SizeToContent = SizeToContent.Manual;
-		if (IsContent) // The content layer
-			Top = storyboardProperty.expandedTop;
-		else // The backdrop layer
-			Height = storyboardProperty.collapsedHeight;
-		BeginStoryboard(
-			storyboardProperty.collapsedHeight,
-			storyboardProperty.expandedHeight,
-			storyboardProperty.collapsedTop,
-			storyboardProperty.expandedTop,
-			storyboardProperty.collapsedTop - storyboardProperty.expandedTop,
-			isExit: false
-		);
+		};*/
 	}
 
 	private bool closeStoryboardCompleted = false;
 	private void Window_Closing(object sender, CancelEventArgs e) {
-		if (!closeStoryboardCompleted) {
+		/*if (!closeStoryboardCompleted) {
 			BeginStoryboard(
 				storyboardProperty.expandedHeight,
 				storyboardProperty.collapsedHeight,
@@ -143,10 +97,10 @@ public partial class ComboBoxFlyout : BackdropWindow {
 				}
 			);
 			e.Cancel = true;
-		}
+		}*/
 	}
 
-	private void BeginStoryboard(
+	/*private void BeginStoryboard(
 		double fromHeight,
 		double toHeight,
 		double fromTop,
@@ -203,12 +157,5 @@ public partial class ComboBoxFlyout : BackdropWindow {
 				childStoryboard.Completed += (sender, e) => Completed();
 			childStoryboard.Begin(ItemsControlWrapper);
 		}
-	}
-
-	public new void Close() {
-		if (IsContent && Related is not null) {
-			Related.DataContext.Selected = DataContext.Selected;
-			Related.Close();
-		} else base.Close();
-	}
+	}*/
 }

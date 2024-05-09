@@ -73,8 +73,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 
 	#region Set backdrop type
 	protected void RefreshFrame() {
-		IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
-		HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+		HwndSource mainWindowSrc = HwndSource.FromHwnd(Handle);
 		mainWindowSrc.CompositionTarget.BackgroundColor = Color.FromArgb(0, 0, 0, 0);
 
 		MARGINS margins = new() {
@@ -96,6 +95,11 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 
 	protected override void OnSourceInitialized(EventArgs e) {
 		base.OnSourceInitialized(e);
+
+		// Fix the issue of incorrect window size when use WindowChrome with SizeToContent.WidthAndHeight.
+		// See: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#720121120
+		if (SizeToContent == SizeToContent.WidthAndHeight && WindowChrome.GetWindowChrome(this) != null)
+			InvalidateMeasure();
 
 		// Detect when the theme changed
 		HwndSource source = (HwndSource)PresentationSource.FromVisual(this);

@@ -11,12 +11,15 @@
 	x:Name="View"
 	MinWidth="200"
 	BorderBrush="{DynamicResource CardStroke}"
+	BorderThickness="1"
 	Closing="Window_Closing"
 	Deactivated="Window_Deactivated"
 	Loaded="Window_Loaded"
 	ResizeMode="NoResize"
 	ShowInTaskbar="False"
 	SizeToContent="WidthAndHeight"
+	SystemBackdropType="TransientWindow"
+	TitleBarType="WindowChromeNoTitleBar"
 	WindowStartupLocation="Manual"
 	mc:Ignorable="d"
 	>
@@ -54,9 +57,6 @@
 		<m:DoubleToThicknessConverter x:Key="DoubleToThick" />
 		<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 		<m:ActualSizeToRectConverter x:Key="SizeToRect" />
-		<c:ComboBoxFlyoutIsContentToTitleBarTypeConverter x:Key="IsContentToTitleBarType" />
-		<c:ComboBoxFlyoutIsContentToSystemBackdropConverter x:Key="IsContentToBackdrop" />
-		<c:ComboBoxFlyoutIsContentToBorderThicknessConverter x:Key="IsContentToBorder" />
 
 		<s:Double x:Key="Padding">2</s:Double>
 		<s:Double x:Key="IndicatorRadius">1.5</s:Double>
@@ -193,7 +193,7 @@
 
 		<Style x:Key="ItemsControlWrapper" TargetType="ItemsControl">
 			<Setter Property="Padding" Value="{Binding Source={StaticResource Padding}, Converter={StaticResource DoubleToThick}, Mode=OneWay}" />
-			<Setter Property="Visibility" Value="{Binding IsContent, ElementName=View, Converter={StaticResource BoolToHiddenVis}, Mode=OneWay}" />
+			<!--<Setter Property="Visibility" Value="{Binding IsContent, ElementName=View, Converter={StaticResource BoolToHiddenVis}, Mode=OneWay}" />
 			<Style.Triggers>
 				<DataTrigger Binding="{Binding IsContent, ElementName=View}" Value="True">
 					<Setter Property="OpacityMask">
@@ -227,31 +227,9 @@
 						</Setter.Value>
 					</Setter>
 				</DataTrigger>
-			</Style.Triggers>
+			</Style.Triggers>-->
 		</Style>
 	</c:BackdropWindow.Resources>
-
-	<c:BackdropWindow.TitleBarType>
-		<Binding
-			Converter="{StaticResource IsContentToTitleBarType}"
-			ElementName="View"
-			Path="IsContent"
-			/>
-	</c:BackdropWindow.TitleBarType>
-	<c:BackdropWindow.SystemBackdropType>
-		<Binding
-			Converter="{StaticResource IsContentToBackdrop}"
-			ElementName="View"
-			Path="IsContent"
-			/>
-	</c:BackdropWindow.SystemBackdropType>
-	<c:BackdropWindow.BorderThickness>
-		<Binding
-			Converter="{StaticResource IsContentToBorder}"
-			ElementName="View"
-			Path="IsContent"
-			/>
-	</c:BackdropWindow.BorderThickness>
 
 	<ItemsControl
 		x:Name="ItemsControlWrapper"

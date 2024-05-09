@@ -88,15 +88,19 @@ public static class PInvoke {
 
 	[Flags]
 	public enum ExtendedWindowStyles {
-		// ...
-		/// <remarks>
-		/// The window is intended to be used as a floating toolbar. A tool window has a title bar that is
-		/// shorter than a normal title bar, and the window title is drawn using a smaller font. A tool window
-		/// does not appear in the taskbar or in the dialog that appears when the user presses ALT+TAB. If a
-		/// tool window has a system menu, its icon is not displayed on the title bar. However, you can display
-		/// the system menu by right-clicking or by typing ALT+SPACE.
-		/// </remarks>
-		ToolWindow = 0x00000080,
+		AcceptFiles = 0x00000010,
+		AppWindow = 0x00040000,
+		ClientEdge = 0x00000200,
+		Composited = 0x02000000,
+		ContextHelp = 0x00000400,
+		ControlParent = 0x00010000,
+		DlgModalFrame = 0x00000001,
+		Layered = 0x00080000,
+		LayoutRtl = 0x00400000,
+		Left = 0x00000000,
+		LeftScrollBar = 0x00004000,
+		LtrReading = 0x00000000,
+		MdiChild = 0x00000040,
 		/// <remarks>
 		/// A top-level window created with this style does not become the foreground window when the user clicks
 		/// it. The system does not bring this window to the foreground when the user minimizes or closes the
@@ -108,7 +112,26 @@ public static class PInvoke {
 		/// the <b>WS_EX_APPWINDOW</b> style.
 		/// </remarks>
 		NoActivate = 0x08000000,
-		// ...
+		NoInheritLayout = 0x00100000,
+		NoParentNotify = 0x00000004,
+		NoRedirectionBitmap = 0x00200000,
+		OverlappedWindow = WindowEdge | ClientEdge,
+		PaletteWindow = WindowEdge | ToolWindow | TopMost,
+		Right = 0x00001000,
+		RightScrollBar = 0x00000000,
+		RtlReading = 0x00002000,
+		StaticEdge = 0x00020000,
+		/// <remarks>
+		/// The window is intended to be used as a floating toolbar. A tool window has a title bar that is
+		/// shorter than a normal title bar, and the window title is drawn using a smaller font. A tool window
+		/// does not appear in the taskbar or in the dialog that appears when the user presses ALT+TAB. If a
+		/// tool window has a system menu, its icon is not displayed on the title bar. However, you can display
+		/// the system menu by right-clicking or by typing ALT+SPACE.
+		/// </remarks>
+		ToolWindow = 0x00000080,
+		TopMost = 0x00000008,
+		Transparent = 0x00000020,
+		WindowEdge = 0x00000100,
 	}
 
 	public enum GetWindowLongFields {

@@ -22,9 +22,7 @@ public partial class ComboBoxViewModel : ObservableObject, IViewAccessibleViewMo
 	private void ArrowKeyDown(int direction) {
 		if (Items.Count == 0) return;
 		Selected = Items[MathEx.PNMod(SelectedIndex + direction, Items.Count)].Text;
-		if (View?.Related is not null) View.Related.DataContext.Selected = Selected;
 		View?.RefreshBindings();
-		View?.Related?.RefreshBindings();
 	}
 
 	[RelayCommand]
