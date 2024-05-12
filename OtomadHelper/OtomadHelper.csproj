@@ -96,14 +96,8 @@
 		<Content Include="Icons\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Remove="WPF\Controls\**" />
-		<EmbeddedResource Remove="WPF\Controls\**" />
 		<None Remove="Web\**" />
-		<None Remove="WPF\Controls\**" />
 		<EmbeddedResource Include="Web\dist\**" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Remove="WPF\Controls\**" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Remove="Module\MainWPFDock.xaml.cs" />
@@ -143,17 +137,6 @@
 		<Page Remove="Module\MainWPFDock.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Compile Include="WPF\Controls\BackdropWindow.cs" />
-	  <Compile Include="WPF\Controls\Button\Button.xaml.cs" />
-	  <Compile Include="WPF\Controls\ComboBox\ComboBoxFlyout.xaml.cs" />
-	  <Compile Include="WPF\Controls\ComboBox\ComboBoxViewModel.cs" />
-	  <Compile Include="WPF\Controls\ContentDialog\ContentDialog.xaml.cs" />
-	  <Compile Include="WPF\Controls\ContentDialog\ContentDialogButtonItem.cs" />
-	  <Compile Include="WPF\Controls\ContentDialog\ContentDialogButtonPanel.cs" />
-	  <Compile Include="WPF\Controls\ContentDialog\ContentDialogViewModel.cs" />
-	  <Compile Include="WPF\Controls\ContentDialog\Converters.cs" />
-	</ItemGroup>
-	<ItemGroup>
 		<PackageReference Include="Costura.Fody" Version="5.7.0">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -162,17 +145,6 @@
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="System.Text.Json" Version="8.0.3" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Include="WPF\Controls\Button\Button.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Include="WPF\Controls\ComboBox\ComboBoxFlyout.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Include="WPF\Controls\ContentDialog\ContentDialog.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="Properties\Settings.settings">
