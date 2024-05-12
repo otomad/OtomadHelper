@@ -14,13 +14,13 @@ public static partial class Extensions {
 	/// <summary>
 	/// Get the value associated with the specified string key, ignoring its case.
 	/// </summary>
-	/// <typeparam name="TValue">The value type of the <paramref name="dictionary"/>.</typeparam>
-	/// <param name="dictionary"><see cref="Dictionary"/></param>
+	/// <typeparam name="TValue">The value type of the <paramref name="dict"/>.</typeparam>
+	/// <param name="dict"><see cref="Dictionary{string, TValue}"/></param>
 	/// <param name="key">The key to get the value from.</param>
 	/// <param name="value">If the specified key is found, returns the value containing that key.</param>
-	/// <returns>Does the <paramref name="dictionary"/> contain the key? Case insensitive.</returns>
-	public static bool TryGetValueIgnoreCase<TValue>(this Dictionary<string, TValue> dictionary, string key, out TValue value) {
-		IEnumerable<KeyValuePair<string, TValue>> result = dictionary.Where(x => x.Key.ToUpperInvariant() == key.ToUpperInvariant());
+	/// <returns>Does the <paramref name="dict"/> contain the key? Case insensitive.</returns>
+	public static bool TryGetValueIgnoreCase<TValue>(this Dictionary<string, TValue> dict, string key, out TValue value) {
+		IEnumerable<KeyValuePair<string, TValue>> result = dict.Where(x => x.Key.ToUpperInvariant() == key.ToUpperInvariant());
 		value = result.FirstOrDefault().Value;
 		return result.Count() > 0;
 	}
@@ -30,11 +30,42 @@ public static partial class Extensions {
 	/// </summary>
 	/// <param name="collection">
 	/// The collection whose elements should be added to the end of the <see cref="IList"/>&lt;<typeparamref name="T"/>&gt;.
-	/// The collection itself cannot be <c>null</c>, but it can contain elements that are <c>null</c>, if type
-	/// <typeparamref name="T"/> is a reference type.
+	/// The collection itself cannot be <see langword="null"/> but it can contain elements that are <see langword="null"/>,
+	/// if type <typeparamref name="T"/> is a reference type.
 	/// </param>
 	public static void AddRange<T>(this IList<T> list, IEnumerable<T> collection) {
 		foreach (T item in collection)
 			list.Add(item);
+	}
+
+	/// <summary>
+	/// Get existing value or create and add new value in a <see cref="Dictionary{TKey, TValue}"/>.
+	/// </summary>
+	/// <typeparam name="TKey">Dictionary key type.</typeparam>
+	/// <typeparam name="TValue">Dictionary value type.</typeparam>
+	/// <param name="dict"><see cref="Dictionary{TKey, TValue}"/>.</param>
+	/// <param name="key">Specify the key of the dictionary.</param>
+	/// <param name="initial">
+	/// <para>If the dictionary does't contains that <paramref name="key"/>, the initial value will be added in.</para>
+	/// <para>Note that if it is got by calling complex methods, it will have unnecessary side effects.</para>
+	/// </param>
+	/// <returns>Existing value or initial value.</returns>
+	public static TValue GetOrInit<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue initial) {
+		if (!dict.TryGetValue(key, out TValue? value)) {
+			value = initial;
+			dict.Add(key, value);
+		}
+		return value!;
+	}
+
+	/// <inheritdoc cref="GetOrInit"/>
+	/// <param name="CreateNew">If the dictionary does't contains that <paramref name="key"/>,
+	/// the initial value will get from this function, and also add to the dictionary.</param>
+	public static TValue GetOrInit<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue> CreateNew) {
+		if (!dict.TryGetValue(key, out TValue? value)) {
+			value = CreateNew();
+			dict.Add(key, value);
+		}
+		return value!;
 	}
 }

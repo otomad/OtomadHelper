@@ -16,7 +16,7 @@ using Rect = System.Windows.Rect;
 namespace OtomadHelper.Test;
 public partial class TestControls : Form {
 	private readonly List<System.Windows.Window> flyouts = new();
-	private readonly string[] list = { "foo", "bar", "baz", "hello", "world" };
+	private readonly string[] list = { "foo", "bar", "baz", "hello", "world", "a", "b", "c", "d", "e", "f", "g", "h" };
 	private string selected = "foo";
 
 	public TestControls() {

@@ -4,6 +4,7 @@ using System.Windows.Interop;
 using System.Windows.Threading;
 using System.Drawing;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace OtomadHelper.Helpers;
 
@@ -34,20 +35,35 @@ public static partial class Extensions {
 	public static async void Vanish(this Window window) =>
 		await Dispatcher.CurrentDispatcher.InvokeAsync(window.Close, DispatcherPriority.Normal);
 
+	private const double DPI_DIVISOR = 96.0;
+
 	/// <summary>
 	/// Get the DPI of the screen where the WinForm <see cref="Form"/> is located.
 	/// </summary>
 	/// <param name="form">A WinForm <see cref="Form"/>.</param>
 	/// <returns>The screen DPI in two dimension.</returns>
-	public static (double x, double y) GetDpi(this Form form) {
-		const double DIVISOR = 96.0;
+	public static (double dpiX, double dpiY) GetDpi(this Form form) {
 		Graphics graphics = form.CreateGraphics();
 		try {
-			return (graphics.DpiX / DIVISOR, graphics.DpiY / DIVISOR);
+			return (graphics.DpiX / DPI_DIVISOR, graphics.DpiY / DPI_DIVISOR);
 		} catch {
 			return (1, 1);
 		} finally {
 			graphics.Dispose();
+		}
+	}
+
+	/// <summary>
+	/// Get the DPI of the screen where the WPF <see cref="Window"/> is located.
+	/// </summary>
+	/// <param name="visual">A WPF <see cref="Window"/>.</param>
+	/// <returns>The screen DPI in two dimension.</returns>
+	public static (double dpiX, double dpiY) GetDpi(this Visual visual) {
+		PresentationSource source = PresentationSource.FromVisual(visual);
+		try {
+			return (source.CompositionTarget.TransformToDevice.M11, source.CompositionTarget.TransformToDevice.M22);
+		} catch {
+			return (1, 1);
 		}
 	}
 }

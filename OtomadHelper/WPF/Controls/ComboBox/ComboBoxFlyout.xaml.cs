@@ -1,11 +1,5 @@
-using System.Security.Cryptography;
-using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-
-using OtomadHelper.Interop;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -34,16 +28,6 @@ public partial class ComboBoxFlyout : BackdropWindow {
 		}
 	}
 
-	public new double Width {
-		get => base.Width - ResourcePadding * 4;
-		set => base.Width = value + ResourcePadding * 4;
-	}
-
-	public new double MinWidth {
-		get => base.MinWidth - ResourcePadding * 4;
-		set => base.MinWidth = value + ResourcePadding * 4;
-	}
-
 	private double ResourcePadding => (double)Resources["Padding"];
 
 	private void Window_Deactivated(object sender, EventArgs e) =>
@@ -52,15 +36,15 @@ public partial class ComboBoxFlyout : BackdropWindow {
 	private void SetTargetRect(Rect rect) {
 		Left = rect.Left;
 		Top = rect.Top;
-		MinWidth = rect.Width;
-		ItemHeight = rect.Height;
+		MinWidth = rect.Width + ResourcePadding * 4;
+		ItemHeight = rect.Height + ResourcePadding * 2;
 	}
 
 	public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register(
 		nameof(ItemHeight), typeof(double), typeof(ComboBoxFlyout), new PropertyMetadata(20.0));
 	public double ItemHeight {
-		get => (double)GetValue(ItemHeightProperty) - ResourcePadding * 2;
-		set => SetValue(ItemHeightProperty, value + ResourcePadding * 2);
+		get => (double)GetValue(ItemHeightProperty);
+		set => SetValue(ItemHeightProperty, value);
 	}
 
 	protected static readonly DependencyProperty IsPressingSpaceProperty = DependencyProperty.Register(
@@ -79,22 +63,20 @@ public partial class ComboBoxFlyout : BackdropWindow {
 	private StoryboardProperty storyboardProperty;*/
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
-		closeStoryboardCompleted = false;
-
 		Left -= ResourcePadding * 2;
 		Top -= ResourcePadding * 2;
-		Top -= Math.Max(DataContext.SelectedIndex, 0) * (ItemHeight + ResourcePadding * 2);
+		Top -= Math.Max(DataContext.SelectedIndex, 0) * ItemHeight;
+		MoveIntoScreen();
 		/*storyboardProperty = new() {
 			collapsedTop = Top,
-			expandedTop = Top - Math.Max(DataContext.SelectedIndex, 0) * (ItemHeight + ResourcePadding * 2),
-			collapsedHeight = ItemHeight + ResourcePadding * 4,
-			expandedHeight = DataContext.Items.Count * (ItemHeight + ResourcePadding * 2) + ResourcePadding * 2,
+			expandedTop = Top - Math.Max(DataContext.SelectedIndex, 0) * ItemHeight,
+			collapsedHeight = ItemHeight + ResourcePadding * 2,
+			expandedHeight = DataContext.Items.Count * ItemHeight + ResourcePadding * 2,
 		};*/
 	}
 
-	private bool closeStoryboardCompleted = false;
-	private void Window_Closing(object sender, CancelEventArgs e) {
-		/*if (!closeStoryboardCompleted) {
+	/*private void Window_Closing(object sender, CancelEventArgs e) {
+		if (!closeStoryboardCompleted) {
 			BeginStoryboard(
 				storyboardProperty.expandedHeight,
 				storyboardProperty.collapsedHeight,
@@ -108,10 +90,10 @@ public partial class ComboBoxFlyout : BackdropWindow {
 				}
 			);
 			e.Cancel = true;
-		}*/
+		}
 	}
 
-	/*private void BeginStoryboard(
+	private void BeginStoryboard(
 		double fromHeight,
 		double toHeight,
 		double fromTop,

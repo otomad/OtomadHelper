@@ -17,8 +17,8 @@ global using System.Threading.Tasks;
 global using System.Web;
 global using System.Windows.Media.Imaging;
 
-global using CommunityToolkit.Mvvm.ComponentModel;
-global using CommunityToolkit.Mvvm.Input;
+//global using CommunityToolkit.Mvvm.ComponentModel;
+//global using CommunityToolkit.Mvvm.Input;
 
 global using Microsoft.Win32;
 
@@ -33,3 +33,4 @@ global using static OtomadHelper.Interop.PInvoke;
 
 global using Path = OtomadHelper.Helpers.Path;
 global using DialogResult = System.Windows.Forms.DialogResult;
+global using Screen = System.Windows.Forms.Screen;

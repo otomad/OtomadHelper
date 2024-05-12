@@ -12,7 +12,6 @@
 	MinWidth="200"
 	BorderBrush="{DynamicResource CardStroke}"
 	BorderThickness="1"
-	Closing="Window_Closing"
 	Deactivated="Window_Deactivated"
 	Loaded="Window_Loaded"
 	ResizeMode="NoResize"
@@ -41,11 +40,11 @@
 		<KeyBinding Key="Return" Command="{Binding EnterKeyDownCommand}" />
 	</c:BackdropWindow.InputBindings>
 
-	<i:Interaction.Triggers>
+	<!--<i:Interaction.Triggers>
 		<i:EventTrigger EventName="KeyUp">
 			<m:EventCommand Command="{Binding KeyUpCommand}" />
 		</i:EventTrigger>
-	</i:Interaction.Triggers>
+	</i:Interaction.Triggers>-->
 
 	<c:BackdropWindow.Resources>
 		<m:BooleanToVisibilityConverter x:Key="BoolToVis" />

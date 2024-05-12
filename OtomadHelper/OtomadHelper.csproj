@@ -24,6 +24,10 @@
 		<TargetFramework>net48</TargetFramework>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<XamlDebuggingInformation>true</XamlDebuggingInformation>
+		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+		<PackageProjectUrl>https://github.com/otomad/OtomadHelper</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/otomad/OtomadHelper.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<OutputType>WinExe</OutputType>
@@ -67,17 +71,11 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Settings.settings</DependentUpon>
 		</Compile>
-		<Compile Update="Test\TestControls.cs">
-			<SubType>Form</SubType>
-		</Compile>
 		<Compile Update="Module\MainDock.cs">
 			<SubType>UserControl</SubType>
 		</Compile>
 		<Compile Update="Module\OtomadHelperDock.cs">
 			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Test\TestForm.cs">
-			<SubType>Form</SubType>
 		</Compile>
 		<EmbeddedResource Update="Module\MainDock.resx">
 			<DependentUpon>MainDock.cs</DependentUpon>
@@ -94,18 +92,18 @@
 		<None Include="Test\app.manifest" />
 	</ItemGroup>
 	<ItemGroup>
-		<EmbeddedResource Update="Test\TestControls.resx">
-			<DependentUpon>TestControls.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Update="Test\TestForm.resx">
-			<DependentUpon>TestForm.cs</DependentUpon>
-		</EmbeddedResource>
 		<EmbeddedResource Include="Assets\**" />
 		<Content Include="Icons\**" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Remove="WPF\Controls\**" />
+		<EmbeddedResource Remove="WPF\Controls\**" />
 		<None Remove="Web\**" />
+		<None Remove="WPF\Controls\**" />
 		<EmbeddedResource Include="Web\dist\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Remove="WPF\Controls\**" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Remove="Module\MainWPFDock.xaml.cs" />
@@ -139,12 +137,18 @@
 		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxItem.g.cs" />
 		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxItem.g.i.cs" />
 		<Compile Remove="obj\x64\Debug\WPF\Views\ContentDialog\ContentDialog.g.i.cs" />
+		<Compile Remove="WPF\Common\EventCommand.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Remove="Module\MainWPFDock.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+	  <Compile Include="WPF\Controls\BackdropWindow.cs" />
+	  <Compile Include="WPF\Controls\Button\Button.xaml.cs" />
+	  <Compile Include="WPF\Controls\ComboBox\ComboBoxFlyout.xaml.cs" />
+	  <Compile Include="WPF\Controls\ComboBox\ComboBoxViewModel.cs" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="Costura.Fody" Version="5.7.0">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -153,6 +157,14 @@
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="System.Text.Json" Version="8.0.3" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Include="WPF\Controls\Button\Button.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	  <Page Include="WPF\Controls\ComboBox\ComboBoxFlyout.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="Properties\Settings.settings">

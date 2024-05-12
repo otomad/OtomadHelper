@@ -68,6 +68,16 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 		DataContext = viewModel;
 	}
 
+	public void MoveIntoScreen() {
+		Screen screen = Screen.FromHandle(Handle);
+		System.Drawing.Rectangle workingArea = screen.WorkingArea;
+		(double dpiX, double dpiY) = this.GetDpi();
+		double maxLeft = workingArea.Right / dpiX - Width;
+		double maxTop = workingArea.Bottom / dpiY - Height;
+		if (Left > maxLeft) Left = maxLeft;
+		if (Top > maxTop) Top = maxTop;
+	}
+
 	#region Set backdrop type
 	protected void RefreshFrame() {
 		HwndSource mainWindowSrc = HwndSource.FromHwnd(Handle);

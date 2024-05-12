@@ -3,34 +3,25 @@ using System.Windows.Input;
 
 namespace OtomadHelper.WPF.Controls;
 
-public partial class ComboBoxViewModel : ObservableObject, IViewAccessibleViewModel<ComboBoxFlyout> {
-	public ComboBoxFlyout? View { get; set; }
-
+public partial class ComboBoxViewModel : ObservableObject<ComboBoxFlyout> {
 	public ObservableCollection<ComboBoxViewModelItem> Items { get; } = new();
 
-	[ObservableProperty]
-	public string selected = "";
+	private string selected = "";
+	public string Selected { get => selected; set => SetProperty(ref selected, value); }
 
 	public int SelectedIndex => Items.ToList().FindIndex(item => item.Text == Selected);
 
-	[RelayCommand]
-	private void CheckRadioButton(string value) {
-		View?.Close();
-	}
+	public RelayCommand<string> CheckRadioButtonCommand => DefineCommand<string>(value => View?.Close());
 
-	[RelayCommand]
-	private void ArrowKeyDown(int direction) {
+	public RelayCommand<int> ArrowKeyDownCommand => DefineCommand<int>(direction => {
 		if (Items.Count == 0) return;
 		Selected = Items[MathEx.PNMod(SelectedIndex + direction, Items.Count)].Text;
 		View?.RefreshBindings();
-	}
+	});
 
-	[RelayCommand]
-	private void EnterKeyDown() {
-		KeyUp();
-	}
+	public RelayCommand EnterKeyDownCommand => DefineCommand(() => KeyUp());
 
-	[RelayCommand]
+	public IRelayCommand<KeyEventArgs?> KeyUpCommand => DefineCommand<KeyEventArgs?>(KeyUp);
 	private void KeyUp(KeyEventArgs? e = null) {
 		if (e is null || e.Key is Key.Space)
 			View?.Close();
