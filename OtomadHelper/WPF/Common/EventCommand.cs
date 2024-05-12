@@ -7,7 +7,7 @@ namespace OtomadHelper.WPF.Common;
 /// <summary>
 /// Event command.
 /// </summary>
-public class EventCommand : TriggerAction<DependencyObject> {
+public class EventCommand : TriggerAction<DependencyObject> { // BUG: Vegas doesn't support.
 	protected override void Invoke(object parameter) {
 		if (CommandParameter != null)
 			parameter = CommandParameter;

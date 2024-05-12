@@ -131,7 +131,6 @@
 		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxItem.g.cs" />
 		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxItem.g.i.cs" />
 		<Compile Remove="obj\x64\Debug\WPF\Views\ContentDialog\ContentDialog.g.i.cs" />
-		<Compile Remove="WPF\Common\EventCommand.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Remove="Module\MainWPFDock.xaml" />
