@@ -51,9 +51,14 @@ public class BetterBridge {
 				if (method.Name != methodName) return false;
 				matchedMethodName = true;
 				ParameterInfo[] parameters = method.GetParameters();
-				if (parameters.Length != jsonArgs.Length) return false;
+				int parametersLength = parameters.Length;
+				if (parametersLength > jsonArgs.Length) // If the method contains optional parameters
+					for (int i = parametersLength - 1; i >= 0 && parametersLength > jsonArgs.Length; i--)
+						if (parameters[i].HasDefaultValue)
+							parametersLength--;
+				if (parametersLength != jsonArgs.Length) return false;
 				matchedParameterLength = true;
-				for (int i = 0; i < parameters.Length; i++) {
+				for (int i = 0; i < parametersLength; i++) {
 					ParameterInfo parameter = parameters[i];
 					string jsonArg = jsonArgs[i].Trim();
 					if (jsonArg == "null" || jsonArg.StartsWith("{")) continue;
@@ -79,9 +84,9 @@ public class BetterBridge {
 
 			ParameterInfo[] parameters = method.GetParameters();
 
-			object?[] typedArgs = new object[jsonArgs.Length];
+			object[] typedArgs = Enumerable.Repeat(Type.Missing, method.GetParameters().Length).ToArray();
 
-			for (int i = 0; i < typedArgs.Length; i++) {
+			for (int i = 0; i < jsonArgs.Length; i++) {
 				object? typedObj = JsonSerializer.Deserialize(jsonArgs[i], parameters[i].ParameterType, jsonOptions);
 				typedArgs[i] = typedObj;
 			}
@@ -92,7 +97,7 @@ public class BetterBridge {
 			string resultJson;
 
 			// Was the method called async?
-			if (resultTyped is not Task resultTypedTask) { // Regular method:
+			if (resultTyped is not Task resultTypedTask) { // Regular method
 				// Package the result
 				resultJson = JsonSerializer.Serialize(resultTyped, jsonOptions);
 			} else { // Async method:

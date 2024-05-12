@@ -64,7 +64,7 @@ public partial class ComboBoxFlyout : BackdropWindow {
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
 		Left -= ResourcePadding * 2;
-		Top -= ResourcePadding * 2;
+		Top -= ResourcePadding * 3;
 		Top -= Math.Max(DataContext.SelectedIndex, 0) * ItemHeight;
 		MoveIntoScreen();
 		/*storyboardProperty = new() {

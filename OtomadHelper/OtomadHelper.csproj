@@ -147,6 +147,11 @@
 	  <Compile Include="WPF\Controls\Button\Button.xaml.cs" />
 	  <Compile Include="WPF\Controls\ComboBox\ComboBoxFlyout.xaml.cs" />
 	  <Compile Include="WPF\Controls\ComboBox\ComboBoxViewModel.cs" />
+	  <Compile Include="WPF\Controls\ContentDialog\ContentDialog.xaml.cs" />
+	  <Compile Include="WPF\Controls\ContentDialog\ContentDialogButtonItem.cs" />
+	  <Compile Include="WPF\Controls\ContentDialog\ContentDialogButtonPanel.cs" />
+	  <Compile Include="WPF\Controls\ContentDialog\ContentDialogViewModel.cs" />
+	  <Compile Include="WPF\Controls\ContentDialog\Converters.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Costura.Fody" Version="5.7.0">
@@ -163,6 +168,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	  <Page Include="WPF\Controls\ComboBox\ComboBoxFlyout.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	  <Page Include="WPF\Controls\ContentDialog\ContentDialog.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	</ItemGroup>

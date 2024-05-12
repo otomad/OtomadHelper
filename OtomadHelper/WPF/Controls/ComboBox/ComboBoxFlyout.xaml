@@ -45,6 +45,7 @@
 			<m:EventCommand Command="{Binding KeyUpCommand}" />
 		</i:EventTrigger>
 	</i:Interaction.Triggers>-->
+	<!--TODO-->
 
 	<c:BackdropWindow.Resources>
 		<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
@@ -113,20 +114,6 @@
 					</MultiTrigger.Conditions>
 					<Setter Property="Background" Value="{DynamicResource FillColorSubtleTertiary}" />
 				</MultiTrigger>
-				<!--<DataTrigger Value="True">
-					<DataTrigger.Binding>
-						<MultiBinding Converter="{StaticResource MultiOr}">
-							<Binding Path="IsPressed" RelativeSource="{RelativeSource Self}" />
-							<Binding Path="IsPressingSpace" ElementName="View" />
-						</MultiBinding>
-					</DataTrigger.Binding>
-					<Setter Property="Background" Value="{DynamicResource FillColorSubtleTertiary}" />
-					<Setter Property="Foreground">
-						<Setter.Value>
-							<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacity}" Color="{DynamicResource ForegroundColor}" />
-						</Setter.Value>
-					</Setter>
-				</DataTrigger>-->
 				<MultiDataTrigger>
 					<MultiDataTrigger.Conditions>
 						<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Self}}" Value="True" />
@@ -196,10 +183,11 @@
 						</BeginStoryboard>
 					</MultiDataTrigger.ExitActions>
 				</MultiDataTrigger>
-				<EventTrigger RoutedEvent="Loaded">
-					<BeginStoryboard>
-						<Storyboard>
-							<DoubleAnimation
+				<DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
+					<DataTrigger.EnterActions>
+						<BeginStoryboard>
+							<Storyboard>
+								<DoubleAnimation
 								EasingFunction="{StaticResource IndicatorAnimationEasingFunction}"
 								FillBehavior="Stop"
 								Storyboard.TargetProperty="Height"
@@ -207,9 +195,10 @@
 								To="{StaticResource IndicatorHeight}"
 								Duration="{StaticResource IndicatorAnimationDuration}"
 								/>
-						</Storyboard>
-					</BeginStoryboard>
-				</EventTrigger>
+							</Storyboard>
+						</BeginStoryboard>
+					</DataTrigger.EnterActions>
+				</DataTrigger>
 			</Style.Triggers>
 		</Style>
 

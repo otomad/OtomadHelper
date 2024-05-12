@@ -77,7 +77,7 @@ public class ObservableObject : INotifyPropertyChanged {
 	private readonly Dictionary<string, object> relayCommands = new();
 
 	private TAction GetRelayCommand<TAction>(string commandName, TAction execute) =>
-		(TAction)relayCommands.GetOrInit(commandName, RelayCommand.ThrowIfNull(ref execute)!);
+		(TAction)relayCommands.GetOrInit(commandName, RelayCommand.ThrowIfNull(execute)!);
 
 	protected RelayCommand<T> DefineCommand<T>(Action<T> execute, [CallerMemberName] string? commandName = null) =>
 		new(GetRelayCommand(commandName!, execute));

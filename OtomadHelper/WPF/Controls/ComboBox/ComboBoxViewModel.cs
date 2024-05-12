@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace OtomadHelper.WPF.Controls;
 
-public partial class ComboBoxViewModel : ObservableObject<ComboBoxFlyout> {
+public class ComboBoxViewModel : ObservableObject<ComboBoxFlyout> {
 	public ObservableCollection<ComboBoxViewModelItem> Items { get; } = new();
 
 	private string selected = "";
@@ -15,8 +16,7 @@ public partial class ComboBoxViewModel : ObservableObject<ComboBoxFlyout> {
 
 	public RelayCommand<int> ArrowKeyDownCommand => DefineCommand<int>(direction => {
 		if (Items.Count == 0) return;
-		Selected = Items[MathEx.PNMod(SelectedIndex + direction, Items.Count)].Text;
-		View?.RefreshBindings();
+		Items[MathEx.PNMod(SelectedIndex + direction, Items.Count)].IsChecked = true;
 	});
 
 	public RelayCommand EnterKeyDownCommand => DefineCommand(() => KeyUp());
@@ -35,7 +35,12 @@ public class ComboBoxViewModelItem : ObservableObject {
 
 	public bool IsChecked {
 		get => ViewModel.Selected == Text;
-		set { if (value) ViewModel.Selected = Text; }
+		set {
+			if (value) {
+				ViewModel.Selected = Text;
+				OnPropertyChanged();
+			}
+		}
 	}
 
 	public ComboBoxViewModelItem(string text, ComboBoxViewModel viewModel) {

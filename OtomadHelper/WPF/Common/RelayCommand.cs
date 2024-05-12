@@ -39,7 +39,7 @@ public sealed class RelayCommand : IRelayCommand {
 	/// <param name="execute">The execution logic.</param>
 	/// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
 	public RelayCommand(Action execute) {
-		this.execute = ThrowIfNull(ref execute);
+		this.execute = ThrowIfNull(execute);
 	}
 
 	/// <summary>
@@ -49,8 +49,8 @@ public sealed class RelayCommand : IRelayCommand {
 	/// <param name="canExecute">The execution status logic.</param>
 	/// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
 	public RelayCommand(Action execute, Func<bool> canExecute) {
-		this.execute = ThrowIfNull(ref execute);
-		this.canExecute = ThrowIfNull(ref canExecute);
+		this.execute = ThrowIfNull(execute);
+		this.canExecute = ThrowIfNull(canExecute);
 	}
 
 	public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
@@ -65,7 +65,7 @@ public sealed class RelayCommand : IRelayCommand {
 	/// </summary>
 	/// <returns>If <paramref name="argument"/> is not <see langword="null"/>, return the original <paramref name="argument"/> value.</returns>
 	/// <exception cref="ArgumentNullException">Raise when <paramref name="argument"/> is <see langword="null"/>.</exception>
-	internal static T ThrowIfNull<T>(ref T argument, [CallerMemberName] string argumentName = "") =>
+	internal static T ThrowIfNull<T>(T argument, [CallerMemberName] string argumentName = "") =>
 		argument is null ? throw new ArgumentNullException(argumentName) : argument;
 }
 
@@ -121,7 +121,7 @@ public sealed class RelayCommand<T> : IRelayCommand<T> {
 	/// </remarks>
 	/// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
 	public RelayCommand(Action<T> execute) {
-		this.execute = RelayCommand.ThrowIfNull(ref execute);
+		this.execute = RelayCommand.ThrowIfNull(execute);
 	}
 
 	/// <summary>
@@ -132,8 +132,8 @@ public sealed class RelayCommand<T> : IRelayCommand<T> {
 	/// <remarks>See notes in <see cref="RelayCommand{T}(Action{T})"/>.</remarks>
 	/// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
 	public RelayCommand(Action<T> execute, Predicate<T> canExecute) {
-		this.execute = RelayCommand.ThrowIfNull(ref execute);
-		this.canExecute = RelayCommand.ThrowIfNull(ref canExecute);
+		this.execute = RelayCommand.ThrowIfNull(execute);
+		this.canExecute = RelayCommand.ThrowIfNull(canExecute);
 	}
 
 	public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
