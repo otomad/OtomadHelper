@@ -6,6 +6,7 @@ namespace OtomadHelper.WPF.Controls;
 public partial class ContentDialog : BackdropWindow {
 	public ContentDialog() {
 		InitializeComponent();
+		Loaded += (sender, e) => UpdateShadingIcon();
 	}
 
 	public new ContentDialogViewModel DataContext => (ContentDialogViewModel)base.DataContext;
@@ -24,5 +25,8 @@ public partial class ContentDialog : BackdropWindow {
 		viewModel.Buttons.AddRange(buttons);
 		dialog.ShowDialog();
 		return (TDialogResult?)viewModel.DialogResult;
-	}
+}
+
+	internal void UpdateShadingIcon() =>
+		IconEl.SetResourceReference(Controls.Icon.SourceProperty, "Icon:" + DataContext.IconName);
 }

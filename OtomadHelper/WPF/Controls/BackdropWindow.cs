@@ -45,17 +45,15 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	}
 
 	protected void SetCurrentThemeResource(bool isDarkTheme, bool isOnLoad) {
-		foreach (ResourceDictionary resource in Resources.MergedDictionaries.ToArray())
-			if (IsThemeColorResource(resource))
-				Resources.MergedDictionaries.Remove(resource);
+		foreach (ResourceDictionary resource in Resources.MergedDictionaries.FindAllByName("ThemeColor"))
+			Resources.MergedDictionaries.Remove(resource);
 
-		if (isOnLoad)
+		if (isOnLoad) {
 			AddDictionary("Wpf/Styles/Controls.xaml");
+			AddDictionary("Wpf/Styles/Icons.xaml");
+		}
 
 		AddDictionary($"Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml");
-
-		bool IsThemeColorResource(ResourceDictionary resource) =>
-			resource["ResourceDictionaryName"] is "ThemeColor";
 
 		void AddDictionary(string path) =>
 			Resources.MergedDictionaries.Add(new() { Source = ProjectUri(path) });

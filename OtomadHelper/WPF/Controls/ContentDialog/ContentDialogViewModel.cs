@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-using IconNameToSymbol = OtomadHelper.WPF.Controls.ContentDialogIconNameToSymbolConverter;
+using IconNameToSymbol = OtomadHelper.WPF.Controls.IconNameToSymbolConverter;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -15,9 +15,11 @@ public class ContentDialogViewModel : ObservableObject<ContentDialog> {
 	public string IconName {
 		get => iconName;
 		set {
-			value = new VariableName(value).Pascal;
-			if (IconNameToSymbol.IsValidIconName(value))
+			value = IconNameToSymbol.NormalizeIconName(value);
+			if (IconNameToSymbol.IsValidIconName(value)) { // TODO: IconNameToSymbolConverter is deprecated.
 				SetProperty(ref iconName, value);
+				View?.UpdateShadingIcon();
+			}
 		}
 	}
 

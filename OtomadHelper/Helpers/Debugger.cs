@@ -22,12 +22,4 @@ internal static class Debugger {
 	public static void DebugPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
 		s = e.NewValue;
 	}
-
-	/// <summary>
-	/// Get <see cref="Uri"/> from a <paramref name="path"/> to this project.
-	/// </summary>
-	/// <param name="path">A <paramref name="path"/> to this project.</param>
-	/// <returns>A valid <see cref="Uri"/> which won't let Vegas to crash.</returns>
-	public static Uri ProjectUri(string path) =>
-		new($"pack://application:,,,/{OtomadHelperModule.ASSEMBLY_NAME};component/{path}", UriKind.Absolute);
 }

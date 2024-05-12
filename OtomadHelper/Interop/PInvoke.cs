@@ -140,7 +140,7 @@ public static class PInvoke {
 		WindowEdge = 0x00000100L,
 	}
 
-	public enum GetWindowLongFields {
+	public enum WindowLongFlags {
 		// ...
 		/// <summary>
 		/// Retrieves the extended window styles.
@@ -176,10 +176,12 @@ public static class PInvoke {
 	internal static extern int DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
 
 	[DllImport("user32.dll")]
-	public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, GetWindowLongFields nIndex);
+	public static extern long GetWindowLongPtr(IntPtr hWnd, WindowLongFlags nIndex);
 
 	[DllImport("user32.dll", SetLastError = true)]
-	public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, GetWindowLongFields nIndex, IntPtr dwNewLong);
+	public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, WindowLongFlags nIndex, IntPtr dwNewLong);
+	[DllImport("user32.dll", SetLastError = true)]
+	public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, WindowLongFlags nIndex, long dwNewLong);
 
 	[DllImport("user32.dll")]
 	public static extern IntPtr GetActiveWindow();
@@ -198,9 +200,9 @@ public static class PInvoke {
 
 	/// <param name="hWnd">Window handle.</param>
 	public static void AddExtendedWindowStyles(IntPtr hWnd, params ExtendedWindowStyles[] styles) {
-		int exStyle = (int)GetWindowLongPtr(hWnd, GetWindowLongFields.ExStyle);
+		long exStyle = GetWindowLongPtr(hWnd, WindowLongFlags.ExStyle);
 		foreach (ExtendedWindowStyles style in styles)
-			exStyle |= (int)style;
-		SetWindowLongPtr(hWnd, GetWindowLongFields.ExStyle, (IntPtr)exStyle);
+			exStyle |= (long)style;
+		SetWindowLongPtr(hWnd, WindowLongFlags.ExStyle, exStyle);
 	}
 }

@@ -1,4 +1,3 @@
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -6,9 +5,9 @@ using System.Windows.Media;
 namespace OtomadHelper.WPF.Controls;
 
 [ValueConversion(typeof(string), typeof(string))]
-public class ContentDialogIconNameToSymbolConverter : IValueConverter {
+public class IconNameToSymbolConverter : IValueConverter {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		string iconName = new VariableName(value.ToString()).Pascal;
+		string iconName = NormalizeIconName(value);
 
 		if (!SegoeIconNames.TryGetValue(iconName, out string symbol))
 			symbol = DefaultIcon;
@@ -30,14 +29,17 @@ public class ContentDialogIconNameToSymbolConverter : IValueConverter {
 	public static string DefaultIcon => SegoeIconNames[DefaultIconName];
 
 	public static bool IsValidIconName(string iconName) => SegoeIconNames.ContainsKey(iconName);
+
+	public static string NormalizeIconName(string iconName) => new VariableName(iconName).Pascal;
+	public static string NormalizeIconName(object iconName) => new VariableName(iconName.ToString()).Pascal;
 }
 
 [ValueConversion(typeof(string), typeof(ImageSource))]
-public class ContentDialogIconNameToImageSourceConverter : IValueConverter {
+public class IconNameToImageSourceConverter : IValueConverter {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		string iconName = new VariableName(value.ToString()).Pascal;
+		string iconName = IconNameToSymbolConverter.NormalizeIconName(value);
 
-		if (Properties.Resources.ResourceManager.GetObject(iconName) is not Icon iconImage)
+		if (Properties.Resources.ResourceManager.GetObject(iconName) is not System.Drawing.Icon iconImage)
 			iconImage = Properties.Resources.Info;
 		return iconImage.ToImageSource();
 	}
