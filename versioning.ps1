@@ -18,19 +18,32 @@ function Set-ContentRaw {
 	[IO.File]::WriteAllLines((Join-Path $pwd $file), $content, $utf8NoBomEncoding)
 }
 
+function Update-ToReplaceIfNeeded {
+	Param (
+		[String] $inputString,
+		[String] $pattern,
+		[String] $replacement
+	)
+	$current = if ($inputString -match $pattern) { $Matches[0] }
+	if ($Matches -ne $null -and $current -ne $replacement) {
+		return $inputString -replace $pattern, $replacement
+	}
+	return $null
+}
+
 $file = ".\version.txt"
 $version = (Get-ContentRaw $file).Split(".") | % {iex $_}
 # $version[2]++
 $version = $version -Join "."
-Write-Output $version
+Write-Host $version
 Set-ContentRaw $file $version
 
 $file = ".\OtomadHelper\OtomadHelper.csproj"
 $csAssemblyInfo = Get-ContentRaw $file
-$csAssemblyInfo = [Regex]::Replace($csAssemblyInfo, "(?<=<(Assembly|File)Version>)[^\*]+?(?=</)", $version)
-Set-ContentRaw $file $csAssemblyInfo
+$csAssemblyInfo = Update-ToReplaceIfNeeded $csAssemblyInfo "(?<=<(Assembly|File)Version>)[^\*]+?(?=</)" $version
+if ($csAssemblyInfo) { Set-ContentRaw $file $csAssemblyInfo }
 
 $file = ".\OtomadHelper\Web\package.json"
 $jsPackage = Get-ContentRaw $file
-$jsPackage = [Regex]::Replace($jsPackage, "(?<=`"version`": `").*(?=`")", $version)
-Set-ContentRaw $file $jsPackage
+$jsPackage = Update-ToReplaceIfNeeded $jsPackage "(?<=`"version`": `").*(?=`")" $version
+if ($jsPackage) { Set-ContentRaw $file $jsPackage }

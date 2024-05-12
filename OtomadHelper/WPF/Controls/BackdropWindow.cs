@@ -4,9 +4,6 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
 
-using OtomadHelper.Module;
-using OtomadHelper.WPF.Common;
-
 namespace OtomadHelper.WPF.Controls;
 
 /// <summary>

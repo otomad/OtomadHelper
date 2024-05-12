@@ -181,6 +181,9 @@ public static class PInvoke {
 	[DllImport("user32.dll")]
 	public static extern IntPtr SetActiveWindow(IntPtr hWnd);
 
+	[DllImport("user32.dll")]
+	public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+
 	public static int ExtendFrame(IntPtr hWnd, MARGINS margins) =>
 		DwmExtendFrameIntoClientArea(hWnd, ref margins);
 

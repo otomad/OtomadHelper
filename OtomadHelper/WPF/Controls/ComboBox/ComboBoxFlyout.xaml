@@ -57,6 +57,7 @@
 		<m:DoubleToThicknessConverter x:Key="DoubleToThick" />
 		<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 		<m:ActualSizeToRectConverter x:Key="SizeToRect" />
+		<m:MultiTriggerOrConverter x:Key="MultiOr" />
 
 		<s:Double x:Key="Padding">2</s:Double>
 		<s:Double x:Key="IndicatorRadius">1.5</s:Double>
@@ -113,18 +114,39 @@
 					</MultiTrigger.Conditions>
 					<Setter Property="Background" Value="{DynamicResource FillColorSubtleTertiary}" />
 				</MultiTrigger>
-				<MultiTrigger>
-					<MultiTrigger.Conditions>
-						<Condition Property="IsChecked" Value="True" />
-						<Condition Property="IsPressed" Value="True" />
-					</MultiTrigger.Conditions>
+				<!--<DataTrigger Value="True">
+					<DataTrigger.Binding>
+						<MultiBinding Converter="{StaticResource MultiOr}">
+							<Binding Path="IsPressed" RelativeSource="{RelativeSource Self}" />
+							<Binding Path="IsPressingSpace" ElementName="View" />
+						</MultiBinding>
+					</DataTrigger.Binding>
+					<Setter Property="Background" Value="{DynamicResource FillColorSubtleTertiary}" />
+					<Setter Property="Foreground">
+						<Setter.Value>
+							<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacity}" Color="{DynamicResource ForegroundColor}" />
+						</Setter.Value>
+					</Setter>
+				</DataTrigger>-->
+				<MultiDataTrigger>
+					<MultiDataTrigger.Conditions>
+						<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Self}}" Value="True" />
+						<Condition Value="True">
+							<Condition.Binding>
+								<MultiBinding Converter="{StaticResource MultiOr}">
+									<Binding Path="IsPressed" RelativeSource="{RelativeSource Self}" />
+									<Binding ElementName="View" Path="IsPressingSpace" />
+								</MultiBinding>
+							</Condition.Binding>
+						</Condition>
+					</MultiDataTrigger.Conditions>
 					<Setter Property="Background" Value="{DynamicResource FillColorSubtleSecondary}" />
 					<Setter Property="Foreground">
 						<Setter.Value>
 							<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacity}" Color="{DynamicResource ForegroundColor}" />
 						</Setter.Value>
 					</Setter>
-				</MultiTrigger>
+				</MultiDataTrigger>
 			</Style.Triggers>
 		</Style>
 
@@ -139,7 +161,14 @@
 				<MultiDataTrigger>
 					<MultiDataTrigger.Conditions>
 						<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True" />
-						<Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True" />
+						<Condition Value="True">
+							<Condition.Binding>
+								<MultiBinding Converter="{StaticResource MultiOr}">
+									<Binding Path="IsPressed" RelativeSource="{RelativeSource AncestorType=RadioButton}" />
+									<Binding ElementName="View" Path="IsPressingSpace" />
+								</MultiBinding>
+							</Condition.Binding>
+						</Condition>
 					</MultiDataTrigger.Conditions>
 					<MultiDataTrigger.EnterActions>
 						<BeginStoryboard>
@@ -230,6 +259,22 @@
 			</Style.Triggers>-->
 		</Style>
 	</c:BackdropWindow.Resources>
+
+	<c:BackdropWindow.Triggers>
+		<EventTrigger RoutedEvent="Loaded">
+			<BeginStoryboard>
+				<Storyboard>
+					<DoubleAnimation
+						FillBehavior="Stop"
+						Storyboard.TargetProperty="Opacity"
+						From="0"
+						To="1"
+						Duration="00:00:00.250"
+						/>
+				</Storyboard>
+			</BeginStoryboard>
+		</EventTrigger>
+	</c:BackdropWindow.Triggers>
 
 	<ItemsControl
 		x:Name="ItemsControlWrapper"

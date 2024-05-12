@@ -4,6 +4,60 @@ using System.Windows.Data;
 
 namespace OtomadHelper.WPF.Common;
 
+#region BooleanConverter
+public class BooleanConverter<T> : IValueConverter
+	where T : notnull {
+	public BooleanConverter(T trueValue, T falseValue) {
+		True = trueValue;
+		False = falseValue;
+	}
+
+	public T True { get; set; }
+	public T False { get; set; }
+
+	public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+		value is bool boolean && boolean ? True : False;
+
+	public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		value is T t && EqualityComparer<T>.Default.Equals(t, True);
+}
+
+/// <summary>
+/// Convert a <see cref="bool"/> value to a <see cref="Visibility"/> value.<br />
+/// Compared to build-in <see cref="System.Windows.Controls.BooleanToVisibilityConverter"/>,
+/// you can manually specify the correspondence from true or false to <see cref="Visibility"/>.
+/// </summary>
+/// <remarks>
+/// <example>
+/// <para>
+/// <c>true => Visible; false => Collapsed</c>
+/// (Default, same as <see cref="System.Windows.Controls.BooleanToVisibilityConverter"/>)
+/// <code>
+/// <![CDATA[<m:BooleanToVisibilityConverter x:Key="BoolToVis" />]]>
+/// </code>
+/// </para>
+/// <para>
+/// <c>true => Visible; false => Hidden</c>
+/// <code>
+/// <![CDATA[<m:BooleanToVisibilityConverter x:Key="BoolToVis" True="Visible" False="Hidden" />]]>
+/// </code>
+/// </para>
+/// <para>
+/// <c>true => Collapsed; false => Visible</c>
+/// (Invert the <see cref="bool"/> value)
+/// <code>
+/// <![CDATA[<m:BooleanToVisibilityConverter x:Key="BoolToVis" True="Collapsed" False="Visible" />]]>
+/// </code>
+/// </para>
+/// </example>
+/// </remarks>
+[ValueConversion(typeof(bool), typeof(Visibility))]
+public sealed class BooleanToVisibilityConverter : BooleanConverter<Visibility> {
+	public BooleanToVisibilityConverter() :
+		base(Visibility.Visible, Visibility.Collapsed) { }
+}
+#endregion
+
 [ValueConversion(typeof(double), typeof(Thickness))]
 public class DoubleToThicknessConverter : IValueConverter {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
@@ -50,5 +104,43 @@ public class ActualSizeToRectConverter : IValueConverter {
 	}
 
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
+}
+
+/// <summary>
+/// MultiTrigger / MultiDataTrigger with OR instead of AND.
+/// </summary>
+/// <remarks>
+/// <example>
+/// <code>
+/// <![CDATA[
+/// <Style.Triggers>
+///   <DataTrigger Value="True">
+///     <DataTrigger.Binding>
+///       <MultiBinding Converter="{StaticResource OrConverter}">
+///         <Binding Path="PermissionFlag" />
+///         <Binding Path="CCTVPath" />
+///       </MultiBinding>
+///     </DataTrigger.Binding>
+///     <Setter Property="Visibility" Value="Hidden" />
+///   </DataTrigger>
+/// </Style.Triggers>
+/// ]]>
+/// </code>
+/// </example>
+/// </remarks>
+public class MultiTriggerOrConverter : IMultiValueConverter {
+	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) =>
+		values.Any(value => {
+			if (value == DependencyProperty.UnsetValue) return false; // Unfortunately, it cannot be placed in the switch.
+			return value switch {
+				bool val => val,
+				string val => string.IsNullOrEmpty(val),
+				null => false,
+				_ => true,
+			};
+		});
+
+	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
 }

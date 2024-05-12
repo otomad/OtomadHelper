@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Web.UI.WebControls;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -14,6 +15,9 @@ namespace OtomadHelper.WPF.Controls;
 public partial class ComboBoxFlyout : BackdropWindow {
 	public ComboBoxFlyout() {
 		InitializeComponent();
+
+		KeyDown += (sender, e) => _ = e.Key == Key.Space && (IsPressingSpace = true);
+		KeyUp += (sender, e) => _ = e.Key == Key.Space && (IsPressingSpace = false);
 	}
 
 	public new ComboBoxViewModel DataContext => (ComboBoxViewModel)base.DataContext;
@@ -57,6 +61,13 @@ public partial class ComboBoxFlyout : BackdropWindow {
 	public double ItemHeight {
 		get => (double)GetValue(ItemHeightProperty) - ResourcePadding * 2;
 		set => SetValue(ItemHeightProperty, value + ResourcePadding * 2);
+	}
+
+	protected static readonly DependencyProperty IsPressingSpaceProperty = DependencyProperty.Register(
+		nameof(IsPressingSpace), typeof(bool), typeof(BackdropWindow), new PropertyMetadata(false));
+	protected bool IsPressingSpace {
+		get => (bool)GetValue(IsPressingSpaceProperty);
+		set => SetValue(IsPressingSpaceProperty, value);
 	}
 
 	/*private struct StoryboardProperty {

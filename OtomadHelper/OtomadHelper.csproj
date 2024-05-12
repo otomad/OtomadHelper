@@ -23,6 +23,7 @@
 		<Platform>x64</Platform>
 		<TargetFramework>net48</TargetFramework>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<XamlDebuggingInformation>true</XamlDebuggingInformation>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<OutputType>WinExe</OutputType>
