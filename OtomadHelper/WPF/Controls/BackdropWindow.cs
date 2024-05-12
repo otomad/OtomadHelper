@@ -9,7 +9,7 @@ namespace OtomadHelper.WPF.Controls;
 /// <summary>
 /// BackdropWindow.xaml 的交互逻辑
 /// </summary>
-public abstract class BackdropWindow : Window, INotifyPropertyChanged {
+public class BackdropWindow : Window, INotifyPropertyChanged {
 	protected readonly WindowInteropHelper helper;
 	protected IntPtr Handle => helper.Handle;
 
@@ -29,6 +29,10 @@ public abstract class BackdropWindow : Window, INotifyPropertyChanged {
 		IsVisibleChanged += (sender, e) => {
 			if ((bool)e.NewValue) RaiseEvent(new RoutedEventArgs(ShowingEvent));
 		};
+
+		// Default styles
+		SetResourceReference(BorderBrushProperty, "CardStroke");
+		BorderThickness = new(1);
 	}
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
@@ -77,6 +81,19 @@ public abstract class BackdropWindow : Window, INotifyPropertyChanged {
 		if (Left > maxLeft) Left = maxLeft;
 		if (Top > maxTop) Top = maxTop;
 	}
+
+	protected virtual void SetLocation(double left, double top) {
+		Left = left;
+		Top = top;
+	}
+	protected virtual void SetLocation(double left, double top, double width, SetWidthType widthType) {
+		SetLocation(left, top);
+		if ((widthType & SetWidthType.Width) != 0) Width = width;
+		if ((widthType & SetWidthType.MinWidth) != 0) MinWidth = width;
+		if ((widthType & SetWidthType.MaxWidth) != 0) MaxWidth = width;
+	}
+	protected virtual void SetLocation(Rect rect, SetWidthType widthType = SetWidthType.Nothing) =>
+		SetLocation(rect.Left, rect.Top, rect.Width, widthType);
 
 	#region Set backdrop type
 	protected void RefreshFrame() {
@@ -229,4 +246,12 @@ public enum TitleBarType {
 	Borderless,
 	WindowChrome,
 	WindowChromeNoTitleBar,
+}
+
+[Flags]
+public enum SetWidthType {
+	Nothing = 0,
+	Width = 1 << 0,
+	MinWidth = 1 << 1,
+	MaxWidth = 1 << 2,
 }

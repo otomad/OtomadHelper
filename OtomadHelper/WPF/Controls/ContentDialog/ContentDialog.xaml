@@ -7,8 +7,6 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Width="800"
-	BorderBrush="{DynamicResource CardStroke}"
-	BorderThickness="1"
 	ResizeMode="NoResize"
 	ShowInTaskbar="True"
 	SizeToContent="Height"

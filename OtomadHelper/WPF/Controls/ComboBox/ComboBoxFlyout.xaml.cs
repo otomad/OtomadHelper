@@ -6,7 +6,7 @@ namespace OtomadHelper.WPF.Controls;
 /// <summary>
 /// ComboBoxFlyout.xaml 的交互逻辑
 /// </summary>
-public partial class ComboBoxFlyout : BackdropWindow {
+public partial class ComboBoxFlyout : BaseFlyout {
 	public ComboBoxFlyout() {
 		InitializeComponent();
 
@@ -34,8 +34,7 @@ public partial class ComboBoxFlyout : BackdropWindow {
 		this.Vanish();
 
 	private void SetTargetRect(Rect rect) {
-		Left = rect.Left;
-		Top = rect.Top;
+		SetLocation(rect);
 		MinWidth = rect.Width + ResourcePadding * 4;
 		ItemHeight = rect.Height + ResourcePadding * 2;
 	}

@@ -1,4 +1,4 @@
-<c:BackdropWindow
+<c:BaseFlyout
 	x:Class="OtomadHelper.WPF.Controls.ComboBoxFlyout"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,23 +10,16 @@
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	x:Name="View"
 	MinWidth="200"
-	BorderBrush="{DynamicResource CardStroke}"
-	BorderThickness="1"
 	Deactivated="Window_Deactivated"
 	Loaded="Window_Loaded"
-	ResizeMode="NoResize"
-	ShowInTaskbar="False"
 	SizeToContent="WidthAndHeight"
-	SystemBackdropType="TransientWindow"
-	TitleBarType="WindowChromeNoTitleBar"
-	WindowStartupLocation="Manual"
 	mc:Ignorable="d"
 	>
-	<c:BackdropWindow.DataContext>
+	<c:BaseFlyout.DataContext>
 		<c:ComboBoxViewModel x:Name="ViewModel" />
-	</c:BackdropWindow.DataContext>
+	</c:BaseFlyout.DataContext>
 
-	<c:BackdropWindow.InputBindings>
+	<c:BaseFlyout.InputBindings>
 		<KeyBinding Key="Up" Command="{Binding ArrowKeyDownCommand}">
 			<KeyBinding.CommandParameter>
 				<s:Int32>-1</s:Int32>
@@ -38,7 +31,7 @@
 			</KeyBinding.CommandParameter>
 		</KeyBinding>
 		<KeyBinding Key="Return" Command="{Binding EnterKeyDownCommand}" />
-	</c:BackdropWindow.InputBindings>
+	</c:BaseFlyout.InputBindings>
 
 	<!--<i:Interaction.Triggers>
 		<i:EventTrigger EventName="KeyUp">
@@ -47,7 +40,7 @@
 	</i:Interaction.Triggers>-->
 	<!--TODO-->
 
-	<c:BackdropWindow.Resources>
+	<c:BaseFlyout.Resources>
 		<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
 		<m:BooleanToVisibilityConverter
 			x:Key="BoolToHiddenVis"
@@ -246,9 +239,9 @@
 				</DataTrigger>
 			</Style.Triggers>-->
 		</Style>
-	</c:BackdropWindow.Resources>
+	</c:BaseFlyout.Resources>
 
-	<c:BackdropWindow.Triggers>
+	<c:BaseFlyout.Triggers>
 		<EventTrigger RoutedEvent="Loaded">
 			<BeginStoryboard>
 				<Storyboard>
@@ -262,7 +255,7 @@
 				</Storyboard>
 			</BeginStoryboard>
 		</EventTrigger>
-	</c:BackdropWindow.Triggers>
+	</c:BaseFlyout.Triggers>
 
 	<ItemsControl
 		x:Name="ItemsControlWrapper"
@@ -300,4 +293,4 @@
 			</DataTemplate>
 		</ItemsControl.ItemTemplate>
 	</ItemsControl>
-</c:BackdropWindow>
+</c:BaseFlyout>
