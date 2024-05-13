@@ -61,7 +61,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 
 	private void BindViewToViewModel() {
 		if (DataContext is IViewAccessibleViewModel viewModel)
-			viewModel.SetView(this);
+			viewModel.View = this;
 	}
 
 	public virtual void RefreshBindings() {
@@ -74,10 +74,14 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 		Screen screen = Screen.FromHandle(Handle);
 		System.Drawing.Rectangle workingArea = screen.WorkingArea;
 		(double dpiX, double dpiY) = this.GetDpi();
-		double maxLeft = workingArea.Right / dpiX - Width;
-		double maxTop = workingArea.Bottom / dpiY - Height;
+		double maxLeft = workingArea.Right / dpiX - Width,
+			maxTop = workingArea.Bottom / dpiY - Height,
+			minLeft = workingArea.Left / dpiX,
+			minTop = workingArea.Top / dpiY;
 		if (Left > maxLeft) Left = maxLeft;
 		if (Top > maxTop) Top = maxTop;
+		if (Left < minLeft) Left = minLeft;
+		if (Top < minTop) Top = minTop;
 	}
 
 	protected virtual void SetLocation(double left, double top) {

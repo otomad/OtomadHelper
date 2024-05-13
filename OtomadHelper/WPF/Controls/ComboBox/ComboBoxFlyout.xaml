@@ -241,22 +241,6 @@
 		</Style>
 	</c:BaseFlyout.Resources>
 
-	<c:BaseFlyout.Triggers>
-		<EventTrigger RoutedEvent="Loaded">
-			<BeginStoryboard>
-				<Storyboard>
-					<DoubleAnimation
-						FillBehavior="Stop"
-						Storyboard.TargetProperty="Opacity"
-						From="0"
-						To="1"
-						Duration="00:00:00.250"
-						/>
-				</Storyboard>
-			</BeginStoryboard>
-		</EventTrigger>
-	</c:BaseFlyout.Triggers>
-
 	<ItemsControl
 		x:Name="ItemsControlWrapper"
 		ItemsSource="{Binding Items}"

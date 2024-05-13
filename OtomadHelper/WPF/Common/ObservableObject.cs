@@ -9,17 +9,6 @@ public interface IViewAccessibleViewModel {
 	public IView? View { get; internal set; }
 }
 
-internal static class ExtendViewAccessibleViewModel {
-	internal static void SetView(this IViewAccessibleViewModel? viewModel, IView view) {
-		if (viewModel is null) return;
-		PropertyInfo? viewProperty = viewModel.GetType().GetProperty("View");
-		if (viewProperty is not null &&
-			typeof(IView).IsAssignableFrom(viewProperty.PropertyType) &&
-			viewProperty.SetMethod is not null)
-			viewProperty.SetMethod.Invoke(viewModel, new object[] { view });
-	}
-}
-
 /// <summary>
 /// A base class for objects of which the properties must be observable.
 /// </summary>
