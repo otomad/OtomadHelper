@@ -84,7 +84,7 @@ public class BetterBridge {
 
 			ParameterInfo[] parameters = method.GetParameters();
 
-			object[] typedArgs = Enumerable.Repeat(Type.Missing, method.GetParameters().Length).ToArray();
+			object?[] typedArgs = Enumerable.Repeat(Type.Missing, method.GetParameters().Length).ToArray();
 
 			for (int i = 0; i < jsonArgs.Length; i++) {
 				object? typedObj = JsonSerializer.Deserialize(jsonArgs[i], parameters[i].ParameterType, jsonOptions);

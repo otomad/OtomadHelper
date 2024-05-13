@@ -2,7 +2,6 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
-	xmlns:common="clr-namespace:OtomadHelper.WPF.Common"
 	>
 	<s:String x:Key="ResourceDictionaryName">ThemeColor</s:String>
 	<Color x:Key="ForegroundColor">White</Color>
@@ -28,6 +27,7 @@
 	<SolidColorBrush x:Key="TextOnAccentForegroundBrush" Color="{DynamicResource TextOnAccentForegroundColor}" />
 	<s:Double x:Key="AccentSecondaryOpacity">0.9</s:Double>
 	<s:Double x:Key="AccentTertiaryOpacity">0.8</s:Double>
-	<SolidColorBrush x:Key="FillColorSubtleSecondary" Color="#0FFFFFFF" />
-	<SolidColorBrush x:Key="FillColorSubtleTertiary" Color="#0AFFFFFF" />
+	<SolidColorBrush x:Key="SubtleSecondary" Color="#0FFFFFFF" />
+	<SolidColorBrush x:Key="SubtleTertiary" Color="#0AFFFFFF" />
+	<SolidColorBrush x:Key="DividerStroke" Color="#15FFFFFF" />
 </ResourceDictionary>

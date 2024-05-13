@@ -1,7 +1,7 @@
 {
-  "profiles": {
-    "OtomadHelper": {
-      "commandName": "Project"
-    }
-  }
+	"profiles": {
+		"OtomadHelper": {
+			"commandName": "Project"
+		}
+	}
 }

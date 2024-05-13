@@ -30,9 +30,6 @@ public partial class ComboBoxFlyout : BaseFlyout {
 
 	private double ResourcePadding => (double)Resources["Padding"];
 
-	private void Window_Deactivated(object sender, EventArgs e) =>
-		this.Vanish();
-
 	private void SetTargetRect(Rect rect) {
 		SetLocation(rect);
 		MinWidth = rect.Width + ResourcePadding * 4;

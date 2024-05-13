@@ -1,0 +1,110 @@
+<c:BaseFlyout
+	x:Class="OtomadHelper.WPF.Controls.PitchPickerFlyout"
+	x:Name="View"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	Width="200"
+	Height="300"
+	Loaded="Window_Loaded"
+	mc:Ignorable="d"
+	>
+	<c:BaseFlyout.DataContext>
+		<c:PitchPickerViewModel x:Name="ViewModel" />
+	</c:BaseFlyout.DataContext>
+
+	<c:BaseFlyout.Resources>
+		<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
+
+		<Thickness x:Key="ItemPadding">4,0</Thickness>
+		<s:Double x:Key="ItemHeight">40</s:Double>
+		<s:Double x:Key="ItemRadius">4</s:Double>
+
+		<Style x:Key="ListView" TargetType="ListView">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="BorderBrush" Value="{DynamicResource DividerStroke}" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+			<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+			<Setter Property="ItemContainerStyle">
+				<Setter.Value>
+					<Style TargetType="ListViewItem">
+						<Setter Property="HorizontalContentAlignment" Value="Center" />
+						<Setter Property="Focusable" Value="False" />
+						<Setter Property="Height" Value="{StaticResource ItemHeight}" />
+						<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+						<Setter Property="FontSize" Value="14" />
+						<Setter Property="m:MouseDownHelper.Enabled" Value="True" />
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="ListBoxItem">
+									<Border
+										x:Name="ListBoxItemBorder"
+										Margin="2,0"
+										BorderBrush="{TemplateBinding BorderBrush}"
+										BorderThickness="{TemplateBinding BorderThickness}"
+										Background="{TemplateBinding Background}"
+										CornerRadius="{Binding Source={StaticResource ItemRadius}, Converter={StaticResource DoubleToRadius}}"
+										SnapsToDevicePixels="true"
+										>
+										<ContentPresenter
+											HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+											VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+											SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+											/>
+									</Border>
+									<ControlTemplate.Triggers>
+										<Trigger Property="IsMouseOver" Value="True">
+											<Setter TargetName="ListBoxItemBorder" Property="Background" Value="{DynamicResource SubtleSecondary}" />
+										</Trigger>
+										<Trigger Property="m:MouseDownHelper.IsLeftPressed" Value="True">
+											<Setter TargetName="ListBoxItemBorder" Property="Background" Value="{DynamicResource SubtleTertiary}" />
+										</Trigger>
+									</ControlTemplate.Triggers>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style
+			x:Key="ListViewWithRightDivider"
+			BasedOn="{StaticResource ListView}"
+			TargetType="ListView"
+			>
+			<Setter Property="BorderThickness" Value="0,0,1,0" />
+		</Style>
+		<Style x:Key="SelectionBase" TargetType="Rectangle">
+			<Setter Property="Fill" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
+			<Setter Property="Grid.ColumnSpan" Value="2" />
+			<Setter Property="Height" Value="{StaticResource ItemHeight}" />
+			<Setter Property="Margin" Value="{StaticResource ItemPadding}" />
+			<Setter Property="RadiusX" Value="{StaticResource ItemRadius}" />
+			<Setter Property="RadiusY" Value="{StaticResource ItemRadius}" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
+	</c:BaseFlyout.Resources>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+		<Rectangle Style="{StaticResource SelectionBase}" />
+		<ListView
+			Grid.Column="0"
+			ItemsSource="{Binding NoteNames}"
+			Style="{StaticResource ListViewWithRightDivider}"
+			/>
+		<ListView
+			Grid.Column="1"
+			ItemsSource="{Binding Octaves}"
+			Style="{StaticResource ListView}"
+			/>
+	</Grid>
+</c:BaseFlyout>

@@ -66,4 +66,26 @@ public static partial class Extensions {
 			return (1, 1);
 		}
 	}
+
+	public static T? GetChildOfType<T>(this DependencyObject sender) where T : DependencyObject {
+		if (sender is null) return null;
+		for (int i = 0; i < VisualTreeHelper.GetChildrenCount(sender); i++) {
+			DependencyObject? child = VisualTreeHelper.GetChild(sender, i);
+			T? result = (child as T) ?? GetChildOfType<T>(child);
+			if (result != null) return result;
+		}
+		return null;
+	}
+
+	public static List<T> GetChildrenOfType<T>(this DependencyObject sender) where T : DependencyObject {
+		List<T> children = new();
+		if (sender is null) return children;
+		for (int i = 0; i < VisualTreeHelper.GetChildrenCount(sender); i++) {
+			DependencyObject? child = VisualTreeHelper.GetChild(sender, i);
+			if (child is T typedChild) children.Add(typedChild);
+			if (VisualTreeHelper.GetChildrenCount(child) != 0)
+				children.AddRange(GetChildrenOfType<T>(child));
+		}
+		return children;
+	}
 }

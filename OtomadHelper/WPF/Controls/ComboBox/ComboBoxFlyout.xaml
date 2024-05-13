@@ -10,7 +10,6 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	MinWidth="200"
-	Deactivated="Window_Deactivated"
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight"
 	mc:Ignorable="d"
@@ -68,7 +67,8 @@
 			<Setter Property="Background" Value="Transparent" />
 			<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 			<Setter Property="Padding" Value="0,0,12,0" />
-			<Setter Property="Height" Value="35.2" />
+			<Setter Property="Height" Value="{Binding ItemHeight, ElementName=View}" />
+			<Setter Property="FontSize" Value="14" />
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="RadioButton">
@@ -79,7 +79,11 @@
 								BorderThickness="0"
 								CornerRadius="4"
 								>
-								<ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+								<ContentPresenter
+									HorizontalAlignment="Left"
+									VerticalAlignment="Center"
+									TextBlock.FontSize="{TemplateBinding FontSize}"
+									/>
 							</Border>
 						</Border>
 					</ControlTemplate>
@@ -87,10 +91,10 @@
 			</Setter>
 			<Style.Triggers>
 				<Trigger Property="IsMouseOver" Value="True">
-					<Setter Property="Background" Value="{DynamicResource FillColorSubtleSecondary}" />
+					<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
 				</Trigger>
 				<Trigger Property="IsPressed" Value="True">
-					<Setter Property="Background" Value="{DynamicResource FillColorSubtleTertiary}" />
+					<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
 					<Setter Property="Foreground">
 						<Setter.Value>
 							<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacity}" Color="{DynamicResource ForegroundColor}" />
@@ -98,14 +102,14 @@
 					</Setter>
 				</Trigger>
 				<Trigger Property="IsChecked" Value="True">
-					<Setter Property="Background" Value="{DynamicResource FillColorSubtleSecondary}" />
+					<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
 				</Trigger>
 				<MultiTrigger>
 					<MultiTrigger.Conditions>
 						<Condition Property="IsChecked" Value="True" />
 						<Condition Property="IsMouseOver" Value="True" />
 					</MultiTrigger.Conditions>
-					<Setter Property="Background" Value="{DynamicResource FillColorSubtleTertiary}" />
+					<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
 				</MultiTrigger>
 				<MultiDataTrigger>
 					<MultiDataTrigger.Conditions>
@@ -119,7 +123,7 @@
 							</Condition.Binding>
 						</Condition>
 					</MultiDataTrigger.Conditions>
-					<Setter Property="Background" Value="{DynamicResource FillColorSubtleSecondary}" />
+					<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
 					<Setter Property="Foreground">
 						<Setter.Value>
 							<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacity}" Color="{DynamicResource ForegroundColor}" />

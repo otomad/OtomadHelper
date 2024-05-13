@@ -29,9 +29,11 @@ partial class TestControls {
 			// 
 			// ComboBoxBtn
 			// 
+			this.ComboBoxBtn.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
 			this.ComboBoxBtn.Location = new System.Drawing.Point(234, 151);
+			this.ComboBoxBtn.Margin = new System.Windows.Forms.Padding(0);
 			this.ComboBoxBtn.Name = "ComboBoxBtn";
-			this.ComboBoxBtn.Size = new System.Drawing.Size(172, 39);
+			this.ComboBoxBtn.Size = new System.Drawing.Size(200, 43);
 			this.ComboBoxBtn.TabIndex = 0;
 			this.ComboBoxBtn.Text = "我是组合框";
 			this.ComboBoxBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -44,7 +46,7 @@ partial class TestControls {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.ClientSize = new System.Drawing.Size(800, 450);
 			this.Controls.Add(this.ComboBoxBtn);
-			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 14F);
 			this.Name = "TestControls";
 			this.Text = "TestControls";
 			this.ResumeLayout(false);
