@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace OtomadHelper.Helpers;
 
 public static partial class Extensions {
@@ -67,5 +69,32 @@ public static partial class Extensions {
 			dict.Add(key, value);
 		}
 		return value!;
+	}
+
+	private static readonly ArgumentOutOfRangeException outOfRangeException = new();
+	public static void Deconstruct<T>(this IList<T> list, out T first, out IList<T> rest) {
+		first = list.Count > 0 ? list[0] : throw outOfRangeException;
+		rest = list.Skip(1).ToList();
+	}
+	public static void Deconstruct<T>(this IList<T> list, out T first, out T second, out IList<T> rest) {
+		first = list.Count > 0 ? list[0] : throw outOfRangeException;
+		second = list.Count > 1 ? list[1] : throw outOfRangeException;
+		rest = list.Skip(2).ToList();
+	}
+	public static void Deconstruct<T>(this IList<T> list, out T first, out T second, out T third, out IList<T> rest) {
+		first = list.Count > 0 ? list[0] : throw outOfRangeException;
+		second = list.Count > 1 ? list[1] : throw outOfRangeException;
+		third = list.Count > 2 ? list[2] : throw outOfRangeException;
+		rest = list.Skip(3).ToList();
+	}
+
+	public static TTuple ToTuple<TTuple>(this IList<object> list) where TTuple : ITuple {
+		int length = list.Count;
+		MethodInfo[] createTupleMethods = typeof(Tuple).GetMethods(BindingFlags.Public | BindingFlags.Static)!;
+		MethodInfo? method = createTupleMethods.FirstOrDefault(method => method.GetParameters().Length == length);
+		if (method is null)
+			throw new Exception($"You can only create a tuple containing up to 8 items, currently providing {length} items");
+		MethodInfo genericMethod = method.MakeGenericMethod(list.Select(item => item.GetType()).ToArray())!;
+		return (TTuple)genericMethod.Invoke(null, list.ToArray());
 	}
 }

@@ -23,7 +23,7 @@ public partial class ComboBoxFlyout : BaseFlyout {
 		return comboBox;
 
 		void SetDataContext(ComboBoxViewModel viewModel) {
-			viewModel.Items.AddRange(list.Select(text => new ComboBoxViewModelItem(text, viewModel)));
+			viewModel.Items.AddRange(list);
 			viewModel.Selected = selected;
 		}
 	}
