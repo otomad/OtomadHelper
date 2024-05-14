@@ -1,4 +1,7 @@
-using System.Collections.Generic;
+/// <summary>
+/// <see href="https://github.com/CommunityToolkit/dotnet">CommunityToolkit.Mvvm</see>
+/// </summary>
+
 using System.Runtime.CompilerServices;
 
 using IView = System.Windows.FrameworkElement;
@@ -47,7 +50,7 @@ public class ObservableObject : INotifyPropertyChanged {
 	/// The <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events are not raised
 	/// if the current and new value for the target property are the same.
 	/// </remarks>
-	protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
+	protected bool SetProperty<T>(ref T field, T value, bool condition = true, [CallerMemberName] string? propertyName = null) {
 		// We duplicate the code here instead of calling the overload because we can't
 		// guarantee that the invoked SetProperty<T> will be inlined, and we need the JIT
 		// to be able to see the full EqualityComparer<T>.Default.Equals call, so that
@@ -56,12 +59,15 @@ public class ObservableObject : INotifyPropertyChanged {
 		// This is the fastest SetProperty<T> overload so we particularly care about
 		// the codegen quality here, and the code is small and simple enough so that
 		// duplicating it still doesn't make the whole class harder to maintain.
-		if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+		if (!condition || EqualityComparer<T>.Default.Equals(field, value)) return false;
 		OnPropertyChanging(propertyName);
 		field = value;
 		OnPropertyChanged(propertyName);
 		return true;
 	}
+
+	protected bool SetProperty<T>(ref T field, T value, Func<bool> GetCondition, [CallerMemberName] string? propertyName = null) =>
+		SetProperty(ref field, value, GetCondition(), propertyName);
 
 	private readonly Dictionary<string, object> relayCommands = new();
 

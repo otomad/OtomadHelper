@@ -34,10 +34,10 @@ public partial class TestControls : Form {
 			height: control.Height / dpiY
 		);
 
-		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect);
-		//PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect);
+		//ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect);
+		PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect);
 		flyouts.Add(flyout);
-		flyout.Closing += (sender, e) => ComboBoxBtn.Text = selected = flyout.DataContext.Selected;
+		//flyout.Closing += (sender, e) => ComboBoxBtn.Text = selected = flyout.DataContext.Selected;
 		try {
 			flyout.ShowDialog();
 		} catch (Exception) { }

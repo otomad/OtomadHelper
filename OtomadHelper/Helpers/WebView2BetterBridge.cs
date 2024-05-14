@@ -67,7 +67,7 @@ public class BetterBridge {
 					if (type == typeof(string) && jsonArg.StartsWith("\"")) continue;
 					else if (type == typeof(bool) && jsonArg is "true" or "false") continue;
 					else if (typeof(IEnumerable).IsAssignableFrom(type) && jsonArg.StartsWith("[")) continue;
-					else if (type.IsNumber() && Regex.IsMatch(jsonArg, @"^[-.\d]")) continue;
+					else if (type.IsNumber() && jsonArg.IsMatch(new(@"^[-.\d]"))) continue;
 					else return false;
 				}
 				return true;

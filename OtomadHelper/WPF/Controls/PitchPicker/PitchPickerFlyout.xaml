@@ -24,12 +24,15 @@
 		<s:Double x:Key="ItemHeight">40</s:Double>
 		<s:Double x:Key="ItemRadius">4</s:Double>
 
-		<Style x:Key="ListView" TargetType="ListView">
+		<Style x:Key="ListView" TargetType="c:PitchPickerFlyoutListView">
 			<Setter Property="Background" Value="Transparent" />
 			<Setter Property="BorderBrush" Value="{DynamicResource DividerStroke}" />
 			<Setter Property="BorderThickness" Value="0" />
 			<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
 			<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+			<Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+			<Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Canvas, AncestorLevel=1}}" />
+			<Setter Property="Padding" Value="0,2" />
 			<Setter Property="ItemContainerStyle">
 				<Setter.Value>
 					<Style TargetType="ListViewItem">
@@ -45,9 +48,9 @@
 									<Border
 										x:Name="ListBoxItemBorder"
 										Margin="2,0"
+										Background="{TemplateBinding Background}"
 										BorderBrush="{TemplateBinding BorderBrush}"
 										BorderThickness="{TemplateBinding BorderThickness}"
-										Background="{TemplateBinding Background}"
 										CornerRadius="{Binding Source={StaticResource ItemRadius}, Converter={StaticResource DoubleToRadius}}"
 										SnapsToDevicePixels="true"
 										>
@@ -75,7 +78,7 @@
 		<Style
 			x:Key="ListViewWithRightDivider"
 			BasedOn="{StaticResource ListView}"
-			TargetType="ListView"
+			TargetType="c:PitchPickerFlyoutListView"
 			>
 			<Setter Property="BorderThickness" Value="0,0,1,0" />
 		</Style>
@@ -96,15 +99,19 @@
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
 		<Rectangle Style="{StaticResource SelectionBase}" />
-		<ListView
-			Grid.Column="0"
-			ItemsSource="{Binding NoteNames}"
-			Style="{StaticResource ListViewWithRightDivider}"
-			/>
-		<ListView
-			Grid.Column="1"
-			ItemsSource="{Binding Octaves}"
-			Style="{StaticResource ListView}"
-			/>
+		<Canvas Grid.Column="0">
+			<c:PitchPickerFlyoutListView
+				ItemClick="{m:EventBinding Command=NoteNameChangeCommand, CommandParameter=$this.Content}"
+				ItemsSource="{Binding NoteNames}"
+				Style="{StaticResource ListViewWithRightDivider}"
+				/>
+		</Canvas>
+		<Canvas Grid.Column="1">
+			<c:PitchPickerFlyoutListView
+				ItemClick="{m:EventBinding Command=OctaveChangeCommand, CommandParameter=$this.Content}"
+				ItemsSource="{Binding Octaves}"
+				Style="{StaticResource ListView}"
+				/>
+		</Canvas>
 	</Grid>
 </c:BaseFlyout>

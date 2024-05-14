@@ -131,6 +131,7 @@
 		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxItem.g.cs" />
 		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxItem.g.i.cs" />
 		<Compile Remove="obj\x64\Debug\WPF\Views\ContentDialog\ContentDialog.g.i.cs" />
+		<Compile Remove="WPF\Common\EventCommand.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Remove="Module\MainWPFDock.xaml" />
@@ -141,7 +142,6 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2478.35" />
-		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="System.Text.Json" Version="8.0.3" />
 	</ItemGroup>

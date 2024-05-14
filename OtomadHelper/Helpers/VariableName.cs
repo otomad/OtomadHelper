@@ -17,16 +17,14 @@ public class VariableName {
 	public string Value {
 		set {
 			value = value.Trim();
-			if (value.Contains("_"))
-				words = value.Split('_');
-			else if (value.Contains('-'))
-				words = value.Split('-');
-			else {
-				string splited = Regex.Replace(value, @"(?!^)([A-Z])", " $1");
-				splited = Regex.Replace(splited, @"(\d+)", " $1 ");
-				splited = Regex.Replace(splited, @"\s+(?=\s)|^\s+|\s+$", "");
-				words = splited.Split(' ');
-			}
+			words =
+				value.Contains("_") ? value.Split('_') :
+				value.Contains('-') ? value.Split('-') :
+				value
+					.Replace(new Regex(@"(?!^)([A-Z])"), " $1")
+					.Replace(new Regex(@"(\d+)"), " $1 ")
+					.Replace(new Regex(@"\s+(?=\s)|^\s+|\s+$"), "")
+					.Split(' ');
 		}
 	}
 

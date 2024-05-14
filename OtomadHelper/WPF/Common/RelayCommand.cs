@@ -1,3 +1,7 @@
+/// <summary>
+/// <see href="https://github.com/CommunityToolkit/dotnet">CommunityToolkit.Mvvm</see>
+/// </summary>
+
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 

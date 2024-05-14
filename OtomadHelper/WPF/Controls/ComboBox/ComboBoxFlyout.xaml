@@ -12,6 +12,7 @@
 	MinWidth="200"
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight"
+	KeyUp="{m:EventBinding Command=KeyUpCommand, CommandParameter=$e}"
 	mc:Ignorable="d"
 	>
 	<c:BaseFlyout.DataContext>
@@ -31,13 +32,6 @@
 		</KeyBinding>
 		<KeyBinding Key="Return" Command="{Binding EnterKeyDownCommand}" />
 	</c:BaseFlyout.InputBindings>
-
-	<!--<i:Interaction.Triggers>
-		<i:EventTrigger EventName="KeyUp">
-			<m:EventCommand Command="{Binding KeyUpCommand}" />
-		</i:EventTrigger>
-	</i:Interaction.Triggers>-->
-	<!--  TODO  -->
 
 	<c:BaseFlyout.Resources>
 		<m:BooleanToVisibilityConverter x:Key="BoolToVis" />

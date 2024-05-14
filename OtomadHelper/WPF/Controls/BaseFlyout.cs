@@ -31,8 +31,10 @@ public class BaseFlyout : BackdropWindow {
 		Loaded += (sender, e) => fadeInStoryboard.Begin(this);
 	}
 
-	public void CenterVertically(Rect rect, SetWidthType widthType = SetWidthType.Nothing) {
+	public void Center(Rect rect, SetWidthType widthType = SetWidthType.Nothing) {
 		SetLocation(rect, widthType);
 		Top -= (ActualHeight - rect.Height) / 2;
+		Left -= (ActualWidth - rect.Width) / 2;
+		MoveIntoScreen();
 	}
 }

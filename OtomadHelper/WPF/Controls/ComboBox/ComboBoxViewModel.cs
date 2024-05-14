@@ -22,7 +22,7 @@ public class ComboBoxViewModel : ObservableObject<ComboBoxFlyout> {
 	public RelayCommand EnterKeyDownCommand => DefineCommand(() => KeyUp());
 
 	public IRelayCommand<KeyEventArgs?> KeyUpCommand => DefineCommand<KeyEventArgs?>(KeyUp);
-	private void KeyUp(KeyEventArgs? e = null) {
+	public void KeyUp(KeyEventArgs? e = null) {
 		if (e is null || e.Key is Key.Space)
 			View?.Close();
 	}

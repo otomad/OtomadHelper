@@ -88,4 +88,23 @@ public static partial class Extensions {
 		}
 		return children;
 	}
+
+	public static DependencyObject? GetParentObject(this DependencyObject child) {
+		if (child is null)
+			return null;
+
+		if (child is ContentElement contentElement) {
+			DependencyObject parent = ContentOperations.GetParent(contentElement);
+			return parent is not null ? parent :
+				contentElement is FrameworkContentElement fce ? fce.Parent : null;
+		}
+
+		if (child is FrameworkElement frameworkElement) {
+			DependencyObject parent = frameworkElement.Parent;
+			if (parent is not null)
+				return parent;
+		}
+
+		return VisualTreeHelper.GetParent(child);
+	}
 }

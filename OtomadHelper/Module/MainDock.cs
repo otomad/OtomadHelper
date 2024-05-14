@@ -23,6 +23,7 @@ public partial class MainDock : UserControl {
 		DragLeave += (sender, e) => MainDock_DragLeave();
 
 		//MainWindow window = new();
+		new TestControls().Show();
 		//window.Show();
 		/*new ContentDialog("幸福倒计时", "即将升级 Windows 到最新版本！", new ContentDialogButtonItem[] {
 			new("草", DialogResult.Abort),
