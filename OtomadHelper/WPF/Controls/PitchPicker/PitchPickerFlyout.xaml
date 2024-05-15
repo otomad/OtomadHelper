@@ -101,17 +101,22 @@
 		<Rectangle Style="{StaticResource SelectionBase}" />
 		<Canvas Grid.Column="0">
 			<c:PitchPickerFlyoutListView
+				x:Name="NoteNameListView"
 				ItemClick="{m:EventBinding Command=NoteNameChangeCommand, CommandParameter=$this.Content}"
-				ItemsSource="{Binding NoteNames}"
+				PreviewMouseWheel="{m:EventBinding Command=NoteNameSpinCommand, CommandParameter=$e.Delta}"
+				ItemsSource="{Binding DisplayNoteNames, ElementName=View}"
 				Style="{StaticResource ListViewWithRightDivider}"
 				/>
 		</Canvas>
 		<Canvas Grid.Column="1">
 			<c:PitchPickerFlyoutListView
+				x:Name="OctaveListView"
 				ItemClick="{m:EventBinding Command=OctaveChangeCommand, CommandParameter=$this.Content}"
+				PreviewMouseWheel="{m:EventBinding Command=OctaveSpinCommand, CommandParameter=$e.Delta}"
 				ItemsSource="{Binding Octaves}"
 				Style="{StaticResource ListView}"
 				/>
+			<!--TODO: Mouse wheel won't work if scroll to the edge.-->
 		</Canvas>
 	</Grid>
 </c:BaseFlyout>

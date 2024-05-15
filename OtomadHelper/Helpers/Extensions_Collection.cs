@@ -97,4 +97,8 @@ public static partial class Extensions {
 		MethodInfo genericMethod = method.MakeGenericMethod(list.Select(item => item.GetType()).ToArray())!;
 		return (TTuple)genericMethod.Invoke(null, list.ToArray());
 	}
+
+	/// <inheritdoc cref="List{T}.IndexOf(T)"/>
+	public static int IndexOf<T>(this List<T> list, T? item) where T : struct =>
+		item is null ? -1 : list.IndexOf(item.Value);
 }

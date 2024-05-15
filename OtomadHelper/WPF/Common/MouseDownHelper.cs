@@ -2,6 +2,20 @@ using System.Windows;
 
 namespace OtomadHelper.WPF.Common;
 
+/// <remarks>
+/// <example>
+/// <code>
+/// <![CDATA[
+/// <Setter Property="m:MouseDownHelper.Enabled" Value="True" />
+/// <Style.Triggers>
+///     <Trigger Property="m:MouseDownHelper.IsLeftPressed" Value="True">
+///         <Setter Property="..." Value="..." />
+///     </Trigger>
+/// </Style.Triggers>
+/// ]]>
+/// </code>
+/// </example>
+/// </remarks>
 public static class MouseDownHelper {
 	public static readonly DependencyProperty EnabledProperty = DependencyProperty.RegisterAttached("Enabled",
 		typeof(bool), typeof(MouseDownHelper), new(false, OnEnabledChanged));

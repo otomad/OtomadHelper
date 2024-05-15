@@ -32,7 +32,7 @@ public class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> {
 	public string Pitch {
 		get => NoteName + Octave;
 		set {
-			Match pitch = value.Match(new(@"(?<NoteName>[A-G][#♯b♭]?)(?<Octave>1?\d)", RegexOptions.IgnoreCase));
+			Match pitch = value.Match(new(@"(?<NoteName>[A-G][#♯b♭]?)(?<Octave>\d+)", RegexOptions.IgnoreCase));
 			if (pitch.Captures.Count == 0) return;
 			NoteName = pitch.Groups["NoteName"].Value;
 			if (int.TryParse(pitch.Groups["Octave"].Value, out int octave))
@@ -43,4 +43,16 @@ public class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> {
 	public RelayCommand<string> NoteNameChangeCommand => DefineCommand<string>(value => NoteName = value);
 
 	public RelayCommand<int> OctaveChangeCommand => DefineCommand<int>(value => Octave = value);
+
+	public RelayCommand<int> NoteNameSpinCommand => DefineCommand<int>(delta => {
+		SignDelta(ref delta);
+		NoteName = NoteNames[MathEx.PNMod(NoteNames.ToList().IndexOf(NoteName) + delta, NoteNames.Length)];
+	});
+
+	public RelayCommand<int> OctaveSpinCommand => DefineCommand<int>(delta => {
+		SignDelta(ref delta);
+		Octave = MathEx.Clamp(Octaves.ToList().IndexOf(Octave) + delta, 0, Octaves.Length);
+	});
+
+	private static int SignDelta(ref int delta) => delta = -Math.Sign(delta);
 }

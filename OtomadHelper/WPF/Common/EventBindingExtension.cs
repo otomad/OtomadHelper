@@ -103,7 +103,7 @@ public class EventBindingExtension : MarkupExtension {
 	internal static object? GetCommandParameter(FrameworkElement target, object args, string commandParameter, ObservableObject? viewModel = null) {
 		string[] classify = commandParameter.Split('.');
 		return classify[0] switch {
-			"$e" => args,
+			"$e" => GetProperty(args),
 			"$this" => GetProperty(target),
 			"$vm" => GetProperty(viewModel),
 			"$view" => viewModel is IViewAccessibleViewModel vm ? GetProperty(vm.View) : null,
