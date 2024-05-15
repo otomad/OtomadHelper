@@ -10,7 +10,9 @@ public class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> {
 	public string NoteName {
 		get => noteName;
 		set {
-			value = value.ToUpper().Replace("♯", "#").Replace(new Regex(@"(?<=[A-G])[b♭]", RegexOptions.IgnoreCase), "b");
+			value = value.ToUpperInvariant()
+				.Replace("♯", "#")
+				.Replace(new Regex(@"(?<=[A-G])[b♭]", RegexOptions.IgnoreCase), "b");
 			if (value.EndsWith("b"))
 				value = value switch {
 					"Db" => "C#",

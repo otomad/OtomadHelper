@@ -37,14 +37,14 @@ public partial class ComboBoxFlyout : BaseFlyout {
 	}
 
 	public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register(
-		nameof(ItemHeight), typeof(double), typeof(ComboBoxFlyout), new PropertyMetadata(20.0));
+		nameof(ItemHeight), typeof(double), typeof(ComboBoxFlyout), new(20.0));
 	public double ItemHeight {
 		get => (double)GetValue(ItemHeightProperty);
 		set => SetValue(ItemHeightProperty, value);
 	}
 
 	protected static readonly DependencyProperty IsPressingSpaceProperty = DependencyProperty.Register(
-		nameof(IsPressingSpace), typeof(bool), typeof(BackdropWindow), new PropertyMetadata(false));
+		nameof(IsPressingSpace), typeof(bool), typeof(BackdropWindow), new(false));
 	protected bool IsPressingSpace {
 		get => (bool)GetValue(IsPressingSpaceProperty);
 		set => SetValue(IsPressingSpaceProperty, value);

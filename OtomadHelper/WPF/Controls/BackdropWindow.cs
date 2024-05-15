@@ -149,7 +149,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 
 	private const SystemBackdropType DEFAULT_SYSTEM_BACKDROP_TYPE = SystemBackdropType.TransientWindow;
 	public static readonly DependencyProperty SystemBackdropTypeProperty = DependencyProperty.Register(
-		nameof(SystemBackdropType), typeof(SystemBackdropType), typeof(BackdropWindow), new PropertyMetadata(DEFAULT_SYSTEM_BACKDROP_TYPE, SystemBackdropTypeChangedCallback));
+		nameof(SystemBackdropType), typeof(SystemBackdropType), typeof(BackdropWindow), new(DEFAULT_SYSTEM_BACKDROP_TYPE, SystemBackdropTypeChangedCallback));
 	public SystemBackdropType SystemBackdropType { get => (SystemBackdropType)GetValue(SystemBackdropTypeProperty); set => SetValue(SystemBackdropTypeProperty, value); }
 
 	protected void SetSystemBackdropType(SystemBackdropType systemBackdropType) {
@@ -185,7 +185,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 
 	#region Extends content into title bar
 	public static readonly DependencyProperty TitleBarTypeProperty = DependencyProperty.Register(
-		nameof(TitleBarType), typeof(TitleBarType), typeof(BackdropWindow), new PropertyMetadata(TitleBarType.System, EnableWindowChromeChangedCallback));
+		nameof(TitleBarType), typeof(TitleBarType), typeof(BackdropWindow), new(TitleBarType.System, EnableWindowChromeChangedCallback));
 	public TitleBarType TitleBarType {
 		get => (TitleBarType)GetValue(TitleBarTypeProperty);
 		set => SetValue(TitleBarTypeProperty, value);

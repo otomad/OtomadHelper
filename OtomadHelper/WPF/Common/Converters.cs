@@ -66,7 +66,7 @@ public class DoubleToThicknessConverter : IValueConverter {
 	}
 
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-		string side = (parameter ?? "left").ToString().ToLower();
+		string side = (parameter ?? "left").ToString().ToLowerInvariant();
 		Thickness thickness = (Thickness)value;
 		return side switch {
 			"top" => thickness.Top,
@@ -85,7 +85,7 @@ public class DoubleToCornerRadiusConverter : IValueConverter {
 	}
 
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-		string side = (parameter ?? "top left").ToString().ToLower();
+		string side = (parameter ?? "top left").ToString().ToLowerInvariant();
 		CornerRadius cornerRadius = (CornerRadius)value;
 		return side switch {
 			string s when s.Contains("top") && s.Contains("right") => cornerRadius.TopRight,

@@ -1,3 +1,9 @@
+using System.IO;
+using System.Resources;
+using System.Runtime.InteropServices.ComTypes;
+using System.Windows.Baml2006;
+using System.Xaml;
+
 using Microsoft.WindowsAPICodePack.Shell;
 
 using OtomadHelper.Module;
@@ -13,6 +19,7 @@ internal static class ResourceHelper {
 	/// using "." (dot) to separate directories.
 	/// </param>
 	/// <returns>The byte sequence of the resource.</returns>
+	/// <exception cref="FileNotFoundException">Throw if the resource path is not exist.</exception>
 	public static Stream GetEmbeddedResource(string resourcePath) {
 		Assembly assembly = Assembly.GetExecutingAssembly();
 		string assetsFilePath = assembly.GetName().Name + "." + resourcePath; // You can set a breakpoint to see the value here.

@@ -92,7 +92,7 @@ public class Path : List<string> {
 	/// Get or set the extension of the file that the path ultimately points to, including the leading period ".".
 	/// </summary>
 	public string DotExtension {
-		get => PathStatic.GetExtension(FullFileName).ToLower();
+		get => PathStatic.GetExtension(FullFileName).ToLowerInvariant();
 		set {
 			value = value.Trim().TrimStart('.');
 			FullFileName = PathStatic.ChangeExtension(FullFileName, value);

@@ -10,7 +10,7 @@ internal class ContentDialogButtonPanel : Grid {
 
 	public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
 		nameof(Spacing), typeof(double), typeof(ContentDialogButtonPanel),
-		new PropertyMetadata(8.0, (sender, e) => (sender as ContentDialogButtonPanel)?.UpdateChildren()));
+		new(8.0, (sender, e) => (sender as ContentDialogButtonPanel)?.UpdateChildren()));
 	public double Spacing { get => (double)GetValue(SpacingProperty); set => SetValue(SpacingProperty, value); }
 
 	private void UpdateChildren() {

@@ -97,7 +97,7 @@
 
 	<Grid>
 		<Canvas>
-			<c:Icon x:Name="IconEl" Style="{StaticResource ShadingIcon}" />
+			<c:Icon x:Name="IconEl" Style="{StaticResource ShadingIcon}" IconName="{Binding IconName}" />
 		</Canvas>
 		<StackPanel Orientation="Vertical">
 			<Border Style="{StaticResource ContentWrapper}">

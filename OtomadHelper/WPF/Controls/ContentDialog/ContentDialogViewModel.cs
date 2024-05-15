@@ -1,7 +1,5 @@
 using System.Collections.ObjectModel;
 
-using IconNameToSymbol = OtomadHelper.WPF.Controls.IconNameToSymbolConverter;
-
 namespace OtomadHelper.WPF.Controls;
 
 public class ContentDialogViewModel : ObservableObject<ContentDialog> {
@@ -11,15 +9,13 @@ public class ContentDialogViewModel : ObservableObject<ContentDialog> {
 	private string body = "";
 	public string Body { get => body; set => SetProperty(ref body, value); }
 
-	private string iconName = IconNameToSymbol.DefaultIconName;
+	private string iconName = "Info";
 	public string IconName {
 		get => iconName;
 		set {
-			value = IconNameToSymbol.NormalizeIconName(value);
-			if (IconNameToSymbol.IsValidIconName(value)) { // TODO: IconNameToSymbolConverter is deprecated.
+			value = Icon.NormalizeIconName(value);
+			if (Icon.IsValidIconName(value))
 				SetProperty(ref iconName, value);
-				View?.UpdateShadingIcon();
-			}
 		}
 	}
 
