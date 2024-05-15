@@ -14,6 +14,12 @@ internal static class ResourceHelper {
 	/// <summary>
 	/// Get the embedded resource.
 	/// </summary>
+	/// <remarks>
+	/// <example>
+	/// If the embedded resource path is <c>OtomadHelper/Web/dist/index.html</c>,<br />
+	/// pass <c>Web.dist.index.html</c> to <paramref name="resourcePath"/>.
+	/// </example>
+	/// </remarks>
 	/// <param name="resourcePath">
 	/// The path to the embedded resource file relative to the project root directory,
 	/// using "." (dot) to separate directories.
@@ -26,7 +32,7 @@ internal static class ResourceHelper {
 		if (!IsResourceExist(assetsFilePath)) // Check for gzip file
 			assetsFilePath += ".gz";
 		if (!IsResourceExist(assetsFilePath))
-			throw new FileNotFoundException("Cannot find embedded resource: " + assetsFilePath);
+			throw new FileNotFoundException("Cannot find the embedded resource: " + assetsFilePath);
 		return assembly.GetManifestResourceStream(assetsFilePath);
 
 		bool IsResourceExist(string filePath) => assembly.GetManifestResourceInfo(filePath) != null;
