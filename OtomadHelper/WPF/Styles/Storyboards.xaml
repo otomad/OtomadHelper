@@ -1,0 +1,16 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	>
+	<Duration x:Key="BaseAnimationDuration">00:00:00.250</Duration>
+
+	<!--#region Easing Functions-->
+	<ExponentialEase
+		x:Key="EaseOutExpo"
+		EasingMode="EaseOut"
+		Exponent="5"
+		/>
+	<CubicEase x:Key="EaseInOutCubic" EasingMode="EaseInOut" />
+	<!--#endregion-->
+</ResourceDictionary>

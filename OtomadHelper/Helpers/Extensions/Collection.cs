@@ -101,4 +101,21 @@ public static partial class Extensions {
 	/// <inheritdoc cref="List{T}.IndexOf(T)"/>
 	public static int IndexOf<T>(this List<T> list, T? item) where T : struct =>
 		item is null ? -1 : list.IndexOf(item.Value);
+
+	/// <inheritdoc cref="List{T}.IndexOf(T)"/>
+	public static int IndexOf<T>(this IEnumerable<T> list, T? item) =>
+		item is null ? -1 : list.ToList().IndexOf(item);
+
+	/// <inheritdoc cref="List{T}.ForEach(Action{T})"/>
+	public static void ForEach<T>(this IEnumerable<T> list, Action<T> action) {
+		foreach (T item in list)
+			action(item);
+	}
+
+	/// <inheritdoc cref="List{T}.ForEach(Action{T})"/>
+	public static void ForEach<T>(this IEnumerable<T> list, Action<T, int> action) {
+		int i = 0;
+		foreach (T item in list)
+			action(item, i++);
+	}
 }

@@ -5,22 +5,6 @@ using System.Windows.Input;
 namespace OtomadHelper.WPF.Controls;
 
 public class PitchPickerFlyoutListView : ListView {
-	/*public PitchPickerFlyoutListView() {
-		Loaded += (sender, e) => UpdateItemsEvent();
-		((INotifyCollectionChanged)Items).CollectionChanged += (sender, e) => UpdateItemsEvent();
-	}
-
-	private void UpdateItemsEvent() {
-		foreach (ListViewItem item in this.GetChildrenOfType<ListViewItem>()) {
-			// If user press the item and then drag it out, do not trigger the click event when mouse up.
-			item.PreviewMouseLeftButtonDown += (sender, e) => item.Tag = true;
-			item.MouseLeave += (sender, e) => item.Tag = false;
-			item.PreviewMouseLeftButtonUp += (sender, e) => {
-				if (item.Tag is true) ItemClick?.Invoke(sender, e);
-			};
-		}
-	}*/
-
 	protected override DependencyObject GetContainerForItemOverride() =>
 		new PitchPickerFlyoutListViewItem();
 
@@ -56,4 +40,7 @@ public class PitchPickerFlyoutListViewItem : ListViewItem {
 			}
 		};
 	}
+
+	public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(nameof(IsActive), typeof(bool), typeof(PitchPickerFlyoutListViewItem), new(false));
+	public bool IsActive { get => (bool)GetValue(IsActiveProperty); internal set => SetValue(IsActiveProperty, value); }
 }

@@ -34,209 +34,208 @@
 	</c:BaseFlyout.InputBindings>
 
 	<c:BaseFlyout.Resources>
-		<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
-		<m:BooleanToVisibilityConverter
-			x:Key="BoolToHiddenVis"
-			True="Visible"
-			False="Hidden"
-			/>
-		<m:DoubleToThicknessConverter x:Key="DoubleToThick" />
-		<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
-		<m:ActualSizeToRectConverter x:Key="SizeToRect" />
-		<m:MultiTriggerOrConverter x:Key="MultiOr" />
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Storyboards.xaml" />
+			</ResourceDictionary.MergedDictionaries>
 
-		<s:Double x:Key="Padding">2</s:Double>
-		<s:Double x:Key="IndicatorRadius">1.5</s:Double>
-		<s:Double x:Key="IndicatorHeight">16</s:Double>
-		<s:Double x:Key="IndicatorPressedHeight">10</s:Double>
-		<Duration x:Key="IndicatorAnimationDuration">00:00:00.250</Duration>
-		<ExponentialEase
-			x:Key="IndicatorAnimationEasingFunction"
-			EasingMode="EaseOut"
-			Exponent="5"
-			/>
-		<SolidColorBrush x:Key="TransparentButClickable" Color="#01FFFFFF" />
+			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
+			<m:BooleanToVisibilityConverter
+				x:Key="BoolToHiddenVis"
+				True="Visible"
+				False="Hidden"
+				/>
+			<m:DoubleToThicknessConverter x:Key="DoubleToThick" />
+			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
+			<m:ActualSizeToRectConverter x:Key="SizeToRect" />
+			<m:MultiTriggerOrConverter x:Key="MultiOr" />
 
-		<Style x:Key="ComboBoxItemButton" TargetType="RadioButton">
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-			<Setter Property="Padding" Value="0,0,12,0" />
-			<Setter Property="Height" Value="{Binding ItemHeight, ElementName=View}" />
-			<Setter Property="FontSize" Value="14" />
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="RadioButton">
-						<Border Padding="{Binding Source={StaticResource Padding}, Converter={StaticResource DoubleToThick}, Mode=OneWay}" Background="{StaticResource TransparentButClickable}">
-							<Border
-								Padding="{TemplateBinding Padding}"
-								Background="{TemplateBinding Background}"
-								BorderThickness="0"
-								CornerRadius="4"
-								>
-								<ContentPresenter
-									HorizontalAlignment="Left"
-									VerticalAlignment="Center"
-									TextBlock.FontSize="{TemplateBinding FontSize}"
-									/>
+			<s:Double x:Key="Padding">2</s:Double>
+			<s:Double x:Key="IndicatorRadius">1.5</s:Double>
+			<s:Double x:Key="IndicatorHeight">16</s:Double>
+			<s:Double x:Key="IndicatorPressedHeight">10</s:Double>
+
+			<Style x:Key="ComboBoxItemButton" TargetType="RadioButton">
+				<Setter Property="Background" Value="Transparent" />
+				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+				<Setter Property="Padding" Value="0,0,12,0" />
+				<Setter Property="Height" Value="{Binding ItemHeight, ElementName=View}" />
+				<Setter Property="FontSize" Value="14" />
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="RadioButton">
+							<Border Padding="{Binding Source={StaticResource Padding}, Converter={StaticResource DoubleToThick}, Mode=OneWay}" Background="Transparent">
+								<Border
+									Padding="{TemplateBinding Padding}"
+									Background="{TemplateBinding Background}"
+									BorderThickness="0"
+									CornerRadius="4"
+									>
+									<ContentPresenter
+										HorizontalAlignment="Left"
+										VerticalAlignment="Center"
+										TextBlock.FontSize="{TemplateBinding FontSize}"
+										/>
+								</Border>
 							</Border>
-						</Border>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-			<Style.Triggers>
-				<Trigger Property="IsMouseOver" Value="True">
-					<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
-				</Trigger>
-				<Trigger Property="IsPressed" Value="True">
-					<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
-					<Setter Property="Foreground">
-						<Setter.Value>
-							<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacity}" Color="{DynamicResource ForegroundColor}" />
-						</Setter.Value>
-					</Setter>
-				</Trigger>
-				<Trigger Property="IsChecked" Value="True">
-					<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
-				</Trigger>
-				<MultiTrigger>
-					<MultiTrigger.Conditions>
-						<Condition Property="IsChecked" Value="True" />
-						<Condition Property="IsMouseOver" Value="True" />
-					</MultiTrigger.Conditions>
-					<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
-				</MultiTrigger>
-				<MultiDataTrigger>
-					<MultiDataTrigger.Conditions>
-						<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Self}}" Value="True" />
-						<Condition Value="True">
-							<Condition.Binding>
-								<MultiBinding Converter="{StaticResource MultiOr}">
-									<Binding Path="IsPressed" RelativeSource="{RelativeSource Self}" />
-									<Binding ElementName="View" Path="IsPressingSpace" />
-								</MultiBinding>
-							</Condition.Binding>
-						</Condition>
-					</MultiDataTrigger.Conditions>
-					<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
-					<Setter Property="Foreground">
-						<Setter.Value>
-							<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacity}" Color="{DynamicResource ForegroundColor}" />
-						</Setter.Value>
-					</Setter>
-				</MultiDataTrigger>
-			</Style.Triggers>
-		</Style>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+				<Style.Triggers>
+					<Trigger Property="IsMouseOver" Value="True">
+						<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
+					</Trigger>
+					<Trigger Property="IsPressed" Value="True">
+						<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
+						<Setter Property="Foreground">
+							<Setter.Value>
+								<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacity}" Color="{DynamicResource ForegroundColor}" />
+							</Setter.Value>
+						</Setter>
+					</Trigger>
+					<Trigger Property="IsChecked" Value="True">
+						<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
+					</Trigger>
+					<MultiTrigger>
+						<MultiTrigger.Conditions>
+							<Condition Property="IsChecked" Value="True" />
+							<Condition Property="IsMouseOver" Value="True" />
+						</MultiTrigger.Conditions>
+						<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
+					</MultiTrigger>
+					<MultiDataTrigger>
+						<MultiDataTrigger.Conditions>
+							<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Self}}" Value="True" />
+							<Condition Value="True">
+								<Condition.Binding>
+									<MultiBinding Converter="{StaticResource MultiOr}">
+										<Binding Path="IsPressed" RelativeSource="{RelativeSource Self}" />
+										<Binding ElementName="View" Path="IsPressingSpace" />
+									</MultiBinding>
+								</Condition.Binding>
+							</Condition>
+						</MultiDataTrigger.Conditions>
+						<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
+						<Setter Property="Foreground">
+							<Setter.Value>
+								<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacity}" Color="{DynamicResource ForegroundColor}" />
+							</Setter.Value>
+						</Setter>
+					</MultiDataTrigger>
+				</Style.Triggers>
+			</Style>
 
-		<Style x:Key="Indicator" TargetType="Rectangle">
-			<Setter Property="Width" Value="3" />
-			<Setter Property="Height" Value="{StaticResource IndicatorHeight}" />
-			<Setter Property="HorizontalAlignment" Value="Left" />
-			<Setter Property="Fill" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
-			<Setter Property="RadiusX" Value="{StaticResource IndicatorRadius}" />
-			<Setter Property="RadiusY" Value="{StaticResource IndicatorRadius}" />
-			<Style.Triggers>
-				<MultiDataTrigger>
-					<MultiDataTrigger.Conditions>
-						<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True" />
-						<Condition Value="True">
-							<Condition.Binding>
-								<MultiBinding Converter="{StaticResource MultiOr}">
-									<Binding Path="IsPressed" RelativeSource="{RelativeSource AncestorType=RadioButton}" />
-									<Binding ElementName="View" Path="IsPressingSpace" />
-								</MultiBinding>
-							</Condition.Binding>
-						</Condition>
-					</MultiDataTrigger.Conditions>
-					<MultiDataTrigger.EnterActions>
-						<BeginStoryboard>
-							<Storyboard>
-								<DoubleAnimation
-									EasingFunction="{StaticResource IndicatorAnimationEasingFunction}"
-									Storyboard.TargetProperty="Height"
-									From="{StaticResource IndicatorHeight}"
-									To="{StaticResource IndicatorPressedHeight}"
-									Duration="{StaticResource IndicatorAnimationDuration}"
-									/>
-							</Storyboard>
-						</BeginStoryboard>
-					</MultiDataTrigger.EnterActions>
-					<MultiDataTrigger.ExitActions>
-						<BeginStoryboard>
-							<Storyboard>
-								<DoubleAnimation
-									EasingFunction="{StaticResource IndicatorAnimationEasingFunction}"
-									Storyboard.TargetProperty="Height"
-									From="{StaticResource IndicatorPressedHeight}"
-									To="{StaticResource IndicatorHeight}"
-									Duration="{StaticResource IndicatorAnimationDuration}"
-									/>
-							</Storyboard>
-						</BeginStoryboard>
-					</MultiDataTrigger.ExitActions>
-				</MultiDataTrigger>
-				<DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
-					<DataTrigger.EnterActions>
-						<BeginStoryboard>
-							<Storyboard>
-								<DoubleAnimation
-									EasingFunction="{StaticResource IndicatorAnimationEasingFunction}"
-									FillBehavior="Stop"
-									Storyboard.TargetProperty="Height"
-									From="{StaticResource IndicatorPressedHeight}"
-									To="{StaticResource IndicatorHeight}"
-									Duration="{StaticResource IndicatorAnimationDuration}"
-									/>
-							</Storyboard>
-						</BeginStoryboard>
-					</DataTrigger.EnterActions>
-				</DataTrigger>
-			</Style.Triggers>
-		</Style>
+			<Style x:Key="Indicator" TargetType="Rectangle">
+				<Setter Property="Width" Value="3" />
+				<Setter Property="Height" Value="{StaticResource IndicatorHeight}" />
+				<Setter Property="HorizontalAlignment" Value="Left" />
+				<Setter Property="Fill" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
+				<Setter Property="RadiusX" Value="{StaticResource IndicatorRadius}" />
+				<Setter Property="RadiusY" Value="{StaticResource IndicatorRadius}" />
+				<Style.Triggers>
+					<MultiDataTrigger>
+						<MultiDataTrigger.Conditions>
+							<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True" />
+							<Condition Value="True">
+								<Condition.Binding>
+									<MultiBinding Converter="{StaticResource MultiOr}">
+										<Binding Path="IsPressed" RelativeSource="{RelativeSource AncestorType=RadioButton}" />
+										<Binding ElementName="View" Path="IsPressingSpace" />
+									</MultiBinding>
+								</Condition.Binding>
+							</Condition>
+						</MultiDataTrigger.Conditions>
+						<MultiDataTrigger.EnterActions>
+							<BeginStoryboard>
+								<Storyboard>
+									<DoubleAnimation
+										EasingFunction="{StaticResource EaseOutExpo}"
+										Storyboard.TargetProperty="Height"
+										From="{StaticResource IndicatorHeight}"
+										To="{StaticResource IndicatorPressedHeight}"
+										Duration="{StaticResource BaseAnimationDuration}"
+										/>
+								</Storyboard>
+							</BeginStoryboard>
+						</MultiDataTrigger.EnterActions>
+						<MultiDataTrigger.ExitActions>
+							<BeginStoryboard>
+								<Storyboard>
+									<DoubleAnimation
+										EasingFunction="{StaticResource EaseOutExpo}"
+										Storyboard.TargetProperty="Height"
+										From="{StaticResource IndicatorPressedHeight}"
+										To="{StaticResource IndicatorHeight}"
+										Duration="{StaticResource BaseAnimationDuration}"
+										/>
+								</Storyboard>
+							</BeginStoryboard>
+						</MultiDataTrigger.ExitActions>
+					</MultiDataTrigger>
+					<DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
+						<DataTrigger.EnterActions>
+							<BeginStoryboard>
+								<Storyboard>
+									<DoubleAnimation
+										EasingFunction="{StaticResource EaseOutExpo}"
+										FillBehavior="Stop"
+										Storyboard.TargetProperty="Height"
+										From="{StaticResource IndicatorPressedHeight}"
+										To="{StaticResource IndicatorHeight}"
+										Duration="{StaticResource BaseAnimationDuration}"
+										/>
+								</Storyboard>
+							</BeginStoryboard>
+						</DataTrigger.EnterActions>
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
 
-		<Style TargetType="TextBlock">
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="FontSize" Value="14" />
-			<Setter Property="LineHeight" Value="20" />
-		</Style>
+			<Style TargetType="TextBlock">
+				<Setter Property="VerticalAlignment" Value="Center" />
+				<Setter Property="FontSize" Value="14" />
+				<Setter Property="LineHeight" Value="20" />
+			</Style>
 
-		<Style x:Key="ItemsControlWrapper" TargetType="ItemsControl">
-			<Setter Property="Padding" Value="{Binding Source={StaticResource Padding}, Converter={StaticResource DoubleToThick}, Mode=OneWay}" />
-			<!--<Setter Property="Visibility" Value="{Binding IsContent, ElementName=View, Converter={StaticResource BoolToHiddenVis}, Mode=OneWay}" />
-			<Style.Triggers>
-				<DataTrigger Binding="{Binding IsContent, ElementName=View}" Value="True">
-					<Setter Property="OpacityMask">
-						<Setter.Value>
-							<DrawingBrush
-								Stretch="None"
-								Viewport="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource SizeToRect}, Mode=OneTime}"
-								ViewportUnits="Absolute"
-								>
-								<DrawingBrush.Drawing>
-									<DrawingGroup>
-										<DrawingGroup.Children>
-											<GeometryDrawing Brush="Transparent">
-												<GeometryDrawing.Geometry>
-													<RectangleGeometry Rect="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource SizeToRect}, Mode=OneTime}" />
-												</GeometryDrawing.Geometry>
-											</GeometryDrawing>
-											<GeometryDrawing Brush="Black">
-												<GeometryDrawing.Geometry>
-													<RectangleGeometry
-														RadiusX="6"
-														RadiusY="6"
-														Rect="0,0,0,0"
-														/>
-												</GeometryDrawing.Geometry>
-											</GeometryDrawing>
-										</DrawingGroup.Children>
-									</DrawingGroup>
-								</DrawingBrush.Drawing>
-							</DrawingBrush>
-						</Setter.Value>
-					</Setter>
-				</DataTrigger>
-			</Style.Triggers>-->
-		</Style>
+			<Style x:Key="ItemsControlWrapper" TargetType="ItemsControl">
+				<Setter Property="Padding" Value="{Binding Source={StaticResource Padding}, Converter={StaticResource DoubleToThick}, Mode=OneWay}" />
+				<!--<Setter Property="Visibility" Value="{Binding IsContent, ElementName=View, Converter={StaticResource BoolToHiddenVis}, Mode=OneWay}" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding IsContent, ElementName=View}" Value="True">
+						<Setter Property="OpacityMask">
+							<Setter.Value>
+								<DrawingBrush
+									Stretch="None"
+									Viewport="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource SizeToRect}, Mode=OneTime}"
+									ViewportUnits="Absolute"
+									>
+									<DrawingBrush.Drawing>
+										<DrawingGroup>
+											<DrawingGroup.Children>
+												<GeometryDrawing Brush="Transparent">
+													<GeometryDrawing.Geometry>
+														<RectangleGeometry Rect="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource SizeToRect}, Mode=OneTime}" />
+													</GeometryDrawing.Geometry>
+												</GeometryDrawing>
+												<GeometryDrawing Brush="Black">
+													<GeometryDrawing.Geometry>
+														<RectangleGeometry
+															RadiusX="6"
+															RadiusY="6"
+															Rect="0,0,0,0"
+															/>
+													</GeometryDrawing.Geometry>
+												</GeometryDrawing>
+											</DrawingGroup.Children>
+										</DrawingGroup>
+									</DrawingBrush.Drawing>
+								</DrawingBrush>
+							</Setter.Value>
+						</Setter>
+					</DataTrigger>
+				</Style.Triggers>-->
+			</Style>
+		</ResourceDictionary>
 	</c:BaseFlyout.Resources>
 
 	<ItemsControl

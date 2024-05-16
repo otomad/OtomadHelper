@@ -11,86 +11,104 @@
 	Width="200"
 	Height="300"
 	Loaded="Window_Loaded"
+	PreviewKeyDown="Window_PreviewKeyDown"
 	mc:Ignorable="d"
 	>
 	<c:BaseFlyout.DataContext>
 		<c:PitchPickerViewModel x:Name="ViewModel" />
 	</c:BaseFlyout.DataContext>
 
+	<c:BaseFlyout.InputBindings>
+		<KeyBinding Key="Space" Command="{Binding CloseKeyDownCommand}" />
+		<KeyBinding Key="Return" Command="{Binding CloseKeyDownCommand}" />
+	</c:BaseFlyout.InputBindings>
+
 	<c:BaseFlyout.Resources>
-		<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Storyboards.xaml" />
+			</ResourceDictionary.MergedDictionaries>
 
-		<Thickness x:Key="ItemPadding">4,0</Thickness>
-		<s:Double x:Key="ItemHeight">40</s:Double>
-		<s:Double x:Key="ItemRadius">4</s:Double>
+			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 
-		<Style x:Key="ListView" TargetType="c:PitchPickerFlyoutListView">
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="BorderBrush" Value="{DynamicResource DividerStroke}" />
-			<Setter Property="BorderThickness" Value="0" />
-			<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
-			<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
-			<Setter Property="ScrollViewer.CanContentScroll" Value="False" />
-			<Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Canvas, AncestorLevel=1}}" />
-			<Setter Property="Padding" Value="0,2" />
-			<Setter Property="ItemContainerStyle">
-				<Setter.Value>
-					<Style TargetType="ListViewItem">
-						<Setter Property="HorizontalContentAlignment" Value="Center" />
-						<Setter Property="Focusable" Value="False" />
-						<Setter Property="Height" Value="{StaticResource ItemHeight}" />
-						<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-						<Setter Property="FontSize" Value="14" />
-						<Setter Property="m:MouseDownHelper.Enabled" Value="True" />
-						<Setter Property="Template">
-							<Setter.Value>
-								<ControlTemplate TargetType="ListBoxItem">
-									<Border
-										x:Name="ListBoxItemBorder"
-										Margin="2,0"
-										Background="{TemplateBinding Background}"
-										BorderBrush="{TemplateBinding BorderBrush}"
-										BorderThickness="{TemplateBinding BorderThickness}"
-										CornerRadius="{Binding Source={StaticResource ItemRadius}, Converter={StaticResource DoubleToRadius}}"
-										SnapsToDevicePixels="true"
-										>
-										<ContentPresenter
-											HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-											VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-											SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-											/>
-									</Border>
-									<ControlTemplate.Triggers>
-										<Trigger Property="IsMouseOver" Value="True">
-											<Setter TargetName="ListBoxItemBorder" Property="Background" Value="{DynamicResource SubtleSecondary}" />
-										</Trigger>
-										<Trigger Property="m:MouseDownHelper.IsLeftPressed" Value="True">
-											<Setter TargetName="ListBoxItemBorder" Property="Background" Value="{DynamicResource SubtleTertiary}" />
-										</Trigger>
-									</ControlTemplate.Triggers>
-								</ControlTemplate>
-							</Setter.Value>
-						</Setter>
-					</Style>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style
-			x:Key="ListViewWithRightDivider"
-			BasedOn="{StaticResource ListView}"
-			TargetType="c:PitchPickerFlyoutListView"
-			>
-			<Setter Property="BorderThickness" Value="0,0,1,0" />
-		</Style>
-		<Style x:Key="SelectionBase" TargetType="Rectangle">
-			<Setter Property="Fill" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
-			<Setter Property="Grid.ColumnSpan" Value="2" />
-			<Setter Property="Height" Value="{StaticResource ItemHeight}" />
-			<Setter Property="Margin" Value="{StaticResource ItemPadding}" />
-			<Setter Property="RadiusX" Value="{StaticResource ItemRadius}" />
-			<Setter Property="RadiusY" Value="{StaticResource ItemRadius}" />
-			<Setter Property="VerticalAlignment" Value="Center" />
-		</Style>
+			<Thickness x:Key="ItemPadding">4,0</Thickness>
+			<s:Double x:Key="ItemHeight">40</s:Double>
+			<s:Double x:Key="ItemRadius">4</s:Double>
+
+			<Style x:Key="ListView" TargetType="c:PitchPickerFlyoutListView">
+				<Setter Property="Background" Value="Transparent" />
+				<Setter Property="BorderBrush" Value="{DynamicResource DividerStroke}" />
+				<Setter Property="BorderThickness" Value="0" />
+				<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+				<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+				<Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+				<Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Canvas, AncestorLevel=1}}" />
+				<Setter Property="Padding" Value="0,2" />
+				<Setter Property="ItemContainerStyle">
+					<Setter.Value>
+						<Style TargetType="ListViewItem">
+							<Setter Property="HorizontalContentAlignment" Value="Center" />
+							<Setter Property="Focusable" Value="False" />
+							<Setter Property="Height" Value="{StaticResource ItemHeight}" />
+							<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+							<Setter Property="FontSize" Value="14" />
+							<Setter Property="m:MouseDownHelper.Enabled" Value="True" />
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="ListBoxItem">
+										<Border
+											x:Name="ListBoxItemBorder"
+											Margin="2,0"
+											Background="{TemplateBinding Background}"
+											BorderBrush="{TemplateBinding BorderBrush}"
+											BorderThickness="{TemplateBinding BorderThickness}"
+											CornerRadius="{Binding Source={StaticResource ItemRadius}, Converter={StaticResource DoubleToRadius}}"
+											SnapsToDevicePixels="true"
+											>
+											<ContentPresenter
+												HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+												VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+												SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+												/>
+										</Border>
+										<ControlTemplate.Triggers>
+											<Trigger Property="IsMouseOver" Value="True">
+												<Setter TargetName="ListBoxItemBorder" Property="Background" Value="{DynamicResource SubtleSecondary}" />
+											</Trigger>
+											<Trigger Property="m:MouseDownHelper.IsLeftPressed" Value="True">
+												<Setter TargetName="ListBoxItemBorder" Property="Background" Value="{DynamicResource SubtleTertiary}" />
+											</Trigger>
+										</ControlTemplate.Triggers>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+						</Style>
+					</Setter.Value>
+				</Setter>
+			</Style>
+			<Style
+				x:Key="ListViewWithRightDivider"
+				BasedOn="{StaticResource ListView}"
+				TargetType="c:PitchPickerFlyoutListView"
+				>
+				<Setter Property="BorderThickness" Value="0,0,1,0" />
+			</Style>
+			<Style x:Key="SelectionBase" TargetType="Rectangle">
+				<Setter Property="Fill" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
+				<Setter Property="Grid.ColumnSpan" Value="2" />
+				<Setter Property="Height" Value="{StaticResource ItemHeight}" />
+				<Setter Property="Margin" Value="{StaticResource ItemPadding}" />
+				<Setter Property="RadiusX" Value="{StaticResource ItemRadius}" />
+				<Setter Property="RadiusY" Value="{StaticResource ItemRadius}" />
+				<Setter Property="VerticalAlignment" Value="Center" />
+			</Style>
+			<Style x:Key="ListViewWrapper" TargetType="Canvas">
+				<Setter Property="Background" Value="Transparent" />
+				<Setter Property="Focusable" Value="True" />
+				<Setter Property="FocusVisualStyle" Value="{DynamicResource InnerFocusVisualStyle}" />
+				<EventSetter Event="PreviewMouseDown" Handler="ListViewWrapper_PreviewMouseDown" />
+			</Style>
+		</ResourceDictionary>
 	</c:BaseFlyout.Resources>
 
 	<Grid>
@@ -99,24 +117,33 @@
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
 		<Rectangle Style="{StaticResource SelectionBase}" />
-		<Canvas Grid.Column="0">
+		<Canvas
+			x:Name="NoteNameWrapper"
+			Grid.Column="0"
+			PreviewMouseWheel="{m:EventBinding Command=NoteNameSpinCommand, CommandParameter=$e.Delta}"
+			Style="{StaticResource ListViewWrapper}"
+			>
 			<c:PitchPickerFlyoutListView
 				x:Name="NoteNameListView"
+				d:ItemsSource="{Binding NoteNames}"
 				ItemClick="{m:EventBinding Command=NoteNameChangeCommand, CommandParameter=$this.Content}"
-				PreviewMouseWheel="{m:EventBinding Command=NoteNameSpinCommand, CommandParameter=$e.Delta}"
 				ItemsSource="{Binding DisplayNoteNames, ElementName=View}"
 				Style="{StaticResource ListViewWithRightDivider}"
 				/>
 		</Canvas>
-		<Canvas Grid.Column="1">
+		<Canvas
+			x:Name="OctaveWrapper"
+			Grid.Column="1"
+			PreviewMouseWheel="{m:EventBinding Command=OctaveSpinCommand, CommandParameter=$e.Delta}"
+			Style="{StaticResource ListViewWrapper}"
+			>
 			<c:PitchPickerFlyoutListView
 				x:Name="OctaveListView"
 				ItemClick="{m:EventBinding Command=OctaveChangeCommand, CommandParameter=$this.Content}"
-				PreviewMouseWheel="{m:EventBinding Command=OctaveSpinCommand, CommandParameter=$e.Delta}"
 				ItemsSource="{Binding Octaves}"
 				Style="{StaticResource ListView}"
 				/>
-			<!--TODO: Mouse wheel won't work if scroll to the edge.-->
+			<!--  TODO: Mouse wheel won't work if scroll to the edge.  -->
 		</Canvas>
 	</Grid>
 </c:BaseFlyout>

@@ -20,72 +20,75 @@
 	</c:BackdropWindow.DataContext>
 
 	<c:BackdropWindow.Resources>
-		<c:IconNameToImageSourceConverter x:Key="IconNameToImageSource" />
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Storyboards.xaml" />
+			</ResourceDictionary.MergedDictionaries>
 
-		<Style TargetType="TextBlock">
-			<Setter Property="TextWrapping" Value="Wrap" />
-			<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-		</Style>
-		<Style
-			x:Key="Title"
-			BasedOn="{StaticResource {x:Type TextBlock}}"
-			TargetType="TextBlock"
-			>
-			<Setter Property="FontSize" Value="20" />
-			<Setter Property="FontWeight" Value="SemiBold" />
-		</Style>
-		<Style
-			x:Key="Body"
-			BasedOn="{StaticResource {x:Type TextBlock}}"
-			TargetType="TextBlock"
-			>
-			<Setter Property="FontSize" Value="14" />
-			<Setter Property="Margin" Value="0,12,0,0" />
-		</Style>
+			<c:IconNameToImageSourceConverter x:Key="IconNameToImageSource" />
 
-		<Style x:Key="ContentWrapper" TargetType="Border">
-			<Setter Property="Padding" Value="24" />
-		</Style>
-		<Style x:Key="ButtonsContainer" TargetType="Border">
-			<Setter Property="Padding" Value="24" />
-			<Setter Property="BorderBrush" Value="{DynamicResource CardStroke}" />
-			<Setter Property="BorderThickness" Value="0,2,0,0" />
-			<Setter Property="Background" Value="{DynamicResource SurfaceOverlayBackground}" />
-		</Style>
-		<Style TargetType="Button">
-			<Setter Property="Height" Value="32" />
-		</Style>
+			<Style TargetType="TextBlock">
+				<Setter Property="TextWrapping" Value="Wrap" />
+				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+			</Style>
+			<Style
+				x:Key="Title"
+				BasedOn="{StaticResource {x:Type TextBlock}}"
+				TargetType="TextBlock"
+				>
+				<Setter Property="FontSize" Value="20" />
+				<Setter Property="FontWeight" Value="SemiBold" />
+			</Style>
+			<Style
+				x:Key="Body"
+				BasedOn="{StaticResource {x:Type TextBlock}}"
+				TargetType="TextBlock"
+				>
+				<Setter Property="FontSize" Value="14" />
+				<Setter Property="Margin" Value="0,12,0,0" />
+			</Style>
 
-		<Style x:Key="ShadingIcon" TargetType="c:Icon">
-			<!--<Setter Property="FontFamily" Value="pack://application:,,,/OtomadHelper;component/Resources/#Segoe Fluent Icons" />
+			<Style x:Key="ContentWrapper" TargetType="Border">
+				<Setter Property="Padding" Value="24" />
+			</Style>
+			<Style x:Key="ButtonsContainer" TargetType="Border">
+				<Setter Property="Padding" Value="24" />
+				<Setter Property="BorderBrush" Value="{DynamicResource CardStroke}" />
+				<Setter Property="BorderThickness" Value="0,2,0,0" />
+				<Setter Property="Background" Value="{DynamicResource SurfaceOverlayBackground}" />
+			</Style>
+			<Style TargetType="Button">
+				<Setter Property="Height" Value="32" />
+			</Style>
+
+			<Style x:Key="ShadingIcon" TargetType="c:Icon">
+				<!--<Setter Property="FontFamily" Value="pack://application:,,,/OtomadHelper;component/Resources/#Segoe Fluent Icons" />
 			<Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol" />-->
-			<Setter Property="Size" Value="96" />
-			<Setter Property="Canvas.Left" Value="-15" />
-			<Setter Property="Canvas.Top" Value="-20" />
-			<Setter Property="Foreground">
-				<Setter.Value>
-					<SolidColorBrush Opacity="0.2" Color="{DynamicResource ForegroundColor}" />
-				</Setter.Value>
-			</Setter>
-			<Style.Triggers>
-				<EventTrigger RoutedEvent="Loaded">
-					<BeginStoryboard>
-						<Storyboard>
-							<DoubleAnimation
-								Storyboard.TargetProperty="Opacity"
-								From="0"
-								To="1"
-								Duration="00:00:02"
-								>
-								<DoubleAnimation.EasingFunction>
-									<CubicEase EasingMode="EaseInOut" />
-								</DoubleAnimation.EasingFunction>
-							</DoubleAnimation>
-						</Storyboard>
-					</BeginStoryboard>
-				</EventTrigger>
-			</Style.Triggers>
-		</Style>
+				<Setter Property="Size" Value="96" />
+				<Setter Property="Canvas.Left" Value="-15" />
+				<Setter Property="Canvas.Top" Value="-20" />
+				<Setter Property="Foreground">
+					<Setter.Value>
+						<SolidColorBrush Opacity="0.2" Color="{DynamicResource ForegroundColor}" />
+					</Setter.Value>
+				</Setter>
+				<Style.Triggers>
+					<EventTrigger RoutedEvent="Loaded">
+						<BeginStoryboard>
+							<Storyboard>
+								<DoubleAnimation
+									EasingFunction="{StaticResource EaseInOutCubic}"
+									Storyboard.TargetProperty="Opacity"
+									From="0"
+									To="1"
+									Duration="00:00:02"
+									/>
+							</Storyboard>
+						</BeginStoryboard>
+					</EventTrigger>
+				</Style.Triggers>
+			</Style>
+		</ResourceDictionary>
 	</c:BackdropWindow.Resources>
 
 	<c:BackdropWindow.Title>
@@ -97,7 +100,11 @@
 
 	<Grid>
 		<Canvas>
-			<c:Icon x:Name="IconEl" Style="{StaticResource ShadingIcon}" IconName="{Binding IconName}" />
+			<c:Icon
+				x:Name="IconEl"
+				IconName="{Binding IconName}"
+				Style="{StaticResource ShadingIcon}"
+				/>
 		</Canvas>
 		<StackPanel Orientation="Vertical">
 			<Border Style="{StaticResource ContentWrapper}">
@@ -107,7 +114,7 @@
 				</StackPanel>
 			</Border>
 			<Border Style="{StaticResource ButtonsContainer}">
-				<ItemsControl ItemsSource="{Binding Buttons}">
+				<ItemsControl Focusable="False" ItemsSource="{Binding Buttons}">
 					<ItemsControl.ItemsPanel>
 						<ItemsPanelTemplate>
 							<c:ContentDialogButtonPanel />

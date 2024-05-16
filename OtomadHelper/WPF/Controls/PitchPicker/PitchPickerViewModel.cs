@@ -46,13 +46,18 @@ public class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> {
 
 	public RelayCommand<int> NoteNameSpinCommand => DefineCommand<int>(delta => {
 		SignDelta(ref delta);
-		NoteName = NoteNames[MathEx.PNMod(NoteNames.ToList().IndexOf(NoteName) + delta, NoteNames.Length)];
+		NoteName = NoteNames[MathEx.PNMod(NoteNames.IndexOf(NoteName) + delta, NoteNames.Length)];
 	});
 
 	public RelayCommand<int> OctaveSpinCommand => DefineCommand<int>(delta => {
 		SignDelta(ref delta);
-		Octave = MathEx.Clamp(Octaves.ToList().IndexOf(Octave) + delta, 0, Octaves.Length);
+		Octave = MathEx.Clamp(Octaves.IndexOf(Octave) + delta, 0, Octaves.Length);
 	});
 
+	/// <summary>
+	/// Invert the polarity, and change the absolute value from 120 to 1.
+	/// </summary>
 	private static int SignDelta(ref int delta) => delta = -Math.Sign(delta);
+
+	public RelayCommand CloseKeyDownCommand => DefineCommand(() => View?.Close());
 }

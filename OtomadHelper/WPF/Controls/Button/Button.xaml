@@ -5,28 +5,13 @@
 	>
 	<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
 	<Thickness x:Key="ButtonPadding">8</Thickness>
-	<Style x:Key="ButtonFocusVisualStyle">
-		<Setter Property="Control.Template">
-			<Setter.Value>
-				<ControlTemplate>
-					<Rectangle
-						Margin="-3"
-						RadiusX="7"
-						RadiusY="7"
-						Stroke="{DynamicResource ForegroundBrush}"
-						StrokeThickness="2"
-						/>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
 	<Style TargetType="c:Button">
 		<Setter Property="MinHeight" Value="32" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ControlElevation}" />
 		<Setter Property="Background" Value="{DynamicResource ControlBackground}" />
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 		<Setter Property="FontSize" Value="14" />
-		<Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisualStyle}" />
+		<Setter Property="FocusVisualStyle" Value="{DynamicResource OuterFocusVisualStyle}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="c:Button">

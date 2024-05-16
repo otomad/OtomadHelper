@@ -1,7 +1,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -15,6 +17,8 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		BindingOperations.SetBinding(this, NoteNameProperty, new Binding("NoteName"));
 		BindingOperations.SetBinding(this, OctaveProperty, new Binding("Octave"));
 	}
+
+	public new PitchPickerViewModel DataContext => (PitchPickerViewModel)base.DataContext;
 
 	public static PitchPickerFlyout Initial(Rect targetRect) {
 		PitchPickerFlyout picker = new();
@@ -63,7 +67,7 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		noteNameIndex -= minIndex; prevNoteNameIndex -= minIndex;
 		double toTop = picker.GetItemTopFromIndex(noteNameIndex);
 		double? fromTop = !hasPrevNoteName ? null : picker.GetItemTopFromIndex(prevNoteNameIndex);
-		picker.SetListViewTopAnimatedly(isOctave: false, toTop, fromTop);
+		picker.SetListViewTopAnimatedly(ColumnType.NoteName, toTop, fromTop);
 	}
 
 	public static void OctavePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
@@ -74,14 +78,14 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		if (octaveIndex == -1) return;
 		double toTop = picker.GetItemTopFromIndex(octaveIndex);
 		double? fromTop = prevOctaveIndex == -1 ? null : picker.GetItemTopFromIndex(prevOctaveIndex);
-		picker.SetListViewTopAnimatedly(isOctave: true, toTop, fromTop);
+		picker.SetListViewTopAnimatedly(ColumnType.Octave, toTop, fromTop);
 	}
 
 	private double GetItemTopFromIndex(int index, bool center = true) =>
-		ItemHeight * (-index + (center ? ReservedForCenteringItemCount : 0)); // ItemPadding
+		ItemHeight * (-index + (center ? ReservedForCenteringItemCount : 0));
 
-	private void SetListViewTopAnimatedly(bool isOctave, double toTop, double? fromTop = null) {
-		ListView listView = isOctave ? OctaveListView : NoteNameListView;
+	private void SetListViewTopAnimatedly(ColumnType column, double toTop, double? fromTop = null) {
+		ListView listView = column == ColumnType.NoteName ? NoteNameListView : OctaveListView;
 		fromTop ??= Canvas.GetTop(listView);
 		if (fromTop is null or double.NaN) {
 			Canvas.SetTop(listView, toTop);
@@ -93,11 +97,44 @@ public partial class PitchPickerFlyout : BaseFlyout {
 			To = toTop,
 			Duration = new(TimeSpan.FromMilliseconds(250)),
 			FillBehavior = FillBehavior.HoldEnd,
-			EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 5 },
+			EasingFunction = (IEasingFunction)Resources["EaseOutExpo"],
 		};
 		Storyboard.SetTargetProperty(animation, new("(Canvas.Top)"));
 		Storyboard storyboard = new();
 		storyboard.Children.Add(animation);
 		storyboard.Begin(listView);
 	}
+
+	internal enum ColumnType {
+		NoteName,
+		Octave,
+	}
+
+	private ColumnType? GetFocusedColumn() =>
+		NoteNameWrapper.IsKeyboardFocused ? ColumnType.NoteName :
+		OctaveWrapper.IsKeyboardFocused ? ColumnType.Octave :
+		null;
+
+	private ColumnType? GetActiveColumn() =>
+		GetFocusedColumn() ?? (
+			NoteNameListView.IsMouseOver ? ColumnType.NoteName :
+			OctaveListView.IsMouseOver ? ColumnType.Octave :
+			null
+		);
+
+	private void Window_PreviewKeyDown(object sender, KeyEventArgs e) {
+		if (e.Key is Key.Up or Key.Down) {
+			ColumnType? column = GetActiveColumn();
+			int delta = e.Key == Key.Up ? 120 : -120;
+			if (column == ColumnType.NoteName) DataContext.NoteNameSpinCommand.Execute(delta);
+			else if (column == ColumnType.Octave) DataContext.OctaveSpinCommand.Execute(delta);
+			e.Handled = true;
+		} else if (e.Key is Key.Left or Key.Right && GetFocusedColumn() is null) {
+			Keyboard.Focus(e.Key == Key.Left ? NoteNameWrapper : OctaveWrapper);
+			e.Handled = true;
+		}
+	}
+
+	private void ListViewWrapper_PreviewMouseDown(object sender, MouseButtonEventArgs e) =>
+		Keyboard.ClearFocus();
 }
