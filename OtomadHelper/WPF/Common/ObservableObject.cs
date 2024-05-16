@@ -1,5 +1,6 @@
 /// <summary>
 /// <see href="https://github.com/CommunityToolkit/dotnet">CommunityToolkit.Mvvm</see>
+/// <para>Cannot use CommunityToolkit.Mvvm, or VEGAS Pro won't recognize the extension.</para>
 /// </summary>
 
 using System.Runtime.CompilerServices;

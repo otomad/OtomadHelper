@@ -1,5 +1,7 @@
 /// <summary>
 /// <see href="https://github.com/JonghoL/EventBindingMarkup"/>
+/// <para>Cannot use Microsoft.Xaml.Behaviors.Wpf, System.Windows.Interactivity, Microsoft.Expression.Interaction,
+/// or VEGAS Pro will crash.</para>
 /// </summary>
 
 using System.Reflection.Emit;

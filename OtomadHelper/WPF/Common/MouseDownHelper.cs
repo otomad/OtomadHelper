@@ -1,3 +1,7 @@
+/// <summary>
+/// <see href="https://stackoverflow.com/a/10667643/19553213" />
+/// </summary>
+
 using System.Windows;
 
 namespace OtomadHelper.WPF.Common;
