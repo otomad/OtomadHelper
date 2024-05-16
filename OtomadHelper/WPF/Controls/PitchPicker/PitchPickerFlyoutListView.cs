@@ -40,7 +40,4 @@ public class PitchPickerFlyoutListViewItem : ListViewItem {
 			}
 		};
 	}
-
-	public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(nameof(IsActive), typeof(bool), typeof(PitchPickerFlyoutListViewItem), new(false));
-	public bool IsActive { get => (bool)GetValue(IsActiveProperty); internal set => SetValue(IsActiveProperty, value); }
 }

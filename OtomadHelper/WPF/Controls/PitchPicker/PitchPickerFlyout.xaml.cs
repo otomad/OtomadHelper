@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
@@ -31,6 +32,7 @@ public partial class PitchPickerFlyout : BaseFlyout {
 	private double ItemPadding => ((Thickness)Resources["ItemPadding"]).Left;
 	private const int DisplayItemCount = 7;
 	private static int ReservedForCenteringItemCount => DisplayItemCount / 2;
+	public Rect SelectionMaskRect => new(0, ReservedForCenteringItemCount / (double)DisplayItemCount, 1, 1 / (double)DisplayItemCount);
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
 		Height = ItemHeight * DisplayItemCount + ItemPadding * 2;
@@ -85,7 +87,7 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		ItemHeight * (-index + (center ? ReservedForCenteringItemCount : 0));
 
 	private void SetListViewTopAnimatedly(ColumnType column, double toTop, double? fromTop = null) {
-		ListView listView = column == ColumnType.NoteName ? NoteNameListView : OctaveListView;
+		PitchPickerFlyoutListView listView = column == ColumnType.NoteName ? NoteNameListView : OctaveListView;
 		fromTop ??= Canvas.GetTop(listView);
 		if (fromTop is null or double.NaN) {
 			Canvas.SetTop(listView, toTop);

@@ -30,6 +30,8 @@
 			</ResourceDictionary.MergedDictionaries>
 
 			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
+			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
+			<m:ActualSizeToRectConverter x:Key="SizeToRect" />
 
 			<Thickness x:Key="ItemPadding">4,0</Thickness>
 			<s:Double x:Key="ItemHeight">40</s:Double>
@@ -37,6 +39,7 @@
 
 			<Style x:Key="ListView" TargetType="c:PitchPickerFlyoutListView">
 				<Setter Property="Background" Value="Transparent" />
+				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 				<Setter Property="BorderBrush" Value="{DynamicResource DividerStroke}" />
 				<Setter Property="BorderThickness" Value="0" />
 				<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
@@ -50,7 +53,7 @@
 							<Setter Property="HorizontalContentAlignment" Value="Center" />
 							<Setter Property="Focusable" Value="False" />
 							<Setter Property="Height" Value="{StaticResource ItemHeight}" />
-							<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+							<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=ListView, AncestorLevel=1}}" />
 							<Setter Property="FontSize" Value="14" />
 							<Setter Property="m:MouseDownHelper.Enabled" Value="True" />
 							<Setter Property="Template">
@@ -86,16 +89,9 @@
 					</Setter.Value>
 				</Setter>
 			</Style>
-			<Style
-				x:Key="ListViewWithRightDivider"
-				BasedOn="{StaticResource ListView}"
-				TargetType="c:PitchPickerFlyoutListView"
-				>
-				<Setter Property="BorderThickness" Value="0,0,1,0" />
-			</Style>
 			<Style x:Key="SelectionBase" TargetType="Rectangle">
 				<Setter Property="Fill" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
-				<Setter Property="Grid.ColumnSpan" Value="2" />
+				<Setter Property="Grid.ColumnSpan" Value="3" />
 				<Setter Property="Height" Value="{StaticResource ItemHeight}" />
 				<Setter Property="Margin" Value="{StaticResource ItemPadding}" />
 				<Setter Property="RadiusX" Value="{StaticResource ItemRadius}" />
@@ -108,42 +104,116 @@
 				<Setter Property="FocusVisualStyle" Value="{DynamicResource InnerFocusVisualStyle}" />
 				<EventSetter Event="PreviewMouseDown" Handler="ListViewWrapper_PreviewMouseDown" />
 			</Style>
+			<Style x:Key="ListViewSeparator" TargetType="Line">
+				<Setter Property="Stretch" Value="Fill" />
+				<Setter Property="Stroke" Value="{DynamicResource DividerStroke}" />
+				<Setter Property="Y2" Value="1" />
+				<Setter Property="Grid.Column" Value="1" />
+			</Style>
+			<Style
+				x:Key="ListViewSelectionMasked"
+				BasedOn="{StaticResource ListView}"
+				TargetType="c:PitchPickerFlyoutListView"
+				>
+				<Setter Property="Foreground" Value="{DynamicResource TextOnAccentForegroundBrush}" />
+				<Setter Property="IsHitTestVisible" Value="False" />
+			</Style>
+			<Style x:Key="ColumnGridSelectionMasked" TargetType="Grid">
+				<Style.Resources>
+					<Style TargetType="Border">
+						<Setter Property="ClipToBounds" Value="True" />
+					</Style>
+				</Style.Resources>
+				<Setter Property="IsHitTestVisible" Value="False" />
+				<Setter Property="Visibility" Value="{Binding IsLightTheme, ElementName=View, Converter={StaticResource BoolToVis}, Mode=OneWay}" />
+				<Setter Property="OpacityMask">
+					<Setter.Value>
+						<DrawingBrush>
+							<DrawingBrush.Drawing>
+								<DrawingGroup>
+									<DrawingGroup.Children>
+										<GeometryDrawing Brush="Transparent">
+											<GeometryDrawing.Geometry>
+												<RectangleGeometry Rect="0,0,1,1" />
+											</GeometryDrawing.Geometry>
+										</GeometryDrawing>
+										<GeometryDrawing Brush="Black">
+											<GeometryDrawing.Geometry>
+												<RectangleGeometry Rect="{Binding SelectionMaskRect, ElementName=View}" />
+											</GeometryDrawing.Geometry>
+										</GeometryDrawing>
+									</DrawingGroup.Children>
+								</DrawingGroup>
+							</DrawingBrush.Drawing>
+						</DrawingBrush>
+					</Setter.Value>
+				</Setter>
+			</Style>
 		</ResourceDictionary>
 	</c:BaseFlyout.Resources>
 
 	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition />
-			<ColumnDefinition />
-		</Grid.ColumnDefinitions>
-		<Rectangle Style="{StaticResource SelectionBase}" />
-		<Canvas
-			x:Name="NoteNameWrapper"
-			Grid.Column="0"
-			PreviewMouseWheel="{m:EventBinding Command=NoteNameSpinCommand, CommandParameter=$e.Delta}"
-			Style="{StaticResource ListViewWrapper}"
-			>
-			<c:PitchPickerFlyoutListView
-				x:Name="NoteNameListView"
-				d:ItemsSource="{Binding NoteNames}"
-				ItemClick="{m:EventBinding Command=NoteNameChangeCommand, CommandParameter=$this.Content}"
-				ItemsSource="{Binding DisplayNoteNames, ElementName=View}"
-				Style="{StaticResource ListViewWithRightDivider}"
-				/>
-		</Canvas>
-		<Canvas
-			x:Name="OctaveWrapper"
-			Grid.Column="1"
-			PreviewMouseWheel="{m:EventBinding Command=OctaveSpinCommand, CommandParameter=$e.Delta}"
-			Style="{StaticResource ListViewWrapper}"
-			>
-			<c:PitchPickerFlyoutListView
-				x:Name="OctaveListView"
-				ItemClick="{m:EventBinding Command=OctaveChangeCommand, CommandParameter=$this.Content}"
-				ItemsSource="{Binding Octaves}"
-				Style="{StaticResource ListView}"
-				/>
-			<!--  TODO: Mouse wheel won't work if scroll to the edge.  -->
-		</Canvas>
+		<Grid x:Name="VisibleGrid">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition Width="1" />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Rectangle Style="{StaticResource SelectionBase}" />
+			<Canvas
+				x:Name="NoteNameWrapper"
+				Grid.Column="0"
+				PreviewMouseWheel="{m:EventBinding Command=NoteNameSpinCommand, CommandParameter=$e.Delta}"
+				Style="{StaticResource ListViewWrapper}"
+				>
+				<c:PitchPickerFlyoutListView
+					x:Name="NoteNameListView"
+					d:ItemsSource="{Binding NoteNames}"
+					ItemClick="{m:EventBinding Command=NoteNameChangeCommand, CommandParameter=$this.Content}"
+					ItemsSource="{Binding DisplayNoteNames, ElementName=View}"
+					Style="{StaticResource ListView}"
+					/>
+			</Canvas>
+			<Line Style="{StaticResource ListViewSeparator}" />
+			<Canvas
+				x:Name="OctaveWrapper"
+				Grid.Column="2"
+				PreviewMouseWheel="{m:EventBinding Command=OctaveSpinCommand, CommandParameter=$e.Delta}"
+				Style="{StaticResource ListViewWrapper}"
+				>
+				<c:PitchPickerFlyoutListView
+					x:Name="OctaveListView"
+					ItemClick="{m:EventBinding Command=OctaveChangeCommand, CommandParameter=$this.Content}"
+					ItemsSource="{Binding Octaves}"
+					Style="{StaticResource ListView}"
+					/>
+			</Canvas>
+		</Grid>
+		<Grid Style="{StaticResource ColumnGridSelectionMasked}">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition Width="1" />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Border Grid.Column="0">
+				<Canvas Style="{StaticResource ListViewWrapper}" >
+					<c:PitchPickerFlyoutListView
+						d:ItemsSource="{Binding NoteNames}"
+						ItemsSource="{Binding DisplayNoteNames, ElementName=View}"
+						Style="{StaticResource ListViewSelectionMasked}"
+						Canvas.Top="{Binding (Canvas.Top), ElementName=NoteNameListView}"
+						/>
+				</Canvas>
+			</Border>
+			<Border Grid.Column="2">
+				<Canvas Style="{StaticResource ListViewWrapper}" >
+					<c:PitchPickerFlyoutListView
+						ItemsSource="{Binding Octaves}"
+						Style="{StaticResource ListViewSelectionMasked}"
+						Canvas.Top="{Binding (Canvas.Top), ElementName=OctaveListView}"
+					/>
+				</Canvas>
+			</Border>
+		</Grid>
 	</Grid>
 </c:BaseFlyout>

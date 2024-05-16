@@ -146,6 +146,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 
 	protected void RefreshDarkMode(bool isOnLoad) {
 		bool isDarkTheme = ShouldAppsUseDarkMode();
+		IsLightTheme = !isDarkTheme;
 		int flag = isDarkTheme ? 1 : 0;
 		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, flag);
 		SetCurrentThemeResource(isDarkTheme, isOnLoad);
@@ -185,6 +186,10 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 		add => AddHandler(ShowingEvent, value);
 		remove => RemoveHandler(ShowingEvent, value);
 	}
+
+	public static readonly DependencyProperty IsLightThemeProperty = DependencyProperty.Register(
+		nameof(IsLightTheme), typeof(bool), typeof(BackdropWindow), new(true));
+	public bool IsLightTheme { get => (bool)GetValue(IsLightThemeProperty); private set => SetValue(IsLightThemeProperty, value); }
 	#endregion
 
 	#region Extends content into title bar
