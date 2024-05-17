@@ -15,8 +15,8 @@ public partial class PitchPickerFlyout : BaseFlyout {
 	public PitchPickerFlyout() {
 		InitializeComponent();
 
-		DataContext.NotifyPropertyChanged<string>(nameof(DataContext.NoteName), NoteNamePropertyChanged, true);
-		DataContext.NotifyPropertyChanged<int?>(nameof(DataContext.Octave), OctavePropertyChanged, true);
+		BindingOperations.SetBinding(this, NoteNameProperty, new Binding("NoteName"));
+		BindingOperations.SetBinding(this, OctaveProperty, new Binding("Octave"));
 	}
 
 	public new PitchPickerViewModel DataContext => (PitchPickerViewModel)base.DataContext;
@@ -43,13 +43,17 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		//	scrollViewer.PreviewMouseWheel += (sender, e) => e.Handled = true);
 	}
 
+	private static readonly DependencyProperty NoteNameProperty = DependencyProperty.Register("NoteName", typeof(string), typeof(PitchPickerFlyout), new(null, NoteNamePropertyChanged));
+	private static readonly DependencyProperty OctaveProperty = DependencyProperty.Register("Octave", typeof(int?), typeof(PitchPickerFlyout), new(null, OctavePropertyChanged));
+
 	public static readonly DependencyProperty DisplayNoteNamesProperty = DependencyProperty.Register(nameof(DisplayNoteNames), typeof(string[]), typeof(PitchPickerFlyout), new(null));
 	private string[] DisplayNoteNames { get => (string[])GetValue(DisplayNoteNamesProperty); set => SetValue(DisplayNoteNamesProperty, value); }
 
-	public void NoteNamePropertyChanged(string noteName, string? prevNoteName, string propertyName) {
+	public static void NoteNamePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		if (sender is not PitchPickerFlyout picker) return;
 		List<string> noteNames = PitchPickerViewModel.NoteNames.ToList();
 		int noteNamesCount = noteNames.Count;
-		if (prevNoteName == noteName) prevNoteName = null;
+		string noteName = (string)e.NewValue; string? prevNoteName = (string?)e.OldValue;
 		int noteNameIndex = noteNames.IndexOf(noteName), prevNoteNameIndex = noteNames.IndexOf(prevNoteName!);
 		bool hasPrevNoteName = prevNoteNameIndex != -1;
 		if (!hasPrevNoteName) prevNoteNameIndex = noteNameIndex;
@@ -64,20 +68,22 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		string[] displayNoteNames = new string[maxIndex - minIndex + 1];
 		for (int i = minIndex, j = 0; i <= maxIndex; i++, j++)
 			displayNoteNames[j] = noteNames[MathEx.PNMod(i, noteNamesCount)];
-		DisplayNoteNames = displayNoteNames;
+		picker.DisplayNoteNames = displayNoteNames;
 		noteNameIndex -= minIndex; prevNoteNameIndex -= minIndex;
-		double toTop = GetItemTopFromIndex(noteNameIndex);
-		double? fromTop = !hasPrevNoteName ? null : GetItemTopFromIndex(prevNoteNameIndex);
-		SetListViewTopAnimatedly(ColumnType.NoteName, toTop, fromTop);
+		double toTop = picker.GetItemTopFromIndex(noteNameIndex);
+		double? fromTop = !hasPrevNoteName ? null : picker.GetItemTopFromIndex(prevNoteNameIndex);
+		picker.SetListViewTopAnimatedly(ColumnType.NoteName, toTop, fromTop);
 	}
 
-	public void OctavePropertyChanged(int? octave, int? prevOctave, string propertyName) {
+	public static void OctavePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+		if (sender is not PitchPickerFlyout picker) return;
 		List<int> octaves = PitchPickerViewModel.Octaves.ToList();
+		int octave = (int)e.NewValue; int? prevOctave = (int?)e.OldValue;
 		int octaveIndex = octaves.IndexOf(octave), prevOctaveIndex = octaves.IndexOf(prevOctave);
 		if (octaveIndex == -1) return;
-		double toTop = GetItemTopFromIndex(octaveIndex);
-		double? fromTop = prevOctaveIndex == -1 ? null : GetItemTopFromIndex(prevOctaveIndex);
-		SetListViewTopAnimatedly(ColumnType.Octave, toTop, fromTop);
+		double toTop = picker.GetItemTopFromIndex(octaveIndex);
+		double? fromTop = prevOctaveIndex == -1 ? null : picker.GetItemTopFromIndex(prevOctaveIndex);
+		picker.SetListViewTopAnimatedly(ColumnType.Octave, toTop, fromTop);
 	}
 
 	private double GetItemTopFromIndex(int index, bool center = true) =>
