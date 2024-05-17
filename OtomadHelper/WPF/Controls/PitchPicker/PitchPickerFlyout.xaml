@@ -39,6 +39,8 @@
 			<s:Double x:Key="ItemRadius">4</s:Double>
 			<s:Int32 x:Key="SpinUpDelta">120</s:Int32>
 			<s:Int32 x:Key="SpinDownDelta">-120</s:Int32>
+			<s:Double x:Key="SpinnerCaretIconSize">8</s:Double>
+			<s:Double x:Key="SpinnerCaretIconPressedSize">7</s:Double>
 
 			<Style x:Key="ListView" TargetType="c:PitchPickerFlyoutListView">
 				<Setter Property="Background" Value="Transparent" />
@@ -153,6 +155,7 @@
 				<Setter Property="BorderThickness" Value="0" />
 				<Setter Property="Background" Value="Transparent" />
 				<Setter Property="Foreground" Value="{DynamicResource ControlStrong}" />
+				<Setter Property="FontSize" Value="8" />
 				<Setter Property="Focusable" Value="False" />
 				<Setter Property="Template">
 					<Setter.Value>
@@ -173,6 +176,17 @@
 						</ControlTemplate>
 					</Setter.Value>
 				</Setter>
+				<Setter Property="ContentTemplate">
+					<Setter.Value>
+						<DataTemplate>
+							<c:Icon
+								Source="{Binding}"
+								Size="{Binding FontSize, RelativeSource={RelativeSource FindAncestor, AncestorType=RepeatButton, AncestorLevel=1}}"
+								Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=RepeatButton, AncestorLevel=1}}"
+								/>
+						</DataTemplate>
+					</Setter.Value>
+				</Setter>
 				<Style.Triggers>
 					<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType=Canvas, AncestorLevel=1}}" Value="False">
 						<Setter Property="Visibility" Value="Collapsed" />
@@ -181,19 +195,44 @@
 						<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
 					</Trigger>
 					<Trigger Property="IsPressed" Value="True">
-						<Setter Property="FontSize" Value="10" />
+						<Trigger.EnterActions>
+							<BeginStoryboard>
+								<Storyboard>
+									<DoubleAnimation
+										EasingFunction="{StaticResource EaseOutExpo}"
+										Storyboard.TargetProperty="FontSize"
+										From="{StaticResource SpinnerCaretIconSize}"
+										To="{StaticResource SpinnerCaretIconPressedSize}"
+										Duration="{StaticResource BaseAnimationDuration}"
+									/>
+								</Storyboard>
+							</BeginStoryboard>
+						</Trigger.EnterActions>
+						<Trigger.ExitActions>
+							<BeginStoryboard>
+								<Storyboard>
+									<DoubleAnimation
+										EasingFunction="{StaticResource EaseOutExpo}"
+										Storyboard.TargetProperty="FontSize"
+										From="{StaticResource SpinnerCaretIconPressedSize}"
+										To="{StaticResource SpinnerCaretIconSize}"
+										Duration="{StaticResource BaseAnimationDuration}"
+									/>
+								</Storyboard>
+							</BeginStoryboard>
+						</Trigger.ExitActions>
 					</Trigger>
 				</Style.Triggers>
 			</Style>
 			<Style x:Key="SpinnerButtonUp" BasedOn="{StaticResource SpinnerButton}" TargetType="RepeatButton">
 				<Setter Property="Padding" Value="0,4,0,0" />
 				<Setter Property="Canvas.Top" Value="0" />
-				<Setter Property="Content" Value="上" />
+				<Setter Property="Content" Value="{DynamicResource Icon:CaretUp}" />
 			</Style>
 			<Style x:Key="SpinnerButtonDown" BasedOn="{StaticResource SpinnerButton}" TargetType="RepeatButton">
 				<Setter Property="Padding" Value="0,0,0,4" />
 				<Setter Property="Canvas.Bottom" Value="0" />
-				<Setter Property="Content" Value="下" />
+				<Setter Property="Content" Value="{DynamicResource Icon:CaretDown}" />
 			</Style>
 		</ResourceDictionary>
 	</c:BaseFlyout.Resources>
@@ -225,6 +264,7 @@
 					Style="{StaticResource SpinnerButtonUp}"
 					CommandParameter="{StaticResource SpinUpDelta}"
 					Command="{Binding NoteNameSpinCommand}"
+					
 					/>
 				<RepeatButton
 					Style="{StaticResource SpinnerButtonDown}"
@@ -281,7 +321,7 @@
 						ItemsSource="{Binding Octaves}"
 						Style="{StaticResource ListViewSelectionMasked}"
 						Canvas.Top="{Binding (Canvas.Top), ElementName=OctaveListView}"
-					/>
+						/>
 				</Canvas>
 			</Border>
 		</Grid>

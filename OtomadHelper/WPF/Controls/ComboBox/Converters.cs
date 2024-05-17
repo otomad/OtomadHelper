@@ -9,12 +9,8 @@ internal class ComboBoxIsCheckedProxy : ObservableObject {
 
 	public bool IsChecked {
 		get => Current == ViewModel?.Selected;
-		set {
-			if (ViewModel is not null && Current is not null && value) {
-				ViewModel.Selected = Current;
-				OnPropertyChanged();
-			}
-		}
+		set => SetProperty(ViewModel?.Selected, v => ViewModel!.Selected = v!, Current,
+			ViewModel is not null && Current is not null && value);
 	}
 }
 

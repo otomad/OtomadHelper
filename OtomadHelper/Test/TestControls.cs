@@ -16,8 +16,8 @@ using Rect = System.Windows.Rect;
 namespace OtomadHelper.Test;
 public partial class TestControls : Form {
 	private readonly List<System.Windows.Window> flyouts = new();
-	private readonly string[] list = { "foo", "bar", "baz", "hello", "world", "a", "b", "c", "d", "e", "f", "g", "h" };
-	private string selected = "foo";
+	private readonly string[] list = { "foo", "bar", "baz", "hello", "world", "C5" };
+	private string selected = "C5";
 
 	public TestControls() {
 		InitializeComponent();
@@ -35,9 +35,9 @@ public partial class TestControls : Form {
 		);
 
 		//ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect);
-		PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect);
+		PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect, selected, out Task<string> resultTask);
 		flyouts.Add(flyout);
-		//flyout.Closing += (sender, e) => ComboBoxBtn.Text = selected = flyout.DataContext.Selected;
+		resultTask.Then(result => { ComboBoxBtn.Text = selected = result; });
 		try {
 			flyout.ShowDialog();
 		} catch (Exception) { }

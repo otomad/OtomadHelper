@@ -16,10 +16,11 @@ public partial class ComboBoxFlyout : BaseFlyout {
 
 	public new ComboBoxViewModel DataContext => (ComboBoxViewModel)base.DataContext;
 
-	public static ComboBoxFlyout Initial(IEnumerable<string> list, string selected, Rect targetRect) {
+	public static ComboBoxFlyout Initial(IEnumerable<string> list, string selected, Rect targetRect, out Task<string> dialogResult) {
 		ComboBoxFlyout comboBox = new();
 		SetDataContext(comboBox.DataContext);
 		comboBox.SetTargetRect(targetRect);
+		dialogResult = comboBox.GetDialogResultTask(() => comboBox.DataContext.Selected);
 		return comboBox;
 
 		void SetDataContext(ComboBoxViewModel viewModel) {

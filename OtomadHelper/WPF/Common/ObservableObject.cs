@@ -20,6 +20,8 @@ public class ObservableObject : INotifyPropertyChanged {
 	/// <inheritdoc cref="INotifyPropertyChanged.PropertyChanged"/>
 	public event PropertyChangedEventHandler? PropertyChanged;
 
+	public event PropertyChangedEventHandler? PropertyNoChanged;
+
 	/// <inheritdoc cref="INotifyPropertyChanging.PropertyChanging"/>
 	public event PropertyChangingEventHandler? PropertyChanging;
 
@@ -27,15 +29,18 @@ public class ObservableObject : INotifyPropertyChanged {
 	/// Raises the <see cref="PropertyChanged"/> event.
 	/// </summary>
 	/// <param name="propertyName">The name of the property that changed.</param>
-	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	protected void OnPropertyChanged<T>(T newValue, T oldValue, [CallerMemberName] string? propertyName = null) =>
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs<T>(propertyName, newValue, oldValue));
+
+	protected void OnPropertyNoChanged<T>(T newValue, T oldValue, [CallerMemberName] string? propertyName = null) =>
+		PropertyNoChanged?.Invoke(this, new PropertyChangedEventArgs<T>(propertyName, newValue, oldValue));
 
 	/// <summary>
 	/// Raises the <see cref="PropertyChanging"/> event.
 	/// </summary>
 	/// <param name="propertyName">(optional) The name of the property that changed.</param>
-	protected void OnPropertyChanging([CallerMemberName] string? propertyName = null) =>
-		PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
+	protected void OnPropertyChanging<T>(T newValue, T oldValue, [CallerMemberName] string? propertyName = null) =>
+		PropertyChanging?.Invoke(this, new PropertyChangingEventArgs<T>(propertyName, newValue, oldValue));
 
 	/// <summary>
 	/// Compares the current and new values for a given property. If the value has changed,
@@ -60,16 +65,52 @@ public class ObservableObject : INotifyPropertyChanged {
 		// This is the fastest SetProperty<T> overload so we particularly care about
 		// the codegen quality here, and the code is small and simple enough so that
 		// duplicating it still doesn't make the whole class harder to maintain.
-		if (!condition || EqualityComparer<T>.Default.Equals(field, value)) return false;
-		OnPropertyChanging(propertyName);
+		if (!condition) return false;
+		T oldValue = field;
+		if (EqualityComparer<T>.Default.Equals(field, value)) {
+			OnPropertyNoChanged(value, oldValue, propertyName);
+			return false;
+		}
+		OnPropertyChanging(value, oldValue, propertyName);
 		field = value;
-		OnPropertyChanged(propertyName);
+		OnPropertyChanged(value, oldValue, propertyName);
 		return true;
+	}
+
+	protected bool SetProperty<T>(T getField, Action<T> SetField, T value, bool condition = true, [CallerMemberName] string? propertyName = null) {
+		bool result = SetProperty(ref getField, value, condition, propertyName);
+		if (result) SetField(getField);
+		return result;
 	}
 
 	protected bool SetProperty<T>(ref T field, T value, Func<bool> GetCondition, [CallerMemberName] string? propertyName = null) =>
 		SetProperty(ref field, value, GetCondition(), propertyName);
 
+	protected bool SetProperty<T>(T getField, Action<T> SetField, T value, Func<bool> GetCondition, [CallerMemberName] string? propertyName = null) =>
+		SetProperty(getField, SetField, value, GetCondition(), propertyName);
+
+	public delegate void NotifyPropertyChangeHandler<T>(T newValue, T? oldValue, string propertyName);
+
+	public void NotifyPropertyChanged<T>(string propertyName, NotifyPropertyChangeHandler<T> Handler, bool triggerEvenIfNoChange = false) {
+		PropertyChangedEventHandler OnPropertyChanged = (sender, _e) => {
+			if (_e.PropertyName == propertyName) {
+				dynamic e = _e;
+				Handler(e.NewValue, e.OldValue, e.PropertyName);
+			}
+		};
+		PropertyChanged += OnPropertyChanged;
+		if (triggerEvenIfNoChange) PropertyNoChanged += OnPropertyChanged;
+	}
+
+	public void NotifyPropertyChanging<T>(string propertyName, NotifyPropertyChangeHandler<T> Handler) =>
+		PropertyChanging += (sender, _e) => {
+			if (_e.PropertyName == propertyName) {
+				dynamic e = _e;
+				Handler(e.NewValue, e.OldValue, e.PropertyName);
+			}
+		};
+
+	#region Commands
 	private readonly Dictionary<string, object> relayCommands = new();
 
 	private TAction GetRelayCommand<TAction>(string commandName, TAction execute) =>
@@ -79,6 +120,7 @@ public class ObservableObject : INotifyPropertyChanged {
 		new(GetRelayCommand(commandName!, execute));
 	protected RelayCommand DefineCommand(Action execute, [CallerMemberName] string? commandName = null) =>
 		new(GetRelayCommand(commandName!, execute));
+	#endregion
 }
 
 /// <inheritdoc/>
@@ -91,4 +133,22 @@ public class ObservableObject<TView> : ObservableObject, IViewAccessibleViewMode
 	/// Access View from ViewModel.
 	/// </summary>
 	public TView? View { get; set; }
+}
+
+public class PropertyChangedEventArgs<T> : PropertyChangedEventArgs {
+	public virtual T NewValue { get; private set; }
+	public virtual T? OldValue { get; private set; }
+	public PropertyChangedEventArgs(string? propertyName, T? newValue, T? oldValue) : base(propertyName) {
+		NewValue = newValue!;
+		OldValue = oldValue;
+	}
+}
+
+public class PropertyChangingEventArgs<T> : PropertyChangingEventArgs {
+	public virtual T NewValue { get; private set; }
+	public virtual T? OldValue { get; private set; }
+	public PropertyChangingEventArgs(string? propertyName, T? newValue, T? oldValue) : base(propertyName) {
+		NewValue = newValue!;
+		OldValue = oldValue;
+	}
 }

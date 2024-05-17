@@ -15,16 +15,18 @@ public partial class PitchPickerFlyout : BaseFlyout {
 	public PitchPickerFlyout() {
 		InitializeComponent();
 
-		BindingOperations.SetBinding(this, NoteNameProperty, new Binding("NoteName"));
-		BindingOperations.SetBinding(this, OctaveProperty, new Binding("Octave"));
+		DataContext.NotifyPropertyChanged<string>(nameof(DataContext.NoteName), NoteNamePropertyChanged, true);
+		DataContext.NotifyPropertyChanged<int?>(nameof(DataContext.Octave), OctavePropertyChanged, true);
 	}
 
 	public new PitchPickerViewModel DataContext => (PitchPickerViewModel)base.DataContext;
 
-	public static PitchPickerFlyout Initial(Rect targetRect) {
+	public static PitchPickerFlyout Initial(Rect targetRect, string pitch, out Task<string> dialogResult) {
 		PitchPickerFlyout picker = new();
+		picker.SetPitchInitially(pitch);
 		//picker.Width = targetRect.Width + picker.ItemPadding * 2;
 		picker.Loaded += (sender, e) => picker.Center(targetRect, SetWidthType.Width);
+		dialogResult = picker.GetDialogResultTask(() => picker.DataContext.Pitch);
 		return picker;
 	}
 
@@ -32,8 +34,8 @@ public partial class PitchPickerFlyout : BaseFlyout {
 	private double ItemPadding => ((Thickness)Resources["ItemPadding"]).Left;
 	private const int DisplayItemCount = 7;
 	private static int ReservedForCenteringItemCount => DisplayItemCount / 2;
-	public Rect SelectionMaskRect => new(0, ReservedForCenteringItemCount * ItemHeight, Width, ItemHeight);
-	public Rect HoverCutEdgeRect => new(0, ItemHeight, Width, ItemHeight * (DisplayItemCount - 2));
+	public Rect SelectionMaskRect => new(0, ReservedForCenteringItemCount * ItemHeight + ItemPadding, Width, ItemHeight);
+	public Rect HoverCutEdgeRect => new(0, ItemHeight + ItemPadding, Width, ItemHeight * (DisplayItemCount - 2));
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
 		Height = ItemHeight * DisplayItemCount + ItemPadding * 2;
@@ -41,17 +43,13 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		//	scrollViewer.PreviewMouseWheel += (sender, e) => e.Handled = true);
 	}
 
-	public static readonly DependencyProperty NoteNameProperty = DependencyProperty.Register("NoteName", typeof(string), typeof(PitchPickerFlyout), new(null, NoteNamePropertyChanged));
-	public static readonly DependencyProperty OctaveProperty = DependencyProperty.Register("Octave", typeof(int?), typeof(PitchPickerFlyout), new(null, OctavePropertyChanged));
-
 	public static readonly DependencyProperty DisplayNoteNamesProperty = DependencyProperty.Register(nameof(DisplayNoteNames), typeof(string[]), typeof(PitchPickerFlyout), new(null));
 	private string[] DisplayNoteNames { get => (string[])GetValue(DisplayNoteNamesProperty); set => SetValue(DisplayNoteNamesProperty, value); }
 
-	public static void NoteNamePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
-		if (sender is not PitchPickerFlyout picker) return;
+	public void NoteNamePropertyChanged(string noteName, string? prevNoteName, string propertyName) {
 		List<string> noteNames = PitchPickerViewModel.NoteNames.ToList();
 		int noteNamesCount = noteNames.Count;
-		string noteName = (string)e.NewValue; string? prevNoteName = (string?)e.OldValue;
+		if (prevNoteName == noteName) prevNoteName = null;
 		int noteNameIndex = noteNames.IndexOf(noteName), prevNoteNameIndex = noteNames.IndexOf(prevNoteName!);
 		bool hasPrevNoteName = prevNoteNameIndex != -1;
 		if (!hasPrevNoteName) prevNoteNameIndex = noteNameIndex;
@@ -66,31 +64,37 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		string[] displayNoteNames = new string[maxIndex - minIndex + 1];
 		for (int i = minIndex, j = 0; i <= maxIndex; i++, j++)
 			displayNoteNames[j] = noteNames[MathEx.PNMod(i, noteNamesCount)];
-		picker.DisplayNoteNames = displayNoteNames;
+		DisplayNoteNames = displayNoteNames;
 		noteNameIndex -= minIndex; prevNoteNameIndex -= minIndex;
-		double toTop = picker.GetItemTopFromIndex(noteNameIndex);
-		double? fromTop = !hasPrevNoteName ? null : picker.GetItemTopFromIndex(prevNoteNameIndex);
-		picker.SetListViewTopAnimatedly(ColumnType.NoteName, toTop, fromTop);
+		double toTop = GetItemTopFromIndex(noteNameIndex);
+		double? fromTop = !hasPrevNoteName ? null : GetItemTopFromIndex(prevNoteNameIndex);
+		SetListViewTopAnimatedly(ColumnType.NoteName, toTop, fromTop);
 	}
 
-	public static void OctavePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
-		if (sender is not PitchPickerFlyout picker) return;
+	public void OctavePropertyChanged(int? octave, int? prevOctave, string propertyName) {
 		List<int> octaves = PitchPickerViewModel.Octaves.ToList();
-		int octave = (int)e.NewValue; int? prevOctave = (int?)e.OldValue;
 		int octaveIndex = octaves.IndexOf(octave), prevOctaveIndex = octaves.IndexOf(prevOctave);
 		if (octaveIndex == -1) return;
-		double toTop = picker.GetItemTopFromIndex(octaveIndex);
-		double? fromTop = prevOctaveIndex == -1 ? null : picker.GetItemTopFromIndex(prevOctaveIndex);
-		picker.SetListViewTopAnimatedly(ColumnType.Octave, toTop, fromTop);
+		double toTop = GetItemTopFromIndex(octaveIndex);
+		double? fromTop = prevOctaveIndex == -1 ? null : GetItemTopFromIndex(prevOctaveIndex);
+		SetListViewTopAnimatedly(ColumnType.Octave, toTop, fromTop);
 	}
 
 	private double GetItemTopFromIndex(int index, bool center = true) =>
 		ItemHeight * (-index + (center ? ReservedForCenteringItemCount : 0));
 
+	protected bool disableSetListViewTopAnimatedly = false;
+
+	public void SetPitchInitially(string pitch) { // Remove unnecessary animations when initializing.
+		disableSetListViewTopAnimatedly = true;
+		DataContext.Pitch = pitch;
+		disableSetListViewTopAnimatedly = false;
+	}
+
 	private void SetListViewTopAnimatedly(ColumnType column, double toTop, double? fromTop = null) {
 		PitchPickerFlyoutListView listView = column == ColumnType.NoteName ? NoteNameListView : OctaveListView;
 		fromTop ??= Canvas.GetTop(listView);
-		if (fromTop is null or double.NaN) {
+		if (fromTop is null or double.NaN || fromTop == toTop || disableSetListViewTopAnimatedly) {
 			Canvas.SetTop(listView, toTop);
 			return;
 		}

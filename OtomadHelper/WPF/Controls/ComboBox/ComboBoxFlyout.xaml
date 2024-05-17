@@ -20,16 +20,8 @@
 	</c:BaseFlyout.DataContext>
 
 	<c:BaseFlyout.InputBindings>
-		<KeyBinding Key="Up" Command="{Binding ArrowKeyDownCommand}">
-			<KeyBinding.CommandParameter>
-				<s:Int32>-1</s:Int32>
-			</KeyBinding.CommandParameter>
-		</KeyBinding>
-		<KeyBinding Key="Down" Command="{Binding ArrowKeyDownCommand}">
-			<KeyBinding.CommandParameter>
-				<s:Int32>1</s:Int32>
-			</KeyBinding.CommandParameter>
-		</KeyBinding>
+		<KeyBinding Key="Up" Command="{Binding ArrowKeyDownCommand}" CommandParameter="{m:Int -1}" />
+		<KeyBinding Key="Down" Command="{Binding ArrowKeyDownCommand}" CommandParameter="{m:Int 1}" />
 		<KeyBinding Key="Return" Command="{Binding EnterKeyDownCommand}" />
 	</c:BaseFlyout.InputBindings>
 

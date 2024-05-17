@@ -75,4 +75,13 @@ public static partial class Extensions {
 		} else
 			return false; // Leave `result` as it was.
 	}
+
+	public static async Task<TTarget> Then<TSource, TTarget>(this Task<TSource> task, Func<TSource, TTarget> then) =>
+		then(await task);
+	public static async void Then<TSource>(this Task<TSource> task, Action<TSource> then) =>
+		then(await task);
+	public static async Task<TTarget> Then<TTarget>(this Task task, Func<TTarget> then) {
+		await task; return then(); }
+	public static async void Then(this Task task, Action then) {
+		await task; then(); }
 }

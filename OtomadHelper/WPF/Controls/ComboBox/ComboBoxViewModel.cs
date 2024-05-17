@@ -35,12 +35,7 @@ public class ComboBoxViewModelItem : ObservableObject {
 
 	public bool IsChecked {
 		get => ViewModel.Selected == Text;
-		set {
-			if (value) {
-				ViewModel.Selected = Text;
-				OnPropertyChanged();
-			}
-		}
+		set => SetProperty(ViewModel.Selected, v => ViewModel.Selected = v, Text, value);
 	}
 
 	public ComboBoxViewModelItem(string text, ComboBoxViewModel viewModel) {

@@ -101,6 +101,12 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	protected virtual void SetLocation(Rect rect, SetWidthType widthType = SetWidthType.Nothing) =>
 		SetLocation(rect.Left, rect.Top, rect.Width, widthType);
 
+	protected internal Task<T> GetDialogResultTask<T>(Func<T> GetResult) {
+		TaskCompletionSource<T> taskCompletionSource = new();
+		Closing += (sender, e) => taskCompletionSource.SetResult(GetResult());
+		return taskCompletionSource.Task;
+	}
+
 	#region Set backdrop type
 	protected void RefreshFrame() {
 		HwndSource mainWindowSrc = HwndSource.FromHwnd(Handle);
