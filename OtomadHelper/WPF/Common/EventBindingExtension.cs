@@ -14,7 +14,7 @@ namespace OtomadHelper.WPF.Common;
 
 public class EventBindingExtension : MarkupExtension {
 	public string? Command { get; set; }
-	public string? CommandParameter { get; set; }
+	public string? CommandParameter { get; set; } // TODO: DependencyProperty
 
 	public override object? ProvideValue(IServiceProvider serviceProvider) {
 		if (serviceProvider.GetService(typeof(IProvideValueTarget)) is not IProvideValueTarget targetProvider)

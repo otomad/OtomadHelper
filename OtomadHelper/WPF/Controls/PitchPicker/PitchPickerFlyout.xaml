@@ -32,10 +32,13 @@
 			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
 			<m:ActualSizeToRectConverter x:Key="SizeToRect" />
+			<m:RectToDrawingBrushConverter x:Key="RectToBrush" />
 
 			<Thickness x:Key="ItemPadding">4,0</Thickness>
 			<s:Double x:Key="ItemHeight">40</s:Double>
 			<s:Double x:Key="ItemRadius">4</s:Double>
+			<s:Int32 x:Key="SpinUpDelta">120</s:Int32>
+			<s:Int32 x:Key="SpinDownDelta">-120</s:Int32>
 
 			<Style x:Key="ListView" TargetType="c:PitchPickerFlyoutListView">
 				<Setter Property="Background" Value="Transparent" />
@@ -100,9 +103,23 @@
 			</Style>
 			<Style x:Key="ListViewWrapper" TargetType="Canvas">
 				<Setter Property="Background" Value="Transparent" />
+				<Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Canvas, AncestorLevel=1}}" />
+				<Setter Property="Height" Value="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Canvas, AncestorLevel=1}}" />
+				<EventSetter Event="PreviewMouseDown" Handler="ListViewWrapper_PreviewMouseDown" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType=Canvas, AncestorLevel=1}}" Value="True">
+						<Setter Property="Clip">
+							<Setter.Value>
+								<RectangleGeometry Rect="{Binding HoverCutEdgeRect, ElementName=View}" />
+							</Setter.Value>
+						</Setter>
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
+			<Style x:Key="ListViewWrapperWrapper" TargetType="Canvas">
+				<Setter Property="Background" Value="Transparent" />
 				<Setter Property="Focusable" Value="True" />
 				<Setter Property="FocusVisualStyle" Value="{DynamicResource InnerFocusVisualStyle}" />
-				<EventSetter Event="PreviewMouseDown" Handler="ListViewWrapper_PreviewMouseDown" />
 			</Style>
 			<Style x:Key="ListViewSeparator" TargetType="Line">
 				<Setter Property="Stretch" Value="Fill" />
@@ -118,42 +135,71 @@
 				<Setter Property="Foreground" Value="{DynamicResource TextOnAccentForegroundBrush}" />
 				<Setter Property="IsHitTestVisible" Value="False" />
 			</Style>
+			<Style TargetType="Border">
+				<Setter Property="ClipToBounds" Value="True" />
+			</Style>
 			<Style x:Key="ColumnGridSelectionMasked" TargetType="Grid">
-				<Style.Resources>
-					<Style TargetType="Border">
-						<Setter Property="ClipToBounds" Value="True" />
-					</Style>
-				</Style.Resources>
 				<Setter Property="IsHitTestVisible" Value="False" />
 				<Setter Property="Visibility" Value="{Binding IsLightTheme, ElementName=View, Converter={StaticResource BoolToVis}, Mode=OneWay}" />
-				<Setter Property="OpacityMask">
+				<Setter Property="Clip">
 					<Setter.Value>
-						<DrawingBrush>
-							<DrawingBrush.Drawing>
-								<DrawingGroup>
-									<DrawingGroup.Children>
-										<GeometryDrawing Brush="Transparent">
-											<GeometryDrawing.Geometry>
-												<RectangleGeometry Rect="0,0,1,1" />
-											</GeometryDrawing.Geometry>
-										</GeometryDrawing>
-										<GeometryDrawing Brush="Black">
-											<GeometryDrawing.Geometry>
-												<RectangleGeometry Rect="{Binding SelectionMaskRect, ElementName=View}" />
-											</GeometryDrawing.Geometry>
-										</GeometryDrawing>
-									</DrawingGroup.Children>
-								</DrawingGroup>
-							</DrawingBrush.Drawing>
-						</DrawingBrush>
+						<RectangleGeometry Rect="{Binding SelectionMaskRect, ElementName=View}" />
 					</Setter.Value>
 				</Setter>
+			</Style>
+			<Style x:Key="SpinnerButton" TargetType="RepeatButton">
+				<Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Canvas, AncestorLevel=1}}" />
+				<Setter Property="Height" Value="{StaticResource ItemHeight}" />
+				<Setter Property="BorderThickness" Value="0" />
+				<Setter Property="Background" Value="Transparent" />
+				<Setter Property="Foreground" Value="{DynamicResource ControlStrong}" />
+				<Setter Property="Focusable" Value="False" />
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="RepeatButton">
+							<Border
+								Padding="{TemplateBinding Padding}"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								>
+								<ContentPresenter
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									TextBlock.Foreground="{TemplateBinding Foreground}"
+									TextBlock.FontSize="{TemplateBinding FontSize}"
+									/>
+							</Border>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType=Canvas, AncestorLevel=1}}" Value="False">
+						<Setter Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+					<Trigger Property="IsMouseOver" Value="True">
+						<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+					</Trigger>
+					<Trigger Property="IsPressed" Value="True">
+						<Setter Property="FontSize" Value="10" />
+					</Trigger>
+				</Style.Triggers>
+			</Style>
+			<Style x:Key="SpinnerButtonUp" BasedOn="{StaticResource SpinnerButton}" TargetType="RepeatButton">
+				<Setter Property="Padding" Value="0,4,0,0" />
+				<Setter Property="Canvas.Top" Value="0" />
+				<Setter Property="Content" Value="上" />
+			</Style>
+			<Style x:Key="SpinnerButtonDown" BasedOn="{StaticResource SpinnerButton}" TargetType="RepeatButton">
+				<Setter Property="Padding" Value="0,0,0,4" />
+				<Setter Property="Canvas.Bottom" Value="0" />
+				<Setter Property="Content" Value="下" />
 			</Style>
 		</ResourceDictionary>
 	</c:BaseFlyout.Resources>
 
 	<Grid>
-		<Grid x:Name="VisibleGrid">
+		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition />
 				<ColumnDefinition Width="1" />
@@ -164,14 +210,26 @@
 				x:Name="NoteNameWrapper"
 				Grid.Column="0"
 				PreviewMouseWheel="{m:EventBinding Command=NoteNameSpinCommand, CommandParameter=$e.Delta}"
-				Style="{StaticResource ListViewWrapper}"
+				Style="{StaticResource ListViewWrapperWrapper}"
 				>
-				<c:PitchPickerFlyoutListView
-					x:Name="NoteNameListView"
-					d:ItemsSource="{Binding NoteNames}"
-					ItemClick="{m:EventBinding Command=NoteNameChangeCommand, CommandParameter=$this.Content}"
-					ItemsSource="{Binding DisplayNoteNames, ElementName=View}"
-					Style="{StaticResource ListView}"
+				<Canvas Style="{StaticResource ListViewWrapper}">
+					<c:PitchPickerFlyoutListView
+						x:Name="NoteNameListView"
+						d:ItemsSource="{Binding NoteNames}"
+						ItemClick="{m:EventBinding Command=NoteNameChangeCommand, CommandParameter=$this.Content}"
+						ItemsSource="{Binding DisplayNoteNames, ElementName=View}"
+						Style="{StaticResource ListView}"
+						/>
+				</Canvas>
+				<RepeatButton
+					Style="{StaticResource SpinnerButtonUp}"
+					CommandParameter="{StaticResource SpinUpDelta}"
+					Command="{Binding NoteNameSpinCommand}"
+					/>
+				<RepeatButton
+					Style="{StaticResource SpinnerButtonDown}"
+					CommandParameter="{StaticResource SpinDownDelta}"
+					Command="{Binding NoteNameSpinCommand}"
 					/>
 			</Canvas>
 			<Line Style="{StaticResource ListViewSeparator}" />
@@ -179,24 +237,36 @@
 				x:Name="OctaveWrapper"
 				Grid.Column="2"
 				PreviewMouseWheel="{m:EventBinding Command=OctaveSpinCommand, CommandParameter=$e.Delta}"
-				Style="{StaticResource ListViewWrapper}"
+				Style="{StaticResource ListViewWrapperWrapper}"
 				>
-				<c:PitchPickerFlyoutListView
-					x:Name="OctaveListView"
-					ItemClick="{m:EventBinding Command=OctaveChangeCommand, CommandParameter=$this.Content}"
-					ItemsSource="{Binding Octaves}"
-					Style="{StaticResource ListView}"
+				<Canvas Style="{StaticResource ListViewWrapper}">
+					<c:PitchPickerFlyoutListView
+						x:Name="OctaveListView"
+						ItemClick="{m:EventBinding Command=OctaveChangeCommand, CommandParameter=$this.Content}"
+						ItemsSource="{Binding Octaves}"
+						Style="{StaticResource ListView}"
+						/>
+				</Canvas>
+				<RepeatButton
+					Style="{StaticResource SpinnerButtonUp}"
+					CommandParameter="{StaticResource SpinUpDelta}"
+					Command="{Binding OctaveSpinCommand}"
+					/>
+				<RepeatButton
+					Style="{StaticResource SpinnerButtonDown}"
+					CommandParameter="{StaticResource SpinDownDelta}"
+					Command="{Binding OctaveSpinCommand}"
 					/>
 			</Canvas>
 		</Grid>
-		<Grid Style="{StaticResource ColumnGridSelectionMasked}">
+		<Grid Style="{StaticResource ColumnGridSelectionMasked}" d:Visibility="Collapsed">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition />
 				<ColumnDefinition Width="1" />
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
 			<Border Grid.Column="0">
-				<Canvas Style="{StaticResource ListViewWrapper}" >
+				<Canvas Style="{StaticResource ListViewWrapper}" Focusable="False">
 					<c:PitchPickerFlyoutListView
 						d:ItemsSource="{Binding NoteNames}"
 						ItemsSource="{Binding DisplayNoteNames, ElementName=View}"
@@ -206,7 +276,7 @@
 				</Canvas>
 			</Border>
 			<Border Grid.Column="2">
-				<Canvas Style="{StaticResource ListViewWrapper}" >
+				<Canvas Style="{StaticResource ListViewWrapper}" Focusable="False">
 					<c:PitchPickerFlyoutListView
 						ItemsSource="{Binding Octaves}"
 						Style="{StaticResource ListViewSelectionMasked}"

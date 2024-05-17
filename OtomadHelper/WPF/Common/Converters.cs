@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace OtomadHelper.WPF.Common;
 
@@ -143,4 +144,28 @@ public class MultiTriggerOrConverter : IMultiValueConverter {
 
 	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
+}
+
+[ValueConversion(typeof(Rect), typeof(DrawingBrush))]
+public class RectToDrawingBrushConverter : IValueConverter {
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+		Rect rect = (Rect)value;
+		DrawingBrush brush = new();
+		DrawingGroup group = new();
+		group.Children.Add(new GeometryDrawing() {
+			Brush = new SolidColorBrush(Colors.Transparent),
+			Geometry = new RectangleGeometry(new Rect(0, 0, 1, 1)),
+		});
+		group.Children.Add(new GeometryDrawing() {
+			Brush = new SolidColorBrush(Colors.Black),
+			Geometry = new RectangleGeometry(rect),
+		});
+		brush.Drawing = group;
+		return brush;
+	}
+
+	public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+		DrawingBrush brush = (DrawingBrush)value;
+		return ((brush.Drawing as DrawingGroup)?.Children.LastOrDefault() as GeometryDrawing)?.Geometry.Bounds;
+	}
 }

@@ -32,7 +32,8 @@ public partial class PitchPickerFlyout : BaseFlyout {
 	private double ItemPadding => ((Thickness)Resources["ItemPadding"]).Left;
 	private const int DisplayItemCount = 7;
 	private static int ReservedForCenteringItemCount => DisplayItemCount / 2;
-	public Rect SelectionMaskRect => new(0, ReservedForCenteringItemCount / (double)DisplayItemCount, 1, 1 / (double)DisplayItemCount);
+	public Rect SelectionMaskRect => new(0, ReservedForCenteringItemCount * ItemHeight, Width, ItemHeight);
+	public Rect HoverCutEdgeRect => new(0, ItemHeight, Width, ItemHeight * (DisplayItemCount - 2));
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
 		Height = ItemHeight * DisplayItemCount + ItemPadding * 2;
@@ -119,15 +120,15 @@ public partial class PitchPickerFlyout : BaseFlyout {
 
 	private ColumnType? GetActiveColumn() =>
 		GetFocusedColumn() ?? (
-			NoteNameListView.IsMouseOver ? ColumnType.NoteName :
-			OctaveListView.IsMouseOver ? ColumnType.Octave :
+			NoteNameWrapper.IsMouseOver ? ColumnType.NoteName :
+			OctaveWrapper.IsMouseOver ? ColumnType.Octave :
 			null
 		);
 
 	private void Window_PreviewKeyDown(object sender, KeyEventArgs e) {
 		if (e.Key is Key.Up or Key.Down) {
 			ColumnType? column = GetActiveColumn();
-			int delta = e.Key == Key.Up ? 120 : -120;
+			int delta = (int)(e.Key == Key.Up ? Resources["SpinUpDelta"] : Resources["SpinDownDelta"]);
 			if (column == ColumnType.NoteName) DataContext.NoteNameSpinCommand.Execute(delta);
 			else if (column == ColumnType.Octave) DataContext.OctaveSpinCommand.Execute(delta);
 			e.Handled = true;
@@ -137,6 +138,9 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		}
 	}
 
-	private void ListViewWrapper_PreviewMouseDown(object sender, MouseButtonEventArgs e) =>
-		Keyboard.ClearFocus();
+	private void ListViewWrapper_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+		// Click to reset the focus ring.
+		if (e.Source is IInputElement element)
+			Keyboard.Focus(element);
+	}
 }

@@ -30,4 +30,6 @@
 	<SolidColorBrush x:Key="SubtleSecondary" Color="#0FFFFFFF" />
 	<SolidColorBrush x:Key="SubtleTertiary" Color="#0AFFFFFF" />
 	<SolidColorBrush x:Key="DividerStroke" Color="#15FFFFFF" />
+	<SolidColorBrush x:Key="TextSecondary" Color="#C8FFFFFF" />
+	<SolidColorBrush x:Key="ControlStrong" Color="#8AFFFFFF" />
 </ResourceDictionary>
