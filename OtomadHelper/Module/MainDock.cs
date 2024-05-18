@@ -1,6 +1,8 @@
 using System.Drawing;
 using System.Text.Json.Nodes;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
+using System.Windows.Interop;
 
 using APNGLib;
 
@@ -31,7 +33,6 @@ public partial class MainDock : UserControl {
 			new("走", DialogResult.Retry),
 			new("忽略", DialogResult.Ignore, true),
 		}).ShowDialog();*/
-		Browser.Capture = true;
 
 #if VEGAS_ENV
 		BackColor = Skins.Colors.ButtonFace;
@@ -43,7 +44,7 @@ public partial class MainDock : UserControl {
 	}
 
 	private async void CoreWebView2_LoadEnvironment() {
-		CoreWebView2EnvironmentOptions options = new("--enable-features=OverlayScrollbar,msEdgeFluentOverlayScrollbar,msOverlayScrollbarWinStyleAnimation,msWebView2BrowserHitTransparent");
+		CoreWebView2EnvironmentOptions options = new("--enable-features=OverlayScrollbar,msEdgeFluentOverlayScrollbar,msOverlayScrollbarWinStyleAnimation"); // msWebView2BrowserHitTransparent
 		CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(null, null, options);
 		await Browser.EnsureCoreWebView2Async(environment);
 		CoreWebView2Settings settings = Browser.CoreWebView2.Settings;
@@ -68,12 +69,11 @@ public partial class MainDock : UserControl {
 		Browser.CoreWebView2.DocumentTitleChanged += (sender, e) => DocumentTitleChanged?.Invoke(Browser.CoreWebView2.DocumentTitle);
 		Browser.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
 		Browser.CoreWebView2.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
-		Browser.CoreWebView2.AddHostObjectToScript("postMessageToHost", postMessageToHost);
 #if DEBUG
 		Browser.CoreWebView2.OpenDevToolsWindow();
 #endif
+		RevokeWebView2DragDropSwallow(this);
 	}
-	private readonly PostMessageToHost postMessageToHost = new();
 
 	private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e) {
 		e.Handled = true;
@@ -81,13 +81,26 @@ public partial class MainDock : UserControl {
 	}
 
 	private async void Browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
-		string message = e.TryGetWebMessageAsString();
-		if (message == "initialized") {
-			await Task.Delay(500);
-			LoadingAnimationPicture.Visible = false;
-			LoadingAnimationPicture.Stop();
-			SplashContainer.Visible = false;
-			Browser.Visible = true;
+		try {
+			string message = e.TryGetWebMessageAsString();
+			switch (message) {
+				case "initialized":
+					await Task.Delay(500);
+					LoadingAnimationPicture.Visible = false;
+					LoadingAnimationPicture.Stop();
+					SplashContainer.Visible = false;
+					Browser.Visible = true;
+					break;
+				default:
+					break;
+			}
+		} catch (ArgumentException) {
+			string json = e.WebMessageAsJson;
+			JsonNode? node = JsonNode.Parse(json);
+			if (node?.GetValueKind() == JsonValueKind.Number) {
+				
+			}
+			Debug.WriteLine(node);
 		}
 	}
 
@@ -158,8 +171,7 @@ public partial class MainDock : UserControl {
 				Debug.WriteLine(location);
 			};
 			menuList.Insert(0, deleteItem);
-			if (isDevMode)
-				menuList.Insert(1, separator);
+			if (isDevMode) menuList.Insert(1, separator);
 		}
 		RemoveIrrationalSeparators();
 
@@ -185,5 +197,24 @@ public partial class MainDock : UserControl {
 						menuList.RemoveAt(i);
 			}
 		}
+	}
+
+	public Rect ClientToScreenRect(Rect clientRect) {
+		Point location = PointToScreen(Point.Empty);
+		(double dpiX, double dpiY) = this.GetDpi();
+		return new(
+			x: (location.X + clientRect.X) / dpiX,
+			y: (location.Y + clientRect.Y) / dpiY,
+			width: clientRect.Width / dpiX,
+			height: clientRect.Height / dpiY
+		);
+	}
+
+	public void ShowFlyout(System.Windows.Window flyout) {
+		try {
+			new WindowInteropHelper(flyout).Owner = Handle;
+			ElementHost.EnableModelessKeyboardInterop(flyout);
+			flyout.Show(); // ShowDialog will prevent WndProc in the dock.
+		} catch (Exception) { }
 	}
 }

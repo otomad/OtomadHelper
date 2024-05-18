@@ -1,3 +1,5 @@
+using NAudio.Utils;
+
 namespace OtomadHelper.Interop;
 
 public static class PInvoke {
@@ -170,10 +172,10 @@ public static class PInvoke {
 	};
 
 	[DllImport("dwmapi.dll")]
-	internal static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
+	public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
 
 	[DllImport("dwmapi.dll")]
-	internal static extern int DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
+	public static extern int DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
 
 	[DllImport("user32.dll")]
 	public static extern long GetWindowLongPtr(IntPtr hWnd, WindowLongFlags nIndex);
@@ -190,7 +192,7 @@ public static class PInvoke {
 	public static extern IntPtr SetActiveWindow(IntPtr hWnd);
 
 	[DllImport("user32.dll")]
-	public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+	public static extern bool SetLayeredWindowAttributes(IntPtr hWnd, uint crKey, byte bAlpha, uint dwFlags);
 
 	public static int ExtendFrame(IntPtr hWnd, MARGINS margins) =>
 		DwmExtendFrameIntoClientArea(hWnd, ref margins);
@@ -205,4 +207,52 @@ public static class PInvoke {
 			exStyle |= (long)style;
 		SetWindowLongPtr(hWnd, WindowLongFlags.ExStyle, exStyle);
 	}
+
+	[DllImport("Ole32.dll")]
+	public static extern int RevokeDragDrop(IntPtr hWnd);
+
+	[DllImport("Ole32.dll")]
+	public static extern int RegisterDragDrop(IntPtr hWnd, IOleDropTarget pDropTarget);
+
+	[DllImport("User32.dll")]
+	public static extern bool EnumChildWindows(IntPtr hWndParent, EnumChildCallback lpEnumFunc, IntPtr lParam);
+
+	[DllImport("User32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+	public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassname, int nMaxCount);
+
+	public delegate bool EnumChildCallback(IntPtr hWnd, IntPtr lParam);
+
+	private static bool EnumWindow(IntPtr hWnd, IntPtr lParam) {
+		GCHandle gcChildhandlesList = GCHandle.FromIntPtr(lParam);
+		if (gcChildhandlesList == null || gcChildhandlesList.Target == null) return false;
+		StringBuilder buf = new(128);
+		GetClassName(hWnd, buf, 128);
+		if (buf.ToString() == Chrome_WidgetWin) {
+			List<IntPtr>? childHandles = gcChildhandlesList.Target as List<IntPtr>;
+			childHandles?.Add(hWnd);
+		}
+		return true;
+	}
+
+	private static IntPtr GetChildHandle(IntPtr hWnd) {
+		List<IntPtr> childHandles = new();
+		GCHandle gcChildhandlesList = GCHandle.Alloc(childHandles);
+		IntPtr pointerChildHandlesList = GCHandle.ToIntPtr(gcChildhandlesList);
+		try {
+			EnumChildCallback childProc = new(EnumWindow);
+			EnumChildWindows(hWnd, childProc, pointerChildHandlesList);
+		} finally {
+			gcChildhandlesList.Free();
+		}
+		return childHandles.FirstOrDefault();
+	}
+
+	public static void RevokeWebView2DragDropSwallow(System.Windows.Forms.Control owner) {
+		IntPtr chrome = GetChildHandle(owner.Handle);
+		if (chrome == IntPtr.Zero) return;
+		DropTarget target = new(owner);
+		RegisterDragDrop(chrome, target);
+	}
+
+	private const string Chrome_WidgetWin = "Chrome_RenderWidgetHostHWND";
 }

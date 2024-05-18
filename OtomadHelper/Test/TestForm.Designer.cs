@@ -31,6 +31,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.ClientSize = new System.Drawing.Size(1262, 673);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.KeyPreview = true;
 			this.Name = "TestForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Otomad Helper - Test Form";

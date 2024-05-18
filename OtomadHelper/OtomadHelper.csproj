@@ -43,6 +43,7 @@
 		<Reference Include="APNGLib">
 			<HintPath>Libraries\APNGManagement\APNGLib.dll</HintPath>
 		</Reference>
+		<Reference Include="Microsoft.VisualBasic" />
 		<Reference Include="PresentationCore" />
 		<Reference Include="PresentationFramework" />
 		<Reference Include="ScriptPortal.MediaSoftware.Skins">
@@ -77,9 +78,6 @@
 		<Compile Update="Module\OtomadHelperDock.cs">
 			<SubType>UserControl</SubType>
 		</Compile>
-		<EmbeddedResource Update="Module\MainDock.resx">
-			<DependentUpon>MainDock.cs</DependentUpon>
-		</EmbeddedResource>
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -132,6 +130,9 @@
 		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxItem.g.i.cs" />
 		<Compile Remove="obj\x64\Debug\WPF\Views\ContentDialog\ContentDialog.g.i.cs" />
 		<Compile Remove="WPF\Common\EventCommand.cs" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Assets\Delete.svg" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Remove="Module\MainWPFDock.xaml" />

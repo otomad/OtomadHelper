@@ -9,4 +9,12 @@ public class Bridge {
 		ContentDialog.ShowDialog<string>(title, body, buttons, iconName) ?? "";
 		// Test:
 		// await bridges.bridge.showMessageBox("幸福倒计时", "Windows 11 即将更新！", [{ text: "OK", dialogResult: "ok", isDefault: true }, { text: "Cancel", dialogResult: "cancel" }], "info");
+
+	public async Task<string> ShowComboBox(Tuple<double, double, double, double> rect, string selected, string[] options) {
+		(double x, double y, double width, double height) = rect;
+		Rect screenRect = Host.ClientToScreenRect(new(x, y, width, height));
+		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(options, selected, screenRect, out Task<string> resultTask);
+		Host.ShowFlyout(flyout);
+		return await resultTask;
+	}
 }

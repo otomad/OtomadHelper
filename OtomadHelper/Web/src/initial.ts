@@ -73,7 +73,7 @@ const global = globalThis as AnyObject;
 
 	// #region The page is fully loaded
 	const observer = new MutationObserver(() => {
-		window.chrome.webview.postMessage("initialized");
+		postMessageToHost("initialized");
 		observer.disconnect();
 	});
 	observer.observe(document.getElementById("root")!, { childList: true });

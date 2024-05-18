@@ -11,8 +11,6 @@ using System.Windows.Forms;
 using OtomadHelper.Interop;
 using OtomadHelper.WPF.Controls;
 
-using Rect = System.Windows.Rect;
-
 namespace OtomadHelper.Test;
 public partial class TestControls : Form {
 	private readonly List<System.Windows.Window> flyouts = new();
@@ -34,8 +32,8 @@ public partial class TestControls : Form {
 			height: control.Height / dpiY
 		);
 
-		//ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect);
-		PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect, selected, out Task<string> resultTask);
+		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect, out Task<string> resultTask);
+		//PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect, selected, out Task<string> resultTask);
 		flyouts.Add(flyout);
 		resultTask.Then(result => { ComboBoxBtn.Text = selected = result; });
 		try {

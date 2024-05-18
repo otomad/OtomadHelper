@@ -128,7 +128,7 @@ public class EventBindingExtension : MarkupExtension {
 		Type currentType = valueType ?? target.GetType();
 
 		foreach (string propertyName in path) {
-			if (propertyName == "Parent" && typeof(DependencyObject).IsAssignableFrom(currentType)) {
+			if (propertyName == "Parent" && currentType.Extends(typeof(DependencyObject))) {
 				target = ((DependencyObject)target).GetParentObject()!;
 				currentType = target.GetType();
 				continue;

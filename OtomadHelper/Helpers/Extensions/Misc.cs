@@ -84,4 +84,7 @@ public static partial class Extensions {
 		await task; return then(); }
 	public static async void Then(this Task task, Action then) {
 		await task; then(); }
+
+	public static bool Extends(this Type type, Type baseType) =>
+		baseType.IsAssignableFrom(type);
 }

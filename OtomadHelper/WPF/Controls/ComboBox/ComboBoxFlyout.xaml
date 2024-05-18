@@ -12,18 +12,20 @@
 	MinWidth="200"
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight"
+	KeyDown="{m:EventBinding Command=KeyDownCommand, CommandParameter=$e}"
 	KeyUp="{m:EventBinding Command=KeyUpCommand, CommandParameter=$e}"
+	Focusable="True"
 	mc:Ignorable="d"
 	>
 	<c:BaseFlyout.DataContext>
 		<c:ComboBoxViewModel x:Name="ViewModel" />
 	</c:BaseFlyout.DataContext>
 
-	<c:BaseFlyout.InputBindings>
-		<KeyBinding Key="Up" Command="{Binding ArrowKeyDownCommand}" CommandParameter="{m:Int -1}" />
-		<KeyBinding Key="Down" Command="{Binding ArrowKeyDownCommand}" CommandParameter="{m:Int 1}" />
+	<!--<c:BaseFlyout.InputBindings>
+		<KeyBinding Key="Up" CommandParameter="{m:Int -1}" Command="{Binding ArrowKeyDownCommand}" />
+		<KeyBinding Key="Down" CommandParameter="{m:Int 1}" Command="{Binding ArrowKeyDownCommand}" />
 		<KeyBinding Key="Return" Command="{Binding EnterKeyDownCommand}" />
-	</c:BaseFlyout.InputBindings>
+	</c:BaseFlyout.InputBindings>-->
 
 	<c:BaseFlyout.Resources>
 		<ResourceDictionary>
@@ -53,6 +55,7 @@
 				<Setter Property="Padding" Value="0,0,12,0" />
 				<Setter Property="Height" Value="{Binding ItemHeight, ElementName=View}" />
 				<Setter Property="FontSize" Value="14" />
+				<Setter Property="Focusable" Value="False" />
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="RadioButton">
@@ -234,6 +237,7 @@
 		x:Name="ItemsControlWrapper"
 		ItemsSource="{Binding Items}"
 		Style="{StaticResource ItemsControlWrapper}"
+		Focusable="True"
 		>
 		<ItemsControl.ItemsPanel>
 			<ItemsPanelTemplate>

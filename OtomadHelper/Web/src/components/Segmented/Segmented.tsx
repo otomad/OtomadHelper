@@ -166,6 +166,7 @@ export default function Segmented<T extends string = string>({ current: [current
 			const { left: trackLeft, width: trackWidth } = track.getBoundingClientRect();
 			let index = Math.floor((e.clientX - trackLeft) / trackWidth * itemCount);
 			if (isRtl()) index = itemCount - 1 - index;
+			index = clamp(index, 0, itemCount - 1);
 			setCurrentByIndex(index);
 		};
 		const pointerUp = () => {

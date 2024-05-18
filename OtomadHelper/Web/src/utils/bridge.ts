@@ -44,8 +44,8 @@ globals.bridges = bridges;
  * Post message to host (C#).
  * @param message - Message.
  */
-export async function postMessageToHost(message: Any) {
-	await window.chrome.webview.hostObjects.postMessageToHost.PostMessage(JSON.stringify(message));
+export function postMessageToHost(message: Any) {
+	window.chrome.webview.postMessage(message);
 }
 globals.postMessageToHost = postMessageToHost;
 

@@ -2,8 +2,10 @@
 /// <see href="https://github.com/johot/WebView2-better-bridge"/>
 /// </summary>
 
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
-using Microsoft.Web.WebView2.WinForms;
+
+using OtomadHelper.Helpers.TupleAsJsonArray;
 using OtomadHelper.Models;
 using OtomadHelper.Module;
 
@@ -26,6 +28,9 @@ public class BetterBridge {
 	internal static readonly JsonSerializerOptions jsonOptions = new() {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		IncludeFields = true,
+		Converters = {
+			new TupleConverterFactory(),
+		},
 	};
 
 	public string[] GetMethods() =>
@@ -67,7 +72,8 @@ public class BetterBridge {
 					Type type = parameter.ParameterType;
 					if (type == typeof(string) && jsonArg.StartsWith("\"")) continue;
 					else if (type == typeof(bool) && jsonArg is "true" or "false") continue;
-					else if (typeof(IEnumerable).IsAssignableFrom(type) && jsonArg.StartsWith("[")) continue;
+					else if ((type.Extends(typeof(IEnumerable)) || type.Extends(typeof(ITuple))) &&
+						jsonArg.StartsWith("[")) continue;
 					else if (type.IsNumber() && jsonArg.IsMatch(new(@"^[-.\d]"))) continue;
 					else return false;
 				}

@@ -42,7 +42,7 @@ public static partial class Extensions {
 	/// </summary>
 	/// <param name="form">A WinForm <see cref="Form"/>.</param>
 	/// <returns>The screen DPI in two dimension.</returns>
-	public static (double dpiX, double dpiY) GetDpi(this Form form) {
+	public static (double dpiX, double dpiY) GetDpi(this Control form) {
 		Graphics graphics = form.CreateGraphics();
 		try {
 			return (graphics.DpiX / DPI_DIVISOR, graphics.DpiY / DPI_DIVISOR);
@@ -56,10 +56,10 @@ public static partial class Extensions {
 	/// <summary>
 	/// Get the DPI of the screen where the WPF <see cref="Window"/> is located.
 	/// </summary>
-	/// <param name="visual">A WPF <see cref="Window"/>.</param>
+	/// <param name="window">A WPF <see cref="Window"/>.</param>
 	/// <returns>The screen DPI in two dimension.</returns>
-	public static (double dpiX, double dpiY) GetDpi(this Visual visual) {
-		PresentationSource source = PresentationSource.FromVisual(visual);
+	public static (double dpiX, double dpiY) GetDpi(this Visual window) {
+		PresentationSource source = PresentationSource.FromVisual(window);
 		try {
 			return (source.CompositionTarget.TransformToDevice.M11, source.CompositionTarget.TransformToDevice.M22);
 		} catch {

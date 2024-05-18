@@ -16,6 +16,7 @@ public class BaseFlyout : BackdropWindow {
 		SystemBackdropType = SystemBackdropType.TransientWindow;
 		TitleBarType = TitleBarType.WindowChromeNoTitleBar;
 		WindowStartupLocation = WindowStartupLocation.Manual;
+		Topmost = true;
 		Deactivated += (sender, e) => this.Vanish();
 
 		// Loaded animation
