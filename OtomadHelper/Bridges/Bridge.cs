@@ -3,6 +3,8 @@ using OtomadHelper.WPF.Controls;
 namespace OtomadHelper.Bridges;
 
 public class Bridge {
+	public void SetIsDevMode(bool isDevMode) => Host.isDevMode = isDevMode;
+
 	public string ShowMessageBox(string title, string body, ContentDialogButtonItem<string>[] buttons, string iconName = "") =>
 		ContentDialog.ShowDialog<string>(title, body, buttons, iconName) ?? "";
 		// Test:

@@ -6,6 +6,7 @@ export default function Home() {
 		<div className="container">
 			<InfoBar status="accent" title="Info">This page is for testing components currently. The quick brown fox jumps over a lazy dog.</InfoBar>
 			<SettingsCardToggleSwitch title="Shown" icon="enabled" on={[shown, setShown]} />
+			<TextBox value={[text, setText]} />
 
 			<div>
 				<Segmented current={[text, setText]}>

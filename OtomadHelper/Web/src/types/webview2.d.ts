@@ -6,6 +6,8 @@
 // These declarations correspond to methods and objects used to facilitate communication
 // between the host and browser for the Microsoft Edge WebView2 applications.
 
+import type { Bridge } from "./host";
+
 /**
  * An asynchronous host object proxy. Host objects added via CoreWebView2.AddHostObjectToScript
  * are exposed as host object proxies using window.chrome.webview.hostObjects.{name}. Host object
@@ -149,6 +151,7 @@ export interface HostObjectsAsyncRoot extends HostObjects {
  * chrome.webview.hostObjects.myObject.
  */
 export interface HostObjects {
+	bridge: MakeFunctionsAsync<Bridge>;
 	[key: string]: HostObjectAsyncProxy;
 }
 
@@ -433,3 +436,8 @@ declare global {
 		};
 	}
 }
+
+type MakeFunctionAsync<TFunction extends Function> = (...args: Parameters<TFunction>) => Promise<ReturnType<TFunction>>;
+type MakeFunctionsAsync<TFunctions> = {
+	[functionName in keyof TFunctions]: MakeFunctionAsync<TFunctions[functionName]>;
+};

@@ -15,7 +15,7 @@ const global = globalThis as AnyObject;
 { // Initial
 	// #region Prevent context menu triggers by right-clicking
 	window.addEventListener("contextmenu", e => {
-		if (isProdMode())
+		if (!isInPath(e.target, 'input, [contenteditable="true"]') && isProdMode())
 			e.preventDefault();
 	});
 	// #endregion

@@ -3,6 +3,7 @@ export const useDevStore = createStore(() => ({
 	rtl: false,
 }));
 
-useDevStore.subscribe(({ rtl }) => {
+useDevStore.subscribe(({ devMode, rtl }) => {
 	document.dir = rtl ? "rtl" : "ltr";
+	bridges.bridge.setIsDevMode(devMode);
 });

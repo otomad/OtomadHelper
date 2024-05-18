@@ -1,14 +1,9 @@
-export { };
-
-declare module "./webview2" {
-	interface HostObjects {
-		bridge: {
-			showMessageBox(title: string, body: string, buttons: ContentDialogButtonItem[]): Promise<string>;
-		};
-	}
+export interface Bridge {
+	setIsDevMode(isDevMode: bool): void;
+	showMessageBox(title: string, body: string, buttons: ContentDialogButtonItem[]): string;
 }
 
-interface ContentDialogButtonItem {
+export interface ContentDialogButtonItem {
 	text: string;
 	dialogResult: string;
 	isDefault?: boolean;

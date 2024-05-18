@@ -40,6 +40,15 @@ export const bridges = new Proxy(EMPTY, {
 }) as HostObjects;
 globals.bridges = bridges;
 
+/**
+ * Post message to host (C#).
+ * @param message - Message.
+ */
+export async function postMessageToHost(message: Any) {
+	await window.chrome.webview.hostObjects.postMessageToHost.PostMessage(JSON.stringify(message));
+}
+globals.postMessageToHost = postMessageToHost;
+
 // Event of communication from native code to web page
 window.isWebView = !!window.chrome.webview;
 window.chrome ??= new VirtualObject();

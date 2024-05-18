@@ -5,6 +5,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.Web.WebView2.WinForms;
 using OtomadHelper.Models;
+using OtomadHelper.Module;
 
 namespace OtomadHelper.Helpers.WebView2BetterBridge;
 
@@ -119,9 +120,7 @@ public class BetterBridge {
 }
 
 public static class MessageSender {
-	private static WebView2? webView2;
-
-	public static WebView2 PostWebMessage_SetWebView2 { set => webView2 = value; }
+	public static MainDock Host { get; internal set; } = null!;
 
 	private static readonly JsonSerializerOptions jsonOptions = new() {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -130,6 +129,6 @@ public static class MessageSender {
 	};
 
 	public static void PostWebMessage<T>(T message) where T : BaseWebMessageEvent {
-		webView2?.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message, jsonOptions));
+		Host.Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message, jsonOptions));
 	}
 }

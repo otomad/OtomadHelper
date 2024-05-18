@@ -16,6 +16,7 @@ words:
   - classname
   - classnames
   - composables
+  - contenteditable
   - cooldown
   - cqh
   - cqw
@@ -62,6 +63,7 @@ words:
   - portato
   - prelisten
   - prerenders
+  - proxied
   - prve
   - pv
   - quarternary
