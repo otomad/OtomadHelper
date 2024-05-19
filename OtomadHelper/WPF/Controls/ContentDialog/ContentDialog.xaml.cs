@@ -1,5 +1,5 @@
-using System.Windows.Input;
-using System.Windows.Threading;
+using System.Windows;
+using System.Windows.Media.Animation;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -51,4 +51,54 @@ public partial class ContentDialog : BackdropWindow {
 
 	public static void ShowError(Exception exception) =>
 		ShowError(exception.Message, exception.StackTrace);
+
+	private double expandedHeight = double.NaN;
+	private void ExpandButton_Click(object sender, RoutedEventArgs e) {
+		bool isExpanded = ExpandButton.IsChecked == true;
+		{
+			double fromHeight, toHeight;
+			if (!isExpanded) {
+				if (expandedHeight is double.NaN)
+					expandedHeight = BodyWrapper.ActualHeight;
+				fromHeight = expandedHeight;
+				toHeight = 0;
+				BodyWrapper.Height = 0;
+			} else {
+				BodyWrapper.Height = double.NaN;
+				toHeight = expandedHeight;
+				fromHeight = 0;
+			}
+
+			DoubleAnimation animation = new() {
+				From = fromHeight,
+				To = toHeight,
+				Duration = (Duration)Resources["BaseAnimationDuration"],
+				FillBehavior = FillBehavior.Stop,
+				EasingFunction = (IEasingFunction)Resources["EaseOutExpo"],
+			};
+			Storyboard.SetTargetProperty(animation, new("Height"));
+			Storyboard storyboard = new();
+			storyboard.Children.Add(animation);
+			storyboard.Begin(BodyWrapper);
+		}
+		{
+			double fromHeight = ActualHeight;
+			double toHeight = isExpanded ? fromHeight + expandedHeight : fromHeight - expandedHeight;
+			SizeToContent sizeToContent = SizeToContent;
+			SizeToContent = SizeToContent.Manual;
+
+			DoubleAnimation animation = new() {
+				From = fromHeight,
+				To = toHeight,
+				Duration = (Duration)Resources["BaseAnimationDuration"],
+				FillBehavior = FillBehavior.Stop,
+				EasingFunction = (IEasingFunction)Resources["EaseOutExpo"],
+			};
+			Storyboard.SetTargetProperty(animation, new("Height"));
+			Storyboard storyboard = new();
+			storyboard.Children.Add(animation);
+			storyboard.Completed += (sender, e) => SizeToContent = sizeToContent;
+			storyboard.Begin(this);
+		}
+	}
 }

@@ -75,6 +75,7 @@
 				<Setter Property="Padding" Value="-2,0" />
 				<Setter Property="SelectionBrush" Value="{Binding WindowGlassBrush, ElementName=View}" />
 				<Setter Property="SelectionTextBrush" Value="{DynamicResource TextOnAccentForegroundBrush}" />
+				<Setter Property="FontFamily" Value="{StaticResource MonoFont}" />
 			</Style>
 			<Style x:Key="ContentWrapper" TargetType="Border">
 				<Setter Property="Padding" Value="24" />
@@ -98,8 +99,6 @@
 				</Style.Triggers>
 			</Style>
 			<Style x:Key="ShadingIcon" TargetType="c:Icon">
-				<!--<Setter Property="FontFamily" Value="pack://application:,,,/OtomadHelper;component/Resources/#Segoe Fluent Icons" />
-				<Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol" />-->
 				<Setter Property="Size" Value="96" />
 				<Setter Property="Canvas.Left" Value="-15" />
 				<Setter Property="Canvas.Top" Value="-20" />
@@ -145,27 +144,25 @@
 
 	<Grid>
 		<Canvas>
-			<c:Icon
-				x:Name="IconEl"
-				IconName="{Binding IconName}"
-				Style="{StaticResource ShadingIcon}"
-				/>
+			<c:Icon IconName="{Binding IconName}" Style="{StaticResource ShadingIcon}" />
 		</Canvas>
 		<StackPanel Orientation="Vertical">
 			<Border Style="{StaticResource ContentWrapper}">
 				<StackPanel Orientation="Vertical">
 					<TextBlock Style="{StaticResource Subtitle}" Text="{Binding Subtitle}" />
 					<TextBlock Style="{StaticResource Title}" Text="{Binding Title}" />
-					<TextBlock
-						Style="{StaticResource Body}"
-						Text="{Binding Body}"
-						Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToInvertVis}}"
-						/>
-					<TextBox
-						Style="{StaticResource CopyableBody}"
-						Text="{Binding Body}"
-						Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToVis}}"
-						/>
+					<Grid x:Name="BodyWrapper">
+						<TextBlock
+							Style="{StaticResource Body}"
+							Text="{Binding Body}"
+							Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToInvertVis}}"
+							/>
+						<TextBox
+							Style="{StaticResource CopyableBody}"
+							Text="{Binding Body}"
+							Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToVis}}"
+							/>
+					</Grid>
 				</StackPanel>
 			</Border>
 			<Border Style="{StaticResource ButtonsContainer}">
@@ -196,7 +193,11 @@
 							</ColumnDefinition.Style>
 						</ColumnDefinition>
 					</Grid.ColumnDefinitions>
-					<c:ExpandButton Grid.Column="0" />
+					<c:ExpandButton
+						x:Name="ExpandButton"
+						Grid.Column="0"
+						Click="ExpandButton_Click"
+						/>
 					<ItemsControl
 						Grid.Column="1"
 						Focusable="False"

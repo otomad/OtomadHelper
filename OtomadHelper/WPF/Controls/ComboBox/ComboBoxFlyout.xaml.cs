@@ -99,7 +99,7 @@ public partial class ComboBoxFlyout : BaseFlyout {
 		bool isExit = false,
 		Action? Completed = null
 	) {
-		Duration duration = new(TimeSpan.FromMilliseconds(250));
+		Duration duration = (Duration)Resources["BaseAnimationDuration"];
 		IEasingFunction easing = (IEasingFunction)Resources["EaseOutExpo"];
 
 		if (!IsContent) {

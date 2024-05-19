@@ -108,7 +108,7 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		DoubleAnimation animation = new() {
 			From = fromTop,
 			To = toTop,
-			Duration = new(TimeSpan.FromMilliseconds(250)),
+			Duration = (Duration)Resources["BaseAnimationDuration"],
 			FillBehavior = FillBehavior.HoldEnd,
 			EasingFunction = (IEasingFunction)Resources["EaseOutExpo"],
 		};

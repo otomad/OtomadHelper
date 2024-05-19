@@ -23,7 +23,7 @@ public class BaseFlyout : BackdropWindow {
 		DoubleAnimation fadeInAnimation = new() {
 			From = 0,
 			To = 1,
-			Duration = new(TimeSpan.FromMilliseconds(250)),
+			Duration = (Duration)Resources["BaseAnimationDuration"],
 			FillBehavior = FillBehavior.Stop,
 		};
 		Storyboard.SetTargetProperty(fadeInAnimation, new("Opacity"));
