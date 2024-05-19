@@ -139,6 +139,7 @@ public partial class MainDock : UserControl {
 	}
 
 	private void MainDock_DragLeave() {
+		if (LoadingAnimationPicture.Visible) return;
 		PostWebMessage(new DragOver() {
 			isDragging = false,
 		});
@@ -146,6 +147,7 @@ public partial class MainDock : UserControl {
 	}
 
 	private void MainDock_DragOver(object sender, DragEventArgs e) {
+		if (LoadingAnimationPicture.Visible) return;
 		e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? e.AllowedEffect & DragDropEffects.Copy : DragDropEffects.None;
 		DropTargetHelper.DragOver(new Point(e.X, e.Y), e.Effect);
 	}
@@ -163,7 +165,7 @@ public partial class MainDock : UserControl {
 		} else {
 			if (!isDevMode) RemoveAllMenuItems();
 			CoreWebView2ContextMenuItem deleteItem = webView.Environment.CreateContextMenuItem(
-			"Delete", null, CoreWebView2ContextMenuItemKind.Command);
+			"Delete", null, CoreWebView2ContextMenuItemKind.Command); // TODO: localization.
 			CoreWebView2ContextMenuItem separator = webView.Environment.CreateContextMenuItem(
 				"", null, CoreWebView2ContextMenuItemKind.Separator);
 			deleteItem.CustomItemSelected += (sender, ex) => {

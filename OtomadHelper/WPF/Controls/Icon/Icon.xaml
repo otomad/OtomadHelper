@@ -7,7 +7,18 @@
 	Width="{Binding Size, ElementName=View}"
 	Height="{Binding Size, ElementName=View}"
 	>
-	<Canvas Width="{Binding Source.Size, ElementName=View}" Height="{Binding Source.Size, ElementName=View}">
-		<Path Data="{Binding Source.Path, ElementName=View}" Fill="{Binding Foreground, ElementName=View}" />
+	<Viewbox.Resources>
+		<Style TargetType="Canvas">
+			<Setter Property="Width" Value="{Binding Source.Size, ElementName=View}" />
+			<Setter Property="Height" Value="{Binding Source.Size, ElementName=View}" />
+		</Style>
+		<Style TargetType="Path">
+			<Setter Property="Data" Value="{Binding Source.Path, ElementName=View}" />
+			<Setter Property="Fill" Value="{Binding Foreground, ElementName=View}" />
+		</Style>
+	</Viewbox.Resources>
+
+	<Canvas>
+		<Path />
 	</Canvas>
 </Viewbox>

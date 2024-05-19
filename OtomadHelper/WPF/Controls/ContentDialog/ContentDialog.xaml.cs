@@ -1,3 +1,6 @@
+using System.Windows.Input;
+using System.Windows.Threading;
+
 namespace OtomadHelper.WPF.Controls;
 
 /// <summary>
@@ -6,6 +9,7 @@ namespace OtomadHelper.WPF.Controls;
 public partial class ContentDialog : BackdropWindow {
 	public ContentDialog() {
 		InitializeComponent();
+		System.Windows.Controls.TextBox textbox;
 	}
 
 	public new ContentDialogViewModel DataContext => (ContentDialogViewModel)base.DataContext;
@@ -25,4 +29,26 @@ public partial class ContentDialog : BackdropWindow {
 		dialog.ShowDialog();
 		return (TDialogResult?)viewModel.DialogResult;
 	}
+
+	public static void ShowError(
+		string message,
+		string stackTrace
+	) {
+		ContentDialog dialog = new();
+		ContentDialogViewModel viewModel = dialog.DataContext;
+		viewModel.Title = message;
+		viewModel.Subtitle = "错误"; // TODO: localization.
+		viewModel.Body = stackTrace;
+		viewModel.IconName = "Error";
+		viewModel.Buttons.AddRange(new ContentDialogButtonItem[] {
+			new("Report", "report"),
+			new("Close", "close", true),
+		});
+		viewModel.Expandable = true;
+		viewModel.CanCopyBody = true;
+		dialog.ShowDialog();
+	}
+
+	public static void ShowError(Exception exception) =>
+		ShowError(exception.Message, exception.StackTrace);
 }

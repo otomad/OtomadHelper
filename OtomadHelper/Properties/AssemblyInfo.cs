@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Markup;
 
 [assembly: AssemblyTrademark("OTOMAD+")]
@@ -12,3 +13,5 @@ using System.Windows.Markup;
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
 [assembly: Guid("c99db0bb-5dcb-49f9-9ed1-563aaeff5e67")]
+
+[assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]

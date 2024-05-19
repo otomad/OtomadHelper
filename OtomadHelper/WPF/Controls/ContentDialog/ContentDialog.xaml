@@ -4,8 +4,8 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
-	xmlns:common="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Width="800"
 	ResizeMode="NoResize"
@@ -21,15 +21,32 @@
 
 	<c:BackdropWindow.Resources>
 		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Storyboards.xaml" />
-			</ResourceDictionary.MergedDictionaries>
-
 			<c:IconNameToImageSourceConverter x:Key="IconNameToImageSource" />
+			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
+			<m:BooleanToVisibilityConverter
+				x:Key="BoolToInvertVis"
+				True="Collapsed"
+				False="Visible"
+				/>
+
+			<Thickness x:Key="BodyMargin">0,12,0,0</Thickness>
 
 			<Style TargetType="TextBlock">
 				<Setter Property="TextWrapping" Value="Wrap" />
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+			</Style>
+			<Style
+				x:Key="Subtitle"
+				BasedOn="{StaticResource {x:Type TextBlock}}"
+				TargetType="TextBlock"
+				>
+				<Setter Property="TextWrapping" Value="NoWrap" />
+				<Setter Property="Margin" Value="0,-10,0,4" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding Subtitle}" Value="">
+						<Setter Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+				</Style.Triggers>
 			</Style>
 			<Style
 				x:Key="Title"
@@ -45,25 +62,44 @@
 				TargetType="TextBlock"
 				>
 				<Setter Property="FontSize" Value="14" />
-				<Setter Property="Margin" Value="0,12,0,0" />
+				<Setter Property="Margin" Value="{StaticResource BodyMargin}" />
 			</Style>
-
+			<Style x:Key="CopyableBody" TargetType="TextBox">
+				<Setter Property="TextWrapping" Value="Wrap" />
+				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+				<Setter Property="IsReadOnly" Value="True" />
+				<Setter Property="FontSize" Value="14" />
+				<Setter Property="Margin" Value="{StaticResource BodyMargin}" />
+				<Setter Property="Background" Value="Transparent" />
+				<Setter Property="BorderThickness" Value="0" />
+				<Setter Property="Padding" Value="-2,0" />
+				<Setter Property="SelectionBrush" Value="{Binding WindowGlassBrush, ElementName=View}" />
+				<Setter Property="SelectionTextBrush" Value="{DynamicResource TextOnAccentForegroundBrush}" />
+			</Style>
 			<Style x:Key="ContentWrapper" TargetType="Border">
 				<Setter Property="Padding" Value="24" />
 			</Style>
 			<Style x:Key="ButtonsContainer" TargetType="Border">
-				<Setter Property="Padding" Value="24" />
+				<Setter Property="Padding" Value="24,20" />
 				<Setter Property="BorderBrush" Value="{DynamicResource CardStroke}" />
 				<Setter Property="BorderThickness" Value="0,2,0,0" />
 				<Setter Property="Background" Value="{DynamicResource SurfaceOverlayBackground}" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding Expandable}" Value="True">
+						<Setter Property="Padding" Value="24,16" />
+					</DataTrigger>
+				</Style.Triggers>
 			</Style>
-			<Style TargetType="Button">
-				<Setter Property="Height" Value="32" />
+			<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="c:Button">
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding Expandable, ElementName=ViewModel}" Value="True">
+						<Setter Property="MinWidth" Value="120" />
+					</DataTrigger>
+				</Style.Triggers>
 			</Style>
-
 			<Style x:Key="ShadingIcon" TargetType="c:Icon">
 				<!--<Setter Property="FontFamily" Value="pack://application:,,,/OtomadHelper;component/Resources/#Segoe Fluent Icons" />
-			<Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol" />-->
+				<Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol" />-->
 				<Setter Property="Size" Value="96" />
 				<Setter Property="Canvas.Left" Value="-15" />
 				<Setter Property="Canvas.Top" Value="-20" />
@@ -88,6 +124,15 @@
 					</EventTrigger>
 				</Style.Triggers>
 			</Style>
+			<Style BasedOn="{StaticResource DefaultExpandButtonStyle}" TargetType="c:ExpandButton">
+				<Setter Property="HorizontalAlignment" Value="Left" />
+				<Setter Property="IsChecked" Value="True" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding Expandable}" Value="False">
+						<Setter Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
 		</ResourceDictionary>
 	</c:BackdropWindow.Resources>
 
@@ -109,29 +154,72 @@
 		<StackPanel Orientation="Vertical">
 			<Border Style="{StaticResource ContentWrapper}">
 				<StackPanel Orientation="Vertical">
+					<TextBlock Style="{StaticResource Subtitle}" Text="{Binding Subtitle}" />
 					<TextBlock Style="{StaticResource Title}" Text="{Binding Title}" />
-					<TextBlock Style="{StaticResource Body}" Text="{Binding Body}" />
+					<TextBlock
+						Style="{StaticResource Body}"
+						Text="{Binding Body}"
+						Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToInvertVis}}"
+						/>
+					<TextBox
+						Style="{StaticResource CopyableBody}"
+						Text="{Binding Body}"
+						Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToVis}}"
+						/>
 				</StackPanel>
 			</Border>
 			<Border Style="{StaticResource ButtonsContainer}">
-				<ItemsControl Focusable="False" ItemsSource="{Binding Buttons}">
-					<ItemsControl.ItemsPanel>
-						<ItemsPanelTemplate>
-							<c:ContentDialogButtonPanel />
-						</ItemsPanelTemplate>
-					</ItemsControl.ItemsPanel>
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<c:Button
-								Command="{Binding ClickButtonCommand, ElementName=ViewModel}"
-								CommandParameter="{Binding DialogResult}"
-								Content="{Binding Text}"
-								DialogResult="{Binding DialogResult}"
-								IsDefault="{Binding IsDefault}"
-								/>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition>
+							<ColumnDefinition.Style>
+								<Style TargetType="ColumnDefinition">
+									<Setter Property="Width" Value="0" />
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding Expandable}" Value="True">
+											<Setter Property="Width" Value="*" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</ColumnDefinition.Style>
+						</ColumnDefinition>
+						<ColumnDefinition>
+							<ColumnDefinition.Style>
+								<Style TargetType="ColumnDefinition">
+									<Setter Property="Width" Value="*" />
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding Expandable}" Value="True">
+											<Setter Property="Width" Value="Auto" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</ColumnDefinition.Style>
+						</ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<c:ExpandButton Grid.Column="0" />
+					<ItemsControl
+						Grid.Column="1"
+						Focusable="False"
+						ItemsSource="{Binding Buttons}"
+						>
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<c:ContentDialogButtonPanel />
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<c:Button
+									Command="{Binding ClickButtonCommand, ElementName=ViewModel}"
+									CommandParameter="{Binding DialogResult}"
+									Content="{Binding Text}"
+									DialogResult="{Binding DialogResult}"
+									IsDefault="{Binding IsDefault}"
+									/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</Grid>
 			</Border>
 		</StackPanel>
 	</Grid>

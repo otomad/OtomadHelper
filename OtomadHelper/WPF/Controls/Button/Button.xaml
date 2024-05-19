@@ -5,7 +5,8 @@
 	>
 	<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
 	<Thickness x:Key="ButtonPadding">8</Thickness>
-	<Style TargetType="c:Button">
+
+	<Style x:Key="DefaultButtonStyle" TargetType="c:Button">
 		<Setter Property="MinHeight" Value="32" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ControlElevation}" />
 		<Setter Property="Background" Value="{DynamicResource ControlBackground}" />
@@ -42,7 +43,7 @@
 			</Trigger>
 			<Trigger Property="IsDefault" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevation}" />
-				<Setter Property="Background" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
+				<Setter Property="Background" Value="{Binding WindowGlassBrush, ElementName=View}" />
 				<Setter Property="Foreground" Value="{DynamicResource TextOnAccentForegroundBrush}" />
 				<Setter Property="Template">
 					<Setter.Value>
@@ -73,7 +74,7 @@
 				</MultiTrigger.Conditions>
 				<Setter Property="Background">
 					<Setter.Value>
-						<SolidColorBrush Opacity="{DynamicResource AccentSecondaryOpacity}" Color="{Binding Source={x:Static SystemParameters.WindowGlassColor}}" />
+						<SolidColorBrush Opacity="{DynamicResource AccentSecondaryOpacity}" Color="{Binding WindowGlassColor, ElementName=View}" />
 					</Setter.Value>
 				</Setter>
 			</MultiTrigger>
@@ -85,7 +86,7 @@
 				<Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeOnAccent}" />
 				<Setter Property="Background">
 					<Setter.Value>
-						<SolidColorBrush Opacity="{DynamicResource AccentTertiaryOpacity}" Color="{Binding Source={x:Static SystemParameters.WindowGlassColor}}" />
+						<SolidColorBrush Opacity="{DynamicResource AccentTertiaryOpacity}" Color="{Binding WindowGlassColor, ElementName=View}" />
 					</Setter.Value>
 				</Setter>
 				<Setter Property="Foreground">
@@ -96,4 +97,6 @@
 			</MultiTrigger>
 		</Style.Triggers>
 	</Style>
+
+	<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="c:Button" />
 </ResourceDictionary>

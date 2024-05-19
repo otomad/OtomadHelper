@@ -10,8 +10,8 @@
 				<ControlTemplate>
 					<Rectangle
 						Margin="-3"
-						RadiusX="7"
-						RadiusY="7"
+						RadiusX="6"
+						RadiusY="6"
 						Stroke="{DynamicResource ForegroundBrush}"
 						StrokeThickness="2"
 						/>

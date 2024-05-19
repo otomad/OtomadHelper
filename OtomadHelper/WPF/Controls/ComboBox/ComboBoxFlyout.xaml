@@ -29,10 +29,6 @@
 
 	<c:BaseFlyout.Resources>
 		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Storyboards.xaml" />
-			</ResourceDictionary.MergedDictionaries>
-
 			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
 			<m:BooleanToVisibilityConverter
 				x:Key="BoolToHiddenVis"
@@ -124,7 +120,7 @@
 				<Setter Property="Width" Value="3" />
 				<Setter Property="Height" Value="{StaticResource IndicatorHeight}" />
 				<Setter Property="HorizontalAlignment" Value="Left" />
-				<Setter Property="Fill" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
+				<Setter Property="Fill" Value="{Binding WindowGlassBrush, ElementName=View}" />
 				<Setter Property="RadiusX" Value="{StaticResource IndicatorRadius}" />
 				<Setter Property="RadiusY" Value="{StaticResource IndicatorRadius}" />
 				<Style.Triggers>

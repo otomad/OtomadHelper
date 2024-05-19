@@ -13,7 +13,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	protected readonly WindowInteropHelper helper;
 	protected IntPtr Handle => helper.Handle;
 
-	public BackdropWindow() {
+	public BackdropWindow() : base() {
 		InitializeComponent();
 		helper = new(this);
 	}
@@ -24,6 +24,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	}
 
 	private void InitializeComponent() {
+		AddDictionary("Wpf/Styles/Generic.xaml");
 		Background = Brushes.Transparent;
 		Loaded += Window_Loaded;
 		IsVisibleChanged += (sender, e) => {
@@ -36,31 +37,14 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	}
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
+		ReserveSystemMenuItems(Handle, SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 		BindViewToViewModel();
 		RefreshFrame();
-		RefreshDarkMode(isOnLoad: true);
+		RefreshDarkMode();
+		RefreshAccentColor();
 		SetSystemBackdropType(SystemBackdropType);
 		if (TitleBarType == TitleBarType.WindowChromeNoTitleBar)
 			AddExtendedWindowStyles(Handle, ExtendedWindowStyles.ToolWindow);
-	}
-
-	protected void SetCurrentThemeResource(bool isDarkTheme, bool isOnLoad) {
-		foreach (ResourceDictionary resource in Resources.MergedDictionaries.FindAllByName("ThemeColor"))
-			Resources.MergedDictionaries.Remove(resource);
-
-		if (isOnLoad)
-			AddDictionaries(
-				"Wpf/Styles/Variables.xaml",
-				"Wpf/Styles/Icons.xaml",
-				"Wpf/Styles/Controls.xaml"
-			);
-
-		AddDictionary($"Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml");
-
-		void AddDictionary(string path) =>
-			Resources.MergedDictionaries.Add(new() { Source = ProjectUri(path) });
-		void AddDictionaries(params string[] paths) =>
-			paths.ForEach(AddDictionary);
 	}
 
 	private void BindViewToViewModel() {
@@ -108,6 +92,32 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	}
 
 	#region Set backdrop type
+	/// <inheritdoc cref="FrameworkElement.Resources" />
+	/// <remarks>
+	/// If I don't create a new property with the same name to override it like this,
+	/// the style declaration in the implemented window will overwrite the global style.
+	/// </remarks>
+	public new ResourceDictionary Resources {
+		get => base.Resources;
+		set {
+#pragma warning disable IDE0008 // 使用显式类型
+			var originalResources = base.Resources.MergedDictionaries;
+#pragma warning restore IDE0008 // 使用显式类型
+			base.Resources = value;
+			base.Resources.MergedDictionaries.AddRange(originalResources);
+		}
+	}
+
+	protected void SetCurrentThemeResource(bool isDarkTheme) {
+		foreach (ResourceDictionary resource in Resources.MergedDictionaries.FindAllByName("ThemeColor").ToList())
+			Resources.MergedDictionaries.Remove(resource);
+
+		AddDictionary($"Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml");
+	}
+
+	public void AddDictionary(string path) =>
+		Resources.MergedDictionaries.Add(new() { Source = ProjectUri(path) });
+
 	protected void RefreshFrame() {
 		HwndSource mainWindowSrc = HwndSource.FromHwnd(Handle);
 		mainWindowSrc.CompositionTarget.BackgroundColor = Color.FromArgb(0, 0, 0, 0);
@@ -129,6 +139,23 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 		return value is 0;
 	}
 
+	//[DllImport("dwmapi.dll", EntryPoint = "#127")] // Equivalent
+	//internal static extern void DwmGetColorizationParameters(ref DWMCOLORIZATIONPARAMS dp);
+	protected static Color? GetDwmColorizationColor() {
+		using RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\DWM");
+		object? value = key?.GetValue("AccentColor");
+		if (value is not int accentColorValue) return null;
+		Color color = FromAbgr(accentColorValue);
+		return color;
+
+		static Color FromAbgr(int value) => Color.FromArgb(
+			(byte)(value >> 24),
+			(byte)value,
+			(byte)(value >> 8),
+			(byte)(value >> 16)
+		);
+	}
+
 	protected override void OnSourceInitialized(EventArgs e) {
 		base.OnSourceInitialized(e);
 
@@ -139,23 +166,44 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 
 		// Detect when the theme changed
 		HwndSource source = (HwndSource)PresentationSource.FromVisual(this);
-		source.AddHook((IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) => {
-			const int WM_SETTINGCHANGE = 0x001A;
-			if (msg == WM_SETTINGCHANGE)
-				if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
-					RefreshDarkMode(isOnLoad: false);
-					RaiseEvent(new RoutedEventArgs(ThemeChangeEvent, this));
-				}
-			return IntPtr.Zero;
-		});
+		source.AddHook(WndProc);
 	}
 
-	protected void RefreshDarkMode(bool isOnLoad) {
+	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
+	protected IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
+		const int WM_SETTINGCHANGE = 0x001A;
+		const int WM_DWMCOLORIZATIONCOLORCHANGED = 0x0320;
+
+		switch (msg) {
+			case WM_SETTINGCHANGE:
+				if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
+					RefreshDarkMode();
+					RaiseEvent(new RoutedEventArgs(ThemeChangeEvent, this));
+				}
+				break;
+			case WM_DWMCOLORIZATIONCOLORCHANGED:
+				RefreshAccentColor();
+				RaiseEvent(new RoutedEventArgs(AccentChangeEvent, this));
+				break;
+			default:
+				break;
+		}
+		return IntPtr.Zero;
+	}
+
+	protected void RefreshDarkMode() {
 		bool isDarkTheme = ShouldAppsUseDarkMode();
 		IsLightTheme = !isDarkTheme;
 		int flag = isDarkTheme ? 1 : 0;
 		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, flag);
-		SetCurrentThemeResource(isDarkTheme, isOnLoad);
+		SetCurrentThemeResource(isDarkTheme);
+	}
+
+	protected void RefreshAccentColor() {
+		if (GetDwmColorizationColor() is Color accentColor) {
+			WindowGlassColor = accentColor;
+			WindowGlassBrush = new SolidColorBrush(accentColor);
+		}
 	}
 
 	private const SystemBackdropType DEFAULT_SYSTEM_BACKDROP_TYPE = SystemBackdropType.TransientWindow;
@@ -173,11 +221,16 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	}
 
 	protected static readonly RoutedEvent ThemeChangeEvent =
-		EventManager.RegisterRoutedEvent("ThemeChange", RoutingStrategy.Bubble, typeof(EventHandler<RoutedEventArgs>), typeof(BackdropWindow));
-
+		EventManager.RegisterRoutedEvent(nameof(ThemeChange), RoutingStrategy.Bubble, typeof(EventHandler<RoutedEventArgs>), typeof(BackdropWindow));
 	public event RoutedEventHandler ThemeChange {
 		add => AddHandler(ThemeChangeEvent, value);
 		remove => RemoveHandler(ThemeChangeEvent, value);
+	}
+	protected static readonly RoutedEvent AccentChangeEvent =
+		EventManager.RegisterRoutedEvent(nameof(AccentChange), RoutingStrategy.Bubble, typeof(EventHandler<RoutedEventArgs>), typeof(BackdropWindow));
+	public event RoutedEventHandler AccentChange {
+		add => AddHandler(AccentChangeEvent, value);
+		remove => RemoveHandler(AccentChangeEvent, value);
 	}
 
 	public event PropertyChangedEventHandler? PropertyChanged;
@@ -196,6 +249,16 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	public static readonly DependencyProperty IsLightThemeProperty = DependencyProperty.Register(
 		nameof(IsLightTheme), typeof(bool), typeof(BackdropWindow), new(true));
 	public bool IsLightTheme { get => (bool)GetValue(IsLightThemeProperty); private set => SetValue(IsLightThemeProperty, value); }
+
+	private static readonly Color WindowsDefaultGlassColor = Color.FromRgb(0, 95, 184);
+
+	public static readonly DependencyProperty WindowGlassColorProperty = DependencyProperty.Register(
+		nameof(WindowGlassColor), typeof(Color), typeof(BackdropWindow), new(WindowsDefaultGlassColor));
+	public Color WindowGlassColor { get => (Color)GetValue(WindowGlassColorProperty); private set => SetValue(WindowGlassColorProperty, value); }
+
+	public static readonly DependencyProperty WindowGlassBrushProperty = DependencyProperty.Register(
+		nameof(WindowGlassBrush), typeof(Brush), typeof(BackdropWindow), new(new SolidColorBrush(WindowsDefaultGlassColor)));
+	public Brush WindowGlassBrush { get => (Brush)GetValue(WindowGlassBrushProperty); private set => SetValue(WindowGlassBrushProperty, value); }
 	#endregion
 
 	#region Extends content into title bar
@@ -215,7 +278,8 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 					CaptionHeight = 54, // Default: 20
 					CornerRadius = new(0),
 					GlassFrameThickness = new(-1),
-					ResizeBorderThickness = new(8, 0, 8, 8),
+					ResizeBorderThickness = window.ResizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ?
+						new(0) : new(8, 0, 8, 8),
 					NonClientFrameEdges = NonClientFrameEdges.Right,
 					UseAeroCaptionButtons = true,
 				});

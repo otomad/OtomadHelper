@@ -25,10 +25,6 @@
 
 	<c:BaseFlyout.Resources>
 		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Storyboards.xaml" />
-			</ResourceDictionary.MergedDictionaries>
-
 			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
 			<m:ActualSizeToRectConverter x:Key="SizeToRect" />
@@ -95,7 +91,7 @@
 				</Setter>
 			</Style>
 			<Style x:Key="SelectionBase" TargetType="Rectangle">
-				<Setter Property="Fill" Value="{Binding Source={x:Static SystemParameters.WindowGlassBrush}}" />
+				<Setter Property="Fill" Value="{Binding WindowGlassBrush, ElementName=View}" />
 				<Setter Property="Grid.ColumnSpan" Value="3" />
 				<Setter Property="Height" Value="{StaticResource ItemHeight}" />
 				<Setter Property="Margin" Value="{StaticResource ItemPadding}" />
@@ -121,7 +117,7 @@
 			<Style x:Key="ListViewWrapperWrapper" TargetType="Canvas">
 				<Setter Property="Background" Value="Transparent" />
 				<Setter Property="Focusable" Value="True" />
-				<Setter Property="FocusVisualStyle" Value="{DynamicResource InnerFocusVisualStyle}" />
+				<Setter Property="FocusVisualStyle" Value="{StaticResource InnerFocusVisualStyle}" />
 			</Style>
 			<Style x:Key="ListViewSeparator" TargetType="Line">
 				<Setter Property="Stretch" Value="Fill" />
@@ -227,12 +223,12 @@
 			<Style x:Key="SpinnerButtonUp" BasedOn="{StaticResource SpinnerButton}" TargetType="RepeatButton">
 				<Setter Property="Padding" Value="0,4,0,0" />
 				<Setter Property="Canvas.Top" Value="0" />
-				<Setter Property="Content" Value="{DynamicResource Icon:CaretUp}" />
+				<Setter Property="Content" Value="{StaticResource Icon:CaretUp}" />
 			</Style>
 			<Style x:Key="SpinnerButtonDown" BasedOn="{StaticResource SpinnerButton}" TargetType="RepeatButton">
 				<Setter Property="Padding" Value="0,0,0,4" />
 				<Setter Property="Canvas.Bottom" Value="0" />
-				<Setter Property="Content" Value="{DynamicResource Icon:CaretDown}" />
+				<Setter Property="Content" Value="{StaticResource Icon:CaretDown}" />
 			</Style>
 		</ResourceDictionary>
 	</c:BaseFlyout.Resources>

@@ -1,5 +1,3 @@
-using NAudio.Utils;
-
 namespace OtomadHelper.Interop;
 
 public static class PInvoke {
@@ -255,4 +253,60 @@ public static class PInvoke {
 	}
 
 	private const string Chrome_WidgetWin = "Chrome_RenderWidgetHostHWND";
+
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	internal static extern bool DeleteMenu(IntPtr menu, uint uPosition, uint uFlags);
+
+	/// <summary>
+	/// Removes the specified menu items from the system menu. Such as restore, move, resize, minimize, maximize, close.
+	/// </summary>
+	/// <param name="hWnd">Handle of a window.</param>
+	/// <param name="items">System window menu item.</param>
+	public static void DeleteSystemMenuItems(IntPtr hWnd, SystemMenuItemType items) {
+		IntPtr menu = GetSystemMenu(hWnd, false);
+		const uint MF_BYCOMMAND = 0x00000000;
+		foreach (KeyValuePair<SystemMenuItemType, uint> item in SystemMenuItemTag.Map)
+			if ((items & item.Key) != 0)
+				DeleteMenu(menu, item.Value, MF_BYCOMMAND);
+	}
+
+	/// <summary>
+	/// Preserves the specified menu items from the system menu. That is the opposite of the
+	/// <see cref="DeleteSystemMenuItems(IntPtr, SystemMenuItemType)"/> method.
+	/// </summary>
+	/// <param name="hWnd">Handle of a window.</param>
+	/// <param name="items">System window menu item.</param>
+	public static void ReserveSystemMenuItems(IntPtr hWnd, SystemMenuItemType items) =>
+		DeleteSystemMenuItems(hWnd, ~items);
+
+	public static class SystemMenuItemTag {
+		public const uint RESTORE = 0xF120;
+		public const uint MOVE = 0xF010;
+		public const uint SIZE = 0xF000;
+		public const uint MINIMIZE = 0xF020;
+		public const uint MAXIMIZE = 0xF030;
+		public const uint CLOSE = 0xF060;
+
+		public static readonly Dictionary<SystemMenuItemType, uint> Map = new() {
+			{ SystemMenuItemType.RESTORE, RESTORE },
+			{ SystemMenuItemType.MOVE, MOVE },
+			{ SystemMenuItemType.SIZE, SIZE },
+			{ SystemMenuItemType.MINIMIZE, MINIMIZE },
+			{ SystemMenuItemType.MAXIMIZE, MAXIMIZE },
+			{ SystemMenuItemType.CLOSE, CLOSE },
+		};
+	}
+
+	[Flags]
+	public enum SystemMenuItemType {
+		RESTORE = 1 << 0,
+		MOVE = 1 << 1,
+		SIZE = 1 << 2,
+		MINIMIZE = 1 << 3,
+		MAXIMIZE = 1 << 4,
+		CLOSE = 1 << 5,
+	}
 }
