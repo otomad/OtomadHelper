@@ -37,7 +37,4 @@ public class ContentDialogViewModel : ObservableObject<ContentDialog> {
 
 	private string subtitle = "";
 	public string Subtitle { get => subtitle; set => SetProperty(ref subtitle, value); }
-
-	private bool isExpansionRunning = false;
-	public bool IsExpansionRunning { get => isExpansionRunning; set => SetProperty(ref isExpansionRunning, value); }
 }
