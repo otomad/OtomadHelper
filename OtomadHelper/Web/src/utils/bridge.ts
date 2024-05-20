@@ -1,3 +1,5 @@
+window.isWebView = !!window.chrome.webview;
+
 class Bridge {
 	private webViewBridge;
 
@@ -32,7 +34,7 @@ class Bridge {
 
 const EMPTY = {};
 type HostObjects = Window["chrome"]["webview"]["hostObjects"];
-export const bridges = new Proxy(EMPTY, {
+export const bridges = !window.isWebView ? new VirtualObject() : new Proxy(EMPTY, {
 	get(_, bridgeName) {
 		if (typeof bridgeName === "symbol") throw new TypeError("Cannot use symbol as bridge name");
 		return new Bridge(bridgeName);
@@ -50,7 +52,6 @@ export function postMessageToHost(message: Any) {
 globals.postMessageToHost = postMessageToHost;
 
 // Event of communication from native code to web page
-window.isWebView = !!window.chrome.webview;
 window.chrome ??= new VirtualObject();
 window.chrome.webview ??= new VirtualObject();
 window.chrome.webview.addEventListener("message", e => {

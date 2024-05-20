@@ -13,7 +13,7 @@ const global = globalThis as AnyObject;
  * Run before the web DOM is loading
  */
 { // Initial
-	// #region Prevent context menu triggers by right-clicking
+	// #region Prevent context menu triggers by right click
 	window.addEventListener("contextmenu", e => {
 		if (!isInPath(e.target, 'input, [contenteditable="true"]') && isProdMode())
 			e.preventDefault();
@@ -43,6 +43,13 @@ const global = globalThis as AnyObject;
 	}, {
 		capture: false,
 		passive: false,
+	});
+	// #endregion
+
+	// #region Prevent show scroll "compass" by mouse middle click
+	window.addEventListener("mousedown", e => {
+		if (e.button === 1 && isProdMode())
+			e.preventDefault();
 	});
 	// #endregion
 

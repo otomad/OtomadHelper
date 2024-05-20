@@ -10,7 +10,9 @@ import type { StoreApi, UseBoundStore } from "zustand";
 function getStorePath<Store extends UseBoundStore<StoreApi<Any>>, Field>(store: Store, path: (state: ZustandState<Store>) => Field) {
 	type States = ZustandState<Store>;
 	const pathContents = path.toString().split("=>").map(i => i.replaceAll(/\s/g, ""));
-	const rootParamName = pathContents[0].replace(/^\(|\)$/g, "").split(",")[0];
+	const rootParamName = pathContents[0].replace(/^\(|\)$/g, "").split(",")[0].replaceAll("$", "\\$");
+	// The minifier (esbuild) will add the dollar symbol to the root param name,
+	// so we must escape it to prevent the regexp treat it as a meta-character.
 	const pathString = pathContents[1].replace(new RegExp(`^${rootParamName}\\.?`), "");
 
 	const paths = pathString.split("."), lastPath = paths.last();
