@@ -29,6 +29,7 @@ global using static OtomadHelper.Helpers.WebView2BetterBridge.MessageSender;
 global using static OtomadHelper.Interop.PInvoke;
 
 global using Path = OtomadHelper.Helpers.Path;
+global using ResourceDictionaries = System.Collections.ObjectModel.Collection<System.Windows.ResourceDictionary>;
 global using DialogResult = System.Windows.Forms.DialogResult;
 global using Screen = System.Windows.Forms.Screen;
 global using Rect = System.Windows.Rect;

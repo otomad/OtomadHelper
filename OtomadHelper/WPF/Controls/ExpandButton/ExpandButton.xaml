@@ -1,13 +1,10 @@
-<ResourceDictionary
+<m:CustomControlResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	>
-	<ResourceDictionary.MergedDictionaries>
-		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Storyboards.xaml" />
-	</ResourceDictionary.MergedDictionaries>
-
 	<c:ExpandButtonIsCheckedToIsExpandedTextConverter x:Key="CheckedToText" />
 
 	<Style x:Key="DefaultExpandButtonStyle" TargetType="c:ExpandButton">
@@ -17,7 +14,7 @@
 		<Setter Property="FontSize" Value="14" />
 		<Setter Property="Padding" Value="0" />
 		<Setter Property="Margin" Value="-3,0,0,0" />
-		<Setter Property="FocusVisualStyle" Value="{DynamicResource OuterFocusVisualStyle}" />
+		<Setter Property="FocusVisualStyle" Value="{StaticResource OuterFocusVisualStyle}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="ToggleButton">
@@ -108,7 +105,7 @@
 					</DataTemplate.Resources>
 					<StackPanel>
 						<Border Style="{StaticResource IconBorder}">
-							<c:Icon Source="{DynamicResource Icon:ChevronDown}" />
+							<c:Icon Source="{StaticResource Icon:ChevronDown}" />
 						</Border>
 						<TextBlock Text="{Binding IsChecked, RelativeSource={RelativeSource FindAncestor, AncestorType=ToggleButton, AncestorLevel=1}, Converter={StaticResource CheckedToText}}" />
 					</StackPanel>
@@ -127,4 +124,4 @@
 	</Style>
 
 	<Style BasedOn="{StaticResource DefaultExpandButtonStyle}" TargetType="c:ExpandButton" />
-</ResourceDictionary>
+</m:CustomControlResourceDictionary>

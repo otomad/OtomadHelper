@@ -10,9 +10,8 @@ public class I18n : DynamicObject {
 		}
 	}
 
-	public string Translate(string key) {
-		return Properties.Resources.ResourceManager.GetString(key);
-	}
+	public string Translate(string key) =>
+		Properties.Resources.ResourceManager.GetString(key);
 
 	public override bool TryGetMember(GetMemberBinder binder, out object result) {
 		result = Translate(binder.Name);

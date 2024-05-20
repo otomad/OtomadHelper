@@ -1,7 +1,9 @@
-<ResourceDictionary
+<m:CustomControlResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	>
 	<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
 	<Thickness x:Key="ButtonPadding">8</Thickness>
@@ -12,7 +14,7 @@
 		<Setter Property="Background" Value="{DynamicResource ControlBackground}" />
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 		<Setter Property="FontSize" Value="14" />
-		<Setter Property="FocusVisualStyle" Value="{DynamicResource OuterFocusVisualStyle}" />
+		<Setter Property="FocusVisualStyle" Value="{StaticResource OuterFocusVisualStyle}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="c:Button">
@@ -99,4 +101,4 @@
 	</Style>
 
 	<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="c:Button" />
-</ResourceDictionary>
+</m:CustomControlResourceDictionary>
