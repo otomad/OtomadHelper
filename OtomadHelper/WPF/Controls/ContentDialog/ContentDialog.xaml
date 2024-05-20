@@ -151,13 +151,14 @@
 				<StackPanel Orientation="Vertical">
 					<TextBlock Style="{StaticResource Subtitle}" Text="{Binding Subtitle}" />
 					<TextBlock Style="{StaticResource Title}" Text="{Binding Title}" />
+					<TextBlock
+						Style="{StaticResource Body}"
+						Text="{Binding Body}"
+						Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToInvertVis}}"
+						/>
 					<Grid x:Name="BodyWrapper">
-						<TextBlock
-							Style="{StaticResource Body}"
-							Text="{Binding Body}"
-							Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToInvertVis}}"
-							/>
 						<TextBox
+							x:Name="CopyableBody"
 							Style="{StaticResource CopyableBody}"
 							Text="{Binding Body}"
 							Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToVis}}"

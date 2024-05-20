@@ -40,8 +40,8 @@ public partial class ContentDialog : BackdropWindow {
 		viewModel.Body = stackTrace;
 		viewModel.IconName = "Error";
 		viewModel.Buttons.AddRange(new ContentDialogButtonItem[] {
-			new("Report", "report"),
-			new("Close", "close", true),
+			// new("Report", "report"), // I'm worried that users encounter any bug, they immediately click to report it directly.
+			new("Close", "close"),
 		});
 		viewModel.Expandable = true;
 		viewModel.CanCopyBody = true;
@@ -51,20 +51,19 @@ public partial class ContentDialog : BackdropWindow {
 	public static void ShowError(Exception exception) =>
 		ShowError(exception.Message, exception.StackTrace);
 
-	private double expandedHeight = double.NaN;
 	private void ExpandButton_Click(object sender, RoutedEventArgs e) {
 		bool isExpanded = ExpandButton.IsChecked == true;
+		double expandedHeight, windowFromHeight = ActualHeight;
 		{
 			double fromHeight, toHeight;
 			if (!isExpanded) {
-				if (expandedHeight is double.NaN)
-					expandedHeight = BodyWrapper.ActualHeight;
-				fromHeight = expandedHeight;
+				fromHeight = expandedHeight = BodyWrapper.ActualHeight;
 				toHeight = 0;
 				BodyWrapper.Height = 0;
 			} else {
 				BodyWrapper.Height = double.NaN;
-				toHeight = expandedHeight;
+				BodyWrapper.UpdateLayout();
+				toHeight = expandedHeight = BodyWrapper.ActualHeight;
 				fromHeight = 0;
 			}
 
@@ -81,8 +80,8 @@ public partial class ContentDialog : BackdropWindow {
 			storyboard.Begin(BodyWrapper);
 		}
 		{
-			double fromHeight = ActualHeight;
-			double toHeight = isExpanded ? fromHeight + expandedHeight : fromHeight - expandedHeight;
+			double fromHeight = windowFromHeight;
+			double toHeight = fromHeight + expandedHeight * (isExpanded ? 1 : -1);
 			SizeToContent sizeToContent = SizeToContent;
 			SizeToContent = SizeToContent.Manual;
 
