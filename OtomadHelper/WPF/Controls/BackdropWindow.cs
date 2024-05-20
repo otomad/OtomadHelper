@@ -4,6 +4,8 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
 
+using ObjectModel = System.Collections.ObjectModel;
+
 namespace OtomadHelper.WPF.Controls;
 
 /// <summary>
@@ -100,23 +102,27 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	public new ResourceDictionary Resources {
 		get => base.Resources;
 		set {
-#pragma warning disable IDE0008 // 使用显式类型
-			var originalResources = base.Resources.MergedDictionaries;
-#pragma warning restore IDE0008 // 使用显式类型
+			// Why not `base.Resources.MergedDictionaries.Add(value);` ?
+			// This will make the XAML hot reload feature become invalid.
+			ObjectModel::Collection<ResourceDictionary> originalResources = base.Resources.MergedDictionaries;
 			base.Resources = value;
 			base.Resources.MergedDictionaries.AddRange(originalResources);
 		}
 	}
 
 	protected void SetCurrentThemeResource(bool isDarkTheme) {
-		foreach (ResourceDictionary resource in Resources.MergedDictionaries.FindAllByName("ThemeColor").ToList())
-			Resources.MergedDictionaries.Remove(resource);
+		foreach (ResourceDictionary resource in Resources.MergedDictionaries.ToList())
+			if (resource is NamedResourceDictionary named && named.Name == "ThemeColor")
+				Resources.MergedDictionaries.Remove(resource);
 
-		AddDictionary($"Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml");
+		AddDictionary($"Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", true);
 	}
 
-	public void AddDictionary(string path) =>
-		Resources.MergedDictionaries.Add(new() { Source = ProjectUri(path) });
+	public void AddDictionary(string path, bool isNamedResourceDictionary = false) {
+		ResourceDictionary resource = isNamedResourceDictionary ? new NamedResourceDictionary() : new ResourceDictionary();
+		resource.Source = ProjectUri(path);
+		Resources.MergedDictionaries.Add(resource);
+	}
 
 	protected void RefreshFrame() {
 		HwndSource mainWindowSrc = HwndSource.FromHwnd(Handle);

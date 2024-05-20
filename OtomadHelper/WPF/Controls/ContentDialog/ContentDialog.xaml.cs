@@ -9,7 +9,6 @@ namespace OtomadHelper.WPF.Controls;
 public partial class ContentDialog : BackdropWindow {
 	public ContentDialog() {
 		InitializeComponent();
-		System.Windows.Controls.TextBox textbox;
 	}
 
 	public new ContentDialogViewModel DataContext => (ContentDialogViewModel)base.DataContext;

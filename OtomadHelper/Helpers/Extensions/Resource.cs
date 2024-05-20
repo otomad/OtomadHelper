@@ -14,7 +14,7 @@ public static partial class Extensions {
 	public static Uri ProjectUri(string path) =>
 		new($"pack://application:,,,/{OtomadHelperModule.ASSEMBLY_NAME};component/{path}", UriKind.Absolute);
 
-	/// <summary>
+	/*/// <summary>
 	/// Get the <see cref="ResourceDictionary"/> name if declared, or <see langword="null"/>.
 	/// </summary>
 	/// <returns>The name of the <see cref="ResourceDictionary"/> if declared, or <see langword="null"/>.</returns>
@@ -36,5 +36,5 @@ public static partial class Extensions {
 	/// <param name="name">The name of the <see cref="ResourceDictionary"/>.</param>
 	/// <returns>All matched <see cref="ResourceDictionary"/> <see cref="IEnumerable{ResourceDictionary}"/>.</returns>
 	public static IEnumerable<ResourceDictionary> FindAllByName(this Collection<ResourceDictionary> merged, string name) =>
-		merged.Where(dict => dict.GetName() == name);
+		merged.Where(dict => dict.GetName() == name);*/
 }
