@@ -34,7 +34,7 @@ class Bridge {
 
 const EMPTY = {};
 type HostObjects = Window["chrome"]["webview"]["hostObjects"];
-export const bridges = !window.isWebView ? new VirtualObject() : new Proxy(EMPTY, {
+export const bridges = !window.isWebView ? new VirtualObject() as never : new Proxy(EMPTY, {
 	get(_, bridgeName) {
 		if (typeof bridgeName === "symbol") throw new TypeError("Cannot use symbol as bridge name");
 		return new Bridge(bridgeName);

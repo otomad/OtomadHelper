@@ -1,4 +1,3 @@
-/* eslint-disable @stylistic/indent */
 import type { TOptions } from "i18next";
 import English from "./English";
 

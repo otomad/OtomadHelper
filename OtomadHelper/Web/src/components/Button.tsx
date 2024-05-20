@@ -1,4 +1,4 @@
-const StyledButton = styled.button<{
+export /* internal */ const StyledButton = styled.button<{
 	/** The name of the background fill color. */
 	$fillColorName?: string;
 	/** Is the orientation of the icon changed based on the writing direction? */

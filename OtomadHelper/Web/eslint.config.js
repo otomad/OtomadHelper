@@ -42,6 +42,8 @@ export default [
 				"flatTernaryExpressions": true,
 				"ignoredNodes": [
 					"TaggedTemplateExpression *", // 修复 styled-components 的字符串模板缩进问题。
+					"TSFunctionType *", // stylistic typescript indent bug
+					"TSMappedType *", // stylistic typescript indent bug
 				],
 			}],
 			"@stylistic/linebreak-style": ["error", "unix"],

@@ -17,6 +17,8 @@ export default function Home() {
 					<Segmented.Item icon="placeholder" id="world">world</Segmented.Item>
 				</Segmented>
 			</div>
+
+			<ComboBox options={["foo", "bar", "baz", "hello", "world"]} current={[text, setText]} />
 		</div>
 	);
 }

@@ -437,7 +437,9 @@ declare global {
 	}
 }
 
-type MakeFunctionAsync<TFunction extends Function> = (...args: Parameters<TFunction>) => Promise<ReturnType<TFunction>>;
+type PromiseOnce<T> = T extends Promise<any> ? T : Promise<T>;
+type MakeFunctionAsync<TFunction extends Function> = (...args: Parameters<TFunction>) =>
+	PromiseOnce<ReturnType<TFunction>>;
 type MakeFunctionsAsync<TFunctions> = {
 	[functionName in keyof TFunctions]: MakeFunctionAsync<TFunctions[functionName]>;
 };

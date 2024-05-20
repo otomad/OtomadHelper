@@ -68,10 +68,10 @@ declare global {
 	 */
 	type KnownKeys<T> = keyof {
 		[Key in keyof T]:
-		string extends Key ? never :
-		number extends Key ? never :
-		symbol extends Key ? never :
-		Key;
+			string extends Key ? never :
+			number extends Key ? never :
+			symbol extends Key ? never :
+			Key;
 	};
 
 	/**

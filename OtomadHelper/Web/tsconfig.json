@@ -20,6 +20,7 @@
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"noEmit": true,
+		"allowUnreachableCode": true,
 		"baseUrl": ".",
 		"paths": {
 			"assets/*": ["src/assets/*"],
