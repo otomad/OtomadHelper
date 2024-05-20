@@ -205,8 +205,8 @@ public partial class MainDock : UserControl {
 		Point location = PointToScreen(Point.Empty);
 		(double dpiX, double dpiY) = this.GetDpi();
 		return new(
-			x: (location.X / dpiX + clientRect.X),
-			y: (location.Y / dpiY + clientRect.Y),
+			x: location.X / dpiX + clientRect.X,
+			y: location.Y / dpiY + clientRect.Y,
 			width: clientRect.Width,
 			height: clientRect.Height
 		);
