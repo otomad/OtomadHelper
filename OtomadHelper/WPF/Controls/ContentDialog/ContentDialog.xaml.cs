@@ -52,6 +52,11 @@ public partial class ContentDialog : BackdropWindow {
 		ShowError(exception.Message, exception.StackTrace);
 
 	private void ExpandButton_Click(object sender, RoutedEventArgs e) {
+		// When the user focuses on the expand button and then holds down the Enter key,
+		// this will trigger the button at a high frequency, causing animation abnormalities.
+		if (DataContext.IsExpansionRunning) return;
+		DataContext.IsExpansionRunning = true;
+
 		bool isExpanded = ExpandButton.IsChecked == true;
 		double expandedHeight, windowFromHeight = ActualHeight;
 		{
@@ -95,7 +100,10 @@ public partial class ContentDialog : BackdropWindow {
 			Storyboard.SetTargetProperty(animation, new("Height"));
 			Storyboard storyboard = new();
 			storyboard.Children.Add(animation);
-			storyboard.Completed += (sender, e) => SizeToContent = sizeToContent;
+			storyboard.Completed += (sender, e) => {
+				SizeToContent = sizeToContent;
+				//ITimer.Thread.Timeout(() => Dispatcher.Invoke(() => DataContext.IsExpansionRunning = false), 200);
+			};
 			storyboard.Begin(this);
 		}
 	}

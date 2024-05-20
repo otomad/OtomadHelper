@@ -57,6 +57,12 @@ public sealed class BooleanToVisibilityConverter : BooleanConverter<Visibility> 
 	public BooleanToVisibilityConverter() :
 		base(Visibility.Visible, Visibility.Collapsed) { }
 }
+
+[ValueConversion(typeof(bool), typeof(bool))]
+public sealed class BooleanInversionConverter : BooleanConverter<bool> {
+	public BooleanInversionConverter() :
+		base(false, true) { }
+}
 #endregion
 
 [ValueConversion(typeof(double), typeof(Thickness))]

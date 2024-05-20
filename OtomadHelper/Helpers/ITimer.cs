@@ -78,7 +78,7 @@ public interface ITimer {
 
 		public ITimer SingleShot() {
 			timer.Tick += (sender, e) => Stop();
-			timer.Start();
+			Start();
 			return this;
 		}
 
@@ -124,7 +124,7 @@ public interface ITimer {
 
 		public ITimer SingleShot() {
 			timer.Tick += (sender, e) => Stop();
-			timer.Start();
+			Start();
 			return this;
 		}
 
@@ -147,6 +147,7 @@ public interface ITimer {
 			callback = (sender, e) => Callback();
 			timer.Elapsed += callback;
 			timer.Interval = ms;
+			timer.AutoReset = true;
 		}
 
 		public double Milliseconds {
@@ -155,7 +156,6 @@ public interface ITimer {
 		}
 
 		public ITimer Start(bool immediate = false) {
-			timer.AutoReset = true;
 			timer.Enabled = true;
 			timer.Start();
 			if (immediate)
@@ -170,9 +170,8 @@ public interface ITimer {
 		}
 
 		public ITimer SingleShot() {
-			timer.AutoReset = false;
-			timer.Enabled = true;
-			timer.Start();
+			timer.Elapsed += (sender, e) => Stop();
+			Start();
 			return this;
 		}
 

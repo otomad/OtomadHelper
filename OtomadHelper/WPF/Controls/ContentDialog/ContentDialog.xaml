@@ -28,6 +28,7 @@
 				True="Collapsed"
 				False="Visible"
 				/>
+			<m:BooleanInversionConverter x:Key="BoolInversion" />
 
 			<Thickness x:Key="BodyMargin">0,12,0,0</Thickness>
 
@@ -126,6 +127,7 @@
 			<Style BasedOn="{StaticResource DefaultExpandButtonStyle}" TargetType="c:ExpandButton">
 				<Setter Property="HorizontalAlignment" Value="Left" />
 				<Setter Property="IsChecked" Value="True" />
+				<Setter Property="KeyboardNavigation.AcceptsReturn" Value="False" />
 				<Style.Triggers>
 					<DataTrigger Binding="{Binding Expandable}" Value="False">
 						<Setter Property="Visibility" Value="Collapsed" />
