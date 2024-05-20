@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
 namespace OtomadHelper.WPF.Controls;
@@ -51,7 +52,14 @@ public partial class ContentDialog : BackdropWindow {
 	public static void ShowError(Exception exception) =>
 		ShowError(exception.Message, exception.StackTrace);
 
+	private bool isExpansionRunning = false;
 	private void ExpandButton_Click(object sender, RoutedEventArgs e) {
+		// When the user focuses on the expand button and then holds down the Enter key,
+		// this will trigger the button at a high frequency, causing animation abnormalities.
+		if (isExpansionRunning) return;
+		isExpansionRunning = true;
+		SetIsVerticalScrollBarShown(false);
+
 		bool isExpanded = ExpandButton.IsChecked == true;
 		double expandedHeight, windowFromHeight = ActualHeight;
 		{
@@ -95,8 +103,15 @@ public partial class ContentDialog : BackdropWindow {
 			Storyboard.SetTargetProperty(animation, new("Height"));
 			Storyboard storyboard = new();
 			storyboard.Children.Add(animation);
-			storyboard.Completed += (sender, e) => SizeToContent = sizeToContent;
+			storyboard.Completed += (sender, e) => {
+				SizeToContent = sizeToContent;
+				isExpansionRunning = false;
+				SetIsVerticalScrollBarShown(true);
+			};
 			storyboard.Begin(this);
 		}
+
+		void SetIsVerticalScrollBarShown(bool shown) =>
+			ScrollViewer.SetVerticalScrollBarVisibility(CopyableBody, shown ? ScrollBarVisibility.Auto : ScrollBarVisibility.Hidden);
 	}
 }

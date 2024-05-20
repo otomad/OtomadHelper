@@ -68,8 +68,12 @@
 			<Style x:Key="CopyableBody" TargetType="TextBox">
 				<Setter Property="TextWrapping" Value="Wrap" />
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+				<Setter Property="CaretBrush" Value="{DynamicResource ForegroundBrush}" />
 				<Setter Property="IsReadOnly" Value="True" />
+				<Setter Property="MaxHeight" Value="450" />
 				<Setter Property="FontSize" Value="14" />
+				<Setter Property="AcceptsReturn" Value="True" />
+				<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
 				<Setter Property="Margin" Value="{StaticResource BodyMargin}" />
 				<Setter Property="Background" Value="Transparent" />
 				<Setter Property="BorderThickness" Value="0" />
