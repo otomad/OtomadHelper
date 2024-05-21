@@ -144,7 +144,7 @@ export function isElementHidden(element: Element | undefined | null): element is
 		getComputedStyle(element).display === "none" || // `display` CSS property is set to `none`
 		getComputedStyle(element).visibility !== "visible", // `visibility` CSS property is set to `hidden` or `collapse`
 	);
-	return !hiddenElement;
+	return !!hiddenElement;
 }
 
 /**
