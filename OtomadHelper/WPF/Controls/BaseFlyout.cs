@@ -18,6 +18,7 @@ public class BaseFlyout : BackdropWindow {
 		WindowStartupLocation = WindowStartupLocation.Manual;
 		Topmost = true;
 		Deactivated += (sender, e) => this.Vanish();
+		Closing += BaseFlyout_Closing;
 
 		// Loaded animation
 		DoubleAnimation fadeInAnimation = new() {
@@ -37,5 +38,15 @@ public class BaseFlyout : BackdropWindow {
 		Top -= (ActualHeight - rect.Height) / 2;
 		Left -= (ActualWidth - rect.Width) / 2;
 		MoveIntoScreen();
+	}
+
+	private bool waitToClose = false;
+	private void BaseFlyout_Closing(object sender, CancelEventArgs e) {
+		// If the window is closed too quickly, the text of the background element has not had time to switch,
+		// so the old value will suddenly flash.
+		if (waitToClose) return;
+		e.Cancel = true;
+		waitToClose = true;
+		Task.Delay(100).Then(Close);
 	}
 }

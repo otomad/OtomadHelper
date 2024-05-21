@@ -35,6 +35,7 @@ public partial class ComboBoxFlyout : BaseFlyout {
 		SetLocation(rect);
 		MinWidth = rect.Width + ResourcePadding * 4;
 		ItemHeight = rect.Height + ResourcePadding * 2;
+		Height = DataContext.Items.Count * ItemHeight + ResourcePadding * 3;
 	}
 
 	public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register(

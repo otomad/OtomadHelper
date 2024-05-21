@@ -86,8 +86,13 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 		SetLocation(rect.Left, rect.Top, rect.Width, widthType);
 
 	protected internal Task<T> GetDialogResultTask<T>(Func<T> GetResult) {
+		bool isGottenDialogResultTask = false;
 		TaskCompletionSource<T> taskCompletionSource = new();
-		Closing += (sender, e) => taskCompletionSource.SetResult(GetResult());
+		Closing += (sender, e) => {
+			if (isGottenDialogResultTask) return;
+			isGottenDialogResultTask = true;
+			taskCompletionSource.SetResult(GetResult());
+		};
 		return taskCompletionSource.Task;
 	}
 
