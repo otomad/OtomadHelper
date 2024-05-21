@@ -2,7 +2,7 @@ import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemTe
 
 const checkedOrInd = ":is(:checked, :indeterminate)";
 const unchecked = ":not(:checked, :indeterminate)";
-const iconExiting = ":has(.icon.exit)";
+const iconExiting = ":has(.icon.exit, .icon.enter-done)";
 
 const StyledCheckboxLabel = styled.label<{
 	/** Include just the checkbox itself, not the text label? */
@@ -192,6 +192,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 			<input
 				type="checkbox"
 				checked={checked}
+				className={{ testChecked: checked }}
 				onChange={e => handleCheck(e.target.checked)}
 				disabled={disabled}
 				ref={checkboxEl}

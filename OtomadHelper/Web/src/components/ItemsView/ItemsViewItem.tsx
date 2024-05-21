@@ -85,7 +85,12 @@ const StyledItemsViewItem = styled.button<{
 			align-items: center;
 			min-height: 48px;
 			padding: 8px 12px;
+			overflow: clip;
 			border-radius: 3px;
+
+			> * {
+				transition: none;
+			}
 
 			&::before {
 				${styles.mixins.oval()};
@@ -95,6 +100,10 @@ const StyledItemsViewItem = styled.button<{
 				block-size: ${100 / 3}%;
 				inline-size: 3px;
 				background-color: ${c("accent-color")};
+
+				@starting-style {
+					scale: 1 0;
+				}
 			}
 		}
 
@@ -135,10 +144,6 @@ const StyledItemsViewItem = styled.button<{
 		.image-wrapper {
 			${styles.mixins.flexCenter()};
 		}
-
-		/* .text {
-			width: 100%;
-		} */
 	`}
 
 	.text > * {
@@ -147,6 +152,24 @@ const StyledItemsViewItem = styled.button<{
 
 	&.selected .text .title {
 		${styles.effects.text.bodyStrong};
+	}
+
+	.checkbox-temp-wrapper {
+		${tgs()} {
+			opacity: 0;
+
+			&,
+			& ~ * {
+				translate: ${-(18 + 16)}px;
+			}
+		}
+		
+		&:is(.enter-active, .exit-active) {
+			&,
+			& ~ * {
+				transition: translate ${eases.easeOutMax} 250ms, opacity ${eases.easeOutMax} 250ms;
+			}
+		}
 	}
 `;
 
@@ -177,7 +200,14 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 			<p className="details">{details}</p>
 		</div>
 	);
-	const checkbox = multiple && <Checkbox value={[selected]} plain />;
+	// const checkbox = multiple && <Checkbox value={[selected]} plain />;
+	const checkbox = (
+		<CssTransition in={multiple} unmountOnExit>
+			<div className="checkbox-temp-wrapper">{/* TODO: Wait for React 19 ref as a prop, and then remove this div. */}
+				<Checkbox value={[selected]} plain />
+			</div>
+		</CssTransition>
+	);
 
 	return (
 		<StyledItemsViewItem $view={view!} className={[className, view, { selected }]} tabIndex={0} {...htmlAttrs}>

@@ -17,10 +17,11 @@
 	"scripts": {
 		"dev": "vite --host",
 		"dev-force": "vite --host --force",
+		"dev-delete-auto-types": "pnpm run delete-auto-types && vite --host --force",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prebuild": "scripts\\prebuild.bat",
-		"predev": "rimraf -g src/types/auto-*.d.ts",
+		"delete-auto-types": "rimraf -g src/types/auto-*.d.ts",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"lint:css": "stylelint './src/**/*.{js,jsx,ts,tsx}'",
 		"release": "pnpm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",

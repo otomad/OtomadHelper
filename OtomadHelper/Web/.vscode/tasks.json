@@ -27,6 +27,14 @@
 		},
 		{
 			"type": "npm",
+			"script": "dev-delete-auto-types",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: dev-delete-auto-types",
+			"detail": "vite",
+		},
+		{
+			"type": "npm",
 			"script": "compact-svg -- ${file}",
 			"problemMatcher": [],
 			"label": "Compact SVG",
