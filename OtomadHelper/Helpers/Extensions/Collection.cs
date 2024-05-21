@@ -88,15 +88,21 @@ public static partial class Extensions {
 		rest = list.Skip(3).ToList();
 	}
 
-	public static TTuple ToTuple<TTuple>(this IList<object> list) where TTuple : ITuple {
+	public static ITuple ToTuple(this IList<object> list, Type? tupleType = null) {
+		tupleType ??= typeof(ITuple);
 		int length = list.Count;
 		MethodInfo[] createTupleMethods = typeof(Tuple).GetMethods(BindingFlags.Public | BindingFlags.Static)!;
 		MethodInfo? method = createTupleMethods.FirstOrDefault(method => method.GetParameters().Length == length);
 		if (method is null)
 			throw new Exception($"You can only create a tuple containing up to 8 items, currently providing {length} items");
-		MethodInfo genericMethod = method.MakeGenericMethod(list.Select(item => item.GetType()).ToArray())!;
-		return (TTuple)genericMethod.Invoke(null, list.ToArray());
+		Type[] genericArgs = tupleType.GenericTypeArguments;
+		if (genericArgs.Length == 0) genericArgs = list.Select(item => item.GetType()).ToArray();
+		MethodInfo genericMethod = method.MakeGenericMethod(genericArgs)!;
+		return (ITuple)genericMethod.Invoke(null, list.ToArray());
 	}
+
+	public static TTuple ToTuple<TTuple>(this IList<object> list) where TTuple : ITuple =>
+		(TTuple)list.ToTuple(typeof(TTuple));
 
 	/// <inheritdoc cref="List{T}.IndexOf(T)"/>
 	public static int IndexOf<T>(this List<T> list, T? item) where T : struct =>

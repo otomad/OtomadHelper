@@ -3,9 +3,9 @@
 /// </summary>
 
 using System.Runtime.CompilerServices;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-//using OtomadHelper.Helpers.TupleAsJsonArray;
 using OtomadHelper.Models;
 using OtomadHelper.Module;
 
@@ -28,9 +28,7 @@ public class BetterBridge {
 	internal static readonly JsonSerializerOptions jsonOptions = new() {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		IncludeFields = true,
-		Converters = {
-			//new TupleConverterFactory(),
-		},
+		// VEGAS environment (?) doesn't support JSON converters.
 	};
 
 	public string[] GetMethods() =>
@@ -94,7 +92,12 @@ public class BetterBridge {
 			object?[] typedArgs = Enumerable.Repeat(Type.Missing, method.GetParameters().Length).ToArray();
 
 			for (int i = 0; i < jsonArgs.Length; i++) {
-				object? typedObj = JsonSerializer.Deserialize(jsonArgs[i], parameters[i].ParameterType, jsonOptions);
+				Type type = parameters[i].ParameterType;
+				object? typedObj;
+				if (type.Extends(typeof(ITuple)))
+					typedObj = JsonDeserializeTuple(jsonArgs[i], type);
+				else
+					typedObj = JsonSerializer.Deserialize(jsonArgs[i], type, jsonOptions);
 				typedArgs[i] = typedObj;
 			}
 
@@ -122,6 +125,22 @@ public class BetterBridge {
 			PostWebMessage(new ConsoleLog(e.ToString(), "error"));
 			return "null";
 		}
+	}
+
+	public static ITuple JsonDeserializeTuple(string arrayJson, Type tupleType) {
+		// VEGAS environment (?) doesn't support JSON converters.
+		// So we can't use some like: <a href="https://github.com/arogozine/TupleAsJsonArray">TupleAsJsonArray</a>.
+		JsonNode? node = JsonNode.Parse(arrayJson);
+		if (node?.GetValueKind() != JsonValueKind.Array)
+			throw new ArrayTypeMismatchException("The specified JSON arg is not the array type");
+		JsonArray array = node.AsArray();
+		Type[] genericTupleArgs = tupleType.GetGenericArguments();
+		object[] arguments = new object[genericTupleArgs.Length];
+		for (int i = 0; i < genericTupleArgs.Length; i++) {
+			Type type = genericTupleArgs[i];
+			arguments[i] = JsonSerializer.Deserialize(array[i], type, jsonOptions)!;
+		}
+		return arguments.ToTuple(tupleType);
 	}
 }
 
