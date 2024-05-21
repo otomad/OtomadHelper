@@ -5,7 +5,7 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
-using OtomadHelper.Helpers.TupleAsJsonArray;
+//using OtomadHelper.Helpers.TupleAsJsonArray;
 using OtomadHelper.Models;
 using OtomadHelper.Module;
 
@@ -29,7 +29,7 @@ public class BetterBridge {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		IncludeFields = true,
 		Converters = {
-			new TupleConverterFactory(),
+			//new TupleConverterFactory(),
 		},
 	};
 

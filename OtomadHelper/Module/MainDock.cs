@@ -212,6 +212,11 @@ public partial class MainDock : UserControl {
 		);
 	}
 
+	public Rect ClientToScreenRect(Tuple<double, double, double, double> clientRect) {
+		(double x, double y, double width, double height) = clientRect;
+		return ClientToScreenRect(new Rect(x, y, width, height));
+	}
+
 	public void ShowFlyout(System.Windows.Window flyout) {
 		try {
 			new WindowInteropHelper(flyout).Owner = Handle;
