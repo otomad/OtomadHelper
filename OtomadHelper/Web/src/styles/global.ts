@@ -65,7 +65,7 @@ const GlobalStyle = createGlobalStyle<{
 			&,
 			&::before,
 			&::after {
-				font-family: "Cascadia Code", "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
+				font-family: "Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Segoe UI Mono", Consolas, "SF Mono", monospace;
 			}
 		}
 	}

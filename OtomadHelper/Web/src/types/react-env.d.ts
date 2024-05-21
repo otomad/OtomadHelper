@@ -44,21 +44,13 @@ declare global {
 	type GetAttributesFromElement<TElement> = GetAttributesFromTag<GetTagFromElement<TElement>>;
 
 	/**
-	 * React Hook style functional component type.
-	 * @deprecated
-	 * @template TProps - Props of the component.
-	 * @template TElement - Inherit all Attrs from a native HTML element.
-	 */
-	export type FCP_Element<TProps = {}, TElement extends Element | null = null> = Override<
-		TElement extends null ? { children?: ReactNode } : GetAttributesFromElement<TElement>, TProps>;
-
-	/**
 	 * Props type for React Hook style functional components.
 	 * @template TProps - Props of the component.
 	 * @template TTagName - Inherit all Attrs from a native HTML element.
 	 */
-	export type FCP<TProps = {}, TTagName extends string | null = null> = Override<
-		TTagName extends null ? { children?: ReactNode } : GetAttributesFromTag<TTagName>, TProps>;
+	export type FCP<TProps = {}, TTagName extends string | Element | null = null> = Override<
+		TTagName extends null ? { children?: ReactNode } :
+		TTagName extends string ? GetAttributesFromTag<TTagName> : GetAttributesFromElement<TTagName>, TProps>;
 
 	/**
 	 * The type of setter function in React useState.

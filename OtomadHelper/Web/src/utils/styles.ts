@@ -232,3 +232,30 @@ export function getLocationStyle(location: MaybeRef<TwoD>): CSSProperties {
 	location = toValue(location);
 	return location[0] !== 0 || location[1] !== 0 ? { left: location[0] + "px", top: location[1] + "px" } : {};
 }
+
+/**
+ * Retrieves bounding client rectangle of the given HTML DOM element.
+ *
+ * @param element - The HTML DOM element (or even EventTarget or null) and get the bounding client rectangle from.
+ * @returns A tuple containing the x, y, width, and height of the bounding client rectangle.
+ *
+ * @remarks
+ * This function is useful when you need to get the position and dimensions of an HTML DOM element.
+ * It first converts the given EventTarget or null to an HTMLElement using the `toValue` function.
+ * Then, it retrieves the bounding client rectangle of the HTMLElement using the `getBoundingClientRect` method.
+ * Finally, it returns a tuple containing the x, y, width, and height of the bounding client rectangle.
+ *
+ * @note In RTL mode, the `x` still indicates the left position instead of the right position.
+ *
+ * @example
+ * ```typescript
+ * const element = document.getElementById("myElement");
+ * const [x, y, width, height] = getBoundingClientRectTuple(element);
+ * console.log(`Element position: x=${x}, y=${y}, width=${width}, height=${height}`);
+ * ```
+ */
+export function getBoundingClientRectTuple(element: MaybeRef<EventTarget | null>): RectTuple {
+	const el = toValue(element) as HTMLElement;
+	const rect = el.getBoundingClientRect();
+	return [rect.x, rect.y, rect.width, rect.height];
+}

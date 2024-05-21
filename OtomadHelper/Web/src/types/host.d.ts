@@ -1,7 +1,8 @@
 export interface Bridge {
 	setIsDevMode(isDevMode: bool): void;
 	showMessageBox(title: string, body: string, buttons: ContentDialogButtonItem[]): string;
-	showComboBox(rect: [x: number, y: number, width: number, height: number], selected: string, options: string[]): Promise<string>;
+	showComboBox(rect: RectTuple, selected: string, options: string[]): string;
+	showPitchPicker(rect: RectTuple, pitch: string): string;
 }
 
 export interface ContentDialogButtonItem {

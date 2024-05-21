@@ -1,6 +1,7 @@
 export default function Home() {
 	const [shown, setShown] = useState(false);
 	const [text, setText] = useState("foo");
+	const pitch = useState("C5");
 
 	return (
 		<div className="container">
@@ -19,6 +20,8 @@ export default function Home() {
 			</div>
 
 			<ComboBox options={["foo", "bar", "baz", "hello", "world"]} current={[text, setText]} />
+
+			<PitchPicker pitch={pitch} style={{ maxWidth: "300px" }} />
 		</div>
 	);
 }
