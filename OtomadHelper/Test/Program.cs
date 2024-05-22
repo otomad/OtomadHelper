@@ -12,8 +12,9 @@ internal static class Program {
 		Application.SetCompatibleTextRenderingDefault(false);
 		Application.Run(new TestForm());
 		//Application.Run(new TestControls());
-		/*s = WPF.Controls.ContentDialog.ShowDialog<string>("幸福倒计时", "Windows 11 即将更新！", new WPF.Controls.ContentDialogButtonItem[] { new("OK", "ok", true), new("Cancel", "cancel") });
-		try {
+		//s = WPF.Controls.ContentDialog.ShowDialog<string>("幸福倒计时", "Windows 11 即将更新！", new WPF.Controls.ContentDialogButtonItem[] { new("OK", "ok", true), new("Cancel", "cancel") });
+		/*try {
+			WPF.Controls.ContentDialog.errorFooter = "VEGAS Pro: v21.0; Otomad Helper: v8.0.0";
 			TestError();
 		} catch (Exception e) {
 			WPF.Controls.ContentDialog.ShowError(e);

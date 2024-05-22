@@ -49,9 +49,10 @@ public partial class MainDock : UserControl {
 		await Browser.EnsureCoreWebView2Async(environment);
 		CoreWebView2Settings settings = Browser.CoreWebView2.Settings;
 		settings.AreBrowserAcceleratorKeysEnabled = false;
+		settings.AreDefaultScriptDialogsEnabled = false;
 		//settings.AreDefaultContextMenusEnabled = false;
-		//settings.AreDefaultScriptDialogsEnabled = false;
 		//settings.AreDevToolsEnabled = false;
+		//settings.IsZoomControlEnabled = false;
 		settings.IsBuiltInErrorPageEnabled = false;
 		settings.IsGeneralAutofillEnabled = false;
 		settings.IsPasswordAutosaveEnabled = false;
@@ -59,18 +60,19 @@ public partial class MainDock : UserControl {
 		settings.IsReputationCheckingRequired = false;
 		settings.IsStatusBarEnabled = false;
 		settings.IsSwipeNavigationEnabled = false;
-		//settings.IsZoomControlEnabled = false;
 	}
 
 	private void Browser_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e) {
 		ManagedStream.Handler(Browser);
 		Browser.Source = new Uri(ManagedStream.RESOURCE_HOST + "index.html"); // "http://www.sunchateau.com/free/ua.htm"
-		Browser.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
-		Browser.CoreWebView2.DocumentTitleChanged += (sender, e) => DocumentTitleChanged?.Invoke(Browser.CoreWebView2.DocumentTitle);
-		Browser.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
-		Browser.CoreWebView2.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
+		CoreWebView2 webView = Browser.CoreWebView2;
+		webView.NewWindowRequested += CoreWebView2_NewWindowRequested;
+		webView.DocumentTitleChanged += (sender, e) => DocumentTitleChanged?.Invoke(Browser.CoreWebView2.DocumentTitle);
+		webView.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
+		webView.ScriptDialogOpening += CoreWebView2_ScriptDialogOpening;
+		webView.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
 #if DEBUG
-		Browser.CoreWebView2.OpenDevToolsWindow();
+		webView.OpenDevToolsWindow();
 #endif
 		RevokeWebView2DragDropSwallow(this);
 	}
@@ -223,5 +225,22 @@ public partial class MainDock : UserControl {
 			ElementHost.EnableModelessKeyboardInterop(flyout);
 			flyout.Show(); // ShowDialog will prevent WndProc in the dock.
 		} catch (Exception) { }
+	}
+
+	private void CoreWebView2_ScriptDialogOpening(object sender, CoreWebView2ScriptDialogOpeningEventArgs e) {
+		if (e.Kind == CoreWebView2ScriptDialogKind.Prompt) return;
+		string iconName = e.Kind switch {
+			CoreWebView2ScriptDialogKind.Confirm => "Question",
+			CoreWebView2ScriptDialogKind.Beforeunload => "Warning",
+			_ => "Info",
+		};
+		WPF.Controls.ContentDialogButtonItem<bool>
+			okBtn = new("OK", true, true),
+			cancelBtn = new("Cancel", false);
+		WPF.Controls.ContentDialogButtonItem<bool>[] buttons = e.Kind == CoreWebView2ScriptDialogKind.Alert ?
+			new[] { okBtn } :
+			new[] { okBtn, cancelBtn };
+		bool dialogResult = WPF.Controls.ContentDialog.ShowDialog<bool>(e.Message, "", buttons, iconName);
+		if (dialogResult) e.Accept();
 	}
 }

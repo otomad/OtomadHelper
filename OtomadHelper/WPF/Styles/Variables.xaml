@@ -38,6 +38,12 @@
 	<!--#region Font Families-->
 	<FontFamily x:Key="IconFont">Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol</FontFamily>
 	<!--<Setter Property="FontFamily" Value="pack://application:,,,/OtomadHelper;component/Resources/#Segoe Fluent Icons" />-->
-	<FontFamily x:Key="MonoFont">Cascadia Code, Cascadia Mono, JetBrains Mono, Segoe UI Mono, Consolas, SF Mono</FontFamily>
+	<FontFamily x:Key="EnglishMonoFont">Cascadia Code, Cascadia Mono, JetBrains Mono, Segoe UI Mono, Consolas, SF Mono</FontFamily>
+	<!--#endregion-->
+
+	<!--#region FontSizes-->
+	<s:Double x:Key="CaptionFontSize">12</s:Double>
+	<s:Double x:Key="BodyFontSize">14</s:Double>
+	<s:Double x:Key="SubtitleFontSize">20</s:Double>
 	<!--#endregion-->
 </ResourceDictionary>

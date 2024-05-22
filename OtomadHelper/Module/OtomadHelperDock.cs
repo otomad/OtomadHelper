@@ -3,6 +3,7 @@ using ScriptPortal.Vegas;
 
 namespace OtomadHelper.Module;
 
+[DesignerCategory("Code")]
 public class OtomadHelperDock : DockableControl {
 	private MainDock? mainDock;
 	internal Vegas vegas => myVegas;

@@ -30,6 +30,7 @@ public partial class ContentDialog : BackdropWindow {
 		return (TDialogResult?)viewModel.DialogResult;
 	}
 
+	internal static string errorFooter = "";
 	public static void ShowError(
 		string message,
 		string stackTrace
@@ -46,6 +47,7 @@ public partial class ContentDialog : BackdropWindow {
 		});
 		viewModel.Expandable = true;
 		viewModel.CanCopyBody = true;
+		viewModel.Footer = errorFooter;
 		dialog.ShowDialog();
 	}
 

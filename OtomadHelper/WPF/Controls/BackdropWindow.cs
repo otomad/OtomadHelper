@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -30,6 +31,8 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 		IsVisibleChanged += (sender, e) => {
 			if ((bool)e.NewValue) RaiseEvent(new RoutedEventArgs(ShowingEvent));
 		};
+		OnCultureChanged(Culture);
+		CultureChanged += OnCultureChanged;
 
 		// Default styles
 		SetResourceReference(BorderBrushProperty, "CardStroke");
@@ -329,6 +332,17 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 		if (e.Key == Key.Escape)
 			this.Vanish();
 		base.OnKeyDown(e);
+	}
+	#endregion
+
+	#region Default fonts
+	public static readonly DependencyProperty MonoFontProperty = DependencyProperty.Register(
+		nameof(MonoFont), typeof(FontFamily), typeof(BackdropWindow));
+	public FontFamily MonoFont { get => (FontFamily)GetValue(MonoFontProperty); private set => SetValue(MonoFontProperty, value); }
+
+	private void OnCultureChanged(CultureInfo culture) {
+		FontFamily defaultFont = FontFamily, englishMonoFont = (FontFamily)Resources["EnglishMonoFont"];
+		MonoFont = new(new[] { englishMonoFont, defaultFont }.Select(font => font.Source).Join(", "));
 	}
 	#endregion
 }

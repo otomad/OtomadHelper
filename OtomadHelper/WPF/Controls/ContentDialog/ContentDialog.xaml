@@ -29,6 +29,7 @@
 				False="Visible"
 				/>
 			<m:BooleanInversionConverter x:Key="BoolInversion" />
+			<m:BooleanAndConverter x:Key="BoolAnd" />
 
 			<Thickness x:Key="BodyMargin">0,12,0,0</Thickness>
 
@@ -41,6 +42,7 @@
 				BasedOn="{StaticResource {x:Type TextBlock}}"
 				TargetType="TextBlock"
 				>
+				<Setter Property="FontSize" Value="{StaticResource CaptionFontSize}" />
 				<Setter Property="TextWrapping" Value="NoWrap" />
 				<Setter Property="Margin" Value="0,-10,0,4" />
 				<Style.Triggers>
@@ -54,7 +56,7 @@
 				BasedOn="{StaticResource {x:Type TextBlock}}"
 				TargetType="TextBlock"
 				>
-				<Setter Property="FontSize" Value="20" />
+				<Setter Property="FontSize" Value="{StaticResource SubtitleFontSize}" />
 				<Setter Property="FontWeight" Value="SemiBold" />
 			</Style>
 			<Style
@@ -62,8 +64,30 @@
 				BasedOn="{StaticResource {x:Type TextBlock}}"
 				TargetType="TextBlock"
 				>
-				<Setter Property="FontSize" Value="14" />
+				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
 				<Setter Property="Margin" Value="{StaticResource BodyMargin}" />
+				<Setter Property="Visibility">
+					<Setter.Value>
+						<MultiBinding Converter="{StaticResource BoolAnd}">
+							<Binding Path="Body" />
+							<Binding Path="CanCopyBody" Converter="{StaticResource BoolToInvertVis}" />
+						</MultiBinding>
+					</Setter.Value>
+				</Setter>
+			</Style>
+			<Style
+				x:Key="Footer"
+				BasedOn="{StaticResource {x:Type TextBlock}}"
+				TargetType="TextBlock"
+				>
+				<Setter Property="FontSize" Value="{StaticResource CaptionFontSize}" />
+				<Setter Property="FontFamily" Value="{Binding MonoFont, ElementName=View}" />
+				<Setter Property="Margin" Value="0,12,0,-12" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding Footer}" Value="">
+						<Setter Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+				</Style.Triggers>
 			</Style>
 			<Style x:Key="CopyableBody" TargetType="TextBox">
 				<Setter Property="TextWrapping" Value="Wrap" />
@@ -71,7 +95,7 @@
 				<Setter Property="CaretBrush" Value="{DynamicResource ForegroundBrush}" />
 				<Setter Property="IsReadOnly" Value="True" />
 				<Setter Property="MaxHeight" Value="450" />
-				<Setter Property="FontSize" Value="14" />
+				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
 				<Setter Property="AcceptsReturn" Value="True" />
 				<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
 				<Setter Property="Margin" Value="{StaticResource BodyMargin}" />
@@ -80,7 +104,15 @@
 				<Setter Property="Padding" Value="-2,0" />
 				<Setter Property="SelectionBrush" Value="{Binding WindowGlassBrush, ElementName=View}" />
 				<Setter Property="SelectionTextBrush" Value="{DynamicResource TextOnAccentForegroundBrush}" />
-				<Setter Property="FontFamily" Value="{StaticResource MonoFont}" />
+				<Setter Property="FontFamily" Value="{Binding MonoFont, ElementName=View}" />
+				<Setter Property="Visibility">
+					<Setter.Value>
+						<MultiBinding Converter="{StaticResource BoolAnd}">
+							<Binding Path="Body" />
+							<Binding Path="CanCopyBody" />
+						</MultiBinding>
+					</Setter.Value>
+				</Setter>
 			</Style>
 			<Style x:Key="ContentWrapper" TargetType="Border">
 				<Setter Property="Padding" Value="24" />
@@ -157,19 +189,15 @@
 				<StackPanel Orientation="Vertical">
 					<TextBlock Style="{StaticResource Subtitle}" Text="{Binding Subtitle}" />
 					<TextBlock Style="{StaticResource Title}" Text="{Binding Title}" />
-					<TextBlock
-						Style="{StaticResource Body}"
-						Text="{Binding Body}"
-						Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToInvertVis}}"
-						/>
+					<TextBlock Style="{StaticResource Body}" Text="{Binding Body}" />
 					<Grid x:Name="BodyWrapper">
 						<TextBox
 							x:Name="CopyableBody"
 							Style="{StaticResource CopyableBody}"
 							Text="{Binding Body}"
-							Visibility="{Binding CanCopyBody, Converter={StaticResource BoolToVis}}"
 							/>
 					</Grid>
+					<TextBlock Style="{StaticResource Footer}" Text="{Binding Footer}" />
 				</StackPanel>
 			</Border>
 			<Border Style="{StaticResource ButtonsContainer}">

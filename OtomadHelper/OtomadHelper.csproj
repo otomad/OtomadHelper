@@ -75,9 +75,7 @@
 		<Compile Update="Module\MainDock.cs">
 			<SubType>UserControl</SubType>
 		</Compile>
-		<Compile Update="Module\OtomadHelperDock.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
+		<Compile Update="Module\OtomadHelperDock.cs" />
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>

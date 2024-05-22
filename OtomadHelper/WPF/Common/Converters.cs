@@ -124,7 +124,7 @@ public class ActualSizeToRectConverter : IValueConverter {
 /// <Style.Triggers>
 ///   <DataTrigger Value="True">
 ///     <DataTrigger.Binding>
-///       <MultiBinding Converter="{StaticResource OrConverter}">
+///       <MultiBinding Converter="{StaticResource BoolOr}">
 ///         <Binding Path="PermissionFlag" />
 ///         <Binding Path="CCTVPath" />
 ///       </MultiBinding>
@@ -136,17 +136,38 @@ public class ActualSizeToRectConverter : IValueConverter {
 /// </code>
 /// </example>
 /// </remarks>
-public class MultiTriggerOrConverter : IMultiValueConverter {
+public class BooleanOrConverter : IMultiValueConverter {
 	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) =>
-		values.Any(value => {
-			if (value == DependencyProperty.UnsetValue) return false; // Unfortunately, it cannot be placed in the switch.
-			return value switch {
-				bool val => val,
-				string val => string.IsNullOrEmpty(val),
-				null => false,
-				_ => true,
-			};
-		});
+		ResolveTargetType(values.Any(IsTruthy), targetType);
+
+	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
+
+	/// <summary>
+	/// Determines whether the specified <paramref name="value"/> can be recognized as a <see langword="true"/> value.
+	/// </summary>
+	public static bool IsTruthy(object value) {
+		if (value == DependencyProperty.UnsetValue) return false; // Unfortunately, it cannot be placed in the switch.
+		return value switch {
+			bool val => val,
+			string val => !string.IsNullOrEmpty(val),
+			Visibility val => val == Visibility.Visible,
+			null => false,
+			_ => true,
+		};
+	}
+
+	public static object ResolveTargetType(bool isTruthy, Type targetType) {
+		if (targetType == typeof(Visibility))
+			return isTruthy ? Visibility.Visible : Visibility.Collapsed;
+		else
+			return isTruthy;
+	}
+}
+
+public class BooleanAndConverter : IMultiValueConverter {
+	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) =>
+		BooleanOrConverter.ResolveTargetType(values.All(BooleanOrConverter.IsTruthy), targetType);
 
 	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();

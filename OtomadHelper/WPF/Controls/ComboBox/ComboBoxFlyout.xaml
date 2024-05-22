@@ -39,7 +39,7 @@
 			<m:DoubleToThicknessConverter x:Key="DoubleToThick" />
 			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 			<m:ActualSizeToRectConverter x:Key="SizeToRect" />
-			<m:MultiTriggerOrConverter x:Key="MultiOr" />
+			<m:BooleanOrConverter x:Key="BoolOr" />
 
 			<s:Double x:Key="Padding">2</s:Double>
 			<s:Double x:Key="IndicatorRadius">1.5</s:Double>
@@ -100,7 +100,7 @@
 							<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Self}}" Value="True" />
 							<Condition Value="True">
 								<Condition.Binding>
-									<MultiBinding Converter="{StaticResource MultiOr}">
+									<MultiBinding Converter="{StaticResource BoolOr}">
 										<Binding Path="IsPressed" RelativeSource="{RelativeSource Self}" />
 										<Binding ElementName="View" Path="IsPressingSpace" />
 									</MultiBinding>
@@ -130,7 +130,7 @@
 							<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True" />
 							<Condition Value="True">
 								<Condition.Binding>
-									<MultiBinding Converter="{StaticResource MultiOr}">
+									<MultiBinding Converter="{StaticResource BoolOr}">
 										<Binding Path="IsPressed" RelativeSource="{RelativeSource AncestorType=RadioButton}" />
 										<Binding ElementName="View" Path="IsPressingSpace" />
 									</MultiBinding>

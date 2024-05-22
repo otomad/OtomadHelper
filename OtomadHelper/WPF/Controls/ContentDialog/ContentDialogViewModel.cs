@@ -30,11 +30,14 @@ public class ContentDialogViewModel : ObservableObject<ContentDialog> {
 	});
 
 	private bool expandable = false;
-	public bool Expandable { get => expandable; set => SetProperty(ref expandable, value); }
+	public bool Expandable { get => expandable && !string.IsNullOrEmpty(Body); set => SetProperty(ref expandable, value); }
 
 	private bool canCopyBody = false;
 	public bool CanCopyBody { get => canCopyBody; set => SetProperty(ref canCopyBody, value); }
 
 	private string subtitle = "";
 	public string Subtitle { get => subtitle; set => SetProperty(ref subtitle, value); }
+
+	private string footer = "";
+	public string Footer { get => footer; set => SetProperty(ref footer, value); }
 }
