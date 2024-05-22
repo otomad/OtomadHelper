@@ -56,7 +56,11 @@
 									Background="{TemplateBinding Background}"
 									CornerRadius="{StaticResource ButtonCornerRadius}"
 									>
-									<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+									<ContentPresenter
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center"
+										RecognizesAccessKey="True"
+										/>
 								</Border>
 								<Border
 									Padding="{StaticResource ButtonPadding}"

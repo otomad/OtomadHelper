@@ -3,6 +3,12 @@ export default function Tools() {
 		<div className="container">
 			<SettingsPageControl style={{ marginBlockEnd: "4px" }}>{t.descriptions.tools}</SettingsPageControl>
 			<SettingsCard
+				title={t.tools.flow}
+				details={t.descriptions.tools.flow}
+				type="button"
+				icon="flow"
+			/>
+			<SettingsCard
 				title={t.tools.selector}
 				details={t.descriptions.tools.selector}
 				type="button"
@@ -49,16 +55,10 @@ export default function Tools() {
 				selectValid={1}
 			/>
 			<SettingsCard
-				title={t.tools.scoreExporter}
-				details={t.descriptions.tools.scoreExporter}
+				title={t.tools.exportScore}
+				details={t.descriptions.tools.exportScore}
 				type="button"
 				icon="export_score"
-			/>
-			<SettingsCard
-				title={t.tools.flow}
-				details={t.descriptions.tools.flow}
-				type="button"
-				icon="flow"
 			/>
 
 			<Subheader>{t.tools.converters}</Subheader>
@@ -71,11 +71,18 @@ export default function Tools() {
 				selectValid={1}
 			/>
 			<SettingsCard
-				title={t.score.timeSignature}
-				details={t.descriptions.tools.converters.timeSignature}
+				title={t.stream.transformMethod}
+				details={t.descriptions.tools.converters.transformMethod}
 				type="button"
-				icon="health"
-				trailingIcon="open"
+				icon="zoom_fit"
+				selectInfo={t(1).selectInfo.videoEvent}
+				selectValid={1}
+			/>
+			<SettingsCard
+				title={t.tools.clawMachine}
+				details={t.descriptions.tools.converters.clawMachine}
+				type="button"
+				icon="claw_machine"
 				selectInfo={t(1).selectInfo.audioEventOnlyOne} selectValid={1 === 1}
 			/>
 		</div>

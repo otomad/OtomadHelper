@@ -30,6 +30,7 @@ words:
   - demibold
   - dvh
   - dvw
+  - élastique
   - endregion
   - esbuild
   - extralight
@@ -41,6 +42,7 @@ words:
   - jsdocs
   - kbd
   - keyframes
+  - lengthenable
   - lotties
   - ltr
   - mht
@@ -130,3 +132,4 @@ flagWords:
   - condif -> config
   - comflict -> conflict
   - typoef -> typeof
+  - grey -> gray

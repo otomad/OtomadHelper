@@ -61,4 +61,25 @@
 	<data name="ImportToHere" xml:space="preserve">
 		<value>Import %1</value>
 	</data>
+	<data name="Delete" xml:space="preserve">
+		<value>&amp;Delete</value>
+	</data>
+	<data name="Ok" xml:space="preserve">
+		<value>&amp;OK</value>
+	</data>
+	<data name="Cancel" xml:space="preserve">
+		<value>&amp;Cancel</value>
+	</data>
+	<data name="Close" xml:space="preserve">
+		<value>&amp;Close</value>
+	</data>
+	<data name="Error" xml:space="preserve">
+		<value>Error</value>
+	</data>
+	<data name="ExpandDetails" xml:space="preserve">
+		<value>Expand details</value>
+	</data>
+	<data name="CollapseDetails" xml:space="preserve">
+		<value>Collapse details</value>
+	</data>
 </root>

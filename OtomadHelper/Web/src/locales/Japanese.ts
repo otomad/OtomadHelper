@@ -42,9 +42,13 @@ export default {
 		},
 		stream: {
 			stretch: {},
+			noLengthening: {},
 			legato: {},
 			transformMethod: {},
 			tuning: {
+				tuningMethod: {},
+				stretchAttributes: {},
+				alternativeForExceedsTheRange: {},
 				prelisten: {
 					waveform: {},
 				},
