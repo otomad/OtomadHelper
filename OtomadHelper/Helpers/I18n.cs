@@ -3,15 +3,22 @@ using System.Globalization;
 namespace OtomadHelper.Helpers;
 
 public class I18n : DynamicObject {
-	public static CultureInfo Culture => Thread.CurrentThread.CurrentCulture;
+	public static CultureInfo Culture { get; private set; } = SystemCulture;
+	public static CultureInfo SystemCulture => Thread.CurrentThread.CurrentCulture;
 
 	public static string SetCulture {
 		set {
 			CultureInfo culture = new(value);
 			Thread.CurrentThread.CurrentCulture = culture;
 			Thread.CurrentThread.CurrentUICulture = culture;
+			Culture = culture;
 			CultureChanged?.Invoke(culture);
 		}
+	}
+
+	public static void RefreshCulture() {
+		Thread.CurrentThread.CurrentCulture = Culture;
+		Thread.CurrentThread.CurrentUICulture = Culture;
 	}
 
 	public delegate void CultureChangedEventHandler(CultureInfo culture);

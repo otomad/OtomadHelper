@@ -28,6 +28,13 @@ public partial class ContentDialog : BackdropWindow {
 		viewModel.Buttons.AddRange(buttons);
 		dialog.ShowDialog();
 		return (TDialogResult?)viewModel.DialogResult;
+		// TODO: SynchronizationContext
+		// Show a modal dialog after the current event handler is completed, to avoid potential reentrancy caused by running a nested message loop in the WebView2 event handler.
+		//System.Threading.SynchronizationContext.Current.Post((_) => {
+		//	Form1 form = new Form1();
+		//	form.ShowDialog();
+		//	form.Closed();
+		//}, null);
 	}
 
 	internal static string errorFooter = "";

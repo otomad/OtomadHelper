@@ -46,7 +46,7 @@ public class ComboBoxViewModelItem : ObservableObject {
 		set {
 			if (value) {
 				ViewModel.Selected = Text;
-				OnPropertyChanged(value, !value); // BUG
+				OnPropertyChanged(value, !value); // BUG: SetProperty
 			}
 		}
 	}
