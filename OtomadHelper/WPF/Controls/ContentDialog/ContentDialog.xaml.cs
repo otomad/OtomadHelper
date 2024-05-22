@@ -38,12 +38,12 @@ public partial class ContentDialog : BackdropWindow {
 		ContentDialog dialog = new();
 		ContentDialogViewModel viewModel = dialog.DataContext;
 		viewModel.Title = message;
-		viewModel.Subtitle = "错误"; // TODO: localization.
+		viewModel.Subtitle = t.Error;
 		viewModel.Body = stackTrace;
 		viewModel.IconName = "Error";
 		viewModel.Buttons.AddRange(new ContentDialogButtonItem[] {
 			// new("Report", "report"), // I'm worried that users encounter any bug, they immediately click to report it directly.
-			new("Close", "close"),
+			new(t.Close, "close"),
 		});
 		viewModel.Expandable = true;
 		viewModel.CanCopyBody = true;

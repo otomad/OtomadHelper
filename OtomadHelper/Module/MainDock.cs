@@ -167,7 +167,7 @@ public partial class MainDock : UserControl {
 		} else {
 			if (!isDevMode) RemoveAllMenuItems();
 			CoreWebView2ContextMenuItem deleteItem = webView.Environment.CreateContextMenuItem(
-			"删除(&D)", null, CoreWebView2ContextMenuItemKind.Command); // TODO: localization.
+			t.Delete, null, CoreWebView2ContextMenuItemKind.Command);
 			CoreWebView2ContextMenuItem separator = webView.Environment.CreateContextMenuItem(
 				"", null, CoreWebView2ContextMenuItemKind.Separator);
 			deleteItem.CustomItemSelected += (sender, ex) => {
@@ -235,8 +235,8 @@ public partial class MainDock : UserControl {
 			_ => "Info",
 		};
 		WPF.Controls.ContentDialogButtonItem<bool>
-			okBtn = new("_OK", true, true), // TODO: localization.
-			cancelBtn = new("_Cancel", false);
+			okBtn = new(t.Ok, true, true),
+			cancelBtn = new(t.Cancel, false);
 		WPF.Controls.ContentDialogButtonItem<bool>[] buttons = e.Kind == CoreWebView2ScriptDialogKind.Alert ?
 			new[] { okBtn } :
 			new[] { okBtn, cancelBtn };

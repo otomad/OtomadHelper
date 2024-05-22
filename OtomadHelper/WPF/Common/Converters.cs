@@ -215,3 +215,12 @@ public class RelativeToAbsoluteRectConverter : IMultiValueConverter {
 	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
 }
+
+[ValueConversion(typeof(string), typeof(string))]
+public class AccessKeyAmpersandToUnderscoreConverter : IValueConverter {
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+		((string)value).Replace('&', '_');
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		((string)value).Replace('_', '&');
+}

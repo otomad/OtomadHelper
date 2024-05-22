@@ -5,6 +5,8 @@
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	>
+	<m:AccessKeyAmpersandToUnderscoreConverter x:Key="AmpToUnder" />
+
 	<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
 	<Thickness x:Key="ButtonPadding">8</Thickness>
 
@@ -25,7 +27,17 @@
 						BorderThickness="{TemplateBinding BorderThickness}"
 						CornerRadius="{StaticResource ButtonCornerRadius}"
 						>
-						<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+						<ContentPresenter
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							RecognizesAccessKey="True"
+							>
+							<ContentPresenter.ContentTemplate>
+								<DataTemplate>
+									<AccessText Text="{Binding Converter={StaticResource AmpToUnder}}"/>
+								</DataTemplate>
+							</ContentPresenter.ContentTemplate>
+						</ContentPresenter>
 					</Border>
 				</ControlTemplate>
 			</Setter.Value>
@@ -60,7 +72,13 @@
 										HorizontalAlignment="Center"
 										VerticalAlignment="Center"
 										RecognizesAccessKey="True"
-										/>
+										>
+										<ContentPresenter.ContentTemplate>
+											<DataTemplate>
+												<AccessText Text="{Binding Converter={StaticResource AmpToUnder}}"/>
+											</DataTemplate>
+										</ContentPresenter.ContentTemplate>
+									</ContentPresenter>
 								</Border>
 								<Border
 									Padding="{StaticResource ButtonPadding}"
