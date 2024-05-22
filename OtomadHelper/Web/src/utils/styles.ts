@@ -257,5 +257,32 @@ export function getLocationStyle(location: MaybeRef<TwoD>): CSSProperties {
 export function getBoundingClientRectTuple(element: MaybeRef<EventTarget | null>): RectTuple {
 	const el = toValue(element) as HTMLElement;
 	const rect = el.getBoundingClientRect();
+	const zoom = useConfigStore.getState().settings.getUiScale1();
+	zoomDomRect(rect, zoom);
 	return [rect.x, rect.y, rect.width, rect.height];
+}
+
+/**
+ * Zooms a DOMRect by a given factor.
+ *
+ * @param rect - The DOMRect to be zoomed.
+ * @param zoom - The zoom factor.
+ *
+ * @remarks
+ * This function modifies the original DOMRect by multiplying each numeric property by the given zoom factor.
+ * It is useful for scaling UI elements or adjusting coordinates based on the UI scale.
+ *
+ * @example
+ * ```typescript
+ * const originalRect = new DOMRect(10, 20, 30, 40);
+ * const zoomFactor = 2;
+ * zoomDomRect(originalRect, zoomFactor);
+ * console.log(originalRect); // Output: DOMRect {x: 20, y: 40, width: 60, height: 80,...}
+ * ```
+ */
+export function zoomDomRect(rect: DOMRect, zoom: number) {
+	for (const key in rect)
+		if (hasOwn(rect, key) && typeof rect[key] === "number")
+			(rect[key] as number) *= zoom;
+	return rect;
 }

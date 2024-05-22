@@ -163,7 +163,7 @@ const StyledItemsViewItem = styled.button<{
 				translate: ${-(18 + 16)}px;
 			}
 		}
-		
+
 		&:is(.enter-active, .exit-active) {
 			&,
 			& ~ * {
@@ -184,7 +184,7 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 	/** Icon. */
 	icon?: DeclaredIcons;
 	/** Identifier. */
-	id: ObjectKey;
+	id: PropertyKey;
 	/** Selected? */
 	selected?: boolean;
 	/** Detailed description. */

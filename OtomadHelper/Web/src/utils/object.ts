@@ -9,7 +9,8 @@
  * @template TKey - The key enumeration type of the object.
  * @template TValue - The value type of the object.
  * @param obj - An object that can return key value pairs of its enumerable properties.
- * @returns An array of the given object's own enumerable string-keyed property key-value pairs. Each key-value
+ * @returns
+ * An array of the given object's own enumerable string-keyed property key-value pairs. Each key-value
  * pair is an array with two elements: the first element is the property key (which is always a string), and the
  * second element is the property value.
  */
@@ -27,6 +28,10 @@ export function entries<TKey extends string | number | symbol, TValue>(obj: { [s
  */
 export function keys<TKey extends object>(obj: TKey) {
 	return Object.keys(obj) as (keyof TKey)[];
+}
+
+export function hasOwn<T extends object>(obj: T, key: PropertyKey): key is keyof T {
+	return Object.hasOwn(obj, key);
 }
 
 /**

@@ -42,7 +42,7 @@ const StyledItemsView = styled.div<{
 
 export default function ItemsView<
 	M extends boolean,
-	T extends (M extends true ? ObjectKey[] : ObjectKey),
+	T extends (M extends true ? PropertyKey[] : PropertyKey),
 >({ view, current: [current, setCurrent], $itemWidth, multiple = false as M, children }: FCP<{
 	/** View mode: list, tile, grid. */
 	view: ItemView;
@@ -53,16 +53,16 @@ export default function ItemsView<
 	/** Multiple selection mode? */
 	multiple?: M;
 }>) {
-	const isSelected = (id: ObjectKey) => {
+	const isSelected = (id: PropertyKey) => {
 		if (multiple)
 			if (Array.isArray(current)) return current.includes(id);
 			else return false;
 		else return current === id;
 	};
 
-	const handleClick = (id: ObjectKey) => {
+	const handleClick = (id: PropertyKey) => {
 		setCurrent?.((
-			!multiple ? id : produce((draft: ObjectKey[]) => {
+			!multiple ? id : produce((draft: PropertyKey[]) => {
 				draft.toggle(id);
 			})
 		) as T);

@@ -14,17 +14,13 @@ declare global {
 	 */
 	type Readable = string | number | bigint;
 	/**
-	 * Any type that can be used as a JavaScript object key, including String, Number, Symbol.
-	 */
-	type ObjectKey = string | number | symbol;
-	/**
 	 * I heard you want to use `any` without any warnings?
 	 */
 	type Any = Parameters<typeof alert>[0];
 	/**
 	 * Any object.
 	 */
-	type AnyObject = Record<ObjectKey, any>;
+	type AnyObject = Record<PropertyKey, any>;
 	/**
 	 * Any function.
 	 */
@@ -37,7 +33,7 @@ declare global {
 	 * Specify the value type of Record with any available object key types.
 	 * @template TValue - The type of value.
 	 */
-	type RecordValue<TValue> = Record<ObjectKey, TValue>;
+	type RecordValue<TValue> = Record<PropertyKey, TValue>;
 	/**
 	 * A tuple representing a two-dimensional point.
 	 */
