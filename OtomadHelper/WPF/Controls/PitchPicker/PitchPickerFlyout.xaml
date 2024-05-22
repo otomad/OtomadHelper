@@ -29,6 +29,7 @@
 			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
 			<m:ActualSizeToRectConverter x:Key="SizeToRect" />
 			<m:RectToDrawingBrushConverter x:Key="RectToBrush" />
+			<m:RelativeToAbsoluteRectConverter x:Key="RelToAbsRect" />
 
 			<Thickness x:Key="ItemPadding">4,0</Thickness>
 			<s:Double x:Key="ItemHeight">40</s:Double>
@@ -62,7 +63,7 @@
 									<ControlTemplate TargetType="ListBoxItem">
 										<Border
 											x:Name="ListBoxItemBorder"
-											Margin="2,0"
+											Margin="2,-1"
 											Background="{TemplateBinding Background}"
 											BorderBrush="{TemplateBinding BorderBrush}"
 											BorderThickness="{TemplateBinding BorderThickness}"
@@ -98,6 +99,11 @@
 				<Setter Property="RadiusX" Value="{StaticResource ItemRadius}" />
 				<Setter Property="RadiusY" Value="{StaticResource ItemRadius}" />
 				<Setter Property="VerticalAlignment" Value="Center" />
+				<Setter Property="RenderTransform">
+					<Setter.Value>
+						<TranslateTransform Y="0.5" />
+					</Setter.Value>
+				</Setter>
 			</Style>
 			<Style x:Key="ListViewWrapper" TargetType="Canvas">
 				<Setter Property="Background" Value="Transparent" />
@@ -141,7 +147,15 @@
 				<Setter Property="Visibility" Value="{Binding IsLightTheme, ElementName=View, Converter={StaticResource BoolToVis}, Mode=OneWay}" />
 				<Setter Property="Clip">
 					<Setter.Value>
-						<RectangleGeometry Rect="{Binding SelectionMaskRect, ElementName=View}" />
+						<RectangleGeometry>
+							<RectangleGeometry.Rect>
+								<MultiBinding Converter="{StaticResource RelToAbsRect}">
+									<Binding Path="SelectionMaskRect" ElementName="View" />
+									<Binding Path="ActualWidth" ElementName="View" />
+									<Binding Path="ActualHeight" ElementName="View" />
+								</MultiBinding>
+							</RectangleGeometry.Rect>
+						</RectangleGeometry>
 					</Setter.Value>
 				</Setter>
 			</Style>

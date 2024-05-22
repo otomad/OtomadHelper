@@ -9,6 +9,7 @@ public class OtomadHelperModule : ICustomCommandModule {
 	internal const string INTERNAL_NAME = "OtomadHelperInternal";
 	internal const string DISPLAY_NAME = "Otomad Helper";
 	internal const string ASSEMBLY_NAME = "OtomadHelper";
+	// TODO: Assembly.GetExecutingAssembly().GetName().Name;
 	// Note: Cannot use Assembly.GetEntryAssembly().GetName().Name, or Vegas will crash.
 
 	internal static string CustomModulePath =>

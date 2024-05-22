@@ -2,9 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Threading;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -34,11 +32,12 @@ public partial class PitchPickerFlyout : BaseFlyout {
 	private double ItemPadding => ((Thickness)Resources["ItemPadding"]).Left;
 	private const int DisplayItemCount = 7;
 	private static int ReservedForCenteringItemCount => DisplayItemCount / 2;
-	public Rect SelectionMaskRect => new(0, ReservedForCenteringItemCount * ItemHeight + ItemPadding, Width, ItemHeight);
-	public Rect HoverCutEdgeRect => new(0, ItemHeight + ItemPadding, Width, ItemHeight * (DisplayItemCount - 2));
+	private double ExpectedHeight => ItemHeight * DisplayItemCount + ItemPadding * 2;
+	public Rect SelectionMaskRect => new(0, (ReservedForCenteringItemCount * ItemHeight + ItemPadding) / ExpectedHeight, 1, ItemHeight / ExpectedHeight); // Relative
+	public Rect HoverCutEdgeRect => new(0, ItemHeight + ItemPadding, Width, ItemHeight * (DisplayItemCount - 2)); // Absolute
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
-		Height = ItemHeight * DisplayItemCount + ItemPadding * 2;
+		Height = ExpectedHeight;
 		//this.GetChildrenOfType<ScrollViewer>().ForEach(scrollViewer =>
 		//	scrollViewer.PreviewMouseWheel += (sender, e) => e.Handled = true);
 	}

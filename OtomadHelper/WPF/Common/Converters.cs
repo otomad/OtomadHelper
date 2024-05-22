@@ -175,3 +175,22 @@ public class RectToDrawingBrushConverter : IValueConverter {
 		return ((brush.Drawing as DrawingGroup)?.Children.LastOrDefault() as GeometryDrawing)?.Geometry.Bounds;
 	}
 }
+
+public class RelativeToAbsoluteRectConverter : IMultiValueConverter {
+	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
+		if (values.Any(value => value == DependencyProperty.UnsetValue))
+			return DependencyProperty.UnsetValue;
+
+		(Rect relativeRect, double actualWidth, double actualHeight) = values.ToTuple<Tuple<Rect, double, double>>();
+
+		return new Rect(
+			relativeRect.X * actualWidth,
+			relativeRect.Y * actualHeight,
+			relativeRect.Width * actualWidth,
+			relativeRect.Height * actualHeight
+		);
+	}
+
+	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
+}

@@ -1,6 +1,4 @@
-using System.Security.Cryptography;
 using System.Windows;
-using System.Windows.Media.Animation;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -21,7 +19,7 @@ public class BaseFlyout : BackdropWindow {
 		Closing += BaseFlyout_Closing;
 
 		// Loaded animation
-		DoubleAnimation fadeInAnimation = new() {
+		/*DoubleAnimation fadeInAnimation = new() {
 			From = 0,
 			To = 1,
 			Duration = (Duration)Resources["BaseAnimationDuration"],
@@ -30,7 +28,7 @@ public class BaseFlyout : BackdropWindow {
 		Storyboard.SetTargetProperty(fadeInAnimation, new("Opacity"));
 		Storyboard fadeInStoryboard = new();
 		fadeInStoryboard.Children.Add(fadeInAnimation);
-		Loaded += (sender, e) => fadeInStoryboard.Begin(this);
+		Loaded += (sender, e) => fadeInStoryboard.Begin(this);*/
 	}
 
 	public void Center(Rect rect, SetWidthType widthType = SetWidthType.Nothing) {
@@ -47,6 +45,6 @@ public class BaseFlyout : BackdropWindow {
 		if (waitToClose) return;
 		e.Cancel = true;
 		waitToClose = true;
-		Task.Delay(100).Then(Close);
+		Task.Delay(50).Then(Close);
 	}
 }
