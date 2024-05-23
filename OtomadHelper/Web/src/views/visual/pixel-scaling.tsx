@@ -1,3 +1,4 @@
+import cursor from "assets/cursors/pixelated_cursor.cur";
 import tipsImage from "assets/images/tips/sand_with_sword.png";
 
 export default function PixelScaling() {
@@ -8,7 +9,7 @@ export default function PixelScaling() {
 
 	return (
 		<div className="container">
-			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.pixelScaling}</SettingsPageControl>
+			<SettingsPageControl image={tipsImage} cursor={cursor} learnMoreLink="">{t.descriptions.pixelScaling}</SettingsPageControl>
 			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={[enabled, setEnabled]} resetTransitionOnChanging />
 
 			{!enabled ? (

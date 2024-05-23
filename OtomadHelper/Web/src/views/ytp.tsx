@@ -1,3 +1,4 @@
+import cursor from "assets/cursors/poo.cur";
 import tipsImage from "assets/images/tips/yoooo_a_boom.jpg";
 import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
 
@@ -11,7 +12,7 @@ export default function Ytp() {
 
 	return (
 		<div className="container">
-			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.ytp}</SettingsPageControl>
+			<SettingsPageControl image={tipsImage} cursor={cursor} learnMoreLink="">{t.descriptions.ytp}</SettingsPageControl>
 			<SettingsCardToggleSwitch title={t.enabled} selectInfo={t(1).selectInfo.source} icon="enabled" on={[enabled, setEnabled]} resetTransitionOnChanging />
 
 			{!enabled ? (

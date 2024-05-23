@@ -4,9 +4,12 @@ const IMAGE_MARGIN = 16;
 const StyledSettingsPageControl = styled.div<{
 	/** Clear float. */
 	$clearFloat?: boolean;
+	/** The file path of the Easter egg mouse cursor. */
+	$cursor?: string;
 }>`
 	display: flex;
 	gap: ${IMAGE_MARGIN}px;
+	${({ $cursor }) => $cursor && css`cursor: url("${$cursor}"), auto`};
 
 	${({ $clearFloat }) => !$clearFloat && css`
 		display: block;
@@ -37,13 +40,15 @@ const StyledSettingsPageControl = styled.div<{
 	}
 `;
 
-export default forwardRef(function SettingsPageControl({ image, learnMoreLink, clearFloat, children, ...htmlAttrs }: FCP<{
+export default forwardRef(function SettingsPageControl({ image, learnMoreLink, clearFloat, cursor, children, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string;
 	/** "Learn More" link href. */
 	learnMoreLink?: string;
-	/** Clear float. */
+	/** Clear float? */
 	clearFloat?: boolean;
+	/** The file path of the Easter egg mouse cursor. */
+	cursor?: string;
 }, "div">, ref: ForwardedRef<"div">) {
 	const [hideUseTips] = selectConfig(c => c.settings.hideUseTips);
 	if (hideUseTips) return;
@@ -66,7 +71,13 @@ export default forwardRef(function SettingsPageControl({ image, learnMoreLink, c
 	});
 
 	return (
-		<StyledSettingsPageControl ref={ref} $clearFloat={clearFloat || isWidow} className={{ noImage: !image }} {...htmlAttrs}>
+		<StyledSettingsPageControl
+			ref={ref}
+			$clearFloat={clearFloat || isWidow}
+			className={{ noImage: !image }}
+			$cursor={cursor}
+			{...htmlAttrs}
+		>
 			{image && <SettingsPageControlPreviewImage image={image} />}
 			<p ref={paragraphEl}>
 				<Preserves>{children}</Preserves>
