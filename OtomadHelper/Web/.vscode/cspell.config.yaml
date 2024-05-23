@@ -48,6 +48,8 @@ words:
   - mht
   - mhtml
   - miscz
+  - mograph
+  - mographs
   - moz
   - multilayering
   - multisource
@@ -109,6 +111,7 @@ ignoreWords:
   - chaosinism
   - grantwoolard
   - cyahega
+  - motosai
   - qo
   - zh
   - fcp

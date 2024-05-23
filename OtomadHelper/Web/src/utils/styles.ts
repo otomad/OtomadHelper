@@ -256,33 +256,33 @@ export function getLocationStyle(location: MaybeRef<TwoD>): CSSProperties {
  */
 export function getBoundingClientRectTuple(element: MaybeRef<EventTarget | null>): RectTuple {
 	const el = toValue(element) as HTMLElement;
-	const rect = el.getBoundingClientRect();
+	let rect = el.getBoundingClientRect();
 	const zoom = useConfigStore.getState().settings.getUiScale1();
-	zoomDomRect(rect, zoom);
+	rect = zoomDomRect(rect, zoom);
 	return [rect.x, rect.y, rect.width, rect.height];
 }
 
 /**
- * Zooms a DOMRect by a given factor.
+ * Zooms the given DOMRect by a specified zoom factor.
  *
  * @param rect - The DOMRect to be zoomed.
- * @param zoom - The zoom factor.
+ * @param zoom - The zoom factor to apply to the DOMRect.
+ *
+ * @returns A new DOMRect with the same position and dimensions as the original, but scaled by the specified zoom factor.
  *
  * @remarks
- * This function modifies the original DOMRect by multiplying each numeric property by the given zoom factor.
+ * This function returns a new DOMRect by multiplying each numeric property by the given zoom factor.
  * It is useful for scaling UI elements or adjusting coordinates based on the UI scale.
  *
  * @example
  * ```typescript
  * const originalRect = new DOMRect(10, 20, 30, 40);
  * const zoomFactor = 2;
- * zoomDomRect(originalRect, zoomFactor);
- * console.log(originalRect); // Output: DOMRect {x: 20, y: 40, width: 60, height: 80,...}
+ * const newRect = zoomDomRect(originalRect, zoomFactor);
+ * console.log(newRect); // Output: DOMRect {x: 20, y: 40, width: 60, height: 80,...}
  * ```
  */
 export function zoomDomRect(rect: DOMRect, zoom: number) {
-	for (const key in rect)
-		if (hasOwn(rect, key) && typeof rect[key] === "number")
-			(rect[key] as number) *= zoom;
-	return rect;
+	const { x, y, width, height } = rect;
+	return new DOMRect(x * zoom, y * zoom, width * zoom, height * zoom);
 }
