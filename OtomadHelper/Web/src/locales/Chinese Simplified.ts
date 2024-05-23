@@ -112,6 +112,7 @@ export default {
 			},
 			instrument: "乐器",
 			drumKit: "鼓组",
+			musicalTrack: "音轨",
 		},
 		stream: {
 			preview: "预览",
@@ -399,8 +400,8 @@ export default {
 				fader: "将选中的剪辑根据指定规则来调整增益（音量/不透明度）",
 				exportScore: "将选中轨道中的剪辑导出为乐谱序列文件",
 				converters: {
-					tuningMethod: "将选中的音频剪辑统一转换到指定的调音算法",
-					transformMethod: "将选中的视频剪辑统一转换到用于应用关键帧的指定目标属性",
+					tuningMethod: "为选中的音频剪辑更换调音算法",
+					transformMethod: "为选中的视频剪辑更换应用变换关键帧的目标属性",
 					clawMachine: "改变音乐节拍以创建有趣的新节奏",
 				},
 			},

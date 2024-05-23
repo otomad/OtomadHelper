@@ -151,7 +151,7 @@ export default function Score() {
 
 			{!!tracks.length && (
 				<>
-					<Subheader>{t(2).titles.track}</Subheader>
+					<Subheader>{t(tracks.length).score.musicalTrack}</Subheader>
 					<TrackToolbar>
 						<div className="left">
 							<CssTransition in={isMultipleSelectionMode} unmountOnExit>

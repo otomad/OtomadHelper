@@ -102,6 +102,8 @@ export default {
 				max: "Max length",
 				fixed: "Fixed length",
 			},
+			musicalTrack: "Track",
+			musicalTrack_other: "Tracks",
 			noteCount: "Note count",
 			beginNote: "Begin note",
 			pan: {
@@ -407,9 +409,9 @@ export default {
 				fader: "Adjusts gain (volume/opacity) for selected clips with the specified rules",
 				exportScore: "Exports the clips in the selected tracks to a score sequence file",
 				converters: {
-					tuningMethod: "Switches the tuning algorithm to the selected audio clips",
-					transformMethod: "Switches the target properties where to apply the transformed keyframes to the selected video clips",
-					clawMachine: "Changes the music beats to create interesting new rhythms, or switches the music time signatures",
+					tuningMethod: "Changes the tuning algorithm to the selected audio clips",
+					transformMethod: "Changes the target properties of the transformed keyframes are applied to the selected video clips.",
+					clawMachine: "Changes the music beats or time signatures to create interesting new rhythms",
 				},
 			},
 			staff: {
