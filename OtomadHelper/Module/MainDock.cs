@@ -96,7 +96,6 @@ public partial class MainDock : UserControl {
 					Browser.Visible = true;
 					break;
 				default:
-					SetCulture = message; // TODO: Change culture.
 					break;
 			}
 		} catch (ArgumentException) {

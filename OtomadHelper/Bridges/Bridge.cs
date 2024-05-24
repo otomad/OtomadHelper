@@ -12,6 +12,13 @@ public class Bridge {
 	public void SetIsDevMode(bool isDevMode) => Host.isDevMode = isDevMode;
 
 	/// <summary>
+	/// Sets the culture for the application.
+	/// </summary>
+	/// <param name="culture">A <see cref="string"/> representing the culture to be set.<br />
+	/// The culture should be in the format "xx-XX" where xx is the language code and XX is the country/region code.</param>
+	public void SetCulture(string culture) => I18n.SetCulture = culture;
+
+	/// <summary>
 	/// Displays a message box with the specified title, body, buttons, and optional icon name.
 	/// </summary>
 	/// <param name="title">The title of the message box.</param>

@@ -56,6 +56,7 @@ export function useLanguage(): StateProperty<string> {
 
 	function changeLanguage(lng: string) {
 		setLanguage(lng);
+		bridges.bridge.setCulture(i18n.t("metadata.culture", { lng }));
 		startColorViewTransition(async () => {
 			await i18n.changeLanguage(lng);
 			const dir = i18n.dir();

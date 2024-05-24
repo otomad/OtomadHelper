@@ -1,4 +1,9 @@
 using System.Globalization;
+using System.Resources;
+
+using Microsoft.CSharp.RuntimeBinder;
+
+using OtomadHelper.Properties;
 
 namespace OtomadHelper.Helpers;
 
@@ -24,12 +29,17 @@ public class I18n : DynamicObject {
 	public delegate void CultureChangedEventHandler(CultureInfo culture);
 	public static event CultureChangedEventHandler? CultureChanged;
 
-	public string Translate(string key) =>
-		Properties.Resources.ResourceManager.GetString(key);
+	public string Translate(string key) {
+		ResourceManager ResourceManager = Resources.ResourceManager;
+		return ResourceManager.GetString(key, Culture) ??
+			ResourceManager.GetString(key) ?? // The specified culture missing the string.
+			$"<{key}>"; // No such string key.
+	}
 
 	public override bool TryGetMember(GetMemberBinder binder, out object result) {
 		result = Translate(binder.Name);
-		return result is not null;
+		//return result is not null;
+		return true;
 	}
 
 	public static readonly dynamic t = new I18n();
