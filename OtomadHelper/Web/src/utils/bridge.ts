@@ -1,3 +1,5 @@
+import "helpers/host-messages";
+
 window.isWebView = !!window.chrome.webview;
 
 class Bridge {
@@ -58,8 +60,4 @@ window.chrome.webview.addEventListener("message", e => {
 	const { type, ...data } = e.data;
 	console.log(type, data);
 	useEvent(`host:${type}`, data);
-});
-
-useListen("host:consoleLog", ({ severity, message }) => {
-	console[severity]?.(message);
 });

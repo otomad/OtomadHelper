@@ -87,4 +87,7 @@ public static partial class Extensions {
 
 	public static bool Extends(this Type type, Type baseType) =>
 		baseType.IsAssignableFrom(type);
+
+	public static bool IsNullable(this Type type) =>
+		!type.IsValueType || Nullable.GetUnderlyingType(type) != null;
 }

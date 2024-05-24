@@ -85,7 +85,7 @@ public class VariableName {
 	/// <returns>Capitalize the first letter and lowercase other letters.</returns>
 	private static string Capitalize(string str) =>
 		string.IsNullOrEmpty(str) ? "" :
-			str[0].ToString().ToUpperInvariant() + str.Substring(1).ToLowerInvariant();
+			char.ToUpperInvariant(str[0]) + str.Substring(1).ToLowerInvariant();
 
 	public override string ToString() => string.Join(" ", words);
 

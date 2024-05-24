@@ -1,6 +1,9 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media.Animation;
+
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -14,27 +17,35 @@ public partial class ContentDialog : BackdropWindow {
 
 	public new ContentDialogViewModel DataContext => (ContentDialogViewModel)base.DataContext;
 
-	public static TDialogResult? ShowDialog<TDialogResult>(
+	public Task<object?> ShowDialogAsync() {
+		TaskCompletionSource<object?> taskCompletionSource = new();
+		// Show a modal dialog after the current event handler is completed,
+		// to avoid potential reentrancy caused by running a nested message loop in the WebView2 event handler.
+		SynchronizationContext.Current.Post(state => {
+			ShowDialog();
+			taskCompletionSource.SetResult(DataContext.DialogResult);
+		}, null);
+		return taskCompletionSource.Task;
+}
+
+	public static async Task<TDialogResult?> ShowDialog<TDialogResult>(
 		string title,
 		string body,
 		IEnumerable<ContentDialogButtonItem> buttons,
 		string iconName = ""
 	) {
+		if (!typeof(TDialogResult).IsNullable()) {
+			string typeName = typeof(TDialogResult).Name;
+			throw new TypeLoadException($"""The generic type "{typeName}" in method "{nameof(ContentDialog)}.{nameof(ShowDialog)}" is a value type, and it is not a nullable type. You have to replace the generic type from "{typeName}" to "{typeName}?".""");
+		}
+
 		ContentDialog dialog = new();
 		ContentDialogViewModel viewModel = dialog.DataContext;
 		viewModel.Title = title;
 		viewModel.Body = body;
 		viewModel.IconName = iconName;
 		viewModel.Buttons.AddRange(buttons);
-		dialog.ShowDialog();
-		return (TDialogResult?)viewModel.DialogResult;
-		// TODO: SynchronizationContext
-		// Show a modal dialog after the current event handler is completed, to avoid potential reentrancy caused by running a nested message loop in the WebView2 event handler.
-		//System.Threading.SynchronizationContext.Current.Post((_) => {
-		//	Form1 form = new Form1();
-		//	form.ShowDialog();
-		//	form.Closed();
-		//}, null);
+		return (TDialogResult?)await dialog.ShowDialogAsync();
 	}
 
 	internal static string errorFooter = "";
@@ -55,7 +66,7 @@ public partial class ContentDialog : BackdropWindow {
 		viewModel.Expandable = true;
 		viewModel.CanCopyBody = true;
 		viewModel.Footer = errorFooter;
-		dialog.ShowDialog();
+		dialog.ShowDialogAsync();
 	}
 
 	public static void ShowError(Exception exception) =>

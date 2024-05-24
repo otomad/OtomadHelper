@@ -3,8 +3,6 @@
 /// </summary>
 
 using System.Runtime.CompilerServices;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 
 using OtomadHelper.Models;
 using OtomadHelper.Module;
@@ -153,7 +151,42 @@ public static class MessageSender {
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 	};
 
-	public static void PostWebMessage<T>(T message) where T : BaseWebMessageEvent {
+	private static readonly JsonSerializerOptions jsonOptionsForGeneralClasses = new(jsonOptions) { IncludeFields = false };
+
+	public static void PostWebMessage<T>(T message) where T : BaseWebMessageEvent =>
 		Host.Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message, jsonOptions));
+
+	private static void PostWebMessageFromJsonObject(JsonObject jsonObject) =>
+		Host.Browser.CoreWebView2.PostWebMessageAsJson(jsonObject.ToJsonString(jsonOptions));
+
+	private static readonly Dictionary<DateTime, TaskCompletionSource<JsonElement>> taskList = new();
+	public static async Task<TReceive> PostWebMessageAndGetResult<TReceive>(object message!!, string? overriddenTypeName = null) {
+		TaskCompletionSource<JsonElement> taskCompletionSource = new();
+		void AddToTaskList(DateTime timestamp) => taskList.Add(timestamp, taskCompletionSource);
+		if (message is BaseWebMessageEvent e) {
+			DateTime timestamp = e.Timestamp;
+			AddToTaskList(timestamp);
+			PostWebMessage(e);
+		} else {
+			JsonObject jsonObject = BaseWebMessageEvent.Wrap(message, jsonOptionsForGeneralClasses, overriddenTypeName);
+			DateTime timestamp = jsonObject[nameof(timestamp)]!.GetValue<DateTime>();
+			AddToTaskList(timestamp);
+			PostWebMessageFromJsonObject(jsonObject);
+		}
+		JsonElement json = await taskCompletionSource.Task;
+		return JsonSerializer.Deserialize<TReceive>(json, jsonOptions)!;
+	}
+
+	internal static void OnReceiveAcknowledgement(string json) {
+		using JsonDocument document = JsonDocument.Parse(json);
+		JsonElement value = document.RootElement;
+		if (!value.TryGetProperty("timestamp", out JsonElement timestampElement)) return;
+		if (!timestampElement.TryGetDateTime(out DateTime timestamp)) return;
+		if (!taskList.TryGetValue(timestamp, out TaskCompletionSource<JsonElement> taskCompletionSource)) return;
+		if (value.TryGetProperty("value", out JsonElement nonObjectValue) &&
+			value.EnumerateObject().Count() == 2)
+			value = nonObjectValue;
+		taskCompletionSource.SetResult(value);
+		taskList.Remove(timestamp);
 	}
 }

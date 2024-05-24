@@ -1,5 +1,4 @@
 using System.Drawing;
-using System.Text.Json.Nodes;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using System.Windows.Interop;
@@ -39,7 +38,6 @@ public partial class MainDock : UserControl {
 		ForeColor = Skins.Colors.ButtonText;
 #endif
 		InitLoadingAnimation();
-		Host = this;
 		CoreWebView2_LoadEnvironment();
 	}
 
@@ -71,6 +69,10 @@ public partial class MainDock : UserControl {
 		webView.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
 		webView.ScriptDialogOpening += CoreWebView2_ScriptDialogOpening;
 		webView.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
+		WebMessageAcknowledgement webMessageAcknowledgement = new();
+		webView.AddHostObjectToScript("webMessageAcknowledgement", webMessageAcknowledgement);
+		Host = this;
+		webMessageAcknowledgement.Received += OnReceiveAcknowledgement;
 #if DEBUG
 		webView.OpenDevToolsWindow();
 #endif
@@ -156,29 +158,55 @@ public partial class MainDock : UserControl {
 	}
 
 	internal bool isDevMode = false;
-	private void CoreWebView2_ContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs e) {
+
+	private enum ContextMenuTarget {
+		Ignore,
+		TextBox,
+		DeletableItem,
+	}
+
+	private async void CoreWebView2_ContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs e) {
 		CoreWebView2 webView = Browser.CoreWebView2;
 		IList<CoreWebView2ContextMenuItem> menuList = e.MenuItems;
-		// `e.ContextMenuTarget.Kind == CoreWebView2ContextMenuTargetKind.SelectedText` won't work
-		// if doesn't select any text, so we check if the menu list includes the "paste" option, and if so,
-		// it indicates that the target is a text box.
-		bool isTextBox = menuList.FirstOrDefault(item => item.Name == "paste") is not null;
-		if (isTextBox) {
-			if (!isDevMode) RemoveMenuItems("emoji", "inspectElement", "share", "webCapture");
-		} else {
-			if (!isDevMode) RemoveAllMenuItems();
-			CoreWebView2ContextMenuItem deleteItem = webView.Environment.CreateContextMenuItem(
-			t.Delete, null, CoreWebView2ContextMenuItemKind.Command);
-			CoreWebView2ContextMenuItem separator = webView.Environment.CreateContextMenuItem(
-				"", null, CoreWebView2ContextMenuItemKind.Separator);
-			deleteItem.CustomItemSelected += (sender, ex) => {
-				Point location = e.Location;
-				Debug.WriteLine(location);
-			};
-			menuList.Insert(0, deleteItem);
-			if (isDevMode) menuList.Insert(1, separator);
+		// `e.ContextMenuTarget.Kind == CoreWebView2ContextMenuTargetKind.SelectedText` won't work if doesn't select any text.
+		ContextMenuTarget target = ContextMenuTarget.Ignore;
+		string deletedItem = "";
+		CoreWebView2Deferral deferral = e.GetDeferral();
+		HTMLElementAttributes[] attrs = await PostWebMessageAndGetResult<HTMLElementAttributes[]>(e.Location, "elementFromPoint");
+		foreach (HTMLElementAttributes attr in attrs) {
+			if (attr.tag == "input" && attr.type == "text" || attr.tag == "textarea") {
+				target = ContextMenuTarget.TextBox;
+				break;
+			} else if (attr.data.ContainsKey("delete")) {
+				target = ContextMenuTarget.DeletableItem;
+				deletedItem = attr.data["delete"];
+				break;
+			}
+		}
+		switch (target) {
+			case ContextMenuTarget.TextBox:
+				if (!isDevMode) RemoveMenuItems("emoji", "inspectElement", "share", "webCapture");
+				break;
+			case ContextMenuTarget.DeletableItem:
+				if (!isDevMode) RemoveAllMenuItems();
+				CoreWebView2ContextMenuItem deleteItem = webView.Environment.CreateContextMenuItem(
+				t.Delete, null, CoreWebView2ContextMenuItemKind.Command);
+				CoreWebView2ContextMenuItem separator = webView.Environment.CreateContextMenuItem(
+					"", null, CoreWebView2ContextMenuItemKind.Separator);
+				deleteItem.CustomItemSelected += (sender, ex) => {
+					Debug.WriteLine(deletedItem);
+				};
+				menuList.Insert(0, deleteItem);
+				if (isDevMode) menuList.Insert(1, separator);
+				break;
+			case ContextMenuTarget.Ignore:
+			default:
+				goto Complete;
 		}
 		RemoveIrrationalSeparators();
+
+	Complete:
+		deferral.Complete();
 
 		void RemoveMenuItems(params string[] names) {
 			foreach (string name in names) {
@@ -228,7 +256,7 @@ public partial class MainDock : UserControl {
 		} catch (Exception) { }
 	}
 
-	private void CoreWebView2_ScriptDialogOpening(object sender, CoreWebView2ScriptDialogOpeningEventArgs e) {
+	private async void CoreWebView2_ScriptDialogOpening(object sender, CoreWebView2ScriptDialogOpeningEventArgs e) {
 		if (e.Kind == CoreWebView2ScriptDialogKind.Prompt) return;
 		string iconName = e.Kind switch {
 			CoreWebView2ScriptDialogKind.Confirm => "Question",
@@ -241,7 +269,9 @@ public partial class MainDock : UserControl {
 		WPF.Controls.ContentDialogButtonItem<bool>[] buttons = e.Kind == CoreWebView2ScriptDialogKind.Alert ?
 			new[] { okBtn } :
 			new[] { okBtn, cancelBtn };
-		bool dialogResult = WPF.Controls.ContentDialog.ShowDialog<bool>(e.Message, "", buttons, iconName);
-		if (dialogResult) e.Accept();
+		CoreWebView2Deferral deferral = e.GetDeferral();
+		bool? dialogResult = await WPF.Controls.ContentDialog.ShowDialog<bool?>(e.Message, "", buttons, iconName);
+		if (dialogResult == true) e.Accept();
+		deferral.Complete();
 	}
 }

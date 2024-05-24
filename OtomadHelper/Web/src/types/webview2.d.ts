@@ -152,6 +152,7 @@ export interface HostObjectsAsyncRoot extends HostObjects {
  */
 export interface HostObjects {
 	bridge: MakeFunctionsAsync<Bridge>;
+	webMessageAcknowledgement: { Ack(json: string): void };
 	[key: string]: HostObjectAsyncProxy;
 }
 
