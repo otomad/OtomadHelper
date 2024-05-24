@@ -22,6 +22,7 @@ global using System.Windows.Media.Imaging;
 global using Microsoft.Win32;
 
 global using OtomadHelper.Helpers;
+global using OtomadHelper.Module;
 global using OtomadHelper.WPF.Common;
 
 global using static OtomadHelper.Helpers.Debugger;

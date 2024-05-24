@@ -8,7 +8,7 @@ public class OtomadHelperDock : DockableControl {
 	private MainDock? mainDock;
 	internal Vegas vegas => myVegas;
 
-	public OtomadHelperDock() : base(OtomadHelperModule.INTERNAL_NAME) => DisplayName = OtomadHelperModule.DISPLAY_NAME;
+	public OtomadHelperDock() : base(OtomadHelperModule.InternalName) => DisplayName = OtomadHelperModule.DisplayName;
 
 	public override DockWindowStyle DefaultDockWindowStyle => DockWindowStyle.Docked;
 

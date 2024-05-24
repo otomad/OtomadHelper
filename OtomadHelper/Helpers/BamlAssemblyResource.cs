@@ -21,7 +21,7 @@ public sealed class BamlAssemblyResource : IDisposable {
 	/// </remarks>
 	public BamlAssemblyResource() {
 		Assembly assembly = Assembly.GetExecutingAssembly();
-		string resName = assembly.GetName().Name + ".g.resources";
+		string resName = OtomadHelperModule.AssemblyName + ".g.resources";
 		manifestResourceStream = assembly.GetManifestResourceStream(resName);
 		resourceReader = new(manifestResourceStream);
 	}

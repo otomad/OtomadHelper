@@ -12,7 +12,7 @@ public static partial class Extensions {
 	/// <param name="path">A <paramref name="path"/> to this project.</param>
 	/// <returns>A valid <see cref="Uri"/> which won't let Vegas to crash.</returns>
 	public static Uri ProjectUri(string path) =>
-		new($"pack://application:,,,/{OtomadHelperModule.ASSEMBLY_NAME};component/{path}", UriKind.Absolute);
+		new($"pack://application:,,,/{OtomadHelperModule.AssemblyName};component/{path}", UriKind.Absolute);
 
 	/*/// <summary>
 	/// Get the <see cref="ResourceDictionary"/> name if declared, or <see langword="null"/>.

@@ -28,7 +28,7 @@ internal static class ResourceHelper {
 	/// <exception cref="FileNotFoundException">Throw if the resource path is not exist.</exception>
 	public static Stream GetEmbeddedResource(string resourcePath) {
 		Assembly assembly = Assembly.GetExecutingAssembly();
-		string assetsFilePath = assembly.GetName().Name + "." + resourcePath; // You can set a breakpoint to see the value here.
+		string assetsFilePath = OtomadHelperModule.AssemblyName + "." + resourcePath; // You can set a breakpoint to see the value here.
 		if (!IsResourceExist(assetsFilePath)) // Check for gzip file
 			assetsFilePath += ".gz";
 		if (!IsResourceExist(assetsFilePath))
