@@ -72,15 +72,40 @@ public static partial class Extensions {
 	}
 
 	private static readonly ArgumentOutOfRangeException outOfRangeException = new();
+	/// <inheritdoc cref="Deconstruct{T}(IList{T}, out T, out T, out T, out IList{T})"/>
 	public static void Deconstruct<T>(this IList<T> list, out T first, out IList<T> rest) {
 		first = list.Count > 0 ? list[0] : throw outOfRangeException;
 		rest = list.Skip(1).ToList();
 	}
+	/// <inheritdoc cref="Deconstruct{T}(IList{T}, out T, out T, out T, out IList{T})"/>
 	public static void Deconstruct<T>(this IList<T> list, out T first, out T second, out IList<T> rest) {
 		first = list.Count > 0 ? list[0] : throw outOfRangeException;
 		second = list.Count > 1 ? list[1] : throw outOfRangeException;
 		rest = list.Skip(2).ToList();
 	}
+	/// <summary>
+	/// Ability to deconstruct a <paramref name="list"/> into each elements and the rest of the list.
+	/// </summary>
+	/// <remarks>
+	/// <example>
+	/// <code>
+	/// var (foo, bar, baz, rest) = list;
+	///
+	/// // Don't care about the rest
+	/// var (foo, bar, baz, _) = list;
+	///
+	/// // Any count of list items
+	/// var (foo, (bar, (baz, rest))) = list;
+	/// </code>
+	/// </example>
+	/// </remarks>
+	/// <typeparam name="T">The type of elements in the <paramref name="list"/>.</typeparam>
+	/// <param name="list">The list to deconstruct.</param>
+	/// <param name="first">The first element of the <paramref name="list"/>.</param>
+	/// <param name="second">The second element of the <paramref name="list"/>.</param>
+	/// <param name="third">The third element of the <paramref name="list"/>.</param>
+	/// <param name="rest">The rest of the list after the first three elements.</param>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when the list contains less than the specified elements.</exception>
 	public static void Deconstruct<T>(this IList<T> list, out T first, out T second, out T third, out IList<T> rest) {
 		first = list.Count > 0 ? list[0] : throw outOfRangeException;
 		second = list.Count > 1 ? list[1] : throw outOfRangeException;
@@ -88,6 +113,13 @@ public static partial class Extensions {
 		rest = list.Skip(3).ToList();
 	}
 
+	/// <summary>
+	/// Converts a list of objects into a tuple.
+	/// </summary>
+	/// <param name="list">The list of objects to convert into a tuple.</param>
+	/// <param name="tupleType">The type of the tuple to create. If not provided, it will get the real type of the object item.</param>
+	/// <returns>An instance of the specified tuple type containing the elements from the input list.</returns>
+	/// <exception cref="Exception">Thrown when the input list contains more than 8 items, as tuples can only contain up to 8 items.</exception>
 	public static ITuple ToTuple(this IList<object> list, Type? tupleType = null) {
 		tupleType ??= typeof(ITuple);
 		int length = list.Count;
@@ -101,6 +133,13 @@ public static partial class Extensions {
 		return (ITuple)genericMethod.Invoke(null, list.ToArray());
 	}
 
+	/// <summary>
+	/// Converts a list of objects into a tuple.
+	/// </summary>
+	/// <typeparam name="TTuple">The type of the tuple to create. If not provided, it will get the real type of the object item.</typeparam>
+	/// <param name="list">The list of objects to convert into a tuple.</param>
+	/// <returns>An instance of the specified tuple type containing the elements from the input list.</returns>
+	/// <exception cref="Exception">Thrown when the input list contains more than 8 items, as tuples can only contain up to 8 items.</exception>
 	public static TTuple ToTuple<TTuple>(this IList<object> list) where TTuple : ITuple =>
 		(TTuple)list.ToTuple(typeof(TTuple));
 
@@ -125,6 +164,15 @@ public static partial class Extensions {
 			action(item, i++);
 	}
 
+	/// <summary>
+	/// Converts a <see cref="JsonElement"/> to a JSON string.
+	/// </summary>
+	/// <param name="jsonElement">The <see cref="JsonElement"/> to convert.</param>
+	/// <returns>A JSON string representation of the <paramref name="jsonElement"/>.</returns>
+	/// <remarks>
+	/// This method uses <see cref="Utf8JsonWriter"/> to write the <paramref name="jsonElement"/> to a memory stream,
+	/// and then converts the stream to a UTF-8 string.
+	/// </remarks>
 	public static string ToJsonString(this JsonElement jsonElement) {
 		using MemoryStream stream = new();
 		Utf8JsonWriter writer = new(stream, new JsonWriterOptions { Indented = true });

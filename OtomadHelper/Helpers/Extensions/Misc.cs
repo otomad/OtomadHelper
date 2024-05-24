@@ -76,18 +76,79 @@ public static partial class Extensions {
 			return false; // Leave `result` as it was.
 	}
 
+	/// <summary>
+	/// Asynchronously executes a function after the completion of the given task.
+	/// </summary>
+	/// <typeparam name="TSource">The type of the result of the task.</typeparam>
+	/// <typeparam name="TTarget">The type of the result of the function.</typeparam>
+	/// <param name="task">The task to await.</param>
+	/// <param name="then">The function to execute after the task completes.</param>
+	/// <returns>The result of the function.</returns>
+	/// <remarks>
+	/// This method is useful for chaining asynchronous operations.
+	/// Or you want to get the result of an asynchronous method in a synchronous method.
+	/// <example>
+	/// <code>
+	/// public void Foo() {
+	///     AsyncFunc().Then(result => {
+	///         Debug.WriteLine(result);
+	///     });
+	/// }
+	/// // Equivalent to
+	/// public async void Foo() {
+	///     var result = AsyncFunc();
+	///     Debug.WriteLine(result);
+	/// }
+	/// </code>
+	/// </example>
+	/// </remarks>
 	public static async Task<TTarget> Then<TSource, TTarget>(this Task<TSource> task, Func<TSource, TTarget> then) =>
 		then(await task);
+	/// <inheritdoc cref="Then{TSource, TTarget}(Task{TSource}, Func{TSource, TTarget})"/>
 	public static async void Then<TSource>(this Task<TSource> task, Action<TSource> then) =>
 		then(await task);
+	/// <inheritdoc cref="Then{TSource, TTarget}(Task{TSource}, Func{TSource, TTarget})"/>
 	public static async Task<TTarget> Then<TTarget>(this Task task, Func<TTarget> then) {
 		await task; return then(); }
+	/// <inheritdoc cref="Then{TSource, TTarget}(Task{TSource}, Func{TSource, TTarget})"/>
 	public static async void Then(this Task task, Action then) {
 		await task; then(); }
 
+	/// <summary>
+	/// Determines whether the current type extends (inherits from) the specified base type.
+	/// </summary>
+	/// <param name="type">The current type to check.</param>
+	/// <param name="baseType">The base type to check if the current type extends.</param>
+	/// <returns>
+	/// <see langword="true"/> if the current type extends the specified base type; otherwise, <see langword="false"/>.
+	/// </returns>
+	/// <remarks>
+	/// This method uses the <see cref="Type.IsAssignableFrom(Type)"/> method to check if the current type is
+	/// assignable from the specified base type.
+	/// </remarks>
+	/// <exception cref="ArgumentNullException">
+	/// If either <paramref name="type"/> or <paramref name="baseType"/> is <see langword="null"/>.
+	/// </exception>
 	public static bool Extends(this Type type, Type baseType) =>
 		baseType.IsAssignableFrom(type);
 
+	/// <summary>
+	/// Determines whether the given type can be assigned to <see langword="null"/>.
+	/// </summary>
+	/// <param name="type">The type to check.</param>
+	/// <returns>
+	/// <see langword="true"/> if the given type can be assigned to <see langword="null"/>;
+	/// otherwise, <see langword="false"/>.
+	/// </returns>
+	/// <remarks>
+	/// This method checks if the given <paramref name="type"/> is a <b>reference type</b>
+	/// or a value type that has a <see cref="Nullable"/> type as its underlying type.<br />
+	/// This indicates that the <paramref name="type"/> can be assigned to <see langword="null"/>.<br />
+	/// If the <paramref name="type"/> is a normal value type, it returns <see langword="false"/>.
+	/// </remarks>
+	/// <exception cref="ArgumentNullException">
+	/// If the given <paramref name="type"/> is <see langword="null"/>.
+	/// </exception>
 	public static bool IsNullable(this Type type) =>
 		!type.IsValueType || Nullable.GetUnderlyingType(type) != null;
 }

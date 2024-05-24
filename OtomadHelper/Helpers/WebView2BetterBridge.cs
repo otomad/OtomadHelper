@@ -153,6 +153,19 @@ public static class MessageSender {
 
 	private static readonly JsonSerializerOptions jsonOptionsForGeneralClasses = new(jsonOptions) { IncludeFields = false };
 
+	/// <summary>
+	/// Posts a web message from the <see cref="Microsoft.Web.WebView2.Core.CoreWebView2"/>.
+	/// </summary>
+	/// <remarks>
+	/// <list type="bullet">
+	/// <item>This method is used to send a <paramref name="message"/> to the JavaScript code running in the WebView2 control.</item>
+	/// <item>The message must be a subclass of <see cref="BaseWebMessageEvent"/>.</item>
+	/// <item>The message is serialized to JSON using the jsonOptions before being posted.</item>
+	/// </list>
+	/// </remarks>
+	/// <typeparam name="T">The type of the <paramref name="message"/>.
+	/// Must be a subclass of <see cref="BaseWebMessageEvent"/>.</typeparam>
+	/// <param name="message">The message to be posted.</param>
 	public static void PostWebMessage<T>(T message) where T : BaseWebMessageEvent =>
 		Host.Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message, jsonOptions));
 
@@ -160,6 +173,13 @@ public static class MessageSender {
 		Host.Browser.CoreWebView2.PostWebMessageAsJson(jsonObject.ToJsonString(jsonOptions));
 
 	private static readonly Dictionary<DateTime, TaskCompletionSource<JsonElement>> taskList = new();
+	/// <summary>
+	/// Asynchronously posts a web message and gets the result.
+	/// </summary>
+	/// <typeparam name="TReceive">The type of the result to be received.</typeparam>
+	/// <param name="message">The message to be posted.</param>
+	/// <param name="overriddenTypeName">An optional parameter to override the type name of the message class.</param>
+	/// <returns>The deserialized result of the posted message.</returns>
 	public static async Task<TReceive> PostWebMessageAndGetResult<TReceive>(object message!!, string? overriddenTypeName = null) {
 		TaskCompletionSource<JsonElement> taskCompletionSource = new();
 		void AddToTaskList(DateTime timestamp) => taskList.Add(timestamp, taskCompletionSource);

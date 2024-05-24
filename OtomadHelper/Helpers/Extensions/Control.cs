@@ -67,6 +67,13 @@ public static partial class Extensions {
 		}
 	}
 
+	/// <summary>
+	/// Find a child of a given type in the visual tree of a <see cref="DependencyObject"/>.
+	/// </summary>
+	/// <typeparam name="T">The type of the child to find.</typeparam>
+	/// <param name="sender">The <see cref="DependencyObject"/> to start the search from.</param>
+	/// <returns>The first child of type <typeparamref name="T"/> found in the visual tree,
+	/// or <see langword="null"/> if no such child is found.</returns>
 	public static T? GetChildOfType<T>(this DependencyObject sender) where T : DependencyObject {
 		if (sender is null) return null;
 		for (int i = 0; i < VisualTreeHelper.GetChildrenCount(sender); i++) {
@@ -77,6 +84,13 @@ public static partial class Extensions {
 		return null;
 	}
 
+	/// <summary>
+	/// Find all children of a given type in the visual tree of a <see cref="DependencyObject"/>.
+	/// </summary>
+	/// <typeparam name="T">The type of the children to find.</typeparam>
+	/// <param name="sender">The <see cref="DependencyObject"/> to start the search from.</param>
+	/// <returns>A list of all children of type <typeparamref name="T"/> found in the visual tree.
+	/// If no such children are found, an empty list is returned.</returns>
 	public static List<T> GetChildrenOfType<T>(this DependencyObject sender) where T : DependencyObject {
 		List<T> children = new();
 		if (sender is null) return children;
@@ -89,6 +103,11 @@ public static partial class Extensions {
 		return children;
 	}
 
+	/// <summary>
+	/// Find the parent of a given <see cref="DependencyObject"/> in the visual tree.
+	/// </summary>
+	/// <param name="child">The <see cref="DependencyObject"/> to find the parent of.</param>
+	/// <returns>The parent of the given <see cref="DependencyObject"/>, or <see langword="null"/> if no parent is found.</returns>
 	public static DependencyObject? GetParentObject(this DependencyObject child) {
 		if (child is null)
 			return null;
