@@ -32,6 +32,7 @@ words:
   - dvh
   - dvw
   - élastique
+  - ele
   - endregion
   - esbuild
   - extralight
@@ -43,6 +44,7 @@ words:
   - jsdocs
   - kbd
   - keyframes
+  - languagedetector
   - lengthenable
   - lotties
   - ltr
@@ -74,6 +76,7 @@ words:
   - prve
   - pv
   - quarternary
+  - resw
   - resx
   - rtl
   - segoe
@@ -102,6 +105,7 @@ words:
   - vsq
   - vtt
   - wj
+  - xmlbuilder
   - xmp
   - yoooo
   - ytp

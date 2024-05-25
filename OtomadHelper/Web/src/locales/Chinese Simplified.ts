@@ -429,13 +429,29 @@ export default {
 		},
 	},
 	csharp: {
-		importToHere: "导入 %1",
-		delete: "删除(&D)",
-		ok: "确定",
-		cancel: "取消",
-		close: "关闭",
-		error: "错误",
-		expandDetails: "展开详细信息",
-		collapseDetails: "收起详细信息",
+		mainDock: {
+			toolTip: {
+				importToHere: "导入 %1",
+			},
+		},
+		coreWebView: {
+			menuItem: {
+				delete: "删除(&D)",
+			},
+		},
+		contentDialog: {
+			button: {
+				ok: "确定",
+				cancel: "取消",
+				close: "关闭",
+			},
+			expander: {
+				expandDetails: "展开详细信息",
+				collapseDetails: "收起详细信息",
+			},
+			showError: {
+				title: "错误",
+			},
+		},
 	},
 } as const satisfies LocaleIdentifiers;

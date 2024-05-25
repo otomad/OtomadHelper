@@ -2,11 +2,7 @@ import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { spacing } from "pangu";
 import { initReactI18next } from "react-i18next";
-
-import zhCN from "./Chinese Simplified";
-import en from "./English";
-import ja from "./Japanese";
-import vi from "./Vietnamese";
+import allLanguages from "./all";
 
 i18n
 	// Detect the language user used currently
@@ -40,12 +36,7 @@ i18n
 			},
 		},
 		postProcess: ["pangu"],
-		resources: {
-			en,
-			"zh-CN": zhCN,
-			ja,
-			vi,
-		},
+		resources: allLanguages,
 	});
 
 document.documentElement.lang = i18n.language;

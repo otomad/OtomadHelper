@@ -9,7 +9,7 @@ public class Bridge {
 	/// Sets the development mode flag for the application.
 	/// </summary>
 	/// <param name="isDevMode">A boolean value indicating whether the application is in development mode.</param>
-	public void SetIsDevMode(bool isDevMode) => Host.isDevMode = isDevMode;
+	public void SetIsDevMode(bool isDevMode) => MainDock.isDevMode = isDevMode;
 
 	/// <summary>
 	/// Sets the culture for the application.
@@ -41,9 +41,9 @@ public class Bridge {
 	/// <param name="options">An array of <see cref="string"/> representing the items to be displayed in the combo box.</param>
 	/// <returns>The selected item from the combo box flyout.</returns>
 	public async Task<string> ShowComboBox(RectTuple rect, string selected, string[] options) {
-		Rect screenRect = Host.ClientToScreenRect(rect);
+		Rect screenRect = MainDock.ClientToScreenRect(rect);
 		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(options, selected, screenRect, out Task<string> resultTask);
-		Host.ShowFlyout(flyout);
+		MainDock.ShowFlyout(flyout);
 		return await resultTask;
 	}
 
@@ -54,9 +54,9 @@ public class Bridge {
 	/// <param name="pitch">The initial pitch (note name and octave) selected in the pitch picker.</param>
 	/// <returns>The selected pitch from the pitch picker flyout.</returns>
 	public async Task<string> ShowPitchPicker(RectTuple rect, string pitch) {
-		Rect screenRect = Host.ClientToScreenRect(rect);
+		Rect screenRect = MainDock.ClientToScreenRect(rect);
 		PitchPickerFlyout flyout = PitchPickerFlyout.Initial(screenRect, pitch, out Task<string> resultTask);
-		Host.ShowFlyout(flyout);
+		MainDock.ShowFlyout(flyout);
 		return await resultTask;
 	}
 }

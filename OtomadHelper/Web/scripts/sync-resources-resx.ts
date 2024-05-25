@@ -6,11 +6,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 import { create } from "xmlbuilder2";
 import VariableName from "../src/classes/VariableName";
 
-import zhCN from "../src/locales/Chinese Simplified";
-import en from "../src/locales/English";
-import ja from "../src/locales/Japanese";
-import vi from "../src/locales/Vietnamese";
-const allLanguages = { en, zhCN, ja, vi };
+import allLanguages from "../src/locales/all";
 
 const templateString = await readFile(resolve(__dirname, "Resources.resx.template.xml"), "utf-8");
 const template = create(templateString);
@@ -40,5 +36,5 @@ for (const language of languages) {
 		indent: "\t",
 		spaceBeforeSlash: true,
 	});
-	writeFile(resolve(__dirname, "../../Properties", `Resources.${language.culture}.resx`), result, "utf-8");
+	writeFile(resolve(__dirname, "../../Strings", `${language.culture}.resw`), result, "utf-8");
 }

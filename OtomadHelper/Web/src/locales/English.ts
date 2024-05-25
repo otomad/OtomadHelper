@@ -438,13 +438,29 @@ export default {
 		},
 	},
 	csharp: {
-		importToHere: "Import %1",
-		delete: "&Delete",
-		ok: "&OK",
-		cancel: "&Cancel",
-		close: "&Close",
-		error: "Error",
-		expandDetails: "Expand details",
-		collapseDetails: "Collapse details",
+		mainDock: {
+			toolTip: {
+				importToHere: "Import %1",
+			},
+		},
+		coreWebView: {
+			menuItem: {
+				delete: "&Delete",
+			},
+		},
+		contentDialog: {
+			button: {
+				ok: "&OK",
+				cancel: "&Cancel",
+				close: "&Close",
+			},
+			expander: {
+				expandDetails: "Expand details",
+				collapseDetails: "Collapse details",
+			},
+			showError: {
+				title: "Error",
+			},
+		},
 	},
 } as const;

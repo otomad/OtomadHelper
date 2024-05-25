@@ -71,7 +71,7 @@ public partial class MainDock : UserControl {
 		webView.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
 		WebMessageAcknowledgement webMessageAcknowledgement = new();
 		webView.AddHostObjectToScript("webMessageAcknowledgement", webMessageAcknowledgement);
-		Host = this;
+		MessageSender.MainDock = this;
 		webMessageAcknowledgement.Received += OnReceiveAcknowledgement;
 #if DEBUG
 		webView.OpenDevToolsWindow();
