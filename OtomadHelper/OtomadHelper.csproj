@@ -86,53 +86,18 @@
 		</None>
 		<Resource Include="Resources\*" />
 		<None Include="Test\app.manifest" />
-	</ItemGroup>
-	<ItemGroup>
 		<EmbeddedResource Include="Assets\**" />
 		<Content Include="Icons\**" />
-	</ItemGroup>
-	<ItemGroup>
 		<None Remove="Web\**" />
 		<EmbeddedResource Include="Web\dist\**" />
+		<EmbeddedResource Include="Strings\**" />
+		<Folder Include="Resources\" />
+		<Folder Include="Services\" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Remove="obj\**" />
 		<Compile Remove="Module\MainWPFDock.xaml.cs" />
-		<Compile Remove="obj\x64\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-		<Compile Remove="obj\x64\Debug\GeneratedInternalTypeHelper.g.cs" />
-		<Compile Remove="obj\x64\Debug\GeneratedInternalTypeHelper.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\OtomadHelper_Content.g.cs" />
-		<Compile Remove="obj\x64\Debug\OtomadHelper_Content.g.i.cs" />
-		<Compile Remove="obj\x64\Release\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-		<Compile Remove="obj\x64\Release\GeneratedInternalTypeHelper.g.cs" />
-		<Compile Remove="obj\x64\Release\GeneratedInternalTypeHelper.g.i.cs" />
-		<Compile Remove="obj\x64\Release\OtomadHelper_Content.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\Module\MainWPFDock.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\Test\MainWindow.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\Test\TestWindow.g.i.cs" />
-		<Compile Remove="obj\x64\Release\Test\MainWindow.g.cs" />
-		<Compile Remove="obj\x64\Release\Test\MainWindow.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Controls\Button.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Controls\ContentDialog.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Controls\Page1.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Views\ContentDialog.g.i.cs" />
-		<Compile Remove="obj\x64\Release\WPF\Controls\Button.g.cs" />
-		<Compile Remove="obj\x64\Release\WPF\Controls\Button.g.i.cs" />
-		<Compile Remove="obj\x64\Release\WPF\Controls\ContentDialog.g.cs" />
-		<Compile Remove="obj\x64\Release\WPF\Controls\ContentDialog.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Controls\ContentDialog\ContentDialog.g.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Controls\ContentDialog\ContentDialog.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBox.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxFlyout.g.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxFlyout.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxItem.g.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Controls\Flyouts\ComboBoxItem.g.i.cs" />
-		<Compile Remove="obj\x64\Debug\WPF\Views\ContentDialog\ContentDialog.g.i.cs" />
 		<Compile Remove="WPF\Common\EventCommand.cs" />
-	</ItemGroup>
-	<ItemGroup>
-	  <None Remove="Assets\Delete.svg" />
-	</ItemGroup>
-	<ItemGroup>
 		<Page Remove="Module\MainWPFDock.xaml" />
 	</ItemGroup>
 	<ItemGroup>
@@ -149,8 +114,5 @@
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Resources\" />
 	</ItemGroup>
 </Project>

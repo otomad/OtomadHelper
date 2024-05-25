@@ -33,14 +33,22 @@ internal static class ResourceHelper {
 	public static Stream GetEmbeddedResource(string resourcePath) {
 		Assembly assembly = Assembly.GetExecutingAssembly();
 		string assetsFilePath = AssemblyName + "." + resourcePath; // You can set a breakpoint to see the value here.
-		if (!IsResourceExist(assetsFilePath)) // Check for gzip file
-			assetsFilePath += ".gz";
 		if (!IsResourceExist(assetsFilePath))
 			throw new FileNotFoundException("Cannot find the embedded resource: " + assetsFilePath);
 		return assembly.GetManifestResourceStream(assetsFilePath);
 
 		bool IsResourceExist(string filePath) => assembly.GetManifestResourceInfo(filePath) != null;
 	}
+
+	/// <summary>
+	/// Get embedded resource names from specific folder.
+	/// </summary>
+	/// <param name="resourceFolder">The folder where the embedded resources in.</param>
+	/// <returns>The embedded resource names.</returns>
+	public static IEnumerable<string> GetEmbeddedResourceNamesInFolder(string resourceFolder) =>
+		Assembly.GetExecutingAssembly()
+			.GetManifestResourceNames()
+			.Where(name => name.StartsWith(AssemblyName + "." + resourceFolder + "."));
 
 	/// <summary>
 	/// Get the thumbnail of a local file.

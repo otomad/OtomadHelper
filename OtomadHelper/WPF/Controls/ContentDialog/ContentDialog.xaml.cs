@@ -19,18 +19,18 @@ public partial class ContentDialog : BackdropWindow {
 
 	public Task<object?> ShowDialogAsync() {
 		TaskCompletionSource<object?> taskCompletionSource = new();
-#if DEBUG
 		// Show a modal dialog after the current event handler is completed,
 		// to avoid potential reentrancy caused by running a nested message loop in the WebView2 event handler.
-		SynchronizationContext.Current.Post(state => {
+		if (SynchronizationContext.Current is not null)
+			SynchronizationContext.Current.Post(state => ShowDialogAndGetResult(), null);
+		else
+			ShowDialogAndGetResult();
+		return taskCompletionSource.Task;
+
+		void ShowDialogAndGetResult() {
 			ShowDialog();
 			taskCompletionSource.SetResult(DataContext.DialogResult);
-		}, null);
-#else
-		ShowDialog();
-		taskCompletionSource.SetResult(DataContext.DialogResult);
-#endif
-		return taskCompletionSource.Task;
+		}
 }
 
 	public static async Task<TDialogResult?> ShowDialog<TDialogResult>(

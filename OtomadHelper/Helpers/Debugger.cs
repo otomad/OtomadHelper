@@ -22,4 +22,36 @@ internal static class Debugger {
 	public static void DebugPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
 		s = e.NewValue;
 	}
+
+	/// <summary>
+	/// <para>Suppress unused variables or parameters warning.</para>
+	/// <para>Hack goto label at the end of the block.</para>
+	/// </summary>
+	/// <remarks>
+	/// <example>
+	/// <code>
+	/// public void UnusedParams(string foo, int bar) {
+	///     bool baz = true;
+	///     Unused(foo, bar, baz);
+	/// }
+	///
+	/// public void HackLabel() {
+	///     if (...) {
+	///         while (...) {
+	///             if (...) {
+	///                 DoSomething();
+	///             } else {
+	///                 goto EndOfIf;
+	///             }
+	///         }
+	///         DoSomething();
+	///     EndOfIf:
+	///         Unused();
+	///     }
+	///     DoSomething();
+	/// }
+	/// </code>
+	/// </example>
+	/// </remarks>
+	public static void Unused(params object[] unused) => _ = unused;
 }
