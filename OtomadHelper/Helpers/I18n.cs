@@ -1,8 +1,6 @@
 using System.Globalization;
 using System.Resources;
 
-using Microsoft.CSharp.RuntimeBinder;
-
 using OtomadHelper.Properties;
 
 namespace OtomadHelper.Helpers;

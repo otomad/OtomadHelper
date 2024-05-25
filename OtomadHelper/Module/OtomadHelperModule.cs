@@ -8,8 +8,6 @@ public class OtomadHelperModule : ICustomCommandModule {
 		new(CommandCategory.View, DisplayName); // This will show in menu: View → Extensions
 	internal const string InternalName = "OtomadHelperInternal";
 	internal const string DisplayName = "Otomad Helper";
-	internal static string AssemblyName => Assembly.GetExecutingAssembly().GetName().Name;
-	// Note: Cannot use Assembly.GetEntryAssembly().GetName().Name, or Vegas will crash.
 
 	internal static string CustomModulePath =>
 		Assembly.GetExecutingAssembly().Location;

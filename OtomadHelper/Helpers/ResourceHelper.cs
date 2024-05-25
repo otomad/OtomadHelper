@@ -11,6 +11,10 @@ using OtomadHelper.Module;
 namespace OtomadHelper.Helpers;
 
 internal static class ResourceHelper {
+	internal static string AssemblyName => Assembly.GetExecutingAssembly().GetName().Name;
+	// Note: Cannot use Assembly.GetEntryAssembly().GetName().Name, or Vegas will crash.
+	// Note: Cannot use OtomadHelperModule.AssemblyName, or it will crash in Visual Studio Debug mode.
+
 	/// <summary>
 	/// Get the embedded resource.
 	/// </summary>
@@ -28,7 +32,7 @@ internal static class ResourceHelper {
 	/// <exception cref="FileNotFoundException">Throw if the resource path is not exist.</exception>
 	public static Stream GetEmbeddedResource(string resourcePath) {
 		Assembly assembly = Assembly.GetExecutingAssembly();
-		string assetsFilePath = OtomadHelperModule.AssemblyName + "." + resourcePath; // You can set a breakpoint to see the value here.
+		string assetsFilePath = AssemblyName + "." + resourcePath; // You can set a breakpoint to see the value here.
 		if (!IsResourceExist(assetsFilePath)) // Check for gzip file
 			assetsFilePath += ".gz";
 		if (!IsResourceExist(assetsFilePath))

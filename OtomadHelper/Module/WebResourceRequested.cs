@@ -2,10 +2,11 @@ using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 
 namespace OtomadHelper.Module;
+
 /// <summary>
 /// Reading of response content stream happens asynchronously, and WebView2 does not
 /// directly dispose the stream once it read. Therefore, use the following stream
-/// class, which properly disposes when WebView2 has read all data.For details, see
+/// class, which properly disposes when WebView2 has read all data. For details, see
 /// <a href="https://github.com/MicrosoftEdge/WebView2Feedback/issues/2513">
 /// CoreWebView2 does not close stream content</a>.
 /// </summary>
@@ -53,6 +54,7 @@ internal class ManagedStream : Stream {
 		const string HOST = RESOURCE_HOST + "*";
 		webView.CoreWebView2.AddWebResourceRequestedFilter(HOST, CoreWebView2WebResourceContext.All);
 		webView.CoreWebView2.WebResourceRequested += (sender, args) => {
+			CoreWebView2Environment webViewEnv = webView.CoreWebView2.Environment;
 			Uri uri = new(args.Request.Uri);
 			NameValueCollection query = HttpUtility.ParseQueryString(uri.Query); // Not used yet
 			string file = uri.AbsolutePath.Substring(1);
@@ -107,11 +109,11 @@ internal class ManagedStream : Stream {
 					Keep-Alive: timeout={AGE}
 					Date: {DateTime.UtcNow.ToUniversalTime():R}
 					""";
-				args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(managedStream, 200, "OK", headers);
+				args.Response = webViewEnv.CreateWebResourceResponse(managedStream, 200, "OK", headers);
 			} catch (InvalidOperationException e) {
-				args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(null, 415, e.Message, "");
+				args.Response = webViewEnv.CreateWebResourceResponse(null, 415, e.Message, "");
 			} catch (Exception) {
-				args.Response = webView.CoreWebView2.Environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+				args.Response = webViewEnv.CreateWebResourceResponse(null, 404, "Not Found", "");
 			}
 		};
 	}
