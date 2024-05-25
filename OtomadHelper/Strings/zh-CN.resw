@@ -58,28 +58,28 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="ImportToHere" xml:space="preserve">
+	<data name="MainDock.ToolTip.ImportToHere" xml:space="preserve">
 		<value>导入 %1</value>
 	</data>
-	<data name="Delete" xml:space="preserve">
+	<data name="CoreWebView.MenuItem.Delete" xml:space="preserve">
 		<value>删除(&amp;D)</value>
 	</data>
-	<data name="Ok" xml:space="preserve">
+	<data name="ContentDialog.Button.Ok" xml:space="preserve">
 		<value>确定</value>
 	</data>
-	<data name="Cancel" xml:space="preserve">
+	<data name="ContentDialog.Button.Cancel" xml:space="preserve">
 		<value>取消</value>
 	</data>
-	<data name="Close" xml:space="preserve">
+	<data name="ContentDialog.Button.Close" xml:space="preserve">
 		<value>关闭</value>
 	</data>
-	<data name="Error" xml:space="preserve">
-		<value>错误</value>
-	</data>
-	<data name="ExpandDetails" xml:space="preserve">
+	<data name="ContentDialog.Expander.ExpandDetails" xml:space="preserve">
 		<value>展开详细信息</value>
 	</data>
-	<data name="CollapseDetails" xml:space="preserve">
+	<data name="ContentDialog.Expander.CollapseDetails" xml:space="preserve">
 		<value>收起详细信息</value>
+	</data>
+	<data name="ContentDialog.ShowError.Title" xml:space="preserve">
+		<value>错误</value>
 	</data>
 </root>

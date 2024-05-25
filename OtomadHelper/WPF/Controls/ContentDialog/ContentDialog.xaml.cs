@@ -61,12 +61,12 @@ public partial class ContentDialog : BackdropWindow {
 		ContentDialog dialog = new();
 		ContentDialogViewModel viewModel = dialog.DataContext;
 		viewModel.Title = message;
-		viewModel.Subtitle = t.Error;
+		viewModel.Subtitle = t.ContentDialog.ShowError.Title;
 		viewModel.Body = stackTrace;
 		viewModel.IconName = "Error";
 		viewModel.Buttons.AddRange(new ContentDialogButtonItem[] {
 			// new("Report", "report"), // I'm worried that users encounter any bug, they immediately click to report it directly.
-			new(t.Close, "close"),
+			new(t.ContentDialog.Button.Close, "close"),
 		});
 		viewModel.Expandable = true;
 		viewModel.CanCopyBody = true;

@@ -165,6 +165,29 @@ export default {
 		},
 	},
 	csharp: {
-		importToHere: "Nhập %1",
+		mainDock: {
+			toolTip: {
+				importToHere: "Nhập %1",
+			},
+		},
+		coreWebView: {
+			menuItem: {
+				delete: "&Xoá",
+			},
+		},
+		contentDialog: {
+			button: {
+				ok: "&OK",
+				cancel: "&Huỷ",
+				close: "&Đóng",
+			},
+			expander: {
+				expandDetails: "Mở rộng chi tiết",
+				collapseDetails: "Thu nhỏ chi tiết",
+			},
+			showError: {
+				title: "Lỗi",
+			},
+		},
 	},
 } as const satisfies LocaleIdentifiers;

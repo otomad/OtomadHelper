@@ -58,7 +58,28 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="ImportToHere" xml:space="preserve">
+	<data name="MainDock.ToolTip.ImportToHere" xml:space="preserve">
 		<value>Nhập %1</value>
+	</data>
+	<data name="CoreWebView.MenuItem.Delete" xml:space="preserve">
+		<value>&amp;Xoá</value>
+	</data>
+	<data name="ContentDialog.Button.Ok" xml:space="preserve">
+		<value>&amp;OK</value>
+	</data>
+	<data name="ContentDialog.Button.Cancel" xml:space="preserve">
+		<value>&amp;Huỷ</value>
+	</data>
+	<data name="ContentDialog.Button.Close" xml:space="preserve">
+		<value>&amp;Đóng</value>
+	</data>
+	<data name="ContentDialog.Expander.ExpandDetails" xml:space="preserve">
+		<value>Mở rộng chi tiết</value>
+	</data>
+	<data name="ContentDialog.Expander.CollapseDetails" xml:space="preserve">
+		<value>Thu nhỏ chi tiết</value>
+	</data>
+	<data name="ContentDialog.ShowError.Title" xml:space="preserve">
+		<value>Lỗi</value>
 	</data>
 </root>

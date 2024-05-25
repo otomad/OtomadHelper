@@ -129,7 +129,7 @@ public partial class MainDock : UserControl {
 		string fullPath = files[0];
 		Path path = new(fullPath);
 		e.Effect = e.AllowedEffect & DragDropEffects.Copy;
-		DropTargetHelper.DragEnter(this, e.Data, new Point(e.X, e.Y), e.Effect, t.ImportToHere, path.FullFileName);
+		DropTargetHelper.DragEnter(this, e.Data, new Point(e.X, e.Y), e.Effect, t.MainDock.ToolTip.ImportToHere, path.FullFileName);
 		bool isDirectory = path.IsDirectory;
 		string extension = path.DotExtension;
 		using RegistryKey? registryKey = Registry.ClassesRoot.OpenSubKey(extension);
@@ -189,7 +189,7 @@ public partial class MainDock : UserControl {
 			case ContextMenuTarget.DeletableItem:
 				if (!isDevMode) RemoveAllMenuItems();
 				CoreWebView2ContextMenuItem deleteItem = webView.Environment.CreateContextMenuItem(
-				t.Delete, null, CoreWebView2ContextMenuItemKind.Command);
+				t.CoreWebView.MenuItem.Delete, null, CoreWebView2ContextMenuItemKind.Command);
 				CoreWebView2ContextMenuItem separator = webView.Environment.CreateContextMenuItem(
 					"", null, CoreWebView2ContextMenuItemKind.Separator);
 				deleteItem.CustomItemSelected += (sender, ex) => {
@@ -263,8 +263,8 @@ public partial class MainDock : UserControl {
 			_ => "Info",
 		};
 		WPF.Controls.ContentDialogButtonItem<bool>
-			okBtn = new(t.Ok, true, true),
-			cancelBtn = new(t.Cancel, false);
+			okBtn = new(t.ContentDialog.Button.Ok, true, true),
+			cancelBtn = new(t.ContentDialog.Button.Cancel, false);
 		WPF.Controls.ContentDialogButtonItem<bool>[] buttons = e.Kind == CoreWebView2ScriptDialogKind.Alert ?
 			new[] { okBtn } :
 			new[] { okBtn, cancelBtn };

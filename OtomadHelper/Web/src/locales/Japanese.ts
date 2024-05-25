@@ -116,6 +116,29 @@ export default {
 		},
 	},
 	csharp: {
-		importToHere: "インポート %1",
+		mainDock: {
+			toolTip: {
+				importToHere: "インポート %1",
+			},
+		},
+		coreWebView: {
+			menuItem: {
+				delete: "削除(&D)",
+			},
+		},
+		contentDialog: {
+			button: {
+				ok: "&OK",
+				cancel: "キャンセル",
+				close: "閉じる",
+			},
+			expander: {
+				expandDetails: "詳細を展開",
+				collapseDetails: "詳細を隠す",
+			},
+			showError: {
+				title: "エラー",
+			},
+		},
 	},
 } as const satisfies LocaleIdentifiers;
