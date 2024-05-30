@@ -40,9 +40,8 @@ export default {
 				projectStart: "Bắt đầu dự án",
 				cursor: "Con trỏ",
 			},
-			belowTopAdjustmentTracks: "Tạo ra bên dưới track điều chỉnh đầu tiên",
-			removeSourceEventsAfterCompletion: "Gỡ bỏ nguồn event gốc sau khi hoàn thành",
-			selectAllEventsGenerated: "Chọn tất cả event đã tạo",
+			preferredTrack: {},
+			afterCompletion: {},
 			randomOffsetForTracks: "Sử dụng độ lệnh ngẫu nhiên cho các track khác nhau",
 		},
 		on: "Bật",
@@ -134,7 +133,9 @@ export default {
 		},
 		descriptions: {
 			source: {
-				belowTopAdjustmentTracks: {},
+				preferredTrack: {
+					belowAdjustmentTracks: {},
+				},
 			},
 			score: {},
 			stream: {

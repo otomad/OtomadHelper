@@ -50,10 +50,10 @@ export default {
 			},
 			afterCompletion: {
 				_: "After completion",
-				removeSourceEvents: "Remove source events",
-				selectSourceEvents: "Select source events",
-				selectGeneratedAudioEvents: "Select all audio events generated",
-				selectGeneratedVideoEvents: "Select all video events generated",
+				removeSourceClips: "Remove source track clips",
+				selectSourceClips: "Select source track clips",
+				selectGeneratedAudioClips: "Select all audio clips generated",
+				selectGeneratedVideoClips: "Select all video clips generated",
 			},
 			randomOffsetForTracks: "Use random offsets for different tracks",
 		},
@@ -201,7 +201,6 @@ export default {
 					adjustAudioToBasePitch: "Adjust audio to base pitch",
 				},
 			},
-			newTrack: "New track",
 			mapping: {
 				_: "Mapping",
 			},
@@ -372,7 +371,7 @@ export default {
 					stretchAttributes: "More config about the select tuning method",
 					resample: "Locks stretch and pitch, adjust the stretch to change the pitch",
 					preserveFormant: "Keeps the voice tone while tuning",
-					basePitch: "Specifies what is the base pitch of the audio event",
+					basePitch: "Specifies the base pitch of the audio clip",
 				},
 				effects: {
 					prve: "Makes your visuals more rhythmic",

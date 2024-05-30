@@ -31,6 +31,8 @@ export default {
 		},
 		source: {
 			startTime: {},
+			preferredTrack: {},
+			afterCompletion: {},
 		},
 		infoBar: {},
 		selectionMode: {},
@@ -85,7 +87,9 @@ export default {
 		},
 		descriptions: {
 			source: {
-				belowTopAdjustmentTracks: {},
+				preferredTrack: {
+					belowAdjustmentTracks: {},
+				},
 			},
 			score: {},
 			stream: {

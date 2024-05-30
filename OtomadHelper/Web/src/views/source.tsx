@@ -9,13 +9,13 @@ export default function Source() {
 	const startTime = selectConfig(c => c.source.startTime);
 	const [preferredTrack, setPreferredTrack] = selectConfig(c => c.source.preferredTrack.value);
 	const belowAdjustmentTracks = selectConfig(c => c.source.preferredTrack.belowAdjustmentTracks);
-	const removeSourceEvents = selectConfig(c => c.source.afterCompletion.removeSourceEvents);
-	const selectSourceEvents = selectConfig(c => c.source.afterCompletion.selectSourceEvents);
-	const selectGeneratedAudioEvents = selectConfig(c => c.source.afterCompletion.selectGeneratedAudioEvents);
-	const selectGeneratedVideoEvents = selectConfig(c => c.source.afterCompletion.selectGeneratedVideoEvents);
+	const removeSourceClips = selectConfig(c => c.source.afterCompletion.removeSourceClips);
+	const selectSourceClips = selectConfig(c => c.source.afterCompletion.selectSourceClips);
+	const selectGeneratedAudioClips = selectConfig(c => c.source.afterCompletion.selectGeneratedAudioClips);
+	const selectGeneratedVideoClips = selectConfig(c => c.source.afterCompletion.selectGeneratedVideoClips);
 	const randomOffsetForTracks = selectConfig(c => c.source.randomOffsetForTracks);
 
-	mutexSwitches(removeSourceEvents, selectSourceEvents);
+	mutexSwitches(removeSourceClips, selectSourceClips);
 
 	return (
 		<div className="container">
@@ -64,10 +64,10 @@ export default function Source() {
 				</ToggleSwitch>
 			</Expander>
 			<Expander title={t.source.afterCompletion} icon="post_processing">
-				<ToggleSwitch on={removeSourceEvents}>{t.source.afterCompletion.removeSourceEvents}</ToggleSwitch>
-				<ToggleSwitch on={selectSourceEvents}>{t.source.afterCompletion.selectSourceEvents}</ToggleSwitch>
-				<ToggleSwitch on={selectGeneratedAudioEvents}>{t.source.afterCompletion.selectGeneratedAudioEvents}</ToggleSwitch>
-				<ToggleSwitch on={selectGeneratedVideoEvents}>{t.source.afterCompletion.selectGeneratedVideoEvents}</ToggleSwitch>
+				<ToggleSwitch on={removeSourceClips}>{t.source.afterCompletion.removeSourceClips}</ToggleSwitch>
+				<ToggleSwitch on={selectSourceClips}>{t.source.afterCompletion.selectSourceClips}</ToggleSwitch>
+				<ToggleSwitch on={selectGeneratedAudioClips}>{t.source.afterCompletion.selectGeneratedAudioClips}</ToggleSwitch>
+				<ToggleSwitch on={selectGeneratedVideoClips}>{t.source.afterCompletion.selectGeneratedVideoClips}</ToggleSwitch>
 			</Expander>
 			<SettingsCardToggleSwitch title={t.source.randomOffsetForTracks} details={t.descriptions.source.randomOffsetForTracks} icon="dice" on={randomOffsetForTracks} />
 			<DragToImport>{t.titles.source}</DragToImport>

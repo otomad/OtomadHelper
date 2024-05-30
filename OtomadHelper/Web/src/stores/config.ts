@@ -20,10 +20,10 @@ interface ConfigState {
 			belowAdjustmentTracks: boolean;
 		};
 		afterCompletion: {
-			removeSourceEvents: boolean;
-			selectSourceEvents: boolean;
-			selectGeneratedAudioEvents: boolean;
-			selectGeneratedVideoEvents: boolean;
+			removeSourceClips: boolean;
+			selectSourceClips: boolean;
+			selectGeneratedAudioClips: boolean;
+			selectGeneratedVideoClips: boolean;
 		};
 		randomOffsetForTracks: boolean;
 	};
@@ -72,10 +72,10 @@ export const useConfigStore = createStore<ConfigState>()(
 				belowAdjustmentTracks: true,
 			},
 			afterCompletion: {
-				removeSourceEvents: false,
-				selectSourceEvents: true,
-				selectGeneratedAudioEvents: true,
-				selectGeneratedVideoEvents: true,
+				removeSourceClips: false,
+				selectSourceClips: true,
+				selectGeneratedAudioClips: true,
+				selectGeneratedVideoClips: true,
 			},
 			randomOffsetForTracks: false,
 		},

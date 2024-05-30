@@ -83,6 +83,7 @@ function formatOrdinal(number: number, localeTag: string) {
 	} catch { // Invalid, future, or artificial locale
 		return String(number); // Where every number is "other" rule.
 	}
+	const abs = Math.abs(number);
 	const pluralRules = new Intl.PluralRules(locale, { type: "ordinal" });
 	const rule = pluralRules.select(number);
 	let suffix!: string, result: string;
@@ -96,16 +97,16 @@ function formatOrdinal(number: number, localeTag: string) {
 				few: "rd",
 				other: "th",
 			});
-			result = Math.abs(number) + suffix;
+			result = abs + suffix;
 			return number >= 0 ? result : number === -1 ? "last" : `${result} to last`;
 		case "zh":
-			result = `第${number}`;
+			result = `第${abs}`;
 			return number >= 0 ? result : `倒数${result}`;
 		case "ja":
-			result = `${number}番目`;
+			result = `${abs}番目`;
 			return number >= 0 ? result : `最後から${result}`;
 		case "vi":
-			result = `thứ ${number}`;
+			result = `thứ ${abs}`;
 			return number >= 0 ? result : `${result} đến cuối cùng`;
 		default:
 			return String(number);
