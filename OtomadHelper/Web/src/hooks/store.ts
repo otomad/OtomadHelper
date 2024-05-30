@@ -39,15 +39,15 @@ export function useStoreSelector<Store extends UseBoundStore<StoreApi<Any>>, Fie
 	type States = ZustandState<Store>;
 	const { getParent, lastPath } = getStorePath(store, path);
 
-	const state = store();
+	const state: States = store();
 	if (!state) throw new Error("You are using useStoreSelector hook with a zustand store that is not being used with zustand immer middleware");
-	const getter = getParent(state)[lastPath];
+	const getter = (root = state) => getParent(root)[lastPath];
 	const setter = (value: unknown) => {
 		store.setState((root: States) => {
-			getParent(root)[lastPath] = typeof value === "function" ? value(getter) : value;
+			getParent(root)[lastPath] = typeof value === "function" ? value(getter(root)) : value;
 		});
 	};
-	return [getter, setter] as StatePropertyNonNull<Field>;
+	return [getter(), setter] as StatePropertyNonNull<Field>;
 }
 
 /**

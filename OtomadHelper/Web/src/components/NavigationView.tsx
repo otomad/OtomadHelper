@@ -303,14 +303,11 @@ const StyledNavigationView = styled.div<{
 				overflow-y: hidden;
 			}
 
-			&:has(.empty-message) {
-				overflow: hidden;
-			}
-
 			> * > .container {
 				display: flex;
 				flex-direction: column;
 				gap: 6px;
+				width: 100%;
 				margin-top: 2px;
 
 				&::after {
@@ -360,14 +357,8 @@ const StyledNavigationView = styled.div<{
 
 const StyledPage = styled.main`
 	container: page / inline-size;
-
-	&:has(.empty-message) {
-		height: calc(100% - 2px);
-
-		> * {
-			height: 100%;
-		}
-	}
+	display: flex;
+	min-height: 100%;
 
 	&.exit {
 		pointer-events: none; // Prevent users from quickly clicking buttons to enter sub-pages.

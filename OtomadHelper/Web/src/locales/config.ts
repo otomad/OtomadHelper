@@ -25,12 +25,25 @@ i18n
 		fallbackLng: "en",
 		interpolation: {
 			escapeValue: false,
-			format(value: string, format, _lng) {
-				value = value.toString();
-				if (value.match(/[a-z]/)) { // If the letters are all capital, they are treated as abbreviations without case conversion.
-					if (format === "uppercase") return value.toUpperCase();
-					if (format === "lowercase") return value.toLowerCase();
-					if (format === "capitalize") return `${value[0].toUpperCase()}${value.slice(1).toLowerCase()}`;
+			format(value, format, lng) {
+				switch (typeof value) {
+					case "string":
+						if (value.match(/[a-z]/)) // If the letters are all capital, treated them as abbreviations without case conversion.
+							switch (format) {
+								case "uppercase": return value.toUpperCase();
+								case "lowercase": return value.toLowerCase();
+								case "capitalize": return `${value[0].toUpperCase()}${value.slice(1).toLowerCase()}`;
+								default: break;
+							}
+						break;
+					case "number":
+						switch (format) {
+							case "ordinal": return formatOrdinal(value, lng!);
+							default: break;
+						}
+						break;
+					default:
+						break;
 				}
 				return value;
 			},
@@ -61,6 +74,42 @@ export function useLanguage(): StateProperty<string> {
 	}
 
 	return [language, changeLanguage];
+}
+
+function formatOrdinal(number: number, localeTag: string) {
+	let locale: Intl.Locale;
+	try {
+		locale = new Intl.Locale(localeTag);
+	} catch { // Invalid, future, or artificial locale
+		return String(number); // Where every number is "other" rule.
+	}
+	const pluralRules = new Intl.PluralRules(locale, { type: "ordinal" });
+	const rule = pluralRules.select(number);
+	let suffix!: string, result: string;
+	const getSuffix = (suffixes: Partial<Record<Intl.LDMLPluralRule, string>>) => suffix = suffixes[rule]!;
+	const { language } = locale;
+	switch (language) {
+		case "en":
+			getSuffix({
+				one: "st",
+				two: "nd",
+				few: "rd",
+				other: "th",
+			});
+			result = Math.abs(number) + suffix;
+			return number >= 0 ? result : number === -1 ? "last" : `${result} to last`;
+		case "zh":
+			result = `第${number}`;
+			return number >= 0 ? result : `倒数${result}`;
+		case "ja":
+			result = `${number}番目`;
+			return number >= 0 ? result : `最後から${result}`;
+		case "vi":
+			result = `thứ ${number}`;
+			return number >= 0 ? result : `${result} đến cuối cùng`;
+		default:
+			return String(number);
+	}
 }
 
 export default i18n;

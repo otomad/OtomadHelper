@@ -1,6 +1,6 @@
 import type { bpmUsings, constraintNoteLengths, encodings } from "views/score";
 import type { startTimes } from "views/source";
-import type { legatos, stretches, transformMethods } from "views/visual";
+import type { legatos, noLengthenings, stretches, transformMethods } from "views/visual";
 
 type StartTime = typeof startTimes[number]["id"];
 type BpmUsing = typeof bpmUsings[number]["id"];
@@ -8,15 +8,23 @@ type ConstraintNoteLength = typeof constraintNoteLengths[number]["id"];
 type Encoding = typeof encodings[number];
 type Stretch = typeof stretches[number]["id"];
 type Legato = typeof legatos[number]["id"];
+type NoLengthening = typeof noLengthenings[number]["id"];
 type TransformMethod = typeof transformMethods[number];
 
 interface ConfigState {
 	source: {
 		source: string;
 		startTime: StartTime;
-		belowTopAdjustmentTracks: boolean;
-		removeSourceEventsAfterCompletion: boolean;
-		selectAllEventsGenerated: boolean;
+		preferredTrack: {
+			value: number;
+			belowAdjustmentTracks: boolean;
+		};
+		afterCompletion: {
+			removeSourceEvents: boolean;
+			selectSourceEvents: boolean;
+			selectGeneratedAudioEvents: boolean;
+			selectGeneratedVideoEvents: boolean;
+		};
 		randomOffsetForTracks: boolean;
 	};
 	score: {
@@ -29,10 +37,11 @@ interface ConfigState {
 	};
 	visual: {
 		enabled: boolean;
+		preferredTrack: number;
 		stretch: Stretch;
 		loop: boolean;
 		staticVisual: boolean;
-		noLengthening: boolean;
+		noLengthening: NoLengthening;
 		legato: Legato;
 		multitrackForChords: boolean;
 		glissando: boolean;
@@ -53,13 +62,21 @@ interface ConfigState {
 }
 
 export const useConfigStore = createStore<ConfigState>()(
+	// @ts-ignore TypeScript brain convulsion.
 	zustandImmer((_set, get) => ({
 		source: {
 			source: "trackEvent",
 			startTime: "projectStart",
-			belowTopAdjustmentTracks: true,
-			removeSourceEventsAfterCompletion: false,
-			selectAllEventsGenerated: false,
+			preferredTrack: {
+				value: 0,
+				belowAdjustmentTracks: true,
+			},
+			afterCompletion: {
+				removeSourceEvents: false,
+				selectSourceEvents: true,
+				selectGeneratedAudioEvents: true,
+				selectGeneratedVideoEvents: true,
+			},
 			randomOffsetForTracks: false,
 		},
 		score: {
@@ -72,10 +89,11 @@ export const useConfigStore = createStore<ConfigState>()(
 		},
 		visual: {
 			enabled: true,
+			preferredTrack: 0,
 			stretch: "noStretching",
 			loop: false,
 			staticVisual: false,
-			noLengthening: false,
+			noLengthening: "lengthenable",
 			legato: "upToOneBeat",
 			multitrackForChords: false,
 			glissando: false,

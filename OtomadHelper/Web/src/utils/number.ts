@@ -1,3 +1,27 @@
+/// <reference path="number.d.ts" />
+
+{ // Init number extensions
+	defineGetterInPrototype(Number, "isPositive", function () {
+		return +this > 0 || Object.is(+this, +0);
+	});
+
+	defineGetterInPrototype(Number, "isInteger", function () {
+		return Number.isInteger(this);
+	});
+
+	defineGetterInPrototype(Number, "isSafeInteger", function () {
+		return Number.isSafeInteger(this);
+	});
+
+	defineGetterInPrototype(Number, "isFinite", function () {
+		return Number.isFinite(this);
+	});
+
+	defineGetterInPrototype(Number, "isNaN", function () {
+		return Number.isNaN(this);
+	});
+}
+
 /**
  * Normalize the number. Reject stupid scientific notation.
  * @param num - Number.

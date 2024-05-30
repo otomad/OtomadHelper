@@ -1,4 +1,5 @@
 import "utils/array";
+import "utils/number";
 import "utils/string";
 
 import "helpers/color-mode";

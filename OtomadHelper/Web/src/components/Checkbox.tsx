@@ -41,6 +41,11 @@ const StyledCheckboxLabel = styled.label<{
 			font-size: 12px;
 			clip-path: inset(0);
 
+			&,
+			* {
+				transition: all ${eases.easeOutMax} 250ms, color 0s, fill 0s;
+			}
+
 			${tgs(tgs.enter)} {
 				clip-path: inset(0 100% 0 0);
 			}
@@ -78,7 +83,7 @@ const StyledCheckboxLabel = styled.label<{
 
 	&:active input${checkedOrInd} ~ .base,
 	.items-view-item:active & input${checkedOrInd} ~ .base,
-	&:is(:hover, :active) .base${iconExiting} {
+	&:active .base${iconExiting} {
 		opacity: 0.8;
 
 		.icon {

@@ -40,9 +40,21 @@ export default {
 				projectStart: "Project start",
 				cursor: "Cursor",
 			},
-			belowTopAdjustmentTracks: "Generate below top adjustment tracks",
-			removeSourceEventsAfterCompletion: "Remove source events after completion",
-			selectAllEventsGenerated: "Select all events generated",
+			preferredTrack: {
+				_: "Preferred track",
+				index: "Preferred track index",
+				top: "Top",
+				ordinal: "Below the {{count, ordinal}} track",
+				belowAdjustmentTracks: "If one or more adjustment tracks below this track, select the next track that none of them",
+				newTrack: "New track",
+			},
+			afterCompletion: {
+				_: "After completion",
+				removeSourceEvents: "Remove source events",
+				selectSourceEvents: "Select source events",
+				selectGeneratedAudioEvents: "Select all audio events generated",
+				selectGeneratedVideoEvents: "Select all video events generated",
+			},
 			randomOffsetForTracks: "Use random offsets for different tracks",
 		},
 		on: "On",
@@ -324,18 +336,22 @@ export default {
 		descriptions: {
 			condition: "Specify when the following configuration will be applied",
 			source: {
-				trim: "Adjust start or end time of the specified source",
-				startTime: "Specify when to start generating from the project",
-				belowTopAdjustmentTracks: {
-					_: "If there are one or more adjustment tracks at the top, it will generate below them",
-					versionRequest: "Note: This feature requires VEGAS Pro ≥ 19. Current version is {{version}}.",
+				trim: "Adjusts start or end time of the specified source",
+				startTime: "Specifies when to start generating from the project",
+				preferredTrack: {
+					_: "Allows you to specify an existing track for generation (except multi-track)",
+					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth to last track.\nIf a preferred track is specified in audio or visual, this will be overridden.",
+					belowAdjustmentTracks: {
+						versionRequest: "Note: This feature requires VEGAS Pro ≥ 19. Current version is {{version}}.",
+					},
 				},
+				randomOffsetForTracks: "When on, this may result in randomly selected source clips having different base pitches, making it only useful for creating funny videos, and barely for creating high-caliber videos",
 			},
 			score: {
-				trim: "Intercept the generation time range of the score",
-				bpm: "Specify the beats per minute",
+				trim: "Intercepts the generation time range of the score",
+				bpm: "Specifies the beats per minute",
 				constraint: "Controls the note output length from the score",
-				encoding: "Specify the text encoding for reading the file",
+				encoding: "Specifies the text encoding for reading the file",
 			},
 			stream: {
 				stretch: "When on, the clip will be stretched instead of changing its duration",
@@ -372,7 +388,7 @@ export default {
 				legato: "Fills the gaps between the track clips",
 			},
 			sonar: {
-				_: "Sonar is a visual effect that utilizes the shapes of Cookie Cutter to create beat-style visuals motion graphics. This feature allows you to dispatch different shapes or effects to various percussion instruments of a drum kit (channel 10) in the score.\nA common Otomad genre is to create Motion Graphics (Mograph) by adding various shapes, such as diffused circles, to the visual based on the beats. Mograph is a product between graphic design and animation design, a form of visual expression based on the flow of time, and a type of video art. The term “motion graphics” refers to graphics that are deformed by the flow of time. A single Otomad video that contains only mographs is often titled “Graphs” or “Shapes”. The name of this effect, “sonar”, is named by Motosai.",
+				_: "Sonar is a visual effect that utilizes the shapes of Cookie Cutter to create beat-style visuals motion graphics. This feature allows you to dispatch different shapes or effects to various percussion instruments of a drum kit (channel 10) in the score.\nA common Otomad genre is to create Motion Graphics (Mograph) by adding various shapes, such as diffused circles, to the visual based on the beats. Mograph is a product between graphic design and animation design, a form of visual expression based on the flow of time, and a type of video art. The term “motion graphics” refers to graphics that are deformed by the flow of time. A single Otomad video that contains only mographs is often titled “Graphs” or “Shapes”.",
 			},
 			shupelunker: {
 				_: "Shupelunker Tactics is an non-tuned YTPMV tactics. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, that is, the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” will be generated. It is also non-tuned, and allows you to choose where the clip is cut (usually at a dialogue), with audio stretching and rewinding often used, as well as adding sixteenth to sixty-fourth rest notes. During the production, the clips will be aligned with the rhythm for singing sense.",

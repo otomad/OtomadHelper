@@ -329,11 +329,71 @@ export function makePrototypeKeysNonEnumerable(constructor: AnyConstructor) {
 }
 
 /**
+ * Defines a getter function on the prototype of a constructor function.
+ *
+ * This function is used to add a getter property to the prototype of a constructor function.
+ * The getter function will be called when accessing the property on instances of the constructor.
+ *
+ * @template T - The type of the instances of the constructor.
+ * @param constructor - The constructor function to which the getter property will be added.
+ * @param protoKey - The name of the property to be added to the prototype.
+ * @param getter - The function to be called when accessing the property.
+ *
+ * @example
+ * ```typescript
+ * class MyClass {
+ *     private _value: number;
+ *
+ *     constructor(value: number) {
+ *         this._value = value;
+ *     }
+ * }
+ *
+ * defineGetterInPrototype(MyClass, "value", function(this: MyClass) {
+ *     return this._value;
+ * });
+ *
+ * const instance = new MyClass(42);
+ * console.log(instance.value); // Output: 42
+ * ```
+ */
+export function defineGetterInPrototype<T>(constructor: new (...args: Any[]) => T, protoKey: string, getter: (this: T) => Any) {
+	Object.defineProperty(constructor.prototype, protoKey, {
+		get: getter,
+		configurable: true,
+		enumerable: false,
+	});
+}
+
+/**
  * A no-operation function that returns undefined regardless of the arguments it receives.
  *
  * @return undefined
  */
 export const noop = lodash.noop;
+
+export function mutexSwitches(...switches: (StateProperty<boolean> | StatePropertyNonNull<boolean> | SetState<boolean> | SetStateNarrow<boolean>)[]) {
+	const originalSetStates: SetState<boolean>[] = [];
+	const result: typeof originalSetStates = [];
+	for (const switch_ of switches) {
+		const originalSetState = (Array.isArray(switch_) ? switch_[1] : switch_)!;
+		originalSetStates.push(originalSetState);
+	}
+	for (const [i, originalSetState] of originalSetStates.entries()) {
+		const setState = setStateInterceptor(originalSetState, value => {
+			if (value)
+				for (const otherSetState of originalSetStates)
+					if (otherSetState !== originalSetState)
+						otherSetState(false);
+			return value;
+		});
+		result[i] = setState;
+		const switch_ = switches[i];
+		if (Array.isArray(switch_))
+			switch_[1] = setState;
+	}
+	return result;
+}
 
 /**
  * @deprecated Await for React 19 released with a new feature **ref as a prop**, and then delete this function.

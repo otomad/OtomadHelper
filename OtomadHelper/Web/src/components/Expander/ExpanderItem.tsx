@@ -80,8 +80,8 @@ export /* internal */ default function ExpanderItem({ icon, title, details, chil
 		<StyledExpanderItem>
 			{icon ? <Icon name={icon} /> : <div className="icon-placeholder" />}
 			<div className="text">
-				<p className="title">{title}</p>
-				<p className="details">{details}</p>
+				<p className="title"><Preserves>{title}</Preserves></p>
+				<p className="details"><Preserves>{details}</Preserves></p>
 			</div>
 			<div className="trailing">
 				{children}

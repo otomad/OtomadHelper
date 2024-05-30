@@ -122,6 +122,10 @@ const StyledTextBox = styled.div`
 		align-items: stretch;
 	}
 
+	:where(.settings-card > .base, .expander-item) > .trailing > :where(&) {
+		width: 200px;
+	}
+
 	input {
 		z-index: 1;
 		width: 100%;
@@ -325,7 +329,8 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 }>) {
 	const inputEl = useDomRef<"input">();
 	const bigIntMode = typeof value === "bigint";
-	const [displayValue, setDisplayValue] = useState("");
+	const intMode = bigIntMode || decimalPlaces === 0;
+	const [displayValue, setDisplayValue] = useState<string>();
 
 	const setValue = (value: TNumber | undefined | ((value: TNumber) => TNumber | undefined)) => (_setValue as SetStateNarrow<TNumber>)?.(prevValue => {
 		if (typeof value === "function") value = value(prevValue);
@@ -348,9 +353,9 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 	}
 
 	function parseText(text: string) {
-		if (bigIntMode) {
+		if (intMode) {
 			text = text.match(/-?\d+/)?.[0] ?? "";
-			return BigInt(text) as TNumber;
+			return (bigIntMode ? BigInt(text) : Number(text)) as TNumber;
 		} else {
 			text = text.replaceAll(/\.+/g, ".").match(/-?\d*\.\d+/)?.[0] ?? text.match(/-?\d+/)?.[0] ?? "";
 			return Number(text) as TNumber;
@@ -364,6 +369,8 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 			return false;
 		const value = text.match(/-?\d*\.?\d*/)?.[0].replace(/(?<=^-?)0+(?=\d)/, "");
 		if (!value) // undefined or ""
+			return false;
+		else if (intMode && text.includes("."))
 			return false;
 		else
 			return value;
@@ -390,7 +397,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 	}, []);
 
 	useEffect(() => {
-		const newValue = value, oldValue = parseText(displayValue);
+		const newValue = value, oldValue = displayValue && parseText(displayValue);
 		if (newValue !== oldValue) updateDisplayValue(value);
 	}, [value, decimalPlaces]);
 
@@ -445,7 +452,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 		<TextBox
 			{...textBoxProps}
 			disabled={disabled}
-			value={[displayValue, setValueFromTextBox]}
+			value={[displayValue ?? "", setValueFromTextBox]}
 			ref={inputEl}
 			onChange={handleBlurChange}
 			onInput={handleInput}

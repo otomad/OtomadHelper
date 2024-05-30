@@ -7,10 +7,15 @@ export /* internal */ const startTimes = [
 export default function Source() {
 	const source = selectConfig(c => c.source.source);
 	const startTime = selectConfig(c => c.source.startTime);
-	const belowTopAdjustmentTracks = selectConfig(c => c.source.belowTopAdjustmentTracks);
-	const removeSourceEventsAfterCompletion = selectConfig(c => c.source.removeSourceEventsAfterCompletion);
-	const selectAllEventsGenerated = selectConfig(c => c.source.selectAllEventsGenerated);
+	const [preferredTrack, setPreferredTrack] = selectConfig(c => c.source.preferredTrack.value);
+	const belowAdjustmentTracks = selectConfig(c => c.source.preferredTrack.belowAdjustmentTracks);
+	const removeSourceEvents = selectConfig(c => c.source.afterCompletion.removeSourceEvents);
+	const selectSourceEvents = selectConfig(c => c.source.afterCompletion.selectSourceEvents);
+	const selectGeneratedAudioEvents = selectConfig(c => c.source.afterCompletion.selectGeneratedAudioEvents);
+	const selectGeneratedVideoEvents = selectConfig(c => c.source.afterCompletion.selectGeneratedVideoEvents);
 	const randomOffsetForTracks = selectConfig(c => c.source.randomOffsetForTracks);
+
+	mutexSwitches(removeSourceEvents, selectSourceEvents);
 
 	return (
 		<div className="container">
@@ -42,18 +47,29 @@ export default function Source() {
 				iconField="icon"
 			/>
 
-			<Subheader>{t.subheaders.moreOptions}</Subheader>
-			<Expander title={t.subheaders.advanced} expanded icon="more">
+			<Subheader>{t.subheaders.advanced}</Subheader>
+			<Expander
+				title={t.source.preferredTrack}
+				selectInfo={preferredTrack === 0 ? t.source.preferredTrack.top : t(preferredTrack).source.preferredTrack.ordinal}
+				icon="preferred_track"
+			>
+				<Expander.Item title={t.source.preferredTrack.index} details={t.descriptions.source.preferredTrack.fillingInstructions}>
+					<TextBox.Number value={[preferredTrack, setPreferredTrack]} decimalPlaces={0} />
+				</Expander.Item>
 				<ToggleSwitch
-					on={belowTopAdjustmentTracks}
-					details={<Preserves>{t.descriptions.source.belowTopAdjustmentTracks + "\n" + t.descriptions.source.belowTopAdjustmentTracks.versionRequest({ version: 16 })}</Preserves>}
+					on={belowAdjustmentTracks}
+					details={t.descriptions.source.preferredTrack.belowAdjustmentTracks.versionRequest({ version: 16 })}
 				>
-					{t.source.belowTopAdjustmentTracks}
+					{t.source.preferredTrack.belowAdjustmentTracks}
 				</ToggleSwitch>
-				<ToggleSwitch on={removeSourceEventsAfterCompletion}>{t.source.removeSourceEventsAfterCompletion}</ToggleSwitch>
-				<ToggleSwitch on={selectAllEventsGenerated}>{t.source.selectAllEventsGenerated}</ToggleSwitch>
-				<ToggleSwitch on={randomOffsetForTracks}>{t.source.randomOffsetForTracks}</ToggleSwitch>
 			</Expander>
+			<Expander title={t.source.afterCompletion} icon="post_processing">
+				<ToggleSwitch on={removeSourceEvents}>{t.source.afterCompletion.removeSourceEvents}</ToggleSwitch>
+				<ToggleSwitch on={selectSourceEvents}>{t.source.afterCompletion.selectSourceEvents}</ToggleSwitch>
+				<ToggleSwitch on={selectGeneratedAudioEvents}>{t.source.afterCompletion.selectGeneratedAudioEvents}</ToggleSwitch>
+				<ToggleSwitch on={selectGeneratedVideoEvents}>{t.source.afterCompletion.selectGeneratedVideoEvents}</ToggleSwitch>
+			</Expander>
+			<SettingsCardToggleSwitch title={t.source.randomOffsetForTracks} details={t.descriptions.source.randomOffsetForTracks} icon="dice" on={randomOffsetForTracks} />
 			<DragToImport>{t.titles.source}</DragToImport>
 		</div>
 	);

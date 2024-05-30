@@ -4,6 +4,10 @@ const StyledComboBox = styled(StyledButton)`
 	min-height: 32px;
 	padding: 4px 11px;
 
+	:where(.settings-card > .base, .expander-item) > .trailing > :where(&) {
+		width: 200px;
+	}
+
 	.content {
 		${styles.mixins.square("100%")};
 		display: flex;
@@ -50,7 +54,7 @@ export default function ComboBox<T extends string>({ options, current: [current,
 	else // fallback in a normal browser
 		return (
 			<StyledComboBox as="select" value={current} onChange={e => setCurrent?.(e.currentTarget.value as T)} {...htmlAttrs}>
-				{options.map(option => <option key={option} value={option}>{option}</option>)}
+				{options.map(option => <option key={option}>{option}</option>)}
 			</StyledComboBox>
 		);
 }

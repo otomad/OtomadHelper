@@ -109,9 +109,9 @@ export default function SettingsCard({
 			<div className="base">
 				<Icon name={icon} />
 				<div className="text">
-					<p className="title">{title}</p>
-					<p className="details">{details}</p>
-					<p className={["details", "select-info", { invalid: !selectValid }]}>{selectInfo}</p>
+					<p className="title"><Preserves>{title}</Preserves></p>
+					<p className="details"><Preserves>{details}</Preserves></p>
+					<p className={["details", "select-info", { invalid: !selectValid }]}><Preserves>{selectInfo}</Preserves></p>
 				</div>
 				<div className="trailing">
 					{children}
