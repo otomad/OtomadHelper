@@ -84,6 +84,7 @@ export default function Visual() {
 								icon="ytp"
 								title={t.empty.ytpEnabled.title}
 								details={t.empty.ytpEnabled.details}
+								noSideEffect
 							>
 								<StackPanel>
 									<Button onClick={() => setYtpEnabled(false)}>{t.empty.ytpEnabled.disableYtp}</Button>
