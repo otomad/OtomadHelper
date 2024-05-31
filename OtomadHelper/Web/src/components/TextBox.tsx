@@ -7,7 +7,7 @@ const StyledSpinner = styled.div`
 	position: absolute;
 	inset-block-start: 50%;
 	inset-inline-end: 16px;
-	z-index: 2;
+	z-index: 6; // Above ExpanderParent
 	contain: size;
 
 	.base {

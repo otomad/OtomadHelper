@@ -44,7 +44,8 @@ const StyledSettingsCard = styled(StyledCard)`
 
 			> .base > .icon,
 			> .base > .text,
-			&.button > .base .trailing-icon {
+			> .base > .trailing > .check-info,
+			&.button > .base > .trailing > .trailing-icon {
 				opacity: ${c("pressed-text-opacity")}
 			}
 		}

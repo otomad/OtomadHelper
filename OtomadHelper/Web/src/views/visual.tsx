@@ -47,6 +47,7 @@ export default function Visual() {
 	const legato = selectConfig(c => c.visual.legato);
 	const multitrackForChords = selectConfig(c => c.visual.multitrackForChords);
 	const glissando = selectConfig(c => c.visual.glissando);
+	const glissandoAmount = selectConfig(c => c.visual.glissandoAmount);
 	// const transformMethod = selectConfig(c => c.visual.transformMethod);
 	const enableStaffVisualizer = selectConfig(c => c.visual.enableStaffVisualizer);
 	const enablePixelScaling = selectConfig(c => c.visual.enablePixelScaling);
@@ -138,7 +139,12 @@ export default function Visual() {
 									imageField="image"
 									$itemWidth={566 / 196 * GRID_VIEW_ITEM_HEIGHT}
 								/>
-								<SettingsCardToggleSwitch title={t.stream.multitrackForChords} details={t.descriptions.stream.multitrackForChords} icon="chords" on={multitrackForChords} />
+								<SettingsCardToggleSwitch
+									title={t.stream.multitrackForChords}
+									details={t.descriptions.stream.multitrackForChords}
+									icon="chords"
+									on={multitrackForChords}
+								/>
 								<Expander
 									title={t.stream.glissando}
 									details={t.descriptions.stream.glissando}
@@ -146,7 +152,11 @@ export default function Visual() {
 									actions={
 										<ToggleSwitch on={glissando} />
 									}
-								/>
+								>
+									<Expander.Item title={t.stream.glissando.amount} details={t.descriptions.stream.glissando.amount}>
+										<TextBox.Number value={glissandoAmount} min={-24} max={24} />
+									</Expander.Item>
+								</Expander>
 								{/* <ExpanderRadio
 									title={t.stream.transformMethod}
 									details={t.descriptions.stream.transformMethod}

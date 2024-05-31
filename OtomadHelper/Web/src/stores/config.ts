@@ -45,6 +45,7 @@ interface ConfigState {
 		legato: Legato;
 		multitrackForChords: boolean;
 		glissando: boolean;
+		glissandoAmount: number;
 		transformMethod: TransformMethod;
 		enableStaffVisualizer: boolean;
 		enablePixelScaling: boolean;
@@ -97,6 +98,7 @@ export const useConfigStore = createStore<ConfigState>()(
 			legato: "upToOneBeat",
 			multitrackForChords: false,
 			glissando: false,
+			glissandoAmount: 12,
 			transformMethod: "panCrop",
 			enableStaffVisualizer: false,
 			enablePixelScaling: false,

@@ -42,7 +42,7 @@ const ExpanderParent = styled(SettingsCard)<{
 				${sharpBottom};
 
 				> .trailing > .trailing-icon > * {
-					rotate: -180deg;
+					rotate: 180deg;
 				}
 			}
 		`;
@@ -50,7 +50,6 @@ const ExpanderParent = styled(SettingsCard)<{
 `;
 
 const ExpanderChild = styled.div`
-	overflow: clip;
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-top-width: 0;
 	border-radius: 0 0 3px 3px;

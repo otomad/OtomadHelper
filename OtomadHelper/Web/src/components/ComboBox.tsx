@@ -53,7 +53,7 @@ export default function ComboBox<T extends string>({ options, current: [current,
 		);
 	else // fallback in a normal browser
 		return (
-			<StyledComboBox as="select" value={current} onChange={e => setCurrent?.(e.currentTarget.value as T)} {...htmlAttrs}>
+			<StyledComboBox as="select" defaultValue={current} onChange={e => setCurrent?.(e.currentTarget.value as T)} {...htmlAttrs}>
 				{options.map(option => <option key={option}>{option}</option>)}
 			</StyledComboBox>
 		);

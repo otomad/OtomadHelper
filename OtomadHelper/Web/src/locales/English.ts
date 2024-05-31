@@ -156,7 +156,10 @@ export default {
 			},
 			multitrackForChords: "Multi-track for chords",
 			createGroups: "Create groups",
-			glissando: "Glissando",
+			glissando: {
+				_: "Glissando",
+				amount: "Amount",
+			},
 			autoPan: "Auto pan",
 			transformMethod: {
 				_: "Transform method",
@@ -364,7 +367,10 @@ export default {
 				legato: "Fills the gaps between notes",
 				multitrackForChords: "Generates multiple tracks for chords",
 				createGroups: "Creates groups for video and audio clips represented by one note",
-				glissando: "Creates a swirl effect if the note pitch bends or slides",
+				glissando: {
+					_: "Creates a swirl effect if the note pitch bends or slides",
+					amount: "Specifies the amount of the swirl twist amplitude",
+				},
 				autoPan: "Pans the audio using envelope automation",
 				transformMethod: "Specifies which target properties to apply the transformed keyframes",
 				tuning: {
