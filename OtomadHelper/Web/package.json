@@ -27,11 +27,13 @@
 		"release": "pnpm run build && gh release create $(node -pe \"require('./package.json').version\") $(node -pe \"require('./package.json').main\")",
 		"compact-svg": "tsx scripts/compact-svg.ts",
 		"crowdin:update": "tsx scripts/crowdin/update.ts",
-		"crowdin:download": "tsx scripts/crowdin/download.ts"
+		"crowdin:download": "tsx scripts/crowdin/download.ts",
+		"commit": "git-cz"
 	},
 	"dependencies": {
 		"ani-cursor": "^0.0.5",
 		"classnames": "^2.5.1",
+		"cz-conventional-changelog-zh": "^0.0.2",
 		"i18next": "^23.11.1",
 		"i18next-browser-languagedetector": "^7.2.1",
 		"immer": "^10.0.4",
@@ -103,5 +105,81 @@
 			"zustand@4.5.2": "patches/zustand@4.5.2.patch"
 		},
 		"allowNonAppliedPatches": false
+	},
+	"config": {
+		"commitizen": {
+			"path": "./OtomadHelper/Web/node_modules/cz-conventional-changelog-zh",
+			"disableScopeLowerCase": false,
+			"disableSubjectLowerCase": false,
+			"maxHeaderWidth": 100000,
+			"maxLineWidth": 100000,
+			"defaultType": "",
+			"defaultScope": "",
+			"defaultSubject": "",
+			"defaultBody": "",
+			"defaultIssues": "",
+			"types": {
+				"feat": {
+					"description": "一个新功能",
+					"title": "Features"
+				},
+				"fix": {
+					"description": "一个bug",
+					"title": "Bug Fixes"
+				},
+				"docs": {
+					"description": "文档增删改",
+					"title": "Documentation"
+				},
+				"style": {
+					"description": "样式修改(空白、格式、缺少分号等)",
+					"title": "Styles"
+				},
+				"refactor": {
+					"description": "既不修复bug也不添加新功能的更改",
+					"title": "Code Refactoring"
+				},
+				"perf": {
+					"description": "性能优化",
+					"title": "Performance Improvements"
+				},
+				"test": {
+					"description": "增加测试",
+					"title": "Tests"
+				},
+				"build": {
+					"description": "影响构建系统或外部依赖项的更改(示例范围:gulp、broccoli、npm)",
+					"title": "Builds"
+				},
+				"ci": {
+					"description": "对CI配置文件和脚本的更改(示例范围:Travis, Circle, BrowserStack, SauceLabs)",
+					"title": "Continuous Integrations"
+				},
+				"chore": {
+					"description": "除src目录或测试文件以外的修改",
+					"title": "Chores"
+				},
+				"revert": {
+					"description": "回退历史版本",
+					"title": "Reverts"
+				},
+				"conflict": {
+					"description": "修改冲突",
+					"title": "Conflict"
+				},
+				"font": {
+					"description": "字体文件更新",
+					"title": "Fonts"
+				},
+				"delete": {
+					"description": "删除文件",
+					"title": "Delete Files"
+				},
+				"stash": {
+					"description": "暂存文件",
+					"title": "Stash Files"
+				}
+			}
+		}
 	}
 }

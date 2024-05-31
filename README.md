@@ -3,11 +3,11 @@
 [![State][state-shield]][download-url]
 [![Version][version-shield]][download-url]
 [![Downloads][download-shield]][download-url]
-[![GPL-3.0][license-shield]][license-url]  
+[![GPL-3.0][license-shield]][license-url]\
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]  
+[![Issues][issues-shield]][issues-url]\
 [![Japanese Translation][ja-translation-shield]][ja-translation-url]
 [![Vietnamese Translation][vi-translation-shield]][vi-translation-url]
 
