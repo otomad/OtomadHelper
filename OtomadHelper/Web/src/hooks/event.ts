@@ -1,4 +1,4 @@
-import type { EffectCallback } from "react";
+import type { EffectCallback, KeyboardEvent, KeyboardEventHandler } from "react";
 type EffectCallbackWithAsync = EffectCallback | (() => (() => Promise<void>) | void);
 
 /**
@@ -316,4 +316,25 @@ export function useSelectAll<T>([selected, setSelected]: StateProperty<T[]>, all
 			setSelected(Array.from(invertedItems));
 		},
 	] as unknown as StatePropertyNonNull<CheckState> & { 2: () => void };
+}
+
+/**
+ * Make `keydown` event fire only once.
+ * @param callback
+ */
+export function useKeyDownOnce(callback: (e: KeyboardEvent, isMouseDown: boolean) => void, deps: DependencyList = []) {
+	const downedKey = useRef<Set<string>>(new Set<string>());
+
+	const onKeyDown = useCallback<KeyboardEventHandler>(e => {
+		if (downedKey.current.has(e.code)) return;
+		downedKey.current.add(e.code);
+		callback(e, true);
+	}, deps);
+
+	const onKeyUp = useCallback<KeyboardEventHandler>(e => {
+		downedKey.current.delete(e.code);
+		callback(e, false);
+	}, deps);
+
+	return [onKeyDown, onKeyUp] as [onKeyDown: KeyboardEventHandler, onKeyUp: KeyboardEventHandler];
 }

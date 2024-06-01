@@ -51,8 +51,6 @@ const StyledSpinner = styled.div`
 
 type SpinValue = 1 | -1;
 
-const wrapKeyCode = (code: string, action: (e: Any) => void) => (e: KeyboardEvent) => e.code === code && action(e);
-
 function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 	/** Disabled */
 	disabled?: boolean;
@@ -63,26 +61,10 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 	/** Mouse release button event. */
 	onRelease?: BaseEventHandler;
 }>) {
-	const repeatTimeout = useRef<Timeout>();
-	const clearRepeatInterval = () => clearInterval(repeatTimeout.current);
-
-	const handleRelease = useCallback<MouseEventHandler & KeyboardEventHandler>(e => {
-		clearRepeatInterval();
-		onRelease?.(e);
-	}, [onRelease]);
-
-	const handlePress = useCallback((spinValue: SpinValue) => {
+	function spinWithValue(spinValue: SpinValue) {
 		const spin = typeof step === "bigint" ? BigInt(spinValue) * step : spinValue * step;
 		onSpin?.(spin);
-		clearRepeatInterval();
-		const startTime = Date.now();
-		repeatTimeout.current = setInterval(() => {
-			if (Date.now() - startTime > 350)
-				onSpin?.(spin);
-		}, 50);
-	}, [onSpin]);
-
-	useEventListener(document, "mouseup", handleRelease as never);
+	}
 
 	return (
 		<StyledSpinner>
@@ -91,26 +73,24 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 					subtle
 					icon="spinner/chevron_up"
 					disabled={disabled}
-					onMouseDown={() => handlePress(1)}
-					onMouseUp={handleRelease}
-					onKeyDown={wrapKeyCode("Space", () => handlePress(1))}
-					onKeyUp={wrapKeyCode("Space", handleRelease)}
+					repeat
+					onClick={() => spinWithValue(1)}
+					onRelease={onRelease}
 				/>
 				<Button
 					subtle
 					icon="spinner/chevron_down"
 					disabled={disabled}
-					onMouseDown={() => handlePress(-1)}
-					onMouseUp={handleRelease}
-					onKeyDown={wrapKeyCode("Space", () => handlePress(-1))}
-					onKeyUp={wrapKeyCode("Space", handleRelease)}
+					repeat
+					onClick={() => spinWithValue(-1)}
+					onRelease={onRelease}
 				/>
 			</div>
 		</StyledSpinner>
 	);
 }
 
-const StyledTextBox = styled.div`
+export /* internal */ const StyledTextBox = styled.div`
 	position: relative;
 	background-color: ${c("fill-color-control-default")};
 	border-radius: 4px;
@@ -127,6 +107,7 @@ const StyledTextBox = styled.div`
 	}
 
 	input {
+		${styles.effects.text.body};
 		z-index: 1;
 		width: 100%;
 		padding: 6px 12px 7px;
@@ -179,7 +160,8 @@ const StyledTextBox = styled.div`
 	}
 
 	&:active,
-	&:focus-within {
+	&:focus-within,
+	.timecode-box:focus-within & {
 		background-color: ${c("fill-color-control-input-active")};
 
 		.stripes .focus-stripe {

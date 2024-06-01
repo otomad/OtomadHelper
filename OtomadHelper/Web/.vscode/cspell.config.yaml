@@ -60,6 +60,7 @@ words:
   - multitrack
   - neutual
   - numberish
+  - nums
   - ofx
   - otf
   - otomad
@@ -90,6 +91,7 @@ words:
   - subgrids
   - subheaders
   - svgr
+  - timecode
   - tsc
   - ttc
   - tts

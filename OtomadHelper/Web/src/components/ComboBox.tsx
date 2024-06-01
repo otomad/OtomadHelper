@@ -24,6 +24,10 @@ const StyledComboBox = styled(StyledButton)`
 			font-size: 16px;
 		}
 	}
+	
+	&:active .content .icon {
+		translate: 0 2px;
+	}
 
 	select& option {
 		background-color: ${c("background-color")};

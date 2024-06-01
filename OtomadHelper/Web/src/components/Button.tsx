@@ -126,7 +126,7 @@ export /* internal */ const StyledButton = styled.button<{
 	`}
 `;
 
-export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBased, className, ...htmlAttrs }: FCP<{
+export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBased, repeat, className, onRelease, ...htmlAttrs }: FCP<{
 	/** Button icon. */
 	icon?: DeclaredIcons;
 	/** Button animated icon. */
@@ -139,16 +139,22 @@ export default forwardRef(function Button({ children, icon, animatedIcon, subtle
 	accent?: boolean | "critical" | "success" | "attention" | "caution";
 	/** Is the orientation of the icon changed based on the writing direction? */
 	dirBased?: boolean;
+	/** Is repeat button? When on, the `onClick` events will be triggered continuously when the button is pressed. */
+	repeat?: boolean;
+	/** Mouse release button event. Only works with `RepeatButton`. */
+	onRelease?: BaseEventHandler;
 }, "button">, ref: ForwardedRef<"button">) {
 	const fillColorName = !accent ? undefined : accent === true ? "accent-color" : `fill-color-system-${accent}`;
 
 	return (
 		<StyledButton
+			as={repeat ? RepeatButton : "button"}
 			ref={ref}
 			type="button"
 			className={[className, { subtle, hyperlink }]}
 			$fillColorName={fillColorName}
 			$dirBased={dirBased}
+			onRelease={repeat ? onRelease : undefined}
 			{...htmlAttrs}
 		>
 			<StackPanel className="content">

@@ -2,6 +2,7 @@ export default function Home() {
 	const [shown, setShown] = useState(false);
 	const [text, setText] = useState("foo");
 	const pitch = useState("C5");
+	const timecode = useState("00:00:03.000");
 
 	return (
 		<div className="container">
@@ -22,6 +23,8 @@ export default function Home() {
 			<ComboBox options={["foo", "bar", "baz", "hello", "world"]} current={[text, setText]} />
 
 			<PitchPicker pitch={pitch} style={{ maxWidth: "300px" }} />
+
+			<TimecodeBox timecode={timecode} />
 		</div>
 	);
 }
