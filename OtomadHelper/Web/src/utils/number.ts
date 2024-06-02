@@ -20,6 +20,12 @@
 	defineGetterInPrototype(Number, "isNaN", function () {
 		return Number.isNaN(this);
 	});
+
+	Number.prototype.toFixedNumber = function (fractionDigits) {
+		return +this.toFixed(fractionDigits);
+	};
+
+	makePrototypeKeysNonEnumerable(Number);
 }
 
 /**

@@ -31,4 +31,10 @@ declare interface Number {
 	 * Check if the number is the reserved value NaN (not a number).
 	 */
 	readonly isNaN: boolean;
+
+	/**
+	 * Returns a number in fixed-point notation, instead of string.
+	 * @param fractionDigits - Number of digits after the decimal point. Must be in the range 0 - 20, inclusive.
+	 */
+	toFixedNumber(fractionDigits?: number): number;
 }

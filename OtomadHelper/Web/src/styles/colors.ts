@@ -9,7 +9,7 @@ const colors = {
 	"fill-color-text-on-accent-primary": ["rgb(255, 255, 255)", "rgb(0, 0, 0)", "HighlightText"],
 	"fill-color-text-on-accent-secondary": ["rgba(255, 255, 255, 0.7)", "rgba(0, 0, 0, 0.5)", "HighlightText"],
 	"fill-color-text-on-accent-disabled": ["rgb(255, 255, 255)", "rgba(255, 255, 255, 0.53)", "HighlightText"],
-	"fill-color-text-on-accent-selected-text": ["rgb(255, 255, 255)", "rgb(255, 255, 255)", "HighlightText"],
+	"fill-color-text-on-accent-selected-text": ["rgb(255, 255, 255)", "rgb(0, 0, 0)", "HighlightText"],
 	"fill-color-control-transparent": ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0)"],
 	"fill-color-control-default": ["rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.06)", "ButtonFace"],
 	"fill-color-control-secondary": ["rgba(249, 249, 249, 0.5)", "rgba(255, 255, 255, 0.08)", "ButtonFace"],

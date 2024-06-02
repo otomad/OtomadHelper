@@ -5,6 +5,7 @@ const StyledPitchPicker = styled(StyledButton)`
 	height: 1px; // A hack way to cheat its children with 100% height to match its min height.
 	min-height: 32px;
 	padding: 0;
+	direction: ltr;
 
 	.content {
 		${styles.mixins.square("100%")};

@@ -90,22 +90,24 @@ export function getPath(target: TargetType): Element[] {
  * ancestor node. For example, find whether the element is clicked, etc.
  *
  * @param target - The target HTML DOM node in the click event.
- * @param element - The bubbling HTML DOM node to find. If it is a string, it represents the CSS selector
+ * @param elements - The bubbling HTML DOM node to find. If it is a string, it represents the CSS selector
  * to be queried.
  * @returns The element to be queried is or is its ancestor node.
  */
-export function isInPath(target: TargetType, element: DetectInPathType): boolean {
+export function isInPath(target: TargetType, ...elements: DetectInPathType[]): boolean {
 	const path = getPath(target);
-	if (isRef(element)) element = toValue(element);
-	if (isObject(element) && "target" in element) element = element.target;
-	if (typeof element === "string") {
-		for (const el of path)
-			if (el.matches(element))
-				return true;
-		return false;
-	}
-	if (!(element instanceof Element)) return false;
-	return path.includes(element);
+	return elements.some(element => {
+		if (isRef(element)) element = toValue(element);
+		if (isObject(element) && "target" in element) element = element.target;
+		if (typeof element === "string") {
+			for (const el of path)
+				if (el.matches(element))
+					return true;
+			return false;
+		}
+		if (!(element instanceof Element)) return false;
+		return path.includes(element);
+	});
 }
 
 /**

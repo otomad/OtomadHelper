@@ -64,7 +64,7 @@ export default {
 		"rule-empty-line-before": null,
 		"no-invalid-double-slash-comments": null,
 		"number-max-precision": null,
-		"property-disallowed-list": ["direction"],
+		// "property-disallowed-list": ["direction"],
 		"order/order": [
 			{
 				"type": "at-rule",
