@@ -1,6 +1,7 @@
 import { StyledTextBox } from "./TextBox";
 
 const SPINNER_BUTTON_HEIGHT = 30, TEXTBOX_BASE_HEIGHT = 32, BUTTON_BORDER_RADIUS = 3;
+const isPressed = ":is(:active, [data-pressed])";
 
 const StyledTimecodeBox = styled.div`
 	position: relative;
@@ -30,7 +31,7 @@ const StyledTimecodeBox = styled.div`
 		&.up {
 			margin-block-end: 2px;
 
-			&:is(:active, [data-pressing]) .icon {
+			&${isPressed} .icon {
 				translate: 0 -2px;
 			}
 		}
@@ -38,7 +39,7 @@ const StyledTimecodeBox = styled.div`
 		&.down {
 			margin-block-start: 2px;
 
-			&:is(:active, [data-pressing]) .icon {
+			&${isPressed} .icon {
 				translate: 0 2px;
 			}
 		}

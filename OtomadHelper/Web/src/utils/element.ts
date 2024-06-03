@@ -177,3 +177,23 @@ export function getElementIndex(element: Element) {
 	if (!element.parentElement) return -1;
 	return [...element.parentElement.children].indexOf(element);
 }
+
+/**
+ * React default dataset (data-* attributes) will automatically convert a boolean value to a string.
+ * So this function will convert the boolean values.
+ * To make sure that add the attribute if the value is true and remove the attribute if the value is false.
+ */
+export function dataset(dataset: Record<string, Readable | boolean | undefined | null> = {}) {
+	const entries = Object.entries(dataset);
+	const result: Record<string, Readable> = {};
+	for (const [camelKey, value] of entries) {
+		const key = "data-" + new VariableName(camelKey).kebab;
+		if (value === undefined || value === null || value === false)
+			continue;
+		else if (value === true)
+			result[key] = "";
+		else
+			result[key] = value;
+	}
+	return result;
+}

@@ -1,3 +1,5 @@
+const isPressed = ":is(:active, [data-pressed])", notPressedOrDisabled = ":not(:active, [data-pressed], [disabled])";
+
 export /* internal */ const StyledButton = styled.button<{
 	/** The name of the background fill color. */
 	$fillColorName?: string;
@@ -15,7 +17,7 @@ export /* internal */ const StyledButton = styled.button<{
 		background-color: ${c("fill-color-control-secondary")};
 	}
 
-	&:active {
+	&${isPressed} {
 		background-color: ${c("fill-color-control-tertiary")};
 
 		> .content {
@@ -39,11 +41,11 @@ export /* internal */ const StyledButton = styled.button<{
 		background-color: ${c("fill-color-control-default")};
 		border-color: ${c("stroke-color-control-stroke-default")};
 
-		${ifColorScheme.dark} &:not(:active, [disabled]) {
+		${ifColorScheme.dark} &${notPressedOrDisabled} {
 			border-top-color: ${c("stroke-color-control-stroke-secondary")};
 		}
 
-		${ifColorScheme.light} &:not(:active, [disabled]) {
+		${ifColorScheme.light} &${notPressedOrDisabled} {
 			border-bottom-color: ${c("stroke-color-control-stroke-secondary")};
 		}
 	` : css`
@@ -55,11 +57,11 @@ export /* internal */ const StyledButton = styled.button<{
 			color: ${c("fill-color-text-on-accent-primary")};
 		}
 
-		${ifColorScheme.dark} &:not(:active, [disabled]) {
+		${ifColorScheme.dark} &${notPressedOrDisabled} {
 			border-top-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
 		}
 
-		${ifColorScheme.light} &:not(:active, [disabled]) {
+		${ifColorScheme.light} &${notPressedOrDisabled} {
 			border-bottom-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
 		}
 
@@ -67,7 +69,7 @@ export /* internal */ const StyledButton = styled.button<{
 			background-color: ${c("fill-color", 90)};
 		}
 
-		&:active {
+		&${isPressed} {
 			background-color: ${c("fill-color", 80)};
 		}
 
@@ -106,7 +108,7 @@ export /* internal */ const StyledButton = styled.button<{
 			background-color: ${c("fill-color-subtle-secondary")};
 		}
 
-		&:active {
+		&${isPressed} {
 			background-color: ${c("fill-color-subtle-tertiary")};
 		}
 	}

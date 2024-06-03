@@ -6,18 +6,18 @@ export default function RepeatButton({ children, onClick, onRelease, ...htmlAttr
 }, "button">) {
 	const repeatTimeout = useRef<Timeout>();
 	const clearRepeatInterval = () => clearInterval(repeatTimeout.current);
-	const [pressing, setPressing] = useState(false);
+	const [pressed, setPressed] = useState(false);
 
 	const handleRelease = useCallback<MouseEventHandler & KeyboardEventHandler>(e => {
 		clearRepeatInterval();
-		setPressing(false);
+		setPressed(false);
 		onRelease?.(e);
 	}, [onRelease]);
 
 	const handlePress = useCallback<MouseEventHandler<HTMLButtonElement>>(e => {
 		onClick?.(e);
 		clearRepeatInterval();
-		setPressing(true);
+		setPressed(true);
 		const startTime = Date.now();
 		repeatTimeout.current = setInterval(() => {
 			if (Date.now() - startTime > 350)
@@ -41,7 +41,7 @@ export default function RepeatButton({ children, onClick, onRelease, ...htmlAttr
 			onMouseUp={handleRelease}
 			onKeyDown={handleKeyDown}
 			onKeyUp={handleKeyUp}
-			{...(pressing ? { "data-pressing": "" } : {})}
+			{...dataset({ pressed })}
 			{...htmlAttrs}
 		>
 			{children}
