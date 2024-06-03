@@ -256,15 +256,15 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 			Caret.set(el, caret);
 		}
 		setValue(newText); // true or undefined
-	}, [value, setValue]);
+	}, [value]);
 
 	const handleKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(e => {
 		onKeyDown?.(e);
-		if (e.key === "Enter") { // Don't use `e.code` or NumpadEnter won't work
+		if (e.code === "Enter" || e.code === "NumpadEnter") {
 			inputEl.current?.blur();
 			stopEvent(e);
 		}
-	}, []);
+	}, [onKeyDown]);
 
 	return (
 		<StyledTextBox {...htmlAttrs}>

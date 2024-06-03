@@ -59,6 +59,7 @@ const StyledTimecodeBox = styled.div`
 
 			&:focus {
 				background-color: ${c("fill-color-control-default")};
+				box-shadow: none;
 			}
 		}
 	}
@@ -114,6 +115,49 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], ...html
 			focusValue(lastActiveItemLastIndex.current);
 	}, []);
 
+	const handleValueWheel = useCallback<WheelEventHandler<HTMLDivElement>>(e => {
+		const valueEl = e.currentTarget;
+		const delta = -Math.sign(e.deltaY);
+		handleSpinnerClick(+valueEl.dataset.lastIndex!, delta);
+	}, []);
+
+	const getValueElementFromLastIndex = (lastIndex: number) => timecodeBoxEl.current?.querySelector(`[data-last-index="${lastIndex}"]`) ?? null;
+
+	function moveFocus(valueElement: Element | number | null, direction: 1 | -1) {
+		if (typeof valueElement === "number") valueElement = getValueElementFromLastIndex(valueElement);
+		valueElement = valueElement?.parentElement ?? null;
+		while (valueElement) {
+			valueElement = direction === -1 ?
+				valueElement.previousElementSibling :
+				valueElement.nextElementSibling;
+			if (valueElement?.classList.contains("value-wrapper")) {
+				(valueElement.firstElementChild as HTMLElement).focus();
+				return;
+			}
+		}
+	}
+
+	const handleValueKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(e => {
+		const valueEl = e.currentTarget;
+
+		if (e.code.in("ArrowUp", "ArrowDown"))
+			handleSpinnerClick(+valueEl.dataset.lastIndex!, e.code === "ArrowUp" ? 1 : -1);
+		else if (e.code.in("ArrowLeft", "ArrowRight", "Semicolon", "Period", "Equal", "NumpadAdd", "Space", "Enter", "NumpadEnter", "NumpadDecimal"))
+			moveFocus(valueEl, e.code === "ArrowLeft" ? -1 : 1);
+		else if (e.code.in("Minus", "NumpadSubtract"))
+			(setTimecode as SetStateNarrow<string>)?.(timecode => getSupposedTimecode(timecode, "-"));
+	}, []);
+
+	const handleItemChange = useCallback<TimecodeItemValueChangeEventHandler>((value, lastIndex) => {
+		(setTimecode as SetStateNarrow<string>)?.(timecode => {
+			const tokens = getTimecodeTokens(timecode);
+			const selectedItem = tokens.at(lastIndex);
+			selectedItem && (selectedItem.value = value);
+			const supposedTimecode = getSupposedTimecode(tokens.join(""));
+			return supposedTimecode;
+		});
+	}, [timecode]);
+
 	return (
 		<StyledTimecodeBox ref={timecodeBoxEl} onMouseDown={handleTimecodeBoxMouseDown} {...htmlAttrs}>
 			<StyledTextBox>
@@ -133,9 +177,15 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], ...html
 							tabIndex={-1}
 							onClick={() => handleSpinnerClick(lastIndex, 1)}
 						/>
-						<div className="value-wrapper">
-							<div className="value" data-last-index={lastIndex} tabIndex={0}>{value}</div>
-						</div>
+						<TimecodeItemValue
+							lastIndex={lastIndex}
+							onWheel={handleValueWheel}
+							onKeyDown={handleValueKeyDown}
+							onChange={handleItemChange}
+							onFinishInput={(...e) => { moveFocus(lastIndex, 1); handleItemChange(...e); }}
+						>
+							{value}
+						</TimecodeItemValue>
 						<Button
 							subtle
 							icon="spinner/chevron_down"
@@ -151,6 +201,62 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], ...html
 	);
 }
 
+type TimecodeItemValueChangeEventHandler = (value: string, lastIndex: number) => void;
+
+function TimecodeItemValue({ lastIndex, children, onChange, onFinishInput, onKeyDown, onBlur, ...htmlAttrs }: FCP<{
+	/** The index of the value item to the last. */
+	lastIndex: number;
+	/** The value of the item. */
+	children: string;
+	/** Trigger when the item blurred and the value has changed. */
+	onChange?: TimecodeItemValueChangeEventHandler;
+	/** Trigger when user finishes editing the value of this item. */
+	onFinishInput?: TimecodeItemValueChangeEventHandler;
+}, "div">) {
+	const [userInput, setUserInput] = useState("");
+	const displayUserInput = useMemo(() => userInput ? userInput.padStart(children.length, "\u2007") : children, [userInput, children]);
+
+	const handleKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(e => {
+		onKeyDown?.(e);
+		const number = e.code.match(/^(Digit|Numpad)(?<number>\d)$/i)?.groups?.number;
+		console.log("🚀 ~ userInput:", userInput);
+		if (number !== undefined)
+			new Promise<string>(resolve =>
+				setUserInput(userInput => {
+					userInput += number;
+					if (userInput.length === children.length) {
+						resolve(userInput); // To solve the problem of triggering events twice due to strict mode in the dev.
+						userInput = "";
+					}
+					return userInput;
+				}),
+			).then(userInput => onFinishInput?.(userInput, lastIndex));
+	}, [onKeyDown, onFinishInput, userInput, children, lastIndex]);
+
+	const handleBlur = useCallback<FocusEventHandler<HTMLDivElement>>(e => {
+		onBlur?.(e);
+		if (userInput) {
+			onChange?.(userInput, lastIndex);
+			setUserInput("");
+		}
+	}, [onBlur, userInput, lastIndex]);
+
+	return (
+		<div className="value-wrapper">
+			<div
+				className="value"
+				data-last-index={lastIndex}
+				tabIndex={0}
+				onBlur={handleBlur}
+				onKeyDown={handleKeyDown}
+				{...htmlAttrs}
+			>
+				{displayUserInput}
+			</div>
+		</div>
+	);
+}
+
 function getSupposedTimecode(input?: string, increment?: string) {
 	function getSeconds(timecode?: string) {
 		const hms = timecode?.match(/(((?<h>[\d-]+):)?(?<m>[\d-]+):)?(?<s>[\d-]*\.[\d-]+|[\d-]+)/)?.groups as
@@ -162,7 +268,10 @@ function getSupposedTimecode(input?: string, increment?: string) {
 
 	let seconds = getSeconds(input);
 	if (increment)
-		seconds += getSeconds(increment);
+		if (increment === "-")
+			seconds = -seconds;
+		else
+			seconds += getSeconds(increment);
 
 	const negative = seconds < 0;
 	seconds = Math.abs(seconds);
