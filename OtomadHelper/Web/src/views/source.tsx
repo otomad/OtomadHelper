@@ -6,7 +6,10 @@ export /* internal */ const startTimes = [
 
 export default function Source() {
 	const source = selectConfig(c => c.source.source);
-	const startTime = selectConfig(c => c.source.startTime);
+	const trimStart = selectConfig(c => c.source.trim.start);
+	const trimEnd = selectConfig(c => c.source.trim.end);
+	const startTime = selectConfig(c => c.source.startTime.use);
+	const customStartTime = selectConfig(c => c.source.startTime.custom);
 	const [preferredTrack, setPreferredTrack] = selectConfig(c => c.source.preferredTrack.value);
 	const belowAdjustmentTracks = selectConfig(c => c.source.preferredTrack.belowAdjustmentTracks);
 	const removeSourceClips = selectConfig(c => c.source.afterCompletion.removeSourceClips);
@@ -28,7 +31,9 @@ export default function Source() {
 				<TestThumbnail />
 			</Card>
 
-			<Expander title={t.source.trim} details={t.descriptions.source.trim} icon="trim" />
+			<Expander title={t.source.trim} details={t.descriptions.source.trim} icon="trim">
+				<ExpanderChildTrim start={trimStart} end={trimEnd} />
+			</Expander>
 			{/* <Expander title={t.source.startTime} details={t.descriptions.source.startTime} icon="start_point">
 				<ItemsView view="tile" current={startTime}>
 					{startTimes.map(item =>
@@ -45,7 +50,11 @@ export default function Source() {
 				idField="id"
 				nameField="name"
 				iconField="icon"
-			/>
+			>
+				<Expander.ChildWrapper>
+					<TimecodeBox timecode={customStartTime} onFocus={() => startTime[1]("custom")} />
+				</Expander.ChildWrapper>
+			</ExpanderRadio>
 
 			<Subheader>{t.subheaders.advanced}</Subheader>
 			<Expander

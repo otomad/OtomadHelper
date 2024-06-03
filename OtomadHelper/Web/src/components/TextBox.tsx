@@ -218,7 +218,7 @@ export /* internal */ const StyledTextBox = styled.div`
 	}
 `;
 
-const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeholder, disabled, prefix, suffix, _spinner: spinner, onChange, onInput, onKeyDown, ...htmlAttrs }: FCP<{
+const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeholder, disabled, prefix, suffix, _spinner: spinner, onChange, onChanging, onInput, onKeyDown, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
 	/** Content placeholder. */
@@ -231,6 +231,8 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 	_spinner?: (inputId: string) => ReactNode;
 	/** Text change event. Only fired after pasting text or after the input box is out of focus. */
 	onChange?: BaseEventHandler<HTMLInputElement>;
+	/** Text changing event. Fired any time the text changes. */
+	onChanging?: BaseEventHandler<HTMLInputElement>;
 	/** Text keyboard input event. */
 	onInput?: (newText: string, el: HTMLInputElement, ...event: Parameters<FormEventHandler<HTMLInputElement>>) => boolean | string | void;
 	/** Keyboard press event. */
@@ -242,6 +244,8 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 
 	const setValue = (value: string | undefined | ((value: string) => string | undefined)) =>
 		value == null || _setValue?.(value as string);
+
+	const handleChange = (e: Any) => { onChanging?.(e); onChange?.(e); };
 
 	const handleInput = useCallback<FormEventHandler<HTMLInputElement>>(e => {
 		const el = e.currentTarget ?? e.target;
@@ -256,12 +260,14 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 			Caret.set(el, caret);
 		}
 		setValue(newText); // true or undefined
+		onChanging?.(e as never);
 	}, [value]);
 
 	const handleKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(e => {
 		onKeyDown?.(e);
 		if (e.code === "Enter" || e.code === "NumpadEnter") {
 			inputEl.current?.blur();
+			handleChange(e);
 			stopEvent(e);
 		}
 	}, [onKeyDown]);
@@ -279,8 +285,8 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 					disabled={disabled}
 					autoComplete="off"
 					onInput={handleInput}
-					onPaste={onChange}
-					onBlur={onChange}
+					onPaste={handleChange}
+					onBlur={handleChange}
 					onKeyDown={handleKeyDown}
 				/>
 				<label className="suffix" htmlFor={inputId}>{suffix}</label>
@@ -425,6 +431,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 		else if (e.code === "ArrowDown") step = -baseStep;
 		if (step) {
 			handlePressSpin(step);
+			textBoxProps.onChanging?.(e);
 			setTimeout(() => setCaretToPoint());
 			stopEvent(e);
 		}

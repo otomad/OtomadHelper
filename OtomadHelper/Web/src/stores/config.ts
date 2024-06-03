@@ -10,11 +10,19 @@ type Stretch = typeof stretches[number]["id"];
 type Legato = typeof legatos[number]["id"];
 type NoLengthening = typeof noLengthenings[number]["id"];
 type TransformMethod = typeof transformMethods[number];
+type Timecode = string;
 
 interface ConfigState {
 	source: {
 		source: string;
-		startTime: StartTime;
+		trim: {
+			start: Timecode;
+			end: Timecode;
+		};
+		startTime: {
+			use: StartTime;
+			custom: Timecode;
+		};
 		preferredTrack: {
 			value: number;
 			belowAdjustmentTracks: boolean;
@@ -29,8 +37,15 @@ interface ConfigState {
 	};
 	score: {
 		format: string;
+		trim: {
+			start: Timecode;
+			end: Timecode;
+		};
 		encoding: Encoding;
-		bpmUsing: BpmUsing;
+		bpm: {
+			use: BpmUsing;
+			custom: number;
+		};
 		timeSignature: string;
 		constraintNoteLength: ConstraintNoteLength;
 		isMultipleSelectionMode: boolean;
@@ -44,8 +59,10 @@ interface ConfigState {
 		noLengthening: NoLengthening;
 		legato: Legato;
 		multitrackForChords: boolean;
-		glissando: boolean;
-		glissandoAmount: number;
+		glissando: {
+			enabled: boolean;
+			amount: number;
+		};
 		transformMethod: TransformMethod;
 		enableStaffVisualizer: boolean;
 		enablePixelScaling: boolean;
@@ -62,12 +79,21 @@ interface ConfigState {
 	toJson(): string; // If named toJSON, it will conflict to the JSON built-in parameter, causing a recursion error.
 }
 
+const EMPTY_TIMECODE = "00:00:00.000";
+
 export const useConfigStore = createStore<ConfigState>()(
 	// @ts-ignore TypeScript brain convulsion.
 	zustandImmer((_set, get) => ({
 		source: {
 			source: "trackEvent",
-			startTime: "projectStart",
+			trim: {
+				start: EMPTY_TIMECODE,
+				end: EMPTY_TIMECODE,
+			},
+			startTime: {
+				use: "projectStart",
+				custom: EMPTY_TIMECODE,
+			},
 			preferredTrack: {
 				value: 0,
 				belowAdjustmentTracks: true,
@@ -82,8 +108,15 @@ export const useConfigStore = createStore<ConfigState>()(
 		},
 		score: {
 			format: "midi",
+			trim: {
+				start: EMPTY_TIMECODE,
+				end: EMPTY_TIMECODE,
+			},
 			encoding: "ANSI",
-			bpmUsing: "variableMidi",
+			bpm: {
+				use: "variableMidi",
+				custom: 120,
+			},
 			timeSignature: "4/4",
 			constraintNoteLength: "none",
 			isMultipleSelectionMode: false,
@@ -97,8 +130,10 @@ export const useConfigStore = createStore<ConfigState>()(
 			noLengthening: "lengthenable",
 			legato: "upToOneBeat",
 			multitrackForChords: false,
-			glissando: false,
-			glissandoAmount: 12,
+			glissando: {
+				enabled: false,
+				amount: 12,
+			},
 			transformMethod: "panCrop",
 			enableStaffVisualizer: false,
 			enablePixelScaling: false,

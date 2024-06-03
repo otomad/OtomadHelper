@@ -93,7 +93,7 @@ export const useChangeEffect = (
 type Options = Partial<{
 	/** Call the callback function immediately upon declaration. */
 	immediate: boolean;
-}>;
+}> & AddEventListenerOptions;
 
 /**
  * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
@@ -195,8 +195,8 @@ export function useEventListener<K extends keyof HTMLElementEventMap, E extends 
 		target = toValue(target);
 		asserts<() => void>(callback);
 		if (options.immediate) callback();
-		target?.addEventListener(event, callback);
-		return () => target?.removeEventListener(event, callback);
+		target?.addEventListener(event, callback, options);
+		return () => target?.removeEventListener(event, callback, options);
 	}, deps);
 }
 

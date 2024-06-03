@@ -76,6 +76,7 @@ export default {
 		selectAll: "Select all",
 		invertSelection: "Invert selection",
 		variableBeginWith: "Variable beginning with {{first, lowercase}}",
+		reset: "Reset",
 		infoBar: {
 			warning: "Warning",
 		},

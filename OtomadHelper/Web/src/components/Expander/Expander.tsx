@@ -64,7 +64,15 @@ const ExpanderChild = styled.div`
 `;
 
 const ExpanderChildWrapper = styled.div`
-	padding: 21px 51px;
+	padding: 7px 51px;
+
+	&:has(.slider) {
+		padding: 21px 51px;
+	}
+
+	&:has(.timecode-box) {
+		--layout: inline;
+	}
 `;
 
 export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, selectInfo }: FCP<PropsOf<typeof SettingsCard> & {

@@ -42,6 +42,10 @@ const TrackToolbar = styled.div`
 			}
 		}
 	}
+	
+	> .segmented {
+		flex-shrink: 0;
+	}
 
 	+ .items-view {
 		.title {
@@ -79,8 +83,11 @@ const TrackToolbar = styled.div`
 
 export default function Score() {
 	const format = selectConfig(c => c.score.format);
+	const trimStart = selectConfig(c => c.score.trim.start);
+	const trimEnd = selectConfig(c => c.score.trim.end);
 	const encoding = selectConfig(c => c.score.encoding);
-	const bpmUsing = selectConfig(c => c.score.bpmUsing);
+	const bpmUsing = selectConfig(c => c.score.bpm.use);
+	const customBpm = selectConfig(c => c.score.bpm.custom);
 	const [timeSignature] = selectConfig(c => c.score.timeSignature);
 	const constraintNoteLength = selectConfig(c => c.score.constraintNoteLength);
 	const [isMultipleSelectionMode, setIsMultipleSelectionMode] = selectConfig(c => c.score.isMultipleSelectionMode);
@@ -114,7 +121,9 @@ export default function Score() {
 			</Card>
 
 			<Subheader>{t.subheaders.config}</Subheader>{/* TODO: This line should be deleted. */}
-			<Expander title={t.source.trim} details={t.descriptions.score.trim} icon="trim" />
+			<Expander title={t.source.trim} details={t.descriptions.source.trim} icon="trim">
+				<ExpanderChildTrim start={trimStart} end={trimEnd} />
+			</Expander>
 			<ExpanderRadio
 				title={t.score.encoding}
 				details={t.descriptions.score.encoding}
@@ -135,7 +144,11 @@ export default function Score() {
 				idField="id"
 				nameField="name"
 				iconField="icon"
-			/>
+			>
+				<Expander.ChildWrapper>
+					<TextBox.Number value={customBpm} style={{ width: "200px" }} onChanging={() => bpmUsing[1]("custom")} />
+				</Expander.ChildWrapper>
+			</ExpanderRadio>
 			<SettingsCard title={t.score.timeSignature} icon="health">{timeSignature}</SettingsCard>
 			<ExpanderRadio
 				title={t.score.constraint}

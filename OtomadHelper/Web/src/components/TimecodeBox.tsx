@@ -1,9 +1,14 @@
 import { StyledTextBox } from "./TextBox";
 
-const SPINNER_BUTTON_HEIGHT = 30, TEXTBOX_BASE_HEIGHT = 32, BUTTON_BORDER_RADIUS = 3;
+const SPINNER_BUTTON_HEIGHT = 30, TEXTBOX_BASE_HEIGHT = 32, BUTTON_BORDER_RADIUS = 2;
 const isPressed = ":is(:active, [data-pressed])";
 
 const StyledTimecodeBox = styled.div`
+	@layer props {
+		/** The layout of the timecode box, expected: center | left | inline. */
+		--layout: center;
+	}
+
 	position: relative;
 	display: grid;
 	grid-auto-flow: column;
@@ -12,6 +17,15 @@ const StyledTimecodeBox = styled.div`
 	place-items: center;
 	font-variant-numeric: tabular-nums;
 	direction: ltr; // Arabic, Hebrew... won't reverse time code
+
+
+	@container style(--layout: left) {
+		justify-content: flex-start;
+	}
+
+	@container style(--layout: inline) {
+		inline-size: fit-content;
+	}
 
 	.mark {
 		grid-row: span 3;
@@ -48,7 +62,7 @@ const StyledTimecodeBox = styled.div`
 	.value-wrapper {
 		height: ${TEXTBOX_BASE_HEIGHT}px;
 		padding: 3px;
-		padding-block: 2px 4px;
+		padding-block-end: 4px;
 
 		.value {
 			${styles.effects.text.body};
@@ -58,7 +72,7 @@ const StyledTimecodeBox = styled.div`
 			border-radius: ${BUTTON_BORDER_RADIUS}px;
 
 			&:focus {
-				background-color: ${c("fill-color-control-default")};
+				background-color: ${c("fill-color-subtle-secondary")};
 				box-shadow: none;
 			}
 		}
@@ -78,9 +92,11 @@ const StyledTimecodeBox = styled.div`
 	}
 `;
 
-export default function TimecodeBox({ timecode: [timecode, setTimecode], ...htmlAttrs }: FCP<{
+export default function TimecodeBox({ timecode: [timecode, setTimecode], onFocus, ...htmlAttrs }: FCP<{
 	/** The current time code or time span. */
 	timecode: StateProperty<string>;
+	/** Fired when the component is focused or changed. */
+	onFocus?: PartialArgsFunc<BaseEventHandler>;
 }, "div">) {
 	const timecodeBoxEl = useDomRef<"div">();
 
@@ -94,6 +110,7 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], ...html
 		)?.focus()), []);
 
 	function handleSpinnerClick(itemLastIndex: number, step: number) {
+		onFocus?.();
 		(setTimecode as SetStateNarrow<string>)?.(timecode => {
 			const stepTimecodeTokens = getTimecodeTokens(timecode.replace(/^-/, ""));
 			stepTimecodeTokens.forEach(item => item.token === "digit" && (item.value = "0".padStart(item.value.length, "0")));
@@ -108,6 +125,7 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], ...html
 	}
 
 	const handleTimecodeBoxMouseDown = useCallback<MouseEventHandler>(e => {
+		onFocus?.(e);
 		if (e.target instanceof HTMLElement && e.target.dataset.lastIndex !== undefined) {
 			const lastIndex = +e.target.dataset.lastIndex;
 			if (Number.isFinite(lastIndex)) lastActiveItemLastIndex.current = lastIndex;
@@ -116,6 +134,7 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], ...html
 	}, []);
 
 	const handleValueWheel = useCallback<WheelEventHandler<HTMLDivElement>>(e => {
+		e.preventDefault();
 		const valueEl = e.currentTarget;
 		const delta = -Math.sign(e.deltaY);
 		handleSpinnerClick(+valueEl.dataset.lastIndex!, delta);
@@ -140,15 +159,20 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], ...html
 	const handleValueKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(e => {
 		const valueEl = e.currentTarget;
 
-		if (e.code.in("ArrowUp", "ArrowDown"))
+		if (e.code.in("ArrowUp", "ArrowDown")) {
+			stopEvent(e);
 			handleSpinnerClick(+valueEl.dataset.lastIndex!, e.code === "ArrowUp" ? 1 : -1);
-		else if (e.code.in("ArrowLeft", "ArrowRight", "Semicolon", "Period", "Equal", "NumpadAdd", "Space", "Enter", "NumpadEnter", "NumpadDecimal"))
+		} else if (e.code.in("ArrowLeft", "ArrowRight", "Semicolon", "Period", "Equal", "NumpadAdd", "Space", "Enter", "NumpadEnter", "NumpadDecimal")) {
+			stopEvent(e);
 			moveFocus(valueEl, e.code === "ArrowLeft" ? -1 : 1);
-		else if (e.code.in("Minus", "NumpadSubtract"))
+		} else if (e.code.in("Minus", "NumpadSubtract")) {
+			onFocus?.(e);
 			(setTimecode as SetStateNarrow<string>)?.(timecode => getSupposedTimecode(timecode, "-"));
+		}
 	}, []);
 
 	const handleItemChange = useCallback<TimecodeItemValueChangeEventHandler>((value, lastIndex) => {
+		onFocus?.();
 		(setTimecode as SetStateNarrow<string>)?.(timecode => {
 			const tokens = getTimecodeTokens(timecode);
 			const selectedItem = tokens.at(lastIndex);
@@ -157,6 +181,8 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], ...html
 			return supposedTimecode;
 		});
 	}, [timecode]);
+
+	// useEventListener(document, "scroll", e => stopEvent(e), { passive: false });
 
 	return (
 		<StyledTimecodeBox ref={timecodeBoxEl} onMouseDown={handleTimecodeBoxMouseDown} {...htmlAttrs}>
@@ -203,16 +229,18 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], ...html
 
 type TimecodeItemValueChangeEventHandler = (value: string, lastIndex: number) => void;
 
-function TimecodeItemValue({ lastIndex, children, onChange, onFinishInput, onKeyDown, onBlur, ...htmlAttrs }: FCP<{
+function TimecodeItemValue({ lastIndex, children, onChange, onFinishInput, onKeyDown, onBlur, onWheel = noop, ...htmlAttrs }: FCP<{
 	/** The index of the value item to the last. */
 	lastIndex: number;
 	/** The value of the item. */
 	children: string;
-	/** Trigger when the item blurred and the value has changed. */
+	/** Fired when the item blurred and the value has changed. */
 	onChange?: TimecodeItemValueChangeEventHandler;
-	/** Trigger when user finishes editing the value of this item. */
+	/** Fired when user finishes editing the value of this item. */
 	onFinishInput?: TimecodeItemValueChangeEventHandler;
 }, "div">) {
+	const valueEl = useDomRef<"div">();
+
 	const [userInput, setUserInput] = useState("");
 	const displayUserInput = useMemo(() => userInput ? userInput.padStart(children.length, "\u2007") : children, [userInput, children]);
 
@@ -241,9 +269,15 @@ function TimecodeItemValue({ lastIndex, children, onChange, onFinishInput, onKey
 		}
 	}, [onBlur, userInput, lastIndex]);
 
+	useEventListener(valueEl, "wheel", onWheel as never, { passive: false });
+	// Cannot directly use `onWheel` in the JSX in React, or will raise an error "Unable to preventDefault inside passive event listener invocation."
+	// So we have to pass a *ref* with `passive: false`.
+	// See: https://stackoverflow.com/a/76406673/19553213
+
 	return (
 		<div className="value-wrapper">
 			<div
+				ref={valueEl}
 				className="value"
 				data-last-index={lastIndex}
 				tabIndex={0}

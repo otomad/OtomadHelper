@@ -46,8 +46,8 @@ export default function Visual() {
 	const noLengthening = selectConfig(c => c.visual.noLengthening);
 	const legato = selectConfig(c => c.visual.legato);
 	const multitrackForChords = selectConfig(c => c.visual.multitrackForChords);
-	const glissando = selectConfig(c => c.visual.glissando);
-	const glissandoAmount = selectConfig(c => c.visual.glissandoAmount);
+	const glissando = selectConfig(c => c.visual.glissando.enabled);
+	const glissandoAmount = selectConfig(c => c.visual.glissando.amount);
 	// const transformMethod = selectConfig(c => c.visual.transformMethod);
 	const enableStaffVisualizer = selectConfig(c => c.visual.enableStaffVisualizer);
 	const enablePixelScaling = selectConfig(c => c.visual.enablePixelScaling);
@@ -154,7 +154,7 @@ export default function Visual() {
 									}
 								>
 									<Expander.Item title={t.stream.glissando.amount} details={t.descriptions.stream.glissando.amount}>
-										<TextBox.Number value={glissandoAmount} min={-24} max={24} />
+										<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix="key" />
 									</Expander.Item>
 								</Expander>
 								{/* <ExpanderRadio
