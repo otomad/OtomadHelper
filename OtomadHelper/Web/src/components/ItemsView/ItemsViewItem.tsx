@@ -89,7 +89,7 @@ const StyledItemsViewItem = styled.button<{
 			border-radius: 3px;
 
 			> * {
-				transition: none;
+				transition: ${fallbackTransitions}, translate 0s;
 			}
 
 			&::before {
