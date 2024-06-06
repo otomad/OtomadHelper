@@ -59,6 +59,7 @@ const GlobalStyle = createGlobalStyle<{
 	pre,
 	kbd,
 	samp,
+	tt,
 	xmp {
 		&,
 		* {

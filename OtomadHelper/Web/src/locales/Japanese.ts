@@ -46,6 +46,7 @@ export default {
 			stretch: {},
 			noLengthening: {},
 			legato: {},
+			glissando: {},
 			transformMethod: {},
 			tuning: {
 				tuningMethod: {},
@@ -94,6 +95,7 @@ export default {
 			score: {},
 			stream: {
 				noLengthening: {},
+				glissando: {},
 				tuning: {},
 				effects: {},
 				mapping: {},

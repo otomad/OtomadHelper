@@ -76,6 +76,7 @@ export default {
 		selectAll: "全选",
 		invertSelection: "反选",
 		variableBeginWith: "{{first, capitalize}}起始的可变值",
+		reset: "重置",
 		infoBar: {
 			warning: "警告",
 		},
@@ -155,7 +156,10 @@ export default {
 			},
 			multitrackForChords: "复音多轨",
 			createGroups: "创建分组",
-			glissando: "弯音效果",
+			glissando: {
+				_: "弯音效果",
+				amount: "弯音大小",
+			},
 			autoPan: "自动声像",
 			transformMethod: {
 				_: "变换方法",
@@ -356,7 +360,10 @@ export default {
 				legato: "填补音符与音符之间的间隙",
 				multitrackForChords: "为和弦生成多条音轨",
 				createGroups: "将一个音符所表示的视频与音频剪辑创建分组",
-				glissando: "在弯音或滑音时产生漩涡效果",
+				glissando: {
+					_: "在弯音或滑音时产生漩涡效果",
+					amount: "指定漩涡扭动幅度的大小",
+				},
 				autoPan: "自动化控制音频的声像包络",
 				transformMethod: "指定在哪个目标属性上应用变换关键帧",
 				tuning: {
