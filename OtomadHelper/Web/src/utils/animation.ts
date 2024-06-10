@@ -174,20 +174,20 @@ export async function* animateSizeGenerator(
 	element = toValue(element);
 	if (!element) return;
 	// if (isPrefersReducedMotion()) duration = 0;
-	startHeight ??= element.clientHeight + (clientAdjustment.startHeight ?? 0);
-	startWidth ??= element.clientWidth + (clientAdjustment.startWidth ?? 0);
+	let isHeightChanged = specified === "height" || specified === "both",
+		isWidthChanged = specified === "width" || specified === "both";
+	startHeight ??= !isHeightChanged ? 0 : element.clientHeight + (clientAdjustment.startHeight ?? 0);
+	startWidth ??= !isWidthChanged ? 0 : element.clientWidth + (clientAdjustment.startWidth ?? 0);
 	const _hasChangeFunc = yield;
 	// if (hasChangeFunc && awaitNextTick) await nextTick();
 	if (removePreviousAnimations) removeExistAnimations(element, element.children[0]);
-	endHeight ??= element.clientHeight + (clientAdjustment.endHeight ?? 0);
-	endWidth ??= element.clientWidth + (clientAdjustment.endWidth ?? 0);
+	endHeight ??= !isHeightChanged ? 0 : element.clientHeight + (clientAdjustment.endHeight ?? 0);
+	endWidth ??= !isWidthChanged ? 0 : element.clientWidth + (clientAdjustment.endWidth ?? 0);
 	// if (getSize)
 	// 	if (Array.isArray(getSize)) [getSize[0], getSize[1]] = [endWidth, endHeight];
 	// 	else getSize.value = [endWidth, endHeight];
 	// if (getRect)
 	// 	getRect.value = element.getBoundingClientRect();
-	let isHeightChanged = specified === "height" || specified === "both",
-		isWidthChanged = specified === "width" || specified === "both";
 	if (startHeight === endHeight) isHeightChanged = false; // No need to change.
 	if (startWidth === endWidth) isWidthChanged = false;
 	if (!isHeightChanged && !isWidthChanged) return;
