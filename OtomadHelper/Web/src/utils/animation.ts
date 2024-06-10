@@ -281,6 +281,7 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 	exit.easing = easing[1];
 	enter.removePreviousAnimations = true;
 	exit.fillForward = true;
+	enter.specified = exit.specified = specified;
 
 	// Here we use a custom event to prevent the native CSS transition animation from interfering with the operation when it ends.
 	const ANIMATE_SIZE_END_EVENT = "animatesizeend";
