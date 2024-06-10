@@ -5,10 +5,12 @@ export const GRID_VIEW_ITEM_HEIGHT = 112;
 const StyledItemsViewItem = styled.button<{
 	/** View mode: list, tile, grid. */
 	$view: ItemView;
+	/** Additional border on normal state of the image wrapper. */
+	$withBorder?: boolean;
 }>`
 	${styles.mixins.forwardFocusRing()};
 
-	${({ $view }) => $view === "grid" ? css`
+	${({ $view, $withBorder }) => $view === "grid" ? css`
 		:where(.image-wrapper) {
 			width: 100%;
 			height: ${GRID_VIEW_ITEM_HEIGHT}px;
@@ -16,6 +18,7 @@ const StyledItemsViewItem = styled.button<{
 
 		.image-wrapper {
 			position: relative;
+			border-radius: inherit;
 
 			.checkbox-label {
 				position: absolute;
@@ -43,6 +46,10 @@ const StyledItemsViewItem = styled.button<{
 			inset: 0;
 			border-radius: inherit;
 			pointer-events: none;
+
+			${$withBorder && css`
+				box-shadow: 0 0 0 1px ${c("stroke-color-surface-stroke-default")} inset;
+			`}
 		}
 
 		&:not(.selected) .selection {
@@ -51,7 +58,10 @@ const StyledItemsViewItem = styled.button<{
 
 		&:hover .selection {
 			background-color: ${c("fill-color-subtle-secondary")};
-			box-shadow: 0 0 0 1px ${c("stroke-color-control-stroke-on-accent-tertiary")} inset;
+
+			${!$withBorder && css`
+				box-shadow: 0 0 0 1px ${c("stroke-color-control-stroke-on-accent-tertiary")} inset;
+			`}
 		}
 
 		&:active .selection {
@@ -148,6 +158,10 @@ const StyledItemsViewItem = styled.button<{
 
 	.text > * {
 		${styles.effects.text.body};
+
+		&:empty {
+			display: none;
+		}
 	}
 
 	&.selected .text .title {
@@ -178,7 +192,7 @@ const DefaultImage = styled.img`
 	object-fit: cover;
 `;
 
-export /* internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, details, _view: view, _multiple: multiple, children, className, ...htmlAttrs }: FCP<{
+export /* internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, details, $withBorder = false, _view: view, _multiple: multiple, children, className, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */
@@ -189,6 +203,8 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 	selected?: boolean;
 	/** Detailed description. */
 	details?: ReactNode;
+	/** Additional border on normal state of the image wrapper. */
+	$withBorder?: boolean;
 	/** @private View mode: list, tile, grid. */
 	_view?: ItemView;
 	/** @private Multiple selection mode? */
@@ -210,7 +226,7 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 	);
 
 	return (
-		<StyledItemsViewItem $view={view!} className={[className, view, { selected }]} tabIndex={0} {...htmlAttrs}>
+		<StyledItemsViewItem $view={view!} $withBorder={$withBorder} className={[className, view, { selected }]} tabIndex={0} {...htmlAttrs}>
 			<div className="base">
 				{view === "grid" ? (
 					<>

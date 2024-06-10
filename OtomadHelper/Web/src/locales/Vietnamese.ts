@@ -127,7 +127,9 @@ export default {
 				vi: "Tiếng Việt",
 			},
 			appearance: {
-				colorScheme: {},
+				colorScheme: {
+					auto: "Tự động",
+				},
 			},
 			config: {},
 			dev: {},

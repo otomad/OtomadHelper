@@ -98,6 +98,23 @@ export default css`
 			// stylelint-disable-next-line property-no-unknown
 			user-drag: none;
 		}
+
+		// Progress bar style.
+		progress {
+			width: 100%;
+			appearance: none;
+
+			&::-webkit-progress-bar {
+				background-color: transparent;
+				transition: ${fallbackTransitions};
+			}
+
+			&::-webkit-progress-value {
+				${styles.mixins.oval()};
+				background-color: ${c("accent-color")};
+				transition: ${fallbackTransitions};
+			}
+		}
 	}
 
 	// System requested high contrast theme.

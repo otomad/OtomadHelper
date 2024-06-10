@@ -27,6 +27,7 @@ const StyledItemsView = styled.div<{
 		grid-template-columns: repeat(auto-fill, ${({ $itemWidth = 200 }) => styles.toValue($itemWidth)});
 		gap: 4px;
 		justify-content: center;
+		align-items: start;
 	}
 
 	.expander-child-items & {

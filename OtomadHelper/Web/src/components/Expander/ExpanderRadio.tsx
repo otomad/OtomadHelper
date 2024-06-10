@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, $itemWidth, radioGroup, onItemClick, children, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, $itemWidth, radioGroup, onItemClick, children, itemsViewItemAttrs, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
 	/** List of options. */
 	items: readonly T[];
 	/** The identifier of the currently selected value. */
@@ -39,6 +39,9 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	$itemWidth?: number;
 	/** Radio button group name, optional. */
 	radioGroup?: string;
+	/** Additional attributes for the items view item. */
+	itemsViewItemAttrs?: Partial<PropsOf<typeof ItemsView.Item>>;
+	/** Fired when the item is clicked. */
 	onItemClick?: MouseEventHandler<HTMLElement>;
 }>) {
 	const items = _items as AnyObject[];
@@ -86,6 +89,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 							icon={getItemField(item, "icon")}
 							details={getItemField(item, "details")}
 							onClick={onItemClick}
+							{...itemsViewItemAttrs}
 						>
 							{getItemField(item, "name")}
 						</ItemsView.Item>

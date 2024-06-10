@@ -27,6 +27,7 @@ const StyledToggleSwitchLabel = styled.button`
 
 		.text {
 			width: unset !important;
+			white-space: nowrap;
 		}
 	}
 
@@ -72,6 +73,8 @@ const StyledToggleSwitchLabel = styled.button`
 	}
 
 	${isPressedPseudo} {
+		opacity: 0.8 !important;
+
 		.base {
 			background-color: ${c("fill-color-control-alt-quarternary")};
 
@@ -122,8 +125,6 @@ const StyledToggleSwitchLabel = styled.button`
 		}
 
 		${isPressedPseudo} {
-			opacity: 0.8;
-
 			.thumb {
 				inset-inline-start: calc(100% - ${THUMB_PRESSED_WIDTH}px);
 			}

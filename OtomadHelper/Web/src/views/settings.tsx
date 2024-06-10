@@ -20,9 +20,12 @@ export default function Settings() {
 				icon="globe"
 				items={languages}
 				expanded
+				view="grid"
 				value={[language, setLanguage]}
 				idField
 				nameField={t.settings.language}
+				imageField={language => <PreviewLanguage language={language} />}
+				itemsViewItemAttrs={{ $withBorder: true }}
 			/>
 
 			<Subheader>{t.settings.appearance}</Subheader>
