@@ -457,7 +457,7 @@ export function objectFilterKeys(object: object, filteredKeys: PropertyKey[]) {
 }
 
 /**
- * @deprecated Await for React 19 released with a new feature **ref as a prop**, and then delete this function.
+ * @deprecated // WARN: Await for React 19 released with a new feature **ref as a prop**, and then delete this function.
  */
 export function functionModule<F extends Function, O>(
 	func: F,

@@ -1,6 +1,9 @@
 import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemText } from "components/Expander/ExpanderItem";
 
-const StyledRadioButtonLabel = styled.label`
+const StyledRadioButtonLabel = styled.label<{
+	/** Include just the radio button itself, not the text label? */
+	$plain?: boolean;
+}>`
 	display: flex;
 	gap: 8px;
 	align-items: center;
@@ -15,10 +18,18 @@ const StyledRadioButtonLabel = styled.label`
 
 	${styledExpanderItemText};
 
-	.expander-child-items & {
-		${styledExpanderItemBase};
-		${styledExpanderItemContent};
-	}
+	${({ $plain }) => !$plain && css`
+		.expander-child-items & {
+			${styledExpanderItemBase};
+			${styledExpanderItemContent};
+		}
+	`}
+
+	${({ $plain }) => $plain && css`
+		.text {
+			display: none;
+		}
+	`}
 
 	.bullet {
 		${styles.mixins.square("100%")};
@@ -98,7 +109,7 @@ const StyledRadioButtonLabel = styled.label`
 	${styles.mixins.forwardFocusRing()};
 `;
 
-export default function RadioButton<T>({ children, id, value: [value, setValue], disabled, onChange, details, radioGroup, ...htmlAttrs }: FCP<{
+export default function RadioButton<T>({ children, id, value: [value, setValue], disabled, onChange, details, radioGroup, plain, ...htmlAttrs }: FCP<{
 	/** Identifier. */
 	id: T;
 	/** The selected value in the current radio button group. */
@@ -111,6 +122,8 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 	details?: ReactNode;
 	/** Radio button group name, optional. */
 	radioGroup?: string;
+	/** Include just the radio button itself, not the text label? */
+	plain?: boolean;
 }, "label">) {
 	const labelEl = useDomRef<"label">();
 	const checked = value === id;
@@ -124,7 +137,7 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 	useOnFormKeyDown(labelEl, "radio", handleCheck);
 
 	return (
-		<StyledRadioButtonLabel tabIndex={checked ? 0 : -1} ref={labelEl} {...htmlAttrs}>
+		<StyledRadioButtonLabel tabIndex={checked ? 0 : -1} ref={labelEl} $plain={plain} {...htmlAttrs}>
 			<input type="radio" checked={checked} name={radioGroup} onChange={e => handleCheck(e.target.checked)} disabled={disabled} />
 			<div className="base">
 				<div className="bullet" />

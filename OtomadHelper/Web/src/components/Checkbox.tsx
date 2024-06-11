@@ -29,6 +29,12 @@ const StyledCheckboxLabel = styled.label<{
 		}
 	`}
 
+	${({ $plain }) => $plain && css`
+		.text {
+			display: none;
+		}
+	`}
+
 	.base {
 		${styles.mixins.square("18px")};
 		${styles.mixins.gridCenter()};

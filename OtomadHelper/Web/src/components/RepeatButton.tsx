@@ -46,5 +46,5 @@ export default function RepeatButton({ children, onClick, onRelease, ...htmlAttr
 		>
 			{children}
 		</button>
-	); // TODO: data-pressing is not elegant.
+	);
 }

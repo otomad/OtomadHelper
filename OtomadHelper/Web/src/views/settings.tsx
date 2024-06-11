@@ -33,9 +33,13 @@ export default function Settings() {
 				icon="paint_brush"
 				items={schemes}
 				expanded
+				view="grid"
 				value={[scheme, setScheme as SetState<string>]}
 				idField
 				nameField={t.settings.appearance.colorScheme}
+				imageField={colorScheme => <PreviewColorScheme colorScheme={colorScheme} currentColorScheme={scheme} />}
+				itemsViewItemAttrs={{ $withBorder: true }}
+				$itemWidth={112}
 			/>
 			<Expander
 				title={t.settings.appearance.uiScale}

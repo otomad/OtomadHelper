@@ -219,7 +219,7 @@ export /* internal */ default function ItemsViewItem({ image, icon, id: _id, sel
 	// const checkbox = multiple && <Checkbox value={[selected]} plain />;
 	const checkbox = (
 		<CssTransition in={multiple} unmountOnExit>
-			<div className="checkbox-temp-wrapper">{/* TODO: Wait for React 19 ref as a prop, and then remove this div. */}
+			<div className="checkbox-temp-wrapper">{/* WARN: Wait for React 19 ref as a prop, and then remove this div. */}
 				<Checkbox value={[selected]} plain />
 			</div>
 		</CssTransition>
