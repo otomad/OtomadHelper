@@ -5,12 +5,11 @@ export default function Settings() {
 	const [language, setLanguage] = useLanguage();
 	const languages = Object.keys(i18n.options.resources ?? {});
 	const schemes = ["light", "dark", "auto"] as const;
-	const { scheme, setScheme } = useColorModeStore();
-	const uiScale = selectConfig(c => c.settings.uiScale);
-	const hideUseTips = selectConfig(c => c.settings.hideUseTips);
+	const { scheme: [scheme, setScheme] } = useStoreState(colorModeStore);
+	const { uiScale, hideUseTips } = selectConfig(c => c.settings);
 
 	// Dev mode
-	const { devMode, rtl } = useStoreState(useDevStore);
+	const { devMode, rtl } = useStoreState(devStore);
 
 	return (
 		<div className="container">

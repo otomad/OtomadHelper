@@ -36,23 +36,16 @@ const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 const TooltipPartial = Tooltip.with({ placement: "y" });
 
 export default function Visual() {
-	const [enabled, setEnabled] = selectConfig(c => c.visual.enabled);
-	const [preferredTrackIndex, setPreferredTrackIndex] = selectConfig(c => c.visual.preferredTrack);
-	const createGroups = selectConfig(c => c.createGroups);
-	const [ytpEnabled, setYtpEnabled] = selectConfig(c => c.ytp.enabled);
-	const stretch = selectConfig(c => c.visual.stretch);
-	const loop = selectConfig(c => c.visual.loop);
-	const staticVisual = selectConfig(c => c.visual.staticVisual);
-	const noLengthening = selectConfig(c => c.visual.noLengthening);
-	const legato = selectConfig(c => c.visual.legato);
-	const multitrackForChords = selectConfig(c => c.visual.multitrackForChords);
-	const glissando = selectConfig(c => c.visual.glissando.enabled);
-	const glissandoAmount = selectConfig(c => c.visual.glissando.amount);
-	// const transformMethod = selectConfig(c => c.visual.transformMethod);
-	const enableStaffVisualizer = selectConfig(c => c.visual.enableStaffVisualizer);
-	const enablePixelScaling = selectConfig(c => c.visual.enablePixelScaling);
+	const {
+		enabled: [enabled, setEnabled],
+		preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
+		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, enablePixelScaling, /* transformMethod */
+	} = selectConfig(c => c.visual);
+	const { enabled: glissando, amount: glissandoAmount } = selectConfig(c => c.visual.glissando);
+	const { enabled: [ytpEnabled, setYtpEnabled] } = selectConfig(c => c.ytp);
+	const { createGroups } = selectConfig(c => c);
 
-	const { changePage, pushPage } = usePageStore();
+	const { changePage, pushPage } = useSnapshot(pageStore);
 
 	const preferredTrack = useMemo(() => {
 		return [tracks[preferredTrackIndex], (item: string) => setPreferredTrackIndex(tracks.indexOf(item))] as StateProperty<string>;

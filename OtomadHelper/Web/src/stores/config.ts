@@ -12,144 +12,75 @@ type NoLengthening = typeof noLengthenings[number]["id"];
 type TransformMethod = typeof transformMethods[number];
 type Timecode = string;
 
-interface ConfigState {
+const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
+
+export const configStore = createStore({
 	source: {
-		source: string;
+		source: "trackEvent",
 		trim: {
-			start: Timecode;
-			end: Timecode;
-		};
+			start: EMPTY_TIMECODE,
+			end: EMPTY_TIMECODE,
+		},
 		startTime: {
-			use: StartTime;
-			custom: Timecode;
-		};
+			use: "projectStart" as StartTime,
+			custom: EMPTY_TIMECODE,
+		},
 		preferredTrack: {
-			value: number;
-			belowAdjustmentTracks: boolean;
-		};
+			value: 0,
+			belowAdjustmentTracks: true,
+		},
 		afterCompletion: {
-			removeSourceClips: boolean;
-			selectSourceClips: boolean;
-			selectGeneratedAudioClips: boolean;
-			selectGeneratedVideoClips: boolean;
-		};
-		randomOffsetForTracks: boolean;
-	};
+			removeSourceClips: false,
+			selectSourceClips: true,
+			selectGeneratedAudioClips: true,
+			selectGeneratedVideoClips: true,
+		},
+		randomOffsetForTracks: false,
+	},
 	score: {
-		format: string;
+		format: "midi",
 		trim: {
-			start: Timecode;
-			end: Timecode;
-		};
-		encoding: Encoding;
+			start: EMPTY_TIMECODE,
+			end: EMPTY_TIMECODE,
+		},
+		encoding: "ANSI" as Encoding,
 		bpm: {
-			use: BpmUsing;
-			custom: number;
-		};
-		timeSignature: string;
-		constraintNoteLength: ConstraintNoteLength;
-		isMultipleSelectionMode: boolean;
-	};
+			use: "variableMidi" as BpmUsing,
+			custom: 120,
+		},
+		timeSignature: "4/4",
+		constraintNoteLength: "none" as ConstraintNoteLength,
+		isMultipleSelectionMode: false,
+	},
 	visual: {
-		enabled: boolean;
-		preferredTrack: number;
-		stretch: Stretch;
-		loop: boolean;
-		staticVisual: boolean;
-		noLengthening: NoLengthening;
-		legato: Legato;
-		multitrackForChords: boolean;
+		enabled: true,
+		preferredTrack: 0,
+		stretch: "noStretching" as Stretch,
+		loop: false,
+		staticVisual: false,
+		noLengthening: "lengthenable" as NoLengthening,
+		legato: "upToOneBeat" as Legato,
+		multitrackForChords: false,
 		glissando: {
-			enabled: boolean;
-			amount: number;
-		};
-		transformMethod: TransformMethod;
-		enableStaffVisualizer: boolean;
-		enablePixelScaling: boolean;
-	};
-	createGroups: boolean;
-	ytp: {
-		enabled: boolean;
-	};
-	settings: {
-		uiScale: number;
-		getUiScale1(): number;
-		hideUseTips: boolean;
-	};
-	toJson(): string; // If named toJSON, it will conflict to the JSON built-in parameter, causing a recursion error.
-}
-
-const EMPTY_TIMECODE = "00:00:00.000";
-
-export const useConfigStore = createStore<ConfigState>()(
-	// @ts-ignore TypeScript brain convulsion.
-	zustandImmer((_set, get) => ({
-		source: {
-			source: "trackEvent",
-			trim: {
-				start: EMPTY_TIMECODE,
-				end: EMPTY_TIMECODE,
-			},
-			startTime: {
-				use: "projectStart",
-				custom: EMPTY_TIMECODE,
-			},
-			preferredTrack: {
-				value: 0,
-				belowAdjustmentTracks: true,
-			},
-			afterCompletion: {
-				removeSourceClips: false,
-				selectSourceClips: true,
-				selectGeneratedAudioClips: true,
-				selectGeneratedVideoClips: true,
-			},
-			randomOffsetForTracks: false,
-		},
-		score: {
-			format: "midi",
-			trim: {
-				start: EMPTY_TIMECODE,
-				end: EMPTY_TIMECODE,
-			},
-			encoding: "ANSI",
-			bpm: {
-				use: "variableMidi",
-				custom: 120,
-			},
-			timeSignature: "4/4",
-			constraintNoteLength: "none",
-			isMultipleSelectionMode: false,
-		},
-		visual: {
-			enabled: true,
-			preferredTrack: 0,
-			stretch: "noStretching",
-			loop: false,
-			staticVisual: false,
-			noLengthening: "lengthenable",
-			legato: "upToOneBeat",
-			multitrackForChords: false,
-			glissando: {
-				enabled: false,
-				amount: 12,
-			},
-			transformMethod: "panCrop",
-			enableStaffVisualizer: false,
-			enablePixelScaling: false,
-		},
-		createGroups: true,
-		ytp: {
 			enabled: false,
+			amount: 12,
 		},
-		settings: {
-			uiScale: 100,
-			getUiScale1: () => get().settings.uiScale / 100,
-			hideUseTips: false,
-		},
-		toJson: () => JSON.stringify(get()),
-	})),
-);
+		transformMethod: "panCrop" as TransformMethod,
+		enableStaffVisualizer: false,
+		enablePixelScaling: false,
+	},
+	createGroups: true,
+	ytp: {
+		enabled: false,
+	},
+	settings: {
+		uiScale: 100,
+		get uiScale1() { return this.uiScale / 100; },
+		hideUseTips: false,
+	},
+	// If named toJSON, it will conflict to the JSON built-in parameter, causing a recursion error.
+	toJson() { return JSON.stringify(this); },
+});
 
-export const selectConfig = <T>(path: (state: ConfigState) => T) => useStoreSelector(useConfigStore, path);
-globals.config = useConfigStore;
+export const selectConfig = <T extends object>(path: (state: typeof configStore) => T) => useStoreState(path(configStore));
+globals.config = configStore;

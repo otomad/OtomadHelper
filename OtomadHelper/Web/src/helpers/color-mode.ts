@@ -25,7 +25,7 @@ export function changeColorScheme(isLight?: boolean | ColorScheme, mode: "initia
 	const afterUpdateThemeSettings = () => {
 		const { backgroundColor } = getComputedStyle(document.body);
 		if (backgroundColor !== "rgba(0, 0, 0, 0)")
-			useColorModeStore.setState(() => ({ backgroundColor }));
+			colorModeStore.backgroundColor = backgroundColor;
 	};
 
 	if (mode === "initial") {
@@ -57,10 +57,9 @@ export function changeColorScheme(isLight?: boolean | ColorScheme, mode: "initia
 		afterUpdateThemeSettings();
 	});
 }
-const getUserColorScheme = () => useColorModeStore.getState().scheme;
 
 { // Init color mode
-	lightModePreference.addEventListener("change", e => getUserColorScheme() === "auto" && changeColorScheme(e.matches, "auto"));
-	changeColorScheme(getUserColorScheme(), "initial");
-	useColorModeStore.subscribe(state => state.scheme, scheme => changeColorScheme(scheme));
+	lightModePreference.addEventListener("change", e => colorModeStore.scheme === "auto" && changeColorScheme(e.matches, "auto"));
+	changeColorScheme(colorModeStore.scheme, "initial");
+	subscribeStoreKey(colorModeStore, "scheme", scheme => changeColorScheme(scheme));
 }

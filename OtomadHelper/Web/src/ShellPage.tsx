@@ -19,7 +19,7 @@ const getTitle = (viewName: string, full: boolean = false, plural?: number) => {
 };
 
 export default function ShellPage() {
-	const { page, changePage, pagePath, transition, canBack, back, reset, setPageContentId, poppedScroll } = usePageStore();
+	const { page, changePage, pagePath, transition, canBack, back, reset, setPageContentId, poppedScroll } = useSnapshot(pageStore);
 	const pageTitles = page.map((crumb, i, { length }) => {
 		try {
 			return {
@@ -32,7 +32,7 @@ export default function ShellPage() {
 		}
 	});
 	const Page = pages[`/src/views/${pagePath}.tsx`] ?? EmptyPage;
-	const [uiScale] = selectConfig(c => c.settings.uiScale);
+	const { uiScale } = useSnapshot(configStore.settings);
 	const zoom = uiScale === 100 ? undefined : uiScale / 100;
 	const { appName } = useAboutApp();
 	const documentTitle = (() => {

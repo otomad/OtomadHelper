@@ -233,7 +233,7 @@ export const globals = globalThis as AnyObject;
  * and has a `typeof` result of "object".
  *
  * @category Lang
- * @param value The value to check.
+ * @param value - The value to check.
  * @returns Returns `true` if `value` is object-like, else `false`.
  * @example
  *
@@ -250,7 +250,43 @@ export const globals = globalThis as AnyObject;
  * // => false
  */
 export function isObject(value: unknown): value is object {
-	return lodash.isObjectLike(value);
+	return value !== null && typeof value === "object";
+	// return lodash.isObjectLike(value);
+}
+
+/**
+ * Checks if `value` is a literal object. A literal object is an object that is created using object literal syntax.
+ *
+ * @category Lang
+ * @param value - The value to check.
+ * @returns Returns `true` if `value` is a literal object, else `false`.
+ *
+ * @example
+ * ```typescript
+ * const obj1 = { prop: "value" };
+ * console.log(isLiteralObject(obj1)); // Output: true
+ *
+ * const obj2 = new Object({ prop: "value" });
+ * console.log(isLiteralObject(obj2)); // Output: true
+ *
+ * const obj3 = function () { };
+ * console.log(isLiteralObject(obj3)); // Output: false
+ *
+ * const obj4 = { prop: "value" }.constructor;
+ * console.log(isLiteralObject(obj4)); // Output: false
+ *
+ * const obj5 = document;
+ * console.log(isLiteralObject(obj5)); // Output: false
+ *
+ * const obj6 = /(.*)/;
+ * console.log(isLiteralObject(obj6)); // Output: false
+ *
+ * const obj7 = new Date();
+ * console.log(isLiteralObject(obj7)); // Output: false
+ * ```
+ */
+export function isLiteralObject(value: unknown): value is object {
+	return Object.prototype.toString.call(value) === "[object Object]";
 }
 
 /**
@@ -393,6 +429,31 @@ export function mutexSwitches(...switches: (StateProperty<boolean> | StateProper
 			switch_[1] = setState;
 	}
 	return result;
+}
+
+/**
+ * Filters the keys of an object based on a provided list of keys.
+ * Creates a new object with only the filtered keys and their corresponding values.
+ *
+ * @param object - The object to filter keys from.
+ * @param filteredKeys - An array of keys to filter from the object.
+ * @returns A new object containing only the filtered keys and their corresponding values.
+ *
+ * @example
+ * ```typescript
+ * const originalObject = { a: 1, b: 2, c: 3 };
+ * const filteredKeys = ['a', 'c'];
+ * const result = objectFilterKeys(originalObject, filteredKeys);
+ * // result: { a: 1, c: 3 }
+ * ```
+ */
+export function objectFilterKeys(object: object, filteredKeys: PropertyKey[]) {
+	const copiedObject: object = {};
+	const ownedKeys = Reflect.ownKeys(object);
+	for (const key of ownedKeys)
+		if (filteredKeys.includes(key))
+			Reflect.defineProperty(copiedObject, key, Reflect.getOwnPropertyDescriptor(object, key)!);
+	return copiedObject;
 }
 
 /**

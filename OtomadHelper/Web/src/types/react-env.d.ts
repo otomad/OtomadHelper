@@ -29,6 +29,10 @@ declare module "csstype" {
 	}
 }
 
+declare module "valtio" {
+	function useSnapshot<T extends object>(p: T): T;
+}
+
 declare global {
 	/**
 	 * React Hook style functional component type.

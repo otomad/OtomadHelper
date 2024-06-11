@@ -61,7 +61,7 @@ const StyledPreviewLanguage = styled.div`
 	}
 `;
 
-const useApprovalProgresses = createStore<{
+/* const useApprovalProgresses = createStore<{
 	proofreading: Map<string, number>;
 	initial(language: string): void;
 	set(language: string, progress: number): void;
@@ -79,7 +79,22 @@ const useApprovalProgresses = createStore<{
 	set(language, progress) {
 		set(prev => ({ proofreading: new Map(prev.proofreading).set(language, progress) }));
 	},
-}));
+})); */
+
+const approvalProgresses = createStore({
+	proofreading: proxyMap<string, number>(),
+	initial(language: string) {
+		const { proofreading } = approvalProgresses;
+		if (!proofreading.has(language)) {
+			proofreading.set(language, -1);
+			fetch(`https://img.shields.io/badge/dynamic/json?color=green&label=${language}&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27${language}%27)].data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-16002405-661336.json`)
+				.then(response => response.xml())
+				.then(xml => xml.querySelector("title")?.textContent?.match(/\d+(\.\d+)?/)?.[0])
+				.then(progress => proofreading.set(language, progress != null ? +progress : 100));
+		}
+		return useSnapshot(approvalProgresses).proofreading.get(language) ?? -1;
+	},
+});
 
 export default function PreviewLanguage({ language }: FCP<{
 	/** The ISO language code. */
@@ -87,9 +102,8 @@ export default function PreviewLanguage({ language }: FCP<{
 	children?: never;
 }>) {
 	const languageName = t({ lng: language }).metadata.name;
-	const { initial: initialProofreading, proofreading } = useApprovalProgresses();
-	initialProofreading(language);
-	const progress = proofreading.get(language) ?? -1;
+	const { initial: useProgress } = approvalProgresses;
+	const progress = useProgress(language);
 	const showProgressPercentage = progress >= 0 && progress < 100;
 
 	return (

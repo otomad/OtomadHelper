@@ -257,7 +257,7 @@ export function getLocationStyle(location: MaybeRef<TwoD>): CSSProperties {
 export function getBoundingClientRectTuple(element: MaybeRef<EventTarget | null>): RectTuple {
 	const el = toValue(element) as HTMLElement;
 	let rect = el.getBoundingClientRect();
-	const zoom = useConfigStore.getState().settings.getUiScale1();
+	const zoom = configStore.settings.uiScale1;
 	rect = zoomDomRect(rect, zoom);
 	return [rect.x, rect.y, rect.width, rect.height];
 }

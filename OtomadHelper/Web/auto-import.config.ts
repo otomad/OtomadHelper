@@ -35,7 +35,7 @@ export default [
 		"react-i18next": [
 			"useTranslation",
 		],
-		"zustand": [
+		/* "zustand": [
 			["create", "createStore"],
 		],
 		"zustand/middleware": [
@@ -44,6 +44,17 @@ export default [
 		],
 		"zustand/middleware/immer": [
 			["immer", "zustandImmer"],
+		], */
+		"valtio": [
+			["proxy", "createStore"],
+			["subscribe", "subscribeStore"],
+			["ref", "valtioRef"],
+			"useSnapshot",
+		],
+		"valtio/utils": [
+			["subscribeKey", "subscribeStoreKey"],
+			"proxyMap",
+			"proxySet",
 		],
 		"immer": [
 			"produce",

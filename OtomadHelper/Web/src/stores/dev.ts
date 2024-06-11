@@ -1,9 +1,9 @@
-export const useDevStore = createStore(() => ({
+export const devStore = createStore({
 	devMode: import.meta.env.DEV,
 	rtl: false,
-}));
+});
 
-useDevStore.subscribe(({ devMode, rtl }) => {
-	document.dir = rtl ? "rtl" : "ltr";
-	bridges.bridge.setIsDevMode(devMode);
+subscribeStore(devStore, () => {
+	document.dir = devStore.rtl ? "rtl" : "ltr";
+	bridges.bridge.setIsDevMode(devStore.devMode);
 });

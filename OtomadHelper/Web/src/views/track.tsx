@@ -1,5 +1,5 @@
 export default function Track() {
-	const { pushPage } = usePageStore();
+	const { pushPage } = useSnapshot(pageStore);
 
 	return (
 		<div className="container">

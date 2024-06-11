@@ -42,7 +42,7 @@ const TrackToolbar = styled.div`
 			}
 		}
 	}
-	
+
 	> .segmented {
 		flex-shrink: 0;
 	}
@@ -82,15 +82,13 @@ const TrackToolbar = styled.div`
 `;
 
 export default function Score() {
-	const format = selectConfig(c => c.score.format);
-	const trimStart = selectConfig(c => c.score.trim.start);
-	const trimEnd = selectConfig(c => c.score.trim.end);
-	const encoding = selectConfig(c => c.score.encoding);
-	const bpmUsing = selectConfig(c => c.score.bpm.use);
-	const customBpm = selectConfig(c => c.score.bpm.custom);
-	const [timeSignature] = selectConfig(c => c.score.timeSignature);
-	const constraintNoteLength = selectConfig(c => c.score.constraintNoteLength);
-	const [isMultipleSelectionMode, setIsMultipleSelectionMode] = selectConfig(c => c.score.isMultipleSelectionMode);
+	const {
+		format, encoding, constraintNoteLength,
+		timeSignature: [timeSignature],
+		isMultipleSelectionMode: [isMultipleSelectionMode, setIsMultipleSelectionMode],
+	} = selectConfig(c => c.score);
+	const { start: trimStart, end: trimEnd } = selectConfig(c => c.score.trim);
+	const { use: bpmUsing, custom: customBpm } = selectConfig(c => c.score.bpm);
 	const selectionMode = useStateSelector(
 		[isMultipleSelectionMode, setIsMultipleSelectionMode],
 		multiple => multiple ? "multiple" : "single",

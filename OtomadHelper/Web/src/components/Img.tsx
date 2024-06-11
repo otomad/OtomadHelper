@@ -1,31 +1,24 @@
-const useImages = createStore<{
-	images: Map<string, HTMLImageElement>;
-	get(src: string): HTMLImageElement;
-	add(src: string): void;
-	has(src: string): boolean;
-}>()(
-	zustandImmer((_set, get) => ({
-		images: new Map<string, HTMLImageElement>(),
-		get(src: string) {
-			get().add(src);
-			return get().images.get(src)!;
-		},
-		add(src: string) {
-			if (get().has(src)) return;
-			const image = new Image();
-			image.src = src;
-			resetImageAttributes(image);
-			get().images.set(src, image);
-		},
-		has(src: string) {
-			return get().images.has(src);
-		},
-	})),
-);
+const useImages = createStore({
+	images: proxyMap<string, HTMLImageElement>(),
+	get(src: string) {
+		useImages.add(src);
+		return useImages.images.get(src)!;
+	},
+	add(src: string) {
+		if (useImages.has(src)) return;
+		const image = new Image();
+		image.src = src;
+		resetImageAttributes(image);
+		useImages.images.set(src, valtioRef(image));
+	},
+	has(src: string) {
+		return useImages.images.has(src);
+	},
+});
 
 {
 	const images = Object.values(import.meta.glob<string>("/src/assets/images/**/*", { import: "default", eager: true }));
-	const { add } = useImages.getState();
+	const { add } = useImages;
 	images.forEach(image => add(image));
 }
 
@@ -50,7 +43,7 @@ export default forwardRef(function Img({ src, duplicate, ...htmlAttrs }: FCP<{
 }, "img">, ref: ForwardedRef<"img">) {
 	const contentsEl = useDomRef<"div">();
 	const imageEl = useDomRef<"img">();
-	const images = useImages();
+	const images = useSnapshot(useImages);
 	const source = duplicate ? src + "?" + duplicate : src;
 
 	useImperativeHandle(ref, () => imageEl.current!, []);

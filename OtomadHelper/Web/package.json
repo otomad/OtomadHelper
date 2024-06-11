@@ -48,7 +48,7 @@
 		"react-transition-group": "file:/react-transition-group/",
 		"styled-components": "^6.1.8",
 		"use-immer": "^0.9.0",
-		"zustand": "^4.5.2"
+		"valtio": "^1.13.2"
 	},
 	"devDependencies": {
 		"@crowdin/crowdin-api-client": "^1.33.1",
@@ -101,8 +101,7 @@
 			"postcss-selector-parser@6.0.16": "patches/postcss-selector-parser@6.0.16.patch",
 			"postcss@8.4.38": "patches/postcss@8.4.38.patch",
 			"styled-components@6.1.8": "patches/styled-components@6.1.8.patch",
-			"vite@5.2.8": "patches/vite@5.2.8.patch",
-			"zustand@4.5.2": "patches/zustand@4.5.2.patch"
+			"vite@5.2.8": "patches/vite@5.2.8.patch"
 		},
 		"allowNonAppliedPatches": false
 	},

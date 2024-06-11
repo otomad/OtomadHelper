@@ -2,7 +2,7 @@ import cursor from "assets/cursors/pixelated_cursor.cur";
 import tipsImage from "assets/images/tips/sand_with_sword.png";
 
 export default function PixelScaling() {
-	const [enabled, setEnabled] = selectConfig(c => c.visual.enablePixelScaling);
+	const { enablePixelScaling: [enabled, setEnabled] } = selectConfig(c => c.visual);
 	const [scaleFactor, setScaleFactor] = useState(100);
 	const [autoScaleFactor, setAutoScaleFactor] = useState(true);
 	const [replaceSource, setReplaceSource] = useState(true);

@@ -50,7 +50,7 @@ export default forwardRef(function SettingsPageControl({ image, learnMoreLink, c
 	/** The file path of the Easter egg mouse cursor. */
 	cursor?: string;
 }, "div">, ref: ForwardedRef<"div">) {
-	const [hideUseTips] = selectConfig(c => c.settings.hideUseTips);
+	const { hideUseTips } = useSnapshot(configStore.settings);
 	if (hideUseTips) return;
 
 	const LearnMore = learnMoreLink ? OpenLink : "a";

@@ -47,9 +47,6 @@ patchedDependencies:
   vite@5.2.8:
     hash: 6ngagdrgiyur6jxchufkvjjr7e
     path: patches/vite@5.2.8.patch
-  zustand@4.5.2:
-    hash: rmunim6encaju2ggsrekgyftw4
-    path: patches/zustand@4.5.2.patch
 
 importers:
 
@@ -106,9 +103,9 @@ importers:
       use-immer:
         specifier: ^0.9.0
         version: 0.9.0(immer@10.0.4)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
-      zustand:
-        specifier: ^4.5.2
-        version: 4.5.2(patch_hash=rmunim6encaju2ggsrekgyftw4)(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(immer@10.0.4)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+      valtio:
+        specifier: ^1.13.2
+        version: 1.13.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
     devDependencies:
       '@crowdin/crowdin-api-client':
         specifier: ^1.33.1
@@ -1465,6 +1462,11 @@ packages:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
     engines: {node: '>=0.4.0'}
 
+  derive-valtio@0.1.0:
+    resolution: {integrity: sha512-OCg2UsLbXK7GmmpzMXhYkdO64vhJ1ROUUGaTFyHjVwEdMEcTTRj7W1TxLbSBxdY8QLBPCcp66MTyaSy0RpO17A==}
+    peerDependencies:
+      valtio: '*'
+
   detect-file@1.0.0:
     resolution: {integrity: sha512-DtCOLG98P007x7wiiOmfI0fi3eIKyWiLTGJ2MDnVi/E04lWGbf+JzrRHMm0rgIIZJGtHpKpbVgLWHrv8xXpc3Q==}
     engines: {node: '>=0.10.0'}
@@ -2759,6 +2761,9 @@ packages:
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
 
+  proxy-compare@2.6.0:
+    resolution: {integrity: sha512-8xuCeM3l8yqdmbPoYeLbrAXCBWu19XEYc5/F28f5qOaoAIMyfmBUkl5axiK+x9olUvRlcekvnm98AP9RDngOIw==}
+
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
@@ -3338,6 +3343,18 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
+  valtio@1.13.2:
+    resolution: {integrity: sha512-Qik0o+DSy741TmkqmRfjq+0xpZBXi/Y6+fXZLn0xNF1z/waFMbE3rkivv5Zcf9RrMUp6zswf2J7sbh2KBlba5A==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
@@ -3477,21 +3494,6 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-
-  zustand@4.5.2:
-    resolution: {integrity: sha512-2cN1tPkDVkwCy5ickKrI7vijSjPksFRfqS6237NzT0vqSsztTNnQdHw9mmN7uBdk3gceVXU0a+21jFzFzAc9+g==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      '@types/react': '>=16.8'
-      immer: '>=9.0.6'
-      react: '>=16.8'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      immer:
-        optional: true
-      react:
-        optional: true
 
 snapshots:
 
@@ -4869,6 +4871,10 @@ snapshots:
       isobject: 3.0.1
 
   delayed-stream@1.0.0: {}
+
+  derive-valtio@0.1.0(valtio@1.13.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))):
+    dependencies:
+      valtio: 1.13.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
 
   detect-file@1.0.0: {}
 
@@ -6295,6 +6301,8 @@ snapshots:
       object-assign: 4.1.1
       react-is: 16.13.1
 
+  proxy-compare@2.6.0: {}
+
   proxy-from-env@1.1.0: {}
 
   pump@3.0.0:
@@ -7004,6 +7012,15 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
+  valtio@1.13.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)):
+    dependencies:
+      derive-valtio: 0.1.0(valtio@1.13.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))
+      proxy-compare: 2.6.0
+      use-sync-external-store: 1.2.0(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+    optionalDependencies:
+      '@types/react': 18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby)
+      react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
+
   vary@1.1.2: {}
 
   vite-plugin-html-minifier@1.0.4(vite@5.2.8(patch_hash=6ngagdrgiyur6jxchufkvjjr7e)(@types/node@20.12.7)(lightningcss@1.24.1)(terser@5.30.3)):
@@ -7161,11 +7178,3 @@ snapshots:
       fd-slicer: 1.1.0
 
   yocto-queue@0.1.0: {}
-
-  zustand@4.5.2(patch_hash=rmunim6encaju2ggsrekgyftw4)(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(immer@10.0.4)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)):
-    dependencies:
-      use-sync-external-store: 1.2.0(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
-    optionalDependencies:
-      '@types/react': 18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby)
-      immer: 10.0.4
-      react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)

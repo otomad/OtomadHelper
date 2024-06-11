@@ -4,7 +4,7 @@ import tipsImage from "assets/images/tips/datamoshing.jpg";
 export default function Mosh() {
 	const tipsEl = useDomRef<"div">();
 	useAniCursor(tipsEl, glitchCursor);
-	const { changePage } = usePageStore();
+	const { changePage } = useSnapshot(pageStore);
 
 	return (
 		<div className="container">

@@ -8,7 +8,7 @@ import "styles/fonts";
 import "styles/properties";
 import "utils/bridge";
 
-const isProdMode = () => !useDevStore.getState().devMode;
+const isProdMode = () => !devStore.devMode;
 const global = globalThis as AnyObject;
 
 /**

@@ -5,7 +5,7 @@ import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
 const effects = ["chorus", "delay", "changePitch", "reverse", "changeSpeed", "vibrato", "changeHue", "rotateHue", "monochrome", "negative", "repeatRapidly", "randomTuning", "upsize", "spherize", "mirror", "highContrast", "oversaturation", "emphasizeThrice"];
 
 export default function Ytp() {
-	const [enabled, setEnabled] = selectConfig(c => c.ytp.enabled);
+	const { enabled: [enabled, setEnabled] } = selectConfig(c => c.ytp);
 	const [selectEffects, setSelectEffects] = useState<string[]>([]);
 	const selectEffectCount = selectEffects.length;
 	const selectAll = useSelectAll([selectEffects, setSelectEffects], effects);

@@ -193,21 +193,10 @@ const filters = {
 	},
 };
 
-interface SavedState {
-	imagePath: string;
-	filters: FilterBlobs;
-	setImagePath(imagePath: string): void;
-	setFilter(name: FilterType, blob: string): void;
-}
-
-const useSaved = createStore<SavedState>()(
-	zustandImmer(set => ({
-		imagePath: "",
-		filters: {} as FilterBlobs,
-		setImagePath: imagePath => set(() => ({ imagePath })),
-		setFilter: (name, blob) => set(saved => void (saved.filters[name] = blob)),
-	})),
-);
+const useSaved = createStore({
+	imagePath: "",
+	filters: {} as FilterBlobs,
+});
 
 /**
  * Returns a function that applies a set of image filters to an image.
@@ -216,12 +205,12 @@ const useSaved = createStore<SavedState>()(
  * @returns A map of filter names to their corresponding URLs.
  */
 export function useCanvasFilter(imagePath: string) {
-	const saved = useSaved();
+	const saved = useSnapshot(useSaved);
 
 	const getCanvasFilter = useCallback(async (imagePath: string) => {
-		if (imagePath === useSaved.getState().imagePath) return saved.filters;
+		if (imagePath === useSaved.imagePath) return saved.filters;
 		else {
-			saved.setImagePath(imagePath);
+			useSaved.imagePath = imagePath;
 			for (const url of Object.values(saved.filters))
 				URL.revokeObjectURL(url);
 		}
@@ -243,10 +232,10 @@ export function useCanvasFilter(imagePath: string) {
 			const newImageData = filter(imageData);
 			context.putImageData(newImageData, 0, 0);
 			const blob = await new Promise<string>(resolve => canvas.toBlob(blob => resolve(URL.createObjectURL(blob!))));
-			saved.setFilter(name, blob);
+			useSaved.filters[name] = blob;
 		}
 
-		return useSaved.getState().filters;
+		return useSaved.filters;
 	}, [imagePath]);
 
 	useEffect(() => {

@@ -532,11 +532,12 @@ const getPaneDisplayMode = (zoom: number = 1): PaneDisplayMode =>
 	window.innerWidth < 641 * zoom ? "minimal" :
 	window.innerWidth < 1008 * zoom ? "compact" : "expanded";
 const usePaneDisplayMode = () => {
-	const { getUiScale1 } = useConfigStore().settings;
-	const [paneDisplayMode, setPaneDisplayMode] = useState<PaneDisplayMode>(getPaneDisplayMode(getUiScale1()));
-	const onResize = () => setPaneDisplayMode(getPaneDisplayMode(getUiScale1()));
+	const { uiScale1 } = useSnapshot(configStore.settings);
+	const [paneDisplayMode, setPaneDisplayMode] = useState<PaneDisplayMode>(getPaneDisplayMode(configStore.settings.uiScale1));
+	const onResize = () => setPaneDisplayMode(getPaneDisplayMode(configStore.settings.uiScale1));
 	useEventListener(window, "resize", onResize);
-	subscribeStoreWithSelector(useConfigStore, c => c.settings.uiScale, onResize);
+	useEffect(() => onResize(), [uiScale1]);
+	// subscribeStoreKey(configStore.settings, "uiScale", onResize);
 	return paneDisplayMode;
 };
 

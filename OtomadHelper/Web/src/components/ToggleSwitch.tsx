@@ -175,7 +175,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 		transition: "none",
 	} as CSSProperties, [thumbLeft]);
 
-	const { resetTransition } = usePageStore();
+	const { resetTransition } = useSnapshot(pageStore);
 	useUpdateEffect(() => {
 		if (resetTransitionOnChanging)
 			resetTransition();
