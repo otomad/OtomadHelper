@@ -328,7 +328,7 @@ export default {
 				uiScale: "UI scale",
 			},
 			config: {
-				hideUseTips: "Hide use tips",
+				hideUsageTips: "Hide usage tips",
 			},
 			dev: {
 				_: "Dev",

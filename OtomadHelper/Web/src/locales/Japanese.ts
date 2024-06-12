@@ -166,6 +166,7 @@ export default {
 					noTuning: "チューニングなし",
 					pitchShift: "ピッチシフト",
 					classic: "クラシック",
+					scaleless: "スケールレス",
 				},
 				stretchAttributes: {
 					_: "ストレッチ属性",
@@ -175,12 +176,14 @@ export default {
 					multiple: "複数のオーディオエフェクトプラグインを使用",
 					plugin: "オーディオエフェクトプラグインに切り替える",
 					octave: "高オクターブまたは低オクターブです",
+					dock: "端にドックする",
 					silent: "サイレントモード",
 				},
 				resample: "リサンプ",
 				preserveFormant: "フォルマントを保存する",
 				basePitch: "ベース ピッチ",
 				prelisten: {
+					_: "プレ再生",
 					engine: "エンジン",
 					waveform: {
 						_: "波形",
@@ -259,6 +262,7 @@ export default {
 				scale: "スケールクラス",
 				mirror: "ミラークラス",
 				invert: "クラスを反転",
+				hue: "色相クラス",
 				chromatic: "モノクロクラス",
 				time: "タイムクラス",
 				time2: "時間クラス2",
@@ -303,7 +307,7 @@ export default {
 				uiScale: "UIスケール",
 			},
 			config: {
-				hideUseTips: "使用のヒントを非表示",
+				hideUsageTips: "使用ヒントを非表示",
 			},
 			dev: {
 				_: "開発",

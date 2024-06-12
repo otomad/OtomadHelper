@@ -320,7 +320,7 @@ export default {
 				uiScale: "界面缩放",
 			},
 			config: {
-				hideUseTips: "隐藏使用贴士",
+				hideUsageTips: "隐藏使用小贴士",
 			},
 			dev: {
 				_: "开发",
