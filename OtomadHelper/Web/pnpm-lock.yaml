@@ -143,6 +143,9 @@ importers:
       babel-plugin-transform-jsx-classnames:
         specifier: ^1.2.2
         version: 1.2.2(patch_hash=ie37eryichha676pwommzoc6ja)
+      click-to-react-component:
+        specifier: ^1.1.0
+        version: 1.1.0(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=iqbtjkk4lenfn3fvpm3rgankea)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -557,6 +560,22 @@ packages:
   '@eslint/js@8.57.0':
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+
+  '@floating-ui/core@0.6.2':
+    resolution: {integrity: sha512-jktYRmZwmau63adUG3GKOAVCofBXkk55S/zQ94XOorAHhwqFIOFAy1rSp2N0Wp6/tGbe9V3u/ExlGZypyY17rg==}
+
+  '@floating-ui/dom@0.4.5':
+    resolution: {integrity: sha512-b+prvQgJt8pieaKYMSJBXHxX/DYwdLsAWxKYqnO5dO2V4oo/TYBZJAUQCVNjTWWsrs6o4VDrNcP9+E70HAhJdw==}
+
+  '@floating-ui/react-dom-interactions@0.3.1':
+    resolution: {integrity: sha512-tP2KEh7EHJr5hokSBHcPGojb+AorDNUf0NYfZGg/M+FsMvCOOsSEeEF0O1NDfETIzDnpbHnCs0DuvCFhSMSStg==}
+    deprecated: Package renamed to @floating-ui/react
+
+  '@floating-ui/react-dom@0.6.3':
+    resolution: {integrity: sha512-hC+pS5D6AgS2wWjbmSQ6UR6Kpy+drvWGJIri6e1EDGADTPsCaa4KzCgmCczHrQeInx9tqs81EyDmbKJYY2swKg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -1028,6 +1047,10 @@ packages:
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
+  aria-hidden@1.2.4:
+    resolution: {integrity: sha512-y+CcFFwelSXpLZk/7fMB2mUbGtX9lKycf1MWJ7CaTIERyitVlyQx6C+sxcROU2BAJ24OiZyK+8wj2i8AlBoS3A==}
+    engines: {node: '>=10'}
+
   arr-diff@4.0.0:
     resolution: {integrity: sha512-YVIQ82gZPGBebQV/a8dar4AitzCQs0jjXwMPZllpXMaGjXPYVUawSxQrRsjhjupyVxEvbHgUmIhKVlND+j02kA==}
     engines: {node: '>=0.10.0'}
@@ -1248,6 +1271,11 @@ packages:
   cli-width@3.0.0:
     resolution: {integrity: sha512-FxqpkPPwu1HjuN93Omfm4h8uIanXofW0RxVEW3k5RKx+mJJYSthzNhp32Kzxxy3YAEZ/Dc/EWN1vZRY0+kOhbw==}
     engines: {node: '>= 10'}
+
+  click-to-react-component@1.1.0:
+    resolution: {integrity: sha512-/DjZemufS1BkxyRgZL3r7HXVVOFRWVQi5Xd4EBnjxZMwrHEh0OlUVA2N9CjXkZ0x8zMf8dL1cKnnx+xUWUg4VA==}
+    peerDependencies:
+      react: '>=16.8.0'
 
   clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
@@ -1959,6 +1987,9 @@ packages:
   homedir-polyfill@1.0.3:
     resolution: {integrity: sha512-eSmmWE5bZTK2Nou4g0AI3zZ9rswp7GRKoKXS1BLUkvPviOqs4YTN1djQIqrXy9k5gEtdLPy86JjRwsNM9tnDcA==}
     engines: {node: '>=0.10.0'}
+
+  htm@3.1.1:
+    resolution: {integrity: sha512-983Vyg8NwUE7JkZ6NmOqpCZ+sh1bKv2iYTlUkzlWmA5JD2acKoxd4KVxbMmxX/85mtfdnDmTFoNKcg5DGAvxNQ==}
 
   html-minifier-terser@7.2.0:
     resolution: {integrity: sha512-tXgn3QfqPIpGl9o+K5tpcj3/MN4SfLtsx2GWwBC3SSd0tXQGyF3gsSqad8loJgKZGM3ZxbYDd5yhiBIdWpmvLA==}
@@ -2693,6 +2724,9 @@ packages:
   pkg-types@1.0.3:
     resolution: {integrity: sha512-nN7pYi0AQqJnoLPC9eHFQ8AcyaixBUOwvqc5TDnIKCMEE6I0y8P7OKA7fPexsXGCGxQDl/cmrLAp26LhcwxZ4A==}
 
+  point-in-polygon@1.1.0:
+    resolution: {integrity: sha512-3ojrFwjnnw8Q9242TzgXuTD+eKiutbzyslcq1ydfu82Db2y+Ogbmyrkpv0Hgj31qwT3lbS9+QAAO/pIQM35XRw==}
+
   posix-character-classes@0.1.1:
     resolution: {integrity: sha512-xTgYBc3fuo7Yt7JbiuFxSYGToMoz8fLoE6TC9Wx1P/u+LfeThMOAqmuyECnlBaaJb+u1m9hHiXUEtwW4OzfUJg==}
     engines: {node: '>=0.10.0'}
@@ -2807,6 +2841,9 @@ packages:
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+
+  react-merge-refs@1.1.0:
+    resolution: {integrity: sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==}
 
   react-refresh@0.14.0:
     resolution: {integrity: sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ==}
@@ -3327,6 +3364,15 @@ packages:
       immer: '>=2.0.0'
       react: ^16.8.0 || ^17.0.1 || ^18.0.0
 
+  use-isomorphic-layout-effect@1.1.2:
+    resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
   use-sync-external-store@1.2.0:
     resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
     peerDependencies:
@@ -3831,6 +3877,32 @@ snapshots:
       - supports-color
 
   '@eslint/js@8.57.0': {}
+
+  '@floating-ui/core@0.6.2': {}
+
+  '@floating-ui/dom@0.4.5':
+    dependencies:
+      '@floating-ui/core': 0.6.2
+
+  '@floating-ui/react-dom-interactions@0.3.1(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=iqbtjkk4lenfn3fvpm3rgankea)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))':
+    dependencies:
+      '@floating-ui/react-dom': 0.6.3(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=iqbtjkk4lenfn3fvpm3rgankea)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+      aria-hidden: 1.2.4
+      point-in-polygon: 1.1.0
+      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+    transitivePeerDependencies:
+      - '@types/react'
+      - react
+      - react-dom
+
+  '@floating-ui/react-dom@0.6.3(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=iqbtjkk4lenfn3fvpm3rgankea)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))':
+    dependencies:
+      '@floating-ui/dom': 0.4.5
+      react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
+      react-dom: 18.2.0(patch_hash=iqbtjkk4lenfn3fvpm3rgankea)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+    transitivePeerDependencies:
+      - '@types/react'
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
@@ -4364,6 +4436,10 @@ snapshots:
 
   argparse@2.0.1: {}
 
+  aria-hidden@1.2.4:
+    dependencies:
+      tslib: 2.6.2
+
   arr-diff@4.0.0: {}
 
   arr-flatten@1.1.0: {}
@@ -4639,6 +4715,16 @@ snapshots:
   cli-spinners@2.9.2: {}
 
   cli-width@3.0.0: {}
+
+  click-to-react-component@1.1.0(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=iqbtjkk4lenfn3fvpm3rgankea)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)):
+    dependencies:
+      '@floating-ui/react-dom-interactions': 0.3.1(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=iqbtjkk4lenfn3fvpm3rgankea)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+      htm: 3.1.1
+      react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
+      react-merge-refs: 1.1.0
+    transitivePeerDependencies:
+      - '@types/react'
+      - react-dom
 
   clone@1.0.4: {}
 
@@ -5527,6 +5613,8 @@ snapshots:
     dependencies:
       parse-passwd: 1.0.0
 
+  htm@3.1.1: {}
+
   html-minifier-terser@7.2.0:
     dependencies:
       camel-case: 4.1.2
@@ -6234,6 +6322,8 @@ snapshots:
       mlly: 1.6.1
       pathe: 1.1.2
 
+  point-in-polygon@1.1.0: {}
+
   posix-character-classes@0.1.1: {}
 
   possible-typed-array-names@1.0.0: {}
@@ -6340,6 +6430,8 @@ snapshots:
       react-dom: 18.2.0(patch_hash=iqbtjkk4lenfn3fvpm3rgankea)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
 
   react-is@16.13.1: {}
+
+  react-merge-refs@1.1.0: {}
 
   react-refresh@0.14.0: {}
 
@@ -7001,6 +7093,12 @@ snapshots:
     dependencies:
       immer: 10.0.4
       react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
+
+  use-isomorphic-layout-effect@1.1.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)):
+    dependencies:
+      react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
+    optionalDependencies:
+      '@types/react': 18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby)
 
   use-sync-external-store@1.2.0(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)):
     dependencies:

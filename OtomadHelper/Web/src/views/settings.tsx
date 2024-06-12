@@ -54,7 +54,7 @@ export default function Settings() {
 			</Expander>
 
 			<Subheader>{t.subheaders.config}</Subheader>
-			<SettingsCardToggleSwitch title={t.settings.config.hideUseTips} icon="chat_help_off" on={hideUseTips} />
+			<SettingsCardToggleSwitch title={t.settings.config.hideUsageTips} icon="chat_help_off" on={hideUseTips} />
 
 			<Subheader>{t.settings.dev}</Subheader>
 			<SettingsCardToggleSwitch title={t.settings.dev.devMode} icon="devtools" on={devMode} />
