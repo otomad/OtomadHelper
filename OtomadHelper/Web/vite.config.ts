@@ -53,7 +53,7 @@ export default defineConfig({
 			symbolId: "icon-[dir]-[name]",
 		}),
 		svgr({
-			include: "**/*.svg",
+			include: "**/*.svg?react",
 		}),
 		tsconfigPaths(),
 		htmlMinifier({

@@ -1,5 +1,5 @@
-import ColoredLogo from "assets/svg/Otomad Helper Colored.svg";
-import MonoLogo from "assets/svg/Otomad Helper Mono.svg";
+import ColoredLogo from "assets/svg/Otomad Helper Colored.svg?react";
+import MonoLogo from "assets/svg/Otomad Helper Mono.svg?react";
 
 const StyledSettingsAbout = styled.div`
 	display: flex;

@@ -41,9 +41,10 @@ export default function RepeatButton({ children, onClick, onRelease, ...htmlAttr
 			onMouseUp={handleRelease}
 			onKeyDown={handleKeyDown}
 			onKeyUp={handleKeyUp}
-			{...dataset({ pressed })}
+			data-pressed={pressed}
 			{...htmlAttrs}
 		>
+			{/* {...dataset({ pressed })} */}
 			{children}
 		</button>
 	);

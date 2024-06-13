@@ -1,8 +1,32 @@
 diff --git a/cjs/react-dom.development.js b/cjs/react-dom.development.js
-index e4ed5aecb725ca7db6a2e8780270f1edc45d0ba8..d793646b627878b8a85b49126ce045a842004e8b 100644
+index e4ed5aecb725ca7db6a2e8780270f1edc45d0ba8..6ba5c0c3380492cbf64206a37e16826b41c30777 100644
 --- a/cjs/react-dom.development.js
 +++ b/cjs/react-dom.development.js
-@@ -10795,6 +10795,8 @@ var updatedAncestorInfo = function () {};
+@@ -517,7 +517,7 @@ reservedProps.forEach(function (name) {
+ ['allowFullScreen', 'async', // Note: there is a special case that prevents it from being written to the DOM
+ // on the client side because the browsers are inconsistent. Instead we call focus().
+ 'autoFocus', 'autoPlay', 'controls', 'default', 'defer', 'disabled', 'disablePictureInPicture', 'disableRemotePlayback', 'formNoValidate', 'hidden', 'loop', 'noModule', 'noValidate', 'open', 'playsInline', 'readOnly', 'required', 'reversed', 'scoped', 'seamless', // Microdata
+-'itemScope'].forEach(function (name) {
++'itemScope', 'inert'].forEach(function (name) {
+   properties[name] = new PropertyInfoRecord(name, BOOLEAN, false, // mustUseProperty
+   name.toLowerCase(), // attributeName
+   null, // attributeNamespace
+@@ -788,7 +788,13 @@ function setValueForProperty(node, name, value, isCustomComponentTag) {
+     if (isAttributeNameSafe(name)) {
+       var _attributeName = name;
+ 
+-      if (value === null) {
++      if (_attributeName.startsWith("data-") && typeof value === "boolean") {
++        if (!value) {
++          node.removeAttribute(_attributeName);
++        } else {
++          node.setAttribute(_attributeName, '');
++        }
++      } else if (value === null) {
+         node.removeAttribute(_attributeName);
+       } else {
+         {
+@@ -10795,6 +10801,8 @@ var updatedAncestorInfo = function () {};
    var didWarn$1 = {};
  
    validateDOMNesting = function (childTag, childText, ancestorInfo) {
@@ -11,7 +35,7 @@ index e4ed5aecb725ca7db6a2e8780270f1edc45d0ba8..d793646b627878b8a85b49126ce045a8
      ancestorInfo = ancestorInfo || emptyAncestorInfo;
      var parentInfo = ancestorInfo.current;
      var parentTag = parentInfo && parentInfo.tag;
-@@ -14901,6 +14903,10 @@ function warnOnFunctionType(returnFiber) {
+@@ -14901,6 +14909,10 @@ function warnOnFunctionType(returnFiber) {
    }
  }
  
@@ -22,7 +46,7 @@ index e4ed5aecb725ca7db6a2e8780270f1edc45d0ba8..d793646b627878b8a85b49126ce045a8
  function resolveLazy(lazyType) {
    var payload = lazyType._payload;
    var init = lazyType._init;
-@@ -15093,7 +15099,7 @@ function ChildReconciler(shouldTrackSideEffects) {
+@@ -15093,7 +15105,7 @@ function ChildReconciler(shouldTrackSideEffects) {
    }
  
    function createChild(returnFiber, newChild, lanes) {
@@ -31,7 +55,7 @@ index e4ed5aecb725ca7db6a2e8780270f1edc45d0ba8..d793646b627878b8a85b49126ce045a8
        // Text nodes don't have keys. If the previous node is implicitly keyed
        // we can continue to replace it without aborting even if it is not a text
        // node.
-@@ -15152,7 +15158,7 @@ function ChildReconciler(shouldTrackSideEffects) {
+@@ -15152,7 +15164,7 @@ function ChildReconciler(shouldTrackSideEffects) {
      // Update the fiber if the keys match, otherwise return null.
      var key = oldFiber !== null ? oldFiber.key : null;
  
@@ -40,7 +64,7 @@ index e4ed5aecb725ca7db6a2e8780270f1edc45d0ba8..d793646b627878b8a85b49126ce045a8
        // Text nodes don't have keys. If the previous node is implicitly keyed
        // we can continue to replace it without aborting even if it is not a text
        // node.
-@@ -15212,7 +15218,7 @@ function ChildReconciler(shouldTrackSideEffects) {
+@@ -15212,7 +15224,7 @@ function ChildReconciler(shouldTrackSideEffects) {
    }
  
    function updateFromMap(existingChildren, returnFiber, newIdx, newChild, lanes) {
@@ -49,7 +73,7 @@ index e4ed5aecb725ca7db6a2e8780270f1edc45d0ba8..d793646b627878b8a85b49126ce045a8
        // Text nodes don't have keys, so we neither have to check the old nor
        // new node for the key. If both are text nodes, they match.
        var matchedFiber = existingChildren.get(newIdx) || null;
-@@ -15828,7 +15834,7 @@ function ChildReconciler(shouldTrackSideEffects) {
+@@ -15828,7 +15840,7 @@ function ChildReconciler(shouldTrackSideEffects) {
        throwOnInvalidObjectType(returnFiber, newChild);
      }
  
@@ -58,10 +82,33 @@ index e4ed5aecb725ca7db6a2e8780270f1edc45d0ba8..d793646b627878b8a85b49126ce045a8
        return placeSingleChild(reconcileSingleTextNode(returnFiber, currentFirstChild, '' + newChild, lanes));
      }
  
+@@ -29863,6 +29875,6 @@ if (
+ ) {
+   __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
+ }
+-        
++
+   })();
+ }
 diff --git a/cjs/react-dom.production.min.js b/cjs/react-dom.production.min.js
-index 7bbc786deca6afaee7c96ed87fcdcfbbea03f11e..16a22f9854c3bc103860d1284c55212e9cb86053 100644
+index 7bbc786deca6afaee7c96ed87fcdcfbbea03f11e..3c671b970b882b11a3e7bce6af5d5c8a8f9d3e5c 100644
 --- a/cjs/react-dom.production.min.js
 +++ b/cjs/react-dom.production.min.js
+@@ -16,12 +16,12 @@ var ia=!("undefined"===typeof window||"undefined"===typeof window.document||"und
+ {},ma={};function oa(a){if(ja.call(ma,a))return!0;if(ja.call(la,a))return!1;if(ka.test(a))return ma[a]=!0;la[a]=!0;return!1}function pa(a,b,c,d){if(null!==c&&0===c.type)return!1;switch(typeof b){case "function":case "symbol":return!0;case "boolean":if(d)return!1;if(null!==c)return!c.acceptsBooleans;a=a.toLowerCase().slice(0,5);return"data-"!==a&&"aria-"!==a;default:return!1}}
+ function qa(a,b,c,d){if(null===b||"undefined"===typeof b||pa(a,b,c,d))return!0;if(d)return!1;if(null!==c)switch(c.type){case 3:return!b;case 4:return!1===b;case 5:return isNaN(b);case 6:return isNaN(b)||1>b}return!1}function v(a,b,c,d,e,f,g){this.acceptsBooleans=2===b||3===b||4===b;this.attributeName=d;this.attributeNamespace=e;this.mustUseProperty=c;this.propertyName=a;this.type=b;this.sanitizeURL=f;this.removeEmptyString=g}var z={};
+ "children dangerouslySetInnerHTML defaultValue defaultChecked innerHTML suppressContentEditableWarning suppressHydrationWarning style".split(" ").forEach(function(a){z[a]=new v(a,0,!1,a,null,!1,!1)});[["acceptCharset","accept-charset"],["className","class"],["htmlFor","for"],["httpEquiv","http-equiv"]].forEach(function(a){var b=a[0];z[b]=new v(b,1,!1,a[1],null,!1,!1)});["contentEditable","draggable","spellCheck","value"].forEach(function(a){z[a]=new v(a,2,!1,a.toLowerCase(),null,!1,!1)});
+-["autoReverse","externalResourcesRequired","focusable","preserveAlpha"].forEach(function(a){z[a]=new v(a,2,!1,a,null,!1,!1)});"allowFullScreen async autoFocus autoPlay controls default defer disabled disablePictureInPicture disableRemotePlayback formNoValidate hidden loop noModule noValidate open playsInline readOnly required reversed scoped seamless itemScope".split(" ").forEach(function(a){z[a]=new v(a,3,!1,a.toLowerCase(),null,!1,!1)});
++["autoReverse","externalResourcesRequired","focusable","preserveAlpha"].forEach(function(a){z[a]=new v(a,2,!1,a,null,!1,!1)});"allowFullScreen async autoFocus autoPlay controls default defer disabled disablePictureInPicture disableRemotePlayback formNoValidate hidden loop noModule noValidate open playsInline readOnly required reversed scoped seamless itemScope inert".split(" ").forEach(function(a){z[a]=new v(a,3,!1,a.toLowerCase(),null,!1,!1)});
+ ["checked","multiple","muted","selected"].forEach(function(a){z[a]=new v(a,3,!0,a,null,!1,!1)});["capture","download"].forEach(function(a){z[a]=new v(a,4,!1,a,null,!1,!1)});["cols","rows","size","span"].forEach(function(a){z[a]=new v(a,6,!1,a,null,!1,!1)});["rowSpan","start"].forEach(function(a){z[a]=new v(a,5,!1,a.toLowerCase(),null,!1,!1)});var ra=/[\-:]([a-z])/g;function sa(a){return a[1].toUpperCase()}
+ "accent-height alignment-baseline arabic-form baseline-shift cap-height clip-path clip-rule color-interpolation color-interpolation-filters color-profile color-rendering dominant-baseline enable-background fill-opacity fill-rule flood-color flood-opacity font-family font-size font-size-adjust font-stretch font-style font-variant font-weight glyph-name glyph-orientation-horizontal glyph-orientation-vertical horiz-adv-x horiz-origin-x image-rendering letter-spacing lighting-color marker-end marker-mid marker-start overline-position overline-thickness paint-order panose-1 pointer-events rendering-intent shape-rendering stop-color stop-opacity strikethrough-position strikethrough-thickness stroke-dasharray stroke-dashoffset stroke-linecap stroke-linejoin stroke-miterlimit stroke-opacity stroke-width text-anchor text-decoration text-rendering underline-position underline-thickness unicode-bidi unicode-range units-per-em v-alphabetic v-hanging v-ideographic v-mathematical vector-effect vert-adv-y vert-origin-x vert-origin-y word-spacing writing-mode xmlns:xlink x-height".split(" ").forEach(function(a){var b=a.replace(ra,
+ sa);z[b]=new v(b,1,!1,a,null,!1,!1)});"xlink:actuate xlink:arcrole xlink:role xlink:show xlink:title xlink:type".split(" ").forEach(function(a){var b=a.replace(ra,sa);z[b]=new v(b,1,!1,a,"http://www.w3.org/1999/xlink",!1,!1)});["xml:base","xml:lang","xml:space"].forEach(function(a){var b=a.replace(ra,sa);z[b]=new v(b,1,!1,a,"http://www.w3.org/XML/1998/namespace",!1,!1)});["tabIndex","crossOrigin"].forEach(function(a){z[a]=new v(a,1,!1,a.toLowerCase(),null,!1,!1)});
+ z.xlinkHref=new v("xlinkHref",1,!1,"xlink:href","http://www.w3.org/1999/xlink",!0,!1);["src","href","action","formAction"].forEach(function(a){z[a]=new v(a,1,!1,a.toLowerCase(),null,!0,!0)});
+-function ta(a,b,c,d){var e=z.hasOwnProperty(b)?z[b]:null;if(null!==e?0!==e.type:d||!(2<b.length)||"o"!==b[0]&&"O"!==b[0]||"n"!==b[1]&&"N"!==b[1])qa(b,c,e,d)&&(c=null),d||null===e?oa(b)&&(null===c?a.removeAttribute(b):a.setAttribute(b,""+c)):e.mustUseProperty?a[e.propertyName]=null===c?3===e.type?!1:"":c:(b=e.attributeName,d=e.attributeNamespace,null===c?a.removeAttribute(b):(e=e.type,c=3===e||4===e&&!0===c?"":""+c,d?a.setAttributeNS(d,b,c):a.setAttribute(b,c)))}
++function ta(a,b,c,d){var e=z.hasOwnProperty(b)?z[b]:null;if(null!==e?0!==e.type:d||!(2<b.length)||"o"!==b[0]&&"O"!==b[0]||"n"!==b[1]&&"N"!==b[1])qa(b,c,e,d)&&(c=null),d||null===e?oa(b)&&(b.startsWith("data-")&&typeof c==="boolean"?(!c?a.removeAttribute(b):a.setAttribute(b,"")):(null===c?a.removeAttribute(b):a.setAttribute(b,""+c))):e.mustUseProperty?a[e.propertyName]=null===c?3===e.type?!1:"":c:(b=e.attributeName,d=e.attributeNamespace,null===c?a.removeAttribute(b):(e=e.type,c=3===e||4===e&&!0===c?"":""+c,d?a.setAttributeNS(d,b,c):a.setAttribute(b,c)))}
+ var ua=aa.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,va=Symbol.for("react.element"),wa=Symbol.for("react.portal"),ya=Symbol.for("react.fragment"),za=Symbol.for("react.strict_mode"),Aa=Symbol.for("react.profiler"),Ba=Symbol.for("react.provider"),Ca=Symbol.for("react.context"),Da=Symbol.for("react.forward_ref"),Ea=Symbol.for("react.suspense"),Fa=Symbol.for("react.suspense_list"),Ga=Symbol.for("react.memo"),Ha=Symbol.for("react.lazy");Symbol.for("react.scope");Symbol.for("react.debug_trace_mode");
+ var Ia=Symbol.for("react.offscreen");Symbol.for("react.legacy_hidden");Symbol.for("react.cache");Symbol.for("react.tracing_marker");var Ja=Symbol.iterator;function Ka(a){if(null===a||"object"!==typeof a)return null;a=Ja&&a[Ja]||a["@@iterator"];return"function"===typeof a?a:null}var A=Object.assign,La;function Ma(a){if(void 0===La)try{throw Error();}catch(c){var b=c.stack.trim().match(/\n( *(at )?)/);La=b&&b[1]||""}return"\n"+La+a}var Na=!1;
+ function Oa(a,b){if(!a||Na)return"";Na=!0;var c=Error.prepareStackTrace;Error.prepareStackTrace=void 0;try{if(b)if(b=function(){throw Error();},Object.defineProperty(b.prototype,"props",{set:function(){throw Error();}}),"object"===typeof Reflect&&Reflect.construct){try{Reflect.construct(b,[])}catch(l){var d=l}Reflect.construct(a,[],b)}else{try{b.call()}catch(l){d=l}a.call(b.prototype)}else{try{throw Error();}catch(l){d=l}a()}}catch(l){if(l&&d&&"string"===typeof l.stack){for(var e=l.stack.split("\n"),
 @@ -149,17 +149,18 @@ function qh(a,b,c,d){a=b.state;"function"===typeof b.componentWillReceiveProps&&
  function rh(a,b,c,d){var e=a.stateNode;e.props=c;e.state=a.memoizedState;e.refs=jh;ah(a);var f=b.contextType;"object"===typeof f&&null!==f?e.context=Vg(f):(f=Zf(b)?Xf:H.current,e.context=Yf(a,f));e.state=a.memoizedState;f=b.getDerivedStateFromProps;"function"===typeof f&&(kh(a,b,f,c),e.state=a.memoizedState);"function"===typeof b.getDerivedStateFromProps||"function"===typeof e.getSnapshotBeforeUpdate||"function"!==typeof e.UNSAFE_componentWillMount&&"function"!==typeof e.componentWillMount||(b=e.state,
  "function"===typeof e.componentWillMount&&e.componentWillMount(),"function"===typeof e.UNSAFE_componentWillMount&&e.UNSAFE_componentWillMount(),b!==e.state&&nh.enqueueReplaceState(e,e.state,null),gh(a,c,e,d),e.state=a.memoizedState);"function"===typeof e.componentDidMount&&(a.flags|=4194308)}
