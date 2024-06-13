@@ -71,6 +71,7 @@ words:
   - parameterless
   - partialize
   - pingpong
+  - pixi
   - portato
   - prelisten
   - prerenders
@@ -109,6 +110,7 @@ words:
   - vocaloid
   - vsq
   - vtt
+  - webgl
   - wj
   - xmlbuilder
   - xmp

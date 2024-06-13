@@ -17,6 +17,9 @@ patchedDependencies:
   babel-plugin-transform-jsx-classnames@1.2.2:
     hash: ie37eryichha676pwommzoc6ja
     path: patches/babel-plugin-transform-jsx-classnames@1.2.2.patch
+  click-to-react-component@1.1.0:
+    hash: gxi75ehq7v4voj7sxqne7mjgoi
+    path: patches/click-to-react-component@1.1.0.patch
   lottie-web@5.12.2:
     hash: urdo465qcktf5jshudaoriujbq
     path: patches/lottie-web@5.12.2.patch
@@ -142,7 +145,7 @@ importers:
         version: 1.2.2(patch_hash=ie37eryichha676pwommzoc6ja)
       click-to-react-component:
         specifier: ^1.1.0
-        version: 1.1.0(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=6kd4d66wteippoxmqcrx452jem)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+        version: 1.1.0(patch_hash=gxi75ehq7v4voj7sxqne7mjgoi)(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=6kd4d66wteippoxmqcrx452jem)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -4713,7 +4716,7 @@ snapshots:
 
   cli-width@3.0.0: {}
 
-  click-to-react-component@1.1.0(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=6kd4d66wteippoxmqcrx452jem)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)):
+  click-to-react-component@1.1.0(patch_hash=gxi75ehq7v4voj7sxqne7mjgoi)(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=6kd4d66wteippoxmqcrx452jem)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)):
     dependencies:
       '@floating-ui/react-dom-interactions': 0.3.1(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react-dom@18.2.0(patch_hash=6kd4d66wteippoxmqcrx452jem)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
       htm: 3.1.1

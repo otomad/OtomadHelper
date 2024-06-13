@@ -101,7 +101,8 @@
 			"@types/react@18.2.78": "patches/@types__react@18.2.78.patch",
 			"postcss-selector-parser@6.0.16": "patches/postcss-selector-parser@6.0.16.patch",
 			"postcss@8.4.38": "patches/postcss@8.4.38.patch",
-			"styled-components@6.1.8": "patches/styled-components@6.1.8.patch"
+			"styled-components@6.1.8": "patches/styled-components@6.1.8.patch",
+			"click-to-react-component@1.1.0": "patches/click-to-react-component@1.1.0.patch"
 		},
 		"allowNonAppliedPatches": false
 	},

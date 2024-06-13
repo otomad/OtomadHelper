@@ -1,0 +1,16 @@
+diff --git a/package.json b/package.json
+index 5c9edb0106bd4c554de9d32f9fc01834df14b9cb..e62db92ad06cb697f590c064866e65d53506d6c3 100644
+--- a/package.json
++++ b/package.json
+@@ -3,7 +3,10 @@
+   "name": "click-to-react-component",
+   "version": "1.1.0",
+   "description": "Option+Click your React components in your browser to open the source file in VS Code",
+-  "exports": "./src/index.js",
++  "exports": {
++    "import": "./src/index.js",
++    "types": "./src/types.d.ts"
++  },
+   "types": "src/types.d.ts",
+   "files": [
+     "src"
