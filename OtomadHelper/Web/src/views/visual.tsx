@@ -6,7 +6,7 @@ import loopImage from "assets/images/tutorials/visual/loop.png";
 import noLengtheningImage from "assets/images/tutorials/visual/no_lengthening.png";
 import staticVisualImage from "assets/images/tutorials/visual/static.png";
 import stretchImage from "assets/images/tutorials/visual/stretch.png";
-import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
+import exampleThumbnail from "assets/images/ヨハネの氷.png";
 
 export /* internal */ const stretches = [
 	{ id: "noStretching", icon: "prohibited" },

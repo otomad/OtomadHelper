@@ -1,6 +1,6 @@
 import cursor from "assets/cursors/poo.cur";
-import tipsImage from "assets/images/tips/yoooo_a_boom.jpg";
-import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
+import tipsImage from "assets/images/tips/yoooo_a_boom.png";
+import exampleThumbnail from "assets/images/ヨハネの氷.png";
 
 const effects = ["chorus", "delay", "changePitch", "reverse", "changeSpeed", "vibrato", "changeHue", "rotateHue", "monochrome", "negative", "repeatRapidly", "randomTuning", "upsize", "spherize", "mirror", "highContrast", "oversaturation", "emphasizeThrice"];
 

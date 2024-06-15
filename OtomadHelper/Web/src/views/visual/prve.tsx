@@ -1,4 +1,4 @@
-import exampleThumbnail from "assets/images/ヨハネの氷.jpg";
+import exampleThumbnail from "assets/images/ヨハネの氷.png";
 
 const prves = [
 	{ class: "flip", icon: "placeholder", effects: ["hFlip", "vFlip", "ccwFlip", "cwFlip"] },
