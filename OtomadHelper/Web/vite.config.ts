@@ -3,6 +3,7 @@ import { transform as transformCSS } from "lightningcss";
 import { resolve as _resolve } from "path";
 import autoImport from "unplugin-auto-import/vite";
 import { defineConfig } from "vite";
+import glsl from "vite-plugin-glsl";
 import htmlMinifier from "vite-plugin-html-minifier";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
@@ -13,7 +14,7 @@ import globalized from "./src/plugins/vite/globalized";
 const resolve = (...paths: string[]) => _resolve(__dirname, ...paths);
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
 	plugins: [
 		react({
 			babel: {
@@ -71,6 +72,9 @@ export default defineConfig({
 				minifyURLs: true,
 			},
 		}),
+		glsl({
+			compress: command === "build",
+		}),
 		/* compression({
 			skipIfLargerOrEqual: true,
 			deleteOriginalAssets: true,
@@ -115,4 +119,4 @@ export default defineConfig({
 		"**/*.cur",
 		"**/*.ani",
 	],
-});
+}));

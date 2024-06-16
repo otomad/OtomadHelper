@@ -1,89 +1,40 @@
+import vertexShaderSource from "assets/glsl/main.vert";
+import fragmentShaderSource from "assets/glsl/radial-blur.frag";
 import exampleImage from "assets/images/ヨハネの氷.jpg";
 import * as webglUtils from "./webgl/utils";
 
-const vertexShaderSource = `#version 300 es
+render(exampleImage);
 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
-in vec2 a_position;
-in vec2 a_textureCoordinate;
+type UniformType = ValueOf<{
+	[key in keyof WebGL2RenderingContext]: key extends `uniform${infer type}` ? type : never;
+}>;
 
-// Used to pass in the resolution of the canvas
-uniform vec2 u_resolution;
+class WebGLFilter {
+	constructor(
+		public readonly gl: WebGL2RenderingContext,
+		public readonly program: WebGLProgram | null,
+		public readonly canvas: HTMLCanvasElement,
+	) {
+		this.uniform = this.uniform.bind(this);
+		this.apply = this.apply.bind(this);
+	}
 
-// Used to pass the texture coordinates to the fragment shader
-out vec2 v_textureCoordinate;
+	uniform(type: UniformType, name: string, v1: unknown, v2?: unknown, v3?: unknown, v4?: unknown) {
+		if (!this.program) throw new Error("program not ready");
+		const uniformLocation = this.gl.getUniformLocation(this.program, name);
+		if (uniformLocation)
+			(this.gl as AnyObject)["uniform" + type](uniformLocation, v1, v2, v3, v4);
+		return this;
+	}
 
-// all shaders have a main function
-void main() {
-
-	// convert the position from pixels to 0.0 to 1.0
-	vec2 zeroToOne = a_position / u_resolution;
-
-	// convert from 0->1 to 0->2
-	vec2 zeroToTwo = zeroToOne * 2.0;
-
-	// convert from 0->2 to -1->+1 (clipspace)
-	vec2 clipSpace = zeroToTwo - 1.0;
-
-	gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-
-	// pass the textureCoordinate to the fragment shader
-	// The GPU will interpolate this value between points.
-	v_textureCoordinate = a_textureCoordinate;
+	apply() {
+		if (!this.program) throw new Error("program not ready");
+		this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+		this.gl.clearColor(0, 0, 0, 0);
+		this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
+		return this;
+	}
 }
-`;
-
-/* const fragmentShaderSource = `#version 300 es
-
-// fragment shaders don't have a default precision so we need
-// to pick one. highp is a good default. It means "high precision"
-precision highp float;
-
-// our texture
-uniform sampler2D u_image;
-
-// the textureCoordinates passed in from the vertex shader.
-in vec2 v_textureCoordinate;
-
-// we need to declare an output for the fragment shader
-out vec4 outColor;
-
-void main() {
-	outColor = texture(u_image, v_textureCoordinate).bgra;
-}
-`; */
-const fragmentShaderSource = `#version 300 es
-
-precision highp float;
-
-in vec2 v_textureCoordinate;
-out vec4 outColor;
-uniform sampler2D u_image;
-uniform float scale;
-uniform float horizontalIntensity;
-uniform float verticalIntensity;
-
-void main() {
-	vec2 newTextureCoordinate = vec2((scale - 1.0) * 0.5 + v_textureCoordinate.x / scale, (scale - 1.0) * 0.5 + v_textureCoordinate.y / scale);
-	vec4 textureColor = texture(u_image, newTextureCoordinate);
-
-	// shift color
-	vec4 shiftColor1 = texture(u_image, newTextureCoordinate + vec2(-0.05 * (scale - 1.0) * horizontalIntensity * 2., -0.05 * (scale - 1.0) * verticalIntensity * 2.));
-	vec4 shiftColor2 = texture(u_image, newTextureCoordinate + vec2(-0.1 * (scale - 1.0) * horizontalIntensity * 2., -0.1 * (scale - 1.0) * verticalIntensity * 2.));
-
-	// 3d blend color
-	vec3 blendFirstColor = vec3(textureColor.r, textureColor.g, shiftColor1.b);
-	vec3 blend3DColor = vec3(shiftColor2.r, blendFirstColor.g, blendFirstColor.b);
-	outColor = vec4(blend3DColor, textureColor.a);
-}
-`;
-
-render(exampleImage, {
-	scale: 1.2,
-	horizontalIntensity: 0.5,
-	verticalIntensity: 0.5,
-});
 
 async function render(imageSource: string, uniforms: Record<string, number> = {}) {
 	const image = new Image();
@@ -124,6 +75,8 @@ async function render(imageSource: string, uniforms: Record<string, number> = {}
 
 	// Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
 	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+	const filter = new WebGLFilter(gl, program, canvas);
 
 	// Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
 	let size = 2; // 2 components per iteration
@@ -203,7 +156,7 @@ async function render(imageSource: string, uniforms: Record<string, number> = {}
 	gl.uniform1i(imageLocation, 0);
 
 	for (const [uniform, value] of Object.entries(uniforms))
-		gl.uniform1f(gl.getUniformLocation(program, uniform), value);
+		filter.uniform("1f", uniform, value);
 
 	// Bind the position buffer so gl.bufferData that will be called
 	// in setRectangle puts data in the position buffer
