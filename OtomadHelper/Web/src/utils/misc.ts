@@ -7,4 +7,13 @@
 	};
 
 	makePrototypeKeysNonEnumerable(Response);
+
+	HTMLImageElement.prototype.awaitLoaded = function () {
+		return new Promise<HTMLImageElement>((resolve, reject) => {
+			this.onload = () => resolve(this);
+			this.onerror = e => reject(e);
+		});
+	};
+
+	makePrototypeKeysNonEnumerable(HTMLImageElement);
 }

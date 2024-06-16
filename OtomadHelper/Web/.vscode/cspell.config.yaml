@@ -16,6 +16,7 @@ words:
   - ccw
   - classname
   - classnames
+  - clipspace
   - composables
   - contenteditable
   - cooldown
@@ -38,6 +39,7 @@ words:
   - extralight
   - flyouts
   - geq
+  - glsl
   - hta
   - immer
   - jsdoc

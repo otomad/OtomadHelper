@@ -5,3 +5,10 @@ declare interface Body {
 	 */
 	xml(): Promise<Document>;
 }
+
+declare interface HTMLImageElement {
+	/**
+	 * Wait for the image is just loaded.
+	 */
+	awaitLoaded(): Promise<HTMLImageElement>;
+}
