@@ -5,14 +5,14 @@
 precision highp float;
 
 // our texture
-uniform sampler2D u_image;
+uniform sampler2D image;
 
 // the textureCoordinates passed in from the vertex shader.
-in vec2 v_textureCoordinate;
+in vec2 textureCoordinate;
 
 // we need to declare an output for the fragment shader
 out vec4 outColor;
 
 void main() {
-	outColor = texture(u_image, v_textureCoordinate).bgra;
+	outColor = texture(image, textureCoordinate).bgra;
 }

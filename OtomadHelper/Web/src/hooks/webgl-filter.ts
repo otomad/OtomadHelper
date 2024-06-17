@@ -57,8 +57,8 @@ async function render(imageSource: string, uniforms: Record<string, number> = {}
 	const textureCoordinateAttributeLocation = gl.getAttribLocation(program, "a_textureCoordinate");
 
 	// lookup uniforms
-	const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
-	const imageLocation = gl.getUniformLocation(program, "u_image");
+	const resolutionLocation = gl.getUniformLocation(program, "resolution");
+	const imageLocation = gl.getUniformLocation(program, "image");
 
 	// Create a vertex array object (attribute state)
 	const vao = gl.createVertexArray();

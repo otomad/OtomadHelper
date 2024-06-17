@@ -2,9 +2,9 @@
 
 precision highp float;
 
-in vec2 v_textureCoordinate;
+in vec2 textureCoordinate;
 out vec4 outColor;
-uniform sampler2D u_image;
+uniform sampler2D image;
 
 const float strength = 0.15;
 const vec2 center = vec2(0.5, 0.5);
@@ -27,7 +27,7 @@ void main() {
 
 	float countLimit = MAX_KERNEL_SIZE;
 
-	vec2 dir = vec2(center.xy - v_textureCoordinate);
+	vec2 dir = vec2(center.xy - textureCoordinate);
 	float dist = length(vec2(dir.x, dir.y));
 
 	float strength = strength;
@@ -48,13 +48,13 @@ void main() {
 		countLimit *= delta;
 		strength *= delta;
 		if (countLimit < 1.0) {
-			outColor = texture(u_image, v_textureCoordinate);
+			outColor = texture(image, textureCoordinate);
 			return;
 		}
 	}
 
 	// randomize the lookup values to hide the fixed number of samples
-	float offset = rand(v_textureCoordinate, 0.0);
+	float offset = rand(textureCoordinate, 0.0);
 
 	float total = 0.0;
 	vec4 color = vec4(0.0);
@@ -64,8 +64,8 @@ void main() {
 	for (float t = 0.0; t < MAX_KERNEL_SIZE; t++) {
 		float percent = (t + offset) / MAX_KERNEL_SIZE;
 		float weight = 4.0 * (percent - percent * percent);
-		vec2 p = v_textureCoordinate + dir * percent;
-		vec4 sampleColor = texture(u_image, p);
+		vec2 p = textureCoordinate + dir * percent;
+		vec4 sampleColor = texture(image, p);
 
 		// switch to pre-multiplied alpha to correctly blur transparent images
 		// sampleColor.rgb *= sampleColor.a;
