@@ -152,6 +152,8 @@ function useLottieSequence(animationItem: MutableRefObject<AnimationItem | undef
 	return { sequence, findMarker, push, clearAll, shift, goToAndStop, onAnimationComplete };
 }
 
+const iconsImport = import.meta.glob<string>("/src/assets/lotties/**/*.json", { query: "?raw", import: "default", eager: true });
+
 export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false, name, hidden = false, speed = 1, filled = false, onInit, onClick, ...htmlAttrs }: FCP<{
 	/** Loop? */
 	loop?: boolean;
@@ -187,7 +189,6 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 		if (typeof name !== "string")
 			return name;
 		try {
-			const iconsImport = import.meta.glob<string>("/src/assets/lotties/**/*.json", { query: "?raw", import: "default", eager: true });
 			const rawIcon = iconsImport[`/src/assets/lotties/${name}.json`];
 			return JSON.parse(rawIcon);
 		} catch (e) {

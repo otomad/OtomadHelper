@@ -383,10 +383,11 @@ export default function PreviewPrve({ thumbnail, name }: FCP<{
 		radialBlur: 2,
 	}[name] ?? 1;
 
-	const canvasFilters = useCanvasFilter(thumbnail);
+	// const canvasFilters = useCanvasFilters(thumbnail);
+	const webglFilters = useWebglFilters(thumbnail);
 
 	const alterImage = {
-		radialBlur: canvasFilters?.radialBlur,
+		radialBlur: webglFilters?.radialBlur,
 	}[name];
 
 	const animatedImage = {

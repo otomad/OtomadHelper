@@ -7,7 +7,8 @@
 	};
 
 	makePrototypeKeysNonEnumerable(Response);
-
+}
+{
 	HTMLImageElement.prototype.awaitLoaded = function () {
 		return new Promise<HTMLImageElement>((resolve, reject) => {
 			this.onload = () => resolve(this);
@@ -16,4 +17,11 @@
 	};
 
 	makePrototypeKeysNonEnumerable(HTMLImageElement);
+}
+{
+	HTMLCanvasElement.prototype.toBlobUrl = function () {
+		return new Promise<string>(resolve => this.toBlob(blob => resolve(blob! && URL.createObjectURL(blob))));
+	};
+
+	makePrototypeKeysNonEnumerable(HTMLCanvasElement);
 }

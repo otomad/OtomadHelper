@@ -13,8 +13,8 @@ const StyledPreviewYtp = styled.div<{
 
 	img {
 		${styles.mixins.square("100%")};
-		object-fit: cover;
 		position: absolute;
+		object-fit: cover;
 	}
 
 	${({ $name }) => {
@@ -71,8 +71,8 @@ const StyledPreviewYtp = styled.div<{
 			`,
 			mirror: css`
 				img:nth-child(2) {
-					clip-path: inset(0 50% 0 0);
 					scale: -1 1;
+					clip-path: inset(0 50% 0 0);
 				}
 			`,
 			highContrast: css`
@@ -108,7 +108,8 @@ export default function PreviewYtp({ thumbnail, name }: FCP<{
 		mirror: 2,
 	}[name] ?? 1;
 
-	const canvasFilters = useCanvasFilter(thumbnail);
+	// const canvasFilters = useCanvasFilters(thumbnail);
+	const webglFilters = useWebglFilters(thumbnail);
 
 	const alterImage = {
 		chorus: ytpChorusImage,
@@ -117,8 +118,14 @@ export default function PreviewYtp({ thumbnail, name }: FCP<{
 		delay: ytpDelayImage,
 		changeSpeed: ytpChangeSpeedImage,
 
-		vibrato: canvasFilters?.vibrato,
-		spherize: canvasFilters?.spherize,
+		vibrato: webglFilters?.wave,
+		spherize: webglFilters?.spherize,
+		twist: webglFilters?.twist,
+		mosaic: webglFilters?.mosaic,
+		thermal: webglFilters?.thermal,
+		emboss: webglFilters?.emboss,
+		bump: webglFilters?.bump,
+		edge: webglFilters?.edge,
 	}[name];
 
 	return (

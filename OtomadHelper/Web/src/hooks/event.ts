@@ -27,8 +27,14 @@ export function useUnmountEffect(effect: NonNull<ReturnType<EffectCallbackWithAs
  * @param effect - The asynchronous effect to be executed. It can be a function that returns a Promise or a void function.
  * @param deps - An optional array of dependencies. If provided, the effect will be re-executed when any of the dependencies change.
  */
-export function useAsyncEffect(effect: () => Promise<void> | void, deps?: DependencyList | undefined) {
-	useEffect(() => void effect(), deps);
+export function useAsyncEffect(effect: () => MaybePromise<void | (() => void)>, deps?: DependencyList | undefined) {
+	const unmountEffect = useRef<(() => void) | void>();
+	useEffect(() => {
+		(async () => {
+			unmountEffect.current = await effect();
+		})();
+		return () => unmountEffect.current?.();
+	}, deps);
 }
 
 /**

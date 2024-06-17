@@ -12,3 +12,10 @@ declare interface HTMLImageElement {
 	 */
 	awaitLoaded(): Promise<HTMLImageElement>;
 }
+
+declare interface HTMLCanvasElement {
+	/**
+	 * Async get the image blob url shown on the canvas.
+	 */
+	toBlobUrl(): Promise<string>;
+}

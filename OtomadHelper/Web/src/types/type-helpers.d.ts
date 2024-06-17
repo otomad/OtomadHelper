@@ -128,4 +128,10 @@ declare global {
 	 * @template TFunc - Source function.
 	 */
 	type PartialArgsFunc<TFunc extends AnyFunction> = Func<Partial<Parameters<TFunc>>, ReturnType<TFunc>>;
+
+	/**
+	 * Maybe the type object of Promise or its type itself.
+	 * @template TRef - Maybe a Promise type.
+	 */
+	type MaybePromise<T> = T | Promise<T>;
 }

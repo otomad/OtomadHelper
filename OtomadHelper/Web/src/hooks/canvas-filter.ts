@@ -204,7 +204,7 @@ const useSaved = createStore({
  * @param imagePath - The path of the image to be filtered.
  * @returns A map of filter names to their corresponding URLs.
  */
-export function useCanvasFilter(imagePath: string) {
+export function useCanvasFilters(imagePath: string) {
 	const saved = useSnapshot(useSaved);
 
 	const getCanvasFilter = useCallback(async (imagePath: string) => {

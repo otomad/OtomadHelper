@@ -79,7 +79,6 @@ type StyleProperties = string & keyof FilterValueType<CSSStyleDeclaration, strin
 type Keyframe = Partial<Override<Record<StyleProperties, Numberish>, { offset: number }>>;
 type Keyframes = Keyframe[];
 type DimensionAxis = "height" | "width" | "both";
-type MaybePromise<T> = T | Promise<T>;
 
 export type AnimateSizeOptions = Partial<{
 	/** Explicitly specify the start height (optional). */

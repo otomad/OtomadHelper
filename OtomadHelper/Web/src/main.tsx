@@ -1,4 +1,4 @@
-/* import { ClickToComponent } from "click-to-react-component";
+import { ClickToComponent } from "click-to-react-component";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
@@ -10,8 +10,4 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 		<App />
 		<ClickToComponent />
 	</React.StrictMode>,
-); */
-
-import "./initial.ts";
-
-import "hooks/webgl-filter";
+);

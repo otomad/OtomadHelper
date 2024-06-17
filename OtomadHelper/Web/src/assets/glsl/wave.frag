@@ -1,5 +1,5 @@
 const float frequency = 72.0;
-const float amplitude = 72.0;
+const float amplitude = 48.0;
 const float time = 0.0;
 
 vec4 frag() {
