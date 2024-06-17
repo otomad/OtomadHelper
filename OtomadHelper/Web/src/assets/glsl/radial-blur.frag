@@ -1,11 +1,3 @@
-#version 300 es
-
-precision highp float;
-
-in vec2 textureCoordinate;
-out vec4 outColor;
-uniform sampler2D image;
-
 const float strength = 0.15;
 const vec2 center = vec2(0.5, 0.5);
 const vec2 radius = vec2(0, -1);
@@ -18,7 +10,7 @@ highp float rand(vec2 co, float seed) {
 	return fract(sin(sn) * c + seed);
 }
 
-void main() {
+vec4 frag() {
 	float minGradient = radius[0] * 0.3;
 	float innerRadius = (radius[0] + minGradient * 0.5);
 
@@ -47,10 +39,8 @@ void main() {
 		delta = (normalCount - delta) / normalCount;
 		countLimit *= delta;
 		strength *= delta;
-		if (countLimit < 1.0) {
-			outColor = texture(image, textureCoordinate);
-			return;
-		}
+		if (countLimit < 1.0)
+			return texture(image, textureCoordinate);
 	}
 
 	// randomize the lookup values to hide the fixed number of samples
@@ -81,5 +71,5 @@ void main() {
 	// switch back from pre-multiplied alpha
 	// color.rgb /= color.a + 0.00001;
 
-	outColor = color;
+	return color;
 }

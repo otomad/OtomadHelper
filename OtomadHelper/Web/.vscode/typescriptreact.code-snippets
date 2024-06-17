@@ -12,7 +12,7 @@
 		"body": [
 			"const Styled${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}} = styled.${2:div}`",
 			"\t",
-			"`;"
+			"`;",
 			"",
 			"export default function ${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}({ children, ...htmlAttrs }: FCP<{",
 			"\t",
@@ -21,7 +21,7 @@
 			"\t\t<Styled${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}>",
 			"\t\t\t$0",
 			"\t\t</Styled${1:${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}}>",
-			"\t);"
+			"\t);",
 			"}",
 			"",
 		],

@@ -77,7 +77,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				},
 			}),
 			glsl({
-				compress: DEV,
+				compress: PROD,
 			}),
 			/* compression({
 				skipIfLargerOrEqual: true,
