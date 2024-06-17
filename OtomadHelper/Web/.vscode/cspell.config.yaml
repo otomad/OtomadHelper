@@ -40,6 +40,8 @@ words:
   - geq
   - glsl
   - highp
+  - hsl
+  - hsv
   - hta
   - immer
   - jsdoc
@@ -84,6 +86,7 @@ words:
   - quarternary
   - resw
   - resx
+  - rgb
   - rtl
   - segoe
   - shupelunker
@@ -102,6 +105,7 @@ words:
   - tts
   - ultrabold
   - unhover
+  - unmap
   - unplugin
   - unsmooth
   - upsize
@@ -117,6 +121,7 @@ words:
   - wj
   - xmlbuilder
   - xmp
+  - xyz
   - yoooo
   - ytp
   - ytpmv

@@ -1,7 +1,7 @@
 import fragmentShaderMainSource from "assets/glsl/main.frag";
 import vertexShaderSource from "assets/glsl/main.vert";
-import filterFragment from "assets/glsl/radial-blur.frag";
-import exampleImage from "assets/images/ヨハネの氷.jpg";
+import fragmentFilter from "assets/glsl/wave.frag";
+import exampleImage from "assets/images/ヨハネの氷.png";
 import * as webglUtils from "./webgl/utils";
 
 render(exampleImage);
@@ -52,7 +52,7 @@ async function render(imageSource: string, uniforms: Record<string, number> = {}
 
 	// Merge the fragmentShaderSource. Split the two, to ensure that the macro definition (#) wraps correctly
 	// after the minified code.
-	const fragmentShaderSource = fragmentShaderMainSource + "\n" + filterFragment;
+	const fragmentShaderSource = fragmentShaderMainSource + "\n" + fragmentFilter;
 
 	// Setup GLSL program.
 	const program = webglUtils.createProgramFromSources(gl, [vertexShaderSource, fragmentShaderSource])!;

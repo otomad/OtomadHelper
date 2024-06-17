@@ -96,8 +96,12 @@ internal class ManagedStream : Stream {
 					"woff2" => "font/woff2",
 					"ttf" => "font/ttf",
 					"json" => "application/json",
+					"xml" => "application/xml",
 					"manifest" => "application/manifest+json",
 					"ani" => "application/x-navi-animation",
+					"frag" => "x-shader/x-fragment",
+					"vert" => "x-shader/x-vertex",
+					"glsl" => "x-shader/x-glsl",
 					_ => "application/octet-stream",
 				};
 				const int AGE = 1200;

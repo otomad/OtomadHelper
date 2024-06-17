@@ -1,6 +1,7 @@
 const float strength = 0.15;
 const vec2 center = vec2(0.5, 0.5);
-const vec2 radius = vec2(0, -1);
+const float innerRadius = 0.0;
+const float radius = -1.0;
 
 const float MAX_KERNEL_SIZE = 32.0;
 
@@ -11,16 +12,16 @@ highp float rand(vec2 co, float seed) {
 }
 
 vec4 frag() {
-	float minGradient = radius[0] * 0.3;
-	float innerRadius = (radius[0] + minGradient * 0.5);
+	float minGradient = innerRadius * 0.3;
+	float innerRadius = (innerRadius + minGradient * 0.5);
 
-	float gradient = radius[1] * 0.3;
-	float radius = (radius[1] - gradient * 0.5);
+	float gradient = radius * 0.3;
+	float radius = (radius - gradient * 0.5);
 
 	float countLimit = MAX_KERNEL_SIZE;
 
 	vec2 dir = vec2(center.xy - textureCoordinate);
-	float dist = length(vec2(dir.x, dir.y));
+	float dist = length(vec2(dir.x, dir.y * resolution.y / resolution.x));
 
 	float strength = strength;
 
