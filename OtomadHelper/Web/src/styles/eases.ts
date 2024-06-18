@@ -162,7 +162,7 @@ const eases = {
 	 */
 	easeOutSmooth: "cubic-bezier(0.1, 0.9, 0.2, 1)",
 	/**
-	 * ### 流动设计强调缓出
+	 * ### 流利设计强调缓出
 	 * 微软 Windows 11 Fluent 2 中用于强调的缓动，如任务栏图标跳动等。
 	 */
 	easeOutFluentBack: "cubic-bezier(0.13, 1.62, 0, 0.92)",
@@ -270,7 +270,7 @@ const eases = {
 	 */
 	easeInOutSmooth: "cubic-bezier(0.75, 0, 0, 1)",
 	/**
-	 * ### 流动设计点对点缓入缓出
+	 * ### 流利设计点对点缓入缓出
 	 * 微软 Windows 11 Fluent 2 中用于点对点的缓动，如窗口最大化、还原等。
 	 */
 	easeInOutFluent: "cubic-bezier(0.13, 1.62, 0, 0.92)",
