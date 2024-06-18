@@ -11,6 +11,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
 import autoImportConfig from "./auto-import.config";
+import fragmentFiltersVirtualFile from "./src/plugins/vite/fragment-filters";
 import globalized from "./src/plugins/vite/globalized";
 
 const resolve = (...paths: string[]) => _resolve(__dirname, ...paths);
@@ -79,6 +80,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 			glsl({
 				compress: PROD,
 			}),
+			fragmentFiltersVirtualFile(),
 			/* compression({
 				skipIfLargerOrEqual: true,
 				deleteOriginalAssets: true,

@@ -37,6 +37,7 @@ words:
   - endregion
   - esbuild
   - extralight
+  - filedir
   - flyouts
   - geq
   - glsl

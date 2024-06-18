@@ -11,6 +11,9 @@ uniform sampler2D image;
 // Used to pass in the resolution of the canvas.
 uniform vec2 resolution;
 
+// Select the correct fragment filter.
+uniform int fragIndex;
+
 // The textureCoordinates passed in from the vertex shader.
 in vec2 textureCoordinate;
 
@@ -20,10 +23,17 @@ out vec4 outColor;
 // Declare the frag() function which would be implemented.
 vec4 frag();
 
+$fragments
+
+vec4 selectFrag(int index) {
+	$switch
+}
+
 // All fragments shared main function.
 void main() {
 	// Use frag() function to define your own filter.
-	outColor = frag();
+	// outColor = frag();
+	outColor = selectFrag(fragIndex);
 }
 
 /**

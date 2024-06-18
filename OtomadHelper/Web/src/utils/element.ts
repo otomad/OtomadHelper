@@ -197,3 +197,12 @@ export function dataset(dataset: Record<string, Readable | boolean | undefined |
 	}
 	return result;
 }
+
+/**
+ * Create a new image from URL.
+ */
+export function createImageFromUrl(url: string) {
+	const image = new Image();
+	image.src = url;
+	return image.awaitLoaded();
+}
