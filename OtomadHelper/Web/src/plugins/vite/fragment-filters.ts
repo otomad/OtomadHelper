@@ -32,7 +32,7 @@ export default (): Plugin => {
 			const { name: basename, ext } = parse(filename);
 			if (stats.isFile() && ext === ".frag" && !excludes.includes(basename)) {
 				const file = await readFile(filedir, "utf-8");
-				fragments.set(basename, file);
+				fragments.set(new VariableName(basename).camel, file);
 			}
 		}
 		return fragments;
@@ -41,7 +41,6 @@ export default (): Plugin => {
 	const processFragments = (fragments: Map<string, string>) => {
 		const defaults: FragmentDefaults = {};
 		for (let [fragName, frag] of fragments) {
-			const fragNameCamel = new VariableName(fragName).camel;
 			const uniformNames: string[] = [];
 			frag = frag.replaceAll(/(?<=(^|\n)\s*)uniform\s+(?<type>\w+)\s+(?<uniformName>\w+)(?<defaultPart>.*);/g, (match, ...args) => {
 				const groups: Record<"type" | "uniformName" | "defaultPart", string> = args.at(-1);
@@ -72,8 +71,8 @@ export default (): Plugin => {
 				return `uniform ${groups.type} ${groups.uniformName};`;
 			});
 			for (const uniformName of uniformNames)
-				frag = frag.replaceAll(new RegExp(`(?<![\\w\\.])${uniformName}(?![\\w])`, "g"), `${fragNameCamel}_${uniformName}`);
-			frag = frag.replaceAll("vec4 frag()", `vec4 ${fragNameCamel}_frag()`);
+				frag = frag.replaceAll(new RegExp(`(?<![\\w\\.])${uniformName}(?![\\w])`, "g"), `${fragName}_${uniformName}`);
+			frag = frag.replaceAll("vec4 frag()", `vec4 ${fragName}_frag()`);
 			fragments.set(fragName, frag);
 		}
 		return [fragments, defaults] as const;
@@ -102,7 +101,7 @@ export default (): Plugin => {
 				main = main.replace("$fragments", [...fragments.values()].join("\n\n"));
 				let switchCase = "switch (index) {\n";
 				for (const [index, fragName] of fragNames.entries())
-					switchCase += `\t\tcase ${index}: return ${new VariableName(fragName).camel}_frag();\n`;
+					switchCase += `\t\tcase ${index}: return ${fragName}_frag();\n`;
 				switchCase += "\t}";
 				main = main.replace("$switch", switchCase);
 

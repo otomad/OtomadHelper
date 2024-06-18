@@ -1,11 +1,5 @@
-import render from "./webgl/render";
-
-const fragments = (() => {
-	const globs = import.meta.glob<string>([
-		"/src/assets/glsl/**/*.frag", "!/src/assets/glsl/**/main.frag",
-	], { import: "default", eager: true });
-	return Object.fromEntries(Object.entries(globs).map(([path, fragment]) => [new VariableName(path.match(/\/src\/assets\/glsl\/(.*)\.frag/)![1]).camel, fragment]));
-})();
+import { fragNames } from "virtual:fragment-filters";
+import filter from "./webgl/render";
 
 type FilterBlobs = Record<string, string>;
 
@@ -25,12 +19,14 @@ export function useWebglFilters(imagePath: string) {
 				URL.revokeObjectURL(url);
 		}
 
-		const canvas = document.createElement("canvas");
-		for (const [name, fragment] of Object.entries(fragments)) {
-			const filter = await render(imagePath, fragment, undefined, canvas);
+		const image = await createImageFromUrl(imagePath);
+		filter.changeImage(image);
+		fragNames.forEach(async name => {
+			filter.changeFilter(name);
+			filter.apply();
 			const blob = await filter.canvas.toBlobUrl();
 			useSaved.filters[name] = blob;
-		}
+		});
 
 		return useSaved.filters;
 	}, [imagePath]);

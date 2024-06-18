@@ -1,5 +1,4 @@
 import vertexShaderSource from "assets/glsl/main.vert";
-import fragmentFilter from "assets/glsl/mosaic.frag";
 import fragmentShaderSource, { defaults, fragNames } from "virtual:fragment-filters";
 import * as webglUtils from "./utils";
 
@@ -63,6 +62,7 @@ class WebGLFilter {
 	}
 
 	changeFilter(fragName: string, uniforms: Uniforms = {}) {
+		fragName = new VariableName(fragName).camel;
 		this.uniform("1i", "fragIndex", fragNames.indexOf(fragName));
 		uniforms = { ...defaults[fragName], ...uniforms };
 		this.uniforms(uniforms, fragName);

@@ -1,4 +1,4 @@
-/* import { ClickToComponent } from "click-to-react-component";
+import { ClickToComponent } from "click-to-react-component";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
@@ -10,26 +10,4 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 		<App />
 		<ClickToComponent />
 	</React.StrictMode>,
-); */
-
-import imagePath0 from "assets/images/ヨハネの氷.jpg";
-import imagePath1 from "assets/images/ヨハネの氷.png";
-import "./initial";
-
-import filter from "hooks/webgl/render";
-
-const image0 = await createImageFromUrl(imagePath0);
-const image1 = await createImageFromUrl(imagePath1);
-
-document.body.append(filter.canvas);
-
-filter.changeImage(image0);
-filter.changeFilter("twist");
-filter.apply();
-let on = false;
-setInterval(() => {
-	on = !on;
-	// filter.changeImage(on ? image0 : image1);
-	filter.changeFilter(on ? "thermal" : "twist");
-	filter.apply();
-}, 2000);
+);
