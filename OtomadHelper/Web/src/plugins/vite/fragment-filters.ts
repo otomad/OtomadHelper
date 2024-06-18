@@ -4,8 +4,13 @@ import { lstat, readdir, readFile } from "fs/promises";
 import { parse, resolve } from "path";
 import type { Plugin } from "vite";
 import loadShader from "../../../node_modules/vite-plugin-glsl/src/loadShader";
+import VariableName from "../../classes/VariableName";
 
 export type FragmentDefaults = Record<string, Record<string, { type: string; value: number | number[] }>>;
+
+function eval2(x: string) {
+	return new Function("return " + x)();
+}
 
 export default (): Plugin => {
 	const pluginName = "fragment-filters";
@@ -36,6 +41,7 @@ export default (): Plugin => {
 	const processFragments = (fragments: Map<string, string>) => {
 		const defaults: FragmentDefaults = {};
 		for (let [fragName, frag] of fragments) {
+			const fragNameCamel = new VariableName(fragName).camel;
 			const uniformNames: string[] = [];
 			frag = frag.replaceAll(/(?<=(^|\n)\s*)uniform\s+(?<type>\w+)\s+(?<uniformName>\w+)(?<defaultPart>.*);/g, (match, ...args) => {
 				const groups: Record<"type" | "uniformName" | "defaultPart", string> = args.at(-1);
@@ -49,12 +55,12 @@ export default (): Plugin => {
 						const vectorLength = parseInt(type.replace("vec", ""), 10);
 						const csv = defaultPart.match(/\((.*)\)/)?.[1].trim();
 						if (!csv) break;
-						value = csv.split(",").map(str => parseFloat(str));
+						value = csv.split(",").map(str => eval2(str) as number);
 						if (value.length === 1)
 							for (let i = 1; i < vectorLength; i++)
 								value.push(value[0]);
 					} else {
-						value = parseFloat(defaultPart);
+						value = eval2(defaultPart) as number;
 						if (!Number.isFinite(value)) break;
 					}
 					if (!(fragName in defaults))
@@ -66,8 +72,8 @@ export default (): Plugin => {
 				return `uniform ${groups.type} ${groups.uniformName};`;
 			});
 			for (const uniformName of uniformNames)
-				frag = frag.replaceAll(new RegExp(`(?<![\\w\\.])${uniformName}(?![\\w])`, "g"), `${fragName}_${uniformName}`);
-			frag = frag.replaceAll("vec4 frag()", `vec4 ${fragName}_frag()`);
+				frag = frag.replaceAll(new RegExp(`(?<![\\w\\.])${uniformName}(?![\\w])`, "g"), `${fragNameCamel}_${uniformName}`);
+			frag = frag.replaceAll("vec4 frag()", `vec4 ${fragNameCamel}_frag()`);
 			fragments.set(fragName, frag);
 		}
 		return [fragments, defaults] as const;
@@ -96,7 +102,7 @@ export default (): Plugin => {
 				main = main.replace("$fragments", [...fragments.values()].join("\n\n"));
 				let switchCase = "switch (index) {\n";
 				for (const [index, fragName] of fragNames.entries())
-					switchCase += `\t\tcase ${index}: return ${fragName}_frag();\n`;
+					switchCase += `\t\tcase ${index}: return ${new VariableName(fragName).camel}_frag();\n`;
 				switchCase += "\t}";
 				main = main.replace("$switch", switchCase);
 
@@ -107,6 +113,15 @@ export default (): Plugin => {
 				result += `export const fragNames = ${JSON.stringify(fragNames)};\n\n`;
 				result += `export const defaults = ${JSON.stringify(defaults)};\n`;
 				return result;
+			}
+		},
+
+		handleHotUpdate({ server, file }) {
+			file = file.replace(root, "");
+			if (file.startsWith("/src/assets/glsl")) {
+				const virtualModule = server.moduleGraph.getModuleById(resolvedVirtualModuleId)!;
+				server.moduleGraph.invalidateModule(virtualModule);
+				server.hot.send({ type: "full-reload" });
 			}
 		},
 	};

@@ -16,19 +16,20 @@ import imagePath0 from "assets/images/ヨハネの氷.jpg";
 import imagePath1 from "assets/images/ヨハネの氷.png";
 import "./initial";
 
-// import filter from "hooks/webgl/render";
-import fragments, { defaults, fragNames } from "virtual:fragment-filters";
-console.log(fragments);
-console.log(fragNames);
-console.log(defaults);
+import filter from "hooks/webgl/render";
 
-/* const image0 = await createImageFromUrl(imagePath0);
+const image0 = await createImageFromUrl(imagePath0);
 const image1 = await createImageFromUrl(imagePath1);
 
 document.body.append(filter.canvas);
 
+filter.changeImage(image0);
+filter.changeFilter("twist");
+filter.apply();
 let on = false;
 setInterval(() => {
 	on = !on;
-	filter.changeImage(on ? image0 : image1);
-}, 2000); */
+	// filter.changeImage(on ? image0 : image1);
+	filter.changeFilter(on ? "thermal" : "twist");
+	filter.apply();
+}, 2000);

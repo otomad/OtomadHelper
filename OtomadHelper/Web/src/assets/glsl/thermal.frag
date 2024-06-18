@@ -1,4 +1,4 @@
-const float direction = 1.0;
+uniform float direction = 1.0;
 
 vec4 hsvToRgb(vec4 hsva) {
 	vec3 hsv = hsva.xyz;

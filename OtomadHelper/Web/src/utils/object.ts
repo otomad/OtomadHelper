@@ -456,6 +456,10 @@ export function objectFilterKeys(object: object, filteredKeys: PropertyKey[]) {
 	return copiedObject;
 }
 
+export function objectReplaceKeys<T extends object>(object: T, replacement: (oldKey: string) => string) {
+	return Object.fromEntries(Object.entries(object).map(([key, value]) => [replacement(key), value] as const)) as T;
+}
+
 /**
  * @deprecated // WARN: Await for React 19 released with a new feature **ref as a prop**, and then delete this function.
  */

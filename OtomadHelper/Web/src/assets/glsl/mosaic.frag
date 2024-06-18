@@ -1,4 +1,4 @@
-const vec2 size = vec2(10);
+uniform vec2 size = vec2(10);
 
 vec2 pixelate(vec2 coord, vec2 size) {
 	return (floor(coord / size) + 0.5) * size;

@@ -1,9 +1,7 @@
-const float strength = 0.15;
-const vec2 center = vec2(0.5, 0.5);
-const float innerRadius = 0.0;
-const float radius = -1.0;
-
-const float MAX_KERNEL_SIZE = 32.0;
+uniform float strength = 0.15;
+uniform vec2 center = vec2(0.5);
+uniform float innerRadius = 0.0;
+uniform float radius = -1.0;
 
 highp float rand(vec2 co, float seed) {
 	const highp float a = 12.9898, b = 78.233, c = 43758.5453;
@@ -12,6 +10,8 @@ highp float rand(vec2 co, float seed) {
 }
 
 vec4 frag() {
+	const float MAX_KERNEL_SIZE = 32.0;
+
 	float minGradient = innerRadius * 0.3;
 	float innerRadius = (innerRadius + minGradient * 0.5);
 

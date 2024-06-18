@@ -1,11 +1,13 @@
-import fragmentShaderMainSource from "assets/glsl/main.frag";
 import vertexShaderSource from "assets/glsl/main.vert";
 import fragmentFilter from "assets/glsl/mosaic.frag";
+import fragmentShaderSource, { defaults, fragNames } from "virtual:fragment-filters";
 import * as webglUtils from "./utils";
 
 type UniformType = ValueOf<{
 	[key in keyof WebGL2RenderingContext]: key extends `uniform${infer type}` ? type : never;
 }>;
+
+type Uniforms = Record<string, number | number[] | { type: UniformType; value: number | number[] }>;
 
 class WebGLFilter {
 	constructor(
@@ -58,7 +60,25 @@ class WebGLFilter {
 			this.uniform("2f", "resolution", canvas.width, canvas.height); // Pass in the canvas resolution so we can convert from pixels to clipSpace in the shader.
 		}
 		this.isImageInitialized = true;
-		this.apply();
+	}
+
+	changeFilter(fragName: string, uniforms: Uniforms = {}) {
+		this.uniform("1i", "fragIndex", fragNames.indexOf(fragName));
+		uniforms = { ...defaults[fragName], ...uniforms };
+		this.uniforms(uniforms, fragName);
+	}
+
+	uniforms(uniforms: Uniforms = {}, fragName?: string) {
+		for (let [uniformName, mixedValue] of Object.entries(uniforms)) {
+			if (fragName)
+				uniformName = new VariableName(fragName).camel + "_" + uniformName;
+			if (typeof mixedValue === "number") mixedValue = { type: "1f", value: mixedValue };
+			if (Array.isArray(mixedValue)) mixedValue = { type: (mixedValue.length + "f") as "2f", value: mixedValue };
+			let { type, value } = mixedValue;
+			if (typeof value === "number") value = [value];
+			type = convertGlslTypeToUniformType(type);
+			this.uniform(type, uniformName, ...value as [number]);
+		}
 	}
 }
 
@@ -67,8 +87,6 @@ function initWebgl2(/* image: HTMLImageElement, fragmentFilter: string, uniforms
 	const canvas = document.createElement("canvas");
 	const gl = canvas.getContext("webgl2");
 	if (!gl) return null!;
-	// Merge the fragmentShaderSource. Split the two, to ensure that the macro definition (#) wraps correctly after the minified code.
-	const fragmentShaderSource = fragmentShaderMainSource + "\n" + fragmentFilter;
 
 	// Setup GLSL program.
 	const program = webglUtils.createProgramFromSources(gl, [vertexShaderSource, fragmentShaderSource])!;
@@ -144,6 +162,16 @@ function setRectangle(gl: WebGL2RenderingContext, x: number, y: number, width: n
 		x2, y1,
 		x2, y2,
 	]), gl.STATIC_DRAW);
+}
+
+function convertGlslTypeToUniformType(type: string): UniformType {
+	return ({
+		int: "1i",
+		float: "1f",
+		vec2: "2f",
+		vec3: "3f",
+		vec4: "4f",
+	} satisfies Record<string, UniformType>)[type] ?? type as UniformType;
 }
 
 const filter = initWebgl2();

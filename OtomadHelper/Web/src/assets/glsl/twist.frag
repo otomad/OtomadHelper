@@ -1,9 +1,9 @@
-float radius = 200.0;
-const float angle = -5.0;
-const vec2 offset = vec2(0.5);
-const vec4 uInputSize = vec4(720.0,404.0,1.0/720.0,1.0/404.0);
+// float radius = 200.0;
+uniform float angle = -5.0;
+uniform vec2 offset = vec2(0.5);
+uniform vec4 uInputSize = vec4(720.0,404.0,1.0/720.0,1.0/404.0);
 
-vec2 twisting(vec2 coord) {
+vec2 twisting(vec2 coord, float radius) {
 	coord *= resolution;
 	coord -= offset * resolution;
 
@@ -24,7 +24,7 @@ vec2 twisting(vec2 coord) {
 }
 
 vec4 frag() {
-	radius = min(resolution.x, resolution.y) / 2.0;
-	vec2 coord = twisting(textureCoordinate);
+	float radius = min(resolution.x, resolution.y) / 2.0;
+	vec2 coord = twisting(textureCoordinate, radius);
 	return texture(image, coord);
 }

@@ -1,4 +1,4 @@
-const float strength = 8.0;
+uniform float strength = 8.0;
 
 vec4 frag() {
 	vec2 onePixel = vec2(1.0 / resolution);

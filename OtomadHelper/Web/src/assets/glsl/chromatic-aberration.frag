@@ -1,6 +1,6 @@
-uniform float scale; // 1.2
-uniform float horizontalIntensity; // 0.5
-uniform float verticalIntensity; // 0.5
+uniform float scale = 1.2;
+uniform float horizontalIntensity = 0.5;
+uniform float verticalIntensity = 0.5;
 
 vec4 frag() {
 	vec2 newTextureCoordinate = vec2((scale - 1.0) * 0.5 + textureCoordinate.x / scale, (scale - 1.0) * 0.5 + textureCoordinate.y / scale);

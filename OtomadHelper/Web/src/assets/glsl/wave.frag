@@ -1,6 +1,6 @@
-const float frequency = 72.0;
-const float amplitude = 48.0;
-const float time = 0.0;
+uniform float frequency = 72.0;
+uniform float amplitude = 48.0;
+uniform float time = 0.0;
 
 vec4 frag() {
 	vec2 uv = textureCoordinate;
