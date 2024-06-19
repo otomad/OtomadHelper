@@ -35,6 +35,7 @@ export default function ShellPage() {
 	const { uiScale } = useSnapshot(configStore.settings);
 	const zoom = uiScale === 100 ? undefined : uiScale / 100;
 	const { appName } = useAboutApp();
+	const { enablePixelScaling } = useSnapshot(configStore.visual);
 	const documentTitle = (() => {
 		const lastPage = page.last();
 		return (lastPage ? getTitle(lastPage, true) + " - " : "") + appName;
@@ -42,9 +43,12 @@ export default function ShellPage() {
 	const pageContentId = useId();
 	setPageContentId(pageContentId);
 
-	useEffect(() => {
+	useEffect(() => { // TODO: React 19 to use new method.
 		document.title = documentTitle;
 	}, [documentTitle]);
+	useEffect(() => { // TODO: React 19 to use new method.
+		document.body.classList.toggle("pixelated", enablePixelScaling);
+	}, [enablePixelScaling]);
 
 	const completeDisabled = !isCompleteAvailable(page);
 	const autoLayoutTracksMode = isAutoLayoutTracks(page);

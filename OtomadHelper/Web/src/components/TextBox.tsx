@@ -74,6 +74,7 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 					icon="spinner/chevron_up"
 					disabled={disabled}
 					repeat
+					tabIndex={-1}
 					onClick={() => spinWithValue(1)}
 					onRelease={onRelease}
 				/>
@@ -82,6 +83,7 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 					icon="spinner/chevron_down"
 					disabled={disabled}
 					repeat
+					tabIndex={-1}
 					onClick={() => spinWithValue(-1)}
 					onRelease={onRelease}
 				/>
@@ -286,8 +288,8 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 					autoComplete="off"
 					onInput={handleInput}
 					onPaste={handleChange}
-					onBlur={handleChange}
 					onKeyDown={handleKeyDown}
+					onMouseDown={onChanging}
 				/>
 				<label className="suffix" htmlFor={inputId}>{suffix}</label>
 				{spinner?.(inputId)}

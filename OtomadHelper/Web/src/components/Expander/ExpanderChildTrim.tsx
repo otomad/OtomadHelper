@@ -33,7 +33,7 @@ export default function ExpanderChildTrim({ start, end }: FCP<{
 				<div className="tilde">~</div>
 				<TimecodeBox timecode={end} />
 			</div>
-			<Button icon="arrow_reset" accent="critical" onClick={reset}>{t.reset}</Button>
+			<Button icon="arrow_reset" accent="critical" subtle extruded onClick={reset}>{t.reset}</Button>
 		</StyledExpanderChildTrim>
 	);
 }

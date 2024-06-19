@@ -37,7 +37,14 @@ export default function Ytp() {
 						icon="sparkle"
 						actions={<Badge hidden={!selectEffectCount}>{selectEffectCount}</Badge>}
 					>
-						<Checkbox value={selectAll}>{t.selectAll}</Checkbox>
+						<Checkbox
+							value={selectAll}
+							actions={
+								<Button subtle icon="invert_selection" onClick={e => { stopEvent(e); selectAll[2](); }}>{t.invertSelection}</Button>
+							}
+						>
+							{t.selectAll}
+						</Checkbox>
 						<ItemsView view="grid" current={[selectEffects, setSelectEffects]} multiple>
 							{effects.map(name => (
 								<ItemsView.Item

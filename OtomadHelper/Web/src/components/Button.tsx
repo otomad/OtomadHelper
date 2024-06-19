@@ -1,15 +1,18 @@
 const isPressed = ":is(:active, [data-pressed])", notPressedOrDisabled = ":not(:active, [data-pressed], [disabled])";
+const inlinePadding = 11;
 
 export /* internal */ const StyledButton = styled.button<{
 	/** The name of the background fill color. */
 	$fillColorName?: string;
+	/** The name of the background fill color when on subtle mode. */
+	$subtleFillColorName?: string;
 	/** Is the orientation of the icon changed based on the writing direction? */
 	$dirBased?: boolean;
 }>`
 	${styles.mixins.flexCenter()};
 	display: inline-flex;
 	min-height: 30px;
-	padding: 4px 11px 6px;
+	padding: 4px ${inlinePadding}px 6px;
 	border: 1px solid;
 	border-radius: 4px;
 
@@ -37,7 +40,44 @@ export /* internal */ const StyledButton = styled.button<{
 		}
 	}
 
-	${({ $fillColorName }) => !$fillColorName ? css`
+	&.subtle,
+	&.hyperlink {
+		padding: 0 11px;
+		background-color: ${c("fill-color-subtle-transparent")};
+		border: none;
+
+		&::before {
+			display: none;
+		}
+
+		&:hover {
+			background-color: ${c("fill-color-subtle-secondary")};
+		}
+
+		&${isPressed} {
+			background-color: ${c("fill-color-subtle-tertiary")};
+		}
+	}
+
+	&.hyperlink {
+		color: ${c("accent-color")};
+		cursor: pointer;
+	}
+
+	&.extruded {
+		margin-inline: ${-inlinePadding}px;
+	}
+
+	${({ $dirBased }) => $dirBased && css`
+		&:dir(rtl) {
+			.icon,
+			.animated-icon .icon-box {
+				scale: -1 1;
+			}
+		}
+	`}
+
+	${({ $fillColorName, $subtleFillColorName }) => !$fillColorName ? css`
 		background-color: ${c("fill-color-control-default")};
 		border-color: ${c("stroke-color-control-stroke-default")};
 
@@ -84,6 +124,22 @@ export /* internal */ const StyledButton = styled.button<{
 				color: ${c("foreground-color")};
 			}
 		}
+
+		&.subtle {
+			--fill-color: ${c($subtleFillColorName!)};
+
+			* {
+				color: ${c($fillColorName)};
+			}
+
+			&:hover {
+				background-color: ${c("fill-color", 75)};
+			}
+
+			&${isPressed} {
+				background-color: ${c("fill-color", 65)};
+			}
+		}
 	`}
 
 	@layer components {
@@ -93,42 +149,9 @@ export /* internal */ const StyledButton = styled.button<{
 	> .content > span {
 		${styles.mixins.hideIfEmpty()};
 	}
-
-	&.subtle,
-	&.hyperlink {
-		padding: 0 11px;
-		background-color: ${c("fill-color-subtle-transparent")};
-		border: none;
-
-		&::before {
-			display: none;
-		}
-
-		&:hover {
-			background-color: ${c("fill-color-subtle-secondary")};
-		}
-
-		&${isPressed} {
-			background-color: ${c("fill-color-subtle-tertiary")};
-		}
-	}
-
-	&.hyperlink {
-		color: ${c("accent-color")};
-		cursor: pointer;
-	}
-
-	${({ $dirBased }) => $dirBased && css`
-		&:dir(rtl) {
-			.icon,
-			.animated-icon .icon-box {
-				scale: -1 1;
-			}
-		}
-	`}
 `;
 
-export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBased, repeat, className, onRelease, ...htmlAttrs }: FCP<{
+export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBased, repeat, extruded, className, onRelease, ...htmlAttrs }: FCP<{
 	/** Button icon. */
 	icon?: DeclaredIcons;
 	/** Button animated icon. */
@@ -143,18 +166,22 @@ export default forwardRef(function Button({ children, icon, animatedIcon, subtle
 	dirBased?: boolean;
 	/** Is repeat button? When on, the `onClick` events will be triggered continuously when the button is pressed. */
 	repeat?: boolean;
+	/** Extrude the inline paddings. */
+	extruded?: boolean;
 	/** Mouse release button event. Only works with `RepeatButton`. */
 	onRelease?: BaseEventHandler;
 }, "button">, ref: ForwardedRef<"button">) {
 	const fillColorName = !accent ? undefined : accent === true ? "accent-color" : `fill-color-system-${accent}`;
+	const subtleFillColorName = `fill-color-system-${accent}-background`;
 
 	return (
 		<StyledButton
 			as={repeat ? RepeatButton : "button"}
 			ref={ref}
 			type="button"
-			className={[className, { subtle, hyperlink }]}
+			className={[className, { subtle, hyperlink, extruded }]}
 			$fillColorName={fillColorName}
+			$subtleFillColorName={subtleFillColorName}
 			$dirBased={dirBased}
 			onRelease={repeat ? onRelease : undefined}
 			{...htmlAttrs}

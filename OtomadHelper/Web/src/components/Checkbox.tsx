@@ -3,6 +3,7 @@ import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemTe
 const checkedOrInd = ":is(:checked, :indeterminate)";
 const unchecked = ":not(:checked, :indeterminate)";
 const iconExiting = ":has(.icon.exit, .icon.enter-done)";
+const pressed = ":active:not(:has(.actions:active))";
 
 const StyledCheckboxLabel = styled.label<{
 	/** Include just the checkbox itself, not the text label? */
@@ -79,17 +80,17 @@ const StyledCheckboxLabel = styled.label<{
 		}
 	}
 
-	&:active,
-	.items-view-item:active & {
+	&${pressed},
+	.items-view-item${pressed} & {
 		input${unchecked} ~ .base {
 			background-color: ${c("fill-color-control-alt-quarternary")};
 			outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
 		}
 	}
 
-	&:active input${checkedOrInd} ~ .base,
-	.items-view-item:active & input${checkedOrInd} ~ .base,
-	&:active .base${iconExiting} {
+	&${pressed} input${checkedOrInd} ~ .base,
+	.items-view-item${pressed} & input${checkedOrInd} ~ .base,
+	&${pressed} .base${iconExiting} {
 		opacity: 0.8;
 
 		.icon {
@@ -113,8 +114,12 @@ const StyledCheckboxLabel = styled.label<{
 		outline-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
 	}
 
-	.items-view-item:active & {
+	.items-view-item${pressed} & {
 		pointer-events: none;
+	}
+
+	.actions {
+		${styles.mixins.hideIfEmpty()};
 	}
 
 	${styles.mixins.forwardFocusRing()};
@@ -127,6 +132,8 @@ interface SharedProps {
 	details?: ReactNode;
 	/** Include just the checkbox itself, not the text label? */
 	plain?: boolean;
+	/** The other action control area on the right side of the expander. */
+	actions?: ReactNode;
 }
 
 export default function Checkbox<T>(props: FCP<{
@@ -149,7 +156,7 @@ export default function Checkbox(props: FCP<{
 	/** State change event. */
 	onChange?: (e: { checkState: CheckState; checked: boolean | null }) => void;
 } & SharedProps>): JSX.Element;
-export default function Checkbox<T>({ children, id, value: [value, setValue], disabled = false, onChange, details, plain = false }: FCP<{
+export default function Checkbox<T>({ children, id, value: [value, setValue], disabled = false, onChange, details, plain = false, actions }: FCP<{
 	id?: T;
 	value: StateProperty<T[]> | StateProperty<boolean> | StateProperty<CheckState>;
 	onChange?: Function;
@@ -216,10 +223,15 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 				</SwitchTransition>
 			</div>
 			{!plain && (
-				<div className="text">
-					<p className="title">{children}</p>
-					<p className="details">{details}</p>
-				</div>
+				<>
+					<div className="text">
+						<p className="title">{children}</p>
+						<p className="details">{details}</p>
+					</div>
+					<div className="actions">
+						{actions}
+					</div>
+				</>
 			)}
 		</StyledCheckboxLabel>
 	);

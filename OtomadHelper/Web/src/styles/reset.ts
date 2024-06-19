@@ -2,6 +2,8 @@
  * Reset all CSS default junk configs here.
  */
 export default css`
+	/* stylelint-disable declaration-block-no-duplicate-properties */
+
 	@layer base {
 		// Goodbye, the ugly native style.
 		button,
@@ -21,6 +23,12 @@ export default css`
 		picture {
 			display: block;
 			vertical-align: bottom; // Retarded VSCode CSS propertyIgnoredDueToDisplay complains that the "vertical-align" property is ignored due to "display: block". I declare it in this global basic style now, but if a component needs to modify it to "display: inline-block" for some special needs, wouldn't this "vertical-align" property be effective?
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: crisp-edges;
+
+			.pixelated & {
+				image-rendering: pixelated;
+			}
 		}
 
 		// The mouse cursor for the label should use the inherited style.
