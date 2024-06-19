@@ -17,5 +17,5 @@ declare interface HTMLCanvasElement {
 	/**
 	 * Async get the image blob url shown on the canvas.
 	 */
-	toBlobUrl(): Promise<string>;
+	toBlobURL(): Promise<string>;
 }

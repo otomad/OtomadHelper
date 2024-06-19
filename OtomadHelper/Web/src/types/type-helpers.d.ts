@@ -134,4 +134,13 @@ declare global {
 	 * @template TRef - Maybe a Promise type.
 	 */
 	type MaybePromise<T> = T | Promise<T>;
+
+	type PromiseOnce<T> = T extends Promise<any> ? T : Promise<T>;
+
+	type MakeFunctionAsync<TFunction extends Function> = (...args: Parameters<TFunction>) =>
+		PromiseOnce<ReturnType<TFunction>>;
+
+	type MakeFunctionsAsync<TFunctions> = {
+		[functionName in keyof TFunctions]: MakeFunctionAsync<TFunctions[functionName]>;
+	};
 }

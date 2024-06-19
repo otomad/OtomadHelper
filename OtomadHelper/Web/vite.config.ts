@@ -125,5 +125,8 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 			"**/*.cur",
 			"**/*.ani",
 		],
+		define: {
+			// SC_DISABLE_SPEEDY: false, // Enable to speed up styled component, but make debugging more difficult;
+		},
 	};
 });

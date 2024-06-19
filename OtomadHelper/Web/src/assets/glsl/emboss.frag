@@ -1,7 +1,9 @@
 uniform float strength = 2.0;
+uniform float accuracy = 500.0; // Use 0.0 to match the image real resolution.
 
 vec4 frag() {
 	vec2 onePixel = vec2(1.0 / resolution);
+	if (accuracy != 0.0) onePixel = vec2(1.0 / accuracy);
 
 	vec4 color;
 

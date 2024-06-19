@@ -19,7 +19,7 @@
 	makePrototypeKeysNonEnumerable(HTMLImageElement);
 }
 {
-	HTMLCanvasElement.prototype.toBlobUrl = function () {
+	HTMLCanvasElement.prototype.toBlobURL = function () {
 		return new Promise<string>(resolve => this.toBlob(blob => resolve(blob! && URL.createObjectURL(blob))));
 	};
 

@@ -24,7 +24,7 @@ export function useWebglFilters(imagePath: string) {
 		fragNames.forEach(async name => {
 			filter.changeFilter(name);
 			filter.apply();
-			const blob = await filter.canvas.toBlobUrl();
+			const blob = await filter.canvas.toBlobURL();
 			useSaved.filters[name] = blob;
 		});
 

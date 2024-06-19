@@ -143,6 +143,13 @@ const GlobalStyle = createGlobalStyle<{
 		display: none;
 	}
 
+	.calc-size {
+		position: fixed;
+		opacity: 0;
+		visibility: hidden;
+		transition: none;
+	}
+
 	// Color mode transition
 	::view-transition-old(root),
 	::view-transition-new(root) {

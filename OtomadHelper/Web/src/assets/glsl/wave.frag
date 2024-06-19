@@ -6,6 +6,5 @@ vec4 frag() {
 	vec2 uv = textureCoordinate;
 	uv.y += sin(uv.x * frequency + time) / amplitude;
 	vec4 color = texture(image, uv);
-	color.a = 1.0;
 	return color;
 }

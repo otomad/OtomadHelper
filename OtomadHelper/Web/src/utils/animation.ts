@@ -134,6 +134,8 @@ export type AnimateSizeOptions = Partial<{
 	removePreviousAnimations: boolean;
 	/** Keep the style after the animation is complete? */
 	fillForward: boolean;
+	/** Use Scheduler API to optimize long task, used in few cases only, animation will be abnormal in other cases. */
+	// optimizeTask: boolean;
 }>;
 
 /**
@@ -175,13 +177,19 @@ export async function* animateSizeGenerator(
 	// if (isPrefersReducedMotion()) duration = 0;
 	let isHeightChanged = specified === "height" || specified === "both",
 		isWidthChanged = specified === "width" || specified === "both";
+	// element.classList.add("calc-size");
+	// await scheduler.postTask(() => {
 	startHeight ??= !isHeightChanged ? 0 : element.clientHeight + (clientAdjustment.startHeight ?? 0);
 	startWidth ??= !isWidthChanged ? 0 : element.clientWidth + (clientAdjustment.startWidth ?? 0);
+	// });
 	const _hasChangeFunc = yield;
+	// await scheduler.postTask(() => {
 	// if (hasChangeFunc && awaitNextTick) await nextTick();
 	if (removePreviousAnimations) removeExistAnimations(element, element.children[0]);
 	endHeight ??= !isHeightChanged ? 0 : element.clientHeight + (clientAdjustment.endHeight ?? 0);
 	endWidth ??= !isWidthChanged ? 0 : element.clientWidth + (clientAdjustment.endWidth ?? 0);
+	// });
+	// element.classList.remove("calc-size");
 	// if (getSize)
 	// 	if (Array.isArray(getSize)) [getSize[0], getSize[1]] = [endWidth, endHeight];
 	// 	else getSize.value = [endWidth, endHeight];
@@ -279,6 +287,7 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 	enter.easing = easing[0];
 	exit.easing = easing[1];
 	enter.removePreviousAnimations = true;
+	exit.removePreviousAnimations = true;
 	exit.fillForward = true;
 	enter.specified = exit.specified = specified;
 
@@ -372,4 +381,13 @@ export async function startColorViewTransition(changeFunc: () => MaybePromise<vo
 	const animation = document.documentElement.animate(keyframes, options);
 	await animation.finished;
 	document.head.removeChild(style);
+}
+
+// This function should to return a Promise instead of the result itself, so cheat the function as async with no await inside the function body.
+// eslint-disable-next-line require-await
+async function postTask<TResult>(callback: () => TResult, optimizeTask: boolean = true) {
+	if (typeof scheduler === "undefined" || !optimizeTask)
+		return callback();
+	else
+		return scheduler.postTask(callback);
 }

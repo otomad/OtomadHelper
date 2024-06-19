@@ -159,3 +159,38 @@ declare global {
 	}
 }
 // #endregion
+
+// #region Scheduler API
+declare global {
+	interface Scheduler {
+		/**
+		 * Adding tasks to be scheduled according to their priority.
+		 *
+		 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Scheduler/postTask)
+		 */
+		postTask<TResult>(callback: () => TResult, options?: SchedulerTaskOptions): PromiseOnce<TResult>;
+	}
+
+	interface SchedulerTaskOptions {
+		priority?: "user-blocking" | "user-visible" | "background";
+		signal?: TaskSignal | AbortSignal;
+		delay?: number;
+	}
+
+	/**
+	 * The scheduler read-only property of the Window interface is the entry point for using the Prioritized Task Scheduling API.
+	 *
+	 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/scheduler)
+	 */
+	const scheduler: Scheduler;
+
+	interface Window {
+		/**
+		 * The scheduler read-only property of the Window interface is the entry point for using the Prioritized Task Scheduling API.
+		 *
+		 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/scheduler)
+		 */
+		scheduler: Scheduler;
+	}
+}
+// #endregion
