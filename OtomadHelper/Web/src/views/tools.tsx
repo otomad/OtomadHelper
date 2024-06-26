@@ -9,18 +9,12 @@ export default function Tools() {
 				icon="flow"
 			/>
 			<SettingsCard
-				title={t.tools.selector}
-				details={t.descriptions.tools.selector}
+				title={t.tools.selectorAndReplacer}
+				details={t.descriptions.tools.selectorAndReplacer}
 				type="button"
 				icon="search"
 				selectInfo={t(0).selectInfo.trackEvent}
 				selectValid={0}
-			/>
-			<SettingsCard
-				title={t.tools.replacer}
-				details={t.descriptions.tools.replacer}
-				type="button"
-				icon="replace"
 			/>
 			<SettingsCard
 				title={t.tools.normalizer}
@@ -39,8 +33,8 @@ export default function Tools() {
 				selectValid={1}
 			/>
 			<SettingsCard
-				title={t.tools.visualizer}
-				details={t.descriptions.tools.visualizer}
+				title={t.tools.effector}
+				details={t.descriptions.tools.effector}
 				type="button"
 				icon="sparkle"
 				selectInfo={t(1).selectInfo.videoEvent}

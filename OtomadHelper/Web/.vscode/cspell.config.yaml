@@ -65,6 +65,7 @@ words:
   - multilayering
   - multisource
   - multitrack
+  - neta
   - neutual
   - numberish
   - nums
@@ -108,6 +109,7 @@ words:
   - ultrabold
   - unhover
   - unmap
+  - unpitched
   - unplugin
   - unsmooth
   - upsize
@@ -142,6 +144,9 @@ ignoreWords:
   - ᵗ
   - ᵗsin
   - pn
+  - shu
+  - shuzo
+  - matsuoka
 flagWords:
   - colour -> color
   - canot -> cannot

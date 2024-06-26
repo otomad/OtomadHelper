@@ -141,7 +141,7 @@ export default {
 				freezeEndFrames: "終了フレームを固定",
 				trimEndFrames: "終了フレームをトリムする",
 				splitThenFreeze: "分割して凍結する",
-				freezeInGray: "グレーで固定",
+				freezeToGray: "グレーで固定",
 			},
 			legato: {
 				upToOneBeat: "1ビートまで",

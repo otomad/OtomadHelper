@@ -145,7 +145,7 @@ export default {
 				freezeEndFrames: "冻结尾帧",
 				trimEndFrames: "截断尾帧",
 				splitThenFreeze: "分割后冻结",
-				freezeInGray: "冻结至黑白",
+				freezeToGray: "冻结至黑白",
 			},
 			legato: {
 				_: "填补间隙",

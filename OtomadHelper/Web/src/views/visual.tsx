@@ -25,7 +25,7 @@ export /* internal */ const noLengthenings = [
 	{ id: "freezeEndFrames", icon: "freeze_end_frames" },
 	{ id: "trimEndFrames", icon: "trim_end_frames" },
 	{ id: "splitThenFreeze", icon: "split_then_freeze" },
-	{ id: "freezeInGray", icon: "freeze_in_gray" },
+	{ id: "freezeToGray", icon: "freeze_to_gray" },
 ] as const;
 export /* internal */ const transformMethods = [
 	"panCrop", "transformOfx",
@@ -109,7 +109,7 @@ export default function Visual() {
 								<TooltipPartial title={<Tooltip.Content image={noLengtheningImage} />}>
 									<ExpanderRadio
 										title={t.stream.noLengthening}
-										details={t.descriptions.stream.noLengthening.visual}
+										details={t.descriptions.stream.noLengthening}
 										icon="no_lengthening"
 										items={noLengthenings}
 										value={noLengthening as StateProperty<string>}
