@@ -25,3 +25,13 @@
 
 	makePrototypeKeysNonEnumerable(HTMLCanvasElement);
 }
+{
+	// Polyfill for Firefox.
+	Element.prototype.scrollIntoViewIfNeeded ??= Element.prototype.scrollIntoView;
+
+	defineGetterInPrototype(Element, "path", function () {
+		return getPath(this);
+	});
+
+	makePrototypeKeysNonEnumerable(Element);
+}

@@ -19,3 +19,14 @@ declare interface HTMLCanvasElement {
 	 */
 	toBlobURL(): Promise<string>;
 }
+
+declare interface Element {
+	/**
+	 * Get an array from the specified element that traces back to the root element.
+	 *
+	 * Used to find the event target and bubble up to find the required element.
+	 *
+	 * @returns An array of the specified element that traces back to the root element.
+	 */
+	readonly path: Element[];
+}

@@ -1,6 +1,6 @@
 import "helpers/host-messages";
 
-window.isWebView = !!window.chrome.webview;
+window.isWebView = !!window.chrome?.webview;
 
 class Bridge {
 	private webViewBridge;
