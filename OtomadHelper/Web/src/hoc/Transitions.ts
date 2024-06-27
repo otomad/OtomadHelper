@@ -1,4 +1,4 @@
-import Size from "./Size";
+import Size from "./Transitions/Size";
 
 export const Transitions = {
 	Size,
