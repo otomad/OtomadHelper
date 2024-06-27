@@ -10,6 +10,7 @@ const StyledSettingsAbout = styled.div`
 		display: none;
 		width: 150px;
 		height: auto;
+		content-visibility: auto;
 
 		${ifColorScheme.light} &.light {
 			display: block;

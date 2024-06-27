@@ -139,9 +139,9 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	// stylelint-disable-next-line selector-id-pattern
-	#__svg__icons__dom__ {
-		display: none;
-	}
+	/* #__svg__icons__dom__ {
+		content-visibility: hidden;
+	} */
 
 	.calc-size {
 		position: fixed;
