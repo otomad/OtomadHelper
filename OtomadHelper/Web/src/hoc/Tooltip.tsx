@@ -79,6 +79,7 @@ const StyledTooltip = styled.div<{
 	}
 `;
 
+// TODO: forwardRef
 export default function Tooltip({ title, placement, offset = 10, timeout = 500, disabled = false, children }: FCP<{
 	/** Tooltip content. */
 	title: ReactNode;

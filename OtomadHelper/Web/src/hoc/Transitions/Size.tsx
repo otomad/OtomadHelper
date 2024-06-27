@@ -1,7 +1,7 @@
 import type { TransitionProps } from "react-transition-group";
 import type { AnimateSizeOptions, SameOrDifferent } from "utils/animation";
 
-export /* internal */ default function Size({ in: shown, specified, duration, easing, enterOptions, exitOptions, unmountOnExit = true, children, ...transitionAttrs }: FCP<{
+export default function Size({ in: shown, specified, duration, easing, enterOptions, exitOptions, unmountOnExit = true, children, ...transitionAttrs }: FCP<{
 	/** Show the children? */
 	in?: boolean;
 	/** Explicitly specify which direction needs to be animated. Defaults to height animation. */

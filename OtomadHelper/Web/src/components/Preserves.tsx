@@ -19,6 +19,7 @@ export default function Preserves({ children }: FCP) {
 export function Br({ repeat = 1, ...htmlAttrs }: FCP<{
 	/** Repeat times. */
 	repeat?: number;
+	children?: never;
 }, "br">) {
 	return forMap(repeat, i => <br key={i} {...htmlAttrs} />);
 }
