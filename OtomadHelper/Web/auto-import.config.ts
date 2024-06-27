@@ -59,6 +59,13 @@ export default [
 			["*", "_"],
 			["*", "lodash"],
 		],
+		"styled-tools": [
+			["prop", "styledProp"],
+			"ifProp",
+			"ifNotProp",
+			"withProp",
+			"switchProp",
+		],
 	},
 	/* {
 		from: "react",

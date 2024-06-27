@@ -100,6 +100,9 @@ importers:
       styled-components:
         specifier: ^6.1.8
         version: 6.1.8(patch_hash=5bk3gltfg5a7pjp7qehgmxddoq)(react-dom@18.2.0(patch_hash=6kd4d66wteippoxmqcrx452jem)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+      styled-tools:
+        specifier: ^1.7.2
+        version: 1.7.2
       use-immer:
         specifier: ^0.9.0
         version: 0.9.0(immer@10.0.4)(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
@@ -3137,6 +3140,9 @@ packages:
     peerDependencies:
       react: '>= 16.8.0'
       react-dom: '>= 16.8.0'
+
+  styled-tools@1.7.2:
+    resolution: {integrity: sha512-IjLxzM20RMwAsx8M1QoRlCG/Kmq8lKzCGyospjtSXt/BTIIcvgTonaxQAsKnBrsZNwhpHzO9ADx5te0h76ILVg==}
 
   stylelint-config-recommended@14.0.0:
     resolution: {integrity: sha512-jSkx290CglS8StmrLp2TxAppIajzIBZKYm3IxT89Kg6fGlxbPiTiyH9PS5YUuVAFwaJLl1ikiXX0QWjI0jmgZQ==}
@@ -6786,6 +6792,8 @@ snapshots:
       shallowequal: 1.1.0
       stylis: 4.3.1
       tslib: 2.5.0
+
+  styled-tools@1.7.2: {}
 
   stylelint-config-recommended@14.0.0(stylelint@16.3.1(typescript@5.4.5)):
     dependencies:
