@@ -55,14 +55,12 @@ export default {
 		allFiles: "Tất cả các file",
 		systemDefault: "Mặc định hệ thống",
 		complete: "Hoàn tất",
-		dragToImport: "Kéo và thả để nhập {{item, lowercase}}",
 		save: "Lưu",
 		auto: "Tự động",
 		back: "Trở lại",
 		navigation: "Điều hướng",
 		selectAll: "Chọn tất cả",
 		invertSelection: "Đảo lựa chọn",
-		variableBeginWith: "Giá trị bắt đầu bằng {{first, lowercase}}",
 		infoBar: {
 			warning: "Nhắc nhở",
 		},
@@ -142,9 +140,10 @@ export default {
 			},
 			score: {},
 			stream: {
-				noLengthening: {},
 				glissando: {},
-				tuning: {},
+				tuning: {
+					prelisten: {},
+				},
 				effects: {},
 				mapping: {},
 			},
@@ -155,7 +154,6 @@ export default {
 			mosh: {
 				normal: "Datamosh là một kĩ thuật làm biến dạng video để tạo hiệu ứng glitch.",
 				glitchy: "])4t4m0sh |_4ˋ m0^.t kj~ thu4^.t |_4ˋm |313^'n ])4.ng vj])30 +)3^? t4.0 hj3^.u u\"ng g|1tch.",
-				additional: "Trong nghệ thuật video, một kỹ thuật được sử dụng là datamosh. Hai trong số các video được xen kẽ, vì vậy khung hình trung gian được nội suy từ hai nguồn riêng biệt. Và tận dụng sự khác biệt trong cách codec video độc lập xử lý thông tin chuyển động và màu sắc.",
 			},
 			tools: {
 				converters: {},

@@ -388,7 +388,7 @@ export default {
 					prve: "Makes your visuals more rhythmic",
 					staff: "Uses custom patterns as notes to draw visuals similar fashion to piano staff sheets",
 					pixelScaling: "Scaling using nearest neighbor hard edge amplification and interpolation algorithms",
-					customEffect: "Apply custom effect presets to all clips",
+					customEffect: "Apply custom effect presets to all clips and tracks",
 				},
 				mapping: {
 					_: "Maps the properties of notes to the specified item",
@@ -430,7 +430,7 @@ export default {
 			tools: {
 				_: "These QoL features make creating YTPMVs a little less painful to work with or setup. They do not require adjustments to any of the previous parameters.",
 				flow: "Creates stunning animations using Beziér Curves",
-				selectorAndReplacer: "Finds and selects all clips that match the specified, then replaces them with the specified new clips",
+				selectorAndReplacer: "Finds and selects all clips that match the specified criteria, and then can replace them with the specified new clips",
 				normalizer: "Normalizes the volume of all selected audio clips",
 				subtitles: "Presets the “Titles & Text” preset, then add multiple lines of text here",
 				effector: "Applies effects to the selected clips",
