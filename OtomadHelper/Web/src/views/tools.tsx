@@ -73,8 +73,8 @@ export default function Tools() {
 				selectValid={1}
 			/>
 			<SettingsCard
-				title={t.tools.clawMachine}
-				details={t.descriptions.tools.converters.clawMachine}
+				title={t.tools.clawer}
+				details={t.descriptions.tools.converters.clawer}
 				type="button"
 				icon="claw_machine"
 				selectInfo={t(1).selectInfo.audioEventOnlyOne} selectValid={1 === 1}

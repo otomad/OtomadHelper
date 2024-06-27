@@ -271,9 +271,9 @@ export default {
 			videoEvent_other: "{{count}} video track events have been selected",
 			audioEvent: "{{count}} audio track event has been selected",
 			audioEvent_other: "{{count}} audio track events have been selected",
-			trackEventOnlyOne: "You must select exactly ONE track event, not more or less",
-			videoEventOnlyOne: "You must select exactly ONE video track event, not more or less",
-			audioEventOnlyOne: "You must select exactly ONE audio track event, not more or less",
+			trackEventOnlyOne: "You must select exactly ONE track event, no more and no less",
+			videoEventOnlyOne: "You must select exactly ONE video track event, no more and no less",
+			audioEventOnlyOne: "You must select exactly ONE audio track event, no more and no less",
 		},
 		prve: {
 			classes: {
@@ -337,13 +337,13 @@ export default {
 			},
 		},
 		descriptions: {
-			condition: "Specify when to apply the following configuration",
+			condition: "Specifies when to apply the following configuration",
 			source: {
 				trim: "Adjusts the start or end time of the specified source",
 				startTime: "Specifies when to start generating from the project",
 				preferredTrack: {
 					_: "Allows you to specify an existing track to generate (except multitrack)",
-					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth-to-last track.\nIf any preferred track is specified on the Audio or Visual page, it will override this option.",
+					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth-to-last track.\nIf any preferred track is specified in the Audio or Visual configuration, it will override this option.",
 					belowAdjustmentTracks: {
 						versionRequest: "Note: This feature requires VEGAS Pro ≥ 19. The current version is {{version}}.",
 					},
@@ -396,10 +396,12 @@ export default {
 				legato: "Fills in the gaps between the track clips",
 			},
 			sonar: {
-				_: "Sonar is a visual effect that utilizes Cookie Cutter shapes to create beat-style visual motion graphics. This feature allows you to assign different shapes or effects to various percussion instruments of a drum kit (channel 10) in the score.\nA common Otomad genre is to create Motion Graphics (Mograph) by adding various shapes, such as diffuse circles, to the visual based on the beats. Mograph is a product between graphic design and animation design, a form of visual expression based on the flow of time, and a kind of video art. The term “motion graphics” refers to graphics that are deformed by the flow of time. A single Otomad video containing only mographs is often titled “Graphs” or “Shapes”.\nThe name of this effect, “Sonar”, was coined by Motosai.",
+				_: "Sonar is a visual effect that utilizes Cookie Cutter shapes to create beat-style visual motion graphics. This feature allows you to assign different shapes or effects to various percussion instruments of a drum kit (channel 10) in the score.\nA common Otomad genre is to create Motion Graphics (Mograph) by adding various shapes, such as diffuse circles, to the visual based on the beats. Mograph is a product between graphic design and animation design, a form of visual expression based on the flow of time, and a kind of video art. The term “motion graphics” refers to graphics that are deformed by the flow of time. A single Otomad video containing only mographs is often titled “Graphs” or “Shapes”.",
+				// The name of this effect, “Sonar”, was coined by Motosai.
 			},
 			shupelunker: {
-				_: "Shupelunker Tactics is an unpitched YTPMV/Otomad tactic. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, i.e. the source clip itself is pitched to match the melody.\nThe name of this tactic originated in Otomad, whose first creation using this tactic had title neta-ed Shu (Shuzo Matsuoka) + Spelunker (game), hence the name. This method was also used in early YTPMV, but it never had an official name or method title, it is more like a meme to use this method in a similar way that most YTPMV from the late 2000s to mid 2010s would use.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” is generated. It is also unpitched and allows you to choose where the clip is cut (usually at a dialog), often using audio stretching and rewinding, as well as adding sixteenth to sixty-fourth rests. During production, the clips are matched to the rhythm for vocal sense.",
+				_: "Shupelunker Tactics is an unpitched YTPMV/Otomad tactic. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, i.e. the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” is generated. It is also unpitched and allows you to choose where the clip is cut (usually at a dialog), often using audio stretching and rewinding, as well as adding sixteenth to sixty-fourth rests. During production, the clips are matched to the rhythm for vocal sense.",
+				// The name of this tactic originated in Otomad, whose first creation using this tactic had the title Shu (Shuzo Matsuoka) netaed with Spelunker (game), hence the name. This method was also used in early YTPMV, but it never had an official name or method title, it is more like a meme to use this method in a similar way that most YTPMV from the late 2000s to mid 2010s would use.
 			},
 			ytp: {
 				_: "YouTube Poop (YTP) is used to create nonsensical videos using various effects known in the YTP genre. YTP supports multisource.\nYTP is a Neo-Dada art form that consists of absurd remixes that imitate and mock the lowest technical and aesthetic standards of remix culture in order to comment on remix culture itself. It consists of video remixes edited from a variety of video clips to confuse, stun, or amuse the viewer. The sources can be mashed all together into a nonsensical crossover story, or simply repeated footage of the characters gesticulating oddly.",

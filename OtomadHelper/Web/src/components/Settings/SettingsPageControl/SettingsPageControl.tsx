@@ -57,7 +57,7 @@ export default forwardRef(function SettingsPageControl({ image, learnMoreLink, c
 	const paragraphEl = useDomRef<"p">();
 	const [isWidow, setIsWidow] = useState(true);
 
-	useMountEffect(() => {
+	useLayoutEffect(() => {
 		if (!paragraphEl.current || !image || clearFloat || learnMoreLink === undefined) return;
 		const observer = new ResizeObserver(lodash.debounce(([{ target }]) => {
 			const lineHeight = parseFloat(getComputedStyle(target).lineHeight);
@@ -68,7 +68,7 @@ export default forwardRef(function SettingsPageControl({ image, learnMoreLink, c
 		}));
 		observer.observe(paragraphEl.current);
 		return () => observer.disconnect();
-	});
+	}, []);
 
 	return (
 		<StyledSettingsPageControl
