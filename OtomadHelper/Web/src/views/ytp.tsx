@@ -35,7 +35,12 @@ export default function Ytp() {
 						title={t.ytp.effects}
 						details={t.descriptions.ytp.effects}
 						icon="sparkle"
-						actions={<Badge hidden={!selectEffectCount}>{selectEffectCount}</Badge>}
+						actions={(
+							<OverlapLayout $horizontalAlign="end" $verticalAlign="center">
+								{selectEffectCount === 1 && <span>{selectEffects[0]}</span>}
+								<Badge hidden={selectEffectCount < 2}>{selectEffectCount}</Badge>
+							</OverlapLayout>
+						)}
 					>
 						<Checkbox
 							value={selectAll}

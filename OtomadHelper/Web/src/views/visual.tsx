@@ -26,6 +26,7 @@ export /* internal */ const noLengthenings = [
 	{ id: "trimEndFrames", icon: "trim_end_frames" },
 	{ id: "splitThenFreeze", icon: "split_then_freeze" },
 	{ id: "freezeToGray", icon: "freeze_to_gray" },
+	{ id: "freezeToEffect", icon: "placeholder" },
 ] as const;
 export /* internal */ const transformMethods = [
 	"panCrop", "transformOfx",
@@ -169,6 +170,7 @@ export default function Visual() {
 								<SettingsCard title={t.titles.pixelScaling} details={t.descriptions.stream.effects.pixelScaling} type="button" icon="miscz" onClick={() => pushPage("pixel-scaling")}>
 									<ToggleSwitch on={enablePixelScaling} />
 								</SettingsCard>
+								<SettingsCard title={t.titles.customEffect} details={t.descriptions.stream.effects.customEffect} type="button" icon="placeholder" trailingIcon="open" />
 
 								<Subheader>{t.subheaders.parameters}</Subheader>
 								<SettingsCard

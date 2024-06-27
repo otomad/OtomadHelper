@@ -20,13 +20,15 @@ export function useWebglFilters(imagePath: string) {
 		}
 
 		const image = await createImageFromUrl(imagePath);
+		// await delay(250); // Delay for the expander expanding duration, or the animation will be lost at the first time.
 		filter.changeImage(image);
-		fragNames.forEach(async name => {
+		for (const name of fragNames) { // Apply filter one by one
+		// fragNames.forEach(async name => { // Apply filter simultaneously
 			filter.changeFilter(name);
 			filter.apply();
 			const blob = await filter.canvas.toBlobURL();
 			useSaved.filters[name] = blob;
-		});
+		}
 
 		return useSaved.filters;
 	}, [imagePath]);

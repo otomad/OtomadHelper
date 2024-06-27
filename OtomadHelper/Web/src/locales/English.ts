@@ -29,6 +29,8 @@ export default {
 			prve: "PV Rhythm Visual Effect",
 			staff: "Staff Visualizer",
 			pixelScaling: "Pixel Scaling",
+			customEffect: "Custom Effect",
+			customEffect_other: "Custom Effects",
 		},
 		source: {
 			trackEvent: "Track event",
@@ -386,6 +388,7 @@ export default {
 					prve: "Makes your visuals more rhythmic",
 					staff: "Uses custom patterns as notes to draw visuals similar fashion to piano staff sheets",
 					pixelScaling: "Scaling using nearest neighbor hard edge amplification and interpolation algorithms",
+					customEffect: "Apply custom effect presets to all clips",
 				},
 				mapping: {
 					_: "Maps the properties of notes to the specified item",

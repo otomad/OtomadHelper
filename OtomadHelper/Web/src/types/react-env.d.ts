@@ -107,6 +107,7 @@ declare global {
 	export type CSSTransitionProps = Partial<ReactTransitionGroupCssTransition.CSSTransitionProps>;
 	export type TransitionProps = Partial<ReactTransitionGroupTransition.TransitionProps>;
 
+	export type { Property as CSSProperty } from "csstype";
 	export type { Draft } from "immer";
 	export type { AnimationItem } from "lottie-web";
 	export type { CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, FocusEventHandler, FormEventHandler, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, ReactElement, ReactNode, RefObject, UIEventHandler, WheelEventHandler } from "react";
