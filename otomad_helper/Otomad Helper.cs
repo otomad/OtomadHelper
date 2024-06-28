@@ -3988,76 +3988,119 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				?? vegas.VideoFX.FindChildByName("Invert")
 				?? vegas.VideoFX.FindChildByName("VEGAS 反转")
 				?? vegas.VideoFX.FindChildByName("VEGAS Invert")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:invert}");
+				?? vegas.VideoFX.FindChildByName("Sony 反转")
+				?? vegas.VideoFX.FindChildByName("Sony Invert")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:invert}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:invert}");
 			hslAdjust = vegas.VideoFX.FindChildByName("HSL 调整")
 				?? vegas.VideoFX.FindChildByName("HSL Adjust")
 				?? vegas.VideoFX.FindChildByName("VEGAS HSL 调整")
 				?? vegas.VideoFX.FindChildByName("VEGAS HSL Adjust")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:hsladjust}");
+				?? vegas.VideoFX.FindChildByName("Sony HSL 调整")
+				?? vegas.VideoFX.FindChildByName("Sony HSL Adjust")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:hsladjust}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:hsladjust}");
 			labAdjust = vegas.VideoFX.FindChildByName("LAB 调整")
 				?? vegas.VideoFX.FindChildByName("LAB Adjust")
 				?? vegas.VideoFX.FindChildByName("VEGAS LAB 调整")
 				?? vegas.VideoFX.FindChildByName("VEGAS LAB Adjust")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:labadjust}");
+				?? vegas.VideoFX.FindChildByName("Sony LAB 调整")
+				?? vegas.VideoFX.FindChildByName("Sony LAB Adjust")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:labadjust}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:labadjust}");
 			blackAndWhite = vegas.VideoFX.FindChildByName("黑白")
 				?? vegas.VideoFX.FindChildByName("Black and White")
 				?? vegas.VideoFX.FindChildByName("VEGAS 黑白")
 				?? vegas.VideoFX.FindChildByName("VEGAS Black and White")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:blackandwhite}");
+				?? vegas.VideoFX.FindChildByName("Sony 黑白")
+				?? vegas.VideoFX.FindChildByName("Sony Black and White")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:blackandwhite}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:blackandwhite}");
 			mirror = vegas.VideoFX.FindChildByName("镜像")
 				?? vegas.VideoFX.FindChildByName("Mirror")
 				?? vegas.VideoFX.FindChildByName("VEGAS 镜像")
 				?? vegas.VideoFX.FindChildByName("VEGAS Mirror")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:mirror}");
+				?? vegas.VideoFX.FindChildByName("Sony 镜像")
+				?? vegas.VideoFX.FindChildByName("Sony Mirror")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:mirror}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:mirror}");
 			picInPic = vegas.VideoFX.FindChildByName("画中画")
 				?? vegas.VideoFX.FindChildByName("Picture In Picture")
 				?? vegas.VideoFX.FindChildByName("VEGAS 画中画")
 				?? vegas.VideoFX.FindChildByName("VEGAS Picture In Picture")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:pictureinpicture}");
+				?? vegas.VideoFX.FindChildByName("Sony 画中画")
+				?? vegas.VideoFX.FindChildByName("Sony Picture In Picture")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:pictureinpicture}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:pictureinpicture}");
 			crop = vegas.VideoFX.FindChildByName("修剪")
 				?? vegas.VideoFX.FindChildByName("Crop")
 				?? vegas.VideoFX.FindChildByName("VEGAS 修剪")
 				?? vegas.VideoFX.FindChildByName("VEGAS Crop")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:crop}");
+				?? vegas.VideoFX.FindChildByName("Sony 修剪")
+				?? vegas.VideoFX.FindChildByName("Sony Crop")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:crop}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:crop}");
 			contrast = vegas.VideoFX.FindChildByName("亮度和对比度")
 				?? vegas.VideoFX.FindChildByName("Brightness and Contrast")
 				?? vegas.VideoFX.FindChildByName("VEGAS 亮度和对比度")
 				?? vegas.VideoFX.FindChildByName("VEGAS Brightness and Contrast")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:brightnessandcontrast}");
+				?? vegas.VideoFX.FindChildByName("Sony 亮度和对比度")
+				?? vegas.VideoFX.FindChildByName("Sony Brightness and Contrast")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:brightnessandcontrast}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:brightnessandcontrast}");
 			wave = vegas.VideoFX.FindChildByName("波浪")
 				?? vegas.VideoFX.FindChildByName("Wave")
 				?? vegas.VideoFX.FindChildByName("VEGAS 波浪")
 				?? vegas.VideoFX.FindChildByName("VEGAS Wave")
+				?? vegas.VideoFX.FindChildByName("Sony 波浪")
+				?? vegas.VideoFX.FindChildByName("Sony Wave")
 				?? vegas.VideoFX.FindChildByUniqueID("{EC1A2314-0C38-11D2-9AAC-00A0C99B12C5}");
 			spherize = vegas.VideoFX.FindChildByName("球面化")
 				?? vegas.VideoFX.FindChildByName("Spherize")
 				?? vegas.VideoFX.FindChildByName("VEGAS 球面化")
 				?? vegas.VideoFX.FindChildByName("VEGAS Spherize")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:spherize}");
+				?? vegas.VideoFX.FindChildByName("Sony 球面化")
+				?? vegas.VideoFX.FindChildByName("Sony Spherize")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:spherize}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:spherize}");
 			gaussianBlur = vegas.VideoFX.FindChildByName("高斯模糊")
 				?? vegas.VideoFX.FindChildByName("Gaussian Blur")
 				?? vegas.VideoFX.FindChildByName("VEGAS 高斯模糊")
 				?? vegas.VideoFX.FindChildByName("VEGAS Gaussian Blur")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:gaussianblur}");
+				?? vegas.VideoFX.FindChildByName("Sony 高斯模糊")
+				?? vegas.VideoFX.FindChildByName("Sony Gaussian Blur")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:gaussianblur}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:gaussianblur}");
 			radialBlur = vegas.VideoFX.FindChildByName("径向模糊")
 				?? vegas.VideoFX.FindChildByName("Radial Blur")
 				?? vegas.VideoFX.FindChildByName("VEGAS 径向模糊")
 				?? vegas.VideoFX.FindChildByName("VEGAS Radial Blur")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:radialblur}");
+				?? vegas.VideoFX.FindChildByName("Sony 径向模糊")
+				?? vegas.VideoFX.FindChildByName("Sony Radial Blur")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:radialblur}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:radialblur}");
 			bzMasking = vegas.VideoFX.FindChildByName("贝兹蒙版")
 				?? vegas.VideoFX.FindChildByName("Bézier Masking")
 				?? vegas.VideoFX.FindChildByName("VEGAS 贝兹蒙版")
 				?? vegas.VideoFX.FindChildByName("VEGAS Bézier Masking")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:bzmasking}");
+				?? vegas.VideoFX.FindChildByName("Sony 贝兹蒙版")
+				?? vegas.VideoFX.FindChildByName("Sony Bézier Masking")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:bzmasking}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:bzmasking}");
 			cookieCutter = vegas.VideoFX.FindChildByName("区域裁切")
 				?? vegas.VideoFX.FindChildByName("Cookie Cutter")
 				?? vegas.VideoFX.FindChildByName("VEGAS 区域裁切")
 				?? vegas.VideoFX.FindChildByName("VEGAS Cookie Cutter")
-				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:cookiecutter}");
+				?? vegas.VideoFX.FindChildByName("Sony 区域裁切")
+				?? vegas.VideoFX.FindChildByName("Sony Cookie Cutter")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:cookiecutter}")
+				?? vegas.VideoFX.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:cookiecutter}");
 			swirl = vegas.VideoFX.FindChildByName("漩涡")
 				?? vegas.VideoFX.FindChildByName("Swirl")
 				?? vegas.VideoFX.FindChildByName("VEGAS 漩涡")
 				?? vegas.VideoFX.FindChildByName("VEGAS Swirl")
+				?? vegas.VideoFX.FindChildByName("Sony 漩涡")
+				?? vegas.VideoFX.FindChildByName("Sony Swirl")
 				?? vegas.VideoFX.FindChildByUniqueID("{B3A8C4CF-E5AD-4B2F-A603-2F0FCB3B546E}");
 			#endregion
 
@@ -4066,12 +4109,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				?? vegas.Generators.FindChildByName("Solid Color")
 				?? vegas.Generators.FindChildByName("VEGAS 纯色")
 				?? vegas.Generators.FindChildByName("VEGAS Solid Color")
-				?? vegas.Generators.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:solidcolor}");
+				?? vegas.Generators.FindChildByName("Sony 纯色")
+				?? vegas.Generators.FindChildByName("Sony Solid Color")
+				?? vegas.Generators.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:solidcolor}")
+				?? vegas.Generators.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:solidcolor}");
 			titlesAndText = vegas.Generators.FindChildByName("字幕和文字")
 				?? vegas.Generators.FindChildByName("Titles & Text")
 				?? vegas.Generators.FindChildByName("VEGAS 字幕和文字")
 				?? vegas.Generators.FindChildByName("VEGAS Titles & Text")
-				?? vegas.Generators.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:titlesandtext}");
+				?? vegas.Generators.FindChildByName("Sony 字幕和文字")
+				?? vegas.Generators.FindChildByName("Sony Titles & Text")
+				?? vegas.Generators.FindChildByUniqueID("{Svfx:com.vegascreativesoftware:titlesandtext}")
+				?? vegas.Generators.FindChildByUniqueID("{Svfx:com.sonycreativesoftware:titlesandtext}");
 			#endregion
 
 			isInit = true;
@@ -5870,14 +5919,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		public class StutterLengthException : Exception {
 			/// <summary>
-			/// 结巴效果长度参数错误。
+			/// 结巴演说长度参数错误。
 			/// </summary>
 			public StutterLengthException() : base(Lang.str.stutter_length_exception) { }
 		}
 
 		public class StutterWindowBiasException : Exception {
 			/// <summary>
-			/// 结巴效果窗口偏移参数错误。
+			/// 结巴演说窗口偏移参数错误。
 			/// </summary>
 			public StutterWindowBiasException() : base(Lang.str.stutter_window_bias_exception) { }
 		}
@@ -6582,7 +6631,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 
 			/// <summary>
-			/// 自动生效的参数数据类。
+			/// 自动乱调的参数数据类。
 			/// </summary>
 			public class ParameterData {
 				/// <summary>
@@ -6610,7 +6659,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 
 			/// <summary>
-			/// 自动生效的参数数据类列表。
+			/// 自动乱调的参数数据类列表。
 			/// </summary>
 			public class ParameterDataList : List<ParameterData> {
 				public ParameterDataList() : base() { }
@@ -19545,7 +19594,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.Name = "AutomatorForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-			this.Text = "自动生效 - 参数";
+			this.Text = "自动乱调 - 参数";
 			this.dock.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
@@ -27439,7 +27488,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AutomatorBtn.Name = "AutomatorBtn";
 			this.AutomatorBtn.Size = new System.Drawing.Size(627, 106);
 			this.AutomatorBtn.TabIndex = 16;
-			this.AutomatorBtn.Text = "自动生效";
+			this.AutomatorBtn.Text = "自动乱调";
 			this.AutomatorBtn.UseVisualStyleBackColor = true;
 			this.AutomatorBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -27453,7 +27502,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StutterBtn.Name = "StutterBtn";
 			this.StutterBtn.Size = new System.Drawing.Size(627, 106);
 			this.StutterBtn.TabIndex = 17;
-			this.StutterBtn.Text = "结巴效果";
+			this.StutterBtn.Text = "结巴演说";
 			this.StutterBtn.UseVisualStyleBackColor = true;
 			this.StutterBtn.Click += new System.EventHandler(this.DatamoshBtn_Click);
 			//
@@ -31127,7 +31176,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		[DllImport("uxtheme.dll", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
-
 		public static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
 		[DllImport("dwmapi.dll")]
 		public static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
@@ -32366,8 +32414,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			layering = "多层叠化",
 			rendering = "预渲染化",
 			scramble = "随机扰乱",
-			automator = "自动生效",
-			stutter = "结巴效果",
+			automator = "自动乱调",
+			stutter = "结巴演说",
 			camera_shake = "镜头摇晃",
 			datamosh_configform_info = "快速自动地对视频选中区域进行数据抹失。",
 			datamix_configform_info = "快速自动地对视频选中区域进行数据抹失（将一个剪辑抹入另一个剪辑）。",
@@ -32449,12 +32497,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			stutter_window_bias_exception = "错误：窗口偏移必须大于 0！",
 			render_template_frame_rate_exception = "错误：帧率必须小于 100！",
 			appdata_not_set_exception = "错误：无法获取 AppData 路径！",
-			stutter_generator_media_info = "“结巴效果”无法自动为媒体生成器生成的媒体生成反向剪辑（如字幕和文字等）。请手动反转它再反转回来从而创建它们的反向剪辑，或者先渲染到文件（例如使用“预渲染化”）。",
-			automator_parameters = "自动生效 - 参数",
+			stutter_generator_media_info = "“结巴演说”无法自动为媒体生成器生成的媒体生成反向剪辑（如字幕和文字等）。请手动反转它再反转回来从而创建它们的反向剪辑，或者先渲染到文件（例如使用“预渲染化”）。",
+			automator_parameters = "自动乱调 - 参数",
 			datamoshing_parameters = "数据抹失 - 参数",
 			layering_parameters = "多层叠化 - 参数",
 			scrambling_parameters = "随机扰乱 - 参数",
-			stutter_parameters = "结巴效果 - 参数",
+			stutter_parameters = "结巴演说 - 参数",
 			frame_count = "帧计数",
 			frames_repeats = "帧重复",
 			layer_count = "层数",
@@ -33503,7 +33551,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				classic_a17 = "A17. 鼓，無音高（最小回音）",
 				classic_a18 = "A18. 鼓（更適用於通鼓）",
 				classic_a19 = "A19. 鼓（微弱回音）",
-				batch_subtitle_generation = "批量生成字幕",
+				batch_subtitle_generation = "批次生成字幕",
 				batch_subtitle_generation_presets = "選擇一個預先設定好的“字幕和文字”媒體產生器的預設：",
 				batch_subtitle_generation_subtitles = "輸入要插入的字幕文字（一行一個，忽略空行）：",
 				batch_subtitle_generation_single_duration = "每個字幕持續時間",
@@ -33913,23 +33961,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				helper_info = "以下功能只是一些獨立的協助工具，與其它生成音視訊的參數無關。",
 				helper_info_warning = "注意：操作之後將會關閉本對話方塊，您可以稍後再重新啟動，部分您未儲存的更改可能會遺失！\n",
 				close_after_open_helper = "操作完成之後關閉本對話方塊",
-				mosh = "抹失",
-				datamosh_clips_folder = "數據抹失片段目錄",
-				datamosh_not_installed_info = "未安裝數據抹失擴展包，下載後方可使用全部功能",
+				mosh = "狂舞",
+				datamosh_clips_folder = "資料狂舞片段目錄",
+				datamosh_not_installed_info = "未安裝資料狂舞擴展包，下載後方可使用全部功能",
 				datamosh_install = "下載擴展包",
-				datamosh_no_clips_folder_info = "請先指定一個用於存放生成的數據抹失片段的資料夾。",
+				datamosh_no_clips_folder_info = "請先指定一個用於存放生成的資料狂舞片段的資料夾。",
 				datamosh_info = "嚜踵藪璩沬妷是一種磨損素材以產生故障效果的技術。",
-				datamosh = "數據抹失",
-				datamix = "數據抹拭",
-				layering = "多層疊化",
-				rendering = "預渲染化",
+				datamosh = "資料狂舞",
+				datamix = "資料相融",
+				layering = "多階層化",
+				rendering = "預彩現化",
 				scramble = "隨機擾亂",
-				automator = "自動生效",
-				stutter = "結巴效果",
+				automator = "自動亂調",
+				stutter = "結巴演說",
 				camera_shake = "鏡頭搖晃",
-				datamosh_configform_info = "快速自動地對視訊選中區域進行數據抹失。",
-				datamix_configform_info = "快速自動地對視訊選中區域進行數據抹失（將一個剪輯抹入另一個剪輯）。",
-				layering_configform_info = "快速自動地對選中剪輯進行多層疊化。",
+				datamosh_configform_info = "快速自動地對視訊選中區域進行資料狂舞。",
+				datamix_configform_info = "快速自動地對視訊選中區域進行資料狂舞（將一個剪輯抹入另一個剪輯）。",
+				layering_configform_info = "快速自動地對選中剪輯進行多階層化。",
 				rendering_configform_info = "快速自動地對視訊選中區域進行渲染。",
 				scramble_configform_info = "快速自動地對選中剪輯進行打亂。",
 				automator_configform_info = "快速自動地為選中視訊效果設定隨機值。",
@@ -33938,7 +33986,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				otomad_helper_config = "Otomad Helper for Vegas - 設定",
 				reset_config_successful = "重設完成，請重新啟動腳本。",
 				reset_config_successful_title = "重設使用者組態",
-				sure_to_reset_config = "確定要重設使用者組態嗎？\n\n重設後您的使用者組態設定數據將會遺失。",
+				sure_to_reset_config = "確定要重設使用者組態嗎？\n\n重設後您的使用者組態設定資料將會遺失。",
 				about_title = "關於",
 				script_author = "腳本作者",
 				script_original_author = "腳本原作者",
@@ -33949,7 +33997,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				why_ok_btn_is_disabled_no_audio_and_video_enabled = "「生成音訊」與「生成視訊」被同時取消勾選。請至少勾選生成其中一項。",
 				why_ok_btn_is_disabled_no_media_take = "所選的媒體素材來源不包含任何有效媒體資源。",
 				why_ok_btn_is_disabled_no_midi_select = "若要生成音 MAD / YTPMV，請先選擇一個 MIDI 序列檔案。",
-				why_ok_btn_is_disabled_in_helper_tab = "為避免誤操作，切勿在「工具」和「抹失」選項卡下進行提交生成操作。",
+				why_ok_btn_is_disabled_in_helper_tab = "為避免誤操作，切勿在「工具」和「狂舞」選項卡下進行提交生成操作。",
 				why_ok_btn_is_disabled_unknown_problem = "未知原因。",
 				no_selected_media_warning = "警告：您沒有在專案媒體視窗中選中任何有效媒體素材！",
 				no_selected_clip_warning = "警告：您沒有在軌道視窗中選中任何剪輯片段！",
@@ -34007,12 +34055,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				stutter_window_bias_exception = "錯誤：視窗偏移必須大於 0！",
 				render_template_frame_rate_exception = "錯誤：幀率必須小於 100！",
 				appdata_not_set_exception = "錯誤：無法獲取 AppData 路徑！",
-				stutter_generator_media_info = "「結巴效果」無法自動為媒體產生器生成的媒體生成反向剪輯（如字幕和文字等）。請手動反轉它再反轉回來從而創建它們的反向剪輯，或者先渲染到檔案（例如使用「預渲染化」）。",
-				automator_parameters = "自動生效 - 參數",
-				datamoshing_parameters = "數據抹失 - 參數",
-				layering_parameters = "多層疊化 - 參數",
+				stutter_generator_media_info = "「結巴演說」無法自動為媒體產生器生成的媒體生成反向剪輯（如字幕和文字等）。請手動反轉它再反轉回來從而創建它們的反向剪輯，或者先渲染到檔案（例如使用「預彩現化」）。",
+				automator_parameters = "自動亂調 - 參數",
+				datamoshing_parameters = "資料狂舞 - 參數",
+				layering_parameters = "多階層化 - 參數",
 				scrambling_parameters = "隨機擾亂 - 參數",
-				stutter_parameters = "結巴效果 - 參數",
+				stutter_parameters = "結巴演說 - 參數",
 				frame_count = "幀計數",
 				frames_repeats = "幀重複",
 				layer_count = "層數",
