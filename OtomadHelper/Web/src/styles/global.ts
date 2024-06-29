@@ -22,9 +22,10 @@ const GlobalStyle = createGlobalStyle<{
 		transition: ${fallbackTransitions};
 		-webkit-tap-highlight-color: transparent;
 
-		/* :where(&) {
-			color: var(--foreground-color);
-		} */
+		:where(&) {
+			// color: var(--foreground-color);
+			text-wrap: pretty;
+		}
 
 		${({ $ready }) => !$ready && css`
 			transition: all ${eases.easeOutMax} 250ms, color 0s, fill 0s, font-size 0s, tab-size 0s;
@@ -69,10 +70,6 @@ const GlobalStyle = createGlobalStyle<{
 				font-family: "Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Segoe UI Mono", Consolas, "SF Mono", monospace;
 			}
 		}
-	}
-
-	:where(:lang(en), :lang(ru), :lang(vi), :lang(id)) {
-		text-wrap: pretty;
 	}
 
 	:focus,

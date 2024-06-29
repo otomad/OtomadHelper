@@ -35,6 +35,8 @@ export function useLanguage(): StateProperty<string> {
 	const [language, setLanguage] = useState(i18n.language);
 
 	function changeLanguage(lng: string) {
+		if (i18n.language === lng && document.documentElement.lang === lng)
+			return;
 		setLanguage(lng);
 		bridges.bridge.setCulture(i18n.t("metadata.culture", { lng }));
 		startColorViewTransition(async () => {
@@ -42,6 +44,7 @@ export function useLanguage(): StateProperty<string> {
 			const dir = i18n.dir();
 			document.documentElement.lang = lng;
 			document.dir = dir;
+			devStore.rtl = dir === "rtl";
 		}, {
 			clipPath: ["inset(0 0 100%)", "inset(0)"],
 		}, {
