@@ -408,6 +408,20 @@ export function defineGetterInPrototype<T>(constructor: new (...args: Any[]) => 
  */
 export const noop = lodash.noop;
 
+/**
+ * Providing a list of boolean state properties (such as a list of toggle switches),
+ * the logic of their setters will now be changed: when any toggle switch is turned on,
+ * the other toggle switches in the list will be turned off. Achieve an effect similar to a radio button group.
+ * This will make the toggle switches mutually exclusive.
+ *
+ * This function will return a new list of boolean state properties with the setters modified.
+ * The original list of boolean status properties in the function parameters will also be modified.
+ * As long as these tuples (boolean state properties) are not temporarily created when calling the function but existing variables,
+ * you can reuse the original variables directly instead of the return values of the function.
+ *
+ * @param switches - S list of boolean state properties (such as a list of toggle switches).
+ * @returns Same as parameter `switches`.
+ */
 export function mutexSwitches(...switches: (StateProperty<boolean> | StatePropertyNonNull<boolean> | SetState<boolean> | SetStateNarrow<boolean>)[]) {
 	const originalSetStates: SetState<boolean>[] = [];
 	const result: typeof originalSetStates = [];
@@ -456,6 +470,23 @@ export function objectFilterKeys(object: object, filteredKeys: PropertyKey[]) {
 	return copiedObject;
 }
 
+/**
+ * Replaces the keys of an object with new keys obtained from a provided function.
+ * Creates a new object with the replaced keys and their corresponding values.
+ *
+ * @template T - The type of the input object. Must be an object type.
+ * @param object - The object whose keys need to be replaced.
+ * @param replacement - A function that takes an old key as input and returns the new key.
+ * @returns A new object with the replaced keys and their corresponding values.
+ *
+ * @example
+ * ```typescript
+ * const originalObject = { a: 1, b: 2, c: 3 };
+ * const replacementFunction = (oldKey: string) => oldKey.toUpperCase();
+ * const result = objectReplaceKeys(originalObject, replacementFunction);
+ * // result: { A: 1, B: 2, C: 3 }
+ * ```
+ */
 export function objectReplaceKeys<T extends object>(object: T, replacement: (oldKey: string) => string) {
 	return Object.fromEntries(Object.entries(object).map(([key, value]) => [replacement(key), value] as const)) as T;
 }

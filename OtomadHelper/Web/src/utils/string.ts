@@ -39,3 +39,5 @@
 
 	makePrototypeKeysNonEnumerable(String);
 }
+
+export { default as replacerWithGroups } from "helpers/replacerWithGroups";

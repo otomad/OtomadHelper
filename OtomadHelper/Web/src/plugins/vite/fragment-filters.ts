@@ -5,6 +5,7 @@ import { parse, resolve } from "path";
 import type { Plugin } from "vite";
 import loadShader from "../../../node_modules/vite-plugin-glsl/src/loadShader";
 import VariableName from "../../classes/VariableName";
+import replacerWithGroups from "../../helpers/replacerWithGroups";
 
 export type FragmentDefaults = Record<string, Record<string, { type: string; value: number | number[] }>>;
 
@@ -42,34 +43,36 @@ export default (): Plugin => {
 		const defaults: FragmentDefaults = {};
 		for (let [fragName, frag] of fragments) {
 			const uniformNames: string[] = [];
-			frag = frag.replaceAll(/(?<=(^|\n)\s*)uniform\s+(?<type>\w+)\s+(?<uniformName>\w+)(?<defaultPart>.*);/g, (match, ...args) => {
-				const groups: Record<"type" | "uniformName" | "defaultPart", string> = args.at(-1);
-				let { type, uniformName, defaultPart } = groups;
-				uniformNames.push(uniformName);
-				while (defaultPart) {
-					defaultPart = defaultPart.replace(/\s*=\s*/, "").trim();
-					if (!defaultPart) break;
-					let value: number | number[];
-					if (type.startsWith("vec")) {
-						const vectorLength = parseInt(type.replace("vec", ""), 10);
-						const csv = defaultPart.match(/\((.*)\)/)?.[1].trim();
-						if (!csv) break;
-						value = csv.split(",").map(str => eval2(str) as number);
-						if (value.length === 1)
-							for (let i = 1; i < vectorLength; i++)
-								value.push(value[0]);
-					} else {
-						value = eval2(defaultPart) as number;
-						if (!Number.isFinite(value)) break;
+			frag = frag.replaceAll(
+				/(?<=(^|\n)\s*)uniform\s+(?<type>\w+)\s+(?<uniformName>\w+)(?<defaultPart>.*);/g,
+				replacerWithGroups<"type" | "uniformName" | "defaultPart">((_match, groups) => {
+					let { type, uniformName, defaultPart } = groups;
+					uniformNames.push(uniformName);
+					while (defaultPart) {
+						defaultPart = defaultPart.replace(/\s*=\s*/, "").trim();
+						if (!defaultPart) break;
+						let value: number | number[];
+						if (type.startsWith("vec")) {
+							const vectorLength = parseInt(type.replace("vec", ""), 10);
+							const csv = defaultPart.match(/\((.*)\)/)?.[1].trim();
+							if (!csv) break;
+							value = csv.split(",").map(str => eval2(str) as number);
+							if (value.length === 1)
+								for (let i = 1; i < vectorLength; i++)
+									value.push(value[0]);
+						} else {
+							value = eval2(defaultPart) as number;
+							if (!Number.isFinite(value)) break;
+						}
+						if (!(fragName in defaults))
+							defaults[fragName] = {};
+						const def = defaults[fragName];
+						def[uniformName] = { type, value };
+						break;
 					}
-					if (!(fragName in defaults))
-						defaults[fragName] = {};
-					const def = defaults[fragName];
-					def[uniformName] = { type, value };
-					break;
-				}
-				return `uniform ${groups.type} ${groups.uniformName};`;
-			});
+					return `uniform ${groups.type} ${groups.uniformName};`;
+				}),
+			);
 			for (const uniformName of uniformNames)
 				frag = frag.replaceAll(new RegExp(`(?<![\\w\\.])${uniformName}(?![\\w])`, "g"), `${fragName}_${uniformName}`);
 			frag = frag.replaceAll("vec4 frag()", `vec4 ${fragName}_frag()`);
