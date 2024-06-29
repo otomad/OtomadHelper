@@ -1,5 +1,5 @@
 export /* internal */ const StyledCard = styled.div`
-	width: 100cqw; // WARN: In the light mode of the settings page, because the SVG LOGO has a filter, the expander's backdrop-filter will display abnormally. This is a Chromium problem.
+	width: 100cqw;
 	text-align: initial;
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-radius: 3px;
