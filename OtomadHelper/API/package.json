@@ -1,0 +1,16 @@
+{
+	"name": "@otomad-helper/api",
+	"version": "0.1.0",
+	"type": "module",
+	"scripts": {
+		"build": "tsp compile ."
+	},
+	"dependencies": {
+		"@typespec/compiler": "latest",
+		"@typespec/rest": "latest",
+		"@azure-tools/typespec-azure-core": "latest",
+		"@azure-tools/typespec-ts": "latest",
+		"@azure-tools/typespec-csharp": "latest"
+	},
+	"private": true
+}

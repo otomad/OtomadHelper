@@ -1,0 +1,6 @@
+node_modules
+desktop.ini
+.DS_Store
+dist
+output
+tsp-output

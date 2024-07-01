@@ -1,0 +1,8 @@
+emit:
+  - "@azure-tools/typespec-ts"
+  - "@azure-tools/typespec-csharp"
+options:
+  "@azure-tools/typespec-ts":
+    package-name: otomad-helper
+  "@azure-tools/typespec-csharp":
+    package-name: otomad-helper

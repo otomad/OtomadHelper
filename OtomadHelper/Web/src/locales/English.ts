@@ -273,9 +273,9 @@ export default {
 			videoEvent_other: "{{count}} video track events have been selected",
 			audioEvent: "{{count}} audio track event has been selected",
 			audioEvent_other: "{{count}} audio track events have been selected",
-			trackEventOnlyOne: "You must select exactly ONE track event, no more and no less",
-			videoEventOnlyOne: "You must select exactly ONE video track event, no more and no less",
-			audioEventOnlyOne: "You must select exactly ONE audio track event, no more and no less",
+			trackEventOnlyOne: "You must select ONE and only ONE track event, no more and no less",
+			videoEventOnlyOne: "You must select ONE and only ONE video track event, no more and no less",
+			audioEventOnlyOne: "You must select ONE and only ONE audio track event, no more and no less",
 		},
 		prve: {
 			classes: {
