@@ -2,7 +2,14 @@ using System.Collections.ObjectModel;
 
 namespace OtomadHelper.WPF.Controls;
 
+public partial class TestViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableObject {
+	[CommunityToolkit.Mvvm.ComponentModel.ObservableProperty]
+	public string foo = "bar";
+}
+
 public class ContentDialogViewModel : ObservableObject<ContentDialog> {
+	public TestViewModel test = new();
+
 	private string title = "";
 	public string Title { get => title; set => SetProperty(ref title, value); }
 

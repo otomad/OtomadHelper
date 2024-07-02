@@ -15,7 +15,14 @@ internal static class Debugger {
 #pragma warning disable IDE1006 // 命名样式
 	public static object? s {
 #pragma warning restore IDE1006 // 命名样式
-		set => Debug.WriteLine(value is null ? "null" : value);
+		set {
+			object nullableValue = value is null ? "null" : value;
+#if !VEGAS_ENV
+			Debug.WriteLine(nullableValue);
+#else
+			MessageBox.Show(nullableValue.ToString());
+#endif
+		}
 	}
 
 	[Obsolete("This method can only be used for debugging and should not be used in release!")]

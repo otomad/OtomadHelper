@@ -1,3 +1,17 @@
 <Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
-	<Costura />
+	<LoadAssembliesOnStartup />
+	<Costura
+		CreateTemporaryAssemblies="true"
+		IncludeDebugSymbols="false"
+		IncludeRuntimeReferences="false"
+		DisableCompression="true"
+		LoadAtModuleInit="true"
+		>
+		<!--<ExcludeAssemblies>
+			CommunityToolkit.Mvvm
+			System.Text.Json
+			Microsoft.Bcl.AsyncInterfaces
+			System.Memory
+		</ExcludeAssemblies>-->
+	</Costura>
 </Weavers>

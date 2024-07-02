@@ -9,6 +9,7 @@ internal static class Program {
 	/// </summary>
 	[STAThread]
 	static void Main() {
+		//CosturaUtility.Initialize();
 		Application.EnableVisualStyles();
 		Application.SetCompatibleTextRenderingDefault(false);
 		//SetCulture = "en-US";

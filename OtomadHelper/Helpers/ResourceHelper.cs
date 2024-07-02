@@ -11,6 +11,7 @@ using OtomadHelper.Module;
 namespace OtomadHelper.Helpers;
 
 internal static class ResourceHelper {
+	/// <remarks>"OtomadHelper"</remarks>
 	internal static string AssemblyName => Assembly.GetExecutingAssembly().GetName().Name;
 	// Note: Cannot use Assembly.GetEntryAssembly().GetName().Name, or Vegas will crash.
 	// Note: Cannot use OtomadHelperModule.AssemblyName, or it will crash in Visual Studio Debug mode.
