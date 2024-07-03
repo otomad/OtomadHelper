@@ -4,12 +4,14 @@
 		<Nullable>enable</Nullable>
 		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
 		<AssemblyTitle>Otomad Helper</AssemblyTitle>
+		<Product>$(AssemblyTitle)</Product>
 		<Company>OTOMAD+</Company>
-		<Product>Otomad Helper</Product>
+		<Authors>$(Company)</Authors>
 		<Description>YTPMV/YTP/Otomad Extension for Vegas Pro</Description>
 		<Copyright>Copyright © otomad 2023 ~</Copyright>
 		<AssemblyVersion>7.9.0</AssemblyVersion>
-		<FileVersion>7.9.0</FileVersion>
+		<FileVersion>$(AssemblyVersion)</FileVersion>
+		<Version>$(AssemblyVersion)</Version>
 		<OutputPath>bin\$(Configuration)\</OutputPath>
 		<PlatformTarget>x64</PlatformTarget>
 		<UseWPF>true</UseWPF>
@@ -27,6 +29,8 @@
 		<RepositoryUrl>https://github.com/otomad/OtomadHelper.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PublishSingleFile>true</PublishSingleFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>apple-touch-icon.png</PackageIcon>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<OutputType>WinExe</OutputType>
@@ -80,9 +84,6 @@
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 			<SubType>Designer</SubType>
 		</EmbeddedResource>
-		<None Include="..\.editorconfig">
-			<Link>.editorconfig</Link>
-		</None>
 		<Resource Include="Resources\*" />
 		<None Include="Test\app.manifest" />
 		<EmbeddedResource Include="Assets\**" />
@@ -91,6 +92,17 @@
 		<None Remove="API\**" />
 		<EmbeddedResource Include="Web\dist\**" />
 		<EmbeddedResource Include="Strings\**" />
+		<None Include="..\.editorconfig">
+			<Link>.editorconfig</Link>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="Web\src\public\apple-touch-icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 		<Folder Include="Resources\" />
 		<Folder Include="Services\" />
 	</ItemGroup>

@@ -20,6 +20,7 @@ public partial class MainDock : UserControl {
 	public MainDock() {
 		InitializeComponent();
 		Dock = DockStyle.Fill;
+		CheckForIllegalCrossThreadCalls = false;
 
 		DragDrop += (sender, e) => MainDock_DragLeave();
 		DragLeave += (sender, e) => MainDock_DragLeave();

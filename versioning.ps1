@@ -40,7 +40,7 @@ Set-ContentRaw $file $version
 
 $file = ".\OtomadHelper\OtomadHelper.csproj"
 $csAssemblyInfo = Get-ContentRaw $file
-$csAssemblyInfo = Update-ToReplaceIfNeeded $csAssemblyInfo "(?<=<(Assembly|File)Version>)[^\*]+?(?=</)" $version
+$csAssemblyInfo = Update-ToReplaceIfNeeded $csAssemblyInfo "(?<=<AssemblyVersion>)[^\*]+?(?=</)" $version
 if ($csAssemblyInfo) { Set-ContentRaw $file $csAssemblyInfo }
 
 $file = ".\OtomadHelper\Web\package.json"

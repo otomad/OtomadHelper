@@ -71,13 +71,13 @@ public static partial class Extensions {
 	/// Find a child of a given type in the visual tree of a <see cref="DependencyObject"/>.
 	/// </summary>
 	/// <typeparam name="T">The type of the child to find.</typeparam>
-	/// <param name="sender">The <see cref="DependencyObject"/> to start the search from.</param>
+	/// <param name="parent">The <see cref="DependencyObject"/> to start the search from.</param>
 	/// <returns>The first child of type <typeparamref name="T"/> found in the visual tree,
 	/// or <see langword="null"/> if no such child is found.</returns>
-	public static T? GetChildOfType<T>(this DependencyObject sender) where T : DependencyObject {
-		if (sender is null) return null;
-		for (int i = 0; i < VisualTreeHelper.GetChildrenCount(sender); i++) {
-			DependencyObject? child = VisualTreeHelper.GetChild(sender, i);
+	public static T? GetChildOfType<T>(this DependencyObject parent) where T : DependencyObject {
+		if (parent is null) return null;
+		for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++) {
+			DependencyObject? child = VisualTreeHelper.GetChild(parent, i);
 			T? result = (child as T) ?? GetChildOfType<T>(child);
 			if (result != null) return result;
 		}
@@ -88,17 +88,36 @@ public static partial class Extensions {
 	/// Find all children of a given type in the visual tree of a <see cref="DependencyObject"/>.
 	/// </summary>
 	/// <typeparam name="T">The type of the children to find.</typeparam>
-	/// <param name="sender">The <see cref="DependencyObject"/> to start the search from.</param>
+	/// <param name="parent">The <see cref="DependencyObject"/> to start the search from.</param>
 	/// <returns>A list of all children of type <typeparamref name="T"/> found in the visual tree.
 	/// If no such children are found, an empty list is returned.</returns>
-	public static List<T> GetChildrenOfType<T>(this DependencyObject sender) where T : DependencyObject {
+	public static List<T> GetChildrenOfType<T>(this DependencyObject parent) where T : DependencyObject {
 		List<T> children = new();
-		if (sender is null) return children;
-		for (int i = 0; i < VisualTreeHelper.GetChildrenCount(sender); i++) {
-			DependencyObject? child = VisualTreeHelper.GetChild(sender, i);
+		if (parent is null) return children;
+		for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++) {
+			DependencyObject? child = VisualTreeHelper.GetChild(parent, i);
 			if (child is T typedChild) children.Add(typedChild);
 			if (VisualTreeHelper.GetChildrenCount(child) != 0)
 				children.AddRange(GetChildrenOfType<T>(child));
+		}
+		return children;
+	}
+
+	/// <summary>
+	/// Find all children of a given type <see cref="Control"/>.
+	/// </summary>
+	/// <typeparam name="T">The type of the children to find.</typeparam>
+	/// <param name="parent">The <see cref="Control"/> to start the search from.</param>
+	/// <param name="includeParent">Also includes the parent control itself?</param>
+	/// <returns>A list of all children of type <typeparamref name="T"/> found.
+	/// If no such children are found, an empty list is returned.</returns>
+	public static List<T> GetChildrenOfType<T>(this Control parent, bool includeParent = false) where T : Control {
+		List<T> children = new();
+		if (parent is null) return children;
+		if (includeParent && parent is T expectedParent) children.Add(expectedParent);
+		foreach (Control control in parent.Controls) {
+			if (control is T expectedControl) children.Add(expectedControl);
+			if (control.HasChildren) children.AddRange(control.GetChildrenOfType<T>());
 		}
 		return children;
 	}
