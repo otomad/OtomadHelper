@@ -8,7 +8,10 @@
 	"dependencies": {
 		"@typespec/compiler": "latest",
 		"@typespec/rest": "latest",
+		"@typespec/http": "latest",
+		"@typespec/openapi3": "latest",
 		"@azure-tools/typespec-azure-core": "latest",
+		"@azure-tools/typespec-client-generator-core": "latest",
 		"@azure-tools/typespec-ts": "latest",
 		"@azure-tools/typespec-csharp": "latest"
 	}

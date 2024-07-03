@@ -1,39 +1,29 @@
-namespace Schemas;
+import "@typespec/http";
+import "@typespec/rest";
+import "@typespec/openapi3";
 
-model Person {
-	/** The person's first name. */
-	firstName: string;
+using TypeSpec.Http;
+using TypeSpec.Rest;
 
-	/** The person's last name. */
-	lastName: string;
+/** This is a pet store service. */
+@service({
+	title: "Pet Store Service",
+})
+@server("https://example.com", "The service endpoint")
+namespace PetStore;
 
-	/** Age in years which must be equal to or greater than zero. */
-	@minValue(0) age: int32;
-
-	/** Person address */
-	address: Address;
-
-	/** List of nick names */
-	nickNames?: string[];
-
-	/** List of cars person owns */
-	cars?: Car[];
+@route("/pets")
+interface Pets {
+	list(): Pet[];
 }
 
-/** Respresent an address */
-model Address {
-	street: string;
-	city: string;
-	country: string;
-}
+model Pet {
+	@minLength(100)
+	name: string;
 
-model Car {
-	/** Kind of car */
-	kind: "ev" | "ice";
+	@minValue(0)
+	@maxValue(100)
+	age: int32;
 
-	/** Brand of the car */
-	brand: string;
-
-	/** Model of the car */
-	`model`: string;
+	kind: "dog" | "cat" | "fish";
 }
