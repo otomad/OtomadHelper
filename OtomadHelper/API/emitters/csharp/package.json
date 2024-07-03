@@ -1,0 +1,32 @@
+{
+	"name": "csharp-emitter",
+	"version": "0.1.0",
+	"type": "module",
+	"main": "dist/src/index.js",
+	"exports": {
+		".": {
+			"types": "./dist/src/index.d.ts",
+			"default": "./dist/src/index.js"
+		},
+		"./testing": {
+			"types": "./dist/src/testing/index.d.ts",
+			"default": "./dist/src/testing/index.js"
+		}
+	},
+	"dependencies": {
+		"@typespec/compiler": "latest"
+	},
+	"devDependencies": {
+		"@types/node": "latest"
+	},
+	"scripts": {
+		"build": "tsc",
+		"watch": "tsc --watch",
+		"test": "node --test ./dist/test/",
+		"lint": "eslint src/ test/ --report-unused-disable-directives --max-warnings=0",
+		"lint:fix": "eslint . --report-unused-disable-directives --fix",
+		"format": "prettier .  --write",
+		"format:check": "prettier --check ."
+	},
+	"private": true
+}
