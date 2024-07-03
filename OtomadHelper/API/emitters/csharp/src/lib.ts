@@ -1,7 +1,7 @@
 import { createTypeSpecLibrary } from "@typespec/compiler";
 
 export const $lib = createTypeSpecLibrary({
-	name: "typescript-emitter",
+	name: "csharp-emitter",
 	diagnostics: {},
 });
 

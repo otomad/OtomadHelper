@@ -15,6 +15,9 @@ importers:
       '@types/node':
         specifier: latest
         version: 20.14.9
+      prettier:
+        specifier: latest
+        version: 3.3.2
 
 packages:
 
@@ -193,6 +196,11 @@ packages:
 
   prettier@3.2.5:
     resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+    engines: {node: '>=14'}
+    hasBin: true
+
+  prettier@3.3.2:
+    resolution: {integrity: sha512-rAVeHYMcv8ATV5d508CFdn+8/pHPpXeIid1DdrPwXnaAdH7cqjVbpJaT5eq4yRAFU/lsbwYwSF/n5iNrdJHPQA==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -470,6 +478,8 @@ snapshots:
   picomatch@2.3.1: {}
 
   prettier@3.2.5: {}
+
+  prettier@3.3.2: {}
 
   prompts@2.4.2:
     dependencies:

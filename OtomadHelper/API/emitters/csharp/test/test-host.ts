@@ -18,7 +18,7 @@ export async function createTypescriptEmitterTestRunner() {
 	return createTestWrapper(host, {
 		compilerOptions: {
 			noEmit: false,
-			emit: ["typescript-emitter"],
+			emit: ["csharp-emitter"],
 		},
 	});
 }
@@ -30,7 +30,7 @@ export async function emitWithDiagnostics(
 	await runner.compileAndDiagnose(code, {
 		outputDir: "tsp-output",
 	});
-	const emitterOutputDir = "./tsp-output/typescript-emitter";
+	const emitterOutputDir = "./tsp-output/csharp-emitter";
 	const files = await runner.program.host.readDir(emitterOutputDir);
 
 	const result: Record<string, string> = {};
