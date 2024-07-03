@@ -50,7 +50,7 @@ const getProxy = (target: object) =>
 				// 	return translate(keys);
 				else return new Proxy(getWithArgsFunction(...keys), {
 					get(target, currentName): unknown {
-						if (currentName === Symbol.toPrimitive || currentName === "toString")
+						if ([Symbol.toPrimitive, "toString", "toJSON", "valueOf"].includes(currentName))
 							return () => translate(keys);
 						if (typeof currentName === "string")
 							return getWithArgsProxy(...parents, currentName);

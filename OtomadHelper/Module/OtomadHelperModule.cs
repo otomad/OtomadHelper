@@ -80,13 +80,10 @@ public class OtomadHelperModule : ICustomCommandModule {
 		lock (this) {
 			AssemblyName askedAssembly = new(args.Name);
 			string name = askedAssembly.Name;
-			if (name.Contains(AssemblyName)) {
-				// If a resource file is requested in the form "dllname.resources.dll" always return null;
-				// https://stackoverflow.com/questions/4368201
-				if (name.EndsWith(".resources")) return null;
-				return Assembly.GetExecutingAssembly();
-			}
-			return null;
+			// If a resource file is requested in the form "dllname.resources.dll" always return null;
+			// https://stackoverflow.com/questions/4368201
+			// if (name.EndsWith(".resources")) return null;
+			return name == AssemblyName ? Assembly.GetExecutingAssembly() : null;
 		}
 	}
 }

@@ -30,7 +30,6 @@
 		<RepositoryType>git</RepositoryType>
 		<PublishSingleFile>true</PublishSingleFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageIcon>apple-touch-icon.png</PackageIcon>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<OutputType>WinExe</OutputType>
@@ -96,10 +95,6 @@
 			<Link>.editorconfig</Link>
 		</None>
 		<None Include="..\README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Include="Web\src\public\apple-touch-icon.png">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>

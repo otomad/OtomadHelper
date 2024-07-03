@@ -4,6 +4,7 @@
 
 using System.Runtime.CompilerServices;
 
+using OtomadHelper.Helpers.TupleAsJsonArray;
 using OtomadHelper.Models;
 using OtomadHelper.Module;
 
@@ -26,7 +27,9 @@ public class BetterBridge {
 	internal static readonly JsonSerializerOptions jsonOptions = new() {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		IncludeFields = true,
-		// VEGAS environment (?) doesn't support JSON converters.
+		Converters = {
+			new TupleConverterFactory(),
+		},
 	};
 
 	public string[] GetMethods() =>
@@ -91,12 +94,7 @@ public class BetterBridge {
 
 			for (int i = 0; i < jsonArgs.Length; i++) {
 				Type type = parameters[i].ParameterType;
-				object? typedObj;
-				if (type.Extends(typeof(ITuple)))
-					typedObj = JsonDeserializeTuple(jsonArgs[i], type);
-				else
-					typedObj = JsonSerializer.Deserialize(jsonArgs[i], type, jsonOptions);
-				typedArgs[i] = typedObj;
+				typedArgs[i] = JsonSerializer.Deserialize(jsonArgs[i], type, jsonOptions);
 			}
 
 			object resultTyped = method.Invoke(bridgeClass, typedArgs);
@@ -125,6 +123,7 @@ public class BetterBridge {
 		}
 	}
 
+	[Obsolete("Use TupleConverterFactory instead.")]
 	public static ITuple JsonDeserializeTuple(string arrayJson, Type tupleType) {
 		// VEGAS environment (?) doesn't support JSON converters.
 		// So we can't use some like: <a href="https://github.com/arogozine/TupleAsJsonArray">TupleAsJsonArray</a>.

@@ -11,6 +11,5 @@
 		"@azure-tools/typespec-azure-core": "latest",
 		"@azure-tools/typespec-ts": "latest",
 		"@azure-tools/typespec-csharp": "latest"
-	},
-	"private": true
+	}
 }
