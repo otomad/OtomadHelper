@@ -204,5 +204,5 @@ export function dataset(dataset: Record<string, Readable | boolean | undefined |
 export function createImageFromUrl(url: string) {
 	const image = new Image();
 	image.src = url;
-	return image.awaitLoaded();
+	return image.waitForLoaded();
 }

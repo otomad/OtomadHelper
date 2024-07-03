@@ -154,7 +154,7 @@ export async function* animateSizeGenerator(
 		easing = eases.easeOutSmooth,
 		specified = "both",
 		withoutAdjustPadding,
-		// nextTick: awaitNextTick = true,
+		// nextTick: waitNextTick = true,
 		// getSize,
 		// getRect,
 		startStyle = {},
@@ -184,7 +184,7 @@ export async function* animateSizeGenerator(
 	// });
 	const _hasChangeFunc = yield;
 	// await scheduler.postTask(() => {
-	// if (hasChangeFunc && awaitNextTick) await nextTick();
+	// if (hasChangeFunc && waitNextTick) await nextTick();
 	if (removePreviousAnimations) removeExistAnimations(element, element.children[0]);
 	endHeight ??= !isHeightChanged ? 0 : element.clientHeight + (clientAdjustment.endHeight ?? 0);
 	endWidth ??= !isWidthChanged ? 0 : element.clientWidth + (clientAdjustment.endWidth ?? 0);

@@ -9,7 +9,7 @@
 	makePrototypeKeysNonEnumerable(Response);
 }
 {
-	HTMLImageElement.prototype.awaitLoaded = function () {
+	HTMLImageElement.prototype.waitForLoaded = function () {
 		return new Promise<HTMLImageElement>((resolve, reject) => {
 			this.onload = () => resolve(this);
 			this.onerror = e => reject(e);

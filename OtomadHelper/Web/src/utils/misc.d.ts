@@ -10,7 +10,7 @@ declare interface HTMLImageElement {
 	/**
 	 * Wait for the image is just loaded.
 	 */
-	awaitLoaded(): Promise<HTMLImageElement>;
+	waitForLoaded(): Promise<HTMLImageElement>;
 }
 
 declare interface HTMLCanvasElement {
