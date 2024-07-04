@@ -7,7 +7,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
-# Custom
+# Do not upload exe or GitHub will warn you by email every time you pushed.
 *.exe
 
 # User-specific files
@@ -379,15 +379,15 @@ MigrationBackup/
 .ionide/
 
 # Fody - auto-generated XML schema
-FodyWeavers.xsd
+# FodyWeavers.xsd
 
 # VS Code files for those working on multiple tools
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
+# .vscode/*
+# !.vscode/settings.json
+# !.vscode/tasks.json
+# !.vscode/launch.json
+# !.vscode/extensions.json
+# *.code-workspace
 
 # Local History for Visual Studio Code
 .history/
