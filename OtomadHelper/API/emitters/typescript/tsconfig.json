@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"useDefineForClassFields": true,
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"lib": [
+			"ESNext"
+		],
+		"rootDir": ".",
+		"outDir": "dist",
+		"sourceMap": false,
+		"declaration": false,
+		/* Linting */
+		"strict": true
+	},
+	"include": [
+		"src",
+		"test"
+	]
+}

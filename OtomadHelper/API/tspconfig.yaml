@@ -1,9 +1,5 @@
 emit:
-  # - "@typespec/openapi3"
-  - "@azure-tools/typespec-ts"
-  # - "@azure-tools/typespec-csharp"
+  - "typescript-emitter"
 options:
-  "@azure-tools/typespec-ts":
-    package-name: otomad-helper
-  "@azure-tools/typespec-csharp":
-    package-name: otomad-helper
+  typescript-emitter:
+    outputDir: "typescript-emitter/api.d.ts"
