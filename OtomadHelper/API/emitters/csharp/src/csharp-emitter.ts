@@ -1,4 +1,3 @@
-import * as prettier from "prettier";
 import { BooleanLiteral, Enum, EnumMember, getDoc, Interface, IntrinsicType, Model, ModelProperty, NumericLiteral, Operation, Scalar, StringLiteral, Tuple, Type, Union, UnionVariant, } from "@typespec/compiler";
 import { code, CodeTypeEmitter, Declaration, EmittedSourceFile, EmitterOutput, Scope, SourceFile, SourceFileScope, StringBuilder, } from "@typespec/compiler/emitter-framework";
 
@@ -6,35 +5,35 @@ export function isArrayType(m: Model) {
 	return m.name === "Array";
 }
 
-export const intrinsicNameToTSType = new Map<string, string>([
-	["unknown", "unknown"],
+export const intrinsicNameToCSType = new Map<string, string>([
+	["unknown", "object"],
 	["string", "string"],
-	["numeric", "number"],
-	["integer", "bigint"],
-	["int8", "number"],
-	["int16", "number"],
-	["int32", "number"],
-	["int64", "bigint"],
-	["safeint", "number"], // int54
-	["uint8", "number"],
-	["uint16", "number"],
-	["uint32", "number"],
-	["uint64", "bigint"],
-	["float", "number"],
-	["float16", "number"],
-	["float32", "number"],
-	["float64", "number"],
-	["decimal", "number"],
-	["decimal128", "number"],
-	["bytes", "Uint8Array"],
-	["boolean", "boolean"],
+	["numeric", "dynamic"],
+	["integer", "dynamic"],
+	["int8", "sbyte"],
+	["int16", "short"],
+	["int32", "int"],
+	["int64", "long"],
+	["safeint", "long"], // int54
+	["uint8", "byte"],
+	["uint16", "ushort"],
+	["uint32", "uint"],
+	["uint64", "ulong"],
+	["float", "dynamic"],
+	["float16", "float"],
+	["float32", "float"],
+	["float64", "double"],
+	["decimal", "decimal"],
+	["decimal128", "decimal"],
+	["bytes", "byte[]"],
+	["boolean", "bool"],
 	["null", "null"],
 	["void", "void"],
-	["never", "never"],
-	["object", "any"],
+	["never", "null"],
+	["object", "object"],
 ]);
 
-export class TypeScriptInterfaceEmitter extends CodeTypeEmitter {
+export class CSharpInterfaceEmitter extends CodeTypeEmitter {
 	// type literals
 	booleanLiteral(boolean: BooleanLiteral): EmitterOutput<string> {
 		return JSON.stringify(boolean.value);
@@ -53,16 +52,16 @@ export class TypeScriptInterfaceEmitter extends CodeTypeEmitter {
 			throw new Error("Unknown scalar type " + scalarName);
 		} */
 
-		const code = intrinsicNameToTSType.get(scalarName) ?? scalarName;
+		const code = intrinsicNameToCSType.get(scalarName) ?? scalarName;
 		return this.emitter.result.rawCode(code);
 	}
 
 	intrinsic(intrinsic: IntrinsicType, name: string): EmitterOutput<string> {
-		if (!intrinsicNameToTSType.has(name)) {
+		if (!intrinsicNameToCSType.has(name)) {
 			throw new Error("Unknown intrinsic type " + name);
 		}
 
-		const code = intrinsicNameToTSType.get(name)!;
+		const code = intrinsicNameToCSType.get(name)!;
 		return this.emitter.result.rawCode(code);
 	}
 
@@ -265,16 +264,9 @@ export class TypeScriptInterfaceEmitter extends CodeTypeEmitter {
 			emittedSourceFile.contents += decl.value + "\n";
 		}
 
-		emittedSourceFile.contents = await prettier.format(emittedSourceFile.contents, {
+		/* emittedSourceFile.contents = await prettier.format(emittedSourceFile.contents, {
 			parser: "typescript",
-
-			trailingComma: "all",
-			tabWidth: 4,
-			useTabs: true,
-			semi: true,
-			singleQuote: false,
-			experimentalTernaries: true,
-		});
+		}); */
 		return emittedSourceFile;
 	}
 }

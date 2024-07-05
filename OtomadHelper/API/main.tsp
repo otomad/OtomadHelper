@@ -1,13 +1,2 @@
-namespace PetStore;
-
-interface Pets {
-	list(): Pet[];
-}
-
-model Pet {
-	name: string;
-
-	age: int32;
-
-	kind: "dog" | "cat" | "fish";
-}
+import "./web-message-events.tsp";
+import "./host.tsp";

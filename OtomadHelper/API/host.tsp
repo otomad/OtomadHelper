@@ -1,4 +1,6 @@
-export interface Bridge {
+scalar RectTuple;
+
+interface Bridge {
 	setIsDevMode(isDevMode: boolean): void;
 	setCulture(culture: string): void;
 	showMessageBox(title: string, body: string, buttons: ContentDialogButtonItem[]): string;
@@ -6,7 +8,7 @@ export interface Bridge {
 	showPitchPicker(rect: RectTuple, pitch: string): string;
 }
 
-export interface ContentDialogButtonItem {
+model ContentDialogButtonItem {
 	text: string;
 	dialogResult: string;
 	isDefault?: boolean;

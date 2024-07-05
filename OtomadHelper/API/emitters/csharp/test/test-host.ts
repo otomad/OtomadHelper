@@ -4,16 +4,16 @@ import {
 	createTestWrapper,
 	expectDiagnosticEmpty,
 } from "@typespec/compiler/testing";
-import { TypescriptEmitterTestLibrary } from "../src/testing/index.js";
+import { CSharpEmitterTestLibrary } from "../src/testing/index.js";
 
-export async function createTypescriptEmitterTestHost() {
+export async function createCSharpEmitterTestHost() {
 	return createTestHost({
-		libraries: [TypescriptEmitterTestLibrary],
+		libraries: [CSharpEmitterTestLibrary],
 	});
 }
 
-export async function createTypescriptEmitterTestRunner() {
-	const host = await createTypescriptEmitterTestHost();
+export async function createCSharpEmitterTestRunner() {
+	const host = await createCSharpEmitterTestHost();
 
 	return createTestWrapper(host, {
 		compilerOptions: {
@@ -26,7 +26,7 @@ export async function createTypescriptEmitterTestRunner() {
 export async function emitWithDiagnostics(
 	code: string
 ): Promise<[Record<string, string>, readonly Diagnostic[]]> {
-	const runner = await createTypescriptEmitterTestRunner();
+	const runner = await createCSharpEmitterTestRunner();
 	await runner.compileAndDiagnose(code, {
 		outputDir: "tsp-output",
 	});
