@@ -1,4 +1,5 @@
 export /* internal */ const styledExpanderItemBase = css`
+	container: setting-card-base;
 	display: flex;
 	gap: 16px;
 	align-items: center;

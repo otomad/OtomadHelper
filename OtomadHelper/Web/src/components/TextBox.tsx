@@ -106,6 +106,7 @@ export /* internal */ const StyledTextBox = styled.div`
 
 	:where(.settings-card > .base, .expander-item) > .trailing > :where(&) {
 		width: 200px;
+		max-width: calc(50cqw - 13px);
 	}
 
 	input {
@@ -317,6 +318,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 	/** The value to increase or decrease each time the knob of numeric up down box is clicked. Defaults to 1. */
 	spinnerStep?: TNumber;
 }>) {
+	console.log(min, max);
 	const inputEl = useDomRef<"input">();
 	const bigIntMode = typeof value === "bigint";
 	const intMode = bigIntMode || decimalPlaces === 0;
@@ -417,7 +419,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 			updateDisplayValue(newValue);
 			return newValue;
 		});
-	}, [value]);
+	}, [value, min, max, decimalPlaces]);
 
 	const handleReleaseSpin = useCallback<BaseEventHandler<HTMLButtonElement>>(e => {
 		if (!(e.currentTarget instanceof HTMLElement)) return;

@@ -25,7 +25,7 @@ export default function Source() {
 			</Card>
 
 			<Expander title={t.source.trim} details={t.descriptions.source.trim} icon="trim">
-				<ExpanderChildTrim start={trimStart} end={trimEnd} />
+				<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
 			</Expander>
 			{/* <Expander title={t.source.startTime} details={t.descriptions.source.startTime} icon="start_point">
 				<ItemsView view="tile" current={startTime}>

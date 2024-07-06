@@ -1,6 +1,7 @@
 import type { TOptions } from "i18next";
-import translation from "locales/config";
+import i18n from "locales/config";
 import type { LocaleWithDefaultValue } from "locales/types";
+import { spacing } from "pangu";
 const I18N_ITEM_SYMBOL = Symbol.for("i18n_item");
 
 export function isI18nItem(newChild: Any): newChild is Record<string, string> {
@@ -15,7 +16,7 @@ const getProxy = (target: object) =>
 			const getParentsPrefix = (...prefixes: string[]) => prefixes.length ? prefixes.join(".") : "";
 			const getDeclarationInfo = (...keys: string[]) => {
 				const key = getParentsPrefix(...keys);
-				const raw = translation.getResource("en", "javascript", key) as string | object;
+				const raw = i18n.getResource("en", "javascript", key) as string | object;
 				return {
 					isCategory: typeof raw === "object",
 					includesInterpolation: typeof raw === "string" && raw.includes("{{"),
@@ -34,7 +35,7 @@ const getProxy = (target: object) =>
 				const { isCategory, missingDefault } = getDeclarationInfo(...keys);
 				if (missingDefault) return getMissingKey(getParentsPrefix(...keys));
 				const key = !isCategory ? getParentsPrefix(...keys) : getParentsPrefix(...keys, "_");
-				return translation.t(key, { ...target, ...options });
+				return i18n.t(key, { ...target, ...options });
 			};
 			const getWithArgsFunction = (...prefixes: string[]) => {
 				const func = (options: TOptions) => translate(prefixes, options);
@@ -78,4 +79,17 @@ Object.freeze(t);
  */
 export function isRtl() {
 	return getComputedStyle(document.documentElement).direction === "rtl";
+}
+
+/**
+ * Returns a string with a language-specific representation of the list.
+ * @param list - An iterable object, such as an Array.
+ * @param type - The format of output message.
+ * @param style - The length of the internationalized message.
+ * @returns A language-specific formatted string representing the elements of the list.
+ */
+export function listFormat(list: string[], type?: Intl.ListFormatType, style?: Intl.ListFormatStyle) {
+	const formatter = new Intl.ListFormat(i18n.language, { type, style });
+	const result = formatter.format(list);
+	return spacing(result);
 }

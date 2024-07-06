@@ -29,11 +29,11 @@ export function getIconSymbolId(name: string) {
 
 export default forwardRef(function Icon({ name, filled, ...htmlAttrs }: FCP<{
 	/** Icon file name. */
-	name: DeclaredIcons;
+	name: DeclaredIcons | "" | boolean;
 	/** Keep the color of the icon itself? */
 	filled?: boolean;
 }, "span">, ref: ForwardedRef<"span">) {
-	if (!name) return <span hidden />;
+	if (!name || typeof name === "boolean") return <span hidden />;
 
 	const symbolId = getIconSymbolId(name);
 	const ariaDescription = name.replaceAll("_", " ").replaceAll("/", ": ");

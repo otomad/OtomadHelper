@@ -46,7 +46,7 @@ const StyledSettingsCard = styled(StyledCard)`
 			> .base > .text,
 			> .base > .trailing > .check-info,
 			&.button > .base > .trailing > .trailing-icon {
-				opacity: ${c("pressed-text-opacity")}
+				opacity: ${c("pressed-text-opacity")};
 			}
 		}
 	}
@@ -83,8 +83,8 @@ export default function SettingsCard({
 	className,
 	...htmlAttrs
 }: FCP<{
-	/** Icon. */
-	icon?: DeclaredIcons;
+	/** Icon. Use an empty string or Boolean type to indicate disabling. */
+	icon?: DeclaredIcons | "" | boolean;
 	/** Title. */
 	title?: ReactNode;
 	/** Detailed description. */

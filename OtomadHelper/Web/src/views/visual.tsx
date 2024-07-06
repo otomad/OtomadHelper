@@ -40,7 +40,7 @@ export default function Visual() {
 	const {
 		enabled: [enabled, setEnabled],
 		preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
-		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, enablePixelScaling, /* transformMethod */
+		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, enablePixelScaling, /* transformMethod */ activeParameterScheme,
 	} = selectConfig(c => c.visual);
 	const { enabled: glissando, amount: glissandoAmount } = selectConfig(c => c.visual.glissando);
 	const { enabled: [ytpEnabled, setYtpEnabled] } = selectConfig(c => c.ytp);
@@ -148,7 +148,7 @@ export default function Visual() {
 									}
 								>
 									<Expander.Item title={t.stream.glissando.amount} details={t.descriptions.stream.glissando.amount}>
-										<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix="key" />
+										<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitones} />
 									</Expander.Item>
 								</Expander>
 								{/* <ExpanderRadio
@@ -179,6 +179,27 @@ export default function Visual() {
 									icon="mapping"
 									type="button"
 								/>
+								<ExpanderRadio
+									title={t.preset}
+									details={t.descriptions.stream.preset}
+									icon="placeholder"
+									items={[]}
+									value={[] as never}
+									view="grid"
+									idField
+									nameField
+								/>
+								{activeParameterScheme[0].map((scheme, i) => (
+									<SettingsCard
+										title={scheme.name}
+										details={listFormat(scheme.parameters, "conjunction", "narrow")}
+										type="button"
+										key={i}
+										icon
+									>
+										<ToggleSwitch on={[scheme.enabled]} />
+									</SettingsCard>
+								))}
 							</>
 						)
 					}

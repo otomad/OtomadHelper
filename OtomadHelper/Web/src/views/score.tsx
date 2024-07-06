@@ -120,7 +120,7 @@ export default function Score() {
 
 			<Subheader>{t.subheaders.config}</Subheader>{/* TODO: This line should be deleted. */}
 			<Expander title={t.source.trim} details={t.descriptions.source.trim} icon="trim">
-				<ExpanderChildTrim start={trimStart} end={trimEnd} />
+				<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
 			</Expander>
 			<ExpanderRadio
 				title={t.score.encoding}

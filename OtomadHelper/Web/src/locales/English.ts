@@ -79,6 +79,8 @@ export default {
 		invertSelection: "Invert selection",
 		variableBeginWith: "Variable from {{first, lowercase}}",
 		reset: "Reset",
+		preset: "Preset",
+		preset_other: "Presets",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -92,6 +94,14 @@ export default {
 			config: "Configuration",
 			parameters: "Parameters",
 			effects: "Effects",
+		},
+		units: {
+			seconds: "s",
+			percents: "%",
+			pixels: "px",
+			beatsPerMinute: "BPM",
+			semitones: "key",
+			degrees: "°",
 		},
 		score: {
 			midi: "MIDI",
@@ -393,6 +403,9 @@ export default {
 				mapping: {
 					_: "Maps the properties of notes to the specified item",
 				},
+				preset: {
+					_: "Predefined parameter schemes for your convenience",
+				},
 			},
 			track: {
 				gradient: "Gives the video tracks a gradient color effect in your layout",
@@ -481,6 +494,7 @@ export default {
 				ok: "&OK",
 				cancel: "&Cancel",
 				close: "&Close",
+				learnMore: "&Learn more",
 			},
 			expander: {
 				expandDetails: "Expand details",
@@ -488,6 +502,12 @@ export default {
 			},
 			showError: {
 				title: "Error",
+			},
+		},
+		wrongOpeningMethod: {
+			script: {
+				title: "Hey, you misplaced the extension!",
+				content: "The new version of Otomad Helper is an extension. Unlike the old version, it is not a script.\n\nPlease move the extension to the Application Extensions directory of VEGAS instead of the Script Menu directory.\n\nLocation:",
 			},
 		},
 	},

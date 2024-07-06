@@ -5,7 +5,8 @@ import exampleThumbnail from "assets/images/ヨハネの氷.png";
 const effects = ["chorus", "delay", "changePitch", "reverse", "changeSpeed", "vibrato", "changeHue", "rotateHue", "monochrome", "negative", "repeatRapidly", "randomTuning", "upsize", "spherize", "mirror", "highContrast", "oversaturation", "emphasizeThrice", "twist", "mosaic", "thermal", "emboss", "bump", "edge"];
 
 export default function Ytp() {
-	const { enabled: [enabled, setEnabled] } = selectConfig(c => c.ytp);
+	const { enabled: [enabled, setEnabled], clips } = selectConfig(c => c.ytp);
+	const { start: constraintStart, end: constraintEnd } = selectConfig(c => c.ytp.constraint);
 	const [selectEffects, setSelectEffects] = useState<string[]>([]);
 	const selectEffectCount = selectEffects.length;
 	const selectAll = useSelectAll([selectEffects, setSelectEffects], effects);
@@ -28,8 +29,12 @@ export default function Ytp() {
 			) : (
 				<>
 					<Subheader>{t.subheaders.parameters}</Subheader>
-					<SettingsCard title={t.ytp.constraint} details={t.descriptions.ytp.constraint} icon="constraint" />
-					<SettingsCard title={t.ytp.clips} details={t.descriptions.ytp.clips} icon="number" />
+					<Expander title={t.ytp.constraint} details={t.descriptions.ytp.constraint} icon="constraint">
+						<ExpanderChildTrim.Value start={constraintStart} end={constraintEnd} min={0.001} decimalPlaces={3} />
+					</Expander>
+					<SettingsCard title={t.ytp.clips} details={t.descriptions.ytp.clips} icon="number">
+						<TextBox.Number value={clips} min={0} decimalPlaces={0} />
+					</SettingsCard>
 					<Subheader>{t.subheaders.effects}</Subheader>
 					<Expander
 						title={t.ytp.effects}

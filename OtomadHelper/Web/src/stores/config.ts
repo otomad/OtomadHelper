@@ -68,10 +68,27 @@ export const configStore = createStore({
 		transformMethod: "panCrop" as TransformMethod,
 		enableStaffVisualizer: false,
 		enablePixelScaling: false,
+		activeParameterScheme: [
+			{
+				name: "进入",
+				enabled: true,
+				parameters: ["缩放", "水平位移", "垂直位移"],
+			},
+			{
+				name: "淡出",
+				enabled: false,
+				parameters: ["淡入淡出"],
+			},
+		],
 	},
 	createGroups: true,
 	ytp: {
 		enabled: false,
+		constraint: {
+			start: 0.01,
+			end: 5,
+		},
+		clips: 30,
 	},
 	settings: {
 		uiScale: 100,

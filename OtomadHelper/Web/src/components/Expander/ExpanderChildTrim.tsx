@@ -14,7 +14,7 @@ const StyledExpanderChildTrim = styled(Expander.ChildWrapper)`
 	}
 `;
 
-export default function ExpanderChildTrim({ start, end }: FCP<{
+function ExpanderChildTrimTimecode({ start, end }: FCP<{
 	children?: never;
 	/** Start time time code. */
 	start: StateProperty<string>;
@@ -37,3 +37,65 @@ export default function ExpanderChildTrim({ start, end }: FCP<{
 		</StyledExpanderChildTrim>
 	);
 }
+
+function ExpanderChildTrimValue({ start, end, unit = t.units.seconds, decimalPlaces, min, max }: FCP<{
+	children?: never;
+	/** Start time value. */
+	start: StateProperty<number>;
+	/** End time value. */
+	end: StateProperty<number>;
+	/** Value unit. */
+	unit?: string;
+	/** The number of decimal places, leaving blank means no limit. */
+	decimalPlaces?: number;
+	/** Limit of the minimum value. */
+	min?: number;
+	/** Limit of the maximum value. */
+	max?: number;
+}, "div">) {
+	return (
+		<StyledExpanderChildTrim>
+			<div className="timecodes">
+				<TextBox.Number
+					value={start}
+					suffix={unit}
+					decimalPlaces={decimalPlaces}
+					min={min}
+					max={minWithUndefined(max, end[0])}
+				/>
+				<div className="tilde">~</div>
+				<TextBox.Number
+					value={end}
+					suffix={unit}
+					decimalPlaces={decimalPlaces}
+					min={maxWithUndefined(min, start[0])}
+					max={max}
+				/>
+			</div>
+		</StyledExpanderChildTrim>
+	);
+}
+
+/**
+ * Calculates the minimum value from an array of numbers, excluding any undefined values.
+ * @param values - An array of numbers and/or undefined values.
+ * @returns The minimum number from the input array, excluding undefined values.
+ */
+function minWithUndefined(...values: (number | undefined)[]) {
+	return Math.min(...(values.filter(value => !isUndefinedNullNaN(value)) as number[]));
+}
+/**
+ * Calculates the maximum value from an array of numbers, excluding any undefined values.
+ * @param values - An array of numbers and/or undefined values.
+ * @returns The maximum number from the input array, excluding undefined values.
+ */
+function maxWithUndefined(...values: (number | undefined)[]) {
+	return Math.max(...(values.filter(value => !isUndefinedNullNaN(value)) as number[]));
+}
+
+const ExpanderChildTrim = {
+	Timecode: ExpanderChildTrimTimecode,
+	Value: ExpanderChildTrimValue,
+};
+
+export default ExpanderChildTrim;
