@@ -2,6 +2,8 @@ import type { FormatFunction } from "i18next";
 import formatOrdinal from "./ordinal";
 
 const formatInterpolation: FormatFunction = function format(value, format, lng) {
+	if (isI18nItem(value))
+		value = value.toString();
 	switch (typeof value) {
 		case "string":
 			if (value.match(/[a-z]/)) // If the letters are all capital, treated them as abbreviations without case conversion.

@@ -6,8 +6,8 @@ const THUMB_PRESSED_WIDTH = 22;
 // const isHoverPseudo = ":is(&:hover, .settings-card:hover .trailing &)";
 // const isPressedPseudo = ":is(&:active, .settings-card:active .trailing &)";
 // WARN: styled components bug: https://github.com/styled-components/styled-components/issues/4279
-const isHoverPseudo = "&:hover, .settings-card:hover .trailing &:only-child";
-const isPressedPseudo = "&:active, &.pressed, .settings-card:active .trailing &:only-child";
+const isHoverPseudo = "&:hover, .settings-card-toggle-switch:hover .trailing:not(:has(:hover)) &";
+const isPressedPseudo = "&:active, &.pressed, .settings-card-toggle-switch:active .trailing:not(:has(:active)) &";
 
 const StyledToggleSwitchLabel = styled.button`
 	display: flex;
@@ -143,10 +143,14 @@ const StyledToggleSwitchLabel = styled.button`
 				background-color: ${c("fill-color-text-on-accent-disabled")};
 			}
 		}
+		
+		&.colored .thumb {
+			background-color: oklab(from ${c("accent-color")} calc(1 - ((L - 0.65) * 10000 + 0.65)) 0 0);
+		}
 	}
 `;
 
-export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, details, resetTransitionOnChanging = false, children, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, details, resetTransitionOnChanging = false, $color, children, ...htmlAttrs }: FCP<{
 	/** Is on? */
 	on: StateProperty<boolean>;
 	/** Disabled */
@@ -159,6 +163,8 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	as?: WebTarget;
 	/** Detailed description. */
 	details?: ReactNode;
+	/** Use special accent color for the toggle switch. */
+	$color?: string;
 	/**
 	 * Reset the page's transition effect when toggling the switch.
 	 * @note This is business logic, but present in the base component.
@@ -225,10 +231,11 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	return (
 		<StyledToggleSwitchLabel
 			as={as as "button"}
-			className={{ selected: on, pressed }}
+			className={{ selected: on, pressed, colored: !!$color }}
 			disabled={disabled}
 			onClick={e => handleCheck(!on, e)}
 			tabIndex={0}
+			style={{ "--accent-color": $color }}
 			{...htmlAttrs}
 		>
 			<div className="text">

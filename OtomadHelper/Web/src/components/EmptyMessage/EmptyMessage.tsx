@@ -1,3 +1,6 @@
+import EmptyMessageTypical from "./EmptyMessageTypical";
+import EmptyMessageYtpDisabled from "./EmptyMessageYtpDisabled";
+
 const scaleIn = keyframes`
 	from {
 		scale: 0.9;
@@ -41,7 +44,7 @@ const StyledEmptyMessage = styled.div`
 
 		> p {
 			${styles.effects.text.custom(14, 20, "regular", "small")};
-			color: ${c("fill-color-text-tertiary")}
+			color: ${c("fill-color-text-tertiary")};
 		}
 	}
 `;
@@ -82,3 +85,6 @@ export default function EmptyMessage({ icon, title, details, iconOff = false, sp
 		</StyledEmptyMessage>
 	);
 }
+
+EmptyMessage.Typical = EmptyMessageTypical;
+EmptyMessage.YtpDisabled = EmptyMessageYtpDisabled;

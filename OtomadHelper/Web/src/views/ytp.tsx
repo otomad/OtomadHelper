@@ -5,7 +5,7 @@ import exampleThumbnail from "assets/images/ヨハネの氷.png";
 const effects = ["chorus", "delay", "changePitch", "reverse", "changeSpeed", "vibrato", "changeHue", "rotateHue", "monochrome", "negative", "repeatRapidly", "randomTuning", "upsize", "spherize", "mirror", "highContrast", "oversaturation", "emphasizeThrice", "twist", "mosaic", "thermal", "emboss", "bump", "edge"];
 
 export default function Ytp() {
-	const { enabled: [enabled, setEnabled], clips } = selectConfig(c => c.ytp);
+	const { enabled, clips } = selectConfig(c => c.ytp);
 	const { start: constraintStart, end: constraintEnd } = selectConfig(c => c.ytp.constraint);
 	const [selectEffects, setSelectEffects] = useState<string[]>([]);
 	const selectEffectCount = selectEffects.length;
@@ -14,61 +14,49 @@ export default function Ytp() {
 	return (
 		<div className="container">
 			<SettingsPageControl image={tipsImage} cursor={cursor} learnMoreLink="">{t.descriptions.ytp}</SettingsPageControl>
-			<SettingsCardToggleSwitch title={t.enabled} selectInfo={t(1).selectInfo.source} icon="enabled" on={[enabled, setEnabled]} resetTransitionOnChanging />
+			<SettingsCardToggleSwitch title={t.enabled} selectInfo={t(1).selectInfo.source} icon="enabled" on={enabled} resetTransitionOnChanging />
 
-			{!enabled ? (
-				<EmptyMessage
-					key="disabled"
-					icon="ytp"
-					title={t.empty.disabled.title({ name: t.titles.ytp })}
-					details={t.empty.disabled.details({ name: t.titles.ytp })}
-					iconOff
+			<EmptyMessage.Typical icon="ytp" name={t.titles.ytp} enabled={enabled}>
+				<Subheader>{t.subheaders.parameters}</Subheader>
+				<Expander title={t.ytp.constraint} details={t.descriptions.ytp.constraint} icon="constraint">
+					<ExpanderChildTrim.Value start={constraintStart} end={constraintEnd} min={0.001} decimalPlaces={3} />
+				</Expander>
+				<SettingsCard title={t.ytp.clips} details={t.descriptions.ytp.clips} icon="number">
+					<TextBox.Number value={clips} min={0} decimalPlaces={0} />
+				</SettingsCard>
+				<Subheader>{t.subheaders.effects}</Subheader>
+				<Expander
+					title={t.ytp.effects}
+					details={t.descriptions.ytp.effects}
+					icon="sparkle"
+					actions={(
+						<OverlapLayout $horizontalAlign="end" $verticalAlign="center">
+							{selectEffectCount === 1 && <span>{selectEffects[0]}</span>}
+							<Badge hidden={selectEffectCount < 2}>{selectEffectCount}</Badge>
+						</OverlapLayout>
+					)}
 				>
-					<Button onClick={() => setEnabled(true)} accent>{t.enable}</Button>
-				</EmptyMessage>
-			) : (
-				<>
-					<Subheader>{t.subheaders.parameters}</Subheader>
-					<Expander title={t.ytp.constraint} details={t.descriptions.ytp.constraint} icon="constraint">
-						<ExpanderChildTrim.Value start={constraintStart} end={constraintEnd} min={0.001} decimalPlaces={3} />
-					</Expander>
-					<SettingsCard title={t.ytp.clips} details={t.descriptions.ytp.clips} icon="number">
-						<TextBox.Number value={clips} min={0} decimalPlaces={0} />
-					</SettingsCard>
-					<Subheader>{t.subheaders.effects}</Subheader>
-					<Expander
-						title={t.ytp.effects}
-						details={t.descriptions.ytp.effects}
-						icon="sparkle"
-						actions={(
-							<OverlapLayout $horizontalAlign="end" $verticalAlign="center">
-								{selectEffectCount === 1 && <span>{selectEffects[0]}</span>}
-								<Badge hidden={selectEffectCount < 2}>{selectEffectCount}</Badge>
-							</OverlapLayout>
-						)}
+					<Checkbox
+						value={selectAll}
+						actions={
+							<Button subtle icon="invert_selection" onClick={e => { stopEvent(e); selectAll[2](); }}>{t.invertSelection}</Button>
+						}
 					>
-						<Checkbox
-							value={selectAll}
-							actions={
-								<Button subtle icon="invert_selection" onClick={e => { stopEvent(e); selectAll[2](); }}>{t.invertSelection}</Button>
-							}
-						>
-							{t.selectAll}
-						</Checkbox>
-						<ItemsView view="grid" current={[selectEffects, setSelectEffects]} multiple>
-							{effects.map(name => (
-								<ItemsView.Item
-									key={name}
-									id={name}
-									image={<PreviewYtp thumbnail={exampleThumbnail} name={name} />}
-								>
-									{name}
-								</ItemsView.Item>
-							))}
-						</ItemsView>
-					</Expander>
-				</>
-			)}
+						{t.selectAll}
+					</Checkbox>
+					<ItemsView view="grid" current={[selectEffects, setSelectEffects]} multiple>
+						{effects.map(name => (
+							<ItemsView.Item
+								key={name}
+								id={name}
+								image={<PreviewYtp thumbnail={exampleThumbnail} name={name} />}
+							>
+								{name}
+							</ItemsView.Item>
+						))}
+					</ItemsView>
+				</Expander>
+			</EmptyMessage.Typical>
 		</div>
 	);
 }

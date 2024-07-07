@@ -67,7 +67,12 @@ export const configStore = createStore({
 		},
 		transformMethod: "panCrop" as TransformMethod,
 		enableStaffVisualizer: false,
-		enablePixelScaling: false,
+		pixelScaling: {
+			enabled: false,
+			scaleFactor: 100,
+			autoScaleFactor: true,
+			replaceSource: true,
+		},
 		currentPreset: "enter",
 		activeParameterScheme: [
 			{
@@ -83,6 +88,25 @@ export const configStore = createStore({
 		],
 	},
 	createGroups: true,
+	sonar: {
+		enabled: true,
+		separateDrums: false,
+		differenceCompositeMode: false,
+		shadow: false,
+		shadowColor: "#ffffff",
+		graphs: [
+			{
+				drumSound: "Kick",
+				color: "#ffffff",
+				shape: "rectangle",
+			},
+			{
+				drumSound: "Snare",
+				color: "#ffffff",
+				shape: "diamond",
+			},
+		],
+	},
 	ytp: {
 		enabled: false,
 		constraint: {
