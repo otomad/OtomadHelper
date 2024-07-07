@@ -68,6 +68,7 @@ export const configStore = createStore({
 		transformMethod: "panCrop" as TransformMethod,
 		enableStaffVisualizer: false,
 		enablePixelScaling: false,
+		currentPreset: "enter",
 		activeParameterScheme: [
 			{
 				name: "进入",

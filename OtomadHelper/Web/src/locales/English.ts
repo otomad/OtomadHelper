@@ -221,6 +221,9 @@ export default {
 			mapping: {
 				_: "Mapping",
 			},
+			preset: {
+				add: "Add to custom presets",
+			},
 			parameters: {
 				copyFromAnotherParameterScheme: "Copy from another parameter scheme here",
 			},

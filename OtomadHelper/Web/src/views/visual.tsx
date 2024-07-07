@@ -26,7 +26,7 @@ export /* internal */ const noLengthenings = [
 	{ id: "trimEndFrames", icon: "trim_end_frames" },
 	{ id: "splitThenFreeze", icon: "split_then_freeze" },
 	{ id: "freezeToGray", icon: "freeze_to_gray" },
-	{ id: "freezeToEffect", icon: "placeholder" },
+	{ id: "freezeToEffect", icon: "freeze_to_effect" },
 ] as const;
 export /* internal */ const transformMethods = [
 	"panCrop", "transformOfx",
@@ -34,17 +34,21 @@ export /* internal */ const transformMethods = [
 
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
+const buildInPresets = ["normal", "enter", "enterStaff", "fadeOut", "flashlight", "horizontalMovement", "verticalMovement", "ccwRotate", "cwRotate", "rainbowColor", "oversaturation", "highContrast", "thresholdChange"];
+
 const TooltipPartial = Tooltip.with({ placement: "y" });
 
 export default function Visual() {
 	const {
 		enabled: [enabled, setEnabled],
 		preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
-		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, enablePixelScaling, /* transformMethod */ activeParameterScheme,
+		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, enablePixelScaling, /* transformMethod */ currentPreset, activeParameterScheme,
 	} = selectConfig(c => c.visual);
 	const { enabled: glissando, amount: glissandoAmount } = selectConfig(c => c.visual.glissando);
 	const { enabled: [ytpEnabled, setYtpEnabled] } = selectConfig(c => c.ytp);
 	const { createGroups } = selectConfig(c => c);
+
+	const shown = useState(true);
 
 	const { changePage, pushPage } = useSnapshot(pageStore);
 
@@ -55,6 +59,7 @@ export default function Visual() {
 	return (
 		<div className="container">
 			<SettingsPageControlMedia stream="visual" fileName="ヨハネの氷.mp4" enabled={[enabled, setEnabled]} thumbnail={exampleThumbnail} />
+			<ContentDialog shown={shown} title="Title" buttons={<Button accent>OK</Button>}>Windows 11 is faster and more intuitive.</ContentDialog>
 
 			{!enabled ? (
 				<EmptyMessage
@@ -170,7 +175,14 @@ export default function Visual() {
 								<SettingsCard title={t.titles.pixelScaling} details={t.descriptions.stream.effects.pixelScaling} type="button" icon="miscz" onClick={() => pushPage("pixel-scaling")}>
 									<ToggleSwitch on={enablePixelScaling} />
 								</SettingsCard>
-								<SettingsCard title={t.titles.customEffect} details={t.descriptions.stream.effects.customEffect} type="button" icon="placeholder" trailingIcon="open" />
+								<SettingsCard
+									title={t.titles.customEffect}
+									details={t.descriptions.stream.effects.customEffect}
+									type="button"
+									icon="custom_effect"
+									trailingIcon="open"
+									onClick={() => shown[1](true)}
+								/>
 
 								<Subheader>{t.subheaders.parameters}</Subheader>
 								<SettingsCard
@@ -182,13 +194,17 @@ export default function Visual() {
 								<ExpanderRadio
 									title={t.preset}
 									details={t.descriptions.stream.preset}
-									icon="placeholder"
-									items={[]}
-									value={[] as never}
-									view="grid"
+									icon="preset"
+									items={buildInPresets}
+									value={currentPreset}
+									view="tile"
 									idField
 									nameField
-								/>
+								>
+									<Expander.ChildWrapper>
+										<Button icon="add">{t.stream.preset.add}</Button>
+									</Expander.ChildWrapper>
+								</ExpanderRadio>
 								{activeParameterScheme[0].map((scheme, i) => (
 									<SettingsCard
 										title={scheme.name}

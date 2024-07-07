@@ -318,7 +318,6 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 	/** The value to increase or decrease each time the knob of numeric up down box is clicked. Defaults to 1. */
 	spinnerStep?: TNumber;
 }>) {
-	console.log(min, max);
 	const inputEl = useDomRef<"input">();
 	const bigIntMode = typeof value === "bigint";
 	const intMode = bigIntMode || decimalPlaces === 0;
