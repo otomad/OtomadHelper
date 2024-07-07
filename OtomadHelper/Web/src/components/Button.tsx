@@ -11,7 +11,7 @@ export /* internal */ const StyledButton = styled.button<{
 }>`
 	${styles.mixins.flexCenter()};
 	display: inline-flex;
-	min-height: 30px;
+	min-height: 32px;
 	padding: 4px ${inlinePadding}px 6px;
 	border: 1px solid;
 	border-radius: 4px;

@@ -48,8 +48,6 @@ export default function Visual() {
 	const { enabled: [ytpEnabled, setYtpEnabled] } = selectConfig(c => c.ytp);
 	const { createGroups } = selectConfig(c => c);
 
-	const shown = useState(true);
-
 	const { changePage, pushPage } = useSnapshot(pageStore);
 
 	const preferredTrack = useMemo(() => {
@@ -59,7 +57,6 @@ export default function Visual() {
 	return (
 		<div className="container">
 			<SettingsPageControlMedia stream="visual" fileName="ヨハネの氷.mp4" enabled={[enabled, setEnabled]} thumbnail={exampleThumbnail} />
-			<ContentDialog shown={shown} title="Title" buttons={<Button accent>OK</Button>}>Windows 11 is faster and more intuitive.</ContentDialog>
 
 			{!enabled ? (
 				<EmptyMessage
@@ -181,7 +178,6 @@ export default function Visual() {
 									type="button"
 									icon="custom_effect"
 									trailingIcon="open"
-									onClick={() => shown[1](true)}
 								/>
 
 								<Subheader>{t.subheaders.parameters}</Subheader>
@@ -216,6 +212,9 @@ export default function Visual() {
 										<ToggleSwitch on={[scheme.enabled]} />
 									</SettingsCard>
 								))}
+								<div>
+									<Button icon="add">{t.new}</Button>
+								</div>
 							</>
 						)
 					}

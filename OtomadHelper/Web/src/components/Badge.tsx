@@ -26,6 +26,7 @@ const StyledBadge = styled.div<{
 	text-align: center;
 	background-color: ${c("fill-color-system-solid-neutral-background")};
 	scale: 1;
+	transition: ${fallbackTransitions}, scale ${eases.easeOutBackSmooth} 250ms;
 
 	&.icon-only {
 		width: 16px;

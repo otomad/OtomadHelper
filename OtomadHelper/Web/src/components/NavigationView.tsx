@@ -329,6 +329,16 @@ const StyledNavigationView = styled.div<{
 				> .contents > * {
 					animation: inherit;
 				}
+
+				> div:not([class]):has(> button) {
+					display: flex;
+					flex-wrap: wrap;
+					gap: 8px;
+
+					> button {
+						min-width: 120px;
+					}
+				}
 			}
 
 			> .exit > .container > * {

@@ -40,7 +40,6 @@ const StyledContentDialog = styled.div`
 
 		> button {
 			width: 100%;
-			min-height: 32px;
 		}
 	}
 `;

@@ -1,7 +1,6 @@
 import { StyledButton } from "./Button";
 
 const StyledComboBox = styled(StyledButton)`
-	min-height: 32px;
 	padding: 4px 11px;
 
 	:where(.settings-card > .base, .expander-item) > .trailing > :where(&) {
@@ -24,7 +23,7 @@ const StyledComboBox = styled(StyledButton)`
 			font-size: 16px;
 		}
 	}
-	
+
 	&:active .content .icon {
 		translate: 0 2px;
 	}

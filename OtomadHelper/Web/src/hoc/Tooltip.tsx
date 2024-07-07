@@ -186,5 +186,18 @@ function TooltipWith(withProps: Partial<TooltipProps>) {
 	return (props: TooltipProps) => <Tooltip {...withProps} {...props} />;
 }
 
+function TooltipWrap<TComponent extends ReactElement | React.ExoticComponent>(component: TComponent, tooltipProps: Partial<TooltipProps>) {
+	const Component = component as unknown as FC;
+	return function TooltipWrappedComponent({ title, ...props }: AnyObject) {
+		const newTooltipProps = Object.assign({}, tooltipProps, title && { title }) as TooltipProps;
+		return (
+			<Tooltip {...newTooltipProps}>
+				<Component {...props} />
+			</Tooltip>
+		);
+	};
+}
+
 Tooltip.Content = TooltipContent;
 Tooltip.with = TooltipWith;
+Tooltip.wrap = TooltipWrap;
