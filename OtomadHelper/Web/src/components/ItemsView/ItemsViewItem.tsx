@@ -136,8 +136,8 @@ const StyledItemsViewItem = styled.button<{
 				scale: 1 0.625;
 			}
 
-			> * {
-				opacity: ${c("pressed-text-opacity")}
+			> :not(.checkbox-temp-wrapper) { // WARN: Wait for React 19 ref as a prop.
+				opacity: ${c("pressed-text-opacity")};
 			}
 		}
 
@@ -168,7 +168,7 @@ const StyledItemsViewItem = styled.button<{
 		${styles.effects.text.bodyStrong};
 	}
 
-	.checkbox-temp-wrapper {
+	.checkbox-temp-wrapper { // WARN: Wait for React 19 ref as a prop.
 		${tgs()} {
 			opacity: 0;
 
