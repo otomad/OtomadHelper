@@ -6,6 +6,8 @@ const StyledColorPicker = styled(StyledButton).attrs({
 })`
 	min-width: unset;
 	aspect-ratio: 1 / 1;
+	background-color: ${c("color")} !important;
+	outline: 1px solid ${getClearColorFromBackgroundColor("color")} !important;
 
 	input {
 		visibility: hidden;
@@ -20,7 +22,7 @@ export default function ColorPicker({ color: [color, setColor], ...htmlAttrs }: 
 	const inputColorEl = useDomRef<"input">();
 
 	return (
-		<StyledColorPicker {...htmlAttrs} style={{ backgroundColor: color }} onClick={() => inputColorEl.current?.click()}>
+		<StyledColorPicker {...htmlAttrs} style={{ "--color": color }} onClick={() => inputColorEl.current?.click()}>
 			<input ref={inputColorEl} type="color" onChange={e => setColor?.(e.currentTarget.value)} />
 		</StyledColorPicker>
 	);

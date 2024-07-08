@@ -41,8 +41,9 @@ const TooltipPartial = Tooltip.with({ placement: "y" });
 export default function Visual() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
-		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, /* transformMethod */ currentPreset, activeParameterScheme,
+		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, /* transformMethod */ currentPreset,
 	} = selectConfig(c => c.visual);
+	const activeParameterScheme = selectConfigArray(c => c.visual.activeParameterScheme);
 	const { enabled: glissando, amount: glissandoAmount } = selectConfig(c => c.visual.glissando);
 	const { enabled: enablePixelScaling } = selectConfig(c => c.visual.pixelScaling);
 	const { createGroups } = selectConfig(c => c);
@@ -174,15 +175,15 @@ export default function Visual() {
 							<Button icon="add">{t.stream.preset.add}</Button>
 						</Expander.ChildWrapper>
 					</ExpanderRadio>
-					{activeParameterScheme[0].map((scheme, i) => (
+					{activeParameterScheme.map((scheme, i) => (
 						<SettingsCard
-							title={scheme.name}
-							details={listFormat(scheme.parameters, "conjunction", "narrow")}
+							title={scheme.name[0]}
+							details={listFormat(scheme.parameters[0], "conjunction", "narrow")}
 							type="button"
 							key={i}
 							icon
 						>
-							<ToggleSwitch on={[scheme.enabled]} />
+							<ToggleSwitch on={scheme.enabled} />
 						</SettingsCard>
 					))}
 					<div>

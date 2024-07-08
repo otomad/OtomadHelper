@@ -96,11 +96,13 @@ export const configStore = createStore({
 		shadowColor: "#ffffff",
 		graphs: [
 			{
+				enabled: true,
 				drumSound: "Kick",
 				color: "#ffffff",
 				shape: "rectangle",
 			},
 			{
+				enabled: true,
 				drumSound: "Snare",
 				color: "#ffffff",
 				shape: "diamond",
@@ -125,4 +127,5 @@ export const configStore = createStore({
 });
 
 export const selectConfig = <T extends object>(path: (state: typeof configStore) => T) => useStoreState(path(configStore));
+export const selectConfigArray = <T extends object>(path: (state: typeof configStore) => T[]) => useStoreStateArray(path(configStore));
 globals.config = configStore;

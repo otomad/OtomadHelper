@@ -144,8 +144,16 @@ const StyledToggleSwitchLabel = styled.button`
 			}
 		}
 
-		&.colored .thumb {
-			background-color: ${getClearColorFromBackgroundColor("accent-color")};
+		&.colored {
+			--highlight-color: ${getClearColorFromBackgroundColor("accent-color")};
+
+			.thumb {
+				background-color: ${c("highlight-color")};
+			}
+
+			.stroke {
+				border-color: ${c("highlight-color")};
+			}
 		}
 	}
 `;

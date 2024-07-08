@@ -28,6 +28,10 @@ interface PersistOptions<TState extends object> {
 	partialize?: (keyof TState)[] | ((state: TState) => object);
 }
 
+type StatePropertiedObject<TState> = {
+	[property in keyof TState]: StatePropertyNonNull<TState[property]>;
+};
+
 /**
  * A hook that allows you to select a specific part of the store's state using a path function.
  * And then you can get or set the selected state property, just like use it in React `useState` hook.
@@ -35,16 +39,27 @@ interface PersistOptions<TState extends object> {
  * @param state - The store instance to select from.
  * @returns A proxy object that provides read and write access to the selected state property.
  */
-export function useStoreState<TState extends object>(state: TState) {
+export function useStoreState<TState extends object>(state: TState): StatePropertiedObject<TState> {
 	return new Proxy(state as AnyObject, {
 		get(state, property) {
 			if (!(property in state)) return [];
-			return [useSnapshot(state)[property], (value: unknown) => {
+			let snapshot;
+			try {
+				snapshot = useSnapshot(state)[property];
+			} catch { // Not hook lifecycle.
+				snapshot = state[property];
+			}
+			// if (isObject(snapshot)) snapshot = useStoreState(snapshot);
+			// if (Array.isArray(state) && typeof snapshot === "function")
+			// 	return snapshot.bind(state.map((item: object) => useStoreState(item)));
+			return [snapshot, (value: unknown) => {
 				const newValue = typeof value === "function" ? value(state[property]) : value;
 				return state[property] = newValue;
 			}];
 		},
-	}) as {
-		[property in keyof TState]: StatePropertyNonNull<TState[property]>;
-	};
+	}) as never;
+}
+
+export function useStoreStateArray<T extends object>(array: T[]): StatePropertiedObject<T>[] {
+	return array.map(item => useStoreState(item));
 }

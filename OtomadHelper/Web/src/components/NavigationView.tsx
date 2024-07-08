@@ -330,7 +330,7 @@ const StyledNavigationView = styled.div<{
 					animation: inherit;
 				}
 
-				> div:not([class]):has(> button) {
+				> div:is(:not([class]), .stack-panel):has(> button) {
 					display: flex;
 					flex-wrap: wrap;
 					gap: 8px;
