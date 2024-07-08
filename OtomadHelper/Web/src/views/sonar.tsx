@@ -26,7 +26,7 @@ export default function Sonar() {
 							title={graph.drumSound[0]}
 							type="button"
 							key={i}
-							icon
+							icon={<PreviewGraph name={graph.shape[0]} color={graph.color[0]} />}
 						>
 							<ToggleSwitch on={graph.enabled} />
 						</SettingsCard>

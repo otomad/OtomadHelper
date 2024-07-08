@@ -42,9 +42,11 @@ declare global {
 	export type FC<TProps = {}, TTagName extends string | null = null> = React.FC<FCP<TProps, TTagName>>;
 
 	type GetTagFromElement<TElement> = {
-		[Tag in keyof HTMLElementTagNameMap]: HTMLElementTagNameMap[Tag] extends TElement ? TElement extends HTMLElementTagNameMap[Tag] ? Tag : never : never;
-	}[keyof HTMLElementTagNameMap];
-	type GetAttributesFromTag<TTagName> = React.ReactDOM[TTagName] extends React.DetailedHTMLFactory<infer Attrs, Any> ? Attrs : never;
+		[Tag in keyof ElementTagNameMap]: ElementTagNameMap[Tag] extends TElement ? TElement extends ElementTagNameMap[Tag] ? Tag : never : never;
+	}[keyof ElementTagNameMap];
+	type GetAttributesFromTag<TTagName> =
+		React.ReactDOM[TTagName] extends React.DetailedHTMLFactory<infer Attrs, any> ? Attrs :
+		React.ReactDOM[TTagName] extends React.SVGFactory ? React.SVGAttributes<any> : never;
 	type GetAttributesFromElement<TElement> = GetAttributesFromTag<GetTagFromElement<TElement>>;
 
 	/**

@@ -46,12 +46,9 @@ export function useStoreState<TState extends object>(state: TState): StateProper
 			let snapshot;
 			try {
 				snapshot = useSnapshot(state)[property];
-			} catch { // Not hook lifecycle.
+			} catch { // Not in hook lifecycle.
 				snapshot = state[property];
 			}
-			// if (isObject(snapshot)) snapshot = useStoreState(snapshot);
-			// if (Array.isArray(state) && typeof snapshot === "function")
-			// 	return snapshot.bind(state.map((item: object) => useStoreState(item)));
 			return [snapshot, (value: unknown) => {
 				const newValue = typeof value === "function" ? value(state[property]) : value;
 				return state[property] = newValue;

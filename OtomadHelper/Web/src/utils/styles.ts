@@ -291,9 +291,10 @@ export function zoomDomRect(rect: DOMRect, zoom: number) {
  * Use pure CSS to calculate the text color (black or white) by the oklab model that can be clearly
  * read under the specified background color.
  * @param colorVar - Background color CSS custom property name, the initial two dashes can be omitted.
+ * @param alpha - The alpha value of the color, defaults to 1.
  * @returns A clear text color.
  */
-export function getClearColorFromBackgroundColor(colorVar: string) {
+export function getClearColorFromBackgroundColor(colorVar: string, alpha: number = 1) {
 	if (!colorVar.startsWith("--")) colorVar = "--" + colorVar;
-	return `oklab(from var(${colorVar}) calc(1 - ((L - 0.65) * 10000 + 0.5)) 0 0)`;
+	return `oklab(from var(${colorVar}) calc(1 - ((L - 0.65) * 10000 + 0.5)) 0 0 / ${alpha})`;
 }

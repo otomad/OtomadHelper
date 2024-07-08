@@ -85,7 +85,7 @@ export default function SettingsCard({
 	...htmlAttrs
 }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
-	icon?: DeclaredIcons | "" | boolean;
+	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
 	title?: ReactNode;
 	/** Detailed description. */
@@ -109,7 +109,7 @@ export default function SettingsCard({
 			{...htmlAttrs}
 		>
 			<div className="base">
-				<Icon name={icon} />
+				{typeof icon === "object" ? icon : <Icon name={icon} />}
 				<div className="text">
 					<p className="title"><Preserves>{title}</Preserves></p>
 					<p className="details"><Preserves>{details}</Preserves></p>
