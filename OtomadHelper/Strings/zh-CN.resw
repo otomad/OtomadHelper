@@ -73,6 +73,9 @@
 	<data name="ContentDialog.Button.Close" xml:space="preserve">
 		<value>关闭</value>
 	</data>
+	<data name="ContentDialog.Button.LearnMore" xml:space="preserve">
+		<value>了解更多</value>
+	</data>
 	<data name="ContentDialog.Expander.ExpandDetails" xml:space="preserve">
 		<value>展开详细信息</value>
 	</data>
@@ -81,5 +84,15 @@
 	</data>
 	<data name="ContentDialog.ShowError.Title" xml:space="preserve">
 		<value>错误</value>
+	</data>
+	<data name="WrongOpeningMethod.Script.Title" xml:space="preserve">
+		<value>嘿，你把该扩展程序放错了位置！</value>
+	</data>
+	<data name="WrongOpeningMethod.Script.Content" xml:space="preserve">
+		<value>新版的Otomad Helper是一个扩展程序。与旧版不同，它不是一个脚本。
+
+请将该扩展移动到VEGAS的Application Extensions目录，而不是Script Menu目录。
+
+位置：</value>
 	</data>
 </root>

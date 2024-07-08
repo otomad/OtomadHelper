@@ -75,6 +75,7 @@ export default {
 			parameters: "Thông số",
 			effects: "Hiệu ứng",
 		},
+		units: {},
 		score: {
 			midi: "MIDI",
 			midiFile: "File trình tự MIDI",
@@ -101,12 +102,14 @@ export default {
 				},
 			},
 			mapping: {},
+			preset: {},
 			parameters: {},
 		},
 		track: {
 			legato: {},
 			clear: {},
 		},
+		sonar: {},
 		ytp: {},
 		mosh: {},
 		tools: {},
@@ -146,6 +149,7 @@ export default {
 				},
 				effects: {},
 				mapping: {},
+				preset: {},
 			},
 			track: {},
 			sonar: {},
@@ -164,7 +168,10 @@ export default {
 		},
 		empty: {
 			disabled: {},
-			ytpEnabled: {},
+			ytpEnabled: {
+				partial: {},
+				fully: {},
+			},
 		},
 	},
 	csharp: {
@@ -191,6 +198,9 @@ export default {
 			showError: {
 				title: "Lỗi",
 			},
+		},
+		wrongOpeningMethod: {
+			script: {},
 		},
 	},
 } as const satisfies LocaleIdentifiers;

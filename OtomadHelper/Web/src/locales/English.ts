@@ -101,7 +101,7 @@ export default {
 			percents: "%",
 			pixels: "px",
 			beatsPerMinute: "BPM",
-			semitones: "key",
+			semitones: "st",
 			degrees: "°",
 		},
 		score: {
@@ -426,10 +426,10 @@ export default {
 			sonar: {
 				_: "Sonar is a visual effect that utilizes Cookie Cutter shapes to create beat-style visual motion graphics. This feature allows you to assign different shapes or effects to various percussion instruments of a drum kit (channel 10) in the score.\nA common Otomad genre is to create Motion Graphics (Mograph) by adding various shapes, such as diffuse circles, to the visual based on the beats. Mograph is a product between graphic design and animation design, a form of visual expression based on the flow of time, and a kind of video art. The term “motion graphics” refers to graphics that are deformed by the flow of time. A single Otomad video containing only mographs is often titled “Graphs” or “Shapes”.",
 				// The name of this effect, “Sonar”, was coined by Motosai.
-				enabled: "Enables sonar effects if the score contains drum kits",
+				enabled: "Enables sonar effects if the active tracks in the score contain drum kits",
 				separateDrums: "Places each drum on its own track",
 				differenceCompositeMode: "Makes the tracks created with difference blend, this will present a shadow puppet style",
-				shadow: "Creates shadows on graphs",
+				shadow: "Adds shadows to graphs",
 			},
 			shupelunker: {
 				_: "Shupelunker Tactics is an unpitched YTPMV/Otomad tactic. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, i.e. the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” is generated. It is also unpitched and allows you to choose where the clip is cut (usually at a dialog), often using audio stretching and rewinding, as well as adding sixteenth to sixty-fourth rests. During production, the clips are matched to the rhythm for vocal sense.",

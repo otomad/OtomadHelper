@@ -78,6 +78,7 @@ export default {
 		invertSelection: "反选",
 		variableBeginWith: "{{first, capitalize}}起始的可变值",
 		reset: "重置",
+		new: "新建",
 		infoBar: {
 			warning: "警告",
 		},
@@ -91,6 +92,14 @@ export default {
 			config: "配置",
 			parameters: "参数",
 			effects: "效果",
+		},
+		units: {
+			seconds: "秒",
+			percents: "%",
+			pixels: "像素",
+			beatsPerMinute: "拍每分",
+			semitones: "半音",
+			degrees: "°",
 		},
 		score: {
 			midi: "MIDI",
@@ -209,6 +218,9 @@ export default {
 			mapping: {
 				_: "映射",
 			},
+			preset: {
+				add: "添加到自定义预设",
+			},
 			parameters: {
 				copyFromAnotherParameterScheme: "从另一套参数方案复制至此",
 			},
@@ -219,6 +231,7 @@ export default {
 			box3d: "3D方盒布局",
 			gradient: "渐变轨道",
 			applyToSelectedTracks: "应用于所选轨道",
+			resetAllLayouts: "全部重置",
 			legato: {
 				_: "填补间隙",
 			},
@@ -227,6 +240,12 @@ export default {
 				motion: "清除轨道运动",
 				effect: "清除轨道效果",
 			},
+		},
+		sonar: {
+			separateDrums: "分离不同鼓声",
+			differenceCompositeMode: "差值合成模式",
+			shadow: "阴影",
+			graphs: "图形 ",
 		},
 		ytp: {
 			constraint: "限制长度",
@@ -384,13 +403,21 @@ export default {
 				mapping: {
 					_: "将音符的参数映射到指定项目",
 				},
+				preset: {
+					_: "为方便你使用而预定义的参数方案",
+				},
 			},
 			track: {
 				gradient: "使视频轨道在布局中具有渐变样式的颜色效果",
 				legato: "填补轨道剪辑中的间隙",
+				resetLayout: "重置此布局的状态来禁用它",
 			},
 			sonar: {
 				_: "声呐是利用区域裁切的形状创建节拍风格动态图形的视觉效果。本功能可利用乐谱中的鼓组乐器（通道10）为其各种打击乐器分配不同的形状或效果。\n一种常见的音MAD流派是根据节奏在画面中加入例如扩散的圆圈等各种图形来制作动态图形（MG动画）。MG动画是介于平面设计与动画设计之间的一种产物，是基于时间流动而设计的视觉表现形式，是影像艺术的一种。其中“动态图形”指的是会随时间流动而改变形态的图形。仅包含MG动画的单个音MAD视频通常以《图形》《形状》等视频标题命名。",
+				enabled: "如果乐谱的活动音轨中包含架子鼓，则会启用声呐效果",
+				separateDrums: "将每个鼓声放置在各自的轨道上",
+				differenceCompositeMode: "创建带有差值混合模式的轨道，这将会呈现一种皮影（影绘）风格",
+				shadow: "为图形添加阴影",
 			},
 			shupelunker: {
 				_: "原音系战法（シュペランカー战法）是一种不调音的音MAD战法。此战法通过使用与旋律音高相同的原素材片段（通常为人声）来演奏旋律，即将素材片段本身做到音高与乐曲的旋律保持一致。\n如果素材片段的音高与旋律不匹配，则生成“鞑靼战法”。此战法同样不改变音高，另外可任意选取素材被切分的位置（通常是在台词的位置），音频伸缩与倒放经常使用，并加入十六分~六十四分休止符。在制作时为了唱歌感因此会把素材和乐曲的节奏对齐。",
@@ -446,12 +473,19 @@ export default {
 				details: "启用以生成{{name, lowercase}}",
 			},
 			ytpEnabled: {
-				title: "已启用YTP，其它相关参数均不可用",
-				details: "禁用YTP功能以使用并调整其它参数",
+				partial: {
+					title: "已启用YTP，其它相关参数均不可用",
+					details: "禁用YTP功能以使用并调整其它参数",
+				},
+				fully: {
+					title: "已启用YTP，无法使用{{feature, capitalize}}功能",
+					details: "禁用YTP功能以使用{{feature, capitalize}}功能",
+				},
 				disableYtp: "禁用YTP",
 				gotoYtp: "转到YTP",
 			},
 		},
+		preset: "预设",
 	},
 	csharp: {
 		mainDock: {
@@ -469,6 +503,7 @@ export default {
 				ok: "确定",
 				cancel: "取消",
 				close: "关闭",
+				learnMore: "了解更多",
 			},
 			expander: {
 				expandDetails: "展开详细信息",
@@ -476,6 +511,12 @@ export default {
 			},
 			showError: {
 				title: "错误",
+			},
+		},
+		wrongOpeningMethod: {
+			script: {
+				title: "嘿，你把该扩展程序放错了位置！",
+				content: "新版的Otomad Helper是一个扩展程序。与旧版不同，它不是一个脚本。\n\n请将该扩展移动到VEGAS的Application Extensions目录，而不是Script Menu目录。\n\n位置：",
 			},
 		},
 	},

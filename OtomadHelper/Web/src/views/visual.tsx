@@ -123,7 +123,7 @@ export default function Visual() {
 						}
 					>
 						<Expander.Item title={t.stream.glissando.amount} details={t.descriptions.stream.glissando.amount}>
-							<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitones} />
+							<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitones} positiveSign />
 						</Expander.Item>
 					</Expander>
 					{/* <ExpanderRadio

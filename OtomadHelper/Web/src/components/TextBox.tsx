@@ -1,3 +1,4 @@
+// #region Spinner
 const StyledSpinner = styled.div`
 	@layer props {
 		--shown: false;
@@ -91,6 +92,7 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 		</StyledSpinner>
 	);
 }
+// #endregion
 
 export /* internal */ const StyledTextBox = styled.div`
 	position: relative;
@@ -114,6 +116,7 @@ export /* internal */ const StyledTextBox = styled.div`
 		z-index: 1;
 		width: 100%;
 		padding: 6px 12px 7px;
+		transition: ${fallbackTransitions}, padding-inline 0s;
 
 		&:focus {
 			box-shadow: none;
@@ -144,6 +147,14 @@ export /* internal */ const StyledTextBox = styled.div`
 		padding-inline-end: 12px;
 	}
 
+	.positive-sign {
+		margin-inline-start: 12px;
+
+		+ input {
+			padding-inline-start: 0;
+		}
+	}
+
 	.spinner-icon {
 		position: relative;
 		margin-inline-start: -6px;
@@ -152,10 +163,12 @@ export /* internal */ const StyledTextBox = styled.div`
 
 	.prefix,
 	.suffix,
+	.positive-sign,
 	.spinner-icon {
 		${styles.mixins.hideIfEmpty()};
 		${styles.mixins.gridCenter()};
 		margin-block-end: 1px;
+		white-space: nowrap;
 	}
 
 	&:hover {
@@ -221,7 +234,7 @@ export /* internal */ const StyledTextBox = styled.div`
 	}
 `;
 
-const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeholder, disabled, prefix, suffix, _spinner: spinner, onChange, onChanging, onInput, onKeyDown, ...htmlAttrs }: FCP<{
+const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeholder, disabled, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, onChange, onChanging, onInput, onKeyDown, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
 	/** Content placeholder. */
@@ -232,6 +245,8 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 	suffix?: string;
 	/** @private Numeric up down box */
 	_spinner?: (inputId: string) => ReactNode;
+	/** @private Show the positive sign? */
+	_showPositiveSign?: boolean;
 	/** Text change event. Only fired after pasting text or after the input box is out of focus. */
 	onChange?: BaseEventHandler<HTMLInputElement>;
 	/** Text changing event. Fired any time the text changes. */
@@ -279,6 +294,7 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 		<StyledTextBox {...htmlAttrs}>
 			<div className="wrapper">
 				<label className="prefix" htmlFor={inputId}>{prefix}</label>
+				{showPositiveSign && <label className="positive-sign" htmlFor={inputId}>+</label>}
 				<input
 					ref={inputEl}
 					id={inputId}
@@ -304,7 +320,7 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 });
 
 type NumberLike = number | bigint;
-function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], disabled, decimalPlaces, keepTrailing0, min, max, spinnerStep, ...textBoxProps }: Override<PropsOf<typeof TextBox>, {
+function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], disabled, decimalPlaces, keepTrailing0, min, max, spinnerStep, positiveSign, ...textBoxProps }: Override<OmitPrivates<PropsOf<typeof TextBox>>, {
 	/** The value of the number, which can be number or bigint type. */
 	value: StateProperty<TNumber>;
 	/** The number of decimal places, leaving blank means no limit. */
@@ -317,6 +333,8 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 	max?: TNumber;
 	/** The value to increase or decrease each time the knob of numeric up down box is clicked. Defaults to 1. */
 	spinnerStep?: TNumber;
+	/** Show the positive sign if the value is positive? */
+	positiveSign?: boolean;
 }>) {
 	const inputEl = useDomRef<"input">();
 	const bigIntMode = typeof value === "bigint";
@@ -446,6 +464,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 			disabled={disabled}
 			value={[displayValue ?? "", setValueFromTextBox]}
 			ref={inputEl}
+			_showPositiveSign={positiveSign && value! > 0}
 			onChange={handleBlurChange}
 			onInput={handleInput}
 			onKeyDown={handleKeyDown}

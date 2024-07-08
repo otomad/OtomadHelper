@@ -92,6 +92,7 @@ export default {
 			parameters: "パラメータ",
 			effects: "効果",
 		},
+		units: {},
 		score: {
 			midi: "MIDI",
 			midiFile: "MIDIシーケンスファイル",
@@ -209,6 +210,7 @@ export default {
 			mapping: {
 				_: "マッピング",
 			},
+			preset: {},
 			parameters: {
 				copyFromAnotherParameterScheme: "別のパラメータスキームからここにコピー",
 			},
@@ -224,10 +226,9 @@ export default {
 			},
 			clear: {
 				_: "クリア",
-				motion: "トラックの動きを消去",
-				effect: "トラックエフェクトをクリア",
 			},
 		},
+		sonar: {},
 		ytp: {
 			constraint: "拘束の長さ",
 			clips: "クリップ",
@@ -257,9 +258,6 @@ export default {
 			clawer: "Clawer",
 		},
 		selectInfo: {
-			trackEventOnlyOne: "トラックイベントを1つだけ選択する必要があります。それ以上、それ以下はありません。",
-			videoEventOnlyOne: "僅用於中文",
-			audioEventOnlyOne: "オーディオトラックのイベントを 1 つだけ選択する必要があります。",
 			source: "{{count}}のメディアソースが選択されました",
 			track: "{{count}}トラックが選択されました",
 			videoTrack: "{{count}}ビデオトラックが選択されました",
@@ -383,6 +381,7 @@ export default {
 				mapping: {
 					_: "指定されたアイテムにノートのプロパティをマップ",
 				},
+				preset: {},
 			},
 			track: {
 				gradient: "レイアウトにグラデーションカラー効果を与えます。",
@@ -445,8 +444,8 @@ export default {
 				details: "{{name, lowercase}}の生成を有効にする",
 			},
 			ytpEnabled: {
-				title: "YTPを有効にしました。他の関連パラメータは利用できません。",
-				details: "他のパラメータを使用したり調整するためにYTP機能を無効にする",
+				partial: {},
+				fully: {},
 				disableYtp: "YTPを無効にする",
 				gotoYtp: "YTPに移動",
 			},
@@ -476,6 +475,9 @@ export default {
 			showError: {
 				title: "エラー",
 			},
+		},
+		wrongOpeningMethod: {
+			script: {},
 		},
 	},
 } as const satisfies LocaleIdentifiers;

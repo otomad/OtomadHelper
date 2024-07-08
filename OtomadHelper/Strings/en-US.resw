@@ -73,6 +73,9 @@
 	<data name="ContentDialog.Button.Close" xml:space="preserve">
 		<value>&amp;Close</value>
 	</data>
+	<data name="ContentDialog.Button.LearnMore" xml:space="preserve">
+		<value>&amp;Learn more</value>
+	</data>
 	<data name="ContentDialog.Expander.ExpandDetails" xml:space="preserve">
 		<value>Expand details</value>
 	</data>
@@ -81,5 +84,15 @@
 	</data>
 	<data name="ContentDialog.ShowError.Title" xml:space="preserve">
 		<value>Error</value>
+	</data>
+	<data name="WrongOpeningMethod.Script.Title" xml:space="preserve">
+		<value>Hey, you misplaced the extension!</value>
+	</data>
+	<data name="WrongOpeningMethod.Script.Content" xml:space="preserve">
+		<value>The new version of Otomad Helper is an extension. Unlike the old version, it is not a script.
+
+Please move the extension to the Application Extensions directory of VEGAS instead of the Script Menu directory.
+
+Location:</value>
 	</data>
 </root>
