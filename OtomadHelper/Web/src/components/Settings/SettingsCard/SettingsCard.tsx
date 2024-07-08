@@ -2,6 +2,7 @@ import { StyledCard } from "components/Card";
 import { styledExpanderItemBase, styledExpanderItemContent } from "components/Expander/ExpanderItem";
 
 export const TRAILING_EXEMPTION = "trailing-exemption";
+const isPressed = ":not(:has(button:active)):active";
 
 const StyledSettingsCard = styled(StyledCard)`
 	${styledExpanderItemContent};
@@ -28,7 +29,7 @@ const StyledSettingsCard = styled(StyledCard)`
 
 	button& {
 		&:hover,
-		&:active {
+		&${isPressed} {
 			border-color: ${c("stroke-color-control-stroke-default")};
 		}
 
@@ -36,8 +37,8 @@ const StyledSettingsCard = styled(StyledCard)`
 			background-color: ${c("fill-color-control-secondary")};
 		}
 
-		&:not(:has(.trailing .toggle-switch-base)):active,
-		&:has(.trailing .toggle-switch-base:not(:active, .pressing, .pressed)):active {
+		&:not(:has(.trailing .toggle-switch-base))${isPressed},
+		&:has(.trailing .toggle-switch-base:not(:active, .pressing, .pressed))${isPressed} {
 			> .base {
 				background-color: ${c("fill-color-control-tertiary")};
 			}
@@ -58,7 +59,7 @@ const StyledSettingsCard = styled(StyledCard)`
 			}
 		}
 
-		&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active)):active {
+		&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active))${isPressed} {
 			.trailing-icon {
 				color: ${c("fill-color-text-secondary")};
 				background-color: ${c("fill-color-subtle-tertiary")};

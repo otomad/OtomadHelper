@@ -143,9 +143,9 @@ const StyledToggleSwitchLabel = styled.button`
 				background-color: ${c("fill-color-text-on-accent-disabled")};
 			}
 		}
-		
+
 		&.colored .thumb {
-			background-color: oklab(from ${c("accent-color")} calc(1 - ((L - 0.65) * 10000 + 0.65)) 0 0);
+			background-color: ${getClearColorFromBackgroundColor("accent-color")};
 		}
 	}
 `;
