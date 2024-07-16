@@ -83,27 +83,21 @@ const TrackToolbar = styled.div`
 
 export default function Score() {
 	const {
-		format, encoding, constraintNoteLength,
+		format, encoding, constraintNoteLength, trimStart, trimEnd, bpmUsing, customBpm,
 		timeSignature: [timeSignature],
-		isMultipleSelectionMode: [isMultipleSelectionMode, setIsMultipleSelectionMode],
+		isMultiple: [isMultiple, setIsMultiple],
 	} = selectConfig(c => c.score);
-	const { start: trimStart, end: trimEnd } = selectConfig(c => c.score.trim);
-	const { use: bpmUsing, custom: customBpm } = selectConfig(c => c.score.bpm);
-	const selectionMode = useStateSelector(
-		[isMultipleSelectionMode, setIsMultipleSelectionMode],
-		multiple => multiple ? "multiple" : "single",
-		selectionMode => selectionMode === "multiple",
-	);
+	const selectionMode = useSelectionMode([isMultiple, setIsMultiple]);
 
 	const [selectedTrack, setSelectedTrack] = useState<number | number[]>(0);
 	useEffect(() => setSelectedTrack(selectedTrack => {
-		if (isMultipleSelectionMode && !Array.isArray(selectedTrack))
+		if (isMultiple && !Array.isArray(selectedTrack))
 			return [selectedTrack];
-		else if (!isMultipleSelectionMode && Array.isArray(selectedTrack))
+		else if (!isMultiple && Array.isArray(selectedTrack))
 			return selectedTrack.at(-1) ?? 0;
 		else // Actually the multiple selection mode doesn't be changed and unexpected trigger this effect.
 			return selectedTrack;
-	}), [isMultipleSelectionMode]);
+	}), [isMultiple]);
 	const selectAll = useSelectAll([selectedTrack, setSelectedTrack] as StateProperty<number[]>, tracks.map((_, index) => index));
 
 	return (
@@ -165,7 +159,7 @@ export default function Score() {
 					<Subheader>{t(tracks.length).score.musicalTrack}</Subheader>
 					<TrackToolbar>
 						<div className="left">
-							<CssTransition in={isMultipleSelectionMode} unmountOnExit>
+							<CssTransition in={isMultiple} unmountOnExit>
 								<div className="content">
 									<Checkbox value={selectAll}>{t.selectAll}</Checkbox>
 									<Button subtle icon="invert_selection" onClick={selectAll[2]}>{t.invertSelection}</Button>
@@ -178,7 +172,7 @@ export default function Score() {
 							<Segmented.Item id="multiple" icon="multiselect">{t.selectionMode.multiple}</Segmented.Item>
 						</Segmented>
 					</TrackToolbar>
-					<ItemsView view="list" multiple={isMultipleSelectionMode} current={[selectedTrack, setSelectedTrack]}>
+					<ItemsView view="list" multiple={isMultiple} current={[selectedTrack, setSelectedTrack]}>
 						{tracks.map((track, index) => (
 							<ItemsView.Item
 								key={index}

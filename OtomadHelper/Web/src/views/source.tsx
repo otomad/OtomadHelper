@@ -5,10 +5,10 @@ export /* internal */ const startTimes = [
 ] as const;
 
 export default function Source() {
-	const { source, randomOffsetForTracks } = selectConfig(c => c.source);
-	const { start: trimStart, end: trimEnd } = selectConfig(c => c.source.trim);
-	const { use: startTime, custom: customStartTime } = selectConfig(c => c.source.startTime);
-	const { belowAdjustmentTracks, value: [preferredTrack, setPreferredTrack] } = selectConfig(c => c.source.preferredTrack);
+	const {
+		source, randomOffsetForTracks, trimStart, trimEnd, startTime, customStartTime,
+		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
+	} = selectConfig(c => c.source);
 	const { removeSourceClips, selectSourceClips, selectGeneratedAudioClips, selectGeneratedVideoClips } = selectConfig(c => c.source.afterCompletion);
 
 	mutexSwitches(removeSourceClips, selectSourceClips);

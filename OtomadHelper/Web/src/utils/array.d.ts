@@ -7,16 +7,23 @@ declare interface Array<T> {
 
 	/**
 	 * Delete the specified item in the array. If there are multiple duplicate items, only the first one will be deleted.
-	 * @param item - Item.
-	 * @returns Successfully deleted?
+	 * @param items - Items.
+	 * @returns Successfully deleted count.
 	 */
-	removeItem(item: T): boolean;
+	removeItem(...items: T[]): number;
 
 	/**
 	 * Delete all specified items in the array.
-	 * @param item - Item.
+	 * @param items - Items.
 	 */
-	removeAllItem(item: T): void;
+	removeAllItem(...items: T[]): void;
+
+	/**
+	 * Insert items to the specified index in the array.
+	 * @param index - Index.
+	 * @param items - Items.
+	 */
+	insert(index: number, ...items: T[]): void;
 
 	/**
 	 * Append the item to the end of the array only if it is not included.
@@ -102,4 +109,17 @@ declare interface Array<T> {
 	 * @param index2 - The index of the second item.
 	 */
 	swap(index1: number, index2: number): T[];
+}
+
+declare interface Set<T> {
+	/**
+	 * Appends multiple new elements with multiple specified values to the end of the Set.
+	 */
+	adds(...values: T[]): this;
+
+	/**
+	 * Removes multiple specified values from the Set.
+	 * @returns Returns the number of the element in the Set existed and has been removed.
+	 */
+	deletes(...values: T[]): number;
 }

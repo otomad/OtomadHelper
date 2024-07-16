@@ -7,6 +7,7 @@ import noLengtheningImage from "assets/images/tutorials/visual/no_lengthening.pn
 import staticVisualImage from "assets/images/tutorials/visual/static.png";
 import stretchImage from "assets/images/tutorials/visual/stretch.png";
 import exampleThumbnail from "assets/images/ヨハネの氷.png";
+import { usePrveCheckInfo } from "./visual/prve";
 
 export /* internal */ const stretches = [
 	{ id: "noStretching", icon: "prohibited" },
@@ -42,11 +43,12 @@ export default function Visual() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
 		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, /* transformMethod */ currentPreset,
+		glissando, glissandoAmount,
 	} = selectConfig(c => c.visual);
 	const activeParameterScheme = selectConfigArray(c => c.visual.activeParameterScheme);
-	const { enabled: glissando, amount: glissandoAmount } = selectConfig(c => c.visual.glissando);
 	const { enabled: enablePixelScaling } = selectConfig(c => c.visual.pixelScaling);
 	const { createGroups } = selectConfig(c => c);
+	const prveCheckInfo = usePrveCheckInfo();
 
 	const { pushPage } = useSnapshot(pageStore);
 
@@ -139,7 +141,9 @@ export default function Visual() {
 					*/}
 
 					<Subheader>{t.subheaders.effects}</Subheader>
-					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")} />
+					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")}>
+						{prveCheckInfo}
+					</SettingsCard>
 					<SettingsCard title={t.titles.staff} details={t.descriptions.stream.effects.staff} type="button" icon="g_clef" onClick={() => pushPage("staff")}>
 						<ToggleSwitch on={enableStaffVisualizer} />
 					</SettingsCard>
@@ -182,6 +186,7 @@ export default function Visual() {
 							type="button"
 							key={i}
 							icon
+							onClick={() => pushPage("parameters")}
 						>
 							<ToggleSwitch on={scheme.enabled} />
 						</SettingsCard>

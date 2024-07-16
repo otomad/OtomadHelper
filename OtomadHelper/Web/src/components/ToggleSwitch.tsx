@@ -241,6 +241,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 			as={as as "button"}
 			className={{ selected: on, pressed, colored: !!$color }}
 			disabled={disabled}
+			aria-disabled={disabled || undefined}
 			onClick={e => handleCheck(!on, e)}
 			tabIndex={0}
 			style={{ "--accent-color": $color }}

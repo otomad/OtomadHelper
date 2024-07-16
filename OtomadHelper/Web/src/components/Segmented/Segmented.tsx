@@ -35,6 +35,7 @@ const StyledSegmented = styled.div<{
 			> .base {
 				${styles.mixins.flexCenter()};
 				gap: 10px;
+				height: 100%;
 				padding: 4px ${ITEM_BASE_PADDING_X_WIDTH}px;
 				border-radius: 2px;
 			}
@@ -204,4 +205,10 @@ export default function Segmented<T extends string = string>({ current: [current
 	);
 }
 
+const SegmentedSelectionModeContainer = styled.div`
+	display: flex;
+	justify-content: flex-end;
+`;
+
 Segmented.Item = SegmentedItem;
+Segmented.SelectionModeContainer = SegmentedSelectionModeContainer;

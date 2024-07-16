@@ -17,18 +17,12 @@ const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 export const configStore = createStore({
 	source: {
 		source: "trackEvent",
-		trim: {
-			start: EMPTY_TIMECODE,
-			end: EMPTY_TIMECODE,
-		},
-		startTime: {
-			use: "projectStart" as StartTime,
-			custom: EMPTY_TIMECODE,
-		},
-		preferredTrack: {
-			value: 0,
-			belowAdjustmentTracks: true,
-		},
+		trimStart: EMPTY_TIMECODE,
+		trimEnd: EMPTY_TIMECODE,
+		startTime: "projectStart" as StartTime,
+		customStartTime: EMPTY_TIMECODE,
+		preferredTrack: 0,
+		belowAdjustmentTracks: true,
 		afterCompletion: {
 			removeSourceClips: false,
 			selectSourceClips: true,
@@ -39,18 +33,14 @@ export const configStore = createStore({
 	},
 	score: {
 		format: "midi",
-		trim: {
-			start: EMPTY_TIMECODE,
-			end: EMPTY_TIMECODE,
-		},
+		trimStart: EMPTY_TIMECODE,
+		trimEnd: EMPTY_TIMECODE,
 		encoding: "ANSI" as Encoding,
-		bpm: {
-			use: "variableMidi" as BpmUsing,
-			custom: 120,
-		},
+		bpmUsing: "variableMidi" as BpmUsing,
+		customBpm: 120,
 		timeSignature: "4/4",
 		constraintNoteLength: "none" as ConstraintNoteLength,
-		isMultipleSelectionMode: false,
+		isMultiple: false,
 	},
 	visual: {
 		enabled: true,
@@ -61,12 +51,27 @@ export const configStore = createStore({
 		noLengthening: "lengthenable" as NoLengthening,
 		legato: "upToOneBeat" as Legato,
 		multitrackForChords: false,
-		glissando: {
-			enabled: false,
-			amount: 12,
-		},
+		glissando: false,
+		glissandoAmount: 12,
 		transformMethod: "panCrop" as TransformMethod,
 		enableStaffVisualizer: false,
+		prve: {
+			general: {
+				control: true,
+				isMultiple: false,
+				effects: ["normal"],
+			},
+			samePitch: {
+				control: false,
+				isMultiple: false,
+				effects: ["normal"],
+			},
+			differentSyllables: {
+				control: false,
+				isMultiple: false,
+				effects: ["normal"],
+			},
+		},
 		pixelScaling: {
 			enabled: false,
 			scaleFactor: 100,
@@ -111,10 +116,8 @@ export const configStore = createStore({
 	},
 	ytp: {
 		enabled: false,
-		constraint: {
-			start: 0.01,
-			end: 5,
-		},
+		constraintStart: 0.01,
+		constraintEnd: 5,
 		clips: 30,
 	},
 	settings: {

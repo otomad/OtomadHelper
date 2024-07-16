@@ -96,13 +96,10 @@ export const hasKey = <T extends object>(obj: T, key: keyof Any): key is keyof T
  * @param interceptor - Interceptor.
  * @returns The generated new `setter` method.
  */
-export function setStateInterceptor<T>(setter: SetState<T>, interceptor: (userInput: Any) => T) {
+export function setStateInterceptor<T>(setter: SetState<T>, interceptor: (userInput: Any, prevState: T) => T) {
 	return (userInput: React.SetStateAction<T>) => {
 		type PrevStateSetter = (value: (prevState: T) => void) => void;
-		if (userInput instanceof Function)
-			(setter as PrevStateSetter)(prevState => interceptor(userInput(prevState)));
-		else
-			setter(interceptor(userInput));
+		(setter as PrevStateSetter)(prevState => interceptor(userInput instanceof Function ? userInput(prevState) : userInput, prevState));
 	};
 }
 
@@ -115,7 +112,7 @@ export function setStateInterceptor<T>(setter: SetState<T>, interceptor: (userIn
  * @param setter - The mapped new `setter`.
  * @returns The new `useState`.
  */
-export function useStateSelector<TOld, TNew>(stateProperty: StateProperty<TOld>, getter: (original: TOld) => TNew, setter: (userInput: TNew) => TOld) {
+export function useStateSelector<TOld, TNew>(stateProperty: StateProperty<TOld>, getter: (original: TOld) => TNew, setter: (userInput: TNew, prevState: TOld) => TOld) {
 	return [
 		getter(stateProperty[0]!),
 		setStateInterceptor(stateProperty[1]!, setter),

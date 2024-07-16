@@ -72,18 +72,7 @@ const StyledSettingsCard = styled(StyledCard)`
 	}
 `;
 
-export default function SettingsCard({
-	icon = "placeholder",
-	title,
-	details,
-	selectInfo,
-	selectValid = true,
-	trailingIcon,
-	children,
-	type = "container",
-	className,
-	...htmlAttrs
-}: FCP<{
+export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, trailingIcon, disabled, children, type = "container", className, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
@@ -106,6 +95,8 @@ export default function SettingsCard({
 		<StyledSettingsCard
 			as={type === "container" ? "div" : "button"}
 			className={[className, type]}
+			disabled={disabled}
+			aria-disabled={disabled || undefined}
 			{...htmlAttrs}
 		>
 			<div className="base">

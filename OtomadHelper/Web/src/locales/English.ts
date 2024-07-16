@@ -31,6 +31,7 @@ export default {
 			pixelScaling: "Pixel Scaling",
 			customEffect: "Custom Effect",
 			customEffect_other: "Custom Effects",
+			parameters: "Parameters",
 		},
 		source: {
 			trackEvent: "Track event",
@@ -82,6 +83,7 @@ export default {
 		preset: "Preset",
 		preset_other: "Presets",
 		new: "New",
+		etc: "{{examples}}, etc.",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -299,7 +301,14 @@ export default {
 			audioEventOnlyOne: "You must select ONE and only ONE audio track event, no more and no less",
 		},
 		prve: {
+			control: {
+				_: "{{mode, capitalize}} control",
+				general: "General",
+				samePitch: "Same pitch",
+				differentSyllables: "Different syllables",
+			},
 			classes: {
+				_: "Classes",
 				flip: "Flip Class",
 				rotation: "Rotation Class",
 				scale: "Scale Class",
@@ -473,6 +482,14 @@ export default {
 			},
 			staff: {
 				_: "Staff Visualizer is designed to use custom patterns as notes to draw visuals similar fashion to piano staff sheets based on the melody of the score.\nThis visual effect style mimics the videos of YouTuber @grantwoolard, who showed the use of musician avatars to draw the piano staff sheets of classical music.",
+			},
+			prve: {
+				control: {
+					general: "Normal condition controls for events of different pitches and the same syllable in YTPMV or Vocaloid mode.\nIf other separate controls are off, they are also included in the case.",
+					samePitch: "Separate controls for events of the same pitch in YTPMV or Vocaloid mode.",
+					differentSyllables: "Separate controls for events of different syllables in Vocaloid mode.",
+				},
+				whirl: "Whirl = Ping-pong Effect + Horizontal Flip",
 			},
 			pixelScaling: {
 				_: "Pixel Scaling feature can enlarge the pixel image of the source to avoid the pixel distortion problem caused by rescaling the original pixel image using smooth gradient algorithm due to VEGAS Pan/Crop. To use it, you can add FFmpeg to the system environment variable, or you can install Datamosh Extension Pack directly.\nPixel Scaling feature will use FFmpeg to enlarge the source file using the nearest neighbor interpolation algorithm to fit the current project size, and then replace the source media file in VEGAS with the newly generated media file. The newly generated file will be identified by adding the suffix “_Scaled” to its name. This feature theoretically supports any image/video file format, including image sequence files imported into VEGAS using conventional methods.",

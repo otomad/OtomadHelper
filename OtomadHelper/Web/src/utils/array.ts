@@ -5,19 +5,29 @@
 		this.splice(index, 1);
 	};
 
-	Array.prototype.removeItem = function (item) {
-		const index = this.indexOf(item);
-		if (index === -1) return false;
-		this.splice(index, 1);
-		return true;
+	Array.prototype.removeItem = function (...items) {
+		let successes = 0;
+		for (const item of items) {
+			const index = this.indexOf(item);
+			if (index === -1) continue;
+			this.splice(index, 1);
+			successes++;
+		}
+		return successes;
 	};
 
-	Array.prototype.removeAllItem = function (item) {
-		while (true) {
-			const index = this.indexOf(item);
-			if (index === -1) return;
-			this.splice(index, 1);
-		}
+	Array.prototype.removeAllItem = function (...items) {
+		for (const item of items)
+			while (true) {
+				const index = this.indexOf(item);
+				if (index === -1) break;
+				this.splice(index, 1);
+			}
+	};
+
+	Array.prototype.insert = function (index, ...items) {
+		if (index < 0) index = this.length + 1 + index;
+		this.splice(index, 0, ...items);
 	};
 
 	Array.prototype.pushDistinct = function (item) {
@@ -106,6 +116,24 @@
 	};
 
 	makePrototypeKeysNonEnumerable(Array);
+}
+
+{ // Init set extensions
+	Set.prototype.adds = function (...values) {
+		for (const value of values)
+			this.add(value);
+		return this;
+	};
+
+	Set.prototype.deletes = function (...values) {
+		let successes = 0;
+		for (const value of values)
+			if (this.delete(value))
+				successes++;
+		return successes;
+	};
+
+	makePrototypeKeysNonEnumerable(Set);
 }
 
 /**

@@ -24,6 +24,7 @@ interface PageState {
 	isAlerted404: boolean;
 	pageContentId?: string;
 	setPageContentId(value: string): void;
+	editingObject: unknown;
 }
 
 const NAME = "page";
@@ -145,5 +146,6 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 		isAlerted404: false,
 		pageContentId: undefined,
 		setPageContentId(pageContentId) { if (pageStore.pageContentId !== pageContentId) pageStore.pageContentId = pageContentId; },
+		editingObject: undefined,
 	} satisfies PageState;
 })(), { partialize: ["page"] });
