@@ -99,7 +99,7 @@ export const configStore = createStore({
 				enabled: true,
 				drumSound: "Kick",
 				color: "#ffffff",
-				shape: "rectangle",
+				shape: "square",
 			},
 			{
 				enabled: true,
