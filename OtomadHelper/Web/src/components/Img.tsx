@@ -16,11 +16,11 @@ const useImages = createStore({
 	},
 });
 
-{
-	const images = Object.values(import.meta.glob<string>("/src/assets/images/**/*", { import: "default", eager: true }));
-	const { add } = useImages;
-	images.forEach(image => add(image));
-}
+// {
+// 	const images = Object.values(import.meta.glob<string>("/src/assets/images/**/*", { import: "default", eager: true }));
+// 	const { add } = useImages;
+// 	images.forEach(image => add(image));
+// }
 
 function resetImageAttributes(image: HTMLImageElement, withAttrs: FCP<{}, "img"> = {}) {
 	const { attributes } = image;

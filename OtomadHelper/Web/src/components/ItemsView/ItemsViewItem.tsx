@@ -196,7 +196,7 @@ export /* @internal */ default function ItemsViewItem({ image, icon, id: _id, se
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */
-	icon?: DeclaredIcons;
+	icon?: DeclaredIcons | ReactNode;
 	/** Identifier. */
 	id: PropertyKey;
 	/** Selected? */
@@ -224,6 +224,7 @@ export /* @internal */ default function ItemsViewItem({ image, icon, id: _id, se
 			</div>
 		</CssTransition>
 	);
+	const iconOrElement = typeof icon === "string" ? <Icon name={icon} /> : icon;
 
 	return (
 		<StyledItemsViewItem $view={view!} $withBorder={$withBorder} className={[className, view, { selected }]} tabIndex={0} {...htmlAttrs}>
@@ -241,7 +242,7 @@ export /* @internal */ default function ItemsViewItem({ image, icon, id: _id, se
 						{checkbox}
 						{(image || icon) && (
 							<div className="image-wrapper">
-								{typeof image === "string" ? <img src={image} /> : icon ? <Icon name={icon} /> : undefined}
+								{typeof image === "string" ? <img src={image} /> : iconOrElement}
 							</div>
 						)}
 						{textPart}
@@ -250,7 +251,7 @@ export /* @internal */ default function ItemsViewItem({ image, icon, id: _id, se
 			</div>
 			{view === "grid" && (
 				<div className="text-part">
-					{icon && <Icon name={icon} />}
+					{iconOrElement}
 					{textPart}
 				</div>
 			)}

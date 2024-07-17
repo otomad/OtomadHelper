@@ -9,9 +9,11 @@ const StyledSettingsPageControl = styled.div<{
 }>`
 	display: flex;
 	gap: ${IMAGE_MARGIN}px;
-	${({ $cursor }) => $cursor && css`cursor: url("${$cursor}"), auto`};
+	${({ $cursor }) => $cursor && css`
+		cursor: url("${$cursor}"), auto;
+	`}
 
-	${({ $clearFloat }) => !$clearFloat && css`
+	${ifNotProp("$clearFloat", css`
 		display: block;
 
 		&.no-image {
@@ -23,7 +25,7 @@ const StyledSettingsPageControl = styled.div<{
 			margin-block-end: 5px;
 			margin-inline-end: ${IMAGE_MARGIN}px;
 		}
-	`}
+	`)}
 
 	.settings-page-control-preview-image {
 		transition: ${fallbackTransitions}, margin 0s;

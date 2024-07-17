@@ -84,6 +84,7 @@ export default {
 		preset_other: "Presets",
 		new: "New",
 		etc: "{{examples}}, etc.",
+		offset: "Offset",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -255,6 +256,19 @@ export default {
 			shadow: "Shadow",
 			graphs: "Graphs",
 		},
+		shupelunker: {
+			affix: {
+				_: "Match affix position",
+				prefix: "Prefix",
+				suffix: "Suffix",
+			},
+			unallocated: {
+				_: "Unallocated",
+				octaves: "Octaves",
+				higherNeighbors: "Higher neighbors",
+				lowerNeighbors: "Lower neighbors",
+			},
+		},
 		ytp: {
 			constraint: "Constraint length",
 			clips: "Clips",
@@ -397,6 +411,7 @@ export default {
 				staticVisual: "Freezes the frame at the beginning of the clip",
 				noLengthening: "Handles the clip if the note is longer than it",
 				legato: "Fills in the gaps between the notes",
+				noLengtheningAndLegatoConflictInAudio: "No lengthening conflicts with Legato in Audio, you cannot enable them simultaneously!",
 				multitrackForChords: "Creates multiple tracks for chords",
 				createGroups: "Creates groups for video and audio clips represented by one note",
 				glissando: {

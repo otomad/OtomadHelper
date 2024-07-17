@@ -138,6 +138,15 @@ export const configStore = createStore({
 			},
 		],
 	},
+	shupelunker: {
+		affix: "prefix",
+		unallocated: {
+			octaves: true,
+			higherNeighbors: true,
+			lowerNeighbors: true,
+		},
+		offset: 0,
+	},
 	ytp: {
 		enabled: false,
 		constraintStart: 10,

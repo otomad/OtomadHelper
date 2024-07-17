@@ -35,6 +35,7 @@ export default function Audio() {
 	} = selectConfig(c => c.audio);
 	const { engine, waveform, duration: beepDuration, adjustAudioToBasePitch } = selectConfig(c => c.audio.prelistenAttributes);
 	const { createGroups } = selectConfig(c => c);
+	const { hideUseTips } = useSnapshot(configStore.settings);
 
 	const { pushPage } = useSnapshot(pageStore);
 
@@ -89,6 +90,7 @@ export default function Audio() {
 						imageField="image"
 						$itemWidth={566 / 196 * GRID_VIEW_ITEM_HEIGHT}
 					/>
+					{!hideUseTips && <InfoBar status="warning" title={t.descriptions.stream.noLengtheningAndLegatoConflictInAudio} />}
 					<SettingsCardToggleSwitch
 						title={t.stream.multitrackForChords}
 						details={t.descriptions.stream.multitrackForChords}
@@ -180,3 +182,6 @@ export default function Audio() {
 		</div>
 	);
 }
+
+subscribeStoreKey(configStore.audio, "noLengthening", value => value !== "lengthenable" && (configStore.audio.legato = "portato"));
+subscribeStoreKey(configStore.audio, "legato", value => value !== "portato" && (configStore.audio.noLengthening = "lengthenable"));

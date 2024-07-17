@@ -28,7 +28,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	 */
 	nameField: FieldType<T> | object;
 	/** The icon field for the radio item. */
-	iconField?: FieldType<T>;
+	iconField?: FieldType<T> | ((item: T) => ReactNode);
 	/** The image field for the radio item. */
 	imageField?: FieldType<T> | ((item: T) => ReactNode);
 	/** The detailed description field for the radio item. */
