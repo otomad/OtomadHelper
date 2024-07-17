@@ -99,7 +99,7 @@ export default {
 			effects: "Effects",
 		},
 		units: {
-			seconds: "s",
+			milliseconds: "ms",
 			percents: "%",
 			pixels: "px",
 			beatsPerMinute: "BPM",
@@ -209,6 +209,8 @@ export default {
 				basePitch: "Base pitch",
 				prelisten: {
 					_: "Prelisten",
+					basePitch: "Prelisten base pitch",
+					audio: "Prelisten audio",
 					engine: "Engine",
 					waveform: {
 						_: "Waveform",
@@ -485,9 +487,9 @@ export default {
 			},
 			prve: {
 				control: {
-					general: "Normal condition controls for events of different pitches and the same syllable in YTPMV or Vocaloid mode.\nIf other separate controls are off, they are also included in the case.",
-					samePitch: "Separate controls for events of the same pitch in YTPMV or Vocaloid mode.",
-					differentSyllables: "Separate controls for events of different syllables in Vocaloid mode.",
+					general: "Normal condition controls for events of different pitches and the same syllable in YTPMV or Sentence Mixing mode.\nIf other separate controls are off, they are also included in the case.",
+					samePitch: "Separate controls for events of the same pitch in YTPMV or Sentence Mixing mode.",
+					differentSyllables: "Separate controls for events of different syllables in Sentence Mixing mode.",
 				},
 				whirl: "Whirl = Ping-pong Effect + Horizontal Flip",
 			},

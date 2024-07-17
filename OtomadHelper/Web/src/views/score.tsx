@@ -1,15 +1,15 @@
-export /* internal */ const bpmUsings = [
+export /* @internal */ const bpmUsings = [
 	{ id: "variableMidi", name: t.score.bpm.variableMidi, icon: "variable_midi" },
 	{ id: "constantMidi", name: t.score.bpm.constantMidi, icon: "midi" },
 	{ id: "project", name: t.score.bpm.project, icon: "veg_file" },
 	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
-export /* internal */ const constraintNoteLengths = [
+export /* @internal */ const constraintNoteLengths = [
 	{ id: "none", icon: "prohibited" },
 	{ id: "max", icon: "less_or_equal" },
 	{ id: "fixed", icon: "equal" },
 ] as const;
-export /* internal */ const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"] as const;
+export /* @internal */ const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"] as const;
 /** @deprecated Test only! */
 const tracks = [
 	{ channel: 1, name: "Lead", noteCount: 100, beginNote: "C5", pan: t.variableBeginWith({ first: t.score.pan.left }), isDrumKit: false, inst: "Sawtooth" },

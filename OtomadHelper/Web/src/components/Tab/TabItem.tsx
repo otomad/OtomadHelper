@@ -108,7 +108,7 @@ const StyledTabItem = styled.button`
 	}
 `;
 
-export /* internal */ default function TabItem({ icon, animatedIcon, children, selected = false, collapsed, id: _id, focusable = true, badge, _vertical: vertical, ...htmlAttrs }: FCP<{
+export /* @internal */ default function TabItem({ icon, animatedIcon, children, selected = false, collapsed, id: _id, focusable = true, badge, _vertical: vertical, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons;
 	/** Animated icon. */

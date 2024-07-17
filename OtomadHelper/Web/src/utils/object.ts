@@ -173,7 +173,7 @@ export function toValue<T>(ref: MaybeRef<T>): T {
  * This hook returns a reference to an HTML DOM element, which can be used to access the DOM element directly.
  * It is useful when you need to interact with the DOM element directly, rather than using React's controlled components.
  *
- * @note You must provide the `TElement` generic type.
+ * @remarks You must provide the `TElement` generic type.
  *
  * @template TElement - A tag name (e.g. `"div"`) or a subclass (e.g. `HTMLDivElement`) of the HTML DOM element class.
  * @param initialValue - The initial value of the reference. Usually to `null`.
@@ -195,7 +195,7 @@ export function useDomRef<TElement extends keyof ElementTagNameMap | Element>(in
 /**
  * Creates a hook that returns a mutable reference to an HTML DOM element without initializing it to null.
  *
- * @note This will return a `StateProperty`, meaning that modifying the reference will also cause the component to re-render.
+ * @remarks This will return a `StateProperty`, meaning that modifying the reference will also cause the component to re-render.
  *
  * @param initialValue - The initial value of the reference. Usually to `null`.
  * @returns A tuple containing the current value of the reference and a function to update it.
@@ -291,7 +291,7 @@ export function isLiteralObject(value: unknown): value is object {
  *
  * In fact, if used correctly, it can force the type of a variable to suddenly change to another type.
  *
- * @note Due to the limitations of TypeScript, it can only shrink the type.
+ * @remarks Due to the limitations of TypeScript, it can only shrink the type.
  *
  * @template T - The type that the object should be.
  * @param object - The object to be asserted.

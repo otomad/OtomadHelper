@@ -5,7 +5,7 @@ import { freezeframes } from "helpers/freezeframe";
 const prvePingpongStaticImage = freezeframes["effects/prve_pingpong.gif"];
 const prveWhirlStaticImage = freezeframes["effects/prve_whirl.gif"];
 
-export /* internal */ const getDuration = (frames: number) => frames * 375 + "ms";
+export /* @internal */ const getDuration = (frames: number) => frames * 375 + "ms";
 
 const StyledPreviewPrve = styled.div<{
 	/** Effect name. */

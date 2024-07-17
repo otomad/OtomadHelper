@@ -1,4 +1,4 @@
-export /* internal */ default function SegmentedItem({ icon, children, className, onClick }: FCP<{
+export /* @internal */ default function SegmentedItem({ icon, children, className, onClick }: FCP<{
 	/** Icon, optional. */
 	icon?: DeclaredIcons;
 	/** Identifier. */

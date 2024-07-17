@@ -1,4 +1,4 @@
-export /* internal */ default function EmptyMessageTypical({ name, icon, enabled: [enabled, setEnabled], children }: FCP<{
+export /* @internal */ default function EmptyMessageTypical({ name, icon, enabled: [enabled, setEnabled], children }: FCP<{
 	/** Feature name. */
 	name: string;
 	/** Feature icon. */

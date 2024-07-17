@@ -22,7 +22,7 @@ export function useUnmountEffect(effect: NonNull<ReturnType<EffectCallbackWithAs
  *
  * This hook allows you to execute an asynchronous effect when the component is mounted or when the specified dependencies change.
  *
- * @note In this hook, you cannot return a callback function to represent the effect to run when the component unmounts.
+ * @remarks In this hook, you cannot return a callback function to represent the effect to run when the component unmounts.
  *
  * @param effect - The asynchronous effect to be executed. It can be a function that returns a Promise or a void function.
  * @param deps - An optional array of dependencies. If provided, the effect will be re-executed when any of the dependencies change.

@@ -83,7 +83,7 @@ declare interface Array<T> {
 
 	/**
 	 * Get the last element of the array.
-	 * @note If the array is empty, it will return undefined. However, at the TypeScript type level, there is an implicit empty removal, which is consistent with the type got when accessing elements directly using index values in `[]`. But if the type of the array already contains undefined, it will not remove empty.
+	 * @remarks If the array is empty, it will return undefined. However, at the TypeScript type level, there is an implicit empty removal, which is consistent with the type got when accessing elements directly using index values in `[]`. But if the type of the array already contains undefined, it will not remove empty.
 	 * @return The last element of the array.
 	 */
 	last(): T;

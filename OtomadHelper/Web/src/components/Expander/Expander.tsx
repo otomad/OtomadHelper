@@ -93,13 +93,20 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	const settingsCardProps = { icon, title, details, selectInfo, disabled };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
 
+	const handleClick = useCallback<MouseEventHandler>(e => {
+		const path = getPath(e);
+		const currentTargetIndex = path.indexOf(e.currentTarget);
+		if (path.slice(0, currentTargetIndex).find(element => element.tagName === "BUTTON")) return;
+		setInternalExpanded(expanded => !expanded);
+	}, []);
+
 	return (
 		<div className="expander">
 			<ExpanderParent
 				{...settingsCardProps}
 				type="expander"
 				trailingIcon="chevron_down"
-				onClick={() => setInternalExpanded(expanded => !expanded)}
+				onClick={handleClick}
 				$expanded={internalExpanded}
 			>
 				{actions}

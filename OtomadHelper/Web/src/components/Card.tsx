@@ -1,4 +1,4 @@
-export /* internal */ const StyledCard = styled.div`
+export /* @internal */ const StyledCard = styled.div`
 	width: 100cqw;
 	text-align: initial;
 	border: 1px solid ${c("stroke-color-card-stroke-default")};

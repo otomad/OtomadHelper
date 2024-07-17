@@ -1,10 +1,13 @@
 import { StyledButton } from "./Button";
+import { inputInSettingsCardStyle } from "./TextBox";
 
 const StyledPitchPicker = styled(StyledButton)`
 	align-items: stretch;
 	height: 1px; // A hack way to cheat its children with 100% height to match its min height.
 	padding: 0;
 	direction: ltr;
+
+	${inputInSettingsCardStyle}
 
 	.content {
 		${styles.mixins.square("100%")};

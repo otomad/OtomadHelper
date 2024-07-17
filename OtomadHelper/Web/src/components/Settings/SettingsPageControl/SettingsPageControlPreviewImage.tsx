@@ -1,4 +1,4 @@
-export /* internal */ const PREVIEW_IMAGE_HEIGHT = 120;
+export /* @internal */ const PREVIEW_IMAGE_HEIGHT = 120;
 
 const StyledSettingsPageControlPreviewImage = styled.div`
 	position: relative;

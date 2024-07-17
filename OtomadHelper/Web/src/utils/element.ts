@@ -2,7 +2,7 @@ type ReactElementType = string | React.JSXElementConstructor<Any>;
 
 /**
  * Determine whether a component is an instance of a certain component type.
- * @note It seems that the specified component type appears to require placement in a separate file,
+ * @remarks It seems that the specified component type appears to require placement in a separate file,
  * rather than in the same file as where the function is invoked.
  * @param node - Component instance.
  * @param element - Component class or function component.

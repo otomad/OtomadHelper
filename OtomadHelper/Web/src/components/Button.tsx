@@ -1,7 +1,7 @@
 const isPressed = ":is(:active, [data-pressed])", notPressedOrDisabled = ":not(:active, [data-pressed], [disabled])";
 const inlinePadding = 11;
 
-export /* internal */ const StyledButton = styled.button<{
+export /* @internal */ const StyledButton = styled.button<{
 	/** The name of the background fill color. */
 	$fillColorName?: string;
 	/** The name of the background fill color when on subtle mode. */

@@ -9,27 +9,27 @@ import stretchImage from "assets/images/tutorials/visual/stretch.png";
 import exampleThumbnail from "assets/images/ヨハネの氷.png";
 import { usePrveCheckInfo } from "./visual/prve";
 
-export /* internal */ const stretches = [
+export /* @internal */ const stretches = [
 	{ id: "noStretching", icon: "prohibited" },
 	{ id: "flexingAndExtending", icon: "arrow_fit_both" },
 	{ id: "extendingOnly", icon: "arrow_fit" },
 	{ id: "flexingOnly", icon: "arrow_fit_in" },
 ] as const;
-export /* internal */ const legatos = [
+export /* @internal */ const legatos = [
 	{ id: "portato", icon: "prohibited", image: legatoPortatoImage },
 	{ id: "upToOneBeat", icon: "quarter_note", image: legatoUpTo1BeatImage },
 	{ id: "upToOneBar", icon: "music_bar", image: legatoUpTo1BarImage },
 	{ id: "unlimited", icon: "infinity", image: legatoUnlimitedImage },
 ] as const;
-export /* internal */ const noLengthenings = [
-	{ id: "lengthenable", icon: "lengthenable" },
-	{ id: "freezeEndFrames", icon: "freeze_end_frames" },
-	{ id: "trimEndFrames", icon: "trim_end_frames" },
-	{ id: "splitThenFreeze", icon: "split_then_freeze" },
-	{ id: "freezeToGray", icon: "freeze_to_gray" },
-	{ id: "freezeToEffect", icon: "freeze_to_effect" },
+export /* @internal */ const noLengthenings = [
+	{ id: "lengthenable", icon: "lengthenable", availableInAudio: true },
+	{ id: "freezeEndFrames", icon: "freeze_end_frames", availableInAudio: false },
+	{ id: "trimEndFrames", icon: "trim_end_frames", availableInAudio: true },
+	{ id: "splitThenFreeze", icon: "split_then_freeze", availableInAudio: false },
+	{ id: "freezeToGray", icon: "freeze_to_gray", availableInAudio: false },
+	{ id: "freezeToEffect", icon: "freeze_to_effect", availableInAudio: false },
 ] as const;
-export /* internal */ const transformMethods = [
+export /* @internal */ const transformMethods = [
 	"panCrop", "transformOfx",
 ] as const;
 

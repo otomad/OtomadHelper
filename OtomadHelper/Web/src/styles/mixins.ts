@@ -115,7 +115,7 @@ export default {
 	`,
 	/**
 	 * Enable hardware 3D. Used to solve certain problems that may cause flickering during transitions.
-	 * @note This will replace or be replaced with existing transform properties.
+	 * @remarks This will replace or be replaced with existing transform properties.
 	 */
 	enableHardware3d: () => css`
 		transform: translateZ(1px);

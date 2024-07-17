@@ -175,7 +175,7 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	$color?: string;
 	/**
 	 * Reset the page's transition effect when toggling the switch.
-	 * @note This is business logic, but present in the base component.
+	 * @remarks This is business logic, but present in the base component.
 	 */
 	resetTransitionOnChanging?: boolean;
 }, "button">) {

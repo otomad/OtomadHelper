@@ -192,7 +192,7 @@ const DefaultImage = styled.img`
 	object-fit: cover;
 `;
 
-export /* internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, details, $withBorder = false, _view: view, _multiple: multiple, children, className, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, details, $withBorder = false, _view: view, _multiple: multiple, children, className, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */

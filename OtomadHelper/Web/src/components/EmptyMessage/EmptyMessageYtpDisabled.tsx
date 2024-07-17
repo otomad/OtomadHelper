@@ -1,4 +1,4 @@
-export /* internal */ default function EmptyMessageYtpDisabled({ fully: feature, children }: FCP<{
+export /* @internal */ default function EmptyMessageYtpDisabled({ fully: feature, children }: FCP<{
 	/** If YTP enabled, the whole feature is unavailable, pass the feature name to this parameter. */
 	fully?: string;
 }>) {

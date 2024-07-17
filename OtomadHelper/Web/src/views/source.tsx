@@ -1,4 +1,4 @@
-export /* internal */ const startTimes = [
+export /* @internal */ const startTimes = [
 	{ id: "projectStart", name: t.source.startTime.projectStart, icon: "arrow_export" },
 	{ id: "cursor", name: t.source.startTime.cursor, icon: "text_cursor" },
 	{ id: "custom", name: t.custom, icon: "edit" },

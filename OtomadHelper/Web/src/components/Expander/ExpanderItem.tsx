@@ -1,4 +1,4 @@
-export /* internal */ const styledExpanderItemBase = css`
+export /* @internal */ const styledExpanderItemBase = css`
 	container: setting-card-base;
 	display: flex;
 	gap: 16px;
@@ -15,7 +15,7 @@ export /* internal */ const styledExpanderItemBase = css`
 	}
 `;
 
-export /* internal */ const styledExpanderItemText = css`
+export /* @internal */ const styledExpanderItemText = css`
 	.text {
 		> * {
 			${styles.mixins.hideIfEmpty()};
@@ -32,7 +32,7 @@ export /* internal */ const styledExpanderItemText = css`
 	}
 `;
 
-export /* internal */ const styledExpanderItemContent = css`
+export /* @internal */ const styledExpanderItemContent = css`
 	.icon-placeholder {
 		${styles.mixins.square("20px")};
 	}
@@ -69,7 +69,7 @@ const StyledExpanderItem = styled.div`
 	${styledExpanderItemContent};
 `;
 
-export /* internal */ default function ExpanderItem({ icon, title, details, children }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, children }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons;
 	/** Title. */

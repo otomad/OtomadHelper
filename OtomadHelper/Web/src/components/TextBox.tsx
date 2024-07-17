@@ -94,7 +94,14 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 }
 // #endregion
 
-export /* internal */ const StyledTextBox = styled.div`
+export /* @internal */ const inputInSettingsCardStyle = css`
+	:where(.settings-card > .base, .expander-item) > .trailing > :where(&) {
+		width: 200px;
+		max-width: calc(50cqw - 13px);
+	}
+`;
+
+export /* @internal */ const StyledTextBox = styled.div`
 	position: relative;
 	background-color: ${c("fill-color-control-default")};
 	border-radius: 4px;
@@ -106,10 +113,7 @@ export /* internal */ const StyledTextBox = styled.div`
 		align-items: stretch;
 	}
 
-	:where(.settings-card > .base, .expander-item) > .trailing > :where(&) {
-		width: 200px;
-		max-width: calc(50cqw - 13px);
-	}
+	${inputInSettingsCardStyle}
 
 	input {
 		${styles.effects.text.body};

@@ -36,4 +36,9 @@ declare global {
 	 * ```
 	 */
 	type RectTuple = [x: number, y: number, width: number, height: number];
+
+	/**
+	 * Curve Type, Video Keyframe Type, or OFX Interpolation Type.
+	 */
+	type CurveType = "linear" | "fast" | "slow" | "smooth" | "sharp" | "none";
 }
