@@ -425,6 +425,13 @@ export default {
 				noTimeRemapping: "When on, the clips will not reset their start time when note on occurs, but will continue playing, useful if you want to apply the effects to the source only",
 				transformMethod: "Specifies target properties for transformed keyframes",
 				tuning: {
+					tuningMethod: {
+						noTuning: "No pitch effect",
+						pitchShift: "Uses the Pitch Shift Audio FX Plugin, which is slow, but the only method accessible to the scripting API in VEGAS Pro ≤ 15",
+						elastic: "Uses the Elastic Stretch Method, just is the default method that directly pressing +/- keys",
+						classic: "Uses the Classic Stretch Method, which is the only method available in VEGAS Pro ≤ ８",
+						scaleless: "Locks stretch and pitch, and change the stretch to get the corresponding pitch regardless of the note pitches, just for fun",
+					},
 					stretchAttributes: "More configuration about the selected tuning method",
 					alternativeForExceedsTheRange: "Handles out-of-range notes with an alternative method",
 					resample: "Locks stretch and pitch, adjusts stretch to change pitch",

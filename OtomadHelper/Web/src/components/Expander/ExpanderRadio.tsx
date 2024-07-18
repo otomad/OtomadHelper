@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, $itemWidth, radioGroup, onItemClick, children, itemsViewItemAttrs, ...settingsCardProps }: FCP<PropsOf<typeof Expander> & {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, details: _details, $itemWidth, radioGroup, onItemClick, children, itemsViewItemAttrs, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly T[];
 	/** The identifier of the currently selected value. */
@@ -35,6 +35,8 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	detailsField?: FieldType<T>;
 	/** Use list/tile/grid view components instead of radio buttons. */
 	view?: ItemView | false;
+	/** Detailed description. */
+	details?: ReactNode | ((value: string | undefined, items: T[]) => ReactNode);
 	/** The width of the child element image when using the grid view component. */
 	$itemWidth?: number;
 	/** Radio button group name, optional. */
@@ -43,7 +45,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	itemsViewItemAttrs?: Partial<PropsOf<typeof ItemsView.Item>>;
 	/** Fired when the item is clicked. */
 	onItemClick?: MouseEventHandler<HTMLElement>;
-}>) {
+}>>) {
 	const items = _items as AnyObject[];
 	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "image" | "details"): Any => {
 		const field = {
@@ -66,8 +68,9 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 			idField && isI18nItem(nameField) ? nameField[value!] : value :
 		typeof checkInfoCondition === "function" ? checkInfoCondition(value, items) :
 		items.find(item => item[checkInfoCondition.id] === value)?.[checkInfoCondition.name];
+	const details = typeof _details === "function" ? _details(value, items) : _details;
 	return (
-		<Expander {...settingsCardProps} checkInfo={checkInfo}>
+		<Expander {...settingsCardProps} checkInfo={checkInfo} details={details}>
 			{!view ? items.map(item => (
 				<RadioButton
 					value={[value as T, setValue]}

@@ -118,6 +118,7 @@ export default function Audio() {
 					<Subheader>{t.stream.tuning}</Subheader>
 					<ExpanderRadio
 						title={t.stream.tuning.tuningMethod}
+						details={id => id && t.descriptions.stream.tuning.tuningMethod[id]}
 						icon="tuning"
 						items={tuningMethods}
 						value={tuningMethod as StateProperty<string>}
