@@ -1,3 +1,4 @@
+import type { pitchNotations } from "views/lyrics";
 import type { bpmUsings, constraintNoteLengths, encodings } from "views/score";
 import type { startTimes } from "views/source";
 import type { legatos, noLengthenings, stretches, transformMethods } from "views/visual";
@@ -10,6 +11,7 @@ type Stretch = typeof stretches[number]["id"];
 type Legato = typeof legatos[number]["id"];
 type NoLengthening = typeof noLengthenings[number]["id"];
 type TransformMethod = typeof transformMethods[number];
+type PitchNotation = typeof pitchNotations[number]["id"];
 type Timecode = string;
 
 const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
@@ -148,12 +150,26 @@ export const configStore = createStore({
 			},
 		],
 	},
+	lyrics: {
+		enabled: false,
+		presetTemplate: "Text",
+		karaoke: {
+			enabled: false,
+			backgroundColor: "#0000ff",
+			foregroundColor: "#00ff00",
+		},
+		pitchNotation: {
+			enabled: false,
+			type: "scientific" as PitchNotation,
+		},
+	},
 	shupelunker: {
+		enabled: false,
 		affix: "prefix",
 		unallocated: {
 			octaves: true,
-			higherNeighbors: true,
 			lowerNeighbors: true,
+			higherNeighbors: true,
 		},
 		offset: 0,
 	},

@@ -3,7 +3,10 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 	on: StateProperty<boolean>;
 	/** Disabled? */
 	disabled?: boolean;
-	/** Reset the page's transition effect when toggling the switch. */
+	/**
+	 * Reset the page's transition effect when toggling the switch.
+	 * @remarks This is business logic, but present in the base component.
+	 */
 	resetTransitionOnChanging?: boolean;
 	/** Use special accent color for the toggle switch. */
 	$color?: string;

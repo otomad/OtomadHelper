@@ -15,7 +15,7 @@ export default function Ytp() {
 			<SettingsPageControl image={tipsImage} cursor={cursor} learnMoreLink="">{t.descriptions.ytp}</SettingsPageControl>
 			<SettingsCardToggleSwitch title={t.enabled} selectInfo={t(1).selectInfo.source} icon="enabled" on={enabled} resetTransitionOnChanging />
 
-			<EmptyMessage.Typical icon="ytp" name={t.titles.ytp} enabled={enabled}>
+			<EmptyMessage.Typical icon="ytp" title="ytp" enabled={enabled}>
 				<Subheader>{t.subheaders.parameters}</Subheader>
 				<Expander title={t.ytp.constraint} details={t.descriptions.ytp.constraint} icon="constraint">
 					<ExpanderChildTrim.Value start={constraintStart} end={constraintEnd} min={1} decimalPlaces={0} />

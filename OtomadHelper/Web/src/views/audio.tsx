@@ -50,7 +50,7 @@ export default function Audio() {
 		<div className="container">
 			<SettingsPageControlMedia stream="audio" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={exampleThumbnail} />
 
-			<EmptyMessage.Typical icon="audio" name={t.titles.audio} enabled={enabled}>
+			<EmptyMessage.Typical icon="audio" title="audio" enabled={enabled}>
 				<SettingsCard title={t.source.preferredTrack} details={t.descriptions.source.preferredTrack} icon="preferred_track">
 					<ComboBox current={preferredTrack} options={tracks} />
 				</SettingsCard>
@@ -112,7 +112,7 @@ export default function Audio() {
 						icon="stereo"
 						actions={<ToggleSwitch on={autoPan} />}
 					>
-						<Expander.ItemCurve curve={autoPanCurve} />
+						<Expander.Item.Curve curve={autoPanCurve} />
 					</Expander>
 
 					<Subheader>{t.stream.tuning}</Subheader>

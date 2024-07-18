@@ -99,6 +99,7 @@ export default {
 			config: "Configuration",
 			parameters: "Parameters",
 			effects: "Effects",
+			seeAlso: "See also",
 		},
 		units: {
 			milliseconds: "ms",
@@ -248,8 +249,8 @@ export default {
 			},
 			clear: {
 				_: "Clear",
-				motion: "Clears track motions",
-				effect: "Clears track effects",
+				motion: "Clear track motions",
+				effect: "Clear track effects",
 			},
 		},
 		sonar: {
@@ -257,6 +258,25 @@ export default {
 			differenceCompositeMode: "Difference composite mode",
 			shadow: "Shadow",
 			graphs: "Graphs",
+		},
+		lyrics: {
+			useStaticText: "Insert subtitles directly from static text",
+			presetTemplate: "Preset template",
+			enableMode: "Enable {{mode, lowercase}} mode",
+			karaoke: {
+				_: "Karaoke",
+				backgroundColor: "Background color",
+				foregroundColor: "Foreground color",
+			},
+			pitchNotation: {
+				_: "Pitch notation",
+				type: "Pitch notation type",
+				scientific: "Scientific Pitch Notation",
+				helmholtz: "Helmholtz Pitch Notation",
+				solfeggio: "Solfeggio Syllable",
+				numbered: "Numbered Musical Notation",
+				gongche: "Gongche Notation",
+			},
 		},
 		shupelunker: {
 			affix: {
@@ -267,9 +287,10 @@ export default {
 			unallocated: {
 				_: "Unallocated",
 				octaves: "Octaves",
-				higherNeighbors: "Higher neighbors",
 				lowerNeighbors: "Lower neighbors",
+				higherNeighbors: "Higher neighbors",
 			},
+			keyMappingZone: "Key mapping zone",
 		},
 		ytp: {
 			constraint: "Constraint length",
@@ -406,6 +427,7 @@ export default {
 				bpm: "Specifies the beats per minute",
 				constraint: "Controls the output length of notes from the score",
 				encoding: "Specifies the text encoding to use when reading the file",
+				ytpEnabled: "YTP feature is enabled, it does not depend on the score, so all settings here have no effect.",
 			},
 			stream: {
 				stretch: "When on, stretches the clip instead of changing its duration",
@@ -427,9 +449,9 @@ export default {
 				tuning: {
 					tuningMethod: {
 						noTuning: "No pitch effect",
-						pitchShift: "Uses the Pitch Shift Audio FX Plugin, which is slow, but the only method accessible to the scripting API in VEGAS Pro ≤ 15",
-						elastic: "Uses the Elastic Stretch Method, just is the default method that directly pressing +/- keys",
-						classic: "Uses the Classic Stretch Method, which is the only method available in VEGAS Pro ≤ ８",
+						pitchShift: "Uses the Pitch Shift Audio Effect Plugin, which is slow, but the only method accessible to the scripting API in VEGAS Pro ≤ 15",
+						elastic: "Uses the Elastic Pitch Change Method, just is the default method that directly pressing +/- keys",
+						classic: "Uses the Classic Pitch Change Method, which is the only method available in VEGAS Pro ≤ ８",
 						scaleless: "Locks stretch and pitch, and change the stretch to get the corresponding pitch regardless of the note pitches, just for fun",
 					},
 					stretchAttributes: "More configuration about the selected tuning method",
@@ -471,6 +493,14 @@ export default {
 			shupelunker: {
 				_: "Shupelunker Tactics is an unpitched YTPMV/Otomad tactic. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, i.e. the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” is generated. It is also unpitched and allows you to choose where the clip is cut (usually at a dialog), often using audio stretching and rewinding, as well as adding sixteenth to sixty-fourth rests. During production, the clips are matched to the rhythm for vocal sense.",
 				// The name of this tactic originated in Otomad, whose first creation using this tactic had the title of being a parody of Shu (Shuzo Matsuoka) netaed with Spelunker (game), hence the name. This method was also used in early YTPMV, but it never had an official name or method title, it is more like a meme to use this method in a similar way that most YTPMV from the late 2000s to mid 2010s would use.
+				affix: "The base pitches of the sources need to be detected by naming the clips, please specify whether the pitch info should be a prefix or suffix to the clip name",
+				unallocated: {
+					_: "Specifies how to fill the vacancies if the sources do not cover all keys",
+					octaves: "Uses the clips with the nearest higher or lower octave, this has the highest priority, useful for sources with sung solfeggios",
+					lowerNeighbors: "Uses lower neighbors, but the lowest keys are filled from the higher neighbors, this has higher priority than higher neighbors",
+					higherNeighbors: "Uses higher neighbors, but the highest keys are filled from the lower neighbors",
+				},
+				offset: "Offsets the sources corresponding to the keys as a whole",
 			},
 			ytp: {
 				_: "YouTube Poop (YTP) is used to create nonsensical videos using various effects known in the YTP genre. YTP supports multisource.\nYTP is a Neo-Dada art form that consists of absurd remixes that imitate and mock the lowest technical and aesthetic standards of remix culture in order to comment on remix culture itself. It consists of video remixes edited from a variety of video clips to confuse, stun, or amuse the viewer. The sources can be mashed all together into a nonsensical crossover story, or simply repeated footage of the characters gesticulating oddly.",

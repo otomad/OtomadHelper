@@ -186,7 +186,7 @@ export default forwardRef(function Button({ children, icon, animatedIcon, subtle
 			onRelease={repeat ? onRelease : undefined}
 			{...htmlAttrs}
 		>
-			<StackPanel className="content">
+			<StackPanel className="content" $nowrap>
 				{icon && <Icon name={icon} />}
 				{animatedIcon && <AnimatedIcon name={animatedIcon} />}
 				<span>{children}</span>

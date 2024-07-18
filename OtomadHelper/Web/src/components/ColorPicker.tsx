@@ -23,7 +23,7 @@ export default function ColorPicker({ color: [color, setColor], ...htmlAttrs }: 
 
 	return (
 		<StyledColorPicker {...htmlAttrs} style={{ "--color": color }} onClick={() => inputColorEl.current?.click()}>
-			<input ref={inputColorEl} type="color" onChange={e => setColor?.(e.currentTarget.value)} />
+			<input ref={inputColorEl} type="color" value={color} onChange={e => setColor?.(e.currentTarget.value)} />
 		</StyledColorPicker>
 	);
 }

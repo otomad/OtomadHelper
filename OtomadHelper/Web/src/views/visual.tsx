@@ -60,7 +60,7 @@ export default function Visual() {
 		<div className="container">
 			<SettingsPageControlMedia stream="visual" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={exampleThumbnail} />
 
-			<EmptyMessage.Typical icon="visual" name={t.titles.visual} enabled={enabled}>
+			<EmptyMessage.Typical icon="visual" title="visual" enabled={enabled}>
 				<SettingsCard title={t.source.preferredTrack} details={t.descriptions.source.preferredTrack} icon="preferred_track">
 					<ComboBox current={preferredTrack} options={tracks} />
 				</SettingsCard>

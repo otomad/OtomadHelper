@@ -1,7 +1,6 @@
 import { StyledCard } from "components/Card";
 import { styledExpanderItemBase, styledExpanderItemContent } from "components/Expander/ExpanderItem";
 
-export const TRAILING_EXEMPTION = "trailing-exemption";
 const isPressed = ":not(:has(button:active)):active";
 
 const StyledSettingsCard = styled(StyledCard)`

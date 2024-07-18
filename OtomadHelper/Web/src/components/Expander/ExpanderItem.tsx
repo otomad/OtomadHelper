@@ -1,3 +1,5 @@
+import ExpanderItemCurve from "./ExpanderItemCurve";
+
 export /* @internal */ const styledExpanderItemBase = css`
 	container: setting-card-base;
 	display: flex;
@@ -90,3 +92,5 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, chi
 		</StyledExpanderItem>
 	);
 }
+
+ExpanderItem.Curve = ExpanderItemCurve;

@@ -1,12 +1,17 @@
-export /* @internal */ default function EmptyMessageTypical({ name, icon, enabled: [enabled, setEnabled], children }: FCP<{
+import type { LocaleIdentifiers } from "locales/types";
+
+export /* @internal */ default function EmptyMessageTypical({ name: staticName, title, icon, enabled: [enabled, setEnabled], children }: FCP<{
 	/** Feature name. */
-	name: string;
+	name?: string;
+	/** Feature name, but automatically get from the i18n strings. */
+	title?: keyof LocaleIdentifiers["javascript"]["titles"];
 	/** Feature icon. */
 	icon: DeclaredIcons;
 	/** Is enabled? */
 	enabled: StatePropertyNonNull<boolean>;
 }>) {
 	if (enabled) return children;
+	const name = staticName || title && t.titles[title];
 	return (
 		<EmptyMessage
 			key="disabled"

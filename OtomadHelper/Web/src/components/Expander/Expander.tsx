@@ -1,5 +1,6 @@
 import ExpanderItem from "./ExpanderItem";
-import ExpanderItemCurve from "./ExpanderItemCurve";
+
+export const TRAILING_EXEMPTION = "trailing-exemption";
 
 const ExpanderParent = styled(SettingsCard)<{
 	/** Expanded? */
@@ -8,12 +9,16 @@ const ExpanderParent = styled(SettingsCard)<{
 	backdrop-filter: blur(4px);
 
 	.check-info {
-		${tgs()} {
+		// Check info should still take up space when hidden, to avoid layout jumps during the toggle animation.
+		transition-behavior: allow-discrete;
+
+		&.hidden {
 			translate: 0 16px;
 			opacity: 0;
+			visibility: hidden;
 		}
 
-		&.enter-active {
+		&:not(.hidden) {
 			transition-timing-function: ${eases.easeOutElastic};
 			transition-duration: 1250ms;
 		}
@@ -111,11 +116,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				$expanded={internalExpanded}
 			>
 				{actions}
-				{checkInfo != null && (
-					<CssTransition in={!internalExpanded || alwaysShowCheckInfo} unmountOnExit>
-						<div className={["check-info", TRAILING_EXEMPTION]}>{checkInfo}</div>
-					</CssTransition>
-				)}
+				{checkInfo != null && <div className={["check-info", TRAILING_EXEMPTION, { hidden: !(!internalExpanded || alwaysShowCheckInfo) }]}>{checkInfo}</div>}
 			</ExpanderParent>
 			<Transitions.Size
 				in={internalExpanded}
@@ -135,5 +136,4 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 }
 
 Expander.Item = ExpanderItem;
-Expander.ItemCurve = ExpanderItemCurve;
 Expander.ChildWrapper = ExpanderChildWrapper;

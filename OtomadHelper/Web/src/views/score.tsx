@@ -87,6 +87,7 @@ export default function Score() {
 		timeSignature: [timeSignature],
 		isMultiple: [isMultiple, setIsMultiple],
 	} = selectConfig(c => c.score);
+	const { enabled: [ytpEnabled] } = selectConfig(c => c.ytp);
 	const selectionMode = useSelectionMode([isMultiple, setIsMultiple]);
 
 	const [selectedTrack, setSelectedTrack] = useState<number | number[]>(0);
@@ -102,6 +103,8 @@ export default function Score() {
 
 	return (
 		<div className="container">
+			{ytpEnabled && <InfoBar status="warning" title={t.descriptions.score.ytpEnabled} button={<EmptyMessage.YtpDisabled.Buttons />} />}
+
 			<Card className="media-pool">
 				<TabBar current={format}>
 					<TabBar.Item id="midi" icon="midi">{t.score.midi}</TabBar.Item>

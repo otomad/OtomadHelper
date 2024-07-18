@@ -78,6 +78,8 @@ export default function Mosh() {
 				selectInfo={t(1).selectInfo.videoEvent}
 				selectValid={1}
 			/>
+
+			<Subheader>{t.subheaders.seeAlso}</Subheader>
 			<div>
 				<Button hyperlink onClick={() => changePage(["settings"])}>{t.mosh.specifyClipsFolder}</Button>
 			</div>

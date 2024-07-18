@@ -35,7 +35,7 @@ export default function ShellPage() {
 	const { uiScale } = useSnapshot(configStore.settings);
 	const zoom = uiScale === 100 ? undefined : uiScale / 100;
 	const { appName } = useAboutApp();
-	const { enablePixelScaling } = useSnapshot(configStore.visual);
+	const { enabled: enablePixelScaling } = useSnapshot(configStore.visual.pixelScaling);
 	const documentTitle = (() => {
 		const lastPage = page.last();
 		return (lastPage ? getTitle(lastPage, true) + " - " : "") + appName;
