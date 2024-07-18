@@ -43,7 +43,7 @@ export default function Visual() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
 		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, /* transformMethod */ currentPreset,
-		glissando, glissandoAmount,
+		glissando, glissandoAmount, noTimeRemapping,
 	} = selectConfig(c => c.visual);
 	const activeParameterScheme = selectConfigArray(c => c.visual.activeParameterScheme);
 	const { enabled: enablePixelScaling } = selectConfig(c => c.visual.pixelScaling);
@@ -89,7 +89,7 @@ export default function Visual() {
 						<ExpanderRadio
 							title={t.stream.noLengthening}
 							details={t.descriptions.stream.noLengthening}
-							icon="no_lengthening"
+							icon="arrow_import_prohibited"
 							items={noLengthenings}
 							value={noLengthening as StateProperty<string>}
 							view="tile"
@@ -117,13 +117,17 @@ export default function Visual() {
 						icon="chords"
 						on={multitrackForChords}
 					/>
+					<SettingsCardToggleSwitch
+						title={t.stream.noTimeRemapping}
+						details={t.descriptions.stream.noTimeRemapping}
+						icon="timer_prohibited"
+						on={noTimeRemapping}
+					/>
 					<Expander
 						title={t.stream.glissando}
 						details={t.descriptions.stream.glissando}
 						icon="swirl"
-						actions={
-							<ToggleSwitch on={glissando} />
-						}
+						actions={<ToggleSwitch on={glissando} />}
 					>
 						<Expander.Item title={t.stream.glissando.amount} details={t.descriptions.stream.glissando.amount}>
 							<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitones} positiveSign />
@@ -158,13 +162,15 @@ export default function Visual() {
 						trailingIcon="open"
 					/>
 
-					<Subheader>{t.subheaders.parameters}</Subheader>
+					<Subheader>{t.stream.mapping}</Subheader>
 					<SettingsCard
 						title={t.stream.mapping}
 						details={t.descriptions.stream.mapping}
 						icon="mapping"
 						type="button"
 					/>
+
+					<Subheader>{t.subheaders.parameters}</Subheader>
 					<ExpanderRadio
 						title={t.preset}
 						details={t.descriptions.stream.preset}

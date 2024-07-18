@@ -35,7 +35,7 @@ const StyledComboBox = styled(StyledButton)`
 
 export default function ComboBox<T extends string>({ options, current: [current, setCurrent], ...htmlAttrs }: FCP<{
 	/** The options of the combo box. */
-	options: T[];
+	options: readonly T[];
 	/** The selected option of the combo box. */
 	current: StateProperty<T>;
 }, HTMLButtonElement & HTMLSelectElement>) {

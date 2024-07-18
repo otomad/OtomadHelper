@@ -53,6 +53,7 @@ export const configStore = createStore({
 		multitrackForChords: false,
 		autoPan: true,
 		autoPanCurve: "linear" as CurveType,
+		noTimeRemapping: false,
 		tuningMethod: "elastic",
 		stretchAttribute: "efficient",
 		alternativeForExceedsTheRange: "plugin",
@@ -65,6 +66,14 @@ export const configStore = createStore({
 			duration: 500,
 			adjustAudioToBasePitch: false,
 		},
+		currentPreset: "fadeOut",
+		activeParameterScheme: [
+			{
+				name: "淡出",
+				enabled: false,
+				parameters: ["淡入淡出"],
+			},
+		],
 	},
 	visual: {
 		enabled: true,
@@ -77,6 +86,7 @@ export const configStore = createStore({
 		multitrackForChords: false,
 		glissando: false,
 		glissandoAmount: 12,
+		noTimeRemapping: false,
 		transformMethod: "panCrop" as TransformMethod,
 		enableStaffVisualizer: false,
 		prve: {

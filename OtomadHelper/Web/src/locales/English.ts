@@ -85,6 +85,7 @@ export default {
 		new: "New",
 		etc: "{{examples}}, etc.",
 		offset: "Offset",
+		curve: "Interpolation curve",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -179,6 +180,7 @@ export default {
 				amount: "Amount",
 			},
 			autoPan: "Auto pan",
+			noTimeRemapping: "No time remapping",
 			transformMethod: {
 				_: "Transform method",
 				panCrop: "Pan/Crop",
@@ -386,6 +388,7 @@ export default {
 		},
 		descriptions: {
 			condition: "Specifies when to apply the following configuration",
+			curve: "Specifies the interpolation curve of the keyframe type",
 			source: {
 				trim: "Adjusts the start or end time of the specified source",
 				startTime: "Specifies when to start generating from the project",
@@ -419,6 +422,7 @@ export default {
 					amount: "Specifies the amount of the swirl twist amplitude",
 				},
 				autoPan: "Pans the audio using envelope automation",
+				noTimeRemapping: "When on, the clips will not reset their start time when note on occurs, but will continue playing, useful if you want to apply the effects to the source only",
 				transformMethod: "Specifies target properties for transformed keyframes",
 				tuning: {
 					stretchAttributes: "More configuration about the selected tuning method",

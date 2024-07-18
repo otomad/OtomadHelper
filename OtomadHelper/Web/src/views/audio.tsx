@@ -25,17 +25,20 @@ const beepWaveforms = ["sinusoid", "triangle", "square", "sawtooth"];
 
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
+const buildInPresets = ["normal", "fadeOut"];
+
 const TooltipPartial = Tooltip.with({ placement: "y" });
 
 export default function Audio() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
-		stretch, loop, normalize, noLengthening, legato, multitrackForChords,
-		tuningMethod, stretchAttribute, alternativeForExceedsTheRange, resample, preserveFormant, basePitch,
+		stretch, loop, normalize, noLengthening, legato, multitrackForChords, noTimeRemapping, autoPan, autoPanCurve,
+		tuningMethod, stretchAttribute, alternativeForExceedsTheRange, resample, preserveFormant, basePitch, currentPreset,
 	} = selectConfig(c => c.audio);
 	const { engine, waveform, duration: beepDuration, adjustAudioToBasePitch } = selectConfig(c => c.audio.prelistenAttributes);
 	const { createGroups } = selectConfig(c => c);
 	const { hideUseTips } = useSnapshot(configStore.settings);
+	const activeParameterScheme = selectConfigArray(c => c.audio.activeParameterScheme);
 
 	const { pushPage } = useSnapshot(pageStore);
 
@@ -69,7 +72,7 @@ export default function Audio() {
 					<ExpanderRadio
 						title={t.stream.noLengthening}
 						details={t.descriptions.stream.noLengthening}
-						icon="no_lengthening"
+						icon="arrow_import_prohibited"
 						items={noLengtheningsInAudio}
 						value={noLengthening as StateProperty<string>}
 						view="tile"
@@ -97,6 +100,20 @@ export default function Audio() {
 						icon="chords"
 						on={multitrackForChords}
 					/>
+					<SettingsCardToggleSwitch
+						title={t.stream.noTimeRemapping}
+						details={t.descriptions.stream.noTimeRemapping}
+						icon="timer_prohibited"
+						on={noTimeRemapping}
+					/>
+					<Expander
+						title={t.stream.autoPan}
+						details={t.descriptions.stream.autoPan}
+						icon="stereo"
+						actions={<ToggleSwitch on={autoPan} />}
+					>
+						<Expander.ItemCurve curve={autoPanCurve} />
+					</Expander>
 
 					<Subheader>{t.stream.tuning}</Subheader>
 					<ExpanderRadio
@@ -170,13 +187,44 @@ export default function Audio() {
 						trailingIcon="open"
 					/>
 
-					<Subheader>{t.subheaders.parameters}</Subheader>
+					<Subheader>{t.stream.mapping}</Subheader>
 					<SettingsCard
 						title={t.stream.mapping}
 						details={t.descriptions.stream.mapping}
 						icon="mapping"
 						type="button"
 					/>
+
+					<Subheader>{t.subheaders.parameters}</Subheader>
+					<ExpanderRadio
+						title={t.preset}
+						details={t.descriptions.stream.preset}
+						icon="preset"
+						items={buildInPresets}
+						value={currentPreset}
+						view="tile"
+						idField
+						nameField
+					>
+						<Expander.ChildWrapper>
+							<Button icon="add">{t.stream.preset.add}</Button>
+						</Expander.ChildWrapper>
+					</ExpanderRadio>
+					{activeParameterScheme.map((scheme, i) => (
+						<SettingsCard
+							title={scheme.name[0]}
+							details={listFormat(scheme.parameters[0], "conjunction", "narrow")}
+							type="button"
+							key={i}
+							icon
+							onClick={() => pushPage("parameters")}
+						>
+							<ToggleSwitch on={scheme.enabled} />
+						</SettingsCard>
+					))}
+					<div>
+						<Button icon="add">{t.new}</Button>
+					</div>
 				</EmptyMessage.YtpDisabled>
 			</EmptyMessage.Typical>
 		</div>

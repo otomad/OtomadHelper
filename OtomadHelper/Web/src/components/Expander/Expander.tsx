@@ -1,4 +1,5 @@
 import ExpanderItem from "./ExpanderItem";
+import ExpanderItemCurve from "./ExpanderItemCurve";
 
 const ExpanderParent = styled(SettingsCard)<{
 	/** Expanded? */
@@ -134,4 +135,5 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 }
 
 Expander.Item = ExpanderItem;
+Expander.ItemCurve = ExpanderItemCurve;
 Expander.ChildWrapper = ExpanderChildWrapper;
