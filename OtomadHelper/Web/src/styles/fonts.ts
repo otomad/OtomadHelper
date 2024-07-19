@@ -1,4 +1,5 @@
 import segoeUiVF from "assets/fonts/SegoeUI-VF.ttf";
+import openHuninn from "assets/fonts/jf-openhuninn-2.0.woff2";
 
 export const fonts = [
 	// #region Segoe UI Variable
@@ -11,6 +12,8 @@ export const fonts = [
 	new FontFace("Segoe UI Variable", 'local("Segoe UI Bold Italic")', { weight: "700", style: "italic" }),
 	new FontFace("Segoe UI Variable", 'local("Segoe UI Black Italic")', { weight: "900", style: "italic" }),
 	// #endregion
+
+	new FontFace("Open Huninn", `url("${openHuninn}") format("woff2")`),
 ];
 
 { // Init fonts

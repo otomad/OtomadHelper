@@ -218,6 +218,13 @@ export function useDomRefState<TElement extends keyof ElementTagNameMap | Elemen
 	return useState<TagNameToElement<TElement> | null>(initialValue);
 }
 
+export function useDomRefs<TElement extends keyof ElementTagNameMap | Element>() {
+	type TElementOrNull = TagNameToElement<TElement> | null;
+	const refs: MutableRefObject<TElementOrNull[]> = useRef([]);
+	const setRef = (index: number) => (el: TElementOrNull) => refs.current[index] = el;
+	return [refs, setRef] as const;
+}
+
 /**
  * Returns the global environment, used to define global variables.
  *

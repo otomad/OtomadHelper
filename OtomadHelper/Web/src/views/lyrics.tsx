@@ -13,7 +13,7 @@ export default function Shupelunker() {
 
 	return (
 		<div className="container">
-			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.lyrics}</SettingsPageControl>
+			<SettingsPageControl image={tipsImage} imageOverlay={<PreviewKaraoke />} learnMoreLink="">{t.descriptions.lyrics}</SettingsPageControl>
 			<EmptyMessage.YtpDisabled fully={t.titles.lyrics}>
 				<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
 

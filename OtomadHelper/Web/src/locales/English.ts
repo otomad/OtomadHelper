@@ -261,6 +261,7 @@ export default {
 		},
 		lyrics: {
 			useStaticText: "Insert subtitles directly from static text",
+			sampleLyrics: "Spicy chicken",
 			presetTemplate: "Preset template",
 			enableMode: "Enable {{mode, lowercase}} mode",
 			karaoke: {

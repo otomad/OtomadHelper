@@ -42,9 +42,11 @@ const StyledSettingsPageControl = styled.div<{
 	}
 `;
 
-export default forwardRef(function SettingsPageControl({ image, learnMoreLink, clearFloat, cursor, children, ...htmlAttrs }: FCP<{
+export default forwardRef(function SettingsPageControl({ image, imageOverlay, learnMoreLink, clearFloat, cursor, children, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string;
+	/** Something overlay on the image. */
+	imageOverlay?: ReactNode;
 	/** "Learn More" link href. */
 	learnMoreLink?: string;
 	/** Clear float? */
@@ -80,7 +82,7 @@ export default forwardRef(function SettingsPageControl({ image, learnMoreLink, c
 			$cursor={cursor}
 			{...htmlAttrs}
 		>
-			{image && <SettingsPageControlPreviewImage image={image} />}
+			{image && <SettingsPageControlPreviewImage image={image}>{imageOverlay}</SettingsPageControlPreviewImage>}
 			<p ref={paragraphEl}>
 				<Preserves>{children}</Preserves>
 				{learnMoreLink !== undefined && (
