@@ -1,3 +1,5 @@
+import tipsImage from "assets/images/tips/bathroom_mirror.jpg";
+
 export /* @internal */ const pitchNotations = ["scientific", "helmholtz", "solfeggio", "numbered", "gongche"] as const;
 
 export default function Shupelunker() {
@@ -11,31 +13,32 @@ export default function Shupelunker() {
 
 	return (
 		<div className="container">
+			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.lyrics}</SettingsPageControl>
 			<EmptyMessage.YtpDisabled fully={t.titles.lyrics}>
 				<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
 
 				<EmptyMessage.Typical icon="lyrics" title="lyrics" enabled={enabled}>
-					<SettingsCard title={t.lyrics.presetTemplate} details={t.lyrics.presetTemplate} icon="subtitles">
+					<SettingsCard title={t.lyrics.presetTemplate} details={t.descriptions.lyrics.presetTemplate} icon="subtitles">
 						<ComboBox current={presetTemplate} options={[]} />
 					</SettingsCard>
 
 					<Subheader>{t.lyrics.karaoke}</Subheader>
-					<SettingsCardToggleSwitch title={t.lyrics.enableMode({ mode: t.lyrics.karaoke })} icon="mic" on={karaokeEnabled} />
+					<SettingsCardToggleSwitch title={t.lyrics.enableMode({ mode: t.lyrics.karaoke })} details={t.descriptions.lyrics.karaoke} icon="mic" on={karaokeEnabled} />
 					<Disabled disabled={!karaokeEnabled[0]}>
-						<SettingsCard icon="karaoke_future_fill" title={t.lyrics.karaoke.futureFill} details={t.lyrics.karaoke.futureFill}>
+						<SettingsCard icon="karaoke_future_fill" title={t.lyrics.karaoke.futureFill} details={t.descriptions.lyrics.karaoke.futureFill}>
 							<ColorPicker color={futureFill} />
 						</SettingsCard>
-						<SettingsCard icon="karaoke_past_fill" title={t.lyrics.karaoke.pastFill} details={t.lyrics.karaoke.pastFill}>
+						<SettingsCard icon="karaoke_past_fill" title={t.lyrics.karaoke.pastFill} details={t.descriptions.lyrics.karaoke.pastFill}>
 							<ColorPicker color={pastFill} />
 						</SettingsCard>
 					</Disabled>
 
 					<Subheader>{t.lyrics.pitchNotation}</Subheader>
-					<SettingsCardToggleSwitch title={t.lyrics.enableMode({ mode: t.lyrics.pitchNotation })} icon="csharp" on={notationEnabled} />
+					<SettingsCardToggleSwitch title={t.lyrics.enableMode({ mode: t.lyrics.pitchNotation })} details={t.descriptions.lyrics.pitchNotation} icon="csharp" on={notationEnabled} />
 					<Disabled disabled={!notationEnabled[0]}>
 						<ExpanderRadio
 							title={t.lyrics.pitchNotation.type}
-							details={t.lyrics.pitchNotation.type}
+							details={t.descriptions.lyrics.pitchNotation.type}
 							icon="music_note"
 							items={pitchNotations}
 							value={type as StateProperty<string>}

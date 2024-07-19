@@ -490,6 +490,19 @@ export default {
 				differenceCompositeMode: "Makes the tracks created with difference blend, this will present a shadow puppet style",
 				shadow: "Adds shadows to graphs",
 			},
+			lyrics: {
+				_: "When the score contains lyrics, such as sequence text, lyrics subtitles can be automatically generated at the same time.\nIf the score does not contain lyrics, you can still generate the pitch notation for use.",
+				presetTemplate: "Select a Title & Text Media Generator preset to use as a template for lyrics",
+				karaoke: {
+					_: "Uses karaoke style subtitles, the color indicator would reflect the progress of the current phrase",
+					futureFill: "Specifies the text fill color for the lyrics that have not yet been sung",
+					pastFill: "Specifies the text fill color for the lyrics that have been being sung",
+				},
+				pitchNotation: {
+					_: "Visualizes the pitch of the current note as text",
+					type: "There are several ways to express musical notation in the world, choose the one you prefer",
+				},
+			},
 			shupelunker: {
 				_: "Shupelunker Tactics is an unpitched YTPMV/Otomad tactic. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, i.e. the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” is generated. It is also unpitched and allows you to choose where the clip is cut (usually at a dialog), often using audio stretching and rewinding, as well as adding sixteenth to sixty-fourth rests. During production, the clips are matched to the rhythm for vocal sense.",
 				// The name of this tactic originated in Otomad, whose first creation using this tactic had the title of being a parody of Shu (Shuzo Matsuoka) netaed with Spelunker (game), hence the name. This method was also used in early YTPMV, but it never had an official name or method title, it is more like a meme to use this method in a similar way that most YTPMV from the late 2000s to mid 2010s would use.
@@ -567,8 +580,8 @@ export default {
 					details: "Disable the YTP feature to use and adjust other parameters",
 				},
 				fully: {
-					title: "YTP enabled, unable to use the {{feature, capitalize}} feature",
-					details: "Disable the YTP feature to use the {{feature, capitalize}} feature",
+					title: "YTP enabled, unable to use the {{feature, lowercase}} feature",
+					details: "Disable the YTP feature to use the {{feature, lowercase}} feature",
 				},
 				disableYtp: "Disable YTP",
 				gotoYtp: "Go to YTP",
