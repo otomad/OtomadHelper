@@ -11,7 +11,7 @@ type Stretch = typeof stretches[number]["id"];
 type Legato = typeof legatos[number]["id"];
 type NoLengthening = typeof noLengthenings[number]["id"];
 type TransformMethod = typeof transformMethods[number];
-type PitchNotation = typeof pitchNotations[number]["id"];
+type PitchNotation = typeof pitchNotations[number];
 type Timecode = string;
 
 const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
@@ -155,8 +155,8 @@ export const configStore = createStore({
 		presetTemplate: "Text",
 		karaoke: {
 			enabled: false,
-			backgroundColor: "#0000ff",
-			foregroundColor: "#00ff00",
+			futureFill: "#0000ff",
+			pastFill: "#00ff00",
 		},
 		pitchNotation: {
 			enabled: false,

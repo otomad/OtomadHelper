@@ -265,8 +265,8 @@ export default {
 			enableMode: "Enable {{mode, lowercase}} mode",
 			karaoke: {
 				_: "Karaoke",
-				backgroundColor: "Background color",
-				foregroundColor: "Foreground color",
+				futureFill: "Will play text fill color",
+				pastFill: "Played text fill color",
 			},
 			pitchNotation: {
 				_: "Pitch notation",
