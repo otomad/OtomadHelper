@@ -422,7 +422,7 @@ export default {
 			stream: {
 				stretch: "开启后，将拉伸剪辑而不是改变剪辑的持续时间",
 				loop: "当剪辑延长到源媒体的末尾后，将会重头开始播放",
-				normalize: "如果音频太安静则很有用",
+				normalize: "适用于音频太安静的素材",
 				staticVisual: "在剪辑起始处冻结帧",
 				noLengthening: "如果音符比剪辑更长，如何处理这些剪辑",
 				legato: "填补音符与音符之间的间隙",
@@ -451,7 +451,7 @@ export default {
 					basePitch: "指定音频剪辑的原始音高",
 					prelisten: {
 						_: "将剪辑与原始音高进行比较，以便调整",
-						adjustAudioToBasePitch: "将剪辑的音频匹配到原始音高，而不是反过来，这对旧式混音有用",
+						adjustAudioToBasePitch: "将剪辑的音频匹配到原始音高，而不是反过来，适用于旧式混音",
 					},
 				},
 				effects: {
