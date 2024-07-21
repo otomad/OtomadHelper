@@ -281,7 +281,7 @@ export default {
 		},
 		shupelunker: {
 			affix: {
-				_: "Match affix position",
+				_: "Match pitch affix position",
 				prefix: "Prefix",
 				suffix: "Suffix",
 			},
@@ -450,13 +450,13 @@ export default {
 				tuning: {
 					tuningMethod: {
 						noTuning: "No pitch effect",
-						pitchShift: "Uses the Pitch Shift Audio Effect Plugin, which is slow, but the only method accessible to the scripting API in VEGAS Pro ≤ 15",
-						elastic: "Uses the Elastic Pitch Change Method, just is the default method that directly pressing +/- keys",
-						classic: "Uses the Classic Pitch Change Method, which is the only method available in VEGAS Pro ≤ ８",
+						pitchShift: "Uses the Pitch Shift Audio Effect Plugin, which is slow, but can work out of range, and is the only method accessible to the scripting API in VEGAS Pro ≤ 15",
+						elastic: "Uses the Elastic Pitch Change Method, just is the default method that directly pressing the +/- keys, which cannot work out of range",
+						classic: "Uses the Classic Pitch Change Method, which cannot work out of range, and is the only method available in VEGAS Pro ≤ 8",
 						scaleless: "Locks stretch and pitch, and change the stretch to get the corresponding pitch regardless of the note pitches, just for fun",
 					},
 					stretchAttributes: "More configuration about the selected tuning method",
-					alternativeForExceedsTheRange: "Handles out-of-range notes with an alternative method",
+					alternativeForExceedsTheRange: "Handles out of range notes with an alternative method",
 					resample: "Locks stretch and pitch, adjusts stretch to change pitch",
 					preserveFormant: "Maintains voice tone while tuning",
 					basePitch: "Specifies the base pitch of the audio clip",

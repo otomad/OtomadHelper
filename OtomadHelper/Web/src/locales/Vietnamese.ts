@@ -110,11 +110,21 @@ export default {
 			clear: {},
 		},
 		sonar: {},
+		lyrics: {
+			sampleLyrics: "Gà lẩu cay",
+			karaoke: {},
+			pitchNotation: {},
+		},
+		shupelunker: {
+			affix: {},
+			unallocated: {},
+		},
 		ytp: {},
 		mosh: {},
 		tools: {},
 		selectInfo: {},
 		prve: {
+			control: {},
 			classes: {},
 		},
 		pixelScaling: {},
@@ -145,6 +155,7 @@ export default {
 			stream: {
 				glissando: {},
 				tuning: {
+					tuningMethod: {},
 					prelisten: {},
 				},
 				effects: {},
@@ -153,7 +164,13 @@ export default {
 			},
 			track: {},
 			sonar: {},
-			shupelunker: {},
+			lyrics: {
+				karaoke: {},
+				pitchNotation: {},
+			},
+			shupelunker: {
+				unallocated: {},
+			},
 			ytp: {},
 			mosh: {
 				normal: "Datamosh là một kĩ thuật làm biến dạng video để tạo hiệu ứng glitch.",
@@ -163,6 +180,9 @@ export default {
 				converters: {},
 			},
 			staff: {},
+			prve: {
+				control: {},
+			},
 			pixelScaling: {},
 			settings: {},
 		},

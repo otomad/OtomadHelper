@@ -1,5 +1,5 @@
 export default function Disabled({ children, disabled = true }: FCP<{
-	/** Disabled all children controls? */
+	/** Disable all children controls? */
 	disabled?: boolean;
 }>) {
 	const d = disabled || undefined;

@@ -4,6 +4,10 @@ const StyledPreviewKaraoke = styled.div`
 	inset: 0;
 	transition: ${fallbackTransitions}, clip-path linear 1s;
 
+	&.reset {
+		transition: ${fallbackTransitions}, clip-path linear 250ms;
+	}
+
 	> p {
 		font-family: "Open Huninn", ui-rounded;
 		font-weight: bold;
@@ -30,7 +34,7 @@ const StyledPreviewKaraoke = styled.div`
 		}
 	}
 
-	main.page.enter-done & {
+	main.page.enter-done &:not(.reset) {
 		&.future {
 			clip-path: inset(0 0 0 50%);
 		}
@@ -41,7 +45,10 @@ const StyledPreviewKaraoke = styled.div`
 	}
 `;
 
-export default function PreviewKaraoke() {
+export default function PreviewKaraoke({ reset }: FCP<{
+	/** Reset the karaoke lyrics progress? */
+	reset?: boolean;
+}>) {
 	const [textEls, setTextEl] = useDomRefs<"p">();
 
 	useEffect(() => {
@@ -54,7 +61,7 @@ export default function PreviewKaraoke() {
 	});
 
 	return (["future", "past"] as const).map((tense, index) => (
-		<StyledPreviewKaraoke key={tense} className={tense}>
+		<StyledPreviewKaraoke key={tense} className={[tense, { reset }]}>
 			<p ref={setTextEl(index)}>{t.lyrics.sampleLyrics}</p>
 		</StyledPreviewKaraoke>
 	));
