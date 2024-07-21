@@ -61,7 +61,7 @@ export default function PreviewColorScheme({ colorScheme, currentColorScheme }: 
 	return (
 		<StyledPreviewColorScheme>
 			{actualColorSchemes.map(scheme => (colorScheme === scheme || colorScheme === "auto") && (
-				<div className="container" data-scheme={scheme} key={scheme}>
+				<div className="container" data-scheme={scheme} key={scheme} inert>
 					<Button>
 						<RadioButton id={colorScheme} value={[currentColorScheme]} plain />
 					</Button>

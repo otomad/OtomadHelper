@@ -424,7 +424,7 @@ export default {
 				loop: "当剪辑延长到源媒体的末尾后，将会重头开始播放",
 				normalize: "如果音频太安静则很有用",
 				staticVisual: "在剪辑起始处冻结帧",
-				noLengthening: "如果音符比剪辑更长，如何处理这些剪辑？",
+				noLengthening: "如果音符比剪辑更长，如何处理这些剪辑",
 				legato: "填补音符与音符之间的间隙",
 				noLengtheningAndLegatoConflictInAudio: "禁止延长和填补间隙在音频里互相冲突，不能同时开启！",
 				multitrackForChords: "为和弦创建多条轨道",
