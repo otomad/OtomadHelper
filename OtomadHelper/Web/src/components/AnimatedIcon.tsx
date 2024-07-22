@@ -179,7 +179,6 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	stop: () => void;
 }>) {
 	const animationItem = useRef<AnimationItem>();
-	const iconBoxEl = useDomRef<"div">();
 	const { findMarker, onAnimationComplete, ...sequence } = useLottieSequence(animationItem);
 
 	/**
@@ -260,7 +259,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	useEffect(() => handleSpeedChange(), [speed]);
 
 	const previousAnimationName = useRef("Normal");
-	useEventListener(iconBoxEl, "animationstart", e => {
+	const onAnimationStart = useCallback<AnimationEventHandler>(e => {
 		let [previous, current] = [previousAnimationName.current, e.animationName];
 		if (!current.startsWith(STATUS_PREFIX)) return;
 		current = current.replace(STATUS_PREFIX, "");
@@ -268,7 +267,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 		handleStateChange({ marker: `${previous}To${current}`, speed: 1 });
 
 		previousAnimationName.current = current;
-	});
+	}, []);
 
 	/**
 	 * Called when the Lottie animation completes loading, used to get the `anim` object.
@@ -288,16 +287,18 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 
 	return (
 		<StyledAnimatedIcon $clipped={clipped} {...htmlAttrs}>
-			<div ref={iconBoxEl} className="icon-box" onClick={handleClick}>
-				<Lottie
-					className={{ filled }}
-					loop={loop}
-					autoplay={autoplay}
-					animationData={animationData!}
-					hidden={hidden}
-					onAnimCreated={onAnimationCreated}
-				/>
-			</div>
+			<EventInjector onAnimationStart={onAnimationStart}>
+				<div className="icon-box" onClick={handleClick}>
+					<Lottie
+						className={{ filled }}
+						loop={loop}
+						autoplay={autoplay}
+						animationData={animationData!}
+						hidden={hidden}
+						onAnimCreated={onAnimationCreated}
+					/>
+				</div>
+			</EventInjector>
 		</StyledAnimatedIcon>
 	);
 });

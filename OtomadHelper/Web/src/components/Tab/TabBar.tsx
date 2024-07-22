@@ -18,8 +18,8 @@ const Indicator = styled.div.attrs(({ $vertical }) => ({
 	${({ $vertical }) => $vertical ? "inline" : "block"}-size: ${THICKNESS}px;
 	position: absolute;
 	background-color: ${c("accent-color")};
-	${({ $vertical }) => $vertical ? css`inset-inline-start: 5px` : css`inset-block-end: 0`};
-	${({ $noTransition }) => $noTransition && css`transition: none`};
+	${({ $vertical }) => $vertical ? css`inset-inline-start: 5px;` : css`inset-block-end: 0;`}
+	${({ $noTransition }) => $noTransition && css`transition: none;`}
 	${({ $position, $vertical }) => $position && css`
 		${$vertical ? "inset-block-start" : "left"}: ${$position[0] ?? 0}px;
 		${$vertical ? "inset-block-end" : "right"}: ${isUndefinedNullNaN($position[1]) ? "100%" : $position[1] + "px"};
@@ -157,37 +157,41 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		}
 	}, [position]);
 
-	const tabBarEl = useDomRef<"div">();
-	useEventListener(tabBarEl, "wheel", e => {
-		if (vertical) return;
+	const onWheel = useCallback<WheelEventHandler>(e => {
+		if (
+			vertical || // Vertical tab bar (navigation view) do not care about horizontal scrolling.
+			e.deltaX !== 0 && e.deltaY === 0 // Consider about touchpad horizontal scrolling.
+		) return;
 		const tabBar = e.currentTarget as HTMLDivElement;
 		if (!tabBar || tabBar.scrollWidth <= tabBar.clientWidth) return;
 		tabBar.scrollLeft += e.deltaY;
 		e.preventDefault();
-	});
+	}, []);
 
 	useEffect(() => {
 		update();
 	}, [current, children]);
 
 	return (
-		<StyledTabBar className={[vertical ? "vertical" : "horizontal"]} ref={tabBarEl}>
-			<div className="scroll">
-				<div className="items">
-					{React.Children.map(children, child => {
-						if (!isReactInstance(child, TabItem)) return child;
-						const id = child.props.id as T;
-						return React.cloneElement(child, {
-							collapsed,
-							_vertical: vertical,
-							selected: current === id,
-							onClick: () => setCurrent?.(id),
-						});
-					})}
+		<EventInjector onWheel={onWheel}>
+			<StyledTabBar className={[vertical ? "vertical" : "horizontal"]}>
+				<div className="scroll">
+					<div className="items">
+						{React.Children.map(children, child => {
+							if (!isReactInstance(child, TabItem)) return child;
+							const id = child.props.id as T;
+							return React.cloneElement(child, {
+								collapsed,
+								_vertical: vertical,
+								selected: current === id,
+								onClick: () => setCurrent?.(id),
+							});
+						})}
+					</div>
+					<Indicator ref={indicatorEl} $position={position} $noTransition={noIndicatorTransition} $vertical={vertical} />
 				</div>
-				<Indicator ref={indicatorEl} $position={position} $noTransition={noIndicatorTransition} $vertical={vertical} />
-			</div>
-		</StyledTabBar>
+			</StyledTabBar>
+		</EventInjector>
 	);
 }
 

@@ -70,3 +70,12 @@ export function useOnFormKeyDown(element: RefObject<HTMLElement>, type: "radio" 
 		};
 	}, []);
 }
+
+/**
+ * Forward the ref from a local ref.
+ * @param forwardedRef - Forwarded ref argument from the `forwardRef` function.
+ * @param localRef - Local `useDomRef` variable.
+ */
+export function useImperativeHandleRef<T>(forwardedRef: React.ForwardedRef<T>, localRef: MutableRefObject<T | null | undefined>) {
+	useImperativeHandle(forwardedRef, () => localRef.current!);
+}

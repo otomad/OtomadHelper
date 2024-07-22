@@ -239,8 +239,6 @@ function TimecodeItemValue({ lastIndex, children, onChange, onFinishInput, onKey
 	/** Fired when user finishes editing the value of this item. */
 	onFinishInput?: TimecodeItemValueChangeEventHandler;
 }, "div">) {
-	const valueEl = useDomRef<"div">();
-
 	const [userInput, setUserInput] = useState("");
 	const displayUserInput = useMemo(() => userInput ? userInput.padStart(children.length, "\u2007") : children, [userInput, children]);
 
@@ -269,24 +267,24 @@ function TimecodeItemValue({ lastIndex, children, onChange, onFinishInput, onKey
 		}
 	}, [onBlur, userInput, lastIndex]);
 
-	useEventListener(valueEl, "wheel", onWheel as never, { passive: false });
 	// Cannot directly use `onWheel` in the JSX in React, or will raise an error "Unable to preventDefault inside passive event listener invocation."
 	// So we have to pass a *ref* with `passive: false`.
 	// See: https://stackoverflow.com/a/76406673/19553213
 
 	return (
 		<div className="value-wrapper">
-			<div
-				ref={valueEl}
-				className="value"
-				data-last-index={lastIndex}
-				tabIndex={0}
-				onBlur={handleBlur}
-				onKeyDown={handleKeyDown}
-				{...htmlAttrs}
-			>
-				{displayUserInput}
-			</div>
+			<EventInjector onWheel={onWheel}>
+				<div
+					className="value"
+					data-last-index={lastIndex}
+					tabIndex={0}
+					onBlur={handleBlur}
+					onKeyDown={handleKeyDown}
+					{...htmlAttrs}
+				>
+					{displayUserInput}
+				</div>
+			</EventInjector>
 		</div>
 	);
 }

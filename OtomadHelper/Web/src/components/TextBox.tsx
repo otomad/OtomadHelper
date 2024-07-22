@@ -262,7 +262,7 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 }, "div">, ref: ForwardedRef<"input">) {
 	const inputId = useId();
 	const inputEl = useDomRef<"input">();
-	useImperativeHandle(ref, () => inputEl.current!);
+	useImperativeHandleRef(ref, inputEl);
 
 	const setValue = (value: string | undefined | ((value: string) => string | undefined)) =>
 		value == null || _setValue?.(value as string);

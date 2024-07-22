@@ -46,7 +46,7 @@ export default forwardRef(function Img({ src, duplicate, ...htmlAttrs }: FCP<{
 	const images = useSnapshot(useImages);
 	const source = duplicate ? src + "?" + duplicate : src;
 
-	useImperativeHandle(ref, () => imageEl.current!, []);
+	useImperativeHandleRef(ref, imageEl);
 
 	useEffect(() => {
 		const contents = contentsEl.current;

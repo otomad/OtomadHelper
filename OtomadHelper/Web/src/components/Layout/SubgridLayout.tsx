@@ -55,7 +55,7 @@ export default forwardRef(function SubgridLayout({ name: groupName, children, ..
 	name: string;
 }, "div">, ref: ForwardedRef<"div">) {
 	const containerEl = useDomRef<"div">();
-	useImperativeHandle(ref, () => containerEl.current!);
+	useImperativeHandleRef(ref, containerEl);
 
 	const { addChildren, removeChildren, updateLayout, resizeObserver } = useSnapshot(subgridChildren);
 	const getContainerAndChildren = () => {
