@@ -29,8 +29,6 @@ export default {
 			prve: "PV Rhythm Visual Effect",
 			staff: "Staff Visualizer",
 			pixelScaling: "Pixel Scaling",
-			customEffect: "Custom Effect",
-			customEffect_other: "Custom Effects",
 			parameters: "Parameters",
 		},
 		source: {
@@ -165,7 +163,7 @@ export default {
 				trimEndFrames: "Trim end frames",
 				splitThenFreeze: "Split then freeze",
 				freezeToGray: "Freeze to gray",
-				freezeToEffect: "Freeze to effect",
+				freezeToPreset: "Freeze to preset",
 			},
 			legato: {
 				_: "Legato",
@@ -176,16 +174,27 @@ export default {
 			},
 			multitrackForChords: "Multitrack for chords",
 			createGroups: "Create groups",
-			glissando: {
-				_: "Glissando",
-				amount: "Amount",
-			},
 			autoPan: "Auto pan",
 			noTimeRemapping: "No time remapping",
 			transformMethod: {
 				_: "Transform method",
 				panCrop: "Pan/Crop",
+				pictureInPicture: "Picture in Picture",
 				transformOfx: "TransformOFX",
+			},
+			playingTechniques: {
+				_: "Playing techniques",
+				applyPreset: "Apply preset",
+				glissando: {
+					_: "Glissando",
+					swirlAmount: "Swirl amount",
+				},
+				appoggiatura: {
+					_: "Appoggiatura",
+				},
+				arpeggios: {
+					_: "Arpeggios",
+				},
 			},
 			tuning: {
 				_: "Tuning",
@@ -235,6 +244,7 @@ export default {
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "Copy from another parameter scheme here",
+				copyAttributesFromSelectedClip: "Copy attributes from selected clip",
 			},
 		},
 		track: {
@@ -440,13 +450,15 @@ export default {
 				noLengtheningAndLegatoConflictInAudio: "No lengthening conflicts with Legato in Audio, you cannot enable them simultaneously!",
 				multitrackForChords: "Creates multiple tracks for chords",
 				createGroups: "Creates groups for video and audio clips represented by one note",
-				glissando: {
-					_: "Creates a swirl effect when the note pitch bends or slides",
-					amount: "Specifies the amount of the swirl twist amplitude",
-				},
 				autoPan: "Pans the audio using envelope automation",
 				noTimeRemapping: "When on, the clips will not reset their start time when note on occurs, but will continue playing, useful if you want to apply the effects to the source only",
 				transformMethod: "Specifies target properties for transformed keyframes",
+				playingTechniques: {
+					glissando: {
+						_: "Creates a swirl effect when the note pitch bends or slides",
+						swirlAmount: "Specifies the amount of the swirl twist amplitude",
+					},
+				},
 				tuning: {
 					tuningMethod: {
 						noTuning: "No pitch effect",
@@ -469,7 +481,6 @@ export default {
 					prve: "Makes your visuals more rhythmic",
 					staff: "Uses custom patterns as notes to draw visuals similar fashion to piano staff sheets",
 					pixelScaling: "Scaling using nearest neighbor hard edge amplification and interpolation algorithms",
-					customEffect: "Apply custom effect presets to all clips and tracks",
 				},
 				mapping: {
 					_: "Maps the properties of notes to the specified item",

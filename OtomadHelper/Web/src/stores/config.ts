@@ -86,10 +86,13 @@ export const configStore = createStore({
 		noLengthening: "lengthenable" as NoLengthening,
 		legato: "upToOneBeat" as Legato,
 		multitrackForChords: false,
-		glissando: false,
-		glissandoAmount: 12,
 		noTimeRemapping: false,
 		transformMethod: "panCrop" as TransformMethod,
+		glissando: false,
+		glissandoAmount: 12,
+		appoggiatura: false,
+		arpeggios: false,
+		arpeggiosNegative: true,
 		enableStaffVisualizer: false,
 		prve: {
 			general: {

@@ -27,10 +27,10 @@ export /* @internal */ const noLengthenings = [
 	{ id: "trimEndFrames", icon: "trim_end_frames", availableInAudio: true },
 	{ id: "splitThenFreeze", icon: "split_then_freeze", availableInAudio: false },
 	{ id: "freezeToGray", icon: "freeze_to_gray", availableInAudio: false },
-	{ id: "freezeToEffect", icon: "freeze_to_effect", availableInAudio: false },
+	{ id: "freezeToPreset", icon: "freeze_to_preset", availableInAudio: false },
 ] as const;
 export /* @internal */ const transformMethods = [
-	"panCrop", "transformOfx",
+	"panCrop", "pictureInPicture", "transformOfx",
 ] as const;
 
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
@@ -42,8 +42,8 @@ const TooltipPartial = Tooltip.with({ placement: "y" });
 export default function Visual() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
-		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, /* transformMethod */ currentPreset,
-		glissando, glissandoAmount, noTimeRemapping,
+		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, transformMethod, currentPreset, noTimeRemapping,
+		glissando, glissandoAmount, appoggiatura, arpeggios, arpeggiosNegative,
 	} = selectConfig(c => c.visual);
 	const activeParameterScheme = selectConfigArray(c => c.visual.activeParameterScheme);
 	const { enabled: enablePixelScaling } = selectConfig(c => c.visual.pixelScaling);
@@ -120,20 +120,10 @@ export default function Visual() {
 					<SettingsCardToggleSwitch
 						title={t.stream.noTimeRemapping}
 						details={t.descriptions.stream.noTimeRemapping}
-						icon="timer_prohibited"
+						icon="timer_off"
 						on={noTimeRemapping}
 					/>
-					<Expander
-						title={t.stream.glissando}
-						details={t.descriptions.stream.glissando}
-						icon="swirl"
-						actions={<ToggleSwitch on={glissando} />}
-					>
-						<Expander.Item title={t.stream.glissando.amount} details={t.descriptions.stream.glissando.amount}>
-							<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitones} positiveSign />
-						</Expander.Item>
-					</Expander>
-					{/* <ExpanderRadio
+					<ExpanderRadio
 						title={t.stream.transformMethod}
 						details={t.descriptions.stream.transformMethod}
 						icon="zoom_fit"
@@ -141,8 +131,33 @@ export default function Visual() {
 						value={transformMethod}
 						idField
 						nameField={t.stream.transformMethod}
-					/> // TODO: Change the integration method of TransformOFX into parameters, add an independent subheader and an info bar to tell user to download it.
+					/>
+					{/* // TODO: Change the integration method of TransformOFX into parameters, add an independent subheader and an info bar to tell user to download it.
 					*/}
+
+					<Subheader>{t.stream.playingTechniques}</Subheader>
+					<Expander
+						title={t.stream.playingTechniques.glissando}
+						details={t.descriptions.stream.playingTechniques.glissando}
+						icon="swirl"
+						actions={<ToggleSwitch on={glissando} />}
+					>
+						<Expander.Item title={t.stream.playingTechniques.glissando.swirlAmount} details={t.descriptions.stream.playingTechniques.glissando.swirlAmount}>
+							<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitones} positiveSign />
+						</Expander.Item>
+					</Expander>
+					<Expander
+						title={t.stream.playingTechniques.appoggiatura}
+						icon="appoggiatura"
+						actions={<ToggleSwitch on={appoggiatura} />}
+					/>
+					<Expander
+						title={t.stream.playingTechniques.arpeggios}
+						icon="arpeggios"
+						actions={<ToggleSwitch on={arpeggios} />}
+					>
+						<ToggleSwitch on={arpeggiosNegative}>Negative</ToggleSwitch>{/* TODO: i18n */}
+					</Expander>
 
 					<Subheader>{t.subheaders.effects}</Subheader>
 					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")}>
@@ -154,13 +169,6 @@ export default function Visual() {
 					<SettingsCard title={t.titles.pixelScaling} details={t.descriptions.stream.effects.pixelScaling} type="button" icon="miscz" onClick={() => pushPage("pixel-scaling")}>
 						<ToggleSwitch on={enablePixelScaling} />
 					</SettingsCard>
-					<SettingsCard
-						title={t.titles.customEffect}
-						details={t.descriptions.stream.effects.customEffect}
-						type="button"
-						icon="custom_effect"
-						trailingIcon="open"
-					/>
 
 					<Subheader>{t.stream.mapping}</Subheader>
 					<SettingsCard
@@ -199,6 +207,7 @@ export default function Visual() {
 					))}
 					<div>
 						<Button icon="add">{t.new}</Button>
+						<Button icon="copy_add">{t.stream.parameters.copyAttributesFromSelectedClip}</Button>
 					</div>
 				</EmptyMessage.YtpDisabled>
 			</EmptyMessage.Typical>

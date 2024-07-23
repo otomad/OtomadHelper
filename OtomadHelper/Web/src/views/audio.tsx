@@ -179,15 +179,6 @@ export default function Audio() {
 						</Expander>
 					</Disabled>
 
-					<Subheader>{t.subheaders.effects}</Subheader>
-					<SettingsCard
-						title={t.titles.customEffect}
-						details={t.descriptions.stream.effects.customEffect}
-						type="button"
-						icon="custom_effect"
-						trailingIcon="open"
-					/>
-
 					<Subheader>{t.stream.mapping}</Subheader>
 					<SettingsCard
 						title={t.stream.mapping}
