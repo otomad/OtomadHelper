@@ -115,7 +115,7 @@ export default {
 			allFiles: "All Files",
 			txt: "Text Documents",
 			midi: "MIDI Sequence Files",
-			singthesis: "All Supported Singthesis Files (Singing Voice Synthesizer Software Project Files)",
+			singthesis: "All Supported Singthesis (Text Synthesis / Singing Voice Synthesizer Software Project) Files",
 			ust: "UTAU/OpenUTAU Sequence Text Files",
 			vsq: "Vocaloid Sequence Files",
 		},
@@ -220,7 +220,7 @@ export default {
 				alternativeForExceedsTheRange: {
 					_: "If exceeds the range",
 					multiple: "Use multiple Audio Effect Plugin",
-					plugin: "Switch to Audio Effect Plugin",
+					plugin: "Switch to Pitch Shift Audio Effect Plugin",
 					octave: "Higher or lower octaves",
 					dock: "Dock at the edge",
 					silent: "Silent",
@@ -393,9 +393,6 @@ export default {
 				vFlip: "Vertical Flip",
 				ccwFlip: "Counterclockwise Flip",
 				cwFlip: "Clockwise Flip",
-				hFlipSustain: "Horizontal Flip Sustain",
-				hFlipRelay: "Horizontal Flip Relay",
-				hFlipInvert: "Horizontal Flip Invert",
 				ccwRotate: "Counterclockwise Rotation",
 				cwRotate: "Clockwise Rotation",
 				turned: "Turned",
@@ -410,8 +407,8 @@ export default {
 				stepChangeHue: "{{count}} Step Chromatic Aberration",
 				stepChangeHue_other: "{{count}} Steps Chromatic Aberration",
 				chromatic: "Chromatic and Monochrome",
-				pingpong: "Ping-pong Effect",
-				whirl: "Whirl",
+				pingpong: "Ping-Pong Effect",
+				whirl: "The Magic of Love Whirls, Spins, Turns in Circles",
 				sharpRewind: "Sharp Rewind",
 				wobblePeriod: "Wobble Period",
 				vExpansion: "Vertical Expansion",
@@ -421,7 +418,7 @@ export default {
 				vBounce: "Vertical Bounce",
 				slantDown: "Slant Down",
 				slantUp: "Slant Up",
-				puyo: "Puyo Pop",
+				puyo: "Puyo Puyo",
 				pendulum: "Play Pendulum",
 				gaussianBlur: "Gaussian Blur",
 				radialBlur: "Radial Blur",
@@ -477,7 +474,7 @@ export default {
 			condition: "Specifies when to apply the following configuration",
 			curve: "Specifies the interpolation curve of the keyframe type",
 			source: {
-				trim: "Adjusts the start or end time of the specified source",
+				trim: "Adjusts the in or out point time of the specified source",
 				startTime: "Specifies when to start generating from the project",
 				preferredTrack: {
 					_: "Allows you to specify an existing track to generate (except multitrack)",
@@ -506,7 +503,7 @@ export default {
 				multitrackForChords: "Creates multiple tracks for chords",
 				createGroups: "Creates groups for video and audio clips represented by one note",
 				autoPan: "Pans the audio using envelope automation",
-				noTimeRemapping: "The clips will not reset their start time when note on occurs, but will continue playing, useful if you want to apply the effects to the source only",
+				noTimeRemapping: "The clips will not reset their in point time when note on occurs, but will continue playing, useful if you want to apply the effects to the source only",
 				transformMethod: "Specifies the priority order of target properties for applying transformation keyframes",
 				playingTechniques: {
 					glissando: {
@@ -630,11 +627,11 @@ export default {
 			},
 			prve: {
 				control: {
-					general: "Normal condition controls for events of different pitches and the same syllable in YTPMV or Sentence Mixing mode.\nIf other separate controls are off, they are also included in the case.",
+					general: "Normal condition controls for nonconsecutive events and consecutive events of different pitches and the same syllable in YTPMV or Sentence Mixing mode.\nIf other separate controls are off, they are also included in the case.",
 					samePitch: "Separate controls for consecutive events of the same pitch in YTPMV or Sentence Mixing mode.",
 					differentSyllables: "Separate controls for consecutive events of different syllables in Sentence Mixing mode.",
 				},
-				whirl: "Whirl = Ping-pong Effect + Horizontal Flip",
+				forceStretch: "The PV Rhythm Visual Effects you are currently using contain Time Class effects, which will cause the stretch to be forcibly set to “$t(stream.stretch.flexingAndExtending)” when in these effects, and not controlled by your settings",
 			},
 			pixelScaling: {
 				_: "Pixel Scaling feature can enlarge the pixel image of the source to avoid the pixel distortion problem caused by rescaling the original pixel image using smooth gradient algorithm due to VEGAS Pan/Crop. To use it, you can add FFmpeg to the system environment variable, or you can install Datamosh Extension Pack directly.\nPixel Scaling feature will use FFmpeg to enlarge the source file using the nearest neighbor interpolation algorithm to fit the current project size, and then replace the source media file in VEGAS with the newly generated media file. The newly generated file will be identified by adding the suffix “_Scaled” to its name. This feature theoretically supports any image/video file format, including image sequence files imported into VEGAS using conventional methods.",

@@ -45,8 +45,12 @@ const getProxy = (target: object) =>
 			const getWithArgsProxy = (...parents: string[]) => {
 				const keys = [rootName, ...parents];
 				const info = getDeclarationInfo(...keys);
-				if (info.missing)
+				if (info.missing) {
+					if (keys.at(-1) === "name")
+						return translate(keys.toPopped());
 					return getMissingKey(info.key);
+					// eslint-disable-next-line @stylistic/brace-style
+				}
 				// else if (!info.includesInterpolation && !info.isCategory)
 				// 	return translate(keys);
 				else return new Proxy(getWithArgsFunction(...keys), {

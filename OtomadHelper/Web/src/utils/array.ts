@@ -30,7 +30,7 @@
 		this.splice(index, 0, ...items);
 	};
 
-	Array.prototype.pushDistinct = function (item) {
+	Array.prototype.pushUniquely = function (item) {
 		if (!this.includes(item))
 			this.push(item);
 	};
@@ -75,7 +75,7 @@
 		return Object.fromEntries(array.map((value, index, array) => callbackFn(value, index, array)));
 	};
 
-	Array.prototype.toDeduplicated = function () {
+	Array.prototype.toUnique = function () {
 		return [...new Set(this)];
 	};
 
@@ -98,7 +98,7 @@
 		return this.at(-1);
 	};
 
-	Array.prototype.deduplicate = function () {
+	Array.prototype.unique = function () {
 		return this.relist(new Set(this));
 	};
 
@@ -113,6 +113,22 @@
 	Array.prototype.swap = function (index1, index2) {
 		[this[index1], this[index2]] = [this[index2], this[index1]];
 		return this;
+	};
+
+	Array.prototype.intersection = function (other) {
+		return [...new Set(this).intersection(new Set(other))];
+	};
+
+	Array.prototype.toPopped = function () {
+		const copy = this.slice();
+		copy.pop();
+		return copy;
+	};
+
+	Array.prototype.toShifted = function () {
+		const copy = this.slice();
+		copy.shift();
+		return copy;
 	};
 
 	makePrototypeKeysNonEnumerable(Array);

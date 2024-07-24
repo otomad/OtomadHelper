@@ -55,7 +55,7 @@ export default {
 				selectGeneratedAudioClips: "生成されたすべてのオーディオクリップを選択",
 				selectGeneratedVideoClips: "生成されたすべてのビデオクリップを選択",
 			},
-			randomOffsetForTracks: "異なるトラックにランダムなオフセットを使用",
+			randomInPoint: {},
 		},
 		on: "オン",
 		off: "オフ",
@@ -92,13 +92,9 @@ export default {
 			effects: "効果",
 		},
 		units: {},
+		fileFormats: {},
 		score: {
 			midi: "MIDI",
-			midiFile: "MIDIシーケンスファイル",
-			st: "シーケンステキスト",
-			stFile: "サポートされているすべてのシーケンステキスト ファイル",
-			ustFile: "UTAU/OpenUTAUシーケンス テキスト ファイル",
-			vsqFile: "Vocaloidシーケンス ファイル",
 			refOtherTracks: "他の曲を参照",
 			tts: "テキストから発話する",
 			pureNotes: "純粋なノート",
@@ -184,7 +180,6 @@ export default {
 				alternativeForExceedsTheRange: {
 					_: "範囲を超えた場合",
 					multiple: "複数のオーディオエフェクトプラグインを使用",
-					plugin: "オーディオエフェクトプラグインに切り替える",
 					octave: "高オクターブまたは低オクターブです",
 					dock: "端にドックする",
 					silent: "サイレントモード",
@@ -291,6 +286,7 @@ export default {
 				blur: "ぼかしクラス",
 				wipe: "クラスの消去",
 			},
+			effects: {},
 		},
 		pixelScaling: {
 			scaleFactor: "拡大率",
@@ -339,7 +335,6 @@ export default {
 		descriptions: {
 			condition: "次の設定をいつ適用するかを指定します",
 			source: {
-				trim: "指定したソースの開始時刻または終了時刻を調整します。",
 				startTime: "プロジェクトから生成を開始するタイミングを指定します",
 				preferredTrack: {
 					_: "生成する既存のトラックを指定できます(マルチトラックを除く)",
@@ -347,7 +342,6 @@ export default {
 						versionRequest: "注意: この機能はVEGAS Pro 19以上が必要です。現在のバージョンは {{version}}です。",
 					},
 				},
-				randomOffsetForTracks: "オンにすると、ランダムに選択されたソースクリップが異なるベースピッチを持つ場合があります。 娯楽用の面白い動画の作成にのみ役立ちますし、高度な動画の作成にはほとんど使えませんでした",
 			},
 			score: {
 				trim: "スコアの生成時間範囲をインターセプトします",
@@ -356,18 +350,17 @@ export default {
 				encoding: "ファイルの読み込み時に使用するテキストエンコーディングを指定します",
 			},
 			stream: {
-				stretch: "オンの場合、クリップの長さを変更せずにストレッチします",
 				loop: "クリップがソースメディアの最後まで長くなると再生が開始されます",
 				normalize: "オーディオを標準化し、静かなオーディオに便利です",
 				staticVisual: "クリップの先頭にあるフレームをフリーズします。",
-				noLengthening: "ノートより長い場合はクリップを処理します。",
 				legato: "ノート間のギャップを埋めます",
 				multitrackForChords: "コード用に複数のトラックを作成",
 				createGroups: "ビデオクリップとオーディオクリップのグループを1つのノートで表します。",
 				autoPan: "エンベロープオートメーションを使用してオーディオをパンする",
-				transformMethod: "変換されたキーフレームのターゲットプロパティを指定します",
 				playingTechniques: {
 					glissando: {},
+					appoggiatura: {},
+					arpeggio: {},
 				},
 				tuning: {
 					tuningMethod: {},

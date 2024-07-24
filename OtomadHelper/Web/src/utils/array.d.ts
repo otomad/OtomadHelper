@@ -29,7 +29,7 @@ declare interface Array<T> {
 	 * Append the item to the end of the array only if it is not included.
 	 * @param item - Item.
 	 */
-	pushDistinct(item: T): void;
+	pushUniquely(item: T): void;
 
 	/**
 	 * Empty the array.
@@ -67,7 +67,7 @@ declare interface Array<T> {
 	 * Array deduplication. This will return a new array.
 	 * @returns Note that a new array will be returned.
 	 */
-	toDeduplicated(): T[];
+	toUnique(): T[];
 
 	/**
 	 * Returns a new array that will exclude any falsy values, such as undefined, null, false, "", ±0, ±0n。
@@ -91,7 +91,7 @@ declare interface Array<T> {
 	/**
 	 * Array deduplication. This will modify the original array.
 	 */
-	deduplicate(): void;
+	unique(): void;
 
 	/**
 	 * Remove undefined, null, NaN, and strings containing only white space characters from the array. This will return a new array.
@@ -109,6 +109,22 @@ declare interface Array<T> {
 	 * @param index2 - The index of the second item.
 	 */
 	swap(index1: number, index2: number): T[];
+
+	/**
+	 * Get elements in both this and the other.
+	 * @param other - Another collection to compare.
+	 */
+	intersection(other: Iterable<T>): T[];
+
+	/**
+	 * Removes the last element from the copy of the array, and return the copy of the array.
+	 */
+	toPopped(): T[];
+
+	/**
+	 * Removes the first element from the copy of the array, and return the copy of the array.
+	 */
+	toShifted(): T[];
 }
 
 declare interface Set<T> {

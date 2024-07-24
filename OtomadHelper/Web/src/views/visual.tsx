@@ -7,7 +7,7 @@ import noLengtheningImage from "assets/images/tutorials/visual/no_lengthening.pn
 import staticVisualImage from "assets/images/tutorials/visual/static.png";
 import stretchImage from "assets/images/tutorials/visual/stretch.png";
 import exampleThumbnail from "assets/images/ヨハネの氷.png";
-import { usePrveCheckInfo } from "./visual/prve";
+import { useIsForceStretch, usePrveCheckInfo } from "./visual/prve";
 
 export /* @internal */ const stretches = [
 	{ id: "noStretching", icon: "prohibited" },
@@ -49,6 +49,7 @@ export default function Visual() {
 	const { enabled: enablePixelScaling } = selectConfig(c => c.visual.pixelScaling);
 	const { createGroups } = selectConfig(c => c);
 	const prveCheckInfo = usePrveCheckInfo();
+	const isForceStretch = useIsForceStretch();
 
 	const { pushPage } = useSnapshot(pageStore);
 
@@ -70,6 +71,8 @@ export default function Visual() {
 						<ExpanderRadio
 							title={t.stream.stretch}
 							details={t.descriptions.stream.stretch}
+							selectInfo={isForceStretch && t.descriptions.prve.forceStretch}
+							selectValid={false}
 							icon="stretch"
 							items={stretches}
 							value={stretch as StateProperty<string>}
@@ -132,8 +135,7 @@ export default function Visual() {
 						idField
 						nameField={t.stream.transformMethod}
 					/>
-					{/* // TODO: Change the integration method of TransformOFX into parameters, add an independent subheader and an info bar to tell user to download it.
-					*/}
+					{/* TODO: Change the integration method of TransformOFX into parameters, add an independent subheader and an info bar to tell user to download it. */}
 
 					<Subheader>{t.stream.playingTechniques}</Subheader>
 					<Expander
@@ -158,7 +160,7 @@ export default function Visual() {
 						icon="arpeggio"
 						actions={<ToggleSwitch on={arpeggio} />}
 					>
-						<ToggleSwitch on={arpeggioNegative} details={t.descriptions.stream.playingTechniques.arpeggio.negative}>Negative</ToggleSwitch>{/* TODO: i18n */}
+						<ToggleSwitch on={arpeggioNegative} details={t.descriptions.stream.playingTechniques.arpeggio.negative}>{t.prve.effects.negative}</ToggleSwitch>
 						<Expander.Item title={t.stream.playingTechniques.applyCustomPreset}>
 							<Button>{t.unselected}</Button>
 						</Expander.Item>

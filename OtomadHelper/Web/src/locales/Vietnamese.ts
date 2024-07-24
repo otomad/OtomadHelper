@@ -42,7 +42,7 @@ export default {
 			},
 			preferredTrack: {},
 			afterCompletion: {},
-			randomOffsetForTracks: "Sử dụng độ lệnh ngẫu nhiên cho các track khác nhau",
+			randomInPoint: {},
 		},
 		on: "Bật",
 		off: "Tắt",
@@ -76,13 +76,9 @@ export default {
 			effects: "Hiệu ứng",
 		},
 		units: {},
+		fileFormats: {},
 		score: {
 			midi: "MIDI",
-			midiFile: "File trình tự MIDI",
-			st: "Văn bản trình tự",
-			stFile: "Tất cả các file trình tự văn bản được hỗ trợ",
-			ustFile: "File trình tự văn bản UTAU/OpenUTAU",
-			vsqFile: "File trình tự Vocaloid",
 			bpm: {},
 			constraint: {},
 			pan: {},
@@ -130,6 +126,7 @@ export default {
 		prve: {
 			control: {},
 			classes: {},
+			effects: {},
 		},
 		pixelScaling: {},
 		settings: {
@@ -159,6 +156,8 @@ export default {
 			stream: {
 				playingTechniques: {
 					glissando: {},
+					appoggiatura: {},
+					arpeggio: {},
 				},
 				tuning: {
 					tuningMethod: {},

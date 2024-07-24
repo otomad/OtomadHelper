@@ -4,6 +4,10 @@ const controlModes = ["general", "samePitch", "differentSyllables"] as const;
 const getControlModeIcon = (mode: string) => `prve_control_${new VariableName(mode).snake}`;
 const DEFAULT_EFFECT = "normal";
 const STEP_CHANGE_HUE = "stepChangeHue";
+const whirlInfo = (() => {
+	const fx = t.prve.effects;
+	return `${fx.whirl} = ${fx.pingpong} + ${fx.hFlip}`;
+})();
 
 /** With step. */
 const $s = (step: number, ...effectIds: string[]) => effectIds.map(effect => ({ effect, step }));
@@ -23,6 +27,7 @@ const prves = [
 	{ class: "wipe", icon: "placeholder", effects: $s(1, "wipeRight", "splitVOut") },
 ];
 const getEffectIds = (effects?: typeof prves[number]["effects"]) => effects?.map(effect => effect.effect) ?? [];
+const findPrveClassEffects = (klass: string) => getEffectIds(prves.find(prve => prve.class === klass)?.effects);
 
 export default function Prve() {
 	const [controlMode, setControlMode] = useState<typeof controlModes[number]>("general");
@@ -30,13 +35,14 @@ export default function Prve() {
 	const { control, isMultiple, effects } = selectConfig(c => c.visual.prve[controlMode]);
 	const selectionMode = useSelectionMode(isMultiple);
 	const selectPrve = (klass: string) => {
-		const classEffects = getEffectIds(prves.find(prve => prve.class === klass)?.effects);
-		const flipEffects = getEffectIds(prves.find(prve => prve.class === "flip")!.effects);
+		const classEffects = findPrveClassEffects(klass);
+		const flipEffects = findPrveClassEffects("flip");
 		return useStateSelector(
 			effects,
 			effects => {
 				// if (!isMultiple) effects = effects.slice(0, 1);
-				const effect = effects.find(effect => classEffects.includes(effect));
+				// const effect = effects.find(effect => classEffects.includes(effect));
+				const effect = effects.intersection(classEffects)[0];
 				return effect ?? DEFAULT_EFFECT;
 			},
 			(effect, _effects) => {
@@ -90,7 +96,7 @@ export default function Prve() {
 					checkInfoCondition={effect => effect === DEFAULT_EFFECT ? "" : effect}
 					alwaysShowCheckInfo
 				>
-					{klass === "time" ? <InfoBar status="info" title={t.descriptions.prve.whirl} /> : undefined}
+					{klass === "time" ? <InfoBar status="info" title={whirlInfo} /> : undefined}
 				</ExpanderRadio>
 			))}
 		</div>
@@ -112,10 +118,10 @@ function getEffectName(effectId: string) {
 }
 
 export function usePrveCheckInfo() {
-	let { effects: [effects] } = selectConfig(c => c.visual.prve.general);
+	let { effects } = useSnapshot(configStore.visual.prve.general);
 	effects = effects.slice();
-	const { samePitch, differentSyllables } = selectConfig(c => c.visual.prve);
-	const enableOtherSeparateControls = samePitch[0].control || differentSyllables[0].control;
+	const { samePitch, differentSyllables } = useSnapshot(configStore.visual.prve);
+	const enableOtherSeparateControls = samePitch.control || differentSyllables.control;
 	if (effects.includes("hFlip") && effects.includes("pingpong")) {
 		const index = Math.min(effects.indexOf("hFlip"), effects.indexOf("pingpong"));
 		effects[index] = "whirl";
@@ -125,4 +131,11 @@ export function usePrveCheckInfo() {
 	const effect = getEffectName(effectId);
 	if (effects.length > 1 || enableOtherSeparateControls) return t.etc({ examples: effect });
 	else return effect;
+}
+
+export function useIsForceStretch() {
+	const timeEffects = findPrveClassEffects("time");
+	const prve = useSnapshot(configStore.visual.prve);
+	const effects = Object.values(prve).flatMap(control => control.effects);
+	return !!effects.intersection(timeEffects).length;
 }
