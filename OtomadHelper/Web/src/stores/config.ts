@@ -91,8 +91,8 @@ export const configStore = createStore({
 		glissando: false,
 		glissandoAmount: 12,
 		appoggiatura: false,
-		arpeggios: false,
-		arpeggiosNegative: true,
+		arpeggio: false,
+		arpeggioNegative: true,
 		enableStaffVisualizer: false,
 		prve: {
 			general: {

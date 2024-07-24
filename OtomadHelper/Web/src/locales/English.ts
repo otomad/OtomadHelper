@@ -192,8 +192,8 @@ export default {
 				appoggiatura: {
 					_: "Appoggiatura",
 				},
-				arpeggios: {
-					_: "Arpeggios",
+				arpeggio: {
+					_: "Arpeggio",
 				},
 			},
 			tuning: {

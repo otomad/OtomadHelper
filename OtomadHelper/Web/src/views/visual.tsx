@@ -43,7 +43,7 @@ export default function Visual() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
 		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, transformMethod, currentPreset, noTimeRemapping,
-		glissando, glissandoAmount, appoggiatura, arpeggios, arpeggiosNegative,
+		glissando, glissandoAmount, appoggiatura, arpeggio, arpeggioNegative,
 	} = selectConfig(c => c.visual);
 	const activeParameterScheme = selectConfigArray(c => c.visual.activeParameterScheme);
 	const { enabled: enablePixelScaling } = selectConfig(c => c.visual.pixelScaling);
@@ -152,11 +152,11 @@ export default function Visual() {
 						actions={<ToggleSwitch on={appoggiatura} />}
 					/>
 					<Expander
-						title={t.stream.playingTechniques.arpeggios}
-						icon="arpeggios"
-						actions={<ToggleSwitch on={arpeggios} />}
+						title={t.stream.playingTechniques.arpeggio}
+						icon="arpeggio"
+						actions={<ToggleSwitch on={arpeggio} />}
 					>
-						<ToggleSwitch on={arpeggiosNegative}>Negative</ToggleSwitch>{/* TODO: i18n */}
+						<ToggleSwitch on={arpeggioNegative}>Negative</ToggleSwitch>{/* TODO: i18n */}
 					</Expander>
 
 					<Subheader>{t.subheaders.effects}</Subheader>
