@@ -88,16 +88,15 @@ internal class DropTarget : IOleDropTarget {
 	int IOleDropTarget.OleDragEnter(object pDataObj, int grfKeyState, long pt, ref int pdwEffect) {
 		POINTL pointl = new() {
 			x = GetX(pt),
-			y = GetY(pt)
+			y = GetY(pt),
 		};
 		DragEventArgs? e = CreateDragEventArgs(pDataObj, grfKeyState, pointl, pdwEffect);
 		if (e is not null) {
 			owner.OnDragEnter(e);
 			pdwEffect = (int)e.Effect;
 			lastEffect = e.Effect;
-		} else {
+		} else
 			pdwEffect = 0;
-		}
 		return 0;
 	}
 
@@ -109,7 +108,7 @@ internal class DropTarget : IOleDropTarget {
 	int IOleDropTarget.OleDragOver(int grfKeyState, long pt, ref int pdwEffect) {
 		POINTL pointl = new() {
 			x = GetX(pt),
-			y = GetY(pt)
+			y = GetY(pt),
 		};
 		DragEventArgs e = CreateDragEventArgs(null, grfKeyState, pointl, pdwEffect)!;
 		owner.OnDragOver(e);
@@ -121,15 +120,14 @@ internal class DropTarget : IOleDropTarget {
 	int IOleDropTarget.OleDrop(object pDataObj, int grfKeyState, long pt, ref int pdwEffect) {
 		POINTL pointl = new() {
 			x = GetX(pt),
-			y = GetY(pt)
+			y = GetY(pt),
 		};
 		DragEventArgs? e = CreateDragEventArgs(pDataObj, grfKeyState, pointl, pdwEffect);
 		if (e is not null) {
 			owner.OnDragDrop(e);
 			pdwEffect = (int)e.Effect;
-		} else {
+		} else
 			pdwEffect = 0;
-		}
 		lastEffect = DragDropEffects.None;
 		lastDataObject = null;
 		return 0;

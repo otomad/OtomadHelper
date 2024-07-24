@@ -148,15 +148,20 @@ export default function Visual() {
 					</Expander>
 					<Expander
 						title={t.stream.playingTechniques.appoggiatura}
+						details={t.descriptions.stream.playingTechniques.appoggiatura}
 						icon="appoggiatura"
 						actions={<ToggleSwitch on={appoggiatura} />}
 					/>
 					<Expander
 						title={t.stream.playingTechniques.arpeggio}
+						details={t.descriptions.stream.playingTechniques.arpeggio}
 						icon="arpeggio"
 						actions={<ToggleSwitch on={arpeggio} />}
 					>
-						<ToggleSwitch on={arpeggioNegative}>Negative</ToggleSwitch>{/* TODO: i18n */}
+						<ToggleSwitch on={arpeggioNegative} details={t.descriptions.stream.playingTechniques.arpeggio.negative}>Negative</ToggleSwitch>{/* TODO: i18n */}
+						<Expander.Item title={t.stream.playingTechniques.applyCustomPreset}>
+							<Button>{t.unselected}</Button>
+						</Expander.Item>
 					</Expander>
 
 					<Subheader>{t.subheaders.effects}</Subheader>
@@ -171,12 +176,10 @@ export default function Visual() {
 					</SettingsCard>
 
 					<Subheader>{t.stream.mapping}</Subheader>
-					<SettingsCard
-						title={t.stream.mapping}
-						details={t.descriptions.stream.mapping}
-						icon="mapping"
-						type="button"
-					/>
+					<Expander title={t.stream.mapping.velocity} icon="signal" />
+					<Expander title={t.stream.mapping.pitch} icon="music_note" />
+					<Expander title={t.stream.mapping.duration} icon="timer" />
+					<Expander title={t.stream.mapping.progress} icon="progress_bar" />
 
 					<Subheader>{t.subheaders.parameters}</Subheader>
 					<ExpanderRadio

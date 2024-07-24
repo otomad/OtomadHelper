@@ -6,7 +6,7 @@ export /* @internal */ const startTimes = [
 
 export default function Source() {
 	const {
-		source, randomOffsetForTracks, trimStart, trimEnd, startTime, customStartTime,
+		source, randomInPointForTracks, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
 	} = selectConfig(c => c.source);
 	const { removeSourceClips, selectSourceClips, selectGeneratedAudioClips, selectGeneratedVideoClips } = selectConfig(c => c.source.afterCompletion);
@@ -71,7 +71,10 @@ export default function Source() {
 				<ToggleSwitch on={selectGeneratedAudioClips}>{t.source.afterCompletion.selectGeneratedAudioClips}</ToggleSwitch>
 				<ToggleSwitch on={selectGeneratedVideoClips}>{t.source.afterCompletion.selectGeneratedVideoClips}</ToggleSwitch>
 			</Expander>
-			<SettingsCardToggleSwitch title={t.source.randomOffsetForTracks} details={t.descriptions.source.randomOffsetForTracks} icon="dice" on={randomOffsetForTracks} />
+			<Expander title={t.source.randomInPoint} details={t.descriptions.source.randomInPoint} icon="dice">
+				<ToggleSwitch on={randomInPointForTracks}>{t.source.randomInPoint.tracks}</ToggleSwitch>
+			</Expander>
+
 			<DragToImport>{t.titles.source}</DragToImport>
 		</div>
 	);

@@ -1,24 +1,28 @@
 import exampleThumbnail from "assets/images/ヨハネの氷.png";
 
-const prves = [
-	{ class: "flip", icon: "placeholder", effects: ["hFlip", "vFlip", "ccwFlip", "cwFlip"] },
-	{ class: "rotation", icon: "placeholder", effects: ["ccwRotate", "cwRotate", "turned"] },
-	{ class: "scale", icon: "placeholder", effects: ["zoomOutIn"] },
-	{ class: "mirror", icon: "placeholder", effects: ["hMirror", "vMirror", "ccwMirror", "cwMirror"] },
-	{ class: "invert", icon: "placeholder", effects: ["negative", "luminInvert"] },
-	{ class: "hue", icon: "placeholder", effects: ["hueInvert", ...forMapFromTo(3, 8, i => "stepChangeHue" + i)] },
-	{ class: "chromatic", icon: "placeholder", effects: ["chromatic"] },
-	{ class: "time", icon: "placeholder", effects: ["pingpong", "whirl"] },
-	{ class: "time2", icon: "placeholder", effects: ["sharpRewind", "wobblePeriod"] },
-	{ class: "ec", icon: "placeholder", effects: ["vExpansion", "vExpansionBounce", "vCompression", "vCompressionBounce", "vBounce", "slantDown", "slantUp", "puyo"] },
-	{ class: "swing", icon: "placeholder", effects: ["pendulum"] },
-	{ class: "blur", icon: "placeholder", effects: ["gaussianBlur", "radialBlur"] },
-	{ class: "wipe", icon: "placeholder", effects: ["wipeRight", "splitVOut"] },
-];
-
 const controlModes = ["general", "samePitch", "differentSyllables"] as const;
 const getControlModeIcon = (mode: string) => `prve_control_${new VariableName(mode).snake}`;
-const defaultEffect = "normal";
+const DEFAULT_EFFECT = "normal";
+const STEP_CHANGE_HUE = "stepChangeHue";
+
+/** With step. */
+const $s = (step: number, ...effectIds: string[]) => effectIds.map(effect => ({ effect, step }));
+const prves = [
+	{ class: "flip", icon: "placeholder", effects: [...$s(2, "hFlip", "vFlip"), ...$s(4, "ccwFlip", "cwFlip")] },
+	{ class: "rotation", icon: "placeholder", effects: [...$s(4, "ccwRotate", "cwRotate"), ...$s(2, "turned")] },
+	{ class: "scale", icon: "placeholder", effects: $s(1, "zoomOutIn") },
+	{ class: "mirror", icon: "placeholder", effects: [...$s(2, "hMirror", "vMirror"), ...$s(4, "ccwMirror", "cwMirror")] },
+	{ class: "invert", icon: "placeholder", effects: [...$s(2, "negative", "luminInvert", "negativeBlur", "negativeThreshold")] },
+	{ class: "hue", icon: "placeholder", effects: [...$s(2, "hueInvert"), ...forMapFromTo(3, 8, step => ({ effect: STEP_CHANGE_HUE + step, step }))] },
+	{ class: "chromatic", icon: "placeholder", effects: $s(2, "chromatic", "chromaticBlur") },
+	{ class: "time", icon: "placeholder", effects: $s(2, "pingpong", "whirl") },
+	{ class: "time2", icon: "placeholder", effects: $s(1, "sharpRewind", "wobblePeriod") },
+	{ class: "ec", icon: "placeholder", effects: [...$s(1, "vExpansion", "vExpansionBounce", "vCompression", "vCompressionBounce", "vBounce"), ...$s(2, "slantDown", "slantUp", "puyo")] },
+	{ class: "swing", icon: "placeholder", effects: $s(2, "pendulum") },
+	{ class: "blur", icon: "placeholder", effects: $s(1, "gaussianBlur", "radialBlur") },
+	{ class: "wipe", icon: "placeholder", effects: $s(1, "wipeRight", "splitVOut") },
+];
+const getEffectIds = (effects?: typeof prves[number]["effects"]) => effects?.map(effect => effect.effect) ?? [];
 
 export default function Prve() {
 	const [controlMode, setControlMode] = useState<typeof controlModes[number]>("general");
@@ -26,25 +30,25 @@ export default function Prve() {
 	const { control, isMultiple, effects } = selectConfig(c => c.visual.prve[controlMode]);
 	const selectionMode = useSelectionMode(isMultiple);
 	const selectPrve = (klass: string) => {
-		const classEffects = prves.find(prve => prve.class === klass)?.effects ?? [];
-		const flipEffects = prves.find(prve => prve.class === "flip")!.effects;
+		const classEffects = getEffectIds(prves.find(prve => prve.class === klass)?.effects);
+		const flipEffects = getEffectIds(prves.find(prve => prve.class === "flip")!.effects);
 		return useStateSelector(
 			effects,
 			effects => {
 				// if (!isMultiple) effects = effects.slice(0, 1);
 				const effect = effects.find(effect => classEffects.includes(effect));
-				return effect ?? defaultEffect;
+				return effect ?? DEFAULT_EFFECT;
 			},
 			(effect, _effects) => {
 				const isWhirl = effect === "whirl";
-				const selectEffects = isWhirl ? ["hFlip", "pingpong"] : effect === defaultEffect && isMultiple ? [] : [effect];
+				const selectEffects = isWhirl ? ["hFlip", "pingpong"] : effect === DEFAULT_EFFECT && isMultiple ? [] : [effect];
 				if (!isMultiple[0]) return selectEffects;
 				const effects = new Set(_effects);
-				effects.delete(defaultEffect);
+				effects.delete(DEFAULT_EFFECT);
 				effects.deletes(...classEffects);
 				if (isWhirl) effects.deletes(...flipEffects);
 				effects.adds(...selectEffects);
-				if (effects.size === 0) effects.add(defaultEffect);
+				if (effects.size === 0) effects.add(DEFAULT_EFFECT);
 				return [...effects];
 			},
 		);
@@ -66,24 +70,24 @@ export default function Prve() {
 				on={isGeneralCurrent ? [true] : control}
 				disabled={isGeneralCurrent}
 				icon={getControlModeIcon(controlMode)}
-				title={t.prve.control({ mode: t.prve.control[controlMode] })}
+				title={t({ context: "full" }).prve.control[controlMode]}
 				details={t.descriptions.prve.control[controlMode]}
 			/>
 			<Subheader>{t.prve.classes}</Subheader>
 
 			{prves.map(({ class: klass, icon, effects }) => (
-				<ExpanderRadio
+				<ExpanderRadio<string>
 					key={klass}
 					title={t.prve.classes[klass]}
 					disabled={!control[0]}
 					icon={icon}
-					items={[defaultEffect, ...effects]}
+					items={[DEFAULT_EFFECT, ...getEffectIds(effects)]}
 					value={selectPrve(klass)}
 					view="grid"
 					idField
-					nameField
-					imageField={name => <PreviewPrve key={name} thumbnail={exampleThumbnail} name={name} />}
-					checkInfoCondition={effect => effect === defaultEffect ? "" : effect}
+					nameField={getEffectName}
+					imageField={id => <PreviewPrve key={id} thumbnail={exampleThumbnail} id={id} />}
+					checkInfoCondition={effect => effect === DEFAULT_EFFECT ? "" : effect}
 					alwaysShowCheckInfo
 				>
 					{klass === "time" ? <InfoBar status="info" title={t.descriptions.prve.whirl} /> : undefined}
@@ -91,6 +95,20 @@ export default function Prve() {
 			))}
 		</div>
 	);
+}
+
+export function getStepChangeHueStep(effectId: string) {
+	if (effectId?.startsWith(STEP_CHANGE_HUE))
+		return +effectId.match(/\d+$/)![0];
+	return null;
+}
+
+function getEffectName(effectId: string) {
+	const { effects } = t.prve;
+	const stepChangeHueStep = getStepChangeHueStep(effectId);
+	if (stepChangeHueStep !== null)
+		return effects[STEP_CHANGE_HUE]({ count: stepChangeHueStep });
+	return effects[effectId];
 }
 
 export function usePrveCheckInfo() {
@@ -103,7 +121,8 @@ export function usePrveCheckInfo() {
 		effects[index] = "whirl";
 		effects.removeAllItem("hFlip", "pingpong");
 	}
-	const effect = effects[0] ?? defaultEffect;
+	const effectId = effects[0] ?? DEFAULT_EFFECT;
+	const effect = getEffectName(effectId);
 	if (effects.length > 1 || enableOtherSeparateControls) return t.etc({ examples: effect });
 	else return effect;
 }

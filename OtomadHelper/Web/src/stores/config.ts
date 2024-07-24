@@ -31,7 +31,7 @@ export const configStore = createStore({
 			selectGeneratedAudioClips: true,
 			selectGeneratedVideoClips: true,
 		},
-		randomOffsetForTracks: false,
+		randomInPointForTracks: false,
 	},
 	score: {
 		format: "midi",

@@ -30,7 +30,6 @@ export default {
 			parameters: "参数",
 			track: "轨道",
 			mosh: "抹失",
-			customEffect: "自定义效果",
 		},
 		source: {
 			trackEvent: "轨道剪辑",
@@ -161,7 +160,7 @@ export default {
 				trimEndFrames: "截断尾帧",
 				splitThenFreeze: "分割后冻结",
 				freezeToGray: "冻结至黑白",
-				freezeToEffect: "冻结至效果",
+				freezeToPreset: "冻结至预设",
 			},
 			legato: {
 				_: "填补间隙",
@@ -172,16 +171,27 @@ export default {
 			},
 			multitrackForChords: "复音多轨",
 			createGroups: "创建分组",
-			glissando: {
-				_: "弯音效果",
-				amount: "弯音大小",
-			},
 			autoPan: "自动声像",
 			noTimeRemapping: "时间不重映射",
 			transformMethod: {
 				_: "变换方法",
 				panCrop: "平移/裁切",
+				pictureInPicture: "画中画",
 				transformOfx: "变换效果插件",
+			},
+			playingTechniques: {
+				_: "演奏技法",
+				applyPreset: "应用预设",
+				glissando: {
+					_: "滑音",
+					swirlAmount: "漩涡大小",
+				},
+				appoggiatura: {
+					_: "倚音",
+				},
+				arpeggio: {
+					_: "琶音",
+				},
 			},
 			tuning: {
 				_: "调音",
@@ -231,6 +241,7 @@ export default {
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "从另一套参数方案复制至此",
+				copyAttributesFromSelectedClip: "复制所选剪辑的属性",
 			},
 		},
 		track: {
@@ -278,7 +289,7 @@ export default {
 		shupelunker: {
 			affix: {
 				_: "匹配音高词缀位置",
-				prefix: "前綴",
+				prefix: "前缀",
 				suffix: "后缀",
 			},
 			unallocated: {
@@ -429,13 +440,14 @@ export default {
 				noLengtheningAndLegatoConflictInAudio: "禁止延长和填补间隙在音频里互相冲突，不能同时开启！",
 				multitrackForChords: "为和弦创建多条轨道",
 				createGroups: "将一个音符所表示的视频与音频剪辑创建分组",
-				glissando: {
-					_: "在弯音或滑音时产生漩涡效果",
-					amount: "指定漩涡扭动幅度的大小",
-				},
 				autoPan: "自动化控制音频的声像包络",
 				noTimeRemapping: "开启后，音符开时将不会重置剪辑的起始时间，而是继续播放，适用于如仅对素材应用效果",
 				transformMethod: "指定在哪个目标属性上应用变换关键帧",
+				playingTechniques: {
+					glissando: {
+						swirlAmount: "指定漩涡扭动幅度的大小",
+					},
+				},
 				tuning: {
 					tuningMethod: {
 						noTuning: "无变调效果",
@@ -458,7 +470,6 @@ export default {
 					prve: "让你的画面更带有节奏感",
 					staff: "以自定义图案为音符，画出与钢琴五线谱类似风格的视觉效果",
 					pixelScaling: "使用邻近硬边缘放大插值算法缩放图像",
-					customEffect: "应用自定义效果预设到所有剪辑和轨道",
 				},
 				mapping: {
 					_: "将音符的参数映射到指定项目",

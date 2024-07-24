@@ -103,7 +103,7 @@ export default function Audio() {
 					<SettingsCardToggleSwitch
 						title={t.stream.noTimeRemapping}
 						details={t.descriptions.stream.noTimeRemapping}
-						icon="timer_prohibited"
+						icon="timer_off"
 						on={noTimeRemapping}
 					/>
 					<Expander
@@ -127,7 +127,7 @@ export default function Audio() {
 						iconField="icon"
 						nameField={t.stream.tuning.tuningMethod}
 					/>
-					<Disabled disabled={tuningMethod[0] === "noTuning"}>
+					<Disabled disabled={tuningMethod[0].in("noTuning", "scaleless")}>
 						<ExpanderRadio
 							title={t.stream.tuning.stretchAttributes}
 							details={t.descriptions.stream.tuning.stretchAttributes}
@@ -180,12 +180,10 @@ export default function Audio() {
 					</Disabled>
 
 					<Subheader>{t.stream.mapping}</Subheader>
-					<SettingsCard
-						title={t.stream.mapping}
-						details={t.descriptions.stream.mapping}
-						icon="mapping"
-						type="button"
-					/>
+					<Expander title={t.stream.mapping.velocity} icon="signal" />
+					<Expander title={t.stream.mapping.pitch} icon="music_note" />
+					<Expander title={t.stream.mapping.duration} icon="timer" />
+					<Expander title={t.stream.mapping.progress} icon="progress_bar" />
 
 					<Subheader>{t.subheaders.parameters}</Subheader>
 					<ExpanderRadio

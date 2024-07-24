@@ -25,6 +25,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	 * - If it is a string, it represents the value of the specified field name of the currently selected object.
 	 * - If it is a callback function, get the required value through the callback function.
 	 * - If it is true, it means that the selected item is a string, and the name can be used directly.
+	 * - If it is an i18n item object, it will get the value of the object from the value as the key.
 	 */
 	nameField: FieldType<T> | object;
 	/** The icon field for the radio item. */

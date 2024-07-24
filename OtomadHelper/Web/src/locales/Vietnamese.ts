@@ -91,8 +91,12 @@ export default {
 			stretch: {},
 			noLengthening: {},
 			legato: {},
-			glissando: {},
 			transformMethod: {},
+			playingTechniques: {
+				glissando: {},
+				appoggiatura: {},
+				arpeggio: {},
+			},
 			tuning: {
 				tuningMethod: {},
 				stretchAttributes: {},
@@ -153,7 +157,9 @@ export default {
 			},
 			score: {},
 			stream: {
-				glissando: {},
+				playingTechniques: {
+					glissando: {},
+				},
 				tuning: {
 					tuningMethod: {},
 					prelisten: {},

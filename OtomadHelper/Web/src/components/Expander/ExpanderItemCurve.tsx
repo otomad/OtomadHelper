@@ -5,7 +5,7 @@ export /* @internal */ default function ExpanderItemCurve({ curve }: FCP<{
 	children?: never;
 }, "div">) {
 	return (
-		<Expander.Item title={t.curve} details={t.descriptions.curve}>
+		<Expander.Item title={t.curve} details={t.descriptions.curve} icon="curve">
 			<ComboBox options={curves} current={curve} />
 		</Expander.Item>
 	);

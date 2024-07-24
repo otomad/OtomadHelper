@@ -108,7 +108,7 @@ export default function Score() {
 			<Card className="media-pool">
 				<TabBar current={format}>
 					<TabBar.Item id="midi" icon="midi">{t.score.midi}</TabBar.Item>
-					<TabBar.Item id="st" icon="ust">{t.score.st}</TabBar.Item>
+					<TabBar.Item id="singthesis" icon="ust">{t.score.singthesis}</TabBar.Item>
 					<TabBar.Item id="refOtherTracks" icon="ref_other_tracks">{t.score.refOtherTracks}</TabBar.Item>
 					<TabBar.Item id="pureNotes" icon="quarter_note">{t.score.pureNotes}</TabBar.Item>
 					<TabBar.Item id="tts" icon="narrator">{t.score.tts}</TabBar.Item>

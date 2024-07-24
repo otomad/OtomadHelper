@@ -92,6 +92,7 @@ words:
   - prerenders
   - proxied
   - prve
+  - puyo
   - pv
   - quarternary
   - resw
@@ -100,6 +101,7 @@ words:
   - rtl
   - segoe
   - shupelunker
+  - singthesis
   - solfeggios
   - spherize
   - styl
@@ -131,6 +133,7 @@ words:
   - vsq
   - vtt
   - webgl
+  - winform
   - wj
   - wpf
   - xmlbuilder
@@ -173,3 +176,4 @@ flagWords:
   - comflict -> conflict
   - typoef -> typeof
   - grey -> gray
+  - oe -> or

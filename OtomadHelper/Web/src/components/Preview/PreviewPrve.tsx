@@ -2,14 +2,15 @@
 import prvePingpongImage from "assets/images/effects/prve_pingpong.gif";
 import prveWhirlImage from "assets/images/effects/prve_whirl.gif";
 import { freezeframes } from "helpers/freezeframe";
+import { getStepChangeHueStep } from "views/visual/prve";
 const prvePingpongStaticImage = freezeframes["effects/prve_pingpong.gif"];
 const prveWhirlStaticImage = freezeframes["effects/prve_whirl.gif"];
 
 export /* @internal */ const getDuration = (frames: number) => frames * 375 + "ms";
 
 const StyledPreviewPrve = styled.div<{
-	/** Effect name. */
-	$name: string;
+	/** Effect identifier. */
+	$id: string;
 }>`
 	${styles.mixins.square("100%")};
 	container: preview-prve / size;
@@ -28,21 +29,20 @@ const StyledPreviewPrve = styled.div<{
 		animation: none;
 	}
 
-	${({ $name }) => {
-		if ($name?.startsWith("stepChangeHue")) {
-			const step = +$name.match(/\d+$/)![0];
+	${({ $id }) => {
+		const stepChangeHueStep = getStepChangeHueStep($id);
+		if (stepChangeHueStep !== null)
 			return css`
 				img {
-					filter: hue-rotate(${360 / step}deg);
+					filter: hue-rotate(${360 / stepChangeHueStep}deg);
 					animation: ${keyframes`
-						${forMapFromTo(1, step, i => {
-							const offset = 100 / step * (i - 1);
-							return `${!offset ? "0%, 100%" : offset + "%"} { filter: hue-rotate(${360 / step * i}deg); }`;
+						${forMapFromTo(1, stepChangeHueStep, i => {
+							const offset = 100 / stepChangeHueStep * (i - 1);
+							return `${!offset ? "0%, 100%" : offset + "%"} { filter: hue-rotate(${360 / stepChangeHueStep * i}deg); }`;
 						})}
-					`} ${getDuration(step)} step-start infinite;
+					`} ${getDuration(stepChangeHueStep)} step-start infinite;
 				}
 			`;
-		}
 		return {
 			hFlip: css`
 				img {
@@ -222,6 +222,25 @@ const StyledPreviewPrve = styled.div<{
 					`} ${getDuration(2)} step-start infinite;
 				}
 			`,
+			negativeBlur: css`
+				img:nth-child(1) {
+					opacity: 0;
+					animation: ${keyframes`
+						0% { opacity: 0; animation-timing-function: ${eases.easeInMax}; }
+						50% { opacity: 1; animation-timing-function: ${eases.easeOutMax}; }
+						100% { opacity: 1; }
+					`} ${getDuration(1)} infinite alternate;
+				}
+				img:nth-child(2) {
+					filter: invert(1);
+					mix-blend-mode: difference;
+					animation: ${keyframes`
+						0% { opacity: 1; animation-timing-function: ${eases.easeInMax}; }
+						50% { opacity: 1; animation-timing-function: ${eases.easeOutMax}; }
+						100% { opacity: 0; }
+					`} ${getDuration(1)} infinite alternate;
+				}
+			`,
 			hueInvert: css`
 				img {
 					filter: hue-rotate(180deg);
@@ -238,6 +257,15 @@ const StyledPreviewPrve = styled.div<{
 						0%, 100% { filter: grayscale(1); }
 						50% { filter: none; }
 					`} ${getDuration(2)} step-start infinite;
+				}
+			`,
+			chromaticBlur: css`
+				img {
+					filter: grayscale(1);
+					animation: ${keyframes`
+						0%, 100% { filter: grayscale(1); }
+						50% { filter: none; }
+					`} ${getDuration(2)} ${eases.easeOutMax} infinite;
 				}
 			`,
 			vExpansion: css`
@@ -365,15 +393,15 @@ const StyledPreviewPrve = styled.div<{
 					`} ${getDuration(1)} ${eases.easeOutMax} infinite;
 				}
 			`,
-		}[$name];
+		}[$id];
 	}}
 `;
 
-export default function PreviewPrve({ thumbnail, name }: FCP<{
+export default function PreviewPrve({ thumbnail, id }: FCP<{
 	/** Thumbnail. */
 	thumbnail: string;
-	/** Effect name. */
-	name: string;
+	/** Effect identifier. */
+	id: string;
 }>) {
 	const imageCount = {
 		hMirror: 2,
@@ -381,25 +409,26 @@ export default function PreviewPrve({ thumbnail, name }: FCP<{
 		ccwMirror: 4,
 		cwMirror: 4,
 		radialBlur: 2,
-	}[name] ?? 1;
+		negativeBlur: 2,
+	}[id] ?? 1;
 
 	// const canvasFilters = useCanvasFilters(thumbnail);
 	const webglFilters = useWebglFilters(thumbnail);
 
 	const alterImage = {
 		radialBlur: webglFilters?.radialBlur,
-	}[name];
+	}[id];
 
 	const animatedImage = {
 		pingpong: Tuple(prvePingpongImage, prvePingpongStaticImage),
 		whirl: Tuple(prveWhirlImage, prveWhirlStaticImage),
-	}[name];
+	}[id];
 
 	return (
-		<StyledPreviewPrve $name={name}>
+		<StyledPreviewPrve $id={id}>
 			{forMap(imageCount, i => animatedImage ?
 				<HoverToChangeImg key={i} animatedSrc={animatedImage[0]} staticSrc={animatedImage[1]} /> :
-				<img key={i} src={name === "radialBlur" && i === 2 ? alterImage! : thumbnail} />)}
+				<img key={i} src={id === "radialBlur" && i === 2 ? alterImage! : thumbnail} />)}
 		</StyledPreviewPrve>
 	);
 }
