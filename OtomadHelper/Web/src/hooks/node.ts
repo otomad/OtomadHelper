@@ -79,3 +79,17 @@ export function useOnFormKeyDown(element: RefObject<HTMLElement>, type: "radio" 
 export function useImperativeHandleRef<T>(forwardedRef: React.ForwardedRef<T>, localRef: MutableRefObject<T | null | undefined>) {
 	useImperativeHandle(forwardedRef, () => localRef.current!);
 }
+
+/**
+ * If user click a button that inside another button, do not trigger outside button event.
+ * @param handler - Mouse event handler.
+ */
+export function useOnNestedButtonClick(handler?: MouseEventHandler) {
+	return useCallback<MouseEventHandler>(e => {
+		const path = getPath(e);
+		const currentTargetIndex = path.indexOf(e.currentTarget);
+		if (path.slice(0, currentTargetIndex).find(element => element.tagName === "BUTTON")) return;
+		if (path.slice(currentTargetIndex + 1).find(element => element.tagName === "BUTTON")) stopEvent(e);
+		handler?.(e);
+	}, []);
+}

@@ -224,10 +224,11 @@ export default function Visual() {
 							details={listFormat(scheme.parameters[0], "conjunction", "narrow")}
 							type="button"
 							key={i}
-							icon
+							icon="reorder_dots"
 							onClick={() => pushPage("parameters")}
 						>
 							<ToggleSwitch on={scheme.enabled} />
+							<Button subtle icon="filter" minWidthUnbounded />
 						</SettingsCard>
 					))}
 					<div>

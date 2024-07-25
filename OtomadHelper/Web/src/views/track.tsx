@@ -1,14 +1,10 @@
 /* eslint-disable react/no-children-prop */
 
-const StyledResetButton = styled(Button).attrs({
-	icon: "arrow_reset",
-	subtle: true,
-	accent: true,
-	onClick: e => stopEvent(e),
-})`
-	min-width: unset;
-`;
-const ResetButton = Tooltip.wrap(StyledResetButton, { placement: "y", title: t.descriptions.track.resetLayout });
+const ResetButton = () => (
+	<Tooltip placement="y" title={t.descriptions.track.resetLayout}>
+		<Button icon="arrow_reset" subtle accent minWidthUnbounded />
+	</Tooltip>
+);
 
 export default function Track() {
 	const { pushPage } = useSnapshot(pageStore);

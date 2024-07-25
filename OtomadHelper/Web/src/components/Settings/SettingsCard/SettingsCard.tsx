@@ -108,7 +108,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 				<div className="trailing">
 					{children}
 					{trailingIcon && typeof trailingIcon === "string" && (
-						<div className={["trailing-icon", TRAILING_EXEMPTION]}>
+						<div className={["trailing-icon", TRAILING_EXEMPTION]} data-type={type}>
 							<Icon name={trailingIcon} />
 						</div>
 					)}

@@ -104,13 +104,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 }>) {
 	const settingsCardProps = { icon, title, details, selectInfo, selectValid, disabled };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
-
-	const handleClick = useCallback<MouseEventHandler>(e => {
-		const path = getPath(e);
-		const currentTargetIndex = path.indexOf(e.currentTarget);
-		if (path.slice(0, currentTargetIndex).find(element => element.tagName === "BUTTON")) return;
-		setInternalExpanded(expanded => !expanded);
-	}, []);
+	const handleClick = useOnNestedButtonClick(() => setInternalExpanded(expanded => !expanded));
 
 	return (
 		<div className="expander">

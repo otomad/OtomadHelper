@@ -59,6 +59,17 @@ export /* @internal */ const StyledButton = styled.button<{
 		}
 	}
 
+	&.subtle {
+		.icon:has(+ :empty) {
+			font-size: 20px;
+		}
+
+		&:has(+ .trailing-icon[data-type="button"]),
+		.contents:has(+ .trailing-icon[data-type="button"]) > & {
+			margin-inline-end: -8px;
+		}
+	}
+
 	&.hyperlink {
 		color: ${c("accent-color")};
 		cursor: pointer;
@@ -143,7 +154,9 @@ export /* @internal */ const StyledButton = styled.button<{
 	`}
 
 	@layer components {
-		min-width: 96px;
+		&:not(.min-width-unbounded) {
+			min-width: 96px;
+		}
 	}
 
 	> .content > span {
@@ -151,7 +164,7 @@ export /* @internal */ const StyledButton = styled.button<{
 	}
 `;
 
-export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBased, repeat, extruded, className, onRelease, ...htmlAttrs }: FCP<{
+export default forwardRef(function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBased, repeat, extruded, minWidthUnbounded, className, onRelease, onClick, ...htmlAttrs }: FCP<{
 	/** Button icon. */
 	icon?: DeclaredIcons;
 	/** Button animated icon. */
@@ -168,22 +181,26 @@ export default forwardRef(function Button({ children, icon, animatedIcon, subtle
 	repeat?: boolean;
 	/** Extrude the inline paddings. */
 	extruded?: boolean;
+	/** No min width? */
+	minWidthUnbounded?: boolean;
 	/** Mouse release button event. Only works with `RepeatButton`. */
 	onRelease?: BaseEventHandler;
 }, "button">, ref: ForwardedRef<"button">) {
 	const fillColorName = !accent ? undefined : accent === true ? "accent-color" : `fill-color-system-${accent}`;
 	const subtleFillColorName = `fill-color-system-${accent}-background`;
+	const handleClick = useOnNestedButtonClick(onClick);
 
 	return (
 		<StyledButton
 			as={repeat ? RepeatButton : "button"}
 			ref={ref}
 			type="button"
-			className={[className, { subtle, hyperlink, extruded }]}
+			className={[className, { subtle, hyperlink, extruded, minWidthUnbounded }]}
 			$fillColorName={fillColorName}
 			$subtleFillColorName={subtleFillColorName}
 			$dirBased={dirBased}
 			onRelease={repeat ? onRelease : undefined}
+			onClick={handleClick}
 			{...htmlAttrs}
 		>
 			<StackPanel className="content" $nowrap>
