@@ -72,6 +72,10 @@ const ExpanderChild = styled.div`
 	&[disabled] {
 		opacity: ${c("disabled-text-opacity")};
 	}
+
+	&.clip-children {
+		overflow: clip;
+	}
 `;
 
 const ExpanderChildWrapper = styled.div`
@@ -86,7 +90,7 @@ const ExpanderChildWrapper = styled.div`
 	}
 `;
 
-export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, selectInfo, selectValid, disabled }: FCP<PropsOf<typeof SettingsCard> & {
+export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, clipChildren, selectInfo, selectValid, disabled }: FCP<PropsOf<typeof SettingsCard> & {
 	/** The other action control area on the right side of the expander. */
 	actions?: ReactNode;
 	/** Expanded initially? */
@@ -95,6 +99,8 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	checkInfo?: Readable;
 	/** Regardless of whether the expander is on or off, the selected display text is always displayed. */
 	alwaysShowCheckInfo?: boolean;
+	/** Make sure expander children won't exceed the area. */
+	clipChildren?: boolean;
 }>) {
 	const settingsCardProps = { icon, title, details, selectInfo, selectValid, disabled };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
@@ -125,7 +131,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				enterOptions={{ startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }}
 				exitOptions={{ endChildTranslate: "0 -100%" }}
 			>
-				<ExpanderChild disabled={disabled}>
+				<ExpanderChild disabled={disabled} className={{ clipChildren }}>
 					<div className="expander-child-items">
 						{children}
 					</div>

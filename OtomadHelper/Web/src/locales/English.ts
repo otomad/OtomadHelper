@@ -88,6 +88,7 @@ export default {
 		offset: "Offset",
 		curve: "Interpolation curve",
 		unselected: "Unselected",
+		topPriority: "{{item, capitalize}} first",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -312,6 +313,7 @@ export default {
 				octaves: "Octaves",
 				lowerNeighbors: "Lower neighbors",
 				higherNeighbors: "Higher neighbors",
+				default: "Default full coverage",
 			},
 			keyMappingZone: "Key mapping zone",
 		},
@@ -583,6 +585,7 @@ export default {
 					octaves: "Uses the clips with the nearest higher or lower octave, this has the highest priority, useful for sources with sung solfeggios",
 					lowerNeighbors: "Uses lower neighbors, but the lowest keys are filled from the higher neighbors, this has higher priority than higher neighbors",
 					higherNeighbors: "Uses higher neighbors, but the highest keys are filled from the lower neighbors",
+					default: "Uses the first clip without any affixes to cover all remaining vacancies, this has the lowest priority",
 				},
 				offset: "Offsets the sources corresponding to the keys as a whole",
 			},

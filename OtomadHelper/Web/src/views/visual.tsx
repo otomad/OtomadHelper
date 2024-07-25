@@ -1,5 +1,3 @@
-import { DndContext } from "@dnd-kit/core";
-import { SortableContext } from "@dnd-kit/sortable";
 import legatoPortatoImage from "assets/images/tutorials/legato_config/legato_portato.png";
 import legatoUnlimitedImage from "assets/images/tutorials/legato_config/legato_unlimited.png";
 import legatoUpTo1BarImage from "assets/images/tutorials/legato_config/legato_up_to_1bar.png";
@@ -52,6 +50,7 @@ export default function Visual() {
 	const { createGroups } = selectConfig(c => c);
 	const prveCheckInfo = usePrveCheckInfo();
 	const isForceStretch = useIsForceStretch();
+	const topPriorityTransformMethod = transformMethod[0][0];
 
 	const { pushPage } = useSnapshot(pageStore);
 
@@ -141,10 +140,20 @@ export default function Visual() {
 						title={t.stream.transformMethod}
 						details={t.descriptions.stream.transformMethod}
 						icon="zoom_fit"
+						checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.stream.transformMethod[topPriorityTransformMethod] })}
+						clipChildren
 					>
-						<DndContext>
-							<SortableContext items={transformMethods} />
-						</DndContext>
+						<SortableList items={transformMethod}>
+							{(item, index) => (
+								<SortableList.Item id={item}>
+									<Expander.Item
+										title={t.stream.transformMethod[item]}
+										icon={<div className="icon-placeholder"><Badge>{index + 1}</Badge></div>}
+										clickable
+									/>
+								</SortableList.Item>
+							)}
+						</SortableList>
 					</Expander>
 					{/* TODO: Change the integration method of TransformOFX into parameters, add an independent subheader and an info bar to tell user to download it. */}
 

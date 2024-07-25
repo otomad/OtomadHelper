@@ -87,7 +87,7 @@ export const configStore = createStore({
 		legato: "upToOneBeat" as Legato,
 		multitrackForChords: false,
 		noTimeRemapping: false,
-		transformMethod: "panCrop" as TransformMethod,
+		transformMethod: ["panCrop", "pictureInPicture", "transformOfx"] as TransformMethod[],
 		prve: {
 			general: {
 				control: true,

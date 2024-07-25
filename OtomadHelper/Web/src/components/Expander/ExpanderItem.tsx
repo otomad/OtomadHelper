@@ -37,6 +37,7 @@ export /* @internal */ const styledExpanderItemText = css`
 export /* @internal */ const styledExpanderItemContent = css`
 	.icon-placeholder {
 		${styles.mixins.square("20px")};
+		${styles.mixins.gridCenter()};
 	}
 
 	${styledExpanderItemText};
@@ -64,24 +65,40 @@ export /* @internal */ const styledExpanderItemContent = css`
 	}
 `;
 
-const StyledExpanderItem = styled.div`
+const StyledExpanderItem = styled.div<{
+	/** With clickable style? */
+	$clickable?: boolean;
+}>`
 	${styledExpanderItemBase};
 	padding-left: 15px;
 
 	${styledExpanderItemContent};
+
+	${ifProp("$clickable", css`
+		:not(.sortable-item) > &:hover,
+		.sortable-list:not(:active) &:hover {
+			background-color: ${c("fill-color-control-secondary")};
+		}
+
+		&:active {
+			background-color: ${c("fill-color-control-tertiary")};
+		}
+	`)}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, children }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, children }: FCP<{
 	/** Icon. */
-	icon?: DeclaredIcons;
+	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
 	title?: ReactNode;
 	/** Detailed description. */
 	details?: ReactNode;
+	/** With clickable style? */
+	clickable?: boolean;
 }>) {
 	return (
-		<StyledExpanderItem>
-			{icon ? <Icon name={icon} /> : <div className="icon-placeholder" />}
+		<StyledExpanderItem $clickable={clickable}>
+			{icon ? typeof icon === "string" ? <Icon name={icon} /> : icon : <div className="icon-placeholder" />}
 			<div className="text">
 				<p className="title"><Preserves>{title}</Preserves></p>
 				<p className="details"><Preserves>{details}</Preserves></p>

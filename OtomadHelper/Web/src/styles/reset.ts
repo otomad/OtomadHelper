@@ -17,6 +17,12 @@ export default css`
 			display: block;
 		}
 
+		ul,
+		ol,
+		li {
+			all: unset;
+		}
+
 		// So images and videos default to inline elements, causing the gap below the block to be caused by you, right?
 		img,
 		video,
