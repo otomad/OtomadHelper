@@ -1,3 +1,5 @@
+import { DndContext } from "@dnd-kit/core";
+import { SortableContext } from "@dnd-kit/sortable";
 import legatoPortatoImage from "assets/images/tutorials/legato_config/legato_portato.png";
 import legatoUnlimitedImage from "assets/images/tutorials/legato_config/legato_unlimited.png";
 import legatoUpTo1BarImage from "assets/images/tutorials/legato_config/legato_up_to_1bar.png";
@@ -126,7 +128,7 @@ export default function Visual() {
 						icon="timer_off"
 						on={noTimeRemapping}
 					/>
-					<ExpanderRadio
+					{/* <ExpanderRadio
 						title={t.stream.transformMethod}
 						details={t.descriptions.stream.transformMethod}
 						icon="zoom_fit"
@@ -134,8 +136,28 @@ export default function Visual() {
 						value={transformMethod}
 						idField
 						nameField={t.stream.transformMethod}
-					/>
+					/> */}
+					<Expander
+						title={t.stream.transformMethod}
+						details={t.descriptions.stream.transformMethod}
+						icon="zoom_fit"
+					>
+						<DndContext>
+							<SortableContext items={transformMethods} />
+						</DndContext>
+					</Expander>
 					{/* TODO: Change the integration method of TransformOFX into parameters, add an independent subheader and an info bar to tell user to download it. */}
+
+					<Subheader>{t.subheaders.effects}</Subheader>
+					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")}>
+						{prveCheckInfo}
+					</SettingsCard>
+					<SettingsCard title={t.titles.staff} details={t.descriptions.stream.effects.staff} type="button" icon="g_clef" onClick={() => pushPage("staff")}>
+						<ToggleSwitch on={enableStaffVisualizer} />
+					</SettingsCard>
+					<SettingsCard title={t.titles.pixelScaling} details={t.descriptions.stream.effects.pixelScaling} type="button" icon="miscz" onClick={() => pushPage("pixel-scaling")}>
+						<ToggleSwitch on={enablePixelScaling} />
+					</SettingsCard>
 
 					<Subheader>{t.stream.playingTechniques}</Subheader>
 					<Expander
@@ -165,17 +187,6 @@ export default function Visual() {
 							<Button>{t.unselected}</Button>
 						</Expander.Item>
 					</Expander>
-
-					<Subheader>{t.subheaders.effects}</Subheader>
-					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")}>
-						{prveCheckInfo}
-					</SettingsCard>
-					<SettingsCard title={t.titles.staff} details={t.descriptions.stream.effects.staff} type="button" icon="g_clef" onClick={() => pushPage("staff")}>
-						<ToggleSwitch on={enableStaffVisualizer} />
-					</SettingsCard>
-					<SettingsCard title={t.titles.pixelScaling} details={t.descriptions.stream.effects.pixelScaling} type="button" icon="miscz" onClick={() => pushPage("pixel-scaling")}>
-						<ToggleSwitch on={enablePixelScaling} />
-					</SettingsCard>
 
 					<Subheader>{t.stream.mapping}</Subheader>
 					<Expander title={t.stream.mapping.velocity} icon="signal" />

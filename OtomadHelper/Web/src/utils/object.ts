@@ -218,6 +218,23 @@ export function useDomRefState<TElement extends keyof ElementTagNameMap | Elemen
 	return useState<TagNameToElement<TElement> | null>(initialValue);
 }
 
+/**
+ * Creates an array of references to an HTML DOM element.
+ *
+ * Useful when you want to use ref in a loop.
+ *
+ * @remarks You must provide the `TElement` generic type.
+ *
+ * @template TElement - A tag name (e.g. `"div"`) or a subclass (e.g. `HTMLDivElement`) of the HTML DOM element class.
+ * @returns An array of references to an HTML DOM element.
+ *
+ * @example
+ * ```typescriptreact
+ * const [refs, setRef] = useDomRefs<"p">();
+ *
+ * return array.map((item, index) => <p key={item} ref={setRef(index)}>{item}</p>);
+ * ```
+ */
 export function useDomRefs<TElement extends keyof ElementTagNameMap | Element>() {
 	type TElementOrNull = TagNameToElement<TElement> | null;
 	const refs: MutableRefObject<TElementOrNull[]> = useRef([]);
@@ -493,6 +510,25 @@ export function objectFilterKeys(object: object, filteredKeys: PropertyKey[]) {
  */
 export function objectReplaceKeys<T extends object>(object: T, replacement: (oldKey: string) => string) {
 	return Object.fromEntries(Object.entries(object).map(([key, value]) => [replacement(key), value] as const)) as T;
+}
+
+/**
+ * Like JavaScript `with` syntax, but safer.
+ *
+ * @param object - A long name object.
+ * @param getter - Rename that object to a short name, then get the result.
+ *
+ * @example
+ * ```typescript
+ * // With
+ * console.log(foo.bar.baz, b => b * (b + 1));
+ *
+ * // Without
+ * console.log(foo.bar.baz * (foo.bar.baz + 1));
+ * ```
+ */
+export function withObject<TObject, TReturn>(object: TObject, getter: (object: TObject) => TReturn) {
+	return getter(object);
 }
 
 /**

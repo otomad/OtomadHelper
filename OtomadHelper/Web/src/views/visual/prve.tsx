@@ -4,27 +4,24 @@ const controlModes = ["general", "samePitch", "differentSyllables"] as const;
 const getControlModeIcon = (mode: string) => `prve_control_${new VariableName(mode).snake}`;
 const DEFAULT_EFFECT = "normal";
 const STEP_CHANGE_HUE = "stepChangeHue";
-const whirlInfo = (() => {
-	const fx = t.prve.effects;
-	return `${fx.whirl} = ${fx.pingpong} + ${fx.hFlip}`;
-})();
+const getWhirlInfo = () => withObject(t.prve.effects, fx => `${fx.whirl} = ${fx.pingpong} + ${fx.hFlip}`);
 
 /** With step. */
 const $s = (step: number, ...effectIds: string[]) => effectIds.map(effect => ({ effect, step }));
 const prves = [
-	{ class: "flip", icon: "placeholder", effects: [...$s(2, "hFlip", "vFlip"), ...$s(4, "ccwFlip", "cwFlip")] },
-	{ class: "rotation", icon: "placeholder", effects: [...$s(4, "ccwRotate", "cwRotate"), ...$s(2, "turned")] },
-	{ class: "scale", icon: "placeholder", effects: $s(1, "zoomOutIn") },
-	{ class: "mirror", icon: "placeholder", effects: [...$s(2, "hMirror", "vMirror"), ...$s(4, "ccwMirror", "cwMirror")] },
-	{ class: "invert", icon: "placeholder", effects: [...$s(2, "negative", "luminInvert", "negativeBlur", "negativeThreshold")] },
-	{ class: "hue", icon: "placeholder", effects: [...$s(2, "hueInvert"), ...forMapFromTo(3, 8, step => ({ effect: STEP_CHANGE_HUE + step, step }))] },
-	{ class: "chromatic", icon: "placeholder", effects: $s(2, "chromatic", "chromaticBlur") },
-	{ class: "time", icon: "placeholder", effects: $s(2, "pingpong", "whirl") },
-	{ class: "time2", icon: "placeholder", effects: $s(1, "sharpRewind", "wobblePeriod") },
-	{ class: "ec", icon: "placeholder", effects: [...$s(1, "vExpansion", "vExpansionBounce", "vCompression", "vCompressionBounce", "vBounce"), ...$s(2, "slantDown", "slantUp", "puyo")] },
-	{ class: "swing", icon: "placeholder", effects: $s(2, "pendulum") },
-	{ class: "blur", icon: "placeholder", effects: $s(1, "gaussianBlur", "radialBlur") },
-	{ class: "wipe", icon: "placeholder", effects: $s(1, "wipeRight", "splitVOut") },
+	{ class: "flip", icon: "flip", effects: [...$s(2, "hFlip", "vFlip"), ...$s(4, "ccwFlip", "cwFlip")] },
+	{ class: "rotation", icon: "rotate", effects: [...$s(4, "ccwRotate", "cwRotate"), ...$s(2, "turned")] },
+	{ class: "scale", icon: "resize_image", effects: $s(1, "zoomOutIn") },
+	{ class: "mirror", icon: "dual_screen_mirror", effects: [...$s(2, "hMirror", "vMirror"), ...$s(4, "ccwMirror", "cwMirror")] },
+	{ class: "invert", icon: "invert_color", effects: [...$s(2, "negative", "luminInvert", "negativeBlur", "negativeThreshold")] },
+	{ class: "hue", icon: "hue", effects: [...$s(2, "hueInvert"), ...forMapFromTo(3, 8, step => ({ effect: STEP_CHANGE_HUE + step, step }))] },
+	{ class: "chromatic", icon: "black_and_white", effects: $s(2, "chromatic", "chromaticBlur") },
+	{ class: "time", icon: "timer", effects: $s(2, "pingpong", "whirl") },
+	{ class: "time2", icon: "timer_2", effects: $s(1, "sharpRewind", "wobblePeriod") },
+	{ class: "ec", icon: "arrow_autofit_height_in", effects: [...$s(1, "vExpansion", "vExpansionBounce", "vCompression", "vCompressionBounce", "vBounce"), ...$s(2, "slantDown", "slantUp", "puyo")] },
+	{ class: "swing", icon: "arrow_rotate", effects: $s(2, "pendulum") },
+	{ class: "blur", icon: "blur", effects: $s(1, "gaussianBlur", "radialBlur") },
+	{ class: "wipe", icon: "double_tap_swipe", effects: $s(1, "wipeRight", "splitVOut") },
 ];
 const getEffectIds = (effects?: typeof prves[number]["effects"]) => effects?.map(effect => effect.effect) ?? [];
 const findPrveClassEffects = (klass: string) => getEffectIds(prves.find(prve => prve.class === klass)?.effects);
@@ -96,7 +93,7 @@ export default function Prve() {
 					checkInfoCondition={effect => effect === DEFAULT_EFFECT ? "" : effect}
 					alwaysShowCheckInfo
 				>
-					{klass === "time" ? <InfoBar status="info" title={whirlInfo} /> : undefined}
+					{klass === "time" ? <InfoBar status="info" title={getWhirlInfo()} /> : undefined}
 				</ExpanderRadio>
 			))}
 		</div>

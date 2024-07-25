@@ -88,12 +88,6 @@ export const configStore = createStore({
 		multitrackForChords: false,
 		noTimeRemapping: false,
 		transformMethod: "panCrop" as TransformMethod,
-		glissando: false,
-		glissandoAmount: 12,
-		appoggiatura: false,
-		arpeggio: false,
-		arpeggioNegative: true,
-		enableStaffVisualizer: false,
 		prve: {
 			general: {
 				control: true,
@@ -117,6 +111,12 @@ export const configStore = createStore({
 			autoScaleFactor: true,
 			replaceSource: true,
 		},
+		glissando: false,
+		glissandoAmount: 12,
+		appoggiatura: false,
+		arpeggio: false,
+		arpeggioNegative: true,
+		enableStaffVisualizer: false,
 		currentPreset: "enter",
 		activeParameterScheme: [
 			{

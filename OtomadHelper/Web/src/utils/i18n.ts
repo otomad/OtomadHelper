@@ -3,6 +3,7 @@ import i18n from "locales/config";
 import type { LocaleWithDefaultValue } from "locales/types";
 import { spacing } from "pangu";
 const I18N_ITEM_SYMBOL = Symbol.for("i18n_item");
+const toPrimitives = [Symbol.toPrimitive, "toString", "toJSON", "valueOf"];
 
 export function isI18nItem(newChild: Any): newChild is Record<string, string> {
 	return !!newChild?.[I18N_ITEM_SYMBOL];
@@ -36,6 +37,7 @@ const getProxy = (target: object) =>
 				if (missingDefault) return getMissingKey(getParentsPrefix(...keys));
 				const key = !isCategory ? getParentsPrefix(...keys) : getParentsPrefix(...keys, "_");
 				return i18n.t(key, { ...target, ...options });
+				// NOTE: If directly return a string, when user switches language, some local variables which store the i18n items will not update the language.
 			};
 			const getWithArgsFunction = (...prefixes: string[]) => {
 				const func = (options: TOptions) => translate(prefixes, options);
@@ -55,7 +57,7 @@ const getProxy = (target: object) =>
 				// 	return translate(keys);
 				else return new Proxy(getWithArgsFunction(...keys), {
 					get(target, currentName): unknown {
-						if ([Symbol.toPrimitive, "toString", "toJSON", "valueOf"].includes(currentName))
+						if (toPrimitives.includes(currentName))
 							return () => translate(keys);
 						if (typeof currentName === "string")
 							return getWithArgsProxy(...parents, currentName);
