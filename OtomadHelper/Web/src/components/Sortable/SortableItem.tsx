@@ -1,6 +1,7 @@
 import type { DraggableSyntheticListeners, UniqueIdentifier } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { PRESSED_SORTABLE_ITEM_OPACITY } from "./SortableOverlay";
 
 const SortableItemContext = createContext({
 	attributes: {} as AnyObject,
@@ -18,7 +19,8 @@ const StyledSortableItem = styled.li`
 	box-shadow:
 		0 0 0 calc(1px / var(--scale-x, 1)) rgb(63 63 68 / 5%),
 		0 1px calc(3px / var(--scale-x, 1)) 0 rgb(34 33 81 / 15%); */
-	transition: none;
+	cursor: ns-resize;
+	transition: ${fallbackTransitions}, transform 0s;
 
 	> * {
 		inline-size: 100%;
@@ -33,15 +35,18 @@ export /* @internal */ function SortableItem({ children, id }: FCP<{
 	/** Unique identifier. */
 	id: UniqueIdentifier;
 }>) {
-	const { attributes, isDragging, listeners, setNodeRef, setActivatorNodeRef, transform, transition } = useSortable({ id });
+	const [disabled, setDisabled] = useState(false);
+	const { attributes, isDragging, listeners, setNodeRef, setActivatorNodeRef, transform, transition } = useSortable({ id, disabled, transition: {
+		duration: 250, easing: eases.easeOutMax,
+	} });
 	const context = useMemo(() => ({ attributes, listeners, ref: setActivatorNodeRef }), [attributes, listeners, setActivatorNodeRef]);
 
 	return (
 		<SortableItemContext.Provider value={context}>
 			<StyledSortableItem
-				ref={e => { setNodeRef(e); setActivatorNodeRef(e); }}
+				ref={setNodeRef}
 				style={{
-					opacity: isDragging ? "0.25" : undefined,
+					opacity: isDragging ? PRESSED_SORTABLE_ITEM_OPACITY : undefined,
 					transform: CSS.Translate.toString(transform),
 					transition,
 				}}
@@ -49,6 +54,15 @@ export /* @internal */ function SortableItem({ children, id }: FCP<{
 				{...listeners}
 			>
 				{children}
+				{/* {(() => {
+					// let disabled = false;
+					const newChildren = React.Children.map(children, child => {
+						console.log(child);
+						return child;
+					});
+					// setDisabled(disabled);
+					return newChildren;
+				})()} */}
 			</StyledSortableItem>
 		</SortableItemContext.Provider>
 	);

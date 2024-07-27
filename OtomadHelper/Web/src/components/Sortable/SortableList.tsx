@@ -1,7 +1,7 @@
 import type { Active, DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
-import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
 import { restrictToParentElement, restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { SortableContext, arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { SortableItem } from "./SortableItem";
 import { SortableOverlay } from "./SortableOverlay";
 
@@ -36,30 +36,37 @@ export function SortableList<T extends BaseItem>({ items: [items, setItems], chi
 	}, [active, items]);
 	const sensors = useSensors(
 		useSensor(PointerSensor),
-		useSensor(KeyboardSensor, {
-			coordinateGetter: sortableKeyboardCoordinates,
-		}),
+		useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
 	);
 	const onDragEnd = ({ active, over }: DragEndEvent) => {
-		if (over && active.id !== over?.id) {
-			const activeIndex = items.findIndex(item => getItemId(item) === active.id);
-			const overIndex = items.findIndex(item => getItemId(item) === over.id);
-			setItems?.(arrayMove(items, activeIndex, overIndex));
-		}
+		if (over && active.id !== over?.id)
+			(setItems as SetStateNarrow<T[]>)?.(items => {
+				const activeIndex = items.findIndex(item => getItemId(item) === active.id);
+				const overIndex = items.findIndex(item => getItemId(item) === over.id);
+				return arrayMove(items, activeIndex, overIndex);
+			});
 		setActive(null);
 	};
 
 	return (
 		<DndContext
 			sensors={sensors}
+			collisionDetection={closestCenter}
 			onDragStart={({ active }) => setActive(active)}
 			onDragEnd={onDragEnd}
 			onDragCancel={() => setActive(null)}
 			modifiers={[restrictToVerticalAxis, restrictToParentElement]}
 		>
-			<SortableContext items={items}>
+			<SortableContext items={items} strategy={verticalListSortingStrategy}>
 				<StyledSortableList>
-					{items.map((item, index, items) => <Fragment key={getItemId(item)}>{children(item, index, items)}</Fragment>)}
+					{items.map((item, index, items) => {
+						const id = getItemId(item);
+						return (
+							<SortableList.Item key={id} id={id}>
+								{children(item, index, items)}
+							</SortableList.Item>
+						);
+					})}
 				</StyledSortableList>
 			</SortableContext>
 			<SortableOverlay>{activeItem?.[0] && children(...activeItem)}</SortableOverlay>

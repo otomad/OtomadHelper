@@ -145,13 +145,11 @@ export default function Visual() {
 					>
 						<SortableList items={transformMethod}>
 							{(item, index) => (
-								<SortableList.Item id={item}>
-									<Expander.Item
-										title={t.stream.transformMethod[item]}
-										icon={<div className="icon-placeholder"><Badge>{index + 1}</Badge></div>}
-										clickable
-									/>
-								</SortableList.Item>
+								<Expander.Item
+									title={t.stream.transformMethod[item]}
+									icon={<div className="icon-placeholder"><Badge>{index + 1}</Badge></div>}
+									clickable
+								/>
 							)}
 						</SortableList>
 					</Expander>

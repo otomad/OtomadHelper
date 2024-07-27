@@ -1,3 +1,4 @@
+// TODO: "PInvoke.cs" rename to "PInvoke_Win32.cs" and "PInvoke_DotNet.cs".
 namespace OtomadHelper.Interop;
 
 public static class PInvoke {
