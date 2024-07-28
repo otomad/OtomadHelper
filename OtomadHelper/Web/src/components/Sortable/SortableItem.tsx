@@ -28,6 +28,14 @@ const StyledSortableItem = styled.li`
 	&:is(.dropping) * {
 		transition: ${fallbackTransitions}, transform 0s, opacity 0s, background-color 0s;
 	}
+
+	:has(> .dragging) > &:not(.dragging) {
+		cursor: not-allowed;
+
+		> * {
+			pointer-events: none;
+		}
+	}
 `;
 
 export /* @internal */ default function SortableItem({ children, id }: FCP<{

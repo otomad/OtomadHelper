@@ -92,7 +92,7 @@ const StyledExpanderItem = styled.div<{
 	`)}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, children }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, children, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -101,9 +101,9 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	details?: ReactNode;
 	/** With clickable style? */
 	clickable?: boolean;
-}>) {
+}, "div">) {
 	return (
-		<StyledExpanderItem $clickable={clickable}>
+		<StyledExpanderItem $clickable={clickable} {...htmlAttrs}>
 			{icon ? typeof icon === "string" ? <Icon name={icon} /> : icon : <div className="icon-placeholder" />}
 			<div className="text">
 				<p className="title"><Preserves>{title}</Preserves></p>

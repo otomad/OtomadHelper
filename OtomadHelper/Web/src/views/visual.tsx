@@ -58,6 +58,16 @@ export default function Visual() {
 		return [tracks[preferredTrackIndex], (item: string) => setPreferredTrackIndex(tracks.indexOf(item))] as StateProperty<string>;
 	}, [preferredTrackIndex]);
 
+	const onSortableOverlayDrop = useCallback<DropAnimationSideEffects>(({ dragOverlay: { node: dragOverlay } }) => {
+		const expanderItem = dragOverlay.firstElementChild! as HTMLDivElement;
+		const id = expanderItem.dataset.id!;
+		const { transformMethod } = configStore.visual;
+		const newIndex = transformMethod.indexOf(id as never);
+		if (newIndex === -1) return;
+		console.log(newIndex + 1);
+		expanderItem.querySelector(".badge .text")!.textContent = String(newIndex + 1);
+	}, []);
+
 	return (
 		<div className="container">
 			<SettingsPageControlMedia stream="visual" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={exampleThumbnail} />
@@ -142,7 +152,7 @@ export default function Visual() {
 						icon="zoom_fit"
 						checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.stream.transformMethod[topPriorityTransformMethod] })}
 					>
-						<SortableList items={transformMethod}>
+						<SortableList items={transformMethod} overlayEmits={{ onDrop: onSortableOverlayDrop }}>
 							{(item, index) => (
 								<Expander.Item
 									title={t.stream.transformMethod[item]}

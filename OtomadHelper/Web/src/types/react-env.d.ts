@@ -1,3 +1,4 @@
+import type _DndKitCore from "@dnd-kit/core";
 import type _Immer from "immer";
 import type _LottieWeb from "lottie-web";
 import type React from "react";
@@ -123,6 +124,7 @@ declare global {
 	export type CSSTransitionProps = Partial<ReactTransitionGroupCssTransition.CSSTransitionProps>;
 	export type TransitionProps = Partial<ReactTransitionGroupTransition.TransitionProps>;
 
+	export type { DropAnimationSideEffects } from "@dnd-kit/core";
 	export type { Property as CSSProperty } from "csstype";
 	export type { Draft } from "immer";
 	export type { AnimationItem } from "lottie-web";

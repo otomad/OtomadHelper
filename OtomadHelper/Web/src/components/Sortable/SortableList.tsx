@@ -3,7 +3,7 @@ import { DndContext, KeyboardSensor, PointerSensor, closestCenter, useSensor, us
 import { restrictToParentElement, restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import SortableItem from "./SortableItem";
-import SortableOverlay from "./SortableOverlay";
+import SortableOverlay, { type SortableOverlayEmits } from "./SortableOverlay";
 
 const StyledSortableList = styled.ul.attrs({
 	role: "application",
@@ -21,11 +21,16 @@ type BaseItem = {
 
 const getItemId = (item: BaseItem) => isObject(item) ? item.id : item;
 
-export function SortableList<T extends BaseItem>({ items: itemsStateProperty, children }: FCP<{
+const addDatasets = (children: ReactNode, id: UniqueIdentifier, index: number) => React.Children.map(children, child =>
+	React.isValidElement(child) ? React.cloneElement(child as never, { "data-id": id, "data-index": index }) : child);
+
+export function SortableList<T extends BaseItem>({ items: itemsStateProperty, overlayEmits, children }: FCP<{
 	/** List items. The item must have `id` property in it. */
 	items: StateProperty<T[]>;
 	/** Rendered item. */
 	children(item: T, index: number, items: T[]): ReactNode;
+	/** Sortable overlay drop animation side effects event handlers. */
+	overlayEmits?: SortableOverlayEmits;
 }>) {
 	if (isStatePropertyPremium(itemsStateProperty))
 		itemsStateProperty = itemsStateProperty.useState();
@@ -67,13 +72,15 @@ export function SortableList<T extends BaseItem>({ items: itemsStateProperty, ch
 						const id = getItemId(item);
 						return (
 							<SortableList.Item key={id} id={id}>
-								{children(item, index, items)}
+								{addDatasets(children(item, index, items), id, index)}
 							</SortableList.Item>
 						);
 					})}
 				</StyledSortableList>
 			</SortableContext>
-			<SortableOverlay>{activeItem?.[0] && children(...activeItem)}</SortableOverlay>
+			<SortableOverlay {...overlayEmits}>
+				{activeItem?.[0] && addDatasets(children(...activeItem), getItemId(activeItem[0]), activeItem[1])}
+			</SortableOverlay>
 		</DndContext>
 	);
 }

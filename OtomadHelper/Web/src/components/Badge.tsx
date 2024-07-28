@@ -63,7 +63,7 @@ export default forwardRef(function Badge({ children, status = "info", hidden, tr
 	return (
 		<CssTransition in={!hidden} unmountOnExit appear={transitionOnAppear}>
 			<StyledBadge $status={status} ref={ref} className={{ iconOnly: !children }} {...htmlAttrs}>
-				{children != null ? <span>{children}</span> : <Icon name={iconName} />}
+				{children != null ? <span className="text">{children}</span> : <Icon name={iconName} />}
 			</StyledBadge>
 		</CssTransition>
 	);
