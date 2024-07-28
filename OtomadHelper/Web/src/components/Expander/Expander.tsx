@@ -63,6 +63,7 @@ const ExpanderChild = styled.div`
 
 	.expander-child-items {
 		background-color: ${c("background-fill-color-card-background-secondary")};
+		border-radius: 0 0 2px 2px;
 
 		> :not(:first-child) {
 			border-top: 1px solid ${c("stroke-color-divider-stroke-default")};

@@ -64,16 +64,21 @@ export async function setStyleWithoutTransition(element: HTMLElement, style: CSS
 }
 
 /**
- * That's right! it's the famous **delay** function.
- *
- * It can also be called `sleep`.
- *
- * @param ms - Milliseconds.
- * @returns Empty promise.
+ * Replay CSS animations.
+ * @param element - HTML DOM element.
+ * @param className - A CSS class name that contains animations.
  */
-export function delay(ms: number): Promise<void> {
-	return new Promise(resolve => setTimeout(resolve, ms));
+export async function replayAnimation(element: Element, ...className: string[]) {
+	element.classList.remove(...className);
+	await nextAnimationTick();
+	element.classList.add(...className);
 }
+
+/**
+ * Did the user request to reduce the dynamic effect?
+ * @returns User requested to reduce dynamic effects.
+ */
+export const isPrefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 type StyleProperties = string & keyof FilterValueType<CSSStyleDeclaration, string>;
 type Keyframe = Partial<Override<Record<StyleProperties, Numberish>, { offset: number }>>;
@@ -174,7 +179,7 @@ export async function* animateSizeGenerator(
 ): AsyncGenerator<void, Animation | void, boolean> {
 	element = toValue(element);
 	if (!element) return;
-	// if (isPrefersReducedMotion()) duration = 0;
+	if (isPrefersReducedMotion()) duration = 0;
 	let isHeightChanged = specified === "height" || specified === "both",
 		isWidthChanged = specified === "width" || specified === "both";
 	// element.classList.add("calc-size");

@@ -88,8 +88,10 @@ export function useOnNestedButtonClick(handler?: MouseEventHandler) {
 	return useCallback<MouseEventHandler>(e => {
 		const path = getPath(e);
 		const currentTargetIndex = path.indexOf(e.currentTarget);
-		if (path.slice(0, currentTargetIndex).find(element => element.tagName === "BUTTON")) return;
-		if (path.slice(currentTargetIndex + 1).find(element => element.tagName === "BUTTON")) stopEvent(e);
+		if (currentTargetIndex !== -1) {
+			if (path.slice(0, currentTargetIndex).find(element => element.tagName === "BUTTON")) return;
+			if (path.slice(currentTargetIndex + 1).find(element => element.tagName === "BUTTON")) stopEvent(e);
+		}
 		handler?.(e);
-	}, []);
+	}, [handler]);
 }

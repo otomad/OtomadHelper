@@ -1,5 +1,6 @@
 import { changeColorScheme } from "helpers/color-mode";
 import GlobalStyle from "styles/global";
+import { } from "valtio";
 import ShellPage from "./ShellPage";
 
 export default function App() {
@@ -12,7 +13,7 @@ export default function App() {
 	});
 
 	useEffect(() => {
-		updateOrCreateMetaTag("description", t.descriptions.settings.about);
+		updateOrCreateMetaTag("description", t.descriptions.settings.about); // DELETE
 	});
 
 	const { i18n } = useTranslation();

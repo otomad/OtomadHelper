@@ -141,7 +141,6 @@ export default function Visual() {
 						details={t.descriptions.stream.transformMethod}
 						icon="zoom_fit"
 						checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.stream.transformMethod[topPriorityTransformMethod] })}
-						clipChildren
 					>
 						<SortableList items={transformMethod}>
 							{(item, index) => (
@@ -222,7 +221,8 @@ export default function Visual() {
 							details={listFormat(scheme.parameters[0], "conjunction", "narrow")}
 							type="button"
 							key={i}
-							icon="reorder_dots"
+							icon
+							dragHandle
 							onClick={() => pushPage("parameters")}
 						>
 							<ToggleSwitch on={scheme.enabled} />

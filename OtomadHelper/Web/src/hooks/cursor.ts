@@ -3,6 +3,9 @@ import type { Cursor } from "styles/force-cursor";
 
 /**
  * Forcefully specify the mouse cursor style.
+ *
+ * [MDN Reference](https://developer.mozilla.org/zh-CN/docs/Web/CSS/cursor)
+ *
  * @param cursor - Cursor style. If it is null, it will restore to the default.
  */
 export function forceCursor(cursor: Cursor | null) {
@@ -14,6 +17,7 @@ export function forceCursor(cursor: Cursor | null) {
 
 /**
  * Use animated mouse cursor (.ani).
+ *
  * @param element - HTML DOM element reference.
  * @param aniUrl - The path of the animated mouse cursor.
  */

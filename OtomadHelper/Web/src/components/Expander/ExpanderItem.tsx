@@ -76,12 +76,18 @@ const StyledExpanderItem = styled.div<{
 
 	${ifProp("$clickable", css`
 		:not(.sortable-item) > &:hover,
-		.sortable-list:not(:active) &:hover {
+		.sortable-item:not(.dragging) > &:hover {
 			background-color: ${c("fill-color-control-secondary")};
 		}
 
-		&:active {
+		.sortable-item:not(.dragging) > &:active,
+		.sortable-overlay:not(.dropping) &${important()} {
 			background-color: ${c("fill-color-control-tertiary")};
+		}
+
+		.sortable-item:last-child > &,
+		:not(.sortable-item, .sortable-overlay) > &:last-child {
+			border-radius: 0 0 2px 2px;
 		}
 	`)}
 `;

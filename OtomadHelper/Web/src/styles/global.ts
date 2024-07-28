@@ -135,11 +135,6 @@ const GlobalStyle = createGlobalStyle<{
 		}
 	}
 
-	// stylelint-disable-next-line selector-id-pattern
-	/* #__svg__icons__dom__ {
-		content-visibility: hidden;
-	} */
-
 	.calc-size {
 		position: fixed;
 		opacity: 0;
@@ -174,6 +169,21 @@ const GlobalStyle = createGlobalStyle<{
 			}
 		`);
 	}}
+
+	// User requested to reduce dynamic effects
+	@media (prefers-reduced-motion: reduce) {
+		${important(2)} {
+			&,
+			&::before,
+			&::after {
+					scroll-behavior: auto;
+					transition-duration: 0s !important;
+					transition-delay: 0s !important;
+					animation-duration: 0s !important;
+					animation-delay: 0s !important;
+			}
+		}
+	}
 
 	${reset}
 `;

@@ -79,6 +79,20 @@ declare global {
 	 * @template T - Property type.
 	 */
 	export type StatePropertyNonNull<T> = [get: T, set: SetState<T>];
+	/**
+	 * Add more functions to the StateProperty.
+	 */
+	export type StatePropertyPremium<T> = StateProperty<T> & {
+		/**
+		 * Subscribe the state property, if the value changed, the callback will be called.
+		 */
+		subscribe(callback: (value: unknown) => void): void;
+		/**
+		 * I don't know why `dnd-kit` and `valtio` aren't compatible with each other.
+		 * So I convert the constructed state property to real React used state property.
+		 */
+		useState(): [get: T, set: SetStateNarrow<T>];
+	};
 
 	/**
 	 * Get Props for the React component.

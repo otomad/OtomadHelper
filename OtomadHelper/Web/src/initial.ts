@@ -4,15 +4,15 @@ import "utils/number";
 import "utils/string";
 
 import "helpers/color-mode";
+import "helpers/dev-global";
 import "styles/fonts";
 import "styles/properties";
 import "utils/bridge";
 
 const isProdMode = () => !devStore.devMode;
-const global = globalThis as AnyObject;
 
 /**
- * Run before the web DOM is loading
+ * Run before the web DOM is loading.
  */
 { // Initial
 	// #region Prevent context menu triggers by right click
@@ -60,13 +60,6 @@ const global = globalThis as AnyObject;
 		if (e.dataTransfer) e.dataTransfer.dropEffect = "none";
 		e.preventDefault();
 	});
-	// #endregion
-
-	// #region Find compiled CSS styles in dev mode
-	if (import.meta.env.DEV)
-		global.findCss = function (component: string) {
-			return [...document.head.querySelector("style[data-styled]")?.childNodes as NodeListOf<Text> ?? []].find(rule => rule.textContent?.includes(component));
-		};
 	// #endregion
 
 	// #region Fix no mouseup event responded when the mouse is moved outside the window

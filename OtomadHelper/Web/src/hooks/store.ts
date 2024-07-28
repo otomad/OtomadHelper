@@ -49,12 +49,31 @@ export function useStoreState<TState extends object>(state: TState): StateProper
 			} catch { // Not in hook lifecycle.
 				snapshot = state[property];
 			}
-			return [snapshot, (value: unknown) => {
+			const stateProperty = [snapshot, (value: unknown) => {
 				const newValue = typeof value === "function" ? value(state[property]) : value;
 				return state[property] = newValue;
 			}];
+			Object.assign(stateProperty, {
+				subscribe: (callback: (value: unknown) => void) => subscribeStoreKey(state, property, callback),
+				useState() {
+					const [getState, setStateOriginal] = useState(state[property]);
+					const setState = setStateInterceptor(setStateOriginal, undefined, value => state[property] = value);
+					useMountEffect(() => {
+						(stateProperty as StatePropertyPremium<unknown>).subscribe(value => setStateOriginal(value));
+					});
+					return [getState, setState];
+				},
+			});
+			return stateProperty;
 		},
 	}) as never;
+}
+
+/**
+ * Check if the StateProperty is StatePropertyPremium.
+ */
+export function isStatePropertyPremium<T>(stateProperty?: StateProperty<T> | null): stateProperty is StatePropertyPremium<T> {
+	return !!stateProperty && "subscribe" in stateProperty;
 }
 
 export function useStoreStateArray<T extends object>(array: T[]): StatePropertiedObject<T>[] {

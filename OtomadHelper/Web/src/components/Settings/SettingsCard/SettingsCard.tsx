@@ -69,9 +69,13 @@ const StyledSettingsCard = styled(StyledCard)`
 	&:dir(rtl) .trailing-icon {
 		scale: -1 1;
 	}
+
+	.drag-handle {
+		cursor: ns-resize;
+	}
 `;
 
-export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, trailingIcon, disabled, children, type = "container", className, ...htmlAttrs }: FCP<{
+export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, trailingIcon, disabled, children, type = "container", dragHandle, className, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
@@ -86,6 +90,8 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	trailingIcon?: DeclaredIcons | "" | boolean;
 	/** Component form type. */
 	type?: "container" | "button" | "expander";
+	/** Show the drag handle to represent that it is sortable? */
+	dragHandle?: boolean;
 }, "div">) {
 	trailingIcon ??= type === "button" ? "chevron_right" :
 		type === "expander" ? "chevron_down" : undefined;
@@ -99,6 +105,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 			{...htmlAttrs}
 		>
 			<div className="base">
+				{dragHandle && <Icon name="reorder_dots" className="drag-handle" />}
 				{typeof icon === "object" ? icon : <Icon name={icon} />}
 				<div className="text">
 					<p className="title"><Preserves>{title}</Preserves></p>

@@ -2,8 +2,8 @@ import type { Active, DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
 import { DndContext, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
 import { restrictToParentElement, restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { SortableItem } from "./SortableItem";
-import { SortableOverlay } from "./SortableOverlay";
+import SortableItem from "./SortableItem";
+import SortableOverlay from "./SortableOverlay";
 
 const StyledSortableList = styled.ul.attrs({
 	role: "application",
@@ -21,14 +21,19 @@ type BaseItem = {
 
 const getItemId = (item: BaseItem) => isObject(item) ? item.id : item;
 
-export function SortableList<T extends BaseItem>({ items: [items, setItems], children }: FCP<{
+export function SortableList<T extends BaseItem>({ items: itemsStateProperty, children }: FCP<{
 	/** List items. The item must have `id` property in it. */
 	items: StateProperty<T[]>;
 	/** Rendered item. */
 	children(item: T, index: number, items: T[]): ReactNode;
 }>) {
+	if (isStatePropertyPremium(itemsStateProperty))
+		itemsStateProperty = itemsStateProperty.useState();
+	let [items, setItems] = itemsStateProperty;
 	items ??= [];
-	const [active, setActive] = useState<Active | null>(null);
+
+	const [active, _setActive] = useState<Active | null>(null);
+	const setActive = setStateInterceptor(_setActive, undefined, active => forceCursor(active ? "row-resize" : null));
 	const activeItem = useMemo(() => {
 		const index = items.findIndex(item => getItemId(item) === active?.id);
 		if (index === -1) return null;
@@ -39,12 +44,11 @@ export function SortableList<T extends BaseItem>({ items: [items, setItems], chi
 		useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
 	);
 	const onDragEnd = ({ active, over }: DragEndEvent) => {
-		if (over && active.id !== over?.id)
-			(setItems as SetStateNarrow<T[]>)?.(items => {
-				const activeIndex = items.findIndex(item => getItemId(item) === active.id);
-				const overIndex = items.findIndex(item => getItemId(item) === over.id);
-				return arrayMove(items, activeIndex, overIndex);
-			});
+		if (over && active.id !== over?.id) {
+			const activeIndex = items.findIndex(item => getItemId(item) === active.id);
+			const overIndex = items.findIndex(item => getItemId(item) === over.id);
+			setItems?.(arrayMove(items, activeIndex, overIndex));
+		}
 		setActive(null);
 	};
 

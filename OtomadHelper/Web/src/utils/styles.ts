@@ -40,6 +40,18 @@ export const ifColorScheme = {
 };
 
 /**
+ * Make your selector higher in priority.
+ * @param priority - The priority, the bigger the number, the higher it is. Less than or equal to zero has no effect.
+ * @returns
+ * ```css
+ * .your-selector:not[#\#]:not[#\#]:not[#\#]:not[#\#]:not[#\#] { }
+ * ```
+ */
+export function important(priority: number = 1) {
+	return ":not(#\\#)".repeat(priority);
+}
+
+/**
  * Get the corresponding CSS style value based on a string or number.
  *
  * This function takes a value as input and returns a CSS value. If the input value is a number,

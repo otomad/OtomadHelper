@@ -15,23 +15,22 @@ const StyledSortableItem = styled.li`
 	justify-content: space-between;
 	align-items: center;
 	list-style: none;
-	/* border-radius: calc(4px / var(--scale-x, 1));
-	box-shadow:
-		0 0 0 calc(1px / var(--scale-x, 1)) rgb(63 63 68 / 5%),
-		0 1px calc(3px / var(--scale-x, 1)) 0 rgb(34 33 81 / 15%); */
 	cursor: ns-resize;
-	transition: ${fallbackTransitions}, transform 0s;
 
 	> * {
 		inline-size: 100%;
 	}
 
-	/* &:active {
-		transition: ${fallbackTransitions}, transform 0s;
-	} */
+	&.dragging {
+		pointer-events: none;
+	}
+
+	&:is(.dropping) * {
+		transition: ${fallbackTransitions}, transform 0s, opacity 0s, background-color 0s;
+	}
 `;
 
-export /* @internal */ function SortableItem({ children, id }: FCP<{
+export /* @internal */ default function SortableItem({ children, id }: FCP<{
 	/** Unique identifier. */
 	id: UniqueIdentifier;
 }>) {
@@ -41,10 +40,17 @@ export /* @internal */ function SortableItem({ children, id }: FCP<{
 	} });
 	const context = useMemo(() => ({ attributes, listeners, ref: setActivatorNodeRef }), [attributes, listeners, setActivatorNodeRef]);
 
+	useEffect(() => {
+		setDisabled((React.Children.map(children, child =>
+			React.isValidElement(child) ? !!child.props.disabled || ["true", true].includes(child.props["aria-disabled"]) : false,
+		) as boolean[]).includes(true));
+	}, [children]);
+
 	return (
 		<SortableItemContext.Provider value={context}>
 			<StyledSortableItem
 				ref={setNodeRef}
+				className={{ dragging: isDragging }}
 				style={{
 					opacity: isDragging ? PRESSED_SORTABLE_ITEM_OPACITY : undefined,
 					transform: CSS.Translate.toString(transform),
