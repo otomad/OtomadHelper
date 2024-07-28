@@ -35,11 +35,6 @@ export /* @internal */ const styledExpanderItemText = css`
 `;
 
 export /* @internal */ const styledExpanderItemContent = css`
-	.icon-placeholder {
-		${styles.mixins.square("20px")};
-		${styles.mixins.gridCenter()};
-	}
-
 	${styledExpanderItemText};
 
 	.text {
@@ -104,7 +99,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 }, "div">) {
 	return (
 		<StyledExpanderItem $clickable={clickable} {...htmlAttrs}>
-			{icon ? typeof icon === "string" ? <Icon name={icon} /> : icon : <div className="icon-placeholder" />}
+			{icon ? typeof icon === "string" ? <Icon name={icon} /> : icon : <Icon shadow />}
 			<div className="text">
 				<p className="title"><Preserves>{title}</Preserves></p>
 				<p className="details"><Preserves>{details}</Preserves></p>

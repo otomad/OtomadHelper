@@ -120,11 +120,13 @@ export const configStore = createStore({
 		currentPreset: "enter",
 		activeParameterScheme: [
 			{
+				id: "ZW50ZXI=",
 				name: "进入",
 				enabled: true,
 				parameters: ["缩放", "水平位移", "垂直位移"],
 			},
 			{
+				id: "ZmFkZQ==",
 				name: "淡出",
 				enabled: false,
 				parameters: ["淡入淡出"],

@@ -28,10 +28,6 @@ interface PersistOptions<TState extends object> {
 	partialize?: (keyof TState)[] | ((state: TState) => object);
 }
 
-type StatePropertiedObject<TState> = {
-	[property in keyof TState]: StatePropertyNonNull<TState[property]>;
-};
-
 /**
  * A hook that allows you to select a specific part of the store's state using a path function.
  * And then you can get or set the selected state property, just like use it in React `useState` hook.
@@ -40,6 +36,7 @@ type StatePropertiedObject<TState> = {
  * @returns A proxy object that provides read and write access to the selected state property.
  */
 export function useStoreState<TState extends object>(state: TState): StatePropertiedObject<TState> {
+	if (!isObject(state)) return state as never;
 	return new Proxy(state as AnyObject, {
 		get(state, property) {
 			if (!(property in state)) return [];

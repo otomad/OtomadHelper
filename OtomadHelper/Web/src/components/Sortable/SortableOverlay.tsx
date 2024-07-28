@@ -3,15 +3,14 @@ import { DragOverlay } from "@dnd-kit/core";
 
 export /* @internal */ const PRESSED_SORTABLE_ITEM_OPACITY = "0.25";
 
-const GlobalStyle = createGlobalStyle`
-	.sortable-list *,
-	.sortable-overlay,
-	.sortable-overlay * {
+const StyledSortableOverlay = styled(DragOverlay)`
+	* {
 		transition: ${fallbackTransitions}, transform 0s, opacity 0s;
 	}
 
-	.sortable-overlay * {
-		transition: ${fallbackTransitions}, transform 0s, opacity 0s, background-color 0s;
+	> * {
+		block-size: inherit;
+		inline-size: inherit;
 	}
 `;
 
@@ -49,8 +48,7 @@ const dropAnimationConfig = (emits: SortableOverlayEmits): DropAnimation => ({
 export /* @internal */ default function SortableOverlay({ children, ...emits }: FCP<SortableOverlayEmits>) {
 	return (
 		<Portal container={document.body}>
-			<GlobalStyle />
-			<DragOverlay className="sortable-overlay" dropAnimation={dropAnimationConfig(emits)}>{children}</DragOverlay>
+			<StyledSortableOverlay dropAnimation={dropAnimationConfig(emits)}>{children}</StyledSortableOverlay>
 		</Portal>
 	);
 }

@@ -1,10 +1,11 @@
 import { StyledCard } from "components/Card";
 import { styledExpanderItemBase, styledExpanderItemContent } from "components/Expander/ExpanderItem";
 
-const isPressed = ":not(:has(button:active)):active";
+const isPressed = (ampersand = "&") => `${ampersand}:not(:has(button:active)):active, .sortable-overlay:not(.dropping) > ${ampersand}`;
 
 const StyledSettingsCard = styled(StyledCard)`
 	${styledExpanderItemContent};
+	position: relative;
 
 	> .base {
 		${styledExpanderItemBase};
@@ -28,7 +29,7 @@ const StyledSettingsCard = styled(StyledCard)`
 
 	button& {
 		&:hover,
-		&${isPressed} {
+		${isPressed()} {
 			border-color: ${c("stroke-color-control-stroke-default")};
 		}
 
@@ -36,8 +37,8 @@ const StyledSettingsCard = styled(StyledCard)`
 			background-color: ${c("fill-color-control-secondary")};
 		}
 
-		&:not(:has(.trailing .toggle-switch-base))${isPressed},
-		&:has(.trailing .toggle-switch-base:not(:active, .pressing, .pressed))${isPressed} {
+		${isPressed("&:not(:has(.trailing .toggle-switch-base))")},
+		${isPressed("&:has(.trailing .toggle-switch-base:not(:active, .pressing, .pressed))")} {
 			> .base {
 				background-color: ${c("fill-color-control-tertiary")};
 			}
@@ -58,7 +59,7 @@ const StyledSettingsCard = styled(StyledCard)`
 			}
 		}
 
-		&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active))${isPressed} {
+		${isPressed("&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active))")} {
 			.trailing-icon {
 				color: ${c("fill-color-text-secondary")};
 				background-color: ${c("fill-color-subtle-tertiary")};
@@ -70,7 +71,12 @@ const StyledSettingsCard = styled(StyledCard)`
 		scale: -1 1;
 	}
 
-	.drag-handle {
+	.drag-handle-shadow {
+		position: absolute;
+		inset-block-start: 0;
+		inset-inline-start: 0;
+		block-size: 100%;
+		inline-size: ${15 + 20 + 16}px;
 		cursor: ns-resize;
 	}
 `;
@@ -96,6 +102,8 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	trailingIcon ??= type === "button" ? "chevron_right" :
 		type === "expander" ? "chevron_down" : undefined;
 
+	const dragHandleContext = useContext(SortableList.Item.Context);
+
 	return (
 		<StyledSettingsCard
 			as={type === "container" ? "div" : "button"}
@@ -105,7 +113,12 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 			{...htmlAttrs}
 		>
 			<div className="base">
-				{dragHandle && <Icon name="reorder_dots" className="drag-handle" />}
+				{dragHandle && (
+					<>
+						<div className="drag-handle-shadow" ref={dragHandleContext.ref} {...dragHandleContext.attributes} {...dragHandleContext.listeners} />
+						<Icon name="reorder_dots" className="drag-handle-icon" />
+					</>
+				)}
 				{typeof icon === "object" ? icon : <Icon name={icon} />}
 				<div className="text">
 					<p className="title"><Preserves>{title}</Preserves></p>

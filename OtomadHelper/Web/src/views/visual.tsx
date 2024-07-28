@@ -43,9 +43,9 @@ export default function Visual() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
 		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, transformMethod, currentPreset, noTimeRemapping,
-		glissando, glissandoAmount, appoggiatura, arpeggio, arpeggioNegative,
+		glissando, glissandoAmount, appoggiatura, arpeggio, arpeggioNegative, activeParameterScheme,
 	} = selectConfig(c => c.visual);
-	const activeParameterScheme = selectConfigArray(c => c.visual.activeParameterScheme);
+	// const activeParameterScheme = selectConfigArray(c => c.visual.activeParameterScheme);
 	const { enabled: enablePixelScaling } = selectConfig(c => c.visual.pixelScaling);
 	const { createGroups } = selectConfig(c => c);
 	const prveCheckInfo = usePrveCheckInfo();
@@ -64,7 +64,6 @@ export default function Visual() {
 		const { transformMethod } = configStore.visual;
 		const newIndex = transformMethod.indexOf(id as never);
 		if (newIndex === -1) return;
-		console.log(newIndex + 1);
 		expanderItem.querySelector(".badge .text")!.textContent = String(newIndex + 1);
 	}, []);
 
@@ -152,7 +151,7 @@ export default function Visual() {
 						icon="zoom_fit"
 						checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.stream.transformMethod[topPriorityTransformMethod] })}
 					>
-						<SortableList items={transformMethod} overlayEmits={{ onDrop: onSortableOverlayDrop }}>
+						<SortableList items={transformMethod} fullyDraggable overlayEmits={{ onDrop: onSortableOverlayDrop }}>
 							{(item, index) => (
 								<Expander.Item
 									title={t.stream.transformMethod[item]}
@@ -225,7 +224,22 @@ export default function Visual() {
 							<Button icon="add">{t.stream.preset.add}</Button>
 						</Expander.ChildWrapper>
 					</ExpanderRadio>
-					{activeParameterScheme.map((scheme, i) => (
+					<SortableList items={activeParameterScheme}>
+						{scheme => (
+							<SettingsCard
+								title={scheme.name[0]}
+								details={listFormat(scheme.parameters[0], "conjunction", "narrow")}
+								type="button"
+								icon
+								dragHandle
+								onClick={() => pushPage("parameters")}
+							>
+								<ToggleSwitch on={scheme.enabled} />
+								<Button subtle icon="filter" minWidthUnbounded />
+							</SettingsCard>
+						)}
+					</SortableList>
+					{/* {activeParameterScheme.map((scheme, i) => (
 						<SettingsCard
 							title={scheme.name[0]}
 							details={listFormat(scheme.parameters[0], "conjunction", "narrow")}
@@ -238,7 +252,7 @@ export default function Visual() {
 							<ToggleSwitch on={scheme.enabled} />
 							<Button subtle icon="filter" minWidthUnbounded />
 						</SettingsCard>
-					))}
+					))} */}
 					<div>
 						<Button icon="add">{t.new}</Button>
 						<Button icon="copy_add">{t.stream.parameters.copyAttributesFromSelectedClip}</Button>

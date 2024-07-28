@@ -545,6 +545,13 @@ export function withObject<TObject, TReturn>(object: TObject, getter: (object: T
 }
 
 /**
+ * Check if a object is a state property.
+ */
+export function isStateProperty<T>(object: unknown): object is StateProperty<T> {
+	return Array.isArray(object) && object.length === 2 && typeof object[1] === "function";
+}
+
+/**
  * @deprecated // WARN: Await for React 19 released with a new feature **ref as a prop**, and then delete this function.
  */
 export function functionModule<F extends Function, O>(

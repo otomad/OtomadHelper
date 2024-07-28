@@ -41,4 +41,8 @@ declare global {
 	 * Curve Type, Video Keyframe Type, or OFX Interpolation Type.
 	 */
 	type CurveType = "linear" | "fast" | "slow" | "smooth" | "sharp" | "none";
+
+	type StatePropertiedObject<TState> = {
+		[property in keyof TState]: StatePropertyNonNull<TState[property]>;
+	};
 }

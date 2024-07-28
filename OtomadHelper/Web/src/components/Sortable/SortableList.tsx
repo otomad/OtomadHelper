@@ -10,8 +10,13 @@ const StyledSortableList = styled.ul.attrs({
 })`
 	display: flex;
 	flex-direction: column;
+	gap: inherit;
 	padding: 0;
 	list-style: none;
+
+	* {
+		transition: ${fallbackTransitions}, transform 0s, opacity 0s;
+	}
 `;
 
 type BaseItem = {
@@ -19,30 +24,38 @@ type BaseItem = {
 	id: UniqueIdentifier;
 } | UniqueIdentifier;
 
-const getItemId = (item: BaseItem) => isObject(item) ? item.id : item;
+const getItemId = (item: BaseItem) =>
+	isObject(item) ?
+		// isStateProperty<UniqueIdentifier>(item.id) ?
+		// item.id[0]! :
+		item.id :
+		item;
 
 const addDatasets = (children: ReactNode, id: UniqueIdentifier, index: number) => React.Children.map(children, child =>
 	React.isValidElement(child) ? React.cloneElement(child as never, { "data-id": id, "data-index": index }) : child);
 
-export function SortableList<T extends BaseItem>({ items: itemsStateProperty, overlayEmits, children }: FCP<{
+export function SortableList<T extends BaseItem>({ items: itemsStateProperty, overlayEmits, fullyDraggable, children }: FCP<{
 	/** List items. The item must have `id` property in it. */
 	items: StateProperty<T[]>;
 	/** Rendered item. */
-	children(item: T, index: number, items: T[]): ReactNode;
+	children(states: StatePropertiedObject<T>, index: number, item: T): ReactNode;
 	/** Sortable overlay drop animation side effects event handlers. */
 	overlayEmits?: SortableOverlayEmits;
+	/** Is there no drag handle and you can drag it the whole element? */
+	fullyDraggable?: boolean;
 }>) {
 	if (isStatePropertyPremium(itemsStateProperty))
 		itemsStateProperty = itemsStateProperty.useState();
 	let [items, setItems] = itemsStateProperty;
 	items ??= [];
+	const states = useStoreStateArray(itemsStateProperty[0] as never) as StatePropertiedObject<T>[];
 
 	const [active, _setActive] = useState<Active | null>(null);
 	const setActive = setStateInterceptor(_setActive, undefined, active => forceCursor(active ? "row-resize" : null));
 	const activeItem = useMemo(() => {
 		const index = items.findIndex(item => getItemId(item) === active?.id);
 		if (index === -1) return null;
-		return [items[index], index, items] as const;
+		return [states[index], index, items[index]] as const;
 	}, [active, items]);
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -68,21 +81,22 @@ export function SortableList<T extends BaseItem>({ items: itemsStateProperty, ov
 		>
 			<SortableContext items={items} strategy={verticalListSortingStrategy}>
 				<StyledSortableList>
-					{items.map((item, index, items) => {
+					{items.map((item, index) => {
 						const id = getItemId(item);
 						return (
-							<SortableList.Item key={id} id={id}>
-								{addDatasets(children(item, index, items), id, index)}
+							<SortableList.Item key={id} id={id} fullyDraggable={fullyDraggable}>
+								{addDatasets(children(states[index], index, item), id, index)}
 							</SortableList.Item>
 						);
 					})}
 				</StyledSortableList>
 			</SortableContext>
 			<SortableOverlay {...overlayEmits}>
-				{activeItem?.[0] && addDatasets(children(...activeItem), getItemId(activeItem[0]), activeItem[1])}
+				{activeItem?.[2] && addDatasets(children(...activeItem), getItemId(activeItem[2]), activeItem[1])}
 			</SortableOverlay>
 		</DndContext>
 	);
 }
 
 SortableList.Item = SortableItem;
+SortableList.Overlay = SortableOverlay;

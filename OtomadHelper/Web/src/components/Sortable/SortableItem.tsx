@@ -9,13 +9,17 @@ const SortableItemContext = createContext({
 	ref(_node: HTMLElement | null) { },
 });
 
-const StyledSortableItem = styled.li`
+const StyledSortableItem = styled.li<{
+	/** Is there no drag handle and you can drag it the whole element? */
+	$fullyDraggable?: boolean;
+}>`
 	display: flex;
 	flex-grow: 1;
 	justify-content: space-between;
 	align-items: center;
 	list-style: none;
-	cursor: ns-resize;
+
+	${ifProp("$fullyDraggable", css`cursor: ns-resize;`)}
 
 	> * {
 		inline-size: 100%;
@@ -38,9 +42,11 @@ const StyledSortableItem = styled.li`
 	}
 `;
 
-export /* @internal */ default function SortableItem({ children, id }: FCP<{
+export /* @internal */ default function SortableItem({ children, id, fullyDraggable }: FCP<{
 	/** Unique identifier. */
 	id: UniqueIdentifier;
+	/** Is there no drag handle and you can drag it the whole element? */
+	fullyDraggable?: boolean;
 }>) {
 	const [disabled, setDisabled] = useState(false);
 	const { attributes, isDragging, listeners, setNodeRef, setActivatorNodeRef, transform, transition } = useSortable({ id, disabled, transition: {
@@ -64,20 +70,13 @@ export /* @internal */ default function SortableItem({ children, id }: FCP<{
 					transform: CSS.Translate.toString(transform),
 					transition,
 				}}
-				{...attributes}
-				{...listeners}
+				$fullyDraggable={fullyDraggable}
+				{...fullyDraggable && { ...attributes, ...listeners }}
 			>
 				{children}
-				{/* {(() => {
-					// let disabled = false;
-					const newChildren = React.Children.map(children, child => {
-						console.log(child);
-						return child;
-					});
-					// setDisabled(disabled);
-					return newChildren;
-				})()} */}
 			</StyledSortableItem>
 		</SortableItemContext.Provider>
 	);
 }
+
+SortableItem.Context = SortableItemContext;

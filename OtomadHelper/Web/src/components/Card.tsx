@@ -1,3 +1,5 @@
+export /* @internal */ const settingsCardPadding = [13, 15] as const;
+
 export /* @internal */ const StyledCard = styled.div`
 	width: 100cqw;
 	text-align: initial;
@@ -6,7 +8,7 @@ export /* @internal */ const StyledCard = styled.div`
 	transition: ${fallbackTransitions}, width 0s;
 
 	> .base {
-		padding: 13px 15px;
+		padding: ${settingsCardPadding[0]}px ${settingsCardPadding[1]}px;
 		background-color: ${c("background-fill-color-card-background-default")};
 		border-radius: 2px;
 	}
