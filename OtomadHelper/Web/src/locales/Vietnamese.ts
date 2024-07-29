@@ -27,6 +27,7 @@ export default {
 			prve: "Hiệu ứng nhịp điệu hình ảnh PV",
 			staff: "Staff Visualizer",
 			pixelScaling: "Tỷ lệ pixel",
+			parameters: "Thông số",
 			track: "Các track",
 			mosh: "Mosh",
 		},
@@ -76,12 +77,18 @@ export default {
 			effects: "Hiệu ứng",
 		},
 		units: {},
-		fileFormats: {},
+		fileFormats: {
+			allFiles: "Tất cả các file",
+			midi: "File trình tự MIDI",
+			ust: "File trình tự văn bản UTAU/OpenUTAU",
+			vsq: "File trình tự Vocaloid",
+		},
 		score: {
 			midi: "MIDI",
 			bpm: {},
 			constraint: {},
 			pan: {},
+			musicalTrack: "Các track",
 		},
 		stream: {
 			stretch: {},

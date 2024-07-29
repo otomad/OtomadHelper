@@ -324,7 +324,7 @@ const StyledNavigationView = styled.div<{
 						animation: ${$transitionName === "jump" ? floatUp : ""}
 							300ms ${50 * (i - 1)}ms ${eases.easeOutMax} backwards;
 					}
-				`)}
+				`, 1)}
 
 				> .contents > * {
 					animation: inherit;
@@ -354,9 +354,9 @@ const StyledNavigationView = styled.div<{
 
 	${() => {
 		const selectors = forMap(NAV_ITEMS_ASSUMED_COUNT, i =>
-			`&:has(.nav-items .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item:active) .nav-items .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item .animated-icon`);
+			`&:has(.nav-items .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item:active) .nav-items .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item .animated-icon`, 1);
 		selectors.push(...forMap(NAV_ITEMS_BOTTOM_ASSUMED_COUNT, i =>
-			`&:has(.nav-items-bottom .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item:active) .nav-items-bottom .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item .animated-icon`));
+			`&:has(.nav-items-bottom .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item:active) .nav-items-bottom .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item .animated-icon`, 1));
 		return css`
 			${selectors.join(", ")} {
 				--state: pressed;
@@ -622,7 +622,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 		<StyledNavigationView $transitionName={transitionName} {...htmlAttrs}>
 			<TopLeftButtons paneDisplayMode={paneDisplayMode} onNavButton={onNavButtonClick} onBack={onBack} canBack={canBack} />
 			{forMap(2, i => {
-				const isFlyout = i === 2;
+				const isFlyout = !!i;
 				return (
 					<NavigationViewLeftPanel
 						key={i}

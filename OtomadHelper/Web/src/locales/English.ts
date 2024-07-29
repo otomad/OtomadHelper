@@ -315,7 +315,7 @@ export default {
 				higherNeighbors: "Higher neighbors",
 				default: "Default full coverage",
 			},
-			keyMappingZone: "Key mapping zone",
+			keyMappingZones: "Key mapping zones",
 		},
 		ytp: {
 			constraint: "Constraint length",

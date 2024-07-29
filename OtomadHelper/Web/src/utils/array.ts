@@ -131,6 +131,17 @@
 		return copy;
 	};
 
+	Array.prototype.mapImmer = function (callbackfn, thisArg) {
+		// `forEach` doesn't support async function, so use `for` instead.
+		for (let index = 0; index < this.length; index++) {
+			const element = this[index];
+			const result = callbackfn.call(thisArg, element, index, this);
+			if (result instanceof Promise) result.then(value => this[index] = value);
+			else this[index] = result;
+		}
+		return this;
+	};
+
 	makePrototypeKeysNonEnumerable(Array);
 }
 

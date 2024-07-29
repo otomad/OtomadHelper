@@ -33,16 +33,18 @@ function useTypography(fontSize: number, lineHeight?: number, weight: keyof type
 }
 
 const easeOutFocusRingBack = "cubic-bezier(0.8, 2.15, 0.67, 1)";
+const focusRingTransitions = `box-shadow 0s, --focus-ring-length-outer ${easeOutFocusRingBack} 350ms, --focus-ring-length-inner ${eases.easeOutMax} 250ms`;
 
 export default {
-	focus: () => css`
+	focus: (inset = false) => css`
 		--focus-ring-length-outer: 4px;
 		--focus-ring-length-inner: 2px;
 		box-shadow:
-			0 0 0 var(--focus-ring-length-inner) ${c("stroke-color-focus-stroke-inner")},
-			0 0 0 var(--focus-ring-length-outer) ${c("stroke-color-focus-stroke-outer")};
-		transition: ${fallbackTransitions}, box-shadow 0s, --focus-ring-length-outer ${easeOutFocusRingBack} 350ms, --focus-ring-length-inner ${eases.easeOutMax} 250ms;
+			0 0 0 var(--focus-ring-length-inner) ${c("stroke-color-focus-stroke-inner")} ${inset && "inset"},
+			0 0 0 var(--focus-ring-length-outer) ${c("stroke-color-focus-stroke-outer")} ${inset && "inset"};
+		transition: ${fallbackTransitions}, ${focusRingTransitions};
 	`,
+	focusRingTransitions,
 	/**
 	 * Specify the **font size**, **weight**, **line height**, and **optical size axis** parameters of *Segoe UI Variable* font.
 	 */

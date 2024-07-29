@@ -73,6 +73,9 @@
 	<data name="ContentDialog.Button.Close" xml:space="preserve">
 		<value>閉じる</value>
 	</data>
+	<data name="ContentDialog.Button.LearnMore" xml:space="preserve">
+		<value>詳細(&amp;L)</value>
+	</data>
 	<data name="ContentDialog.Expander.ExpandDetails" xml:space="preserve">
 		<value>詳細を展開</value>
 	</data>
@@ -81,5 +84,15 @@
 	</data>
 	<data name="ContentDialog.ShowError.Title" xml:space="preserve">
 		<value>エラー</value>
+	</data>
+	<data name="WrongOpeningMethod.Script.Title" xml:space="preserve">
+		<value>拡張機能を外しました！</value>
+	</data>
+	<data name="WrongOpeningMethod.Script.Content" xml:space="preserve">
+		<value>Omad Helper の新バージョンは拡張機能です。旧バージョンとは異なり、スクリプトではありません。
+
+スクリプトメニューディレクトリの代わりにVEGASのApplication Extensionsディレクトリに拡張を移動してください。
+
+場所:</value>
 	</data>
 </root>

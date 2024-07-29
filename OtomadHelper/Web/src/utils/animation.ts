@@ -1,4 +1,6 @@
 import { flushSync as reactDomFlushSync } from "react-dom";
+import type * as Styled from "styled-components";
+import "utils/array";
 
 /**
  * Remove all animations in progress from the specified DOM element.
@@ -72,6 +74,20 @@ export async function replayAnimation(element: Element, ...className: string[]) 
 	element.classList.remove(...className);
 	await nextAnimationTick();
 	element.classList.add(...className);
+}
+
+/**
+ * ### Reflow
+ * Reset CSS animations.
+ * @see https://stackoverflow.com/a/45036752/19553213
+ * @see https://stackoverflow.com/questions/27637184
+ * @param element - HTML DOM element.
+ */
+export async function resetAnimation(element: HTMLElement) {
+	element.style.animation = "none";
+	// element.offsetHeight;
+	await nextAnimationTick();
+	element.style.animation = null!;
 }
 
 /**
@@ -388,11 +404,22 @@ export async function startColorViewTransition(changeFunc: () => MaybePromise<vo
 	document.head.removeChild(style);
 }
 
-// This function should to return a Promise instead of the result itself, so cheat the function as async with no await inside the function body.
-// eslint-disable-next-line require-await
-async function postTask<TResult>(callback: () => TResult, optimizeTask: boolean = true) {
-	if (typeof scheduler === "undefined" || !optimizeTask)
-		return callback();
-	else
-		return scheduler.postTask(callback);
+export function forthBack_keyframes<Props extends object = {}>(strings: TemplateStringsArray, ...interpolations: Array<Styled.Interpolation<Props>>) {
+	const forth = keyframes(strings, ...interpolations);
+
+	const backStrings = [...strings];
+	function reverseOffset(rule: string) {
+		const reg = (word: string) => new RegExp(`(?<=\\s|^)${word}(?=\\s*\\{)`, "gu");
+		return rule
+			.replaceAll(reg("from"), "t\0o")
+			.replaceAll(reg("to"), "fr\0om")
+			.replaceAll(reg("([\\d\\.]+)%"), (_, percent) => 100 - parseFloat(percent) + "%")
+			.replaceAll("\0", "");
+	}
+	backStrings.mapImmer(rule => reverseOffset(rule));
+	interpolations.mapImmer(rule => typeof rule === "string" ? reverseOffset(rule) : rule);
+
+	const back = keyframes(backStrings as unknown as TemplateStringsArray, ...interpolations);
+
+	return [forth, back] as const;
 }

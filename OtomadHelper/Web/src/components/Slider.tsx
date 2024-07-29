@@ -86,7 +86,7 @@ const StyledSlider = styled.div`
 		}
 	}
 
-	${styles.mixins.forwardFocusRing("thumb")};
+	${styles.mixins.forwardFocusRing(".thumb")};
 `;
 
 export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, step, keyStep = 1, disabled = false, onChanging, onChanged }: FCP<{

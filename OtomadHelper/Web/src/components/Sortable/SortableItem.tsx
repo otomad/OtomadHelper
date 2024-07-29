@@ -40,6 +40,12 @@ const StyledSortableItem = styled.li<{
 			pointer-events: none;
 		}
 	}
+
+	${styles.mixins.forwardFocusRing("> *", true)};
+	&:focus-visible,
+	&:focus-visible > * {
+		transition: ${fallbackTransitions}, ${styles.effects.focusRingTransitions}, transform 0s, opacity 0s;
+	}
 `;
 
 export /* @internal */ default function SortableItem({ children, id, fullyDraggable }: FCP<{

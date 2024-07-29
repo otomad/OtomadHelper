@@ -103,7 +103,7 @@ const StyledToggleSwitchLabel = styled.button`
 		}
 	}
 
-	${styles.mixins.forwardFocusRing("toggle-switch-base")};
+	${styles.mixins.forwardFocusRing(".toggle-switch-base")};
 
 	&.selected {
 		.stroke {

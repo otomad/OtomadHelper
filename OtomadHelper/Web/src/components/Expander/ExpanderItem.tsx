@@ -72,12 +72,12 @@ const StyledExpanderItem = styled.div<{
 	${ifProp("$clickable", css`
 		:not(.sortable-item) > &:hover,
 		.sortable-item:not(.dragging) > &:hover {
-			background-color: ${c("fill-color-control-secondary")};
+			background-color: ${c("fill-color-subtle-secondary")};
 		}
 
 		.sortable-item:not(.dragging) > &:active,
 		.sortable-overlay:not(.dropping) &${important()} {
-			background-color: ${c("fill-color-control-tertiary")};
+			background-color: ${c("fill-color-subtle-tertiary")};
 		}
 
 		.sortable-item:last-child > &,

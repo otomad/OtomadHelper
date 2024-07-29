@@ -175,6 +175,7 @@ export const configStore = createStore({
 			octaves: true,
 			lowerNeighbors: true,
 			higherNeighbors: true,
+			default: true,
 		},
 		offset: 0,
 	},

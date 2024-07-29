@@ -125,6 +125,14 @@ declare interface Array<T> {
 	 * Removes the first element from the copy of the array, and return the copy of the array.
 	 */
 	toShifted(): T[];
+
+	/**
+	 * Calls a defined callback function on each element of an array, and replace the elements in the original array with the corresponding results.
+	 * @note This will modify the original array.
+	 * @param callbackfn - A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.
+	 * @param thisArg - An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
+	 */
+	mapImmer<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[];
 }
 
 declare interface Set<T> {

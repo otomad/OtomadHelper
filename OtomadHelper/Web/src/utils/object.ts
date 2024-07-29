@@ -59,12 +59,13 @@ export function assign<TTarget extends object>(target: TTarget, ...sources: Part
  * @template T - The object type to be repeated.
  * @param length - Number of loops.
  * @param callback - `map` callback.
+ * @param startIndex - Initial index. Defaults to 0.
  * @param flat - Flatten the array?
  * @returns An array of objects repeated a specified number of times.
  */
-export function forMap<T>(length: number, callback: (index: number) => T, flat: boolean = false) {
+export function forMap<T>(length: number, callback: (index: number) => T, startIndex: number = 0, flat: boolean = false) {
 	const mapAction = (flat ? "flatMap" : "map") as "map";
-	return Array<void>(length).fill(undefined)[mapAction]((_, index) => callback(index + 1));
+	return Array<void>(length).fill(undefined)[mapAction]((_, index) => callback(index + startIndex));
 }
 
 /**

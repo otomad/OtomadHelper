@@ -19,8 +19,8 @@ const ExpanderParent = styled(SettingsCard)<{
 		}
 
 		&:not(.hidden) {
-			transition-timing-function: ${eases.easeOutElastic};
 			transition-duration: 1250ms;
+			transition-timing-function: ${eases.easeOutElastic};
 		}
 	}
 

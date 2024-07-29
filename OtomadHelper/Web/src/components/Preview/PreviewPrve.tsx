@@ -428,7 +428,7 @@ export default function PreviewPrve({ thumbnail, id }: FCP<{
 		<StyledPreviewPrve $id={id}>
 			{forMap(imageCount, i => animatedImage ?
 				<HoverToChangeImg key={i} animatedSrc={animatedImage[0]} staticSrc={animatedImage[1]} /> :
-				<img key={i} src={id === "radialBlur" && i === 2 ? alterImage! : thumbnail} />)}
+				<img key={i} src={id === "radialBlur" && i ? alterImage! : thumbnail} />)}
 		</StyledPreviewPrve>
 	);
 }

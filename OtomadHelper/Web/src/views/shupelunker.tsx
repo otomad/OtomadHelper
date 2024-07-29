@@ -7,7 +7,7 @@ const affixes = [
 
 export default function Shupelunker() {
 	const { enabled, affix, offset } = selectConfig(c => c.shupelunker);
-	const { octaves, higherNeighbors, lowerNeighbors } = selectConfig(c => c.shupelunker.unallocated);
+	const { octaves, lowerNeighbors, higherNeighbors, default: defaultAll } = selectConfig(c => c.shupelunker.unallocated);
 
 	return (
 		<div className="container">
@@ -31,12 +31,13 @@ export default function Shupelunker() {
 						<ToggleSwitch on={octaves} details={t.descriptions.shupelunker.unallocated.octaves}>{t.shupelunker.unallocated.octaves}</ToggleSwitch>
 						<ToggleSwitch on={lowerNeighbors} details={t.descriptions.shupelunker.unallocated.lowerNeighbors}>{t.shupelunker.unallocated.lowerNeighbors}</ToggleSwitch>
 						<ToggleSwitch on={higherNeighbors} details={t.descriptions.shupelunker.unallocated.higherNeighbors}>{t.shupelunker.unallocated.higherNeighbors}</ToggleSwitch>
+						<ToggleSwitch on={defaultAll} details={t.descriptions.shupelunker.unallocated.default}>{t.shupelunker.unallocated.default}</ToggleSwitch>
 					</Expander>
 					<SettingsCard title={t.offset} details={t.descriptions.shupelunker.offset} icon="table_resize">
 						<TextBox.Number value={offset} decimalPlaces={0} suffix={t.units.semitones} positiveSign />
 					</SettingsCard>
 
-					<Subheader>{t.shupelunker.keyMappingZone}</Subheader>
+					<Subheader>{t.shupelunker.keyMappingZones}</Subheader>
 				</EmptyMessage.Typical>
 			</EmptyMessage.YtpDisabled>
 		</div>

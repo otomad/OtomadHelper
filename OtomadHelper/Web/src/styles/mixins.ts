@@ -80,15 +80,16 @@ export default {
 	},
 	/**
 	 * Cancel the focus ring style of the parent element, and forward it to a child element to apply the focus ring style.
-	 * @param childClassName - Child element class name.
+	 * @param childSelector - Child element selector.
+	 * @param inset - Makes focus ring inside the element.
 	 */
-	forwardFocusRing: (childClassName: string = "base") => css`
+	forwardFocusRing: (childSelector: string = ".base", inset: boolean = false) => css`
 		&:focus-visible {
 			box-shadow: none;
 			transition: inherit;
 
-			.${childClassName} {
-				${styles.effects.focus()};
+			${childSelector} {
+				${styles.effects.focus(inset)};
 			}
 		}
 	`,

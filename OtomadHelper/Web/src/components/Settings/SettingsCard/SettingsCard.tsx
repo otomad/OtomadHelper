@@ -5,10 +5,10 @@ const isPressed = (ampersand = "&") => `${ampersand}:not(:has(button:active)):ac
 
 const StyledSettingsCard = styled(StyledCard)`
 	${styledExpanderItemContent};
-	position: relative;
 
 	> .base {
 		${styledExpanderItemBase};
+		position: relative;
 
 		.select-info {
 			color: ${c("accent-color")};
@@ -72,12 +72,36 @@ const StyledSettingsCard = styled(StyledCard)`
 	}
 
 	.drag-handle-shadow {
+		${styles.mixins.gridCenter()};
 		position: absolute;
 		inset-block-start: 0;
 		inset-inline-start: 0;
+		z-index: 1;
 		block-size: 100%;
 		inline-size: ${15 + 20 + 16}px;
+		border-radius: 3px;
 		cursor: ns-resize;
+
+		&::after {
+			${styles.mixins.square("36px")};
+			content: "";
+			display: block;
+			background-color: ${c("fill-color-subtle-secondary")};
+			border-radius: 4px;
+			opacity: 0;
+		}
+
+		&:hover:not(:active)::after {
+			opacity: 1;
+
+			.sortable-overlay & {
+				opacity: 0;
+			}
+		}
+
+		&:focus-visible {
+			${styles.effects.focus(true)};
+		}
 	}
 `;
 
