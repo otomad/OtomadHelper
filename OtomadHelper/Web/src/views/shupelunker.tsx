@@ -38,6 +38,7 @@ export default function Shupelunker() {
 					</SettingsCard>
 
 					<Subheader>{t.shupelunker.keyMappingZones}</Subheader>
+					<PreviewPiano />
 				</EmptyMessage.Typical>
 			</EmptyMessage.YtpDisabled>
 		</div>

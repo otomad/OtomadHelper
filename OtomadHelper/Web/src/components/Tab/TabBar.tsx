@@ -157,23 +157,13 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		}
 	}, [position]);
 
-	const onWheel = useCallback<WheelEventHandler>(e => {
-		if (
-			vertical || // Vertical tab bar (navigation view) do not care about horizontal scrolling.
-			e.deltaX !== 0 && e.deltaY === 0 // Consider about touchpad horizontal scrolling.
-		) return;
-		const tabBar = e.currentTarget as HTMLDivElement;
-		if (!tabBar || tabBar.scrollWidth <= tabBar.clientWidth) return;
-		tabBar.scrollLeft += e.deltaY;
-		e.preventDefault();
-	}, []);
-
 	useEffect(() => {
 		update();
 	}, [current, children]);
 
 	return (
-		<EventInjector onWheel={onWheel}>
+		<HorizontalScroll enabled={!vertical}>
+			{/* Vertical tab bar (navigation view) do not care about horizontal scrolling. */}
 			<StyledTabBar className={[vertical ? "vertical" : "horizontal"]}>
 				<div className="scroll">
 					<div className="items">
@@ -191,7 +181,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 					<Indicator ref={indicatorEl} $position={position} $noTransition={noIndicatorTransition} $vertical={vertical} />
 				</div>
 			</StyledTabBar>
-		</EventInjector>
+		</HorizontalScroll>
 	);
 }
 
