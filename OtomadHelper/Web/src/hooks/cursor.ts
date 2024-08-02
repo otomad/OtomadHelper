@@ -1,5 +1,6 @@
 import { convertAniBinaryToCSS } from "ani-cursor";
-import type { Cursor } from "styles/force-cursor";
+import type { Property } from "csstype";
+type Cursor = Property.Cursor;
 
 /**
  * Forcefully specify the mouse cursor style.
@@ -10,9 +11,9 @@ import type { Cursor } from "styles/force-cursor";
  */
 export function forceCursor(cursor: Cursor | null) {
 	if (!cursor)
-		delete document.body.dataset.cursor;
+		document.body.style.removeProperty("--cursor");
 	else
-		document.body.dataset.cursor = cursor;
+		document.body.style.setProperty("--cursor", cursor);
 }
 
 /**

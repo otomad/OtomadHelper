@@ -1,0 +1,4 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="white" stroke="black" stroke-miterlimit="10" data-hotspot-x="16" data-hotspot-y="16" data-fallback="row-resize">
+	<path d="M11.5 11.2143H14.7143V13.5H7.5V15.5H24.5V13.5H17.2857V11.2143H20.5V10.5714L16 6.07143L11.5 10.5714V11.2143Z" />
+	<path d="M11.5 20.7857H14.7143V18.5H7.5V16.5H24.5V18.5H17.2857V20.7857H20.5V21.4286L16 25.9286L11.5 21.4286V20.7857Z" />
+</svg>

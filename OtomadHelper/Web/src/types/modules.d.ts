@@ -7,3 +7,7 @@ declare module "*.ani" {
 	const src: string;
 	export default src;
 }
+declare module "*.svg?cursor" {
+	const svg: string;
+	export default svg;
+}

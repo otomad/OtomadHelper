@@ -80,7 +80,7 @@ const StyledSettingsCard = styled(StyledCard)`
 		block-size: 100%;
 		inline-size: ${15 + 20 + 16}px;
 		border-radius: 3px;
-		cursor: ns-resize;
+		cursor: ${SortableList.Item.dragHandleCursor};
 
 		&::after {
 			${styles.mixins.square("36px")};

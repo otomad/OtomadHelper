@@ -2,6 +2,7 @@ import type { Active, DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
 import { DndContext, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
 import { restrictToParentElement, restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import nsResizeDraggingCur from "assets/cursors/ns_resize_dragging.svg?cursor";
 import SortableItem from "./SortableItem";
 import SortableOverlay, { type SortableOverlayEmits } from "./SortableOverlay";
 
@@ -51,7 +52,7 @@ export function SortableList<T extends BaseItem>({ items: itemsStateProperty, ov
 	const states = useStoreStateArray(itemsStateProperty[0] as never) as StatePropertiedObject<T>[];
 
 	const [active, _setActive] = useState<Active | null>(null);
-	const setActive = setStateInterceptor(_setActive, undefined, active => forceCursor(active ? "row-resize" : null));
+	const setActive = setStateInterceptor(_setActive, undefined, active => forceCursor(active ? nsResizeDraggingCur : null));
 	const activeItem = useMemo(() => {
 		const index = items.findIndex(item => getItemId(item) === active?.id);
 		if (index === -1) return null;

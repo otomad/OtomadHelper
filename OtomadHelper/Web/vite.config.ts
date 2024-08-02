@@ -13,6 +13,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import autoImportConfig from "./auto-import.config";
 import fragmentFiltersVirtualFile from "./src/plugins/vite/fragment-filters";
 import globalized from "./src/plugins/vite/globalized";
+import svgCursor from "./src/plugins/vite/svg-cursor";
 
 const resolve = (...paths: string[]) => _resolve(__dirname, ...paths);
 
@@ -81,6 +82,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				compress: PROD,
 			}),
 			fragmentFiltersVirtualFile(),
+			svgCursor(),
 			/* compression({
 				skipIfLargerOrEqual: true,
 				deleteOriginalAssets: true,
@@ -95,7 +97,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				output: {
 					entryFileNames: "[name].js",
 					chunkFileNames: "chunks/[name].js",
-					assetFileNames: "assets/[name]-[hash].[ext]",
+					assetFileNames: "assets/[name].[hash].[ext]",
 					/* manualChunks(id) {
 						if (id.endsWith(".js")) return "../" + id;
 						if (id.includes("node_modules")) return "vendor";

@@ -1,7 +1,6 @@
 import { globalColors } from "./colors";
 import eases from "./eases";
 import fakeAnimations from "./fake-animations";
-import forceCursors from "./force-cursor";
 import reset from "./reset";
 
 const GlobalStyle = createGlobalStyle<{
@@ -159,16 +158,16 @@ const GlobalStyle = createGlobalStyle<{
 		z-index: calc(infinity);
 	}
 
-	${() => {
-		return forceCursors.map(cursor => css`
-			body[data-cursor="${cursor}"] {
-				&,
-				* {
-					cursor: ${cursor} !important;
-				}
+	body[style*="--cursor"] {
+		&,
+		* {
+			&,
+			::before,
+			::after {
+				cursor: var(--cursor) !important;
 			}
-		`);
-	}}
+		}
+	}
 
 	// User requested to reduce dynamic effects
 	@media (prefers-reduced-motion: reduce) {

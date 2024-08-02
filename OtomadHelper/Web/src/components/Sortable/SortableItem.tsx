@@ -1,6 +1,7 @@
 import type { DraggableSyntheticListeners, UniqueIdentifier } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import nsResizeCur from "assets/cursors/ns_resize.svg?cursor";
 import { PRESSED_SORTABLE_ITEM_OPACITY } from "./SortableOverlay";
 
 const SortableItemContext = createContext({
@@ -19,7 +20,8 @@ const StyledSortableItem = styled.li<{
 	align-items: center;
 	list-style: none;
 
-	${ifProp("$fullyDraggable", css`cursor: ns-resize;`)}
+	/* ${ifProp("$fullyDraggable", css`cursor: ns-resize;`)} */
+	${ifProp("$fullyDraggable", css`cursor: ${nsResizeCur};`)}
 
 	> * {
 		inline-size: 100%;
@@ -86,3 +88,4 @@ export /* @internal */ default function SortableItem({ children, id, fullyDragga
 }
 
 SortableItem.Context = SortableItemContext;
+SortableItem.dragHandleCursor = nsResizeCur;
