@@ -93,6 +93,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 		publicDir: "src/public",
 		build: {
 			target: "ESNext",
+			assetsInlineLimit: 200,
 			rollupOptions: {
 				output: {
 					entryFileNames: "[name].js",
