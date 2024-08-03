@@ -6,7 +6,7 @@ export default function HorizontalScroll({ enabled = true, children }: FCP<{
 		if (!enabled || e.deltaX !== 0 && e.deltaY === 0) return; // Consider about touchpad horizontal scrolling.
 		const el = e.currentTarget as HTMLDivElement;
 		if (!el || el.scrollWidth <= el.clientWidth) return;
-		el.scrollLeft += e.deltaY;
+		el.scrollLeft += e.deltaY; // TODO: Smooth scroll makes it stuck.
 		e.preventDefault();
 	}, []);
 

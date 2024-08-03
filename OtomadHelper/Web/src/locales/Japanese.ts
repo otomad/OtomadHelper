@@ -247,6 +247,7 @@ export default {
 				velocity: "Velocity",
 				pitch: "Pitch",
 				duration: "期間",
+				pan: "パン",
 				progress: "進捗状況",
 			},
 			preset: {
@@ -462,7 +463,7 @@ export default {
 			},
 		},
 		descriptions: {
-			condition: "次の設定をいつ適用するかを指定します",
+			condition: "この設定をいつ適用するかを指定します",
 			curve: "キーフレームタイプの補間曲線を指定します。",
 			source: {
 				trim: "指定したソースのインポイントまたはアウトポイントタイムを調整します。",

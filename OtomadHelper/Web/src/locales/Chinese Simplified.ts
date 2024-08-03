@@ -247,6 +247,7 @@ export default {
 				velocity: "力度",
 				pitch: "音高",
 				duration: "持续时间",
+				pan: "声像",
 				progress: "进度",
 			},
 			preset: {
@@ -462,7 +463,7 @@ export default {
 			},
 		},
 		descriptions: {
-			condition: "指定当满足何条件时才会应用下述配置",
+			condition: "指定当满足何条件时才会应用该配置",
 			curve: "指定关键帧类型中的插值曲线",
 			source: {
 				trim: "调整指定素材的入点或出点时间",

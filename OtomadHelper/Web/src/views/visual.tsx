@@ -236,24 +236,12 @@ export default function Visual() {
 								onClick={() => pushPage("parameters")}
 							>
 								<ToggleSwitch on={scheme.enabled} />
-								<Button subtle icon="filter" minWidthUnbounded />
+								<Tooltip placement="y" title={t.descriptions.condition}>
+									<Button subtle icon="filter" minWidthUnbounded />
+								</Tooltip>
 							</SettingsCard>
 						)}
 					</SortableList>
-					{/* {activeParameterScheme.map((scheme, i) => (
-						<SettingsCard
-							title={scheme.name[0]}
-							details={listFormat(scheme.parameters[0], "conjunction", "narrow")}
-							type="button"
-							key={i}
-							icon
-							dragHandle
-							onClick={() => pushPage("parameters")}
-						>
-							<ToggleSwitch on={scheme.enabled} />
-							<Button subtle icon="filter" minWidthUnbounded />
-						</SettingsCard>
-					))} */}
 					<div>
 						<Button icon="add">{t.new}</Button>
 						<Button icon="copy_add">{t.stream.parameters.copyAttributesFromSelectedClip}</Button>
