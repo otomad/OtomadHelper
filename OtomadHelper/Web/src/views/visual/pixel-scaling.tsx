@@ -1,4 +1,4 @@
-import cursor from "assets/cursors/pixelated_cursor.cur";
+import cursor from "assets/cursors/pixelated_cursor.svg?cursor";
 import tipsImage from "assets/images/tips/sand_with_sword.png";
 
 export default function PixelScaling() {

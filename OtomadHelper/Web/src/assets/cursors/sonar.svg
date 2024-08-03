@@ -1,0 +1,21 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" data-hotspot-x="16" data-hotspot-y="16" data-fallback="ns-resize">
+	<style>
+		<![CDATA[
+			#rect {
+				transform-origin: center center;
+				animation: scale 500ms infinite;
+			}
+
+			@keyframes scale {
+				from {
+					scale: 0.5;
+				}
+
+				to {
+					scale: 1;
+				}
+			}
+		]]>
+	</style>
+	<rect id="rect" width="32" height="32" fill="black" />
+</svg>

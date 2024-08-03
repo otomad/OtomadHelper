@@ -1,3 +1,4 @@
+import cursor from "assets/cursors/sonar.svg?cursor";
 import tipsImage from "assets/images/tips/shapes.png";
 
 export default function Sonar() {
@@ -8,7 +9,7 @@ export default function Sonar() {
 
 	return (
 		<div className="container">
-			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.sonar}</SettingsPageControl>
+			<SettingsPageControl image={tipsImage} cursor={cursor} learnMoreLink="">{t.descriptions.sonar}</SettingsPageControl>
 
 			<EmptyMessage.YtpDisabled fully={t.titles.sonar}>
 				<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} details={t.descriptions.sonar.enabled} resetTransitionOnChanging />

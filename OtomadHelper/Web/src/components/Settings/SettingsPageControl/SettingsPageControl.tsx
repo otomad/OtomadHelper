@@ -10,7 +10,7 @@ const StyledSettingsPageControl = styled.div<{
 	display: flex;
 	gap: ${IMAGE_MARGIN}px;
 	${({ $cursor }) => $cursor && css`
-		cursor: url("${$cursor}"), auto;
+		cursor: ${$cursor.startsWith("url(") ? $cursor : `url("${$cursor}"), auto`};
 	`}
 
 	${ifNotProp("$clearFloat", css`

@@ -250,6 +250,7 @@ export default {
 				velocity: "Velocity",
 				pitch: "Pitch",
 				duration: "Duration",
+				pan: "Pan",
 				progress: "Progress",
 			},
 			preset: {
@@ -473,7 +474,7 @@ export default {
 			},
 		},
 		descriptions: {
-			condition: "Specifies when to apply the following configuration",
+			condition: "Specifies when to apply this configuration",
 			curve: "Specifies the interpolation curve of the keyframe type",
 			source: {
 				trim: "Adjusts the in or out point time of the specified source",

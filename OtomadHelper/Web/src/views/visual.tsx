@@ -207,6 +207,7 @@ export default function Visual() {
 					<Expander title={t.stream.mapping.velocity} icon="signal" />
 					<Expander title={t.stream.mapping.pitch} icon="music_note" />
 					<Expander title={t.stream.mapping.duration} icon="timer" />
+					<Expander title={t.stream.mapping.pan} icon="stereo" />
 					<Expander title={t.stream.mapping.progress} icon="progress_bar" />
 
 					<Subheader>{t.subheaders.parameters}</Subheader>
