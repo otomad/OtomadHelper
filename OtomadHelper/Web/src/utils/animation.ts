@@ -55,14 +55,15 @@ export function flushSync(callback?: () => unknown) {
 
 /**
  * **Temporarily** disable transition animations when styling an element.
- * @param element - HTML DOM element.
+ * @param element - HTML DOM element or its CSS style declaration.
  * @param style - CSS style.
  */
-export async function setStyleWithoutTransition(element: HTMLElement, style: CSSProperties) {
-	Object.assign(element.style, style);
-	element.style.transition = "none";
+export async function setStyleWithoutTransition(element: HTMLElement | CSSStyleDeclaration, style: CSSProperties = {}) {
+	const styles = element instanceof CSSStyleDeclaration ? element : element.style;
+	Object.assign(styles, style);
+	styles.transition = "none";
 	await nextAnimationTick();
-	element.style.removeProperty("transition");
+	styles.transition = null!;
 }
 
 /**

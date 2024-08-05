@@ -80,7 +80,7 @@ export default [
 			"no-lonely-if": "off",
 			"dot-notation": ["error"],
 			"guard-for-in": "error",
-			"no-extra-label": "error",
+			"no-extra-label": "off",
 			"require-await": "error",
 			"yoda": "error",
 			"@stylistic/block-spacing": "error",

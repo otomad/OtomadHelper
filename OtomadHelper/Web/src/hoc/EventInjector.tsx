@@ -12,6 +12,7 @@ type FilterOnEvents<TDomAttributes> = Partial<OmitNevers<{
 type AllEvents = FilterOnEvents<React.DOMAttributes<HTMLElement> & {
 	// For events which are not shown in the DOM attributes.
 	onAnimationCancel: AnimationEventHandler<HTMLElement>;
+	onScrollEnd: BaseEventHandler<HTMLElement>;
 }>;
 
 type Options = boolean | AddEventListenerOptions | EventListenerOptions;
