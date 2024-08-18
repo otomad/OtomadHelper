@@ -520,7 +520,6 @@ export default {
 					stretchAttributes: "選択したチューニング方法の詳細設定",
 					alternativeForExceedsTheRange: "別の方法で範囲外のメモを処理",
 					resample: "ストレッチとピッチをロックし、ストレッチを調整してピッチを変更します",
-					preserveFormant: "チューニング中に音声音を維持します",
 					basePitch: "オーディオクリップのベースピッチを指定します",
 					prelisten: {
 						_: "クリップとベースピッチを比較し、簡単に調整できます",

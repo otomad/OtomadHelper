@@ -532,7 +532,7 @@ export default {
 					stretchAttributes: "More configuration about the selected tuning method",
 					alternativeForExceedsTheRange: "Handles out of range notes with an alternative method",
 					resample: "Locks stretch and pitch, adjusts stretch to change pitch",
-					preserveFormant: "Maintains voice tone while tuning",
+					preserveFormant: "Maintains voice tone characteristics while tuning",
 					basePitch: "Specifies the base pitch of the audio clip",
 					prelisten: {
 						_: "Compares the clip to the base pitch for easy adjustment",

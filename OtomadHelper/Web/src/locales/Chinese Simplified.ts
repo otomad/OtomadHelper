@@ -521,7 +521,7 @@ export default {
 					stretchAttributes: "有关所选调音方法的更多配置",
 					alternativeForExceedsTheRange: "使用另一种平替方法来处理超出音域之外的音符",
 					resample: "锁定伸缩与音调，调整伸缩以改变音调",
-					preserveFormant: "调音时保持音色不变",
+					preserveFormant: "调音时保持语音音色特征不变",
 					basePitch: "指定音频剪辑的原始音高",
 					prelisten: {
 						_: "将剪辑与原始音高进行比较，以便调整",
