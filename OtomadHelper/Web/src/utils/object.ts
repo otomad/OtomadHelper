@@ -344,7 +344,7 @@ export function isLiteralObject(value: unknown): value is object {
  *
  * let element = document.getElementById("my-element")!.firstElementChild!; // Type: Element
  * asserts<HTMLInputElement>(element);
- * element; // Type: HTMLInputElement;
+ * element; // Type: HTMLInputElement
  *
  * let a = 123; // Type: number
  * asserts<string>(a);

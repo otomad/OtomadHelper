@@ -1,15 +1,23 @@
-const WILL_SCROLL_X_ATTR = "willScrollX";
+// const WILL_SCROLL_X_ATTR = "willScrollX";
 
 export default function HorizontalScroll({ enabled = true, children }: FCP<{
 	/** When user use mouse wheel to scroll, should it scroll horizontally instead of default vertically? */
 	enabled?: boolean;
 }, "div">) {
-	const deleteWillScrollX = (el?: HTMLElement): void => void delete el?.dataset[WILL_SCROLL_X_ATTR];
+	// const willScrollX = useRef<number>();
+	const [scrollX, setScrollX] = useState(0);
+	const smoothScrollX = useSmoothValue(scrollX, 1);
+	const _el = useDomRef<"section">(); // WARN: Wait for React 19 ref as a prop.
 	
 	const onWheel = useCallback<WheelEventHandler<HTMLElement>>(e => {
 		const el = e.currentTarget;
 		if (!el) return;
-		notPrevent: do {
+		_el.current = el;
+		if (!enabled || el.scrollWidth <= el.clientWidth) return;
+		e.preventDefault();
+		setScrollX(scrollX => clamp(scrollX + (e.deltaX || e.deltaY), 0, el.scrollWidth - el.offsetWidth));
+		
+		/* notPrevent: do {
 			prevent: do {
 				if (!enabled ||
 					e.deltaX !== 0 || e.deltaY === 0 || // Consider about touchpad horizontal scrolling.
@@ -31,13 +39,18 @@ export default function HorizontalScroll({ enabled = true, children }: FCP<{
 			} while (false);
 			e.preventDefault();
 		} while (false);
-		deleteWillScrollX(el);
+		deleteWillScrollX(el); */
 	}, [enabled]);
 	
-	const onScrollEnd = useCallback<BaseEventHandler<HTMLElement>>(e => deleteWillScrollX(e.currentTarget), []);
+	useEffect(() => {
+		if (!_el.current) return;
+		_el.current.scrollLeft = smoothScrollX;
+	}, [smoothScrollX]);
+	
+	// const onScrollEnd = useCallback<BaseEventHandler<HTMLElement>>(e => deleteWillScrollX(e.currentTarget), []);
 
 	return (
-		<EventInjector onWheel={onWheel} onScrollEnd={onScrollEnd}>
+		<EventInjector onWheel={onWheel}>
 			{children as ReactElement}
 		</EventInjector>
 	);
