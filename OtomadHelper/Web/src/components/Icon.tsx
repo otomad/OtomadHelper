@@ -39,7 +39,11 @@ function Icon(props: FCP<{
 	shadow: boolean;
 }, "i">, ref: ForwardedRef<"i">): JSX.Element;
 function Icon({ name, filled, shadow, className, ...htmlAttrs }: FCP<{
-	/** Icon file name. */
+	/**
+	 * Icon file name.
+	 * - If it is a boolean, it will be disguised as a (fake) icon element, but the content will be empty.
+	 * - If it is an empty string or undefined, it will return nothing.
+	 */
 	name?: DeclaredIcons | "" | boolean;
 	/** Keep the color of the icon itself? */
 	filled?: boolean;
@@ -48,7 +52,8 @@ function Icon({ name, filled, shadow, className, ...htmlAttrs }: FCP<{
 }, "i">, ref: ForwardedRef<"i">) {
 	if (shadow) return <StyledIcon className={["shadow", className]} {...htmlAttrs} ref={ref} />;
 
-	if (!name || typeof name === "boolean") return <i hidden className={className} {...htmlAttrs} ref={ref} />;
+	if (typeof name === "boolean") return <i hidden className={className} {...htmlAttrs} ref={ref} />;
+	if (!name) return;
 
 	const symbolId = getIconSymbolId(name);
 	const ariaDescription = name.replaceAll("_", " ").replaceAll("/", ": ");
