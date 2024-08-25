@@ -1,4 +1,4 @@
-﻿namespace OtomadHelper.Test;
+namespace OtomadHelper.Test;
 
 partial class TestControls {
 	/// <summary>
