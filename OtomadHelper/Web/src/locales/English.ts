@@ -26,6 +26,8 @@ export default {
 			mosh_full: "Datamoshes",
 			tools: "Tools",
 			settings: "Settings",
+			effect: "Effect",
+			effect_other: "Effects",
 			prve: "PV Rhythm Visual Effect",
 			staff: "Staff Visualizer",
 			pixelScaling: "Pixel Scaling",
@@ -56,9 +58,10 @@ export default {
 				selectGeneratedAudioClips: "Select all audio clips generated",
 				selectGeneratedVideoClips: "Select all video clips generated",
 			},
-			randomInPoint: {
-				_: "Random in point",
-				tracks: "For different tracks",
+			blindBox: {
+				_: "Blind box",
+				track: "For each track or channel",
+				marker: "Switch once per marker",
 			},
 		},
 		on: "On",
@@ -101,7 +104,6 @@ export default {
 			advanced: "Advanced",
 			config: "Configuration",
 			parameters: "Parameters",
-			effects: "Effects",
 			seeAlso: "See also",
 		},
 		units: {
@@ -196,6 +198,8 @@ export default {
 				applyCustomPreset: "Apply custom preset",
 				glissando: {
 					_: "Glissando",
+					swirl: "Swirl",
+					pingpong: "Ping-Pong",
 					swirlAmount: "Swirl amount",
 				},
 				appoggiatura: {
@@ -486,7 +490,11 @@ export default {
 						versionRequest: "Note: This feature requires VEGAS Pro ≥ 19. The current version is {{version}}.",
 					},
 				},
-				randomInPoint: "This can result in randomly selected source clips having different base pitches, making it useful only for creating funny videos for entertainment purposes, and barely used for creating high-caliber videos",
+				blindBox: {
+					_: "Uses random in points for the source.\nThis can result in randomly selected source clips having different base pitches, making it useful only for creating funny videos for entertainment purposes, and barely used for creating high-caliber videos.",
+					track: "Whether track or channel depends on the Score configuration",
+					marker: "When a marker is encountered in the score, the in point of the source will be changed once. If several markers have the same non-empty name, they will use the same in point of the source.",
+				},
 			},
 			score: {
 				trim: "Intercepts the generation time range of the score",
@@ -510,7 +518,7 @@ export default {
 				transformMethod: "Specifies the priority order of target properties for applying transformation keyframes",
 				playingTechniques: {
 					glissando: {
-						_: "Produces an effect when playing pitch bends, slides, or glissandi. Defaults to swirl.",
+						_: "Produces an effect when playing pitch bends, slides, or glissandi.",
 						swirlAmount: "Specifies the amount of the swirl twist amplitude",
 					},
 					appoggiatura: {

@@ -43,7 +43,7 @@ export default function Visual() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
 		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, transformMethod, currentPreset, noTimeRemapping,
-		glissando, glissandoAmount, appoggiatura, arpeggio, arpeggioNegative, activeParameterScheme,
+		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioNegative, activeParameterScheme,
 	} = selectConfig(c => c.visual);
 	// const activeParameterScheme = selectConfigArray(c => c.visual.activeParameterScheme);
 	const { enabled: enablePixelScaling } = selectConfig(c => c.visual.pixelScaling);
@@ -163,7 +163,7 @@ export default function Visual() {
 					</Expander>
 					{/* TODO: Change the integration method of TransformOFX into parameters, add an independent subheader and an info bar to tell user to download it. */}
 
-					<Subheader>{t.subheaders.effects}</Subheader>
+					<Subheader>{t(2).titles.effect}</Subheader>
 					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")}>
 						{prveCheckInfo}
 					</SettingsCard>
@@ -181,6 +181,12 @@ export default function Visual() {
 						icon="swirl"
 						actions={<ToggleSwitch on={glissando} />}
 					>
+						<Expander.Item title={t.titles.effect}>
+							<Segmented current={glissandoEffect}>
+								<Segmented.Item id="swirl">{t.stream.playingTechniques.glissando.swirl}</Segmented.Item>
+								<Segmented.Item id="pingpong">{t.stream.playingTechniques.glissando.pingpong}</Segmented.Item>
+							</Segmented>
+						</Expander.Item>
 						<Expander.Item title={t.stream.playingTechniques.glissando.swirlAmount} details={t.descriptions.stream.playingTechniques.glissando.swirlAmount}>
 							<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitones} positiveSign />
 						</Expander.Item>

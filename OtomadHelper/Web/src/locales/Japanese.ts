@@ -30,6 +30,7 @@ export default {
 			parameters: "パラメータ",
 			track: "トラック",
 			mosh: "モッシュ",
+			effect: "効果",
 		},
 		source: {
 			trackEvent: "予定を追跡",
@@ -56,9 +57,10 @@ export default {
 				selectGeneratedAudioClips: "生成されたすべてのオーディオクリップを選択",
 				selectGeneratedVideoClips: "生成されたすべてのビデオクリップを選択",
 			},
-			randomInPoint: {
-				_: "ランダムなポイント",
-				tracks: "さまざまなトラックの場合は",
+			blindBox: {
+				_: "素材盲の箱",
+				track: "各トラックまたはチャンネルに対して",
+				marker: "マーカーごとに1回ずつ切り替える",
 			},
 		},
 		on: "オン",
@@ -99,7 +101,6 @@ export default {
 			advanced: "高度な設定",
 			config: "設定",
 			parameters: "パラメータ",
-			effects: "効果",
 			seeAlso: "関連項目",
 		},
 		units: {
@@ -193,6 +194,8 @@ export default {
 				applyCustomPreset: "カスタムプリセットを適用する",
 				glissando: {
 					_: "Glissando",
+					swirl: "渦巻き",
+					pingpong: "ピンポン",
 					swirlAmount: "渦巻きの量",
 				},
 				appoggiatura: {
@@ -474,7 +477,11 @@ export default {
 						versionRequest: "注意: この機能はVEGAS Pro 19以上が必要です。現在のバージョンは {{version}}です。",
 					},
 				},
-				randomInPoint: "これにより、ランダムに選択されたソースクリップが異なるベースピッチを持つ可能性があります。 娯楽用の面白い動画の作成にのみ役立ちますし、高度な動画の作成にはほとんど使えませんでした",
+				blindBox: {
+					_: "ソースのポイントでランダムに使用します。\nこれは、ランダムに選択されたソースクリップが異なるベースピッチを持つ可能性があります。 娯楽用の面白い動画の作成にのみ役立ちますし、高度な動画の作成にはほとんど使用されません。",
+					track: "トラックまたはチャンネルはスコア構成によって異なります",
+					marker: "スコアにマーカーがある場合、ソースのインポイントは一度変更されます。 複数のマーカーに同じ名前が空でない場合、ソースのポイントで同じ名前が使用されます。",
+				},
 			},
 			score: {
 				trim: "スコアの生成時間範囲をインターセプトします",
@@ -498,7 +505,7 @@ export default {
 				transformMethod: "変換キーフレームを適用するためのターゲットプロパティの優先順位を指定します",
 				playingTechniques: {
 					glissando: {
-						_: "ピッチベンド、スライド、またはグリッサンディを演奏したときにエフェクトを生成します。デフォルトは旋回します。",
+						_: "ピッチベンド、スライド、またはglissandiを再生するときにエフェクトを生成します。",
 						swirlAmount: "旋回ツイスト振幅の大きさを指定します",
 					},
 					appoggiatura: {
@@ -520,6 +527,7 @@ export default {
 					stretchAttributes: "選択したチューニング方法の詳細設定",
 					alternativeForExceedsTheRange: "別の方法で範囲外のメモを処理",
 					resample: "ストレッチとピッチをロックし、ストレッチを調整してピッチを変更します",
+					preserveFormant: "チューニング中は音声音の特性を維持します",
 					basePitch: "オーディオクリップのベースピッチを指定します",
 					prelisten: {
 						_: "クリップとベースピッチを比較し、簡単に調整できます",

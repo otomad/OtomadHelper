@@ -36,7 +36,6 @@
 		"@dnd-kit/sortable": "^8.0.0",
 		"ani-cursor": "^0.0.5",
 		"classnames": "^2.5.1",
-		"cz-conventional-changelog-zh": "^0.0.2",
 		"i18next": "^23.11.1",
 		"i18next-browser-languagedetector": "^7.2.1",
 		"immer": "^10.0.4",

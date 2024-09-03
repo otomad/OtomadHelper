@@ -30,6 +30,7 @@ export default {
 			parameters: "参数",
 			track: "轨道",
 			mosh: "抹失",
+			effect: "效果",
 		},
 		source: {
 			trackEvent: "轨道剪辑",
@@ -56,9 +57,10 @@ export default {
 				selectGeneratedAudioClips: "选中生成的所有音频剪辑",
 				selectGeneratedVideoClips: "选中生成的所有视频剪辑",
 			},
-			randomInPoint: {
-				_: "随机入点",
-				tracks: "为不同的音轨",
+			blindBox: {
+				_: "素材盲盒",
+				track: "为每个音轨或通道",
+				marker: "每个标记切换一次",
 			},
 		},
 		on: "开",
@@ -99,7 +101,6 @@ export default {
 			advanced: "高级",
 			config: "配置",
 			parameters: "参数",
-			effects: "效果",
 			seeAlso: "另请参阅",
 		},
 		units: {
@@ -193,6 +194,8 @@ export default {
 				applyCustomPreset: "应用自定义预设",
 				glissando: {
 					_: "滑音",
+					swirl: "漩涡",
+					pingpong: "来回",
 					swirlAmount: "漩涡大小",
 				},
 				appoggiatura: {
@@ -475,7 +478,11 @@ export default {
 						versionRequest: "注意：此功能要求至少为VEGAS Pro 19。当前版本为 {{version}}。",
 					},
 				},
-				randomInPoint: "这可能会导致随机选择的素材片段具有不同的原始音高，因此只能用来做成搞笑视频供娱乐，几乎不能做成高品质视频",
+				blindBox: {
+					_: "对素材使用随机入点。\n这可能会导致随机选择的素材片段具有不同的原始音高，因此只能用来做成搞笑视频供娱乐，几乎不能做成高品质视频。",
+					track: "究竟是音轨还是通道取决于乐曲配置",
+					marker: "当在乐谱中遇到标记时，就会改变一次素材入点。如果某些标记具有相同的非空名称，它们将会使用相同的素材入点。",
+				},
 			},
 			score: {
 				trim: "截取乐曲生成的时间范围",
@@ -499,7 +506,7 @@ export default {
 				transformMethod: "指定要应用变换关键帧的目标属性的优先级顺序",
 				playingTechniques: {
 					glissando: {
-						_: "在演奏弯音或滑音时产生效果。默认为漩涡。",
+						_: "在演奏弯音或滑音时产生效果。",
 						swirlAmount: "指定漩涡扭动幅度的大小",
 					},
 					appoggiatura: {

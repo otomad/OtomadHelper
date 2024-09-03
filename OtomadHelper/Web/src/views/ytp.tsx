@@ -23,7 +23,7 @@ export default function Ytp() {
 				<SettingsCard title={t.ytp.clips} details={t.descriptions.ytp.clips} icon="number">
 					<TextBox.Number value={clips} min={0} decimalPlaces={0} />
 				</SettingsCard>
-				<Subheader>{t.subheaders.effects}</Subheader>
+				<Subheader>{t(2).titles.effect}</Subheader>
 				<Expander
 					title={t.ytp.effects}
 					details={t.descriptions.ytp.effects}

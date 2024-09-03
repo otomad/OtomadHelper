@@ -43,7 +43,7 @@ export default {
 			},
 			preferredTrack: {},
 			afterCompletion: {},
-			randomInPoint: {},
+			blindBox: {},
 		},
 		on: "Bật",
 		off: "Tắt",
@@ -74,7 +74,6 @@ export default {
 			advanced: "Nâng cao",
 			config: "Thiết Lập",
 			parameters: "Thông số",
-			effects: "Hiệu ứng",
 		},
 		units: {},
 		fileFormats: {
@@ -158,6 +157,7 @@ export default {
 				preferredTrack: {
 					belowAdjustmentTracks: {},
 				},
+				blindBox: {},
 			},
 			score: {},
 			stream: {

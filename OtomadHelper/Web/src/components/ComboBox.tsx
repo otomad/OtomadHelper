@@ -41,7 +41,7 @@ export default function ComboBox<T extends string>({ options, current: [current,
 }, HTMLButtonElement & HTMLSelectElement>) {
 	async function showComboBox(e: MouseEvent) {
 		const rect = getBoundingClientRectTuple(e.currentTarget);
-		const result = await bridges.bridge.showComboBox(rect, current!, options);
+		const result = await bridges.bridge.showComboBox(rect, current!, options as T[]);
 		setCurrent?.(result as T);
 	}
 

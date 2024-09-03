@@ -31,7 +31,8 @@ export const configStore = createStore({
 			selectGeneratedAudioClips: true,
 			selectGeneratedVideoClips: true,
 		},
-		randomInPointForTracks: false,
+		blindBoxForTrack: false,
+		blindBoxForMarker: false,
 	},
 	score: {
 		format: "midi",
@@ -112,6 +113,7 @@ export const configStore = createStore({
 			replaceSource: true,
 		},
 		glissando: false,
+		glissandoEffect: "swirl" as "swirl" | "pingpong",
 		glissandoAmount: 12,
 		appoggiatura: false,
 		arpeggio: false,
