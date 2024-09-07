@@ -111,7 +111,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 * @homepage https://otomadhelper.readthedocs.io/
 * @repository https://github.com/otomad/OtomadHelper
 * @license GPL 3.0
-* @author Ranne
+* @author Rantetsu Inori
 */`,
 				},
 			},

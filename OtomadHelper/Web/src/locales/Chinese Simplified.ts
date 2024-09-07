@@ -434,7 +434,7 @@ export default {
 				feedback: "反馈建议",
 				version: "版本",
 				author: "作者",
-				__author__: "兰音",
+				__author__: "兰澈 祈",
 				originalAuthor: "原作者",
 				__originalAuthor__: "Chaosinism",
 				translator: "翻译",

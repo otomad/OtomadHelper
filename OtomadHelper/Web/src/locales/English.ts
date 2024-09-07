@@ -446,7 +446,7 @@ export default {
 				feedback: "Feedback",
 				version: "Version",
 				author: "Author",
-				__author__: "Ranne",
+				__author__: "Rantetsu Inori",
 				originalAuthor: "Original author",
 				__originalAuthor__: "Chaosinism",
 				translator: "Translator",

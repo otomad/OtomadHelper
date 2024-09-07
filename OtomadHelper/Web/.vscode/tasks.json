@@ -58,5 +58,16 @@
 			"label": "Crowdin: Download",
 			"detail": "Download translated language file from Crowdin",
 		},
+		{
+			"type": "npm",
+			"script": "list-credit-licenses",
+			"problemMatcher": [],
+			"label": "List Credit Licenses",
+			"detail": "List all licenses to generate credits.md",
+			"presentation": {
+				"reveal": "never",
+				"close": true
+			}
+		},
 	],
 }

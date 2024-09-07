@@ -136,7 +136,12 @@ export default {
 		},
 		pixelScaling: {},
 		settings: {
-			about: {},
+			about: {
+				author: "Tác giả",
+				__author__: "Lan Triệt Kì",
+				originalAuthor: "Tác giả gốc",
+				__originalAuthor__: "Chaosinism",
+			},
 			language: {
 				_: "Ngôn ngữ",
 				en: "Tiếng Anh",

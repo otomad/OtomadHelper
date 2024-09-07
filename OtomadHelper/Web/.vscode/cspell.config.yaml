@@ -63,6 +63,7 @@ words:
   - lightningcss
   - lotties
   - ltr
+  - lumin
   - mht
   - mhtml
   - miscz
@@ -167,6 +168,8 @@ ignoreWords:
   - shu
   - shuzo
   - matsuoka
+  - rantetsu
+  - inori
 flagWords:
   - colour -> color
   - canot -> cannot

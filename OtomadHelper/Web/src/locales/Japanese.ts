@@ -434,7 +434,7 @@ export default {
 				feedback: "フィードバック",
 				version: "バージョン",
 				author: "作成者",
-				__author__: "蘭音",
+				__author__: "蘭澈 祈",
 				originalAuthor: "オリジナルの著者",
 				__originalAuthor__: "Chaosinism",
 				translator: "翻訳",

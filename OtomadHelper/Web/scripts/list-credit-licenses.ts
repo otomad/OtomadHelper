@@ -16,10 +16,10 @@ const md = mdTemplate + Object.entries(packages).map(([packageName, { licenses, 
 	licenses ??= "";
 	publisher ??= "";
 	if (Array.isArray(licenses)) licenses = licenses.join(" + ");
-	packageName = packageName.split("@")[0];
+	packageName = packageName.replace(/@[^@]*$/, "");
 
 	const project = repository ? `[${packageName}](${repository})` : packageName;
 	return `${project} | ${publisher} | ${licenses}`;
-}).join("\n");
+}).join("\n") + "\n";
 
 writeFile(resolve(webDir, "../..", "CREDITS.node.md"), md, "utf-8");
