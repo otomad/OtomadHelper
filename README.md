@@ -39,7 +39,7 @@
 
 > [!IMPORTANT]
 >
-> #### THIS IS NOT THE APPLICATION PROGRAM, THESE ARE THE SOURCE FILES
+> #### THIS IS NOT THE EXTENSION ITSELF, THESE ARE THE SOURCE FILES
 >
 > If you are looking to download Otomad Helper, please click the button below.
 >
