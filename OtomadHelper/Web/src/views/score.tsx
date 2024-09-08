@@ -140,9 +140,9 @@ export default function Score() {
 				nameField="name"
 				iconField="icon"
 			>
-				<Expander.ChildWrapper>
-					<TextBox.Number value={customBpm} style={{ width: "200px" }} onChanging={() => bpmUsing[1]("custom")} />
-				</Expander.ChildWrapper>
+				<CustomItem current={bpmUsing}>
+					{setToCustom => <TextBox.Number value={customBpm} style={{ width: "200px" }} onChanging={setToCustom} />}
+				</CustomItem>
 			</ExpanderRadio>
 			<SettingsCard title={t.score.timeSignature} icon="health">{timeSignature}</SettingsCard>
 			<ExpanderRadio

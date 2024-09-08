@@ -128,7 +128,7 @@ declare global {
 	export type { Property as CSSProperty } from "csstype";
 	export type { Draft } from "immer";
 	export type { AnimationItem } from "lottie-web";
-	export type { AnimationEventHandler, CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, FocusEventHandler, FormEventHandler, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, ReactElement, ReactNode, RefObject, UIEventHandler, WheelEventHandler } from "react";
+	export type { AnimationEventHandler, ChangeEventHandler, CSSProperties, DependencyList, DragEventHandler, EventHandler, FocusEventHandler, FormEventHandler, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, default as React, ReactElement, ReactNode, RefObject, UIEventHandler, WheelEventHandler } from "react";
 	export type { CssTransition, SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition has the same name as a native class.
 	export type { WebTarget } from "styled-components";
 }

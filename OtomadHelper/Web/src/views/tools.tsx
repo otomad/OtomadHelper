@@ -22,7 +22,8 @@ export default function Tools() {
 				type="button"
 				icon="spatial_volume"
 				trailingIcon="open"
-				selectInfo={t(1).selectInfo.audioEvent} selectValid={1}
+				selectInfo={t(1).selectInfo.audioEvent}
+				selectValid={1}
 			/>
 			<SettingsCard
 				title={t.tools.subtitles}

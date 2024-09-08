@@ -158,7 +158,7 @@ const StyledToggleSwitchLabel = styled.button`
 	}
 `;
 
-export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, details, resetTransitionOnChanging = false, $color, children, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, details, resetTransitionOnChanging = false, $color, lock, children, ...htmlAttrs }: FCP<{
 	/** Is on? */
 	on: StateProperty<boolean>;
 	/** Disabled */
@@ -178,7 +178,17 @@ export default function ToggleSwitch({ on: [on, setOn], disabled, isPressing: [i
 	 * @remarks This is business logic, but present in the base component.
 	 */
 	resetTransitionOnChanging?: boolean;
+	/**
+	 * Sets the displayed value of the toggle switch and disables it.
+	 *
+	 * This only changes its appearance, not its internal data.
+	 *
+	 * Useful when you need to disable user input without affecting configuration saving.
+	 */
+	lock?: boolean | null;
 }, "button">) {
+	const on = typeof lock === "boolean" ? lock : _on!;
+	const disabled = typeof lock === "boolean" || _disabled;
 	const textLabel = on ? t.on : t.off;
 	const [isDragging, setIsDragging] = useState(false);
 	const [thumbLeft, setThumbLeft] = useState<number>();

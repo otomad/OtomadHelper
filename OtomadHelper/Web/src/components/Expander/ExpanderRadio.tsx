@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, details: _details, $itemWidth, radioGroup, onItemClick, children, itemsViewItemAttrs, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, details: _details, $itemWidth, radioGroup, itemsViewItemAttrs, hideCustom = true, children, onItemClick, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly T[];
 	/** The identifier of the currently selected value. */
@@ -44,10 +44,18 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	radioGroup?: string;
 	/** Additional attributes for the items view item. */
 	itemsViewItemAttrs?: Partial<PropsOf<typeof ItemsView.Item>>;
+	/**
+	 * Remove the "custom" option from the options so that you can customize the "custom" form control.
+	 *
+	 * Enabled by default, and the default assumption is that the identifier of the "custom" option is `"custom"`.
+	 * If you pass a string to this parameter, the string will be used as the identifier of the "custom" option.
+	 *
+	 * If you don't want this feature, pass `false`.
+	 */
+	hideCustom?: boolean | string;
 	/** Fired when the item is clicked. */
 	onItemClick?: MouseEventHandler<HTMLElement>;
 }>>) {
-	const items = _items as AnyObject[];
 	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "image" | "details"): Any => {
 		const field = {
 			name: nameField,
@@ -62,6 +70,9 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 			typeof field === "function" ? field(item) :
 			item;
 	};
+	const items = _items as AnyObject[];
+	const filteredItems = useMemo(() => hideCustom === false ? items : items.filter(item =>
+		getItemField(item, "id") !== (typeof hideCustom === "string" ? hideCustom : "custom")), _items);
 	const checkInfo = !checkInfoCondition ? undefined :
 		typeof checkInfoCondition === "string" ? checkInfoCondition :
 		checkInfoCondition === true ? typeof idField === "string" && typeof nameField === "string" ?
@@ -72,7 +83,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	const details = typeof _details === "function" ? _details(value, items) : _details;
 	return (
 		<Expander {...settingsCardProps} checkInfo={checkInfo} details={details}>
-			{!view ? items.map(item => (
+			{!view ? filteredItems.map(item => (
 				<RadioButton
 					value={[value as T, setValue]}
 					id={getItemField(item, "id")}
@@ -85,7 +96,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 				</RadioButton>
 			)) : (
 				<ItemsView view={view} current={[value as T, setValue]} $itemWidth={$itemWidth}>
-					{items.map(item => (
+					{filteredItems.map(item => (
 						<ItemsView.Item
 							id={getItemField(item, "id")}
 							key={getItemField(item, "id")}

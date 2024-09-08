@@ -4,6 +4,9 @@ export /* @internal */ const startTimes = [
 	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
 
+/** @deprecated */
+const isUnderVegas16 = true;
+
 export default function Source() {
 	const {
 		source, blindBoxForTrack, blindBoxForMarker, trimStart, trimEnd, startTime, customStartTime,
@@ -12,6 +15,10 @@ export default function Source() {
 	const { removeSourceClips, selectSourceClips, selectGeneratedAudioClips, selectGeneratedVideoClips } = selectConfig(c => c.source.afterCompletion);
 
 	mutexSwitches(removeSourceClips, selectSourceClips);
+
+	const underVegas16 = isUnderVegas16 ?
+		<p style={{ color: c("fill-color-system-critical") }}>{t.descriptions.source.preferredTrack.belowAdjustmentTracks.versionRequest({ version: 16 })}</p> :
+		undefined;
 
 	return (
 		<div className="container">
@@ -27,12 +34,6 @@ export default function Source() {
 			<Expander title={t.source.trim} details={t.descriptions.source.trim} icon="trim">
 				<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
 			</Expander>
-			{/* <Expander title={t.source.startTime} details={t.descriptions.source.startTime} icon="start_point">
-				<ItemsView view="tile" current={startTime}>
-					{startTimes.map(item =>
-						<ItemsView.Item id={item.id} key={item.id} icon={item.icon}>{item.name}</ItemsView.Item>)}
-				</ItemsView>
-			</Expander> */}
 			<ExpanderRadio
 				title={t.source.startTime}
 				details={t.descriptions.source.startTime}
@@ -44,9 +45,9 @@ export default function Source() {
 				nameField="name"
 				iconField="icon"
 			>
-				<Expander.ChildWrapper>
-					<TimecodeBox timecode={customStartTime} onFocus={() => startTime[1]("custom")} />
-				</Expander.ChildWrapper>
+				<CustomItem current={startTime}>
+					{setToCustom => <TimecodeBox timecode={customStartTime} onFocus={() => setToCustom} />}
+				</CustomItem>
 			</ExpanderRadio>
 
 			<Subheader>{t.subheaders.advanced}</Subheader>
@@ -60,7 +61,8 @@ export default function Source() {
 				</Expander.Item>
 				<ToggleSwitch
 					on={belowAdjustmentTracks}
-					details={t.descriptions.source.preferredTrack.belowAdjustmentTracks.versionRequest({ version: 16 })}
+					details={underVegas16}
+					lock={isUnderVegas16 ? false : null}
 				>
 					{t.source.preferredTrack.belowAdjustmentTracks}
 				</ToggleSwitch>
