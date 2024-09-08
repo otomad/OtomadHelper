@@ -38,7 +38,7 @@ export default function ComboBox<T extends string>({ options, current: [current,
 	options: readonly T[];
 	/** The selected option of the combo box. */
 	current: StateProperty<T>;
-}, HTMLButtonElement & HTMLSelectElement>) {
+}, "select">) {
 	async function showComboBox(e: MouseEvent) {
 		const rect = getBoundingClientRectTuple(e.currentTarget);
 		const result = await bridges.bridge.showComboBox(rect, current!, options as T[]);
@@ -47,7 +47,7 @@ export default function ComboBox<T extends string>({ options, current: [current,
 
 	if (window.isWebView)
 		return (
-			<StyledComboBox onClick={showComboBox} {...htmlAttrs}>
+			<StyledComboBox onClick={showComboBox} {...htmlAttrs as FCP<{}, "button">}>
 				<div className="content">
 					<div className="text">{current}</div>
 					<Icon name="chevron_down" />
