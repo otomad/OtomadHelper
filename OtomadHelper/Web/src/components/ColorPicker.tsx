@@ -4,7 +4,7 @@ const StyledColorPicker = styled(StyledButton).attrs({
 	$fillColorName: "accent-color",
 	$subtleFillColorName: "accent-color",
 })`
-	min-width: unset;
+	min-inline-size: unset;
 	aspect-ratio: 1 / 1;
 	background-color: ${c("color")} !important;
 	outline: 1px solid ${getClearColorFromBackgroundColor("color")} !important;

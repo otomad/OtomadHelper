@@ -23,7 +23,7 @@ const StyledSpinner = styled.div`
 		button {
 			${styles.mixins.square("40px")};
 			display: flex;
-			min-width: unset;
+			min-inline-size: unset;
 
 			&:first-child:active .icon {
 				translate: 0 -2px;
@@ -58,7 +58,7 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 	/** The value to increase or decrease each time the knob of numeric up down box is clicked. Defaults to 1. */
 	step?: NumberLike;
 	/** Knob click event. It is 1 when the knob is clicked up and -1 when it is clicked down. */
-	onSpin?: (spinValue: NumberLike) => void;
+	onSpin?(spinValue: NumberLike): void;
 	/** Mouse release button event. */
 	onRelease?: BaseEventHandler;
 }>) {
@@ -248,7 +248,7 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 	/** Suffix. */
 	suffix?: string;
 	/** @private Numeric up down box */
-	_spinner?: (inputId: string) => ReactNode;
+	_spinner?(inputId: string): ReactNode;
 	/** @private Show the positive sign? */
 	_showPositiveSign?: boolean;
 	/** Text change event. Only fired after pasting text or after the input box is out of focus. */
@@ -256,7 +256,7 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 	/** Text changing event. Fired any time the text changes. */
 	onChanging?: BaseEventHandler<HTMLInputElement>;
 	/** Text keyboard input event. */
-	onInput?: (newText: string, el: HTMLInputElement, ...event: Parameters<FormEventHandler<HTMLInputElement>>) => boolean | string | void;
+	onInput?(newText: string, el: HTMLInputElement, ...event: Parameters<FormEventHandler<HTMLInputElement>>): boolean | string | void;
 	/** Keyboard press event. */
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 }, "div">, ref: ForwardedRef<"input">) {

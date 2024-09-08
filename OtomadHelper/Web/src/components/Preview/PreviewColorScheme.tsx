@@ -25,7 +25,7 @@ const StyledPreviewColorScheme = styled.div.attrs({
 
 			button {
 				${styles.mixins.square("60%")};
-				min-width: unset;
+				min-inline-size: unset;
 				background-color: ${colors["fill-color-control-default"][i]};
 				border-color: ${colors["stroke-color-control-stroke-default"][i]};
 

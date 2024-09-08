@@ -132,7 +132,7 @@ interface SharedProps {
 	details?: ReactNode;
 	/** Include just the checkbox itself, not the text label? */
 	plain?: boolean;
-	/** The other action control area on the right side of the expander. */
+	/** The other action control area on the right side of the component. */
 	actions?: ReactNode;
 }
 
@@ -142,19 +142,19 @@ export default function Checkbox<T>(props: FCP<{
 	/** An array of selected values in the current checkbox group. */
 	value: StateProperty<T[]>;
 	/** State change event. */
-	onChange?: (e: { id: T; value: T[]; checkState: CheckState; checked: boolean }) => void;
+	onChange?(e: { id: T; value: T[]; checkState: CheckState; checked: boolean }): void;
 } & SharedProps>): JSX.Element;
 export default function Checkbox(props: FCP<{
 	/** Is the checkbox currently selected? */
 	value: StateProperty<boolean>;
 	/** State change event. */
-	onChange?: (e: { checkState: CheckState; checked: boolean }) => void;
+	onChange?(e: { checkState: CheckState; checked: boolean }): void;
 } & SharedProps>): JSX.Element;
 export default function Checkbox(props: FCP<{
 	/** Checked status. */
 	value: StateProperty<CheckState>;
 	/** State change event. */
-	onChange?: (e: { checkState: CheckState; checked: boolean | null }) => void;
+	onChange?(e: { checkState: CheckState; checked: boolean | null }): void;
 } & SharedProps>): JSX.Element;
 export default function Checkbox<T>({ children, id, value: [value, setValue], disabled = false, onChange, details, plain = false, actions }: FCP<{
 	id?: T;

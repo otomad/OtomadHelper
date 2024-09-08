@@ -160,6 +160,13 @@
 		return successes;
 	};
 
+	Set.prototype.toggle = function (item) {
+		if (!this.has(item))
+			this.add(item);
+		else
+			this.delete(item);
+	};
+
 	makePrototypeKeysNonEnumerable(Set);
 }
 

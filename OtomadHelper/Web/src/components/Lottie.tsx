@@ -17,7 +17,7 @@ export default function Lottie({ loop = false, autoplay = false, animationData, 
 	/** Animation resource data. */
 	animationData: object;
 	/** Animation creation completion event. */
-	onAnimCreated?: (anim: AnimationItem) => void;
+	onAnimCreated?(anim: AnimationItem): void;
 }, "div">) {
 	const [_anim, setAnim] = useState<AnimationItem>();
 	const lavContainerEl = useDomRef<"div">();

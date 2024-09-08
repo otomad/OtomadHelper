@@ -135,6 +135,10 @@ declare interface Array<T> {
 	mapImmer<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[];
 }
 
+declare interface ReadonlyArray<T> extends Pick<Array<T>,
+	"mapObject",
+> { }
+
 declare interface Set<T> {
 	/**
 	 * Appends multiple new elements with multiple specified values to the end of the Set.
@@ -146,4 +150,11 @@ declare interface Set<T> {
 	 * @returns Returns the number of the element in the Set existed and has been removed.
 	 */
 	deletes(...values: T[]): number;
+
+	/**
+	 * Toggle the item whether the set contains it.
+	 * If the set contains the item, remove it; otherwise, add it.
+	 * @param item - Item.
+	 */
+	toggle(item: T): void;
 }

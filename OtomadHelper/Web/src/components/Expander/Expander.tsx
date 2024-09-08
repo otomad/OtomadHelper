@@ -92,7 +92,7 @@ const ExpanderChildWrapper = styled.div`
 `;
 
 export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, clipChildren, selectInfo, selectValid, disabled }: FCP<PropsOf<typeof SettingsCard> & {
-	/** The other action control area on the right side of the expander. */
+	/** The other action control area on the right side of the component. */
 	actions?: ReactNode;
 	/** Expanded initially? */
 	expanded?: boolean;

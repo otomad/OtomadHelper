@@ -10,7 +10,7 @@ const NavButton = styled(Button).attrs({
 })`
 	position: absolute;
 	width: ${navButtonSize.width}px;
-	min-width: unset;
+	min-inline-size: unset;
 	height: ${navButtonSize.height}px;
 `;
 
@@ -57,9 +57,9 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 	/** Can go back? */
 	canBack?: boolean;
 	/** Back button click event. */
-	onBack?: () => void;
+	onBack?(): void;
 	/** Global navigation button click event. */
-	onNavButton?: () => void;
+	onNavButton?(): void;
 }>) {
 	const vertical = paneDisplayMode === "compact";
 	const tooltipPlacement: Placement = vertical ? "right" : "bottom";
@@ -336,7 +336,7 @@ const StyledNavigationView = styled.div<{
 					gap: 8px;
 
 					> button {
-						min-width: 120px;
+						min-inline-size: 120px;
 					}
 				}
 			}
@@ -565,7 +565,7 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	/** Can go back? */
 	canBack?: boolean;
 	/** Back button click event. */
-	onBack?: () => void;
+	onBack?(): void;
 	/** Command bar, optional. */
 	commandBar?: ReactNode;
 	/** Manually specify the identifier for the page content element. */

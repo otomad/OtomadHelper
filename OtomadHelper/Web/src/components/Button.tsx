@@ -1,4 +1,4 @@
-const isPressed = ":is(:active, [data-pressed])", notPressedOrDisabled = ":not(:active, [data-pressed], [disabled])";
+const isPressed = ":is(:active, [data-pressed]):not(:has(button:active))", notPressedOrDisabled = ":not(:active, [data-pressed], [disabled])";
 const inlinePadding = 11;
 
 export /* @internal */ const StyledButton = styled.button<{
@@ -150,12 +150,19 @@ export /* @internal */ const StyledButton = styled.button<{
 			&${isPressed} {
 				background-color: ${c("fill-color", 65)};
 			}
+
+			&.neutral {
+				&:hover,
+				&${isPressed} {
+					background-color: ${c("fill-color")};
+				}
+			}
 		}
 	`}
 
 	@layer components {
 		&:not(.min-width-unbounded) {
-			min-width: 96px;
+			min-inline-size: 96px;
 		}
 	}
 
@@ -174,7 +181,7 @@ export default forwardRef(function Button({ children, icon, animatedIcon, subtle
 	/** Use hyperlink button? */
 	hyperlink?: boolean;
 	/** Attach accent color to the button? */
-	accent?: boolean | "critical" | "success" | "attention" | "caution";
+	accent?: boolean | "critical" | "success" | "attention" | "caution" | "neutral";
 	/** Is the orientation of the icon changed based on the writing direction? */
 	dirBased?: boolean;
 	/** Is repeat button? When on, the `onClick` events will be triggered continuously when the button is pressed. */
@@ -195,7 +202,7 @@ export default forwardRef(function Button({ children, icon, animatedIcon, subtle
 			as={repeat ? RepeatButton : "button"}
 			ref={ref}
 			type="button"
-			className={[className, { subtle, hyperlink, extruded, minWidthUnbounded }]}
+			className={[className, { subtle, hyperlink, extruded, minWidthUnbounded }, accent && typeof accent === "string" ? accent : "accent"]}
 			$fillColorName={fillColorName}
 			$subtleFillColorName={subtleFillColorName}
 			$dirBased={dirBased}

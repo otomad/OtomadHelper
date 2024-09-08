@@ -36,6 +36,7 @@ export default function Shupelunker() {
 					<SettingsCard title={t.offset} details={t.descriptions.shupelunker.offset} icon="table_resize">
 						<TextBox.Number value={offset} decimalPlaces={0} suffix={t.units.semitones} positiveSign />
 					</SettingsCard>
+					<SettingsCardToggleSwitch on={[true]} title="（翻译）独占轨道" details="（翻译）开启后以使各素材保持在固定位置，但如果素材过多时会造成占用过大" />
 
 					<Subheader>{t.shupelunker.keyMappingZones}</Subheader>
 					<PreviewPiano />

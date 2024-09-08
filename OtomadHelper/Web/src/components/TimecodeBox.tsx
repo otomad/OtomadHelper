@@ -37,7 +37,7 @@ const StyledTimecodeBox = styled.div`
 
 	button {
 		width: calc(100% - 6px);
-		min-width: unset;
+		min-inline-size: unset;
 		height: ${SPINNER_BUTTON_HEIGHT - 2}px;
 		min-height: unset;
 		border-radius: ${BUTTON_BORDER_RADIUS}px;

@@ -105,9 +105,9 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 	/** Disabled */
 	disabled?: boolean;
 	/** The slider is dragging event. */
-	onChanging?: (value: number) => void;
+	onChanging?(value: number): void;
 	/** The slider is lifted after being dragged event. */
-	onChanged?: (value: number) => void;
+	onChanged?(value: number): void;
 }>) {
 	const errorInfo = `The value range should be between [${min} ~ ${max}], with the current value being ${value}.`;
 	if (value === undefined)

@@ -2,6 +2,8 @@ import { styledExpanderItemText } from "components/Expander/ExpanderItem";
 
 export const GRID_VIEW_ITEM_HEIGHT = 112;
 
+const isPressed = ":active:not(:has(button:active))";
+
 const StyledItemsViewItem = styled.button<{
 	/** View mode: list, tile, grid. */
 	$view: ItemView;
@@ -64,7 +66,7 @@ const StyledItemsViewItem = styled.button<{
 			`}
 		}
 
-		&:active .selection {
+		&${isPressed} .selection {
 			background-color: ${c("fill-color-subtle-tertiary")};
 		}
 
@@ -80,7 +82,7 @@ const StyledItemsViewItem = styled.button<{
 				0 0 0 3px ${c("fill-color-control-solid-default")} inset;
 		}
 
-		&.selected:active .selection {
+		&.selected${isPressed} .selection {
 			box-shadow:
 				0 0 0 2px ${c("accent-color", 80)} inset,
 				0 0 0 3px ${c("fill-color-control-solid-default")} inset;
@@ -91,6 +93,7 @@ const StyledItemsViewItem = styled.button<{
 		> .base {
 			position: relative;
 			display: flex;
+			flex-wrap: wrap;
 			gap: 16px;
 			align-items: center;
 			min-height: 48px;
@@ -129,7 +132,7 @@ const StyledItemsViewItem = styled.button<{
 			background-color: ${c("fill-color-subtle-secondary")};
 		}
 
-		&:active > .base {
+		&${isPressed} > .base {
 			background-color: ${c("fill-color-subtle-tertiary")};
 
 			&::before {
@@ -173,14 +176,14 @@ const StyledItemsViewItem = styled.button<{
 			opacity: 0;
 
 			&,
-			& ~ * {
+			& + * {
 				translate: ${-(18 + 16)}px;
 			}
 		}
 
 		&:is(.enter-active, .exit-active) {
 			&,
-			& ~ * {
+			& + * {
 				transition: translate ${eases.easeOutMax} 250ms, opacity ${eases.easeOutMax} 250ms;
 			}
 		}
@@ -192,7 +195,9 @@ const DefaultImage = styled.img`
 	object-fit: cover;
 `;
 
-export /* @internal */ default function ItemsViewItem({ image, icon, id: _id, selected = false, details, $withBorder = false, _view: view, _multiple: multiple, children, className, ...htmlAttrs }: FCP<{
+export type OnItemsViewItemClickEventHandler = (id: PropertyKey, selected: CheckState, e: MouseEvent) => void;
+
+export /* @internal */ default function ItemsViewItem({ image, icon, id, selected = "unchecked", details, actions, $withBorder = false, _view: view, _multiple: multiple, children, className, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */
@@ -200,15 +205,21 @@ export /* @internal */ default function ItemsViewItem({ image, icon, id: _id, se
 	/** Identifier. */
 	id: PropertyKey;
 	/** Selected? */
-	selected?: boolean;
+	selected?: CheckState;
 	/** Detailed description. */
 	details?: ReactNode;
+	/** The other action control area on the right side of the component. */
+	actions?: ReactNode;
 	/** Additional border on normal state of the image wrapper. */
 	$withBorder?: boolean;
 	/** @private View mode: list, tile, grid. */
 	_view?: ItemView;
 	/** @private Multiple selection mode? */
 	_multiple?: boolean;
+	/** Fired when the selection changed. */
+	onSelectedChange?(id: PropertyKey, selected: CheckState): void;
+	/** Fired when user click it. */
+	onClick?: OnItemsViewItemClickEventHandler;
 }, "button">) {
 	const textPart = (
 		<div className="text">
@@ -226,8 +237,17 @@ export /* @internal */ default function ItemsViewItem({ image, icon, id: _id, se
 	);
 	const iconOrElement = typeof icon === "string" ? <Icon name={icon} /> : icon;
 
+	useEffect(() => onSelectedChange?.(id, selected), [selected]);
+
 	return (
-		<StyledItemsViewItem $view={view!} $withBorder={$withBorder} className={[className, view, { selected }]} tabIndex={0} {...htmlAttrs}>
+		<StyledItemsViewItem
+			$view={view!}
+			$withBorder={$withBorder}
+			className={[className, view, { selected: selected !== "unchecked" }]}
+			tabIndex={0}
+			onClick={e => onClick?.(id, selected, e)}
+			{...htmlAttrs}
+		>
 			<div className="base">
 				{view === "grid" ? (
 					<>
@@ -246,6 +266,7 @@ export /* @internal */ default function ItemsViewItem({ image, icon, id: _id, se
 							</div>
 						)}
 						{textPart}
+						{actions}
 					</>
 				)}
 			</div>

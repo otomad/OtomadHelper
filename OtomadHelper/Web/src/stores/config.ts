@@ -1,5 +1,5 @@
 import type { pitchNotations } from "views/lyrics";
-import type { bpmUsings, constraintNoteLengthTypes, encodings } from "views/score";
+import type { bpmUsings, constraintNoteLengthTypes, encodings, multipleSelectTrackItems } from "views/score";
 import type { startTimes } from "views/source";
 import type { legatos, noLengthenings, stretches, transformMethods } from "views/visual";
 
@@ -13,6 +13,7 @@ type NoLengthening = typeof noLengthenings[number]["id"];
 type TransformMethod = typeof transformMethods[number];
 type PitchNotation = typeof pitchNotations[number];
 type Timecode = string;
+type MultipleSelectTrackItem = typeof multipleSelectTrackItems[number];
 
 const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 
@@ -44,7 +45,8 @@ export const configStore = createStore({
 		timeSignature: "4/4",
 		constraintNoteLengthType: "none" as ConstraintNoteLengthType,
 		constraintNoteLengthValue: EMPTY_TIMECODE,
-		isMultiple: false,
+		selectedTrack: 0 as number | number[],
+		multipleSelectTrackItems: {} as Record<number, Set<MultipleSelectTrackItem>>,
 	},
 	audio: {
 		enabled: true,
@@ -142,7 +144,7 @@ export const configStore = createStore({
 		separateDrums: false,
 		differenceCompositeMode: false,
 		shadow: false,
-		shadowColor: "#ffffff",
+		shadowColor: "#000000",
 		graphs: [
 			{
 				enabled: true,
@@ -163,8 +165,8 @@ export const configStore = createStore({
 		presetTemplate: "Text",
 		karaoke: {
 			enabled: false,
-			futureFill: "#0000ff",
-			pastFill: "#00ff00",
+			futureFill: "#005fb7",
+			pastFill: "#0f7b0f",
 		},
 		pitchNotation: {
 			enabled: false,

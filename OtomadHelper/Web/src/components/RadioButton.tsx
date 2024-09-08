@@ -117,7 +117,7 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 	/** Disabled? */
 	disabled?: boolean;
 	/** State change event. */
-	onChange?: (e: { id: T; value: T; checked: boolean }) => void;
+	onChange?(e: { id: T; value: T; checked: boolean }): void;
 	/** Detailed description. */
 	details?: ReactNode;
 	/** Radio button group name, optional. */

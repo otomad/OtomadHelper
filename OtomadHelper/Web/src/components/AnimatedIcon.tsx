@@ -170,13 +170,13 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	/** Keep the color of the icon itself? */
 	filled?: boolean;
 	/** Initialization event. */
-	onInit?: (anim?: AnimationItem) => void;
+	onInit?(anim?: AnimationItem): void;
 	/** Click event. */
-	onClick?: (anim?: AnimationItem) => void;
+	onClick?(anim?: AnimationItem): void;
 }, "div">, ref: ForwardedRef<{
-	play: () => void;
-	pause: () => void;
-	stop: () => void;
+	play(): void;
+	pause(): void;
+	stop(): void;
 }>) {
 	const animationItem = useRef<AnimationItem>();
 	const { findMarker, onAnimationComplete, ...sequence } = useLottieSequence(animationItem);

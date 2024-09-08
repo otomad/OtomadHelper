@@ -1,4 +1,4 @@
-import ItemsViewItem from "./ItemsViewItem";
+import ItemsViewItem, { type OnItemsViewItemClickEventHandler } from "./ItemsViewItem";
 
 const StyledItemsView = styled.div<{
 	/** In grid view, the width of the child element image. Defaults to 200px. */
@@ -44,7 +44,7 @@ const StyledItemsView = styled.div<{
 export default function ItemsView<
 	M extends boolean,
 	T extends (M extends true ? PropertyKey[] : PropertyKey),
->({ view, current: [current, setCurrent], $itemWidth, multiple = false as M, children }: FCP<{
+>({ view, current: [current, setCurrent], $itemWidth, multiple = false as M, indeterminatenesses = [], children }: FCP<{
 	/** View mode: list, tile, grid. */
 	view: ItemView;
 	/** The identifier of the currently selected item. */
@@ -53,6 +53,8 @@ export default function ItemsView<
 	$itemWidth?: number;
 	/** Multiple selection mode? */
 	multiple?: M;
+	/** Specifies which items are set to an indeterminate state. */
+	indeterminatenesses?: PropertyKey[];
 }>) {
 	const isSelected = (id: PropertyKey) => {
 		if (multiple)
@@ -74,11 +76,12 @@ export default function ItemsView<
 			{React.Children.map(children, child => {
 				if (!isReactInstance(child, ItemsViewItem)) return child;
 				const id = child.props.id;
+				const onParentClick = child.props.onClick;
 				return React.cloneElement(child, {
-					selected: isSelected(id),
+					selected: !isSelected(id) ? "unchecked" : indeterminatenesses.includes(id) ? "indeterminate" : "checked",
 					_view: view,
 					_multiple: multiple,
-					onClick: () => handleClick(id),
+					onClick: (...e: Parameters<OnItemsViewItemClickEventHandler>) => { handleClick(id); onParentClick?.(...e); },
 				});
 			})}
 		</StyledItemsView>

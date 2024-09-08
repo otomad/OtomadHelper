@@ -553,6 +553,15 @@ export function isStateProperty<T>(object: unknown): object is StateProperty<T> 
 }
 
 /**
+ * Clear all keys of an object.
+ * @param object - Object.
+ */
+export function clearObject(object: AnyObject) {
+	for (const prop of Object.getOwnPropertyNames(object))
+		delete object[prop];
+}
+
+/**
  * @deprecated // WARN: Await for React 19 released with a new feature **ref as a prop**, and then delete this function.
  */
 export function functionModule<F extends Function, O>(

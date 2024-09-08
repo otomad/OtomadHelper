@@ -9,6 +9,8 @@ import "styles/fonts";
 import "styles/properties";
 import "utils/bridge";
 
+import { enableMapSet } from "immer";
+
 const isProdMode = () => !devStore.devMode;
 
 /**
@@ -79,5 +81,9 @@ const isProdMode = () => !devStore.devMode;
 		observer.disconnect();
 	});
 	observer.observe(document.getElementById("root")!, { childList: true });
+	// #endregion
+
+	// #region Enable Map and Set support for Immer
+	enableMapSet();
 	// #endregion
 }

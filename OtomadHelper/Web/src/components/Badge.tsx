@@ -20,7 +20,7 @@ const StyledBadge = styled.div<{
 	${styles.effects.text.caption};
 	display: inline-flex;
 	flex-shrink: 0;
-	min-width: 16px;
+	min-inline-size: 16px;
 	height: 16px;
 	padding: 0 3px;
 	text-align: center;

@@ -9,6 +9,8 @@ export /* @internal */ const constraintNoteLengthTypes = [
 	{ id: "max", icon: "less_or_equal" },
 	{ id: "fixed", icon: "equal" },
 ] as const;
+export /* @internal */ const multipleSelectTrackItems = Object.freeze(["audio", "visual", "sonar", "lyrics"] as const);
+const allMultipleSelectTrackItemSet = new Set(multipleSelectTrackItems);
 export /* @internal */ const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"] as const;
 /** @deprecated Test only! */
 const tracks = [
@@ -35,7 +37,7 @@ const TrackToolbar = styled.div`
 		}
 
 		.button {
-			min-width: unset;
+			min-inline-size: unset;
 
 			.icon {
 				font-size: 20px;
@@ -81,25 +83,101 @@ const TrackToolbar = styled.div`
 	}
 `;
 
+const MultipleSelectTrackItemsContainer = styled.div`
+	place-self: stretch;
+	margin-inline-start: auto;
+	transition: ${fallbackTransitions} !important;
+
+	button {
+		block-size: 100%;
+		min-inline-size: unset;
+	}
+
+	${tgs()} {
+		translate: 34px;
+		opacity: 0;
+	}
+`;
+
 export default function Score() {
 	const {
 		format, encoding, constraintNoteLengthType, constraintNoteLengthValue, trimStart, trimEnd, bpmUsing, customBpm,
 		timeSignature: [timeSignature],
-		isMultiple: [isMultiple, setIsMultiple],
+		selectedTrack: [selectedTrack, setSelectedTrack], multipleSelectTrackItems: [selectTrackItems, _setSelectTrackItems],
 	} = selectConfig(c => c.score);
 	const { enabled: [ytpEnabled] } = selectConfig(c => c.ytp);
-	const selectionMode = useSelectionMode([isMultiple, setIsMultiple]);
 
-	const [selectedTrack, setSelectedTrack] = useState<number | number[]>(0);
-	useEffect(() => setSelectedTrack(selectedTrack => {
-		if (isMultiple && !Array.isArray(selectedTrack))
-			return [selectedTrack];
-		else if (!isMultiple && Array.isArray(selectedTrack))
-			return selectedTrack.at(-1) ?? 0;
-		else // Actually the multiple selection mode doesn't be changed and unexpected trigger this effect.
-			return selectedTrack;
-	}), [isMultiple]);
-	const selectAll = useSelectAll([selectedTrack, setSelectedTrack] as StateProperty<number[]>, tracks.map((_, index) => index));
+	const setSelectTrackItems = (recipe: (draft: typeof selectTrackItems) => void) => (_setSelectTrackItems as SetStateNarrow<typeof selectTrackItems>)(produce(recipe));
+
+	const [isMultiple, setIsMultiple] = useStateSelector(
+		[selectedTrack, setSelectedTrack],
+		selectedTrack => typeof selectedTrack !== "number",
+		(isMultiple, selectedTrack) => {
+			if (isMultiple && typeof selectedTrack === "number") {
+				const items = {} as typeof selectTrackItems;
+				for (const index of tracks.keys())
+					items[index] = index === selectedTrack ? new Set(allMultipleSelectTrackItemSet) : new Set();
+				_setSelectTrackItems(items);
+				return [selectedTrack];
+			} else if (!isMultiple && typeof selectedTrack !== "number")
+				return selectedTrack.at(-1) ?? 0;
+			else // Actually the multiple selection mode doesn't be changed and unexpected trigger this effect.
+				return selectedTrack;
+		},
+	);
+	useMountEffect(() => {
+		setSelectTrackItems(items => {
+			for (const index of tracks.keys())
+				if (!(items[index] instanceof Set)) items[index] = new Set();
+			new Set(Object.keys(items)).difference(new Set(Object.keys(tracks))).forEach(index => delete items[+index]);
+		});
+	});
+
+	const indeterminatenesses = typeof selectedTrack === "number" ? undefined! : selectedTrack.filter(index => !selectTrackItems[index]?.isSupersetOf(allMultipleSelectTrackItemSet));
+	function handleTrackItemsClick(index: number, item: typeof multipleSelectTrackItems[number]) {
+		setSelectTrackItems(tracks => {
+			tracks[index]?.toggle(item);
+			(setSelectedTrack as SetStateNarrow<number | number[]>)?.(produce(selectedTrack => {
+				if (typeof selectedTrack !== "number")
+					if (!tracks[index].size) selectedTrack.removeItem(index);
+					else selectedTrack.pushUniquely(index);
+			}));
+		});
+	}
+	function handleTrackClick(_index: PropertyKey, selected: CheckState) {
+		if (!isMultiple) return;
+		const index = _index as number;
+		setSelectTrackItems(items => {
+			if (selected !== "unchecked") items[index].clear();
+			else items[index].adds(...multipleSelectTrackItems);
+		});
+	}
+
+	const selectionMode = useSelectionMode([isMultiple, setIsMultiple]);
+	// const selectAll = useSelectAll([selectedTrack, setSelectedTrack] as StateProperty<number[]>, [...tracks.keys()]);
+	const selectAll = (() => {
+		const selected = selectedTrack as number[], setSelected = setSelectedTrack, allSelection = [...tracks.keys()];
+		return [
+			!selected.length ? "unchecked" : selected.length - indeterminatenesses.length === allSelection.length ? "checked" : "indeterminate",
+			(checkState: CheckState) => {
+				if (checkState === "unchecked") {
+					setSelected([]);
+					setSelectTrackItems(items => Object.values(items).forEach(item => item.clear()));
+				} else if (checkState === "checked") {
+					setSelected(allSelection.slice());
+					setSelectTrackItems(items => Object.values(items).forEach(item => item.adds(...multipleSelectTrackItems)));
+				}
+			},
+			() => {
+				const selectedDraft: typeof selected = [];
+				setSelectTrackItems(items => Object.entries(items).forEach(([index, set]) => {
+					multipleSelectTrackItems.forEach(item => set.toggle(item));
+					if (set.size) selectedDraft.push(+index);
+				}));
+				setSelected(selectedDraft);
+			},
+		] as unknown as StatePropertyNonNull<CheckState> & { 2: () => void };
+	})();
 
 	return (
 		<div className="container">
@@ -179,11 +257,12 @@ export default function Score() {
 							<Segmented.Item id="multiple" icon="multiselect">{t.selectionMode.multiple}</Segmented.Item>
 						</Segmented>
 					</TrackToolbar>
-					<ItemsView view="list" multiple={isMultiple} current={[selectedTrack, setSelectedTrack]}>
+					<ItemsView view="list" multiple={isMultiple} current={[selectedTrack, setSelectedTrack]} indeterminatenesses={indeterminatenesses}>
 						{tracks.map((track, index) => (
 							<ItemsView.Item
 								key={index}
 								id={index}
+								onClick={handleTrackClick}
 								details={(
 									<>
 										<SubgridLayout className="row" name="score-track-note-details">
@@ -196,6 +275,22 @@ export default function Score() {
 											<p className="span-to-end"><Icon name="score" />{t.score.instrument}{t.colon}{track.inst}</p>
 										</SubgridLayout>
 									</>
+								)}
+								actions={(
+									<CssTransition in={isMultiple} unmountOnExit>
+										<MultipleSelectTrackItemsContainer>
+											{multipleSelectTrackItems.map(item => (
+												<Tooltip key={item} placement="y" title={t.titles[item]}>
+													<Button
+														icon={item}
+														subtle
+														accent={selectTrackItems[index]?.has(item) ? true : "neutral"}
+														onClick={() => handleTrackItemsClick(index, item)}
+													/>
+												</Tooltip>
+											))}
+										</MultipleSelectTrackItemsContainer>
+									</CssTransition>
 								)}
 							>
 								<SubgridLayout name="score-track-name">
