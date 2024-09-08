@@ -80,10 +80,10 @@ const ExpanderChild = styled.div`
 `;
 
 const ExpanderChildWrapper = styled.div`
-	padding: 7px 51px;
+	padding: 7px 38px;
 
 	&:has(.slider) {
-		padding: 21px 51px;
+		padding: 21px 38px;
 	}
 
 	&:has(.timecode-box) {

@@ -7,6 +7,10 @@ const StyledExpanderChildTrim = styled(Expander.ChildWrapper)`
 		flex-wrap: wrap;
 		gap: 12px;
 		align-items: center;
+
+		> .text-box {
+			inline-size: 200px;
+		}
 	}
 
 	.tilde {

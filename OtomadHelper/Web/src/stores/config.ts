@@ -1,11 +1,11 @@
 import type { pitchNotations } from "views/lyrics";
-import type { bpmUsings, constraintNoteLengths, encodings } from "views/score";
+import type { bpmUsings, constraintNoteLengthTypes, encodings } from "views/score";
 import type { startTimes } from "views/source";
 import type { legatos, noLengthenings, stretches, transformMethods } from "views/visual";
 
 type StartTime = typeof startTimes[number]["id"];
 type BpmUsing = typeof bpmUsings[number]["id"];
-type ConstraintNoteLength = typeof constraintNoteLengths[number]["id"];
+type ConstraintNoteLengthType = typeof constraintNoteLengthTypes[number]["id"];
 type Encoding = typeof encodings[number];
 type Stretch = typeof stretches[number]["id"];
 type Legato = typeof legatos[number]["id"];
@@ -42,7 +42,8 @@ export const configStore = createStore({
 		bpmUsing: "variableMidi" as BpmUsing,
 		customBpm: 120,
 		timeSignature: "4/4",
-		constraintNoteLength: "none" as ConstraintNoteLength,
+		constraintNoteLengthType: "none" as ConstraintNoteLengthType,
+		constraintNoteLengthValue: EMPTY_TIMECODE,
 		isMultiple: false,
 	},
 	audio: {

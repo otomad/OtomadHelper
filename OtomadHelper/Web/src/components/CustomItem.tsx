@@ -3,12 +3,21 @@ const StyledCustomItem = styled.div`
 	flex-wrap: wrap;
 	gap: 4px;
 	justify-content: space-between;
-	align-items: stretch;
+	align-items: center;
 	padding: 7px 35px;
 
 	> .items-view-item {
 		flex: 1;
+		place-self: stretch;
 		inline-size: 100%;
+
+		~ * {
+			place-self: center;
+
+			&.text-box {
+				inline-size: 200px;
+			}
+		}
 	}
 `;
 

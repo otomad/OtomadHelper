@@ -72,7 +72,8 @@ const StyledTimecodeBox = styled.div`
 			border-radius: ${BUTTON_BORDER_RADIUS}px;
 
 			&:focus {
-				background-color: ${c("fill-color-subtle-secondary")};
+				color: ${c("fill-color-text-on-accent-selected-text")};
+				background-color: ${c("accent-color")};
 				box-shadow: none;
 			}
 		}
@@ -182,8 +183,6 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], onFocus
 		});
 	}, [timecode]);
 
-	// useEventListener(document, "scroll", e => stopEvent(e), { passive: false });
-
 	return (
 		<StyledTimecodeBox ref={timecodeBoxEl} onMouseDown={handleTimecodeBoxMouseDown} {...htmlAttrs}>
 			<StyledTextBox>
@@ -209,6 +208,7 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], onFocus
 							onKeyDown={handleValueKeyDown}
 							onChange={handleItemChange}
 							onFinishInput={(...e) => { moveFocus(lastIndex, 1); handleItemChange(...e); }}
+							onRequestFocusLeft={(...e) => { moveFocus(lastIndex, -1); handleItemChange(...e); }}
 						>
 							{value}
 						</TimecodeItemValue>
@@ -229,7 +229,7 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], onFocus
 
 type TimecodeItemValueChangeEventHandler = (value: string, lastIndex: number) => void;
 
-function TimecodeItemValue({ lastIndex, children, onChange, onFinishInput, onKeyDown, onBlur, onWheel = noop, ...htmlAttrs }: FCP<{
+function TimecodeItemValue({ lastIndex, children, onChange, onFinishInput, onRequestFocusLeft, onKeyDown, onBlur, onWheel = noop, ...htmlAttrs }: FCP<{
 	/** The index of the value item to the last. */
 	lastIndex: number;
 	/** The value of the item. */
@@ -238,21 +238,31 @@ function TimecodeItemValue({ lastIndex, children, onChange, onFinishInput, onKey
 	onChange?: TimecodeItemValueChangeEventHandler;
 	/** Fired when user finishes editing the value of this item. */
 	onFinishInput?: TimecodeItemValueChangeEventHandler;
+	/** Fired when user press BackSpace key and want to move focus to the left. */
+	onRequestFocusLeft?: TimecodeItemValueChangeEventHandler;
 }, "div">) {
-	const [userInput, setUserInput] = useState("");
-	const displayUserInput = useMemo(() => userInput ? userInput.padStart(children.length, "\u2007") : children, [userInput, children]);
+	const [userInput, setUserInput] = useState<string>();
+	const displayUserInput = useMemo(() => userInput !== undefined ? userInput.padStart(children.length, "\u2007") : children, [userInput, children]);
 
 	const handleKeyDown = useCallback<KeyboardEventHandler<HTMLDivElement>>(e => {
 		onKeyDown?.(e);
+		if (e.code === "Backspace") {
+			setUserInput(userInput => {
+				if (userInput === "") onRequestFocusLeft?.("0", lastIndex);
+				else if (userInput) return userInput.slice(0, -1);
+				else if (children) return children.slice(0, -1);
+			});
+			return;
+		}
 		const number = e.code.match(/^(Digit|Numpad)(?<number>\d)$/i)?.groups?.number;
-		console.log("🚀 ~ userInput:", userInput);
 		if (number !== undefined)
 			new Promise<string>(resolve =>
 				setUserInput(userInput => {
+					userInput ??= "";
 					userInput += number;
 					if (userInput.length === children.length) {
 						resolve(userInput); // To solve the problem of triggering events twice due to strict mode in the dev.
-						userInput = "";
+						userInput = undefined;
 					}
 					return userInput;
 				}),
@@ -261,9 +271,9 @@ function TimecodeItemValue({ lastIndex, children, onChange, onFinishInput, onKey
 
 	const handleBlur = useCallback<FocusEventHandler<HTMLDivElement>>(e => {
 		onBlur?.(e);
-		if (userInput) {
+		if (userInput !== undefined) {
 			onChange?.(userInput, lastIndex);
-			setUserInput("");
+			setUserInput(undefined);
 		}
 	}, [onBlur, userInput, lastIndex]);
 

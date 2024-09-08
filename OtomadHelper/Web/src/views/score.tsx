@@ -4,7 +4,7 @@ export /* @internal */ const bpmUsings = [
 	{ id: "project", name: t.score.bpm.project, icon: "veg_file" },
 	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
-export /* @internal */ const constraintNoteLengths = [
+export /* @internal */ const constraintNoteLengthTypes = [
 	{ id: "none", icon: "prohibited" },
 	{ id: "max", icon: "less_or_equal" },
 	{ id: "fixed", icon: "equal" },
@@ -83,7 +83,7 @@ const TrackToolbar = styled.div`
 
 export default function Score() {
 	const {
-		format, encoding, constraintNoteLength, trimStart, trimEnd, bpmUsing, customBpm,
+		format, encoding, constraintNoteLengthType, constraintNoteLengthValue, trimStart, trimEnd, bpmUsing, customBpm,
 		timeSignature: [timeSignature],
 		isMultiple: [isMultiple, setIsMultiple],
 	} = selectConfig(c => c.score);
@@ -141,7 +141,7 @@ export default function Score() {
 				iconField="icon"
 			>
 				<CustomItem current={bpmUsing}>
-					{setToCustom => <TextBox.Number value={customBpm} style={{ width: "200px" }} onChanging={setToCustom} />}
+					{setToCustom => <TextBox.Number value={customBpm} onChanging={setToCustom} />}
 				</CustomItem>
 			</ExpanderRadio>
 			<SettingsCard title={t.score.timeSignature} icon="health">{timeSignature}</SettingsCard>
@@ -149,13 +149,17 @@ export default function Score() {
 				title={t.score.constraint}
 				details={t.descriptions.score.constraint}
 				icon="constraint"
-				items={constraintNoteLengths}
-				value={constraintNoteLength as StateProperty<string>}
+				items={constraintNoteLengthTypes}
+				value={constraintNoteLengthType as StateProperty<string>}
 				view="tile"
 				idField="id"
 				nameField={t.score.constraint}
 				iconField="icon"
-			/>
+			>
+				<Expander.ChildWrapper>
+					<TimecodeBox timecode={constraintNoteLengthValue} />
+				</Expander.ChildWrapper>
+			</ExpanderRadio>
 
 			{!!tracks.length && (
 				<>
