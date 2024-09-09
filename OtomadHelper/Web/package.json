@@ -28,8 +28,9 @@
 		"compact-svg": "tsx scripts/compact-svg.ts",
 		"crowdin:update": "tsx scripts/crowdin/update.ts",
 		"crowdin:download": "tsx scripts/crowdin/download.ts",
-		"commit": "git-cz",
-		"list-credit-licenses": "tsx scripts/list-credit-licenses.ts"
+		"list-credit-licenses": "tsx scripts/list-credit-licenses.ts",
+		"prepare": "husky",
+		"commit": "git-cz -a"
 	},
 	"dependencies": {
 		"@dnd-kit/core": "^6.1.0",
@@ -55,6 +56,10 @@
 		"valtio": "^1.13.2"
 	},
 	"devDependencies": {
+		"@commitlint/cli": "^19.4.1",
+		"@commitlint/config-conventional": "^19.4.1",
+		"@commitlint/cz-commitlint": "^19.4.0",
+		"@commitlint/types": "^19.0.3",
 		"@crowdin/crowdin-api-client": "^1.33.1",
 		"@styled/typescript-styled-plugin": "^1.0.1",
 		"@stylistic/eslint-plugin": "^1.7.0",
@@ -71,12 +76,12 @@
 		"babel-plugin-transform-jsx-classnames": "^1.2.2",
 		"click-to-react-component": "^1.1.0",
 		"commitizen": "^4.3.0",
-		"cz-conventional-changelog-zh": "^0.0.2",
 		"eslint": "^8.57.0",
 		"eslint-plugin-react": "^7.34.1",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.6",
 		"extract-zip": "^2.0.1",
+		"husky": "^9.1.5",
 		"jsdom": "^24.1.1",
 		"license-checker": "^25.0.1",
 		"lightningcss": "^1.24.1",
@@ -119,78 +124,7 @@
 	},
 	"config": {
 		"commitizen": {
-			"path": "./OtomadHelper/Web/node_modules/cz-conventional-changelog-zh",
-			"disableScopeLowerCase": false,
-			"disableSubjectLowerCase": false,
-			"maxHeaderWidth": 100000,
-			"maxLineWidth": 100000,
-			"defaultType": "",
-			"defaultScope": "",
-			"defaultSubject": "",
-			"defaultBody": "",
-			"defaultIssues": "",
-			"types": {
-				"feat": {
-					"description": "一个新功能",
-					"title": "Features"
-				},
-				"fix": {
-					"description": "一个bug",
-					"title": "Bug Fixes"
-				},
-				"docs": {
-					"description": "文档增删改",
-					"title": "Documentation"
-				},
-				"style": {
-					"description": "样式修改(空白、格式、缺少分号等)",
-					"title": "Styles"
-				},
-				"refactor": {
-					"description": "既不修复bug也不添加新功能的更改",
-					"title": "Code Refactoring"
-				},
-				"perf": {
-					"description": "性能优化",
-					"title": "Performance Improvements"
-				},
-				"test": {
-					"description": "增加测试",
-					"title": "Tests"
-				},
-				"build": {
-					"description": "影响构建系统或外部依赖项的更改(示例范围:gulp、broccoli、npm)",
-					"title": "Builds"
-				},
-				"ci": {
-					"description": "对CI配置文件和脚本的更改(示例范围:Travis, Circle, BrowserStack, SauceLabs)",
-					"title": "Continuous Integrations"
-				},
-				"chore": {
-					"description": "除src目录或测试文件以外的修改",
-					"title": "Chores"
-				},
-				"revert": {
-					"description": "回退历史版本",
-					"title": "Reverts"
-				},
-				"conflict": {
-					"description": "修改冲突",
-					"title": "Conflict"
-				},
-				"font": {
-					"description": "字体文件更新",
-					"title": "Fonts"
-				},
-				"delete": {
-					"description": "删除文件",
-					"title": "Delete Files"
-				},
-				"stash": {
-					"description": "暂存文件",
-					"title": "Stash Files"
-				}
-			}
+			"path": "@commitlint/cz-commitlint"
 		}
 	}
 }
