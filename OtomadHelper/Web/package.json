@@ -70,6 +70,8 @@
 		"babel-plugin-styled-components": "^2.1.4",
 		"babel-plugin-transform-jsx-classnames": "^1.2.2",
 		"click-to-react-component": "^1.1.0",
+		"commitizen": "^4.3.0",
+		"cz-conventional-changelog-zh": "^0.0.2",
 		"eslint": "^8.57.0",
 		"eslint-plugin-react": "^7.34.1",
 		"eslint-plugin-react-hooks": "^4.6.0",
