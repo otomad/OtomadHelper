@@ -194,7 +194,7 @@ export default forwardRef(function Button({ children, icon, animatedIcon, subtle
 	onRelease?: BaseEventHandler;
 }, "button">, ref: ForwardedRef<"button">) {
 	const fillColorName = !accent ? undefined : accent === true ? "accent-color" : `fill-color-system-${accent}`;
-	const subtleFillColorName = `fill-color-system-${accent}-background`;
+	const subtleFillColorName = `fill-color-system-${accent === true ? "accent" : accent}-background`;
 	const handleClick = useOnNestedButtonClick(onClick);
 
 	return (

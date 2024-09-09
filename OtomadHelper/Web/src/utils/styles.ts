@@ -31,7 +31,7 @@ export function c(cssVarName: string & {} | "white" | "black" | ColorNames, alph
 			"#" + rgb + Math.round(alpha / 100 * 255).toString(16).padStart(2, "0");
 	}
 	return alpha === undefined ? `var(--${cssVarName})` :
-		`rgb(from var(--${cssVarName}) r g b / ${alpha}%)`;
+		`rgb(from var(--${cssVarName}) r g b / calc(alpha * ${alpha}%))`;
 }
 
 export const ifColorScheme = {

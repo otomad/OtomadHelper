@@ -141,6 +141,11 @@ const GlobalStyle = createGlobalStyle<{
 		transition: none;
 	}
 
+	// Additional calculated colors
+	:root {
+		--fill-color-system-accent-background: rgb(from var(--accent-color) r g b / 15%);
+	}
+
 	// Color mode transition
 	::view-transition-old(root),
 	::view-transition-new(root) {

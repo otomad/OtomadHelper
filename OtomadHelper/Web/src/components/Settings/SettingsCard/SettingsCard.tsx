@@ -17,6 +17,13 @@ const StyledSettingsCard = styled(StyledCard)`
 				color: ${c("fill-color-system-critical")};
 			}
 		}
+
+		> .trailing {
+			> button.button,
+			> .contents > button.button {
+				align-self: stretch;
+			}
+		}
 	}
 
 	&[disabled] > .base {
