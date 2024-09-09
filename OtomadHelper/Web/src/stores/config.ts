@@ -182,6 +182,7 @@ export const configStore = createStore({
 			higherNeighbors: true,
 			default: true,
 		},
+		exclusiveTrack: true,
 		offset: 0,
 	},
 	ytp: {

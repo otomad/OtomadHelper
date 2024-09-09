@@ -6,7 +6,7 @@ const affixes = [
 ];
 
 export default function Shupelunker() {
-	const { enabled, affix, offset } = selectConfig(c => c.shupelunker);
+	const { enabled, affix, exclusiveTrack, offset } = selectConfig(c => c.shupelunker);
 	const { octaves, lowerNeighbors, higherNeighbors, default: defaultAll } = selectConfig(c => c.shupelunker.unallocated);
 
 	return (
@@ -33,10 +33,10 @@ export default function Shupelunker() {
 						<ToggleSwitch on={higherNeighbors} details={t.descriptions.shupelunker.unallocated.higherNeighbors}>{t.shupelunker.unallocated.higherNeighbors}</ToggleSwitch>
 						<ToggleSwitch on={defaultAll} details={t.descriptions.shupelunker.unallocated.default}>{t.shupelunker.unallocated.default}</ToggleSwitch>
 					</Expander>
+					<SettingsCardToggleSwitch on={exclusiveTrack} title={t.shupelunker.exclusiveTrack} details={t.descriptions.shupelunker.exclusiveTrack} icon="exclusive_track" />
 					<SettingsCard title={t.offset} details={t.descriptions.shupelunker.offset} icon="table_resize">
 						<TextBox.Number value={offset} decimalPlaces={0} suffix={t.units.semitones} positiveSign />
 					</SettingsCard>
-					<SettingsCardToggleSwitch on={[true]} title="（翻译）独占轨道" details="（翻译）开启后以使各素材保持在固定位置，但如果素材过多时会造成占用过大" />
 
 					<Subheader>{t.shupelunker.keyMappingZones}</Subheader>
 					<PreviewPiano />

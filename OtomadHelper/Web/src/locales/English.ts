@@ -320,6 +320,7 @@ export default {
 				higherNeighbors: "Higher neighbors",
 				default: "Default full coverage",
 			},
+			exclusiveTrack: "Exclusive track",
 			keyMappingZones: "Key mapping zones",
 		},
 		ytp: {
@@ -588,7 +589,7 @@ export default {
 			shupelunker: {
 				_: "Shupelunker Tactics is an unpitched YTPMV/Otomad tactic. It is used to play the melody by using a clip of the source (usually a vocal) at the same pitch as the melody, i.e. the source clip itself is pitched to match the melody.\nIf the pitch of the clip does not match the melody, “Tartar Tactics” is generated. It is also unpitched and allows you to choose where the clip is cut (usually at a dialog), often using audio stretching and rewinding, as well as adding sixteenth to sixty-fourth rests. During production, the clips are matched to the rhythm for vocal sense.",
 				// The name of this tactic originated in Otomad, whose first creation using this tactic had the title of being a parody of Shu (Shuzo Matsuoka) netaed with Spelunker (game), hence the name. This method was also used in early YTPMV, but it never had an official name or method title, it is more like a meme to use this method in a similar way that most YTPMV from the late 2000s to mid 2010s would use.
-				affix: "The base pitches of the sources need to be detected by naming the clips, please specify whether the pitch info should be a prefix or suffix to the clip name",
+				affix: "The base pitches of the clips need to be detected by naming them, please specify whether the pitch info should be a prefix or suffix to the clip name",
 				unallocated: {
 					_: "Specifies how to fill the vacancies if the sources do not cover all keys",
 					octaves: "Uses the clips with the nearest higher or lower octave, this has the highest priority, useful for sources with sung solfeggios",
@@ -596,7 +597,8 @@ export default {
 					higherNeighbors: "Uses higher neighbors, but the highest keys are filled from the lower neighbors",
 					default: "Uses the first clip without any affixes to cover all remaining vacancies, this has the lowest priority",
 				},
-				offset: "Offsets the sources corresponding to the keys as a whole",
+				exclusiveTrack: "Ensure that each clip of the source remains in the same position, but if there are too many clips, they will take up too much space",
+				offset: "Offsets the clips corresponding to the keys as a whole",
 			},
 			ytp: {
 				_: "YouTube Poop (YTP) is used to create nonsensical videos using various effects known in the YTP genre. YTP supports multisource.\nYTP is a Neo-Dada art form that consists of absurd remixes that imitate and mock the lowest technical and aesthetic standards of remix culture in order to comment on remix culture itself. It consists of video remixes edited from a variety of video clips to confuse, stun, or amuse the viewer. The sources can be mashed all together into a nonsensical crossover story, or simply repeated footage of the characters gesticulating oddly.",
