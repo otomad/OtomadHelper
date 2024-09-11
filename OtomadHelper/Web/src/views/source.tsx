@@ -46,7 +46,7 @@ export default function Source() {
 				iconField="icon"
 			>
 				<CustomItem current={startTime}>
-					{setToCustom => <TimecodeBox timecode={customStartTime} onFocus={() => setToCustom} />}
+					{setToCustom => <TimecodeBox timecode={customStartTime} onFocus={setToCustom} />}
 				</CustomItem>
 			</ExpanderRadio>
 
@@ -72,6 +72,7 @@ export default function Source() {
 				<ToggleSwitch on={selectSourceClips}>{t.source.afterCompletion.selectSourceClips}</ToggleSwitch>
 				<ToggleSwitch on={selectGeneratedAudioClips}>{t.source.afterCompletion.selectGeneratedAudioClips}</ToggleSwitch>
 				<ToggleSwitch on={selectGeneratedVideoClips}>{t.source.afterCompletion.selectGeneratedVideoClips}</ToggleSwitch>
+				{/* TODO: 选中生成的所有其它剪辑，例如五线谱、声呐、字幕等，挨个添加。 */}
 			</Expander>
 			<Expander title={t.source.blindBox} details={t.descriptions.source.blindBox} icon="dice">
 				<ToggleSwitch on={blindBoxForTrack} details={t.descriptions.source.blindBox.track}>{t.source.blindBox.track}</ToggleSwitch>

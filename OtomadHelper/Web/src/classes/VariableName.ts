@@ -58,7 +58,7 @@ export default class VariableName {
 	 * Convert to camelCase.
 	 */
 	get camel() {
-		return this.#words.map((word, i) => i ? capitalize(word) : word.toLowerCase()).join("");
+		return this.#words.map((word, i) => i !== 0 ? capitalize(word) : word.toLowerCase()).join("");
 	}
 
 	/**
@@ -86,7 +86,7 @@ export default class VariableName {
 	 * Convert to Sentence case, separated by spaces, with only the first letter of the sentence capitalized.
 	 */
 	get sentence() {
-		return this.#words.map((word, i) => !i ? capitalize(word) : word.toLowerCase()).join(" ");
+		return this.#words.map((word, i) => i === 0 ? capitalize(word) : word.toLowerCase()).join(" ");
 	}
 
 	/**
@@ -97,10 +97,19 @@ export default class VariableName {
 	}
 
 	/**
-	 * Convert to --css-custom-property-name-form, which is kebab-case with two dashes as a prefix.
+	 * Convert to --css-custom-property-name-form, which is kebab-case with two dashes as the prefix.
 	 */
 	get cssVar() {
 		return "--" + this.kebab;
+	}
+
+	/**
+	 * Convert to css-property-form, which just like kebab-case, but if the first word is in "webkit", "moz", "ms", "o",
+	 * it will use one dash as the prefix.
+	 */
+	get cssProperty() {
+		const prefix = ["webkit", "moz", "ms", "o"].includes(this.#words[0]) ? "-" : "";
+		return prefix + this.kebab;
 	}
 }
 

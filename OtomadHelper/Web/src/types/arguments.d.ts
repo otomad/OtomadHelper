@@ -42,6 +42,12 @@ declare global {
 	 */
 	type CurveType = "linear" | "fast" | "slow" | "smooth" | "sharp" | "none";
 
+	/**
+	 * A string that represents the priority (e.g. `"important"`) if one exists.
+	 * If none exists, returns the empty string.
+	 */
+	type StylePriority = "important" | "";
+
 	type StatePropertiedObject<TState> = {
 		[property in keyof TState]: StatePropertyNonNull<TState[property]>;
 	};

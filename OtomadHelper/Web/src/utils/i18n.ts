@@ -14,7 +14,7 @@ const getProxy = (target: object) =>
 		get(target, rootName) {
 			if (typeof rootName === "symbol") return;
 			if (typeof target === "function") target = {};
-			const getParentsPrefix = (...prefixes: string[]) => prefixes.length ? prefixes.join(".") : "";
+			const getParentsPrefix = (...prefixes: string[]) => prefixes.length > 0 ? prefixes.join(".") : "";
 			const getDeclarationInfo = (...keys: string[]) => {
 				const key = getParentsPrefix(...keys);
 				const raw = i18n.getResource("en", "javascript", key) as string | object;
@@ -81,10 +81,12 @@ Object.freeze(t);
 
 /**
  * Check if the current page is written from right to left (such as in Arabic) rather than from left to right (such as in English).
+ * @param container - Specify the container. Defaults to `<html>`.
  * @returns Is the horizontal writing direction of the current page written from right to left?
  */
-export function isRtl() {
-	return getComputedStyle(document.documentElement).direction === "rtl";
+export function isRtl(container?: Element | null) {
+	container ??= document.documentElement;
+	return getComputedStyle(container).direction === "rtl";
 }
 
 /**

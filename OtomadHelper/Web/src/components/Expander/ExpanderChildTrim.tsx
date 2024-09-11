@@ -7,14 +7,10 @@ const StyledExpanderChildTrim = styled(Expander.ChildWrapper)`
 		flex-wrap: wrap;
 		gap: 12px;
 		align-items: center;
-
-		> .text-box {
-			inline-size: 200px;
-		}
 	}
 
-	.tilde {
-		margin: 0 auto;
+	.timecodes.has-child-wrapped .tilde {
+		writing-mode: vertical-rl;
 	}
 `;
 
@@ -32,11 +28,11 @@ function ExpanderChildTrimTimecode({ start, end }: FCP<{
 
 	return (
 		<StyledExpanderChildTrim>
-			<div className="timecodes">
+			<VerticalIfFlexWrap className="timecodes">
 				<TimecodeBox timecode={start} />
 				<div className="tilde">~</div>
 				<TimecodeBox timecode={end} />
-			</div>
+			</VerticalIfFlexWrap>
 			<Button icon="arrow_reset" accent="critical" subtle extruded onClick={reset}>{t.reset}</Button>
 		</StyledExpanderChildTrim>
 	);

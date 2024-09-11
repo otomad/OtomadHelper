@@ -405,7 +405,7 @@ export async function startColorViewTransition(changeFunc: () => MaybePromise<vo
 	document.head.removeChild(style);
 }
 
-export function forthBack_keyframes<Props extends object = {}>(strings: TemplateStringsArray, ...interpolations: Array<Styled.Interpolation<Props>>) {
+export function forthBack_keyframes<Props extends object = object>(strings: TemplateStringsArray, ...interpolations: Array<Styled.Interpolation<Props>>) {
 	const forth = keyframes(strings, ...interpolations);
 
 	const backStrings = [...strings];
@@ -423,4 +423,36 @@ export function forthBack_keyframes<Props extends object = {}>(strings: Template
 	const back = keyframes(backStrings as unknown as TemplateStringsArray, ...interpolations);
 
 	return [forth, back] as const;
+}
+
+const setStyleTemporarilyQueue: Promise<void>[] = [];
+/**
+ * Set the style, then do something others, after that, restore the style back.
+ * @param element - HTML DOM element.
+ * @param style - The style to be set.
+ * @param action - After set the style, do something others.
+ */
+export async function setStyleTemporarily(element: HTMLElement, style: CSSProperties, action: () => MaybePromise<void>) {
+	if (setStyleTemporarilyQueue[0] !== undefined) await setStyleTemporarilyQueue[0];
+	const { promise, resolve } = Promise.withResolvers<void>();
+	setStyleTemporarilyQueue.push(promise);
+
+	style = objectReplaceKeys(style, camel => new VariableName(camel).cssProperty);
+	// Convert property names to kebab case or Element.style.setProperty won't recognize them.
+	if (!("transition" in style)) style.transition = "none";
+
+	const originalStyle: Record<string, [value: Numberish, priority: StylePriority]> = {};
+	for (const property of Object.keys(style)) // Copy original style.
+		originalStyle[property] = [element.style.getPropertyValue(property), element.style.getPropertyPriority(property) as StylePriority];
+
+	for (const [property, value] of Object.entries(style))
+		element.style.setProperty(property, value, "important");
+
+	await action();
+
+	for (const [property, [value, priority]] of Object.entries(originalStyle))
+		element.style.setProperty(property, value as string, priority);
+
+	resolve();
+	setStyleTemporarilyQueue.removeItem(promise);
 }

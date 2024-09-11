@@ -52,17 +52,17 @@
 	};
 
 	Array.prototype.randomOne = function (record) {
-		if (!this.length) return null;
+		if (this.length === 0) return null;
 		record = toValue(record);
 		let index = randBetween(0, this.length - 1);
 		if (record !== undefined) {
-			if (record.length !== this.length + 1 || record.every((n, i) => !i || n)) {
+			if (record.length !== this.length + 1 || record.every((n, i) => i === 0 || n)) {
 				let last = +record[0];
 				if (!Number.isFinite(last)) last = -1;
 				record.relist(Array(this.length + 1).fill(0));
 				record[0] = last;
 			}
-			while (record[index + 1] || index === record[0])
+			while (record[index + 1] !== 0 || index === record[0])
 				index = randBetween(0, this.length - 1);
 			record[index + 1] = 1;
 			record[0] = index;
@@ -85,7 +85,7 @@
 
 	Array.prototype.equals = function (another) {
 		if (this === another) return true;
-		if (!this || !another) return false;
+		if (this == null || another == null) return false;
 		if (this.length !== another.length) return false;
 
 		for (let i = 0; i < this.length; i++)

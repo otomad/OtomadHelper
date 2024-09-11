@@ -42,7 +42,7 @@ export default function CustomItem<T extends string = "custom">({ icon = "edit",
 				id={id}
 				details={details}
 				icon={icon}
-				selected={current === id}
+				selected={current === id ? "checked" : "unchecked"}
 				onClick={setToCustom}
 			>
 				{title}
