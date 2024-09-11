@@ -7,7 +7,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import reactRecommended from "eslint-plugin-react/configs/recommended.js";
 import tseslint from "typescript-eslint";
 
-/** @type {import("eslint").Linter.FlatConfig[]} */
+/** @type {import("eslint").Linter.Config[]} */
 export default [
 	eslint.configs.recommended,
 	...tseslint.configs.recommended,
@@ -24,6 +24,8 @@ export default [
 				ecmaFeatures: {
 					jsx: true,
 				},
+				project: true,
+				tsconfigRootDir: import.meta.dirname,
 			},
 			ecmaVersion: "latest",
 			sourceType: "module",
@@ -191,6 +193,25 @@ export default [
 			"@stylistic/indent-binary-ops": "error",
 			"@stylistic/type-generic-spacing": "error",
 			"@stylistic/type-named-tuple-spacing": "error",
+			"@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
+			"@typescript-eslint/strict-boolean-expressions": ["warn", {
+				"allowString": false,
+				"allowNumber": false,
+				"allowNullableObject": false,
+				"allowNullableBoolean": true,
+				"allowNullableString": false,
+				"allowNullableNumber": false,
+				"allowNullableEnum": false,
+				"allowAny": false,
+			}],
+			"@typescript-eslint/no-unnecessary-type-assertion": "error",
+			"@typescript-eslint/no-unnecessary-type-constraint": "error",
+			"@typescript-eslint/no-unnecessary-type-parameters": "error",
+			"@typescript-eslint/no-unnecessary-type-arguments": "error",
+			"@typescript-eslint/no-unnecessary-template-expression": "error",
+			"@typescript-eslint/no-unnecessary-qualifier": "error",
+			"@typescript-eslint/no-unnecessary-parameter-property-assignment": "error",
+			"@typescript-eslint/no-unnecessary-condition": ["error", { allowConstantLoopConditions: true }],
 			"react-refresh/only-export-components": [
 				"off",
 				{ allowConstantExport: true },

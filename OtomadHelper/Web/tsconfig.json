@@ -21,6 +21,7 @@
 		"isolatedModules": true,
 		"noEmit": true,
 		"allowUnreachableCode": true,
+		"allowJs": true,
 		"baseUrl": ".",
 		"paths": {
 			"assets/*": ["src/assets/*"],
@@ -50,9 +51,9 @@
 		"verbatimModuleSyntax": true,
 	},
 	"include": [
-		"src", "scripts",
+		".",
 	],
 	"exclude": [
-		"node_modules",
+		"node_modules", "dist",
 	],
 }

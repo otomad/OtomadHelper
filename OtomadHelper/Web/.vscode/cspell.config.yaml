@@ -4,6 +4,8 @@ dictionaryDefinitions: []
 dictionaries: []
 import: []
 language: en,vi
+includeRegExpList:
+  - '/[\p{Script_Extensions=Latin}]+/gu'
 words:
   - ack
   - ani
