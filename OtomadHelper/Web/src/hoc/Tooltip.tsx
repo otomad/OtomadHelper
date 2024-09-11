@@ -107,6 +107,14 @@ export default function Tooltip({ title, placement, offset = 10, timeout = 500, 
 		return dom as HTMLElement | null;
 	}, [contentsEl]);
 
+	useEffect(() => {
+		if (dom && title) {
+			const ariaLabel = title.toString();
+			if (!ariaLabel.match(/^\[object .*\]$/))
+				dom.ariaLabel = ariaLabel;
+		}
+	}, [dom, title]);
+
 	const handleHover = (e: MouseEvent) => {
 		clearTimeout(shownTimeout.current);
 		if (!dom || !isInPath(e, dom)) return;
