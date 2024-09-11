@@ -56,6 +56,7 @@ export default function Prve() {
 			},
 		);
 	};
+	const [initialValueCountMap, setInitialValueCountMap] = useImmer(new Map<string, number>());
 
 	return (
 		<div className="container">
@@ -94,6 +95,12 @@ export default function Prve() {
 					alwaysShowCheckInfo
 				>
 					{klass === "time" ? <InfoBar status="info" title={getWhirlInfo()} /> : undefined}
+					<div className="initial-value" style={{ display: "flex" }}>
+						Initial value:
+						<div style={{ display: "flex", overflow: "hidden" }}>
+							{forMap(initialValueCountMap.get(klass) ?? 1, i => <PreviewPrve key={i} thumbnail={exampleThumbnail} id={selectPrve(klass)[0]!} style={{ width: "100px", height: "100px", "--i": i }} onFramesChange={frames => setInitialValueCountMap(map => map.set(klass, frames))} />)}
+						</div>
+					</div>
 				</ExpanderRadio>
 			))}
 		</div>
@@ -134,5 +141,5 @@ export function useIsForceStretch() {
 	const timeEffects = findPrveClassEffects("time");
 	const prve = useSnapshot(configStore.visual.prve);
 	const effects = Object.values(prve).flatMap(control => control.effects);
-	return !!effects.intersection(timeEffects).length;
+	return !(effects.intersection(timeEffects).length === 0);
 }
