@@ -1,6 +1,6 @@
 import type { pitchNotations } from "views/lyrics";
 import type { bpmUsings, constraintNoteLengthTypes, encodings, multipleSelectTrackItems } from "views/score";
-import type { startTimes } from "views/source";
+import type { selectGeneratedClipsType, startTimes } from "views/source";
 import type { legatos, noLengthenings, stretches, transformMethods } from "views/visual";
 
 type StartTime = typeof startTimes[number]["id"];
@@ -14,6 +14,7 @@ type TransformMethod = typeof transformMethods[number];
 type PitchNotation = typeof pitchNotations[number];
 type Timecode = string;
 type MultipleSelectTrackItem = typeof multipleSelectTrackItems[number];
+type SelectGeneratedClips = typeof selectGeneratedClipsType[number]["id"];
 
 const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 
@@ -29,8 +30,7 @@ export const configStore = createStore({
 		afterCompletion: {
 			removeSourceClips: false,
 			selectSourceClips: true,
-			selectGeneratedAudioClips: true,
-			selectGeneratedVideoClips: true,
+			selectGeneratedClips: [] as true | SelectGeneratedClips[],
 		},
 		blindBoxForTrack: false,
 		blindBoxForMarker: false,

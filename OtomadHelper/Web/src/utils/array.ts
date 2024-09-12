@@ -167,6 +167,10 @@
 			this.delete(item);
 	};
 
+	Set.prototype.equals = function (other) {
+		return this.symmetricDifference(other).size === 0;
+	};
+
 	makePrototypeKeysNonEnumerable(Set);
 }
 

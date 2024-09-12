@@ -173,7 +173,7 @@ function InitialValue({ klass, effect, initialValue }: FCP<{
 	const frames = PrveClass.findClass(klass)?.findEffectFrames(effect) ?? 1;
 
 	return (
-		<StyledInitialValue title="Initial Value">
+		<StyledInitialValue title={t.prve.initialValue} icon="replay">
 			<ItemsView className="initial-value-items" view="grid" current={initialValue} $itemWidth={100}>
 				{forMap(frames, j => {
 					const i = (j + frames - 1) % frames; // Change the order from `0 1 2 3` to `3 0 1 2`.

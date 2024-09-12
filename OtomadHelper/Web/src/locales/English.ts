@@ -29,7 +29,8 @@ export default {
 			effect: "Effect",
 			effect_other: "Effects",
 			prve: "PV Rhythm Visual Effect",
-			staff: "Staff Visualizer",
+			staff: "Staff",
+			staff_full: "Staff Visualizer",
 			pixelScaling: "Pixel Scaling",
 			parameters: "Parameters",
 		},
@@ -55,8 +56,7 @@ export default {
 				_: "After completion",
 				removeSourceClips: "Remove source track clips",
 				selectSourceClips: "Select source track clips",
-				selectGeneratedAudioClips: "Select all audio clips generated",
-				selectGeneratedVideoClips: "Select all video clips generated",
+				selectGeneratedClips: "Select all clips generated",
 			},
 			blindBox: {
 				_: "Blind box",
@@ -371,6 +371,7 @@ export default {
 			audioEventOnlyOne: "You must select ONE and only ONE audio track event, no more and no less",
 		},
 		prve: {
+			initialValue: "Initial value",
 			control: {
 				general: "General",
 				general_full: "General control",
@@ -527,7 +528,7 @@ export default {
 						_: "Produces an effect when playing appoggiaturas.\nWhen there are one to two sixteenth notes or shorter consecutively, they are considered as appoggiaturas.",
 					},
 					arpeggio: {
-						_: "Produces an effect when playing arpeggios. Defaults to negative.\nWhen there are three or more sixteenth notes or shorter consecutively, they are considered as arpeggios.",
+						_: "Produces an effect when playing arpeggios.\nWhen there are three or more sixteenth notes or shorter consecutively, they are considered as arpeggios.",
 						negative: "Typically uses negative to represent arpeggios",
 					},
 				},

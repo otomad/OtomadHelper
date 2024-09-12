@@ -3,6 +3,15 @@ export /* @internal */ const startTimes = [
 	{ id: "cursor", name: t.source.startTime.cursor, icon: "text_cursor" },
 	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
+export /* @internal */ const selectGeneratedClipsType = [
+	{ id: "audio", name: t.titles.audio, icon: "audio" },
+	{ id: "visual", name: t.titles.visual, icon: "visual" },
+	{ id: "staff", name: t.titles.staff, icon: "g_clef" },
+	{ id: "sonar", name: t.titles.sonar, icon: "sonar" },
+	{ id: "lyrics", name: t.titles.lyrics, icon: "lyrics" },
+] as const;
+const allSelectGeneratedClips = Object.freeze(selectGeneratedClipsType.map(item => item.id));
+const getAllSelectGeneratedClips = () => allSelectGeneratedClips.slice();
 
 /** @deprecated */
 const isUnderVegas16 = true;
@@ -12,9 +21,16 @@ export default function Source() {
 		source, blindBoxForTrack, blindBoxForMarker, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
 	} = selectConfig(c => c.source);
-	const { removeSourceClips, selectSourceClips, selectGeneratedAudioClips, selectGeneratedVideoClips } = selectConfig(c => c.source.afterCompletion);
+	const { removeSourceClips, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = selectConfig(c => c.source.afterCompletion);
 
 	mutexSwitches(removeSourceClips, selectSourceClips);
+
+	const selectGeneratedClips = useStateSelector(
+		_selectGeneratedClips,
+		items => typeof items === "boolean" ? getAllSelectGeneratedClips() : items === undefined ? [] : items,
+		items => new Set(items).equals(new Set(allSelectGeneratedClips)) ? true : items,
+		{ processPrevStateInSetterWithGetter: true },
+	);
 
 	const underVegas16 = isUnderVegas16 ?
 		<p style={{ color: c("fill-color-system-critical") }}>{t.descriptions.source.preferredTrack.belowAdjustmentTracks.versionRequest({ version: 16 })}</p> :
@@ -70,9 +86,11 @@ export default function Source() {
 			<Expander title={t.source.afterCompletion} icon="post_processing">
 				<ToggleSwitch on={removeSourceClips}>{t.source.afterCompletion.removeSourceClips}</ToggleSwitch>
 				<ToggleSwitch on={selectSourceClips}>{t.source.afterCompletion.selectSourceClips}</ToggleSwitch>
-				<ToggleSwitch on={selectGeneratedAudioClips}>{t.source.afterCompletion.selectGeneratedAudioClips}</ToggleSwitch>
-				<ToggleSwitch on={selectGeneratedVideoClips}>{t.source.afterCompletion.selectGeneratedVideoClips}</ToggleSwitch>
-				{/* TODO: 选中生成的所有其它剪辑，例如五线谱、声呐、字幕等，挨个添加。 */}
+				<SelectAll value={selectGeneratedClips} all={getAllSelectGeneratedClips()} title={t.source.afterCompletion.selectGeneratedClips} />
+				<ItemsView view="tile" multiple current={selectGeneratedClips}>
+					{selectGeneratedClipsType.map(({ id, name, icon }) =>
+						<ItemsView.Item id={id} key={id} icon={icon}>{name}</ItemsView.Item>)}
+				</ItemsView>
 			</Expander>
 			<Expander title={t.source.blindBox} details={t.descriptions.source.blindBox} icon="dice">
 				<ToggleSwitch on={blindBoxForTrack} details={t.descriptions.source.blindBox.track}>{t.source.blindBox.track}</ToggleSwitch>

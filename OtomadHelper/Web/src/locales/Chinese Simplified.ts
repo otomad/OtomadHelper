@@ -25,7 +25,8 @@ export default {
 			tools: "工具",
 			settings: "设置",
 			prve: "画面节奏视觉效果",
-			staff: "五线谱可视化",
+			staff: "五线谱",
+			staff_full: "五线谱可视化",
 			pixelScaling: "像素硬边缘放大",
 			parameters: "参数",
 			track: "轨道",
@@ -54,8 +55,7 @@ export default {
 				_: "完成后",
 				removeSourceClips: "删除源轨道剪辑",
 				selectSourceClips: "选中源轨道剪辑",
-				selectGeneratedAudioClips: "选中生成的所有音频剪辑",
-				selectGeneratedVideoClips: "选中生成的所有视频剪辑",
+				selectGeneratedClips: "选中生成的所有剪辑",
 			},
 			blindBox: {
 				_: "素材盲盒",
@@ -360,6 +360,7 @@ export default {
 			audioEvent: "已选中{{count}}段音频轨道剪辑",
 		},
 		prve: {
+			initialValue: "初始值",
 			control: {
 				general: "常规",
 				general_full: "常规控制",
@@ -418,6 +419,7 @@ export default {
 				gaussianBlur: "高斯模糊",
 				radialBlur: "径向模糊",
 				wipeRight: "向右擦除",
+				wipeRight1: "1 步向右擦除",
 				splitVOut: "垂直分割",
 				stepChangeHue: "{{count}}步色差",
 			},
@@ -514,7 +516,7 @@ export default {
 						_: "在演奏倚音时产生效果。\n当有连续一到两个十六分音符或更短的音符时，它们将被视为倚音。",
 					},
 					arpeggio: {
-						_: "在演奏琶音时产生效果。默认为颜色反转。\n当有连续三个及以上十六分音符或更短的音符时，它们将被视为琶音。",
+						_: "在演奏琶音时产生效果。\n当有连续三个及以上十六分音符或更短的音符时，它们将被视为琶音。",
 						negative: "典型地使用颜色反转来表现琶音",
 					},
 				},

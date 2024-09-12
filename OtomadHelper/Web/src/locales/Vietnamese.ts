@@ -25,7 +25,6 @@ export default {
 			tools: "Công cụ",
 			settings: "Cài đặt",
 			prve: "Hiệu ứng nhịp điệu hình ảnh PV",
-			staff: "Staff Visualizer",
 			pixelScaling: "Tỷ lệ pixel",
 			parameters: "Thông số",
 			track: "Các track",

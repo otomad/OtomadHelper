@@ -8,7 +8,6 @@ export default function Ytp() {
 	const { enabled, clips, constraintStart, constraintEnd } = selectConfig(c => c.ytp);
 	const [selectEffects, setSelectEffects] = useState<string[]>([]);
 	const selectEffectCount = selectEffects.length;
-	const selectAll = useSelectAll([selectEffects, setSelectEffects], effects);
 
 	return (
 		<div className="container">
@@ -35,14 +34,7 @@ export default function Ytp() {
 						</OverlapLayout>
 					)}
 				>
-					<Checkbox
-						value={selectAll}
-						actions={
-							<Button subtle icon="invert_selection" onClick={e => { stopEvent(e); selectAll[2](); }}>{t.invertSelection}</Button>
-						}
-					>
-						{t.selectAll}
-					</Checkbox>
+					<SelectAll value={[selectEffects, setSelectEffects]} all={effects} />
 					<ItemsView view="grid" current={[selectEffects, setSelectEffects]} multiple>
 						{effects.map(name => (
 							<ItemsView.Item

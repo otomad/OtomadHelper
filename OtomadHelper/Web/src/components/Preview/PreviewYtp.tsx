@@ -3,7 +3,9 @@ import ytpChangeSpeedImage from "assets/images/effects/ytp_change_speed.png";
 import ytpChorusImage from "assets/images/effects/ytp_chorus.jpg";
 import ytpDelayImage from "assets/images/effects/ytp_delay.png";
 import ytpReverseImage from "assets/images/effects/ytp_reverse.png";
-import { getDuration } from "./PreviewPrve";
+import { MILLISECONDS_PER_FRAME } from "./PreviewPrve";
+
+const getDuration = (frames: number) => frames * MILLISECONDS_PER_FRAME + "ms";
 
 const StyledPreviewYtp = styled.div<{
 	/** Effect name. */

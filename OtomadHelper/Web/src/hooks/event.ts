@@ -312,7 +312,7 @@ export function useSelectAll<T>([selected, setSelected]: StateProperty<T[]>, all
 	selected ??= [];
 	setSelected ??= noop;
 	return [
-		!selected.length ? "unchecked" : selected.length === allSelection.length ? "checked" : "indeterminate",
+		selected.length === 0 ? "unchecked" : selected.length === allSelection.length ? "checked" : "indeterminate",
 		(checkState: CheckState) => {
 			if (checkState === "unchecked") setSelected([]);
 			else if (checkState === "checked") setSelected(allSelection.slice());

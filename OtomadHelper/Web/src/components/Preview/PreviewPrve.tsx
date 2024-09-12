@@ -5,8 +5,7 @@ import { getStepChangeHueStep } from "views/visual/prve";
 const prvePingpongStaticImage = freezeframes["effects/prve_pingpong.gif"];
 const prveWhirlStaticImage = freezeframes["effects/prve_whirl.gif"];
 
-const MILLISECONDS_PER_FRAME = 375;
-export /* @internal */ const getDuration = (frames: number) => frames * 375 + "ms";
+export /* @internal */ const MILLISECONDS_PER_FRAME = 375;
 
 const StyledPreviewPrve = styled.div<{
 	/** Effect identifier. */

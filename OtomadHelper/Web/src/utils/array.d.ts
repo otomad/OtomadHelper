@@ -157,4 +157,9 @@ declare interface Set<T> {
 	 * @param item - Item.
 	 */
 	toggle(item: T): void;
+
+	/**
+	 * Comparing two Sets for equality.
+	 */
+	equals(other: Set<T> | SetLike<T>): boolean;
 }

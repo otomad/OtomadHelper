@@ -212,6 +212,7 @@ export default [
 			"@typescript-eslint/no-unnecessary-qualifier": "error",
 			"@typescript-eslint/no-unnecessary-parameter-property-assignment": "error",
 			"@typescript-eslint/no-unnecessary-condition": ["off", { allowConstantLoopConditions: true }],
+			"@typescript-eslint/no-empty-object-type": "off",
 			"react-refresh/only-export-components": [
 				"off",
 				{ allowConstantExport: true },

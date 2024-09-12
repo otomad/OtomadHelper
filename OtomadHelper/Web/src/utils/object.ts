@@ -96,16 +96,19 @@ export const hasKey = <T extends object>(obj: T, key: keyof Any): key is keyof T
  * @param setter - The `setter` method in `useState`.
  * @param interceptor - Interceptor.
  * @param subscribe - Do something after the value set.
+ * @param getter - INTERNAL pass getter from `useStateSelector` hook.
  * @returns The generated new `setter` method.
  */
 export function setStateInterceptor<T>(
 	setter: SetState<T>,
 	interceptor?: (userInput: Any, prevState: T) => T,
 	subscribe?: (curState: T, prevState: T, userInput: Any) => void,
+	getter?: (original: T) => T,
 ) {
 	return (userInput: React.SetStateAction<T>) => {
 		type PrevStateSetter = (value: (prevState: T) => void) => void;
 		(setter as PrevStateSetter)(prevState => {
+			if (getter) prevState = getter(prevState);
 			const userInputValue = userInput instanceof Function ? userInput(prevState) : userInput;
 			const curState = interceptor ? interceptor(userInputValue, prevState) : userInputValue;
 			curState !== prevState && subscribe?.(curState, prevState, userInputValue);
@@ -127,10 +130,16 @@ export function useStateSelector<TOld, TNew>(
 	stateProperty: StateProperty<TOld>,
 	getter: (original: TOld) => TNew,
 	setter: (userInput: TNew, prevState: TOld) => TOld,
+	{
+		processPrevStateInSetterWithGetter = false,
+	}: {
+		/** In the new setter, it will use the new getter to preprocess the previous state. */
+		processPrevStateInSetterWithGetter?: boolean;
+	} = {}
 ) {
 	return [
 		getter(stateProperty[0]!),
-		setStateInterceptor(stateProperty[1]!, setter),
+		setStateInterceptor(stateProperty[1]!, setter, undefined, processPrevStateInSetterWithGetter ? getter as never : undefined),
 	] as StateProperty<TNew>;
 }
 
