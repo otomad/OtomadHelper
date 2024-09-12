@@ -10,7 +10,9 @@ export /* @internal */ const getDuration = (frames: number) => frames * 375 + "m
 
 const StyledPreviewPrve = styled.div<{
 	/** Effect identifier. */
-	$id: string;
+	$effect: string;
+	/** Frame count. */
+	$frames?: number;
 }>`
 	${styles.mixins.square("100%")};
 	container: preview-prve / size;
@@ -21,9 +23,15 @@ const StyledPreviewPrve = styled.div<{
 		animation-duration: calc(var(--frames) * ${MILLISECONDS_PER_FRAME}ms);
 		animation-timing-function: step-start;
 		animation-iteration-count: infinite;
+	}
 
-		@layer base {
-			--frames: 1;
+	@layer base {
+		--frames: 1;
+		--i: 0;
+		--adjust-order: 0;
+		--adjust-rate: 1;
+
+		img {
 			${styles.mixins.square("100%")};
 		}
 	}
@@ -32,22 +40,23 @@ const StyledPreviewPrve = styled.div<{
 		${useLottieStatus.animation("Hover")};
 	}
 
-	.items-view-item:not(:hover, :focus-visible) & img {
+	.items-view-item:not(:hover, :focus-visible, .initial-value-item) & img {
 		animation: none;
 	}
 
 	.initial-value & img {
 		animation-play-state: paused;
-		animation-delay: calc(var(--i, 0) * -${MILLISECONDS_PER_FRAME}ms);
+		animation-delay: calc((var(--i) + var(--adjust-order)) * -${MILLISECONDS_PER_FRAME}ms / var(--adjust-rate) + 1ms);
 	}
 
 	@layer components {
-		${({ $id }) => {
-			const stepChangeHueStep = getStepChangeHueStep($id);
+		${({ $frames }) => $frames !== undefined && css`--frames: ${$frames};`};
+
+		${({ $effect }) => {
+			const stepChangeHueStep = getStepChangeHueStep($effect);
 			if (stepChangeHueStep !== null)
 				return css`
 					img {
-						--frames: ${stepChangeHueStep};
 						filter: hue-rotate(${360 / stepChangeHueStep}deg);
 						animation: ${keyframes`
 							${forMapFromTo(1, stepChangeHueStep, i => {
@@ -60,7 +69,6 @@ const StyledPreviewPrve = styled.div<{
 			return {
 				hFlip: css`
 					img {
-						--frames: 2;
 						scale: -1 1;
 						animation: ${keyframes`
 							0%, 100% { scale: -1 1; }
@@ -70,7 +78,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				vFlip: css`
 					img {
-						--frames: 2;
 						scale: 1 -1;
 						animation: ${keyframes`
 							0%, 100% { scale: 1 -1; }
@@ -80,7 +87,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				ccwFlip: css`
 					img {
-						--frames: 4;
 						scale: 1 -1;
 						animation: ${keyframes`
 							0%, 100% { scale: 1 -1; }
@@ -92,7 +98,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				cwFlip: css`
 					img {
-						--frames: 4;
 						scale: -1 1;
 						animation: ${keyframes`
 							0%, 100% { scale: -1 1; }
@@ -104,7 +109,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				ccwRotate: css`
 					img {
-						--frames: 4;
 						width: 100cqh;
 						height: 100cqw;
 						transform: translate(calc((100cqw - 100cqh) / 2), calc((100cqw - 100cqh) / -2)) rotate(-90deg);
@@ -118,7 +122,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				cwRotate: css`
 					img {
-						--frames: 4;
 						width: 100cqh;
 						height: 100cqw;
 						transform: translate(calc((100cqw - 100cqh) / 2), calc((100cqw - 100cqh) / -2)) rotate(90deg);
@@ -132,7 +135,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				turned: css`
 					img {
-						--frames: 2;
 						rotate: 180deg;
 						animation: ${keyframes`
 							0%, 100% { rotate: 180deg; }
@@ -151,9 +153,7 @@ const StyledPreviewPrve = styled.div<{
 					}
 				`,
 				hMirror: css`
-					img {
-						--frames: 2;
-					}
+					--adjust-order: 1;
 					img:nth-child(2) {
 						scale: -1 1;
 						clip-path: inset(0 50% 0 0);
@@ -164,9 +164,7 @@ const StyledPreviewPrve = styled.div<{
 					}
 				`,
 				vMirror: css`
-					img {
-						--frames: 2;
-					}
+					--adjust-order: 1;
 					img:nth-child(2) {
 						scale: 1 -1;
 						clip-path: inset(0 0 50% 0);
@@ -177,9 +175,6 @@ const StyledPreviewPrve = styled.div<{
 					}
 				`,
 				ccwMirror: css`
-					img {
-						--frames: 4;
-					}
 					img:nth-child(2) {
 						scale: -1 1;
 						clip-path: inset(0 50% 0 0);
@@ -208,9 +203,6 @@ const StyledPreviewPrve = styled.div<{
 					}
 				`,
 				cwMirror: css`
-					img {
-						--frames: 4;
-					}
 					img:nth-child(2) {
 						scale: -1 1;
 						clip-path: inset(0 0 0 50%);
@@ -240,7 +232,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				negative: css`
 					img {
-						--frames: 2;
 						filter: invert(1);
 						animation: ${keyframes`
 							0%, 100% { filter: invert(1); }
@@ -250,7 +241,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				luminInvert: css`
 					img {
-						--frames: 2;
 						filter: invert(1) hue-rotate(180deg);
 						animation: ${keyframes`
 							0%, 100% { filter: invert(1) hue-rotate(180deg); }
@@ -259,6 +249,7 @@ const StyledPreviewPrve = styled.div<{
 					}
 				`,
 				negativeBlur: css`
+					--frames: 1;
 					img:nth-child(1) {
 						opacity: 0;
 						animation: ${keyframes`
@@ -279,7 +270,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				hueInvert: css`
 					img {
-						--frames: 2;
 						filter: hue-rotate(180deg);
 						animation: ${keyframes`
 							0%, 100% { filter: hue-rotate(180deg); }
@@ -289,7 +279,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				chromatic: css`
 					img {
-						--frames: 2;
 						filter: grayscale(1);
 						animation: ${keyframes`
 							0%, 100% { filter: grayscale(1); }
@@ -299,7 +288,6 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				chromaticBlur: css`
 					img {
-						--frames: 2;
 						filter: grayscale(1);
 						animation: ${keyframes`
 							0%, 100% { filter: grayscale(1); }
@@ -361,8 +349,9 @@ const StyledPreviewPrve = styled.div<{
 					}
 				`,
 				slantDown: css`
+					--adjust-order: 1;
+					--adjust-rate: 0.5;
 					img {
-						--frames: 2;
 						transform: skewX(25deg) scaleX(0.5);
 						transform-origin: center bottom;
 						animation: ${keyframes`
@@ -374,8 +363,9 @@ const StyledPreviewPrve = styled.div<{
 					}
 				`,
 				slantUp: css`
+					--adjust-order: 1;
+					--adjust-rate: 0.5;
 					img {
-						--frames: 2;
 						transform: skewX(25deg) scale(0.5);
 						transform-origin: center bottom;
 						animation: ${keyframes`
@@ -387,8 +377,8 @@ const StyledPreviewPrve = styled.div<{
 					}
 				`,
 				puyo: css`
+					--adjust-order: 1;
 					img {
-						--frames: 2;
 						scale: 1 0.75;
 						animation: ${keyframes`
 							0%, 100% { scale: 1 0.75; }
@@ -398,8 +388,8 @@ const StyledPreviewPrve = styled.div<{
 					}
 				`,
 				pendulum: css`
+					--adjust-order: 1;
 					img {
-						--frames: 2;
 						scale: 0.5;
 						rotate: -25deg;
 						animation: ${keyframes`
@@ -430,8 +420,20 @@ const StyledPreviewPrve = styled.div<{
 					}
 				`,
 				wipeRight: css`
+					--adjust-order: 1;
 					img {
-						--frames: 2;
+						clip-path: inset(0 75% 0 0);
+						animation: ${keyframes`
+							0% { clip-path: inset(0 100% 0 0); }
+							50% { clip-path: inset(0 0 0 0); }
+							100% { clip-path: inset(0 0 0 100%); }
+						`};
+						animation-timing-function: ${eases.easeOutMax} !important;
+					}
+				`,
+				wipeRight1: css`
+					--adjust-order: 1;
+					img {
 						clip-path: inset(0 75% 0 0);
 						animation: ${keyframes`
 							0% { clip-path: inset(0 100% 0 0); }
@@ -451,18 +453,18 @@ const StyledPreviewPrve = styled.div<{
 						animation-timing-function: ${eases.easeOutMax} !important;
 					}
 				`,
-			}[$id];
+			}[$effect];
 		}}
 	}
 `;
 
-export default function PreviewPrve({ thumbnail, id, onFramesChange, ...htmlAttrs }: FCP<{
+export default function PreviewPrve({ thumbnail, effect, frames, ...htmlAttrs }: FCP<{
 	/** Thumbnail. */
 	thumbnail: string;
 	/** Effect identifier. */
-	id: string;
-	/** Tell parent (PRVE page) what is the frame count of the current effect. */
-	onFramesChange?(frames: number): void;
+	effect: string;
+	/** Frame count. */
+	frames?: number;
 }, "div">) {
 	const imageCount = {
 		hMirror: 2,
@@ -471,33 +473,25 @@ export default function PreviewPrve({ thumbnail, id, onFramesChange, ...htmlAttr
 		cwMirror: 4,
 		radialBlur: 2,
 		negativeBlur: 2,
-	}[id] ?? 1;
+	}[effect] ?? 1;
 
 	// const canvasFilters = useCanvasFilters(thumbnail);
 	const webglFilters = useWebglFilters(thumbnail);
 
 	const alterImage = {
 		radialBlur: webglFilters?.radialBlur,
-	}[id];
+	}[effect];
 
 	const animatedImage = {
 		pingpong: Tuple(prvePingpongImage, prvePingpongStaticImage),
 		whirl: Tuple(prveWhirlImage, prveWhirlStaticImage),
-	}[id];
-
-	const el = useDomRef<"div">();
-	useEffect(() => {
-		const img = el.current?.querySelector("img");
-		let frames = !img ? NaN : +getComputedStyle(img).getPropertyValue("--frames");
-		if (!Number.isFinite(frames)) frames = 1;
-		onFramesChange?.(frames);
-	}, [id]);
+	}[effect];
 
 	return (
-		<StyledPreviewPrve ref={el} $id={id} {...htmlAttrs}>
-			{forMap(imageCount, i => animatedImage ?
+		<StyledPreviewPrve $effect={effect} $frames={frames} {...htmlAttrs}>
+			{forMap(imageCount, i => animatedImage !== undefined ?
 				<HoverToChangeImg key={i} animatedSrc={animatedImage[0]} staticSrc={animatedImage[1]} /> :
-				<img key={i} src={id === "radialBlur" && i ? alterImage! : thumbnail} />)}
+				<img key={i} src={effect === "radialBlur" && i > 0 ? alterImage! : thumbnail} />)}
 		</StyledPreviewPrve>
 	);
 }

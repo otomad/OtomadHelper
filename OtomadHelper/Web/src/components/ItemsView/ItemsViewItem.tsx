@@ -221,10 +221,10 @@ export /* @internal */ default function ItemsViewItem({ image, icon, id, selecte
 	/** Fired when user click it. */
 	onClick?: OnItemsViewItemClickEventHandler;
 }, "button">) {
-	const textPart = (
+	const textPart = (children || details) && (
 		<div className="text">
-			<p className="title">{children}</p>
-			<p className="details">{details}</p>
+			{children && <p className="title">{children}</p>}
+			{details && <p className="details">{details}</p>}
 		</div>
 	);
 	// const checkbox = multiple && <Checkbox value={[selected]} plain />;
@@ -270,7 +270,7 @@ export /* @internal */ default function ItemsViewItem({ image, icon, id, selecte
 					</>
 				)}
 			</div>
-			{view === "grid" && (
+			{view === "grid" && (iconOrElement || textPart) && (
 				<div className="text-part">
 					{iconOrElement}
 					{textPart}

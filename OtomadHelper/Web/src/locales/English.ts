@@ -431,6 +431,7 @@ export default {
 				gaussianBlur: "Gaussian Blur",
 				radialBlur: "Radial Blur",
 				wipeRight: "Wipe in the Right",
+				wipeRight1: "1 Step Wipe in the Right",
 				splitVOut: "Split Vertical Out",
 			},
 		},

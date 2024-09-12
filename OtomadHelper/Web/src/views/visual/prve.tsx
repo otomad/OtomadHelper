@@ -2,29 +2,49 @@ import exampleThumbnail from "assets/images/ヨハネの氷.png";
 
 const controlModes = ["general", "samePitch", "differentSyllables"] as const;
 const getControlModeIcon = (mode: string) => `prve_control_${new VariableName(mode).snake}`;
+const prveEffect = (fx: string, initial: number = 0) => ({ fx, initial });
 const DEFAULT_EFFECT = "normal";
 const STEP_CHANGE_HUE = "stepChangeHue";
 const getWhirlInfo = () => withObject(t.prve.effects, fx => `${fx.whirl} = ${fx.pingpong} + ${fx.hFlip}`);
 
-/** With step. */
-const $s = (step: number, ...effectIds: string[]) => effectIds.map(effect => ({ effect, step }));
-const prves = [
-	{ class: "flip", icon: "flip", effects: [...$s(2, "hFlip", "vFlip"), ...$s(4, "ccwFlip", "cwFlip")] },
-	{ class: "rotation", icon: "rotate", effects: [...$s(4, "ccwRotate", "cwRotate"), ...$s(2, "turned")] },
-	{ class: "scale", icon: "resize_image", effects: $s(1, "zoomOutIn") },
-	{ class: "mirror", icon: "dual_screen_mirror", effects: [...$s(2, "hMirror", "vMirror"), ...$s(4, "ccwMirror", "cwMirror")] },
-	{ class: "invert", icon: "invert_color", effects: [...$s(2, "negative", "luminInvert", "negativeBlur", "negativeThreshold")] },
-	{ class: "hue", icon: "hue", effects: [...$s(2, "hueInvert"), ...forMapFromTo(3, 8, step => ({ effect: STEP_CHANGE_HUE + step, step }))] },
-	{ class: "chromatic", icon: "black_and_white", effects: $s(2, "chromatic", "chromaticBlur") },
-	{ class: "time", icon: "timer", effects: $s(2, "pingpong", "whirl") },
-	{ class: "time2", icon: "timer_2", effects: $s(1, "sharpRewind", "wobblePeriod") },
-	{ class: "ec", icon: "arrow_autofit_height_in", effects: [...$s(1, "vExpansion", "vExpansionBounce", "vCompression", "vCompressionBounce", "vBounce"), ...$s(2, "slantDown", "slantUp", "puyo")] },
-	{ class: "swing", icon: "arrow_rotate", effects: $s(2, "pendulum") },
-	{ class: "blur", icon: "blur", effects: $s(1, "gaussianBlur", "radialBlur") },
-	{ class: "wipe", icon: "double_tap_swipe", effects: $s(1, "wipeRight", "splitVOut") },
-];
-const getEffectIds = (effects?: typeof prves[number]["effects"]) => effects?.map(effect => effect.effect) ?? [];
-const findPrveClassEffects = (klass: string) => getEffectIds(prves.find(prve => prve.class === klass)?.effects);
+/** With frames step. */
+const $s = (frames: number, ...effectIds: string[]) => effectIds.map(effect => ({ effect, frames }));
+type PrveClassEffect = {
+	effect: string;
+	frames: number;
+};
+class PrveClass {
+	public static readonly all = [
+		new PrveClass("flip", "flip", [...$s(2, "hFlip", "vFlip"), ...$s(4, "ccwFlip", "cwFlip")]),
+		new PrveClass("rotation", "rotate", [...$s(4, "ccwRotate", "cwRotate"), ...$s(2, "turned")]),
+		new PrveClass("scale", "resize_image", $s(1, "zoomOutIn")),
+		new PrveClass("mirror", "dual_screen_mirror", [...$s(2, "hMirror", "vMirror"), ...$s(4, "ccwMirror", "cwMirror")]),
+		new PrveClass("invert", "invert_color", [...$s(2, "negative", "luminInvert", "negativeBlur", "negativeThreshold")]),
+		new PrveClass("hue", "hue", [...$s(2, "hueInvert"), ...forMapFromTo(3, 8, frames => ({ effect: STEP_CHANGE_HUE + frames, frames }))]),
+		new PrveClass("chromatic", "black_and_white", $s(2, "chromatic", "chromaticBlur")),
+		new PrveClass("time", "timer", $s(2, "pingpong", "whirl")),
+		new PrveClass("time2", "timer_2", $s(1, "sharpRewind", "wobblePeriod")),
+		new PrveClass("ec", "arrow_autofit_height_in", [...$s(1, "vExpansion", "vExpansionBounce", "vCompression", "vCompressionBounce", "vBounce"), ...$s(2, "slantDown", "slantUp", "puyo")]),
+		new PrveClass("swing", "arrow_rotate", $s(2, "pendulum")),
+		new PrveClass("blur", "blur", $s(1, "gaussianBlur", "radialBlur")),
+		new PrveClass("wipe", "double_tap_swipe", [...$s(2, "wipeRight"), ...$s(1, "wipeRight1", "splitVOut")]),
+	];
+
+	public readonly class: string;
+	private constructor(
+		klass: string,
+		public readonly icon: DeclaredIcons,
+		public readonly effects: PrveClassEffect[],
+	) {
+		this.class = klass;
+		this.findEffectFrames = this.findEffectFrames.bind(this);
+	}
+
+	public static findClass(klass: string) { return PrveClass.all.find(_class => _class.class === klass); }
+	public get effectIds() { return this.effects.map(effect => effect.effect) ?? []; }
+	public static findClassEffects(klass: string) { return PrveClass.findClass(klass)?.effectIds ?? []; }
+	public findEffectFrames(effect: string) { return this.effects.find(_effect => _effect.effect === effect)?.frames ?? 1; }
+}
 
 export default function Prve() {
 	const [controlMode, setControlMode] = useState<typeof controlModes[number]>("general");
@@ -32,31 +52,45 @@ export default function Prve() {
 	const { control, isMultiple, effects } = selectConfig(c => c.visual.prve[controlMode]);
 	const selectionMode = useSelectionMode(isMultiple);
 	const selectPrve = (klass: string) => {
-		const classEffects = findPrveClassEffects(klass);
-		const flipEffects = findPrveClassEffects("flip");
+		const classEffects = PrveClass.findClassEffects(klass);
+		const flipEffects = PrveClass.findClassEffects("flip");
 		return useStateSelector(
 			effects,
 			effects => {
 				// if (!isMultiple) effects = effects.slice(0, 1);
 				// const effect = effects.find(effect => classEffects.includes(effect));
-				const effect = effects.intersection(classEffects)[0];
-				return effect ?? DEFAULT_EFFECT;
+				if (classEffects === undefined) return undefined;
+				const fx = effects.map(effect => effect.fx).intersection(classEffects)[0];
+				return fx ?? DEFAULT_EFFECT;
 			},
-			(effect, _effects) => {
+			(effect, prevEffects) => {
+				if (effect === undefined) return prevEffects;
+				const addInitialValueToEffects = (effects: Iterable<string>) =>
+					Array.from(effects, fx => prevEffects.find(effect => effect.fx === fx) ?? prveEffect(fx, 0));
 				const isWhirl = effect === "whirl";
-				const selectEffects = isWhirl ? ["hFlip", "pingpong"] : effect === DEFAULT_EFFECT && isMultiple ? [] : [effect];
-				if (!isMultiple[0]) return selectEffects;
-				const effects = new Set(_effects);
+				const selectEffects = isWhirl ? ["hFlip", "pingpong"] : effect === DEFAULT_EFFECT && isMultiple[0] ? [] : [effect];
+				if (!isMultiple[0]) return addInitialValueToEffects(selectEffects);
+				const effects = new Set(prevEffects.map(effect => effect.fx));
 				effects.delete(DEFAULT_EFFECT);
 				effects.deletes(...classEffects);
 				if (isWhirl) effects.deletes(...flipEffects);
 				effects.adds(...selectEffects);
 				if (effects.size === 0) effects.add(DEFAULT_EFFECT);
-				return [...effects];
+				return addInitialValueToEffects(effects);
 			},
 		);
 	};
-	const [initialValueCountMap, setInitialValueCountMap] = useImmer(new Map<string, number>());
+	const useInitialValue = (currentEffect: string) => useStateSelector(
+		effects,
+		effects => effects.find(effect => effect.fx === currentEffect)?.initial ?? 0,
+		(initial, prevEffects) => {
+			const draft = [...prevEffects];
+			const effect = draft.find(effect => effect.fx === currentEffect);
+			if (effect !== undefined) effect.initial = initial;
+			else draft.push(prveEffect(currentEffect, initial));
+			return draft;
+		},
+	);
 
 	return (
 		<div className="container">
@@ -79,31 +113,81 @@ export default function Prve() {
 			/>
 			<Subheader>{t.prve.classes}</Subheader>
 
-			{prves.map(({ class: klass, icon, effects }) => (
-				<ExpanderRadio<string>
-					key={klass}
-					title={t.prve.classes[klass]}
-					disabled={!control[0]}
-					icon={icon}
-					items={[DEFAULT_EFFECT, ...getEffectIds(effects)]}
-					value={selectPrve(klass)}
-					view="grid"
-					idField
-					nameField={getEffectName}
-					imageField={id => <PreviewPrve key={id} thumbnail={exampleThumbnail} id={id} />}
-					checkInfoCondition={effect => effect === DEFAULT_EFFECT ? "" : effect}
-					alwaysShowCheckInfo
-				>
-					{klass === "time" ? <InfoBar status="info" title={getWhirlInfo()} /> : undefined}
-					<div className="initial-value" style={{ display: "flex" }}>
-						Initial value:
-						<div style={{ display: "flex", overflow: "hidden" }}>
-							{forMap(initialValueCountMap.get(klass) ?? 1, i => <PreviewPrve key={i} thumbnail={exampleThumbnail} id={selectPrve(klass)[0]!} style={{ width: "100px", height: "100px", "--i": i }} onFramesChange={frames => setInitialValueCountMap(map => map.set(klass, frames))} />)}
-						</div>
-					</div>
-				</ExpanderRadio>
-			))}
+			{PrveClass.all.map(({ class: klass, icon, effectIds, findEffectFrames }) => {
+				const currentEffectState = selectPrve(klass), currentEffect = currentEffectState[0]!;
+				return (
+					<ExpanderRadio<string>
+						key={klass}
+						title={t.prve.classes[klass]}
+						disabled={!control[0]}
+						icon={icon}
+						items={[DEFAULT_EFFECT, ...effectIds]}
+						value={currentEffectState}
+						view="grid"
+						idField
+						nameField={getEffectName}
+						imageField={effect => <PreviewPrve key={effect} thumbnail={exampleThumbnail} effect={effect} frames={findEffectFrames(effect)} />}
+						checkInfoCondition={effect => !effect || effect === DEFAULT_EFFECT ? "" : getEffectName(effect)}
+						alwaysShowCheckInfo
+					>
+						{klass === "time" ? <InfoBar status="info" title={getWhirlInfo()} /> : undefined}
+						<InitialValue klass={klass} effect={currentEffect} initialValue={useInitialValue(currentEffect)} />
+					</ExpanderRadio>
+				);
+			})}
 		</div>
+	);
+}
+
+const StyledInitialValue = styled(Expander.Item)`
+	.text {
+		flex-shrink: 0;
+		width: unset;
+	}
+
+	.trailing,
+	.initial-value-items {
+		flex-shrink: 1;
+		justify-content: flex-start;
+		width: 100%;
+	}
+
+	.image-wrapper {
+		height: 100px;
+
+		* {
+			transition: none !important;
+		}
+	}
+`;
+
+function InitialValue({ klass, effect, initialValue }: FCP<{
+	/** Current PRVE class. */
+	klass: string;
+	/** Current PRVE effect in this class. */
+	effect: string;
+	/** The initial value of the PRVE effect. */
+	initialValue: StateProperty<number>;
+	children?: undefined;
+}>) {
+	const frames = PrveClass.findClass(klass)?.findEffectFrames(effect) ?? 1;
+
+	return (
+		<StyledInitialValue title="Initial Value">
+			<ItemsView className="initial-value-items" view="grid" current={initialValue} $itemWidth={100}>
+				{forMap(frames, j => {
+					const i = (j + frames - 1) % frames; // Change the order from `0 1 2 3` to `3 0 1 2`.
+					return (
+						<ItemsView.Item
+							image={(
+								<PreviewPrve thumbnail={exampleThumbnail} effect={effect} frames={frames} style={{ "--i": i }} />
+							)}
+							key={j} id={j} className="initial-value-item"
+						/>
+					);
+				})}
+			</ItemsView>
+		</StyledInitialValue>
 	);
 }
 
@@ -122,8 +206,7 @@ function getEffectName(effectId: string) {
 }
 
 export function usePrveCheckInfo() {
-	let { effects } = useSnapshot(configStore.visual.prve.general);
-	effects = effects.slice();
+	const effects = useSnapshot(configStore.visual.prve.general).effects.map(effect => effect.fx);
 	const { samePitch, differentSyllables } = useSnapshot(configStore.visual.prve);
 	const enableOtherSeparateControls = samePitch.control || differentSyllables.control;
 	if (effects.includes("hFlip") && effects.includes("pingpong")) {
@@ -138,8 +221,8 @@ export function usePrveCheckInfo() {
 }
 
 export function useIsForceStretch() {
-	const timeEffects = findPrveClassEffects("time");
+	const timeEffects = PrveClass.findClassEffects("time");
 	const prve = useSnapshot(configStore.visual.prve);
 	const effects = Object.values(prve).flatMap(control => control.effects);
-	return !(effects.intersection(timeEffects).length === 0);
+	return !(effects.map(effect => effect.fx).intersection(timeEffects).length === 0);
 }

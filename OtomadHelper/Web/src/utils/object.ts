@@ -125,7 +125,8 @@ export function setStateInterceptor<T>(
  */
 export function useStateSelector<TOld, TNew>(
 	stateProperty: StateProperty<TOld>,
-	getter: (original: TOld) => TNew, setter: (userInput: TNew, prevState: TOld) => TOld,
+	getter: (original: TOld) => TNew,
+	setter: (userInput: TNew, prevState: TOld) => TOld,
 ) {
 	return [
 		getter(stateProperty[0]!),

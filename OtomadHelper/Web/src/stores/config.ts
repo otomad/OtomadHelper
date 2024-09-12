@@ -96,17 +96,17 @@ export const configStore = createStore({
 			general: {
 				control: true,
 				isMultiple: false,
-				effects: ["normal"],
+				effects: [{ fx: "normal", initial: 0 }],
 			},
 			samePitch: {
 				control: false,
 				isMultiple: false,
-				effects: ["normal"],
+				effects: [{ fx: "normal", initial: 0 }],
 			},
 			differentSyllables: {
 				control: false,
 				isMultiple: false,
-				effects: ["normal"],
+				effects: [{ fx: "normal", initial: 0 }],
 			},
 		},
 		pixelScaling: {

@@ -44,7 +44,7 @@ const StyledItemsView = styled.div<{
 export default function ItemsView<
 	M extends boolean,
 	T extends (M extends true ? PropertyKey[] : PropertyKey),
->({ view, current: [current, setCurrent], $itemWidth, multiple = false as M, indeterminatenesses = [], children }: FCP<{
+>({ view, current: [current, setCurrent], $itemWidth, multiple = false as M, indeterminatenesses = [], children, className, ...htmlAttrs }: FCP<{
 	/** View mode: list, tile, grid. */
 	view: ItemView;
 	/** The identifier of the currently selected item. */
@@ -55,7 +55,7 @@ export default function ItemsView<
 	multiple?: M;
 	/** Specifies which items are set to an indeterminate state. */
 	indeterminatenesses?: PropertyKey[];
-}>) {
+}, "div">) {
 	const isSelected = (id: PropertyKey) => {
 		if (multiple)
 			if (Array.isArray(current)) return current.includes(id);
@@ -72,7 +72,7 @@ export default function ItemsView<
 	};
 
 	return (
-		<StyledItemsView className={[view]} $itemWidth={$itemWidth}>
+		<StyledItemsView className={[className, view]} $itemWidth={$itemWidth} {...htmlAttrs}>
 			{React.Children.map(children, child => {
 				if (!isReactInstance(child, ItemsViewItem)) return child;
 				const id = child.props.id;
