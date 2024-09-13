@@ -194,7 +194,7 @@ export default [
 			"@stylistic/type-generic-spacing": "error",
 			"@stylistic/type-named-tuple-spacing": "error",
 			"@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
-			"@typescript-eslint/strict-boolean-expressions": ["warn", {
+			"@typescript-eslint/strict-boolean-expressions": ["off", { // 如需检查错误时可再临时手动开启。
 				"allowString": false,
 				"allowNumber": false,
 				"allowNullableObject": false,

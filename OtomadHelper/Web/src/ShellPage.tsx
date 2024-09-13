@@ -5,7 +5,7 @@ function EmptyPage() {
 }
 
 const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "lyrics", "shupelunker", "ytp"];
-const navToolItems = ["mosh", "tools"];
+const navToolItems = ["library", "mosh", "tools"];
 const bottomNavItems = ["settings"] as const;
 
 const isCompleteAvailable = (page: string[]) => !["mosh", "tools", "settings"].includes(page[0]);
@@ -57,10 +57,10 @@ export default function ShellPage() {
 		<NavigationView
 			currentNav={[page, changePage]}
 			navItems={[
-				...navItems.map(item => ({ text: getTitle(item), id: item, animatedIcon: item })),
+				...navItems.map(item => ({ text: getTitle(item), id: item, icon: item, animatedIcon: item })),
 				{ type: "hr" },
-				...navToolItems.map(item => ({ text: getTitle(item, false, 2), id: item, animatedIcon: item })),
-				...bottomNavItems.map(item => ({ text: getTitle(item, false, 2), id: item, animatedIcon: item, bottom: true })),
+				...navToolItems.map(item => ({ text: getTitle(item, false, 2), id: item, icon: item, animatedIcon: item })),
+				...bottomNavItems.map(item => ({ text: getTitle(item, false, 2), id: item, icon: item, animatedIcon: item, bottom: true })),
 			]}
 			titles={pageTitles}
 			transitionName={transition}

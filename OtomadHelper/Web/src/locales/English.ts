@@ -33,6 +33,7 @@ export default {
 			staff_full: "Staff Visualizer",
 			pixelScaling: "Pixel Scaling",
 			parameters: "Parameters",
+			library: "Library",
 		},
 		source: {
 			trackEvent: "Track event",

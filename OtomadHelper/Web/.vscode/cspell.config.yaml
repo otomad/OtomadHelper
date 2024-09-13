@@ -5,7 +5,7 @@ dictionaries: []
 import: []
 language: en,vi
 includeRegExpList:
-  - '/[\p{Script_Extensions=Latin}]+/gu'
+  - '/[\p{Script_Extensions=Latin}\p{ASCII}]+/gu'
 words:
   - ack
   - ani

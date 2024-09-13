@@ -154,7 +154,18 @@ function useLottieSequence(animationItem: MutableRefObject<AnimationItem | undef
 
 const iconsImport = import.meta.glob<string>("/src/assets/lotties/**/*.json", { query: "?raw", import: "default", eager: true });
 
-export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false, name, hidden = false, speed = 1, filled = false, onInit, onClick, ...htmlAttrs }: FCP<{
+export default forwardRef(function AnimatedIcon({
+	loop = false,
+	autoplay = false,
+	name,
+	hidden = false,
+	speed = 1,
+	filled = false,
+	showFallbackIcon = true, // WARN: 动态图标补齐后将其更改为 false。
+	onInit,
+	onClick,
+	...htmlAttrs
+}: FCP<{
 	/** Loop? */
 	loop?: boolean;
 	/** Autoplay? */
@@ -169,6 +180,11 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 	// state?: AnimatedIconState;
 	/** Keep the color of the icon itself? */
 	filled?: boolean;
+	/**
+	 * If the specified animated icon doesn't exist, then replace it with a static icon with the same icon name.\
+	 * You can also manually specify the fallback icon name.
+	 */
+	showFallbackIcon?: boolean | DeclaredIcons;
 	/** Initialization event. */
 	onInit?(anim?: AnimationItem): void;
 	/** Click event. */
@@ -191,9 +207,21 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 			const rawIcon = iconsImport[`/src/assets/lotties/${name}.json`];
 			return JSON.parse(rawIcon);
 		} catch (e) {
-			console.error(`Lottie file "${name}" doesn't exist in "assets/lotties"`, e);
+			if (!showFallbackIcon)
+				console.error(`Lottie file "${name}" doesn't exist in "assets/lotties"`, e);
+			return null;
 		}
 	}, [name]);
+
+	if (!isObject(animationData) && showFallbackIcon) {
+		const iconName =
+			showFallbackIcon === true && typeof name === "string" ? name :
+			typeof showFallbackIcon === "string" ? showFallbackIcon : null;
+		if (iconName)
+			return <Icon name={iconName} hidden={hidden} filled={filled} {...htmlAttrs} />;
+		else
+			return;
+	}
 
 	const clipped = useMemo(() => !!animationData.metadata?.customProps?.clipped, [name]);
 
@@ -293,7 +321,7 @@ export default forwardRef(function AnimatedIcon({ loop = false, autoplay = false
 						className={{ filled }}
 						loop={loop}
 						autoplay={autoplay}
-						animationData={animationData!}
+						animationData={animationData}
 						hidden={hidden}
 						onAnimCreated={onAnimationCreated}
 					/>
