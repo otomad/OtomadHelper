@@ -1,6 +1,8 @@
 import type { RuleSet } from "styled-components";
 import { setBorderRadius, type BorderRadiusPosition } from "./internal";
 
+type ResponsiveUnit = "v" | "dv" | "lv" | "sv" | "cq";
+
 export default {
 	/**
 	 * Center the element with the **flex** layout (flex - center - center).
@@ -24,17 +26,32 @@ export default {
 	 * @param size - Side length.
 	 * @param withSizeVar - Create a CSS custom property named `--size` to make it easier for other components to modify its size?
 	 */
-	square: (size: string, withSizeVar: boolean = false) =>
-		!withSizeVar ?
-			css`
-				width: ${size};
-				height: ${size};
-			` :
-			css`
-				--size: ${size};
-				width: var(--size);
-				height: var(--size);
-			`,
+	square: ((size: string, withSizeVar: boolean = false, responsiveUnit?: ResponsiveUnit) =>
+		!responsiveUnit ?
+			!withSizeVar ?
+				css`
+					width: ${size};
+					height: ${size};
+				` :
+				css`
+					--size: ${size};
+					width: var(--size);
+					height: var(--size);
+				` :
+			!withSizeVar ?
+				css`
+					width: ${size}${responsiveUnit}w;
+					height: ${size}${responsiveUnit}h;
+				` :
+				css`
+					--size: ${size};
+					width: calc(var(--size) * 1${responsiveUnit}w);
+					height: calc(var(--size) * 1${responsiveUnit}h);
+				`
+	) as {
+		(size: string, withSizeVar?: boolean): RuleSet<object>;
+		(size: number, withSizeVar: boolean, responsiveUnit?: ResponsiveUnit): RuleSet<object>;
+	},
 	/**
 	 * Become a oval.
 	 *

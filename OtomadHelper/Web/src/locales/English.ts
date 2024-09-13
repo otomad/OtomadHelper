@@ -564,6 +564,7 @@ export default {
 				},
 			},
 			track: {
+				_: "Automatic layout of selected tracks in YTPMV-like style.",
 				gradient: "Gives the video tracks a gradient color effect in your layout",
 				legato: "Fills in the gaps between the track clips",
 				resetLayout: "Reset the status of this layout to disable it",

@@ -44,7 +44,7 @@ const StyledSettingsPageControl = styled.div<{
 
 export default forwardRef(function SettingsPageControl({ image, imageOverlay, learnMoreLink, clearFloat, cursor, children, ...htmlAttrs }: FCP<{
 	/** Image. */
-	image?: string;
+	image?: string | ReactNode;
 	/** Something overlay on the image. */
 	imageOverlay?: ReactNode;
 	/** "Learn More" link href. */

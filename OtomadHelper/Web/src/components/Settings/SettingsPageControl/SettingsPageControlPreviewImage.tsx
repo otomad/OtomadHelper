@@ -1,6 +1,9 @@
 export /* @internal */ const PREVIEW_IMAGE_HEIGHT = 120;
 
-const StyledSettingsPageControlPreviewImage = styled.div`
+const StyledSettingsPageControlPreviewImage = styled.div<{
+	/** Pass a React node as image instead of a pure image. */
+	$customImage?: boolean;
+}>`
 	position: relative;
 	display: inline-block;
 	flex-shrink: 0;
@@ -8,6 +11,10 @@ const StyledSettingsPageControlPreviewImage = styled.div`
 	height: ${PREVIEW_IMAGE_HEIGHT}px;
 	overflow: clip;
 	border-radius: 3px;
+
+	${ifProp("$customImage", css`
+		width: ${PREVIEW_IMAGE_HEIGHT / 9 * 16}px;
+	`)}
 
 	img {
 		${styles.mixins.square("100%")};
@@ -25,11 +32,11 @@ const StyledSettingsPageControlPreviewImage = styled.div`
 
 export default function SettingsPageControlPreviewImage({ image, children }: FCP<{
 	/** Image. */
-	image: string;
+	image: string | ReactNode;
 }>) {
 	return (
-		<StyledSettingsPageControlPreviewImage>
-			<Img src={image} />
+		<StyledSettingsPageControlPreviewImage $customImage={typeof image !== "string"}>
+			{typeof image === "string" ? <Img src={image} /> : image}
 			<div className="stroke" />
 			{children}
 		</StyledSettingsPageControlPreviewImage>

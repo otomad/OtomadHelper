@@ -1,4 +1,5 @@
 /* eslint-disable react/no-children-prop */
+import exampleThumbnail from "assets/images/ヨハネの氷.png";
 
 const ResetButton = () => (
 	<Tooltip placement="y" title={t.descriptions.track.resetLayout}>
@@ -11,6 +12,8 @@ export default function Track() {
 
 	return (
 		<div className="container">
+			<SettingsPageControl image={(<PreviewLayout thumbnail={exampleThumbnail} />)} learnMoreLink="">{t.descriptions.track}</SettingsPageControl>
+
 			<Subheader>{t.track.layout}</Subheader>
 			<SettingsCard title={t.track.grid} type="button" icon="grid" onClick={() => pushPage("home")} children={<ResetButton />} />
 			<SettingsCard title={t.track.box3d} type="button" icon="cube" children={<ResetButton />} />
