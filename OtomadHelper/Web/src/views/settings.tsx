@@ -7,6 +7,7 @@ export default function Settings() {
 	const schemes = ["light", "dark", "auto"] as const;
 	const { scheme: [scheme, setScheme] } = useStoreState(colorModeStore);
 	const { uiScale, hideUseTips } = selectConfig(c => c.settings);
+	const backgroundImage = IndexedDBStore.backgroundImage.useStore();
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -28,6 +29,9 @@ export default function Settings() {
 			/>
 
 			<Subheader>{t.settings.appearance}</Subheader>
+			<ExpanderRadio
+				title={t.settings.appearance.backgroundImage}
+			/>
 			<ExpanderRadio
 				title={t.settings.appearance.colorScheme}
 				icon="paint_brush"

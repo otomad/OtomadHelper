@@ -2,6 +2,14 @@
 	"name": "@otomad-helper/api",
 	"version": "0.1.0",
 	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/otomad/OtomadHelper.git"
+	},
+	"homepage": "https://otomadhelper.readthedocs.io/",
+	"bugs": "https://github.com/otomad/OtomadHelper/issues",
+	"author": "Rantetsu Inori",
+	"license": "GPL-3.0-only",
 	"scripts": {
 		"build": "tsp compile ."
 	},

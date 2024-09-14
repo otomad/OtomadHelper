@@ -30,6 +30,16 @@ export function keys<TKey extends object>(obj: TKey) {
 	return Object.keys(obj) as (keyof TKey)[];
 }
 
+/**
+ * Checks if the provided object has a specified own property.
+ *
+ * Compared to `Object.hasOwn`, the types of values returned in TypeScript are less disgusting.
+ *
+ * @template T - The type of the object. Must be an object type.
+ * @param obj - The object to check.
+ * @param key - The key to check for.
+ * @returns Returns `true` if the object has the specified own property, otherwise `false`.
+ */
 export function hasOwn<T extends object>(obj: T, key: PropertyKey): key is keyof T {
 	return Object.hasOwn(obj, key);
 }

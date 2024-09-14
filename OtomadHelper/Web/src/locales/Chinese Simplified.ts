@@ -29,6 +29,7 @@ export default {
 			staff_full: "五线谱可视化",
 			pixelScaling: "像素硬边缘放大",
 			parameters: "参数",
+			management: "管理",
 			track: "轨道",
 			mosh: "抹失",
 			effect: "效果",

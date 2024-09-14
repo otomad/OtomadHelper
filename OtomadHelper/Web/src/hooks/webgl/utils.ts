@@ -13,7 +13,7 @@ function addLineNumbersWithError(src: string, log = "") {
 		const next = matches[index + 1];
 		const end = next ? next.index : log.length;
 		const msg = log.substring(match.index, end);
-		return [lineNo - 1, msg];
+		return [lineNo - 1, msg] as const;
 	}));
 	return src.split("\n").map((line, lineNo) => {
 		const err = lineNoToErrorMap.get(lineNo);

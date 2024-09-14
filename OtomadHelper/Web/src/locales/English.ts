@@ -33,7 +33,7 @@ export default {
 			staff_full: "Staff Visualizer",
 			pixelScaling: "Pixel Scaling",
 			parameters: "Parameters",
-			library: "Library",
+			management: "Management",
 		},
 		source: {
 			trackEvent: "Track event",
@@ -471,6 +471,7 @@ export default {
 					auto: "Auto",
 				},
 				uiScale: "UI scale",
+				backgroundImage: "Background image",
 			},
 			config: {
 				hideUsageTips: "Hide usage tips",

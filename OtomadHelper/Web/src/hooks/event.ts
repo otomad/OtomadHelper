@@ -1,5 +1,5 @@
 import type { EffectCallback, KeyboardEvent, KeyboardEventHandler } from "react";
-type EffectCallbackWithAsync = EffectCallback | (() => (() => Promise<void>) | void);
+type EffectCallbackWithAsync = EffectCallback | (() => (() => Promise<void>) | void | Promise<void>);
 
 /**
  * Hook to run an effect when the component mounts.
@@ -13,7 +13,7 @@ export function useMountEffect(effect: EffectCallback) {
  * Hook to run an effect when the component unmounts.
  * @param effect - The effect to run when the component unmounts.
  */
-export function useUnmountEffect(effect: NonNull<ReturnType<EffectCallbackWithAsync>>) {
+export function useUnmountEffect(effect: EffectCallback | (() => Promise<void>)) {
 	useEffect(() => () => void effect(), []);
 }
 
@@ -27,7 +27,7 @@ export function useUnmountEffect(effect: NonNull<ReturnType<EffectCallbackWithAs
  * @param effect - The asynchronous effect to be executed. It can be a function that returns a Promise or a void function.
  * @param deps - An optional array of dependencies. If provided, the effect will be re-executed when any of the dependencies change.
  */
-export function useAsyncEffect(effect: () => MaybePromise<void | (() => void)>, deps?: DependencyList | undefined) {
+export function useAsyncEffect(effect: EffectCallbackWithAsync, deps?: DependencyList | undefined) {
 	const unmountEffect = useRef<(() => void) | void>();
 	useEffect(() => {
 		(async () => {
@@ -35,6 +35,19 @@ export function useAsyncEffect(effect: () => MaybePromise<void | (() => void)>, 
 		})();
 		return () => unmountEffect.current?.();
 	}, deps);
+}
+
+/**
+ * Asynchronous effect hook to run an effect when the component mounts.
+ *
+ * This hook allows you to execute an asynchronous effect when the component is mounted.
+ *
+ * @remarks In this hook, you cannot return a callback function to represent the effect to run when the component unmounts.
+ *
+ * @param effect - The asynchronous effect to run when the component mounts. It can be a function that returns a Promise or a void function.
+ */
+export function useAsyncMountEffect(effect: EffectCallbackWithAsync) {
+	useAsyncEffect(effect, []);
 }
 
 /**

@@ -5,7 +5,7 @@ function EmptyPage() {
 }
 
 const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "lyrics", "shupelunker", "ytp"];
-const navToolItems = ["library", "mosh", "tools"];
+const navToolItems = ["management", "mosh", "tools"];
 const bottomNavItems = ["settings"] as const;
 
 const isCompleteAvailable = (page: string[]) => !["mosh", "tools", "settings"].includes(page[0]);
