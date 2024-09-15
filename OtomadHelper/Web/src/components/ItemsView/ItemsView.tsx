@@ -30,6 +30,10 @@ const StyledItemsView = styled.div<{
 		align-items: start;
 	}
 
+	&:empty {
+		display: none;
+	}
+
 	.expander-child-items & {
 		&.tile {
 			padding: 7px 35px;

@@ -581,6 +581,15 @@ export function clearObject(object: AnyObject) {
 		delete object[prop];
 }
 
+export async function getCurrentState<T>(setter: SetState<T>) {
+	return new Promise<T>(resolve => {
+		(setter as SetStateNarrow<T>)(prevState => {
+			resolve(prevState);
+			return prevState;
+		});
+	});
+}
+
 /**
  * @deprecated // WARN: Await for React 19 released with a new feature **ref as a prop**, and then delete this function.
  */

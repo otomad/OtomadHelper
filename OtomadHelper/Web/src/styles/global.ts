@@ -153,16 +153,6 @@ const GlobalStyle = createGlobalStyle<{
 		animation: none;
 	}
 
-	::view-transition-old(root),
-	${ifColorScheme.dark}.changing-color-scheme::view-transition-new(root) {
-		z-index: 1;
-	}
-
-	::view-transition-new(root),
-	${ifColorScheme.dark}.changing-color-scheme::view-transition-old(root) {
-		z-index: calc(infinity);
-	}
-
 	body[style*="--cursor"] {
 		&,
 		* {
@@ -180,11 +170,11 @@ const GlobalStyle = createGlobalStyle<{
 			&,
 			&::before,
 			&::after {
-					scroll-behavior: auto;
-					transition-duration: 0s !important;
-					transition-delay: 0s !important;
-					animation-duration: 0s !important;
-					animation-delay: 0s !important;
+				scroll-behavior: auto;
+				transition-duration: 0s !important;
+				transition-delay: 0s !important;
+				animation-duration: 0s !important;
+				animation-delay: 0s !important;
 			}
 		}
 	}

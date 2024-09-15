@@ -174,6 +174,19 @@
 	makePrototypeKeysNonEnumerable(Set);
 }
 
+{ // Init map extensions
+	Map.prototype.getOrInit = async function (key, defaultValue) {
+		if (!this.has(key)) {
+			const value = await defaultValue();
+			this.set(key, value);
+			return value;
+		} else
+			return this.get(key);
+	};
+
+	makePrototypeKeysNonEnumerable(Map);
+}
+
 /**
  * Map to an object via a constant array.
  * @remarks This JSDoc deliberately does not add "-" after the `@param` parameter, otherwise bugs will occur.

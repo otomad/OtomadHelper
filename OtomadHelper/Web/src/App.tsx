@@ -1,6 +1,5 @@
 import { changeColorScheme } from "helpers/color-mode";
 import GlobalStyle from "styles/global";
-import { } from "valtio";
 import ShellPage from "./ShellPage";
 
 export default function App() {
@@ -22,6 +21,7 @@ export default function App() {
 
 	return (
 		<>
+			<BackgroundImage />
 			<GlobalStyle $ready={ready} />
 			<ShellPage />
 			<div id="portals" />

@@ -1,3 +1,4 @@
+import type { BackgroundImageRowWithMore } from "hooks/background-images";
 import { useLanguage } from "locales/config";
 
 export default function Settings() {
@@ -7,10 +8,15 @@ export default function Settings() {
 	const schemes = ["light", "dark", "auto"] as const;
 	const { scheme: [scheme, setScheme] } = useStoreState(colorModeStore);
 	const { uiScale, hideUseTips } = selectConfig(c => c.settings);
-	const backgroundImage = IndexedDBStore.backgroundImage.useStore();
+	const backgroundImages = useBackgroundImages();
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
+
+	async function addBackgroundImage() {
+		const file = await openFile({ accept: "image/*" });
+		if (file) backgroundImages.add(file);
+	}
 
 	return (
 		<div className="container">
@@ -29,9 +35,20 @@ export default function Settings() {
 			/>
 
 			<Subheader>{t.settings.appearance}</Subheader>
-			<ExpanderRadio
+			<ExpanderRadio<BackgroundImageRowWithMore>
 				title={t.settings.appearance.backgroundImage}
-			/>
+				items={backgroundImages.items}
+				expanded
+				view="grid"
+				value={backgroundImages.backgroundImage}
+				idField="key"
+				imageField="url"
+				onItemContextMenu={(item, e) => { if (item.key !== "-1") { stopEvent(e); backgroundImages.delete(item.key); } }}
+			>
+				<Expander.ChildWrapper>
+					<Button onClick={addBackgroundImage}>Browse</Button>
+				</Expander.ChildWrapper>
+			</ExpanderRadio>
 			<ExpanderRadio
 				title={t.settings.appearance.colorScheme}
 				icon="paint_brush"

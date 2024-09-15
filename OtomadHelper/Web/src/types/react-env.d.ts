@@ -79,7 +79,7 @@ declare global {
 	 * Can be used to achieve bidirectional binding. But the property cannot be empty.
 	 * @template T - Property type.
 	 */
-	export type StatePropertyNonNull<T> = [get: T, set: SetState<T>];
+	export type StatePropertyNonNull<T> = [get: T, set: SetStateNarrow<T>];
 	/**
 	 * Add more functions to the StateProperty.
 	 */

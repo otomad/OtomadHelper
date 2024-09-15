@@ -1,10 +1,10 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, details: _details, $itemWidth, radioGroup, itemsViewItemAttrs, hideCustom = true, children, onItemClick, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, details: _details, $itemWidth, radioGroup, itemsViewItemAttrs, hideCustom = true, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly T[];
 	/** The identifier of the currently selected value. */
-	value: T extends string ? StateProperty<T> : StateProperty<string>;
+	value: Readonly<T extends string ? StateProperty<T> : StateProperty<string>>;
 	/**
 	 * The conditions for displaying the currently selected state.
 	 * - If it is a string, the constant string is displayed.
@@ -27,7 +27,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	 * - If it is true, it means that the selected item is a string, and the name can be used directly.
 	 * - If it is an i18n item object, it will get the value of the object from the value as the key.
 	 */
-	nameField: FieldType<T> | object;
+	nameField?: FieldType<T> | object;
 	/** The icon field for the radio item. */
 	iconField?: FieldType<T> | ((item: T) => ReactNode);
 	/** The image field for the radio item. */
@@ -55,6 +55,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	hideCustom?: boolean | string;
 	/** Fired when the item is clicked. */
 	onItemClick?: MouseEventHandler<HTMLElement>;
+	onItemContextMenu?(item: T, event: React.MouseEvent<HTMLElement, MouseEvent>): void;
 }>>) {
 	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "image" | "details"): Any => {
 		const field = {
@@ -72,7 +73,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	};
 	const items = _items as AnyObject[];
 	const filteredItems = useMemo(() => hideCustom === false ? items : items.filter(item =>
-		getItemField(item, "id") !== (typeof hideCustom === "string" ? hideCustom : "custom")), _items);
+		getItemField(item, "id") !== (typeof hideCustom === "string" ? hideCustom : "custom")), [_items]);
 	const checkInfo = !checkInfoCondition ? undefined :
 		typeof checkInfoCondition === "string" ? checkInfoCondition :
 		checkInfoCondition === true ? typeof idField === "string" && typeof nameField === "string" ?
@@ -91,6 +92,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 					details={getItemField(item, "details")}
 					radioGroup={radioGroup}
 					onClick={onItemClick}
+					onContextMenu={e => onItemContextMenu?.(item, e)}
 				>
 					{getItemField(item, "name")}
 				</RadioButton>
@@ -103,7 +105,8 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 							image={getItemField(item, "image")}
 							icon={getItemField(item, "icon")}
 							details={getItemField(item, "details")}
-							onClick={onItemClick}
+							onClick={(_1, _2, e) => onItemClick?.(e)}
+							onContextMenu={e => onItemContextMenu?.(item, e)}
 							{...itemsViewItemAttrs}
 						>
 							{getItemField(item, "name")}

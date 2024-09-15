@@ -192,6 +192,7 @@ export const configStore = createStore({
 		clips: 30,
 	},
 	settings: {
+		backgroundImage: "-1",
 		uiScale: 100,
 		get uiScale1() { return this.uiScale / 100; },
 		hideUseTips: false,

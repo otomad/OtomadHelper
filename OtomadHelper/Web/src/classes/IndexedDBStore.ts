@@ -21,6 +21,13 @@ export default class IndexedDBStore<T extends object> {
 	}
 
 	/**
+	 * Checks if the IndexedDB database is opened.
+	 */
+	get isDatabaseOpen() {
+		return this.#database !== null;
+	}
+
+	/**
 	 * Gets the readwrite IndexedDB object store associated with the current instance.
 	 *
 	 * @returns The readwrite IndexedDB object store associated with the current instance.
@@ -165,14 +172,14 @@ export default class IndexedDBStore<T extends object> {
 	/**
 	 * Asynchronously iterates over all key-value pairs in the IndexedDB object store.
 	 *
-	 * @yields {Generator<[keyof T, ValueOf<T>]>} - Yields the key-value pair for each item in the object store.
+	 * @yields {Generator<[IDBValidKey, T]>} - Yields the key-value pair for each item in the object store.
 	 */
 	async *entries() {
 		const request = this.store.openCursor();
 		while (true) {
 			const cursor = await IndexedDBStore.getResult(request);
 			if (!cursor) break;
-			yield [cursor.key, cursor.value] as [keyof T, ValueOf<T>];
+			yield [cursor.key, cursor.value] as [IDBValidKey, T];
 			cursor.continue();
 		}
 	}
@@ -180,14 +187,14 @@ export default class IndexedDBStore<T extends object> {
 	/**
 	 * Asynchronously iterates over all keys in the IndexedDB object store.
 	 *
-	 * @yields {Generator<keyof T>} - Yields the key for each item in the object store.
+	 * @yields {Generator<IDBValidKey>} - Yields the key for each item in the object store.
 	 */
 	async *keys() {
 		const request = this.store.openKeyCursor();
 		while (true) {
 			const cursor = await IndexedDBStore.getResult(request);
 			if (!cursor) break;
-			yield cursor.key as keyof T;
+			yield cursor.key;
 			cursor.continue();
 		}
 	}
@@ -195,7 +202,7 @@ export default class IndexedDBStore<T extends object> {
 	/**
 	 * Asynchronously iterates over all values in the IndexedDB object store.
 	 *
-	 * @yields {Generator<ValueOf<T>>} - Yields the value for each item in the object store.
+	 * @yields {Generator<T>} - Yields the value for each item in the object store.
 	 */
 	async *values() {
 		for await (const [_key, value] of this.entries())
@@ -218,34 +225,25 @@ export default class IndexedDBStore<T extends object> {
 		return IndexedDBStore.getResult(this.store.getAll());
 	}
 
-	useStore() {
-		const [items, _setItems] = useState<T[]>([]);
-
-		useAsyncMountEffect(async () => {
-			_setItems(await this.all());
-		});
-
-		const setItems: typeof _setItems = value => (async () => {
-			value = typeof value === "function" ? value(await this.all()) : value;
-			_setItems(value);
-		})();
-
-		return [items, setItems] as StatePropertyNonNull<T[]>;
+	/**
+	 * Applies a callback function to each item in the IndexedDB object store and returns a new array with the results.
+	 *
+	 * @template TOut - The type of the array elements returned by the callback function.
+	 * @param callbackfn - A function to apply to each item in the object store.
+	 * The callback function takes two arguments:
+	 * - `value`: The current item being processed.
+	 * - `key`: The key of the current item being processed.
+	 *
+	 * @returns A Promise that resolves with a new array containing the results of applying the callback function to each item in the object store.
+	 *
+	 * @remarks
+	 * This method is asynchronous and uses the `for await...of` syntax to iterate over the object store's values.
+	 * It is useful for transforming or filtering the items in the object store.
+	 */
+	async map<TOut>(callbackfn: (value: T, key: IDBValidKey) => TOut) {
+		const result: TOut[] = [];
+		for await (const [key, value] of this.entries())
+			result.push(callbackfn(value, key));
+		return result;
 	}
-
-	static #backgroundImage: IndexedDBStore<BackgroundImageRow> | null = null;
-	static get backgroundImage() {
-		if (!IndexedDBStore.#backgroundImage)
-			IndexedDBStore.#backgroundImage = new IndexedDBStore<BackgroundImageRow>("ImagesDB", 1, "backgroundImages", {
-				imageData: null,
-				filename: null,
-			});
-		IndexedDBStore.#backgroundImage.open();
-		return IndexedDBStore.#backgroundImage;
-	}
-}
-
-interface BackgroundImageRow {
-	imageData: Blob;
-	filename: string;
 }

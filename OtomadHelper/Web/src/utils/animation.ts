@@ -358,7 +358,7 @@ export const STOP_TRANSITION_ID = "stop-transition";
  * @param options - Animation options.
  * @returns The destructor can be executed after the animation is completed.
  */
-export async function startColorViewTransition(changeFunc: () => MaybePromise<void | unknown>, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions = {}) {
+export async function startColorViewTransition(changeFunc: () => MaybePromise<void | unknown>, animations: [keyframes: Keyframe[] | PropertyIndexedKeyframes, options?: KeyframeAnimationOptions][]) {
 	if (!document.startViewTransition) {
 		await changeFunc();
 		return;
@@ -393,15 +393,18 @@ export async function startColorViewTransition(changeFunc: () => MaybePromise<vo
 	`);
 	document.head.appendChild(style);
 
-	options.duration ??= 300;
-	options.easing ??= eases.easeInOutSmooth;
-	options.pseudoElement ??= "::view-transition-new(root)";
-
 	const transition = document.startViewTransition(changeFunc);
 	await transition.ready;
 
-	const animation = document.documentElement.animate(keyframes, options);
-	await animation.finished;
+	await Promise.all(animations.map(async ([keyframes, options]) => {
+		options ??= {};
+		options.duration ??= 300;
+		options.easing ??= eases.easeInOutSmooth;
+		options.pseudoElement ??= "::view-transition-new(root)";
+
+		return await document.documentElement.animate(keyframes, options).finished;
+	}));
+
 	document.head.removeChild(style);
 }
 
