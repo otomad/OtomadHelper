@@ -63,9 +63,11 @@ export /* @internal */ const styledExpanderItemContent = css`
 const StyledExpanderItem = styled.div<{
 	/** With clickable style? */
 	$clickable?: boolean;
+	/** As sub title style? */
+	$asSubtitle?: boolean;
 }>`
 	${styledExpanderItemBase};
-	padding-left: 15px;
+	padding-inline-start: 15px;
 
 	${styledExpanderItemContent};
 
@@ -85,9 +87,17 @@ const StyledExpanderItem = styled.div<{
 			border-radius: 0 0 2px 2px;
 		}
 	`)}
+
+	${ifProp("$asSubtitle", css`
+		padding-block-end: 0;
+
+		.text .title {
+			${styles.effects.text.bodyStrong};
+		}
+	`)}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, children, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, children, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -96,9 +106,11 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	details?: ReactNode;
 	/** With clickable style? */
 	clickable?: boolean;
+	/** As sub title style? */
+	asSubtitle?: boolean;
 }, "div">) {
 	return (
-		<StyledExpanderItem $clickable={clickable} {...htmlAttrs}>
+		<StyledExpanderItem $clickable={clickable} $asSubtitle={asSubtitle} {...htmlAttrs}>
 			{icon ? typeof icon === "string" ? <Icon name={icon} /> : icon : <Icon shadow />}
 			<div className="text">
 				<p className="title"><Preserves>{title}</Preserves></p>

@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 import { transform as transformCSS } from "lightningcss";
 import { resolve as _resolve } from "path";
 import autoImport from "unplugin-auto-import/vite";
+import turboConsole from "unplugin-turbo-console/vite";
 import { defineConfig } from "vite";
 import glsl from "vite-plugin-glsl";
 import htmlMinifier from "vite-plugin-html-minifier";
@@ -88,6 +89,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				deleteOriginalAssets: true,
 				include: [/\.(x?html?|mht(ml)?|hta|md|css|s[ca]ss|less|styl|[mc]?[jt]sx?|json[5c]?|ya?ml|xa?ml|toml|ini|config|map|(web)?manifest|appcache|[to]tf|ttc|vtt|svg|bmp|ico|cur|ani)$/iu],
 			}), */
+			turboConsole(),
 		],
 		base: "",
 		publicDir: "src/public",

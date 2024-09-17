@@ -1,12 +1,4 @@
-const StyledSelectAll = styled.div`
-	.expander-item {
-		padding-bottom: 0;
-
-		.text .title {
-			${styles.effects.text.bodyStrong};
-		}
-	}
-`;
+const StyledSelectAll = styled.div({});
 
 export default function SelectAll<T>({ value, all, icon, title, details }: FCP<{
 	value: StateProperty<T[]>;
@@ -22,7 +14,7 @@ export default function SelectAll<T>({ value, all, icon, title, details }: FCP<{
 
 	return (
 		<StyledSelectAll>
-			{title && <Expander.Item title={title} details={details} icon={icon} />}
+			{title && <Expander.Item title={title} details={details} icon={icon} asSubtitle />}
 			<Checkbox
 				value={selectAll}
 				actions={
