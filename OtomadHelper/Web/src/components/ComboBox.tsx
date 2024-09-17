@@ -1,11 +1,10 @@
 import { StyledButton } from "./Button";
+import { inputInSettingsCardStyle } from "./TextBox";
 
 const StyledComboBox = styled(StyledButton)`
 	padding: 4px 11px;
 
-	:where(.settings-card > .base, .expander-item) > .trailing > :where(&) {
-		width: 200px;
-	}
+	${inputInSettingsCardStyle};
 
 	.content {
 		${styles.mixins.square("100%")};

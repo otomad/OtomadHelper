@@ -37,4 +37,9 @@ declare interface Number {
 	 * @param fractionDigits - Number of digits after the decimal point. Must be in the range 0 - 20, inclusive.
 	 */
 	toFixedNumber(fractionDigits?: number): number;
+
+	/**
+	 * Get the number of decimals in a number.
+	 */
+	countDecimals(): number;
 }

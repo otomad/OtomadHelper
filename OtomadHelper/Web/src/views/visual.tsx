@@ -3,9 +3,9 @@ import legatoUnlimitedImage from "assets/images/tutorials/legato_config/legato_u
 import legatoUpTo1BarImage from "assets/images/tutorials/legato_config/legato_up_to_1bar.png";
 import legatoUpTo1BeatImage from "assets/images/tutorials/legato_config/legato_up_to_1beat.png";
 import loopImage from "assets/images/tutorials/visual/loop.png";
-import noLengtheningImage from "assets/images/tutorials/visual/no_lengthening.png";
 import staticVisualImage from "assets/images/tutorials/visual/static.png";
 import stretchImage from "assets/images/tutorials/visual/stretch.png";
+import unlengthenImage from "assets/images/tutorials/visual/unlengthen.png";
 import exampleThumbnail from "assets/images/ヨハネの氷.png";
 import { useIsForceStretch, usePrveCheckInfo } from "./visual/prve";
 
@@ -21,7 +21,7 @@ export /* @internal */ const legatos = [
 	{ id: "upToOneBar", icon: "music_bar", image: legatoUpTo1BarImage },
 	{ id: "unlimited", icon: "infinity", image: legatoUnlimitedImage },
 ] as const;
-export /* @internal */ const noLengthenings = [
+export /* @internal */ const unlengthens = [
 	{ id: "lengthenable", icon: "lengthenable", availableInAudio: true },
 	{ id: "freezeEndFrames", icon: "freeze_end_frames", availableInAudio: false },
 	{ id: "trimEndFrames", icon: "trim_end_frames", availableInAudio: true },
@@ -42,7 +42,7 @@ const TooltipPartial = Tooltip.with({ placement: "y" });
 export default function Visual() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
-		stretch, loop, staticVisual, noLengthening, legato, multitrackForChords, enableStaffVisualizer, transformMethod, currentPreset, noTimeRemapping,
+		stretch, loop, staticVisual, unlengthen, legato, multitrackForChords, enableStaffVisualizer, transformMethod, currentPreset, timeUnremapping, resampleImitatively,
 		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioNegative, activeParameterScheme,
 	} = selectConfig(c => c.visual);
 	// const activeParameterScheme = selectConfigArray(c => c.visual.activeParameterScheme);
@@ -98,16 +98,16 @@ export default function Visual() {
 					<TooltipPartial title={<Tooltip.Content image={staticVisualImage} />}>
 						<SettingsCardToggleSwitch title={t.stream.staticVisual} details={t.descriptions.stream.staticVisual} icon="visual" on={staticVisual} />
 					</TooltipPartial>
-					<TooltipPartial title={<Tooltip.Content image={noLengtheningImage} />}>
+					<TooltipPartial title={<Tooltip.Content image={unlengthenImage} />}>
 						<ExpanderRadio
-							title={t.stream.noLengthening}
-							details={t.descriptions.stream.noLengthening}
+							title={t.stream.unlengthen}
+							details={t.descriptions.stream.unlengthen}
 							icon="arrow_import_prohibited"
-							items={noLengthenings}
-							value={noLengthening as StateProperty<string>}
+							items={unlengthens}
+							value={unlengthen as StateProperty<string>}
 							view="tile"
 							idField="id"
-							nameField={t.stream.noLengthening}
+							nameField={t.stream.unlengthen}
 							iconField="icon"
 						/>
 					</TooltipPartial>
@@ -131,11 +131,23 @@ export default function Visual() {
 						on={multitrackForChords}
 					/>
 					<SettingsCardToggleSwitch
-						title={t.stream.noTimeRemapping}
-						details={t.descriptions.stream.noTimeRemapping}
+						title={t.stream.timeUnremapping}
+						details={t.descriptions.stream.timeUnremapping}
 						icon="timer_off"
-						on={noTimeRemapping}
+						on={timeUnremapping}
 					/>
+					<SettingsCard
+						title={t.stream.resampleImitatively}
+						details={(
+							<>
+								{t.descriptions.stream.resampleImitatively}<br />
+								{resampleImitatively[0] === "auto" && t.descriptions.stream.resampleImitatively.auto}
+							</>
+						)}
+						icon="lock"
+					>
+						<ThreeStageSwitch current={resampleImitatively} />
+					</SettingsCard>
 					{/* <ExpanderRadio
 						title={t.stream.transformMethod}
 						details={t.descriptions.stream.transformMethod}

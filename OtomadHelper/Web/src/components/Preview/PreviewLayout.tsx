@@ -5,7 +5,6 @@ const StyledPreviewLayout = styled.div<{
 	$img: string;
 }>`
 	${styles.mixins.square("100%")};
-	container: preview-layout / size;
 	position: relative;
 
 	> * {
@@ -109,7 +108,7 @@ const StyledPreviewLayout = styled.div<{
 	}
 `;
 
-export default function PreviewLayout({ thumbnail, ...htmlAttrs }: FCP<{
+export default function PreviewLayout({ thumbnail }: FCP<{
 	/** Thumbnail. */
 	thumbnail: string;
 }, "div">) {

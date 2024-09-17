@@ -51,4 +51,7 @@ declare global {
 	type StatePropertiedObject<TState> = {
 		[property in keyof TState]: StatePropertyNonNull<TState[property]>;
 	};
+
+	/** Three stage switch type. */
+	type TrueFalseAuto = "true" | "false" | "auto";
 }

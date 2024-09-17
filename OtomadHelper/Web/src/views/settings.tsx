@@ -7,8 +7,12 @@ export default function Settings() {
 	const languages = Object.keys(i18n.options.resources ?? {});
 	const schemes = ["light", "dark", "auto"] as const;
 	const { scheme: [scheme, setScheme] } = useStoreState(colorModeStore);
-	const { uiScale, hideUseTips } = selectConfig(c => c.settings);
+	const {
+		uiScale, hideUseTips,
+		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur,
+	} = selectConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
+	const showBackgroundImage = backgroundImages.backgroundImage[0] !== "-1";
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -37,17 +41,55 @@ export default function Settings() {
 			<Subheader>{t.settings.appearance}</Subheader>
 			<ExpanderRadio<BackgroundImageRowWithMore>
 				title={t.settings.appearance.backgroundImage}
+				icon="wallpaper"
 				items={backgroundImages.items}
 				expanded
 				view="grid"
 				value={backgroundImages.backgroundImage}
 				idField="key"
 				imageField="url"
+				checkInfoCondition={showBackgroundImage ? t.on : t.off}
 				onItemContextMenu={(item, e) => { if (item.key !== "-1") { stopEvent(e); backgroundImages.delete(item.key); } }}
+				before={(
+					<Expander.ChildWrapper>
+						<Button icon="open_file" onClick={addBackgroundImage}>{t.browse}</Button>
+					</Expander.ChildWrapper>
+				)}
 			>
-				<Expander.ChildWrapper>
-					<Button onClick={addBackgroundImage}>Browse</Button>
-				</Expander.ChildWrapper>
+				{showBackgroundImage && (
+					<>
+						<Expander.Item title={t.settings.appearance.backgroundImage.opacity} icon="opacity">
+							<Slider
+								value={backgroundImageOpacity}
+								min={0}
+								max={1}
+								step={0.01}
+								defaultValue={0.2}
+								displayValue
+							/>
+						</Expander.Item>
+						<Expander.Item title={t.settings.appearance.backgroundImage.tint} icon="saturation">
+							<Slider
+								value={backgroundImageTint}
+								min={0}
+								max={1}
+								step={0.01}
+								defaultValue={0}
+								displayValue
+							/>
+						</Expander.Item>
+						<Expander.Item title={t.settings.appearance.backgroundImage.blur} icon="blur">
+							<Slider
+								value={backgroundImageBlur}
+								min={0}
+								max={64}
+								step={1}
+								defaultValue={0}
+								displayValue
+							/>
+						</Expander.Item>
+					</>
+				)}
 			</ExpanderRadio>
 			<ExpanderRadio
 				title={t.settings.appearance.colorScheme}

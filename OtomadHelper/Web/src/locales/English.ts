@@ -93,6 +93,7 @@ export default {
 		curve: "Interpolation curve",
 		unselected: "Unselected",
 		topPriority: "{{item, capitalize}} first",
+		browse: "Browse",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -168,8 +169,8 @@ export default {
 			loop: "Loop",
 			normalize: "Normalize",
 			staticVisual: "Static visual",
-			noLengthening: {
-				_: "No lengthening",
+			unlengthen: {
+				_: "Unlengthen",
 				lengthenable: "Lengthenable",
 				freezeEndFrames: "Freeze end frames",
 				trimEndFrames: "Trim end frames",
@@ -187,7 +188,8 @@ export default {
 			multitrackForChords: "Multitrack for chords",
 			createGroups: "Create groups",
 			autoPan: "Auto pan",
-			noTimeRemapping: "No time remapping",
+			timeUnremapping: "Time unremapping",
+			resampleImitatively: "Resample imitatively",
 			transformMethod: {
 				_: "Transform method",
 				panCrop: "Pan/Crop",
@@ -471,7 +473,12 @@ export default {
 					auto: "Auto",
 				},
 				uiScale: "UI scale",
-				backgroundImage: "Background image",
+				backgroundImage: {
+					_: "Background image",
+					opacity: "Opacity",
+					tint: "Tint",
+					blur: "Blur intensity",
+				},
 			},
 			config: {
 				hideUsageTips: "Hide usage tips",
@@ -490,14 +497,14 @@ export default {
 				startTime: "Specifies when to start generating from the project",
 				preferredTrack: {
 					_: "Allows you to specify an existing track to generate (except multitrack)",
-					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth-to-last track.\nIf any preferred track is specified in the Audio or Visual configuration, it will override this option.",
+					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth-to-last track.\nIf any preferred track is specified in Audio or Visual, it will override this option.",
 					belowAdjustmentTracks: {
 						versionRequest: "Note: This feature requires VEGAS Pro ≥ 19. The current version is {{version}}.",
 					},
 				},
 				blindBox: {
 					_: "Uses random in points for the source.\nThis can result in randomly selected source clips having different base pitches, making it useful only for creating funny videos for entertainment purposes, and barely used for creating high-caliber videos.",
-					track: "Whether track or channel depends on the Score configuration",
+					track: "Whether track or channel depends on the Score",
 					marker: "When a marker is encountered in the score, the in point of the source will be changed once. If several markers have the same non-empty name, they will use the same in point of the source.",
 				},
 			},
@@ -513,13 +520,17 @@ export default {
 				loop: "When the clip is lengthened to the end of the source media, playback starts over",
 				normalize: "Normalizes the audio, useful for quiet audio",
 				staticVisual: "Freezes the frame at the beginning of the clip",
-				noLengthening: "Attempts to freeze at the out point of the clip to avoid accidentally playing the part beyond the trimming time when some notes are too long",
+				unlengthen: "Attempts to freeze at the out point of the clip to avoid accidentally playing the part beyond the trimming time when some notes are too long",
 				legato: "Fills in the gaps between the notes",
-				noLengtheningAndLegatoConflictInAudio: "No lengthening conflicts with Legato in Audio, you cannot enable them simultaneously!",
+				unlengthenAndLegatoConflictInAudio: "Unlengthening and Legato are conflicting in Audio, you cannot enable them simultaneously!",
 				multitrackForChords: "Creates multiple tracks for chords",
 				createGroups: "Creates groups for video and audio clips represented by one note",
 				autoPan: "Pans the audio using envelope automation",
-				noTimeRemapping: "The clips will not reset their in point time when note on occurs, but will continue playing, useful if you want to apply the effects to the source only",
+				timeUnremapping: "The clips will not reset their in point time when note on occurs, but will continue playing, useful if you want to apply the effects to the source only",
+				resampleImitatively: {
+					_: "Imitate the resampling behavior in the Visual, causing the stretching to flexing as the pitch increases",
+					auto: "This will depend on whether resampling is enabled in Audio to ensure that the visual is sync with the audio",
+				},
 				transformMethod: "Specifies the priority order of target properties for applying transformation keyframes",
 				playingTechniques: {
 					glissando: {

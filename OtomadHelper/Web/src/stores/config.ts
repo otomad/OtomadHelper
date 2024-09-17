@@ -1,7 +1,7 @@
 import type { pitchNotations } from "views/lyrics";
 import type { bpmUsings, constraintNoteLengthTypes, encodings, multipleSelectTrackItems } from "views/score";
 import type { selectGeneratedClipsType, startTimes } from "views/source";
-import type { legatos, noLengthenings, stretches, transformMethods } from "views/visual";
+import type { legatos, stretches, transformMethods, unlengthens } from "views/visual";
 
 type StartTime = typeof startTimes[number]["id"];
 type BpmUsing = typeof bpmUsings[number]["id"];
@@ -9,7 +9,7 @@ type ConstraintNoteLengthType = typeof constraintNoteLengthTypes[number]["id"];
 type Encoding = typeof encodings[number];
 type Stretch = typeof stretches[number]["id"];
 type Legato = typeof legatos[number]["id"];
-type NoLengthening = typeof noLengthenings[number]["id"];
+type Unlengthen = typeof unlengthens[number]["id"];
 type TransformMethod = typeof transformMethods[number];
 type PitchNotation = typeof pitchNotations[number];
 type Timecode = string;
@@ -54,12 +54,12 @@ export const configStore = createStore({
 		stretch: "noStretching" as Stretch,
 		loop: false,
 		normalize: true,
-		noLengthening: "lengthenable" as NoLengthening,
+		unlengthen: "lengthenable" as Unlengthen,
 		legato: "portato" as Legato,
 		multitrackForChords: false,
 		autoPan: true,
 		autoPanCurve: "linear" as CurveType,
-		noTimeRemapping: false,
+		timeUnremapping: false,
 		tuningMethod: "elastic",
 		stretchAttribute: "efficient",
 		alternativeForExceedsTheRange: "plugin",
@@ -87,10 +87,11 @@ export const configStore = createStore({
 		stretch: "noStretching" as Stretch,
 		loop: false,
 		staticVisual: false,
-		noLengthening: "lengthenable" as NoLengthening,
+		unlengthen: "lengthenable" as Unlengthen,
 		legato: "upToOneBeat" as Legato,
 		multitrackForChords: false,
-		noTimeRemapping: false,
+		timeUnremapping: false,
+		resampleImitatively: "auto" as TrueFalseAuto,
 		transformMethod: ["panCrop", "pictureInPicture", "transformOfx"] as TransformMethod[],
 		prve: {
 			general: {
@@ -193,6 +194,9 @@ export const configStore = createStore({
 	},
 	settings: {
 		backgroundImage: "-1",
+		backgroundImageOpacity: 0.2,
+		backgroundImageTint: 0,
+		backgroundImageBlur: 0,
 		uiScale: 100,
 		get uiScale1() { return this.uiScale / 100; },
 		hideUseTips: false,

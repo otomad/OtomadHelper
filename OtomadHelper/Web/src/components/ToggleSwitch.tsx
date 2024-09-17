@@ -24,6 +24,7 @@ const StyledToggleSwitchLabel = styled.button`
 		display: flex;
 		gap: inherit;
 		align-items: center;
+		margin-inline-start: auto;
 
 		.text {
 			width: unset !important;

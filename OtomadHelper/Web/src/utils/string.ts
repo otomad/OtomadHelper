@@ -1,5 +1,7 @@
 /// <reference path="string.d.ts" />
 
+import dedent from "dedent";
+
 { // Init string extensions
 	String.prototype.countChar = function (...chars) {
 		let count = 0;
@@ -25,9 +27,9 @@
 		return Array.from(this).join(sep);
 	};
 
-	String.prototype.in = function (...list) {
-		return list.includes(this as never);
-	};
+	String.prototype.in = function (this: undefined, ...list) {
+		return list.includes(this);
+	} as string["in"];
 
 	String.prototype.removeSpace = function () {
 		return this.replace(/\s/g, "");
@@ -35,6 +37,10 @@
 
 	String.prototype.holeString = function (start, end) {
 		return this.slice(0, start) + this.slice(end);
+	};
+
+	String.prototype.dedent = function () {
+		return dedent(this as string);
 	};
 
 	makePrototypeKeysNonEnumerable(String);

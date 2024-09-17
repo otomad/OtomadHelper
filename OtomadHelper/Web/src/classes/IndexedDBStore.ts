@@ -83,9 +83,10 @@ export default class IndexedDBStore<T extends object> {
 			request.onerror = () => reject(request.error);
 
 			request.onupgradeneeded = () => {
-				if (!this.database.objectStoreNames.contains(this.objectStoreName)) {
+				const database = request.result;
+				if (!database.objectStoreNames.contains(this.objectStoreName)) {
 					const { keyPath, ...keys } = this.objectStoreSchema;
-					const objectStore = this.database.createObjectStore(this.objectStoreName, keyPath !== undefined ? { keyPath } : { autoIncrement: true });
+					const objectStore = database.createObjectStore(this.objectStoreName, keyPath !== undefined ? { keyPath } : { autoIncrement: true });
 					for (const [key, options] of Object.entries(keys))
 						objectStore.createIndex(key, key, options ?? undefined);
 				}
@@ -244,6 +245,6 @@ export default class IndexedDBStore<T extends object> {
 		const result: TOut[] = [];
 		for await (const [key, value] of this.entries())
 			result.push(callbackfn(value, key));
-		return result;
+		return await Promise.all(result);
 	}
 }

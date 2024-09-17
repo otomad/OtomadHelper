@@ -396,14 +396,14 @@ export async function startColorViewTransition(changeFunc: () => MaybePromise<vo
 	const transition = document.startViewTransition(changeFunc);
 	await transition.ready;
 
-	await Promise.all(animations.map(async ([keyframes, options]) => {
+	await animations.asyncMap(async ([keyframes, options]) => {
 		options ??= {};
 		options.duration ??= 300;
 		options.easing ??= eases.easeInOutSmooth;
 		options.pseudoElement ??= "::view-transition-new(root)";
 
 		return await document.documentElement.animate(keyframes, options).finished;
-	}));
+	});
 
 	document.head.removeChild(style);
 }
@@ -440,7 +440,7 @@ export async function setStyleTemporarily(element: HTMLElement, style: CSSProper
 	const { promise, resolve } = Promise.withResolvers<void>();
 	setStyleTemporarilyQueue.push(promise);
 
-	style = objectReplaceKeys(style, camel => new VariableName(camel).cssProperty);
+	style = objectReplaceKeys(style, camel => camel.startsWith("--") ? camel : new VariableName(camel).cssProperty);
 	// Convert property names to kebab case or Element.style.setProperty won't recognize them.
 	if (!("transition" in style)) style.transition = "none";
 

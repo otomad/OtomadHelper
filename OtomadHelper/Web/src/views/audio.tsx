@@ -1,6 +1,6 @@
 import exampleThumbnail from "assets/images/ヨハネの氷.png";
-import { legatos, noLengthenings, stretches } from "./visual";
-const noLengtheningsInAudio = noLengthenings.filter(item => item.availableInAudio);
+import { legatos, stretches, unlengthens } from "./visual";
+const unlengthensInAudio = unlengthens.filter(item => item.availableInAudio);
 
 export /* @internal */ const tuningMethods = [
 	{ id: "noTuning", icon: "prohibited" },
@@ -32,7 +32,7 @@ const TooltipPartial = Tooltip.with({ placement: "y" });
 export default function Audio() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
-		stretch, loop, normalize, noLengthening, legato, multitrackForChords, noTimeRemapping, autoPan, autoPanCurve,
+		stretch, loop, normalize, unlengthen, legato, multitrackForChords, timeUnremapping, autoPan, autoPanCurve,
 		tuningMethod, stretchAttribute, alternativeForExceedsTheRange, resample, preserveFormant, basePitch, currentPreset,
 	} = selectConfig(c => c.audio);
 	const { engine, waveform, duration: beepDuration, adjustAudioToBasePitch } = selectConfig(c => c.audio.prelistenAttributes);
@@ -70,14 +70,14 @@ export default function Audio() {
 					<SettingsCardToggleSwitch title={t.stream.loop} details={t.descriptions.stream.loop} icon="loop" on={loop} />
 					<SettingsCardToggleSwitch title={t.stream.normalize} details={t.descriptions.stream.normalize} icon="normalize" on={normalize} />
 					<ExpanderRadio
-						title={t.stream.noLengthening}
-						details={t.descriptions.stream.noLengthening}
+						title={t.stream.unlengthen}
+						details={t.descriptions.stream.unlengthen}
 						icon="arrow_import_prohibited"
-						items={noLengtheningsInAudio}
-						value={noLengthening as StateProperty<string>}
+						items={unlengthensInAudio}
+						value={unlengthen as StateProperty<string>}
 						view="tile"
 						idField="id"
-						nameField={t.stream.noLengthening}
+						nameField={t.stream.unlengthen}
 						iconField="icon"
 					/>
 					<ExpanderRadio
@@ -93,7 +93,7 @@ export default function Audio() {
 						imageField="image"
 						$itemWidth={566 / 196 * GRID_VIEW_ITEM_HEIGHT}
 					/>
-					{!hideUseTips && <InfoBar status="warning" title={t.descriptions.stream.noLengtheningAndLegatoConflictInAudio} />}
+					{!hideUseTips && <InfoBar status="warning" title={t.descriptions.stream.unlengthenAndLegatoConflictInAudio} />}
 					<SettingsCardToggleSwitch
 						title={t.stream.multitrackForChords}
 						details={t.descriptions.stream.multitrackForChords}
@@ -101,10 +101,10 @@ export default function Audio() {
 						on={multitrackForChords}
 					/>
 					<SettingsCardToggleSwitch
-						title={t.stream.noTimeRemapping}
-						details={t.descriptions.stream.noTimeRemapping}
+						title={t.stream.timeUnremapping}
+						details={t.descriptions.stream.timeUnremapping}
 						icon="timer_off"
-						on={noTimeRemapping}
+						on={timeUnremapping}
 					/>
 					<Expander
 						title={t.stream.autoPan}
@@ -222,5 +222,5 @@ export default function Audio() {
 	);
 }
 
-subscribeStoreKey(configStore.audio, "noLengthening", value => value !== "lengthenable" && (configStore.audio.legato = "portato"));
-subscribeStoreKey(configStore.audio, "legato", value => value !== "portato" && (configStore.audio.noLengthening = "lengthenable"));
+subscribeStoreKey(configStore.audio, "unlengthen", value => value !== "lengthenable" && (configStore.audio.legato = "portato"));
+subscribeStoreKey(configStore.audio, "legato", value => value !== "portato" && (configStore.audio.unlengthen = "lengthenable"));

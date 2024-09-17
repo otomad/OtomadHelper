@@ -67,6 +67,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      dedent:
+        specifier: ^1.5.3
+        version: 1.5.3
       i18next:
         specifier: ^23.11.1
         version: 23.11.1
@@ -1736,6 +1739,14 @@ packages:
 
   dedent@0.7.0:
     resolution: {integrity: sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==}
+
+  dedent@1.5.3:
+    resolution: {integrity: sha512-NHQtfOOW68WD8lgypbLA5oT+Bt0xXJhiYvoR6SmmNXZfpzOGXwdKWmcwG8N7PwVVWV3eF/68nmD9BaJSsTBhyQ==}
+    peerDependencies:
+      babel-plugin-macros: ^3.1.0
+    peerDependenciesMeta:
+      babel-plugin-macros:
+        optional: true
 
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
@@ -5870,6 +5881,8 @@ snapshots:
   decode-uri-component@0.2.2: {}
 
   dedent@0.7.0: {}
+
+  dedent@1.5.3: {}
 
   deep-is@0.1.4: {}
 

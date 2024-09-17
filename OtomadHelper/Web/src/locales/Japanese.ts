@@ -163,15 +163,7 @@ export default {
 			loop: "ループ",
 			normalize: "正規化",
 			staticVisual: "静的ビジュアル",
-			noLengthening: {
-				_: "延長しない",
-				lengthenable: "Lengthenable",
-				freezeEndFrames: "終了フレームを固定",
-				trimEndFrames: "終了フレームをトリムする",
-				splitThenFreeze: "分割して凍結する",
-				freezeToGray: "グレーに固定",
-				freezeToPreset: "プリセットに固定",
-			},
+			unlengthen: {},
 			legato: {
 				_: "Legato",
 				portato: "Portato",
@@ -182,7 +174,6 @@ export default {
 			multitrackForChords: "コードのマルチラック",
 			createGroups: "グループを作成",
 			autoPan: "オート パン",
-			noTimeRemapping: "再マッピングに時間がありません",
 			transformMethod: {
 				_: "変換方法",
 				panCrop: "パン/トリミング",
@@ -458,6 +449,7 @@ export default {
 					auto: "自動",
 				},
 				uiScale: "UIスケール",
+				backgroundImage: {},
 			},
 			config: {
 				hideUsageTips: "使用ヒントを非表示",
@@ -482,7 +474,6 @@ export default {
 				},
 				blindBox: {
 					_: "ソースのポイントでランダムに使用します。\nこれは、ランダムに選択されたソースクリップが異なるベースピッチを持つ可能性があります。 娯楽用の面白い動画の作成にのみ役立ちますし、高度な動画の作成にはほとんど使用されません。",
-					track: "トラックまたはチャンネルはスコア構成によって異なります",
 					marker: "スコアにマーカーがある場合、ソースのインポイントは一度変更されます。 複数のマーカーに同じ名前が空でない場合、ソースのポイントで同じ名前が使用されます。",
 				},
 			},
@@ -498,13 +489,11 @@ export default {
 				loop: "クリップがソースメディアの最後まで長くなると再生が開始されます",
 				normalize: "オーディオを標準化し、静かなオーディオに便利です",
 				staticVisual: "クリップの先頭にあるフレームをフリーズします。",
-				noLengthening: "一部のノートが長すぎる場合、トリミング時間を超えてパートを誤って再生しないようにクリップのアウトポイントでフリーズしようとします。",
 				legato: "ノート間のギャップを埋めます",
-				noLengtheningAndLegatoConflictInAudio: "オーディオの Legato との長時間の競合がありません。同時に有効にすることはできません！",
 				multitrackForChords: "コード用に複数のトラックを作成",
 				createGroups: "ビデオクリップとオーディオクリップのグループを1つのノートで表します。",
 				autoPan: "エンベロープオートメーションを使用してオーディオをパンする",
-				noTimeRemapping: "ノートが発生した場合、クリップはポイント時間をリセットしません。 再生を続けますソースにエフェクトを適用する場合に便利です",
+				resampleImitatively: {},
 				transformMethod: "変換キーフレームを適用するためのターゲットプロパティの優先順位を指定します",
 				playingTechniques: {
 					glissando: {

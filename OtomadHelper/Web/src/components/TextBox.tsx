@@ -94,10 +94,12 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 }
 // #endregion
 
+export /* @internal */ const inSettingsCardTrailing = ":where(.settings-card > .base, .expander-item) > .trailing";
+
 export /* @internal */ const inputInSettingsCardStyle = css`
-	:where(.settings-card > .base, .expander-item) > .trailing > :where(&) {
-		width: 200px;
-		max-width: calc(50cqw - 13px);
+	${inSettingsCardTrailing} > :where(&) {
+		inline-size: 200px;
+		max-inline-size: calc(50cqw - 13px);
 	}
 `;
 

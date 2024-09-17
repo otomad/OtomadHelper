@@ -133,6 +133,13 @@ declare interface Array<T> {
 	 * @param thisArg - An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
 	 */
 	mapImmer<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[];
+
+	/**
+	 * Calls a defined callback asynchronous function on each element of an array, and returns an array promise that contains the results.
+	 * @param callbackfn An asynchronous function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.
+	 * @param thisArg An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
+	 */
+	asyncMap<U>(callbackfn: (value: T, index: number, array: T[]) => MaybePromise<U>, thisArg?: any): Promise<U[]>;
 }
 
 declare interface ReadonlyArray<T> extends Pick<Array<T>,

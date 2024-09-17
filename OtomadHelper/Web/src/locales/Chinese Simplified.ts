@@ -90,6 +90,7 @@ export default {
 		curve: "插值曲线",
 		unselected: "未选择",
 		topPriority: "{{item, capitalize}} 最优先",
+		browse: "浏览",
 		infoBar: {
 			warning: "警告",
 		},
@@ -164,7 +165,7 @@ export default {
 			loop: "循环",
 			normalize: "规范化音频",
 			staticVisual: "静态画面",
-			noLengthening: {
+			unlengthen: {
 				_: "禁止延长",
 				lengthenable: "可延长",
 				freezeEndFrames: "冻结尾帧",
@@ -183,7 +184,8 @@ export default {
 			multitrackForChords: "复音多轨",
 			createGroups: "创建分组",
 			autoPan: "自动声像",
-			noTimeRemapping: "时间不重映射",
+			timeUnremapping: "时间解除重映射",
+			resampleImitatively: "模拟重采样音频",
 			transformMethod: {
 				_: "变换方法",
 				panCrop: "平移/裁切",
@@ -459,6 +461,12 @@ export default {
 					auto: "自动",
 				},
 				uiScale: "界面缩放",
+				backgroundImage: {
+					_: "背景图像",
+					opacity: "不透明度",
+					tint: "着色",
+					blur: "模糊强度",
+				},
 			},
 			config: {
 				hideUsageTips: "隐藏使用小贴士",
@@ -477,7 +485,7 @@ export default {
 				startTime: "指定何时从项目开始生成",
 				preferredTrack: {
 					_: "允许你指定一条现有轨道来生成（多轨除外）",
-					fillingInstructions: "若为0，则生成在所有轨道的上方；\n若为正，则生成在第几条轨道的下方；\n若为负，则生成在倒数第几条轨道的下方。\n如果在音频或画面配置中指定了任何首选轨道，它将会覆盖此选项。",
+					fillingInstructions: "若为0，则生成在所有轨道的上方；\n若为正，则生成在第几条轨道的下方；\n若为负，则生成在倒数第几条轨道的下方。\n如果在音频或画面中指定了任何首选轨道，它将会覆盖此选项。",
 					belowAdjustmentTracks: {
 						versionRequest: "注意：此功能要求至少为VEGAS Pro 19。当前版本为 {{version}}。",
 					},
@@ -500,13 +508,17 @@ export default {
 				loop: "当剪辑延长到源媒体的末尾后，将会重头开始播放",
 				normalize: "适用于音频太安静的素材",
 				staticVisual: "在剪辑起始处冻结帧",
-				noLengthening: "尝试在剪辑的出点处冻结，以避免在某些音符过长时，意外播放到超出修剪时间的部分",
+				unlengthen: "尝试在剪辑的出点处冻结，以避免在某些音符过长时，意外播放到超出修剪时间的部分",
 				legato: "填补音符与音符之间的间隙",
-				noLengtheningAndLegatoConflictInAudio: "禁止延长和填补间隙在音频里互相冲突，不能同时开启！",
+				unlengthenAndLegatoConflictInAudio: "禁止延长和填补间隙在音频里互相冲突，不能同时开启！",
 				multitrackForChords: "为和弦创建多条轨道",
 				createGroups: "将一个音符所表示的视频与音频剪辑创建分组",
 				autoPan: "自动化控制音频的声像包络",
-				noTimeRemapping: "音符开时将不会重置剪辑的入点时间，而是继续播放，适用于如仅对素材应用效果",
+				timeUnremapping: "音符开时将不会重置剪辑的入点时间，而是继续播放，适用于如仅对素材应用效果",
+				resampleImitatively: {
+					_: "在画面中模仿重采样音频的行为，使拉伸值随着音高的升高而缩短",
+					auto: "这将取决于是否在音频中启用重采样音频功能以确保画面与音频同步",
+				},
 				transformMethod: "指定要应用变换关键帧的目标属性的优先级顺序",
 				playingTechniques: {
 					glissando: {

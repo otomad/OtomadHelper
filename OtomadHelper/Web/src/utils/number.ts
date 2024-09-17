@@ -25,6 +25,18 @@
 		return +this.toFixed(fractionDigits);
 	};
 
+	Number.prototype.countDecimals = function () {
+		if (Math.floor(this.valueOf()) === this.valueOf()) return 0;
+
+		const str = this.toString();
+		if (str.includes(".") && str.includes("-"))
+			return +str.split("-")[1] || 0;
+		else if (str.indexOf(".") !== -1)
+			return str.split(".")[1].length || 0;
+		else
+			return +str.split("-")[1] || 0;
+	};
+
 	makePrototypeKeysNonEnumerable(Number);
 }
 

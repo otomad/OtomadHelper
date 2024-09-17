@@ -1,3 +1,5 @@
+import { inSettingsCardTrailing } from "./TextBox";
+
 const THUMB_SIZE = 20;
 const TRACK_THICKNESS = 4;
 const valueCalc = "calc(var(--value) * (100% - var(--thumb-size)))";
@@ -9,14 +11,22 @@ const StyledSlider = styled.div`
 	position: relative;
 	touch-action: none;
 
+	:where(&) {
+		width: 100%;
+	}
+
+	${inSettingsCardTrailing} & {
+		inline-size: 300px;
+	}
+
 	> * {
 		--thumb-size: ${THUMB_SIZE}px;
 		--track-thickness: ${TRACK_THICKNESS}px;
 	}
 
 	.track {
-		height: var(--thumb-size);
-		padding: ${thumbSizeHalf} 0;
+		height: calc(var(--thumb-size) + var(--track-thickness));
+		padding-block: ${thumbSizeHalf};
 
 		&::after {
 			content: "";
@@ -35,7 +45,7 @@ const StyledSlider = styled.div`
 		position: absolute;
 		top: 0;
 		width: ${valueCalc};
-		margin: ${thumbSizeHalf} 0;
+		margin-block: ${thumbSizeHalf};
 		background-color: ${c("accent-color")};
 		pointer-events: none;
 		transition: background-color ${eases.easeOutMax} 250ms;
@@ -46,7 +56,7 @@ const StyledSlider = styled.div`
 		${styles.mixins.circle()};
 		${styles.mixins.flexCenter()};
 		position: absolute;
-		top: calc(var(--track-thickness) / 2);
+		inset-block-start: calc(var(--track-thickness) / 2);
 		inset-inline-start: ${valueCalc};
 		background-color: ${c("fill-color-control-solid-default")};
 		box-shadow:
@@ -89,7 +99,19 @@ const StyledSlider = styled.div`
 	${styles.mixins.forwardFocusRing(".thumb")};
 `;
 
-export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, step, keyStep = 1, disabled = false, onChanging, onChanged }: FCP<{
+const StyledSliderWrapper = styled.div`
+	display: flex;
+	gap: 8px;
+	align-items: center;
+
+	.display-value {
+		${styles.effects.text.body};
+		color: ${c("fill-color-text-secondary")};
+		font-variant-numeric: tabular-nums;
+	}
+`;
+
+export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, step, keyStep = 1, disabled = false, displayValue: _displayValue = false, onChanging, onChanged }: FCP<{
 	/** Current value. */
 	value: StateProperty<number>;
 	/** Slider minimum value. */
@@ -104,6 +126,8 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 	keyStep?: number;
 	/** Disabled */
 	disabled?: boolean;
+	/** Show the text indicates the value? Or get the display text from the value. */
+	displayValue?: boolean | ((value: number) => Readable) | Readable;
 	/** The slider is dragging event. */
 	onChanging?(value: number): void;
 	/** The slider is lifted after being dragged event. */
@@ -188,8 +212,16 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 		setValue?.(clampValue(value + (movePrev ? -1 : 1) * keyStep));
 	}, [value]);
 
+	const displayValue = (() => {
+		if (_displayValue === false || _displayValue === undefined) return undefined;
+		else if (_displayValue === true) return step ? value.toFixed(step.countDecimals()) : value;
+		else if (typeof _displayValue === "function") return _displayValue(value);
+		else return _displayValue;
+	})();
+
 	return (
-		<div>
+		<StyledSliderWrapper>
+			<span className="display-value">{displayValue}</span>
 			<StyledSlider
 				tabIndex={0}
 				style={{
@@ -204,6 +236,6 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 				<div className="passed" />
 				<div className={["thumb", { pressed }]} onPointerDown={onThumbDown} />
 			</StyledSlider>
-		</div>
+		</StyledSliderWrapper>
 	);
 }

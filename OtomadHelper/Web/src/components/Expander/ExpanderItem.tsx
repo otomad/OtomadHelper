@@ -3,6 +3,7 @@ import ExpanderItemCurve from "./ExpanderItemCurve";
 export /* @internal */ const styledExpanderItemBase = css`
 	container: setting-card-base;
 	display: flex;
+	flex-wrap: wrap;
 	gap: 16px;
 	align-items: center;
 	min-height: 48px;
@@ -38,13 +39,19 @@ export /* @internal */ const styledExpanderItemContent = css`
 	${styledExpanderItemText};
 
 	.text {
+		flex: 1;
 		width: 100%;
+
+		.title {
+			hyphens: none;
+		}
 	}
 
 	.trailing {
 		display: flex;
 		gap: 1rem;
 		align-items: center;
+		margin-inline-start: auto;
 
 		.trailing-icon {
 			${styles.mixins.square("30px")};

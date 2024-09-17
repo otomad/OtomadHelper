@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, details: _details, $itemWidth, radioGroup, itemsViewItemAttrs, hideCustom = true, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, details: _details, $itemWidth, radioGroup, itemsViewItemAttrs, hideCustom = true, before, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly T[];
 	/** The identifier of the currently selected value. */
@@ -53,6 +53,8 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	 * If you don't want this feature, pass `false`.
 	 */
 	hideCustom?: boolean | string;
+	/** The children before its items. */
+	before?: ReactNode;
 	/** Fired when the item is clicked. */
 	onItemClick?: MouseEventHandler<HTMLElement>;
 	onItemContextMenu?(item: T, event: React.MouseEvent<HTMLElement, MouseEvent>): void;
@@ -84,6 +86,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	const details = typeof _details === "function" ? _details(value, items) : _details;
 	return (
 		<Expander {...settingsCardProps} checkInfo={checkInfo} details={details}>
+			{before}
 			{!view ? filteredItems.map(item => (
 				<RadioButton
 					value={[value as T, setValue]}

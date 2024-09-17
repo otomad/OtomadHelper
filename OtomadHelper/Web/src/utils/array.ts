@@ -142,6 +142,10 @@
 		return this;
 	};
 
+	Array.prototype.asyncMap = function (callbackfn, thisArg) {
+		return Promise.all(this.map(callbackfn, thisArg));
+	};
+
 	makePrototypeKeysNonEnumerable(Array);
 }
 

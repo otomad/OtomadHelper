@@ -11,15 +11,20 @@ export interface BackgroundImageRowWithMore extends BackgroundImageRow {
 	key: string;
 }
 
-const blobToUrl = proxyMap<Blob, string>();
+const keyToUrl = proxyMap<string, string>();
 const _config = createStore({ items: [] as BackgroundImageRowWithMore[] }); // FIXME: 简单的场合变复杂了！
 
 export function useBackgroundImages() {
 	const store = useRef<IndexedDBStore<BackgroundImageRow>>();
 	type Store = NonNull<typeof store.current>;
 	const config = useSnapshot(_config);
-	const { backgroundImage: [backgroundImage, _setBackgroundImage] } = selectConfig(c => c.settings);
-	const setBackgroundImage: typeof _setBackgroundImage = value => getCurrentState(_setBackgroundImage).then(prev => startCircleViewTransition((typeof value === "function" ? value(prev) : value) !== "-1", () => _setBackgroundImage(value)));
+	const { backgroundImage } = useSnapshot(configStore.settings);
+	const setBackgroundImage: SetStateNarrow<typeof backgroundImage> = value => {
+		const previous = configStore.settings.backgroundImage;
+		const current = typeof value === "function" ? value(previous) : value;
+		if (current !== previous)
+			startCircleViewTransition(current !== "-1", () => configStore.settings.backgroundImage = current);
+	};
 	const currentImage = useMemo(() => config.items.find(item => item.key === backgroundImage)?.url ?? "", [config.items, backgroundImage]);
 
 	useAsyncMountEffect(async () => {
@@ -33,10 +38,11 @@ export function useBackgroundImages() {
 
 	async function updateItems() {
 		if (!store.current || !store.current.isDatabaseOpen) return;
-		const items = await Promise.all(await store.current.map(async (value, key) => {
-			const url: string = await Map.prototype.getOrInit.apply(blobToUrl, [value.imageData, async () => await fileToBlob(value.imageData)]);
-			return { ...value, url, key: key.toString() };
-		}));
+		const items = await store.current.map(async (value, key) => {
+			key = key.toString();
+			const url: string = await Map.prototype.getOrInit.apply(keyToUrl, [key, async () => await fileToBlob(value.imageData)]);
+			return { ...value, url, key };
+		});
 		_config.items = [{ imageData: null!, filename: "", url: "", key: "-1" }, ...items];
 	}
 
@@ -50,10 +56,11 @@ export function useBackgroundImages() {
 	}
 
 	async function delete_(key: string) {
-		if (!store.current) return;
+		if (!store.current || +key < 0) return;
+		setBackgroundImage(backgroundImage => backgroundImage === key ? "-1" : backgroundImage);
+		await nextAnimationTick();
 		await store.current.delete(+key);
 		updateItems();
-		setBackgroundImage(backgroundImage => backgroundImage === key ? "-1" : backgroundImage);
 	}
 
 	return {

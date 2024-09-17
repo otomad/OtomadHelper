@@ -90,7 +90,7 @@ export default {
 		},
 		stream: {
 			stretch: {},
-			noLengthening: {},
+			unlengthen: {},
 			legato: {},
 			transformMethod: {},
 			playingTechniques: {
@@ -152,6 +152,7 @@ export default {
 				colorScheme: {
 					auto: "Tự động",
 				},
+				backgroundImage: {},
 			},
 			config: {},
 			dev: {},
@@ -165,6 +166,7 @@ export default {
 			},
 			score: {},
 			stream: {
+				resampleImitatively: {},
 				playingTechniques: {
 					glissando: {},
 					appoggiatura: {},

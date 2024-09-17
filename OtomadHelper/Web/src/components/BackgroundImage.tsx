@@ -5,23 +5,32 @@ const StyledBackgroundImage = styled.div`
 
 	&,
 	* {
+		${styles.mixins.square("100%")};
+		inset: 0;
 		transition: none;
 	}
 
 	img {
-		${styles.mixins.square("100%")};
 		object-fit: cover;
+	}
+
+	.overlay {
+		position: absolute;
+		background-color: ${c("accent-color")};
+		mix-blend-mode: screen;
 	}
 `;
 
 export default function BackgroundImage() {
 	const { currentImage } = useBackgroundImages();
+	const { backgroundImageOpacity: [opacity], backgroundImageTint: [tint], backgroundImageBlur: [blur] } = selectConfig(c => c.settings);
 
 	if (!currentImage) return;
 
 	return (
-		<StyledBackgroundImage>
-			<img key={currentImage} src={currentImage} />
+		<StyledBackgroundImage style={{ opacity }}>
+			<img key={currentImage} src={currentImage} style={{ filter: `blur(${blur}px)` }} />
+			<div className="overlay" style={{ opacity: tint }} />
 		</StyledBackgroundImage>
 	);
 }
