@@ -202,24 +202,5 @@ export function mapObjectConst<const T extends string, U>(array: T[], callbackFn
 	return Object.fromEntries(array.map((value, index, array) => ([value, callbackFn(value, index, array)] as [T, U]))) as Record<T, U>;
 }
 
-// #region Tuples
-/** Creates a new 1-tuple or singleton that is correctly recognized by TypeScript. */
-export function Tuple<T1>(item1: T1): [T1];
-/** Creates a new 2-tuple or pair that is correctly recognized by TypeScript. */
-export function Tuple<T1, T2>(item1: T1, item2: T2): [T1, T2];
-/** Creates a new 3-tuple or triple that is correctly recognized by TypeScript. */
-export function Tuple<T1, T2, T3>(item1: T1, item2: T2, item3: T3): [T1, T2, T3];
-/** Creates a new 4-tuple or quadruple that is correctly recognized by TypeScript. */
-export function Tuple<T1, T2, T3, T4>(item1: T1, item2: T2, item3: T3, item4: T4): [T1, T2, T3, T4];
-/** Creates a new 5-tuple or quintuple that is correctly recognized by TypeScript. */
-export function Tuple<T1, T2, T3, T4, T5>(item1: T1, item2: T2, item3: T3, item4: T4, item5: T5): [T1, T2, T3, T4, T5];
-/** Creates a new 6-tuple or sextuple that is correctly recognized by TypeScript. */
-export function Tuple<T1, T2, T3, T4, T5, T6>(item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6): [T1, T2, T3, T4, T5, T6];
-/** Creates a new 7-tuple or septuple that is correctly recognized by TypeScript. */
-export function Tuple<T1, T2, T3, T4, T5, T6, T7>(item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7): [T1, T2, T3, T4, T5, T6, T7];
-/** Creates a new 8-tuple or octuple that is correctly recognized by TypeScript. */
-export function Tuple<T1, T2, T3, T4, T5, T6, T7, T8>(item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8): [T1, T2, T3, T4, T5, T6, T7, T8];
-export function Tuple(...args: unknown[]) {
-	return [...args];
-}
-// #endregion
+/** Creates a new tuple that is correctly recognized by TypeScript. */
+export const Tuple = <T extends Any[]>(...args: T): T => args;
