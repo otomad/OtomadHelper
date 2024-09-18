@@ -576,7 +576,7 @@ export default {
 				},
 			},
 			track: {
-				_: "Automatic layout of selected tracks in YTPMV-like style.",
+				_: "Layout is one of the core points in the visual production process of YTPMV. Learn about composition, knowing how to make a good visual layout for a YTPMV will make it much more enjoyable to watch than you would expect.\nBasically, make sure your melody sample is the most prominent thing in the visuals.",
 				gradient: "Gives the video tracks a gradient color effect in your layout",
 				legato: "Fills in the gaps between the track clips",
 				resetLayout: "Reset the status of this layout to disable it",
