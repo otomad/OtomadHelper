@@ -1,3 +1,10 @@
+/* eslint-disable dot-notation */
+import midi from "assets/audios/Second Heaven.mid?keyframes";
+import type { Keyframes } from "styled-components/dist/types";
+
+const flippedKeyframes = convertMidiToKeyframes(midi);
+console.log(midi);
+
 const FLIPPING_SCALE = 1.3;
 
 const StyledPreviewLayout = styled.div<{
@@ -71,7 +78,6 @@ const StyledPreviewLayout = styled.div<{
 			}
 		}
 
-		// TODO: Replace it with real midi score.
 		/* stylelint-disable-next-line no-duplicate-selectors */
 		&::before {
 			animation: ${keyframes`
@@ -90,7 +96,15 @@ const StyledPreviewLayout = styled.div<{
 				100% {
 					scale: -1 1;
 				}
-			`} ${eases.easeOutMax} 1s infinite;
+			`} ${eases.easeOutMax} 25.77s infinite;
+		}
+
+		&.lead::before {
+			animation-name: ${flippedKeyframes["Melody"]()};
+		}
+
+		&.bass::before {
+			animation-name: ${flippedKeyframes["Chord"]()};
 		}
 	}
 
@@ -104,6 +118,22 @@ const StyledPreviewLayout = styled.div<{
 
 		section {
 			--size: 75%;
+
+			&:nth-of-type(1)::before {
+				animation-name: ${flippedKeyframes["Ring"]()};
+			}
+
+			&:nth-of-type(2)::before {
+				animation-name: ${flippedKeyframes["Arpeggio"]()};
+			}
+
+			&:nth-of-type(3)::before {
+				animation-name: ${flippedKeyframes["Bass"]()};
+			}
+
+			&:nth-of-type(4)::before {
+				animation-name: ${flippedKeyframes["Bass #2"]()};
+			}
 		}
 	}
 `;
@@ -123,4 +153,28 @@ export default function PreviewLayout({ thumbnail }: FCP<{
 			</div>
 		</StyledPreviewLayout>
 	);
+}
+
+function convertMidiToKeyframes(mid: typeof midi) {
+	const result: Record<string, () => Keyframes> = {};
+	const toPercents = (percents: number[]) => percents.map(number => number + "%").join(",");
+	for (const [name, notes] of Object.entries(mid))
+		result[name] = () => keyframes`
+			${toPercents(notes[0])} {
+				scale: ${FLIPPING_SCALE};
+			}
+
+			${toPercents(notes[1])} {
+				scale: 1;
+			}
+
+			${toPercents(notes[2])} {
+				scale: -${FLIPPING_SCALE} ${FLIPPING_SCALE};
+			}
+
+			${toPercents(notes[3])} {
+				scale: -1 1;
+			}
+		`;
+	return result;
 }

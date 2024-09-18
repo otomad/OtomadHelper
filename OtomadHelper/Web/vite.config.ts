@@ -14,6 +14,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import autoImportConfig from "./auto-import.config";
 import fragmentFiltersVirtualFile from "./src/plugins/vite/fragment-filters";
 import globalized from "./src/plugins/vite/globalized";
+import midiKeyframes from "./src/plugins/vite/midi";
 import svgCursor from "./src/plugins/vite/svg-cursor";
 
 const resolve = (...paths: string[]) => _resolve(__dirname, ...paths);
@@ -90,6 +91,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				include: [/\.(x?html?|mht(ml)?|hta|md|css|s[ca]ss|less|styl|[mc]?[jt]sx?|json[5c]?|ya?ml|xa?ml|toml|ini|config|map|(web)?manifest|appcache|[to]tf|ttc|vtt|svg|bmp|ico|cur|ani)$/iu],
 			}), */
 			turboConsole(),
+			midiKeyframes(),
 		],
 		base: "",
 		publicDir: "src/public",

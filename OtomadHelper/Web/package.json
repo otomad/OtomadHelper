@@ -65,6 +65,7 @@
 		"@styled/typescript-styled-plugin": "^1.0.1",
 		"@stylistic/eslint-plugin": "^1.7.0",
 		"@stylistic/stylelint-plugin": "^2.1.1",
+		"@tonejs/midi": "^2.0.28",
 		"@types/jsdom": "^21.1.7",
 		"@types/license-checker": "^25.0.6",
 		"@types/lodash-es": "^4.17.12",
