@@ -1,3 +1,5 @@
+import type { MenuOutput } from "utils/context-menu";
+
 export { };
 
 declare global {
@@ -70,5 +72,9 @@ declare global {
 		 * Check if it is running in the WebView environment.
 		 */
 		isWebView: boolean;
+		/**
+		 * A global variable indicates the current context menu and its items.
+		 */
+		contextMenu?: MenuOutput;
 	}
 }

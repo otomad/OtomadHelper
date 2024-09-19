@@ -24,6 +24,7 @@ export default function App() {
 			<BackgroundImage />
 			<GlobalStyle $ready={ready} />
 			<ShellPage />
+			<DevContextMenu />
 			<div id="portals" />
 		</>
 	);

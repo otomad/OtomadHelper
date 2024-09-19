@@ -103,7 +103,7 @@ public partial class MainDock : UserControl {
 			string json = e.WebMessageAsJson;
 			JsonNode? node = JsonNode.Parse(json);
 			if (node?.GetValueKind() == JsonValueKind.Number) {
-				
+
 			}
 			Debug.WriteLine(node);
 		}
@@ -172,7 +172,7 @@ public partial class MainDock : UserControl {
 		ContextMenuTarget target = ContextMenuTarget.Ignore;
 		string deletedItem = "";
 		CoreWebView2Deferral deferral = e.GetDeferral();
-		HTMLElementAttributes[] attrs = await PostWebMessageAndGetResult<HTMLElementAttributes[]>(e.Location, "elementFromPoint");
+		HTMLElementAttributes[] attrs = await PostWebMessageAndGetResult<HTMLElementAttributes[]>(e.Location, "elementFromPoint"); // TODO: refactor
 		foreach (HTMLElementAttributes attr in attrs) {
 			if (attr.tag == "input" && attr.type == "text" || attr.tag == "textarea") {
 				target = ContextMenuTarget.TextBox;

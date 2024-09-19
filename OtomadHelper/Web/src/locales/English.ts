@@ -688,16 +688,14 @@ export default {
 				gotoYtp: "Go to YTP",
 			},
 		},
+		menu: {
+			delete: "&Delete",
+		},
 	},
 	csharp: {
 		mainDock: {
 			toolTip: {
 				importToHere: "Import %1",
-			},
-		},
-		coreWebView: {
-			menuItem: {
-				delete: "&Delete",
 			},
 		},
 		contentDialog: {

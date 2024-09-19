@@ -5,7 +5,7 @@ type ApplicationEvents = {
 	[host: `host:${string}` & {}]: AnyObject;
 	"host:dragOver": WebMessageEvents.DragOver;
 	"host:consoleLog": WebMessageEvents.ConsoleLog;
-	"host:elementFromPoint": { x: number; y: number };
+	"dev:showContextMenu": [e: MouseEvent, menu: typeof window["contextMenu"] & {}];
 };
 
 const emitter = mitt<ApplicationEvents>();

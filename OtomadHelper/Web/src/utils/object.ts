@@ -440,7 +440,7 @@ export function makePrototypeKeysNonEnumerable(constructor: AnyConstructor) {
  *     }
  * }
  *
- * defineGetterInPrototype(MyClass, "value", function(this: MyClass) {
+ * defineGetterInPrototype(MyClass, "value", function (this: MyClass) {
  *     return this._value;
  * });
  *

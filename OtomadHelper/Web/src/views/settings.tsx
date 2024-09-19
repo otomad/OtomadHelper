@@ -49,7 +49,11 @@ export default function Settings() {
 				idField="key"
 				imageField="url"
 				checkInfoCondition={showBackgroundImage ? t.on : t.off}
-				onItemContextMenu={(item, e) => { if (item.key !== -1) { stopEvent(e); backgroundImages.delete(item.key); } }}
+				onItemContextMenu={(item, e) => {
+					if (item.key !== -1) createContextMenu([
+						{ label: t.menu.delete, onClick: () => backgroundImages.delete(item.key) },
+					])(e);
+				}}
 				before={(
 					<Expander.ChildWrapper>
 						<Button icon="open_file" onClick={addBackgroundImage}>{t.browse}</Button>

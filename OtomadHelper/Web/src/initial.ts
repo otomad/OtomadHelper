@@ -11,15 +11,13 @@ import "utils/bridge";
 
 import { enableMapSet } from "immer";
 
-const isProdMode = () => !devStore.devMode;
-
 /**
  * Run before the web DOM is loading.
  */
 { // Initial
 	// #region Prevent context menu triggers by right click
 	window.addEventListener("contextmenu", e => {
-		if (!isInPath(e.target, 'input[type="text"], textarea, [contenteditable="true"], [data-delete]') && isProdMode())
+		if (!isInPath(e.target, 'input[type="text"], textarea, [contenteditable="true"]') && isProdMode())
 			e.preventDefault();
 	});
 	// #endregion
