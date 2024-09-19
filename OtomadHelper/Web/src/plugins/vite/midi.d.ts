@@ -10,7 +10,10 @@ declare module "*.midi" {
 }
 
 declare module "*.mid?keyframes" {
-	const midi: Record<string, [number[], number[], number[], number[]]>;
+	const midi: {
+		tracks: Record<string, [number[], number[], number[], number[]]>;
+		length: number;
+	};
 	export default midi;
 }
 

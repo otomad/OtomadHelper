@@ -25,7 +25,7 @@ export default (): Plugin => {
 			const midi = new Midi(midiData);
 			if (isMidiKeyframes) {
 				const resultNotes: Record<string, { start: number; end: number }[]> = {};
-				let maxTicks = 0;
+				let maxTicks = 0, maxSeconds = 0;
 				midi.tracks.forEach((track, i) => {
 					if (!track.name) {
 						const prevTrack = midi.tracks[i - 1];
@@ -40,13 +40,14 @@ export default (): Plugin => {
 							if (note.ticks === prevNote.start) continue;
 							if (note.ticks <= prevNote.end) prevNote.end = note.ticks - TICK_GAP;
 						}
-						const end = note.ticks + note.durationTicks;
+						const end = note.ticks + note.durationTicks, endSeconds = note.time + note.duration;
 						notes.push({ start: note.ticks, end });
 						if (end > maxTicks) maxTicks = end;
+						if (endSeconds > maxSeconds) maxSeconds = endSeconds;
 					}
 					resultNotes[track.name] = notes;
 				});
-				const resultKeyframes: Record<string, [number[], number[], number[], number[]]> = {};
+				const resultKeyframes: typeof import("*.mid?keyframes").default.tracks = {};
 				for (const [name, notes] of Object.entries(resultNotes)) {
 					resultKeyframes[name] = [[], [], [], []];
 					const result = resultKeyframes[name];
@@ -59,10 +60,13 @@ export default (): Plugin => {
 						flipped = !flipped;
 					}
 				}
-				return { code: "export default " + JSON.stringify(resultKeyframes) };
+				return "export default " + JSON.stringify({
+					tracks: resultKeyframes,
+					length: maxSeconds,
+				});
 			}
 
-			return { code: "export default " + JSON.stringify(midi) };
+			return "export default " + JSON.stringify(midi);
 		},
 	};
 };

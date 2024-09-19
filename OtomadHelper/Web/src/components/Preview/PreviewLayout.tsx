@@ -2,8 +2,7 @@
 import midi from "assets/audios/Second Heaven.mid?keyframes";
 import type { Keyframes } from "styled-components/dist/types";
 
-const flippedKeyframes = convertMidiToKeyframes(midi);
-console.log(midi);
+const flippedKeyframes = convertMidiToKeyframes(midi.tracks);
 
 const FLIPPING_SCALE = 1.3;
 
@@ -96,7 +95,7 @@ const StyledPreviewLayout = styled.div<{
 				100% {
 					scale: -1 1;
 				}
-			`} ${eases.easeOutMax} 25.77s infinite;
+			`} ${eases.easeOutMax} ${midi.length}s infinite;
 		}
 
 		&.lead::before {
@@ -155,7 +154,7 @@ export default function PreviewLayout({ thumbnail }: FCP<{
 	);
 }
 
-function convertMidiToKeyframes(mid: typeof midi) {
+function convertMidiToKeyframes(mid: typeof import("*.mid?keyframes").default.tracks) {
 	const result: Record<string, () => Keyframes> = {};
 	const toPercents = (percents: number[]) => percents.map(number => number + "%").join(",");
 	for (const [name, notes] of Object.entries(mid))
