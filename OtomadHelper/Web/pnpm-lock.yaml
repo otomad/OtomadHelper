@@ -79,6 +79,9 @@ importers:
       immer:
         specifier: ^10.0.4
         version: 10.0.4
+      jotai-valtio:
+        specifier: ^0.5.0
+        version: 0.5.0(jotai@2.9.3(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(valtio@1.13.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -2645,6 +2648,24 @@ packages:
   jiti@1.21.6:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
     hasBin: true
+
+  jotai-valtio@0.5.0:
+    resolution: {integrity: sha512-4XVKGhPe3/XFkMwuYLGk8CkWISsog5KRnHtB3bSo0cr7+xb5wm0uJl142pe+Kbls7dQGrYXLt1eurYdibfalnQ==}
+    peerDependencies:
+      jotai: '>=2.0.0'
+      valtio: '>=1.0.0'
+
+  jotai@2.9.3:
+    resolution: {integrity: sha512-IqMWKoXuEzWSShjd9UhalNsRGbdju5G2FrqNLQJT+Ih6p41VNYe2sav5hnwQx4HJr25jq9wRqvGSWGviGG6Gjw==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -6938,6 +6959,16 @@ snapshots:
       set-function-name: 2.0.2
 
   jiti@1.21.6: {}
+
+  jotai-valtio@0.5.0(jotai@2.9.3(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)))(valtio@1.13.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))):
+    dependencies:
+      jotai: 2.9.3(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+      valtio: 1.13.2(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym))
+
+  jotai@2.9.3(@types/react@18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby))(react@18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)):
+    optionalDependencies:
+      '@types/react': 18.2.78(patch_hash=elhs2bm6qbyerx2izl4w7ytzby)
+      react: 18.2.0(patch_hash=ctassvsoyoddchcpsn57aedcym)
 
   js-tokens@4.0.0: {}
 

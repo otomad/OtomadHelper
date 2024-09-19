@@ -66,6 +66,10 @@ export default [
 			"withProp",
 			"switchProp",
 		],
+		"jotai": [
+			"atom",
+			"useAtom",
+		],
 	},
 	/* {
 		from: "react",

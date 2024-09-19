@@ -11,13 +11,13 @@ export interface BackgroundImageRowWithMore extends BackgroundImageRow {
 	key: number;
 }
 
-const keyToUrl = proxyMap<string, string>();
-const _config = createStore({ items: [] as BackgroundImageRowWithMore[] }); // FIXME: 简单的场合变复杂了！
+const keyToUrl = proxyMap<number, string>();
+const itemsAtom = atom<BackgroundImageRowWithMore[]>([]);
 
 export function useBackgroundImages() {
 	const store = useRef<IndexedDBStore<BackgroundImageRow>>();
 	type Store = NonNull<typeof store.current>;
-	const config = useSnapshot(_config);
+	const [items, setItems] = useAtom(itemsAtom);
 	const { backgroundImage } = useSnapshot(configStore.settings);
 	const setBackgroundImage: SetStateNarrow<typeof backgroundImage> = value => {
 		const previous = configStore.settings.backgroundImage;
@@ -25,7 +25,7 @@ export function useBackgroundImages() {
 		if (current !== previous)
 			startCircleViewTransition(current !== -1, () => configStore.settings.backgroundImage = current);
 	};
-	const currentImage = useMemo(() => config.items.find(item => item.key === backgroundImage)?.url ?? "", [config.items, backgroundImage]);
+	const currentImage = useMemo(() => items.find(item => item.key === backgroundImage)?.url ?? "", [items, backgroundImage]);
 
 	useAsyncMountEffect(async () => {
 		store.current = new IndexedDBStore<BackgroundImageRow>("ImagesDB", 1, "backgroundImages", {
@@ -43,7 +43,7 @@ export function useBackgroundImages() {
 			const url: string = await Map.prototype.getOrInit.apply(keyToUrl, [key, async () => await fileToBlob(value.imageData)]);
 			return { ...value, url, key };
 		});
-		_config.items = [{ imageData: null!, filename: "", url: "", key: -1 }, ...items];
+		setItems([{ imageData: null!, filename: "", url: "", key: -1 }, ...items]);
 	}
 
 	async function add(image: File) {
@@ -59,12 +59,14 @@ export function useBackgroundImages() {
 		if (!store.current || +key < 0) return;
 		setBackgroundImage(backgroundImage => backgroundImage === key ? -1 : backgroundImage);
 		await nextAnimationTick();
+		URL.revokeObjectURL(keyToUrl.get(key) ?? "");
+		keyToUrl.delete(key);
 		await store.current.delete(+key);
 		updateItems();
 	}
 
 	return {
-		items: config.items,
+		items,
 		update: updateItems,
 		add,
 		map: (...args: Parameters<Store["map"]>) => store.current?.map(...args),
