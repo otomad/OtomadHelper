@@ -213,9 +213,11 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 	}, [value]);
 
 	const displayValue = (() => {
+		const steppedSmoothValue = step ? smoothValue.toFixed(step.countDecimals()) : smoothValue;
 		if (_displayValue === false || _displayValue === undefined) return undefined;
-		else if (_displayValue === true) return step ? value.toFixed(step.countDecimals()) : value;
-		else if (typeof _displayValue === "function") return _displayValue(value);
+		else if (_displayValue === true) return steppedSmoothValue;
+		else if (typeof _displayValue === "function") return _displayValue(+steppedSmoothValue);
+		// It is possible to expose more types of values (such as the original value with long decimals, unclamped value, etc.), but it is unnecessary at the moment.
 		else return _displayValue;
 	})();
 

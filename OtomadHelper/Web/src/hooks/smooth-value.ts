@@ -9,6 +9,7 @@ interface SmoothValueOptions<T extends SmoothValueAcceptType> {
 
 const EPSILON = 0.01; // Number.EPSILON
 const isValueNotChanged = (cur: number, prev: number) => Math.abs(cur - prev) < EPSILON;
+const DEFAULT_FPS = 60;
 
 /**
  * Create a smooth responsive reference variable based on a numerical value, array, or point.
@@ -47,10 +48,11 @@ export function useSmoothValue<T extends SmoothValueAcceptType>(current: T, spee
 			}
 		}
 	});
+	const fps = useMonitorFps();
 	useEffect(() => {
 		const animation = () => {
 			const value = current;
-			const getNewValue = (cur: number, prev: number) => +(prev + (cur - prev) * speed).toFixed(FRACTION_DIGITS);
+			const getNewValue = (cur: number, prev: number) => +(prev + (cur - prev) * (speed / fps * DEFAULT_FPS)).toFixed(FRACTION_DIGITS);
 			if (typeof value === "number")
 				(setSmoothValue as SetStateNarrow<number>)(prev => getNewValue(value, prev));
 			else if (value instanceof Point)
@@ -61,7 +63,7 @@ export function useSmoothValue<T extends SmoothValueAcceptType>(current: T, spee
 			else
 				(setSmoothValue as SetStateNarrow<number[]>)(prevs => prevs.map((prev, i) =>
 					getNewValue(value[i], prev)));
-			animationId.current = requestAnimationFrame(animation);
+			animationId.current = requestAnimationFrame(animation); // Note that `requestAnimationFrame` speed depends on your monitor FPS.
 		};
 		animation();
 		return () => cancelAnimationFrame(animationId.current!);

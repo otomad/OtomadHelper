@@ -459,3 +459,24 @@ export async function setStyleTemporarily(element: HTMLElement, style: CSSProper
 	resolve();
 	setStyleTemporarilyQueue.removeItem(promise);
 }
+
+/**
+ * Get user's current monitor frame rate per seconds.
+ * @returns Monitor FPS.
+ * @see https://stackoverflow.com/questions/6131051
+ */
+export const getMonitorFps = lodash.throttle(function () {
+	return new Promise<number>(resolve =>
+		requestAnimationFrame(t1 =>
+			requestAnimationFrame(t2 => resolve(1000 / (t2 - t1))),
+		),
+	);
+}, 1000);
+
+const monitorFps = createStore({ value: 60 });
+setInterval(() => getMonitorFps()?.then(fps => monitorFps.value = clamp(fps, 10, 300)), 1000);
+/**
+ * Get user's current monitor frame rate per seconds.
+ * @returns Monitor FPS.
+ */
+export const useMonitorFps = () => useSnapshot(monitorFps).value;
