@@ -116,7 +116,7 @@ export default function Prve() {
 			{PrveClass.all.map(({ class: klass, icon, effectIds, findEffectFrames }) => {
 				const currentEffectState = selectPrve(klass), currentEffect = currentEffectState[0]!;
 				return (
-					<ExpanderRadio<string>
+					<ExpanderRadio
 						key={klass}
 						title={t.prve.classes[klass]}
 						disabled={!control[0]}

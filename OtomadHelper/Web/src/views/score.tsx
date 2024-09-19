@@ -107,7 +107,7 @@ export default function Score() {
 	} = selectConfig(c => c.score);
 	const { enabled: [ytpEnabled] } = selectConfig(c => c.ytp);
 
-	const setSelectTrackItems = (recipe: (draft: typeof selectTrackItems) => void) => (_setSelectTrackItems as SetStateNarrow<typeof selectTrackItems>)(produce(recipe));
+	const setSelectTrackItems = (recipe: (draft: typeof selectTrackItems) => void) => _setSelectTrackItems(produce(recipe));
 
 	const [isMultiple, setIsMultiple] = useStateSelector(
 		[selectedTrack, setSelectedTrack],
@@ -137,7 +137,7 @@ export default function Score() {
 	function handleTrackItemsClick(index: number, item: typeof multipleSelectTrackItems[number]) {
 		setSelectTrackItems(tracks => {
 			tracks[index]?.toggle(item);
-			(setSelectedTrack as SetStateNarrow<number | number[]>)?.(produce(selectedTrack => {
+			setSelectedTrack?.(produce(selectedTrack => {
 				if (typeof selectedTrack !== "number")
 					if (!tracks[index].size) selectedTrack.removeItem(index);
 					else selectedTrack.pushUniquely(index);
@@ -212,7 +212,7 @@ export default function Score() {
 				details={t.descriptions.score.bpm}
 				icon="speed"
 				items={bpmUsings}
-				value={bpmUsing as StateProperty<string>}
+				value={bpmUsing}
 				view="tile"
 				idField="id"
 				nameField="name"
@@ -228,7 +228,7 @@ export default function Score() {
 				details={t.descriptions.score.constraint}
 				icon="constraint"
 				items={constraintNoteLengthTypes}
-				value={constraintNoteLengthType as StateProperty<string>}
+				value={constraintNoteLengthType}
 				view="tile"
 				idField="id"
 				nameField={t.score.constraint}

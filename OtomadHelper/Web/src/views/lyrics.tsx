@@ -41,7 +41,7 @@ export default function Shupelunker() {
 							details={t.descriptions.lyrics.pitchNotation.type}
 							icon="music_note"
 							items={pitchNotations}
-							value={type as StateProperty<string>}
+							value={type}
 							view="tile"
 							idField
 							nameField={t.lyrics.pitchNotation}

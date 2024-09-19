@@ -193,7 +193,7 @@ export const configStore = createStore({
 		clips: 30,
 	},
 	settings: {
-		backgroundImage: "-1",
+		backgroundImage: -1,
 		backgroundImageOpacity: 0.2,
 		backgroundImageTint: 0,
 		backgroundImageBlur: 0,

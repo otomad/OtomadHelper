@@ -12,7 +12,7 @@ export default function Settings() {
 		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur,
 	} = selectConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
-	const showBackgroundImage = backgroundImages.backgroundImage[0] !== "-1";
+	const showBackgroundImage = backgroundImages.backgroundImage[0] !== -1;
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -39,7 +39,7 @@ export default function Settings() {
 			/>
 
 			<Subheader>{t.settings.appearance}</Subheader>
-			<ExpanderRadio<BackgroundImageRowWithMore>
+			<ExpanderRadio
 				title={t.settings.appearance.backgroundImage}
 				icon="wallpaper"
 				items={backgroundImages.items}
@@ -49,7 +49,7 @@ export default function Settings() {
 				idField="key"
 				imageField="url"
 				checkInfoCondition={showBackgroundImage ? t.on : t.off}
-				onItemContextMenu={(item, e) => { if (item.key !== "-1") { stopEvent(e); backgroundImages.delete(item.key); } }}
+				onItemContextMenu={(item, e) => { if (item.key !== -1) { stopEvent(e); backgroundImages.delete(item.key); } }}
 				before={(
 					<Expander.ChildWrapper>
 						<Button icon="open_file" onClick={addBackgroundImage}>{t.browse}</Button>
@@ -97,7 +97,7 @@ export default function Settings() {
 				items={schemes}
 				expanded
 				view="grid"
-				value={[scheme, setScheme as SetState<string>]}
+				value={[scheme, setScheme]}
 				idField
 				nameField={t.settings.appearance.colorScheme}
 				imageField={colorScheme => <PreviewColorScheme colorScheme={colorScheme} currentColorScheme={scheme} />}

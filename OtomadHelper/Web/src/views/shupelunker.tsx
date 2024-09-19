@@ -21,7 +21,7 @@ export default function Shupelunker() {
 						details={t.descriptions.shupelunker.affix}
 						icon="music_note_strikethrough"
 						items={affixes}
-						value={affix as StateProperty<string>}
+						value={affix}
 						view="tile"
 						idField="id"
 						nameField={t.shupelunker.affix}

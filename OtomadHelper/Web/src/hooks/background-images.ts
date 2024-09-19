@@ -8,7 +8,7 @@ interface BackgroundImageRow {
 
 export interface BackgroundImageRowWithMore extends BackgroundImageRow {
 	url: string;
-	key: string;
+	key: number;
 }
 
 const keyToUrl = proxyMap<string, string>();
@@ -23,7 +23,7 @@ export function useBackgroundImages() {
 		const previous = configStore.settings.backgroundImage;
 		const current = typeof value === "function" ? value(previous) : value;
 		if (current !== previous)
-			startCircleViewTransition(current !== "-1", () => configStore.settings.backgroundImage = current);
+			startCircleViewTransition(current !== -1, () => configStore.settings.backgroundImage = current);
 	};
 	const currentImage = useMemo(() => config.items.find(item => item.key === backgroundImage)?.url ?? "", [config.items, backgroundImage]);
 
@@ -39,11 +39,11 @@ export function useBackgroundImages() {
 	async function updateItems() {
 		if (!store.current || !store.current.isDatabaseOpen) return;
 		const items = await store.current.map(async (value, key) => {
-			key = key.toString();
+			key = +key;
 			const url: string = await Map.prototype.getOrInit.apply(keyToUrl, [key, async () => await fileToBlob(value.imageData)]);
 			return { ...value, url, key };
 		});
-		_config.items = [{ imageData: null!, filename: "", url: "", key: "-1" }, ...items];
+		_config.items = [{ imageData: null!, filename: "", url: "", key: -1 }, ...items];
 	}
 
 	async function add(image: File) {
@@ -55,9 +55,9 @@ export function useBackgroundImages() {
 		await updateItems();
 	}
 
-	async function delete_(key: string) {
+	async function delete_(key: number) {
 		if (!store.current || +key < 0) return;
-		setBackgroundImage(backgroundImage => backgroundImage === key ? "-1" : backgroundImage);
+		setBackgroundImage(backgroundImage => backgroundImage === key ? -1 : backgroundImage);
 		await nextAnimationTick();
 		await store.current.delete(+key);
 		updateItems();

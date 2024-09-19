@@ -36,7 +36,7 @@ interface PersistOptions<TState extends object> {
  * @returns A proxy object that provides read and write access to the selected state property.
  */
 export function useStoreState<TState extends object>(state: TState): StatePropertiedObject<TState> {
-	if (!isObject(state)) return state as never;
+	if (!isObject(state)) return state;
 	return new Proxy(state as AnyObject, {
 		get(state, property) {
 			if (!(property in state)) return [];
@@ -48,6 +48,7 @@ export function useStoreState<TState extends object>(state: TState): StateProper
 			}
 			const stateProperty = [snapshot, (value: unknown) => {
 				const newValue = typeof value === "function" ? value(state[property]) : value;
+				if (state[property] === newValue) return newValue; // If the value is same as the previous value, do not reassign it.
 				return state[property] = newValue;
 			}];
 			Object.assign(stateProperty, {

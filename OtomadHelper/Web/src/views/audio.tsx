@@ -61,7 +61,7 @@ export default function Audio() {
 						details={t.descriptions.stream.stretch}
 						icon="stretch"
 						items={stretches}
-						value={stretch as StateProperty<string>}
+						value={stretch}
 						view="tile"
 						idField="id"
 						nameField={t.stream.stretch}
@@ -74,7 +74,7 @@ export default function Audio() {
 						details={t.descriptions.stream.unlengthen}
 						icon="arrow_import_prohibited"
 						items={unlengthensInAudio}
-						value={unlengthen as StateProperty<string>}
+						value={unlengthen}
 						view="tile"
 						idField="id"
 						nameField={t.stream.unlengthen}
@@ -85,7 +85,7 @@ export default function Audio() {
 						details={t.descriptions.stream.legato}
 						icon="legato"
 						items={legatos}
-						value={legato as StateProperty<string>}
+						value={legato}
 						view="grid"
 						idField="id"
 						nameField={t.stream.legato}
@@ -121,7 +121,7 @@ export default function Audio() {
 						details={id => id && t.descriptions.stream.tuning.tuningMethod[id]}
 						icon="tuning"
 						items={tuningMethods}
-						value={tuningMethod as StateProperty<string>}
+						value={tuningMethod}
 						view="tile"
 						idField="id"
 						iconField="icon"
@@ -133,7 +133,7 @@ export default function Audio() {
 							details={t.descriptions.stream.tuning.stretchAttributes}
 							icon="tuning_wrench"
 							items={[]}
-							value={stretchAttribute as StateProperty<string>}
+							value={stretchAttribute}
 							view="tile"
 							idField="id"
 							nameField={t.stream.tuning.stretchAttributes}
@@ -143,7 +143,7 @@ export default function Audio() {
 							details={t.descriptions.stream.tuning.alternativeForExceedsTheRange}
 							icon="exceeds"
 							items={exceeds}
-							value={alternativeForExceedsTheRange as StateProperty<string>}
+							value={alternativeForExceedsTheRange}
 							view="tile"
 							idField="id"
 							iconField="icon"

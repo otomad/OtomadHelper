@@ -55,7 +55,7 @@ export default function Source() {
 				details={t.descriptions.source.startTime}
 				icon="start_point"
 				items={startTimes}
-				value={startTime as StateProperty<string>}
+				value={startTime}
 				view="tile"
 				idField="id"
 				nameField="name"

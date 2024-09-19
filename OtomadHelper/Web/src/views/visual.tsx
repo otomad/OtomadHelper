@@ -85,7 +85,7 @@ export default function Visual() {
 							selectValid={false}
 							icon="stretch"
 							items={stretches}
-							value={stretch as StateProperty<string>}
+							value={stretch}
 							view="tile"
 							idField="id"
 							nameField={t.stream.stretch}
@@ -104,7 +104,7 @@ export default function Visual() {
 							details={t.descriptions.stream.unlengthen}
 							icon="arrow_import_prohibited"
 							items={unlengthens}
-							value={unlengthen as StateProperty<string>}
+							value={unlengthen}
 							view="tile"
 							idField="id"
 							nameField={t.stream.unlengthen}
@@ -116,7 +116,7 @@ export default function Visual() {
 						details={t.descriptions.stream.legato}
 						icon="legato"
 						items={legatos}
-						value={legato as StateProperty<string>}
+						value={legato}
 						view="grid"
 						idField="id"
 						nameField={t.stream.legato}

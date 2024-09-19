@@ -45,11 +45,13 @@ export function useLanguage(): StateProperty<string> {
 			document.documentElement.lang = lng;
 			document.dir = dir;
 			devStore.rtl = dir === "rtl";
-		}, {
-			clipPath: ["inset(0 0 100%)", "inset(0)"],
-		}, {
-			duration: 500,
-		});
+		}, [
+			[{
+				clipPath: ["inset(0 0 100%)", "inset(0)"],
+			}, {
+				duration: 500,
+			}],
+		]);
 	}
 
 	return [language, changeLanguage];

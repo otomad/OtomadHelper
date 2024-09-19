@@ -1,25 +1,25 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<T>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, details: _details, $itemWidth, radioGroup, itemsViewItemAttrs, hideCustom = true, before, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, details: _details, $itemWidth, radioGroup, itemsViewItemAttrs, hideCustom = true, before, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
-	items: readonly T[];
+	items: readonly TItem[];
 	/** The identifier of the currently selected value. */
-	value: Readonly<T extends string ? StateProperty<T> : StateProperty<string>>;
+	value: Readonly<StateProperty<TKey>>;
 	/**
 	 * The conditions for displaying the currently selected state.
 	 * - If it is a string, the constant string is displayed.
 	 * - If it is true, it means to determine or fix the currently selected identifier based on the idField and nameField properties.
-	 * - If it is `{ id: string; name: string }`, the required name value is looked up based on the current state of the object.
+	 * - If it is `{ id: TKey; name: string }`, the required name value is looked up based on the current state of the object.
 	 * - If it is a callback function, get the required value through the callback function.
 	 */
-	checkInfoCondition?: string | { id: string; name: string } | true | ((value: string | undefined, items: T[]) => string | undefined);
+	checkInfoCondition?: string | { id: TKey; name: string } | true | ((value: TKey | undefined, items: TItem[]) => Readable | undefined);
 	/**
 	 * The identifier field for the radio item.
 	 * - If it is a string, it represents the value of the specified field name of the currently selected object.
 	 * - If it is a callback function, get the required value through the callback function.
 	 * - If it is true, it means that the selected item is a string, and the identifier can be used directly.
 	 */
-	idField: FieldType<T>;
+	idField: FieldType<TItem>;
 	/**
 	 * The name field for the radio item.
 	 * - If it is a string, it represents the value of the specified field name of the currently selected object.
@@ -27,17 +27,17 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	 * - If it is true, it means that the selected item is a string, and the name can be used directly.
 	 * - If it is an i18n item object, it will get the value of the object from the value as the key.
 	 */
-	nameField?: FieldType<T> | object;
+	nameField?: FieldType<TItem> | object;
 	/** The icon field for the radio item. */
-	iconField?: FieldType<T> | ((item: T) => ReactNode);
+	iconField?: FieldType<TItem> | ((item: TItem) => ReactNode);
 	/** The image field for the radio item. */
-	imageField?: FieldType<T> | ((item: T) => ReactNode);
+	imageField?: FieldType<TItem> | ((item: TItem) => ReactNode);
 	/** The detailed description field for the radio item. */
-	detailsField?: FieldType<T>;
+	detailsField?: FieldType<TItem>;
 	/** Use list/tile/grid view components instead of radio buttons. */
 	view?: ItemView | false;
 	/** Detailed description. */
-	details?: ReactNode | ((value: string | undefined, items: T[]) => ReactNode);
+	details?: ReactNode | ((value: TKey | undefined, items: TItem[]) => ReactNode);
 	/** The width of the child element image when using the grid view component. */
 	$itemWidth?: number;
 	/** Radio button group name, optional. */
@@ -57,9 +57,9 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 	before?: ReactNode;
 	/** Fired when the item is clicked. */
 	onItemClick?: MouseEventHandler<HTMLElement>;
-	onItemContextMenu?(item: T, event: React.MouseEvent<HTMLElement, MouseEvent>): void;
+	onItemContextMenu?(item: TItem, event: React.MouseEvent<HTMLElement, MouseEvent>): void;
 }>>) {
-	const getItemField = (item: T, fieldName: "id" | "name" | "icon" | "image" | "details"): Any => {
+	const getItemField = (item: TItem, fieldName: "id" | "name" | "icon" | "image" | "details"): Any => {
 		const field = {
 			name: nameField,
 			id: idField,
@@ -80,7 +80,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 		typeof checkInfoCondition === "string" ? checkInfoCondition :
 		checkInfoCondition === true ? typeof idField === "string" && typeof nameField === "string" ?
 			items.find(item => item[idField] === value)?.[nameField] :
-			idField && isI18nItem(nameField) ? nameField[value!] : value :
+			idField && isI18nItem(nameField) ? nameField[value as string] : value :
 		typeof checkInfoCondition === "function" ? checkInfoCondition(value, items) :
 		items.find(item => item[checkInfoCondition.id] === value)?.[checkInfoCondition.name];
 	const details = typeof _details === "function" ? _details(value, items) : _details;
@@ -89,7 +89,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 			{before}
 			{!view ? filteredItems.map(item => (
 				<RadioButton
-					value={[value as T, setValue]}
+					value={[value, setValue]}
 					id={getItemField(item, "id")}
 					key={getItemField(item, "id")}
 					details={getItemField(item, "details")}
@@ -100,7 +100,7 @@ export default function ExpanderRadio<T>({ items: _items, value: [value, setValu
 					{getItemField(item, "name")}
 				</RadioButton>
 			)) : (
-				<ItemsView view={view} current={[value as T, setValue]} $itemWidth={$itemWidth}>
+				<ItemsView view={view} current={[value, setValue]} $itemWidth={$itemWidth}>
 					{filteredItems.map(item => (
 						<ItemsView.Item
 							id={getItemField(item, "id")}
