@@ -195,7 +195,7 @@ const DefaultImage = styled.img`
 	object-fit: cover;
 `;
 
-export type OnItemsViewItemClickEventHandler = (id: PropertyKey, selected: CheckState, e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+export type OnItemsViewItemClickEventHandler = (id: PropertyKey, selected: CheckState, e: React.MouseEvent<HTMLElement>) => void;
 
 export /* @internal */ default function ItemsViewItem({ image, icon, id, selected = "unchecked", details, actions, $withBorder = false, _view: view, _multiple: multiple, children, className, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
 	/** Image. */

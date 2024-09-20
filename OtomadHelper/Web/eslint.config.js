@@ -209,7 +209,7 @@ export default [
 			"@typescript-eslint/no-unnecessary-type-parameters": "error",
 			"@typescript-eslint/no-unnecessary-type-arguments": "error",
 			"@typescript-eslint/no-unnecessary-template-expression": "error",
-			"@typescript-eslint/no-unnecessary-qualifier": "error",
+			"@typescript-eslint/no-unnecessary-qualifier": "off", // 开启后，某些包含复杂类型的特殊文件会把 eslint 弄崩。
 			"@typescript-eslint/no-unnecessary-parameter-property-assignment": "error",
 			"@typescript-eslint/no-unnecessary-condition": ["off", { allowConstantLoopConditions: true }],
 			"@typescript-eslint/no-empty-object-type": "off",
@@ -242,7 +242,8 @@ export default [
 				"afterOpening": "never",
 				"beforeClosing": "never",
 			}],
-			"@stylistic/jsx-one-expression-per-line": "off",
+			"@stylistic/jsx-one-expression-per-line": "off", // ["error", { allow: "non-jsx" }],
+			"react/jsx-one-expression-per-line": "off", // ["error", { allow: "non-jsx" }],
 			"react/self-closing-comp": ["error", { "component": true }],
 			"no-restricted-properties": ["error", {
 				object: "arguments",

@@ -55,6 +55,9 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				],
 				dts: "./src/types/auto-imports.d.ts",
 				defaultExportByFilename: false,
+				viteOptimizeDeps: true,
+				// @ts-expect-error Please restore cache!!!
+				cache: false,
 			}),
 			globalized(),
 			createSvgIconsPlugin({
