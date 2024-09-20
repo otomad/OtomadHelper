@@ -176,7 +176,10 @@ public class DependencyPropertySubscriber : DependencyObject {
 
 	private readonly PropertyChangedCallback handler;
 
-	public DependencyPropertySubscriber(DependencyObject dependencyObject!!, DependencyProperty dependencyProperty!!, PropertyChangedCallback handler!!) {
+	public DependencyPropertySubscriber(DependencyObject dependencyObject, DependencyProperty dependencyProperty, PropertyChangedCallback handler) {
+		if (dependencyObject is null) throw new ArgumentNullException(nameof(dependencyObject));
+		if (dependencyProperty is null) throw new ArgumentNullException(nameof(dependencyProperty));
+		if (handler is null) throw new ArgumentNullException(nameof(handler));
 		this.handler = handler;
 
 		Binding binding = new() {

@@ -10,12 +10,8 @@ namespace OtomadHelper.Module;
 /// <a href="https://github.com/MicrosoftEdge/WebView2Feedback/issues/2513">
 /// CoreWebView2 does not close stream content</a>.
 /// </summary>
-internal class ManagedStream : Stream {
+internal class ManagedStream(Stream s) : Stream {
 	#region Overrides
-	private readonly Stream s;
-
-	public ManagedStream(Stream s) => this.s = s;
-
 	public override bool CanRead => s.CanRead;
 
 	public override bool CanSeek => s.CanSeek;

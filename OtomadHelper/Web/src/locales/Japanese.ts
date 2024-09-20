@@ -647,17 +647,13 @@ export default {
 				gotoYtp: "YTPに移動",
 			},
 		},
+		menu: {},
 		preset: "プリセット",
 	},
 	csharp: {
 		mainDock: {
 			toolTip: {
 				importToHere: "インポート %1",
-			},
-		},
-		coreWebView: {
-			menuItem: {
-				delete: "削除(&D)",
 			},
 		},
 		contentDialog: {

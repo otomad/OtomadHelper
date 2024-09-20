@@ -61,9 +61,6 @@
 	<data name="MainDock.ToolTip.ImportToHere" xml:space="preserve">
 		<value>Import %1</value>
 	</data>
-	<data name="CoreWebView.MenuItem.Delete" xml:space="preserve">
-		<value>&amp;Delete</value>
-	</data>
 	<data name="ContentDialog.Button.Ok" xml:space="preserve">
 		<value>&amp;OK</value>
 	</data>

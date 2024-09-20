@@ -30,6 +30,7 @@
 		<RepositoryType>git</RepositoryType>
 		<PublishSingleFile>true</PublishSingleFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<OutputType>WinExe</OutputType>
@@ -49,11 +50,11 @@
 		<Reference Include="PresentationCore" />
 		<Reference Include="PresentationFramework" />
 		<Reference Include="ScriptPortal.MediaSoftware.Skins">
-			<HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 20.0\ScriptPortal.MediaSoftware.Skins.dll</HintPath>
+			<HintPath>D:\Program Files\VEGAS\VEGAS Pro 22.0\ScriptPortal.MediaSoftware.Skins.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="ScriptPortal.Vegas">
-			<HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 20.0\ScriptPortal.Vegas.dll</HintPath>
+			<HintPath>D:\Program Files\VEGAS\VEGAS Pro 22.0\ScriptPortal.Vegas.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="SwfDataObjectExtensions">
@@ -120,8 +121,8 @@
 		<!--<Exec Command="$(ProjectDir)\Properties\InsertIcons.exe $(TargetPath) $(ProjectDir)Icons" />-->
 	</Target>
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-		<PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.34">
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+		<PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.34.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -136,8 +137,8 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>-->
 		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2478.35" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2739.15" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
-		<PackageReference Include="System.Text.Json" Version="8.0.3" />
+		<PackageReference Include="System.Text.Json" Version="8.0.4" />
 	</ItemGroup>
 </Project>

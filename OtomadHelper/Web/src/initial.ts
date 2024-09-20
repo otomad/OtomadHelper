@@ -17,6 +17,7 @@ import { enableMapSet } from "immer";
 { // Initial
 	// #region Prevent context menu triggers by right click
 	window.addEventListener("contextmenu", e => {
+		window.contextMenu = undefined;
 		if (!isInPath(e.target, 'input[type="text"], textarea, [contenteditable="true"]') && isProdMode())
 			e.preventDefault();
 	});

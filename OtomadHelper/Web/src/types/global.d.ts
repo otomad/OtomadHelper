@@ -1,4 +1,4 @@
-import type { MenuOutput } from "utils/context-menu";
+import type { ContextMenuOutput } from "utils/context-menu";
 
 export { };
 
@@ -75,6 +75,6 @@ declare global {
 		/**
 		 * A global variable indicates the current context menu and its items.
 		 */
-		contextMenu?: MenuOutput;
+		contextMenu?: ContextMenuOutput;
 	}
 }

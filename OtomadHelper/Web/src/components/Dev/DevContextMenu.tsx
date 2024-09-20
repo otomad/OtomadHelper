@@ -1,6 +1,6 @@
 // This component will show in the DEV mode only!
 
-import type { MenuOutput } from "utils/context-menu";
+import type { ContextMenuOutput } from "utils/context-menu";
 
 const StyledContextMenu = styled.menu`
 	position: fixed;
@@ -27,7 +27,7 @@ export default function DevContextMenu() {
 	if (window.isWebView) return;
 
 	const [location, setLocation] = useState<TwoD>([NaN, NaN]);
-	const [menu, setMenu] = useState<MenuOutput>();
+	const [menu, setMenu] = useState<ContextMenuOutput>();
 	const isMenuShown = useMemo(() => menu != null && menu.items.length !== 0, [menu]);
 	const menuEl = useDomRef<"menu">();
 	const ifFinite = (value: number) => Number.isFinite(value) ? value + "px" : undefined;

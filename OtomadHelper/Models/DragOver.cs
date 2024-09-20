@@ -1,6 +1,6 @@
 namespace OtomadHelper.Models;
 
-public class DragOver : BaseWebMessageEvent {
+internal class DragOver : BaseWebMessageEvent {
 	public string? extension;
 	public string? contentType;
 	public bool? isDirectory;

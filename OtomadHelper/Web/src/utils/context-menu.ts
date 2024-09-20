@@ -1,35 +1,35 @@
-export type MenuItemKind = "command" | "checkBox" | "radio" | "separator" | "submenu";
+export type ContextMenuItemKind = "command" | "checkBox" | "radio" | "separator" | "submenu";
 
-export type MenuInput = MenuItemInput[];
+export type ContextMenuInput = ContextMenuItemInput[];
 
-export interface MenuItemInput {
-	kind?: MenuItemKind;
+export interface ContextMenuItemInput {
+	kind?: ContextMenuItemKind;
 	label: string;
 	// icon?: unknown; // Don't know how to add an icon.
 	checked?: boolean;
 	enabled?: boolean;
 	onClick?(): void;
-	items?: MenuItemInput[];
+	items?: ContextMenuItemInput[];
 }
 
-export interface MenuOutput {
+export interface ContextMenuOutput {
 	uuid: string;
-	items: MenuItemOutput[];
+	items: ContextMenuItemOutput[];
 }
 
-export interface MenuItemOutput {
-	kind: MenuItemKind;
+export interface ContextMenuItemOutput {
+	kind: ContextMenuItemKind;
 	label: string;
 	uuid: string;
 	checked?: boolean;
 	enabled?: boolean;
 	command?(): void;
-	items?: MenuItemOutput[];
+	items?: ContextMenuItemOutput[];
 }
 
-export function createContextMenu(menu: MenuInput): MouseEventHandler<HTMLElement> {
+export function createContextMenu(menu: ContextMenuInput): MouseEventHandler<HTMLElement> {
 	const getUuid = () => crypto.randomUUID();
-	const menuOutput: MenuOutput = { uuid: getUuid(), items: convertMenuInputToOutput(menu) ?? [] };
+	const menuOutput: ContextMenuOutput = { uuid: getUuid(), items: convertMenuInputToOutput(menu) ?? [] };
 	if (menuOutput.items.length === 0)
 		return e => {
 			if (isProdMode())
@@ -37,12 +37,13 @@ export function createContextMenu(menu: MenuInput): MouseEventHandler<HTMLElemen
 			window.contextMenu = undefined;
 		};
 
-	function convertMenuInputToOutput(menu?: MenuInput) {
+	function convertMenuInputToOutput(menu?: ContextMenuInput) {
 		if (menu === undefined) return undefined;
-		const items: MenuItemOutput[] = [];
-		for (const { kind, onClick, items: children, ...item } of menu)
+		const items: ContextMenuItemOutput[] = [];
+		for (const { kind, label, onClick, items: children, ...item } of menu)
 			items.push({
 				kind: kind ?? "command",
+				label: label.toString(),
 				uuid: getUuid(),
 				command: onClick,
 				items: convertMenuInputToOutput(children),

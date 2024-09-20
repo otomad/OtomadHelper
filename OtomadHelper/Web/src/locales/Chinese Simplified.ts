@@ -673,17 +673,15 @@ export default {
 				gotoYtp: "转到YTP",
 			},
 		},
+		menu: {
+			delete: "删除(&D)",
+		},
 		preset: "预设",
 	},
 	csharp: {
 		mainDock: {
 			toolTip: {
 				importToHere: "导入 %1",
-			},
-		},
-		coreWebView: {
-			menuItem: {
-				delete: "删除(&D)",
 			},
 		},
 		contentDialog: {

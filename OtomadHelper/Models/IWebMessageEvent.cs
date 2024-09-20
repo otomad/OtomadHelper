@@ -7,7 +7,8 @@ public abstract class BaseWebMessageEvent {
 
 	private static string GetTypeName(object obj) => new VariableName(obj.GetType().Name).Camel;
 
-	public static JsonObject Wrap(object obj!!, JsonSerializerOptions options, string? overriddenTypeName = null) {
+	public static JsonObject Wrap(object obj, JsonSerializerOptions options, string? overriddenTypeName = null) {
+		if (obj is null) throw new ArgumentNullException(nameof(obj));
 		JsonNode node = JsonSerializer.SerializeToNode(obj, options)!;
 		if (node.GetValueKind() != JsonValueKind.Object)
 			node = new JsonObject() { ["value"] = node };

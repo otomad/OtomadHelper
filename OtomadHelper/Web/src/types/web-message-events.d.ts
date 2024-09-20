@@ -13,6 +13,11 @@ declare global {
 			severity: "log" | "error" | "warn";
 			message: string;
 		}
+
+		export interface ContextMenuItemClickEventArgs {
+			menuUuid: string;
+			menuItemUuid: string;
+		}
 	}
 }
 

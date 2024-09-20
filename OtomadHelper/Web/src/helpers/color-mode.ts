@@ -2,7 +2,7 @@ export type ColorScheme = "light" | "dark" | "auto";
 const lightModePreference = window.matchMedia("(prefers-color-scheme: light)");
 
 let lastClickMouseEvent: MouseEvent | undefined;
-document.addEventListener("click", e => lastClickMouseEvent = e, true);
+["mousedown", "mouseup", "mousemove"].forEach(type => document.addEventListener(type as "mousedown", e => lastClickMouseEvent = e, true));
 
 /**
  * Changes the color scheme of the website.

@@ -8,11 +8,14 @@ using APNGLib;
 using Microsoft.Web.WebView2.Core;
 
 using OtomadHelper.Bridges;
+using OtomadHelper.Helpers;
 using OtomadHelper.Helpers.WebView2BetterBridge;
 using OtomadHelper.Models;
 using OtomadHelper.Test;
 
 using ScriptPortal.MediaSoftware.Skins;
+
+using ContextMenu = OtomadHelper.Models.ContextMenu;
 
 namespace OtomadHelper.Module;
 
@@ -159,60 +162,50 @@ public partial class MainDock : UserControl {
 
 	internal bool isDevMode = false;
 
-	private enum ContextMenuTarget {
+	/*private enum ContextMenuTarget {
 		Ignore,
 		TextBox,
-		DeletableItem,
-	}
+		Custom,
+	}*/
 
 	private async void CoreWebView2_ContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs e) {
 		CoreWebView2 webView = Browser.CoreWebView2;
 		IList<CoreWebView2ContextMenuItem> menuList = e.MenuItems;
-		// `e.ContextMenuTarget.Kind == CoreWebView2ContextMenuTargetKind.SelectedText` won't work if doesn't select any text.
-		ContextMenuTarget target = ContextMenuTarget.Ignore;
-		string deletedItem = "";
 		CoreWebView2Deferral deferral = e.GetDeferral();
-		HTMLElementAttributes[] attrs = await PostWebMessageAndGetResult<HTMLElementAttributes[]>(e.Location, "elementFromPoint"); // TODO: refactor
-		foreach (HTMLElementAttributes attr in attrs) {
-			if (attr.tag == "input" && attr.type == "text" || attr.tag == "textarea") {
-				target = ContextMenuTarget.TextBox;
-				break;
-			} else if (attr.data.ContainsKey("delete")) {
-				target = ContextMenuTarget.DeletableItem;
-				deletedItem = attr.data["delete"];
-				break;
-			}
-		}
-		switch (target) {
-			case ContextMenuTarget.TextBox:
-				if (!isDevMode) RemoveMenuItems("emoji", "inspectElement", "share", "webCapture");
-				break;
-			case ContextMenuTarget.DeletableItem:
-				if (!isDevMode) RemoveAllMenuItems();
-				CoreWebView2ContextMenuItem deleteItem = webView.Environment.CreateContextMenuItem(
-				t.CoreWebView.MenuItem.Delete, null, CoreWebView2ContextMenuItemKind.Command);
-				CoreWebView2ContextMenuItem separator = webView.Environment.CreateContextMenuItem(
-					"", null, CoreWebView2ContextMenuItemKind.Separator);
-				deleteItem.CustomItemSelected += (sender, ex) => {
-					Debug.WriteLine(deletedItem);
-				};
-				menuList.Insert(0, deleteItem);
-				if (isDevMode) menuList.Insert(1, separator);
-				break;
-			case ContextMenuTarget.Ignore:
-			default:
+		// `e.ContextMenuTarget.Kind == CoreWebView2ContextMenuTargetKind.SelectedText` won't work
+		// if doesn't select any text, so we check if the menu list includes the "paste" option, and if so,
+		// it indicates that the target is a text box.
+		bool isTextBox = menuList.FirstOrDefault(item => item.Name == "paste") is not null;
+		if (isTextBox) {
+			if (!isDevMode) RemoveMenuItems(["emoji", "inspectElement", "share", "webCapture"], [50221, 41120]);
+		} else {
+			if (!isDevMode) RemoveAllMenuItems();
+			string contextMenuJson = await webView.ExecuteScriptAsync("window.contextMenu");
+			if (contextMenuJson == "null") goto Complete;
+			ContextMenu contextMenu;
+			try {
+				contextMenu = ParseJson<ContextMenu>(contextMenuJson);
+			} catch (JsonException) {
 				goto Complete;
+			}
+			List<CoreWebView2ContextMenuItem> menuItems = CreateContextMenuItems(contextMenu.items, contextMenu.uuid);
+			if (isDevMode) menuItems.Add(webView.Environment.CreateContextMenuItem("", null, CoreWebView2ContextMenuItemKind.Separator));
+			foreach ((CoreWebView2ContextMenuItem item, int index) in menuItems.WithIndex())
+				menuList.Insert(index, item);
 		}
 		RemoveIrrationalSeparators();
 
 	Complete:
 		deferral.Complete();
 
-		void RemoveMenuItems(params string[] names) {
+		void RemoveMenuItems(string[] names, int[] commandIds) {
 			foreach (string name in names) {
 				CoreWebView2ContextMenuItem? menuItem = menuList.FirstOrDefault(item => item.Name == name);
-				if (menuItem is not null)
-					menuList.Remove(menuItem);
+				if (menuItem is not null) menuList.Remove(menuItem);
+			}
+			foreach (int commandId in commandIds) { // Some new menu items in Microsft Edge don't have a name, so we can use command id only.
+				CoreWebView2ContextMenuItem? menuItem = menuList.FirstOrDefault(item => item.CommandId == commandId);
+				if (menuItem is not null) menuList.Remove(menuItem);
 			}
 		}
 
@@ -230,6 +223,23 @@ public partial class MainDock : UserControl {
 						menuList.RemoveAt(i);
 			}
 		}
+
+		List<CoreWebView2ContextMenuItem> CreateContextMenuItems(ContextMenuItem[] items, string menuUuid) =>
+			items.Select(item => {
+				CoreWebView2ContextMenuItem menuItem = webView.Environment.CreateContextMenuItem(item.label, null, item.kind);
+				switch (item.kind) {
+					case CoreWebView2ContextMenuItemKind.Separator:
+						break;
+					case CoreWebView2ContextMenuItemKind.Submenu:
+						menuItem.Children.AddRange(CreateContextMenuItems(item.items ?? [], menuUuid));
+						break;
+					default:
+						menuItem.CustomItemSelected += (sender, e) =>
+							PostWebMessage(new ContextMenuItemClickEventArgs(menuUuid, item.uuid));
+						break;
+				}
+				return menuItem;
+			}).ToList();
 	}
 
 	public Rect ClientToScreenRect(Rect clientRect) {
@@ -267,8 +277,8 @@ public partial class MainDock : UserControl {
 			okBtn = new(t.ContentDialog.Button.Ok, true, true),
 			cancelBtn = new(t.ContentDialog.Button.Cancel, false);
 		WPF.Controls.ContentDialogButtonItem<bool>[] buttons = e.Kind == CoreWebView2ScriptDialogKind.Alert ?
-			new[] { okBtn } :
-			new[] { okBtn, cancelBtn };
+			[okBtn] :
+			[okBtn, cancelBtn];
 		CoreWebView2Deferral deferral = e.GetDeferral();
 		bool? dialogResult = await WPF.Controls.ContentDialog.ShowDialog<bool?>(e.Message, "", buttons, iconName);
 		if (dialogResult == true) e.Accept();

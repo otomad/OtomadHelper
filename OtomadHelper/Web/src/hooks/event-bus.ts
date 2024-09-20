@@ -5,6 +5,7 @@ type ApplicationEvents = {
 	[host: `host:${string}` & {}]: AnyObject;
 	"host:dragOver": WebMessageEvents.DragOver;
 	"host:consoleLog": WebMessageEvents.ConsoleLog;
+	"host:contextMenuItemClickEventArgs": WebMessageEvents.ContextMenuItemClickEventArgs;
 	"dev:showContextMenu": [e: MouseEvent, menu: typeof window["contextMenu"] & {}];
 };
 

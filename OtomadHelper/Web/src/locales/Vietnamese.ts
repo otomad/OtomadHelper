@@ -211,16 +211,12 @@ export default {
 				fully: {},
 			},
 		},
+		menu: {},
 	},
 	csharp: {
 		mainDock: {
 			toolTip: {
 				importToHere: "Nhập %1",
-			},
-		},
-		coreWebView: {
-			menuItem: {
-				delete: "&Xoá",
 			},
 		},
 		contentDialog: {

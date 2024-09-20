@@ -85,7 +85,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 	/**
 	 * Update the tab indicator.
 	 */
-	const update = useCallback(async () => {
+	const update = useCallback(async () => { // FIXME: 先点击设置，再点击其它导航项，会意外发生从设置之前的一个导航项过渡到新导航项的动画，仅在生产环境触发，开发环境却没得问题。
 		const indicator = indicatorEl.current;
 		if (!indicator) return;
 		type TabBarMovement = "previous" | "next" | "appear" | "disappear" | "none";
@@ -126,7 +126,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		let target1 = targetRect[vertical ? "top" : "left"] - entire1,
 			target2 = targetRect[vertical ? "bottom" : "right"] - entire1;
 		const targetOffset = (target2 - target1 - LENGTH) / 2;
-		if (targetOffset > 0) target1 += targetOffset, target2 -= targetOffset;
+		if (targetOffset > 0) { target1 += targetOffset; target2 -= targetOffset; }
 		if (movement === "appear") {
 			setNoIndicatorTransition(true);
 			const center = (target1 + target2) / 2;

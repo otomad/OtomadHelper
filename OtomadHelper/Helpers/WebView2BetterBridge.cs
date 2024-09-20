@@ -46,8 +46,7 @@ public class BetterBridge {
 		try {
 			// We have stored each argument as json data in an array, the array is also encoded to a string
 			// since webview can't invoke string[] array functions
-			string[]? jsonArgs = JsonSerializer.Deserialize<string[]>(jsonArgsString, jsonOptions);
-			if (jsonArgs is null)
+			string[]? jsonArgs = JsonSerializer.Deserialize<string[]>(jsonArgsString, jsonOptions) ??
 				throw new TypeLoadException("Invalid arguments");
 
 			bool matchedMethodName = false, matchedParameterLength = false;
@@ -148,6 +147,9 @@ public static class MessageSender {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 		IncludeFields = true,
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+		Converters = {
+			new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+		},
 	};
 
 	private static readonly JsonSerializerOptions jsonOptionsForGeneralClasses = new(jsonOptions) { IncludeFields = false };
@@ -179,7 +181,8 @@ public static class MessageSender {
 	/// <param name="message">The message to be posted.</param>
 	/// <param name="overriddenTypeName">An optional parameter to override the type name of the message class.</param>
 	/// <returns>The deserialized result of the posted message.</returns>
-	public static async Task<TReceive> PostWebMessageAndGetResult<TReceive>(object message!!, string? overriddenTypeName = null) {
+	public static async Task<TReceive> PostWebMessageAndGetResult<TReceive>(object message, string? overriddenTypeName = null) {
+		if (message is null) throw new ArgumentNullException(nameof(message));
 		TaskCompletionSource<JsonElement> taskCompletionSource = new();
 		void AddToTaskList(DateTime timestamp) => taskList.Add(timestamp, taskCompletionSource);
 		if (message is BaseWebMessageEvent e) {
@@ -207,5 +210,9 @@ public static class MessageSender {
 			value = nonObjectValue;
 		taskCompletionSource.SetResult(value);
 		taskList.Remove(timestamp);
+	}
+
+	internal static TReceive ParseJson<TReceive>(string json) {
+		return JsonSerializer.Deserialize<TReceive>(json, jsonOptions)!;
 	}
 }

@@ -124,7 +124,9 @@ public class EventBindingExtension : MarkupExtension {
 		return FindViewModel(parent);
 	}
 
-	internal static object FollowPropertyPath(object target!!, IEnumerable<string> path!!, Type? valueType = null) {
+	internal static object FollowPropertyPath(object target, IEnumerable<string> path, Type? valueType = null) {
+		if (target is null) throw new ArgumentNullException(nameof(target));
+		if (path is null) throw new ArgumentNullException(nameof(path));
 		Type currentType = valueType ?? target.GetType();
 
 		foreach (string propertyName in path) {
