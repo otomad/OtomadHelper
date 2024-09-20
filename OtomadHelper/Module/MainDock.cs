@@ -162,16 +162,13 @@ public partial class MainDock : UserControl {
 
 	internal bool isDevMode = false;
 
-	/*private enum ContextMenuTarget {
-		Ignore,
-		TextBox,
-		Custom,
-	}*/
-
 	private async void CoreWebView2_ContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs e) {
 		CoreWebView2 webView = Browser.CoreWebView2;
 		IList<CoreWebView2ContextMenuItem> menuList = e.MenuItems;
 		CoreWebView2Deferral deferral = e.GetDeferral();
+
+		//ManagedStream icon = new(ResourceHelper.GetEmbeddedResource("Assets.Delete.svg")); // FIXME: svg icon won't work, but png will work.
+
 		// `e.ContextMenuTarget.Kind == CoreWebView2ContextMenuTargetKind.SelectedText` won't work
 		// if doesn't select any text, so we check if the menu list includes the "paste" option, and if so,
 		// it indicates that the target is a text box.
