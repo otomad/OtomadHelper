@@ -1,6 +1,12 @@
+import { exec as execSync } from "child_process";
 import { readFile, writeFile } from "fs/promises";
 import checker from "license-checker";
 import { resolve } from "path";
+
+const exec = (command: string) => new Promise<string>((resolve, reject) => execSync(command, (_err, stdout, stderr) => {
+	if (stderr) reject(stderr);
+	resolve(stdout);
+}));
 
 const webDirs = {
 	web: "..",
@@ -22,7 +28,28 @@ for (const [variableName, webRelativeDir] of Object.entries(webDirs)) {
 	allPackages[variableName] = packages;
 }
 
-let md = await readFile(resolve(import.meta.dirname, "CREDITS.node.template.md"), "utf-8");
+interface NugetModuleInfo {
+	PackageId: string;
+	PackageVersion: string;
+	PackageProjectUrl: string;
+	Copyright: string;
+	Authors: string;
+	License: string;
+	LicenseUrl: string;
+	LicenseInformationOrigin: number;
+}
+
+// NOTE: You have to install this nuget tool globally before run the script:
+// dotnet tool install --global nuget-license
+const csJson = await exec("nuget-license -i ../../OtomadHelper.sln -t -o Json");
+const cs = JSON.parse(csJson) as NugetModuleInfo[];
+allPackages.cs = Object.fromEntries(cs.map(pack => [pack.PackageId, {
+	licenses: pack.License,
+	repository: pack.PackageProjectUrl,
+	publisher: pack.Authors,
+} satisfies checker.ModuleInfo]));
+
+let md = await readFile(resolve(import.meta.dirname, "CREDITS.gen.template.md"), "utf-8");
 
 for (const [variableName, packages] of Object.entries(allPackages))
 	md = md.replace("$" + variableName, Object.entries(packages).map(([packageName, { licenses, repository, publisher }]) => {
@@ -35,4 +62,4 @@ for (const [variableName, packages] of Object.entries(allPackages))
 		return `${project} | ${publisher} | ${licenses}`;
 	}).join("\n"));
 
-writeFile(resolve(import.meta.dirname, "../../..", "CREDITS.node.md"), md, "utf-8");
+writeFile(resolve(import.meta.dirname, "../../..", "CREDITS.gen.md"), md, "utf-8");

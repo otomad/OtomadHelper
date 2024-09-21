@@ -42,6 +42,8 @@ We would like to thank their authors and contributors for their contributions to
 
 ## C# Host Libs
 
+[View All »](CREDITS.gen.md#c-host-libs)
+
 Project | Authors | License | Notes
 ---- | ---- | ---- | ----
 [NAudio](https://github.com/naudio/NAudio) | Mark Heath | MIT | *MIDI read/write<br>Waveform sound*
@@ -54,13 +56,15 @@ Project | Authors | License | Notes
 [Open Live Writer](https://github.com/OpenLiveWriter/OpenLiveWriter) | Nick Vella | MIT | *Convert OLE drag-and-drop event to WinForm*
 [Tuple As Json Array](https://github.com/arogozine/TupleAsJsonArray) | Alexandre Rogozine | MIT | *Convert C# Tuple to/from JSON Array*
 
+[View All »](CREDITS.gen.md#c-host-libs)
+
 ## TypeScript WebUI Libs
 
-[View All »](CREDITS.node.md#typescript-webui-libs)
+[View All »](CREDITS.gen.md#typescript-webui-libs)
 
 ## TypeSpec API Libs
 
-[View All »](CREDITS.node.md#typespec-api-libs)
+[View All »](CREDITS.gen.md#typespec-api-libs)
 
 ## Vegas Datamosh Libs
 

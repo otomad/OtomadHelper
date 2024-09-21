@@ -166,9 +166,6 @@ public partial class MainDock : UserControl {
 		CoreWebView2 webView = Browser.CoreWebView2;
 		IList<CoreWebView2ContextMenuItem> menuList = e.MenuItems;
 		CoreWebView2Deferral deferral = e.GetDeferral();
-
-		//ManagedStream icon = new(ResourceHelper.GetEmbeddedResource("Assets.Delete.svg")); // FIXME: svg icon won't work, but png will work.
-
 		// `e.ContextMenuTarget.Kind == CoreWebView2ContextMenuTargetKind.SelectedText` won't work
 		// if doesn't select any text, so we check if the menu list includes the "paste" option, and if so,
 		// it indicates that the target is a text box.
@@ -224,6 +221,7 @@ public partial class MainDock : UserControl {
 		List<CoreWebView2ContextMenuItem> CreateContextMenuItems(ContextMenuItem[] items, string menuUuid) =>
 			items.Select(item => {
 				CoreWebView2ContextMenuItem menuItem = webView.Environment.CreateContextMenuItem(item.label, null, item.kind);
+				// TODO: svg icon won't work, but png will work.
 				switch (item.kind) {
 					case CoreWebView2ContextMenuItemKind.Separator:
 						break;
