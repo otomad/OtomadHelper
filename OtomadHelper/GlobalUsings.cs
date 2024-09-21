@@ -19,6 +19,11 @@ global using System.Threading.Tasks;
 global using System.Web;
 global using System.Windows.Media.Imaging;
 
+global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+
+global using DependencyPropertyGenerator;
+
 global using Microsoft.Win32;
 
 global using OtomadHelper.Helpers;
@@ -31,8 +36,9 @@ global using static OtomadHelper.Helpers.Misc;
 global using static OtomadHelper.Helpers.WebView2BetterBridge.MessageSender;
 global using static OtomadHelper.Interop.PInvoke;
 
-global using Path = OtomadHelper.Helpers.Path;
-global using ResourceDictionaries = System.Collections.ObjectModel.Collection<System.Windows.ResourceDictionary>;
 global using DialogResult = System.Windows.Forms.DialogResult;
-global using Screen = System.Windows.Forms.Screen;
+global using ObservableObject = OtomadHelper.WPF.Common.ObservableObject;
+global using Path = OtomadHelper.Helpers.Path;
 global using Rect = System.Windows.Rect;
+global using ResourceDictionaries = System.Collections.ObjectModel.Collection<System.Windows.ResourceDictionary>;
+global using Screen = System.Windows.Forms.Screen;

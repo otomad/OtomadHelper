@@ -27,6 +27,15 @@
 		<KeyBinding Key="Down" CommandParameter="{m:Int 1}" Command="{Binding ArrowKeyDownCommand}" />
 		<KeyBinding Key="Return" Command="{Binding EnterKeyDownCommand}" />
 	</c:BaseFlyout.InputBindings>-->
+	
+	<!--<i:Interaction.Triggers>
+		<i:EventTrigger EventName="KeyDown">
+			<m:EventCommand Command="{Binding KeyDownCommand}" />
+		</i:EventTrigger>
+		<i:EventTrigger EventName="KeyUp">
+			<m:EventCommand Command="{Binding KeyUpCommand}" />
+		</i:EventTrigger>
+	</i:Interaction.Triggers>-->
 
 	<c:BaseFlyout.Resources>
 		<ResourceDictionary>

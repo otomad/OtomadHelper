@@ -1,9 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Media.Animation;
-
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -64,10 +61,10 @@ public partial class ContentDialog : BackdropWindow {
 		viewModel.Subtitle = t.ContentDialog.ShowError.Title;
 		viewModel.Body = stackTrace;
 		viewModel.IconName = "Error";
-		viewModel.Buttons.AddRange(new ContentDialogButtonItem[] {
+		viewModel.Buttons.AddRange([
 			// new("Report", "report"), // I'm worried that users encounter any bug, they immediately click to report it directly.
 			new(t.ContentDialog.Button.Close, "close"),
-		});
+		]);
 		viewModel.Expandable = true;
 		viewModel.CanCopyBody = true;
 		viewModel.Footer = errorFooter;

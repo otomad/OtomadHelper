@@ -11,7 +11,9 @@ namespace OtomadHelper.WPF.Common;
 /// <summary>
 /// Supplies attached properties that provides visibility of animations
 /// </summary>
-public class VisibilityAnimation {
+[AttachedDependencyProperty<AnimationType, FrameworkElement>("AnimationType", DefaultValue = AnimationType.None,
+	Description = "Using a DependencyProperty as the backing store for AnimationType.\nThis enables animation, styling, binding, etc...")]
+public static partial class VisibilityAnimation {
 	public enum AnimationType {
 		/// <summary>
 		/// No animation
@@ -32,44 +34,12 @@ public class VisibilityAnimation {
 	/// <summary>
 	/// List of hooked objects
 	/// </summary>
-	private static readonly Dictionary<FrameworkElement, bool> hookedElements = new();
-
-	/// <summary>
-	/// Get AnimationType attached property
-	/// </summary>
-	/// <param name="obj">Dependency object</param>
-	/// <returns>AnimationType value</returns>
-	public static AnimationType GetAnimationType(DependencyObject obj) =>
-		(AnimationType) obj.GetValue(AnimationTypeProperty);
-
-	/// <summary>
-	/// Set AnimationType attached property
-	/// </summary>
-	/// <param name="obj">Dependency object</param>
-	/// <param name="value">New value for AnimationType</param>
-	public static void SetAnimationType(DependencyObject obj, AnimationType value) =>
-		obj.SetValue(AnimationTypeProperty, value);
-
-	/// <summary>
-	/// Using a DependencyProperty as the backing store for AnimationType. 
-	/// This enables animation, styling, binding, etc...
-	/// </summary>
-	public static readonly DependencyProperty AnimationTypeProperty = DependencyProperty.RegisterAttached(
-		"AnimationType",
-		typeof(AnimationType),
-		typeof(VisibilityAnimation),
-		new(AnimationType.None, OnAnimationTypePropertyChanged));
+	private static readonly Dictionary<FrameworkElement, bool> hookedElements = [];
 
 	/// <summary>
 	/// AnimationType property changed
 	/// </summary>
-	/// <param name="dependencyObject">Dependency object</param>
-	/// <param name="e">e</param>
-	private static void OnAnimationTypePropertyChanged(
-		DependencyObject dependencyObject,
-		DependencyPropertyChangedEventArgs e) {
-		if (dependencyObject is not FrameworkElement frameworkElement) return;
-
+	static partial void OnAnimationTypeChanged(FrameworkElement frameworkElement, AnimationType oldValue, AnimationType newValue) {
 		// If AnimationType is set to True on this framework element, 
 		if (GetAnimationType(frameworkElement) != AnimationType.None) {
 			// Add this framework element to hooked list
@@ -106,7 +76,9 @@ public class VisibilityAnimation {
 			new FrameworkPropertyMetadata(
 				Visibility.Visible,
 				VisibilityChanged,
-				CoerceVisibility));
+				CoerceVisibility
+			)
+		);
 	}
 
 	/// <summary>

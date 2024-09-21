@@ -6,6 +6,7 @@
 	x:Name="View"
 	Width="{Binding Size, ElementName=View}"
 	Height="{Binding Size, ElementName=View}"
+	Loaded="Icon_Loaded"
 	>
 	<Viewbox.Resources>
 		<Style TargetType="Canvas">

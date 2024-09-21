@@ -6,6 +6,8 @@ namespace OtomadHelper.WPF.Controls;
 /// <summary>
 /// ComboBoxFlyout.xaml 的交互逻辑
 /// </summary>
+[DependencyProperty<double>("ItemHeight", DefaultValue = 20.0)]
+[DependencyProperty<bool>("IsPressingSpace", DefaultValue = false)]
 public partial class ComboBoxFlyout : BaseFlyout {
 	public ComboBoxFlyout() {
 		InitializeComponent();
@@ -36,20 +38,6 @@ public partial class ComboBoxFlyout : BaseFlyout {
 		MinWidth = rect.Width + ResourcePadding * 4;
 		ItemHeight = rect.Height + ResourcePadding * 2;
 		Height = DataContext.Items.Count * ItemHeight + ResourcePadding * 3;
-	}
-
-	public static readonly DependencyProperty ItemHeightProperty = DependencyProperty.Register(
-		nameof(ItemHeight), typeof(double), typeof(ComboBoxFlyout), new(20.0));
-	public double ItemHeight {
-		get => (double)GetValue(ItemHeightProperty);
-		set => SetValue(ItemHeightProperty, value);
-	}
-
-	protected static readonly DependencyProperty IsPressingSpaceProperty = DependencyProperty.Register(
-		nameof(IsPressingSpace), typeof(bool), typeof(BackdropWindow), new(false));
-	protected bool IsPressingSpace {
-		get => (bool)GetValue(IsPressingSpaceProperty);
-		set => SetValue(IsPressingSpaceProperty, value);
 	}
 
 	/*private struct StoryboardProperty {

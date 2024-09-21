@@ -3,15 +3,15 @@ using System.Windows.Controls;
 
 namespace OtomadHelper.WPF.Controls;
 
-internal class ContentDialogButtonPanel : Grid {
+[DependencyProperty<double>("Spacing", DefaultValue = 8.0)]
+internal partial class ContentDialogButtonPanel : Grid {
 	public ContentDialogButtonPanel() : base() {
 		LayoutUpdated += (sender, e) => UpdateChildren();
 	}
 
-	public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
-		nameof(Spacing), typeof(double), typeof(ContentDialogButtonPanel),
-		new(8.0, (sender, e) => (sender as ContentDialogButtonPanel)?.UpdateChildren()));
-	public double Spacing { get => (double)GetValue(SpacingProperty); set => SetValue(SpacingProperty, value); }
+	partial void OnSpacingChanged() {
+		UpdateChildren();
+	}
 
 	private void UpdateChildren() {
 		ColumnDefinitions.Clear();

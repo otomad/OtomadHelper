@@ -21,13 +21,11 @@ public class PitchPickerFlyoutListView : ListView {
 	internal void InvokeItemClick(object sender, MouseButtonEventArgs e) => ItemClick?.Invoke(sender, e);
 }
 
-public class PitchPickerFlyoutListViewItem : ListViewItem {
+[DependencyProperty<bool>("IsPressed", DefaultValue = false)]
+public partial class PitchPickerFlyoutListViewItem : ListViewItem {
 	public PitchPickerFlyoutListView? ParentListView { get; internal set; }
 
 	public event MouseButtonEventHandler? Click;
-
-	public static readonly DependencyProperty IsPressedProperty = DependencyProperty.Register(nameof(IsPressed), typeof(bool), typeof(PitchPickerFlyoutListViewItem), new(false));
-	public bool IsPressed { get => (bool)GetValue(IsPressedProperty); internal set => SetValue(IsPressedProperty, value); }
 
 	public PitchPickerFlyoutListViewItem() {
 		// If user press the item and then drag it out, do not trigger the click event when mouse up.

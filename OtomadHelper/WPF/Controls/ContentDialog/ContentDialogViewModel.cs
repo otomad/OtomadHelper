@@ -2,12 +2,12 @@ using System.Collections.ObjectModel;
 
 namespace OtomadHelper.WPF.Controls;
 
-public class ContentDialogViewModel : ObservableObject<ContentDialog> {
+public partial class ContentDialogViewModel : ObservableObject<ContentDialog> {
+	[ObservableProperty]
 	private string title = "";
-	public string Title { get => title; set => SetProperty(ref title, value); }
 
+	[ObservableProperty]
 	private string body = "";
-	public string Body { get => body; set => SetProperty(ref body, value); }
 
 	private string iconName = "Info";
 	public string IconName {
@@ -19,25 +19,29 @@ public class ContentDialogViewModel : ObservableObject<ContentDialog> {
 		}
 	}
 
-	public ObservableCollection<ContentDialogButtonItem> Buttons { get; } = new();
+	public ObservableCollection<ContentDialogButtonItem> Buttons { get; } = [];
 
+	[ObservableProperty]
 	private object? dialogResult = null;
-	public object? DialogResult { get => dialogResult; set => SetProperty(ref dialogResult, value); }
 
-	public RelayCommand<object> ClickButtonCommand => DefineCommand<object>(dialogResult => {
+	[RelayCommand]
+	public void ClickButton(object dialogResult) {
 		DialogResult = dialogResult;
 		View?.Close();
-	});
+	}
 
 	private bool expandable = false;
-	public bool Expandable { get => expandable && !string.IsNullOrEmpty(Body); set => SetProperty(ref expandable, value); }
+	public bool Expandable {
+		get => expandable && !string.IsNullOrEmpty(Body);
+		set => SetProperty(ref expandable, value);
+	}
 
+	[ObservableProperty]
 	private bool canCopyBody = false;
-	public bool CanCopyBody { get => canCopyBody; set => SetProperty(ref canCopyBody, value); }
 
+	[ObservableProperty]
 	private string subtitle = "";
-	public string Subtitle { get => subtitle; set => SetProperty(ref subtitle, value); }
 
+	[ObservableProperty]
 	private string footer = "";
-	public string Footer { get => footer; set => SetProperty(ref footer, value); }
 }

@@ -8,7 +8,6 @@ using System.Reflection.Emit;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows;
-using System.Windows.Media;
 
 namespace OtomadHelper.WPF.Common;
 
@@ -70,7 +69,7 @@ public class EventBindingExtension : MarkupExtension {
 	}
 
 	internal static readonly MethodInfo getMethod = typeof(EventBindingExtension).GetMethod("HandlerIntern",
-		new[] { typeof(object), typeof(object), typeof(string), typeof(string) });
+		[typeof(object), typeof(object), typeof(string), typeof(string)]);
 
 	internal static void Handler(object sender, object args) =>
 		HandlerIntern(sender, args, "cmd", null);

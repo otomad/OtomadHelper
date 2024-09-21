@@ -3,6 +3,7 @@
 /// </summary>
 
 using System.Windows;
+using System.Windows.Input;
 
 namespace OtomadHelper.WPF.Common;
 
@@ -20,7 +21,9 @@ namespace OtomadHelper.WPF.Common;
 /// </code>
 /// </example>
 /// </remarks>
-public static class MouseDownHelper {
+[AttachedDependencyProperty<bool, UIElement>("IsPressed", DefaultValue = false, IsReadOnly = true)]
+[AttachedDependencyProperty<bool, UIElement>("IsLeftPressed", DefaultValue = false, IsReadOnly = true)]
+public static partial class MouseDownHelper {
 	public static readonly DependencyProperty EnabledProperty = DependencyProperty.RegisterAttached("Enabled",
 		typeof(bool), typeof(MouseDownHelper), new(false, OnEnabledChanged));
 
@@ -47,39 +50,25 @@ public static class MouseDownHelper {
 		element.PreviewMouseUp -= Element_MouseUp;
 	}
 
-	private static void Element_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+	private static void Element_MouseDown(object sender, MouseButtonEventArgs e) {
 		if (sender is UIElement element) SetIsPressed(element, true);
 	}
 
-	private static void Element_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+	private static void Element_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
 		if (sender is UIElement element) SetIsLeftPressed(element, true);
 	}
 
-	private static void Element_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) {
+	private static void Element_MouseLeave(object sender, MouseEventArgs e) {
 		if (sender is UIElement element) {
 			SetIsPressed(element, false);
 			SetIsLeftPressed(element, false);
 		}
 	}
 
-	private static void Element_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+	private static void Element_MouseUp(object sender, MouseButtonEventArgs e) {
 		if (sender is UIElement element) {
 			SetIsPressed(element, false);
 			SetIsLeftPressed(element, false);
 		}
 	}
-
-	internal static readonly DependencyPropertyKey IsPressedPropertyKey = DependencyProperty.RegisterAttachedReadOnly
-		("IsPressed", typeof(bool), typeof(MouseDownHelper), new(false));
-	public static readonly DependencyProperty IsPressedProperty = IsPressedPropertyKey.DependencyProperty;
-
-	internal static void SetIsPressed(UIElement element, bool value) => element.SetValue(IsPressedPropertyKey, value);
-	public static bool GetIsPressed(UIElement element) => (bool)element.GetValue(IsPressedProperty);
-
-	internal static readonly DependencyPropertyKey IsLeftPressedPropertyKey = DependencyProperty.RegisterAttachedReadOnly
-		("IsLeftPressed", typeof(bool), typeof(MouseDownHelper), new(false));
-	public static readonly DependencyProperty IsLeftPressedProperty = IsLeftPressedPropertyKey.DependencyProperty;
-
-	internal static void SetIsLeftPressed(UIElement element, bool value) => element.SetValue(IsLeftPressedPropertyKey, value);
-	public static bool GetIsLeftPressed(UIElement element) => (bool)element.GetValue(IsLeftPressedProperty);
 }

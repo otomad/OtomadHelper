@@ -23,7 +23,7 @@ public class CustomControlResourceDictionary : ResourceDictionary {
 		AddResource("Wpf/Styles/Generic.xaml");
 	}
 
-	private static readonly List<string> dictionaryBeingAdded = new();
+	private static readonly List<string> dictionaryBeingAdded = [];
 	public void AddResource(string path) {
 		lock (dictionaryBeingAdded) {
 			// We need to lock the thread and use a static field to judge before and after adding the

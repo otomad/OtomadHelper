@@ -32,13 +32,13 @@ public partial class TestControls : Form {
 			height: control.Height / dpiY
 		);
 
-		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect, out Task<string> resultTask);
+		//ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect, out Task<string> resultTask);
 		//PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect, selected, out Task<string> resultTask);
-		flyouts.Add(flyout);
-		resultTask.Then(result => { ComboBoxBtn.Text = selected = result; });
-		try {
-			flyout.ShowDialog();
-		} catch (Exception) { }
+		//flyouts.Add(flyout);
+		//resultTask.Then(result => { ComboBoxBtn.Text = selected = result; });
+		//try {
+		//	flyout.ShowDialog();
+		//} catch (Exception) { }
 	}
 
 	protected override void WndProc(ref Message m) {
