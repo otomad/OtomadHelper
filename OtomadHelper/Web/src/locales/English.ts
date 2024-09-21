@@ -94,6 +94,7 @@ export default {
 		unselected: "Unselected",
 		topPriority: "{{item, capitalize}} first",
 		browse: "Browse",
+		ok: "OK",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -446,16 +447,19 @@ export default {
 		settings: {
 			about: {
 				checkForUpdates: "Check for updates",
-				repositoryLink: "Repository link",
+				repositoryLink: "Repository",
 				documentation: "Documentation",
 				translation: "Contribute translation",
 				feedback: "Feedback",
+				changeLog: "Changelog",
+				license: "License",
 				version: "Version",
 				author: "Author",
 				__author__: "Rantetsu Inori",
 				originalAuthor: "Original author",
 				__originalAuthor__: "Chaosinism",
 				translator: "Translator",
+				translators: "Translators",
 			},
 			language: {
 				_: "Language",
@@ -668,6 +672,7 @@ export default {
 			},
 			settings: {
 				about: "Otomad Helper is a YTPMV/YTP extension for VEGAS Pro that enables VEGAS to accept scores such as MIDI sequence files as input and automatically generate YTPMV tracks.",
+				translation: "If you would like to participate in the translation, you are welcome to join as well.",
 			},
 		},
 		empty: {

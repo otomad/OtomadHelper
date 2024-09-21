@@ -101,3 +101,30 @@ export function listFormat(list: string[], type?: Intl.ListFormatType, style?: I
 	const result = formatter.format(list);
 	return spacing(result);
 }
+
+/**
+ * Get all language tags.
+ * @returns All language tags.
+ */
+export function useLanguageTags() {
+	const { i18n } = useTranslation();
+	const languages = Object.keys(i18n.options.resources ?? {});
+	return languages;
+}
+
+/**
+ * Get reactive current language.
+ * @returns Reactive current language.
+ */
+export function useCurrentLanguage() {
+	const { i18n } = useTranslation();
+	const [language, setLanguage] = useState(i18n.language);
+
+	useMountEffect(() => {
+		const onLanguageChanged = (lang: string) => setLanguage(lang);
+		i18n.on("languageChanged", onLanguageChanged);
+		return () => i18n.off("languageChanged", onLanguageChanged);
+	});
+
+	return language;
+}

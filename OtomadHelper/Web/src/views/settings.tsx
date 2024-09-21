@@ -1,10 +1,8 @@
-import type { BackgroundImageRowWithMore } from "hooks/background-images";
 import { useLanguage } from "locales/config";
 
 export default function Settings() {
-	const { i18n } = useTranslation();
 	const [language, setLanguage] = useLanguage();
-	const languages = Object.keys(i18n.options.resources ?? {});
+	const languages = useLanguageTags();
 	const schemes = ["light", "dark", "auto"] as const;
 	const { scheme: [scheme, setScheme] } = useStoreState(colorModeStore);
 	const {

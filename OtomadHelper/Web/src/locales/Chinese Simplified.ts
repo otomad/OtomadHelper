@@ -91,6 +91,7 @@ export default {
 		unselected: "未选择",
 		topPriority: "{{item, capitalize}} 最优先",
 		browse: "浏览",
+		ok: "确定",
 		infoBar: {
 			warning: "警告",
 		},
@@ -438,12 +439,15 @@ export default {
 				documentation: "说明文档",
 				translation: "贡献翻译",
 				feedback: "反馈建议",
+				changeLog: "更新日志",
+				license: "许可协议",
 				version: "版本",
 				author: "作者",
 				__author__: "兰澈 祈",
 				originalAuthor: "原作者",
 				__originalAuthor__: "Chaosinism",
 				translator: "翻译",
+				translators: "翻译人员",
 			},
 			language: {
 				_: "语言",
@@ -653,6 +657,7 @@ export default {
 			},
 			settings: {
 				about: "音MAD助手是VEGAS Pro的音MAD扩展程序，旨在使VEGAS能够接受如MIDI序列文件等乐谱作为输入并自动生成音MAD的轨道。",
+				translation: "如果你想要参与翻译，欢迎你的加入。",
 			},
 		},
 		empty: {

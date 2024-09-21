@@ -23,6 +23,15 @@ export default css`
 			all: unset;
 		}
 
+		table {
+			border-spacing: 0;
+		}
+
+		th,
+		td {
+			padding: 0;
+		}
+
 		// So images and videos default to inline elements, causing the gap below the block to be caused by you, right?
 		img,
 		video,

@@ -10,8 +10,8 @@ const NavButton = styled(Button).attrs({
 })`
 	position: absolute;
 	width: ${navButtonSize.width}px;
-	min-inline-size: unset;
 	height: ${navButtonSize.height}px;
+	min-inline-size: unset;
 `;
 
 const StyledTopLeftButtons = styled.div`
@@ -238,7 +238,7 @@ const StyledNavigationView = styled.div<{
 			display: flex;
 			gap: 14px;
 			align-items: center;
-			transition: all ${eases.easeInOutMaterialEmphasized} 1000ms;
+			transition: all ${eases.easeInOutMaterialEmphasized} 700ms;
 
 			* {
 				white-space: nowrap;
@@ -264,8 +264,8 @@ const StyledNavigationView = styled.div<{
 				.enter-active {
 					translate: 0;
 					opacity: 1;
-					transition-delay: 200ms;
 					transition-duration: 300ms;
+					transition-delay: 200ms;
 
 					&.crumb {
 						transition-delay: 300ms;

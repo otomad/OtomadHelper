@@ -422,7 +422,6 @@ export default {
 		settings: {
 			about: {
 				checkForUpdates: "アップデートを確認",
-				repositoryLink: "リポジトリリンク",
 				documentation: "ドキュメント",
 				translation: "翻訳に貢献",
 				feedback: "フィードバック",

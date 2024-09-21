@@ -51,6 +51,7 @@ const Mask = styled.div`
 	z-index: 30;
 	background-color: ${c("background-fill-color-smoke-default")};
 	backdrop-filter: grayscale(0.75);
+	transition-timing-function: ${eases.easeOutMaterialStandard};
 
 	${tgs()} {
 		opacity: 0;
