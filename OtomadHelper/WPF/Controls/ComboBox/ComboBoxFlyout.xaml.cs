@@ -20,15 +20,11 @@ public partial class ComboBoxFlyout : BaseFlyout {
 
 	public static ComboBoxFlyout Initial(IEnumerable<string> list, string selected, Rect targetRect, out Task<string> dialogResult) {
 		ComboBoxFlyout comboBox = new();
-		SetDataContext(comboBox.DataContext);
+		comboBox.DataContext.Selected = selected;
+		comboBox.DataContext.Items.AddRange(list);
 		comboBox.SetTargetRect(targetRect);
 		dialogResult = comboBox.GetDialogResultTask(() => comboBox.DataContext.Selected);
 		return comboBox;
-
-		void SetDataContext(ComboBoxViewModel viewModel) {
-			viewModel.Items.AddRange(list.Select(text => new ComboBoxViewModelItem(text, viewModel)));
-			viewModel.Selected = selected;
-		}
 	}
 
 	private double ResourcePadding => (double)Resources["Padding"];

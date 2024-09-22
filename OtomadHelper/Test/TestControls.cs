@@ -13,7 +13,7 @@ using OtomadHelper.WPF.Controls;
 
 namespace OtomadHelper.Test;
 public partial class TestControls : Form {
-	private readonly List<System.Windows.Window> flyouts = new();
+	private readonly List<System.Windows.Window> flyouts = [];
 	private readonly string[] list = { "foo", "bar", "baz", "hello", "world", "C5" };
 	private string selected = "C5";
 
@@ -32,13 +32,13 @@ public partial class TestControls : Form {
 			height: control.Height / dpiY
 		);
 
-		//ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect, out Task<string> resultTask);
+		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect, out Task<string> resultTask);
 		//PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect, selected, out Task<string> resultTask);
-		//flyouts.Add(flyout);
-		//resultTask.Then(result => { ComboBoxBtn.Text = selected = result; });
-		//try {
-		//	flyout.ShowDialog();
-		//} catch (Exception) { }
+		flyouts.Add(flyout);
+		resultTask.Then(result => ComboBoxBtn.Text = selected = result);
+		try {
+			flyout.ShowDialog();
+		} catch (Exception) { }
 	}
 
 	protected override void WndProc(ref Message m) {

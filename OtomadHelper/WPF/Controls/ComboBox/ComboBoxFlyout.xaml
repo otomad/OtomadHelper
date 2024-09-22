@@ -49,6 +49,7 @@
 			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 			<m:ActualSizeToRectConverter x:Key="SizeToRect" />
 			<m:BooleanOrConverter x:Key="BoolOr" />
+			<c:ComboBoxStringToIsCheckedConverter x:Key="StringToChecked" />
 
 			<s:Double x:Key="Padding">2</s:Double>
 			<s:Double x:Key="IndicatorRadius">1.5</s:Double>
@@ -255,8 +256,9 @@
 				<RadioButton
 					x:Name="RadioButton"
 					Command="{Binding CheckRadioButtonCommand, ElementName=ViewModel}"
+					CommandParameter="{Binding}"
 					GroupName="ComboBoxItem"
-					IsChecked="{Binding IsChecked, Mode=TwoWay}"
+					IsChecked="{m:Binding Converter={StaticResource StringToChecked}, ConverterParameter={Binding Selected, ElementName=ViewModel}, Mode=OneWay}"
 					Style="{StaticResource ComboBoxItemButton}"
 					>
 					<Grid>
@@ -270,7 +272,7 @@
 							Style="{StaticResource Indicator}"
 							Visibility="{Binding IsChecked, ElementName=RadioButton, Converter={StaticResource BoolToVis}}"
 							/>
-						<TextBlock Grid.Column="1" Text="{Binding Text}" />
+						<TextBlock Grid.Column="1" Text="{Binding}" />
 					</Grid>
 				</RadioButton>
 			</DataTemplate>

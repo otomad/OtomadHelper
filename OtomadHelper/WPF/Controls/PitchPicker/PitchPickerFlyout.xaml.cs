@@ -41,8 +41,6 @@ public partial class PitchPickerFlyout : BaseFlyout {
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
 		Height = ExpectedHeight;
-		//this.GetChildrenOfType<ScrollViewer>().ForEach(scrollViewer =>
-		//	scrollViewer.PreviewMouseWheel += (sender, e) => e.Handled = true);
 	}
 
 	partial void OnNoteNameChanged(string? prevNoteName, string? noteName) {

@@ -1,21 +1,22 @@
 <Viewbox
 	x:Class="OtomadHelper.WPF.Controls.Icon"
+	x:Name="View"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
-	x:Name="View"
 	Width="{Binding Size, ElementName=View}"
 	Height="{Binding Size, ElementName=View}"
 	Loaded="Icon_Loaded"
 	>
 	<Viewbox.Resources>
 		<Style TargetType="Canvas">
-			<Setter Property="Width" Value="{Binding Source.Size, ElementName=View}" />
-			<Setter Property="Height" Value="{Binding Source.Size, ElementName=View}" />
+			<Setter Property="DataContext" Value="{Binding ElementName=View}" />
+			<Setter Property="Width" Value="{Binding Source.Size}" />
+			<Setter Property="Height" Value="{Binding Source.Size}" />
 		</Style>
 		<Style TargetType="Path">
-			<Setter Property="Data" Value="{Binding Source.Path, ElementName=View}" />
-			<Setter Property="Fill" Value="{Binding Foreground, ElementName=View}" />
+			<Setter Property="Data" Value="{Binding Source.Path}" />
+			<Setter Property="Fill" Value="{Binding Foreground}" />
 		</Style>
 	</Viewbox.Resources>
 

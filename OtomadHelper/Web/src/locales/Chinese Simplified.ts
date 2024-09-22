@@ -268,7 +268,7 @@ export default {
 		track: {
 			layout: "布局",
 			grid: "网格布局",
-			box3d: "3D方盒布局",
+			box3d: "三维方盒布局",
 			gradient: "渐变轨道",
 			applyToSelectedTracks: "应用于所选轨道",
 			resetAllLayouts: "全部重置",

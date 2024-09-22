@@ -3,8 +3,8 @@ using System.Windows.Input;
 namespace OtomadHelper.WPF.Controls;
 
 public partial class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> {
-	public static string[] NoteNames { get; } = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
-	public static int[] Octaves { get; } = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	public static string[] NoteNames { get; } = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+	public static int[] Octaves { get; } = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 	private string noteName = "C";
 	public string NoteName {

@@ -5,6 +5,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
