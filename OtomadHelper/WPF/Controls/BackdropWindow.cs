@@ -10,7 +10,13 @@ namespace OtomadHelper.WPF.Controls;
 /// <summary>
 /// BackdropWindow.xaml 的交互逻辑
 /// </summary>
-public class BackdropWindow : Window, INotifyPropertyChanged {
+[DependencyProperty<SystemBackdropType>("SystemBackdropType", DefaultValueExpression = "DEFAULT_SYSTEM_BACKDROP_TYPE")]
+[DependencyProperty<bool>("IsLightTheme", DefaultValue = true)]
+[DependencyProperty<Color>("WindowGlassColor", DefaultValueExpression = "WindowsDefaultGlassColor")]
+[DependencyProperty<Brush>("WindowGlassBrush", DefaultValueExpression = "WindowsDefaultGlassBrush")]
+[DependencyProperty<TitleBarType>("TitleBarType", DefaultValueExpression = "TitleBarType.System")]
+[DependencyProperty<FontFamily>("MonoFont")]
+public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	protected readonly WindowInteropHelper helper;
 	protected IntPtr Handle => helper.Handle;
 
@@ -137,12 +143,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 		HwndSource mainWindowSrc = HwndSource.FromHwnd(Handle);
 		mainWindowSrc.CompositionTarget.BackgroundColor = Color.FromArgb(0, 0, 0, 0);
 
-		MARGINS margins = new() {
-			cxLeftWidth = -1,
-			cxRightWidth = -1,
-			cyTopHeight = -1,
-			cyBottomHeight = -1,
-		};
+		Margins margins = new(-1);
 
 		ExtendFrame(mainWindowSrc.Handle, margins);
 	}
@@ -222,18 +223,12 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	}
 
 	private const SystemBackdropType DEFAULT_SYSTEM_BACKDROP_TYPE = SystemBackdropType.TransientWindow;
-	public static readonly DependencyProperty SystemBackdropTypeProperty = DependencyProperty.Register(
-		nameof(SystemBackdropType), typeof(SystemBackdropType), typeof(BackdropWindow), new(DEFAULT_SYSTEM_BACKDROP_TYPE, SystemBackdropTypeChangedCallback));
-	public SystemBackdropType SystemBackdropType { get => (SystemBackdropType)GetValue(SystemBackdropTypeProperty); set => SetValue(SystemBackdropTypeProperty, value); }
 
 	protected void SetSystemBackdropType(SystemBackdropType systemBackdropType) {
 		SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (int)systemBackdropType);
 	}
 
-	private static void SystemBackdropTypeChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
-		if (sender is not BackdropWindow window) return;
-		window.SetSystemBackdropType((SystemBackdropType)e.NewValue);
-	}
+	partial void OnSystemBackdropTypeChanged(SystemBackdropType newValue) => SetSystemBackdropType(newValue);
 
 	protected static readonly RoutedEvent ThemeChangeEvent =
 		EventManager.RegisterRoutedEvent(nameof(ThemeChange), RoutingStrategy.Bubble, typeof(EventHandler<RoutedEventArgs>), typeof(BackdropWindow));
@@ -261,58 +256,38 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 		remove => RemoveHandler(ShowingEvent, value);
 	}
 
-	public static readonly DependencyProperty IsLightThemeProperty = DependencyProperty.Register(
-		nameof(IsLightTheme), typeof(bool), typeof(BackdropWindow), new(true));
-	public bool IsLightTheme { get => (bool)GetValue(IsLightThemeProperty); private set => SetValue(IsLightThemeProperty, value); }
-
 	private static readonly Color WindowsDefaultGlassColor = Color.FromRgb(0, 95, 184);
-
-	public static readonly DependencyProperty WindowGlassColorProperty = DependencyProperty.Register(
-		nameof(WindowGlassColor), typeof(Color), typeof(BackdropWindow), new(WindowsDefaultGlassColor));
-	public Color WindowGlassColor { get => (Color)GetValue(WindowGlassColorProperty); private set => SetValue(WindowGlassColorProperty, value); }
-
-	public static readonly DependencyProperty WindowGlassBrushProperty = DependencyProperty.Register(
-		nameof(WindowGlassBrush), typeof(Brush), typeof(BackdropWindow), new(new SolidColorBrush(WindowsDefaultGlassColor)));
-	public Brush WindowGlassBrush { get => (Brush)GetValue(WindowGlassBrushProperty); private set => SetValue(WindowGlassBrushProperty, value); }
+	private static Brush WindowsDefaultGlassBrush => new SolidColorBrush(WindowsDefaultGlassColor);
 	#endregion
 
 	#region Extends content into title bar
-	public static readonly DependencyProperty TitleBarTypeProperty = DependencyProperty.Register(
-		nameof(TitleBarType), typeof(TitleBarType), typeof(BackdropWindow), new(TitleBarType.System, EnableWindowChromeChangedCallback));
-	public TitleBarType TitleBarType {
-		get => (TitleBarType)GetValue(TitleBarTypeProperty);
-		set => SetValue(TitleBarTypeProperty, value);
-	}
-
-	private static void EnableWindowChromeChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
-		if (sender is not BackdropWindow window) return;
-		if (e.NewValue is not TitleBarType value) return;
+	partial void OnTitleBarTypeChanged(TitleBarType value) {
 		switch (value) {
 			case TitleBarType.WindowChrome:
-				WindowChrome.SetWindowChrome(window, new() {
+				WindowChrome.SetWindowChrome(this, new() {
 					CaptionHeight = 54, // Default: 20
 					CornerRadius = new(0),
 					GlassFrameThickness = new(-1),
-					ResizeBorderThickness = window.ResizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ?
+					ResizeBorderThickness = ResizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ?
 						new(0) : new(8, 0, 8, 8),
-					NonClientFrameEdges = NonClientFrameEdges.Right,
+					NonClientFrameEdges = NonClientFrameEdges.None,
 					UseAeroCaptionButtons = true,
 				});
 				break;
 			case TitleBarType.WindowChromeNoTitleBar:
-				WindowChrome.SetWindowChrome(window, new() {
+				WindowChrome.SetWindowChrome(this, new() {
 					CaptionHeight = 0,
 					CornerRadius = new(0),
 					GlassFrameThickness = new(-1),
 					ResizeBorderThickness = new(0),
 				});
-				window.WindowStyle = WindowStyle.None;
-				window.ResizeMode = ResizeMode.CanResize;
+				WindowStyle = WindowStyle.None;
+				ResizeMode = ResizeMode.CanResize;
 				break;
 			case TitleBarType.Borderless:
 				RemoveWindowChrome();
-				window.AllowsTransparency = true;
-				window.WindowStyle = WindowStyle.None;
+				AllowsTransparency = true;
+				WindowStyle = WindowStyle.None;
 				break;
 			case TitleBarType.System:
 			default:
@@ -320,7 +295,7 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 				break;
 		}
 
-		void RemoveWindowChrome() => WindowChrome.SetWindowChrome(window, null);
+		void RemoveWindowChrome() => WindowChrome.SetWindowChrome(this, null);
 	}
 
 	protected override void OnKeyDown(KeyEventArgs e) {
@@ -337,10 +312,6 @@ public class BackdropWindow : Window, INotifyPropertyChanged {
 	#endregion
 
 	#region Default fonts
-	public static readonly DependencyProperty MonoFontProperty = DependencyProperty.Register(
-		nameof(MonoFont), typeof(FontFamily), typeof(BackdropWindow));
-	public FontFamily MonoFont { get => (FontFamily)GetValue(MonoFontProperty); private set => SetValue(MonoFontProperty, value); }
-
 	private void OnCultureChanged(CultureInfo culture) {
 		FontFamily defaultFont = FontFamily, englishMonoFont = (FontFamily)Resources["EnglishMonoFont"];
 		MonoFont = new(new[] { englishMonoFont, defaultFont }.Select(font => font.Source).Join(", "));

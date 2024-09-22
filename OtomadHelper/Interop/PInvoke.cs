@@ -151,27 +151,29 @@ public static class PInvoke {
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct MARGINS {
+	public struct Margins(int left, int top, int right, int bottom) {
 		/// <summary>
 		/// width of left border that retains its size
 		/// </summary>
-		public int cxLeftWidth;
+		public int cxLeftWidth = left;
 		/// <summary>
 		/// width of right border that retains its size
 		/// </summary>
-		public int cxRightWidth;
+		public int cxRightWidth = right;
 		/// <summary>
 		/// height of top border that retains its size
 		/// </summary>
-		public int cyTopHeight;
+		public int cyTopHeight = top;
 		/// <summary>
 		/// height of bottom border that retains its size
 		/// </summary>
-		public int cyBottomHeight;
+		public int cyBottomHeight = bottom;
+
+		public Margins(int size) : this(size, size, size, size) { }
 	};
 
 	[DllImport("dwmapi.dll")]
-	public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
+	public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref Margins pMarInset);
 
 	[DllImport("dwmapi.dll")]
 	public static extern int DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
@@ -193,7 +195,7 @@ public static class PInvoke {
 	[DllImport("user32.dll")]
 	public static extern bool SetLayeredWindowAttributes(IntPtr hWnd, uint crKey, byte bAlpha, uint dwFlags);
 
-	public static int ExtendFrame(IntPtr hWnd, MARGINS margins) =>
+	public static int ExtendFrame(IntPtr hWnd, Margins margins) =>
 		DwmExtendFrameIntoClientArea(hWnd, ref margins);
 
 	public static int SetWindowAttribute(IntPtr hWnd, DwmWindowAttribute attribute, int parameter) =>
@@ -234,7 +236,7 @@ public static class PInvoke {
 	}
 
 	private static IntPtr GetChildHandle(IntPtr hWnd) {
-		List<IntPtr> childHandles = new();
+		List<IntPtr> childHandles = [];
 		GCHandle gcChildhandlesList = GCHandle.Alloc(childHandles);
 		IntPtr pointerChildHandlesList = GCHandle.ToIntPtr(gcChildhandlesList);
 		try {
@@ -292,12 +294,12 @@ public static class PInvoke {
 		public const uint CLOSE = 0xF060;
 
 		public static readonly Dictionary<SystemMenuItemType, uint> Map = new() {
-			{ SystemMenuItemType.RESTORE, RESTORE },
-			{ SystemMenuItemType.MOVE, MOVE },
-			{ SystemMenuItemType.SIZE, SIZE },
-			{ SystemMenuItemType.MINIMIZE, MINIMIZE },
-			{ SystemMenuItemType.MAXIMIZE, MAXIMIZE },
-			{ SystemMenuItemType.CLOSE, CLOSE },
+			[SystemMenuItemType.RESTORE] = RESTORE,
+			[SystemMenuItemType.MOVE] = MOVE,
+			[SystemMenuItemType.SIZE] = SIZE,
+			[SystemMenuItemType.MINIMIZE] = MINIMIZE,
+			[SystemMenuItemType.MAXIMIZE] = MAXIMIZE,
+			[SystemMenuItemType.CLOSE] = CLOSE,
 		};
 	}
 

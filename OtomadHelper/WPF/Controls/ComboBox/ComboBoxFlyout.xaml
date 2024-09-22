@@ -10,12 +10,15 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	MinWidth="200"
+	MaxWidth="{x:Static SystemParameters.MaximizedPrimaryScreenWidth}"
+	MaxHeight="{x:Static SystemParameters.MaximizedPrimaryScreenHeight}"
 	Loaded="Window_Loaded"
 	SizeToContent="Width"
 	Height="0"
 	KeyDown="{m:EventBinding Command=KeyDownCommand, CommandParameter=$e}"
 	KeyUp="{m:EventBinding Command=KeyUpCommand, CommandParameter=$e}"
 	Focusable="True"
+	Topmost="True"
 	mc:Ignorable="d"
 	>
 	<c:BaseFlyout.DataContext>
@@ -240,42 +243,44 @@
 		</ResourceDictionary>
 	</c:BaseFlyout.Resources>
 
-	<ItemsControl
-		x:Name="ItemsControlWrapper"
-		ItemsSource="{Binding Items}"
-		Style="{StaticResource ItemsControlWrapper}"
-		Focusable="True"
-		>
-		<ItemsControl.ItemsPanel>
-			<ItemsPanelTemplate>
-				<StackPanel Orientation="Vertical" />
-			</ItemsPanelTemplate>
-		</ItemsControl.ItemsPanel>
-		<ItemsControl.ItemTemplate>
-			<DataTemplate>
-				<RadioButton
-					x:Name="RadioButton"
-					Command="{Binding CheckRadioButtonCommand, ElementName=ViewModel}"
-					CommandParameter="{Binding}"
-					GroupName="ComboBoxItem"
-					IsChecked="{m:Binding Converter={StaticResource StringToChecked}, ConverterParameter={Binding Selected, ElementName=ViewModel}, Mode=OneWay}"
-					Style="{StaticResource ComboBoxItemButton}"
-					>
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="12" />
-							<ColumnDefinition Width="*" />
-						</Grid.ColumnDefinitions>
-						<Rectangle
-							x:Name="Indicator"
-							Grid.Column="0"
-							Style="{StaticResource Indicator}"
-							Visibility="{Binding IsChecked, ElementName=RadioButton, Converter={StaticResource BoolToVis}}"
-							/>
-						<TextBlock Grid.Column="1" Text="{Binding}" />
-					</Grid>
-				</RadioButton>
-			</DataTemplate>
-		</ItemsControl.ItemTemplate>
-	</ItemsControl>
+	<ScrollViewer VerticalScrollBarVisibility="Auto">
+		<ItemsControl
+			x:Name="ItemsControlWrapper"
+			ItemsSource="{Binding Items}"
+			Style="{StaticResource ItemsControlWrapper}"
+			Focusable="True"
+			>
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Vertical" />
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<RadioButton
+						x:Name="RadioButton"
+						Command="{Binding CheckRadioButtonCommand, ElementName=ViewModel}"
+						CommandParameter="{Binding}"
+						GroupName="ComboBoxItem"
+						IsChecked="{m:Binding Converter={StaticResource StringToChecked}, ConverterParameter={Binding Selected, ElementName=ViewModel}, Mode=OneWay}"
+						Style="{StaticResource ComboBoxItemButton}"
+						>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="12" />
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+							<Rectangle
+								x:Name="Indicator"
+								Grid.Column="0"
+								Style="{StaticResource Indicator}"
+								Visibility="{Binding IsChecked, ElementName=RadioButton, Converter={StaticResource BoolToVis}}"
+								/>
+							<TextBlock Grid.Column="1" Text="{Binding}" />
+						</Grid>
+					</RadioButton>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</ScrollViewer>
 </c:BaseFlyout>

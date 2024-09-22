@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace OtomadHelper.WPF.Controls;
@@ -49,6 +50,8 @@ public partial class ComboBoxFlyout : BaseFlyout {
 		Top -= ResourcePadding * 3;
 		Top -= Math.Max(DataContext.SelectedIndex, 0) * ItemHeight;
 		MoveIntoScreen();
+		RadioButton? checkedRadio = ItemsControlWrapper.GetChildrenOfType<RadioButton>().FirstOrDefault(radio => radio.IsChecked == true);
+		checkedRadio?.BringIntoView();
 		/*storyboardProperty = new() {
 			collapsedTop = Top,
 			expandedTop = Top - Math.Max(DataContext.SelectedIndex, 0) * ItemHeight,

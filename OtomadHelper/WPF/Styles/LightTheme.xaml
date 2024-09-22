@@ -34,4 +34,5 @@
 	<SolidColorBrush x:Key="DividerStroke" Color="#14000000" />
 	<SolidColorBrush x:Key="TextSecondary" Color="#9A000000" />
 	<SolidColorBrush x:Key="ControlStrong" Color="#71000000" />
+	<SolidColorBrush x:Key="AcrylicBackground" Color="#D8FCFCFC" />
 </m:NamedResourceDictionary>

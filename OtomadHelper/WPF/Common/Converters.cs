@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Xml.Linq;
 
 namespace OtomadHelper.WPF.Common;
 
@@ -223,4 +224,34 @@ public class AccessKeyAmpersandToUnderscoreConverter : IValueConverter {
 
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
 		((string)value).Replace('_', '&');
+}
+
+//[ValueConversion(typeof(FrameworkElement), typeof(CornerRadius))]
+//public class OvalCornerRadiusConverter : IValueConverter {
+//	private static double IfNaN(double value, double replacement) =>
+//		value is double.NaN or double.PositiveInfinity or double.NegativeInfinity ? replacement : value;
+
+//	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+//		FrameworkElement element = (FrameworkElement)value;
+//		double radius = Math.Min(IfNaN(element.Width, double.PositiveInfinity), IfNaN(element.Height, double.PositiveInfinity)) / 2;
+//		if (radius == double.PositiveInfinity) radius = 0;
+//		return new CornerRadius(radius);
+//	}
+
+//	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+//		throw new NotImplementedException();
+//}
+
+public class OvalCornerRadiusConverter : IMultiValueConverter {
+	private static double IfNaN(double value, double replacement) =>
+		value is double.NaN or double.PositiveInfinity or double.NegativeInfinity ? replacement : value;
+
+	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
+		double radius = values.Cast<double>().Select(value => IfNaN(value, double.PositiveInfinity)).Min() / 2;
+		if (radius == double.PositiveInfinity) radius = 0;
+		return new CornerRadius(radius);
+	}
+
+	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
 }

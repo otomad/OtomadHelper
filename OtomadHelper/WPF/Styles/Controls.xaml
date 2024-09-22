@@ -6,5 +6,6 @@
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Controls/Button/Button.xaml" />
 		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Controls/ExpandButton/ExpandButton.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Controls/ScrollBar/ScrollBar.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

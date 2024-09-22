@@ -29,6 +29,7 @@ public class BetterBridge {
 		IncludeFields = true,
 		Converters = {
 			new TupleConverterFactory(),
+			new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
 		},
 	};
 
@@ -173,7 +174,7 @@ public static class MessageSender {
 	private static void PostWebMessageFromJsonObject(JsonObject jsonObject) =>
 		MainDock.Browser.CoreWebView2.PostWebMessageAsJson(jsonObject.ToJsonString(jsonOptions));
 
-	private static readonly Dictionary<DateTime, TaskCompletionSource<JsonElement>> taskList = new();
+	private static readonly Dictionary<DateTime, TaskCompletionSource<JsonElement>> taskList = [];
 	/// <summary>
 	/// Asynchronously posts a web message and gets the result.
 	/// </summary>
