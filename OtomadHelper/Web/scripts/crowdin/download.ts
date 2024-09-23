@@ -1,9 +1,10 @@
 import extract from "extract-zip";
 import { createWriteStream, existsSync } from "fs";
-import { copyFile, mkdir, readdir, rm, stat } from "fs/promises";
+import { copyFile, mkdir, readdir, stat } from "fs/promises";
 import https from "https";
 import { tmpdir } from "os";
 import { join, resolve } from "path";
+import { rimraf } from "rimraf";
 import consoleColors from "../console-colors";
 import { translationsApi } from "./crowdin";
 import { projectId } from "./token";
@@ -46,11 +47,13 @@ async function mergeFolders(sourceFolder: string, targetFolder: string) {
 	for (const file of files) {
 		const sourcePath = join(sourceFolder, file);
 		const targetPath = join(targetFolder, file);
+		if (!existsSync(sourcePath)) continue;
 		const stats = await stat(sourcePath);
 
-		if (stats.isFile())
+		if (stats.isFile()) {
+			if (!existsSync(sourcePath)) continue;
 			await copyFile(sourcePath, targetPath);
-		else if (stats.isDirectory()) {
+		} else if (stats.isDirectory()) {
 			if (!existsSync(targetPath))
 				await mkdir(targetPath, { recursive: true });
 			mergeFolders(sourcePath, targetPath);
@@ -85,10 +88,9 @@ await downloadFile(downloadUrl, filePath);
 const extractedPath = resolve(tmpdir(), "l10n");
 await extractZip(filePath, extractedPath);
 await moveLocaleFiles(extractedPath, "Web");
-const remove = (path: string) => rm(path, { recursive: true, force: true });
 await Promise.all([
-	remove(filePath),
-	remove(extractedPath),
+	rimraf(filePath),
+	rimraf(extractedPath),
 ]);
 console.log(consoleColors.foreground.green + "Download successfully!" + consoleColors.reset);
 

@@ -23,15 +23,9 @@ namespace OtomadHelper.WPF.Common;
 /// </remarks>
 [AttachedDependencyProperty<bool, UIElement>("IsPressed", DefaultValue = false, IsReadOnly = true)]
 [AttachedDependencyProperty<bool, UIElement>("IsLeftPressed", DefaultValue = false, IsReadOnly = true)]
+[AttachedDependencyProperty<bool, UIElement>("Enabled", DefaultValue = false)]
 public static partial class MouseDownHelper {
-	public static readonly DependencyProperty EnabledProperty = DependencyProperty.RegisterAttached("Enabled",
-		typeof(bool), typeof(MouseDownHelper), new(false, OnEnabledChanged));
-
-	public static void SetEnabled(UIElement element, bool value) => element.SetValue(EnabledProperty, value);
-	public static bool GetEnabled(UIElement element) => (bool)element.GetValue(EnabledProperty);
-
-	private static void OnEnabledChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
-		if (sender is not UIElement element || e.NewValue is not bool enabled) return;
+	static partial void OnEnabledChanged(UIElement element, bool enabled) {
 		if (enabled) Register(element);
 		else UnRegister(element);
 	}

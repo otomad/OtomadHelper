@@ -86,10 +86,10 @@
 		<value>拡張機能を外しました！</value>
 	</data>
 	<data name="WrongOpeningMethod.Script.Content" xml:space="preserve">
-		<value>Omad Helper の新バージョンは拡張機能です。旧バージョンとは異なり、スクリプトではありません。
+		<value>音MADヘルパーの新バージョンは拡張機能です。旧バージョンとは異なり、スクリプトではありません。
 
 スクリプトメニューディレクトリの代わりにVEGASのApplication Extensionsディレクトリに拡張を移動してください。
 
-場所:</value>
+場所：</value>
 	</data>
 </root>

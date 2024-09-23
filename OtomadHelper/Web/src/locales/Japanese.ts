@@ -673,7 +673,7 @@ export default {
 		wrongOpeningMethod: {
 			script: {
 				title: "拡張機能を外しました！",
-				content: "Omad Helper の新バージョンは拡張機能です。旧バージョンとは異なり、スクリプトではありません。\n\nスクリプトメニューディレクトリの代わりにVEGASのApplication Extensionsディレクトリに拡張を移動してください。\n\n場所:",
+				content: "音MADヘルパーの新バージョンは拡張機能です。旧バージョンとは異なり、スクリプトではありません。\n\nスクリプトメニューディレクトリの代わりにVEGASのApplication Extensionsディレクトリに拡張を移動してください。\n\n場所：",
 			},
 		},
 	},

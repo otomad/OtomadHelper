@@ -317,6 +317,10 @@ export default [
 				name: "outerWidth",
 				message: "Please use window.outerWidth instead.",
 			}],
+			"no-restricted-syntax": ["error", {
+				selector: "VariableDeclaration[kind = 'let'] > VariableDeclarator[init = null]:not([id.typeAnnotation])",
+				message: "Type must be inferred at variable declaration",
+			}],
 		},
 	},
 	{
