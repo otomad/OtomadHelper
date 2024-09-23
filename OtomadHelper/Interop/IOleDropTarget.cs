@@ -52,7 +52,7 @@ public interface IOleDropTarget {
 }
 
 [StructLayout(LayoutKind.Sequential)]
-public struct POINTL {
+public struct PointLong {
 	public int x;
 	public int y;
 }
@@ -66,7 +66,7 @@ internal class DropTarget : IOleDropTarget {
 		this.owner = owner;
 	}
 
-	private DragEventArgs? CreateDragEventArgs(object? pDataObj, int grfKeyState, POINTL pt, int pdwEffect) {
+	private DragEventArgs? CreateDragEventArgs(object? pDataObj, int grfKeyState, PointLong pt, int pdwEffect) {
 		IDataObject? data;
 		if (pDataObj is null)
 			data = lastDataObject;
@@ -86,7 +86,7 @@ internal class DropTarget : IOleDropTarget {
 	private int GetY(long pt) => (int)(((ulong)(pt >> 0x20)) & 0xffffffffL);
 
 	int IOleDropTarget.OleDragEnter(object pDataObj, int grfKeyState, long pt, ref int pdwEffect) {
-		POINTL pointl = new() {
+		PointLong pointl = new() {
 			x = GetX(pt),
 			y = GetY(pt),
 		};
@@ -106,7 +106,7 @@ internal class DropTarget : IOleDropTarget {
 	}
 
 	int IOleDropTarget.OleDragOver(int grfKeyState, long pt, ref int pdwEffect) {
-		POINTL pointl = new() {
+		PointLong pointl = new() {
 			x = GetX(pt),
 			y = GetY(pt),
 		};
@@ -118,7 +118,7 @@ internal class DropTarget : IOleDropTarget {
 	}
 
 	int IOleDropTarget.OleDrop(object pDataObj, int grfKeyState, long pt, ref int pdwEffect) {
-		POINTL pointl = new() {
+		PointLong pointl = new() {
 			x = GetX(pt),
 			y = GetY(pt),
 		};

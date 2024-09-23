@@ -14,7 +14,7 @@ using OtomadHelper.WPF.Controls;
 namespace OtomadHelper.Test;
 public partial class TestControls : Form {
 	private readonly List<System.Windows.Window> flyouts = [];
-	private readonly string[] list = { "foo", "bar", "baz", "hello", "world", "C5", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+	private readonly string[] list = ["foo", "bar", "baz", "hello", "world", "C5", /*"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"*/];
 	private string selected = "C5";
 
 	public TestControls() {
@@ -35,7 +35,7 @@ public partial class TestControls : Form {
 		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect, out Task<string> resultTask);
 		//PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect, selected, out Task<string> resultTask);
 		flyouts.Add(flyout);
-		resultTask.Then(result => ComboBoxBtn.Text = selected = result);
+		_ = resultTask.Then(result => ComboBoxBtn.Text = selected = result);
 		try {
 			flyout.ShowDialog();
 		} catch (Exception) { }

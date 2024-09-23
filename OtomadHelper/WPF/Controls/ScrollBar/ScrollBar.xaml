@@ -5,20 +5,42 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
+	<m:OvalCornerRadiusConverter x:Key="Oval" />
 	<s:Double x:Key="ScrollBarThickness">14</s:Double>
 	<s:Double x:Key="ScrollBarButtonPressedScale">0.8</s:Double>
-	<m:OvalCornerRadiusConverter x:Key="Oval" />
+	<s:Double x:Key="ScrollBarTrackThickness">6</s:Double>
+	<s:Double x:Key="ScrollBarTrackUnhoveredThickness">2</s:Double>
+	<Thickness x:Key="ScrollBarVerticalTrackUnhoveredMargin">4,0,0,0</Thickness>
+	<Thickness x:Key="ScrollBarHorizontalTrackUnhoveredMargin">0,4,0,0</Thickness>
+	<Duration x:Key="ScrollBarButtonPressedScaleDuration">00:00:00.100</Duration>
 
-	<Style x:Key="ScrollBarLineButton" TargetType="RepeatButton">
+	<Storyboard x:Key="FadeIn">
+		<DoubleAnimation
+			EasingFunction="{StaticResource EaseOutExpo}"
+			Storyboard.TargetProperty="Opacity"
+			From="0"
+			To="1"
+			Duration="{StaticResource BaseAnimationDuration}"
+			/>
+	</Storyboard>
+	<Storyboard x:Key="FadeOut">
+		<DoubleAnimation
+			EasingFunction="{StaticResource EaseOutExpo}"
+			Storyboard.TargetProperty="Opacity"
+			From="1"
+			To="0"
+			Duration="{StaticResource BaseAnimationDuration}"
+			/>
+	</Storyboard>
+
+	<Style x:Key="ScrollBarLineButton" TargetType="c:ScrollBarLineButton">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="OverridesDefaultStyle" Value="true" />
 		<Setter Property="Focusable" Value="false" />
 		<Setter Property="Foreground" Value="{DynamicResource ControlStrong}" />
-		<Setter Property="Tag" Value="0" />
-		<!--  We treat the Tag as the Rotation Angle  -->
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="RepeatButton">
+				<ControlTemplate TargetType="c:ScrollBarLineButton">
 					<Border
 						x:Name="Border"
 						Background="Transparent"
@@ -26,7 +48,10 @@
 						RenderTransformOrigin="0.5 0.5"
 						>
 						<Border.RenderTransform>
-							<RotateTransform Angle="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+							<TransformGroup>
+								<ScaleTransform ScaleX="{Binding ArrowScale, RelativeSource={RelativeSource TemplatedParent}}" ScaleY="{Binding ArrowScale, RelativeSource={RelativeSource TemplatedParent}}" />
+								<RotateTransform Angle="{Binding ArrowRotation, RelativeSource={RelativeSource TemplatedParent}}" />
+							</TransformGroup>
 						</Border.RenderTransform>
 						<c:Icon
 							Foreground="{TemplateBinding Foreground}"
@@ -34,27 +59,51 @@
 							Source="{StaticResource Icon:CaretUp}"
 							/>
 					</Border>
-					<ControlTemplate.Triggers>
-						<Trigger Property="IsPressed" Value="true">
-							<Setter TargetName="Border" Property="RenderTransform">
-								<Setter.Value>
-									<TransformGroup>
-										<ScaleTransform ScaleX="{StaticResource ScrollBarButtonPressedScale}" ScaleY="{StaticResource ScrollBarButtonPressedScale}" />
-										<RotateTransform Angle="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" />
-									</TransformGroup>
-								</Setter.Value>
-							</Setter>
-						</Trigger>
-					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
+		<Setter Property="Opacity" Value="0" />
 		<Style.Triggers>
-			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="False">
-				<Setter Property="Opacity" Value="0" />
-			</DataTrigger>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+			</Trigger>
+			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="True">
+				<Setter Property="Opacity" Value="1" />
+				<DataTrigger.EnterActions>
+					<BeginStoryboard Storyboard="{StaticResource FadeIn}" />
+				</DataTrigger.EnterActions>
+				<DataTrigger.ExitActions>
+					<BeginStoryboard Storyboard="{StaticResource FadeOut}" />
+				</DataTrigger.ExitActions>
+			</DataTrigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="ArrowScale" Value="{StaticResource ScrollBarButtonPressedScale}" />
+				<Trigger.EnterActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation
+								EasingFunction="{StaticResource EaseOutExpo}"
+								Storyboard.TargetProperty="ArrowScale"
+								From="1"
+								To="{StaticResource ScrollBarButtonPressedScale}"
+								Duration="{StaticResource ScrollBarButtonPressedScaleDuration}"
+								/>
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.EnterActions>
+				<Trigger.ExitActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation
+								EasingFunction="{StaticResource EaseOutExpo}"
+								Storyboard.TargetProperty="ArrowScale"
+								From="{StaticResource ScrollBarButtonPressedScale}"
+								To="1"
+								Duration="{StaticResource ScrollBarButtonPressedScaleDuration}"
+								/>
+						</Storyboard>
+					</BeginStoryboard>
+				</Trigger.ExitActions>
 			</Trigger>
 		</Style.Triggers>
 	</Style>
@@ -64,43 +113,83 @@
 		<Setter Property="OverridesDefaultStyle" Value="true" />
 		<Setter Property="IsTabStop" Value="false" />
 		<Setter Property="Focusable" Value="false" />
-		<Setter Property="Width" Value="6" />
+		<Setter Property="Width" Value="{StaticResource ScrollBarTrackUnhoveredThickness}" />
 		<Setter Property="Height" Value="Auto" />
+		<Setter Property="Margin" Value="{StaticResource ScrollBarVerticalTrackUnhoveredMargin}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Thumb">
 					<Border
 						Width="{TemplateBinding Width}"
 						Height="{TemplateBinding Height}"
+						m:OvalCornerRadius.Enabled="True"
 						Background="{DynamicResource ControlStrong}"
 						BorderThickness="0"
-						>
-						<Border.CornerRadius>
-							<MultiBinding Converter="{StaticResource Oval}">
-								<Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
-								<Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
-							</MultiBinding>
-						</Border.CornerRadius>
-					</Border>
+						/>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 		<Style.Triggers>
 			<DataTrigger Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="Horizontal">
 				<Setter Property="Width" Value="Auto" />
-				<Setter Property="Height" Value="6" />
-			</DataTrigger>
-			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="False">
-				<Setter Property="Width" Value="2" />
-				<Setter Property="Margin" Value="4,0,0,0" />
+				<Setter Property="Height" Value="{StaticResource ScrollBarTrackUnhoveredThickness}" />
+				<Setter Property="Margin" Value="{StaticResource ScrollBarHorizontalTrackUnhoveredMargin}" />
 			</DataTrigger>
 			<MultiDataTrigger>
 				<MultiDataTrigger.Conditions>
-					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="False" />
+					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="True" />
+					<Condition Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="Vertical" />
+				</MultiDataTrigger.Conditions>
+				<Setter Property="Width" Value="{StaticResource ScrollBarTrackThickness}" />
+				<Setter Property="Margin" Value="0" />
+				<MultiDataTrigger.EnterActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation
+								EasingFunction="{StaticResource EaseOutExpo}"
+								Storyboard.TargetProperty="Width"
+								From="{StaticResource ScrollBarTrackUnhoveredThickness}"
+								To="{StaticResource ScrollBarTrackThickness}"
+								Duration="{StaticResource BaseAnimationDuration}"
+								/>
+							<ThicknessAnimation
+								EasingFunction="{StaticResource EaseOutExpo}"
+								Storyboard.TargetProperty="Margin"
+								From="{StaticResource ScrollBarVerticalTrackUnhoveredMargin}"
+								To="0"
+								Duration="{StaticResource BaseAnimationDuration}"
+								/>
+						</Storyboard>
+					</BeginStoryboard>
+				</MultiDataTrigger.EnterActions>
+				<MultiDataTrigger.ExitActions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation
+								EasingFunction="{StaticResource EaseOutExpo}"
+								Storyboard.TargetProperty="Width"
+								From="{StaticResource ScrollBarTrackThickness}"
+								To="{StaticResource ScrollBarTrackUnhoveredThickness}"
+								Duration="{StaticResource BaseAnimationDuration}"
+								/>
+							<ThicknessAnimation
+								EasingFunction="{StaticResource EaseOutExpo}"
+								Storyboard.TargetProperty="Margin"
+								From="0"
+								To="{StaticResource ScrollBarVerticalTrackUnhoveredMargin}"
+								Duration="{StaticResource BaseAnimationDuration}"
+								/>
+						</Storyboard>
+					</BeginStoryboard>
+				</MultiDataTrigger.ExitActions>
+			</MultiDataTrigger>
+			<MultiDataTrigger>
+				<MultiDataTrigger.Conditions>
+					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="True" />
 					<Condition Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="Horizontal" />
 				</MultiDataTrigger.Conditions>
-				<Setter Property="Height" Value="2" />
-				<Setter Property="Margin" Value="0,4,0,0" />
+				<Setter Property="Height" Value="{StaticResource ScrollBarTrackThickness}" />
+				<Setter Property="Margin" Value="0" />
 			</MultiDataTrigger>
 		</Style.Triggers>
 	</Style>
@@ -111,17 +200,17 @@
 
 	<Style x:Key="ScrollBarTrackBorder" TargetType="Border">
 		<Setter Property="Background" Value="{DynamicResource AcrylicBackground}" />
-		<Setter Property="CornerRadius">
-			<Setter.Value>
-				<MultiBinding Converter="{StaticResource Oval}">
-					<Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
-					<Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
-				</MultiBinding>
-			</Setter.Value>
-		</Setter>
+		<Setter Property="m:OvalCornerRadius.Enabled" Value="True" />
+		<Setter Property="Opacity" Value="0" />
 		<Style.Triggers>
-			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="False">
-				<Setter Property="Opacity" Value="0" />
+			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="True">
+				<Setter Property="Opacity" Value="1" />
+				<DataTrigger.EnterActions>
+					<BeginStoryboard Storyboard="{StaticResource FadeIn}" />
+				</DataTrigger.EnterActions>
+				<DataTrigger.ExitActions>
+					<BeginStoryboard Storyboard="{StaticResource FadeOut}" />
+				</DataTrigger.ExitActions>
 			</DataTrigger>
 		</Style.Triggers>
 	</Style>
@@ -134,11 +223,11 @@
 				<RowDefinition Height="16" />
 			</Grid.RowDefinitions>
 			<Border Grid.RowSpan="3" Style="{StaticResource ScrollBarTrackBorder}" />
-			<RepeatButton
+			<c:ScrollBarLineButton
 				Grid.Row="0"
+				ArrowPoint="Up"
 				Command="ScrollBar.LineUpCommand"
 				Style="{StaticResource ScrollBarLineButton}"
-				Tag="0"
 				/>
 			<Track
 				x:Name="PART_Track"
@@ -155,12 +244,12 @@
 					<RepeatButton Command="ScrollBar.PageDownCommand" Style="{StaticResource ScrollBarPageButton}" />
 				</Track.IncreaseRepeatButton>
 			</Track>
-			<RepeatButton
+			<c:ScrollBarLineButton
 				Grid.Row="3"
 				Height="18"
+				ArrowPoint="Down"
 				Command="ScrollBar.LineDownCommand"
 				Style="{StaticResource ScrollBarLineButton}"
-				Tag="180"
 				/>
 		</Grid>
 	</ControlTemplate>
@@ -173,11 +262,11 @@
 				<ColumnDefinition Width="16" />
 			</Grid.ColumnDefinitions>
 			<Border Grid.ColumnSpan="3" Style="{StaticResource ScrollBarTrackBorder}" />
-			<RepeatButton
+			<c:ScrollBarLineButton
 				Grid.Column="0"
+				ArrowPoint="Left"
 				Command="ScrollBar.LineLeftCommand"
 				Style="{StaticResource ScrollBarLineButton}"
-				Tag="270"
 				/>
 			<Track
 				x:Name="PART_Track"
@@ -194,12 +283,12 @@
 					<RepeatButton Command="ScrollBar.PageRightCommand" Style="{StaticResource ScrollBarPageButton}" />
 				</Track.IncreaseRepeatButton>
 			</Track>
-			<RepeatButton
+			<c:ScrollBarLineButton
 				Grid.Column="3"
 				Height="18"
+				ArrowPoint="Right"
 				Command="ScrollBar.LineRightCommand"
 				Style="{StaticResource ScrollBarLineButton}"
-				Tag="90"
 				/>
 		</Grid>
 	</ControlTemplate>
@@ -209,7 +298,7 @@
 		<Setter Property="OverridesDefaultStyle" Value="true" />
 		<Style.Triggers>
 			<Trigger Property="Orientation" Value="Horizontal">
-				<Setter Property="Width" Value="Auto"/>
+				<Setter Property="Width" Value="Auto" />
 				<Setter Property="Height" Value="{StaticResource ScrollBarThickness}" />
 				<Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
 			</Trigger>

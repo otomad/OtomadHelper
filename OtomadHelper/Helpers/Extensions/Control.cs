@@ -5,6 +5,7 @@ using System.Windows.Threading;
 using System.Drawing;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Data;
 
 namespace OtomadHelper.Helpers;
 
@@ -92,7 +93,7 @@ public static partial class Extensions {
 	/// <returns>A list of all children of type <typeparamref name="T"/> found in the visual tree.
 	/// If no such children are found, an empty list is returned.</returns>
 	public static List<T> GetChildrenOfType<T>(this DependencyObject parent) where T : DependencyObject {
-		List<T> children = new();
+		List<T> children = [];
 		if (parent is null) return children;
 		for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++) {
 			DependencyObject? child = VisualTreeHelper.GetChild(parent, i);
@@ -112,7 +113,7 @@ public static partial class Extensions {
 	/// <returns>A list of all children of type <typeparamref name="T"/> found.
 	/// If no such children are found, an empty list is returned.</returns>
 	public static List<T> GetChildrenOfType<T>(this Control parent, bool includeParent = false) where T : Control {
-		List<T> children = new();
+		List<T> children = [];
 		if (parent is null) return children;
 		if (includeParent && parent is T expectedParent) children.Add(expectedParent);
 		foreach (Control control in parent.Controls) {
@@ -144,5 +145,15 @@ public static partial class Extensions {
 		}
 
 		return VisualTreeHelper.GetParent(child);
+	}
+
+	/// <inheritdoc cref="BindingOperations.ClearBinding(DependencyObject, DependencyProperty)"/>
+	public static void ClearBinding(this FrameworkElement target, DependencyProperty dp) {
+		BindingOperations.ClearBinding(target, dp);
+	}
+
+	/// <inheritdoc cref="BindingOperations.ClearAllBindings(DependencyObject)"/>
+	public static void ClearBinding(this FrameworkElement target) {
+		BindingOperations.ClearAllBindings(target);
 	}
 }

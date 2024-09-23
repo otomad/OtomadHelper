@@ -14,12 +14,12 @@ public static partial class Extensions {
 		return e.Data.GetDataPresent(DataFormats.FileDrop) ? e.Data.GetData(DataFormats.FileDrop) as string[] ?? NOTHING : NOTHING;
 	}
 
-	private static readonly HashSet<Type> NumericTypes = new() {
+	private static readonly HashSet<Type> NumericTypes = [
 		typeof(int), typeof(double), typeof(decimal),
 		typeof(long), typeof(short), typeof(sbyte),
 		typeof(byte), typeof(ulong), typeof(ushort),
 		typeof(uint), typeof(float),
-	};
+	];
 
 	/// <summary>
 	/// Determine whether a type is a numeric (including <see cref="int"/>, <see cref="double"/>, etc.) type.
@@ -65,10 +65,9 @@ public static partial class Extensions {
 	public static bool TryParseNumber<TNumber>(string s, ref TNumber result) where TNumber : IComparable<TNumber> {
 		NotImplementedException NaNException = new($"{typeof(TNumber).Name} is not a number type");
 		if (!typeof(TNumber).IsNumber()) throw NaNException;
-		MethodInfo? tryParseMethod = typeof(TNumber).GetMethod("TryParse",
-			new[] { typeof(string), typeof(TNumber).MakeByRefType() });
-		if (tryParseMethod is null) throw NaNException;
-		object?[] parameters = new object?[] { s, null };
+		MethodInfo tryParseMethod = typeof(TNumber).GetMethod("TryParse",
+			[typeof(string), typeof(TNumber).MakeByRefType()]) ?? throw NaNException;
+		object?[] parameters = [s, null];
 		if ((bool)tryParseMethod.Invoke(null, parameters)) {
 			result = (TNumber)parameters[1]!;
 			return true;

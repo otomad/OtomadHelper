@@ -37,25 +37,25 @@ public class TupleConverterFactory : JsonConverterFactory {
 }
 
 internal static class TupleReflector {
-	public static readonly HashSet<Type> TupleTypes = new(new Type[] {
-			typeof(Tuple<>),
-			typeof(Tuple<,>),
-			typeof(Tuple<,,>),
-			typeof(Tuple<,,,>),
-			typeof(Tuple<,,,,>),
-			typeof(Tuple<,,,,,>),
-			typeof(Tuple<,,,,,,>),
-			typeof(Tuple<,,,,,,,>),
+	public static readonly HashSet<Type> TupleTypes = new([
+		typeof(Tuple<>),
+		typeof(Tuple<,>),
+		typeof(Tuple<,,>),
+		typeof(Tuple<,,,>),
+		typeof(Tuple<,,,,>),
+		typeof(Tuple<,,,,,>),
+		typeof(Tuple<,,,,,,>),
+		typeof(Tuple<,,,,,,,>),
 
-			typeof(ValueTuple<>),
-			typeof(ValueTuple<,>),
-			typeof(ValueTuple<,,>),
-			typeof(ValueTuple<,,,>),
-			typeof(ValueTuple<,,,,>),
-			typeof(ValueTuple<,,,,,>),
-			typeof(ValueTuple<,,,,,,>),
-			typeof(ValueTuple<,,,,,,,>)
-	});
+		typeof(ValueTuple<>),
+		typeof(ValueTuple<,>),
+		typeof(ValueTuple<,,>),
+		typeof(ValueTuple<,,,>),
+		typeof(ValueTuple<,,,,>),
+		typeof(ValueTuple<,,,,,>),
+		typeof(ValueTuple<,,,,,,>),
+		typeof(ValueTuple<,,,,,,,>)
+	]);
 	public static Type GetTupleConverter(Type typeToConvert) {
 		Type[] genericTupleArgs = typeToConvert.GetGenericArguments();
 

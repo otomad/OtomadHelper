@@ -34,7 +34,7 @@ public class OtomadHelperModule : ICustomCommandModule {
 	public ICollection GetCustomCommands() {
 		customCommandModule.MenuPopup += HandlePICmdMenuPopup;
 		customCommandModule.Invoked += HandlePICmdInvoked;
-		CustomCommand[] commands = new CustomCommand[] { customCommandModule };
+		CustomCommand[] commands = [customCommandModule];
 		return commands;
 	}
 

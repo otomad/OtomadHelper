@@ -31,11 +31,11 @@ public partial class MainDock : UserControl {
 		//MainWindow window = new();
 		//new TestControls().Show();
 		//window.Show();
-		/*new ContentDialog("幸福倒计时", "即将升级 Windows 到最新版本！", new ContentDialogButtonItem[] {
+		/*_ = WPF.Controls.ContentDialog.ShowDialog<string>("幸福倒计时", "即将升级 Windows 到最新版本！", [
 			new("草", DialogResult.Abort),
 			new("走", DialogResult.Retry),
 			new("忽略", DialogResult.Ignore, true),
-		}).ShowDialog();*/
+		]);*/
 
 #if VEGAS_ENV
 		BackColor = Skins.Colors.ButtonFace;

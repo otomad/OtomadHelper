@@ -47,10 +47,10 @@ public class EventBindingExtension : MarkupExtension {
 		if (eventHandlerType is null) return null;
 
 		MethodInfo? handlerInfo = eventHandlerType.GetMethod("Invoke");
-		DynamicMethod? method = new("", handlerInfo.ReturnType, new[] {
+		DynamicMethod? method = new("", handlerInfo.ReturnType, [
 			handlerInfo.GetParameters()[0].ParameterType,
 			handlerInfo.GetParameters()[1].ParameterType,
-		});
+		]);
 
 		ILGenerator? gen = method.GetILGenerator();
 		gen.Emit(OpCodes.Ldarg, 0);

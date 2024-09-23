@@ -1,8 +1,10 @@
 using System.Windows;
+using System.Windows.Media.Animation;
 
 namespace OtomadHelper.WPF.Controls;
 
-public class BaseFlyout : BackdropWindow {
+[DependencyProperty<bool>("FadeIn", DefaultValue = false)]
+public partial class BaseFlyout : BackdropWindow {
 	public BaseFlyout() {
 		InitializeComponent();
 	}
@@ -19,16 +21,18 @@ public class BaseFlyout : BackdropWindow {
 		Closing += BaseFlyout_Closing;
 
 		// Loaded animation
-		/*DoubleAnimation fadeInAnimation = new() {
-			From = 0,
-			To = 1,
-			Duration = (Duration)Resources["BaseAnimationDuration"],
-			FillBehavior = FillBehavior.Stop,
-		};
-		Storyboard.SetTargetProperty(fadeInAnimation, new("Opacity"));
-		Storyboard fadeInStoryboard = new();
-		fadeInStoryboard.Children.Add(fadeInAnimation);
-		Loaded += (sender, e) => fadeInStoryboard.Begin(this);*/
+		if (FadeIn) {
+			DoubleAnimation fadeInAnimation = new() {
+				From = 0,
+				To = 1,
+				Duration = (Duration)Resources["BaseAnimationDuration"],
+				FillBehavior = FillBehavior.Stop,
+			};
+			Storyboard.SetTargetProperty(fadeInAnimation, new("Opacity"));
+			Storyboard fadeInStoryboard = new();
+			fadeInStoryboard.Children.Add(fadeInAnimation);
+			Loaded += (sender, e) => fadeInStoryboard.Begin(this);
+		}
 	}
 
 	public void Center(Rect rect, SetWidthType widthType = SetWidthType.Nothing) {

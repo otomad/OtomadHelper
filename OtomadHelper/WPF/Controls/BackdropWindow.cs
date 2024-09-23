@@ -76,12 +76,14 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 			maxTop = workingArea.Bottom / dpiY - Height,
 			minLeft = workingArea.Left / dpiX,
 			minTop = workingArea.Top / dpiY,
-			screenWidth = workingArea.Width / dpiX;
+			screenWidth = workingArea.Width / dpiX,
+			screenHeight = workingArea.Height / dpiY;
 		if (Left > maxLeft) Left = maxLeft;
 		if (Top > maxTop) Top = maxTop;
 		if (Left < minLeft) Left = minLeft;
 		if (Top < minTop) Top = minTop;
 		MaxWidth = Math.Min(MaxWidth, screenWidth);
+		MaxHeight = Math.Min(MaxHeight, screenHeight);
 	}
 
 	protected virtual void SetLocation(double left, double top) {
