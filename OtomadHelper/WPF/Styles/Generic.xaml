@@ -6,7 +6,6 @@
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Variables.xaml" />
 		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Icons.xaml" />
-		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Controls.xaml" />
 		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Storyboards.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

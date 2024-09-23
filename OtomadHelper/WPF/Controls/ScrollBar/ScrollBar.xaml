@@ -5,6 +5,12 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
+	<!--<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Storyboards.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Icons.xaml" />
+	</ResourceDictionary.MergedDictionaries>-->
+	<!-- Why cannot auto import??? -->
+	
 	<m:OvalCornerRadiusConverter x:Key="Oval" />
 	<s:Double x:Key="ScrollBarThickness">14</s:Double>
 	<s:Double x:Key="ScrollBarButtonPressedScale">0.8</s:Double>
@@ -14,7 +20,7 @@
 	<Thickness x:Key="ScrollBarHorizontalTrackUnhoveredMargin">0,4,0,0</Thickness>
 	<Duration x:Key="ScrollBarButtonPressedScaleDuration">00:00:00.100</Duration>
 
-	<Storyboard x:Key="FadeIn">
+	<!--<Storyboard x:Key="FadeIn">
 		<DoubleAnimation
 			EasingFunction="{StaticResource EaseOutExpo}"
 			Storyboard.TargetProperty="Opacity"
@@ -31,7 +37,7 @@
 			To="0"
 			Duration="{StaticResource BaseAnimationDuration}"
 			/>
-	</Storyboard>
+	</Storyboard>-->
 
 	<Style x:Key="ScrollBarLineButton" TargetType="c:ScrollBarLineButton">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
@@ -78,7 +84,7 @@
 			</DataTrigger>
 			<Trigger Property="IsPressed" Value="True">
 				<Setter Property="ArrowScale" Value="{StaticResource ScrollBarButtonPressedScale}" />
-				<Trigger.EnterActions>
+				<!--<Trigger.EnterActions>
 					<BeginStoryboard>
 						<Storyboard>
 							<DoubleAnimation
@@ -103,7 +109,7 @@
 								/>
 						</Storyboard>
 					</BeginStoryboard>
-				</Trigger.ExitActions>
+				</Trigger.ExitActions>-->
 			</Trigger>
 		</Style.Triggers>
 	</Style>
@@ -142,7 +148,7 @@
 				</MultiDataTrigger.Conditions>
 				<Setter Property="Width" Value="{StaticResource ScrollBarTrackThickness}" />
 				<Setter Property="Margin" Value="0" />
-				<MultiDataTrigger.EnterActions>
+				<!--<MultiDataTrigger.EnterActions>
 					<BeginStoryboard>
 						<Storyboard>
 							<DoubleAnimation
@@ -181,7 +187,7 @@
 								/>
 						</Storyboard>
 					</BeginStoryboard>
-				</MultiDataTrigger.ExitActions>
+				</MultiDataTrigger.ExitActions>-->
 			</MultiDataTrigger>
 			<MultiDataTrigger>
 				<MultiDataTrigger.Conditions>

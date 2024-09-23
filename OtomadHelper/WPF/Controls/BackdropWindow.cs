@@ -32,7 +32,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 
 	private void InitializeComponent() {
 		RefreshCulture();
-		AddResource("Wpf/Styles/Generic.xaml");
+		AddResource("Wpf/Styles/GenericWithControls.xaml");
 		Background = Brushes.Transparent;
 		Loaded += Window_Loaded;
 		IsVisibleChanged += (sender, e) => {

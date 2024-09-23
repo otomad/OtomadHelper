@@ -20,19 +20,21 @@ public class NamedResourceDictionary : ResourceDictionary {
 
 public class CustomControlResourceDictionary : ResourceDictionary {
 	public CustomControlResourceDictionary() {
-		AddResource("Wpf/Styles/Generic.xaml");
+		AddResource("Wpf/Styles/GenericWithControls.xaml", "Wpf/Styles/Generic.xaml");
 	}
 
 	private static readonly List<string> dictionaryBeingAdded = [];
-	public void AddResource(string path) {
+	public void AddResource(string path, string avoidRecursion) {
 		lock (dictionaryBeingAdded) {
 			// We need to lock the thread and use a static field to judge before and after adding the
 			// resource dictionary code to avoid recursing to the control being created when adding the
 			// "Control.xaml" dictionary, causing a stack overflow exception.
-			if (dictionaryBeingAdded.Contains(path)) return;
-			dictionaryBeingAdded.Add(path);
-			MergedDictionaries.Add(new() { Source = ProjectUri(path) });
-			dictionaryBeingAdded.Remove(path);
+			if (!dictionaryBeingAdded.Contains(path)) {
+				dictionaryBeingAdded.Add(path);
+				MergedDictionaries.Add(new() { Source = ProjectUri(path) });
+				dictionaryBeingAdded.Remove(path);
+			} else
+				MergedDictionaries.Add(new() { Source = ProjectUri(avoidRecursion) });
 		}
 	}
 }
