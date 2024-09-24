@@ -67,7 +67,7 @@ export const configStore = createStore({
 		preserveFormant: false,
 		basePitch: "C5",
 		prelistenAttributes: {
-			engine: "NAudio",
+			engine: "WebAudio",
 			waveform: "sinusoid",
 			duration: 500,
 			adjustAudioToBasePitch: false,

@@ -20,7 +20,7 @@ const getExceedsName = (id: string | undefined, tuningMethod: string) => !id ? "
 	id === "plugin" && tuningMethod === "pitchShift" ? "multiple" : id
 ];
 
-const beepEngines = ["ConsoleBeep", "PowerShell", "NAudio"];
+const beepEngines = ["NAudio", "WebAudio"];
 const beepWaveforms = ["sinusoid", "triangle", "square", "sawtooth"];
 
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];

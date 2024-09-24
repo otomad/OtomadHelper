@@ -1,3 +1,4 @@
+import dedent from "dedent";
 import { lstat, readdir, writeFile } from "fs/promises";
 import { throttle } from "lodash-es";
 import { parse, resolve } from "path";
@@ -9,6 +10,7 @@ export default (): Plugin => {
 	const registered = {
 		icons: [] as string[],
 		lotties: [] as string[],
+		classes: [] as string[],
 	};
 
 	const initIcons = async (path?: string[]) => {
@@ -38,12 +40,46 @@ export default (): Plugin => {
 			fileDisplay(resolve(root, "src/assets/lotties"), lotties, registered.lotties),
 		]);
 		const D_TS_NAME = "auto-icons.d.ts";
+		await writeFile(resolve(root, "src/types/", D_TS_NAME), (() => dedent`
+			declare global {
+				type DeclaredIcons = "${icons.join('" | "')}" | (string & {});
+
+				type DeclaredLotties = "${lotties.join('" | "')}" | (string & {});
+			}
+
+			export { };\n
+		`)());
+	};
+
+	const initClasses = async (path?: string[]) => {
+		if (path)
+			if (path[1] === "classes") {
+				if (path.length > 3) return;
+				if (registered.classes.includes(path[2])) return;
+			}
+		const fileDisplay = async (filePath: string) => {
+			const classes: string[] = [];
+			const files = await readdir(resolve(filePath));
+			for (const filename of files) {
+				const filedir = resolve(filePath, filename);
+				const stats = await lstat(filedir);
+				const basename = parse(filename).name;
+				if (stats.isFile())
+					classes.push(basename);
+			}
+			return classes;
+		};
+		const classes = await fileDisplay(resolve(root, "src/classes"));
+		registered.classes = classes;
+		const D_TS_NAME = "auto-classes.d.ts";
 		await writeFile(resolve(root, "src/types/", D_TS_NAME), (() => {
-			let result = 'declare global {\n\ttype DeclaredIcons = "';
-			result += icons.join('" | "');
-			result += '" | (string & {});\n\ttype DeclaredLotties = "';
-			result += lotties.join('" | "');
-			result += '" | (string & {});\n}\n\nexport { };\n';
+			let result = "";
+			for (const [i, klass] of classes.entries())
+				result += `import type _${i} from "classes/${klass}.ts";\n`;
+			result += "\ndeclare global {\n";
+			for (const klass of classes)
+				result += `\texport { default as ${klass} } from "classes/${klass}.ts";\n`;
+			result += "}\n\nexport { };\n";
 			return result;
 		})());
 	};
@@ -51,6 +87,8 @@ export default (): Plugin => {
 	const throttledFn = throttle((path: string[]) => {
 		if (path[1] === "assets" && ["icons", "lotties"].includes(path[2]))
 			initIcons(path);
+		if (path[1] === "classes")
+			initClasses(path);
 	}, 5000);
 
 	return {
@@ -59,6 +97,7 @@ export default (): Plugin => {
 
 		buildStart() {
 			initIcons();
+			initClasses();
 		},
 
 		handleHotUpdate({ file }) {
