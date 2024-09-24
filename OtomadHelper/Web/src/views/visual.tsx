@@ -193,10 +193,10 @@ export default function Visual() {
 						icon="swirl"
 						actions={<ToggleSwitch on={glissando} />}
 					>
-						<Expander.Item title={t.titles.effect}>
+						<Expander.Item icon="sparkle" title={t.titles.effect}>
 							<Segmented current={glissandoEffect}>
-								<Segmented.Item id="swirl">{t.stream.playingTechniques.glissando.swirl}</Segmented.Item>
-								<Segmented.Item id="pingpong">{t.stream.playingTechniques.glissando.pingpong}</Segmented.Item>
+								<Segmented.Item icon="swirl" id="swirl">{t.stream.playingTechniques.glissando.swirl}</Segmented.Item>
+								<Segmented.Item icon="pingpong" id="pingpong">{t.stream.playingTechniques.glissando.pingpong}</Segmented.Item>
 							</Segmented>
 						</Expander.Item>
 						<Expander.Item title={t.stream.playingTechniques.glissando.swirlAmount} details={t.descriptions.stream.playingTechniques.glissando.swirlAmount}>
@@ -215,8 +215,8 @@ export default function Visual() {
 						icon="arpeggio"
 						actions={<ToggleSwitch on={arpeggio} />}
 					>
-						<ToggleSwitch on={arpeggioNegative} details={t.descriptions.stream.playingTechniques.arpeggio.negative}>{t.prve.effects.negative}</ToggleSwitch>
-						<Expander.Item title={t.stream.playingTechniques.applyCustomPreset}>
+						<ToggleSwitch icon="invert_color" on={arpeggioNegative} details={t.descriptions.stream.playingTechniques.arpeggio.negative}>{t.prve.effects.negative}</ToggleSwitch>
+						<Expander.Item icon="preset" title={t.stream.playingTechniques.applyCustomPreset}>
 							<Button>{t.unselected}</Button>
 						</Expander.Item>
 					</Expander>

@@ -32,15 +32,19 @@ const StyledComboBox = styled(StyledButton)`
 	}
 `;
 
-export default function ComboBox<T extends string>({ options, current: [current, setCurrent], ...htmlAttrs }: FCP<{
+export default function ComboBox<T extends string>({ ids, options, current: [current, setCurrent], ...htmlAttrs }: FCP<{
+	/** The identifiers of the combo box. */
+	ids?: readonly T[];
 	/** The options of the combo box. */
-	options: readonly T[];
+	options: readonly Readable[];
 	/** The selected option of the combo box. */
 	current: StateProperty<T>;
 }, "select">) {
+	ids ??= options as T[];
+
 	async function showComboBox(e: MouseEvent) {
 		const rect = getBoundingClientRectTuple(e.currentTarget);
-		const result = await bridges.bridge.showComboBox(rect, current!, options as T[]);
+		const result = await bridges.bridge.showComboBox(rect, current!, ids as T[]); // TODO: add ids.
 		setCurrent?.(result as T);
 	}
 
@@ -56,7 +60,7 @@ export default function ComboBox<T extends string>({ options, current: [current,
 	else // fallback in dev (a normal browser)
 		return (
 			<StyledComboBox as="select" defaultValue={current} onChange={e => setCurrent?.(e.currentTarget.value as T)} {...htmlAttrs}>
-				{options.map(option => <option key={option}>{option}</option>)}
+				{ids.map((id, i) => <option key={id} value={id}>{options[i]}</option>)}
 			</StyledComboBox>
 		);
 }

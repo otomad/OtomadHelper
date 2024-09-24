@@ -1,4 +1,4 @@
-import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemText } from "components/Expander/ExpanderItem";
+import { expanderItemWithIconPaddingInlineStart, styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemText } from "components/Expander/ExpanderItem";
 
 const THUMB_SIZE = 18;
 const THUMB_PRESSED_WIDTH = 22;
@@ -157,9 +157,13 @@ const StyledToggleSwitchLabel = styled.button`
 			}
 		}
 	}
+
+	&:has(> .icon) {
+		padding-inline-start: ${expanderItemWithIconPaddingInlineStart}px;
+	}
 `;
 
-export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, details, resetTransitionOnChanging = false, $color, lock, children, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = [], hideLabel, as, details, resetTransitionOnChanging = false, $color, lock, icon, children, ...htmlAttrs }: FCP<{
 	/** Is on? */
 	on: StateProperty<boolean>;
 	/** Disabled */
@@ -187,6 +191,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	 * Useful when you need to disable user input without affecting configuration saving.
 	 */
 	lock?: boolean | null;
+	icon?: DeclaredIcons;
 }, "button">) {
 	const on = typeof lock === "boolean" ? lock : _on!;
 	const disabled = typeof lock === "boolean" || _disabled;
@@ -258,6 +263,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 			style={{ "--accent-color": $color }}
 			{...htmlAttrs}
 		>
+			{icon && <Icon name={icon} />}
 			<div className="text">
 				<p className="title">{children}</p>
 				<p className="details">{details}</p>

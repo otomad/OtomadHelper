@@ -22,7 +22,7 @@ export default function Home() {
 
 			<ComboBox options={["foo", "bar", "baz", "hello", "world"]} current={[text, setText]} />
 
-			<PitchPicker pitch={pitch} style={{ maxWidth: "300px" }} />
+			<PitchPicker spn={pitch} style={{ maxWidth: "300px" }} />
 
 			<TimecodeBox timecode={timecode} />
 		</div>

@@ -54,4 +54,7 @@ declare global {
 
 	/** Three stage switch type. */
 	type TrueFalseAuto = "true" | "false" | "auto";
+
+	/** The type of oscillator to use. Must be one of the following: "sine", "square", "sawtooth", "triangle". */
+	type OscillatorCommonType = Exclude<OscillatorType, "custom">;
 }

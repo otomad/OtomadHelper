@@ -1,3 +1,4 @@
+import type { beepEngines } from "views/audio";
 import type { pitchNotations } from "views/lyrics";
 import type { bpmUsings, constraintNoteLengthTypes, encodings, multipleSelectTrackItems } from "views/score";
 import type { selectGeneratedClipsType, startTimes } from "views/source";
@@ -15,6 +16,7 @@ type PitchNotation = typeof pitchNotations[number];
 type Timecode = string;
 type MultipleSelectTrackItem = typeof multipleSelectTrackItems[number];
 type SelectGeneratedClips = typeof selectGeneratedClipsType[number]["id"];
+type BeepEngines = typeof beepEngines[number];
 
 const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 
@@ -67,9 +69,10 @@ export const configStore = createStore({
 		preserveFormant: false,
 		basePitch: "C5",
 		prelistenAttributes: {
-			engine: "WebAudio",
-			waveform: "sinusoid",
+			engine: "WebAudio" as BeepEngines,
+			waveform: "sine" as OscillatorCommonType,
 			duration: 500,
+			volume: 1,
 			adjustAudioToBasePitch: false,
 		},
 		currentPreset: "fadeOut",

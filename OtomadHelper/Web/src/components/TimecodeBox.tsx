@@ -32,14 +32,15 @@ const StyledTimecodeBox = styled.div`
 
 		&:is(.text-box + .mark) {
 			margin-inline-start: 8px;
+			padding-block-end: 2px;
 		}
 	}
 
 	button {
 		width: calc(100% - 6px);
-		min-inline-size: unset;
 		height: ${SPINNER_BUTTON_HEIGHT - 2}px;
 		min-height: unset;
+		min-inline-size: unset;
 		border-radius: ${BUTTON_BORDER_RADIUS}px;
 
 		&.up {
@@ -116,7 +117,7 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], onFocus
 			const stepTimecodeTokens = getTimecodeTokens(timecode.replace(/^-/, ""));
 			stepTimecodeTokens.forEach(item => item.token === "digit" && (item.value = "0".padStart(item.value.length, "0")));
 			const selectedItem = stepTimecodeTokens.at(itemLastIndex);
-			selectedItem && (selectedItem.value = String(Math.abs(step)).padStart(selectedItem.value.length, "0"));
+			if (selectedItem) selectedItem.value = String(Math.abs(step)).padStart(selectedItem.value.length, "0");
 			const stepTimecode = (step < 0 ? "-" : "") + stepTimecodeTokens.join("");
 			const supposedTimecode = getSupposedTimecode(timecode, stepTimecode);
 			return supposedTimecode;
@@ -177,7 +178,7 @@ export default function TimecodeBox({ timecode: [timecode, setTimecode], onFocus
 		(setTimecode as SetStateNarrow<string>)?.(timecode => {
 			const tokens = getTimecodeTokens(timecode);
 			const selectedItem = tokens.at(lastIndex);
-			selectedItem && (selectedItem.value = value);
+			if (selectedItem) selectedItem.value = value;
 			const supposedTimecode = getSupposedTimecode(tokens.join(""));
 			return supposedTimecode;
 		});

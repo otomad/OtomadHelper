@@ -27,39 +27,23 @@ const StyledPitchPicker = styled(StyledButton)`
 	}
 `;
 
-export default function PitchPicker({ pitch: [pitch, setPitch], ...htmlAttrs }: FCP<{
+export default function PitchPicker({ spn: [spn, setSpn], ...htmlAttrs }: FCP<{
 	/** Scientific pitch notation. */
-	pitch: StateProperty<string>;
+	spn: StateProperty<string>;
 }, "button">) {
-	const noteNameAndOctave = useMemo(() => {
-		const groups = pitch?.match(/(?<noteName>[A-G][#♯b♭]?)(?<octave>\d+)/i)?.groups as undefined ?? { noteName: "", octave: "" };
-		let noteName = groups.noteName
-			.toUpperCase()
-			.replaceAll("♯", "#")
-			.replace(/(?<=[A-G])[b♭]/i, "b");
-		if (noteName.endsWith("b"))
-			noteName = {
-				Db: "C#",
-				Eb: "D#",
-				Gb: "F#",
-				Ab: "G#",
-				Bb: "A#",
-			}[noteName] ?? noteName;
-		groups.noteName = noteName;
-		return groups;
-	}, [pitch]);
+	const pitch = useMemo(() => new Pitch(spn!), [spn]);
 
 	async function showPitchPicker(e: MouseEvent) {
 		const rect = getBoundingClientRectTuple(e.currentTarget);
-		const result = await bridges.bridge.showPitchPicker(rect, pitch!);
-		setPitch?.(result);
+		const result = await bridges.bridge.showPitchPicker(rect, spn!);
+		setSpn?.(result);
 	}
 
 	return (
 		<StyledPitchPicker onClick={showPitchPicker} {...htmlAttrs}>
 			<div className="content">
-				<div>{noteNameAndOctave.noteName}</div>
-				<div>{noteNameAndOctave.octave}</div>
+				<div>{pitch.noteName}</div>
+				<div>{pitch.octave}</div>
 			</div>
 		</StyledPitchPicker>
 	);

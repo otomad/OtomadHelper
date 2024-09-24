@@ -1,5 +1,7 @@
 import ExpanderItemCurve from "./ExpanderItemCurve";
 
+export /* @internal */ const expanderItemWithIconPaddingInlineStart = 15;
+
 export /* @internal */ const styledExpanderItemBase = css`
 	container: setting-card-base;
 	display: flex;
@@ -74,7 +76,7 @@ const StyledExpanderItem = styled.div<{
 	$asSubtitle?: boolean;
 }>`
 	${styledExpanderItemBase};
-	padding-inline-start: 15px;
+	padding-inline-start: ${expanderItemWithIconPaddingInlineStart}px;
 
 	${styledExpanderItemContent};
 

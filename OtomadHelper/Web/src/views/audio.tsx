@@ -20,8 +20,8 @@ const getExceedsName = (id: string | undefined, tuningMethod: string) => !id ? "
 	id === "plugin" && tuningMethod === "pitchShift" ? "multiple" : id
 ];
 
-const beepEngines = ["NAudio", "WebAudio"];
-const beepWaveforms = ["sinusoid", "triangle", "square", "sawtooth"];
+export /* @internal */ const beepEngines = ["NAudio", "WebAudio"] as const;
+const beepWaveforms = ["sine", "triangle", "square", "sawtooth"] as const satisfies OscillatorCommonType[];
 
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
@@ -29,22 +29,61 @@ const buildInPresets = ["normal", "fadeOut"];
 
 const TooltipPartial = Tooltip.with({ placement: "y" });
 
+const PrelistenActions = styled.div`
+	position: relative;
+	display: flex;
+	gap: 8px;
+	align-items: stretch;
+
+	:has(~ .stop) {
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+	}
+
+	.stop {
+		position: absolute;
+		inset: 0;
+	}
+`;
+
 export default function Audio() {
 	const {
 		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
 		stretch, loop, normalize, unlengthen, legato, multitrackForChords, timeUnremapping, autoPan, autoPanCurve,
 		tuningMethod, stretchAttribute, alternativeForExceedsTheRange, resample, preserveFormant, basePitch, currentPreset,
 	} = selectConfig(c => c.audio);
-	const { engine, waveform, duration: beepDuration, adjustAudioToBasePitch } = selectConfig(c => c.audio.prelistenAttributes);
+	const { engine, waveform, duration: beepDuration, volume: beepVolume, adjustAudioToBasePitch } = selectConfig(c => c.audio.prelistenAttributes);
 	const { createGroups } = selectConfig(c => c);
 	const { hideUseTips } = useSnapshot(configStore.settings);
 	const activeParameterScheme = selectConfigArray(c => c.audio.activeParameterScheme);
+	const [stopPrelistenings, setStopPrelistenings] = useImmer<(() => void)[]>([]);
+	const isPrelistening = stopPrelistenings.length > 0;
 
 	const { pushPage } = useSnapshot(pageStore);
 
 	const preferredTrack = useMemo(() => {
 		return [tracks[preferredTrackIndex], (item: string) => setPreferredTrackIndex(tracks.indexOf(item))] as StateProperty<string>;
 	}, [preferredTrackIndex]);
+
+	function prelistenBasePitch() {
+		if (isPrelistening) {
+			stopPrelistening();
+			return;
+		}
+		if (engine[0] === "WebAudio") {
+			const { stop, promise } = beep(waveform[0],
+				(adjustAudioToBasePitch ? new Pitch("C", 5) : new Pitch(basePitch[0])).frequency, beepDuration[0], beepVolume[0]);
+			setStopPrelistenings(draft => void draft.push(stop));
+			promise.then(() => setStopPrelistenings(draft => void draft.removeItem(stop)));
+		} else if (engine[0] === "NAudio") {
+			// TODO
+		} else return;
+	}
+	function stopPrelistening() {
+		stopPrelistenings.forEach(stop => stop());
+		setStopPrelistenings([]);
+	}
 
 	return (
 		<div className="container">
@@ -153,29 +192,40 @@ export default function Audio() {
 						<SettingsCardToggleSwitch title={t.stream.tuning.resample} details={t.descriptions.stream.tuning.resample} icon="lock" on={resample} />
 						<SettingsCardToggleSwitch title={t.stream.tuning.preserveFormant} details={t.descriptions.stream.tuning.preserveFormant} icon="speech" on={preserveFormant} />
 						<SettingsCard title={t.stream.tuning.basePitch} details={t.descriptions.stream.tuning.basePitch} icon="music_note">
-							<PitchPicker pitch={basePitch} />
+							<PitchPicker spn={basePitch} />
 						</SettingsCard>
 						<Expander
 							title={t.stream.tuning.prelisten}
 							details={t.descriptions.stream.tuning.prelisten}
 							icon="headphone"
 							actions={(
-								<StackPanel $gap={6}>
-									<Button>{t.stream.tuning.prelisten.basePitch}</Button>
+								<PrelistenActions>
+									<Button onClick={prelistenBasePitch}>{t.stream.tuning.prelisten.basePitch}</Button>
 									<Button>{t.stream.tuning.prelisten.audio}</Button>
-								</StackPanel>
+									{isPrelistening && <Button icon="stop" className="stop" onClick={stopPrelistening}>{t.stream.tuning.prelisten.stop}</Button>}
+								</PrelistenActions>
 							)}
 						>
-							<Expander.Item title={t.stream.tuning.prelisten.engine}>
+							<Expander.Item icon="table_column_top_bottom" title={t.stream.tuning.prelisten.engine}>
 								<ComboBox options={beepEngines} current={engine} />
 							</Expander.Item>
-							<Expander.Item title={t.stream.tuning.prelisten.waveform}>
-								<ComboBox options={beepWaveforms.map(waveform => t.stream.tuning.prelisten.waveform[waveform])} current={waveform} />
+							<Expander.Item icon="sound_wave" title={t.stream.tuning.prelisten.waveform}>
+								<ComboBox ids={beepWaveforms} options={beepWaveforms.map(waveform => t.stream.tuning.prelisten.waveform[waveform])} current={waveform} />
 							</Expander.Item>
-							<Expander.Item title={t.stream.tuning.prelisten.duration}>
-								<TextBox.Number value={beepDuration} min={0} decimalPlaces={0} suffix={t.units.milliseconds} />
+							<Expander.Item icon="timer" title={t.stream.tuning.prelisten.duration}>
+								<TextBox.Number value={beepDuration} min={0} decimalPlaces={0} spinnerStep={100} suffix={t.units.milliseconds} />
 							</Expander.Item>
-							<ToggleSwitch on={adjustAudioToBasePitch} details={t.descriptions.stream.tuning.prelisten.adjustAudioToBasePitch}>{t.stream.tuning.prelisten.adjustAudioToBasePitch}</ToggleSwitch>
+							<Expander.Item icon="audio" title={t.stream.tuning.prelisten.volume}>
+								<Slider
+									value={beepVolume}
+									min={0}
+									max={1}
+									step={0.01}
+									defaultValue={1}
+									displayValue={value => (value * 100 | 0) + "%"}
+								/>
+							</Expander.Item>
+							<ToggleSwitch icon="voice_mail" on={adjustAudioToBasePitch} details={t.descriptions.stream.tuning.prelisten.adjustAudioToBasePitch}>{t.stream.tuning.prelisten.adjustAudioToBasePitch}</ToggleSwitch>
 						</Expander>
 					</Disabled>
 
