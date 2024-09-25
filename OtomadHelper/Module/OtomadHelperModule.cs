@@ -68,7 +68,7 @@ public class OtomadHelperModule : ICustomCommandModule {
 	/// </remarks>
 	/// <returns>The exteacted small icon file path.</returns>
 	private string SaveAndGetIconPath() {
-		string localIconPath = Path.r(VegasAppDataPath, "Otomad Helper.png");
+		string localIconPath = new Path(VegasAppDataPath, "Otomad Helper.png");
 		ResourceHelper.WriteResourceToFile("Assets.ToolbarIcon.png", localIconPath);
 		return localIconPath;
 	}

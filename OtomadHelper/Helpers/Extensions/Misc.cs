@@ -1,4 +1,7 @@
-using System.Windows.Forms;
+using System.Windows;
+
+using DataFormats = System.Windows.Forms.DataFormats;
+using DragEventArgs = System.Windows.Forms.DragEventArgs;
 
 namespace OtomadHelper.Helpers;
 
@@ -10,7 +13,7 @@ public static partial class Extensions {
 	/// <param name="e">Drag-and-drop event arguments.</param>
 	/// <returns>Array of the file names for drag-and-drop.</returns>
 	public static string[] GetFileNames(this DragEventArgs e) {
-		string[] NOTHING = new string[0];
+		string[] NOTHING = [];
 		return e.Data.GetDataPresent(DataFormats.FileDrop) ? e.Data.GetData(DataFormats.FileDrop) as string[] ?? NOTHING : NOTHING;
 	}
 
@@ -150,4 +153,14 @@ public static partial class Extensions {
 	/// </exception>
 	public static bool IsNullable(this Type type) =>
 		!type.IsValueType || Nullable.GetUnderlyingType(type) != null;
+
+	/// <summary>
+	/// If this <see cref="ResourceDictionary"/> is inside a <see cref="ResourceDictionary.MergedDictionaries"/> and it has
+	/// <see cref="ResourceDictionary.Source"/> property.
+	/// Get the <c>rootElement</c> which is private by reflection.
+	/// </summary>
+	/// <param name="parent"></param>
+	/// <returns>The root element of a <see cref="ResourceDictionary"/> if it has.</returns>
+	public static ResourceDictionary? GetRootElement(this ResourceDictionary parent) =>
+		typeof(ResourceDictionary).GetField("_rootElement", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(parent) as ResourceDictionary;
 }

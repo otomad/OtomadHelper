@@ -74,7 +74,7 @@ export default function Audio() {
 		if (engine[0] === "WebAudio") {
 			const { stop, promise } = beep(waveform[0],
 				(adjustAudioToBasePitch ? new Pitch("C", 5) : new Pitch(basePitch[0])).frequency, beepDuration[0], beepVolume[0]);
-			setStopPrelistenings(draft => void draft.push(stop));
+			setStopPrelistenings(draft => void draft.pushUniquely(stop));
 			promise.then(() => setStopPrelistenings(draft => void draft.removeItem(stop)));
 		} else if (engine[0] === "NAudio") {
 			// TODO

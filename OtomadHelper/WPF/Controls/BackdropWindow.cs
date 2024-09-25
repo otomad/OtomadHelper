@@ -32,7 +32,8 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 
 	private void InitializeComponent() {
 		RefreshCulture();
-		AddResource("Wpf/Styles/GenericWithControls.xaml");
+		AddResource("Wpf/Styles/Generic.xaml");
+		AddResource("Wpf/Styles/Controls.xaml");
 		Background = Brushes.Transparent;
 		Loaded += Window_Loaded;
 		IsVisibleChanged += (sender, e) => {
@@ -272,7 +273,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 					GlassFrameThickness = new(-1),
 					ResizeBorderThickness = ResizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ?
 						new(0) : new(8, 0, 8, 8),
-					NonClientFrameEdges = NonClientFrameEdges.None,
+					NonClientFrameEdges = NonClientFrameEdges.Right,
 					UseAeroCaptionButtons = true,
 				});
 				break;

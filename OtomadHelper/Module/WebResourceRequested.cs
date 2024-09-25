@@ -53,7 +53,7 @@ internal class ManagedStream(Stream s) : Stream {
 			CoreWebView2Environment webViewEnv = webView.CoreWebView2.Environment;
 			Uri uri = new(args.Request.Uri);
 			NameValueCollection query = HttpUtility.ParseQueryString(uri.Query); // Not used yet
-			string file = uri.AbsolutePath.Substring(1);
+			string file = uri.AbsolutePath[1..];
 			file = Uri.UnescapeDataString(file);
 			string[] fileSlug = file.Split('/');
 			string virtualPath = fileSlug.FirstOrDefault();
