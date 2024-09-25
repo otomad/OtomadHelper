@@ -19,8 +19,8 @@ type Options = boolean | AddEventListenerOptions | EventListenerOptions;
 
 const eventAttrToType = (eventName: string) => eventName.toLowerCase().replace(/^on/, "");
 
-const EventInjector = forwardRef(function EventInjector<TElement extends ReactElement>({ children, options, ...events }: FCP<{
-	children: TElement;
+const EventInjector = forwardRef(function EventInjector({ children, options, ...events }: FCP<{
+	children: ReactElement;
 	/**
 	 * Event listener options.
 	 *

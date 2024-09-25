@@ -453,7 +453,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 
 	const handleKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(e => {
 		const baseStep = spinnerStep ?? 1;
-		let step;
+		let step: NumberLike | undefined;
 		if (e.code === "ArrowUp") step = baseStep;
 		else if (e.code === "ArrowDown") step = -baseStep;
 		if (step) {
