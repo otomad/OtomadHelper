@@ -5,12 +5,6 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
-	<!--<ResourceDictionary.MergedDictionaries>
-		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Storyboards.xaml" />
-		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Styles/Icons.xaml" />
-	</ResourceDictionary.MergedDictionaries>-->
-	<!-- Why cannot auto import??? -->
-	
 	<m:OvalCornerRadiusConverter x:Key="Oval" />
 	<s:Double x:Key="ScrollBarThickness">14</s:Double>
 	<s:Double x:Key="ScrollBarButtonPressedScale">0.8</s:Double>

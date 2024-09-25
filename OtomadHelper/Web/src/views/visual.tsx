@@ -33,6 +33,7 @@ export /* @internal */ const transformMethods = [
 	"panCrop", "pictureInPicture", "transformOfx",
 ] as const;
 
+/** @deprecated */
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
 const buildInPresets = ["normal", "enter", "enterStaff", "fadeOut", "flashlight", "horizontalMovement", "verticalMovement", "ccwRotate", "cwRotate", "rainbowColor", "oversaturation", "highContrast", "thresholdChange"];
@@ -41,7 +42,7 @@ const TooltipPartial = Tooltip.with({ placement: "y" });
 
 export default function Visual() {
 	const {
-		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
+		enabled, preferredTrack: preferredTrackIndex,
 		stretch, loop, staticVisual, unlengthen, legato, multitrackForChords, enableStaffVisualizer, transformMethod, currentPreset, timeUnremapping, resampleImitatively,
 		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioNegative, activeParameterScheme,
 	} = selectConfig(c => c.visual);
@@ -53,10 +54,6 @@ export default function Visual() {
 	const topPriorityTransformMethod = transformMethod[0][0];
 
 	const { pushPage } = useSnapshot(pageStore);
-
-	const preferredTrack = useMemo(() => {
-		return [tracks[preferredTrackIndex], (item: string) => setPreferredTrackIndex(tracks.indexOf(item))] as StateProperty<string>;
-	}, [preferredTrackIndex]);
 
 	const onSortableOverlayDrop = useCallback<DropAnimationSideEffects>(({ dragOverlay: { node: dragOverlay } }) => {
 		const expanderItem = dragOverlay.firstElementChild! as HTMLDivElement;
@@ -73,7 +70,7 @@ export default function Visual() {
 
 			<EmptyMessage.Typical icon="visual" title="visual" enabled={enabled}>
 				<SettingsCard title={t.source.preferredTrack} details={t.descriptions.source.preferredTrack} icon="preferred_track">
-					<ComboBox current={preferredTrack} options={tracks} />
+					<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
 				</SettingsCard>
 				<SettingsCardToggleSwitch title={t.stream.createGroups} details={t.descriptions.stream.createGroups} icon="group_object" on={createGroups} />
 				<EmptyMessage.YtpDisabled>

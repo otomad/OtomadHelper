@@ -41,8 +41,8 @@ public sealed class BamlAssemblyResource : IDisposable {
 	/// </summary>
 	/// <remarks>
 	/// <example>
-	/// If the embedded resource path is <c>OtomadHelper/WPF/Styles/Icons.xaml</c>,<br />
-	/// pass <c>WPF/Styles/Icons</c> to <paramref name="resourcePath"/>. Case insensitive.
+	/// If the embedded resource path is <c>OtomadHelper/WPF/Themes/Icons.xaml</c>,<br />
+	/// pass <c>WPF/Themes/Icons</c> to <paramref name="resourcePath"/>. Case insensitive.
 	/// </example>
 	/// </remarks>
 	/// <param name="path">

@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Data;
 
 using DataFormats = System.Windows.Forms.DataFormats;
 using DragEventArgs = System.Windows.Forms.DragEventArgs;
@@ -163,4 +164,55 @@ public static partial class Extensions {
 	/// <returns>The root element of a <see cref="ResourceDictionary"/> if it has.</returns>
 	public static ResourceDictionary? GetRootElement(this ResourceDictionary parent) =>
 		typeof(ResourceDictionary).GetField("_rootElement", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(parent) as ResourceDictionary;
+
+	/// <inheritdoc cref="Binding.Mode"/>
+	/// <exception cref="ArgumentException">The <see cref="BindingBase"/> type is not implemented and supported.</exception>
+	public static void SetMode(this BindingBase? bindingBase, BindingMode mode) {
+		switch (bindingBase) {
+			case null:
+				break;
+			case Binding binding:
+				binding.Mode = mode;
+				break;
+			case MultiBinding binding:
+				binding.Mode = mode;
+				break;
+			case PriorityBinding binding:
+				binding.Bindings.ForEach(bind => bindingBase.SetMode(mode));
+				break;
+			default:
+				throw new NotSupportedException($"The binding type `{bindingBase.GetType().Name}` is not implemented and supported yet");
+		}
+	}
+
+	/// <summary>
+	/// We've known that <see cref="MultiBinding.Bindings"/> supports <see cref="Binding"/> only,
+	/// not supports <see cref="MultiBinding"/> and <see cref="PriorityBinding"/>. So we support them.
+	/// </summary>
+	/// <param name="multiBinding">The bindings where to be added.</param>
+	/// <param name="bindingBase">The binding bases which will be added.</param>
+	/// <returns>How many bindings were added.</returns>
+	/// <exception cref="ArgumentException">The <see cref="BindingBase"/> type is not supported.</exception>
+	public static int AddBinding(this MultiBinding multiBinding, BindingBase? bindingBase) {
+		int added = 0;
+		switch (bindingBase) {
+			case null:
+				break;
+			case Binding binding:
+				multiBinding.Bindings.Add(binding);
+				added += 1;
+				break;
+			case MultiBinding binding:
+				foreach (BindingBase bind in binding.Bindings)
+					added += multiBinding.AddBinding(bind);
+				break;
+			case PriorityBinding binding:
+				foreach (BindingBase bind in binding.Bindings)
+					added += multiBinding.AddBinding(bind);
+				break;
+			default:
+				throw new NotSupportedException($"The binding type `{bindingBase.GetType().Name}` is not implemented and supported yet");
+		}
+		return added;
+	}
 }

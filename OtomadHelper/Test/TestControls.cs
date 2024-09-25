@@ -32,7 +32,7 @@ public partial class TestControls : Form {
 			height: control.Height / dpiY
 		);
 
-		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list, selected, rect, out Task<string> resultTask);
+		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list.Select(i => i.ToUpper()), list, selected, rect, out Task<string> resultTask);
 		//PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect, selected, out Task<string> resultTask);
 		flyouts.Add(flyout);
 		_ = resultTask.Then(result => ComboBoxBtn.Text = selected = result);

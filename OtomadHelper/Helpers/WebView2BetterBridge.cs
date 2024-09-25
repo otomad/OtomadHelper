@@ -36,6 +36,24 @@ public class BetterBridge {
 	public string[] GetMethods() =>
 		bridgeClassType.GetMethods().Select(m => m.Name).ToArray();
 
+	private static JsonValueKind GetJsonArgType(string jsonArg) {
+		if (jsonArg == "null") return JsonValueKind.Null;
+		else if (jsonArg.StartsWith("\"")) return JsonValueKind.String;
+		else if (jsonArg == "true") return JsonValueKind.True;
+		else if (jsonArg == "false") return JsonValueKind.False;
+		else if (jsonArg.StartsWith("[")) return JsonValueKind.Array;
+		else if (jsonArg.StartsWith("{")) return JsonValueKind.Object;
+		else if (jsonArg.IsMatch(new(@"^[-.\d]"))) return JsonValueKind.Number;
+		else return JsonValueKind.Undefined;
+	}
+
+	private static Type JsonTypeToCsType(JsonValueKind jsonType, Type unhandled = null!) => jsonType switch {
+		JsonValueKind.String => typeof(string),
+		JsonValueKind.Number => typeof(double), // What about int??
+		JsonValueKind.True or JsonValueKind.False => typeof(bool),
+		_ => unhandled, // Cannot handle them now.
+	};
+
 	/// <summary>
 	/// Called from TS/JS side works on both async and regular methods of the wrapped class!
 	/// </summary>
@@ -63,17 +81,28 @@ public class BetterBridge {
 							parametersLength--;
 				if (parametersLength != jsonArgs.Length) return false;
 				matchedParameterLength = true;
+				Dictionary<Type, JsonValueKind> genericParameters = [];
 				for (int i = 0; i < parametersLength; i++) {
 					ParameterInfo parameter = parameters[i];
 					string jsonArg = jsonArgs[i].Trim();
-					if (jsonArg == "null" || jsonArg.StartsWith("{")) continue;
-					// Nulls and objects are temporarily unable to directly determine the correct type.
+					JsonValueKind jsonType = GetJsonArgType(jsonArg);
 					Type type = parameter.ParameterType;
-					if (type == typeof(string) && jsonArg.StartsWith("\"")) continue;
-					else if (type == typeof(bool) && jsonArg is "true" or "false") continue;
+					if (type.IsGenericParameter) {
+						if (jsonType is JsonValueKind.Null or JsonValueKind.Undefined) continue;
+						if (genericParameters.TryGetValue(type, out JsonValueKind prevJsonType)) {
+							if (prevJsonType != jsonType) return false;
+							else continue;
+						}
+						genericParameters[type] = jsonType;
+						continue;
+					}
+					if (jsonType is JsonValueKind.Null or JsonValueKind.Undefined or JsonValueKind.Object) continue;
+					// Nulls and objects are temporarily unable to directly determine the correct type.
+					if (type == typeof(string) && jsonType is JsonValueKind.String) continue;
+					else if (type == typeof(bool) && jsonType is JsonValueKind.True or JsonValueKind.False) continue;
 					else if ((type.Extends(typeof(IEnumerable)) || type.Extends(typeof(ITuple))) &&
-						jsonArg.StartsWith("[")) continue;
-					else if (type.IsNumber() && jsonArg.IsMatch(new(@"^[-.\d]"))) continue;
+						jsonType is JsonValueKind.Array) continue;
+					else if (type.IsNumber() && jsonType is JsonValueKind.Number) continue;
 					else return false;
 				}
 				return true;
@@ -92,11 +121,44 @@ public class BetterBridge {
 
 			object?[] typedArgs = Enumerable.Repeat(Type.Missing, method.GetParameters().Length).ToArray();
 
+			Dictionary<Type, Type> genericTypes = [];
 			for (int i = 0; i < jsonArgs.Length; i++) {
+				string jsonArg = jsonArgs[i];
 				Type type = parameters[i].ParameterType;
-				typedArgs[i] = JsonSerializer.Deserialize(jsonArgs[i], type, jsonOptions);
+				if (type.IsGenericParameter) {
+					Type genericType = type;
+					if (genericTypes.TryGetValue(genericType, out Type realType))
+						type = realType;
+					else {
+						type = JsonTypeToCsType(GetJsonArgType(jsonArg), type);
+						genericTypes[genericType] = type;
+					}
+				}
+				if (type.GetElementType() is Type elementType && elementType.IsGenericParameter) {
+					if (genericTypes.TryGetValue(elementType, out Type realType))
+						type = realType.MakeArrayType();
+					else {
+						IEnumerable<string> items = jsonArg[1..^1].Split(',').Select(item => item.Trim());
+						foreach (string item in items) {
+							Type? _type = JsonTypeToCsType(GetJsonArgType(item));
+							if (_type is not null) {
+								type = _type.MakeArrayType();
+								genericTypes[elementType] = _type;
+								break;
+							}
+						}
+					}
+				}
+				typedArgs[i] = JsonSerializer.Deserialize(jsonArg, type, jsonOptions);
 			}
 
+			if (method.IsGenericMethod) {
+				Type[] generics = (Type[])method.GetGenericArguments().Clone();
+				for (int i = 0; i < generics.Length; i++)
+					if (genericTypes.TryGetValue(generics[i], out Type realType))
+						generics[i] = realType;
+				method = method.MakeGenericMethod(generics);
+			}
 			object resultTyped = method.Invoke(bridgeClass, typedArgs);
 
 			// Was it an async method (in bridgeClass?)

@@ -1,5 +1,3 @@
-const audioContext = new AudioContext();
-
 /**
  * Plays a beep sound using the Web Audio API.
  *
@@ -14,6 +12,7 @@ const audioContext = new AudioContext();
  * @returns A promise that resolves when the beep is finished playing.
  */
 export function beep(type: OscillatorCommonType, hz: number, ms: number, vol: number) {
+	const audioContext = new AudioContext();
 	const oscillator = audioContext.createOscillator();
 	oscillator.type = type;
 	oscillator.frequency.setValueAtTime(hz, audioContext.currentTime);
@@ -27,9 +26,6 @@ export function beep(type: OscillatorCommonType, hz: number, ms: number, vol: nu
 	const stop = () => oscillator.stop();
 	const promise = delay(ms).then(() => {
 		stop();
-
-		oscillator.disconnect();
-		volume.disconnect();
 	});
 
 	return { stop, promise };

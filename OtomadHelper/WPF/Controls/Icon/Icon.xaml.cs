@@ -32,7 +32,7 @@ public partial class Icon : Viewbox {
 		get {
 			if (validIconNames is null) {
 				using BamlAssemblyResource baml = new();
-				ResourceDictionary xaml = (ResourceDictionary)baml.GetXaml("WPF/Styles/Icons");
+				ResourceDictionary xaml = (ResourceDictionary)baml.GetXaml("WPF/Themes/Icons");
 				validIconNames = xaml.Keys.Cast<string>()
 					.Where(key => key.StartsWith("Icon:", StringComparison.InvariantCultureIgnoreCase))
 					.Select(key => key.Replace(new Regex(@"^Icon:", RegexOptions.IgnoreCase), ""))

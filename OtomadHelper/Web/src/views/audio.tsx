@@ -23,6 +23,7 @@ const getExceedsName = (id: string | undefined, tuningMethod: string) => !id ? "
 export /* @internal */ const beepEngines = ["NAudio", "WebAudio"] as const;
 const beepWaveforms = ["sine", "triangle", "square", "sawtooth"] as const satisfies OscillatorCommonType[];
 
+/** @deprecated */
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
 const buildInPresets = ["normal", "fadeOut"];
@@ -49,7 +50,7 @@ const PrelistenActions = styled.div`
 
 export default function Audio() {
 	const {
-		enabled, preferredTrack: [preferredTrackIndex, setPreferredTrackIndex],
+		enabled, preferredTrack: preferredTrackIndex,
 		stretch, loop, normalize, unlengthen, legato, multitrackForChords, timeUnremapping, autoPan, autoPanCurve,
 		tuningMethod, stretchAttribute, alternativeForExceedsTheRange, resample, preserveFormant, basePitch, currentPreset,
 	} = selectConfig(c => c.audio);
@@ -61,10 +62,6 @@ export default function Audio() {
 	const isPrelistening = stopPrelistenings.length > 0;
 
 	const { pushPage } = useSnapshot(pageStore);
-
-	const preferredTrack = useMemo(() => {
-		return [tracks[preferredTrackIndex], (item: string) => setPreferredTrackIndex(tracks.indexOf(item))] as StateProperty<string>;
-	}, [preferredTrackIndex]);
 
 	function prelistenBasePitch() {
 		if (isPrelistening) {
@@ -91,7 +88,7 @@ export default function Audio() {
 
 			<EmptyMessage.Typical icon="audio" title="audio" enabled={enabled}>
 				<SettingsCard title={t.source.preferredTrack} details={t.descriptions.source.preferredTrack} icon="preferred_track">
-					<ComboBox current={preferredTrack} options={tracks} />
+					<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
 				</SettingsCard>
 				<SettingsCardToggleSwitch title={t.stream.createGroups} details={t.descriptions.stream.createGroups} icon="group_object" on={createGroups} />
 				<EmptyMessage.YtpDisabled>
@@ -207,7 +204,7 @@ export default function Audio() {
 							)}
 						>
 							<Expander.Item icon="table_column_top_bottom" title={t.stream.tuning.prelisten.engine}>
-								<ComboBox options={beepEngines} current={engine} />
+								<ComboBox options={beepEngines} ids={beepEngines} current={engine} />
 							</Expander.Item>
 							<Expander.Item icon="sound_wave" title={t.stream.tuning.prelisten.waveform}>
 								<ComboBox ids={beepWaveforms} options={beepWaveforms.map(waveform => t.stream.tuning.prelisten.waveform[waveform])} current={waveform} />

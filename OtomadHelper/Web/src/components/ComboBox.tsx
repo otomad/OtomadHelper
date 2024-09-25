@@ -32,19 +32,19 @@ const StyledComboBox = styled(StyledButton)`
 	}
 `;
 
-export default function ComboBox<T extends string>({ ids, options, current: [current, setCurrent], ...htmlAttrs }: FCP<{
+export default function ComboBox<T extends string | number>({ ids, options, current: [current, setCurrent], ...htmlAttrs }: FCP<{
 	/** The identifiers of the combo box. */
-	ids?: readonly T[];
+	ids: readonly T[];
 	/** The options of the combo box. */
 	options: readonly Readable[];
 	/** The selected option of the combo box. */
 	current: StateProperty<T>;
 }, "select">) {
-	ids ??= options as T[];
+	const currentOption = options[ids.indexOf(current!)] ?? `<${current}>`;
 
 	async function showComboBox(e: MouseEvent) {
 		const rect = getBoundingClientRectTuple(e.currentTarget);
-		const result = await bridges.bridge.showComboBox(rect, current!, ids as T[]); // TODO: add ids.
+		const result = await bridges.bridge.showComboBox(rect, current!, toValueArray(ids), toStringArray(options));
 		setCurrent?.(result as T);
 	}
 
@@ -52,7 +52,7 @@ export default function ComboBox<T extends string>({ ids, options, current: [cur
 		return (
 			<StyledComboBox onClick={showComboBox} {...htmlAttrs as FCP<{}, "button">}>
 				<div className="content">
-					<div className="text">{current}</div>
+					<div className="text">{currentOption}</div>
 					<Icon name="chevron_down" />
 				</div>
 			</StyledComboBox>
@@ -63,4 +63,15 @@ export default function ComboBox<T extends string>({ ids, options, current: [cur
 				{ids.map((id, i) => <option key={id} value={id}>{options[i]}</option>)}
 			</StyledComboBox>
 		);
+}
+
+/* eslint-disable @typescript-eslint/no-wrapper-object-types */
+// The `Object` means every JavaScript object base class (including string, boolean and almost everything),
+// So here we use `Object` instead of `object` for correct typing. So does ESLint disable.
+function toStringArray(array: readonly Object[]) {
+	return array.map(item => item.toString());
+}
+
+function toValueArray(array: readonly Object[]) {
+	return array.map(item => item.valueOf());
 }

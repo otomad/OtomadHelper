@@ -32,8 +32,8 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 
 	private void InitializeComponent() {
 		RefreshCulture();
-		AddResource("Wpf/Styles/Generic.xaml");
-		AddResource("Wpf/Styles/Controls.xaml");
+		AddResource("WPF/Themes/Generic.xaml");
+		AddResource("WPF/Themes/Controls.xaml");
 		Background = Brushes.Transparent;
 		Loaded += Window_Loaded;
 		IsVisibleChanged += (sender, e) => {
@@ -133,7 +133,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 			if (resource is NamedResourceDictionary named && named.Name == "ThemeColor")
 				Resources.MergedDictionaries.Remove(resource);
 
-		AddResource($"Wpf/Styles/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", true);
+		AddResource($"WPF/Themes/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", true);
 	}
 
 	public void AddResource(string path, bool isNamedResourceDictionary = false) {

@@ -37,12 +37,13 @@ public class Bridge {
 	/// Displays a combo box flyout with the specified options and initial selected item.
 	/// </summary>
 	/// <param name="rect">A tuple representing the screen coordinates (x, y, width, height) of the flyout's position.</param>
-	/// <param name="selected">The current selected item in the combo box.</param>
+	/// <param name="selected">The current selected item ID in the combo box.</param>
+	/// <param name="ids">An array of <see cref="string"/> representing the ID of items in the combo box.</param>
 	/// <param name="options">An array of <see cref="string"/> representing the items to be displayed in the combo box.</param>
 	/// <returns>The selected item from the combo box flyout.</returns>
-	public async Task<string> ShowComboBox(RectTuple rect, string selected, string[] options) {
+	public async Task<T> ShowComboBox<T>(RectTuple rect, T selected, T[] ids, string[] options) {
 		Rect screenRect = MainDock.ClientToScreenRect(rect);
-		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(options, selected, screenRect, out Task<string> resultTask);
+		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(ids, options, selected, screenRect, out Task<T> resultTask);
 		MainDock.ShowFlyout(flyout);
 		return await resultTask;
 	}

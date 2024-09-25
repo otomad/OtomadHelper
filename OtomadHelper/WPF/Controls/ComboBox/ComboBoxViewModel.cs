@@ -3,17 +3,19 @@ using System.Windows.Input;
 
 namespace OtomadHelper.WPF.Controls;
 
-public partial class ComboBoxViewModel : ObservableObject<ComboBoxFlyout> {
-	public ObservableCollection<string> Items { get; } = [];
+public partial class ComboBoxViewModel<T> : ObservableObject<ComboBoxFlyout> {
+	public ObservableCollection<string> Options { get; } = [];
+
+	public ObservableCollection<T> Ids { get; } = [];
 
 	[ObservableProperty]
-	private string selected = "";
+	private T selected = typeof(T).Extends(typeof(string)) ? (T)(object)string.Empty : default!;
 
-	public int SelectedIndex => Items.ToList().IndexOf(Selected);
+	public int SelectedIndex => Ids.ToList().IndexOf(Selected);
 
 	[RelayCommand]
-	private void CheckRadioButton(string item) {
-		Selected = item;
+	private void CheckRadioButton(T id) {
+		Selected = id;
 		View?.Close();
 	}
 
@@ -22,8 +24,8 @@ public partial class ComboBoxViewModel : ObservableObject<ComboBoxFlyout> {
 		if (e.Key == Key.Enter) KeyUp();
 		else if (e.Key is Key.Up or Key.Down) {
 			int direction = e.Key == Key.Up ? -1 : 1;
-			if (Items.Count == 0) return;
-			Selected = Items[MathEx.PNMod(SelectedIndex + direction, Items.Count)];
+			if (Ids.Count == 0) return;
+			Selected = Ids[MathEx.PNMod(SelectedIndex + direction, Ids.Count)];
 		}
 	}
 
@@ -33,3 +35,5 @@ public partial class ComboBoxViewModel : ObservableObject<ComboBoxFlyout> {
 			View?.Close();
 	}
 }
+
+public class ComboBoxViewModel : ComboBoxViewModel<object> { }

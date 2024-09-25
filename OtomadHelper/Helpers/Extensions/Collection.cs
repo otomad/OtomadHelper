@@ -180,4 +180,16 @@ public static partial class Extensions {
 		writer.Flush();
 		return Encoding.UTF8.GetString(stream.ToArray());
 	}
+
+	/// <inheritdoc cref="Dictionary{int, T}.TryGetValue(int, out T)"/>
+	public static bool TryGetValue<T>(this IList<T> list, int index, out T value) {
+		try {
+			T result = list[index];
+			value = result;
+			return true;
+		} catch (IndexOutOfRangeException) {
+			value = default!;
+			return false;
+		}
+	}
 }

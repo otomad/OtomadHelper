@@ -13,10 +13,11 @@ namespace OtomadHelper.WPF.Common;
 /// </remarks>
 [ContentProperty(nameof(Binding))]
 public class BindingExtension : MarkupExtension {
-	public Binding Binding { get; set; }
+	public BindingBase Binding { get; set; }
 	public BindingMode Mode { get; set; }
 	public IValueConverter? Converter { get; set; }
-	public Binding? ConverterParameter { get; set; }
+	public BindingBase? ConverterParameter { get; set; }
+	private int BindingCount { get; set; }
 
 	public BindingExtension() => Binding = new Binding();
 
@@ -24,16 +25,16 @@ public class BindingExtension : MarkupExtension {
 
 	public BindingExtension(Binding binding) => Binding = binding;
 
-	public override object ProvideValue(IServiceProvider serviceProvider) {
+	public override object ProvideValue(IServiceProvider serviceProvider) { // PriorityBinding
 		MultiBinding multiBinding = new();
-		Binding.Mode = Mode;
-		multiBinding.Bindings.Add(Binding);
+		Binding.SetMode(Mode);
+		BindingCount = multiBinding.AddBinding(Binding);
 		if (ConverterParameter != null) {
-			ConverterParameter.Mode = BindingMode.OneWay;
-			multiBinding.Bindings.Add(ConverterParameter);
+			ConverterParameter.SetMode(BindingMode.OneWay);
+			multiBinding.AddBinding(ConverterParameter);
 		}
 		if (Converter != null) {
-			MultiValueConverterAdapter adapter = new() { Converter = Converter };
+			MultiValueConverterAdapter adapter = new() { Converter = Converter, BindingCount = BindingCount };
 			multiBinding.Converter = adapter;
 		}
 		return multiBinding.ProvideValue(serviceProvider);
@@ -43,14 +44,19 @@ public class BindingExtension : MarkupExtension {
 	private class MultiValueConverterAdapter : IMultiValueConverter {
 		public IValueConverter? Converter { get; set; }
 
+		public int BindingCount { private get; init; }
+
 		private object? lastParameter;
 
+		private static object ArrayOrOnly(object[] objects) => objects.Length == 1 ? objects[0] : objects;
+
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
+			object bindingValue = ArrayOrOnly(values[0..BindingCount]);
 			if (Converter == null)
-				return values[0]; // Required for VS design-time
-			if (values.Length > 1)
-				lastParameter = values[1];
-			return Converter.Convert(values[0], targetType, lastParameter, culture);
+				return bindingValue; // Required for VS design-time
+			if (values.Length > BindingCount)
+				lastParameter = ArrayOrOnly(values[BindingCount..]);
+			return Converter.Convert(bindingValue, targetType, lastParameter, culture);
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) {

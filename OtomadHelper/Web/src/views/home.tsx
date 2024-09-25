@@ -3,6 +3,7 @@ export default function Home() {
 	const [text, setText] = useState("foo");
 	const pitch = useState("C5");
 	const timecode = useState("00:00:03.000");
+	const options = ["foo", "bar", "baz", "hello", "world"];
 
 	return (
 		<div className="container">
@@ -20,7 +21,7 @@ export default function Home() {
 				</Segmented>
 			</div>
 
-			<ComboBox options={["foo", "bar", "baz", "hello", "world"]} current={[text, setText]} />
+			<ComboBox options={options} ids={options} current={[text, setText]} />
 
 			<PitchPicker spn={pitch} style={{ maxWidth: "300px" }} />
 

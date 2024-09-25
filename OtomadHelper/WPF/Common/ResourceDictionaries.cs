@@ -19,7 +19,7 @@ public class NamedResourceDictionary : ResourceDictionary {
 
 public class CustomControlResourceDictionary : ResourceDictionary {
 	public CustomControlResourceDictionary() {
-		AddResource("Wpf/Styles/Generic.xaml");
+		AddResource("WPF/Themes/Generic.xaml");
 	}
 
 	// The auto added resource doesn't includes Control.xaml.
@@ -84,6 +84,6 @@ public class SharedResourceDictionary : ResourceDictionary {
 	/// We don't required to write the whole long URI again.
 	/// </summary>
 	public string ControlSource {
-		set => Source = new Path(ProjectUri("Wpf/Controls/")) { IsWindows = false } + (value + ".xaml");
+		set => Source = new Path(ProjectUri("WPF/Controls/")) { IsWindows = false } + (value + ".xaml");
 	}
 }

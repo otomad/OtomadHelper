@@ -52,7 +52,8 @@
 			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 			<m:ActualSizeToRectConverter x:Key="SizeToRect" />
 			<m:BooleanOrConverter x:Key="BoolOr" />
-			<c:ComboBoxStringToIsCheckedConverter x:Key="StringToChecked" />
+			<c:ComboBoxIdToIsCheckedConverter x:Key="IdToChecked" />
+			<c:ComboBoxIdToOptionConverter x:Key="IdToOption" />
 
 			<s:Double x:Key="Padding">2</s:Double>
 			<s:Double x:Key="IndicatorRadius">1.5</s:Double>
@@ -246,7 +247,7 @@
 	<ScrollViewer VerticalScrollBarVisibility="Auto">
 		<ItemsControl
 			x:Name="ItemsControlWrapper"
-			ItemsSource="{Binding Items}"
+			ItemsSource="{Binding Ids}"
 			Style="{StaticResource ItemsControlWrapper}"
 			Focusable="True"
 			>
@@ -262,7 +263,7 @@
 						Command="{Binding CheckRadioButtonCommand, ElementName=ViewModel}"
 						CommandParameter="{Binding}"
 						GroupName="ComboBoxItem"
-						IsChecked="{m:Binding Converter={StaticResource StringToChecked}, ConverterParameter={Binding Selected, ElementName=ViewModel}, Mode=OneWay}"
+						IsChecked="{m:Binding Converter={StaticResource IdToChecked}, ConverterParameter={Binding Selected, ElementName=ViewModel}, Mode=OneWay}"
 						Style="{StaticResource ComboBoxItemButton}"
 						>
 						<Grid>
@@ -276,7 +277,18 @@
 								Style="{StaticResource Indicator}"
 								Visibility="{Binding IsChecked, ElementName=RadioButton, Converter={StaticResource BoolToVis}}"
 								/>
-							<TextBlock Grid.Column="1" Text="{Binding}" />
+							<TextBlock Grid.Column="1">
+								<TextBlock.Text>
+									<m:Binding Converter="{StaticResource IdToOption}" Mode="OneWay">
+										<m:Binding.ConverterParameter>
+											<MultiBinding>
+												<Binding Path="Ids" ElementName="ViewModel" />
+												<Binding Path="Options" ElementName="ViewModel" />
+											</MultiBinding>
+										</m:Binding.ConverterParameter>
+									</m:Binding>
+								</TextBlock.Text>
+							</TextBlock>
 						</Grid>
 					</RadioButton>
 				</DataTemplate>

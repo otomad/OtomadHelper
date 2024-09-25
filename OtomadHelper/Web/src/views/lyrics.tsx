@@ -19,7 +19,7 @@ export default function Shupelunker() {
 
 				<EmptyMessage.Typical icon="lyrics" title="lyrics" enabled={enabled}>
 					<SettingsCard title={t.lyrics.presetTemplate} details={t.descriptions.lyrics.presetTemplate} icon="subtitles">
-						<ComboBox current={presetTemplate} options={[]} />
+						<ComboBox current={presetTemplate} options={[]} ids={[]} />
 					</SettingsCard>
 
 					<Subheader>{t.lyrics.karaoke}</Subheader>
