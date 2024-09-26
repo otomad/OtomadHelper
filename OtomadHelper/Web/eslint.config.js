@@ -316,6 +316,9 @@ export default [
 			}, {
 				name: "outerWidth",
 				message: "Please use window.outerWidth instead.",
+			}, {
+				name: "open",
+				message: "Please use window.open instead.",
 			}],
 			"no-restricted-syntax": ["error", {
 				selector: "VariableDeclaration[kind = 'let'] > VariableDeclarator[init = null]:not([id.typeAnnotation])",

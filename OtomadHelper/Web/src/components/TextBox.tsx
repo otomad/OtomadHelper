@@ -117,6 +117,10 @@ export /* @internal */ const StyledTextBox = styled.div`
 
 	${inputInSettingsCardStyle}
 
+	.expander-child-wrapper :where(&) {
+		inline-size: 200px;
+	}
+
 	input {
 		${styles.effects.text.body};
 		z-index: 1;

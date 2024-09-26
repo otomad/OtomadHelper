@@ -52,6 +52,7 @@ const colors = {
 	"fill-color-control-on-image-disabled": ["rgba(255, 255, 255, 0)", "rgba(30, 30, 30, 0)", "GrayText"],
 	"stroke-color-control-stroke-default": ["rgba(0, 0, 0, 0.06)", "rgba(255, 255, 255, 0.07)", "ActiveBorder"],
 	"stroke-color-control-stroke-secondary": ["rgba(0, 0, 0, 0.16)", "rgba(255, 255, 255, 0.09)", "ActiveBorder"],
+	"stroke-color-control-stroke-secondary-on-default": ["rgba(0, 0, 0, 0.1)", "rgba(255, 255, 255, 0.02)", "ActiveBorder"],
 	"stroke-color-control-stroke-tertiary": ["rgba(0, 0, 0, 0.13)", "rgba(255, 255, 255, 0.03)", "ActiveBorder"],
 	"stroke-color-control-stroke-on-accent-default": ["rgba(255, 255, 255, 0.08)", "rgba(255, 255, 255, 0.08)", "ActiveBorder"],
 	"stroke-color-control-stroke-on-accent-secondary": ["rgba(0, 0, 0, 0.4)", "rgba(0, 0, 0, 0.14)", "ActiveBorder"],

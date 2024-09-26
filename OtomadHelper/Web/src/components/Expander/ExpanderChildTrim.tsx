@@ -38,7 +38,7 @@ function ExpanderChildTrimTimecode({ start, end }: FCP<{
 	);
 }
 
-function ExpanderChildTrimValue({ start, end, unit = t.units.milliseconds, decimalPlaces, min, max }: FCP<{
+function ExpanderChildTrimValue({ start, end, unit = t.units.milliseconds, decimalPlaces, min, max, spinnerStep }: FCP<{
 	children?: never;
 	/** Start time value. */
 	start: StateProperty<number>;
@@ -52,6 +52,8 @@ function ExpanderChildTrimValue({ start, end, unit = t.units.milliseconds, decim
 	min?: number;
 	/** Limit of the maximum value. */
 	max?: number;
+	/** The value to increase or decrease each time the knob of numeric up down box is clicked. Defaults to 1. */
+	spinnerStep?: number;
 }, "div">) {
 	return (
 		<StyledExpanderChildTrim>
@@ -62,6 +64,7 @@ function ExpanderChildTrimValue({ start, end, unit = t.units.milliseconds, decim
 					decimalPlaces={decimalPlaces}
 					min={min}
 					max={minWithUndefined(max, end[0])}
+					spinnerStep={spinnerStep}
 				/>
 				<div className="tilde">~</div>
 				<TextBox.Number
@@ -70,6 +73,7 @@ function ExpanderChildTrimValue({ start, end, unit = t.units.milliseconds, decim
 					decimalPlaces={decimalPlaces}
 					min={maxWithUndefined(min, start[0])}
 					max={max}
+					spinnerStep={spinnerStep}
 				/>
 			</div>
 		</StyledExpanderChildTrim>

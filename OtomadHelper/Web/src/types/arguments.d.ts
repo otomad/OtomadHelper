@@ -21,23 +21,6 @@ declare global {
 	type ItemView = "list" | "tile" | "grid" | "grid-list";
 
 	/**
-	 * A 4-tuple of rectangles representing the coordinates and dimensions of the given element.
-	 *
-	 * Useful when communicating with code in C# host.
-	 *
-	 * @example In TypeScript:
-	 * ```typescript
-	 * [x: number, y: number, width: number, height: number]
-	 * ```
-	 *
-	 * In C#:
-	 * ```csharp
-	 * (double x, double y, double width, double height)
-	 * ```
-	 */
-	type RectTuple = [x: number, y: number, width: number, height: number];
-
-	/**
 	 * Curve Type, Video Keyframe Type, or OFX Interpolation Type.
 	 */
 	type CurveType = "linear" | "fast" | "slow" | "smooth" | "sharp" | "none";

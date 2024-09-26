@@ -248,6 +248,8 @@ export function getLocationStyle(location: MaybeRef<TwoD>): CSSProperties {
 /**
  * Retrieves bounding client rectangle of the given HTML DOM element.
  *
+ * @deprecated
+ *
  * @param element - The HTML DOM element (or even EventTarget or null) and get the bounding client rectangle from.
  * @returns A tuple containing the x, y, width, and height of the bounding client rectangle.
  *
@@ -266,12 +268,12 @@ export function getLocationStyle(location: MaybeRef<TwoD>): CSSProperties {
  * console.log(`Element position: x=${x}, y=${y}, width=${width}, height=${height}`);
  * ```
  */
-export function getBoundingClientRectTuple(element: MaybeRef<EventTarget | null>): RectTuple {
+export function getBoundingClientRect(element: MaybeRef<EventTarget | null>): DOMRect {
 	const el = toValue(element) as HTMLElement;
 	let rect = el.getBoundingClientRect();
 	const zoom = configStore.settings.uiScale1;
 	rect = zoomDomRect(rect, zoom);
-	return [rect.x, rect.y, rect.width, rect.height];
+	return rect;
 }
 
 /**

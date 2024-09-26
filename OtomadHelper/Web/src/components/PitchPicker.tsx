@@ -33,11 +33,11 @@ export default function PitchPicker({ spn: [spn, setSpn], ...htmlAttrs }: FCP<{
 }, "button">) {
 	const pitch = useMemo(() => new Pitch(spn!), [spn]);
 
-	async function showPitchPicker(e: MouseEvent) {
-		const rect = getBoundingClientRectTuple(e.currentTarget);
+	const showPitchPicker: MouseEventHandler<HTMLButtonElement> = async e => {
+		const rect = e.currentTarget.getBoundingClientRect();
 		const result = await bridges.bridge.showPitchPicker(rect, spn!);
 		setSpn?.(result);
-	}
+	};
 
 	return (
 		<StyledPitchPicker onClick={showPitchPicker} {...htmlAttrs}>

@@ -1,7 +1,5 @@
 using OtomadHelper.WPF.Controls;
 
-using RectTuple = System.Tuple<double, double, double, double>;
-
 namespace OtomadHelper.Bridges;
 
 public class Bridge {
@@ -41,7 +39,7 @@ public class Bridge {
 	/// <param name="ids">An array of <see cref="string"/> representing the ID of items in the combo box.</param>
 	/// <param name="options">An array of <see cref="string"/> representing the items to be displayed in the combo box.</param>
 	/// <returns>The selected item from the combo box flyout.</returns>
-	public async Task<T> ShowComboBox<T>(RectTuple rect, T selected, T[] ids, string[] options) {
+	public async Task<T> ShowComboBox<T>(Rect rect, T selected, T[] ids, string[] options) {
 		Rect screenRect = MainDock.ClientToScreenRect(rect);
 		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(ids, options, selected, screenRect, out Task<T> resultTask);
 		MainDock.ShowFlyout(flyout);
@@ -54,7 +52,7 @@ public class Bridge {
 	/// <param name="rect">A tuple representing the screen coordinates (x, y, width, height) of the flyout's position.</param>
 	/// <param name="pitch">The initial pitch (note name and octave) selected in the pitch picker.</param>
 	/// <returns>The selected pitch from the pitch picker flyout.</returns>
-	public async Task<string> ShowPitchPicker(RectTuple rect, string pitch) {
+	public async Task<string> ShowPitchPicker(Rect rect, string pitch) {
 		Rect screenRect = MainDock.ClientToScreenRect(rect);
 		PitchPickerFlyout flyout = PitchPickerFlyout.Initial(screenRect, pitch, out Task<string> resultTask);
 		MainDock.ShowFlyout(flyout);

@@ -1,9 +1,9 @@
 /* eslint-disable react/no-children-prop */
 import exampleThumbnail from "assets/images/ヨハネの氷.png";
 
-const ResetButton = () => (
-	<Tooltip placement="y" title={t.descriptions.track.resetLayout}>
-		<Button icon="arrow_reset" subtle accent minWidthUnbounded />
+const DeactivateButton = () => (
+	<Tooltip placement="y" title={t.descriptions.track.deactivate}>
+		<Button icon="arrow_reset" accent>{t.track.deactivate}</Button>
 	</Tooltip>
 );
 
@@ -15,11 +15,11 @@ export default function Track() {
 			<SettingsPageControl image={(<PreviewLayout thumbnail={exampleThumbnail} />)} learnMoreLink="">{t.descriptions.track}</SettingsPageControl>
 
 			<Subheader>{t.track.layout}</Subheader>
-			<SettingsCard title={t.track.grid} type="button" icon="grid" onClick={() => pushPage("home")} children={<ResetButton />} />
-			<SettingsCard title={t.track.box3d} type="button" icon="cube" children={<ResetButton />} />
-			<SettingsCard title={t.track.gradient} details={t.descriptions.track.gradient} type="button" icon="highlight" children={<ResetButton />} />
+			<SettingsCard title={t.track.grid} type="button" icon="grid" onClick={() => pushPage("home")} children={<DeactivateButton />} />
+			<SettingsCard title={t.track.box3d} type="button" icon="cube" children={<DeactivateButton />} />
+			<SettingsCard title={t.track.gradient} details={t.descriptions.track.gradient} type="button" icon="highlight" children={<DeactivateButton />} />
 			<div>
-				<Button icon="arrow_reset">{t.track.resetAllLayouts}</Button>
+				<Button icon="arrow_reset">{t.track.deactivateAll}</Button>
 			</div>
 
 			<Subheader>{t.stream.legato}</Subheader>

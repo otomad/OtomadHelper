@@ -10,11 +10,20 @@ export /* @internal */ const StyledButton = styled.button<{
 	$dirBased?: boolean;
 }>`
 	${styles.mixins.flexCenter()};
+	--border-outline-color: ${c("stroke-color-control-stroke-default")};
+	--border-highlight-color: ${c("stroke-color-control-stroke-secondary-on-default")};
+	--border-accent-color: transparent;
+	--border-highlight-y-offset: 0;
+	position: relative;
 	display: inline-flex;
 	min-height: 32px;
 	padding: 4px ${inlinePadding}px 6px;
-	border: 1px solid;
+	border: none;
 	border-radius: 4px;
+	box-shadow:
+		0 var(--border-highlight-y-offset) 0 0 var(--border-highlight-color),
+		0 0 0 1px var(--border-outline-color),
+		0 0 0 1px var(--border-accent-color) !important;
 
 	&:hover {
 		background-color: ${c("fill-color-control-secondary")};
@@ -40,11 +49,20 @@ export /* @internal */ const StyledButton = styled.button<{
 		}
 	}
 
+	&:focus-visible::after {
+		${styles.mixins.square("100%")};
+		${styles.effects.focus()};
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+	}
+
 	&.subtle,
 	&.hyperlink {
 		padding: 0 11px;
 		background-color: ${c("fill-color-subtle-transparent")};
-		border: none;
+		box-shadow: none !important;
 
 		&::before {
 			display: none;
@@ -57,6 +75,10 @@ export /* @internal */ const StyledButton = styled.button<{
 		&${isPressed} {
 			background-color: ${c("fill-color-subtle-tertiary")};
 		}
+	}
+
+	&:not(.subtle, .hyperlink) {
+		margin: 1px;
 	}
 
 	&.subtle {
@@ -90,41 +112,37 @@ export /* @internal */ const StyledButton = styled.button<{
 
 	${({ $fillColorName, $subtleFillColorName }) => !$fillColorName ? css`
 		background-color: ${c("fill-color-control-default")};
-		border-color: ${c("stroke-color-control-stroke-default")};
 
 		${ifColorScheme.dark} &${notPressedOrDisabled} {
-			border-top-color: ${c("stroke-color-control-stroke-secondary")};
+			--border-highlight-y-offset: -1px;
 		}
 
 		${ifColorScheme.light} &${notPressedOrDisabled} {
-			border-bottom-color: ${c("stroke-color-control-stroke-secondary")};
+			--border-highlight-y-offset: 1px;
 		}
 	` : css`
 		--fill-color: ${c($fillColorName)};
+		--border-outline-color: ${c("stroke-color-control-stroke-on-accent-default")};
+		--border-highlight-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
+		--border-accent-color: ${c($fillColorName)};
 		background-color: ${c($fillColorName)};
-		border-color: ${c("stroke-color-control-stroke-on-accent-default")};
 
 		* {
 			color: ${c("fill-color-text-on-accent-primary")};
 		}
 
-		${ifColorScheme.dark} &${notPressedOrDisabled} {
-			border-top-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
-		}
-
-		${ifColorScheme.light} &${notPressedOrDisabled} {
-			border-bottom-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
-		}
-
 		&:hover {
+			--border-accent-color: ${c("fill-color", 90)};
 			background-color: ${c("fill-color", 90)};
 		}
 
 		&${isPressed} {
+			--border-accent-color: ${c("fill-color", 80)};
 			background-color: ${c("fill-color", 80)};
 		}
 
 		&[disabled] {
+			--border-accent-color: ${c("fill-color-accent-disabled")};
 			background-color: ${c("fill-color-accent-disabled")};
 
 			${ifColorScheme.light} & > .content {

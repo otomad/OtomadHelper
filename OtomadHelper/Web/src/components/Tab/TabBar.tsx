@@ -81,6 +81,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 	const [position, _setPosition] = useState<TwoD>([NaN, NaN]);
 	const [noIndicatorTransition, setNoIndicatorTransition] = useState(false);
 	const updateIndicatorThread = useRef<symbol>();
+	const { uiScale1 } = useSnapshot(configStore.settings);
 
 	/**
 	 * Update the tab indicator.
@@ -109,7 +110,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 		const entireRect = indicator.parentElement!.getBoundingClientRect();
 		const entire1 = entireRect[vertical ? "top" : "left"],
 			entire2 = entireRect[vertical ? "bottom" : "right"],
-			entireLength = entire2 - entire1;
+			entireLength = (entire2 - entire1) / uiScale1;
 		const setPosition = setStateInterceptor(_setPosition, ([pos1, pos2]: TwoD) => [pos1, entireLength - pos2] as TwoD);
 		const [entry1, entry2] = position;
 		if (entry1 + entry2 >= entireLength || !Number.isFinite(entry1) || !Number.isFinite(entry2))
@@ -123,8 +124,8 @@ export default function TabBar<T extends string = string>({ current: [current, s
 			return;
 		}
 		const targetRect = selectedTabItem.getBoundingClientRect();
-		let target1 = targetRect[vertical ? "top" : "left"] - entire1,
-			target2 = targetRect[vertical ? "bottom" : "right"] - entire1;
+		let target1 = (targetRect[vertical ? "top" : "left"] - entire1) / uiScale1,
+			target2 = (targetRect[vertical ? "bottom" : "right"] - entire1) / uiScale1;
 		const targetOffset = (target2 - target1 - LENGTH) / 2;
 		if (targetOffset > 0) { target1 += targetOffset; target2 -= targetOffset; }
 		if (movement === "appear") {
@@ -155,7 +156,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 			if (updateIndicatorThread.current !== thisThread) return;
 			setPosition1();
 		}
-	}, [position]);
+	}, [position, uiScale1]);
 
 	useEffect(() => {
 		update();

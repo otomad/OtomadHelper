@@ -36,7 +36,7 @@ const PrelistenActions = styled.div`
 	gap: 8px;
 	align-items: stretch;
 
-	:has(~ .stop) {
+	:has(~ .stop.shown) {
 		opacity: 0;
 		visibility: hidden;
 		pointer-events: none;
@@ -45,6 +45,12 @@ const PrelistenActions = styled.div`
 	.stop {
 		position: absolute;
 		inset: 0;
+
+		&:not(.shown) {
+			display: none;
+			opacity: 0;
+			transition-behavior: allow-discrete;
+		}
 	}
 `;
 
@@ -199,7 +205,7 @@ export default function Audio() {
 								<PrelistenActions>
 									<Button onClick={prelistenBasePitch}>{t.stream.tuning.prelisten.basePitch}</Button>
 									<Button>{t.stream.tuning.prelisten.audio}</Button>
-									{isPrelistening && <Button icon="stop" className="stop" onClick={stopPrelistening}>{t.stream.tuning.prelisten.stop}</Button>}
+									<Button icon="stop" className={["stop", { shown: isPrelistening }]} onClick={stopPrelistening}>{t.stream.tuning.prelisten.stop}</Button>
 								</PrelistenActions>
 							)}
 						>

@@ -10,6 +10,7 @@ const StyledCommandBar = styled.div`
 	> * {
 		${styles.effects.text.body};
 		display: flex;
+		align-items: center;
 		height: 100%;
 		/* overflow-x: hidden; */
 	}

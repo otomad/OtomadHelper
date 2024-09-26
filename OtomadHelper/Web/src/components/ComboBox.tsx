@@ -42,11 +42,11 @@ export default function ComboBox<T extends string | number>({ ids, options, curr
 }, "select">) {
 	const currentOption = options[ids.indexOf(current!)] ?? `<${current}>`;
 
-	async function showComboBox(e: MouseEvent) {
-		const rect = getBoundingClientRectTuple(e.currentTarget);
-		const result = await bridges.bridge.showComboBox(rect, current!, toValueArray(ids), toStringArray(options));
-		setCurrent?.(result as T);
-	}
+	const showComboBox: MouseEventHandler<HTMLButtonElement> = async e => {
+		const rect = e.currentTarget.getBoundingClientRect();
+		const result = await bridges.bridge.showComboBox(rect, current!, ids, toStringArray(options)) as T;
+		setCurrent?.(result);
+	};
 
 	if (window.isWebView)
 		return (
@@ -70,8 +70,4 @@ export default function ComboBox<T extends string | number>({ ids, options, curr
 // So here we use `Object` instead of `object` for correct typing. So does ESLint disable.
 function toStringArray(array: readonly Object[]) {
 	return array.map(item => item.toString());
-}
-
-function toValueArray(array: readonly Object[]) {
-	return array.map(item => item.valueOf());
 }

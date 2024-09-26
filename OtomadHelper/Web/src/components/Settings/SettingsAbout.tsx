@@ -65,13 +65,13 @@ export default function SettingsAbout() {
 						{Array.from(pairs.entries(), ([key, value]) => <span key={key}>{key + t.colon + value}</span>)}
 					</div>
 					<div>
-						<OpenLink href="https://otomadhelper.readthedocs.io/">{t.settings.about.documentation}</OpenLink>
-						<OpenLink href="https://github.com/otomad/OtomadHelper/releases">{t.settings.about.changeLog}</OpenLink>
-						<OpenLink href="https://github.com/otomad/OtomadHelper">{t.settings.about.repositoryLink}</OpenLink>
-						<OpenLink href="https://github.com/otomad/OtomadHelper/issues">{t.settings.about.feedback}</OpenLink>
-						<OpenLink href="https://www.gnu.org/licenses/gpl-3.0.html">{t.settings.about.license}</OpenLink>
-						<a onClick={() => setShowTranslators(true)}>{t.settings.about.translators}</a>
-						<OpenLink href={CONTRIBUTE_TRANSLATION_LINK}>{t.settings.about.translation}</OpenLink>
+						<Link href="https://otomadhelper.readthedocs.io/">{t.settings.about.documentation}</Link>
+						<Link href="https://github.com/otomad/OtomadHelper/releases">{t.settings.about.changeLog}</Link>
+						<Link href="https://github.com/otomad/OtomadHelper">{t.settings.about.repositoryLink}</Link>
+						<Link href="https://github.com/otomad/OtomadHelper/issues">{t.settings.about.feedback}</Link>
+						<Link href="https://www.gnu.org/licenses/gpl-3.0.html">{t.settings.about.license}</Link>
+						<Link onClick={() => setShowTranslators(true)}>{t.settings.about.translators}</Link>
+						<Link href={CONTRIBUTE_TRANSLATION_LINK}>{t.settings.about.translation}</Link>
 					</div>
 					<Translators shown={[showTranslators, setShowTranslators]} />
 				</div>
@@ -144,10 +144,10 @@ function Translators({ shown: [shown, setShown] }: FCP<{
 		<ContentDialog
 			shown={[shown, setShown]}
 			title={t.settings.about.translators}
-			buttons={(
+			buttons={close => (
 				<>
 					<Button onClick={() => window.open(CONTRIBUTE_TRANSLATION_LINK)}>{t.settings.about.translation}</Button>
-					<Button accent onClick={() => setShown?.(false)}>{t.ok}</Button>
+					<Button autoFocus accent onClick={close}>{t.ok}</Button>
 				</>
 			)}
 		>

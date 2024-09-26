@@ -3,7 +3,7 @@ const StyledContentDialog = styled.div`
 	max-height: 100dvh;
 	overflow: clip;
 	background-color: ${c("background-fill-color-layer-alt-solid")};
-	border-radius: 7px;
+	border-radius: 8px;
 	outline: 1px solid ${c("stroke-color-surface-stroke-default")};
 	box-shadow:
 		0 32px 64px ${c("black", 19)},
@@ -70,12 +70,31 @@ export default function ContentDialog({ shown: [shown, setShown], title, static:
 	/** Focus content dialog. Don't close it when click outside? */
 	static?: boolean;
 	/** Action buttons. */
-	buttons?: ReactNode;
+	buttons?: ReactNode | ((close: () => void) => ReactNode);
 }, "div">) {
+	const close = (): void => void setShown?.(false);
+
 	const handleClickMask = useCallback<MouseEventHandler>(e => {
 		if (!isStatic && e.currentTarget === e.target)
-			setShown?.(false);
+			close();
 	}, []);
+
+	useEventListener(window, "keydown", e => {
+		if (!isStatic && e.code === "Escape")
+			close();
+	});
+
+	const setRootInert = (inert: boolean) => {
+		const root = document.getElementById("root");
+		if (root) root.inert = inert;
+	};
+
+	useEffect(() => {
+		if (shown)
+			setRootInert(true);
+		else if (document.querySelectorAll("#popovers .content-dialog").length <= 1)
+			setRootInert(false);
+	}, [shown]);
 
 	return (
 		<Portal>
@@ -86,7 +105,9 @@ export default function ContentDialog({ shown: [shown, setShown], title, static:
 							<div className="title">{title}</div>
 							<div className="body">{children}</div>
 						</div>
-						<div className="button-grid">{buttons}</div>
+						<div className="button-grid">
+							{typeof buttons === "function" ? buttons(close) : buttons}
+						</div>
 					</StyledContentDialog>
 				</Mask>
 			</CssTransition>

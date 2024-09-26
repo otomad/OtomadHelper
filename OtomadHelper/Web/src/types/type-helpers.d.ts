@@ -162,12 +162,20 @@ declare global {
 	type PromiseOnce<T> = T extends Promise<any> ? T : Promise<T>;
 
 	/**
+	 * Make all items in Array or Object T readonly.
+	 */
+	type ReadonlyArrayItems<T> = {
+		[P in keyof T]: Readonly<T[P]>;
+	};
+
+	/**
 	 * Converts a synchronous function into an asynchronous one by wrapping its return value in a Promise.
 	 * If the given function already returns a Promise, it will be returned as is.
 	 *
 	 * @template TFunction - The type of the source function to be converted. It should be a synchronous function type.
 	 */
-	type MakeFunctionAsync<TFunction extends Function> = (...args: Parameters<TFunction>) =>
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+	type MakeFunctionAsync<TFunction extends Function> = (...args: ReadonlyArrayItems<Parameters<TFunction>>) =>
 		PromiseOnce<ReturnType<TFunction>>;
 
 	/**

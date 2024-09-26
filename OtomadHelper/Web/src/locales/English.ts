@@ -277,7 +277,8 @@ export default {
 			box3d: "3D Box Layout",
 			gradient: "Gradient Tracks",
 			applyToSelectedTracks: "Apply to selected tracks",
-			resetAllLayouts: "Reset all",
+			deactivate: "Deactivate",
+			deactivateAll: "Deactivate all",
 			legato: {
 				_: "Legato",
 			},
@@ -585,7 +586,7 @@ export default {
 				_: "Layout is one of the core points in the visual production process of YTPMV. Learn about composition, knowing how to make a good visual layout for a YTPMV will make it much more enjoyable to watch than you would expect.\nBasically, make sure your melody sample is the most prominent thing in the visuals.",
 				gradient: "Gives the video tracks a gradient color effect in your layout",
 				legato: "Fills in the gaps between the track clips",
-				resetLayout: "Reset the status of this layout to disable it",
+				deactivate: "Reset the status of this layout to deactivate it",
 			},
 			sonar: {
 				_: "Sonar is a visual effect that utilizes Cookie Cutter shapes to create beat-style visual motion graphics. This feature allows you to assign different shapes or effects to various percussion instruments of a drum kit (channel 10) in the score.\nA common Otomad genre is to create Motion Graphics (Mograph) by adding various shapes, such as diffuse circles, to the visual based on the beats. Mograph is a product between graphic design and animation design, a form of visual expression based on the flow of time, and a kind of video art. The term “motion graphics” refers to graphics that are deformed by the flow of time. A single Otomad video containing only mographs is often titled “Graphs” or “Shapes”.",
