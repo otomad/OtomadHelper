@@ -26,6 +26,7 @@ export function beep(type: OscillatorCommonType, hz: number, ms: number, vol: nu
 	const stop = () => oscillator.stop();
 	const promise = delay(ms).then(() => {
 		stop();
+		return audioContext.close();
 	});
 
 	return { stop, promise };
