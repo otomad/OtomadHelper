@@ -46,10 +46,10 @@ internal static class ResourceHelper {
 	/// </summary>
 	/// <param name="resourceFolder">The folder where the embedded resources in.</param>
 	/// <returns>The embedded resource names.</returns>
-	public static IEnumerable<string> GetEmbeddedResourceNamesInFolder(string resourceFolder) =>
+	public static IEnumerable<string> GetEmbeddedResourceNamesInFolder(string? resourceFolder = null) =>
 		Assembly.GetExecutingAssembly()
 			.GetManifestResourceNames()
-			.Where(name => name.StartsWith(AssemblyName + "." + resourceFolder + "."));
+			.Where(name => string.IsNullOrWhiteSpace(resourceFolder) || name.StartsWith(AssemblyName + "." + resourceFolder + "."));
 
 	/// <summary>
 	/// Get the thumbnail of a local file.
