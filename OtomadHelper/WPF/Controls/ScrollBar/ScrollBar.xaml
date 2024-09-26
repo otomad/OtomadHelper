@@ -10,7 +10,7 @@
 	<s:Double x:Key="ScrollBarButtonPressedScale">0.8</s:Double>
 	<s:Double x:Key="ScrollBarTrackThickness">6</s:Double>
 	<s:Double x:Key="ScrollBarTrackUnhoveredThickness">2</s:Double>
-	<Thickness x:Key="ScrollBarVerticalTrackUnhoveredMargin">4,0,0,0</Thickness>
+	<Thickness x:Key="ScrollBarVerticalTrackUnhoveredMargin">2,0,0,0</Thickness>
 	<Thickness x:Key="ScrollBarHorizontalTrackUnhoveredMargin">0,4,0,0</Thickness>
 	<Duration x:Key="ScrollBarButtonPressedScaleDuration">00:00:00.100</Duration>
 
@@ -23,15 +23,7 @@
 			Duration="{StaticResource BaseAnimationDuration}"
 			/>
 	</Storyboard>
-	<Storyboard x:Key="FadeOut">
-		<DoubleAnimation
-			EasingFunction="{StaticResource EaseOutExpo}"
-			Storyboard.TargetProperty="Opacity"
-			From="1"
-			To="0"
-			Duration="{StaticResource BaseAnimationDuration}"
-			/>
-	</Storyboard>
+	<m:ReversedStoryboard x:Key="FadeOut" BasedOn="{StaticResource FadeIn}" />
 
 	<Style x:Key="ScrollBarLineButton" TargetType="c:ScrollBarLineButton">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
@@ -91,19 +83,9 @@
 						</Storyboard>
 					</BeginStoryboard>
 				</Trigger.EnterActions>
-				<Trigger.ExitActions>
-					<BeginStoryboard>
-						<Storyboard>
-							<DoubleAnimation
-								EasingFunction="{StaticResource EaseOutExpo}"
-								Storyboard.TargetProperty="ArrowScale"
-								From="{StaticResource ScrollBarButtonPressedScale}"
-								To="1"
-								Duration="{StaticResource ScrollBarButtonPressedScaleDuration}"
-								/>
-						</Storyboard>
-					</BeginStoryboard>
-				</Trigger.ExitActions>
+				<m:ReversedStoryboard.AutoReverse>
+					<m:ReversedStoryboard />
+				</m:ReversedStoryboard.AutoReverse>
 			</Trigger>
 		</Style.Triggers>
 	</Style>
@@ -113,19 +95,23 @@
 		<Setter Property="OverridesDefaultStyle" Value="true" />
 		<Setter Property="IsTabStop" Value="false" />
 		<Setter Property="Focusable" Value="false" />
-		<Setter Property="Width" Value="{StaticResource ScrollBarTrackUnhoveredThickness}" />
+		<Setter Property="Width" Value="10" />
+		<Setter Property="FontSize" Value="{StaticResource ScrollBarTrackUnhoveredThickness}" />
 		<Setter Property="Height" Value="Auto" />
 		<Setter Property="Margin" Value="{StaticResource ScrollBarVerticalTrackUnhoveredMargin}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Thumb">
-					<Border
-						Width="{TemplateBinding Width}"
-						Height="{TemplateBinding Height}"
-						m:OvalCornerRadius.Enabled="True"
-						Background="{DynamicResource ControlStrong}"
-						BorderThickness="0"
-						/>
+					<Border Background="Transparent">
+						<Border
+							Width="{TemplateBinding FontSize}"
+							Height="{TemplateBinding Height}"
+							m:OvalCornerRadius.Enabled="True"
+							Background="{DynamicResource ControlStrong}"
+							BorderThickness="0"
+							Margin="{TemplateBinding Margin}"
+							/>
+					</Border>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
@@ -137,17 +123,17 @@
 			</DataTrigger>
 			<MultiDataTrigger>
 				<MultiDataTrigger.Conditions>
-					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="True" />
-					<Condition Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="Vertical" />
+					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type ScrollBar}}}" Value="True" />
+					<Condition Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type ScrollBar}}}" Value="Vertical" />
 				</MultiDataTrigger.Conditions>
-				<Setter Property="Width" Value="{StaticResource ScrollBarTrackThickness}" />
+				<Setter Property="FontSize" Value="{StaticResource ScrollBarTrackThickness}" />
 				<Setter Property="Margin" Value="0" />
 				<MultiDataTrigger.EnterActions>
 					<BeginStoryboard>
 						<Storyboard>
 							<DoubleAnimation
 								EasingFunction="{StaticResource EaseOutExpo}"
-								Storyboard.TargetProperty="Width"
+								Storyboard.TargetProperty="FontSize"
 								From="{StaticResource ScrollBarTrackUnhoveredThickness}"
 								To="{StaticResource ScrollBarTrackThickness}"
 								Duration="{StaticResource BaseAnimationDuration}"
@@ -162,26 +148,9 @@
 						</Storyboard>
 					</BeginStoryboard>
 				</MultiDataTrigger.EnterActions>
-				<MultiDataTrigger.ExitActions>
-					<BeginStoryboard>
-						<Storyboard>
-							<DoubleAnimation
-								EasingFunction="{StaticResource EaseOutExpo}"
-								Storyboard.TargetProperty="Width"
-								From="{StaticResource ScrollBarTrackThickness}"
-								To="{StaticResource ScrollBarTrackUnhoveredThickness}"
-								Duration="{StaticResource BaseAnimationDuration}"
-								/>
-							<ThicknessAnimation
-								EasingFunction="{StaticResource EaseOutExpo}"
-								Storyboard.TargetProperty="Margin"
-								From="0"
-								To="{StaticResource ScrollBarVerticalTrackUnhoveredMargin}"
-								Duration="{StaticResource BaseAnimationDuration}"
-								/>
-						</Storyboard>
-					</BeginStoryboard>
-				</MultiDataTrigger.ExitActions>
+				<m:ReversedStoryboard.AutoReverse>
+					<m:ReversedStoryboard />
+				</m:ReversedStoryboard.AutoReverse>
 			</MultiDataTrigger>
 			<MultiDataTrigger>
 				<MultiDataTrigger.Conditions>

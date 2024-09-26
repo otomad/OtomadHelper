@@ -41,7 +41,7 @@ public class I18n : DynamicObject {
 		else if (!cultures.Select(culture => culture.TwoLetterISOLanguageName).ToList().Contains(culture.TwoLetterISOLanguageName)) suitableCulture = DefaultCulture;
 		else {
 			if (cultureFallbackMap is null) {
-				cultureFallbackMap = new();
+				cultureFallbackMap = [];
 				foreach (CultureInfo targetCulture in cultures) {
 					CultureInfo cultureItem = targetCulture;
 					while (!cultureItem.IsReadOnly) {
@@ -104,7 +104,7 @@ public class I18n : DynamicObject {
 
 	public static readonly dynamic t = new I18n();
 
-	private IEnumerable<string> Parents { get; set; } = new string[0];
+	private IEnumerable<string> Parents { get; set; } = [];
 
 	private I18n() { }
 	private I18n(IEnumerable<string> parents) => Parents = parents;
