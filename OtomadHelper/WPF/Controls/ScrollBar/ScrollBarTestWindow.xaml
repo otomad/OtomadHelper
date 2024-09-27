@@ -8,6 +8,7 @@
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	Width="800"
 	Height="450"
+	BorderThickness="0"
 	mc:Ignorable="d"
 	SystemBackdropType="MainWindow"
 	>

@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Controls.Primitives;
 
 namespace OtomadHelper.WPF.Controls;
@@ -14,4 +15,11 @@ public enum ScrollBarLineButtonArrowPoint {
 	Right = 90,
 	Down = 180,
 	Left = 270,
+}
+
+[DependencyProperty<double>("BaseWidth", TypeConverter = typeof(LengthConverter))]
+[DependencyProperty<double>("BaseHeight", TypeConverter = typeof(LengthConverter))]
+[DependencyProperty<Thickness>("BaseMargin")]
+public partial class ScrollBarThumb : Thumb {
+	
 }
