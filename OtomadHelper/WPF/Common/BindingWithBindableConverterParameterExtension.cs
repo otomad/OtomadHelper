@@ -8,7 +8,7 @@ namespace OtomadHelper.WPF.Common;
 /// Allows Binding to Converter Parameter.
 /// </summary>
 /// <remarks>
-/// Original name: <b><c>BindingWithBindableConverterParameter Extension</c></b><br/>
+/// Original name: <b><c>BindingWithBindableConverterParameterExtension</c></b><br/>
 /// <see href="https://stackoverflow.com/a/60822278/19553213"/>
 /// </remarks>
 [ContentProperty(nameof(Binding))]

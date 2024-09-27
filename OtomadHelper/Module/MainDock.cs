@@ -138,7 +138,7 @@ public partial class MainDock : UserControl {
 		string extension = path.DotExtension;
 		using RegistryKey? registryKey = Registry.ClassesRoot.OpenSubKey(extension);
 		string contentType = (string)(registryKey?.GetValue("Content Type") ?? "");
-		PostWebMessage(new DragOver() {
+		PostWebMessage(new DragOver {
 			extension = extension,
 			contentType = contentType,
 			isDirectory = isDirectory,
@@ -148,7 +148,7 @@ public partial class MainDock : UserControl {
 
 	private void MainDock_DragLeave() {
 		if (LoadingAnimationPicture.Visible) return;
-		PostWebMessage(new DragOver() {
+		PostWebMessage(new DragOver {
 			isDragging = false,
 		});
 		DropTargetHelper.DragLeave(this);

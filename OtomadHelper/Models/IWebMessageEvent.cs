@@ -11,7 +11,7 @@ public abstract class BaseWebMessageEvent {
 		if (obj is null) throw new ArgumentNullException(nameof(obj));
 		JsonNode node = JsonSerializer.SerializeToNode(obj, options)!;
 		if (node.GetValueKind() != JsonValueKind.Object)
-			node = new JsonObject() { ["value"] = node };
+			node = new JsonObject { ["value"] = node };
 		JsonObject objectNode = node.AsObject();
 		objectNode[nameof(Type).ToLowerInvariant()] =
 			string.IsNullOrEmpty(overriddenTypeName) ? GetTypeName(obj) : overriddenTypeName;

@@ -13,7 +13,8 @@ internal static class Program {
 		Application.EnableVisualStyles();
 		Application.SetCompatibleTextRenderingDefault(false);
 		//SetCulture = "en-US";
-		Application.Run(new TestForm());
+		//Application.Run(new TestForm());
+
 		//Application.Run(new TestControls());
 		//s = WPF.Controls.ContentDialog.ShowDialog<string>("幸福倒计时", "Windows 11 即将更新！", [new(t.ContentDialog.Button.Ok, "ok", true), new(t.ContentDialog.Button.Cancel, "cancel")]);
 		/*try {
@@ -23,5 +24,6 @@ internal static class Program {
 			WPF.Controls.ContentDialog.ShowError(e);
 		}
 		static int TestError() => 0 / Math.Abs(0);*/
+		new WPF.Controls.ScrollBarTestWindow().ShowDialog();
 	}
 }

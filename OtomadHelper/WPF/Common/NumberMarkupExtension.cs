@@ -2,6 +2,29 @@ using System.Windows.Markup;
 
 namespace OtomadHelper.WPF.Common;
 
+/// <summary>
+/// Define <see cref="int"/> number more simply.
+/// </summary>
+/// <remarks>
+/// <example>
+/// <para>Before:</para>
+/// <code>
+/// <![CDATA[
+/// <Element>
+///     <Element.Property>
+///         <s:Int32>1</s:Int32>
+///     </Element.Property>
+/// </Element>
+/// ]]>
+/// </code>
+/// <para>After:</para>
+/// <code>
+/// <![CDATA[
+/// <Element Property="{m:Int 1}" />
+/// ]]>
+/// </code>
+/// </example>
+/// </remarks>
 [MarkupExtensionReturnType(typeof(int))]
 public class IntExtension(int value) : MarkupExtension {
 	[ConstructorArgument("value")]
@@ -10,6 +33,29 @@ public class IntExtension(int value) : MarkupExtension {
 	public override object ProvideValue(IServiceProvider serviceProvider) => Value;
 }
 
+/// <summary>
+/// Define <see cref="double"/> number more simply.
+/// </summary>
+/// <remarks>
+/// <example>
+/// <para>Before:</para>
+/// <code>
+/// <![CDATA[
+/// <Element>
+///     <Element.Property>
+///         <s:Double>3.14</s:Double>
+///     </Element.Property>
+/// </Element>
+/// ]]>
+/// </code>
+/// <para>After:</para>
+/// <code>
+/// <![CDATA[
+/// <Element Property="{m:Double 3.14}" />
+/// ]]>
+/// </code>
+/// </example>
+/// </remarks>
 [MarkupExtensionReturnType(typeof(double))]
 public class DoubleExtension(int value) : MarkupExtension {
 	[ConstructorArgument("value")]

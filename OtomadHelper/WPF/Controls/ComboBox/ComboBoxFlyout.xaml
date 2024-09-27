@@ -266,11 +266,7 @@
 						IsChecked="{m:Binding Converter={StaticResource IdToChecked}, ConverterParameter={Binding Selected, ElementName=ViewModel}, Mode=OneWay}"
 						Style="{StaticResource ComboBoxItemButton}"
 						>
-						<Grid>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="12" />
-								<ColumnDefinition Width="*" />
-							</Grid.ColumnDefinitions>
+						<Grid m:GridDef.Column="12,*">
 							<Rectangle
 								x:Name="Indicator"
 								Grid.Column="0"

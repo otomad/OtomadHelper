@@ -175,11 +175,11 @@ public class RectToDrawingBrushConverter : IValueConverter {
 		Rect rect = (Rect)value;
 		DrawingBrush brush = new();
 		DrawingGroup group = new();
-		group.Children.Add(new GeometryDrawing() {
+		group.Children.Add(new GeometryDrawing {
 			Brush = new SolidColorBrush(Colors.Transparent),
 			Geometry = new RectangleGeometry(new Rect(0, 0, 1, 1)),
 		});
-		group.Children.Add(new GeometryDrawing() {
+		group.Children.Add(new GeometryDrawing {
 			Brush = new SolidColorBrush(Colors.Black),
 			Geometry = new RectangleGeometry(rect),
 		});

@@ -249,12 +249,7 @@
 	</c:BaseFlyout.Resources>
 
 	<Grid>
-		<Grid>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-				<ColumnDefinition Width="1" />
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
+		<Grid m:GridDef.Column="Auto,1,Auto">
 			<Rectangle Style="{StaticResource SelectionBase}" />
 			<Canvas
 				x:Name="NoteNameWrapper"
@@ -310,12 +305,7 @@
 					/>
 			</Canvas>
 		</Grid>
-		<Grid Style="{StaticResource ColumnGridSelectionMasked}" d:Visibility="Collapsed">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-				<ColumnDefinition Width="1" />
-				<ColumnDefinition />
-			</Grid.ColumnDefinitions>
+		<Grid Style="{StaticResource ColumnGridSelectionMasked}" m:GridDef.Column="Auto,1,Auto" d:Visibility="Collapsed">
 			<Border Grid.Column="0">
 				<Canvas Style="{StaticResource ListViewWrapper}" Focusable="False">
 					<c:PitchPickerFlyoutListView

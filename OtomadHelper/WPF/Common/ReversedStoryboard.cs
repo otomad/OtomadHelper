@@ -14,10 +14,10 @@ public partial class ReversedStoryboard : Storyboard {
 		if ((enterBegin != null) == (exitBegin != null)) return; // If both or neither are defined, skip.
 		BeginStoryboard begin = new();
 		if (enterBegin != null) {
-			begin.Storyboard = new ReversedStoryboard() { BasedOn = enterBegin.Storyboard, ReverseEasing = value.ReverseEasing };
+			begin.Storyboard = new ReversedStoryboard { BasedOn = enterBegin.Storyboard, ReverseEasing = value.ReverseEasing };
 			trigger.ExitActions.Add(begin);
 		} else if (exitBegin != null) {
-			begin.Storyboard = new ReversedStoryboard() { BasedOn = exitBegin.Storyboard, ReverseEasing = value.ReverseEasing };
+			begin.Storyboard = new ReversedStoryboard { BasedOn = exitBegin.Storyboard, ReverseEasing = value.ReverseEasing };
 			trigger.EnterActions.Add(begin);
 		}
 	}
@@ -27,95 +27,35 @@ public partial class ReversedStoryboard : Storyboard {
 		if (BasedOn == null) return;
 		foreach (Timeline originalTimeline in BasedOn.Children) {
 			Timeline timeline = originalTimeline.Clone();
-			switch (timeline) {
-				case DoubleAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				#region messy
-				case ByteAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case ColorAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case DecimalAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case Int16Animation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case Int32Animation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case Int64Animation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case PointAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case Point3DAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case QuaternionAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case RectAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case Rotation3DAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case SingleAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case SizeAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case ThicknessAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case VectorAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				case Vector3DAnimation ani:
-					(ani.From, ani.To) = (ani.To, ani.From);
-					ReverseEasingFunction(ani.EasingFunction);
-					break;
-				default:
-					break;
-				#endregion
+
+			PropertyInfo? fromProperty = timeline.GetType().GetProperty("From");
+			PropertyInfo? toProperty = timeline.GetType().GetProperty("To");
+			PropertyInfo? easingProperty = timeline.GetType().GetProperty("EasingFunction");
+			if (fromProperty is null || toProperty is null || fromProperty.PropertyType != toProperty.PropertyType) return;
+
+			object temp = fromProperty.GetValue(timeline);
+			fromProperty.SetValue(timeline, toProperty.GetValue(timeline));
+			toProperty.SetValue(timeline, temp);
+
+			if (ReverseEasing && easingProperty != null) {
+				object unknownEasing = easingProperty.GetValue(timeline);
+				if (unknownEasing is EasingFunctionBase easingFunction) {
+					EasingFunctionBase easing = ReverseEasingFunction(easingFunction);
+					easingProperty.SetValue(timeline, easing);
+				}
 			}
+
 			Children.Add(timeline);
 		}
 	}
 
-	private IEasingFunction ReverseEasingFunction(IEasingFunction originalEasing) {
-		if (!ReverseEasing) return originalEasing;
-		if (originalEasing is EasingFunctionBase easingFunction) {
-			EasingFunctionBase easing = (EasingFunctionBase)easingFunction.Clone();
-			easing.EasingMode = easing.EasingMode switch {
-				EasingMode.EaseIn => EasingMode.EaseOut,
-				EasingMode.EaseOut => EasingMode.EaseIn,
-				_ => EasingMode.EaseInOut,
-			};
-			return easing;
-		}
-		return originalEasing;
+	private static EasingFunctionBase ReverseEasingFunction(EasingFunctionBase easingFunction) {
+		EasingFunctionBase easing = (EasingFunctionBase)easingFunction.Clone();
+		easing.EasingMode = easing.EasingMode switch {
+			EasingMode.EaseIn => EasingMode.EaseOut,
+			EasingMode.EaseOut => EasingMode.EaseIn,
+			_ => EasingMode.EaseInOut,
+		};
+		return easing;
 	}
 }
