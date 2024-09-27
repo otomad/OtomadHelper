@@ -1,5 +1,7 @@
 using System.Windows.Markup;
 
+using Icon = OtomadHelper.WPF.Controls.Icon;
+
 namespace OtomadHelper.WPF.Common;
 
 /// <summary>
@@ -62,4 +64,12 @@ public class DoubleExtension(int value) : MarkupExtension {
 	public double Value { get; set; } = value;
 
 	public override object ProvideValue(IServiceProvider serviceProvider) => Value;
+}
+
+[MarkupExtensionReturnType(typeof(Icon))]
+public class IconExtension(string name) : MarkupExtension {
+	[ConstructorArgument("name")]
+	public string Name { get; set; } = name;
+
+	public override object ProvideValue(IServiceProvider serviceProvider) => new Icon { IconName = Name };
 }

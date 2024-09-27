@@ -1,0 +1,45 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	>
+	<ContextMenu x:Key="TextBoxContextMenu" x:Shared="true">
+		<MenuItem Command="ApplicationCommands.Undo" Icon="{m:Icon Undo}" />
+		<MenuItem Command="ApplicationCommands.Redo" Icon="{m:Icon Redo}" />
+		<Separator />
+		<MenuItem Command="ApplicationCommands.Cut" Icon="{m:Icon Cut}" />
+		<MenuItem Command="ApplicationCommands.Copy" Icon="{m:Icon Copy}" />
+		<MenuItem Command="ApplicationCommands.Paste" Icon="{m:Icon Paste}" />
+		<MenuItem Command="ApplicationCommands.Delete" Icon="{m:Icon Delete}" />
+		<Separator />
+		<MenuItem Command="ApplicationCommands.SelectAll" Icon="{m:Icon SelectAll}" />
+	</ContextMenu>
+
+	<ContextMenu x:Key="VerticalScrollBarContextMenu" x:Shared="true">
+		<MenuItem Command="ScrollBar.ScrollHereCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<Separator />
+		<MenuItem Command="ScrollBar.ScrollToTopCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<MenuItem Command="ScrollBar.ScrollToBottomCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<Separator />
+		<MenuItem Command="ScrollBar.PageUpCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<MenuItem Command="ScrollBar.PageDownCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<Separator />
+		<MenuItem Command="ScrollBar.LineUpCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<MenuItem Command="ScrollBar.LineDownCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+	</ContextMenu>
+
+	<ContextMenu x:Key="HorizontalScrollBarContextMenu" x:Shared="true">
+		<MenuItem Command="ScrollBar.ScrollHereCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<Separator />
+		<MenuItem Command="ScrollBar.ScrollToLeftEndCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<MenuItem Command="ScrollBar.ScrollToRightEndCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<Separator />
+		<MenuItem Command="ScrollBar.PageLeftCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<MenuItem Command="ScrollBar.PageRightCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<Separator />
+		<MenuItem Command="ScrollBar.LineLeftCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+		<MenuItem Command="ScrollBar.LineRightCommand" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource FindAncestor, AncestorType=ContextMenu}}" />
+	</ContextMenu>
+</ResourceDictionary>

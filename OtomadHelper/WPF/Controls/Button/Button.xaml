@@ -10,7 +10,7 @@
 	<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
 	<Thickness x:Key="ButtonPadding">8</Thickness>
 
-	<Style x:Key="DefaultButtonStyle" TargetType="c:Button">
+	<Style x:Key="DefaultButtonStyle" TargetType="Button">
 		<Setter Property="MinHeight" Value="32" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ControlElevation}" />
 		<Setter Property="Background" Value="{DynamicResource ControlBackground}" />
@@ -19,7 +19,7 @@
 		<Setter Property="FocusVisualStyle" Value="{DynamicResource OuterFocusVisualStyle}" />
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="c:Button">
+				<ControlTemplate TargetType="Button">
 					<Border
 						Padding="{StaticResource ButtonPadding}"
 						Background="{TemplateBinding Background}"
@@ -61,7 +61,7 @@
 				<Setter Property="Foreground" Value="{DynamicResource TextOnAccentForegroundBrush}" />
 				<Setter Property="Template">
 					<Setter.Value>
-						<ControlTemplate TargetType="c:Button">
+						<ControlTemplate TargetType="Button">
 							<Grid>
 								<Border
 									Padding="{StaticResource ButtonPadding}"
@@ -123,4 +123,5 @@
 	</Style>
 
 	<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="c:Button" />
+	<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button" />
 </m:CustomControlResourceDictionary>

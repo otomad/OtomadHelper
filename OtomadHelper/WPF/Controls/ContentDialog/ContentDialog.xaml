@@ -105,6 +105,7 @@
 				<Setter Property="SelectionBrush" Value="{Binding WindowGlassBrush, ElementName=View}" />
 				<Setter Property="SelectionTextBrush" Value="{DynamicResource TextOnAccentForegroundBrush}" />
 				<Setter Property="FontFamily" Value="{Binding MonoFont, ElementName=View}" />
+				<Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
 				<Setter Property="Visibility">
 					<Setter.Value>
 						<MultiBinding Converter="{StaticResource BoolAnd}">

@@ -7,5 +7,6 @@
 		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Themes/Variables.xaml" />
 		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Themes/Icons.xaml" />
 		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Themes/Storyboards.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Themes/Menus.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

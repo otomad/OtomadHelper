@@ -33,6 +33,8 @@
 	<SolidColorBrush x:Key="SubtleTertiary" Color="#06000000" />
 	<SolidColorBrush x:Key="DividerStroke" Color="#14000000" />
 	<SolidColorBrush x:Key="TextSecondary" Color="#9A000000" />
+	<SolidColorBrush x:Key="TextDisabled" Color="#5C000000" />
 	<SolidColorBrush x:Key="ControlStrong" Color="#71000000" />
 	<SolidColorBrush x:Key="AcrylicBackground" Color="#B2FCFCFC" />
+	<SolidColorBrush x:Key="SurfaceStrokeFlyout" Color="#0E000000" />
 </m:NamedResourceDictionary>

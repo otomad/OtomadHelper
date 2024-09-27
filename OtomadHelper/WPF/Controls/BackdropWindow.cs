@@ -16,6 +16,7 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<Brush>("WindowGlassBrush", DefaultValueExpression = "WindowsDefaultGlassBrush")]
 [DependencyProperty<TitleBarType>("TitleBarType", DefaultValueExpression = "TitleBarType.System")]
 [DependencyProperty<FontFamily>("MonoFont")]
+[DependencyProperty<FontFamily>("DefaultFont")]
 public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	protected readonly WindowInteropHelper helper;
 	protected IntPtr Handle => helper.Handle;
@@ -93,7 +94,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		Top = top;
 	}
 	protected virtual void SetLocation(double left, double top, double width, SetWidthType widthType) {
-		SetLocation(left, top);
+	SetLocation(left, top);
 		if ((widthType & SetWidthType.Width) != 0) Width = width;
 		if ((widthType & SetWidthType.MinWidth) != 0) MinWidth = width;
 		if ((widthType & SetWidthType.MaxWidth) != 0) MaxWidth = width;
@@ -153,7 +154,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	}
 
 	//[DllImport("UXTheme.dll", SetLastError = true, EntryPoint = "#132")] // Not available after Windows 1903.
-	protected static bool ShouldAppsUseDarkMode() {
+	protected internal static bool ShouldAppsUseDarkMode() {
 		using RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
 		object? value = key?.GetValue("AppsUseLightTheme");
 		return value is 0;
@@ -214,7 +215,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	protected void RefreshDarkMode() {
 		bool isDarkTheme = ShouldAppsUseDarkMode();
 		IsLightTheme = !isDarkTheme;
-		int flag = isDarkTheme ? 1 : 0;
+		uint flag = isDarkTheme ? 1u : 0;
 		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, flag);
 		SetCurrentThemeResource(isDarkTheme);
 	}
@@ -229,7 +230,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	private const SystemBackdropType DEFAULT_SYSTEM_BACKDROP_TYPE = SystemBackdropType.TransientWindow;
 
 	protected void SetSystemBackdropType(SystemBackdropType systemBackdropType) {
-		SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (int)systemBackdropType);
+		SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (uint)systemBackdropType);
 	}
 
 	partial void OnSystemBackdropTypeChanged(SystemBackdropType newValue) => SetSystemBackdropType(newValue);
@@ -318,6 +319,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	#region Default fonts
 	private void OnCultureChanged(CultureInfo culture) {
 		FontFamily defaultFont = FontFamily, englishMonoFont = (FontFamily)Resources["EnglishMonoFont"];
+		DefaultFont = defaultFont;
 		MonoFont = new(new[] { englishMonoFont, defaultFont }.Select(font => font.Source).Join(", "));
 	}
 	#endregion

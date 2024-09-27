@@ -1,4 +1,6 @@
 // TODO: "PInvoke.cs" rename to "PInvoke_Win32.cs" and "PInvoke_DotNet.cs".
+using static OtomadHelper.Interop.PInvoke;
+
 namespace OtomadHelper.Interop;
 
 public static class PInvoke {
@@ -6,7 +8,7 @@ public static class PInvoke {
 	/// Flags for specifying the system-drawn backdrop material of a window, including behind the non-client area.
 	/// </summary>
 	/// <remarks>
-	/// <a href="https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwm_systembackdrop_type"><c>DWM_SYSTEMBACKDROP_TYPE enumeration (dwmapi.h)</c></a><br/>
+	/// <a href="https://learn.microsoft.com/windows/win32/api/dwmapi/ne-dwmapi-dwm_systembackdrop_type"><c>DWM_SYSTEMBACKDROP_TYPE enumeration (dwmapi.h)</c></a><br/>
 	/// </remarks>
 	public enum SystemBackdropType {
 		/// <remarks>
@@ -24,7 +26,7 @@ public static class PInvoke {
 		/// <remarks>
 		/// Draw the backdrop material effect corresponding to a long-lived window behind the entire window bounds.<br/>
 		/// For Windows 11, this corresponds to Mica in its default variant. The material effect might change with future Windows releases.
-		/// For more info about Mica, see <a href="https://learn.microsoft.com/en-us/windows/apps/design/style/mica">Mica</a>.
+		/// For more info about Mica, see <a href="https://learn.microsoft.com/windows/apps/design/style/mica">Mica</a>.
 		/// </remarks>
 		MainWindow,
 		/// <summary>Acrylic</summary>
@@ -32,14 +34,14 @@ public static class PInvoke {
 		/// Draw the backdrop material effect corresponding to a transient window behind the entire window bounds.<br/>
 		/// For Windows 11, this corresponds to Desktop Acrylic, also known as Background Acrylic, in its brightest variant.
 		/// The material effect might change with future Windows releases. For more info about Desktop Acrylic, see
-		/// <a href="https://learn.microsoft.com/en-us/windows/apps/design/style/acrylic">Acrylic</a>.
+		/// <a href="https://learn.microsoft.com/windows/apps/design/style/acrylic">Acrylic</a>.
 		/// </remarks>
 		TransientWindow,
 		/// <summary>MicaAlt</summary>
 		/// <remarks>
 		/// Draw the backdrop material effect corresponding to a window with a tabbed title bar behind the entire window bounds.<br/>
 		/// For Windows 11, this corresponds to Mica in its alternate variant (Mica Alt). The material might change with future releases of Windows.
-		/// For more info about Mica Alt, see <a href="https://learn.microsoft.com/en-us/windows/apps/design/style/mica#app-layering-with-mica-alt">Layering with Mica Alt</a>.
+		/// For more info about Mica Alt, see <a href="https://learn.microsoft.com/windows/apps/design/style/mica#app-layering-with-mica-alt">Layering with Mica Alt</a>.
 		/// </remarks>
 		TabbedWindow,
 	}
@@ -48,7 +50,7 @@ public static class PInvoke {
 	/// Options used by the DwmGetWindowAttribute and DwmSetWindowAttribute functions.
 	/// </summary>
 	/// <remarks>
-	/// <a href="https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute"><c>DWMWINDOWATTRIBUTE enumeration (dwmapi.h)</c></a><br/>
+	/// <a href="https://learn.microsoft.com/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute"><c>DWMWINDOWATTRIBUTE enumeration (dwmapi.h)</c></a><br/>
 	/// </remarks>
 	public enum DwmWindowAttribute {
 		NCRenderingEnabled,
@@ -56,7 +58,7 @@ public static class PInvoke {
 		TransitionsForceDisabled,
 		AllowNCPaint,
 		CaptionButtonBounds,
-		NonclientRtlLayout,
+		NonClientRtlLayout,
 		ForceIconicRepresentation,
 		Flip3dPolicy,
 		ExtendedFrameBounds,
@@ -67,7 +69,7 @@ public static class PInvoke {
 		Cloaked,
 		FreezeRepresentation,
 		PassiveUpdateMode,
-		UseHostBackdropbrush,
+		UseHostBackdropBrush,
 		/// <summary>
 		/// Use with DwmSetWindowAttribute. Allows the window frame for this window to be drawn in dark mode colors when the dark mode system setting is enabled.
 		/// For compatibility reasons, all windows default to light mode regardless of the system setting. The pvAttribute parameter points to a value of type <b>BOOL</b>.
@@ -88,10 +90,32 @@ public static class PInvoke {
 	}
 
 	/// <summary>
+	/// Ways you can round windows.
+	/// </summary>
+	public enum WindowCornerPreference {
+		/// <summary>
+		/// Determined by system or application preference.
+		/// </summary>
+		Default,
+		/// <summary>
+		/// Do not round the corners.
+		/// </summary>
+		DoNotRound,
+		/// <summary>
+		/// Round the corners.
+		/// </summary>
+		Round,
+		/// <summary>
+		/// Round the corners slightly.
+		/// </summary>
+		RoundSmall,
+	}
+
+	/// <summary>
 	/// Extended Window Styles.
 	/// </summary>
 	/// <remarks>
-	/// <a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles">Extended Window Styles</a><br/>
+	/// <a href="https://learn.microsoft.com/windows/win32/winmsg/extended-window-styles">Extended Window Styles</a><br/>
 	/// </remarks>
 	[Flags]
 	public enum ExtendedWindowStyles : long {
@@ -140,14 +164,59 @@ public static class PInvoke {
 		Transparent = 0x00000020L,
 		WindowEdge = 0x00000100L,
 	}
+	/// <summary>
+	/// Window Styles.
+	/// </summary>
+	/// <remarks>
+	/// <a href="https://learn.microsoft.com/windows/win32/winmsg/window-styles">Window Styles</a><br/>
+	/// </remarks>
+	[Flags]
+	public enum WindowStyles : long {
+		Border = 0x00800000L,
+		Caption = 0x00C00000L,
+		Child = 0x40000000L,
+		ChildWindow = 0x40000000L,
+		ClipChildren = 0x02000000L,
+		ClipSiblings = 0x04000000L,
+		Disabled = 0x08000000L,
+		DlgFrame = 0x00400000L,
+		Group = 0x00020000L,
+		HScroll = 0x00100000L,
+		Iconic = 0x20000000L,
+		Maximize = 0x01000000L,
+		MaximizeBox = 0x00010000L,
+		Minimize = 0x20000000L,
+		MinimizeBox = 0x00020000L,
+		Overlapped = 0x00000000L,
+		OverlappedWindow = Overlapped | Caption | SysMenu | ThickFrame | MinimizeBox | MaximizeBox,
+		Popup = 0x80000000L,
+		PopupWindow = Popup | Border | SysMenu,
+		SizeBox = 0x00040000L,
+		SysMenu = 0x00080000L,
+		TabStop = 0x00010000L,
+		ThickFrame = 0x00040000L,
+		Tiled = 0x00000000L,
+		TiledWindow = Overlapped | Caption | SysMenu | ThickFrame | MinimizeBox | MaximizeBox,
+		Visible = 0x10000000L,
+		Vscroll = 0x00200000L,
+	}
 
+	/// <remarks>
+	/// <a href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setwindowlongw#parameters">Window Long Flags</a>
+	/// </remarks>
 	public enum WindowLongFlags {
-		// ...
 		/// <summary>
-		/// Retrieves the extended window styles.
+		/// The extended window style.
 		/// </summary>
 		ExStyle = -20,
-		// ...
+		HInstance = -6,
+		ID = -12,
+		/// <summary>
+		/// The window style.
+		/// </summary>
+		Style = -16,
+		UserData = -21,
+		WndProc = -4,
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -176,7 +245,7 @@ public static class PInvoke {
 	public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref Margins pMarInset);
 
 	[DllImport("dwmapi.dll")]
-	public static extern int DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
+	public static extern int DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref uint pvAttribute, int cbAttribute);
 
 	[DllImport("user32.dll")]
 	public static extern long GetWindowLongPtr(IntPtr hWnd, WindowLongFlags nIndex);
@@ -198,8 +267,8 @@ public static class PInvoke {
 	public static int ExtendFrame(IntPtr hWnd, Margins margins) =>
 		DwmExtendFrameIntoClientArea(hWnd, ref margins);
 
-	public static int SetWindowAttribute(IntPtr hWnd, DwmWindowAttribute attribute, int parameter) =>
-		DwmSetWindowAttribute(hWnd, attribute, ref parameter, Marshal.SizeOf<int>());
+	public static int SetWindowAttribute(IntPtr hWnd, DwmWindowAttribute attribute, uint parameter) =>
+		DwmSetWindowAttribute(hWnd, attribute, ref parameter, Marshal.SizeOf<uint>());
 
 	/// <param name="hWnd">Window handle.</param>
 	public static void AddExtendedWindowStyles(IntPtr hWnd, params ExtendedWindowStyles[] styles) {
@@ -311,5 +380,73 @@ public static class PInvoke {
 		MINIMIZE = 1 << 3,
 		MAXIMIZE = 1 << 4,
 		CLOSE = 1 << 5,
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public struct AccentPolicy {
+		public AccentState AccentState;
+		public int AccentFlags;
+		public uint GradientColor;
+		public int AnimationId;
+	}
+	public enum AccentState {
+		Disabled = 0,
+		EnableGradient = 1,
+		EnableTransparentGradient = 2,
+		EnableBlurBehind = 3,
+		EnableAcrylicBlurBehind = 4,
+		InvalidState = 5
+	}
+	[StructLayout(LayoutKind.Sequential)]
+	public struct WindowCompositionAttributeData {
+		public WindowCompositionAttribute Attribute;
+		public IntPtr Data;
+		public int SizeOfData;
+	}
+	public enum WindowCompositionAttribute {
+		Undefine,
+		NCRenderingEnable,
+		NCRenderingPolic,
+		TransitionsForceDisable,
+		AllowNCPain,
+		CaptionButtonBound,
+		NonClientRtlLayou,
+		ForceIconicRepresentatio,
+		ExtendedFrameBound,
+		HasIconicBitma,
+		ThemeAttributes,
+		NCRenderingExiled,
+		NCAdornmentInfo,
+		ExcludedFromLivePreview,
+		VideoOverlayActive,
+		ForceActiveWindowAppearance,
+		DisallowPeek,
+		Cloak,
+		Cloaked,
+		AccentPolicy,
+		FreezeRepresentation,
+		EverUncloaked,
+		VisualOwner,
+		Last,
+	}
+	[DllImport("user32.dll")]
+	public static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
+	public static void EnableAcrylicBlurBehind(IntPtr hwnd, uint gradientColor = 0) {
+		AccentPolicy accent = new() {
+			AccentState = AccentState.EnableAcrylicBlurBehind,
+			AccentFlags = 0,
+			AnimationId = 0,
+			GradientColor = gradientColor,
+		};
+		int accentStructSize = Marshal.SizeOf(accent);
+		IntPtr accentPtr = Marshal.AllocHGlobal(accentStructSize);
+		Marshal.StructureToPtr(accent, accentPtr, false);
+		WindowCompositionAttributeData data = new() {
+			Attribute = WindowCompositionAttribute.AccentPolicy,
+			Data = accentPtr,
+			SizeOfData = accentStructSize,
+		};
+		SetWindowCompositionAttribute(hwnd, ref data);
+		Marshal.FreeHGlobal(accentPtr);
 	}
 }

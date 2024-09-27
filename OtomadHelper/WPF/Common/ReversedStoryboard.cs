@@ -5,7 +5,7 @@ namespace OtomadHelper.WPF.Common;
 
 [DependencyProperty<Storyboard>("BasedOn", OnChanged = "Update")]
 [DependencyProperty<bool>("ReverseEasing", DefaultValue = false, OnChanged = "Update")]
-[AttachedDependencyProperty<ReversedStoryboard, TriggerBase>("AutoReverse")]
+[AttachedDependencyProperty<ReversedStoryboard, TriggerBase>("AutoReverse")] // TODO: 和内置属性重名冲突了。
 public partial class ReversedStoryboard : Storyboard {
 	static partial void OnAutoReverseChanged(TriggerBase trigger, ReversedStoryboard? value) {
 		if (value is null) return;
