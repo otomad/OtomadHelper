@@ -1,5 +1,5 @@
 namespace OtomadHelper.Test {
-	partial class TestForm {
+	partial class AppDebugForm {
 		/// <summary>
 		/// 必需的设计器变量。
 		/// </summary>

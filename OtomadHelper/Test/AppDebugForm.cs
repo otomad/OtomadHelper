@@ -5,12 +5,12 @@ using OtomadHelper.Module;
 
 namespace OtomadHelper.Test;
 
-public partial class TestForm : Form {
+public partial class AppDebugForm : Form {
 	private readonly MainDock mainDock;
 	//private readonly MainWPFDock mainWpfDock;
 	//private readonly ElementHost elementHost;
 
-	public TestForm() {
+	public AppDebugForm() {
 		InitializeComponent();
 		mainDock = new MainDock();
 		Controls.Add(mainDock);

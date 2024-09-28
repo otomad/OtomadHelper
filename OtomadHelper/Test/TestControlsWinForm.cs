@@ -12,12 +12,12 @@ using OtomadHelper.Interop;
 using OtomadHelper.WPF.Controls;
 
 namespace OtomadHelper.Test;
-public partial class TestControls : Form {
+public partial class TestControlsWinForm : Form {
 	private readonly List<System.Windows.Window> flyouts = [];
 	private readonly string[] list = ["foo", "bar", "baz", "hello", "world", "C5", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 	private string selected = "C5";
 
-	public TestControls() {
+	public TestControlsWinForm() {
 		InitializeComponent();
 	}
 

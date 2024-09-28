@@ -15,11 +15,11 @@ internal static class Program {
 		Application.SetCompatibleTextRenderingDefault(false);
 		//SetCulture = "en-US";
 #if TEST0
-		Application.Run(new TestForm());
+		Application.Run(new AppDebugForm());
 #endif
 
 #if TEST1
-		Application.Run(new TestControls());
+		Application.Run(new TestControlsWinForm());
 #endif
 #if TEST2
 		s = WPF.Controls.ContentDialog.ShowDialog<string>("幸福倒计时", "Windows 11 即将更新！", [new(t.ContentDialog.Button.Ok, "ok", true), new(t.ContentDialog.Button.Cancel, "cancel")]);
@@ -34,7 +34,7 @@ internal static class Program {
 		static int TestError() => 0 / Math.Abs(0);
 #endif
 #if TEST4
-		new WPF.Controls.ScrollBarTestWindow().ShowDialog();
+		new TestControlsWPF().ShowDialog();
 #endif
 	}
 }
