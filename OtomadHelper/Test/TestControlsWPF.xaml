@@ -3,20 +3,35 @@
 	Title="TestControlsWPF"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	Width="800"
 	Height="450"
 	BorderThickness="0"
+	SystemBackdropType="TransientWindow"
 	mc:Ignorable="d"
-	SystemBackdropType="MainWindow"
 	>
-	<Grid>
-		<ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
-			<Canvas Width="8192" Height="4096">
-				<TextBox Canvas.Left="10" Canvas.Top="10" Width="276" ContextMenu="{StaticResource TextBoxContextMenu}" />
-			</Canvas>
-		</ScrollViewer>
-	</Grid>
+	<TabControl
+		Padding="0"
+		Background="Transparent"
+		BorderThickness="0"
+		>
+		<TabItem Header="Tests">
+			<StackPanel>
+				<TextBox Width="276" ContextMenu="{StaticResource TextBoxContextMenu}" />
+				<TextBox Width="276" ContextMenu="{StaticResource TextBoxContextMenu}" IsEnabled="False" Text="Hello world!" />
+				
+				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange">Mica</RadioButton>
+				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange">MicaAlt</RadioButton>
+				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange" IsChecked="True">Acrylic</RadioButton>
+				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange">Solid</RadioButton>
+			</StackPanel>
+		</TabItem>
+		<TabItem Header="Scroll Bar">
+			<ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+				<Canvas Width="8192" Height="4096" />
+			</ScrollViewer>
+		</TabItem>
+	</TabControl>
 </c:BackdropWindow>

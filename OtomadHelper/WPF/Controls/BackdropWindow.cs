@@ -43,7 +43,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		OnCultureChanged(Culture);
 		CultureChanged += OnCultureChanged;
 
-		// Default styles
+		// Border color (useless when system border color set)
 		SetResourceReference(BorderBrushProperty, "CardStroke");
 		BorderThickness = new(1);
 	}
@@ -58,6 +58,8 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		SetSystemBackdropType(SystemBackdropType);
 		if (TitleBarType == TitleBarType.WindowChromeNoTitleBar)
 			AddExtendedWindowStyles(Handle, ExtendedWindowStyles.ToolWindow);
+		//SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
+		OnWindowAttributeSetting();
 	}
 
 	private void BindViewToViewModel() {
@@ -170,10 +172,10 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		return color;
 
 		static Color FromAbgr(int value) => Color.FromArgb(
-			(byte)(value >> 24),
-			(byte)value,
-			(byte)(value >> 8),
-			(byte)(value >> 16)
+			(byte)(value >> 8 * 3),
+			(byte)(value >> 8 * 0),
+			(byte)(value >> 8 * 1),
+			(byte)(value >> 8 * 2)
 		);
 	}
 
@@ -218,6 +220,8 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		uint flag = isDarkTheme ? 1u : 0;
 		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, flag);
 		SetCurrentThemeResource(isDarkTheme);
+		//Color borderColor = isDarkTheme ? Color.FromRgb(20, 20, 20) : Color.FromRgb(219, 219, 219);
+		//SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, borderColor.ToAbgr(false));
 	}
 
 	protected void RefreshAccentColor() {
@@ -233,7 +237,10 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (uint)systemBackdropType);
 	}
 
-	partial void OnSystemBackdropTypeChanged(SystemBackdropType newValue) => SetSystemBackdropType(newValue);
+	partial void OnSystemBackdropTypeChanged(SystemBackdropType newValue) {
+		SetSystemBackdropType(newValue);
+		OnWindowAttributeSetting();
+	}
 
 	protected static readonly RoutedEvent ThemeChangeEvent =
 		EventManager.RegisterRoutedEvent(nameof(ThemeChange), RoutingStrategy.Bubble, typeof(EventHandler<RoutedEventArgs>), typeof(BackdropWindow));
@@ -253,6 +260,8 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 	protected virtual void OnPropertyChanged(string propertyName) {
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
+
+	protected virtual void OnWindowAttributeSetting() { }
 
 	public static readonly RoutedEvent ShowingEvent = EventManager.RegisterRoutedEvent("Showing", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BackdropWindow));
 

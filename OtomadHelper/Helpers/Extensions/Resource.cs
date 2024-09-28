@@ -1,8 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 
-using OtomadHelper.Module;
-
 namespace OtomadHelper.Helpers;
 
 public static partial class Extensions {

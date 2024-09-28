@@ -37,4 +37,8 @@
 	<SolidColorBrush x:Key="ControlStrong" Color="#8AFFFFFF" />
 	<SolidColorBrush x:Key="AcrylicBackground" Color="#CE2C2C2C" />
 	<SolidColorBrush x:Key="SurfaceStrokeFlyout" Color="#33000000" />
+	<SolidColorBrush x:Key="ControlDefault" Color="#0FFFFFFF" />
+	<SolidColorBrush x:Key="ControlSecondary" Color="#15FFFFFF" />
+	<SolidColorBrush x:Key="ControlInputActive" Color="#B21E1E1E" />
+	<SolidColorBrush x:Key="ControlDisabled" Color="#0AFFFFFF" />
 </m:NamedResourceDictionary>

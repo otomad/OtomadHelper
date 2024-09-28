@@ -9,5 +9,6 @@
 		<m:SharedResourceDictionary ControlSource="ExpandButton/ExpandButton" />
 		<m:SharedResourceDictionary ControlSource="ScrollBar/ScrollBar" />
 		<m:SharedResourceDictionary ControlSource="ContextMenu/ContextMenu" />
+		<m:SharedResourceDictionary ControlSource="TextBox/TextBox" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
