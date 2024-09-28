@@ -85,9 +85,9 @@
 						</Storyboard>
 					</BeginStoryboard>
 				</Trigger.EnterActions>
-				<m:ReversedStoryboard.AutoReverse>
+				<m:ReversedStoryboard.AutoReverseTriggerActions>
 					<m:ReversedStoryboard />
-				</m:ReversedStoryboard.AutoReverse>
+				</m:ReversedStoryboard.AutoReverseTriggerActions>
 			</Trigger>
 		</Style.Triggers>
 	</Style>
@@ -153,9 +153,9 @@
 						</Storyboard>
 					</BeginStoryboard>
 				</MultiDataTrigger.EnterActions>
-				<m:ReversedStoryboard.AutoReverse>
+				<m:ReversedStoryboard.AutoReverseTriggerActions>
 					<m:ReversedStoryboard />
-				</m:ReversedStoryboard.AutoReverse>
+				</m:ReversedStoryboard.AutoReverseTriggerActions>
 			</MultiDataTrigger>
 			<MultiDataTrigger>
 				<MultiDataTrigger.Conditions>
@@ -184,9 +184,9 @@
 						</Storyboard>
 					</BeginStoryboard>
 				</MultiDataTrigger.EnterActions>
-				<m:ReversedStoryboard.AutoReverse>
+				<m:ReversedStoryboard.AutoReverseTriggerActions>
 					<m:ReversedStoryboard />
-				</m:ReversedStoryboard.AutoReverse>
+				</m:ReversedStoryboard.AutoReverseTriggerActions>
 			</MultiDataTrigger>
 		</Style.Triggers>
 	</Style>

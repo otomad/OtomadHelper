@@ -14,7 +14,9 @@
 	>
 	<Grid>
 		<ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
-			<Canvas Width="8192" Height="4096" />
+			<Canvas Width="8192" Height="4096">
+				<TextBox Canvas.Left="10" Canvas.Top="10" Width="276" ContextMenu="{StaticResource TextBoxContextMenu}" />
+			</Canvas>
 		</ScrollViewer>
 	</Grid>
 </c:BackdropWindow>

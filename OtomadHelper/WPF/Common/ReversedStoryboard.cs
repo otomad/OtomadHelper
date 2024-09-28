@@ -5,9 +5,9 @@ namespace OtomadHelper.WPF.Common;
 
 [DependencyProperty<Storyboard>("BasedOn", OnChanged = "Update")]
 [DependencyProperty<bool>("ReverseEasing", DefaultValue = false, OnChanged = "Update")]
-[AttachedDependencyProperty<ReversedStoryboard, TriggerBase>("AutoReverse")] // TODO: 和内置属性重名冲突了。
+[AttachedDependencyProperty<ReversedStoryboard, TriggerBase>("AutoReverseTriggerActions")]
 public partial class ReversedStoryboard : Storyboard {
-	static partial void OnAutoReverseChanged(TriggerBase trigger, ReversedStoryboard? value) {
+	static partial void OnAutoReverseTriggerActionsChanged(TriggerBase trigger, ReversedStoryboard? value) {
 		if (value is null) return;
 		BeginStoryboard? enterBegin = trigger.EnterActions.FirstOrDefault(action => action is BeginStoryboard begin && begin.Storyboard is not null) as BeginStoryboard;
 		BeginStoryboard? exitBegin = trigger.ExitActions.FirstOrDefault(action => action is BeginStoryboard begin && begin.Storyboard is not null) as BeginStoryboard;

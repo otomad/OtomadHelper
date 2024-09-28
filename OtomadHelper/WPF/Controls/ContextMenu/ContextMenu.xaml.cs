@@ -1,17 +1,32 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interop;
+
+using BaseContextMenu = System.Windows.Controls.ContextMenu;
 
 namespace OtomadHelper.WPF.Controls;
 
-public partial class ContextMenuResourceDictionary : CustomControlResourceDictionary {
+[AttachedDependencyProperty<bool, BaseContextMenu>("FixCanExecute", DefaultValue = false)]
+public partial class ContextMenu : CustomControlResourceDictionary {
 	public void ContextMenu_IsVisibleChanged(object sender, RoutedPropertyChangedEventArgs<bool> e) {
-		ContextMenu contextMenu = (ContextMenu)sender;
+		BaseContextMenu contextMenu = (BaseContextMenu)sender;
+
 		if (!contextMenu.IsVisible) return;
 		InitializeComponent(contextMenu);
+
+		// Fix a confusing issue that caused the IsEnabled of MenuItems to not update in time.
+		if (GetFixCanExecute(contextMenu))
+			foreach (object? _item in contextMenu.Items)
+				if (_item is MenuItem item)
+					if (item.Command is ICommand command) {
+						item.Command = null;
+						item.IsEnabled = command.CanExecute(item.CommandParameter);
+						item.Command = command;
+					}
 	}
 
-	internal static void InitializeComponent(ContextMenu contextMenu) {
+	internal static void InitializeComponent(BaseContextMenu contextMenu) {
 		IntPtr? handle = (PresentationSource.FromVisual(contextMenu) as HwndSource)?.Handle;
 		if (handle is not IntPtr Handle) return;
 

@@ -5,12 +5,12 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
-	<ContextMenu x:Key="TextBoxContextMenu" x:Shared="true">
+	<ContextMenu x:Key="TextBoxContextMenu" x:Shared="true" c:ContextMenu.FixCanExecute="True">
 		<MenuItem Command="ApplicationCommands.Undo" Icon="{m:Icon Undo}" />
 		<MenuItem Command="ApplicationCommands.Redo" Icon="{m:Icon Redo}" />
 		<Separator />
 		<MenuItem Command="ApplicationCommands.Cut" Icon="{m:Icon Cut}" />
-		<MenuItem Command="ApplicationCommands.Copy" Icon="{m:Icon Copy}" />
+		<MenuItem Command="{x:Static ApplicationCommands.Copy}" Icon="{m:Icon Copy}" />
 		<MenuItem Command="ApplicationCommands.Paste" Icon="{m:Icon Paste}" />
 		<MenuItem Command="ApplicationCommands.Delete" Icon="{m:Icon Delete}" />
 		<Separator />

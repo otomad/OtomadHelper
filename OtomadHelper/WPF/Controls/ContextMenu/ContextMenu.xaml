@@ -1,5 +1,5 @@
 <m:CustomControlResourceDictionary
-	x:Class="OtomadHelper.WPF.Controls.ContextMenuResourceDictionary"
+	x:Class="OtomadHelper.WPF.Controls.ContextMenu"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
