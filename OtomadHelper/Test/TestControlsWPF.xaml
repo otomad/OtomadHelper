@@ -19,8 +19,8 @@
 		>
 		<TabItem Header="Tests">
 			<StackPanel>
-				<TextBox Width="276" ContextMenu="{StaticResource TextBoxContextMenu}" />
-				<TextBox Width="276" ContextMenu="{StaticResource TextBoxContextMenu}" IsEnabled="False" Text="Hello world!" />
+				<TextBox Width="276" />
+				<TextBox Width="276" IsEnabled="False" Text="Hello world!" />
 				
 				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange">Mica</RadioButton>
 				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange">MicaAlt</RadioButton>

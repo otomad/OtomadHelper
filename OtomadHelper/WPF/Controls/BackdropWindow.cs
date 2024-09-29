@@ -33,6 +33,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 
 	private void InitializeComponent() {
 		RefreshCulture();
+		CommandBindings.AddRange(Commands.CommandBindings);
 		AddResource("WPF/Themes/Generic.xaml");
 		AddResource("WPF/Themes/Controls.xaml");
 		Background = Brushes.Transparent;
@@ -219,6 +220,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		IsLightTheme = !isDarkTheme;
 		uint flag = isDarkTheme ? 1u : 0;
 		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, flag);
+		EnableDarkSystemMenu(isDarkTheme);
 		SetCurrentThemeResource(isDarkTheme);
 		//Color borderColor = isDarkTheme ? Color.FromRgb(20, 20, 20) : Color.FromRgb(219, 219, 219);
 		//SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, borderColor.ToAbgr(false));

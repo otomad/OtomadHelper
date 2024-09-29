@@ -80,6 +80,7 @@
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="SelectionBrush" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
 		<Setter Property="SelectionTextBrush" Value="{DynamicResource TextOnAccentForegroundBrush}" />
+		<Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="TextBoxBase">

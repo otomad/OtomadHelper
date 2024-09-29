@@ -449,4 +449,23 @@ public static class PInvoke {
 		SetWindowCompositionAttribute(hwnd, ref data);
 		Marshal.FreeHGlobal(accentPtr);
 	}
+
+	public enum PreferredAppMode {
+		Default,
+		AllowDark,
+		ForceDark,
+		ForceLight,
+		Max,
+	}
+
+	[DllImport("uxtheme.dll", EntryPoint = "#135", SetLastError = true, CharSet = CharSet.Unicode)]
+	public static extern int SetPreferredAppMode(PreferredAppMode preferredAppMode);
+
+	[DllImport("uxtheme.dll", EntryPoint = "#136", SetLastError = true, CharSet = CharSet.Unicode)]
+	public static extern void FlushMenuThemes();
+
+	public static void EnableDarkSystemMenu(bool isDarkTheme) {
+		SetPreferredAppMode(isDarkTheme ? PreferredAppMode.ForceDark : PreferredAppMode.ForceLight);
+		FlushMenuThemes();
+	}
 }

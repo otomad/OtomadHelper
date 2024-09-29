@@ -6,7 +6,8 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
-	<m:DebuggerConverter x:Key="debug" />
+	<s:Double x:Key="ContextMenuItemMinWidth">180</s:Double>
+	
 	<Style x:Key="DefaultContextMenuStyle" TargetType="ContextMenu">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="OverridesDefaultStyle" Value="True" />
@@ -79,7 +80,7 @@
 			<Style TargetType="MenuItem">
 				<Setter Property="SnapsToDevicePixels" Value="True" />
 				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
-				<Setter Property="MinWidth" Value="180" />
+				<Setter Property="MinWidth" Value="{StaticResource ContextMenuItemMinWidth}" />
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 				<Setter Property="Template">
 					<Setter.Value>

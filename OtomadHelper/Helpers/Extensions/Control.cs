@@ -156,4 +156,11 @@ public static partial class Extensions {
 	public static void ClearBinding(this FrameworkElement target) {
 		BindingOperations.ClearAllBindings(target);
 	}
+
+	/// <summary>
+	/// Check if a WPF <see cref="System.Windows.Controls.TextBox"/> is editable.
+	/// </summary>
+	/// <returns>The <see cref="System.Windows.Controls.TextBox"/> is editable?</returns>
+	public static bool IsEditable(this System.Windows.Controls.TextBox textBox) =>
+		textBox.IsEnabled && !textBox.IsReadOnly && textBox.IsHitTestVisible;
 }
