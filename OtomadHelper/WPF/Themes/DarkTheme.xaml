@@ -25,8 +25,13 @@
 		<GradientStop Offset="0.9" Color="#14FFFFFF" />
 		<GradientStop Offset="1" Color="#23000000" />
 	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="CircleElevation" StartPoint="0.5,0" EndPoint="0.5,1">
+		<GradientStop Offset="0" Color="#16FFFFFF" />
+		<GradientStop Offset="0.5" Color="#11FFFFFF" />
+	</LinearGradientBrush>
 	<Color x:Key="TextOnAccentForegroundColor">White</Color>
 	<SolidColorBrush x:Key="TextOnAccentForegroundBrush" Color="{DynamicResource TextOnAccentForegroundColor}" />
+	<SolidColorBrush x:Key="TextOnAccent" Color="Black" />
 	<s:Double x:Key="AccentSecondaryOpacity">0.9</s:Double>
 	<s:Double x:Key="AccentTertiaryOpacity">0.8</s:Double>
 	<SolidColorBrush x:Key="SubtleSecondary" Color="#0FFFFFFF" />
@@ -41,4 +46,10 @@
 	<SolidColorBrush x:Key="ControlSecondary" Color="#15FFFFFF" />
 	<SolidColorBrush x:Key="ControlInputActive" Color="#B21E1E1E" />
 	<SolidColorBrush x:Key="ControlDisabled" Color="#0AFFFFFF" />
+	<SolidColorBrush x:Key="ControlAltSecondary" Color="#19000000" />
+	<SolidColorBrush x:Key="ControlAltTertiary" Color="#0AFFFFFF" />
+	<SolidColorBrush x:Key="ControlAltQuarternary" Color="#11FFFFFF" />
+	<SolidColorBrush x:Key="ControlStrongStroke" Color="#9AFFFFFF" />
+	<SolidColorBrush x:Key="ControlStrongStrokeDisabled" Color="#28FFFFFF" />
+	<SolidColorBrush x:Key="AccentDisabled" Color="#28FFFFFF" />
 </m:NamedResourceDictionary>

@@ -26,6 +26,8 @@
 				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange">MicaAlt</RadioButton>
 				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange" IsChecked="True">Acrylic</RadioButton>
 				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange">Solid</RadioButton>
+				<RadioButton IsEnabled="False">Disabled Unchecked</RadioButton>
+				<RadioButton IsChecked="True" IsEnabled="False">Disabled Checked</RadioButton>
 			</StackPanel>
 		</TabItem>
 		<TabItem Header="Scroll Bar">

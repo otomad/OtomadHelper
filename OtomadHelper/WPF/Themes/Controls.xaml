@@ -10,5 +10,6 @@
 		<m:SharedResourceDictionary ControlSource="ScrollBar/ScrollBar" />
 		<m:SharedResourceDictionary ControlSource="ContextMenu/ContextMenu" />
 		<m:SharedResourceDictionary ControlSource="TextBox/TextBox" />
+		<m:SharedResourceDictionary ControlSource="RadioButton/RadioButton" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
