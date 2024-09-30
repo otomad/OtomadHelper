@@ -29,7 +29,7 @@ public partial class ContentDialog : BackdropWindow {
 			ShowDialog();
 			taskCompletionSource.SetResult(DataContext.DialogResult);
 		}
-}
+	}
 
 	public static async Task<TDialogResult?> ShowDialog<TDialogResult>(
 		string title,
@@ -37,11 +37,7 @@ public partial class ContentDialog : BackdropWindow {
 		IEnumerable<ContentDialogButtonItem> buttons,
 		string iconName = ""
 	) {
-		if (!typeof(TDialogResult).IsNullable()) {
-			string typeName = typeof(TDialogResult).Name;
-			throw new TypeLoadException($"""The generic type "{typeName}" in method "{nameof(ContentDialog)}.{nameof(ShowDialog)}" is a value type, and it is not a nullable type. You have to replace the generic type from "{typeName}" to "{typeName}?".""");
-		}
-
+		ValidateDialogResultType<TDialogResult>();
 		ContentDialog dialog = new();
 		ContentDialogViewModel viewModel = dialog.DataContext;
 		viewModel.Title = title;
@@ -70,6 +66,29 @@ public partial class ContentDialog : BackdropWindow {
 		viewModel.CanCopyBody = true;
 		viewModel.Footer = errorFooter;
 		dialog.ShowDialogAsync();
+	}
+
+	public static async Task<TDialogResult?> ShowDialog<TDialogResult>(
+		string title,
+		UIElement content,
+		IEnumerable<ContentDialogButtonItem> buttons,
+		string iconName = ""
+	) {
+		ValidateDialogResultType<TDialogResult>();
+		ContentDialog dialog = new();
+		ContentDialogViewModel viewModel = dialog.DataContext;
+		viewModel.Title = title;
+		viewModel.Content = content;
+		viewModel.IconName = iconName;
+		viewModel.Buttons.AddRange(buttons);
+		return (TDialogResult?)await dialog.ShowDialogAsync();
+	}
+
+	private static void ValidateDialogResultType<TDialogResult>() {
+		if (!typeof(TDialogResult).IsNullable()) {
+			string typeName = typeof(TDialogResult).Name;
+			throw new TypeLoadException($"""The generic type "{typeName}" in method "{nameof(ContentDialog)}.{nameof(ShowDialog)}" is a value type, and it is not a nullable type. You have to replace the generic type from "{typeName}" to "{typeName}?".""");
+		}
 	}
 
 	public static void ShowError(Exception exception) =>

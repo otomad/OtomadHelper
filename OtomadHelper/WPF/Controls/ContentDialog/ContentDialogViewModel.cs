@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -8,6 +9,9 @@ public partial class ContentDialogViewModel : ObservableObject<ContentDialog> {
 
 	[ObservableProperty]
 	private string body = "";
+
+	[ObservableProperty]
+	private UIElement? content;
 
 	private string iconName = "Info";
 	public string IconName {

@@ -30,6 +30,7 @@
 				/>
 			<m:BooleanInversionConverter x:Key="BoolInversion" />
 			<m:BooleanAndConverter x:Key="BoolAnd" />
+			<m:ObjectToVisibilityConverter x:Key="ObjectToVis" />
 
 			<Thickness x:Key="BodyMargin">0,12,0,0</Thickness>
 
@@ -198,6 +199,11 @@
 							Text="{Binding Body}"
 							/>
 					</Grid>
+					<ContentControl
+						Margin="{StaticResource BodyMargin}"
+						Content="{Binding Content}"
+						Visibility="{Binding Content, Converter={StaticResource ObjectToVis}}"
+						/>
 					<TextBlock Style="{StaticResource Footer}" Text="{Binding Footer}" />
 				</StackPanel>
 			</Border>
