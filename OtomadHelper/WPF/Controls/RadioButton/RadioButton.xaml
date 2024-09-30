@@ -6,10 +6,38 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
+	<s:Double x:Key="RadioButtonBulletSize">20</s:Double>
+
 	<Style x:Key="DefaultRadioButtonStyle" TargetType="RadioButton">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="OverridesDefaultStyle" Value="True" />
-		<Setter Property="FocusVisualStyle" Value="{x:Null}" />
+		<Setter Property="FocusVisualStyle">
+			<Setter.Value>
+				<Style>
+					<Setter Property="Control.Template">
+						<Setter.Value>
+							<ControlTemplate>
+								<Canvas>
+									<Rectangle
+										Width="26"
+										Height="26"
+										Margin="-3"
+										RadiusX="13"
+										RadiusY="13"
+										Stroke="{DynamicResource ForegroundBrush}"
+										StrokeThickness="2"
+										/>
+									<!--
+										Width/Height = RadioButtonBulletSize + (-Margin) * 2
+										RadiusX/RadiusY = Width / 2
+									-->
+								</Canvas>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</Setter.Value>
+		</Setter>
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 		<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
 		<Setter Property="Margin" Value="4" />
@@ -17,6 +45,8 @@
 		<EventSetter Event="MouseLeave" Handler="UpdateStates_Hover" />
 		<EventSetter Event="PreviewMouseDown" Handler="UpdateStates_Press" />
 		<EventSetter Event="PreviewMouseUp" Handler="UpdateStates_Lift" />
+		<EventSetter Event="PreviewKeyDown" Handler="UpdateStates_KeyDown" />
+		<EventSetter Event="PreviewKeyUp" Handler="UpdateStates_KeyUp" />
 		<EventSetter Event="Checked" Handler="UpdateStates_Check" />
 		<EventSetter Event="Unchecked" Handler="UpdateStates_Check" />
 		<Setter Property="Template">
@@ -24,7 +54,7 @@
 				<ControlTemplate TargetType="RadioButton">
 					<BulletDecorator Background="Transparent">
 						<BulletDecorator.Bullet>
-							<Grid Width="20" Height="20">
+							<Grid Width="{StaticResource RadioButtonBulletSize}" Height="{StaticResource RadioButtonBulletSize}">
 								<Ellipse
 									x:Name="Border"
 									Fill="{DynamicResource ControlAltSecondary}"
@@ -39,13 +69,6 @@
 									Fill="{DynamicResource TextOnAccent}"
 									Stroke="{DynamicResource CircleElevation}"
 									StrokeThickness="1"
-									/>
-								<Ellipse
-									x:Name="FocusRing"
-									Visibility="Collapsed"
-									Margin="-3"
-									Stroke="{DynamicResource ForegroundBrush}"
-									StrokeThickness="2"
 									/>
 							</Grid>
 						</BulletDecorator.Bullet>
@@ -141,7 +164,7 @@
 						<Trigger Property="IsPressed" Value="True">
 							<Setter TargetName="Border" Property="Fill" Value="{DynamicResource ControlAltQuarternary}" />
 							<Setter TargetName="Border" Property="Stroke" Value="{DynamicResource ControlStrongStrokeDisabled}" />
-							<Setter TargetName="CheckMark" Property="MinWidth" Value="8" />
+							<!--<Setter TargetName="CheckMark" Property="MinWidth" Value="8" />-->
 							<Setter TargetName="CheckMark" Property="StrokeThickness" Value="0" />
 						</Trigger>
 						<Trigger Property="IsEnabled" Value="False">
@@ -158,14 +181,14 @@
 								<Condition Property="IsChecked" Value="True" />
 								<Condition Property="IsMouseOver" Value="True" />
 							</MultiTrigger.Conditions>
-							<Setter TargetName="CheckMark" Property="MinWidth" Value="12" />
+							<!--<Setter TargetName="CheckMark" Property="MinWidth" Value="12" />-->
 						</MultiTrigger>
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
 								<Condition Property="IsChecked" Value="True" />
 								<Condition Property="IsPressed" Value="True" />
 							</MultiTrigger.Conditions>
-							<Setter TargetName="CheckMark" Property="MinWidth" Value="8" />
+							<!--<Setter TargetName="CheckMark" Property="MinWidth" Value="8" />-->
 						</MultiTrigger>
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
@@ -175,9 +198,6 @@
 							<Setter TargetName="Border" Property="Fill" Value="{DynamicResource AccentDisabled}" />
 							<Setter TargetName="Border" Property="Stroke" Value="{DynamicResource AccentDisabled}" />
 						</MultiTrigger>
-						<Trigger Property="IsFocused" Value="True">
-							<Setter TargetName="FocusRing" Property="Visibility" Value="Visible" />
-						</Trigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
