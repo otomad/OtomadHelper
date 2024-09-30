@@ -273,3 +273,16 @@ public class ObjectToVisibilityConverter : IValueConverter {
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
 }
+
+public class CommandParameters : MultiBinding {
+	public CommandParameters() : base() {
+		Converter = new MultiValueToArrayConverter();
+	}
+}
+
+internal class MultiValueToArrayConverter : IMultiValueConverter {
+	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => values;
+
+	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
+}

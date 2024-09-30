@@ -49,8 +49,7 @@ public static partial class GridDef {
 
 	private static IEnumerable<GridLength> ParseDefinitions(string definitions) =>
 		definitions.Split(',').Select(size => {
-			size = size.Trim().ToLowerInvariant();
-			if (size == "auto")
+			if (size == "Auto")
 				return GridLength.Auto;
 			else if (size.EndsWith("*")) {
 				string factor = size.Replace("*", "");

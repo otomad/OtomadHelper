@@ -176,9 +176,10 @@ public static partial class Extensions {
 				break;
 			case MultiBinding binding:
 				binding.Mode = mode;
+				binding.Bindings.ForEach(bind => bind.SetMode(mode));
 				break;
 			case PriorityBinding binding:
-				binding.Bindings.ForEach(bind => bindingBase.SetMode(mode));
+				binding.Bindings.ForEach(bind => bind.SetMode(mode));
 				break;
 			default:
 				throw new NotSupportedException($"The binding type `{bindingBase.GetType().Name}` is not implemented and supported yet");

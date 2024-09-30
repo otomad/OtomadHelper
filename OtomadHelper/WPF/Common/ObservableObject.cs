@@ -13,6 +13,11 @@ public interface IViewAccessibleViewModel {
 /// Add more options.
 /// </remarks>
 public class ObservableObject : CommunityToolkit.Mvvm.ComponentModel.ObservableObject {
+	/// <inheritdoc cref="CommunityToolkit.Mvvm.ComponentModel.ObservableObject.OnPropertyChanged(string?)"/>
+	public new void OnPropertyChanged([CallerMemberName] string? propertyName = null) => base.OnPropertyChanged(propertyName);
+	/// <inheritdoc cref="CommunityToolkit.Mvvm.ComponentModel.ObservableObject.OnPropertyChanging(string?)"/>
+	public new void OnPropertyChanging([CallerMemberName] string? propertyName = null) => base.OnPropertyChanged(propertyName);
+
 	public event PropertyChangedEventHandler? PropertyNoChanged;
 
 	/// <summary>

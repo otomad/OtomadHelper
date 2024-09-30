@@ -73,7 +73,7 @@
 							</Grid>
 						</BulletDecorator.Bullet>
 						<ContentPresenter
-							Margin="8,-2,0,0"
+							Margin="8,0,0,0"
 							HorizontalAlignment="Left"
 							VerticalAlignment="Center"
 							RecognizesAccessKey="True"

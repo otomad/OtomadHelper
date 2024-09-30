@@ -208,3 +208,33 @@ dotnet_diagnostic.IDE0028.severity = error
 
 # IDE0300: 简化集合初始化
 dotnet_diagnostic.IDE0300.severity = error
+
+# Default severity for analyzer diagnostics with category 'Style'
+dotnet_analyzer_diagnostic.category-Style.severity = warning
+
+# IDE0005: Using 指令是不需要的。
+dotnet_diagnostic.IDE0005.severity = silent
+
+# IDE0058: 永远不会使用表达式值
+dotnet_diagnostic.IDE0058.severity = silent
+
+# IDE0046: 转换为条件表达式
+dotnet_diagnostic.IDE0046.severity = suggestion
+
+# IDE0251: 将成员设为“readonly”
+dotnet_diagnostic.IDE0251.severity = silent
+
+# IDE0044: 添加只读修饰符
+dotnet_diagnostic.IDE0044.severity = suggestion
+
+# IDE0022: 使用方法的程序块主体
+dotnet_diagnostic.IDE0022.severity = none
+
+# IDE0024: 使用块主体来表示运算符
+dotnet_diagnostic.IDE0024.severity = none
+
+# IDE0055: 修正格式
+dotnet_diagnostic.IDE0055.severity = silent
+
+# IDE0072: 添加缺失的事例
+dotnet_diagnostic.IDE0072.severity = suggestion

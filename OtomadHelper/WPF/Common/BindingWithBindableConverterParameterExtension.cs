@@ -14,8 +14,8 @@ namespace OtomadHelper.WPF.Common;
 [ContentProperty(nameof(Binding))]
 public class BindingExtension : MarkupExtension {
 	public BindingBase Binding { get; set; }
-	public BindingMode Mode { get; set; }
-	public IValueConverter? Converter { get; set; }
+	public BindingMode Mode { get; set; } = BindingMode.TwoWay;
+	public dynamic? Converter { get; set; } // IValueConverter or IMultiValueConverter
 	public BindingBase? ConverterParameter { get; set; }
 	private int BindingCount { get; set; }
 
@@ -23,10 +23,10 @@ public class BindingExtension : MarkupExtension {
 
 	public BindingExtension(string path) => Binding = new Binding(path);
 
-	public BindingExtension(Binding binding) => Binding = binding;
+	public BindingExtension(BindingBase binding) => Binding = binding;
 
 	public override object ProvideValue(IServiceProvider serviceProvider) { // PriorityBinding
-		MultiBinding multiBinding = new();
+		MultiBinding multiBinding = new() { Mode = Mode };
 		Binding.SetMode(Mode);
 		BindingCount = multiBinding.AddBinding(Binding);
 		if (ConverterParameter != null) {
@@ -34,7 +34,10 @@ public class BindingExtension : MarkupExtension {
 			multiBinding.AddBinding(ConverterParameter);
 		}
 		if (Converter != null) {
-			MultiValueConverterAdapter adapter = new() { Converter = Converter, BindingCount = BindingCount };
+			MultiValueConverterAdapter adapter = new() { BindingCount = BindingCount };
+			if (Converter is IValueConverter) adapter.Converter = Converter;
+			else if (Converter is IMultiValueConverter) adapter.MultiConverter = Converter;
+			else throw new NotSupportedException($"The converter type `{Converter}` is not supported");
 			multiBinding.Converter = adapter;
 		}
 		return multiBinding.ProvideValue(serviceProvider);
@@ -42,7 +45,8 @@ public class BindingExtension : MarkupExtension {
 
 	[ContentProperty(nameof(Converter))]
 	private class MultiValueConverterAdapter : IMultiValueConverter {
-		public IValueConverter? Converter { get; set; }
+		internal IValueConverter? Converter { get; set; }
+		internal IMultiValueConverter? MultiConverter { get; set; }
 
 		public int BindingCount { private get; init; }
 
@@ -51,18 +55,25 @@ public class BindingExtension : MarkupExtension {
 		private static object ArrayOrOnly(object[] objects) => objects.Length == 1 ? objects[0] : objects;
 
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
-			object bindingValue = ArrayOrOnly(values[0..BindingCount]);
-			if (Converter == null)
-				return bindingValue; // Required for VS design-time
+			object[] bindingValues = values[0..BindingCount];
+			object bindingValue = MultiConverter is null ? ArrayOrOnly(bindingValues) : bindingValues;
 			if (values.Length > BindingCount)
 				lastParameter = ArrayOrOnly(values[BindingCount..]);
-			return Converter.Convert(bindingValue, targetType, lastParameter, culture);
+			if (MultiConverter is not null)
+				return MultiConverter.Convert(bindingValues, targetType, lastParameter, culture);
+			else if (Converter is not null)
+				return Converter.Convert(bindingValue, targetType, lastParameter, culture);
+			else
+				return bindingValue; // Required for VS design-time
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) {
-			if (Converter == null) return [value]; // Required for VS design-time
-
-			return [Converter.ConvertBack(value, targetTypes[0], lastParameter, culture)];
+			if (MultiConverter is not null)
+				return MultiConverter.ConvertBack(value, targetTypes[0..BindingCount], lastParameter, culture);
+			else if (Converter is not null)
+				return [Converter.ConvertBack(value, targetTypes[0], lastParameter, culture)];
+			else
+				return [value]; // Required for VS design-time
 		}
 	}
 }
