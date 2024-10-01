@@ -73,7 +73,7 @@
 			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>
-	
+
 	<Grid m:GridDef.Column="Auto,65,Auto" m:GridDef.Row="*,*,*,10,*,*,*">
 		<RadioButton Tag="HSL.0" Grid.Column="0" Grid.Row="0">H</RadioButton>
 		<RadioButton Tag="HSL.1" Grid.Column="0" Grid.Row="1">S</RadioButton>

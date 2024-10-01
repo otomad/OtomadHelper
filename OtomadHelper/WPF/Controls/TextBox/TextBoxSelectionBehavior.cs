@@ -5,23 +5,15 @@ using System.Windows.Media;
 
 using Microsoft.Xaml.Behaviors;
 
-namespace OtomadHelper.WPF.Common;
+namespace OtomadHelper.WPF.Controls;
 
-public class TextBoxSelectionBehavior : Behavior<TextBox> {// BUG:
-	public const double MAX_DISTANCE = 10;
-	private Point position;
-	private int start;
-	private int cur;
-	private double right;
-	private bool drag;
-	private const double MAX_DRAG = 12;
-
+/// <remarks>
+/// <see href="https://stackoverflow.com/a/64393305/19553213"/>
+/// <para>Currently only fix the click padding issue, and drag to select text is not supported yet.</para>
+/// </remarks>
+public class TextBoxSelectionBehavior : Behavior<Border> {
 	protected override void OnAttached() {
-		AssociatedObject.PreviewMouseDown += V_PreviewMouseDown;
-		AssociatedObject.PreviewMouseUp += V_PreviewMouseUp;
-		AssociatedObject.PreviewMouseMove += V_PreviewMouseMove;
-		AssociatedObject.LostFocus += V_LostFocus;
-		AssociatedObject.IsKeyboardFocusedChanged += V_IsKeyboardFocusedChanged;
+		AssociatedObject.PreviewMouseDown += PreviewMouseDown;
 
 		base.OnAttached();
 	}
@@ -29,51 +21,29 @@ public class TextBoxSelectionBehavior : Behavior<TextBox> {// BUG:
 	protected override void OnDetaching() {
 		base.OnDetaching();
 
-		AssociatedObject.PreviewMouseDown -= V_PreviewMouseDown;
-		AssociatedObject.PreviewMouseUp -= V_PreviewMouseUp;
-		AssociatedObject.PreviewMouseMove -= V_PreviewMouseMove;
-		AssociatedObject.LostFocus -= V_LostFocus;
-		AssociatedObject.IsKeyboardFocusedChanged -= V_IsKeyboardFocusedChanged;
+		AssociatedObject.PreviewMouseDown -= PreviewMouseDown;
 	}
 
-	public static readonly DependencyProperty ClickSelectsProperty = DependencyProperty.RegisterAttached("ClickSelects", typeof(bool), typeof(TextBoxSelectionBehavior), new UIPropertyMetadata(true));
-	public static bool GetClickSelects(FrameworkElement obj) => (bool)obj.GetValue(ClickSelectsProperty);
-	public static void SetClickSelects(FrameworkElement obj, bool value) => obj.SetValue(ClickSelectsProperty, value);
+	private void PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+		if (e.Source is not TextBox textBox || IsTextBoxView(e.OriginalSource)) return;
+		Border border = AssociatedObject;
+		Thickness padding = border.Padding;
+		Point position = e.GetPosition(border);
+		if (position.X >= border.ActualWidth - padding.Right - TEXT_BOX_INNER_PADDING_X)
+			textBox.CaretIndex = int.MaxValue;
+		else if (position.X <= padding.Left + TEXT_BOX_INNER_PADDING_X)
+			textBox.CaretIndex = 0;
+	}
 
-	private void V_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
-		if (e.ChangedButton != MouseButton.Left) return;
-		AssociatedObject.ReleaseMouseCapture();
-		if (e.OriginalSource is Grid g && VisualTreeHelper.GetParent(g) is FrameworkElement { Name: "PART_ContentHost" }) {
-			position = e.GetPosition(AssociatedObject);
-			FrameworkElement r = (FrameworkElement)AssociatedObject.GetChildOfType<ScrollContentPresenter>()!.Content;
-			right = r.TranslatePoint(new Point(r.ActualWidth, 0), AssociatedObject).X;
-			cur = start = AssociatedObject.GetCharacterIndexFromPoint(position, true) + (position.X >= right ? 1 : 0);
-			AssociatedObject.SelectionStart = start;
-			AssociatedObject.SelectionLength = 0;
-			AssociatedObject.Focus();
-			AssociatedObject.CaptureMouse();
-			drag = false;
-			e.Handled = true;
-		}
-	}
-	private void V_PreviewMouseMove(object sender, MouseEventArgs e) {
-		Point p = e.GetPosition(AssociatedObject);
-		cur = AssociatedObject.GetCharacterIndexFromPoint(p, true);
-		AssociatedObject.SelectionStart = Math.Min(start, cur);
-		AssociatedObject.SelectionLength = Math.Abs(cur - start) + (p.X >= right ? position.X >= right ? -1 : 1 : 0);
-		if (!drag) drag = Math.Max(Math.Abs(position.X - p.X), Math.Abs(position.Y - p.Y)) > MAX_DRAG;
-		e.Handled = true;
-	}
-	private void V_PreviewMouseUp(object sender, MouseButtonEventArgs e) {
-		AssociatedObject.ReleaseMouseCapture();
-		if (!drag && GetClickSelects(AssociatedObject)) AssociatedObject.SelectAll();
-		e.Handled = true;
-	}
-	private void V_LostFocus(object sender, RoutedEventArgs e) {
-		AssociatedObject.ReleaseMouseCapture();
-	}
-	private void V_IsKeyboardFocusedChanged(object sender, DependencyPropertyChangedEventArgs e) {
-		if ((bool)e.NewValue) return;
-		AssociatedObject.ReleaseMouseCapture();
-	}
+	private const int TEXT_BOX_INNER_PADDING_X = 4;
+
+	/// <summary>
+	/// Test a object is a <see cref="TextBoxView" /> instance.
+	/// </summary>
+	/// <remarks>
+	/// The class <see cref="TextBoxView" /> is internal so we cannot get it directly.
+	/// </remarks>
+	/// <param name="test">The object to be tested.</param>
+	private static bool IsTextBoxView(object? test) =>
+		test is not null && test.GetType().FullName == "System.Windows.Controls.TextBoxView";
 }
