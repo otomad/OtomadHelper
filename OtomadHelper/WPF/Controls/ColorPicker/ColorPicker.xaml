@@ -49,13 +49,14 @@
 				<Setter Property="HorizontalAlignment" Value="Stretch" />
 				<Setter Property="Margin" Value="5,2" />
 				<Setter Property="TextAlignment" Value="Right" />
-				<EventSetter Event="PreviewTextInput" Handler="IsTextAllowed" />
-				<EventSetter Event="DataObject.Pasting" Handler="TextBoxPasting" />
-				<Setter Property="Text" Value="{m:Binding Values, Converter={StaticResource ValuesToText}, ConverterParameter={Binding Tag, RelativeSource={RelativeSource Self}}, Mode=OneWay}" />
+				<Setter Property="Text" Value="{m:Binding Values, Converter={StaticResource ValuesToText}, ConverterParameter={Binding Tag, RelativeSource={RelativeSource Self}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}" />
 				<Setter Property="m:InteractivityItems.Template">
 					<Setter.Value>
 						<m:InteractivityTemplate>
 							<m:InteractivityItems>
+								<m:InteractivityItems.Behaviors>
+									<m:NumberTextBoxBehavior NumberInputMode="Decimal" />
+								</m:InteractivityItems.Behaviors>
 								<m:InteractivityItems.Triggers>
 									<i:EventTrigger EventName="TextChanged" SourceObject="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}">
 										<i:InvokeCommandAction

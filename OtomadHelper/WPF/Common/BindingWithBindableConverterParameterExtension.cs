@@ -18,6 +18,8 @@ public class BindingExtension : MarkupExtension {
 	public dynamic? Converter { get; set; } // IValueConverter or IMultiValueConverter
 	public BindingBase? ConverterParameter { get; set; }
 	private int BindingCount { get; set; }
+	public UpdateSourceTrigger UpdateSourceTrigger { get; set; }
+	public bool NotifyOnSourceUpdated { get; set; }
 
 	public BindingExtension() => Binding = new Binding();
 
@@ -26,7 +28,11 @@ public class BindingExtension : MarkupExtension {
 	public BindingExtension(BindingBase binding) => Binding = binding;
 
 	public override object ProvideValue(IServiceProvider serviceProvider) { // PriorityBinding
-		MultiBinding multiBinding = new() { Mode = Mode };
+		MultiBinding multiBinding = new() {
+			Mode = Mode,
+			UpdateSourceTrigger = UpdateSourceTrigger,
+			NotifyOnSourceUpdated = NotifyOnSourceUpdated
+		};
 		Binding.SetMode(Mode);
 		BindingCount = multiBinding.AddBinding(Binding);
 		if (ConverterParameter != null) {

@@ -238,3 +238,9 @@ dotnet_diagnostic.IDE0055.severity = silent
 
 # IDE0072: 添加缺失的事例
 dotnet_diagnostic.IDE0072.severity = suggestion
+
+# IDE0021: 使用构造函数的块主体
+dotnet_diagnostic.IDE0021.severity = none
+
+# IDE0045: 转换为条件表达式
+dotnet_diagnostic.IDE0045.severity = suggestion
