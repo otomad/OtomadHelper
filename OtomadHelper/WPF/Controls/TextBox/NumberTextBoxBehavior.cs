@@ -30,6 +30,7 @@ public partial class NumberTextBoxBehavior : Behavior<TextBox> {
 		if (input == "." && original.Contains(".")) allowed = false;
 		if (input == "-" && caret != 0) allowed = false;
 		e.Handled = !allowed;
+		KeepCaretIndex(caret + input.Length);
 	}
 
 	private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e) {
@@ -38,8 +39,12 @@ public partial class NumberTextBoxBehavior : Behavior<TextBox> {
 			string text = (string)e.DataObject.GetData(typeof(string));
 			bool allowed = IsTextAllowed(text, false);
 			if (!allowed) e.CancelCommand();
+			else KeepCaretIndex(AssociatedObject.CaretIndex + text.Length);
 		} else e.CancelCommand();
 	}
+
+	private void KeepCaretIndex(int caretIndex) =>
+		_ = ITimer.WinForm.Delay(1).Then(() => AssociatedObject.CaretIndex = caretIndex);
 
 	/// <summary>
 	/// Check if the text is allowed to input to the text box.

@@ -28,8 +28,4 @@ public partial class ColorPicker : UserControl {
 		Unicolour newColor = viewModel.Color;
 		return Color.FromArgb((byte)newColor.Alpha.A255, (byte)newColor.Rgb.Byte255.R, (byte)newColor.Rgb.Byte255.G, (byte)newColor.Rgb.Byte255.B);
 	}
-
-	private void TextBox_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e) {
-		s = 123;
-	}
 }

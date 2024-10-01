@@ -87,6 +87,13 @@ public interface ITimer {
 
 		public static ITimer Interval(Action Callback, double ms) =>
 			new WinForm(Callback, ms).Start();
+
+		public static async Task Delay(double ms) {
+			TaskCompletionSource<bool> taskCompletionSource = new(false);
+			Timeout(() => taskCompletionSource.SetResult(true), ms);
+			await taskCompletionSource.Task;
+			return;
+		}
 	}
 
 	/// <inheritdoc cref="TimerType.WPF" />
@@ -133,6 +140,13 @@ public interface ITimer {
 
 		public static ITimer Interval(Action Callback, double ms) =>
 			new WPF(Callback, ms).Start();
+
+		public static async Task Delay(double ms) {
+			TaskCompletionSource<bool> taskCompletionSource = new(false);
+			Timeout(() => taskCompletionSource.SetResult(true), ms);
+			await taskCompletionSource.Task;
+			return;
+		}
 	}
 
 	/// <inheritdoc cref="TimerType.Timer" />
@@ -180,6 +194,13 @@ public interface ITimer {
 
 		public static ITimer Interval(Action Callback, double ms) =>
 			new Timer(Callback, ms).Start();
+
+		public static async Task Delay(double ms) {
+			TaskCompletionSource<bool> taskCompletionSource = new(false);
+			Timeout(() => taskCompletionSource.SetResult(true), ms);
+			await taskCompletionSource.Task;
+			return;
+		}
 	}
 
 	/// <inheritdoc cref="TimerType.Thread" />
@@ -225,6 +246,13 @@ public interface ITimer {
 
 		public static ITimer Interval(Action Callback, double ms) =>
 			new Thread(Callback, ms).Start();
+
+		public static async Task Delay(double ms) {
+			TaskCompletionSource<bool> taskCompletionSource = new(false);
+			Timeout(() => taskCompletionSource.SetResult(true), ms);
+			await taskCompletionSource.Task;
+			return;
+		}
 	}
 
 	#endregion
