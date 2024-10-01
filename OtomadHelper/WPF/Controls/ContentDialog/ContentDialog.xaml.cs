@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media.Animation;
 
 namespace OtomadHelper.WPF.Controls;
@@ -70,7 +69,7 @@ public partial class ContentDialog : BackdropWindow {
 
 	public static async Task<TDialogResult?> ShowDialog<TDialogResult>(
 		string title,
-		UIElement content,
+		FrameworkElement content,
 		IEnumerable<ContentDialogButtonItem> buttons,
 		string iconName = ""
 	) {
@@ -81,6 +80,8 @@ public partial class ContentDialog : BackdropWindow {
 		viewModel.Content = content;
 		viewModel.IconName = iconName;
 		viewModel.Buttons.AddRange(buttons);
+		dialog.Width = content.Width;
+		dialog.SizeToContent = SizeToContent.WidthAndHeight;
 		return (TDialogResult?)await dialog.ShowDialogAsync();
 	}
 

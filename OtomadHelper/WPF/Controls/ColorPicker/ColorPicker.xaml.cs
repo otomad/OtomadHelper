@@ -15,6 +15,10 @@ public partial class ColorPicker : UserControl {
 		InitializeComponent();
 	}
 
+	private void OnLoaded(object sender, RoutedEventArgs e) {
+		DataContext.View = this;
+	}
+
 	public new ColorPickerViewModel DataContext => (ColorPickerViewModel)base.DataContext;
 
 	public static async Task<Color> ShowDialog(Color color) { // TODO: 预计传入的颜色参数为 Hex。

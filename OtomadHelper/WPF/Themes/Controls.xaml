@@ -11,5 +11,6 @@
 		<m:SharedResourceDictionary ControlSource="ContextMenu/ContextMenu" />
 		<m:SharedResourceDictionary ControlSource="TextBox/TextBox" />
 		<m:SharedResourceDictionary ControlSource="RadioButton/RadioButton" />
+		<m:SharedResourceDictionary ControlSource="ColorPicker/CheckerBoardBrush" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

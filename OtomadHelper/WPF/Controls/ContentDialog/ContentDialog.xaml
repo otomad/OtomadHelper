@@ -200,9 +200,11 @@
 							/>
 					</Grid>
 					<ContentControl
+						x:Name="ContentControl"
 						Margin="{StaticResource BodyMargin}"
 						Content="{Binding Content}"
 						Visibility="{Binding Content, Converter={StaticResource ObjectToVis}}"
+						Focusable="False"
 						/>
 					<TextBlock Style="{StaticResource Footer}" Text="{Binding Footer}" />
 				</StackPanel>

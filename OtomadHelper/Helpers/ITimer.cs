@@ -41,6 +41,8 @@ public interface ITimer {
 	/// </summary>
 	public ITimer SingleShot();
 
+	public bool IsStart { get; }
+
 	#region Implements
 
 	/// <inheritdoc cref="TimerType.WinForm" />
@@ -48,6 +50,7 @@ public interface ITimer {
 		private readonly System.Windows.Forms.Timer timer;
 		private readonly EventHandler callback;
 
+		public bool IsStart { get; private set; }
 		public TimerType Type => TimerType.WinForm;
 
 		public WinForm(Action Callback, double ms) {
@@ -63,6 +66,7 @@ public interface ITimer {
 		}
 
 		public ITimer Start(bool immediate = false) {
+			IsStart = true;
 			timer.Enabled = true;
 			timer.Start();
 			if (immediate)
@@ -73,6 +77,7 @@ public interface ITimer {
 		public ITimer Stop() {
 			timer.Stop();
 			timer.Enabled = false;
+			IsStart = false;
 			return this;
 		}
 
@@ -101,6 +106,7 @@ public interface ITimer {
 		private readonly System.Windows.Threading.DispatcherTimer timer;
 		private readonly EventHandler callback;
 
+		public bool IsStart { get; private set; }
 		public TimerType Type => TimerType.WPF;
 
 		public WPF(Action Callback, double ms) {
@@ -116,6 +122,7 @@ public interface ITimer {
 		}
 
 		public ITimer Start(bool immediate = false) {
+			IsStart = true;
 			timer.IsEnabled = true;
 			timer.Start();
 			if (immediate)
@@ -126,6 +133,7 @@ public interface ITimer {
 		public ITimer Stop() {
 			timer.Stop();
 			timer.IsEnabled = false;
+			IsStart = false;
 			return this;
 		}
 
@@ -154,6 +162,7 @@ public interface ITimer {
 		private readonly System.Timers.Timer timer;
 		private readonly System.Timers.ElapsedEventHandler callback;
 
+		public bool IsStart { get; private set; }
 		public TimerType Type => TimerType.Timer;
 
 		public Timer(Action Callback, double ms) {
@@ -170,6 +179,7 @@ public interface ITimer {
 		}
 
 		public ITimer Start(bool immediate = false) {
+			IsStart = true;
 			timer.Enabled = true;
 			timer.Start();
 			if (immediate)
@@ -180,6 +190,7 @@ public interface ITimer {
 		public ITimer Stop() {
 			timer.Stop();
 			timer.Enabled = false;
+			IsStart = false;
 			return this;
 		}
 
@@ -209,6 +220,7 @@ public interface ITimer {
 		private readonly TimerCallback callback;
 		private double ms;
 
+		public bool IsStart { get; private set; }
 		public TimerType Type => TimerType.Thread;
 
 		public Thread(Action Callback, double ms) {
@@ -225,6 +237,7 @@ public interface ITimer {
 		}
 
 		public ITimer Start(bool immediate = false) {
+			IsStart = true;
 			timer = new(callback, this, (long)ms, 0);
 			if (immediate)
 				callback(null);
@@ -233,6 +246,7 @@ public interface ITimer {
 
 		public ITimer Stop() {
 			timer?.Dispose();
+			IsStart = false;
 			return this;
 		}
 

@@ -73,4 +73,32 @@ public static class MathEx {
 	public static T Clamp<T>(T value, T min, T max) where T : IComparable<T> =>
 		Math.Max((dynamic)min!, Math.Min((dynamic)value!, (dynamic)max!));
 
+	/// <summary>
+	/// <para><b>Inaccurate Thermometer</b></para>
+	///
+	/// <para>
+	/// Maps a value from one range to another, with a linear relationship between the old and new ranges and
+	/// not necessarily a proportional relationship, such as the relationship between Celsius and Fahrenheit,
+	/// and return the corresponding new value.
+	/// </para>
+	///
+	/// <para>
+	/// This function takes a value <c><paramref name="x"/></c> within a range <c>[<paramref name="min"/>, <paramref name="max"/>]</c>
+	/// and maps it to a new range <c>[<paramref name="a"/>, <paramref name="b"/>]</c>.
+	/// The mapping is done linearly, meaning that the ratio of the new range to the old range is preserved.
+	/// </para>
+	///
+	/// <para>
+	/// For example, changing a color value from 0 to 255 to a value from 0 to 100.
+	/// </para>
+	/// </summary>
+	/// <param name="x">The value within the old range to be mapped.</param>
+	/// <param name="min">The minimum value of the old range.</param>
+	/// <param name="max">The maximum value of the old range.</param>
+	/// <param name="a">The minimum value of the new range.</param>
+	/// <param name="b">The maximum value of the new range.</param>
+	/// <returns>The mapped value within the new range.</returns>
+	public static TOutput Map<TOutput>(decimal x, decimal min, decimal max, TOutput a, TOutput b) =>
+		(TOutput)(dynamic)(((decimal)(dynamic)b! - (decimal)(dynamic)a!) * (x - min) / (max - min) + (decimal)(dynamic)a!);
+
 }
