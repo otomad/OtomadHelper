@@ -42,5 +42,5 @@
 ## v8.0 - WebView2
 ### Prototype
 ![otomad_helper_v8.0-prototype](otomad_helper_v8.0-prototype.png)
-### v8.0
-![otomad_helper_v8.0](otomad_helper_v8.0.png)
+### Alpha
+![otomad_helper_v8.0-alpha](otomad_helper_v8.0-alpha.png)
