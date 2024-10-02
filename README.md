@@ -5,7 +5,7 @@
 	<h1>VegasScripts</h1>
 	<p>
 		<img src="https://img.shields.io/badge/STATE-STABLE-green?style=flat-square" alt="State" />
-		<img src="https://img.shields.io/badge/VERSION-4.31.28.0-orange?style=flat-square" alt="Version" />
+		<img src="https://img.shields.io/badge/VERSION-4.46.2.0-orange?style=flat-square" alt="Version" />
 		<img src="https://img.shields.io/github/downloads/otomad/OtomadHelper/total.svg?style=flat-square&label=DOWNLOADS" alt="Downloads">
 	</p>
 </div>
@@ -49,7 +49,7 @@ You can also read [@Evauation](https://github.com/Evauation)'s [documentation](h
 ### Install
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) the latest version of this script.
 2. Unzip **ALL** the files in the zip file you've just downloaded to the "Script Menu" folder in the Vegas installation directory.
-> (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu)
+> (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
 3. Make sure that the DLL file `(DLL\NAudio.dll)` is not locked. **Specific steps:**
 	1. In the Vegas installation directory, enter folder `Script Menu\DLL`.
 	2. Right-click the NAudio.dll file and select Properties.
@@ -68,7 +68,7 @@ Vegas Pro 13+ supported.
 
 Vegas Pro 16 and above support all features, and Vegas Pro 13 ~ 15 are compatible to run (some features are missing). The correct version must be installed though.
 
-Tested **fine** on Vegas Pro 17, 18, 19, 20, 21.
+Tested **fine** on Vegas Pro 17, 18, 19, 20, 21, 22.
 
 ### Glossary
 You could learn about many features more easily through pictures.
@@ -76,7 +76,7 @@ You could learn about many features more easily through pictures.
 [Glossary >](glossary.md)
 
 ### Tutorial
-[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)  
+[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)
 <small>[Explore Visual Effects](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### Major Version Update History
@@ -113,7 +113,7 @@ If you use this script, the script will use the following permissions.
 	The script need to read and write the registry to install or uninstall pitch-shift plugin presets.
 	<!-- If you don't use pitch-shift plugin method in script, you can ignore the installation presets and thus not use this permission. -->
 	> Path: HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
-	
+
 	Configurations related to Datamosh are saved in the registry.
 	> Path: HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets
 
@@ -178,9 +178,9 @@ Compilation note for Sony Vegas **(v13 and under)**:
 
 ### Install
 * Scripts belong in the Vegas install directory, in the "Script Menu" folder.
-	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu)
+	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
 * Some scripts require additional DLLs, put them in a "DLL" folder in the "Script Menu" folder.
-	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu\\DLL)
+	* (ie. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu\\DLL)
 * Make sure that the DLL files (such as `DLL\NAudio.dll`) are not blocked.
 
 </div>

@@ -41,7 +41,7 @@ Bạn cũng có thể đọc [tài liệu](https://docs.google.com/document/d/1P
 ### Hướng dẫn cài đặt
 1. [Tải xuống](https://github.com/otomad/OtomadHelper/releases/latest) phiên bản mới nhất của script này.
 2. Giải nén **TẤT CẢ** file trong file zip bạn vừa tải về tới thư mục "Script Menu" trong đường dẫn cài đặt của Vegas.
-> (Ví dụ. C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu)
+> (Ví dụ. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
 3. Đảm bảo rằng là file DLL `(DLL\NAudio.dll)` không bị khoá. **Các bước cụ thể:**
 	1. Trong đường dẫn cài đặt của Vegas, vào thư mục `Script Menu\DLL`.
 	2. Chuột phải vào file NAudio.dll và chọn "**Properties**".
@@ -60,7 +60,7 @@ Vegas Pro 13+ được hỗ trợ.
 
 Vegas Pro 16 và các phiên bản mới hơn trên phiên bản này hỗ trợ tất cả tính năng, và Vegas Pro 13 ~ 15 tương thích để chạy script (Một vài tính năng sẽ thiếu). Cần phải cài đúng phiên bản của script
 
-Đã test **ổn định** ở Vegas Pro 17, 18, 19, 20, 21.
+Đã test **ổn định** ở Vegas Pro 17, 18, 19, 20, 21, 22.
 
 ### Chú giải
 Bạn có thể tìm hiểu về nhiều tính năng dễ dàng hơn thông qua hình ảnh.
@@ -68,7 +68,7 @@ Bạn có thể tìm hiểu về nhiều tính năng dễ dàng hơn thông qua 
 [Chú giải >](glossary.md)
 
 ### Hướng dẫn
-[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)  
+[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)\
 <small>[Khám phá các hiệu ứng Visual](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### Lịch sử cập nhật phiên bản chính

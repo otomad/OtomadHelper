@@ -41,7 +41,7 @@ Kalian bisa baca ini: [@Evauation](https://github.com/Evauation)'s [documentatio
 ### Instalasi
 1. [Download](https://github.com/otomad/OtomadHelper/releases/latest) versi terbaru.
 2. Unzip (Ekstrak) **Semua** file di dalam zip file yang barusan kalian download ke folder "Script Menu" (Lokasinya di tempat folder Vegas).
-> (yaitu. C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu)
+> (yaitu. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
 3. Pastikan file DLL-nya `(DLL\NAudio.dll)` ga terlock. **Langkah spesifik:**
 	1. Di direktori instalasi Vegas, masukkan folder `Script Menu\DLL`.
 	2. Klik kanan file NAudio.dll dan pilih properties.
@@ -60,7 +60,7 @@ Vegas Pro 13+ didukung.
 
 Vegas Pro 16 dan versi keatas mendukung semua fitur, dan Vegas Pro 13 ~ 15 kompatibel untuk dijalankan (beberapa fitur hilang). Versi yang benar harus diinstal.
 
-Telah di uji **bisa** di Vegas Pro 17, 18, 19, 20, 21.
+Telah di uji **bisa** di Vegas Pro 17, 18, 19, 20, 21, 22.
 
 ### Glossary
 Kalian dapat mempelajari banyak fitur dengan lebih mudah melalui gambar.
@@ -68,7 +68,7 @@ Kalian dapat mempelajari banyak fitur dengan lebih mudah melalui gambar.
 [Glossary >](glossary.md)
 
 ### Tutorial
-[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)  
+[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)\
 <small>[Eksplor efek Visual](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### Riwayat update
@@ -104,7 +104,7 @@ Jika Kalian menggunakan skrip ini, skrip akan menggunakan izin berikut.
 2. Registry read and write.<br />
 	Skrip perlu membaca dan mengedit registry untuk menginstal atau menghapus preset plugin pitch-shift.
 	> Path: HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
-	
+
 	Konfigurasi yang terkait dengan Datamosh disimpan dalam registry.
 	> Path: HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets
 
@@ -169,9 +169,9 @@ Catatan kompilasi untuk Sony Vegas **(v13 ke bawah)**:
 
 ### Instalasi
 * Skrip termasuk dalam direktori instalasi Vegas, di folder "Menu Skrip".
-	* (yaitu. C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu)
+	* (yaitu. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
 * Beberapa skrip memerlukan DLL tambahan, letakkan di folder "DLL" di folder "Menu Skrip".
-	* (yaitu. C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu\\DLL)
+	* (yaitu. C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu\\DLL)
 * Ingat! file dll jangan lupa di Unblock. -->
 
 </div>

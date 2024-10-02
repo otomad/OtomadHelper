@@ -5,7 +5,7 @@
 	<h2 id="otomad-helper">音 MAD 助手</h2>
 	<p><b>兰音</b></p>
 	<p><a href="https://github.com/otomad/OtomadHelper/releases/latest"><img src="https://img.shields.io/badge/-点击下载最新版！-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="Download" /></a></p>
-	
+
 [English](README.md) | **简体中文** | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md) | [Bahasa Indo](README_id-ID.md)
 </div>
 
@@ -41,7 +41,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 ### 安装
 1. [下载](https://github.com/otomad/OtomadHelper/releases/latest)最新版脚本。
 2. 解压压缩包内的**所有**文件并放置到 Vegas 安装目录下的“Script Menu”文件夹中。
-> (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu)
+> (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
 3. 确保 DLL 文件 `(DLL\NAudio.dll)` 没有被锁定。**具体步骤：**
 	1. 在 Vegas 安装目录下，依次进入文件夹 `Script Menu\DLL`。
 	2. 右键 NAudio.dll 文件，并选择“属性”。
@@ -60,7 +60,7 @@ YTP 的相关功能参考自 [YTP+](https://github.com/YTP-Plus)。
 
 Vegas Pro 16 及以上版本支持所有功能，Vegas Pro 13 ~ 15 可以兼容运行（会缺失部分功能）。前提是必须安装对应的版本。
 
-Vegas Pro 17、18、19、20、21 测试**正常**。
+Vegas Pro 17、18、19、20、21、22 测试**正常**。
 
 ### 词汇表
 您可以通过图片更轻松地了解许多功能。
@@ -68,7 +68,7 @@ Vegas Pro 17、18、19、20、21 测试**正常**。
 [词汇表 >](glossary.md)
 
 ### 教程
-[![一分半上手 Otomad Helper](covers/youtube_cover.svg)](https://b23.tv/g98ALSe)  
+[![一分半上手 Otomad Helper](covers/youtube_cover.svg)](https://b23.tv/g98ALSe)\
 <small>[探索视觉效果](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### 主要版本更新历史
@@ -105,7 +105,7 @@ Vegas Pro 17、18、19、20、21 测试**正常**。
 	脚本需要读写注册表来安装或卸载移调插件预设。
 	<!-- 如果您不使用移调插件这个调音算法，您可以忽略该权限。 -->
 	> 路径：HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
-	
+
 	数据抹失的相关配置保存在注册表中。
 	> 路径：HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets
 

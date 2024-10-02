@@ -41,7 +41,7 @@ YTP の関連機能は [YTP+](https://github.com/YTP-Plus) から参照してい
 ### インストール
 1. スクリプトの最新バージョンを[ダウンロードします](https://github.com/otomad/OtomadHelper/releases/latest)。
 2. Vegas インストールディレクトリの下の「Script Menu」フォルダにダウンロードした ZIP ファイル内の**すべて**のファイルを解凍します。
-> (例えば：C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu)
+> (例えば：C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
 3. DLL ファイル `(DLL\NAudio.dll)` がロックされていないことを確認してください。**詳しい手順：**
 	1. Vegas のインストールディレクトリで、`Script Menu\DLL` フォルダを開きます。
 	2. ファイル NAudio.dll を右クリックし、［プロパティ］をクリックします。
@@ -60,7 +60,7 @@ Vegas Pro 13 以降。
 
 Vegas 16 以降はすべての機能がサポートされており、Vegas 13〜15 にも実行できます（だが一部の機能が欠落になります）。対応するバージョンがインストールされていることが前提です。
 
-Vegas Pro 17、18、19、20、21 で**正常**に作動します。
+Vegas Pro 17、18、19、20、21、22 で**正常**に作動します。
 
 ### 用語集
 画像を通して多くの機能をより簡単に知ることができます。
@@ -68,7 +68,7 @@ Vegas Pro 17、18、19、20、21 で**正常**に作動します。
 [用語集 >](glossary.md)
 
 ### チュートリアル
-[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)  
+[![Get started with Otomad Helper in 1.5 minutes](covers/youtube_cover.svg)](https://youtu.be/amDtqY_HsGM)\
 <small>[ビジュアルエフェクトの探索](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### メジャーバージョンの更新履歴
@@ -105,7 +105,7 @@ Vegas Pro 17、18、19、20、21 で**正常**に作動します。
 	ピッチシフトプラグインプリセットをインストールまたはアンインストールするには、スクリプトでレジストリを読み書きで実現します。
 	<!-- ピッチシフトプラグインのチューニングアルゴリズムを使用しない場合は、この権限を無視してもいいです。 -->
 	> パス：HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
-	
+
 	データモッシュに関連する構成はレジストリに保存されます。
 	> パス：HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets
 

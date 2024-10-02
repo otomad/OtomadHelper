@@ -41,7 +41,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 ### 安裝
 1. [下載](https://github.com/otomad/OtomadHelper/releases/latest)最新版腳本。
 2. 解壓壓縮包內的**所有**檔案並放置到 Vegas 安裝目錄下的「Script Menu」資料夾中。
-> (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 21.0\\Script Menu)
+> (例如：C:\\Program Files\\VEGAS\\VEGAS Pro 22.0\\Script Menu)
 3. 確保 DLL 檔案 `(DLL\NAudio.dll)` 沒有被鎖定。**具體步驟：**
 	1. 在 Vegas 安裝目錄下，依次進入資料夾 `Script Menu\DLL`。
 	2. 右鍵 NAudio.dll 檔案，並選擇「屬性」。
@@ -60,7 +60,7 @@ YTP 的相關功能參考自 [YTP+](https://github.com/YTP-Plus)。
 
 Vegas Pro 16 及以上版本支援所有功能，Vegas Pro 13 ~ 15 可以兼容運行（會缺失部分功能）。前提是必須安裝對應的版本。
 
-Vegas Pro 17、18、19、20、21 測試**正常**。
+Vegas Pro 17、18、19、20、21、22 測試**正常**。
 
 ### 詞彙表
 您可以通過圖片更輕鬆地瞭解許多功能。
@@ -68,7 +68,7 @@ Vegas Pro 17、18、19、20、21 測試**正常**。
 [詞彙表 >](glossary.md)
 
 ### 教程
-[![一分半上手 Otomad Helper](covers/youtube_cover.svg)](https://b23.tv/g98ALSe)  
+[![一分半上手 Otomad Helper](covers/youtube_cover.svg)](https://b23.tv/g98ALSe)\
 <small>[探索視覺效果](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### 主要版本更新歷史
@@ -105,7 +105,7 @@ Vegas Pro 17、18、19、20、21 測試**正常**。
 	腳本需要讀寫登錄檔來安裝或卸載移調外掛插件預設。
 	<!-- 如果您不使用移調插件這個調音算法，您可以忽略該許可權。 -->
 	> 路徑：HKEY_CURRENT_USER\\Software\\DirectShow\\Presets\\{ED1B4100-93BE-11D0-AEBC-00A0C9053912}
-	
+
 	資料狂舞的相關配置儲存在登錄檔中。
 	> 路徑：HKEY_CURRENT_USER\\SOFTWARE\\VEGAS Creative Software\\Custom Presets
 
