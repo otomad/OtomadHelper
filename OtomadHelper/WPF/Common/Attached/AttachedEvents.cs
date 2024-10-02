@@ -16,7 +16,7 @@ namespace OtomadHelper.WPF.Common;
 /// </example>
 /// </remarks>
 [AttachedDependencyProperty<bool, UIElement>("RaiseIsVisibleChanged", DefaultValue = false, OnChanged = "OnRaiseIsVisibleChanged")]
-public static partial class AttachedEvents {
+public static partial class AttachedEvents { // TODO: Not widely use.
 	public static readonly RoutedEvent IsVisibleChangedEvent = EventManager.RegisterRoutedEvent(
 		"IsVisibleChanged",
 		RoutingStrategy.Bubble,

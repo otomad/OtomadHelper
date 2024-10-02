@@ -1,4 +1,4 @@
-﻿// ===================================
+// ===================================
 // <copyright>LogoUI Co.</copyright>
 // <author>Vlad Spivak</author>
 // <email>mailto:vlads@logoui.co.il</email>
@@ -34,11 +34,11 @@ using TriggerCollection = Microsoft.Xaml.Behaviors.TriggerCollection;
 namespace OtomadHelper.WPF.Common;
 
 /// <summary>
-/// <see cref="FrameworkTemplate"/> for InteractivityElements instance
+/// <see cref="FrameworkTemplate"/> for InteractivityElements instance.
 /// </summary>
 /// <remarks>
 /// Subclassed for forward compatibility, perhaps one day <see cref="FrameworkTemplate"/>
-/// will not be partially internal
+/// will not be partially internal.
 /// </remarks>
 public class InteractivityTemplate : DataTemplate {
 
@@ -50,12 +50,12 @@ public class InteractivityTemplate : DataTemplate {
 [AttachedDependencyProperty<InteractivityTemplate>("Template")]
 public partial class InteractivityItems : FrameworkElement {
 	/// <summary>
-	/// Storage for triggers
+	/// Storage for triggers.
 	/// </summary>
 	public new List<TriggerBase> Triggers { get; } = [];
 
 	/// <summary>
-	/// Storage for Behaviors
+	/// Storage for Behaviors.
 	/// </summary>
 	public List<Behavior> Behaviors { get; } = [];
 
