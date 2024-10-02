@@ -30339,7 +30339,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			OpenLink(Links.DOCUMENTATION_ENGLISH);
 		}
 
-		public void OpenLink(string link) {
+		public static void OpenLink(string link) {
 			Process.Start("explorer.exe", link);
 		}
 
@@ -33726,7 +33726,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				create_event_group = "創建分組",
 				aconfig = "生成音訊",
 				audio_stretch = "拉伸音訊",
-				audio_loop = "循環音訊",
+				audio_loop = "迴圈音訊",
 				audio_normalize = "規範化音量",
 				audio_lock_stretch_pitch = "鎖定伸縮與音調",
 				auto_pan = "自動聲像",
@@ -33813,7 +33813,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				split_vertical_out = "垂直分割",
 				vconfig = "生成視訊",
 				video_stretch = "拉伸視訊",
-				video_loop = "循環視訊",
+				video_loop = "迴圈視訊",
 				freeze_first_frame = "靜態畫面",
 				freeze_last_frame = "禁止延長",
 				legato = "填補間隙",
@@ -34120,7 +34120,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				add_a_new_empty_track = "添加新的空軌道",
 				insert_a_new_empty_track = "插入新的空軌道",
 				dispatch_instrument_to_channel = "為通道指派樂器",
-				export_loop_region_only = "僅導出循環區域",
+				export_loop_region_only = "僅導出迴圈區域",
 				failed_to_quick_config = "MIDI 檔案路徑已變更或未定義，無法執行快速生成操作，請直接打開配置介面手動配置。",
 			};
 			Japanese = new Lang {
