@@ -1,5 +1,5 @@
 /// <summary>
-/// <see href="https://github.com/JonghoL/EventBindingMarkup"/>
+/// <see href="https://github.com/JonghoL/EventBindingMarkup" />
 /// </summary>
 
 using System.Reflection.Emit;
@@ -9,6 +9,20 @@ using System.Windows;
 
 namespace OtomadHelper.WPF.Common;
 
+/// <remarks>
+/// <example>
+/// <code>
+/// <![CDATA[
+/// KeyDown="{m:EventBinding Command=KeyDownCommand, CommandParameter=$e}"
+/// KeyUp="{m:EventBinding Command=KeyUpCommand, CommandParameter=$e}"
+///
+/// PreviewMouseWheel="{m:EventBinding Command=NoteNameSpinCommand, CommandParameter=$e.Delta}"
+/// ItemClick="{m:EventBinding Command=NoteNameChangeCommand, CommandParameter=$this.Content}"
+/// ]]>
+/// </code>
+/// </example>
+/// </remarks>
+[Obsolete("Use XamlBehaviorsWpf instead")]
 public class EventBindingExtension : MarkupExtension {
 	public string? Command { get; set; }
 	public string? CommandParameter { get; set; } // TODO: DependencyProperty

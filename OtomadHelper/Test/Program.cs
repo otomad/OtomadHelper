@@ -1,4 +1,4 @@
-#define TEST5
+#define TEST1
 using System.Resources;
 using System.Windows.Forms;
 

@@ -145,7 +145,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 					pixels[i + 1] = (byte)color.Rgb.Byte255.G;
 					pixels[i + 2] = (byte)color.Rgb.Byte255.B;
 				}
-				SecondarySource.WritePixels(new Int32Rect(0, 0, 1, height), pixels, SecondarySource.BackBufferStride, 0);
+				SecondarySource.WritePixels(new Int32Rect(0, 0, 1, height), pixels, CHANNEL, 0);
 				//SecondarySource.AddDirtyRect(new Int32Rect(0, 0, 1, height));
 				//SecondarySource.Unlock();
 			}

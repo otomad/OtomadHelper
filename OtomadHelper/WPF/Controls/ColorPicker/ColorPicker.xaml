@@ -60,7 +60,7 @@
 									<m:NumberTextBoxBehavior NumberInputMode="Decimal" />
 								</m:InteractivityItems.Behaviors>
 								<m:InteractivityItems.Triggers>
-									<i:EventTrigger EventName="TextChanged" SourceObject="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}">
+									<i:EventTrigger EventName="TextChanged">
 										<i:InvokeCommandAction
 											Command="{Binding TextChangedCommand}"
 											PassEventArgsToCommand="True"

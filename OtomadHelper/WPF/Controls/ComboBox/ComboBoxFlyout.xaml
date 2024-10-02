@@ -15,8 +15,6 @@
 	Loaded="Window_Loaded"
 	SizeToContent="Width"
 	Height="0"
-	KeyDown="{m:EventBinding Command=KeyDownCommand, CommandParameter=$e}"
-	KeyUp="{m:EventBinding Command=KeyUpCommand, CommandParameter=$e}"
 	Focusable="True"
 	Topmost="True"
 	mc:Ignorable="d"
@@ -25,20 +23,20 @@
 		<c:ComboBoxViewModel x:Name="ViewModel" />
 	</c:BaseFlyout.DataContext>
 
-	<!--<c:BaseFlyout.InputBindings>
-		<KeyBinding Key="Up" CommandParameter="{m:Int -1}" Command="{Binding ArrowKeyDownCommand}" />
-		<KeyBinding Key="Down" CommandParameter="{m:Int 1}" Command="{Binding ArrowKeyDownCommand}" />
-		<KeyBinding Key="Return" Command="{Binding EnterKeyDownCommand}" />
-	</c:BaseFlyout.InputBindings>-->
-	
-	<!--<i:Interaction.Triggers>
-		<i:EventTrigger EventName="KeyDown">
-			<m:EventCommand Command="{Binding KeyDownCommand}" />
-		</i:EventTrigger>
-		<i:EventTrigger EventName="KeyUp">
-			<m:EventCommand Command="{Binding KeyUpCommand}" />
-		</i:EventTrigger>
-	</i:Interaction.Triggers>-->
+	<i:Interaction.Triggers>
+		<i:KeyTrigger FiredOn="KeyDown" Key="Return">
+			<i:CallMethodAction TargetObject="{Binding}" MethodName="Close" />
+		</i:KeyTrigger>
+		<i:KeyTrigger FiredOn="KeyUp" Key="Space">
+			<i:CallMethodAction TargetObject="{Binding}" MethodName="Close" />
+		</i:KeyTrigger>
+		<i:KeyTrigger FiredOn="KeyDown" Key="Up">
+			<i:InvokeCommandAction Command="{Binding ArrowMoveCommand}" CommandParameter="{m:Int -1}" />
+		</i:KeyTrigger>
+		<i:KeyTrigger FiredOn="KeyDown" Key="Down">
+			<i:InvokeCommandAction Command="{Binding ArrowMoveCommand}" CommandParameter="{m:Int 1}" />
+		</i:KeyTrigger>
+	</i:Interaction.Triggers>
 
 	<c:BaseFlyout.Resources>
 		<ResourceDictionary>

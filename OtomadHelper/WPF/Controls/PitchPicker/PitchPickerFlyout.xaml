@@ -261,16 +261,22 @@
 					<c:PitchPickerFlyoutListView
 						x:Name="NoteNameListView"
 						d:ItemsSource="{Binding NoteNames}"
-						ItemClick="{m:EventBinding Command=NoteNameChangeCommand, CommandParameter=$this.Content}"
 						ItemsSource="{Binding DisplayNoteNames, ElementName=View}"
 						Style="{StaticResource ListView}"
-						/>
+						>
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="c:PitchPickerFlyoutListViewItem.Click">
+								<i:InvokeCommandAction
+									Command="{Binding NoteNameChangeCommand}"
+									/>
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+					</c:PitchPickerFlyoutListView>
 				</Canvas>
 				<RepeatButton
 					Style="{StaticResource SpinnerButtonUp}"
 					CommandParameter="{StaticResource SpinUpDelta}"
 					Command="{Binding NoteNameSpinCommand}"
-					
 					/>
 				<RepeatButton
 					Style="{StaticResource SpinnerButtonDown}"
@@ -288,10 +294,10 @@
 				<Canvas Style="{StaticResource ListViewWrapper}">
 					<c:PitchPickerFlyoutListView
 						x:Name="OctaveListView"
-						ItemClick="{m:EventBinding Command=OctaveChangeCommand, CommandParameter=$this.Content}"
 						ItemsSource="{Binding Octaves}"
 						Style="{StaticResource ListView}"
 						/>
+					<!--ItemClick="{m:EventBinding Command=OctaveChangeCommand, CommandParameter=$this.Content}"-->
 				</Canvas>
 				<RepeatButton
 					Style="{StaticResource SpinnerButtonUp}"

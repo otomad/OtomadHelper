@@ -13,26 +13,18 @@ public partial class ComboBoxViewModel<T> : ObservableObject<ComboBoxFlyout> {
 
 	public int SelectedIndex => Ids.ToList().IndexOf(Selected);
 
+	public void Close() => View?.Close();
+
 	[RelayCommand]
 	private void CheckRadioButton(T id) {
 		Selected = id;
-		View?.Close();
+		Close();
 	}
 
 	[RelayCommand]
-	private void KeyDown(KeyEventArgs e) {
-		if (e.Key == Key.Enter) KeyUp();
-		else if (e.Key is Key.Up or Key.Down) {
-			int direction = e.Key == Key.Up ? -1 : 1;
-			if (Ids.Count == 0) return;
-			Selected = Ids[MathEx.PNMod(SelectedIndex + direction, Ids.Count)];
-		}
-	}
-
-	[RelayCommand]
-	public void KeyUp(KeyEventArgs? e = null) {
-		if (e is null || e.Key is Key.Space)
-			View?.Close();
+	private void ArrowMove(int direction) {
+		if (Ids.Count == 0) return;
+		Selected = Ids[MathEx.PNMod(SelectedIndex + direction, Ids.Count)];
 	}
 }
 

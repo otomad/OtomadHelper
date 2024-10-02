@@ -17,24 +17,24 @@ public class PitchPickerFlyoutListView : ListView {
 			listViewItem.ParentListView = this;
 	}
 
-	public event MouseButtonEventHandler? ItemClick;
-	internal void InvokeItemClick(object sender, MouseButtonEventArgs e) => ItemClick?.Invoke(sender, e);
+	//public event MouseButtonEventHandler? ItemClick;
+	//internal void InvokeItemClick(object sender, MouseButtonEventArgs e) => ItemClick?.Invoke(sender, e);
 }
 
 [DependencyProperty<bool>("IsPressed", DefaultValue = false)]
+[RoutedEvent("Click", RoutedEventStrategy.Bubble)]
 public partial class PitchPickerFlyoutListViewItem : ListViewItem {
 	public PitchPickerFlyoutListView? ParentListView { get; internal set; }
-
-	public event MouseButtonEventHandler? Click;
 
 	public PitchPickerFlyoutListViewItem() {
 		// If user press the item and then drag it out, do not trigger the click event when mouse up.
 		PreviewMouseLeftButtonDown += (sender, e) => IsPressed = true;
 		MouseLeave += (sender, e) => IsPressed = false;
 		PreviewMouseLeftButtonUp += (sender, e) => {
-			if (IsPressed == true) {
-				Click?.Invoke(sender, e);
-				ParentListView?.InvokeItemClick(sender, e);
+			if (IsPressed) {
+				RaiseEvent(new RoutedEventArgs(ClickEvent));
+				//Click?.Invoke(sender, e);
+				//ParentListView?.InvokeItemClick(sender, e2);
 			}
 		};
 	}

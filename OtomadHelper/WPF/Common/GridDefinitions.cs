@@ -19,7 +19,7 @@ namespace OtomadHelper.WPF.Common;
 ///          <RowDefinition Height="Auto"/>
 ///          <RowDefinition Height="25"/>
 ///     </Grid.RowDefinitions>
-/// <Grid>
+/// </Grid>
 /// ]]>
 /// </code>
 /// <para>After:</para>
