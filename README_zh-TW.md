@@ -68,7 +68,7 @@ Vegas Pro 17、18、19、20、21、22 測試**正常**。
 [詞彙表 >](glossary.md)
 
 ### 教程
-[![一分半上手 Otomad Helper](covers/youtube_cover.svg)](https://b23.tv/g98ALSe)\
+[![一分半上手 Otomad Helper](covers/youtube_cover.svg)](https://www.bilibili.com/video/av613241077)\
 <small>[探索視覺效果](https://youtu.be/cY2Qa3Owetw)</small>
 
 ### 主要版本更新歷史
