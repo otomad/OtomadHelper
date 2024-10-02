@@ -2664,7 +2664,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="successful">是否成功获取网页数据。</param>
 		/// <param name="isLatest">是否已是最新版。</param>
 		/// <returns>最新版本号。</returns>
-		public static string GetLatestScriptVersion(out bool successful, out bool isLatest) {
+		public static string GetLatestScriptVersion(out bool successful, out bool isLatest, out Version versionObject) {
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 			string json;
 			MatchCollection matches;
@@ -2682,12 +2682,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		third:
 			successful = false;
 			isLatest = true;
+			versionObject = null;
 			return null;
 		ok:
 			string version = matches[0].Value.Trim();
 			Version latestVersion = new Version(version);
 			successful = true;
 			isLatest = latestVersion <= VERSION;
+			versionObject = latestVersion;
 			return "v" + version;
 		}
 
@@ -30338,8 +30340,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				RELEASE_NOTES_V4_10_17_0 = "https://www.bilibili.com/read/cv13614419",
 				DOCUMENTATION_ENGLISH = "https://docs.google.com/document/d/1PEkh0_WFDLUAYGD-YzIDNXUQiAKqogEvpuRQhfqz9ng",
 				TUTORIAL_VIDEO_ENGLISH = "https://youtu.be/8vSpzgL_86A", // Bug 之一：链接中不能包含如问号或等号等特殊符号。暂时打不开，以 YouTube 短链替换之。
-				GITHUB_LATEST_API = "https://api.github.com/repos/otomad/VegasScripts/releases/latest", // 一小时 60 次上限。
-				GITHUB_LATEST_API_2 = "https://otomad.github.io/VegasScripts/README.md",
+				GITHUB_LATEST_API = "https://api.github.com/repos/otomad/OtomadHelper/releases/latest", // 一小时 60 次上限。
+				GITHUB_LATEST_API_2 = "https://otomad.github.io/OtomadHelper/README.md",
 				GITHUB_ISSUES = "https://github.com/otomad/OtomadHelper/issues",
 				GITHUB_DATAMOSH_EXTPACK = "https://github.com/otomad/OtomadHelper/releases/tag/v1.0-datamosh";
 		}
@@ -31239,17 +31241,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				Lang str = Lang.str;
 				bool alertable = isManualUpdate; // 修改：自动检测更新失败时不要播放关键性终止提示音。
 				bool ok, isLatest;
-				string newVersion = EntryPoint.GetLatestScriptVersion(out ok, out isLatest);
+				Version newVersionObject, futureVersionSupportedMinVegasVersion = new Version(16, 0);
+				string newVersion = EntryPoint.GetLatestScriptVersion(out ok, out isLatest, out newVersionObject);
 				if (!ok || string.IsNullOrWhiteSpace(newVersion)) {
 					if (alertable) CriticalStop.Play();
 					return;
 				}
+				bool isUnsupportFutureVersion = newVersionObject != null && EntryPoint.CurrentVegasVersion != null &&
+					newVersionObject >= new Version(5, 0) && EntryPoint.CurrentVegasVersion < futureVersionSupportedMinVegasVersion;
 				if (!isLatest) {
-					latestVersionToolStripMenuItemInBar.Text = str.download_latest_version + str.colon + newVersion;
-					latestVersionToolStripMenuItemInBar.Visible = true;
-					if (alertable) {
-						DialogResult updateNow = MessageBox.Show(string.Format(str.check_update_found, newVersion, "v" + EntryPoint.VERSION), str.check_update_title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-						if (updateNow == DialogResult.Yes) latestVersionLinkToolStripMenuItem.PerformClick();
+					if (isUnsupportFutureVersion) {
+						if (isManualUpdate)
+							MessageBox.Show(string.Format(str.check_update_unsupport_future_version, newVersion, "v" + EntryPoint.VERSION, futureVersionSupportedMinVegasVersion, EntryPoint.CurrentVegasVersion), str.check_update_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					} else {
+						latestVersionToolStripMenuItemInBar.Text = str.download_latest_version + str.colon + newVersion;
+						latestVersionToolStripMenuItemInBar.Visible = true;
+						if (alertable) {
+							DialogResult updateNow = MessageBox.Show(string.Format(str.check_update_found, newVersion, "v" + EntryPoint.VERSION), str.check_update_title, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+							if (updateNow == DialogResult.Yes) latestVersionLinkToolStripMenuItem.PerformClick();
+						}
 					}
 				} else if (isManualUpdate)
 					MessageBox.Show(string.Format(str.check_update_not_found, newVersion), str.check_update_title, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -31813,6 +31823,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			check_update_title = "更新脚本",
 			check_update_found = "检测到新版本，是否立即更新？\n\n最新版本：{0}\n当前版本：{1}",
 			check_update_not_found = "已是最新版本！\n\n最新版本：{0}",
+			check_update_unsupport_future_version = "已检测到新版本，但是您当前的 Vegas 版本过低，新版本不支持您的 Vegas 版本。请更新您的 Vegas 软件，然后才能使用新版本。\n\n新版最低支持：Vegas Pro {2}\n您当前正使用：Vegas Pro {3}\n\n最新版本：{0}\n当前版本：{1}",
 			check_update_on_startup = "启动时自动检查更新",
 			download_latest_version = "下载最新版本",
 			quick_config = "快速配置",
@@ -32594,6 +32605,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_title = "Update script",
 				check_update_found = "New version detected, update now?\n\nLatest version: {0}\nCurrent version: {1}",
 				check_update_not_found = "Already the latest version!\n\nLatest version: {0}",
+				check_update_unsupport_future_version = "New version detected, but your current Vegas version is too low and the new version does not support your Vegas version. Please update your Vegas software before you can use the new version.\n\nMinimum supported version: Vegas Pro {2}\nCurrent version: Vegas Pro {3}\n\nLatest version: {0}\nCurrent version: {1}",
 				check_update_on_startup = "Check for updates at startup",
 				download_latest_version = "Download the latest",
 				quick_config = "Quickly configure",
@@ -33372,6 +33384,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_title = "更新腳本",
 				check_update_found = "偵測到新版本，是否立即更新？ \n\n最新版本：{0}\n當前版本：{1}",
 				check_update_not_found = "已是最新版本！\n\n最新版本：{0}",
+				check_update_unsupport_future_version = "已偵測到新版本，但是您當前的 Vegas 版本過低，新版本不支援您的 Vegas 版本。請更新您的 Vegas 軟體，然後才能使用新版本。\n\n新版最低支援：Vegas Pro {2}\n您當前正使用：Vegas Pro {3}\n\n最新版本：{0}\n當前版本：{1}",
 				check_update_on_startup = "啟動時自動檢查更新",
 				download_latest_version = "下載最新版本",
 				quick_config = "快速配置",
@@ -34150,6 +34163,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_title = "スクリプトの更新",
 				check_update_found = "新しいバージョンが検出されました。すぐに更新しますか？\n\n最新バージョン：{0}\n現行のバージョン：{1}",
 				check_update_not_found = "すでに最新バージョン！\n\n最新バージョン：{0}",
+				check_update_unsupport_future_version = "新しいバージョンが検出されましたが、現在のVegasバージョンは古すぎるため、新しいバージョンはVegasバージョンをサポートしていません。新しいバージョンを使用する前に、Vegasソフトウェアを更新してください。\n\nサポートされる最小バージョン：Vegas Pro {2}\n現在のバージョン：Vegas Pro {3}\n\n最新バージョン：{0}\n現行のバージョン：{1}",
 				check_update_on_startup = "起動時に更新を確認",
 				download_latest_version = "最新のダウンロード",
 				quick_config = "迅速な設定",
@@ -34927,8 +34941,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				unsupported_vegas_version_title = "Несоответствие версий",
 				unsupported_vegas_version_feature = "Версии ниже Vegas Pro {0} не поддерживают эту функцию.",
 				check_update_title = "Скрипт обновления",
-				check_update_found = "Обнаружена новая версия, обновить сейчас?\nПоследняя версия: {0}\nТекущая версия:{1}",
+				check_update_found = "Обнаружена новая версия, обновить сейчас?\nПоследняя версия: {0}\nТекущая версия: {1}",
 				check_update_not_found = "Уже последняя версия!\n\nПоследняя версия: {0}",
+				check_update_unsupport_future_version = "Обнаружена новая версия, но ваша текущая версия Vegas слишком низкая, и новая версия не поддерживает вашу версию Vegas. Пожалуйста, обновите программное обеспечение Vegas, прежде чем использовать новую версию.\n\nМинимальная поддерживаемая версия: Vegas Pro {2}\nТекущая версия: Vegas Pro {3}\n\nПоследняя версия: {0}\nТекущая версия: {1}",
 				check_update_on_startup = "Проверять наличие обновлений при запуске",
 				download_latest_version = "Загрузите последнюю",
 				quick_config = "Быстрая настройка",
@@ -35708,6 +35723,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_title = "Cập nhật script",
 				check_update_found = "Đã phát hiện phiên bản mới, cập nhật ngay?\n\nPhiên bản mới nhất: {0}\nPhiên bản hiện tại: {1}",
 				check_update_not_found = "Hiện đã ở phiên bản mới nhất!\n\nPhiên bản mới nhất: {0}",
+				check_update_unsupport_future_version = "Đã phát hiện phiên bản mới, nhưng phiên bản Vegas hiện tại của bạn quá thấp và phiên bản mới không hỗ trợ phiên bản Vegas của bạn. Vui lòng cập nhật phần mềm Vegas của bạn trước khi có thể sử dụng phiên bản mới.\n\nPhiên bản được hỗ trợ tối thiểu: Vegas Pro {2}\nPhiên bản hiện tại: Vegas Pro {3}\n\nPhiên bản mới nhất: {0}\nPhiên bản hiện tại: {1}",
 				check_update_on_startup = "Kiểm tra bản cập nhật khi khởi động",
 				download_latest_version = "Tải xuống phiên bản mới nhất",
 				quick_config = "Nhanh chóng thiết lập",
@@ -36486,6 +36502,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				check_update_title = "Update script",
 				check_update_found = "Versi baru terdeteksi! Update sekarang?\n\nVersi terbaru: {0}\nVersi sekarang: {1}",
 				check_update_not_found = "Sudah versi terbaru!\n\nVersi terbaru: {0}",
+				check_update_unsupport_future_version = "Versi baru terdeteksi, tetapi versi Vegas Anda saat ini terlalu rendah dan versi baru tidak mendukung versi Vegas Anda. Harap perbarui perangkat lunak Vegas Anda sebelum Anda dapat menggunakan versi baru.\n\nVersi minimum yang didukung: Vegas Pro {2}\nVersi saat ini: Vegas Pro {3}\n\nVersi terbaru: {0}\nVersi sekarang: {1}",
 				check_update_on_startup = "Periksa update saat startup",
 				download_latest_version = "Download yang terbaru",
 				quick_config = "Konfigurasikan dengan cepat",
