@@ -1,4 +1,4 @@
-#define TEST1
+#define TEST5
 using System.Resources;
 using System.Windows.Forms;
 
@@ -9,7 +9,7 @@ internal static class Program {
 	/// The main entry point for the application.
 	/// </summary>
 	[STAThread]
-	static void Main() {
+	public static void Main() {
 		//CosturaUtility.Initialize();
 		Application.EnableVisualStyles();
 		Application.SetCompatibleTextRenderingDefault(false);

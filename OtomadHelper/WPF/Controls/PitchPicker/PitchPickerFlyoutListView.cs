@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -16,9 +15,6 @@ public class PitchPickerFlyoutListView : ListView {
 		if (element is PitchPickerFlyoutListViewItem listViewItem)
 			listViewItem.ParentListView = this;
 	}
-
-	//public event MouseButtonEventHandler? ItemClick;
-	//internal void InvokeItemClick(object sender, MouseButtonEventArgs e) => ItemClick?.Invoke(sender, e);
 }
 
 [DependencyProperty<bool>("IsPressed", DefaultValue = false)]
@@ -33,8 +29,6 @@ public partial class PitchPickerFlyoutListViewItem : ListViewItem {
 		PreviewMouseLeftButtonUp += (sender, e) => {
 			if (IsPressed) {
 				RaiseEvent(new RoutedEventArgs(ClickEvent));
-				//Click?.Invoke(sender, e);
-				//ParentListView?.InvokeItemClick(sender, e2);
 			}
 		};
 	}

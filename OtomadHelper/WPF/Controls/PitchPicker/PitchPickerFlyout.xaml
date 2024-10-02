@@ -254,9 +254,13 @@
 			<Canvas
 				x:Name="NoteNameWrapper"
 				Grid.Column="0"
-				PreviewMouseWheel="{m:EventBinding Command=NoteNameSpinCommand, CommandParameter=$e.Delta}"
 				Style="{StaticResource ListViewWrapperWrapper}"
 				>
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="PreviewMouseWheel">
+						<i:InvokeCommandAction Command="{Binding NoteNameSpinCommand}" EventArgsParameterPath="Delta" />
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
 				<Canvas Style="{StaticResource ListViewWrapper}">
 					<c:PitchPickerFlyoutListView
 						x:Name="NoteNameListView"
@@ -264,13 +268,13 @@
 						ItemsSource="{Binding DisplayNoteNames, ElementName=View}"
 						Style="{StaticResource ListView}"
 						>
-						<i:Interaction.Triggers>
-							<i:EventTrigger EventName="c:PitchPickerFlyoutListViewItem.Click">
-								<i:InvokeCommandAction
-									Command="{Binding NoteNameChangeCommand}"
-									/>
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
+						<i:Interaction.Behaviors>
+							<m:EventToCommandBehavior
+								Command="{Binding NoteNameChangeCommand}"
+								RoutedEvent="c:PitchPickerFlyoutListViewItem.Click"
+								EventArgsParameterPath="OriginalSource.Content"
+								/>
+						</i:Interaction.Behaviors>
 					</c:PitchPickerFlyoutListView>
 				</Canvas>
 				<RepeatButton
@@ -288,16 +292,27 @@
 			<Canvas
 				x:Name="OctaveWrapper"
 				Grid.Column="2"
-				PreviewMouseWheel="{m:EventBinding Command=OctaveSpinCommand, CommandParameter=$e.Delta}"
 				Style="{StaticResource ListViewWrapperWrapper}"
 				>
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="PreviewMouseWheel">
+						<i:InvokeCommandAction Command="{Binding OctaveSpinCommand}" EventArgsParameterPath="Delta" />
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
 				<Canvas Style="{StaticResource ListViewWrapper}">
 					<c:PitchPickerFlyoutListView
 						x:Name="OctaveListView"
 						ItemsSource="{Binding Octaves}"
 						Style="{StaticResource ListView}"
-						/>
-					<!--ItemClick="{m:EventBinding Command=OctaveChangeCommand, CommandParameter=$this.Content}"-->
+						>
+						<i:Interaction.Behaviors>
+							<m:EventToCommandBehavior
+								Command="{Binding OctaveChangeCommand}"
+								RoutedEvent="c:PitchPickerFlyoutListViewItem.Click"
+								EventArgsParameterPath="OriginalSource.Content"
+								/>
+						</i:Interaction.Behaviors>
+					</c:PitchPickerFlyoutListView>
 				</Canvas>
 				<RepeatButton
 					Style="{StaticResource SpinnerButtonUp}"

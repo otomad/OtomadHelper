@@ -27,6 +27,7 @@
 			<c:ColorPickerModelAxisToCheckedConverter x:Key="ModelAxisToChecked" />
 			<c:ColorPickerValuesToTextConverter x:Key="ValuesToText" />
 			<c:ColorPickerTextChangedEventArgsToTextAndNameConverter x:Key="TextChangedToTextName" />
+			<c:UnicolourToMediaColorConverter x:Key="UniToMediaColor" />
 
 			<Style BasedOn="{StaticResource DefaultRadioButtonStyle}" TargetType="RadioButton">
 				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
@@ -61,11 +62,7 @@
 								</m:InteractivityItems.Behaviors>
 								<m:InteractivityItems.Triggers>
 									<i:EventTrigger EventName="TextChanged">
-										<i:InvokeCommandAction
-											Command="{Binding TextChangedCommand}"
-											PassEventArgsToCommand="True"
-											EventArgsConverter="{StaticResource TextChangedToTextName}"
-											/>
+										<i:InvokeCommandAction Command="{Binding TextChangedCommand}" EventArgsConverter="{StaticResource TextChangedToTextName}" />
 									</i:EventTrigger>
 								</m:InteractivityItems.Triggers>
 							</m:InteractivityItems>
@@ -91,7 +88,19 @@
 			Stretch="Fill"
 			/>
 
-		<Rectangle Grid.Column="4" Fill="{StaticResource CheckerBoard}" />
+		<Grid Grid.Column="4">
+			<Rectangle Fill="{StaticResource CheckerBoard}" />
+			<Rectangle>
+				<Rectangle.Fill>
+					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+						<LinearGradientBrush.GradientStops>
+							<GradientStop Offset="0" Color="{Binding Color, Converter={StaticResource UniToMediaColor}}" />
+							<GradientStop Offset="1" Color="Transparent" />
+						</LinearGradientBrush.GradientStops>
+					</LinearGradientBrush>
+				</Rectangle.Fill>
+			</Rectangle>
+		</Grid>
 
 		<Grid Grid.Column="6" m:GridDef.Column="Auto,65,Auto,10,Auto,65,Auto,10,Auto,65,Auto" m:GridDef.Row="*,*,*,10,*,*,*">
 			<RadioButton Tag="HSL.0" Grid.Column="0" Grid.Row="0">H</RadioButton>

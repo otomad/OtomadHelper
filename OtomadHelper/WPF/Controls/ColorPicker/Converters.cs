@@ -1,8 +1,7 @@
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
-
-using DrWPF.Windows.Data;
+using System.Windows.Media;
 
 using Wacton.Unicolour;
 
@@ -42,4 +41,17 @@ public class ColorPickerTextChangedEventArgsToTextAndNameConverter : IValueConve
 
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
+}
+
+[ValueConversion(typeof(Unicolour), typeof(Color))]
+public class UnicolourToMediaColorConverter : IValueConverter {
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+		Unicolour color = (Unicolour)value;
+		return color.ToMediaColor();
+	}
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+		Color color = (Color)value;
+		return color.ToUnicolour();
+	}
 }

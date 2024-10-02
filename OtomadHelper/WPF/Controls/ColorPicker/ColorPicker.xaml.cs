@@ -24,12 +24,12 @@ public partial class ColorPicker : UserControl {
 	public static async Task<Color> ShowDialog(Color color) { // TODO: 预计传入的颜色参数为 Hex。
 		ColorPicker panel = new();
 		ColorPickerViewModel viewModel = panel.DataContext;
-		viewModel.Color = new(ColourSpace.Rgb255, color.R, color.G, color.B, color.A);
+		viewModel.Color = color.ToUnicolour();
 		bool dialogResult = await ContentDialog.ShowDialog<bool?>("Select a Color", panel, [
 			new ContentDialogButtonItem<bool>(t.ContentDialog.Button.Ok, true, true),
 			new ContentDialogButtonItem<bool>(t.ContentDialog.Button.Cancel, false),
 		], "Color") ?? false;
 		Unicolour newColor = viewModel.Color;
-		return Color.FromArgb((byte)newColor.Alpha.A255, (byte)newColor.Rgb.Byte255.R, (byte)newColor.Rgb.Byte255.G, (byte)newColor.Rgb.Byte255.B);
+		return newColor.ToMediaColor();
 	}
 }

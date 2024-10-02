@@ -1,3 +1,4 @@
+using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Data;
 
@@ -215,5 +216,26 @@ public static partial class Extensions {
 				throw new NotSupportedException($"The binding type `{bindingBase.GetType().Name}` is not implemented and supported yet");
 		}
 		return added;
+	}
+
+	/// <summary>
+	/// Get the property from a object with the path string.
+	/// </summary>
+	/// <remarks>
+	/// <example>
+	/// <code>
+	/// foo.GetPath("bar.baz");
+	/// </code>
+	/// Equals to
+	/// <code>
+	/// foo.bar.baz;
+	/// </code>
+	/// </example>
+	/// </remarks>
+	public static object GetPath(this object obj, string path) {
+		string[] array = path.Split('.');
+		foreach (string name in array)
+			obj = obj.GetType().GetProperty(name).GetValue(obj, null);
+		return obj;
 	}
 }
