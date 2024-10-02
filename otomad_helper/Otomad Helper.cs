@@ -49,6 +49,7 @@
 #define INTERNATIONALIZED // 启用国际化翻译操作。取消定义后可暂时禁用翻译操作并锁定为简体中文，如不需要翻译时也许可以加快脚本启动速度，但其实也没快多少。
 #define PRODUCTION // 用于生产环境。定义后可以吞掉一些无关紧要的错误。取消定义后可以展现一些可能会产生隐患的错误。
 // 以下宏定义为版本号标记。如您的软件本体版本号低于这些标记，应注释掉它们。注意若启用高版本号的标记，比它更低的版本号标记必须同时启用。
+#define VER_GEQ_22 // Vegas 版本号大于或等于 22。
 #define VER_GEQ_16 // Vegas 版本号大于或等于 16。定义后可正常使用调音算法属性等功能。
 #define VER_GEQ_14 // Vegas 版本号大于或等于 14。定义后将依赖库切换到 Magix 版本。
 
@@ -377,7 +378,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				return false;
 			}
 			try {
-				vegas.ImportFile(clipName, true);
+				#if VER_GEQ_22
+					vegas.ImportFile(clipName, true, false);
+				#else
+					vegas.ImportFile(clipName, true);
+				#endif
 			} catch (Exception ee) { ShowError(new Exceptions.NoMediaTakeException(), ee); return false; }
 			Media media = vegas.Project.MediaPool.Find(clipName);
 			this.media = media;
@@ -398,7 +403,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			bool valid = true;
 			exception = null;
 			try {
-				vegas.ImportFile(clipName, true);
+				#if VER_GEQ_22
+					vegas.ImportFile(clipName, true, false);
+				#else
+					vegas.ImportFile(clipName, true);
+				#endif
 			} catch (Exception e) {
 				valid = false;
 				exception = e;

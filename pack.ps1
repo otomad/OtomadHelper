@@ -4,7 +4,7 @@ function Use-SrcPath {
 	Param (
 		[String] $fileName
 	)
-	
+
 	return Join-Path $PSScriptRoot "otomad_helper" | Join-Path -ChildPath $fileName
 }
 
@@ -13,10 +13,10 @@ function Add-ToZip {
 		[String] $zipFile,
 		[String] $file
 	)
-	
+
 	$writeTime = $lastWriteTime = (Get-Item $zipFile).LastWriteTime
 	& "C:\Program Files\WinRAR\WinRAR" a -afzip $zipFile $file
-	
+
 	while ($writeTime -eq $lastWriteTime) {
 		Start-Sleep -Milliseconds 100
 		$lastWriteTime = (Get-Item $zipFile).LastWriteTime
@@ -29,13 +29,13 @@ function Update-ToReplaceTextFileOnce {
 		[String[]] $sourceTexts,
 		[String[]] $targetTexts
 	)
-	
+
 	$content = Get-Content -Path $file -Encoding UTF8 -Raw
-	
+
 	for ($i = 0; $i -lt $sourceTexts.Length; $i++) {
 		$content = [Regex]::New($sourceTexts[$i]).Replace($content, $targetTexts[$i], 1)
 	}
-	
+
 	# Set-Content -Path $file -Value $content -Encoding UTF8
 	$utf8NoBomEncoding = New-Object Text.UTF8Encoding $False
 	[IO.File]::WriteAllLines((Join-Path $pwd $file), $content, $utf8NoBomEncoding)
@@ -46,7 +46,7 @@ function Update-UndefinedSymbols {
 		[String]   $file,
 		[String[]] $undefinedSymbols
 	)
-	
+
 	if ($undefinedSymbols.Length -ne 0) {
 		$sourceTexts = $undefinedSymbols | ForEach-Object { "#define " + $_ }
 		$targetTexts = $undefinedSymbols | ForEach-Object { "// #define " + $_ }
@@ -55,14 +55,17 @@ function Update-UndefinedSymbols {
 }
 
 $infos = @{
-	VegasVersions    = 16..21 -join "";
+	VegasVersions    = 22;
 	UndefinedSymbols = @();
 }, @{
+	VegasVersions    = 16..21 -join "";
+	UndefinedSymbols = @("VER_GEQ_22");
+}, @{
 	VegasVersions    = 14..15 -join "";
-	UndefinedSymbols = @("VER_GEQ_16");
+	UndefinedSymbols = @("VER_GEQ_22", "VER_GEQ_16");
 }, @{
 	VegasVersions    = 13;
-	UndefinedSymbols = @("VER_GEQ_16", "VER_GEQ_14");
+	UndefinedSymbols = @("VER_GEQ_22", "VER_GEQ_16", "VER_GEQ_14");
 }
 
 $version = [Regex]::New("(?<=VERSION-)[\d\.]+").Match((Get-Content -Path '..\README.md' -Encoding UTF8)).Value
