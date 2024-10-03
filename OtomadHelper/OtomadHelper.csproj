@@ -8,7 +8,7 @@
 		<Company>OTOMAD+</Company>
 		<Authors>$(Company)</Authors>
 		<Description>YTPMV/YTP/Otomad Extension for Vegas Pro</Description>
-		<Copyright>Copyright © otomad 2023 ~</Copyright>
+		<Copyright>Copyright © 2021 ~ Present, Rantetsu Inori</Copyright>
 		<AssemblyVersion>7.9.0</AssemblyVersion>
 		<FileVersion>$(AssemblyVersion)</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
