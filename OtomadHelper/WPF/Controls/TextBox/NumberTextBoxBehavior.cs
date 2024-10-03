@@ -6,7 +6,7 @@ using Microsoft.Xaml.Behaviors;
 
 namespace OtomadHelper.WPF.Common;
 
-[DependencyProperty<NumberTextBoxInputMode>("NumberInputMode", DefaultValueExpression = "NumberTextBoxInputMode.Text")]
+[AttachedDependencyProperty<NumberTextBoxInputMode, TextBox>("NumberInputMode", DefaultValueExpression = "NumberTextBoxInputMode.Text")]
 public partial class NumberTextBoxBehavior : Behavior<TextBox> {
 	protected override void OnAttached() {
 		AssociatedObject.PreviewTextInput += TextBox_TextInput;
@@ -21,6 +21,8 @@ public partial class NumberTextBoxBehavior : Behavior<TextBox> {
 		AssociatedObject.PreviewTextInput -= TextBox_TextInput;
 		DataObject.RemovePastingHandler(AssociatedObject, TextBox_Pasting);
 	}
+
+	private NumberTextBoxInputMode NumberInputMode => GetNumberInputMode(AssociatedObject);
 
 	private void TextBox_TextInput(object sender, TextCompositionEventArgs e) {
 		if (NumberInputMode == NumberTextBoxInputMode.Text) return;

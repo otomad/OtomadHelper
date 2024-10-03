@@ -1,3 +1,5 @@
+#pragma warning disable CS8600
+
 namespace OtomadHelper.Helpers;
 
 public static class MathEx {
@@ -71,7 +73,7 @@ public static class MathEx {
 	/// </list>
 	/// </returns>
 	public static T Clamp<T>(T value, T min, T max) where T : IComparable<T> =>
-		Math.Max((dynamic)min!, Math.Min((dynamic)value!, (dynamic)max!));
+		value.CompareTo(min) < 0 ? min : value.CompareTo(max) > 0 ? max : value;
 
 	/// <summary>
 	/// <para><b>Inaccurate Thermometer</b></para>
@@ -98,7 +100,10 @@ public static class MathEx {
 	/// <param name="a">The minimum value of the new range.</param>
 	/// <param name="b">The maximum value of the new range.</param>
 	/// <returns>The mapped value within the new range.</returns>
-	public static TOutput Map<TOutput>(decimal x, decimal min, decimal max, TOutput a, TOutput b) =>
-		(TOutput)(dynamic)(((decimal)(dynamic)b! - (decimal)(dynamic)a!) * (x - min) / (max - min) + (decimal)(dynamic)a!);
+	public static TOutput Map<TOutput>(double x, double min, double max, TOutput a, TOutput b) =>
+		min == (double)(dynamic)a && max == (double)(dynamic)b ? (TOutput)(dynamic)x :
+		(TOutput)(dynamic)(((double)(dynamic)b - (double)(dynamic)a) * (x - min) / (max - min) + (double)(dynamic)a);
 
+	public static TOutput ClampMap<TOutput>(double x, double min, double max, TOutput a, TOutput b) =>
+		Clamp((dynamic)Map(x, min, max, a, b), a, b);
 }

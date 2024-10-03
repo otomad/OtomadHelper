@@ -24,7 +24,7 @@ public class ColorPickerValuesToTextConverter : IValueConverter {
 	[SuppressMessage("Style", "IDE0008")]
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 		var dictionary = (Dictionary<ColorPickerModelAxis, double>)value;
-		return dictionary.TryGetValue(ColorPickerModelAxis.FromName((string)parameter), out double result) ? result.ToString() : string.Empty;
+		return dictionary.TryGetValue(ColorPickerModelAxis.FromName((string)parameter), out double result) ? Math.Round(result).ToString() : string.Empty;
 	}
 
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>

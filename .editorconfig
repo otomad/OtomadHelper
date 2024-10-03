@@ -210,7 +210,7 @@ dotnet_diagnostic.IDE0028.severity = error
 dotnet_diagnostic.IDE0300.severity = error
 
 # Default severity for analyzer diagnostics with category 'Style'
-dotnet_analyzer_diagnostic.category-Style.severity = warning
+dotnet_analyzer_diagnostic.category-Style.severity = silent
 
 # IDE0005: Using 指令是不需要的。
 dotnet_diagnostic.IDE0005.severity = silent

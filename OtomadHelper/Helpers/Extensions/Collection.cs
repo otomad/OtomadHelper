@@ -124,13 +124,12 @@ public static partial class Extensions {
 		tupleType ??= typeof(ITuple);
 		int length = list.Count;
 		MethodInfo[] createTupleMethods = typeof(Tuple).GetMethods(BindingFlags.Public | BindingFlags.Static)!;
-		MethodInfo? method = createTupleMethods.FirstOrDefault(method => method.GetParameters().Length == length);
-		if (method is null)
+		MethodInfo? method = createTupleMethods.FirstOrDefault(method => method.GetParameters().Length == length) ??
 			throw new Exception($"You can only create a tuple containing up to 8 items, currently providing {length} items");
 		Type[] genericArgs = tupleType.GenericTypeArguments;
 		if (genericArgs.Length == 0) genericArgs = list.Select(item => item.GetType()).ToArray();
 		MethodInfo genericMethod = method.MakeGenericMethod(genericArgs)!;
-		return (ITuple)genericMethod.Invoke(null, list.ToArray());
+		return (ITuple)genericMethod.Invoke(null, [.. list]);
 	}
 
 	/// <summary>
@@ -192,4 +191,22 @@ public static partial class Extensions {
 			return false;
 		}
 	}
+
+	/// <summary>
+	/// Convert a <see cref="Tuple" /> or <see cref="ValueTuple" /> to <see cref="Array" />.
+	/// </summary>
+	/// <param name="tuple"><see cref="Tuple" /> or <see cref="ValueTuple" />.</param>
+	public static T[] ToArray<T>(this ITuple tuple) {
+		T[] array = new T[tuple.Length];
+		for (int i = 0; i < tuple.Length; i++)
+			array[i] = (T)tuple[i];
+		return array;
+	}
+
+	/// <summary>
+	/// Get <see cref="Tuple" /> or <see cref="ValueTuple" /> item value by its index.
+	/// </summary>
+	/// <param name="tuple"><see cref="Tuple" /> or <see cref="ValueTuple" />.</param>
+	/// <param name="index">The index of the item.</param>
+	public static T Get<T>(this ITuple tuple, int index) => (T)tuple[index];
 }

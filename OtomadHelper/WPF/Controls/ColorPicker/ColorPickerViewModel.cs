@@ -1,7 +1,10 @@
-using System.Windows;
 using System.Windows.Media;
 
 using Wacton.Unicolour;
+
+using ThreeD = (double X, double Y, double Z);
+using ThreeDRange = ((double Min, double Max) X, (double Min, double Max) Y, (double Min, double Max) Z);
+using Range = (double Min, double Max);
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -16,27 +19,28 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		[ColourSpace.Hsl, ColourSpace.Rgb255, ColourSpace.Hsb, ColourSpace.Hwb, ColourSpace.Oklab, ColourSpace.Oklch];
 	private bool isColorChanging = false;
 	partial void OnColorChanged(Unicolour color) {
-		//Values["Alpha"] = color.Alpha.A255;
-		foreach (ColourSpace model in KnownModels) {
-			ColourTriplet triplet = ToTriplet(model);
-			Values[new(model, 0)] = triplet.First;
-			Values[new(model, 1)] = triplet.Second;
-			Values[new(model, 2)] = triplet.Third;
-		}
-		lock (this)
-			if (!isColorChanging) {
-				isColorChanging = true;
-				OnPropertyChanged(nameof(Values));
-				UpdateSources();
-				isColorChanging = false;
+		lock (this) {
+			if (isColorChanging) return;
+			isColorChanging = true;
+			//Values["Alpha"] = color.Alpha.A255;
+			foreach (ColourSpace model in KnownModels) {
+				ThreeD triplet = ToTriplet(model);
+				ThreeDRange inputRange = GetInputRange(model), outputRange = GetOutputRange(model);
+				Values[new(model, 0)] = MathEx.ClampMap(triplet.X, outputRange.X.Min, outputRange.X.Max, inputRange.X.Min, inputRange.X.Max);
+				Values[new(model, 1)] = MathEx.ClampMap(triplet.Y, outputRange.Y.Min, outputRange.Y.Max, inputRange.Y.Min, inputRange.Y.Max);
+				Values[new(model, 2)] = MathEx.ClampMap(triplet.Z, outputRange.Z.Min, outputRange.Z.Max, inputRange.Z.Min, inputRange.Z.Max);
 			}
+			OnPropertyChanged(nameof(Values));
+			UpdateSources();
+			isColorChanging = false;
+		}
 	}
 
 	partial void OnModelAxisChanged(ColorPickerModelAxis value) {
 		UpdateSources();
 	}
 
-	private ColourTriplet ToTriplet(ColourSpace model) {
+	private ThreeD ToTriplet(ColourSpace model) {
 		ColourRepresentation representation = model switch {
 			ColourSpace.Rgb255 => Color.Rgb.Byte255,
 			ColourSpace.Hsl => Color.Hsl,
@@ -48,7 +52,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			ColourSpace.Oklch => Color.Oklch,
 			_ => throw new NotImplementedException(),
 		};
-		ColourTriplet triplet = representation.Triplet;
+		ThreeD triplet = representation.Triplet.Tuple;
 		return triplet;
 	}
 
@@ -59,61 +63,69 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	[ObservableProperty]
 	private Dictionary<ColorPickerModelAxis, double> values = [];
 
+	private bool isTextChanging = false;
 	[RelayCommand]
 	public void TextChanged((string text, string name) tuple) {
-		double alpha = Color.Alpha.A;
-		ColorPickerModelAxis modelAxis = ColorPickerModelAxis.FromName(tuple.name);
-		if (!double.TryParse(tuple.text, out double value)) return;
-		double[] triplet = ToTriplet(modelAxis.Model).ToArray();
-		triplet[modelAxis.Axis] = value;
-		Color = new(modelAxis.Model, triplet[0], triplet[1], triplet[2], alpha);
+		lock (this) {
+			if (isTextChanging) return;
+			isTextChanging = true;
+			double alpha = Color.Alpha.A;
+			(ColourSpace model, int axis) = ColorPickerModelAxis.FromName(tuple.name);
+			//ColourSpace model = modelAxis.Model;
+			//int axis = modelAxis
+			if (!double.TryParse(tuple.text, out double value)) return;
+			double[] triplet = ToTriplet(model).ToArray<double>();
+			Range inputRange = GetInputRange(model).Get<Range>(axis), outputRange = GetOutputRange(model).Get<Range>(axis);
+			triplet[axis] = MathEx.Map(value, inputRange.Min, inputRange.Max, outputRange.Min, outputRange.Max);
+			Color = new(model, triplet[0], triplet[1], triplet[2], alpha);
+			isTextChanging = false;
+		}
 	}
 
-	[ObservableProperty]
-	private WriteableBitmap primarySource = new(64, 64, 96, 96, PixelFormats.Rgb24, null);
-	[ObservableProperty]
-	private WriteableBitmap secondarySource = new(1, 64, 96, 96, PixelFormats.Rgb24, null);
+	private const int SOURCE_RESOLUTION = 32;
 
-	[SuppressMessage("Style", "IDE0008")]
+	[ObservableProperty]
+	private WriteableBitmap primarySource = new(SOURCE_RESOLUTION, SOURCE_RESOLUTION, 96, 96, PixelFormats.Rgb24, null);
+	[ObservableProperty]
+	private WriteableBitmap secondarySource = new(1, SOURCE_RESOLUTION, 96, 96, PixelFormats.Rgb24, null);
+
 	private void UpdateSources() { // FIXME: So stuck.
 		const int CHANNEL = 3;
-		ColourTriplet triplet = ToTriplet(ModelAxis.Model);
-		var range = GetRange(ModelAxis.Model);
+		Tuple<double, double, double> tuple = ToTriplet(ModelAxis.Model).ToTuple();
+		ThreeDRange range = GetOutputRange(ModelAxis.Model);
 		{
 			int width = PrimarySource.PixelWidth, height = PrimarySource.PixelHeight, stride = PrimarySource.BackBufferStride;
 			unsafe {
 				byte* pixels = (byte*)PrimarySource.BackBuffer.ToPointer();
 				PrimarySource.Lock();
 				//byte[] pixels = new byte[height * width * CHANNEL];
-				new Thread(() => {
-					for (int row = 0; row < height; row++) {
-						for (int col = 0; col < width; col++) {
-							int i = row * stride + col * CHANNEL;
-							(double, double, double) tuple = triplet.Tuple;
-							switch (ModelAxis.Axis) {
-								case 0:
-									tuple.Item2 = MathEx.Map(col, 0, width - 1, range.Item2.min, range.Item2.max);
-									tuple.Item3 = MathEx.Map(row, 0, height - 1, range.Item3.max, range.Item3.min);
-									break;
-								case 1:
-									tuple.Item1 = MathEx.Map(col, 0, width - 1, range.Item1.min, range.Item1.max);
-									tuple.Item3 = MathEx.Map(row, 0, height - 1, range.Item3.max, range.Item3.min);
-									break;
-								case 2:
-									tuple.Item1 = MathEx.Map(col, 0, width - 1, range.Item1.min, range.Item1.max);
-									tuple.Item2 = MathEx.Map(row, 0, height - 1, range.Item2.max, range.Item2.min);
-									break;
-								default:
-									continue;
-							}
-							Unicolour color = new(ModelAxis.Model, tuple);
-							Rgb255 rgb = color.Rgb.Byte255;
-							pixels[i] = (byte)rgb.R;
-							pixels[i + 1] = (byte)rgb.G;
-							pixels[i + 2] = (byte)rgb.B;
+				for (int row = 0; row < height; row++) {
+					for (int col = 0; col < width; col++) {
+						int i = row * stride + col * CHANNEL;
+						ThreeD triplet = tuple.ToValueTuple();
+						switch (ModelAxis.Axis) {
+							case 0:
+								triplet.Y = MathEx.Map(col, 0, width - 1, range.Y.Min, range.Y.Max);
+								triplet.Z = MathEx.Map(row, 0, height - 1, range.Z.Max, range.Z.Min);
+								break;
+							case 1:
+								triplet.X = MathEx.Map(col, 0, width - 1, range.X.Min, range.X.Max);
+								triplet.Z = MathEx.Map(row, 0, height - 1, range.Z.Max, range.Z.Min);
+								break;
+							case 2:
+								triplet.X = MathEx.Map(col, 0, width - 1, range.X.Min, range.X.Max);
+								triplet.Y = MathEx.Map(row, 0, height - 1, range.Y.Max, range.Y.Min);
+								break;
+							default:
+								continue;
 						}
+						Unicolour color = new(ModelAxis.Model, triplet);
+						Rgb255 rgb = color.Rgb.Byte255;
+						pixels[i] = (byte)rgb.ConstrainedR;
+						pixels[i + 1] = (byte)rgb.ConstrainedG;
+						pixels[i + 2] = (byte)rgb.ConstrainedB;
 					}
-				}).JoinStart();
+				}
 				//PrimarySource.WritePixels(new(0, 0, width, height), pixels, PrimarySource.BackBufferStride, 0);
 				PrimarySource.AddDirtyRect(new(0, 0, width, height));
 				PrimarySource.Unlock();
@@ -125,29 +137,28 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 				byte* pixels = (byte*)SecondarySource.BackBuffer;
 				SecondarySource.Lock();
 				//byte[] pixels = new byte[height * 1 * CHANNEL];
-				new Thread(() => {
-					for (int row = 0; row < height; row++) {
-						int i = row * stride;
-						(double, double, double) tuple = triplet.Tuple;
-						switch (ModelAxis.Axis) {
-							case 0:
-								tuple.Item1 = MathEx.Map(row, 0, height - 1, range.Item1.max, range.Item1.min);
-								break;
-							case 1:
-								tuple.Item2 = MathEx.Map(row, 0, height - 1, range.Item2.max, range.Item2.min);
-								break;
-							case 2:
-								tuple.Item3 = MathEx.Map(row, 0, height - 1, range.Item3.max, range.Item3.min);
-								break;
-							default:
-								continue;
-						}
-						Unicolour color = new(ModelAxis.Model, tuple);
-						pixels[i] = (byte)color.Rgb.Byte255.R;
-						pixels[i + 1] = (byte)color.Rgb.Byte255.G;
-						pixels[i + 2] = (byte)color.Rgb.Byte255.B;
+				for (int row = 0; row < height; row++) {
+					int i = row * stride;
+					ThreeD triplet = tuple.ToValueTuple();
+					switch (ModelAxis.Axis) {
+						case 0:
+							triplet.X = MathEx.Map(row, 0, height - 1, range.X.Max, range.X.Min);
+							break;
+						case 1:
+							triplet.Y = MathEx.Map(row, 0, height - 1, range.Y.Max, range.Y.Min);
+							break;
+						case 2:
+							triplet.Z = MathEx.Map(row, 0, height - 1, range.Z.Max, range.Z.Min);
+							break;
+						default:
+							continue;
 					}
-				}).JoinStart();
+					Unicolour color = new(ModelAxis.Model, triplet);
+					Rgb255 rgb = color.Rgb.Byte255;
+					pixels[i] = (byte)rgb.ConstrainedR;
+					pixels[i + 1] = (byte)rgb.ConstrainedG;
+					pixels[i + 2] = (byte)rgb.ConstrainedB;
+				}
 				//SecondarySource.WritePixels(new(0, 0, 1, height), pixels, CHANNEL, 0);
 				SecondarySource.AddDirtyRect(new(0, 0, width, height));
 				SecondarySource.Unlock();
@@ -155,7 +166,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		}
 	}
 
-	private static ((double min, double max), (double min, double max), (double min, double max)) GetRange(ColourSpace model) {
+	private static ThreeDRange GetOutputRange(ColourSpace model) {
 		return model switch {
 			ColourSpace.Rgb255 => ((0, 255), (0, 255), (0, 255)),
 			ColourSpace.Hsl => ((0, 360), (0, 1), (0, 1)),
@@ -163,6 +174,18 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			ColourSpace.Hwb => ((0, 360), (0, 1), (0, 1)),
 			ColourSpace.Oklab => ((0, 1), (-0.5, 0.5), (-0.5, 0.5)),
 			ColourSpace.Oklch => ((0, 1), (0, 0.5), (0, 360)),
+			_ => throw new NotImplementedException(),
+		};
+	}
+
+	private static ThreeDRange GetInputRange(ColourSpace model) {
+		return model switch {
+			ColourSpace.Rgb255 => ((0, 255), (0, 255), (0, 255)),
+			ColourSpace.Hsl => ((0, 360), (0, 100), (0, 100)),
+			ColourSpace.Hsb => ((0, 360), (0, 100), (0, 100)),
+			ColourSpace.Hwb => ((0, 360), (0, 100), (0, 100)),
+			ColourSpace.Oklab => ((0, 100), (-128, 128), (-128, 128)),
+			ColourSpace.Oklch => ((0, 100), (0, 230), (0, 360)),
 			_ => throw new NotImplementedException(),
 		};
 	}
@@ -194,5 +217,10 @@ public struct ColorPickerModelAxis(ColourSpace model, int axis) {
 			},
 			int.Parse(splitted[1])
 		);
+	}
+
+	internal void Deconstruct(out ColourSpace model, out int axis) {
+		model = Model;
+		axis = Axis;
 	}
 }

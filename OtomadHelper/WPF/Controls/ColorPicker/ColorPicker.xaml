@@ -53,12 +53,13 @@
 				<Setter Property="Margin" Value="5,2" />
 				<Setter Property="TextAlignment" Value="Right" />
 				<Setter Property="Text" Value="{m:Binding Values, Converter={StaticResource ValuesToText}, ConverterParameter={Binding Tag, RelativeSource={RelativeSource Self}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}" />
+				<Setter Property="m:NumberTextBoxBehavior.NumberInputMode" Value="Integer" />
 				<Setter Property="m:InteractivityItems.Template">
 					<Setter.Value>
 						<m:InteractivityTemplate>
 							<m:InteractivityItems>
 								<m:InteractivityItems.Behaviors>
-									<m:NumberTextBoxBehavior NumberInputMode="Decimal" />
+									<m:NumberTextBoxBehavior />
 								</m:InteractivityItems.Behaviors>
 								<m:InteractivityItems.Triggers>
 									<i:EventTrigger EventName="TextChanged">
@@ -69,6 +70,12 @@
 						</m:InteractivityTemplate>
 					</Setter.Value>
 				</Setter>
+			</Style>
+
+			<Style TargetType="Image">
+				<Setter Property="Stretch" Value="Fill" />
+				<Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+				<Setter Property="RenderOptions.EdgeMode" Value="Unspecified" />
 			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>
@@ -85,7 +92,6 @@
 			Grid.Column="2"
 			Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
 			Source="{Binding SecondarySource, Mode=OneTime}"
-			Stretch="Fill"
 			/>
 
 		<Grid Grid.Column="4">
@@ -135,8 +141,8 @@
 			<TextBox Tag="HWB.1" Grid.Column="5" Grid.Row="5" />
 			<TextBox Tag="HWB.2" Grid.Column="5" Grid.Row="6" />
 			<TextBox Tag="OKLAB.0" Grid.Column="9" Grid.Row="0" />
-			<TextBox Tag="OKLAB.1" Grid.Column="9" Grid.Row="1" />
-			<TextBox Tag="OKLAB.2" Grid.Column="9" Grid.Row="2" />
+			<TextBox Tag="OKLAB.1" Grid.Column="9" Grid.Row="1" m:NumberTextBoxBehavior.NumberInputMode="SignedInteger" />
+			<TextBox Tag="OKLAB.2" Grid.Column="9" Grid.Row="2" m:NumberTextBoxBehavior.NumberInputMode="SignedInteger" />
 			<TextBox Tag="OKLCH.0" Grid.Column="9" Grid.Row="4" />
 			<TextBox Tag="OKLCH.1" Grid.Column="9" Grid.Row="5" />
 			<TextBox Tag="OKLCH.2" Grid.Column="9" Grid.Row="6" />
