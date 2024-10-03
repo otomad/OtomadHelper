@@ -169,6 +169,14 @@ public class BooleanAndConverter : IMultiValueConverter {
 		throw new NotImplementedException();
 }
 
+public class BooleanNotConverter : IValueConverter {
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+		BooleanOrConverter.ResolveTargetType(!BooleanOrConverter.IsTruthy(value), targetType);
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		Convert(value, targetType, parameter, culture);
+}
+
 [ValueConversion(typeof(Rect), typeof(DrawingBrush))]
 public class RectToDrawingBrushConverter : IValueConverter {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {

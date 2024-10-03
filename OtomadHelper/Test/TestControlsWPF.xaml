@@ -21,7 +21,7 @@
 			<StackPanel>
 				<TextBox Width="276" />
 				<TextBox Width="276" IsEnabled="False" Text="Hello world!" />
-				
+
 				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange">Mica</RadioButton>
 				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange">MicaAlt</RadioButton>
 				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange" IsChecked="True">Acrylic</RadioButton>
