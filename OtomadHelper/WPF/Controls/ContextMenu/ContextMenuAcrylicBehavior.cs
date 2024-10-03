@@ -1,16 +1,27 @@
+using Microsoft.Xaml.Behaviors;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
-
-using BaseContextMenu = System.Windows.Controls.ContextMenu;
 
 namespace OtomadHelper.WPF.Controls;
 
-[AttachedDependencyProperty<bool, BaseContextMenu>("FixCanExecute", DefaultValue = false)]
-public partial class ContextMenu : CustomControlResourceDictionary {
-	public void ContextMenu_IsVisibleChanged(object sender, RoutedPropertyChangedEventArgs<bool> e) {
-		BaseContextMenu contextMenu = (BaseContextMenu)sender;
+[AttachedDependencyProperty<bool, ContextMenu>("FixCanExecute", DefaultValue = false)]
+public partial class ContextMenuAcrylicBehavior : Behavior<ContextMenu> {
+	protected override void OnAttached() {
+		AssociatedObject.IsVisibleChanged += ContextMenu_IsVisibleChanged;
+
+		base.OnAttached();
+	}
+
+	protected override void OnDetaching() {
+		base.OnDetaching();
+
+		AssociatedObject.IsVisibleChanged -= ContextMenu_IsVisibleChanged;
+	}
+
+	private void ContextMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e) {
+		ContextMenu contextMenu = AssociatedObject;
 
 		if (!contextMenu.IsVisible) return;
 		InitializeComponent(contextMenu);
@@ -26,7 +37,7 @@ public partial class ContextMenu : CustomControlResourceDictionary {
 					}
 	}
 
-	internal static void InitializeComponent(BaseContextMenu contextMenu) {
+	internal static void InitializeComponent(ContextMenu contextMenu) {
 		IntPtr? handle = (PresentationSource.FromVisual(contextMenu) as HwndSource)?.Handle;
 		if (handle is not IntPtr Handle) return;
 

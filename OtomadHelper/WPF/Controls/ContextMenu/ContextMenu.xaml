@@ -1,8 +1,8 @@
 <m:CustomControlResourceDictionary
-	x:Class="OtomadHelper.WPF.Controls.ContextMenu"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
@@ -16,6 +16,7 @@
 		<Setter Property="BorderBrush" Value="{DynamicResource SurfaceStrokeFlyout}" />
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="FontFamily" Value="{Binding DefaultFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
+		<Setter Property="TextBlock.TextAlignment" Value="Left" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="ContextMenu">
@@ -32,8 +33,17 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<Setter Property="m:AttachedEvents.RaiseIsVisibleChanged" Value="True" />
-		<EventSetter Event="m:AttachedEvents.IsVisibleChanged" Handler="ContextMenu_IsVisibleChanged" />
+		<Setter Property="m:InteractivityItems.Template">
+			<Setter.Value>
+				<m:InteractivityTemplate>
+					<m:InteractivityItems>
+						<m:InteractivityItems.Behaviors>
+							<c:ContextMenuAcrylicBehavior />
+						</m:InteractivityItems.Behaviors>
+					</m:InteractivityItems>
+				</m:InteractivityTemplate>
+			</Setter.Value>
+		</Setter>
 
 		<Style.Resources>
 			<Style x:Key="ShortcutKey" TargetType="TextBlock">

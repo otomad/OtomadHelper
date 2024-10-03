@@ -22,7 +22,7 @@ namespace OtomadHelper.WPF.Controls;
 /// </remarks>
 [AttachedDependencyProperty<double, UIElement>("WidthFraction", DefaultValue = 1d, OnChanged = "OnClippingInvalidated", Validate = true)]
 [AttachedDependencyProperty<double, UIElement>("HeightFraction", DefaultValue = 1d, OnChanged = "OnClippingInvalidated", Validate = true)]
-[DependencyProperty<Brush>("Background", DefaultValueExpression = "Brushes.Transparent", AffectsRender = true)]
+[DependencyProperty<Brush>("Background", DefaultValueExpression = "System.Windows.Media.Brushes.Transparent", AffectsRender = true)]
 [DependencyProperty<ClipperConstraintSource>("Constraint", DefaultValue = ClipperConstraintSource.WidthAndHeight, Validate = true)]
 public sealed partial class Clipper : Decorator {
 	//public static readonly DependencyProperty WidthFractionProperty = DependencyProperty.RegisterAttached("WidthFraction", typeof(double), typeof(Clipper), new(1d, OnClippingInvalidated), IsFraction);
