@@ -14,6 +14,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 
 	private static readonly ColourSpace[] KnownModels =
 		[ColourSpace.Hsl, ColourSpace.Rgb255, ColourSpace.Hsb, ColourSpace.Hwb, ColourSpace.Oklab, ColourSpace.Oklch];
+	private bool isColorChanging = false;
 	partial void OnColorChanged(Unicolour color) {
 		//Values["Alpha"] = color.Alpha.A255;
 		foreach (ColourSpace model in KnownModels) {
@@ -22,14 +23,17 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			Values[new(model, 1)] = triplet.Second;
 			Values[new(model, 2)] = triplet.Third;
 		}
-		OnPropertyChanged(nameof(Values));
-		if (timer.IsStart) timer.Stop();
-		timer.SingleShot();
+		lock (this)
+			if (!isColorChanging) {
+				isColorChanging = true;
+				OnPropertyChanged(nameof(Values));
+				UpdateSources();
+				isColorChanging = false;
+			}
 	}
 
 	partial void OnModelAxisChanged(ColorPickerModelAxis value) {
-		if (timer.IsStart) timer.Stop();
-		timer.SingleShot();
+		UpdateSources();
 	}
 
 	private ColourTriplet ToTriplet(ColourSpace model) {
@@ -66,41 +70,74 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	}
 
 	[ObservableProperty]
-	private WriteableBitmap primarySource = new(128, 128, 96, 96, PixelFormats.Rgb24, null);
+	private WriteableBitmap primarySource = new(64, 64, 96, 96, PixelFormats.Rgb24, null);
 	[ObservableProperty]
-	private WriteableBitmap secondarySource = new(1, 128, 96, 96, PixelFormats.Rgb24, null);
+	private WriteableBitmap secondarySource = new(1, 64, 96, 96, PixelFormats.Rgb24, null);
 
-	private readonly ITimer timer;
-	public ColorPickerViewModel() : base() {
-		timer = new ITimer.WinForm(UpdateSources, 10);
-	}
-
+	[SuppressMessage("Style", "IDE0008")]
 	private void UpdateSources() { // FIXME: So stuck.
 		const int CHANNEL = 3;
 		ColourTriplet triplet = ToTriplet(ModelAxis.Model);
 		var range = GetRange(ModelAxis.Model);
 		{
-			int width = PrimarySource.PixelWidth, height = PrimarySource.PixelHeight;
+			int width = PrimarySource.PixelWidth, height = PrimarySource.PixelHeight, stride = PrimarySource.BackBufferStride;
 			unsafe {
 				byte* pixels = (byte*)PrimarySource.BackBuffer.ToPointer();
 				PrimarySource.Lock();
 				//byte[] pixels = new byte[height * width * CHANNEL];
-				for (int row = 0; row < height; row++) {
-					for (int col = 0; col < width; col++) {
-						int i = row * width * CHANNEL + col * CHANNEL;
+				new Thread(() => {
+					for (int row = 0; row < height; row++) {
+						for (int col = 0; col < width; col++) {
+							int i = row * stride + col * CHANNEL;
+							(double, double, double) tuple = triplet.Tuple;
+							switch (ModelAxis.Axis) {
+								case 0:
+									tuple.Item2 = MathEx.Map(col, 0, width - 1, range.Item2.min, range.Item2.max);
+									tuple.Item3 = MathEx.Map(row, 0, height - 1, range.Item3.max, range.Item3.min);
+									break;
+								case 1:
+									tuple.Item1 = MathEx.Map(col, 0, width - 1, range.Item1.min, range.Item1.max);
+									tuple.Item3 = MathEx.Map(row, 0, height - 1, range.Item3.max, range.Item3.min);
+									break;
+								case 2:
+									tuple.Item1 = MathEx.Map(col, 0, width - 1, range.Item1.min, range.Item1.max);
+									tuple.Item2 = MathEx.Map(row, 0, height - 1, range.Item2.max, range.Item2.min);
+									break;
+								default:
+									continue;
+							}
+							Unicolour color = new(ModelAxis.Model, tuple);
+							Rgb255 rgb = color.Rgb.Byte255;
+							pixels[i] = (byte)rgb.R;
+							pixels[i + 1] = (byte)rgb.G;
+							pixels[i + 2] = (byte)rgb.B;
+						}
+					}
+				}).JoinStart();
+				//PrimarySource.WritePixels(new(0, 0, width, height), pixels, PrimarySource.BackBufferStride, 0);
+				PrimarySource.AddDirtyRect(new(0, 0, width, height));
+				PrimarySource.Unlock();
+			}
+		}
+		{
+			int width = SecondarySource.PixelWidth, height = SecondarySource.PixelHeight, stride = SecondarySource.BackBufferStride;
+			unsafe {
+				byte* pixels = (byte*)SecondarySource.BackBuffer;
+				SecondarySource.Lock();
+				//byte[] pixels = new byte[height * 1 * CHANNEL];
+				new Thread(() => {
+					for (int row = 0; row < height; row++) {
+						int i = row * stride;
 						(double, double, double) tuple = triplet.Tuple;
 						switch (ModelAxis.Axis) {
 							case 0:
-								tuple.Item2 = MathEx.Map(col, 0, width - 1, range.Item2.min, range.Item2.max);
-								tuple.Item3 = MathEx.Map(row, 0, height - 1, range.Item3.max, range.Item3.min);
+								tuple.Item1 = MathEx.Map(row, 0, height - 1, range.Item1.max, range.Item1.min);
 								break;
 							case 1:
-								tuple.Item1 = MathEx.Map(col, 0, width - 1, range.Item1.min, range.Item1.max);
-								tuple.Item3 = MathEx.Map(row, 0, height - 1, range.Item3.max, range.Item3.min);
+								tuple.Item2 = MathEx.Map(row, 0, height - 1, range.Item2.max, range.Item2.min);
 								break;
 							case 2:
-								tuple.Item1 = MathEx.Map(col, 0, width - 1, range.Item1.min, range.Item1.max);
-								tuple.Item2 = MathEx.Map(row, 0, height - 1, range.Item2.max, range.Item2.min);
+								tuple.Item3 = MathEx.Map(row, 0, height - 1, range.Item3.max, range.Item3.min);
 								break;
 							default:
 								continue;
@@ -110,42 +147,10 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 						pixels[i + 1] = (byte)color.Rgb.Byte255.G;
 						pixels[i + 2] = (byte)color.Rgb.Byte255.B;
 					}
-				}
-				//PrimarySource.WritePixels(new Int32Rect(0, 0, width, height), pixels, PrimarySource.BackBufferStride, 0);
-				PrimarySource.AddDirtyRect(new Int32Rect(0, 0, width, height));
-				PrimarySource.Unlock();
-			}
-		}
-		{
-			int height = SecondarySource.PixelHeight;
-			unsafe {
-				//byte* pixels = (byte*)SecondarySource.BackBuffer.ToPointer();
-				//SecondarySource.Lock();
-				byte[] pixels = new byte[height * 1 * CHANNEL];
-				for (int row = 0; row < height; row++) {
-					int i = row * CHANNEL;
-					(double, double, double) tuple = triplet.Tuple;
-					switch (ModelAxis.Axis) {
-						case 0:
-							tuple.Item1 = MathEx.Map(row, 0, height - 1, range.Item1.max, range.Item1.min);
-							break;
-						case 1:
-							tuple.Item2 = MathEx.Map(row, 0, height - 1, range.Item2.max, range.Item2.min);
-							break;
-						case 2:
-							tuple.Item3 = MathEx.Map(row, 0, height - 1, range.Item3.max, range.Item3.min);
-							break;
-						default:
-							continue;
-					}
-					Unicolour color = new(ModelAxis.Model, tuple);
-					pixels[i] = (byte)color.Rgb.Byte255.R;
-					pixels[i + 1] = (byte)color.Rgb.Byte255.G;
-					pixels[i + 2] = (byte)color.Rgb.Byte255.B;
-				}
-				SecondarySource.WritePixels(new Int32Rect(0, 0, 1, height), pixels, CHANNEL, 0);
-				//SecondarySource.AddDirtyRect(new Int32Rect(0, 0, 1, height));
-				//SecondarySource.Unlock();
+				}).JoinStart();
+				//SecondarySource.WritePixels(new(0, 0, 1, height), pixels, CHANNEL, 0);
+				SecondarySource.AddDirtyRect(new(0, 0, width, height));
+				SecondarySource.Unlock();
 			}
 		}
 	}

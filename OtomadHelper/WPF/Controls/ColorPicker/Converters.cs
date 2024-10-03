@@ -21,7 +21,7 @@ public class ColorPickerModelAxisToCheckedConverter : IValueConverter {
 
 [ValueConversion(typeof(Dictionary<ColorPickerModelAxis, double>), typeof(string))]
 public class ColorPickerValuesToTextConverter : IValueConverter {
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0008")]
+	[SuppressMessage("Style", "IDE0008")]
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 		var dictionary = (Dictionary<ColorPickerModelAxis, double>)value;
 		return dictionary.TryGetValue(ColorPickerModelAxis.FromName((string)parameter), out double result) ? result.ToString() : string.Empty;

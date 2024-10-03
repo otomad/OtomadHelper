@@ -238,4 +238,9 @@ public static partial class Extensions {
 			obj = obj.GetType().GetProperty(name).GetValue(obj, null);
 		return obj;
 	}
+
+	public static void JoinStart(this Thread thread) {
+		thread.Start();
+		thread.Join();
+	}
 }

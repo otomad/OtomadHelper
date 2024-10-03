@@ -78,13 +78,13 @@
 			Grid.Column="0"
 			Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
 			Width="{Binding Height, RelativeSource={RelativeSource Self}}"
-			Source="{Binding PrimarySource}"
+			Source="{Binding PrimarySource, Mode=OneTime}"
 			/>
 
 		<Image
 			Grid.Column="2"
 			Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
-			Source="{Binding SecondarySource}"
+			Source="{Binding SecondarySource, Mode=OneTime}"
 			Stretch="Fill"
 			/>
 
