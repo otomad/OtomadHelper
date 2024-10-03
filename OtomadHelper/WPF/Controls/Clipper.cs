@@ -20,11 +20,15 @@ namespace OtomadHelper.WPF.Controls;
 /// </code>
 /// </example>
 /// </remarks>
-public sealed class Clipper : Decorator {
-	public static readonly DependencyProperty WidthFractionProperty = DependencyProperty.RegisterAttached("WidthFraction", typeof(double), typeof(Clipper), new(1d, OnClippingInvalidated), IsFraction);
-	public static readonly DependencyProperty HeightFractionProperty = DependencyProperty.RegisterAttached("HeightFraction", typeof(double), typeof(Clipper), new(1d, OnClippingInvalidated), IsFraction);
-	public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(Brush), typeof(Clipper), new FrameworkPropertyMetadata(Brushes.Transparent, FrameworkPropertyMetadataOptions.AffectsRender));
-	public static readonly DependencyProperty ConstraintProperty = DependencyProperty.Register("Constraint", typeof(ClipperConstraintSource), typeof(Clipper), new(ClipperConstraintSource.WidthAndHeight, OnClippingInvalidated), IsValidConstraintSource);
+[AttachedDependencyProperty<double, UIElement>("WidthFraction", DefaultValue = 1d, OnChanged = "OnClippingInvalidated", Validate = true)]
+[AttachedDependencyProperty<double, UIElement>("HeightFraction", DefaultValue = 1d, OnChanged = "OnClippingInvalidated", Validate = true)]
+[DependencyProperty<Brush>("Background", DefaultValueExpression = "Brushes.Transparent", AffectsRender = true)]
+[DependencyProperty<ClipperConstraintSource>("Constraint", DefaultValue = ClipperConstraintSource.WidthAndHeight, Validate = true)]
+public sealed partial class Clipper : Decorator {
+	//public static readonly DependencyProperty WidthFractionProperty = DependencyProperty.RegisterAttached("WidthFraction", typeof(double), typeof(Clipper), new(1d, OnClippingInvalidated), IsFraction);
+	//public static readonly DependencyProperty HeightFractionProperty = DependencyProperty.RegisterAttached("HeightFraction", typeof(double), typeof(Clipper), new(1d, OnClippingInvalidated), IsFraction);
+	//public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(Brush), typeof(Clipper), new FrameworkPropertyMetadata(Brushes.Transparent, FrameworkPropertyMetadataOptions.AffectsRender));
+	//public static readonly DependencyProperty ConstraintProperty = DependencyProperty.Register("Constraint", typeof(ClipperConstraintSource), typeof(Clipper), new(ClipperConstraintSource.WidthAndHeight, OnClippingInvalidated), IsValidConstraintSource);
 
 	private Size childSize;
 	private DependencyPropertySubscriber? childVerticalAlignmentSubcriber;
@@ -34,37 +38,37 @@ public sealed class Clipper : Decorator {
 		base.ClipToBounds = true;
 	}
 
-	public Brush Background {
-		get => (Brush)GetValue(BackgroundProperty);
-		set => SetValue(BackgroundProperty, value);
-	}
+	//public Brush Background {
+	//	get => (Brush)GetValue(BackgroundProperty);
+	//	set => SetValue(BackgroundProperty, value);
+	//}
 
-	public ClipperConstraintSource Constraint {
-		get => (ClipperConstraintSource)GetValue(ConstraintProperty);
-		set => SetValue(ConstraintProperty, value);
-	}
+	//public ClipperConstraintSource Constraint {
+	//	get => (ClipperConstraintSource)GetValue(ConstraintProperty);
+	//	set => SetValue(ConstraintProperty, value);
+	//}
 
 	[Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
 	public new bool ClipToBounds => true;
 
-	[AttachedPropertyBrowsableForChildren]
-	public static double GetWidthFraction(DependencyObject obj) => (double)obj.GetValue(WidthFractionProperty);
+	//[AttachedPropertyBrowsableForChildren]
+	//public static double GetWidthFraction(DependencyObject obj) => (double)obj.GetValue(WidthFractionProperty);
 
-	public static void SetWidthFraction(DependencyObject obj, double value) => obj.SetValue(WidthFractionProperty, value);
+	//public static void SetWidthFraction(DependencyObject obj, double value) => obj.SetValue(WidthFractionProperty, value);
 
-	[AttachedPropertyBrowsableForChildren]
-	public static double GetHeightFraction(DependencyObject obj) => (double)obj.GetValue(HeightFractionProperty);
+	//[AttachedPropertyBrowsableForChildren]
+	//public static double GetHeightFraction(DependencyObject obj) => (double)obj.GetValue(HeightFractionProperty);
 
-	public static void SetHeightFraction(DependencyObject obj, double value) => obj.SetValue(HeightFractionProperty, value);
+	//public static void SetHeightFraction(DependencyObject obj, double value) => obj.SetValue(HeightFractionProperty, value);
 
 	protected override Size MeasureOverride(Size constraint) {
 		if (Child is null) return Size.Empty;
 
 		Child.Measure(Constraint switch {
 			ClipperConstraintSource.WidthAndHeight => constraint,
-			ClipperConstraintSource.Width => new Size(constraint.Width, double.PositiveInfinity),
-			ClipperConstraintSource.Height => new Size(double.PositiveInfinity, constraint.Height),
-			ClipperConstraintSource.Nothing => new Size(double.PositiveInfinity, double.PositiveInfinity),
+			ClipperConstraintSource.Width => new(constraint.Width, double.PositiveInfinity),
+			ClipperConstraintSource.Height => new(double.PositiveInfinity, constraint.Height),
+			ClipperConstraintSource.Nothing => new(double.PositiveInfinity, double.PositiveInfinity),
 			_ => throw new NotImplementedException(),
 		});
 
@@ -122,7 +126,7 @@ public sealed class Clipper : Decorator {
 			}
 		}
 
-		Child.Arrange(new Rect(new Point(offsetX, offsetY), childSize));
+		Child.Arrange(new(new(offsetX, offsetY), childSize));
 
 		return clipperSize;
 	}
@@ -146,22 +150,20 @@ public sealed class Clipper : Decorator {
 
 	protected override void OnRender(DrawingContext drawingContext) {
 		base.OnRender(drawingContext);
-		drawingContext.DrawRectangle(Background, null, new Rect(RenderSize));
+		drawingContext.DrawRectangle(Background, null, new(RenderSize));
 	}
 
-	private static bool IsFraction(object value) {
-		double numericValue = (double)value;
-		return numericValue is >= 0d and <= 1d;
-	}
+	private static partial bool IsWidthFractionValid(double value) => IsFraction(value);
+	private static partial bool IsHeightFractionValid(double value) => IsFraction(value);
+	private static bool IsFraction(double numericValue) => numericValue is >= 0d and <= 1d;
 
-	private static void OnClippingInvalidated(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
-		if (sender is UIElement element && VisualTreeHelper.GetParent(element) is Clipper translator)
+	partial void OnConstraintChanged() => OnClippingInvalidated(this);
+	private static void OnClippingInvalidated(UIElement element) {
+		if (VisualTreeHelper.GetParent(element) is Clipper translator)
 			translator.InvalidateMeasure();
 	}
 
-	private static bool IsValidConstraintSource(object value) {
-		return Enum.IsDefined(typeof(ClipperConstraintSource), value);
-	}
+	private static partial bool IsConstraintValid(ClipperConstraintSource value) => Enum.IsDefined(typeof(ClipperConstraintSource), value);
 }
 
 public enum ClipperConstraintSource {
@@ -171,9 +173,8 @@ public enum ClipperConstraintSource {
 	Nothing,
 }
 
-public class DependencyPropertySubscriber : DependencyObject {
-	private static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(object), typeof(DependencyPropertySubscriber), new PropertyMetadata(null, ValueChanged));
-
+[DependencyProperty<object>("Value")]
+public partial class DependencyPropertySubscriber : DependencyObject {
 	private readonly PropertyChangedCallback handler;
 
 	public DependencyPropertySubscriber(DependencyObject dependencyObject, DependencyProperty dependencyProperty, PropertyChangedCallback handler) {
@@ -192,6 +193,5 @@ public class DependencyPropertySubscriber : DependencyObject {
 
 	public void Unsubscribe() => BindingOperations.ClearBinding(this, ValueProperty);
 
-	private static void ValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) =>
-		((DependencyPropertySubscriber)sender).handler(sender, e);
+	partial void OnValueChanged(object? oldValue, object? newValue) => handler(this, new(ValueProperty, oldValue, newValue));
 }

@@ -244,3 +244,6 @@ dotnet_diagnostic.IDE0021.severity = none
 
 # IDE0045: 转换为条件表达式
 dotnet_diagnostic.IDE0045.severity = suggestion
+
+# IDE0010: 添加缺失的事例
+dotnet_diagnostic.IDE0010.severity = suggestion
