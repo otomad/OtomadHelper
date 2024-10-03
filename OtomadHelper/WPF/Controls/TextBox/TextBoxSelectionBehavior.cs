@@ -26,6 +26,8 @@ public class TextBoxSelectionBehavior : Behavior<Border> {
 
 	private void PreviewMouseDown(object sender, MouseButtonEventArgs e) {
 		if (e.Source is not TextBox textBox || IsTextBoxView(e.OriginalSource)) return;
+		if (e.MiddleButton == MouseButtonState.Pressed) return;
+		if (e.RightButton == MouseButtonState.Pressed && textBox.SelectionLength > 0) return;
 		Border border = AssociatedObject;
 		Thickness padding = border.Padding;
 		Point position = e.GetPosition(border);

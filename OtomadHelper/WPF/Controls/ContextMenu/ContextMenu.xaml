@@ -98,7 +98,7 @@
 							<Border
 								Name="Border"
 								Margin="3,0"
-								Padding="8,8"
+								Padding="9,8"
 								Background="{TemplateBinding Background}"
 								BorderThickness="0"
 								CornerRadius="5"
