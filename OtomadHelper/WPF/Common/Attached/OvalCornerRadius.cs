@@ -28,10 +28,10 @@ public static partial class OvalCornerRadius {
 	/// <m:OvalCornerRadiusConverter x:Key="Oval" />
 	///
 	/// <Border.CornerRadius>
-	/// 	<MultiBinding Converter="{StaticResource Oval}">
-	/// 		<Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
-	/// 		<Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
-	/// 	</MultiBinding>
+	///     <MultiBinding Converter="{StaticResource Oval}">
+	///         <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
+	///         <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
+	///     </MultiBinding>
 	/// </Border.CornerRadius>
 	/// ]]>
 	/// </code>
@@ -40,7 +40,7 @@ public static partial class OvalCornerRadius {
 	private static BindingBase CornerRadiusBinding {
 		get {
 			MultiBinding multiBinding = new() {
-				Converter = new OvalCornerRadiusConverter()
+				Converter = new OvalCornerRadiusConverter(),
 			};
 			RelativeSource relativeSource = new() { Mode = RelativeSourceMode.Self };
 

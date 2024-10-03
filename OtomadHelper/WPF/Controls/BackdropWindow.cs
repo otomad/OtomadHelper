@@ -17,7 +17,10 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<TitleBarType>("TitleBarType", DefaultValueExpression = "TitleBarType.System")]
 [DependencyProperty<FontFamily>("MonoFont")]
 [DependencyProperty<FontFamily>("DefaultFont")]
-public partial class BackdropWindow : Window, INotifyPropertyChanged {
+[RoutedEvent("ThemeChange", RoutedEventStrategy.Bubble)]
+[RoutedEvent("AccentChange", RoutedEventStrategy.Bubble)]
+[RoutedEvent("Showing", RoutedEventStrategy.Bubble)]
+public partial class BackdropWindow : Window {
 	protected readonly WindowInteropHelper helper;
 	protected IntPtr Handle => helper.Handle;
 
@@ -244,33 +247,7 @@ public partial class BackdropWindow : Window, INotifyPropertyChanged {
 		OnWindowAttributeSetting();
 	}
 
-	protected static readonly RoutedEvent ThemeChangeEvent =
-		EventManager.RegisterRoutedEvent(nameof(ThemeChange), RoutingStrategy.Bubble, typeof(EventHandler<RoutedEventArgs>), typeof(BackdropWindow));
-	public event RoutedEventHandler ThemeChange {
-		add => AddHandler(ThemeChangeEvent, value);
-		remove => RemoveHandler(ThemeChangeEvent, value);
-	}
-	protected static readonly RoutedEvent AccentChangeEvent =
-		EventManager.RegisterRoutedEvent(nameof(AccentChange), RoutingStrategy.Bubble, typeof(EventHandler<RoutedEventArgs>), typeof(BackdropWindow));
-	public event RoutedEventHandler AccentChange {
-		add => AddHandler(AccentChangeEvent, value);
-		remove => RemoveHandler(AccentChangeEvent, value);
-	}
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	protected virtual void OnPropertyChanged(string propertyName) {
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
-
 	protected virtual void OnWindowAttributeSetting() { }
-
-	public static readonly RoutedEvent ShowingEvent = EventManager.RegisterRoutedEvent("Showing", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BackdropWindow));
-
-	public event RoutedEventHandler Showing {
-		add => AddHandler(ShowingEvent, value);
-		remove => RemoveHandler(ShowingEvent, value);
-	}
 
 	private static readonly Color WindowsDefaultGlassColor = Color.FromRgb(0, 95, 184);
 	private static Brush WindowsDefaultGlassBrush => new SolidColorBrush(WindowsDefaultGlassColor);
