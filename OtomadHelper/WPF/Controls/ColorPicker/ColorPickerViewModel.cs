@@ -67,23 +67,44 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 
 	private bool isTextChanging = false;
 	[RelayCommand]
-	public void TextChanged((string text, string name) tuple) {
+	public void TextChanged((string Text, string Name) e) {
 		lock (this) {
-			if (isTextChanging)
-				return;
+			if (isTextChanging) return;
 			isTextChanging = true;
 			double alpha = Color.Alpha.A;
-			(ColourSpace model, int axis) = ColorPickerModelAxis.FromName(tuple.name);
+			(ColourSpace model, int axis) = ColorPickerModelAxis.FromName(e.Name);
 			//ColourSpace model = modelAxis.Model;
 			//int axis = modelAxis
-			if (!double.TryParse(tuple.text, out double value))
-				return;
+			if (!double.TryParse(e.Text, out double value)) return;
 			double[] triplet = ToTriplet(model).ToArray<double>();
 			Range inputRange = GetInputRange(model).Get<Range>(axis), outputRange = GetOutputRange(model).Get<Range>(axis);
 			triplet[axis] = MathEx.Map(value, inputRange.Min, inputRange.Max, outputRange.Min, outputRange.Max);
 			Color = new(model, triplet[0], triplet[1], triplet[2], alpha);
 			isTextChanging = false;
 		}
+	}
+
+	[RelayCommand]
+	public void ThumbDragged(ColorTrackThumbDraggingRoutedEventArgs e) {
+		(ColourSpace model, int axis) = ModelAxis;
+		double[] triplet = ToTriplet(model).ToArray<double>();
+
+		int GetPointXyz(int xyzIndex) => ColorPickerModelAxisToRangeConverter.GetPointXyz(xyzIndex, axis);
+
+		switch (e.Axis) {
+			case "XY":
+				triplet[GetPointXyz(0)] = e.X;
+				triplet[GetPointXyz(1)] = e.Y;
+				break;
+			case "Z":
+				triplet[GetPointXyz(2)] = e.Y;
+				break;
+			default:
+				break;
+		}
+
+		Color = new(model, triplet[0], triplet[1], triplet[2]);
+		_ = 1;
 	}
 
 	private const int SOURCE_RESOLUTION = 32;

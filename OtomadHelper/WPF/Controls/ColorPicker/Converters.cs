@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -100,3 +101,15 @@ public class UnicolourToPointXyzConverter : IMultiValueConverter {
 	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
 }
+
+/*[ValueConversion(typeof(RoutedEventArgs), typeof((string Axis, double X, double Y)))]
+public class DraggingEventArgsToPointXyConverter : IValueConverter {
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+		RoutedEventArgs e = (RoutedEventArgs)value;
+		ColorTrackThumb thumb = (ColorTrackThumb)e.Source;
+		return ((string)thumb.Tag, thumb.X, thumb.Y);
+	}
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
+}*/

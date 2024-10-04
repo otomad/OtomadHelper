@@ -48,7 +48,6 @@
 				/>
 			<m:DoubleToThicknessConverter x:Key="DoubleToThick" />
 			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
-			<m:ActualSizeToRectConverter x:Key="SizeToRect" />
 			<m:BooleanOrConverter x:Key="BoolOr" />
 			<c:ComboBoxIdToIsCheckedConverter x:Key="IdToChecked" />
 			<c:ComboBoxIdToOptionConverter x:Key="IdToOption" />

@@ -100,13 +100,13 @@ public class DoubleToCornerRadiusConverter : IValueConverter {
 }
 
 [ValueConversion(typeof(FrameworkElement), typeof(Rect))]
-public class ActualSizeToRectConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		FrameworkElement element = (FrameworkElement)value;
-		return new Rect(0, 0, element.ActualWidth, element.ActualHeight);
+public class ActualSizeToRectConverter : IMultiValueConverter {
+	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
+		(double actualWidth, double actualHeight) = values.ToTuple<Tuple<double, double>>();
+		return new Rect(0, 0, actualWidth, actualHeight);
 	}
 
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
 }
 

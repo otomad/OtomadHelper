@@ -28,7 +28,6 @@
 		<ResourceDictionary>
 			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
-			<m:ActualSizeToRectConverter x:Key="SizeToRect" />
 			<m:RectToDrawingBrushConverter x:Key="RectToBrush" />
 			<m:RelativeToAbsoluteRectConverter x:Key="RelToAbsRect" />
 

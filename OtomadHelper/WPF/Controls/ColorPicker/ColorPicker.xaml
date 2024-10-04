@@ -25,6 +25,8 @@
 				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Themes/Controls.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
+			<s:Double x:Key="TrackCornerRadius">6</s:Double>
+
 			<c:ColorPickerModelAxisToCheckedConverter x:Key="ModelAxisToChecked" />
 			<c:ColorPickerValuesToTextConverter x:Key="ValuesToText" />
 			<c:ColorPickerTextChangedEventArgsToTextAndNameConverter x:Key="TextChangedToTextName" />
@@ -87,6 +89,19 @@
 						<SolidColorBrush Color="{Binding Color, Converter={StaticResource UniToMediaColor}}" />
 					</Setter.Value>
 				</Setter>
+				<Setter Property="m:InteractivityItems.Template">
+					<Setter.Value>
+						<m:InteractivityTemplate>
+							<m:InteractivityItems>
+								<m:InteractivityItems.Triggers>
+									<i:EventTrigger EventName="Dragging">
+										<i:InvokeCommandAction Command="{Binding ThumbDraggedCommand}" PassEventArgsToCommand="True" />
+									</i:EventTrigger>
+								</m:InteractivityItems.Triggers>
+							</m:InteractivityItems>
+						</m:InteractivityTemplate>
+					</Setter.Value>
+				</Setter>
 			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>
@@ -97,29 +112,30 @@
 				Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
 				Width="{Binding Height, RelativeSource={RelativeSource Self}}"
 				Source="{Binding PrimarySource, Mode=OneTime}"
+				m:CornerRadiusClip.CornerRadius="{StaticResource TrackCornerRadius}"
 				/>
 			<Canvas>
-				<c:ColorTrackThumb ReverseY="True">
+				<c:ColorTrackThumb Tag="XY" ReverseY="True">
 					<c:ColorTrackThumb.X>
-						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 0}" Mode="OneWay">
+						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 0}">
 							<Binding Path="Color" />
 							<Binding Path="ModelAxis" />
 						</MultiBinding>
 					</c:ColorTrackThumb.X>
 					<c:ColorTrackThumb.Y>
-						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 1}" Mode="OneWay">
+						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 1}">
 							<Binding Path="Color" />
 							<Binding Path="ModelAxis" />
 						</MultiBinding>
 					</c:ColorTrackThumb.Y>
 					<c:ColorTrackThumb.XRange>
-						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 0}" Mode="OneWay">
+						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 0}">
 							<Binding Path="ModelAxis" />
 							<Binding Path="Color" />
 						</MultiBinding>
 					</c:ColorTrackThumb.XRange>
 					<c:ColorTrackThumb.YRange>
-						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 1}" Mode="OneWay">
+						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 1}">
 							<Binding Path="ModelAxis" />
 							<Binding Path="Color" />
 						</MultiBinding>
@@ -132,21 +148,23 @@
 			<Image
 				Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
 				Source="{Binding SecondarySource, Mode=OneTime}"
+				m:CornerRadiusClip.CornerRadius="{StaticResource TrackCornerRadius}"
 				/>
 			<Canvas>
 				<c:ColorTrackThumb
+					Tag="Z"
 					X="0.5"
 					ReverseY="True"
 					DragAxis="Y"
 					>
 					<c:ColorTrackThumb.Y>
-						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 2}" Mode="OneWay">
+						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 2}">
 							<Binding Path="Color" />
 							<Binding Path="ModelAxis" />
 						</MultiBinding>
 					</c:ColorTrackThumb.Y>
 					<c:ColorTrackThumb.YRange>
-						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 2}" Mode="OneWay">
+						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 2}">
 							<Binding Path="ModelAxis" />
 							<Binding Path="Color" />
 						</MultiBinding>
@@ -156,8 +174,8 @@
 		</Grid>
 
 		<Grid Grid.Column="4">
-			<Rectangle Fill="{StaticResource CheckerBoard}" />
-			<Rectangle>
+			<Rectangle Fill="{StaticResource CheckerBoard}" RadiusX="{StaticResource TrackCornerRadius}" RadiusY="{StaticResource TrackCornerRadius}" />
+			<Rectangle RadiusX="{StaticResource TrackCornerRadius}" RadiusY="{StaticResource TrackCornerRadius}">
 				<Rectangle.Fill>
 					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
 						<LinearGradientBrush.GradientStops>

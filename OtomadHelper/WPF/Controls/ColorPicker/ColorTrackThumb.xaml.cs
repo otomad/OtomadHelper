@@ -6,6 +6,8 @@ using System.Windows.Media;
 
 namespace OtomadHelper.WPF.Controls;
 
+using XY = (double X, double Y);
+
 [DependencyProperty<double>("X", DefaultValue = 0, OnChanged = "OnChange")]
 [DependencyProperty<double>("Y", DefaultValue = 0, OnChanged = "OnChange")]
 [DependencyProperty<ColorTrackThumbDragAxis>("DragAxis", DefaultValue = ColorTrackThumbDragAxis.XY)]
@@ -13,6 +15,7 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<ValueTuple<double, double>>("YRange", DefaultValueExpression = "(0, 1)", OnChanged = "OnChange")]
 [DependencyProperty<bool>("ReverseX", DefaultValue = false)]
 [DependencyProperty<bool>("ReverseY", DefaultValue = false)]
+[RoutedEvent("Dragging", RoutedEventStrategy.Bubble)]
 public partial class ColorTrackThumb : Thumb {
 	protected Canvas? Canvas { get; private set; }
 
@@ -49,7 +52,8 @@ public partial class ColorTrackThumb : Thumb {
 		base.OnMouseMove(e);
 		if (Canvas is null || !IsMouseCaptured) return;
 		Point position = e.GetPosition(Canvas);
-		SetPosition(position.X - offset.X, position.Y - offset.Y);
+		XY xy = SetPosition(position.X - offset.X, position.Y - offset.Y);
+		RaiseDragging(xy);
 	}
 	protected override void OnMouseUp(MouseButtonEventArgs e) {
 		ReleaseMouseCapture();
@@ -61,37 +65,47 @@ public partial class ColorTrackThumb : Thumb {
 		offset = e.GetPosition(Canvas);
 		Canvas.CaptureMouse();
 		Canvas_MouseMove(sender, e);
+		VisualStateManager.GoToState(this, "Pressed", true);
 	}
 	protected void Canvas_MouseMove(object sender, MouseEventArgs e) {
 		if (e.Source is not Canvas Canvas) return;
 		if (!Canvas.IsMouseCaptured) return;
 		Point position = e.GetPosition(Canvas);
-		SetPosition(position.X - ActualWidth / 2, position.Y - ActualHeight / 2);
+		XY xy = SetPosition(position.X - ActualWidth / 2, position.Y - ActualHeight / 2);
+		RaiseDragging(xy);
 	}
 	protected void Canvas_MouseUp(object sender, MouseButtonEventArgs e) {
 		if (e.Source is not Canvas Canvas) return;
 		Canvas.ReleaseMouseCapture();
+		VisualStateManager.GoToState(this, IsMouseOver ? "MouseOver" : "Normal", true);
 	}
 
-	private void SetPosition(double x, double y, bool initial = false) {
-		if (Canvas is null) return;
+	private XY SetPosition(double x, double y, bool initial = false) {
+		XY result = default;
+		if (Canvas is null) return result;
 		isOnChanging = true;
 		x = MathEx.Clamp(x, -ActualWidth / 2, Canvas.ActualWidth - ActualWidth / 2);
 		y = MathEx.Clamp(y, -ActualHeight / 2, Canvas.ActualHeight - ActualHeight / 2);
 		(Range X, Range Y) range = CheckReverse();
 		if (initial || (DragAxis & ColorTrackThumbDragAxis.X) != 0) {
 			Canvas.SetLeft(this, x);
-			if (IsXBound) X = MathEx.Map(x, 0, Canvas.ActualWidth, range.X.Min, range.X.Max);
+			result.X = MathEx.Map(x, 0, Canvas.ActualWidth, range.X.Min, range.X.Max);
+			if (IsXBound) X = result.X;
 		}
 		if (initial || (DragAxis & ColorTrackThumbDragAxis.Y) != 0) {
 			Canvas.SetTop(this, y);
-			if (IsYBound) Y = MathEx.Map(y, 0, Canvas.ActualHeight, range.Y.Min, range.Y.Max);
+			result.Y = MathEx.Map(y, 0, Canvas.ActualHeight, range.Y.Min, range.Y.Max);
+			if (IsYBound) Y = result.Y;
 		}
 		isOnChanging = false;
+		return result;
 	}
 
 	private bool IsXBound => GetBindingExpression(XProperty) != null;
 	private bool IsYBound => GetBindingExpression(YProperty) != null;
+
+	private void RaiseDragging(XY xy) =>
+		RaiseEvent(new ColorTrackThumbDraggingRoutedEventArgs(DraggingEvent, this, Tag as string ?? "", xy.X, xy.Y));
 
 	private bool isOnChanging = false;
 	private void OnChange() => OnChange(false);
@@ -119,4 +133,11 @@ public enum ColorTrackThumbDragAxis {
 	X = 1,
 	Y = 2,
 	XY = X | Y,
+}
+
+public class ColorTrackThumbDraggingRoutedEventArgs(RoutedEvent routedEvent, object source, string axis, double x, double y) :
+	RoutedEventArgs(routedEvent, source) {
+	public string Axis { get; } = axis;
+	public double X { get; } = x;
+	public double Y { get; } = y;
 }
