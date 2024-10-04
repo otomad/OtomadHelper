@@ -5,6 +5,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Width="800"
 	Height="450"
@@ -12,6 +13,10 @@
 	SystemBackdropType="TransientWindow"
 	mc:Ignorable="d"
 	>
+	<c:BackdropWindow.Resources>
+		<m:DebuggerConverter x:Key="Debugger" />
+	</c:BackdropWindow.Resources>
+
 	<TabControl
 		Padding="0"
 		Background="Transparent"
@@ -28,6 +33,13 @@
 				<RadioButton GroupName="SystemBackdropType" Checked="SystemBackdropTypeChange">Solid</RadioButton>
 				<RadioButton IsEnabled="False">Disabled Unchecked</RadioButton>
 				<RadioButton IsChecked="True" IsEnabled="False">Disabled Checked</RadioButton>
+
+				<TextBox x:Name="X" Text="0.3" />
+				<Border Width="100" Height="100" BorderBrush="Gray" BorderThickness="1">
+					<Canvas>
+						<c:ColorTrackThumb Foreground="Lime" X="{Binding Text, ElementName=X, Mode=OneWay}" Y="0.5" />
+					</Canvas>
+				</Border>
 			</StackPanel>
 		</TabItem>
 		<TabItem Header="Scroll Bar">

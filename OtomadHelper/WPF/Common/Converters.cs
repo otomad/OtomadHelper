@@ -294,3 +294,27 @@ internal class MultiValueToArrayConverter : IMultiValueConverter {
 	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
 }
+
+[ValueConversion(typeof(Color), typeof(Color))]
+public class BackgroundToForegroundColorConverter : IValueConverter {
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+		Color color = (Color)value;
+		Wacton.Unicolour.Unicolour unicolour = color.ToUnicolour();
+		bool tooWhite = unicolour.Oklch.L >= 0.65;
+		return tooWhite ? Colors.Black : Colors.White;
+	}
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
+}
+
+[ValueConversion(typeof(SolidColorBrush), typeof(SolidColorBrush))]
+public class BackgroundToForegroundBrushConverter : IValueConverter {
+	private readonly BackgroundToForegroundColorConverter converter = new();
+
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+		new SolidColorBrush((Color)converter.Convert(((SolidColorBrush)value).Color, typeof(Color), parameter, culture));
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
+}

@@ -4,7 +4,6 @@ using Wacton.Unicolour;
 
 using ThreeD = (double X, double Y, double Z);
 using ThreeDRange = ((double Min, double Max) X, (double Min, double Max) Y, (double Min, double Max) Z);
-using Range = (double Min, double Max);
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -40,21 +39,24 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		UpdateSources();
 	}
 
-	private ThreeD ToTriplet(ColourSpace model) {
+	internal static ThreeD ToTriplet(Unicolour color, ColourSpace model) {
 		ColourRepresentation representation = model switch {
-			ColourSpace.Rgb255 => Color.Rgb.Byte255,
-			ColourSpace.Hsl => Color.Hsl,
-			ColourSpace.Hsb => Color.Hsb,
-			ColourSpace.Hwb => Color.Hwb,
-			ColourSpace.Lab => Color.Lab,
-			ColourSpace.Lchab => Color.Lchab,
-			ColourSpace.Oklab => Color.Oklab,
-			ColourSpace.Oklch => Color.Oklch,
+			ColourSpace.Rgb255 => color.Rgb.Byte255,
+			ColourSpace.Hsl => color.Hsl,
+			ColourSpace.Hsb => color.Hsb,
+			ColourSpace.Hwb => color.Hwb,
+			ColourSpace.Lab => color.Lab,
+			ColourSpace.Lchab => color.Lchab,
+			ColourSpace.Oklab => color.Oklab,
+			ColourSpace.Oklch => color.Oklch,
 			_ => throw new NotImplementedException(),
 		};
-		ThreeD triplet = representation.Triplet.Tuple;
+		ThreeD triplet = representation.ConstrainedTriplet.Tuple;
 		return triplet;
 	}
+
+	private ThreeD ToTriplet(ColourSpace model) =>
+		ToTriplet(Color, model);
 
 	[RelayCommand]
 	public void CheckModelAxis(string name) =>
@@ -67,13 +69,15 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	[RelayCommand]
 	public void TextChanged((string text, string name) tuple) {
 		lock (this) {
-			if (isTextChanging) return;
+			if (isTextChanging)
+				return;
 			isTextChanging = true;
 			double alpha = Color.Alpha.A;
 			(ColourSpace model, int axis) = ColorPickerModelAxis.FromName(tuple.name);
 			//ColourSpace model = modelAxis.Model;
 			//int axis = modelAxis
-			if (!double.TryParse(tuple.text, out double value)) return;
+			if (!double.TryParse(tuple.text, out double value))
+				return;
 			double[] triplet = ToTriplet(model).ToArray<double>();
 			Range inputRange = GetInputRange(model).Get<Range>(axis), outputRange = GetOutputRange(model).Get<Range>(axis);
 			triplet[axis] = MathEx.Map(value, inputRange.Min, inputRange.Max, outputRange.Min, outputRange.Max);
@@ -166,7 +170,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		}
 	}
 
-	private static ThreeDRange GetOutputRange(ColourSpace model) {
+	internal static ThreeDRange GetOutputRange(ColourSpace model) {
 		return model switch {
 			ColourSpace.Rgb255 => ((0, 255), (0, 255), (0, 255)),
 			ColourSpace.Hsl => ((0, 360), (0, 1), (0, 1)),
@@ -178,7 +182,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		};
 	}
 
-	private static ThreeDRange GetInputRange(ColourSpace model) {
+	internal static ThreeDRange GetInputRange(ColourSpace model) {
 		return model switch {
 			ColourSpace.Rgb255 => ((0, 255), (0, 255), (0, 255)),
 			ColourSpace.Hsl => ((0, 360), (0, 100), (0, 100)),

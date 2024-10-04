@@ -239,8 +239,25 @@ public static partial class Extensions {
 		return obj;
 	}
 
+	/// <summary>
+	/// Join and start the <see cref="Thread" />.
+	/// </summary>
 	public static void JoinStart(this Thread thread) {
 		thread.Start();
 		thread.Join();
 	}
+
+	/// <summary>
+	/// Check the value if it is not <see cref="double.NaN" />, <see cref="double.PositiveInfinity" />, or <see cref="double.NegativeInfinity" />.
+	/// </summary>
+	public static bool IsFinite(this double value) =>
+		!(double.IsNaN(value) || double.IsInfinity(value));
+
+	/// <summary>
+	/// If the <paramref name="value" /> is not <see cref="double.NaN" />, <see cref="double.PositiveInfinity" />, or <see cref="double.NegativeInfinity" />,
+	/// return it, or return the default value.
+	/// </summary>
+	/// <param name="def">Default value.</param>
+	public static double FiniteOrDefault(this double value, double def = default) =>
+		IsFinite(value) ? value : def;
 }

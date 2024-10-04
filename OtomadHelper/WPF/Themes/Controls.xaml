@@ -12,5 +12,6 @@
 		<m:SharedResourceDictionary ControlSource="TextBox/TextBox" />
 		<m:SharedResourceDictionary ControlSource="RadioButton/RadioButton" />
 		<m:SharedResourceDictionary ControlSource="ColorPicker/CheckerBoardBrush" />
+		<m:SharedResourceDictionary ControlSource="ColorPicker/ColorTrackThumb" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

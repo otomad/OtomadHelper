@@ -1,0 +1,114 @@
+<m:CustomControlResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	>
+	<s:Double x:Key="ThumbBaseSize">20</s:Double>
+
+	<c:TrackThumbInnerBaseMultiplySizeConverter x:Key="MultiplySize" />
+	<m:BackgroundToForegroundBrushConverter x:Key="BgToFgBrush" />
+
+	<Style x:Key="DefaultColorTrackThumbStyle" TargetType="c:ColorTrackThumb">
+		<Setter Property="SnapsToDevicePixels" Value="True" />
+		<Setter Property="OverridesDefaultStyle" Value="true" />
+		<Setter Property="IsTabStop" Value="false" />
+		<Setter Property="Focusable" Value="false" />
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="Width" Value="20" />
+		<Setter Property="m:InteractivityItems.Template">
+			<Setter.Value>
+				<m:InteractivityTemplate>
+					<m:InteractivityItems>
+						<m:InteractivityItems.Behaviors>
+							<i:MouseDragElementBehavior />
+						</m:InteractivityItems.Behaviors>
+					</m:InteractivityItems>
+				</m:InteractivityTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Thumb">
+					<ControlTemplate.Resources>
+						<Style TargetType="Ellipse">
+							<Setter Property="HorizontalAlignment" Value="Center" />
+							<Setter Property="VerticalAlignment" Value="Center" />
+						</Style>
+					</ControlTemplate.Resources>
+					<Grid Background="Transparent">
+						<Ellipse
+							Width="{TemplateBinding Width}"
+							Height="{TemplateBinding Width}"
+							Fill="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BgToFgBrush}}"
+							Stroke="{DynamicResource CircleElevation}"
+							StrokeThickness="1"
+							/>
+						<Ellipse
+							x:Name="InnerThumbBase"
+							Height="{Binding Width, RelativeSource={RelativeSource Self}}"
+							MinWidth="0.6"
+							Fill="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"
+							>
+							<Ellipse.Width>
+								<MultiBinding Converter="{StaticResource MultiplySize}">
+									<Binding Path="MinWidth" RelativeSource="{RelativeSource Self}" />
+									<Binding Path="Width" RelativeSource="{RelativeSource TemplatedParent}" />
+								</MultiBinding>
+							</Ellipse.Width>
+						</Ellipse>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualStateGroup.Transitions>
+									<VisualTransition
+										GeneratedDuration="{StaticResource BaseAnimationDuration}"
+										GeneratedEasingFunction="{StaticResource EaseOutExpo}"
+										To="Normal"
+										/>
+									<VisualTransition
+										GeneratedDuration="{StaticResource BaseAnimationDuration}"
+										GeneratedEasingFunction="{StaticResource EaseOutExpo}"
+										To="MouseOver"
+										/>
+									<VisualTransition
+										GeneratedDuration="{StaticResource BaseAnimationDuration}"
+										GeneratedEasingFunction="{StaticResource EaseOutExpo}"
+										To="Pressed"
+										/>
+								</VisualStateGroup.Transitions>
+								<VisualState x:Name="Normal">
+									<Storyboard>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetName="InnerThumbBase" Storyboard.TargetProperty="MinWidth">
+											<SplineDoubleKeyFrame KeyTime="0" Value="0.6" />
+											<!--  12 ÷ 20  -->
+										</DoubleAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="MouseOver">
+									<Storyboard>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetName="InnerThumbBase" Storyboard.TargetProperty="MinWidth">
+											<SplineDoubleKeyFrame KeyTime="0" Value="0.7" />
+											<!--  14 ÷ 20  -->
+										</DoubleAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Pressed">
+									<Storyboard>
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetName="InnerThumbBase" Storyboard.TargetProperty="MinWidth">
+											<SplineDoubleKeyFrame KeyTime="0" Value="0.5" />
+											<!--  10 ÷ 20  -->
+										</DoubleAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style BasedOn="{StaticResource DefaultColorTrackThumbStyle}" TargetType="c:ColorTrackThumb" />
+</m:CustomControlResourceDictionary>

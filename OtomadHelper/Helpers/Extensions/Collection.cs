@@ -204,9 +204,37 @@ public static partial class Extensions {
 	}
 
 	/// <summary>
+	/// Convert a <see cref="Tuple" /> or <see cref="ValueTuple" /> to <see cref="List{T}" />.
+	/// </summary>
+	/// <param name="tuple"><see cref="Tuple" /> or <see cref="ValueTuple" />.</param>
+	public static List<T> ToList<T>(this ITuple tuple) =>
+		tuple.ToArray<T>().ToList();
+
+	/// <summary>
 	/// Get <see cref="Tuple" /> or <see cref="ValueTuple" /> item value by its index.
 	/// </summary>
 	/// <param name="tuple"><see cref="Tuple" /> or <see cref="ValueTuple" />.</param>
 	/// <param name="index">The index of the item.</param>
 	public static T Get<T>(this ITuple tuple, int index) => (T)tuple[index];
+
+	/// <summary>
+	/// Check if the <see cref="IEnumerable{T}"/> has any item with the specified index.
+	/// </summary>
+	public static bool HasIndex<T>(this IEnumerable<T> source, int index) =>
+		index >= 0 && source.Count() > index;
+
+	/// <inheritdoc cref="Enumerable.FirstOrDefault{TSource}(IEnumerable{TSource})" />
+	/// <param name="def">Default value.</param>
+	public static T FirstOrDefault<T>(this IEnumerable<T> source, T def) =>
+		source.Count() > 0 ? source.First() : def;
+
+	/// <inheritdoc cref="Enumerable.LastOrDefault{TSource}(IEnumerable{TSource})" />
+	/// <param name="def">Default value.</param>
+	public static T LastOrDefault<T>(this IEnumerable<T> source, T def) =>
+		source.Count() > 0 ? source.Last() : def;
+
+	/// <inheritdoc cref="Enumerable.ElementAtOrDefault{TSource}(IEnumerable{TSource}, int)" />
+	/// <param name="def">Default value.</param>
+	public static T ElementAtOrDefault<T>(this IEnumerable<T> source, int index, T def) =>
+		source.HasIndex(index) ? source.ElementAt(index) : def;
 }

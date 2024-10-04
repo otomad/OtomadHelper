@@ -43,3 +43,4 @@ global using Path = OtomadHelper.Helpers.Path;
 global using Rect = System.Windows.Rect;
 global using ResourceDictionaries = System.Collections.ObjectModel.Collection<System.Windows.ResourceDictionary>;
 global using Screen = System.Windows.Forms.Screen;
+global using Range = (double Min, double Max);

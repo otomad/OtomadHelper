@@ -7,6 +7,7 @@
 	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	Width="800"
 	Loaded="OnLoaded"
 	d:DesignHeight="450"
@@ -28,6 +29,8 @@
 			<c:ColorPickerValuesToTextConverter x:Key="ValuesToText" />
 			<c:ColorPickerTextChangedEventArgsToTextAndNameConverter x:Key="TextChangedToTextName" />
 			<c:UnicolourToMediaColorConverter x:Key="UniToMediaColor" />
+			<c:ColorPickerModelAxisToRangeConverter x:Key="ModelAxisToRange" />
+			<c:UnicolourToPointXyzConverter x:Key="UniToXyz" />
 
 			<Style BasedOn="{StaticResource DefaultRadioButtonStyle}" TargetType="RadioButton">
 				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
@@ -77,22 +80,80 @@
 				<Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
 				<Setter Property="RenderOptions.EdgeMode" Value="Unspecified" />
 			</Style>
+
+			<Style BasedOn="{StaticResource DefaultColorTrackThumbStyle}" TargetType="c:ColorTrackThumb">
+				<Setter Property="Foreground">
+					<Setter.Value>
+						<SolidColorBrush Color="{Binding Color, Converter={StaticResource UniToMediaColor}}" />
+					</Setter.Value>
+				</Setter>
+			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>
 
-	<Grid m:GridDef.Column="Auto,10,25,10,25,10,Auto" Height="300">
-		<Image
-			Grid.Column="0"
-			Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
-			Width="{Binding Height, RelativeSource={RelativeSource Self}}"
-			Source="{Binding PrimarySource, Mode=OneTime}"
-			/>
+	<Grid m:GridDef.Column="Auto,20,12,20,12,20,Auto" Height="300">
+		<Grid Grid.Column="0">
+			<Image
+				Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
+				Width="{Binding Height, RelativeSource={RelativeSource Self}}"
+				Source="{Binding PrimarySource, Mode=OneTime}"
+				/>
+			<Canvas>
+				<c:ColorTrackThumb ReverseY="True">
+					<c:ColorTrackThumb.X>
+						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 0}" Mode="OneWay">
+							<Binding Path="Color" />
+							<Binding Path="ModelAxis" />
+						</MultiBinding>
+					</c:ColorTrackThumb.X>
+					<c:ColorTrackThumb.Y>
+						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 1}" Mode="OneWay">
+							<Binding Path="Color" />
+							<Binding Path="ModelAxis" />
+						</MultiBinding>
+					</c:ColorTrackThumb.Y>
+					<c:ColorTrackThumb.XRange>
+						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 0}" Mode="OneWay">
+							<Binding Path="ModelAxis" />
+							<Binding Path="Color" />
+						</MultiBinding>
+					</c:ColorTrackThumb.XRange>
+					<c:ColorTrackThumb.YRange>
+						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 1}" Mode="OneWay">
+							<Binding Path="ModelAxis" />
+							<Binding Path="Color" />
+						</MultiBinding>
+					</c:ColorTrackThumb.YRange>
+				</c:ColorTrackThumb>
+			</Canvas>
+		</Grid>
 
-		<Image
-			Grid.Column="2"
-			Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
-			Source="{Binding SecondarySource, Mode=OneTime}"
-			/>
+		<Grid Grid.Column="2">
+			<Image
+				Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
+				Source="{Binding SecondarySource, Mode=OneTime}"
+				/>
+			<Canvas>
+				<c:ColorTrackThumb
+					X="0.5"
+					ReverseY="True"
+					DragAxis="Y"
+					>
+					<c:ColorTrackThumb.Y>
+						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 2}" Mode="OneWay">
+							<Binding Path="Color" />
+							<Binding Path="ModelAxis" />
+						</MultiBinding>
+					</c:ColorTrackThumb.Y>
+					<c:ColorTrackThumb.YRange>
+						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 2}" Mode="OneWay">
+							<Binding Path="ModelAxis" />
+							<Binding Path="Color" />
+						</MultiBinding>
+					</c:ColorTrackThumb.YRange>
+				</c:ColorTrackThumb>
+			</Canvas>
+		</Grid>
 
 		<Grid Grid.Column="4">
 			<Rectangle Fill="{StaticResource CheckerBoard}" />
@@ -130,7 +191,7 @@
 
 			<TextBox Tag="HSL.0" Grid.Column="1" Grid.Row="0" />
 			<TextBox Tag="HSL.1" Grid.Column="1" Grid.Row="1" />
-			<TextBox Tag="HSL.2" Grid.Column="1" Grid.Row="2" />
+			<TextBox Tag="HSL.2" Grid.Column="1" Grid.Row="2" x:Name="Test" />
 			<TextBox Tag="RGB.0" Grid.Column="1" Grid.Row="4" />
 			<TextBox Tag="RGB.1" Grid.Column="1" Grid.Row="5" />
 			<TextBox Tag="RGB.2" Grid.Column="1" Grid.Row="6" />

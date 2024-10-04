@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
@@ -81,5 +82,26 @@ public class BindingExtension : MarkupExtension {
 			else
 				return [value]; // Required for VS design-time
 		}
+	}
+}
+
+public class StaticBinding : MarkupExtension {
+	public object? Value { get; set; }
+
+	public StaticBinding() { }
+	public StaticBinding(object? value) => Value = value;
+
+	public override object ProvideValue(IServiceProvider serviceProvider) {
+		Binding binding = new() {
+			ConverterParameter = Value,
+			Converter = new StaticConverter(),
+			Mode = BindingMode.OneTime,
+		};
+		return binding;
+	}
+
+	private class StaticConverter : IValueConverter {
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => parameter;
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => parameter;
 	}
 }
