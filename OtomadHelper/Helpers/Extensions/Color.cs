@@ -29,6 +29,6 @@ public static partial class Extensions {
 
 	public static MediaColor ToMediaColor(this Unicolour color) {
 		Rgb255 rgb = color.Rgb.Byte255;
-		return MediaColor.FromArgb((byte)color.Alpha.A255, (byte)rgb.R, (byte)rgb.G, (byte)rgb.B);
+		return MediaColor.FromArgb((byte)color.Alpha.A255, (byte)rgb.ConstrainedR, (byte)rgb.ConstrainedG, (byte)rgb.ConstrainedB);
 	}
 }

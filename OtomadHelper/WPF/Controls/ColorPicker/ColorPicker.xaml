@@ -63,6 +63,7 @@
 							<m:InteractivityItems>
 								<m:InteractivityItems.Behaviors>
 									<m:NumberTextBoxBehavior />
+									<m:NumberTextBoxUpDownKeyBehavior />
 								</m:InteractivityItems.Behaviors>
 								<m:InteractivityItems.Triggers>
 									<i:EventTrigger EventName="TextChanged">
@@ -88,7 +89,7 @@
 					</Setter.Value>
 				</Setter>
 				<Setter Property="Round" Value="True" />
-				<!--<Setter Property="m:InteractivityItems.Template">
+				<Setter Property="m:InteractivityItems.Template">
 					<Setter.Value>
 						<m:InteractivityTemplate>
 							<m:InteractivityItems>
@@ -100,7 +101,7 @@
 							</m:InteractivityItems>
 						</m:InteractivityTemplate>
 					</Setter.Value>
-				</Setter>-->
+				</Setter>
 			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>

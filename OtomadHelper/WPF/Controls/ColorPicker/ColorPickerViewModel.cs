@@ -33,7 +33,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			}
 			OnPropertyChanged(nameof(Values));
 			UpdateSourcesBehavior behavior = UpdateSourcesBehavior.UpdateBoth;
-			if (prevColor is not null) {
+			if (prevColor is not null && isInit) {
 				(ColourSpace model, int axis) = ModelAxis;
 				int z = GetPointXyz(2);
 				double[] prevTriplet = ToTriplet(prevColor, model).ToArray<double>(), triplet = ToTriplet(color, model).ToArray<double>();
@@ -41,9 +41,11 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 				if (prevTriplet.Keys().All(i => i == axis ? true : prevTriplet[i] == triplet[i])) behavior &= ~UpdateSourcesBehavior.UpdateSecondary;
 			}
 			UpdateSources(behavior);
+			isInit = true;
 			isColorChanging = false;
 		}
 	}
+	private bool isInit = false;
 
 	partial void OnModelAxisChanged(ColorPickerModelAxis value) {
 		UpdateSources();
@@ -84,8 +86,6 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			isTextChanging = true;
 			double alpha = Color.Alpha.A;
 			(ColourSpace model, int axis) = ColorPickerModelAxis.FromName(e.Name);
-			//ColourSpace model = modelAxis.Model;
-			//int axis = modelAxis
 			if (!double.TryParse(e.Text, out double value)) return;
 			double[] triplet = ToTriplet(model).ToArray<double>();
 			Range inputRange = GetInputRange(model).Get<Range>(axis), outputRange = GetOutputRange(model).Get<Range>(axis);
@@ -104,9 +104,19 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		View.PointXy.XRange = range.Get<Range>(GetPointXyz(0));
 		View.PointXy.YRange = range.Get<Range>(GetPointXyz(1));
 		View.PointZ.YRange = range.Get<Range>(GetPointXyz(2));
-		BindingOperations.SetBinding(View.PointXy, ColorTrackThumb.XProperty, new Binding("Text") { Source = GetTextBox(0), Mode = BindingMode.TwoWay });
-		BindingOperations.SetBinding(View.PointXy, ColorTrackThumb.YProperty, new Binding("Text") { Source = GetTextBox(1), Mode = BindingMode.TwoWay });
-		BindingOperations.SetBinding(View.PointZ, ColorTrackThumb.YProperty, new Binding("Text") { Source = GetTextBox(2), Mode = BindingMode.TwoWay });
+		BindingOperations.SetBinding(View.PointXy, ColorTrackThumb.XProperty, new Binding("Text") { Source = GetTextBox(0), Mode = BindingMode.OneWay });
+		BindingOperations.SetBinding(View.PointXy, ColorTrackThumb.YProperty, new Binding("Text") { Source = GetTextBox(1), Mode = BindingMode.OneWay });
+		BindingOperations.SetBinding(View.PointZ, ColorTrackThumb.YProperty, new Binding("Text") { Source = GetTextBox(2), Mode = BindingMode.OneWay });
+		// BindingMode.TwoWay will break binding, so we use TextBox.SetCurrentValue instead.
+	}
+
+	[RelayCommand]
+	public void ThumbDragged(ColorTrackThumbDraggingRoutedEventArgs e) {
+		ColorTrackThumb thumb = (ColorTrackThumb)e.Source;
+		TextBox? x = BindingOperations.GetBinding(thumb, ColorTrackThumb.XProperty)?.Source as TextBox;
+		TextBox? y = BindingOperations.GetBinding(thumb, ColorTrackThumb.YProperty)?.Source as TextBox;
+		x?.SetCurrentValue(TextBox.TextProperty, Math.Round(e.X).ToString());
+		y?.SetCurrentValue(TextBox.TextProperty, Math.Round(e.Y).ToString());
 	}
 
 	private const int SOURCE_RESOLUTION = 32;

@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -91,12 +92,12 @@ public partial class ColorTrackThumb : Thumb {
 		if (initial || (DragAxis & ColorTrackThumbDragAxis.X) != 0) {
 			Canvas.SetLeft(this, x - ActualWidth / 2);
 			result.X = MathEx.Map(x, 0, Canvas.ActualWidth, range.X.Min, range.X.Max);
-			if (IsXBound) X = RoundIfNeed(result.X);
+			if (CanSetX) X = RoundIfNeed(result.X);
 		}
 		if (initial || (DragAxis & ColorTrackThumbDragAxis.Y) != 0) {
 			Canvas.SetTop(this, y - ActualHeight / 2);
 			result.Y = MathEx.Map(y, 0, Canvas.ActualHeight, range.Y.Min, range.Y.Max);
-			if (IsYBound) Y = RoundIfNeed(result.Y);
+			if (CanSetY) Y = RoundIfNeed(result.Y);
 		}
 		isOnChanging = false;
 		return result;
@@ -104,8 +105,18 @@ public partial class ColorTrackThumb : Thumb {
 
 	private double RoundIfNeed(double value) => Round ? Math.Round(value) : value;
 
-	private bool IsXBound => GetBindingExpression(XProperty) != null;
-	private bool IsYBound => GetBindingExpression(YProperty) != null;
+	private bool CanSetX => CheckBindingToSource(XProperty);
+	private bool CanSetY => CheckBindingToSource(YProperty);
+
+	/// <summary>
+	/// <para>Check if the <see cref="BindingMode" /> is <see cref="BindingMode.OneWayToSource" /> or  <see cref="BindingMode.TwoWay" />?</para>
+	/// <para>If not checked, it will create a local data and make the binding invalid.</para>
+	/// </summary>
+	private bool CheckBindingToSource(DependencyProperty dp) {
+		BindingExpression? expression = GetBindingExpression(dp);
+		if (expression is null) return false;
+		return expression.ParentBinding.Mode is BindingMode.OneWayToSource or BindingMode.TwoWay;
+	}
 
 	private void RaiseDragging(XY xy) =>
 		RaiseEvent(new ColorTrackThumbDraggingRoutedEventArgs(DraggingEvent, this, Tag as string ?? "", xy.X, xy.Y));

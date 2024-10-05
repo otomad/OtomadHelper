@@ -37,7 +37,7 @@
 				<TextBox x:Name="X" Text="0" />
 				<Border Width="100" Height="100" BorderBrush="Gray" BorderThickness="1">
 					<Canvas>
-						<c:ColorTrackThumb Foreground="Lime" X="{Binding Text, ElementName=X, Mode=TwoWay}" Y="0" />
+						<c:ColorTrackThumb Foreground="Lime" X="{Binding Text, ElementName=X, Mode=OneWay}" Y="0" />
 					</Canvas>
 				</Border>
 			</StackPanel>

@@ -24,7 +24,7 @@ public partial class NumberTextBoxBehavior : Behavior<TextBox> {
 
 	private NumberTextBoxInputMode NumberInputMode => GetNumberInputMode(AssociatedObject);
 
-	private void TextBox_TextInput(object sender, TextCompositionEventArgs e) {
+	private void TextBox_TextInput(object sender, TextCompositionEventArgs e) { // TODO: Range DependencyProperty - TextBox Change if out of range, clamp it.
 		if (NumberInputMode == NumberTextBoxInputMode.Text) return;
 		string input = e.Text, original = AssociatedObject.Text;
 		int caret = AssociatedObject.CaretIndex;
