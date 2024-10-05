@@ -1,3 +1,5 @@
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 using Wacton.Unicolour;
@@ -17,7 +19,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	private static readonly ColourSpace[] KnownModels =
 		[ColourSpace.Hsl, ColourSpace.Rgb255, ColourSpace.Hsb, ColourSpace.Hwb, ColourSpace.Oklab, ColourSpace.Oklch];
 	private bool isColorChanging = false;
-	partial void OnColorChanged(Unicolour color) {
+	partial void OnColorChanged(Unicolour? prevColor, Unicolour color) {
 		lock (this) {
 			if (isColorChanging) return;
 			isColorChanging = true;
@@ -30,13 +32,22 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 				Values[new(model, 2)] = MathEx.ClampMap(triplet.Z, outputRange.Z.Min, outputRange.Z.Max, inputRange.Z.Min, inputRange.Z.Max);
 			}
 			OnPropertyChanged(nameof(Values));
-			UpdateSources();
+			UpdateSourcesBehavior behavior = UpdateSourcesBehavior.UpdateBoth;
+			if (prevColor is not null) {
+				(ColourSpace model, int axis) = ModelAxis;
+				int z = GetPointXyz(2);
+				double[] prevTriplet = ToTriplet(prevColor, model).ToArray<double>(), triplet = ToTriplet(color, model).ToArray<double>();
+				if (prevTriplet[axis] == triplet[axis]) behavior &= ~UpdateSourcesBehavior.UpdatePrimary;
+				if (prevTriplet.Keys().All(i => i == axis ? true : prevTriplet[i] == triplet[i])) behavior &= ~UpdateSourcesBehavior.UpdateSecondary;
+			}
+			UpdateSources(behavior);
 			isColorChanging = false;
 		}
 	}
 
 	partial void OnModelAxisChanged(ColorPickerModelAxis value) {
 		UpdateSources();
+		UpdateThumbsBinding();
 	}
 
 	internal static ThreeD ToTriplet(Unicolour color, ColourSpace model) {
@@ -84,27 +95,18 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		}
 	}
 
-	[RelayCommand]
-	public void ThumbDragged(ColorTrackThumbDraggingRoutedEventArgs e) {
-		(ColourSpace model, int axis) = ModelAxis;
-		double[] triplet = ToTriplet(model).ToArray<double>();
+	internal void UpdateThumbsBinding() {
+		if (View is null) return;
+		ThreeDRange range = GetInputRange(ModelAxis.Model);
 
-		int GetPointXyz(int xyzIndex) => ColorPickerModelAxisToRangeConverter.GetPointXyz(xyzIndex, axis);
+		TextBox? GetTextBox(int xyzIndex) => View?.FindForm<TextBox>(new ColorPickerModelAxis(ModelAxis.Model, GetPointXyz(xyzIndex)).ToString());
 
-		switch (e.Axis) {
-			case "XY":
-				triplet[GetPointXyz(0)] = e.X;
-				triplet[GetPointXyz(1)] = e.Y;
-				break;
-			case "Z":
-				triplet[GetPointXyz(2)] = e.Y;
-				break;
-			default:
-				break;
-		}
-
-		Color = new(model, triplet[0], triplet[1], triplet[2]);
-		_ = 1;
+		View.PointXy.XRange = range.Get<Range>(GetPointXyz(0));
+		View.PointXy.YRange = range.Get<Range>(GetPointXyz(1));
+		View.PointZ.YRange = range.Get<Range>(GetPointXyz(2));
+		BindingOperations.SetBinding(View.PointXy, ColorTrackThumb.XProperty, new Binding("Text") { Source = GetTextBox(0), Mode = BindingMode.TwoWay });
+		BindingOperations.SetBinding(View.PointXy, ColorTrackThumb.YProperty, new Binding("Text") { Source = GetTextBox(1), Mode = BindingMode.TwoWay });
+		BindingOperations.SetBinding(View.PointZ, ColorTrackThumb.YProperty, new Binding("Text") { Source = GetTextBox(2), Mode = BindingMode.TwoWay });
 	}
 
 	private const int SOURCE_RESOLUTION = 32;
@@ -114,11 +116,19 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	[ObservableProperty]
 	private WriteableBitmap secondarySource = new(1, SOURCE_RESOLUTION, 96, 96, PixelFormats.Rgb24, null);
 
-	private void UpdateSources() { // FIXME: So stuck.
+	[Flags]
+	private enum UpdateSourcesBehavior {
+		DoNotUpdate = 0,
+		UpdatePrimary = 1,
+		UpdateSecondary = 2,
+		UpdateBoth = UpdatePrimary | UpdateSecondary,
+	}
+
+	private void UpdateSources(UpdateSourcesBehavior behavior = UpdateSourcesBehavior.UpdateBoth) { // FIXME: So stuck.
 		const int CHANNEL = 3;
 		Tuple<double, double, double> tuple = ToTriplet(ModelAxis.Model).ToTuple();
 		ThreeDRange range = GetOutputRange(ModelAxis.Model);
-		{
+		if ((behavior & UpdateSourcesBehavior.UpdatePrimary) != 0) {
 			int width = PrimarySource.PixelWidth, height = PrimarySource.PixelHeight, stride = PrimarySource.BackBufferStride;
 			unsafe {
 				byte* pixels = (byte*)PrimarySource.BackBuffer.ToPointer();
@@ -156,7 +166,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 				PrimarySource.Unlock();
 			}
 		}
-		{
+		if ((behavior & UpdateSourcesBehavior.UpdateSecondary) != 0) {
 			int width = SecondarySource.PixelWidth, height = SecondarySource.PixelHeight, stride = SecondarySource.BackBufferStride;
 			unsafe {
 				byte* pixels = (byte*)SecondarySource.BackBuffer;
@@ -214,6 +224,14 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			_ => throw new NotImplementedException(),
 		};
 	}
+
+	public static int GetPointXyz(int xyzIndex, int axis) {
+		List<int> xyzMap = [0, 1, 2];
+		xyzMap.Remove(axis);
+		xyzMap.Add(axis);
+		return xyzMap[xyzIndex];
+	}
+	public int GetPointXyz(int xyzIndex) => GetPointXyz(xyzIndex, ModelAxis.Axis);
 }
 
 public struct ColorPickerModelAxis(ColourSpace model, int axis) {
@@ -226,23 +244,26 @@ public struct ColorPickerModelAxis(ColourSpace model, int axis) {
 	public override bool Equals(object obj) => obj is ColorPickerModelAxis item && this == item;
 	public override int GetHashCode() => Model.GetHashCode() ^ Axis.GetHashCode();
 
+	internal static readonly Dictionary<string, ColourSpace> NameModelMap = new() {
+		["RGB"] = ColourSpace.Rgb255,
+		["HSL"] = ColourSpace.Hsl,
+		["HSB"] = ColourSpace.Hsb,
+		["HWB"] = ColourSpace.Hwb,
+		["LAB"] = ColourSpace.Lab,
+		["LCH"] = ColourSpace.Lchab,
+		["OKLAB"] = ColourSpace.Oklab,
+		["OKLCH"] = ColourSpace.Oklch,
+	};
+
 	public static ColorPickerModelAxis FromName(string name) {
 		string[] splitted = name.Split('_', '.');
 		return new(
-			splitted[0].ToUpperInvariant() switch {
-				"RGB" => ColourSpace.Rgb255,
-				"HSL" => ColourSpace.Hsl,
-				"HSB" => ColourSpace.Hsb,
-				"HWB" => ColourSpace.Hwb,
-				"LAB" => ColourSpace.Lab,
-				"LCH" => ColourSpace.Lchab,
-				"OKLAB" => ColourSpace.Oklab,
-				"OKLCH" => ColourSpace.Oklch,
-				_ => throw new NotImplementedException(),
-			},
+			NameModelMap[splitted[0].ToUpperInvariant()],
 			int.Parse(splitted[1])
 		);
 	}
+
+	public override string ToString() => $"{NameModelMap.GetKeyByValue(Model)}.{Axis}";
 
 	internal void Deconstruct(out ColourSpace model, out int axis) {
 		model = Model;

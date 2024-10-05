@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 
 using Wacton.Unicolour;
@@ -17,6 +16,7 @@ public partial class ColorPicker : UserControl {
 
 	private void OnLoaded(object sender, RoutedEventArgs e) {
 		DataContext.View = this;
+		DataContext.UpdateThumbsBinding();
 	}
 
 	public new ColorPickerViewModel DataContext => (ColorPickerViewModel)base.DataContext;
@@ -31,5 +31,12 @@ public partial class ColorPicker : UserControl {
 		], "Color") ?? false;
 		Unicolour newColor = viewModel.Color;
 		return newColor.ToMediaColor();
+	}
+
+	public TElement? FindForm<TElement>(string tag) where TElement : FrameworkElement {
+		foreach (UIElement element in Form.Children)
+			if (element is TElement el && el.Tag is string Tag && Tag == tag)
+				return el;
+		return null;
 	}
 }

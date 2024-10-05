@@ -1,6 +1,4 @@
-using System;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -48,8 +46,10 @@ public class ColorPickerTextChangedEventArgsToTextAndNameConverter : IValueConve
 [ValueConversion(typeof(Unicolour), typeof(Color))]
 public class UnicolourToMediaColorConverter : IValueConverter {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		Unicolour color = (Unicolour)value;
-		return color.ToMediaColor();
+		Unicolour unicolour = (Unicolour)value;
+		Color color = unicolour.ToMediaColor();
+		if (parameter is Color Color && Color == Colors.Transparent) color.A = 0;
+		return color;
 	}
 
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
@@ -65,51 +65,3 @@ public class TrackThumbInnerBaseMultiplySizeConverter : IMultiValueConverter {
 	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
 }
-
-[ValueConversion(typeof(ColorPickerModelAxis), typeof(Range))]
-public class ColorPickerModelAxisToRangeConverter : IMultiValueConverter {
-	[SuppressMessage("Style", "IDE0008")]
-	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
-		(ColourSpace model, int axis) = (ColorPickerModelAxis)values[0];
-		var range = ColorPickerViewModel.GetOutputRange(model);
-		int xyzIndex = (int)parameter;
-		int pointXyz = GetPointXyz(xyzIndex, axis);
-		return range.Get<Range>(pointXyz);
-	}
-
-	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
-
-	public static int GetPointXyz(int xyzIndex, int axis) {
-		List<int> xyzMap = [0, 1, 2];
-		xyzMap.Remove(axis);
-		xyzMap.Add(axis);
-		return xyzMap[xyzIndex];
-	}
-}
-
-[ValueConversion(typeof(Unicolour), typeof(double))]
-public class UnicolourToPointXyzConverter : IMultiValueConverter {
-	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
-		Unicolour color = (Unicolour)values[0];
-		(ColourSpace model, int axis) = (ColorPickerModelAxis)values[1];
-		int xyzIndex = (int)parameter;
-		int pointXyz = ColorPickerModelAxisToRangeConverter.GetPointXyz(xyzIndex, axis);
-		return ColorPickerViewModel.ToTriplet(color, model).Get<double>(pointXyz);
-	}
-
-	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
-}
-
-/*[ValueConversion(typeof(RoutedEventArgs), typeof((string Axis, double X, double Y)))]
-public class DraggingEventArgsToPointXyConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		RoutedEventArgs e = (RoutedEventArgs)value;
-		ColorTrackThumb thumb = (ColorTrackThumb)e.Source;
-		return ((string)thumb.Tag, thumb.X, thumb.Y);
-	}
-
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
-}*/

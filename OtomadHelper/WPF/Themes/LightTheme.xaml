@@ -8,6 +8,7 @@
 	<s:String x:Key="ResourceDictionaryName">ThemeColor</s:String>
 	<Color x:Key="ForegroundColor">#E4000000</Color>
 	<SolidColorBrush x:Key="ForegroundBrush" Color="{DynamicResource ForegroundColor}" />
+	<SolidColorBrush x:Key="BackgroundBrush" Color="#FFF3F3F3" />
 	<SolidColorBrush x:Key="CardStroke" Color="#0E000000" />
 	<SolidColorBrush x:Key="SurfaceOverlayBackground" Color="#0B000000" />
 	<SolidColorBrush x:Key="ControlBackground" Color="#B2FFFFFF" />
@@ -52,4 +53,5 @@
 	<SolidColorBrush x:Key="ControlStrongStroke" Color="#9A000000" />
 	<SolidColorBrush x:Key="ControlStrongStrokeDisabled" Color="#37000000" />
 	<SolidColorBrush x:Key="AccentDisabled" Color="#37000000" />
+	<SolidColorBrush x:Key="CheckerBoardAlt" Color="#FFD9D9D9" />
 </m:NamedResourceDictionary>

@@ -237,4 +237,26 @@ public static partial class Extensions {
 	/// <param name="def">Default value.</param>
 	public static T ElementAtOrDefault<T>(this IEnumerable<T> source, int index, T def) =>
 		source.HasIndex(index) ? source.ElementAt(index) : def;
+
+	/// <summary>
+	/// Get dictionary key by value.
+	/// </summary>
+	/// <remarks>
+	/// Throw if the value doesn't match any <see cref="KeyValuePairs" />.
+	/// </remarks>
+	/// <typeparam name="TValue">The value type must override <see cref="Object.Equals(object)" /> method.</typeparam>
+	/// <param name="value">The value type must override <see cref="Object.Equals(object)" /> method.</param>
+	/// <returns>The first key that match the value.</returns>
+	/// <exception cref="ArgumentNullException" />
+	public static TKey GetKeyByValue<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TValue value) =>
+		dictionary.First(pair => EqualityComparer<TValue>.Default.Equals(pair.Value, value)).Key;
+
+	/// <summary>
+	/// Get the index <see cref="IEnumerable{T}" /> of the <paramref name="collection" />.
+	/// </summary>
+	/// <remarks>
+	/// For example, if the length of the <paramref name="collection" /> is <see langword="4" />,
+	/// this will return <c>IEnumerable&lt;int&gt; { 0, 1, 2, 3 }</c>.
+	/// </remarks>
+	public static IEnumerable<int> Keys<T>(this IEnumerable<T> collection) => Enumerable.Range(0, collection.Count());
 }

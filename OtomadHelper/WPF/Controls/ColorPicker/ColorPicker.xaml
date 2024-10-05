@@ -31,8 +31,6 @@
 			<c:ColorPickerValuesToTextConverter x:Key="ValuesToText" />
 			<c:ColorPickerTextChangedEventArgsToTextAndNameConverter x:Key="TextChangedToTextName" />
 			<c:UnicolourToMediaColorConverter x:Key="UniToMediaColor" />
-			<c:ColorPickerModelAxisToRangeConverter x:Key="ModelAxisToRange" />
-			<c:UnicolourToPointXyzConverter x:Key="UniToXyz" />
 
 			<Style BasedOn="{StaticResource DefaultRadioButtonStyle}" TargetType="RadioButton">
 				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
@@ -89,7 +87,8 @@
 						<SolidColorBrush Color="{Binding Color, Converter={StaticResource UniToMediaColor}}" />
 					</Setter.Value>
 				</Setter>
-				<Setter Property="m:InteractivityItems.Template">
+				<Setter Property="Round" Value="True" />
+				<!--<Setter Property="m:InteractivityItems.Template">
 					<Setter.Value>
 						<m:InteractivityTemplate>
 							<m:InteractivityItems>
@@ -101,7 +100,7 @@
 							</m:InteractivityItems>
 						</m:InteractivityTemplate>
 					</Setter.Value>
-				</Setter>
+				</Setter>-->
 			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>
@@ -115,8 +114,8 @@
 				m:CornerRadiusClip.CornerRadius="{StaticResource TrackCornerRadius}"
 				/>
 			<Canvas>
-				<c:ColorTrackThumb Tag="XY" ReverseY="True">
-					<c:ColorTrackThumb.X>
+				<c:ColorTrackThumb x:Name="PointXy" ReverseY="True">
+					<!--<c:ColorTrackThumb.X>
 						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 0}">
 							<Binding Path="Color" />
 							<Binding Path="ModelAxis" />
@@ -139,7 +138,7 @@
 							<Binding Path="ModelAxis" />
 							<Binding Path="Color" />
 						</MultiBinding>
-					</c:ColorTrackThumb.YRange>
+					</c:ColorTrackThumb.YRange>-->
 				</c:ColorTrackThumb>
 			</Canvas>
 		</Grid>
@@ -152,12 +151,12 @@
 				/>
 			<Canvas>
 				<c:ColorTrackThumb
-					Tag="Z"
+					x:Name="PointZ"
 					X="0.5"
 					ReverseY="True"
 					DragAxis="Y"
 					>
-					<c:ColorTrackThumb.Y>
+					<!--<c:ColorTrackThumb.Y>
 						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 2}">
 							<Binding Path="Color" />
 							<Binding Path="ModelAxis" />
@@ -168,7 +167,7 @@
 							<Binding Path="ModelAxis" />
 							<Binding Path="Color" />
 						</MultiBinding>
-					</c:ColorTrackThumb.YRange>
+					</c:ColorTrackThumb.YRange>-->
 				</c:ColorTrackThumb>
 			</Canvas>
 		</Grid>
@@ -180,14 +179,14 @@
 					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
 						<LinearGradientBrush.GradientStops>
 							<GradientStop Offset="0" Color="{Binding Color, Converter={StaticResource UniToMediaColor}}" />
-							<GradientStop Offset="1" Color="Transparent" />
+							<GradientStop Offset="1" Color="{Binding Color, Converter={StaticResource UniToMediaColor}, ConverterParameter={x:Static Colors.Transparent}}" />
 						</LinearGradientBrush.GradientStops>
 					</LinearGradientBrush>
 				</Rectangle.Fill>
 			</Rectangle>
 		</Grid>
 
-		<Grid Grid.Column="6" m:GridDef.Column="Auto,65,Auto,10,Auto,65,Auto,10,Auto,65,Auto" m:GridDef.Row="*,*,*,10,*,*,*">
+		<Grid x:Name="Form" Grid.Column="6" m:GridDef.Column="Auto,65,Auto,10,Auto,65,Auto,10,Auto,65,Auto" m:GridDef.Row="*,*,*,10,*,*,*">
 			<RadioButton Tag="HSL.0" Grid.Column="0" Grid.Row="0">H</RadioButton>
 			<RadioButton Tag="HSL.1" Grid.Column="0" Grid.Row="1">S</RadioButton>
 			<RadioButton Tag="HSL.2" Grid.Column="0" Grid.Row="2">L</RadioButton>
@@ -209,7 +208,7 @@
 
 			<TextBox Tag="HSL.0" Grid.Column="1" Grid.Row="0" />
 			<TextBox Tag="HSL.1" Grid.Column="1" Grid.Row="1" />
-			<TextBox Tag="HSL.2" Grid.Column="1" Grid.Row="2" x:Name="Test" />
+			<TextBox Tag="HSL.2" Grid.Column="1" Grid.Row="2" />
 			<TextBox Tag="RGB.0" Grid.Column="1" Grid.Row="4" />
 			<TextBox Tag="RGB.1" Grid.Column="1" Grid.Row="5" />
 			<TextBox Tag="RGB.2" Grid.Column="1" Grid.Row="6" />

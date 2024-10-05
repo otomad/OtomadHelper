@@ -11,22 +11,19 @@
 
 		<DrawingBrush.Drawing>
 			<DrawingGroup>
-				<GeometryDrawing Brush="White">
+				<GeometryDrawing Brush="{DynamicResource BackgroundBrush}">
 					<GeometryDrawing.Geometry>
 						<RectangleGeometry Rect="0,0,100,100" />
 					</GeometryDrawing.Geometry>
 				</GeometryDrawing>
 
-				<GeometryDrawing>
+				<GeometryDrawing Brush="{DynamicResource CheckerBoardAlt}">
 					<GeometryDrawing.Geometry>
 						<GeometryGroup>
 							<RectangleGeometry Rect="0,0,50,50" />
 							<RectangleGeometry Rect="50,50,50,50" />
 						</GeometryGroup>
 					</GeometryDrawing.Geometry>
-					<GeometryDrawing.Brush>
-						<SolidColorBrush Color="#d7d7d7" />
-					</GeometryDrawing.Brush>
 				</GeometryDrawing>
 			</DrawingGroup>
 		</DrawingBrush.Drawing>
