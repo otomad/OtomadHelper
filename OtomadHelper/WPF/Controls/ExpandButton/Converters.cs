@@ -1,14 +1,11 @@
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace OtomadHelper.WPF.Controls;
 
-public class ExpandButtonIsCheckedToIsExpandedTextConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		bool isExpanded = (bool)value;
-		return isExpanded ? t.ContentDialog.Expander.CollapseDetails : t.ContentDialog.Expander.ExpandDetails;
-	}
-
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
+[ValueConversion(typeof(bool), typeof(string))]
+public class ExpandButtonIsCheckedToIsExpandedTextConverter : ValueConverter<bool, string> {
+	public override string Convert(bool isExpanded, Type targetType, object parameter, CultureInfo culture) =>
+		isExpanded ? t.ContentDialog.Expander.CollapseDetails : t.ContentDialog.Expander.ExpandDetails;
 }

@@ -62,15 +62,11 @@ public sealed class BooleanInversionConverter : BooleanConverter<bool> {
 #endregion
 
 [ValueConversion(typeof(double), typeof(Thickness))]
-public class DoubleToThicknessConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		double uniformLength = (double)value;
-		return new Thickness(uniformLength);
-	}
+public class DoubleToThicknessConverter : ValueConverter<double, Thickness, string> {
+	public override Thickness Convert(double uniformLength, Type targetType, string parameter, CultureInfo culture) => new(uniformLength);
 
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+	public override double ConvertBack(Thickness thickness, Type targetType, string parameter, CultureInfo culture) {
 		string side = (parameter ?? "left").ToString().ToLowerInvariant();
-		Thickness thickness = (Thickness)value;
 		return side switch {
 			"top" => thickness.Top,
 			"right" => thickness.Right,
@@ -81,15 +77,11 @@ public class DoubleToThicknessConverter : IValueConverter {
 }
 
 [ValueConversion(typeof(double), typeof(CornerRadius))]
-public class DoubleToCornerRadiusConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		double uniformRadius = (double)value;
-		return new CornerRadius(uniformRadius);
-	}
+public class DoubleToCornerRadiusConverter : ValueConverter<double, CornerRadius, string> {
+	public override CornerRadius Convert(double uniformRadius, Type targetType, string parameter, CultureInfo culture) => new(uniformRadius);
 
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+	public override double ConvertBack(CornerRadius cornerRadius, Type targetType, string parameter, CultureInfo culture) {
 		string side = (parameter ?? "top left").ToString().ToLowerInvariant();
-		CornerRadius cornerRadius = (CornerRadius)value;
 		return side switch {
 			string s when s.Contains("top") && s.Contains("right") => cornerRadius.TopRight,
 			string s when s.Contains("bottom") && s.Contains("right") => cornerRadius.BottomRight,
@@ -99,15 +91,11 @@ public class DoubleToCornerRadiusConverter : IValueConverter {
 	}
 }
 
-[ValueConversion(typeof(FrameworkElement), typeof(Rect))]
-public class ActualSizeToRectConverter : IMultiValueConverter {
-	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
-		(double actualWidth, double actualHeight) = values.ToTuple<Tuple<double, double>>();
-		return new Rect(0, 0, actualWidth, actualHeight);
+public class ActualSizeToRectConverter : MultiValueConverter<Tuple<double, double>, Rect> {
+	public override Rect Convert(Tuple<double, double> values, Type targetType, object parameter, CultureInfo culture) {
+		(double actualWidth, double actualHeight) = values;
+		return new(0, 0, actualWidth, actualHeight);
 	}
-
-	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
 }
 
 /// <summary>
@@ -178,35 +166,32 @@ public class BooleanNotConverter : IValueConverter {
 }
 
 [ValueConversion(typeof(Rect), typeof(DrawingBrush))]
-public class RectToDrawingBrushConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		Rect rect = (Rect)value;
+public class RectToDrawingBrushConverter : ValueConverter<Rect?, DrawingBrush> {
+	public override DrawingBrush Convert(Rect? rect, Type targetType, object parameter, CultureInfo culture) {
 		DrawingBrush brush = new();
 		DrawingGroup group = new();
 		group.Children.Add(new GeometryDrawing {
 			Brush = new SolidColorBrush(Colors.Transparent),
-			Geometry = new RectangleGeometry(new Rect(0, 0, 1, 1)),
+			Geometry = new RectangleGeometry(new(0, 0, 1, 1)),
 		});
 		group.Children.Add(new GeometryDrawing {
 			Brush = new SolidColorBrush(Colors.Black),
-			Geometry = new RectangleGeometry(rect),
+			Geometry = new RectangleGeometry(rect!.Value),
 		});
 		brush.Drawing = group;
 		return brush;
 	}
 
-	public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-		DrawingBrush brush = (DrawingBrush)value;
-		return ((brush.Drawing as DrawingGroup)?.Children.LastOrDefault() as GeometryDrawing)?.Geometry.Bounds;
-	}
+	public override Rect? ConvertBack(DrawingBrush brush, Type targetType, object parameter, CultureInfo culture) =>
+		((brush.Drawing as DrawingGroup)?.Children.LastOrDefault() as GeometryDrawing)?.Geometry.Bounds;
 }
 
-public class RelativeToAbsoluteRectConverter : IMultiValueConverter {
-	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
-		if (values.Any(value => value == DependencyProperty.UnsetValue))
-			return DependencyProperty.UnsetValue;
+public class RelativeToAbsoluteRectConverter : MultiValueConverter<Tuple<Rect, double, double>, Rect> {
+	public override Rect Convert(Tuple<Rect, double, double> values, Type targetType, object parameter, CultureInfo culture) {
+		//if (values.Any(value => value == DependencyProperty.UnsetValue))
+		//	return DependencyProperty.UnsetValue;
 
-		(Rect relativeRect, double actualWidth, double actualHeight) = values.ToTuple<Tuple<Rect, double, double>>();
+		(Rect relativeRect, double actualWidth, double actualHeight) = values;
 
 		return new Rect(
 			relativeRect.X * actualWidth,
@@ -215,48 +200,26 @@ public class RelativeToAbsoluteRectConverter : IMultiValueConverter {
 			relativeRect.Height * actualHeight
 		);
 	}
-
-	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
 }
 
 [ValueConversion(typeof(string), typeof(string))]
-public class AccessKeyAmpersandToUnderscoreConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-		((string)value).Replace('&', '_');
+public class AccessKeyAmpersandToUnderscoreConverter : ValueConverter<string, string> {
+	public override string Convert(string value, Type targetType, object parameter, CultureInfo culture) =>
+		value.Replace('&', '_');
 
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-		((string)value).Replace('_', '&');
+	public override string ConvertBack(string value, Type targetType, object parameter, CultureInfo culture) =>
+		value.Replace('_', '&');
 }
 
-//[ValueConversion(typeof(FrameworkElement), typeof(CornerRadius))]
-//public class OvalCornerRadiusConverter : IValueConverter {
-//	private static double IfNaN(double value, double replacement) =>
-//		value is double.NaN or double.PositiveInfinity or double.NegativeInfinity ? replacement : value;
-
-//	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-//		FrameworkElement element = (FrameworkElement)value;
-//		double radius = Math.Min(IfNaN(element.Width, double.PositiveInfinity), IfNaN(element.Height, double.PositiveInfinity)) / 2;
-//		if (radius == double.PositiveInfinity) radius = 0;
-//		return new CornerRadius(radius);
-//	}
-
-//	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-//		throw new NotImplementedException();
-//}
-
-public class OvalCornerRadiusConverter : IMultiValueConverter {
+public class OvalCornerRadiusConverter : MultiValueConverter<double[], CornerRadius> {
 	private static double IfNaN(double value, double replacement) =>
 		value is double.NaN or double.PositiveInfinity or double.NegativeInfinity ? replacement : value;
 
-	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
-		double radius = values.Cast<double>().Select(value => IfNaN(value, double.PositiveInfinity)).Min() / 2;
+	public override CornerRadius Convert(double[] values, Type targetType, object parameter, CultureInfo culture) {
+		double radius = values.Select(value => IfNaN(value, double.PositiveInfinity)).Min() / 2;
 		if (radius == double.PositiveInfinity) radius = 0;
-		return new CornerRadius(radius);
+		return new(radius);
 	}
-
-	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
 }
 
 public class DebuggerConverter : IValueConverter {
@@ -272,14 +235,11 @@ public class DebuggerConverter : IValueConverter {
 }
 
 [ValueConversion(typeof(object), typeof(Visibility))]
-public class ObjectToVisibilityConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+public class ObjectToVisibilityConverter : ValueConverter<object, Visibility> {
+	public override Visibility Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 		bool shown = BooleanOrConverter.IsTruthy(value);
 		return shown ? Visibility.Visible : Visibility.Collapsed;
 	}
-
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
 }
 
 public class CommandParameters : MultiBinding {
@@ -296,25 +256,18 @@ internal class MultiValueToArrayConverter : IMultiValueConverter {
 }
 
 [ValueConversion(typeof(Color), typeof(Color))]
-public class BackgroundToForegroundColorConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		Color color = (Color)value;
+public class BackgroundToForegroundColorConverter : ValueConverter<Color, Color> {
+	public override Color Convert(Color color, Type targetType, object parameter, CultureInfo culture) {
 		Wacton.Unicolour.Unicolour unicolour = color.ToUnicolour();
 		bool tooWhite = unicolour.Oklch.L >= 0.65;
 		return tooWhite ? Colors.Black : Colors.White;
 	}
-
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
 }
 
 [ValueConversion(typeof(SolidColorBrush), typeof(SolidColorBrush))]
-public class BackgroundToForegroundBrushConverter : IValueConverter {
+public class BackgroundToForegroundBrushConverter : ValueConverter<SolidColorBrush, SolidColorBrush> {
 	private readonly BackgroundToForegroundColorConverter converter = new();
 
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-		new SolidColorBrush((Color)converter.Convert(((SolidColorBrush)value).Color, typeof(Color), parameter, culture));
-
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
+	public override SolidColorBrush Convert(SolidColorBrush value, Type targetType, object parameter, CultureInfo culture) =>
+		new(converter.Convert(value.Color, typeof(Color), parameter, culture));
 }

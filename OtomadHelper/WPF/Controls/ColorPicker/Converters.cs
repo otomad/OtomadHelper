@@ -8,68 +8,49 @@ using Wacton.Unicolour;
 namespace OtomadHelper.WPF.Controls;
 
 [ValueConversion(typeof(ColorPickerModelAxis), typeof(bool))]
-public class ColorPickerModelAxisToCheckedConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		ColorPickerModelAxis modelAxis = (ColorPickerModelAxis)value;
-		return modelAxis == ColorPickerModelAxis.FromName((string)parameter);
-	}
+public class ColorPickerModelAxisToCheckedConverter : ValueConverter<ColorPickerModelAxis, bool, string> {
+	public override bool Convert(ColorPickerModelAxis modelAxis, Type targetType, string parameter, CultureInfo culture) =>
+		modelAxis == ColorPickerModelAxis.FromName(parameter);
 
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-		return ColorPickerModelAxis.FromName((string)parameter);
-	}
+	public override ColorPickerModelAxis ConvertBack(bool value, Type targetType, string parameter, CultureInfo culture) =>
+		ColorPickerModelAxis.FromName(parameter);
 }
 
 [ValueConversion(typeof(Dictionary<ColorPickerModelAxis, double>), typeof(string))]
-public class ColorPickerValuesToTextConverter : IValueConverter {
-	[SuppressMessage("Style", "IDE0008")]
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		var dictionary = (Dictionary<ColorPickerModelAxis, double>)value;
-		return dictionary.TryGetValue(ColorPickerModelAxis.FromName((string)parameter), out double result) ? Math.Round(result).ToString() : string.Empty;
+public class ColorPickerValuesToTextConverter : ValueConverter<Dictionary<ColorPickerModelAxis, double>, string, string> {
+	public override string Convert(Dictionary<ColorPickerModelAxis, double> dictionary, Type targetType, string parameter, CultureInfo culture) {
+		return dictionary.TryGetValue(ColorPickerModelAxis.FromName(parameter), out double result) ? Math.Round(result).ToString() : string.Empty;
 	}
-
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
 }
 
 [ValueConversion(typeof(TextChangedEventArgs), typeof(ValueTuple<string, string>))]
-public class ColorPickerTextChangedEventArgsToTextAndNameConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		TextChangedEventArgs e = (TextChangedEventArgs)value;
+public class ColorPickerTextChangedEventArgsToTextAndNameConverter : ValueConverter<TextChangedEventArgs, (string text, string name)> {
+	public override (string text, string name) Convert(TextChangedEventArgs e, Type targetType, object parameter, CultureInfo culture) {
 		TextBox textBox = (TextBox)e.Source;
 		return (textBox.Text, (string)textBox.Tag);
 	}
-
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
 }
 
 [ValueConversion(typeof(Unicolour), typeof(Color))]
-public class UnicolourToMediaColorConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		Unicolour unicolour = (Unicolour)value;
+public class UnicolourToMediaColorConverter : ValueConverter<Unicolour, Color> {
+	public override Color Convert(Unicolour unicolour, Type targetType, object parameter, CultureInfo culture) {
 		Color color = unicolour.ToMediaColor();
 		if (parameter is Color Color && Color == Colors.Transparent) color.A = 0;
 		return color;
 	}
 
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-		Color color = (Color)value;
-		return color.ToUnicolour();
-	}
+	public override Unicolour ConvertBack(Color color, Type targetType, object parameter, CultureInfo culture) =>
+		color.ToUnicolour();
 }
 
-public class TrackThumbInnerBaseMultiplySizeConverter : IMultiValueConverter {
-	public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) =>
-		values.Cast<double>().ToArray().Aggregate(1d, (a, b) => a * b);
-
-	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
+public class TrackThumbInnerBaseMultiplySizeConverter : MultiValueConverter<double[], double> {
+	public override double Convert(double[] values, Type targetType, object parameter, CultureInfo culture) =>
+		values.ToArray().Aggregate(1d, (a, b) => a * b);
 }
 
 [ValueConversion(typeof(string), typeof(Range))]
-public class TextBoxNameToRangeConverter : IValueConverter {
-	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		string name = (string)value;
+public class TextBoxNameToRangeConverter : ValueConverter<string, Range> {
+	public override Range Convert(string name, Type targetType, object parameter, CultureInfo culture) {
 		(ColourSpace model, int axis) = ColorPickerModelAxis.FromName(name);
 		(Range X, Range Y, Range Z) ranges = ColorPickerViewModel.GetInputRange(model);
 		return axis switch {
@@ -79,7 +60,4 @@ public class TextBoxNameToRangeConverter : IValueConverter {
 			_ => throw new ArgumentOutOfRangeException(name),
 		};
 	}
-
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-		throw new NotImplementedException();
 }

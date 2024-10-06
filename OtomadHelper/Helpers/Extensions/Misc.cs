@@ -1,4 +1,3 @@
-using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Data;
 
@@ -260,4 +259,20 @@ public static partial class Extensions {
 	/// <param name="def">Default value.</param>
 	public static double FiniteOrDefault(this double value, double def = default) =>
 		IsFinite(value) ? value : def;
+
+	/// <summary>
+	/// Check if the type is <see cref="IEnumerable{T}" /> type, and return the <see cref="IEnumerable{T}" /> type and its item type.
+	/// </summary>
+	/// <param name="enumerableType"><see cref="IEnumerable{T}" /> (or <see cref="IEnumerable" /> if don't know the <see langword="T" />) type.</param>
+	/// <param name="itemType">Type of <see langword="T" /> (or <see langword="null" /> if don't know).</param>
+	/// <returns>Is the type extends the <see cref="IEnumerable" /> type?</returns>
+	public static bool TryGetIEnumerableType(this Type type, out Type enumerableType, out Type itemType) {
+		enumerableType = null!;
+		itemType = null!;
+		if (!type.Extends(typeof(IEnumerable))) return false;
+		enumerableType = type.GetInterface("IEnumerable`1");
+		itemType = enumerableType?.GenericTypeArguments[0]!;
+		enumerableType ??= type.GetInterface("IEnumerable");
+		return true;
+	}
 }

@@ -123,10 +123,11 @@ public static partial class Extensions {
 	public static ITuple ToTuple(this IList<object> list, Type? tupleType = null) {
 		tupleType ??= typeof(ITuple);
 		int length = list.Count;
-		MethodInfo[] createTupleMethods = typeof(Tuple).GetMethods(BindingFlags.Public | BindingFlags.Static)!;
+		Type tupleBaseType = tupleType?.GetType().FullName.StartsWith(typeof(ValueTuple).FullName) == true ? typeof(ValueTuple) : typeof(Tuple);
+		MethodInfo[] createTupleMethods = tupleBaseType.GetMethods(BindingFlags.Public | BindingFlags.Static)!;
 		MethodInfo? method = createTupleMethods.FirstOrDefault(method => method.GetParameters().Length == length) ??
 			throw new Exception($"You can only create a tuple containing up to 8 items, currently providing {length} items");
-		Type[] genericArgs = tupleType.GenericTypeArguments;
+		Type[] genericArgs = tupleType!.GenericTypeArguments;
 		if (genericArgs.Length == 0) genericArgs = list.Select(item => item.GetType()).ToArray();
 		MethodInfo genericMethod = method.MakeGenericMethod(genericArgs)!;
 		return (ITuple)genericMethod.Invoke(null, [.. list]);
