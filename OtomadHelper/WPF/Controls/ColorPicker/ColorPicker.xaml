@@ -31,6 +31,7 @@
 			<c:ColorPickerValuesToTextConverter x:Key="ValuesToText" />
 			<c:ColorPickerTextChangedEventArgsToTextAndNameConverter x:Key="TextChangedToTextName" />
 			<c:UnicolourToMediaColorConverter x:Key="UniToMediaColor" />
+			<c:TextBoxNameToRangeConverter x:Key="NameToRange" />
 
 			<Style BasedOn="{StaticResource DefaultRadioButtonStyle}" TargetType="RadioButton">
 				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
@@ -57,6 +58,7 @@
 				<Setter Property="TextAlignment" Value="Right" />
 				<Setter Property="Text" Value="{m:Binding Values, Converter={StaticResource ValuesToText}, ConverterParameter={Binding Tag, RelativeSource={RelativeSource Self}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}" />
 				<Setter Property="m:NumberTextBoxBehavior.NumberInputMode" Value="Integer" />
+				<Setter Property="m:NumberTextBoxBehavior.Range" Value="{Binding Tag, RelativeSource={RelativeSource Self}, Converter={StaticResource NameToRange}, Mode=OneTime}" />
 				<Setter Property="m:InteractivityItems.Template">
 					<Setter.Value>
 						<m:InteractivityTemplate>
@@ -115,32 +117,7 @@
 				m:CornerRadiusClip.CornerRadius="{StaticResource TrackCornerRadius}"
 				/>
 			<Canvas>
-				<c:ColorTrackThumb x:Name="PointXy" ReverseY="True">
-					<!--<c:ColorTrackThumb.X>
-						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 0}">
-							<Binding Path="Color" />
-							<Binding Path="ModelAxis" />
-						</MultiBinding>
-					</c:ColorTrackThumb.X>
-					<c:ColorTrackThumb.Y>
-						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 1}">
-							<Binding Path="Color" />
-							<Binding Path="ModelAxis" />
-						</MultiBinding>
-					</c:ColorTrackThumb.Y>
-					<c:ColorTrackThumb.XRange>
-						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 0}">
-							<Binding Path="ModelAxis" />
-							<Binding Path="Color" />
-						</MultiBinding>
-					</c:ColorTrackThumb.XRange>
-					<c:ColorTrackThumb.YRange>
-						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 1}">
-							<Binding Path="ModelAxis" />
-							<Binding Path="Color" />
-						</MultiBinding>
-					</c:ColorTrackThumb.YRange>-->
-				</c:ColorTrackThumb>
+				<c:ColorTrackThumb x:Name="PointXy" ReverseY="True" />
 			</Canvas>
 		</Grid>
 
@@ -156,20 +133,7 @@
 					X="0.5"
 					ReverseY="True"
 					DragAxis="Y"
-					>
-					<!--<c:ColorTrackThumb.Y>
-						<MultiBinding Converter="{StaticResource UniToXyz}" ConverterParameter="{m:Int 2}">
-							<Binding Path="Color" />
-							<Binding Path="ModelAxis" />
-						</MultiBinding>
-					</c:ColorTrackThumb.Y>
-					<c:ColorTrackThumb.YRange>
-						<MultiBinding Converter="{StaticResource ModelAxisToRange}" ConverterParameter="{m:Int 2}">
-							<Binding Path="ModelAxis" />
-							<Binding Path="Color" />
-						</MultiBinding>
-					</c:ColorTrackThumb.YRange>-->
-				</c:ColorTrackThumb>
+					/>
 			</Canvas>
 		</Grid>
 

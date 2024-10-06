@@ -214,11 +214,11 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	internal static ThreeDRange GetOutputRange(ColourSpace model) {
 		return model switch {
 			ColourSpace.Rgb255 => ((0, 255), (0, 255), (0, 255)),
-			ColourSpace.Hsl => ((0, 360), (0, 1), (0, 1)),
-			ColourSpace.Hsb => ((0, 360), (0, 1), (0, 1)),
-			ColourSpace.Hwb => ((0, 360), (0, 1), (0, 1)),
+			ColourSpace.Hsl => ((0, 359), (0, 1), (0, 1)),
+			ColourSpace.Hsb => ((0, 359), (0, 1), (0, 1)),
+			ColourSpace.Hwb => ((0, 359), (0, 1), (0, 1)),
 			ColourSpace.Oklab => ((0, 1), (-0.5, 0.5), (-0.5, 0.5)),
-			ColourSpace.Oklch => ((0, 1), (0, 0.5), (0, 360)),
+			ColourSpace.Oklch => ((0, 1), (0, 0.5), (0, 359)),
 			_ => throw new NotImplementedException(),
 		};
 	}
@@ -226,11 +226,11 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	internal static ThreeDRange GetInputRange(ColourSpace model) {
 		return model switch {
 			ColourSpace.Rgb255 => ((0, 255), (0, 255), (0, 255)),
-			ColourSpace.Hsl => ((0, 360), (0, 100), (0, 100)),
-			ColourSpace.Hsb => ((0, 360), (0, 100), (0, 100)),
-			ColourSpace.Hwb => ((0, 360), (0, 100), (0, 100)),
+			ColourSpace.Hsl => ((0, 359), (0, 100), (0, 100)),
+			ColourSpace.Hsb => ((0, 359), (0, 100), (0, 100)),
+			ColourSpace.Hwb => ((0, 359), (0, 100), (0, 100)),
 			ColourSpace.Oklab => ((0, 100), (-128, 128), (-128, 128)),
-			ColourSpace.Oklch => ((0, 100), (0, 230), (0, 360)),
+			ColourSpace.Oklch => ((0, 100), (0, 230), (0, 359)),
 			_ => throw new NotImplementedException(),
 		};
 	}

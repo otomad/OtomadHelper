@@ -7,10 +7,12 @@ using Microsoft.Xaml.Behaviors;
 namespace OtomadHelper.WPF.Common;
 
 [AttachedDependencyProperty<NumberTextBoxInputMode, TextBox>("NumberInputMode", DefaultValueExpression = "NumberTextBoxInputMode.Text")]
+[AttachedDependencyProperty<ValueTuple<double, double>?, TextBox>("Range", Validate = true)]
 public partial class NumberTextBoxBehavior : Behavior<TextBox> {
 	protected override void OnAttached() {
 		AssociatedObject.PreviewTextInput += TextBox_TextInput;
 		DataObject.AddPastingHandler(AssociatedObject, TextBox_Pasting);
+		AssociatedObject.TextChanged += TextBox_TextChanged;
 
 		base.OnAttached();
 	}
@@ -20,6 +22,7 @@ public partial class NumberTextBoxBehavior : Behavior<TextBox> {
 
 		AssociatedObject.PreviewTextInput -= TextBox_TextInput;
 		DataObject.RemovePastingHandler(AssociatedObject, TextBox_Pasting);
+		AssociatedObject.TextChanged -= TextBox_TextChanged;
 	}
 
 	private NumberTextBoxInputMode NumberInputMode => GetNumberInputMode(AssociatedObject);
@@ -44,6 +47,20 @@ public partial class NumberTextBoxBehavior : Behavior<TextBox> {
 			else KeepCaretIndex(AssociatedObject.CaretIndex + text.Length);
 		} else e.CancelCommand();
 	}
+
+	private void TextBox_TextChanged(object sender, TextChangedEventArgs e) {
+		if (NumberInputMode == NumberTextBoxInputMode.Text || GetRange(AssociatedObject) is not Range range) return;
+		string text = AssociatedObject.Text;
+		if (string.IsNullOrEmpty(text) || !double.TryParse(text, out double value)) return;
+		if (value < range.Min || value > range.Max) {
+			int caretIndex = AssociatedObject.CaretIndex;
+			value = value < range.Min ? range.Min : range.Max;
+			AssociatedObject.SetCurrentValue(TextBox.TextProperty, value.ToString());
+			AssociatedObject.CaretIndex = caretIndex;
+		}
+	}
+
+	private static partial bool IsRangeValid((double, double)? value) => value is not Range range || range.Min <= range.Max;
 
 	private void KeepCaretIndex(int caretIndex) =>
 		_ = ITimer.WinForm.Delay(1).Then(() => AssociatedObject.CaretIndex = caretIndex);

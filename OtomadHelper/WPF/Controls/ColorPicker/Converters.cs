@@ -65,3 +65,21 @@ public class TrackThumbInnerBaseMultiplySizeConverter : IMultiValueConverter {
 	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
 }
+
+[ValueConversion(typeof(string), typeof(Range))]
+public class TextBoxNameToRangeConverter : IValueConverter {
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+		string name = (string)value;
+		(ColourSpace model, int axis) = ColorPickerModelAxis.FromName(name);
+		(Range X, Range Y, Range Z) ranges = ColorPickerViewModel.GetInputRange(model);
+		return axis switch {
+			0 => ranges.X,
+			1 => ranges.Y,
+			2 => ranges.Z,
+			_ => throw new ArgumentOutOfRangeException(name),
+		};
+	}
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
+}
