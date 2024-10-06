@@ -8,10 +8,10 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
-	Width="800"
+	Width="760"
 	Loaded="OnLoaded"
+	d:DesignWidth="760"
 	d:DesignHeight="450"
-	d:DesignWidth="800"
 	mc:Ignorable="d"
 	>
 	<UserControl.DataContext>
@@ -32,6 +32,7 @@
 			<c:ColorPickerTextChangedEventArgsToTextAndNameConverter x:Key="TextChangedToTextName" />
 			<c:UnicolourToMediaColorConverter x:Key="UniToMediaColor" />
 			<c:TextBoxNameToRangeConverter x:Key="NameToRange" />
+			<c:Alpha255ToAlpha100Converter x:Key="A255ToA100" />
 
 			<Style BasedOn="{StaticResource DefaultRadioButtonStyle}" TargetType="RadioButton">
 				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
@@ -48,6 +49,11 @@
 				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
 				<Setter Property="VerticalAlignment" Value="Center" />
 				<Setter Property="HorizontalAlignment" Value="Left" />
+			</Style>
+
+			<Style x:Key="RadioLessLabel" BasedOn="{StaticResource Unit}" TargetType="TextBlock">
+				<Setter Property="HorizontalAlignment" Value="Right" />
+				<Setter Property="Margin" Value="0,0,4,0" />
 			</Style>
 
 			<Style BasedOn="{StaticResource DefaultTextBoxStyle}" TargetType="TextBox">
@@ -143,15 +149,23 @@
 				<Rectangle.Fill>
 					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
 						<LinearGradientBrush.GradientStops>
-							<GradientStop Offset="0" Color="{Binding Color, Converter={StaticResource UniToMediaColor}}" />
-							<GradientStop Offset="1" Color="{Binding Color, Converter={StaticResource UniToMediaColor}, ConverterParameter={x:Static Colors.Transparent}}" />
+							<GradientStop Offset="0" Color="{Binding Color, Converter={StaticResource UniToMediaColor}, ConverterParameter={m:Double 1}}" />
+							<GradientStop Offset="1" Color="{Binding Color, Converter={StaticResource UniToMediaColor}, ConverterParameter={m:Double 0}}" />
 						</LinearGradientBrush.GradientStops>
 					</LinearGradientBrush>
 				</Rectangle.Fill>
 			</Rectangle>
+			<Canvas>
+				<c:ColorTrackThumb
+					x:Name="PointA"
+					X="0.5"
+					ReverseY="True"
+					DragAxis="Y"
+					/>
+			</Canvas>
 		</Grid>
 
-		<Grid x:Name="Form" Grid.Column="6" m:GridDef.Column="Auto,65,Auto,10,Auto,65,Auto,10,Auto,65,Auto" m:GridDef.Row="*,*,*,10,*,*,*">
+		<Grid x:Name="Form" Grid.Column="6" m:GridDef.Column="Auto,65,Auto,10,Auto,65,Auto,10,Auto,65,Auto" m:GridDef.Row="*,*,*,8,*,*,*,8,*,*">
 			<RadioButton Tag="HSL.0" Grid.Column="0" Grid.Row="0">H</RadioButton>
 			<RadioButton Tag="HSL.1" Grid.Column="0" Grid.Row="1">S</RadioButton>
 			<RadioButton Tag="HSL.2" Grid.Column="0" Grid.Row="2">L</RadioButton>
@@ -170,6 +184,9 @@
 			<RadioButton Tag="OKLCH.0" Grid.Column="8" Grid.Row="4">L</RadioButton>
 			<RadioButton Tag="OKLCH.1" Grid.Column="8" Grid.Row="5">C</RadioButton>
 			<RadioButton Tag="OKLCH.2" Grid.Column="8" Grid.Row="6">H</RadioButton>
+			<TextBlock Grid.Column="0" Grid.Row="8" Style="{StaticResource RadioLessLabel}">A</TextBlock>
+			<TextBlock Grid.Column="0" Grid.Row="9" Style="{StaticResource RadioLessLabel}">A</TextBlock>
+			<TextBlock Grid.Column="4" Grid.Row="8" Style="{StaticResource RadioLessLabel}">#</TextBlock>
 
 			<TextBox Tag="HSL.0" Grid.Column="1" Grid.Row="0" />
 			<TextBox Tag="HSL.1" Grid.Column="1" Grid.Row="1" />
@@ -189,6 +206,11 @@
 			<TextBox Tag="OKLCH.0" Grid.Column="9" Grid.Row="4" />
 			<TextBox Tag="OKLCH.1" Grid.Column="9" Grid.Row="5" />
 			<TextBox Tag="OKLCH.2" Grid.Column="9" Grid.Row="6" />
+			<TextBox Tag="A255" Grid.Column="1" Grid.Row="8" m:NumberTextBoxBehavior.Range="0,255" Text="{Binding Alpha, Mode=OneWay}" />
+			<TextBox Tag="A100" Grid.Column="1" Grid.Row="9" m:NumberTextBoxBehavior.Range="0,100" Text="{Binding Alpha, Mode=OneWay, Converter={StaticResource A255ToA100}}" />
+			<TextBox Tag="HEX" Grid.Column="5" Grid.Row="8" Grid.ColumnSpan="5" Text="{Binding Hex, Mode=OneWay}" />
+
+			<c:Button Grid.Column="6" Grid.Row="9" Grid.ColumnSpan="4" Margin="0,2,5,0">Eye dropper</c:Button>
 
 			<TextBlock Grid.Column="2" Grid.Row="0" Style="{StaticResource Unit}">°</TextBlock>
 			<TextBlock Grid.Column="2" Grid.Row="1" Style="{StaticResource Unit}">%</TextBlock>
@@ -202,6 +224,7 @@
 			<TextBlock Grid.Column="10" Grid.Row="0" Style="{StaticResource Unit}">%</TextBlock>
 			<TextBlock Grid.Column="10" Grid.Row="4" Style="{StaticResource Unit}">%</TextBlock>
 			<TextBlock Grid.Column="10" Grid.Row="6" Style="{StaticResource Unit}">°</TextBlock>
+			<TextBlock Grid.Column="2" Grid.Row="9" Style="{StaticResource Unit}">%</TextBlock>
 		</Grid>
 	</Grid>
 </UserControl>

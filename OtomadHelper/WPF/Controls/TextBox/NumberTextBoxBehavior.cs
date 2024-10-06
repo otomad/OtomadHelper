@@ -7,7 +7,7 @@ using Microsoft.Xaml.Behaviors;
 namespace OtomadHelper.WPF.Common;
 
 [AttachedDependencyProperty<NumberTextBoxInputMode, TextBox>("NumberInputMode", DefaultValueExpression = "NumberTextBoxInputMode.Text")]
-[AttachedDependencyProperty<ValueTuple<double, double>?, TextBox>("Range", Validate = true)]
+[AttachedDependencyProperty<ValueTuple<double, double>?, TextBox>("Range", TypeConverter = typeof(TupleConverter<ValueTuple<double, double>>), Validate = true)]
 public partial class NumberTextBoxBehavior : Behavior<TextBox> {
 	protected override void OnAttached() {
 		AssociatedObject.PreviewTextInput += TextBox_TextInput;

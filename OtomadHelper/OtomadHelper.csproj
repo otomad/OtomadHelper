@@ -107,7 +107,6 @@
 		<Compile Remove="obj\**" />
 		<Compile Remove="Helpers\DebounceThrottle.cs" />
 		<Compile Remove="Module\MainWPFDock.xaml.cs" />
-		<Compile Remove="WPF\Common\TypeConverters.cs" />
 		<Page Remove="Module\MainWPFDock.xaml" />
 	</ItemGroup>
 	<ItemGroup>

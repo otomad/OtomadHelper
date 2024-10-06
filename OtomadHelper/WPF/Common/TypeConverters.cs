@@ -21,9 +21,23 @@ public class CollectionConverter<T> : TypeConverter where T : IEnumerable {
 		if (value is null) throw GetConvertFromException(value);
 		if (value is not string source) return base.ConvertFrom(context, culture, value);
 		RemoveParenthesis(ref source);
-		Type enumerable = typeof(T).GetInterface("IEnumerable`1");
-		if (enumerable is null) throw new ArgumentException($"The target type `{typeof(T)}` is not supported");
-		Type itemType = enumerable.GenericTypeArguments[0];
+		if (!typeof(T).TryGetIEnumerableType(out Type enumerable, out Type itemType)) goto UnknownType;
+		string[] items = source.Split(',', ';');
+		int length = items.Length;
+		if (typeof(T).Extends(typeof(Array))) {
+			IList array = Array.CreateInstance(itemType, length);
+			for (int i = 0; i < length; i++)
+				array[i] = Convert.ChangeType(items[i], itemType);
+			return (T)array;
+		} else if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>)) {
+			IList list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(itemType), [length]);
+			foreach (object item in items)
+				list.Add(Convert.ChangeType(items, itemType));
+			return (T)list;
+		} else // Lazy to implement Dictionary and HashSet
+			goto UnknownType;
+	UnknownType:
+		throw new ArgumentException($"The argument type `{typeof(T)}` is not supported");
 	}
 
 	public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType) =>
@@ -31,5 +45,22 @@ public class CollectionConverter<T> : TypeConverter where T : IEnumerable {
 }
 
 public class TupleConverter<T> : TypeConverter where T : ITuple {
+	public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) =>
+		sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
+	public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType) =>
+		destinationType == typeof(string) || base.CanConvertTo(context, destinationType);
 
+	public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value) {
+		if (value is null) throw GetConvertFromException(value);
+		if (value is not string source) return base.ConvertFrom(context, culture, value);
+		CollectionConverter<IEnumerable>.RemoveParenthesis(ref source);
+		if (!typeof(T).Extends(typeof(ITuple)) || !typeof(T).IsGenericType) goto UnknownType;
+		IEnumerable<object> items = source.Split(',', ';').Select((item, index) => Convert.ChangeType(item, typeof(T).GenericTypeArguments[index]));
+		return items.ToTuple(typeof(T));
+	UnknownType:
+		throw new ArgumentException($"The argument type `{typeof(T)}` is not supported");
+	}
+
+	public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType) =>
+		destinationType == typeof(string) ? value.ToString() : base.ConvertTo(context, culture, value, destinationType);
 }

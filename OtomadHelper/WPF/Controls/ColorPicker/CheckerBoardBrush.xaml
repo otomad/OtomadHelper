@@ -6,9 +6,9 @@
 		x:Key="CheckerBoard"
 		Stretch="None"
 		TileMode="Tile"
-		Viewport="0,0,0.5,0.05"
+		ViewportUnits="Absolute"
+		Viewport="0,0,8,8"
 		>
-
 		<DrawingBrush.Drawing>
 			<DrawingGroup>
 				<GeometryDrawing Brush="{DynamicResource BackgroundBrush}">

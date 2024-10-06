@@ -120,10 +120,10 @@ public static partial class Extensions {
 	/// <param name="tupleType">The type of the tuple to create. If not provided, it will get the real type of the object item.</param>
 	/// <returns>An instance of the specified tuple type containing the elements from the input list.</returns>
 	/// <exception cref="Exception">Thrown when the input list contains more than 8 items, as tuples can only contain up to 8 items.</exception>
-	public static ITuple ToTuple(this IList<object> list, Type? tupleType = null) {
+	public static ITuple ToTuple(this IEnumerable<object> list, Type? tupleType = null) {
 		tupleType ??= typeof(ITuple);
-		int length = list.Count;
-		Type tupleBaseType = tupleType?.GetType().FullName.StartsWith(typeof(ValueTuple).FullName) == true ? typeof(ValueTuple) : typeof(Tuple);
+		int length = list.Count();
+		Type tupleBaseType = tupleType?.FullName.StartsWith(typeof(ValueTuple).FullName) == true ? typeof(ValueTuple) : typeof(Tuple);
 		MethodInfo[] createTupleMethods = tupleBaseType.GetMethods(BindingFlags.Public | BindingFlags.Static)!;
 		MethodInfo? method = createTupleMethods.FirstOrDefault(method => method.GetParameters().Length == length) ??
 			throw new Exception($"You can only create a tuple containing up to 8 items, currently providing {length} items");
@@ -140,7 +140,7 @@ public static partial class Extensions {
 	/// <param name="list">The list of objects to convert into a tuple.</param>
 	/// <returns>An instance of the specified tuple type containing the elements from the input list.</returns>
 	/// <exception cref="Exception">Thrown when the input list contains more than 8 items, as tuples can only contain up to 8 items.</exception>
-	public static TTuple ToTuple<TTuple>(this IList<object> list) where TTuple : ITuple =>
+	public static TTuple ToTuple<TTuple>(this IEnumerable<object> list) where TTuple : ITuple =>
 		(TTuple)list.ToTuple(typeof(TTuple));
 
 	/// <inheritdoc cref="List{T}.IndexOf(T)"/>
