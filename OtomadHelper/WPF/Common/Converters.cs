@@ -196,9 +196,6 @@ public class RectToDrawingBrushConverter : ValueConverter<Rect?, DrawingBrush> {
 
 public class RelativeToAbsoluteRectConverter : MultiValueConverter<Tuple<Rect, double, double>, Rect> {
 	public override Rect Convert(Tuple<Rect, double, double> values, Type targetType, object parameter, CultureInfo culture) {
-		//if (values.Any(value => value == DependencyProperty.UnsetValue))
-		//	return DependencyProperty.UnsetValue;
-
 		(Rect relativeRect, double actualWidth, double actualHeight) = values;
 
 		return new Rect(
@@ -283,4 +280,17 @@ public class BackgroundToForegroundColorConverter : IValueConverter {
 public class ObjectToTypeNameConverter : ValueConverter<object, string> {
 	public override string Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
 		value.GetType().Name;
+}
+
+[ValueConversion(typeof(Color), typeof(SolidColorBrush))]
+[ValueConversion(typeof(SolidColorBrush), typeof(Color))]
+public class SolidColorBrushConverter : IValueConverter {
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+		Color color = value is Color c ? c : value is SolidColorBrush b ? b.Color : throw new ArgumentException($"Unknown source value {value}");
+		return targetType.Extends(typeof(Color)) ? color : targetType.Extends(typeof(Brush)) ? new SolidColorBrush(color) :
+			throw new NotImplementedException($"Unknown target type {targetType}");
+	}
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		Convert(value, targetType, parameter, culture);
 }

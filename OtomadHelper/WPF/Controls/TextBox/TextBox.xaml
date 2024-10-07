@@ -35,7 +35,7 @@
 		BasedOn="{StaticResource TextBoxStripe}"
 		TargetType="Border"
 		>
-		<Setter Property="Background" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
+		<Setter Property="Background" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 		<Setter Property="MinHeight" Value="2" />
 		<Setter Property="RenderTransform">
 			<Setter.Value>
@@ -43,7 +43,7 @@
 			</Setter.Value>
 		</Setter>
 		<Style.Triggers>
-			<DataTrigger Binding="{Binding IsFocused, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" Value="True">
+			<DataTrigger Binding="{Binding IsFocused, RelativeSource={RelativeSource AncestorType=TextBox}}" Value="True">
 				<Setter Property="RenderTransform">
 					<Setter.Value>
 						<ScaleTransform ScaleX="1" />
@@ -79,7 +79,7 @@
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ControlStroke}" />
 		<Setter Property="BorderThickness" Value="1" />
-		<Setter Property="SelectionBrush" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
+		<Setter Property="SelectionBrush" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 		<Setter Property="SelectionTextBrush" Value="{DynamicResource TextOnAccentForegroundBrush}" />
 		<Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
 		<Setter Property="Template">

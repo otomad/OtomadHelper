@@ -15,7 +15,7 @@
 		<Setter Property="Background" Value="#01000000" />
 		<Setter Property="BorderBrush" Value="{DynamicResource SurfaceStrokeFlyout}" />
 		<Setter Property="BorderThickness" Value="1" />
-		<Setter Property="FontFamily" Value="{Binding DefaultFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
+		<Setter Property="FontFamily" Value="{Binding DefaultFont, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 		<Setter Property="TextBlock.TextAlignment" Value="Left" />
 		<Setter Property="Template">
 			<Setter.Value>
@@ -52,7 +52,7 @@
 				<Setter Property="HorizontalAlignment" Value="Right" />
 				<Setter Property="VerticalAlignment" Value="Center" />
 				<Style.Triggers>
-					<DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=MenuItem}}" Value="False">
+					<DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=MenuItem}}" Value="False">
 						<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
 					</DataTrigger>
 				</Style.Triggers>

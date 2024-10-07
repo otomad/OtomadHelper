@@ -49,7 +49,7 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="RadioButton">
-					<BulletDecorator Background="Transparent" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=RadioButton}}">
+					<BulletDecorator Background="Transparent" DataContext="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}}">
 						<BulletDecorator.Bullet>
 							<Grid Width="{StaticResource RadioButtonBulletSize}" Height="{StaticResource RadioButtonBulletSize}">
 								<Ellipse
@@ -189,10 +189,10 @@
 							<Setter TargetName="Border" Property="Stroke" Value="{DynamicResource ControlStrongStrokeDisabled}" />
 						</Trigger>
 						<Trigger Property="IsChecked" Value="True">
-							<Setter TargetName="Border" Property="Fill" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
-							<Setter TargetName="Border" Property="Stroke" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
+							<Setter TargetName="Border" Property="Fill" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
+							<Setter TargetName="Border" Property="Stroke" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 							<Setter TargetName="CheckMark" Property="MinWidth" Value="10" />
-							<Setter TargetName="CheckMark" Property="Fill" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}, Converter={StaticResource BgToFg}}" />
+							<Setter TargetName="CheckMark" Property="Fill" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}, Converter={StaticResource BgToFg}}" />
 						</Trigger>
 						<MultiTrigger>
 							<MultiTrigger.Conditions>

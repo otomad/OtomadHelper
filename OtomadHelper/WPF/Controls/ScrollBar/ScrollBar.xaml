@@ -61,7 +61,7 @@
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
 			</Trigger>
-			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="True">
+			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True">
 				<Setter Property="Opacity" Value="1" />
 				<DataTrigger.EnterActions>
 					<BeginStoryboard Storyboard="{StaticResource FadeIn}" />
@@ -121,15 +121,15 @@
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Background" Value="{DynamicResource TextSecondary}" />
 			</Trigger>
-			<DataTrigger Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="Horizontal">
+			<DataTrigger Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="Horizontal">
 				<Setter Property="BaseWidth" Value="Auto" />
 				<Setter Property="BaseHeight" Value="{StaticResource ScrollBarTrackUnhoveredThickness}" />
 				<Setter Property="BaseMargin" Value="{StaticResource ScrollBarHorizontalTrackUnhoveredMargin}" />
 			</DataTrigger>
 			<MultiDataTrigger>
 				<MultiDataTrigger.Conditions>
-					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="True" />
-					<Condition Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="Vertical" />
+					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True" />
+					<Condition Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="Vertical" />
 				</MultiDataTrigger.Conditions>
 				<Setter Property="BaseWidth" Value="{StaticResource ScrollBarTrackThickness}" />
 				<Setter Property="BaseMargin" Value="0" />
@@ -159,8 +159,8 @@
 			</MultiDataTrigger>
 			<MultiDataTrigger>
 				<MultiDataTrigger.Conditions>
-					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="True" />
-					<Condition Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="Horizontal" />
+					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True" />
+					<Condition Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="Horizontal" />
 				</MultiDataTrigger.Conditions>
 				<Setter Property="BaseHeight" Value="{StaticResource ScrollBarTrackThickness}" />
 				<Setter Property="BaseMargin" Value="0" />
@@ -201,7 +201,7 @@
 		<Setter Property="m:OvalCornerRadius.Enabled" Value="True" />
 		<Setter Property="Opacity" Value="0" />
 		<Style.Triggers>
-			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar, AncestorLevel=1}}" Value="True">
+			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True">
 				<Setter Property="Opacity" Value="1" />
 				<DataTrigger.EnterActions>
 					<BeginStoryboard Storyboard="{StaticResource FadeIn}" />

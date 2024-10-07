@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Data;
 
 namespace OtomadHelper.WPF.Common;
@@ -15,6 +16,7 @@ public abstract class ValueConverter<TSource, TTarget, TParameter> : IValueConve
 		TParameter param = MultiValueConverter<TSource, TTarget, TParameter>.ToCollectionType<TParameter>(parameter);
 		return Convert((TSource)value, targetType, param, culture)!;
 	}
+
 	object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
 		TParameter param = MultiValueConverter<TSource, TTarget, TParameter>.ToCollectionType<TParameter>(parameter);
 		return ConvertBack((TTarget)value, targetType, param, culture)!;
@@ -28,6 +30,7 @@ public abstract class MultiValueConverter<TSource, TTarget, TParameter> : IMulti
 		throw new NotImplementedException();
 
 	object IMultiValueConverter.Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
+		if (values.Any(value => value == DependencyProperty.UnsetValue)) return DependencyProperty.UnsetValue;
 		TParameter param = ToCollectionType<TParameter>(parameter);
 		TSource source = ToCollectionType<TSource>(values);
 		return Convert(source, targetType, param, culture)!;

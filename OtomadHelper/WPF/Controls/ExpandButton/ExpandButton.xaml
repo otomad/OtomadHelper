@@ -2,8 +2,8 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
-	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
 	<c:ExpandButtonIsCheckedToIsExpandedTextConverter x:Key="CheckedToText" />
 
@@ -45,7 +45,7 @@
 						</Style>
 						<Style TargetType="c:Icon">
 							<Setter Property="Size" Value="16" />
-							<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=ToggleButton, AncestorLevel=1}}" />
+							<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}, FallbackValue=White}" />
 							<Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
 							<Setter Property="RenderTransform">
 								<Setter.Value>
@@ -53,7 +53,7 @@
 								</Setter.Value>
 							</Setter>
 							<Style.Triggers>
-								<DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource FindAncestor, AncestorType=ToggleButton, AncestorLevel=1}}" Value="True">
+								<DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
 									<DataTrigger.EnterActions>
 										<BeginStoryboard>
 											<Storyboard>
@@ -85,15 +85,31 @@
 						</Style>
 						<Style x:Key="IconBorder" TargetType="Border">
 							<Setter Property="CornerRadius" Value="4" />
-							<Setter Property="Background" Value="Transparent" />
+							<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
 							<Setter Property="Width" Value="{StaticResource IconBorderSize}" />
 							<Setter Property="Height" Value="{StaticResource IconBorderSize}" />
 							<Setter Property="VerticalAlignment" Value="Center" />
+							<Setter Property="Opacity" Value="0" />
 							<Style.Triggers>
-								<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType=ToggleButton, AncestorLevel=1}}" Value="True">
-									<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
+								<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+									<DataTrigger.EnterActions>
+										<BeginStoryboard>
+											<Storyboard>
+												<DoubleAnimation
+													EasingFunction="{StaticResource EaseOutExpo}"
+													Storyboard.TargetProperty="Opacity"
+													From="0"
+													To="1"
+													Duration="00:00:00.150"
+													/>
+											</Storyboard>
+										</BeginStoryboard>
+									</DataTrigger.EnterActions>
+									<m:ReversedStoryboard.AutoReverseTriggerActions>
+										<m:ReversedStoryboard />
+									</m:ReversedStoryboard.AutoReverseTriggerActions>
 								</DataTrigger>
-								<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType=ToggleButton, AncestorLevel=1}}" Value="True">
+								<DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
 									<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
 								</DataTrigger>
 							</Style.Triggers>
@@ -104,10 +120,11 @@
 						</Style>
 					</DataTemplate.Resources>
 					<StackPanel>
-						<Border Style="{StaticResource IconBorder}">
+						<Grid>
+							<Border Style="{StaticResource IconBorder}" />
 							<c:Icon Source="{StaticResource Icon:ChevronDown}" />
-						</Border>
-						<TextBlock Text="{Binding IsChecked, RelativeSource={RelativeSource FindAncestor, AncestorType=ToggleButton, AncestorLevel=1}, Converter={StaticResource CheckedToText}}" />
+						</Grid>
+						<TextBlock Text="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}, Converter={StaticResource CheckedToText}}" />
 					</StackPanel>
 				</DataTemplate>
 			</Setter.Value>

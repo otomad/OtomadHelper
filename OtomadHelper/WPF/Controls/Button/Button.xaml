@@ -18,7 +18,7 @@
 		<Setter Property="RecognizesAccessKey" Value="True" />
 		<Setter Property="ContentTemplate" Value="{Binding}" />
 		<Style.Triggers>
-			<DataTrigger Binding="{Binding Content, Converter={StaticResource TypeOf}, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}" Value="String">
+			<DataTrigger Binding="{Binding Content, Converter={StaticResource TypeOf}, RelativeSource={RelativeSource AncestorType=Button}}" Value="String">
 				<Setter Property="ContentTemplate">
 					<Setter.Value>
 						<DataTemplate>
@@ -70,13 +70,13 @@
 				</Setter>
 			</Trigger>
 			<Trigger Property="IsDefault" Value="True">
-				<Setter Property="Accent" Value="{Binding WindowGlassColor, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
+				<Setter Property="Accent" Value="{Binding WindowGlassColor, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 			</Trigger>
 			<DataTrigger Binding="{Binding Accent, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolTruthy}}" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevation}" />
 				<Setter Property="Background">
 					<Setter.Value>
-						<SolidColorBrush Opacity="{Binding BackgroundOpacity, RelativeSource={RelativeSource FindAncestor, AncestorType=c:Button}}" Color="{Binding Accent, RelativeSource={RelativeSource FindAncestor, AncestorType=c:Button}}" />
+						<SolidColorBrush Opacity="{Binding BackgroundOpacity, RelativeSource={RelativeSource AncestorType=c:Button}}" Color="{Binding Accent, RelativeSource={RelativeSource AncestorType=c:Button}}" />
 					</Setter.Value>
 				</Setter>
 				<Setter Property="Foreground" Value="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BgToFg}}" />
@@ -110,7 +110,7 @@
 				<Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeOnAccent}" />
 				<Setter Property="Foreground">
 					<Setter.Value>
-						<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacityOnAccent}" Color="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType=c:Button}, Converter={StaticResource BgToFg}}" />
+						<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacityOnAccent}" Color="{Binding Background, RelativeSource={RelativeSource AncestorType=c:Button}, Converter={StaticResource BgToFg}}" />
 					</Setter.Value>
 				</Setter>
 			</MultiDataTrigger>

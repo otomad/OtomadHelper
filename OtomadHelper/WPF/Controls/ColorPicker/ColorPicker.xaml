@@ -36,7 +36,7 @@
 			<c:ColorPickerIsNotSpecialColorTextBox x:Key="NotSpecialColor" />
 
 			<Style BasedOn="{StaticResource DefaultRadioButtonStyle}" TargetType="RadioButton">
-				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
+				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 				<Setter Property="VerticalAlignment" Value="Center" />
 				<Setter Property="HorizontalAlignment" Value="Left" />
 				<Setter Property="IsChecked" Value="{m:Binding ModelAxis, Converter={StaticResource ModelAxisToChecked}, ConverterParameter={Binding Tag, RelativeSource= {RelativeSource Self}}, Mode=OneWay}" />
@@ -45,7 +45,7 @@
 			</Style>
 
 			<Style x:Key="Unit" TargetType="TextBlock">
-				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
+				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
 				<Setter Property="VerticalAlignment" Value="Center" />
@@ -58,7 +58,7 @@
 			</Style>
 
 			<Style BasedOn="{StaticResource DefaultTextBoxStyle}" TargetType="TextBox">
-				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
+				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 				<Setter Property="VerticalAlignment" Value="Center" />
 				<Setter Property="HorizontalAlignment" Value="Stretch" />
 				<Setter Property="Margin" Value="5,2" />
@@ -122,7 +122,7 @@
 	<Grid m:GridDef.Column="Auto,20,12,20,12,20,Auto" Height="300">
 		<Grid Grid.Column="0">
 			<Image
-				Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
+				Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}"
 				Width="{Binding Height, RelativeSource={RelativeSource Self}}"
 				Source="{Binding PrimarySource, Mode=OneTime}"
 				m:CornerRadiusClip.CornerRadius="{StaticResource TrackCornerRadius}"
@@ -134,7 +134,7 @@
 
 		<Grid Grid.Column="2">
 			<Image
-				Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}}"
+				Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}"
 				Source="{Binding SecondarySource, Mode=OneTime}"
 				m:CornerRadiusClip.CornerRadius="{StaticResource TrackCornerRadius}"
 				/>
