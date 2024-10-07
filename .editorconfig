@@ -247,3 +247,6 @@ dotnet_diagnostic.IDE0045.severity = suggestion
 
 # IDE0010: 添加缺失的事例
 dotnet_diagnostic.IDE0010.severity = suggestion
+
+# IDE1006: 命名样式
+dotnet_diagnostic.IDE1006.severity = warning

@@ -33,7 +33,8 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			}
 			OnPropertyChanged(nameof(Values));
 			Alpha = color.Alpha.A255;
-			Hex = color.Hex.TrimStart('#');
+			IList<string> hexes = ToHex(color);
+			if (!hexes.Contains(Hex)) Hex = hexes[0];
 			UpdateSourcesBehavior behavior = UpdateSourcesBehavior.UpdateBoth;
 			if (prevColor is not null && isInit) {
 				(ColourSpace model, int axis) = ModelAxis;
@@ -92,8 +93,11 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			isTextChanging = true;
 			if (e.Name is "A255" or "A100" or "HEX") {
 				if (e.Name == "HEX") {
-					if (e.Text.Length is 6 or 8)
-						Color = new(e.Text);
+					Unicolour? color = FromHex(e.Text);
+					if (color is not null) {
+						Color = color;
+						Hex = e.Text;
+					}
 				} else if (double.TryParse(e.Text, out double alpha)) {
 					alpha = alpha / (e.Name == "A255" ? 255 : 100);
 					ColourSpace model = ModelAxis.Model;
@@ -262,6 +266,38 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		return xyzMap[xyzIndex];
 	}
 	public int GetPointXyz(int xyzIndex) => GetPointXyz(xyzIndex, ModelAxis.Axis);
+
+	public static IList<string> ToHex(Unicolour color) {
+		// color.Hex missing alpha
+		byte r = (byte)color.Rgb.Byte255.ConstrainedR, g = (byte)color.Rgb.Byte255.ConstrainedG,
+			b = (byte)color.Rgb.Byte255.ConstrainedB, a = (byte)color.Alpha.A255;
+		string xr = r.ToString("X2"), xg = g.ToString("X2"), xb = b.ToString("X2"), xa = a.ToString("X2");
+		List<string> results = new(4);
+		if (a == 255) results.Add(xr + xg + xb);
+		results.Add(xr + xg + xb + xa);
+		if (r % 0x11 == 0 && g % 0x11 == 0 && b % 0x11 == 0) {
+			if (a == 255) results.Add(new([xr[0], xg[0], xb[0]]));
+			if (a % 0x11 == 0) results.Add(new([xr[0], xg[0], xb[0], xa[0]]));
+		}
+		return results;
+	}
+
+	public static Unicolour? FromHex(string hex) {
+		if (hex.Length is not (3 or 6 or 4 or 8)) return null;
+		if (hex.Match(new(@"[^0-9A-F]", RegexOptions.IgnoreCase)).Success) return null;
+
+		static string RepeatTwice(string source) {
+			StringBuilder sb = new();
+			foreach (char c in source) {
+				sb.Append(c);
+				sb.Append(c);
+			}
+			return sb.ToString();
+		}
+
+		if (hex.Length is 3 or 4) hex = RepeatTwice(hex);
+		return new(hex);
+	}
 }
 
 public struct ColorPickerModelAxis(ColourSpace model, int axis) {

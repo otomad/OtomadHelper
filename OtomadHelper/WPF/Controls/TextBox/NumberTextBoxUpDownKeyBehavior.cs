@@ -5,7 +5,7 @@ using Microsoft.Xaml.Behaviors;
 
 namespace OtomadHelper.WPF.Common;
 
-[DependencyProperty<double>("Step", DefaultValue = 1)]
+[AttachedDependencyProperty<double>("Step", DefaultValue = 1)]
 public partial class NumberTextBoxUpDownKeyBehavior : Behavior<TextBox> {
 	protected override void OnAttached() {
 		AssociatedObject.PreviewKeyDown += TextBox_KeyDown;
@@ -18,6 +18,8 @@ public partial class NumberTextBoxUpDownKeyBehavior : Behavior<TextBox> {
 
 		AssociatedObject.PreviewKeyDown -= TextBox_KeyDown;
 	}
+
+	private double Step => GetStep(AssociatedObject);
 
 	private void TextBox_KeyDown(object sender, KeyEventArgs e) {
 		if (Step == 0) return;

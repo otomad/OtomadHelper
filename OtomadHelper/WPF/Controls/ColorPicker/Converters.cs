@@ -75,3 +75,8 @@ public class Alpha255ToAlpha100Converter : ValueConverter<int, int> {
 	public override int Convert(int value, Type targetType, object parameter, CultureInfo culture) =>
 		(int)Math.Round((double)value / 255 * 100);
 }
+
+public class ColorPickerIsNotSpecialColorTextBox : ValueConverter<string, bool> {
+	public override bool Convert(string name, Type targetType, object parameter, CultureInfo culture) =>
+		name.Contains(".");
+}

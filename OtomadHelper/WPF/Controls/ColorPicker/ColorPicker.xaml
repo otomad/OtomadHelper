@@ -33,6 +33,7 @@
 			<c:UnicolourToMediaColorConverter x:Key="UniToMediaColor" />
 			<c:TextBoxNameToRangeConverter x:Key="NameToRange" />
 			<c:Alpha255ToAlpha100Converter x:Key="A255ToA100" />
+			<c:ColorPickerIsNotSpecialColorTextBox x:Key="NotSpecialColor" />
 
 			<Style BasedOn="{StaticResource DefaultRadioButtonStyle}" TargetType="RadioButton">
 				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
@@ -62,7 +63,6 @@
 				<Setter Property="HorizontalAlignment" Value="Stretch" />
 				<Setter Property="Margin" Value="5,2" />
 				<Setter Property="TextAlignment" Value="Right" />
-				<Setter Property="Text" Value="{m:Binding Values, Converter={StaticResource ValuesToText}, ConverterParameter={Binding Tag, RelativeSource={RelativeSource Self}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}" />
 				<Setter Property="m:NumberTextBoxBehavior.NumberInputMode" Value="Integer" />
 				<Setter Property="m:NumberTextBoxBehavior.Range" Value="{Binding Tag, RelativeSource={RelativeSource Self}, Converter={StaticResource NameToRange}, Mode=OneTime}" />
 				<Setter Property="m:InteractivityItems.Template">
@@ -82,6 +82,11 @@
 						</m:InteractivityTemplate>
 					</Setter.Value>
 				</Setter>
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}, Converter={StaticResource NotSpecialColor}}" Value="True">
+						<Setter Property="Text" Value="{m:Binding Values, Converter={StaticResource ValuesToText}, ConverterParameter={Binding Tag, RelativeSource={RelativeSource Self}}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}" />
+					</DataTrigger>
+				</Style.Triggers>
 			</Style>
 
 			<Style TargetType="Image">
@@ -208,7 +213,17 @@
 			<TextBox Tag="OKLCH.2" Grid.Column="9" Grid.Row="6" />
 			<TextBox Tag="A255" Grid.Column="1" Grid.Row="8" m:NumberTextBoxBehavior.Range="0,255" Text="{Binding Alpha, Mode=OneWay}" />
 			<TextBox Tag="A100" Grid.Column="1" Grid.Row="9" m:NumberTextBoxBehavior.Range="0,100" Text="{Binding Alpha, Mode=OneWay, Converter={StaticResource A255ToA100}}" />
-			<TextBox Tag="HEX" Grid.Column="5" Grid.Row="8" Grid.ColumnSpan="5" Text="{Binding Hex, Mode=OneWay}" />
+			<TextBox
+				Tag="HEX"
+				Grid.Column="5"
+				Grid.Row="8"
+				Grid.ColumnSpan="5"
+				TextAlignment="Left"
+				m:NumberTextBoxUpDownKeyBehavior.Step="0"
+				m:NumberTextBoxBehavior.MaxLength="8"
+				m:NumberTextBoxBehavior.NumberInputMode="Hex"
+				Text="{Binding Hex, Mode=OneWay}"
+				/>
 
 			<c:Button Grid.Column="6" Grid.Row="9" Grid.ColumnSpan="4" Margin="0,2,5,0">Eye dropper</c:Button>
 
