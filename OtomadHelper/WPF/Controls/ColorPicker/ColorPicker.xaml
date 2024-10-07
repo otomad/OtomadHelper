@@ -225,7 +225,17 @@
 				Text="{Binding Hex, Mode=OneWay}"
 				/>
 
-			<c:Button Grid.Column="6" Grid.Row="9" Grid.ColumnSpan="4" Margin="0,2,5,0">Eye dropper</c:Button>
+			<c:Button Grid.Column="6" Grid.Row="9" Grid.ColumnSpan="4" Margin="0,2,5,0">
+				Eye dropper
+				<i:Interaction.Behaviors>
+					<c:EyeDropperBehavior />
+				</i:Interaction.Behaviors>
+				<i:Interaction.Triggers>
+					<m:RoutedEventTrigger RoutedEvent="{x:Static c:EyeDropperBehavior.GetColorEvent}">
+						<i:InvokeCommandAction Command="{Binding GetColorFromScreenCommand}" EventArgsParameterPath="Color" />
+					</m:RoutedEventTrigger>
+				</i:Interaction.Triggers>
+			</c:Button>
 
 			<TextBlock Grid.Column="2" Grid.Row="0" Style="{StaticResource Unit}">°</TextBlock>
 			<TextBlock Grid.Column="2" Grid.Row="1" Style="{StaticResource Unit}">%</TextBlock>

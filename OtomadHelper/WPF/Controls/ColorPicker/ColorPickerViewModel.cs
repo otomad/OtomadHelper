@@ -76,8 +76,12 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		ToTriplet(Color, model);
 
 	[RelayCommand]
-	public void CheckModelAxis(string name) =>
+	private void CheckModelAxis(string name) =>
 		ModelAxis = ColorPickerModelAxis.FromName(name);
+
+	[RelayCommand]
+	private void GetColorFromScreen(Color color) =>
+		Color = color.ToUnicolour();
 
 	[ObservableProperty]
 	private Dictionary<ColorPickerModelAxis, double> values = [];
@@ -88,7 +92,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 
 	private bool isTextChanging = false;
 	[RelayCommand]
-	public void TextChanged((string Text, string Name) e) {
+	private void TextChanged((string Text, string Name) e) {
 		lock (this) {
 			if (isTextChanging) return;
 			isTextChanging = true;
