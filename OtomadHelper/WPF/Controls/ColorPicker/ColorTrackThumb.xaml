@@ -9,7 +9,7 @@
 	<s:Double x:Key="ThumbBaseSize">20</s:Double>
 
 	<c:TrackThumbInnerBaseMultiplySizeConverter x:Key="MultiplySize" />
-	<m:BackgroundToForegroundBrushConverter x:Key="BgToFgBrush" />
+	<m:BackgroundToForegroundColorConverter x:Key="BgToFg" />
 
 	<Style x:Key="DefaultColorTrackThumbStyle" TargetType="c:ColorTrackThumb">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
@@ -42,7 +42,7 @@
 						<Ellipse
 							Width="{TemplateBinding Width}"
 							Height="{TemplateBinding Width}"
-							Fill="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BgToFgBrush}}"
+							Fill="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BgToFg}}"
 							Stroke="{DynamicResource CircleElevation}"
 							StrokeThickness="1"
 							/>

@@ -6,15 +6,18 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	>
 	<m:AccessKeyAmpersandToUnderscoreConverter x:Key="AmpToUnder" />
+	<m:BooleanTruthyConverter x:Key="BoolTruthy" />
+	<m:BackgroundToForegroundColorConverter x:Key="BgToFg" />
 
 	<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
 	<Thickness x:Key="ButtonPadding">8</Thickness>
 
-	<Style x:Key="DefaultButtonStyle" TargetType="Button">
+	<Style x:Key="DefaultButtonStyle" TargetType="c:Button">
 		<Setter Property="MinHeight" Value="32" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ControlElevation}" />
 		<Setter Property="Background" Value="{DynamicResource ControlBackground}" />
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+		<Setter Property="BackgroundOpacity" Value="1" />
 		<Setter Property="FontSize" Value="14" />
 		<Setter Property="FocusVisualStyle" Value="{DynamicResource OuterFocusVisualStyle}" />
 		<Setter Property="Template">
@@ -45,9 +48,11 @@
 		<Style.Triggers>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Background" Value="{DynamicResource ControlBackgroundSecondary}" />
+				<Setter Property="BackgroundOpacity" Value="{DynamicResource AccentSecondaryOpacity}" />
 			</Trigger>
 			<Trigger Property="IsPressed" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource ControlStroke}" />
+				<Setter Property="BackgroundOpacity" Value="{DynamicResource AccentTertiaryOpacity}" />
 				<Setter Property="Background" Value="{DynamicResource ControlBackgroundTertiary}" />
 				<Setter Property="Foreground">
 					<Setter.Value>
@@ -56,9 +61,16 @@
 				</Setter>
 			</Trigger>
 			<Trigger Property="IsDefault" Value="True">
+				<Setter Property="Accent" Value="{Binding WindowGlassColor, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
+			</Trigger>
+			<DataTrigger Binding="{Binding Accent, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolTruthy}}" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevation}" />
-				<Setter Property="Background" Value="{Binding WindowGlassBrush, ElementName=View}" />
-				<Setter Property="Foreground" Value="{DynamicResource TextOnAccentForegroundBrush}" />
+				<Setter Property="Background">
+					<Setter.Value>
+						<SolidColorBrush Opacity="{Binding BackgroundOpacity, RelativeSource={RelativeSource FindAncestor, AncestorType=c:Button}}" Color="{Binding Accent, RelativeSource={RelativeSource FindAncestor, AncestorType=c:Button}}" />
+					</Setter.Value>
+				</Setter>
+				<Setter Property="Foreground" Value="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BgToFg}}" />
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="Button">
@@ -90,38 +102,22 @@
 						</ControlTemplate>
 					</Setter.Value>
 				</Setter>
-			</Trigger>
-			<MultiTrigger>
-				<MultiTrigger.Conditions>
-					<Condition Property="IsDefault" Value="True" />
-					<Condition Property="IsMouseOver" Value="True" />
-				</MultiTrigger.Conditions>
-				<Setter Property="Background">
-					<Setter.Value>
-						<SolidColorBrush Opacity="{DynamicResource AccentSecondaryOpacity}" Color="{Binding WindowGlassColor, ElementName=View}" />
-					</Setter.Value>
-				</Setter>
-			</MultiTrigger>
-			<MultiTrigger>
-				<MultiTrigger.Conditions>
-					<Condition Property="IsDefault" Value="True" />
-					<Condition Property="IsPressed" Value="True" />
-				</MultiTrigger.Conditions>
+			</DataTrigger>
+			<MultiDataTrigger>
+				<MultiDataTrigger.Conditions>
+					<Condition Binding="{Binding Accent, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolTruthy}}" Value="True" />
+					<Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="True" />
+				</MultiDataTrigger.Conditions>
 				<Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeOnAccent}" />
-				<Setter Property="Background">
-					<Setter.Value>
-						<SolidColorBrush Opacity="{DynamicResource AccentTertiaryOpacity}" Color="{Binding WindowGlassColor, ElementName=View}" />
-					</Setter.Value>
-				</Setter>
 				<Setter Property="Foreground">
 					<Setter.Value>
-						<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacityOnAccent}" Color="{DynamicResource TextOnAccentForegroundColor}" />
+						<SolidColorBrush Opacity="{DynamicResource ControlPressedOpacityOnAccent}" Color="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType=c:Button}, Converter={StaticResource BgToFg}}" />
 					</Setter.Value>
 				</Setter>
-			</MultiTrigger>
+			</MultiDataTrigger>
 		</Style.Triggers>
 	</Style>
 
 	<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="c:Button" />
-	<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button" />
+	<!--<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button" />-->
 </m:CustomControlResourceDictionary>

@@ -23,11 +23,7 @@ public partial class ColorTrackThumb : Thumb {
 
 	public ColorTrackThumb() {
 		Loaded += (sender, e) => {
-			DependencyObject? parent;
-			do
-				parent = this.GetParentObject();
-			while (!(parent is Canvas || parent is null));
-			Canvas = parent as Canvas;
+			Canvas = this.GetParent<Canvas>();
 
 			if (Canvas is not null) {
 				OnChange(true);

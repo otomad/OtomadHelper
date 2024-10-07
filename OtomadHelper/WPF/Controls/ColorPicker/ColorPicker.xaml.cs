@@ -17,6 +17,8 @@ public partial class ColorPicker : UserControl {
 	private void OnLoaded(object sender, RoutedEventArgs e) {
 		DataContext.View = this;
 		DataContext.UpdateThumbsBinding();
+		SetAccentColor();
+		(Window.GetWindow(this) as ContentDialog)?.SetNonDefaultButtonAccent(DataContext.Color.ToMediaColor());
 	}
 
 	public new ColorPickerViewModel DataContext => (ColorPickerViewModel)base.DataContext;
@@ -38,5 +40,12 @@ public partial class ColorPicker : UserControl {
 			if (element is TElement el && el.Tag is string Tag && Tag == tag)
 				return el;
 		return null;
+	}
+
+	internal void SetAccentColor(Color? color = null) {
+		color ??= DataContext.Color.ToMediaColor();
+		BackdropWindow? window = Window.GetWindow(this) as BackdropWindow;
+		if (window is not null)
+			window.CustomAccentColor = color;
 	}
 }

@@ -1,5 +1,7 @@
+using System.Web.UI;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace OtomadHelper.WPF.Controls;
@@ -94,6 +96,15 @@ public partial class ContentDialog : BackdropWindow {
 
 	public static void ShowError(Exception exception) =>
 		ShowError(exception.Message, exception.StackTrace);
+
+	internal void SetNonDefaultButtonAccent(Color color) {
+		for (int i = 0; i < ButtonsContainer.Items.Count; i++) {
+			ContentPresenter presenter = (ContentPresenter)ButtonsContainer.ItemContainerGenerator.ContainerFromIndex(i);
+			Button? button = presenter.ContentTemplate.FindName("Button", presenter) as Button;
+			if (button is not null && !button.IsDefault)
+				button.Accent = color;
+		}
+	}
 
 	private bool isExpansionRunning = false;
 	private void ExpandButton_Click(object sender, RoutedEventArgs e) {

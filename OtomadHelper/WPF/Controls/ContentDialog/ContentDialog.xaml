@@ -243,6 +243,7 @@
 						Click="ExpandButton_Click"
 						/>
 					<ItemsControl
+						x:Name="ButtonsContainer"
 						Grid.Column="1"
 						Focusable="False"
 						ItemsSource="{Binding Buttons}"
@@ -255,6 +256,7 @@
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
 								<c:Button
+									x:Name="Button"
 									Command="{Binding ClickButtonCommand, ElementName=ViewModel}"
 									CommandParameter="{Binding DialogResult}"
 									Content="{Binding Text}"

@@ -11,6 +11,7 @@
 	<m:BooleanAndConverter x:Key="BoolAnd" />
 	<m:BooleanOrConverter x:Key="BoolOr" />
 	<m:BooleanNotConverter x:Key="BoolNot" />
+	<m:BackgroundToForegroundColorConverter x:Key="BgToFg" />
 
 	<Style x:Key="DefaultRadioButtonStyle" TargetType="RadioButton">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
@@ -191,6 +192,7 @@
 							<Setter TargetName="Border" Property="Fill" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
 							<Setter TargetName="Border" Property="Stroke" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}}" />
 							<Setter TargetName="CheckMark" Property="MinWidth" Value="10" />
+							<Setter TargetName="CheckMark" Property="Fill" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=c:BackdropWindow}, Converter={StaticResource BgToFg}}" />
 						</Trigger>
 						<MultiTrigger>
 							<MultiTrigger.Conditions>

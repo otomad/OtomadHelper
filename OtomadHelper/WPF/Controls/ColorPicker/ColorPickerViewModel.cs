@@ -44,6 +44,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 				if (prevTriplet.Keys().All(i => i == axis ? true : prevTriplet[i] == triplet[i])) behavior &= ~UpdateSourcesBehavior.UpdateSecondary;
 			}
 			UpdateSources(behavior);
+			View?.SetAccentColor(Color.ToMediaColor());
 			isInit = true;
 			isColorChanging = false;
 		}

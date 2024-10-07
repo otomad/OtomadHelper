@@ -165,6 +165,14 @@ public class BooleanNotConverter : IValueConverter {
 		Convert(value, targetType, parameter, culture);
 }
 
+public class BooleanTruthyConverter : IValueConverter {
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+		BooleanOrConverter.ResolveTargetType(BooleanOrConverter.IsTruthy(value), targetType);
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		Convert(value, targetType, parameter, culture);
+}
+
 [ValueConversion(typeof(Rect), typeof(DrawingBrush))]
 public class RectToDrawingBrushConverter : ValueConverter<Rect?, DrawingBrush> {
 	public override DrawingBrush Convert(Rect? rect, Type targetType, object parameter, CultureInfo culture) {
@@ -205,10 +213,10 @@ public class RelativeToAbsoluteRectConverter : MultiValueConverter<Tuple<Rect, d
 [ValueConversion(typeof(string), typeof(string))]
 public class AccessKeyAmpersandToUnderscoreConverter : ValueConverter<string, string> {
 	public override string Convert(string value, Type targetType, object parameter, CultureInfo culture) =>
-		value.Replace('&', '_');
+		(value ?? "").Replace('&', '_');
 
 	public override string ConvertBack(string value, Type targetType, object parameter, CultureInfo culture) =>
-		value.Replace('_', '&');
+		(value ?? "").Replace('_', '&');
 }
 
 public class OvalCornerRadiusConverter : MultiValueConverter<double[], CornerRadius> {
@@ -256,18 +264,17 @@ internal class MultiValueToArrayConverter : IMultiValueConverter {
 }
 
 [ValueConversion(typeof(Color), typeof(Color))]
-public class BackgroundToForegroundColorConverter : ValueConverter<Color, Color> {
-	public override Color Convert(Color color, Type targetType, object parameter, CultureInfo culture) {
+[ValueConversion(typeof(SolidColorBrush), typeof(SolidColorBrush))]
+public class BackgroundToForegroundColorConverter : IValueConverter {
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+		Color color = value is Color c ? c : value is SolidColorBrush b ? b.Color : throw new ArgumentException($"Unknown source value {value}");
 		Wacton.Unicolour.Unicolour unicolour = color.ToUnicolour();
 		bool tooWhite = unicolour.Oklch.L >= 0.65;
-		return tooWhite ? Colors.Black : Colors.White;
+		Color foregroundColor = tooWhite ? Colors.Black : Colors.White;
+		return targetType.Extends(typeof(Color)) ? foregroundColor : targetType.Extends(typeof(Brush)) ? new SolidColorBrush(foregroundColor) :
+			throw new NotImplementedException($"Unknown target type {targetType}");
 	}
-}
 
-[ValueConversion(typeof(SolidColorBrush), typeof(SolidColorBrush))]
-public class BackgroundToForegroundBrushConverter : ValueConverter<SolidColorBrush, SolidColorBrush> {
-	private readonly BackgroundToForegroundColorConverter converter = new();
-
-	public override SolidColorBrush Convert(SolidColorBrush value, Type targetType, object parameter, CultureInfo culture) =>
-		new(converter.Convert(value.Color, typeof(Color), parameter, culture));
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
 }

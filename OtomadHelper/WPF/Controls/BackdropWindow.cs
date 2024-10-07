@@ -12,8 +12,9 @@ namespace OtomadHelper.WPF.Controls;
 /// </summary>
 [DependencyProperty<SystemBackdropType>("SystemBackdropType", DefaultValueExpression = "DEFAULT_SYSTEM_BACKDROP_TYPE")]
 [DependencyProperty<bool>("IsLightTheme", DefaultValue = true)]
-[DependencyProperty<Color>("WindowGlassColor", DefaultValueExpression = "WindowsDefaultGlassColor")]
-[DependencyProperty<Brush>("WindowGlassBrush", DefaultValueExpression = "WindowsDefaultGlassBrush")]
+[DependencyProperty<Color?>("CustomAccentColor")]
+[DependencyProperty<Color>("WindowGlassColor", DefaultValueExpression = "WindowsDefaultGlassColor", IsReadOnly = true)]
+[DependencyProperty<Brush>("WindowGlassBrush", DefaultValueExpression = "WindowsDefaultGlassBrush", IsReadOnly = true)]
 [DependencyProperty<TitleBarType>("TitleBarType", DefaultValueExpression = "TitleBarType.System")]
 [DependencyProperty<FontFamily>("MonoFont")]
 [DependencyProperty<FontFamily>("DefaultFont")]
@@ -198,19 +199,21 @@ public partial class BackdropWindow : Window {
 
 	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
 	protected IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
-		const int WM_SETTINGCHANGE = 0x001A;
-		const int WM_DWMCOLORIZATIONCOLORCHANGED = 0x0320;
+		const int SettingChange = 0x001A;
+		const int DwmColorizationColorChanged = 0x0320;
 
 		switch (msg) {
-			case WM_SETTINGCHANGE:
+			case SettingChange:
 				if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
 					RefreshDarkMode();
-					RaiseEvent(new RoutedEventArgs(ThemeChangeEvent, this));
+					RaiseEvent(new(ThemeChangeEvent, this));
 				}
 				break;
-			case WM_DWMCOLORIZATIONCOLORCHANGED:
-				RefreshAccentColor();
-				RaiseEvent(new RoutedEventArgs(AccentChangeEvent, this));
+			case DwmColorizationColorChanged:
+				if (CustomAccentColor is null) {
+					RefreshAccentColor();
+					RaiseEvent(new(AccentChangeEvent, this));
+				}
 				break;
 			default:
 				break;
@@ -229,10 +232,13 @@ public partial class BackdropWindow : Window {
 		//SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, borderColor.ToAbgr(false));
 	}
 
+	partial void OnCustomAccentColorChanged() => RefreshAccentColor();
 	protected void RefreshAccentColor() {
-		if (GetDwmColorizationColor() is Color accentColor) {
-			WindowGlassColor = accentColor;
-			WindowGlassBrush = new SolidColorBrush(accentColor);
+		Color? accentColor = CustomAccentColor;
+		accentColor ??= GetDwmColorizationColor();
+		if (accentColor is Color color) {
+			WindowGlassColor = color;
+			WindowGlassBrush = new SolidColorBrush(color);
 		}
 	}
 

@@ -7,6 +7,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Data;
 
+using Control = System.Windows.Forms.Control;
+
 namespace OtomadHelper.Helpers;
 
 public static partial class Extensions {
@@ -124,11 +126,11 @@ public static partial class Extensions {
 	}
 
 	/// <summary>
-	/// Find the parent of a given <see cref="DependencyObject"/> in the visual tree.
+	/// Find the parent of a given <see cref="DependencyObject" /> in the visual tree.
 	/// </summary>
-	/// <param name="child">The <see cref="DependencyObject"/> to find the parent of.</param>
-	/// <returns>The parent of the given <see cref="DependencyObject"/>, or <see langword="null"/> if no parent is found.</returns>
-	public static DependencyObject? GetParentObject(this DependencyObject child) {
+	/// <param name="child">The <see cref="DependencyObject" /> to find the parent of.</param>
+	/// <returns>The parent of the given <see cref="DependencyObject" />, or <see langword="null"/> if no parent is found.</returns>
+	public static DependencyObject? GetParent(this DependencyObject child) {
 		if (child is null)
 			return null;
 
@@ -145,6 +147,21 @@ public static partial class Extensions {
 		}
 
 		return VisualTreeHelper.GetParent(child);
+	}
+
+	/// <summary>
+	/// Find the parent of a given <typeparamref name="TElement" /> in the visual tree.
+	/// </summary>
+	/// <typeparam name="TElement">Type of parent.</typeparam>
+	/// <param name="child">The <typeparamref name="TElement" /> to find the parent of.</param>
+	/// <returns>The parent of the given <typeparamref name="TElement" />,
+	/// or <see langword="null"/> if there is no parent of type <typeparamref name="TElement" />.</returns>
+	public static TElement? GetParent<TElement>(this DependencyObject child) where TElement : DependencyObject {
+		DependencyObject? parent;
+		do
+			parent = child.GetParent();
+		while (!(parent is TElement || parent is null));
+		return parent as TElement;
 	}
 
 	/// <inheritdoc cref="BindingOperations.ClearBinding(DependencyObject, DependencyProperty)"/>
