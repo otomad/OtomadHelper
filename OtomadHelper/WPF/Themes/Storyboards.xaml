@@ -11,6 +11,11 @@
 		EasingMode="EaseOut"
 		Exponent="5"
 		/>
+	<ExponentialEase
+		x:Key="EaseInExpo"
+		EasingMode="EaseIn"
+		Exponent="5"
+		/>
 	<CubicEase x:Key="EaseInOutCubic" EasingMode="EaseInOut" />
 	<!--#endregion-->
 </ResourceDictionary>

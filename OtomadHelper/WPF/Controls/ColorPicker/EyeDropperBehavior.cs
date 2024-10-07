@@ -33,18 +33,23 @@ public class EyeDropperBehavior : Behavior<Button> {
 	private double CurrentWindowLeft { get; set; }
 	private const double InvisibleWindowLeft = 65536;
 
+	private EyeDropperPreview Preview { get; } = new();
+
 	private void Button_MouseDown(object sender, MouseButtonEventArgs e) {
 		AssociatedObject.CaptureMouse();
 		CurrentWindowLeft = Window.Left;
 		Window.Left = InvisibleWindowLeft;
 		Mouse.OverrideCursor = Cursors.Cross;
+		Preview.Show();
+		Button_MouseMove(sender, e);
 	}
 
 	private void Button_MouseMove(object sender, MouseEventArgs e) {
 		if (!AssociatedObject.IsMouseCaptured) return;
-		//System.Windows.Point position = GetPoint(e);
-		//position.Offset(65536, 0);
-		//s = position;
+		Point position = GetPoint(e);
+		Preview.MoveToMouse(position, Window.GetDpi());
+		Color color = GetColorAt(position);
+		Preview.PointColor = color;
 	}
 
 	private void Button_MouseUp(object sender, MouseButtonEventArgs e) {
@@ -55,6 +60,7 @@ public class EyeDropperBehavior : Behavior<Button> {
 		}
 		Window.Left = CurrentWindowLeft;
 		Mouse.OverrideCursor = null;
+		Preview.Hide();
 		AssociatedObject.ReleaseMouseCapture();
 	}
 

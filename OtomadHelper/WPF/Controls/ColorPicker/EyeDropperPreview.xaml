@@ -1,0 +1,84 @@
+<Window
+	x:Class="OtomadHelper.WPF.Controls.EyeDropperPreview"
+	Title="EyeDropperPreview"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	Width="150"
+	Height="150"
+	AllowsTransparency="True"
+	Background="Transparent"
+	RenderTransformOrigin="0.5,0.5"
+	Topmost="True"
+	WindowStyle="None"
+	mc:Ignorable="d"
+	>
+	<Window.RenderTransform>
+		<ScaleTransform ScaleX="1" ScaleY="1" />
+	</Window.RenderTransform>
+
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Themes/Generic.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<m:BackgroundToForegroundColorConverter x:Key="BgToFg" />
+
+			<Style TargetType="Ellipse">
+				<Setter Property="Stroke">
+					<Setter.Value>
+						<SolidColorBrush Color="{Binding PointColor, Converter={StaticResource BgToFg}, RelativeSource={RelativeSource AncestorType=c:EyeDropperPreview}}" />
+					</Setter.Value>
+				</Setter>
+				<Setter Property="SnapsToDevicePixels" Value="False" />
+			</Style>
+
+			<Storyboard x:Key="Hide" FillBehavior="Stop">
+				<DoubleAnimation
+					EasingFunction="{StaticResource EaseOutExpo}"
+					Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+					From="1"
+					To="0.8"
+					Duration="{StaticResource BaseAnimationDuration}"
+					/>
+				<DoubleAnimation
+					EasingFunction="{StaticResource EaseOutExpo}"
+					Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+					From="1"
+					To="0.8"
+					Duration="{StaticResource BaseAnimationDuration}"
+					/>
+				<DoubleAnimation
+					EasingFunction="{StaticResource EaseOutExpo}"
+					Storyboard.TargetProperty="Opacity"
+					From="1"
+					To="0"
+					Duration="{StaticResource BaseAnimationDuration}"
+					/>
+			</Storyboard>
+		</ResourceDictionary>
+	</Window.Resources>
+
+	<Grid Width="100" Height="100">
+		<Grid.Effect>
+			<DropShadowEffect
+				BlurRadius="10"
+				Opacity="0.5"
+				ShadowDepth="0"
+				/>
+		</Grid.Effect>
+		<Ellipse StrokeThickness="12">
+			<Ellipse.Stroke>
+				<SolidColorBrush Color="{Binding PointColor, RelativeSource={RelativeSource AncestorType=c:EyeDropperPreview}}" />
+			</Ellipse.Stroke>
+		</Ellipse>
+		<Ellipse />
+		<Ellipse Margin="11" />
+	</Grid>
+</Window>
