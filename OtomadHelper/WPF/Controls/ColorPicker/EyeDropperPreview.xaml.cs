@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -9,8 +10,12 @@ namespace OtomadHelper.WPF.Controls;
 /// </summary>
 [DependencyProperty<Color>("PointColor", DefaultValueExpression = "System.Windows.Media.Colors.White")]
 public partial class EyeDropperPreview : Window {
+	protected readonly WindowInteropHelper helper;
+	protected IntPtr Handle => helper.Handle;
+
 	public EyeDropperPreview() {
 		InitializeComponent();
+		helper = new(this);
 	}
 
 	internal void MoveToMouse(Point point, (double X, double Y) dpi) {
@@ -23,5 +28,9 @@ public partial class EyeDropperPreview : Window {
 		Storyboard hideAnimation = (Storyboard)Resources["Hide"];
 		hideAnimation.Completed += (sender, e) => base.Hide();
 		BeginStoryboard(hideAnimation);
+	}
+
+	private void Window_Loaded(object sender, RoutedEventArgs e) {
+		AddExtendedWindowStyles(Handle, ExtendedWindowStyles.ToolWindow);
 	}
 }
