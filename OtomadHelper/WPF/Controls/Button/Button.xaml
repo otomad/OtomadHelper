@@ -8,9 +8,27 @@
 	<m:AccessKeyAmpersandToUnderscoreConverter x:Key="AmpToUnder" />
 	<m:BooleanTruthyConverter x:Key="BoolTruthy" />
 	<m:BackgroundToForegroundColorConverter x:Key="BgToFg" />
+	<m:ObjectToTypeNameConverter x:Key="TypeOf" />
 
 	<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
-	<Thickness x:Key="ButtonPadding">8</Thickness>
+
+	<Style x:Key="ButtonContentPresenter" TargetType="ContentPresenter">
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="RecognizesAccessKey" Value="True" />
+		<Setter Property="ContentTemplate" Value="{Binding}" />
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding Content, Converter={StaticResource TypeOf}, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}" Value="String">
+				<Setter Property="ContentTemplate">
+					<Setter.Value>
+						<DataTemplate>
+							<AccessText Text="{Binding Converter={StaticResource AmpToUnder}}"/>
+						</DataTemplate>
+					</Setter.Value>
+				</Setter>
+			</DataTrigger>
+		</Style.Triggers>
+	</Style>
 
 	<Style x:Key="DefaultButtonStyle" TargetType="c:Button">
 		<Setter Property="MinHeight" Value="32" />
@@ -20,27 +38,18 @@
 		<Setter Property="BackgroundOpacity" Value="1" />
 		<Setter Property="FontSize" Value="14" />
 		<Setter Property="FocusVisualStyle" Value="{DynamicResource OuterFocusVisualStyle}" />
+		<Setter Property="Padding" Value="8" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="Button">
 					<Border
-						Padding="{StaticResource ButtonPadding}"
+						Padding="{TemplateBinding Padding}"
 						Background="{TemplateBinding Background}"
 						BorderBrush="{TemplateBinding BorderBrush}"
 						BorderThickness="{TemplateBinding BorderThickness}"
 						CornerRadius="{StaticResource ButtonCornerRadius}"
 						>
-						<ContentPresenter
-							HorizontalAlignment="Center"
-							VerticalAlignment="Center"
-							RecognizesAccessKey="True"
-							>
-							<ContentPresenter.ContentTemplate>
-								<DataTemplate>
-									<AccessText Text="{Binding Converter={StaticResource AmpToUnder}}"/>
-								</DataTemplate>
-							</ContentPresenter.ContentTemplate>
-						</ContentPresenter>
+						<ContentPresenter Style="{StaticResource ButtonContentPresenter}" />
 					</Border>
 				</ControlTemplate>
 			</Setter.Value>
@@ -76,24 +85,14 @@
 						<ControlTemplate TargetType="Button">
 							<Grid>
 								<Border
-									Padding="{StaticResource ButtonPadding}"
+									Padding="{TemplateBinding Padding}"
 									Background="{TemplateBinding Background}"
 									CornerRadius="{StaticResource ButtonCornerRadius}"
 									>
-									<ContentPresenter
-										HorizontalAlignment="Center"
-										VerticalAlignment="Center"
-										RecognizesAccessKey="True"
-										>
-										<ContentPresenter.ContentTemplate>
-											<DataTemplate>
-												<AccessText Text="{Binding Converter={StaticResource AmpToUnder}}"/>
-											</DataTemplate>
-										</ContentPresenter.ContentTemplate>
-									</ContentPresenter>
+									<ContentPresenter Style="{StaticResource ButtonContentPresenter}" />
 								</Border>
 								<Border
-									Padding="{StaticResource ButtonPadding}"
+									Padding="{TemplateBinding Padding}"
 									BorderBrush="{TemplateBinding BorderBrush}"
 									BorderThickness="{TemplateBinding BorderThickness}"
 									CornerRadius="{StaticResource ButtonCornerRadius}"

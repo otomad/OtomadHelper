@@ -278,3 +278,9 @@ public class BackgroundToForegroundColorConverter : IValueConverter {
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
 		throw new NotImplementedException();
 }
+
+[ValueConversion(typeof(object), typeof(string))]
+public class ObjectToTypeNameConverter : ValueConverter<object, string> {
+	public override string Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+		value.GetType().Name;
+}

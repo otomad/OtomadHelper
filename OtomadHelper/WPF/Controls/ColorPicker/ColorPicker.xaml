@@ -225,8 +225,11 @@
 				Text="{Binding Hex, Mode=OneWay}"
 				/>
 
-			<c:Button Grid.Column="6" Grid.Row="9" Grid.ColumnSpan="4" Margin="0,2,5,0">
-				Eye dropper
+			<c:Button Grid.Column="6" Grid.Row="9" Grid.ColumnSpan="4" Margin="0,2,5,0" Padding="2">
+				<StackPanel Orientation="Horizontal">
+					<c:Icon IconName="EyeDropper" Margin="0,0,7,0" />
+					<TextBlock>Eye dropper</TextBlock>
+				</StackPanel>
 				<i:Interaction.Behaviors>
 					<c:EyeDropperBehavior />
 				</i:Interaction.Behaviors>
