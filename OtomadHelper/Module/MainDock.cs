@@ -14,8 +14,12 @@ using OtomadHelper.Models;
 using OtomadHelper.Test;
 
 using ScriptPortal.MediaSoftware.Skins;
+using ScriptPortal.Vegas;
 
 using ContextMenu = OtomadHelper.Models.ContextMenu;
+using BackdropWindow = OtomadHelper.WPF.Controls.BackdropWindow;
+using System.IO;
+using System.Net.Mime;
 
 namespace OtomadHelper.Module;
 
@@ -93,6 +97,9 @@ public partial class MainDock : UserControl {
 			string message = e.TryGetWebMessageAsString();
 			switch (message) {
 				case "initialized":
+					string? accentColor = BackdropWindow.GetDwmColorizationColor()?.ToHex();
+					if (accentColor is not null)
+						PostWebMessage(new AccentColor { accentColor = accentColor });
 					await Task.Delay(500);
 					LoadingAnimationPicture.Visible = false;
 					LoadingAnimationPicture.Stop();
@@ -278,5 +285,19 @@ public partial class MainDock : UserControl {
 		bool? dialogResult = await WPF.Controls.ContentDialog.ShowDialog<bool?>(e.Message, "", buttons, iconName);
 		if (dialogResult == true) e.Accept();
 		deferral.Complete();
+	}
+
+	protected override void WndProc(ref Message m) { // TODO: Not update in WinForm UserControl.
+		bool handled = false;
+		BackdropWindow.WndProcTemplate(ref m,
+			() => {
+				handled = true;
+			},
+			() => {
+				handled = true;
+			}
+		);
+		if (handled) DefWndProc(ref m);
+		else base.WndProc(ref m);
 	}
 }

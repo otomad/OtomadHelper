@@ -101,7 +101,7 @@ public partial class BackdropWindow : Window {
 		Top = top;
 	}
 	protected virtual void SetLocation(double left, double top, double width, SetWidthType widthType) {
-	SetLocation(left, top);
+		SetLocation(left, top);
 		if ((widthType & SetWidthType.Width) != 0) Width = width;
 		if ((widthType & SetWidthType.MinWidth) != 0) MinWidth = width;
 		if ((widthType & SetWidthType.MaxWidth) != 0) MaxWidth = width;
@@ -169,7 +169,7 @@ public partial class BackdropWindow : Window {
 
 	//[DllImport("dwmapi.dll", EntryPoint = "#127")] // Equivalent
 	//internal static extern void DwmGetColorizationParameters(ref DWMCOLORIZATIONPARAMS dp);
-	protected static Color? GetDwmColorizationColor() {
+	protected internal static Color? GetDwmColorizationColor() {
 		using RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\DWM");
 		object? value = key?.GetValue("AccentColor");
 		if (value is not int accentColorValue) return null;
@@ -197,28 +197,41 @@ public partial class BackdropWindow : Window {
 		source.AddHook(WndProc);
 	}
 
-	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
-	protected IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
+	internal static IntPtr WndProcTemplate(ref System.Windows.Forms.Message m, Action? OnThemeChanged, Action? OnAccentChanged) {
+		bool handled = false;
+		return WndProcTemplate(m.HWnd, m.Msg, m.WParam, m.LParam, ref handled, OnThemeChanged, OnAccentChanged);
+	}
+
+	internal static IntPtr WndProcTemplate(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled, Action? OnThemeChanged, Action? OnAccentChanged) {
 		const int SettingChange = 0x001A;
 		const int DwmColorizationColorChanged = 0x0320;
 
 		switch (msg) {
 			case SettingChange:
-				if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
-					RefreshDarkMode();
-					RaiseEvent(new(ThemeChangeEvent, this));
-				}
+				if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet")
+					OnThemeChanged?.Invoke();
 				break;
 			case DwmColorizationColorChanged:
-				if (CustomAccentColor is null) {
-					RefreshAccentColor();
-					RaiseEvent(new(AccentChangeEvent, this));
-				}
+				OnAccentChanged?.Invoke();
 				break;
 			default:
 				break;
 		}
 		return IntPtr.Zero;
+	}
+
+	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
+	protected IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
+		return WndProcTemplate(hwnd, msg, wParam, lParam, ref handled,
+			() => {
+				RefreshDarkMode();
+				RaiseEvent(new(ThemeChangeEvent, this));
+			},
+			() => {
+				RefreshAccentColor();
+				RaiseEvent(new(AccentChangeEvent, this));
+			}
+		);
 	}
 
 	protected void RefreshDarkMode() {

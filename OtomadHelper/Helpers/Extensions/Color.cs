@@ -31,4 +31,10 @@ public static partial class Extensions {
 		Rgb255 rgb = color.Rgb.Byte255;
 		return MediaColor.FromArgb((byte)color.Alpha.A255, (byte)rgb.ConstrainedR, (byte)rgb.ConstrainedG, (byte)rgb.ConstrainedB);
 	}
+
+	public static string ToHex(this MediaColor color) {
+		string hex = "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
+		if (color.A != 255) hex += color.A.ToString("X2");
+		return hex;
+	}
 }

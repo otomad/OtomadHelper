@@ -1,13 +1,5 @@
+import type { ApplicationEvents } from "helpers/host-messages";
 import mitt from "mitt";
-
-type ApplicationEvents = {
-	// Define events that need to be used globally here.
-	[host: `host:${string}` & {}]: AnyObject;
-	"host:dragOver": WebMessageEvents.DragOver;
-	"host:consoleLog": WebMessageEvents.ConsoleLog;
-	"host:contextMenuItemClickEventArgs": WebMessageEvents.ContextMenuItemClickEventArgs;
-	"dev:showContextMenu": [e: MouseEvent, menu: typeof window["contextMenu"] & {}];
-};
 
 const emitter = mitt<ApplicationEvents>();
 
