@@ -4,6 +4,7 @@ import type { ContextMenuOutput } from "utils/context-menu";
 
 const StyledContextMenu = styled.menu`
 	position: fixed;
+	z-index: 70;
 	margin: 0;
 	padding: 2px;
 	background-color: ${c("background-fill-color-acrylic-background-default")};
@@ -15,11 +16,23 @@ const StyledContextMenu = styled.menu`
 	li {
 		display: block;
 		padding: 9px 16px;
-	}
 
-	li:hover {
-		background-color: ${c("fill-color-subtle-secondary")};
-		border-radius: 4px;
+		&:hover,
+		&:active {
+			border-radius: 4px;
+		}
+
+		&:hover {
+			background-color: ${c("fill-color-subtle-secondary")};
+		}
+
+		&:active {
+			background-color: ${c("fill-color-subtle-tertiary")};
+
+			.content {
+				opacity: ${c("pressed-text-opacity")};
+			}
+		}
 	}
 `;
 
@@ -47,10 +60,32 @@ export default function DevContextMenu() {
 		<Portal>
 			<StyledContextMenu ref={menuEl} style={{ left: ifFinite(location[0]), top: ifFinite(location[1]) }}>
 				{menu && menu.items.map((item, i) =>
-					item.kind === "command" ? <li key={i} disabled={item.enabled === false} onClick={() => { clearMenu(); item.command?.(); }}>{item.label}</li> :
+					item.kind === "command" ? <li key={i} disabled={item.enabled === false} onClick={() => { clearMenu(); item.command?.(); }}><span className="content">{processAccessKey(item.label)}</span></li> :
 					item.kind === "separator" ? <hr /> : undefined,
 				)}
 			</StyledContextMenu>
 		</Portal>
 	);
+}
+
+function processAccessKey(label: string) {
+	const nodes: ReactNode[] = [];
+	let currentWord = "";
+	const submitCurrentWord = () => currentWord && nodes.push(currentWord);
+	for (let i = 0; i < label.length; i++) {
+		const char = label[i];
+		if (char !== "&") {
+			currentWord += char;
+			continue;
+		}
+		const nextChar = label[i + 1];
+		if (nextChar !== undefined && nextChar !== "&") {
+			submitCurrentWord();
+			currentWord = "";
+			nodes.push(<u>{nextChar}</u>);
+			i++;
+		}
+	}
+	submitCurrentWord();
+	return nodes;
 }

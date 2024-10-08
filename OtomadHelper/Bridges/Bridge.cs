@@ -58,4 +58,14 @@ public class Bridge {
 		MainDock.ShowFlyout(flyout);
 		return await resultTask;
 	}
+
+	/// <summary>
+	/// Displays a color picker window with the old hex color.
+	/// </summary>
+	/// <param name="hex">Old hex color.</param>
+	/// <returns>New hex color.</returns>
+	public async Task<string> ShowColorPicker(string hex) {
+		string newHex = await ColorPicker.ShowDialog(hex);
+		return newHex;
+	}
 }

@@ -38,6 +38,10 @@ public class EyeDropperBehavior : Behavior<Button> {
 	private EyeDropperPreview Preview { get; } = new();
 
 	private void Button_MouseDown(object sender, MouseButtonEventArgs e) {
+		if (AssociatedObject.IsMouseCaptured) {
+			Button_LostMouseCapture();
+			return;
+		}
 		AssociatedObject.CaptureMouse();
 		CurrentWindowLeft = Window.Left;
 		Window.Left = InvisibleWindowLeft;
@@ -60,9 +64,10 @@ public class EyeDropperBehavior : Behavior<Button> {
 			Color color = GetColorAt(position);
 			AssociatedObject.RaiseEvent(new GetColorRoutedEventArgs(color, GetColorEvent, AssociatedObject));
 		}
-		Button_LostMouseCapture(null!, e);
+		Button_LostMouseCapture();
 	}
 
+	private void Button_LostMouseCapture() => Button_LostMouseCapture(null!, null!);
 	private async void Button_LostMouseCapture(object sender, MouseEventArgs e) {
 		if (sender is not null) {
 			await ITimer.WinForm.Delay(5);

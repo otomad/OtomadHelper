@@ -19,6 +19,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	private static readonly ColourSpace[] KnownModels =
 		[ColourSpace.Hsl, ColourSpace.Rgb255, ColourSpace.Hsb, ColourSpace.Hwb, ColourSpace.Oklab, ColourSpace.Oklch];
 	private bool isColorChanging = false;
+	internal void InitialColor() => OnColorChanged(null, Color);
 	partial void OnColorChanged(Unicolour? prevColor, Unicolour color) {
 		lock (this) {
 			if (isColorChanging) return;
@@ -288,6 +289,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	}
 
 	public static Unicolour? FromHex(string hex) {
+		hex = hex.TrimStart('#');
 		if (hex.Length is not (3 or 6 or 4 or 8)) return null;
 		if (hex.Match(new(@"[^0-9A-F]", RegexOptions.IgnoreCase)).Success) return null;
 

@@ -1,4 +1,4 @@
-#define TEST5
+#define TEST0
 using System.Resources;
 using System.Windows.Forms;
 
@@ -37,7 +37,7 @@ internal static class Program {
 		new TestControlsWPF().ShowDialog();
 #endif
 #if TEST5
-		_ = WPF.Controls.ColorPicker.ShowDialog(System.Windows.Media.Colors.Black).Then(color => s = color);
+		_ = WPF.Controls.ColorPicker.ShowDialog("000").Then(color => s = color);
 #endif
 	}
 }

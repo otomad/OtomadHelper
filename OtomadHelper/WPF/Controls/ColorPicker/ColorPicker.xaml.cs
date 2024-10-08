@@ -10,29 +10,37 @@ namespace OtomadHelper.WPF.Controls;
 /// ColorPicker.xaml 的交互逻辑
 /// </summary>
 public partial class ColorPicker : UserControl {
+	static ColorPicker() {
+		_ = Configuration.Default;
+	}
+
 	public ColorPicker() {
 		InitializeComponent();
 	}
 
 	private void OnLoaded(object sender, RoutedEventArgs e) {
 		DataContext.View = this;
+		DataContext.InitialColor();
 		DataContext.UpdateThumbsBinding();
-		SetAccentColor();
 		ContentDialog?.SetNonDefaultButtonAccent(DataContext.Color.ToMediaColor());
 	}
 
 	public new ColorPickerViewModel DataContext => (ColorPickerViewModel)base.DataContext;
 
-	public static async Task<Color> ShowDialog(Color color) { // TODO: 预计传入的颜色参数为 Hex。
+	public static async Task<string> ShowDialog(string hex) {
+		bool startsWithHash = hex.StartsWith("#");
+		Unicolour? color = ColorPickerViewModel.FromHex(hex);
+		if (color is null) return hex;
 		ColorPicker panel = new();
 		ColorPickerViewModel viewModel = panel.DataContext;
-		viewModel.Color = color.ToUnicolour();
+		viewModel.Color = color;
 		bool dialogResult = await ContentDialog.ShowDialog<bool?>("Select a Color", panel, [
 			new ContentDialogButtonItem<bool>(t.ContentDialog.Button.Ok, true, true),
 			new ContentDialogButtonItem<bool>(t.ContentDialog.Button.Cancel, false),
 		], "Color") ?? false;
 		Unicolour newColor = viewModel.Color;
-		return newColor.ToMediaColor();
+		if (!dialogResult) return hex;
+		return (startsWithHash ? "#" : "") + ColorPickerViewModel.ToHex(newColor)[0];
 	}
 
 	public TElement? FindForm<TElement>(string tag) where TElement : FrameworkElement {
