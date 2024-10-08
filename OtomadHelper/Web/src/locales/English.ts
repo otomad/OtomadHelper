@@ -727,5 +727,14 @@ export default {
 				content: "The new version of Otomad Helper is an extension. Unlike the old version, it is not a script.\n\nPlease move the extension to the Application Extensions directory of VEGAS instead of the Script Menu directory.\n\nLocation:",
 			},
 		},
+		textBox: {
+			menu: {
+				clearAll: "Clear All",
+			},
+		},
+		colorPicker: {
+			title: "Select a Color",
+			eyeDropper: "Eye dropper",
+		},
 	},
 } as const;

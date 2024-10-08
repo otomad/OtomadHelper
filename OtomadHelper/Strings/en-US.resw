@@ -92,4 +92,13 @@ Please move the extension to the Application Extensions directory of VEGAS inste
 
 Location:</value>
 	</data>
+	<data name="TextBox.Menu.ClearAll" xml:space="preserve">
+		<value>Clear All</value>
+	</data>
+	<data name="ColorPicker.Title" xml:space="preserve">
+		<value>Select a Color</value>
+	</data>
+	<data name="ColorPicker.EyeDropper" xml:space="preserve">
+		<value>Eye dropper</value>
+	</data>
 </root>

@@ -92,4 +92,13 @@
 
 位置：</value>
 	</data>
+	<data name="TextBox.Menu.ClearAll" xml:space="preserve">
+		<value>清空</value>
+	</data>
+	<data name="ColorPicker.Title" xml:space="preserve">
+		<value>选择颜色</value>
+	</data>
+	<data name="ColorPicker.EyeDropper" xml:space="preserve">
+		<value>取色</value>
+	</data>
 </root>

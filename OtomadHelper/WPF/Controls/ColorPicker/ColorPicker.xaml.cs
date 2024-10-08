@@ -34,7 +34,7 @@ public partial class ColorPicker : UserControl {
 		ColorPicker panel = new();
 		ColorPickerViewModel viewModel = panel.DataContext;
 		viewModel.Color = color;
-		bool dialogResult = await ContentDialog.ShowDialog<bool?>("Select a Color", panel, [
+		bool dialogResult = await ContentDialog.ShowDialog<bool?>((string)t.ColorPicker.Title, panel, [
 			new ContentDialogButtonItem<bool>(t.ContentDialog.Button.Ok, true, true),
 			new ContentDialogButtonItem<bool>(t.ContentDialog.Button.Cancel, false),
 		], "Color") ?? false;

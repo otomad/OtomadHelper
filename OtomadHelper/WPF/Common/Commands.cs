@@ -7,19 +7,19 @@ namespace OtomadHelper.WPF.Common;
 public static class Commands {
 	public static readonly RoutedUICommand ClearAll = new(
 		name: "ClearAll",
-		text: "Clear All", // TODO: i18n
+		text: t.TextBox.Menu.ClearAll as string, // TODO: Possible to dynamic change i18n?
 		inputGestures: [new KeyGesture(Key.None, ModifierKeys.None, "Ctrl+A, Del")],
 		ownerType: typeof(Commands)
 	);
 
 	internal static readonly CommandBinding[] CommandBindings = [
 		Create(ApplicationCommands.Delete, static (RoutedEventArgs e, ref bool canExecute) => {
-			if (e.Source is not TextBox textBox) return null;
+			if (e.OriginalSource is not TextBox textBox) return null;
 			canExecute = textBox.IsEditable() && textBox.SelectionLength > 0;
 			return () => textBox.SelectedText = string.Empty;
 		}),
 		Create(ClearAll, static (RoutedEventArgs e, ref bool canExecute) => {
-			if (e.Source is not TextBox textBox) return null;
+			if (e.OriginalSource is not TextBox textBox) return null;
 			canExecute = textBox.IsEditable() && textBox.Text.Length > 0;
 			return () => textBox.Clear();
 		}),

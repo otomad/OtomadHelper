@@ -273,7 +273,8 @@ export default {
 			box3d: "三维方盒布局",
 			gradient: "渐变轨道",
 			applyToSelectedTracks: "应用于所选轨道",
-			resetAllLayouts: "全部重置",
+			deactivate: "停用",
+			deactivateAll: "全部停用",
 			legato: {
 				_: "填补间隙",
 			},
@@ -421,7 +422,7 @@ export default {
 				slantDown: "斜下扩缩",
 				slantUp: "斜上扩缩",
 				puyo: "魔法气泡",
-				pendulum: "钟摆",
+				pendulum: "摆锤",
 				gaussianBlur: "高斯模糊",
 				radialBlur: "径向模糊",
 				wipeRight: "向右擦除",
@@ -573,7 +574,7 @@ export default {
 				_: "布局是YTPMV画面制作过程中的核心要点之一。了解版式，知道如何为YTPMV制作一个良好的画面布局，会让它比你想象的更有趣。\n基本上，确保你的主旋律采样是画面中最突出的部分。",
 				gradient: "使视频轨道在布局中具有渐变样式的颜色效果",
 				legato: "填补轨道剪辑中的间隙",
-				resetLayout: "重置此布局的状态来禁用它",
+				deactivate: "重置此布局的状态以停用它",
 			},
 			sonar: {
 				_: "声呐是利用区域裁切的形状创建节拍风格动态图形的视觉效果。本功能可利用乐曲中的鼓组乐器（通道10）为其各种打击乐器分配不同的形状或效果。\n一种常见的音MAD流派是根据节奏在画面中加入例如扩散的圆圈等各种图形来制作动态图形（MG动画）。MG动画是介于平面设计与动画设计之间的一种产物，是基于时间流动而设计的视觉表现形式，是影像艺术的一种。其中“动态图形”指的是会随时间流动而改变形态的图形。仅包含MG动画的单件音MAD视频通常以《图形》《形状》等视频标题命名。",
@@ -711,6 +712,15 @@ export default {
 				title: "嘿，你把该扩展程序放错了位置！",
 				content: "新版的Otomad Helper是一个扩展程序。与旧版不同，它不是一个脚本。\n\n请将该扩展移动到VEGAS的Application Extensions目录，而不是Script Menu目录。\n\n位置：",
 			},
+		},
+		textBox: {
+			menu: {
+				clearAll: "清空",
+			},
+		},
+		colorPicker: {
+			title: "选择颜色",
+			eyeDropper: "取色",
 		},
 	},
 } as const satisfies LocaleIdentifiers;
