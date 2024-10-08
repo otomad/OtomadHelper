@@ -39,8 +39,20 @@
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 			</Style>
 			<Style
-				x:Key="Subtitle"
+				x:Key="TitleAndSubtitle"
 				BasedOn="{StaticResource {x:Type TextBlock}}"
+				TargetType="TextBlock"
+				>
+				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding IsNonClientActive, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="False">
+						<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
+			<Style
+				x:Key="Subtitle"
+				BasedOn="{StaticResource TitleAndSubtitle}"
 				TargetType="TextBlock"
 				>
 				<Setter Property="FontSize" Value="{StaticResource CaptionFontSize}" />
@@ -54,7 +66,7 @@
 			</Style>
 			<Style
 				x:Key="Title"
-				BasedOn="{StaticResource {x:Type TextBlock}}"
+				BasedOn="{StaticResource TitleAndSubtitle}"
 				TargetType="TextBlock"
 				>
 				<Setter Property="FontSize" Value="{StaticResource SubtitleFontSize}" />
@@ -71,7 +83,7 @@
 					<Setter.Value>
 						<MultiBinding Converter="{StaticResource BoolAnd}">
 							<Binding Path="Body" />
-							<Binding Path="CanCopyBody" Converter="{StaticResource BoolToInvertVis}" />
+							<Binding Converter="{StaticResource BoolToInvertVis}" Path="CanCopyBody" />
 						</MultiBinding>
 					</Setter.Value>
 				</Setter>
@@ -203,8 +215,8 @@
 						x:Name="ContentControl"
 						Margin="{StaticResource BodyMargin}"
 						Content="{Binding Content}"
-						Visibility="{Binding Content, Converter={StaticResource ObjectToVis}}"
 						Focusable="False"
+						Visibility="{Binding Content, Converter={StaticResource ObjectToVis}}"
 						/>
 					<TextBlock Style="{StaticResource Footer}" Text="{Binding Footer}" />
 				</StackPanel>

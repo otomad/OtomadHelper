@@ -287,7 +287,7 @@ public partial class MainDock : UserControl {
 		deferral.Complete();
 	}
 
-	protected override void WndProc(ref Message m) { // TODO: Not update in WinForm UserControl.
+	/*protected override void WndProc(ref Message m) { // TODO: Not update in WinForm UserControl.
 		bool handled = false;
 		BackdropWindow.WndProcTemplate(ref m,
 			() => {
@@ -299,5 +299,5 @@ public partial class MainDock : UserControl {
 		);
 		if (handled) DefWndProc(ref m);
 		else base.WndProc(ref m);
-	}
+	}*/
 }

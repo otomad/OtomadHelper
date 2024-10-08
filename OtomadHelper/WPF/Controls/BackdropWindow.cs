@@ -18,6 +18,7 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<TitleBarType>("TitleBarType", DefaultValueExpression = "TitleBarType.System")]
 [DependencyProperty<FontFamily>("MonoFont")]
 [DependencyProperty<FontFamily>("DefaultFont")]
+[DependencyProperty<bool>("IsNonClientActive")]
 [RoutedEvent("ThemeChange", RoutedEventStrategy.Bubble)]
 [RoutedEvent("AccentChange", RoutedEventStrategy.Bubble)]
 [RoutedEvent("Showing", RoutedEventStrategy.Bubble)]
@@ -197,7 +198,7 @@ public partial class BackdropWindow : Window {
 		source.AddHook(WndProc);
 	}
 
-	internal static IntPtr WndProcTemplate(ref System.Windows.Forms.Message m, Action? OnThemeChanged, Action? OnAccentChanged) {
+	/*internal static IntPtr WndProcTemplate(ref System.Windows.Forms.Message m, Action? OnThemeChanged, Action? OnAccentChanged) {
 		bool handled = false;
 		return WndProcTemplate(m.HWnd, m.Msg, m.WParam, m.LParam, ref handled, OnThemeChanged, OnAccentChanged);
 	}
@@ -232,6 +233,44 @@ public partial class BackdropWindow : Window {
 				RaiseEvent(new(AccentChangeEvent, this));
 			}
 		);
+	}*/
+
+	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
+	protected IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
+		const int SettingChange = 0x001A;
+		const int DwmColorizationColorChanged = 0x0320;
+		const int NCActivate = 0x0086;
+
+		switch (msg) {
+			case SettingChange:
+				if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
+					RefreshDarkMode();
+					RaiseEvent(new(ThemeChangeEvent, this));
+				}
+				break;
+			case DwmColorizationColorChanged:
+				RefreshAccentColor();
+				RaiseEvent(new(AccentChangeEvent, this));
+				break;
+			case NCActivate:
+				// reference: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html
+				IsNonClientActive = wParam == trueValue;
+				break;
+			default:
+				break;
+		}
+		return IntPtr.Zero;
+	}
+	private static readonly IntPtr trueValue = new(1);
+
+	protected override void OnActivated(EventArgs e) {
+		base.OnActivated(e);
+		IsNonClientActive = true;
+	}
+
+	protected override void OnDeactivated(EventArgs e) {
+		base.OnDeactivated(e);
+		IsNonClientActive = false;
 	}
 
 	protected void RefreshDarkMode() {
