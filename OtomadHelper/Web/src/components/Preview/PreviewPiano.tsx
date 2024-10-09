@@ -57,8 +57,8 @@ const StyledPianoKey = styled.div`
 		${styles.mixins.square("100%")};
 		position: relative;
 		z-index: 1;
-		min-inline-size: 24px;
 		padding-bottom: 12px; // Avoid floating scrollbar taking up position.
+		min-inline-size: 24px;
 		color: ${textColors[0]};
 		background-color: ${fills[0]};
 		border-color: ${strokes[0]};

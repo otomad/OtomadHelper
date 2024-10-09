@@ -19,8 +19,10 @@ declare global {
 			menuItemUuid: string;
 		}
 
-		export interface AccentColor {
-			accentColor: string;
+		export interface AccentPalette {
+			colorization: string;
+			lightAccentColor: string;
+			darkAccentColor: string;
 		}
 	}
 }

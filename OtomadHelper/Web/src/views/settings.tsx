@@ -85,7 +85,7 @@ export default function Settings() {
 								value={backgroundImageBlur}
 								min={0}
 								max={64}
-								step={1}
+								step={0.01}
 								defaultValue={0}
 								displayValue
 							/>

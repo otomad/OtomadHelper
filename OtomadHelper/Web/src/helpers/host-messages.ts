@@ -6,7 +6,7 @@ export type ApplicationEvents = {
 	"host:dragOver": WebMessageEvents.DragOver;
 	"host:consoleLog": WebMessageEvents.ConsoleLog;
 	"host:contextMenuItemClickEventArgs": WebMessageEvents.ContextMenuItemClickEventArgs;
-	"host:accentColor": WebMessageEvents.AccentColor;
+	"host:accentPalette": WebMessageEvents.AccentPalette;
 	"dev:showContextMenu": [e: MouseEvent, menu: typeof window["contextMenu"] & {}];
 };
 
@@ -32,8 +32,4 @@ useListen("host:contextMenuItemClickEventArgs", ({ menuUuid, menuItemUuid }) => 
 		}
 		return null;
 	}
-});
-
-useListen("host:accentColor", ({ accentColor }) => {
-	document.documentElement.style.setProperty("--accent-color", accentColor);
 });

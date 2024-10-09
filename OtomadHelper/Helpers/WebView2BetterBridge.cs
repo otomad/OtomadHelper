@@ -212,6 +212,7 @@ public static class MessageSender {
 		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 		Converters = {
 			new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+			new ColorJsonConverter(),
 		},
 	};
 
@@ -275,7 +276,6 @@ public static class MessageSender {
 		taskList.Remove(timestamp);
 	}
 
-	internal static TReceive ParseJson<TReceive>(string json) {
-		return JsonSerializer.Deserialize<TReceive>(json, jsonOptions)!;
-	}
+	internal static TReceive ParseJson<TReceive>(string json) =>
+		JsonSerializer.Deserialize<TReceive>(json, jsonOptions)!;
 }

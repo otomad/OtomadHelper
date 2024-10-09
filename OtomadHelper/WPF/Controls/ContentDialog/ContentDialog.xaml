@@ -39,20 +39,8 @@
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 			</Style>
 			<Style
-				x:Key="TitleAndSubtitle"
-				BasedOn="{StaticResource {x:Type TextBlock}}"
-				TargetType="TextBlock"
-				>
-				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-				<Style.Triggers>
-					<DataTrigger Binding="{Binding IsNonClientActive, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="False">
-						<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
-					</DataTrigger>
-				</Style.Triggers>
-			</Style>
-			<Style
 				x:Key="Subtitle"
-				BasedOn="{StaticResource TitleAndSubtitle}"
+				BasedOn="{StaticResource {x:Type TextBlock}}"
 				TargetType="TextBlock"
 				>
 				<Setter Property="FontSize" Value="{StaticResource CaptionFontSize}" />
@@ -62,15 +50,23 @@
 					<DataTrigger Binding="{Binding Subtitle}" Value="">
 						<Setter Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
+					<DataTrigger Binding="{Binding IsNonClientActive, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="False">
+						<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
+					</DataTrigger>
 				</Style.Triggers>
 			</Style>
 			<Style
 				x:Key="Title"
-				BasedOn="{StaticResource TitleAndSubtitle}"
+				BasedOn="{StaticResource {x:Type TextBlock}}"
 				TargetType="TextBlock"
 				>
 				<Setter Property="FontSize" Value="{StaticResource SubtitleFontSize}" />
 				<Setter Property="FontWeight" Value="SemiBold" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding IsNonClientActive, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="False">
+						<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+					</DataTrigger>
+				</Style.Triggers>
 			</Style>
 			<Style
 				x:Key="Body"

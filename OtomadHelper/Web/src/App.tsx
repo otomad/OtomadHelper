@@ -1,4 +1,5 @@
 import { changeColorScheme } from "helpers/color-mode";
+import DynamicAccentColor from "styles/accent";
 import GlobalStyle from "styles/global";
 import ShellPage from "./ShellPage";
 
@@ -23,6 +24,7 @@ export default function App() {
 		<>
 			<BackgroundImage />
 			<GlobalStyle $ready={ready} />
+			<DynamicAccentColor />
 			<ShellPage />
 			<DevContextMenu />
 			<div id="portals" />

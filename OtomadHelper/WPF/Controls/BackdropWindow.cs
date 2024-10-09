@@ -5,6 +5,8 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
 
+using OtomadHelper.Models;
+
 namespace OtomadHelper.WPF.Controls;
 
 /// <summary>
@@ -171,11 +173,30 @@ public partial class BackdropWindow : Window {
 	//[DllImport("dwmapi.dll", EntryPoint = "#127")] // Equivalent
 	//internal static extern void DwmGetColorizationParameters(ref DWMCOLORIZATIONPARAMS dp);
 	protected internal static Color? GetDwmColorizationColor() {
-		using RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\DWM");
-		object? value = key?.GetValue("AccentColor");
-		if (value is not int accentColorValue) return null;
-		Color color = FromAbgr(accentColorValue);
-		return color;
+		AccentPalette? palette = GetAccentPalette();
+		if (palette is null) return null;
+		bool isDark = ShouldAppsUseDarkMode();
+		return isDark ? palette.DarkAccentColor : palette.LightAccentColor;
+	}
+
+	protected internal static AccentPalette? GetAccentPalette() {
+		AccentPalette palette = new();
+
+		using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\DWM")) {
+			if (key?.GetValue("AccentColor") is int value)
+				palette.Colorization = FromAbgr(value);
+			else return null;
+		}
+
+		using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent")) {
+			if (key?.GetValue("AccentPalette") is byte[] value) {
+				palette.DarkAccentColor = Color.FromRgb(value[4], value[5], value[6]);
+				palette.LightAccentColor = Color.FromRgb(value[16], value[17], value[18]);
+			} else
+				palette.LightAccentColor = palette.DarkAccentColor = palette.Colorization;
+		}
+
+		return palette;
 
 		static Color FromAbgr(int value) => Color.FromArgb(
 			(byte)(value >> 8 * 3),
@@ -190,50 +211,13 @@ public partial class BackdropWindow : Window {
 
 		// Fix the issue of incorrect window size when use WindowChrome with SizeToContent.WidthAndHeight.
 		// See: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#720121120
-		if (SizeToContent == SizeToContent.WidthAndHeight && WindowChrome.GetWindowChrome(this) != null)
+		if (SizeToContent == SizeToContent.WidthAndHeight && WindowChrome.GetWindowChrome(this) is not null)
 			InvalidateMeasure();
 
 		// Detect when the theme changed
 		HwndSource source = (HwndSource)PresentationSource.FromVisual(this);
 		source.AddHook(WndProc);
 	}
-
-	/*internal static IntPtr WndProcTemplate(ref System.Windows.Forms.Message m, Action? OnThemeChanged, Action? OnAccentChanged) {
-		bool handled = false;
-		return WndProcTemplate(m.HWnd, m.Msg, m.WParam, m.LParam, ref handled, OnThemeChanged, OnAccentChanged);
-	}
-
-	internal static IntPtr WndProcTemplate(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled, Action? OnThemeChanged, Action? OnAccentChanged) {
-		const int SettingChange = 0x001A;
-		const int DwmColorizationColorChanged = 0x0320;
-
-		switch (msg) {
-			case SettingChange:
-				if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet")
-					OnThemeChanged?.Invoke();
-				break;
-			case DwmColorizationColorChanged:
-				OnAccentChanged?.Invoke();
-				break;
-			default:
-				break;
-		}
-		return IntPtr.Zero;
-	}
-
-	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
-	protected IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
-		return WndProcTemplate(hwnd, msg, wParam, lParam, ref handled,
-			() => {
-				RefreshDarkMode();
-				RaiseEvent(new(ThemeChangeEvent, this));
-			},
-			() => {
-				RefreshAccentColor();
-				RaiseEvent(new(AccentChangeEvent, this));
-			}
-		);
-	}*/
 
 	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
 	protected IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
@@ -246,6 +230,7 @@ public partial class BackdropWindow : Window {
 				if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
 					RefreshDarkMode();
 					RaiseEvent(new(ThemeChangeEvent, this));
+					goto case DwmColorizationColorChanged;
 				}
 				break;
 			case DwmColorizationColorChanged:

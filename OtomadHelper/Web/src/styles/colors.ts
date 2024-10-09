@@ -1,7 +1,10 @@
+/* eslint-disable @stylistic/quote-props */
+
 const colors = {
 	"background-color": ["#f3f3f3", "#202020", "Canvas"],
 	"foreground-color": ["rgba(0, 0, 0, 0.9)", "rgb(255, 255, 255)", "CanvasText"], // fill-color-text-primary
 	"accent-color": ["#005fb8", "#60cdff", "Highlight"],
+	"colorization": ["#0078d4", "#0078d4", "transparent"],
 	"fill-color-text-primary-solid": ["rgba(24, 24, 24)", "rgb(255, 255, 255)", "CanvasText"],
 	"fill-color-text-secondary": ["rgba(0, 0, 0, 0.61)", "rgba(255, 255, 255, 0.79)", "CanvasText"],
 	"fill-color-text-tertiary": ["rgba(0, 0, 0, 0.45)", "rgba(255, 255, 255, 0.54)", "CanvasText"],

@@ -16,7 +16,7 @@ const StyledBackgroundImage = styled.div`
 
 	.overlay {
 		position: absolute;
-		background-color: ${c("accent-color")};
+		background-color: ${c("colorization")};
 		mix-blend-mode: screen;
 	}
 `;

@@ -32,6 +32,8 @@ public partial class MainDock : UserControl {
 		DragDrop += (sender, e) => MainDock_DragLeave();
 		DragLeave += (sender, e) => MainDock_DragLeave();
 
+		SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+
 		//MainWindow window = new();
 		//new TestControls().Show();
 		//window.Show();
@@ -97,9 +99,7 @@ public partial class MainDock : UserControl {
 			string message = e.TryGetWebMessageAsString();
 			switch (message) {
 				case "initialized":
-					string? accentColor = BackdropWindow.GetDwmColorizationColor()?.ToHex();
-					if (accentColor is not null)
-						PostWebMessage(new AccentColor { accentColor = accentColor });
+					PostAccentColorToTheWeb();
 					await Task.Delay(500);
 					LoadingAnimationPicture.Visible = false;
 					LoadingAnimationPicture.Stop();
@@ -287,17 +287,13 @@ public partial class MainDock : UserControl {
 		deferral.Complete();
 	}
 
-	/*protected override void WndProc(ref Message m) { // TODO: Not update in WinForm UserControl.
-		bool handled = false;
-		BackdropWindow.WndProcTemplate(ref m,
-			() => {
-				handled = true;
-			},
-			() => {
-				handled = true;
-			}
-		);
-		if (handled) DefWndProc(ref m);
-		else base.WndProc(ref m);
-	}*/
+	private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e) {
+		if (e.Category != UserPreferenceCategory.General) return;
+		PostAccentColorToTheWeb();
+	}
+
+	private void PostAccentColorToTheWeb() {
+		AccentPalette? palette = BackdropWindow.GetAccentPalette();
+		if (palette is not null) PostWebMessage(palette);
+	}
 }
