@@ -174,7 +174,6 @@ declare global {
 	 *
 	 * @template TFunction - The type of the source function to be converted. It should be a synchronous function type.
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 	type MakeFunctionAsync<TFunction extends Function> = (...args: ReadonlyArrayItems<Parameters<TFunction>>) =>
 		PromiseOnce<ReturnType<TFunction>>;
 

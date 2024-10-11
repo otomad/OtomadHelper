@@ -145,7 +145,7 @@ export function useStateSelector<TOld, TNew>(
 	}: {
 		/** In the new setter, it will use the new getter to preprocess the previous state. */
 		processPrevStateInSetterWithGetter?: boolean;
-	} = {}
+	} = {},
 ) {
 	return [
 		getter(stateProperty[0]!),
@@ -375,6 +375,7 @@ export function isLiteralObject(value: unknown): value is object {
  * foo; // Type is still "foo" | "bar", because it cannot increase the type.
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function asserts<T>(object: unknown): asserts object is T { }
 
 /**
@@ -581,7 +582,7 @@ export function clearObject(object: AnyObject) {
 		delete object[prop];
 }
 
-export async function getCurrentState<T>(setter: SetState<T>) {
+export function getCurrentState<T>(setter: SetState<T>) {
 	return new Promise<T>(resolve => {
 		(setter as SetStateNarrow<T>)(prevState => {
 			resolve(prevState);

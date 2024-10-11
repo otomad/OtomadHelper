@@ -217,6 +217,12 @@ export default [
 				"off",
 				{ allowConstantExport: true },
 			],
+			"@typescript-eslint/no-unsafe-function-type": "off",
+			"@typescript-eslint/no-unused-expressions": ["error", {
+				allowShortCircuit: true,
+				allowTernary: true,
+				enforceForJSX: true,
+			}],
 			"react-hooks/exhaustive-deps": "off",
 			"react-hooks/rules-of-hooks": "off",
 			"react/react-in-jsx-scope": "off",

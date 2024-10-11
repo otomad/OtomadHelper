@@ -610,11 +610,9 @@ export default function NavigationView({ currentNav, navItems = [], titles, tran
 	if (pageTitleKey[0] === previousPageTitleKey.current?.[0]) pageTitleKey[1] = previousPageTitleKey.current?.[1];
 	previousPageTitleKey.current = pageTitleKey;
 
-	const onNavButtonClick = () => void (
-		responsive === "expanded" ?
-			setIsExpandedInExpandedMode(expanded => !expanded) :
-			setFlyoutDisplayMode(mode => mode === "expanded" ? "minimal" : "expanded")
-	);
+	const onNavButtonClick = () => responsive === "expanded" ?
+		setIsExpandedInExpandedMode(expanded => !expanded) :
+		setFlyoutDisplayMode(mode => mode === "expanded" ? "minimal" : "expanded");
 
 	const hideFlyoutNavMenu = () => void (flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal"));
 	useEffect(hideFlyoutNavMenu, [currentNav, useWindowWidth()]);

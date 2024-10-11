@@ -20,6 +20,7 @@ words:
   - ccw
   - classname
   - classnames
+  - commitlint
   - composables
   - contenteditable
   - cooldown

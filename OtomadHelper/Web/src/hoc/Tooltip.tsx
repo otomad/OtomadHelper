@@ -8,6 +8,7 @@ const StyledTooltip = styled.div<{
 	z-index: 80;
 	display: flex;
 	pointer-events: none;
+	transition: ${fallbackTransitions}, left 0s, top 0s;
 
 	.base {
 		flex-shrink: 0;
@@ -194,7 +195,7 @@ function TooltipWith(withProps: Partial<TooltipProps>) {
 	return (props: TooltipProps) => <Tooltip {...withProps} {...props} />;
 }
 
-function TooltipWrap<TComponent extends ReactElement | React.ExoticComponent>(component: TComponent, tooltipProps: Partial<TooltipProps>) {
+function TooltipWrap(component: ReactElement | React.ExoticComponent, tooltipProps: Partial<TooltipProps>) {
 	const Component = component as unknown as FC;
 	return function TooltipWrappedComponent({ title, ...props }: AnyObject) {
 		const newTooltipProps = Object.assign({}, tooltipProps, title && { title }) as TooltipProps;
