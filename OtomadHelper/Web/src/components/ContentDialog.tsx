@@ -74,10 +74,18 @@ export default function ContentDialog({ shown: [shown, setShown], title, static:
 }, "div">) {
 	const close = (): void => void setShown?.(false);
 
-	const handleClickMask = useCallback<MouseEventHandler>(e => {
+	const maskEl = useDomRef<"div">();
+
+	const handleMaskPointerDown: PointerEventHandler<HTMLDivElement> = e => {
 		if (!isStatic && e.currentTarget === e.target)
+			maskEl.current = e.currentTarget;
+	};
+
+	useEventListener(document, "pointerup", e => {
+		if (!isStatic && maskEl.current && maskEl.current === e.target)
 			close();
-	}, []);
+		maskEl.current = null;
+	});
 
 	useEventListener(window, "keydown", e => {
 		if (!isStatic && e.code === "Escape")
@@ -99,7 +107,7 @@ export default function ContentDialog({ shown: [shown, setShown], title, static:
 	return (
 		<Portal>
 			<CssTransition in={shown} unmountOnExit appear>
-				<Mask onClick={handleClickMask}>
+				<Mask onPointerDown={handleMaskPointerDown}>
 					<StyledContentDialog {...htmlAttrs}>
 						<div className="content">
 							<div className="title">{title}</div>
