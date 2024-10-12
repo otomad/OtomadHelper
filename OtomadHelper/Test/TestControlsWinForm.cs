@@ -35,16 +35,20 @@ public partial class TestControlsWinForm : Form {
 		);
 
 		BaseFlyout? flyout = null;
-		Task<string> resultTask = null!;
+		Task<string> resultTaskString = null!;
+		Task<bool> resultTaskBool = null!;
 		if (sender == ComboBoxBtn)
-			flyout = ComboBoxFlyout.Initial(list.Select(i => i.ToUpper()), list, selected, rect, out resultTask);
-		else if (sender == PitchPickerButton)
-			flyout = PitchPickerFlyout.Initial(rect, selected, out resultTask);
+			flyout = ComboBoxFlyout.Initial(list.Select(i => i.ToUpper()), list, selected, rect, out resultTaskString);
+		else if (sender == PitchPickerBtn)
+			flyout = PitchPickerFlyout.Initial(rect, selected, out resultTaskString);
+		else if (sender == ConfirmDeleteFlyoutBtn)
+			flyout = ConfirmDeleteFlyout.Initial(rect, "Are you sure you want to delete it?", out resultTaskBool);
 
 		if (flyout is null) return;
 
 		flyouts.Add(flyout);
-		resultTask.Then(result => { if (sender is Button button) button.Text = selected = result; });
+		resultTaskString?.Then(result => { if (sender is Button button) button.Text = selected = result; });
+		resultTaskBool?.Then(result => Debug.WriteLine(result));
 		try {
 			flyout.ShowDialog();
 		} catch (Exception) { }

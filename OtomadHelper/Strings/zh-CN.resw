@@ -101,4 +101,7 @@
 	<data name="ColorPicker.EyeDropper" xml:space="preserve">
 		<value>取色</value>
 	</data>
+	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
+		<value>确认删除？</value>
+	</data>
 </root>

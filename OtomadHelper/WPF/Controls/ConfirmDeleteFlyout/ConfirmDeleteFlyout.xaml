@@ -1,5 +1,6 @@
 <c:BaseFlyout
 	x:Class="OtomadHelper.WPF.Controls.ConfirmDeleteFlyout"
+	Title="ConfirmDeleteFlyout"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
@@ -8,21 +9,64 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
-	Title="ConfirmDeleteFlyout"
-	Width="800"
-	Height="450"
+	Width="400"
+	Height="200"
+	SizeToContent="Height"
 	mc:Ignorable="d"
->
+	>
 	<c:BaseFlyout.DataContext>
 		<c:ConfirmDeleteFlyoutViewModel />
 	</c:BaseFlyout.DataContext>
 
-	<StackPanel Orientation="Vertical">
-		<TextBlock>确认删除？</TextBlock>
-		<TextBlock Text="{Binding Body}" />
-		<c:ContentDialogButtonPanel>
-			<c:Button Content="{m:Translate ContentDialog.Button.Ok}" Command="{Binding SetDialogResultCommand}" CommandParameter="{m:Bool True}" />
-			<c:Button Content="{m:Translate ContentDialog.Button.Cancel}" IsDefault="True" Command="{Binding SetDialogResultCommand}" CommandParameter="{m:Bool False}" />
-		</c:ContentDialogButtonPanel>
-	</StackPanel>
+	<c:BaseFlyout.Resources>
+		<Style TargetType="TextBlock">
+			<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="Margin" Value="0,0,0,12" />
+		</Style>
+
+		<Style
+			x:Key="Title"
+			BasedOn="{StaticResource {x:Type TextBlock}}"
+			TargetType="TextBlock"
+			>
+			<Setter Property="FontWeight" Value="SemiBold" />
+			<Setter Property="Margin" Value="0,0,0,5" />
+		</Style>
+
+		<Style
+			x:Key="SmallShadingIcon"
+			BasedOn="{StaticResource ShadingIcon}"
+			TargetType="c:Icon"
+			>
+			<Setter Property="Size" Value="48" />
+			<Setter Property="Canvas.Left" Value="-2.5" />
+			<Setter Property="Canvas.Top" Value="-2.5" />
+		</Style>
+	</c:BaseFlyout.Resources>
+
+	<Grid>
+		<Canvas>
+			<c:Icon IconName="Delete" Style="{StaticResource SmallShadingIcon}" />
+		</Canvas>
+		<Border Padding="16,14" BorderThickness="0">
+			<StackPanel Orientation="Vertical">
+				<TextBlock Style="{StaticResource Title}" Text="{m:Translate Flyout.ConfirmDelete.Title}" />
+				<TextBlock d:Text="Are you sure you want to delete it?" Text="{Binding Message}" />
+				<c:ContentDialogButtonPanel>
+					<c:Button
+						Command="{Binding SetDialogResultCommand}"
+						CommandParameter="{m:Bool True}"
+						Content="{m:Translate ContentDialog.Button.Ok}"
+						/>
+					<c:Button
+						Command="{Binding SetDialogResultCommand}"
+						CommandParameter="{m:Bool False}"
+						Content="{m:Translate ContentDialog.Button.Cancel}"
+						IsDefault="True"
+						/>
+				</c:ContentDialogButtonPanel>
+			</StackPanel>
+		</Border>
+	</Grid>
 </c:BaseFlyout>

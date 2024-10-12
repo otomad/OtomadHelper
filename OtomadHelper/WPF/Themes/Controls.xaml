@@ -13,5 +13,6 @@
 		<m:SharedResourceDictionary ControlSource="RadioButton/RadioButton" />
 		<m:SharedResourceDictionary ControlSource="ColorPicker/CheckerBoardBrush" />
 		<m:SharedResourceDictionary ControlSource="ColorPicker/ColorTrackThumb" />
+		<m:SharedResourceDictionary ControlSource="ContentDialog/ShadingIcon" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -56,7 +56,7 @@ async function mergeFolders(sourceFolder: string, targetFolder: string) {
 		} else if (stats.isDirectory()) {
 			if (!existsSync(targetPath))
 				await mkdir(targetPath, { recursive: true });
-			mergeFolders(sourcePath, targetPath);
+			await mergeFolders(sourcePath, targetPath);
 		}
 	}
 }

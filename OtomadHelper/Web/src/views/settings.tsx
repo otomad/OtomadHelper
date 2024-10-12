@@ -49,7 +49,7 @@ export default function Settings() {
 				checkInfoCondition={showBackgroundImage ? t.on : t.off}
 				onItemContextMenu={(item, e) => {
 					if (item.key !== -1) createContextMenu([
-						{ label: t.menu.delete, onClick: () => backgroundImages.delete(item.key) },
+						{ label: t.menu.delete, onClick: () => backgroundImages.delete(item.key), confirmDeleteMessage: t.confirm.delete.backgroundImage },
 					])(e);
 				}}
 				before={(

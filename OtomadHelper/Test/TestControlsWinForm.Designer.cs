@@ -25,8 +25,8 @@ partial class TestControlsWinForm {
 	/// </summary>
 	private void InitializeComponent() {
 			this.ComboBoxBtn = new System.Windows.Forms.Button();
-			this.PitchPickerButton = new System.Windows.Forms.Button();
-			this.ConfirmDeleteFlyoutButton = new System.Windows.Forms.Button();
+			this.PitchPickerBtn = new System.Windows.Forms.Button();
+			this.ConfirmDeleteFlyoutBtn = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// ComboBoxBtn
@@ -42,39 +42,39 @@ partial class TestControlsWinForm {
 			this.ComboBoxBtn.UseVisualStyleBackColor = true;
 			this.ComboBoxBtn.Click += new System.EventHandler(this.Button_Click);
 			// 
-			// PitchPickerButton
+			// PitchPickerBtn
 			// 
-			this.PitchPickerButton.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
-			this.PitchPickerButton.Location = new System.Drawing.Point(271, 315);
-			this.PitchPickerButton.Margin = new System.Windows.Forms.Padding(0);
-			this.PitchPickerButton.Name = "PitchPickerButton";
-			this.PitchPickerButton.Size = new System.Drawing.Size(320, 69);
-			this.PitchPickerButton.TabIndex = 1;
-			this.PitchPickerButton.Text = "我是音高选择器";
-			this.PitchPickerButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.PitchPickerButton.UseVisualStyleBackColor = true;
-			this.PitchPickerButton.Click += new System.EventHandler(this.Button_Click);
+			this.PitchPickerBtn.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
+			this.PitchPickerBtn.Location = new System.Drawing.Point(271, 315);
+			this.PitchPickerBtn.Margin = new System.Windows.Forms.Padding(0);
+			this.PitchPickerBtn.Name = "PitchPickerBtn";
+			this.PitchPickerBtn.Size = new System.Drawing.Size(320, 69);
+			this.PitchPickerBtn.TabIndex = 1;
+			this.PitchPickerBtn.Text = "我是音高选择器";
+			this.PitchPickerBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.PitchPickerBtn.UseVisualStyleBackColor = true;
+			this.PitchPickerBtn.Click += new System.EventHandler(this.Button_Click);
 			// 
-			// ConfirmDeleteFlyoutButton
+			// ConfirmDeleteFlyoutBtn
 			// 
-			this.ConfirmDeleteFlyoutButton.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
-			this.ConfirmDeleteFlyoutButton.Location = new System.Drawing.Point(271, 448);
-			this.ConfirmDeleteFlyoutButton.Margin = new System.Windows.Forms.Padding(0);
-			this.ConfirmDeleteFlyoutButton.Name = "ConfirmDeleteFlyoutButton";
-			this.ConfirmDeleteFlyoutButton.Size = new System.Drawing.Size(320, 69);
-			this.ConfirmDeleteFlyoutButton.TabIndex = 2;
-			this.ConfirmDeleteFlyoutButton.Text = "我是确认删除浮窗";
-			this.ConfirmDeleteFlyoutButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.ConfirmDeleteFlyoutButton.UseVisualStyleBackColor = true;
-			this.ConfirmDeleteFlyoutButton.ClientSizeChanged += new System.EventHandler(this.Button_Click);
+			this.ConfirmDeleteFlyoutBtn.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F);
+			this.ConfirmDeleteFlyoutBtn.Location = new System.Drawing.Point(271, 448);
+			this.ConfirmDeleteFlyoutBtn.Margin = new System.Windows.Forms.Padding(0);
+			this.ConfirmDeleteFlyoutBtn.Name = "ConfirmDeleteFlyoutBtn";
+			this.ConfirmDeleteFlyoutBtn.Size = new System.Drawing.Size(320, 69);
+			this.ConfirmDeleteFlyoutBtn.TabIndex = 2;
+			this.ConfirmDeleteFlyoutBtn.Text = "我是确认删除浮窗";
+			this.ConfirmDeleteFlyoutBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.ConfirmDeleteFlyoutBtn.UseVisualStyleBackColor = true;
+			this.ConfirmDeleteFlyoutBtn.Click += new System.EventHandler(this.Button_Click);
 			// 
 			// TestControlsWinForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.ClientSize = new System.Drawing.Size(1280, 720);
-			this.Controls.Add(this.ConfirmDeleteFlyoutButton);
-			this.Controls.Add(this.PitchPickerButton);
+			this.Controls.Add(this.ConfirmDeleteFlyoutBtn);
+			this.Controls.Add(this.PitchPickerBtn);
 			this.Controls.Add(this.ComboBoxBtn);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 14F);
 			this.Margin = new System.Windows.Forms.Padding(5);
@@ -87,6 +87,6 @@ partial class TestControlsWinForm {
 	#endregion
 
 	private System.Windows.Forms.Button ComboBoxBtn;
-	private System.Windows.Forms.Button PitchPickerButton;
-	private System.Windows.Forms.Button ConfirmDeleteFlyoutButton;
+	private System.Windows.Forms.Button PitchPickerBtn;
+	private System.Windows.Forms.Button ConfirmDeleteFlyoutBtn;
 }

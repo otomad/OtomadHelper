@@ -3,7 +3,7 @@ using System.Windows.Media.Animation;
 
 namespace OtomadHelper.WPF.Controls;
 
-[DependencyProperty<BaseFlyoutStartupAnimation>("StartupAnimation", DefaultValue = BaseFlyoutStartupAnimation.None)]
+[DependencyProperty<BaseFlyoutLoadedAnimation>("LoadedAnimation", DefaultValue = BaseFlyoutLoadedAnimation.None)]
 public partial class BaseFlyout : BackdropWindow {
 	public BaseFlyout() {
 		InitializeComponent();
@@ -19,8 +19,6 @@ public partial class BaseFlyout : BackdropWindow {
 		Topmost = true;
 		Deactivated += (sender, e) => this.Vanish();
 		Closing += BaseFlyout_Closing;
-
-		LoadedAnimation();
 	}
 
 	public void Center(Rect rect, SetWidthType widthType = SetWidthType.Nothing) {
@@ -30,19 +28,50 @@ public partial class BaseFlyout : BackdropWindow {
 		MoveIntoScreen();
 	}
 
-	private void LoadedAnimation() {
-		if (StartupAnimation == BaseFlyoutStartupAnimation.FadeIn) {
+	private Storyboard LoadedStoryboard { get; } = new();
+	private void BeginLoadedStoryboard(object? sender, RoutedEventArgs? e) => LoadedStoryboard.Begin(this);
+	public Duration BaseAnimationDuration => (Duration)Resources["BaseAnimationDuration"];
+	public ExponentialEase EaseOutExpo => (ExponentialEase)Resources["EaseOutExpo"];
+	private bool FadeInOutOnLoadedUnloaded => LoadedAnimation is BaseFlyoutLoadedAnimation.FadeIn or BaseFlyoutLoadedAnimation.FloatUp or BaseFlyoutLoadedAnimation.FloatDown;
+	partial void OnLoadedAnimationChanged(BaseFlyoutLoadedAnimation loadedAnimation) {
+		LoadedStoryboard.Children.Clear();
+		Loaded -= BeginLoadedStoryboard;
+		if (FadeInOutOnLoadedUnloaded) {
 			DoubleAnimation fadeInAnimation = new() {
 				From = 0,
 				To = 1,
-				Duration = (Duration)Resources["BaseAnimationDuration"],
+				Duration = BaseAnimationDuration,
 				FillBehavior = FillBehavior.Stop,
 			};
 			Storyboard.SetTargetProperty(fadeInAnimation, new("Opacity"));
-			Storyboard fadeInStoryboard = new();
-			fadeInStoryboard.Children.Add(fadeInAnimation);
-			Loaded += (sender, e) => fadeInStoryboard.Begin(this);
+			LoadedStoryboard.Children.Add(fadeInAnimation);
+			if (loadedAnimation is BaseFlyoutLoadedAnimation.FloatUp or BaseFlyoutLoadedAnimation.FloatDown) {
+				DoubleAnimation floatInAnimation = new() {
+					From = Top,
+					To = Top + FLYOUT_OFFSET * (loadedAnimation == BaseFlyoutLoadedAnimation.FloatUp ? -1 : 1),
+					Duration = new(TimeSpan.FromMilliseconds(500)),
+					EasingFunction = EaseOutExpo,
+					FillBehavior = FillBehavior.HoldEnd,
+				};
+				Storyboard.SetTargetProperty(floatInAnimation, new("Top"));
+				LoadedStoryboard.Children.Add(floatInAnimation);
+			}
+			Loaded += BeginLoadedStoryboard;
 		}
+	}
+
+	private void BeginUnloadedAnimation() {
+		DoubleAnimation fadeInAnimation = new() {
+			From = 1,
+			To = 0,
+			Duration = new(TimeSpan.FromMilliseconds(150)),
+			FillBehavior = FillBehavior.HoldEnd,
+		};
+		Storyboard.SetTargetProperty(fadeInAnimation, new("Opacity"));
+		Storyboard storyboard = new();
+		storyboard.Children.Add(fadeInAnimation);
+		storyboard.Completed += (sender, e) => Close();
+		storyboard.Begin(this);
 	}
 
 	private bool waitToClose = false;
@@ -52,21 +81,31 @@ public partial class BaseFlyout : BackdropWindow {
 		if (waitToClose) return;
 		e.Cancel = true;
 		waitToClose = true;
-		Task.Delay(50).Then(Close);
+		if (FadeInOutOnLoadedUnloaded)
+			BeginUnloadedAnimation();
+		else
+			Task.Delay(50).Then(Close);
 	}
 
+	private const double FLYOUT_OFFSET = 15;
 	public void Flyout(Rect rect) {
 		Screen screen = Screen.FromHandle(Handle);
 		System.Drawing.Rectangle workingArea = screen.WorkingArea;
 		(_, double dpiY) = this.GetDpi();
 		double screenHeight = workingArea.Height / dpiY;
 		bool placeTop = rect.Top >= screenHeight - rect.Bottom;
-		Top = placeTop ? rect.Top - ActualHeight : rect.Bottom;
+		double clientHeight = Content is FrameworkElement element ? element.ActualHeight : ActualHeight;
+		Top = placeTop ? rect.Top - clientHeight : rect.Bottom;
+		Left = rect.Left - (ActualWidth - rect.Width) / 2;
+		MoveIntoScreen();
+		LoadedAnimation = placeTop ? BaseFlyoutLoadedAnimation.FloatUp : BaseFlyoutLoadedAnimation.FloatDown;
+		BeginLoadedStoryboard(null, null);
 	}
 }
 
-public enum BaseFlyoutStartupAnimation {
+public enum BaseFlyoutLoadedAnimation {
 	None,
 	FadeIn,
-	FloatIn,
+	FloatUp,
+	FloatDown,
 }

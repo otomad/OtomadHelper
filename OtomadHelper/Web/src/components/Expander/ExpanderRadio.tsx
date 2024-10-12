@@ -57,7 +57,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	before?: ReactNode;
 	/** Fired when the item is clicked. */
 	onItemClick?: MouseEventHandler<HTMLElement>;
-	onItemContextMenu?(item: TItem, event: React.MouseEvent<HTMLElement, MouseEvent>): void;
+	onItemContextMenu?(item: TItem, event: React.MouseEvent<HTMLElement>): void;
 }>>) {
 	const getItemField = (item: TItem, fieldName: "id" | "name" | "icon" | "image" | "details"): Any => {
 		const field = {

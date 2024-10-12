@@ -113,7 +113,7 @@ declare global {
 	 */
 	export type ZustandState<TStore> = NonNull<TStore extends UseBoundStore<StoreApi<infer T>> ? T : never>;
 
-	interface BaseEvent<T = Element> extends React.SyntheticEvent<T>, Event { }
+	interface BaseEvent<T = Element> extends SyntheticEvent<T>, Event { }
 	export type BaseEventHandler<T = Element> = EventHandler<BaseEvent<T>>;
 
 	export type ElementTagNameMap = HTMLElementTagNameMap & SVGElementTagNameMap & MathMLElementTagNameMap & HTMLElementDeprecatedTagNameMap;
@@ -128,7 +128,7 @@ declare global {
 	export type { Property as CSSProperty } from "csstype";
 	export type { Draft } from "immer";
 	export type { AnimationItem } from "lottie-web";
-	export type { AnimationEventHandler, ChangeEventHandler, CSSProperties, DependencyList, DragEventHandler, EventHandler, FocusEventHandler, FormEventHandler, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, default as React, ReactElement, ReactNode, RefObject, UIEventHandler, WheelEventHandler } from "react";
+	export type { AnimationEventHandler, ChangeEventHandler, CSSProperties, DependencyList, DragEventHandler, EventHandler, FocusEventHandler, FormEventHandler, KeyboardEventHandler, MouseEventHandler, MutableRefObject, PointerEventHandler, default as React, ReactElement, ReactNode, RefObject, SyntheticEvent, UIEventHandler, WheelEventHandler } from "react";
 	export type { CssTransition, SwitchTransition, TransitionGroup } from "react-transition-group"; // CSSTransition has the same name as a native class.
 	export type { WebTarget } from "styled-components";
 }

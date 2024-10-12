@@ -145,31 +145,6 @@
 					</DataTrigger>
 				</Style.Triggers>
 			</Style>
-			<Style x:Key="ShadingIcon" TargetType="c:Icon">
-				<Setter Property="Size" Value="96" />
-				<Setter Property="Canvas.Left" Value="-15" />
-				<Setter Property="Canvas.Top" Value="-20" />
-				<Setter Property="Foreground">
-					<Setter.Value>
-						<SolidColorBrush Opacity="0.2" Color="{DynamicResource ForegroundColor}" />
-					</Setter.Value>
-				</Setter>
-				<Style.Triggers>
-					<EventTrigger RoutedEvent="Loaded">
-						<BeginStoryboard>
-							<Storyboard>
-								<DoubleAnimation
-									EasingFunction="{StaticResource EaseInOutCubic}"
-									Storyboard.TargetProperty="Opacity"
-									From="0"
-									To="1"
-									Duration="00:00:02"
-									/>
-							</Storyboard>
-						</BeginStoryboard>
-					</EventTrigger>
-				</Style.Triggers>
-			</Style>
 			<Style BasedOn="{StaticResource DefaultExpandButtonStyle}" TargetType="c:ExpandButton">
 				<Setter Property="HorizontalAlignment" Value="Left" />
 				<Setter Property="IsChecked" Value="True" />

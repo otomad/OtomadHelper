@@ -29,6 +29,7 @@ export default {
 			staff_full: "スタッフビジュアライザー",
 			pixelScaling: "ピクセルスケーリング",
 			parameters: "パラメータ",
+			management: "管理",
 			track: "トラック",
 			mosh: "モッシュ",
 			effect: "効果",
@@ -89,6 +90,8 @@ export default {
 		curve: "補間曲線",
 		unselected: "選択を解除",
 		topPriority: "最初に {{item, capitalize}}",
+		browse: "検索",
+		ok: "OK",
 		infoBar: {
 			warning: "警告",
 		},
@@ -110,6 +113,11 @@ export default {
 			beatsPerMinute: "BPM",
 			semitones: "st",
 			degrees: "°",
+		},
+		confirm: {
+			delete: {
+				backgroundImage: "この背景画像を削除してもよろしいですか？",
+			},
 		},
 		fileFormats: {
 			allFiles: "すべてのファイル",
@@ -163,7 +171,15 @@ export default {
 			loop: "ループ",
 			normalize: "正規化",
 			staticVisual: "静的ビジュアル",
-			unlengthen: {},
+			unlengthen: {
+				_: "Unlengthen",
+				lengthenable: "Lengthenable",
+				freezeEndFrames: "終了フレームを固定",
+				trimEndFrames: "終了フレームをトリムする",
+				splitThenFreeze: "分割して凍結する",
+				freezeToGray: "グレーに固定",
+				freezeToPreset: "プリセットに固定",
+			},
 			legato: {
 				_: "Legato",
 				portato: "Portato",
@@ -174,6 +190,8 @@ export default {
 			multitrackForChords: "コードのマルチラック",
 			createGroups: "グループを作成",
 			autoPan: "オート パン",
+			timeUnremapping: "時間のマッピングを解除",
+			resampleImitatively: "模倣して再サンプルする",
 			transformMethod: {
 				_: "変換方法",
 				panCrop: "パン/トリミング",
@@ -224,15 +242,17 @@ export default {
 					_: "プレ再生",
 					basePitch: "プレリッスンのピッチ:",
 					audio: "Prelisten audio",
+					stop: "プリリスニングを停止する",
 					engine: "エンジン",
 					waveform: {
 						_: "波形",
-						sinusoid: "Sinusoid",
+						sine: "Sinusoid",
 						triangle: "Triangle",
 						square: "矩形波",
 						sawtooth: "ノコギリ波",
 					},
 					duration: "期間",
+					volume: "音量",
 					adjustAudioToBasePitch: "音声をベースピッチに調整",
 				},
 			},
@@ -258,7 +278,8 @@ export default {
 			box3d: "3D ボックスレイアウト",
 			gradient: "グラデーショントラック",
 			applyToSelectedTracks: "選択したトラックに適用",
-			resetAllLayouts: "すべてリセット",
+			deactivate: "無効にする",
+			deactivateAll: "すべて無効にする",
 			legato: {
 				_: "Legato",
 			},
@@ -422,15 +443,19 @@ export default {
 		settings: {
 			about: {
 				checkForUpdates: "アップデートを確認",
+				repositoryLink: "リポジトリ",
 				documentation: "ドキュメント",
 				translation: "翻訳に貢献",
 				feedback: "フィードバック",
+				changeLog: "更新履歴",
+				license: "ライセンス",
 				version: "バージョン",
 				author: "作成者",
 				__author__: "蘭澈 祈",
 				originalAuthor: "オリジナルの著者",
 				__originalAuthor__: "Chaosinism",
 				translator: "翻訳",
+				translators: "翻訳",
 			},
 			language: {
 				_: "言語",
@@ -448,7 +473,12 @@ export default {
 					auto: "自動",
 				},
 				uiScale: "UIスケール",
-				backgroundImage: {},
+				backgroundImage: {
+					_: "背景画像",
+					opacity: "透明度",
+					tint: "Tint",
+					blur: "ぼかしの強さ",
+				},
 			},
 			config: {
 				hideUsageTips: "使用ヒントを非表示",
@@ -473,6 +503,7 @@ export default {
 				},
 				blindBox: {
 					_: "ソースのポイントでランダムに使用します。\nこれは、ランダムに選択されたソースクリップが異なるベースピッチを持つ可能性があります。 娯楽用の面白い動画の作成にのみ役立ちますし、高度な動画の作成にはほとんど使用されません。",
+					track: "トラックまたはチャンネルがスコアに依存するかどうか",
 					marker: "スコアにマーカーがある場合、ソースのインポイントは一度変更されます。 複数のマーカーに同じ名前が空でない場合、ソースのポイントで同じ名前が使用されます。",
 				},
 			},
@@ -488,11 +519,17 @@ export default {
 				loop: "クリップがソースメディアの最後まで長くなると再生が開始されます",
 				normalize: "オーディオを標準化し、静かなオーディオに便利です",
 				staticVisual: "クリップの先頭にあるフレームをフリーズします。",
+				unlengthen: "一部のノートが長すぎる場合、トリミング時間を超えてパートを誤って再生しないようにクリップのアウトポイントでフリーズしようとします。",
 				legato: "ノート間のギャップを埋めます",
+				unlengthenAndLegatoConflictInAudio: "オーディオで長くなったりレガートが競合しているため、同時に有効にすることはできません！",
 				multitrackForChords: "コード用に複数のトラックを作成",
 				createGroups: "ビデオクリップとオーディオクリップのグループを1つのノートで表します。",
 				autoPan: "エンベロープオートメーションを使用してオーディオをパンする",
-				resampleImitatively: {},
+				timeUnremapping: "ノートが発生した場合、クリップはポイント時間をリセットしません。 再生を続けますソースにエフェクトを適用する場合に便利です",
+				resampleImitatively: {
+					_: "Visualでリサンプリング動作を模倣し、ピッチが大きくなるとストレッチが屈曲します",
+					auto: "これは、ビジュアルがオーディオと同期していることを確認するために、Audioでリサンプリングが有効になっているかどうかによって異なります。",
+				},
 				transformMethod: "変換キーフレームを適用するためのターゲットプロパティの優先順位を指定します",
 				playingTechniques: {
 					glissando: {
@@ -538,9 +575,10 @@ export default {
 				},
 			},
 			track: {
+				_: "レイアウトは、YTPMVのビジュアル制作プロセスにおけるコアポイントの一つです。 コンポジションについて学ぶ YTPMVのために良い視覚的なレイアウトを作る方法を知ることは、あなたが期待するよりもはるかに楽しいものになります。\n基本的に、ビジュアルでメロディのサンプルが最も顕著なものであることを確認してください。",
 				gradient: "レイアウトにグラデーションカラー効果を与えます。",
 				legato: "トラッククリップ間のギャップを埋めます",
-				resetLayout: "このレイアウトの状態をリセットして無効にする",
+				deactivate: "このレイアウトの状態をリセットして無効にします",
 			},
 			sonar: {
 				_: "ソナーは、クッキーカッターの形を利用してビートスタイルのモーショングラフィックスを作成する視覚効果です。この機能を使用すると、スコア内のドラムキット（チャンネル10）のさまざまなパーカッションインストゥルメントに異なるシェイプやエフェクトをディスパッチできます。\n音MADの一般的なジャンルは、さまざまな形状を加えてモーショングラフィックス(MG)を作成することです。拡散した円やビートに基づいて視覚化することができますモーショングラフィックスは、グラフィックデザインとアニメーションデザインの間の製品です時間の流れに基づいた視覚的表現とビデオアートの一種ですモーショングラフィックスという用語は、時間の流れによって変形するグラフィックスを指します。モーグラフのみを含む単一の音MADビデオは、しばしば「グラフ」または「形」と題されます。",
@@ -626,6 +664,7 @@ export default {
 			},
 			settings: {
 				about: "音MADヘルパー、VEGAS Pro用の音MADエクステンションVEGASがMIDIシーケンスファイルのようなスコアを入力として受け入れ、音MADトラックを自動的に生成できるように設計されています。",
+				translation: "翻訳に参加したい場合は、ぜひ参加してください。",
 			},
 		},
 		empty: {
@@ -646,7 +685,9 @@ export default {
 				gotoYtp: "YTPに移動",
 			},
 		},
-		menu: {},
+		menu: {
+			delete: "削除(&D)",
+		},
 		preset: "プリセット",
 	},
 	csharp: {
@@ -674,6 +715,20 @@ export default {
 			script: {
 				title: "拡張機能を外しました！",
 				content: "音MADヘルパーの新バージョンは拡張機能です。旧バージョンとは異なり、スクリプトではありません。\n\nスクリプトメニューディレクトリの代わりにVEGASのApplication Extensionsディレクトリに拡張を移動してください。\n\n場所：",
+			},
+		},
+		textBox: {
+			menu: {
+				clearAll: "すべてクリア",
+			},
+		},
+		colorPicker: {
+			title: "色を選択",
+			eyeDropper: "スポイト",
+		},
+		flyout: {
+			confirmDelete: {
+				title: "削除？",
 			},
 		},
 	},

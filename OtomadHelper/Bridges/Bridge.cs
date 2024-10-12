@@ -68,4 +68,17 @@ public class Bridge {
 		string newHex = await ColorPicker.ShowDialog(hex);
 		return newHex;
 	}
+
+	/// <summary>
+	/// Displays a comfirm delete flyout with the hint text.
+	/// </summary>
+	/// <param name="rect">A tuple representing the screen coordinates (x, y, width, height) of the target's position.</param>
+	/// <param name="text">Text like <b>"Are you sure you want to delete it?"</b>.</param>
+	/// <returns>Does user click the OK button?</returns>
+	public async Task<bool> ShowConfirmDeleteFlyout(Rect rect, string message) {
+		Rect screenRect = MainDock.ClientToScreenRect(rect);
+		ConfirmDeleteFlyout flyout = ConfirmDeleteFlyout.Initial(screenRect, message, out Task<bool> resultTask);
+		MainDock.ShowFlyout(flyout);
+		return await resultTask;
+	}
 }

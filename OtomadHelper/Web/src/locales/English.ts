@@ -117,6 +117,11 @@ export default {
 			semitones: "st",
 			degrees: "°",
 		},
+		confirm: {
+			delete: {
+				backgroundImage: "Are you sure you want to delete this background image?",
+			},
+		},
 		fileFormats: {
 			allFiles: "All Files",
 			txt: "Text Documents",
@@ -735,6 +740,11 @@ export default {
 		colorPicker: {
 			title: "Select a Color",
 			eyeDropper: "Eye dropper",
+		},
+		flyout: {
+			confirmDelete: {
+				title: "Delete?",
+			},
 		},
 	},
 } as const;

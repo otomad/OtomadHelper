@@ -70,7 +70,7 @@ public class EyeDropperBehavior : Behavior<Button> {
 	private void Button_LostMouseCapture() => Button_LostMouseCapture(null!, null!);
 	private async void Button_LostMouseCapture(object sender, MouseEventArgs e) {
 		if (sender is not null) {
-			await ITimer.WinForm.Delay(5);
+			await Task.Delay(5);
 			if (AssociatedObject.IsMouseCaptured) return;
 		}
 		Window.Left = CurrentWindowLeft;

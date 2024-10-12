@@ -92,4 +92,16 @@
 
 場所：</value>
 	</data>
+	<data name="TextBox.Menu.ClearAll" xml:space="preserve">
+		<value>すべてクリア</value>
+	</data>
+	<data name="ColorPicker.Title" xml:space="preserve">
+		<value>色を選択</value>
+	</data>
+	<data name="ColorPicker.EyeDropper" xml:space="preserve">
+		<value>スポイト</value>
+	</data>
+	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
+		<value>削除？</value>
+	</data>
 </root>

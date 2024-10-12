@@ -114,6 +114,11 @@ export default {
 			semitones: "半音",
 			degrees: "°",
 		},
+		confirm: {
+			delete: {
+				backgroundImage: "你确定要删除该背景图像吗？",
+			},
+		},
 		fileFormats: {
 			allFiles: "所有文件",
 			txt: "文本文档",
@@ -721,6 +726,11 @@ export default {
 		colorPicker: {
 			title: "选择颜色",
 			eyeDropper: "取色",
+		},
+		flyout: {
+			confirmDelete: {
+				title: "确认删除？",
+			},
 		},
 	},
 } as const satisfies LocaleIdentifiers;

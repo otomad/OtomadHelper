@@ -75,6 +75,9 @@ export default {
 			parameters: "Thông số",
 		},
 		units: {},
+		confirm: {
+			delete: {},
+		},
 		fileFormats: {
 			allFiles: "Tất cả các file",
 			midi: "File trình tự MIDI",
@@ -235,6 +238,13 @@ export default {
 		},
 		wrongOpeningMethod: {
 			script: {},
+		},
+		textBox: {
+			menu: {},
+		},
+		colorPicker: {},
+		flyout: {
+			confirmDelete: {},
 		},
 	},
 } as const satisfies LocaleIdentifiers;

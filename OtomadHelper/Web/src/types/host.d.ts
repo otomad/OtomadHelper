@@ -5,6 +5,7 @@ export interface Bridge {
 	showComboBox<T>(rect: DOMRect, selected: T, ids: T[], options: string[]): T;
 	showPitchPicker(rect: DOMRect, pitch: string): string;
 	showColorPicker(hex: string): string;
+	showConfirmDeleteFlyout(rect: DOMRect, message: string): boolean;
 }
 
 export interface ContentDialogButtonItem {

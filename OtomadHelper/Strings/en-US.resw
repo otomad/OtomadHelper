@@ -101,4 +101,7 @@ Location:</value>
 	<data name="ColorPicker.EyeDropper" xml:space="preserve">
 		<value>Eye dropper</value>
 	</data>
+	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
+		<value>Delete?</value>
+	</data>
 </root>
