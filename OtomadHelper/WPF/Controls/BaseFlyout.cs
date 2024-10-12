@@ -3,7 +3,7 @@ using System.Windows.Media.Animation;
 
 namespace OtomadHelper.WPF.Controls;
 
-[DependencyProperty<bool>("FadeIn", DefaultValue = false)]
+[DependencyProperty<BaseFlyoutStartupAnimation>("StartupAnimation", DefaultValue = BaseFlyoutStartupAnimation.None)]
 public partial class BaseFlyout : BackdropWindow {
 	public BaseFlyout() {
 		InitializeComponent();
@@ -20,8 +20,18 @@ public partial class BaseFlyout : BackdropWindow {
 		Deactivated += (sender, e) => this.Vanish();
 		Closing += BaseFlyout_Closing;
 
-		// Loaded animation
-		if (FadeIn) {
+		LoadedAnimation();
+	}
+
+	public void Center(Rect rect, SetWidthType widthType = SetWidthType.Nothing) {
+		SetLocation(rect, widthType);
+		Top -= (ActualHeight - rect.Height) / 2;
+		Left -= (ActualWidth - rect.Width) / 2;
+		MoveIntoScreen();
+	}
+
+	private void LoadedAnimation() {
+		if (StartupAnimation == BaseFlyoutStartupAnimation.FadeIn) {
 			DoubleAnimation fadeInAnimation = new() {
 				From = 0,
 				To = 1,
@@ -35,13 +45,6 @@ public partial class BaseFlyout : BackdropWindow {
 		}
 	}
 
-	public void Center(Rect rect, SetWidthType widthType = SetWidthType.Nothing) {
-		SetLocation(rect, widthType);
-		Top -= (ActualHeight - rect.Height) / 2;
-		Left -= (ActualWidth - rect.Width) / 2;
-		MoveIntoScreen();
-	}
-
 	private bool waitToClose = false;
 	private void BaseFlyout_Closing(object sender, CancelEventArgs e) {
 		// If the window is closed too quickly, the text of the background element has not had time to switch,
@@ -51,4 +54,19 @@ public partial class BaseFlyout : BackdropWindow {
 		waitToClose = true;
 		Task.Delay(50).Then(Close);
 	}
+
+	public void Flyout(Rect rect) {
+		Screen screen = Screen.FromHandle(Handle);
+		System.Drawing.Rectangle workingArea = screen.WorkingArea;
+		(_, double dpiY) = this.GetDpi();
+		double screenHeight = workingArea.Height / dpiY;
+		bool placeTop = rect.Top >= screenHeight - rect.Bottom;
+		Top = placeTop ? rect.Top - ActualHeight : rect.Bottom;
+	}
+}
+
+public enum BaseFlyoutStartupAnimation {
+	None,
+	FadeIn,
+	FloatIn,
 }

@@ -1,0 +1,28 @@
+<c:BaseFlyout
+	x:Class="OtomadHelper.WPF.Controls.ConfirmDeleteFlyout"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	Title="ConfirmDeleteFlyout"
+	Width="800"
+	Height="450"
+	mc:Ignorable="d"
+>
+	<c:BaseFlyout.DataContext>
+		<c:ConfirmDeleteFlyoutViewModel />
+	</c:BaseFlyout.DataContext>
+
+	<StackPanel Orientation="Vertical">
+		<TextBlock>确认删除？</TextBlock>
+		<TextBlock Text="{Binding Body}" />
+		<c:ContentDialogButtonPanel>
+			<c:Button Content="{m:Translate ContentDialog.Button.Ok}" Command="{Binding SetDialogResultCommand}" CommandParameter="{m:Bool True}" />
+			<c:Button Content="{m:Translate ContentDialog.Button.Cancel}" IsDefault="True" Command="{Binding SetDialogResultCommand}" CommandParameter="{m:Bool False}" />
+		</c:ContentDialogButtonPanel>
+	</StackPanel>
+</c:BaseFlyout>

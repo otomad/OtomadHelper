@@ -11,6 +11,8 @@ using System.Windows.Forms;
 using OtomadHelper.Interop;
 using OtomadHelper.WPF.Controls;
 
+using Button = System.Windows.Forms.Button;
+
 namespace OtomadHelper.Test;
 public partial class TestControlsWinForm : Form {
 	private readonly List<System.Windows.Window> flyouts = [];
@@ -21,7 +23,7 @@ public partial class TestControlsWinForm : Form {
 		InitializeComponent();
 	}
 
-	private void ComboBoxBtn_Click(object sender, EventArgs e) {
+	private void Button_Click(object sender, EventArgs e) {
 		if (sender is not Control control) return;
 		Point location = control.PointToScreen(Point.Empty);
 		(double dpiX, double dpiY) = this.GetDpi();
@@ -32,10 +34,17 @@ public partial class TestControlsWinForm : Form {
 			height: control.Height / dpiY
 		);
 
-		//ComboBoxFlyout flyout = ComboBoxFlyout.Initial(list.Select(i => i.ToUpper()), list, selected, rect, out Task<string> resultTask);
-		PitchPickerFlyout flyout = PitchPickerFlyout.Initial(rect, selected, out Task<string> resultTask);
+		BaseFlyout? flyout = null;
+		Task<string> resultTask = null!;
+		if (sender == ComboBoxBtn)
+			flyout = ComboBoxFlyout.Initial(list.Select(i => i.ToUpper()), list, selected, rect, out resultTask);
+		else if (sender == PitchPickerButton)
+			flyout = PitchPickerFlyout.Initial(rect, selected, out resultTask);
+
+		if (flyout is null) return;
+
 		flyouts.Add(flyout);
-		_ = resultTask.Then(result => ComboBoxBtn.Text = selected = result);
+		resultTask.Then(result => { if (sender is Button button) button.Text = selected = result; });
 		try {
 			flyout.ShowDialog();
 		} catch (Exception) { }

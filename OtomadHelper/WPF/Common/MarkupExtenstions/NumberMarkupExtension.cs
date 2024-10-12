@@ -73,3 +73,11 @@ public class IconExtension(string name) : MarkupExtension {
 
 	public override object ProvideValue(IServiceProvider serviceProvider) => new Icon { IconName = Name };
 }
+
+[MarkupExtensionReturnType(typeof(bool))]
+public class BoolExtension(bool value) : MarkupExtension {
+	[ConstructorArgument("value")]
+	public bool Value { get; set; } = value;
+
+	public override object ProvideValue(IServiceProvider serviceProvider) => Value;
+}
