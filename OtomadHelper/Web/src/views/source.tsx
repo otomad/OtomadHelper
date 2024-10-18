@@ -20,6 +20,7 @@ export default function Source() {
 	const {
 		source, blindBoxForTrack, blindBoxForMarker, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
+		trackGroup, collapseTrackGroup,
 	} = selectConfig(c => c.source);
 	const { removeSourceClips, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = selectConfig(c => c.source.afterCompletion);
 
@@ -95,6 +96,9 @@ export default function Source() {
 			<Expander title={t.source.blindBox} details={t.descriptions.source.blindBox} icon="dice">
 				<ToggleSwitch on={blindBoxForTrack} details={t.descriptions.source.blindBox.track}>{t.source.blindBox.track}</ToggleSwitch>
 				<ToggleSwitch on={blindBoxForMarker} details={t.descriptions.source.blindBox.marker}>{t.source.blindBox.marker}</ToggleSwitch>
+			</Expander>
+			<Expander title={t.source.trackGroup} details={t.descriptions.source.trackGroup} icon="group" actions={<ToggleSwitch on={trackGroup} />}>
+				<ToggleSwitch on={collapseTrackGroup} icon="arrow_minimize">{t.source.trackGroup.collapse}</ToggleSwitch>
 			</Expander>
 
 			<DragToImport>{t.titles.source}</DragToImport>

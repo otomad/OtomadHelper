@@ -140,14 +140,16 @@ export default function Prve() {
 }
 
 const StyledInitialValue = styled(Expander.Item)`
+	padding-inline: 15px;
+
 	.text {
-		flex-shrink: 0;
+		flex: 0 0 auto;
 		width: unset;
 	}
 
 	.trailing,
 	.initial-value-items {
-		flex-shrink: 1;
+		flex: 1 1 0%;
 		justify-content: flex-start;
 		width: 100%;
 	}

@@ -474,7 +474,7 @@ export const getMonitorFps = lodash.throttle(function () {
 }, 1000);
 
 const monitorFps = createStore({ value: 60 });
-setInterval(() => getMonitorFps()?.then(fps => monitorFps.value = clamp(fps, 10, 300)), 1000);
+setInterval(() => getMonitorFps()?.then(fps => monitorFps.value = clamp(fps, 10, 300)), 1000); // FIXME: 掉帧时数据会异常！
 /**
  * Get user's current monitor frame rate per seconds.
  * @returns Monitor FPS.

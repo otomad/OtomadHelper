@@ -96,7 +96,7 @@ export default function Audio() {
 				<SettingsCard title={t.source.preferredTrack} details={t.descriptions.source.preferredTrack} icon="preferred_track">
 					<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
 				</SettingsCard>
-				<SettingsCardToggleSwitch title={t.stream.createGroups} details={t.descriptions.stream.createGroups} icon="group_object" on={createGroups} />
+				<SettingsCardToggleSwitch title={t.stream.createGroups} details={t.descriptions.stream.createGroups} icon="group" on={createGroups} />
 				<EmptyMessage.YtpDisabled>
 					<ExpanderRadio
 						title={t.stream.stretch}
@@ -160,14 +160,14 @@ export default function Audio() {
 					<Subheader>{t.stream.tuning}</Subheader>
 					<ExpanderRadio
 						title={t.stream.tuning.tuningMethod}
-						details={id => id && t.descriptions.stream.tuning.tuningMethod[id]}
 						icon="tuning"
 						items={tuningMethods}
 						value={tuningMethod}
-						view="tile"
+						view="list"
 						idField="id"
 						iconField="icon"
 						nameField={t.stream.tuning.tuningMethod}
+						detailsField={t.descriptions.stream.tuning.tuningMethod}
 					/>
 					<Disabled disabled={tuningMethod[0].in("noTuning", "scaleless")}>
 						<ExpanderRadio
@@ -186,7 +186,7 @@ export default function Audio() {
 							icon="exceeds"
 							items={exceeds}
 							value={alternativeForExceedsTheRange}
-							view="tile"
+							view="list"
 							idField="id"
 							iconField="icon"
 							nameField={item => getExceedsName(item.id, tuningMethod[0])}
@@ -228,7 +228,7 @@ export default function Audio() {
 									displayValue={value => (value * 100 | 0) + "%"}
 								/>
 							</Expander.Item>
-							<ToggleSwitch icon="voice_mail" on={adjustAudioToBasePitch} details={t.descriptions.stream.tuning.prelisten.adjustAudioToBasePitch}>{t.stream.tuning.prelisten.adjustAudioToBasePitch}</ToggleSwitch>
+							<ToggleSwitch icon="remix_add" on={adjustAudioToBasePitch} details={t.descriptions.stream.tuning.prelisten.adjustAudioToBasePitch}>{t.stream.tuning.prelisten.adjustAudioToBasePitch}</ToggleSwitch>
 						</Expander>
 					</Disabled>
 

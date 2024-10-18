@@ -105,6 +105,7 @@ const StyledSliderWrapper = styled.div`
 	align-items: center;
 
 	.display-value {
+		${styles.mixins.hideIfEmpty()};
 		${styles.effects.text.body};
 		color: ${c("fill-color-text-secondary")};
 		font-variant-numeric: tabular-nums;

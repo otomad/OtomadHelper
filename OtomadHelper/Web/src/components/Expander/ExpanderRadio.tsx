@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = false, details: _details, $itemWidth, radioGroup, itemsViewItemAttrs, hideCustom = true, before, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, view = "radio", details: _details, $itemWidth, radioGroup, itemsViewItemAttrs, hideCustom = true, before, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly TItem[];
 	/** The identifier of the currently selected value. */
@@ -33,9 +33,9 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	/** The image field for the radio item. */
 	imageField?: FieldType<TItem> | ((item: TItem) => ReactNode);
 	/** The detailed description field for the radio item. */
-	detailsField?: FieldType<TItem>;
+	detailsField?: FieldType<TItem> | object | ((item: TItem) => ReactNode);
 	/** Use list/tile/grid view components instead of radio buttons. */
-	view?: ItemView | false;
+	view?: ItemView | "radio";
 	/** Detailed description. */
 	details?: ReactNode | ((value: TKey | undefined, items: TItem[]) => ReactNode);
 	/** The width of the child element image when using the grid view component. */
@@ -87,7 +87,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	return (
 		<Expander {...settingsCardProps} checkInfo={checkInfo} details={details}>
 			{before}
-			{!view ? filteredItems.map(item => (
+			{view === "radio" ? filteredItems.map(item => (
 				<RadioButton
 					value={[value, setValue]}
 					id={getItemField(item, "id")}

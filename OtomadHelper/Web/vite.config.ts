@@ -8,6 +8,7 @@ import turboConsole from "unplugin-turbo-console/vite";
 import { defineConfig } from "vite";
 import glsl from "vite-plugin-glsl";
 import htmlMinifier from "vite-plugin-html-minifier";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -95,6 +96,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 			}), */
 			turboConsole(),
 			midiKeyframes(),
+			ViteImageOptimizer(), // test: /\.(jpe?g|png|gif|tiff|webp|svg|avif)$/i,
 		],
 		base: "",
 		publicDir: "src/public",

@@ -42,6 +42,10 @@ const StyledItemsView = styled.div<{
 		&.grid {
 			padding: 7px;
 		}
+
+		&.list > .items-view-item > .base {
+			padding-inline: 23.5px;
+		}
 	}
 `;
 

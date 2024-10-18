@@ -93,7 +93,7 @@ const StyledItemsViewItem = styled.button<{
 		> .base {
 			position: relative;
 			display: flex;
-			flex-wrap: wrap;
+			flex-wrap: nowrap;
 			gap: 16px;
 			align-items: center;
 			min-height: 48px;

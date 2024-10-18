@@ -36,6 +36,8 @@ export const configStore = createStore({
 		},
 		blindBoxForTrack: false,
 		blindBoxForMarker: false,
+		trackGroup: true,
+		collapseTrackGroup: true,
 	},
 	score: {
 		format: "midi",

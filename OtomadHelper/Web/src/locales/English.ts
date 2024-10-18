@@ -64,6 +64,10 @@ export default {
 				track: "For each track or channel",
 				marker: "Switch once per marker",
 			},
+			trackGroup: {
+				_: "Grouping tracks",
+				collapse: "Collapse track groups by default",
+			},
 		},
 		on: "On",
 		off: "Off",
@@ -518,6 +522,9 @@ export default {
 					_: "Uses random in points for the source.\nThis can result in randomly selected source clips having different base pitches, making it useful only for creating funny videos for entertainment purposes, and barely used for creating high-caliber videos.",
 					track: "Whether track or channel depends on the Score",
 					marker: "When a marker is encountered in the score, the in point of the source will be changed once. If several markers have the same non-empty name, they will use the same in point of the source.",
+				},
+				trackGroup: {
+					_: "Group tracks by score track",
 				},
 			},
 			score: {
