@@ -1,22 +1,22 @@
-export default function Disabled({ children, disabled = true, as = Fragment, wrapper, ...htmlAttrs }: FCP<{
+export default function Disabled({ children, disabled = true as boolean | undefined, as = Fragment, container, ...htmlAttrs }: FCP<{
 	/** Disable all children controls? */
 	disabled?: boolean;
-	/** Modify the wrapper type. Defaults to `React.Fragment` (a.k.a. nothing). */
+	/** Modify the container type. Defaults to `React.Fragment` (a.k.a. nothing). */
 	as?: AsTarget;
 	/** Same as `as`, but compatible with Styled Components. */
-	wrapper?: AsTarget;
+	container?: AsTarget;
 }>) {
-	const d = disabled || undefined;
-	const Wrapper = wrapper ?? as;
-	if (Wrapper === Fragment) htmlAttrs = {};
+	disabled ||= undefined;
+	const Container = container ?? as;
+	if (Container === Fragment) htmlAttrs = {};
 	return (
-		<Wrapper {...htmlAttrs}>
+		<Container {...htmlAttrs}>
 			{React.Children.map(children, child =>
 				React.cloneElement(child as ReactElement, {
-					disabled: d,
-					"aria-disabled": d,
+					disabled,
+					"aria-disabled": disabled,
 				}),
 			)}
-		</Wrapper>
+		</Container>
 	);
 }

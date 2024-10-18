@@ -3,9 +3,7 @@ import { styledExpanderItemBase, styledExpanderItemContent } from "components/Ex
 
 const isPressed = (ampersand = "&") => `${ampersand}:not(:has(button:active)):active, .sortable-overlay:not(.dropping) > ${ampersand}`;
 
-export const TRAILING_EXEMPTION = "trailing-exemption";
-
-const StyledSettingsCard = styled(StyledCard)`
+const StyledSettingsCard = styled(StyledCard)(() => css`
 	${styledExpanderItemContent};
 
 	> .base {
@@ -42,7 +40,7 @@ const StyledSettingsCard = styled(StyledCard)`
 		}
 	}
 
-	button& {
+	button&:not(.container) {
 		&:hover,
 		${isPressed()} {
 			border-color: ${c("stroke-color-control-stroke-default")};
@@ -118,9 +116,9 @@ const StyledSettingsCard = styled(StyledCard)`
 			${styles.effects.focus(true)};
 		}
 	}
-`;
+`);
 
-export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, trailingIcon, disabled, children, type = "container", dragHandle, className, ...htmlAttrs }: FCP<{
+export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, trailingIcon, disabled, children, type = "container", dragHandle, className, tabIndex, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
@@ -133,8 +131,15 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	selectValid?: boolean | number;
 	/** Trailing icon. Use an empty string or Boolean type to indicate disabling. */
 	trailingIcon?: DeclaredIcons | "" | boolean;
-	/** Component form type. */
-	type?: "container" | "button" | "expander";
+	/**
+	 * Component form type.
+	 * - `container` - A normal `<div>` box, cannot be clicked.
+	 * - `button` - A button that can be clicked, default trailing icon is chevron right.
+	 * - `expander` - An accordion item that can be expanded or collapsed, default trailing icon is chevron down.
+	 * - `container-but-button` - Similar to `container`, but it is a `<button>` instead of a `<div>`,
+	 * useful when dynamically change the `type`, the tag name will not be changed, thus avoid the re-rendering element issue.
+	 */
+	type?: "container" | "button" | "expander" | "container-but-button";
 	/** Show the drag handle to represent that it is sortable? */
 	dragHandle?: boolean;
 }, "div">) {
@@ -146,9 +151,10 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	return (
 		<StyledSettingsCard
 			as={type === "container" ? "div" : "button"}
-			className={[className, type]}
+			className={[className, type === "container-but-button" ? "container" : type]}
 			disabled={disabled}
 			aria-disabled={disabled || undefined}
+			tabIndex={tabIndex ?? type.in("container", "container-but-button") ? -1 : 0}
 			{...htmlAttrs}
 		>
 			<div className="base">

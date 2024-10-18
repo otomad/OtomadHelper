@@ -43,6 +43,7 @@ export default {
 			preferredTrack: {},
 			afterCompletion: {},
 			blindBox: {},
+			trackGroup: {},
 		},
 		on: "Bật",
 		off: "Tắt",
@@ -166,6 +167,7 @@ export default {
 					belowAdjustmentTracks: {},
 				},
 				blindBox: {},
+				trackGroup: {},
 			},
 			score: {},
 			stream: {

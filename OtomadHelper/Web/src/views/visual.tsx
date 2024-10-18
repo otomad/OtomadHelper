@@ -184,11 +184,11 @@ export default function Visual() {
 					</SettingsCard>
 
 					<Subheader>{t.stream.playingTechniques}</Subheader>
-					<Expander
+					<SettingsCardToggleSwitch
 						title={t.stream.playingTechniques.glissando}
 						details={t.descriptions.stream.playingTechniques.glissando}
 						icon="swirl"
-						actions={<ToggleSwitch on={glissando} />}
+						on={glissando}
 					>
 						<Expander.Item icon="sparkle" title={t.titles.effect}>
 							<Segmented current={glissandoEffect}>
@@ -199,24 +199,24 @@ export default function Visual() {
 						<Expander.Item title={t.stream.playingTechniques.glissando.swirlAmount} details={t.descriptions.stream.playingTechniques.glissando.swirlAmount}>
 							<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitones} positiveSign />
 						</Expander.Item>
-					</Expander>
-					<Expander
+					</SettingsCardToggleSwitch>
+					<SettingsCardToggleSwitch
 						title={t.stream.playingTechniques.appoggiatura}
 						details={t.descriptions.stream.playingTechniques.appoggiatura}
 						icon="appoggiatura"
-						actions={<ToggleSwitch on={appoggiatura} />}
+						on={appoggiatura}
 					/>
-					<Expander
+					<SettingsCardToggleSwitch
 						title={t.stream.playingTechniques.arpeggio}
 						details={t.descriptions.stream.playingTechniques.arpeggio}
 						icon="arpeggio"
-						actions={<ToggleSwitch on={arpeggio} />}
+						on={arpeggio}
 					>
 						<ToggleSwitch icon="invert_color" on={arpeggioNegative} details={t.descriptions.stream.playingTechniques.arpeggio.negative}>{t.prve.effects.negative}</ToggleSwitch>
 						<Expander.Item icon="preset" title={t.stream.playingTechniques.applyCustomPreset}>
 							<Button>{t.unselected}</Button>
 						</Expander.Item>
-					</Expander>
+					</SettingsCardToggleSwitch>
 
 					<Subheader>{t.stream.mapping}</Subheader>
 					<Expander title={t.stream.mapping.velocity} icon="signal" />

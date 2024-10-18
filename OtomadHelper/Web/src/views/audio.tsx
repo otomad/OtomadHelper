@@ -31,7 +31,7 @@ const buildInPresets = ["normal", "fadeOut"];
 const TooltipPartial = Tooltip.with({ placement: "y" });
 
 const PrelistenActions = styled(Disabled).attrs({
-	wrapper: "div",
+	container: "div",
 })`
 	position: relative;
 	display: flex;
@@ -150,14 +150,14 @@ export default function Audio() {
 						icon="timer_off"
 						on={timeUnremapping}
 					/>
-					<Expander
+					<SettingsCardToggleSwitch
 						title={t.stream.autoPan}
 						details={t.descriptions.stream.autoPan}
 						icon="stereo"
-						actions={<ToggleSwitch on={autoPan} />}
+						on={autoPan}
 					>
 						<Expander.Item.Curve curve={autoPanCurve} />
-					</Expander>
+					</SettingsCardToggleSwitch>
 
 					<Subheader>{t.stream.tuning}</Subheader>
 					<ExpanderRadio

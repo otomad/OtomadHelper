@@ -1,8 +1,12 @@
 import ExpanderItem from "./ExpanderItem";
 
+export const TRAILING_EXEMPTION = "trailing-exemption";
+
 const ExpanderParent = styled(SettingsCard)<{
 	/** Expanded? */
 	$expanded?: boolean;
+	/** Make expander child items disabled. */
+	$childrenDisabled?: boolean;
 }>`
 	backdrop-filter: blur(4px);
 
@@ -29,6 +33,13 @@ const ExpanderParent = styled(SettingsCard)<{
 	&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active)):active > .base > .trailing > .trailing-icon > * {
 		translate: 0 ${({ $expanded }) => $expanded ? 2 : -2}px;
 	}
+
+	${ifProp("$childrenDisabled", css`
+		& > .base > .trailing > .trailing-icon > * {
+			color: ${c("fill-color-text-disabled")};
+			translate: 0 !important;
+		}
+	`)}
 
 	${({ $expanded }) => {
 		const sharpBottom = css`
@@ -89,7 +100,7 @@ const ExpanderChildWrapper = styled.div`
 	}
 `;
 
-export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, clipChildren, hideExpandIfNoChildren = false, selectInfo, selectValid, disabled, type: settingsCardType }: FCP<PropsOf<typeof SettingsCard> & {
+export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, clipChildren, childrenDisabled, selectInfo, selectValid, disabled }: FCP<PropsOf<typeof SettingsCard> & {
 	/** The other action control area on the right side of the component. */
 	actions?: ReactNode;
 	/** Expanded initially? */
@@ -100,41 +111,41 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	alwaysShowCheckInfo?: boolean;
 	/** Make sure expander children won't exceed the area. */
 	clipChildren?: boolean;
-	/** If there is no children in the expander, then hide the expand icon. */
-	hideExpandIfNoChildren?: boolean;
+	/** Make expander child items disabled. */
+	childrenDisabled?: boolean;
 }>) {
 	const settingsCardProps = { icon, title, details, selectInfo, selectValid, disabled };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
-	const handleClick = useOnNestedButtonClick(() => setInternalExpanded(expanded => !expanded));
-	const hideExpand = hideExpandIfNoChildren && !children;
+	const handleClick = useOnNestedButtonClick(() => !childrenDisabled && setInternalExpanded(expanded => !expanded));
+	useEffect(() => setInternalExpanded(expanded), [expanded]);
+	useEffect(() => { if (disabled || childrenDisabled) setInternalExpanded(false); }, [disabled, childrenDisabled]);
 
 	return (
 		<div className="expander">
 			<ExpanderParent
 				{...settingsCardProps}
-				type={hideExpand ? settingsCardType : "expander"}
-				trailingIcon={hideExpand ? undefined : "chevron_down"}
+				type={childrenDisabled ? "container-but-button" : "expander"}
+				trailingIcon="chevron_down"
 				onClick={handleClick}
 				$expanded={internalExpanded}
+				$childrenDisabled={childrenDisabled}
 			>
 				{actions}
 				{checkInfo != null && <div className={["check-info", TRAILING_EXEMPTION, { hidden: !(!internalExpanded || alwaysShowCheckInfo) }]}>{checkInfo}</div>}
 			</ExpanderParent>
-			{!hideExpand && (
-				<Transitions.Size
-					in={internalExpanded}
-					specified="height"
-					duration={350}
-					enterOptions={{ startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }}
-					exitOptions={{ endChildTranslate: "0 -100%" }}
-				>
-					<ExpanderChild disabled={disabled} className={{ clipChildren }}>
-						<div className="expander-child-items">
-							{children}
-						</div>
-					</ExpanderChild>
-				</Transitions.Size>
-			)}
+			<Transitions.Size
+				in={internalExpanded}
+				specified="height"
+				duration={350}
+				enterOptions={{ startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }}
+				exitOptions={{ endChildTranslate: "0 -100%" }}
+			>
+				<ExpanderChild disabled={disabled || childrenDisabled} className={{ clipChildren }}>
+					<div className="expander-child-items">
+						{children}
+					</div>
+				</ExpanderChild>
+			</Transitions.Size>
 		</div>
 	);
 }

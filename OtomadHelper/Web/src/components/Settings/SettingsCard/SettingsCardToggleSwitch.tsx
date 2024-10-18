@@ -16,32 +16,50 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 	const [isToggleSwitchPressing, setIsToggleSwitchPressing] = useState(false);
 	trailingIcon ||= "";
 	onClick ??= () => !isToggleSwitchPressing && (setOn as SetStateNarrow<boolean>)?.(on => !on);
+	const isExpander = shouldBeExpander(children);
 
 	return (
-		<Expander
+		<SettingsCardOrExpander
 			type="button"
 			disabled={disabled}
 			trailingIcon={trailingIcon}
 			className={[className, "settings-card-toggle-switch"]}
 			onClick={onClick}
-			hideExpandIfNoChildren
 			actions={(
 				<>
 					<ToggleSwitch
-						as="label"
+						as={isExpander ? undefined : "label"}
 						$color={$color}
 						on={[on, setOn]}
 						isPressing={[isToggleSwitchPressing, setIsToggleSwitchPressing]}
-						tabIndex={-1}
+						tabIndex={isExpander ? undefined : -1}
 						disabled={disabled}
 						resetTransitionOnChanging={resetTransitionOnChanging}
 					/>
 					{actions}
 				</>
 			)}
+			childrenDisabled={isExpander && !on}
 			{...settingsCardProps}
 		>
 			{children}
-		</Expander>
+		</SettingsCardOrExpander>
+	);
+}
+
+function shouldBeExpander(children?: ReactNode) { return !([undefined, null, NaN, ""] as ReactNode[]).includes(children); }
+
+function SettingsCardOrExpander({ children, actions, ...htmlAttrs }: {
+	children?: ReactNode;
+	actions?: ReactNode;
+	[x: string]: Any;
+}) {
+	const isExpander = shouldBeExpander(children);
+	const Container = isExpander ? Expander : SettingsCard;
+
+	return (
+		<Container {...htmlAttrs} actions={isExpander && actions}>
+			{isExpander ? children : actions}
+		</Container>
 	);
 }

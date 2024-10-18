@@ -97,9 +97,9 @@ export default function Source() {
 				<ToggleSwitch on={blindBoxForTrack} details={t.descriptions.source.blindBox.track}>{t.source.blindBox.track}</ToggleSwitch>
 				<ToggleSwitch on={blindBoxForMarker} details={t.descriptions.source.blindBox.marker}>{t.source.blindBox.marker}</ToggleSwitch>
 			</Expander>
-			<Expander title={t.source.trackGroup} details={t.descriptions.source.trackGroup} icon="group" actions={<ToggleSwitch on={trackGroup} />}>
+			<SettingsCardToggleSwitch title={t.source.trackGroup} details={t.descriptions.source.trackGroup} icon="group" on={trackGroup}>
 				<ToggleSwitch on={collapseTrackGroup} icon="arrow_minimize">{t.source.trackGroup.collapse}</ToggleSwitch>
-			</Expander>
+			</SettingsCardToggleSwitch>
 
 			<DragToImport>{t.titles.source}</DragToImport>
 		</div>
