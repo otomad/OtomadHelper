@@ -9,9 +9,11 @@ const THUMB_PRESSED_WIDTH = 22;
 const isHoverPseudo = "&:hover, .settings-card-toggle-switch:hover .trailing:not(:has(:hover)) &";
 const isPressedPseudo = "&:active, &.pressed, .settings-card-toggle-switch:active .trailing:not(:has(:active)) &";
 
+const TOGGLE_SWITCH_LABEL_GAP = 12;
+
 const StyledToggleSwitchLabel = styled.button`
 	display: flex;
-	gap: 12px;
+	gap: ${TOGGLE_SWITCH_LABEL_GAP}px;
 	justify-content: space-between;
 	align-items: center;
 	text-align: start;
@@ -22,7 +24,7 @@ const StyledToggleSwitchLabel = styled.button`
 
 	.right {
 		display: flex;
-		gap: inherit;
+		gap: ${TOGGLE_SWITCH_LABEL_GAP}px; // When use \`inherit\` will produce new issues.
 		align-items: center;
 		margin-inline-start: auto;
 
@@ -137,7 +139,7 @@ const StyledToggleSwitchLabel = styled.button`
 			}
 
 			.base {
-				background-color: ${c("stroke-color-control-strong-stroke-disabled")};
+				background-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
 			}
 
 			.thumb {
@@ -264,10 +266,12 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 			{...htmlAttrs}
 		>
 			{icon && <Icon name={icon} />}
-			<div className="text">
-				<p className="title">{children}</p>
-				<p className="details">{details}</p>
-			</div>
+			{(children || details) && (
+				<div className="text">
+					{children && <p className="title">{children}</p>}
+					{details && <p className="details">{details}</p>}
+				</div>
+			)}
 			<div className="right">
 				{!hideLabel && <span className="text">{textLabel}</span>}
 				<div className={["stroke", "toggle-switch-base", { pressing: isPressing }]}>

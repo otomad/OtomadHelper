@@ -69,6 +69,8 @@ export default [
 		"jotai": [
 			"atom",
 			"useAtom",
+			"useAtomValue",
+			"useSetAtom",
 		],
 	},
 	/* {

@@ -30,6 +30,7 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 				on={[on, setOn]}
 				isPressing={[isToggleSwitchPressing, setIsToggleSwitchPressing]}
 				tabIndex={-1}
+				disabled={disabled}
 				resetTransitionOnChanging={resetTransitionOnChanging}
 			/>
 			{children}

@@ -105,7 +105,6 @@ const StyledSliderWrapper = styled.div`
 	align-items: center;
 
 	.display-value {
-		${styles.mixins.hideIfEmpty()};
 		${styles.effects.text.body};
 		color: ${c("fill-color-text-secondary")};
 		font-variant-numeric: tabular-nums;
@@ -224,7 +223,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 
 	return (
 		<StyledSliderWrapper>
-			<span className="display-value">{displayValue}</span>
+			{displayValue && <span className="display-value">{displayValue}</span>}
 			<StyledSlider
 				tabIndex={0}
 				style={{

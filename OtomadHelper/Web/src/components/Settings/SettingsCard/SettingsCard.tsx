@@ -29,8 +29,14 @@ const StyledSettingsCard = styled(StyledCard)`
 	&[disabled] > .base {
 		background-color: ${c("fill-color-control-disabled")};
 
-		> * {
+		> :not(.trailing) {
 			opacity: ${c("disabled-text-opacity")};
+		}
+
+		> .trailing {
+			@layer layout {
+				color: ${c("fill-color-text-disabled")};
+			}
 		}
 	}
 
@@ -157,7 +163,10 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 					<p className={["details", "select-info", { invalid: !selectValid }]}><Preserves>{selectInfo}</Preserves></p>
 				</div>
 				<div className="trailing">
-					{children}
+					{React.Children.map(children, child => !React.isValidElement(child) ? child : React.cloneElement(child, {
+						disabled: disabled ?? false,
+						"aria-disabled": disabled || undefined,
+					} as never))}
 					{trailingIcon && typeof trailingIcon === "string" && (
 						<div className={["trailing-icon", TRAILING_EXEMPTION]} data-type={type}>
 							<Icon name={trailingIcon} />

@@ -30,7 +30,9 @@ const buildInPresets = ["normal", "fadeOut"];
 
 const TooltipPartial = Tooltip.with({ placement: "y" });
 
-const PrelistenActions = styled.div`
+const PrelistenActions = styled(Disabled).attrs({
+	wrapper: "div",
+})`
 	position: relative;
 	display: flex;
 	gap: 8px;

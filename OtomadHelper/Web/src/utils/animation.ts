@@ -473,10 +473,13 @@ export const getMonitorFps = lodash.throttle(function () {
 	);
 }, 1000);
 
-const monitorFps = createStore({ value: 60 });
-setInterval(() => getMonitorFps()?.then(fps => monitorFps.value = clamp(fps, 10, 300)), 1000); // FIXME: 掉帧时数据会异常！
+const monitorFps = atom(60);
+monitorFps.onMount = setMonitorFps => { // FIXME: 掉帧时数据会异常！
+	setInterval(async () => setMonitorFps(clamp(await getMonitorFps() || 60, 10, 300)), 1000);
+};
+
 /**
  * Get user's current monitor frame rate per seconds.
  * @returns Monitor FPS.
  */
-export const useMonitorFps = () => useSnapshot(monitorFps).value;
+export const useMonitorFps = () => useAtomValue(monitorFps);
