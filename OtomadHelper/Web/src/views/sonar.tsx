@@ -16,9 +16,14 @@ export default function Sonar() {
 				<EmptyMessage.Typical icon="sonar" title="sonar" enabled={enabled}>
 					<SettingsCardToggleSwitch icon="arrow_split" title={t.sonar.separateDrums} details={t.descriptions.sonar.separateDrums} on={separateDrums} />
 					<SettingsCardToggleSwitch icon="invert_color" title={t.sonar.differenceCompositeMode} details={t.descriptions.sonar.differenceCompositeMode} on={differenceCompositeMode} />
-					<SettingsCardToggleSwitch icon="shadow" title={t.sonar.shadow} details={t.descriptions.sonar.shadow} on={shadow} $color={shadowColor[0]}>
-						<ColorPicker color={shadowColor} />
-					</SettingsCardToggleSwitch>
+					<SettingsCardToggleSwitch
+						icon="shadow"
+						title={t.sonar.shadow}
+						details={t.descriptions.sonar.shadow}
+						on={shadow}
+						$color={shadowColor[0]}
+						actions={<ColorPicker color={shadowColor} />}
+					/>
 
 					<Subheader>{t.sonar.graphs}</Subheader>
 					{graphs.map((graph, i) => (

@@ -3,6 +3,8 @@ import { styledExpanderItemBase, styledExpanderItemContent } from "components/Ex
 
 const isPressed = (ampersand = "&") => `${ampersand}:not(:has(button:active)):active, .sortable-overlay:not(.dropping) > ${ampersand}`;
 
+export const TRAILING_EXEMPTION = "trailing-exemption";
+
 const StyledSettingsCard = styled(StyledCard)`
 	${styledExpanderItemContent};
 
