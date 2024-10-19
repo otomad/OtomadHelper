@@ -20,6 +20,8 @@ import globalized from "./src/plugins/vite/globalized";
 import midiKeyframes from "./src/plugins/vite/midi";
 import svgCursor from "./src/plugins/vite/svg-cursor";
 
+const ENABLE_MINIFY = true;
+
 const resolve = (...paths: string[]) => _resolve(__dirname, ...paths);
 
 // https://vitejs.dev/config/
@@ -135,7 +137,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				},
 			},
 			chunkSizeWarningLimit: 500_000, // 500MB
-			// minify: "terser", // When enabled, smaller but slower.
+			minify: ENABLE_MINIFY && "esbuild", // "terser", // When enable terser, smaller but slower.
 			terserOptions: {
 				keep_classnames: true,
 			},

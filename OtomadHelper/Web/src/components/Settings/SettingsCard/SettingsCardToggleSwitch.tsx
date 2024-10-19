@@ -39,7 +39,7 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 					{actions}
 				</>
 			)}
-			childrenDisabled={isExpander && !on}
+			childrenDisabled={isExpander ? !on : undefined}
 			{...settingsCardProps}
 		>
 			{children}
@@ -58,7 +58,7 @@ function SettingsCardOrExpander({ children, actions, ...htmlAttrs }: {
 	const Container = isExpander ? Expander : SettingsCard;
 
 	return (
-		<Container {...htmlAttrs} actions={isExpander && actions}>
+		<Container {...htmlAttrs} actions={isExpander ? actions : undefined}>
 			{isExpander ? children : actions}
 		</Container>
 	);

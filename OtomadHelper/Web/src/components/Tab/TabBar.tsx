@@ -80,13 +80,12 @@ export default function TabBar<T extends string = string>({ current: [current, s
 	const indicatorEl = useDomRef<"div">();
 	const [position, _setPosition] = useState<TwoD>([NaN, NaN]);
 	const [noIndicatorTransition, setNoIndicatorTransition] = useState(false);
-	const updateIndicatorThread = useRef<symbol>();
 	const { uiScale1 } = useSnapshot(configStore.settings);
 
 	/**
 	 * Update the tab indicator.
 	 */
-	const update = useCallback(async () => { // FIXME: 先点击设置，再点击其它导航项，会意外发生从设置之前的一个导航项过渡到新导航项的动画，仅在生产环境触发，开发环境却没得问题。
+	const update = useCallback(async () => {
 		const indicator = indicatorEl.current;
 		if (!indicator) return;
 		type TabBarMovement = "previous" | "next" | "appear" | "disappear" | "none";
@@ -128,33 +127,35 @@ export default function TabBar<T extends string = string>({ current: [current, s
 			target2 = (targetRect[vertical ? "bottom" : "right"] - entire1) / uiScale1;
 		const targetOffset = (target2 - target1 - LENGTH) / 2;
 		if (targetOffset > 0) { target1 += targetOffset; target2 -= targetOffset; }
+		const setPosition1 = () => _setPosition(([_, pos2]) => [target1, pos2]);
+		const setPosition2 = () => setPosition(([pos1]) => [pos1, target2]);
+		const setPositionBoth = () => setPosition([target1, target2]);
+		const delayTime = () => delay(DELAY);
 		if (movement === "appear") {
 			setNoIndicatorTransition(true);
 			const center = (target1 + target2) / 2;
 			setPosition([center, center]);
-			await nextAnimationTick();
+			await delay(0);
 			setNoIndicatorTransition(false);
-			setPosition([target1, target2]);
+			setPositionBoth();
 			return;
 		}
 		const movementSign = entry1 + entireLength - entry2 - (target1 + target2);
 		movement = movementSign > 0 ? "previous" : movementSign < 0 ? "next" : "none";
-		if (movement === "none") return;
-		const setPosition1 = () => _setPosition(([_, pos2]) => [target1, pos2]);
-		const setPosition2 = () => setPosition(([pos1]) => [pos1, target2]);
-		const delayTime = () => delay(DELAY);
-		const thisThread = Symbol("update");
-		updateIndicatorThread.current = thisThread;
+		if (movement === "none") {
+			setPositionBoth();
+			await delayTime();
+			setPositionBoth();
+			return;
+		}
 		if (movement === "previous") {
 			setPosition1();
 			await delayTime();
-			if (updateIndicatorThread.current !== thisThread) return;
-			setPosition2();
+			setPositionBoth();
 		} else if (movement === "next") {
 			setPosition2();
 			await delayTime();
-			if (updateIndicatorThread.current !== thisThread) return;
-			setPosition1();
+			setPositionBoth();
 		}
 	}, [position, uiScale1]);
 
