@@ -29,7 +29,7 @@ const StyledPreviewKaraoke = styled.div`
 		clip-path: inset(0 100% 0 0);
 
 		> p {
-			color: lch(from ${c("colorization")} 50 100 h);
+			color: lch(from ${c("colorization")} 50 c h);
 			-webkit-text-stroke-color: white;
 		}
 	}

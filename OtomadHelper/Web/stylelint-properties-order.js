@@ -79,6 +79,7 @@ export default [
 	"box-sizing",
 	"width",
 	"min-inline-size",
+	"min-width",
 	"max-width",
 	"height",
 	"min-height",

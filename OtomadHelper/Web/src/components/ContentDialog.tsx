@@ -1,4 +1,5 @@
 const StyledContentDialog = styled.div`
+	min-width: min(500px, 100dvw);
 	max-width: 100dvw;
 	max-height: 100dvh;
 	overflow: clip;

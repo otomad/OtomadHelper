@@ -3,6 +3,7 @@
 import react from "@vitejs/plugin-react";
 import { transform as transformCSS } from "lightningcss";
 import { resolve as _resolve } from "path";
+import license from "rollup-plugin-license";
 import autoImport from "unplugin-auto-import/vite";
 import turboConsole from "unplugin-turbo-console/vite";
 import { defineConfig } from "vite";
@@ -13,6 +14,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
 import autoImportConfig from "./auto-import.config";
+import { author, displayName, github, homepage, project, version } from "./package.json";
 import fragmentFiltersVirtualFile from "./src/plugins/vite/fragment-filters";
 import globalized from "./src/plugins/vite/globalized";
 import midiKeyframes from "./src/plugins/vite/midi";
@@ -97,6 +99,22 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 			turboConsole(),
 			midiKeyframes(),
 			ViteImageOptimizer(), // test: /\.(jpe?g|png|gif|tiff|webp|svg|avif)$/i,
+			license({
+				banner: {
+					commentStyle: "ignored",
+					content: {
+						file: resolve("banner.template.ejs"),
+					},
+					data: {
+						name: displayName,
+						version,
+						author,
+						homepage,
+						repository: github,
+						project,
+					},
+				},
+			}),
 		],
 		base: "",
 		publicDir: "src/public",
@@ -114,14 +132,6 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 						else if (id.includes("svg-icons-register")) return "svgs";
 						else if (id.includes("assets/lotties")) return "lotties";
 					}, */
-					banner:
-`/*!
-* Otomad Helper
-* @homepage https://otomadhelper.readthedocs.io/
-* @repository https://github.com/otomad/OtomadHelper
-* @license GPL 3.0
-* @author Rantetsu Inori
-*/`,
 				},
 			},
 			chunkSizeWarningLimit: 500_000, // 500MB

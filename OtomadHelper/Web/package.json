@@ -11,8 +11,10 @@
 		"url": "https://github.com/otomad/OtomadHelper.git"
 	},
 	"homepage": "https://otomadhelper.readthedocs.io/",
+	"github": "https://github.com/otomad/OtomadHelper",
 	"bugs": "https://github.com/otomad/OtomadHelper/issues",
 	"author": "Rantetsu Inori",
+	"project": "OTOMAD+",
 	"license": "GPL-3.0-only",
 	"scripts": {
 		"dev": "vite --host",
@@ -90,6 +92,7 @@
 		"lightningcss": "^1.24.1",
 		"postcss-styled-syntax": "^0.6.4",
 		"rimraf": "^6.0.1",
+		"rollup-plugin-license": "^3.5.3",
 		"sharp": "^0.33.5",
 		"stylelint": "^16.3.1",
 		"stylelint-config-standard": "^36.0.0",

@@ -71,6 +71,15 @@
 		<Reference Include="WindowsBase" />
 	</ItemGroup>
 	<ItemGroup>
+		<!--<None Remove="%2a%2a\**" />
+		<Compile Remove="%2a%2a\**" />
+		<EmbeddedResource Remove="%2a%2a\**" />
+		<Page Remove="%2a%2a\**" />-->
+		<Compile Remove="%2a%2a/%2a.cs" />
+		<EmbeddedResource Remove="%2a%2a/%2a.resx" />
+		<Page Remove="%2a%2a/%2a.xaml" />
+	</ItemGroup>
+	<ItemGroup>
 		<Compile Update="Properties\Settings.Designer.cs">
 			<DesignTimeSharedInput>True</DesignTimeSharedInput>
 			<AutoGen>True</AutoGen>
@@ -89,10 +98,23 @@
 		<None Include="Test\app.manifest" />
 		<EmbeddedResource Include="Assets\**" />
 		<Content Include="Icons\**" />
-		<None Remove="Web\**" />
-		<None Remove="API\**" />
 		<EmbeddedResource Include="Web\dist\**" />
 		<EmbeddedResource Include="Strings\**" />
+		<Compile Include="Properties\**\*.cs" />
+		<EmbeddedResource Include="Properties\**\*.resx" />
+		<Compile Include="Bridges\**" />
+		<Compile Include="Helpers\**" />
+		<Compile Include="Interop\**" />
+		<Compile Include="Models\**" />
+		<Compile Include="Module\**\*.cs" />
+		<Compile Include="Services\**" />
+		<Compile Include="Test\**\*.cs" />
+		<Page Include="Test\**\*.xaml" />
+		<Compile Include="WPF\**\*.cs" />
+		<Page Include="WPF\**\*.xaml" />
+		<Compile Include="GlobalUsings.cs" />
+		<Folder Include="Resources\" />
+		<Folder Include="Services\" />
 		<None Include="..\.editorconfig">
 			<Link>.editorconfig</Link>
 		</None>
@@ -100,10 +122,10 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
-		<Folder Include="Resources\" />
-		<Folder Include="Services\" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Remove="Web\**" />
+		<None Remove="API\**" />
 		<Compile Remove="obj\**" />
 		<Compile Remove="Helpers\DebounceThrottle.cs" />
 		<Compile Remove="Module\MainWPFDock.xaml.cs" />
@@ -131,6 +153,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Melanchall.DryWetMidi" Version="7.2.0" />
 		<!--<PackageReference Include="Costura.Fody" Version="5.7.0">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
