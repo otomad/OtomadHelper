@@ -219,7 +219,7 @@ export default function Score() {
 				iconField="icon"
 			>
 				<CustomItem current={bpmUsing}>
-					{setToCustom => <TextBox.Number value={customBpm} onChanging={setToCustom} />}
+					{setToCustom => <TextBox.Number value={customBpm} onChanging={setToCustom} suffix={t.units.beatsPerMinute} />}
 				</CustomItem>
 			</ExpanderRadio>
 			<SettingsCard title={t.score.timeSignature} icon="health">{timeSignature}</SettingsCard>

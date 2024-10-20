@@ -125,6 +125,7 @@ export default {
 			seeAlso: "See also",
 		},
 		units: {
+			pieces: "",
 			milliseconds: "ms",
 			percents: "%",
 			pixels: "px",
@@ -524,7 +525,7 @@ export default {
 				startTime: "Specifies when to start generating from the project",
 				preferredTrack: {
 					_: "Allows you to specify an existing track to generate (except multitrack)",
-					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth-to-last track.\nIf any preferred track is specified in Audio or Visual, it will override this option.",
+					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth-to-last track.\nIf any preferred track is specified in Audio or Visual, that will override this option.",
 					belowAdjustmentTracks: {
 						versionRequest: "Note: This feature requires VEGAS Pro ≥ 19. The current version is {{version}}.",
 					},
@@ -535,10 +536,10 @@ export default {
 					marker: "When a marker is encountered in the score, the in point of the source will be changed once. If several markers have the same non-empty name, they will use the same in point of the source.",
 				},
 				trackGroup: {
-					_: "Group tracks by score track",
+					_: "Groups tracks by score track",
 				},
 				trackName: {
-					_: "Specifies the name for the created tracks and track groups",
+					_: "Specifies the name for the generated tracks or track groups",
 				},
 			},
 			score: {
@@ -642,8 +643,8 @@ export default {
 				unallocated: {
 					_: "Specifies how to fill the vacancies if the sources do not cover all keys",
 					octaves: "Uses the clips with the nearest higher or lower octave, this has the highest priority, useful for sources with sung solfeggios",
-					lowerNeighbors: "Uses lower neighbors, but the lowest keys are filled from the higher neighbors, this has higher priority than higher neighbors",
-					higherNeighbors: "Uses higher neighbors, but the highest keys are filled from the lower neighbors",
+					lowerNeighbors: "Uses lower neighbors, but the lowest keys are filled from their nearest higher neighbor, this has higher priority than the higher neighbors",
+					higherNeighbors: "Uses higher neighbors, but the highest keys are filled from their nearest lower neighbor",
 					default: "Uses the first clip without any affixes to cover all remaining vacancies, this has the lowest priority",
 				},
 				exclusiveTrack: "Ensure that each clip of the source remains in the same position, but if there are too many clips, they will take up too much space",

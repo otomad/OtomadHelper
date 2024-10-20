@@ -20,7 +20,7 @@ export default function Ytp() {
 					<ExpanderChildTrim.Value start={constraintStart} end={constraintEnd} min={1} decimalPlaces={0} spinnerStep={100} />
 				</Expander>
 				<SettingsCard title={t.ytp.clips} details={t.descriptions.ytp.clips} icon="number">
-					<TextBox.Number value={clips} min={0} decimalPlaces={0} />
+					<TextBox.Number value={clips} min={0} decimalPlaces={0} suffix={t.units.pieces} />
 				</SettingsCard>
 				<Subheader>{t(2).titles.effect}</Subheader>
 				<Expander

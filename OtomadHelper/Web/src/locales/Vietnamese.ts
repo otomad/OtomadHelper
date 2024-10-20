@@ -44,6 +44,7 @@ export default {
 			afterCompletion: {},
 			blindBox: {},
 			trackGroup: {},
+			trackName: {},
 		},
 		on: "Bật",
 		off: "Tắt",
@@ -168,6 +169,7 @@ export default {
 				},
 				blindBox: {},
 				trackGroup: {},
+				trackName: {},
 			},
 			score: {},
 			stream: {

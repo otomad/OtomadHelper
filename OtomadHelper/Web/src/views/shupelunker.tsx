@@ -28,10 +28,10 @@ export default function Shupelunker() {
 						iconField={item => <span lang="en">{item.symbol}</span>}
 					/>
 					<Expander title={t.shupelunker.unallocated} details={t.descriptions.shupelunker.unallocated} icon="unallocated">
-						<ToggleSwitch on={octaves} details={t.descriptions.shupelunker.unallocated.octaves}>{t.shupelunker.unallocated.octaves}</ToggleSwitch>
-						<ToggleSwitch on={lowerNeighbors} details={t.descriptions.shupelunker.unallocated.lowerNeighbors}>{t.shupelunker.unallocated.lowerNeighbors}</ToggleSwitch>
-						<ToggleSwitch on={higherNeighbors} details={t.descriptions.shupelunker.unallocated.higherNeighbors}>{t.shupelunker.unallocated.higherNeighbors}</ToggleSwitch>
-						<ToggleSwitch on={defaultAll} details={t.descriptions.shupelunker.unallocated.default}>{t.shupelunker.unallocated.default}</ToggleSwitch>
+						<ToggleSwitch on={octaves} details={t.descriptions.shupelunker.unallocated.octaves} icon="unallocated_octaves">{t.shupelunker.unallocated.octaves}</ToggleSwitch>
+						<ToggleSwitch on={lowerNeighbors} details={t.descriptions.shupelunker.unallocated.lowerNeighbors} icon="unallocated_lower_neighbors">{t.shupelunker.unallocated.lowerNeighbors}</ToggleSwitch>
+						<ToggleSwitch on={higherNeighbors} details={t.descriptions.shupelunker.unallocated.higherNeighbors} icon="unallocated_higher_neighbors">{t.shupelunker.unallocated.higherNeighbors}</ToggleSwitch>
+						<ToggleSwitch on={defaultAll} details={t.descriptions.shupelunker.unallocated.default} icon="unallocated_default">{t.shupelunker.unallocated.default}</ToggleSwitch>
 					</Expander>
 					<SettingsCardToggleSwitch on={exclusiveTrack} title={t.shupelunker.exclusiveTrack} details={t.descriptions.shupelunker.exclusiveTrack} icon="exclusive_track" />
 					<SettingsCard title={t.offset} details={t.descriptions.shupelunker.offset} icon="table_resize">

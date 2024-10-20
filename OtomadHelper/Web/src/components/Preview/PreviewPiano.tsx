@@ -99,15 +99,15 @@ const StyledPianoKey = styled.div`
 	}
 
 	.active {
-		color: ${c("fill-color-text-on-accent-primary")};
-		background-color: ${c("accent-color")};
+		color: ${getClearColorFromBackgroundColor("colorization")};
+		background-color: ${c("colorization")};
 
 		&:hover {
-			background-color: ${c("accent-color", 90)};
+			background-color: ${c("colorization", 90)};
 		}
 
 		&:active {
-			background-color: ${c("accent-color", 80)};
+			background-color: ${c("colorization", 80)};
 		}
 	}
 `;

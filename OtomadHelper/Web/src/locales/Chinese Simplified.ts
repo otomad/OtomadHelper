@@ -67,6 +67,17 @@ export default {
 				_: "轨道组",
 				collapse: "默认情况下折叠轨道组",
 			},
+			trackName: {
+				_: "轨道名",
+				track: "乐曲音轨名",
+				trackIndex: "乐曲音轨序号",
+				instrument: "乐曲乐器名",
+				channel: "乐曲通道编号",
+				clip: "素材剪辑名",
+				media: "素材媒体名",
+				score: "乐曲文件名",
+				unnamed: "未命名",
+			},
 		},
 		on: "开",
 		off: "关",
@@ -111,6 +122,7 @@ export default {
 			seeAlso: "另请参阅",
 		},
 		units: {
+			pieces: "个",
 			milliseconds: "毫秒",
 			percents: "%",
 			pixels: "像素",
@@ -514,6 +526,9 @@ export default {
 				trackGroup: {
 					_: "依照乐曲音轨为轨道分组",
 				},
+				trackName: {
+					_: "为生成的轨道或轨道组命名",
+				},
 			},
 			score: {
 				trim: "截取乐曲生成的时间范围",
@@ -614,8 +629,8 @@ export default {
 				unallocated: {
 					_: "如果素材未能涵盖所有音调，请指定如何填补这些空缺",
 					octaves: "使用最邻近高或低八度的剪辑，这具有最高的优先级，适用于吟唱唱名或视唱练耳的素材",
-					lowerNeighbors: "使用邻近的低音，除了最低音部分由邻近的高音填充，这比邻近高音的优先级更高",
-					higherNeighbors: "使用邻近的高音，除了最高音部分由邻近的低音填充",
+					lowerNeighbors: "使用邻近的低音，除了最低音部分由其最邻近的高音填充，这比邻近高音的优先级更高",
+					higherNeighbors: "使用邻近的高音，除了最高音部分由其最邻近的低音填充",
 					default: "使用第一段不包含任何词缀的剪辑来覆盖剩余所有空缺的区域，这具有最低的优先级",
 				},
 				exclusiveTrack: "确保素材中各剪辑均保持同一位置，但是如果剪辑过多时会占用太多的空间",

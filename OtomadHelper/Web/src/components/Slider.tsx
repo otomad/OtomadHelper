@@ -111,7 +111,7 @@ const StyledSliderWrapper = styled.div`
 	}
 `;
 
-export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, step, keyStep = 1, disabled = false, displayValue: _displayValue = false, onChanging, onChanged }: FCP<{
+export default function Slider({ value: [value, setValue], min = 0, max = 100, defaultValue, step, keyStep = 1, disabled = false, displayValue: _displayValue = false, onChanging, onChanged, onDisplayValueChanged }: FCP<{
 	/** Current value. */
 	value: StateProperty<number>;
 	/** Slider minimum value. */
@@ -132,6 +132,8 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 	onChanging?(value: number): void;
 	/** The slider is lifted after being dragged event. */
 	onChanged?(value: number): void;
+	/** Fired when you want to get the display value. */
+	onDisplayValueChanged?(value: Readable | undefined): void;
 }>) {
 	const errorInfo = `The value range should be between [${min} ~ ${max}], with the current value being ${value}.`;
 	if (value === undefined)
@@ -213,7 +215,8 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 	}, [value]);
 
 	const displayValue = (() => {
-		const steppedSmoothValue = step ? smoothValue.toFixed(step.countDecimals()) : smoothValue;
+		const smoothValue2 = map(smoothValue, 0, 1, min, max);
+		const steppedSmoothValue = step ? smoothValue2.toFixed(step.countDecimals()) : smoothValue2;
 		if (_displayValue === false || _displayValue === undefined) return undefined;
 		else if (_displayValue === true) return steppedSmoothValue;
 		else if (typeof _displayValue === "function") return _displayValue(+steppedSmoothValue);
@@ -221,9 +224,11 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, d
 		else return _displayValue;
 	})();
 
+	useEffect(() => void onDisplayValueChanged?.(displayValue), [displayValue]);
+
 	return (
 		<StyledSliderWrapper>
-			{displayValue && <span className="display-value">{displayValue}</span>}
+			{displayValue && !onDisplayValueChanged && <span className="display-value">{displayValue}</span>}
 			<StyledSlider
 				tabIndex={0}
 				style={{

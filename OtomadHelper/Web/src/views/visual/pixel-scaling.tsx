@@ -9,8 +9,10 @@ export default function PixelScaling() {
 		replaceSource: [replaceSource, setReplaceSource],
 	} = selectConfig(c => c.visual.pixelScaling);
 
+	const [displayScaleFactor, setDisplayScaleFactor] = useState<Readable | undefined>(scaleFactor);
 	const isManuallyAutoScaleFactor = scaleFactor === 0;
-	const isActuallyAutoScaleFactor = autoScaleFactor || isManuallyAutoScaleFactor;
+	// eslint-disable-next-line eqeqeq
+	const isActuallyAutoScaleFactor = displayScaleFactor == 0;
 	const setScaleFactor = setStateInterceptor(_setScaleFactor, undefined, () => setAutoScaleFactor(false));
 
 	return (
@@ -22,13 +24,13 @@ export default function PixelScaling() {
 				<Expander
 					title={t.pixelScaling.scaleFactor}
 					icon="zoom_in"
-					checkInfo={isActuallyAutoScaleFactor ? t.auto : scaleFactor + "%"}
+					checkInfo={isActuallyAutoScaleFactor ? t.auto : displayScaleFactor + "%"}
 					alwaysShowCheckInfo
 					expanded
 				>
 					<ToggleSwitch on={[isManuallyAutoScaleFactor || autoScaleFactor, setAutoScaleFactor]} disabled={isManuallyAutoScaleFactor}>{t.auto}</ToggleSwitch>
 					<Expander.ChildWrapper>
-						<Slider value={[autoScaleFactor ? 0 : scaleFactor, setScaleFactor]} step={1} />
+						<Slider value={[autoScaleFactor ? 0 : scaleFactor, setScaleFactor]} step={1} displayValue onDisplayValueChanged={setDisplayScaleFactor} />
 					</Expander.ChildWrapper>
 				</Expander>
 				<SettingsCardToggleSwitch title={t.pixelScaling.replaceSourceMedia} icon="replace" on={[replaceSource, setReplaceSource]} />

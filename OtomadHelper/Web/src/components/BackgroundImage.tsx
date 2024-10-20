@@ -1,6 +1,7 @@
 const StyledBackgroundImage = styled.div`
 	${styles.mixins.fullscreen()};
 	inset: 0;
+	z-index: -1;
 	pointer-events: none;
 
 	&,
