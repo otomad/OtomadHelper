@@ -68,6 +68,17 @@ export default {
 				_: "Grouping tracks",
 				collapse: "Collapse track groups by default",
 			},
+			trackName: {
+				_: "Name for tracks",
+				track: "Score track name",
+				trackIndex: "Score track index",
+				instrument: "Score instrument name",
+				channel: "Score channel number",
+				clip: "Source clip name",
+				media: "Source media name",
+				score: "Score file name",
+				unnamed: "Unnamed",
+			},
 		},
 		on: "On",
 		off: "Off",
@@ -525,6 +536,9 @@ export default {
 				},
 				trackGroup: {
 					_: "Group tracks by score track",
+				},
+				trackName: {
+					_: "Specifies the name for the created tracks and track groups",
 				},
 			},
 			score: {

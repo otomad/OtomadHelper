@@ -20,7 +20,7 @@ const getExceedsName = (id: string | undefined, tuningMethod: string) => !id ? "
 	id === "plugin" && tuningMethod === "pitchShift" ? "multiple" : id
 ];
 
-export /* @internal */ const beepEngines = ["NAudio", "WebAudio"] as const;
+export /* @internal */ const beepEngines = ["WebAudio"] as const;
 const beepWaveforms = ["sine", "triangle", "square", "sawtooth"] as const satisfies OscillatorCommonType[];
 
 /** @deprecated */

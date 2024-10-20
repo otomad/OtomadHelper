@@ -1,7 +1,7 @@
 export /* @internal */ const bpmUsings = [
 	{ id: "variableMidi", name: t.score.bpm.variableMidi, icon: "variable_midi" },
 	{ id: "constantMidi", name: t.score.bpm.constantMidi, icon: "midi" },
-	{ id: "project", name: t.score.bpm.project, icon: "veg_file" },
+	{ id: "project", name: t.score.bpm.project, icon: "document_vegas" },
 	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
 export /* @internal */ const constraintNoteLengthTypes = [

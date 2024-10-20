@@ -78,7 +78,7 @@ export /* @internal */ const StyledButton = styled.button<{
 		}
 	}
 
-	&:not(.subtle, .hyperlink) {
+	&:not(.subtle, .hyperlink, select) {
 		margin: 1px;
 	}
 

@@ -259,7 +259,7 @@ export default function Visual() {
 					</SortableList>
 					<div>
 						<Button icon="add">{t.new}</Button>
-						<Button icon="copy_add">{t.stream.parameters.copyAttributesFromSelectedClip}</Button>
+						{/* <Button icon="copy_add">{t.stream.parameters.copyAttributesFromSelectedClip}</Button> */}
 					</div>
 				</EmptyMessage.YtpDisabled>
 			</EmptyMessage.Typical>

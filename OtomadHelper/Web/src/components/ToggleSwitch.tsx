@@ -39,6 +39,18 @@ const StyledToggleSwitchLabel = styled.button`
 	.expander-child-items & {
 		${styledExpanderItemBase};
 		${styledExpanderItemContent};
+
+		&:hover {
+			background-color: ${c("fill-color-subtle-secondary")};
+		}
+
+		&:active {
+			background-color: ${c("fill-color-subtle-tertiary")};
+		}
+
+		&:last-child {
+			border-radius: inherit;
+		}
 	}
 
 	.stroke {

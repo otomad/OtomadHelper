@@ -12,6 +12,16 @@ export /* @internal */ const selectGeneratedClipsType = [
 ] as const;
 const allSelectGeneratedClips = Object.freeze(selectGeneratedClipsType.map(item => item.id));
 const getAllSelectGeneratedClips = () => allSelectGeneratedClips.slice();
+export /* @internal */ const trackNames = [
+	{ id: "track", name: t.source.trackName.track, icon: "track" },
+	{ id: "trackIndex", name: t.source.trackName.trackIndex, icon: "track_number_list" },
+	{ id: "instrument", name: t.source.trackName.instrument, icon: "score" },
+	{ id: "channel", name: t.source.trackName.channel, icon: "midi" },
+	{ id: "clip", name: t.source.trackName.clip, icon: "track_event" },
+	{ id: "media", name: t.source.trackName.media, icon: "media" },
+	{ id: "score", name: t.source.trackName.score, icon: "document_score" },
+	{ id: "unnamed", name: t.source.trackName.unnamed, icon: "prohibited" },
+] as const;
 
 /** @deprecated */
 const isUnderVegas16 = true;
@@ -20,7 +30,7 @@ export default function Source() {
 	const {
 		source, blindBoxForTrack, blindBoxForMarker, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
-		trackGroup, collapseTrackGroup,
+		trackGroup, collapseTrackGroup, trackName,
 	} = selectConfig(c => c.source);
 	const { removeSourceClips, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = selectConfig(c => c.source.afterCompletion);
 
@@ -94,12 +104,23 @@ export default function Source() {
 				</ItemsView>
 			</Expander>
 			<Expander title={t.source.blindBox} details={t.descriptions.source.blindBox} icon="dice">
-				<ToggleSwitch on={blindBoxForTrack} details={t.descriptions.source.blindBox.track}>{t.source.blindBox.track}</ToggleSwitch>
-				<ToggleSwitch on={blindBoxForMarker} details={t.descriptions.source.blindBox.marker}>{t.source.blindBox.marker}</ToggleSwitch>
+				<ToggleSwitch on={blindBoxForTrack} details={t.descriptions.source.blindBox.track} icon="track">{t.source.blindBox.track}</ToggleSwitch>
+				<ToggleSwitch on={blindBoxForMarker} details={t.descriptions.source.blindBox.marker} icon="marker">{t.source.blindBox.marker}</ToggleSwitch>
 			</Expander>
 			<SettingsCardToggleSwitch title={t.source.trackGroup} details={t.descriptions.source.trackGroup} icon="group" on={trackGroup}>
 				<ToggleSwitch on={collapseTrackGroup} icon="arrow_minimize">{t.source.trackGroup.collapse}</ToggleSwitch>
 			</SettingsCardToggleSwitch>
+			<ExpanderRadio
+				title={t.source.trackName}
+				details={t.descriptions.source.trackName}
+				icon="rename"
+				items={trackNames}
+				value={trackName}
+				view="tile"
+				idField="id"
+				nameField={t.source.trackName}
+				iconField="icon"
+			/>
 
 			<DragToImport>{t.titles.source}</DragToImport>
 		</div>

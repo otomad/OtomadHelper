@@ -1,7 +1,7 @@
 import type { beepEngines } from "views/audio";
 import type { pitchNotations } from "views/lyrics";
 import type { bpmUsings, constraintNoteLengthTypes, encodings, multipleSelectTrackItems } from "views/score";
-import type { selectGeneratedClipsType, startTimes } from "views/source";
+import type { selectGeneratedClipsType, startTimes, trackNames } from "views/source";
 import type { legatos, stretches, transformMethods, unlengthens } from "views/visual";
 
 type StartTime = typeof startTimes[number]["id"];
@@ -16,7 +16,8 @@ type PitchNotation = typeof pitchNotations[number];
 type Timecode = string;
 type MultipleSelectTrackItem = typeof multipleSelectTrackItems[number];
 type SelectGeneratedClips = typeof selectGeneratedClipsType[number]["id"];
-type BeepEngines = typeof beepEngines[number];
+type BeepEngine = typeof beepEngines[number];
+type TrackNameType = typeof trackNames[number]["id"];
 
 const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 
@@ -38,6 +39,7 @@ export const configStore = createStore({
 		blindBoxForMarker: false,
 		trackGroup: true,
 		collapseTrackGroup: true,
+		trackName: "track" as TrackNameType,
 	},
 	score: {
 		format: "midi",
@@ -71,7 +73,7 @@ export const configStore = createStore({
 		preserveFormant: false,
 		basePitch: "C5",
 		prelistenAttributes: {
-			engine: "WebAudio" as BeepEngines,
+			engine: "WebAudio" as BeepEngine,
 			waveform: "sine" as OscillatorCommonType,
 			duration: 500,
 			volume: 1,
