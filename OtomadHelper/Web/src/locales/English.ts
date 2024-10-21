@@ -728,7 +728,7 @@ export default {
 		},
 	},
 	csharp: {
-		mainDock: {
+		host: {
 			toolTip: {
 				importToHere: "Import %1",
 			},
@@ -766,6 +766,16 @@ export default {
 		flyout: {
 			confirmDelete: {
 				title: "Delete?",
+			},
+		},
+		keybindings: {
+			caption: "Commands",
+			commands: {
+				useTrackEventAsSource: "Use Track Event as Source",
+				useProjectMediaAsSource: "Use Project Media as Source",
+				enableYtp: "Enable YTP Feature",
+				disableYtp: "Disable YTP Feature",
+				startGenerating: "Start Generating",
 			},
 		},
 	},

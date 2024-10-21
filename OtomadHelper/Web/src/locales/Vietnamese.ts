@@ -221,10 +221,8 @@ export default {
 		menu: {},
 	},
 	csharp: {
-		mainDock: {
-			toolTip: {
-				importToHere: "Nhập %1",
-			},
+		host: {
+			toolTip: {},
 		},
 		contentDialog: {
 			button: {
@@ -249,6 +247,9 @@ export default {
 		colorPicker: {},
 		flyout: {
 			confirmDelete: {},
+		},
+		keybindings: {
+			commands: {},
 		},
 	},
 } as const satisfies LocaleIdentifiers;

@@ -58,7 +58,7 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="MainDock.ToolTip.ImportToHere" xml:space="preserve">
+	<data name="Host.ToolTip.ImportToHere" xml:space="preserve">
 		<value>导入 %1</value>
 	</data>
 	<data name="ContentDialog.Button.Ok" xml:space="preserve">
@@ -103,5 +103,23 @@
 	</data>
 	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
 		<value>确认删除？</value>
+	</data>
+	<data name="Keybindings.Caption" xml:space="preserve">
+		<value>命令</value>
+	</data>
+	<data name="Keybindings.Commands.UseTrackEventAsSource" xml:space="preserve">
+		<value>使用轨道事件作为素材</value>
+	</data>
+	<data name="Keybindings.Commands.UseProjectMediaAsSource" xml:space="preserve">
+		<value>使用项目媒体作为素材</value>
+	</data>
+	<data name="Keybindings.Commands.EnableYtp" xml:space="preserve">
+		<value>启用YTP功能</value>
+	</data>
+	<data name="Keybindings.Commands.DisableYtp" xml:space="preserve">
+		<value>禁用YTP功能</value>
+	</data>
+	<data name="Keybindings.Commands.StartGenerating" xml:space="preserve">
+		<value>开始生成</value>
 	</data>
 </root>

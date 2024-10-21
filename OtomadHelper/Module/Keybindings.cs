@@ -3,28 +3,43 @@ using ScriptPortal.Vegas;
 namespace OtomadHelper.Module;
 
 public class Keybindings {
-	internal CustomCommand Parent { get; } = new(Module.COMMAND_CATEGORY, "Otomad Helper - Keybindings");
+	internal CustomCommand Parent { get; } = new(Module.COMMAND_CATEGORY, $"{Module.DisplayName}.Commands");
 	internal List<CustomCommand> Commands = [];
 
 	public void Initialize() {
-		AddKeybinding(nameof(SetSourceToTrackEvent), SetSourceToTrackEvent);
-		AddKeybinding(nameof(SetSourceToProjectMedia), SetSourceToProjectMedia);
-		AddKeybinding(nameof(EnableYtp), EnableYtp);
-		AddKeybinding(nameof(DisableYtp), DisableYtp);
-		AddKeybinding(nameof(StartGenerate), StartGenerate);
+		SetCommandName(Parent, () => $"{Module.DisplayName} - {t.Keybindings.Caption}");
+		foreach (VegasKeybindingEventType type in EnumerateEnum<VegasKeybindingEventType>())
+			AddKeybinding(type);
 	}
 
-	public event Action? SetSourceToTrackEvent;
-	public event Action? SetSourceToProjectMedia;
-	public event Action? EnableYtp;
-	public event Action? DisableYtp;
-	public event Action? StartGenerate;
+	public delegate void KeybindingEventHandler(object sender, VegasKeybindingEventArgs e);
+	public event KeybindingEventHandler? TriggerKeybinding;
 
-	private void AddKeybinding(string name, Action? invoked) {
-		CustomCommand command = new(Module.COMMAND_CATEGORY, name);
-		command.MenuItemName = command.DisplayName + "!!!";
-		command.Invoked += (sender, e) => invoked?.Invoke();
+	private void AddKeybinding(VegasKeybindingEventType type) {
+		string typeName = type.ToString();
+		CustomCommand command = new(Module.COMMAND_CATEGORY, $"{Module.DisplayName}.{typeName}") {
+			//CanAddToMenu = false, // TODO: Uncomment it after debug.
+		};
+		SetCommandName(command, () => t.Keybindings.Commands[typeName]);
+		command.Invoked += (sender, e) => TriggerKeybinding?.Invoke(command, new(type));
 		Parent.AddChild(command);
 		Commands.Add(command);
 	}
+
+	private static void SetCommandName(CustomCommand command, Func<string> GetName) {
+		command.MenuItemName = command.DisplayName = GetName();
+		CultureChanged += culture => command.MenuItemName = command.DisplayName = GetName();
+	}
+}
+
+public class VegasKeybindingEventArgs(VegasKeybindingEventType type) : EventArgs {
+	public VegasKeybindingEventType Type => type;
+}
+
+public enum VegasKeybindingEventType {
+	UseTrackEventAsSource = 1,
+	UseProjectMediaAsSource,
+	EnableYtp,
+	DisableYtp,
+	StartGenerating,
 }

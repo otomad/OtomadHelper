@@ -714,7 +714,7 @@ export default {
 		preset: "预设",
 	},
 	csharp: {
-		mainDock: {
+		host: {
 			toolTip: {
 				importToHere: "导入 %1",
 			},
@@ -752,6 +752,16 @@ export default {
 		flyout: {
 			confirmDelete: {
 				title: "确认删除？",
+			},
+		},
+		keybindings: {
+			caption: "命令",
+			commands: {
+				useTrackEventAsSource: "使用轨道事件作为素材",
+				useProjectMediaAsSource: "使用项目媒体作为素材",
+				enableYtp: "启用YTP功能",
+				disableYtp: "禁用YTP功能",
+				startGenerating: "开始生成",
 			},
 		},
 	},

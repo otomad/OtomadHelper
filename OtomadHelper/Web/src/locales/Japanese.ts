@@ -713,7 +713,7 @@ export default {
 		preset: "プリセット",
 	},
 	csharp: {
-		mainDock: {
+		host: {
 			toolTip: {
 				importToHere: "インポート %1",
 			},
@@ -751,6 +751,16 @@ export default {
 		flyout: {
 			confirmDelete: {
 				title: "削除？",
+			},
+		},
+		keybindings: {
+			caption: "マーク",
+			commands: {
+				useTrackEventAsSource: "トラックイベントをソースとして使用",
+				useProjectMediaAsSource: "ソース としてプロジェクト メディアを使用",
+				enableYtp: "YTP機能を有効にする",
+				disableYtp: "YTP機能を無効にする",
+				startGenerating: "生成を開始",
 			},
 		},
 	},

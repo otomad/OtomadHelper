@@ -15,16 +15,34 @@ public class Dockable : DockableControl {
 	}
 
 	public override DockWindowStyle DefaultDockWindowStyle => DockWindowStyle.Docked;
-
 	public override Size DefaultFloatingSize => new(800, 480);
+	public bool Shown { get; private set; } = false;
 
-	protected override void OnLoad(EventArgs args) {
-		if (host is not null) Controls.Remove(host);
+	public void Reload() {
+		DisposeHost();
 		host = new(this);
 		Controls.Add(host);
+	}
+
+	protected override void OnLoad(EventArgs args) {
+		Reload();
+		Shown = true;
 
 		//Vegas.TrackEventStateChanged += HandleTrackEventChanged;
 		//Vegas.TrackEventCountChanged += HandleTrackEventChanged;
+	}
+
+	protected void DisposeHost() {
+		if (host is not null) {
+			Controls.Remove(host);
+			host.Dispose();
+			host = null;
+		}
+	}
+
+	protected override void OnClosed(EventArgs args) {
+		DisposeHost();
+		Shown = false;
 	}
 
 	private void HandleTrackEventChanged(object sender, EventArgs e) {

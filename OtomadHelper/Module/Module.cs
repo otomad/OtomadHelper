@@ -1,3 +1,9 @@
+/// <remarks>
+/// `const` is a "nice" way to shoot yourself in the foot.
+/// </remarks>
+/// <see href="https://stackoverflow.com/a/756010/19553213" />
+/// <see href="https://www.stum.de/2009/01/14/const-strings-a-very-convenient-way-to-shoot-yourself-in-the-foot/" />
+
 using ScriptPortal.Vegas;
 
 namespace OtomadHelper.Module;
@@ -7,7 +13,7 @@ namespace OtomadHelper.Module;
 /// </summary>
 public class Module : ICustomCommandModule {
 	public Vegas vegas = null!;
-	internal const CommandCategory COMMAND_CATEGORY = CommandCategory.View;
+	internal static readonly CommandCategory COMMAND_CATEGORY = CommandCategory.View; // NOTE: DO NOT USE `const`! Or ILRepack won't bundle it.
 	private readonly CustomCommand customCommandModule = new(COMMAND_CATEGORY, DisplayName); // This will show in menu: View → Extensions
 	internal const string InternalName = "OtomadHelperInternal";
 	internal const string DisplayName = "Otomad Helper";
@@ -36,7 +42,7 @@ public class Module : ICustomCommandModule {
 	public ICollection GetCustomCommands() {
 		customCommandModule.MenuPopup += HandlePICmdMenuPopup;
 		customCommandModule.Invoked += HandlePICmdInvoked;
-		CustomCommand[] commands = [customCommandModule];
+		CustomCommand[] commands = [customCommandModule, Keybindings.Parent, .. Keybindings.Commands];
 		return commands;
 	}
 

@@ -58,7 +58,7 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="MainDock.ToolTip.ImportToHere" xml:space="preserve">
+	<data name="Host.ToolTip.ImportToHere" xml:space="preserve">
 		<value>Import %1</value>
 	</data>
 	<data name="ContentDialog.Button.Ok" xml:space="preserve">
@@ -103,5 +103,23 @@ Location:</value>
 	</data>
 	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
 		<value>Delete?</value>
+	</data>
+	<data name="Keybindings.Caption" xml:space="preserve">
+		<value>Commands</value>
+	</data>
+	<data name="Keybindings.Commands.UseTrackEventAsSource" xml:space="preserve">
+		<value>Use Track Event as Source</value>
+	</data>
+	<data name="Keybindings.Commands.UseProjectMediaAsSource" xml:space="preserve">
+		<value>Use Project Media as Source</value>
+	</data>
+	<data name="Keybindings.Commands.EnableYtp" xml:space="preserve">
+		<value>Enable YTP Feature</value>
+	</data>
+	<data name="Keybindings.Commands.DisableYtp" xml:space="preserve">
+		<value>Disable YTP Feature</value>
+	</data>
+	<data name="Keybindings.Commands.StartGenerating" xml:space="preserve">
+		<value>Start Generating</value>
 	</data>
 </root>

@@ -22,4 +22,17 @@ public static class Misc {
 		Process process = Process.Start(processStartInfo); // still crash, don't know why.
 		if (waitForExit) process.WaitForExit();
 	}
+
+	/// <summary>
+	/// Enumerate an <see cref="Enum" /> type.
+	/// </summary>
+	/// <typeparam name="TEnum"><see cref="Enum" /></typeparam>
+	/// <returns>An array of <see cref="Enum" />.</returns>
+	/// <exception cref="ArgumentException">Throw if <typeparamref name="TEnum" /> is not an enumerated type.</exception>
+	public static TEnum[] EnumerateEnum<TEnum>() where TEnum : Enum {
+		Type type = typeof(TEnum);
+		if (!typeof(TEnum).IsEnum)
+			throw new ArgumentException($"{type} must be an enumerated type");
+		return (TEnum[])Enum.GetValues(type);
+	}
 }

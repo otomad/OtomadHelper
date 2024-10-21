@@ -26,6 +26,7 @@ public partial class Host : UserControl {
 
 	public Host(Dockable dockable) {
 		Dockable = dockable;
+		Dockable.Closed += Dockable_Closed;
 #else
 	public Host() {
 #endif
@@ -149,7 +150,7 @@ public partial class Host : UserControl {
 		string fullPath = files[0];
 		Path path = new(fullPath);
 		e.Effect = e.AllowedEffect & DragDropEffects.Copy;
-		DropTargetHelper.DragEnter(this, e.Data, new Point(e.X, e.Y), e.Effect, t.MainDock.ToolTip.ImportToHere, path.FullFileName);
+		DropTargetHelper.DragEnter(this, e.Data, new Point(e.X, e.Y), e.Effect, t.Host.ToolTip.ImportToHere, path.FullFileName);
 		bool isDirectory = path.IsDirectory;
 		string extension = path.DotExtension;
 		using RegistryKey? registryKey = Registry.ClassesRoot.OpenSubKey(extension);
@@ -306,10 +307,16 @@ public partial class Host : UserControl {
 
 	private void AddModuleKeybindings() {
 #if VEGAS_ENV
-		Keybindings keybindings = Dockable.Module.Keybindings;
-		keybindings.SetSourceToTrackEvent += () => s = nameof(keybindings.SetSourceToTrackEvent);
-		keybindings.SetSourceToProjectMedia += () => s = nameof(keybindings.SetSourceToProjectMedia);
-		keybindings.StartGenerate += () => s = nameof(keybindings.StartGenerate);
+		Dockable.Module.Keybindings.TriggerKeybinding += Module_TriggerKeybinding;
 #endif
+	}
+
+	private void Module_TriggerKeybinding(object sender, VegasKeybindingEventArgs e) {
+		if (!Dockable.Shown) return;
+		s = e.Type.ToString() + " Triggered!";
+	}
+
+	protected void Dockable_Closed(object sender, EventArgs e) {
+		Dockable.Module.Keybindings.TriggerKeybinding -= Module_TriggerKeybinding;
 	}
 }

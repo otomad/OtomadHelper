@@ -58,7 +58,7 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="MainDock.ToolTip.ImportToHere" xml:space="preserve">
+	<data name="Host.ToolTip.ImportToHere" xml:space="preserve">
 		<value>インポート %1</value>
 	</data>
 	<data name="ContentDialog.Button.Ok" xml:space="preserve">
@@ -103,5 +103,23 @@
 	</data>
 	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
 		<value>削除？</value>
+	</data>
+	<data name="Keybindings.Caption" xml:space="preserve">
+		<value>マーク</value>
+	</data>
+	<data name="Keybindings.Commands.UseTrackEventAsSource" xml:space="preserve">
+		<value>トラックイベントをソースとして使用</value>
+	</data>
+	<data name="Keybindings.Commands.UseProjectMediaAsSource" xml:space="preserve">
+		<value>ソース としてプロジェクト メディアを使用</value>
+	</data>
+	<data name="Keybindings.Commands.EnableYtp" xml:space="preserve">
+		<value>YTP機能を有効にする</value>
+	</data>
+	<data name="Keybindings.Commands.DisableYtp" xml:space="preserve">
+		<value>YTP機能を無効にする</value>
+	</data>
+	<data name="Keybindings.Commands.StartGenerating" xml:space="preserve">
+		<value>生成を開始</value>
 	</data>
 </root>
