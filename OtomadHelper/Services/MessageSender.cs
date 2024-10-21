@@ -4,7 +4,7 @@ using OtomadHelper.Module;
 namespace OtomadHelper.Services;
 
 public static class MessageSender {
-	public static MainDock MainDock { get; internal set; } = null!;
+	public static Host Host { get; internal set; } = null!;
 
 	private static readonly JsonSerializerOptions jsonOptions = new() {
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -32,10 +32,10 @@ public static class MessageSender {
 	/// Must be a subclass of <see cref="BaseWebMessageEvent"/>.</typeparam>
 	/// <param name="message">The message to be posted.</param>
 	public static void PostWebMessage<T>(T message) where T : BaseWebMessageEvent =>
-		MainDock.Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message, jsonOptions));
+		Host.Browser.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message, jsonOptions));
 
 	private static void PostWebMessageFromJsonObject(JsonObject jsonObject) =>
-		MainDock.Browser.CoreWebView2.PostWebMessageAsJson(jsonObject.ToJsonString(jsonOptions));
+		Host.Browser.CoreWebView2.PostWebMessageAsJson(jsonObject.ToJsonString(jsonOptions));
 
 	private static readonly Dictionary<DateTime, TaskCompletionSource<JsonElement>> taskList = [];
 	/// <summary>

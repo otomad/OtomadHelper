@@ -7,6 +7,7 @@
 			<InputAssemblies Include="$(TargetPath)" />
 			<InputAssemblies Include="$(OutputPath)*.dll" Exclude="$(TargetPath)" />
 			<InputAssemblies Remove="$(OutputPath)WebView2Loader.dll" />
+			<InputAssemblies Remove="$(OutputPath)Melanchall_DryWetMidi_Native*.dll" />
 		</ItemGroup>
 		<ILRepack
 			Parallel="true"

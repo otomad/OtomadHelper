@@ -102,6 +102,15 @@ public class I18n : DynamicObject {
 		return true;
 	}
 
+	public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result) {
+		if (!indexes.HasIndex(0) || indexes[0] is not string name) {
+			result = null!;
+			return false;
+		}
+		result = Translate(name);
+		return true;
+	}
+
 	public static readonly dynamic t = new I18n();
 
 	private IEnumerable<string> Parents { get; set; } = [];

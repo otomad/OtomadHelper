@@ -8,29 +8,33 @@ using APNGLib;
 using Microsoft.Web.WebView2.Core;
 
 using OtomadHelper.Bridges;
-using OtomadHelper.Helpers;
 using OtomadHelper.Helpers.WebView2BetterBridge;
 using OtomadHelper.Models;
-using OtomadHelper.Test;
+using OtomadHelper.Services;
 
 using ScriptPortal.MediaSoftware.Skins;
 using ScriptPortal.Vegas;
 
-using ContextMenu = OtomadHelper.Models.ContextMenu;
 using BackdropWindow = OtomadHelper.WPF.Controls.BackdropWindow;
-using System.IO;
-using System.Net.Mime;
+using ContextMenu = OtomadHelper.Models.ContextMenu;
 
 namespace OtomadHelper.Module;
 
-public partial class MainDock : UserControl {
-	public MainDock() {
+public partial class Host : UserControl {
+#if VEGAS_ENV
+	internal Dockable Dockable { get; }
+
+	public Host(Dockable dockable) {
+		Dockable = dockable;
+#else
+	public Host() {
+#endif
 		InitializeComponent();
 		Dock = DockStyle.Fill;
 		CheckForIllegalCrossThreadCalls = false;
 
-		DragDrop += (sender, e) => MainDock_DragLeave();
-		DragLeave += (sender, e) => MainDock_DragLeave();
+		DragDrop += (sender, e) => Host_DragLeave();
+		DragLeave += (sender, e) => Host_DragLeave();
 
 		SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
 
@@ -81,7 +85,7 @@ public partial class MainDock : UserControl {
 		webView.AddHostObjectToScript("bridge", new BetterBridge(new Bridge()));
 		WebMessageAcknowledgement webMessageAcknowledgement = new();
 		webView.AddHostObjectToScript("webMessageAcknowledgement", webMessageAcknowledgement);
-		MessageSender.MainDock = this;
+		MessageSender.Host = this;
 		webMessageAcknowledgement.Received += OnReceiveAcknowledgement;
 #if DEBUG
 		webView.OpenDevToolsWindow();
@@ -94,6 +98,14 @@ public partial class MainDock : UserControl {
 		Process.Start(e.Uri);
 	}
 
+	private void WebInitialized() {
+		LoadingAnimationPicture.Visible = false;
+		LoadingAnimationPicture.Stop();
+		SplashContainer.Visible = false;
+		Browser.Visible = true;
+		AddModuleKeybindings();
+	}
+
 	private async void Browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
 		try {
 			string message = e.TryGetWebMessageAsString();
@@ -101,10 +113,7 @@ public partial class MainDock : UserControl {
 				case "initialized":
 					PostAccentColorToTheWeb();
 					await Task.Delay(500);
-					LoadingAnimationPicture.Visible = false;
-					LoadingAnimationPicture.Stop();
-					SplashContainer.Visible = false;
-					Browser.Visible = true;
+					WebInitialized();
 					break;
 				default:
 					break;
@@ -133,7 +142,7 @@ public partial class MainDock : UserControl {
 	public delegate void DocumentTitleChangedEventHandler(string title);
 	public event DocumentTitleChangedEventHandler? DocumentTitleChanged;
 
-	private void MainDock_DragEnter(object sender, DragEventArgs e) {
+	private void Host_DragEnter(object sender, DragEventArgs e) {
 		if (LoadingAnimationPicture.Visible) return; // The animation should not respond to drag events when initializing it.
 		string[] files = e.GetFileNames();
 		if (files.Length < 1) return;
@@ -153,15 +162,13 @@ public partial class MainDock : UserControl {
 		});
 	}
 
-	private void MainDock_DragLeave() {
+	private void Host_DragLeave() {
 		if (LoadingAnimationPicture.Visible) return;
-		PostWebMessage(new DragOver {
-			isDragging = false,
-		});
+		PostWebMessage(new DragOver { isDragging = false });
 		DropTargetHelper.DragLeave(this);
 	}
 
-	private void MainDock_DragOver(object sender, DragEventArgs e) {
+	private void Host_DragOver(object sender, DragEventArgs e) {
 		if (LoadingAnimationPicture.Visible) return;
 		e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? e.AllowedEffect & DragDropEffects.Copy : DragDropEffects.None;
 		DropTargetHelper.DragOver(new Point(e.X, e.Y), e.Effect);
@@ -295,5 +302,14 @@ public partial class MainDock : UserControl {
 	private void PostAccentColorToTheWeb() {
 		AccentPalette? palette = BackdropWindow.GetAccentPalette();
 		if (palette is not null) PostWebMessage(palette);
+	}
+
+	private void AddModuleKeybindings() {
+#if VEGAS_ENV
+		Keybindings keybindings = Dockable.Module.Keybindings;
+		keybindings.SetSourceToTrackEvent += () => s = nameof(keybindings.SetSourceToTrackEvent);
+		keybindings.SetSourceToProjectMedia += () => s = nameof(keybindings.SetSourceToProjectMedia);
+		keybindings.StartGenerate += () => s = nameof(keybindings.StartGenerate);
+#endif
 	}
 }

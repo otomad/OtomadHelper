@@ -1,6 +1,3 @@
-using System.IO;
-using System.Resources;
-using System.Runtime.InteropServices.ComTypes;
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace OtomadHelper.Helpers;

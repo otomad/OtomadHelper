@@ -5,13 +5,14 @@ namespace OtomadHelper.Module;
 /// <summary>
 /// Defines initialization routines for hosting a set of custom commands.
 /// </summary>
-public class OtomadHelperModule : ICustomCommandModule {
+public class Module : ICustomCommandModule {
 	public Vegas vegas = null!;
-	private readonly CustomCommand customCommandModule =
-		new(CommandCategory.View, DisplayName); // This will show in menu: View → Extensions
+	internal const CommandCategory COMMAND_CATEGORY = CommandCategory.View;
+	private readonly CustomCommand customCommandModule = new(COMMAND_CATEGORY, DisplayName); // This will show in menu: View → Extensions
 	internal const string InternalName = "OtomadHelperInternal";
 	internal const string DisplayName = "Otomad Helper";
 	private static string AssemblyName => ResourceHelper.AssemblyName; // Only available in Vegas environment, so private.
+	internal Keybindings Keybindings { get; } = new();
 
 	internal static string CustomModulePath => Assembly.GetExecutingAssembly().Location;
 	internal string VegasAppDataPath => vegas.GetApplicationDataPath(Environment.SpecialFolder.ApplicationData);
@@ -24,6 +25,7 @@ public class OtomadHelperModule : ICustomCommandModule {
 		vegas = myVegas;
 		customCommandModule.MenuItemName = DisplayName;
 		customCommandModule.IconFile = SaveAndGetIconPath();
+		Keybindings.Initialize();
 		AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 	}
 
@@ -50,7 +52,7 @@ public class OtomadHelperModule : ICustomCommandModule {
 	/// </summary>
 	private void HandlePICmdInvoked(object sender, EventArgs args) {
 		if (!vegas.ActivateDockView(InternalName)) {
-			OtomadHelperDock dock = new() {
+			Dockable dock = new(this) {
 				AutoLoadCommand = customCommandModule,
 				PersistDockWindowState = true,
 			};

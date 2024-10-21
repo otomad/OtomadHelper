@@ -7,7 +7,7 @@ public class Bridge {
 	/// Sets the development mode flag for the application.
 	/// </summary>
 	/// <param name="isDevMode">A boolean value indicating whether the application is in development mode.</param>
-	public void SetIsDevMode(bool isDevMode) => MainDock.isDevMode = isDevMode;
+	public void SetIsDevMode(bool isDevMode) => Host.isDevMode = isDevMode;
 
 	/// <summary>
 	/// Sets the culture for the application.
@@ -40,9 +40,9 @@ public class Bridge {
 	/// <param name="options">An array of <see cref="string"/> representing the items to be displayed in the combo box.</param>
 	/// <returns>The selected item from the combo box flyout.</returns>
 	public async Task<T> ShowComboBox<T>(Rect rect, T selected, T[] ids, string[] options) {
-		Rect screenRect = MainDock.ClientToScreenRect(rect);
+		Rect screenRect = Host.ClientToScreenRect(rect);
 		ComboBoxFlyout flyout = ComboBoxFlyout.Initial(ids, options, selected, screenRect, out Task<T> resultTask);
-		MainDock.ShowFlyout(flyout);
+		Host.ShowFlyout(flyout);
 		return await resultTask;
 	}
 
@@ -53,9 +53,9 @@ public class Bridge {
 	/// <param name="pitch">The initial pitch (note name and octave) selected in the pitch picker.</param>
 	/// <returns>The selected pitch from the pitch picker flyout.</returns>
 	public async Task<string> ShowPitchPicker(Rect rect, string pitch) {
-		Rect screenRect = MainDock.ClientToScreenRect(rect);
+		Rect screenRect = Host.ClientToScreenRect(rect);
 		PitchPickerFlyout flyout = PitchPickerFlyout.Initial(screenRect, pitch, out Task<string> resultTask);
-		MainDock.ShowFlyout(flyout);
+		Host.ShowFlyout(flyout);
 		return await resultTask;
 	}
 
@@ -76,9 +76,9 @@ public class Bridge {
 	/// <param name="text">Text like <b>"Are you sure you want to delete it?"</b>.</param>
 	/// <returns>Does user click the OK button?</returns>
 	public async Task<bool> ShowConfirmDeleteFlyout(Rect rect, string message) {
-		Rect screenRect = MainDock.ClientToScreenRect(rect);
+		Rect screenRect = Host.ClientToScreenRect(rect);
 		ConfirmDeleteFlyout flyout = ConfirmDeleteFlyout.Initial(screenRect, message, out Task<bool> resultTask);
-		MainDock.ShowFlyout(flyout);
+		Host.ShowFlyout(flyout);
 		return await resultTask;
 	}
 }

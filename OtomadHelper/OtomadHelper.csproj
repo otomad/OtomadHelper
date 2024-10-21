@@ -85,10 +85,9 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Settings.settings</DependentUpon>
 		</Compile>
-		<Compile Update="Module\MainDock.cs">
+		<Compile Update="Module\Host.cs">
 			<SubType>UserControl</SubType>
 		</Compile>
-		<Compile Update="Module\OtomadHelperDock.cs" />
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -127,8 +126,6 @@
 		<None Remove="API\**" />
 		<Compile Remove="obj\**" />
 		<Compile Remove="Helpers\DebounceThrottle.cs" />
-		<Compile Remove="Module\MainWPFDock.xaml.cs" />
-		<Page Remove="Module\MainWPFDock.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="Properties\Settings.settings">

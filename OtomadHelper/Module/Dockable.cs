@@ -4,20 +4,24 @@ using ScriptPortal.Vegas;
 namespace OtomadHelper.Module;
 
 [DesignerCategory("Code")]
-public class OtomadHelperDock : DockableControl {
-	private MainDock? mainDock;
+public class Dockable : DockableControl {
+	private Host? host;
 	internal Vegas Vegas => myVegas;
+	internal Module Module { get; }
 
-	public OtomadHelperDock() : base(OtomadHelperModule.InternalName) => DisplayName = OtomadHelperModule.DisplayName;
+	public Dockable(Module module) : base(Module.InternalName) {
+		DisplayName = Module.DisplayName;
+		Module = module;
+	}
 
 	public override DockWindowStyle DefaultDockWindowStyle => DockWindowStyle.Docked;
 
 	public override Size DefaultFloatingSize => new(800, 480);
 
 	protected override void OnLoad(EventArgs args) {
-		if (mainDock != null) Controls.Remove(mainDock);
-		mainDock = new();
-		Controls.Add(mainDock);
+		if (host is not null) Controls.Remove(host);
+		host = new(this);
+		Controls.Add(host);
 
 		//Vegas.TrackEventStateChanged += HandleTrackEventChanged;
 		//Vegas.TrackEventCountChanged += HandleTrackEventChanged;
