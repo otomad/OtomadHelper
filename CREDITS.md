@@ -46,7 +46,6 @@ We would like to thank their authors and contributors for their contributions to
 
 Project | Authors | License | Notes
 ---- | ---- | ---- | ----
-[NAudio](https://github.com/naudio/NAudio) | Mark Heath | MIT | *MIDI read/write<br>Waveform sound*
 [APNG Management](https://github.com/murrple-1/APNGManagement) | Murray Christopherson | MIT | *Display APNG animated images*
 [Shell Drag Drop](https://github.com/Starli0n/ShellDragDrop) | Adam Root | None | *Display file thumbnails when dropping files*
 [WebView2 Better Bridge](https://github.com/johot/WebView2-better-bridge) | Johan Otterud | None | *Using WebView2 call C# methods with complex params*
@@ -55,6 +54,9 @@ Project | Authors | License | Notes
 [Outlook DnD Protocol](https://github.com/yasoonOfficial/outlook-dndprotocol) | Tobias Viehweger | MIT | *Convert OLE drag-and-drop event to WinForm*
 [Open Live Writer](https://github.com/OpenLiveWriter/OpenLiveWriter) | Nick Vella | MIT | *Convert OLE drag-and-drop event to WinForm*
 [Tuple As Json Array](https://github.com/arogozine/TupleAsJsonArray) | Alexandre Rogozine | MIT | *Convert C# Tuple to/from JSON Array*
+[DependencyPropertyGenerator](https://github.com/HavenDV/DependencyPropertyGenerator) | Konstantin S. | MIT | *Dependency property, routed event source generator*
+[Unicolour](https://github.com/waacton/Unicolour) | William Acton | MIT | *Convert color within multiple color space*
+[DryWetMidi](https://github.com/melanchall/drywetmidi) | Maxim Dobroselsky | MIT | *MIDI read/write*
 
 [View All »](CREDITS.gen.md#c-host-libs)
 
@@ -85,6 +87,7 @@ Project | Authors | License | Notes
 ---- | ---- | ---- | ----
 [Otomad Helper](https://github.com/Chaosinism/vegas_scripts) | Chaosinism | LGPL 3.0 | *The original project this is based on*
 [Vegas Scripts](https://github.com/evankale/VegasScripts) | Evan Kale | GPL 3.0 | *The project Chaosinism's referenced*
+[NAudio](https://github.com/naudio/NAudio) | Mark Heath | MIT | *MIDI read/write<br>Waveform sound*
 [YTP+](https://github.com/YTP-Plus) | Ben Brown<br>Kiwifruitdev<br>Nuppington | GPL 3.0 | *YTP feature reference*
 [Alpha Color Dialog](https://sourceforge.net/projects/alpha-color-dialog/) | Opulos | BSD | *Color picker with alpha*
 [Ookii Dialogs WinForms](https://github.com/ookii-dialogs/ookii-dialogs-winforms) | C. Augusto Proiete | BSD 3-Clause | *Vista-style progress dialog<br>Vista-style folder dialog*

@@ -23,6 +23,7 @@ Project | Authors | License
 [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet) | Microsoft | MIT
 DependencyPropertyGenerator | havendv | MIT
 [ILRepack.Lib.MSBuild.Task](https://github.com/ravibpatel/ILRepack.Lib.MSBuild.Task) | RBSoft | MIT
+[Melanchall.DryWetMidi](https://github.com/melanchall/drywetmidi) | melanchall | MIT
 [Microsoft-WindowsAPICodePack-Core](https://github.com/contre/Windows-API-Code-Pack-1.1) | rpastric,contre,dahall | https://github.com/contre/Windows-API-Code-Pack-1.1/LICENSE
 [Microsoft-WindowsAPICodePack-Shell](https://github.com/contre/Windows-API-Code-Pack-1.1) | rpastric,contre,dahall | https://github.com/contre/Windows-API-Code-Pack-1.1/LICENSE
 [Microsoft.Bcl.AsyncInterfaces](https://dot.net/) | Microsoft | MIT
@@ -47,6 +48,7 @@ DependencyPropertyGenerator | havendv | MIT
 [System.Text.Json](https://dot.net/) | Microsoft | MIT
 [System.Threading.Tasks.Extensions](https://dot.net/) | Microsoft | MIT
 [System.ValueTuple](https://dot.net/) | Microsoft | MIT
+[Wacton.Unicolour](https://github.com/waacton/Unicolour) | William Acton | 
 
 ## TypeScript WebUI Libs
 
@@ -133,6 +135,8 @@ Project | Authors | License
 [@floating-ui/react-dom](https://github.com/floating-ui/floating-ui) | atomiks | MIT
 [@humanwhocodes/module-importer](https://github.com/humanwhocodes/module-importer) | Nicholas C. Zaks | Apache-2.0
 [@humanwhocodes/retry](https://github.com/humanwhocodes/retrier) | Nicholas C. Zaks | Apache-2.0
+[@img/sharp-win32-x64](https://github.com/lovell/sharp) | Lovell Fuller | Apache-2.0 AND LGPL-3.0-or-later
+[@isaacs/cliui](https://github.com/yargs/cliui) | Ben Coe | ISC
 [@jridgewell/gen-mapping](https://github.com/jridgewell/gen-mapping) | Justin Ridgewell | MIT
 [@jridgewell/resolve-uri](https://github.com/jridgewell/resolve-uri) | Justin Ridgewell | MIT
 [@jridgewell/set-array](https://github.com/jridgewell/set-array) | Justin Ridgewell | MIT
@@ -146,6 +150,7 @@ Project | Authors | License
 [@oozcitak/infra](https://github.com/oozcitak/infra) | Ozgur Ozcitak | MIT
 [@oozcitak/url](https://github.com/oozcitak/url) | Ozgur Ozcitak | MIT
 [@oozcitak/util](https://github.com/oozcitak/util) | Ozgur Ozcitak | MIT
+[@pkgjs/parseargs](https://github.com/pkgjs/parseargs) |  | MIT
 [@rollup/pluginutils](https://github.com/rollup/plugins) | Rich Harris | MIT
 [@rollup/rollup-win32-x64-msvc](https://github.com/rollup/rollup) | Lukas Taegert-Atkinson | MIT
 [@styled/typescript-styled-plugin](https://github.com/styled-components/typescript-styled-plugin) | Styled Components | MIT
@@ -210,6 +215,7 @@ Project | Authors | License
 [agent-base](https://github.com/TooTallNate/proxy-agents) | Nathan Rajlich | MIT
 [ajv](https://github.com/ajv-validator/ajv) | Evgeny Poberezkin | MIT
 [ani-cursor](https://github.com/captbaritone/webamp) | Jordan Eldredge | MIT
+[ansi-colors](https://github.com/doowb/ansi-colors) | Brian Woodward | MIT
 [ansi-escapes](https://github.com/sindresorhus/ansi-escapes) | Sindre Sorhus | MIT
 [ansi-regex](https://github.com/chalk/ansi-regex) | Sindre Sorhus | MIT
 [ansi-styles](https://github.com/chalk/ansi-styles) | Sindre Sorhus | MIT
@@ -277,10 +283,13 @@ Project | Authors | License
 [clone](https://github.com/pvorb/node-clone) | Paul Vorbach | MIT
 [collection-visit](https://github.com/jonschlinkert/collection-visit) | Jon Schlinkert | MIT
 [color-convert](https://github.com/Qix-/color-convert) | Heather Arthur | MIT
-[color-name](https://github.com/dfcreative/color-name) | DY | MIT
+[color-name](https://github.com/colorjs/color-name) | DY | MIT
+[color-string](https://github.com/Qix-/color-string) | Heather Arthur | MIT
+[color](https://github.com/Qix-/color) |  | MIT
 [colord](https://github.com/omgovich/colord) | Vlad Shilov | MIT
 [combined-stream](https://github.com/felixge/node-combined-stream) | Felix Geisendörfer | MIT
 [commander](https://github.com/tj/commander.js) | TJ Holowaychuk | MIT
+[commenting](https://github.com/3rd-Eden/commenting) | Arnout Kazemier | MIT
 [commitizen](https://github.com/commitizen/cz-cli) | Jim Cummins | MIT
 [compare-func](https://github.com/stevemao/compare-func) | Steve Mao | MIT
 [component-emitter](https://github.com/sindresorhus/component-emitter) |  | MIT
@@ -336,12 +345,13 @@ Project | Authors | License
 [dir-glob](https://github.com/kevva/dir-glob) | Kevin Mårtensson | MIT
 [doctrine](https://github.com/eslint/doctrine) |  | Apache-2.0
 [dom-helpers](https://github.com/react-bootstrap/dom-helpers) | Jason Quense | MIT
-[dom-serializer](https://github.com/cheeriojs/dom-renderer) | Felix Boehm | MIT
+[dom-serializer](https://github.com/cheeriojs/dom-serializer) | Felix Boehm | MIT
 [domelementtype](https://github.com/fb55/domelementtype) | Felix Boehm | BSD-2-Clause
 [domhandler](https://github.com/fb55/domhandler) | Felix Boehm | BSD-2-Clause
 [domutils](https://github.com/fb55/domutils) | Felix Boehm | BSD-2-Clause
 [dot-case](https://github.com/blakeembrey/change-case) | Blake Embrey | MIT
 [dot-prop](https://github.com/sindresorhus/dot-prop) | Sindre Sorhus | MIT
+[eastasianwidth](https://github.com/komagata/eastasianwidth) | Masaki Komagata | MIT
 [electron-to-chromium](https://github.com/kilian/electron-to-chromium) | Kilian Valkhof | ISC
 [emmet](https://github.com/emmetio/emmet) | Sergey Chikuyonok | MIT
 [emoji-regex](https://github.com/mathiasbynens/emoji-regex) | Mathias Bynens | MIT
@@ -390,6 +400,7 @@ Project | Authors | License
 [fastest-levenshtein](https://github.com/ka-weihe/fastest-levenshtein) | Kasper U. Weihe | MIT
 [fastq](https://github.com/mcollina/fastq) | Matteo Collina | ISC
 [fd-slicer](https://github.com/andrewrk/node-fd-slicer) | Andrew Kelley | MIT
+[fdir](https://github.com/thecodrr/fdir) | thecodrr | MIT
 [figures](https://github.com/sindresorhus/figures) | Sindre Sorhus | MIT
 [file-entry-cache](https://github.com/jaredwray/file-entry-cache) | Jared Wray | MIT
 [fill-range](https://github.com/jonschlinkert/fill-range) | Jon Schlinkert | MIT
@@ -402,6 +413,7 @@ Project | Authors | License
 [follow-redirects](https://github.com/follow-redirects/follow-redirects) | Ruben Verborgh | MIT
 [for-each](https://github.com/Raynos/for-each) | Raynos | MIT
 [for-in](https://github.com/jonschlinkert/for-in) | Jon Schlinkert | MIT
+[foreground-child](https://github.com/tapjs/foreground-child) | Isaac Z. Schlueter | ISC
 [form-data](https://github.com/form-data/form-data) | Felix Geisendörfer | MIT
 [fragment-cache](https://github.com/jonschlinkert/fragment-cache) | Jon Schlinkert | MIT
 [fs-extra](https://github.com/jprichardson/node-fs-extra) | JP Richardson | MIT
@@ -517,6 +529,7 @@ Project | Authors | License
 [isexe](https://github.com/isaacs/isexe) | Isaac Z. Schlueter | ISC
 [isobject](https://github.com/jonschlinkert/isobject) | Jon Schlinkert | MIT
 [iterator.prototype](https://github.com/ljharb/Iterator.prototype) | Jordan Harband | MIT
+[jackspeak](https://github.com/isaacs/jackspeak) | Isaac Z. Schlueter | BlueOak-1.0.0
 [jiti](https://github.com/unjs/jiti) |  | MIT
 [jotai-valtio](https://github.com/jotaijs/jotai-valtio) | Daishi Kato | MIT
 [jotai](https://github.com/pmndrs/jotai) | Daishi Kato | MIT
@@ -582,10 +595,12 @@ Project | Authors | License
 [mimic-fn](https://github.com/sindresorhus/mimic-fn) | Sindre Sorhus | MIT
 [minimatch](https://github.com/isaacs/minimatch) | Isaac Z. Schlueter | ISC
 [minimist](https://github.com/minimistjs/minimist) | James Halliday | MIT
+[minipass](https://github.com/isaacs/minipass) | Isaac Z. Schlueter | ISC
 [mitt](https://github.com/developit/mitt) |  | MIT
 [mixin-deep](https://github.com/jonschlinkert/mixin-deep) | Jon Schlinkert | MIT
 [mkdirp](https://github.com/substack/node-mkdirp) | James Halliday | MIT
 [mlly](https://github.com/unjs/mlly) |  | MIT
+[moment](https://github.com/moment/moment) | Iskren Ivov Chernev | MIT
 [ms](https://github.com/zeit/ms) |  | MIT
 [mute-stream](https://github.com/isaacs/mute-stream) | Isaac Z. Schlueter | ISC
 [nanoid](https://github.com/ai/nanoid) | Andrey Sitnik | MIT
@@ -622,6 +637,8 @@ Project | Authors | License
 [otomad-helper](https://github.com/otomad/OtomadHelper) | Rantetsu Inori | GPL-3.0-only
 [p-limit](https://github.com/sindresorhus/p-limit) | Sindre Sorhus | MIT
 [p-locate](https://github.com/sindresorhus/p-locate) | Sindre Sorhus | MIT
+[package-json-from-dist](https://github.com/isaacs/package-json-from-dist) | Isaac Z. Schlueter | BlueOak-1.0.0
+[package-name-regex](https://github.com/dword-design/package-name-regex) | Sebastian Landwehr | MIT
 [pangu](https://github.com/vinta/pangu.js) | Vinta Chen | MIT
 [param-case](https://github.com/blakeembrey/change-case) | Blake Embrey | MIT
 [parent-module](https://github.com/sindresorhus/parent-module) | Sindre Sorhus | MIT
@@ -634,6 +651,7 @@ Project | Authors | License
 [path-is-absolute](https://github.com/sindresorhus/path-is-absolute) | Sindre Sorhus | MIT
 [path-key](https://github.com/sindresorhus/path-key) | Sindre Sorhus | MIT
 [path-parse](https://github.com/jbgutierrez/path-parse) | Javier Blanco | MIT
+[path-scurry](https://github.com/isaacs/path-scurry) | Isaac Z. Schlueter | BlueOak-1.0.0
 [path-type](https://github.com/sindresorhus/path-type) | Sindre Sorhus | MIT
 [pathe](https://github.com/unjs/pathe) |  | MIT
 [pend](https://github.com/andrewrk/node-pend) | Andrew Kelley | MIT
@@ -697,6 +715,8 @@ postcss-resolve-nested-selector | David Clark | MIT
 [ret](https://github.com/fent/ret.js) | Roly Fentanes | MIT
 [reusify](https://github.com/mcollina/reusify) | Matteo Collina | MIT
 [riff-file](https://github.com/rochars/riff-file) | Rafael da Silva Rocha | MIT
+[rimraf](https://github.com/isaacs/rimraf) | Isaac Z. Schlueter | ISC
+[rollup-plugin-license](https://github.com/mjeanroy/rollup-plugin-license) | Mickael Jeanroy | MIT
 [rollup](https://github.com/rollup/rollup) | Rich Harris | MIT
 [rrweb-cssom](https://github.com/rrweb-io/CSSOM) | Nikita Vasilyev | MIT
 [run-async](https://github.com/SBoudrias/run-async) | Simon Boudrias | MIT
@@ -715,11 +735,13 @@ postcss-resolve-nested-selector | David Clark | MIT
 [set-function-name](https://github.com/ljharb/set-function-name) | Jordan Harband | MIT
 [set-value](https://github.com/jonschlinkert/set-value) | Jon Schlinkert | MIT
 [shallowequal](https://github.com/dashed/shallowequal) | Alberto Leal | MIT
+[sharp](https://github.com/lovell/sharp) | Lovell Fuller | Apache-2.0
 [shebang-command](https://github.com/kevva/shebang-command) | Kevin Mårtensson | MIT
 [shebang-regex](https://github.com/sindresorhus/shebang-regex) | Sindre Sorhus | MIT
 [shell-quote](https://github.com/ljharb/shell-quote) | James Halliday | MIT
 [side-channel](https://github.com/ljharb/side-channel) | Jordan Harband | MIT
 [signal-exit](https://github.com/tapjs/signal-exit) | Ben Coe | ISC
+[simple-swizzle](https://github.com/qix-/node-simple-swizzle) | Qix | MIT
 [slash](https://github.com/sindresorhus/slash) | Sindre Sorhus | MIT
 [slice-ansi](https://github.com/chalk/slice-ansi) |  | MIT
 [slide](https://github.com/isaacs/slide-flow-control) | Isaac Z. Schlueter | ISC
@@ -736,6 +758,7 @@ postcss-resolve-nested-selector | David Clark | MIT
 [spdx-correct](https://github.com/jslicense/spdx-correct.js) |  | Apache-2.0
 [spdx-exceptions](https://github.com/kemitchell/spdx-exceptions.json) | The Linux Foundation | CC-BY-3.0
 [spdx-expression-parse](https://github.com/jslicense/spdx-expression-parse.js) | Kyle E. Mitchell | MIT
+[spdx-expression-validate](https://github.com/kemitchell/spdx-expression-validate.js) | Kyle E. Mitchell | (MIT AND CC-BY-3.0)
 [spdx-license-ids](https://github.com/jslicense/spdx-license-ids) | Shinnosuke Watanabe | CC0-1.0
 [spdx-ranges](https://github.com/kemitchell/spdx-ranges.js) | The Linux Foundation | (MIT AND CC-BY-3.0)
 [spdx-satisfies](https://github.com/kemitchell/spdx-satisfies.js) | Kyle E. Mitchell | MIT
@@ -829,6 +852,7 @@ postcss-resolve-nested-selector | David Clark | MIT
 [vary](https://github.com/jshttp/vary) | Douglas Christopher Wilson | MIT
 [vite-plugin-glsl](https://github.com/UstymUkhman/vite-plugin-glsl) | Ustym Ukhman | MIT
 [vite-plugin-html-minifier](https://github.com/erm1116/vite-plugin-html-minifier) | erm1116 | MIT
+[vite-plugin-image-optimizer](https://github.com/FatehAK/vite-plugin-image-optimizer) | fatehak | MIT
 [vite-plugin-svg-icons](https://github.com/anncwb/vite-plugin-svg-icons) | Vben | MIT
 [vite-plugin-svgr](https://github.com/pd4d10/vite-plugin-svgr) | Rongjian Zhang | MIT
 [vite-tsconfig-paths](https://github.com/aleclarson/vite-tsconfig-paths) | aleclarson | MIT
