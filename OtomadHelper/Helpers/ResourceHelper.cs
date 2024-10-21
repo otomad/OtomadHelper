@@ -1,12 +1,7 @@
 using System.IO;
 using System.Resources;
 using System.Runtime.InteropServices.ComTypes;
-using System.Windows.Baml2006;
-using System.Xaml;
-
 using Microsoft.WindowsAPICodePack.Shell;
-
-using OtomadHelper.Module;
 
 namespace OtomadHelper.Helpers;
 

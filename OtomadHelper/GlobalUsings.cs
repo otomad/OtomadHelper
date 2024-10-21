@@ -34,13 +34,13 @@ global using static OtomadHelper.Helpers.Debugger;
 global using static OtomadHelper.Helpers.Extensions;
 global using static OtomadHelper.Helpers.I18n;
 global using static OtomadHelper.Helpers.Misc;
-global using static OtomadHelper.Helpers.WebView2BetterBridge.MessageSender;
 global using static OtomadHelper.Interop.PInvoke;
+global using static OtomadHelper.Services.MessageSender;
 
 global using DialogResult = System.Windows.Forms.DialogResult;
 global using ObservableObject = OtomadHelper.WPF.Common.ObservableObject;
 global using Path = OtomadHelper.Helpers.Path;
+global using Range = (double Min, double Max);
 global using Rect = System.Windows.Rect;
 global using ResourceDictionaries = System.Collections.ObjectModel.Collection<System.Windows.ResourceDictionary>;
 global using Screen = System.Windows.Forms.Screen;
-global using Range = (double Min, double Max);

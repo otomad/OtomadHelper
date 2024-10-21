@@ -114,7 +114,6 @@
 		<Page Include="WPF\**\*.xaml" />
 		<Compile Include="GlobalUsings.cs" />
 		<Folder Include="Resources\" />
-		<Folder Include="Services\" />
 		<None Include="..\.editorconfig">
 			<Link>.editorconfig</Link>
 		</None>

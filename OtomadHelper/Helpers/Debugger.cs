@@ -1,7 +1,5 @@
 using System.Windows;
 
-using OtomadHelper.Module;
-
 namespace OtomadHelper.Helpers;
 
 internal static class Debugger {
@@ -12,9 +10,8 @@ internal static class Debugger {
 	/// 给老娘展示内容！
 	/// </remarks>
 	[Obsolete("This method can only be used for debugging and should not be used in release!")]
-#pragma warning disable IDE1006 // 命名样式
+	[SuppressMessage("Style", "IDE1006")]
 	public static object? s {
-#pragma warning restore IDE1006 // 命名样式
 		set {
 			object nullableValue = value is null ? "null" : value;
 #if !VEGAS_ENV

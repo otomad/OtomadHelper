@@ -6,7 +6,7 @@ namespace OtomadHelper.Module;
 [DesignerCategory("Code")]
 public class OtomadHelperDock : DockableControl {
 	private MainDock? mainDock;
-	internal Vegas vegas => myVegas;
+	internal Vegas Vegas => myVegas;
 
 	public OtomadHelperDock() : base(OtomadHelperModule.InternalName) => DisplayName = OtomadHelperModule.DisplayName;
 
@@ -19,8 +19,8 @@ public class OtomadHelperDock : DockableControl {
 		mainDock = new();
 		Controls.Add(mainDock);
 
-		//vegas.TrackEventStateChanged += HandleTrackEventChanged;
-		//vegas.TrackEventCountChanged += HandleTrackEventChanged;
+		//Vegas.TrackEventStateChanged += HandleTrackEventChanged;
+		//Vegas.TrackEventCountChanged += HandleTrackEventChanged;
 	}
 
 	private void HandleTrackEventChanged(object sender, EventArgs e) {

@@ -291,7 +291,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	public static Unicolour? FromHex(string hex) {
 		hex = hex.TrimStart('#');
 		if (hex.Length is not (3 or 6 or 4 or 8)) return null;
-		if (hex.Match(new(@"[^0-9A-F]", RegexOptions.IgnoreCase)).Success) return null;
+		if (hex.IsMatch(new(@"[^0-9A-F]", RegexOptions.IgnoreCase))) return null;
 
 		static string RepeatTwice(string source) {
 			StringBuilder sb = new();

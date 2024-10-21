@@ -67,7 +67,7 @@ public class Path : List<string> {
 		foreach (string dir in paths) {
 			if (dir is null) continue;
 			else if (dir.Length == 0) Clear();
-			else if (dir.Match(new(@"^\.+$")).Success) {
+			else if (dir.IsMatch(new(@"^\.+$"))) {
 				if (dir == ".") {
 				} else if (dir == "..") {
 					if (Count >= 1) Up();

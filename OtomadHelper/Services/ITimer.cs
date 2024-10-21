@@ -1,4 +1,4 @@
-namespace OtomadHelper.Helpers;
+namespace OtomadHelper.Services;
 
 public enum TimerType {
 	/// <summary>
