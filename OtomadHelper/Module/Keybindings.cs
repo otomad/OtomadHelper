@@ -7,7 +7,7 @@ public class Keybindings {
 	internal List<CustomCommand> Commands = [];
 
 	public void Initialize() {
-		SetCommandName(Parent, () => $"{Module.DisplayName} - {t.Keybindings.Caption}");
+		SetCommandName(Parent, () => Module.DisplayName);
 		foreach (VegasKeybindingEventType type in EnumerateEnum<VegasKeybindingEventType>())
 			AddKeybinding(type);
 	}
