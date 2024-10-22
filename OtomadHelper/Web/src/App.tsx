@@ -27,6 +27,7 @@ export default function App() {
 			<DynamicAccentColor />
 			<ShellPage />
 			<DevContextMenu />
+			<Toast />
 			<div id="portals" />
 		</>
 	);

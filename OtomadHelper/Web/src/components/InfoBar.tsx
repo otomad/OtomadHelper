@@ -116,9 +116,9 @@ export default function InfoBar({ status, title, children, button, className, ..
 		<StyledInfoBar ref={infoBarEl} $status={status ?? "info"} className={[className, { multiline }]} {...htmlAttrs}>
 			{status && <Badge status={status} />}
 			<div className="text-part">
-				<div className="title">{title}</div>
-				<div className="text">{children}</div>
-				<div className="buttons">{button}</div>
+				{title && <div className="title">{title}</div>}
+				{children && <div className="text">{children}</div>}
+				{button && <div className="buttons">{button}</div>}
 			</div>
 		</StyledInfoBar>
 	);

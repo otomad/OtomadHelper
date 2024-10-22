@@ -83,6 +83,7 @@ const GlobalStyle = createGlobalStyle<{
 	html {
 		${styles.effects.text.body};
 		line-height: normal;
+		interpolate-size: allow-keywords;
 	}
 
 	body {

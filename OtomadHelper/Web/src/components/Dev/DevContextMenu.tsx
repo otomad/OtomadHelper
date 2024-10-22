@@ -49,7 +49,7 @@ export default function DevContextMenu() {
 		setMenu(undefined);
 	}
 
-	useListen("dev:showContextMenu", ([e, menu]) => {
+	useListen("dev:showContextMenu", (e, menu) => {
 		setLocation([e.clientX, e.clientY]);
 		setMenu(menu);
 	});
@@ -61,7 +61,7 @@ export default function DevContextMenu() {
 			<StyledContextMenu ref={menuEl} style={{ left: ifFinite(location[0]), top: ifFinite(location[1]) }}>
 				{menu && menu.items.map((item, i) =>
 					item.kind === "command" ? <li key={i} disabled={item.enabled === false} onClick={() => { clearMenu(); item.command?.(); }}><span className="content">{processAccessKey(item.label)}</span></li> :
-					item.kind === "separator" ? <hr /> : undefined,
+					item.kind === "separator" ? <hr key={i} /> : undefined,
 				)}
 			</StyledContextMenu>
 		</Portal>

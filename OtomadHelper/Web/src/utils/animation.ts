@@ -164,6 +164,7 @@ export type AnimateSizeOptions = Partial<{
  * Advanced hook generator function for animated width/height when width/height value is set to auto.
  * @param element - HTML DOM element.
  * @returns A generator function that returns the animation async promise.
+ * @deprecated
  */
 export async function* animateSizeGenerator(
 	element: MaybeRef<Element | undefined>,
@@ -269,6 +270,7 @@ export async function* animateSizeGenerator(
  * @param changeFunc - A callback function that will change the width/height.
  * @param options - Configuration options.
  * @returns Animation async promise.
+ * @deprecated
  */
 export async function animateSize(
 	element: MaybeRef<Element | undefined>,
@@ -292,6 +294,7 @@ export type SameOrDifferent<T> = T | undefined | [T | undefined, T | undefined];
  * @param enterOptions - Specify other parameters when entering animation.
  * @param exitOptions - Specify other parameters when exiting animation.
  * @returns Returns 3 functions `onEnter`, `onExit`, `endListener`.
+ * @deprecated
  */
 export function simpleAnimateSize(specified: "width" | "height" = "height", duration?: SameOrDifferent<number>, easing?: SameOrDifferent<string>, enterOptions: AnimateSizeOptions = {}, exitOptions: AnimateSizeOptions = {}) {
 	const enter = enterOptions, exit = exitOptions;

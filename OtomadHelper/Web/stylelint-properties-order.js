@@ -572,6 +572,7 @@ export default [
 	"view-timeline-axis",
 	"view-timeline-inset",
 	"timeline-scope",
+	"interpolate-size",
 
 	// svg
 	"fill",

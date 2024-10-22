@@ -16,7 +16,8 @@ const emitter = mitt<ApplicationEvents>();
  * useEvent("foo", { a: "b" });
  * ```
  */
-export const useEvent = emitter.emit;
+export const useEvent: <Key extends keyof ApplicationEvents>(type: Key, ...args: ApplicationEvents[Key]) => void = (type, ...args) =>
+	emitter.emit(type, args);
 
 /**
  * Listens to an event on the global event emitter.
@@ -34,7 +35,15 @@ export const useEvent = emitter.emit;
  * useListen("*", (type, e) => console.log(type, e));
  * ```
  */
-export const useListen = emitter.on;
+export const useListen: {
+	<Key extends keyof ApplicationEvents>(type: Key, handler: (...args: ApplicationEvents[Key]) => void): void;
+	(type: "*", handler: (type: keyof ApplicationEvents, ...args: ApplicationEvents[keyof ApplicationEvents]) => void): void;
+} = (type: string, handler: Function) => {
+	(emitter.on as Function)(type as keyof ApplicationEvents, (typeOrArgs: string | unknown[], args: unknown[]) => {
+		if (type === "*") handler(typeOrArgs, ...args);
+		else handler(...typeOrArgs);
+	});
+};
 
 /**
  * Listens to an event on the global event emitter once.
@@ -68,15 +77,15 @@ export function listenOnce<TKey extends keyof ApplicationEvents>(type: TKey, han
  * @param type - The event type.
  * @param handler - The event handler function.
  */
-export function useListenAndReturnAck<TKey extends keyof ApplicationEvents>(type: TKey, handler: (event: ApplicationEvents[TKey]) => Any) {
-	useListen(type, e => {
+export function useListenAndReturnAck<TKey extends keyof ApplicationEvents>(type: TKey, handler: (...args: ApplicationEvents[TKey]) => Any) {
+	useListen(type as "host:dragOver", e => {
 		if (!("timestamp" in e)) {
 			console.error(e);
 			throw new TypeError("Received event is invalid, it has no timestamp property");
 		}
 		type DateTimeInJson = string; // C# System.Text.Json will convert DateTime to string.
 		const timestamp = e.timestamp as DateTimeInJson;
-		let result = handler(e);
+		let result = (handler as Function)(e);
 		if (!(isObject(result) && !Array.isArray(result)))
 			result = { value: result, timestamp: undefined! as DateTimeInJson };
 		result.timestamp = timestamp;

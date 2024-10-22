@@ -37,6 +37,11 @@ export default {
 		"import-notation": null,
 		"at-rule-no-unknown": null,
 		"function-no-unknown": null,
+		"property-no-unknown": [true, {
+			"ignoreProperties": [
+				"interpolate-size", // WARN: 等 StyleLint 支持该新属性后移除。
+			],
+		}],
 		"declaration-empty-line-before": null,
 		"custom-property-empty-line-before": null,
 		"selector-pseudo-class-no-unknown": [true, {
