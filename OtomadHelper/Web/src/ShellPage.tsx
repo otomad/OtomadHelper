@@ -4,9 +4,23 @@ function EmptyPage() {
 	return <div className="container"><EmptyMessage icon="settings" title={t.underConstruction} spinAtBegin noSideEffect /></div>;
 }
 
-const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "lyrics", "shupelunker", "ytp"];
-const navToolItems = ["management", "mosh", "tools"];
+const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "lyrics", "shupelunker", "ytp"] as const;
+const navToolItems = ["management", "mosh", "tools"] as const;
 const bottomNavItems = ["settings"] as const;
+
+export function redirectIcon(name: string): DeclaredIcons & DeclaredLotties {
+	const redirects = {
+		source: "video_clip_multiple",
+		score: "instrument",
+		audio: "volume",
+		visual: "image",
+		track: "layer",
+		shupelunker: "slice",
+		tools: "apps",
+		management: "library",
+	} as const;
+	return hasOwn(redirects, name) ? redirects[name] : name as DeclaredIcons & DeclaredLotties;
+}
 
 const isCompleteAvailable = (page: string[]) => !["mosh", "tools", "settings"].includes(page[0]);
 const isAutoLayoutTracks = (page: string[]) => page.length >= 2 && page[0] === "track";
@@ -57,10 +71,10 @@ export default function ShellPage() {
 		<NavigationView
 			currentNav={[page, changePage]}
 			navItems={[
-				...navItems.map(item => ({ text: getTitle(item), id: item, icon: item, animatedIcon: item })),
+				...navItems.map(item => ({ text: getTitle(item), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item) })),
 				{ type: "hr" },
-				...navToolItems.map(item => ({ text: getTitle(item, false, 2), id: item, icon: item, animatedIcon: item })),
-				...bottomNavItems.map(item => ({ text: getTitle(item, false, 2), id: item, icon: item, animatedIcon: item, bottom: true })),
+				...navToolItems.map(item => ({ text: getTitle(item, false, 2), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item) })),
+				...bottomNavItems.map(item => ({ text: getTitle(item, false, 2), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item), bottom: true })),
 			]}
 			titles={pageTitles}
 			transitionName={transition}

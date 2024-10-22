@@ -1,7 +1,9 @@
-export /* @internal */ const bpmUsings = [
-	{ id: "variableMidi", name: t.score.bpm.variableMidi, icon: "variable_midi" },
-	{ id: "constantMidi", name: t.score.bpm.constantMidi, icon: "midi" },
-	{ id: "project", name: t.score.bpm.project, icon: "document_vegas" },
+import { redirectIcon } from "../ShellPage";
+
+export /* @internal */ const tempoUsings = [
+	{ id: "variableScore", name: t.score.tempo.variableScore, icon: "score_variable" },
+	{ id: "constantScore", name: t.score.tempo.constantScore, icon: "score" },
+	{ id: "project", name: t.score.tempo.project, icon: "document_vegas" },
 	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
 export /* @internal */ const constraintNoteLengthTypes = [
@@ -101,7 +103,7 @@ const MultipleSelectTrackItemsContainer = styled.div`
 
 export default function Score() {
 	const {
-		format, encoding, constraintNoteLengthType, constraintNoteLengthValue, trimStart, trimEnd, bpmUsing, customBpm,
+		format, encoding, constraintNoteLengthType, constraintNoteLengthValue, trimStart, trimEnd, tempoUsing, customTempo,
 		timeSignature: [timeSignature],
 		selectedTrack: [selectedTrack, setSelectedTrack], multipleSelectTrackItems: [selectTrackItems, _setSelectTrackItems],
 	} = selectConfig(c => c.score);
@@ -208,18 +210,18 @@ export default function Score() {
 				checkInfoCondition={value => value === "ANSI" ? t.systemDefault : value}
 			/>
 			<ExpanderRadio
-				title={t.score.bpm}
-				details={t.descriptions.score.bpm}
+				title={t.score.tempo}
+				details={t.descriptions.score.tempo}
 				icon="speed"
-				items={bpmUsings}
-				value={bpmUsing}
+				items={tempoUsings}
+				value={tempoUsing}
 				view="tile"
 				idField="id"
 				nameField="name"
 				iconField="icon"
 			>
-				<CustomItem current={bpmUsing}>
-					{setToCustom => <TextBox.Number value={customBpm} onChanging={setToCustom} suffix={t.units.beatsPerMinute} />}
+				<CustomItem current={tempoUsing}>
+					{setToCustom => <TextBox.Number value={customTempo} onChanging={setToCustom} suffix={t.units.beatsPerMinute} />}
 				</CustomItem>
 			</ExpanderRadio>
 			<SettingsCard title={t.score.timeSignature} icon="health">{timeSignature}</SettingsCard>
@@ -272,7 +274,7 @@ export default function Score() {
 										</SubgridLayout>
 										<SubgridLayout className="row" name="score-track-note-details">
 											{track.isDrumKit && <p><Icon name="drum" />{t.score.drumKit}</p>}
-											<p className="span-to-end"><Icon name="score" />{t.score.instrument}{t.colon}{track.inst}</p>
+											<p className="span-to-end"><Icon name="instrument" />{t.score.instrument}{t.colon}{track.inst}</p>
 										</SubgridLayout>
 									</>
 								)}
@@ -282,7 +284,7 @@ export default function Score() {
 											{multipleSelectTrackItems.map(item => (
 												<Tooltip key={item} placement="y" title={t.titles[item]}>
 													<Button
-														icon={item}
+														icon={redirectIcon(item)}
 														subtle
 														accent={selectTrackItems[index]?.has(item) ? true : "neutral"}
 														onClick={() => handleTrackItemsClick(index, item)}

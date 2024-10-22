@@ -1,11 +1,11 @@
 import type { beepEngines } from "views/audio";
 import type { pitchNotations } from "views/lyrics";
-import type { bpmUsings, constraintNoteLengthTypes, encodings, multipleSelectTrackItems } from "views/score";
+import type { constraintNoteLengthTypes, encodings, multipleSelectTrackItems, tempoUsings } from "views/score";
 import type { selectGeneratedClipsType, startTimes, trackNames } from "views/source";
 import type { legatos, stretches, transformMethods, unlengthens } from "views/visual";
 
 type StartTime = typeof startTimes[number]["id"];
-type BpmUsing = typeof bpmUsings[number]["id"];
+type TempoUsing = typeof tempoUsings[number]["id"];
 type ConstraintNoteLengthType = typeof constraintNoteLengthTypes[number]["id"];
 type Encoding = typeof encodings[number];
 type Stretch = typeof stretches[number]["id"];
@@ -46,8 +46,8 @@ export const configStore = createStore({
 		trimStart: EMPTY_TIMECODE,
 		trimEnd: EMPTY_TIMECODE,
 		encoding: "ANSI" as Encoding,
-		bpmUsing: "variableMidi" as BpmUsing,
-		customBpm: 120,
+		tempoUsing: "variableScore" as TempoUsing,
+		customTempo: 120,
 		timeSignature: "4/4",
 		constraintNoteLengthType: "none" as ConstraintNoteLengthType,
 		constraintNoteLengthValue: EMPTY_TIMECODE,

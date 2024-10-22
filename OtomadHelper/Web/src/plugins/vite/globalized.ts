@@ -42,13 +42,13 @@ export default (): Plugin => {
 		const D_TS_NAME = "auto-icons.d.ts";
 		await writeFile(resolve(root, "src/types/", D_TS_NAME), (() => dedent`
 			declare global {
-				type DeclaredIcons = "${icons.join('" | "')}" | (string & {});
+				type DeclaredIcons = "${icons.join('" | "')}";
 
-				type DeclaredLotties = "${lotties.join('" | "')}" | (string & {});
+				type DeclaredLotties = "${lotties.join('" | "')}";
 			}
 
 			export { };\n
-		`)());
+		`)()); // | (string & {})
 	};
 
 	const initClasses = async (path?: string[]) => {

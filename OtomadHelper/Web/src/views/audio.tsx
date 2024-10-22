@@ -94,7 +94,7 @@ export default function Audio() {
 		<div className="container">
 			<SettingsPageControlMedia stream="audio" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={exampleThumbnail} />
 
-			<EmptyMessage.Typical icon="audio" title="audio" enabled={enabled}>
+			<EmptyMessage.Typical icon="volume" title="audio" enabled={enabled}>
 				<SettingsCard title={t.source.preferredTrack} details={t.descriptions.source.preferredTrack} icon="preferred_track">
 					<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
 				</SettingsCard>
@@ -220,7 +220,7 @@ export default function Audio() {
 							<Expander.Item icon="timer" title={t.stream.tuning.prelisten.duration}>
 								<TextBox.Number value={beepDuration} min={0} decimalPlaces={0} spinnerStep={100} suffix={t.units.milliseconds} />
 							</Expander.Item>
-							<Expander.Item icon="audio" title={t.stream.tuning.prelisten.volume}>
+							<Expander.Item icon="volume" title={t.stream.tuning.prelisten.volume}>
 								<Slider
 									value={beepVolume}
 									min={0}

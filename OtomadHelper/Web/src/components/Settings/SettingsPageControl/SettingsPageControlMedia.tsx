@@ -72,11 +72,12 @@ export default function SettingsPageControlMedia({ stream, fileName, enabled, th
 	/** Thumbnail. */
 	thumbnail: string;
 }>) {
+	const icon = stream === "audio" ? "volume" : "image";
 	return (
 		<StyledSettingsPageControlMedia $enabled={enabled[0] ?? true}>
 			<Img className="background" src={thumbnail} duplicate="background" />
 			<SettingsPageControlPreviewImage image={thumbnail}>
-				<Icon name={"colored/" + stream} filled />
+				<Icon name={`colored/${icon}`} filled />
 			</SettingsPageControlPreviewImage>
 			<div className="right">
 				<p>{fileName}</p>

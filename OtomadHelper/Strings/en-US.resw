@@ -104,9 +104,6 @@ Location:</value>
 	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
 		<value>Delete?</value>
 	</data>
-	<data name="Keybindings.Caption" xml:space="preserve">
-		<value>Commands</value>
-	</data>
 	<data name="Keybindings.Commands.UseTrackEventAsSource" xml:space="preserve">
 		<value>Use Track Event as Source</value>
 	</data>

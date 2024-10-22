@@ -68,7 +68,7 @@ export default function Visual() {
 		<div className="container">
 			<SettingsPageControlMedia stream="visual" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={exampleThumbnail} />
 
-			<EmptyMessage.Typical icon="visual" title="visual" enabled={enabled}>
+			<EmptyMessage.Typical icon="image" title="visual" enabled={enabled}>
 				<SettingsCard title={t.source.preferredTrack} details={t.descriptions.source.preferredTrack} icon="preferred_track">
 					<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
 				</SettingsCard>
@@ -93,7 +93,7 @@ export default function Visual() {
 						<SettingsCardToggleSwitch title={t.stream.loop} details={t.descriptions.stream.loop} icon="loop" on={loop} />
 					</TooltipPartial>
 					<TooltipPartial title={<Tooltip.Content image={staticVisualImage} />}>
-						<SettingsCardToggleSwitch title={t.stream.staticVisual} details={t.descriptions.stream.staticVisual} icon="visual" on={staticVisual} />
+						<SettingsCardToggleSwitch title={t.stream.staticVisual} details={t.descriptions.stream.staticVisual} icon="image" on={staticVisual} />
 					</TooltipPartial>
 					<TooltipPartial title={<Tooltip.Content image={unlengthenImage} />}>
 						<ExpanderRadio

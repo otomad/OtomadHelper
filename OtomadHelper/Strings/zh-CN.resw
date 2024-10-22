@@ -104,9 +104,6 @@
 	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
 		<value>确认删除？</value>
 	</data>
-	<data name="Keybindings.Caption" xml:space="preserve">
-		<value>命令</value>
-	</data>
 	<data name="Keybindings.Commands.UseTrackEventAsSource" xml:space="preserve">
 		<value>使用轨道事件作为素材</value>
 	</data>

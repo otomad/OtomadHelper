@@ -150,10 +150,10 @@ export default {
 			tts: "文字转语音",
 			pureNotes: "纯音符",
 			encoding: "编码",
-			bpm: {
-				_: "BPM",
-				variableMidi: "可变MIDI速度",
-				constantMidi: "恒定MIDI速度",
+			tempo: {
+				_: "速度",
+				variableScore: "可变乐曲速度",
+				constantScore: "恒定乐曲速度",
 				project: "项目速度",
 			},
 			timeSignature: "节拍",
@@ -532,7 +532,7 @@ export default {
 			},
 			score: {
 				trim: "截取乐曲生成的时间范围",
-				bpm: "指定每分钟多少拍",
+				tempo: "指定每分钟多少拍",
 				constraint: "控制乐曲中的音符输出长度",
 				encoding: "指定在读取文件时要使用的文本编码",
 				ytpEnabled: "YTP功能已启用，但它不依赖于乐曲，因此该处的所有设置均不起任何作用。",
@@ -755,7 +755,6 @@ export default {
 			},
 		},
 		keybindings: {
-			caption: "命令",
 			commands: {
 				useTrackEventAsSource: "使用轨道事件作为素材",
 				useProjectMediaAsSource: "使用项目媒体作为素材",

@@ -14,7 +14,7 @@ export default function Shupelunker() {
 			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.shupelunker}</SettingsPageControl>
 
 			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
-			<EmptyMessage.Typical icon="shupelunker" title="shupelunker_full" enabled={enabled}>
+			<EmptyMessage.Typical icon="slice" title="shupelunker_full" enabled={enabled}>
 				<EmptyMessage.YtpDisabled fully={t.titles.shupelunker}>
 					<ExpanderRadio
 						title={t.shupelunker.affix}

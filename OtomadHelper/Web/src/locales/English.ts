@@ -153,10 +153,10 @@ export default {
 			tts: "Text to speech",
 			pureNotes: "Pure notes",
 			encoding: "Encoding",
-			bpm: {
-				_: "BPM",
-				variableMidi: "Variable MIDI tempo",
-				constantMidi: "Constant MIDI tempo",
+			tempo: {
+				_: "Tempo",
+				variableScore: "Variable score tempo",
+				constantScore: "Constant score tempo",
 				project: "Project tempo",
 			},
 			timeSignature: "Time signature",
@@ -544,7 +544,7 @@ export default {
 			},
 			score: {
 				trim: "Intercepts the generation time range of the score",
-				bpm: "Specifies the beats per minute",
+				tempo: "Specifies the beats per minute",
 				constraint: "Controls the output length of notes from the score",
 				encoding: "Specifies the text encoding to use when reading the file",
 				ytpEnabled: "YTP feature is enabled, it does not depend on the score, so all settings here have no effect.",

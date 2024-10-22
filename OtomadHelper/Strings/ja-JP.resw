@@ -104,9 +104,6 @@
 	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
 		<value>削除？</value>
 	</data>
-	<data name="Keybindings.Caption" xml:space="preserve">
-		<value>マーク</value>
-	</data>
 	<data name="Keybindings.Commands.UseTrackEventAsSource" xml:space="preserve">
 		<value>トラックイベントをソースとして使用</value>
 	</data>

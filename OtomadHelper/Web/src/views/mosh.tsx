@@ -36,7 +36,7 @@ export default function Mosh() {
 				title={t.mosh.layer}
 				details={t.descriptions.mosh.layer}
 				type="button"
-				icon="track"
+				icon="layer"
 				selectInfo={t(1).selectInfo.videoEvent}
 				selectValid={1}
 			/>

@@ -4,8 +4,8 @@ export /* @internal */ const startTimes = [
 	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
 export /* @internal */ const selectGeneratedClipsType = [
-	{ id: "audio", name: t.titles.audio, icon: "audio" },
-	{ id: "visual", name: t.titles.visual, icon: "visual" },
+	{ id: "audio", name: t.titles.audio, icon: "volume" },
+	{ id: "visual", name: t.titles.visual, icon: "image" },
 	{ id: "staff", name: t.titles.staff, icon: "g_clef" },
 	{ id: "sonar", name: t.titles.sonar, icon: "sonar" },
 	{ id: "lyrics", name: t.titles.lyrics, icon: "lyrics" },
@@ -13,8 +13,8 @@ export /* @internal */ const selectGeneratedClipsType = [
 const allSelectGeneratedClips = Object.freeze(selectGeneratedClipsType.map(item => item.id));
 const getAllSelectGeneratedClips = () => allSelectGeneratedClips.slice();
 export /* @internal */ const trackNames = [
-	{ id: "track", name: t.source.trackName.track, icon: "track" },
-	{ id: "trackIndex", name: t.source.trackName.trackIndex, icon: "track_number_list" },
+	{ id: "track", name: t.source.trackName.track, icon: "layer" },
+	{ id: "trackIndex", name: t.source.trackName.trackIndex, icon: "layer_number_list" },
 	{ id: "instrument", name: t.source.trackName.instrument, icon: "score" },
 	{ id: "channel", name: t.source.trackName.channel, icon: "midi" },
 	{ id: "clip", name: t.source.trackName.clip, icon: "track_event" },
@@ -104,7 +104,7 @@ export default function Source() {
 				</ItemsView>
 			</Expander>
 			<Expander title={t.source.blindBox} details={t.descriptions.source.blindBox} icon="dice">
-				<ToggleSwitch on={blindBoxForTrack} details={t.descriptions.source.blindBox.track} icon="track">{t.source.blindBox.track}</ToggleSwitch>
+				<ToggleSwitch on={blindBoxForTrack} details={t.descriptions.source.blindBox.track} icon="layer">{t.source.blindBox.track}</ToggleSwitch>
 				<ToggleSwitch on={blindBoxForMarker} details={t.descriptions.source.blindBox.marker} icon="marker">{t.source.blindBox.marker}</ToggleSwitch>
 			</Expander>
 			<SettingsCardToggleSwitch title={t.source.trackGroup} details={t.descriptions.source.trackGroup} icon="group" on={trackGroup}>

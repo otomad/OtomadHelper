@@ -150,11 +150,11 @@ export default {
 			tts: "テキストから発話する",
 			pureNotes: "純粋なノート",
 			encoding: "エンコード",
-			bpm: {
-				_: "BPM",
-				variableMidi: "MIDIテンポを変更する",
-				constantMidi: "定数MIDIテンポ",
-				project: "プロジェクトのテンポ",
+			tempo: {
+				_: "Tempo",
+				variableScore: "可変スコアのテンポ（テンポ）",
+				constantScore: "一定のスコアのテンポ。",
+				project: "プロジェクトのテンポ（テンポ）",
 			},
 			timeSignature: "拍子記号",
 			constraint: {
@@ -531,7 +531,7 @@ export default {
 			},
 			score: {
 				trim: "スコアの生成時間範囲をインターセプトします",
-				bpm: "分あたりの拍数を指定します",
+				tempo: "分あたりの拍数を指定します",
 				constraint: "スコアからのノートの出力長さを制御します",
 				encoding: "ファイルの読み込み時に使用するテキストエンコーディングを指定します",
 				ytpEnabled: "YTP機能が有効になっているため、スコアに依存しないので、ここでのすべての設定は効果がありません。",
@@ -754,7 +754,6 @@ export default {
 			},
 		},
 		keybindings: {
-			caption: "マーク",
 			commands: {
 				useTrackEventAsSource: "トラックイベントをソースとして使用",
 				useProjectMediaAsSource: "ソース としてプロジェクト メディアを使用",
