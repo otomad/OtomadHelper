@@ -163,8 +163,12 @@ const StyledNavigationView = styled.div<{
 				translate: -${COMPACT_WIDTH}px;
 			}
 
-			&.flyout .nav-items {
-				${styles.mixins.noScrollbar()};
+			&.flyout {
+				outline-width: 0;
+
+				.nav-items {
+					${styles.mixins.noScrollbar()};
+				}
 			}
 		}
 
@@ -176,6 +180,7 @@ const StyledNavigationView = styled.div<{
 			outline: 1px solid ${c("stroke-color-surface-stroke-flyout")};
 			box-shadow: 0 8px 16px ${c("shadows-flyout")};
 			backdrop-filter: blur(60px);
+			transition-behavior: allow-discrete;
 		}
 	}
 

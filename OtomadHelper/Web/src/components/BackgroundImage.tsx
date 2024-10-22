@@ -3,6 +3,7 @@ const StyledBackgroundImage = styled.div`
 	inset: 0;
 	z-index: -1;
 	pointer-events: none;
+	transition: scale ${eases.easeOutMax} 250ms !important;
 
 	&,
 	* {
