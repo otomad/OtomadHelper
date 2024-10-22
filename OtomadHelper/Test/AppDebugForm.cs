@@ -9,11 +9,7 @@ public partial class AppDebugForm : Form {
 
 	public AppDebugForm() {
 		InitializeComponent();
-#if !VEGAS_ENV
-		host = new Host();
-#else
 		host = new Host(null!);
-#endif
 		Controls.Add(host);
 		host.DocumentTitleChanged += title => Text = title;
 

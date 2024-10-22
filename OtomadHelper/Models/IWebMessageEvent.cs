@@ -18,4 +18,10 @@ public abstract class BaseWebMessageEvent {
 		objectNode[nameof(Timestamp).ToLowerInvariant()] = DateTime.Now;
 		return objectNode;
 	}
+
+	// Make sure that child class won't override these fields.
+	[JsonIgnore]
+	protected readonly object? type;
+	[JsonIgnore]
+	protected readonly object? timestamp;
 }

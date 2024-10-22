@@ -42,7 +42,7 @@ public class Module : ICustomCommandModule {
 	public ICollection GetCustomCommands() {
 		customCommandModule.MenuPopup += HandlePICmdMenuPopup;
 		customCommandModule.Invoked += HandlePICmdInvoked;
-		CustomCommand[] commands = [customCommandModule, Keybindings.Parent, .. Keybindings.Commands];
+		CustomCommand[] commands = [customCommandModule, Keybindings.Parent, .. Keybindings.Commands.Values];
 		return commands;
 	}
 

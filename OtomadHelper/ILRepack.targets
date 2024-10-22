@@ -5,6 +5,7 @@
 		<!-- Condition="'$(Configuration)' == 'Release'" -->
 		<ItemGroup>
 			<InputAssemblies Include="$(TargetPath)" />
+			<!--<InputAssemblies Include="@(ReferencePathWithRefAssemblies)" />-->
 			<InputAssemblies Include="$(OutputPath)*.dll" Exclude="$(TargetPath)" />
 			<InputAssemblies Remove="$(OutputPath)WebView2Loader.dll" />
 			<InputAssemblies Remove="$(OutputPath)Melanchall_DryWetMidi_Native*.dll" />
@@ -15,6 +16,7 @@
 			Internalize="false"
 			InputAssemblies="@(InputAssemblies)"
 			TargetKind="SameAsPrimaryAssembly"
+			LibraryPath="$(OutputPath)"
 			OutputFile="$(TargetPath)"
 			AllowDuplicateResources="false"
 		/>

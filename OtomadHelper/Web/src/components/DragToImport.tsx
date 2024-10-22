@@ -51,7 +51,7 @@ const StyledDragToImport = styled.div`
 		}
 	}
 
-	&.exit .empty-message {
+	&.exit.drop .empty-message {
 		--character-unit: 1ex;
 
 		&:is(:lang(zh), :lang(ko)) {
@@ -90,22 +90,20 @@ const StyledDragToImport = styled.div`
 export default function DragToImport({ children }: FCP<{
 	children: string;
 }>) {
-	const [shown, setShown] = useState(true);
+	const [shown, setShown] = useState(false);
+	const [drop, setDrop] = useState(false);
 
 	useListen("host:dragOver", e => {
-		setShown(e.isDragging);
+		setShown(e.isDragging ?? false);
+		setDrop(e.isDragging === false);
 	});
-
-	/* useInterval(() => {
-		setShown(shown => !shown);
-	}, 1000); */
 
 	const title = t.dragToImport({ item: children });
 
 	return (
 		<Portal>
 			<CssTransition in={shown} unmountOnExit>
-				<StyledDragToImport onMouseDown={() => setShown(false)} onMouseUp={() => setShown(false)}>
+				<StyledDragToImport className={{ drop }} onMouseDown={() => setShown(false)} onMouseUp={() => setShown(false)}>
 					<div className="box">
 						<EmptyMessage icon="touch_pointer" title={<LetterByLetter>{title}</LetterByLetter>} noSideEffect />
 					</div>

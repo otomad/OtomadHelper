@@ -51,7 +51,7 @@
 		"verbatimModuleSyntax": true,
 	},
 	"include": [
-		".",
+		".", "src/locales/.auto-import",
 	],
 	"exclude": [
 		"node_modules", "dist",

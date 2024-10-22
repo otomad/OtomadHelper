@@ -351,6 +351,7 @@ export default [
 			".output/*",
 			"node_modules/*",
 			"**/dist/*",
+			"**/.auto-import/*",
 		],
 	},
 ];

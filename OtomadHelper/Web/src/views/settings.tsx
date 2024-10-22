@@ -1,5 +1,3 @@
-import { useLanguage } from "locales/config";
-
 export default function Settings() {
 	const [language, setLanguage] = useLanguage();
 	const languages = useLanguageTags();

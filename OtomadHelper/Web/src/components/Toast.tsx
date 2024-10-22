@@ -116,6 +116,7 @@ export default function Toast() {
 	const [timestamp, setTimestamp] = useState(0);
 	const [cooldown, setCooldown] = useState(0);
 	const [disableLetterByLetter, setDisableLetterByLetter] = useState(false);
+	const [isInitialed, setIsInitialed] = useState(false);
 	const DURATION = 2000, UPDATE_COOLDOWN_INTERVAL = 10;
 
 	useInterval(() => {
@@ -128,12 +129,15 @@ export default function Toast() {
 	}, UPDATE_COOLDOWN_INTERVAL);
 
 	useListen("app:toast", text => {
+		setIsInitialed(true);
 		setDisableLetterByLetter(shown);
 		setText(text);
 		setCooldown(0);
 		setShown(true);
 		setTimestamp(Date.now());
 	});
+
+	if (!isInitialed) return;
 
 	return (
 		<Portal>

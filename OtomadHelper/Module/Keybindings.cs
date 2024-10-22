@@ -4,7 +4,7 @@ namespace OtomadHelper.Module;
 
 public class Keybindings {
 	internal CustomCommand Parent { get; } = new(Module.COMMAND_CATEGORY, $"{Module.DisplayName}.Commands");
-	internal List<CustomCommand> Commands = [];
+	internal readonly Dictionary<VegasKeybindingEventType, CustomCommand> Commands = [];
 
 	public void Initialize() {
 		SetCommandName(Parent, () => Module.DisplayName);
@@ -19,16 +19,26 @@ public class Keybindings {
 		string typeName = type.ToString();
 		CustomCommand command = new(Module.COMMAND_CATEGORY, $"{Module.DisplayName}.{typeName}") {
 			//CanAddToMenu = false, // TODO: Uncomment it after debug.
+			Enabled = false,
 		};
 		SetCommandName(command, () => t.Keybindings.Commands[typeName]);
 		command.Invoked += (sender, e) => TriggerKeybinding?.Invoke(command, new(type));
 		Parent.AddChild(command);
-		Commands.Add(command);
+		Commands.Add(type, command);
 	}
 
-	private static void SetCommandName(CustomCommand command, Func<string> GetName) {
+	private static void SetCommandName(CustomCommand command, Func<string> GetName, bool listenCultureChange = true) {
 		command.MenuItemName = command.DisplayName = GetName();
-		CultureChanged += culture => command.MenuItemName = command.DisplayName = GetName();
+		if (listenCultureChange)
+			CultureChanged += culture => command.MenuItemName = command.DisplayName = GetName();
+	}
+
+	public bool Enabled {
+		set => Commands.Values.ForEach(command => command.Enabled = value);
+	}
+
+	public bool YtpEnabled {
+		set => SetCommandName(Commands[VegasKeybindingEventType.EnableYtp], () => t.Keybindings.Commands[value ? "DisableYtp" : "EnableYtp"], false);
 	}
 }
 
@@ -40,6 +50,5 @@ public enum VegasKeybindingEventType {
 	UseTrackEventAsSource = 1,
 	UseProjectMediaAsSource,
 	EnableYtp,
-	DisableYtp,
 	StartGenerating,
 }

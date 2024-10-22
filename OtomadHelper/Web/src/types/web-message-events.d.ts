@@ -6,7 +6,7 @@ declare global {
 			isDirectory: boolean;
 			isDragging: true;
 		} | {
-			isDragging: false;
+			isDragging: false | null;
 		};
 
 		export interface ConsoleLog {
@@ -24,7 +24,13 @@ declare global {
 			lightAccentColor: string;
 			darkAccentColor: string;
 		}
+
+		export interface TriggerKeybinding {
+			event: VegasKeybindingEventType;
+		}
 	}
+
+	type VegasKeybindingEventType = "useTrackEventAsSource" | "useProjectMediaAsSource" | "enableYtp" | "startGenerating";
 }
 
 export default WebMessageEvents;

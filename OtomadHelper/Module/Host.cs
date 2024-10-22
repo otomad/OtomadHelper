@@ -23,19 +23,20 @@ namespace OtomadHelper.Module;
 public partial class Host : UserControl {
 #if VEGAS_ENV
 	internal Dockable Dockable { get; }
+	private Keybindings Keybindings => Dockable.Module.Keybindings;
 
 	public Host(Dockable dockable) {
 		Dockable = dockable;
 		Dockable.Closed += Dockable_Closed;
 #else
-	public Host() {
+	public Host(object @null) {
 #endif
 		InitializeComponent();
 		Dock = DockStyle.Fill;
 		CheckForIllegalCrossThreadCalls = false;
 
-		DragDrop += (sender, e) => Host_DragLeave();
-		DragLeave += (sender, e) => Host_DragLeave();
+		DragDrop += (sender, e) => Host_DragLeave(isDrop: true);
+		DragLeave += (sender, e) => Host_DragLeave(isDrop: false);
 
 		SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
 
@@ -104,7 +105,9 @@ public partial class Host : UserControl {
 		LoadingAnimationPicture.Stop();
 		SplashContainer.Visible = false;
 		Browser.Visible = true;
+#if VEGAS_ENV
 		AddModuleKeybindings();
+#endif
 	}
 
 	private async void Browser_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
@@ -163,9 +166,9 @@ public partial class Host : UserControl {
 		});
 	}
 
-	private void Host_DragLeave() {
+	private void Host_DragLeave(bool isDrop) {
 		if (LoadingAnimationPicture.Visible) return;
-		PostWebMessage(new DragOver { isDragging = false });
+		PostWebMessage(new DragOver { isDragging = isDrop ? false : null });
 		DropTargetHelper.DragLeave(this);
 	}
 
@@ -305,18 +308,20 @@ public partial class Host : UserControl {
 		if (palette is not null) PostWebMessage(palette);
 	}
 
-	private void AddModuleKeybindings() {
 #if VEGAS_ENV
-		Dockable.Module.Keybindings.TriggerKeybinding += Module_TriggerKeybinding;
-#endif
+	protected void AddModuleKeybindings() {
+		Keybindings.TriggerKeybinding += Module_TriggerKeybinding;
+		Keybindings.Enabled = true;
 	}
 
 	private void Module_TriggerKeybinding(object sender, VegasKeybindingEventArgs e) {
 		if (!Dockable.Shown) return;
-		s = e.Type.ToString() + " Triggered!";
+		PostWebMessage(new TriggerKeybinding { @event = e.Type });
 	}
 
 	protected void Dockable_Closed(object sender, EventArgs e) {
-		Dockable.Module.Keybindings.TriggerKeybinding -= Module_TriggerKeybinding;
+		Keybindings.TriggerKeybinding -= Module_TriggerKeybinding;
+		Keybindings.Enabled = false;
 	}
+#endif
 }

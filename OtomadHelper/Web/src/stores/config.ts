@@ -215,3 +215,8 @@ export const configStore = createStore({
 export const selectConfig = <T extends object>(path: (state: typeof configStore) => T) => useStoreState(path(configStore));
 export const selectConfigArray = <T extends object>(path: (state: typeof configStore) => T[]) => useStoreStateArray(path(configStore));
 globals.config = configStore;
+
+// If declare these
+useListenKeybinding("useTrackEventAsSource", () => configStore.source.source = "trackEvent");
+useListenKeybinding("useProjectMediaAsSource", () => configStore.source.source = "projectMedia");
+useListenKeybinding("enableYtp", () => configStore.ytp.enabled = !configStore.ytp.enabled);

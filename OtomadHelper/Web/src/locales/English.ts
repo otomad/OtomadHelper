@@ -769,7 +769,6 @@ export default {
 			},
 		},
 		keybindings: {
-			caption: "Commands",
 			commands: {
 				useTrackEventAsSource: "Use Track Event as Source",
 				useProjectMediaAsSource: "Use Project Media as Source",

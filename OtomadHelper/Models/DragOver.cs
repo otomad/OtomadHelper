@@ -4,5 +4,6 @@ internal class DragOver : BaseWebMessageEvent {
 	public string? extension;
 	public string? contentType;
 	public bool? isDirectory;
-	public bool isDragging = false;
+	[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+	public bool? isDragging = null;
 }

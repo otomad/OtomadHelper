@@ -1,5 +1,3 @@
-import { useLanguage } from "locales/config";
-
 const InlineBlock = styled.span`
 	display: inline-block; // Allow transform for span (inline).
 	white-space: pre-wrap; // Do not remove the spaces.

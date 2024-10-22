@@ -45,6 +45,12 @@ export const useListen: {
 	});
 };
 
+export const useListenKeybinding = (type: WebMessageEvents.TriggerKeybinding["event"], handler: () => void) => {
+	useListen("host:triggerKeybinding", ({ event }) => {
+		if (event === type) handler();
+	});
+};
+
 /**
  * Listens to an event on the global event emitter once.
  *

@@ -7,6 +7,7 @@ export type ApplicationEvents = {
 	"host:consoleLog": [WebMessageEvents.ConsoleLog];
 	"host:contextMenuItemClickEventArgs": [WebMessageEvents.ContextMenuItemClickEventArgs];
 	"host:accentPalette": [WebMessageEvents.AccentPalette];
+	"host:triggerKeybinding": [WebMessageEvents.TriggerKeybinding];
 	"dev:showContextMenu": [e: MouseEvent, menu: typeof window["contextMenu"] & {}];
 	"app:toast": [string];
 };
@@ -35,4 +36,10 @@ useListen("host:contextMenuItemClickEventArgs", ({ menuUuid, menuItemUuid }) => 
 		}
 		return null;
 	}
+});
+
+useListen("host:triggerKeybinding", ({ event }) => {
+	let key: string = event;
+	if (event === "enableYtp" && !configStore.ytp.enabled) key = "disableYtp";
+	useEvent("app:toast", i18n.t(`csharp:keybindings.commands.${key}`));
 });

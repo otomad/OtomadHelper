@@ -1,5 +1,4 @@
 import type { TOptions } from "i18next";
-import i18n from "locales/config";
 import type { LocaleWithDefaultValue } from "locales/types";
 import { spacing } from "pangu";
 const I18N_ITEM_SYMBOL = Symbol.for("i18n_item");

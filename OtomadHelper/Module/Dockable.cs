@@ -24,12 +24,14 @@ public class Dockable : DockableControl {
 		Controls.Add(host);
 	}
 
-	protected override void OnLoad(EventArgs args) {
+	protected override void OnLoad(EventArgs e) {
 		Reload();
 		Shown = true;
 
 		//Vegas.TrackEventStateChanged += HandleTrackEventChanged;
 		//Vegas.TrackEventCountChanged += HandleTrackEventChanged;
+
+		base.OnLoad(e);
 	}
 
 	protected void DisposeHost() {
@@ -40,17 +42,18 @@ public class Dockable : DockableControl {
 		}
 	}
 
-	protected override void OnClosed(EventArgs args) {
+	protected override void OnClosed(EventArgs e) {
 		DisposeHost();
 		Shown = false;
+		base.OnClosed(e);
 	}
 
 	private void HandleTrackEventChanged(object sender, EventArgs e) {
 		//myForm.SelectBtn_Click(null, null);
 	}
 
-	/*protected override void OnClosed(EventArgs args) {
-		base.OnClosed(args);
+	/*protected override void OnClosed(EventArgs e) {
+		base.OnClosed(e);
 	}
 
 	protected override void WndProc(ref Message m) {
