@@ -369,7 +369,8 @@ export async function startColorViewTransition(changeFunc: () => MaybePromise<vo
 	style.textContent = String(css`
 		*,
 		*::before,
-		*::after {
+		*::after,
+		*::-webkit-progress-value {
 			-webkit-transition: none !important;
 			-moz-transition: none !important;
 			-ms-transition: none !important;
