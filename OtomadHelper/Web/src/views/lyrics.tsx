@@ -14,10 +14,10 @@ export default function Shupelunker() {
 	return (
 		<div className="container">
 			<SettingsPageControl image={tipsImage} imageOverlay={<PreviewKaraoke reset={!enabled[0]} />} learnMoreLink="">{t.descriptions.lyrics}</SettingsPageControl>
-			<EmptyMessage.YtpDisabled fully={t.titles.lyrics}>
-				<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
 
-				<EmptyMessage.Typical icon="lyrics" title="lyrics" enabled={enabled}>
+			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
+			<EmptyMessage.Typical icon="lyrics" title="lyrics" enabled={enabled}>
+				<EmptyMessage.YtpDisabled fully={t.titles.lyrics}>
 					<SettingsCard title={t.lyrics.presetTemplate} details={t.descriptions.lyrics.presetTemplate} icon="subtitles">
 						<ComboBox current={presetTemplate} options={[]} ids={[]} />
 					</SettingsCard>
@@ -53,8 +53,8 @@ export default function Shupelunker() {
 					<div>
 						<Button hyperlink onClick={() => changePage(["tools"])}>{t.lyrics.useStaticText}</Button>
 					</div>
-				</EmptyMessage.Typical>
-			</EmptyMessage.YtpDisabled>
+				</EmptyMessage.YtpDisabled>
+			</EmptyMessage.Typical>
 		</div>
 	);
 }

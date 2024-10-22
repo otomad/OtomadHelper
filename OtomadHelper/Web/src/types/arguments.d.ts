@@ -40,4 +40,10 @@ declare global {
 
 	/** The type of oscillator to use. Must be one of the following: "sine", "square", "sawtooth", "triangle". */
 	type OscillatorCommonType = Exclude<OscillatorType, "custom">;
+
+	/** The values that badge can be accepted. */
+	type BadgeValue = string | number | boolean | undefined;
+
+	/** Badge value and status. */
+	type BadgeArgs = [badge?: BadgeValue, status?: Status];
 }

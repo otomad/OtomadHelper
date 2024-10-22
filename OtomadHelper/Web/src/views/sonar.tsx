@@ -10,10 +10,9 @@ export default function Sonar() {
 		<div className="container">
 			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.sonar}</SettingsPageControl>
 
-			<EmptyMessage.YtpDisabled fully={t.titles.sonar}>
-				<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} details={t.descriptions.sonar.enabled} resetTransitionOnChanging />
-
-				<EmptyMessage.Typical icon="sonar" title="sonar" enabled={enabled}>
+			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} details={t.descriptions.sonar.enabled} resetTransitionOnChanging />
+			<EmptyMessage.Typical icon="sonar" title="sonar" enabled={enabled}>
+				<EmptyMessage.YtpDisabled fully={t.titles.sonar}>
 					<SettingsCardToggleSwitch icon="arrow_split" title={t.sonar.separateDrums} details={t.descriptions.sonar.separateDrums} on={separateDrums} />
 					<SettingsCardToggleSwitch icon="invert_color" title={t.sonar.differenceCompositeMode} details={t.descriptions.sonar.differenceCompositeMode} on={differenceCompositeMode} />
 					<SettingsCardToggleSwitch
@@ -40,8 +39,8 @@ export default function Sonar() {
 						<Button icon="add">{t.new}</Button>
 						<Button icon="arrow_reset" accent="critical">{t.reset}</Button>
 					</StackPanel>
-				</EmptyMessage.Typical>
-			</EmptyMessage.YtpDisabled>
+				</EmptyMessage.YtpDisabled>
+			</EmptyMessage.Typical>
 		</div>
 	);
 }

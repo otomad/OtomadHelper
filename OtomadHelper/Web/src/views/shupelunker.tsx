@@ -12,10 +12,10 @@ export default function Shupelunker() {
 	return (
 		<div className="container">
 			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.shupelunker}</SettingsPageControl>
-			<EmptyMessage.YtpDisabled fully={t.titles.shupelunker}>
-				<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
 
-				<EmptyMessage.Typical icon="shupelunker" title="shupelunker_full" enabled={enabled}>
+			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
+			<EmptyMessage.Typical icon="shupelunker" title="shupelunker_full" enabled={enabled}>
+				<EmptyMessage.YtpDisabled fully={t.titles.shupelunker}>
 					<ExpanderRadio
 						title={t.shupelunker.affix}
 						details={t.descriptions.shupelunker.affix}
@@ -40,8 +40,8 @@ export default function Shupelunker() {
 
 					<Subheader>{t.shupelunker.keyMappingZones}</Subheader>
 					<PreviewPiano />
-				</EmptyMessage.Typical>
-			</EmptyMessage.YtpDisabled>
+				</EmptyMessage.YtpDisabled>
+			</EmptyMessage.Typical>
 		</div>
 	);
 }

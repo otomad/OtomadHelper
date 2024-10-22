@@ -20,16 +20,20 @@ const StyledBadge = styled.div<{
 	${styles.effects.text.caption};
 	display: inline-flex;
 	flex-shrink: 0;
-	min-inline-size: 16px;
-	height: 16px;
 	padding: 0 3px;
+	block-size: 16px;
+	min-inline-size: 16px;
 	text-align: center;
 	background-color: ${c("fill-color-system-solid-neutral-background")};
 	scale: 1;
 	transition: ${fallbackTransitions}, scale ${eases.easeOutBackSmooth} 250ms;
 
+	&.exit {
+		transition: ${fallbackTransitions}, scale ${eases.easeOutMax} 250ms;
+	}
+
 	&.icon-only {
-		width: 16px;
+		inline-size: 16px;
 	}
 
 	${tgs()} {
@@ -49,6 +53,13 @@ const StyledBadge = styled.div<{
 	.icon {
 		font-size: 12px;
 	}
+
+	&.beacon {
+		padding: 0;
+		block-size: 4px;
+		inline-size: 4px;
+		min-inline-size: unset;
+	}
 `;
 
 export default forwardRef(function Badge({ children, status = "info", hidden, transitionOnAppear = true, ...htmlAttrs }: FCP<{
@@ -60,10 +71,12 @@ export default forwardRef(function Badge({ children, status = "info", hidden, tr
 	transitionOnAppear?: boolean;
 }, "div">, ref: ForwardedRef<"div">) {
 	const iconName = `badge/${["neutual", "accent"].includes(status) ? "info" : status}`;
+	if (children === undefined || children === false) hidden = true;
+	const beacon = typeof children === "boolean";
 	return (
 		<CssTransition in={!hidden} unmountOnExit appear={transitionOnAppear}>
-			<StyledBadge $status={status} ref={ref} className={{ iconOnly: !children }} {...htmlAttrs}>
-				{children != null ? <span className="text">{children}</span> : <Icon name={iconName} />}
+			<StyledBadge $status={status} ref={ref} className={{ iconOnly: children === undefined, beacon }} {...htmlAttrs}>
+				{!beacon && (children != null ? <span className="text">{children}</span> : <Icon name={iconName} />)}
 			</StyledBadge>
 		</CssTransition>
 	);

@@ -28,7 +28,7 @@ const StyledTabItem = styled.button`
 		}
 
 		&:active > * {
-			opacity: ${c("pressed-text-opacity")}
+			opacity: ${c("pressed-text-opacity")};
 		}
 	}
 
@@ -108,6 +108,9 @@ const StyledTabItem = styled.button`
 	}
 `;
 
+const BadgeItem = ({ hidden, badge: [badge, status] = [] }: { hidden?: boolean; badge?: BadgeArgs }) =>
+	<Badge status={status ?? "accent"} hidden={hidden}>{badge}</Badge>;
+
 export /* @internal */ default function TabItem({ icon, animatedIcon, children, selected = false, collapsed, id: _id, focusable = true, badge, _vertical: vertical, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons;
@@ -122,7 +125,7 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 	/** Can be focused? */
 	focusable?: boolean;
 	/** Badge. */
-	badge?: string | number;
+	badge?: BadgeArgs;
 	/** @private Use the vertical NavigationView style? */
 	_vertical?: boolean;
 }, "section">) {
@@ -149,9 +152,6 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 
 	useEffect(() => scrollIntoView(), [selected]);
 
-	const BadgeItem = useCallback(({ hidden }: { hidden?: boolean }) =>
-		<Badge status="accent" hidden={badge === undefined || hidden}>{badge}</Badge>, [badge]);
-
 	return (
 		<Tooltip placement="right" offset={5} disabled={!collapsed} title={children}>
 			<Transition
@@ -172,14 +172,14 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 							<div className="badge-wrapper">
 								{icon && !animatedIcon && <Icon name={icon} />}
 								{animatedIcon && <AnimatedIcon name={animatedIcon} />}
-								<BadgeItem hidden={!(vertical && collapsed)} />
+								<BadgeItem hidden={!(vertical && collapsed)} badge={badge} />
 							</div>
 						)}
 						<div className="badge-wrapper fill">
 							<div className="text">{children}</div>
-							{!vertical && <BadgeItem />}
+							{!vertical && <BadgeItem badge={badge} />}
 						</div>
-						{vertical && <BadgeItem />}
+						{vertical && <BadgeItem badge={badge} />}
 					</StyledTabItem>
 				</StyledTabItemWrapper>
 			</Transition>
