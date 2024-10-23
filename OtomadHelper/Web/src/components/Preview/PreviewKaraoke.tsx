@@ -28,6 +28,10 @@ const StyledPreviewKaraoke = styled.div`
 	&.past {
 		clip-path: inset(0 100% 0 0);
 
+		&:dir(rtl) {
+			clip-path: inset(0 0 0 100%);
+		}
+
 		> p {
 			color: lch(from ${c("colorization")} 50 c h);
 			-webkit-text-stroke-color: white;
@@ -35,11 +39,13 @@ const StyledPreviewKaraoke = styled.div`
 	}
 
 	main.page.enter-done &:not(.reset) {
-		&.future {
+		&.future,
+		&.past:dir(rtl) {
 			clip-path: inset(0 0 0 50%);
 		}
 
-		&.past {
+		&.past,
+		&.future:dir(rtl) {
 			clip-path: inset(0 50% 0 0);
 		}
 	}

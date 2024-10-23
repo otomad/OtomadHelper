@@ -451,12 +451,10 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	const [isNavItemsOverflowing, setIsNavItemsOverflowing] = useState(false);
 	const navItemsEl = useDomRef<"div">();
 	const focusable = !flyout && paneDisplayMode === "minimal" ? false : isFlyoutShown === flyout;
-	const navBadges = useSnapshot(navBadgeStore);
 
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
 		if ("type" in item) return item.type === "hr" ? <hr key={index} /> : undefined;
-		const { text, icon, animatedIcon, id } = item;
-		const badge = hasOwn(navBadges, id) ? navBadges[id] : undefined;
+		const { text, icon, animatedIcon, id, badge } = item;
 		return (
 			<TabBar.Item
 				key={id}
@@ -469,7 +467,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 				{text}
 			</TabBar.Item>
 		);
-	}, [isFlyoutShown, focusable, navBadges]);
+	}, [isFlyoutShown, focusable]);
 
 	useEventListener(window, "resize", () => {
 		const navItems = navItemsEl.current;
@@ -537,7 +535,7 @@ interface NavItem {
 	/** Place it at the bottom of the navigation panel? */
 	bottom?: boolean;
 	/** Show the badge, or **beacon** by `true`. */
-	// badge?: true | number;
+	badge?: BadgeArgs;
 }
 
 interface NavBrItem {

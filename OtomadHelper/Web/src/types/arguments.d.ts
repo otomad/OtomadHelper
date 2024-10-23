@@ -45,5 +45,5 @@ declare global {
 	type BadgeValue = string | number | boolean | undefined;
 
 	/** Badge value and status. */
-	type BadgeArgs = [badge?: BadgeValue, status?: Status];
+	type BadgeArgs = [badge?: BadgeValue, status?: Status, hidden?: boolean];
 }

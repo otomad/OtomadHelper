@@ -19,6 +19,7 @@ export function redirectIcon(name: string): DeclaredIcons & DeclaredLotties {
 		tools: "apps",
 		management: "library",
 	} as const;
+	// @ts-expect-error
 	return hasOwn(redirects, name) ? redirects[name] : name as DeclaredIcons & DeclaredLotties;
 }
 
@@ -66,12 +67,14 @@ export default function ShellPage() {
 
 	const completeDisabled = !isCompleteAvailable(page);
 	const autoLayoutTracksMode = isAutoLayoutTracks(page);
+	const navBadges = useSnapshot(navBadgeStore);
+	const getBadge = (id: string) => hasOwn(navBadges, id) ? navBadges[id] : undefined;
 
 	return (
 		<NavigationView
 			currentNav={[page, changePage]}
 			navItems={[
-				...navItems.map(item => ({ text: getTitle(item), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item) })),
+				...navItems.map(item => ({ text: getTitle(item), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item), badge: getBadge(item) })),
 				{ type: "hr" },
 				...navToolItems.map(item => ({ text: getTitle(item, false, 2), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item) })),
 				...bottomNavItems.map(item => ({ text: getTitle(item, false, 2), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item), bottom: true })),

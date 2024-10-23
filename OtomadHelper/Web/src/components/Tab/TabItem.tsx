@@ -15,7 +15,8 @@ const StyledTabItem = styled.button`
 
 	.tab-bar.vertical & {
 		gap: 16px;
-		padding: 9px 16px 11px;
+		padding-block: 9px 11px;
+		padding-inline: 16px 12px;
 
 		&:hover,
 		&.selected {
@@ -72,6 +73,11 @@ const StyledTabItem = styled.button`
 		}
 	}
 
+	.badge-wrapper-adjust-beacon {
+		${styles.mixins.gridCenter()};
+		min-inline-size: 16px;
+	}
+
 	.tab-bar.horizontal & {
 		gap: 8px;
 		padding: 14px 12px;
@@ -108,8 +114,8 @@ const StyledTabItem = styled.button`
 	}
 `;
 
-const BadgeItem = ({ hidden, badge: [badge, status] = [] }: { hidden?: boolean; badge?: BadgeArgs }) =>
-	<Badge status={status ?? "accent"} hidden={hidden}>{badge}</Badge>;
+const BadgeItem = ({ hidden: layoutHidden, badge: [badge, status, hidden] = [] }: { hidden?: boolean; badge?: BadgeArgs }) =>
+	<Badge status={status ?? "accent"} hidden={hidden || layoutHidden}>{badge}</Badge>;
 
 export /* @internal */ default function TabItem({ icon, animatedIcon, children, selected = false, collapsed, id: _id, focusable = true, badge, _vertical: vertical, ...htmlAttrs }: FCP<{
 	/** Icon. */
@@ -179,7 +185,11 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 							<div className="text">{children}</div>
 							{!vertical && <BadgeItem badge={badge} />}
 						</div>
-						{vertical && <BadgeItem badge={badge} />}
+						{vertical && (
+							<div className="badge-wrapper-adjust-beacon">
+								<BadgeItem badge={badge} />
+							</div>
+						)}
 					</StyledTabItem>
 				</StyledTabItemWrapper>
 			</Transition>

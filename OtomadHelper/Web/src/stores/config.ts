@@ -147,6 +147,17 @@ export const configStore = createStore({
 		],
 	},
 	createGroups: true,
+	track: {
+		grid: {
+			enabled: true,
+		},
+		box3d: {
+			enabled: true,
+		},
+		gradient: {
+			enabled: true,
+		},
+	},
 	sonar: {
 		enabled: true,
 		separateDrums: false,

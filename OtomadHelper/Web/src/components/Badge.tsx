@@ -62,7 +62,7 @@ const StyledBadge = styled.div<{
 	}
 `;
 
-export default forwardRef(function Badge({ children, status = "info", hidden, transitionOnAppear = true, ...htmlAttrs }: FCP<{
+export default forwardRef(function Badge({ children, status = "info", hidden, transitionOnAppear = true, className, ...htmlAttrs }: FCP<{
 	/** The state of the badge, that is, the color. */
 	status?: Status;
 	/** Hidden? */
@@ -70,12 +70,12 @@ export default forwardRef(function Badge({ children, status = "info", hidden, tr
 	/** Play transition when the badge is appeared? */
 	transitionOnAppear?: boolean;
 }, "div">, ref: ForwardedRef<"div">) {
-	const iconName = `badge/${["neutual", "accent"].includes(status) ? "info" : status}`;
+	const iconName = `badge/${status.in("neutual", "accent") ? "info" : status}` as const;
 	if (children === undefined || children === false) hidden = true;
 	const beacon = typeof children === "boolean";
 	return (
 		<CssTransition in={!hidden} unmountOnExit appear={transitionOnAppear}>
-			<StyledBadge $status={status} ref={ref} className={{ iconOnly: children === undefined, beacon }} {...htmlAttrs}>
+			<StyledBadge $status={status} ref={ref} className={[{ iconOnly: children === undefined, beacon }, className]} {...htmlAttrs}>
 				{!beacon && (children != null ? <span className="text">{children}</span> : <Icon name={iconName} />)}
 			</StyledBadge>
 		</CssTransition>

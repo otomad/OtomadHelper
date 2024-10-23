@@ -10,16 +10,20 @@ export const navBadgeStore = createStore({
 	lyrics: DEFAULT,
 	shupelunker: DEFAULT,
 	ytp: DEFAULT,
+	track: DEFAULT,
 });
 
 watch(get => {
-	get(configStore);
-	const ytpWarn = configStore.ytp.enabled ? "warning" : "accent";
-	navBadgeStore.score = configStore.ytp.enabled ? [true, ytpWarn] : DEFAULT;
-	navBadgeStore.audio = [configStore.audio.enabled];
-	navBadgeStore.visual = [configStore.visual.enabled];
-	navBadgeStore.sonar = [configStore.sonar.enabled, ytpWarn];
-	navBadgeStore.lyrics = [configStore.lyrics.enabled, ytpWarn];
-	navBadgeStore.shupelunker = [configStore.shupelunker.enabled, ytpWarn];
-	navBadgeStore.ytp = [configStore.ytp.enabled];
+	const c = configStore, b = navBadgeStore;
+	get(c);
+	const ytpWarn = c.ytp.enabled ? "warning" : "accent";
+	b.score = c.ytp.enabled ? [true, ytpWarn] : DEFAULT;
+	b.audio = [c.audio.enabled];
+	b.visual = [c.visual.enabled];
+	b.sonar = [c.sonar.enabled, ytpWarn];
+	b.lyrics = [c.lyrics.enabled, ytpWarn];
+	b.shupelunker = [c.shupelunker.enabled, ytpWarn];
+	b.ytp = [c.ytp.enabled];
+	const layoutEnabledCount = [c.track.grid.enabled, c.track.box3d.enabled, c.track.gradient.enabled].filter(enabled => enabled).length;
+	b.track = [layoutEnabledCount, "accent", layoutEnabledCount === 0];
 });
