@@ -22,7 +22,7 @@ const GlobalStyle = createGlobalStyle<{
 		-webkit-tap-highlight-color: transparent;
 
 		:where(&) {
-			// color: var(--foreground-color);
+			/* color: var(--foreground-color); */
 			text-wrap: pretty;
 		}
 
@@ -140,6 +140,11 @@ const GlobalStyle = createGlobalStyle<{
 		opacity: 0;
 		visibility: hidden;
 		transition: none;
+	}
+
+	svg,
+	svg * {
+		transition: ${fallbackTransitions}, color 0s;
 	}
 
 	// Additional calculated colors

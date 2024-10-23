@@ -86,6 +86,7 @@ const colors = {
 	"background-fill-color-layer-on-mica-base-alt-secondary": ["rgba(0, 0, 0, 0.04)", "rgba(255, 255, 255, 0.06)", "ButtonFace"],
 	"background-fill-color-layer-on-mica-base-alt-tertiary": ["rgb(249, 249, 249)", "rgb(44, 44, 44)", "ButtonFace"],
 	"background-fill-color-acrylic-background-default": ["rgba(252, 252, 252, 0.85)", "rgba(44, 44, 44, 0.96)", "ButtonFace"],
+	"background-fill-color-acrylic-background-command-bar": ["rgba(252, 252, 252, 0.4)", "rgba(44, 44, 44, 0.7)", "ButtonFace"],
 	"background-fill-color-acrylic-background-base": ["rgba(243, 243, 243, 0.9)", "rgba(32, 32, 32, 0.96)", "ButtonFace"],
 	"background-fill-color-mica-background-base": ["rgb(243, 243, 243)", "rgb(32, 32, 32)", "ButtonFace"],
 	"background-fill-color-mica-background-base-alt": ["rgb(218, 218, 218)", "rgb(10, 10, 10)", "ButtonFace"],

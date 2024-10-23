@@ -3,7 +3,7 @@ import type { TransitionProps } from "react-transition-group";
 const StyledCommandBar = styled.div`
 	// box-shadow: 0 8px 16px ${c("shadows-flyout")};
 	padding: 4px;
-	background-color: ${c("background-fill-color-acrylic-background-default")};
+	background-color: ${c("background-fill-color-acrylic-background-command-bar")};
 	border: 1px solid ${c("stroke-color-surface-stroke-flyout")};
 	border-radius: 6px;
 
@@ -11,12 +11,22 @@ const StyledCommandBar = styled.div`
 		${styles.effects.text.body};
 		display: flex;
 		align-items: center;
-		height: 100%;
-		/* overflow-x: hidden; */
+		block-size: 100%;
 	}
 
 	* {
 		white-space: nowrap;
+	}
+
+	.command-bar-item {
+		overflow: hidden;
+		transition: all ${eases.easeInOutFluent} 650ms;
+
+		${tgs()} {
+			inline-size: 0;
+			scale: 0.5;
+			opacity: 0;
+		}
 	}
 `;
 
@@ -41,21 +51,15 @@ function CommandBarItem({ icon, children, canBeDisabled, disabled, onClick, ...b
 	const button = <Button icon={icon} subtle disabled={disabled} onClick={onClick} {...htmlAttrs}>{children}</Button>;
 
 	return (
-		<Transitions.Size
-			{...transitionAttrs}
-			specified="width"
-			duration={750}
-			easing={eases.easeInOutMax}
-			exitOptions={{ keepClippingAtEnd: true }}
-		>
-			<div>
+		<CssTransition {...transitionAttrs}>
+			<div className="command-bar-item">
 				{!canBeDisabled ? button : (
 					<DisabledButtonWrapper key="complete" disabled={disabled} onClick={onClick}>
 						{button}
 					</DisabledButtonWrapper>
 				)}
 			</div>
-		</Transitions.Size>
+		</CssTransition>
 	);
 }
 

@@ -8,7 +8,7 @@ import effects from "styles/effects";
 import { STATUS_PREFIX, type AvailableLottieStatus } from "styles/fake-animations";
 import mixins from "styles/mixins";
 
-export const fallbackTransitions = `all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, fill ${eases.easeOutMax} 100ms`;
+export const fallbackTransitions = `all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms`;
 
 /**
  * Apply the theme color.

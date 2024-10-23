@@ -137,20 +137,6 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 }, "section">) {
 	const tabItemEl = useDomRef<"button">();
 
-	const onEnter = async () => {
-		const el = tabItemEl.current;
-		if (!el) return;
-		await animateSize(el, () => el.classList.toggle("collapsed", false));
-		el.dispatchEvent(new Event("transitionend"));
-	};
-
-	const onExit = async () => {
-		const el = tabItemEl.current;
-		if (!el) return;
-		await animateSize(el, () => el.classList.toggle("collapsed", true));
-		el.dispatchEvent(new Event("transitionend"));
-	};
-
 	const scrollIntoView = () => {
 		if (selected)
 			tabItemEl.current?.scrollIntoViewIfNeeded();
@@ -160,39 +146,32 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 
 	return (
 		<Tooltip placement="right" offset={5} disabled={!collapsed} title={children}>
-			<Transition
-				nodeRef={tabItemEl}
-				in={!collapsed}
-				onEnter={onEnter}
-				onExit={onExit}
-			>
-				<StyledTabItemWrapper {...htmlAttrs}>
-					<StyledTabItem
-						type="button"
-						ref={tabItemEl}
-						tabIndex={focusable ? 0 : -1}
-						{...htmlAttrs}
-						className={{ selected }}
-					>
-						{(icon || animatedIcon) && (
-							<div className="badge-wrapper">
-								{icon && !animatedIcon && <Icon name={icon} />}
-								{animatedIcon && <AnimatedIcon name={animatedIcon} />}
-								<BadgeItem hidden={!(vertical && collapsed)} badge={badge} />
-							</div>
-						)}
-						<div className="badge-wrapper fill">
-							<div className="text">{children}</div>
-							{!vertical && <BadgeItem badge={badge} />}
+			<StyledTabItemWrapper {...htmlAttrs}>
+				<StyledTabItem
+					type="button"
+					ref={tabItemEl}
+					tabIndex={focusable ? 0 : -1}
+					{...htmlAttrs}
+					className={{ selected }}
+				>
+					{(icon || animatedIcon) && (
+						<div className="badge-wrapper">
+							{icon && !animatedIcon && <Icon name={icon} />}
+							{animatedIcon && <AnimatedIcon name={animatedIcon} />}
+							<BadgeItem hidden={!(vertical && collapsed)} badge={badge} />
 						</div>
-						{vertical && (
-							<div className="badge-wrapper-adjust-beacon">
-								<BadgeItem badge={badge} />
-							</div>
-						)}
-					</StyledTabItem>
-				</StyledTabItemWrapper>
-			</Transition>
+					)}
+					<div className="badge-wrapper fill">
+						<div className="text">{children}</div>
+						{!vertical && <BadgeItem badge={badge} />}
+					</div>
+					{vertical && (
+						<div className="badge-wrapper-adjust-beacon">
+							<BadgeItem badge={badge} />
+						</div>
+					)}
+				</StyledTabItem>
+			</StyledTabItemWrapper>
 		</Tooltip>
 	);
 }

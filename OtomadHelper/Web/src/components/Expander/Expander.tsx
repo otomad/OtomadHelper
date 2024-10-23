@@ -65,6 +65,7 @@ const ExpanderParent = styled(SettingsCard)<{
 
 const ExpanderChild = styled.div`
 	inline-size: 100%;
+	overflow: clip;
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-top-width: 0;
 	border-radius: 0 0 3px 3px;
@@ -82,8 +83,18 @@ const ExpanderChild = styled.div`
 		opacity: ${c("disabled-text-opacity")};
 	}
 
-	&.clip-children {
-		overflow: clip;
+	${tgs()} {
+		block-size: 0;
+		border-bottom-width: 0;
+
+		.expander-child-items {
+			translate: 0 -100%;
+		}
+	}
+
+	&,
+	.expander-child-items {
+		transition: ${fallbackTransitions}, block-size ${eases.easeOutSmooth} 350ms, translate ${eases.easeOutSmooth} 350ms;
 	}
 `;
 
@@ -132,19 +143,13 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				{actions}
 				{checkInfo != null && <div className={["check-info", TRAILING_EXEMPTION, { hidden: !(!internalExpanded || alwaysShowCheckInfo) }]}>{checkInfo}</div>}
 			</ExpanderParent>
-			<Transitions.Size
-				in={internalExpanded}
-				specified="height"
-				duration={350}
-				enterOptions={{ startChildTranslate: "0 -100%", clientAdjustment: { endHeight: 1 } }}
-				exitOptions={{ endChildTranslate: "0 -100%" }}
-			>
+			<CssTransition in={internalExpanded} unmountOnExit>
 				<ExpanderChild disabled={disabled || childrenDisabled} className={{ clipChildren }}>
 					<div className="expander-child-items">
 						{children}
 					</div>
 				</ExpanderChild>
-			</Transitions.Size>
+			</CssTransition>
 		</div>
 	);
 }
