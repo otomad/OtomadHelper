@@ -69,6 +69,7 @@ const colors = {
 	"stroke-color-divider-stroke-default": ["rgba(0, 0, 0, 0.08)", "rgba(255, 255, 255, 0.08)", "ActiveBorder"],
 	"stroke-color-surface-stroke-default": ["rgba(117, 117, 117, 0.4)", "rgba(117, 117, 117, 0.4)", "ActiveBorder"],
 	"stroke-color-surface-stroke-flyout": ["rgba(0, 0, 0, 0.06)", "rgba(0, 0, 0, 0.2)", "ActiveBorder"],
+	"stroke-color-surface-stroke-flyout-navigation-panel": ["rgba(0, 0, 0, 0.06)", "rgba(0, 0, 0, 0.06)", "ActiveBorder"],
 	"stroke-color-focus-stroke-outer": ["rgba(0, 0, 0, 0.9)", "rgb(255, 255, 255)", "ActiveBorder"],
 	"stroke-color-focus-stroke-inner": ["rgb(255, 255, 255)", "rgba(0, 0, 0, 0.7)", "ActiveBorder"],
 	"background-fill-color-card-background-default": ["rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.05)", "ButtonFace"],

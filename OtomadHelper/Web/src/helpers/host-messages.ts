@@ -9,7 +9,7 @@ export type ApplicationEvents = {
 	"host:accentPalette": [WebMessageEvents.AccentPalette];
 	"host:triggerKeybinding": [WebMessageEvents.TriggerKeybinding];
 	"dev:showContextMenu": [e: MouseEvent, menu: typeof window["contextMenu"] & {}];
-	"app:toast": [string];
+	"app:toast": [message: string];
 };
 
 expectType<Record<string, unknown[]>>(undefined! as ApplicationEvents);

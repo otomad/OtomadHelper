@@ -2,10 +2,10 @@ const HEIGHT = 50;
 
 const StyledToast = styled.div`
 	position: fixed;
-	bottom: min(100px, 10dvh);
-	left: min(100px, 20dvw);
+	inset-block-end: min(100px, 10dvh);
+	inset-inline-start: min(100px, 20dvw);
 	z-index: 90;
-	height: ${HEIGHT}px;
+	block-size: ${HEIGHT}px;
 	overflow: clip;
 	background-color: ${c("background-fill-color-card-background-secondary")};
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
@@ -26,7 +26,7 @@ const StyledToast = styled.div`
 		`} 750ms ${eases.easeInOutMaterialEmphasized},
 		${keyframes`
 			from {
-				width: ${HEIGHT}px;
+				inline-size: ${HEIGHT}px;
 			}
 		`} 750ms ${eases.easeInOutMaterialEmphasized} 250ms backwards,
 		${keyframes`
@@ -40,8 +40,8 @@ const StyledToast = styled.div`
 		display: flex;
 		column-gap: 13px;
 		align-items: center;
-		height: 100%;
 		padding: 13px 16px;
+		block-size: 100%;
 		border: inherit;
 		border-width: 0;
 		border-radius: 4px;
@@ -64,10 +64,10 @@ const StyledToast = styled.div`
 	.progress {
 		${styles.mixins.oval()};
 		position: absolute;
-		top: calc((100% - var(--progress) * 1%) / 2);
-		left: 0;
-		width: 3px;
-		height: calc(var(--progress) * 1%);
+		inset-block-start: calc((100% - var(--progress) * 1%) / 2);
+		inset-inline-start: 0;
+		block-size: calc(var(--progress) * 1%);
+		inline-size: 3px;
 		background-color: ${c("accent-color")};
 	}
 
@@ -85,7 +85,7 @@ const StyledToast = styled.div`
 			`} 650ms ${eases.easeInOutMaterialEmphasized} 150ms forwards,
 			${keyframes`
 				to {
-					width: ${HEIGHT}px;
+					inline-size: ${HEIGHT}px;
 				}
 			`} 500ms ${eases.easeInOutMaterialEmphasized} forwards,
 			${keyframes`
@@ -141,7 +141,7 @@ export default function Toast() {
 
 	return (
 		<Portal>
-			<StyledToast className={{ hidden: !shown }} style={{ "--progress": cooldown }}>
+			<StyledToast className={{ hidden: !shown }} style={{ "--progress": cooldown }} onPointerMove={() => setCooldown(100)}>
 				<div className="progress" />
 				<div className="base">
 					<Badge status="info" />

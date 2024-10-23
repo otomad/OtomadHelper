@@ -9,6 +9,7 @@ export default function Settings() {
 	} = selectConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
 	const showBackgroundImage = backgroundImages.backgroundImage[0] !== -1;
+	const [displayUiScale, setDisplayUiScale] = useState<Readable | undefined>(uiScale[0]);
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -107,12 +108,20 @@ export default function Settings() {
 			<Expander
 				title={t.settings.appearance.uiScale}
 				icon="zoom_in"
-				checkInfo={uiScale[0] + "%"}
+				checkInfo={displayUiScale + "%"}
 				alwaysShowCheckInfo
 				expanded
 			>
 				<Expander.ChildWrapper>
-					<Slider value={uiScale} min={50} max={200} defaultValue={100} step={1} />
+					<Slider
+						value={uiScale}
+						min={50}
+						max={200}
+						defaultValue={100}
+						step={1}
+						displayValue
+						onDisplayValueChanged={setDisplayUiScale}
+					/>
 				</Expander.ChildWrapper>
 			</Expander>
 

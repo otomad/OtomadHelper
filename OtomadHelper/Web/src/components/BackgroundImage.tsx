@@ -3,13 +3,13 @@ const StyledBackgroundImage = styled.div`
 	inset: 0;
 	z-index: -1;
 	pointer-events: none;
-	transition: scale ${eases.easeOutMax} 250ms !important;
+	transition: ${fallbackTransitions}, scale ${eases.easeOutMax} 250ms !important;
 
 	&,
 	* {
 		${styles.mixins.square("100%")};
 		inset: 0;
-		transition: none;
+		// transition: none; // Enable for low configuration devices.
 	}
 
 	img {

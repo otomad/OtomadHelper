@@ -164,6 +164,7 @@ const StyledNavigationView = styled.div<{
 			}
 
 			&.flyout {
+				--outline-transition-timing-function: ${eases.stepEnd};
 				outline-width: 0;
 
 				.nav-items {
@@ -173,13 +174,15 @@ const StyledNavigationView = styled.div<{
 		}
 
 		&.flyout {
+			--outline-transition-timing-function: ${eases.stepStart};
 			position: fixed;
 			z-index: 8;
-			background-color: ${c("background-fill-color-acrylic-background-default")};
+			/* background-color: ${c("background-fill-color-acrylic-background-default")}; */
 			border-radius: 0 8px 8px 0;
-			outline: 1px solid ${c("stroke-color-surface-stroke-flyout")};
+			outline: 1px solid ${c("stroke-color-surface-stroke-flyout-navigation-panel")};
 			box-shadow: 0 8px 16px ${c("shadows-flyout")};
 			backdrop-filter: blur(60px);
+			transition: ${fallbackTransitions}, outline 250ms var(--outline-transition-timing-function);
 			transition-behavior: allow-discrete;
 		}
 	}
