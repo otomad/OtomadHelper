@@ -195,13 +195,15 @@ export /* @internal */ const StyledTextBox = styled.div`
 		}
 	}
 
+	[disabled] &,
 	&:has(input[disabled]) {
+		color: ${c("fill-color-text-disabled")};
 		background-color: ${c("fill-color-control-disabled")};
 		cursor: not-allowed;
 
-		.wrapper {
+		/* .wrapper {
 			opacity: ${c("disabled-text-opacity")};
-		}
+		} */
 
 		.stripes .focus-stripe {
 			scale: 0;
@@ -301,7 +303,7 @@ const TextBox = forwardRef(function TextBox({ value: [value, _setValue], placeho
 	}, [onKeyDown]);
 
 	return (
-		<StyledTextBox {...htmlAttrs}>
+		<StyledTextBox disabled={disabled} {...htmlAttrs}>
 			<div className="wrapper">
 				<label className="prefix" htmlFor={inputId}>{prefix}</label>
 				{showPositiveSign && <label className="positive-sign" htmlFor={inputId}>+</label>}
@@ -490,6 +492,39 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 	);
 }
 
+const StyledNumberUnitTextBox = styled.div`
+	display: flex;
+	gap: 8px;
+	align-items: center;
+
+	.combo-box {
+		inline-size: 10px;
+	}
+
+	.expander-item & :where(.text-box) {
+		inline-size: 200px;
+	}
+`;
+
+function NumberUnitTextBox<TUnit extends string>({ value: [[value, unit], set], units, unitNames, disabled, ...numberTextBoxProps }: Override<PropsOf<typeof NumberTextBox<number>>, {
+	/** Numeric value and its unit type. */
+	value: StatePropertyNonNull<Unit<TUnit>>;
+	/** All unit types. */
+	units: TUnit[];
+	/** All unit type names. */
+	unitNames: Readable[];
+}>) {
+	const setValue = (value: number) => set(([, unit]) => [value, unit]);
+	const setUnit = (unit: TUnit) => set(([value]) => [value, unit]);
+	return (
+		<StyledNumberUnitTextBox>
+			<NumberTextBox value={[value, setValue]} {...numberTextBoxProps} disabled={disabled} />
+			<ComboBox current={[unit, setUnit]} ids={units} options={unitNames} disabled={disabled} />
+		</StyledNumberUnitTextBox>
+	);
+}
+
 export default functionModule(TextBox, {
 	Number: NumberTextBox,
+	NumberUnit: NumberUnitTextBox,
 });

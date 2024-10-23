@@ -42,7 +42,9 @@ export default {
 			},
 			preferredTrack: {},
 			afterCompletion: {},
-			blindBox: {},
+			blindBox: {
+				barOrBeat: {},
+			},
 			trackGroup: {},
 			trackName: {},
 		},
@@ -167,7 +169,9 @@ export default {
 				preferredTrack: {
 					belowAdjustmentTracks: {},
 				},
-				blindBox: {},
+				blindBox: {
+					barOrBeat: {},
+				},
 				trackGroup: {},
 				trackName: {},
 			},

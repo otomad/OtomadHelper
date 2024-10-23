@@ -46,4 +46,7 @@ declare global {
 
 	/** Badge value and status. */
 	type BadgeArgs = [badge?: BadgeValue, status?: Status, hidden?: boolean];
+
+	/** A type which includes the numeric value and its unit enum type. */
+	type Unit<TUnit extends string> = [numeric: number, unit: TUnit];
 }

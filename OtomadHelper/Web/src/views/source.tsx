@@ -22,15 +22,21 @@ export /* @internal */ const trackNames = [
 	{ id: "score", name: t.source.trackName.score, icon: "document_score" },
 	{ id: "unnamed", name: t.source.trackName.unnamed, icon: "prohibited" },
 ] as const;
+export /* @internal */ const barOrBeatUnits = [
+	{ id: "bar", name: t.units.bar },
+	{ id: "beat", name: t.units.beat },
+] as const;
+const barOrBeatUnitTypes = barOrBeatUnits.map(unit => unit.id), barOrBeatUnitNames = barOrBeatUnits.map(unit => unit.name);
 
 /** @deprecated */
 const isUnderVegas16 = true;
 
 export default function Source() {
 	const {
-		source, blindBoxForTrack, blindBoxForMarker, trimStart, trimEnd, startTime, customStartTime,
+		source, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
 		trackGroup, collapseTrackGroup, trackName,
+		blindBoxForTrack, blindBoxForMarker, blindBoxForBarOrBeat, blindBoxForBarOrBeatPeriod, blindBoxForBarOrBeatPreparation,
 	} = selectConfig(c => c.source);
 	const { removeSourceClips, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = selectConfig(c => c.source.afterCompletion);
 
@@ -106,6 +112,15 @@ export default function Source() {
 			<Expander title={t.source.blindBox} details={t.descriptions.source.blindBox} icon="dice">
 				<ToggleSwitch on={blindBoxForTrack} details={t.descriptions.source.blindBox.track} icon="layer">{t.source.blindBox.track}</ToggleSwitch>
 				<ToggleSwitch on={blindBoxForMarker} details={t.descriptions.source.blindBox.marker} icon="marker">{t.source.blindBox.marker}</ToggleSwitch>
+				<ToggleSwitch on={blindBoxForBarOrBeat} details={t.descriptions.source.blindBox.barOrBeat} icon="music_bar">{t.source.blindBox.barOrBeat}</ToggleSwitch>
+				<Disabled disabled={!blindBoxForBarOrBeat[0]}>
+					<Expander.Item title={t.source.blindBox.barOrBeat.period} details={t.descriptions.source.blindBox.barOrBeat.period} icon="timer">
+						<TextBox.NumberUnit value={blindBoxForBarOrBeatPeriod} units={barOrBeatUnitTypes} unitNames={barOrBeatUnitNames} decimalPlaces={0} min={1} />
+					</Expander.Item>
+					<Expander.Item title={t.source.blindBox.barOrBeat.preparation} details={t.descriptions.source.blindBox.barOrBeat.preparation} icon="hourglass">
+						<TextBox.NumberUnit value={blindBoxForBarOrBeatPreparation} units={barOrBeatUnitTypes} unitNames={barOrBeatUnitNames} decimalPlaces={0} min={0} />
+					</Expander.Item>
+				</Disabled>
 			</Expander>
 			<SettingsCardToggleSwitch title={t.source.trackGroup} details={t.descriptions.source.trackGroup} icon="group" on={trackGroup}>
 				<ToggleSwitch on={collapseTrackGroup} icon="arrow_minimize">{t.source.trackGroup.collapse}</ToggleSwitch>

@@ -40,6 +40,11 @@ export /* @internal */ const styledExpanderItemText = css`
 export /* @internal */ const styledExpanderItemContent = css`
 	${styledExpanderItemText};
 
+	&[disabled],
+	&[disabled] .text .details {
+		color: ${c("fill-color-text-disabled")};
+	}
+
 	.text {
 		flex: 1;
 		width: 100%;
@@ -106,7 +111,7 @@ const StyledExpanderItem = styled.div<{
 	`)}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, children, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, children, disabled, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -119,7 +124,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	asSubtitle?: boolean;
 }, "div">) {
 	return (
-		<StyledExpanderItem $clickable={clickable} $asSubtitle={asSubtitle} {...htmlAttrs}>
+		<StyledExpanderItem $clickable={clickable} $asSubtitle={asSubtitle} disabled={disabled} {...htmlAttrs}>
 			{icon ? typeof icon === "string" ? <Icon name={icon} /> : icon : <Icon shadow />}
 			<div className="text">
 				<p className="title"><Preserves>{title}</Preserves></p>

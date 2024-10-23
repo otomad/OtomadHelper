@@ -27,8 +27,15 @@ const StyledComboBox = styled(StyledButton)`
 		translate: 0 2px;
 	}
 
-	select& option {
-		background-color: ${c("background-color")};
+	select& {
+		option {
+			background-color: ${c("background-color")};
+		}
+
+		&[disabled],
+		[disabled] & {
+			color: ${c("fill-color-text-disabled")};
+		}
 	}
 `;
 

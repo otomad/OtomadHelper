@@ -1,7 +1,7 @@
 import type { beepEngines } from "views/audio";
 import type { pitchNotations } from "views/lyrics";
 import type { constraintNoteLengthTypes, encodings, multipleSelectTrackItems, tempoUsings } from "views/score";
-import type { selectGeneratedClipsType, startTimes, trackNames } from "views/source";
+import type { barOrBeatUnits, selectGeneratedClipsType, startTimes, trackNames } from "views/source";
 import type { legatos, stretches, transformMethods, unlengthens } from "views/visual";
 
 type StartTime = typeof startTimes[number]["id"];
@@ -18,6 +18,7 @@ type MultipleSelectTrackItem = typeof multipleSelectTrackItems[number];
 type SelectGeneratedClips = typeof selectGeneratedClipsType[number]["id"];
 type BeepEngine = typeof beepEngines[number];
 type TrackNameType = typeof trackNames[number]["id"];
+type BarOrBeatUnit = typeof barOrBeatUnits[number]["id"];
 
 const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 
@@ -37,6 +38,9 @@ export const configStore = createStore({
 		},
 		blindBoxForTrack: false,
 		blindBoxForMarker: false,
+		blindBoxForBarOrBeat: false,
+		blindBoxForBarOrBeatPeriod: [4, "bar"] as Unit<BarOrBeatUnit>,
+		blindBoxForBarOrBeatPreparation: [0, "bar"] as Unit<BarOrBeatUnit>,
 		trackGroup: true,
 		collapseTrackGroup: true,
 		trackName: "track" as TrackNameType,

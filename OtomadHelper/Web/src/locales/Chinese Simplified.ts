@@ -62,6 +62,11 @@ export default {
 				_: "素材盲盒",
 				track: "为每个音轨或通道",
 				marker: "每个标记切换一次",
+				barOrBeat: {
+					_: "每小节或每拍切换一次",
+					period: "周期",
+					preparation: "预备",
+				},
 			},
 			trackGroup: {
 				_: "轨道组",
@@ -129,6 +134,8 @@ export default {
 			beatsPerMinute: "拍每分",
 			semitones: "半音",
 			degrees: "°",
+			bar: "小节",
+			beat: "拍",
 		},
 		confirm: {
 			delete: {
@@ -521,7 +528,12 @@ export default {
 				blindBox: {
 					_: "为素材使用随机入点。\n这可能会导致随机选择的素材片段具有不同的原始音高，因此只能用来做成搞笑视频供娱乐，几乎不能做成高品质视频。",
 					track: "究竟是音轨还是通道取决于乐曲配置",
-					marker: "当在乐谱中遇到标记时，就会改变一次素材入点。如果某些标记具有相同的非空名称，它们将会使用相同的素材入点。",
+					marker: "当在乐曲中遇到标记时，就会变更一次素材入点。如果某些标记具有相同的非空名称，它们将会使用相同的素材入点。",
+					barOrBeat: {
+						_: "手动根据乐曲以恒定的周期变更素材入点",
+						period: "指定变更的周期",
+						preparation: "初次执行前的延迟",
+					},
 				},
 				trackGroup: {
 					_: "依照乐曲音轨为轨道分组",

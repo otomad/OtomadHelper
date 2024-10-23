@@ -63,6 +63,11 @@ export default {
 				_: "Blind box",
 				track: "For each track or channel",
 				marker: "Switch once per marker",
+				barOrBeat: {
+					_: "Switch once per bar or beat",
+					period: "Period",
+					preparation: "Preparation",
+				},
 			},
 			trackGroup: {
 				_: "Grouping tracks",
@@ -132,6 +137,8 @@ export default {
 			beatsPerMinute: "BPM",
 			semitones: "st",
 			degrees: "°",
+			bar: "Bar",
+			beat: "Beat",
 		},
 		confirm: {
 			delete: {
@@ -534,6 +541,11 @@ export default {
 					_: "Uses random in points for the source.\nThis can result in randomly selected source clips having different base pitches, making it useful only for creating funny videos for entertainment purposes, and barely used for creating high-caliber videos.",
 					track: "Whether track or channel depends on the Score",
 					marker: "When a marker is encountered in the score, the in point of the source will be changed once. If several markers have the same non-empty name, they will use the same in point of the source.",
+					barOrBeat: {
+						_: "Manually changes the in points of the source at a constant period according to the score",
+						period: "Specified the periods to change",
+						preparation: "Delay before first execution",
+					},
 				},
 				trackGroup: {
 					_: "Groups tracks by score track",
