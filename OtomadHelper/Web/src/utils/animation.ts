@@ -463,27 +463,3 @@ export async function setStyleTemporarily(element: HTMLElement, style: CSSProper
 	resolve();
 	setStyleTemporarilyQueue.removeItem(promise);
 }
-
-/**
- * Get user's current monitor frame rate per seconds.
- * @returns Monitor FPS.
- * @see https://stackoverflow.com/questions/6131051
- */
-export const getMonitorFps = lodash.throttle(function () {
-	return new Promise<number>(resolve =>
-		requestAnimationFrame(t1 =>
-			requestAnimationFrame(t2 => resolve(1000 / (t2 - t1))),
-		),
-	);
-}, 1000);
-
-const monitorFps = atom(60);
-monitorFps.onMount = setMonitorFps => { // FIXME: 掉帧时数据会异常！
-	setInterval(async () => setMonitorFps(clamp(await getMonitorFps() || 60, 10, 300)), 1000);
-};
-
-/**
- * Get user's current monitor frame rate per seconds.
- * @returns Monitor FPS.
- */
-export const useMonitorFps = () => useAtomValue(monitorFps);

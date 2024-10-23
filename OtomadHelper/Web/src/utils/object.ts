@@ -582,6 +582,9 @@ export function clearObject(object: AnyObject) {
 		delete object[prop];
 }
 
+/**
+ * @deprecated
+ */
 export function getCurrentState<T>(setter: SetState<T>) {
 	return new Promise<T>(resolve => {
 		(setter as SetStateNarrow<T>)(prevState => {

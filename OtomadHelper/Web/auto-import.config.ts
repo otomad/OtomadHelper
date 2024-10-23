@@ -71,6 +71,7 @@ export default [
 			"useAtom",
 			"useAtomValue",
 			"useSetAtom",
+			["createStore", "createJotaiStore"],
 		],
 	},
 	/* {

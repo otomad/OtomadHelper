@@ -28,6 +28,10 @@ declare global {
 		export interface TriggerKeybinding {
 			event: VegasKeybindingEventType;
 		}
+
+		export interface FpsUpdated {
+			fps: number;
+		}
 	}
 
 	type VegasKeybindingEventType = "useTrackEventAsSource" | "useProjectMediaAsSource" | "enableYtp" | "startGenerating";

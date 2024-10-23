@@ -40,7 +40,7 @@ export function useStoreState<TState extends object>(state: TState): StateProper
 	return new Proxy(state as AnyObject, {
 		get(state, property) {
 			if (!(property in state)) return [];
-			let snapshot;
+			let snapshot: Any;
 			try {
 				snapshot = useSnapshot(state)[property];
 			} catch { // Not in hook lifecycle.

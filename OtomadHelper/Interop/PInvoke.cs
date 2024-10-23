@@ -1,4 +1,6 @@
 // TODO: "PInvoke.cs" rename to "PInvoke_Win32.cs" and "PInvoke_DotNet.cs".
+using System.Threading;
+
 namespace OtomadHelper.Interop;
 
 public static class PInvoke {
@@ -465,5 +467,110 @@ public static class PInvoke {
 	public static void EnableDarkSystemMenu(bool isDarkTheme) {
 		SetPreferredAppMode(isDarkTheme ? PreferredAppMode.ForceDark : PreferredAppMode.ForceLight);
 		FlushMenuThemes();
+	}
+
+	// https://blog.getpaint.net/2017/08/12/win32-how-to-get-the-refresh-rate-for-a-window/
+	// https://github.com/rickbrew/RefreshRateWpf/blob/master/RefreshRateWpfApp/MainWindow.xaml.cs
+	[DllImport("user32.dll", SetLastError = false)]
+	private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
+
+	[StructLayout(LayoutKind.Sequential)]
+	private struct Rect {
+		public int left;
+		public int top;
+		public int right;
+		public int bottom;
+	}
+
+	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	private unsafe struct MonitorInfoExW {
+		public uint cbSize;
+		public Rect rcMonitor;
+		public Rect rcWork;
+		public uint dwFlags;
+
+		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+		public string szDevice;
+	}
+
+	[DllImport("user32.dll", SetLastError = false, CharSet = CharSet.Unicode)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	private static extern bool GetMonitorInfoW(IntPtr hMonitor, ref MonitorInfoExW lpmi);
+
+	[DllImport("user32.dll", SetLastError = false, CharSet = CharSet.Unicode)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	private static extern bool EnumDisplaySettingsW([MarshalAs(UnmanagedType.LPWStr)] string lpszDeviceName, uint iModeNum, out DevModeW lpDevMode);
+
+	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	private struct DevModeW {
+		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+		public string dmDeviceName;
+
+		public ushort dmSpecVersion;
+		public ushort dmDriverVersion;
+		public ushort dmSize;
+		public ushort dmDriverExtra;
+		public uint dmFields;
+
+		// These next 4 int fields are a union with the above 8 shorts, but we don't need them right now
+		public int dmPositionX;
+		public int dmPositionY;
+		public uint dmDisplayOrientation;
+		public uint dmDisplayFixedOutput;
+
+		public short dmColor;
+		public short dmDuplex;
+		public short dmYResolution;
+		public short dmTTOption;
+		public short dmCollate;
+
+		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+		public string dmFormName;
+
+		public short dmLogPixels;
+		public uint dmBitsPerPel;
+		public uint dmPelsWidth;
+		public uint dmPelsHeight;
+
+		public uint dmNupOrDisplayFlags;
+		public uint dmDisplayFrequency;
+
+		public uint dmICMMethod;
+		public uint dmICMIntent;
+		public uint dmMediaType;
+		public uint dmDitherType;
+		public uint dmReserved1;
+		public uint dmReserved2;
+		public uint dmPanningWidth;
+		public uint dmPanningHeight;
+	}
+
+	public readonly struct MonitorInfo {
+		public uint Width { get; init; }
+		public uint Height { get; init; }
+		public uint Frequency { get; init; }
+
+		public override string ToString() =>
+			$"{Width} × {Height} @ {Frequency}Hz";
+	}
+
+	public static MonitorInfo? GetMonitorInfo(IntPtr hwnd) {
+		const uint MONITOR_DEFAULTTONEAREST = 2;
+		const uint ENUM_CURRENT_SETTINGS = unchecked((uint)-1);
+
+		IntPtr hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+		if (hMonitor == IntPtr.Zero) return null;
+
+		MonitorInfoExW monitorInfo = new() { cbSize = (uint)Marshal.SizeOf<MonitorInfoExW>() };
+		if (!GetMonitorInfoW(hMonitor, ref monitorInfo)) return null;
+
+		DevModeW devMode = new() { dmSize = (ushort)Marshal.SizeOf<DevModeW>() };
+		if (!EnumDisplaySettingsW(monitorInfo.szDevice, ENUM_CURRENT_SETTINGS, out devMode)) return null;
+
+		return new MonitorInfo {
+			Width = devMode.dmPelsWidth,
+			Height = devMode.dmPelsHeight,
+			Frequency = devMode.dmDisplayFrequency,
+		};
 	}
 }
