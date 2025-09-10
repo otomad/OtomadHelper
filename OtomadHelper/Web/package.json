@@ -127,7 +127,7 @@
 		"typescript-eslint": "^8.31.0",
 		"unplugin-auto-import": "^20.1.0",
 		"unplugin-turbo-console": "^1.11.2",
-		"vite": "^7.0.5",
+		"vite": "^7.0.7",
 		"vite-plugin-glsl": "^1.5.1",
 		"vite-plugin-image-optimizer": "^1.1.8",
 		"vite-plugin-no-bundle": "^4.0.0",
