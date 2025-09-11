@@ -324,5 +324,29 @@ declare interface String {
 	/**
 	 * Gets the real length (Unicode characters code length) of the string, without regard to surrogate pairs.
 	 */
-	readonly codeLength: number;
+	readonly realLength: number;
+
+	/**
+	 * Returns the real character at the specified index, without regard to surrogate pairs.
+	 *
+	 * @param index - The zero-based index of the desired code unit. A negative index will count back from the last item.
+	 */
+	realCharAt(index: number): string;
+
+	/**
+	 * Returns the real Unicode value of the character at the specified location, without regard to surrogate pairs.
+	 *
+	 * @param index - The zero-based index of the desired character. A negative index will count back from the last item.
+	 */
+	realCodePointAt(index: number): number;
+
+	/**
+	 * Returns a section of a string, without regard to surrogate pairs.
+	 *
+	 * @param start - The index to the beginning of the specified portion of string.
+	 * @param end - The index to the end of the specified portion of string. The substring includes the characters up to,
+	 * but not including, the character indicated by end. If this value is not specified, the substring continues to the
+	 * end of string.
+	 */
+	realSlice(start?: number, end?: number): string;
 }

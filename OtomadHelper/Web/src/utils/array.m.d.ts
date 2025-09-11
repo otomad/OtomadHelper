@@ -648,4 +648,11 @@ declare interface IteratorObject<T, TReturn, TNext> {
 	 * @remarks This will a bit faster than `[...iterable].length`.
 	 */
 	readonly length: number;
+	
+	/**
+	 * Returns the item located at the specified index.
+	 *
+	 * @param index - The zero-based index of the desired code unit. A negative index will count back from the last item.
+	 */
+	at(index: number): T;
 }

@@ -272,6 +272,15 @@
 			++length;
 		return length;
 	});
+	
+	Iterator.prototype.at = function (index) {
+		if (index < 0) index = this.length + index;
+		for (const item of this) {
+			if (index === 0) return item;
+			index--;
+		}
+		return undefined;
+	};
 }
 
 /**

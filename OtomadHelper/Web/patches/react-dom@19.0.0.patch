@@ -1,5 +1,5 @@
 diff --git a/cjs/react-dom-client.development.js b/cjs/react-dom-client.development.js
-index 83ea1c6a783efe2e674eda4b681eb361f000d12d..cccbc46b756cd9b0f193ccbf46b851112c335f60 100644
+index 83ea1c6a783efe2e674eda4b681eb361f000d12d..4a5e88e4046f83b7910595c39d8948770653948a 100644
 --- a/cjs/react-dom-client.development.js
 +++ b/cjs/react-dom-client.development.js
 @@ -1387,7 +1387,13 @@
@@ -84,19 +84,18 @@ index 83ea1c6a783efe2e674eda4b681eb361f000d12d..cccbc46b756cd9b0f193ccbf46b85111
          )
            return (
              (prevDebugInfo = "" + newChild),
-@@ -16898,6 +16914,11 @@
+@@ -16898,6 +16914,10 @@
      }
      function noop$1() {}
      function setProp(domElement, tag, key, value, props, prevValue) {
++      const areI18nItems = isI18nItem(value) && isI18nItem(prevValue);
 +      if (isI18nItem(value)) value = value.toString();
-+      if (isI18nItem(prevValue)) {
-+        prevValue = prevValue.toString();
-+        if (value === prevValue) return;
-+      }
++      if (isI18nItem(prevValue)) prevValue = prevValue.toString();
++      if (areI18nItems && value === prevValue) return;
        switch (key) {
          case "children":
            if ("string" === typeof value)
-@@ -19067,6 +19088,7 @@
+@@ -19067,6 +19087,7 @@
        textInstance.nodeValue = newText;
      }
      function removeChild(parentInstance, child) {
@@ -105,7 +104,7 @@ index 83ea1c6a783efe2e674eda4b681eb361f000d12d..cccbc46b756cd9b0f193ccbf46b85111
      }
      function removeChildFromContainer(container, child) {
 diff --git a/cjs/react-dom-client.production.js b/cjs/react-dom-client.production.js
-index af7283abaca3e5812ef71b03d9c999410baa1a80..e4e6bae54fb151e084cb66269fa8b3f1ccfd2a82 100644
+index af7283abaca3e5812ef71b03d9c999410baa1a80..ece24d25ad74a6aa52d6fa691828ed1a9c5b1104 100644
 --- a/cjs/react-dom-client.production.js
 +++ b/cjs/react-dom-client.production.js
 @@ -909,7 +909,13 @@ function isAttributeNameSafe(attributeName) {
@@ -181,15 +180,14 @@ index af7283abaca3e5812ef71b03d9c999410baa1a80..e4e6bae54fb151e084cb66269fa8b3f1
              hostParent.removeChild(deletedFiber.stateNode);
            } catch (error) {
              captureCommitPhaseError(
-@@ -12347,6 +12361,11 @@ function checkForUnmatchedText(serverText, clientText) {
+@@ -12347,6 +12361,10 @@ function checkForUnmatchedText(serverText, clientText) {
  }
  function noop$1() {}
  function setProp(domElement, tag, key, value, props, prevValue) {
++  const areI18nItems = isI18nItem(value) && isI18nItem(prevValue);
 +  if (isI18nItem(value)) value = value.toString();
-+  if (isI18nItem(prevValue)) {
-+    prevValue = prevValue.toString();
-+    if (value === prevValue) return;
-+  }
++  if (isI18nItem(prevValue)) prevValue = prevValue.toString();
++  if (areI18nItems && value === prevValue) return;
    switch (key) {
      case "children":
        "string" === typeof value

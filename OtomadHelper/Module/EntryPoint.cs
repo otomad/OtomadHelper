@@ -8,6 +8,7 @@ namespace OtomadHelper.Module;
 public class EntryPoint {
 	public async void FromVegas(Vegas myVegas) {
 		vegas = myVegas;
+		vegas.ResumePlaybackOnScriptExit = true;
 		Prior.Initialize();
 
 		await ShowWrongOpeningMethodError();
@@ -26,7 +27,7 @@ public class EntryPoint {
 	private async Task ShowWrongOpeningMethodError() {
 		string? result = await WPF.Controls.ContentDialog.ShowDialog<string>(
 			(string)t.WrongOpeningMethod.Script.Title,
-			(string)t.WrongOpeningMethod.Script.Content + "\n" + CorrectExtensionPath, // TODO: \C:\ProgramData\VEGAS Pro\Application Extensions
+			(string)t.WrongOpeningMethod.Script.Content + "\n" + CorrectExtensionPath,
 			[
 				new(t.ContentDialog.Button.Ok, "ok"),
 				new(t.ContentDialog.Button.OpenPath, "openPath"),

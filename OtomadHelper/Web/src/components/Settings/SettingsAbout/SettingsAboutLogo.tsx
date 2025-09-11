@@ -36,7 +36,7 @@ const StyledSettingsAboutLogo = styled.div`
 		}
 	}
 
-	.icon-wrapper {
+	.icon-wrapper > * {
 		display: none;
 
 		${ifColorScheme.light} &.light {
@@ -118,15 +118,15 @@ export /** @internal */ default function SettingsAboutLogo() {
 		<StyledSettingsAboutLogoWrapper>
 			<StyledSettingsAboutLogo role="img" aria-hidden>
 				<div className="row-1">
-					<div className="icon-wrapper light" data-icon-style={iconStyle} onClick={nextIconStyle}>
-						{
-							iconStyle === "liquid glass" ? <LogoIconLiquidGlass /> :
-							iconStyle === "aero" ? <LogoIconAero /> :
-							<LogoIconFluent />
-						}
-					</div>
-					<div className="icon-wrapper dark">
-						<LogoIconMono />
+					<div className="icon-wrapper" data-icon-style={iconStyle} onClick={nextIconStyle}>
+						<Attrs className="light">
+							{
+								iconStyle === "liquid glass" ? <LogoIconLiquidGlass /> :
+								iconStyle === "aero" ? <LogoIconAero /> :
+								<LogoIconFluent />
+							}
+						</Attrs>
+						<LogoIconMono className="dark" />
 					</div>
 					<LogoTitle className="title" />
 				</div>

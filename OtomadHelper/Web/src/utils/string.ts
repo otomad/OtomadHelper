@@ -32,7 +32,7 @@ import { spacing } from "pangu";
 	};
 
 	String.prototype.holeString = function (start, end?: number) {
-		return this.slice(0, start) + this.slice(end ?? start + 1);
+		return this.realSlice(0, start) + this.realSlice(end ?? start + 1);
 	};
 
 	String.prototype.dedent = function () {
@@ -40,8 +40,8 @@ import { spacing } from "pangu";
 	};
 
 	String.prototype.toCapitalized = function (keepCase = false) {
-		const decapitated = this.slice(1);
-		return this[0].toLocaleUpperCase() + (keepCase ? decapitated : decapitated.toLocaleLowerCase());
+		const decapitated = this.realSlice(1);
+		return this.realCharAt(0).toLocaleUpperCase() + (keepCase ? decapitated : decapitated.toLocaleLowerCase());
 	};
 
 	String.prototype.nowrapPerWord = function () {
@@ -73,7 +73,7 @@ import { spacing } from "pangu";
 	};
 
 	String.prototype.toTitleCase = function () {
-		return this.mapWords(word => word[0].toLocaleUpperCase() + word.slice(1));
+		return this.mapWords(word => word.realCharAt(0).toLocaleUpperCase() + word.realSlice(1));
 	};
 
 	String.prototype.mapWords = function (convert) {
@@ -84,9 +84,21 @@ import { spacing } from "pangu";
 		return this.toLocaleUpperCase() === this.valueOf();
 	};
 
-	defineGetterInPrototype(String, "codeLength", function () {
-		return this[Symbol.iterator].length;
+	defineGetterInPrototype(String, "realLength", function () {
+		return this[Symbol.iterator]().length;
 	});
+
+	String.prototype.realCharAt = function (index) {
+		return this[Symbol.iterator]().at(index);
+	};
+
+	String.prototype.realCodePointAt = function (index) {
+		return this.realCharAt(index).codePointAt(0)!;
+	};
+
+	String.prototype.realSlice = function (from, end) {
+		return [...this].slice(from, end).join("");
+	};
 
 	makePrototypeKeysNonEnumerable(String);
 }
