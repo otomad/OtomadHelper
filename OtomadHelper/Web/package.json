@@ -101,7 +101,7 @@
 		"commitizen": "latest",
 		"eslint": "^9.23.0",
 		"eslint-plugin-import": "^2.31.0",
-		"eslint-plugin-jsdoc": "^54.2.1",
+		"eslint-plugin-jsdoc": "^57.0.3",
 		"eslint-plugin-react": "^7.37.3",
 		"eslint-plugin-react-hooks": "6.0.0-rc.1",
 		"eslint-plugin-react-refresh": "^0.4.16",
