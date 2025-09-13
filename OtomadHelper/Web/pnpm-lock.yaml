@@ -166,13 +166,13 @@ importers:
     devDependencies:
       '@commitlint/cli':
         specifier: latest
-        version: 19.8.1(@types/node@24.3.1)(typescript@5.8.3)
+        version: 19.8.1(@types/node@24.3.3)(typescript@5.8.3)
       '@commitlint/config-conventional':
         specifier: latest
         version: 19.8.1
       '@commitlint/cz-commitlint':
         specifier: latest
-        version: 19.8.1(@types/node@24.3.1)(commitizen@4.3.1(@types/node@24.3.1)(typescript@5.8.3))(inquirer@9.0.0)(typescript@5.8.3)
+        version: 19.8.1(@types/node@24.3.3)(commitizen@4.3.1(@types/node@24.3.3)(typescript@5.8.3))(inquirer@9.0.0)(typescript@5.8.3)
       '@commitlint/types':
         specifier: latest
         version: 19.8.1
@@ -205,7 +205,7 @@ importers:
         version: 4.17.12
       '@types/node':
         specifier: latest
-        version: 24.3.1
+        version: 24.3.3
       '@types/pangu':
         specifier: ^4.0.2
         version: 4.0.2
@@ -217,7 +217,7 @@ importers:
         version: 19.0.1
       '@vitejs/plugin-react':
         specifier: ^4.7.0
-        version: 4.7.0(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
+        version: 4.7.0(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
       babel-plugin-react-compiler:
         specifier: 19.1.0-rc.2
         version: 19.1.0-rc.2
@@ -232,7 +232,7 @@ importers:
         version: 1.1.2(@types/react@19.0.1(patch_hash=4d0b913251acfcb3774935179365be5f6b3075745ccefb13409ad5f292db38fc))(react-dom@19.0.0(patch_hash=d3761d2a843c3f3d47078c7ab9b0c3773bb8e1914eb2f774a237610dad2ce464)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
       commitizen:
         specifier: latest
-        version: 4.3.1(@types/node@24.3.1)(typescript@5.8.3)
+        version: 4.3.1(@types/node@24.3.3)(typescript@5.8.3)
       eslint:
         specifier: ^9.23.0
         version: 9.23.0(jiti@2.5.1)
@@ -316,31 +316,31 @@ importers:
         version: 20.1.0
       unplugin-turbo-console:
         specifier: ^1.11.2
-        version: 1.11.2(esbuild@0.25.9)(rollup@4.50.1)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
+        version: 1.11.2(esbuild@0.25.9)(rollup@4.50.1)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
       vite:
         specifier: ^7.0.7
-        version: 7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
+        version: 7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
       vite-plugin-glsl:
         specifier: ^1.5.1
-        version: 1.5.1(rollup@4.50.1)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
+        version: 1.5.1(rollup@4.50.1)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
       vite-plugin-image-optimizer:
         specifier: ^1.1.8
-        version: 1.1.8(patch_hash=31ee3d991bfd591319b2dafde4065eb99830c75e27c590eaabca0df303e615fc)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
+        version: 1.1.8(patch_hash=31ee3d991bfd591319b2dafde4065eb99830c75e27c590eaabca0df303e615fc)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
       vite-plugin-no-bundle:
         specifier: ^4.0.0
         version: 4.0.0
       vite-plugin-qrcode:
         specifier: ^0.3.0
-        version: 0.3.0(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
+        version: 0.3.0(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
       vite-plugin-svg-icons:
         specifier: ^2.0.1
-        version: 2.0.1(patch_hash=cad8fe9e85e9a8161bed9de902772da348386ffb9fc7f7ce30b0b503b39d0688)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
+        version: 2.0.1(patch_hash=cad8fe9e85e9a8161bed9de902772da348386ffb9fc7f7ce30b0b503b39d0688)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
       vite-plugin-svgr:
         specifier: ^4.3.0
-        version: 4.3.0(rollup@4.50.1)(typescript@5.8.3)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
+        version: 4.3.0(rollup@4.50.1)(typescript@5.8.3)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
       vite-tsconfig-paths:
         specifier: ^4.3.2
-        version: 4.3.2(typescript@5.8.3)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
+        version: 4.3.2(typescript@5.8.3)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))
       xmlbuilder2:
         specifier: ^3.1.1
         version: 3.1.1
@@ -1645,8 +1645,8 @@ packages:
   '@types/node@18.19.124':
     resolution: {integrity: sha512-hY4YWZFLs3ku6D2Gqo3RchTd9VRCcrjqp/I0mmohYeUVA5Y8eCXKJEasHxLAJVZRJuQogfd1GiJ9lgogBgKeuQ==}
 
-  '@types/node@24.3.1':
-    resolution: {integrity: sha512-3vXmQDXy+woz+gnrTvuvNrPzekOi+Ds0ReMxw0LzBiK3a+1k0kQn9f2NWk+lgD4rJehFUmYy2gMhJ2ZI+7YP9g==}
+  '@types/node@24.3.3':
+    resolution: {integrity: sha512-GKBNHjoNw3Kra1Qg5UXttsY5kiWMEfoHq2TmXb+b1rcm6N7B3wTrFYIf/oSZ1xNQ+hVVijgLkiDZh7jRRsh+Gw==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -1965,8 +1965,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@1.9.0:
-    resolution: {integrity: sha512-re4CqKTJaURpzbLHtIi6XpDv20/CnpXOtjRY5/CU32L8gU8ek9UIivcfvSWvmKEngmVbrUtPpdDwWDWL7DNHvg==}
+  axios@1.12.1:
+    resolution: {integrity: sha512-Kn4kbSXpkFHCGE6rBFNwIv0GQs4AvDT80jlveJDKFxjbTYMUeB4QtsdPCv6H8Cm19Je7IU6VFtRl2zWZI0rudQ==}
 
   babel-plugin-react-compiler@19.1.0-rc.2:
     resolution: {integrity: sha512-kSNA//p5fMO6ypG8EkEVPIqAjwIXm5tMjfD1XRPL/sRjYSbJ6UsvORfaeolNWnZ9n310aM0xJP7peW26BuCVzA==}
@@ -6221,11 +6221,11 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@commitlint/cli@19.8.1(@types/node@24.3.1)(typescript@5.8.3)':
+  '@commitlint/cli@19.8.1(@types/node@24.3.3)(typescript@5.8.3)':
     dependencies:
       '@commitlint/format': 19.8.1
       '@commitlint/lint': 19.8.1
-      '@commitlint/load': 19.8.1(@types/node@24.3.1)(typescript@5.8.3)
+      '@commitlint/load': 19.8.1(@types/node@24.3.3)(typescript@5.8.3)
       '@commitlint/read': 19.8.1
       '@commitlint/types': 19.8.1
       tinyexec: 1.0.1
@@ -6244,13 +6244,13 @@ snapshots:
       '@commitlint/types': 19.8.1
       ajv: 8.17.1
 
-  '@commitlint/cz-commitlint@19.8.1(@types/node@24.3.1)(commitizen@4.3.1(@types/node@24.3.1)(typescript@5.8.3))(inquirer@9.0.0)(typescript@5.8.3)':
+  '@commitlint/cz-commitlint@19.8.1(@types/node@24.3.3)(commitizen@4.3.1(@types/node@24.3.3)(typescript@5.8.3))(inquirer@9.0.0)(typescript@5.8.3)':
     dependencies:
       '@commitlint/ensure': 19.8.1
-      '@commitlint/load': 19.8.1(@types/node@24.3.1)(typescript@5.8.3)
+      '@commitlint/load': 19.8.1(@types/node@24.3.3)(typescript@5.8.3)
       '@commitlint/types': 19.8.1
       chalk: 5.3.0
-      commitizen: 4.3.1(@types/node@24.3.1)(typescript@5.8.3)
+      commitizen: 4.3.1(@types/node@24.3.3)(typescript@5.8.3)
       inquirer: 9.0.0
       lodash.isplainobject: 4.0.6
       word-wrap: 1.2.5
@@ -6286,7 +6286,7 @@ snapshots:
       '@commitlint/rules': 19.8.1
       '@commitlint/types': 19.8.1
 
-  '@commitlint/load@19.8.1(@types/node@24.3.1)(typescript@5.8.3)':
+  '@commitlint/load@19.8.1(@types/node@24.3.3)(typescript@5.8.3)':
     dependencies:
       '@commitlint/config-validator': 19.8.1
       '@commitlint/execute-rule': 19.8.1
@@ -6294,7 +6294,7 @@ snapshots:
       '@commitlint/types': 19.8.1
       chalk: 5.5.0
       cosmiconfig: 9.0.0(typescript@5.8.3)
-      cosmiconfig-typescript-loader: 6.1.0(@types/node@24.3.1)(cosmiconfig@9.0.0(typescript@5.8.3))(typescript@5.8.3)
+      cosmiconfig-typescript-loader: 6.1.0(@types/node@24.3.3)(cosmiconfig@9.0.0(typescript@5.8.3))(typescript@5.8.3)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -6347,7 +6347,7 @@ snapshots:
 
   '@crowdin/crowdin-api-client@1.41.0':
     dependencies:
-      axios: 1.9.0
+      axios: 1.12.1
     transitivePeerDependencies:
       - debug
 
@@ -7096,7 +7096,7 @@ snapshots:
 
   '@types/conventional-commits-parser@5.0.0':
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 24.3.3
 
   '@types/estree@1.0.6': {}
 
@@ -7108,7 +7108,7 @@ snapshots:
 
   '@types/jsdom@21.1.7':
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 24.3.3
       '@types/tough-cookie': 4.0.5
       parse5: 7.1.2
 
@@ -7130,7 +7130,7 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@24.3.1':
+  '@types/node@24.3.3':
     dependencies:
       undici-types: 7.10.0
 
@@ -7150,13 +7150,13 @@ snapshots:
 
   '@types/svgo@2.6.4':
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 24.3.3
 
   '@types/tough-cookie@4.0.5': {}
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 24.3.3
     optional: true
 
   '@typescript-eslint/eslint-plugin@8.31.0(@typescript-eslint/parser@8.31.0(eslint@9.23.0(jiti@2.5.1))(typescript@5.8.3))(eslint@9.23.0(jiti@2.5.1))(typescript@5.8.3)':
@@ -7295,7 +7295,7 @@ snapshots:
     dependencies:
       '@vibrant/types': 4.0.0
 
-  '@vitejs/plugin-react@4.7.0(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))':
+  '@vitejs/plugin-react@4.7.0(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0))':
     dependencies:
       '@babel/core': 7.28.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.0)
@@ -7303,7 +7303,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.27
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
+      vite: 7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -7519,7 +7519,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  axios@1.9.0:
+  axios@1.12.1:
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.4
@@ -7839,10 +7839,10 @@ snapshots:
 
   commenting@1.1.0: {}
 
-  commitizen@4.3.1(@types/node@24.3.1)(typescript@5.8.3):
+  commitizen@4.3.1(@types/node@24.3.3)(typescript@5.8.3):
     dependencies:
       cachedir: 2.3.0
-      cz-conventional-changelog: 3.3.0(@types/node@24.3.1)(typescript@5.8.3)
+      cz-conventional-changelog: 3.3.0(@types/node@24.3.3)(typescript@5.8.3)
       dedent: 0.7.0
       detect-indent: 6.1.0
       find-node-modules: 2.1.3
@@ -7906,9 +7906,9 @@ snapshots:
       object-assign: 4.1.1
       vary: 1.1.2
 
-  cosmiconfig-typescript-loader@6.1.0(@types/node@24.3.1)(cosmiconfig@9.0.0(typescript@5.8.3))(typescript@5.8.3):
+  cosmiconfig-typescript-loader@6.1.0(@types/node@24.3.3)(cosmiconfig@9.0.0(typescript@5.8.3))(typescript@5.8.3):
     dependencies:
-      '@types/node': 24.3.1
+      '@types/node': 24.3.3
       cosmiconfig: 9.0.0(typescript@5.8.3)
       jiti: 2.5.1
       typescript: 5.8.3
@@ -8003,16 +8003,16 @@ snapshots:
 
   csstype@3.1.3: {}
 
-  cz-conventional-changelog@3.3.0(@types/node@24.3.1)(typescript@5.8.3):
+  cz-conventional-changelog@3.3.0(@types/node@24.3.3)(typescript@5.8.3):
     dependencies:
       chalk: 2.4.2
-      commitizen: 4.3.1(@types/node@24.3.1)(typescript@5.8.3)
+      commitizen: 4.3.1(@types/node@24.3.3)(typescript@5.8.3)
       conventional-commit-types: 3.0.0
       lodash.map: 4.6.0
       longest: 2.0.1
       word-wrap: 1.2.5
     optionalDependencies:
-      '@commitlint/load': 19.8.1(@types/node@24.3.1)(typescript@5.8.3)
+      '@commitlint/load': 19.8.1(@types/node@24.3.3)(typescript@5.8.3)
     transitivePeerDependencies:
       - '@types/node'
       - typescript
@@ -11495,7 +11495,7 @@ snapshots:
       unplugin: 2.3.9
       unplugin-utils: 0.3.0
 
-  unplugin-turbo-console@1.11.2(esbuild@0.25.9)(rollup@4.50.1)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
+  unplugin-turbo-console@1.11.2(esbuild@0.25.9)(rollup@4.50.1)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
     dependencies:
       '@rollup/pluginutils': 5.1.3(rollup@4.50.1)
       estree-walker: 3.0.3
@@ -11509,7 +11509,7 @@ snapshots:
     optionalDependencies:
       esbuild: 0.25.9
       rollup: 4.50.1
-      vite: 7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
+      vite: 7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
     transitivePeerDependencies:
       - uWebSockets.js
 
@@ -11597,30 +11597,30 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-plugin-glsl@1.5.1(rollup@4.50.1)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
+  vite-plugin-glsl@1.5.1(rollup@4.50.1)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
     dependencies:
       '@rollup/pluginutils': 5.2.0(rollup@4.50.1)
-      vite: 7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
+      vite: 7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
     transitivePeerDependencies:
       - rollup
 
-  vite-plugin-image-optimizer@1.1.8(patch_hash=31ee3d991bfd591319b2dafde4065eb99830c75e27c590eaabca0df303e615fc)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
+  vite-plugin-image-optimizer@1.1.8(patch_hash=31ee3d991bfd591319b2dafde4065eb99830c75e27c590eaabca0df303e615fc)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
     dependencies:
       ansi-colors: 4.1.3
       pathe: 1.1.2
-      vite: 7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
+      vite: 7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
 
   vite-plugin-no-bundle@4.0.0:
     dependencies:
       fast-glob: 3.3.2
       micromatch: 4.0.8
 
-  vite-plugin-qrcode@0.3.0(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
+  vite-plugin-qrcode@0.3.0(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
     dependencies:
       qrcode-terminal: 0.12.0
-      vite: 7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
+      vite: 7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
 
-  vite-plugin-svg-icons@2.0.1(patch_hash=cad8fe9e85e9a8161bed9de902772da348386ffb9fc7f7ce30b0b503b39d0688)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
+  vite-plugin-svg-icons@2.0.1(patch_hash=cad8fe9e85e9a8161bed9de902772da348386ffb9fc7f7ce30b0b503b39d0688)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
     dependencies:
       '@types/svgo': 2.6.4
       cors: 2.8.5
@@ -11630,33 +11630,33 @@ snapshots:
       pathe: 0.2.0
       svg-baker: 1.7.0
       svgo: 2.8.0
-      vite: 7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
+      vite: 7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-svgr@4.3.0(rollup@4.50.1)(typescript@5.8.3)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
+  vite-plugin-svgr@4.3.0(rollup@4.50.1)(typescript@5.8.3)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
     dependencies:
       '@rollup/pluginutils': 5.1.3(rollup@4.50.1)
       '@svgr/core': 8.1.0(typescript@5.8.3)
       '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0(typescript@5.8.3))
-      vite: 7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
+      vite: 7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
     transitivePeerDependencies:
       - rollup
       - supports-color
       - typescript
 
-  vite-tsconfig-paths@4.3.2(typescript@5.8.3)(vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
+  vite-tsconfig-paths@4.3.2(typescript@5.8.3)(vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)):
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.8.3)
     optionalDependencies:
-      vite: 7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
+      vite: 7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@7.0.7(@types/node@24.3.1)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0):
+  vite@7.0.7(@types/node@24.3.3)(jiti@2.5.1)(lightningcss@1.28.2)(terser@5.37.0):
     dependencies:
       esbuild: 0.25.9
       fdir: 6.5.0(picomatch@4.0.3)
@@ -11665,7 +11665,7 @@ snapshots:
       rollup: 4.50.1
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 24.3.1
+      '@types/node': 24.3.3
       fsevents: 2.3.3
       jiti: 2.5.1
       lightningcss: 1.28.2
