@@ -65,7 +65,7 @@ export function hasOwn<T extends object>(obj: T, key: PropertyKey): key is keyof
  *
  * @template TTarget - The target object type.
  * @param target - The target object — what to apply the sources' properties to, which is returned after it is modified.
- * @param sources - The source object(s) — objects containing the properties you want to apply.
+ * @param sources - Source object(s) — objects containing the properties you want to apply.
  * @returns The target object.
  */
 export function assign<TTarget extends object>(target: TTarget, ...sources: Partial<TTarget>[]): TTarget {
@@ -569,7 +569,7 @@ export function mutexSwitches(...switches: (StateProperty<boolean> | StateProper
 /**
  * Like JavaScript `with` syntax, but safer.
  *
- * @template TObject - The source object type.
+ * @template TObject - Source object type.
  * @template TReturn - The type returned.
  * @param object - A long name object.
  * @param getter - Rename that object to a short name, then get the result.

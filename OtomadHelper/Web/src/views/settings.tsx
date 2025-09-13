@@ -43,11 +43,10 @@ export default function Settings() {
 	const { scheme: [scheme, setScheme], amoledDark: [amoledDark, setAmoledDark], contrast: [contrast, setContrast] } = useStoreState(colorModeStore);
 	const { black: actualAmoledDark, contrast: actualContrast } = useActualColorScheme();
 	const {
-		uiScale, hideUseTips, autoSwitchSourceFrom, autoCollapsePrveClasses,
+		fontSize, hideUseTips, autoSwitchSourceFrom, autoCollapsePrveClasses,
 		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur, systemBackdrop, accentColor, backgroundColor,
 	} = useSelectConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
-	const [displayUiScale, setDisplayUiScale] = useState<Readable | undefined>(uiScale[0]);
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -315,22 +314,20 @@ export default function Settings() {
 				)}
 			</Expander>
 			<Expander
-				title={t.settings.appearance.uiScale}
-				icon="zoom_in"
-				checkInfo={displayUiScale + t.units.percent}
+				title={t.settings.appearance.fontSize}
+				icon="text_font_size"
+				checkInfo={fontSize[0].toFixedNumber(1) + t.units.point}
 				alwaysShowCheckInfo
 				expanded={DEV_EXPANDED}
 			>
 				<Expander.ChildWrapper>
 					<Slider
-						value={uiScale}
-						min={50}
-						max={200}
-						defaultValue={100}
-						step={1}
+						value={fontSize}
+						min={7}
+						max={28}
+						defaultValue={14}
+						step={0.1}
 						staticSmoothInterval={0}
-						displayValue
-						onDisplayValueChanged={setDisplayUiScale}
 					/>
 				</Expander.ChildWrapper>
 			</Expander>

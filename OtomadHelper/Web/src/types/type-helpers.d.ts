@@ -89,8 +89,8 @@ declare global {
 	 */
 	type CapitalizeObject<T extends object> = {
 		[Key in keyof T as Capitalize<Key>]:
-		T[Key] extends (infer U)[] | undefined | null ? CapitalizeObject<U>[] :
-		CapitalizeObject<T[Key]>;
+			T[Key] extends (infer U)[] | undefined | null ? CapitalizeObject<U>[] :
+			CapitalizeObject<T[Key]>;
 	} & T;
 
 	/**
@@ -163,6 +163,8 @@ declare global {
 
 	/**
 	 * Make all items in Array or Object T readonly.
+	 *
+	 * @template T - Source array or object.
 	 */
 	type ReadonlyArrayItems<T> = {
 		[P in keyof T]: Readonly<T[P]>;
@@ -212,6 +214,8 @@ declare global {
 
 	/**
 	 * Make all properties in T required and exclude null and undefined from them.
+	 *
+	 * @template T - Source object.
 	 */
 	type RequiredNonNullable<T> = {
 		[P in keyof T]-?: T[P] & {};
@@ -301,13 +305,29 @@ declare global {
 	 * Creates a new type based on `TSource` where the specified properties `TRequiredProperties`
 	 * are made required, while the rest of the properties retain their original optionality.
 	 *
-	 * @template TSource - The source object type.
+	 * @template TSource - Source object type.
 	 * @template TRequiredProperties - The keys of `TSource` that should be required in the resulting type.
 	 *
 	 * @example
+	 * ```typescript
 	 * type Example = { a?: number; b?: string; c?: boolean; d: bigint };
 	 * type Result = RequiredWith<Example, "a" | "b">;
 	 * // Result is: { a: number; b: string; c?: boolean; d: bigint }
+	 * ```
 	 */
 	type RequiredWith<TSource extends object, TRequiredProperties extends keyof TSource> = Override<TSource, Required<Pick<TSource, TRequiredProperties>>>;
+
+	/**
+	 * Makes all properties of a given object nullable.
+	 *
+	 * @template T - The object whose properties will be made nullable.
+	 * @example
+	 * ```typescript
+	 * type User = { name: string; age: number };
+	 * type NullableUser = Nullable<User>; // { name: string | null; age: number | null }
+	 * ```
+	 */
+	type Nullable<T> = {
+		[key in keyof T]: T[key] | null;
+	};
 }

@@ -46,7 +46,7 @@ export default function ShellPage() {
 		}
 	});
 	const Page = pages[`/src/views/${pagePath}.tsx`] ?? EmptyPage;
-	const { uiScale1 } = useSnapshot(configStore.settings);
+	const uiScale1 = useUiScale1();
 	const zoom = uiScale1 === 1 ? undefined : uiScale1;
 	const { appName } = useAboutApp();
 	const { enabled: enablePixelScaling } = useSnapshot(configStore.visual.pixelScaling);

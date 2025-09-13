@@ -182,6 +182,7 @@ export default {
 			fraction: "fr", // Unit: Fraction.
 			fraction_full: "Fraction", // Unit: Fraction.
 			fraction_full_other: "Fractions",
+			point: "pt", // Unit: Point. A font size unit.
 		},
 		confirm: {
 			delete: {
@@ -789,7 +790,7 @@ export default {
 					micaAlt: "Mica Alt",
 					solid: "Solid",
 				},
-				uiScale: "UI scale",
+				fontSize: "Font size",
 			},
 			preference: {
 				_: "Preference",

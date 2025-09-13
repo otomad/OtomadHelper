@@ -1,4 +1,4 @@
-const DURATION = 250;
+const DURATION = 350;
 
 export default function DynamicAutoSize({ specified, children }: FCP<{
 	/** Explicitly specify which direction needs to be animated. Defaults to height animation. */

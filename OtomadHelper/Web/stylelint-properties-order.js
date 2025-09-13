@@ -549,10 +549,10 @@ export default [
 
 	// animation
 	"transition",
+	"transition-property",
 	"transition-duration",
 	"transition-timing-function",
 	"transition-delay",
-	"transition-property",
 	"transition-behavior",
 	"animation",
 	"animation-name",

@@ -103,7 +103,7 @@ export default function TabBar<T extends string = string>({ current: [current, s
 }, "nav">) {
 	const indicatorEl = useDomRef<"div">();
 	const [position, _setPosition] = useState<TwoD>([NaN, NaN]);
-	const { uiScale1 } = useSnapshot(configStore.settings);
+	const uiScale1 = useUiScale1();
 	const [_movement, setMovement] = useState<TabBarMovement>("disappear");
 	const [disablePressIndicatorStyle, setDisablePressIndicatorStyle] = useDelayState(false);
 	const [appearingPosition, setAppearingPosition] = useDelayState<TwoD>();

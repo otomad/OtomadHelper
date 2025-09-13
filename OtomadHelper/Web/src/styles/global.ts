@@ -1,3 +1,4 @@
+import { FALLBACK_TRANSITIONS } from "utils/styles";
 import { globalColors } from "./colors";
 import eases from "./eases";
 import fakeAnimations from "./fake-animations";
@@ -5,8 +6,6 @@ import fix from "./fix";
 import focusTestStyle from "./focus-test";
 import functions from "./functions";
 import reset from "./reset";
-
-export /* @internal */ const FALLBACK_TRANSITIONS = `all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, visibility 0s, font-feature-settings 0s` as const;
 
 const GlobalStyle = createGlobalStyle<{
 	/** Has the page loaded completely? */

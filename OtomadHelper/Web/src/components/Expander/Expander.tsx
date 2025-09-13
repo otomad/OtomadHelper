@@ -105,7 +105,9 @@ const ExpanderChild = styled.div`
 
 	&,
 	.expander-child-items {
-		transition: ${fallbackTransitions}, block-size ${eases.easeInOutMaterialEmphasized} 350ms, translate ${eases.easeInOutMaterialEmphasized} 350ms;
+		transition-property: block-size, translate;
+		transition-duration: 350ms;
+		transition-timing-function: ${eases.easeInOutMaterialEmphasized};
 	}
 `;
 
@@ -184,7 +186,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				{checkInfo != null && (
 					<CssTransition
 						in={!internalExpanded || alwaysShowCheckInfo}
-						// disabled={alwaysShowCheckInfo}
+						timeout={350} // Explicitly specified for better performance.
 						hiddenOnExit
 						requestAnimationFrame
 					>

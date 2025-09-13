@@ -6,11 +6,11 @@ import type { ColorNames, SystemColors } from "styles/colors";
 import eases from "styles/eases";
 import effects from "styles/effects";
 import { type AvailableLottieStatus, STATUS_PREFIX } from "styles/fake-animations";
-import type { FALLBACK_TRANSITIONS } from "styles/global";
 import mixins from "styles/mixins";
 
 export { ifColorScheme } from "styles/colors";
 
+export /* @internal */ const FALLBACK_TRANSITIONS = `all ${eases.easeOutMax} 250ms, color ${eases.easeOutMax} 100ms, visibility 0s, font-feature-settings 0s` as const;
 export const fallbackTransitions = "var(--fallback-transitions)" as typeof FALLBACK_TRANSITIONS;
 
 /**
@@ -261,7 +261,7 @@ export function getLocationStyle(location: MaybeRef<TwoD>): CSSProperties {
 export function getBoundingClientRect(element: MaybeRef<EventTarget | null>): DOMRect {
 	const el = toValue(element) as HTMLElement;
 	let rect = el.getBoundingClientRect();
-	const zoom = configStore.settings.uiScale1;
+	const zoom = getUiScale1();
 	rect = zoomDomRect(rect, zoom);
 	return rect;
 }

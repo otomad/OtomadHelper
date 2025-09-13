@@ -2,7 +2,7 @@ declare interface ObjectConstructor {
 	/**
 	 * Creates a new object composed of the picked `object` properties.
 	 * @category Object
-	 * @param object - The source object.
+	 * @param object - Source object.
 	 * @param pickedKeys - keys of properties you want to pick from the object, specified in arrays.
 	 * @returns Returns the new object.
 	 * @example
@@ -14,7 +14,7 @@ declare interface ObjectConstructor {
 	/**
 	 * Creates a new object composed of the `object` properties `predicate` returns truthy for.
 	 * @category Object
-	 * @param object - The source object.
+	 * @param object - Source object.
 	 * @param predicate - The function to predicted whether the property should be picked.
 	 * - `currentValue`: the current value processed in the object.
 	 * - `key`: the key of the `currentValue` in the object.
@@ -31,7 +31,7 @@ declare interface ObjectConstructor {
 	/**
 	 * Creates a new object composed of the own and inherited enumerable properties of `object` that are not omitted.
 	 * @category Object
-	 * @param object - The source object.
+	 * @param object - Source object.
 	 * @param omittedKeys - keys of properties you want to omit from the object, specified in arrays.
 	 * @returns Returns the new object.
 	 * @example
@@ -43,7 +43,7 @@ declare interface ObjectConstructor {
 	/**
 	 * creates a new object composed of the own and inherited enumerable properties of `object` that `predicate` doesn't return truthy for.
 	 * @category Object
-	 * @param object - The source object.
+	 * @param object - Source object.
 	 * @param predicate - The function to predicted whether the property should be omitted.
 	 * - `currentValue`: the current value processed in the object.
 	 * - `key`: the key of the `currentValue` in the object.
@@ -75,13 +75,13 @@ declare interface ObjectConstructor {
 
 	/**
 	 * Clear all keys of an object.
-	 * @param object - The source object.
+	 * @param object - Source object.
 	 */
 	clear(object: AnyObject): void;
 
 	/**
 	 * Get the key and value of an object by the index at the definition time.
-	 * @param object - The source object.
+	 * @param object - Source object.
 	 * @param index - The index at the definition time.
 	 * @returns The entry (a tuple of key and value) of the object, or empty array if cannot be found.
 	 */

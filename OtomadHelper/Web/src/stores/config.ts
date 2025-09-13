@@ -316,14 +316,13 @@ namespace Config {
 			systemBackdrop: "acrylic" as SystemBackdrop,
 			accentColor: "wallpaper",
 			backgroundColor: "windows",
-			uiScale: 100,
-			get uiScale1() { return window.isWebView ? 1 : this.uiScale / 100; },
+			fontSize: 14,
 			hideUseTips: false,
 			autoSwitchSourceFrom: true,
 			autoCollapsePrveClasses: true,
 		},
 		// If named toJSON, it will conflict to the JSON built-in parameter, causing a recursion error.
-		toJson() { return JSON.stringify(this); },
+		// toJson() { return JSON.stringify(this); }, // DELETE: Do not put methods in config store which cannot be serialized.
 	});
 }
 

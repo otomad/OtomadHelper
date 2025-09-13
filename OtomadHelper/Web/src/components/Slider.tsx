@@ -206,13 +206,13 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, a
 	}, [min, max, step]);
 
 	function onThumbDown(e: PointerEvent, triggerByTrack: boolean = false) {
-		if (e.button) { resetToDefault(e); return; }
+		if (e.button) { e.preventDefault(); return; }
 		setPressed(true);
 		const thumb = (e.currentTarget as HTMLDivElement).parentElement!.querySelector(".thumb") as HTMLDivElement;
 		const thumbSize = thumb.offsetWidth;
 		const track = thumb.parentElement!.querySelector(".track")!;
 		const { left, width } = track.getBoundingClientRect();
-		const x = triggerByTrack ? thumbSize / 2 : e.clientX - left - thumb.offsetLeft * configStore.settings.uiScale1;
+		const x = triggerByTrack ? thumbSize / 2 : e.clientX - left - thumb.offsetLeft * getUiScale1();
 		const aborter = new AbortController();
 		const pointerMove = lodash.debounce((e: PointerEvent) => {
 			const position = clamp(e.clientX - left - x, 0, width - thumbSize);
@@ -235,7 +235,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, a
 	}
 
 	const onTrackDown: PointerEventHandler = e => {
-		if (e.button) { resetToDefault(e); return; }
+		if (e.button) { e.preventDefault(); return; }
 		const track = e.currentTarget as HTMLDivElement;
 		const thumb = track.parentElement!.querySelector(".thumb") as HTMLDivElement;
 		const thumbSizeHalf = thumb.offsetWidth / 2;
@@ -296,7 +296,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, a
 			>
 				<div className="track" onPointerDown={onTrackDown} />
 				<div className="passed" />
-				<div className={["thumb", { pressed }]} onPointerDown={onThumbDown} />
+				<div className={["thumb", { pressed }]} onPointerDown={onThumbDown} />{/* onDoubleClick={resetToDefault} */ /* Easy to touch by mistake */}
 			</StyledSlider>
 		</StyledSliderWrapper>
 	);
