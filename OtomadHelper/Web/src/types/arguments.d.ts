@@ -69,7 +69,10 @@ declare global {
 	/** Badge value and status. */
 	type BadgeArgs = [badge?: BadgeValue, status?: Status, hidden?: boolean];
 
-	/** A type which includes the numeric value and its unit enum type. */
+	/**
+	 * A type which includes the numeric value and its unit enum type.
+	 * @template TUnit - The unit name (string). You can narrow it.
+	 */
 	type Unit<TUnit extends string> = [numeric: number, unit: TUnit];
 
 	/**

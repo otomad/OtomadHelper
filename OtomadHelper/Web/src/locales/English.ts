@@ -98,7 +98,7 @@ export default {
 				},
 			},
 			consonant: "Consonant time",
-			takeTurns: "Take turns",
+			matchCut: "Beat sync match cut",
 			linearMap: "Linear map output",
 		},
 		on: "On", // The label next to a toggle switch.
@@ -131,8 +131,12 @@ export default {
 		browse: "Browse", // Browse files or folders.
 		ok: "OK",
 		close: "Close",
-		descending: "Descending",
+		order: "Order",
 		ascending: "Ascending",
+		descending: "Descending",
+		sequential: "Sequential",
+		reversed: "Reversed",
+		shuffled: "Shuffled",
 		view: "View", // Generally, it is the name of the first item in the context menu of a Windows directory, which includes tiles, lists, icons, etc.
 		size: "Size", // Indicate image size or icon size, etc.
 		disabled: "Disabled",
@@ -845,7 +849,10 @@ export default {
 					_: "To prevent consonants from being stretched or delayed, you can separate the consonant and vowel parts of the same audio or video source so that special optimization can be applied to the consonant part of the source.\nIf at least two audio or video clips are selected, the first clip is considered the initial consonant part, the second clip is considered the vowel part, and the third segment (if any) is considered the final consonant part.",
 					manualEnabled: "In Sentence Mixing mode, this feature is enabled automatically.",
 				},
-				takeTurns: "Select multiple sources that will take turns applying each time a note is generated",
+				matchCut: {
+					_: "Select multiple sources that will be applied in turn by auto beat sync match cut",
+					order: "Specify the application sequential order of sources",
+				},
 				linearMap: {
 					_: "Select multiple sources that will be mapped to available tracks in order (excess sources or tracks will be omitted)",
 					descending: "Reverses the order of the tracks to map (note that it is not the order of the selected sources)",

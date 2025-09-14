@@ -4,7 +4,7 @@ import type { beepEngines, normalizeTimes, tuningMethods } from "views/audio";
 import type { musicalNotationSystems } from "views/lyrics";
 import type { constrainNoteLengthTypes, encodings, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
 import type { systemBackdrops } from "views/settings";
-import type { barOrBeatUnitTypes, selectGeneratedClipsType, sourceFromEnums, startTimes, trackNames } from "views/source";
+import type { barOrBeatUnitTypes, selectGeneratedClipsType, sequentialOrders, sourceFromEnums, startTimes, trackNames } from "views/source";
 import type { trackLegatoModes } from "views/track";
 import type { arrayTypes, directionTypes, fitTypes, parityTypes } from "views/track/grid";
 import type { legatos, preRenders, stretches, transformMethods, truncates } from "views/visual";
@@ -37,6 +37,7 @@ namespace Config {
 	export type PrveCustomStepSequences = Partial<Record<string, number[]>>;
 	export type PreRenderAs = typeof preRenders[number]["id"];
 	export type TuningMethod = typeof tuningMethods[number]["id"];
+	export type SequentialOrder = typeof sequentialOrders[number]["id"];
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -71,7 +72,8 @@ namespace Config {
 			secretBoxForBarOrBeatPeriod: [4, "bar"] as Unit<BarOrBeatUnit>,
 			secretBoxForBarOrBeatPreparation: [0, "bar"] as Unit<BarOrBeatUnit>,
 			consonant: false,
-			takeTurns: false,
+			matchCut: false,
+			matchCutOrder: "sequential" as SequentialOrder,
 			linearMap: false,
 			linearMapDescending: false,
 		},

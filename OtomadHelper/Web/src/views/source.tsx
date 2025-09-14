@@ -23,6 +23,11 @@ export /* @internal */ const trackNames = [
 	{ id: "score", name: t.source.trackName.score, icon: "document_score" },
 	{ id: "unnamed", name: t.source.trackName.unnamed, icon: "prohibited" },
 ] as const;
+export /* @internal */ const sequentialOrders = [
+	{ id: "sequential", icon: "arrow_right_double" },
+	{ id: "reversed", icon: "arrow_left_double" },
+	{ id: "shuffled", icon: "shuffle" },
+] as const;
 
 export /* @internal */ const barOrBeatUnitTypes = ["bar", "beat"] as const;
 const barOrBeatUnitNames = (count: number) => [t(count).units.bar, t(count).units.beat] as const;
@@ -34,7 +39,7 @@ export default function Source() {
 	const {
 		sourceFrom, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
-		trackGroup, collapseTrackGroup, trackName, secretBox, consonant, takeTurns, linearMap, linearMapDescending,
+		trackGroup, collapseTrackGroup, trackName, secretBox, consonant, matchCut, matchCutOrder, linearMap, linearMapDescending,
 		secretBoxLimitToSelected, secretBoxForTrack, secretBoxForMarker, secretBoxForBarOrBeat, secretBoxForBarOrBeatPeriod, secretBoxForBarOrBeatPreparation,
 	} = useSelectConfig(c => c.source);
 	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = useSelectConfig(c => c.source.afterCompletion);
@@ -43,7 +48,7 @@ export default function Source() {
 
 	mutexSwitches(removeSourceClips, selectSourceClips);
 	mutexSwitches(removeSourceClipsWithTracks, selectSourceClips);
-	mutexSwitches(secretBox, consonant, takeTurns, linearMap);
+	mutexSwitches(secretBox, consonant, matchCut, linearMap);
 	useEffect(() => { removeSourceClipsWithTracks[0] && removeSourceClips[1](true); }, [removeSourceClipsWithTracks[0]]);
 	useEffect(() => { !removeSourceClips[0] && removeSourceClipsWithTracks[1](false); }, [removeSourceClips[0]]);
 
@@ -145,7 +150,7 @@ export default function Source() {
 				>
 					<ToggleSwitch on={secretBoxLimitToSelected} details={t.descriptions.source.secretBox.limitToSelected} icon="video_clip_multiple_checkmark">{t.source.secretBox.limitToSelected}</ToggleSwitch>
 					<ToggleSwitch on={secretBoxForTrack} details={t.descriptions.source.secretBox.track} icon="layer">{t.source.secretBox.track}</ToggleSwitch>
-					<ToggleSwitch on={secretBoxForMarker} details={t.descriptions.source.secretBox.marker} icon="marker">{t.source.secretBox.marker}</ToggleSwitch>
+					<ToggleSwitch on={secretBoxForMarker} details={t.descriptions.source.secretBox.marker} icon="flag">{t.source.secretBox.marker}</ToggleSwitch>
 					<ToggleSwitch on={secretBoxForBarOrBeat} details={t.descriptions.source.secretBox.barOrBeat} icon="music_bar">{t.source.secretBox.barOrBeat}</ToggleSwitch>
 					<Attrs disabled={!secretBoxForBarOrBeat[0]}>
 						<Expander.Item title={t.source.secretBox.barOrBeat.period} details={t.descriptions.source.secretBox.barOrBeat.period} icon="timer">
@@ -166,11 +171,17 @@ export default function Source() {
 					selectValid={manualEnabled}
 				/>
 				<SettingsCardToggleSwitch
-					title={t.source.takeTurns}
-					details={t.descriptions.source.takeTurns}
-					icon="take_turns"
-					on={takeTurns}
-				/>
+					title={t.source.matchCut}
+					details={t.descriptions.source.matchCut}
+					icon="flag_auto_beat"
+					on={matchCut}
+				>
+					<Expander.Item title={t.order} icon="arrow_sort_horizontal" details={t.descriptions.source.matchCut.order}>
+						<Segmented current={matchCutOrder}>
+							{sequentialOrders.map(({ id, icon }) => <Segmented.Item id={id} key={id} icon={icon}>{t[id]}</Segmented.Item>)}
+						</Segmented>
+					</Expander.Item>
+				</SettingsCardToggleSwitch>
 				<SettingsCardToggleSwitch
 					title={t.source.linearMap}
 					details={t.descriptions.source.linearMap}

@@ -24,6 +24,7 @@ export default function DynamicAutoSize({ specified, children }: FCP<{
 				prevWidth !== width && enableWidth && validateSize(prevWidth) && validateSize(width) ||
 				prevHeight !== height && enableHeight && validateSize(prevHeight) && validateSize(height))) {
 				animating.current = true;
+				removeExistAnimations(el.current);
 				el.current.animate({
 					...enableWidth && { width: pxify(prevWidth, width) },
 					...enableHeight && { height: pxify(prevHeight, height) },

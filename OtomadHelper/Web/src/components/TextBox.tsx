@@ -268,6 +268,10 @@ export /* @internal */ const StyledTextBox = styled.div`
 		.stripes * {
 			scale: 0;
 		}
+
+		input {
+			color: inherit;
+		}
 	}
 
 	${ifColorScheme.contrast} & {
@@ -657,8 +661,8 @@ function NumberUnitTextBox<TUnit extends string>({ value: [[value, unit], set], 
 	/** All unit type names, or get the plural unit type names from the value (count). */
 	unitNames: readonly Readable[] | ((value: number) => readonly Readable[]);
 }>) {
-	const setValue = (newValue: React.SetStateAction<number>) => set(([, unit]) => [typeof newValue === "function" ? newValue(value) : newValue, unit]);
-	const setUnit = (newUnit: React.SetStateAction<TUnit>) => set(([value]) => [value, typeof newUnit === "function" ? newUnit(unit) : unit]);
+	const setValue = (newValue: React.SetStateAction<number>) => set?.(([, unit]) => [typeof newValue === "function" ? newValue(value) : newValue, unit]);
+	const setUnit = (newUnit: React.SetStateAction<TUnit>) => set?.(([value]) => [value, typeof newUnit === "function" ? newUnit(unit) : newUnit]);
 
 	return (
 		<StyledNumberUnitTextBox>

@@ -55,6 +55,7 @@ export default css`
 			cursor: not-allowed;
 			pointer-events: none;
 			user-select: none;
+			interactivity: inert;
 		}
 
 		// Inert style overrides.
