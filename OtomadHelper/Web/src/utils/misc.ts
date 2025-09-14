@@ -77,3 +77,8 @@
 		this.focus();
 	};
 }
+{
+	defineGetterInPrototype(Symbol, "isGlobal", function () {
+		return Symbol.keyFor(this.valueOf()) !== undefined;
+	});
+}

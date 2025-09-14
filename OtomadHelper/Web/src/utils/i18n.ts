@@ -270,3 +270,21 @@ export function getLocaleName(targetLocale: string | Intl.Locale, displayLocale:
 	// if (displayLocale === "yue") fallbackLocales.push("zh-Hant-HK");
 	return new Intl.DisplayNames(fallbackLocales, { type: "language" }).of(targetLocale)!;
 }
+
+/**
+ * Uses the same resolve functionality as the `t` function and returns true if a key and context exists.
+ * @param getKey - Get the key.
+ * @param context - Provide the context if required.
+ * @returns The key and the context exist.
+ * @example
+ * ```javascript
+ * i18nExists(t.my.key, "context"); // -> true if exists, false if not.
+ * ```
+ */
+export function i18nExists(getKey: (t: Trans) => Any, context?: string) {
+	const t = new PathObject() as Trans;
+	let path = getKey(t) + "";
+	if (context) path += `_${context}`;
+	return i18n.exists(path);
+}
+globals.i18nExists = i18nExists;

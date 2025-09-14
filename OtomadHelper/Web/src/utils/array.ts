@@ -225,6 +225,30 @@
 		}, []);
 	};
 
+	Array.prototype.firstDefined = function (predicate, check = "undefined", thisArg) {
+		let result: Any;
+		this.some((value, index, array) => {
+			const currentResult = predicate.call(thisArg, value, index, array);
+			let matched = false;
+			switch (check) {
+				case "undefined": matched = currentResult !== undefined; break;
+				case "null": matched = currentResult !== null; break;
+				case "nullish": matched = currentResult != null; break; // != checks both null and undefined
+				case "false": matched = currentResult !== false; break;
+				case "falsy": matched = !!currentResult; break; // truthy check
+				default: break;
+			}
+			if (matched) result = currentResult;
+			return matched;
+		});
+		return result;
+	};
+
+	Array.prototype.indexOfDefault = function (searchElement, fromIndex) {
+		const index = this.indexOf(searchElement, fromIndex);
+		return index !== -1 ? index : undefined;
+	};
+
 	makePrototypeKeysNonEnumerable(Array);
 }
 

@@ -156,3 +156,21 @@ declare interface HTMLInputElement {
 	 */
 	selectAndFocus(): void;
 }
+
+declare interface Symbol {
+	/**
+	 * Determines whether the provided symbol is a global symbol.
+	 *
+	 * A global symbol is one that was created using `Symbol.for()`, which registers the symbol
+	 * in the global symbol registry. This getter checks if the symbol exists in the registry.
+	 *
+	 * @returns The symbol is a global symbol?
+	 *
+	 * @example
+	 * ```javascript
+	 * Symbol("foo").isGlobal; // false
+	 * Symbol.for("foo").isGlobal; // true
+	 * ```
+	 */
+	readonly isGlobal: boolean;
+}

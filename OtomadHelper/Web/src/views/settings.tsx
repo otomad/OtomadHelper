@@ -62,6 +62,7 @@ export default function Settings() {
 		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur, systemBackdrop, accentColor, backgroundColor,
 	} = useSelectConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
+	const { pushPage } = useSnapshot(pageStore);
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -351,6 +352,7 @@ export default function Settings() {
 			</Expander>
 
 			<Subheader>{t.settings.preference}</Subheader>
+			<SettingsCard title={t({ context: "long" }).titles.internal} details={t.descriptions.settings.internal} type="button" icon="settings" onClick={() => pushPage("internal")} />
 			<SettingsCardToggleSwitch title={t.settings.preference.autoSwitchSourceFrom} details={t.descriptions.settings.preference.autoSwitchSourceFrom} icon="arrow_swap" on={autoSwitchSourceFrom} />
 			<SettingsCardToggleSwitch title={t.settings.preference.autoCollapsePrveClasses} details={t.descriptions.settings.preference.autoCollapsePrveClasses} icon="chevron_down_up" on={autoCollapsePrveClasses} />
 

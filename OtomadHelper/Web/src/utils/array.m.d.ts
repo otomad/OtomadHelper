@@ -581,10 +581,50 @@ declare interface Array<T> {
 	 * ```
 	 */
 	split(delimiter: T | ((element: T) => boolean)): T[][];
+
+	/**
+	 * Returns the first defined result produced by applying the given predicate to each element in the array.
+	 * Iterates over the array and calls the predicate function for each element until the predicate function returns a value that is defined or truthy.
+	 * If such a value is found, it is returned immediately; otherwise, `undefined` is returned.
+	 *
+	 * @template TRet - The return type of the predicate function.
+	 * @param predicate - A function that is called for each element in the array. Should return a value of type `TRet` or `undefined`.
+	 * @param check - Specifies how the function determines the basis for the value defined. Defaults to `"undefined"`.
+	 * - `"undefined"`: The value returned by the predicate function that is not `undefined`.
+	 * - `"null"`: The value returned by the predicate function that is not `null`.
+	 * - `"nullish"`: The value returned by the predicate function that is neither `undefined` nor `null`.
+	 * - `"false"`: The value returned by the predicate function that is not `false`.
+	 * - `"falsy"`: The value returned by the predicate function that is not any falsy value, such as `undefined`, `null`, `NaN`, `false`, `""`, `±0`, `0n`, `document.all`.
+	 * @param thisArg - An object to which the this keyword can refer in the predicate function. If thisArg is omitted, undefined is used as the this value.
+	 * @returns The first value returned by the predicate function that is defined or truthy, or `undefined` if no such value is found.
+	 *
+	 * @example
+	 * ```javascript
+	 * [0, 2, 4].firstDefined(x => x * 26 || undefined); // 52
+	 * ```
+	 */
+	firstDefined<TRet>(predicate: (value: T, index: number, array: T[]) => TRet | undefined | null, check?: "undefined" | "null" | "nullish" | "false" | "falsy", thisArg?: any): TRet;
+
+	/**
+	 * Returns the index of the first occurrence of a value in an array, or **`undefined`** if it is not present.
+	 * It is useful when you want to use nullish coalescing operator (??) to provide a default index, while -1 is annoying.
+	 * @param searchElement - The value to locate in the array.
+	 * @param fromIndex - The array index at which to begin the search. If fromIndex is omitted, the search starts at index 0.
+	 * @returns The index of the first occurrence of a value in an array, or **`undefined`** if it is not present.
+	 *
+	 * @example
+	 * ```javascript
+	 * ["foo", "bar", "baz"].indexOfDefault("bar"); // 1
+	 * ["foo", "bar", "baz"].indexOf("qux"); // -1
+	 * ["foo", "bar", "baz"].indexOfDefault("qux"); // undefined
+	 * ["foo", "bar", "baz"].indexOfDefault("qux") ?? 3; // 3
+	 * ```
+	 */
+	indexOfDefault(searchElement: any, fromIndex?: number): number | undefined;
 }
 
 declare interface ReadonlyArray<T> extends Pick<Array<T>,
-	"mapObject" | "nextItem" | "includes"
+	"mapObject" | "nextItem" | "includes" | "indexOfDefault"
 > {
 	/**
 	 * If, on the other hand, you feel seriously enough that this use of includes() should be accepted with no type assertions,
