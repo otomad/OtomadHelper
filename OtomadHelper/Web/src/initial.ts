@@ -15,10 +15,12 @@ import { enableMapSet } from "immer";
  * Run before the web DOM is loading.
  */
 { // Initial
+	const isFocusOnInputField = (e: Event) => isInPath(e.target, 'input[type="text"], textarea, [contenteditable="true"]');
+
 	// #region Prevent context menu triggers by right click
 	window.addEventListener("contextmenu", e => {
 		window.contextMenu = undefined;
-		if (!isInPath(e.target, 'input[type="text"], textarea, [contenteditable="true"]') && isProdMode())
+		if (!isFocusOnInputField(e) && isProdMode())
 			e.preventDefault();
 	});
 	// #endregion
@@ -28,9 +30,13 @@ import { enableMapSet } from "immer";
 		// Disabled only in prod mode
 		if (isProdMode())
 			if (
+				// Zoom (Ctrl + + / Ctrl + -)
 				e.ctrlKey && ["Equal", "Minus", "NumpadAdd", "NumpadSubtract"].includes(e.code) ||
+				// Open DevTools (F12 / Ctrl + Shift + I / Ctrl + Shift + C)
 				e.code === "F12" ||
-				e.ctrlKey && e.shiftKey && ["KeyC", "KeyI"].includes(e.code)
+				e.ctrlKey && e.shiftKey && ["KeyC", "KeyI"].includes(e.code) ||
+				// Select all (Ctrl + A)
+				!isFocusOnInputField(e) && e.ctrlKey && e.code === "KeyA"
 			)
 				e.preventDefault();
 		// Disabled in any mode

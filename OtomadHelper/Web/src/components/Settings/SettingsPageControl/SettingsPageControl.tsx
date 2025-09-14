@@ -60,6 +60,10 @@ const StyledSettingsPageControl = styled.div<{
 			> p {
 				margin-block-start: -3px;
 			}
+
+			* {
+				user-select: text;
+			}
 		}
 
 
