@@ -7,6 +7,8 @@ export default function Home() {
 	const options = ["foo", "bar", "baz", "hello", "world"];
 	const slider = useState(50);
 	const checkboxModel = useState<string[]>([]);
+	const itemsViewViews = ["grid", "list", "tile", "grid-list", "radio"] satisfies PropsOf<typeof ExpanderRadio>["view"][];
+	const [itemsViewView, setItemsViewView] = useState<ValueOf<typeof itemsViewViews>>("tile");
 
 	return (
 		<div className="container">
@@ -43,6 +45,22 @@ export default function Home() {
 			<Expander icon="multiselect" title="Checkboxes">
 				{options.map(option => <Checkbox key={option} id={option} value={checkboxModel}>{option}</Checkbox>)}
 			</Expander>
+			<ExpanderRadio
+				icon="grid"
+				title="Items view"
+				view={itemsViewView}
+				items={options}
+				value={[text, setText]}
+				idField
+				nameField
+				before={(
+					<Expander.Item title="View">
+						<Segmented current={[itemsViewView, setItemsViewView]}>
+							{itemsViewViews.map(view => <Segmented.Item key={view} id={view}>{view}</Segmented.Item>)}
+						</Segmented>
+					</Expander.Item>
+				)}
+			/>
 		</div>
 	);
 }

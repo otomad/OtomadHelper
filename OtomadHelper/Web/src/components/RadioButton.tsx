@@ -53,10 +53,10 @@ const StyledRadioButtonLabel = styled.label<{
 	&:active .base {
 		background-color: ${c("fill-color-control-alt-quarternary")};
 		outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
+	}
 
-		.bullet {
-			scale: ${10 / 18};
-		}
+	&:hover:active .base .bullet {
+		scale: ${10 / 18};
 	}
 
 	input[disabled] ~ {
@@ -95,10 +95,10 @@ const StyledRadioButtonLabel = styled.label<{
 
 	&:active input:checked ~ .base {
 		opacity: 0.8;
+	}
 
-		.bullet {
-			scale: ${6 / 18};
-		}
+	&:hover:active input:checked ~ .base .bullet {
+		scale: ${6 / 18};
 	}
 
 	input:checked[disabled] ~ .base {

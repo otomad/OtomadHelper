@@ -23,6 +23,21 @@ const StyledColorPalette = styled(Expander.ChildWrapper).attrs({
 	border-block-start: none !important;
 `;
 
+const SampleTextFontSize = styled.div`
+	${styles.effects.text.body};
+	margin-block-start: 1lh;
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+
+	.info {
+		${styles.effects.text.caption};
+	}
+
+	* {
+		user-select: text;
+	}
+`;
+
 /* const BackgroundImageItemStyle = createGlobalStyle`
 	.background-image-item:not(.sortable-overlay *, .dragging, .dropping) {
 		@starting-style {
@@ -316,8 +331,7 @@ export default function Settings() {
 			<Expander
 				title={t.settings.appearance.fontSize}
 				icon="text_font_size"
-				checkInfo={fontSize[0].toFixedNumber(1) + t.units.point}
-				alwaysShowCheckInfo
+				checkInfo={fontSize[0] + t.units.point}
 				expanded={DEV_EXPANDED}
 			>
 				<Expander.ChildWrapper>
@@ -329,6 +343,10 @@ export default function Settings() {
 						step={0.1}
 						staticSmoothInterval={0}
 					/>
+					<SampleTextFontSize>
+						<p className="sample">{t.descriptions.settings.appearance.fontSize.sampleText}</p>
+						<p className="info"><Preserves soft>{t.descriptions.settings.appearance.fontSize.info({ current: fontSize[0], default: 14 })}</Preserves></p>
+					</SampleTextFontSize>
 				</Expander.ChildWrapper>
 			</Expander>
 

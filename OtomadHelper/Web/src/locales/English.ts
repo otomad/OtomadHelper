@@ -1149,6 +1149,10 @@ export default {
 						systemContrastMayNot: "The system high contrast theme is enabled and the {{option, lowercase}} option may not be effective at this time.",
 						blackScheme: "The black color scheme is enabled and the {{option, lowercase}} option will not be effective at this time.",
 					},
+					fontSize: {
+						info: "The currently set UI standard text font size is **{{current}} pt**; \nthe default font size is {{default}} pt.",
+						sampleText: "The sound of ocean waves calms my soul.", // This is the sample text in Windows 11 notepad settings.
+					},
 				},
 				preference: {
 					autoSwitchSourceFrom: "Changes the source from automatically based on the last selected content",

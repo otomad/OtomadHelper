@@ -4,7 +4,8 @@ const Subheader = styled.h4`
 	font-weight: 600;
 
 	&:first-child:not(.items-view.grid > *),
-	.items-view.grid:first-child > & {
+	.items-view.grid:first-child > &,
+	.settings-page-control + & {
 		margin-block-start: 0;
 	}
 

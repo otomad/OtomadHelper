@@ -197,6 +197,7 @@ export default [
 				"method": { "before": true, "after": false },
 			}],
 			"prefer-rest-params": "off",
+			"no-empty-pattern": "off",
 			"import/order": ["warn", {
 				"alphabetize": { "order": "asc", "orderImportKind": "asc", "caseInsensitive": false },
 				"named": true,

@@ -211,6 +211,20 @@
 		return this.length === 0 ? undefined : this[floorMod(index, this.length)];
 	};
 
+	Array.prototype.split = function (delimiter) {
+		return this.reduce((accumulator, currentValue) => {
+			const test = typeof delimiter === "function" ? delimiter(currentValue) : currentValue === delimiter;
+			if (test)
+				accumulator.push([]); // Start a new sub-array.
+			else {
+				if (accumulator.length === 0) // Handle case where delimiter is the first element.
+					accumulator.push([]);
+				accumulator[accumulator.length - 1].push(currentValue); // Add element to the current sub-array.
+			}
+			return accumulator;
+		}, []);
+	};
+
 	makePrototypeKeysNonEnumerable(Array);
 }
 
@@ -272,7 +286,7 @@
 			++length;
 		return length;
 	});
-	
+
 	Iterator.prototype.at = function (index) {
 		if (index < 0) index = this.length + index;
 		for (const item of this) {

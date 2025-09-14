@@ -65,7 +65,7 @@ const StyledSettingsPageControl = styled.div<{
 
 		> .learn-more-wrapper {
 			display: block;
-			margin-block-start: 0.5em;
+			margin-block-start: 0.375lh;
 		}
 	}
 

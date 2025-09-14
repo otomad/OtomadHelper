@@ -127,7 +127,7 @@ const StyledSliderWrapper = styled.div`
 	}
 `;
 
-export default function Slider({ value: [value, setValue], min = 0, max = 100, autoClampValue, defaultValue, step, keyStep = 1, keyBigStepMultiplier = 10, displayValueStep, smoothlyDisplayValue = true, disabled = false, displayValue: _displayValue = false, staticSmoothInterval: staticInterval, onChanging, onChange, onDisplayValueChanged }: FCP<{
+export default function Slider({ value: [value, _setValue], min = 0, max = 100, autoClampValue, defaultValue, step, keyStep = 1, keyBigStepMultiplier = 10, displayValueStep, smoothlyDisplayValue = true, disabled = false, displayValue: _displayValue = false, staticSmoothInterval: staticInterval, onChanging, onChange, onDisplayValueChanged }: FCP<{
 	/** Current value. */
 	value: StateProperty<number>;
 	/** Slider minimum value. @default 0 */
@@ -176,10 +176,10 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, a
 	if (min > max)
 		throw new RangeError(`Is the minimum value of Slider greater than the maximum value? The minimum value is ${min}, and the maximum value is ${max}`);
 	if (value < min)
-		if (autoClampValue) setValue?.(min);
+		if (autoClampValue) _setValue?.(min);
 		else throw new RangeError("The value of Slider is lesser than the minimum value. " + errorInfo);
 	if (value > max)
-		if (autoClampValue) setValue?.(max);
+		if (autoClampValue) _setValue?.(max);
 		else throw new RangeError("The value of Slider is greater than the maximum value. " + errorInfo);
 
 	const restrict = useCallback((n: number | undefined, nanValue: number) => Number.isFinite(n) ? clamp(map(n!, min, max, 0, 1), 0, 1) : nanValue, [min, max]);
@@ -189,10 +189,16 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, a
 	const [pressed, setPressed] = useState(false);
 	const id = useId();
 
+	const setValue = useCallback((value: number) => {
+		value = clamp(value, min, max);
+		if (step) value = value.toFixedNumber(step.countDecimals());
+		_setValue?.(value);
+	}, [_setValue, min, max, step]);
+
 	function resetToDefault(e: MouseEvent) {
 		e.preventDefault();
 		if (defaultValue !== undefined && Number.isFinite(defaultValue)) {
-			setValue?.(defaultValue);
+			setValue(defaultValue);
 			onChanging?.(defaultValue);
 			onChange?.(defaultValue);
 		}
@@ -218,7 +224,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, a
 			const position = clamp(e.clientX - left - x, 0, width - thumbSize);
 			let value = clampValue(map(position, 0, width - thumbSize, min, max));
 			if (isRtl()) value = max - value + min;
-			setValue?.(value);
+			setValue(value);
 			onChanging?.(value);
 		});
 		const pointerUp = () => {
@@ -242,7 +248,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, a
 		const { width } = track.getBoundingClientRect();
 		let value = clampValue(map(e.nativeEvent.offsetX, thumbSizeHalf, width - thumbSizeHalf, min, max));
 		if (isRtl()) value = max - value + min;
-		setValue?.(value);
+		setValue(value);
 		onChanging?.(value);
 		onThumbDown(e, true); // Then call the dragging slider event.
 	};
@@ -255,7 +261,7 @@ export default function Slider({ value: [value, setValue], min = 0, max = 100, a
 		stopEvent(e);
 		const newValue = e.code === "Home" ? min : e.code === "End" ? max :
 			clampValue(value + (decrease ? -1 : 1) * keyStep * (largeStep ? keyBigStepMultiplier : 1));
-		setValue?.(newValue);
+		setValue(newValue);
 	}, [value, clampValue, keyBigStepMultiplier, keyStep, min, max, setValue]);
 
 	const steppedSmoothValue = useMemo(() => {

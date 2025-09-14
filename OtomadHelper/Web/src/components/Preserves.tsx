@@ -1,12 +1,16 @@
 type RTFs = (string | React.JSX.Element)[];
 
-function replaceLfToBr(longText: string | string[], spacing?: string | boolean) {
-	longText = wrapIfNotArray(longText);
-	return longText.flatMap(text => text
+function splitByLines(multilineText: string | string[]) {
+	multilineText = wrapIfNotArray(multilineText);
+	return multilineText.flatMap(text => text
 		.replaceAll(/\r\n|\n\r|\r/g, "\n")
-		.split("\n")
+		.split("\n"));
+}
+
+function replaceLfToBr(longText: string[], spacing?: string | boolean) {
+	return longText
 		.interpose(i => <Br key={`br-${i}`} spacing={spacing} />)
-		.filter(line => typeof line === "string" ? line.trim() : true));
+		.filter(line => typeof line === "string" ? line.trim() : true);
 }
 
 function replaceAsteriskToEmAndStrong(longText: string | RTFs) {
@@ -18,19 +22,36 @@ function replaceAsteriskToEmAndStrong(longText: string | RTFs) {
  * Automatically convert `\n` in the passed string to `<br />` to preserve line breaks.
  * @returns An array of each lines of the source string separated by `<br />`.
  */
-export default function Preserves({ spacing, children }: FCP<{
+export default function Preserves({}: FCP<{
 	/**
 	 * Paragraph spacing, or height of `<br>`. CSS `<length>` type. Defaults to `0`.\
-	 * If you pass `true`, it will be `0.5em`.
+	 * If you pass `true`, it will be `0.375lh`.
 	 */
 	spacing?: string | boolean;
-	/** Allows auto convert text enclosed by asterisk to italic (`*italic*`)? Defaults to true. */
-	// autoItalic?: boolean;
+}>): ReactNode;
+/**
+ * Automatically convert `\n` in the passed string to `<br />` to preserve line breaks.
+ * @returns An array of each lines of the source string separated by `<br />`.
+ */
+export default function Preserves({}: FCP<{
+	/**
+	 * Create soft line breaks, which for preferred line break places. Cannot be used with spacing together.
+	 */
+	soft?: boolean;
+}>): ReactNode;
+export default function Preserves({ spacing, soft, children }: FCP<{
+	spacing?: string | boolean;
+	soft?: boolean;
 }>): ReactNode {
 	return React.Children.map(children, child => {
 		if (typeof child === "string" || isI18nItem(child)) {
-			let result = replaceLfToBr(child.toString(), spacing);
+			// eslint-disable-next-line no-restricted-syntax
+			let result;
+			result = splitByLines(child.toString());
+			result = replaceLfToBr(result, spacing);
 			result = replaceAsteriskToEmAndStrong(result);
+			if (soft) result = result.split(child => React.isValidElement(child) && child.type === Br)
+				.map((line, i) => <span key={i} style={{ display: "inline-block", whiteSpace: "pre-wrap" }}>{line}</span>);
 			return result;
 		} else if (spacing && React.isValidElement<FCP<{}, "br">>(child) && child.type === "br") {
 			const { key, props: { children: _0, ...props } } = child;
@@ -45,7 +66,7 @@ const SpacingBr = styled("x-br")<{ // WARN: <br> tag not work for override `disp
 }>`
 	content: "";
 	display: block;
-	margin-block-start: ${({ $spacing = "0.5em" }) => $spacing};
+	margin-block-start: ${({ $spacing = "0.375lh" }) => $spacing};
 `;
 
 export function Br({ repeat = 1, spacing, ...htmlAttrs }: FCP<{
@@ -53,7 +74,7 @@ export function Br({ repeat = 1, spacing, ...htmlAttrs }: FCP<{
 	repeat?: number;
 	/**
 	 * Paragraph spacing, or height of `<br>`. CSS `<length>` type. Defaults to `0`.\
-	 * If you pass `true`, it will be `0.5em`.
+	 * If you pass `true`, it will be `0.375lh`.
 	 */
 	spacing?: string | boolean;
 	children?: never;

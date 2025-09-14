@@ -556,6 +556,31 @@ declare interface Array<T> {
 	 * ```
 	 */
 	circularAt(index: number): T;
+
+	/**
+	 * Splits an array into sub-arrays using a specified delimiter element or predicate function.
+	 *
+	 * @template T - The type of elements in the input array.
+	 * @param delimiter - The delimiter used to split the array.
+	 * Can be a value of type `T` or a predicate function that returns `true` for delimiter elements.
+	 * @returns An array of sub-arrays, split at each occurrence of the delimiter.
+	 * The delimiter elements are not included in the resulting sub-arrays.
+	 *
+	 * @example
+	 * ```typescript
+	 * const originalArray = [1, 2, "split", 3, 4, "split", 5, 6];
+	 * const splitArrays = originalArray.split("split");
+	 * // splitArrays: [[1, 2], [3, 4], [5, 6]]
+	 * ```
+	 *
+	 * @example
+	 * ```typescript
+	 * const arr = [1, 2, 0, 3, 0, 4];
+	 * const result = originalArray.split(x => x === 0);
+	 * // result: [[1, 2], [3], [4]]
+	 * ```
+	 */
+	split(delimiter: T | ((element: T) => boolean)): T[][];
 }
 
 declare interface ReadonlyArray<T> extends Pick<Array<T>,
@@ -648,7 +673,7 @@ declare interface IteratorObject<T, TReturn, TNext> {
 	 * @remarks This will a bit faster than `[...iterable].length`.
 	 */
 	readonly length: number;
-	
+
 	/**
 	 * Returns the item located at the specified index.
 	 *
