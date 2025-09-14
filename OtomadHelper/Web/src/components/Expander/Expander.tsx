@@ -116,16 +116,18 @@ const ExpanderChildWrapper = styled.div<{
 	$noDivider?: boolean;
 	/** Override padding inline with presets. */
 	$tilePadding?: "tile view" | "button to item";
+	/** A style that suitable for when expander contains only a single component and even without title, icon and details? */
+	$single?: boolean;
 }>`
 	padding: ${expanderItemPadding[0]}px ${expanderItemPadding[1]}px;
-
-	&:has(.slider) {
-		padding: 21px 52px;
-	}
 
 	&:has(.timecode-box) {
 		--layout: inline;
 	}
+
+	${ifProp("$single", css`
+		padding: 21px 52px;
+	`)}
 
 	${ifProp("$noDivider", css`
 		padding-block-start: 0;

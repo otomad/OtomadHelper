@@ -334,7 +334,7 @@ export default function Settings() {
 				checkInfo={fontSize[0] + t.units.point}
 				expanded={DEV_EXPANDED}
 			>
-				<Expander.ChildWrapper>
+				<Expander.ChildWrapper $single>
 					<Slider
 						value={fontSize}
 						min={7}
@@ -355,6 +355,29 @@ export default function Settings() {
 			<SettingsCardToggleSwitch title={t.settings.preference.autoCollapsePrveClasses} details={t.descriptions.settings.preference.autoCollapsePrveClasses} icon="chevron_down_up" on={autoCollapsePrveClasses} />
 
 			<Subheader>{t.subheaders.config}</Subheader>
+			<Expander title={t.settings.config.backupAndRestore} icon="arrow_counterclockwise">
+				<Expander.Item title={t.settings.config.backupAndRestore.userConfig} icon="settings_multiple">
+					<StackPanel>
+						<Button icon="arrow_download">{t.export}</Button>
+						<Button icon="arrow_upload">{t.import}</Button>
+					</StackPanel>
+				</Expander.Item>
+				<Expander.Item title={t.settings.config.backupAndRestore.path} icon="folder" details="C:\">
+					<Button icon="open">{t.open}</Button>
+				</Expander.Item>
+				<Expander.Item title={t.dangerZone} icon="error_circle">
+					<Button icon="arrow_reset" accent="critical">{t.reset}</Button>
+				</Expander.Item>
+			</Expander>
+			<Expander title={t.settings.config.clipsFolder} icon="folder_temp">
+				<Expander.ChildWrapper $single>
+					<TextBox value={[]} style={{ inlineSize: "100%" }} />
+					<StackPanel style={{ marginBlockStart: "0.5lh" }}>
+						<Button icon="folder_arrow_up_right">{t.browse}</Button>
+						<Button icon="open">{t.open}</Button>
+					</StackPanel>
+				</Expander.ChildWrapper>
+			</Expander>
 			<SettingsCardToggleSwitch title={t.settings.config.hideUsageTips} icon="chat_help_off" on={hideUseTips} />
 
 			<Subheader>{t.settings.dev}</Subheader>

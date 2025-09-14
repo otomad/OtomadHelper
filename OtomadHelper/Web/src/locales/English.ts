@@ -151,6 +151,10 @@ export default {
 		unit: "Unit",
 		deleteSelection: "Delete selection",
 		all: "All",
+		export: "Export",
+		import: "Import",
+		dangerZone: "Danger zone",
+		open: "Open",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -803,6 +807,12 @@ export default {
 			},
 			config: {
 				hideUsageTips: "Hide usage tips",
+				backupAndRestore: {
+					_: "Backup & restore",
+					userConfig: "User configuration settings file",
+					path: "Configuration settings file path",
+				},
+				clipsFolder: "Clips folder",
 			},
 			dev: {
 				_: "Dev",
