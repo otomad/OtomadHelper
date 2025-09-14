@@ -324,6 +324,14 @@ namespace Config {
 			autoCollapsePrveClasses: true,
 			internal: {
 				language: "zh-CN",
+				openglInterop: false,
+				autosaveInterval: 300000,
+				defaultTextTool: "titleAndText",
+				defaultTuningMethod: "",
+				defaultClassicMode: "",
+				defaultElasticMode: "",
+				preserveClipboardOnClose: false,
+				eventGroupSelection: false,
 			},
 		},
 		// If named toJSON, it will conflict to the JSON built-in parameter, causing a recursion error.

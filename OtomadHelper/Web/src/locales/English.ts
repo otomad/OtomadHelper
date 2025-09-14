@@ -347,7 +347,7 @@ export default {
 					_: "Tuning method",
 					noTuning: "No Tuning",
 					pitchShift: "Pitch Shift",
-					elastic: "Élastique",
+					elastic: "Elastic", // Élastique
 					classic: "Classic",
 					scaleless: "Scaleless",
 					acid: "ACID", // Indicate MAGIX ACID Pro.
@@ -821,6 +821,14 @@ export default {
 			},
 			internal: {
 				language: "VEGAS Pro language",
+				openglInterop: "OpenGL compatibility interoperability mode",
+				autosaveInterval: "Custom autosave interval",
+				defaultTextTool: "Default text media generator tool",
+				defaultTuningMethod: "Default tuning method for new audio clips",
+				defaultClassicMode: "Default Classic stretch mode for new audio clips",
+				defaultElasticMode: "Default Elastic stretch mode for new audio clips",
+				preserveClipboardOnClose: "Preserve clipboard on project close",
+				eventGroupSelection: "Select all clips in a group once select any of them",
 			},
 			dev: {
 				_: "Dev",
