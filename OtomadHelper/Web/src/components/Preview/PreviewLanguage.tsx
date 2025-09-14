@@ -14,6 +14,7 @@ const StyledPreviewLanguage = styled.div`
 	.text {
 		${styles.effects.text.subtitle};
 		margin: ${TEXT_MARGIN[1]}px ${TEXT_MARGIN[0]}px;
+		text-align: start;
 
 		.items-view-item.selected & {
 			color: ${c("accent-color")};
@@ -81,12 +82,17 @@ approvalProgresses.onMount = setProgress => {
 		}).catch(noop);
 };
 
-export default function PreviewLanguage({ language }: FCP<{
+export default function PreviewLanguage({ language, showProgress = true }: FCP<{
 	/** The ISO language code. */
 	language: string;
+	/** Show translation approval progress? @default true */
+	showProgress?: boolean;
 	children?: never;
 }>) {
-	const languageName = t({ lng: language }).metadata.name;
+	const allLanguages = useLanguageTags();
+	const languageName = (allLanguages.includes(language) ?
+		t({ lng: language }).metadata.name :
+		getLocaleName(language, language)).toTitleCase();
 	const [progresses] = useAtom(approvalProgresses);
 	const progress = progresses.get(language) ?? -1;
 	const showProgressPercentage = progress >= 0 && progress < 100;
@@ -94,12 +100,16 @@ export default function PreviewLanguage({ language }: FCP<{
 	return (
 		<StyledPreviewLanguage lang={language}>
 			<div className="text">{languageName}</div>
-			<progress value={progress} max={100} aria-hidden />
-			{showProgressPercentage && (
-				<div className="approval-progress">
-					<Icon name="logo/crowdin" />
-					<span>{progress}%</span>
-				</div>
+			{showProgress && (
+				<>
+					<progress value={progress} max={100} aria-hidden />
+					{showProgressPercentage && (
+						<div className="approval-progress">
+							<Icon name="logo/crowdin" />
+							<span>{progress}%</span>
+						</div>
+					)}
+				</>
 			)}
 		</StyledPreviewLanguage>
 	);

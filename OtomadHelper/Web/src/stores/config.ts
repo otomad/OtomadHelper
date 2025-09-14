@@ -322,6 +322,9 @@ namespace Config {
 			hideUseTips: false,
 			autoSwitchSourceFrom: true,
 			autoCollapsePrveClasses: true,
+			internal: {
+				language: "zh-CN",
+			},
 		},
 		// If named toJSON, it will conflict to the JSON built-in parameter, causing a recursion error.
 		// toJson() { return JSON.stringify(this); }, // DELETE: Do not put methods in config store which cannot be serialized.

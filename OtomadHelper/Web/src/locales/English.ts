@@ -819,6 +819,9 @@ export default {
 					_: "Clips folder",
 				},
 			},
+			internal: {
+				language: "VEGAS Pro language",
+			},
 			dev: {
 				_: "Dev",
 				devMode: "Developer mode",
@@ -1193,7 +1196,7 @@ export default {
 				},
 				internal: {
 					_: "This includes some practical options that cannot be set in the VEGAS Pro preferences",
-					info: "This will modify the global preferences of VEGAS Pro, not only for the current project. Incorrect settings may cause VEGAS Pro to fail to start. Please use it with caution.",
+					info: "This will modify the global preferences of VEGAS Pro, not only for the current project. Incorrect settings may cause VEGAS Pro to fail to start. Please use with caution.",
 				},
 			},
 		},

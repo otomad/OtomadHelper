@@ -14,6 +14,8 @@ export function isI18nItem(newChild: Any): newChild is Record<string, string> {
 	return !!newChild?.[I18N_ITEM_SYMBOL];
 }
 
+const wellknownSymbols = Reflect.ownKeys(Symbol).map(key => Symbol[key as never]).filter(value => typeof value === "symbol");
+
 const getProxy = (target: object, fallbackMode: boolean = false) => {
 	const getParentsPrefix = (...prefixes: string[]) => prefixes.length > 0 ? prefixes.join(".") : "";
 	const getDeclarationInfo = (...keys: string[]) => {
@@ -24,7 +26,7 @@ const getProxy = (target: object, fallbackMode: boolean = false) => {
 			includesInterpolation: typeof raw === "string" && raw.includes("{{"),
 			missing: raw === undefined,
 			missingDefault: typeof raw === "object" && !("_" in raw),
-			isStringMethod: keys.last() in String.prototype,
+			isStringMethod: keys.last() in String.prototype || wellknownSymbols.includes(keys.last()),
 			key,
 			raw,
 		};
@@ -101,7 +103,8 @@ const getProxy = (target: object, fallbackMode: boolean = false) => {
 						if (typeof currentName === "string")
 							return getWithArgsProxy(...parents, currentName);
 						if (typeof currentName === "symbol")
-							return target[currentName as typeof I18N_ITEM_SYMBOL];
+							if (currentName === I18N_ITEM_SYMBOL) return target[currentName];
+							else return translate(keys)![currentName as SymbolConstructor["iterator"]];
 					},
 					...sharedProxyHandler(keys),
 				});
