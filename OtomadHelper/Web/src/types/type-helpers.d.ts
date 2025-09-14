@@ -6,6 +6,13 @@ declare global {
 	 *
 	 * @template TSource - Source interface.
 	 * @template TCondition - Filter the type of value.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Keyframe = FilterValueType<{ width: string; height: string; offset: number }, string>;
+	 * //   ^?
+	 * type Keyframe = { width: string; height: string };
+	 * ```
 	 */
 	type FilterValueType<TSource, TCondition> = Pick<
 		TSource,
@@ -18,6 +25,13 @@ declare global {
 	 * Remove read-only modifiers.
 	 *
 	 * @template T - Source object.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Test = Writable<{ readonly foo: string; readonly bar: string }>;
+	 * //   ^?
+	 * type Test = { foo: string; bar: string };
+	 * ```
 	 */
 	type Writable<T> = { -readonly [Key in keyof T]: T[Key] };
 
@@ -25,6 +39,13 @@ declare global {
 	 * Deeply remove read-only modifiers.
 	 *
 	 * @template T - Source object.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Test = DeepWritable<{ readonly foo: { readonly bar: { readonly baz: Readonly<Element> } } }>;
+	 * //   ^?
+	 * type Test = { foo: { bar: { baz: Element } } };
+	 * ```
 	 */
 	type DeepWritable<T> = { -readonly [Key in keyof T]: DeepWritable<T[Key]> };
 
@@ -50,42 +71,45 @@ declare global {
 	 *
 	 * @template TSource - Source object.
 	 * @template TOverrider - Overridden fields and their types.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Character = Override<{ name: "Li Lei", age: 12 }, { name: "Han Meimei" }>;
+	 * //   ^?
+	 * type Character = { name: "Han Meimei", age: 12 };
+	 * ```
 	 */
 	type Override<TSource, TOverrider> = Omit<TSource, keyof TOverrider> & TOverrider;
-
-	/**
-	 * Get the Props of the component.
-	 *
-	 * @template TVueComponent - Vue component.
-	 */
-	type ComponentProps<TVueComponent> = Omit<InstanceType<TVueComponent>["$props"], keyof VNodeProps>;
 
 	/**
 	 * Remove the type of Ref.
 	 *
 	 * @template TRef - Maybe a Ref type.
+	 *
+	 * @example
+	 * ```typescript
+	 * type T0 = Unref<Ref<string>>;
+	 * //   ^?
+	 * type T0 = string;
+	 *
+	 * type T1 = Unref<string>;
+	 * //   ^?
+	 * type T1 = string;
+	 * ```
 	 */
 	type Unref<TRef> = TRef extends MaybeRef<infer Value> ? Value : TRef;
 
 	/**
-	 * Remove the index signature of T and only use known attribute key names.
-	 *
-	 * For example, removing `[x: string]` from an enumeration type.
+	 * Deep capitalize all keys of an object.
 	 *
 	 * @template T - Source object.
-	 */
-	type KnownKeys<T> = keyof {
-		[Key in keyof T]:
-			string extends Key ? never :
-			number extends Key ? never :
-			symbol extends Key ? never :
-			Key;
-	};
-
-	/**
-	 * Capitalize all keys of an object.
 	 *
-	 * @template T - Source object.
+	 * @example
+	 * ```typescript
+	 * type Test = CapitalizeObject<{ foo: { bar: { baz: Element } } }>;
+	 * //   ^?
+	 * type Test = { Foo: { Bar: { Baz: Element } } };
+	 * ```
 	 */
 	type CapitalizeObject<T extends object> = {
 		[Key in keyof T as Capitalize<Key>]:
@@ -94,9 +118,20 @@ declare global {
 	} & T;
 
 	/**
-	 * Similar to the keyword 'keyof', it only returns a set of value types rather than a set of key types.
+	 * Similar to the keyword `keyof`, but only returns a union of value types rather than a union of key types.
 	 *
 	 * @template T - Source object.
+	 *
+	 * @example
+	 * ```typescript
+	 * type T0 = ValueOf<number[]>;
+	 * //   ^?
+	 * type T0 = number;
+	 *
+	 * type T1 = ValueOf<{ foo: string; bar: number }>;
+	 * //   ^?
+	 * type T1 = string | number;
+	 * ```
 	 */
 	type ValueOf<T extends object> =
 		T extends ArrayLike<infer Value> ? Value :
@@ -107,6 +142,13 @@ declare global {
 	 * Deep read-only object.
 	 *
 	 * @template T - Source object.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Test = DeepReadonly<{ foo: { bar: { baz: Element } } }>;
+	 * //   ^?
+	 * type Test = { readonly foo: { readonly bar: { readonly baz: Readonly<Element> } } };
+	 * ```
 	 */
 	type DeepReadonly<T> = Readonly<{
 		[Key in keyof T]: DeepReadonly<T[Key]>;
@@ -116,31 +158,71 @@ declare global {
 	 * Maybe the type object of the Ref packaging or its type itself.
 	 *
 	 * @template TRef - Maybe a Ref type.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Test = MaybeRef<string>;
+	 * //   ^?
+	 * type Test = string | RefObject<string>;
+	 * ```
 	 */
-	type MaybeRef<TRef> = RefObject<TRef> | RefObject<TRef> | TRef;
+	type MaybeRef<TRef> = RefObject<TRef> | TRef;
 
 	/**
 	 * Reference to HTML DOM element.
 	 *
 	 * @template TElement - HTML DOM element.
+	 *
+	 * @example
+	 * ```typescript
+	 * type El0 = DomRef<"div">;
+	 * //   ^?
+	 * type El0 = RefObject<HTMLDivElement | null>;
+	 *
+	 * type El1 = DomRef<HTMLDivElement>;
+	 * //   ^?
+	 * type El1 = RefObject<HTMLDivElement | null>;
 	 */
 	type DomRef<TElement extends keyof ElementTagNameMap | Element> = RefObject<(TElement extends string ? TagNameToElement<TElement> : TElement) | null>;
 
 	/**
-	 * Get the type of a function based on the specified parameters and return value.
+	 * Construct a function type with specified parameter types and return type.
 	 *
-	 * @template TArgs - The tuple of the function parameters.
+	 * @template TArgs - A tuple of the function parameters.
 	 * @template TRet - The return value of a function, leaving blank indicates no return value `void`.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Function = Func<[arg1: string, arg2: boolean], number>;
+	 * //   ^?
+	 * type Function = (arg1: string, arg2: boolean) => number;
+	 *
+	 * type Consumer = Func<[arg1: string, arg2: boolean]>;
+	 * //   ^?
+	 * type Consumer = (arg1: string, arg2: boolean) => void;
+	 *
+	 * type Runnable = Func;
+	 * //   ^?
+	 * type Runnable = () => void;
+	 * ```
 	 */
 	type Func<
 		TArgs extends Iterable<any> | ArrayLike<any> = [],
 		TRet = void,
 	> = (...args: TArgs) => TRet;
+	type a = Func<[f: string]>;
 
 	/**
-	 * Make all the parameters nullable in the function.
+	 * Make all the parameters optional in the function.
 	 *
 	 * @template TFunc - Source function.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Test = PartialArgsFunc<(arg1: string, arg2: boolean) => number>;
+	 * //   ^?
+	 * type Test = (arg1?: string, arg2?: boolean) => number;
+	 * ```
 	 */
 	type PartialArgsFunc<TFunc extends AnyFunction> = Func<Partial<Parameters<TFunc>>, ReturnType<TFunc>>;
 
@@ -148,6 +230,13 @@ declare global {
 	 * Maybe the type object of Promise or its type itself.
 	 *
 	 * @template T - Maybe a Promise type.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Test = MaybePromise<string>;
+	 * //   ^?
+	 * type Test = string | Promise<string>;
+	 * ```
 	 */
 	type MaybePromise<T> = T | Promise<T>;
 
@@ -155,9 +244,24 @@ declare global {
 	 * If the given type is already a Promise type, it returns itself,
 	 * otherwise it returns this type wrapped by a Promise.
 	 *
-	 * There is no need for nesting Promise types much more times.
+	 * There is no need to nest Promise types much more times.
 	 *
 	 * @template T - Maybe a Promise type.
+	 *
+	 * @example
+	 * ```typescript
+	 * type T0 = PromiseOnce<string>;
+	 * //   ^?
+	 * type T0 = Promise<string>;
+	 *
+	 * type T1 = PromiseOnce<Promise<string>>;
+	 * //   ^?
+	 * type T1 = Promise<string>;
+	 *
+	 * type T2 = Promise<Promise<string>>;
+	 * //   ^?
+	 * type T2 = Promise<Promise<string>>;
+	 * ```
 	 */
 	type PromiseOnce<T> = T extends Promise<any> ? T : Promise<T>;
 
@@ -165,6 +269,17 @@ declare global {
 	 * Make all items in Array or Object T readonly.
 	 *
 	 * @template T - Source array or object.
+	 *
+	 * @example
+	 * ```typescript
+	 * type T0 = ReadonlyArrayItems<Element[]>;
+	 * //   ^?
+	 * type T0 = Readonly<Element>[];
+	 *
+	 * type T1 = ReadonlyArrayItems<[Element, Node]>;
+	 * //   ^?
+	 * type T1 = [Readonly<Element>, Readonly<Node>];
+	 * ```
 	 */
 	type ReadonlyArrayItems<T> = {
 		[P in keyof T]: Readonly<T[P]>;
@@ -175,6 +290,13 @@ declare global {
 	 * If the given function already returns a Promise, it will be returned as is.
 	 *
 	 * @template TFunction - The type of the source function to be converted. It should be a synchronous function type.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Asynchronous = MakeFunctionAsync<() => string>;
+	 * //   ^?
+	 * type Asynchronous = () => Promise<string>;
+	 * ```
 	 */
 	type MakeFunctionAsync<TFunction extends Function> = (...args: ReadonlyArrayItems<Parameters<TFunction>>) =>
 		PromiseOnce<ReturnType<TFunction>>;
@@ -189,6 +311,13 @@ declare global {
 	 * @returns An object with the same keys as the input object, but with each function value replaced by
 	 * an asynchronous version of the function. The asynchronous version of a function will return a Promise
 	 * that resolves with the same value as the original function.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Asynchronous = MakeFunctionAsync<{ foo: () => string }>;
+	 * //   ^?
+	 * type Asynchronous = { foo: () => Promise<string> };
+	 * ```
 	 */
 	type MakeFunctionsAsync<TFunctions> = {
 		[functionName in keyof TFunctions]: MakeFunctionAsync<TFunctions[functionName]>;
@@ -198,6 +327,13 @@ declare global {
 	 * Remove properties with value type of `never` from a object.
 	 *
 	 * @template T - Source object.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Test = OmitNevers<{ foo: string; bar: never }>;
+	 * //   ^?
+	 * type Test = { foo: string };
+	 * ```
 	 */
 	type OmitNevers<T> = Pick<T, {
 		[K in keyof T]: T[K] extends never ? never : K;
@@ -207,15 +343,35 @@ declare global {
 	 * Remove private properties which conventionally have keys beginning with underscores from a object.
 	 *
 	 * @template T - Source object.
+	 *
+	 * @example
+	 * ```typescript
+	 * type MiddleAgedPerson = OmitConventionalPrivates<{ name: string; _age: number }>;
+	 * //   ^?
+	 * type MiddleAgedPerson = { name: string };
+	 * ```
 	 */
-	type OmitPrivates<T> = OmitNevers<{
+	type OmitConventionalPrivates<T> = OmitNevers<{
 		[key in keyof T]: key extends `_${string}` ? never : T[key];
 	}>;
 
 	/**
 	 * Make all properties in T required and exclude null and undefined from them.
+	 * @note Built-in utility type `Required` is powerless for properties whose values are explicitly unioned with
+	 * `undefined` without specifying `?:`.
 	 *
 	 * @template T - Source object.
+	 *
+	 * @example
+	 * ```typescript
+	 * type T0 = Required<{ foo?: string | undefined; bar: string | undefined }>;
+	 * //   ^?
+	 * type T0 = { foo: string; bar: string | undefined };
+	 *
+	 * type T1 = RequiredNonNullable<{ foo?: string | undefined; bar: string | undefined }>;
+	 * //   ^?
+	 * type T1 = { foo: string; bar: string };
+	 * ```
 	 */
 	type RequiredNonNullable<T> = {
 		[P in keyof T]-?: T[P] & {};
@@ -277,9 +433,12 @@ declare global {
 	/**
 	 * Union the primitive value types with their wrapper object types.
 	 * @template T - Primitive value types.
+	 *
 	 * @example
 	 * ```typescript
-	 * type foo = WithWrapperType<string | number | bigint>; // Expect type: string | number | bigint | String | Number | BigInt;
+	 * type Test = WithWrapperType<string | number | bigint>;
+	 * //   ^?
+	 * type Test = string | number | bigint | String | Number | BigInt;
 	 * ```
 	 */
 	type WithWrapperType<T> = T |
@@ -296,7 +455,9 @@ declare global {
 	 * @see https://stackoverflow.com/a/75080234/19553213
 	 * @example
 	 * ```typescript
-	 * type Test = ObtainLiterals<"a" | "b" | string & {}>; // "a" | "b"
+	 * type Test = ObtainLiterals<"a" | "b" | string & {}>;
+	 * //   ^?
+	 * type Test = "a" | "b";
 	 * ```
 	 */
 	type ObtainLiterals<T> = T extends infer R ? (R extends string ? (string extends R ? never : R) : never) : never;
@@ -312,19 +473,24 @@ declare global {
 	 * ```typescript
 	 * type Example = { a?: number; b?: string; c?: boolean; d: bigint };
 	 * type Result = RequiredWith<Example, "a" | "b">;
-	 * // Result is: { a: number; b: string; c?: boolean; d: bigint }
+	 * //   ^?
+	 * type Result = { a: number; b: string; c?: boolean; d: bigint };
 	 * ```
 	 */
 	type RequiredWith<TSource extends object, TRequiredProperties extends keyof TSource> = Override<TSource, Required<Pick<TSource, TRequiredProperties>>>;
 
 	/**
 	 * Makes all properties of a given object nullable.
+	 * @remarks It is similar to `Partial` but replaces `undefined` with `null`.
 	 *
 	 * @template T - The object whose properties will be made nullable.
+	 *
 	 * @example
 	 * ```typescript
 	 * type User = { name: string; age: number };
-	 * type NullableUser = Nullable<User>; // { name: string | null; age: number | null }
+	 * type NullableUser = Nullable<User>;
+	 * //   ^?
+	 * type NullableUser = { name: string | null; age: number | null };
 	 * ```
 	 */
 	type Nullable<T> = {

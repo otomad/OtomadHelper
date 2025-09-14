@@ -38,6 +38,7 @@ export function nextAnimationTick() {
 /**
  * flushSync lets you force React to flush any updates inside the provided callback synchronously.
  * This ensures that the DOM is updated immediately.
+ * @template R - The return type of the callback.
  * @param callback - A function. React will immediately call this callback and flush any updates it
  * contains synchronously. It may also flush any pending updates, or Effects, or updates inside of
  * Effects. If an update suspends as a result of this flushSync call, the fallbacks may be re-shown.

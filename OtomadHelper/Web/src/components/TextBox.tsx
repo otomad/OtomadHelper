@@ -458,7 +458,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 }
 
 type NumberLike = number | bigint;
-function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], disabled, readOnly, decimalPlaces, keepTrailing0, min, max, spinnerStep, keyBigStepMultiplier, positiveSign, inputRef, ...textBoxProps }: Override<OmitPrivates<PropsOf<typeof TextBox>>, {
+function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], disabled, readOnly, decimalPlaces, keepTrailing0, min, max, spinnerStep, keyBigStepMultiplier, positiveSign, inputRef, ...textBoxProps }: Override<OmitConventionalPrivates<PropsOf<typeof TextBox>>, {
 	/** The value of the number, which can be number or bigint type. */
 	value: [get: TNumber, set?: SetStateNarrow<TNumber>];
 	/** The number of decimal places, leaving blank means no limit. */

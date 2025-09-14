@@ -19,6 +19,7 @@ export default [
 	reactRecommended,
 	importPlugin.flatConfigs.warnings,
 	jsdoc.configs["flat/recommended-typescript"],
+	// ...jsdoc.configs.examples,
 	stylistic.configs.customize({
 		indent: "tab",
 		quotes: "double",
@@ -41,6 +42,9 @@ export default [
 			},
 		},
 		files: ["**/*.{js,jsx,ts,tsx}"],
+		ignores: [
+			"**/*.md/*.js",
+		],
 		plugins: {
 			"react-refresh": reactRefresh,
 			unicorn,
@@ -471,7 +475,7 @@ export default [
 		},
 	},
 	{
-		files: ["*.{js,jsx}"],
+		files: ["**/*.{js,jsx}"],
 		rules: {
 			"jsdoc/check-tag-names": "off",
 			"jsdoc/no-types": "off",

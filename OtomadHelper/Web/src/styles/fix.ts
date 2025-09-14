@@ -5,8 +5,6 @@
  * this is because other plugins have inconsistent naming conventions.
  */
 
-import { FALLBACK_TRANSITIONS } from "utils/styles";
-
 export default css`
 	/* stylelint-disable selector-id-pattern */
 	/* stylelint-disable selector-class-pattern */
@@ -37,9 +35,4 @@ export default css`
 		}
 	}
 	// #endregion
-
-	// HACK: When expander-child contains ItemsView will laggy when expanding and collapsing.
-	/* :root:has(.expander-child:is(.enter, .enter-active, .exit, .exit-active)) {
-		--fallback-transitions: ${FALLBACK_TRANSITIONS.replaceAll("250ms", "450ms")};
-	} */
 `;

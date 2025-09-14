@@ -233,7 +233,7 @@ export default class IndexedDBStore<T extends object> {
 	 * 1. Updating a specific property of an existing record identified by its ID.
 	 * 2. Adding or updating an entire record in the store.
 	 *
-	 * @param args -
+	 * @param args
 	 * The arguments for the operation. The method determines the mode of operation
 	 * based on the number and types of arguments provided:
 	 * - If three arguments are provided: `[key, value, id]`
@@ -425,7 +425,7 @@ export default class IndexedDBStore<T extends object> {
 	 *
 	 * @template T - The type of the objects stored in the IndexedDB object store.
 	 * @param key - The key of the index to sort by. Must be a valid key of type `T` and a string.
-	 * @param direction -
+	 * @param direction
 	 * The direction in which to iterate over the records.
 	 * Defaults to `"next"`. Possible values are:
 	 * - `"next"`: Ascending order.

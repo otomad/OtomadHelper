@@ -237,6 +237,7 @@ words:
   - unflipped
   - unfocusable
   - unhover
+  - unioned
   - unlengthen
   - unlengthening
   - unlengthens
@@ -317,6 +318,7 @@ ignoreWords:
   - tsu
   - gae
   - cái
+  - meimei
 flagWords:
   - colour -> color
   - canot -> cannot

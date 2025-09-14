@@ -16,6 +16,7 @@ function replaceAsteriskToEmAndStrong(longText: string | RTFs) {
 
 /**
  * Automatically convert `\n` in the passed string to `<br />` to preserve line breaks.
+ * @returns An array of each lines of the source string separated by `<br />`.
  */
 export default function Preserves({ spacing, children }: FCP<{
 	/**
@@ -66,6 +67,7 @@ export function Br({ repeat = 1, spacing, ...htmlAttrs }: FCP<{
  * Converts markdown text (bold and italic only) to React JSX.\
  * Supports **bold**, *italic*, and ***bold italic***.
  * @param markdown - The markdown text to convert.
+ * @param keyPrefix - If use it in a loop, please provide a key to all child JSX elements, which can prevent same key among all children.
  * @returns React fragment with formatted elements.
  */
 function markdownToJsx(markdown: string, keyPrefix: string = "") {

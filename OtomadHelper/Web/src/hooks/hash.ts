@@ -1,7 +1,7 @@
 // cSpell:ignore uniqueid
 
 /**
- * Due to React build-in hook `useId` will return a string that contains two special symbols - colons.\
+ * Due to React built-in hook `useId` will return a string that contains two special symbols - colons.\
  * You have to escape it then put it into `querySelector` function or CSS.\
  * But it seems cannot use it as a CSS custom property name.\
  * So I decided to remove the annoying colons.\
