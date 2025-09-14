@@ -319,6 +319,7 @@ ignoreWords:
   - gae
   - cái
   - meimei
+  - loca
 flagWords:
   - colour -> color
   - canot -> cannot

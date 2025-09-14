@@ -355,26 +355,26 @@ export default function Settings() {
 			<SettingsCardToggleSwitch title={t.settings.preference.autoCollapsePrveClasses} details={t.descriptions.settings.preference.autoCollapsePrveClasses} icon="chevron_down_up" on={autoCollapsePrveClasses} />
 
 			<Subheader>{t.subheaders.config}</Subheader>
-			<Expander title={t.settings.config.backupAndRestore} icon="arrow_counterclockwise">
-				<Expander.Item title={t.settings.config.backupAndRestore.userConfig} icon="settings_multiple">
+			<Expander title={t.settings.config.userConfig} icon="settings_multiple" details={t.descriptions.settings.config.userConfig}>
+				<Expander.Item title={t.settings.config.userConfig.backupAndRestore} icon="arrow_sync" details={t.descriptions.settings.config.userConfig.backupAndRestore}>
 					<StackPanel>
 						<Button icon="arrow_download">{t.export}</Button>
 						<Button icon="arrow_upload">{t.import}</Button>
 					</StackPanel>
 				</Expander.Item>
-				<Expander.Item title={t.settings.config.backupAndRestore.path} icon="folder" details="C:\">
-					<Button icon="open">{t.open}</Button>
+				<Expander.Item title={t.settings.config.userConfig.fileLocation} icon="folder" details="C:\">
+					<Button icon="location_target">{t.locate}</Button>
 				</Expander.Item>
-				<Expander.Item title={t.dangerZone} icon="error_circle">
+				<Expander.Item title={t.dangerZone} icon="error_circle" details={t.descriptions.settings.config.userConfig.reset}>
 					<Button icon="arrow_reset" accent="critical">{t.reset}</Button>
 				</Expander.Item>
 			</Expander>
-			<Expander title={t.settings.config.clipsFolder} icon="folder_temp">
+			<Expander title={t.settings.config.clipsFolder} icon="folder_video_clip" details={t.descriptions.settings.config.clipsFolder}>
 				<Expander.ChildWrapper $single>
 					<TextBox value={[]} style={{ inlineSize: "100%" }} />
 					<StackPanel style={{ marginBlockStart: "0.5lh" }}>
 						<Button icon="folder_arrow_up_right">{t.browse}</Button>
-						<Button icon="open">{t.open}</Button>
+						<Button icon="location_target">{t.locate}</Button>
 					</StackPanel>
 				</Expander.ChildWrapper>
 			</Expander>
