@@ -191,11 +191,11 @@ export default function Settings() {
 										hidden={color === "wallpaper" && !backgroundImages.currentDominantColor}
 										selected={color === "windows" && accentColor[0] === "wallpaper" && !backgroundImages.currentDominantColor}
 										autoStartViewTransition
-										coloredSelectedOutline
+										selectedOutlineColor="colored"
 									/>
 								</TooltipPartial>
 							))}
-							{BasicColorPalette.values.map(color => <ColorButton key={color} color={color} value={accentColor} autoStartViewTransition coloredSelectedOutline />)}
+							{BasicColorPalette.values.map(color => <ColorButton key={color} color={color} value={accentColor} autoStartViewTransition selectedOutlineColor="colored" />)}
 							<TooltipPartial title={t.custom}>
 								<ColorPicker
 									color={accentColor}
@@ -204,7 +204,7 @@ export default function Settings() {
 									showIconWhenHovering={false}
 									showSpectrumWhenUnselected
 									autoStartViewTransition
-									coloredSelectedOutline
+									selectedOutlineColor="colored"
 								/>
 							</TooltipPartial>
 						</StyledColorPalette>

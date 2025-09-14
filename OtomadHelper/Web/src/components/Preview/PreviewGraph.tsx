@@ -8,14 +8,14 @@ const StyledPreviewGraph = styled.i.attrs({
 	margin: ${-CONTAINER_PADDING}px;
 	margin-inline: -10px -2px;
 	padding: ${CONTAINER_PADDING}px;
-	background-color: ${getContrastiveColor("color", 0.5)};
+	background-color: --contrast-color(var(--color), 0.5);
 	border-radius: 2px;
 	forced-color-adjust: none;
 
 	svg {
 		${styles.mixins.square("54px")};
 		display: block;
-		stroke: ${c("color")};
+		stroke: var(--color);
 	}
 `;
 

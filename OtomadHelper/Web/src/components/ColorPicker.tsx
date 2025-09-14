@@ -25,7 +25,7 @@ const StyledColorButton = styled(StyledButton)`
 		inset: ${PADDING}px;
 		background-color: ${c("color")};
 		border-radius: inherit;
-		box-shadow: 0 0 0 1px ${getContrastiveColor("color", 0.37)} inset;
+		box-shadow: 0 0 0 1px --contrast-color(var(--color), 0.37) inset;
 
 		&.spectrum {
 			background:
@@ -39,7 +39,7 @@ const StyledColorButton = styled(StyledButton)`
 	.icon,
 	.animated-icon {
 		position: absolute;
-		color: ${getContrastiveColor("color")};
+		color: --contrast-color(var(--color));
 		font-size: 16px;
 
 		&:is(.spectrum ~ *) {
@@ -89,8 +89,13 @@ const StyledColorButton = styled(StyledButton)`
 	&[aria-checked="true"] {
 		outline-color: ${c("stroke-color-focus-stroke-outer")};
 
-		&[data-colored-selected-outline] {
-			--stroke-color-focus-stroke-outer: lch(from ${c("color")} 50 c h); // Change selected focused outline color.
+		// Change selected focused outline color.
+		&[data-selected-outline-color="colored"] {
+			--stroke-color-focus-stroke-outer: lch(from ${c("color")} 50 c h);
+		}
+
+		&[data-selected-outline-color]:not([data-selected-outline-color="colored"]) {
+			--stroke-color-focus-stroke-outer: attr(data-selected-outline-color <color>);
 		}
 	}
 
@@ -99,7 +104,7 @@ const StyledColorButton = styled(StyledButton)`
 	}
 `;
 
-export function ColorButton({ color, icon, animatedIcon, selected = false, value: [value, setValue] = NEVER_MIND, showIconWhenHovering = false, colorAlt, showSpectrum = false, autoStartViewTransition, coloredSelectedOutline, style, role = "radio", onClick, children, ...htmlAttrs }: FCP<{
+export function ColorButton({ color, icon, animatedIcon, selected = false, value: [value, setValue] = NEVER_MIND, showIconWhenHovering = false, colorAlt, showSpectrum = false, autoStartViewTransition, selectedOutlineColor, style, role = "radio", onClick, children, ...htmlAttrs }: FCP<{
 	/** Color. */
 	color?: string;
 	/** Icon. */
@@ -118,8 +123,13 @@ export function ColorButton({ color, icon, animatedIcon, selected = false, value
 	showSpectrum?: boolean;
 	/** Auto start color palette view transition? */
 	autoStartViewTransition?: boolean;
-	/** Make selected outline colored? */
-	coloredSelectedOutline?: boolean;
+	/**
+	 * Specify the selected outline color. Defaults to `undefined`.
+	 * - `undefined`: Use default focus stroke outer color.
+	 * - `"colored"`: Use the same color as `color` prop.
+	 * - `string`: Custom outline color.
+	 */
+	selectedOutlineColor?: "colored" | (string & {});
 }, "button">) {
 	const [isIconAnimating, setIsIconAnimating] = useState(false);
 	// The edit icon will keep showing until the animation finishes playing.
@@ -141,7 +151,7 @@ export function ColorButton({ color, icon, animatedIcon, selected = false, value
 			style={{ ...style, "--color": colorAlt ?? color }}
 			aria-checked={selected}
 			role={role}
-			data-colored-selected-outline={coloredSelectedOutline}
+			data-selected-outline-color={selectedOutlineColor}
 			onClick={handleClick}
 		>
 			<div className={["fill", { spectrum: showSpectrum }]} />

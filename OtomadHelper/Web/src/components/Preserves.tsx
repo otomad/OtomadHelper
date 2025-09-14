@@ -66,7 +66,7 @@ const SpacingBr = styled("x-br")<{ // WARN: <br> tag not work for override `disp
 }>`
 	content: "";
 	display: block;
-	margin-block-start: ${({ $spacing = "0.375lh" }) => $spacing};
+	margin-block-start: ${({ $spacing = "0.375lh" }) => $spacing}; // 0.5em × (1em := 12px) ÷ (1lh := 16px)
 `;
 
 export function Br({ repeat = 1, spacing, ...htmlAttrs }: FCP<{

@@ -292,20 +292,6 @@ export function zoomDomRect(rect: DOMRect, zoom: number) {
 }
 
 /**
- * Use pure CSS to calculate the high contrast text color (black or white) by the oklab model from
- * the specified background color.
- * @param colorVar - Background color CSS custom property name, the initial two dashes can be omitted.
- * @param alpha - The alpha value of the color, defaults to 1.
- * @returns A contrastive text color.
- * @remarks When `color-contrast()` available, this function will be deprecated.
- */
-export function getContrastiveColor(colorVar: string, alpha: number = 1) {
-	if (!colorVar.startsWith("--")) colorVar = "--" + colorVar;
-	return `oklch(from var(${colorVar}) calc(1 - round(to-zero, L / 0.65)) 0 0 / ${alpha})`;
-	// Cannot use `infinity`.
-}
-
-/**
  * Useful when you want to convert
  * ```typescript
  * element.style.backgroundColor = "black";

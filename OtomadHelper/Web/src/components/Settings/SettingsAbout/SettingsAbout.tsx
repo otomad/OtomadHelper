@@ -2,6 +2,7 @@ import links from "helpers/links";
 import SettingsAboutLogo from "./SettingsAboutLogo";
 
 const StyledSettingsAbout = styled.div`
+	${styles.effects.text.body};
 	display: contents;
 
 	.about-info {
@@ -37,13 +38,14 @@ const StyledSettingsAbout = styled.div`
 	}
 
 	.links {
+		${styles.effects.text.bodyStrong};
 		column-gap: 14px;
 		column-rule: 3px dotted ${c("accent-color", 40)};
 		column-rule-outset: -8px;
 	}
 
 	> * {
-		margin-block-end: 6px;
+		margin-block-end: 0.3lh; // 6px ÷ (1lh := 20px)
 	}
 `;
 

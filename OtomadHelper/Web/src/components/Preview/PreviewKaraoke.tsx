@@ -41,7 +41,7 @@ const StyledPreviewKaraoke = styled.div`
 
 	&.custom > p {
 		color: var(--color);
-		-webkit-text-stroke-color: ${getContrastiveColor("color")};
+		-webkit-text-stroke-color: --contrast-color(var(--color));
 	}
 
 	main.page.enter-done &:not(.reset) {

@@ -140,7 +140,7 @@ const StyledPianoKey = styled.div`
 		--mixed-active: black;
 		--level-hover: 10%;
 		--level-active: 10%;
-		color: ${getContrastiveColor("colorization")};
+		color: --contrast-color(${c("colorization")});
 	}
 
 	&:not(:last-child, :hover, :has(> .white.active)) > .white {
