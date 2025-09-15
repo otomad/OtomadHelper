@@ -125,6 +125,11 @@ export const t = getProxy(targetFunction) as Trans;
 export const tf = getProxy(targetFunction, true) as Trans;
 type Trans = LocaleDictionary & typeof targetFunction;
 
+declare global {
+	// @ts-ignore
+	export type { LocaleIdentifiers } from "locales/types";
+}
+
 /**
  * Check if the current page is written from right to left (such as in Arabic) rather than from left to right (such as in English).
  * @param container - Specify the container. Defaults to `<html>`.

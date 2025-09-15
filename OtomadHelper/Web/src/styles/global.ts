@@ -1,5 +1,6 @@
 import { FALLBACK_TRANSITIONS } from "utils/styles";
 import { globalColors } from "./colors";
+import counters from "./counters";
 import eases from "./eases";
 import fakeAnimations from "./fake-animations";
 import fix from "./fix";
@@ -14,6 +15,7 @@ const GlobalStyle = createGlobalStyle<{
 	${globalColors()};
 	${fakeAnimations};
 	${functions};
+	${counters};
 
 	*,
 	::before,

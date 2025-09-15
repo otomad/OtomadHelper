@@ -288,7 +288,7 @@ export default {
 				_: "Tuning",
 				tuningMethod: {
 					_: "Phương pháp tuning",
-					noTuning: "Không tuning",
+					none: "Không tuning",
 					pitchShift: "Đổi Cao Độ",
 					elastic: "Élastique",
 					classic: "Classic",
@@ -787,7 +787,7 @@ export default {
 				tuning: {
 					tuningMethod: {
 						_: "Sử dụng một thuật toán tuning khác",
-						noTuning: "Không có hiệu ứng cao độ",
+						none: "Không có hiệu ứng cao độ",
 						pitchShift: "Sử dụng Plugin hiệu ứng âm thanh Pitch Shift. Đây là plugin DirectX có cùng thuật toán với Classic Method và có thể hỗ trợ nhiều cao độ hơn. Tiện ích mở rộng này yêu cầu phải tải một số preset trước khi sử dụng.",
 						elastic: "Sử dụng Phương pháp thay đổi cao độ Elastic. Phương pháp Élastique sử dụng công nghệ từ zplane.development và cung cấp khả năng kéo dãn thời gian thực và thay đổi cao độ được cải tiến. Đây chỉ là phương pháp mặc định để nhấn trực tiếp các phím +/−.",
 						classic: "Sử dụng Phương pháp thay đổi cao độ cổ điển. Phương pháp này sử dụng công nghệ cũ từ Vegas Pro 8 trở xuống và cung cấp nhiều kiểu crossfade hơn để lựa chọn, tùy thuộc vào nguồn của bạn.",

@@ -177,14 +177,6 @@ export default {
 			second: "s", // Unit: Second.
 			minute: "min", // Unit: Minute.
 			hour: "h", // Unit: Hour.
-			millisecond_full: "Millisecond", // Unit: Millisecond.
-			second_full: "Second", // Unit: Second.
-			minute_full: "Minute", // Unit: Minute.
-			hour_full: "Hour", // Unit: Hour.
-			millisecond_full_other: "Milliseconds",
-			second_full_other: "Seconds",
-			minute_full_other: "Minutes",
-			hour_full_other: "Hours",
 			percent: "%", // Unit: Percent.
 			pixel: "px", // Unit: Pixel.
 			pixel_full: "Pixel", // Unit: Pixel.
@@ -356,7 +348,7 @@ export default {
 				_: "Tuning",
 				tuningMethod: {
 					_: "Tuning method",
-					noTuning: "No Tuning",
+					none: "No Tuning",
 					pitchShift: "Pitch Shift",
 					elastic: "Elastic", // Élastique
 					classic: "Classic",
@@ -367,6 +359,33 @@ export default {
 				},
 				stretchAttributes: {
 					_: "Stretch attributes",
+					elastic: {
+						pro: "Professional",
+						efficient: "Efficient",
+						soloist_monophonic: "Soloist (Monophonic)",
+						soloist_speech: "Soloist (Speech)",
+					},
+					classic: {
+						a01: "Music 1 (minimum flange, may echo)",
+						a02: "Music 2",
+						a03: "Music 3 (less echo)",
+						a04: "Music 4 (fast, good for bass)",
+						a05: "Music 5",
+						a06: "Music 6",
+						a07: "Speech 1",
+						a08: "Speech 2",
+						a09: "Speech 3 (fast)",
+						a10: "Solo instruments 1",
+						a11: "Solo instruments 2",
+						a12: "Solo instruments 3",
+						a13: "Solo instruments 4 (less echo)",
+						a14: "Solo instruments 5",
+						a15: "Solo instruments 6",
+						a16: "Solo instruments 7 (fast)",
+						a17: "Drums, unpitched (minimum echo)",
+						a18: "Drums (better for toms)",
+						a19: "Drums (tiny echo)",
+					},
 				},
 				alternativeForExceedTheRange: {
 					_: "If exceeds the range",
@@ -832,14 +851,14 @@ export default {
 			},
 			internal: {
 				language: "VEGAS Pro language",
-				openglInterop: "OpenGL compatibility interoperability mode",
-				autosaveInterval: "Custom autosave interval",
+				autosaveInterval: "Autosave interval",
 				defaultTextTool: "Default text media generator tool",
 				defaultTuningMethod: "Default tuning method for new audio clips",
-				defaultClassicMode: "Default Classic stretch mode for new audio clips",
-				defaultElasticMode: "Default Elastic stretch mode for new audio clips",
+				defaultElasticMode: "Default Elastic stretch attribute for new audio clips",
+				defaultClassicMode: "Default Classic stretch attribute for new audio clips",
 				preserveClipboardOnClose: "Preserve clipboard on project close",
 				eventGroupSelection: "Select all clips in a group once select any of them",
+				openglInterop: "OpenGL GDI compatibility mode",
 			},
 			dev: {
 				_: "Dev",
@@ -985,7 +1004,7 @@ export default {
 				tuning: {
 					tuningMethod: {
 						_: "Uses a different tuning algorithm",
-						noTuning: "No pitch effect",
+						none: "No pitch effect",
 						pitchShift: "Uses the Pitch Shift Audio Effect Plugin. It is a DirectX plugin with the same algorithm as the Classic Method and can support a wider range of pitches. The extension requires some presets to be loaded before use.",
 						elastic: "Uses the Elastic Pitch Change Method. The Élastique Method uses technology from zplane.development, and provides enhanced real-time time stretching and pitch-shifting capabilities. It is just the default method to directly press the +/− keys.",
 						classic: "Uses the Classic Pitch Change Method. It uses the old technology from Vegas Pro 8 and below versions, and provides more crossfade types to choose from, depending on your source.",
@@ -999,7 +1018,9 @@ export default {
 							exceedTheRange: "Can work exceed the range",
 						},
 					},
-					stretchAttributes: "Detailed configuration of the selected tuning method",
+					stretchAttributes: "The current tuning method does not support setting any stretch properties",
+					stretchAttributes_elastic: "Choose the most suitable mode for the current source from the sub-algorithms of the Elastic tuning method. Different modes provide different levels of quality and performance.",
+					stretchAttributes_classic: "Choose a mode from the Classic tuning method to specify how the file is divided and crossfaded to prevent artifacts. Depending on the source, you may need to experiment with different crossfade types.",
 					alternativeForExceedTheRange: {
 						_: "Handles out of range notes with an alternative method",
 						plugin: "Reaches any pitch by using the Pitch Shift Audio Effect Plugin repeatedly",
@@ -1218,6 +1239,15 @@ export default {
 				internal: {
 					_: "This includes some practical options that cannot be set in the VEGAS Pro preferences",
 					info: "This will modify the global preferences of VEGAS Pro, not only for the current project. Incorrect settings may cause VEGAS Pro to fail to start. Please use with caution.",
+					language: "Change VEGAS Pro language. Restart VEGAS Pro for the change to take effect.",
+					openglInterop: "Resolves the issue where the preview window does not refresh effects on specific versions of NVIDIA Studio graphics cards",
+					autosaveInterval: "Adjust the autosave time for projects. Defaults to {{default}} minutes.",
+					defaultTextTool: "Change the default media generator tool for Insert Text Media. Defaults to Title & Text.",
+					defaultTuningMethod: "Change the default tuning method for new audio clips. Defaults to $t(stream.tuning.tuningMethod.elastic).",
+					defaultClassicMode: "Change the default stretch attribute of the Classic method for new audio clips. Defaults to $t(stream.tuning.stretchAttributes.elastic.efficient).",
+					defaultElasticMode: "Change the default stretch attribute of the Elastic method for new audio clips. Defaults to $t(stream.tuning.stretchAttributes.classic.a03).",
+					preserveClipboardOnClose: "Allows cross-project copy and paste by successively opening different projects in a same VEGAS Pro instance",
+					eventGroupSelection: "Allows video clips within the group to automatically follow the movement when dragging audio clips across tracks, instead of staying on the original track, and vice versa",
 				},
 			},
 		},

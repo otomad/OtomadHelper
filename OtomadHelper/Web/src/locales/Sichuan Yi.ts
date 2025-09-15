@@ -322,7 +322,7 @@ export default {
 				_: "crwdns1822:0crwdne1822:0",
 				tuningMethod: {
 					_: "crwdns2266:0crwdne2266:0",
-					noTuning: "crwdns2268:0crwdne2268:0",
+					none: "crwdns2268:0crwdne2268:0",
 					pitchShift: "crwdns2270:0crwdne2270:0",
 					elastic: "crwdns2316:0crwdne2316:0",
 					classic: "crwdns2274:0crwdne2274:0",
@@ -914,7 +914,7 @@ export default {
 				tuning: {
 					tuningMethod: {
 						_: "crwdns3770:0crwdne3770:0",
-						noTuning: "crwdns2702:0crwdne2702:0",
+						none: "crwdns2702:0crwdne2702:0",
 						pitchShift: "crwdns3772:0crwdne3772:0",
 						elastic: "crwdns3818:0crwdne3818:0",
 						classic: "crwdns3776:0crwdne3776:0",

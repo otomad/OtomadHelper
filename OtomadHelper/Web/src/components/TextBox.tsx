@@ -301,7 +301,7 @@ export /* @internal */ const StyledTextBox = styled.div`
 		}
 
 		:is(.expander, .settings-card):has(&) {
-			z-index: 1;
+			z-index: 6;
 		}
 	}
 
@@ -650,7 +650,7 @@ const StyledNumberUnitTextBox = styled.div`
 		inline-size: 10px;
 	}
 
-	.expander-item & :where(.text-box) {
+	:is(.expander-item, .settings-card) & :where(.text-box) {
 		inline-size: 200px;
 	}
 `;
@@ -681,9 +681,8 @@ export const roughTimeUnits = Object.freeze(Object.assign(
 		filter(this: readonly RoughTimeUnit[], units: readonly RoughTimeUnit[]): readonly RoughTimeUnit[] {
 			return Array.prototype.filter.call(this, unit => units.includes(unit)).toReversed();
 		},
-		names(this: typeof roughTimeUnits, count: number, units: readonly RoughTimeUnit[]) {
-			const filteredUnitLength = this.filter(units).length;
-			return (unit: RoughTimeUnit) => t({ count, context: filteredUnitLength <= 1 ? undefined : "full" }).units[unit];
+		names(this: typeof roughTimeUnits, count: number, _units: readonly RoughTimeUnit[]) {
+			return (unit: RoughTimeUnit) => t({ count }).units[unit];
 		},
 	},
 ));

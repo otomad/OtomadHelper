@@ -47,6 +47,7 @@ words:
   - cqmin
   - cqw
   - crossfade
+  - crossfaded
   - csstype
   - cw
   - danmaku
@@ -76,6 +77,7 @@ words:
   - formatjs
   - fullwidth
   - fx
+  - gdi
   - geq
   - glsl
   - gongche
@@ -371,3 +373,4 @@ flagWords:
   - typw -> type
   - hors -> hours
   - hor -> hour
+  - efault -> default

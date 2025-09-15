@@ -1,6 +1,6 @@
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
 import { deepClone } from "valtio/utils";
-import type { beepEngines, normalizeTimes, tuningMethods } from "views/audio";
+import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
 import type { musicalNotationSystems } from "views/lyrics";
 import type { constrainNoteLengthTypes, encodings, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
 import type { systemBackdrops } from "views/settings";
@@ -37,7 +37,10 @@ namespace Config {
 	export type PrveCustomStepSequences = Partial<Record<string, number[]>>;
 	export type PreRenderAs = typeof preRenders[number]["id"];
 	export type TuningMethod = typeof tuningMethods[number]["id"];
+	export type ExactTuningMethod = typeof exactTuningMethods[number]["id"];
 	export type SequentialOrder = typeof sequentialOrders[number]["id"];
+	export type TuningElasticMode = typeof tuningElasticModes[number];
+	export type TuningClassicMode = typeof tuningClassicModes[number];
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -115,7 +118,9 @@ namespace Config {
 			tuningMethod: "elastic" as TuningMethod,
 			tuningMethodAcid: false,
 			tuningMethodScaleless: false,
-			stretchAttribute: "efficient",
+			stretchAttributeElastic: "efficient" as TuningElasticMode,
+			stretchAttributeClassic: "a03" as TuningClassicMode,
+			stretchAttributePitchShift: "a03" as TuningClassicMode,
 			alternativeForExceedTheRange: "plugin",
 			resample: false,
 			preserveFormant: false,
@@ -325,15 +330,14 @@ namespace Config {
 			autoCollapsePrveClasses: true,
 			internal: {
 				language: "zh-CN",
-				openglInterop: false,
-				autosaveInterval: 300000,
-				constraintUnit: "millisecond" as RoughTimeUnit,
+				autosaveInterval: [5, "minute"] as Unit<RoughTimeUnit>,
 				defaultTextTool: "titleAndText",
-				defaultTuningMethod: "",
-				defaultClassicMode: "",
-				defaultElasticMode: "",
+				defaultTuningMethod: "elastic",
+				defaultElasticMode: "efficient",
+				defaultClassicMode: "a03",
 				preserveClipboardOnClose: false,
 				eventGroupSelection: false,
+				openglInterop: false,
 			},
 		},
 		// If named toJSON, it will conflict to the JSON built-in parameter, causing a recursion error.

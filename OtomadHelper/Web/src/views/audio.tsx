@@ -3,12 +3,19 @@ import { legatos, stretches, truncates } from "./visual";
 const truncatesInAudio = truncates.filter(item => item.availableInAudio);
 
 export /* @internal */ const tuningMethods = [
-	{ id: "noTuning", icon: "prohibited" },
+	{ id: "none", icon: "prohibited" },
 	{ id: "unset", icon: "line_horizontal" },
 	{ id: "pitchShift", icon: "plugin" },
 	{ id: "elastic", icon: "plus_minus" },
 	{ id: "classic", icon: "history" },
 	{ id: "oscillator", icon: "waveforms/triangle" },
+] as const;
+
+export /* @internal */ const exactTuningMethods = [
+	{ id: "none", icon: "prohibited" },
+	{ id: "elastic", icon: "plus_minus" },
+	{ id: "classic", icon: "history" },
+	{ id: "acid", icon: "logo/acid" },
 ] as const;
 
 export /* @internal */ const exceeds = [
@@ -27,6 +34,9 @@ export /* @internal */ const normalizeTimes = [
 
 export /* @internal */ const beepEngines = ["WebAudio"] as const;
 const beepWaveforms = ["sinusoid", "triangle", "square", "sawtooth"] as const satisfies OscillatorCommonType[];
+
+export /* @internal */ const tuningElasticModes = ["pro", "efficient", "soloist_monophonic", "soloist_speech"] as const;
+export /* @internal */ const tuningClassicModes = forMap(19, i => "a" + String(i).padStart(2, "0"), 1) as readonly (keyof LocaleIdentifiers["javascript"]["stream"]["tuning"]["stretchAttributes"]["classic"])[];
 
 /** @deprecated */
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
@@ -80,7 +90,7 @@ export default function Audio() {
 		enabled, preferredTrack: preferredTrackIndex,
 		stretch, loop, normalize, truncate, legato, multitrackForChords, stack, timeUnremapping, autoPan, autoPanCurve,
 		tuningMethod, tuningMethodAcid, tuningMethodScaleless,
-		stretchAttribute, alternativeForExceedTheRange, resample, preserveFormant, currentPreset,
+		stretchAttributeElastic, stretchAttributeClassic, stretchAttributePitchShift, alternativeForExceedTheRange, resample, preserveFormant, currentPreset,
 		basePitch, basePitchBased, cent, glissando,
 	} = useSelectConfig(c => c.audio);
 	const { engine, waveform, duration: beepDuration, volume: beepVolume, adjustAudioToBasePitch } = useSelectConfig(c => c.audio.prelistenAttributes);
@@ -245,19 +255,34 @@ export default function Audio() {
 							);
 						}}
 					>
-						<ToggleSwitch on={tuningMethodAcid} lock={tuningMethod[0] !== "noTuning" ? null : false} icon="acid" details={t.descriptions.stream.tuning.tuningMethod.acid}>{t.stream.tuning.tuningMethod.acid}</ToggleSwitch>
+						<ToggleSwitch on={tuningMethodAcid} lock={tuningMethod[0] !== "none" ? null : false} icon="logo/acid" details={t.descriptions.stream.tuning.tuningMethod.acid}>{t.stream.tuning.tuningMethod.acid}</ToggleSwitch>
 						<ToggleSwitch on={tuningMethodScaleless} lock={tuningMethodScalelessUnlocked ? null : false} icon="scaleless" details={t.descriptions.stream.tuning.tuningMethod.scaleless}>{t.stream.tuning.tuningMethod.scaleless}</ToggleSwitch>
 					</ExpanderRadio>
-					<Attrs disabled={tuningMethod[0] === "noTuning" || tuningMethodScalelessEnabled || undefined}>
-						<ExpanderRadio
+					<Attrs disabled={tuningMethod[0] === "none" || tuningMethodScalelessEnabled || undefined}>
+						<ExpanderRadio<Any, Any>
 							title={t.stream.tuning.stretchAttributes}
-							details={t.descriptions.stream.tuning.stretchAttributes}
 							icon="tuning_wrench"
-							items={[]}
-							value={stretchAttribute}
 							view="tile"
-							idField="id"
-							nameField={t.stream.tuning.stretchAttributes}
+							idField
+							{
+								...tuningMethod[0] === "elastic" ? {
+									value: stretchAttributeElastic,
+									items: tuningElasticModes,
+									nameField: t.stream.tuning.stretchAttributes.elastic,
+									details: t({ context: "elastic" }).descriptions.stream.tuning.stretchAttributes,
+								} : tuningMethod[0].in("classic", "pitchShift") ? {
+									value: tuningMethod[0] === "pitchShift" ? stretchAttributePitchShift : stretchAttributeClassic,
+									items: tuningClassicModes,
+									nameField: (id: string) => <TuningClassicModeListItem id={id} />,
+									checkInfoCondition: (id: string) => t.stream.tuning.stretchAttributes.classic[id],
+									details: t({ context: "classic" }).descriptions.stream.tuning.stretchAttributes,
+								} : {
+									disabled: true,
+									value: [],
+									items: [],
+									details: t.descriptions.stream.tuning.stretchAttributes,
+								}
+							}
 						/>
 						<Attrs disabled={tuningMethod[0] === "oscillator" || undefined}>
 							<ExpanderRadio

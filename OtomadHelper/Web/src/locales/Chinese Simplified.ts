@@ -322,7 +322,7 @@ export default {
 				_: "调音",
 				tuningMethod: {
 					_: "调音方法",
-					noTuning: "不调音",
+					none: "不调音",
 					pitchShift: "移调",
 					elastic: "弹性",
 					classic: "古典",
@@ -914,7 +914,7 @@ export default {
 				tuning: {
 					tuningMethod: {
 						_: "使用另一种不同的调音算法",
-						noTuning: "无变调效果",
+						none: "无变调效果",
 						pitchShift: "使用移调音频效果插件。它是一款DirectX插件，其算法与古典方法相同，可以支持更广泛的音域。在使用前扩展需要加载一些预设方可使用。",
 						elastic: "使用弹性音调更改方法。Élastique方法使用了来自zplane.development的技术，并提供了增强的实时时间拉伸和音调转换功能。它也就是直接按下加减键调音的默认方法。",
 						classic: "使用古典音调更改方法。它使用了来自Vegas Pro 8及以下版本中旧的技术，并可根据素材提供更多混叠类型供选择。",

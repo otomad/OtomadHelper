@@ -352,7 +352,7 @@ export default function Settings() {
 			</Expander>
 
 			<Subheader>{t.settings.preference}</Subheader>
-			<SettingsCard title={t({ context: "long" }).titles.internal} details={t.descriptions.settings.internal} type="button" icon="settings" onClick={() => pushPage("internal")} />
+			<SettingsCard title={t({ context: "long" }).titles.internal} details={t.descriptions.settings.internal} type="button" icon="registry" onClick={() => pushPage("internal")} />
 			<SettingsCardToggleSwitch title={t.settings.preference.autoSwitchSourceFrom} details={t.descriptions.settings.preference.autoSwitchSourceFrom} icon="arrow_swap" on={autoSwitchSourceFrom} />
 			<SettingsCardToggleSwitch title={t.settings.preference.autoCollapsePrveClasses} details={t.descriptions.settings.preference.autoCollapsePrveClasses} icon="chevron_down_up" on={autoCollapsePrveClasses} />
 
