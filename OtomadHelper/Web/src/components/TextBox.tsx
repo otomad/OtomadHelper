@@ -655,24 +655,47 @@ const StyledNumberUnitTextBox = styled.div`
 	}
 `;
 
-function NumberUnitTextBox<TUnit extends string>({ value: [[value, unit], set], units, unitNames, disabled, ...numberTextBoxProps }: Override<PropsOf<typeof NumberTextBox<number>>, {
+function NumberUnitTextBox<TUnit extends string>({ value: [[curValue, curUnit], set], units, unitNames, disabled, ...numberTextBoxProps }: Override<PropsOf<typeof NumberTextBox<number>>, {
 	/** Numeric value and its unit type. */
 	value: StatePropertyNonNull<Unit<TUnit>>;
 	/** All unit types. */
 	units: readonly TUnit[];
-	/** All unit type names, or get the plural unit type names from the value (count). */
-	unitNames: readonly Readable[] | ((value: number) => readonly Readable[]);
+	/** Get the plural unit type names from the unit type and current value. */
+	unitNames(unit: TUnit, currentValueNumeric: number, currentValueUnit: TUnit, thisUnitIndex: number, allUnits: readonly TUnit[]): Readable;
 }>) {
-	const setValue = (newValue: React.SetStateAction<number>) => set?.(([, unit]) => [typeof newValue === "function" ? newValue(value) : newValue, unit]);
-	const setUnit = (newUnit: React.SetStateAction<TUnit>) => set?.(([value]) => [value, typeof newUnit === "function" ? newUnit(unit) : newUnit]);
+	const setValue = (newValue: React.SetStateAction<number>) => set?.(([, unit]) => [typeof newValue === "function" ? newValue(curValue) : newValue, unit]);
+	const setUnit = (newUnit: React.SetStateAction<TUnit>) => set?.(([value]) => [value, typeof newUnit === "function" ? newUnit(curUnit) : newUnit]);
+	const mappedUnitNames = !unitNames ? units : units.map((unit, index, units) => unitNames(unit, curValue, curUnit, index, units));
 
 	return (
 		<StyledNumberUnitTextBox>
-			<NumberTextBox value={[value, setValue]} {...numberTextBoxProps} disabled={disabled} />
-			<ComboBox current={[unit, setUnit]} ids={units} options={typeof unitNames === "function" ? unitNames(value) : unitNames} disabled={disabled} />
+			<NumberTextBox value={[curValue, setValue]} {...numberTextBoxProps} disabled={disabled} />
+			<ComboBox current={[curUnit, setUnit]} ids={units} options={mappedUnitNames} disabled={disabled} />
 		</StyledNumberUnitTextBox>
 	);
 }
 
+export const roughTimeUnits = Object.freeze(Object.assign(
+	["millisecond", "second", "minute", "hour"] satisfies RoughTimeUnit[],
+	{
+		filter(this: readonly RoughTimeUnit[], units: readonly RoughTimeUnit[]): readonly RoughTimeUnit[] {
+			return Array.prototype.filter.call(this, unit => units.includes(unit)).toReversed();
+		},
+		names(this: typeof roughTimeUnits, count: number, units: readonly RoughTimeUnit[]) {
+			const filteredUnitLength = this.filter(units).length;
+			return (unit: RoughTimeUnit) => t({ count, context: filteredUnitLength <= 1 ? undefined : "full" }).units[unit];
+		},
+	},
+));
+
+function RoughTimeTextBox({ units = roughTimeUnits, value, ...numberUnitProps }: Override<PropsOf<typeof NumberUnitTextBox<RoughTimeUnit>>, {
+	unitNames?: never;
+	/** Filter the available rough time units. @default */
+	units?: readonly RoughTimeUnit[];
+}>) {
+	return <NumberUnitTextBox {...numberUnitProps} value={value} units={roughTimeUnits.filter(units)} unitNames={roughTimeUnits.names(value[0][0], units)} />;
+}
+
 TextBox.Number = NumberTextBox;
 TextBox.NumberUnit = NumberUnitTextBox;
+TextBox.RoughTime = RoughTimeTextBox;

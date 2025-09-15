@@ -12,8 +12,7 @@ export /* @internal */ const vegasLanguages = [
 
 export default function Internal() {
 	const [currentLanguage] = useLanguage();
-	const { language: [language, setLanguage], openglInterop } = useSelectConfig(c => c.settings.internal);
-
+	const { language: [language, setLanguage], openglInterop, autosaveInterval, defaultTextTool, defaultTuningMethod, defaultClassicMode, defaultElasticMode, preserveClipboardOnClose, eventGroupSelection } = useSelectConfig(c => c.settings.internal);
 	return (
 		<div className="container">
 			<InfoBar status="warning" title={t.infoBar.warning}>{t.descriptions.settings.internal.info}</InfoBar>
@@ -30,7 +29,8 @@ export default function Internal() {
 				imageField={({ tag: language }) => <PreviewLanguage language={language} showProgress={false} />}
 				itemsViewItemAttrs={{ withBorder: true }}
 			/>
-			<SettingsCardToggleSwitch on={openglInterop} title={t.settings.internal.language} />
+			<SettingsCardToggleSwitch on={openglInterop} title={t.settings.internal.openglInterop} icon="opengl" />
+			<SettingsCardToggleSwitch on={openglInterop} title={t.settings.internal.openglInterop} icon="opengl" />
 		</div>
 	);
 }

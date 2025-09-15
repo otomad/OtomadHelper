@@ -6,7 +6,8 @@ const defaultClassName = {
 	wrapChildren: "wrap-children",
 	nextIsWrapped: "next-is-wrapped",
 	hasChildWrapped: "has-child-wrapped",
-};
+	tentativeTouchApproach: "tentative-touch-approach", // 试触法
+} as const;
 
 /**
  * Detects flex-wrap via JavaScript ([unfortunately not possible in CSS](https://stackoverflow.com/q/40012428)).
@@ -23,15 +24,21 @@ const defaultClassName = {
 export function useDetectWrappedElements(ref: RefObject<HTMLElement | null>, {
 	nextIsWrapped: nextIsWrappedClassName = defaultClassName.nextIsWrapped,
 	hasChildWrapped: hasChildWrappedClassName = defaultClassName.hasChildWrapped,
+	tentativeTouchApproach: tentativeTouchApproachClassName = defaultClassName.tentativeTouchApproach,
 } = {}) {
 	function detectWrappedElements() {
 		const parent = ref.current;
 		if (parent == null) return;
 
 		setStyleTemporarily(parent, {
-			flexDirection: "row",
-			// alignItems: "stretch",
-			flexWrap: "wrap",
+			style: {
+				flexDirection: "row",
+				// alignItems: "stretch",
+				flexWrap: "wrap",
+			},
+			class: {
+				[tentativeTouchApproachClassName]: true,
+			},
 		}, () => {
 			let hasChildWrapped = false;
 			for (let i = 0; i < parent.children.length; i++) {

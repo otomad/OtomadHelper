@@ -30,7 +30,6 @@ export /* @internal */ const sequentialOrders = [
 ] as const;
 
 export /* @internal */ const barOrBeatUnitTypes = ["bar", "beat"] as const;
-const barOrBeatUnitNames = (count: number) => [t(count).units.bar, t(count).units.beat] as const;
 
 /** @deprecated */
 const isUnderVegas16 = true;
@@ -154,10 +153,10 @@ export default function Source() {
 					<ToggleSwitch on={secretBoxForBarOrBeat} details={t.descriptions.source.secretBox.barOrBeat} icon="music_bar">{t.source.secretBox.barOrBeat}</ToggleSwitch>
 					<Attrs disabled={!secretBoxForBarOrBeat[0]}>
 						<Expander.Item title={t.source.secretBox.barOrBeat.period} details={t.descriptions.source.secretBox.barOrBeat.period} icon="timer">
-							<TextBox.NumberUnit value={secretBoxForBarOrBeatPeriod} units={barOrBeatUnitTypes} unitNames={count => barOrBeatUnitNames(count)} decimalPlaces={0} min={1} />
+							<TextBox.NumberUnit value={secretBoxForBarOrBeatPeriod} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={1} />
 						</Expander.Item>
 						<Expander.Item title={t.source.secretBox.barOrBeat.preparation} details={t.descriptions.source.secretBox.barOrBeat.preparation} icon="hourglass">
-							<TextBox.NumberUnit value={secretBoxForBarOrBeatPreparation} units={barOrBeatUnitTypes} unitNames={count => barOrBeatUnitNames(count)} decimalPlaces={0} min={0} />
+							<TextBox.NumberUnit value={secretBoxForBarOrBeatPreparation} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={0} />
 						</Expander.Item>
 					</Attrs>
 				</SettingsCardToggleSwitch>

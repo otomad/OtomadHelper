@@ -111,7 +111,7 @@ const StyledComboBox = styled(StyledButton)`
 				box-shadow: 0 8px 16px ${c("shadows-flyout")};
 				opacity: 0;
 				backdrop-filter: blur(60px);
-				transition: ${fallbackTransitions};
+				transition: ${fallbackTransitions}, width 0s, height 0s;
 				transition-behavior: allow-discrete;
 
 				&:popover-open {
@@ -165,9 +165,16 @@ const StyledComboBox = styled(StyledButton)`
 			}
 		}
 	}
+
+	.vertical-if-flex-wrap > & {
+		transition: ${fallbackTransitions}, inline-size 0s, block-size 0s;
+	}
+
+	.vertical-if-flex-wrap.has-child-wrapped:not(.tentative-touch-approach) > & {
+		inline-size: calc(100% - 50px);
+	}
 `;
 
-export default function ComboBox(props: FCP<{}, "select">): React.JSX.Element;
 export default function ComboBox<T extends string | number>(props: FCP<{
 	/** The identifiers for each option of the combo box. */
 	ids: readonly T[];
@@ -178,6 +185,7 @@ export default function ComboBox<T extends string | number>(props: FCP<{
 	/** The selected option of the combo box. */
 	current: StateProperty<T>;
 }, "select">): React.JSX.Element;
+export default function ComboBox(props: FCP<{}, "select">): React.JSX.Element;
 export default function ComboBox<T extends string | number>({ ids = [], options = [], icons = [], current: [current, setCurrent] = NEVER_MIND, disabled, ...htmlAttrs }: FCP<{
 	ids?: readonly T[];
 	options?: readonly Readable[];

@@ -57,7 +57,7 @@ const StyledSideEffect = styled.div`
 `;
 
 export default function Ytp() {
-	const { enabled, clips, constraintStart, constraintEnd } = useSelectConfig(c => c.ytp);
+	const { enabled, clips, constraint } = useSelectConfig(c => c.ytp);
 	const [selectEffects, setSelectEffects] = useState<string[]>([]);
 	const selectEffectCount = selectEffects.length;
 
@@ -69,7 +69,7 @@ export default function Ytp() {
 			<EmptyMessage.Typical icon="ytp" title="ytp" enabled={enabled}>
 				<Subheader>{t.subheaders.parameters}</Subheader>
 				<Expander title={t.ytp.constrain} details={t.descriptions.ytp.constrain} icon="constraint">
-					<ExpanderChildTrim.Value start={constraintStart} end={constraintEnd} min={1} decimalPlaces={0} spinnerStep={100} />
+					<ExpanderChildTrim.RoughTime range={constraint} min={1} decimalPlaces={0} spinnerStep={100} />
 				</Expander>
 				<SettingsCard title={t.ytp.clips} details={t.descriptions.ytp.clips} icon="number">
 					<TextBox.Number value={clips} min={0} decimalPlaces={0} suffix={t.units.piece} />

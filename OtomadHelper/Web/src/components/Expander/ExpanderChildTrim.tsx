@@ -18,9 +18,11 @@ const StyledExpanderChildTrim = styled(Expander.ChildWrapper)`
 		align-items: center;
 	}
 
-	.timecodes.has-child-wrapped ${RangeDash} {
-		font-feature-settings: "case" on, "vert" on;
-		writing-mode: vertical-rl;
+	.timecodes.has-child-wrapped {
+		${RangeDash} {
+			font-feature-settings: "case" on, "vert" on;
+			writing-mode: vertical-rl;
+		}
 	}
 `;
 
@@ -30,7 +32,7 @@ function ExpanderChildTrimTimecode({ start, end }: FCP<{
 	start: StateProperty<string>;
 	/** End time time code. */
 	end: StateProperty<string>;
-}, "div">) {
+}>) {
 	function reset() {
 		start[1]?.("0");
 		end[1]?.("0");
@@ -48,14 +50,14 @@ function ExpanderChildTrimTimecode({ start, end }: FCP<{
 	);
 }
 
-function ExpanderChildTrimValue({ start, end, unit = t.units.millisecond, decimalPlaces, min, max, spinnerStep }: FCP<{
+function ExpanderChildTrimValue<TUnit extends string>({ range: [[curStart, curEnd, curUnit], set], units = [], unitNames, decimalPlaces, min, max, spinnerStep }: FCP<{
 	children?: never;
-	/** Start time value. */
-	start: StateProperty<number>;
-	/** End time value. */
-	end: StateProperty<number>;
-	/** Value unit. */
-	unit?: string;
+	/** Current range value: start, end, and unit. */
+	range: StatePropertyNonNull<RangeUnit<TUnit>>;
+	/** Value unit list. */
+	units?: readonly TUnit[];
+	/** Get the unit type names from the unit type (always plural). */
+	unitNames(unit: TUnit, index: number, units: readonly TUnit[]): Readable;
 	/** The number of decimal places, leaving blank means no limit. */
 	decimalPlaces?: number;
 	/** Limit of the minimum value. */
@@ -64,30 +66,46 @@ function ExpanderChildTrimValue({ start, end, unit = t.units.millisecond, decima
 	max?: number;
 	/** The value to increase or decrease each time the knob of numeric up down box is clicked. @default 1 */
 	spinnerStep?: number;
-}, "div">) {
+}>) {
+	const isStaticUnit = units.length <= 1;
+	const staticUnit = isStaticUnit ? units[0] : undefined;
+	const setStart = (newStart: React.SetStateAction<number>) => set?.(([, end, unit]) => [typeof newStart === "function" ? newStart(curStart) : newStart, end, unit]);
+	const setEnd = (newEnd: React.SetStateAction<number>) => set?.(([start, , unit]) => [start, typeof newEnd === "function" ? newEnd(curEnd) : newEnd, unit]);
+	const setUnit = (newUnit: React.SetStateAction<TUnit>) => set?.(([start, end]) => [start, end, typeof newUnit === "function" ? newUnit(curUnit) : newUnit]);
+	const mappedUnitNames = !unitNames ? units : units.map((unit, index, units) => unitNames(unit, index, units));
+
 	return (
 		<StyledExpanderChildTrim>
 			<VerticalIfFlexWrap className="timecodes">
 				<TextBox.Number
-					value={start as StatePropertyNonNull<number>}
-					suffix={unit}
+					value={[curStart, setStart]}
+					suffix={staticUnit}
 					decimalPlaces={decimalPlaces}
 					min={min}
-					max={minWithUndefined(max, end[0])}
+					max={minWithUndefined(max, curEnd)}
 					spinnerStep={spinnerStep}
 				/>
 				<RangeDash />
 				<TextBox.Number
-					value={end as StatePropertyNonNull<number>}
-					suffix={unit}
+					value={[curEnd, setEnd]}
+					suffix={staticUnit}
 					decimalPlaces={decimalPlaces}
-					min={maxWithUndefined(min, start[0])}
+					min={maxWithUndefined(min, curStart)}
 					max={max}
 					spinnerStep={spinnerStep}
 				/>
+				{!isStaticUnit && <ComboBox current={[curUnit, setUnit]} ids={units} options={mappedUnitNames} />}
 			</VerticalIfFlexWrap>
 		</StyledExpanderChildTrim>
 	);
+}
+
+function ExpanderChildTrimRoughTime({ units = roughTimeUnits, ...trimValueProps }: Override<PropsOf<typeof ExpanderChildTrimValue<RoughTimeUnit>>, {
+	unitNames?: never;
+	/** Filter the available rough time units. @default */
+	units?: readonly RoughTimeUnit[];
+}>) {
+	return <ExpanderChildTrimValue {...trimValueProps} units={roughTimeUnits.filter(units)} unitNames={roughTimeUnits.names(2, units)} />;
 }
 
 /**
@@ -107,9 +125,10 @@ function maxWithUndefined(...values: (number | undefined)[]) {
 	return Math.max(...values.toTrimmed());
 }
 
-const ExpanderChildTrim = {
-	Timecode: ExpanderChildTrimTimecode,
-	Value: ExpanderChildTrimValue,
-};
+namespace ExpanderChildTrim {
+	export const Timecode = ExpanderChildTrimTimecode;
+	export const Value = ExpanderChildTrimValue;
+	export const RoughTime = ExpanderChildTrimRoughTime;
+}
 
 export default ExpanderChildTrim;

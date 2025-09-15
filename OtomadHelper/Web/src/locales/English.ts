@@ -174,6 +174,17 @@ export default {
 		units: {
 			piece: "", // [EMPTY IN ENGLISH] This key represents the Mandarin Chinese measure word “个” (gè), used in phrases like “3 个苹果” (3 apples) where English omits counters.\nPlease localize it if your language REQUIRING generic counters (i.e. numeric classifiers):\n- Japanese: “つ” (tsu) as in “3つのリンゴ”\n- Vietnamese: “cái” as in “3 cái táo”\n- Korean: “개” (gae) as in “사과 3개”\nOr keep translation EMPTY (“”) if your language does not use such particles (like English / European languages).\nWARNINGS:\n- DO NOT translate as “ge” or copy Chinese character.\n- DO NOT leave empty for East / Southeast Asian languages.\n- DO NOT include QUOTES (“”) outside.\n- If uncertain, consult: https://wals.info/chapter/55\nEXAMPLES:\n- Simplified Chinese: “个”\n- Traditional Chinese: “個”\n- Japanese: “つ”\n- English: “”\n- German: “”\n- Vietnamese: “cái”\n- Thai: “อัน”
 			millisecond: "ms", // Unit: Millisecond.
+			second: "s", // Unit: Second.
+			minute: "min", // Unit: Minute.
+			hour: "h", // Unit: Hour.
+			millisecond_full: "Millisecond", // Unit: Millisecond.
+			second_full: "Second", // Unit: Second.
+			minute_full: "Minute", // Unit: Minute.
+			hour_full: "Hour", // Unit: Hour.
+			millisecond_full_other: "Milliseconds",
+			second_full_other: "Seconds",
+			minute_full_other: "Minutes",
+			hour_full_other: "Hours",
 			percent: "%", // Unit: Percent.
 			pixel: "px", // Unit: Pixel.
 			pixel_full: "Pixel", // Unit: Pixel.

@@ -76,6 +76,12 @@ declare global {
 	type Unit<TUnit extends string> = [numeric: number, unit: TUnit];
 
 	/**
+	 * A type which includes a range of two numeric values and their unit enum type.
+	 * @template TUnit - The unit name (string). You can narrow it.
+	 */
+	type RangeUnit<TUnit extends string> = [start: number, end: number, unit: TUnit];
+
+	/**
 	 * The `aria-checked` attribute indicates the current "checked" state of checkboxes, radio buttons, and other widgets.
 	 *
 	 * The `aria-checked` attribute indicates whether the element is checked (`true`), unchecked (`false`), or if the checked
@@ -126,4 +132,7 @@ declare global {
 
 	/** Is the orientation of the icon changed based on the writing direction? */
 	type DirBasedIcon = boolean | FlowDirection | [from: FlowDirection, to: FlowDirection];
+
+	/** Rough time unit which can be switched by combobox. */
+	type RoughTimeUnit = "millisecond" | "second" | "minute" | "hour";
 }

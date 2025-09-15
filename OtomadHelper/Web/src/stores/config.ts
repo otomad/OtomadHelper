@@ -308,8 +308,7 @@ namespace Config {
 		},
 		ytp: {
 			enabled: false,
-			constraintStart: 10,
-			constraintEnd: 5000,
+			constraint: [10, 5000, "millisecond"] as RangeUnit<RoughTimeUnit>,
 			clips: 30,
 		},
 		settings: {
@@ -328,6 +327,7 @@ namespace Config {
 				language: "zh-CN",
 				openglInterop: false,
 				autosaveInterval: 300000,
+				constraintUnit: "millisecond" as RoughTimeUnit,
 				defaultTextTool: "titleAndText",
 				defaultTuningMethod: "",
 				defaultClassicMode: "",
