@@ -308,7 +308,7 @@ const SETTINGS_CARD_TRAILING_MAX_WIDTH = 200;
 
 const StyledLeading = styled.div`
 	&.contents {
-		display: contents;
+		display: contents !important;
 	}
 `;
 
