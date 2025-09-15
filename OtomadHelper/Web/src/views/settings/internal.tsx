@@ -32,7 +32,7 @@ export default function Internal() {
 				imageField={({ tag: language }) => <PreviewLanguage language={language} showProgress={false} />}
 				itemsViewItemAttrs={{ withBorder: true }}
 			/>
-			<SettingsCard title={t.settings.internal.autosaveInterval} details={t.descriptions.settings.internal.autosaveInterval} icon="save_clock">
+			<SettingsCard title={t.settings.internal.autosaveInterval} details={t.descriptions.settings.internal.autosaveInterval({ default: 5 })} icon="save_clock">
 				<TextBox.RoughTime value={autosaveInterval} />
 			</SettingsCard>
 			<Expander title={t.settings.internal.defaultTextTool} details={t.descriptions.settings.internal.defaultTextTool} icon="text_toolbox" />
@@ -61,7 +61,7 @@ export default function Internal() {
 			<ExpanderRadio
 				title={t.settings.internal.defaultClassicMode}
 				details={t.descriptions.settings.internal.defaultClassicMode}
-				icon="history"
+				icon="hourglass"
 				view="tile"
 				idField
 				value={defaultClassicMode}
@@ -69,7 +69,7 @@ export default function Internal() {
 				nameField={id => <TuningClassicModeListItem id={id} />}
 				checkInfoCondition={id => id ? t.stream.tuning.stretchAttributes.classic[id] : ""}
 			/>
-			<SettingsCardToggleSwitch on={preserveClipboardOnClose} title={t.descriptions.settings.internal.preserveClipboardOnClose} details={t.settings.internal.preserveClipboardOnClose} icon="clipboard_checkmark" />
+			<SettingsCardToggleSwitch on={preserveClipboardOnClose} title={t.settings.internal.preserveClipboardOnClose} details={t.descriptions.settings.internal.preserveClipboardOnClose} icon="clipboard_checkmark" />
 			<SettingsCardToggleSwitch on={eventGroupSelection} title={t.settings.internal.eventGroupSelection} details={t.descriptions.settings.internal.eventGroupSelection} icon="group_link" />
 			<SettingsCardToggleSwitch on={openglInterop} title={t.settings.internal.openglInterop} details={t.descriptions.settings.internal.openglInterop} icon="opengl" />
 		</div>

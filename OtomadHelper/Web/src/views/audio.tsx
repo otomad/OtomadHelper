@@ -7,14 +7,14 @@ export /* @internal */ const tuningMethods = [
 	{ id: "unset", icon: "line_horizontal" },
 	{ id: "pitchShift", icon: "plugin" },
 	{ id: "elastic", icon: "plus_minus" },
-	{ id: "classic", icon: "history" },
+	{ id: "classic", icon: "hourglass" },
 	{ id: "oscillator", icon: "waveforms/triangle" },
 ] as const;
 
 export /* @internal */ const exactTuningMethods = [
 	{ id: "none", icon: "prohibited" },
 	{ id: "elastic", icon: "plus_minus" },
-	{ id: "classic", icon: "history" },
+	{ id: "classic", icon: "hourglass" },
 	{ id: "acid", icon: "logo/acid" },
 ] as const;
 

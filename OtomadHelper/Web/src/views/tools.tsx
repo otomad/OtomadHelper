@@ -86,6 +86,20 @@ export default function Tools() {
 				selectInfo={t(1).selectInfo.audioEventOnlyOne}
 				selectValid={1}
 			/>
+
+			<Subheader>{t.tools.services}</Subheader>
+			<SettingsCard
+				title={t.tools.variableTempo}
+				details={t.descriptions.tools.variableTempo}
+				type="button"
+				icon="speed_play"
+			/>
+			<SettingsCard
+				title={t.tools.ultraPaste}
+				details={t.descriptions.tools.ultraPaste}
+				type="button"
+				icon="clipboard_star"
+			/>
 		</div>
 	);
 }
