@@ -171,7 +171,7 @@ const StyledComboBox = styled(StyledButton)`
 	}
 
 	.vertical-if-flex-wrap.has-child-wrapped:not(.tentative-touch-approach) > & {
-		inline-size: calc(100% - 50px);
+		inline-size: calc(100% - 2px);
 	}
 `;
 

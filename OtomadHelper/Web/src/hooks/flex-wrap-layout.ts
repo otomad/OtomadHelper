@@ -24,36 +24,24 @@ const defaultClassName = {
 export function useDetectWrappedElements(ref: RefObject<HTMLElement | null>, {
 	nextIsWrapped: nextIsWrappedClassName = defaultClassName.nextIsWrapped,
 	hasChildWrapped: hasChildWrappedClassName = defaultClassName.hasChildWrapped,
-	tentativeTouchApproach: tentativeTouchApproachClassName = defaultClassName.tentativeTouchApproach,
 } = {}) {
 	function detectWrappedElements() {
 		const parent = ref.current;
 		if (parent == null) return;
 
-		setStyleTemporarily(parent, {
-			style: {
-				flexDirection: "row",
-				// alignItems: "stretch",
-				flexWrap: "wrap",
-			},
-			class: {
-				[tentativeTouchApproachClassName]: true,
-			},
-		}, () => {
-			let hasChildWrapped = false;
-			for (let i = 0; i < parent.children.length; i++) {
-				const child = parent.children[i], prevChild = parent.children[i - 1];
-				const isWrapped = isElementWrapped(child, prevChild);
-				if (isWrapped) hasChildWrapped = true;
-				prevChild?.classList.toggle(nextIsWrappedClassName, isWrapped);
-				if (child?.nextElementSibling === null) child.classList.remove(nextIsWrappedClassName);
-			}
-			parent.classList.toggle(hasChildWrappedClassName, hasChildWrapped);
-		});
+		parent.classList.toggle(hasChildWrappedClassName, false);
+		let hasChildWrapped = false;
+		for (let i = 0; i < parent.children.length; i++) {
+			const child = parent.children[i], prevChild = parent.children[i - 1];
+			const isWrapped = isElementWrapped(child, prevChild);
+			if (isWrapped) hasChildWrapped = true;
+			prevChild?.classList.toggle(nextIsWrappedClassName, isWrapped);
+			if (child?.nextElementSibling === null) child.classList.remove(nextIsWrappedClassName);
+		}
+		parent.classList.toggle(hasChildWrappedClassName, hasChildWrapped);
 	}
 
 	useEventListener(window, "resize", () => detectWrappedElements(), { immediate: true });
-	// new ResizeObserver() // No usage temporarily
 }
 
 /**

@@ -499,39 +499,3 @@ export async function startColorViewTransition(changeFunc: () => MaybePromise<vo
 		if (defaultOptions.cursor) forceCursor(null);
 	}
 }
-
-const setStyleTemporarilyQueue: Promise<void>[] = [];
-/**
- * Set the style, then do something others, after that, restore the style back.
- * @param element - HTML DOM element.
- * @param style - The style to be set.
- * @param action - After set the style, do something others.
- */
-export async function setStyleTemporarily(element: HTMLElement, { style = {}, class: classObject = {} }: {
-	style?: CSSProperties;
-	class?: Record<string, boolean>;
-}, action: () => MaybePromise<void>) {
-	if (setStyleTemporarilyQueue[0] !== undefined) await setStyleTemporarilyQueue[0];
-	const { promise, resolve } = Promise.withResolvers<void>();
-	setStyleTemporarilyQueue.push(promise);
-
-	asserts<Record<string, string>>(style);
-	style = Object.replaceKeys(style, convertCamelStylePropertyToKebab);
-	asserts<Record<string, string>>(style);
-	// Convert property names to kebab case or Element.style.setProperty won't recognize them.
-	if (!("transition" in style)) style.transition = "none";
-
-	const originalStyle = Object.keys(style).mapObject(property => [property, [element.style.getPropertyValue(property), element.style.getPropertyPriority(property)] as [value: Numberish, priority: StylePriority]]);
-	const originalClass = Object.keys(classObject).mapObject(className => [className, element.classList.contains(className)]);
-
-	for (const [property, value] of Object.entries(style)) element.style.setProperty(property, value, "important");
-	for (const [className, has] of Object.entries(classObject)) if (has !== undefined) element.classList.toggle(className, has);
-
-	await action();
-
-	for (const [property, [value, priority]] of Object.entries(originalStyle)) element.style.setProperty(property, value as string, priority);
-	for (const [className, has] of Object.entries(originalClass)) element.classList.toggle(className, has);
-
-	resolve();
-	setStyleTemporarilyQueue.removeItem(promise);
-}
