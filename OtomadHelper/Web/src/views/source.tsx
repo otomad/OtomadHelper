@@ -39,7 +39,7 @@ export default function Source() {
 	const {
 		sourceFrom, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
-		trackGroup, collapseTrackGroup, trackName, secretBox, consonant, matchCut, matchCutOrder, linearMap, linearMapDescending,
+		trackGroup, collapseTrackGroup, trackName, secretBox, consonant, matchCut, matchCutOrder, matchCutLoop, matchCutSecretBox, linearMap, linearMapDescending,
 		secretBoxLimitToSelected, secretBoxForTrack, secretBoxForMarker, secretBoxForBarOrBeat, secretBoxForBarOrBeatPeriod, secretBoxForBarOrBeatPreparation,
 	} = useSelectConfig(c => c.source);
 	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = useSelectConfig(c => c.source.afterCompletion);
@@ -181,6 +181,8 @@ export default function Source() {
 							{sequentialOrders.map(({ id, icon }) => <Segmented.Item id={id} key={id} icon={icon}>{t[id]}</Segmented.Item>)}
 						</Segmented>
 					</Expander.Item>
+					<ToggleSwitch on={matchCutLoop} icon="arrow_repeat_all" details={t.descriptions.source.matchCut.loop}>{t.stream.loop}</ToggleSwitch>
+					<ToggleSwitch on={matchCutSecretBox} icon="dice" details={t.descriptions.source.matchCut.secretBox}>{t.source.secretBox}</ToggleSwitch>
 				</SettingsCardToggleSwitch>
 				<SettingsCardToggleSwitch
 					title={t.source.linearMap}

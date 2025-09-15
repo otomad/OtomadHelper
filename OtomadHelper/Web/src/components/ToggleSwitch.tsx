@@ -280,6 +280,12 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	 * But this will cause the content to become static.
 	 */
 	_reduceLag?: boolean;
+	/**
+	 * @deprecated
+	 * - For Expander Item title, please use children slot instead;
+	 * - For tooltip title, please use Tooltip HoC instead.
+	 */
+	title?: never;
 	/** Occurs while toggling. */
 	onChange?(on: boolean): void;
 }, "button">) {

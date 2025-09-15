@@ -18,6 +18,7 @@ const StyledTooltip = styled.div<{
 		max-width: 50dvw;
 		height: max-content;
 		padding: 6px 8px;
+		// stylelint-disable-next-line property-no-deprecated
 		word-wrap: break-word;
 		overflow-wrap: break-word;
 		border-radius: 4px;
@@ -93,7 +94,7 @@ export default function Tooltip({ title: _title, placement, offset = 10, timeout
 	timeout?: number;
 	/** Do not show the tooltip? */
 	disabled?: boolean;
-	/** Automatically apply the tooltip title to the target element's aria label attribute unless it already has the attribute or it is aria hidden? Defaults to true. */
+	/** Automatically apply the tooltip title to the target element's aria label attribute unless it already has the attribute or it is aria hidden? @default true */
 	applyAriaLabel?: boolean;
 	/** Do not wrap the child with a child wrapper. Please ensure that your child is exactly one element and forward the ref correctly. */
 	unwrapped?: boolean;

@@ -62,7 +62,7 @@ function ExpanderChildTrimValue({ start, end, unit = t.units.millisecond, decima
 	min?: number;
 	/** Limit of the maximum value. */
 	max?: number;
-	/** The value to increase or decrease each time the knob of numeric up down box is clicked. Defaults to 1. */
+	/** The value to increase or decrease each time the knob of numeric up down box is clicked. @default 1 */
 	spinnerStep?: number;
 }, "div">) {
 	return (

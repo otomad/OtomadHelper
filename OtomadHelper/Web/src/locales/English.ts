@@ -854,7 +854,7 @@ export default {
 					_: "Groups tracks by score track",
 				},
 				trackName: {
-					_: "Specify the name for the generated tracks or track groups",
+					_: "Specify the name for the generated tracks and track groups",
 				},
 				multisource: {
 					ytpEnabled: "YTP feature is enabled and these features are currently unconfigurable.",
@@ -878,6 +878,8 @@ export default {
 				matchCut: {
 					_: "Select multiple sources that will be applied in turn by auto beat sync match cut",
 					order: "Specify the application sequential order of sources",
+					loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
+					secretBox: "No need to select multiple sources, just select one long source. Then it will randomly select the in point of each clips.",
 				},
 				linearMap: {
 					_: "Select multiple sources that will be mapped to available tracks in order (excess sources or tracks will be omitted)",

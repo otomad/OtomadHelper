@@ -55,7 +55,7 @@ type SpinValue = 1 | -1;
 function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 	/** Disabled? */
 	disabled?: boolean;
-	/** The value to increase or decrease each time the knob of numeric up down box is clicked. Defaults to 1. */
+	/** The value to increase or decrease each time the knob of numeric up down box is clicked. @default 1 */
 	step?: NumberLike;
 	/** Knob click event. It is 1 when the knob is clicked up and -1 when it is clicked down. */
 	onSpin?(spinValue: NumberLike): void;
@@ -371,7 +371,9 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	onInput?(newText: string, el: HTMLInputElement, ...event: Parameters<FormEventHandler<HTMLInputElement>>): boolean | string | void;
 	/** Keyboard press event. */
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+	/** @deprecated Please use `disabled` instead. */
 	"aria-disabled"?: never;
+	/** @deprecated Please use `readOnly` instead. */
 	"aria-readonly"?: never;
 }, "div">) {
 	const inputIdDef = useId();
@@ -473,11 +475,11 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 	min?: TNumber;
 	/** Limit of the maximum value. */
 	max?: TNumber;
-	/** The value to increase or decrease each time the knob of numeric up down box is clicked. Defaults to 1. */
+	/** The value to increase or decrease each time the knob of numeric up down box is clicked. @default 1 */
 	spinnerStep?: TNumber;
 	/**
 	 * According to the Accessibility feature, when user press PageUp and PageDown key, it will adjust a larger number than the `keyStep`.
-	 * Please specify a number which will multiply by the `keyStep`. Defaults to 10.
+	 * Please specify a number which will multiply by the `keyStep`. @default 10
 	 */
 	keyBigStepMultiplier?: TNumber;
 	/** Show the positive sign if the value is positive? */

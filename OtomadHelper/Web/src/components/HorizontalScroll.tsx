@@ -4,7 +4,7 @@ const applyScroll = new WeakMap<Element, ScrollByDelegate>();
 export default function HorizontalScroll<TContainer extends AsTarget>({ enabled = true, children, ref, as = "div" as TContainer, container, ...htmlAttrs }: {
 	/** When user use mouse wheel to scroll, should it scroll horizontally instead of default vertically? */
 	enabled?: boolean;
-	/** Modify the container type. Defaults to `React.Fragment` (aka nothing). */
+	/** Modify the container type. @default <React.Fragment> (aka nothing) */
 	as?: TContainer;
 	/** Same as `as`, but compatible with Styled Components. */
 	container?: TContainer;

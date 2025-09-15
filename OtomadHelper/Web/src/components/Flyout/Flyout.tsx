@@ -110,7 +110,7 @@ export default function Flyout({ anchorName, position, shown: [shown, setShown] 
 	shown?: StateProperty<boolean>;
 	/** Auto set root inert when flyout shown? */
 	autoInert?: boolean;
-	/** Auto add padding with default size to which direction? Defaults to `y`. */
+	/** Auto add padding with default size to which direction? @default "y" */
 	autoPadding?: "x" | "y" | "xy" | "";
 	/**
 	 * Customize where to teleport the flyout.

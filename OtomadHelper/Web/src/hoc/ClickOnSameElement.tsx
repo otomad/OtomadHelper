@@ -6,7 +6,7 @@ export default function ClickOnSameElement({ bubbling = true, children, onClick,
 	/** The child must be ONE HTML or React element. */
 	children: ReactElement;
 	ref?: ForwardedRef<"section">;
-	/** Allows to click on its descendant elements until they bubble up to the target element? Defaults to true. */
+	/** Allows to click on its descendant elements until they bubble up to the target element? @default true */
 	bubbling?: boolean;
 	/**
 	 * Make sure that if press mouse button while on child content and release it on parent, that does not count as click on parent.

@@ -24,8 +24,11 @@ function replaceAsteriskToEmAndStrong(longText: string | RTFs) {
  */
 export default function Preserves({}: FCP<{
 	/**
-	 * Paragraph spacing, or height of `<br>`. CSS `<length>` type. Defaults to `0`.\
+	 * Paragraph spacing, or height of `<br>`. CSS `<length>` type.
+	 *
 	 * If you pass `true`, it will be `0.375lh`.
+	 *
+	 * @default 0
 	 */
 	spacing?: string | boolean;
 }>): ReactNode;
@@ -70,11 +73,14 @@ const SpacingBr = styled("x-br")<{ // WARN: <br> tag not work for override `disp
 `;
 
 export function Br({ repeat = 1, spacing, ...htmlAttrs }: FCP<{
-	/** Repeat times. Defaults to 1. */
+	/** Repeat times. @default 1 */
 	repeat?: number;
 	/**
-	 * Paragraph spacing, or height of `<br>`. CSS `<length>` type. Defaults to `0`.\
+	 * Paragraph spacing, or height of `<br>`. CSS `<length>` type.
+	 *
 	 * If you pass `true`, it will be `0.375lh`.
+	 *
+	 * @default 0
 	 */
 	spacing?: string | boolean;
 	children?: never;

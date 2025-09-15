@@ -124,10 +124,11 @@ export function ColorButton({ color, icon, animatedIcon, selected = false, value
 	/** Auto start color palette view transition? */
 	autoStartViewTransition?: boolean;
 	/**
-	 * Specify the selected outline color. Defaults to `undefined`.
+	 * Specify the selected outline color.
 	 * - `undefined`: Use default focus stroke outer color.
 	 * - `"colored"`: Use the same color as `color` prop.
 	 * - `string`: Custom outline color.
+	 * @default undefined
 	 */
 	selectedOutlineColor?: "colored" | (string & {});
 }, "button">) {

@@ -1,7 +1,7 @@
 const INITIAL_CURRENT_INDEX = -1;
 
 export /* @internal */ default function ExpanderGroup({ autoCollapse = true, children }: FCP<{
-	/** Should collapse other expanded expanders automatically when expanding a expander? Defaults to true. */
+	/** Should collapse other expanded expanders automatically when expanding a expander? @default true */
 	autoCollapse?: boolean;
 }>) {
 	const [currentIndex, setCurrentIndex] = useState(INITIAL_CURRENT_INDEX);

@@ -74,6 +74,8 @@ namespace Config {
 			consonant: false,
 			matchCut: false,
 			matchCutOrder: "sequential" as SequentialOrder,
+			matchCutLoop: true,
+			matchCutSecretBox: false,
 			linearMap: false,
 			linearMapDescending: false,
 		},
