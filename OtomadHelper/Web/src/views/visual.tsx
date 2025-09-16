@@ -2,10 +2,6 @@ import legatoPortatoImage from "assets/images/tutorials/legato_config/legato_por
 import legatoUnlimitedImage from "assets/images/tutorials/legato_config/legato_unlimited.png";
 import legatoUpTo1BarImage from "assets/images/tutorials/legato_config/legato_up_to_1bar.png";
 import legatoUpTo1BeatImage from "assets/images/tutorials/legato_config/legato_up_to_1beat.png";
-import loopImage from "assets/images/tutorials/visual/loop.png";
-import staticVisualImage from "assets/images/tutorials/visual/static.png";
-import stretchImage from "assets/images/tutorials/visual/stretch.png";
-import truncateImage from "assets/images/tutorials/visual/truncate.png";
 import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 import { usePrveInfo } from "./visual/prve";
 
@@ -42,8 +38,6 @@ export /* @internal */ const preRenders = [
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
 const buildInPresets = ["normal", "enter", "enterStaff", "fadeOut", "flashlight", "horizontalMovement", "verticalMovement", "ccwRotate", "cwRotate", "rainbowColor", "oversaturation", "highContrast", "thresholdChange"];
-
-const TooltipPartial = Tooltip.with({ placement: "y" });
 
 export default function Visual() {
 	const {
@@ -86,51 +80,43 @@ export default function Visual() {
 				</SettingsCard>
 				<SettingsCardToggleSwitch title={t.stream.createGroups} details={t.descriptions.stream.createGroups} icon="group" on={createGroups} />
 				<ExpanderStreamPlaybackRate stream="visual" />
-				<TooltipPartial title={<Tooltip.Content image={loopImage} />}>
-					<SettingsCard
-						title={t.stream.loop}
-						details={t.descriptions.stream.loop}
-						selectInfo={loop[0] === "auto" && t.descriptions.stream.loop.unset}
-						icon="loop"
-					>
-						<ThreeStageSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />
-					</SettingsCard>
-				</TooltipPartial>
+				<SettingsCard
+					title={t.stream.loop}
+					details={t.descriptions.stream.loop}
+					selectInfo={loop[0] === "auto" && t.descriptions.stream.loop.unset}
+					icon="loop"
+				>
+					<ThreeStageSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />
+				</SettingsCard>
 				<ExpanderStreamPreRender stream="visual" />
 				<EmptyMessage.YtpDisabled>
-					<TooltipPartial title={<Tooltip.Content image={stretchImage} />}>
-						<ExpanderRadio
-							title={t.stream.stretch}
-							details={t.descriptions.stream.stretch}
-							selectInfo={isForceStretch && t(prveCount).descriptions.prve.forceStretch}
-							selectValid={false}
-							icon="stretch"
-							items={stretches}
-							value={stretch}
-							view="tile"
-							idField="id"
-							iconField="icon"
-							nameField={t.stream.stretch}
-							detailsField={t.descriptions.stream.stretch}
-						/>
-					</TooltipPartial>
-					<TooltipPartial title={<Tooltip.Content image={truncateImage} />}>
-						<ExpanderRadio
-							title={t.stream.truncate}
-							details={t.descriptions.stream.truncate}
-							icon="arrow_import_prohibited"
-							items={truncates}
-							value={truncate}
-							view="tile"
-							idField="id"
-							iconField="icon"
-							nameField={t.stream.truncate}
-							detailsField={t.descriptions.stream.truncate}
-						/>
-					</TooltipPartial>
-					<TooltipPartial title={<Tooltip.Content image={staticVisualImage} />}>
-						<SettingsCardToggleSwitch title={t.stream.staticVisual} details={t.descriptions.stream.staticVisual} icon="image" on={staticVisual} />
-					</TooltipPartial>
+					<ExpanderRadio
+						title={t.stream.stretch}
+						details={t.descriptions.stream.stretch}
+						selectInfo={isForceStretch && t(prveCount).descriptions.prve.forceStretch}
+						selectValid={false}
+						icon="stretch"
+						items={stretches}
+						value={stretch}
+						view="tile"
+						idField="id"
+						iconField="icon"
+						nameField={t.stream.stretch}
+						detailsField={t.descriptions.stream.stretch}
+					/>
+					<ExpanderRadio
+						title={t.stream.truncate}
+						details={t.descriptions.stream.truncate}
+						icon="arrow_import_prohibited"
+						items={truncates}
+						value={truncate}
+						view="tile"
+						idField="id"
+						iconField="icon"
+						nameField={t.stream.truncate}
+						detailsField={t.descriptions.stream.truncate}
+					/>
+					<SettingsCardToggleSwitch title={t.stream.staticVisual} details={t.descriptions.stream.staticVisual} icon="image" on={staticVisual} />
 					<ExpanderRadio
 						title={t.stream.legato}
 						details={t.descriptions.stream.legato}

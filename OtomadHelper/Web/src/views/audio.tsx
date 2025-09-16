@@ -43,8 +43,6 @@ const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
 const buildInPresets = ["normal", "fadeOut"];
 
-const TooltipPartial = Tooltip.with({ placement: "y" });
-
 // #region Styles
 const PrelistenActions = styled(StackPanel)`
 	position: relative;
