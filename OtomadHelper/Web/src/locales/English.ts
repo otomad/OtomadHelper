@@ -320,20 +320,12 @@ export default {
 					end: "End at cut",
 				},
 			},
-			transformMethod: {
-				_: "Transform method",
-				panCrop: "Pan/Crop",
-				pictureInPicture: "Picture in Picture",
-				transformOfx: "TransformOFX",
-			},
+			transformMethod: "Transform method",
 			articulations: {
 				_: "Articulations",
 				applyCustomPreset: "Apply custom preset",
 				glissando: {
 					_: "Glissando",
-					swirl: "Swirl",
-					wave: "Wave",
-					tv: "TV",
 					pingpong: "Ping-Pong",
 					swirlAmount: "Swirl amount",
 				},
@@ -855,7 +847,7 @@ export default {
 			internal: {
 				language: "VEGAS Pro language",
 				autosaveInterval: "Autosave interval",
-				defaultTextTool: "Default text media generator tool",
+				defaultTextPlugin: "Default text media generator plugin",
 				defaultTuningMethod: "Default tuning method for new audio clips",
 				defaultElasticMode: "Default Elastic stretch attribute for new audio clips",
 				defaultClassicMode: "Default Classic stretch attribute for new audio clips",
@@ -1121,7 +1113,7 @@ export default {
 			},
 			lyrics: {
 				_: "If the score contains lyrics data, such as a singing voice synthesizer software project file, it can automatically generate dynamic subtitles to achieve an immersive experience of audio and visual synchronization. This feature includes the following sub-modes:\nKaraoke mode can generate word-for-word synchronized dynamic subtitles. The lyrics are presented as colored progress bars. The currently sung words are highlighted in realtime (i.e. change from white to fluorescent). The unsung part retains its basic color, precisely for the duration of each syllable.\nIn Pitch Notation mode, if the score does not contain lyrics, the note pitches can be converted into subtitles that jump with the performance in realtime. This mode supports multiple notation systems.",
-				presetTemplate: "Select a “Titles & Text” Media Generator preset to use as a template for lyrics",
+				presetTemplate: "Select a “$t(shared:plugins.titlesAndText)” Media Generator preset to use as a template for lyrics",
 				karaoke: {
 					_: "Uses karaoke style subtitles, the color indicator would reflect the progress of the current phrase",
 					futureFill: "Specify the text fill color for the lyrics that have not yet been sung",
@@ -1165,7 +1157,7 @@ export default {
 				scramble: "Chops the clips into a pile of fragments and shuffles them",
 				automator: "Adds random keyframes to each frame automatically for each effect you have added to the video clips",
 				stutter: "Stutters the clips by forwarding and reversing them in randomized intervals",
-				shake: "Shakes or wiggles the clips by using Pan/Crop",
+				shake: "Shakes or wiggles the clips by using $t(shared:plugins.panCrop)",
 				notInstalled: "The Datamosh Extension Pack is not installed and will not be available for full features until it is downloaded.",
 			},
 			tools: {
@@ -1174,7 +1166,7 @@ export default {
 				selector: "Finds and selects all clips that match the specified criteria",
 				replacer: "Replaces the selected clips with the specified new clips",
 				propertizer: "Sets properties (e.g., normalize, stretch) for all selected clips in batches",
-				subtitles: "Presets the “Titles & Text” preset, then add multiple lines of text here",
+				subtitles: "Presets the “$t(shared:plugins.titlesAndText)” preset, then add multiple lines of text here",
 				effector: "Applies effects to the selected clips",
 				fader: "Adjusts the properties (e.g., gain, volume, opacity) of selected clips in a fade in or out manner one by one",
 				exportScore: "Exports the clips in the selected tracks to a score sequence file",
@@ -1246,7 +1238,7 @@ export default {
 					info: "This will modify the global preferences of VEGAS Pro, not only for the current project. Incorrect settings may cause VEGAS Pro to fail to start. Please use with caution.",
 					language: "Change VEGAS Pro language. Restart VEGAS Pro for the change to take effect.",
 					autosaveInterval: "Adjust the autosave time for projects. Defaults to {{default}} minutes.",
-					defaultTextTool: "Change the default media generator tool for “Insert Text Media”. Defaults to “Titles & Text”.",
+					defaultTextPlugin: "Change the default media generator tool for “Insert Text Media”. Defaults to “$t(shared:plugins.titlesAndText)”.",
 					defaultTuningMethod: "Change the default tuning method for new audio clips. Defaults to $t(stream.tuning.tuningMethod.elastic).",
 					defaultElasticMode: "Change the default stretch attribute of the Elastic method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.elastic.efficient)”.",
 					defaultClassicMode: "Change the default stretch attribute of the Classic method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.classic.a03)”.",
@@ -1296,6 +1288,21 @@ export default {
 			checkboxGroup: "Checkbox group",
 			timesOperator: "Times",
 			reorderHandle: "Drag to reorder",
+		},
+	},
+	shared: {
+		plugins: {
+			panCrop: "Pan/Crop",
+			pictureInPicture: "Picture in Picture",
+			transformOfx: "TransformOFX",
+			swirl: "Swirl",
+			wave: "Wave",
+			tvSimulator: "TV Simulator",
+			tvSimulator_short: "TV",
+			titlesAndText: "Titles & Text",
+			legacyText: "(Legacy) Text",
+			proTypeTitler: "ProType Titler",
+			creditRoll: "Credit Roll",
 		},
 	},
 	csharp: {

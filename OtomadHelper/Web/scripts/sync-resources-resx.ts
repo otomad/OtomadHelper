@@ -21,7 +21,8 @@ function flattenObject(object: AnyObject, context: string[] = []) {
 	return result;
 }
 
-const languages = Object.entries(allLanguages).map(([code, lang]) => ({ code, culture: lang.javascript.metadata.culture, dictionary: flattenObject(lang.csharp) }));
+const languages = Object.entries(allLanguages).map(([code, lang]) =>
+	({ code, culture: lang.javascript.metadata.culture, dictionary: flattenObject({ ...lang.csharp, shared: lang.shared }) }));
 for (const language of languages) {
 	if (language.code === IN_CONTEXT_LANGUAGE_CODE) continue;
 	const xml = create(template.options).import(template);

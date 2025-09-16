@@ -20,7 +20,7 @@ i18n
 	// Docs: https://www.i18next.com/overview/configuration-options
 	.init({
 		debug: import.meta.env.DEV,
-		ns: ["javascript"],
+		ns: ["javascript", "shared"],
 		defaultNS: "javascript",
 		fallbackLng: "en",
 		interpolation: {

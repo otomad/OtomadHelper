@@ -4,6 +4,7 @@ import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicMode
 import type { musicalNotationSystems } from "views/lyrics";
 import type { constrainNoteLengthTypes, encodings, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
 import type { systemBackdrops } from "views/settings";
+import type { textPlugins } from "views/settings/internal";
 import type { barOrBeatUnitTypes, selectGeneratedClipsType, sequentialOrders, sourceFromEnums, startTimes, trackNames } from "views/source";
 import type { trackLegatoModes } from "views/track";
 import type { arrayTypes, directionTypes, fitTypes, parityTypes } from "views/track/grid";
@@ -41,6 +42,7 @@ namespace Config {
 	export type SequentialOrder = typeof sequentialOrders[number]["id"];
 	export type TuningElasticMode = typeof tuningElasticModes[number];
 	export type TuningClassicMode = typeof tuningClassicModes[number];
+	export type TextPlugin = typeof textPlugins[number];
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -331,10 +333,10 @@ namespace Config {
 			internal: {
 				language: "zh-CN",
 				autosaveInterval: [5, "minute"] as Unit<RoughTimeUnit>,
-				defaultTextTool: "titleAndText",
-				defaultTuningMethod: "elastic",
-				defaultElasticMode: "efficient",
-				defaultClassicMode: "a03",
+				defaultTextPlugin: "titlesAndText" as TextPlugin | (string & {}),
+				defaultTuningMethod: "elastic" as TuningMethod,
+				defaultElasticMode: "efficient" as TuningElasticMode,
+				defaultClassicMode: "a03" as TuningClassicMode,
 				preserveClipboardOnClose: false,
 				eventGroupSelection: false,
 				openglInterop: false,

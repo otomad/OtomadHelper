@@ -33,5 +33,6 @@ type DiscardConstString<TLocale> = {
 	[key in KeyWithOther<keyof TLocale>]?: string;
 };
 
-export type LocaleWithDefaultValue = NestLocaleWithDefaultValue<typeof English["javascript"]>;
+type DefaultI18nNamespace = "javascript";
+export type LocaleWithDefaultValue = NestLocaleWithDefaultValue<Override<typeof English[DefaultI18nNamespace], typeof English>>;
 export type LocaleIdentifiers = DiscardConstString<typeof English>;

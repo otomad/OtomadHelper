@@ -222,11 +222,13 @@ words:
   - svgr
   - svgs
   - svh
+  - svs
   - svw
   - tabbar
   - timecode
   - timecodes
   - timeflow
+  - titler
   - toggleable
   - tonejs
   - touchpad
@@ -240,7 +242,6 @@ words:
   - unflipped
   - unfocusable
   - unhover
-  - unioned
   - unlengthen
   - unlengthening
   - unlengthens
@@ -374,3 +375,4 @@ flagWords:
   - hors -> hours
   - hor -> hour
   - efault -> default
+  - unioned -> in a union

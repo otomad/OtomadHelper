@@ -205,12 +205,12 @@ export default function Visual() {
 						title={t.stream.transformMethod}
 						details={t.descriptions.stream.transformMethod}
 						icon="zoom_fit"
-						checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.stream.transformMethod[topPriorityTransformMethod] })}
+						checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.shared.plugins[topPriorityTransformMethod] })}
 					>
 						<SortableView items={transformMethod} fullyDraggable overlayEmits={{ onDrop: onSortableOverlayDrop }}>
 							{(item, index) => (
 								<Expander.Item
-									title={t.stream.transformMethod[item]}
+									title={t.shared.plugins[item]}
 									icon={<div className="icon-placeholder"><Badge>{index + 1}</Badge></div>}
 									clickable
 								/>
@@ -240,9 +240,9 @@ export default function Visual() {
 						<Expander.Item icon="sparkle" title={t.titles.effect}>
 							<Segmented current={glissandoEffect}>
 								<Segmented.Item icon="swirl" id="swirl">{t.stream.articulations.glissando.swirl}</Segmented.Item>
-								<Segmented.Item icon="wave" id="wave">{t.stream.articulations.glissando.wave}</Segmented.Item>
-								<Segmented.Item icon="tv" id="tv">{t.stream.articulations.glissando.tv}</Segmented.Item>
-								<Segmented.Item icon="pingpong" id="pingpong">{t.stream.articulations.glissando.pingpong}</Segmented.Item>
+								<Segmented.Item icon="wave" id="wave">{t.shared.plugins.wave}</Segmented.Item>
+								<Segmented.Item icon="tv" id="tv">{t({ context: "short" }).shared.plugins.tvSimulator}</Segmented.Item>
+								<Segmented.Item icon="pingpong" id="pingpong">{t.shared.plugins.pingpong}</Segmented.Item>
 							</Segmented>
 						</Expander.Item>
 						<Expander.Item title={t.stream.articulations.glissando.swirlAmount} details={t.descriptions.stream.articulations.glissando.swirlAmount}>

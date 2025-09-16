@@ -12,9 +12,11 @@ export /* @internal */ const vegasLanguages = [
 	{ id: 2052, tag: "zh-CN" },
 ];
 
+export /* @internal */ const textPlugins = ["titlesAndText", "legacyText", "proTypeTitler", "creditRoll"] as const;
+
 export default function Internal() {
 	const [currentLanguage] = useLanguage();
-	const { language: [language, setLanguage], openglInterop, autosaveInterval, defaultTextTool, defaultTuningMethod, defaultClassicMode, defaultElasticMode, preserveClipboardOnClose, eventGroupSelection } = useSelectConfig(c => c.settings.internal);
+	const { language: [language, setLanguage], openglInterop, autosaveInterval, defaultTextPlugin, defaultTuningMethod, defaultClassicMode, defaultElasticMode, preserveClipboardOnClose, eventGroupSelection } = useSelectConfig(c => c.settings.internal);
 	return (
 		<div className="container">
 			<InfoBar status="warning" title={t.infoBar.warning}>{t.descriptions.settings.internal.info}</InfoBar>
@@ -35,7 +37,17 @@ export default function Internal() {
 			<SettingsCard title={t.settings.internal.autosaveInterval} details={t.descriptions.settings.internal.autosaveInterval({ default: 5 })} icon="save_clock">
 				<TextBox.RoughTime value={autosaveInterval} />
 			</SettingsCard>
-			<Expander title={t.settings.internal.defaultTextTool} details={t.descriptions.settings.internal.defaultTextTool} icon="text_toolbox" />
+			<ExpanderRadio
+				title={t.settings.internal.defaultTextPlugin}
+				details={t.descriptions.settings.internal.defaultTextPlugin}
+				icon="text_toolbox"
+				view="grid"
+				items={textPlugins}
+				value={defaultTextPlugin}
+				idField
+				nameField={t.shared.plugins}
+				checkInfoCondition={id => id && tf.shared.plugins[id] || t.custom} // Do not to refactor it to ternary operator.
+			/>
 			<ExpanderRadio
 				title={t.settings.internal.defaultTuningMethod}
 				details={t.descriptions.settings.internal.defaultTuningMethod}

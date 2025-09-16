@@ -311,7 +311,7 @@ declare interface Array<T> {
 	 * @example
 	 * ```javascript
 	 * const array = ["apple", "orange", "pear"];
-	 * array.toPopped(); // ["orange", "pear"]
+	 * array.toShifted(); // ["orange", "pear"]
 	 * ```
 	 */
 	toShifted(): T[];

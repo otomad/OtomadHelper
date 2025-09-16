@@ -357,7 +357,7 @@ declare global {
 
 	/**
 	 * Make all properties in T required and exclude null and undefined from them.
-	 * @note Built-in utility type `Required` is powerless for properties whose values are explicitly unioned with
+	 * @note Built-in utility type `Required` is powerless for properties whose values are explicitly in a union with
 	 * `undefined` without specifying `?:`.
 	 *
 	 * @template T - Source object.

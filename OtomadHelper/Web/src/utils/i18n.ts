@@ -15,20 +15,28 @@ export function isI18nItem(newChild: Any): newChild is Record<string, string> {
 }
 
 const wellknownSymbols = Reflect.ownKeys(Symbol).map(key => Symbol[key as never]).filter(value => typeof value === "symbol");
+const DEFAULT_NAMESPACE = "javascript";
 
 const getProxy = (target: object, fallbackMode: boolean = false) => {
 	const getParentsPrefix = (...prefixes: string[]) => prefixes.length > 0 ? prefixes.join(".") : "";
 	const getDeclarationInfo = (...keys: string[]) => {
-		const key = getParentsPrefix(...keys);
-		const raw = i18n.getResource("en", "javascript", key) as string | object;
+		const hasNamespace = !!i18n.options.ns?.includes(keys[0]);
+		const namespace = hasNamespace ? keys[0] : DEFAULT_NAMESPACE;
+		if (hasNamespace) keys = keys.toShifted();
+		let key = getParentsPrefix(...keys);
+		const raw = i18n.getResource("en", namespace, key) as string | object;
+		const isCategory = typeof raw === "object";
+		if (isCategory) key += key ? "._" : "_";
+		if (hasNamespace) key = namespace + ":" + key;
 		return {
-			isCategory: typeof raw === "object",
+			isCategory,
 			includesInterpolation: typeof raw === "string" && raw.includes("{{"),
 			missing: raw === undefined,
-			missingDefault: typeof raw === "object" && !("_" in raw),
+			missingDefault: isCategory && !("_" in raw),
 			isStringMethod: keys.last() in String.prototype || wellknownSymbols.includes(keys.last()),
 			key,
 			raw,
+			namespace,
 		};
 	};
 	const has = (keys: string[], currentName: string) => !getDeclarationInfo(...keys, currentName).missing;
@@ -42,7 +50,7 @@ const getProxy = (target: object, fallbackMode: boolean = false) => {
 			const { raw } = getDeclarationInfo(...keys);
 			return isObject(raw) ? Reflect.ownKeys(raw) : [];
 		},
-		getOwnPropertyDescriptor(target, currentName) {
+		getOwnPropertyDescriptor(_target, currentName) {
 			if (typeof currentName === "string" && has(keys, currentName))
 				return { enumerable: true, configurable: true };
 		},
@@ -60,13 +68,12 @@ const getProxy = (target: object, fallbackMode: boolean = false) => {
 				return displayValue;
 			};
 			const translate = (keys: string[], options?: TOptions) => {
-				const { isCategory, missingDefault } = getDeclarationInfo(...keys);
-				if (missingDefault) return getMissingKey(getParentsPrefix(...keys));
+				const { missingDefault, key } = getDeclarationInfo(...keys);
+				if (missingDefault) return getMissingKey(key);
 				const formatters = [
 					...target?.format ? wrapIfNotArray(target.format) : [],
 					...options?.format ? wrapIfNotArray(options.format) : [],
 				];
-				const key = !isCategory ? getParentsPrefix(...keys) : getParentsPrefix(...keys, "_");
 				let result = i18n.t(key, { ...target, ...options }) as string;
 				if (formatters.length > 0) {
 					const sep: string = options?.interpolation?.formatSeparator ?? target?.interpolation?.formatSeparator ?? ",";
@@ -295,4 +302,3 @@ export function i18nExists(getKey: (t: Trans) => Any, context?: string) {
 	if (context) path += `_${context}`;
 	return i18n.exists(path);
 }
-globals.i18nExists = i18nExists;

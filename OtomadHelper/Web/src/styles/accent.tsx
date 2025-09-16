@@ -13,7 +13,7 @@ const StyledDynamicAccentColor = createGlobalStyle<{
 	css`
 		--colorization: #005fb8;
 		--accent-color-windows: ${colors["accent-color"][1]};
-		--accent-color-vegas: #198cfe;
+		--accent-color-vegas: #0078d7; // #198cfe
 		--accent-color-wallpaper: var(--image-dominant-color, var(--accent-color-windows));
 		--background-color-windows: ${colors["background-color"][1]};
 		--background-color-vegas: #222;
@@ -21,7 +21,7 @@ const StyledDynamicAccentColor = createGlobalStyle<{
 
 		&[data-scheme~="light"] {
 			--accent-color-windows: ${colors["accent-color"][0]};
-			--accent-color-vegas: #198cfe;
+			--accent-color-vegas: #0078d7; // #198cfe
 			--background-color-windows: ${colors["background-color"][0]};
 			--background-color-vegas: #eee;
 		}
