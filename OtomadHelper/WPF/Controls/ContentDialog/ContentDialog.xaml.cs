@@ -182,4 +182,7 @@ public partial class ContentDialog : BackdropWindow {
 		void SetIsVerticalScrollBarShown(bool shown) =>
 			ScrollViewer.SetVerticalScrollBarVisibility(CopyableBody, shown ? ScrollBarVisibility.Auto : ScrollBarVisibility.Hidden);
 	}
+
+	protected virtual void View_Showing(object sender, RoutedEventArgs e) =>
+		Controls.Icon.PlaySound(ViewModel.IconName);
 }

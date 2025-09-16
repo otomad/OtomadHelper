@@ -14,6 +14,7 @@
 	TitleBarType="WindowChrome"
 	WindowStartupLocation="CenterScreen"
 	Topmost="True"
+	Showing="View_Showing"
 	mc:Ignorable="d"
 	>
 	<c:BackdropWindow.DataContext>

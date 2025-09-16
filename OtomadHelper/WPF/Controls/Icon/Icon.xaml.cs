@@ -1,6 +1,6 @@
+using System.Media;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 using System.Windows.Media;
 
 namespace OtomadHelper.WPF.Controls;
@@ -48,4 +48,19 @@ public partial class Icon : Viewbox {
 
 	public static string NormalizeIconName(string iconName) => new VariableName(iconName).Pascal;
 	public static string NormalizeIconName(object iconName) => NormalizeIconName(iconName.ToString());
+
+	/// <summary>
+	/// Play system sound with presupposed icon names. Other icon names will not play any sound.
+	/// </summary>
+	/// <param name="iconName">All known icon names, including: Info, Warning, Error, Question.</param>
+	public static void PlaySound(string iconName) {
+		SystemSound? sound = iconName switch {
+			"Info" => SystemSounds.Beep,
+			"Warning" => SystemSounds.Asterisk,
+			"Error" => SystemSounds.Hand,
+			"Question" => SystemSounds.Exclamation,
+			_ => null,
+		};
+		sound?.Play();
+	}
 }

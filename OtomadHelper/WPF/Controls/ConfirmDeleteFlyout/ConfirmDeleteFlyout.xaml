@@ -12,6 +12,8 @@
 	Width="400"
 	Height="200"
 	SizeToContent="Height"
+	Topmost="True"
+	Showing="ConfirmDeleteFlyout_Showing"
 	mc:Ignorable="d"
 	>
 	<c:BaseFlyout.DataContext>

@@ -18,4 +18,7 @@ public partial class ConfirmDeleteFlyout : BaseFlyout {
 		flyout.Loaded += (_, _) => flyout.Flyout(targetRect);
 		return flyout;
 	}
+
+	private void ConfirmDeleteFlyout_Showing(object sender, System.Windows.RoutedEventArgs e) =>
+		Controls.Icon.PlaySound("Question");
 }

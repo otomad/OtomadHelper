@@ -26,7 +26,7 @@ internal static class Program {
 		Application.Run(new TestControlsWinForm());
 #endif
 #if TEST2
-		s = ContentDialog.ShowDialog<DialogResult>("幸福倒计时", "即将更新 Windows 11 到最新版本！", [
+		s = ContentDialog.ShowDialog<DialogResult?>("幸福倒计时", "即将更新 Windows 11 到最新版本！", [
 			new("草", DialogResult.Abort),
 			new("走", DialogResult.Retry),
 			new("忽略", DialogResult.Ignore, true),
