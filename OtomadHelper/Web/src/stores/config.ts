@@ -42,7 +42,7 @@ namespace Config {
 	export type SequentialOrder = typeof sequentialOrders[number]["id"];
 	export type TuningElasticMode = typeof tuningElasticModes[number];
 	export type TuningClassicMode = typeof tuningClassicModes[number];
-	export type TextPlugin = typeof textPlugins[number];
+	export type TextPlugin = typeof textPlugins[number]["id"];
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {

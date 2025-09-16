@@ -1,3 +1,7 @@
+import pluginCreditRoll from "src/assets/images/plugins/credit_roll.png";
+import pluginLegacyText from "src/assets/images/plugins/legacy_text.png";
+import pluginProtypeTitler from "src/assets/images/plugins/protype_titler.png";
+import pluginCreditTitlesAndText from "src/assets/images/plugins/titles_and_text.png";
 import { exactTuningMethods, tuningClassicModes, tuningElasticModes } from "views/audio";
 
 export /* @internal */ const vegasLanguages = [
@@ -12,7 +16,31 @@ export /* @internal */ const vegasLanguages = [
 	{ id: 2052, tag: "zh-CN" },
 ];
 
-export /* @internal */ const textPlugins = ["titlesAndText", "legacyText", "proTypeTitler", "creditRoll"] as const;
+export /* @internal */ const textPlugins = [
+	// cspell:disable-next-line
+	{ id: "titlesAndText", uid: "{Svfx:com.vegascreativesoftware:titlesandtext}", image: pluginCreditTitlesAndText },
+	{ id: "legacyText", uid: "{0FE8789D-0C47-442A-AFB0-0DAF97669317}", image: pluginLegacyText },
+	{ id: "protypeTitler", uid: "{53FC0B44-BD58-4716-A90F-3EB43168DE81}", image: pluginProtypeTitler },
+	{ id: "creditRoll", uid: "{02FD3B60-986B-11D4-9F6F-00485481BD31}", image: pluginCreditRoll },
+] as const;
+
+const TextPluginPreviewImage = styled.img`
+	${styles.mixins.square("100%")};
+	object-fit: cover;
+	object-position: top;
+
+	.items-view-item:hover & {
+		object-position: bottom;
+	}
+
+	.items-view-item:hover:active & {
+		object-position: center;
+	}
+
+	/* ${ifColorScheme.dark} & {
+		filter: invert(1) hue-rotate(180deg);
+	} */
+`;
 
 export default function Internal() {
 	const [currentLanguage] = useLanguage();
@@ -40,13 +68,14 @@ export default function Internal() {
 			<ExpanderRadio
 				title={t.settings.internal.defaultTextPlugin}
 				details={t.descriptions.settings.internal.defaultTextPlugin}
-				icon="text_toolbox"
+				icon="text_plugin"
 				view="grid"
 				items={textPlugins}
 				value={defaultTextPlugin}
-				idField
+				idField="id"
 				nameField={t.shared.plugins}
 				checkInfoCondition={id => id && tf.shared.plugins[id] || t.custom} // Do not to refactor it to ternary operator.
+				imageField={({ image, id }) => <TextPluginPreviewImage src={image} alt={t.shared.plugins[id]} />}
 			/>
 			<ExpanderRadio
 				title={t.settings.internal.defaultTuningMethod}

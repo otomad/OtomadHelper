@@ -1301,7 +1301,7 @@ export default {
 			tvSimulator_short: "TV",
 			titlesAndText: "Titles & Text",
 			legacyText: "(Legacy) Text",
-			proTypeTitler: "ProType Titler",
+			protypeTitler: "ProType Titler",
 			creditRoll: "Credit Roll",
 		},
 	},
