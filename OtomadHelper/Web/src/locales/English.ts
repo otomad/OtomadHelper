@@ -1238,7 +1238,7 @@ export default {
 					info: "This will modify the global preferences of VEGAS Pro, not only for the current project. Incorrect settings may cause VEGAS Pro to fail to start. Please use with caution.",
 					language: "Change VEGAS Pro language. Restart VEGAS Pro for the change to take effect.",
 					autosaveInterval: "Adjust the autosave time for projects. Defaults to {{default}} minutes.",
-					defaultTextPlugin: "Change the default media generator tool for “Insert Text Media”. Defaults to “$t(shared:plugins.titlesAndText)”.",
+					defaultTextPlugin: "Change the default media generator plugin for “Insert Text Media”. Defaults to “$t(shared:plugins.titlesAndText)”.",
 					defaultTuningMethod: "Change the default tuning method for new audio clips. Defaults to $t(stream.tuning.tuningMethod.elastic).",
 					defaultElasticMode: "Change the default stretch attribute of the Elastic method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.elastic.efficient)”.",
 					defaultClassicMode: "Change the default stretch attribute of the Classic method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.classic.a03)”.",
