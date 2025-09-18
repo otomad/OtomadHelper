@@ -30,13 +30,13 @@ public class EntryPoint {
 			(string)t.WrongOpeningMethod.Script.Content + "\n" + CorrectExtensionPath,
 			[
 				new(t.ContentDialog.Button.Ok, "ok"),
-				new(t.ContentDialog.Button.OpenPath, "openPath"),
+				new(t.ContentDialog.Button.Locate, "locate"),
 				new(t.ContentDialog.Button.LearnMore, "learnMore", true),
 			]
 		);
 		if (result == "learnMore")
 			OpenLink("https://otomad.github.io/otomad/link/OtomadHelper.html#documentation");
-		else if (result == "openPath") {
+		else if (result == "locate") {
 			Exception? e = CorrectExtensionPath.CreateDirectory();
 			if (e is not null) ShowError(e);
 			else OpenLink(CorrectExtensionPath);

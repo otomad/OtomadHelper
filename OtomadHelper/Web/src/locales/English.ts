@@ -1113,7 +1113,7 @@ export default {
 			},
 			lyrics: {
 				_: "If the score contains lyrics data, such as a singing voice synthesizer software project file, it can automatically generate dynamic subtitles to achieve an immersive experience of audio and visual synchronization. This feature includes the following sub-modes:\nKaraoke mode can generate word-for-word synchronized dynamic subtitles. The lyrics are presented as colored progress bars. The currently sung words are highlighted in realtime (i.e. change from white to fluorescent). The unsung part retains its basic color, precisely for the duration of each syllable.\nIn Pitch Notation mode, if the score does not contain lyrics, the note pitches can be converted into subtitles that jump with the performance in realtime. This mode supports multiple notation systems.",
-				presetTemplate: "Select a “$t(shared:plugins.titlesAndText)” Media Generator preset to use as a template for lyrics",
+				presetTemplate: "Select a “$t(shared:plugins.titlesAndText)” media generator preset to use as a template for lyrics",
 				karaoke: {
 					_: "Uses karaoke style subtitles, the color indicator would reflect the progress of the current phrase",
 					futureFill: "Specify the text fill color for the lyrics that have not yet been sung",
@@ -1238,7 +1238,7 @@ export default {
 					info: "This will modify the global preferences of VEGAS Pro, not only for the current project. Incorrect settings may cause VEGAS Pro to fail to start. Please use with caution.",
 					language: "Change VEGAS Pro language. Restart VEGAS Pro for the change to take effect.",
 					autosaveInterval: "Adjust the autosave time for projects. Defaults to {{default}} minutes.",
-					defaultTextPlugin: "Change the default media generator plugin for “Insert Text Media”. Defaults to “$t(shared:plugins.titlesAndText)”.",
+					defaultTextPlugin: "Change the default text media generator plugin for the “Insert Text Media” option in the context menu of the timeline pane. Defaults to “$t(shared:plugins.titlesAndText)”.",
 					defaultTuningMethod: "Change the default tuning method for new audio clips. Defaults to $t(stream.tuning.tuningMethod.elastic).",
 					defaultElasticMode: "Change the default stretch attribute of the Elastic method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.elastic.efficient)”.",
 					defaultClassicMode: "Change the default stretch attribute of the Classic method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.classic.a03)”.",

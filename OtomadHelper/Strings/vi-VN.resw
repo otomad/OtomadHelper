@@ -233,4 +233,22 @@ Vị trí:</value>
 	<data name="Descriptions.ColorPicker.EyeDropper" xml:space="preserve">
 		<value>Bốc một màu trên màn hình</value>
 	</data>
+	<data name="Shared.Plugins.PanCrop" xml:space="preserve">
+		<value>Chuyển hướng/Cắt xén</value>
+	</data>
+	<data name="Shared.Plugins.PictureInPicture" xml:space="preserve">
+		<value>Hình trong Hình (PiP)</value>
+	</data>
+	<data name="Shared.Plugins.TransformOfx" xml:space="preserve">
+		<value>TransformOFX</value>
+	</data>
+	<data name="Shared.Plugins.Swirl" xml:space="preserve">
+		<value>Xoáy</value>
+	</data>
+	<data name="Shared.Plugins.Wave" xml:space="preserve">
+		<value>Sóng</value>
+	</data>
+	<data name="Shared.Plugins.TvSimulatorShort" xml:space="preserve">
+		<value>TV</value>
+	</data>
 </root>

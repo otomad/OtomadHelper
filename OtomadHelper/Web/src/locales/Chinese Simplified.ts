@@ -35,6 +35,8 @@ export default {
 			grid_full: "网格布局",
 			box3d: "三维方盒布局",
 			gradient: "渐变轨道",
+			internal: "全局内部",
+			internal_long: "VEGAS Pro 全局内部首选项",
 			track: "轨道",
 			mosh: "抹失",
 			effect: "效果",
@@ -96,7 +98,7 @@ export default {
 				},
 			},
 			consonant: "辅音时间",
-			takeTurns: "依次轮流",
+			matchCut: "踩点",
 			linearMap: "线性映射输出",
 		},
 		on: "开",
@@ -127,8 +129,12 @@ export default {
 		browse: "浏览",
 		ok: "确定",
 		close: "关闭",
-		descending: "递减",
+		order: "次序",
 		ascending: "递增",
+		descending: "递减",
+		sequential: "顺序",
+		reversed: "逆序",
+		shuffled: "乱序",
 		view: "视图",
 		size: "大小",
 		disabled: "禁用",
@@ -143,6 +149,10 @@ export default {
 		unit: "单位\n",
 		deleteSelection: "删除所选",
 		all: "全部",
+		export: "导出",
+		import: "导入",
+		dangerZone: "危险地带",
+		locate: "定位",
 		infoBar: {
 			warning: "警告",
 		},
@@ -160,6 +170,9 @@ export default {
 		units: {
 			piece: "个",
 			millisecond: "毫秒",
+			second: "秒钟",
+			minute: "分钟",
+			hour: "小时",
 			percent: "%",
 			pixel: "像素",
 			beatPerMinute: "拍每分",
@@ -168,6 +181,7 @@ export default {
 			densityIndependentPixel: "逻辑像素",
 			times: "×",
 			fraction: "等分",
+			point: "点",
 			pixel_full: "像素",
 			bar: "小节",
 			beat: "拍",
@@ -179,6 +193,7 @@ export default {
 				backgroundImage: "确定要删除该背景图像吗？",
 			},
 			enableImproveTranslation: "确定要进入语境翻译工具来改进翻译吗？",
+			resetConfig: "确定要重置用户配置吗？\n重置后所有的用户配置数据都将丢失。除非你遇到了某些无法解决的问题，否则无需执行此操作。",
 		},
 		curve: {
 			_: "插值曲线",
@@ -294,20 +309,12 @@ export default {
 					end: "终点切入",
 				},
 			},
-			transformMethod: {
-				_: "变换方法",
-				panCrop: "平移/裁切",
-				pictureInPicture: "画中画",
-				transformOfx: "变换效果插件",
-			},
+			transformMethod: "变换方法",
 			articulations: {
 				_: "演奏技法",
 				applyCustomPreset: "应用自定义预设",
 				glissando: {
 					_: "滑音",
-					swirl: "漩涡",
-					wave: "波浪",
-					tv: "电视",
 					pingpong: "来回",
 					swirlAmount: "漩涡大小",
 				},
@@ -333,6 +340,33 @@ export default {
 				},
 				stretchAttributes: {
 					_: "拉伸属性",
+					elastic: {
+						pro: "专业",
+						efficient: "高效",
+						soloist_monophonic: "独奏（单声道）",
+						soloist_speech: "独奏（语音）",
+					},
+					classic: {
+						a01: "音乐1（最小变调，可能有回音）",
+						a02: "音乐2",
+						a03: "音乐3（回音较小）",
+						a04: "音乐4（快速，适合低音）",
+						a05: "音乐5",
+						a06: "音乐6",
+						a07: "语音1",
+						a08: "语音2",
+						a09: "语音3（快速）",
+						a10: "独奏乐器1",
+						a11: "独奏乐器2",
+						a12: "独奏乐器3",
+						a13: "独奏乐器4（回音较小）",
+						a14: "独奏乐器5",
+						a15: "独奏乐器6",
+						a16: "独奏乐器7（快速）",
+						a17: "鼓，无音高（最小回音）",
+						a18: "鼓（更适用于通鼓）",
+						a19: "鼓（微弱回音）",
+					},
 				},
 				alternativeForExceedTheRange: {
 					_: "超出音域替代方法",
@@ -610,6 +644,9 @@ export default {
 			exportScore: "导出乐谱",
 			converters: "转换",
 			clawer: "耙爪器",
+			services: "服务",
+			variableTempo: "可变速度",
+			ultraPaste: "超级粘贴",
 		},
 		selectInfo: {
 			trackEventOnlyOne: "必须恰好选中1段轨道剪辑，不得多选或少选",
@@ -765,7 +802,7 @@ export default {
 					micaAlt: "云母平替",
 					solid: "纯色",
 				},
-				uiScale: "界面缩放",
+				fontSize: "字体大小",
 			},
 			preference: {
 				_: "偏好",
@@ -774,6 +811,25 @@ export default {
 			},
 			config: {
 				hideUsageTips: "隐藏使用小贴士",
+				userConfig: {
+					_: "用户配置设置",
+					backupAndRestore: "备份与还原",
+					fileLocation: "配置设置文件位置",
+				},
+				clipsFolder: {
+					_: "片段文件夹",
+				},
+			},
+			internal: {
+				language: "VEGAS Pro语言",
+				autosaveInterval: "自动保存时间间隔",
+				defaultTextPlugin: "默认文本媒体生成器插件",
+				defaultTuningMethod: "新音频剪辑的默认调音方法",
+				defaultElasticMode: "新音频剪辑的默认弹性拉伸属性",
+				defaultClassicMode: "新音频剪辑的默认古典拉伸属性",
+				preserveClipboardOnClose: "项目关闭时保留剪贴板",
+				eventGroupSelection: "点选组内任一剪辑即选中整组",
+				openglInterop: "OpenGL GDI兼容模式",
 			},
 			dev: {
 				_: "开发",
@@ -799,13 +855,13 @@ export default {
 					_: "依照乐曲音轨为轨道分组",
 				},
 				trackName: {
-					_: "为生成的轨道或轨道组命名",
+					_: "为生成的轨道和轨道组命名",
 				},
 				multisource: {
 					ytpEnabled: "YTP功能启用时不可配置这些功能。",
 				},
 				secretBox: {
-					_: "随机化素材入点。\n这可能会导致随机选取的素材片段具有不同的原始音高，因此只能用来做成搞笑视频供娱乐，几乎不能做成高品质视频。",
+					_: "随机化素材入点。\n这可能会导致随机挑取的素材片段具有不同的原始音高，因此只能用来做成搞笑视频供娱乐，几乎不能做成高品质视频。",
 					limitToSelected: "仅在所选的多素材之间随机切换，而不是使用完全随机的入点",
 					track: "究竟是音轨还是通道取决于乐曲配置",
 					marker: "当在乐曲中遇到标记时，就会变更一次素材入点。如果某些标记具有相同的非空名称，它们将会使用相同的素材入点。",
@@ -820,10 +876,15 @@ export default {
 					_: "为防止辅音被拉伸或延迟，可以将同一音视频素材的辅音与元音部分分割开，以便于为素材的辅音部分应用特殊优化。\n若至少选中两段音频剪辑或视频剪辑，则第一段被视为首辅音部分，第二段被视为元音部分，第三段（如果有）被视为尾辅音部分。",
 					manualEnabled: "人力模式下已自动启用本功能。",
 				},
-				takeTurns: "选中多项素材，每次产生音符时都会轮流应用这些素材",
+				matchCut: {
+					_: "点选多项素材，将通过自动踩点依次轮流应用这些素材",
+					order: "指定素材的应用次序",
+					loop: "禁用后，则所需音符数超出所选素材数时会立即终止生成。请重新填充足够的素材或启用循环。",
+					secretBox: "无需挑选多项素材，只需点选一段长素材，它将自动随机挑取片段的入点",
+				},
 				linearMap: {
-					_: "选中多项素材，它们将按顺序映射到可用音轨（多余的素材或音轨会被剔除）",
-					descending: "反转音轨的顺序来映射（注意不是所选素材的顺序）",
+					_: "点选多项素材，它们将依次映射到可用音轨（多余的素材或音轨会被剔除）",
+					descending: "反转音轨的顺序来映射（注意不是所选素材的次序）",
 				},
 			},
 			score: {
@@ -897,7 +958,7 @@ export default {
 					duration: "设置过渡的持续时间",
 					crossfadeInfo: "默认插入交叉淡化过渡，你可以稍后自行替换为其它转场。",
 				},
-				transformMethod: "指定要应用变换关键帧的目标属性的优先级顺序",
+				transformMethod: "指定要应用变换关键帧的目标属性的优先级次序",
 				articulations: {
 					glissando: {
 						_: "在演奏弯音或滑音时产生效果。",
@@ -928,7 +989,9 @@ export default {
 							exceedTheRange: "可以超出音域",
 						},
 					},
-					stretchAttributes: "有关所选调音方法的详细配置",
+					stretchAttributes: "当前调音方法不支持设置任何拉伸属性",
+					stretchAttributes_elastic: "从弹性调音方法的子算法中选取最适合当前素材的模式，不同的模式下提供的质量与所需的性能也不同。",
+					stretchAttributes_classic: "从古典调音方法中选择一种模式以指定如何分割和交叉淡化文件从而防止产生伪影。根据素材的不同，你可能需要尝试不同的交叉淡化类型。",
 					alternativeForExceedTheRange: {
 						_: "使用另一种平替方法来处理超出音域范围之外的音符",
 						plugin: "通过反复使用移调音频效果插件从而达到任意音高",
@@ -1025,7 +1088,7 @@ export default {
 			},
 			lyrics: {
 				_: "当乐曲中包含歌词信息，比如乐曲为虚拟歌姬项目文件时，能够自动生成动态字幕，实现音画同步的沉浸式体验。该功能包含以下子模式：\n卡拉OK模式，能生成逐字同步的动态字幕。歌词以色彩进度条形式呈现，当前演唱的字词会实时高亮（如从白色渐变为荧光色），未演唱部分保持基础色调，精确到每个音节的时长。\n音高记号模式，如果乐曲中不包含歌词，可以将音符音高转化为字幕，字幕随演奏实时跳动。该模式支持多套乐谱体系。",
-				presetTemplate: "选择“字幕和文字”媒体发生器的预设作为歌词的模板",
+				presetTemplate: "选择“$t(shared:plugins.titlesAndText)”媒体发生器的预设作为歌词的模板",
 				karaoke: {
 					_: "使用卡拉OK风格字幕，颜色指示器会反映当前乐句的演唱进度",
 					futureFill: "指定未播放歌词的文字填充颜色",
@@ -1051,6 +1114,7 @@ export default {
 			},
 			ytp: {
 				_: "YouTube Poop(YTP)使用各种效果来创作以解构、拼贴和荒诞主义为核心的视频。YTP支持多素材。\nYTP是数字时代的新达达主义艺术实践。通过剪辑、重复、变速、倒放等技术，将素材重新组合成无逻辑的“视频混搭”，刻意模仿低画质、低技术审美的风格，以此戏谑主流视频文化的严肃性与规范性。例如将人物动作循环播放、叠加意义断裂的台词，或插入突兀的音效，制造出既荒诞又具有黑色幽默的视听效果。\nYTP反叛传统叙事逻辑，挑战观众对“意义”的固有认知。通过数字剪辑技术解构主流媒体内容，将文化符号转化为无意义的“电子垃圾”。其作品常以“混乱即美学”为原则，如无限循环的鬼畜片段或扭曲的角色对话，形成独特的后现代艺术语言。YTP的创作门槛较低，但其艺术价值在于对媒介本质的反思⸺通过技术缺陷凸显数字媒介的脆弱性。YTP虽为网络迷因，实为一场持续的数字艺术实验，重新定义了娱乐与批判的边界。",
+				slogan: "YouTube Poop⸺烟起之处，灼不可触。因YouTube实为秽薮。",
 				constrain: "控制要生成的剪辑的长度",
 				clips: "设定要生成的剪辑的数目",
 				effects: "指定YTP的效果",
@@ -1066,7 +1130,7 @@ export default {
 				scramble: "将剪辑切割成若干碎屑并进行随机重组",
 				automator: "自动为添加到视频剪辑中的每种效果在各帧添加随机关键帧",
 				stutter: "通过随机时间间隔的正放与倒放来制造卡顿效果",
-				shake: "运用平移/裁切来摇晃或摆动剪辑",
+				shake: "运用$t(shared:plugins.panCrop)来摇晃或摆动剪辑",
 				notInstalled: "未安装数据抹失扩展包，下载后方可使用全部功能。",
 			},
 			tools: {
@@ -1075,7 +1139,7 @@ export default {
 				selector: "查找并选中符合指定条件的所有剪辑",
 				replacer: "替换所选剪辑至指定的新剪辑",
 				propertizer: "批量为所有选中剪辑设置属性（如规范化、拉伸）",
-				subtitles: "预先设定好“字幕和文字”的预设，然后在此处添加多行文本",
+				subtitles: "预先设定好“$t(shared:plugins.titlesAndText)”的预设，然后在此处添加多行文本",
 				effector: "为所选剪辑应用效果",
 				fader: "以逐项渐入或渐出的方式调整所选剪辑的属性（如增益、音量、不透明度）",
 				exportScore: "将所选轨道中的剪辑导出为乐谱序列文件",
@@ -1084,6 +1148,8 @@ export default {
 					transformMethod: "为所选视频剪辑更换应用变换关键帧的目标属性",
 					clawer: "改变音乐节拍以创建有趣的新节奏",
 				},
+				variableTempo: "只要标有速度标记，就可以在时间线上实时显示速度变化",
+				ultraPaste: "只需一个快捷键即可导入几乎任何文件类型",
 			},
 			staff: {
 				_: "五线谱可视化是一种将音乐符号转化为创意视觉图形的视觉效果，其核心在于通过自定义图案（如人物头像、几何图形等）替代传统音符，并基于乐曲旋律将其定位在五线谱的对应音高位置上，形成兼具艺术性与功能性的动态画面。这种视觉效果风格的灵感源自数字艺术与音乐的结合实践，YouTube创作者Grant Woolard的作品。他的视频特色是将音乐家头像转化为音符，在五线谱上动态排列，并演奏经典音乐。这既保留乐谱的音高逻辑，又赋予其个性化视觉叙事。\n该效果可用于艺术创作与演出视觉设计，例如将艺术家的表演转化为动态五线谱艺术投影，或为数字专辑封面生成交互式乐谱动画。其创新性在于打破传统乐谱的静态限制，以视觉语言重新诠释音乐结构，使抽象旋律转化为可感知的“视觉旋律”。",
@@ -1120,10 +1186,37 @@ export default {
 						systemContrastMayNot: "系统高对比度主题已启用，此时{{option, lowercase}}选项不一定生效。",
 						blackScheme: "黑色配色方案已启用，此时{{option, lowercase}}选项不会生效。",
 					},
+					fontSize: {
+						info: "当前设定的界面标准文本字体大小为 **{{current}}点**；\n默认字体大小为{{default}}点。",
+						sampleText: "海浪的声音平静了我的心灵。",
+					},
 				},
 				preference: {
 					autoSwitchSourceFrom: "根据最后所选内容自动更改素材来源",
 					autoCollapsePrveClasses: "展开一组$t(titles.prve)类时自动折叠其它效果类",
+				},
+				config: {
+					userConfig: {
+						_: "备份、恢复或清除用户配置设置数据",
+						backupAndRestore: "导出或导入用户配置设置数据以便不时之需",
+						reset: "重置用户配置可能会解决某些不可名状的问题，你也会丢失你的所有配置数据",
+					},
+					clipsFolder: {
+						_: "选择用于存放由数据抹失、像素硬边缘放大等工具生成片段的文件夹",
+					},
+				},
+				internal: {
+					_: "此处收录部分无法在VEGAS Pro首选项中设置的实用选项",
+					info: "这将会修改VEGAS Pro的全局偏好，而不仅仅是针对当前项目。错误的设置可能导致VEGAS Pro无法启动，请谨慎操作。",
+					language: "更改VEGAS Pro的语言，重启VEGAS Pro以使更改生效",
+					autosaveInterval: "调整项目的自动保存时间，默认为{{default}}分钟",
+					defaultTextPlugin: "更改轨道窗格的右键菜单中“插入文本媒体”选项的默认媒体生成器插件，默认为“$t(shared:plugins.titlesAndText)”",
+					defaultTuningMethod: "更改新音频剪辑的默认调音方法，默认为$t(stream.tuning.tuningMethod.elastic)",
+					defaultElasticMode: "更改新音频剪辑中弹性方法的默认拉伸属性，默认为“$t(stream.tuning.stretchAttributes.elastic.efficient)”",
+					defaultClassicMode: "更改新音频剪辑中古典方法的默认拉伸属性，默认为“$t(stream.tuning.stretchAttributes.classic.a03)”",
+					preserveClipboardOnClose: "允许在同一个VEGAS Pro实例中通过先后打开不同的项目来跨项目复制粘贴",
+					eventGroupSelection: "允许在拖动音频剪辑跨轨道时，组内视频剪辑会自动跟随移动，而不是保持在原轨道上，反之亦然",
+					openglInterop: "解决在特定版本的英伟达工作室显卡下预览窗口不刷新特效的问题",
 				},
 			},
 		},
@@ -1170,6 +1263,21 @@ export default {
 		},
 		preset: "预设",
 	},
+	shared: {
+		plugins: {
+			panCrop: "平移/裁切",
+			pictureInPicture: "画中画",
+			transformOfx: "变换效果插件",
+			swirl: "漩涡",
+			wave: "波浪",
+			tvSimulator: "电视模拟器",
+			tvSimulator_short: "电视",
+			titlesAndText: "字幕和文字",
+			legacyText: "（自带）文字",
+			protypeTitler: "PTT字幕",
+			creditRoll: "致谢字幕",
+		},
+	},
 	csharp: {
 		host: {
 			toolTip: {
@@ -1182,7 +1290,7 @@ export default {
 				cancel: "取消",
 				close: "关闭",
 				learnMore: "了解更多",
-				openPath: "打开路径",
+				locate: "定位",
 			},
 			expander: {
 				expandDetails: "展开详细信息",

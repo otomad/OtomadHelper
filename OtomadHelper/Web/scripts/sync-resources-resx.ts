@@ -9,7 +9,7 @@ const template_string = await readFile(resolve(import.meta.dirname, "Resources.r
 const template = create(template_string);
 
 function flattenObject(object: AnyObject, context: string[] = []) {
-	const convertKey = (context: string[]) => context.map(key => new VariableName(key).pascal).join(".");
+	const convertKey = (context: string[]) => context.map(key => new VariableName(key, true).pascal).join(".");
 	const result = {} as Record<string, string>;
 	for (const [key, value] of Object.entries(object)) {
 		const newContext = [...context, key];

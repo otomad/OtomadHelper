@@ -73,8 +73,8 @@
 	<data name="ContentDialog.Button.LearnMore" xml:space="preserve">
 		<value>了解更多</value>
 	</data>
-	<data name="ContentDialog.Button.OpenPath" xml:space="preserve">
-		<value>打开路径</value>
+	<data name="ContentDialog.Button.Locate" xml:space="preserve">
+		<value>定位</value>
 	</data>
 	<data name="ContentDialog.Expander.ExpandDetails" xml:space="preserve">
 		<value>展开详细信息</value>
@@ -238,5 +238,38 @@
 	</data>
 	<data name="Descriptions.ColorPicker.EyeDropper" xml:space="preserve">
 		<value>从屏幕上拾取颜色</value>
+	</data>
+	<data name="Shared.Plugins.PanCrop" xml:space="preserve">
+		<value>平移/裁切</value>
+	</data>
+	<data name="Shared.Plugins.PictureInPicture" xml:space="preserve">
+		<value>画中画</value>
+	</data>
+	<data name="Shared.Plugins.TransformOfx" xml:space="preserve">
+		<value>变换效果插件</value>
+	</data>
+	<data name="Shared.Plugins.Swirl" xml:space="preserve">
+		<value>漩涡</value>
+	</data>
+	<data name="Shared.Plugins.Wave" xml:space="preserve">
+		<value>波浪</value>
+	</data>
+	<data name="Shared.Plugins.TvSimulator" xml:space="preserve">
+		<value>电视模拟器</value>
+	</data>
+	<data name="Shared.Plugins.TvSimulatorShort" xml:space="preserve">
+		<value>电视</value>
+	</data>
+	<data name="Shared.Plugins.TitlesAndText" xml:space="preserve">
+		<value>字幕和文字</value>
+	</data>
+	<data name="Shared.Plugins.LegacyText" xml:space="preserve">
+		<value>（自带）文字</value>
+	</data>
+	<data name="Shared.Plugins.ProtypeTitler" xml:space="preserve">
+		<value>PTT字幕</value>
+	</data>
+	<data name="Shared.Plugins.CreditRoll" xml:space="preserve">
+		<value>致谢字幕</value>
 	</data>
 </root>

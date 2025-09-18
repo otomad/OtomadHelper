@@ -73,8 +73,8 @@
 	<data name="ContentDialog.Button.LearnMore" xml:space="preserve">
 		<value>&amp;Learn more</value>
 	</data>
-	<data name="ContentDialog.Button.OpenPath" xml:space="preserve">
-		<value>Open &amp;path</value>
+	<data name="ContentDialog.Button.Locate" xml:space="preserve">
+		<value>Loca&amp;te</value>
 	</data>
 	<data name="ContentDialog.Expander.ExpandDetails" xml:space="preserve">
 		<value>Expand details</value>
@@ -238,5 +238,38 @@ Location:</value>
 	</data>
 	<data name="Descriptions.ColorPicker.EyeDropper" xml:space="preserve">
 		<value>Pick a color from the screen</value>
+	</data>
+	<data name="Shared.Plugins.PanCrop" xml:space="preserve">
+		<value>Pan/Crop</value>
+	</data>
+	<data name="Shared.Plugins.PictureInPicture" xml:space="preserve">
+		<value>Picture in Picture</value>
+	</data>
+	<data name="Shared.Plugins.TransformOfx" xml:space="preserve">
+		<value>TransformOFX</value>
+	</data>
+	<data name="Shared.Plugins.Swirl" xml:space="preserve">
+		<value>Swirl</value>
+	</data>
+	<data name="Shared.Plugins.Wave" xml:space="preserve">
+		<value>Wave</value>
+	</data>
+	<data name="Shared.Plugins.TvSimulator" xml:space="preserve">
+		<value>TV Simulator</value>
+	</data>
+	<data name="Shared.Plugins.TvSimulatorShort" xml:space="preserve">
+		<value>TV</value>
+	</data>
+	<data name="Shared.Plugins.TitlesAndText" xml:space="preserve">
+		<value>Titles &amp; Text</value>
+	</data>
+	<data name="Shared.Plugins.LegacyText" xml:space="preserve">
+		<value>(Legacy) Text</value>
+	</data>
+	<data name="Shared.Plugins.ProtypeTitler" xml:space="preserve">
+		<value>ProType Titler</value>
+	</data>
+	<data name="Shared.Plugins.CreditRoll" xml:space="preserve">
+		<value>Credit Roll</value>
 	</data>
 </root>

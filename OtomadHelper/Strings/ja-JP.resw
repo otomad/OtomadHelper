@@ -73,8 +73,8 @@
 	<data name="ContentDialog.Button.LearnMore" xml:space="preserve">
 		<value>詳細(&amp;L)</value>
 	</data>
-	<data name="ContentDialog.Button.OpenPath" xml:space="preserve">
-		<value>パスを開く(&amp;P)</value>
+	<data name="ContentDialog.Button.Locate" xml:space="preserve">
+		<value>Loca&amp;te</value>
 	</data>
 	<data name="ContentDialog.Expander.ExpandDetails" xml:space="preserve">
 		<value>詳細を展開</value>
@@ -238,5 +238,38 @@
 	</data>
 	<data name="Descriptions.ColorPicker.EyeDropper" xml:space="preserve">
 		<value>画面から色を選択</value>
+	</data>
+	<data name="Shared.Plugins.PanCrop" xml:space="preserve">
+		<value>パン/トリミング</value>
+	</data>
+	<data name="Shared.Plugins.PictureInPicture" xml:space="preserve">
+		<value>Picture in Picture</value>
+	</data>
+	<data name="Shared.Plugins.TransformOfx" xml:space="preserve">
+		<value>TransformOFX</value>
+	</data>
+	<data name="Shared.Plugins.Swirl" xml:space="preserve">
+		<value>渦巻き</value>
+	</data>
+	<data name="Shared.Plugins.Wave" xml:space="preserve">
+		<value>ウェーブ</value>
+	</data>
+	<data name="Shared.Plugins.TvSimulator" xml:space="preserve">
+		<value>テレビシミュレーション</value>
+	</data>
+	<data name="Shared.Plugins.TvSimulatorShort" xml:space="preserve">
+		<value>テレビ</value>
+	</data>
+	<data name="Shared.Plugins.TitlesAndText" xml:space="preserve">
+		<value>タイトル &amp; テキスト</value>
+	</data>
+	<data name="Shared.Plugins.LegacyText" xml:space="preserve">
+		<value>(レガシー) テキスト</value>
+	</data>
+	<data name="Shared.Plugins.ProtypeTitler" xml:space="preserve">
+		<value>ProType Titler</value>
+	</data>
+	<data name="Shared.Plugins.CreditRoll" xml:space="preserve">
+		<value>クレジットロール</value>
 	</data>
 </root>

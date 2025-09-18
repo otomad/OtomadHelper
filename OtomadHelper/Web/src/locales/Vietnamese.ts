@@ -120,8 +120,9 @@ export default {
 		topPriority: "{{item}} trước",
 		browse: "Duyệt qua",
 		ok: "OK",
-		descending: "Giảm dần",
 		ascending: "Tăng dần",
+		descending: "Giảm dần",
+		reversed: "Đảo ngược",
 		view: "Xem",
 		size: "Kích cỡ",
 		disabled: "Đã vô hiệu hoá",
@@ -131,6 +132,8 @@ export default {
 		decrease: "Giảm",
 		duration: "Thời lượng",
 		preview: "Xem trước",
+		export: "Xuất",
+		import: "Nhập",
 		infoBar: {
 			warning: "Nhắc nhở",
 		},
@@ -261,19 +264,11 @@ export default {
 			transition: {
 				alignment: {},
 			},
-			transformMethod: {
-				_: "Phương pháp biến đổi",
-				panCrop: "Chuyển hướng/Cắt xén",
-				pictureInPicture: "Hình trong Hình (PiP)",
-				transformOfx: "TransformOFX",
-			},
+			transformMethod: "Phương pháp biến đổi",
 			articulations: {
 				applyCustomPreset: "Áp dụng preset tùy chỉnh",
 				glissando: {
 					_: "Glisssando",
-					swirl: "Xoáy",
-					wave: "Sóng",
-					tv: "TV",
 					pingpong: "Ping-Pong",
 					swirlAmount: "Số lượng xoáy",
 				},
@@ -290,13 +285,39 @@ export default {
 					_: "Phương pháp tuning",
 					none: "Không tuning",
 					pitchShift: "Đổi Cao Độ",
-					elastic: "Élastique",
 					classic: "Classic",
 					scaleless: "Không tỷ lệ",
 					acid: "ACID",
 				},
 				stretchAttributes: {
 					_: "Thuộc tính kéo dãn",
+					elastic: {
+						pro: "Professional",
+						efficient: "Efficient",
+						soloist_monophonic: "Soloist (Monophonic)",
+						soloist_speech: "Soloist (Speech)",
+					},
+					classic: {
+						a01: "Music 1 (flange tổi thiểu, có thể vang lên ‹echo›)",
+						a02: "Music 2",
+						a03: "Music 3 (ít vang)",
+						a04: "Music 4 (nhanh, dùng tốt với bass)",
+						a05: "Music 5",
+						a06: "Music 6",
+						a07: "Speech 1",
+						a08: "Speech 2",
+						a09: "Speech 3 (nhanh)",
+						a10: "Solo instruments 1",
+						a11: "Solo instruments 2",
+						a12: "Solo instruments 3",
+						a13: "Solo instruments 4 (ít vang)",
+						a14: "Solo instruments 5",
+						a15: "Solo instruments 6",
+						a16: "Solo instruments 7 (nhanh)",
+						a17: "Drums, unpitched (vang tối thiểu)",
+						a18: "Drums (Tốt hơn với toms ‹tìm google toms-toms drum nhé›)",
+						a19: "Drums (tiếng vang nhỏ)",
+					},
 				},
 				alternativeForExceedTheRange: {
 					_: "Nếu vượt quá phạm vi",
@@ -673,7 +694,6 @@ export default {
 					micaAlt: "Mica khác",
 					solid: "Đặc",
 				},
-				uiScale: "Tỉ lệ UI",
 			},
 			preference: {
 				_: "Tuỳ chỉnh",
@@ -682,7 +702,10 @@ export default {
 			},
 			config: {
 				hideUsageTips: "Ẩn mẹo sử dụng",
+				userConfig: {},
+				clipsFolder: {},
 			},
+			internal: {},
 			dev: {
 				_: "Chế độ nhà phát triển",
 				devMode: "Chế độ nhà phát triển",
@@ -720,6 +743,7 @@ export default {
 					_: "Để tránh phụ âm bị kéo dãn hoặc chậm trễ, bạn có thể tách phần phụ âm và nguyên âm của cùng một nguồn âm thanh hoặc video để có thể áp dụng tối ưu hóa đặc biệt cho phần phụ âm của nguồn đó.\nNếu chọn ít nhất hai đoạn âm thanh hoặc video, đoạn đầu tiên được coi là phần phụ âm đầu, đoạn thứ hai được coi là phần nguyên âm và đoạn thứ ba (nếu có) được coi là phần phụ âm cuối.",
 					manualEnabled: "Ở chế độ Sentence Mixing, tính năng này được bật tự động.",
 				},
+				matchCut: {},
 				linearMap: {},
 			},
 			score: {
@@ -800,7 +824,6 @@ export default {
 							exceedTheRange: "Có thể hoạt động vượt quá phạm vi",
 						},
 					},
-					stretchAttributes: "Thiết lập chi tiết của phương pháp tuning đã chọn",
 					alternativeForExceedTheRange: {
 						_: "Xử lý các nốt ngoài phạm vi bằng phương pháp thay thế",
 						plugin: "Đạt đến bất kỳ cao độ nào bằng cách sử dụng Plugin hiệu ứng âm thanh Pitch Shift nhiều lần",
@@ -878,8 +901,6 @@ export default {
 				shadow: "Thêm bóng đổ vào đồ hình",
 			},
 			lyrics: {
-				_: "Nếu bản nhạc có kèm dữ liệu phần lời (ví dụ như file dự án phần mềm tổng hợp giọng hát) thì có thể tự động tạo ra phụ đề sinh động, tạo cảm giác hòa hợp và mãn nhãn giữa âm thanh và hình ảnh. Tính năng này bao gồm các chế độ:\nChế độ Karaoke tạo ra phụ đề được tô màu khớp với lời nhạc trong file âm thanh trong thời gian thực. Lời hát khi đến đâu, được tô màu rõ đến đó, còn không thì giữ nguyên màu sắc gốc. Độ chính xác đến từng tiếng trong lời.\nChế độ Ghi cao độ: Nếu như bản nhạc không có kèm lời, cao độ của các nốt nhạc có thể xuất thành phụ đề tương ứng theo thời gian thực. Chế độ này bao gồm nhiều hệ thống ghi cao độ nốt.",
-				presetTemplate: "Chọn preset trong trình tạo Tiêu đề và Văn bản (VEGAS Pro) để làm bản mẫu cho phần lời",
 				karaoke: {
 					_: "Xác định màu, trong chế độ Karaoke để mô tả tiến độ của phần lời",
 				},
@@ -915,7 +936,6 @@ export default {
 				scramble: "Băm clip thành đoạn nhỏ rồi xáo trọn thứ tự",
 				automator: "Thêm các keyframe ngẫu nhiên tự động mỗi khi thêm một hiệu ứng vào video clip",
 				stutter: "Tạo clip bị hiệu ứng “giật” bằng cách tua nhanh / ngược tại các thời điểm ngẫu nhiên",
-				shake: "Rung hoặc lắc các clip bằng cách sử dụng Chuyển hướng/Cắt xén",
 				notInstalled: "Gói mở rộng Datamosh chưa được cài đặt và sẽ không khả dụng đầy đủ cho đến khi nó được tải xuống.",
 			},
 			tools: {
@@ -924,7 +944,6 @@ export default {
 				selector: "Tìm và chọn tất cả các clip hội đủ tiêu chí xác định",
 				replacer: "Thay thế các clip đã chọn bằng một clip mới",
 				propertizer: "Thiết đặt thuộc tính (co dãn, chuẩn hoá…) cho tất cả các clip trong bộ",
-				subtitles: "Thiết lập mẫu “Tiêu đề & Văn bản” (VEGAS), sau đó thêm các dòng văn bản ở đây",
 				effector: "Áp dụng các hiệu ứng lên các clip đã chọn",
 				fader: "Tinh chỉnh các thuộc tính (vd. âm lượng, độ mờ) của các clip đã chọn theo từng đối tượng một, theo hướng mờ dần hoặc rõ dần ",
 				exportScore: "Xuất các clip trong các track đang chọn thành một file bản nhạc",
@@ -961,11 +980,17 @@ export default {
 						black: "chỉ dành cho AMOLED tối",
 					},
 					invalid: {},
+					fontSize: {},
 				},
 				preference: {
 					autoSwitchSourceFrom: "Thay đổi nguồn tự động dựa trên nội dung được chọn cuối cùng",
 					autoCollapsePrveClasses: "Thu gọn các tùy chọn $t(titles.prve, lowercase) khác được mở rộng một cách tự động khi mở rộng một tùy chọn",
 				},
+				config: {
+					userConfig: {},
+					clipsFolder: {},
+				},
+				internal: {},
 			},
 		},
 		empty: {
@@ -1000,6 +1025,16 @@ export default {
 			checkboxGroup: "Nhóm hộp kiểm",
 		},
 		preset: "Preset",
+	},
+	shared: {
+		plugins: {
+			panCrop: "Chuyển hướng/Cắt xén",
+			pictureInPicture: "Hình trong Hình (PiP)",
+			transformOfx: "TransformOFX",
+			swirl: "Xoáy",
+			wave: "Sóng",
+			tvSimulator_short: "TV",
+		},
 	},
 	csharp: {
 		host: {
