@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 import stylistic from "@stylistic/eslint-plugin";
 import importPlugin from "eslint-plugin-import";
 import reactRecommended from "eslint-plugin-react/configs/recommended.js";
-import jsdoc from "eslint-plugin-jsdoc";
+import jsdoc, { getJsdocProcessorPlugin } from "eslint-plugin-jsdoc";
 // plugins
 import reactRefresh from "eslint-plugin-react-refresh";
 import unicorn from "eslint-plugin-unicorn";
@@ -19,12 +19,13 @@ export default [
 	reactRecommended,
 	importPlugin.flatConfigs.warnings,
 	jsdoc.configs["flat/recommended-typescript"],
-	// ...jsdoc.configs.examples,
+	// Stylistic 简单规则
 	stylistic.configs.customize({
 		indent: "tab",
 		quotes: "double",
 		semi: true,
 	}),
+	// 主规则
 	{
 		languageOptions: {
 			parserOptions: {
@@ -42,9 +43,6 @@ export default [
 			},
 		},
 		files: ["**/*.{js,jsx,ts,tsx}"],
-		ignores: [
-			"**/*.md/*.js",
-		],
 		plugins: {
 			"react-refresh": reactRefresh,
 			unicorn,
@@ -69,11 +67,7 @@ export default [
 					warning: "warn",
 					throw: "throws",
 					yield: "yields",
-				},
-				structuredTags: {
-					throws: { required: ["type"] },
-					yields: { required: ["type"] },
-					next: { required: ["type"] },
+					defaults: "default",
 				},
 			},
 		},
@@ -260,6 +254,12 @@ export default [
 			"jsdoc/require-yields": ["error", {
 				"exemptedBy": ["inheritdoc", "deprecated", "see"],
 			}],
+			"jsdoc/require-throws-type": "warn",
+			"jsdoc/require-yields-type": "warn",
+			"jsdoc/require-next-type": "warn",
+			"jsdoc/require-throws-description": "warn",
+			"jsdoc/require-yields-description": "warn",
+			"jsdoc/require-next-description": "warn",
 			"@typescript-eslint/no-unused-vars": ["warn", { // 非要使用未使用变量，前面加下划线。
 				"argsIgnorePattern": "^_",
 				"varsIgnorePattern": "^_",
@@ -460,6 +460,7 @@ export default [
 			}],
 		},
 	},
+	// ESLint 和 StyleLint 的规则属性名建议加引号以保持统一
 	{
 		files: ["*.config.{js,ts}"],
 		rules: {
@@ -467,6 +468,7 @@ export default [
 			"import/order": "off",
 		},
 	},
+	// 类型声明文件中可以用 any
 	{
 		files: ["**/*.d.ts"],
 		rules: {
@@ -475,6 +477,7 @@ export default [
 			"no-var": "off", // 在 globalThis 中声明成员时必须要用 var（不能使用 let 或 const）！参见：https://stackoverflow.com/a/69429093/19553213
 		},
 	},
+	// JavaScript 源文件需要在 JSDoc 中写类型
 	{
 		files: ["**/*.{js,jsx}"],
 		rules: {
@@ -485,6 +488,47 @@ export default [
 			"jsdoc/require-property-type": "error",
 		},
 	},
+	// JSDoc example 检查插件
+	{
+		files: ["**/*.{js,jsx,ts,tsx}"],
+		languageOptions: {
+			parser: tseslint.parser, // Allows normal processing of TS files
+			parserOptions: {
+				projectService: {
+					allowDefaultProject: [
+						"*.ts/*.md/*.ts",
+						"*.js/*.md/*.ts",
+						// Oddly had to add this to get the test file properly linted, but
+						// didn't need to add `eslint.config.js` here, though it was linted (actually I wasn't allowed to add it with the project service saying it was already included)
+					],
+				},
+			},
+		},
+		name: "jsdoc/examples/processor",
+		plugins: {
+			examples: getJsdocProcessorPlugin({
+				parser: tseslint.parser, // Allows processor to parse TS files for @example tags
+				exampleCodeRegex: "^```(?:ts|js|typescript|javascript)([\\s\\S]*)```\\s*$",
+				// In order to avoid the default of processing our examples
+				// as *.js files, we indicate the inner blocks are TS.
+				// This allows us to target TS files, as we do below.
+				matchingFileName: "placeholder.md/*.ts",
+			}),
+		},
+		processor: "examples/examples",
+	},
+	{
+		files: ["**/*.md/*.js"],
+		name: "jsdoc/examples/rules",
+		languageOptions: {
+			parser: tseslint.parser, // Allows @example itself to use TS
+		},
+		rules: {
+			...jsdoc.configs.examples[1].rules,
+			...tseslint.configs.disableTypeChecked.rules,
+		},
+	},
+	// 排除列表
 	{
 		ignores: [
 			"dist/*",
