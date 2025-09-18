@@ -33,6 +33,12 @@ export /* @internal */ const preRenders = [
 	{ id: "media", icon: "media_forward" },
 	{ id: "timeline", icon: "timeline_forward" },
 ] as const;
+export /* @internal */ const glissandoEffects = [
+	{ id: "swirl", name: t.stream.articulations.glissando.swirl },
+	{ id: "wave", name: t.shared.plugins.wave },
+	{ id: "tv", name: t({ context: "short" }).shared.plugins.tvSimulator },
+	{ id: "pingpong", name: t.shared.plugins.pingpong },
+] as const;
 
 /** @deprecated */
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
@@ -225,10 +231,8 @@ export default function Visual() {
 					>
 						<Expander.Item icon="sparkle" title={t.titles.effect}>
 							<Segmented current={glissandoEffect}>
-								<Segmented.Item icon="swirl" id="swirl">{t.stream.articulations.glissando.swirl}</Segmented.Item>
-								<Segmented.Item icon="wave" id="wave">{t.shared.plugins.wave}</Segmented.Item>
-								<Segmented.Item icon="tv" id="tv">{t({ context: "short" }).shared.plugins.tvSimulator}</Segmented.Item>
-								<Segmented.Item icon="pingpong" id="pingpong">{t.shared.plugins.pingpong}</Segmented.Item>
+								{glissandoEffects.map(({ id, name }) =>
+									<Segmented.Item key={id} id={id} icon={id}>{name}</Segmented.Item>)}
 							</Segmented>
 						</Expander.Item>
 						<Expander.Item title={t.stream.articulations.glissando.swirlAmount} details={t.descriptions.stream.articulations.glissando.swirlAmount}>
