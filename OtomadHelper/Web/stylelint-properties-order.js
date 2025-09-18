@@ -12,6 +12,7 @@ export default [
 	// position
 	"position",
 	"position-animation",
+	"position-anchor",
 	"position-fallback",
 	"position-fallback-bounds",
 	"position-area",

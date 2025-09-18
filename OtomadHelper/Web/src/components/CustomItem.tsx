@@ -13,10 +13,6 @@ const StyledCustomItem = styled.div`
 
 		~ * {
 			place-self: center;
-
-			&.text-box {
-				inline-size: 200px;
-			}
 		}
 	}
 `;

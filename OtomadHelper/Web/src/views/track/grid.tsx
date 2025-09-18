@@ -189,7 +189,6 @@ const Determinant = styled.div`
 	}
 
 	.text-box {
-		inline-size: 200px;
 		transition: ${fallbackTransitions}, inline-size 0s;
 	}
 
@@ -306,10 +305,10 @@ const StyledContainerPreview = styled.div`
 
 			@supports (anchor-name: ${COMMAND_BAR_WRAPPER_ANCHOR_NAME}) {
 				position: fixed;
-				inset-block-start: unset;
-				inset-inline-end: unset;
 				position-anchor: ${COMMAND_BAR_WRAPPER_ANCHOR_NAME};
 				position-area: span-inline-start center;
+				inset-block-start: unset;
+				inset-inline-end: unset;
 			}
 		}
 	}
@@ -323,12 +322,12 @@ const Ruler = styled.div.attrs({
 })`
 	${styles.effects.text.caption};
 	position: fixed;
+	position-anchor: --preview-grid;
 	display: grid;
 	color: ${c("fill-color-text-secondary")};
 	font-size: 10px;
 	text-align: center;
 	transition: none;
-	position-anchor: --preview-grid;
 
 	> * {
 		contain: strict;

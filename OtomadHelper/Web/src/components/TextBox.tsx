@@ -130,7 +130,7 @@ export /* @internal */ const StyledTextBox = styled.div`
 
 	${inputInSettingsCardStyle}
 
-	.expander-child-wrapper :where(&) {
+	@layer base {
 		inline-size: 200px;
 	}
 
@@ -648,10 +648,6 @@ const StyledNumberUnitTextBox = styled.div`
 
 	.combo-box {
 		inline-size: 10px;
-	}
-
-	:is(.expander-item, .settings-card) & :where(.text-box) {
-		inline-size: 200px;
 	}
 `;
 
