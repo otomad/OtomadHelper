@@ -397,7 +397,7 @@ export default function Grid() {
 	const square = array[0] === "square", fixedColumns = array[0] === "fixed" && horizontalDirection, fixedRows = array[0] === "fixed" && verticalDirection;
 	const columnReadonly = square || fixedRows, rowReadonly = square || fixedColumns;
 	const order = useMemo(() => descending ? "descending" : "ascending", [descending]);
-	const id = useUniqueId("grid-view"), fieldAnchorName = "--" + id + "-field";
+	const id = useUniqueId("grid-view"), fieldAnchorName = `--${id}-field`;
 	// Show fast fill float toolbar while editing column or row count text box?
 	const [fastFillShown, setFastFillShown] = useState(false);
 	const columnInputRef = useDomRef<"input">(), rowInputRef = useDomRef<"input">();

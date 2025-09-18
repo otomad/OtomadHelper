@@ -1,4 +1,5 @@
 // cSpell:ignore uniqueid
+// DELETE: From React v19.1.0, :r123: changed to «r123».
 
 /**
  * Due to React built-in hook `useId` will return a string that contains two special symbols - colons.\

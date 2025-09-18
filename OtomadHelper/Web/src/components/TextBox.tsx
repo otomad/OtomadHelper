@@ -4,12 +4,13 @@ const StyledSpinner = styled.div`
 		--shown: false;
 	}
 
-	${styles.mixins.flexCenter()};
 	position: absolute;
+	position-area: center;
+	/* ${styles.mixins.flexCenter()};
 	inset-block-start: 50%;
 	inset-inline-end: 16px;
 	z-index: 6; // Above ExpanderParent
-	contain: size;
+	contain: size; */
 
 	.base {
 		padding: 4px;
@@ -52,11 +53,13 @@ const StyledSpinner = styled.div`
 
 type SpinValue = 1 | -1;
 
-function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
+function Spinner({ disabled, step = 1, positionAnchor, onSpin, onRelease }: FCP<{
 	/** Disabled? */
 	disabled?: boolean;
 	/** The value to increase or decrease each time the knob of numeric up down box is clicked. @default 1 */
 	step?: NumberLike;
+	/** Provide the spinner icon anchor name. */
+	positionAnchor?: string;
 	/** Knob click event. It is 1 when the knob is clicked up and -1 when it is clicked down. */
 	onSpin?(spinValue: NumberLike): void;
 	/** Mouse release button event. */
@@ -68,7 +71,7 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 	}
 
 	return (
-		<StyledSpinner aria-hidden={disabled}>
+		<StyledSpinner aria-hidden={disabled} style={{ positionAnchor }}>
 			<div className="base">
 				<Button
 					subtle
@@ -376,7 +379,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	/** @deprecated Please use `readOnly` instead. */
 	"aria-readonly"?: never;
 }, "div">) {
-	const inputIdDef = useId();
+	const inputIdDef = useUniqueId("input");
 	const inputId = id || inputIdDef;
 	const inputEl = useDomRef<"input">();
 	const wrapperEl = useDomRef<"div">();
@@ -630,14 +633,27 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 			onChange={handleBlurChange}
 			onInput={handleInput}
 			onKeyDown={handleKeyDown}
-			_spinner={inputId => (
-				<>
-					<label className="spinner-icon" htmlFor={inputId} aria-hidden>
-						<Icon name="scroll_up_down" />
-					</label>
-					{!readOnly && <Spinner onSpin={handlePressSpin} onRelease={handleReleaseSpin} disabled={disabled} step={spinnerStep} />}
-				</>
-			)}
+			_spinner={inputId => {
+				const anchorName = `--${inputId}-spinner-icon`;
+				return (
+					<>
+						<label className="spinner-icon" htmlFor={inputId} aria-hidden style={{ anchorName }}>
+							<Icon name="scroll_up_down" />
+						</label>
+						{!readOnly && (
+							<Portal container="main.page">
+								<Spinner
+									onSpin={handlePressSpin}
+									onRelease={handleReleaseSpin}
+									disabled={disabled}
+									step={spinnerStep}
+									positionAnchor={anchorName}
+								/>
+							</Portal>
+						)}
+					</>
+				);
+			}}
 		/>
 	);
 }
