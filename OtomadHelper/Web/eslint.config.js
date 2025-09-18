@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 import stylistic from "@stylistic/eslint-plugin";
 import importPlugin from "eslint-plugin-import";
 import reactRecommended from "eslint-plugin-react/configs/recommended.js";
-import jsdoc, { getJsdocProcessorPlugin } from "eslint-plugin-jsdoc";
+import jsdoc from "eslint-plugin-jsdoc";
 // plugins
 import reactRefresh from "eslint-plugin-react-refresh";
 import unicorn from "eslint-plugin-unicorn";
@@ -486,46 +486,6 @@ export default [
 			"jsdoc/require-param-type": "error",
 			"jsdoc/require-returns-type": "error",
 			"jsdoc/require-property-type": "error",
-		},
-	},
-	// JSDoc example 检查插件
-	{
-		files: ["**/*.{js,jsx,ts,tsx}"],
-		languageOptions: {
-			parser: tseslint.parser, // Allows normal processing of TS files
-			parserOptions: {
-				projectService: {
-					allowDefaultProject: [
-						"*.ts/*.md/*.ts",
-						"*.js/*.md/*.ts",
-						// Oddly had to add this to get the test file properly linted, but
-						// didn't need to add `eslint.config.js` here, though it was linted (actually I wasn't allowed to add it with the project service saying it was already included)
-					],
-				},
-			},
-		},
-		name: "jsdoc/examples/processor",
-		plugins: {
-			examples: getJsdocProcessorPlugin({
-				parser: tseslint.parser, // Allows processor to parse TS files for @example tags
-				exampleCodeRegex: "^```(?:ts|js|typescript|javascript)([\\s\\S]*)```\\s*$",
-				// In order to avoid the default of processing our examples
-				// as *.js files, we indicate the inner blocks are TS.
-				// This allows us to target TS files, as we do below.
-				matchingFileName: "placeholder.md/*.ts",
-			}),
-		},
-		processor: "examples/examples",
-	},
-	{
-		files: ["**/*.md/*.js"],
-		name: "jsdoc/examples/rules",
-		languageOptions: {
-			parser: tseslint.parser, // Allows @example itself to use TS
-		},
-		rules: {
-			...jsdoc.configs.examples[1].rules,
-			...tseslint.configs.disableTypeChecked.rules,
 		},
 	},
 	// 排除列表
