@@ -17,7 +17,6 @@ function pathObjectProxy(path: string): ReturnType<typeof pathObjectTarget> {
 	return new Proxy(pathObjectTarget(path), {
 		get(target, property) {
 			let { path } = target;
-			if (path.startsWith("new ")) path = `(${path})`;
 			if ([Symbol.toPrimitive, "toString", "valueOf"].includes(property))
 				return () => path;
 			if (property === isPathObject) return true;
@@ -34,13 +33,12 @@ function pathObjectProxy(path: string): ReturnType<typeof pathObjectTarget> {
 		},
 		apply(target, _thisArg, argArray) {
 			let { path } = target;
-			if (path.startsWith("new ")) path = `(${path})`;
 			path += `(${JSON.stringify(argArray).slice(1, -1)})`;
 			return pathObjectProxy(path);
 		},
 		construct(target, argArray, _newTarget) {
 			let { path } = target;
-			if (path.startsWith("new ")) path = `(${path})`;
+			if (path.includes("(")) path = `(${path})`;
 			path += `(${JSON.stringify(argArray).slice(1, -1)})`;
 			path = "new " + path;
 			return pathObjectProxy(path);
