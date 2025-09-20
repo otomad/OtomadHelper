@@ -22,6 +22,7 @@ const StyledPreviewColorScheme = styled.div.attrs({
 			inset: 0;
 			object-fit: cover;
 			background-size: cover;
+			transition: none;
 		}
 
 		&.light,
