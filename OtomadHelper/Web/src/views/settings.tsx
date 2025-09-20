@@ -132,7 +132,7 @@ export default function Settings() {
 							current={[scheme, setScheme]}
 						>
 							{schemes.map(scheme =>
-								<ItemsView.Item id={scheme} key={scheme} withBorder image={<PreviewColorScheme colorScheme={scheme} />}>{t.settings.appearance.colorScheme[scheme]}</ItemsView.Item>)}
+								<ItemsView.Item id={scheme} key={scheme} image={<PreviewColorScheme colorScheme={scheme} />}>{t.settings.appearance.colorScheme[scheme]}</ItemsView.Item>)}
 						</ItemsView>
 						<ItemsView
 							view="grid"
@@ -147,7 +147,6 @@ export default function Settings() {
 								details={t.descriptions.settings.appearance.colorScheme.black}
 								style={{ opacity: scheme === "light" ? 0.5 : undefined }}
 								baseAttrs={{ "data-scheme": classNames("dark black") }}
-								withBorder
 								disableCheckmarkTransition
 							>
 								{t.settings.appearance.colorScheme.black}
@@ -157,7 +156,6 @@ export default function Settings() {
 								key="contrast"
 								selected={[contrast, setContrast]}
 								image={<PreviewColorScheme colorScheme="contrast" />}
-								withBorder
 								disableCheckmarkTransition
 							>
 								{t.settings.appearance.colorScheme.contrast}

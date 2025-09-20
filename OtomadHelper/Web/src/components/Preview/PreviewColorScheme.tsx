@@ -1,108 +1,73 @@
+/* eslint-disable import/order */
 import type { ColorScheme } from "helpers/color-mode";
-
-const TAB_ITEM_COUNT = 6;
-const TAB_ITEM_RADIUS = 66;
+import imgLight from "assets/images/loop/light.avif";
+import imgDark from "assets/images/loop/dark.avif";
+import imgBlack from "assets/images/loop/black.avif";
+import imgLightContrast from "assets/images/loop/light_contrast.avif";
+import imgDarkContrast from "assets/images/loop/dark_contrast.avif";
+import imgBlackContrast from "assets/images/loop/black_contrast.avif";
 
 const StyledPreviewColorScheme = styled.div.attrs({
 	inert: true,
 })`
+	${styles.mixins.square("100%")};
 	position: relative;
 
-	&,
-	.container {
-		${styles.mixins.square("100%")};
-		--padding: 1px;
-		position: relative;
-		display: flex;
-		gap: 12px;
-		padding: var(--padding);
-		overflow: clip;
-		background-color: ${c("background-color")};
-		border-radius: 6px;
-		zoom: 0.75;
-	}
-
-	.container:nth-child(2) {
-		${styles.mixins.square("calc(100% - var(--padding) * 2)")};
-		position: absolute;
-		clip-path: polygon(33.333% 100%, 100% 100%, 100% 0%, 66.667% 0%);
-	}
-
-	.icon {
-		color: ${c("foreground-color")};
-	}
-
-	.color-scheme-button {
-		${styles.mixins.square("36px")};
-		${styles.mixins.circle()};
-		${styles.mixins.absoluteCenter()};
-		padding-block-start: 6px;
-		scale: 1.75;
-	}
-
-	.circular > * {
-		${styles.mixins.absoluteCenter(undefined, false)};
-
-		${forMap(TAB_ITEM_COUNT, i => css`
-			&:nth-child(${i + 1}) {
-				translate:
-					calc(cos(${i} / ${TAB_ITEM_COUNT} * 1turn) * ${-TAB_ITEM_RADIUS}px)
-					calc(sin(${i} / ${TAB_ITEM_COUNT} * 1turn) * ${-TAB_ITEM_RADIUS}px);
-			}
-		`)}
-	}
-
-	.tab-item {
-		${styles.mixins.gridCenter()};
-		/* position: relative; */
-		padding: 9px 12px;
-		color: ${c("foreground-color")};
-		border-radius: 4px;
-
-		&.disabled {
-			opacity: ${c("disabled-text-opacity")};
-		}
-
-		&.selected {
-			background-color: ${c("fill-color-subtle-secondary")};
-
-			&::before {
-				${styles.mixins.oval()}
-				content: "";
-				position: absolute;
-				inset-inline-start: 0;
-				block-size: 20px;
-				inline-size: 3px;
-				background-color: ${c("accent-color")};
-			}
-		}
-	}
-
-	.container${ifColorScheme.contrast} .tab-item.selected {
-		background-color: ${cc("Highlight")};
+	.img {
+		background-image: url("${imgDark}");
 
 		&,
-		.icon {
-			color: ${cc("HighlightText")};
-		}
-
 		&::before {
-			background-color: ${cc("HighlightText")};
+			position: absolute;
+			inset: 0;
+			object-fit: cover;
+			background-size: cover;
 		}
-	}
 
-	.card > .base {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-	}
+		&.light,
+		&.auto {
+			background-image: url("${imgLight}");
+		}
 
-	.corner > * {
-		position: absolute;
+		&.black {
+			background-image: url("${imgBlack}");
+		}
 
-		&:nth-child(1) {
-			inset-block-end: 12px;
-			inset-inline-start: -26%;
+		&.contrast {
+			background-image: url("${imgDarkContrast}");
+
+			${ifColorScheme.light} & {
+				background-image: url("${imgLightContrast}");
+			}
+
+			${ifColorScheme.black} & {
+				background-image: url("${imgBlackContrast}");
+			}
+		}
+
+		&.auto {
+			${ifColorScheme.contrast} & {
+				background-image: url("${imgLightContrast}");
+			}
+
+			&::before {
+				content: "";
+				background-image: url("${imgDark}");
+				mask: linear-gradient(in oklch 120deg, black 35%, white 60%);
+				mask-mode: luminance; // Use oklch and luminance make the gradient smoother.
+
+				${ifColorScheme.contrast} & {
+					background-image: url("${imgDarkContrast}");
+				}
+			}
+
+			&.black-enabled::before {
+				background-image: url("${imgBlack}");
+
+				${ifColorScheme.contrast} & {
+					background-image: url("${imgBlackContrast}");
+				}
+			}
 		}
 	}
 `;
@@ -114,48 +79,11 @@ export default function PreviewColorScheme({ colorScheme: value }: FCP<{
 	colorScheme: ColorSchemeEx;
 	children?: never;
 }>) {
-	const { amoledDark } = useSnapshot(colorModeStore);
-	const scheme = value === "black" ? "dark black" : value;
-	const icon = ({
-		light: "sun",
-		dark: "moon",
-		black: "star",
-		contrast: "contrast",
-		auto: "desktop",
-	} satisfies Record<ColorSchemeEx, DeclaredIcons>)[value];
+	const { amoledDark, scheme, contrast } = useSnapshot(colorModeStore);
 
 	return (
 		<StyledPreviewColorScheme>
-			{value === "auto" ? (
-				<>
-					<PreviewColorSchemeContent scheme="light" icon={icon} />
-					<PreviewColorSchemeContent scheme={amoledDark ? "dark black" : "dark"} icon={icon} />
-				</>
-			) : <PreviewColorSchemeContent scheme={scheme} icon={icon} />}
+			<div className={["img", value, { blackEnabled: value === "auto" && amoledDark }]} />
 		</StyledPreviewColorScheme>
-	);
-}
-
-function PreviewColorSchemeContent({ scheme, icon }: {
-	scheme: string;
-	icon: DeclaredIcons;
-}) {
-	const tabIcons: DeclaredIcons[] = ["home", "volume", "layer", "sonar", "ytp", "mosh"];
-	return (
-		<div className="container" data-scheme={scheme} inert>
-			<Button icon={icon} minWidthUnbounded className="color-scheme-button" />
-			<Contents className="circular">
-				{tabIcons.map((tabIcon, i) => (
-					<div key={tabIcon} className={["tab-item", { selected: i === 0 }]}>
-						<Icon name={tabIcon} />
-					</div>
-				))}
-			</Contents>
-			<Contents className="corner">
-				<Card>
-					<Slider value={[85]} />
-				</Card>
-			</Contents>
-		</div>
 	);
 }

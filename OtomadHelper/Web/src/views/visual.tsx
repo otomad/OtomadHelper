@@ -34,10 +34,10 @@ export /* @internal */ const preRenders = [
 	{ id: "timeline", icon: "timeline_forward" },
 ] as const;
 export /* @internal */ const glissandoEffects = [
-	{ id: "swirl", name: t.stream.articulations.glissando.swirl },
+	{ id: "swirl", name: t.shared.plugins.swirl },
 	{ id: "wave", name: t.shared.plugins.wave },
 	{ id: "tv", name: t({ context: "short" }).shared.plugins.tvSimulator },
-	{ id: "pingpong", name: t.shared.plugins.pingpong },
+	{ id: "pingpong", name: t.stream.articulations.glissando.pingpong },
 ] as const;
 
 /** @deprecated */

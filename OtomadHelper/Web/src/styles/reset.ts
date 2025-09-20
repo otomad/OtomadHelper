@@ -149,9 +149,7 @@ export default css`
 
 		// Do not change font in math.
 		math {
-			font-weight: inherit;
-			line-height: inherit;
-			word-spacing: inherit;
+			${styles.mixins.inherit("font-weight", "line-height", "word-spacing")};
 		}
 
 		// Do not semi-transparent Combobox when disabled

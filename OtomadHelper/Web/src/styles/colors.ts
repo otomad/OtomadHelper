@@ -8,7 +8,7 @@ export const fillColorAccentOpacity = {
 const $c = c as (cssVarName: string, alpha?: number) => string; // Avoid type circular reference itself.
 
 const colors = {
-	"background-color": ["rgb(243, 243, 243)", "rgb(32, 32, 32)", "Canvas", "black"],
+	"background-color": ["rgb(243, 243, 243)", "rgb(32, 32, 32)", "Canvas", "black", "black"],
 	"foreground-color": ["rgba(0, 0, 0, 0.9)", "rgb(255, 255, 255)", "CanvasText"], // fill-color-text-primary
 	"accent-color": ["rgb(0, 95, 184)", "rgb(96, 205, 255)", "Highlight"],
 	"colorization": ["rgb(0, 120, 212)", "rgb(0, 120, 212)", "transparent"],
@@ -116,7 +116,13 @@ const colors = {
 	"shadows-flyout": ["rgba(0, 0, 0, 0.14)", "rgba(0, 0, 0, 0.26)"],
 	"pressed-text-opacity": ["0.6063", "0.786"],
 	"disabled-text-opacity": ["0.3614", "0.3628"],
-} satisfies Record<string, [string, string] | [string, string, SystemColors] | [string, string, SystemColors, string]>;
+} satisfies Record<string, [
+	light: string,
+	dark: string,
+	contrast?: SystemColors,
+	blackNotContrast?: string | undefined,
+	black?: string | undefined,
+]>;
 export type ColorNames = keyof typeof colors;
 export default colors;
 
@@ -139,12 +145,17 @@ export const ifColorScheme = {
 
 export function globalColors() {
 	let css = "";
-	// Light, Dark, High Contrast, Black (AMOLED)
-	for (let i = 0; i < 4; i++) {
+	// 0: Light
+	// 1: Dark
+	// 2: High Contrast
+	// 3: Black (AMOLED) (High Contrast OFF)
+	// 4: Black (AMOLED)
+	for (let i = 0; i < 5; i++) {
 		const selector = [
 			`:root${ifColorScheme.light}, ${ifColorScheme.light}`,
 			`:root, ${ifColorScheme.dark}`,
 			`:root${ifColorScheme.contrast}, ${ifColorScheme.contrast}`,
+			`:root${ifColorScheme.black}:not(${ifColorScheme.contrast})${important(2)}, ${ifColorScheme.black}:not(${ifColorScheme.contrast})${important(2)}`,
 			`:root${ifColorScheme.black}${important(2)}, ${ifColorScheme.black}${important(2)}`,
 		][i];
 		css += selector + "{";
@@ -155,19 +166,24 @@ export function globalColors() {
 	}
 	// Reduce Transparency: Light, Dark
 	css += ifColorScheme.reduceTransparency + "{";
-	for (let i = 0; i < 2; i++) {
+	for (let i = 0; i < 5; i++) {
 		const selector = [
 			`:root${ifColorScheme.light}:not(${ifColorScheme.contrast}), ${ifColorScheme.light}:not(${ifColorScheme.contrast})`,
 			`:root:not(${ifColorScheme.contrast}), ${ifColorScheme.dark}:not(${ifColorScheme.contrast})`,
+			undefined,
+			`:root${ifColorScheme.black}:not(${ifColorScheme.contrast})${important(3)}, ${ifColorScheme.black}:not(${ifColorScheme.contrast})${important(3)}`,
+			undefined,
 		][i];
+		if (!selector) continue;
 		css += selector + "{";
-		for (const [key, values] of Object.entries(colors)) {
-			const rgba = values[i].match(/rgba\(([\d.]+),\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/);
-			if (rgba && key !== "background-color") {
-				const [, r, g, b, a] = rgba;
-				css += `--${key}: color-mix(in srgb, rgb(${r} ${g} ${b}) ${+a * 100}%, var(--background-color));`;
+		for (const [key, values] of Object.entries(colors))
+			if (values[i]) {
+				const rgba = values[i].match(/rgba\(([\d.]+),\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/);
+				if (rgba && key !== "background-color") {
+					const [, r, g, b, a] = rgba;
+					css += `--${key}: color-mix(in srgb, rgb(${r} ${g} ${b}) ${+a * 100}%, var(--background-color));`;
+				}
 			}
-		}
 		css += "}";
 	}
 	css += "}";

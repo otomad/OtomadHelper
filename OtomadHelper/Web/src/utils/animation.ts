@@ -370,7 +370,7 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
  * @param css - The CSS input, which can be a string or a styled components rule set.
  * @returns The resulting single CSS string.
  */
-function styledRuleSetToString(css: string | Styled.RuleSet<object>) {
+function styledRuleSetToString(css: string | Styled.RuleSet) {
 	return Array.isArray(css) ? css.join("") : css;
 }
 
@@ -387,7 +387,7 @@ function styledRuleSetToString(css: string | Styled.RuleSet<object>) {
  * removeStyle();
  * ```
  */
-function addStyle(css: string | Styled.RuleSet<object>) {
+function addStyle(css: string | Styled.RuleSet) {
 	css = styledRuleSetToString(css);
 	const sheet = new CSSStyleSheet();
 	sheet.replaceSync(css);
@@ -457,7 +457,7 @@ interface ColorViewTransitionAnimationFallbackDefaultOption extends ColorViewTra
 	/** Set the cursor while transitioning. */
 	cursor?: Cursor;
 	/** Append additional static CSS style during the whole transition duration. */
-	staticStyle?: string | RuleSet<object>;
+	staticStyle?: string | RuleSet;
 }
 
 /**

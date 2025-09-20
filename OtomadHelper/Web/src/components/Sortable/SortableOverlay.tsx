@@ -13,8 +13,7 @@ const StyledSortableOverlay = styled(DragOverlay)`
 	}
 
 	> * {
-		block-size: inherit !important;
-		inline-size: inherit !important;
+		${styles.mixins.inherit("block-size", "inline-size", true)};
 		scale: var(--sortable-overlay-scale);
 		transition: ${fallbackTransitions}, scale 250ms cubic-bezier(0.18, 0.67, 0.6, 1.22), opacity 100ms 250ms;
 

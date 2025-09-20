@@ -87,6 +87,7 @@ interface IsInPathOptions {
  * - If the target is an `Event`, it uses the event's target.
  * - If the resulting target is not an `Element`, it returns `null`.
  *
+ * @template TElement - Element type.
  * @param target - The target to convert, which can be a ref object, an `Event`, or an `Element`.
  * @returns The corresponding `Element` if conversion is possible, otherwise `null`.
  */

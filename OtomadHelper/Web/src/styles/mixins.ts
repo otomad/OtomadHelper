@@ -168,4 +168,17 @@ export default {
 			}
 		}
 	`,
+	/**
+	 * Inherit multiple CSS properties from parent.
+	 * @param properties - CSS properties name in hyphen case.
+	 */
+	inherit: ((...properties: (keyof CSSPropertiesHyphen)[]) => {
+		let important = false;
+		if (typeof properties.last() === "boolean")
+			important = !!properties.pop();
+		return properties.map(property => css`${property}: inherit ${important ? "!important" : ""};`);
+	}) as {
+		(...properties: (keyof CSSPropertiesHyphen)[]): RuleSet;
+		(...args: [...properties: (keyof CSSPropertiesHyphen)[], important: boolean]): RuleSet;
+	},
 };

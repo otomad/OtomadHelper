@@ -15,10 +15,9 @@ const StyledFilter = styled(HorizontalScroll)`
 	}
 
 	.pills {
+		${styles.mixins.inherit("display", "align-items")};
 		position: relative;
-		display: inherit;
 		gap: 4px;
-		align-items: inherit;
 	}
 `;
 

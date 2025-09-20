@@ -24,8 +24,7 @@ const Wrapper = styled(HorizontalScroll)`
 
 		> :first-child,
 		> :first-child > :first-child {
-			border-start-start-radius: inherit;
-			border-end-start-radius: inherit;
+			${styles.mixins.inherit("border-start-start-radius", "border-end-start-radius")};
 		}
 	}
 
