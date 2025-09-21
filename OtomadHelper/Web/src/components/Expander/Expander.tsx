@@ -96,7 +96,7 @@ const ExpanderChild = styled.div`
 
 	${tgs()} {
 		block-size: 0;
-		border-bottom-width: 0;
+		border-block-end-width: 0;
 
 		.expander-child-items {
 			translate: 0 -100%;
