@@ -47,9 +47,9 @@ patchedDependencies:
   react-flip-move@3.0.5:
     hash: d1030c1d607e98dd8374bb5772be6708d855227d990270893e5264f3ad45634d
     path: patches/react-flip-move@3.0.5.patch
-  styled-components@6.1.13:
-    hash: 2313f3ad53c8f5cd6c9979087c9bfe0b8dd09e42658923a7b597e005f4699291
-    path: patches/styled-components@6.1.13.patch
+  styled-components:
+    hash: dd9b1cffb608f53a2cd214ba48847c9b5b74dc6c1ab789a009f55c7ccb5ae3f9
+    path: patches/styled-components.patch
   valtio:
     hash: 4d27899d61788bff2a8a597241e4e25cc1ff9dd731040713ccac6ad17f2f1361
     path: patches/valtio.patch
@@ -149,8 +149,8 @@ importers:
         specifier: ^4.6.1
         version: 4.6.1(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
       styled-components:
-        specifier: ^6.1.13
-        version: 6.1.13(patch_hash=2313f3ad53c8f5cd6c9979087c9bfe0b8dd09e42658923a7b597e005f4699291)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
+        specifier: ^6.1.19
+        version: 6.1.19(patch_hash=dd9b1cffb608f53a2cd214ba48847c9b5b74dc6c1ab789a009f55c7ccb5ae3f9)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
       styled-tools:
         specifier: ^1.7.2
         version: 1.7.2
@@ -223,7 +223,7 @@ importers:
         version: 19.1.0-rc.2
       babel-plugin-styled-components:
         specifier: ^2.1.4
-        version: 2.1.4(patch_hash=c4c55bc6f5757993287d56bcdde424bc2652f6e1fbf5d6563d7478d676542610)(@babel/core@7.24.4)(styled-components@6.1.13(patch_hash=2313f3ad53c8f5cd6c9979087c9bfe0b8dd09e42658923a7b597e005f4699291)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))
+        version: 2.1.4(patch_hash=c4c55bc6f5757993287d56bcdde424bc2652f6e1fbf5d6563d7478d676542610)(@babel/core@7.24.4)(styled-components@6.1.19(patch_hash=dd9b1cffb608f53a2cd214ba48847c9b5b74dc6c1ab789a009f55c7ccb5ae3f9)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))
       babel-plugin-transform-jsx-classnames:
         specifier: ^1.2.2
         version: 1.2.2(patch_hash=3261c0fb8fd9750eb153af71ac2bebf9f5bf26eefba4c76cc91d7cf4af24efd1)
@@ -279,8 +279,8 @@ importers:
         specifier: ^8.4.49
         version: 8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b)
       postcss-styled-syntax:
-        specifier: ^0.7.0
-        version: 0.7.0(patch_hash=69f5393d9c454ca77e32b4019e496bb770cf3ba94599f697efd518f495a0c8ab)(postcss@8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b))
+        specifier: ^0.7.1
+        version: 0.7.1(postcss@8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b))
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -4510,11 +4510,11 @@ packages:
     peerDependencies:
       postcss: ^8.4.20
 
-  postcss-styled-syntax@0.7.0:
-    resolution: {integrity: sha512-OeStzPkHJ1/WDGRKm/JuVK8UdJbjt3U7AFC+zUc9omJ79SaXSxWoy+PXxJz7t8vOO8HcUgCLndNEQfLvZ74TuQ==}
+  postcss-styled-syntax@0.7.1:
+    resolution: {integrity: sha512-V5Iy8JztqXOKnTojdytF8IJ3zDXyVR927XftBPinJa3TnKdChGvGzUNEYlNuDtR+iqpuFkwJMgZdaJarYfGFCg==}
     engines: {node: '>=14.17'}
     peerDependencies:
-      postcss: ^8.4.21
+      postcss: ^8.5.1
 
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
@@ -4522,10 +4522,6 @@ packages:
   postcss@5.2.18:
     resolution: {integrity: sha512-zrUjRRe1bpXKsX1qAJNJjqZViErVuyEkMTRrwu4ud4sbTtIBRmtaYDrHmcGgmrbsW3MHfmtIf+vJumgQn+PrXg==}
     engines: {node: '>=0.12'}
-
-  postcss@8.4.38:
-    resolution: {integrity: sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==}
-    engines: {node: ^10 || ^12 || >=14}
 
   postcss@8.4.49:
     resolution: {integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==}
@@ -5102,8 +5098,8 @@ packages:
   style-search@0.1.0:
     resolution: {integrity: sha512-Dj1Okke1C3uKKwQcetra4jSuk0DqbzbYtXipzFlFMZtowbF1x7BKJwB9AayVMyFARvU8EDrZdcax4At/452cAg==}
 
-  styled-components@6.1.13:
-    resolution: {integrity: sha512-M0+N2xSnAtwcVAQeFEsGWFFxXDftHUD7XrKla06QbpUMmbmtFBMMTcKWvFXtWxuD5qQkB8iU5gk6QASlx2ZRMw==}
+  styled-components@6.1.19:
+    resolution: {integrity: sha512-1v/e3Dl1BknC37cXMhwGomhO8AkYmN41CqyX9xhUDxry1ns3BFQy2lLDRQXJRdVVWB9OHemv/53xaStimvWyuA==}
     engines: {node: '>= 16'}
     peerDependencies:
       react: '>= 16.8.0'
@@ -6396,7 +6392,7 @@ snapshots:
   '@dnd-kit/accessibility@3.1.1(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))':
     dependencies:
       react: 19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@dnd-kit/core@6.3.1(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))':
     dependencies:
@@ -6423,7 +6419,7 @@ snapshots:
   '@dnd-kit/utilities@3.2.2(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))':
     dependencies:
       react: 19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@dual-bundle/import-meta-resolve@4.1.0': {}
 
@@ -6439,7 +6435,7 @@ snapshots:
 
   '@emnapi/runtime@1.3.1':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@emotion/is-prop-valid@1.2.2':
@@ -7547,14 +7543,14 @@ snapshots:
     dependencies:
       '@babel/types': 7.27.0
 
-  babel-plugin-styled-components@2.1.4(patch_hash=c4c55bc6f5757993287d56bcdde424bc2652f6e1fbf5d6563d7478d676542610)(@babel/core@7.24.4)(styled-components@6.1.13(patch_hash=2313f3ad53c8f5cd6c9979087c9bfe0b8dd09e42658923a7b597e005f4699291)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))):
+  babel-plugin-styled-components@2.1.4(patch_hash=c4c55bc6f5757993287d56bcdde424bc2652f6e1fbf5d6563d7478d676542610)(@babel/core@7.24.4)(styled-components@6.1.19(patch_hash=dd9b1cffb608f53a2cd214ba48847c9b5b74dc6c1ab789a009f55c7ccb5ae3f9)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))):
     dependencies:
       '@babel/helper-annotate-as-pure': 7.22.5
       '@babel/helper-module-imports': 7.24.3
       '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.24.4)
       lodash: 4.17.21
       picomatch: 2.3.1
-      styled-components: 6.1.13(patch_hash=2313f3ad53c8f5cd6c9979087c9bfe0b8dd09e42658923a7b597e005f4699291)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
+      styled-components: 6.1.19(patch_hash=dd9b1cffb608f53a2cd214ba48847c9b5b74dc6c1ab789a009f55c7ccb5ae3f9)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
     transitivePeerDependencies:
       - '@babel/core'
 
@@ -7722,7 +7718,7 @@ snapshots:
   camel-case@4.1.2:
     dependencies:
       pascal-case: 3.1.2
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   camelcase@6.3.0: {}
 
@@ -8225,7 +8221,7 @@ snapshots:
   dot-case@3.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   dot-prop@5.3.0:
     dependencies:
@@ -9872,7 +9868,7 @@ snapshots:
 
   lower-case@2.0.2:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   lru-cache@10.4.3: {}
 
@@ -10035,7 +10031,7 @@ snapshots:
   no-case@3.0.4:
     dependencies:
       lower-case: 2.0.2
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   node-fetch-native@1.6.4: {}
 
@@ -10252,7 +10248,7 @@ snapshots:
   param-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   parent-module@1.0.1:
     dependencies:
@@ -10286,7 +10282,7 @@ snapshots:
   pascal-case@3.1.2:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   pascalcase@0.1.1: {}
 
@@ -10379,7 +10375,7 @@ snapshots:
     dependencies:
       postcss: 8.5.3
 
-  postcss-styled-syntax@0.7.0(patch_hash=69f5393d9c454ca77e32b4019e496bb770cf3ba94599f697efd518f495a0c8ab)(postcss@8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b)):
+  postcss-styled-syntax@0.7.1(postcss@8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b)):
     dependencies:
       postcss: 8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b)
       typescript: 5.8.3
@@ -10392,12 +10388,6 @@ snapshots:
       js-base64: 2.6.4
       source-map: 0.5.7
       supports-color: 3.2.3
-
-  postcss@8.4.38:
-    dependencies:
-      nanoid: 3.3.11
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
 
   postcss@8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b):
     dependencies:
@@ -10721,7 +10711,7 @@ snapshots:
 
   rxjs@7.8.1:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   safe-array-concat@1.1.2:
     dependencies:
@@ -10891,7 +10881,7 @@ snapshots:
   snake-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   snapdragon-node@2.1.1:
     dependencies:
@@ -11107,14 +11097,14 @@ snapshots:
 
   style-search@0.1.0: {}
 
-  styled-components@6.1.13(patch_hash=2313f3ad53c8f5cd6c9979087c9bfe0b8dd09e42658923a7b597e005f4699291)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)):
+  styled-components@6.1.19(patch_hash=dd9b1cffb608f53a2cd214ba48847c9b5b74dc6c1ab789a009f55c7ccb5ae3f9)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)):
     dependencies:
       '@emotion/is-prop-valid': 1.2.2
       '@emotion/unitless': 0.8.1
       '@types/stylis': 4.2.5
       css-to-react-native: 3.2.0
       csstype: 3.1.3
-      postcss: 8.4.38
+      postcss: 8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b)
       react: 19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)
       react-dom: 19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
       shallowequal: 1.1.0

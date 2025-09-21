@@ -14,8 +14,8 @@ export default function Home() {
 		<div className="container">
 			<InfoBar status="accent" title="Info">This page is for testing components currently. The quick brown fox jumps over a lazy dog.</InfoBar>
 			<SettingsCardToggleSwitch title="Shown" icon="enabled" on={[shown, setShown]} />
-			<TextBox value={[text, setText]} />
-			<TextBox.Number value={[number, setNumber]} suffix="px" required pattern={/\d+/} />
+			<TextBox value={[text, setText]} fullWidth />
+			<TextBox.Number value={[number, setNumber]} suffix="px" required pattern={/\d+/} fullWidth />
 
 			<div>
 				<Segmented current={[text, setText]}>
@@ -38,6 +38,8 @@ export default function Home() {
 			<Filter current={[text, setText]}>
 				{options.map(option => <Filter.Item key={option} id={option} icon="placeholder">{option}</Filter.Item>)}
 			</Filter>
+
+			<SearchBox />
 
 			<Expander icon="single_select" title="Radio buttons">
 				{options.map(option => <RadioButton key={option} id={option} value={[text, setText]}>{option}</RadioButton>)}

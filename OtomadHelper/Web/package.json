@@ -69,7 +69,7 @@
 		"react-flip-move": "^3.0.5",
 		"react-i18next": "^15.5.2",
 		"react-transition-group-fc": "^4.6.1",
-		"styled-components": "^6.1.13",
+		"styled-components": "^6.1.19",
 		"styled-tools": "^1.7.2",
 		"use-immer": "^0.11.0",
 		"valtio": "^2.1.4",
@@ -114,7 +114,7 @@
 		"license-checker": "^25.0.1",
 		"lightningcss": "^1.28.2",
 		"postcss": "^8.4.49",
-		"postcss-styled-syntax": "^0.7.0",
+		"postcss-styled-syntax": "^0.7.1",
 		"rimraf": "^6.0.1",
 		"rollup-plugin-license": "^3.5.3",
 		"sharp": "^0.33.5",
@@ -147,7 +147,6 @@
 			"license-checker@25.0.1": "patches/license-checker@25.0.1.patch",
 			"postcss@8.4.49": "patches/postcss@8.4.49.patch",
 			"postcss-styled-syntax@0.7.0": "patches/postcss-styled-syntax@0.7.0.patch",
-			"styled-components@6.1.13": "patches/styled-components@6.1.13.patch",
 			"@types/react@19.0.1": "patches/@types__react@19.0.1.patch",
 			"react": "patches/react@19.0.0.patch",
 			"react-dom": "patches/react-dom@19.0.0.patch",
@@ -156,9 +155,10 @@
 			"html-minifier-terser": "patches/html-minifier-terser.patch",
 			"valtio": "patches/valtio.patch",
 			"vite-plugin-svg-icons": "patches/vite-plugin-svg-icons.patch",
-			"enum-plus": "patches/enum-plus.patch"
+			"enum-plus": "patches/enum-plus.patch",
+			"styled-components": "patches/styled-components.patch"
 		},
-		"allowUnusedPatches": false
+		"allowUnusedPatches": true
 	},
 	"config": {
 		"commitizen": {

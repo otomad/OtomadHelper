@@ -106,7 +106,10 @@ export /* @internal */ const inputInSettingsCardStyle = css`
 	}
 `;
 
-export /* @internal */ const StyledTextBox = styled.div`
+export /* @internal */ const StyledTextBox = styled.div<{
+	/** The default text box width is 200px, you can change it to 100% when you set it to true. */
+	$fullWidth?: boolean;
+}>`
 	position: relative;
 	background-color: ${c("fill-color-control-default")};
 	border-radius: 4px;
@@ -130,9 +133,11 @@ export /* @internal */ const StyledTextBox = styled.div`
 
 	${inputInSettingsCardStyle}
 
-	@layer base {
-		inline-size: 200px;
-	}
+	${ifNotProp("$fullWidth", css`
+		@layer base {
+			inline-size: 200px;
+		}
+	`)}
 
 	input {
 		${styles.effects.text.body};
@@ -336,7 +341,7 @@ export /* @internal */ const StyledTextBox = styled.div`
 	}
 `;
 
-export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, ref, inputRef, ...htmlAttrs }: FCP<{
+export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, ref, inputRef, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
 	/** Content placeholder. */
@@ -363,6 +368,12 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	required?: boolean;
 	/** Trigger onChanging event while onMouseDown? @default true */
 	mouseDownTriggerOnChanging?: boolean;
+	/**
+	 * The default text box width is 200px, you can change it to 100% when you set it to true.
+	 * However, you can still change the width freely in the style attribute whenever you want.
+	 * @default false
+	 */
+	fullWidth?: boolean;
 	/** Text change event. Only occurs after pasting text or after the input box is out of focus. */
 	onChange?: BaseEventHandler<HTMLInputElement>;
 	/** Text changing event. Occurs any time the text changes. */
@@ -420,6 +431,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 			ref={wrapperEl}
 			disabled={disabled}
 			aria-disabled={disabled || undefined}
+			$fullWidth={fullWidth}
 			onClick={e => e.stopPropagation()}
 			{...htmlAttrs}
 		>

@@ -263,9 +263,9 @@ const StyledNavigationView = styled.div<{
 
 					@supports (anchor-name: ${TITLE_ANCHOR_NAME}) {
 						position: fixed;
+						position-anchor: ${TITLE_ANCHOR_NAME};
 						inset-block-start: var(--inset-block-start);
 						inset-inline-end: anchor(end);
-						position-anchor: ${TITLE_ANCHOR_NAME};
 
 						${hasUnsupportedBrowserInfoBar} {
 							inset-block-start: calc(var(--inset-block-start) + ${UnsupportedBrowserInfoBar.height}px);
@@ -348,6 +348,7 @@ const StyledNavigationView = styled.div<{
 		.page-content {
 			container: page-scroll / scroll-state;
 			block-size: 100%;
+			contain: layout;
 			overflow: hidden auto;
 			overscroll-behavior: contain;
 
