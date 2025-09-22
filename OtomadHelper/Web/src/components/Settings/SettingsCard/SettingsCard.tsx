@@ -89,7 +89,7 @@ const StyledSettingsCard = styled(StyledCard)<{
 			> .base > .leading > .icon,
 			> .base > .leading > .text,
 			> .base > .trailing > .check-info,
-			&.button > .base > .trailing > .trailing-icon {
+			&.button > .base > .trailing > .action-icon {
 				opacity: ${c("pressed-text-opacity")};
 			}
 		}
@@ -97,20 +97,20 @@ const StyledSettingsCard = styled(StyledCard)<{
 
 	&.expander-parent {
 		&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}, p, span):hover)):hover {
-			.trailing-icon {
+			.action-icon {
 				background-color: ${c("fill-color-subtle-secondary")};
 			}
 		}
 
 		${isPressed("&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active))")} {
-			.trailing-icon {
+			.action-icon {
 				color: ${c("fill-color-text-secondary")};
 				background-color: ${c("fill-color-subtle-tertiary")};
 			}
 		}
 	}
 
-	&:dir(rtl) .trailing-icon {
+	&:dir(rtl) .action-icon {
 		scale: -1 1;
 	}
 
@@ -175,7 +175,7 @@ const StyledSettingsCard = styled(StyledCard)<{
 	}
 `);
 
-export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, trailingIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, ariaIdRef, ref, onClick, onFocus, ...htmlAttrs }: FCP<{
+export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, ariaIdRef, ref, onClick, onFocus, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
@@ -186,8 +186,8 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	selectInfo?: ReactNode;
 	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. */
 	selectValid?: boolean | number;
-	/** Trailing icon. Use an empty string or Boolean type to indicate disabling. */
-	trailingIcon?: DeclaredIcons | "" | boolean;
+	/** Trailing Action icon. Use an empty string or Boolean type to indicate disabling. */
+	actionIcon?: DeclaredIcons | "" | boolean;
 	/**
 	 * Component form type.
 	 * - `container` - A normal `<div>` box, cannot be clicked.
@@ -208,7 +208,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	/** Pass settings card aria ID to the parent component. */
 	ariaIdRef?: RefObject<string | undefined | null>;
 }, "div">) {
-	trailingIcon ??= type === "button" ? "chevron_right" :
+	actionIcon ??= type === "button" ? "chevron_right" :
 		type === "expander" ? "chevron_down" : undefined;
 	const dragHandleContext = useContext(SortableView.Item.Context);
 	const ariaId = useId();
@@ -290,9 +290,9 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 										!child ? child : <p key={i} {...propsWithDisabledWithoutKey}>{child}</p> :
 										React.cloneElement(child, propsWithDisabled);
 								})}
-								{trailingIcon && typeof trailingIcon === "string" && (
-									<div className={["trailing-icon", TRAILING_EXEMPTION]} data-type={type}>
-										<Icon name={trailingIcon} />
+								{actionIcon && typeof actionIcon === "string" && (
+									<div className={["action-icon", TRAILING_EXEMPTION]} data-type={type}>
+										<Icon name={actionIcon} />
 									</div>
 								)}
 							</>

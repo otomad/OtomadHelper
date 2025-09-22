@@ -492,7 +492,7 @@ const StyledPage = styled.main`
 	// #endregion
 `;
 
-function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, navItemsId, flyout, isCompact, onRequestHide }: FCP<{
+function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, navItemsId, flyout, isCompact, onRequestHide, onRequestExpand }: FCP<{
 	paneDisplayMode: PaneDisplayMode;
 	isFlyoutShown: boolean;
 	customContent?: ReactNode;
@@ -502,10 +502,12 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	flyout: boolean;
 	isCompact: boolean;
 	onRequestHide(): void;
+	onRequestExpand(): void;
 }>) {
 	const navItemsEl = useDomRef<"div">();
 	const focusable = !flyout && paneDisplayMode === "minimal" ? false : isFlyoutShown === flyout;
 	const covered = !flyout && isFlyoutShown;
+	const [searchValue, setSearchValue] = useState("");
 
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
 		if ("type" in item) return item.type === "hr" ? <hr key={index} aria-hidden /> : undefined;
@@ -555,6 +557,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 				tabIndex={-1}
 				onScroll={onNavItemsScroll}
 			>
+				<SearchBox value={[searchValue, setSearchValue]} collapsed={paneDisplayMode === "compact"} onCollapsedButtonClick={onRequestExpand} />
 				{customContent}
 				{mainTabBar}
 			</div>
@@ -685,8 +688,11 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	const onNavButtonClick = () => responsive === "expanded" ?
 		setIsExpandedInExpandedMode(expanded => !expanded) :
 		setFlyoutDisplayMode(mode => mode === "expanded" ? "minimal" : "expanded");
-
+	const onRequestExpand = () => responsive === "expanded" ?
+		setIsExpandedInExpandedMode(true) :
+		setFlyoutDisplayMode("expanded");
 	const hideFlyoutNavMenu = () => { flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal"); };
+
 	const windowWidth = useWindowWidth();
 	useEffect(hideFlyoutNavMenu, [currentNav, windowWidth]);
 
@@ -707,6 +713,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 						flyout={isFlyout}
 						isCompact={paneDisplayMode === "compact"}
 						onRequestHide={hideFlyoutNavMenu}
+						onRequestExpand={onRequestExpand}
 					/>
 				);
 			})}

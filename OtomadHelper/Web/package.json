@@ -146,7 +146,6 @@
 			"vite-plugin-image-optimizer@1.1.8": "patches/vite-plugin-image-optimizer@1.1.8.patch",
 			"license-checker@25.0.1": "patches/license-checker@25.0.1.patch",
 			"postcss@8.4.49": "patches/postcss@8.4.49.patch",
-			"postcss-styled-syntax@0.7.0": "patches/postcss-styled-syntax@0.7.0.patch",
 			"@types/react@19.0.1": "patches/@types__react@19.0.1.patch",
 			"react": "patches/react@19.0.0.patch",
 			"react-dom": "patches/react-dom@19.0.0.patch",
@@ -156,9 +155,10 @@
 			"valtio": "patches/valtio.patch",
 			"vite-plugin-svg-icons": "patches/vite-plugin-svg-icons.patch",
 			"enum-plus": "patches/enum-plus.patch",
-			"styled-components": "patches/styled-components.patch"
+			"styled-components": "patches/styled-components.patch",
+			"postcss-styled-syntax": "patches/postcss-styled-syntax.patch"
 		},
-		"allowUnusedPatches": true
+		"allowUnusedPatches": false
 	},
 	"config": {
 		"commitizen": {

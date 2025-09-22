@@ -39,8 +39,6 @@ export default function Home() {
 				{options.map(option => <Filter.Item key={option} id={option} icon="placeholder">{option}</Filter.Item>)}
 			</Filter>
 
-			<SearchBox />
-
 			<Expander icon="single_select" title="Radio buttons">
 				{options.map(option => <RadioButton key={option} id={option} value={[text, setText]}>{option}</RadioButton>)}
 			</Expander>

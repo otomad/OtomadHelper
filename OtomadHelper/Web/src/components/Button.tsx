@@ -109,8 +109,8 @@ export /* @internal */ const StyledButton = styled.button<{
 			font-size: 20px;
 		}
 
-		&:has(+ .trailing-icon[data-type="button"]),
-		.contents:has(+ .trailing-icon[data-type="button"]) > & {
+		&:has(+ .action-icon[data-type="button"]),
+		.contents:has(+ .action-icon[data-type="button"]) > & {
 			margin-inline-end: -8px;
 		}
 	}

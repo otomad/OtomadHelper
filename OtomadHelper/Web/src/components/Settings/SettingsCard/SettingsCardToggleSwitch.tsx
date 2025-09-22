@@ -1,4 +1,4 @@
-export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, children, trailingIcon, resetTransitionOnChanging, className, color, actions, lock, title, onClick, onChange, ...settingsCardProps }: FCP<Override<PropsOf<typeof SettingsCard>, {
+export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, children, actionIcon, resetTransitionOnChanging, className, color, actions, lock, title, onClick, onChange, ...settingsCardProps }: FCP<Override<PropsOf<typeof SettingsCard>, {
 	/** Is on? */
 	on: StateProperty<boolean>;
 	/** Disabled? */
@@ -24,7 +24,7 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 	onChange?(on: boolean): void;
 }>>) {
 	const [isToggleSwitchPressing, setIsToggleSwitchPressing] = useState(false);
-	trailingIcon ||= "";
+	actionIcon ||= "";
 	onClick ??= () => !isToggleSwitchPressing && (setOn as SetStateNarrow<boolean>)?.(on => { onChange?.(!on); return !on; });
 	const isExpander = shouldBeExpander(children);
 
@@ -32,7 +32,7 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 		<SettingsCardOrExpander
 			type="button"
 			disabled={disabled || lock != null}
-			trailingIcon={trailingIcon}
+			actionIcon={actionIcon}
 			className={[className, nameof.kebab({ SettingsCardToggleSwitch }), { toggleSwitchHoverable: !isExpander || !on }]}
 			actions={(
 				<>

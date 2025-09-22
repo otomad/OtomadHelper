@@ -68,7 +68,7 @@ export /* @internal */ const styledExpanderItemContent = css`
 			}
 		}
 
-		.trailing-icon {
+		.action-icon {
 			${styles.mixins.square("30px")};
 			${styles.mixins.flexCenter()};
 			flex-shrink: 0;

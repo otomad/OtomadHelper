@@ -16,7 +16,7 @@ const enabledFocusVisible = css`
 	}
 `;
 
-const StyledComboBox = styled(StyledButton)`
+const StyledComboBox = styled(StyledButton)(() => css`
 	padding: 4px 11px;
 
 	${inputInSettingsCardStyle};
@@ -173,7 +173,7 @@ const StyledComboBox = styled(StyledButton)`
 	.vertical-if-flex-wrap.has-child-wrapped:not(.tentative-touch-approach) > & {
 		inline-size: calc(100% - 2px);
 	}
-`;
+`);
 
 export default function ComboBox<T extends string | number>(props: FCP<{
 	/** The identifiers for each option of the combo box. */

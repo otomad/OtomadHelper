@@ -32,9 +32,9 @@ patchedDependencies:
   postcss-selector-parser@6.1.2:
     hash: 95d44ecd87b2f8615a9d13fe20bf343fa0f9bc6a8831354069c9cd35365f3a5f
     path: patches/postcss-selector-parser@6.1.2.patch
-  postcss-styled-syntax@0.7.0:
+  postcss-styled-syntax:
     hash: 69f5393d9c454ca77e32b4019e496bb770cf3ba94599f697efd518f495a0c8ab
-    path: patches/postcss-styled-syntax@0.7.0.patch
+    path: patches/postcss-styled-syntax.patch
   postcss@8.4.49:
     hash: 99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b
     path: patches/postcss@8.4.49.patch
@@ -280,7 +280,7 @@ importers:
         version: 8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b)
       postcss-styled-syntax:
         specifier: ^0.7.1
-        version: 0.7.1(postcss@8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b))
+        version: 0.7.1(patch_hash=69f5393d9c454ca77e32b4019e496bb770cf3ba94599f697efd518f495a0c8ab)(postcss@8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b))
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -10375,7 +10375,7 @@ snapshots:
     dependencies:
       postcss: 8.5.3
 
-  postcss-styled-syntax@0.7.1(postcss@8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b)):
+  postcss-styled-syntax@0.7.1(patch_hash=69f5393d9c454ca77e32b4019e496bb770cf3ba94599f697efd518f495a0c8ab)(postcss@8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b)):
     dependencies:
       postcss: 8.4.49(patch_hash=99f4d3ce97801e249946b11ea21ff8e503d3b45751c6ae3442bf7c8b6debf90b)
       typescript: 5.8.3

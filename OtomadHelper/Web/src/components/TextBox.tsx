@@ -96,6 +96,58 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 }
 // #endregion
 
+const StyledTextBoxActionButton = styled.button.attrs({
+	type: "button",
+})`
+	flex-shrink: 0;
+	padding: 4px;
+	overflow: hidden;
+	cursor: default;
+
+	.base {
+		align-content: center;
+		block-size: 100%;
+		padding: 0 7px;
+		border-radius: 3px;
+
+		.icon {
+			display: flex;
+			color: ${c("fill-color-text-secondary")};
+			font-size: 16px;
+		}
+	}
+
+	&:hover .base {
+		background-color: ${c("fill-color-subtle-secondary")};
+	}
+
+	&:active .base {
+		background-color: ${c("fill-color-subtle-tertiary")};
+
+		.icon {
+			color: ${c("fill-color-text-tertiary")};
+		}
+	}
+`;
+
+function TextBoxActionButton({ icon, tooltip, ...htmlAttrs }: FCP<{
+	/** Button icon. */
+	icon?: DeclaredIcons;
+	/** Tooltip. */
+	tooltip?: Readable;
+	children?: never;
+}, "button">) {
+	return (
+		<Tooltip title={tooltip} placement="y">
+			<StyledTextBoxActionButton {...htmlAttrs}>
+				<div className="base">
+					{icon && <Icon name={icon} />}
+				</div>
+			</StyledTextBoxActionButton>
+		</Tooltip>
+	);
+}
+
 export /* @internal */ const inSettingsCardTrailing = ":where(.settings-card > .base, .expander-item) > .trailing";
 
 export /* @internal */ const inputInSettingsCardStyle = css`
@@ -174,9 +226,14 @@ export /* @internal */ const StyledTextBox = styled.div<{
 		}
 	}
 
-	.prefix {
+	.prefix,
+	.leading-icon {
 		margin-inline-end: -4px;
 		padding-inline-start: 12px;
+	}
+
+	.leading-icon {
+		color: ${c("fill-color-text-secondary")};
 	}
 
 	.suffix {
@@ -210,7 +267,8 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	.suffix,
 	.positive-sign,
 	.warn-icon,
-	.spinner-icon {
+	.spinner-icon,
+	.leading-icon {
 		${styles.mixins.hideIfEmpty()};
 		${styles.mixins.gridCenter()};
 		margin-block-end: 1px;
@@ -262,6 +320,25 @@ export /* @internal */ const StyledTextBox = styled.div<{
 				margin-inline-end: 0;
 				scale: 0;
 			}
+		}
+	}
+
+	.action-buttons {
+		${StyledTextBoxActionButton} {
+			scale: 1;
+			transition-behavior: allow-discrete;
+
+			${[
+				"&[hidden]",
+				"@starting-style",
+			].map(selector => css`
+				${selector} {
+					inline-size: 0;
+					margin-inline: 0;
+					padding-inline: 0;
+					scale: 0;
+				}
+			`)}
 		}
 	}
 
@@ -341,7 +418,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	}
 `;
 
-export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, ref, inputRef, ...htmlAttrs }: FCP<{
+export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, showClearAll, icon, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, ref, inputRef, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
 	/** Content placeholder. */
@@ -356,7 +433,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	_spinner?(inputId: string): ReactNode;
 	/** @private Show the positive sign? */
 	_showPositiveSign?: boolean;
-	/** Set the attributes for the input element. @deprecated */
+	// /** Set the attributes for the input element. @deprecated */
 	// inputAttrs?: FCP<{}, "input">;
 	/** Ref to the input element. */
 	inputRef?: MiscRef<HTMLInputElement>;
@@ -374,6 +451,10 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	 * @default false
 	 */
 	fullWidth?: boolean;
+	/** Show the clear all button? */
+	showClearAll?: boolean;
+	/** Custom leading icon of the text box. */
+	icon?: DeclaredIcons;
 	/** Text change event. Only occurs after pasting text or after the input box is out of focus. */
 	onChange?: BaseEventHandler<HTMLInputElement>;
 	/** Text changing event. Occurs any time the text changes. */
@@ -397,6 +478,8 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 
 	const setValue = (value: string | undefined | ((value: string) => string | undefined)) =>
 		value == null || _setValue?.(value as string);
+
+	const clearAll = () => _setValue?.("");
 
 	const handleChange = useCallback((e: Any) => { onChanging?.(e); onChange?.(e); }, [onChange, onChanging]);
 
@@ -436,6 +519,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 			{...htmlAttrs}
 		>
 			<div className="wrapper">
+				{icon && <label className="leading-icon" htmlFor={inputId}><Icon name={icon} /></label>}
 				<label className="prefix" htmlFor={inputId}>{prefix}</label>
 				{showPositiveSign && <label className="positive-sign" htmlFor={inputId}>+</label>}
 				<input
@@ -464,6 +548,9 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 				<Tooltip title={() => inputEl.current?.validationMessage} placement="y">
 					<Icon name="error_circle" className="warn-icon" />
 				</Tooltip>
+				<Contents className="action-buttons">
+					{showClearAll && <TextBoxActionButton icon="dismiss" hidden={!value} onClick={clearAll} />}
+				</Contents>
 				{spinner?.(inputId)}
 			</div>
 			<div className="stripes">

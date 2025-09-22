@@ -21,16 +21,16 @@ const ExpanderParent = styled(SettingsCard)<{ // BUG: After auto resize, when sc
 		}
 	}
 
-	> .base > .trailing > .trailing-icon > * {
+	> .base > .trailing > .action-icon > * {
 		${styles.mixins.enableHardware3d()};
 	}
 
-	&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active)):active > .base > .trailing > .trailing-icon > * {
+	&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active)):active > .base > .trailing > .action-icon > * {
 		translate: 0 ${({ $expanded }) => $expanded ? 2 : -2}px;
 	}
 
 	${ifProp("$childrenDisabled", css`
-		& > .base > .trailing > .trailing-icon {
+		& > .base > .trailing > .action-icon {
 			background-color: transparent !important;
 
 			> * {
@@ -63,7 +63,7 @@ const ExpanderParent = styled(SettingsCard)<{ // BUG: After auto resize, when sc
 			> .base {
 				${sharpBottom};
 
-				> .trailing > .trailing-icon > * {
+				> .trailing > .action-icon > * {
 					rotate: 180deg;
 				}
 			}
@@ -176,7 +176,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				{...settingsCardProps}
 				ref={ref}
 				type={childrenDisabled ? onClickWhenChildrenDisabled ? "button" : "container-but-button" : "expander"}
-				trailingIcon="chevron_down"
+				actionIcon="chevron_down"
 				ariaIdRef={ariaId}
 				aria-controls={withAriaId("-child")}
 				aria-expanded={internalExpanded}
