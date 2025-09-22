@@ -130,7 +130,7 @@ const targetFunction = (options?: number | bigint | TOptions) => {
 /** Get localize string objects. */
 export const t = getProxy(targetFunction) as Trans;
 export const tf = getProxy(targetFunction, true) as Trans;
-type Trans = LocaleDictionary & typeof targetFunction;
+export /* @internal */ type Trans = LocaleDictionary & typeof targetFunction;
 
 declare global {
 	// @ts-ignore
