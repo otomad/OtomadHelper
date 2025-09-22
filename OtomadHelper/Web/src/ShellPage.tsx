@@ -62,6 +62,7 @@ export default function ShellPage() {
 	const pageContentId = useId();
 	setPageContentId(pageContentId);
 	const { commandBarDisabled } = useSnapshot(pageStore);
+	const searchValue = useState("");
 
 	useEffect(() => {
 		document.body.classList.toggle("pixelated", enablePixelScaling);
@@ -106,6 +107,7 @@ export default function ShellPage() {
 					}
 				</CommandBar>
 			)}
+			searchValue={searchValue}
 			style={{ zoom, "--zoom": zoom }} // TODO: Use webview2 native zoom function.
 		>
 			<title>{documentTitle}</title>

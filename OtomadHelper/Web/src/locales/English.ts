@@ -157,6 +157,8 @@ export default {
 		import: "Import",
 		dangerZone: "Danger zone",
 		locate: "Locate",
+		clearAll: "Clear all",
+		search: "Search",
 		infoBar: {
 			warning: "Warning",
 		},

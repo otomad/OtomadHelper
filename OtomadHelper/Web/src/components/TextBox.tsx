@@ -99,6 +99,7 @@ function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
 const StyledTextBoxActionButton = styled.button.attrs({
 	type: "button",
 })`
+	${styles.mixins.forwardFocusRing(".base")};
 	flex-shrink: 0;
 	padding: 4px;
 	overflow: hidden;
@@ -479,7 +480,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	const setValue = (value: string | undefined | ((value: string) => string | undefined)) =>
 		value == null || _setValue?.(value as string);
 
-	const clearAll = () => _setValue?.("");
+	const clearAll = () => { _setValue?.(""); inputEl.current?.focus(); };
 
 	const handleChange = useCallback((e: Any) => { onChanging?.(e); onChange?.(e); }, [onChange, onChanging]);
 
@@ -549,7 +550,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 					<Icon name="error_circle" className="warn-icon" />
 				</Tooltip>
 				<Contents className="action-buttons">
-					{showClearAll && <TextBoxActionButton icon="dismiss" hidden={!value} onClick={clearAll} />}
+					{showClearAll && <TextBoxActionButton icon="dismiss" hidden={!value} tooltip={t.clearAll} onClick={clearAll} />}
 				</Contents>
 				{spinner?.(inputId)}
 			</div>

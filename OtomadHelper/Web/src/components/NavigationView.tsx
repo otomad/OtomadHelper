@@ -1,11 +1,14 @@
 import type { TransitionUpdateStatus } from "react-transition-group-fc";
 
-const navButtonSize = { width: 44, height: 40 };
+const navButtonSize = { width: 44, height: 40, verticalWidth: 52 };
 const NAV_ITEMS_ASSUMED_COUNT = 20;
 const NAV_ITEMS_BOTTOM_ASSUMED_COUNT = 3;
 const TITLE_ANCHOR_NAME = "--navigation-view-title";
 const hasUnsupportedBrowserInfoBar = `body:has(.${nameof.kebab({ UnsupportedBrowserInfoBar })}) &`;
 export const CONTAINER_CLASSNAMES = ".container, .container-preview";
+
+const TooltipTitleWithShortcut = ({ title, shortcut }: { title: string; shortcut: string[] }) =>
+	<>{title}<Kbd>{shortcut}</Kbd></>;
 
 export const styledContainer = css`
 	display: flex;
@@ -34,7 +37,7 @@ const StyledTopLeftButtons = styled.div`
 		margin-inline-start: 5px;
 
 		${NavButton} {
-			inline-size: 52px;
+			inline-size: ${navButtonSize.verticalWidth}px;
 		}
 	}
 
@@ -78,17 +81,14 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 		else if (e.altKey && e.code === "KeyH" && !e.repeat) onNavButton?.();
 	});
 
-	const TooltipTitle = useCallback(({ title, shortcut }: { title: string; shortcut: string[] }) =>
-		<>{title}<Kbd>{shortcut}</Kbd></>, []);
-
 	return (
 		<StyledTopLeftButtons className={{ shadow, vertical }}>
 			{!shadow && (
 				<div className="base">
-					<Tooltip placement={tooltipPlacement} title={<TooltipTitle title={t.back} shortcut={["Alt", "←"]} />}>
+					<Tooltip placement={tooltipPlacement} title={<TooltipTitleWithShortcut title={t.back} shortcut={["Alt", "←"]} />}>
 						<NavButton animatedIcon="back" disabled={!canBack} onClick={onBack} aria-label={t.back} dirBasedIcon />
 					</Tooltip>
-					<Tooltip placement={tooltipPlacement} title={<TooltipTitle title={t.navigation} shortcut={["Alt", "H"]} />}>
+					<Tooltip placement={tooltipPlacement} title={<TooltipTitleWithShortcut title={t.navigation} shortcut={["Alt", "H"]} />}>
 						<NavButton animatedIcon="global_nav_button" onClick={onNavButton} aria-label={t.navigation} />
 						{/* Do not use `accessKey="H"`, it do repeat the keydown, which is not we wanted. */}
 					</Tooltip>
@@ -130,6 +130,7 @@ const StyledNavigationView = styled.div<{
 		inline-size: 320px;
 		max-inline-size: calc(100dvw / var(--zoom, 1));
 		padding-block-end: 4px;
+		overflow: hidden;
 
 		@media (horizontal-viewport-segments >= 2) {
 			inline-size: calc((env(viewport-segment-left 1 0) - env(viewport-segment-left 0 0)) / var(--zoom, 1));
@@ -213,6 +214,33 @@ const StyledNavigationView = styled.div<{
 			body:has(.background-image) & {
 				background-color: transparent;
 			}
+		}
+
+		search {
+			transition: ${fallbackTransitions}, margin-inline 0s;
+
+			&:not(.collapsed) {
+				margin-block: 4px 3px;
+				margin-inline: 9px;
+
+				.text-box .leading-icon {
+					margin-inline-end: 4px;
+				}
+			}
+
+			&.collapsed {
+				/* margin-block-end: 5px; */
+
+				button {
+					block-size: ${navButtonSize.height}px;
+					inline-size: ${navButtonSize.verticalWidth}px;
+					margin-inline-start: 5px;
+				}
+			}
+		}
+
+		&:not(.compact, .compact + .flyout) search {
+			margin-block-end: 8px;
 		}
 	}
 
@@ -492,7 +520,7 @@ const StyledPage = styled.main`
 	// #endregion
 `;
 
-function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, navItemsId, flyout, isCompact, onRequestHide, onRequestExpand }: FCP<{
+function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, navItemsId, flyout, isCompact, searchValue, onRequestHide, onRequestExpand }: FCP<{
 	paneDisplayMode: PaneDisplayMode;
 	isFlyoutShown: boolean;
 	customContent?: ReactNode;
@@ -501,13 +529,14 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	navItemsId?: string;
 	flyout: boolean;
 	isCompact: boolean;
+	searchValue: StateProperty<string>;
 	onRequestHide(): void;
 	onRequestExpand(): void;
 }>) {
 	const navItemsEl = useDomRef<"div">();
 	const focusable = !flyout && paneDisplayMode === "minimal" ? false : isFlyoutShown === flyout;
 	const covered = !flyout && isFlyoutShown;
-	const [searchValue, setSearchValue] = useState("");
+	const isHidden = paneDisplayMode === "minimal" || covered;
 
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
 		if ("type" in item) return item.type === "hr" ? <hr key={index} aria-hidden /> : undefined;
@@ -548,8 +577,16 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	));
 
 	return (
-		<div className={["left", paneDisplayMode, { flyout, covered }]} aria-hidden={paneDisplayMode === "minimal" || covered} aria-label={t.aria.navMenu}>
+		<div className={["left", paneDisplayMode, { flyout, covered }]} aria-hidden={isHidden} aria-label={t.aria.navMenu}>
 			<TopLeftButtons shadow paneDisplayMode={isCompact ? "compact" : paneDisplayMode} />
+			<SearchBox
+				value={searchValue}
+				collapsed={paneDisplayMode !== "expanded" && !flyout}
+				inert={isHidden}
+				collapsedButtonTooltip={{ title: <TooltipTitleWithShortcut title={t.search} shortcut={["Ctrl", "F"]} />, placement: "right" }}
+				enableShortcutKey={!flyout}
+				onCollapsedButtonClick={onRequestExpand}
+			/>
 			<div
 				ref={navItemsEl}
 				data-nav-items-id={navItemsId}
@@ -557,7 +594,6 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 				tabIndex={-1}
 				onScroll={onNavItemsScroll}
 			>
-				<SearchBox value={[searchValue, setSearchValue]} collapsed={paneDisplayMode === "compact"} onCollapsedButtonClick={onRequestExpand} />
 				{customContent}
 				{mainTabBar}
 			</div>
@@ -625,7 +661,7 @@ const usePaneDisplayMode = () => {
 
 export const MainPageTransitionContext = createContext({ status: "entered" as TransitionUpdateStatus });
 
-export default function NavigationView({ currentNav: [currentNav, setCurrentNav], navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, pageContentId, poppedScroll, ...htmlAttrs }: FCP<{
+export default function NavigationView({ currentNav: [currentNav, setCurrentNav], navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, pageContentId, poppedScroll, searchValue, ...htmlAttrs }: FCP<{
 	/** Current navigation page status parameters. */
 	currentNav: StateProperty<string[]>;
 	/** All navigation items. */
@@ -646,6 +682,8 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	pageContentId?: string;
 	/** The page scroll value popped from the stack. */
 	poppedScroll?: PageScroll;
+	/** The current search box text. */
+	searchValue: StateProperty<string>;
 }, "div">) {
 	const currentNavTab = useStateSelector([currentNav, setCurrentNav], nav => nav[0], value => [value]);
 	const pagePath = currentNav!.join("/");
@@ -712,6 +750,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 						customContent={customContent}
 						flyout={isFlyout}
 						isCompact={paneDisplayMode === "compact"}
+						searchValue={searchValue}
 						onRequestHide={hideFlyoutNavMenu}
 						onRequestExpand={onRequestExpand}
 					/>
