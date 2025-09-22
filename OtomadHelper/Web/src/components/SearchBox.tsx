@@ -31,10 +31,21 @@ export default function SearchBox({ value, collapsed, collapsedButtonTooltip, en
 	}, undefined, [enableShortcutKey, onCollapsedButtonClick, collapsed]);
 
 	return (
-		<search className={["search-box", { collapsed }, className]} {...htmlAttrs}>
-			{!collapsed ?
-				<TextBox value={value} fullWidth icon="search" showClearAll /> :
-				<Tooltip {...collapsedButtonTooltip!}><Button subtle minWidthUnbounded icon="search" onClick={handleCollapsedButtonClick} /></Tooltip>}
+		<search className={["search-box", { collapsed }, className]} aria-label={t.aria.searchBox} {...htmlAttrs}>
+			{!collapsed ? (
+				<TextBox
+					type="search"
+					value={value}
+					fullWidth
+					icon="search"
+					showClearAll
+					aria-label={t.aria.searchBox}
+				/>
+			) : (
+				<Tooltip {...collapsedButtonTooltip!}>
+					<Button subtle minWidthUnbounded icon="search" onClick={handleCollapsedButtonClick} aria-label={t.aria.searchBox} />
+				</Tooltip>
+			)}
 		</search>
 	);
 }

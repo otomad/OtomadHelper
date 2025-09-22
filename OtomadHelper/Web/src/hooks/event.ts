@@ -134,7 +134,7 @@ type Options = Partial<{
  * });
  * ```
  */
-export function useEventListener<K extends keyof WindowEventMap>(target: Window, event: K, callback: (this: Window, ev: WindowEventMap[K]) => void, options?: Options, deps?: DependencyList): void;
+export function useEventListener<K extends keyof WindowEventMap>(target: Window, event: K, callback: (this: Window, ev: WindowEventMap[K]) => void, options?: Options, deps?: DependencyList | null): void;
 /**
  * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
  *
@@ -144,7 +144,7 @@ export function useEventListener<K extends keyof WindowEventMap>(target: Window,
  * @param event - The type of the event to listen for. Must be a key of `DocumentEventMap`.
  * @param callback - The function to be called when the event is triggered.
  * @param options - An optional object containing an `immediate` property, which when `true`, will immediately call the `callback` function when the event listener is added.
- * @param deps - An optional array of dependencies. When any of the dependencies change, the event listener will be added or removed.
+ * @param deps - An optional array of dependencies. When any of the dependencies change, the event listener will be added or removed. If it is null, every changes will update it.
  *
  * @example
  * ```typescript
@@ -158,6 +158,7 @@ export function useEventListener<K extends keyof DocumentEventMap>(target: Docum
  * A hook to add an event listener to the specified target element, with both addEventListener and removeEventListener in the lifecycle.
  *
  * @template K - The type of the event to listen for, must be a key of `HTMLElementEventMap`.
+ * @template E - HTML DOM element type.
  *
  * @param target - The target HTML DOM element to listen for the event.
  * @param event - The type of the event to listen for. Must be a key of `HTMLElementEventMap`.

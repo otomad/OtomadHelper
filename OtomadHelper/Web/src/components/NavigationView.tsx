@@ -77,9 +77,10 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 	const tooltipPlacement: Placement = vertical ? "right" : "bottom";
 
 	useEventListener(window, "keydown", e => {
+		if (shadow) return;
 		if (e.altKey && e.code === "ArrowLeft" && !e.repeat) onBack?.();
 		else if (e.altKey && e.code === "KeyH" && !e.repeat) onNavButton?.();
-	});
+	}, undefined, null);
 
 	return (
 		<StyledTopLeftButtons className={{ shadow, vertical }}>

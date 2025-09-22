@@ -419,7 +419,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	}
 `;
 
-export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, showClearAll, icon, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, ref, inputRef, ...htmlAttrs }: FCP<{
+export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, showClearAll, icon, type = "text", "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, ref, inputRef, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
 	/** Content placeholder. */
@@ -456,6 +456,8 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	showClearAll?: boolean;
 	/** Custom leading icon of the text box. */
 	icon?: DeclaredIcons;
+	/** Input type. @default "text" */
+	type?: React.HTMLInputTypeAttribute;
 	/** Text change event. Only occurs after pasting text or after the input box is out of focus. */
 	onChange?: BaseEventHandler<HTMLInputElement>;
 	/** Text changing event. Occurs any time the text changes. */
@@ -520,13 +522,13 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 			{...htmlAttrs}
 		>
 			<div className="wrapper">
-				{icon && <label className="leading-icon" htmlFor={inputId}><Icon name={icon} /></label>}
+				{icon && <label className="leading-icon" htmlFor={inputId} aria-hidden><Icon name={icon} /></label>}
 				<label className="prefix" htmlFor={inputId}>{prefix}</label>
 				{showPositiveSign && <label className="positive-sign" htmlFor={inputId}>+</label>}
 				<input
 					ref={inputEl}
 					id={inputId}
-					type="text"
+					type={type}
 					value={value}
 					placeholder={placeholder}
 					disabled={disabled || undefined}

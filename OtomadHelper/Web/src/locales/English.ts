@@ -1290,6 +1290,7 @@ export default {
 			checkboxGroup: "Checkbox group",
 			timesOperator: "Times",
 			reorderHandle: "Drag to reorder",
+			searchBox: "Search box",
 		},
 	},
 	shared: {

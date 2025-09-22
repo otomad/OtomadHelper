@@ -156,5 +156,10 @@ export default css`
 		select:disabled {
 			opacity: 1;
 		}
+
+		// Hide browser default input clear all button
+		input::-webkit-search-cancel-button {
+			display: none;
+		}
 	}
 `;
