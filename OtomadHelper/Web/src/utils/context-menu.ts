@@ -3,32 +3,51 @@ export type ContextMenuItemKind = "command" | "checkBox" | "radio" | "separator"
 export type ContextMenuInput = ContextMenuItemInput[];
 
 export type ContextMenuItemInput = {
-	// icon?: unknown; // Don't know how to add an icon.
+	/** Icon. */
+	// icon?: unknown; // Don't know how to add an icon. Tracking: https://github.com/MicrosoftEdge/WebView2Feedback/issues/4827
+	/** Add check mark if the kind is a checkbox. */
 	checked?: boolean;
+	/** The menu item is enabled? */
 	enabled?: boolean;
+	/** Occurs when the menu item clicked. */
 	onClick?(): void;
+	/** Sub menu items if the kind is a submenu. */
 	items?: ContextMenuItemInput[];
+	/** Add a confirm delete message if this menu item command is to delete something. */
 	confirmDeleteMessage?: string;
 } & ({
+	/** Menu item kind. */
 	kind?: ContextMenuItemKind;
+	/** Label. @required */
 	label: string;
 } | {
+	/** The menu item is a separator. */
 	kind: "separator";
+	/** You can ignore the label of the menu item if it is a separator, which wouldn't be shown. @default "" */
 	label?: string;
 });
 
 export interface ContextMenuOutput {
+	/** A Universally Unique IDentifier that represents to the menu. */
 	uuid: string;
+	/** Child menu items. */
 	items: ContextMenuItemOutput[];
 }
 
 export interface ContextMenuItemOutput {
+	/** Menu item kind. */
 	kind: ContextMenuItemKind;
+	/** Label. */
 	label: string;
+	/** A Universally Unique IDentifier that represents to the menu item. */
 	uuid: string;
+	/** Add check mark if the kind is a checkbox. */
 	checked?: boolean;
+	/** The menu item is enabled? */
 	enabled?: boolean;
+	/** Occurs when the menu item clicked. */
 	command?(): void;
+	/** Sub menu items if the kind is a submenu. */
 	items?: ContextMenuItemOutput[];
 }
 

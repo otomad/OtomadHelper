@@ -578,7 +578,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	));
 
 	return (
-		<div className={["left", paneDisplayMode, { flyout, covered }]} aria-hidden={isHidden} aria-label={t.aria.navMenu}>
+		<aside className={["left", paneDisplayMode, { flyout, covered }]} aria-hidden={isHidden} aria-label={t.aria.navMenu}>
 			<TopLeftButtons shadow paneDisplayMode={isCompact ? "compact" : paneDisplayMode} />
 			<SearchBox
 				value={searchValue}
@@ -601,7 +601,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 			<div className="nav-items-bottom">
 				{bottomTabBar}
 			</div>
-		</div>
+		</aside>
 	);
 }
 
@@ -768,7 +768,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 				onClick={hideFlyoutNavMenu}
 			>
 				<Attrs inert={flyoutDisplayMode !== "minimal"}>
-					<div className="title-wrapper">
+					<header className="title-wrapper">
 						<div className="title-wrapper-inner">
 							<div>
 								<TransitionGroup>
@@ -805,7 +805,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 								{commandBar}
 							</section>
 						</div>
-					</div>
+					</header>
 					<div className={["page-content", transitionName]} ref={pageContentEl} id={pageContentId}>
 						<MainPageTransitionContext value={{ status: mainPageTransitionStatus }}>
 							<SwitchTransition mode={transitionName === "jump" ? "out-in" : "out-in-preload"}>

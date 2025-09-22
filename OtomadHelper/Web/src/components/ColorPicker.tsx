@@ -95,7 +95,7 @@ const StyledColorButton = styled(StyledButton)`
 		}
 
 		&[data-selected-outline-color]:not([data-selected-outline-color="colored"]) {
-			--stroke-color-focus-stroke-outer: attr(data-selected-outline-color <color>);
+			--stroke-color-focus-stroke-outer: attr(data-selected-outline-color type(<color>));
 		}
 	}
 

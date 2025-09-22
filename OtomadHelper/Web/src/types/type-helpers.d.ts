@@ -496,4 +496,49 @@ declare global {
 	type Nullable<T> = {
 		[key in keyof T]: T[key] | null;
 	};
+
+	/**
+	 * Determines whether the given object type `TObject` contains the specified key `TKey`.
+	 *
+	 * @template TObject - The object type to check for the key.
+	 * @template TKey - The property key to check for existence in `TObject`.
+	 * @returns Does `TObject` have a property of key `TKey`?
+	 *
+	 * @example
+	 * ```typescript
+	 * type Example = HasKey<{ foo: number }, "foo">; // true
+	 * type Example2 = HasKey<{ bar: string }, "baz">; // false
+	 * ```
+	 */
+	type HasKey<TObject, TKey extends PropertyKey> = TObject extends Record<TKey, any> ? true : false;
+
+	/**
+	 * Replaces the first occurrence of a substring pattern within a string type with a replacement string type.
+	 *
+	 * @template TSource - The source string type to perform replacements on.
+	 * @template TPattern - The substring pattern to search for and replace.
+	 * @template TReplacement - The string type to replace the first occurrence of the pattern.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Result = Replace<"foo_bar_bar", "bar", "baz">; // "foo_baz_bar"
+	 * ```
+	 */
+	type Replace<TSource extends string, TPattern extends string, TReplacement extends string> =
+		TSource extends `${infer Left}${TPattern}${infer Right}` ? `${Left}${TReplacement}${Right}` : TSource;
+
+	/**
+	 * Recursively replaces all occurrences of a substring pattern within a string type with a replacement string type.
+	 *
+	 * @template TSource - The source string type to perform replacements on.
+	 * @template TPattern - The substring pattern to search for and replace.
+	 * @template TReplacement - The string type to replace each occurrence of the pattern.
+	 *
+	 * @example
+	 * ```typescript
+	 * type Result = ReplaceAll<"foo_bar_bar", "bar", "baz">; // "foo_baz_baz"
+	 * ```
+	 */
+	type ReplaceAll<TSource extends string, TPattern extends string, TReplacement extends string> =
+		TSource extends `${infer Left}${TPattern}${infer Right}` ? `${Left}${TReplacement}${ReplaceAll<Right, TPattern, TReplacement>}` : TSource;
 }
