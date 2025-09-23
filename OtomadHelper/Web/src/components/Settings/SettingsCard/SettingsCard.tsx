@@ -175,7 +175,7 @@ const StyledSettingsCard = styled(StyledCard)<{
 	}
 `);
 
-export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, ariaIdRef, ref, onClick, onFocus, ...htmlAttrs }: FCP<{
+export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, anchor, ariaIdRef, ref, onClick, onFocus, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
@@ -205,6 +205,8 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	trailingGap?: number | string;
 	/** Is the orientation of the icon changed based on the writing direction? */
 	dirBasedIcon?: DirBasedIcon;
+	/** Specify a search anchor landmark. Must be CSS escaped. */
+	anchor?: string;
 	/** Pass settings card aria ID to the parent component. */
 	ariaIdRef?: RefObject<string | undefined | null>;
 }, "div">) {
@@ -240,6 +242,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 				aria-describedby={`${ariaId}-details`}
 				tabIndex={tabIndex}
 				$trailingGap={trailingGap}
+				data-anchor={anchor}
 				ref={ref}
 				onFocus={handleFocus}
 				{...htmlAttrs}
@@ -273,7 +276,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 							</>
 						)}
 						trailing={(
-							<>
+							<Expander.Context value={{ place: "action" }}>
 								{flattenReactChildren(children).map((child, i) => {
 									const propsWithDisabled = {
 										key: (() => {
@@ -295,7 +298,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 										<Icon name={actionIcon} />
 									</div>
 								)}
-							</>
+							</Expander.Context>
 						)}
 					/>
 				</div>

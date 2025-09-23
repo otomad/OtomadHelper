@@ -146,7 +146,7 @@ const StyledExpanderItem = styled.div<{
 	`)}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, noDivider, ariaHiddenForText, nowrap = false, children, disabled = false, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, noDivider, ariaHiddenForText, nowrap = false, anchor, children, disabled = false, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -163,6 +163,8 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	ariaHiddenForText?: boolean;
 	/** Do not wrap the action children to the second line if the text is too long? */
 	nowrap?: boolean;
+	/** Specify a search anchor landmark. Must be CSS escaped. */
+	anchor?: string;
 }, "div">) {
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 	return (
@@ -173,6 +175,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 			$nowrap={nowrap}
 			disabled={disabled}
 			aria-disabled={disabled || undefined}
+			data-anchor={anchor}
 			{...htmlAttrs}
 		>
 			<InteractionStateContext value={{ disabled }}>

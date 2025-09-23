@@ -296,9 +296,9 @@ export function getLocaleName(targetLocale: string | Intl.Locale, displayLocale:
  * i18nExists(t.my.key, "context"); // -> true if exists, false if not.
  * ```
  */
-export function i18nExists(getKey: (t: Trans) => Any, context?: string) {
+export function i18nExists(getKey: ((t: Trans) => Any) | string, context?: string) {
 	const t = new PathObject() as Trans;
-	let path = getKey(t) + "";
+	let path = typeof getKey === "string" ? getKey : getKey(t) + "";
 	if (context) path += `_${context}`;
 	return i18n.exists(path);
 }

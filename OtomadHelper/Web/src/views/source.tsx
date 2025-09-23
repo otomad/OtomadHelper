@@ -71,13 +71,11 @@ export default function Source() {
 				<TestThumbnail />
 			</Card>
 
-			<Expander title={t.source.trim} details={t.descriptions.source.trim} icon="aspect_ratio">
+			<Setting meta={metas.source.trim}>
 				<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
-			</Expander>
-			<ExpanderRadio
-				title={t.source.startTime}
-				details={t.descriptions.source.startTime}
-				icon="start_point"
+			</Setting>
+			<Setting
+				meta={metas.source.startTime}
 				items={startTimes}
 				value={startTime}
 				view="tile"
@@ -88,7 +86,7 @@ export default function Source() {
 				<CustomItem current={startTime}>
 					{setToCustom => <TimecodeBox value={customStartTime} onFocus={setToCustom} />}
 				</CustomItem>
-			</ExpanderRadio>
+			</Setting>
 
 			<Subheader>{t.subheaders.advanced}</Subheader>
 			<Expander title={t.source.afterCompletion} icon="post_processing">

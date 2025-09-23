@@ -210,7 +210,6 @@ declare global {
 		TArgs extends Iterable<any> | ArrayLike<any> = [],
 		TRet = void,
 	> = (...args: TArgs) => TRet;
-	type a = Func<[f: string]>;
 
 	/**
 	 * Make all the parameters optional in the function.
@@ -507,20 +506,21 @@ declare global {
 	 * @example
 	 * ```typescript
 	 * type Example = HasKey<{ foo: number }, "foo">; // true
-	 * type Example2 = HasKey<{ bar: string }, "baz">; // false
+	 * type Example = HasKey<{ bar: string }, "baz">; // false
 	 * ```
 	 */
 	type HasKey<TObject, TKey extends PropertyKey> = TObject extends Record<TKey, any> ? true : false;
 
 	/**
-	 * Replaces the first occurrence of a substring pattern within a string type with a replacement string type.
+	 * Replaces the first occurrence of a substring pattern within a source string type with a replacement string type.
 	 *
-	 * @template TSource - The source string type to perform replacements on.
-	 * @template TPattern - The substring pattern to search for and replace.
-	 * @template TReplacement - The string type to replace the first occurrence of the pattern.
+	 * @template TSource - The source string type to perform the replacement on.
+	 * @template TPattern - The substring pattern to search for within the source string.
+	 * @template TReplacement - The string to replace the pattern with.
 	 *
 	 * @example
 	 * ```typescript
+	 * type Result = Replace<"hello world", "world", "TypeScript">; // "hello TypeScript"
 	 * type Result = Replace<"foo_bar_bar", "bar", "baz">; // "foo_baz_bar"
 	 * ```
 	 */
@@ -541,4 +541,21 @@ declare global {
 	 */
 	type ReplaceAll<TSource extends string, TPattern extends string, TReplacement extends string> =
 		TSource extends `${infer Left}${TPattern}${infer Right}` ? `${Left}${TReplacement}${ReplaceAll<Right, TPattern, TReplacement>}` : TSource;
+
+	/**
+	 * Creates a type based on `TSource` where the specified properties `TProperties` are made optional,
+	 * and all other properties remain unchanged.
+	 *
+	 * @template TSource - The original type.
+	 * @template TProperties - The keys of `TSource` to be made optional.
+	 *
+	 * @example
+	 * ```typescript
+	 * type User = { id: number; name: string; email: string };
+	 * type PartialUserEmail = PartialWith<User, "email">;
+	 * //   ^?
+	 * type PartialUserEmail = { id: number; name: string; email?: string };
+	 * ```
+	 */
+	type PartialWith<TSource, TProperties extends PropertyKey> = Omit<TSource, TProperties> & Partial<Pick<TSource, TProperties>>;
 }

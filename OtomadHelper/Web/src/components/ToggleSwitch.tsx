@@ -240,7 +240,7 @@ const StyledToggleSwitchLabel = styled.button`
 	}
 `;
 
-export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, _reduceLag, children, onChange, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, _reduceLag, anchor, children, onChange, ...htmlAttrs }: FCP<{
 	/** Is on? */
 	on: StateProperty<boolean>;
 	/** Disabled */
@@ -286,6 +286,8 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	 * - For tooltip title, please use Tooltip HoC instead.
 	 */
 	title?: never;
+	/** Specify a search anchor landmark. Must be CSS escaped. */
+	anchor?: string;
 	/** Occurs while toggling. */
 	onChange?(on: boolean): void;
 }, "button">) {
@@ -380,6 +382,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 			aria-checked={on}
 			aria-labelledby={`${ariaId}-title`}
 			aria-describedby={`${ariaId}-details`}
+			data-anchor={anchor}
 			{...htmlAttrs}
 		>
 			{icon && <Icon name={icon} />}

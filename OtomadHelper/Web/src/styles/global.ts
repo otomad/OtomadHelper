@@ -234,6 +234,11 @@ const GlobalStyle = createGlobalStyle<{
 		}
 	}
 
+	// Search anchor landmark
+	[data-anchor] {
+		view-transition-name: attr(data-anchor type(<custom-ident>));
+	}
+
 	// Focus testing
 	html.focus-testing ${important()}:focus {
 		${focusTestStyle};

@@ -21,8 +21,10 @@ export default {
 				"right": "| <anchor()>",
 				"bottom": "| <anchor()>",
 				"left": "| <anchor()>",
-				//
+				// WARN: https://github.com/stylelint/stylelint/issues/8778
 				"appearance": "| base-select",
+				// WARN: https://github.com/stylelint/stylelint/issues/8779
+				"view-transition-name": "| <attr()>",
 			},
 			types: {
 				// WARN: https://github.com/stylelint/stylelint/issues/8610
@@ -31,6 +33,8 @@ export default {
 				"repeating-linear-gradient()": "| <color-interpolation-method>",
 				"repeating-radial-gradient()": "| <color-interpolation-method>",
 				"repeating-conic-gradient()": "| <color-interpolation-method>",
+				// WARN: https://github.com/stylelint/stylelint/issues/8779
+				"attr()": "attr( <any-value> )",
 			},
 		},
 	},

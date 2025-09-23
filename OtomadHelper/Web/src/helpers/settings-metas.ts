@@ -2,9 +2,9 @@ import type { I18nArgsFunction } from "locales/types";
 import type { Trans } from "utils/i18n";
 const t = new PathObject() as Trans;
 
-type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link";
+type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup";
 
-interface SettingMetaInput {
+export interface SettingMeta {
 	/** A unique identifier under the parent (global uniqueness is not required). */
 	// id: string;
 	/** Title must be referenced from an i18n locale string. If ignoring, it will auto concat from ancestor keys. */
@@ -16,7 +16,7 @@ interface SettingMetaInput {
 	/** Settings card form type. @see {@link SettingsCard} */
 	type?: SettingsCardFormType;
 	/** Child settings if the type is an expander. */
-	items?: Record<string, SettingMetaInput>;
+	items?: Record<string, SettingMeta>;
 	/** Aliases for this setting. It will auto inherit from `t.aliases` namespace. */
 	aliases?: string;
 	/** Click to jump at another link. */
@@ -98,7 +98,7 @@ const settingsMetasInput = {
 			},
 		},
 	},
-} as const satisfies Record<string, Record<string, SettingMetaInput>>;
+} as const satisfies Record<string, Record<string, SettingMeta>>;
 
 type Hyphenate<T extends string> = T extends `${infer Char}${infer Subsequent}` ?
 	`${Char extends Uppercase<Char> ? Char extends Lowercase<Char> ? Char : `-${Lowercase<Char>}` : Char}${Hyphenate<Subsequent>}` : T;
@@ -128,7 +128,7 @@ type Nesting<TObject> = {
 };
 
 const settingsMetasOutput: AnyObject = settingsMetasInput;
-function convertItem(item: SettingMetaInput, path: string) {
+function convertItem(item: SettingMeta, path: string) {
 	const { items: itemsInput, ...meta } = item;
 	const items = itemsInput as AnyObject;
 	if (!lodash.isEmpty(itemsInput))
@@ -143,5 +143,5 @@ function convertItem(item: SettingMetaInput, path: string) {
 }
 for (const [pageId, items] of Object.entries(settingsMetasInput as AnyObject))
 	for (const [itemId, item] of Object.entries(items))
-		items[itemId] = convertItem(item as SettingMetaInput, `${pageId}.${itemId}`);
+		items[itemId] = convertItem(item as SettingMeta, `${pageId}.${itemId}`);
 export const settingsMetas = settingsMetasOutput as Nesting<ConvertPage<typeof settingsMetasInput>>;
