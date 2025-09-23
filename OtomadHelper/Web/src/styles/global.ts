@@ -212,11 +212,13 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	// Color mode transition
-	:root:not(.default-view-transition) {
-		&::view-transition-old(root),
-		&::view-transition-new(root) {
-			mix-blend-mode: normal;
-			animation: none;
+	:root:active-view-transition-type(instant) {
+		@layer base {
+			&::view-transition-old(root),
+			&::view-transition-new(root) {
+				mix-blend-mode: normal;
+				animation-name: none;
+			}
 		}
 	}
 

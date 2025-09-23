@@ -458,6 +458,12 @@ interface ColorViewTransitionAnimationFallbackDefaultOption extends ColorViewTra
 	cursor?: Cursor;
 	/** Append additional static CSS style during the whole transition duration. */
 	staticStyle?: string | RuleSet;
+	/**
+	 * An array of strings. These strings act as class names or identifiers for the transition, allowing you to
+	 * selectively apply CSS styles or run different JavaScript logic based on the type of transition occurring.
+	 * @default ["instant"]
+	 */
+	types?: string | string[];
 }
 
 /**
@@ -468,34 +474,42 @@ interface ColorViewTransitionAnimationFallbackDefaultOption extends ColorViewTra
  * You can even set the cursor while transitioning.
  * @returns The destructor can be executed after the animation is completed.
  */
-export async function startColorViewTransition(changeFunc: () => MaybePromise<void | unknown>, animations: [keyframes: Keyframe[] | PropertyIndexedKeyframes, options?: ColorViewTransitionAnimationOption][], defaultOptions: ColorViewTransitionAnimationFallbackDefaultOption = {}) {
+export async function startColorViewTransition(changeFunc: () => MaybePromise<void | unknown>, animations: [keyframes: Keyframe[] | PropertyIndexedKeyframes, options?: ColorViewTransitionAnimationOption][], { cursor, staticStyle, types, ...defaultOptions }: ColorViewTransitionAnimationFallbackDefaultOption = {}) {
 	if (!document.startViewTransition || isReduceMotion()) {
 		await changeFunc();
 		return;
 	}
 
+	const INSTANT_TYPE = "instant";
 	defaultOptions.duration ??= 300;
 	defaultOptions.easing ??= eases.easeInOutSmooth;
 	defaultOptions.pseudoElement ??= "::view-transition-new(root)";
+	types = types ? wrapIfNotArray(types) : [INSTANT_TYPE];
 
-	const restoreTransitions = stopTransition({ includesViewTransitions: true });
-	const removeStyle = defaultOptions.staticStyle ? addStyle(defaultOptions.staticStyle) : undefined;
+	const restoreTransitions = types.includes(INSTANT_TYPE) ? stopTransition({ includesViewTransitions: true }) : undefined;
+	const removeStyle = staticStyle ? addStyle(staticStyle) : undefined;
 	const previousReactTransitionGroupDisabled = reactTransitionGroupConfig.disabled;
 	reactTransitionGroupConfig.disabled = true;
 
 	try {
-		if (defaultOptions.cursor) forceCursor(defaultOptions.cursor);
-		const transition = document.startViewTransition(changeFunc);
+		if (cursor) forceCursor(cursor);
+		const transition = document.startViewTransition({
+			update: changeFunc,
+			types,
+		});
 		await transition.ready;
 
-		await animations.asyncMap(async ([keyframes, options]) => {
-			options = supplement(options ?? {}, defaultOptions);
-			return await document.documentElement.animate(keyframes, options).finished;
-		});
+		await Promise.all([
+			keyframes.length > 0 ? animations.asyncMap(async ([keyframes, options]) => {
+				options = supplement(options ?? {}, defaultOptions);
+				return await document.documentElement.animate(keyframes, options).finished;
+			}) : undefined,
+			transition.finished,
+		]);
 	} finally {
-		restoreTransitions();
+		restoreTransitions?.();
 		removeStyle?.();
 		reactTransitionGroupConfig.disabled = previousReactTransitionGroupDisabled;
-		if (defaultOptions.cursor) forceCursor(null);
+		if (cursor) forceCursor(null);
 	}
 }

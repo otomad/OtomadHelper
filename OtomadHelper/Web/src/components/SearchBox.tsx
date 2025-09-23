@@ -1,4 +1,4 @@
-export default function SearchBox({ value, collapsed, collapsedButtonTooltip, enableShortcutKey, onCollapsedButtonClick, className, ...htmlAttrs }: FCP<{
+export default function SearchBox({ value, collapsed, collapsedButtonTooltip, enableShortcutKey, placeholder, onCollapsedButtonClick, className, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
 	/** Collapse the search box? */
@@ -10,6 +10,8 @@ export default function SearchBox({ value, collapsed, collapsedButtonTooltip, en
 	 * Note that there can only be one search box in a page that can listen to the shortcut key, or they will conflict.
 	 */
 	enableShortcutKey?: boolean;
+	/** Content placeholder shown in the input box. */
+	placeholder?: string;
 	/** Occurs when the collapsed button clicked. */
 	onCollapsedButtonClick?(): void;
 	children?: never;
@@ -39,6 +41,7 @@ export default function SearchBox({ value, collapsed, collapsedButtonTooltip, en
 					fullWidth
 					icon="search"
 					showClearAll
+					placeholder={placeholder}
 					aria-label={t.aria.searchBox}
 				/>
 			) : (

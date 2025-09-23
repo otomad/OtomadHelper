@@ -586,6 +586,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 				inert={isHidden}
 				collapsedButtonTooltip={{ title: <TooltipTitleWithShortcut title={t.search} shortcut={["Ctrl", "F"]} />, placement: "right" }}
 				enableShortcutKey={!flyout}
+				placeholder={t.search}
 				onCollapsedButtonClick={onRequestExpand}
 			/>
 			<div

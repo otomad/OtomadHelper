@@ -38,6 +38,9 @@ declare global {
 	 * > Type 'Buffer' is not assignable to type 'Uint8Array'.\
 	 * >   The types of 'entries()' are incompatible between these types.\
 	 * >     Type 'IterableIterator<[number, number]>' is missing the following properties from type 'ArrayIterator<[number, number]>': map, filter, take, drop, and 9 more.
+	 *
+	 * @template T - {@link IterableIterator}
+	 * @template U - {@link IterableIterator}
 	 */
 	interface IterableIterator<T, U> extends ArrayIterator<T> { }
 
@@ -45,7 +48,8 @@ declare global {
 		/**
 		 * I don't know why MDN missing the JS FontFace version of `size-adjust`.
 		 *
-		 * [MDN Reference](https://developer.mozilla.org/docs/Web/CSS/@font-face/size-adjust)
+		 * [MDN Reference](https://developer.mozilla.org/docs/Web/CSS/@font-face/size-adjust)\
+		 * [Tracking](https://github.com/mdn/content/issues/36587)
 		 */
 		sizeAdjust?: string;
 	}
@@ -114,6 +118,7 @@ declare global {
 // #endregion
 
 // #region View Transitions API
+type ViewTransitionUpdateCallback = () => Promise<void | unknown> | void | unknown;
 declare global {
 	interface Document {
 		/**
@@ -122,20 +127,16 @@ declare global {
 		 *
 		 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Document/startViewTransition)
 		 */
-		startViewTransition(updateCallback: () => Promise<void | unknown> | void | unknown): ViewTransition;
+		startViewTransition(updateCallback: ViewTransitionUpdateCallback): ViewTransition;
+		startViewTransition(options: {
+			update?: ViewTransitionUpdateCallback;
+			types?: string[];
+		}): ViewTransition;
 	}
 
 	interface CSSStyleDeclaration {
-		viewTransitionName: string;
 		interpolateSize: string;
 	}
-}
-
-interface ViewTransition {
-	finished: Promise<void>;
-	ready: Promise<void>;
-	updateCallbackDone: Promise<void>;
-	skipTransition(): void;
 }
 // #endregion
 
