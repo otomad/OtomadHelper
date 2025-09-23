@@ -143,7 +143,7 @@ export function ColorButton({ color, icon, animatedIcon, selected = false, value
 	if (value !== undefined) selected ||= value === color;
 
 	const handleClick: MouseEventHandler<HTMLButtonElement> = async e => {
-		if (autoStartViewTransition) {
+		if (autoStartViewTransition && !selected) {
 			emit("app:startColorPaletteViewTransition");
 			await delay(0);
 		}
