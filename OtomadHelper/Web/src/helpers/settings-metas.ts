@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-wrapper-object-types */
 import type { I18nArgsFunction } from "locales/types";
 import type { Trans } from "utils/i18n";
 const t = new PathObject() as Trans;
@@ -45,7 +46,10 @@ const settingsMetasInput = {
 					icon: "layer_number",
 					details: t.descriptions.source.preferredTrack.fillingInstructions,
 				},
-				belowAdjustmentTracks: { icon: "layer_sparkle_add_below" },
+				belowAdjustmentTracks: {
+					icon: "layer_sparkle_add_below",
+					details: undefined,
+				},
 			},
 		},
 		trackGroup: {
@@ -100,14 +104,15 @@ const settingsMetasInput = {
 	},
 } as const satisfies Record<string, Record<string, SettingMeta>>;
 
-type Hyphenate<T extends string> = T extends `${infer Char}${infer Subsequent}` ?
-	`${Char extends Uppercase<Char> ? Char extends Lowercase<Char> ? Char : `-${Lowercase<Char>}` : Char}${Hyphenate<Subsequent>}` : T;
+// type Hyphenate<T extends string> = T extends `${infer Char}${infer Subsequent}` ?
+// 	`${Char extends Uppercase<Char> ? Char extends Lowercase<Char> ? Char : `-${Lowercase<Char>}` : Char}${Hyphenate<Subsequent>}` : T;
+// Hyphenate will produce `Type instantiation is excessively deep and possibly infinite. ts(2589)` error, so ignore it in ts-part-time.
 type TranslateFromPath<TRoot, TPath> =
 	TPath extends `${infer Parent}.${infer Child}` ? TranslateFromPath<TRoot[Parent & keyof TRoot], Child> :
 	TRoot[TPath & keyof TRoot] extends { _: infer Title } ? Title : TRoot[TPath & keyof TRoot];
 type HasTranslation<T> = string extends T ? never : T extends I18nArgsFunction ? never : T;
 type DefaultMeta<TPath extends string> = OmitNevers<{
-	path: Hyphenate<ReplaceAll<ReplaceAll<Replace<TPath, ".", "#">, "_", "/">, ".", "/">>;
+	path: /* Hyphenate< */ReplaceAll<ReplaceAll<Replace<TPath, ".", "#">, "_", "/">, ".", "/">/* > */;
 	title: HasTranslation<TranslateFromPath<Trans, ReplaceAll<TPath, "_", ".">>>;
 	details: HasTranslation<TranslateFromPath<Trans["descriptions"], ReplaceAll<TPath, "_", ".">>>;
 }>;
@@ -136,9 +141,12 @@ function convertItem(item: SettingMeta, path: string) {
 			items[itemId] = convertItem(item, `${path}.${itemId}`);
 	meta.path = CSS.escape(path.replace(".", ":").replaceAll("_", "/").replaceAll(".", "/").replaceAll(/[A-Z]/g, letter => "-" + letter.toLowerCase()));
 	const dotJoined = path.replaceAll("_", ".");
-	meta.title ??= dotJoined;
-	meta.details ??= "descriptions." + dotJoined;
+	if (!("title" in meta)) meta.title = dotJoined;
+	if (!("details" in meta)) meta.details = "descriptions." + dotJoined;
 	meta.aliases ??= "aliases." + dotJoined;
+	if (meta.title as Object instanceof PathObject) meta.title = meta.title?.toString();
+	if (meta.details as Object instanceof PathObject) meta.details = meta.details?.toString();
+	if (meta.aliases as Object instanceof PathObject) meta.aliases = meta.aliases?.toString();
 	return { meta, ...items };
 }
 for (const [pageId, items] of Object.entries(settingsMetasInput as AnyObject))

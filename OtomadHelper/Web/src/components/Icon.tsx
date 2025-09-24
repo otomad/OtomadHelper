@@ -82,6 +82,7 @@ const xmlSerializer = new XMLSerializer();
  * Get raw SVG of the icon.
  * @remarks Only available after the React app loaded.
  * @param name - Icon file name.
+ * @returns Get raw SVG content from sprite icons.
  */
 function getRawSvg(name: DeclaredIcons) {
 	// Old method, it will accidentally build a large number of svg module chunks.

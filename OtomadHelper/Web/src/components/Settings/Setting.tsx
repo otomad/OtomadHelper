@@ -3,6 +3,7 @@
 import type { SettingMeta } from "helpers/settings-metas";
 import { settingsMetas } from "helpers/settings-metas";
 export const metas = settingsMetas;
+export type SettingMetaInside = { meta: SettingMeta };
 
 interface Props {
 	meta: { meta: Partial<SettingMeta> };
@@ -48,6 +49,22 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 			return <SettingsCard type="button" {..._props as Any}>{actions}</SettingsCard>;
 	}
 }
+
+function useMeta(meta?: SettingMetaInside, overriddenProps: {
+	title?: ReactNode;
+	details?: ReactNode;
+	icon?: DeclaredIcons | ReactElement;
+} = {}) {
+	if (!meta) return overriddenProps;
+	return {
+		title: overriddenProps.title ?? $t(meta.meta.title)!,
+		details: overriddenProps.details ?? $t(meta.meta.details)!,
+		icon: overriddenProps.icon ?? meta.meta.icon,
+		anchor: meta.meta.path!,
+	};
+}
+
+Setting.useMeta = useMeta;
 
 function $t(key?: string) {
 	if (!key) return;

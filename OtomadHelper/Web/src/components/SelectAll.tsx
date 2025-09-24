@@ -15,7 +15,7 @@ const StyledSelectAll = styled.div`
 	}
 `;
 
-export default function SelectAll<T>({ value, all, icon, title, details }: FCP<{
+export default function SelectAll<T>({ value, all, icon, title, meta, details }: FCP<{
 	value: StateProperty<T[]>;
 	all: T[];
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
@@ -24,12 +24,15 @@ export default function SelectAll<T>({ value, all, icon, title, details }: FCP<{
 	title?: ReactNode;
 	/** Detailed description. */
 	details?: ReactNode;
+	/** Inherit from a setting meta. */
+	meta?: SettingMetaInside;
 }, "div">) {
 	const selectAll = useSelectAll(value, all);
+	const props = Setting.useMeta(meta, { title, details, icon });
 
 	return (
 		<StyledSelectAll>
-			{title && <Expander.Item title={title} details={details} icon={icon} asSubtitle />}
+			{props.title && <Expander.Item {...props} asSubtitle />}
 			<Checkbox
 				value={selectAll}
 				actions={

@@ -100,7 +100,7 @@ export default {
 				},
 			},
 			consonant: "Consonant time",
-			matchCut: "Beat sync match cut",
+			matchCut: "Beat sync / Match cut",
 			linearMap: "Linear map output",
 		},
 		on: "On", // The label next to a toggle switch.
@@ -903,7 +903,7 @@ export default {
 					manualEnabled: "In Sentence Mixing mode, this feature is enabled automatically.",
 				},
 				matchCut: {
-					_: "Select multiple sources that will be applied in turn by auto beat sync match cut",
+					_: "Select multiple sources that will be applied in turn by auto beat sync / match cut",
 					order: "Specify the application sequential order of sources",
 					loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
 					secretBox: "No need to select multiple sources, just select one long source. Then it will randomly select the in point of each clips.",

@@ -43,6 +43,7 @@ export default function Source() {
 	} = useSelectConfig(c => c.source);
 	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = useSelectConfig(c => c.source.afterCompletion);
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
+	const meta = metas.source;
 	/** @deprecated */ const manualEnabled = false;
 
 	mutexSwitches(removeSourceClips, selectSourceClips);
@@ -71,11 +72,11 @@ export default function Source() {
 				<TestThumbnail />
 			</Card>
 
-			<Setting meta={metas.source.trim}>
+			<Setting meta={meta.trim}>
 				<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
 			</Setting>
 			<Setting
-				meta={metas.source.startTime}
+				meta={meta.startTime}
 				items={startTimes}
 				value={startTime}
 				view="tile"
@@ -89,43 +90,38 @@ export default function Source() {
 			</Setting>
 
 			<Subheader>{t.subheaders.advanced}</Subheader>
-			<Expander title={t.source.afterCompletion} icon="post_processing">
-				<ToggleSwitch on={removeSourceClips} lock={lockRemoveOrSelectSourceClips} icon="delete_track_event">{t.source.afterCompletion.removeSourceClips}</ToggleSwitch>
-				<ToggleSwitch on={removeSourceClipsWithTracks} lock={lockRemoveOrSelectSourceClips} icon="delete_layer">{t.source.afterCompletion.removeSourceClipsWithTracks}</ToggleSwitch>
-				<ToggleSwitch on={selectSourceClips} lock={lockRemoveOrSelectSourceClips} icon="select_all">{t.source.afterCompletion.selectSourceClips}</ToggleSwitch>
-				<ItemsView view="tile" multiple current={selectGeneratedClips} selectAll={{ title: t.source.afterCompletion.selectGeneratedClips }}>
+			<Setting meta={meta.afterCompletion}>
+				<Setting meta={meta.afterCompletion.removeSourceClips} on={removeSourceClips} lock={lockRemoveOrSelectSourceClips} />
+				<Setting meta={meta.afterCompletion.removeSourceClipsWithTracks} on={removeSourceClipsWithTracks} lock={lockRemoveOrSelectSourceClips} />
+				<Setting meta={meta.afterCompletion.selectSourceClips} on={selectSourceClips} lock={lockRemoveOrSelectSourceClips} />
+				<ItemsView view="tile" multiple current={selectGeneratedClips} selectAll={{ meta: meta.afterCompletion.selectGeneratedClips }}>
 					{selectGeneratedClipsType.map(({ id, name, icon }) =>
 						<ItemsView.Item id={id} key={id} icon={icon}>{name}</ItemsView.Item>)}
 				</ItemsView>
-			</Expander>
+			</Setting>
 
-			<Expander
-				title={t.source.preferredTrack}
+			<Setting
+				meta={meta.preferredTrack}
 				selectInfo={preferredTrack === 0 ? t.source.preferredTrack.top : t(preferredTrack).source.preferredTrack.ordinal}
-				icon="preferred_track"
 			>
-				<Expander.Item title={t.source.preferredTrack.index} details={t.descriptions.source.preferredTrack.fillingInstructions} icon="layer_number">
+				<Setting meta={meta.preferredTrack.index}>
 					<StackPanel>
 						<TextBox.Number value={[preferredTrack, setPreferredTrack]} decimalPlaces={0} />
 						<QuicklySelectCurrentTrack />
 					</StackPanel>
-				</Expander.Item>
-				<ToggleSwitch
+				</Setting>
+				<Setting
+					meta={meta.preferredTrack.belowAdjustmentTracks}
 					on={belowAdjustmentTracks}
 					selectInfo={isUnderVegas16 && t.descriptions.source.preferredTrack.belowAdjustmentTracks.versionRequest({ version: 16 })}
-					icon="layer_sparkle_add_below"
 					lock={isUnderVegas16 ? false : null}
-				>
-					{t.source.preferredTrack.belowAdjustmentTracks}
-				</ToggleSwitch>
-			</Expander>
-			<SettingsCardToggleSwitch title={t.source.trackGroup} details={t.descriptions.source.trackGroup} icon="group" on={trackGroup}>
+				/>
+			</Setting>
+			<Setting meta={meta.trackGroup} on={trackGroup}>
 				<ToggleSwitch on={collapseTrackGroup} icon="chevron_down_up">{t.source.trackGroup.collapse}</ToggleSwitch>
-			</SettingsCardToggleSwitch>
-			<ExpanderRadio
-				title={t.source.trackName}
-				details={t.descriptions.source.trackName}
-				icon="rename"
+			</Setting>
+			<Setting
+				meta={meta.trackName}
 				items={trackNames}
 				value={trackName}
 				view="tile"
@@ -138,57 +134,39 @@ export default function Source() {
 			<Subheader>{t.source.multisource}</Subheader>
 			{ytpEnabled && <InfoBar status="warning" title={t.descriptions.source.multisource.ytpEnabled} button={<EmptyMessage.YtpDisabled.Buttons />} />}
 			<Attrs disabled={ytpEnabled ? true : undefined}>
-				<SettingsCardToggleSwitch
-					title={t.source.secretBox}
-					details={t.descriptions.source.secretBox}
-					selectInfo={ytpEnabled && t.descriptions.source.secretBox.ytpEnabled}
-					icon="dice"
-					on={secretBox}
-				>
-					<ToggleSwitch on={secretBoxLimitToSelected} details={t.descriptions.source.secretBox.limitToSelected} icon="video_clip_multiple_checkmark">{t.source.secretBox.limitToSelected}</ToggleSwitch>
-					<ToggleSwitch on={secretBoxForTrack} details={t.descriptions.source.secretBox.track} icon="layer">{t.source.secretBox.track}</ToggleSwitch>
-					<ToggleSwitch on={secretBoxForMarker} details={t.descriptions.source.secretBox.marker} icon="flag">{t.source.secretBox.marker}</ToggleSwitch>
-					<ToggleSwitch on={secretBoxForBarOrBeat} details={t.descriptions.source.secretBox.barOrBeat} icon="music_bar">{t.source.secretBox.barOrBeat}</ToggleSwitch>
+				<Setting meta={meta.secretBox} selectInfo={ytpEnabled && t.descriptions.source.secretBox.ytpEnabled} on={secretBox}>
+					<Setting meta={meta.secretBox.limitToSelected} on={secretBoxLimitToSelected} />
+					<Setting meta={meta.secretBox.track} on={secretBoxForTrack} />
+					<Setting meta={meta.secretBox.marker} on={secretBoxForMarker} />
+					<Setting meta={meta.secretBox.barOrBeat} on={secretBoxForBarOrBeat} />
 					<Attrs disabled={!secretBoxForBarOrBeat[0]}>
-						<Expander.Item title={t.source.secretBox.barOrBeat.period} details={t.descriptions.source.secretBox.barOrBeat.period} icon="timer">
+						<Setting meta={meta.secretBox.barOrBeat.period}>
 							<TextBox.NumberUnit value={secretBoxForBarOrBeatPeriod} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={1} />
-						</Expander.Item>
-						<Expander.Item title={t.source.secretBox.barOrBeat.preparation} details={t.descriptions.source.secretBox.barOrBeat.preparation} icon="hourglass">
+						</Setting>
+						<Setting meta={meta.secretBox.barOrBeat.preparation}>
 							<TextBox.NumberUnit value={secretBoxForBarOrBeatPreparation} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={0} />
-						</Expander.Item>
+						</Setting>
 					</Attrs>
-				</SettingsCardToggleSwitch>
-				<SettingsCardToggleSwitch
-					title={t.source.consonant}
-					details={t.descriptions.source.consonant}
-					icon="consonant"
+				</Setting>
+				<Setting
+					meta={meta.consonant}
 					on={consonant}
 					lock={manualEnabled ? true : null}
 					selectInfo={manualEnabled ? t.descriptions.source.consonant.manualEnabled : undefined}
 					selectValid={manualEnabled}
 				/>
-				<SettingsCardToggleSwitch
-					title={t.source.matchCut}
-					details={t.descriptions.source.matchCut}
-					icon="flag_auto_beat"
-					on={matchCut}
-				>
-					<Expander.Item title={t.order} icon="arrow_sort_horizontal" details={t.descriptions.source.matchCut.order}>
+				<Setting meta={meta.matchCut} on={matchCut}>
+					<Setting meta={meta.matchCut.order}>
 						<Segmented current={matchCutOrder}>
 							{sequentialOrders.map(({ id, icon }) => <Segmented.Item id={id} key={id} icon={icon}>{t[id]}</Segmented.Item>)}
 						</Segmented>
-					</Expander.Item>
-					<ToggleSwitch on={matchCutLoop} icon="arrow_repeat_all" details={t.descriptions.source.matchCut.loop}>{t.stream.loop}</ToggleSwitch>
-					<ToggleSwitch on={matchCutSecretBox} icon="dice" details={t.descriptions.source.matchCut.secretBox}>{t.source.secretBox}</ToggleSwitch>
-				</SettingsCardToggleSwitch>
-				<SettingsCardToggleSwitch
-					title={t.source.linearMap}
-					details={t.descriptions.source.linearMap}
-					icon="launchpad"
-					on={linearMap}
-				>
-					<ToggleSwitch on={linearMapDescending} details={t.descriptions.source.linearMap.descending} icon="descending">{t.descending}</ToggleSwitch>
-				</SettingsCardToggleSwitch>
+					</Setting>
+					<Setting meta={meta.matchCut.loop} on={matchCutLoop} />
+					<Setting meta={meta.matchCut.secretBox} on={matchCutSecretBox} />
+				</Setting>
+				<Setting meta={meta.linearMap} on={linearMap}>
+					<Setting meta={meta.linearMap.descending} on={linearMapDescending} />
+				</Setting>
 			</Attrs>
 
 			<DragToImport>{t.titles.source}</DragToImport>
