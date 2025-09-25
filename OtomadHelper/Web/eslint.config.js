@@ -192,6 +192,7 @@ export default [
 			}],
 			"prefer-rest-params": "off",
 			"no-empty-pattern": "off",
+			"no-misleading-character-class": ["error", { "allowEscape": true }],
 			"import/order": ["warn", {
 				"alphabetize": { "order": "asc", "orderImportKind": "asc", "caseInsensitive": false },
 				"named": true,

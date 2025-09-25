@@ -1,4 +1,45 @@
-export default function SearchBox({ value, collapsed, collapsedButtonTooltip, enableShortcutKey, placeholder, onCollapsedButtonClick, className, ...htmlAttrs }: FCP<{
+const StyledDataList = styled.div`
+	${styles.effects.flyout};
+	position: fixed;
+	position-anchor: var(--text-box-anchor-name);
+	position-area: block-end;
+	z-index: 9;
+	inline-size: anchor-size(inline);
+	padding: 4px;
+	border-block-start-width: 0;
+	border-start-start-radius: 0;
+	border-start-end-radius: 0;
+	transform-origin: top;
+	transition-behavior: allow-discrete;
+
+	.text-box:focus-within:has(&) {
+		border-end-start-radius: 0;
+		border-end-end-radius: 0;
+	}
+
+	@starting-style {
+		scale: 0.98;
+		opacity: 0;
+	}
+
+	.text-box:not(:focus-within) & {
+		display: none;
+		scale: 0.98;
+		opacity: 0;
+	}
+
+	&:empty::after {
+		${styles.effects.text.body};
+		content: attr(data-empty);
+		display: block;
+		margin-block: 0.5lh;
+		color: ${c("fill-color-text-tertiary")};
+		font-style: italic;
+		text-align: center;
+	}
+`;
+
+export default function SearchBox({ value: [value, setValue], collapsed, collapsedButtonTooltip, enableShortcutKey, placeholder, onCollapsedButtonClick, onSearch, className, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
 	/** Collapse the search box? */
@@ -14,6 +55,8 @@ export default function SearchBox({ value, collapsed, collapsedButtonTooltip, en
 	placeholder?: string;
 	/** Occurs when the collapsed button clicked. */
 	onCollapsedButtonClick?(): void;
+	/** Get search results. */
+	onSearch?(keyword: string): ReactNode;
 	children?: never;
 }, "search">) {
 	const focusSearchBox = () =>
@@ -26,6 +69,8 @@ export default function SearchBox({ value, collapsed, collapsedButtonTooltip, en
 		focusSearchBox();
 	};
 
+	const searchResults = useMemo(() => onSearch?.(value ?? ""), [value, onSearch]);
+
 	useEventListener(window, "keydown", e => {
 		if (!enableShortcutKey || !(e.ctrlKey && e.code === "KeyF")) return;
 		e.preventDefault();
@@ -37,12 +82,17 @@ export default function SearchBox({ value, collapsed, collapsedButtonTooltip, en
 			{!collapsed ? (
 				<TextBox
 					type="search"
-					value={value}
+					value={[value, setValue]}
 					fullWidth
 					icon="search"
 					showClearAll
 					placeholder={placeholder}
 					aria-label={t.aria.searchBox}
+					customFlyout={value?.trim() && (
+						<StyledDataList data-empty={t.noMatchingResults} onMouseDown={e => e.preventDefault()} onClick={() => (document.activeElement as HTMLElement)?.blur?.()}>
+							{searchResults}
+						</StyledDataList>
+					)}
 				/>
 			) : (
 				<Tooltip {...collapsedButtonTooltip!}>

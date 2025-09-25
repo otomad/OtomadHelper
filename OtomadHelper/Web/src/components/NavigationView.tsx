@@ -521,7 +521,7 @@ const StyledPage = styled.main`
 	// #endregion
 `;
 
-function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, navItemsId, flyout, isCompact, searchValue, onRequestHide, onRequestExpand }: FCP<{
+function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent, currentNavTab, navItems, navItemsId, flyout, isCompact, searchValue, onRequestHide, onRequestExpand, onSearch }: FCP<{
 	paneDisplayMode: PaneDisplayMode;
 	isFlyoutShown: boolean;
 	customContent?: ReactNode;
@@ -533,6 +533,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	searchValue: StateProperty<string>;
 	onRequestHide(): void;
 	onRequestExpand(): void;
+	onSearch?: PropsOf<typeof SearchBox>["onSearch"];
 }>) {
 	const navItemsEl = useDomRef<"div">();
 	const focusable = !flyout && paneDisplayMode === "minimal" ? false : isFlyoutShown === flyout;
@@ -588,6 +589,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 				enableShortcutKey={!flyout}
 				placeholder={t.search}
 				onCollapsedButtonClick={onRequestExpand}
+				onSearch={onSearch}
 			/>
 			<div
 				ref={navItemsEl}
@@ -663,7 +665,7 @@ const usePaneDisplayMode = () => {
 
 export const MainPageTransitionContext = createContext({ status: "entered" as TransitionUpdateStatus });
 
-export default function NavigationView({ currentNav: [currentNav, setCurrentNav], navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, pageContentId, poppedScroll, searchValue, ...htmlAttrs }: FCP<{
+export default function NavigationView({ currentNav: [currentNav, setCurrentNav], navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, pageContentId, poppedScroll, searchValue, onSearch, onEnter, ...htmlAttrs }: FCP<{
 	/** Current navigation page status parameters. */
 	currentNav: StateProperty<string[]>;
 	/** All navigation items. */
@@ -686,6 +688,10 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	poppedScroll?: PageScroll;
 	/** The current search box text. */
 	searchValue: StateProperty<string>;
+	/** Get search results. */
+	onSearch?: PropsOf<typeof SearchBox>["onSearch"];
+	/** Occurs when the new page enter. */
+	onEnter?(): void;
 }, "div">) {
 	const currentNavTab = useStateSelector([currentNav, setCurrentNav], nav => nav[0], value => [value]);
 	const pagePath = currentNav!.join("/");
@@ -696,6 +702,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 	const pageContentEl = useDomRef<"div">();
 	const scrollToTopOrPrevious = () => {
+		onEnter?.();
 		const pageContent = pageContentEl.current;
 		if (!pageContent) return;
 		const container = pageContent.lastElementChild?.firstElementChild;
@@ -755,6 +762,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 						searchValue={searchValue}
 						onRequestHide={hideFlyoutNavMenu}
 						onRequestExpand={onRequestExpand}
+						onSearch={onSearch}
 					/>
 				);
 			})}

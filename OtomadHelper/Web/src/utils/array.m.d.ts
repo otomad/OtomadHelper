@@ -167,15 +167,19 @@ declare interface Array<T> {
 
 	/**
 	 * Array deduplication. This will return a new array.
+	 * @param callbackFn - If provided, then deduplicate from the return values of the callback function.
 	 * @returns Note that a new array will be returned.
 	 *
 	 * @example
 	 * ```javascript
 	 * const array = ["apple", "orange", "pear", "pear"];
 	 * array.toUnique(); // ["apple", "orange", "pear"]
+	 *
+	 * const users = [{ name: "Alice" }, { name: "Bob" }, { name: "Alice" }, { name: "Charlie" }];
+	 * array.toUnique(user => user.name); // [{ name: "Alice" }, { name: "Bob" }, { name: "Charlie" }]
 	 * ```
 	 */
-	toUnique(): T[];
+	toUnique(callbackFn?: (value: T, index: number, array: T[]) => any): T[];
 
 	/**
 	 * Remove any falsy values, such as `undefined`, `null`, `NaN`, `false`, `""`, `±0`, `0n`, `document.all`.
@@ -233,15 +237,20 @@ declare interface Array<T> {
 
 	/**
 	 * Array deduplication. This will modify the original array.
+	 * @param callbackFn - If provided, then deduplicate from the return values of the callback function.
 	 *
 	 * @example
 	 * ```javascript
 	 * const array = ["apple", "orange", "pear", "pear"];
 	 * array.unique();
 	 * console.log(array); // ["apple", "orange", "pear"]
+	 *
+	 * const users = [{ name: "Alice" }, { name: "Bob" }, { name: "Alice" }, { name: "Charlie" }];
+	 * users.unique(user => user.name);
+	 * console.log(users); // [{ name: "Alice" }, { name: "Bob" }, { name: "Charlie" }]
 	 * ```
 	 */
-	unique(): void;
+	unique(callbackFn?: (value: T, index: number, array: T[]) => any): void;
 
 	/**
 	 * Remove `undefined`, `null`, `NaN`, empty strings, or strings containing only white space characters from the array.

@@ -21,6 +21,8 @@ export default {
 				"right": "| <anchor()>",
 				"bottom": "| <anchor()>",
 				"left": "| <anchor()>",
+				"width": "| <anchor-size()>",
+				"height": "| <anchor-size()>",
 				// WARN: https://github.com/stylelint/stylelint/issues/8778
 				"appearance": "| base-select",
 				// WARN: https://github.com/stylelint/stylelint/issues/8779

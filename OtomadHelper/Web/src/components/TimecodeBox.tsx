@@ -82,7 +82,7 @@ const StyledTimecodeBox = styled.div`
 			}
 
 			&:not(:focus) {
-				transition-delay: 50ms; // When clicking the spinner buttons, the textbox will briefly lose focus, thus delaying its blurring time.
+				transition-delay: 50ms; // When clicking the spinner buttons, the text box will briefly lose focus, thus delaying its blurring time.
 			}
 		}
 	}

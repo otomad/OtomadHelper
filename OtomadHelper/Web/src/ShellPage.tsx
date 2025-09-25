@@ -38,7 +38,7 @@ const getTitle = (viewName: string, context: "long" | "full" | "short", plural?:
 };
 
 export default function ShellPage() {
-	const { page, changePage, pagePath, transition, canBack, back, reset, setPageContentId, poppedScroll } = useSnapshot(pageStore);
+	const { page, changePage, pagePath, transition, canBack, back, reset, setPageContentId, poppedScroll, commandBarDisabled, pageChangeResolver } = useSnapshot(pageStore);
 	const pageTitles = page.map((crumb, i, { length }) => {
 		try {
 			return {
@@ -61,7 +61,6 @@ export default function ShellPage() {
 	})();
 	const pageContentId = useId();
 	setPageContentId(pageContentId);
-	const { commandBarDisabled } = useSnapshot(pageStore);
 	const searchValue = useState("");
 
 	useEffect(() => {
@@ -108,6 +107,8 @@ export default function ShellPage() {
 				</CommandBar>
 			)}
 			searchValue={searchValue}
+			onSearch={keyword => <HandleSearchResults keyword={keyword} />}
+			onEnter={() => { pageChangeResolver?.resolve(); console.log("changed"); }}
 			style={{ zoom, "--zoom": zoom }} // TODO: Use webview2 native zoom function.
 		>
 			<title>{documentTitle}</title>

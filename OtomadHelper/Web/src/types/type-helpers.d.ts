@@ -558,4 +558,21 @@ declare global {
 	 * ```
 	 */
 	type PartialWith<TSource, TProperties extends PropertyKey> = Omit<TSource, TProperties> & Partial<Pick<TSource, TProperties>>;
+
+	/**
+	 * Creates a type based on `TSource` where the specified properties `TProperties` are made required,
+	 * and all other properties remain unchanged.
+	 *
+	 * @template TSource - The original type.
+	 * @template TProperties - The keys of `TSource` to be made required.
+	 *
+	 * @example
+	 * ```typescript
+	 * type PartialUser = { id?: number; name?: string; email?: string };
+	 * type RequiredUserId = RequiredWith<PartialUser, "id">;
+	 * //   ^?
+	 * type RequiredUserId = { id: number; name?: string; email?: string };
+	 * ```
+	 */
+	type RequiredWith<TSource, TProperties extends PropertyKey> = Omit<TSource, TProperties> & Required<Pick<TSource, TProperties>>;
 }

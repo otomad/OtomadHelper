@@ -159,6 +159,7 @@ export default {
 		locate: "Locate",
 		clearAll: "Clear all",
 		search: "Search",
+		noMatchingResults: "No matching results",
 		infoBar: {
 			warning: "Warning",
 		},

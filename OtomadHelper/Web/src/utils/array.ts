@@ -75,8 +75,14 @@
 		return Object.fromEntries(array.map((value, index, array) => callbackFn(value, index, array)));
 	};
 
-	Array.prototype.toUnique = function () {
-		return [...new Set(this)];
+	Array.prototype.toUnique = function (callbackFn) {
+		if (!callbackFn) return [...new Set(this)];
+		const seen = new Map();
+		this.map(callbackFn).forEach((ret, i) => {
+			const item = this[i];
+			if (!seen.has(ret)) seen.set(ret, item);
+		});
+		return [...seen.values()];
 	};
 
 	Array.prototype.toCompacted = function () {
@@ -102,8 +108,8 @@
 		return this[0];
 	};
 
-	Array.prototype.unique = function () {
-		return this.relist(new Set(this));
+	Array.prototype.unique = function (callbackFn) {
+		return this.relist(this.toUnique(callbackFn));
 	};
 
 	Array.prototype.toTrimmed = function () {

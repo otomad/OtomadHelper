@@ -4,6 +4,7 @@ import counters from "./counters";
 import eases from "./eases";
 import fakeAnimations from "./fake-animations";
 import fix from "./fix";
+import focusHighlightStyle from "./focus-highlight";
 import focusTestStyle from "./focus-test";
 import functions from "./functions";
 import reset from "./reset";
@@ -242,6 +243,11 @@ const GlobalStyle = createGlobalStyle<{
 	// Focus testing
 	html.focus-testing ${important()}:focus {
 		${focusTestStyle};
+	}
+
+	// Search goto highlight
+	.focus-highlight {
+		${focusHighlightStyle};
 	}
 
 	// User requested to reduce dynamic effects

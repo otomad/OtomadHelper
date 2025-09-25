@@ -169,6 +169,8 @@ export /* @internal */ const inputInSettingsCardStyle = css`
 export /* @internal */ const StyledTextBox = styled.div<{
 	/** The default text box width is 200px, you can change it to 100% when you set it to true. */
 	$fullWidth?: boolean;
+	/** Anchor name of the whole text box itself. */
+	$anchorName?: string;
 }>`
 	position: relative;
 	background-color: ${c("fill-color-control-default")};
@@ -176,6 +178,11 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	box-shadow: 0 0 0 1px ${c("stroke-color-control-stroke-default")} inset;
 	cursor: text;
 	forced-color-adjust: none;
+
+	${({ $anchorName }) => $anchorName && css`
+		--text-box-anchor-name: ${$anchorName};
+		anchor-name: ${$anchorName};
+	`}
 
 	&,
 	* {
@@ -376,16 +383,8 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	}
 
 	&:focus-within {
-		${StyledSpinner} {
-			--shown: true;
-		}
-
 		.spinner-icon {
 			margin-inline-start: 10px;
-		}
-
-		:is(.expander, .settings-card):has(&) {
-			z-index: 6;
 		}
 	}
 
@@ -439,7 +438,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	// inputAttrs?: FCP<{}, "input">;
 	/** Ref to the input element. */
 	inputRef?: MiscRef<HTMLInputElement>;
-	/** Add your own flyout inside the textbox, must be absolute or fixed position. */
+	/** Add your own flyout inside the text box, must be absolute or fixed position. */
 	customFlyout?: ReactNode;
 	/** Custom input allowed characters pattern. */
 	pattern?: RegExp;
@@ -521,6 +520,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 			disabled={disabled}
 			aria-disabled={disabled || undefined}
 			$fullWidth={fullWidth}
+			$anchorName={`--${inputId}-text-box`}
 			onClick={e => e.stopPropagation()}
 			{...htmlAttrs}
 		>

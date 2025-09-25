@@ -29,6 +29,9 @@ interface PageState {
 	useOnSave(handler: () => void): void;
 	commandBarDisabled: boolean;
 	useSetCommandBarDisabled(): SetStateNarrow<boolean>;
+	pageChangeResolver?: PromiseWithResolvers<void>;
+	lastGotoPath?: string;
+	goto(path?: string): void;
 }
 
 const NAME = "page";
@@ -108,8 +111,10 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 	}
 
 	function setPageInternal(nextPage: string[]) {
+		pageStore.lastGotoPath = undefined;
 		const { page } = pageStore;
-		if (page.equals(nextPage)) return;
+		if (lodash.isEqual(page, nextPage)) return false;
+		pageStore.pageChangeResolver = Promise.withResolvers();
 		const transition = getTransition(page, nextPage);
 		// document.startViewTransition(() =>
 		Object.assign(pageStore, {
@@ -119,6 +124,7 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 			...getScrolls(transition, nextPage),
 		});
 		// );
+		return true;
 	}
 
 	return {
@@ -129,7 +135,7 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 		poppedScroll: undefined,
 		get pagePath() { return pageStore.page.join("/"); },
 		changePage: changePage as SetState<string[]>,
-		pushPage: lodash.throttle((...pages) => setPageInternal([...pageStore.page, ...pages]), 700, { trailing: false }),
+		pushPage: lodash.throttle((...pages) => { setPageInternal([...pageStore.page, ...pages]); }, 700, { trailing: false }),
 		get canBack() { return pageStore.page.length > 1; },
 		back() {
 			if (pageStore.canBack) {
@@ -162,6 +168,15 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 		useSetCommandBarDisabled() {
 			useUnmountEffect(() => { pageStore.commandBarDisabled = false; });
 			return value => pageStore.commandBarDisabled = typeof value === "function" ? value(pageStore.commandBarDisabled) : value;
+		},
+		pageChangeResolver: undefined,
+		lastGotoPath: undefined,
+		async goto(path) {
+			if (!path) return;
+			const [page] = path.split(":");
+			const changed = setPageInternal(page.split("/"));
+			if (changed && pageStore.pageChangeResolver) await pageStore.pageChangeResolver.promise;
+			pageStore.lastGotoPath = path;
 		},
 	} satisfies PageState;
 })(), { partialize: ["page"] });

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-wrapper-object-types */
 import type { I18nArgsFunction } from "locales/types";
 import type { Trans } from "utils/i18n";
+import { t as $$t } from "utils/i18n";
 const t = new PathObject() as Trans;
 
 type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup";
@@ -104,9 +105,6 @@ const settingsMetasInput = {
 	},
 } as const satisfies Record<string, Record<string, SettingMeta>>;
 
-// type Hyphenate<T extends string> = T extends `${infer Char}${infer Subsequent}` ?
-// 	`${Char extends Uppercase<Char> ? Char extends Lowercase<Char> ? Char : `-${Lowercase<Char>}` : Char}${Hyphenate<Subsequent>}` : T;
-// Hyphenate will produce `Type instantiation is excessively deep and possibly infinite. ts(2589)` error, so ignore it in ts-part-time.
 type TranslateFromPath<TRoot, TPath> =
 	TPath extends `${infer Parent}.${infer Child}` ? TranslateFromPath<TRoot[Parent & keyof TRoot], Child> :
 	TRoot[TPath & keyof TRoot] extends { _: infer Title } ? Title : TRoot[TPath & keyof TRoot];
@@ -132,6 +130,7 @@ type Nesting<TObject> = {
 		}> : never;
 };
 
+const metas: SettingMeta[] = [];
 const settingsMetasOutput: AnyObject = settingsMetasInput;
 function convertItem(item: SettingMeta, path: string) {
 	const { items: itemsInput, ...meta } = item;
@@ -139,7 +138,7 @@ function convertItem(item: SettingMeta, path: string) {
 	if (!lodash.isEmpty(itemsInput))
 		for (const [itemId, item] of Object.entries(itemsInput))
 			items[itemId] = convertItem(item, `${path}.${itemId}`);
-	meta.path = CSS.escape(path.replace(".", ":").replaceAll("_", "/").replaceAll(".", "/").replaceAll(/[A-Z]/g, letter => "-" + letter.toLowerCase()));
+	meta.path = path.replace(".", ":").replaceAll("_", "/").replaceAll(".", "/");
 	const dotJoined = path.replaceAll("_", ".");
 	if (!("title" in meta)) meta.title = dotJoined;
 	if (!("details" in meta)) meta.details = "descriptions." + dotJoined;
@@ -147,9 +146,49 @@ function convertItem(item: SettingMeta, path: string) {
 	if (meta.title as Object instanceof PathObject) meta.title = meta.title?.toString();
 	if (meta.details as Object instanceof PathObject) meta.details = meta.details?.toString();
 	if (meta.aliases as Object instanceof PathObject) meta.aliases = meta.aliases?.toString();
+	metas.push(meta);
 	return { meta, ...items };
 }
 for (const [pageId, items] of Object.entries(settingsMetasInput as AnyObject))
 	for (const [itemId, item] of Object.entries(items))
 		items[itemId] = convertItem(item as SettingMeta, `${pageId}.${itemId}`);
 export const settingsMetas = settingsMetasOutput as Nesting<ConvertPage<typeof settingsMetasInput>>;
+
+export /* @internal */ function $t(key?: string) {
+	if (!key) return;
+	const keys = key.split(".");
+	if (!i18nExists(key)) return;
+	return keys.reduce<AnyObject>((root, key) => root[key], $$t).toString();
+}
+
+let settingsMetasSearchMap: [string, SettingMeta][] = [];
+function updateSettingsMetasSearchMap() {
+	settingsMetasSearchMap = [];
+	const add = (keyword: string, meta: SettingMeta) => {
+		keyword = keyword.toLowerCase().replaceAll(/[\r\n\u2008\ufe00-\ufe0f\u{e0000}-\u{effff}]/gu, "");
+		settingsMetasSearchMap.push([keyword, meta]);
+	};
+	for (const meta of metas) {
+		let { title, details, aliases: _aliases } = meta;
+		if ((title = $t(title))) add(title, meta);
+		if ((details = $t(details))) add(details, meta);
+		if ((_aliases = $t(_aliases))) {
+			const aliases = _aliases?.split(/,\s*/).map(alias => alias.trim()).toCompacted() ?? [];
+			for (const alias of aliases)
+				add(alias, meta);
+		}
+	}
+}
+updateSettingsMetasSearchMap();
+i18n.on("languageChanged", updateSettingsMetasSearchMap);
+
+export function search(query?: string) {
+	if (!query?.trim()) return [];
+	query = query.toLowerCase();
+	const getSortScore = (keyword: string) => keyword.replace(query, "").replaceAll(query, "1").realLength;
+
+	return settingsMetasSearchMap
+		.filter(([keyword]) => keyword.includes(query))
+		.sort(([a], [b]) => getSortScore(a) - getSortScore(b))
+		.toUnique(([, meta]) => meta);
+}
