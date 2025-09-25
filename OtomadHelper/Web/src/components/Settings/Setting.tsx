@@ -17,14 +17,14 @@ export default function Setting(props: InheritFrom<Omit<PropsOf<typeof SettingsC
 export default function Setting(props: InheritFrom<typeof Expander>): React.JSX.Element;
 export default function Setting(props: InheritFrom<typeof Expander.Item>): React.JSX.Element;
 export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof SettingsCard | typeof SettingsCardToggleSwitch | typeof Expander | typeof ExpanderRadio | typeof Expander.Item>) {
-	const { lastGotoPath } = useSnapshot(pageStore);
+	const lastGotoPath = useSnapshot(pageStore).lastGotoPath?.valueOf();
 	const { path, link, type } = meta as RequiredWith<SettingMeta, "path">;
 	props.title ??= $t(meta.title);
 	props.details ??= $t(meta.details);
 	props.icon ??= meta.icon;
 	props.anchor = CSS.escape(path);
 	if (lastGotoPath === path) props.className = classNames(props, "focus-highlight");
-	const expanded = !!(lastGotoPath !== path && lastGotoPath?.startsWith(path) || "expanded" in props && props.expanded);
+	const expanded = !!(lastGotoPath !== path && lastGotoPath?.startsWith(path));
 	const { place } = useContext(Expander.Context);
 	const isExpanderChild = place === "children";
 	const { changePage } = useSnapshot(pageStore);
@@ -41,7 +41,7 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 	else if (isExpanderChild)
 		return <Expander.Item {...props as Any} />;
 	else if ("children" in props || type === "expander")
-		return <Expander {...props as Any} expanded={expanded} />;
+		return <Expander {...props as Any} _requestExpanded={expanded ? new Object(true) : undefined} />;
 	else {
 		const { actions, ..._props } = props as PropsOf<typeof Expander>;
 		if (type === "container")

@@ -89,7 +89,7 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 					placeholder={placeholder}
 					aria-label={t.aria.searchBox}
 					customFlyout={value?.trim() && (
-						<StyledDataList data-empty={t.noMatchingResults} onMouseDown={e => e.preventDefault()} onClick={() => (document.activeElement as HTMLElement)?.blur?.()}>
+						<StyledDataList data-empty={t.noMatchingResults} onMouseDown={e => e.preventDefault()}>
 							{searchResults}
 						</StyledDataList>
 					)}

@@ -30,7 +30,8 @@ interface PageState {
 	commandBarDisabled: boolean;
 	useSetCommandBarDisabled(): SetStateNarrow<boolean>;
 	pageChangeResolver?: PromiseWithResolvers<void>;
-	lastGotoPath?: string;
+	// eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
+	lastGotoPath?: String;
 	goto(path?: string): void;
 }
 
@@ -173,10 +174,15 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 		lastGotoPath: undefined,
 		async goto(path) {
 			if (!path) return;
+			(document.activeElement as HTMLElement)?.blur?.();
 			const [page] = path.split(":");
 			const changed = setPageInternal(page.split("/"));
+			pageStore.lastGotoPath = new String(path);
 			if (changed && pageStore.pageChangeResolver) await pageStore.pageChangeResolver.promise;
-			pageStore.lastGotoPath = path;
+			await delay(100);
+			const el = document.querySelector(`[data-anchor="${CSS.escape(CSS.escape(path))}"]`); // Double escaping, are you kidding me?
+			if (!el) return;
+			makeFocusHighlightEffect(el);
 		},
 	} satisfies PageState;
 })(), { partialize: ["page"] });
