@@ -35,22 +35,22 @@ const StyledPreviewLanguage = styled.div`
 		height: 8px;
 
 		.items-view-item.selected & {
-			${progressFinishedPart`
+			${progressFinishedPart(css`
 				border-start-start-radius: 0;
 				border-end-start-radius: 0;
-			`}
+			`)}
 
 			&[value="100"] {
-				${progressFinishedPart`
-					border-radius: none;
-				`}
+				${progressFinishedPart(css`
+					border-radius: 0;
+				`)}
 			}
 		}
 
 		.items-view-item:not(.selected) & {
-			${progressFinishedPart`
+			${progressFinishedPart(css`
 				background-color: ${c("fill-color-text-secondary")};
-			`}
+			`)}
 		}
 	}
 

@@ -140,11 +140,11 @@ export default css`
 				transition: ${fallbackTransitions};
 			}
 
-			${progressFinishedPart`
+			${progressFinishedPart(css`
 				${styles.mixins.oval()};
 				background-color: ${c("accent-color")};
 				transition: ${fallbackTransitions};
-			`}
+			`)}
 		}
 
 		// Do not change font in math.

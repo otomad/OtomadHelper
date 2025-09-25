@@ -354,16 +354,30 @@ export function convertCamelStylePropertyToKebab(camel: string) {
  * }
  * ```
  */
-export const progressFinishedPart: typeof css<object> = (...style) => {
-	return [
-		"&::-webkit-progress-value",
-		"&::-moz-progress-bar",
-	].map(finishedPart => css`
-		${finishedPart} {
-			${css(...style)}
-		}
-	`);
-};
+export const progressFinishedPart = (style: RuleSet) => [
+	"&::-webkit-progress-value",
+	"&::-moz-progress-bar",
+].map(finishedPart => css`
+	${finishedPart} {
+		${style}
+	}
+`);
+
+/**
+ * Generates CSS rules for elements with the `[hidden]` attribute and for the `@starting-style` pseudo-class,
+ * applying the provided style to both selectors.
+ *
+ * @param style - The CSS rules to apply to the selectors.
+ * @returns An array of CSS-in-JS style blocks, each targeting either `[hidden]` or `@starting-style`.
+ */
+export const hiddenAndStartingStyle = (style: RuleSet) => [
+	"&[hidden]",
+	"@starting-style",
+].map(selector => css`
+	${selector} {
+		${style}
+	}
+`);
 
 /* eslint-disable jsdoc/check-param-names */
 /**

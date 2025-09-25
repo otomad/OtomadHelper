@@ -1,4 +1,4 @@
-const stopAt = ["button", "input", "textarea", "datalist", "select", ".toggle-switch-label", ".drag-handle-shadow"];
+const stopAt = ["button", "input", "textarea", "datalist", "select", ".toggle-switch-label", ".drag-handle-shadow", ".text-box"];
 
 const isPointerEvent = (e: Event): e is PointerEvent => e.type === "pointerup";
 

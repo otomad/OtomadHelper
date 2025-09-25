@@ -1,15 +1,14 @@
 // #region Spinner
 const StyledSpinner = styled.div`
-	@layer props {
-		--shown: false;
-	}
+	position: fixed;
+	position-area: center;
+	z-index: 10;
+	transition-behavior: allow-discrete;
 
-	${styles.mixins.flexCenter()};
-	position: absolute;
-	inset-block-start: 50%;
-	inset-inline-end: 16px;
-	z-index: 6; // Above ExpanderParent
-	contain: size;
+	&,
+	.base {
+		inline-size: fit-content;
+	}
 
 	.base {
 		padding: 4px;
@@ -33,8 +32,10 @@ const StyledSpinner = styled.div`
 				translate: 0 2px;
 			}
 		}
+	}
 
-		@container style(--shown: false) {
+	${hiddenAndStartingStyle(css`
+		.base {
 			scale: 0.75;
 			opacity: 0;
 			pointer-events: none;
@@ -47,28 +48,34 @@ const StyledSpinner = styled.div`
 				translate: 0 -14px;
 			}
 		}
-	}
+	`)}
 `;
 
 type SpinValue = 1 | -1;
 
-function Spinner({ disabled, step = 1, onSpin, onRelease }: FCP<{
+function Spinner({ disabled, step = 1, positionAnchor, shown = false, onSpin, onRelease }: FCP<{
 	/** Disabled? */
 	disabled?: boolean;
 	/** The value to increase or decrease each time the knob of numeric up down box is clicked. @default 1 */
 	step?: NumberLike;
+	/** Provide the spinner icon anchor name. */
+	positionAnchor?: string;
+	/** Show the spinner? */
+	shown?: boolean;
 	/** Knob click event. It is 1 when the knob is clicked up and -1 when it is clicked down. */
 	onSpin?(spinValue: NumberLike): void;
 	/** Mouse release button event. */
 	onRelease?: BaseEventHandler;
 }>) {
+	const hidden = disabled || !shown;
+
 	function spinWithValue(spinValue: SpinValue) {
 		const spin = typeof step === "bigint" ? BigInt(spinValue) * step : spinValue * step;
 		onSpin?.(spin);
 	}
 
 	return (
-		<StyledSpinner aria-hidden={disabled}>
+		<StyledSpinner hidden={hidden} aria-hidden={hidden} style={{ positionAnchor }} onMouseDown={e => e.preventDefault()}>
 			<div className="base">
 				<Button
 					subtle
@@ -278,8 +285,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 
 	.spinner-icon {
 		position: relative;
-		margin-inline-start: -6px;
-		padding-inline-end: 6px;
+		margin-inline: -6px 6px;
 	}
 
 	.warn-icon {
@@ -329,16 +335,11 @@ export /* @internal */ const StyledTextBox = styled.div<{
 			scale: 1;
 			transition-behavior: allow-discrete;
 
-			${[
-				"&[hidden]",
-				"@starting-style",
-			].map(selector => css`
-				${selector} {
-					inline-size: 0;
-					margin-inline: 0;
-					padding-inline: 0;
-					scale: 0;
-				}
+			${hiddenAndStartingStyle(css`
+				inline-size: 0;
+				margin-inline: 0;
+				padding-inline: 0;
+				scale: 0;
 			`)}
 		}
 	}
@@ -375,7 +376,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	}
 
 	&:focus-within {
-		.spinner {
+		${StyledSpinner} {
 			--shown: true;
 		}
 
@@ -419,7 +420,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	}
 `;
 
-export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, showClearAll, icon, type = "text", "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, ref, inputRef, ...htmlAttrs }: FCP<{
+export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, showClearAll, icon, type = "text", "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, onFocusChange, ref, inputRef, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
 	/** Content placeholder. */
@@ -466,12 +467,14 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	onInput?(newText: string, el: HTMLInputElement, ...event: Parameters<FormEventHandler<HTMLInputElement>>): boolean | string | void;
 	/** Keyboard press event. */
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+	/** Occurs when the input box focused or blurred. */
+	onFocusChange?(focused: boolean, e: React.FocusEvent<HTMLInputElement>): void;
 	/** @deprecated Please use `disabled` instead. */
 	"aria-disabled"?: never;
 	/** @deprecated Please use `readOnly` instead. */
 	"aria-readonly"?: never;
 }, "div">) {
-	const inputIdDef = useId();
+	const inputIdDef = useUniqueId("input");
 	const inputId = id || inputIdDef;
 	const inputEl = useDomRef<"input">();
 	const wrapperEl = useDomRef<"div">();
@@ -546,6 +549,8 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 					onPaste={handleChange}
 					onKeyDown={handleKeyDown}
 					onMouseDown={mouseDownTriggerOnChanging ? onChanging : undefined}
+					onFocus={e => onFocusChange?.(true, e)}
+					onBlur={e => onFocusChange?.(false, e)}
 				/>
 				<label className="suffix" htmlFor={inputId}>{suffix}</label>
 				<Tooltip title={() => inputEl.current?.validationMessage} placement="y">
@@ -593,6 +598,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 	keyBigStepMultiplier ??= (bigIntMode ? 10n : 10) as TNumber;
 	const intMode = bigIntMode || decimalPlaces === 0;
 	const [displayValue, setDisplayValue] = useState<string>();
+	const [focused, setFocused] = useState(false);
 
 	const setValue = (value: TNumber | undefined | ((value: TNumber) => TNumber | undefined)) => _setValue?.(prevValue => {
 		if (typeof value === "function") value = value(prevValue);
@@ -732,14 +738,29 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 			onChange={handleBlurChange}
 			onInput={handleInput}
 			onKeyDown={handleKeyDown}
-			_spinner={inputId => (
-				<>
-					<label className="spinner-icon" htmlFor={inputId} aria-hidden>
-						<Icon name="scroll_up_down" />
-					</label>
-					{!readOnly && <Spinner onSpin={handlePressSpin} onRelease={handleReleaseSpin} disabled={disabled} step={spinnerStep} />}
-				</>
-			)}
+			onFocusChange={focused => setFocused(focused)}
+			_spinner={inputId => {
+				const anchorName = `--${inputId}-spinner-icon`;
+				return (
+					<>
+						<label className="spinner-icon" htmlFor={inputId} aria-hidden style={{ anchorName }}>
+							<Icon name="scroll_up_down" />
+						</label>
+						{!readOnly && (
+							<Portal container="main.page">
+								<Spinner
+									onSpin={handlePressSpin}
+									onRelease={handleReleaseSpin}
+									disabled={disabled}
+									step={spinnerStep}
+									positionAnchor={anchorName}
+									shown={focused}
+								/>
+							</Portal>
+						)}
+					</>
+				);
+			}}
 		/>
 	);
 }
