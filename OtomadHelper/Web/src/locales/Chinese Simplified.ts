@@ -65,9 +65,9 @@ export default {
 				index: "首选轨道序号",
 				top: "顶部",
 				ordinal: "在{{count, ordinal}}条轨道下方",
-				belowAdjustmentTracks: "若该轨道下方存在一条或多条调整轨道，则选择紧随其后的首条非调整轨道",
+				belowAdjustmentTracks: "若该轨道下方存在一条或多条调整轨道，则选中紧随其后的首条非调整轨道",
 				newTrack: "新增轨道",
-				quicklySelect: "快速选择当前轨道",
+				quicklySelect: "快速选中当前轨道",
 			},
 			trackGroup: {
 				_: "轨道组",
@@ -153,6 +153,8 @@ export default {
 		import: "导入",
 		dangerZone: "危险地带",
 		locate: "定位",
+		clearAll: "清空",
+		search: "搜索",
 		infoBar: {
 			warning: "警告",
 		},
@@ -829,7 +831,7 @@ export default {
 				defaultClassicMode: "新音频剪辑的默认古典拉伸属性",
 				preserveClipboardOnClose: "项目关闭时保留剪贴板",
 				eventGroupSelection: "点选组内任一剪辑即选中整组",
-				openglInterop: "OpenGL GDI兼容模式",
+				openglInterop: "OpenGL GDI 兼容模式",
 			},
 			dev: {
 				_: "开发",
@@ -1260,6 +1262,7 @@ export default {
 			checkboxGroup: "复选框组",
 			timesOperator: "乘以",
 			reorderHandle: "拖拽以排序",
+			searchBox: "搜索框",
 		},
 		preset: "预设",
 	},
