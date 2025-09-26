@@ -61,6 +61,7 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 	onSearch?(keyword: string): ReactNode;
 	children?: never;
 }, "search">) {
+	const [language] = useLanguage();
 	const focusSearchBox = () =>
 		[...document.querySelectorAll<HTMLInputElement>(`.${nameof.kebab({ SearchBox })} input`)]
 			.find(searchBox => searchBox.checkVisibility())?.focus();
@@ -71,7 +72,7 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 		focusSearchBox();
 	};
 
-	const searchResults = useMemo(() => onSearch?.(value ?? ""), [value, onSearch]);
+	const searchResults = useMemo(() => onSearch?.(value ?? ""), [value, onSearch, language]);
 
 	useEventListener(window, "keydown", e => {
 		if (!enableShortcutKey || !(e.ctrlKey && e.code === "KeyF")) return;

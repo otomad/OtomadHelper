@@ -539,6 +539,8 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	const focusable = !flyout && paneDisplayMode === "minimal" ? false : isFlyoutShown === flyout;
 	const covered = !flyout && isFlyoutShown;
 	const isHidden = paneDisplayMode === "minimal" || covered;
+	const { t } = useTranslation();
+	const searchPlaceholder = t("search");
 
 	const getNavItemNode = useCallback((item: typeof navItems[number], index: number) => {
 		if ("type" in item) return item.type === "hr" ? <hr key={index} aria-hidden /> : undefined;
@@ -579,15 +581,15 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	));
 
 	return (
-		<aside className={["left", paneDisplayMode, { flyout, covered }]} aria-hidden={isHidden} aria-label={t.aria.navMenu}>
+		<aside className={["left", paneDisplayMode, { flyout, covered }]} aria-hidden={isHidden} aria-label={t("aria.navMenu")}>
 			<TopLeftButtons shadow paneDisplayMode={isCompact ? "compact" : paneDisplayMode} />
 			<SearchBox
 				value={searchValue}
 				collapsed={paneDisplayMode !== "expanded" && !flyout}
 				inert={isHidden}
-				collapsedButtonTooltip={{ title: <TooltipTitleWithShortcut title={t.search} shortcut={["Ctrl", "F"]} />, placement: "right" }}
+				collapsedButtonTooltip={{ title: <TooltipTitleWithShortcut title={searchPlaceholder} shortcut={["Ctrl", "F"]} />, placement: "right" }}
 				enableShortcutKey={!flyout}
-				placeholder={t.search}
+				placeholder={searchPlaceholder}
 				onCollapsedButtonClick={onRequestExpand}
 				onSearch={onSearch}
 			/>

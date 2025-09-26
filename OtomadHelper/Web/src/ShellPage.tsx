@@ -107,7 +107,7 @@ export default function ShellPage() {
 				</CommandBar>
 			)}
 			searchValue={searchValue}
-			onSearch={keyword => <HandleSearchResults keyword={keyword} />}
+			onSearch={query => <HandleSearchResults query={query} />}
 			onEnter={() => pageChangeResolver?.resolve()}
 			style={{ zoom, "--zoom": zoom }} // TODO: Use webview2 native zoom function.
 		>

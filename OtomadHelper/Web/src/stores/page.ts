@@ -188,7 +188,7 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 			}
 			const scrollIntoView = () => el.scrollIntoView({ block: "center" });
 			if (!isCollapsedNow) scrollIntoView();
-			else delay(250).then(() => scrollIntoView());
+			else delay(350).then(() => scrollIntoView());
 			makeFocusHighlightEffect(el);
 		},
 	} satisfies PageState;

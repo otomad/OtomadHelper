@@ -152,14 +152,21 @@ export default css`
 			${styles.mixins.inherit("font-weight", "line-height", "word-spacing")};
 		}
 
-		// Do not semi-transparent Combobox when disabled
+		// Do not semi-transparent Combobox when disabled.
 		select:disabled {
 			opacity: 1;
 		}
 
-		// Hide browser default input clear all button
+		// Hide browser default input clear all button.
 		input::-webkit-search-cancel-button {
 			display: none;
+		}
+
+		// Highlight mark style
+		mark {
+			color: ${c("fill-color-text-on-accent-selected-text")};
+			background-color: ${c("fill-color-system-caution")};
+			border-radius: 4px;
 		}
 	}
 `;

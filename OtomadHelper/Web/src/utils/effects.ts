@@ -45,8 +45,11 @@ export async function makeFocusDiffusionEffect(element: TargetType, options?: Ov
 const FOCUS_HIGHLIGHT_CLASS = "focus-highlight-effect";
 const FOCUS_HIGHLIGHT_RING_CLASS = "focus-highlight-ring";
 const clearFocusHighlightEffect = () => {
-	for (const ring of document.getElementsByClassName(FOCUS_HIGHLIGHT_RING_CLASS)) {
-		ring.getAnimations().forEach(animation => animation.pause());
+	for (const ring of document.getElementsByClassName(FOCUS_HIGHLIGHT_RING_CLASS) as HTMLCollectionOf<HTMLElement>) {
+		ring.style.top = ring.offsetTop + "px";
+		ring.style.left = ring.offsetLeft + "px";
+		ring.style.width = ring.offsetWidth + "px";
+		ring.style.height = ring.offsetHeight + "px";
 		ring.animate({ opacity: [1, 0] }, { duration: 250, easing: eases.easeOutMax }).finished.catch(noop).then(() => {
 			removeExistAnimations(ring);
 			ring.remove();
@@ -54,7 +57,7 @@ const clearFocusHighlightEffect = () => {
 	}
 	for (const el of document.getElementsByClassName(FOCUS_HIGHLIGHT_CLASS) as HTMLCollectionOf<HTMLElement>) {
 		el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
-		el.style.removeProperty("anchor-name");
+		el.style.anchorName = null!;
 	}
 };
 window.addEventListener("mouseup", clearFocusHighlightEffect, true);
@@ -83,8 +86,8 @@ export async function makeFocusHighlightEffect(element: TargetType, options?: Ov
 			{ boxShadow: "none" },
 		], { duration: 2000, easing: "linear", iterations: 3 }).finished.catch(noop);
 	} finally {
-		ring.remove();
-		el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
-		el.style.removeProperty("anchor-name");
+		// ring.remove();
+		// el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
+		// el.style.removeProperty("anchor-name");
 	}
 }

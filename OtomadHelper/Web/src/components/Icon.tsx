@@ -15,6 +15,7 @@ const StyledIcon = styled.i<{
 
 	svg {
 		${squared};
+		pointer-events: none;
 
 		${({ $filled }) => !$filled && css`
 			fill: currentColor;

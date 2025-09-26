@@ -161,21 +161,23 @@ export /* @internal */ function $t(key?: string) {
 	return keys.reduce<AnyObject>((root, key) => root[key], $$t).toString();
 }
 
-let settingsMetasSearchMap: [string, SettingMeta][] = [];
+const settingsMetasSearchMapProperties = ["title", "alias", "details"] as const;
+type SettingsMetasSearchMapProperty = typeof settingsMetasSearchMapProperties[number];
+let settingsMetasSearchMap: [keyword: string, property: SettingsMetasSearchMapProperty, meta: SettingMeta, originalKeyword: string][] = [];
 function updateSettingsMetasSearchMap() {
 	settingsMetasSearchMap = [];
-	const add = (keyword: string, meta: SettingMeta) => {
-		keyword = keyword.toLowerCase().replaceAll(/[\r\n\u2008\p{VS}]/gu, "");
-		settingsMetasSearchMap.push([keyword, meta]);
+	const add = (keyword: string, property: SettingsMetasSearchMapProperty, meta: SettingMeta) => {
+		const normalizedKeyword = keyword.toLowerCase().replaceAll(/[\r\n\u2008\p{VS}]/gu, "");
+		settingsMetasSearchMap.push([normalizedKeyword, property, meta, keyword]);
 	};
 	for (const meta of metas) {
 		let { title, details, aliases: _aliases } = meta;
-		if ((title = $t(title))) add(title, meta);
-		if ((details = $t(details))) add(details, meta);
+		if ((title = $t(title))) add(title, "title", meta);
+		if ((details = $t(details))) add(details, "details", meta);
 		if ((_aliases = $t(_aliases))) {
 			const aliases = _aliases?.split(/,\s*/).map(alias => alias.trim()).toCompacted() ?? [];
 			for (const alias of aliases)
-				add(alias, meta);
+				add(alias, "alias", meta);
 		}
 	}
 }
@@ -184,7 +186,7 @@ i18n.on("languageChanged", updateSettingsMetasSearchMap);
 
 export function search(query?: string) {
 	if (!query?.trim()) return [];
-	query = query.trim().toLowerCase();
+	query = query.trim().replaceAll(/\s{2,}/g, " ").toLowerCase();
 	const locale = i18n.language;
 	const matchWordBoundary = (keyword: string) => !!keyword.match(new RegExp("\\b" + RegExp.escape(query)));
 	const getSortScore = (keyword: string) => keyword.replace(query, "").replaceAll(query, "1").realLength;
@@ -193,6 +195,8 @@ export function search(query?: string) {
 		.filter(([keyword]) => keyword.includes(query))
 		.sort(([a], [b]) => {
 			let score: number; const indexOfA = a.indexOf(query), indexOfB = b.indexOf(query);
+			// Zerothly, sort by title → alias → details.
+			// if ((score = settingsMetasSearchMapProperties.indexOf(propOfA) - settingsMetasSearchMapProperties.indexOf(propOfB))) return score;
 			// Firstly, check if there are matches at the beginning boundary of the word, because generally no one will enter it from the inside of the word.
 			if ((score = -(+matchWordBoundary(a) - +matchWordBoundary(b)))) return score;
 			// Secondly, check if any keywords start with the query word.
@@ -204,5 +208,5 @@ export function search(query?: string) {
 			// Fifthly, compare by alphabet.
 			return a.localeCompare(b, locale);
 		})
-		.toUnique(([, meta]) => meta);
+		.toUnique(([, , meta]) => meta);
 }

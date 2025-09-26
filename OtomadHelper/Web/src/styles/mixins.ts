@@ -4,6 +4,27 @@ import { type BorderRadiusPosition, setBorderRadius } from "./internal";
 type ResponsiveUnit = "v" | "dv" | "lv" | "sv" | "cq";
 type OutOfFlowPositions = "absolute" | "fixed";
 
+// #region keyframes
+const overflowGradientScrollStartMaskTransparencyChangeKeyframes = keyframes`
+	from {
+		--scroll-start-mask-transparency: 1;
+	}
+
+	to {
+		--scroll-start-mask-transparency: 0;
+	}
+`;
+const overflowGradientScrollEndMaskTransparencyChangeKeyframes = keyframes`
+	from {
+		--scroll-end-mask-transparency: 0;
+	}
+
+	to {
+		--scroll-end-mask-transparency: 1;
+	}
+`;
+// #endregion
+
 export default {
 	/**
 	 * Center the element with the **flex** layout (flex - center - center).
@@ -181,4 +202,20 @@ export default {
 		(...properties: (keyof CSSPropertiesHyphen)[]): RuleSet;
 		(...args: [...properties: (keyof CSSPropertiesHyphen)[], important: boolean]): RuleSet;
 	},
+	overflowGradient: (axis: "x" | "y", scrollMaskThickness: string) => css`
+		--scroll-mask-thickness: ${scrollMaskThickness};
+		mask: linear-gradient(
+			to ${axis === "x" ? "right" : "bottom"},
+			rgb(0 0 0 / var(--scroll-start-mask-transparency)) 0%,
+			black var(--scroll-mask-thickness) calc(100% - var(--scroll-mask-thickness)),
+			rgb(0 0 0 / var(--scroll-end-mask-transparency)) 100%
+		);
+		animation:
+			${overflowGradientScrollStartMaskTransparencyChangeKeyframes} 1s linear forwards,
+			${overflowGradientScrollEndMaskTransparencyChangeKeyframes} 1s linear backwards;
+		animation-timeline: scroll(self ${axis});
+		animation-range: 0 1em, calc(100% - 1em) 100%;
+		overflow-${axis}: auto;
+		overscroll-behavior-${axis}: auto;
+	`,
 };

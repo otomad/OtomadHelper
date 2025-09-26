@@ -25,37 +25,8 @@ const StyledSettingsPageControl = styled.div<{
 		${styles.effects.text.caption};
 
 		> .scroll-wrapper {
-			--scroll-mask-height: 1.75em;
+			${styles.mixins.overflowGradient("y", "1.25lh")};
 			max-block-size: ${PREVIEW_IMAGE_HEIGHT + 1}px;
-			overflow-block: auto;
-			overscroll-behavior-block: auto;
-			mask: linear-gradient(
-				to bottom,
-				rgb(0 0 0 / var(--scroll-start-mask-transparency)) 0%,
-				black var(--scroll-mask-height) calc(100% - var(--scroll-mask-height)),
-				rgb(0 0 0 / var(--scroll-end-mask-transparency)) 100%
-			);
-			animation:
-				${keyframes`
-					from {
-						--scroll-start-mask-transparency: 1;
-					}
-
-					to {
-						--scroll-start-mask-transparency: 0;
-					}
-				`} 1s linear forwards,
-				${keyframes`
-					from {
-						--scroll-end-mask-transparency: 0;
-					}
-
-					to {
-						--scroll-end-mask-transparency: 1;
-					}
-				`} 1s linear backwards;
-			animation-timeline: scroll(self);
-			animation-range: 0 1em, calc(100% - 1em) 100%;
 
 			> p {
 				margin-block-start: -3px;
