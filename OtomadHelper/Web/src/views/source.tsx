@@ -118,7 +118,7 @@ export default function Source() {
 				/>
 			</Setting>
 			<Setting meta={meta.trackGroup} on={trackGroup}>
-				<ToggleSwitch on={collapseTrackGroup} icon="chevron_down_up">{t.source.trackGroup.collapse}</ToggleSwitch>
+				<Setting meta={meta.trackGroup.collapse} on={collapseTrackGroup} />
 			</Setting>
 			<Setting
 				meta={meta.trackName}

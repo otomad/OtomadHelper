@@ -25,7 +25,7 @@ export /* @internal */ const styledExpanderItemText = css`
 		}
 
 		.title {
-			line-height: 20px;
+			${styles.effects.text.body};
 		}
 
 		.details {

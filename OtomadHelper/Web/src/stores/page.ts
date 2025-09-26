@@ -182,10 +182,13 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 			const isCollapsedNow = !getEl();
 			await delay(100);
 			const el = getEl();
-			if (!el) return;
+			if (!el) {
+				console.error(new ReferenceError("Cannot find path in the current page: " + path));
+				return;
+			}
 			const scrollIntoView = () => el.scrollIntoView({ block: "center" });
 			if (!isCollapsedNow) scrollIntoView();
-			else delay(350).then(() => scrollIntoView());
+			else delay(250).then(() => scrollIntoView());
 			makeFocusHighlightEffect(el);
 		},
 	} satisfies PageState;
