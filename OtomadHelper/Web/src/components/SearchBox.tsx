@@ -12,6 +12,7 @@ const StyledDataList = styled.div`
 	border-start-start-radius: 0;
 	border-start-end-radius: 0;
 	transform-origin: top;
+	transition: ${fallbackTransitions}, inline-size 0s;
 	transition-behavior: allow-discrete;
 
 	.text-box:focus-within:has(&) {

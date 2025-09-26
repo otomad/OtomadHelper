@@ -176,6 +176,7 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 			(document.activeElement as HTMLElement)?.blur?.();
 			const [page] = path.split(":");
 			const changed = setPageInternal(page.split("/"));
+			if (!path.includes(":")) return;
 			pageStore.lastGotoPath = [path, Date.now()];
 			if (changed && pageStore.pageChangeResolver) await pageStore.pageChangeResolver.promise;
 			const getEl = () => document.querySelector(`[data-anchor="${CSS.escape(CSS.escape(path))}"]`); // Double escaping, are you kidding me?

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-wrapper-object-types */
 import type { I18nArgsFunction } from "locales/types";
+import { redirectIcon } from "src/ShellPage";
 import type { Trans } from "utils/i18n";
-import { t as $$t } from "utils/i18n";
+import { tf as $$t } from "utils/i18n";
 const t = new PathObject() as Trans;
 
 type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup";
@@ -14,13 +15,13 @@ export interface SettingMeta {
 	/** Details must be referenced from an i18n locale string. If ignoring, it will auto get from `t.descriptions` namespace. */
 	details?: string;
 	/** Icon. */
-	icon: DeclaredIcons;
+	icon?: DeclaredIcons;
 	/** Settings card form type. @see {@link SettingsCard} */
 	type?: SettingsCardFormType;
 	/** Child settings if the type is an expander. */
 	items?: Record<string, SettingMeta>;
 	/** Aliases for this setting. It will auto inherit from `t.aliases` namespace. */
-	aliases?: string;
+	aliases?: string[];
 	/** Click to jump at another link. */
 	link?: string;
 	/** Path of unique identifiers to it. Auto generated. CSS escaped. */
@@ -29,8 +30,10 @@ export interface SettingMeta {
 
 const settingsMetasInput = {
 	source: {
+		from: {},
 		trim: { icon: "aspect_ratio" },
 		startTime: { icon: "start_point" },
+		advanced: { title: t.subheaders.advanced },
 		afterCompletion: {
 			icon: "post_processing",
 			items: {
@@ -60,6 +63,7 @@ const settingsMetasInput = {
 			},
 		},
 		trackName: { icon: "rename" },
+		multisource: {},
 		secretBox: {
 			icon: "dice",
 			items: {
@@ -108,7 +112,7 @@ const settingsMetasInput = {
 type TranslateFromPath<TRoot, TPath> =
 	TPath extends `${infer Parent}.${infer Child}` ? TranslateFromPath<TRoot[Parent & keyof TRoot], Child> :
 	TRoot[TPath & keyof TRoot] extends { _: infer Title } ? Title : TRoot[TPath & keyof TRoot];
-type HasTranslation<T> = string extends T ? never : T extends I18nArgsFunction ? never : T;
+type HasTranslation<T> = string extends T ? never : T extends I18nArgsFunction ? never : T extends string ? T : never;
 type DefaultMeta<TPath extends string> = OmitNevers<{
 	path: /* Hyphenate< */ReplaceAll<ReplaceAll<Replace<TPath, ".", "#">, "_", "/">, ".", "/">/* > */;
 	title: HasTranslation<TranslateFromPath<Trans, ReplaceAll<TPath, "_", ".">>>;
@@ -142,12 +146,20 @@ function convertItem(item: SettingMeta, path: string) {
 	const dotJoined = path.replaceAll("_", ".");
 	if (!("title" in meta)) meta.title = dotJoined;
 	if (!("details" in meta)) meta.details = "descriptions." + dotJoined;
-	meta.aliases ??= "aliases." + dotJoined;
+	meta.aliases ??= [];
+	meta.aliases.pushUniquely("aliases." + dotJoined);
 	if (meta.title as Object instanceof PathObject) meta.title = meta.title?.toString();
 	if (meta.details as Object instanceof PathObject) meta.details = meta.details?.toString();
-	if (meta.aliases as Object instanceof PathObject) meta.aliases = meta.aliases?.toString();
+	for (let i = 0; i < meta.aliases.length; i++)
+		if (meta.aliases[i] as Object instanceof PathObject) meta.aliases[i] = meta.aliases[i]?.toString();
 	metas.push(meta);
 	return { meta, ...items };
+}
+for (let page of Object.keys(settingsMetasInput)) {
+	page = page.replaceAll("_", "/"); const subpage = page.split("/").at(-1)!;
+	const contexts = ["long", "full", ""];
+	const context = contexts.firstDefined(ctx => i18nExists(t => t.titles[subpage], ctx) && ctx && "_" + ctx || undefined) ?? "";
+	metas.push({ path: page, icon: redirectIcon(subpage), title: t.titles[subpage + context].toString(), aliases: contexts.map(ctx => t.titles[subpage + ctx].toString()) });
 }
 for (const [pageId, items] of Object.entries(settingsMetasInput as AnyObject))
 	for (const [itemId, item] of Object.entries(items))
@@ -174,8 +186,8 @@ function updateSettingsMetasSearchMap() {
 		let { title, details, aliases: _aliases } = meta;
 		if ((title = $t(title))) add(title, "title", meta);
 		if ((details = $t(details))) add(details, "details", meta);
-		if ((_aliases = $t(_aliases))) {
-			const aliases = _aliases?.split(/,\s*/).map(alias => alias.trim()).toCompacted() ?? [];
+		if ((_aliases = _aliases?.map(alias => $t(alias)).toCompacted())) {
+			const aliases = _aliases?.join(", ").split(/,\s*/).map(alias => alias.trim()).filter(alias => alias !== title).toCompacted() ?? [];
 			for (const alias of aliases)
 				add(alias, "alias", meta);
 		}

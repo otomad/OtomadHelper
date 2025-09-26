@@ -31,6 +31,11 @@ const StyledSearchResult = styled.button`
 		margin-block-start: 4px;
 	}
 
+	&:has(.text .title:only-child) > .icon {
+		align-self: center;
+		margin-block-start: 0;
+	}
+
 	.subtitle {
 		${styles.effects.text.caption};
 		color: ${c("fill-color-text-secondary")};
@@ -101,11 +106,12 @@ const StyledSearchResultPath = styled.div`
 `;
 
 function SearchResultPath({ meta }: { meta: SettingMeta }) {
-	const path = meta.path!.replace(/[:/][^:/]*?$/, "");
+	const path = meta.path!.replace(/(^|[:/])[^:/]*?$/, "");
 	const [_page = "", _anchor = ""] = path.split(":");
 	const pages = _page.split("/").map(subpage => tf.titles[subpage]).toCompacted();
 	let metaRoot = _page.split("/").reduce<AnyObject>((root, subpage) => root[subpage], metas);
 	const anchors = _anchor.split("/").map(anchor => { metaRoot = metaRoot?.[anchor]; return $t(metaRoot?.meta?.title); }).toCompacted();
+	if (pages.length === 0 && anchors.length === 0) return;
 
 	return (
 		<StyledSearchResultPath>

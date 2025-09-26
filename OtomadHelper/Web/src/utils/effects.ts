@@ -11,6 +11,7 @@ function createFocusRing(el: Element | null, { borderRadius, portal = "main.page
 	const ring = document.createElement("div");
 	ring.style.position = "fixed";
 	ring.style.pointerEvents = "none";
+	ring.style.transition = "none";
 	if (borderRadius === undefined) ({ borderRadius } = getComputedStyle(el));
 	if (borderRadius && borderRadius !== "0px") ring.style.borderRadius = borderRadius;
 	popovers.append(ring);
@@ -23,7 +24,8 @@ function createFocusRing(el: Element | null, { borderRadius, portal = "main.page
  * @param options - Override style options.
  * @returns Empty promise.
  */
-export async function makeFocusDiffusionEffect(element: TargetType, options?: OverrideStyleOptions) {
+export async function makeFocusDiffusionEffect(element: TargetType, options: OverrideStyleOptions = {}) {
+	options.portal ??= "#popovers";
 	const el = targetToElement(element);
 	const ring = createFocusRing(el, options);
 	if (!el || !ring) return;
@@ -42,14 +44,26 @@ export async function makeFocusDiffusionEffect(element: TargetType, options?: Ov
 	ring.remove();
 }
 
+/**
+ * Sets the style position and size of an element based on its current offset values.
+ * @param target - The target HTML element.
+ * @param measure - The measure HTML element.
+ */
+function setElementRectFromOffset(target: HTMLElement, measure: HTMLElement) {
+	target.style.top = measure.offsetTop + "px";
+	target.style.left = measure.offsetLeft + "px";
+	target.style.width = measure.offsetWidth + "px";
+	target.style.height = measure.offsetHeight + "px";
+}
+
 const FOCUS_HIGHLIGHT_CLASS = "focus-highlight-effect";
 const FOCUS_HIGHLIGHT_RING_CLASS = "focus-highlight-ring";
-const clearFocusHighlightEffect = () => {
+/**
+ * A cleanup function for {@link makeFocusHighlightEffect}.
+ */
+const cleanupFocusHighlightEffect = () => {
 	for (const ring of document.getElementsByClassName(FOCUS_HIGHLIGHT_RING_CLASS) as HTMLCollectionOf<HTMLElement>) {
-		ring.style.top = ring.offsetTop + "px";
-		ring.style.left = ring.offsetLeft + "px";
-		ring.style.width = ring.offsetWidth + "px";
-		ring.style.height = ring.offsetHeight + "px";
+		setElementRectFromOffset(ring, ring);
 		ring.animate({ opacity: [1, 0] }, { duration: 250, easing: eases.easeOutMax }).finished.catch(noop).then(() => {
 			removeExistAnimations(ring);
 			ring.remove();
@@ -60,9 +74,15 @@ const clearFocusHighlightEffect = () => {
 		el.style.anchorName = null!;
 	}
 };
-window.addEventListener("mouseup", clearFocusHighlightEffect, true);
+window.addEventListener("mouseup", cleanupFocusHighlightEffect, true);
+/**
+ * Make a focus highlight effect around the target element.
+ * @param element - Target HTML DOM element.
+ * @param options - Override style options.
+ * @returns Empty promise.
+ */
 export async function makeFocusHighlightEffect(element: TargetType, options?: OverrideStyleOptions) {
-	clearFocusHighlightEffect();
+	cleanupFocusHighlightEffect();
 	await nextAnimationTick();
 	const el = targetToElement<HTMLElement>(element);
 	const ring = createFocusRing(el, options);
@@ -86,8 +106,8 @@ export async function makeFocusHighlightEffect(element: TargetType, options?: Ov
 			{ boxShadow: "none" },
 		], { duration: 2000, easing: "linear", iterations: 3 }).finished.catch(noop);
 	} finally {
-		// ring.remove();
-		// el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
-		// el.style.removeProperty("anchor-name");
+		ring.remove();
+		el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
+		el.style.removeProperty("anchor-name");
 	}
 }

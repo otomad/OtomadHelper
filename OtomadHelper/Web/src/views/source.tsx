@@ -63,7 +63,7 @@ export default function Source() {
 
 	return (
 		<div className="container">
-			<Card className="media-pool">
+			<Card className="media-pool" data-anchor={CSS.escape(meta.from.meta.path)}>
 				<TabBar current={sourceFrom} aria-label={t.source.from}>
 					<TabBar.Item id="trackEvent" icon="track_event">{t.source.trackEvent}</TabBar.Item>
 					<TabBar.Item id="projectMedia" icon="media">{t.source.projectMedia}</TabBar.Item>
@@ -89,7 +89,7 @@ export default function Source() {
 				</CustomItem>
 			</Setting>
 
-			<Subheader>{t.subheaders.advanced}</Subheader>
+			<Subheader meta={meta.advanced} />
 			<Setting meta={meta.afterCompletion}>
 				<Setting meta={meta.afterCompletion.removeSourceClips} on={removeSourceClips} lock={lockRemoveOrSelectSourceClips} />
 				<Setting meta={meta.afterCompletion.removeSourceClipsWithTracks} on={removeSourceClipsWithTracks} lock={lockRemoveOrSelectSourceClips} />
@@ -131,7 +131,7 @@ export default function Source() {
 				detailsField="additional"
 			/>
 
-			<Subheader>{t.source.multisource}</Subheader>
+			<Subheader meta={meta.multisource} />
 			{ytpEnabled && <InfoBar status="warning" title={t.descriptions.source.multisource.ytpEnabled} button={<EmptyMessage.YtpDisabled.Buttons />} />}
 			<Attrs disabled={ytpEnabled ? true : undefined}>
 				<Setting meta={meta.secretBox} selectInfo={ytpEnabled && t.descriptions.source.secretBox.ytpEnabled} on={secretBox}>
