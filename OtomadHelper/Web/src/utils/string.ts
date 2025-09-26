@@ -133,3 +133,8 @@ export function panguSpacing(text: Readable) {
 	if (typeof text !== "string") return text;
 	return spacing(text);
 }
+
+/**
+ * @see Same as {@link CSS.escape}, but accept `undefined` as input.
+ */
+export const CSS_escape = (ident?: string) => ident !== undefined ? CSS.escape(ident) : undefined;

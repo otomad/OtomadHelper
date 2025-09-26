@@ -4,8 +4,10 @@ const StyledDataList = styled.div`
 	position-anchor: var(--text-box-anchor-name);
 	position-area: block-end;
 	z-index: 9;
+	max-block-size: 100%;
 	inline-size: anchor-size(inline);
 	padding: 4px;
+	overflow-block: auto;
 	border-block-start-width: 0;
 	border-start-start-radius: 0;
 	border-start-end-radius: 0;

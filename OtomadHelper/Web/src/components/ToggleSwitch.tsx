@@ -382,7 +382,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 			aria-checked={on}
 			aria-labelledby={`${ariaId}-title`}
 			aria-describedby={`${ariaId}-details`}
-			data-anchor={anchor}
+			data-anchor={CSS_escape(anchor)}
 			{...htmlAttrs}
 		>
 			{icon && <Icon name={icon} />}

@@ -22,7 +22,7 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 	props.title ??= $t(meta.title);
 	props.details ??= $t(meta.details);
 	props.icon ??= meta.icon;
-	props.anchor = CSS.escape(path);
+	props.anchor = path;
 	if (lastGotoPath === path) props.className = classNames(props, "focus-highlight");
 	const expanded = !!(lastGotoPath !== path && lastGotoPath?.startsWith(path));
 	const _requestExpanded = expanded ? [true, lastGotoPathTimestamp] : undefined;

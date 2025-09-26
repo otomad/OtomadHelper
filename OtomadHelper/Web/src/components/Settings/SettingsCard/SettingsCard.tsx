@@ -244,7 +244,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 				aria-describedby={`${ariaId}-details`}
 				tabIndex={tabIndex}
 				$trailingGap={trailingGap}
-				data-anchor={anchor}
+				data-anchor={CSS_escape(anchor)}
 				ref={ref}
 				onFocus={handleFocus}
 				{...htmlAttrs}
