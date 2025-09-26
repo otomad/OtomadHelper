@@ -42,27 +42,49 @@ export async function makeFocusDiffusionEffect(element: TargetType, options?: Ov
 	ring.remove();
 }
 
-const lastFocusHighlightEffectElAtom = atom<[el: HTMLElement, ring: HTMLDivElement]>();
+const FOCUS_HIGHLIGHT_CLASS = "focus-highlight-effect";
+const FOCUS_HIGHLIGHT_RING_CLASS = "focus-highlight-ring";
+const clearFocusHighlightEffect = () => {
+	for (const ring of document.getElementsByClassName(FOCUS_HIGHLIGHT_RING_CLASS)) {
+		ring.getAnimations().forEach(animation => animation.pause());
+		ring.animate({ opacity: [1, 0] }, { duration: 250, easing: eases.easeOutMax }).finished.catch(noop).then(() => {
+			removeExistAnimations(ring);
+			ring.remove();
+		});
+	}
+	for (const el of document.getElementsByClassName(FOCUS_HIGHLIGHT_CLASS) as HTMLCollectionOf<HTMLElement>) {
+		el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
+		el.style.removeProperty("anchor-name");
+	}
+};
+window.addEventListener("mouseup", clearFocusHighlightEffect, true);
 export async function makeFocusHighlightEffect(element: TargetType, options?: OverrideStyleOptions) {
-	const remove = (el?: HTMLElement, ring?: HTMLDivElement) => {
-		jotaiStore.set(lastFocusHighlightEffectElAtom, undefined);
-		el?.style.removeProperty("anchor-name");
-		ring?.remove();
-	};
-	const lastEl = jotaiStore.get(lastFocusHighlightEffectElAtom);
-	remove(...lastEl ?? []);
+	clearFocusHighlightEffect();
+	await nextAnimationTick();
 	const el = targetToElement<HTMLElement>(element);
 	const ring = createFocusRing(el, options);
 	if (!el || !ring) return;
-	el.scrollIntoView({ block: "center" });
-	jotaiStore.set(lastFocusHighlightEffectElAtom, [el, ring]);
+	el.classList.add(FOCUS_HIGHLIGHT_CLASS);
 	const anchorName = "--" + CSS.escape(crypto.randomUUID());
-	console.log("​ ​ anchorName​", anchorName);
 	el.style.anchorName = anchorName;
-	assign(ring.style, { position: "fixed", positionAnchor: anchorName, positionArea: "center", inlineSize: "100%", blockSize: "100%" });
-	await ring.animate([
-		{ boxShadow: "none", easing: eases.easeOutMax },
-		{ boxShadow: `0 0 8px 6px ${c("accent-color", 60)}`, easing: eases.easeInSmooth },
-		{ boxShadow: "none" },
-	], { duration: 2000, easing: "linear", iterations: 3 }).finished.catch(() => remove(el, ring)).finally(() => remove(el, ring));
+	assign(ring.style, {
+		position: "fixed",
+		positionAnchor: anchorName,
+		top: "anchor(top, calc(infinity * -1px))",
+		left: "anchor(left, calc(infinity * -1px))",
+		width: "anchor-size(width, 0)",
+		height: "anchor-size(height, 0)",
+	});
+	ring.classList.add(FOCUS_HIGHLIGHT_RING_CLASS);
+	try {
+		await ring.animate([
+			{ boxShadow: "none", easing: eases.easeOutMax },
+			{ boxShadow: `0 0 8px 6px ${c("accent-color", 60)}`, easing: eases.easeInSmooth },
+			{ boxShadow: "none" },
+		], { duration: 2000, easing: "linear", iterations: 3 }).finished.catch(noop);
+	} finally {
+		ring.remove();
+		el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
+		el.style.removeProperty("anchor-name");
+	}
 }

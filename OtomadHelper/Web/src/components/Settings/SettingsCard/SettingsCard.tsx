@@ -175,7 +175,7 @@ const StyledSettingsCard = styled(StyledCard)<{
 	}
 `);
 
-export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, anchor, ariaIdRef, ref, onClick, onFocus, ...htmlAttrs }: FCP<{
+export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, anchor, ariaIdRef, ref, _requestExpanded, onClick, onFocus, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
@@ -209,6 +209,8 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	anchor?: string;
 	/** Pass settings card aria ID to the parent component. */
 	ariaIdRef?: RefObject<string | undefined | null>;
+	/** @private Compatible with Expander. */
+	_requestExpanded?: never;
 }, "div">) {
 	actionIcon ??= type === "button" ? "chevron_right" :
 		type === "expander" ? "chevron_down" : undefined;

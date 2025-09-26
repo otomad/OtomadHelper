@@ -142,7 +142,7 @@ const ExpanderChildWrapper = styled.div<{
 	` : undefined}
 `;
 
-export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, clipChildren, childrenDisabled, childRole, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor, _requestExpanded, onClickWhenChildrenDisabled, onToggle, ref }: FCP<Override<PropsOf<typeof SettingsCard>, {
+export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, clipChildren, childrenDisabled, childRole, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor, _requestExpanded: [_requestExpanded, _requestExpandedTimestamp] = NEVER_MIND, onClickWhenChildrenDisabled, onToggle, ref }: FCP<Override<PropsOf<typeof SettingsCard>, {
 	/** The other action control area on the right side of the component. */
 	actions?: ReactNode;
 	/** Expanded initially? */
@@ -157,9 +157,8 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	childrenDisabled?: boolean;
 	/** Define the role of expander child. */
 	childRole?: AriaRole;
-	/** @private Request the expanded because user search something inside the expander. */
-	// eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
-	_requestExpanded?: Boolean;
+	/** @private Request to expanded because user search something inside the expander. */
+	_requestExpanded?: [value: boolean, timestamp: number];
 	/** Occurs when the expander parent has been clicked where the child items disabled. */
 	onClickWhenChildrenDisabled?(): void;
 	/** Occurs when the expander expanded or collapsed. */
@@ -171,7 +170,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	useUpdateEffect(() => setInternalExpanded(expanded), [expanded]);
 	useEffect(() => onToggle?.(internalExpanded), [internalExpanded]);
 	useEffect(() => { if (disabled || childrenDisabled) setInternalExpanded(false); }, [disabled, childrenDisabled]);
-	useEffect(() => { if (_requestExpanded) setInternalExpanded(_requestExpanded.valueOf()); }, [_requestExpanded]);
+	useEffect(() => { if (_requestExpanded) setInternalExpanded(_requestExpanded); }, [_requestExpanded, _requestExpandedTimestamp]);
 	const ariaId = useRef<string>(null);
 	const withAriaId = (suffix: string) => !ariaId.current ? undefined : ariaId.current + suffix;
 

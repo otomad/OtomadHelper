@@ -165,7 +165,7 @@ let settingsMetasSearchMap: [string, SettingMeta][] = [];
 function updateSettingsMetasSearchMap() {
 	settingsMetasSearchMap = [];
 	const add = (keyword: string, meta: SettingMeta) => {
-		keyword = keyword.toLowerCase().replaceAll(/[\r\n\u2008\ufe00-\ufe0f\u{e0000}-\u{effff}]/gu, "");
+		keyword = keyword.toLowerCase().replaceAll(/[\r\n\u2008\p{VS}]/gu, "");
 		settingsMetasSearchMap.push([keyword, meta]);
 	};
 	for (const meta of metas) {
@@ -184,11 +184,25 @@ i18n.on("languageChanged", updateSettingsMetasSearchMap);
 
 export function search(query?: string) {
 	if (!query?.trim()) return [];
-	query = query.toLowerCase();
+	query = query.trim().toLowerCase();
+	const locale = i18n.language;
+	const matchWordBoundary = (keyword: string) => !!keyword.match(new RegExp("\\b" + RegExp.escape(query)));
 	const getSortScore = (keyword: string) => keyword.replace(query, "").replaceAll(query, "1").realLength;
 
 	return settingsMetasSearchMap
 		.filter(([keyword]) => keyword.includes(query))
-		.sort(([a], [b]) => getSortScore(a) - getSortScore(b))
+		.sort(([a], [b]) => {
+			let score: number; const indexOfA = a.indexOf(query), indexOfB = b.indexOf(query);
+			// Firstly, check if there are matches at the beginning boundary of the word, because generally no one will enter it from the inside of the word.
+			if ((score = -(+matchWordBoundary(a) - +matchWordBoundary(b)))) return score;
+			// Secondly, check if any keywords start with the query word.
+			if (!indexOfA !== !indexOfB) return !indexOfA ? -1 : 1;
+			// Thirdly, check if there are any most matched shorter string.
+			if ((score = getSortScore(a) - getSortScore(b))) return score;
+			// Fourthly, check the query word that are closer to the beginning.
+			if ((score = indexOfA - indexOfB)) return score;
+			// Fifthly, compare by alphabet.
+			return a.localeCompare(b, locale);
+		})
 		.toUnique(([, meta]) => meta);
 }

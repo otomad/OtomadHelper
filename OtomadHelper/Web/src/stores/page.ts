@@ -30,8 +30,7 @@ interface PageState {
 	commandBarDisabled: boolean;
 	useSetCommandBarDisabled(): SetStateNarrow<boolean>;
 	pageChangeResolver?: PromiseWithResolvers<void>;
-	// eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
-	lastGotoPath?: String;
+	lastGotoPath?: [value: string, timestamp: number];
 	goto(path?: string): void;
 }
 
@@ -177,11 +176,16 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 			(document.activeElement as HTMLElement)?.blur?.();
 			const [page] = path.split(":");
 			const changed = setPageInternal(page.split("/"));
-			pageStore.lastGotoPath = new String(path);
+			pageStore.lastGotoPath = [path, Date.now()];
 			if (changed && pageStore.pageChangeResolver) await pageStore.pageChangeResolver.promise;
+			const getEl = () => document.querySelector(`[data-anchor="${CSS.escape(CSS.escape(path))}"]`); // Double escaping, are you kidding me?
+			const isCollapsedNow = !getEl();
 			await delay(100);
-			const el = document.querySelector(`[data-anchor="${CSS.escape(CSS.escape(path))}"]`); // Double escaping, are you kidding me?
+			const el = getEl();
 			if (!el) return;
+			const scrollIntoView = () => el.scrollIntoView({ block: "center" });
+			if (!isCollapsedNow) scrollIntoView();
+			else delay(350).then(() => scrollIntoView());
 			makeFocusHighlightEffect(el);
 		},
 	} satisfies PageState;

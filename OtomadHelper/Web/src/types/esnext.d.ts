@@ -67,6 +67,11 @@ declare global {
 	interface CSSStyleDeclaration {
 		[x: string]: string;
 	}
+
+	interface RegExpConstructor {
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp/escape) */
+		escape(string: string): string;
+	}
 }
 // #endregion
 
