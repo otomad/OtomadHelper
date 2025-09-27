@@ -56,9 +56,11 @@ const StyledSearchResult = styled.button`
 	}
 `;
 
-export default function HandleSearchResults({ query }: {
+export default function HandleSearchResults({ query, onSearchResultSelect }: {
 	/** Search keyword. */
 	query?: string;
+	/** Occurs when user click the search result item. */
+	onSearchResultSelect?(): void;
 }) {
 	const [language] = useLanguage();
 	const { goto } = useSnapshot(pageStore);
@@ -73,7 +75,7 @@ export default function HandleSearchResults({ query }: {
 	return searchResults.map(([, property, meta, keyword], i) => {
 		const title = meta.translatedTitle;
 		return (
-			<StyledSearchResult key={meta.path} onClick={() => goto(meta.path)}>
+			<StyledSearchResult key={meta.path} onClick={() => { onSearchResultSelect?.(); goto(meta.path); }}>
 				{meta.icon && meta.icon !== "placeholder" ? <Icon name={meta.icon} /> : <Icon shadow />}
 				<div className="text">
 					<p className="title">{property === "title" ? <HighlightText wholeText={title} keyword={query} /> : title}</p>

@@ -1278,10 +1278,10 @@ export default {
 			moveForward: "Move &forward", // Add “&” before a letter to indicate the access key.
 			moveBackward: "Move &backward", // Add “&” before a letter to indicate the access key.
 			grid: {
-				columnWidth: "Column &width",
-				rowHeight: "Row &height",
-				span: "&Span",
-				insertBlank: "Insert &blanks",
+				columnWidth: "Column &width", // Add “&” before a letter to indicate the access key.
+				rowHeight: "Row &height", // Add “&” before a letter to indicate the access key.
+				span: "&Span", // Add “&” before a letter to indicate the access key.
+				insertBlank: "Insert &blanks", // Add “&” before a letter to indicate the access key.
 			},
 		},
 		aria: {
@@ -1292,6 +1292,28 @@ export default {
 			timesOperator: "Times",
 			reorderHandle: "Drag to reorder",
 			searchBox: "Search box",
+		},
+		aliases: {
+			titles: {
+				source: "Material, Media",
+				score: "Chart, MIDI, Song, Music",
+				audio: "Sound",
+				visual: "Video",
+				sonar: "Motion Graphic, Motion Graphics, Mograph, Mographs, MG, Cookie Cutter",
+				prve: "Promotion Video Rhythm Visual Effect, Promotion Video Rhythm Visual Effects",
+				staff: "Musical Staff, Piano Staff Sheets Fashion",
+				pixelScaling: "MisczTools, Miscz Tools",
+			},
+			source: {
+				trackGroup: "Track group", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				trackName: "Track name", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				secretBox: "Blind box, Gacha", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+			},
+			score: {
+				tempo: "Speed, BPM", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				timeSignature: "Beat", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				constrain: "Restrict note length", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+			},
 		},
 	},
 	csharp: {
@@ -1610,6 +1632,26 @@ export default {
 				86: "Mute Surdo",
 				87: "Open Surdo",
 				88: "Applause 2",
+				89: "Snare Ghost 1",
+				90: "Snare Ghost 2",
+				91: "Hand Clap 1",
+				92: "Hand Clap 2",
+				93: "Scratch 1",
+				94: "Scratch 2",
+				95: "Scratch 3",
+				96: "Hit 1",
+				97: "Hit 2",
+				98: "Hit 3",
+				99: "Hit 4",
+				100: "Hit 5",
+				101: "Low Tom 1",
+				102: "Low Tom 2",
+				103: "Cajón 1",
+				104: "Cajón 2",
+				105: "Syn Burst Nz",
+				106: "Sweep Down",
+				107: "Laser",
+				108: "Syn Back Nz",
 			},
 		},
 	},

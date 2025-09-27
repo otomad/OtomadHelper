@@ -272,4 +272,661 @@ Location:</value>
 	<data name="Shared.Plugins.CreditRoll" xml:space="preserve">
 		<value>Credit Roll</value>
 	</data>
+	<data name="Shared.Midi.Unknown" xml:space="preserve">
+		<value>Unknown</value>
+	</data>
+	<data name="Shared.Midi.Instruments.1" xml:space="preserve">
+		<value>Acoustic Grand Piano</value>
+	</data>
+	<data name="Shared.Midi.Instruments.2" xml:space="preserve">
+		<value>Bright Acoustic Piano</value>
+	</data>
+	<data name="Shared.Midi.Instruments.3" xml:space="preserve">
+		<value>Electric Grand Piano</value>
+	</data>
+	<data name="Shared.Midi.Instruments.4" xml:space="preserve">
+		<value>Honky-Tonk Piano</value>
+	</data>
+	<data name="Shared.Midi.Instruments.5" xml:space="preserve">
+		<value>Electric Piano 1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.6" xml:space="preserve">
+		<value>Electric Piano 2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.7" xml:space="preserve">
+		<value>Harpsichord</value>
+	</data>
+	<data name="Shared.Midi.Instruments.8" xml:space="preserve">
+		<value>Clavinet</value>
+	</data>
+	<data name="Shared.Midi.Instruments.9" xml:space="preserve">
+		<value>Celesta</value>
+	</data>
+	<data name="Shared.Midi.Instruments.10" xml:space="preserve">
+		<value>Glockenspiel</value>
+	</data>
+	<data name="Shared.Midi.Instruments.11" xml:space="preserve">
+		<value>Music Box</value>
+	</data>
+	<data name="Shared.Midi.Instruments.12" xml:space="preserve">
+		<value>Vibraphone</value>
+	</data>
+	<data name="Shared.Midi.Instruments.13" xml:space="preserve">
+		<value>Marimba</value>
+	</data>
+	<data name="Shared.Midi.Instruments.14" xml:space="preserve">
+		<value>Xylophone</value>
+	</data>
+	<data name="Shared.Midi.Instruments.15" xml:space="preserve">
+		<value>Tubular Bells</value>
+	</data>
+	<data name="Shared.Midi.Instruments.16" xml:space="preserve">
+		<value>Dulcimer</value>
+	</data>
+	<data name="Shared.Midi.Instruments.17" xml:space="preserve">
+		<value>Drawbar Organ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.18" xml:space="preserve">
+		<value>Percussive Organ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.19" xml:space="preserve">
+		<value>Rock Organ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.20" xml:space="preserve">
+		<value>Church Organ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.21" xml:space="preserve">
+		<value>Reed Organ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.22" xml:space="preserve">
+		<value>Accordion</value>
+	</data>
+	<data name="Shared.Midi.Instruments.23" xml:space="preserve">
+		<value>Harmonica</value>
+	</data>
+	<data name="Shared.Midi.Instruments.24" xml:space="preserve">
+		<value>Tango Accordion</value>
+	</data>
+	<data name="Shared.Midi.Instruments.25" xml:space="preserve">
+		<value>Acoustic Guitar (nylon)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.26" xml:space="preserve">
+		<value>Acoustic Guitar (steel)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.27" xml:space="preserve">
+		<value>Electric Guitar (jazz)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.28" xml:space="preserve">
+		<value>Electric Guitar (clean)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.29" xml:space="preserve">
+		<value>Electric Guitar (muted)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.30" xml:space="preserve">
+		<value>Overdriven Guitar</value>
+	</data>
+	<data name="Shared.Midi.Instruments.31" xml:space="preserve">
+		<value>Distortion Guitar</value>
+	</data>
+	<data name="Shared.Midi.Instruments.32" xml:space="preserve">
+		<value>Guitar Harmonics</value>
+	</data>
+	<data name="Shared.Midi.Instruments.33" xml:space="preserve">
+		<value>Acoustic Bass</value>
+	</data>
+	<data name="Shared.Midi.Instruments.34" xml:space="preserve">
+		<value>Electric Bass (finger)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.35" xml:space="preserve">
+		<value>Electric Bass (pick)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.36" xml:space="preserve">
+		<value>Fretless Bass</value>
+	</data>
+	<data name="Shared.Midi.Instruments.37" xml:space="preserve">
+		<value>Slap Bass 1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.38" xml:space="preserve">
+		<value>Slap Bass 2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.39" xml:space="preserve">
+		<value>Synth Bass 1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.40" xml:space="preserve">
+		<value>Synth Bass 2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.41" xml:space="preserve">
+		<value>Violin</value>
+	</data>
+	<data name="Shared.Midi.Instruments.42" xml:space="preserve">
+		<value>Viola</value>
+	</data>
+	<data name="Shared.Midi.Instruments.43" xml:space="preserve">
+		<value>Cello</value>
+	</data>
+	<data name="Shared.Midi.Instruments.44" xml:space="preserve">
+		<value>Contrabass</value>
+	</data>
+	<data name="Shared.Midi.Instruments.45" xml:space="preserve">
+		<value>Tremolo Strings</value>
+	</data>
+	<data name="Shared.Midi.Instruments.46" xml:space="preserve">
+		<value>Pizzicato Strings</value>
+	</data>
+	<data name="Shared.Midi.Instruments.47" xml:space="preserve">
+		<value>Orchestral Harp</value>
+	</data>
+	<data name="Shared.Midi.Instruments.48" xml:space="preserve">
+		<value>Timpani</value>
+	</data>
+	<data name="Shared.Midi.Instruments.49" xml:space="preserve">
+		<value>String Ensemble 1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.50" xml:space="preserve">
+		<value>String Ensemble 2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.51" xml:space="preserve">
+		<value>SynthStrings 1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.52" xml:space="preserve">
+		<value>SynthStrings 2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.53" xml:space="preserve">
+		<value>Choir Aahs</value>
+	</data>
+	<data name="Shared.Midi.Instruments.54" xml:space="preserve">
+		<value>Voice Oohs</value>
+	</data>
+	<data name="Shared.Midi.Instruments.55" xml:space="preserve">
+		<value>Synth Voice</value>
+	</data>
+	<data name="Shared.Midi.Instruments.56" xml:space="preserve">
+		<value>Orchestra Hit</value>
+	</data>
+	<data name="Shared.Midi.Instruments.57" xml:space="preserve">
+		<value>Trumpet</value>
+	</data>
+	<data name="Shared.Midi.Instruments.58" xml:space="preserve">
+		<value>Trombone</value>
+	</data>
+	<data name="Shared.Midi.Instruments.59" xml:space="preserve">
+		<value>Tuba</value>
+	</data>
+	<data name="Shared.Midi.Instruments.60" xml:space="preserve">
+		<value>Muted Trumpet</value>
+	</data>
+	<data name="Shared.Midi.Instruments.61" xml:space="preserve">
+		<value>French Horn</value>
+	</data>
+	<data name="Shared.Midi.Instruments.62" xml:space="preserve">
+		<value>Brass Section</value>
+	</data>
+	<data name="Shared.Midi.Instruments.63" xml:space="preserve">
+		<value>SynthBrass 1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.64" xml:space="preserve">
+		<value>SynthBrass 2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.65" xml:space="preserve">
+		<value>Soprano Sax</value>
+	</data>
+	<data name="Shared.Midi.Instruments.66" xml:space="preserve">
+		<value>Alto Sax</value>
+	</data>
+	<data name="Shared.Midi.Instruments.67" xml:space="preserve">
+		<value>Tenor Sax</value>
+	</data>
+	<data name="Shared.Midi.Instruments.68" xml:space="preserve">
+		<value>Baritone Sax</value>
+	</data>
+	<data name="Shared.Midi.Instruments.69" xml:space="preserve">
+		<value>Oboe</value>
+	</data>
+	<data name="Shared.Midi.Instruments.70" xml:space="preserve">
+		<value>English Horn</value>
+	</data>
+	<data name="Shared.Midi.Instruments.71" xml:space="preserve">
+		<value>Bassoon</value>
+	</data>
+	<data name="Shared.Midi.Instruments.72" xml:space="preserve">
+		<value>Clarinet</value>
+	</data>
+	<data name="Shared.Midi.Instruments.73" xml:space="preserve">
+		<value>Piccolo</value>
+	</data>
+	<data name="Shared.Midi.Instruments.74" xml:space="preserve">
+		<value>Flute</value>
+	</data>
+	<data name="Shared.Midi.Instruments.75" xml:space="preserve">
+		<value>Recorder</value>
+	</data>
+	<data name="Shared.Midi.Instruments.76" xml:space="preserve">
+		<value>Pan Flute</value>
+	</data>
+	<data name="Shared.Midi.Instruments.77" xml:space="preserve">
+		<value>Blown Bottle</value>
+	</data>
+	<data name="Shared.Midi.Instruments.78" xml:space="preserve">
+		<value>Shakuhachi</value>
+	</data>
+	<data name="Shared.Midi.Instruments.79" xml:space="preserve">
+		<value>Whistle</value>
+	</data>
+	<data name="Shared.Midi.Instruments.80" xml:space="preserve">
+		<value>Ocarina</value>
+	</data>
+	<data name="Shared.Midi.Instruments.81" xml:space="preserve">
+		<value>Lead 1 (square)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.82" xml:space="preserve">
+		<value>Lead 2 (sawtooth)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.83" xml:space="preserve">
+		<value>Lead 3 (calliope)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.84" xml:space="preserve">
+		<value>Lead 4 (chiff)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.85" xml:space="preserve">
+		<value>Lead 5 (charang)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.86" xml:space="preserve">
+		<value>Lead 6 (voice)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.87" xml:space="preserve">
+		<value>Lead 7 (fifths)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.88" xml:space="preserve">
+		<value>Lead 8 (bass + lead)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.89" xml:space="preserve">
+		<value>Pad 1 (new age)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.90" xml:space="preserve">
+		<value>Pad 2 (warm)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.91" xml:space="preserve">
+		<value>Pad 3 (polysynth)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.92" xml:space="preserve">
+		<value>Pad 4 (choir)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.93" xml:space="preserve">
+		<value>Pad 5 (bowed)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.94" xml:space="preserve">
+		<value>Pad 6 (metallic)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.95" xml:space="preserve">
+		<value>Pad 7 (halo)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.96" xml:space="preserve">
+		<value>Pad 8 (sweep)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.97" xml:space="preserve">
+		<value>FX 1 (rain)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.98" xml:space="preserve">
+		<value>FX 2 (soundtrack)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.99" xml:space="preserve">
+		<value>FX 3 (crystal)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.100" xml:space="preserve">
+		<value>FX 4 (atmosphere)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.101" xml:space="preserve">
+		<value>FX 5 (brightness)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.102" xml:space="preserve">
+		<value>FX 6 (goblins)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.103" xml:space="preserve">
+		<value>FX 7 (echoes)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.104" xml:space="preserve">
+		<value>FX 8 (sci-fi)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.105" xml:space="preserve">
+		<value>Sitar</value>
+	</data>
+	<data name="Shared.Midi.Instruments.106" xml:space="preserve">
+		<value>Banjo</value>
+	</data>
+	<data name="Shared.Midi.Instruments.107" xml:space="preserve">
+		<value>Shamisen</value>
+	</data>
+	<data name="Shared.Midi.Instruments.108" xml:space="preserve">
+		<value>Koto</value>
+	</data>
+	<data name="Shared.Midi.Instruments.109" xml:space="preserve">
+		<value>Kalimba</value>
+	</data>
+	<data name="Shared.Midi.Instruments.110" xml:space="preserve">
+		<value>Bagpipe</value>
+	</data>
+	<data name="Shared.Midi.Instruments.111" xml:space="preserve">
+		<value>Fiddle</value>
+	</data>
+	<data name="Shared.Midi.Instruments.112" xml:space="preserve">
+		<value>Shanai</value>
+	</data>
+	<data name="Shared.Midi.Instruments.113" xml:space="preserve">
+		<value>Tinkle Bell</value>
+	</data>
+	<data name="Shared.Midi.Instruments.114" xml:space="preserve">
+		<value>Agogô</value>
+	</data>
+	<data name="Shared.Midi.Instruments.115" xml:space="preserve">
+		<value>Steel Drums</value>
+	</data>
+	<data name="Shared.Midi.Instruments.116" xml:space="preserve">
+		<value>Woodblock</value>
+	</data>
+	<data name="Shared.Midi.Instruments.117" xml:space="preserve">
+		<value>Taiko Drum</value>
+	</data>
+	<data name="Shared.Midi.Instruments.118" xml:space="preserve">
+		<value>Melodic Tom</value>
+	</data>
+	<data name="Shared.Midi.Instruments.119" xml:space="preserve">
+		<value>Synth Drum</value>
+	</data>
+	<data name="Shared.Midi.Instruments.120" xml:space="preserve">
+		<value>Reverse Cymbal</value>
+	</data>
+	<data name="Shared.Midi.Instruments.121" xml:space="preserve">
+		<value>Guitar Fret Noise</value>
+	</data>
+	<data name="Shared.Midi.Instruments.122" xml:space="preserve">
+		<value>Breath Noise</value>
+	</data>
+	<data name="Shared.Midi.Instruments.123" xml:space="preserve">
+		<value>Seashore</value>
+	</data>
+	<data name="Shared.Midi.Instruments.124" xml:space="preserve">
+		<value>Bird Tweet</value>
+	</data>
+	<data name="Shared.Midi.Instruments.125" xml:space="preserve">
+		<value>Telephone Ring</value>
+	</data>
+	<data name="Shared.Midi.Instruments.126" xml:space="preserve">
+		<value>Helicopter</value>
+	</data>
+	<data name="Shared.Midi.Instruments.127" xml:space="preserve">
+		<value>Applause</value>
+	</data>
+	<data name="Shared.Midi.Instruments.128" xml:space="preserve">
+		<value>Gunshot</value>
+	</data>
+	<data name="Shared.Midi.Percussions.17" xml:space="preserve">
+		<value>Voice One</value>
+	</data>
+	<data name="Shared.Midi.Percussions.18" xml:space="preserve">
+		<value>Voice Two</value>
+	</data>
+	<data name="Shared.Midi.Percussions.19" xml:space="preserve">
+		<value>Voice Three</value>
+	</data>
+	<data name="Shared.Midi.Percussions.22" xml:space="preserve">
+		<value>MC-505 Beep 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.23" xml:space="preserve">
+		<value>MC-505 Beep 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.24" xml:space="preserve">
+		<value>Concert SD</value>
+	</data>
+	<data name="Shared.Midi.Percussions.25" xml:space="preserve">
+		<value>Snare Roll</value>
+	</data>
+	<data name="Shared.Midi.Percussions.26" xml:space="preserve">
+		<value>Finger Snap</value>
+	</data>
+	<data name="Shared.Midi.Percussions.27" xml:space="preserve">
+		<value>High Q</value>
+	</data>
+	<data name="Shared.Midi.Percussions.28" xml:space="preserve">
+		<value>Slap</value>
+	</data>
+	<data name="Shared.Midi.Percussions.29" xml:space="preserve">
+		<value>Scratch Push</value>
+	</data>
+	<data name="Shared.Midi.Percussions.30" xml:space="preserve">
+		<value>Scratch Pull</value>
+	</data>
+	<data name="Shared.Midi.Percussions.31" xml:space="preserve">
+		<value>Sticks</value>
+	</data>
+	<data name="Shared.Midi.Percussions.32" xml:space="preserve">
+		<value>Square Click</value>
+	</data>
+	<data name="Shared.Midi.Percussions.33" xml:space="preserve">
+		<value>Metronome Click</value>
+	</data>
+	<data name="Shared.Midi.Percussions.34" xml:space="preserve">
+		<value>Metronome Bell</value>
+	</data>
+	<data name="Shared.Midi.Percussions.35" xml:space="preserve">
+		<value>Acoustic Bass Drum</value>
+	</data>
+	<data name="Shared.Midi.Percussions.36" xml:space="preserve">
+		<value>Electric Bass Drum</value>
+	</data>
+	<data name="Shared.Midi.Percussions.37" xml:space="preserve">
+		<value>Side Stick</value>
+	</data>
+	<data name="Shared.Midi.Percussions.38" xml:space="preserve">
+		<value>Acoustic Snare</value>
+	</data>
+	<data name="Shared.Midi.Percussions.39" xml:space="preserve">
+		<value>Hand Clap</value>
+	</data>
+	<data name="Shared.Midi.Percussions.40" xml:space="preserve">
+		<value>Electric Snare</value>
+	</data>
+	<data name="Shared.Midi.Percussions.41" xml:space="preserve">
+		<value>Low Floor Tom</value>
+	</data>
+	<data name="Shared.Midi.Percussions.42" xml:space="preserve">
+		<value>Closed Hi-Hat</value>
+	</data>
+	<data name="Shared.Midi.Percussions.43" xml:space="preserve">
+		<value>High Floor Tom</value>
+	</data>
+	<data name="Shared.Midi.Percussions.44" xml:space="preserve">
+		<value>Pedal Hi-Hat</value>
+	</data>
+	<data name="Shared.Midi.Percussions.45" xml:space="preserve">
+		<value>Low Tom</value>
+	</data>
+	<data name="Shared.Midi.Percussions.46" xml:space="preserve">
+		<value>Open Hi-Hat</value>
+	</data>
+	<data name="Shared.Midi.Percussions.47" xml:space="preserve">
+		<value>Low-Mid Tom</value>
+	</data>
+	<data name="Shared.Midi.Percussions.48" xml:space="preserve">
+		<value>High-Mid Tom</value>
+	</data>
+	<data name="Shared.Midi.Percussions.49" xml:space="preserve">
+		<value>Crash Cymbal 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.50" xml:space="preserve">
+		<value>High Tom</value>
+	</data>
+	<data name="Shared.Midi.Percussions.51" xml:space="preserve">
+		<value>Ride Cymbal 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.52" xml:space="preserve">
+		<value>Chinese Cymbal</value>
+	</data>
+	<data name="Shared.Midi.Percussions.53" xml:space="preserve">
+		<value>Ride Bell</value>
+	</data>
+	<data name="Shared.Midi.Percussions.54" xml:space="preserve">
+		<value>Tambourine</value>
+	</data>
+	<data name="Shared.Midi.Percussions.55" xml:space="preserve">
+		<value>Splash Cymbal</value>
+	</data>
+	<data name="Shared.Midi.Percussions.56" xml:space="preserve">
+		<value>Cowbell</value>
+	</data>
+	<data name="Shared.Midi.Percussions.57" xml:space="preserve">
+		<value>Crash Cymbal 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.58" xml:space="preserve">
+		<value>Vibraslap</value>
+	</data>
+	<data name="Shared.Midi.Percussions.59" xml:space="preserve">
+		<value>Ride Cymbal 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.60" xml:space="preserve">
+		<value>High Bongo</value>
+	</data>
+	<data name="Shared.Midi.Percussions.61" xml:space="preserve">
+		<value>Low Bongo</value>
+	</data>
+	<data name="Shared.Midi.Percussions.62" xml:space="preserve">
+		<value>Mute High Conga</value>
+	</data>
+	<data name="Shared.Midi.Percussions.63" xml:space="preserve">
+		<value>Open High Conga</value>
+	</data>
+	<data name="Shared.Midi.Percussions.64" xml:space="preserve">
+		<value>Low Conga</value>
+	</data>
+	<data name="Shared.Midi.Percussions.65" xml:space="preserve">
+		<value>High Timbale</value>
+	</data>
+	<data name="Shared.Midi.Percussions.66" xml:space="preserve">
+		<value>Low Timbale</value>
+	</data>
+	<data name="Shared.Midi.Percussions.67" xml:space="preserve">
+		<value>High Agogô</value>
+	</data>
+	<data name="Shared.Midi.Percussions.68" xml:space="preserve">
+		<value>Low Agogô</value>
+	</data>
+	<data name="Shared.Midi.Percussions.69" xml:space="preserve">
+		<value>Cabasa</value>
+	</data>
+	<data name="Shared.Midi.Percussions.70" xml:space="preserve">
+		<value>Maracas</value>
+	</data>
+	<data name="Shared.Midi.Percussions.71" xml:space="preserve">
+		<value>Short Whistle</value>
+	</data>
+	<data name="Shared.Midi.Percussions.72" xml:space="preserve">
+		<value>Long Whistle</value>
+	</data>
+	<data name="Shared.Midi.Percussions.73" xml:space="preserve">
+		<value>Short Güiro</value>
+	</data>
+	<data name="Shared.Midi.Percussions.74" xml:space="preserve">
+		<value>Long Güiro</value>
+	</data>
+	<data name="Shared.Midi.Percussions.75" xml:space="preserve">
+		<value>Claves</value>
+	</data>
+	<data name="Shared.Midi.Percussions.76" xml:space="preserve">
+		<value>High Woodblock</value>
+	</data>
+	<data name="Shared.Midi.Percussions.77" xml:space="preserve">
+		<value>Low Woodblock</value>
+	</data>
+	<data name="Shared.Midi.Percussions.78" xml:space="preserve">
+		<value>Mute Cuíca</value>
+	</data>
+	<data name="Shared.Midi.Percussions.79" xml:space="preserve">
+		<value>Open Cuíca</value>
+	</data>
+	<data name="Shared.Midi.Percussions.80" xml:space="preserve">
+		<value>Mute Triangle</value>
+	</data>
+	<data name="Shared.Midi.Percussions.81" xml:space="preserve">
+		<value>Open Triangle</value>
+	</data>
+	<data name="Shared.Midi.Percussions.82" xml:space="preserve">
+		<value>Shaker</value>
+	</data>
+	<data name="Shared.Midi.Percussions.83" xml:space="preserve">
+		<value>Jingle Bell</value>
+	</data>
+	<data name="Shared.Midi.Percussions.84" xml:space="preserve">
+		<value>Bell Tree</value>
+	</data>
+	<data name="Shared.Midi.Percussions.85" xml:space="preserve">
+		<value>Castanets</value>
+	</data>
+	<data name="Shared.Midi.Percussions.86" xml:space="preserve">
+		<value>Mute Surdo</value>
+	</data>
+	<data name="Shared.Midi.Percussions.87" xml:space="preserve">
+		<value>Open Surdo</value>
+	</data>
+	<data name="Shared.Midi.Percussions.88" xml:space="preserve">
+		<value>Applause 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.89" xml:space="preserve">
+		<value>Snare Ghost 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.90" xml:space="preserve">
+		<value>Snare Ghost 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.91" xml:space="preserve">
+		<value>Hand Clap 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.92" xml:space="preserve">
+		<value>Hand Clap 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.93" xml:space="preserve">
+		<value>Scratch 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.94" xml:space="preserve">
+		<value>Scratch 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.95" xml:space="preserve">
+		<value>Scratch 3</value>
+	</data>
+	<data name="Shared.Midi.Percussions.96" xml:space="preserve">
+		<value>Hit 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.97" xml:space="preserve">
+		<value>Hit 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.98" xml:space="preserve">
+		<value>Hit 3</value>
+	</data>
+	<data name="Shared.Midi.Percussions.99" xml:space="preserve">
+		<value>Hit 4</value>
+	</data>
+	<data name="Shared.Midi.Percussions.100" xml:space="preserve">
+		<value>Hit 5</value>
+	</data>
+	<data name="Shared.Midi.Percussions.101" xml:space="preserve">
+		<value>Low Tom 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.102" xml:space="preserve">
+		<value>Low Tom 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.103" xml:space="preserve">
+		<value>Cajón 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.104" xml:space="preserve">
+		<value>Cajón 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.105" xml:space="preserve">
+		<value>Syn Burst Nz</value>
+	</data>
+	<data name="Shared.Midi.Percussions.106" xml:space="preserve">
+		<value>Sweep Down</value>
+	</data>
+	<data name="Shared.Midi.Percussions.107" xml:space="preserve">
+		<value>Laser</value>
+	</data>
+	<data name="Shared.Midi.Percussions.108" xml:space="preserve">
+		<value>Syn Back Nz</value>
+	</data>
 </root>

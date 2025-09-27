@@ -272,4 +272,661 @@
 	<data name="Shared.Plugins.CreditRoll" xml:space="preserve">
 		<value>致谢字幕</value>
 	</data>
+	<data name="Shared.Midi.Unknown" xml:space="preserve">
+		<value>未知</value>
+	</data>
+	<data name="Shared.Midi.Instruments.1" xml:space="preserve">
+		<value>大钢琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.2" xml:space="preserve">
+		<value>亮音钢琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.3" xml:space="preserve">
+		<value>电钢琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.4" xml:space="preserve">
+		<value>酒吧钢琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.5" xml:space="preserve">
+		<value>柔音电钢琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.6" xml:space="preserve">
+		<value>合唱电钢琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.7" xml:space="preserve">
+		<value>羽管键琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.8" xml:space="preserve">
+		<value>电翼琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.9" xml:space="preserve">
+		<value>钢片琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.10" xml:space="preserve">
+		<value>钟琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.11" xml:space="preserve">
+		<value>八音盒</value>
+	</data>
+	<data name="Shared.Midi.Instruments.12" xml:space="preserve">
+		<value>电颤琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.13" xml:space="preserve">
+		<value>马林巴琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.14" xml:space="preserve">
+		<value>木琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.15" xml:space="preserve">
+		<value>管钟</value>
+	</data>
+	<data name="Shared.Midi.Instruments.16" xml:space="preserve">
+		<value>扬琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.17" xml:space="preserve">
+		<value>音栓风琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.18" xml:space="preserve">
+		<value>敲击风琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.19" xml:space="preserve">
+		<value>摇滚风琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.20" xml:space="preserve">
+		<value>管风琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.21" xml:space="preserve">
+		<value>簧风琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.22" xml:space="preserve">
+		<value>手风琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.23" xml:space="preserve">
+		<value>口琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.24" xml:space="preserve">
+		<value>探戈手风琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.25" xml:space="preserve">
+		<value>古典吉他</value>
+	</data>
+	<data name="Shared.Midi.Instruments.26" xml:space="preserve">
+		<value>民谣吉他</value>
+	</data>
+	<data name="Shared.Midi.Instruments.27" xml:space="preserve">
+		<value>爵士电吉他</value>
+	</data>
+	<data name="Shared.Midi.Instruments.28" xml:space="preserve">
+		<value>原音电吉他</value>
+	</data>
+	<data name="Shared.Midi.Instruments.29" xml:space="preserve">
+		<value>闷音电吉他</value>
+	</data>
+	<data name="Shared.Midi.Instruments.30" xml:space="preserve">
+		<value>破音电吉他</value>
+	</data>
+	<data name="Shared.Midi.Instruments.31" xml:space="preserve">
+		<value>失真电吉他</value>
+	</data>
+	<data name="Shared.Midi.Instruments.32" xml:space="preserve">
+		<value>吉他泛音</value>
+	</data>
+	<data name="Shared.Midi.Instruments.33" xml:space="preserve">
+		<value>木贝司</value>
+	</data>
+	<data name="Shared.Midi.Instruments.34" xml:space="preserve">
+		<value>指弹电贝司</value>
+	</data>
+	<data name="Shared.Midi.Instruments.35" xml:space="preserve">
+		<value>拨片电贝司</value>
+	</data>
+	<data name="Shared.Midi.Instruments.36" xml:space="preserve">
+		<value>无品贝司</value>
+	</data>
+	<data name="Shared.Midi.Instruments.37" xml:space="preserve">
+		<value>击弦贝司1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.38" xml:space="preserve">
+		<value>击弦贝司2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.39" xml:space="preserve">
+		<value>合成贝司1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.40" xml:space="preserve">
+		<value>合成贝司2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.41" xml:space="preserve">
+		<value>小提琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.42" xml:space="preserve">
+		<value>中提琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.43" xml:space="preserve">
+		<value>大提琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.44" xml:space="preserve">
+		<value>低音提琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.45" xml:space="preserve">
+		<value>颤弓弦乐</value>
+	</data>
+	<data name="Shared.Midi.Instruments.46" xml:space="preserve">
+		<value>弹拨弦乐</value>
+	</data>
+	<data name="Shared.Midi.Instruments.47" xml:space="preserve">
+		<value>竖琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.48" xml:space="preserve">
+		<value>定音鼓</value>
+	</data>
+	<data name="Shared.Midi.Instruments.49" xml:space="preserve">
+		<value>弦乐合奏1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.50" xml:space="preserve">
+		<value>弦乐合奏2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.51" xml:space="preserve">
+		<value>合成弦乐1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.52" xml:space="preserve">
+		<value>合成弦乐2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.53" xml:space="preserve">
+		<value>合唱“啊”</value>
+	</data>
+	<data name="Shared.Midi.Instruments.54" xml:space="preserve">
+		<value>人声“嘟”</value>
+	</data>
+	<data name="Shared.Midi.Instruments.55" xml:space="preserve">
+		<value>合成人声</value>
+	</data>
+	<data name="Shared.Midi.Instruments.56" xml:space="preserve">
+		<value>管弦打击乐</value>
+	</data>
+	<data name="Shared.Midi.Instruments.57" xml:space="preserve">
+		<value>小号</value>
+	</data>
+	<data name="Shared.Midi.Instruments.58" xml:space="preserve">
+		<value>长号</value>
+	</data>
+	<data name="Shared.Midi.Instruments.59" xml:space="preserve">
+		<value>大号</value>
+	</data>
+	<data name="Shared.Midi.Instruments.60" xml:space="preserve">
+		<value>闷音小号</value>
+	</data>
+	<data name="Shared.Midi.Instruments.61" xml:space="preserve">
+		<value>圆号</value>
+	</data>
+	<data name="Shared.Midi.Instruments.62" xml:space="preserve">
+		<value>铜管组</value>
+	</data>
+	<data name="Shared.Midi.Instruments.63" xml:space="preserve">
+		<value>合成铜管1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.64" xml:space="preserve">
+		<value>合成铜管2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.65" xml:space="preserve">
+		<value>高音萨克斯</value>
+	</data>
+	<data name="Shared.Midi.Instruments.66" xml:space="preserve">
+		<value>中音萨克斯</value>
+	</data>
+	<data name="Shared.Midi.Instruments.67" xml:space="preserve">
+		<value>次中音萨克斯</value>
+	</data>
+	<data name="Shared.Midi.Instruments.68" xml:space="preserve">
+		<value>上低音萨克斯</value>
+	</data>
+	<data name="Shared.Midi.Instruments.69" xml:space="preserve">
+		<value>双簧管</value>
+	</data>
+	<data name="Shared.Midi.Instruments.70" xml:space="preserve">
+		<value>英国管</value>
+	</data>
+	<data name="Shared.Midi.Instruments.71" xml:space="preserve">
+		<value>大管</value>
+	</data>
+	<data name="Shared.Midi.Instruments.72" xml:space="preserve">
+		<value>单簧管</value>
+	</data>
+	<data name="Shared.Midi.Instruments.73" xml:space="preserve">
+		<value>短笛</value>
+	</data>
+	<data name="Shared.Midi.Instruments.74" xml:space="preserve">
+		<value>长笛</value>
+	</data>
+	<data name="Shared.Midi.Instruments.75" xml:space="preserve">
+		<value>竖笛</value>
+	</data>
+	<data name="Shared.Midi.Instruments.76" xml:space="preserve">
+		<value>排箫</value>
+	</data>
+	<data name="Shared.Midi.Instruments.77" xml:space="preserve">
+		<value>吹瓶</value>
+	</data>
+	<data name="Shared.Midi.Instruments.78" xml:space="preserve">
+		<value>尺八</value>
+	</data>
+	<data name="Shared.Midi.Instruments.79" xml:space="preserve">
+		<value>哨子</value>
+	</data>
+	<data name="Shared.Midi.Instruments.80" xml:space="preserve">
+		<value>陶笛</value>
+	</data>
+	<data name="Shared.Midi.Instruments.81" xml:space="preserve">
+		<value>方波</value>
+	</data>
+	<data name="Shared.Midi.Instruments.82" xml:space="preserve">
+		<value>锯齿波</value>
+	</data>
+	<data name="Shared.Midi.Instruments.83" xml:space="preserve">
+		<value>汽笛风琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.84" xml:space="preserve">
+		<value>吹管</value>
+	</data>
+	<data name="Shared.Midi.Instruments.85" xml:space="preserve">
+		<value>恰朗戈琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.86" xml:space="preserve">
+		<value>索洛沃克斯</value>
+	</data>
+	<data name="Shared.Midi.Instruments.87" xml:space="preserve">
+		<value>平行五度</value>
+	</data>
+	<data name="Shared.Midi.Instruments.88" xml:space="preserve">
+		<value>贝司合奏</value>
+	</data>
+	<data name="Shared.Midi.Instruments.89" xml:space="preserve">
+		<value>幻想铺底</value>
+	</data>
+	<data name="Shared.Midi.Instruments.90" xml:space="preserve">
+		<value>暖音铺底</value>
+	</data>
+	<data name="Shared.Midi.Instruments.91" xml:space="preserve">
+		<value>重奏铺底</value>
+	</data>
+	<data name="Shared.Midi.Instruments.92" xml:space="preserve">
+		<value>合唱铺底</value>
+	</data>
+	<data name="Shared.Midi.Instruments.93" xml:space="preserve">
+		<value>弓弦铺底</value>
+	</data>
+	<data name="Shared.Midi.Instruments.94" xml:space="preserve">
+		<value>金属铺底</value>
+	</data>
+	<data name="Shared.Midi.Instruments.95" xml:space="preserve">
+		<value>光环铺底</value>
+	</data>
+	<data name="Shared.Midi.Instruments.96" xml:space="preserve">
+		<value>扫弦铺底</value>
+	</data>
+	<data name="Shared.Midi.Instruments.97" xml:space="preserve">
+		<value>雨声</value>
+	</data>
+	<data name="Shared.Midi.Instruments.98" xml:space="preserve">
+		<value>音轨</value>
+	</data>
+	<data name="Shared.Midi.Instruments.99" xml:space="preserve">
+		<value>水晶</value>
+	</data>
+	<data name="Shared.Midi.Instruments.100" xml:space="preserve">
+		<value>气氛</value>
+	</data>
+	<data name="Shared.Midi.Instruments.101" xml:space="preserve">
+		<value>明亮</value>
+	</data>
+	<data name="Shared.Midi.Instruments.102" xml:space="preserve">
+		<value>魅影</value>
+	</data>
+	<data name="Shared.Midi.Instruments.103" xml:space="preserve">
+		<value>回声</value>
+	</data>
+	<data name="Shared.Midi.Instruments.104" xml:space="preserve">
+		<value>科幻</value>
+	</data>
+	<data name="Shared.Midi.Instruments.105" xml:space="preserve">
+		<value>西塔琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.106" xml:space="preserve">
+		<value>班卓琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.107" xml:space="preserve">
+		<value>三味线</value>
+	</data>
+	<data name="Shared.Midi.Instruments.108" xml:space="preserve">
+		<value>十三弦筝</value>
+	</data>
+	<data name="Shared.Midi.Instruments.109" xml:space="preserve">
+		<value>拇指琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.110" xml:space="preserve">
+		<value>风笛</value>
+	</data>
+	<data name="Shared.Midi.Instruments.111" xml:space="preserve">
+		<value>古提琴</value>
+	</data>
+	<data name="Shared.Midi.Instruments.112" xml:space="preserve">
+		<value>印度唢呐</value>
+	</data>
+	<data name="Shared.Midi.Instruments.113" xml:space="preserve">
+		<value>叮𪠽铃</value>
+	</data>
+	<data name="Shared.Midi.Instruments.114" xml:space="preserve">
+		<value>拉丁打铃</value>
+	</data>
+	<data name="Shared.Midi.Instruments.115" xml:space="preserve">
+		<value>钢鼓</value>
+	</data>
+	<data name="Shared.Midi.Instruments.116" xml:space="preserve">
+		<value>木鱼</value>
+	</data>
+	<data name="Shared.Midi.Instruments.117" xml:space="preserve">
+		<value>太鼓</value>
+	</data>
+	<data name="Shared.Midi.Instruments.118" xml:space="preserve">
+		<value>嗵鼓</value>
+	</data>
+	<data name="Shared.Midi.Instruments.119" xml:space="preserve">
+		<value>合成鼓</value>
+	</data>
+	<data name="Shared.Midi.Instruments.120" xml:space="preserve">
+		<value>反转吊镲</value>
+	</data>
+	<data name="Shared.Midi.Instruments.121" xml:space="preserve">
+		<value>吉他换把声</value>
+	</data>
+	<data name="Shared.Midi.Instruments.122" xml:space="preserve">
+		<value>呼吸声</value>
+	</data>
+	<data name="Shared.Midi.Instruments.123" xml:space="preserve">
+		<value>海浪声</value>
+	</data>
+	<data name="Shared.Midi.Instruments.124" xml:space="preserve">
+		<value>鸟鸣</value>
+	</data>
+	<data name="Shared.Midi.Instruments.125" xml:space="preserve">
+		<value>电话铃声</value>
+	</data>
+	<data name="Shared.Midi.Instruments.126" xml:space="preserve">
+		<value>直升机</value>
+	</data>
+	<data name="Shared.Midi.Instruments.127" xml:space="preserve">
+		<value>掌声</value>
+	</data>
+	<data name="Shared.Midi.Instruments.128" xml:space="preserve">
+		<value>枪声</value>
+	</data>
+	<data name="Shared.Midi.Percussions.17" xml:space="preserve">
+		<value>人声“一”</value>
+	</data>
+	<data name="Shared.Midi.Percussions.18" xml:space="preserve">
+		<value>人声“二”</value>
+	</data>
+	<data name="Shared.Midi.Percussions.19" xml:space="preserve">
+		<value>人声“三”</value>
+	</data>
+	<data name="Shared.Midi.Percussions.22" xml:space="preserve">
+		<value>MC-505信号音1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.23" xml:space="preserve">
+		<value>MC-505信号音2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.24" xml:space="preserve">
+		<value>音乐会军鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.25" xml:space="preserve">
+		<value>军鼓滚奏</value>
+	</data>
+	<data name="Shared.Midi.Percussions.26" xml:space="preserve">
+		<value>响指</value>
+	</data>
+	<data name="Shared.Midi.Percussions.27" xml:space="preserve">
+		<value>激光枪声</value>
+	</data>
+	<data name="Shared.Midi.Percussions.28" xml:space="preserve">
+		<value>拍打</value>
+	</data>
+	<data name="Shared.Midi.Percussions.29" xml:space="preserve">
+		<value>搓碟推音</value>
+	</data>
+	<data name="Shared.Midi.Percussions.30" xml:space="preserve">
+		<value>搓碟拉音</value>
+	</data>
+	<data name="Shared.Midi.Percussions.31" xml:space="preserve">
+		<value>鼓槌</value>
+	</data>
+	<data name="Shared.Midi.Percussions.32" xml:space="preserve">
+		<value>方波敲声</value>
+	</data>
+	<data name="Shared.Midi.Percussions.33" xml:space="preserve">
+		<value>节拍器</value>
+	</data>
+	<data name="Shared.Midi.Percussions.34" xml:space="preserve">
+		<value>节拍铃</value>
+	</data>
+	<data name="Shared.Midi.Percussions.35" xml:space="preserve">
+		<value>真鼓底鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.36" xml:space="preserve">
+		<value>电鼓底鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.37" xml:space="preserve">
+		<value>鼓边</value>
+	</data>
+	<data name="Shared.Midi.Percussions.38" xml:space="preserve">
+		<value>真鼓军鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.39" xml:space="preserve">
+		<value>拍手</value>
+	</data>
+	<data name="Shared.Midi.Percussions.40" xml:space="preserve">
+		<value>电鼓军鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.41" xml:space="preserve">
+		<value>低音落地嗵鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.42" xml:space="preserve">
+		<value>闭镲</value>
+	</data>
+	<data name="Shared.Midi.Percussions.43" xml:space="preserve">
+		<value>高音落地嗵鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.44" xml:space="preserve">
+		<value>踩镲</value>
+	</data>
+	<data name="Shared.Midi.Percussions.45" xml:space="preserve">
+		<value>低音嗵鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.46" xml:space="preserve">
+		<value>开镲</value>
+	</data>
+	<data name="Shared.Midi.Percussions.47" xml:space="preserve">
+		<value>中低音嗵鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.48" xml:space="preserve">
+		<value>中高音嗵鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.49" xml:space="preserve">
+		<value>吊镲1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.50" xml:space="preserve">
+		<value>高音嗵鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.51" xml:space="preserve">
+		<value>叮叮镲1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.52" xml:space="preserve">
+		<value>锣</value>
+	</data>
+	<data name="Shared.Midi.Percussions.53" xml:space="preserve">
+		<value>镲帽</value>
+	</data>
+	<data name="Shared.Midi.Percussions.54" xml:space="preserve">
+		<value>铃鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.55" xml:space="preserve">
+		<value>水镲</value>
+	</data>
+	<data name="Shared.Midi.Percussions.56" xml:space="preserve">
+		<value>牛铃</value>
+	</data>
+	<data name="Shared.Midi.Percussions.57" xml:space="preserve">
+		<value>吊镲2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.58" xml:space="preserve">
+		<value>震音木</value>
+	</data>
+	<data name="Shared.Midi.Percussions.59" xml:space="preserve">
+		<value>叮叮镲2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.60" xml:space="preserve">
+		<value>高音邦戈鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.61" xml:space="preserve">
+		<value>低音邦戈鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.62" xml:space="preserve">
+		<value>闭高音康加鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.63" xml:space="preserve">
+		<value>开高音康加鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.64" xml:space="preserve">
+		<value>低音康加鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.65" xml:space="preserve">
+		<value>高音天巴鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.66" xml:space="preserve">
+		<value>低音天巴鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.67" xml:space="preserve">
+		<value>高音拉丁打铃</value>
+	</data>
+	<data name="Shared.Midi.Percussions.68" xml:space="preserve">
+		<value>低音拉丁打铃</value>
+	</data>
+	<data name="Shared.Midi.Percussions.69" xml:space="preserve">
+		<value>铁沙铃</value>
+	</data>
+	<data name="Shared.Midi.Percussions.70" xml:space="preserve">
+		<value>沙锤</value>
+	</data>
+	<data name="Shared.Midi.Percussions.71" xml:space="preserve">
+		<value>短哨音</value>
+	</data>
+	<data name="Shared.Midi.Percussions.72" xml:space="preserve">
+		<value>长哨音</value>
+	</data>
+	<data name="Shared.Midi.Percussions.73" xml:space="preserve">
+		<value>短刮葫</value>
+	</data>
+	<data name="Shared.Midi.Percussions.74" xml:space="preserve">
+		<value>长刮葫</value>
+	</data>
+	<data name="Shared.Midi.Percussions.75" xml:space="preserve">
+		<value>响棒</value>
+	</data>
+	<data name="Shared.Midi.Percussions.76" xml:space="preserve">
+		<value>高音木鱼</value>
+	</data>
+	<data name="Shared.Midi.Percussions.77" xml:space="preserve">
+		<value>低音木鱼</value>
+	</data>
+	<data name="Shared.Midi.Percussions.78" xml:space="preserve">
+		<value>闭擦鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.79" xml:space="preserve">
+		<value>开擦鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.80" xml:space="preserve">
+		<value>闭三角铁</value>
+	</data>
+	<data name="Shared.Midi.Percussions.81" xml:space="preserve">
+		<value>开三角铁</value>
+	</data>
+	<data name="Shared.Midi.Percussions.82" xml:space="preserve">
+		<value>沙铃</value>
+	</data>
+	<data name="Shared.Midi.Percussions.83" xml:space="preserve">
+		<value>圣诞铃</value>
+	</data>
+	<data name="Shared.Midi.Percussions.84" xml:space="preserve">
+		<value>音树</value>
+	</data>
+	<data name="Shared.Midi.Percussions.85" xml:space="preserve">
+		<value>响板</value>
+	</data>
+	<data name="Shared.Midi.Percussions.86" xml:space="preserve">
+		<value>闭桑巴鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.87" xml:space="preserve">
+		<value>开桑巴鼓</value>
+	</data>
+	<data name="Shared.Midi.Percussions.88" xml:space="preserve">
+		<value>掌声2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.89" xml:space="preserve">
+		<value>魔鬼军鼓音1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.90" xml:space="preserve">
+		<value>魔鬼军鼓音2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.91" xml:space="preserve">
+		<value>拍手1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.92" xml:space="preserve">
+		<value>拍手2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.93" xml:space="preserve">
+		<value>搓碟1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.94" xml:space="preserve">
+		<value>搓碟2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.95" xml:space="preserve">
+		<value>搓碟3</value>
+	</data>
+	<data name="Shared.Midi.Percussions.96" xml:space="preserve">
+		<value>打击1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.97" xml:space="preserve">
+		<value>打击2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.98" xml:space="preserve">
+		<value>打击3</value>
+	</data>
+	<data name="Shared.Midi.Percussions.99" xml:space="preserve">
+		<value>打击4</value>
+	</data>
+	<data name="Shared.Midi.Percussions.100" xml:space="preserve">
+		<value>打击5</value>
+	</data>
+	<data name="Shared.Midi.Percussions.101" xml:space="preserve">
+		<value>低音嗵鼓1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.102" xml:space="preserve">
+		<value>低音嗵鼓2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.103" xml:space="preserve">
+		<value>箱鼓1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.104" xml:space="preserve">
+		<value>箱鼓2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.105" xml:space="preserve">
+		<value>合成脉冲音</value>
+	</data>
+	<data name="Shared.Midi.Percussions.106" xml:space="preserve">
+		<value>下扫弦</value>
+	</data>
+	<data name="Shared.Midi.Percussions.107" xml:space="preserve">
+		<value>激光</value>
+	</data>
+	<data name="Shared.Midi.Percussions.108" xml:space="preserve">
+		<value>合成铺底音</value>
+	</data>
 </root>

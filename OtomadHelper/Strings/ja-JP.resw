@@ -144,7 +144,7 @@
 		<value>キー / ブラック</value>
 	</data>
 	<data name="ColorPicker.Axis.Luminance" xml:space="preserve">
-		<value>&lt;unk&gt;</value>
+		<value />
 	</data>
 	<data name="ColorPicker.Axis.AAxisInLab" xml:space="preserve">
 		<value>a-Axis (−緑 ↔️ +赤)</value>
@@ -271,5 +271,662 @@
 	</data>
 	<data name="Shared.Plugins.CreditRoll" xml:space="preserve">
 		<value>クレジットロール</value>
+	</data>
+	<data name="Shared.Midi.Unknown" xml:space="preserve">
+		<value>不明</value>
+	</data>
+	<data name="Shared.Midi.Instruments.1" xml:space="preserve">
+		<value>Acoustic Grand Piano</value>
+	</data>
+	<data name="Shared.Midi.Instruments.2" xml:space="preserve">
+		<value>明るいアコースティックピアノ（ピアノ）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.3" xml:space="preserve">
+		<value>エレクトリックグランドピアノformat@@0</value>
+	</data>
+	<data name="Shared.Midi.Instruments.4" xml:space="preserve">
+		<value>ホンキー・トークピアノformat@@0</value>
+	</data>
+	<data name="Shared.Midi.Instruments.5" xml:space="preserve">
+		<value>エレクトリックピアノ1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.6" xml:space="preserve">
+		<value>エレクトリックピアノ2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.7" xml:space="preserve">
+		<value>Harpsichord</value>
+	</data>
+	<data name="Shared.Midi.Instruments.8" xml:space="preserve">
+		<value>Clavinet</value>
+	</data>
+	<data name="Shared.Midi.Instruments.9" xml:space="preserve">
+		<value>セレスタ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.10" xml:space="preserve">
+		<value>Glockenspiel</value>
+	</data>
+	<data name="Shared.Midi.Instruments.11" xml:space="preserve">
+		<value>オルゴールボックス</value>
+	</data>
+	<data name="Shared.Midi.Instruments.12" xml:space="preserve">
+		<value>バイブラフォン</value>
+	</data>
+	<data name="Shared.Midi.Instruments.13" xml:space="preserve">
+		<value>Marimba</value>
+	</data>
+	<data name="Shared.Midi.Instruments.14" xml:space="preserve">
+		<value>Xylophone</value>
+	</data>
+	<data name="Shared.Midi.Instruments.15" xml:space="preserve">
+		<value>チューブラーベル</value>
+	</data>
+	<data name="Shared.Midi.Instruments.16" xml:space="preserve">
+		<value>Dulcimer</value>
+	</data>
+	<data name="Shared.Midi.Instruments.17" xml:space="preserve">
+		<value>Drawbar Organ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.18" xml:space="preserve">
+		<value>パーカッシブ臓器format@@0</value>
+	</data>
+	<data name="Shared.Midi.Instruments.19" xml:space="preserve">
+		<value>ロックオルガン</value>
+	</data>
+	<data name="Shared.Midi.Instruments.20" xml:space="preserve">
+		<value>教会オルガン</value>
+	</data>
+	<data name="Shared.Midi.Instruments.21" xml:space="preserve">
+		<value>リード臓器format@@0</value>
+	</data>
+	<data name="Shared.Midi.Instruments.22" xml:space="preserve">
+		<value>アコーディオン</value>
+	</data>
+	<data name="Shared.Midi.Instruments.23" xml:space="preserve">
+		<value>ハーモニカ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.24" xml:space="preserve">
+		<value>タンゴアコーディオン</value>
+	</data>
+	<data name="Shared.Midi.Instruments.25" xml:space="preserve">
+		<value>Acoustic Guitar (nylon)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.26" xml:space="preserve">
+		<value>アコースティックギター（鋼）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.27" xml:space="preserve">
+		<value>エレキギター（ジャズ）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.28" xml:space="preserve">
+		<value>エレキギター（クリーン）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.29" xml:space="preserve">
+		<value>エレキギター（ミュート）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.30" xml:space="preserve">
+		<value>追い詰められたGuitar</value>
+	</data>
+	<data name="Shared.Midi.Instruments.31" xml:space="preserve">
+		<value>歪みのギター</value>
+	</data>
+	<data name="Shared.Midi.Instruments.32" xml:space="preserve">
+		<value>ギターハーモニックス</value>
+	</data>
+	<data name="Shared.Midi.Instruments.33" xml:space="preserve">
+		<value>アコースティックベース</value>
+	</data>
+	<data name="Shared.Midi.Instruments.34" xml:space="preserve">
+		<value>エレクトリックベース (指)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.35" xml:space="preserve">
+		<value>Electric Bass (pick)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.36" xml:space="preserve">
+		<value>フレットレスベース</value>
+	</data>
+	<data name="Shared.Midi.Instruments.37" xml:space="preserve">
+		<value>ベース Slap 1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.38" xml:space="preserve">
+		<value>ベース スラップ2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.39" xml:space="preserve">
+		<value>ベース1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.40" xml:space="preserve">
+		<value>ベース2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.41" xml:space="preserve">
+		<value>バイオリン(バイオリン)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.42" xml:space="preserve">
+		<value>Viola</value>
+	</data>
+	<data name="Shared.Midi.Instruments.43" xml:space="preserve">
+		<value>Cello</value>
+	</data>
+	<data name="Shared.Midi.Instruments.44" xml:space="preserve">
+		<value>Contrabass</value>
+	</data>
+	<data name="Shared.Midi.Instruments.45" xml:space="preserve">
+		<value>トレモロ文字列</value>
+	</data>
+	<data name="Shared.Midi.Instruments.46" xml:space="preserve">
+		<value>Pizzicato 文字列</value>
+	</data>
+	<data name="Shared.Midi.Instruments.47" xml:space="preserve">
+		<value>オーケストラ・ハープ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.48" xml:space="preserve">
+		<value>ティンパニ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.49" xml:space="preserve">
+		<value>弦楽アンサンブル1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.50" xml:space="preserve">
+		<value>弦楽アンサンブル2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.51" xml:space="preserve">
+		<value>SynthStrings 1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.52" xml:space="preserve">
+		<value>SynthStrings 2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.53" xml:space="preserve">
+		<value>合唱団</value>
+	</data>
+	<data name="Shared.Midi.Instruments.54" xml:space="preserve">
+		<value>音声Oohs</value>
+	</data>
+	<data name="Shared.Midi.Instruments.55" xml:space="preserve">
+		<value>シンセボイス（合成音声）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.56" xml:space="preserve">
+		<value>オーケストラヒット</value>
+	</data>
+	<data name="Shared.Midi.Instruments.57" xml:space="preserve">
+		<value>Trumpet</value>
+	</data>
+	<data name="Shared.Midi.Instruments.58" xml:space="preserve">
+		<value>トロンボーン</value>
+	</data>
+	<data name="Shared.Midi.Instruments.59" xml:space="preserve">
+		<value>Tuba</value>
+	</data>
+	<data name="Shared.Midi.Instruments.60" xml:space="preserve">
+		<value>ミュートされたトランペット。</value>
+	</data>
+	<data name="Shared.Midi.Instruments.61" xml:space="preserve">
+		<value>フランス語の角</value>
+	</data>
+	<data name="Shared.Midi.Instruments.62" xml:space="preserve">
+		<value>「真鍮」セクション</value>
+	</data>
+	<data name="Shared.Midi.Instruments.63" xml:space="preserve">
+		<value>SynthBrass 1</value>
+	</data>
+	<data name="Shared.Midi.Instruments.64" xml:space="preserve">
+		<value>SynthBrass 2</value>
+	</data>
+	<data name="Shared.Midi.Instruments.65" xml:space="preserve">
+		<value>ソプラノサックス</value>
+	</data>
+	<data name="Shared.Midi.Instruments.66" xml:space="preserve">
+		<value>Alto Sax</value>
+	</data>
+	<data name="Shared.Midi.Instruments.67" xml:space="preserve">
+		<value>テナー サックス</value>
+	</data>
+	<data name="Shared.Midi.Instruments.68" xml:space="preserve">
+		<value>Baritone Sax</value>
+	</data>
+	<data name="Shared.Midi.Instruments.69" xml:space="preserve">
+		<value>Oboe</value>
+	</data>
+	<data name="Shared.Midi.Instruments.70" xml:space="preserve">
+		<value>English Horn</value>
+	</data>
+	<data name="Shared.Midi.Instruments.71" xml:space="preserve">
+		<value>バスーン</value>
+	</data>
+	<data name="Shared.Midi.Instruments.72" xml:space="preserve">
+		<value>クラリネット</value>
+	</data>
+	<data name="Shared.Midi.Instruments.73" xml:space="preserve">
+		<value>Piccolo</value>
+	</data>
+	<data name="Shared.Midi.Instruments.74" xml:space="preserve">
+		<value>フルート</value>
+	</data>
+	<data name="Shared.Midi.Instruments.75" xml:space="preserve">
+		<value>レコーダー(Recorder)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.76" xml:space="preserve">
+		<value>フルートパン</value>
+	</data>
+	<data name="Shared.Midi.Instruments.77" xml:space="preserve">
+		<value>Blown ボトル</value>
+	</data>
+	<data name="Shared.Midi.Instruments.78" xml:space="preserve">
+		<value>尺八（しゃくはち）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.79" xml:space="preserve">
+		<value>命令書</value>
+	</data>
+	<data name="Shared.Midi.Instruments.80" xml:space="preserve">
+		<value>Ocarina</value>
+	</data>
+	<data name="Shared.Midi.Instruments.81" xml:space="preserve">
+		<value>リード 1 (正方形)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.82" xml:space="preserve">
+		<value>リード2（鋸歯）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.83" xml:space="preserve">
+		<value>リード3（カリオペ）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.84" xml:space="preserve">
+		<value>リード 4 (シフ)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.85" xml:space="preserve">
+		<value>リード5（チャラン）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.86" xml:space="preserve">
+		<value>リード 6 (音声)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.87" xml:space="preserve">
+		<value>リード7（5番目）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.88" xml:space="preserve">
+		<value>リード 8 (ベース + リード)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.89" xml:space="preserve">
+		<value>Pad 1 (新しい年齢)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.90" xml:space="preserve">
+		<value>Pad 2 (warm)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.91" xml:space="preserve">
+		<value>Pad 3 (Polysynth)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.92" xml:space="preserve">
+		<value>Pad 4 (choir)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.93" xml:space="preserve">
+		<value>パッド5（弓）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.94" xml:space="preserve">
+		<value>パッド6（金属）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.95" xml:space="preserve">
+		<value>Pad 7 (halo)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.96" xml:space="preserve">
+		<value>Pad 8 (sweep)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.97" xml:space="preserve">
+		<value>FX 1（雨）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.98" xml:space="preserve">
+		<value>FX 2（サウンドトラック）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.99" xml:space="preserve">
+		<value>FX 3 (クリスタル)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.100" xml:space="preserve">
+		<value>FX 4 (雰囲気)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.101" xml:space="preserve">
+		<value>FX 5（明るさ）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.102" xml:space="preserve">
+		<value>FX 6（ゴブリン）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.103" xml:space="preserve">
+		<value>FX 7 (エコー)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.104" xml:space="preserve">
+		<value>FX 8 (sci-fi)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.105" xml:space="preserve">
+		<value>シタル</value>
+	</data>
+	<data name="Shared.Midi.Instruments.106" xml:space="preserve">
+		<value>番上（ばんじょう）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.107" xml:space="preserve">
+		<value>三味線（三味線）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.108" xml:space="preserve">
+		<value>Koto</value>
+	</data>
+	<data name="Shared.Midi.Instruments.109" xml:space="preserve">
+		<value>Kalimba</value>
+	</data>
+	<data name="Shared.Midi.Instruments.110" xml:space="preserve">
+		<value>Bagpipe</value>
+	</data>
+	<data name="Shared.Midi.Instruments.111" xml:space="preserve">
+		<value>Fiddle</value>
+	</data>
+	<data name="Shared.Midi.Instruments.112" xml:space="preserve">
+		<value>Shanai</value>
+	</data>
+	<data name="Shared.Midi.Instruments.113" xml:space="preserve">
+		<value>Tinkle Bell</value>
+	</data>
+	<data name="Shared.Midi.Instruments.114" xml:space="preserve">
+		<value>Agogô</value>
+	</data>
+	<data name="Shared.Midi.Instruments.115" xml:space="preserve">
+		<value>スチールドラムス</value>
+	</data>
+	<data name="Shared.Midi.Instruments.116" xml:space="preserve">
+		<value>木ブロック</value>
+	</data>
+	<data name="Shared.Midi.Instruments.117" xml:space="preserve">
+		<value>太鼓（太鼓）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.118" xml:space="preserve">
+		<value>メロディックトム</value>
+	</data>
+	<data name="Shared.Midi.Instruments.119" xml:space="preserve">
+		<value>シンセ・ドラム(Synth Drum)</value>
+	</data>
+	<data name="Shared.Midi.Instruments.120" xml:space="preserve">
+		<value>シンバル反転</value>
+	</data>
+	<data name="Shared.Midi.Instruments.121" xml:space="preserve">
+		<value>ギターフレットノイズ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.122" xml:space="preserve">
+		<value>呼吸のノイズ</value>
+	</data>
+	<data name="Shared.Midi.Instruments.123" xml:space="preserve">
+		<value>海岸</value>
+	</data>
+	<data name="Shared.Midi.Instruments.124" xml:space="preserve">
+		<value>鳥のツイート</value>
+	</data>
+	<data name="Shared.Midi.Instruments.125" xml:space="preserve">
+		<value>電話の着信音</value>
+	</data>
+	<data name="Shared.Midi.Instruments.126" xml:space="preserve">
+		<value>ヘリコプター（ヘリコプター）</value>
+	</data>
+	<data name="Shared.Midi.Instruments.127" xml:space="preserve">
+		<value>拍手する</value>
+	</data>
+	<data name="Shared.Midi.Instruments.128" xml:space="preserve">
+		<value>機関銃弾</value>
+	</data>
+	<data name="Shared.Midi.Percussions.17" xml:space="preserve">
+		<value>音声 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.18" xml:space="preserve">
+		<value>音声 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.19" xml:space="preserve">
+		<value>音声3</value>
+	</data>
+	<data name="Shared.Midi.Percussions.22" xml:space="preserve">
+		<value>MC-505ビープ音 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.23" xml:space="preserve">
+		<value>MC-505ビープ音2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.24" xml:space="preserve">
+		<value>コンサート SD</value>
+	</data>
+	<data name="Shared.Midi.Percussions.25" xml:space="preserve">
+		<value>スネアロール</value>
+	</data>
+	<data name="Shared.Midi.Percussions.26" xml:space="preserve">
+		<value>指でスナップ</value>
+	</data>
+	<data name="Shared.Midi.Percussions.27" xml:space="preserve">
+		<value>High Q</value>
+	</data>
+	<data name="Shared.Midi.Percussions.28" xml:space="preserve">
+		<value>Slap</value>
+	</data>
+	<data name="Shared.Midi.Percussions.29" xml:space="preserve">
+		<value>スクラッチプッシュ</value>
+	</data>
+	<data name="Shared.Midi.Percussions.30" xml:space="preserve">
+		<value>スクラッチプル</value>
+	</data>
+	<data name="Shared.Midi.Percussions.31" xml:space="preserve">
+		<value>スティック</value>
+	</data>
+	<data name="Shared.Midi.Percussions.32" xml:space="preserve">
+		<value>正方形のクリック</value>
+	</data>
+	<data name="Shared.Midi.Percussions.33" xml:space="preserve">
+		<value>Metronome Click</value>
+	</data>
+	<data name="Shared.Midi.Percussions.34" xml:space="preserve">
+		<value>Metronome Bell</value>
+	</data>
+	<data name="Shared.Midi.Percussions.35" xml:space="preserve">
+		<value>Acoustic Bass Drum</value>
+	</data>
+	<data name="Shared.Midi.Percussions.36" xml:space="preserve">
+		<value>エレクトリックベースのドラム(ドラム)</value>
+	</data>
+	<data name="Shared.Midi.Percussions.37" xml:space="preserve">
+		<value>サイドスティック</value>
+	</data>
+	<data name="Shared.Midi.Percussions.38" xml:space="preserve">
+		<value>Acoustic Snare</value>
+	</data>
+	<data name="Shared.Midi.Percussions.39" xml:space="preserve">
+		<value>Hand Clap</value>
+	</data>
+	<data name="Shared.Midi.Percussions.40" xml:space="preserve">
+		<value>電動スネア</value>
+	</data>
+	<data name="Shared.Midi.Percussions.41" xml:space="preserve">
+		<value>低床の Tom</value>
+	</data>
+	<data name="Shared.Midi.Percussions.42" xml:space="preserve">
+		<value>クローズドHi-Hat</value>
+	</data>
+	<data name="Shared.Midi.Percussions.43" xml:space="preserve">
+		<value>高い床のトム</value>
+	</data>
+	<data name="Shared.Midi.Percussions.44" xml:space="preserve">
+		<value>Pedal Hi-Hat</value>
+	</data>
+	<data name="Shared.Midi.Percussions.45" xml:space="preserve">
+		<value>下のトム</value>
+	</data>
+	<data name="Shared.Midi.Percussions.46" xml:space="preserve">
+		<value>Hi-Hat を開く</value>
+	</data>
+	<data name="Shared.Midi.Percussions.47" xml:space="preserve">
+		<value>ローミッドトム</value>
+	</data>
+	<data name="Shared.Midi.Percussions.48" xml:space="preserve">
+		<value>ハイミッドトム</value>
+	</data>
+	<data name="Shared.Midi.Percussions.49" xml:space="preserve">
+		<value>クラッシュシンバル 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.50" xml:space="preserve">
+		<value>高いトム</value>
+	</data>
+	<data name="Shared.Midi.Percussions.51" xml:space="preserve">
+		<value>ライドシンバル1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.52" xml:space="preserve">
+		<value>Chinese Cymbal</value>
+	</data>
+	<data name="Shared.Midi.Percussions.53" xml:space="preserve">
+		<value>ライドベル</value>
+	</data>
+	<data name="Shared.Midi.Percussions.54" xml:space="preserve">
+		<value>タンブリン</value>
+	</data>
+	<data name="Shared.Midi.Percussions.55" xml:space="preserve">
+		<value>スプラッシュシンバル</value>
+	</data>
+	<data name="Shared.Midi.Percussions.56" xml:space="preserve">
+		<value>カウベル</value>
+	</data>
+	<data name="Shared.Midi.Percussions.57" xml:space="preserve">
+		<value>クラッシュシンバル2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.58" xml:space="preserve">
+		<value>Vibraslap</value>
+	</data>
+	<data name="Shared.Midi.Percussions.59" xml:space="preserve">
+		<value>ライドシンバル2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.60" xml:space="preserve">
+		<value>High Bongo</value>
+	</data>
+	<data name="Shared.Midi.Percussions.61" xml:space="preserve">
+		<value>Low Bongo</value>
+	</data>
+	<data name="Shared.Midi.Percussions.62" xml:space="preserve">
+		<value>ミュートハイコンガ</value>
+	</data>
+	<data name="Shared.Midi.Percussions.63" xml:space="preserve">
+		<value>Open High Conga</value>
+	</data>
+	<data name="Shared.Midi.Percussions.64" xml:space="preserve">
+		<value>低コンガ</value>
+	</data>
+	<data name="Shared.Midi.Percussions.65" xml:space="preserve">
+		<value>高ティンバレス</value>
+	</data>
+	<data name="Shared.Midi.Percussions.66" xml:space="preserve">
+		<value>低Timbale</value>
+	</data>
+	<data name="Shared.Midi.Percussions.67" xml:space="preserve">
+		<value>高アゴゴ&lt;unk&gt;</value>
+	</data>
+	<data name="Shared.Midi.Percussions.68" xml:space="preserve">
+		<value>低アゴ&lt;unk&gt;</value>
+	</data>
+	<data name="Shared.Midi.Percussions.69" xml:space="preserve">
+		<value>Cabasa</value>
+	</data>
+	<data name="Shared.Midi.Percussions.70" xml:space="preserve">
+		<value>Maracas</value>
+	</data>
+	<data name="Shared.Midi.Percussions.71" xml:space="preserve">
+		<value>短い命令書</value>
+	</data>
+	<data name="Shared.Midi.Percussions.72" xml:space="preserve">
+		<value>長い命令書</value>
+	</data>
+	<data name="Shared.Midi.Percussions.73" xml:space="preserve">
+		<value>短いGu&lt;unk&gt; iro</value>
+	</data>
+	<data name="Shared.Midi.Percussions.74" xml:space="preserve">
+		<value>ロングGu&lt;unk&gt;</value>
+	</data>
+	<data name="Shared.Midi.Percussions.75" xml:space="preserve">
+		<value>Claves</value>
+	</data>
+	<data name="Shared.Midi.Percussions.76" xml:space="preserve">
+		<value>高木ブロック</value>
+	</data>
+	<data name="Shared.Midi.Percussions.77" xml:space="preserve">
+		<value>低木ブロック</value>
+	</data>
+	<data name="Shared.Midi.Percussions.78" xml:space="preserve">
+		<value>ミュートCuíca</value>
+	</data>
+	<data name="Shared.Midi.Percussions.79" xml:space="preserve">
+		<value>オープンCuíca</value>
+	</data>
+	<data name="Shared.Midi.Percussions.80" xml:space="preserve">
+		<value>三角形をミュート</value>
+	</data>
+	<data name="Shared.Midi.Percussions.81" xml:space="preserve">
+		<value>三角形を開く</value>
+	</data>
+	<data name="Shared.Midi.Percussions.82" xml:space="preserve">
+		<value>シェーカー</value>
+	</data>
+	<data name="Shared.Midi.Percussions.83" xml:space="preserve">
+		<value>ジングルベル</value>
+	</data>
+	<data name="Shared.Midi.Percussions.84" xml:space="preserve">
+		<value>ベルツリー</value>
+	</data>
+	<data name="Shared.Midi.Percussions.85" xml:space="preserve">
+		<value>Castanets</value>
+	</data>
+	<data name="Shared.Midi.Percussions.86" xml:space="preserve">
+		<value>Mute Surdo</value>
+	</data>
+	<data name="Shared.Midi.Percussions.87" xml:space="preserve">
+		<value>Surdo を開く</value>
+	</data>
+	<data name="Shared.Midi.Percussions.88" xml:space="preserve">
+		<value>拍手2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.89" xml:space="preserve">
+		<value>スネアゴースト1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.90" xml:space="preserve">
+		<value>スネアゴースト2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.91" xml:space="preserve">
+		<value>Hand Clap 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.92" xml:space="preserve">
+		<value>Hand Clap 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.93" xml:space="preserve">
+		<value>スクラッチ 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.94" xml:space="preserve">
+		<value>スクラッチ 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.95" xml:space="preserve">
+		<value>スクラッチ 3</value>
+	</data>
+	<data name="Shared.Midi.Percussions.96" xml:space="preserve">
+		<value>ヒット数 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.97" xml:space="preserve">
+		<value>ヒット 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.98" xml:space="preserve">
+		<value>ヒット 3</value>
+	</data>
+	<data name="Shared.Midi.Percussions.99" xml:space="preserve">
+		<value>ヒット 4</value>
+	</data>
+	<data name="Shared.Midi.Percussions.100" xml:space="preserve">
+		<value>ヒット 5</value>
+	</data>
+	<data name="Shared.Midi.Percussions.101" xml:space="preserve">
+		<value>Low Tom 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.102" xml:space="preserve">
+		<value>Low Tom 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.103" xml:space="preserve">
+		<value>Cajon 1</value>
+	</data>
+	<data name="Shared.Midi.Percussions.104" xml:space="preserve">
+		<value>Cajon 2</value>
+	</data>
+	<data name="Shared.Midi.Percussions.105" xml:space="preserve">
+		<value>Syn Burst Nz</value>
+	</data>
+	<data name="Shared.Midi.Percussions.106" xml:space="preserve">
+		<value>Sweep Down</value>
+	</data>
+	<data name="Shared.Midi.Percussions.107" xml:space="preserve">
+		<value>レーザー</value>
+	</data>
+	<data name="Shared.Midi.Percussions.108" xml:space="preserve">
+		<value>Syn Back Nz</value>
 	</data>
 </root>

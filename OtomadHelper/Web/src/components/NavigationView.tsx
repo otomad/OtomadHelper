@@ -741,6 +741,11 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 		setIsExpandedInExpandedMode(true) :
 		setFlyoutDisplayMode("expanded");
 	const hideFlyoutNavMenu = () => { flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal"); };
+	const handleSearch: typeof onSearch = (keyword, onSearchResultSelect) => onSearch?.(keyword, () => {
+		(document.activeElement as HTMLElement)?.blur?.();
+		setFlyoutDisplayMode("minimal");
+		onSearchResultSelect?.();
+	});
 
 	const windowWidth = useWindowWidth();
 	useEffect(hideFlyoutNavMenu, [currentNav, windowWidth]);
@@ -764,7 +769,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 						searchValue={searchValue}
 						onRequestHide={hideFlyoutNavMenu}
 						onRequestExpand={onRequestExpand}
-						onSearch={onSearch}
+						onSearch={handleSearch}
 					/>
 				);
 			})}

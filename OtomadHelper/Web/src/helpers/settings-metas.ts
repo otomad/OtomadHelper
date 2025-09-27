@@ -56,11 +56,15 @@ export class SettingMeta implements ISettingMeta {
 	get translatedPath() {
 		const path = this.path.replace(/(^|[:/])[^:/]*?$/, "");
 		const [_page = "", _anchor = ""] = path.split(":");
-		const pages = _page.split("/").map(subpage => $$t.titles[subpage]?.toString()).toCompacted();
-		let metaRoot = _page.split("/").reduce<AnyObject>((root, subpage) => root[subpage], metas);
-		const anchors = _anchor.split("/").map(anchor => { metaRoot = metaRoot?.[anchor]; return $t(metaRoot?.meta?.title); }).toCompacted();
+		const pages = splitUnlessEmpty(_page, "/").map(subpage => $$t.titles[subpage]?.toString()).toCompacted();
+		let metaRoot = splitUnlessEmpty(_page, "/").reduce<AnyObject>((root, subpage) => root[subpage], settingsMetas);
+		const anchors = splitUnlessEmpty(_anchor, "/").map(anchor => { metaRoot = metaRoot?.[anchor]; return $t(metaRoot?.meta?.title); }).toCompacted();
 		return { pages, anchors };
 	}
+}
+
+function splitUnlessEmpty(source: string, sep: string) {
+	return source ? source.split(sep) : [];
 }
 
 type TranslateFromPath<TRoot, TPath> =
@@ -113,12 +117,12 @@ function convertItem(item: ISettingMeta, path: string) {
 }
 for (let page of Object.keys(settingsMetasInput)) {
 	page = page.replaceAll("_", "/"); const subpage = page.split("/").at(-1)!;
-	const contexts = ["long", "full", undefined];
+	const contexts = ["long", "full", "other", undefined];
 	const context = contexts.firstDefined(ctx => i18nExists(t => t.titles[subpage], ctx) && ctx && "_" + ctx || undefined) ?? "";
 	const meta = new SettingMeta({
 		icon: redirectIcon(subpage),
 		title: t.titles[subpage + context].toString(),
-		aliases: contexts.map(ctx => t.titles[subpage + ctx].toString()),
+		aliases: [...contexts.map(ctx => t.titles[subpage + ctx].toString()), t.aliases.titles[subpage].toString()],
 	}, page);
 	metas.push(meta);
 }
@@ -130,7 +134,7 @@ export const settingsMetas = settingsMetasOutput as Nesting<ConvertPage<typeof s
 function $t(key?: string) {
 	if (!key) return;
 	const keys = key.split(".");
-	if (!i18nExists(key)) return;
+	if (!i18nExists(key, undefined, false)) return;
 	return keys.reduce<AnyObject>((root, key) => root[key], $$t).toString();
 }
 
@@ -148,7 +152,7 @@ function updateSettingsMetasSearchMap() {
 		if ((title = $t(title))) add(title, "title", meta);
 		if ((details = $t(details))) add(details, "details", meta);
 		if ((_aliases = _aliases?.map(alias => $t(alias)).toCompacted())) {
-			const aliases = _aliases?.join(", ").split(/,\s*/).map(alias => alias.trim()).filter(alias => alias !== title).toCompacted() ?? [];
+			const aliases = _aliases?.join(", ").split(/[,，、]\s*/).map(alias => alias.trim()).filter(alias => alias !== title).toCompacted() ?? [];
 			for (const alias of aliases)
 				add(alias, "alias", meta);
 		}

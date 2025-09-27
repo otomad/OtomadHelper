@@ -173,7 +173,6 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 		lastGotoPath: undefined,
 		async goto(path) {
 			if (!path) return;
-			(document.activeElement as HTMLElement)?.blur?.();
 			const [page] = path.split(":");
 			const changed = setPageInternal(page.split("/"));
 			if (!path.includes(":")) return;

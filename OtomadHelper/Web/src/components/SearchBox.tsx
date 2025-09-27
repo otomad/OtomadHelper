@@ -42,7 +42,7 @@ const StyledDataList = styled.div`
 	}
 `;
 
-export default function SearchBox({ value: [value, setValue], collapsed, collapsedButtonTooltip, enableShortcutKey, placeholder, onCollapsedButtonClick, onSearch, className, ...htmlAttrs }: FCP<{
+export default function SearchBox({ value: [value, setValue], collapsed, collapsedButtonTooltip, enableShortcutKey, placeholder, onCollapsedButtonClick, onSearch, onSearchResultSelect, className, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
 	/** Collapse the search box? */
@@ -59,7 +59,9 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 	/** Occurs when the collapsed button clicked. */
 	onCollapsedButtonClick?(): void;
 	/** Get search results. */
-	onSearch?(keyword: string): ReactNode;
+	onSearch?(keyword: string, onSearchResultSelect?: () => void): ReactNode;
+	/** Occurs when user click the search result item. */
+	onSearchResultSelect?(): void;
 	children?: never;
 }, "search">) {
 	const [language] = useLanguage();
@@ -72,14 +74,18 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 		await delay(0);
 		focusSearchBox();
 	};
+	const datalistEl = useDomRef<"div">();
 
-	const searchResults = useMemo(() => onSearch?.(value ?? ""), [value, onSearch, language]);
+	const searchResults = useMemo(() => onSearch?.(value ?? "", onSearchResultSelect), [value, onSearch, language, onSearchResultSelect]);
 
 	useEventListener(window, "keydown", e => {
 		if (!enableShortcutKey || !(e.ctrlKey && e.code === "KeyF")) return;
 		e.preventDefault();
 		collapsed ? handleCollapsedButtonClick() : focusSearchBox();
 	}, undefined, [enableShortcutKey, onCollapsedButtonClick, collapsed]);
+
+	const scrollDatalistToTop = () => datalistEl.current?.scrollTo({ top: 0, behavior: "instant" });
+	useEffect(() => { scrollDatalistToTop(); delay(0).then(scrollDatalistToTop); }, [value]);
 
 	return (
 		<search className={["search-box", { collapsed }, className]} aria-label={t.aria.searchBox} {...htmlAttrs}>
@@ -93,7 +99,7 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 					placeholder={placeholder}
 					aria-label={t.aria.searchBox}
 					customFlyout={value?.trim() && (
-						<StyledDataList data-empty={t.noMatchingResults} onMouseDown={e => e.preventDefault()}>
+						<StyledDataList ref={datalistEl} data-empty={t.noMatchingResults} onMouseDown={e => e.preventDefault()}>
 							{searchResults}
 						</StyledDataList>
 					)}

@@ -67,6 +67,7 @@ export const settingsMetasInput = {
 				},
 				secretBox: {
 					title: t.source.secretBox,
+					aliases: [t.aliases.source.secretBox],
 					icon: "dice",
 				},
 			},

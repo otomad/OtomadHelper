@@ -149,6 +149,7 @@ export default {
 			seeAlso: "Xem thêm",
 		},
 		units: {
+			piece: "cái",
 			millisecond: "ms (mili giây)",
 			percent: "%",
 			pixel: "px (điểm ảnh)",
@@ -1024,17 +1025,16 @@ export default {
 			commandBar: "Thanh lệnh",
 			checkboxGroup: "Nhóm hộp kiểm",
 		},
-		preset: "Preset",
-	},
-	shared: {
-		plugins: {
-			panCrop: "Chuyển hướng/Cắt xén",
-			pictureInPicture: "Hình trong Hình (PiP)",
-			transformOfx: "TransformOFX",
-			swirl: "Xoáy",
-			wave: "Sóng",
-			tvSimulator_short: "TV",
+		aliases: {
+			source: {
+				trackName: "Tên track",
+			},
+			score: {
+				timeSignature: "Beat",
+				constrain: "Hạn chế độ dài nốt",
+			},
 		},
+		preset: "Preset",
 	},
 	csharp: {
 		host: {
@@ -1131,6 +1131,20 @@ export default {
 			colorPicker: {
 				eyeDropper: "Bốc một màu trên màn hình",
 			},
+		},
+	},
+	shared: {
+		plugins: {
+			panCrop: "Chuyển hướng/Cắt xén",
+			pictureInPicture: "Hình trong Hình (PiP)",
+			transformOfx: "TransformOFX",
+			swirl: "Xoáy",
+			wave: "Sóng",
+			tvSimulator_short: "TV",
+		},
+		midi: {
+			instruments: {},
+			percussions: {},
 		},
 	},
 } as const satisfies LocaleIdentifiers;
