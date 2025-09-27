@@ -7,7 +7,7 @@ const t = new PathObject() as Trans;
 
 type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup";
 
-export interface SettingMeta {
+interface ISettingMeta {
 	/** A unique identifier under the parent (global uniqueness is not required). */
 	// id: string;
 	/** Title must be referenced from an i18n locale string. If ignoring, it will auto concat from ancestor keys. */
@@ -19,13 +19,11 @@ export interface SettingMeta {
 	/** Settings card form type. @see {@link SettingsCard} */
 	type?: SettingsCardFormType;
 	/** Child settings if the type is an expander. */
-	items?: Record<string, SettingMeta>;
+	items?: Record<string, ISettingMeta>;
 	/** Aliases for this setting. It will auto inherit from `t.aliases` namespace. */
 	aliases?: string[];
 	/** Click to jump at another link. */
 	link?: string;
-	/** Path of unique identifiers to it. Auto generated. CSS escaped. */
-	path?: string;
 }
 
 const settingsMetasInput = {
@@ -107,7 +105,47 @@ const settingsMetasInput = {
 			},
 		},
 	},
-} as const satisfies Record<string, Record<string, SettingMeta>>;
+	score: {
+		from: {},
+
+	},
+} as const satisfies Record<string, Record<string, ISettingMeta>>;
+
+export class SettingMeta implements ISettingMeta {
+	title?: string;
+	details?: string;
+	icon?: DeclaredIcons;
+	type?: SettingsCardFormType;
+	items?: Record<string, ISettingMeta>;
+	aliases?: string[];
+	link?: string;
+
+	constructor(meta: ISettingMeta, path: string) {
+		Object.assign(this, meta);
+		this.path = path;
+	}
+
+	/** Path of unique identifiers to it. Auto generated. */
+	path: string;
+	/** Path of unique identifiers to it. Auto generated. CSS escaped. */
+	get cssPath() { return CSS_escape(this.path); }
+
+	get translatedTitle() { return $t(this.title); }
+	get translatedDetails() { return $t(this.details); }
+	get translatedAliases() {
+		const _aliases = this.aliases?.map(alias => $t(alias)).toCompacted();
+		return _aliases?.join(", ").split(/,\s*/).map(alias => alias.trim()).filter(alias => alias !== this.translatedTitle).toCompacted() ?? [];
+	}
+
+	get translatedPath() {
+		const path = this.path.replace(/(^|[:/])[^:/]*?$/, "");
+		const [_page = "", _anchor = ""] = path.split(":");
+		const pages = _page.split("/").map(subpage => $$t.titles[subpage]?.toString()).toCompacted();
+		let metaRoot = _page.split("/").reduce<AnyObject>((root, subpage) => root[subpage], metas);
+		const anchors = _anchor.split("/").map(anchor => { metaRoot = metaRoot?.[anchor]; return $t(metaRoot?.meta?.title); }).toCompacted();
+		return { pages, anchors };
+	}
+}
 
 type TranslateFromPath<TRoot, TPath> =
 	TPath extends `${infer Parent}.${infer Child}` ? TranslateFromPath<TRoot[Parent & keyof TRoot], Child> :
@@ -136,13 +174,13 @@ type Nesting<TObject> = {
 
 const metas: SettingMeta[] = [];
 const settingsMetasOutput: AnyObject = settingsMetasInput;
-function convertItem(item: SettingMeta, path: string) {
+function convertItem(item: ISettingMeta, path: string) {
 	const { items: itemsInput, ...meta } = item;
 	const items = itemsInput as AnyObject;
 	if (!lodash.isEmpty(itemsInput))
 		for (const [itemId, item] of Object.entries(itemsInput))
 			items[itemId] = convertItem(item, `${path}.${itemId}`);
-	meta.path = path.replace(".", ":").replaceAll("_", "/").replaceAll(".", "/");
+	const _path = path.replace(".", ":").replaceAll("_", "/").replaceAll(".", "/");
 	const dotJoined = path.replaceAll("_", ".");
 	if (!("title" in meta)) meta.title = dotJoined;
 	if (!("details" in meta)) meta.details = "descriptions." + dotJoined;
@@ -152,21 +190,27 @@ function convertItem(item: SettingMeta, path: string) {
 	if (meta.details as Object instanceof PathObject) meta.details = meta.details?.toString();
 	for (let i = 0; i < meta.aliases.length; i++)
 		if (meta.aliases[i] as Object instanceof PathObject) meta.aliases[i] = meta.aliases[i]?.toString();
-	metas.push(meta);
-	return { meta, ...items };
+	const _meta = new SettingMeta(meta, _path);
+	metas.push(_meta);
+	return { meta: _meta, ...items };
 }
 for (let page of Object.keys(settingsMetasInput)) {
 	page = page.replaceAll("_", "/"); const subpage = page.split("/").at(-1)!;
-	const contexts = ["long", "full", ""];
+	const contexts = ["long", "full", undefined];
 	const context = contexts.firstDefined(ctx => i18nExists(t => t.titles[subpage], ctx) && ctx && "_" + ctx || undefined) ?? "";
-	metas.push({ path: page, icon: redirectIcon(subpage), title: t.titles[subpage + context].toString(), aliases: contexts.map(ctx => t.titles[subpage + ctx].toString()) });
+	const meta = new SettingMeta({
+		icon: redirectIcon(subpage),
+		title: t.titles[subpage + context].toString(),
+		aliases: contexts.map(ctx => t.titles[subpage + ctx].toString()),
+	}, page);
+	metas.push(meta);
 }
 for (const [pageId, items] of Object.entries(settingsMetasInput as AnyObject))
 	for (const [itemId, item] of Object.entries(items))
-		items[itemId] = convertItem(item as SettingMeta, `${pageId}.${itemId}`);
+		items[itemId] = convertItem(item as ISettingMeta, `${pageId}.${itemId}`);
 export const settingsMetas = settingsMetasOutput as Nesting<ConvertPage<typeof settingsMetasInput>>;
 
-export /* @internal */ function $t(key?: string) {
+function $t(key?: string) {
 	if (!key) return;
 	const keys = key.split(".");
 	if (!i18nExists(key)) return;

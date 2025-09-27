@@ -35,4 +35,8 @@ export default css`
 		}
 	}
 	// #endregion
+
+	main.page.exit .focus-highlight-ring {
+		display: none;
+	}
 `;

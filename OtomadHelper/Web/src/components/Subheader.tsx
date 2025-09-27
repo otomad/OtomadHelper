@@ -1,5 +1,3 @@
-import { $t } from "helpers/settings-metas";
-
 const StyledSubheader = styled.h4`
 	inline-size: fit-content;
 	margin-block: 10px 4px;
@@ -29,6 +27,6 @@ const StyledSubheader = styled.h4`
 export default function Subheader({ meta, children, ...htmlAttrs }: FCP<{
 	meta?: PropsOf<typeof Setting>["meta"];
 }, "h4">) {
-	children ??= $t(meta?.meta.title);
-	return <StyledSubheader data-anchor={CSS_escape(meta?.meta.path)} {...htmlAttrs}>{children}</StyledSubheader>;
+	const { title, anchor } = Setting.useMeta(meta, { title: children });
+	return <StyledSubheader data-anchor={anchor} {...htmlAttrs}>{title}</StyledSubheader>;
 }

@@ -175,7 +175,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 			$nowrap={nowrap}
 			disabled={disabled}
 			aria-disabled={disabled || undefined}
-			data-anchor={CSS_escape(anchor)}
+			data-anchor={anchor}
 			{...htmlAttrs}
 		>
 			<InteractionStateContext value={{ disabled }}>

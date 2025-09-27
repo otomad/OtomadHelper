@@ -1,12 +1,12 @@
 // This component unite SettingsCard, SettingsCardToggleSwitch, Expander, ExpanderRadio, ExpanderItem into one.
 
 import type { SettingMeta } from "helpers/settings-metas";
-import { $t, settingsMetas } from "helpers/settings-metas";
+import { settingsMetas } from "helpers/settings-metas";
 export const metas = settingsMetas;
-export type SettingMetaInside = { meta: SettingMeta };
+export type SettingMetaInside = { meta?: SettingMeta };
 
 interface Props {
-	meta: { meta: Partial<SettingMeta> };
+	meta: { meta: SettingMeta };
 }
 
 type InheritFrom<T> = Props & PartialWith<T extends Function ? PropsOf<T> : T, keyof SettingMeta>;
@@ -18,11 +18,11 @@ export default function Setting(props: InheritFrom<typeof Expander>): React.JSX.
 export default function Setting(props: InheritFrom<typeof Expander.Item>): React.JSX.Element;
 export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof SettingsCard | typeof SettingsCardToggleSwitch | typeof Expander | typeof ExpanderRadio | typeof Expander.Item>) {
 	const [lastGotoPath, lastGotoPathTimestamp] = useSnapshot(pageStore).lastGotoPath ?? [];
-	const { path, link, type } = meta as RequiredWith<SettingMeta, "path">;
-	props.title ??= $t(meta.title);
-	props.details ??= $t(meta.details);
+	const { path, cssPath, link, type } = meta as RequiredWith<SettingMeta, "path">;
+	props.title ??= meta.translatedTitle;
+	props.details ??= meta.translatedDetails;
 	props.icon ??= meta.icon;
-	props.anchor = path;
+	props.anchor = cssPath;
 	if (lastGotoPath === path) props.className = classNames(props, "focus-highlight");
 	const expanded = !!(lastGotoPath !== path && lastGotoPath?.startsWith(path));
 	const _requestExpanded = expanded ? [true, lastGotoPathTimestamp] : undefined;
@@ -54,17 +54,19 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 	}
 }
 
-function useMeta(meta?: SettingMetaInside, overriddenProps: {
+function useMeta({ meta }: SettingMetaInside = {}, overriddenProps: {
 	title?: ReactNode;
 	details?: ReactNode;
 	icon?: DeclaredIcons | ReactElement;
-} = {}) {
+} = {}): typeof overriddenProps & {
+	anchor?: string;
+} {
 	if (!meta) return overriddenProps;
 	return {
-		title: overriddenProps.title ?? $t(meta.meta.title)!,
-		details: overriddenProps.details ?? $t(meta.meta.details)!,
-		icon: overriddenProps.icon ?? meta.meta.icon,
-		anchor: meta.meta.path!,
+		title: overriddenProps.title ?? meta.translatedTitle!,
+		details: overriddenProps.details ?? meta.translatedDetails!,
+		icon: overriddenProps.icon ?? meta.icon,
+		anchor: meta.cssPath,
 	};
 }
 

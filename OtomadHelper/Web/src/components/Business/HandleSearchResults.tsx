@@ -1,4 +1,4 @@
-import { $t, type SettingMeta, search } from "helpers/settings-metas";
+import { type SettingMeta, search } from "helpers/settings-metas";
 
 const MAX_LENGTH = 10;
 
@@ -71,7 +71,7 @@ export default function HandleSearchResults({ query }: {
 	});
 
 	return searchResults.map(([, property, meta, keyword], i) => {
-		const title = $t(meta.title);
+		const title = meta.translatedTitle;
 		return (
 			<StyledSearchResult key={meta.path} onClick={() => goto(meta.path)}>
 				{meta.icon && meta.icon !== "placeholder" ? <Icon name={meta.icon} /> : <Icon shadow />}
@@ -106,11 +106,7 @@ const StyledSearchResultPath = styled.div`
 `;
 
 function SearchResultPath({ meta }: { meta: SettingMeta }) {
-	const path = meta.path!.replace(/(^|[:/])[^:/]*?$/, "");
-	const [_page = "", _anchor = ""] = path.split(":");
-	const pages = _page.split("/").map(subpage => tf.titles[subpage]).toCompacted();
-	let metaRoot = _page.split("/").reduce<AnyObject>((root, subpage) => root[subpage], metas);
-	const anchors = _anchor.split("/").map(anchor => { metaRoot = metaRoot?.[anchor]; return $t(metaRoot?.meta?.title); }).toCompacted();
+	const { pages, anchors } = meta.translatedPath;
 	if (pages.length === 0 && anchors.length === 0) return;
 
 	return (

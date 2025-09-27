@@ -137,4 +137,11 @@ export function panguSpacing(text: Readable) {
 /**
  * @see Same as {@link CSS.escape}, but accept `undefined` as input.
  */
-export const CSS_escape = (ident?: string) => ident !== undefined ? CSS.escape(ident) : undefined;
+export function CSS_escape(ident: string): string;
+/**
+ * @see Same as {@link CSS.escape}, but accept `undefined` as input.
+ */
+export function CSS_escape(ident?: string): string | undefined;
+export function CSS_escape(ident?: string) {
+	return ident !== undefined ? CSS.escape(ident) : ident;
+}
