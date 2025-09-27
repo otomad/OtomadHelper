@@ -415,7 +415,7 @@ export default {
 					volumeForBasePitch: "Volume when prelistening base pitch",
 					adjustAudioToBasePitch: "Adjust audio to base pitch",
 				},
-				imitative: "Imitative tuning methods",
+				mimical: "Mimical tuning methods",
 			},
 			mapping: {
 				_: "Mapping",
@@ -1027,7 +1027,7 @@ export default {
 						wrap: "Returns to the highest or lowest key within the range of {{formulaFor24}}",
 						silent: "Mutes those notes",
 					},
-					resample: "Adjusts stretch to change pitch in sync, causing the stretch to flex as the pitch increases, presenting a classic tape recorder style",
+					resample: "Adjusts stretch to change pitch in sync, causing the stretch to flex as the pitch increases, mimicking old-school audio devices",
 					preserveFormant: "Maintains voice tone characteristics while tuning",
 					basePitch: {
 						_: "Specify the base pitch of the audio clip",
@@ -1038,11 +1038,11 @@ export default {
 						_: "Compares the clip to the base pitch for easy adjustment",
 						adjustAudioToBasePitch: "Match the audio of the clip to the base pitch instead of the other way around, useful for older styles of remixes",
 					},
-					imitative: {
+					mimical: {
 						_: "Applies techniques inspired by audio tuning methods to visual processing",
 						auto: "Setting these properties to Auto means they will only be enabled when the corresponding property in the Audio configuration is enabled.",
-						resample: "Imitate the resampling behavior in the Visual, causing the stretch to flex as the pitch increases",
-						oscillator: "Imitate the Manual Oscillator behavior in the Visual to produce rapidly repetitive visuals",
+						resample: "Mimics the resampling behavior in the Visual, causing the stretch to flex as the pitch increases",
+						oscillator: "Mimics the Manual Oscillator behavior in the Visual to produce rapidly repetitive visuals",
 					},
 				},
 				effects: {
@@ -1295,14 +1295,14 @@ export default {
 		},
 		aliases: {
 			titles: {
-				source: "Material, Media",
-				score: "Chart, MIDI, Song, Music",
-				audio: "Sound",
-				visual: "Video",
-				sonar: "Motion Graphic, Motion Graphics, Mograph, Mographs, MG, Cookie Cutter",
-				prve: "Promotion Video Rhythm Visual Effect, Promotion Video Rhythm Visual Effects",
-				staff: "Musical Staff, Piano Staff Sheets Fashion",
-				pixelScaling: "MisczTools, Miscz Tools",
+				source: "Material, Media", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				score: "Chart, MIDI, Song, Music", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				audio: "Sound", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				visual: "Video", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				sonar: "Motion Graphic, Motion Graphics, Mograph, Mographs, MG, Cookie Cutter", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				prve: "Promotion Video Rhythm Visual Effect, Promotion Video Rhythm Visual Effects", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				staff: "Musical Staff, Piano Staff Sheets Fashion", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				pixelScaling: "MisczTools, Miscz Tools", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
 			source: {
 				trackGroup: "Track group", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
@@ -1313,6 +1313,19 @@ export default {
 				tempo: "Speed, BPM", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				timeSignature: "Beat", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				constrain: "Restrict note length", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+			},
+			stream: {
+				staticVisual: "Freeze first frame, Freeze start frame",
+				truncate: "Unlengthen, Unlengthening, No lengthening, No looping, No extending, Freeze last frame, Freeze end frame",
+				legato: "Fill gaps, Eliminate gaps, Remove gaps",
+				autoPan: "Auto panning",
+				stack: "Stacking",
+				timeUnremapping: "Persistent timeflow, Time remapping",
+				tuning: {
+					alternativeForExceedTheRange: "Alternative method for exceeding the range, Alternative for exceed the range",
+					resample: "Lock stretch and pitch, Lock to stretch, Pitch change lock, Pitch lock, Lock pitch",
+					mimical: "Imitative tuning methods",
+				},
 			},
 		},
 	},

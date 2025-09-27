@@ -43,6 +43,7 @@ const StyledSearchResult = styled.button`
 		&.details {
 			${styles.mixins.noScrollbar()};
 			${styles.mixins.overflowGradient("x", "1em")};
+			position: relative;
 			contain: inline-size;
 			overflow-inline: scroll;
 			pointer-events: none;
@@ -68,19 +69,24 @@ export default function HandleSearchResults({ query, onSearchResultSelect }: {
 	const [detailsEls, setDetailsEls] = useDomRefs<"p">();
 
 	useEffect(() => {
-		for (const detailsEl of detailsEls.current)
-			detailsEl?.querySelector("mark")?.scrollIntoView({ behavior: "instant", inline: "center" });
+		for (const detailsEl of detailsEls.current) {
+			const mark = detailsEl?.querySelector("mark");
+			if (!detailsEl || !mark) continue;
+			const { offsetLeft } = mark;
+			mark.scrollIntoView({ behavior: "instant", inline: "center" });
+			if (detailsEl.scrollLeft > offsetLeft) detailsEl.scrollTo({ behavior: "instant", left: offsetLeft });
+		}
 	});
 
-	return searchResults.map(([, property, meta, keyword], i) => {
+	return searchResults.map(({ prop, meta, keyword }, i) => {
 		const title = meta.translatedTitle;
 		return (
 			<StyledSearchResult key={meta.path} onClick={() => { onSearchResultSelect?.(); goto(meta.path); }}>
 				{meta.icon && meta.icon !== "placeholder" ? <Icon name={meta.icon} /> : <Icon shadow />}
 				<div className="text">
-					<p className="title">{property === "title" ? <HighlightText wholeText={title} keyword={query} /> : title}</p>
-					{property !== "title" && (
-						<p className={["subtitle", property]} ref={property === "details" ? setDetailsEls(i) : undefined}>
+					<p className="title">{prop === "title" ? <HighlightText wholeText={title} keyword={query} /> : title}</p>
+					{prop !== "title" && (
+						<p className={["subtitle", prop]} ref={prop === "details" ? setDetailsEls(i) : undefined}>
 							<HighlightText wholeText={keyword} keyword={query} />
 						</p>
 					)}
@@ -125,6 +131,7 @@ function HighlightText({ wholeText, keyword }: { wholeText?: string; keyword?: s
 	if (!wholeText || !keyword) return;
 	const tokens = wholeText
 		.replaceAll(new RegExp(RegExp.escape(keyword), "gi"), "\0$&\0")
+		.replaceAll(/\0{2,}/g, "")
 		.split("\0")
 		.map((text, i) => i % 2 ? <mark key={i}>{text}</mark> : text);
 	return tokens;

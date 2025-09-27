@@ -38,7 +38,7 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 			return <ToggleSwitch {..._props as Any}>{title}</ToggleSwitch>;
 		}
 	else if ("items" in props || type === "radiogroup")
-		return <ExpanderRadio {...props as Any} />;
+		return <ExpanderRadio {...props as Any} _requestExpanded={_requestExpanded} />;
 	else if (isExpanderChild)
 		return <Expander.Item {...props as Any} />;
 	else if ("children" in props || type === "expander")

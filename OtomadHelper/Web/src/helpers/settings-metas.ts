@@ -67,6 +67,14 @@ function splitUnlessEmpty(source: string, sep: string) {
 	return source ? source.split(sep) : [];
 }
 
+const redirectPath = {
+	audio: "stream",
+	visual: "stream",
+	"visual.staff": "staff",
+	"visual.prve": "prve",
+	"visual.pixelScaling": "pixelScaling",
+} as const;
+
 type TranslateFromPath<TRoot, TPath> =
 	TPath extends `${infer Parent}.${infer Child}` ? TranslateFromPath<TRoot[Parent & keyof TRoot], Child> :
 	TRoot[TPath & keyof TRoot] extends { _: infer Title } ? Title : TRoot[TPath & keyof TRoot];
@@ -102,7 +110,12 @@ function convertItem(item: ISettingMeta, path: string) {
 		for (const [itemId, item] of Object.entries(itemsInput))
 			items[itemId] = convertItem(item, `${path}.${itemId}`);
 	const _path = path.replace(".", ":").replaceAll("_", "/").replaceAll(".", "/");
-	const dotJoined = path.replaceAll("_", ".");
+	let dotJoined = path.replaceAll("_", ".");
+	for (const [old, new_] of Object.entries(redirectPath))
+		if (dotJoined.startsWith(old)) {
+			dotJoined = dotJoined.replaceStart(old, new_);
+			break;
+		}
 	if (!("title" in meta)) meta.title = dotJoined;
 	if (!("details" in meta)) meta.details = "descriptions." + dotJoined;
 	meta.aliases ??= [];
@@ -138,14 +151,24 @@ function $t(key?: string) {
 	return keys.reduce<AnyObject>((root, key) => root[key], $$t).toString();
 }
 
-const settingsMetasSearchMapProperties = ["title", "alias", "details"] as const;
-type SettingsMetasSearchMapProperty = typeof settingsMetasSearchMapProperties[number];
-let settingsMetasSearchMap: [keyword: string, property: SettingsMetasSearchMapProperty, meta: SettingMeta, originalKeyword: string][] = [];
+const settingMetaSearchResultProperties = ["title", "alias", "details"] as const;
+type SettingMetaSearchResultProperty = typeof settingMetaSearchResultProperties[number];
+interface SettingMetaSearchResult {
+	/** Normalized keyword. */
+	normalized: string;
+	prop: SettingMetaSearchResultProperty;
+	meta: SettingMeta;
+	/** Original keyword. */
+	keyword: string;
+	/** Index in the collection of the property. */
+	index?: number;
+}
+let settingMetaSearchResults: SettingMetaSearchResult[] = [];
 function updateSettingsMetasSearchMap() {
-	settingsMetasSearchMap = [];
-	const add = (keyword: string, property: SettingsMetasSearchMapProperty, meta: SettingMeta) => {
-		const normalizedKeyword = keyword.toLowerCase().replaceAll(/[\r\n\u2008\p{VS}]/gu, "");
-		settingsMetasSearchMap.push([normalizedKeyword, property, meta, keyword]);
+	settingMetaSearchResults = [];
+	const add = (keyword: string, prop: SettingMetaSearchResultProperty, meta: SettingMeta, index?: number) => {
+		const normalized = keyword.toLowerCase().replaceAll(/[\r\n\u2008\p{VS}]/gu, "");
+		settingMetaSearchResults.push({ normalized, prop, meta, keyword, index });
 	};
 	for (const meta of metas) {
 		let { title, details, aliases: _aliases } = meta;
@@ -153,8 +176,8 @@ function updateSettingsMetasSearchMap() {
 		if ((details = $t(details))) add(details, "details", meta);
 		if ((_aliases = _aliases?.map(alias => $t(alias)).toCompacted())) {
 			const aliases = _aliases?.join(", ").split(/[,，、]\s*/).map(alias => alias.trim()).filter(alias => alias !== title).toCompacted() ?? [];
-			for (const alias of aliases)
-				add(alias, "alias", meta);
+			for (const [i, alias] of aliases.entries())
+				add(alias, "alias", meta, i);
 		}
 	}
 }
@@ -168,22 +191,24 @@ export function search(query?: string) {
 	const matchWordBoundary = (keyword: string) => !!keyword.match(new RegExp("\\b" + RegExp.escape(query)));
 	const getSortScore = (keyword: string) => keyword.replace(query, "").replaceAll(query, "1").realLength;
 
-	return settingsMetasSearchMap
-		.filter(([keyword]) => keyword.includes(query))
-		.sort(([a], [b]) => {
+	return settingMetaSearchResults
+		.filter(({ normalized }) => normalized.includes(query))
+		.sort(({ normalized: a, ...resultA }, { normalized: b, ...resultB }) => {
 			let score: number; const indexOfA = a.indexOf(query), indexOfB = b.indexOf(query);
-			// Zerothly, sort by title → alias → details.
-			// if ((score = settingsMetasSearchMapProperties.indexOf(propOfA) - settingsMetasSearchMapProperties.indexOf(propOfB))) return score;
 			// Firstly, check if there are matches at the beginning boundary of the word, because generally no one will enter it from the inside of the word.
 			if ((score = -(+matchWordBoundary(a) - +matchWordBoundary(b)))) return score;
 			// Secondly, check if any keywords start with the query word.
 			if (!indexOfA !== !indexOfB) return !indexOfA ? -1 : 1;
-			// Thirdly, check if there are any most matched shorter string.
+			// Thirdly, sort by title → alias → details.
+			if ((score = settingMetaSearchResultProperties.indexOf(resultA.prop) - settingMetaSearchResultProperties.indexOf(resultB.prop))) return score;
+			// Fourthly, if they are same meta, sort with their prop collection declaration order.
+			if (resultA.meta === resultB.meta && resultA.prop === resultB.prop && resultA.index !== undefined && resultB.index !== undefined) return resultA.index - resultB.index;
+			// Fifthly, check if there are any most matched shorter string.
 			if ((score = getSortScore(a) - getSortScore(b))) return score;
-			// Fourthly, check the query word that are closer to the beginning.
+			// Sixthly, check the query word that are closer to the beginning.
 			if ((score = indexOfA - indexOfB)) return score;
-			// Fifthly, compare by alphabet.
+			// Seventhly, compare by alphabet.
 			return a.localeCompare(b, locale);
 		})
-		.toUnique(([, , meta]) => meta);
+		.toUnique(({ meta }) => meta);
 }

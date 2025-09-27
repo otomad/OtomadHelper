@@ -94,6 +94,7 @@ export default function Audio() {
 	const { engine, waveform, duration: beepDuration, volume: beepVolume, adjustAudioToBasePitch } = useSelectConfig(c => c.audio.prelistenAttributes);
 	const { createGroups } = useSelectConfig(c => c);
 	const activeParameterScheme = useSelectConfigArray(c => c.audio.activeParameterScheme);
+	const meta = metas.audio;
 	const [stopPrelistening, setStopPrelistening] = useState<() => void>();
 	const tuningMethodScalelessUnlocked = tuningMethod[0].in("unset", "elastic", "classic"), tuningMethodScalelessEnabled = tuningMethodScaleless[0] && tuningMethodScalelessUnlocked;
 	const alternativeForExceedTheRangeDisabled = !tuningMethod[0].in("elastic", "classic", "unset");
@@ -118,13 +119,16 @@ export default function Audio() {
 			<SettingsPageControlMedia stream="audio" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={exampleThumbnail} />
 
 			<EmptyMessage.Typical icon="volume" title="audio" enabled={enabled}>
-				<SettingsCard title={t.source.preferredTrack} details={t.descriptions.source.preferredTrack} icon="preferred_track">
-					<StackPanel>
-						<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
-						<QuicklySelectCurrentTrack />
-					</StackPanel>
-				</SettingsCard>
-				<SettingsCardToggleSwitch title={t.stream.createGroups} details={t.descriptions.stream.createGroups} icon="group" on={createGroups} />
+				<Setting
+					meta={meta.preferredTrack}
+					actions={(
+						<StackPanel>
+							<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
+							<QuicklySelectCurrentTrack />
+						</StackPanel>
+					)}
+				/>
+				<Setting meta={meta.createGroups} on={createGroups} />
 				<ExpanderStreamPlaybackRate stream="audio" />
 				{/* When using segmented control, excessive explanation of its functions may occupy a large amount of interface space and potentially affect the user experience. */}
 				{/* <SettingsCard title={t.stream.normalize} details={t.descriptions.stream.normalize} icon="normalize" selectInfo={normalize[0] !== "false" && t.descriptions.stream.normalize[normalize[0]]}>
@@ -132,10 +136,8 @@ export default function Audio() {
 						{normalizeTimes.map(({ id, icon }) => <Segmented.Item id={id} key={id} icon={icon}>{id === "false" ? t.off : t.stream.normalize[id]}</Segmented.Item>)}
 					</Segmented>
 				</SettingsCard> */}
-				<ExpanderRadio
-					title={t.stream.normalize}
-					details={t.descriptions.stream.normalize}
-					icon="normalize"
+				<Setting
+					meta={meta.normalize}
 					items={normalizeTimes}
 					value={normalize}
 					view="list"
@@ -145,20 +147,15 @@ export default function Audio() {
 					checkInfoCondition={id => id === "false" ? t.off : t.stream.normalize[id!]}
 					detailsField={({ id }) => id === "false" ? undefined : t.descriptions.stream.normalize[id]}
 				/>
-				<SettingsCard
-					title={t.stream.loop}
-					details={t.descriptions.stream.loop}
+				<Setting
+					meta={meta.loop}
 					selectInfo={loop[0] === "auto" && t.descriptions.stream.loop.unset}
-					icon="loop"
-				>
-					<ThreeStageSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />
-				</SettingsCard>
+					actions={<ThreeStageSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />}
+				/>
 				<ExpanderStreamPreRender stream="audio" />
 				<EmptyMessage.YtpDisabled>
-					<ExpanderRadio
-						title={t.stream.stretch}
-						details={t.descriptions.stream.stretch}
-						icon="stretch"
+					<Setting
+						meta={meta.stretch}
 						items={stretches}
 						value={stretch}
 						view="tile"
@@ -167,10 +164,8 @@ export default function Audio() {
 						nameField={t.stream.stretch}
 						detailsField={t.descriptions.stream.stretch}
 					/>
-					<ExpanderRadio
-						title={t.stream.truncate}
-						details={t.descriptions.stream.truncate}
-						icon="arrow_import_prohibited"
+					<Setting
+						meta={meta.truncate}
 						items={truncatesInAudio}
 						value={truncate}
 						view="tile"
@@ -180,11 +175,9 @@ export default function Audio() {
 						detailsField={t.descriptions.stream.truncate}
 					>
 						<TruncateAndLegatoConflictInfoBar />
-					</ExpanderRadio>
-					<ExpanderRadio
-						title={t.stream.legato}
-						details={t.descriptions.stream.legato}
-						icon="legato"
+					</Setting>
+					<Setting
+						meta={meta.legato}
 						items={legatos}
 						value={legato}
 						view="grid"
@@ -195,39 +188,17 @@ export default function Audio() {
 						itemWidth={566 / 196 * GRID_VIEW_ITEM_HEIGHT}
 					>
 						<TruncateAndLegatoConflictInfoBar />
-					</ExpanderRadio>
-					<SettingsCardToggleSwitch
-						title={t.stream.multitrackForChords}
-						details={t.descriptions.stream.multitrackForChords}
-						icon="chords"
-						on={multitrackForChords}
-					/>
-					<SettingsCardToggleSwitch
-						title={t.stream.stack}
-						details={t.descriptions.stream.stack}
-						icon="database_stack"
-						on={stack}
-					/>
-					<SettingsCardToggleSwitch
-						title={t.stream.timeUnremapping}
-						details={t.descriptions.stream.timeUnremapping}
-						icon="timer_off"
-						on={timeUnremapping}
-					/>
-					<SettingsCardToggleSwitch
-						title={t.stream.autoPan}
-						details={t.descriptions.stream.autoPan}
-						icon="stereo"
-						on={autoPan}
-					>
+					</Setting>
+					<Setting meta={meta.multitrackForChords} on={multitrackForChords} />
+					<Setting meta={meta.stack} on={stack} />
+					<Setting meta={meta.timeUnremapping} on={timeUnremapping} />
+					<Setting meta={meta.autoPan} on={autoPan}>
 						<Expander.Item.Curve curve={autoPanCurve} />
-					</SettingsCardToggleSwitch>
+					</Setting>
 
-					<Subheader>{t.stream.tuning}</Subheader>
-					<ExpanderRadio
-						title={t.stream.tuning.tuningMethod}
-						details={t.descriptions.stream.tuning.tuningMethod}
-						icon="tuning"
+					<Subheader meta={meta.tuning} />
+					<Setting
+						meta={meta.tuning.tuningMethod}
 						items={tuningMethods}
 						value={tuningMethod}
 						view="tile"
@@ -253,13 +224,12 @@ export default function Audio() {
 							);
 						}}
 					>
-						<ToggleSwitch on={tuningMethodAcid} lock={tuningMethod[0] !== "none" ? null : false} icon="logo/acid" details={t.descriptions.stream.tuning.tuningMethod.acid}>{t.stream.tuning.tuningMethod.acid}</ToggleSwitch>
-						<ToggleSwitch on={tuningMethodScaleless} lock={tuningMethodScalelessUnlocked ? null : false} icon="scaleless" details={t.descriptions.stream.tuning.tuningMethod.scaleless}>{t.stream.tuning.tuningMethod.scaleless}</ToggleSwitch>
-					</ExpanderRadio>
+						<Setting meta={meta.tuning.tuningMethod.acid} on={tuningMethodAcid} lock={tuningMethod[0] !== "none" ? null : false} />
+						<Setting meta={meta.tuning.tuningMethod.scaleless} on={tuningMethodScaleless} lock={tuningMethodScalelessUnlocked ? null : false} />
+					</Setting>
 					<Attrs disabled={tuningMethod[0] === "none" || tuningMethodScalelessEnabled || undefined}>
-						<ExpanderRadio<Any, Any>
-							title={t.stream.tuning.stretchAttributes}
-							icon="tuning_wrench"
+						<Setting<Any, Any>
+							meta={meta.tuning.stretchAttributes}
 							view="tile"
 							idField
 							{
@@ -283,10 +253,8 @@ export default function Audio() {
 							}
 						/>
 						<Attrs disabled={tuningMethod[0] === "oscillator" || undefined}>
-							<ExpanderRadio
-								title={t.stream.tuning.alternativeForExceedTheRange}
-								details={t.descriptions.stream.tuning.alternativeForExceedTheRange}
-								icon="tuning_warning"
+							<Setting
+								meta={meta.tuning.alternativeForExceedTheRange}
 								items={exceeds}
 								value={alternativeForExceedTheRange}
 								view="list"
@@ -304,28 +272,19 @@ export default function Audio() {
 								disabled={alternativeForExceedTheRangeDisabled}
 								checkInfo={alternativeForExceedTheRangeDisabled ? tuningMethod[0] === "pitchShift" ? t.stream.tuning.alternativeForExceedTheRange.multiple : t.stream.tuning.tuningMethod[tuningMethod[0]] : undefined}
 							/>
-							<SettingsCardToggleSwitch
-								title={t.stream.tuning.resample}
-								details={t.descriptions.stream.tuning.resample}
-								icon="link_multiple"
-								lock={tuningMethodScalelessEnabled ? true : tuningMethod[0] === "oscillator" ? false : null}
+							<Setting
+								meta={meta.tuning.resample}
 								on={resample}
+								lock={tuningMethodScalelessEnabled ? true : tuningMethod[0] === "oscillator" ? false : null}
 							/>
-							<SettingsCardToggleSwitch
-								title={t.stream.tuning.preserveFormant}
-								details={t.descriptions.stream.tuning.preserveFormant}
-								icon="speech"
+							<Setting
+								meta={meta.tuning.preserveFormant}
 								on={preserveFormant}
 								lock={tuningMethod[0].in("elastic", "unset") ? null : false}
 							/>
 						</Attrs>
-						<Expander
-							title={t.stream.tuning.basePitch}
-							details={t.descriptions.stream.tuning.basePitch}
-							icon="music_note"
-							actions={<PitchPicker spn={basePitch} />}
-						>
-							<Expander.Item title={t.stream.tuning.basePitch.cent} details={t.descriptions.stream.tuning.basePitch.cent} icon="fine_tune">
+						<Setting meta={meta.tuning.basePitch} actions={<PitchPicker spn={basePitch} />}>
+							<Setting meta={meta.tuning.basePitch.cent}>
 								<SliderWithBox
 									value={cent}
 									min={-100}
@@ -334,14 +293,12 @@ export default function Audio() {
 									defaultValue={0}
 									suffix={t(cent[0]).units.cent}
 								/>
-							</Expander.Item>
-							<ToggleSwitch icon="relative" on={basePitchBased} details={t.descriptions.stream.tuning.basePitch.based}>{t.stream.tuning.basePitch.based}</ToggleSwitch>
-							<ToggleSwitch icon="tuning_sparkle" on={[false]} disabled selectInfo={t.underConstruction}>{t.stream.tuning.basePitch.auto}</ToggleSwitch>
-						</Expander>
-						<Expander
-							title={t.stream.tuning.prelisten}
-							details={t.descriptions.stream.tuning.prelisten}
-							icon="headphone"
+							</Setting>
+							<Setting meta={meta.tuning.basePitch.based} on={basePitchBased} />
+							<Setting meta={meta.tuning.basePitch.auto} on={[false]} disabled selectInfo={t.underConstruction} />
+						</Setting>
+						<Setting
+							meta={meta.tuning.prelisten}
 							actions={(
 								<PrelistenActions>
 									<Button onClick={prelistenBasePitch}>{t.stream.tuning.prelisten.basePitch}</Button>
@@ -350,21 +307,21 @@ export default function Audio() {
 								</PrelistenActions>
 							)}
 						>
-							<Expander.Item icon="table_column_top_bottom" title={t.stream.tuning.prelisten.engine}>
+							<Setting meta={meta.tuning.prelisten.engine}>
 								<ComboBox current={engine} ids={beepEngines} options={beepEngines} />
-							</Expander.Item>
-							<Expander.Item icon="sound_wave" title={t.stream.tuning.prelisten.waveform}>
+							</Setting>
+							<Setting meta={meta.tuning.prelisten.waveform}>
 								<ComboBox
 									current={waveform}
 									ids={beepWaveforms}
 									options={beepWaveforms.map(waveform => t.stream.tuning.prelisten.waveform[waveform])}
 									icons={beepWaveforms.map(waveform => `waveforms/${waveform}` as const)}
 								/>
-							</Expander.Item>
-							<Expander.Item icon="timer" title={t.duration}>
+							</Setting>
+							<Setting meta={meta.tuning.prelisten.duration}>
 								<TextBox.Number value={beepDuration} min={0} decimalPlaces={0} spinnerStep={100} suffix={t.units.millisecond} />
-							</Expander.Item>
-							<Expander.Item icon="volume" title={t.stream.tuning.prelisten.volumeForBasePitch}>
+							</Setting>
+							<Setting meta={meta.tuning.prelisten.volumeForBasePitch}>
 								<Slider
 									value={beepVolume}
 									min={0}
@@ -373,25 +330,20 @@ export default function Audio() {
 									defaultValue={1}
 									displayValue={value => (value * 100 | 0) + t.units.percent}
 								/>
-							</Expander.Item>
-							<ToggleSwitch icon="remix_add" on={adjustAudioToBasePitch} details={t.descriptions.stream.tuning.prelisten.adjustAudioToBasePitch}>{t.stream.tuning.prelisten.adjustAudioToBasePitch}</ToggleSwitch>
-						</Expander>
-						<SettingsCardToggleSwitch
-							on={glissando}
-							title={t.stream.articulations.glissando}
-							details={t.descriptions.stream.articulations.glissando}
-							icon="slide_note"
-						/>
+							</Setting>
+							<Setting meta={meta.tuning.prelisten.adjustAudioToBasePitch} on={adjustAudioToBasePitch} />
+						</Setting>
+						<Setting meta={meta.tuning.glissando} on={glissando} />
 					</Attrs>
 
-					<Subheader>{t.stream.mapping}</Subheader>
-					<Expander title={t.stream.mapping.velocity} icon="signal" />
-					<Expander title={t.stream.mapping.pitch} icon="music_note" />
-					<Expander title={t.duration} icon="timer" />
-					<Expander title={t.stream.mapping.pan} icon="stereo" />
-					<Expander title={t.stream.mapping.progress} icon="progress_bar" />
+					<Subheader meta={meta.mapping} />
+					<Setting meta={meta.mapping.velocity} />
+					<Setting meta={meta.mapping.pitch} />
+					<Setting meta={meta.mapping.duration} />
+					<Setting meta={meta.mapping.pan} />
+					<Setting meta={meta.mapping.progress} />
 
-					<Subheader>{t.subheaders.parameters}</Subheader>
+					<Subheader meta={meta.parameters} />
 					<ExpanderRadio
 						title={t.preset}
 						details={t.descriptions.stream.preset}

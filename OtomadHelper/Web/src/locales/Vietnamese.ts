@@ -843,7 +843,7 @@ export default {
 						_: "So sánh clip với cao độ cơ bản để điều chỉnh dễ dàng",
 						adjustAudioToBasePitch: "Ghép âm thanh của clip với cao độ cơ bản thay vì ngược lại, hữu ích cho các phong cách remix cũ",
 					},
-					imitative: {
+					mimical: {
 						resample: "Mô phỏng hành vi resampling trong Visual, khiến độ dãn nở cong khi cao độ tăng",
 					},
 				},

@@ -404,7 +404,7 @@ export default {
 					volumeForBasePitch: "crwdns3930:0crwdne3930:0",
 					adjustAudioToBasePitch: "crwdns1852:0crwdne1852:0",
 				},
-				imitative: "crwdns4354:0crwdne4354:0",
+				mimical: "crwdns4354:0crwdne4354:0",
 			},
 			mapping: {
 				_: "crwdns2232:0crwdne2232:0",
@@ -1014,7 +1014,7 @@ export default {
 						_: "crwdns2482:0crwdne2482:0",
 						adjustAudioToBasePitch: "crwdns2484:0crwdne2484:0",
 					},
-					imitative: {
+					mimical: {
 						_: "crwdns4360:0crwdne4360:0",
 						auto: "crwdns4362:0crwdne4362:0",
 						resample: "crwdns4364:0crwdne4364:0",

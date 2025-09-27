@@ -403,7 +403,7 @@ export default {
 					volumeForBasePitch: "预听标准音高时的音量",
 					adjustAudioToBasePitch: "调整音频到主音高",
 				},
-				imitative: "模拟调音方法",
+				mimical: "模拟调音方法",
 			},
 			mapping: {
 				_: "映射",
@@ -1013,7 +1013,7 @@ export default {
 						_: "将剪辑与原始音高进行比较，以便调整",
 						adjustAudioToBasePitch: "将剪辑的音频匹配到原始音高，而不是反过来，适用于旧式混音",
 					},
-					imitative: {
+					mimical: {
 						_: "将音频调音方法的衍生技术应用于画面处理",
 						auto: "将这些属性设为自动意味着只有在音频配置中的相应属性启用后才会被启用。",
 						resample: "在画面中模仿重采样音频的行为，使拉伸值随着音高的升高而缩短",

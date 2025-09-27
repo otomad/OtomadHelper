@@ -49,7 +49,7 @@ export default function Visual() {
 	const {
 		enabled, preferredTrack: preferredTrackIndex,
 		stretch, loop, staticVisual, truncate, legato, multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping,
-		imitativeResample, imitativeOscillator, transition, transitionAlignment, transitionDuration,
+		mimicalResample, mimicalOscillator, transition, transitionAlignment, transitionDuration,
 		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioNegative, activeParameterScheme,
 	} = useSelectConfig(c => c.visual);
 	// const activeParameterScheme = useSelectConfigArray(c => c.visual.activeParameterScheme);
@@ -59,8 +59,8 @@ export default function Visual() {
 	const { prveCheckInfo, isForceStretch, prveCount } = usePrveInfo();
 	const topPriorityTransformMethod = transformMethod[0][0];
 
-	useEffect(() => { imitativeResample[0] === "true" && imitativeOscillator[0] === "true" && imitativeOscillator[1]("auto"); }, [imitativeResample[0]]);
-	useEffect(() => { imitativeResample[0] === "true" && imitativeOscillator[0] === "true" && imitativeResample[1]("auto"); }, [imitativeOscillator[0]]);
+	useEffect(() => { mimicalResample[0] === "true" && mimicalOscillator[0] === "true" && mimicalOscillator[1]("auto"); }, [mimicalResample[0]]);
+	useEffect(() => { mimicalResample[0] === "true" && mimicalOscillator[0] === "true" && mimicalResample[1]("auto"); }, [mimicalOscillator[0]]);
 
 	const { pushPage } = useSnapshot(pageStore);
 
@@ -155,17 +155,16 @@ export default function Visual() {
 						on={timeUnremapping}
 					/>
 					<Expander
-						title={t.stream.tuning.imitative}
-						details={t.descriptions.stream.tuning.imitative}
-						// selectInfo={resampleImitatively[0] === "auto" && t.descriptions.stream.resampleImitatively.auto}
+						title={t.stream.tuning.mimical}
+						details={t.descriptions.stream.tuning.mimical}
 						icon="tuning_image"
 					>
-						<InfoBar status="info">{t.descriptions.stream.tuning.imitative.auto}</InfoBar>
-						<Expander.Item icon="link_multiple" title={t.stream.tuning.resample} details={t.descriptions.stream.tuning.imitative.resample}>
-							<ThreeStageSwitch current={imitativeResample} />
+						<InfoBar status="info">{t.descriptions.stream.tuning.mimical.auto}</InfoBar>
+						<Expander.Item icon="link_multiple" title={t.stream.tuning.resample} details={t.descriptions.stream.tuning.mimical.resample}>
+							<ThreeStageSwitch current={mimicalResample} />
 						</Expander.Item>
-						<Expander.Item icon="waveforms/triangle" title={t({ context: "full" }).stream.tuning.tuningMethod.oscillator} details={t.descriptions.stream.tuning.imitative.oscillator}>
-							<ThreeStageSwitch current={imitativeOscillator} />
+						<Expander.Item icon="waveforms/triangle" title={t({ context: "full" }).stream.tuning.tuningMethod.oscillator} details={t.descriptions.stream.tuning.mimical.oscillator}>
+							<ThreeStageSwitch current={mimicalOscillator} />
 						</Expander.Item>
 					</Expander>
 					<SettingsCardToggleSwitch

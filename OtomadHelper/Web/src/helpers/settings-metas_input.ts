@@ -24,10 +24,7 @@ export const settingsMetasInput = {
 					icon: "layer_number",
 					details: t.descriptions.source.preferredTrack.fillingInstructions,
 				},
-				belowAdjustmentTracks: {
-					icon: "layer_sparkle_add_below",
-					details: undefined,
-				},
+				belowAdjustmentTracks: { icon: "layer_sparkle_add_below", details: undefined },
 			},
 		},
 		trackGroup: {
@@ -57,14 +54,8 @@ export const settingsMetasInput = {
 		matchCut: {
 			icon: "flag_auto_beat",
 			items: {
-				order: {
-					title: t.order,
-					icon: "arrow_sort_horizontal",
-				},
-				loop: {
-					title: t.stream.loop,
-					icon: "arrow_repeat_all",
-				},
+				order: { icon: "arrow_sort_horizontal", title: t.order },
+				loop: { icon: "arrow_repeat_all", title: t.stream.loop },
 				secretBox: {
 					title: t.source.secretBox,
 					aliases: [t.aliases.source.secretBox],
@@ -75,19 +66,13 @@ export const settingsMetasInput = {
 		linearMap: {
 			icon: "launchpad",
 			items: {
-				descending: {
-					title: t.descending,
-					icon: "descending",
-				},
+				descending: { icon: "descending", title: t.descending },
 			},
 		},
 	},
 	score: {
 		from: {},
-		trim: {
-			title: t.source.trim,
-			icon: "aspect_ratio",
-		},
+		trim: { icon: "aspect_ratio", title: t.source.trim },
 		encoding: { icon: "globe" },
 		tempo: { icon: "speed" },
 		timeSignature: { icon: "health" },
@@ -95,4 +80,92 @@ export const settingsMetasInput = {
 		parser: { icon: "engine" },
 		trackOrChannel: { icon: "midi" },
 	},
+	audio: {
+		preferredTrack: {
+			title: t.source.preferredTrack,
+			details: t.descriptions.source.preferredTrack,
+			icon: "preferred_track",
+		},
+		createGroups: { icon: "group" },
+		playbackRate: playbackRate(),
+		normalize: { icon: "normalize" },
+		loop: { icon: "loop" },
+		preRender: preRender(),
+		stretch: { icon: "stretch" },
+		truncate: { icon: "arrow_import_prohibited" },
+		legato: { icon: "legato" },
+		multitrackForChords: { icon: "chords" },
+		stack: { icon: "database_stack" },
+		timeUnremapping: { icon: "timer_off" },
+		autoPan: { icon: "stereo" },
+		tuning: {
+			items: {
+				tuningMethod: {
+					icon: "tuning",
+					items: {
+						acid: { icon: "logo/acid" },
+						scaleless: { icon: "scaleless" },
+					},
+				},
+				stretchAttributes: { icon: "tuning_wrench", details: undefined },
+				alternativeForExceedTheRange: { icon: "tuning_warning" },
+				resample: { icon: "link_multiple" },
+				preserveFormant: { icon: "speech" },
+				basePitch: {
+					icon: "music_note",
+					items: {
+						cent: { icon: "fine_tune" },
+						based: { icon: "relative" },
+						auto: { icon: "tuning_sparkle" },
+					},
+				},
+				prelisten: {
+					icon: "headphone",
+					items: {
+						engine: { icon: "table_column_top_bottom" },
+						waveform: { icon: "sound_wave" },
+						duration: { icon: "timer", title: t.duration },
+						volumeForBasePitch: { icon: "volume" },
+						adjustAudioToBasePitch: { icon: "remix_add" },
+					},
+				},
+				glissando: {
+					title: t.stream.articulations.glissando,
+					details: t.descriptions.stream.articulations.glissando,
+					icon: "slide_note",
+				},
+			},
+		},
+		mapping: {
+			items: {
+				velocity: { icon: "signal" },
+				pitch: { icon: "music_note" },
+				duration: { icon: "timer", title: t.duration },
+				pan: { icon: "stereo" },
+				progress: { icon: "progress_bar" },
+			},
+		},
+		parameters: { title: t.subheaders.parameters },
+	},
 } as const satisfies Record<string, Record<string, ISettingMeta>>;
+
+function playbackRate() {
+	return {
+		icon: "play_circle_hint_half",
+		items: {
+			based: { icon: "relative" },
+			sync: {
+				icon: "sync",
+				details: undefined,
+			},
+		},
+	} as const satisfies ISettingMeta;
+}
+function preRender() {
+	return {
+		icon: "movie",
+		items: {
+			acidTag: { icon: "logo/acid" },
+		},
+	} as const satisfies ISettingMeta;
+}

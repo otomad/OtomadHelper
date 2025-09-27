@@ -18,7 +18,8 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 	});
 
 	return (
-		<Expander
+		<Setting
+			meta={metas.audio.playbackRate}
 			title={t.stream.playbackRate}
 			details={t.descriptions.stream.playbackRate}
 			icon="play_circle_hint_half"
@@ -37,8 +38,8 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 				</>
 			)}
 		>
-			<ToggleSwitch on={stream === "audio" ? audioBased : visualBased} details={t.descriptions.stream.playbackRate.based} icon="relative">{t.stream.playbackRate.based}</ToggleSwitch>
-			<ToggleSwitch on={sync} icon="sync" details={t.descriptions.stream.playbackRate[!sync[0] ? "sync" : "outSync"]({ stream: stream !== "audio" ? t.titles.audio : t.titles.visual })}>{t.stream.playbackRate.sync}</ToggleSwitch>
-		</Expander>
+			<Setting meta={metas.audio.playbackRate.based} on={stream === "audio" ? audioBased : visualBased} />
+			<Setting meta={metas.audio.playbackRate.sync} on={sync} details={t.descriptions.stream.playbackRate[!sync[0] ? "sync" : "outSync"]({ stream: stream !== "audio" ? t.titles.audio : t.titles.visual })} />
+		</Setting>
 	);
 }
