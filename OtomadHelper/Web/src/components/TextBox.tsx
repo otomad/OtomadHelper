@@ -612,7 +612,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 		let result = normalizeNumber(value);
 		if (decimalPlaces !== undefined && typeof value === "number") {
 			if (typeof decimalPlaces !== "number" || decimalPlaces < 0 || decimalPlaces > 100)
-				throw new Error(`Decimal places argument must be between 0 and 100, got ${decimalPlaces}`);
+				throw new RangeError(`Decimal places argument must be between 0 and 100, got ${decimalPlaces}`);
 			result = value.toFixed(decimalPlaces);
 		}
 		if (!keepTrailing0 && result.includes("."))

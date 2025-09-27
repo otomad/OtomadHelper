@@ -3,11 +3,12 @@ import type { I18nArgsFunction } from "locales/types";
 import { redirectIcon } from "src/ShellPage";
 import type { Trans } from "utils/i18n";
 import { tf as $$t } from "utils/i18n";
+import { settingsMetasInput } from "./settings-metas_input";
 const t = new PathObject() as Trans;
 
 type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup";
 
-interface ISettingMeta {
+export interface ISettingMeta {
 	/** A unique identifier under the parent (global uniqueness is not required). */
 	// id: string;
 	/** Title must be referenced from an i18n locale string. If ignoring, it will auto concat from ancestor keys. */
@@ -25,91 +26,6 @@ interface ISettingMeta {
 	/** Click to jump at another link. */
 	link?: string;
 }
-
-const settingsMetasInput = {
-	source: {
-		from: {},
-		trim: { icon: "aspect_ratio" },
-		startTime: { icon: "start_point" },
-		advanced: { title: t.subheaders.advanced },
-		afterCompletion: {
-			icon: "post_processing",
-			items: {
-				removeSourceClips: { icon: "delete_track_event" },
-				removeSourceClipsWithTracks: { icon: "delete_layer" },
-				selectSourceClips: { icon: "select_all" },
-				selectGeneratedClips: { icon: undefined! },
-			},
-		},
-		preferredTrack: {
-			icon: "preferred_track",
-			items: {
-				index: {
-					icon: "layer_number",
-					details: t.descriptions.source.preferredTrack.fillingInstructions,
-				},
-				belowAdjustmentTracks: {
-					icon: "layer_sparkle_add_below",
-					details: undefined,
-				},
-			},
-		},
-		trackGroup: {
-			icon: "group",
-			items: {
-				collapse: { icon: "chevron_down_up" },
-			},
-		},
-		trackName: { icon: "rename" },
-		multisource: {},
-		secretBox: {
-			icon: "dice",
-			items: {
-				limitToSelected: { icon: "video_clip_multiple_checkmark" },
-				track: { icon: "layer" },
-				marker: { icon: "flag" },
-				barOrBeat: {
-					icon: "music_bar",
-					items: {
-						period: { icon: "timer" },
-						preparation: { icon: "hourglass" },
-					},
-				},
-			},
-		},
-		consonant: { icon: "consonant" },
-		matchCut: {
-			icon: "flag_auto_beat",
-			items: {
-				order: {
-					icon: "arrow_sort_horizontal",
-					title: t.order,
-				},
-				loop: {
-					icon: "arrow_repeat_all",
-					title: t.stream.loop,
-				},
-				secretBox: {
-					icon: "dice",
-					title: t.source.secretBox,
-				},
-			},
-		},
-		linearMap: {
-			icon: "launchpad",
-			items: {
-				descending: {
-					icon: "descending",
-					title: t.descending,
-				},
-			},
-		},
-	},
-	score: {
-		from: {},
-
-	},
-} as const satisfies Record<string, Record<string, ISettingMeta>>;
 
 export class SettingMeta implements ISettingMeta {
 	title?: string;
@@ -159,7 +75,8 @@ type DefaultMeta<TPath extends string> = OmitNevers<{
 type JoinDot<T, U> = T extends "" ? U & string : `${T & string}.${U & string}`;
 type ConvertItem<TPage, TPath extends string> = {
 	[item in keyof TPage]:
-		{ meta: Override<DefaultMeta<JoinDot<TPath, item>>, Omit<TPage[item], "items">> } & (TPage[item] extends { items: Any } ? ConvertItem<TPage[item]["items"], JoinDot<TPath, item>> : {})
+		{ meta: Override<DefaultMeta<JoinDot<TPath, item>>, Omit<TPage[item], "items">> & Omit<SettingMeta, keyof ISettingMeta> } &
+		(TPage[item] extends { items: Any } ? ConvertItem<TPage[item]["items"], JoinDot<TPath, item>> : {})
 };
 type ConvertPage<TObject> = {
 	[page in keyof TObject]: ConvertItem<TObject[page], page & string>;

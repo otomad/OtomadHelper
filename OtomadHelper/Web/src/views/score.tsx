@@ -19,9 +19,9 @@ export /* @internal */ const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "
 export /* @internal */ const trackAndChannel = ["track", "channel"] as const;
 /** @deprecated Test only! */
 const tracks = [
-	{ channel: 1, name: "Lead", noteCount: 100, beginNote: "C5", pan: t.variableBeginWith({ first: t.score.pan.left }), isDrumKit: false, inst: "Sawtooth" },
-	{ channel: 2, name: "Chords", noteCount: 50, beginNote: "C#5", pan: t.score.pan.right, isDrumKit: false, inst: "Strings" },
-	{ channel: 10, name: "Drums", noteCount: 150, beginNote: "A3", pan: t.score.pan.center, isDrumKit: true, inst: "Piano" },
+	{ channel: 1, name: "Lead", noteCount: 100, beginNote: 60, pan: "leftVariable", isDrumKit: false, inst: 82 },
+	{ channel: 2, name: "Chords", noteCount: 50, beginNote: 61, pan: "right", isDrumKit: false, inst: 51 },
+	{ channel: 10, name: "Drums", noteCount: 150, beginNote: 45, pan: "center", isDrumKit: true, inst: 1 },
 ];
 
 // #region Styles
@@ -119,6 +119,7 @@ export default function Score() {
 	} = useSelectConfig(c => c.score);
 	const { type: constrainNoteLengthType, min: constrainNoteLengthMin, ...constrainNoteLengthValues } = useSelectConfig(c => c.score.constrainNoteLength);
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
+	const meta = metas.score;
 
 	const setSelectTrackItems = (recipe: (draft: typeof selectTrackItems) => void) => _setSelectTrackItems(produce(recipe));
 
@@ -203,7 +204,7 @@ export default function Score() {
 		<div className="container">
 			{ytpEnabled && <InfoBar status="warning" title={t.descriptions.score.ytpEnabled} button={<EmptyMessage.YtpDisabled.Buttons />} />}
 
-			<Card className="media-pool">
+			<Card className="media-pool" data-anchor={meta.from.meta.cssPath}>
 				<TabBar current={format} aria-label={t.score.from}>
 					<TabBar.Item id="midi" icon="midi">{t.score.midi}</TabBar.Item>
 					<TabBar.Item id="singthesis" icon="ust">{t.score.singthesis}</TabBar.Item>
@@ -213,23 +214,19 @@ export default function Score() {
 				</TabBar>
 			</Card>
 
-			<Expander title={t.source.trim} details={t.descriptions.source.trim} icon="aspect_ratio">
+			<Setting meta={meta.trim}>
 				<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
-			</Expander>
-			<ExpanderRadio
-				title={t.score.encoding}
-				details={t.descriptions.score.encoding}
-				icon="globe"
+			</Setting>
+			<Setting
+				meta={meta.encoding}
 				items={encodings}
 				value={encoding}
 				idField
 				nameField={value => value === "ANSI" ? t.systemDefault : value}
 				checkInfoCondition={value => value === "ANSI" ? t.systemDefault : value}
 			/>
-			<ExpanderRadio
-				title={t.score.tempo}
-				details={t.descriptions.score.tempo}
-				icon="speed"
+			<Setting
+				meta={meta.tempo}
 				items={tempoUsings}
 				value={tempoUsing}
 				view="tile"
@@ -240,12 +237,10 @@ export default function Score() {
 				<CustomItem current={tempoUsing}>
 					{setToCustom => <TextBox.Number value={customTempo} onChanging={setToCustom} suffix={t.units.beatPerMinute} />}
 				</CustomItem>
-			</ExpanderRadio>
-			<SettingsCard title={t.score.timeSignature} icon="health">{timeSignature}</SettingsCard>
-			<ExpanderRadio
-				title={t.score.constrain}
-				details={t.descriptions.score.constrain}
-				icon="constraint"
+			</Setting>
+			<Setting meta={meta.timeSignature} actions={timeSignature} />
+			<Setting
+				meta={meta.constrain}
 				items={constrainNoteLengthTypes}
 				value={constrainNoteLengthType}
 				view="tile"
@@ -271,24 +266,21 @@ export default function Score() {
 						<TimecodeBox value={constrainNoteLengthMin} />
 					</Expander.Item>
 				)}
-			</ExpanderRadio>
-			<SettingsCard title={t.score.parser} details={t.descriptions.score.parser} icon="engine">
-				<ComboBox ids={["otomadHelper"]} options={["Otomad Helper"]} current={["otomadHelper"]} />
-			</SettingsCard>
-			<SettingsCard
-				title={t.score.trackOrChannel}
-				details={t.descriptions.score.trackOrChannel}
-				icon="midi"
+			</Setting>
+			<Setting meta={meta.parser} actions={<ComboBox ids={["otomadHelper"]} options={["Otomad Helper"]} current={["otomadHelper"]} />} />
+			<Setting
+				meta={meta.trackOrChannel}
 				disabled={format[0] !== "midi"}
-			>
-				<Segmented current={trackOrChannel}>
-					{trackAndChannel.map(option => {
-						const icon: DeclaredIcons = option === "channel" ? "launchpad" : "layer";
-						const label = option === "channel" ? t.score.channel : t.score.musicalTrack;
-						return <Segmented.Item id={option} key={option} icon={icon}>{label}</Segmented.Item>;
-					})}
-				</Segmented>
-			</SettingsCard>
+				actions={(
+					<Segmented current={trackOrChannel}>
+						{trackAndChannel.map(option => {
+							const icon: DeclaredIcons = option === "channel" ? "launchpad" : "layer";
+							const label = option === "channel" ? t.score.channel : t.score.musicalTrack;
+							return <Segmented.Item id={option} key={option} icon={icon}>{label}</Segmented.Item>;
+						})}
+					</Segmented>
+				)}
+			/>
 
 			{tracks.length > 0 && (
 				<>
@@ -309,47 +301,54 @@ export default function Score() {
 						</Segmented>
 					</TrackToolbar>
 					<ItemsView view="list" multiple={isMultiple} current={[selectedTrack, setSelectedTrack]} indeterminatenesses={indeterminatenesses}>
-						{tracks.map((track, index) => (
-							<ItemsView.Item
-								key={index}
-								id={index}
-								onClick={handleTrackClick}
-								details={(
-									<>
-										<SubgridLayout className="row" name="score-track-note-details">
-											<p><Icon name="music_note" />{t.score.noteCount}{t.colon}{track.noteCount}</p>
-											<p><Icon name="start_point" />{t.score.beginNote}{t.colon}{track.beginNote}</p>
-											<p><Icon name="stereo" />{t.score.pan}{t.colon}{track.pan}</p>
-										</SubgridLayout>
-										<SubgridLayout className="row" name="score-track-note-details">
-											{track.isDrumKit && <p><Icon name="drum" />{t.score.drumKit}</p>}
-											<p className="span-to-end"><Icon name="instrument" />{t.score.instrument}{t.colon}{track.inst}</p>
-										</SubgridLayout>
-									</>
-								)}
-								actions={(
-									<CssTransition in={isMultiple} unmountOnExit>
-										<MultipleSelectTrackItemsContainer>
-											{Array.from(getAllMultipleSelectTrackItemSet(track), item => !track.isDrumKit && item === "sonar" ? undefined : (
-												<Tooltip key={item} placement="y" title={t.titles[item]}>
-													<ToggleButton
-														icon={redirectIcon(item)}
-														appearance="subtle"
-														checked={[selectTrackItems[index]?.has(item)]}
-														onClick={() => handleTrackItemsClick(index, item)}
-													/>
-												</Tooltip>
-											))}
-										</MultipleSelectTrackItemsContainer>
-									</CssTransition>
-								)}
-							>
-								<SubgridLayout name="score-track-name">
-									{track.channel != null && <div className="badge-wrapper"><Badge transitionOnAppear={false}>{track.channel}</Badge></div>}
-									<span>{track.name}</span>
-								</SubgridLayout>
-							</ItemsView.Item>
-						))}
+						{tracks.map((track, index) => {
+							let beginNote = new Pitch(track.beginNote).spn;
+							if (track.isDrumKit) beginNote = tf.shared.midi.percussions[track.beginNote] ?? `${tf.shared.midi.unknown} (${beginNote})`;
+							const inst = tf.shared.midi.instruments[track.inst] ?? tf.shared.midi.unknown;
+							// 	{ channel: 1, name: "Lead", noteCount: 100, beginNote: "C5", pan: t.variableBeginWith({ first: t.score.pan.left }), isDrumKit: false, inst: "Sawtooth" },
+							const pan = !track.pan.endsWith("Variable") ? t.score.pan[track.pan] : t.variableBeginWith({ first: t.score.pan[track.pan.replaceEnd("Variable")] });
+							return (
+								<ItemsView.Item
+									key={index}
+									id={index}
+									onClick={handleTrackClick}
+									details={(
+										<>
+											<SubgridLayout className="row" name="score-track-note-details">
+												<p><Icon name="music_note" />{t.score.noteCount}{t.colon}{track.noteCount}</p>
+												<p><Icon name="start_point" />{t.score.beginNote}{t.colon}{beginNote}</p>
+												<p><Icon name="stereo" />{t.score.pan}{t.colon}{pan}</p>
+											</SubgridLayout>
+											<SubgridLayout className="row" name="score-track-note-details">
+												{track.isDrumKit && <p><Icon name="drum" />{t.score.drumKit}</p>}
+												<p className="span-to-end"><Icon name="instrument" />{t.score.instrument}{t.colon}{inst}</p>
+											</SubgridLayout>
+										</>
+									)}
+									actions={(
+										<CssTransition in={isMultiple} unmountOnExit>
+											<MultipleSelectTrackItemsContainer>
+												{Array.from(getAllMultipleSelectTrackItemSet(track), item => !track.isDrumKit && item === "sonar" ? undefined : (
+													<Tooltip key={item} placement="y" title={t.titles[item]}>
+														<ToggleButton
+															icon={redirectIcon(item)}
+															appearance="subtle"
+															checked={[selectTrackItems[index]?.has(item)]}
+															onClick={() => handleTrackItemsClick(index, item)}
+														/>
+													</Tooltip>
+												))}
+											</MultipleSelectTrackItemsContainer>
+										</CssTransition>
+									)}
+								>
+									<SubgridLayout name="score-track-name">
+										{track.channel != null && <div className="badge-wrapper"><Badge transitionOnAppear={false}>{track.channel}</Badge></div>}
+										<span>{track.name}</span>
+									</SubgridLayout>
+								</ItemsView.Item>
+							);
+						})}
 					</ItemsView>
 				</>
 			)}

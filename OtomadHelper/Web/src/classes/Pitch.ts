@@ -6,7 +6,8 @@ const noteNames = "C,C#,D,D#,E,F,F#,G,G#,A,A#,B".split(",");
  * @returns The SPN string (e.g., "C#4", "Bb3").
  */
 export function midiNoteToSPN(midiNoteNumber: number) {
-	return noteNames[midiNoteNumber % 12] + (midiNoteNumber / 12 | 0);
+	return noteNames[floorMod(midiNoteNumber, 12)] + Math.floor(midiNoteNumber / 12);
+	// CAUTION: DO NOT use `midiNoteNumber / 12 | 0` which stands for trunc instead of floor!
 }
 
 /**
@@ -66,7 +67,7 @@ export default class Pitch {
 	 * @returns An object containing the note name and octave.
 	 */
 	static parseSpn(spn: string) {
-		const groups = spn?.match(/(?<noteName>[A-G][#♯b♭]?)(?<octave>\d+)/i)?.groups as undefined ?? { noteName: "", octave: "" };
+		const groups = spn?.match(/(?<noteName>[A-G][#♯b♭]?)(?<octave>-?\d+)/i)?.groups as undefined ?? { noteName: "", octave: "" };
 		const octave = +groups.octave;
 		let noteName = groups.noteName
 			.toUpperCase()
@@ -115,7 +116,7 @@ export default class Pitch {
 	 * Gets or sets the note name (e.g., "C", "C#", "D").
 	 */
 	get noteName() {
-		return Pitch.#noteNames[this.#noteNumber % 12];
+		return Pitch.#noteNames[floorMod(this.#noteNumber, 12)];
 	}
 
 	set noteName(noteName) {
@@ -126,7 +127,8 @@ export default class Pitch {
 	 * Gets or sets the octave number (e.g., 4, 5).
 	 */
 	get octave() {
-		return this.#noteNumber / 12 | 0;
+		return Math.floor(this.#noteNumber / 12);
+		// CAUTION: DO NOT use `this.#noteNumber / 12 | 0` which stands for trunc instead of floor!
 	}
 
 	set octave(octave) {

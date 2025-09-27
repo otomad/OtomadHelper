@@ -18,7 +18,7 @@ export default function Setting(props: InheritFrom<typeof Expander>): React.JSX.
 export default function Setting(props: InheritFrom<typeof Expander.Item>): React.JSX.Element;
 export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof SettingsCard | typeof SettingsCardToggleSwitch | typeof Expander | typeof ExpanderRadio | typeof Expander.Item>) {
 	const [lastGotoPath, lastGotoPathTimestamp] = useSnapshot(pageStore).lastGotoPath ?? [];
-	const { path, cssPath, link, type } = meta as RequiredWith<SettingMeta, "path">;
+	const { path, cssPath, link, type } = meta;
 	props.title ??= meta.translatedTitle;
 	props.details ??= meta.translatedDetails;
 	props.icon ??= meta.icon;
@@ -45,12 +45,12 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 		return <Expander {...props as Any} _requestExpanded={_requestExpanded} />;
 	else {
 		const { actions, ..._props } = props as PropsOf<typeof Expander>;
-		if (type === "container")
-			return <SettingsCard {..._props as Any}>{actions}</SettingsCard>;
+		if (type === "button")
+			return <SettingsCard type="button" {..._props as Any}>{actions}</SettingsCard>;
 		else if (link || type === "link")
 			return <SettingsCard type="button" onClick={() => link && changePage([link])} {..._props as Any}>{actions}</SettingsCard>;
 		else
-			return <SettingsCard type="button" {..._props as Any}>{actions}</SettingsCard>;
+			return <SettingsCard {..._props as Any}>{actions}</SettingsCard>;
 	}
 }
 

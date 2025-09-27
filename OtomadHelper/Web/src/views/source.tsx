@@ -63,7 +63,7 @@ export default function Source() {
 
 	return (
 		<div className="container">
-			<Card className="media-pool" data-anchor={CSS.escape(meta.from.meta.path)}>
+			<Card className="media-pool" data-anchor={meta.from.meta.cssPath}>
 				<TabBar current={sourceFrom} aria-label={t.source.from}>
 					<TabBar.Item id="trackEvent" icon="track_event">{t.source.trackEvent}</TabBar.Item>
 					<TabBar.Item id="projectMedia" icon="media">{t.source.projectMedia}</TabBar.Item>

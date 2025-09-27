@@ -7,9 +7,12 @@ language: en,vi
 includeRegExpList:
   - /[\p{Script_Extensions=Latin}\p{ASCII}]+/gu
 words:
+  - aahs
   - abbrs
   - ack
   - aequilate
+  - agogo
+  - agogô
   - amoled
   - ani
   - apng
@@ -30,13 +33,19 @@ words:
   - booleanish
   - bouncized
   - breakbeat
+  - cabasa
   - calaboca
   - camelcase
   - ccw
+  - charang
   - checkmark
+  - chiff
+  - chiffer
   - cjk
   - classname
   - classnames
+  - claves
+  - clavinet
   - clr
   - codepen
   - commitlint
@@ -50,6 +59,8 @@ words:
   - crossfade
   - crossfaded
   - csstype
+  - cuíca
+  - cuica
   - cw
   - danmaku
   - datamix
@@ -73,6 +84,7 @@ words:
   - esbuild
   - evaluable
   - extralight
+  - fi
   - filedir
   - flyouts
   - formatjs
@@ -86,6 +98,7 @@ words:
   - gra
   - grayscale
   - gridlines
+  - güiro
   - halfwidth
   - highp
   - hmr
@@ -162,6 +175,7 @@ words:
   - otomad
   - otomadhelper
   - otomads
+  - overdriven
   - overrider
   - oversaturation
   - pangu
@@ -172,6 +186,7 @@ words:
   - pillarboxing
   - pingpong
   - pixi
+  - polysynth
   - portato
   - posterize
   - prelisten
@@ -201,6 +216,9 @@ words:
   - segoe
   - selectedcontent
   - semilight
+  - shakuhachi
+  - shamisen
+  - shanai
   - shupelunker
   - sidenav
   - singthesis
@@ -222,18 +240,21 @@ words:
   - subgrids
   - subheaders
   - subtags
+  - surdo
   - svgr
   - svgs
   - svh
   - svs
   - svw
   - tabbar
+  - taiko
   - timecode
   - timecodes
   - timeflow
   - titler
   - toggleable
   - tonejs
+  - tonk
   - touchpad
   - tp
   - tsc
@@ -261,6 +282,7 @@ words:
   - utf
   - valtio
   - vec
+  - vibraslap
   - vite
   - vnd
   - vocaloid
@@ -382,3 +404,7 @@ flagWords:
   - unioned -> in a union
   - collasped -> collapsed
   - collaspe -> collapse
+  - elastique -> élastique
+  - agogo -> agogô
+  - guiro -> güiro
+  - cuica -> cuíca

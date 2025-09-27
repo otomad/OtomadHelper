@@ -70,7 +70,7 @@ public class I18n : DynamicObject {
 	}
 
 	public override bool TryGetIndex(GetIndexBinder binder, object[] indexes, out object result) {
-		if (!indexes.HasIndex(0) || indexes[0] is not string name) {
+		if (!indexes.HasIndex(0) || indexes[0] is not string name) { // TODO: get index of int
 			result = null!;
 			return false;
 		}
