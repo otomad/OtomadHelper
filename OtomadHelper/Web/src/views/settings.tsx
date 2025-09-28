@@ -272,7 +272,7 @@ export default function Settings() {
 					view="grid"
 					minDistance
 					onReorder={async (from, to) => await backgroundImages.reorder(backgroundImages.items[from].key, to - 1)}
-					unfocusableForSortableItems
+					nonFocusableForSortableItems
 					disableKeyboardSensor
 				>
 					{(_1, _2, { id, url, displayIndex, color }) => (

@@ -10,6 +10,7 @@ export /* @internal */ const styledSimpleIndicator = css`
 		content: "";
 		position: absolute;
 		inset-inline-start: 0;
+		align-self: center;
 		block-size: ${100 / 3}%;
 		inline-size: 3px;
 		background-color: ${c("accent-color")};

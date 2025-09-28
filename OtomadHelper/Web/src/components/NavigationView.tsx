@@ -741,10 +741,13 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 		setIsExpandedInExpandedMode(true) :
 		setFlyoutDisplayMode("expanded");
 	const hideFlyoutNavMenu = () => { flyoutDisplayMode !== "minimal" && setFlyoutDisplayMode("minimal"); };
-	const handleSearch: typeof onSearch = (keyword, onSearchResultSelect) => onSearch?.(keyword, () => {
-		(document.activeElement as HTMLElement)?.blur?.();
-		setFlyoutDisplayMode("minimal");
-		onSearchResultSelect?.();
+	const handleSearch: typeof onSearch = ({ onSelect, ...props }) => onSearch?.({
+		onSelect() {
+			(document.activeElement as HTMLElement)?.blur?.();
+			setFlyoutDisplayMode("minimal");
+			onSelect?.();
+		},
+		...props,
 	});
 
 	const windowWidth = useWindowWidth();

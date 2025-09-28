@@ -74,7 +74,7 @@ const cleanupFocusHighlightEffect = () => {
 		el.style.anchorName = null!;
 	}
 };
-window.addEventListener("mouseup", cleanupFocusHighlightEffect, true);
+window.addEventListener("mouseup", e => e.isTrusted && cleanupFocusHighlightEffect(), true);
 /**
  * Make a focus highlight effect around the target element.
  * @param element - Target HTML DOM element.
@@ -88,7 +88,7 @@ export async function makeFocusHighlightEffect(element: TargetType, options?: Ov
 	const ring = createFocusRing(el, options);
 	if (!el || !ring) return;
 	el.classList.add(FOCUS_HIGHLIGHT_CLASS);
-	const anchorName = "--" + CSS.escape(crypto.randomUUID());
+	const anchorName = CSS.escape("--" + crypto.randomUUID()); // CAUTION: DO NOT put `"--" +` outside of `CSS.escape`!
 	el.style.anchorName = anchorName;
 	assign(ring.style, {
 		position: "fixed",
@@ -107,7 +107,9 @@ export async function makeFocusHighlightEffect(element: TargetType, options?: Ov
 		], { duration: 2000, easing: "linear", iterations: 3 }).finished.catch(noop);
 	} finally {
 		ring.remove();
-		el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
-		el.style.removeProperty("anchor-name");
+		if (el.style.anchorName === anchorName) {
+			el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
+			el.style.anchorName = null!;
+		}
 	}
 }

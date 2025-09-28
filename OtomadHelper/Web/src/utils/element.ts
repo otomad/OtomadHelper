@@ -326,14 +326,14 @@ export function findFirstFocusableElement(container: MaybeRef<Element | null>) {
 		"select",
 		"[tabindex]",
 	];
-	const unfocusableSelectors = [
+	const nonFocusableSelectors = [
 		"[disabled]",
 		"[hidden]",
 		"[inert]",
 		'[tabindex="-1"]',
 		"[aria-disabled]",
 	];
-	return container?.querySelector<HTMLElement>(`:is(${focusableSelectors.join(",")}):not(${unfocusableSelectors.join(",")})`) ?? null;
+	return container?.querySelector<HTMLElement>(`:is(${focusableSelectors.join(",")}):not(${nonFocusableSelectors.join(",")})`) ?? null;
 }
 
 /**

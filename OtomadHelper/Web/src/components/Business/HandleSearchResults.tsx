@@ -1,22 +1,47 @@
+import { styledSimpleIndicator } from "components/ItemsView/ItemsViewItem";
 import { type SettingMeta, search } from "helpers/settings-metas";
 
 const MAX_LENGTH = 10;
 
+const IconWrapper = styled.div({});
+
 const StyledSearchResult = styled.button`
+	--padding: 8px;
+	position: relative;
 	display: flex;
 	gap: 16px;
 	align-items: flex-start;
 	inline-size: 100%;
-	padding: 8px;
+	padding: var(--padding);
 	border-radius: 4px;
 
-	&:hover {
+	${styledSimpleIndicator};
+
+	&::before {
+		block-size: 20px;
+	}
+
+	&:hover,
+	&.selected {
 		background-color: ${c("fill-color-subtle-secondary")};
+	}
+
+	&:not(.selected):active,
+	&.selected:not(:active):hover {
+		background-color: ${c("fill-color-subtle-tertiary")};
+	}
+
+	&:not(.selected)::before {
+		scale: 1 0;
+		opacity: 0;
 	}
 
 	&:active {
 		color: ${c("fill-color-text-secondary")};
-		background-color: ${c("fill-color-subtle-tertiary")};
+
+		&::before {
+			scale: 1 0.625;
+		}
 	}
 
 	.text {
@@ -26,14 +51,20 @@ const StyledSearchResult = styled.button`
 		inline-size: 100%;
 	}
 
-	> .icon {
+	${IconWrapper} {
+		${styles.mixins.square("20px")};
 		flex-shrink: 0;
-		margin-block-start: 4px;
+
+		.icon {
+			position: absolute;
+			inset-block-start: calc(var(--padding) + 4px);
+		}
 	}
 
-	&:has(.text .title:only-child) > .icon {
-		align-self: center;
-		margin-block-start: 0;
+	&.selected ${IconWrapper} .icon,
+	&:has(.text .title:only-child) ${IconWrapper} .icon {
+		inset-block-start: 50%;
+		translate: 0 -50%;
 	}
 
 	.subtitle {
@@ -57,18 +88,16 @@ const StyledSearchResult = styled.button`
 	}
 `;
 
-export default function HandleSearchResults({ query, onSearchResultSelect }: {
-	/** Search keyword. */
-	query?: string;
-	/** Occurs when user click the search result item. */
-	onSearchResultSelect?(): void;
-}) {
+export default function HandleSearchResults({ query, onSelect, handler }: SearchBox.SearchResultProps) {
 	const [language] = useLanguage();
 	const { goto } = useSnapshot(pageStore);
 	const searchResults = useMemo(() => search(query).slice(0, MAX_LENGTH), [query, language]);
 	const [detailsEls, setDetailsEls] = useDomRefs<"p">();
+	const [keyboardSelectIndex, setKeyboardSelectIndex] = useState(0);
+	const searchResultEl = useDomRef<"button">();
 
 	useEffect(() => {
+		setKeyboardSelectIndex(0);
 		for (const detailsEl of detailsEls.current) {
 			const mark = detailsEl?.querySelector("mark");
 			if (!detailsEl || !mark) continue;
@@ -76,13 +105,42 @@ export default function HandleSearchResults({ query, onSearchResultSelect }: {
 			mark.scrollIntoView({ behavior: "instant", inline: "center" });
 			if (detailsEl.scrollLeft > offsetLeft) detailsEl.scrollTo({ behavior: "instant", left: offsetLeft });
 		}
-	});
+	}, [query]);
+
+	useEffect(() => {
+		const container = searchResultEl.current?.parentElement;
+		if (!container) return;
+		const item = container.querySelector(".search-result.selected") ?? container.querySelector(".search-result");
+		item?.scrollIntoViewIfNeeded();
+	}, [query, keyboardSelectIndex]);
+
+	function onUpDown(direction: -1 | 1) {
+		setKeyboardSelectIndex(index => floorMod(index + direction, searchResults.length + 1));
+	}
+
+	function onEnter() {
+		const i = Math.max(0, keyboardSelectIndex - 1);
+		if (searchResults[i]) {
+			onSelect?.();
+			goto(searchResults[i].meta.path);
+		}
+	}
+
+	useImperativeHandle(handler, () => ({ onUpDown, onEnter }));
 
 	return searchResults.map(({ prop, meta, keyword }, i) => {
 		const title = meta.translatedTitle;
 		return (
-			<StyledSearchResult key={meta.path} onClick={() => { onSearchResultSelect?.(); goto(meta.path); }}>
-				{meta.icon && meta.icon !== "placeholder" ? <Icon name={meta.icon} /> : <Icon shadow />}
+			<StyledSearchResult
+				key={meta.path}
+				ref={searchResultEl}
+				tabIndex={-1}
+				className={{ selected: keyboardSelectIndex - 1 === i }}
+				onClick={() => { onSelect?.(); goto(meta.path); setKeyboardSelectIndex(index => index === 0 ? 0 : i + 1); }}
+			>
+				<IconWrapper>
+					{meta.icon && meta.icon !== "placeholder" ? <Icon name={meta.icon} /> : undefined}
+				</IconWrapper>
 				<div className="text">
 					<p className="title">{prop === "title" ? <HighlightText wholeText={title} keyword={query} /> : title}</p>
 					{prop !== "title" && (

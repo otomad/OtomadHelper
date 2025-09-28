@@ -138,16 +138,18 @@ const StyledTextBoxActionButton = styled.button.attrs({
 	}
 `;
 
-function TextBoxActionButton({ icon, tooltip, ...htmlAttrs }: FCP<{
+function TextBoxActionButton({ icon, tooltip, nonFocusable = false, ...htmlAttrs }: FCP<{
 	/** Button icon. */
 	icon?: DeclaredIcons;
 	/** Tooltip. */
 	tooltip?: Readable;
+	/** Apply tabIndex = -1? */
+	nonFocusable?: boolean;
 	children?: never;
 }, "button">) {
 	return (
 		<Tooltip title={tooltip} placement="y">
-			<StyledTextBoxActionButton {...htmlAttrs}>
+			<StyledTextBoxActionButton tabIndex={nonFocusable ? -1 : undefined} {...htmlAttrs}>
 				<div className="base">
 					{icon && <Icon name={icon} />}
 				</div>
@@ -557,7 +559,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 					<Icon name="error_circle" className="warn-icon" />
 				</Tooltip>
 				<Contents className="action-buttons">
-					{showClearAll && <TextBoxActionButton icon="dismiss" hidden={!value} tooltip={t.clearAll} onClick={clearAll} />}
+					{showClearAll && <TextBoxActionButton icon="dismiss" hidden={!value} tooltip={t.clearAll} nonFocusable onClick={clearAll} />}
 				</Contents>
 				{spinner?.(inputId)}
 			</div>

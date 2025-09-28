@@ -8,6 +8,7 @@ const StyledDataList = styled.div`
 	inline-size: anchor-size(inline);
 	padding: 4px;
 	overflow-block: auto;
+	scroll-behavior: auto;
 	border-block-start-width: 0;
 	border-start-start-radius: 0;
 	border-start-end-radius: 0;
@@ -42,6 +43,24 @@ const StyledDataList = styled.div`
 	}
 `;
 
+declare global {
+	namespace SearchBox { // unplugin-auto-import doesn't support namespace import now.
+		interface SearchResultProps {
+			/** Search keyword. */
+			query?: string;
+			/** Occurs when user click the search result item. */
+			onSelect?(): void;
+			/** A ref to handle keydown events from search box. */
+			handler?: RefObject<{
+				/** Occurs when user press up or down key. -1: Up; 1: Down. */
+				onUpDown(direction: -1 | 1): void;
+				/** Occurs when user press enter key. */
+				onEnter(): void;
+			} | undefined>;
+		}
+	}
+}
+
 export default function SearchBox({ value: [value, setValue], collapsed, collapsedButtonTooltip, enableShortcutKey, placeholder, onCollapsedButtonClick, onSearch, onSearchResultSelect, className, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
@@ -59,7 +78,7 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 	/** Occurs when the collapsed button clicked. */
 	onCollapsedButtonClick?(): void;
 	/** Get search results. */
-	onSearch?(keyword: string, onSearchResultSelect?: () => void): ReactNode;
+	onSearch?(props: SearchBox.SearchResultProps): ReactNode;
 	/** Occurs when user click the search result item. */
 	onSearchResultSelect?(): void;
 	children?: never;
@@ -75,8 +94,13 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 		focusSearchBox();
 	};
 	const datalistEl = useDomRef<"div">();
+	const keyDownHandler = useRef<Unref<SearchBox.SearchResultProps["handler"]>>(undefined);
 
-	const searchResults = useMemo(() => onSearch?.(value ?? "", onSearchResultSelect), [value, onSearch, language, onSearchResultSelect]);
+	const searchResults = useMemo(() => onSearch?.({
+		query: value ?? "",
+		onSelect: onSearchResultSelect,
+		handler: keyDownHandler,
+	}), [value, onSearch, language, onSearchResultSelect]);
 
 	useEventListener(window, "keydown", e => {
 		if (!enableShortcutKey || !(e.ctrlKey && e.code === "KeyF")) return;
@@ -84,8 +108,18 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 		collapsed ? handleCollapsedButtonClick() : focusSearchBox();
 	}, undefined, [enableShortcutKey, onCollapsedButtonClick, collapsed]);
 
-	const scrollDatalistToTop = () => datalistEl.current?.scrollTo({ top: 0, behavior: "instant" });
-	useEffect(() => { scrollDatalistToTop(); delay(0).then(scrollDatalistToTop); }, [value]);
+	// const scrollDatalistToTop = () => datalistEl.current?.scrollTo({ top: 0, behavior: "instant" });
+	// useEffect(() => { scrollDatalistToTop(); delay(0).then(scrollDatalistToTop); }, [value]);
+
+	const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
+		if (e.code.in("ArrowUp", "ArrowDown"))
+			keyDownHandler.current?.onUpDown(e.code === "ArrowUp" ? -1 : 1);
+		else if (e.code.in("Enter", "NumpadEnter"))
+			keyDownHandler.current?.onEnter();
+		else
+			return;
+		e.preventDefault();
+	};
 
 	return (
 		<search className={["search-box", { collapsed }, className]} aria-label={t.aria.searchBox} {...htmlAttrs}>
@@ -103,6 +137,7 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 							{searchResults}
 						</StyledDataList>
 					)}
+					onKeyDown={handleKeyDown}
 				/>
 			) : (
 				<Tooltip {...collapsedButtonTooltip!}>

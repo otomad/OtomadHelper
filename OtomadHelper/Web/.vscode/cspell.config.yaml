@@ -267,7 +267,6 @@ words:
   - ultrabold
   - unconfigurable
   - unflipped
-  - unfocusable
   - unhover
   - unlengthen
   - unlengthening
@@ -413,3 +412,5 @@ flagWords:
   - cuica -> cuíca
   - cajon -> cajón
   - mimicing -> mimicking
+  - nonFocusable -> nonFocusable
+  - focusless -> nonFocusable

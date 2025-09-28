@@ -47,7 +47,7 @@ const addDatasets = (children: ReactNode, id: UniqueIdentifier, index: number, v
 
 const minimumDistanceActivationConstraint = { distance: 15 };
 
-export function SortableView<TItem extends BaseItem>({ items: itemsStateProperty, overlayEmits, fullyDraggable, view = "list", minDistance, unfocusableForSortableItems, disableKeyboardSensor, children, onReorder }: FCP<{
+export function SortableView<TItem extends BaseItem>({ items: itemsStateProperty, overlayEmits, fullyDraggable, view = "list", minDistance, nonFocusableForSortableItems, disableKeyboardSensor, children, onReorder }: FCP<{
 	/** List items. The item must have `id` property in it. */
 	items: StateProperty<TItem[]>;
 	/** Rendered item. */
@@ -62,8 +62,8 @@ export function SortableView<TItem extends BaseItem>({ items: itemsStateProperty
 	minDistance?: boolean;
 	/** Occurs after user reorder an item. */
 	onReorder?(fromIndex: number, toIndex: number, items: TItem[]): MaybePromise<void>;
-	/** Apply tabIndex -1 to sortable items? */
-	unfocusableForSortableItems?: boolean;
+	/** Apply tabIndex = -1 to sortable items? */
+	nonFocusableForSortableItems?: boolean;
 	/** Stop do sorting when press space bar key? */
 	disableKeyboardSensor?: boolean;
 }>) {
@@ -107,7 +107,7 @@ export function SortableView<TItem extends BaseItem>({ items: itemsStateProperty
 				key={id}
 				id={id}
 				fullyDraggable={fullyDraggable}
-				unfocusable={unfocusableForSortableItems}
+				nonFocusable={nonFocusableForSortableItems}
 				_view={view}
 				_pin={pin}
 			>

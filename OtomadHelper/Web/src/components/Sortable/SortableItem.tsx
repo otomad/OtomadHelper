@@ -58,7 +58,7 @@ const StyledSortableItem = styled.li<{
 	}
 `;
 
-export /* @internal */ default function SortableItem({ children, id, fullyDraggable, _view: view, _pin: pin, unfocusable }: FCP<{
+export /* @internal */ default function SortableItem({ children, id, fullyDraggable, _view: view, _pin: pin, nonFocusable }: FCP<{
 	/** Unique identifier. */
 	id: UniqueIdentifier;
 	/** Is there no drag handle and you can drag it the whole element? */
@@ -67,8 +67,8 @@ export /* @internal */ default function SortableItem({ children, id, fullyDragga
 	_view?: "list" | "grid";
 	/** Should the item pin to the top or bottom of the list? */
 	_pin?: PinTo;
-	/** Apply tabIndex -1? */
-	unfocusable?: boolean;
+	/** Apply tabIndex = -1? */
+	nonFocusable?: boolean;
 }>) {
 	const [disabled, setDisabled] = useState(false);
 	const { attributes, isDragging, listeners, setNodeRef, setActivatorNodeRef, transform, transition } = useSortable({ id, disabled, transition: {
@@ -100,7 +100,7 @@ export /* @internal */ default function SortableItem({ children, id, fullyDragga
 				$fullyDraggable={fullyDraggable}
 				$view={view}
 				{...fullyDraggable && { ...attributes, ...listeners }}
-				tabIndex={unfocusable ? -1 : 0}
+				tabIndex={nonFocusable ? -1 : 0}
 			>
 				{children}
 			</StyledSortableItem>
