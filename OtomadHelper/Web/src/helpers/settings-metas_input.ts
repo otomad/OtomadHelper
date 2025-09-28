@@ -4,17 +4,17 @@ const t = new PathObject() as Trans;
 
 export const settingsMetasInput = {
 	source: {
-		from: {},
+		from: { icon: "video_clip_multiple" },
 		trim: { icon: "aspect_ratio" },
 		startTime: { icon: "start_point" },
-		advanced: { title: t.subheaders.advanced },
+		advanced: { title: t.subheaders.advanced, type: "subheader" },
 		afterCompletion: {
 			icon: "post_processing",
 			items: {
 				removeSourceClips: { icon: "delete_track_event" },
 				removeSourceClipsWithTracks: { icon: "delete_layer" },
 				selectSourceClips: { icon: "select_all" },
-				selectGeneratedClips: { icon: undefined! },
+				selectGeneratedClips: { icon: "select_all" },
 			},
 		},
 		preferredTrack: {
@@ -34,7 +34,7 @@ export const settingsMetasInput = {
 			},
 		},
 		trackName: { icon: "rename" },
-		multisource: {},
+		multisource: { type: "subheader" },
 		secretBox: {
 			icon: "dice",
 			items: {
@@ -71,7 +71,7 @@ export const settingsMetasInput = {
 		},
 	},
 	score: {
-		from: {},
+		from: { icon: "instrument" },
 		trim: { icon: "aspect_ratio", title: t.source.trim },
 		encoding: { icon: "globe" },
 		tempo: { icon: "speed" },
@@ -99,6 +99,7 @@ export const settingsMetasInput = {
 		timeUnremapping: { icon: "timer_off" },
 		autoPan: { icon: "stereo" },
 		tuning: {
+			type: "subheader",
 			items: {
 				tuningMethod: {
 					icon: "tuning",
@@ -137,6 +138,7 @@ export const settingsMetasInput = {
 			},
 		},
 		mapping: {
+			type: "subheader",
 			items: {
 				velocity: { icon: "signal" },
 				pitch: { icon: "music_note" },
@@ -145,7 +147,76 @@ export const settingsMetasInput = {
 				progress: { icon: "progress_bar" },
 			},
 		},
-		parameters: { title: t.subheaders.parameters },
+		parameters: { title: t.subheaders.parameters, type: "subheader" },
+	},
+	visual: {
+		preferredTrack: {
+			title: t.source.preferredTrack,
+			details: t.descriptions.source.preferredTrack,
+			icon: "preferred_track",
+		},
+		createGroups: { icon: "group" },
+		playbackRate: playbackRate(),
+		loop: { icon: "loop" },
+		preRender: preRender(),
+		stretch: { icon: "stretch" },
+		truncate: { icon: "arrow_import_prohibited" },
+		staticVisual: { icon: "image" },
+		legato: { icon: "legato" },
+		multitrackForChords: { icon: "chords" },
+		stack: { icon: "database_stack" },
+		timeUnremapping: { icon: "timer_off" },
+		mimical: {
+			title: t.stream.tuning.mimical,
+			details: t.descriptions.stream.tuning.mimical,
+			icon: "tuning_image",
+			items: {
+				resample: {
+					title: t.stream.tuning.resample,
+					details: t.descriptions.stream.tuning.mimical.resample,
+					icon: "link_multiple",
+				},
+				oscillator: {
+					title: t.stream.tuning.tuningMethod.oscillator_full,
+					details: t.descriptions.stream.tuning.mimical.oscillator,
+					icon: "waveforms/triangle",
+				},
+			},
+		},
+		transition: {
+			icon: "transition",
+			items: {
+				alignment: { icon: "align_center_vertical" },
+				duration: { icon: "timer", title: t.duration },
+			},
+		},
+		transformMethod: { icon: "zoom_fit" },
+		effects: { title: t.titles.effect_other, type: "subheader" },
+		articulations: {
+			type: "subheader",
+			items: {
+				glissando: { icon: "slide_note" },
+				appoggiatura: { icon: "appoggiatura" },
+				arpeggio: {
+					icon: "score",
+					items: {
+						negative: { icon: "invert_color", title: t.prve.effects.negative },
+						applyCustomPreset: { icon: "preset", title: t.stream.articulations.applyCustomPreset },
+					},
+				},
+			},
+		},
+		mapping: {
+			type: "subheader",
+			items: {
+				velocity: { icon: "signal" },
+				pitch: { icon: "music_note" },
+				duration: { icon: "timer", title: t.duration },
+				pan: { icon: "stereo" },
+				progress: { icon: "progress_bar" },
+			},
+		},
+		parameters: { title: t.subheaders.parameters, type: "subheader" },
 	},
 } as const satisfies Record<string, Record<string, ISettingMeta>>;
 

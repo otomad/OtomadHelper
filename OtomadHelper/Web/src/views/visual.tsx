@@ -57,6 +57,7 @@ export default function Visual() {
 	const { enabled: enableStaffVisualizer } = useSelectConfig(c => c.visual.staff);
 	const { createGroups } = useSelectConfig(c => c);
 	const { prveCheckInfo, isForceStretch, prveCount } = usePrveInfo();
+	const meta = metas.visual;
 	const topPriorityTransformMethod = transformMethod[0][0];
 
 	useEffect(() => { mimicalResample[0] === "true" && mimicalOscillator[0] === "true" && mimicalOscillator[1]("auto"); }, [mimicalResample[0]]);
@@ -78,30 +79,28 @@ export default function Visual() {
 			<SettingsPageControlMedia stream="visual" fileName="ヨハネの氷.mp4" enabled={enabled} thumbnail={exampleThumbnail} />
 
 			<EmptyMessage.Typical icon="image" title="visual" enabled={enabled}>
-				<SettingsCard title={t.source.preferredTrack} details={t.descriptions.source.preferredTrack} icon="preferred_track">
-					<StackPanel>
-						<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
-						<QuicklySelectCurrentTrack />
-					</StackPanel>
-				</SettingsCard>
-				<SettingsCardToggleSwitch title={t.stream.createGroups} details={t.descriptions.stream.createGroups} icon="group" on={createGroups} />
+				<Setting
+					meta={meta.preferredTrack}
+					actions={(
+						<StackPanel>
+							<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
+							<QuicklySelectCurrentTrack />
+						</StackPanel>
+					)}
+				/>
+				<Setting meta={meta.createGroups} on={createGroups} />
 				<ExpanderStreamPlaybackRate stream="visual" />
-				<SettingsCard
-					title={t.stream.loop}
-					details={t.descriptions.stream.loop}
+				<Setting
+					meta={meta.loop}
 					selectInfo={loop[0] === "auto" && t.descriptions.stream.loop.unset}
-					icon="loop"
-				>
-					<ThreeStageSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />
-				</SettingsCard>
+					actions={<ThreeStageSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />}
+				/>
 				<ExpanderStreamPreRender stream="visual" />
 				<EmptyMessage.YtpDisabled>
-					<ExpanderRadio
-						title={t.stream.stretch}
-						details={t.descriptions.stream.stretch}
+					<Setting
+						meta={meta.stretch}
 						selectInfo={isForceStretch && t(prveCount).descriptions.prve.forceStretch}
 						selectValid={false}
-						icon="stretch"
 						items={stretches}
 						value={stretch}
 						view="tile"
@@ -110,10 +109,8 @@ export default function Visual() {
 						nameField={t.stream.stretch}
 						detailsField={t.descriptions.stream.stretch}
 					/>
-					<ExpanderRadio
-						title={t.stream.truncate}
-						details={t.descriptions.stream.truncate}
-						icon="arrow_import_prohibited"
+					<Setting
+						meta={meta.truncate}
 						items={truncates}
 						value={truncate}
 						view="tile"
@@ -122,11 +119,9 @@ export default function Visual() {
 						nameField={t.stream.truncate}
 						detailsField={t.descriptions.stream.truncate}
 					/>
-					<SettingsCardToggleSwitch title={t.stream.staticVisual} details={t.descriptions.stream.staticVisual} icon="image" on={staticVisual} />
-					<ExpanderRadio
-						title={t.stream.legato}
-						details={t.descriptions.stream.legato}
-						icon="legato"
+					<Setting meta={meta.staticVisual} on={staticVisual} />
+					<Setting
+						meta={meta.legato}
 						items={legatos}
 						value={legato}
 						view="grid"
@@ -136,44 +131,16 @@ export default function Visual() {
 						imageField="image"
 						itemWidth={566 / 196 * GRID_VIEW_ITEM_HEIGHT}
 					/>
-					<SettingsCardToggleSwitch
-						title={t.stream.multitrackForChords}
-						details={t.descriptions.stream.multitrackForChords}
-						icon="chords"
-						on={multitrackForChords}
-					/>
-					<SettingsCardToggleSwitch
-						title={t.stream.stack}
-						details={t.descriptions.stream.stack}
-						icon="database_stack"
-						on={stack}
-					/>
-					<SettingsCardToggleSwitch
-						title={t.stream.timeUnremapping}
-						details={t.descriptions.stream.timeUnremapping}
-						icon="timer_off"
-						on={timeUnremapping}
-					/>
-					<Expander
-						title={t.stream.tuning.mimical}
-						details={t.descriptions.stream.tuning.mimical}
-						icon="tuning_image"
-					>
+					<Setting meta={meta.multitrackForChords} on={multitrackForChords} />
+					<Setting meta={meta.stack} on={stack} />
+					<Setting meta={meta.timeUnremapping} on={timeUnremapping} />
+					<Setting meta={meta.mimical}>
 						<InfoBar status="info">{t.descriptions.stream.tuning.mimical.auto}</InfoBar>
-						<Expander.Item icon="link_multiple" title={t.stream.tuning.resample} details={t.descriptions.stream.tuning.mimical.resample}>
-							<ThreeStageSwitch current={mimicalResample} />
-						</Expander.Item>
-						<Expander.Item icon="waveforms/triangle" title={t({ context: "full" }).stream.tuning.tuningMethod.oscillator} details={t.descriptions.stream.tuning.mimical.oscillator}>
-							<ThreeStageSwitch current={mimicalOscillator} />
-						</Expander.Item>
-					</Expander>
-					<SettingsCardToggleSwitch
-						title={t.stream.transition}
-						details={t.descriptions.stream.transition}
-						icon="transition"
-						on={transition}
-					>
-						<Expander.Item title={t.stream.transition.alignment} details={t.descriptions.stream.transition.alignment} icon="align_center_vertical">
+						<Setting meta={meta.mimical.resample}><ThreeStageSwitch current={mimicalResample} /></Setting>
+						<Setting meta={meta.mimical.oscillator}><ThreeStageSwitch current={mimicalOscillator} /></Setting>
+					</Setting>
+					<Setting meta={meta.transition} on={transition}>
+						<Setting meta={meta.transition.alignment}>
 							<Slider
 								value={transitionAlignment}
 								defaultValue={0}
@@ -186,18 +153,11 @@ export default function Visual() {
 									100: t.stream.transition.alignment.start,
 								})[value] ?? `${value > 0 ? "+" : ""}${value}%`}
 							/>
-						</Expander.Item>
-						<Expander.Item title={t.duration} details={t.descriptions.stream.transition.duration} icon="timer">
-							<TimecodeBox value={transitionDuration} />
-						</Expander.Item>
+						</Setting>
+						<Setting meta={meta.transition.duration}><TimecodeBox value={transitionDuration} /></Setting>
 						<InfoBar status="info">{t.descriptions.stream.transition.crossfadeInfo}</InfoBar>
-					</SettingsCardToggleSwitch>
-					<Expander
-						title={t.stream.transformMethod}
-						details={t.descriptions.stream.transformMethod}
-						icon="zoom_fit"
-						checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.shared.plugins[topPriorityTransformMethod] })}
-					>
+					</Setting>
+					<Setting meta={meta.transformMethod} checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.shared.plugins[topPriorityTransformMethod] })}>
 						<SortableView items={transformMethod} fullyDraggable overlayEmits={{ onDrop: onSortableOverlayDrop }}>
 							{(item, index) => (
 								<Expander.Item
@@ -207,10 +167,10 @@ export default function Visual() {
 								/>
 							)}
 						</SortableView>
-					</Expander>
+					</Setting>
 					{/* TODO: Change the integration method of TransformOFX into parameters, add an independent subheader and an info bar to tell user to download it. */}
 
-					<Subheader>{t(2).titles.effect}</Subheader>
+					<Subheader meta={meta.effects} />
 					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")}>
 						{prveCheckInfo}
 					</SettingsCard>
@@ -221,13 +181,8 @@ export default function Visual() {
 						<ToggleSwitch on={enablePixelScaling} />
 					</SettingsCard>
 
-					<Subheader>{t.stream.articulations}</Subheader>
-					<SettingsCardToggleSwitch
-						title={t.stream.articulations.glissando}
-						details={t.descriptions.stream.articulations.glissando}
-						icon="slide_note"
-						on={glissando}
-					>
+					<Subheader meta={meta.articulations} />
+					<Setting meta={meta.articulations.glissando} on={glissando}>
 						<Expander.Item icon="sparkle" title={t.titles.effect}>
 							<Segmented current={glissandoEffect}>
 								{glissandoEffects.map(({ id, name }) =>
@@ -237,33 +192,21 @@ export default function Visual() {
 						<Expander.Item title={t.stream.articulations.glissando.swirlAmount} details={t.descriptions.stream.articulations.glissando.swirlAmount}>
 							<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitone} positiveSign />
 						</Expander.Item>
-					</SettingsCardToggleSwitch>
-					<SettingsCardToggleSwitch
-						title={t.stream.articulations.appoggiatura}
-						details={t.descriptions.stream.articulations.appoggiatura}
-						icon="appoggiatura"
-						on={appoggiatura}
-					/>
-					<SettingsCardToggleSwitch
-						title={t.stream.articulations.arpeggio}
-						details={t.descriptions.stream.articulations.arpeggio}
-						icon="score"
-						on={arpeggio}
-					>
-						<ToggleSwitch icon="invert_color" on={arpeggioNegative} details={t.descriptions.stream.articulations.arpeggio.negative}>{t.prve.effects.negative}</ToggleSwitch>
-						<Expander.Item icon="preset" title={t.stream.articulations.applyCustomPreset}>
-							<Button>{t.unselected}</Button>
-						</Expander.Item>
-					</SettingsCardToggleSwitch>
+					</Setting>
+					<Setting meta={meta.articulations.appoggiatura} on={appoggiatura} />
+					<Setting meta={meta.articulations.arpeggio} on={arpeggio}>
+						<Setting meta={meta.articulations.arpeggio.negative} on={arpeggioNegative} />
+						<Setting meta={meta.articulations.arpeggio.applyCustomPreset}><Button>{t.unselected}</Button></Setting>
+					</Setting>
 
-					<Subheader>{t.stream.mapping}</Subheader>
-					<Expander title={t.stream.mapping.velocity} icon="signal" />
-					<Expander title={t.stream.mapping.pitch} icon="music_note" />
-					<Expander title={t.duration} icon="timer" />
-					<Expander title={t.stream.mapping.pan} icon="stereo" />
-					<Expander title={t.stream.mapping.progress} icon="progress_bar" />
+					<Subheader meta={meta.mapping} />
+					<Setting meta={meta.mapping.velocity} />
+					<Setting meta={meta.mapping.pitch} />
+					<Setting meta={meta.mapping.duration} />
+					<Setting meta={meta.mapping.pan} />
+					<Setting meta={meta.mapping.progress} />
 
-					<Subheader>{t.subheaders.parameters}</Subheader>
+					<Subheader meta={meta.parameters} />
 					<ExpanderRadio
 						title={t.preset}
 						details={t.descriptions.stream.preset}

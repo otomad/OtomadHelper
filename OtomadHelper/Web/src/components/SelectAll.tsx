@@ -29,6 +29,7 @@ export default function SelectAll<T>({ value, all, icon, title, meta, details }:
 }, "div">) {
 	const selectAll = useSelectAll(value, all);
 	const props = Setting.useMeta(meta, { title, details, icon });
+	if ("icon" in arguments[0] && !icon) props.icon = undefined;
 
 	return (
 		<StyledSelectAll>

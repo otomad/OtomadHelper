@@ -12,7 +12,8 @@ function createFocusRing(el: Element | null, { borderRadius, portal = "main.page
 	ring.style.position = "fixed";
 	ring.style.pointerEvents = "none";
 	ring.style.transition = "none";
-	if (borderRadius === undefined) ({ borderRadius } = getComputedStyle(el));
+	const computedStyle = getComputedStyle(el);
+	if (borderRadius === undefined) borderRadius = computedStyle.getPropertyValue("--focus-border-radius") || computedStyle.borderRadius;
 	if (borderRadius && borderRadius !== "0px") ring.style.borderRadius = borderRadius;
 	popovers.append(ring);
 	return ring;

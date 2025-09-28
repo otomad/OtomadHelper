@@ -4,6 +4,7 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 }, "div">) {
 	const { sync, audioRate, visualRate, audioBased, visualBased } = useSelectConfig(c => c.playbackRate);
 	const value = stream === "audio" ? audioRate : visualRate;
+	const meta = metas[stream];
 
 	useEffect(() => {
 		if (!sync[0]) return;
@@ -19,10 +20,7 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 
 	return (
 		<Setting
-			meta={metas.audio.playbackRate}
-			title={t.stream.playbackRate}
-			details={t.descriptions.stream.playbackRate}
-			icon="play_circle_hint_half"
+			meta={meta.playbackRate}
 			trailingGap={8}
 			actions={(
 				<>
@@ -38,8 +36,8 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 				</>
 			)}
 		>
-			<Setting meta={metas.audio.playbackRate.based} on={stream === "audio" ? audioBased : visualBased} />
-			<Setting meta={metas.audio.playbackRate.sync} on={sync} details={t.descriptions.stream.playbackRate[!sync[0] ? "sync" : "outSync"]({ stream: stream !== "audio" ? t.titles.audio : t.titles.visual })} />
+			<Setting meta={meta.playbackRate.based} on={stream === "audio" ? audioBased : visualBased} />
+			<Setting meta={meta.playbackRate.sync} on={sync} details={t.descriptions.stream.playbackRate[!sync[0] ? "sync" : "outSync"]({ stream: stream !== "audio" ? t.titles.audio : t.titles.visual })} />
 		</Setting>
 	);
 }

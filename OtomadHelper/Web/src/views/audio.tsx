@@ -192,9 +192,7 @@ export default function Audio() {
 					<Setting meta={meta.multitrackForChords} on={multitrackForChords} />
 					<Setting meta={meta.stack} on={stack} />
 					<Setting meta={meta.timeUnremapping} on={timeUnremapping} />
-					<Setting meta={meta.autoPan} on={autoPan}>
-						<Expander.Item.Curve curve={autoPanCurve} />
-					</Setting>
+					<Setting meta={meta.autoPan} on={autoPan}><Expander.Item.Curve curve={autoPanCurve} /></Setting>
 
 					<Subheader meta={meta.tuning} />
 					<Setting

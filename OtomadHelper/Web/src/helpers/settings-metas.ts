@@ -6,7 +6,7 @@ import { tf as $$t } from "utils/i18n";
 import { settingsMetasInput } from "./settings-metas_input";
 const t = new PathObject() as Trans;
 
-type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup";
+type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup" | "subheader";
 
 export interface ISettingMeta {
 	/** A unique identifier under the parent (global uniqueness is not required). */
@@ -124,6 +124,7 @@ function convertItem(item: ISettingMeta, path: string) {
 	if (meta.details as Object instanceof PathObject) meta.details = meta.details?.toString();
 	for (let i = 0; i < meta.aliases.length; i++)
 		if (meta.aliases[i] as Object instanceof PathObject) meta.aliases[i] = meta.aliases[i]?.toString();
+	if (!("icon" in meta) && meta.type === "subheader") meta.icon = "subheader";
 	const _meta = new SettingMeta(meta, _path);
 	metas.push(_meta);
 	return { meta: _meta, ...items };

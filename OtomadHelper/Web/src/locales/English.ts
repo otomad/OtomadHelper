@@ -1324,8 +1324,8 @@ export default {
 				tuning: {
 					alternativeForExceedTheRange: "Alternative method for exceeding the range, Alternative for exceed the range",
 					resample: "Lock stretch and pitch, Lock to stretch, Pitch change lock, Pitch lock, Lock pitch",
-					mimical: "Imitative tuning methods",
 				},
+				mimical: "Imitative tuning methods",
 			},
 		},
 	},

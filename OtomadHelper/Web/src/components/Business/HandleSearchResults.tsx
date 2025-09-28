@@ -89,9 +89,10 @@ const StyledSearchResult = styled.button`
 `;
 
 export default function HandleSearchResults({ query, onSelect, handler }: SearchBox.SearchResultProps) {
+	"use no memo";
 	const [language] = useLanguage();
 	const { goto } = useSnapshot(pageStore);
-	const searchResults = useMemo(() => search(query).slice(0, MAX_LENGTH), [query, language]);
+	const searchResults = useMemo(() => search(query).slice(0, MAX_LENGTH), [query, language]); // When enable React Compiler, it won't care if language changed, and take the useMemo deps alone.
 	const [detailsEls, setDetailsEls] = useDomRefs<"p">();
 	const [keyboardSelectIndex, setKeyboardSelectIndex] = useState(0);
 	const searchResultEl = useDomRef<"button">();
@@ -132,7 +133,7 @@ export default function HandleSearchResults({ query, onSelect, handler }: Search
 		const title = meta.translatedTitle;
 		return (
 			<StyledSearchResult
-				key={meta.path}
+				key={meta.path + "—" + prop}
 				ref={searchResultEl}
 				tabIndex={-1}
 				className={{ selected: keyboardSelectIndex - 1 === i }}

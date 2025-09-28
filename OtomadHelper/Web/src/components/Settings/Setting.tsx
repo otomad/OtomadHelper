@@ -19,9 +19,10 @@ export default function Setting(props: InheritFrom<typeof Expander.Item>): React
 export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof SettingsCard | typeof SettingsCardToggleSwitch | typeof Expander | typeof ExpanderRadio | typeof Expander.Item>) {
 	const [lastGotoPath, lastGotoPathTimestamp] = useSnapshot(pageStore).lastGotoPath ?? [];
 	const { path, cssPath, link, type } = meta;
-	props.title ??= meta.translatedTitle;
-	props.details ??= meta.translatedDetails;
-	props.icon ??= meta.icon;
+	// Act backstop unless explicit passing undefined.
+	if (!("title" in props)) props.title = meta.translatedTitle;
+	if (!("details" in props)) props.details = meta.translatedDetails;
+	if (!("icon" in props)) props.icon = meta.icon;
 	props.anchor = cssPath;
 	if (lastGotoPath === path) props.className = classNames(props, "focus-highlight");
 	const expanded = !!(lastGotoPath !== path && lastGotoPath?.startsWith(path));
@@ -30,6 +31,8 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 	const isExpanderChild = place === "children";
 	const { changePage } = useSnapshot(pageStore);
 
+	if (type === "subheader")
+		throw new TypeError("The Setting component doesn't support subheader type", { cause: meta });
 	if ("on" in props || type === "switch")
 		if (!isExpanderChild)
 			return <SettingsCardToggleSwitch {...props as Any} _requestExpanded={_requestExpanded} />;

@@ -1,4 +1,5 @@
 const StyledSubheader = styled.h4`
+	--focus-border-radius: 4px;
 	inline-size: fit-content;
 	margin-block: 10px 4px;
 	margin-inline: 2px;
