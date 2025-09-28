@@ -36,10 +36,6 @@ const TextPluginPreviewImage = styled.img`
 	.items-view-item:hover:active & {
 		object-position: center;
 	}
-
-	/* ${ifColorScheme.dark} & {
-		filter: invert(1) hue-rotate(180deg);
-	} */
 `;
 
 export default function Internal() {

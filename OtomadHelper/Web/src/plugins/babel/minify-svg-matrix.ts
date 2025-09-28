@@ -9,6 +9,12 @@ const matrixAttrs = {
 	feFuncA: ["tableValues"],
 };
 
+function minifyMatrixValue(value: string) {
+	value = value.trim().replaceAll(/\s+/g, " ");
+	value = value.split(" ").map(n => n.replace(/^0+/, "").replace(/\.0*$/, "") || "0").join(" ");
+	return value;
+}
+
 export default (_babel: typeof babelCore): babelCore.PluginObj | undefined => {
 	const dev = process.env.NODE_ENV === "development";
 
@@ -22,16 +28,14 @@ export default (_babel: typeof babelCore): babelCore.PluginObj | undefined => {
 				const openingElement = path.node.openingElement;
 				// TagName is name of tag like div, p etc.
 				const tagName = (openingElement.name as babelCore.types.JSXIdentifier).name;
-				for (const [expectedTagName, expectedAttributes] of Object.entries(matrixAttrs)) {
-					if (tagName !== expectedTagName) continue;
-					for (const attribute of openingElement.attributes)
-						if ("name" in attribute && expectedAttributes.includes(attribute.name.name as string) && attribute.value?.type === "StringLiteral") {
-							let value = attribute.value.value;
-							value = value.trim().replaceAll(/\s+/g, " ");
-							value = value.split(" ").map(n => n.replace(/^0+/, "").replace(/\.0*$/, "") || "0").join(" ");
-							attribute.value.value = value;
-						}
-				}
+				if (!(tagName in matrixAttrs)) return;
+				const expectedAttributes = matrixAttrs[tagName as keyof typeof matrixAttrs];
+				for (const attribute of openingElement.attributes)
+					if ("name" in attribute && expectedAttributes.includes(attribute.name.name as string))
+						if (attribute.value?.type === "StringLiteral")
+							attribute.value.value = minifyMatrixValue(attribute.value.value);
+						else if (attribute.value?.type === "JSXExpressionContainer" && attribute.value.expression.type === "StringLiteral")
+							attribute.value.expression.value = minifyMatrixValue(attribute.value.expression.value);
 			},
 		},
 	};

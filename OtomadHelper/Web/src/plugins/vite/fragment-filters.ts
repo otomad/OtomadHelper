@@ -104,7 +104,7 @@ export default (): VitePlugin => {
 				switchCase += "\t}";
 				main = main.replace("$switch", switchCase);
 
-				const shader = await loadShader(main, mainPath, { compress: config.command === "build" } as never);
+				const shader = await loadShader(main, mainPath, { minify: config.command === "build" } as never);
 				main = shader.outputShader;
 
 				let result = `export default ${JSON.stringify(main)};\n\n`;
