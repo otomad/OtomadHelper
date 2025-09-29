@@ -18,8 +18,12 @@ export function redirectIcon(name: string): DeclaredIcons & DeclaredLotties {
 		shupelunker: "slice",
 		tools: "apps",
 		management: "library",
-	} as const;
-	return hasOwn(redirects, name) ? redirects[name] : name as DeclaredIcons & DeclaredLotties;
+		// Subpages
+		prve: "sparkle",
+		staff: "g_clef",
+		pixelScaling: "pixelate_zoom",
+	} as const satisfies Record<string, DeclaredIcons | DeclaredLotties>;
+	return (hasOwn(redirects, name) ? redirects[name] : name) as DeclaredIcons & DeclaredLotties;
 }
 
 const isCompleteAvailable = (page: string[]) => !["management", "mosh", "tools", "settings"].includes(page[0]);

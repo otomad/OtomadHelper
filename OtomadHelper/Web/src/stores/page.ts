@@ -110,8 +110,13 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 		return { scrolls, poppedScroll };
 	}
 
+	function normalizePage(page: string[]) {
+		return page.mapImmer(layer => new VariableName(layer).kebab);
+	}
+
 	function setPageInternal(nextPage: string[]) {
 		pageStore.lastGotoPath = undefined;
+		nextPage = normalizePage(nextPage);
 		const { page } = pageStore;
 		if (lodash.isEqual(page, nextPage)) return false;
 		pageStore.pageChangeResolver = Promise.withResolvers();

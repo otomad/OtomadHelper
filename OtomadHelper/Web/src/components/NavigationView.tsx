@@ -20,10 +20,12 @@ export const styledContainer = css`
 const NavButton = styled(Button).attrs({
 	subtle: true,
 })`
-	position: absolute;
-	block-size: ${navButtonSize.height}px;
-	inline-size: ${navButtonSize.width}px;
-	min-inline-size: unset;
+	&& {
+		position: absolute;
+		block-size: ${navButtonSize.height}px;
+		inline-size: ${navButtonSize.width}px;
+		min-inline-size: unset;
+	}
 `;
 
 const StyledTopLeftButtons = styled.div`

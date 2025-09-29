@@ -692,6 +692,7 @@ export default {
 			stepSequence: "Step sequence",
 			stepSequence_angle: "Angle sequence",
 			control: {
+				_: "Separate controls",
 				general: "General",
 				general_full: "General control",
 				samePitch: "Same pitch",
@@ -1045,11 +1046,6 @@ export default {
 						oscillator: "Mimics the Manual Oscillator behavior in the Visual to produce rapidly repetitive visuals",
 					},
 				},
-				effects: {
-					prve: "Makes your visuals more rhythmic",
-					staff: "Uses custom patterns as notes to draw visuals similar fashion to piano staff sheets",
-					pixelScaling: "Scaling using nearest neighbor hard edge amplification and interpolation algorithms",
-				},
 				mapping: {
 					_: "Maps the properties of notes to the specified item",
 				},
@@ -1182,9 +1178,11 @@ export default {
 				ultraPaste: "Import nearly any file type with just a single shortcut key",
 			},
 			staff: {
+				caption: "Uses custom patterns as notes to draw visuals similar fashion to piano staff sheets",
 				_: "Staff Visualizer is a visual effect that transforms musical symbols into creative visual graphics. At its core, it replaces traditional notes with custom patterns (e.g., avatars, geometric shapes, etc.) and places them at the proper pitch of the staff based on the melody of the music, forming a dynamic visual with both artistry and functionality. This visual effect style is inspired by the combination of digital art and music, the creations of YouTuber Grant Woolard. His video is characterized by transforming musicians’ avatars into notes, dynamically arranging them on the staff, and playing classical music. It not only preserves the pitch logic of the score, but also gives it a personalized visual narrative.\nThis effect can be used for artistic creation and performance visual design, such as transforming the artist’s performance into a dynamic staff art projection, or creating interactive music animations for digital album covers. Its innovation lies in breaking the static limit of traditional music scores, reinterpreting the musical structure with visual language, and transforming abstract melodies into perceptible “visual melodies”.",
 			},
 			prve: {
+				caption: "Makes your visuals more rhythmic",
 				control: {
 					general: "Normal condition controls for nonconsecutive events and consecutive events of different pitches and the same syllable in YTPMV or Sentence Mixing mode.\nIf other separate controls are off, they are also included in the case.",
 					samePitch: "Separate controls for consecutive events of the same pitch in YTPMV or Sentence Mixing mode.",
@@ -1196,6 +1194,7 @@ export default {
 				customStepSequence: "Customize the step sequence",
 			},
 			pixelScaling: {
+				caption: "Scaling using nearest neighbor hard edge amplification and interpolation algorithms",
 				_: "Pixel Scaling feature is a lossless scaling technology designed for pixel art or images that require sharp edges. Its purpose is to solve the pixel blurring problem caused by VEGAS’s built-in bilinear interpolation scaling algorithm, which creates a gradual transition by mixing the colors of adjacent pixels and destroys the clear boundary of pixel art. This feature is scaled by the nearest neighbor interpolation algorithm, which directly copies the color value of the nearest pixel, and ensures that the scaled image edge maintains the “hard cut” effect to avoid blurring.\nThis feature is especially applicable to retro game resources, low-resolution UI or scenes that need to enhance pixel style. For example, when scaling an 8-bit game character animation, it can prevent the character contour from being “softened” by smoothing, and ensure that each pixel block is still clear and legible after scaling. Note that you need to configure the FFmpeg environment or install the Datamosh Extension Pack in advance to enable the core processing function.\nAccording to the project resolution, this feature generates a new file of appropriate size using the nearest neighbor interpolation algorithm, and the filename is identified with the suffix “_Scaled”. This process supports any image/video format as well as image sequence files imported into VEGAS.",
 			},
 			settings: {
@@ -1300,7 +1299,7 @@ export default {
 				audio: "Sound", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				visual: "Video", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				sonar: "Motion Graphic, Motion Graphics, Mograph, Mographs, MG, Cookie Cutter", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
-				prve: "Promotion Video Rhythm Visual Effect, Promotion Video Rhythm Visual Effects", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				prve: "Promotion Video Rhythm Visual Effect, Promotion Video Rhythm Visual Effects, PV Rhythmic Visual Effect, PV Rhythmic Visual Effects, Promotion Video Rhythmic Visual Effect, Promotion Video Rhythmic Visual Effects, PV Rhythmical Visual Effect, PV Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effect, Promotion Video Rhythmical Visual Effects, PRVE", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				staff: "Musical Staff, Piano Staff Sheets Fashion", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				pixelScaling: "MisczTools, Miscz Tools", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
@@ -1315,6 +1314,7 @@ export default {
 				constrain: "Restrict note length", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
 			stream: {
+				playbackRate: "Playback speed",
 				staticVisual: "Freeze first frame, Freeze start frame",
 				truncate: "Unlengthen, Unlengthening, No lengthening, No looping, No extending, No extension, Freeze last frame, Freeze end frame",
 				legato: "Fill gaps, Eliminate gaps, Remove gaps",

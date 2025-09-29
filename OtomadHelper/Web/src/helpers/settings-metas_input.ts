@@ -217,6 +217,29 @@ export const settingsMetasInput = {
 		},
 		parameters: { title: t.subheaders.parameters, type: "subheader" },
 	},
+	visual_prve: {
+		control: { icon: "prve_control_general" },
+		classes: {
+			type: "subheader",
+			items: {
+				flip: { icon: "flip_h" },
+				rotation: { icon: "rotate" },
+				scale: { icon: "resize_image" },
+				mirror: { icon: "image_reflection" },
+				invert: { icon: "invert_color" },
+				hue: { icon: "hue" },
+				chromatic: { icon: "grayscale" },
+				time: { icon: "timer" },
+				time2: { icon: "timer_2" },
+				ec: { icon: "arrow_autofit_height_in" },
+				swing: { icon: "arrow_rotate" },
+				blur: { icon: "blur" },
+				wipe: { icon: "double_tap_swipe" },
+			},
+		},
+	},
+	visual_staff: {},
+	visual_pixelScaling: {},
 } as const satisfies Record<string, Record<string, ISettingMeta>>;
 
 function playbackRate() {

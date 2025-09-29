@@ -21,7 +21,7 @@ export /* @internal */ const styledSimpleIndicator = css`
 	}
 `;
 
-const StyledItemsViewItem = styled.button<{
+interface StyledItemsViewItemProps {
 	/** View mode: list, tile, grid. */
 	$view: ItemView;
 	/** Add additional borders to the normal state of the image wrapper? */
@@ -30,7 +30,9 @@ const StyledItemsViewItem = styled.button<{
 	$selectionColor?: string;
 	/** Is the orientation of the icon changed based on the writing direction? */
 	$dirBasedIcon?: DirBasedIcon;
-}>`
+}
+
+const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<StyledItemsViewItemProps>`
 	${styles.mixins.forwardFocusRing()};
 	--selection-color: ${({ $selectionColor }) => $selectionColor || c("accent-color")};
 
@@ -263,7 +265,7 @@ const StyledItemsViewItem = styled.button<{
 			}
 		}
 	}
-`;
+`);
 
 const DefaultImage = styled.img`
 	${styles.mixins.square("100%")};

@@ -161,8 +161,8 @@ importers:
         specifier: ^2.1.4
         version: 2.1.4(patch_hash=4d27899d61788bff2a8a597241e4e25cc1ff9dd731040713ccac6ad17f2f1361)(@types/react@19.0.1(patch_hash=4d0b913251acfcb3774935179365be5f6b3075745ccefb13409ad5f292db38fc))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
       variable-name-conversion:
-        specifier: ^1.6.0
-        version: 1.6.0
+        specifier: ^1.7.0
+        version: 1.7.0
     devDependencies:
       '@commitlint/cli':
         specifier: latest
@@ -5448,8 +5448,8 @@ packages:
       react:
         optional: true
 
-  variable-name-conversion@1.6.0:
-    resolution: {integrity: sha512-n15XHHfEwonS2xUuBKsNkRyp9HEBI5x9zpt0f1uiRmS1oCppnIeQmYO7Jy6icM9REMDNjZ/eCBG/EA3zajjcxQ==}
+  variable-name-conversion@1.7.0:
+    resolution: {integrity: sha512-ozRnRUjiqsr/CWakvZqCm3PTYsR4BYbKiR/6B/Uwjx9rg7YLyfnjWzudS9yLvfsEkL+suaGd3CgSJf2kET+1CQ==}
 
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
@@ -11426,7 +11426,7 @@ snapshots:
       '@types/react': 19.0.1(patch_hash=4d0b913251acfcb3774935179365be5f6b3075745ccefb13409ad5f292db38fc)
       react: 19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)
 
-  variable-name-conversion@1.6.0: {}
+  variable-name-conversion@1.7.0: {}
 
   vary@1.1.2: {}
 

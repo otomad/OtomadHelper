@@ -73,7 +73,7 @@
 		"styled-tools": "^1.7.2",
 		"use-immer": "^0.11.0",
 		"valtio": "^2.1.4",
-		"variable-name-conversion": "^1.6.0"
+		"variable-name-conversion": "^1.7.0"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "latest",

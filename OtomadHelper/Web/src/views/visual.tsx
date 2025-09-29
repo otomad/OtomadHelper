@@ -171,15 +171,9 @@ export default function Visual() {
 					{/* TODO: Change the integration method of TransformOFX into parameters, add an independent subheader and an info bar to tell user to download it. */}
 
 					<Subheader meta={meta.effects} />
-					<SettingsCard title={t.titles.prve} details={t.descriptions.stream.effects.prve} type="button" icon="sparkle" onClick={() => pushPage("prve")}>
-						{prveCheckInfo}
-					</SettingsCard>
-					<SettingsCard title={t({ context: "full" }).titles.staff} details={t.descriptions.stream.effects.staff} type="button" icon="g_clef" onClick={() => pushPage("staff")}>
-						<ToggleSwitch on={enableStaffVisualizer} />
-					</SettingsCard>
-					<SettingsCard title={t.titles.pixelScaling} details={t.descriptions.stream.effects.pixelScaling} type="button" icon="pixelate_zoom" onClick={() => pushPage("pixel-scaling")}>
-						<ToggleSwitch on={enablePixelScaling} />
-					</SettingsCard>
+					<Setting meta={meta.prve} actions={prveCheckInfo} />
+					<Setting meta={meta.staff} actions={<ToggleSwitch on={enableStaffVisualizer} />} />
+					<Setting meta={meta.pixelScaling} actions={<ToggleSwitch on={enablePixelScaling} />} />
 
 					<Subheader meta={meta.articulations} />
 					<Setting meta={meta.articulations.glissando} on={glissando}>

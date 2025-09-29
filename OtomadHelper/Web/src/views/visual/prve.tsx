@@ -21,25 +21,24 @@ type PrveClassEffect = {
 };
 class PrveClass {
 	public static readonly all = [
-		new PrveClass("flip", "flip_h", [...$s(2, "hFlip", "vFlip"), ...$s(4, "ccwFlip", "cwFlip")]),
-		new PrveClass("rotation", "rotate", $s(1, "rotate")),
-		new PrveClass("scale", "resize_image", $s(1, "zoomOutIn")),
-		new PrveClass("mirror", "image_reflection", [...$s(2, "hMirror", "vMirror"), ...$s(4, "ccwMirror", "cwMirror")]),
-		new PrveClass("invert", "invert_color", [...$s(2, "negative", "luminInvert", "negativeFade", "negativeLuma"), ...$s(4, "rotInvertHue", "rotInvertLumin", "altInvertHue", "altInvertLumin")]),
-		new PrveClass("hue", "hue", [...$s(2, "hueInvert"), ...forMapFromTo(3, 8, 1, frames => ({ effect: STEP_CHANGE_HUE + frames, frames }))]),
-		new PrveClass("chromatic", "grayscale", $s(2, "chromatic", "chromaticFade")),
-		new PrveClass("time", "timer", $s(2, "pingpong", "whirl")),
-		new PrveClass("time2", "timer_2", $s(1, "sharpRewind", "wobblePeriod")),
-		new PrveClass("ec", "arrow_autofit_height_in", [...$s(1, "vExpansion", "vExpansionBounce", "vCompression", "vCompressionBounce", "vBounce"), ...$s(2, "slantDown", "slantUp", "puyo")]),
-		new PrveClass("swing", "arrow_rotate", $s(2, "pendulum")),
-		new PrveClass("blur", "blur", $s(1, "gaussianBlur", "radialBlur")),
-		new PrveClass("wipe", "double_tap_swipe", [...$s(2, "wipeRight"), ...$s(1, "wipeRight1", "splitVOut")]),
+		new PrveClass("flip", [...$s(2, "hFlip", "vFlip"), ...$s(4, "ccwFlip", "cwFlip")]),
+		new PrveClass("rotation", $s(1, "rotate")),
+		new PrveClass("scale", $s(1, "zoomOutIn")),
+		new PrveClass("mirror", [...$s(2, "hMirror", "vMirror"), ...$s(4, "ccwMirror", "cwMirror")]),
+		new PrveClass("invert", [...$s(2, "negative", "luminInvert", "negativeFade", "negativeLuma"), ...$s(4, "rotInvertHue", "rotInvertLumin", "altInvertHue", "altInvertLumin")]),
+		new PrveClass("hue", [...$s(2, "hueInvert"), ...forMapFromTo(3, 8, 1, frames => ({ effect: STEP_CHANGE_HUE + frames, frames }))]),
+		new PrveClass("chromatic", $s(2, "chromatic", "chromaticFade")),
+		new PrveClass("time", $s(2, "pingpong", "whirl")),
+		new PrveClass("time2", $s(1, "sharpRewind", "wobblePeriod")),
+		new PrveClass("ec", [...$s(1, "vExpansion", "vExpansionBounce", "vCompression", "vCompressionBounce", "vBounce"), ...$s(2, "slantDown", "slantUp", "puyo")]),
+		new PrveClass("swing", $s(2, "pendulum")),
+		new PrveClass("blur", $s(1, "gaussianBlur", "radialBlur")),
+		new PrveClass("wipe", [...$s(2, "wipeRight"), ...$s(1, "wipeRight1", "splitVOut")]),
 	];
 
 	public readonly class: PrveClassType;
 	private constructor(
 		klass: PrveClassType,
-		public readonly icon: DeclaredIcons,
 		public readonly effects: PrveClassEffect[],
 	) {
 		this.class = klass;
@@ -62,6 +61,7 @@ export default function Prve() {
 	const { autoCollapsePrveClasses } = useSnapshot(configStore.settings);
 	const { control, isMultiple, effects } = useSelectConfig(c => c.visual.prve[controlMode]);
 	const { compression, slant, puyo, pendulum, gaussianBlur, radialBlur, rotation, initialAngle, rotateCustomSequence } = useSelectConfig(c => c.visual.prve[controlMode].amounts);
+	const meta = metas.visual.prve;
 	const selectionMode = useSelectionMode(isMultiple);
 	const effectLength = effects[0].length;
 	const shouldHideSelectionBadge = effectLength <= 0 || effectLength === 1 && (effects[0][0].fx === DEFAULT_EFFECT || !isMultiple[0]);
@@ -132,9 +132,10 @@ export default function Prve() {
 					<Segmented.Item id="multiple" icon="multiselect">{t.selectionMode.multiple}</Segmented.Item>
 				</Segmented>
 			</StackPanel>
-			<SettingsCardToggleSwitch
+			<Setting
 				on={isGeneralCurrent ? [true] : control}
 				disabled={isGeneralCurrent}
+				meta={meta.control}
 				icon={getControlModeIcon(controlMode)}
 				title={t({ context: "full" }).prve.control[controlMode]}
 				details={t.descriptions.prve.control[controlMode]}
@@ -145,14 +146,13 @@ export default function Prve() {
 			</Subheader>
 
 			<Expander.Group autoCollapse={autoCollapsePrveClasses}>
-				{PrveClass.all.map(({ class: klass, icon, effectIds, findEffectFrames }) => {
+				{PrveClass.all.map(({ class: klass, effectIds, findEffectFrames }) => {
 					const currentEffectState = selectPrve(klass), currentEffect = currentEffectState[0]!;
 					if (klass === "rotation") return (
-						<ExpanderRadio
+						<Setting
 							key={klass}
-							title={t.prve.classes[klass]}
+							meta={meta.classes[klass]}
 							disabled={!control[0]}
-							icon={icon}
 							items={[DEFAULT_EFFECT, "ccwRotate", "cwRotate", "turned"]}
 							value={[
 								currentEffect === "rotate" && !rotateCustomSequence[0] ?
@@ -219,14 +219,13 @@ export default function Prve() {
 								initialStep={useInitialStep(klass, currentEffect)}
 								onCurrentEffectRotationModeChange={setCurrentEffectRotation}
 							/>
-						</ExpanderRadio>
+						</Setting>
 					);
 					else return (
-						<ExpanderRadio
+						<Setting
 							key={klass}
-							title={t.prve.classes[klass]}
 							disabled={!control[0]}
-							icon={icon}
+							meta={meta.classes[klass]}
 							items={[DEFAULT_EFFECT, ...effectIds]}
 							value={currentEffectState}
 							view="grid"
@@ -267,7 +266,7 @@ export default function Prve() {
 								);
 							})()}
 							<InitialStep klass={klass} effect={currentEffect} initialStep={useInitialStep(klass, currentEffect)} />
-						</ExpanderRadio>
+						</Setting>
 					);
 				})}
 			</Expander.Group>

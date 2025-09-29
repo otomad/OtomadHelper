@@ -68,11 +68,11 @@ function splitUnlessEmpty(source: string, sep: string) {
 }
 
 const redirectPath = {
-	audio: "stream",
-	visual: "stream",
 	"visual.staff": "staff",
 	"visual.prve": "prve",
 	"visual.pixelScaling": "pixelScaling",
+	audio: "stream",
+	visual: "stream",
 } as const;
 
 type RedirectPath<Root extends AnyObject> = Root & {
@@ -105,7 +105,8 @@ type ConvertItem<TPage, TPath extends string> = {
 		(TPage[item] extends { items: Any } ? ConvertItem<TPage[item]["items"], JoinDot<TPath, item>> : {})
 };
 type ConvertPage<TObject> = {
-	[page in keyof TObject]: ConvertItem<TObject[page], page & string>;
+	[page in keyof TObject]: ConvertItem<Omit<TObject[page], "meta">, page & string> &
+		{ meta: Override<DefaultMeta<page & string>, TObject[page] extends { meta: Any } ? TObject[page]["meta"] : {}> & Omit<SettingMeta, keyof ISettingMeta> };
 };
 type Nesting<TObject> = {
 	[key in keyof TObject as key extends `${string}_${string}` ? never : key]:
@@ -117,7 +118,7 @@ type Nesting<TObject> = {
 
 const metas: SettingMeta[] = [];
 const settingsMetasOutput: AnyObject = settingsMetasInput;
-function convertItem(item: ISettingMeta, path: string) {
+function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = false) {
 	const { items: itemsInput, ...meta } = item;
 	const items = itemsInput as AnyObject;
 	if (!lodash.isEmpty(itemsInput))
@@ -130,34 +131,63 @@ function convertItem(item: ISettingMeta, path: string) {
 			dotJoined = dotJoined.replaceStart(old, new_);
 			break;
 		}
-	if (!("title" in meta)) meta.title = dotJoined;
-	if (!("details" in meta)) meta.details = "descriptions." + dotJoined;
 	meta.aliases ??= [];
-	meta.aliases.pushUniquely("aliases." + dotJoined);
+	if (!isPageMeta) {
+		if (!("title" in meta)) meta.title = dotJoined;
+		if (!("details" in meta)) meta.details = "descriptions." + dotJoined;
+		meta.aliases.pushUniquely("aliases." + dotJoined);
+		if (!("icon" in meta) && meta.type === "subheader") meta.icon = "subheader";
+	} else {
+		const subpage = _path.split("/").at(-1)!;
+		const contexts = ["long", "full", "other", undefined];
+		const context = contexts.filter(ctx => ctx !== "other").firstDefined(ctx => i18nExists(t => t.titles[subpage], ctx) && ctx && "_" + ctx || undefined) ?? "";
+		if (!("title" in meta)) meta.title = t.titles[subpage + context].toString();
+		if (!("details" in meta)) meta.details = "descriptions." + dotJoined + ".caption";
+		meta.aliases.pushUniquely(...contexts.map(ctx => t.titles[subpage + ctx].toString()), t.aliases.titles[subpage].toString());
+		if (!("icon" in meta)) meta.icon = redirectIcon(subpage);
+		meta.type ??= "link";
+		meta.link ??= _path;
+	}
 	if (meta.title as Object instanceof PathObject) meta.title = meta.title?.toString();
 	if (meta.details as Object instanceof PathObject) meta.details = meta.details?.toString();
 	for (let i = 0; i < meta.aliases.length; i++)
 		if (meta.aliases[i] as Object instanceof PathObject) meta.aliases[i] = meta.aliases[i]?.toString();
-	if (!("icon" in meta) && meta.type === "subheader") meta.icon = "subheader";
 	const _meta = new SettingMeta(meta, _path);
 	metas.push(_meta);
 	return { meta: _meta, ...items };
 }
-for (let page of Object.keys(settingsMetasInput)) {
-	page = page.replaceAll("_", "/"); const subpage = page.split("/").at(-1)!;
-	const contexts = ["long", "full", "other", undefined];
-	const context = contexts.firstDefined(ctx => i18nExists(t => t.titles[subpage], ctx) && ctx && "_" + ctx || undefined) ?? "";
-	const meta = new SettingMeta({
-		icon: redirectIcon(subpage),
-		title: t.titles[subpage + context].toString(),
-		aliases: [...contexts.map(ctx => t.titles[subpage + ctx].toString()), t.aliases.titles[subpage].toString()],
-	}, page);
-	metas.push(meta);
+// for (let page of Object.keys(settingsMetasInput)) {
+// 	page = page.replaceAll("_", "/"); const subpage = page.split("/").at(-1)!;
+// 	const contexts = ["long", "full", "other", undefined];
+// 	const context = contexts.firstDefined(ctx => i18nExists(t => t.titles[subpage], ctx) && ctx && "_" + ctx || undefined) ?? "";
+// 	const meta = new SettingMeta({
+// 		icon: redirectIcon(subpage),
+// 		title: t.titles[subpage + context].toString(),
+// 		aliases: [...contexts.map(ctx => t.titles[subpage + ctx].toString()), t.aliases.titles[subpage].toString()],
+// 	}, page);
+// 	metas.push(meta);
+// }
+for (const [pageId, items] of Object.entries(settingsMetasInput as AnyObject)) {
+	items.meta = convertItem(items.meta ?? {}, pageId, true).meta;
+	for (const [itemId, item] of Object.entries(items))
+		if (itemId !== "meta")
+			items[itemId] = convertItem(item as ISettingMeta, `${pageId}.${itemId}`);
 }
 for (const [pageId, items] of Object.entries(settingsMetasInput as AnyObject))
-	for (const [itemId, item] of Object.entries(items))
-		items[itemId] = convertItem(item as ISettingMeta, `${pageId}.${itemId}`);
+	if (pageId.includes("_")) {
+		accessPath(settingsMetasInput, pageId.replaceAll("_", "."), items);
+		delete settingsMetasInput[pageId as never];
+	}
 export const settingsMetas = settingsMetasOutput as Nesting<ConvertPage<typeof settingsMetasInput>>;
+
+function accessPath(root: AnyObject, path: string, overwrite: unknown) {
+	return path.split(".").reduce((parent, layer, i, { length }) => {
+		const nullish = !parent[layer];
+		if (nullish) parent[layer] = {};
+		if (overwrite && i === length - 1) parent[layer] = nullish ? overwrite : Object.assign(parent[layer], overwrite);
+		return parent[layer];
+	}, root);
+}
 
 function $t(key?: string) {
 	if (!key) return;
