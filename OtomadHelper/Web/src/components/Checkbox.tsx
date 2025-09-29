@@ -3,7 +3,7 @@ import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemTe
 const checkedOrIndet = ":is(:checked, :indeterminate)";
 const unchecked = ":not(:checked, :indeterminate)";
 const iconExiting = ":has(.icon.exit, .icon.enter-done)";
-const pressed = ":active:not(:has(.actions:active))";
+const pressed = ":active:not(:has(:is(.actions, .button):active))";
 
 const StyledCheckboxLabel = styled.label<{
 	/** Include just the checkbox itself, without the text label? */

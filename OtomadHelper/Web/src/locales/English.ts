@@ -1316,8 +1316,9 @@ export default {
 			},
 			stream: {
 				staticVisual: "Freeze first frame, Freeze start frame",
-				truncate: "Unlengthen, Unlengthening, No lengthening, No looping, No extending, Freeze last frame, Freeze end frame",
+				truncate: "Unlengthen, Unlengthening, No lengthening, No looping, No extending, No extension, Freeze last frame, Freeze end frame",
 				legato: "Fill gaps, Eliminate gaps, Remove gaps",
+				multitrackForChords: "Multiple track for chords, Multi-track for chords, Chords",
 				autoPan: "Auto panning",
 				stack: "Stacking",
 				timeUnremapping: "Persistent timeflow, Time remapping",

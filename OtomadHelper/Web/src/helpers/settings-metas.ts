@@ -4,7 +4,7 @@ import { redirectIcon } from "src/ShellPage";
 import type { Trans } from "utils/i18n";
 import { tf as $$t } from "utils/i18n";
 import { settingsMetasInput } from "./settings-metas_input";
-const t = new PathObject() as Trans;
+const t = new PathObject() as RedirectedTrans;
 
 type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup" | "subheader";
 
@@ -75,14 +75,28 @@ const redirectPath = {
 	"visual.pixelScaling": "pixelScaling",
 } as const;
 
+type RedirectPath<Root extends AnyObject> = Root & {
+	audio: Root["stream"];
+	visual: Root["stream"] & {
+		staff: Root["staff"];
+		prve: Root["prve"];
+		pixelScaling: Root["pixelScaling"];
+	};
+};
+
+export type RedirectedTrans = RedirectPath<Trans> & {
+	descriptions: RedirectPath<Trans["descriptions"]>;
+	aliases: RedirectPath<Trans["aliases"]>;
+};
+
 type TranslateFromPath<TRoot, TPath> =
 	TPath extends `${infer Parent}.${infer Child}` ? TranslateFromPath<TRoot[Parent & keyof TRoot], Child> :
 	TRoot[TPath & keyof TRoot] extends { _: infer Title } ? Title : TRoot[TPath & keyof TRoot];
 type HasTranslation<T> = string extends T ? never : T extends I18nArgsFunction ? never : T extends string ? T : never;
 type DefaultMeta<TPath extends string> = OmitNevers<{
 	path: /* Hyphenate< */ReplaceAll<ReplaceAll<Replace<TPath, ".", "#">, "_", "/">, ".", "/">/* > */;
-	title: HasTranslation<TranslateFromPath<Trans, ReplaceAll<TPath, "_", ".">>>;
-	details: HasTranslation<TranslateFromPath<Trans["descriptions"], ReplaceAll<TPath, "_", ".">>>;
+	title: HasTranslation<TranslateFromPath<RedirectedTrans, ReplaceAll<TPath, "_", ".">>>;
+	details: HasTranslation<TranslateFromPath<RedirectedTrans["descriptions"], ReplaceAll<TPath, "_", ".">>>;
 }>;
 type JoinDot<T, U> = T extends "" ? U & string : `${T & string}.${U & string}`;
 type ConvertItem<TPage, TPath extends string> = {
@@ -209,7 +223,9 @@ export function search(query?: string) {
 			// Sixthly, check the query word that are closer to the beginning.
 			if ((score = indexOfA - indexOfB)) return score;
 			// Seventhly, compare by alphabet.
-			return a.localeCompare(b, locale);
+			if ((score = a.localeCompare(b, locale))) return score;
+			// Eighthly, compare their path length, prioritize short circuit.
+			return resultA.meta.path.length - resultB.meta.path.length;
 		})
 		.toUnique(({ meta }) => meta);
 }

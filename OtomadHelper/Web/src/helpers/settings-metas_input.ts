@@ -1,6 +1,5 @@
-import type { Trans } from "utils/i18n";
-import type { ISettingMeta } from "./settings-metas";
-const t = new PathObject() as Trans;
+import type { ISettingMeta, RedirectedTrans } from "./settings-metas";
+const t = new PathObject() as RedirectedTrans;
 
 export const settingsMetasInput = {
 	source: {
