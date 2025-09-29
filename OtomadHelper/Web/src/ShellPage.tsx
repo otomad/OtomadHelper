@@ -34,7 +34,7 @@ const getTitle = (viewName: string, context: "long" | "full" | "short", plural?:
 	const t = (context?: string) => {
 		const key = new VariableName(viewName).camel;
 		if (!i18nExists(t => t.titles[key], context)) return;
-		return i18n.t(`titles.${key}`, { plural, context });
+		return i18n.t(`titles.${key}`, { count: plural, context });
 	};
 	const contexts = ["long", "full", undefined] as const;
 	const ctx = contexts.slice(contexts.indexOfDefault(_context) ?? 2).firstDefined(context => t(context)) ?? t();

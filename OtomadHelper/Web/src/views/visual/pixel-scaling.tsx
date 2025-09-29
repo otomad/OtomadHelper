@@ -8,6 +8,7 @@ export default function PixelScaling() {
 		autoScaleFactor: [autoScaleFactor, setAutoScaleFactor],
 		replaceSource: [replaceSource, setReplaceSource],
 	} = useSelectConfig(c => c.visual.pixelScaling);
+	const meta = metas.visual.pixelScaling;
 
 	const [displayScaleFactor, setDisplayScaleFactor] = useState<Readable | undefined>(scaleFactor);
 	const isManuallyAutoScaleFactor = scaleFactor === 0;
@@ -21,9 +22,8 @@ export default function PixelScaling() {
 			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
 
 			<EmptyMessage.Typical icon="pixelate_zoom" title="pixelScaling" enabled={enabled}>
-				<Expander
-					title={t.pixelScaling.scaleFactor}
-					icon="zoom_in"
+				<Setting
+					meta={meta.scaleFactor}
 					checkInfo={isActuallyAutoScaleFactor ? t.auto : displayScaleFactor + t.units.percent}
 					alwaysShowCheckInfo
 					expanded
@@ -32,8 +32,8 @@ export default function PixelScaling() {
 					<Expander.ChildWrapper>
 						<Slider value={[autoScaleFactor ? 0 : scaleFactor, setScaleFactor]} step={1} displayValue onDisplayValueChanged={setDisplayScaleFactor} />
 					</Expander.ChildWrapper>
-				</Expander>
-				<SettingsCardToggleSwitch title={t.pixelScaling.replaceSourceMedia} icon="replace" on={[replaceSource, setReplaceSource]} />
+				</Setting>
+				<Setting meta={meta.replaceSourceMedia} on={[replaceSource, setReplaceSource]} />
 			</EmptyMessage.Typical>
 		</div>
 	);

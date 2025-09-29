@@ -239,7 +239,10 @@ export const settingsMetasInput = {
 		},
 	},
 	visual_staff: {},
-	visual_pixelScaling: {},
+	visual_pixelScaling: {
+		scaleFactor: { icon: "zoom_in" },
+		replaceSourceMedia: { icon: "replace" },
+	},
 } as const satisfies Record<string, Record<string, ISettingMeta>>;
 
 function playbackRate() {
