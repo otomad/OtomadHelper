@@ -7,6 +7,7 @@ const IconWrapper = styled.div({});
 
 const StyledSearchResult = styled.button`
 	--padding: 8px;
+	--icon-size: 20px;
 	position: relative;
 	display: flex;
 	gap: 16px;
@@ -18,7 +19,7 @@ const StyledSearchResult = styled.button`
 	${styledSimpleIndicator};
 
 	&::before {
-		block-size: 20px;
+		block-size: var(--icon-size);
 	}
 
 	&:hover,
@@ -52,19 +53,20 @@ const StyledSearchResult = styled.button`
 	}
 
 	${IconWrapper} {
-		${styles.mixins.square("20px")};
+		container-type: size;
 		flex-shrink: 0;
+		align-self: stretch;
+		block-size: auto;
+		inline-size: var(--icon-size);
 
 		.icon {
-			position: absolute;
-			inset-block-start: calc(var(--padding) + 4px);
+			translate: 0 4px;
 		}
 	}
 
 	&.selected ${IconWrapper} .icon,
 	&:has(.text .title:only-child) ${IconWrapper} .icon {
-		inset-block-start: 50%;
-		translate: 0 -50%;
+		translate: 0 calc((100cqh - var(--icon-size)) / 2);
 	}
 
 	.subtitle {
