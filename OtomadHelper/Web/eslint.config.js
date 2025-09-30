@@ -292,7 +292,7 @@ export default [
 				"functions": false,
 			}],
 			"@typescript-eslint/no-empty-function": "off",
-			"@typescript-eslint/no-redeclare": "warn",
+			"@typescript-eslint/no-redeclare": "off", // TypeScript 编译器已支持。
 			"@typescript-eslint/no-useless-constructor": "error",
 			"@typescript-eslint/no-this-alias": "off",
 			"@stylistic/indent-binary-ops": "error",

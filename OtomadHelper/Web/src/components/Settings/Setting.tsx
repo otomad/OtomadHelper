@@ -57,19 +57,22 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 	}
 }
 
-function useMeta({ meta }: SettingMetaInside = {}, overriddenProps: {
+interface UseMetaOverriddenProps {
 	title?: ReactNode;
 	details?: ReactNode;
-	icon?: DeclaredIcons | ReactElement;
-} = {}): typeof overriddenProps & {
+	icon?: DeclaredIcons;
+	children?: ReactNode;
 	anchor?: string;
-} {
-	if (!meta) return overriddenProps;
+}
+function useMeta({ meta }: SettingMetaInside = {}, overriddenProps: UseMetaOverriddenProps | IArguments = {}): RequiredWith<UseMetaOverriddenProps, "anchor"> {
+	if (isArguments(overriddenProps)) overriddenProps = overriddenProps[0] as UseMetaOverriddenProps;
+	if (!meta) return overriddenProps as never;
 	return {
-		title: overriddenProps.title ?? meta.translatedTitle!,
-		details: overriddenProps.details ?? meta.translatedDetails!,
-		icon: overriddenProps.icon ?? meta.icon,
-		anchor: meta.cssPath,
+		title: "title" in overriddenProps ? overriddenProps.title : meta.translatedTitle!,
+		details: "details" in overriddenProps ? overriddenProps.details : meta.translatedDetails!,
+		icon: "icon" in overriddenProps ? overriddenProps.icon : meta.icon,
+		anchor: "anchor" in overriddenProps ? overriddenProps.anchor! : meta.cssPath,
+		children: "children" in overriddenProps ? overriddenProps.children : meta.translatedTitle!,
 	};
 }
 

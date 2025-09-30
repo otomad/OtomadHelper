@@ -26,8 +26,11 @@ const StyledSubheader = styled.h4`
 `;
 
 export default function Subheader({ meta, children, ...htmlAttrs }: FCP<{
+	/** Auto fill props from a setting meta. */
 	meta?: PropsOf<typeof Setting>["meta"];
+	anchor?: string;
 }, "h4">) {
-	const { title, anchor } = Setting.useMeta(meta, { title: children });
-	return <StyledSubheader data-anchor={anchor} {...htmlAttrs}>{title}</StyledSubheader>;
+	// eslint-disable-next-line no-var
+	var { children, anchor } = Setting.useMeta(meta, arguments);
+	return <StyledSubheader data-anchor={anchor} {...htmlAttrs}>{children}</StyledSubheader>;
 }

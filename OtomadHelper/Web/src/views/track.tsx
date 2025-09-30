@@ -31,6 +31,7 @@ export default function Track() {
 	const { pushPage } = useSnapshot(pageStore);
 	const [layoutEnabled, layoutEnabledCount, deactivateAll] = useLayoutEnabled();
 	const { mode: legatoMode, increaseSpacing, forClips: legatoForClips, includeGroup: legatoIncludeGroup, backwards: legatoBackwards } = useSelectConfig(c => c.track.legato);
+	const meta = metas.track;
 
 	useEffect(() => {
 		if (!legatoForClips[0] && legatoMode[0] === "stackingAllAfter") legatoMode[1]("stacking");
@@ -40,7 +41,7 @@ export default function Track() {
 		<div className="container">
 			<SettingsPageControl image={(<PreviewLayout thumbnail={exampleThumbnail} />)} learnMoreLink="">{t.descriptions.track}</SettingsPageControl>
 
-			<Subheader>{t.track.layout}</Subheader>
+			<Subheader meta={meta.layout} />
 			<SettingsCard
 				title={t({ context: "full" }).titles.grid}
 				type="button"
@@ -72,7 +73,7 @@ export default function Track() {
 			</div>
 
 			<Subheader>{t.stream.legato}</Subheader>
-			<Expander title={t.track.legato} details={t.descriptions.track.legato} icon="legato">
+			<Setting meta={meta.legato}>
 				<ItemsView view="grid" current={legatoMode} itemWidth={320} key={String(legatoForClips[0])}>
 					{/* When `legatoForClips` change, re-render the entire component to avoid the animation of the newly added item being out of sync with other items. */}
 					{trackLegatoModes.map(mode => {
@@ -92,26 +93,21 @@ export default function Track() {
 						);
 					})}
 				</ItemsView>
-				<ToggleSwitch on={legatoForClips} details={t.descriptions.track.legato.forClips} icon="track_event">{t.track.legato.forClips}</ToggleSwitch>
-				<ToggleSwitch on={legatoIncludeGroup} details={t.descriptions.track.legato.includeGroup} icon="group">{t.track.legato.includeGroup}</ToggleSwitch>
-				<ToggleSwitch on={legatoBackwards} details={t.descriptions.track.legato.backwards} icon="arrow_reply">{t.track.legato.backwards}</ToggleSwitch>
-				<Expander.Item
-					title={t.track.legato.increaseSpacing.split("\n")[0]}
-					details={t.descriptions.track.legato.increaseSpacing}
-					disabled={!legatoMode[0].in("increaseSpacing", "increaseSpacingAllTracks")}
-					icon="increase_spacing"
-				>
+				<Setting meta={meta.legato.forClips} on={legatoForClips} />
+				<Setting meta={meta.legato.includeGroup} on={legatoIncludeGroup} />
+				<Setting meta={meta.legato.backwards} on={legatoBackwards} />
+				<Setting meta={meta.legato.increaseSpacing} disabled={!legatoMode[0].in("increaseSpacing", "increaseSpacingAllTracks")}>
 					<TimecodeBox value={increaseSpacing} />
-				</Expander.Item>
+				</Setting>
 				<Expander.ChildWrapper>
 					<Button icon="checkmark">{t.apply}</Button>
 				</Expander.ChildWrapper>
-			</Expander>
+			</Setting>
 
-			<Subheader>{t.track.clear}</Subheader>
+			<Subheader meta={meta.clear} />
 			<div>
-				<Button icon="clear_motion" accent="critical">{t.track.clear.motion}</Button>
-				<Button icon="clear_plugin" accent="critical">{t.track.clear.effect}</Button>
+				<Button meta={meta.clear.motion} accent="critical" />
+				<Button meta={meta.clear.effect} accent="critical" />
 			</div>
 		</div>
 	);

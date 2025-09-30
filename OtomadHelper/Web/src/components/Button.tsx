@@ -239,7 +239,7 @@ export /* @internal */ const StyledButton = styled.button<{
 	}
 `;
 
-export default function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBasedIcon, repeat, extruded, minWidthUnbounded, ariaHiddenForChildren, href, blank = true, className, disabled, onRelease, onClick, ref, ...htmlAttrs }: FCP<{
+export default function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBasedIcon, repeat, extruded, minWidthUnbounded, ariaHiddenForChildren, href, blank = true, meta, className, disabled, onRelease, onClick, ref, ...htmlAttrs }: FCP<{
 	/** Button icon. */
 	icon?: DeclaredIcons;
 	/** Button animated icon. */
@@ -268,12 +268,16 @@ export default function Button({ children, icon, animatedIcon, subtle, hyperlink
 	href?: string;
 	/** Open in new tab? Only available when `href` is provided. */
 	blank?: boolean;
+	/** Auto fill props from a setting meta. */
+	meta?: PropsOf<typeof Setting>["meta"];
 	/** Mouse release button event. Only works with `RepeatButton`. */
 	onRelease?: BaseEventHandler;
 }, "button">) {
 	const fillColorName = !accent ? undefined : accent === true ? "accent-color" : `fill-color-system-${accent}`;
 	const subtleFillColorName = `fill-color-system-${accent === true ? "accent" : accent}-background`;
 	const handleClick = useOnNestedButtonClick(onClick);
+	// eslint-disable-next-line no-var
+	var { children, anchor, icon } = Setting.useMeta(meta, arguments);
 
 	return (
 		<StyledButton
@@ -299,6 +303,7 @@ export default function Button({ children, icon, animatedIcon, subtle, hyperlink
 			$fillColorName={fillColorName}
 			$subtleFillColorName={subtleFillColorName}
 			$dirBasedIcon={dirBasedIcon}
+			data-anchor={anchor}
 			onRelease={repeat ? onRelease : undefined}
 			onClick={handleClick}
 			{...htmlAttrs}

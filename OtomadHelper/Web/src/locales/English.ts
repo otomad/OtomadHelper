@@ -434,6 +434,7 @@ export default {
 		},
 		track: {
 			layout: "Layout",
+			layout_other: "Layouts",
 			grid: {
 				array: "Array",
 				square: "Square",
@@ -542,6 +543,7 @@ export default {
 				lengthen: "Lengthening clips\nChange clips length",
 				increaseSpacing: "Increase spacing\nFor current tracks",
 				increaseSpacingAllTracks: "Increase spacing\nFor all tracks",
+				increaseSpacingSetting: "Increase spacing",
 				forClips: "For selected clips only",
 				includeGroup: "Include the clips within a group",
 				backwards: "Backwards",
@@ -1293,11 +1295,13 @@ export default {
 			searchBox: "Search box",
 		},
 		aliases: {
+			// cSpell:disable
 			titles: {
 				source: "Material, Media", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				score: "Chart, MIDI, Song, Music", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				audio: "Sound", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				visual: "Video", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				track: "Layer, Layers", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				sonar: "Motion Graphic, Motion Graphics, Mograph, Mographs, MG, Cookie Cutter", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				prve: "Promotion Video Rhythm Visual Effect, Promotion Video Rhythm Visual Effects, PV Rhythmic Visual Effect, PV Rhythmic Visual Effects, Promotion Video Rhythmic Visual Effect, Promotion Video Rhythmic Visual Effects, PV Rhythmical Visual Effect, PV Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effect, Promotion Video Rhythmical Visual Effects, PRVE", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				staff: "Musical Staff, Piano Staff Sheets Fashion", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
@@ -1318,17 +1322,28 @@ export default {
 				staticVisual: "Freeze first frame, Freeze start frame",
 				truncate: "Unlengthen, Unlengthening, No lengthening, No looping, No extending, No extension, Freeze last frame, Freeze end frame",
 				legato: "Fill gaps, Eliminate gaps, Remove gaps",
-				multitrackForChords: "Multiple track for chords, Multi-track for chords, Chords",
+				multitrackForChords: "Multiple track for chords, Multi-track for chords, Chords, Multiple tracks for chords, Multi-tracks for chords, Multitracks for chords",
+				createGroups: "Create groups",
 				autoPan: "Auto panning",
 				stack: "Stacking",
 				timeUnremapping: "Persistent timeflow, Time remapping",
-				prerender: "Prerenders",
+				prerender: "Pre-render, Pre-renders, Pre-rendering, Prerenders, Prerendering, Pre render, Pre renders, Pre rendering",
+				articulations: {
+					_: "Playing technique, Playing techniques, Technique, Techniques",
+					glissando: "Glissandi, Glissandos, Glissandoes, Portamento, Portamenti, Portamentos, Gliss, Glisses, Slide, Slides, Glide, Glides, Pitch bend, Pitch bends, Pitch wheel, Pitch wheels, Bender, Benders",
+					appoggiatura: "Appoggiaturas, Appoggiature, Acciaccatura, Acciaccaturas, Acciaccature, Appoggiare, Grace note, Grace notes",
+					arpeggio: "Arp, Arps, Arpeggios, Arpeggi, Arpeggiare",
+				},
 				tuning: {
 					alternativeForExceedTheRange: "Alternative method for exceeding the range, Alternative for exceed the range",
 					resample: "Lock stretch and pitch, Lock to stretch, Pitch change lock, Pitch lock, Lock pitch",
 				},
 				mimical: "Imitative tuning methods",
 			},
+			track: {
+				layout: "Template, Templates, Composition, Composite, Compose, Typesetting, Typography, Auto Layout Tracks",
+			},
+			// cSpell:enable
 		},
 	},
 	csharp: {

@@ -19,7 +19,7 @@ export default function SelectAll<T>({ value, all, icon, title, meta, details }:
 	value: StateProperty<T[]>;
 	all: T[];
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
-	icon?: DeclaredIcons | ReactElement;
+	icon?: DeclaredIcons;
 	/** Title. */
 	title?: ReactNode;
 	/** Detailed description. */
@@ -28,12 +28,13 @@ export default function SelectAll<T>({ value, all, icon, title, meta, details }:
 	meta?: SettingMetaInside;
 }, "div">) {
 	const selectAll = useSelectAll(value, all);
-	const props = Setting.useMeta(meta, { title, details, icon });
-	if ("icon" in arguments[0] && !icon) props.icon = undefined;
+	// eslint-disable-next-line no-var
+	var { title, details, icon, anchor } = Setting.useMeta(meta, arguments);
+	const props = { title, details, icon, anchor };
 
 	return (
 		<StyledSelectAll>
-			{props.title && <Expander.Item {...props} asSubtitle />}
+			{title && <Expander.Item {...props} asSubtitle />}
 			<Checkbox
 				value={selectAll}
 				actions={

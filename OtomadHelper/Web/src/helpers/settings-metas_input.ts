@@ -6,7 +6,7 @@ export const settingsMetasInput = {
 		from: { icon: "video_clip_multiple" },
 		trim: { icon: "aspect_ratio" },
 		startTime: { icon: "start_point" },
-		advanced: { title: t.subheaders.advanced, type: "subheader" },
+		advanced: subheader(t.subheaders.advanced),
 		afterCompletion: {
 			icon: "post_processing",
 			items: {
@@ -33,7 +33,7 @@ export const settingsMetasInput = {
 			},
 		},
 		trackName: { icon: "rename" },
-		multisource: { type: "subheader" },
+		multisource: subheader(),
 		secretBox: {
 			icon: "dice",
 			items: {
@@ -132,6 +132,7 @@ export const settingsMetasInput = {
 				glissando: {
 					title: t.stream.articulations.glissando,
 					details: t.descriptions.stream.articulations.glissando,
+					aliases: [t.aliases.stream.articulations.glissando],
 					icon: "slide_note",
 				},
 			},
@@ -146,7 +147,7 @@ export const settingsMetasInput = {
 				progress: { icon: "progress_bar" },
 			},
 		},
-		parameters: { title: t.subheaders.parameters, type: "subheader" },
+		parameters: subheader(t.subheaders.advanced),
 	},
 	visual: {
 		preferredTrack: {
@@ -190,7 +191,7 @@ export const settingsMetasInput = {
 			},
 		},
 		transformMethod: { icon: "zoom_fit" },
-		effects: { title: t.titles.effect_other, type: "subheader" },
+		effects: subheader(t.subheaders.advanced),
 		articulations: {
 			type: "subheader",
 			items: {
@@ -215,7 +216,7 @@ export const settingsMetasInput = {
 				progress: { icon: "progress_bar" },
 			},
 		},
-		parameters: { title: t.subheaders.parameters, type: "subheader" },
+		parameters: subheader(t.subheaders.advanced),
 	},
 	visual_prve: {
 		control: { icon: "prve_control_general" },
@@ -243,6 +244,27 @@ export const settingsMetasInput = {
 		scaleFactor: { icon: "zoom_in" },
 		replaceSourceMedia: { icon: "replace" },
 	},
+	track: {
+		layout: subheader({ icon: "layout_row_two_split_bottom" }),
+		legato: {
+			aliases: [t.aliases.stream.legato],
+			icon: "legato",
+			items: {
+				forClips: { icon: "track_event" },
+				includeGroup: { icon: "group" },
+				backwards: { icon: "arrow_reply" },
+				increaseSpacing: { icon: "increase_spacing", title: t.track.legato.increaseSpacingSetting },
+			},
+		},
+		clear: {
+			type: "subheader",
+			icon: "eraser",
+			items: {
+				motion: { icon: "clear_motion" },
+				effect: { icon: "clear_plugin" },
+			},
+		},
+	},
 } as const satisfies Record<string, Record<string, ISettingMeta>>;
 
 function playbackRate() {
@@ -263,5 +285,13 @@ function prerender() {
 		items: {
 			acidTag: { icon: "logo/acid" },
 		},
+	} as const satisfies ISettingMeta;
+}
+function subheader<const IMeta extends ISettingMeta>(meta: string | IMeta = {} as IMeta) {
+	return {
+		type: "subheader",
+		...typeof meta === "string" || meta instanceof PathObject ? {
+			title: meta as string,
+		} : meta,
 	} as const satisfies ISettingMeta;
 }

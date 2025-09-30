@@ -36,3 +36,13 @@ export function areFunctionsGenerallyEqual(a: unknown, b: unknown) {
 export function isAsyncFunction(test: unknown): test is (...args: Any[]) => Promise<Any> {
 	return test instanceof Function && test.constructor.name === "AsyncFunction";
 }
+
+/**
+ * Determines whether the provided value is an `arguments` object of the function.
+ *
+ * @param test - The value to test.
+ * @returns Is the value an `arguments` object?
+ */
+export function isArguments(test: unknown): test is IArguments {
+	return Object.prototype.toString.call(test) === "[object Arguments]";
+}
