@@ -44,7 +44,7 @@ export class SettingMeta implements ISettingMeta {
 	/** Path of unique identifiers to it. Auto generated. */
 	path: string;
 	/** Path of unique identifiers to it. Auto generated. CSS escaped. */
-	get cssPath() { return CSS_escape(this.path); }
+	get cssPath() { return this.path !== undefined ? CSS.escape(this.path) : undefined!; }
 
 	get translatedTitle() { return $t(this.title); }
 	get translatedDetails() { return $t(this.details); }
