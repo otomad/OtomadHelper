@@ -89,7 +89,12 @@ export const settingsMetasInput = {
 		playbackRate: playbackRate(),
 		normalize: { icon: "normalize" },
 		loop: { icon: "loop" },
-		prerender: prerender(),
+		prerender: {
+			icon: "movie",
+			items: {
+				acidTag: { icon: "logo/acid" },
+			},
+		},
 		stretch: { icon: "stretch" },
 		truncate: { icon: "arrow_import_prohibited" },
 		legato: { icon: "legato" },
@@ -158,7 +163,7 @@ export const settingsMetasInput = {
 		createGroups: { icon: "group" },
 		playbackRate: playbackRate(),
 		loop: { icon: "loop" },
-		prerender: prerender(),
+		prerender: { icon: "movie" },
 		stretch: { icon: "stretch" },
 		truncate: { icon: "arrow_import_prohibited" },
 		staticVisual: { icon: "image" },
@@ -276,14 +281,6 @@ function playbackRate() {
 				icon: "sync",
 				details: undefined,
 			},
-		},
-	} as const satisfies ISettingMeta;
-}
-function prerender() {
-	return {
-		icon: "movie",
-		items: {
-			acidTag: { icon: "logo/acid" },
 		},
 	} as const satisfies ISettingMeta;
 }
