@@ -182,7 +182,7 @@ function $t(key?: string) {
 	if (!key) return;
 	const keys = key.split(".");
 	if (!i18nExists(key, undefined, false)) return;
-	return keys.reduce<AnyObject>((root, key) => root[key], $$t).toString();
+	return keys.reduce<AnyObject>((root, key) => root[key], $$t)?.toString();
 }
 
 const settingMetaSearchResultProperties = ["title", "alias", "details"] as const;

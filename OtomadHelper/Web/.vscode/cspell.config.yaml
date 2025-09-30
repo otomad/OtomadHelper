@@ -161,7 +161,6 @@ words:
   - neta
   - netaed
   - neutual
-  - notdeprecated
   - numberish
   - numpad
   - nums
@@ -356,6 +355,9 @@ ignoreWords:
   - cái
   - meimei
   - loca
+  - evauation
+  - notdeprecated
+  - delthas
 flagWords:
   - colour -> color
   - canot -> cannot

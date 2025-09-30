@@ -365,7 +365,7 @@ export default function Settings() {
 				<Expander.Item title={t.settings.config.userConfig.fileLocation} icon="folder" details="C:\">
 					<Button icon="location_target">{t.locate}</Button>
 				</Expander.Item>
-				<Expander.Item title={t.dangerZone} icon="error_circle" details={t.descriptions.settings.config.userConfig.reset}>
+				<Expander.Item title={t.dangerZone} icon="warning" details={t.descriptions.settings.config.userConfig.reset}>
 					<Button icon="arrow_reset" accent="critical">{t.reset}</Button>
 				</Expander.Item>
 			</Expander>

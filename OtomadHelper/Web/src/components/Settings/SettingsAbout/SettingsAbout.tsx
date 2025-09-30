@@ -12,6 +12,7 @@ const StyledSettingsAbout = styled.div`
 		color: ${c("fill-color-text-secondary")};
 		text-align: center;
 		text-wrap: pretty;
+		hyphens: manual;
 	}
 
 	.collaborators,
@@ -97,6 +98,7 @@ export default function SettingsAbout() {
 			>
 				<AboutInformation />
 			</Expander>
+			<Expander title={t.settings.about.help} icon="question_circle" />
 		</>
 	);
 }

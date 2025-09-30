@@ -788,6 +788,7 @@ export default {
 				feedback: "Feedback",
 				changelog: "Changelog",
 				license: "License",
+				roadmap: "Roadmap",
 				version: "Version",
 				author: "Author",
 				__author__: "Rantetsu Inori",
@@ -795,6 +796,15 @@ export default {
 				__originalAuthor__: "Chaosinism",
 				translator: "Translator",
 				translators: "Translators",
+				help: "Help",
+				troubleshooting: "Troubleshooting",
+				tutorialVideo: "Tutorial video",
+				releaseNotes: "Release notes",
+				documentationForFeature: "Documentation for {{feature}}", // E.g. Documentation for Staff Visualizer.
+				documentationInLanguage: "{{language, capitalize}} documentation", // E.g. English documentations.
+				documentationInLanguage_other: "{{language, capitalize}} documentations",
+				previousVersionDocumentation: "Previous version of the documentations",
+				exploreVisualEffects: "Explore visual effects",
 			},
 			language: {
 				_: "Language",
