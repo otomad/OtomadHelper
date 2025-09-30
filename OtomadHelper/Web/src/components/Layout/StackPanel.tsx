@@ -1,6 +1,6 @@
 const StackPanel = styled.div<{
 	$direction?: "horizontal" | "vertical";
-	$gap?: string | number;
+	$gap?: Numberish | [rowGap: Numberish, columnGap: Numberish];
 	$align?: CSSProperties["justifyContent"];
 	$endAlignWhenWrap?: boolean;
 	$nowrap?: boolean;
@@ -10,7 +10,7 @@ const StackPanel = styled.div<{
 	flex-direction: ${({ $direction = "horizontal" }) => $direction === "vertical" ? "column" : "row"};
 	// stylelint-disable-next-line declaration-block-no-redundant-longhand-properties
 	flex-wrap: ${ifProp("$nowrap", "nowrap", "wrap")};
-	gap: ${({ $gap = 8 }) => styles.toValue($gap)};
+	gap: ${({ $gap = 8 }) => !Array.isArray($gap) ? styles.toValue($gap) : $gap.map(gap => styles.toValue(gap)).join(" ")};
 	justify-content: ${styledProp("$align", "normal")};
 	align-items: center;
 

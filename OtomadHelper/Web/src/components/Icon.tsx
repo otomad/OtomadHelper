@@ -8,6 +8,7 @@ const StyledIcon = styled.i<{
 	${squared};
 	${styles.mixins.flexCenter()};
 	display: inline-flex;
+	vertical-align: middle;
 
 	:where(&) {
 		${styles.effects.text.icon};

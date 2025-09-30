@@ -98,7 +98,9 @@ export default function SettingsAbout() {
 			>
 				<AboutInformation />
 			</Expander>
-			<Expander title={t.settings.about.help} icon="question_circle" />
+			<Expander title={t.settings.about.help} icon="question_circle">
+				<HelpLinks />
+			</Expander>
 		</>
 	);
 }
@@ -270,4 +272,62 @@ export function listFormatTranslators(targetLanguage: string, displayLanguage: s
 	const translators = t({ lng: targetLanguage }).metadata.__translator__, hasTranslator = translators.length > 0;
 	const formattedTranslator = hasTranslator ? listFormatTranslators_static(translators, displayLanguage) : "—";
 	return [hasTranslator, formattedTranslator];
+}
+
+function HelpLinks() {
+	const currentLanguage = useCurrentLanguage();
+	const tAbout = t.settings.about;
+	const helpsV4: Record<Intl.UnicodeBCP47LocaleIdentifier, { name: string; link: string; version?: string }[]> = {
+		zh: [
+			{ name: tAbout.documentation, version: "0.1", link: links.helpV4.chinese.documentation_chaosinism_v0_1 },
+			{ name: tAbout.troubleshooting, version: "0.1", link: links.helpV4.chinese.troubleshooting_chaosinism_v0_1 },
+			{ name: tAbout.tutorialVideo, version: "0.1", link: links.helpV4.chinese.tutorialVideo_chaosinism_v0_1 },
+			{ name: tAbout.documentationForFeature({ feature: t({ context: "full" }).titles.staff }), version: "0.1", link: links.helpV4.chinese.documentation_staffVisualizer_chaosinism_v0_1 },
+			{ name: tAbout.releaseNotes, version: "4.9.25.0", link: links.helpV4.chinese.releaseNotes_v4_9_25_0 },
+			{ name: tAbout.releaseNotes, version: "4.10.17.0", link: links.helpV4.chinese.releaseNotes_v4_10_17_0 },
+			{ name: tAbout.tutorialVideo, version: "4.26.14.0", link: links.helpV4.chinese.tutorialVideo_v4_26_14_0 },
+		],
+		en: [
+			{ name: tAbout.documentation, link: links.helpV4.english.documentation_evauation },
+			{ name: tAbout.tutorialVideoForFeature({ feature: t.titles.ytp }), link: links.helpV4.english.tutorialVideo_ytpPlus },
+			{ name: tAbout.tutorialVideoForFeature({ feature: t.mosh.datamosh }), version: "1.4.0", link: links.helpV4.english.tutorialVideo_datamosh_delthas_v1_4_0 },
+			{ name: tAbout.tutorialVideo, version: "4.16.4.0", link: links.helpV4.english.tutorialVideo_greenBean_v4_16_4_0 },
+			{ name: tAbout.tutorialVideo, version: "4.16.4.0", link: links.helpV4.english.tutorialVideo_cassidy_v4_16_4_0 },
+			{ name: tAbout.exploreVisualEffects, version: "4.23.11.0", link: links.helpV4.english.exploreVisualEffects_v4_23_11_0 },
+			{ name: tAbout.tutorialVideo, version: "4.26.14.0", link: links.helpV4.english.tutorialVideo_v4_26_14_0 },
+		],
+		vi: [
+			{ name: tAbout.tutorialVideo, version: "4.26.14.0", link: links.helpV4.vietnamese.tutorialVideo_cyahega_v4_26_14_0 },
+		],
+	};
+
+	const icons: Record<string, DeclaredIcons> = {
+		bilibili: "logo/bilibili",
+		youtube: "logo/youtube",
+		"docs.google": "logo/google_docs",
+	};
+
+	return (
+		<>
+			<Expander.Item title={<b>{tAbout.previousVersionDocumentation + " (v4.x)"}</b>} />
+			{Object.entries(helpsV4).map(([language, links]) => (
+				<Fragment key={language}>
+					<Expander.Item title={tAbout.documentationInLanguage({ language: getLocaleName(language, currentLanguage), count: links.length })} noDivider />
+					<Expander.ChildWrapper $noDivider>
+						<StackPanel $gap={[8, 14]}>
+							{links.map(({ name, version, link }) => {
+								const icon = Object.entries(icons).find(([domain]) => link.includes(domain))?.[1];
+								return (
+									<Link key={link} href={link}>
+										{icon && <Icon name={icon} filled style={{ marginInlineEnd: "0.35em" }} />}
+										{name}{version ? ` (v${version})` : undefined}
+									</Link>
+								);
+							})}
+						</StackPanel>
+					</Expander.ChildWrapper>
+				</Fragment>
+			))}
+		</>
+	);
 }

@@ -15,7 +15,7 @@ const Links = {
 			documentation_chaosinism_v0_1: "https://www.bilibili.com/read/cv392013",
 			troubleshooting_chaosinism_v0_1: "https://www.bilibili.com/read/cv495309",
 			tutorialVideo_chaosinism_v0_1: "https://www.bilibili.com/video/av22226321",
-			documentation_staffVisualizer_chaosinism_v0_1: "https://www.bilibili.com/read/cv392013",
+			documentation_staffVisualizer_chaosinism_v0_1: "https://www.bilibili.com/read/cv1027442",
 			releaseNotes_v4_9_25_0: "http://www.bilibili.com/read/cv13335178",
 			releaseNotes_v4_10_17_0: "https://www.bilibili.com/read/cv13614419",
 			tutorialVideo_v4_26_14_0: "https://www.bilibili.com/video/av613241077",

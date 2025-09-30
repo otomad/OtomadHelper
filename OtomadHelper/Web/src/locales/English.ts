@@ -805,6 +805,7 @@ export default {
 				documentationInLanguage_other: "{{language, capitalize}} documentations",
 				previousVersionDocumentation: "Previous version of the documentations",
 				exploreVisualEffects: "Explore visual effects",
+				tutorialVideoForFeature: "Tutorial video for {{feature}}", // E.g. Tutorial video for Staff Visualizer.
 			},
 			language: {
 				_: "Language",
