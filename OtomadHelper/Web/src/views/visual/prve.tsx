@@ -140,7 +140,7 @@ export default function Prve() {
 				title={t({ context: "full" }).prve.control[controlMode]}
 				details={t.descriptions.prve.control[controlMode]}
 			/>
-			<Subheader>
+			<Subheader meta={meta.classes}>
 				{t.prve.classes}
 				<Badge style={{ marginInlineStart: "12px" }} hidden={shouldHideSelectionBadge}>{effectLength}</Badge>
 			</Subheader>

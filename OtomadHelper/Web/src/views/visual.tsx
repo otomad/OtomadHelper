@@ -28,7 +28,7 @@ export /* @internal */ const truncates = [
 export /* @internal */ const transformMethods = [
 	"panCrop", "pictureInPicture", "transformOfx",
 ] as const;
-export /* @internal */ const preRenders = [
+export /* @internal */ const prerenders = [
 	{ id: "instant", icon: "flash" },
 	{ id: "media", icon: "media_forward" },
 	{ id: "timeline", icon: "timeline_forward" },
@@ -95,7 +95,7 @@ export default function Visual() {
 					selectInfo={loop[0] === "auto" && t.descriptions.stream.loop.unset}
 					actions={<ThreeStageSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />}
 				/>
-				<ExpanderStreamPreRender stream="visual" />
+				<ExpanderStreamPrerender stream="visual" />
 				<EmptyMessage.YtpDisabled>
 					<Setting
 						meta={meta.stretch}

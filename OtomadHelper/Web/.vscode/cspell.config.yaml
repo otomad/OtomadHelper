@@ -195,6 +195,8 @@ words:
   - prelistening
   - prelistenings
   - premade
+  - prerender
+  - prerendering
   - prerenders
   - propertize
   - propertizer
@@ -415,3 +417,5 @@ flagWords:
   - mimicing -> mimicking
   - nonFocusable -> nonFocusable
   - focusless -> nonFocusable
+  - solfege -> solfège
+  - solfeges -> solfèges

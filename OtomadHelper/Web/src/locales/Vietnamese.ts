@@ -261,7 +261,7 @@ export default {
 			autoPan: "Tự động chuyển hướng",
 			stack: "Xếp chồng",
 			timeUnremapping: "Thời gian dai dẳng",
-			preRender: {},
+			prerender: {},
 			transition: {
 				alignment: {},
 			},
@@ -795,7 +795,7 @@ export default {
 				autoPan: "Chuyển hướng âm thanh bằng cách sử dụng envelope automation",
 				stack: "Xếp chồng các clip chặt chẽ nhất có thể trên một track, thay vì đặt kết quả trên các track riêng biệt theo track bản nhạc",
 				timeUnremapping: "Đoạn clip sẽ không thiết lập lại điểm vào của nó khi nốt nhạc xuất hiện, nhưng sẽ tiếp tục phát, hữu ích nếu bạn chỉ muốn áp dụng hiệu ứng cho nguồn",
-				preRender: {},
+				prerender: {},
 				transition: {},
 				articulations: {
 					glissando: {

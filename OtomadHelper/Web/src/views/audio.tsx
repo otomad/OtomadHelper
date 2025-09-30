@@ -152,7 +152,7 @@ export default function Audio() {
 					selectInfo={loop[0] === "auto" && t.descriptions.stream.loop.unset}
 					actions={<ThreeStageSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />}
 				/>
-				<ExpanderStreamPreRender stream="audio" />
+				<ExpanderStreamPrerender stream="audio" />
 				<EmptyMessage.YtpDisabled>
 					<Setting
 						meta={meta.stretch}

@@ -8,7 +8,7 @@ import type { textPlugins } from "views/settings/internal";
 import type { barOrBeatUnitTypes, selectGeneratedClipsType, sequentialOrders, sourceFromEnums, startTimes, trackNames } from "views/source";
 import type { trackLegatoModes } from "views/track";
 import type { arrayTypes, directionTypes, fitTypes, parityTypes } from "views/track/grid";
-import type { glissandoEffects, legatos, preRenders, stretches, transformMethods, truncates } from "views/visual";
+import type { glissandoEffects, legatos, prerenders, stretches, transformMethods, truncates } from "views/visual";
 
 namespace Config {
 	export type StartTime = typeof startTimes[number]["id"];
@@ -36,7 +36,7 @@ namespace Config {
 	export type NormalizeTime = typeof normalizeTimes[number]["id"];
 	export type SystemBackdrop = typeof systemBackdrops[number]["name"];
 	export type PrveCustomStepSequences = Partial<Record<string, number[]>>;
-	export type PreRenderAs = typeof preRenders[number]["id"];
+	export type PrerenderAs = typeof prerenders[number]["id"];
 	export type TuningMethod = typeof tuningMethods[number]["id"];
 	export type ExactTuningMethod = typeof exactTuningMethods[number]["id"];
 	export type SequentialOrder = typeof sequentialOrders[number]["id"];
@@ -127,8 +127,8 @@ namespace Config {
 			alternativeForExceedTheRange: "plugin",
 			resample: false,
 			preserveFormant: false,
-			preRender: "instant" satisfies PreRenderAs as PreRenderAs,
-			preRenderAcidTag: false,
+			prerender: "instant" satisfies PrerenderAs as PrerenderAs,
+			prerenderAcidTag: false,
 			basePitch: "C5",
 			cent: 0,
 			basePitchBased: true,
@@ -165,7 +165,7 @@ namespace Config {
 			transition: false,
 			transitionAlignment: 0,
 			transitionDuration: EMPTY_TIMECODE,
-			preRender: "instant" satisfies PreRenderAs as PreRenderAs,
+			prerender: "instant" satisfies PrerenderAs as PrerenderAs,
 			transformMethod: ["panCrop", "pictureInPicture", "transformOfx"] as TransformMethod[],
 			prve: {
 				general: {

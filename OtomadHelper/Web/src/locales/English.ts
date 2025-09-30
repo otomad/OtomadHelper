@@ -306,8 +306,8 @@ export default {
 			autoPan: "Auto pan",
 			stack: "Stack",
 			timeUnremapping: "Time unremapping", // Time un-remap-(p)ing is the antonym of time remapping.\nIf it is difficult‌ to translate, you can substitute‌ it with “Persistent timeflow”.
-			preRender: {
-				_: "Pre-render",
+			prerender: {
+				_: "Prerender",
 				instant: "Instant (Off)",
 				media: "As rendered media",
 				timeline: "As nested timeline",
@@ -972,9 +972,9 @@ export default {
 				autoPan: "Pans the audio using envelope automation",
 				stack: "Stacks the clips as tightly as possible on one track, rather than placing the results on separate tracks according to the score track",
 				timeUnremapping: "The clip will not reset its in point time when note on occurs, but will continue to play, useful if you only want to apply the effects to the source",
-				preRender: {
-					_: "Applying too many effects to the sources before generation may cause it to get stuck during generation, and for this you may need to pre-render the sources to apply the effects deeply",
-					instant: "Does not perform pre-rendering, that will copy the effects onto every generated clip",
+				prerender: {
+					_: "Applying too many effects to the sources before generation may cause it to get stuck during generation, and for this you may need to prerender the sources to apply the effects deeply",
+					instant: "Does not perform prerendering, that will copy the effects onto every generated clip",
 					media: "Renders as a single media file",
 					media_audio: "Renders as a single media file, and later annotate ACID pitch tag",
 					timeline: "Renders as a nested timeline (single VEGAS Pro project file)",
@@ -1322,6 +1322,7 @@ export default {
 				autoPan: "Auto panning",
 				stack: "Stacking",
 				timeUnremapping: "Persistent timeflow, Time remapping",
+				prerender: "Prerenders",
 				tuning: {
 					alternativeForExceedTheRange: "Alternative method for exceeding the range, Alternative for exceed the range",
 					resample: "Lock stretch and pitch, Lock to stretch, Pitch change lock, Pitch lock, Lock pitch",

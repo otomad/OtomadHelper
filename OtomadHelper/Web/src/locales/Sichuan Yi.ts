@@ -295,7 +295,7 @@ export default {
 			autoPan: "crwdns1812:0crwdne1812:0",
 			stack: "crwdns3254:0crwdne3254:0",
 			timeUnremapping: "crwdns3918:0crwdne3918:0",
-			preRender: {
+			prerender: {
 				_: "crwdns4168:0crwdne4168:0",
 				instant: "crwdns4170:0crwdne4170:0",
 				media: "crwdns4172:0crwdne4172:0",
@@ -947,7 +947,7 @@ export default {
 				autoPan: "crwdns2046:0crwdne2046:0",
 				stack: "crwdns3310:0crwdne3310:0",
 				timeUnremapping: "crwdns3920:0crwdne3920:0",
-				preRender: {
+				prerender: {
 					_: "crwdns4356:0crwdne4356:0",
 					instant: "crwdns4302:0crwdne4302:0",
 					media: "crwdns4304:0crwdne4304:0",

@@ -294,7 +294,7 @@ export default {
 			autoPan: "自动声像",
 			stack: "堆积",
 			timeUnremapping: "持续时间流",
-			preRender: {
+			prerender: {
 				_: "预渲染",
 				instant: "即时（关）",
 				media: "作渲染的媒体",
@@ -946,7 +946,7 @@ export default {
 				autoPan: "自动化控制音频的声像包络",
 				stack: "将剪辑尽可能紧密地堆积在一条轨道上，而不根据乐曲的音轨分轨放置",
 				timeUnremapping: "音符开时将不会重置剪辑的入点时间，而是继续播放，适用于如仅对素材应用效果",
-				preRender: {
+				prerender: {
 					_: "生成前对素材应用太多的效果可能会导致生成时卡死，为此你可能需要预渲染素材来深度应用效果",
 					instant: "不预渲染，这将复制效果到生成的每段剪辑上",
 					media: "渲染为单独媒体文件",
