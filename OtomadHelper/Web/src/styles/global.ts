@@ -34,7 +34,7 @@ const GlobalStyle = createGlobalStyle<{
 		forced-color-adjust: none;
 		-webkit-tap-highlight-color: transparent;
 
-		:where(&) {
+		@layer base {
 			/* color: var(--foreground-color); */
 			text-wrap: pretty;
 		}
@@ -139,6 +139,10 @@ const GlobalStyle = createGlobalStyle<{
 			text-align: justify;
 		}
 
+		&:where(:not(:lang(zh), :lang(ja), :lang(ko))) {
+			hanging-punctuation: first allow-end last;
+		}
+
 		${ifColorScheme.light} & {
 			color-scheme: only light;
 		}
@@ -194,6 +198,14 @@ const GlobalStyle = createGlobalStyle<{
 		color: ${c("fill-color-text-on-accent-selected-text")};
 		background-color: ${c("fill-color-system-target")};
 	}
+
+	// Get rid of nested disabled with multiple translucent.
+	/* [disabled] [disabled] {
+		&,
+		* {
+			opacity: 1 !important;
+		}
+	} */
 
 	#large-viewport-size {
 		position: fixed;

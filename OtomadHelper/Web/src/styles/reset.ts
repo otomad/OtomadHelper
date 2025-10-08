@@ -4,15 +4,34 @@
 export default css`
 	@layer base {
 		// Goodbye, the ugly native style.
+		input,
+		select,
+		textarea,
+		button {
+			font: inherit;
+		}
+
 		button,
 		input {
 			all: unset;
 			display: inline-block;
 		}
 
+		input,
+		textarea {
+			field-sizing: content;
+		}
+
 		figure {
 			all: unset;
 			display: block;
+			inline-size: fit-content;
+			margin-inline: auto;
+		}
+
+		figcaption {
+			contain: inline-size;
+			font-size: inherit;
 		}
 
 		ul,
@@ -22,7 +41,13 @@ export default css`
 		}
 
 		table {
+			caption-side: bottom;
 			border-spacing: 0;
+			border-collapse: collapse;
+		}
+
+		[role="region"][aria-labelledby][tabindex] {
+			overflow: auto;
 		}
 
 		th,
@@ -33,11 +58,13 @@ export default css`
 		// So images and videos default to inline elements, causing the gap below the block to be caused by you, right?
 		img,
 		video,
-		picture {
+		picture,
+		iframe {
 			display: block;
 			vertical-align: bottom; // Retarded VSCode CSS propertyIgnoredDueToDisplay complains that the "vertical-align" property is ignored due to "display: block". I declare it in this global basic style now, but if a component needs to modify it to "display: inline-block" for some special needs, wouldn't this "vertical-align" property be effective?
 			image-rendering: -webkit-optimize-contrast;
 			image-rendering: crisp-edges;
+			border-style: none;
 
 			.pixelated & {
 				image-rendering: pixelated;
@@ -51,7 +78,8 @@ export default css`
 
 		// Disabled style overrides.
 		[disabled],
-		:disabled {
+		:disabled,
+		[aria-disabled="true" i] {
 			cursor: not-allowed;
 			pointer-events: none;
 			user-select: none;
@@ -68,6 +96,7 @@ export default css`
 					cursor: not-allowed;
 					pointer-events: none !important;
 					user-select: none;
+					interactivity: inert;
 				}
 			}
 		}
@@ -86,6 +115,19 @@ export default css`
 		h6,
 		p {
 			margin: 0;
+		}
+
+		// Balance heading wrap typography.
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			&,
+			* {
+				text-wrap: balance;
+			}
 		}
 
 		// Global hyperlink style.
@@ -110,7 +152,7 @@ export default css`
 		// Allow shapes in SVG elements to exceed their boundaries.
 		svg,
 		svg * {
-			overflow: visible;
+			overflow: visible !important;
 		}
 
 		// Prevent images from being dragged.
@@ -168,6 +210,11 @@ export default css`
 			background-color: ${c("fill-color-system-caution")};
 			border-radius: 4px;
 			box-decoration-break: clone;
+		}
+
+		// No headbutting
+		:target {
+			scroll-margin: 3rlh;
 		}
 	}
 `;
