@@ -17,16 +17,16 @@ export default function Setting(props: InheritFrom<Omit<PropsOf<typeof SettingsC
 export default function Setting(props: InheritFrom<typeof Expander>): React.JSX.Element;
 export default function Setting(props: InheritFrom<typeof Expander.Item>): React.JSX.Element;
 export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof SettingsCard | typeof SettingsCardToggleSwitch | typeof Expander | typeof ExpanderRadio | typeof Expander.Item>) {
-	const [lastGotoPath, lastGotoPathTimestamp] = useSnapshot(pageStore).lastGotoPath ?? [];
+	const { lastGotoPath } = useSnapshot(pageStore);
 	const { path, cssPath, link, type } = meta;
 	// Act backstop unless explicit passing undefined.
 	if (!("title" in props)) props.title = meta.translatedTitle;
 	if (!("details" in props)) props.details = meta.translatedDetails;
 	if (!("icon" in props)) props.icon = meta.icon;
 	props.anchor = cssPath;
-	if (lastGotoPath === path) props.className = classNames(props, "focus-highlight");
-	const expanded = !!(lastGotoPath !== path && lastGotoPath?.startsWith(path));
-	const _requestExpanded = expanded ? [true, lastGotoPathTimestamp] : undefined;
+	if (lastGotoPath?.value === path) props.className = classNames(props, "focus-highlight");
+	const expanded = !!(lastGotoPath?.value !== path && lastGotoPath?.value.startsWith(path));
+	const _requestExpanded = expanded ? TransientValue.computed(lastGotoPath, () => true) : undefined;
 	const { place } = useContext(Expander.Context);
 	const isExpanderChild = place === "children";
 	const { changePage } = useSnapshot(pageStore);

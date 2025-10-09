@@ -30,7 +30,7 @@ interface PageState {
 	commandBarDisabled: boolean;
 	useSetCommandBarDisabled(): SetStateNarrow<boolean>;
 	pageChangeResolver?: PromiseWithResolvers<void>;
-	lastGotoPath?: [value: string, timestamp: number];
+	lastGotoPath?: TransientValue<string>;
 	goto(path?: string): void;
 }
 
@@ -181,7 +181,7 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 			const [page] = path.split(":");
 			const changed = setPageInternal(page.split("/"));
 			if (!path.includes(":")) return;
-			pageStore.lastGotoPath = [path, Date.now()];
+			pageStore.lastGotoPath = new TransientValue(path);
 			if (changed && pageStore.pageChangeResolver) await pageStore.pageChangeResolver.promise;
 			const getEl = () => document.querySelector(`[data-anchor="${CSS.escape(CSS.escape(path))}"]`); // Double escaping, are you kidding me?
 			const isCollapsedNow = !getEl();
