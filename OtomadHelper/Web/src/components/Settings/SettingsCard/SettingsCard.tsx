@@ -175,7 +175,7 @@ const StyledSettingsCard = styled(StyledCard)<{
 	}
 `);
 
-export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, anchor, ariaIdRef, ref, _requestExpanded, onClick, onFocus, ...htmlAttrs }: FCP<{
+export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, actionsMinWidthThreshold, anchor, ariaIdRef, ref, _requestExpanded, onClick, onFocus, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
@@ -205,6 +205,8 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	trailingGap?: number | string;
 	/** Is the orientation of the icon changed based on the writing direction? */
 	dirBasedIcon?: DirBasedIcon;
+	/** Specified the min width threshold, if the actions part is wider then it, the settings card base will be wrapped. */
+	actionsMinWidthThreshold?: number;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
 	/** Pass settings card aria ID to the parent component. */
@@ -251,6 +253,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 			>
 				<div className="base">
 					<SettingsCardBase
+						threshold={actionsMinWidthThreshold}
 						leading={(
 							<>
 								{dragHandle && (

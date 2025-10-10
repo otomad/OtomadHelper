@@ -142,7 +142,7 @@ const ExpanderChildWrapper = styled.div<{
 	` : undefined}
 `;
 
-export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, clipChildren, childrenDisabled, childRole, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor, _requestExpanded, onClickWhenChildrenDisabled, onToggle, ref }: FCP<Override<PropsOf<typeof SettingsCard>, {
+export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, clipChildren, childrenDisabled, childRole, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor, actionsMinWidthThreshold, _requestExpanded, onClickWhenChildrenDisabled, onToggle, ref }: FCP<Override<PropsOf<typeof SettingsCard>, {
 	/** The other action control area on the right side of the component. */
 	actions?: ReactNode;
 	/** Expanded initially? */
@@ -164,7 +164,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	/** Occurs when the expander expanded or collapsed. */
 	onToggle?(expanded: boolean): void;
 }>>) {
-	const settingsCardProps = { icon, title, details, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor };
+	const settingsCardProps = { icon, title, details, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor, actionsMinWidthThreshold };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
 	const handleClick = useOnNestedButtonClick(() => !childrenDisabled ? setInternalExpanded(expanded => !expanded) : onClickWhenChildrenDisabled?.());
 	useUpdateEffect(() => setInternalExpanded(expanded), [expanded]);

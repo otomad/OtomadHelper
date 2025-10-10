@@ -146,7 +146,7 @@ const StyledExpanderItem = styled.div<{
 	`)}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, noDivider, ariaHiddenForText, nowrap = false, anchor, children, disabled = false, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, noDivider, ariaHiddenForText, nowrap = false, anchor, children, disabled = false, actionsMinWidthThreshold, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -165,6 +165,8 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	nowrap?: boolean;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
+	/** Specified the min width threshold, if the actions part is wider then it, the settings card base will be wrapped. */
+	actionsMinWidthThreshold?: number;
 }, "div">) {
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 	return (
@@ -180,6 +182,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 		>
 			<InteractionStateContext value={{ disabled }}>
 				<SettingsCard.Base
+					threshold={actionsMinWidthThreshold}
 					leading={(
 						<>
 							{icon ? typeof icon === "string" ? <Icon name={icon} /> : icon : <Icon shadow />}

@@ -388,7 +388,14 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 	return (
 		<Expander.AequilateTextItems>
 			{!isCustomInitialStepClass && (
-				<StyledInitialStep title={tc.prve.initialStep} icon="replay" role="region" className={ifColorScheme.forceMotion} ariaHiddenForText>
+				<StyledInitialStep
+					title={tc.prve.initialStep}
+					icon="replay"
+					role="region"
+					className={ifColorScheme.forceMotion}
+					ariaHiddenForText
+					actionsMinWidthThreshold={0}
+				>
 					<ItemsView<number[]> className="initial-step-items" view="grid" current={[initialStep, setInitialStep]} itemWidth={100} aria-label={t.prve.initialStep}>
 						{forMap(frames, j => {
 							const i = (j + frames - 1) % frames; // Change the order from `0 1 2 3` to `3 0 1 2`.
@@ -437,7 +444,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 				</StyledInitialStep>
 			)}
 			{(initialStep.length > 0 || isCustomInitialStepClass) && !isRandom && (
-				<Expander.Item title={tc.prve.stepSequence} icon="flow">
+				<Expander.Item title={tc.prve.stepSequence} icon="flow" actionsMinWidthThreshold={0}>
 					<StepSequence>
 						{initialStep.map((frame, i) => (
 							<div key={i} className="step-sequence-item" data-frame={frame}>
