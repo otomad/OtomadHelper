@@ -80,11 +80,7 @@ export const settingsMetasInput = {
 		trackOrChannel: { icon: "midi" },
 	},
 	audio: {
-		preferredTrack: {
-			title: t.source.preferredTrack,
-			details: t.descriptions.source.preferredTrack,
-			icon: "preferred_track",
-		},
+		preferredTrack: { icon: "preferred_track", title: t.source.preferredTrack },
 		createGroups: { icon: "group" },
 		playbackRate: playbackRate(),
 		normalize: { icon: "normalize" },
@@ -155,11 +151,7 @@ export const settingsMetasInput = {
 		parameters: subheader(t.subheaders.advanced),
 	},
 	visual: {
-		preferredTrack: {
-			title: t.source.preferredTrack,
-			details: t.descriptions.source.preferredTrack,
-			icon: "preferred_track",
-		},
+		preferredTrack: { icon: "preferred_track", title: t.source.preferredTrack },
 		createGroups: { icon: "group" },
 		playbackRate: playbackRate(),
 		loop: { icon: "loop" },

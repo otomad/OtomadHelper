@@ -887,7 +887,6 @@ export default {
 				trim: "Adjusts the in or out point time of the specified source",
 				startTime: "Specify when to start generating from the project",
 				preferredTrack: {
-					_: "Allows you to specify an existing track to generate (except multitrack)",
 					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth-to-last track.\nIf any preferred track is specified in Audio or Visual, that will override this option.",
 					belowAdjustmentTracks: {
 						versionRequest: "Note: This feature requires VEGAS Pro ≥ 19. The current version is {{version}}.",
@@ -986,6 +985,7 @@ export default {
 				autoPan: "Pans the audio using envelope automation",
 				stack: "Stacks the clips as tightly as possible on one track, rather than placing the results on separate tracks according to the score track",
 				timeUnremapping: "The clip will not reset its in point time when note on occurs, but will continue to play, useful if you only want to apply the effects to the source",
+				preferredTrack: "Allows you to specify an existing track to generate (except multitrack)",
 				prerender: {
 					_: "Applying too many effects to the sources before generation may cause it to get stuck during generation, and for this you may need to prerender the sources to apply the effects deeply",
 					instant: "Does not perform prerendering, that will copy the effects onto every generated clip",

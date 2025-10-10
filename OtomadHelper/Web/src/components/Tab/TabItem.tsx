@@ -1,29 +1,23 @@
-const StyledTabItemWrapper = styled.div`
-	.tab-bar.vertical & {
-		padding: 1.5px 5px;
-	}
-`;
-
-const tabItemHover = (css)`:is(:hover, ${StyledTabItemWrapper}:hover > *)`;
-const tabItemActive = (css)`:is(:active, ${StyledTabItemWrapper}:active > *)`;
-
 const StyledTabItem = styled.button`
 	position: relative;
 	display: flex;
 	align-items: center;
 	min-block-size: 30px;
-	inline-size: -webkit-fill-available;
-	inline-size: -moz-available;
-	inline-size: stretch;
 	overflow-inline: hidden;
-	border-radius: 3px;
+	border-radius: 8px / 4.5px; // Original: 3px; by adding with the border width: (3px + 5px) / (3px + 1.5px).
 
 	.tab-bar.vertical & {
 		gap: 16px;
+		inline-size: -webkit-fill-available;
+		inline-size: -moz-available;
+		inline-size: stretch;
 		padding-block: 9px 11px;
 		padding-inline: 16px 12px;
+		background-clip: padding-box;
+		border: solid transparent;
+		border-width: 1.5px 5px;
 
-		&${tabItemHover},
+		&:hover,
 		&.selected {
 			background-color: ${c("fill-color-subtle-secondary")};
 
@@ -47,12 +41,12 @@ const StyledTabItem = styled.button`
 			}
 		}
 
-		&:not(.selected)${tabItemActive},
-		&.selected:not(${tabItemActive})${tabItemHover} {
+		&:not(.selected):active,
+		&.selected:not(:active):hover {
 			background-color: ${c("fill-color-subtle-tertiary")};
 		}
 
-		&${tabItemActive} > * {
+		&:active > * {
 			opacity: ${c("pressed-text-opacity")};
 		}
 	}
@@ -151,47 +145,45 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 	/** @private Use the vertical NavigationView style? */
 	_vertical?: boolean;
 }, GenericElement>) {
-	const tabItemWrapperEl = useDomRef<"div">(), tabItemEl = useDomRef<"button">();
+	const tabItemEl = useDomRef<"button">();
 
 	const scrollIntoView = (force = false) => {
 		if ((selected || force) && autoScrollIntoView)
-			scrollIntoViewAlt(tabItemWrapperEl, !vertical);
+			scrollIntoViewAlt(tabItemEl, !vertical);
 	};
 	useEffect(() => scrollIntoView(), [selected]);
 	useKeyboardFocus(tabItemEl, () => scrollIntoView(true));
 
 	return (
 		<Tooltip placement="right" offset={5} disabled={!collapsed} title={children} applyAriaLabel={false}>
-			<StyledTabItemWrapper ref={tabItemWrapperEl} {...htmlAttrs}>
-				<StyledTabItem
-					ref={tabItemEl}
-					type="button"
-					tabIndex={focusable ? 0 : -1}
-					role="tab"
-					aria-selected={selected}
-					aria-current={selected ? ariaCurrentWhenSelected : undefined}
-					onClick={e => { onClick?.(e); scrollIntoView(true); }}
-					{...htmlAttrs}
-					className={{ selected }}
-				>
-					{(icon || animatedIcon) && (
-						<div className="badge-wrapper">
-							{icon && !animatedIcon && <Icon name={icon} />}
-							{animatedIcon && <AnimatedIcon name={animatedIcon} />}
-							<BadgeItem hidden={!(vertical && collapsed)} badge={badge} />
-						</div>
-					)}
-					<div className="badge-wrapper fill">
-						<div className="text">{children}</div>
-						{!vertical && <BadgeItem badge={badge} />}
+			<StyledTabItem
+				ref={tabItemEl}
+				type="button"
+				tabIndex={focusable ? 0 : -1}
+				role="tab"
+				aria-selected={selected}
+				aria-current={selected ? ariaCurrentWhenSelected : undefined}
+				onClick={e => { onClick?.(e); scrollIntoView(true); }}
+				{...htmlAttrs}
+				className={{ selected }}
+			>
+				{(icon || animatedIcon) && (
+					<div className="badge-wrapper">
+						{icon && !animatedIcon && <Icon name={icon} />}
+						{animatedIcon && <AnimatedIcon name={animatedIcon} />}
+						<BadgeItem hidden={!(vertical && collapsed)} badge={badge} />
 					</div>
-					{vertical && (
-						<div className="badge-wrapper-adjust-beacon">
-							<BadgeItem badge={badge} />
-						</div>
-					)}
-				</StyledTabItem>
-			</StyledTabItemWrapper>
+				)}
+				<div className="badge-wrapper fill">
+					<div className="text">{children}</div>
+					{!vertical && <BadgeItem badge={badge} />}
+				</div>
+				{vertical && (
+					<div className="badge-wrapper-adjust-beacon">
+						<BadgeItem badge={badge} />
+					</div>
+				)}
+			</StyledTabItem>
 		</Tooltip>
 	);
 }

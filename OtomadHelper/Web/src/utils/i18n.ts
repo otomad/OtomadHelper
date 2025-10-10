@@ -302,5 +302,9 @@ export function i18nExists(getKey: ((t: Trans) => Any) | string, context?: strin
 	const t = new PathObject() as Trans;
 	let path = typeof getKey === "string" ? getKey : getKey(t) + "";
 	if (context) path += `_${context}`;
-	return i18n.exists(path, { fallbackLng: enableFallbackLang ? undefined : false });
+	const fallbackLng = enableFallbackLang ? undefined : false;
+	const notCategoryExists = i18n.exists(path, { fallbackLng, returnObjects: false });
+	if (notCategoryExists) return true;
+	if (notCategoryExists === i18n.exists(path, { fallbackLng, returnObjects: true })) return false;
+	return i18n.exists(path + "._", { fallbackLng, returnObjects: false });
 }

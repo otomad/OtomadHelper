@@ -449,9 +449,9 @@ const StyledNavigationView = styled.div<{
 
 	${() => {
 		const selectors = forMap(NAV_ITEMS_ASSUMED_COUNT, i =>
-			`&:has(.nav-items .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item:active) .nav-items .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item .animated-icon`, 1);
+			`&:has(.nav-items .tooltip-child-wrapper:nth-of-type(${i}) .tab-item:active) .nav-items .tooltip-child-wrapper:nth-of-type(${i}) .tab-item .animated-icon`, 1);
 		selectors.push(...forMap(NAV_ITEMS_BOTTOM_ASSUMED_COUNT, i =>
-			`&:has(.nav-items-bottom .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item:active) .nav-items-bottom .tooltip-child-wrapper:nth-of-type(${i}) .tab-item-wrapper .tab-item .animated-icon`, 1));
+			`&:has(.nav-items-bottom .tooltip-child-wrapper:nth-of-type(${i}) .tab-item:active) .nav-items-bottom .tooltip-child-wrapper:nth-of-type(${i}) .tab-item .animated-icon`, 1));
 		return css`
 			${selectors.join(", ")} {
 				--state: pressed;

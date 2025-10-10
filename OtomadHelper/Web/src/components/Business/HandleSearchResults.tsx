@@ -6,14 +6,15 @@ const MAX_LENGTH = 10;
 const IconWrapper = styled.div({});
 
 const StyledSearchResult = styled.button`
-	--padding: 8px;
 	--icon-size: 20px;
 	position: relative;
 	display: flex;
 	gap: 16px;
 	align-items: flex-start;
 	inline-size: 100%;
-	padding: var(--padding);
+	padding: 7px;
+	background-clip: padding-box;
+	border: 1px solid transparent;
 	border-radius: 4px;
 
 	${styledSimpleIndicator};

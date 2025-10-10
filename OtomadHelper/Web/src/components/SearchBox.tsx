@@ -6,7 +6,7 @@ const StyledDataList = styled.div`
 	z-index: 9;
 	max-block-size: 100%;
 	inline-size: anchor-size(inline);
-	padding: 4px;
+	padding: 3px;
 	overflow-block: auto;
 	scroll-behavior: auto;
 	border-block-start-width: 0;
