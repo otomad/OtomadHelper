@@ -255,6 +255,10 @@
 		return index !== -1 ? index : undefined;
 	};
 
+	Array.prototype.hole = function (start, end?: number) {
+		return this.slice(0, start).concat(this.slice(end ?? start + 1));
+	};
+
 	makePrototypeKeysNonEnumerable(Array);
 }
 

@@ -478,6 +478,7 @@ export default {
 					_: "Parity pattern",
 					unflipped: "Unflipped",
 					allFlipped: "All flipped",
+					random: "Randomly flipped",
 					evenColumns: "Even columns",
 					oddColumns: "Odd columns",
 					evenRows: "Even rows",

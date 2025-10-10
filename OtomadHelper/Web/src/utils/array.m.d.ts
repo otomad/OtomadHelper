@@ -630,6 +630,27 @@ declare interface Array<T> {
 	 * ```
 	 */
 	indexOfDefault(searchElement: any, fromIndex?: number): number | undefined;
+
+	/**
+	 * The hole is `[holeStart, holeEnd)`.
+	 *
+	 * And `Array.prototype.hole(holeStart, holeEnd)` will create a new array which contains `[0, holeStart) ∪ [holeEnd, end]`.
+	 *
+	 * @example
+	 * ```javascript
+	 * [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].hole(3, 6); // [0, 1, 2, 6, 7, 8, 9]
+	 * ```
+	 */
+	hole(holeStart: number, holeEnd: number): T;
+	/**
+	 * Create a new array which contains `[0, hole) ∪ (hole, end]`.
+	 *
+	 * @example
+	 * ```javascript
+	 * [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].hole(4); // [0, 1, 2, 3, 5, 6, 7, 8, 9]
+	 * ```
+	 */
+	hole(hole: number): T;
 }
 
 declare interface ReadonlyArray<T> extends Pick<Array<T>,

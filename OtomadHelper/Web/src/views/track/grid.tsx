@@ -5,7 +5,7 @@ import ApprovalsAppIcon from "assets/svg/approvals_app.svg?react";
 export /* @internal */ const arrayTypes = ["square", "fixed"] as const;
 export /* @internal */ const directionTypes = ["lr-tb", "tb-lr", "rl-tb", "tb-rl"] as const;
 export /* @internal */ const fitTypes = ["cover", "contain"] as const;
-export /* @internal */ const parityTypes = ["unflipped", "even_columns", "odd_columns", "even_rows", "odd_rows", "even_checker", "odd_checker", "even_dots", "odd_dots", "even_gridlines", "odd_gridlines", "all_flipped"] as const;
+export /* @internal */ const parityTypes = ["unflipped", "even_columns", "odd_columns", "even_rows", "odd_rows", "even_checker", "odd_checker", "even_dots", "odd_dots", "even_gridlines", "odd_gridlines", "all_flipped", "random"] as const;
 const parityTypes_rowsFirst = [parityTypes[0], ...parityTypes.slice(3, 5), ...parityTypes.slice(1, 3), ...parityTypes.slice(5)] as const;
 type GridParityType = typeof parityTypes[number];
 const MAX_COL_ROW = 100;
@@ -23,11 +23,12 @@ const getGridUnitTypeName = (unit: WebMessageEvents.GridUnitType, count: number)
 
 export /* @internal */ const getParityText = (parity: GridParityType) => t.track.grid.parity[new VariableName(parity).camel];
 export /* @internal */ const getParityIcon = (parity: GridParityType): DeclaredIcons =>
-	parity === "unflipped" ? "dismiss_square" : parity === "all_flipped" ? "checkmark_square" : `parity/${parity}`;
+	parity === "unflipped" ? "dismiss_square" : parity === "all_flipped" ? "checkmark_square" : parity === "random" ? "question_square" : `parity/${parity}`;
 
 export /* @internal */ const matchParity = (parity: GridParityType, column: number, row: number): boolean => ({
 	unflipped: false,
 	all_flipped: true,
+	random: Math.random() >= 0.5,
 	even_columns: !(column % 2),
 	odd_columns: !!(column % 2),
 	even_rows: !(row % 2),

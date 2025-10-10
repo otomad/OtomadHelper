@@ -5,7 +5,7 @@ const gradients = [
 	{ group: "gradually", items: ["rainbow", "graSaturated", "graContrasted", "threshold"] },
 	{ group: "alternately", items: ["altChromatic", "altNegative", "altLuminInvert", "altHueInvert", "rotInvert"] },
 ];
-const parityTypes = [_parityTypes[0], _parityTypes.at(-1)!, ..._parityTypes.slice(1, -1)] as const;
+const parityTypes = [_parityTypes[0], _parityTypes.at(-2)!, ..._parityTypes.slice(1).hole(-2)] as (typeof _parityTypes[number])[];
 const DEFAULT_ITEM_WIDTH = 325;
 
 export default function Gradient() {

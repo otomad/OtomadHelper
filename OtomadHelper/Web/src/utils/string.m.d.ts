@@ -131,23 +131,23 @@ declare interface String {
 	/**
 	 * The hole is `[holeStart, holeEnd)`.
 	 *
-	 * And `String.prototype.holeString(holeStart, holeEnd)` will create a substring which contains `[0, holeStart) ∪ [holeEnd, end]`.
+	 * And `String.prototype.hole(holeStart, holeEnd)` will create a substring which contains `[0, holeStart) ∪ [holeEnd, end]`.
 	 *
 	 * @example
 	 * ```javascript
-	 * console.log("hello world!".holeString(3, 6)); // Output: "helworld!"
+	 * console.log("hello world!".hole(3, 6)); // Output: "helworld!"
 	 * ```
 	 */
-	holeString(holeStart: number, holeEnd: number): string;
+	hole(holeStart: number, holeEnd: number): string;
 	/**
 	 * Create a substring which contains `[0, hole) ∪ (hole, end]`.
 	 *
 	 * @example
 	 * ```javascript
-	 * console.log("hello world!".holeString(4)); // Output: "hell world!"
+	 * console.log("hello world!".hole(4)); // Output: "hell world!"
 	 * ```
 	 */
-	holeString(hole: number): string;
+	hole(hole: number): string;
 
 	/**
 	 * A string that gets so long you need to break it over multiple lines.

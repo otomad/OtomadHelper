@@ -31,7 +31,7 @@ import { spacing } from "pangu";
 		return this.replaceAll(/\s/g, "");
 	};
 
-	String.prototype.holeString = function (start, end?: number) {
+	String.prototype.hole = function (start, end?: number) {
 		return this.realSlice(0, start) + this.realSlice(end ?? start + 1);
 	};
 
