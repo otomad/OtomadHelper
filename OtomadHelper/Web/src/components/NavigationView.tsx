@@ -401,6 +401,7 @@ const StyledNavigationView = styled.div<{
 
 					&:not(:has(> .empty-message))::after {
 						content: "";
+						display: block;
 						flex-shrink: 0;
 						block-size: 18px;
 					}

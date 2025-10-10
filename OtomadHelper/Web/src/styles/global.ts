@@ -44,6 +44,20 @@ const GlobalStyle = createGlobalStyle<{
 		`}
 	}
 
+	@layer base {
+		[lang] {
+			&:is(:lang(zh), :lang(ja), :lang(ko)) {
+				text-align: justify;
+				hanging-punctuation: none;
+			}
+
+			&:is(:not(:lang(zh), :lang(ja), :lang(ko))) {
+				text-align: start;
+				hanging-punctuation: first allow-end last;
+			}
+		}
+	}
+
 	:lang(zh-Hant) {
 		&,
 		&::before,
@@ -134,14 +148,6 @@ const GlobalStyle = createGlobalStyle<{
 		accent-color: var(--accent-color);
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-
-		&:where(:lang(zh), :lang(ja), :lang(ko)) {
-			text-align: justify;
-		}
-
-		&:where(:not(:lang(zh), :lang(ja), :lang(ko))) {
-			hanging-punctuation: first allow-end last;
-		}
 
 		${ifColorScheme.light} & {
 			color-scheme: only light;

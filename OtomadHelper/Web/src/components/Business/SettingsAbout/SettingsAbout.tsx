@@ -61,6 +61,7 @@ export default function SettingsAbout() {
 	if (hasTranslator) collaborators.set(t.settings.about.translator, formattedTranslator);
 	const { version } = useAboutApp();
 	const [showTranslators, setShowTranslators] = useState(false);
+	const { pushPage } = useSnapshot(pageStore);
 
 	return (
 		<>
@@ -80,9 +81,9 @@ export default function SettingsAbout() {
 					<Link href={links.otomadHelper.repository}>{t.settings.about.repositoryLink}</Link>
 					<Link href={links.otomadHelper.changelog}>{t.settings.about.changelog}</Link>
 					<Link href={links.otomadHelper.issues}>{t.settings.about.feedback}</Link>
-					<Link href={links.gpl3}>{t.settings.about.license}</Link>
 					<Link onClick={() => setShowTranslators(true)} aria-haspopup="dialog">{t.settings.about.translators}</Link>
 					<Link href={links.crowdin.contributeTranslation[currentLanguage]}>{t.settings.about.translation}</Link>
+					<Link onClick={() => pushPage("license")}>{t.titles.license}</Link>
 				</div>
 				<Translators shown={[showTranslators, setShowTranslators]} />
 			</StyledSettingsAbout>

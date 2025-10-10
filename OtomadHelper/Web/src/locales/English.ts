@@ -43,6 +43,7 @@ export default {
 			gradient: "Gradient Tracks",
 			internal: "Global Internal",
 			internal_long: "VEGAS Pro Global Internal Preferences",
+			license: "License (GPL-3.0)",
 		},
 		source: {
 			from: "Source from",
@@ -787,7 +788,6 @@ export default {
 				translation: "Contribute translation",
 				feedback: "Feedback",
 				changelog: "Changelog",
-				license: "License",
 				roadmap: "Roadmap",
 				version: "Version",
 				author: "Author",

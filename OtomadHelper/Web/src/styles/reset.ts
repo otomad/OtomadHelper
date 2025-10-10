@@ -38,6 +38,12 @@ export default css`
 		ol,
 		li {
 			all: unset;
+			display: block;
+		}
+
+		li {
+			display: list-item;
+			list-style: none;
 		}
 
 		table {
