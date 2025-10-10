@@ -175,7 +175,7 @@ const StyledSettingsCard = styled(StyledCard)<{
 	}
 `);
 
-export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, actionsMinWidthThreshold, anchor, ariaIdRef, ref, _requestExpanded, onClick, onFocus, ...htmlAttrs }: FCP<{
+export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, wrapActionsWhenNarrow, anchor, ariaIdRef, ref, _requestExpanded, onClick, onFocus, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
@@ -190,10 +190,10 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	actionIcon?: DeclaredIcons | "" | boolean;
 	/**
 	 * Component form type.
-	 * - `container` - A normal `<div>` box, cannot be clicked.
-	 * - `button` - A button that can be clicked, default trailing icon is chevron right.
-	 * - `expander` - An accordion item that can be expanded or collapsed, default trailing icon is chevron down.
-	 * - `container-but-button` - Similar to `container`, but it is a `<button>` instead of a `<div>`,
+	 * - `"container"` - A normal `<div>` box, cannot be clicked.
+	 * - `"button"` - A button that can be clicked, default trailing icon is chevron right.
+	 * - `"expander"` - An accordion item that can be expanded or collapsed, default trailing icon is chevron down.
+	 * - `"container-but-button"` - Similar to `"container"`, but it is a `<button>` instead of a `<div>`,
 	 * useful when dynamically change the `type`, the tag name will not be changed, thus avoid the re-rendering element issue.
 	 */
 	type?: "container" | "button" | "expander" | "container-but-button";
@@ -205,8 +205,14 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	trailingGap?: number | string;
 	/** Is the orientation of the icon changed based on the writing direction? */
 	dirBasedIcon?: DirBasedIcon;
-	/** Specified the min width threshold, if the actions part is wider then it, the settings card base will be wrapped. */
-	actionsMinWidthThreshold?: number;
+	/**
+	 * Specify that when the window size is too narrow, if the actions cannot be fitted in, should the actions be wrapped to the second row?
+	 * - `true`: The actions wrapped to the second row.
+	 * - `false`: The actions stay on the first row and squeeze the text content before them.
+	 * - `undefined`: It will auto detect whether the wrapping is needed. The default behavior is: wrapping when the actions are wider than 200px.
+	 * @default undefined
+	 */
+	wrapActionsWhenNarrow?: boolean;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
 	/** Pass settings card aria ID to the parent component. */
@@ -253,7 +259,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 			>
 				<div className="base">
 					<SettingsCardBase
-						threshold={actionsMinWidthThreshold}
+						wrap={wrapActionsWhenNarrow}
 						leading={(
 							<>
 								{dragHandle && (
@@ -320,20 +326,22 @@ const StyledLeading = styled.div`
 	}
 `;
 
-function SettingsCardBase({ threshold = SETTINGS_CARD_TRAILING_MAX_WIDTH, leading, trailing }: FCP<{
-	/** Specified the min width threshold, if the trailing part is wider then it, the settings card base will be wrapped. */
+function SettingsCardBase({ threshold = SETTINGS_CARD_TRAILING_MAX_WIDTH, leading, trailing, wrap }: FCP<{
+	/** Specified the min width threshold, if the trailing part is wider then it, the settings card base will be wrapped. Unit: px. */
 	threshold?: number;
 	/** Leading part. */
 	leading?: ReactNode;
 	/** Trailing part. */
 	trailing?: ReactNode;
+	/** Should it force wrapping or force not wrapping? Defaults to auto-detect. */
+	wrap?: boolean;
 	children?: never;
 }, "div">) {
-	const [wrapped, setWrapped] = useState(false);
+	const [wrapped, setWrapped] = useState(wrap ?? false);
 	const trailingEl = useDomRef<"div">();
 
 	useMountEffect(() => {
-		if (!trailingEl.current) return;
+		if (!trailingEl.current || wrap !== undefined) return;
 		const observer = new ResizeObserver(([{ borderBoxSize: [{ inlineSize }] }]) => {
 			setWrapped(inlineSize > threshold);
 		});

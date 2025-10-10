@@ -146,7 +146,7 @@ const StyledExpanderItem = styled.div<{
 	`)}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, noDivider, ariaHiddenForText, nowrap = false, anchor, children, disabled = false, actionsMinWidthThreshold, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, noDivider, ariaHiddenForText, nowrap = false, anchor, children, disabled = false, wrapActionsWhenNarrow, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -165,8 +165,14 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	nowrap?: boolean;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
-	/** Specified the min width threshold, if the actions part is wider then it, the settings card base will be wrapped. */
-	actionsMinWidthThreshold?: number;
+	/**
+	 * Specify that when the window size is too narrow, if the actions cannot be fitted in, should the actions be wrapped to the second row?
+	 * - `true`: The actions wrapped to the second row.
+	 * - `false`: The actions stay on the first row and squeeze the text content before them.
+	 * - `undefined`: It will auto detect whether the wrapping is needed. The default behavior is: wrapping when the actions are wider than 200px.
+	 * @default undefined
+	 */
+	wrapActionsWhenNarrow?: boolean;
 }, "div">) {
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 	return (
@@ -182,7 +188,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 		>
 			<InteractionStateContext value={{ disabled }}>
 				<SettingsCard.Base
-					threshold={actionsMinWidthThreshold}
+					wrap={wrapActionsWhenNarrow}
 					leading={(
 						<>
 							{icon ? typeof icon === "string" ? <Icon name={icon} /> : icon : <Icon shadow />}

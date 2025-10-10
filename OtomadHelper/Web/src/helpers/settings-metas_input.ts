@@ -1,5 +1,5 @@
 import type { ISettingMeta, RedirectedTrans } from "./settings-metas";
-const t = new PathObject() as RedirectedTrans;
+const { t } = new PathObject<RedirectedTrans>();
 
 export const settingsMetasInput = {
 	source: {
@@ -140,6 +140,7 @@ export const settingsMetasInput = {
 		},
 		mapping: {
 			type: "subheader",
+			icon: "flow",
 			items: {
 				velocity: { icon: "signal" },
 				pitch: { icon: "music_note" },
@@ -148,7 +149,7 @@ export const settingsMetasInput = {
 				progress: { icon: "progress_bar" },
 			},
 		},
-		parameters: subheader(t.subheaders.advanced),
+		parameters: subheader(t.subheaders.parameters),
 	},
 	visual: {
 		preferredTrack: { icon: "preferred_track", title: t.source.preferredTrack },
@@ -188,7 +189,7 @@ export const settingsMetasInput = {
 			},
 		},
 		transformMethod: { icon: "zoom_fit" },
-		effects: subheader(t.subheaders.advanced),
+		effects: subheader(t(2).titles.effect),
 		articulations: {
 			type: "subheader",
 			items: {
@@ -205,6 +206,7 @@ export const settingsMetasInput = {
 		},
 		mapping: {
 			type: "subheader",
+			icon: "flow",
 			items: {
 				velocity: { icon: "signal" },
 				pitch: { icon: "music_note" },
@@ -213,7 +215,7 @@ export const settingsMetasInput = {
 				progress: { icon: "progress_bar" },
 			},
 		},
-		parameters: subheader(t.subheaders.advanced),
+		parameters: subheader(t.subheaders.parameters),
 	},
 	visual_prve: {
 		control: { icon: "prve_control_general" },

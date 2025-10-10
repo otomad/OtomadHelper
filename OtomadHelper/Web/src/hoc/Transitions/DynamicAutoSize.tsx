@@ -7,14 +7,14 @@ export default function DynamicAutoSize({ specified, children }: FCP<{
 	// lockSize?: boolean;
 }, "section">) {
 	const el = useDomRef<"section">();
-
+	const reduceMotion = useMediaQuery.reduceMotion();
 	const size = useRef({ width: NaN, height: NaN });
 	const animating = useRef(false);
 	const pxify = (...numbers: number[]) => numbers.map(number => number + "px");
 	const validateSize = (size: number) => Number.isFinite(size) && size !== 0; // Special requirements: The use case will not be met at the moment when the size is 0.
 
 	useEffect(() => {
-		if (!el.current) return;
+		if (!el.current || reduceMotion) return;
 		const observer = new ResizeObserver(([{ contentRect: { width, height } }]) => {
 			width = Math.round(width); height = Math.round(height);
 			const { width: prevWidth, height: prevHeight } = size.current;
@@ -35,7 +35,7 @@ export default function DynamicAutoSize({ specified, children }: FCP<{
 		});
 		observer.observe(el.current);
 		return () => observer.disconnect();
-	}, [specified]);
+	}, [specified, reduceMotion]);
 
 	return cloneRef(children, el);
 }

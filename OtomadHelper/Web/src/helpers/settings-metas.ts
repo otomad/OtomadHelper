@@ -4,7 +4,7 @@ import { redirectIcon } from "src/ShellPage";
 import type { Trans } from "utils/i18n";
 import { tf as $$t } from "utils/i18n";
 import { settingsMetasInput } from "./settings-metas_input";
-const t = new PathObject() as RedirectedTrans;
+const { t } = new PathObject<RedirectedTrans>();
 
 type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup" | "subheader";
 
@@ -46,10 +46,10 @@ export class SettingMeta implements ISettingMeta {
 	/** Path of unique identifiers to it. Auto generated. CSS escaped. */
 	get cssPath() { return this.path !== undefined ? CSS.escape(this.path) : undefined!; }
 
-	get translatedTitle() { return $t(this.title); }
+	get translatedTitle() { const title = $t(this.title); if (!title) { console.error(this.title); debugger; } return title; }
 	get translatedDetails() { return $t(this.details); }
 	get translatedAliases() {
-		const _aliases = this.aliases?.map(alias => $t(alias)).toCompacted();
+		const _aliases = this.aliases?.map(alias => $t(alias, false)).toCompacted();
 		return _aliases?.join(", ").split(/,\s*/).map(alias => alias.trim()).filter(alias => alias !== this.translatedTitle).toCompacted() ?? [];
 	}
 
@@ -178,11 +178,18 @@ function accessPath(root: AnyObject, path: string, overwrite: unknown) {
 	}, root);
 }
 
-function $t(key?: string) {
+function $t(key: string | undefined, enableFallbackLang: boolean = true) {
 	if (!key) return;
 	const keys = key.split(".");
-	if (!i18nExists(key, undefined, false)) return;
-	return keys.reduce<AnyObject>((root, key) => root[key], $$t)?.toString();
+	let plural: number | undefined;
+	if (keys[0]?.match(/^t(?=[.(]|$)/)) {
+		const func = keys.shift()!;
+		key = keys.join(".");
+		const plural_string = func.match(/^t\((\d+)\)$/)?.[1];
+		if (plural_string) plural = +plural_string;
+	}
+	if (!i18nExists(key, undefined, enableFallbackLang)) return;
+	return keys.reduce<AnyObject>((root, key) => root[key], $$t(plural))?.toString();
 }
 
 const settingMetaSearchResultProperties = ["title", "alias", "details"] as const;
@@ -206,9 +213,9 @@ function updateSettingsMetasSearchMap() {
 	};
 	for (const meta of metas) {
 		let { title, details, aliases: _aliases } = meta;
-		if ((title = $t(title))) add(title, "title", meta);
-		if ((details = $t(details))) add(details, "details", meta);
-		if ((_aliases = _aliases?.map(alias => $t(alias)).toCompacted())) {
+		if ((title = $t(title, false))) add(title, "title", meta);
+		if ((details = $t(details, false))) add(details, "details", meta);
+		if ((_aliases = _aliases?.map(alias => $t(alias, false)).toCompacted())) {
 			const aliases = _aliases?.join(", ").split(/[,，、]\s*/).map(alias => alias.trim()).filter(alias => alias !== title).toCompacted() ?? [];
 			for (const [i, alias] of aliases.entries())
 				add(alias, "alias", meta, i);

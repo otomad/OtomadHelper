@@ -217,5 +217,10 @@ export default {
 		animation-range: 0 1em, calc(100% - 1em) 100%;
 		overflow-${axis}: auto;
 		overscroll-behavior-${axis}: auto;
+
+		${ifColorScheme.reduceTransparency} {
+			mask: none;
+			animation: none;
+		}
 	`,
 };

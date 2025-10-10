@@ -222,7 +222,10 @@ export /* @internal */ const StyledTextBox = styled.div<{
 		}
 
 		@supports (caret-animation: manual) {
-			caret-animation: manual;
+			caret-animation: if(
+				media(prefers-reduced-motion: no-preference): manual;
+				else: auto;
+			);
 
 			&:focus {
 				animation: ${keyframes`

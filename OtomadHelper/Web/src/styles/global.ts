@@ -270,8 +270,10 @@ const GlobalStyle = createGlobalStyle<{
 			&::after {
 				scroll-behavior: auto;
 				transition-duration: 0s !important;
+				transition-timing-function: step-start !important;
 				transition-delay: 0s !important;
 				animation-duration: 0s !important;
+				animation-timing-function: step-start !important;
 				animation-delay: 0s !important;
 			}
 		}
@@ -279,10 +281,12 @@ const GlobalStyle = createGlobalStyle<{
 
 	// System requested high contrast theme.
 	${ifColorScheme.contrast} {
-		*,
-		::before,
-		::after {
-			backdrop-filter: none !important;
+		:not(.focus-highlight-ring) {
+			&,
+			&::before,
+			&::after {
+				backdrop-filter: none !important;
+			}
 		}
 
 		:root& {

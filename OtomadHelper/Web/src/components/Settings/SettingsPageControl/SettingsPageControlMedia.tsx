@@ -52,6 +52,10 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 
 		${ifColorScheme.reduceTransparency} {
 			filter: none !important;
+
+			${ifColorScheme.contrast} & {
+				filter: url("#posterize") !important;
+			}
 		}
 	}
 

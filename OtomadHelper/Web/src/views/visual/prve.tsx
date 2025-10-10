@@ -394,7 +394,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 					role="region"
 					className={ifColorScheme.forceMotion}
 					ariaHiddenForText
-					actionsMinWidthThreshold={0}
+					wrapActionsWhenNarrow
 				>
 					<ItemsView<number[]> className="initial-step-items" view="grid" current={[initialStep, setInitialStep]} itemWidth={100} aria-label={t.prve.initialStep}>
 						{forMap(frames, j => {
@@ -444,7 +444,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 				</StyledInitialStep>
 			)}
 			{(initialStep.length > 0 || isCustomInitialStepClass) && !isRandom && (
-				<Expander.Item title={tc.prve.stepSequence} icon="flow" actionsMinWidthThreshold={0}>
+				<Expander.Item title={tc.prve.stepSequence} icon="flow" wrapActionsWhenNarrow>
 					<StepSequence>
 						{initialStep.map((frame, i) => (
 							<div key={i} className="step-sequence-item" data-frame={frame}>

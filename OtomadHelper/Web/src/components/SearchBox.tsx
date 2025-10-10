@@ -16,6 +16,10 @@ const StyledDataList = styled.div`
 	transition: ${fallbackTransitions}, inline-size 0s;
 	transition-behavior: allow-discrete;
 
+	${ifColorScheme.contrast} & {
+		inline-size: calc(anchor-size(inline) - 2px);
+	}
+
 	.text-box:focus-within:has(&) {
 		border-end-start-radius: 0;
 		border-end-end-radius: 0;

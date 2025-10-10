@@ -114,6 +114,10 @@ const StyledComboBox = styled(StyledButton)(() => css`
 				transition: ${fallbackTransitions}, width 0s, height 0s;
 				transition-behavior: allow-discrete;
 
+				${ifColorScheme.reduceMotion} {
+					transition: none;
+				}
+
 				&:popover-open {
 					opacity: 1;
 

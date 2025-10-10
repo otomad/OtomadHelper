@@ -306,6 +306,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	const isContrast = useSnapshot(colorModeStore).contrast;
 	if (isContrast) color = undefined;
 	const [inContextLocalization] = useInContextLocalization();
+	const reduceMotion = useMediaQuery.reduceMotion();
 
 	const { resetTransition } = useSnapshot(pageStore);
 	useUpdateEffect(() => {
@@ -352,15 +353,17 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 			setThumbLeft(undefined);
 			setLabelTranslate(undefined);
 			setIsDragging(isMoved); // Define recognition as drag instead of click.
-			nextAnimationTick().then(() => {
+			const lift = () => {
 				setPressed(false);
 				setIsPressing?.(false);
-			});
+			};
+			if (reduceMotion) lift();
+			else nextAnimationTick().then(lift);
 		};
 		thumb.setPointerCapture(e.pointerId);
 		thumb.addEventListener("pointermove", pointerMove, { signal: aborter.signal });
 		thumb.addEventListener("pointerup", pointerUp, { signal: aborter.signal });
-	}, [handleCheck, setIsPressing]);
+	}, [handleCheck, setIsPressing, reduceMotion]);
 
 	const textEl = useDomRef<"div">();
 	useEffect(() => {
@@ -396,7 +399,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 			<div className="right">
 				{!hideLabel && (
 					<output className="text label" aria-hidden>
-						{!inContextLocalization ? (
+						{!inContextLocalization && !reduceMotion ? (
 							<div className="label-container" style={{ "--progress": labelTranslate }}>
 								<span className="off">{t.off}</span>
 								<span className="on">{t.on}</span>

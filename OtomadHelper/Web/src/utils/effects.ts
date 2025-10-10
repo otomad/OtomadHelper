@@ -1,3 +1,6 @@
+const isReduceMotionOrTransparency = () => useMediaQuery.reduceMotion({ noHook: true }) || useMediaQuery.reduceTransparency({ noHook: true });
+const isContrast = () => document.documentElement.dataset.scheme?.includes("contrast");
+
 interface OverrideStyleOptions {
 	/** Override the border-radius property for the focus ring. If not specified, it will auto inherit the value from the target element. */
 	borderRadius?: CSSProperty.BorderRadius | null;
@@ -34,14 +37,22 @@ export async function makeFocusDiffusionEffect(element: TargetType, options: Ove
 	for (const property of ["top", "left", "width", "height"] as const)
 		ring.style[property] = rect[property] + "px";
 	const duration = 500;
-	await Promise.all([
-		ring.animate({
-			boxShadow: [`0 0 0 ${c("accent-color")}`, `0 0 50px ${c("accent-color")}`],
-		}, { duration, easing: eases.easeOutQuad }).finished,
-		ring.animate({
-			opacity: [1, 0],
-		}, { duration, easing: "linear" }).finished,
-	]);
+	if (!isReduceMotionOrTransparency() && !isContrast())
+		await Promise.all([
+			ring.animate({
+				boxShadow: [`0 0 0 ${c("accent-color")}`, `0 0 50px ${c("accent-color")}`],
+			}, { duration, easing: eases.easeOutQuad }).finished,
+			ring.animate({
+				opacity: [1, 0],
+			}, { duration, easing: "linear" }).finished,
+		]);
+	else {
+		if (isContrast())
+			ring.style.backdropFilter = "invert(1)";
+		else if (isReduceMotionOrTransparency())
+			ring.style.outline = `4px solid ${c("accent-color")}`;
+		await delay(duration / 2);
+	}
 	ring.remove();
 }
 
@@ -63,7 +74,12 @@ const FOCUS_HIGHLIGHT_RING_CLASS = "focus-highlight-ring";
  * A cleanup function for {@link makeFocusHighlightEffect}.
  */
 const cleanupFocusHighlightEffect = () => {
+	const reduceMotion = isReduceMotionOrTransparency();
 	for (const ring of document.getElementsByClassName(FOCUS_HIGHLIGHT_RING_CLASS) as HTMLCollectionOf<HTMLElement>) {
+		if (reduceMotion) {
+			ring.remove();
+			continue;
+		}
 		setElementRectFromOffset(ring, ring);
 		ring.animate({ opacity: [1, 0] }, { duration: 250, easing: eases.easeOutMax }).finished.catch(noop).then(() => {
 			removeExistAnimations(ring);
@@ -100,12 +116,24 @@ export async function makeFocusHighlightEffect(element: TargetType, options?: Ov
 		height: "anchor-size(height, 0)",
 	});
 	ring.classList.add(FOCUS_HIGHLIGHT_RING_CLASS);
+	const duration = 2000;
 	try {
-		await ring.animate([
-			{ boxShadow: "none", easing: eases.easeOutMax },
-			{ boxShadow: `0 0 8px 6px ${c("accent-color", 60)}`, easing: eases.easeInSmooth },
-			{ boxShadow: "none" },
-		], { duration: 2000, easing: "linear", iterations: 3 }).finished.catch(noop);
+		if (!isReduceMotionOrTransparency() && !isContrast())
+			await ring.animate([
+				{ boxShadow: "none", easing: eases.easeOutMax },
+				{ boxShadow: `0 0 8px 6px ${c("accent-color", 60)}`, easing: eases.easeInSmooth },
+				{ boxShadow: "none" },
+			], { duration, easing: "linear", iterations: 3 }).finished.catch(noop);
+		else if (isContrast())
+			await ring.animate([
+				{ backdropFilter: "invert(1)", offset: 0, easing: "step-end" },
+				{ backdropFilter: "none", offset: 0.5, easing: "step-end" },
+			], { duration: duration / 2, easing: "linear", iterations: 3 }).finished.catch(noop);
+		else if (isReduceMotionOrTransparency())
+			await ring.animate([
+				{ outline: `3px solid ${c("accent-color")}`, offset: 0, easing: "step-end" },
+				{ outline: "none", offset: 0.5, easing: "step-end" },
+			], { duration: duration / 2, easing: "linear", iterations: 3 }).finished.catch(noop);
 	} finally {
 		ring.remove();
 		if (el.style.anchorName === anchorName) {

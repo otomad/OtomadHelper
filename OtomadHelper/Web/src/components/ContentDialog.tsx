@@ -91,7 +91,7 @@ const Mask = styled.div`
 	}
 `;
 
-export default function ContentDialog({ shown: [shown, setShown], title, static: isStatic = false, children, buttons, autoTitleCase = true, width, peek, style, className, ...htmlAttrs }: FCP<{
+export default function ContentDialog({ shown: [shown, setShown], title, static: isStatic = false, children, buttons, autoTitleCase = true, width, peek = false, style, className, ...htmlAttrs }: FCP<{
 	/** Show the content dialog? */
 	shown: StateProperty<boolean>;
 	/** Dialog title. */
