@@ -343,7 +343,7 @@ const StepSequence = styled.div`
 	}
 `;
 
-const StyledCustomStepsIcon = styled.div`
+const StyledColoredIcon = styled.div`
 	${styles.mixins.gridCenter()};
 	${styles.mixins.square("100%")};
 
@@ -351,7 +351,8 @@ const StyledCustomStepsIcon = styled.div`
 		font-size: 48px;
 	}
 `;
-const CustomStepsIcon = () => <StyledCustomStepsIcon><Icon name="colored/edit" /></StyledCustomStepsIcon>;
+const CustomStepsIcon = () => <StyledColoredIcon><Icon name="colored/edit" /></StyledColoredIcon>;
+const RandomStepsIcon = () => <StyledColoredIcon><Icon name="colored/question_square" /></StyledColoredIcon>;
 
 const customInitialStepClasses = ["rotation"] as const;
 function getStepSequence(frames: number, initialStep: number) { return forMap(frames, i => floorMod(i, frames) + 1, initialStep); }
@@ -368,6 +369,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 	onCurrentEffectRotationModeChange?(mode: CustomEffectRotationMode): void;
 }>) {
 	initialStep ??= [];
+	const isRandom = initialStep.includes(NaN);
 	const isCustomInitialStepClass = customInitialStepClasses.includes(klass);
 	const prveClass = PrveClass.findClass(klass);
 	const frames = prveClass?.findEffectFrames(effect) ?? 1;
@@ -421,10 +423,20 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 								}}
 							/>
 						)}
+						{!isDefault && (
+							<ItemsView.Item
+								image={<RandomStepsIcon />}
+								id={[NaN]}
+								className="initial-step-item"
+								withBorder
+								tooltip={t.descriptions.prve.customStepSequence}
+								aria-label={t.custom}
+							/>
+						)}
 					</ItemsView>
 				</StyledInitialStep>
 			)}
-			{(initialStep.length > 0 || isCustomInitialStepClass) && (
+			{(initialStep.length > 0 || isCustomInitialStepClass) && !isRandom && (
 				<Expander.Item title={tc.prve.stepSequence} icon="flow">
 					<StepSequence>
 						{initialStep.map((frame, i) => (

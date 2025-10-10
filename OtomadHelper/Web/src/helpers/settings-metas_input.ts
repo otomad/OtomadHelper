@@ -35,7 +35,7 @@ export const settingsMetasInput = {
 		trackName: { icon: "rename" },
 		multisource: subheader(),
 		secretBox: {
-			icon: "dice",
+			icon: "question_square",
 			items: {
 				limitToSelected: { icon: "video_clip_multiple_checkmark" },
 				track: { icon: "layer" },
@@ -58,7 +58,7 @@ export const settingsMetasInput = {
 				secretBox: {
 					title: t.source.secretBox,
 					aliases: [t.aliases.source.secretBox],
-					icon: "dice",
+					icon: "question_square",
 				},
 			},
 		},

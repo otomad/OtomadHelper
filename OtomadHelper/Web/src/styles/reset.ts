@@ -207,7 +207,7 @@ export default css`
 		// Highlight mark style
 		mark {
 			color: ${c("fill-color-text-on-accent-selected-text")};
-			background-color: ${c("fill-color-system-caution")};
+			background-color: ${c("fill-color-system-target")};
 			border-radius: 4px;
 			box-decoration-break: clone;
 		}
