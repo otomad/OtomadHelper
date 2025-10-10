@@ -170,7 +170,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	useUpdateEffect(() => setInternalExpanded(expanded), [expanded]);
 	useEffect(() => onToggle?.(internalExpanded), [internalExpanded]);
 	useEffect(() => { if (disabled || childrenDisabled) setInternalExpanded(false); }, [disabled, childrenDisabled]);
-	useTransientValue(_requestExpanded, expanded => setInternalExpanded(!!expanded));
+	useTransientValue(_requestExpanded, expanded => { expanded && setInternalExpanded(true); }); // Set to true only, do not set to false.
 	const ariaId = useRef<string>(null);
 	const withAriaId = (suffix: string) => !ariaId.current ? undefined : ariaId.current + suffix;
 

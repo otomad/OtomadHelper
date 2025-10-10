@@ -8,4 +8,4 @@ export const BasicColorPalette = Enum({
 	blue: "#4581e1",
 	purple: "#b044b0",
 	pink: "#f06e8e",
-} as const);
+});

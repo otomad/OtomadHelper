@@ -92,14 +92,14 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3
       enum-plus:
-        specifier: ^2.3.1
-        version: 2.3.1(patch_hash=184c67ab30ea863c89798ea1f88d18253ebb03915d5fd8e17887cf16bee1c559)
+        specifier: ^3.0.1
+        version: 3.0.1(patch_hash=184c67ab30ea863c89798ea1f88d18253ebb03915d5fd8e17887cf16bee1c559)
       fullwidth-quotes:
         specifier: ^1.0.1
         version: 1.0.1
       i18next:
-        specifier: ^25.3.0
-        version: 25.3.0(typescript@5.8.3)
+        specifier: ^25.6.0
+        version: 25.6.0(typescript@5.8.3)
       i18next-browser-languagedetector:
         specifier: ^8.2.0
         version: 8.2.0
@@ -143,8 +143,8 @@ importers:
         specifier: ^3.0.5
         version: 3.0.5(patch_hash=d1030c1d607e98dd8374bb5772be6708d855227d990270893e5264f3ad45634d)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
       react-i18next:
-        specifier: ^15.5.2
-        version: 15.5.2(i18next@25.3.0(typescript@5.8.3))(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))(typescript@5.8.3)
+        specifier: ^16.0.0
+        version: 16.0.0(i18next@25.6.0(typescript@5.8.3))(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))(typescript@5.8.3)
       react-transition-group-fc:
         specifier: ^4.6.1
         version: 4.6.1(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
@@ -554,10 +554,6 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
-
-  '@babel/runtime@7.27.0':
-    resolution: {integrity: sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==}
-    engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.27.6':
     resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
@@ -2597,8 +2593,8 @@ packages:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
     engines: {node: '>=0.12'}
 
-  enum-plus@2.3.1:
-    resolution: {integrity: sha512-qzkz+/jWrsj7jhTfdWkge832qmkkteGQTuv/JGUjSB+HrD+Au0ES8IC6Nrr88CLCXXI4aMc2ZW+OGqUUvoTJ8g==}
+  enum-plus@3.0.1:
+    resolution: {integrity: sha512-x6VjtKiMztmDXNQvy84PxZ0JViAanzBq7LigXlnLiyhfjwowJytdn/7BLuGj3fEaNEbJVj1HVZ6aZklPWSJyUg==}
     engines: {node: '>=7.10.1'}
 
   env-paths@2.2.1:
@@ -3287,8 +3283,8 @@ packages:
   i18next-browser-languagedetector@8.2.0:
     resolution: {integrity: sha512-P+3zEKLnOF0qmiesW383vsLdtQVyKtCNA9cjSoKCppTKPQVfKd2W8hbVo5ZhNJKDqeM7BOcvNoKJOjpHh4Js9g==}
 
-  i18next@25.3.0:
-    resolution: {integrity: sha512-ZSQIiNGfqSG6yoLHaCvrkPp16UejHI8PCDxFYaNG/1qxtmqNmqEg4JlWKlxkrUmrin2sEjsy+Mjy1TRozBhOgw==}
+  i18next@25.6.0:
+    resolution: {integrity: sha512-tTn8fLrwBYtnclpL5aPXK/tAYBLWVvoHM1zdfXoRNLcI+RvtMsoZRV98ePlaW3khHYKuNh/Q65W/+NVFUeIwVw==}
     peerDependencies:
       typescript: ^5
     peerDependenciesMeta:
@@ -4528,10 +4524,10 @@ packages:
       react: '>=16.3.x'
       react-dom: '>=16.3.x'
 
-  react-i18next@15.5.2:
-    resolution: {integrity: sha512-ePODyXgmZQAOYTbZXQn5rRsSBu3Gszo69jxW6aKmlSgxKAI1fOhDwSu6bT4EKHciWPKQ7v7lPrjeiadR6Gi+1A==}
+  react-i18next@16.0.0:
+    resolution: {integrity: sha512-JQ+dFfLnFSKJQt7W01lJHWRC0SX7eDPobI+MSTJ3/gP39xH2g33AuTE7iddAfXYHamJdAeMGM0VFboPaD3G68Q==}
     peerDependencies:
-      i18next: '>= 23.2.3'
+      i18next: '>= 25.5.2'
       react: '>= 16.8.0'
       react-dom: '*'
       react-native: '*'
@@ -4606,9 +4602,6 @@ packages:
 
   regenerator-runtime@0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-
-  regenerator-runtime@0.14.1:
-    resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
 
   regex-not@1.0.2:
     resolution: {integrity: sha512-J6SDjUgDxQj5NusnOtdFxDwN/+HWykR8GELwctJ7mdqhcyy1xEc4SRFHUXvxTp661YaVKAjfRLZ9cCqS6tn32A==}
@@ -5970,10 +5963,6 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.0
       '@babel/helper-plugin-utils': 7.27.1
-
-  '@babel/runtime@7.27.0':
-    dependencies:
-      regenerator-runtime: 0.14.1
 
   '@babel/runtime@7.27.6': {}
 
@@ -8086,7 +8075,7 @@ snapshots:
 
   entities@4.5.0: {}
 
-  enum-plus@2.3.1(patch_hash=184c67ab30ea863c89798ea1f88d18253ebb03915d5fd8e17887cf16bee1c559): {}
+  enum-plus@3.0.1(patch_hash=184c67ab30ea863c89798ea1f88d18253ebb03915d5fd8e17887cf16bee1c559): {}
 
   env-paths@2.2.1: {}
 
@@ -9060,9 +9049,9 @@ snapshots:
 
   i18next-browser-languagedetector@8.2.0:
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.27.6
 
-  i18next@25.3.0(typescript@5.8.3):
+  i18next@25.6.0(typescript@5.8.3):
     dependencies:
       '@babel/runtime': 7.27.6
     optionalDependencies:
@@ -10290,11 +10279,11 @@ snapshots:
       react: 19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)
       react-dom: 19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
 
-  react-i18next@15.5.2(i18next@25.3.0(typescript@5.8.3))(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))(typescript@5.8.3):
+  react-i18next@16.0.0(i18next@25.6.0(typescript@5.8.3))(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))(typescript@5.8.3):
     dependencies:
-      '@babel/runtime': 7.27.0
+      '@babel/runtime': 7.27.6
       html-parse-stringify: 3.0.1
-      i18next: 25.3.0(typescript@5.8.3)
+      i18next: 25.6.0(typescript@5.8.3)
       react: 19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)
     optionalDependencies:
       react-dom: 19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
@@ -10392,8 +10381,6 @@ snapshots:
       which-builtin-type: 1.2.1
 
   regenerator-runtime@0.13.11: {}
-
-  regenerator-runtime@0.14.1: {}
 
   regex-not@1.0.2:
     dependencies:
