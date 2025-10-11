@@ -4,9 +4,6 @@ import { useInContextLocalization } from "helpers/jipt-activator";
 const THUMB_SIZE = 18;
 const THUMB_PRESSED_WIDTH = 22;
 
-// const isHoverPseudo = ":is(&:hover, .settings-card:hover .trailing &)";
-// const isPressedPseudo = ":is(&:active, .settings-card:active .trailing &)";
-// WARN: styled components bug: https://github.com/styled-components/styled-components/issues/4279
 const isHoverPseudo = "&:hover, .settings-card-toggle-switch.toggle-switch-hoverable:hover .trailing:not(:has(:hover)) &";
 const isPressedPseudo = "&:active, &.pressed, .settings-card-toggle-switch.toggle-switch-hoverable:active .trailing:not(:has(:active)) &";
 
@@ -94,18 +91,14 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 		}
 	}
 
-	.stroke {
-		${styles.mixins.oval()};
-		width: 40px;
-		height: 20px;
-		border: 1px solid ${c("stroke-color-control-strong-stroke-default")};
-	}
-
 	.base {
-		${styles.mixins.square("100%")};
+		${styles.mixins.oval()};
 		position: relative;
+		block-size: 20px;
+		inline-size: 40px;
 		background-color: ${c("fill-color-control-alt-secondary")};
-		border-radius: inherit;
+		background-clip: padding-box;
+		border: 1px solid ${c("stroke-color-control-strong-stroke-default")};
 	}
 
 	.thumb {
@@ -153,12 +146,9 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	}
 
 	&[disabled] {
-		.stroke {
-			border-color: ${c("stroke-color-control-strong-stroke-disabled")};
-		}
-
 		.base {
 			background-color: ${c("fill-color-control-alt-disabled")};
+			border-color: ${c("stroke-color-control-strong-stroke-disabled")};
 		}
 
 		.thumb {
@@ -179,12 +169,9 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	${styles.mixins.forwardFocusRing(".toggle-switch-base")};
 
 	&.selected {
-		.stroke {
-			border-color: ${c("accent-color")};
-		}
-
 		.base {
 			background-color: ${c("accent-color")} !important;
+			border-color: ${c("accent-color")};
 		}
 
 		.thumb {
@@ -211,12 +198,9 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 		}
 
 		&[disabled] {
-			.stroke {
-				border-color: ${c("stroke-color-control-strong-stroke-disabled")};
-			}
-
 			.base {
 				background-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
+				border-color: ${c("stroke-color-control-strong-stroke-disabled")};
 			}
 
 			.thumb {
@@ -328,7 +312,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 		const thumb = e.currentTarget;
 		const control = thumb.parentElement!;
 		const controlRect = control.getBoundingClientRect();
-		const left = controlRect.left, max = controlRect.width - THUMB_PRESSED_WIDTH;
+		const left = controlRect.left, max = controlRect.width - THUMB_PRESSED_WIDTH - 2;
 		const x = e.pageX - left - thumb.offsetLeft;
 		const { clientX } = e;
 		const aborter = new AbortController();
@@ -405,10 +389,8 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 						) : on ? t.on : t.off}
 					</output>
 				)}
-				<div className={["stroke", "toggle-switch-base", { pressing: isPressing }]}>
-					<div className="base">
-						<div className="thumb" style={thumbStyle} onPointerDown={onThumbDown} />
-					</div>
+				<div className={["base", "toggle-switch-base", { pressing: isPressing }]}>
+					<div className="thumb" style={thumbStyle} onPointerDown={onThumbDown} />
 				</div>
 			</div>
 		</StyledToggleSwitchLabel>

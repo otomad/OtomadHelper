@@ -13,10 +13,8 @@ export /* @internal */ default function SegmentedItem({ icon, selected, children
 			className={["item", { selected }, className]}
 			onClick={onClick}
 		>
-			<div className="base">
-				{icon && <Icon name={icon} />}
-				{children && <p>{children}</p>}
-			</div>
+			{icon && <Icon name={icon} />}
+			{children && <p>{children}</p>}
 		</div>
 	);
 }
