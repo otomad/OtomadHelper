@@ -18,4 +18,14 @@ export default css`
 	@function --contrast-color(--color <color>, --alpha type(<number> | <percentage>): 1) returns <color> {
 		result: oklch(from var(--color) calc(1 - round(to-zero, L / 0.645)) 0 0 / var(--alpha));
 	}
+
+	/**
+	 * Same as native \`light-dark()\` function, but accept non-color values.
+	 */
+	@function --light-dark(--light, --dark) {
+		result: if(
+			style(--color-scheme: light): var(--light);
+			else: var(--dark);
+		);
+	}
 `;

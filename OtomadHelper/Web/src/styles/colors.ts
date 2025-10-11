@@ -8,7 +8,7 @@ export const fillColorAccentOpacity = {
 const $c = c as (cssVarName: string, alpha?: number) => string; // Avoid type circular reference itself.
 
 const colors = {
-	"background-color": ["rgb(243, 243, 243)", "rgb(32, 32, 32)", "Canvas", "black", "black"],
+	"background-color": ["rgb(243, 243, 243)", "rgb(32, 32, 32)", "Canvas", "black"],
 	"foreground-color": ["rgba(0, 0, 0, 0.9)", "rgb(255, 255, 255)", "CanvasText"], // fill-color-text-primary
 	"accent-color": ["rgb(0, 95, 184)", "rgb(96, 205, 255)", "Highlight"],
 	"colorization": ["rgb(0, 120, 212)", "rgb(0, 120, 212)", "transparent"],
@@ -121,14 +121,13 @@ const colors = {
 	light: string,
 	dark: string,
 	contrast?: SystemColors,
-	blackNotContrast?: string | undefined,
 	black?: string | undefined,
 ]>;
 export type ColorNames = keyof typeof colors;
 export default colors;
 
 /**
- * @notdeprecated Respects color-scheme inherited from parent\
+ * @deprecated Respects color-scheme inherited from parent\
  * https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme
  */
 export const ifColorScheme = {
@@ -144,68 +143,56 @@ export const ifColorScheme = {
 	notReduceTransparency: "@media (prefers-reduced-transparency: no-preference)",
 } as const;
 
-function parseRgba(color: string) {
+function parseRgba(color?: string) {
 	let r = "0", g = "0", b = "0", a = "1";
-	const rgba = color.match(/rgba\(([\d.]+),\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/);
-	const rgb = color.match(/rgb\(([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/);
+	const rgba = color?.match(/rgba\(([\d.]+),\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/);
+	const rgb = color?.match(/rgb\(([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/);
 	if (rgba)
 		[, r, g, b, a] = rgba;
 	else if (rgb)
 		[, r, g, b] = rgb;
-	// else
-	// 	throw new TypeError(`Cannot parse color "${color}" as rgba`);
 	const hasAlpha = a !== "1";
 	return { hasAlpha, r, g, b, a };
 }
+const mixColorWithBg = ({ r, g, b, a }: ReturnType<typeof parseRgba>) => `rgb(${r} ${g} ${b}) ${+a * 100}%`;
 
 export function globalColors() {
-	let css = "";
+	const css: string[] = [];
 	// 0: Light
 	// 1: Dark
 	// 2: High Contrast
 	// 3: Black (AMOLED) (High Contrast OFF)
-	// 4: Black (AMOLED)
-	css += ":root {";
-	for (const [key, [light, dark]] of Object.entries(colors))
-		css += `--${key}: light-dark(${light}, ${dark});`;
-	css += "}";
-	for (let i = 2; i < 5; i++) {
-		const selector = [
-			`:root${ifColorScheme.light}, ${ifColorScheme.light}`,
-			`:root, ${ifColorScheme.dark}`,
-			`:root${ifColorScheme.contrast}, ${ifColorScheme.contrast}`,
-			`:root${ifColorScheme.black}:not(${ifColorScheme.contrast})${important(2)}, ${ifColorScheme.black}:not(${ifColorScheme.contrast})${important(2)}`,
-			`:root${ifColorScheme.black}${important(2)}, ${ifColorScheme.black}${important(2)}`,
-		][i];
-		css += selector + "{";
-		for (const [key, values] of Object.entries(colors))
-			if (values[i])
-				css += `--${key}: ${values[i]};`;
-		css += "}";
-	}
-	// Reduce Transparency: Light, Dark
-	css += ifColorScheme.reduceTransparency + "{";
-	const mixColorWithBg = ({ r, g, b, a }: ReturnType<typeof parseRgba>) => `color-mix(in srgb, rgb(${r} ${g} ${b}) ${+a * 100}%, var(--background-color))`;
-	for (let i = 1; i < 3; i++) {
-		const selector = [
-			`:root${ifColorScheme.light}:not(${ifColorScheme.contrast}), ${ifColorScheme.light}:not(${ifColorScheme.contrast})`,
-			`:root:not(${ifColorScheme.contrast}), [data-scheme]:not(${ifColorScheme.contrast})`,
-			undefined,
-			`:root${ifColorScheme.black}:not(${ifColorScheme.contrast})${important(3)}, ${ifColorScheme.black}:not(${ifColorScheme.contrast})${important(3)}`,
-			undefined,
-		][i];
-		if (!selector) continue;
-		css += selector + "{";
-		for (const [key, values] of Object.entries(colors))
-			if (values[i]) {
-				const lightRgba = parseRgba(values[0]), darkRgba = parseRgba(values[i]);
-				if ((lightRgba.hasAlpha || darkRgba.hasAlpha) && key !== "background-color")
-					css += `--${key}: light-dark(${mixColorWithBg(lightRgba)}, ${mixColorWithBg(darkRgba)});`;
+	css.push("[data-scheme] {");
+	for (const [key, values] of Object.entries(colors)) {
+		const [light, dark, contrast, black] = values;
+		const isColor = light.startsWith("rgb"), lightDarkOnly = values.length === 2;
+		if (lightDarkOnly) {
+			css.push(`--${key}: ${isColor ? "" : "--"}light-dark(${light}, ${dark});`);
+			continue;
+		}
+		css.push(`--${key}: if(`);
+		const conditions: string[] = [];
+		conditions.push(`else: light-dark(${light}, ${dark});`);
+		if (black)
+			conditions.push(`style(--color-scheme-black: true): ${black};`);
+		if (key !== "background-color") {
+			const lightRgba = parseRgba(light), darkRgba = parseRgba(dark), blackRgba = parseRgba(black);
+			if (lightRgba.hasAlpha || darkRgba.hasAlpha || blackRgba.hasAlpha) {
+				const reduceTransparency: string[] = [];
+				reduceTransparency.push("style(--color-scheme-reduce-transparency: true): color-mix(in srgb,");
+				const lightDark = `--light-dark(${mixColorWithBg(lightRgba)}, ${mixColorWithBg(darkRgba)})`;
+				if (black) reduceTransparency.push(`if(style(--color-scheme-black: true): ${mixColorWithBg(blackRgba)}; else: ${lightDark};)`);
+				else reduceTransparency.push(lightDark);
+				reduceTransparency.push(", var(--background-color));");
+				conditions.push(reduceTransparency.join(""));
 			}
-		css += "}";
+		}
+		if (contrast)
+			conditions.push(`style(--color-scheme-contrast: true): ${contrast};`);
+		css.push(...conditions.toReversed(), ");");
 	}
-	css += "}";
-	return css;
+	css.push("}");
+	return css.join("");
 }
 
 export type SystemColors =

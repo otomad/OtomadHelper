@@ -231,7 +231,7 @@ export default [
 				"disableExtraPropertyReporting": true,
 			}],
 			"jsdoc/check-tag-names": ["error", {
-				"definedTags": ["note", "remarks", "memberOf", "category", "warn", "notdeprecated"],
+				"definedTags": ["note", "remarks", "memberOf", "category", "warn"],
 			}],
 			"jsdoc/require-hyphen-before-param-description": ["error", "always", { "tags": { "template": "always" } }],
 			"jsdoc/require-returns": ["warn", {

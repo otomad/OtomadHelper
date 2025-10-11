@@ -144,14 +144,9 @@ const GlobalStyle = createGlobalStyle<{
 		background-color: var(--background-color);
 		touch-action: manipulation;
 		transition: ${fallbackTransitions}, width 0s, height 0s;
-		color-scheme: dark;
 		accent-color: var(--accent-color);
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-
-		${ifColorScheme.light} & {
-			color-scheme: only light;
-		}
 
 		${({ $ready }) => !$ready && css`
 			transition: background-color 0s;
@@ -186,6 +181,48 @@ const GlobalStyle = createGlobalStyle<{
 	svg,
 	svg * {
 		transition: ${fallbackTransitions}, color 0s;
+	}
+
+	// Color schemes
+	:root {
+		@layer base {
+			--color-scheme: dark;
+			--color-scheme-black: false;
+			--color-scheme-contrast: false;
+			--color-scheme-reduce-transparency: false;
+			--color-scheme-reduce-motion: false;
+		}
+
+		@media (forced-colors: active) or (prefers-contrast: more) {
+			--color-scheme-contrast: true;
+		}
+
+		@media (prefers-reduced-transparency: reduce) {
+			--color-scheme-reduce-transparency: true;
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			--color-scheme-reduce-motion: true;
+		}
+	}
+
+	[data-scheme~="dark"] {
+		--color-scheme: dark;
+		color-scheme: dark;
+	}
+
+	[data-scheme~="light"] {
+		--color-scheme: light;
+		color-scheme: only light;
+	}
+
+	[data-scheme~="dark"][data-scheme~="black"] {
+		--color-scheme-black: true;
+	}
+
+	[data-scheme~="contrast"] {
+		--color-scheme-contrast: true;
+		--colorization: transparent;
 	}
 
 	// Prevent DevTools Ctrl+Shift+C to select an element inside the svg.
@@ -223,6 +260,7 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	// Additional calculated colors
+	/* stylelint-disable-next-line no-duplicate-selectors */
 	:root {
 		--fill-color-system-accent-background: rgb(from var(--accent-color) r g b / 15%);
 		--fallback-transitions: ${FALLBACK_TRANSITIONS};
@@ -263,39 +301,35 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	// User requested to reduce dynamic effects
-	${ifColorScheme.reduceMotion} {
-		${important(2)}:not(.${ifColorScheme.forceMotion}, .${ifColorScheme.forceMotion} *) {
-			&,
-			&::before,
-			&::after {
-				scroll-behavior: auto;
-				transition-duration: 0s !important;
-				transition-timing-function: step-start !important;
-				transition-delay: 0s !important;
-				animation-duration: 0s !important;
-				animation-timing-function: step-start !important;
-				animation-delay: 0s !important;
-			}
+	@container style(--color-scheme-reduce-motion: true) { // ${important(2)}:not(.force-motion, .force-motion *)
+		*,
+		::before,
+		::after {
+			scroll-behavior: auto;
+			transition-duration: 0s !important;
+			transition-timing-function: step-start !important;
+			transition-delay: 0s !important;
+			animation-duration: 0s !important;
+			animation-timing-function: step-start !important;
+			animation-delay: 0s !important;
 		}
 	}
 
 	// System requested high contrast theme.
-	${ifColorScheme.contrast} {
-		:not(.focus-highlight-ring) {
-			&,
-			&::before,
-			&::after {
-				backdrop-filter: none !important;
-			}
-		}
-
-		:root& {
-			--fallback-transitions-for-contrast-scheme: color 0s, background-color 0s, border-color 0s;
-			--fallback-transitions: ${FALLBACK_TRANSITIONS}, var(--fallback-transitions-for-contrast-scheme);
+	@container style(--color-scheme-contrast: true) { // :not(.focus-highlight-ring)
+		*,
+		::before,
+		::after {
+			backdrop-filter: none !important;
 		}
 	}
 
-	${ifColorScheme.reduceTransparency} {
+	:root[data-scheme~="contrast"] {
+		--fallback-transitions-for-contrast-scheme: color 0s, background-color 0s, border-color 0s;
+		--fallback-transitions: ${FALLBACK_TRANSITIONS}, var(--fallback-transitions-for-contrast-scheme);
+	}
+
+	@container style(--color-scheme-reduce-transparency: reduce) {
 		*,
 		::before,
 		::after {

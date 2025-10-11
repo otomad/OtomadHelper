@@ -21,25 +21,28 @@ const StyledDynamicAccentColor = createGlobalStyle<{
 	`,
 	$palette?.colorization && css`
 		--colorization: ${$palette.colorization};
-		--accent-color: light-dark(${$palette.lightAccentColor}, ${$palette.darkAccentColor});
+		--accent-color: if(
+			style(--color-scheme-contrast: true): ${colors["accent-color"][2]};
+			else: light-dark(${$palette.lightAccentColor}, ${$palette.darkAccentColor});
+		);
 		--accent-color-windows: light-dark(${$palette.lightAccentColor}, ${$palette.darkAccentColor});
 		--accent-color-vegas: light-dark(${$palette.lightAccentColor}, ${$palette.darkAccentColor});
 	`,
 	css`
 		${currentDominantColor && css`--image-dominant-color: ${currentDominantColor};`}
-		${!(accentColor === "windows" || accentColor === "wallpaper" && !currentDominantColor) && css`--colorization: var(--accent-color);`}
-		--accent-color: ${getAutoColor("accent-color", accentColor)};
-		--background-color: ${getAutoColor("background-color", backgroundColor)};
-	`,
-	css`
-		&[data-scheme~="contrast"] {
-			--colorization: transparent;
-			--accent-color: Highlight;
-			--background-color: Canvas;
-		}
+		${!(accentColor === "windows" || accentColor === "wallpaper" && !currentDominantColor) &&
+		css`--colorization: if(style(--color-scheme-contrast: true): transparent; else: var(--accent-color));`}
+		--accent-color: if(
+			style(--color-scheme-contrast: true): ${colors["accent-color"][2]};
+			else: ${getAutoColor("accent-color", accentColor)};
+		);
+		--background-color: if(
+			style(--color-scheme-black: true): black;
+			style(--color-scheme-contrast: true): ${colors["background-color"][2]};
+			else: ${getAutoColor("background-color", backgroundColor)};
+		);
 	`,
 ].map((rules, i) => css`
-	:root${important(i)},
 	[data-scheme]${important(i)} {
 		${rules}
 	}
