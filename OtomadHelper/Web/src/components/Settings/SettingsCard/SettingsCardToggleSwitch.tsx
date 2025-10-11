@@ -57,6 +57,7 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 			aria-label={applyAriaLabel(title)}
 			role={isExpander && on ? undefined : "switch"}
 			aria-checked={on}
+			wrapActionsWhenNarrow={!actions ? false : undefined} // For better performance if there is no other custom actions.
 			onClick={onClick}
 			onClickWhenChildrenDisabled={isExpander && setOn ? () => { setOn(true); onChange?.(true); } : undefined}
 			{...settingsCardProps}

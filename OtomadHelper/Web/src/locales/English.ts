@@ -43,7 +43,8 @@ export default {
 			gradient: "Gradient Tracks",
 			internal: "Global Internal",
 			internal_long: "VEGAS Pro Global Internal Preferences",
-			license: "License (GPL-3.0)",
+			license: "License",
+			license_full: "License (GPL-3.0)",
 		},
 		source: {
 			from: "Source from",
@@ -836,6 +837,13 @@ export default {
 					wallpaper: "Background Image Dominant Color",
 					accent: "Accent color",
 					background: "Background color",
+					red: "Red",
+					yellow: "Yellow",
+					green: "Green",
+					cyan: "Cyan",
+					blue: "Blue",
+					purple: "Purple",
+					pink: "Pink",
 				},
 				transparency: {
 					_: "Dialog material",
@@ -908,7 +916,7 @@ export default {
 					marker: "When a marker is encountered in the score, the in point of the source will be changed once. If several markers have the same non-empty name, they will use the same in point of the source.",
 					barOrBeat: {
 						_: "Manually changes the in points of the source at a constant period according to the score",
-						period: "Specified the periods to change",
+						period: "Specify the periods to change",
 						preparation: "Delay before first execution",
 					},
 					ytpEnabled: "YTP feature is enabled and it already supports randomization, it is unnecessary to set it here.",
@@ -1020,7 +1028,7 @@ export default {
 						none: "No pitch effect",
 						pitchShift: "Uses the Pitch Shift Audio Effect Plugin. It is a DirectX plugin with the same algorithm as the Classic Method and can support a wider range of pitches. The extension requires some presets to be loaded before use.",
 						elastic: "Uses the Elastic Pitch Change Method. The Élastique Method uses technology from zplane.development, and provides enhanced real-time time stretching and pitch-shifting capabilities. It is just the default method to directly press the +/− keys.",
-						classic: "Uses the Classic Pitch Change Method. It uses the old technology from Vegas Pro 8 and below versions, and provides more crossfade types to choose from, depending on your source.",
+						classic: "Uses the Classic Pitch Change Method. It uses the old technology from Vegas Video 2.0 through Vegas Pro 8.0, and provides more crossfade types to choose from, depending on your source.",
 						scaleless: "Locks stretch and pitch, and changes the stretch to get the corresponding pitch regardless of the actual note pitch, just for fun",
 						unset: "Preserves the original tuning method of the clip unchanged or the default value, even if it is No Tuning",
 						acid: "Transposes the clip to fit the tempo if you are using ACIDized loops rendered by ACID Pro",
@@ -1327,33 +1335,33 @@ export default {
 			score: {
 				tempo: "Speed, BPM", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				timeSignature: "Beat", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
-				constrain: "Restrict note length", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				constrain: "Restrict note length, Portato, Staccato, Staccatissimo", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
 			stream: {
-				playbackRate: "Playback speed",
-				staticVisual: "Freeze first frame, Freeze start frame",
-				truncate: "Unlengthen, Unlengthening, No lengthening, No looping, No extending, No extension, Freeze last frame, Freeze end frame",
-				legato: "Fill gaps, Eliminate gaps, Remove gaps",
-				multitrackForChords: "Multiple track for chords, Multi-track for chords, Chords, Multiple tracks for chords, Multi-tracks for chords, Multitracks for chords",
-				createGroups: "Create groups",
-				autoPan: "Auto panning",
-				stack: "Stacking",
-				timeUnremapping: "Persistent timeflow, Time remapping",
-				prerender: "Pre-render, Pre-renders, Pre-rendering, Prerenders, Prerendering, Pre render, Pre renders, Pre rendering",
+				playbackRate: "Playback speed", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				staticVisual: "Freeze first frame, Freeze start frame", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				truncate: "Unlengthen, Unlengthening, No lengthening, No looping, No extending, No extension, Freeze last frame, Freeze end frame", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				legato: "Fill gaps, Eliminate gaps, Remove gaps, Portato, Staccato, Staccatissimo", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				multitrackForChords: "Multiple track for chords, Multi-track for chords, Chords, Multiple tracks for chords, Multi-tracks for chords, Multitracks for chords", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				createGroups: "Create groups", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				autoPan: "Auto panning", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				stack: "Stacking", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				timeUnremapping: "Persistent timeflow, Time remapping", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				prerender: "Pre-render, Pre-renders, Pre-rendering, Prerenders, Prerendering, Pre render, Pre renders, Pre rendering", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				articulations: {
-					_: "Playing technique, Playing techniques, Technique, Techniques",
-					glissando: "Glissandi, Glissandos, Glissandoes, Portamento, Portamenti, Portamentos, Gliss, Glisses, Slide, Slides, Glide, Glides, Pitch bend, Pitch bends, Pitch wheel, Pitch wheels, Bender, Benders",
-					appoggiatura: "Appoggiaturas, Appoggiature, Acciaccatura, Acciaccaturas, Acciaccature, Appoggiare, Grace note, Grace notes",
-					arpeggio: "Arp, Arps, Arpeggios, Arpeggi, Arpeggiare",
+					_: "Playing technique, Playing techniques, Technique, Techniques", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					glissando: "Glissandi, Glissandos, Glissandoes, Portamento, Portamenti, Portamentos, Gliss, Glisses, Slide, Slides, Glide, Glides, Pitch bend, Pitch bends, Pitch wheel, Pitch wheels, Bender, Benders", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					appoggiatura: "Appoggiaturas, Appoggiature, Acciaccatura, Acciaccaturas, Acciaccature, Appoggiare, Grace note, Grace notes", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					arpeggio: "Arp, Arps, Arpeggios, Arpeggi, Arpeggiare", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				},
 				tuning: {
-					alternativeForExceedTheRange: "Alternative method for exceeding the range, Alternative for exceed the range",
-					resample: "Lock stretch and pitch, Lock to stretch, Pitch change lock, Pitch lock, Lock pitch",
+					alternativeForExceedTheRange: "Alternative method for exceeding the range, Alternative for exceed the range", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					resample: "Lock stretch and pitch, Lock to stretch, Pitch change lock, Pitch lock, Lock pitch", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				},
-				mimical: "Imitative tuning methods",
+				mimical: "Imitative tuning methods", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
 			track: {
-				layout: "Template, Templates, Composition, Composite, Compose, Typesetting, Typography, Auto Layout Tracks",
+				layout: "Template, Templates, Composition, Composite, Compose, Typesetting, Typography, Auto Layout Tracks", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
 			// cSpell:enable
 		},

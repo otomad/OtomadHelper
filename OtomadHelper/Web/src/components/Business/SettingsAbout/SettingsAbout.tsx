@@ -52,13 +52,14 @@ const StyledSettingsAbout = styled.div`
 
 export default function SettingsAbout() {
 	"use no memo";
+	const currentLanguage = useCurrentLanguage();
+	const [hasTranslator, formattedTranslator] = listFormatTranslators(currentLanguage, currentLanguage);
 	const collaborators = new Map<string, string>([
 		[t.settings.about.author, t.settings.about.__author__],
 		[t.settings.about.originalAuthor, t.settings.about.__originalAuthor__],
+		[t.settings.about.translator, hasTranslator ? formattedTranslator : ""],
+		[t.titles.license, "GPL-3.0"],
 	]);
-	const currentLanguage = useCurrentLanguage();
-	const [hasTranslator, formattedTranslator] = listFormatTranslators(currentLanguage, currentLanguage);
-	if (hasTranslator) collaborators.set(t.settings.about.translator, formattedTranslator);
 	const { version } = useAboutApp();
 	const [showTranslators, setShowTranslators] = useState(false);
 	const { pushPage } = useSnapshot(pageStore);
@@ -68,7 +69,7 @@ export default function SettingsAbout() {
 			<StyledSettingsAbout>
 				<SettingsAboutLogo />
 				<div className="collaborators">
-					{Array.from(collaborators.entries(), ([key, value]) => (
+					{Array.from(collaborators.entries(), ([key, value]) => !value ? undefined : (
 						<div key={key}>
 							<div className="role">{key}</div>
 							<div className="name">{value}</div>
@@ -81,9 +82,9 @@ export default function SettingsAbout() {
 					<Link href={links.otomadHelper.repository}>{t.settings.about.repositoryLink}</Link>
 					<Link href={links.otomadHelper.changelog}>{t.settings.about.changelog}</Link>
 					<Link href={links.otomadHelper.issues}>{t.settings.about.feedback}</Link>
+					<Link onClick={() => pushPage("license")}>{t.titles.license}</Link>
 					<Link onClick={() => setShowTranslators(true)} aria-haspopup="dialog">{t.settings.about.translators}</Link>
 					<Link href={links.crowdin.contributeTranslation[currentLanguage]}>{t.settings.about.translation}</Link>
-					<Link onClick={() => pushPage("license")}>{t.titles.license}</Link>
 				</div>
 				<Translators shown={[showTranslators, setShowTranslators]} />
 			</StyledSettingsAbout>

@@ -46,7 +46,7 @@ const SampleTextFontSize = styled.div`
 	}
 `; */
 
-const TooltipPartial = Tooltip.with({ placement: "y" });
+const TooltipY = Tooltip.with({ placement: "y" });
 
 export default function Settings() {
 	const [currentLanguage, setLanguage] = useLanguage();
@@ -170,7 +170,14 @@ export default function Settings() {
 							current={null}
 							multiple
 						>
-							<ItemsView.Item id="contrast" key="contrast" selected="checked" image={<PreviewColorScheme colorScheme="contrast" />}>{t.settings.appearance.colorScheme.contrast}</ItemsView.Item>
+							<ItemsView.Item
+								id="contrast"
+								key="contrast"
+								selected="checked"
+								image={<PreviewColorScheme colorScheme="contrast" />}
+							>
+								{t.settings.appearance.colorScheme.contrast}
+							</ItemsView.Item>
 						</ItemsView>
 					</>
 				)}
@@ -181,7 +188,7 @@ export default function Settings() {
 						<Expander.Item title={t.settings.appearance.palette.accent} icon="color_fill" asSubtitle />
 						<StyledColorPalette>
 							{autoColorPalettes.map(color => (
-								<TooltipPartial key={color} title={t.settings.appearance.palette[color]}>
+								<TooltipY key={color} title={t.settings.appearance.palette[color]}>
 									<ColorButton
 										color={color}
 										value={accentColor}
@@ -192,10 +199,14 @@ export default function Settings() {
 										autoStartViewTransition
 										selectedOutlineColor="colored"
 									/>
-								</TooltipPartial>
+								</TooltipY>
 							))}
-							{BasicColorPalette.values.map(color => <ColorButton key={color} color={color} value={accentColor} autoStartViewTransition selectedOutlineColor="colored" />)}
-							<TooltipPartial title={t.custom}>
+							{BasicColorPalette.items.map(({ value: color, key: name }) => (
+								<TooltipY key={color} title={t.settings.appearance.palette[name]}>
+									<ColorButton color={color} value={accentColor} autoStartViewTransition selectedOutlineColor="colored" />
+								</TooltipY>
+							))}
+							<TooltipY title={t.custom}>
 								<ColorPicker
 									color={accentColor}
 									computedColor={getComputedPaletteColor("accent")}
@@ -205,14 +216,14 @@ export default function Settings() {
 									autoStartViewTransition
 									selectedOutlineColor="colored"
 								/>
-							</TooltipPartial>
+							</TooltipY>
 						</StyledColorPalette>
 						{(actualContrast || actualAmoledDark) && <InfoBar status="warning">{t.descriptions.settings.appearance.invalid.blackScheme({ option: t.settings.appearance.palette.background })}</InfoBar>}
 						<Attrs style={{ opacity: actualContrast || actualAmoledDark ? 0.5 : undefined }}>
 							<Expander.Item title={t.settings.appearance.palette.background} icon="color_background" asSubtitle />
 							<StyledColorPalette>
 								{autoColorPalettes.map(color => (
-									<TooltipPartial key={color} title={t.settings.appearance.palette[color]}>
+									<TooltipY key={color} title={t.settings.appearance.palette[color]}>
 										<ColorButton
 											key={color}
 											color={color}
@@ -223,10 +234,14 @@ export default function Settings() {
 											selected={color === "windows" && backgroundColor[0] === "wallpaper" && !backgroundImages.currentDominantColor}
 											autoStartViewTransition
 										/>
-									</TooltipPartial>
+									</TooltipY>
 								))}
-								{BasicColorPalette.values.map(color => <ColorButton key={color} color={color} value={backgroundColor} autoStartViewTransition />)}
-								<TooltipPartial title={t.custom}>
+								{BasicColorPalette.items.map(({ value: color, key: name }) => (
+									<TooltipY key={color} title={t.settings.appearance.palette[name]}>
+										<ColorButton key={color} color={color} value={backgroundColor} autoStartViewTransition />
+									</TooltipY>
+								))}
+								<TooltipY title={t.custom}>
 									<ColorPicker
 										color={backgroundColor}
 										computedColor={getComputedPaletteColor("background")}
@@ -234,7 +249,7 @@ export default function Settings() {
 										showIconWhenHovering={false}
 										showSpectrumWhenUnselected
 									/>
-								</TooltipPartial>
+								</TooltipY>
 							</StyledColorPalette>
 						</Attrs>
 					</>
