@@ -1,11 +1,5 @@
 <svg id="svg_1753_3649" width="82" height="16" viewBox="0 0 177 35" fill="none" xmlns="http://www.w3.org/2000/svg">
 	<style>
-		@layer props {
-			#svg_1753_3649 {
-				--color-scheme: light;
-			}
-		}
-
 		@container style(--color-scheme: dark) {
 			#svg_1753_3649 path {
 				fill: currentColor;

@@ -39,6 +39,7 @@ const StyledSettingsAboutLogo = styled.div`
 
 		&.dark {
 			display: --light-dark(none, block);
+			pointer-events: none;
 		}
 
 		&:active {
