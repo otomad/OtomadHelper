@@ -487,6 +487,7 @@ export async function startColorViewTransition(changeFunc: () => MaybePromise<vo
 	types = types ? wrapIfNotArray(types) : [INSTANT_TYPE];
 
 	const restoreTransitions = types.includes(INSTANT_TYPE) ? stopTransition({ includesViewTransitions: true }) : undefined;
+	const restoreDataAnchor = addStyle(css`[data-anchor] { view-transition-name: none !important; }`);
 	const removeStyle = staticStyle ? addStyle(staticStyle) : undefined;
 	const previousReactTransitionGroupDisabled = reactTransitionGroupConfig.disabled;
 	reactTransitionGroupConfig.disabled = true;
@@ -508,6 +509,7 @@ export async function startColorViewTransition(changeFunc: () => MaybePromise<vo
 		]);
 	} finally {
 		restoreTransitions?.();
+		restoreDataAnchor?.();
 		removeStyle?.();
 		reactTransitionGroupConfig.disabled = previousReactTransitionGroupDisabled;
 		if (cursor) forceCursor(null);
