@@ -67,8 +67,8 @@ const StyledSettingsCard = styled(StyledCard)<{
 			}
 		}
 
-		&:hover,
-		${isPressed()} {
+		&:hover > .base,
+		${isPressed()} > .base {
 			border-color: ${c("stroke-color-control-stroke-default")};
 		}
 

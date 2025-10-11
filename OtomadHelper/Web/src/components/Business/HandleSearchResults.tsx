@@ -67,7 +67,7 @@ const StyledSearchResult = styled.button`
 
 	&.selected ${IconWrapper} .icon,
 	&:has(.text .title:only-child) ${IconWrapper} .icon {
-		translate: 0 calc((100cqh - var(--icon-size)) / 2);
+		translate: 0 calc((100cqh - 2px - var(--icon-size)) / 2);
 	}
 
 	.subtitle {

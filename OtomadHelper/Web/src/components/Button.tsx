@@ -29,20 +29,21 @@ export /* @internal */ const StyledButton = styled.button<{
 	$dirBasedIcon?: DirBasedIcon;
 }>`
 	${styles.mixins.flexCenter()};
-	--border-outline-color: ${c("stroke-color-control-stroke-default")};
+	/* --border-outline-color: ${c("stroke-color-control-stroke-default")};
 	--border-highlight-color: ${c("stroke-color-control-stroke-secondary-on-default")};
 	--border-accent-color: transparent;
-	--border-highlight-y-offset: 0;
+	--border-highlight-y-offset: 0; */
 	position: relative;
 	display: inline-flex;
 	min-height: 32px;
 	padding: 4px ${inlinePadding}px 6px;
-	border: none;
+	background-clip: padding-box;
+	border: 1px solid ${c("stroke-color-control-stroke-default")};
 	border-radius: 4px;
-	box-shadow:
+	/* box-shadow:
 		0 var(--border-highlight-y-offset) 0 0 var(--border-highlight-color),
 		0 0 0 1px var(--border-outline-color),
-		0 0 0 1px var(--border-accent-color) !important;
+		0 0 0 1px var(--border-accent-color) !important; */
 
 	&:hover {
 		background-color: ${c("fill-color-control-secondary")};
@@ -69,23 +70,12 @@ export /* @internal */ const StyledButton = styled.button<{
 		}
 	}
 
-	&::after {
-		${styles.mixins.square("100%")};
-		content: "";
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-	}
-
-	&:focus-visible::after {
-		${styles.effects.focus()};
-	}
-
 	&.subtle,
 	&.hyperlink {
 		padding: 0 11px;
 		background-color: ${c("fill-color-subtle-transparent")};
-		box-shadow: none !important;
+		background-clip: border-box;
+		border-color: transparent !important;
 
 		&::before {
 			display: none;
@@ -98,10 +88,6 @@ export /* @internal */ const StyledButton = styled.button<{
 		&${isPressed} {
 			background-color: ${c("fill-color-subtle-tertiary")};
 		}
-	}
-
-	&:not(.subtle, .hyperlink, select) {
-		margin: 1px;
 	}
 
 	&.subtle {
@@ -130,16 +116,28 @@ export /* @internal */ const StyledButton = styled.button<{
 		background-color: ${c("fill-color-control-default")};
 
 		&${notPressedOrDisabled} {
-			--border-highlight-y-offset: --light-dark(1px, -1px);
+			${ifColorScheme.at.light} {
+				border-block-end-color: ${c("stroke-color-control-stroke-secondary")};
+			}
+
+			${ifColorScheme.at.dark} {
+				border-block-start-color: ${c("stroke-color-control-stroke-secondary")};
+			}
 		}
 	` : css`
 		--fill-color: ${c($fillColorName)};
-		--border-outline-color: ${c("stroke-color-control-stroke-on-accent-default")};
+		/* --border-outline-color: ${c("stroke-color-control-stroke-on-accent-default")};
 		--border-highlight-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
-		--border-accent-color: ${c($fillColorName)};
+		--border-accent-color: ${c($fillColorName)}; */
 		background-color: ${c($fillColorName)};
+		background-clip: border-box;
+		border-color: ${c("stroke-color-control-stroke-on-accent-default")};
 
-		* {
+		&${notPressedOrDisabled} {
+			border-block-end-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
+		}
+
+		> .content {
 			color: ${c("fill-color-text-on-accent-primary")};
 		}
 
@@ -149,18 +147,20 @@ export /* @internal */ const StyledButton = styled.button<{
 		}
 
 		&:hover {
-			--border-accent-color: ${c("fill-color", fillColorAccentOpacity.secondary)};
 			background-color: ${c("fill-color", fillColorAccentOpacity.secondary)};
 		}
 
 		&${isPressed} {
-			--border-accent-color: ${c("fill-color", fillColorAccentOpacity.tertiary)};
 			background-color: ${c("fill-color", fillColorAccentOpacity.tertiary)};
 		}
 
-		&:not(.subtle)[disabled] {
-			--border-accent-color: ${c("fill-color-accent-disabled")};
+		&[disabled] {
 			background-color: ${c("fill-color-accent-disabled")};
+			border-color: transparent !important;
+
+			> .content {
+				color: ${c("fill-color-text-on-accent-disabled")};
+			}
 
 			${ifColorScheme.at.light} {
 				> .content {
@@ -169,7 +169,9 @@ export /* @internal */ const StyledButton = styled.button<{
 			}
 
 			${ifColorScheme.at.dark} {
-				color: ${c("foreground-color")};
+				> .content {
+					color: ${c("foreground-color")} !important;
+				}
 			}
 		}
 
@@ -202,19 +204,18 @@ export /* @internal */ const StyledButton = styled.button<{
 	`}
 
 	${ifColorScheme.at.contrast} {
-		--border-highlight-y-offset: 0 !important;
 		color: ${cc("ButtonText")};
 		forced-color-adjust: none;
 
 		&:hover,
 		&${isPressed} {
-			--border-outline-color: ${cc("Highlight")};
 			color: ${cc("HighlightText")};
 			background-color: ${cc("Highlight")} !important;
+			border-color: ${cc("Highlight")};
 		}
 
 		&${isPressed} {
-			--border-outline-color: ${cc("ButtonFace")};
+			border-color: ${cc("ButtonFace")};
 		}
 	}
 

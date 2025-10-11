@@ -29,6 +29,7 @@ const NavButton = styled(Button).attrs({
 `;
 
 const StyledTopLeftButtons = styled.div`
+	position: relative;
 	z-index: 10;
 	block-size: ${navButtonSize.height}px;
 	margin-block: 4px 1px;
@@ -46,10 +47,6 @@ const StyledTopLeftButtons = styled.div`
 	&:not(.shadow) {
 		position: fixed;
 		z-index: 11;
-	}
-
-	.base {
-		position: relative;
 	}
 
 	&:not(.vertical) ${NavButton}:nth-of-type(2) {
@@ -87,7 +84,7 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 	return (
 		<StyledTopLeftButtons className={{ shadow, vertical }}>
 			{!shadow && (
-				<div className="base">
+				<>
 					<Tooltip placement={tooltipPlacement} title={<TooltipTitleWithShortcut title={t.back} shortcut={["Alt", "←"]} />}>
 						<NavButton animatedIcon="back" disabled={!canBack} onClick={onBack} aria-label={t.back} dirBasedIcon />
 					</Tooltip>
@@ -95,7 +92,7 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 						<NavButton animatedIcon="global_nav_button" onClick={onNavButton} aria-label={t.navigation} />
 						{/* Do not use `accessKey="H"`, it do repeat the keydown, which is not we wanted. */}
 					</Tooltip>
-				</div>
+				</>
 			)}
 		</StyledTopLeftButtons>
 	);

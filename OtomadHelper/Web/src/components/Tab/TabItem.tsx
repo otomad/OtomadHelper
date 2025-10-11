@@ -118,6 +118,28 @@ const StyledTabItem = styled.button`
 	&.selected {
 		${styles.effects.text.bodyStrong};
 	}
+
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		display: block;
+		border-radius: 3px;
+		pointer-events: none;
+	}
+
+	&::before {
+		anchor-name: var(--anchor-name);
+	}
+
+	&::after {
+		position: fixed;
+		position-anchor: var(--anchor-name);
+		inset: anchor(top) anchor(right) anchor(bottom) anchor(left);
+	}
+
+	${styles.mixins.forwardFocusRing("&::after")};
 `;
 
 const BadgeItem = ({ hidden: layoutHidden, badge: [badge, status, hidden] = [false] as never }: { hidden?: boolean; badge?: BadgeArgs }) =>
@@ -146,7 +168,7 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 	_vertical?: boolean;
 }, GenericElement>) {
 	const tabItemEl = useDomRef<"button">();
-
+	const anchorName = useUniqueId();
 	const scrollIntoView = (force = false) => {
 		if ((selected || force) && autoScrollIntoView)
 			scrollIntoViewAlt(tabItemEl, !vertical);
@@ -166,6 +188,7 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 				onClick={e => { onClick?.(e); scrollIntoView(true); }}
 				{...htmlAttrs}
 				className={{ selected }}
+				style={{ "--anchor-name": "--" + anchorName }}
 			>
 				{(icon || animatedIcon) && (
 					<div className="badge-wrapper">

@@ -106,30 +106,26 @@ function Spinner({ disabled, step = 1, positionAnchor, shown = false, onSpin, on
 const StyledTextBoxActionButton = styled.button.attrs({
 	type: "button",
 })`
-	${styles.mixins.forwardFocusRing(".base")};
 	flex-shrink: 0;
-	padding: 4px;
+	align-content: center;
+	padding: 0 7px;
 	overflow: hidden;
+	background-clip: padding-box;
+	border: 4px solid transparent;
+	border-radius: 7px;
 	cursor: default;
 
-	.base {
-		align-content: center;
-		block-size: 100%;
-		padding: 0 7px;
-		border-radius: 3px;
-
-		.icon {
-			display: flex;
-			color: ${c("fill-color-text-secondary")};
-			font-size: 16px;
-		}
+	.icon {
+		display: flex;
+		color: ${c("fill-color-text-secondary")};
+		font-size: 16px;
 	}
 
-	&:hover .base {
+	&:hover {
 		background-color: ${c("fill-color-subtle-secondary")};
 	}
 
-	&:active .base {
+	&:active {
 		background-color: ${c("fill-color-subtle-tertiary")};
 
 		.icon {
@@ -150,9 +146,7 @@ function TextBoxActionButton({ icon, tooltip, nonFocusable = false, ...htmlAttrs
 	return (
 		<Tooltip title={tooltip} placement="y">
 			<StyledTextBoxActionButton tabIndex={nonFocusable ? -1 : undefined} {...htmlAttrs}>
-				<div className="base">
-					{icon && <Icon name={icon} />}
-				</div>
+				{icon && <Icon name={icon} />}
 			</StyledTextBoxActionButton>
 		</Tooltip>
 	);
@@ -351,6 +345,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 				inline-size: 0;
 				margin-inline: 0;
 				padding-inline: 0;
+				border-inline-width: 0;
 				scale: 0;
 			`)}
 		}
