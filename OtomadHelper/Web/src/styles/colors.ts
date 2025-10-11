@@ -12,7 +12,7 @@ const colors = {
 	"foreground-color": ["rgba(0, 0, 0, 0.9)", "rgb(255, 255, 255)", "CanvasText"], // fill-color-text-primary
 	"accent-color": ["rgb(0, 95, 184)", "rgb(96, 205, 255)", "Highlight"],
 	"colorization": ["rgb(0, 120, 212)", "rgb(0, 120, 212)", "transparent"],
-	"fill-color-text-primary-solid": ["rgba(24, 24, 24)", "rgb(255, 255, 255)", "CanvasText"],
+	"fill-color-text-primary-solid": ["rgb(24, 24, 24)", "rgb(255, 255, 255)", "CanvasText"],
 	"fill-color-text-secondary": ["rgba(0, 0, 0, 0.61)", "rgba(255, 255, 255, 0.79)", "CanvasText"],
 	"fill-color-text-tertiary": ["rgba(0, 0, 0, 0.45)", "rgba(255, 255, 255, 0.54)", "CanvasText"],
 	"fill-color-text-disabled": ["rgba(0, 0, 0, 0.36)", "rgba(255, 255, 255, 0.36)", "GrayText"],
@@ -144,6 +144,20 @@ export const ifColorScheme = {
 	notReduceTransparency: "@media (prefers-reduced-transparency: no-preference)",
 } as const;
 
+function parseRgba(color: string) {
+	let r = "0", g = "0", b = "0", a = "1";
+	const rgba = color.match(/rgba\(([\d.]+),\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/);
+	const rgb = color.match(/rgb\(([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/);
+	if (rgba)
+		[, r, g, b, a] = rgba;
+	else if (rgb)
+		[, r, g, b] = rgb;
+	// else
+	// 	throw new TypeError(`Cannot parse color "${color}" as rgba`);
+	const hasAlpha = a !== "1";
+	return { hasAlpha, r, g, b, a };
+}
+
 export function globalColors() {
 	let css = "";
 	// 0: Light
@@ -151,7 +165,11 @@ export function globalColors() {
 	// 2: High Contrast
 	// 3: Black (AMOLED) (High Contrast OFF)
 	// 4: Black (AMOLED)
-	for (let i = 0; i < 5; i++) {
+	css += ":root {";
+	for (const [key, [light, dark]] of Object.entries(colors))
+		css += `--${key}: light-dark(${light}, ${dark});`;
+	css += "}";
+	for (let i = 2; i < 5; i++) {
 		const selector = [
 			`:root${ifColorScheme.light}, ${ifColorScheme.light}`,
 			`:root, ${ifColorScheme.dark}`,
@@ -167,10 +185,11 @@ export function globalColors() {
 	}
 	// Reduce Transparency: Light, Dark
 	css += ifColorScheme.reduceTransparency + "{";
-	for (let i = 0; i < 5; i++) {
+	const mixColorWithBg = ({ r, g, b, a }: ReturnType<typeof parseRgba>) => `color-mix(in srgb, rgb(${r} ${g} ${b}) ${+a * 100}%, var(--background-color))`;
+	for (let i = 1; i < 3; i++) {
 		const selector = [
 			`:root${ifColorScheme.light}:not(${ifColorScheme.contrast}), ${ifColorScheme.light}:not(${ifColorScheme.contrast})`,
-			`:root:not(${ifColorScheme.contrast}), ${ifColorScheme.dark}:not(${ifColorScheme.contrast})`,
+			`:root:not(${ifColorScheme.contrast}), [data-scheme]:not(${ifColorScheme.contrast})`,
 			undefined,
 			`:root${ifColorScheme.black}:not(${ifColorScheme.contrast})${important(3)}, ${ifColorScheme.black}:not(${ifColorScheme.contrast})${important(3)}`,
 			undefined,
@@ -179,18 +198,15 @@ export function globalColors() {
 		css += selector + "{";
 		for (const [key, values] of Object.entries(colors))
 			if (values[i]) {
-				const rgba = values[i].match(/rgba\(([\d.]+),\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/);
-				if (rgba && key !== "background-color") {
-					const [, r, g, b, a] = rgba;
-					css += `--${key}: color-mix(in srgb, rgb(${r} ${g} ${b}) ${+a * 100}%, var(--background-color));`;
-				}
+				const lightRgba = parseRgba(values[0]), darkRgba = parseRgba(values[i]);
+				if ((lightRgba.hasAlpha || darkRgba.hasAlpha) && key !== "background-color")
+					css += `--${key}: light-dark(${mixColorWithBg(lightRgba)}, ${mixColorWithBg(darkRgba)});`;
 			}
 		css += "}";
 	}
 	css += "}";
 	return css;
 }
-// TODO: `light-dark`, `prefers-color-scheme`.
 
 export type SystemColors =
 	"ActiveText" | "ButtonFace" | "ButtonText" | "Canvas" | "CanvasText" | "Field" | "FieldText" | "GrayText" | "Highlight" | "HighlightText" | "LinkText" | "VisitedText" | // Standard

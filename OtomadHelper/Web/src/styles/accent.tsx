@@ -12,31 +12,18 @@ const StyledDynamicAccentColor = createGlobalStyle<{
 }>(({ theme: $palette, $customize: { accentColor, backgroundColor, currentDominantColor } }) => [
 	css`
 		--colorization: #005fb8;
-		--accent-color-windows: ${colors["accent-color"][1]};
+		--accent-color-windows: light-dark(${colors["accent-color"].slice(0, 2).join(",")});
 		--accent-color-vegas: #0078d7; // #198cfe
 		--accent-color-wallpaper: var(--image-dominant-color, var(--accent-color-windows));
-		--background-color-windows: ${colors["background-color"][1]};
-		--background-color-vegas: #222;
+		--background-color-windows: light-dark(${colors["background-color"].slice(0, 2).join(",")});
+		--background-color-vegas: light-dark(#eee, #222);
 		--background-color-wallpaper: var(--image-dominant-color, var(--background-color-windows));
-
-		&[data-scheme~="light"] {
-			--accent-color-windows: ${colors["accent-color"][0]};
-			--accent-color-vegas: #0078d7; // #198cfe
-			--background-color-windows: ${colors["background-color"][0]};
-			--background-color-vegas: #eee;
-		}
 	`,
 	$palette?.colorization && css`
 		--colorization: ${$palette.colorization};
-		--accent-color: ${$palette.darkAccentColor};
-		--accent-color-windows: ${$palette.darkAccentColor};
-		--accent-color-vegas: ${$palette.darkAccentColor};
-
-		&[data-scheme~="light"] {
-			--accent-color: ${$palette.lightAccentColor};
-			--accent-color-windows: ${$palette.lightAccentColor};
-			--accent-color-vegas: ${$palette.lightAccentColor};
-		}
+		--accent-color: light-dark(${$palette.lightAccentColor}, ${$palette.darkAccentColor});
+		--accent-color-windows: light-dark(${$palette.lightAccentColor}, ${$palette.darkAccentColor});
+		--accent-color-vegas: light-dark(${$palette.lightAccentColor}, ${$palette.darkAccentColor});
 	`,
 	css`
 		${currentDominantColor && css`--image-dominant-color: ${currentDominantColor};`}
