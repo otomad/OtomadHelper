@@ -218,7 +218,7 @@ export default {
 		overflow-${axis}: auto;
 		overscroll-behavior-${axis}: auto;
 
-		${ifColorScheme.reduceTransparency} {
+		${ifColorScheme.at.reduceTransparency} {
 			mask: none;
 			animation: none;
 		}

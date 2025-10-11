@@ -5,13 +5,9 @@ const StyledIconOff = styled.div`
 	display: inline-flex;
 
 	> svg {
-		--shadow-stroke-width: 1.5;
+		--shadow-stroke-width: --light-dark(1, 1.5);
 		${styles.mixins.square("1em")};
 		fill: currentColor;
-
-		${ifColorScheme.light} & {
-			--shadow-stroke-width: 1;
-		}
 	}
 `;
 

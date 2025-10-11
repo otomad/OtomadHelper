@@ -69,7 +69,7 @@ export default function SettingsPageControl({ image, imageOverlay, learnMoreLink
 		>
 			{image && <SettingsPageControlPreviewImage image={image}>{imageOverlay}</SettingsPageControlPreviewImage>}
 			<div className="paragraph-wrapper">
-				<div className={["scroll-wrapper", ifColorScheme.forceMotion]}>
+				<div className={["scroll-wrapper", "force-motion"]}>
 					<p><Preserves spacing>{children}</Preserves></p>
 				</div>
 				{learnMoreLink !== undefined && <div className="learn-more-wrapper"><LearnMore>{t.learnMore}</LearnMore></div>}

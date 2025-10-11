@@ -126,21 +126,21 @@ const colors = {
 export type ColorNames = keyof typeof colors;
 export default colors;
 
-/**
- * @deprecated Respects color-scheme inherited from parent\
- * https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme
- */
 export const ifColorScheme = {
-	light: '[data-scheme~="light"]',
-	dark: '[data-scheme~="dark"]',
-	black: '[data-scheme~="dark"][data-scheme~="black"]',
-	// contrast: "@media (forced-colors: active) or (prefers-contrast: more)",
-	contrast: '[data-scheme~="contrast"]',
-	reduceTransparency: "@media (prefers-reduced-transparency: reduce)",
-	reduceMotion: "@media (prefers-reduced-motion: reduce)",
-	forceMotion: "force-motion",
-	contrastButOverridden: ':not(html[data-scheme~="contrast"] [data-scheme]:not([data-scheme~="contrast"]) *)',
-	notReduceTransparency: "@media (prefers-reduced-transparency: no-preference)",
+	light: "style(--color-scheme: light)",
+	dark: "style(--color-scheme: dark)",
+	black: "style(--color-scheme-dark: true)",
+	contrast: "style(--color-scheme-contrast: true)",
+	reduceTransparency: "style(--color-scheme-reduce-transparency: true)",
+	reduceMotion: "style(--color-scheme-reduce-motion: true)",
+	at: {
+		light: "@container style(--color-scheme: light)",
+		dark: "@container style(--color-scheme: dark)",
+		black: "@container style(--color-scheme-dark: true)",
+		contrast: "@container style(--color-scheme-contrast: true)",
+		reduceTransparency: "@container style(--color-scheme-reduce-transparency: true)",
+		reduceMotion: "@container style(--color-scheme-reduce-motion: true)",
+	},
 } as const;
 
 function parseRgba(color?: string) {

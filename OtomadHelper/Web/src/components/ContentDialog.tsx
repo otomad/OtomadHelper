@@ -62,7 +62,7 @@ const StyledContentDialog = styled.div`
 		}
 	}
 
-	${ifColorScheme.notReduceTransparency} {
+	@media (prefers-reduced-transparency: no-preference) {
 		&.peek {
 			background-color: ${c("background-fill-color-layer-alt-translucent")};
 

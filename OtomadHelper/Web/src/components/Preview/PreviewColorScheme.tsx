@@ -35,19 +35,15 @@ const StyledPreviewColorScheme = styled.div.attrs({
 		}
 
 		&.contrast {
-			background-image: url("${imgDarkContrast}");
-
-			${ifColorScheme.light} & {
-				background-image: url("${imgLightContrast}");
-			}
-
-			${ifColorScheme.black} & {
-				background-image: url("${imgBlackContrast}");
-			}
+			background-image: if(
+				${ifColorScheme.black}: url("${imgBlackContrast}");
+				${ifColorScheme.light}: url("${imgLightContrast}");
+				else: url("${imgDarkContrast}");
+			);
 		}
 
 		&.auto {
-			${ifColorScheme.contrast} & {
+			${ifColorScheme.at.contrast} {
 				background-image: url("${imgLightContrast}");
 			}
 
@@ -57,7 +53,7 @@ const StyledPreviewColorScheme = styled.div.attrs({
 				mask: linear-gradient(in oklch 120deg, black 35%, white 60%);
 				mask-mode: luminance; // Use oklch and luminance make the gradient smoother.
 
-				${ifColorScheme.contrast} & {
+				${ifColorScheme.at.contrast} {
 					background-image: url("${imgDarkContrast}");
 				}
 			}
@@ -65,7 +61,7 @@ const StyledPreviewColorScheme = styled.div.attrs({
 			&.black-enabled::before {
 				background-image: url("${imgBlack}");
 
-				${ifColorScheme.contrast} & {
+				${ifColorScheme.at.contrast} {
 					background-image: url("${imgBlackContrast}");
 				}
 			}

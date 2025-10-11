@@ -37,7 +37,7 @@ const Indicator = styled.div.attrs(({ $vertical }) => ({
 			transition: none !important;
 		}
 		${$vertical && css`
-			${ifColorScheme.contrast} & {
+			${ifColorScheme.at.contrast} {
 				background-color: ${cc("HighlightText")};
 			}
 		`}

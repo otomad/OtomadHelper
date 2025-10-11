@@ -89,22 +89,15 @@ const StyledPianoKey = styled.div`
 
 	.white {
 		${styles.mixins.square("100%")};
-		--fill: ${fills[0]};
-		--mixed-hover: black;
+		--fill: light-dark(${fills[0]}, ${fillsDark[0]});
+		--mixed-hover: light-dark(black, white);
 		--level-hover: 6.5%;
-		--level-active: 13%;
+		--level-active: --light-dark(13%, 11%);
 		position: relative;
 		z-index: 1;
 		min-inline-size: 24px;
 		padding-block-end: 12px; // Avoid floating scrollbar taking up position.
-		border-color: ${strokes[0]};
-
-		${ifColorScheme.dark} & {
-			--fill: ${fillsDark[0]};
-			--mixed-hover: white;
-			--level-active: 11%;
-			border-color: ${strokeDarkWhite};
-		}
+		border-color: light-dark(${strokes[0]}, ${strokeDarkWhite});
 
 		&:focus-visible {
 			z-index: 2;
@@ -113,10 +106,10 @@ const StyledPianoKey = styled.div`
 
 	.black {
 		${styles.mixins.square("100%")};
-		--fill: ${fills[1]};
+		--fill: light-dark(${fills[1]}, ${fillsDark[1]});
 		--mixed-hover: white;
-		--level-hover: 12%;
-		--level-active: 24%;
+		--level-hover: --light-dark(12%, 6%);
+		--level-active: --light-dark(24%, 9%);
 		position: absolute;
 		top: 0;
 		right: ${-BLACK_KEY_WIDTH / 2}%;
@@ -125,12 +118,6 @@ const StyledPianoKey = styled.div`
 		height: 50%;
 		border-color: ${strokes[1]};
 		border-radius: 0 0 4px 4px;
-
-		${ifColorScheme.dark} & {
-			--fill: ${fillsDark[1]};
-			--level-hover: 6%;
-			--level-active: 9%;
-		}
 	}
 
 	.active {

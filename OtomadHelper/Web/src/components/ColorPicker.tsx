@@ -28,16 +28,12 @@ const StyledColorButton = styled(StyledButton)`
 		box-shadow: 0 0 0 1px --contrast-color(var(--color), 0.37) inset;
 
 		&.spectrum {
-			--background-color: black;
+			--background-color: light-dark(white, black);
 			background:
 				radial-gradient(closest-side, ${c("background-color")}, transparent),
 				conic-gradient(in oklch longer hue, red, red);
 			background-color: ${c("color")};
 			box-shadow: 0 0 0 1px ${c("foreground-color", 37)} inset;
-
-			${ifColorScheme.light} & {
-				--background-color: white;
-			}
 		}
 	}
 

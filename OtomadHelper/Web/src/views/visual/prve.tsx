@@ -392,7 +392,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 					title={tc.prve.initialStep}
 					icon="replay"
 					role="region"
-					className={ifColorScheme.forceMotion}
+					className="force-motion"
 					ariaHiddenForText
 					wrapActionsWhenNarrow
 				>

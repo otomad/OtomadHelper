@@ -25,41 +25,24 @@ const StyledSettingsAboutLogo = styled.div`
 		align-items: center;
 		margin-top: -8px;
 		margin-left: -8px;
-		filter: drop-shadow(0 3px 3px #21262c40);
-
-		${ifColorScheme.contrast} & {
-			filter: none;
-		}
-
-		${ifColorScheme.reduceTransparency} {
-			filter: none;
-		}
+		filter: if(
+			${ifColorScheme.contrast} or ${ifColorScheme.reduceTransparency}: none;
+			else: drop-shadow(0 3px 3px #21262c40);
+		);
 	}
 
 	.icon-wrapper > * {
-		display: none;
-
-		${ifColorScheme.light} &.light {
-			display: block;
-		}
-
-		${ifColorScheme.dark} &.dark {
-			display: block;
-		}
-
 		&.light {
+			display: --light-dark(block, none);
 			cursor: pointer;
+		}
+
+		&.dark {
+			display: --light-dark(none, block);
 		}
 
 		&:active {
 			scale: 0.95;
-		}
-	}
-
-	.title,
-	.subtitle {
-		${ifColorScheme.dark} & {
-			--color-scheme: dark;
 		}
 	}
 
@@ -90,8 +73,10 @@ const StyledSettingsAboutLogo = styled.div`
 		animation-delay: 125ms !important;
 	}
 
-	${ifColorScheme.light} & [data-icon-style="liquid glass"] ~ .title {
-		margin-left: 9px;
+	${ifColorScheme.at.light} {
+		[data-icon-style="liquid glass"] ~ .title {
+			margin-left: 9px;
+		}
 	}
 
 	svg {

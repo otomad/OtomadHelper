@@ -5,11 +5,10 @@ const LavContainer = styled.div.attrs({
 })`
 	&,
 	* {
-		transition: color ${eases.easeOutMax} 100ms;
-
-		${ifColorScheme.contrast} & {
-			transition: none;
-		}
+		transition: if(
+			${ifColorScheme.contrast}: none;
+			else: color ${eases.easeOutMax} 100ms;
+		);
 	}
 `;
 

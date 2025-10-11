@@ -37,12 +37,11 @@ const StyledSegmented = styled.div<{
 				gap: 10px;
 				height: 100%;
 				padding: 4px ${ITEM_BASE_PADDING_X_WIDTH}px;
-				color: ${c("foreground-color")};
+				color: if(
+					${ifColorScheme.contrast}: ${cc("ButtonText")};
+					else: ${c("foreground-color")};
+				);
 				border-radius: 2px;
-
-				${ifColorScheme.contrast} & {
-					color: ${cc("ButtonText")};
-				}
 			}
 
 			p {
@@ -98,15 +97,14 @@ const StyledSegmented = styled.div<{
 		align-items: flex-end;
 		height: calc(100% + ${2 * THUMB_BORDER_WIDTH}px);
 		margin: ${-THUMB_BORDER_WIDTH}px;
-		background-color: ${c("fill-color-control-default")};
+		background-color: if(
+			${ifColorScheme.reduceTransparency} or ${ifColorScheme.contrast}: transparent;
+			else: ${c("fill-color-control-default")};
+		);
 		border: 1px solid ${c("stroke-color-control-stroke-default")};
 		border-radius: inherit;
 		transition: ${fallbackTransitions}, inset-inline-start ${THUMB_TRANSITION_OPTION};
 		forced-color-adjust: none;
-
-		${ifColorScheme.reduceTransparency} {
-			background-color: transparent;
-		}
 
 		${({ $itemCount = 0, $selectedIndex = -1 }) => !$itemCount ? css`
 			inset-inline-start: 0;
@@ -117,16 +115,16 @@ const StyledSegmented = styled.div<{
 			${$selectedIndex === -1 && css`opacity: 0;`}
 		`}
 
-		${ifColorScheme.dark} &:not(:active, [disabled]) {
-			border-block-start-color: ${c("stroke-color-control-stroke-secondary")};
+		${ifColorScheme.at.dark} {
+			&:not(:active, [disabled]) {
+				border-block-start-color: ${c("stroke-color-control-stroke-secondary")};
+			}
 		}
 
-		${ifColorScheme.light} &:not(:active, [disabled]) {
-			border-block-end-color: ${c("stroke-color-control-stroke-secondary")};
-		}
-
-		${ifColorScheme.contrast} & {
-			background-color: transparent;
+		${ifColorScheme.at.light} {
+			&:not(:active, [disabled]) {
+				border-block-end-color: ${c("stroke-color-control-stroke-secondary")};
+			}
 		}
 
 		&::after {
@@ -162,19 +160,15 @@ const StyledSegmented = styled.div<{
 	.thumb-content {
 		position: absolute;
 		top: 0;
+		display: if(
+			${ifColorScheme.dark} or ${ifColorScheme.contrast}: none;
+			else: block;
+		);
 		pointer-events: none;
 		clip-path: inset(${({ $itemCount = 0, $selectedIndex = -1 }) => !$itemCount || $selectedIndex === -1 ? "0 100% 0 0" : !isRtl() ?
 			`0 calc((1 - (${$selectedIndex} + 1) / ${$itemCount}) * 100%) 0 calc(${$selectedIndex} / ${$itemCount} * 100%)` :
 			`0 calc(${$selectedIndex} / ${$itemCount} * 100%) 0 calc((1 - (${$selectedIndex} + 1) / ${$itemCount}) * 100%)`} round 4px);
 		transition: ${fallbackTransitions}, clip-path ${THUMB_TRANSITION_OPTION};
-
-		${ifColorScheme.dark} & {
-			display: none;
-		}
-
-		${ifColorScheme.contrast} & {
-			display: none;
-		}
 	}
 `;
 

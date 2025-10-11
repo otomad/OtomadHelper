@@ -43,20 +43,13 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 		inset: 0;
 		object-fit: cover;
 		opacity: 0.3;
-		filter: blur(30px);
+		filter: if(
+			${ifColorScheme.reduceTransparency} and ${ifColorScheme.contrast}: url("#posterize");
+			${ifColorScheme.reduceTransparency}: none;
+			${ifColorScheme.contrast}: blur(30px) url("#posterize");
+			else: blur(30px);
+		);
 		pointer-events: none;
-
-		${ifColorScheme.contrast} & {
-			filter: blur(30px) url("#posterize");
-		}
-
-		${ifColorScheme.reduceTransparency} {
-			filter: none !important;
-
-			${ifColorScheme.contrast} & {
-				filter: url("#posterize") !important;
-			}
-		}
 	}
 
 	.toggle-switch-label {

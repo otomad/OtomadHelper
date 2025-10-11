@@ -63,7 +63,7 @@ const StyledBadge = styled.div<{
 		padding: 0;
 	}
 
-	${ifColorScheme.contrast} & {
+	${ifColorScheme.at.contrast} {
 		color: ${cc("HighlightText")};
 		background-color: ${cc("Highlight")};
 	}

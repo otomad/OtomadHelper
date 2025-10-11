@@ -20,22 +20,20 @@ const StyledPreviewBackdrop = styled.div`
 		overflow: clip;
 		background-image: linear-gradient(135deg, rgb(from ${c("accent-color")} r g b / var(--opacity)) 0%, rgb(from color-mix(in oklch, ${c("accent-color")} 100%, black 30%) r g b / var(--opacity)) 100%);
 		border-radius: 6px;
+		box-shadow: if(
+			${ifColorScheme.contrast}: none;
+			${ifColorScheme.light}: var(--box-shadow-base), inset 0 -2px 8px ${c("stroke-color-control-stroke-on-accent-secondary", 22)};
+			else: var(--box-shadow-base), inset 0 2px 2px ${c("stroke-color-control-stroke-on-accent-secondary")};
+		);
 
-		${ifColorScheme.light} & {
-			box-shadow: var(--box-shadow-base), inset 0 -2px 8px ${c("stroke-color-control-stroke-on-accent-secondary", 22)};
-
+		${ifColorScheme.at.light} {
 			&.solid {
 				box-shadow: var(--box-shadow-base), inset 0 -2px 2px ${c("stroke-color-control-stroke-on-accent-secondary", 22)};
 			}
 		}
 
-		${ifColorScheme.dark} & {
-			box-shadow: var(--box-shadow-base), inset 0 2px 2px ${c("stroke-color-control-stroke-on-accent-secondary")};
-		}
-
-		${ifColorScheme.contrast} & {
+		${ifColorScheme.at.contrast} {
 			border: 1px solid black;
-			box-shadow: none !important;
 		}
 
 		&.back {
@@ -83,8 +81,7 @@ const StyledPreviewBackdrop = styled.div`
 					--opacity: 32.745098%;
 					--mix: 50%;
 
-					${ifColorScheme.dark} & {
-						/* filter: saturate(0.5); */
+					${ifColorScheme.at.dark} {
 						backdrop-filter: blur(var(--blur)) brightness(0.05) !important;
 					}
 				}

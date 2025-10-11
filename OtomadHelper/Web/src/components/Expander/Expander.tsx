@@ -50,16 +50,11 @@ const ExpanderParent = styled(SettingsCard)<{ // BUG: After auto resize, when sc
 			${sharpBottom};
 			container: expander-parent / scroll-state;
 			position: sticky;
-			top: -1px;
+			top: if(
+				${ifColorScheme.reduceTransparency} or ${ifColorScheme.contrast}: 0;
+				else: -1px;
+			);
 			z-index: 5;
-
-			${ifColorScheme.reduceTransparency} {
-				top: 0;
-			}
-
-			${ifColorScheme.contrast} & {
-				top: 0;
-			}
 
 			> .base {
 				${sharpBottom};

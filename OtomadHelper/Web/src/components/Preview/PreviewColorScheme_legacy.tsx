@@ -78,18 +78,21 @@ const StyledPreviewColorScheme = styled.div.attrs({
 		}
 	}
 
-	.container${ifColorScheme.contrast} .tab-item.selected {
-		background-color: ${cc("Highlight")};
+	${ifColorScheme.at.contrast} {
+		.container .tab-item.selected {
+			background-color: ${cc("Highlight")};
 
-		&,
-		.icon {
-			color: ${cc("HighlightText")};
-		}
+			&,
+			.icon {
+				color: ${cc("HighlightText")};
+			}
 
-		&::before {
-			background-color: ${cc("HighlightText")};
+			&::before {
+				background-color: ${cc("HighlightText")};
+			}
 		}
 	}
+
 
 	.card > .base {
 		display: flex;

@@ -5,7 +5,10 @@ const StyledDataList = styled.div`
 	position-area: block-end;
 	z-index: 9;
 	max-block-size: 100%;
-	inline-size: anchor-size(inline);
+	inline-size: if(
+		${ifColorScheme.contrast}: calc(anchor-size(inline) - 2px);
+		else: anchor-size(inline);
+	);
 	padding: 3px;
 	overflow-block: auto;
 	scroll-behavior: auto;
@@ -15,10 +18,6 @@ const StyledDataList = styled.div`
 	transform-origin: top;
 	transition: ${fallbackTransitions}, inline-size 0s;
 	transition-behavior: allow-discrete;
-
-	${ifColorScheme.contrast} & {
-		inline-size: calc(anchor-size(inline) - 2px);
-	}
 
 	.text-box:focus-within:has(&) {
 		border-end-start-radius: 0;

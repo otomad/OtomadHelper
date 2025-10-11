@@ -113,7 +113,10 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 		${styles.mixins.oval()};
 		position: absolute;
 		inset-inline-start: 0;
-		background-color: ${c("fill-color-text-secondary")};
+		background-color: if(
+			${ifColorScheme.contrast}: ${cc("ButtonText")};
+			else: ${c("fill-color-text-secondary")};
+		);
 		scale: calc(12 / ${THUMB_SIZE});
 		touch-action: pinch-zoom;
 
@@ -123,10 +126,6 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 			display: block;
 			background-color: transparent;
 			scale: 10 3;
-		}
-
-		${ifColorScheme.contrast} &${ifColorScheme.contrastButOverridden} {
-			background-color: ${cc("ButtonText")};
 		}
 	}
 
@@ -191,11 +190,10 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 		.thumb {
 			inset-inline-start: calc(100% - ${THUMB_SIZE}px);
 			background-color: ${c("fill-color-text-on-accent-primary")};
-			outline: 1px solid ${c("stroke-color-control-stroke-secondary")};
-
-			${ifColorScheme.contrast} &${ifColorScheme.contrastButOverridden} {
-				outline: none;
-			}
+			outline: if(
+				${ifColorScheme.contrast}: none;
+				else: 1px solid ${c("stroke-color-control-stroke-secondary")};
+			);
 		}
 
 		.label-container${important()} {

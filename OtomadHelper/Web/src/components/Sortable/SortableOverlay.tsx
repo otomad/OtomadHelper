@@ -15,11 +15,10 @@ const StyledSortableOverlay = styled(DragOverlay)`
 	> * {
 		${styles.mixins.inherit("block-size", "inline-size", true)};
 		scale: var(--sortable-overlay-scale);
-		transition: ${fallbackTransitions}, scale 250ms cubic-bezier(0.18, 0.67, 0.6, 1.22), opacity 100ms 250ms;
-
-		${ifColorScheme.reduceMotion} {
-			transition: scale 1ms step-end !important;
-		}
+		transition: if(
+			${ifColorScheme.reduceMotion}: scale 1ms step-end;
+			else: ${fallbackTransitions}, scale 250ms cubic-bezier(0.18, 0.67, 0.6, 1.22), opacity 100ms 250ms;
+		);
 
 		@starting-style {
 			scale: 1;
@@ -90,7 +89,7 @@ export /* @internal */ default function SortableOverlay({ modifiers, children, .
 	return (
 		<Portal container={document.body}>
 			<StyledSortableOverlay
-				className={ifColorScheme.forceMotion}
+				className="force-motion"
 				adjustScale
 				dropAnimation={dropAnimationConfig(emits)}
 				modifiers={modifiers}

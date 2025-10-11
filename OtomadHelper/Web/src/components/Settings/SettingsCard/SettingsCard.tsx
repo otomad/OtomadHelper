@@ -128,15 +128,14 @@ const StyledSettingsCard = styled(StyledCard)<{
 		&::after {
 			${styles.mixins.square("36px")};
 			content: "";
-			display: block;
+			display: if(
+				${ifColorScheme.contrast}: none;
+				else: block;
+			);
 			border-radius: 4px;
 
 			.sortable-item.dragging & {
 				box-shadow: none;
-			}
-
-			${ifColorScheme.contrast} & {
-				display: none;
 			}
 		}
 

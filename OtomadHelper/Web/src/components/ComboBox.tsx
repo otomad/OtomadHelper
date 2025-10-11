@@ -1,11 +1,6 @@
-import chevron from "assets/icons/chevron_down.svg?inline"; // TODO: DEV import only.
-import colors from "styles/colors";
 import { StyledButton } from "./Button";
 import { styledSimpleIndicator } from "./ItemsView/ItemsViewItem";
 import { inputInSettingsCardStyle } from "./TextBox";
-
-const themedChevron = colors["foreground-color"].slice(0, 2).map(color =>
-	chevron.replace("svg%20", `svg%20fill='${encodeURI(color)}'%20`));
 
 // Apply focus-visible ring style only if it is webview environment (as a button) or the customizable select element.
 // Not for default select element, or the focus ring will unexpectedly appear when mouse clicking without keyboard.
@@ -66,27 +61,6 @@ const StyledComboBox = styled(StyledButton)(() => css`
 			color: ${c("fill-color-text-disabled")};
 		}
 
-		@supports not (appearance: base-select) {
-			background-image: url("${themedChevron[1]}");
-			background-repeat: no-repeat;
-			background-position: calc(100% - 11px) center;
-			background-size: 16px;
-			background-attachment: scroll;
-			appearance: none;
-
-			${ifColorScheme.light} & {
-				background-image: url("${themedChevron[0]}");
-			}
-
-			&:active {
-				background-position-y: calc(50% + 2px);
-			}
-
-			&:dir(rtl) {
-				background-position-x: 11px;
-			}
-		}
-
 		@supports (appearance: base-select) {
 			${enabledFocusVisible};
 
@@ -111,12 +85,11 @@ const StyledComboBox = styled(StyledButton)(() => css`
 				box-shadow: 0 8px 16px ${c("shadows-flyout")};
 				opacity: 0;
 				backdrop-filter: blur(60px);
-				transition: ${fallbackTransitions}, width 0s, height 0s;
+				transition: if(
+					${ifColorScheme.reduceMotion}: none;
+					else: ${fallbackTransitions}, width 0s, height 0s;
+				);
 				transition-behavior: allow-discrete;
-
-				${ifColorScheme.reduceMotion} {
-					transition: none;
-				}
 
 				&:popover-open {
 					opacity: 1;

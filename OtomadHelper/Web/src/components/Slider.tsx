@@ -31,11 +31,10 @@ const StyledSlider = styled.div`
 		&::after {
 			content: "";
 			display: block;
-			background-color: ${c("fill-color-control-strong-default")};
-
-			${ifColorScheme.contrast} &${ifColorScheme.contrastButOverridden} {
-				background-color: ${cc("FieldText")};
-			}
+			background-color: if(
+				${ifColorScheme.contrast}: ${cc("FieldText")};
+				else: ${c("fill-color-control-strong-default")};
+			);
 		}
 	}
 

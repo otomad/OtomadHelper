@@ -129,12 +129,8 @@ export /* @internal */ const StyledButton = styled.button<{
 	${({ $fillColorName, $subtleFillColorName }) => !$fillColorName ? css`
 		background-color: ${c("fill-color-control-default")};
 
-		${ifColorScheme.dark} &${notPressedOrDisabled} {
-			--border-highlight-y-offset: -1px;
-		}
-
-		${ifColorScheme.light} &${notPressedOrDisabled} {
-			--border-highlight-y-offset: 1px;
+		&${notPressedOrDisabled} {
+			--border-highlight-y-offset: --light-dark(1px, -1px);
 		}
 	` : css`
 		--fill-color: ${c($fillColorName)};
@@ -166,11 +162,13 @@ export /* @internal */ const StyledButton = styled.button<{
 			--border-accent-color: ${c("fill-color-accent-disabled")};
 			background-color: ${c("fill-color-accent-disabled")};
 
-			${ifColorScheme.light} & > .content {
-				opacity: 1;
+			${ifColorScheme.at.light} {
+				> .content {
+					opacity: 1;
+				}
 			}
 
-			${ifColorScheme.dark} & {
+			${ifColorScheme.at.dark} {
 				color: ${c("foreground-color")};
 			}
 		}
@@ -198,12 +196,12 @@ export /* @internal */ const StyledButton = styled.button<{
 			}
 		}
 
-		${ifColorScheme.contrast} &${ifColorScheme.contrastButOverridden} {
+		${ifColorScheme.at.contrast} {
 			background-color: ${cc("ActiveText")};
 		}
 	`}
 
-	${ifColorScheme.contrast} &${ifColorScheme.contrastButOverridden} {
+	${ifColorScheme.at.contrast} {
 		--border-highlight-y-offset: 0 !important;
 		color: ${cc("ButtonText")};
 		forced-color-adjust: none;

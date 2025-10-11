@@ -21,7 +21,7 @@ const StyledTabItem = styled.button`
 		&.selected {
 			background-color: ${c("fill-color-subtle-secondary")};
 
-			${ifColorScheme.contrast} & {
+			${ifColorScheme.at.contrast} {
 				background-color: ${cc("Highlight")} !important;
 
 				* {

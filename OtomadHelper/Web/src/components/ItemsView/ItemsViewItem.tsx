@@ -120,11 +120,11 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 		}
 
 		&:is(:hover, ${isPressed}) .selection {
-			${ifColorScheme.contrast} & {
+			${ifColorScheme.at.contrast} {
 				background-color: transparent;
 			}
 
-			${ifColorScheme.reduceTransparency} {
+			${ifColorScheme.at.reduceTransparency} {
 				background-color: transparent;
 			}
 		}
