@@ -12,7 +12,7 @@ const isPressedPseudo = "&:active, &.pressed, .settings-card-toggle-switch.toggl
 
 const TOGGLE_SWITCH_LABEL_GAP = 12;
 
-const StyledToggleSwitchLabel = styled.button`
+const StyledToggleSwitchLabel = styled.button(() => css`
 	display: flex;
 	gap: ${TOGGLE_SWITCH_LABEL_GAP}px;
 	justify-content: space-between;
@@ -238,7 +238,7 @@ const StyledToggleSwitchLabel = styled.button`
 			}
 		}
 	}
-`;
+`);
 
 export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, _reduceLag, anchor, children, onChange, ...htmlAttrs }: FCP<{
 	/** Is on? */

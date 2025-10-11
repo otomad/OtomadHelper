@@ -726,6 +726,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	};
 	const navItemsId = useId();
 	const [mainPageTransitionStatus, setMainPageTransitionStatus] = useState<TransitionUpdateStatus>("entered");
+	const reduceMotion = useMediaQuery.reduceMotion();
 
 	const currentNavItem = useMemo(() =>
 		navItems.find(item => !("type" in item) && item.id === currentNavTab[0]) as NavItem,
@@ -752,6 +753,19 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 		},
 		...props,
 	});
+
+	async function hack_rerenderPageWhenReduceMotion() {
+		// HACK: Unknown Chromium render bug (first found in Chromium 141). When user prefers reduced motion,
+		// the page will unexpectedly not shown after the first navigation when it is the first time the webpage loaded,
+		// by changing any style will make it become normal. I don't know why this happened.
+		if (!reduceMotion) return;
+		const pageContent = pageContentEl.current, mainPage = pageContent?.querySelector(":scope > .enter-done");
+		if (pageContent && mainPage && getComputedStyle(mainPage).translate !== "none") {
+			pageContent.hidden = true;
+			await nextAnimationTick();
+			pageContent.hidden = false;
+		}
+	}
 
 	const windowWidth = useWindowWidth();
 	useEffect(hideFlyoutNavMenu, [currentNav, windowWidth]);
@@ -834,6 +848,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 								<CssTransition
 									key={pagePath}
 									onEnter={scrollToTopOrPrevious}
+									onEntered={hack_rerenderPageWhenReduceMotion}
 									onUpdated={(_, status) => setMainPageTransitionStatus(status)}
 									moreCoherentWhenCombo
 									maxTimeout={1000}
