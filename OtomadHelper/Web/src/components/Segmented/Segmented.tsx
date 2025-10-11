@@ -3,8 +3,6 @@ import SegmentedItem from "./SegmentedItem";
 const THUMB_BORDER_WIDTH = 1;
 const ITEM_BASE_MARGIN_X_WIDTH = 3;
 const ITEM_BASE_PADDING_X_WIDTH = 11.5;
-const ITEM_BASE_BORDER_RADIUS = 2;
-const ITEM_BASE_ADJUSTED_BORDER_RADIUS = `${ITEM_BASE_BORDER_RADIUS}px ${ITEM_BASE_BORDER_RADIUS + ITEM_BASE_MARGIN_X_WIDTH}px`;
 const ITEM_BASE_ADJUSTED_PADDING_X_WIDTH = ITEM_BASE_PADDING_X_WIDTH + ITEM_BASE_MARGIN_X_WIDTH;
 const THUMB_TRANSITION_OPTION = `${eases.easeOutSmooth} 350ms`;
 const SEGMENTED_ITEM_PRESSED_SCALE = 0.95;
@@ -32,17 +30,19 @@ const StyledSegmented = styled.div<{
 		width: inherit;
 
 		.item {
-			${styles.mixins.flexCenter()};
-			gap: 10px;
-			height: 100%;
-			padding: 4px ${ITEM_BASE_PADDING_X_WIDTH}px;
-			color: if(
-				${ifColorScheme.contrast}: ${cc("ButtonText")};
-				else: ${c("foreground-color")};
-			);
-			background-clip: padding-box;
-			border: ${ITEM_BASE_MARGIN_X_WIDTH}px solid transparent;
-			border-radius: ${ITEM_BASE_BORDER_RADIUS + ITEM_BASE_MARGIN_X_WIDTH}px;
+			padding: ${ITEM_BASE_MARGIN_X_WIDTH}px;
+
+			> .base {
+				${styles.mixins.flexCenter()};
+				gap: 10px;
+				height: 100%;
+				padding: 4px ${ITEM_BASE_PADDING_X_WIDTH}px;
+				color: if(
+					${ifColorScheme.contrast}: ${cc("ButtonText")};
+					else: ${c("foreground-color")};
+				);
+				border-radius: 2px;
+			}
 
 			p {
 				${styles.effects.text.body};
@@ -57,11 +57,11 @@ const StyledSegmented = styled.div<{
 	}
 
 	.items .item {
-		&:hover {
+		&:hover > .base {
 			background-color: ${c("fill-color-subtle-secondary")};
 		}
 
-		&:active {
+		&:active > .base {
 			background-color: ${c("fill-color-subtle-tertiary")};
 			scale: ${SEGMENTED_ITEM_PRESSED_SCALE};
 
@@ -72,18 +72,20 @@ const StyledSegmented = styled.div<{
 
 		&.selected ~ .item:not(:last-child),
 		&:not(:has(+ .selected)):has(~ .item.selected) {
-			padding-inline-end: ${ITEM_BASE_ADJUSTED_PADDING_X_WIDTH}px;
-			border-inline-end-width: ${ITEM_BASE_MARGIN_X_WIDTH / 2}px;
-			border-start-end-radius: ${ITEM_BASE_ADJUSTED_BORDER_RADIUS};
-			border-end-end-radius: ${ITEM_BASE_ADJUSTED_BORDER_RADIUS};
+			padding-inline-end: 0;
+
+			> .base {
+				padding-inline-end: ${ITEM_BASE_ADJUSTED_PADDING_X_WIDTH}px;
+			}
 		}
 
 		&.selected ~ .item:not(.selected + .item),
 		&:not(:first-child):has(~ .item.selected) {
-			padding-inline-start: ${ITEM_BASE_ADJUSTED_PADDING_X_WIDTH}px;
-			border-inline-start-width: ${ITEM_BASE_MARGIN_X_WIDTH / 2}px;
-			border-start-start-radius: ${ITEM_BASE_ADJUSTED_BORDER_RADIUS};
-			border-end-start-radius: ${ITEM_BASE_ADJUSTED_BORDER_RADIUS};
+			padding-inline-start: 0;
+
+			> .base {
+				padding-inline-start: ${ITEM_BASE_ADJUSTED_PADDING_X_WIDTH}px;
+			}
 		}
 	}
 
@@ -150,7 +152,7 @@ const StyledSegmented = styled.div<{
 			background-color: ${c("fill-color-accent-disabled")};
 		}
 
-		:is(.items, .thumb-content) .item {
+		:is(.items, .thumb-content) .item > .base {
 			color: ${c("fill-color-text-disabled")};
 		}
 	}
