@@ -136,25 +136,28 @@ export default function Visual() {
 					<Setting meta={meta.timeUnremapping} on={timeUnremapping} />
 					<Setting meta={meta.mimical}>
 						<InfoBar status="info">{t.descriptions.stream.tuning.mimical.auto}</InfoBar>
-						<Setting meta={meta.mimical.resample}><ThreeStageSwitch current={mimicalResample} /></Setting>
-						<Setting meta={meta.mimical.oscillator}><ThreeStageSwitch current={mimicalOscillator} /></Setting>
+						<Setting meta={meta.mimical.resample} actions={<ThreeStageSwitch current={mimicalResample} />} />
+						<Setting meta={meta.mimical.oscillator} actions={<ThreeStageSwitch current={mimicalOscillator} />} />
 					</Setting>
 					<Setting meta={meta.transition} on={transition}>
-						<Setting meta={meta.transition.alignment}>
-							<Slider
-								value={transitionAlignment}
-								defaultValue={0}
-								min={-100}
-								max={100}
-								displayValueStep={1}
-								displayValue={value => ({
-									"-100": t.stream.transition.alignment.end,
-									0: t.stream.transition.alignment.center,
-									100: t.stream.transition.alignment.start,
-								})[value] ?? `${value > 0 ? "+" : ""}${value}%`}
-							/>
-						</Setting>
-						<Setting meta={meta.transition.duration}><TimecodeBox value={transitionDuration} /></Setting>
+						<Setting
+							meta={meta.transition.alignment}
+							actions={(
+								<Slider
+									value={transitionAlignment}
+									defaultValue={0}
+									min={-100}
+									max={100}
+									displayValueStep={1}
+									displayValue={value => ({
+										"-100": t.stream.transition.alignment.end,
+										0: t.stream.transition.alignment.center,
+										100: t.stream.transition.alignment.start,
+									})[value] ?? `${value > 0 ? "+" : ""}${value}%`}
+								/>
+							)}
+						/>
+						<Setting meta={meta.transition.duration} actions={<TimecodeBox value={transitionDuration} />} />
 						<InfoBar status="info">{t.descriptions.stream.transition.crossfadeInfo}</InfoBar>
 					</Setting>
 					<Setting meta={meta.transformMethod} checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.shared.plugins[topPriorityTransformMethod] })}>
@@ -164,6 +167,7 @@ export default function Visual() {
 									title={t.shared.plugins[item]}
 									icon={<div className="icon-placeholder"><Badge>{index + 1}</Badge></div>}
 									clickable
+									nonFocusable
 								/>
 							)}
 						</SortableView>
@@ -190,7 +194,7 @@ export default function Visual() {
 					<Setting meta={meta.articulations.appoggiatura} on={appoggiatura} />
 					<Setting meta={meta.articulations.arpeggio} on={arpeggio}>
 						<Setting meta={meta.articulations.arpeggio.negative} on={arpeggioNegative} />
-						<Setting meta={meta.articulations.arpeggio.applyCustomPreset}><Button>{t.unselected}</Button></Setting>
+						<Setting meta={meta.articulations.arpeggio.applyCustomPreset} actions={<Button>{t.unselected}</Button>} />
 					</Setting>
 
 					<Subheader meta={meta.mapping} />

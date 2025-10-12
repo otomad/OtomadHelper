@@ -282,16 +282,19 @@ export default function Audio() {
 							/>
 						</Attrs>
 						<Setting meta={meta.tuning.basePitch} actions={<PitchPicker spn={basePitch} />}>
-							<Setting meta={meta.tuning.basePitch.cent}>
-								<SliderWithBox
-									value={cent}
-									min={-100}
-									max={100}
-									decimalPlaces={0}
-									defaultValue={0}
-									suffix={t(cent[0]).units.cent}
-								/>
-							</Setting>
+							<Setting
+								meta={meta.tuning.basePitch.cent}
+								actions={(
+									<SliderWithBox
+										value={cent}
+										min={-100}
+										max={100}
+										decimalPlaces={0}
+										defaultValue={0}
+										suffix={t(cent[0]).units.cent}
+									/>
+								)}
+							/>
 							<Setting meta={meta.tuning.basePitch.based} on={basePitchBased} />
 							<Setting meta={meta.tuning.basePitch.auto} on={[false]} disabled selectInfo={t.underConstruction} />
 						</Setting>
@@ -305,30 +308,38 @@ export default function Audio() {
 								</PrelistenActions>
 							)}
 						>
-							<Setting meta={meta.tuning.prelisten.engine}>
-								<ComboBox current={engine} ids={beepEngines} options={beepEngines} />
-							</Setting>
-							<Setting meta={meta.tuning.prelisten.waveform}>
-								<ComboBox
-									current={waveform}
-									ids={beepWaveforms}
-									options={beepWaveforms.map(waveform => t.stream.tuning.prelisten.waveform[waveform])}
-									icons={beepWaveforms.map(waveform => `waveforms/${waveform}` as const)}
-								/>
-							</Setting>
-							<Setting meta={meta.tuning.prelisten.duration}>
-								<TextBox.Number value={beepDuration} min={0} decimalPlaces={0} spinnerStep={100} suffix={t.units.millisecond} />
-							</Setting>
-							<Setting meta={meta.tuning.prelisten.volumeForBasePitch}>
-								<Slider
-									value={beepVolume}
-									min={0}
-									max={1}
-									step={0.01}
-									defaultValue={1}
-									displayValue={value => (value * 100 | 0) + t.units.percent}
-								/>
-							</Setting>
+							<Setting
+								meta={meta.tuning.prelisten.engine}
+								actions={<ComboBox current={engine} ids={beepEngines} options={beepEngines} />}
+							/>
+							<Setting
+								meta={meta.tuning.prelisten.waveform}
+								actions={(
+									<ComboBox
+										current={waveform}
+										ids={beepWaveforms}
+										options={beepWaveforms.map(waveform => t.stream.tuning.prelisten.waveform[waveform])}
+										icons={beepWaveforms.map(waveform => `waveforms/${waveform}` as const)}
+									/>
+								)}
+							/>
+							<Setting
+								meta={meta.tuning.prelisten.duration}
+								actions={<TextBox.Number value={beepDuration} min={0} decimalPlaces={0} spinnerStep={100} suffix={t.units.millisecond} />}
+							/>
+							<Setting
+								meta={meta.tuning.prelisten.volumeForBasePitch}
+								actions={(
+									<Slider
+										value={beepVolume}
+										min={0}
+										max={1}
+										step={0.01}
+										defaultValue={1}
+										displayValue={value => (value * 100 | 0) + t.units.percent}
+									/>
+								)}
+							/>
 							<Setting meta={meta.tuning.prelisten.adjustAudioToBasePitch} on={adjustAudioToBasePitch} />
 						</Setting>
 						<Setting meta={meta.tuning.glissando} on={glissando} />

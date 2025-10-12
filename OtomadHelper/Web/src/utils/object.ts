@@ -725,3 +725,32 @@ export const supplement: typeof Object["assign"] = (target: object, ...sources: 
 				(target as AnyObject)[key] = value;
 	return target;
 };
+
+/**
+ * Deep freeze the object recursively.
+ * @template T - Object type.
+ * @param obj - Object on which to lock the attributes.
+ * @returns Deep freezed object.
+ */
+export function deepFreeze<T extends AnyObject>(obj: T): DeepReadonly<T> {
+	Object.freeze(obj);
+	if (obj === undefined) return obj;
+
+	Object.getOwnPropertyNames(obj).forEach(prop => {
+		const value = obj[prop];
+		if (
+			value !== null &&
+			(typeof value === "object" || typeof value === "function") &&
+			(() => {
+				try {
+					return !Object.isFrozen(value);
+				} catch {
+					return false;
+				}
+			})()
+		)
+			deepFreeze(value);
+	});
+
+	return obj;
+}

@@ -96,9 +96,11 @@ export default function Track() {
 				<Setting meta={meta.legato.forClips} on={legatoForClips} />
 				<Setting meta={meta.legato.includeGroup} on={legatoIncludeGroup} />
 				<Setting meta={meta.legato.backwards} on={legatoBackwards} />
-				<Setting meta={meta.legato.increaseSpacing} disabled={!legatoMode[0].in("increaseSpacing", "increaseSpacingAllTracks")}>
-					<TimecodeBox value={increaseSpacing} />
-				</Setting>
+				<Setting
+					meta={meta.legato.increaseSpacing}
+					disabled={!legatoMode[0].in("increaseSpacing", "increaseSpacingAllTracks")}
+					actions={<TimecodeBox value={increaseSpacing} />}
+				/>
 				<Expander.ChildWrapper>
 					<Button icon="checkmark">{t.apply}</Button>
 				</Expander.ChildWrapper>

@@ -117,10 +117,10 @@ type Nesting<TObject> = {
 };
 
 const metas: SettingMeta[] = [];
-const settingsMetasOutput: AnyObject = settingsMetasInput;
+const settingsMetasOutput: AnyObject = {};
 function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = false) {
 	const { items: itemsInput, ...meta } = item;
-	const items = itemsInput as AnyObject;
+	const items: AnyObject = {};
 	if (!lodash.isEmpty(itemsInput))
 		for (const [itemId, item] of Object.entries(itemsInput))
 			items[itemId] = convertItem(item, `${path}.${itemId}`);
@@ -131,7 +131,7 @@ function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = fal
 			dotJoined = dotJoined.replaceStart(old, new_);
 			break;
 		}
-	meta.aliases ??= [];
+	meta.aliases = [...meta.aliases ?? []];
 	if (!isPageMeta) {
 		if (!("title" in meta)) meta.title = dotJoined;
 		if (!("details" in meta)) meta.details = "descriptions." + dotJoined;
@@ -157,15 +157,15 @@ function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = fal
 	return { meta: _meta, ...items };
 }
 for (const [pageId, items] of Object.entries(settingsMetasInput as AnyObject)) {
-	items.meta = convertItem(items.meta ?? {}, pageId, true).meta;
+	settingsMetasOutput[pageId] = {};
+	settingsMetasOutput[pageId].meta = convertItem(items.meta ?? {}, pageId, true).meta;
 	for (const [itemId, item] of Object.entries(items))
-		if (itemId !== "meta")
-			items[itemId] = convertItem(item as ISettingMeta, `${pageId}.${itemId}`);
+		settingsMetasOutput[pageId][itemId] = convertItem(item as ISettingMeta, `${pageId}.${itemId}`);
 }
-for (const [pageId, items] of Object.entries(settingsMetasInput as AnyObject))
+for (const [pageId, items] of Object.entries(settingsMetasOutput))
 	if (pageId.includes("_")) {
-		accessPath(settingsMetasInput, pageId.replaceAll("_", "."), items);
-		delete settingsMetasInput[pageId as never];
+		accessPath(settingsMetasOutput, pageId.replaceAll("_", "."), items);
+		delete settingsMetasOutput[pageId as never];
 	}
 export const settingsMetas = settingsMetasOutput as Nesting<ConvertPage<typeof settingsMetasInput>>;
 

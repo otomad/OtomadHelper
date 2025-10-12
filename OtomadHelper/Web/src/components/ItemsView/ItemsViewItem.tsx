@@ -155,8 +155,10 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 			flex-wrap: nowrap;
 			gap: 16px;
 			align-items: center;
-			min-height: 48px;
-			padding: 8px 12px;
+			block-size: 100%;
+			min-block-size: 48px;
+			padding-block: 12px;
+			padding-inline: 8px;
 			overflow: clip;
 			border-radius: 3px;
 

@@ -5,9 +5,11 @@ const styledDivider = css`
 const StyledSubExpander = styled.div`
 	display: contents;
 
-	> .expander-item,
-	> .toggle-switch-label {
-		${styledDivider};
+	&:not(:first-child) {
+		> .expander-item,
+		> .toggle-switch-label {
+			${styledDivider};
+		}
 	}
 
 	> .expander-item {
@@ -27,16 +29,18 @@ const StyledSubExpander = styled.div`
 	}
 
 	> .expander-child {
+		${styledDivider};
 		overflow: hidden;
 
 		&:has(> .expander-child-items:empty) {
 			display: none;
 		}
 
-		> .expander-child-items {
-			> * {
+		> .expander-child-items > * {
+			padding-inline-start: ${expanderItemPadding[1]}px;
+
+			&:not(:first-child) {
 				${styledDivider};
-				padding-inline-start: ${expanderItemPadding[1]}px;
 			}
 		}
 
@@ -46,6 +50,10 @@ const StyledSubExpander = styled.div`
 			> .expander-child-items {
 				translate: 0 -100%;
 			}
+		}
+
+		&.exit-active {
+			border-block-start-width: 0;
 		}
 	}
 `;
@@ -61,7 +69,14 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 	expanded?: boolean | StatePropertyNonNull<boolean>;
 	/** @private Request to expanded because user search something inside the expander. */
 	_requestExpanded?: TransientValue<boolean>;
-	/** Show chevron or switch as the expanding control. @default "chevron" */
+	/**
+	 * Show chevron or switch as the expanding control.
+	 *
+	 * The difference is that, when user search something inside the sub-expander, if the type is switch, it will not
+	 * auto turn on the toggle switch; if the type is chevron, it will auto set it to expanded.
+	 *
+	 * @default "chevron"
+	 */
 	type?: "chevron" | "switch";
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;

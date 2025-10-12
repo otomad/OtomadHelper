@@ -9,7 +9,6 @@ import "styles/fonts";
 import "styles/properties";
 import "utils/bridge";
 
-import { settingsMetas } from "helpers/settings-metas";
 import { enableMapSet } from "immer";
 
 /**
@@ -104,10 +103,4 @@ import { enableMapSet } from "immer";
 	// #region Enable Map and Set support for Immer
 	enableMapSet();
 	// #endregion
-}
-
-globalThis.metas = settingsMetas;
-declare global {
-	// eslint-disable-next-line no-var
-	var metas: typeof settingsMetas;
 }

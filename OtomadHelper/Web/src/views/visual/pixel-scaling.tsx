@@ -29,7 +29,7 @@ export default function PixelScaling() {
 					expanded
 				>
 					<ToggleSwitch on={[isManuallyAutoScaleFactor || autoScaleFactor, setAutoScaleFactor]} disabled={isManuallyAutoScaleFactor} _reduceLag>{t.auto}</ToggleSwitch>
-					<Expander.ChildWrapper>
+					<Expander.ChildWrapper $single>
 						<Slider value={[autoScaleFactor ? 0 : scaleFactor, setScaleFactor]} step={1} displayValue onDisplayValueChanged={setDisplayScaleFactor} />
 					</Expander.ChildWrapper>
 				</Setting>

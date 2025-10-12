@@ -159,6 +159,12 @@ const StyledExpanderItem = styled.div<{
 		.sortable-overlay:not(.dropping) &${important()} {
 			background-color: ${c("fill-color-subtle-tertiary")};
 		}
+
+		.sortable-item:last-child > &,
+		:not(.sortable-item, .sortable-overlay) > &:last-child {
+			border-end-start-radius: 2px;
+			border-end-end-radius: 2px;
+		}
 	`)}
 
 	${ifProp("$asSubtitle", css`
@@ -175,7 +181,7 @@ const StyledExpanderItem = styled.div<{
 	`)}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, noDivider, ariaHiddenForText, anchor, children, disabled = false, wrapActionsWhenNarrow, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, nonFocusable, asSubtitle, noDivider, ariaHiddenForText, anchor, children, disabled = false, wrapActionsWhenNarrow, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -184,6 +190,8 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	details?: ReactNode;
 	/** With clickable style? */
 	clickable?: boolean;
+	/** Apply tabIndex = -1? Only available when `clickable` is true. */
+	nonFocusable?: boolean;
 	/** As sub title style? */
 	asSubtitle?: boolean;
 	/** Remove the top split line and top padding from the expand child. */
@@ -208,6 +216,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 			$asSubtitle={asSubtitle}
 			$noDivider={noDivider}
 			disabled={disabled}
+			tabIndex={nonFocusable ? -1 : clickable ? 0 : undefined}
 			aria-disabled={disabled || undefined}
 			data-anchor={anchor}
 			{...htmlAttrs}

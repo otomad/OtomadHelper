@@ -73,8 +73,6 @@ export /* @internal */ const StyledButton = styled.button<{
 
 	&.subtle,
 	&.hyperlink {
-		padding-block: 11px;
-		padding-inline: 0;
 		background-color: ${c("fill-color-subtle-transparent")};
 		background-clip: border-box;
 		border-color: transparent !important;
