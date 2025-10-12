@@ -1361,7 +1361,7 @@ export default {
 				mimical: "Imitative tuning methods", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
 			track: {
-				layout: "Template, Templates, Composition, Composite, Compose, Typesetting, Typography, Auto Layout Tracks", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				layout: "Template, Templates, Composition, Composite, Compose, Typesetting, Typography, Format, Storyboard, Auto Layout Tracks", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
 			// cSpell:enable
 		},

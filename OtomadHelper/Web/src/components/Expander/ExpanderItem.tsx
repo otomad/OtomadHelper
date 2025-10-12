@@ -219,6 +219,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 			tabIndex={nonFocusable ? -1 : clickable ? 0 : undefined}
 			aria-disabled={disabled || undefined}
 			data-anchor={anchor}
+			as={clickable && !nonFocusable ? "button" as never : undefined}
 			{...htmlAttrs}
 		>
 			<InteractionStateContext value={{ disabled }}>

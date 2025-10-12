@@ -78,13 +78,16 @@ const ExpanderChildItems = styled.div`
 
 const ExpanderChild = styled.div`
 	inline-size: 100%;
-	overflow: hidden;
 	background-color: ${c("background-fill-color-card-background-secondary")};
 	background-clip: padding-box;
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
 	border-block-start-width: 0;
 	border-end-start-radius: 3px;
 	border-end-end-radius: 3px;
+
+	&:not(.enter-done) {
+		overflow: clip;
+	}
 
 	&[disabled] {
 		opacity: ${c("disabled-text-opacity")};

@@ -36,12 +36,12 @@ const StyledSubExpander = styled.div`
 			display: none;
 		}
 
-		> .expander-child-items > * {
+		> .expander-child-items:not(.no-indention) > * {
 			padding-inline-start: ${expanderItemPadding[1]}px;
+		}
 
-			&:not(:first-child) {
-				${styledDivider};
-			}
+		> .expander-child-items > :not(:first-child) {
+			${styledDivider};
 		}
 
 		${tgs()} {
@@ -58,7 +58,7 @@ const StyledSubExpander = styled.div`
 	}
 `;
 
-export /* @internal */ default function SubExpander({ icon, title, details, disabled, expanded = false, _requestExpanded, type = "chevron", anchor, actions: _actions, children, onChange: _onChange, ...htmlAttrs }: FCP<{
+export /* @internal */ default function SubExpander({ icon, title, details, disabled, expanded = false, _requestExpanded, type = "chevron", noIndention, anchor, actions: _actions, children, onChange: _onChange, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons;
 	/** Title. */
@@ -78,6 +78,8 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 	 * @default "chevron"
 	 */
 	type?: "chevron" | "switch";
+	/** Should not it auto add indention at the start of child items? */
+	noIndention?: boolean;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
 	/** The other action control area on the right side of the component. @warn Useless, not working now. */
@@ -129,7 +131,7 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 			}
 			<CssTransition in={expanded || requestExpanded} unmountOnExit transitionEndProperty={["height", "block-size"]} requestAnimationFrame>
 				<div className="expander-child">
-					<div className="expander-child-items">
+					<div className={["expander-child-items", { noIndention }]}>
 						{children}
 					</div>
 				</div>

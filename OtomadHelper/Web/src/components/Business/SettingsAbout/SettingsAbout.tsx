@@ -311,25 +311,26 @@ function HelpLinks() {
 
 	return (
 		<>
-			<Expander.Item title={<b>{tAbout.previousVersionDocumentation + " (v4.x)"}</b>} />
-			{Object.entries(helpsV4).map(([language, links]) => (
-				<Fragment key={language}>
-					<Expander.Item title={tAbout.documentationInLanguage({ language: getLocaleName(language, currentLanguage), count: links.length })} noDivider />
-					<Expander.ChildWrapper $noDivider>
-						<StackPanel $gap={[8, 14]}>
-							{links.map(({ name, version, link }) => {
-								const icon = Object.entries(icons).find(([domain]) => link.includes(domain))?.[1];
-								return (
-									<Link key={link} href={link}>
-										{icon && <Icon name={icon} filled style={{ marginInlineEnd: "0.35em" }} />}
-										{name}{version ? ` (v${version})` : undefined}
-									</Link>
-								);
-							})}
-						</StackPanel>
-					</Expander.ChildWrapper>
-				</Fragment>
-			))}
+			<Expander.Sub title={<b>{tAbout.previousVersionDocumentation + " (v4.x)"}</b>} noIndention>
+				{Object.entries(helpsV4).map(([language, links]) => (
+					<Fragment key={language}>
+						<Expander.Item title={tAbout.documentationInLanguage({ language: getLocaleName(language, currentLanguage), count: links.length })} noDivider />
+						<Expander.ChildWrapper $noDivider>
+							<StackPanel $gap={[8, 14]}>
+								{links.map(({ name, version, link }) => {
+									const icon = Object.entries(icons).find(([domain]) => link.includes(domain))?.[1];
+									return (
+										<Link key={link} href={link}>
+											{icon && <Icon name={icon} filled style={{ marginInlineEnd: "0.35em" }} />}
+											{name}{version ? ` (v${version})` : undefined}
+										</Link>
+									);
+								})}
+							</StackPanel>
+						</Expander.ChildWrapper>
+					</Fragment>
+				))}
+			</Expander.Sub>
 		</>
 	);
 }
