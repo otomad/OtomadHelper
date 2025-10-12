@@ -25,8 +25,6 @@ export default {
 				"height": "| <anchor-size()>",
 				// WARN: https://github.com/stylelint/stylelint/issues/8778
 				"appearance": "| base-select",
-				// WARN: https://github.com/stylelint/stylelint/issues/8779
-				"view-transition-name": "| <attr()>",
 			},
 			types: {
 				// WARN: https://github.com/stylelint/stylelint/issues/8610
@@ -35,8 +33,6 @@ export default {
 				"repeating-linear-gradient()": "| <color-interpolation-method>",
 				"repeating-radial-gradient()": "| <color-interpolation-method>",
 				"repeating-conic-gradient()": "| <color-interpolation-method>",
-				// WARN: https://github.com/stylelint/stylelint/issues/8779
-				"attr()": "attr( <any-value> )",
 			},
 		},
 	},
@@ -67,7 +63,13 @@ export default {
 		"at-rule-no-unknown": null,
 		"function-no-unknown": null,
 		"property-no-unknown": [true, { "severity": "warning" }],
-		"declaration-property-value-no-unknown": [true, { "severity": "warning" }],
+		"declaration-property-value-no-unknown": [true, {
+			"severity": "warning",
+			"ignoreProperties": {
+				// WARN: https://github.com/stylelint/stylelint/issues/8779
+				"/.+/": ["/(^|[^\\w-])(attr|if|--[\\w-]+)\\(/"],
+			},
+		}],
 		"declaration-empty-line-before": null,
 		"custom-property-empty-line-before": null,
 		"selector-pseudo-class-no-unknown": [true, {
