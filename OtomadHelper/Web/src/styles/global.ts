@@ -1,7 +1,6 @@
 import { FALLBACK_TRANSITIONS } from "utils/styles";
 import { globalColors } from "./colors";
 import counters from "./counters";
-import eases from "./eases";
 import fakeAnimations from "./fake-animations";
 import fix from "./fix";
 import focusTestStyle from "./focus-test";
@@ -29,10 +28,10 @@ const GlobalStyle = createGlobalStyle<{
 		font-optical-sizing: auto;
 		hyphens: auto;
 		hyphenate-limit-chars: 10;
+		-webkit-tap-highlight-color: transparent;
 		user-select: none;
 		transition: ${fallbackTransitions};
 		forced-color-adjust: none;
-		-webkit-tap-highlight-color: transparent;
 
 		@layer base {
 			/* color: var(--foreground-color); */
@@ -139,14 +138,14 @@ const GlobalStyle = createGlobalStyle<{
 		font-synthesis: none;
 		font-variant-ligatures: common-ligatures historical-ligatures contextual;
 		font-variant-numeric: proportional-nums;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 		text-rendering: optimizeLegibility;
 		tab-size: 4;
 		background-color: var(--background-color);
 		touch-action: manipulation;
 		transition: ${fallbackTransitions}, width 0s, height 0s;
 		accent-color: var(--accent-color);
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
 	}
 
 	#root {

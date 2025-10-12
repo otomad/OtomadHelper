@@ -69,7 +69,7 @@ declare global {
 	 *         <div {...htmlAttrs}>
 	 *             <button {...htmlAttrs} />
 	 *         </div>
-	 *     )
+	 *     );
 	 * }
 	 * ```
 	 */
@@ -99,6 +99,7 @@ declare global {
 	export type StatePropertyNonNull<T> = [get: T, set: SetStateNarrow<T>];
 	/**
 	 * Add more functions to the StateProperty.
+	 * @template T - State property type.
 	 */
 	export type StatePropertyPremium<T> = StateProperty<T> & {
 		/**

@@ -76,6 +76,7 @@ const StyledPianoKey = styled.div`
 		color: ${c("foreground-color")};
 		/* font-variant-numeric: tabular-nums; */
 		background-color: color-mix(in srgb, var(--fill), var(--highlight) var(--level-highlight));
+		background-clip: border-box;
 		border: 1px solid;
 
 		&:hover {

@@ -56,6 +56,11 @@ const StyledSettingsCard = styled(StyledCard)<{
 		@container expander-parent scroll-state(stuck: top) {
 			> .base {
 				background-color: ${c("background-fill-color-expander-sticky-background-default")};
+
+				> .leading > .text > .details {
+					/* -webkit-line-clamp: 2; */
+					// Unfortunately it will be glitchy after enable it.
+				}
 			}
 
 			&:hover > .base {
@@ -88,9 +93,12 @@ const StyledSettingsCard = styled(StyledCard)<{
 
 			> .base > .leading > .icon,
 			> .base > .leading > .text,
-			> .base > .trailing > .check-info,
-			&.button > .base > .trailing > .action-icon {
+			> .base > .trailing > .check-info {
 				opacity: ${c("pressed-text-opacity")};
+			}
+
+			&.button > .base > .trailing > .action-icon {
+				--state: active;
 			}
 		}
 	}
@@ -98,14 +106,13 @@ const StyledSettingsCard = styled(StyledCard)<{
 	&.expander-parent {
 		&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}, p, span):hover)):hover {
 			.action-icon {
-				background-color: ${c("fill-color-subtle-secondary")};
+				--state: hover;
 			}
 		}
 
-		${isPressed("&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active))")} {
+		${isPressed(`&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active))`)} {
 			.action-icon {
-				color: ${c("fill-color-text-secondary")};
-				background-color: ${c("fill-color-subtle-tertiary")};
+				--state: active;
 			}
 		}
 	}
@@ -174,7 +181,7 @@ const StyledSettingsCard = styled(StyledCard)<{
 	}
 `);
 
-export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, wrapActionsWhenNarrow, anchor, ariaIdRef, ref, _requestExpanded, onClick, onFocus, ...htmlAttrs }: FCP<{
+export default function SettingsCard({ icon = "placeholder", title, details, selectInfo, selectValid = true, actionIcon, disabled, children, type = "container", dragHandle, appearance = "primary", trailingGap, className, tabIndex, dirBasedIcon, wrapActionsWhenNarrow, anchor, ariaIdRef, ref, _requestExpanded, _isExpander, onClick, onFocus, ...htmlAttrs }: FCP<{
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
 	icon?: DeclaredIcons | "" | boolean | ReactElement;
 	/** Title. */
@@ -218,6 +225,8 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	ariaIdRef?: RefObject<string | undefined | null>;
 	/** @private Compatible with Expander. */
 	_requestExpanded?: never;
+	/** @private Is called by Expander? */
+	_isExpander?: boolean;
 }, "div">) {
 	actionIcon ??= type === "button" ? "chevron_right" :
 		type === "expander" ? "chevron_down" : undefined;
@@ -304,7 +313,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 										React.cloneElement(child, propsWithDisabled);
 								})}
 								{actionIcon && typeof actionIcon === "string" && (
-									<div className={["action-icon", TRAILING_EXEMPTION]} data-type={type}>
+									<div className={["action-icon", TRAILING_EXEMPTION, { expanderChevron: _isExpander }]} data-type={type}>
 										<Icon name={actionIcon} />
 									</div>
 								)}

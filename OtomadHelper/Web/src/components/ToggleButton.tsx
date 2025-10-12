@@ -1,9 +1,3 @@
-const StyledToggleButton = styled(Button)`
-	margin: 0 !important;
-	padding-block: 0 !important;
-	box-shadow: none !important;
-`;
-
 export default function ToggleButton({ checked: [checked, setChecked] = [false] as never, appearance = "intense", subtle, onToggled, onClick, ...htmlAttrs }: FCP<Override<PropsOf<typeof Button>, {
 	/** Checked? */
 	checked?: StateProperty<boolean>;
@@ -22,7 +16,8 @@ export default function ToggleButton({ checked: [checked, setChecked] = [false] 
 }>>) {
 	subtle ||= appearance === "subtle" ? true : "small-icon";
 	return (
-		<StyledToggleButton
+		<Button
+			style={{ paddingBlock: 0 }}
 			{...htmlAttrs}
 			onClick={e => {
 				(setChecked as SetStateNarrow<boolean>)?.(checked => {

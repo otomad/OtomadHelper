@@ -103,9 +103,10 @@ const StyledComboBox = styled(StyledButton)(() => css`
 			option {
 				${styles.effects.text.body};
 				position: relative;
-				margin: 3px;
 				padding: 6px 12px;
 				background-color: transparent;
+				background-clip: padding-box;
+				border: 1.5px solid transparent;
 				border-radius: 5px;
 
 				&::checkmark {
@@ -138,6 +139,11 @@ const StyledComboBox = styled(StyledButton)(() => css`
 					&::before {
 						scale: 1 0.625;
 					}
+				}
+
+				&:focus-visible {
+					--focus-ring-length-outer: 2px;
+					--focus-ring-length-inner: 0;
 				}
 			}
 		}

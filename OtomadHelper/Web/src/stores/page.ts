@@ -184,9 +184,13 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 			pageStore.lastGotoPath = new TransientValue(path);
 			if (changed && pageStore.pageChangeResolver) await pageStore.pageChangeResolver.promise;
 			const getEl = () => document.querySelector(`[data-anchor="${CSS.escape(CSS.escape(path))}"]`); // Double escaping, are you kidding me?
-			const isCollapsedNow = !getEl();
-			await delay(100);
-			const el = getEl();
+			let el = getEl();
+			const isCollapsedNow = !el;
+			let retryTimes = 5;
+			do {
+				await delay(100);
+				el = getEl();
+			} while (!el && --retryTimes);
 			if (!el) {
 				console.error(new ReferenceError("Cannot find path in the current page: " + path));
 				return;

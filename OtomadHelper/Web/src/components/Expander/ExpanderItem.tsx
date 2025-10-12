@@ -9,6 +9,7 @@ export /* @internal */ const styledExpanderItemBase = css`
 	min-block-size: 48px;
 	inline-size: 100%;
 	overflow-inline: clip;
+	background-clip: padding-box;
 
 	:where(&) {
 		padding-block: ${expanderItemPadding[0]}px;
@@ -32,7 +33,10 @@ export /* @internal */ const styledExpanderItemText = css`
 
 		.details {
 			${styles.effects.text.caption};
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
 			color: ${c("fill-color-text-secondary")};
+			text-overflow: ellipsis;
 		}
 	}
 `;
@@ -71,12 +75,27 @@ export /* @internal */ const styledExpanderItemContent = css`
 		}
 
 		.action-icon {
+			@layer props {
+				--state: normal;
+			}
+
 			${styles.mixins.square("30px")};
 			${styles.mixins.flexCenter()};
 			flex-shrink: 0;
 			margin-block: -4px;
 			margin-inline-end: -7px;
+			color: if(
+				style(--state: active): ${c("fill-color-text-secondary")};
+				style(--state: disabled): ${c("fill-color-text-disabled")};
+				else: ${c("foreground-color")};
+			);
+			background-color: if(
+				style(--state: hover): ${c("fill-color-subtle-secondary")};
+				style(--state: active): ${c("fill-color-subtle-tertiary")};
+				else: transparent;
+			);
 			border-radius: 3px;
+			pointer-events: none;
 
 			.icon {
 				font-size: 16px;
@@ -84,6 +103,28 @@ export /* @internal */ const styledExpanderItemContent = css`
 
 			&:last-child:not(:first-child) {
 				margin-inline-start: -3px;
+			}
+
+			> * {
+				${styles.mixins.enableHardware3d()};
+			}
+
+			&.expander-chevron {
+				@layer props {
+					--expansion: collapsed;
+				}
+
+				.icon {
+					translate: if(
+						style((--state: active) and (--expansion: collapsed)): 0 -2px;
+						style((--state: active) and (--expansion: expanded)): 0 2px;
+						else: 0;
+					);
+					rotate: if(
+						style(--expansion: expanded): 180deg;
+						else: 0deg;
+					);
+				}
 			}
 		}
 	}
@@ -101,7 +142,6 @@ const StyledExpanderItem = styled.div<{
 }>`
 	${styledExpanderItemBase};
 	padding-inline-start: ${expanderItemWithIconPaddingInlineStart}px;
-
 	${styledExpanderItemContent};
 
 	&[disabled] > .leading > :is(.text, .icon) {
@@ -114,14 +154,10 @@ const StyledExpanderItem = styled.div<{
 			background-color: ${c("fill-color-subtle-secondary")};
 		}
 
+		:not(.sortable-item) > &:active,
 		.sortable-item:not(.dragging) > &:active,
 		.sortable-overlay:not(.dropping) &${important()} {
 			background-color: ${c("fill-color-subtle-tertiary")};
-		}
-
-		.sortable-item:last-child > &,
-		:not(.sortable-item, .sortable-overlay) > &:last-child {
-			border-radius: 0 0 2px 2px;
 		}
 	`)}
 

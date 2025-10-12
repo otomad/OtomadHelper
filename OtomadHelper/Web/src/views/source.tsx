@@ -104,12 +104,15 @@ export default function Source() {
 				meta={meta.preferredTrack}
 				selectInfo={preferredTrack === 0 ? t.source.preferredTrack.top : t(preferredTrack).source.preferredTrack.ordinal}
 			>
-				<Setting meta={meta.preferredTrack.index}>
-					<StackPanel>
-						<TextBox.Number value={[preferredTrack, setPreferredTrack]} decimalPlaces={0} />
-						<QuicklySelectCurrentTrack />
-					</StackPanel>
-				</Setting>
+				<Setting
+					meta={meta.preferredTrack.index}
+					actions={(
+						<StackPanel>
+							<TextBox.Number value={[preferredTrack, setPreferredTrack]} decimalPlaces={0} />
+							<QuicklySelectCurrentTrack />
+						</StackPanel>
+					)}
+				/>
 				<Setting
 					meta={meta.preferredTrack.belowAdjustmentTracks}
 					on={belowAdjustmentTracks}
@@ -138,15 +141,20 @@ export default function Source() {
 					<Setting meta={meta.secretBox.limitToSelected} on={secretBoxLimitToSelected} />
 					<Setting meta={meta.secretBox.track} on={secretBoxForTrack} />
 					<Setting meta={meta.secretBox.marker} on={secretBoxForMarker} />
-					<Setting meta={meta.secretBox.barOrBeat} on={secretBoxForBarOrBeat} />
-					<Attrs disabled={!secretBoxForBarOrBeat[0]}>
-						<Setting meta={meta.secretBox.barOrBeat.period}>
-							<TextBox.NumberUnit value={secretBoxForBarOrBeatPeriod} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={1} />
-						</Setting>
-						<Setting meta={meta.secretBox.barOrBeat.preparation}>
-							<TextBox.NumberUnit value={secretBoxForBarOrBeatPreparation} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={0} />
-						</Setting>
-					</Attrs>
+					<Setting meta={meta.secretBox.barOrBeat} expanded={secretBoxForBarOrBeat} type="switch">
+						<Setting
+							meta={meta.secretBox.barOrBeat.period}
+							actions={(
+								<TextBox.NumberUnit value={secretBoxForBarOrBeatPeriod} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={1} />
+							)}
+						/>
+						<Setting
+							meta={meta.secretBox.barOrBeat.preparation}
+							actions={(
+								<TextBox.NumberUnit value={secretBoxForBarOrBeatPreparation} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={0} />
+							)}
+						/>
+					</Setting>
 				</Setting>
 				<Setting
 					meta={meta.consonant}
@@ -156,11 +164,14 @@ export default function Source() {
 					selectValid={manualEnabled}
 				/>
 				<Setting meta={meta.matchCut} on={matchCut}>
-					<Setting meta={meta.matchCut.order}>
-						<Segmented current={matchCutOrder}>
-							{sequentialOrders.map(({ id, icon }) => <Segmented.Item id={id} key={id} icon={icon}>{t[id]}</Segmented.Item>)}
-						</Segmented>
-					</Setting>
+					<Setting
+						meta={meta.matchCut.order}
+						actions={(
+							<Segmented current={matchCutOrder}>
+								{sequentialOrders.map(({ id, icon }) => <Segmented.Item id={id} key={id} icon={icon}>{t[id]}</Segmented.Item>)}
+							</Segmented>
+						)}
+					/>
 					<Setting meta={meta.matchCut.loop} on={matchCutLoop} />
 					<Setting meta={meta.matchCut.secretBox} on={matchCutSecretBox} />
 				</Setting>

@@ -2,6 +2,7 @@ import ExpanderAequilateTextItems from "./ExpanderAequilateTextItems";
 import ExpanderContext from "./ExpanderContext";
 import ExpanderGroup from "./ExpanderGroup";
 import ExpanderItem from "./ExpanderItem";
+import SubExpander from "./SubExpander";
 
 export const TRAILING_EXEMPTION = "trailing-exemption";
 
@@ -22,22 +23,9 @@ const ExpanderParent = styled(SettingsCard)<{ // BUG: After auto resize, when sc
 		}
 	}
 
-	> .base > .trailing > .action-icon > * {
-		${styles.mixins.enableHardware3d()};
-	}
-
-	&:not(:has(.trailing > :not(.${TRAILING_EXEMPTION}):active)):active > .base > .trailing > .action-icon > * {
-		translate: 0 ${({ $expanded }) => $expanded ? 2 : -2}px;
-	}
-
 	${ifProp("$childrenDisabled", css`
 		& > .base > .trailing > .action-icon {
-			background-color: transparent !important;
-
-			> * {
-				color: ${c("fill-color-text-disabled")};
-				translate: 0 !important;
-			}
+			--state: disabled !important;
 		}
 	`)}
 
@@ -59,32 +47,44 @@ const ExpanderParent = styled(SettingsCard)<{ // BUG: After auto resize, when sc
 			> .base {
 				${sharpBottom};
 
-				> .trailing > .action-icon > * {
-					rotate: 180deg;
+				> .trailing > .action-icon {
+					--expansion: expanded;
 				}
 			}
 		`;
 	}}
 `;
 
-const ExpanderChild = styled.div`
-	inline-size: 100%;
-	border: 1px solid ${c("stroke-color-card-stroke-default")};
-	border-radius: 0 0 3px 3px;
-	border-block-start-width: 0;
+const ExpanderChildItems = styled.div`
+	border-radius: inherit;
 
-	&:not(.enter-done) {
-		overflow: clip;
-	}
-
-	.expander-child-items {
-		background-color: ${c("background-fill-color-card-background-secondary")};
-		border-radius: 0 0 2px 2px;
-
-		> :not(:first-child) {
-			border-block-start: 1px solid ${c("stroke-color-divider-stroke-default")};
+	@layer layout {
+		> * {
+			background-clip: padding-box;
 		}
 	}
+
+	> :not(:first-child) {
+		border-block-start: 1px solid ${c("stroke-color-divider-stroke-default")};
+	}
+
+	> :last-child,
+	> .sub-expander:last-child > :last-child:not(.expander-child),
+	> .sub-expander:last-child .expander-child-items > :last-child {
+		border-end-start-radius: 2px;
+		border-end-end-radius: 2px;
+	}
+`;
+
+const ExpanderChild = styled.div`
+	inline-size: 100%;
+	overflow: hidden;
+	background-color: ${c("background-fill-color-card-background-secondary")};
+	background-clip: padding-box;
+	border: 1px solid ${c("stroke-color-card-stroke-default")};
+	border-block-start-width: 0;
+	border-end-start-radius: 3px;
+	border-end-end-radius: 3px;
 
 	&[disabled] {
 		opacity: ${c("disabled-text-opacity")};
@@ -94,13 +94,14 @@ const ExpanderChild = styled.div`
 		block-size: 0;
 		border-block-end-width: 0;
 
-		.expander-child-items {
+		${ExpanderChildItems} {
 			translate: 0 -100%;
 		}
 	}
 
 	&,
-	.expander-child-items {
+	.expander-child,
+	.expander-child-items { // Also apply styles to sub-expander.
 		transition-property: block-size, translate;
 		transition-duration: 350ms;
 		transition-timing-function: ${eases.easeInOutMaterialEmphasized};
@@ -115,7 +116,8 @@ const ExpanderChildWrapper = styled.div<{
 	/** A style that suitable for when expander contains only a single component and even without title, icon and details? */
 	$single?: boolean;
 }>`
-	padding: ${expanderItemPadding[0]}px ${expanderItemPadding[1]}px;
+	padding-block: ${expanderItemPadding[0]}px;
+	padding-inline: ${expanderItemPadding[1]}px;
 
 	&:has(.timecode-box) {
 		--layout: inline;
@@ -181,6 +183,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				aria-expanded={internalExpanded}
 				$expanded={internalExpanded}
 				$childrenDisabled={childrenDisabled}
+				_isExpander
 				onClick={handleClick}
 			>
 				{actions}
@@ -203,11 +206,11 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 					id={withAriaId("-child")}
 					aria-labelledby={withAriaId("-title")}
 				>
-					<div className="expander-child-items">
+					<ExpanderChildItems>
 						<ExpanderContext value={{ place: "children" }}>
 							{children}
 						</ExpanderContext>
-					</div>
+					</ExpanderChildItems>
 				</ExpanderChild>
 			</CssTransition>
 		</div>
@@ -219,3 +222,4 @@ Expander.ChildWrapper = ExpanderChildWrapper;
 Expander.Group = ExpanderGroup;
 Expander.AequilateTextItems = ExpanderAequilateTextItems;
 Expander.Context = ExpanderContext;
+Expander.Sub = SubExpander;

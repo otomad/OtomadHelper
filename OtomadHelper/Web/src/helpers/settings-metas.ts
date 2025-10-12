@@ -46,7 +46,7 @@ export class SettingMeta implements ISettingMeta {
 	/** Path of unique identifiers to it. Auto generated. CSS escaped. */
 	get cssPath() { return this.path !== undefined ? CSS.escape(this.path) : undefined!; }
 
-	get translatedTitle() { const title = $t(this.title); if (!title) { console.error(this.title); debugger; } return title; }
+	get translatedTitle() { return $t(this.title); }
 	get translatedDetails() { return $t(this.details); }
 	get translatedAliases() {
 		const _aliases = this.aliases?.map(alias => $t(alias, false)).toCompacted();

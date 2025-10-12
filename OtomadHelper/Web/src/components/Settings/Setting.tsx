@@ -1,8 +1,6 @@
-// This component unite SettingsCard, SettingsCardToggleSwitch, Expander, ExpanderRadio, ExpanderItem into one.
+// This component unite SettingsCard, SettingsCardToggleSwitch, Expander, ExpanderRadio, ExpanderItem, SubExpander into one.
 
 import type { SettingMeta } from "helpers/settings-metas";
-import { settingsMetas } from "helpers/settings-metas";
-export const metas = settingsMetas;
 export type SettingMetaInside = { meta?: SettingMeta };
 
 interface Props {
@@ -16,7 +14,8 @@ export default function Setting<TItem, TKey extends PropertyKey>(props: InheritF
 export default function Setting(props: InheritFrom<Omit<PropsOf<typeof SettingsCard>, "children"> & { actions: PropsOf<typeof SettingsCard>["children"] }>): React.JSX.Element;
 export default function Setting(props: InheritFrom<typeof Expander>): React.JSX.Element;
 export default function Setting(props: InheritFrom<typeof Expander.Item>): React.JSX.Element;
-export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof SettingsCard | typeof SettingsCardToggleSwitch | typeof Expander | typeof ExpanderRadio | typeof Expander.Item>) {
+export default function Setting(props: InheritFrom<typeof Expander.Sub>): React.JSX.Element;
+export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof SettingsCard | typeof SettingsCardToggleSwitch | typeof Expander | typeof ExpanderRadio | typeof Expander.Item | typeof Expander.Sub>) {
 	const { lastGotoPath } = useSnapshot(pageStore);
 	const { path, cssPath, link, type } = meta;
 	// Act backstop unless explicit passing undefined.
@@ -43,7 +42,12 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 	else if ("items" in props || type === "radiogroup")
 		return <ExpanderRadio {...props as Any} _requestExpanded={_requestExpanded} />;
 	else if (isExpanderChild)
-		return <Expander.Item {...props as Any} />;
+		if ("children" in props)
+			return <Expander.Sub {...props as Any} _requestExpanded={_requestExpanded} />;
+		else {
+			const { actions, ..._props } = props as PropsOf<typeof Expander>;
+			return <Expander.Item {..._props as Any}>{actions}</Expander.Item>;
+		}
 	else if ("children" in props || type === "expander")
 		return <Expander {...props as Any} _requestExpanded={_requestExpanded} />;
 	else {
