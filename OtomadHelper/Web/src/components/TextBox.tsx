@@ -205,7 +205,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	input {
 		${styles.effects.text.body};
 		z-index: 1;
-		width: 100%;
+		inline-size: 100%;
 		padding: 6px 12px 7px;
 		color: ${c("foreground-color")};
 		caret-color: currentColor;
@@ -397,9 +397,9 @@ export /* @internal */ const StyledTextBox = styled.div<{
 
 		> * {
 			position: absolute;
-			bottom: 0;
-			width: 100%;
-			height: 1px;
+			inset-block-end: 0;
+			block-size: 1px;
+			inline-size: 100%;
 
 			&.large-stripe {
 				background-color: ${c("fill-color-control-strong-default")};

@@ -40,7 +40,7 @@ const GlobalStyle = createGlobalStyle<{
 		}
 
 		${({ $ready }) => !$ready && css`
-			transition: all ${eases.easeOutMax} 250ms, color 0s, fill 0s, font-size 0s, tab-size 0s;
+			transition: none !important;
 		`}
 	}
 
@@ -130,7 +130,7 @@ const GlobalStyle = createGlobalStyle<{
 
 	body {
 		position: relative;
-		height: 100dvh;
+		block-size: 100dvb;
 		margin: 0;
 		padding: 0;
 		color: var(--foreground-color);
@@ -147,10 +147,6 @@ const GlobalStyle = createGlobalStyle<{
 		accent-color: var(--accent-color);
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-
-		${({ $ready }) => !$ready && css`
-			transition: background-color 0s;
-		`}
 	}
 
 	#root {

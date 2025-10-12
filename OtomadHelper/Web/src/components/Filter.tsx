@@ -8,7 +8,8 @@ const StyledFilter = styled(HorizontalScroll)`
 	gap: 0;
 	align-items: center;
 	padding-block: 4px;
-	overflow: auto visible;
+	overflow-block: visible;
+	overflow-inline: auto;
 
 	* {
 		flex-shrink: 0;

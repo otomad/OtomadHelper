@@ -23,7 +23,7 @@ const StyledSegmented = styled.div<{
 	}
 
 	.items,
-	.thumb-content {
+	.visible-content {
 		display: grid;
 		grid-auto-columns: 1fr;
 		grid-auto-flow: column;
@@ -34,6 +34,7 @@ const StyledSegmented = styled.div<{
 
 			> .base {
 				${styles.mixins.flexCenter()};
+				position: relative;
 				gap: 10px;
 				height: 100%;
 				padding: 4px ${ITEM_BASE_PADDING_X_WIDTH}px;
@@ -57,17 +58,26 @@ const StyledSegmented = styled.div<{
 	}
 
 	.items .item {
-		&:hover > .base {
+		> .base::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			z-index: -1;
+			display: block;
+			border-radius: inherit;
+		}
+
+		&:hover > .base::before {
 			background-color: ${c("fill-color-subtle-secondary")};
 		}
 
-		&:active > .base {
+		&:active > .base::before {
 			background-color: ${c("fill-color-subtle-tertiary")};
 			scale: ${SEGMENTED_ITEM_PRESSED_SCALE};
+		}
 
-			> * {
-				opacity: ${c("pressed-text-opacity")};
-			}
+		&:active > .base > * {
+			opacity: ${c("pressed-text-opacity")};
 		}
 
 		&.selected ~ .item:not(:last-child),
@@ -141,10 +151,14 @@ const StyledSegmented = styled.div<{
 				width: 10px;
 			}
 
-			& + .thumb-content {
+			& + .visible-content {
 				opacity: 0.5;
 			}
 		}
+	}
+
+	&:has(.thumb:is(:active, :hover)) .items .item {
+		pointer-events: none;
 	}
 
 	&[disabled] {
@@ -152,17 +166,17 @@ const StyledSegmented = styled.div<{
 			background-color: ${c("fill-color-accent-disabled")};
 		}
 
-		:is(.items, .thumb-content) .item > .base {
+		:is(.items, .visible-content) .item > .base {
 			color: ${c("fill-color-text-disabled")};
 		}
 	}
 
-	.thumb-content {
+	.visible-content {
 		position: absolute;
 		top: 0;
 		display: if(
 			${ifColorScheme.dark} or ${ifColorScheme.contrast}: none;
-			else: block;
+			else: grid;
 		);
 		pointer-events: none;
 		clip-path: inset(${({ $itemCount = 0, $selectedIndex = -1 }) => !$itemCount || $selectedIndex === -1 ? "0 100% 0 0" : !isRtl() ?
@@ -184,6 +198,7 @@ export default function Segmented<T extends string = string>({ current: [current
 	const itemCount = items.length;
 	const selectedIndex = items.findIndex(item => item.props.id === current);
 	const setCurrentByIndex = (index: number) => items[index] && setCurrent?.(items[index].props.id as T);
+	const clonedItems = () => items.map(child => React.cloneElement(child));
 
 	const handleDrag = useCallback<PointerEventHandler<HTMLDivElement>>(e => {
 		const thumb = e.currentTarget;
@@ -229,9 +244,7 @@ export default function Segmented<T extends string = string>({ current: [current
 				})}
 			</div>
 			<div className="thumb" onPointerDown={handleDrag} tabIndex={0} onKeyDown={e => e.code === "Space" ? e.preventDefault() : handleArrowKeyDown(e)} />
-			<div className="thumb-content" aria-hidden>
-				{items.map(child => React.cloneElement(child))}
-			</div>
+			<div className="visible-content thumb-content" aria-hidden inert>{clonedItems()}</div>
 		</StyledSegmented>
 	);
 }

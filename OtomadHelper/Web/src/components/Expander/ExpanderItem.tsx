@@ -7,10 +7,12 @@ export /* @internal */ const styledExpanderItemBase = css`
 	gap: 16px;
 	align-items: center;
 	min-block-size: 48px;
+	inline-size: 100%;
 	overflow-inline: clip;
 
 	:where(&) {
-		padding: ${expanderItemPadding[0]}px ${expanderItemPadding[1]}px;
+		padding-block: ${expanderItemPadding[0]}px;
+		padding-inline: ${expanderItemPadding[1]}px;
 	}
 
 	> :not(.text) {
@@ -135,18 +137,9 @@ const StyledExpanderItem = styled.div<{
 		padding-block: 0;
 		border-block-start-width: 0 !important;
 	`)}
-
-	${ifProp("$nowrap", css`
-		flex-wrap: nowrap;
-
-		.leading {
-			flex-shrink: unset;
-			min-inline-size: unset;
-		}
-	`)}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, noDivider, ariaHiddenForText, nowrap = false, anchor, children, disabled = false, wrapActionsWhenNarrow, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, asSubtitle, noDivider, ariaHiddenForText, anchor, children, disabled = false, wrapActionsWhenNarrow, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -161,8 +154,6 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	noDivider?: boolean;
 	/** Remove text from aria tree? */
 	ariaHiddenForText?: boolean;
-	/** Do not wrap the action children to the second line if the text is too long? */
-	nowrap?: boolean;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
 	/**
@@ -180,7 +171,6 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 			$clickable={clickable}
 			$asSubtitle={asSubtitle}
 			$noDivider={noDivider}
-			$nowrap={nowrap}
 			disabled={disabled}
 			aria-disabled={disabled || undefined}
 			data-anchor={anchor}

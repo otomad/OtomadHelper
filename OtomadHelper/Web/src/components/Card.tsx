@@ -4,7 +4,7 @@ export /* @internal */ const StyledCard = styled.div<{
 	/** Card width. */
 	$width?: Numberish;
 }>`
-	inline-size: ${({ $width }) => styles.toValue($width ?? "100cqw")};
+	inline-size: ${({ $width }) => styles.toValue($width ?? "100cqi")};
 	text-align: initial;
 	border-radius: 3px;
 	transition: ${fallbackTransitions}, inline-size 0s;
@@ -40,7 +40,7 @@ export /* @internal */ const StyledCard = styled.div<{
 `;
 
 export default function Card<TTarget extends AsTarget = "div">({ width, children, as, ...htmlAttrs }: Override<PropsOf<TTarget>, {
-	/** Card width. @default 100cqw */
+	/** Card width. @default 100cqi */
 	width?: Numberish;
 	/** As container. */
 	as?: TTarget;

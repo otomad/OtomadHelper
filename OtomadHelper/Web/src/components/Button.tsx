@@ -35,8 +35,9 @@ export /* @internal */ const StyledButton = styled.button<{
 	--border-highlight-y-offset: 0; */
 	position: relative;
 	display: inline-flex;
-	min-height: 32px;
-	padding: 4px ${inlinePadding}px 6px;
+	min-block-size: 32px;
+	padding-block: 4px 6px;
+	padding-inline: ${inlinePadding}px;
 	background-clip: padding-box;
 	border: 1px solid ${c("stroke-color-control-stroke-default")};
 	border-radius: 4px;
@@ -72,7 +73,8 @@ export /* @internal */ const StyledButton = styled.button<{
 
 	&.subtle,
 	&.hyperlink {
-		padding: 0 11px;
+		padding-block: 11px;
+		padding-inline: 0;
 		background-color: ${c("fill-color-subtle-transparent")};
 		background-clip: border-box;
 		border-color: transparent !important;
@@ -116,12 +118,13 @@ export /* @internal */ const StyledButton = styled.button<{
 		background-color: ${c("fill-color-control-default")};
 
 		&${notPressedOrDisabled} {
+			// Do not use CSS logical properties here, or will be ugly in vertical locales.
 			${ifColorScheme.at.light} {
-				border-block-end-color: ${c("stroke-color-control-stroke-secondary")};
+				border-bottom-color: ${c("stroke-color-control-stroke-secondary")};
 			}
 
 			${ifColorScheme.at.dark} {
-				border-block-start-color: ${c("stroke-color-control-stroke-secondary")};
+				border-top-color: ${c("stroke-color-control-stroke-secondary")};
 			}
 		}
 	` : css`
@@ -134,7 +137,7 @@ export /* @internal */ const StyledButton = styled.button<{
 		border-color: ${c("stroke-color-control-stroke-on-accent-default")};
 
 		&${notPressedOrDisabled} {
-			border-block-end-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
+			border-bottom-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
 		}
 
 		> .content {
