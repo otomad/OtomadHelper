@@ -34,6 +34,7 @@ export default {
 			grid_full: "Grid Layout",
 			box3d: "Bố cục hộp 3D",
 			gradient: "Track đa sắc",
+			license: "Giấy phép",
 			track: "Các track",
 			mosh: "Mosh",
 			effect: "Hiệu ứng",
@@ -370,7 +371,6 @@ export default {
 			},
 		},
 		track: {
-			layout: "Bố cục",
 			grid: {
 				array: "Hàng",
 				square: "Hình vuông",
@@ -657,7 +657,7 @@ export default {
 				translation: "Đóng góp bản dịch",
 				feedback: "Góp ý",
 				changelog: "Nhật ký thay đổi",
-				license: "Giấy phép",
+				roadmap: "Roadmap",
 				version: "Phiên bản",
 				author: "Tác giả",
 				__author__: "Lan Triệt Kì",
@@ -665,6 +665,9 @@ export default {
 				__originalAuthor__: "Chaosinism",
 				translator: "Dịch giả",
 				translators: "Dịch giả",
+				troubleshooting: "Xử lý sự cố",
+				tutorialVideo: "Video hướng dẫn",
+				releaseNotes: "Ghi chú phát hành",
 			},
 			language: {
 				_: "Ngôn ngữ",
@@ -687,7 +690,13 @@ export default {
 					black: "Đen",
 					contrast: "Độ tương phản cao",
 				},
-				palette: {},
+				palette: {
+					red: "Đỏ",
+					yellow: "Vàng",
+					green: "Xanh lục",
+					cyan: "Lục lam",
+					blue: "Xanh lam",
+				},
 				transparency: {
 					_: "Loại hộp thoại",
 					acrylic: "Acrylic",
@@ -717,7 +726,6 @@ export default {
 			source: {
 				trim: "Điều chỉnh thời gian điểm vào hoặc ra của nguồn nguyên liệu được chỉ định",
 				preferredTrack: {
-					_: "Cho phép bạn chỉ định một track hiện có để tạo (trừ đa track)",
 					fillingInstructions: "Nếu giá trị là 0 thì tạo ra trên tất cả các track;\nNếu dương, thì được tạo ra bên dưới track thứ n;\nNếu âm, thì được tạo bên dưới track thứ n tính từ cuối.\nNếu bất kỳ track ưa thích nào được chỉ định là Âm thanh hoặc Hình ảnh, thì tùy chọn này sẽ bị ghi đè.",
 					belowAdjustmentTracks: {
 						versionRequest: "Lưu ý: Tính năng này yêu cầu VEGAS Pro ≥ 19. Phiên bản hiện tại là {{version}}.",
@@ -735,7 +743,6 @@ export default {
 					marker: "Khi gặp một điểm đánh dấu trong bản nhạc, điểm vào của nguồn sẽ được thay đổi một lần. Nếu một số điểm đánh dấu có cùng tên không rỗng, chúng sẽ sử dụng cùng một điểm vào của nguồn.",
 					barOrBeat: {
 						_: "Thay đổi thủ công các điểm in của nguồn theo một khoảng thời gian không đổi theo bản nhạc",
-						period: "Chỉ định các khoảng thời gian cần thay đổi",
 						preparation: "Trì hoãn trước khi thực hiện lần đầu",
 					},
 					ytpEnabled: "Tính năng YTP đã được bật và hỗ trợ tính năng ngẫu nhiên, không cần thiết phải thiết lập ở đây.",
@@ -795,6 +802,7 @@ export default {
 				autoPan: "Chuyển hướng âm thanh bằng cách sử dụng envelope automation",
 				stack: "Xếp chồng các clip chặt chẽ nhất có thể trên một track, thay vì đặt kết quả trên các track riêng biệt theo track bản nhạc",
 				timeUnremapping: "Đoạn clip sẽ không thiết lập lại điểm vào của nó khi nốt nhạc xuất hiện, nhưng sẽ tiếp tục phát, hữu ích nếu bạn chỉ muốn áp dụng hiệu ứng cho nguồn",
+				preferredTrack: "Cho phép bạn chỉ định một track hiện có để tạo (trừ đa track)",
 				prerender: {},
 				transition: {},
 				articulations: {
@@ -815,7 +823,6 @@ export default {
 						none: "Không có hiệu ứng cao độ",
 						pitchShift: "Sử dụng Plugin hiệu ứng âm thanh Pitch Shift. Đây là plugin DirectX có cùng thuật toán với Classic Method và có thể hỗ trợ nhiều cao độ hơn. Tiện ích mở rộng này yêu cầu phải tải một số preset trước khi sử dụng.",
 						elastic: "Sử dụng Phương pháp thay đổi cao độ Elastic. Phương pháp Élastique sử dụng công nghệ từ zplane.development và cung cấp khả năng kéo dãn thời gian thực và thay đổi cao độ được cải tiến. Đây chỉ là phương pháp mặc định để nhấn trực tiếp các phím +/−.",
-						classic: "Sử dụng Phương pháp thay đổi cao độ cổ điển. Phương pháp này sử dụng công nghệ cũ từ Vegas Pro 8 trở xuống và cung cấp nhiều kiểu crossfade hơn để lựa chọn, tùy thuộc vào nguồn của bạn.",
 						scaleless: "Khóa độ dãn và cao độ, và thay đổi độ dãn để có được cao độ tương ứng bất kể cao độ nốt nhạc thực tế ra sao, chỉ cho vui",
 						unset: "Giữ nguyên phương pháp tuning ban đầu của clip không thay đổi hoặc giá trị mặc định, ngay cả khi Không Tuning",
 						acid: "Chuyển đổi clip để phù hợp với nhịp độ nếu bạn đang sử dụng vòng lặp ACIDized được kết xuất bởi ACID Pro",
@@ -833,7 +840,6 @@ export default {
 						wrap: "Trở về phím cao nhất hoặc thấp nhất trong phạm vi {{formulaFor24}}",
 						silent: "Tắt tiếng những nốt đó",
 					},
-					resample: "Điều chỉnh độ dãn để thay đổi cao độ đồng bộ, khiến độ dãn cong khi cao độ tăng, thể hiện phong cách máy ghi âm băng cổ điển",
 					preserveFormant: "Duy trì đặc điểm tông giọng trong khi tuning",
 					basePitch: {
 						cent: "Ổn định cao độ tuning",
@@ -843,14 +849,7 @@ export default {
 						_: "So sánh clip với cao độ cơ bản để điều chỉnh dễ dàng",
 						adjustAudioToBasePitch: "Ghép âm thanh của clip với cao độ cơ bản thay vì ngược lại, hữu ích cho các phong cách remix cũ",
 					},
-					mimical: {
-						resample: "Mô phỏng hành vi resampling trong Visual, khiến độ dãn nở cong khi cao độ tăng",
-					},
-				},
-				effects: {
-					prve: "Làm cho hình ảnh của bạn có nhịp điệu hơn",
-					staff: "Sử dụng các mẫu tùy chỉnh như các nốt nhạc để vẽ hình ảnh theo cách tương tự như các bản khuông nhạc piano",
-					pixelScaling: "Mở rộng tỉ lệ bằng cách sử dụng các thuật toán khuếch đại và nội suy cạnh cứng lân cận gần nhất",
+					mimical: {},
 				},
 				mapping: {
 					_: "Gán các thuộc tính của nốt vào mục đã chỉ định",
@@ -955,9 +954,11 @@ export default {
 				},
 			},
 			staff: {
+				caption: "Sử dụng các mẫu tùy chỉnh như các nốt nhạc để vẽ hình ảnh theo cách tương tự như các bản khuông nhạc piano",
 				_: "Tái hiện khuông nhạc là một hiệu ứng hình ảnh biến đổi các ký hiệu âm nhạc thành đồ họa trực quan sáng tạo. Về bản chất, nó thay thế các nốt nhạc truyền thống bằng các mẫu tùy chỉnh (ví dụ: hình đại diện, hình dạng hình học, v.v.) và đặt chúng ở cao độ thích hợp của khuông nhạc dựa trên giai điệu của bản nhạc, tạo thành hình ảnh động với cả tính nghệ thuật và chức năng. Phong cách hiệu ứng hình ảnh này lấy cảm hứng từ sự kết hợp giữa nghệ thuật kỹ thuật số và âm nhạc, sáng tạo của YouTuber Grant Woolard. Video của anh ấy được đặc trưng bởi việc biến đổi hình đại diện của nhạc sĩ thành các nốt nhạc, sắp xếp chúng một cách năng động trên khuông nhạc và phát nhạc cổ điển. Nó không chỉ giữ nguyên logic cao độ của bản nhạc mà còn mang đến cho nó một câu chuyện trực quan được cá nhân hóa.\nHiệu ứng này có thể được sử dụng cho việc sáng tạo nghệ thuật và thiết kế hình ảnh biểu diễn, chẳng hạn như biến màn biểu diễn của nghệ sĩ thành một hình chiếu nghệ thuật động của khuông nhạc hoặc tạo hoạt ảnh âm nhạc tương tác cho bìa album kỹ thuật số. Sự đổi mới của nó nằm ở việc phá vỡ giới hạn tĩnh của các bản nhạc truyền thống, diễn giải lại cấu trúc âm nhạc bằng ngôn ngữ hình ảnh và biến giai điệu trừu tượng thành “giai điệu hình ảnh” dễ nhận biết.",
 			},
 			prve: {
+				caption: "Làm cho hình ảnh của bạn có nhịp điệu hơn",
 				control: {
 					general: "Điều tiết thông thường cho các sự kiện (event trong VEGAS) không liên tục và liên tục, có cao độ khác nhau và cùng một tiếng (âm tiết) trong chế độ YTPMV hoặc Sentence Mixing.\nTrường hợp các chế độ điều tiết khác đang tắt cũng sẽ được tính vào trường hợp này.",
 					samePitch: "Điều tiết riêng biệt cho các event liên tục cùng cao độ trong chế độ YTPMV hoặc Sentence Mixing.",
@@ -966,6 +967,7 @@ export default {
 				forceStretch: "$t(titles.prve, { 'count': {{count}} }) hiện dùng nằm trong tùy chọn Thời gian, do vậy giá trị co giãn sẽ bị buộc thành $t(stream.stretch.flexingAndExtending, nowrapPerWord) khi các hiệu ứng này được áp dụng lên, không thể chỉnh sửa khác được",
 			},
 			pixelScaling: {
+				caption: "Mở rộng tỉ lệ bằng cách sử dụng các thuật toán khuếch đại và nội suy cạnh cứng lân cận gần nhất",
 				_: "Co dãn Điểm ảnh là kỹ nghệ co dãn cho đồ họa pixel hoặc các ảnh số cần sự sắc nét. Mục đích là nhằm giải quyết tình trạng mờ điểm ảnh do thuật toán co dãn chèn song phương cài sẵn trên VEGAS bằng cách phối trộn các màu tại các điểm ảnh lân cận, xóa bỏ đường biên màu rõ ràng, là tính chất của đồ họa pixel. Tính năng này tỷ lệ theo thuật toán chèn gần nhất: Trực tiếp sao chép giá trị màu của điểm ảnh gần nhất, đảm bảo là ảnh đã co dãn bảo đảm được đường biên rõ nét, tránh bị mờ ảnh.\nTính năng này đặc biệt hữu ích với tư liệu game cổ, hoặc giao diện có độ phân giải thấp, hoặc các phân cảnh cần cải thiện điểm ảnh. Ví dụ: khi thu phóng một hoạt họa nhân vật game 8-bit, có thể ngăn đường biên màu của nhân vật bị “mềm”, đảm bảo rằng mỗi điểm ảnh khi thu phóng đều giữ nguyên trạng. Lưu ý: để tính năng hoạt động cần phải thiết đặt môi trường FFmpeg hoặc cài gói mở rộng Datamosh.\nTính năng này chiếu theo độ phân giải của dự án để tạo ra một tệp có kích thước tương đối xấp xỉ bằng thuật toán chèn lân cận, tên tệp đi kèm hậu tố “_Scaled”. Tính năng hỗ trợ bất cứ định dạng hình ảnh/video nào, cũng như các tệp hình ảnh trình tự, khi nhập vào VEGAS.",
 			},
 			settings: {
@@ -1026,13 +1028,22 @@ export default {
 			checkboxGroup: "Nhóm hộp kiểm",
 		},
 		aliases: {
+			titles: {
+				ytp: "cái",
+				mosh: "cái",
+			},
 			source: {
 				trackName: "Tên track",
 			},
 			score: {
 				timeSignature: "Beat",
-				constrain: "Hạn chế độ dài nốt",
 			},
+			stream: {
+				createGroups: "Tạo nhóm",
+				articulations: {},
+				tuning: {},
+			},
+			track: {},
 		},
 		preset: "Preset",
 	},

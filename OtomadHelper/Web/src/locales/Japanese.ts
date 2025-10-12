@@ -36,6 +36,8 @@ export default {
 			gradient: "グラデーショントラック",
 			internal: "グローバル内部",
 			internal_long: "VEGAS Pro グローバル内部設定",
+			license: "ライセンス",
+			license_full: "ライセンス (GPL-3.0)",
 			track: "トラック",
 			mosh: "モッシュ",
 			effect: "効果",
@@ -295,7 +297,7 @@ export default {
 			stack: "スタック",
 			timeUnremapping: "永続的なタイムフロー",
 			prerender: {
-				_: "事前レンダリング",
+				_: "Prerender",
 				instant: "インスタント（オフ）",
 				media: "レンダリングされたメディア",
 				timeline: "ネストされたタイムラインとして",
@@ -403,7 +405,7 @@ export default {
 					volumeForBasePitch: "プリリスニングベースピッチ時の音量",
 					adjustAudioToBasePitch: "音声をベースピッチに調整",
 				},
-				mimical: "模擬チューニング方法",
+				mimical: "ミミカルチューニング方法",
 			},
 			mapping: {
 				_: "マッピング",
@@ -421,7 +423,6 @@ export default {
 			},
 		},
 		track: {
-			layout: "レイアウト",
 			grid: {
 				array: "行列",
 				square: "正方形（正方形）",
@@ -456,6 +457,7 @@ export default {
 					_: "パリティパターン",
 					unflipped: "反転しない",
 					allFlipped: "すべてひっくり返しました",
+					random: "ランダムに反転しました",
 					evenColumns: "偶数",
 					oddColumns: "奇数列",
 					evenRows: "偶数",
@@ -526,6 +528,7 @@ export default {
 				lengthen: "エキスパンションクランプ\nクリップの長さの変更",
 				increaseSpacing: "\n現在のトラックの間隔を上げる",
 				increaseSpacingAllTracks: "\n間隔を広げます。すべてのトラックについて。",
+				increaseSpacingSetting: "間隔を上げる",
 				forClips: "選択したクリップのみ",
 				includeGroup: "グループ内のクリップを含める",
 				backwards: "戻る",
@@ -668,6 +671,7 @@ export default {
 			stepSequence: "ステップシーケンス",
 			stepSequence_angle: "角度のシーケンス",
 			control: {
+				_: "別々のコントロール",
 				general: "全般",
 				general_full: "一般的なコントロール",
 				samePitch: "同じピッチです",
@@ -759,7 +763,7 @@ export default {
 				translation: "翻訳に貢献",
 				feedback: "フィードバック",
 				changelog: "更新履歴",
-				license: "ライセンス",
+				roadmap: "ロードマップ",
 				version: "バージョン",
 				author: "作成者",
 				__author__: "蘭澈 祈",
@@ -767,6 +771,15 @@ export default {
 				__originalAuthor__: "Chaosinism",
 				translator: "翻訳",
 				translators: "翻訳",
+				help: "ヘルプ",
+				troubleshooting: "トラブルシューティング",
+				tutorialVideo: "チュートリアルビデオ",
+				releaseNotes: "リリースノート",
+				documentationForFeature: "{{feature}} のドキュメント",
+				previousVersionDocumentation: "ドキュメントの以前のバージョン",
+				exploreVisualEffects: "視覚効果を探索する",
+				tutorialVideoForFeature: "{{feature}} のチュートリアルビデオ",
+				documentationInLanguage: "{{language, capitalize}} ドキュメント",
 			},
 			language: {
 				_: "言語",
@@ -796,6 +809,13 @@ export default {
 					wallpaper: "背景画像の征服色",
 					accent: "アクセントカラー",
 					background: "背景色",
+					red: "赤",
+					yellow: "黄色",
+					green: "緑",
+					cyan: "水色",
+					blue: "青",
+					purple: "パープル",
+					pink: "ピンク",
 				},
 				transparency: {
 					_: "ダイアログ素材",
@@ -847,7 +867,6 @@ export default {
 				trim: "指定したソースのインポイントまたはアウトポイントタイムを調整します。",
 				startTime: "プロジェクトから生成を開始するタイミングを指定します",
 				preferredTrack: {
-					_: "生成する既存のトラックを指定できます(マルチトラックを除く)",
 					fillingInstructions: "0の場合は、すべてのトラックの上に生成されます。\n正であれば、n番目のレールの下に生成されます。\n負の場合は、最後からn番目のレールの下で生成されます。\nオーディオまたはビデオで優先曲を指定すると、このオプションは上書きされます。",
 					belowAdjustmentTracks: {
 						versionRequest: "注意: この機能はVEGAS Pro 19以上が必要です。現在のバージョンは {{version}}です。",
@@ -869,7 +888,7 @@ export default {
 					marker: "スコアにマーカーがある場合、ソースのインポイントは一度変更されます。 複数のマーカーに同じ名前が空でない場合、ソースのポイントで同じ名前が使用されます。",
 					barOrBeat: {
 						_: "スコアに従って、ソースのポイントを一定期間で手動で変更します。",
-						period: "変更する期間を指定",
+						period: "変更する期間を指定します",
 						preparation: "最初の実行までの遅延",
 					},
 					ytpEnabled: "YTP機能が有効になっており、既にランダム化に対応しているため、ここで設定する必要はありません。",
@@ -946,9 +965,10 @@ export default {
 				autoPan: "エンベロープオートメーションを使用してオーディオをパンする",
 				stack: "楽譜に応じて結果を別々のトラックに配置するのではなく、1つのトラックで可能な限り緊密にクリップをスタックします。",
 				timeUnremapping: "ノートオンが発生したとき、クリップはポイントインポイント時間をリセットしません。 効果をソースに適用するだけでも役に立ちます",
+				preferredTrack: "生成する既存のトラックを指定できます(マルチトラックを除く)",
 				prerender: {
-					_: "生成前にソースにエフェクトを適用しすぎると、生成中に動けなくなる可能性があります。 そのためには、その効果を深く適用するために、ソースを事前にレンダリングする必要があるかもしれません",
-					instant: "プレレンダリングを実行せず、生成されたすべてのクリップにエフェクトをコピーします",
+					_: "生成前にソースにエフェクトを適用しすぎると、生成中に動けなくなる可能性があります。 そのためにはその効果を深く応用するために",
+					instant: "生成されたすべてのクリップにエフェクトをコピーするプリレンダーを実行しません。",
 					media: "単一のメディア ファイルとしてレンダリング",
 					media_audio: "単一のメディアファイルとしてレンダリングし、後でACIDピッチタグに注釈を付けます",
 					timeline: "ネストされたタイムラインとしてレンダリング (シングルVEGAS Proプロジェクトファイル)",
@@ -980,7 +1000,7 @@ export default {
 						none: "ピッチエフェクトなし",
 						pitchShift: "ピッチシフトオーディオエフェクトプラグインを使用します。 これは、Classic メソッドと同じアルゴリズムを持つDirectXプラグインであり、より広い範囲のピッチをサポートできます。 拡張機能は、使用前にプリセットをロードする必要があります。",
 						elastic: "エラスティックピッチ変更法を使用します。Élastique メソッドは、z平面からの技術を使用します。 エバロピメント、および強化されたリアルタイムタイムストレッチおよびピッチシフト機能を提供します。+/− キーを直接押すデフォルトの方法です。",
-						classic: "クラシックピッチ変更メソッドを使用します。 Vegas Pro 8 以下のバージョンの古いテクノロジーを使用しており、ソースに応じてより多くのクロスフェードタイプを選択できます。",
+						classic: "クラシックピッチチェンジ方式を使用します。Vegas Video 2の古い技術を使用します。 Vegas Pro 8.0 を介して、ソースに応じて、より多くのクロスフェードタイプを選択できます。",
 						scaleless: "ストレッチとピッチをロックし、ストレッチを変更して、実際のノートピッチに関係なく対応するピッチを取得します。",
 						unset: "チューニングなしであっても、クリップのオリジナルのチューニング方法をそのまままたはデフォルト値に保持します。",
 						acid: "ACID ProでレンダリングされたACID化ループを使用している場合、クリップをテンポに合わせてトランスポーズします。",
@@ -1002,7 +1022,7 @@ export default {
 						wrap: "{{formulaFor24}} の範囲内の最も高いキーまたは最も低いキーに戻ります。",
 						silent: "これらのメモをミュート",
 					},
-					resample: "同期でピッチを変更するようにストレッチを調整し、ピッチが大きくなるとストレッチが曲がるようになり、クラシックなテープレコーダースタイルを提示します",
+					resample: "同期中にピッチを変更するようストレッチを調整し、ストレッチがピッチが大きくなるにつれて、旧式のオーディオデバイスを模倣します。",
 					preserveFormant: "チューニング中は音声音の特性を維持します",
 					basePitch: {
 						_: "オーディオクリップのベースピッチを指定します",
@@ -1016,14 +1036,9 @@ export default {
 					mimical: {
 						_: "オーディオのチューニング方法に触発されたテクニックを視覚処理に適用します。",
 						auto: "これらのプロパティを Auto に設定すると、オーディオ構成内の対応するプロパティが有効になっている場合にのみ有効になります。",
-						resample: "Visualのリサンプリング動作を模倣し、ピッチが大きくなるとストレッチが曲がるようになります。",
-						oscillator: "ビジュアルのマニュアルオシレーターの動作を模倣して、迅速な繰り返しビジュアルを生成します",
+						resample: "Visualのリサンプリング動作をミミックスし、ストレッチがピッチの増加に伴って曲がるようにします",
+						oscillator: "ビジュアル内のマニュアルオシレーターの動作をミミックスすることで、素早く繰り返しビジュアルを作成できます。",
 					},
-				},
-				effects: {
-					prve: "ビジュアルのリズムを上げます。",
-					staff: "カスタムパターンをメモとして使用し、ピアノ譜面と同様のビジュアルを描きます。",
-					pixelScaling: "最も近い近傍のハードエッジ増幅と補間アルゴリズムを使用してスケーリングします",
 				},
 				mapping: {
 					_: "指定されたアイテムにノートのプロパティをマップ",
@@ -1152,9 +1167,11 @@ export default {
 				ultraPaste: "単一のショートカットキーでほぼすべてのファイルタイプをインポート",
 			},
 			staff: {
+				caption: "カスタムパターンをメモとして使用し、ピアノ譜面と同様のビジュアルを描きます。",
 				_: "Staff Visualizer は音楽シンボルを創造的なビジュアルグラフィックスに変換する視覚効果です。コアでは、従来のノートをカスタムパターンに置き換えます(例えば。 アバター幾何学図形など 音楽のメロディーに基づいてスタッフのピッチに向けます 芸術性と機能性の両方でダイナミックな視覚を形成しています この視覚効果のスタイルは、デジタルアートと音楽の組み合わせ、YouTuber Grant Woolardの作品にインスパイアされています。 彼のビデオは、ミュージシャンのアバターをノートに変換し、スタッフにダイナミックにアレンジし、クラシック音楽を演奏するのが特徴です。 それはスコアのピッチロジックを保持するだけでなく、個別の視覚的な物語を提供します。\nこの効果は、芸術的な創造とパフォーマンスのビジュアルデザインに使用できます。 アーティストのパフォーマンスをダイナミックなスタッフアートプロジェクションに変換したり、デジタルアルバムカバーのインタラクティブな音楽アニメーションを作成したりするなど。 その革新は、従来の楽譜の静的限界を破ることにあります。 音楽構造を視覚言語で再解釈し、抽象的なメロディーを知覚可能な「ビジュアルメロディー」に変換する。",
 			},
 			prve: {
+				caption: "ビジュアルのリズムを上げます。",
 				control: {
 					general: "YTPMVまたはSentence Mixingモードでは、連続したイベントやピッチの連続したイベント、同じ音節の通常の条件をコントロールします。\n他の別個のコントロールがオフの場合、ケースにも含まれます。",
 					samePitch: "YTPMVまたはSentence Mixingモードでは、同じピッチの連続イベントのコントロールを分離します。",
@@ -1165,6 +1182,7 @@ export default {
 				forceStretch: "使用中の$t(titles.prve, { 'count': {{count}} })にはタイムクラスの効果が含まれています。これにより、これらの効果の下でストレッチが設定制御されずに「$t(stream.stretch.flexingAndExtending, nowrapPerWord)」に強制的に設定されます。",
 			},
 			pixelScaling: {
+				caption: "最も近い近傍のハードエッジ増幅と補間アルゴリズムを使用してスケーリングします",
 				_: "ピクセルスケーリング機能は、シャープなエッジを必要とするピクセルアートや画像のために設計された可逆スケーリング技術です。その目的は、隣接するピクセルの色を混合してグラデーションを作成し、ピクセルアートの明瞭な境界を破壊するVEGAS内蔵の双線形補間スケーリングアルゴリズムによるピクセルのぼやけ問題を解決することである。この特徴は最隣接補間アルゴリズムによってスケーリングされ、最も近いピクセルの色値を直接コピーし、スケーリング後の画像エッジがぼやけないように「ハードカット」効果を維持することを確保する。\nこの機能は特に、レトロなゲームリソース、低解像度UI、またはピクセルスタイルを強化する必要があるシーンに適しています。たとえば、8ビットのゲームキャラクタアニメーションをスケーリングする場合、スムージングすることでキャラクタの輪郭が「ソフト化」されるのを防ぎ、各ピクセルブロックがスケーリング後も読みやすいようにすることができます。コア処理機能を有効にするには、FFmpeg環境を事前に構成するか、Datamosh拡張パッケージをインストールする必要があることに注意してください。\nプロジェクトの解像度に基づいて、この機能は最近傍補間アルゴリズムを使用して適切なサイズの新しいファイルを生成し、ファイル名は接尾辞「_ Scaled」で識別されます。このプロシージャは、画像/ビデオフォーマット、およびVEGASをインポートする画像シーケンスファイルをサポートします。",
 			},
 			settings: {
@@ -1263,6 +1281,17 @@ export default {
 			searchBox: "検索ボックス",
 		},
 		aliases: {
+			titles: {
+				score: "チャート、MIDI、歌、音楽",
+				audio: "サウンド",
+				visual: "ビデオ",
+				track: "レイヤー、レイヤー",
+				ytp: "つ",
+				mosh: "つ",
+				prve: "動画リズムビジュアルエフェクトのプロモーションビデオリズムビジュアルエフェクト、PVリズムビジュアルエフェクト、PVリズムビジュアルエフェクト、動画リズムビジュアルエフェクトのプロモーションビデオリズムビジュアルエフェクトのプロモーション。 Promotion Video Rhythmic Visual Effects, PV Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effects, PRVE",
+				staff: "ミュージカルスタッフ、ピアノスタッフのシート ファッション",
+				pixelScaling: "MisczTools, Miscz Tools",
+			},
 			source: {
 				trackGroup: "トラックグループ",
 				trackName: "トラック名",
@@ -1271,7 +1300,33 @@ export default {
 			score: {
 				tempo: "スピード、BPM",
 				timeSignature: "ビート（ビート）",
-				constrain: "ノートの長さを制限する",
+				constrain: "ノート長の制限、Portato、Staccatissimo",
+			},
+			stream: {
+				playbackRate: "再生速度",
+				staticVisual: "最初のフレームを固定、開始フレームを固定",
+				truncate: "Unlength, Unlengthening, No lengthing, No looping, No extending, No extension, Freeze last frame, Freeze end frame",
+				legato: "ギャップを埋める、ギャップを排除する、ギャップを削除する、Portato、Staccatsimo",
+				multitrackForChords: "コードの複数トラック、コードのマルチトラック、コードのマルチトラック、コードのマルチトラック、コードのマルチトラック",
+				createGroups: "グループを作成",
+				autoPan: "自動パン",
+				stack: "スタッキング",
+				timeUnremapping: "永続的なタイムフロー、時間の再マッピング",
+				prerender: "プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング",
+				articulations: {
+					_: "技、技、技、技、技法、技法、技法、技法など。",
+					glissando: "Glissandi、Glissandoes、Glissandoes、Portamenti、Portamenti、Gliss、Gliss、スライド、スライド、スライド、スライド、スライド、ピッチ曲げ、ピッチ曲げ、ピッチホイール、ピッチホイール、ベンダー、ベンダーなど",
+					appoggiatura: "Appoggiatura, Apppoggiature, Accatura, Accaturas, Acciacature, Appoggiare, Grace note, Grace note",
+					arpeggio: "Arp, Arps, Arpeggios, Arpeggi, Arpeggiare",
+				},
+				tuning: {
+					alternativeForExceedTheRange: "範囲を超える代替方法, 範囲を超えるための代替方法",
+					resample: "ストレッチとピッチをロック、ストレッチをロック、ピッチ変更ロック、ピッチをロックする",
+				},
+				mimical: "模擬チューニング方法",
+			},
+			track: {
+				layout: "テンプレート、テンプレート、コンポジション、コンポジション、コンポジション、タイプセット、タイポグラフィ、フォーマット、ストーリーボード、オートレイアウトトラック",
 			},
 		},
 		preset: "プリセット",

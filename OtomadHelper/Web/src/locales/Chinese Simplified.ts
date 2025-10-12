@@ -36,6 +36,8 @@ export default {
 			gradient: "渐变轨道",
 			internal: "全局内部",
 			internal_long: "VEGAS Pro 全局内部首选项",
+			license: "许可协议",
+			license_full: "许可协议 (GPL-3.0)",
 			track: "轨道",
 			mosh: "抹失",
 			effect: "效果",
@@ -421,7 +423,6 @@ export default {
 			},
 		},
 		track: {
-			layout: "布局",
 			grid: {
 				array: "阵列",
 				square: "平方",
@@ -456,6 +457,7 @@ export default {
 					_: "奇偶校验图案",
 					unflipped: "不翻转",
 					allFlipped: "全翻转",
+					random: "随机翻转",
 					evenColumns: "偶列",
 					oddColumns: "奇列",
 					evenRows: "偶行",
@@ -526,6 +528,7 @@ export default {
 				lengthen: "延长剪辑\n改变剪辑持续时间",
 				increaseSpacing: "增加间隙\n应用于当前轨道",
 				increaseSpacingAllTracks: "增加间隙\n应用于所有轨道",
+				increaseSpacingSetting: "增加间隙",
 				forClips: "仅应用于所选剪辑",
 				includeGroup: "也应用于同分组内其它剪辑",
 				backwards: "反向",
@@ -668,6 +671,7 @@ export default {
 			stepSequence: "步序列",
 			stepSequence_angle: "角序列",
 			control: {
+				_: "分别控制",
 				general: "常规",
 				general_full: "常规控制",
 				samePitch: "同音高",
@@ -759,7 +763,7 @@ export default {
 				translation: "贡献翻译",
 				feedback: "反馈建议",
 				changelog: "更新日志",
-				license: "许可协议",
+				roadmap: "路线图",
 				version: "版本",
 				author: "作者",
 				__author__: "兰澈祈",
@@ -767,6 +771,15 @@ export default {
 				__originalAuthor__: "Chaosinism",
 				translator: "翻译",
 				translators: "翻译人员",
+				help: "帮助",
+				troubleshooting: "疑难解答",
+				tutorialVideo: "教程视频",
+				releaseNotes: "更新日志",
+				documentationForFeature: "{{feature}}说明文档",
+				previousVersionDocumentation: "旧版本的说明文档",
+				exploreVisualEffects: "探索视觉效果",
+				tutorialVideoForFeature: "{{feature}}教程视频",
+				documentationInLanguage: "{{language, capitalize}}说明文档",
 			},
 			language: {
 				_: "语言",
@@ -796,6 +809,13 @@ export default {
 					wallpaper: "背景图像主色",
 					accent: "主题色",
 					background: "背景色",
+					red: "红色",
+					yellow: "黄色",
+					green: "绿色",
+					cyan: "青色",
+					blue: "蓝色",
+					purple: "紫色",
+					pink: "粉色",
 				},
 				transparency: {
 					_: "对话框材质",
@@ -847,7 +867,6 @@ export default {
 				trim: "调整指定素材的入点或出点时间",
 				startTime: "指定何时从项目开始生成",
 				preferredTrack: {
-					_: "允许你指定一条现有轨道来生成（多轨除外）",
 					fillingInstructions: "若为0，则生成在所有轨道的上方；\n若为正，则生成在第几条轨道的下方；\n若为负，则生成在倒数第几条轨道的下方。\n如果在音频或画面中指定了任何首选轨道，它将会覆盖此选项。",
 					belowAdjustmentTracks: {
 						versionRequest: "注意：此功能要求至少为VEGAS Pro 19。当前版本为 {{version}}。",
@@ -946,6 +965,7 @@ export default {
 				autoPan: "自动化控制音频的声像包络",
 				stack: "将剪辑尽可能紧密地堆积在一条轨道上，而不根据乐曲的音轨分轨放置",
 				timeUnremapping: "音符开时将不会重置剪辑的入点时间，而是继续播放，适用于如仅对素材应用效果",
+				preferredTrack: "允许你指定一条现有轨道来生成（多轨除外）",
 				prerender: {
 					_: "生成前对素材应用太多的效果可能会导致生成时卡死，为此你可能需要预渲染素材来深度应用效果",
 					instant: "不预渲染，这将复制效果到生成的每段剪辑上",
@@ -980,7 +1000,7 @@ export default {
 						none: "无变调效果",
 						pitchShift: "使用移调音频效果插件。它是一款DirectX插件，其算法与古典方法相同，可以支持更广泛的音域。在使用前扩展需要加载一些预设方可使用。",
 						elastic: "使用弹性音调更改方法。Élastique方法使用了来自zplane.development的技术，并提供了增强的实时时间拉伸和音调转换功能。它也就是直接按下加减键调音的默认方法。",
-						classic: "使用古典音调更改方法。它使用了来自Vegas Pro 8及以下版本中旧的技术，并可根据素材提供更多混叠类型供选择。",
+						classic: "使用古典音调更改方法。它使用了来自Vegas Video 2.0至Vegas Pro 8.0版本中旧的技术，并可根据素材提供更多混叠类型供选择。",
 						scaleless: "锁定伸缩与音调，完全通过改变拉伸值来获取相应的音调，而不考虑音符的实际音高，仅供娱乐",
 						unset: "保持剪辑原始调音方法不变或保持默认值，即便它是不调音",
 						acid: "如果你正在使用由ACID Pro渲染的ACID化循环音乐片段，则剪辑将被转置以适应节奏",
@@ -1019,11 +1039,6 @@ export default {
 						resample: "在画面中模仿重采样音频的行为，使拉伸值随着音高的升高而缩短",
 						oscillator: "在画面中模仿人工振荡器的行为以产生高频重复的画面",
 					},
-				},
-				effects: {
-					prve: "让你的画面更带有节奏感",
-					staff: "以自定义图案为音符，画出与钢琴五线谱类似风格的视觉效果",
-					pixelScaling: "使用邻近硬边缘放大插值算法缩放画面",
 				},
 				mapping: {
 					_: "将音符的参数映射到指定项目",
@@ -1154,9 +1169,11 @@ export default {
 				ultraPaste: "只需一个快捷键即可导入几乎任何文件类型",
 			},
 			staff: {
+				caption: "以自定义图案为音符，画出与钢琴五线谱类似风格的视觉效果",
 				_: "五线谱可视化是一种将音乐符号转化为创意视觉图形的视觉效果，其核心在于通过自定义图案（如人物头像、几何图形等）替代传统音符，并基于乐曲旋律将其定位在五线谱的对应音高位置上，形成兼具艺术性与功能性的动态画面。这种视觉效果风格的灵感源自数字艺术与音乐的结合实践，YouTube创作者Grant Woolard的作品。他的视频特色是将音乐家头像转化为音符，在五线谱上动态排列，并演奏经典音乐。这既保留乐谱的音高逻辑，又赋予其个性化视觉叙事。\n该效果可用于艺术创作与演出视觉设计，例如将艺术家的表演转化为动态五线谱艺术投影，或为数字专辑封面生成交互式乐谱动画。其创新性在于打破传统乐谱的静态限制，以视觉语言重新诠释音乐结构，使抽象旋律转化为可感知的“视觉旋律”。",
 			},
 			prve: {
+				caption: "让你的画面更带有节奏感",
 				control: {
 					general: "一般条件下控制间断事件或不同音高和相同音节的连续事件（音MAD和人力模式）。\n如果其它分别控制已关闭，则它们的用例亦会纳入此处。",
 					samePitch: "对相同音高的连续事件分别控制（音MAD和人力模式）",
@@ -1167,6 +1184,7 @@ export default {
 				forceStretch: "正在使用的$t(titles.prve, { 'count': {{count}} })中包含时间类的效果，这会导致在这些效果下拉伸将被强制设定为“$t(stream.stretch.flexingAndExtending)”，而不受你的设置控制",
 			},
 			pixelScaling: {
+				caption: "使用邻近硬边缘放大插值算法缩放画面",
 				_: "像素硬边缘放大功能是一种专为像素艺术或需保留锐利边缘的画面设计的无损放大技术。其目的是解决VEGAS自带的双线性插值缩放算法导致的像素模糊问题，这类算法会通过混合相邻像素颜色生成渐变过渡，破坏像素画的清晰边界。而该功能通过最近邻插值算法实现放大，直接复制最近像素的颜色值，确保放大后的图像边缘保持“硬切”效果，以避免模糊。\n该功能尤其适用于复古游戏素材、低分辨率界面或需要强化像素风格的设计场景。例如放大八位游戏角色动画时，可避免角色轮廓因平滑处理而“软化”，确保每块像素在放大后仍清晰可辨。值得注意的是，你需要提前配置FFmpeg环境或安装数据抹失扩展包以启用核心处理功能。\n该功能根据项目分辨率，通过最近邻插值算法生成适配尺寸的新文件，文件名以“_Scaled”后缀标识。此过程支持任意图像/视频格式，同时也支持以常规方式导入进VEGAS的图像序列文件。",
 			},
 			settings: {
@@ -1265,12 +1283,51 @@ export default {
 			searchBox: "搜索框",
 		},
 		aliases: {
+			titles: {
+				source: "媒体, 采样",
+				score: "乐谱、铺面、MIDI、曲目、选曲、课题曲",
+				audio: "音声",
+				visual: "视频、映像、PV",
+				track: "图层",
+				sonar: "动态图形、动态图形生成功能、MG动画、MG、区域裁切、图形、形状",
+				shupelunker: "鞑靼战法、Shupelunker战法、松冈修造、洞穴探险、地底探险",
+				ytp: "油管便、油土伯便、油管便便、油土伯便便",
+				mosh: "资料狂舞、幻术故障、数据狂舞、狂舞",
+				prve: "PV节奏视觉效果、映像节奏视觉效果、PRVE",
+				staff: "钢琴谱、五线谱视觉化",
+				pixelScaling: "MisczTools, Miscz Tools",
+			},
 			source: {
 				secretBox: "素材盲箱, 抽卡, 扭蛋",
 			},
 			score: {
 				tempo: "BPM",
 				timeSignature: "节拍, 节奏, 拍子",
+				constrain: "断奏、断连奏、半连奏、半断奏、半跳音、次断音、断奏音、特断音",
+			},
+			stream: {
+				playbackRate: "播放速度",
+				staticVisual: "冻结首帧、冻结初帧、定格首帧、定格初帧",
+				truncate: "禁止延长、禁止加长、不延长、不加长、不要延长、不要加长、冻结尾帧、冻结末帧、定格尾帧、定格末帧",
+				legato: "消除间隙、削除间隙、填补空隙、消除空隙、削除空隙、填补间距、消除间距、削除间距、连奏、断奏、断连奏、半连奏、半断奏、半跳音、次断音、断奏音、特断音",
+				multitrackForChords: "和弦、多轨、多轨道、多音轨",
+				createGroups: "创建分组",
+				autoPan: "自动声道、自动声相",
+				stack: "堆叠、叠叠乐",
+				timeUnremapping: "时间解除重映射、时间取消重映射、时间不重映射、时间重映射",
+				articulations: {
+					_: "技法、技术、技巧",
+					glissando: "弯音、颤音",
+					appoggiatura: "装饰音",
+				},
+				tuning: {
+					alternativeForExceedTheRange: "超出范围替代方法、如果超出音域、如果超出范围、超出音域",
+					resample: "重采样、重新采样、锁定伸缩与音调、锁定拉伸与音调、锁定伸缩与音高、锁定拉伸与音高、锁定伸缩与变调、锁定拉伸与变调、锁定以拉伸、锁定音调、锁定音高",
+				},
+				mimical: "模拟调音方法",
+			},
+			track: {
+				layout: "模板、版式、版式设计、排版、格式、分镜、自动布局轨道",
 			},
 		},
 		preset: "预设",
@@ -1476,7 +1533,7 @@ export default {
 				83: "汽笛风琴",
 				84: "吹管",
 				85: "恰朗戈琴",
-				86: "索洛沃克斯",
+				86: "合成人声",
 				87: "平行五度",
 				88: "贝司合奏",
 				89: "幻想铺底",

@@ -133,7 +133,7 @@ export const settingsMetasInput = {
 				glissando: {
 					title: t.stream.articulations.glissando,
 					details: t.descriptions.stream.articulations.glissando,
-					aliases: [t.aliases.stream.articulations.glissando],
+					aliases: [t.aliases.stream.articulations.glissando, t.shared.plugins.swirl, t.shared.plugins.wave],
 					icon: "slide_note",
 				},
 			},
