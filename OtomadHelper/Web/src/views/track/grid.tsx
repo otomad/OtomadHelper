@@ -25,21 +25,23 @@ export /* @internal */ const getParityText = (parity: GridParityType) => t.track
 export /* @internal */ const getParityIcon = (parity: GridParityType): DeclaredIcons =>
 	parity === "unflipped" ? "dismiss_square" : parity === "all_flipped" ? "checkmark_square" : parity === "random" ? "question_square" : `parity/${parity}`;
 
-export /* @internal */ const matchParity = (parity: GridParityType, column: number, row: number): boolean => ({
-	unflipped: false,
-	all_flipped: true,
-	random: Math.random() >= 0.5,
-	even_columns: !(column % 2),
-	odd_columns: !!(column % 2),
-	even_rows: !(row % 2),
-	odd_rows: !!(row % 2),
-	even_checker: !!((column + row) % 2),
-	odd_checker: !((column + row) % 2),
-	even_dots: !(column % 2) && !(row % 2),
-	odd_dots: !!(column % 2) && !!(row % 2),
-	even_gridlines: !!(column % 2) || !!(row % 2),
-	odd_gridlines: !(column % 2) || !(row % 2),
-})[parity];
+export /* @internal */ const matchParity = (parity: GridParityType, column: number, row: number, randomSeed?: string): boolean => {
+	if (parity === "random") return (randomSeed === undefined ? Math.random() : seedRandom(`${randomSeed},${column},${row}`)()) >= 0.5;
+	return {
+		unflipped: false,
+		all_flipped: true,
+		even_columns: !(column % 2),
+		odd_columns: !!(column % 2),
+		even_rows: !(row % 2),
+		odd_rows: !!(row % 2),
+		even_checker: !!((column + row) % 2),
+		odd_checker: !((column + row) % 2),
+		even_dots: !(column % 2) && !(row % 2),
+		odd_dots: !!(column % 2) && !!(row % 2),
+		even_gridlines: !!(column % 2) || !!(row % 2),
+		odd_gridlines: !(column % 2) || !(row % 2),
+	}[parity];
+};
 
 // #region Style
 const PreviewGridContainer = styled.div`
@@ -286,8 +288,8 @@ const StyledContainerPreview = styled.div`
 	}
 
 	.command-bar-wrapper {
-		position: relative;
 		anchor-name: ${COMMAND_BAR_WRAPPER_ANCHOR_NAME};
+		position: relative;
 
 		.reset-btn {
 			position: absolute;
@@ -516,6 +518,7 @@ export default function Grid() {
 	// Operation record filter badges.
 	const operationRecordFilterBadgeCounts = { span: spans.length, columnWidth: columnWidths.length, rowHeight: rowHeights.length, blank: blanks.length } as Record<typeof operationRecordFilter, number>;
 	operationRecordFilterBadgeCounts.all = sum(...Object.values(operationRecordFilterBadgeCounts));
+	const [flipHRandomTimestamp, setFlipHRandomTimestamp] = useState(0), [flipVRandomTimestamp, setFlipVRandomTimestamp] = useState(0);
 
 	pageStore.useOnSave(() => configStore.track.grid.enabled = true);
 	const setPageCommandBarDisabled = pageStore.useSetCommandBarDisabled();
@@ -684,16 +687,32 @@ export default function Grid() {
 							</CommandBar.Item>
 							<CommandBar.Item icon={order} caption={t[order]} details={t.descriptions.track.descending} onClick={() => setDescending(desc => !desc)} />
 							<hr />
-							<CommandBar.Item icon="flip_h" caption={t.track.grid.mirrorEdges + " - " + t.prve.effects.hFlip} altCaption={t.prve.effects.hFlip} details={t.descriptions.track.grid.mirrorEdges.hFlip} hovering>
-								<ItemsView view="list" current={mirrorEdgesHFlip}>
-									{parityTypes.map(option => <ItemsView.Item id={option} key={option} icon={getParityIcon(option)}>{getParityText(option)}</ItemsView.Item>)}
-								</ItemsView>
-							</CommandBar.Item>
-							<CommandBar.Item icon="flip_v" caption={t.track.grid.mirrorEdges + " - " + t.prve.effects.vFlip} altCaption={t.prve.effects.vFlip} details={t.descriptions.track.grid.mirrorEdges.vFlip} hovering>
-								<ItemsView view="list" current={mirrorEdgesVFlip}>
-									{parityTypes_rowsFirst.map(option => <ItemsView.Item id={option} key={option} icon={getParityIcon(option)}>{getParityText(option)}</ItemsView.Item>)}
-								</ItemsView>
-							</CommandBar.Item>
+							{...(["h", "v"] as const).map(d => {
+								const flipKey = `${d}Flip`, isH = d === "h";
+								return (
+									<CommandBar.Item
+										key={flipKey}
+										icon={`flip_${d}`}
+										caption={t.track.grid.mirrorEdges + " - " + t.prve.effects[flipKey]}
+										altCaption={t.prve.effects[flipKey]}
+										details={t.descriptions.track.grid.mirrorEdges[flipKey]}
+										hovering
+									>
+										<ItemsView view="list" current={isH ? mirrorEdgesHFlip : mirrorEdgesVFlip}>
+											{(isH ? parityTypes : parityTypes_rowsFirst).map(option => (
+												<ItemsView.Item
+													id={option}
+													key={option}
+													icon={getParityIcon(option)}
+													onClick={option === "random" ? () => (isH ? setFlipHRandomTimestamp : setFlipVRandomTimestamp)(Date.now()) : undefined}
+												>
+													{getParityText(option)}
+												</ItemsView.Item>
+											))}
+										</ItemsView>
+									</CommandBar.Item>
+								);
+							})}
 						</CommandBar>
 					</CommandBar.Group>
 					<Button icon="arrow_reset" accent="critical" className="reset-btn" hidden={!flyoutEditor} onClick={resetFlyoutEditor}>{t.reset}</Button>
@@ -736,8 +755,8 @@ export default function Grid() {
 								>
 									<div
 										className={[{
-											hFlip: matchParity(mirrorEdgesHFlip[0], colStart, rowStart),
-											vFlip: matchParity(mirrorEdgesVFlip[0], colStart, rowStart),
+											hFlip: matchParity(mirrorEdgesHFlip[0], colStart, rowStart, `${flipHRandomTimestamp.toString(36)},h`),
+											vFlip: matchParity(mirrorEdgesVFlip[0], colStart, rowStart, `${flipVRandomTimestamp.toString(36)},v`),
 											highlight:
 												flyoutEditor?.in("span", "blank") && trackIndex === highLightCellIndex ||
 												flyoutEditor === "width" && flyoutEditorColumnRow?.[1] === "column" && flyoutEditorColumnRow[0] === colEnd - 1 ||

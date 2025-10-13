@@ -131,7 +131,7 @@ const StyledPreviewGradient = styled.div<{
 	}
 `;
 
-export default function PreviewGradient({ thumbnail, square, mirrorEdges, overlay, effect, descending, direction, parity, ...htmlAttrs }: FCP<{
+export default function PreviewGradient({ thumbnail, square, mirrorEdges, overlay, effect, descending, direction, parity, randomTimestamp, ...htmlAttrs }: FCP<{
 	/** Thumbnail. */
 	thumbnail: string;
 	/** Square or linear? */
@@ -148,10 +148,13 @@ export default function PreviewGradient({ thumbnail, square, mirrorEdges, overla
 	direction: Config.GridDirectionOrderType;
 	/** Parity pattern. */
 	parity?: [h: Config.GridParityType, v: Config.GridParityType] | false;
+	/** Specify random timestamp. */
+	randomTimestamp?: [h: number, v: number];
 }, "div">) {
 	const count = square ? 9 : 5;
 	if (!square) parity = undefined;
 	const getCell = (i: number): TwoD => !square ? [i + 1, 1] : [i % 3 + 1, (i / 3 | 0) + 1];
+	const getRandomSeed = (timestamp?: number) => timestamp ? timestamp.toString(36) : undefined;
 
 	return (
 		<StyledPreviewGradient
@@ -170,8 +173,8 @@ export default function PreviewGradient({ thumbnail, square, mirrorEdges, overla
 					alt=""
 					className={{
 						parity,
-						parityH: parity && matchParity(parity[0], ...getCell(i)),
-						parityV: parity && matchParity(parity[1], ...getCell(i)),
+						parityH: parity && matchParity(parity[0], ...getCell(i), getRandomSeed(randomTimestamp?.[0]) + ",1"),
+						parityV: parity && matchParity(parity[1], ...getCell(i), getRandomSeed(randomTimestamp?.[1]) + ",2"),
 						descending,
 					}}
 				/>

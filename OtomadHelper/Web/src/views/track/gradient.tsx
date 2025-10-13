@@ -20,6 +20,7 @@ export default function Gradient() {
 	const order = useMemo(() => descending ? "descending" : "ascending", [descending]);
 	const [showGridIntegration, setShowGridIntegration] = useState(false);
 	const verticalDirection = direction[0].startsWith("tb");
+	const [flip1RandomTimestamp, setFlip1RandomTimestamp] = useState(0), [flip2RandomTimestamp, setFlip2RandomTimestamp] = useState(0);
 
 	return (
 		<div className="container" style={{ marginBlockStart: 0, blockSize: "max-content" }}>
@@ -75,28 +76,21 @@ export default function Gradient() {
 							itemsViewItemAttrs={dir => ({ dirBasedIcon: dir })}
 						/>
 						<Subheader>{t.track.gradient.groups.alternately}</Subheader>
-						<ExpanderRadio
-							title={t.track.grid.parity}
-							items={parityTypes}
-							value={parity}
-							icon={getParityIcon(parity[0])}
-							iconField={parity => getParityIcon(parity)}
-							view="tile"
-							idField
-							nameField={parity => t.track.grid.parity[new VariableName(parity).camel]}
-							checkInfoCondition={parity => t.track.grid.parity[new VariableName(parity!).camel]}
-						/>
-						<ExpanderRadio
-							title={t.track.grid.paritySpare({ number: 2 })}
-							items={parityTypes}
-							value={parity2}
-							icon={getParityIcon(parity2[0])}
-							iconField={parity => getParityIcon(parity)}
-							view="tile"
-							idField
-							nameField={parity => t.track.grid.parity[new VariableName(parity).camel]}
-							checkInfoCondition={parity => t.track.grid.parity[new VariableName(parity!).camel]}
-						/>
+						{...[1, 0].map(i => (
+							<ExpanderRadio
+								key={`parity${i ? 1 : 2}`}
+								title={i ? t.track.grid.parity : t.track.grid.paritySpare({ number: 2 })}
+								items={parityTypes}
+								value={i ? parity : parity2}
+								icon={getParityIcon((i ? parity : parity2)[0])}
+								iconField={parity => getParityIcon(parity)}
+								view="tile"
+								idField
+								nameField={parity => t.track.grid.parity[new VariableName(parity).camel]}
+								checkInfoCondition={parity => t.track.grid.parity[new VariableName(parity!).camel]}
+								onItemClick={option => option === "random" && (i ? setFlip1RandomTimestamp : setFlip2RandomTimestamp)(Date.now())}
+							/>
+						))}
 						{/* <Subheader>{t.track.gradient.groups.gradually}</Subheader> */}
 						{/* TODO: 逐渐组设置，包括形状（如菱形、方形、圆形）、中心点。 */}
 					</EmptyMessage.Typical>
@@ -121,6 +115,7 @@ export default function Gradient() {
 										descending={descending}
 										direction={direction[0]}
 										parity={enableGridIntegration && group === "alternately" && [parity[0], parity2[0]]}
+										randomTimestamp={[flip1RandomTimestamp, flip2RandomTimestamp]}
 									/>
 								)}
 							>

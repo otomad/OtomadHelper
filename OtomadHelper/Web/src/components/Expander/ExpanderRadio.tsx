@@ -67,8 +67,9 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	transition?: boolean | string;
 	/** Make items cannot be selected? */
 	readOnly?: boolean;
-	/** Occurs when the item clicked. */
-	onItemClick?: MouseEventHandler<HTMLElement>;
+	/** Occurs when the item left clicked. */
+	onItemClick?(item: TItem, event: React.MouseEvent<HTMLElement>): void;
+	/** Occurs when the item right clicked. */
 	onItemContextMenu?(item: TItem, event: React.MouseEvent<HTMLElement>): void;
 }>>) {
 	const getItemField = (item: TItem, fieldName: "id" | "name" | "icon" | "image" | "details" | "imageOverlay"): Any => {
@@ -116,7 +117,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 					details={getItemField(item, "details")}
 					radioGroup={radioGroup}
 					readOnly={readOnly}
-					onClick={onItemClick}
+					onClick={e => onItemClick?.(item, e)}
 					onContextMenu={e => onItemContextMenu?.(item, e)}
 				>
 					{getItemField(item, "name")}
@@ -139,7 +140,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 							icon={getItemField(item, "icon")}
 							details={getItemField(item, "details")}
 							imageOverlay={getItemField(item, "imageOverlay")}
-							onClick={(_1, _2, e) => onItemClick?.(e)}
+							onClick={(_1, _2, e) => onItemClick?.(item, e)}
 							onContextMenu={e => onItemContextMenu?.(item, e)}
 							{...typeof itemsViewItemAttrs === "function" ? itemsViewItemAttrs(item) : itemsViewItemAttrs}
 						>
