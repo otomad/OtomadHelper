@@ -511,3 +511,10 @@ export function scrollIntoViewAlt(element: MaybeRef<HTMLElement | null>, enableA
 	if (scrollLeft.value + scrollClientWidth < elementOffsetRight)
 		scrollLeft.value = elementOffsetRight - scrollClientWidth;
 }
+
+type CustomEvents = FilterValueType<GlobalEventHandlersEventMap, CustomEvent>;
+type CustomEventDetail<T extends keyof CustomEvents> = GlobalEventHandlersEventMap[T] extends CustomEvent<infer Detail> ? Detail : never;
+export const createCustomEvent = <T extends keyof CustomEvents>(
+	type: T,
+	eventInitDict: CustomEventInit<CustomEventDetail<T>>,
+) => new CustomEvent(type, eventInitDict);

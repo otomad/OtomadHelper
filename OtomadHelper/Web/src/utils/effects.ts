@@ -116,6 +116,13 @@ export async function makeFocusHighlightEffect(element: TargetType, options?: Ov
 		height: "anchor-size(height, 0)",
 	});
 	ring.classList.add(FOCUS_HIGHLIGHT_RING_CLASS);
+	const transitionExitAborter = new AbortController();
+	window.addEventListener("transitionExitCapture", e => {
+		if (e.detail.target.contains(el)) {
+			transitionExitAborter.abort();
+			cleanupFocusHighlightEffect();
+		}
+	}, { signal: transitionExitAborter.signal });
 	const duration = 2000;
 	try {
 		if (!isReduceMotionOrTransparency() && !isContrast())
@@ -135,6 +142,7 @@ export async function makeFocusHighlightEffect(element: TargetType, options?: Ov
 				{ outline: "none", offset: 0.5, easing: "step-end" },
 			], { duration: duration / 2, easing: "linear", iterations: 3 }).finished.catch(noop);
 	} finally {
+		transitionExitAborter.abort();
 		ring.remove();
 		if (el.style.anchorName === anchorName) {
 			el.classList.remove(FOCUS_HIGHLIGHT_CLASS);

@@ -8,6 +8,7 @@ export default function LetterByLetter({ as: As = "p", children = "", granularit
 	as?: AsTarget;
 	/** The children must be string. */
 	children?: string;
+	/** The type of input to be split. */
 	granularity?: Intl.SegmenterOptions["granularity"];
 }, "p">) {
 	const [language] = useLanguage();

@@ -272,12 +272,12 @@ const StyledNavigationView = styled.div<{
 			font-weight: 600;
 
 			> .title-wrapper-inner {
+				anchor-name: ${TITLE_ANCHOR_NAME};
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 				block-size: ${TITLE_LINE_HEIGHT}px;
 				inline-size: 100%;
-				anchor-name: ${TITLE_ANCHOR_NAME};
 
 				> div {
 					${styles.mixins.square("100%")};
@@ -704,7 +704,8 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 	const pageContentEl = useDomRef<"div">();
-	const scrollToTopOrPrevious = () => {
+
+	function scrollToTopOrPrevious() {
 		onEnter?.();
 		const pageContent = pageContentEl.current;
 		if (!pageContent) return;
@@ -721,7 +722,8 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 			return;
 		}
 		pageContent.scrollTo({ top: 0, left: 0, behavior: "instant" });
-	};
+	}
+
 	const navItemsId = useId();
 	const [mainPageTransitionStatus, setMainPageTransitionStatus] = useState<TransitionUpdateStatus>("entered");
 	const reduceMotion = useMediaQuery.reduceMotion();
@@ -751,19 +753,6 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 		},
 		...props,
 	});
-
-	async function hack_rerenderPageWhenReduceMotion() {
-		// HACK: Unknown Chromium render bug (first found in Chromium 141). When user prefers reduced motion,
-		// the page will unexpectedly not shown after the first navigation when it is the first time the webpage loaded,
-		// by changing any style will make it become normal. I don't know why this happened.
-		if (!reduceMotion) return;
-		const pageContent = pageContentEl.current, mainPage = pageContent?.querySelector(":scope > .enter-done");
-		if (pageContent && mainPage && getComputedStyle(mainPage).translate !== "none") {
-			pageContent.hidden = true;
-			await nextAnimationTick();
-			pageContent.hidden = false;
-		}
-	}
 
 	const windowWidth = useWindowWidth();
 	useEffect(hideFlyoutNavMenu, [currentNav, windowWidth]);
@@ -845,9 +834,10 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 							<SwitchTransition mode={transitionName === "jump" ? "out-in" : "out-in-preload"}>
 								<CssTransition
 									key={pagePath}
-									onEnter={scrollToTopOrPrevious}
-									onEntered={hack_rerenderPageWhenReduceMotion}
-									onUpdated={(_, status) => setMainPageTransitionStatus(status)}
+									onUpdated={(_, status) => {
+										setMainPageTransitionStatus(status);
+										if (status === (reduceMotion ? "entered" : "enter")) scrollToTopOrPrevious();
+									}}
 									moreCoherentWhenCombo
 									maxTimeout={1000}
 								>

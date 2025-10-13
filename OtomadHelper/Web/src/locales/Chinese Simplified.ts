@@ -423,6 +423,7 @@ export default {
 			},
 		},
 		track: {
+			layout: "布局",
 			grid: {
 				array: "阵列",
 				square: "平方",

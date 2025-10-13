@@ -100,6 +100,10 @@ import { spacing } from "pangu";
 		return [...this].slice(from, end).join("");
 	};
 
+	defineGetterInPrototype(String, "graphemes", function () {
+		return Array.from(new Intl.Segmenter("en", { granularity: "grapheme" }).segment(this.valueOf()), ({ segment }) => segment);
+	});
+
 	makePrototypeKeysNonEnumerable(String);
 }
 

@@ -136,7 +136,7 @@ const ExpanderChildWrapper = styled.div<{
 	`)}
 
 	${({ $tilePadding }) => $tilePadding === "tile view" ? css`
-		padding-inline: 35px;
+		padding-inline: 39px;
 	` : $tilePadding === "button to item" ? css`
 		padding-inline: 40px;
 	` : undefined}

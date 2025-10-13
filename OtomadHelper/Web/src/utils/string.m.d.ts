@@ -349,4 +349,10 @@ declare interface String {
 	 * end of string.
 	 */
 	realSlice(start?: number, end?: number): string;
+
+	/**
+	 * Splits the sentence by graphemes, useful for dividing or counting a string with emojis or characters with
+	 * combining diacritical marks.
+	 */
+	readonly graphemes: string[];
 }

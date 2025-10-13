@@ -40,7 +40,7 @@ export /* @internal */ const StyledItemsView = styled.div`
 
 	.expander-child-items & {
 		&.tile {
-			padding: 7px 35px;
+			padding: 7px 39px;
 		}
 
 		&.grid {

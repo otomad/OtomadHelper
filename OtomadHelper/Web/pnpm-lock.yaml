@@ -14,9 +14,6 @@ patchedDependencies:
   babel-plugin-transform-jsx-classnames:
     hash: 3261c0fb8fd9750eb153af71ac2bebf9f5bf26eefba4c76cc91d7cf4af24efd1
     path: patches/babel-plugin-transform-jsx-classnames.patch
-  enum-plus:
-    hash: 184c67ab30ea863c89798ea1f88d18253ebb03915d5fd8e17887cf16bee1c559
-    path: patches/enum-plus.patch
   html-minifier-terser:
     hash: 3fe9cc1b32a68ef076f3ee2cca3bf57b2d6f105256826c548cceb18008f3a01c
     path: patches/html-minifier-terser.patch
@@ -93,7 +90,7 @@ importers:
         version: 1.5.3
       enum-plus:
         specifier: ^3.0.1
-        version: 3.0.1(patch_hash=184c67ab30ea863c89798ea1f88d18253ebb03915d5fd8e17887cf16bee1c559)
+        version: 3.0.1
       fullwidth-quotes:
         specifier: ^1.0.1
         version: 1.0.1
@@ -146,8 +143,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0(i18next@25.6.0(typescript@5.8.3))(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))(typescript@5.8.3)
       react-transition-group-fc:
-        specifier: ^4.6.1
-        version: 4.6.1(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
+        specifier: ^4.6.2
+        version: 4.6.2(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
       styled-components:
         specifier: ^6.1.19
         version: 6.1.19(patch_hash=dd9b1cffb608f53a2cd214ba48847c9b5b74dc6c1ab789a009f55c7ccb5ae3f9)(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))
@@ -4550,8 +4547,8 @@ packages:
     resolution: {integrity: sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==}
     engines: {node: '>=0.10.0'}
 
-  react-transition-group-fc@4.6.1:
-    resolution: {integrity: sha512-VY+t/R6V74TLwMjc6sSehBTFgZP3HRQXSyzQJBDf7f/t95NhUjz7PJNmmWnMiNbUxzm6r+U/sFJ2QzHrKGkPfQ==}
+  react-transition-group-fc@4.6.2:
+    resolution: {integrity: sha512-3/XcHyduZ4dDdU04ZqTTsnV+1MeqgttDDcCoCDqEuGUPsCBuwFB8U7cIzel+2E+YKIZztMsU2YX+92YBGUCCsQ==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -8075,7 +8072,7 @@ snapshots:
 
   entities@4.5.0: {}
 
-  enum-plus@3.0.1(patch_hash=184c67ab30ea863c89798ea1f88d18253ebb03915d5fd8e17887cf16bee1c559): {}
+  enum-plus@3.0.1: {}
 
   env-paths@2.2.1: {}
 
@@ -10295,7 +10292,7 @@ snapshots:
 
   react-refresh@0.17.0: {}
 
-  react-transition-group-fc@4.6.1(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)):
+  react-transition-group-fc@4.6.2(react-dom@19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)))(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)):
     dependencies:
       react: 19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)
       react-dom: 19.0.0(patch_hash=5178dbaf742b08b13ae911e560ba58c50d9323a3ef2c1209c95ac14558383f77)(react@19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad))

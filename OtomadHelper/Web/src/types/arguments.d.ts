@@ -135,4 +135,11 @@ declare global {
 
 	/** Rough time unit which can be switched by combobox. */
 	type RoughTimeUnit = "millisecond" | "second" | "minute" | "hour";
+
+	// Add custom events
+	interface GlobalEventHandlersEventMap {
+		transitionExitCapture: CustomEvent<{
+			target: HTMLElement;
+		}>;
+	}
 }

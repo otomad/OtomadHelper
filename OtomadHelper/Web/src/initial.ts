@@ -10,6 +10,7 @@ import "styles/properties";
 import "utils/bridge";
 
 import { enableMapSet } from "immer";
+import { config as transitionGroupConfig } from "react-transition-group-fc";
 
 /**
  * Run before the web DOM is loading.
@@ -102,5 +103,9 @@ import { enableMapSet } from "immer";
 
 	// #region Enable Map and Set support for Immer
 	enableMapSet();
+	// #endregion
+
+	// #region Dispatch global transition exit event.
+	transitionGroupConfig.onExit = node => window.dispatchEvent(createCustomEvent("transitionExitCapture", { detail: { target: node } }));
 	// #endregion
 }

@@ -4,7 +4,7 @@ const StyledCustomItem = styled.div`
 	gap: 4px;
 	justify-content: space-between;
 	align-items: center;
-	padding: 7px 35px;
+	padding: 7px 39px;
 
 	> .items-view-item {
 		flex: 1;
