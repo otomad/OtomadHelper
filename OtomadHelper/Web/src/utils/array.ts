@@ -259,6 +259,22 @@
 		return this.slice(0, start).concat(this.slice(end ?? start + 1));
 	};
 
+	Array.prototype.move = function (fromStart, fromEnd = fromStart + 1, toIndex = 0) {
+		if (this.length === 0) return this;
+		if (fromStart < 0) fromStart += this.length;
+		if (fromEnd < 0) fromEnd += this.length;
+		if (toIndex < 0) toIndex += this.length + 1;
+		if (fromStart >= fromEnd || toIndex >= fromStart && toIndex <= fromEnd) return this;
+		const movedItems = this.splice(fromStart, fromEnd - fromStart);
+		const adjustedTarget = toIndex > fromStart ? toIndex - movedItems.length : toIndex;
+		this.splice(adjustedTarget, 0, ...movedItems);
+		return this;
+	};
+
+	Array.prototype.toMoved = function (fromStart, fromEnd, toIndex) {
+		return this.slice().move(fromStart, fromEnd, toIndex);
+	};
+
 	makePrototypeKeysNonEnumerable(Array);
 }
 

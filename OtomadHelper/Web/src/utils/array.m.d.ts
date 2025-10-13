@@ -651,10 +651,40 @@ declare interface Array<T> {
 	 * ```
 	 */
 	hole(hole: number): T;
+
+	/**
+	 * Move the items within `[fromStart, fromEnd)` to `toIndex`. This will modify the original array.
+	 *
+	 * @param fromStart - Start index of items that to be moved.
+	 * @param fromEnd - End index of items that to be moved. Defaults to `fromStart + 1`.
+	 * @param toIndex - Target index to move. Defaults to `0`.
+	 * @returns The original array with items moved.
+	 *
+	 * @example
+	 * ```javascript
+	 * [0, 1, 2, 3, 4, 5, 6, 7, 8].move(4, 6, 2); // [0, 1, 4, 5, 2, 3, 6, 7, 8]
+	 * ```
+	 */
+	move(fromStart: number, fromEnd?: number, toIndex?: number): T[];
+
+	/**
+	 * Move the items within `[fromStart, fromEnd)` to `toIndex`. This will return a new array.
+	 *
+	 * @param fromStart - Start index of items that to be moved.
+	 * @param fromEnd - End index of items that to be moved. Defaults to `fromStart + 1`.
+	 * @param toIndex - Target index to move. Defaults to `0`.
+	 * @returns A new array with items moved.
+	 *
+	 * @example
+	 * ```javascript
+	 * [0, 1, 2, 3, 4, 5, 6, 7, 8].move(4, 6, 2); // [0, 1, 4, 5, 2, 3, 6, 7, 8]
+	 * ```
+	 */
+	toMoved(fromStart: number, fromEnd?: number, toIndex?: number): T[];
 }
 
 declare interface ReadonlyArray<T> extends Pick<Array<T>,
-	"mapObject" | "nextItem" | "includes" | "indexOfDefault"
+	"mapObject" | "nextItem" | "includes" | "indexOfDefault" | "toMoved"
 > {
 	/**
 	 * If, on the other hand, you feel seriously enough that this use of includes() should be accepted with no type assertions,
