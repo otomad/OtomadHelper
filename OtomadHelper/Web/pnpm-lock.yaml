@@ -23,9 +23,6 @@ patchedDependencies:
   lottie-web@5.12.2:
     hash: 8478d38bb7fb10aa0308e4c9d5c978124785085e970180c6a774f340ab7f7906
     path: patches/lottie-web@5.12.2.patch
-  pangu:
-    hash: 29f14f5eb128a96123aa57f1d33df18b05f7e2dbed95c84370445cb5b2ed8823
-    path: patches/pangu.patch
   postcss-selector-parser@6.1.2:
     hash: 95d44ecd87b2f8615a9d13fe20bf343fa0f9bc6a8831354069c9cd35365f3a5f
     path: patches/postcss-selector-parser@6.1.2.patch
@@ -127,9 +124,6 @@ importers:
       node-vibrant:
         specifier: ^4.0.3
         version: 4.0.3
-      pangu:
-        specifier: ^4.0.7
-        version: 4.0.7(patch_hash=29f14f5eb128a96123aa57f1d33df18b05f7e2dbed95c84370445cb5b2ed8823)
       react:
         specifier: ^19.0.0
         version: 19.0.0(patch_hash=a1a62374ebca8fc3e338179457accd437d9b67c177c3440df5eb7f78d59727ad)
@@ -203,9 +197,6 @@ importers:
       '@types/node':
         specifier: latest
         version: 24.3.3
-      '@types/pangu':
-        specifier: ^4.0.2
-        version: 4.0.2
       '@types/react':
         specifier: ^19.0.1
         version: 19.0.1(patch_hash=4d0b913251acfcb3774935179365be5f6b3075745ccefb13409ad5f292db38fc)
@@ -1576,9 +1567,6 @@ packages:
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
-
-  '@types/pangu@4.0.2':
-    resolution: {integrity: sha512-rVwVCkOFTWpmBjZuxTiVhLE8cwIKff3jWEKjs+DDg6bMkQwjp9Bp03pNanHQTtTzP53SDHJutb/kfGFHNhOJaQ==}
 
   '@types/react-dom@19.0.1':
     resolution: {integrity: sha512-hljHij7MpWPKF6u5vojuyfV0YA4YURsQG7KT6SzV0Zs2BXAtgdTxG6A229Ub/xiWV4w/7JL8fi6aAyjshH4meA==}
@@ -4271,10 +4259,6 @@ packages:
   pako@1.0.11:
     resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
 
-  pangu@4.0.7:
-    resolution: {integrity: sha512-weZKJIwwy5gjt4STGVUH9bix3BGk7wZ2ahtIypwe3e/mllsrIZIvtfLx1dPX56GcpZFOCFKmeqI1qVuB9enRzA==}
-    hasBin: true
-
   param-case@3.0.4:
     resolution: {integrity: sha512-RXlj7zCYokReqWpOPH9oYivUzLYZ5vAPIfEmCTNViosC78F8F0H9y7T7gG2M39ymgutxF5gcFEsyZQSph9Bp3A==}
 
@@ -6957,8 +6941,6 @@ snapshots:
       undici-types: 7.10.0
 
   '@types/normalize-package-data@2.4.4': {}
-
-  '@types/pangu@4.0.2': {}
 
   '@types/react-dom@19.0.1':
     dependencies:
@@ -10050,8 +10032,6 @@ snapshots:
   package-name-regex@2.0.6: {}
 
   pako@1.0.11: {}
-
-  pangu@4.0.7(patch_hash=29f14f5eb128a96123aa57f1d33df18b05f7e2dbed95c84370445cb5b2ed8823): {}
 
   param-case@3.0.4:
     dependencies:

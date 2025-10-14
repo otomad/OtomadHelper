@@ -168,8 +168,7 @@ export function swapArrowLeftRightIfRtl<T extends string>(code: T) {
  */
 export function listFormat(list: string[], type?: Intl.ListFormatType, style?: Intl.ListFormatStyle) {
 	const formatter = new Intl.ListFormat(i18n.language, { type, style });
-	const result = formatter.format(list);
-	return panguSpacing(result);
+	return formatter.format(list);
 }
 
 /**

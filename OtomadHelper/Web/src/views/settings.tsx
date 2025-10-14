@@ -345,7 +345,7 @@ export default function Settings() {
 			<Expander
 				title={t.settings.appearance.fontSize}
 				icon="text_font_size"
-				checkInfo={panguSpacing(fontSize[0] + t.units.point)}
+				checkInfo={fontSize[0] + t.units.point}
 				expanded={DEV_EXPANDED}
 			>
 				<Expander.ChildWrapper $single>

@@ -138,6 +138,7 @@ const GlobalStyle = createGlobalStyle<{
 		font-synthesis: none;
 		font-variant-ligatures: common-ligatures historical-ligatures contextual;
 		font-variant-numeric: proportional-nums;
+		text-autospace: normal;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		text-rendering: optimizeLegibility;

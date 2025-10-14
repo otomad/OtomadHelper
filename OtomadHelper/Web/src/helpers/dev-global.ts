@@ -18,10 +18,6 @@ if (import.meta.env.DEV) {
 	};
 	// #endregion
 
-	// #region Pangu spacing
-	globals.spacing = panguSpacing;
-	// #endregion
-
 	// #region Temporarily set theme
 	globals.setTheme = (...themes: string[]) => {
 		const html = document.documentElement;

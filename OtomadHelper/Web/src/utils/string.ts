@@ -1,5 +1,4 @@
 import dedent from "dedent";
-import { spacing } from "pangu";
 
 { // Init string extensions
 	String.prototype.count = function (...substrings) {
@@ -116,24 +115,3 @@ import { spacing } from "pangu";
 export const canToString = (test: Object | undefined | null): test is string => !!test && !test.toString().match(/^\[object .*\]$/);
 
 export { default as replacerWithGroups } from "helpers/replacerWithGroups";
-
-/**
- * Adds spacing between Chinese and English characters in the given text.
- *
- * @param text - The input text string to process.
- * @returns The processed text with spacing added.
- */
-export function panguSpacing(text: string): string;
-/**
- * Adds spacing between Chinese and English characters in the given text.
- *
- * @param text - The input text to process. Can be a string, number, or bigint.
- * If the input is not a string, it will be returned as-is.
- * @returns The processed text with spacing added if the input is a string,
- * or the original input if it is not a string.
- */
-export function panguSpacing(text: Readable): Readable;
-export function panguSpacing(text: Readable) {
-	if (typeof text !== "string") return text;
-	return spacing(text);
-}

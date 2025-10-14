@@ -267,7 +267,7 @@ function AboutInformation() {
 function listFormatTranslators_static(translators: string[] | string, lang: string) {
 	if (typeof translators === "string" || isI18nItem(translators)) translators = translators.toString().split("\n").toTrimmed();
 	const formatted = new Intl.ListFormat(lang, { style: "narrow", type: "conjunction" }).format(translators);
-	return panguSpacing(formatted);
+	return formatted;
 }
 
 export function listFormatTranslators(targetLanguage: string, displayLanguage: string): [hasTranslator: boolean, formattedTranslator: string] {

@@ -282,7 +282,7 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 
 	return (
 		<StyledSliderWrapper onAuxClick={resetToDefault}>
-			{hasValue(displayValue) && !onDisplayValueChanged && <output htmlFor={id} aria-hidden>{panguSpacing(displayValue)}</output>}
+			{hasValue(displayValue) && !onDisplayValueChanged && <output htmlFor={id} aria-hidden>{displayValue}</output>}
 			<StyledSlider
 				tabIndex={disabled ? -1 : 0}
 				style={{
