@@ -25,6 +25,8 @@ export default {
 				"height": "| <anchor-size()>",
 				// WARN: https://github.com/stylelint/stylelint/issues/8778
 				"appearance": "| base-select",
+				//
+				"justify-self": "| anchor-center",
 			},
 			types: {
 				// WARN: https://github.com/stylelint/stylelint/issues/8610

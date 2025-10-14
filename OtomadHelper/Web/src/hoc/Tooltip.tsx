@@ -1,124 +1,165 @@
 /** CAUTION: Only used for debugging during development, please ensure to be `false` in production. */
 const DEBUG_MODE = false;
 
-const StyledTooltip = styled.div<{
-	/** Tooltip offset (animation only). */
-	$offset: number;
-}>`
-	${styles.mixins.square("0")};
+const StyledTooltip = styled.div`
+	--offset: 10px;
 	position: fixed;
+	position-anchor: var(--anchor);
 	z-index: 80;
 	display: flex;
-	transition: ${fallbackTransitions}, left 0s, top 0s;
+	justify-self: anchor-center;
+	overflow: clip;
+	border-radius: 4px;
+	outline: 1px solid ${c("stroke-color-surface-stroke-flyout")};
+	box-shadow: 0 4px 8px ${c("shadows-flyout")};
+	transition: opacity ${eases.easeOutMax} 250ms, margin ${eases.easeOutMax} 250ms;
 	${!DEBUG_MODE && css`pointer-events: none;`};
 
 	.base {
-		${styles.effects.flyout};
 		flex-shrink: 0;
-		max-width: 50dvw;
-		height: max-content;
+		block-size: max-content;
+		max-width: if(
+			media(width < 576px): 100dvw;
+			media(width < 768px): 75dvw;
+			else: 50dvw;
+		);
 		padding: 6px 8px;
+		text-wrap: wrap; // Disable pretty text-wrap, because if line breaks, there are too many blank at the right.
 		// stylelint-disable-next-line property-no-deprecated
 		word-wrap: break-word;
 		overflow-wrap: break-word;
-		border-radius: 4px;
+		background-color: ${c("background-fill-color-acrylic-background-default")};
 		backdrop-filter: blur(60px);
 
 		&:has(.tooltip-content) {
 			padding: 0;
-			border-radius: 7px;
+		}
+	}
+
+	&:has(.tooltip-content) {
+		border-radius: 7px;
+	}
+
+	&.top,
+	&.bottom,
+	&.y {
+		position-area: top;
+		position-try: flip-block;
+		margin-bottom: var(--offset);
+
+		&.bottom {
+			position-area: bottom;
+			margin-top: var(--offset);
+			margin-bottom: 0;
+		}
+
+		&.y {
+			position-try-order: most-height;
+		}
+	}
+
+	&.left,
+	&.right,
+	&.x {
+		position-area: left;
+		position-try: flip-inline;
+		margin-right: var(--offset);
+
+		&.right {
+			position-area: right;
+			margin-right: 0;
+			margin-left: var(--offset);
+		}
+
+		&.x {
+			position-try-order: most-width;
+		}
+	}
+
+	&.block-start,
+	&.block-end,
+	&.block {
+		position-area: block-start;
+		position-try: flip-block;
+		margin-block-end: var(--offset);
+
+		&.block-end {
+			position-area: block-end;
+			margin-block: var(--offset) 0;
+		}
+
+		&.block {
+			position-try-order: most-block-size;
+		}
+	}
+
+	&.inline-start,
+	&.inline-end,
+	&.inline {
+		position-area: inline-start;
+		position-try: flip-inline;
+		margin-inline-end: var(--offset);
+
+		&.inline-end {
+			position-area: inline-end;
+			margin-inline: var(--offset) 0;
+		}
+
+		&.inline {
+			position-try-order: most-inline-size;
 		}
 	}
 
 	${tgs()} {
-		.base {
-			opacity: 0;
-		}
-
-		${({ $offset }) => css`
-			&.top {
-				translate: 0 ${$offset}px;
-			}
-
-			&.bottom {
-				translate: 0 ${-$offset}px;
-			}
-
-			&.right {
-				translate: ${-$offset}px;
-			}
-
-			&.left {
-				translate: ${$offset}px;
-			}
-		`}
-	}
-
-	&.top {
-		justify-content: center;
-		align-items: flex-end;
-	}
-
-	&.bottom {
-		justify-content: center;
-		align-items: flex-start;
-	}
-
-	&.right {
-		justify-content: flex-start;
-		align-items: center;
-
-		&:dir(rtl) {
-			justify-content: flex-end;
-		}
-	}
-
-	&.left {
-		justify-content: flex-end;
-		align-items: center;
-
-		&:dir(rtl) {
-			justify-content: flex-start;
-		}
+		margin: 0 !important;
+		opacity: 0;
 	}
 `;
 
-export default function Tooltip({ title: _title, placement, offset = 10, timeout = 500, disabled = false, applyAriaLabel = true, unwrapped = true, children, ref }: FCP<{
+const DEFAULT_TOOLTIP_ANCHOR_PREFIX = "--tooltip-anchor";
+
+export default function Tooltip({ title: _title, placement, offset, timeout = 500, disabled = false, applyAriaLabel = true, children, ref }: FCP<{
 	/** Tooltip content. */
 	title: ReactNode | (() => ReactNode);
 	/** Tooltip placement. */
-	placement?: Placement;
-	/** Tooltip offset. */
+	placement: Placement;
+	/** Tooltip offset. Unit: px. @default 10 */
 	offset?: number;
-	/** Delayed display time. */
+	/** Delayed display time. Unit: ms. @default 500 */
 	timeout?: number;
 	/** Do not show the tooltip? */
 	disabled?: boolean;
 	/** Automatically apply the tooltip title to the target element's aria label attribute unless it already has the attribute or it is aria hidden? @default true */
 	applyAriaLabel?: boolean;
-	/** Do not wrap the child with a child wrapper. Please ensure that your child is exactly one element and forward the ref correctly. */
-	unwrapped?: boolean;
 	ref?: ForwardedRef<"section">;
 }>) {
 	const getUpdatedTitle = useCallback(() => isI18nItem(_title) ? _title.toString() : typeof _title === "function" ? _title() : _title, [_title]);
 	const [title, setTitle] = useState(getUpdatedTitle());
 	const updateTitle = useCallback(() => setTitle(getUpdatedTitle()), [getUpdatedTitle]);
 	const [shown, setShown] = useState(false);
-	const [contentsEl, setContentsEl] = useDomRefState<"div">(); // Use state instead of ref to make sure change it to rerender.
-	const tooltipEl = useDomRef<"div">();
-	const [actualPlacement, setActualPlacement] = useState(placement);
-	const [position, setPosition] = useState<CSSProperties>();
+	const [childEl, setChildEl] = useDomRefState<"div">(); // Use state instead of ref to make sure change it to rerender.
 	const shownTimeout = useRef<Timeout>(undefined);
+	const newAnchorName = useUniqueId(DEFAULT_TOOLTIP_ANCHOR_PREFIX);
+	const anchorName = useRef(newAnchorName);
+	const { isInPage } = useContext(MainPageContext);
 
-	useImperativeHandle(ref, () => contentsEl!);
+	useImperativeHandle(ref, () => childEl!);
+
+	useEffect(() => {
+		if (!childEl) return;
+		if (childEl.style.anchorName) anchorName.current = childEl.style.anchorName;
+		else childEl.style.anchorName = newAnchorName;
+		return () => {
+			if (childEl.style.anchorName?.startsWith(DEFAULT_TOOLTIP_ANCHOR_PREFIX)) childEl.style.anchorName = null!;
+		};
+	}, [childEl]);
 
 	const dom = useMemo(() => {
-		if (unwrapped) return contentsEl;
-		let dom = contentsEl?.firstElementChild;
+		let dom: Element | null = childEl;
 		while (dom && (getComputedStyle(dom).display === "contents" || dom.classList.contains("expander")))
 			dom = dom.firstElementChild;
 		return dom as HTMLElement | null;
-	}, [contentsEl]);
+	}, [childEl]);
 
 	useEffect(() => {
 		updateTitle();
@@ -134,17 +175,10 @@ export default function Tooltip({ title: _title, placement, offset = 10, timeout
 	const handleHover = (e: MouseEvent) => {
 		updateTitle();
 		clearTimeout(shownTimeout.current);
-		if (!dom || !isInPath(e, dom)) return;
-		shownTimeout.current = setTimeout(async () => {
+		if (!dom || disabled || !isInPath(e, dom)) return;
+		shownTimeout.current = setTimeout(() => {
 			if (!dom) return;
-			const options = getPosition(dom, placement, offset);
-			setActualPlacement(options.placement);
-			setPosition(options.style);
 			setShown(true);
-			await nextAnimationTick();
-			const tooltip = tooltipEl.current;
-			if (!tooltip) return;
-			setPosition(moveIntoPage(tooltip, tooltip.parentElement!, 1));
 		}, timeout);
 	};
 
@@ -154,23 +188,27 @@ export default function Tooltip({ title: _title, placement, offset = 10, timeout
 		setShown(false);
 	};
 
-	useEventListener(dom, "mouseenter", handleHover, undefined, [contentsEl, title, placement, offset, timeout, disabled, children]);
-	useEventListener(dom, "mouseleave", handleUnhover, undefined, [contentsEl]);
-	useEventListener(dom, "click", handleUnhover, undefined, [contentsEl]);
-	useEventListener(window, "keydown", handleUnhover, { capture: true }, [contentsEl]);
+	useEventListener(dom, "mouseenter", handleHover, undefined, [childEl, title, placement, offset, timeout, disabled, children]);
+	useEventListener(dom, "mouseleave", handleUnhover, undefined, [childEl]);
+	useEventListener(dom, "click", handleUnhover, undefined, [childEl]);
+	useEventListener(window, "keydown", handleUnhover, { capture: true }, [childEl]);
 
 	return (
 		<>
-			{!unwrapped ? (
-				<Contents className="tooltip-child-wrapper" ref={setContentsEl}>
-					{children}
-				</Contents>
-			) : cloneRef(children, setContentsEl)}
+			{cloneRef(children, setChildEl)}
 			{!disabled && title && (
 				<Portal>
-					<CssTransition in={shown} unmountOnExit>
-						<StyledTooltip role="tooltip" $offset={offset} className={actualPlacement} style={position}>
-							<div className="base" ref={tooltipEl}>
+					<CssTransition in={shown || DEBUG_MODE} unmountOnExit>
+						<StyledTooltip
+							role="tooltip"
+							className={placement ?? "unknown"}
+							style={{
+								"--anchor": anchorName.current,
+								"--offset": offset !== undefined ? offset + "px" : undefined,
+								positionVisibility: isInPage ? "anchors-visible" : undefined,
+							}}
+						>
+							<div className="base">
 								{title}
 							</div>
 						</StyledTooltip>
@@ -225,9 +263,9 @@ function TooltipContent({ image, title, children, ...htmlAttrs }: FCP<{
 
 export type TooltipProps = PropsOf<typeof Tooltip>;
 
-function TooltipWith(withProps: Partial<TooltipProps>) {
-	// eslint-disable-next-line react/display-name
-	return (props: TooltipProps) => <Tooltip {...withProps} {...props} />;
+function TooltipWith<TKey extends keyof TooltipProps>(withProps: Partial<Record<TKey, TooltipProps[TKey]>>) {
+	const PartialTooltip = (props: PartialWith<TooltipProps, TKey>) => <Tooltip {...withProps} {...props as TooltipProps} />;
+	return PartialTooltip;
 }
 
 function TooltipWrap(component: ReactElement | React.ExoticComponent, tooltipProps: Partial<TooltipProps>) {

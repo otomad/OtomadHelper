@@ -30,7 +30,7 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 						max={16}
 						decimalPlaces={3}
 					/>
-					<Tooltip title={t.reset} placement="y">
+					<Tooltip title={t.reset} placement="block">
 						<Button icon="arrow_reset" subtle minWidthUnbounded onClick={() => value[1](1)} />
 					</Tooltip>
 				</>

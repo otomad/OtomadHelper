@@ -144,7 +144,7 @@ function TextBoxActionButton({ icon, tooltip, nonFocusable = false, ...htmlAttrs
 	children?: never;
 }, "button">) {
 	return (
-		<Tooltip title={tooltip} placement="y">
+		<Tooltip title={tooltip} placement="block">
 			<StyledTextBoxActionButton tabIndex={nonFocusable ? -1 : undefined} {...htmlAttrs}>
 				{icon && <Icon name={icon} />}
 			</StyledTextBoxActionButton>
@@ -553,7 +553,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 					onBlur={e => onFocusChange?.(false, e)}
 				/>
 				<label className="suffix" htmlFor={inputId}>{suffix}</label>
-				<Tooltip title={() => inputEl.current?.validationMessage} placement="y">
+				<Tooltip title={() => inputEl.current?.validationMessage} placement="block">
 					<Icon name="error_circle" className="warn-icon" />
 				</Tooltip>
 				<Contents className="action-buttons">

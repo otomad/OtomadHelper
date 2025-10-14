@@ -168,7 +168,7 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 	_vertical?: boolean;
 }, GenericElement>) {
 	const tabItemEl = useDomRef<"button">();
-	const anchorName = useUniqueId();
+	const anchorName = useUniqueId("--tab-item-focus-ring");
 	const scrollIntoView = (force = false) => {
 		if ((selected || force) && autoScrollIntoView)
 			scrollIntoViewAlt(tabItemEl, !vertical);
@@ -177,7 +177,7 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 	useKeyboardFocus(tabItemEl, () => scrollIntoView(true));
 
 	return (
-		<Tooltip placement="right" offset={5} disabled={!collapsed} title={children} applyAriaLabel={false}>
+		<Tooltip placement="inline-end" offset={5} disabled={!collapsed} title={children} applyAriaLabel={false}>
 			<StyledTabItem
 				ref={tabItemEl}
 				type="button"
@@ -188,7 +188,7 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 				onClick={e => { onClick?.(e); scrollIntoView(true); }}
 				{...htmlAttrs}
 				className={{ selected }}
-				style={{ "--anchor-name": "--" + anchorName }}
+				style={{ "--anchor-name": anchorName }}
 			>
 				{(icon || animatedIcon) && (
 					<div className="badge-wrapper">

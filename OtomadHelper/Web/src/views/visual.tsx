@@ -230,7 +230,7 @@ export default function Visual() {
 								onClick={() => pushPage("parameters")}
 							>
 								<ToggleSwitch on={scheme.enabled} />
-								<Tooltip placement="y" title={t.descriptions.condition}>
+								<Tooltip placement="block" title={t.descriptions.condition}>
 									<Button subtle icon="filter" minWidthUnbounded />
 								</Tooltip>
 							</SettingsCard>

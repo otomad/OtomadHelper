@@ -46,7 +46,7 @@ const SampleTextFontSize = styled.div`
 	}
 `; */
 
-const TooltipY = Tooltip.with({ placement: "y" });
+const TooltipBlock = Tooltip.with({ placement: "block" });
 
 export default function Settings() {
 	const [currentLanguage, setLanguage] = useLanguage();
@@ -188,7 +188,7 @@ export default function Settings() {
 						<Expander.Item title={t.settings.appearance.palette.accent} icon="color_fill" asSubtitle />
 						<StyledColorPalette>
 							{autoColorPalettes.map(color => (
-								<TooltipY key={color} title={t.settings.appearance.palette[color]}>
+								<TooltipBlock key={color} title={t.settings.appearance.palette[color]}>
 									<ColorButton
 										color={color}
 										value={accentColor}
@@ -199,14 +199,14 @@ export default function Settings() {
 										autoStartViewTransition
 										selectedOutlineColor="colored"
 									/>
-								</TooltipY>
+								</TooltipBlock>
 							))}
 							{BasicColorPalette.items.map(({ value: color, key: name }) => (
-								<TooltipY key={color} title={t.settings.appearance.palette[name]}>
+								<TooltipBlock key={color} title={t.settings.appearance.palette[name]}>
 									<ColorButton color={color} value={accentColor} autoStartViewTransition selectedOutlineColor="colored" />
-								</TooltipY>
+								</TooltipBlock>
 							))}
-							<TooltipY title={t.custom}>
+							<TooltipBlock title={t.custom}>
 								<ColorPicker
 									color={accentColor}
 									computedColor={getComputedPaletteColor("accent")}
@@ -216,14 +216,14 @@ export default function Settings() {
 									autoStartViewTransition
 									selectedOutlineColor="colored"
 								/>
-							</TooltipY>
+							</TooltipBlock>
 						</StyledColorPalette>
 						{(actualContrast || actualAmoledDark) && <InfoBar status="warning">{t.descriptions.settings.appearance.invalid.blackScheme({ option: t.settings.appearance.palette.background })}</InfoBar>}
 						<Attrs style={{ opacity: actualContrast || actualAmoledDark ? 0.5 : undefined }}>
 							<Expander.Item title={t.settings.appearance.palette.background} icon="color_background" asSubtitle />
 							<StyledColorPalette>
 								{autoColorPalettes.map(color => (
-									<TooltipY key={color} title={t.settings.appearance.palette[color]}>
+									<TooltipBlock key={color} title={t.settings.appearance.palette[color]}>
 										<ColorButton
 											key={color}
 											color={color}
@@ -234,14 +234,14 @@ export default function Settings() {
 											selected={color === "windows" && backgroundColor[0] === "wallpaper" && !backgroundImages.currentDominantColor}
 											autoStartViewTransition
 										/>
-									</TooltipY>
+									</TooltipBlock>
 								))}
 								{BasicColorPalette.items.map(({ value: color, key: name }) => (
-									<TooltipY key={color} title={t.settings.appearance.palette[name]}>
+									<TooltipBlock key={color} title={t.settings.appearance.palette[name]}>
 										<ColorButton key={color} color={color} value={backgroundColor} autoStartViewTransition />
-									</TooltipY>
+									</TooltipBlock>
 								))}
-								<TooltipY title={t.custom}>
+								<TooltipBlock title={t.custom}>
 									<ColorPicker
 										color={backgroundColor}
 										computedColor={getComputedPaletteColor("background")}
@@ -249,7 +249,7 @@ export default function Settings() {
 										showIconWhenHovering={false}
 										showSpectrumWhenUnselected
 									/>
-								</TooltipY>
+								</TooltipBlock>
 							</StyledColorPalette>
 						</Attrs>
 					</>

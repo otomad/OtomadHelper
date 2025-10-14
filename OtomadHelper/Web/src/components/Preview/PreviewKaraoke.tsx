@@ -66,7 +66,6 @@ export default function PreviewKaraoke({ reset, futureFill, pastFill }: FCP<{
 	pastFill?: string;
 }>) {
 	const [textEls, setTextEl] = useDomRefs<"p">();
-	// const { status: _status } = useContext(MainPageTransitionContext);
 
 	useEffect(() => {
 		const CONTAINER_PADDING = 20;

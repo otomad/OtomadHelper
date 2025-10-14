@@ -235,7 +235,7 @@ type WithAttrsProps<TTag> = Partial<(TTag extends keyof ElementTagNameMap ? FCP<
  * @returns A new component containing the partial props or attrs.
  */
 export function withAttrs<TTag extends keyof ElementTagNameMap | React.FC>(tag: TTag, withProps: WithAttrsProps<TTag>) {
-	return (props: WithAttrsProps<TTag>) => React.createElement(tag, { ...withProps, ...props }) as unknown as TTag;
+	return (props: WithAttrsProps<TTag>) => h(tag, { ...withProps, ...props }) as unknown as TTag;
 }
 
 /**

@@ -30,7 +30,6 @@ export default css`
 		}
 
 		figcaption {
-			contain: inline-size;
 			font-size: inherit;
 		}
 

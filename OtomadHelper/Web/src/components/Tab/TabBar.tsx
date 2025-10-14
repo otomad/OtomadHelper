@@ -107,7 +107,6 @@ export default function TabBar<T extends string = string>({ current: [current, s
 	const [_movement, setMovement] = useState<TabBarMovement>("disappear");
 	const [disablePressIndicatorStyle, setDisablePressIndicatorStyle] = useDelayState(false);
 	const [appearingPosition, setAppearingPosition] = useDelayState<TwoD>();
-	// const { status: mainPageTransitionStatus } = useContext(MainPageTransitionContext);
 
 	/**
 	 * Update the tab indicator.

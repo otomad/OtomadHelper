@@ -21,6 +21,7 @@ export default [
 	"position-try-options",
 	"position-try-order",
 	"position-try-fallbacks",
+	"position-visibility",
 	"inset",
 	"inset-block",
 	"inset-block-start",

@@ -37,7 +37,9 @@ declare global {
 	type Status = "neutual" | "accent" | "info" | "asterisk" | "warning" | "success" | "error";
 
 	/** The placement of tooltips, flyouts, etc. */
-	type Placement = "top" | "right" | "bottom" | "left" | "x" | "y";
+	type Placement =
+		"top" | "right" | "bottom" | "left" | "x" | "y" |
+		"block-start" | "inline-end" | "block-end" | "inline-start" | "inline" | "block";
 
 	/** Item view mode. */
 	type ItemView = "list" | "tile" | "grid" | "grid-list";

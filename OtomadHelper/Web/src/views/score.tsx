@@ -329,7 +329,7 @@ export default function Score() {
 										<CssTransition in={isMultiple} unmountOnExit>
 											<MultipleSelectTrackItemsContainer>
 												{Array.from(getAllMultipleSelectTrackItemSet(track), item => !track.isDrumKit && item === "sonar" ? undefined : (
-													<Tooltip key={item} placement="y" title={t.titles[item]}>
+													<Tooltip key={item} placement="block" title={t.titles[item]}>
 														<ToggleButton
 															icon={redirectIcon(item)}
 															appearance="subtle"

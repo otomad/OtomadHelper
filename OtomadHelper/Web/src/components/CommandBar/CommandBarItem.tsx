@@ -73,7 +73,7 @@ export /* @internal */ function CommandBarItem({ icon, caption, altCaption, deta
 	);
 
 	return (
-		<Tooltip title={tooltip} placement="y" disabled={hovering} applyAriaLabel={false}>
+		<Tooltip title={tooltip} placement="block" disabled={hovering} applyAriaLabel={false}>
 			<CssTransition {...transitionAttrs} requestAnimationFrame>
 				<div className="command-bar-item" style={{ anchorName, "--icon-only": $p(iconOnly), "--too-narrow": $p(tooNarrow) }}>
 					{!canBeDisabled ? button : (

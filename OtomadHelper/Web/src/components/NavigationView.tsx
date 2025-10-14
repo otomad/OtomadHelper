@@ -73,7 +73,7 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 	onNavButton?(): void;
 }>) {
 	const vertical = paneDisplayMode === "compact";
-	const tooltipPlacement: Placement = vertical ? "right" : "bottom";
+	const tooltipPlacement: Placement = vertical ? "inline-end" : "block-end";
 
 	useEventListener(window, "keydown", e => {
 		if (shadow) return;
@@ -588,7 +588,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 				value={searchValue}
 				collapsed={paneDisplayMode !== "expanded" && !flyout}
 				inert={isHidden}
-				collapsedButtonTooltip={{ title: <TooltipTitleWithShortcut title={searchPlaceholder} shortcut={["Ctrl", "F"]} />, placement: "right" }}
+				collapsedButtonTooltip={{ title: <TooltipTitleWithShortcut title={searchPlaceholder} shortcut={["Ctrl", "F"]} />, placement: "inline-end" }}
 				enableShortcutKey={!flyout}
 				placeholder={searchPlaceholder}
 				onCollapsedButtonClick={onRequestExpand}
@@ -666,7 +666,12 @@ const usePaneDisplayMode = () => {
 	return paneDisplayMode;
 };
 
-export const MainPageTransitionContext = createContext({ status: "entered" as TransitionUpdateStatus });
+export const MainPageContext = createContext({
+	/** Current view transition status. */
+	transitionStatus: "entered" as TransitionUpdateStatus,
+	/** Indicates the current component is inside the main page. */
+	isInPage: false,
+});
 
 export default function NavigationView({ currentNav: [currentNav, setCurrentNav], navItems = [], titles, transitionName = "", children, customContent, canBack = true, onBack, commandBar, pageContentId, poppedScroll, searchValue, onSearch, onEnter, ...htmlAttrs }: FCP<{
 	/** Current navigation page status parameters. */
@@ -830,7 +835,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 						</div>
 					</header>
 					<div className={["page-content", transitionName]} ref={pageContentEl} id={pageContentId}>
-						<MainPageTransitionContext value={{ status: mainPageTransitionStatus }}>
+						<MainPageContext value={{ transitionStatus: mainPageTransitionStatus, isInPage: true }}>
 							<SwitchTransition mode={transitionName === "jump" ? "out-in" : "out-in-preload"}>
 								<CssTransition
 									key={pagePath}
@@ -846,7 +851,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 									</StyledPage>
 								</CssTransition>
 							</SwitchTransition>
-						</MainPageTransitionContext>
+						</MainPageContext>
 					</div>
 				</Attrs>
 			</div>

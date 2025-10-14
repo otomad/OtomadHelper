@@ -838,7 +838,7 @@ export default function Grid() {
 							<div />
 							<Label id={id} htmlFor="padding">{t(padding[0]).track.grid.padding}</Label>
 							<Multiply className="shadow" />
-							<Tooltip title={t.descriptions.track.grid.padding} placement="top" offset={TOOLTIP_OFFSET} unwrapped={false}>
+							<Tooltip title={t.descriptions.track.grid.padding} placement="block-start" offset={TOOLTIP_OFFSET}>
 								<TextBox.Number
 									id={`${id}-padding`}
 									aria-labelledby={`${id}-padding-label`}

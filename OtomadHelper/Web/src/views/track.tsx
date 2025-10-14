@@ -16,7 +16,7 @@ const StyledDeactivateButton = styled(Button).attrs({
 `;
 
 const DeactivateButton = ({ activated: [activated, setActivated] }: { activated: StatePropertyNonNull<boolean> }) => (
-	<Tooltip placement="y" title={t.descriptions.track.deactivate}>
+	<Tooltip placement="block" title={t.descriptions.track.deactivate}>
 		<StyledDeactivateButton
 			className={{ hidden: !activated }}
 			tabIndex={activated ? 0 : -1}

@@ -334,7 +334,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 		setSelected = selected[1] as never;
 		selected = selected[0] ? "checked" : "unchecked";
 	}
-	if (typeof tooltip === "string" || isI18nItem(tooltip)) tooltip = { title: String(tooltip), placement: "y" };
+	if (typeof tooltip === "string" || isI18nItem(tooltip)) tooltip = { title: String(tooltip), placement: "block" };
 
 	const ariaId = useId();
 	const textPart = (children || details) && (
@@ -363,7 +363,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 
 	return (
 		<ItemsViewItemStateContext value={{ hover }}>
-			<Tooltip disabled={!!tooltip} {...tooltip!}>
+			<Tooltip disabled={!tooltip} {...tooltip!}>
 				<EventInjector ref={el} onAnimationStart={e => handleAnimation(e, true)} onAnimationCancel={e => handleAnimation(e, false)}>
 					<StyledItemsViewItem
 						$view={view}
