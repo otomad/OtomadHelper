@@ -611,15 +611,16 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	);
 }
 
-const StyledBreadCrumbChevronRight = styled.div`
+const StyledBreadCrumbChevronRight = styled.div(() => css`
 	${styles.mixins.flexCenter()};
+	${styledDirBasedIcon(true)};
 	margin-block-start: 4px;
 
 	.icon {
 		color: ${c("fill-color-text-secondary")};
 		font-size: 16px;
 	}
-`;
+`);
 
 const BreadCrumbChevronRight = ({ ref }: FCP<{}, "div">) => (
 	<StyledBreadCrumbChevronRight ref={ref}>

@@ -71,7 +71,7 @@ const StyledPianoKey = styled.div`
 		--level-highlight: 0%;
 		display: flex;
 		justify-content: center;
-		align-items: flex-end;
+		align-items: end;
 		contain: strict;
 		color: ${c("foreground-color")};
 		/* font-variant-numeric: tabular-nums; */

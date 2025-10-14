@@ -1,8 +1,8 @@
 // import { ClickToComponent } from "click-to-react-component";
+import "./initial";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import "./initial";
 import "./locales/config";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

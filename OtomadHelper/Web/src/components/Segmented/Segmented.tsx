@@ -104,7 +104,7 @@ const StyledSegmented = styled.div<{
 		inset-block-start: 0;
 		display: flex;
 		justify-content: center;
-		align-items: flex-end;
+		align-items: end;
 		height: calc(100% + ${2 * THUMB_BORDER_WIDTH}px);
 		margin: ${-THUMB_BORDER_WIDTH}px;
 		background-color: if(
@@ -251,7 +251,7 @@ export default function Segmented<T extends string = string>({ current: [current
 
 const SegmentedSelectionModeContainer = styled.div`
 	display: flex;
-	justify-content: flex-end;
+	justify-content: end;
 `;
 
 Segmented.Item = SegmentedItem;

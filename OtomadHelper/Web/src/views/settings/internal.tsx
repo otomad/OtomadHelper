@@ -83,6 +83,7 @@ export default function Internal() {
 				value={defaultTuningMethod}
 				items={exactTuningMethods}
 				nameField={({ id }) => t.stream.tuning.tuningMethod[id]}
+				detailsField={({ id, originalName }) => t.stream.tuning.tuningMethod[id].toString() !== originalName && originalName}
 				checkInfoCondition={id => t.stream.tuning.tuningMethod[id!]}
 			/>
 			<ExpanderRadio

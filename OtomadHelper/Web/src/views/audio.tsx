@@ -12,10 +12,10 @@ export /* @internal */ const tuningMethods = [
 ] as const;
 
 export /* @internal */ const exactTuningMethods = [
-	{ id: "none", icon: "prohibited" },
-	{ id: "elastic", icon: "plus_minus" },
-	{ id: "classic", icon: "hourglass" },
-	{ id: "acid", icon: "logo/acid" },
+	{ id: "none", icon: "prohibited", originalName: undefined },
+	{ id: "elastic", icon: "plus_minus", originalName: "Élastique" },
+	{ id: "classic", icon: "hourglass", originalName: "Classic" },
+	{ id: "acid", icon: "logo/acid", originalName: "ACID" },
 ] as const;
 
 export /* @internal */ const exceeds = [
@@ -74,7 +74,7 @@ const TuningMethodEvaluation = styled.ul`
 	li {
 		display: flex;
 		gap: 6px;
-		align-items: flex-end;
+		align-items: end;
 
 		.icon {
 			font-size: 14px;

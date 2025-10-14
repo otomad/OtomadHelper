@@ -6,8 +6,8 @@ const StyledPreviewLanguage = styled.div`
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	justify-content: flex-end;
-	align-items: flex-start;
+	justify-content: end;
+	align-items: start;
 	height: 100%;
 	border-radius: inherit;
 

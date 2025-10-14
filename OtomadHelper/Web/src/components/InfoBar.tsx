@@ -15,7 +15,7 @@ const StyledInfoBar = styled.div<{
 }>`
 	display: flex;
 	column-gap: 13px;
-	align-items: flex-start;
+	align-items: start;
 	padding: 13px 15px;
 	overflow-inline: clip;
 	background-color: ${c("background-fill-color-card-background-secondary")};

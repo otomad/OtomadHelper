@@ -278,7 +278,7 @@ const StyledInitialStep = styled(Expander.Item)`
 	.trailing,
 	.initial-step-items {
 		flex: 1 1 0%;
-		justify-content: flex-start;
+		justify-content: start;
 		width: 100%;
 	}
 

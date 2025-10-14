@@ -10,7 +10,7 @@ const StyledSearchResult = styled.button`
 	position: relative;
 	display: flex;
 	gap: 16px;
-	align-items: flex-start;
+	align-items: start;
 	inline-size: 100%;
 	padding: 7px;
 	background-clip: padding-box;
@@ -161,7 +161,12 @@ export default function HandleSearchResults({ query, onSelect, handler }: Search
 
 const StyledSearchResultPath = styled.div`
 	${styles.effects.text.caption};
+	${styledDirBasedIcon(true)};
 	color: ${c("fill-color-text-secondary")};
+
+	> span {
+		display: inline-block;
+	}
 
 	.icon {
 		display: inline-flex;
@@ -178,12 +183,14 @@ const StyledSearchResultPath = styled.div`
 function SearchResultPath({ meta }: { meta: SettingMeta }) {
 	const { pages, anchors } = meta.translatedPath;
 	if (pages.length === 0 && anchors.length === 0) return;
+	// Text without wrapping with span will break RTL direction because of inline-block behavior.
+	const wrapWithSpan = (items: string[]) => items.map((item, i) => <span key={i}>{item}</span>);
 
 	return (
 		<StyledSearchResultPath>
-			{pages.interpose(i => <Icon key={`sep-page-${i}`} name="chevron_right" />)}
+			{wrapWithSpan(pages).interpose(i => <Icon key={`sep-page-${i}`} name="chevron_right" />)}
 			{pages.length > 0 && anchors.length > 0 && <Icon name="chevron_double_right" />}
-			{anchors.interpose(i => <Icon key={`sep-anchor-${i}`} name="chevron_right" />)}
+			{wrapWithSpan(anchors).interpose(i => <Icon key={`sep-anchor-${i}`} name="chevron_right" />)}
 		</StyledSearchResultPath>
 	);
 }

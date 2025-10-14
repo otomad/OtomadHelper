@@ -82,7 +82,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 		.text-part {
 			display: flex;
 			gap: 10px;
-			align-items: center;
+			align-items: start;
 			margin: 5px 0;
 			text-align: start;
 		}
@@ -211,7 +211,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 			${styles.mixins.flexCenter()};
 
 			&.top-align-icon {
-				align-self: flex-start;
+				align-self: start;
 				margin-top: 5px;
 			}
 		}

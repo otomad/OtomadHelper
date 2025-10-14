@@ -85,7 +85,7 @@ const PreviewGrid = styled.div`
 	[role="img"] {
 		${styles.mixins.square("100%")};
 		position: relative;
-		align-content: flex-end;
+		align-content: end;
 		min-height: 0;
 		contain: strict;
 		object-fit: var(--fit);

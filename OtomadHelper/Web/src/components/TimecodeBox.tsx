@@ -21,7 +21,7 @@ const StyledTimecodeBox = styled.div`
 
 
 	@container style(--layout: left) {
-		justify-content: flex-start;
+		justify-content: start;
 	}
 
 	@container style(--layout: inline) {
