@@ -4,7 +4,8 @@ const StyledCustomItem = styled.div`
 	gap: 4px;
 	justify-content: space-between;
 	align-items: center;
-	padding: 7px 39px;
+	padding-block: 7px;
+	padding-inline: 39px;
 
 	> .items-view-item {
 		flex: 1;
@@ -39,6 +40,7 @@ export default function CustomItem<T extends string = "custom">({ icon = "edit",
 				details={details}
 				icon={icon}
 				selected={current === id ? "checked" : "unchecked"}
+				_view="tile"
 				onClick={setToCustom}
 			>
 				{title}

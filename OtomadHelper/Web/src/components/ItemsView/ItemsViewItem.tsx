@@ -162,6 +162,8 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 			overflow: clip;
 			border-radius: 3px;
 
+			${$view === "tile" && css`padding-inline-start: 16px;`};
+
 			> * {
 				transition: ${fallbackTransitions}, translate 0s;
 			}

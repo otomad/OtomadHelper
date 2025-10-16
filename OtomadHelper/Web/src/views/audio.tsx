@@ -361,7 +361,7 @@ export default function Audio() {
 						value={currentPreset}
 						view="tile"
 						idField
-						nameField
+						nameField={t.stream.preset}
 					>
 						<Expander.ChildWrapper $tilePadding="tile view">
 							<Button icon="add">{t.stream.preset.add}</Button>

@@ -76,7 +76,7 @@ const StyledComboBox = styled(StyledButton)(() => css`
 			&::picker(select) {
 				position-area: block-end;
 				position-try: most-block-size flip-block;
-				inline-size: calc(anchor-size(self-inline) + 12px);
+				inline-size: calc(anchor-size(self-inline) + 7px);
 				padding: 2px;
 				background-color: ${c("background-fill-color-acrylic-background-command-bar")};
 				border: none;
