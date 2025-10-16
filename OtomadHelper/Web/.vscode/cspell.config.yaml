@@ -198,6 +198,7 @@ words:
   - polysynth
   - portato
   - posterize
+  - pralltrillers
   - prelisten
   - prelistening
   - prelistenings
@@ -295,6 +296,7 @@ words:
   - valtio
   - vec
   - vibraslap
+  - vibrati
   - vite
   - vnd
   - vocaloid
@@ -429,3 +431,6 @@ flagWords:
   - focusless -> nonFocusable
   - solfege -> solfège
   - solfeges -> solfèges
+  - glissandos -> glissandi
+  - glissandoes -> glissandi
+  - vibratos -> vibrati

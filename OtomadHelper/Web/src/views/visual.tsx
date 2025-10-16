@@ -43,7 +43,7 @@ export /* @internal */ const glissandoEffects = [
 /** @deprecated */
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
-const buildInPresets = ["normal", "enter", "enterStaff", "fadeOut", "flashlight", "horizontalMovement", "verticalMovement", "ccwRotate", "cwRotate", "rainbowColor", "oversaturation", "highContrast", "thresholdChange"];
+const buildInPresets = ["normal", "enter", "enterStaff", "fadeOut", "flashlight", "horizontalMovement", "verticalMovement", "ccwRotate", "cwRotate", "colorful", "oversaturation", "highContrast", "lumaFade"];
 
 export default function Visual() {
 	const {
@@ -213,7 +213,7 @@ export default function Visual() {
 						value={currentPreset}
 						view="tile"
 						idField
-						nameField
+						nameField={t.stream.preset}
 					>
 						<Expander.ChildWrapper $tilePadding="tile view">
 							<Button icon="add">{t.stream.preset.add}</Button>

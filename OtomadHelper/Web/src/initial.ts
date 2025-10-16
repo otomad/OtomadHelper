@@ -105,7 +105,7 @@ import { config as transitionGroupConfig } from "react-transition-group-fc";
 	enableMapSet();
 	// #endregion
 
-	// #region Dispatch global transition exit event.
+	// #region Dispatch global transition exit event
 	transitionGroupConfig.onExit = node => window.dispatchEvent(createCustomEvent("transitionExitCapture", { detail: { target: node } }));
 	// #endregion
 }

@@ -428,6 +428,19 @@ export default {
 			},
 			preset: {
 				add: "Add to custom presets",
+				normal: "Normal",
+				enter: "Enter",
+				enterStaff: "Enter (Staff Visualizer)",
+				fadeOut: "Fade Out",
+				flashlight: "Flashlight",
+				horizontalMovement: "Horizontal Movement",
+				verticalMovement: "Vertical Movement",
+				ccwRotate: "Counterclockwise Rotation",
+				cwRotate: "Clockwise Rotation",
+				colorful: "Colorful",
+				oversaturation: "Oversaturation",
+				highContrast: "High Contrast",
+				lumaFade: "Luma Fade",
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "Copy from another parameter scheme here",
@@ -858,6 +871,7 @@ export default {
 				_: "Preference",
 				autoSwitchSourceFrom: "Auto switch source from",
 				autoCollapsePrveClasses: "Auto collapse $t(titles.prve) classes",
+				previewWithSource: "Preview with selected source",
 			},
 			config: {
 				hideUsageTips: "Hide usage tips",
@@ -1011,14 +1025,14 @@ export default {
 				transformMethod: "Specify the priority order of target properties for applying transformation keyframes",
 				articulations: {
 					glissando: {
-						_: "Produces an effect when playing pitch bends, slides, or glissandi.",
+						_: "Produces a certain effect when playing pitch bends, slides, glissandi, or vibrati.",
 						swirlAmount: "Specify the amount of the swirl twist amplitude",
 					},
 					appoggiatura: {
-						_: "Produces an effect when playing appoggiaturas.\nWhen there are one to two sixteenth notes or shorter consecutively, they are considered as appoggiaturas.",
+						_: "Produces a certain effect when playing appoggiaturas, pralltrillers, or mordents.\nWhen there are one to two sixteenth notes or shorter consecutively, they are considered as appoggiaturas.",
 					},
 					arpeggio: {
-						_: "Produces an effect when playing arpeggios.\nWhen there are three or more sixteenth notes or shorter consecutively, they are considered as arpeggios.",
+						_: "Produces a certain effect when playing arpeggios, trills, or tremolos.\nWhen there are three or more sixteenth notes or shorter consecutively, they are considered as arpeggios.",
 						negative: "Typically uses negative to represent arpeggios",
 					},
 				},
@@ -1246,6 +1260,7 @@ export default {
 				preference: {
 					autoSwitchSourceFrom: "Changes the source from automatically based on the last selected content",
 					autoCollapsePrveClasses: "Collapses other expanded $t(titles.prve) classes automatically when expanding a class",
+					previewWithSource: "Uses the selected source to preview the effects. If you often encounter monotonous sources that affect the preview, try disabling it to preview with the default sample image.",
 				},
 				config: {
 					userConfig: {
@@ -1353,11 +1368,14 @@ export default {
 				prerender: "Pre-render, Pre-renders, Pre-rendering, Prerenders, Prerendering, Pre render, Pre renders, Pre rendering", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				articulations: {
 					_: "Playing technique, Playing techniques, Technique, Techniques", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
-					glissando: "Glissandi, Glissandos, Glissandoes, Portamento, Portamenti, Portamentos, Gliss, Glisses, Slide, Slides, Glide, Glides, Pitch bend, Pitch bends, Pitch wheel, Pitch wheels, Bender, Benders", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
-					appoggiatura: "Appoggiaturas, Appoggiature, Acciaccatura, Acciaccaturas, Acciaccature, Appoggiare, Grace note, Grace notes", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
-					arpeggio: "Arp, Arps, Arpeggios, Arpeggi, Arpeggiare", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					glissando: "Glissandi, Glissandos, Glissandoes, Portamento, Portamenti, Portamentos, Gliss, Glisses, Slide, Slides, Glide, Glides, Pitch bend, Pitch bends, Pitch wheel, Pitch wheels, Bender, Benders, Vibrato, Vibratos, Vibrati, Vibrare", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					appoggiatura: "Appoggiaturas, Appoggiature, Acciaccatura, Acciaccaturas, Acciaccature, Appoggiare, Pralltriller, Pralltrillers, Mordent, Mordents, Grace note, Grace notes", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					arpeggio: "Arp, Arps, Arpeggios, Arpeggi, Arpeggiare, Trill, Trillo, Trills, Tremolo, Tremolos, Tremolando", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				},
 				tuning: {
+					tuningMethod: {
+						oscillator: "",
+					},
 					alternativeForExceedTheRange: "Alternative method for exceeding the range, Alternative for exceed the range", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 					resample: "Lock stretch and pitch, Lock to stretch, Pitch change lock, Pitch lock, Lock pitch", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				},

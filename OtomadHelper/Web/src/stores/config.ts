@@ -331,6 +331,7 @@ namespace Config {
 			hideUseTips: false,
 			autoSwitchSourceFrom: true,
 			autoCollapsePrveClasses: true,
+			previewWithSource: true,
 			internal: {
 				language: "zh-CN",
 				autosaveInterval: [5, "minute"] as Unit<RoughTimeUnit>,

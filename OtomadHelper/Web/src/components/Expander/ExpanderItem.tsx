@@ -89,12 +89,6 @@ export /* @internal */ const styledExpanderItemContent = css`
 				style(--state: disabled): ${c("fill-color-text-disabled")};
 				else: ${c("foreground-color")};
 			);
-			background-color: if(
-				style(--state: hover): ${c("fill-color-subtle-secondary")};
-				style(--state: active): ${c("fill-color-subtle-tertiary")};
-				else: transparent;
-			);
-			border-radius: 3px;
 			pointer-events: none;
 
 			.icon {
@@ -113,6 +107,13 @@ export /* @internal */ const styledExpanderItemContent = css`
 				@layer props {
 					--expansion: collapsed;
 				}
+
+				background-color: if(
+					style(--state: hover): ${c("fill-color-subtle-secondary")};
+					style(--state: active): ${c("fill-color-subtle-tertiary")};
+					else: transparent;
+				);
+				border-radius: 3px;
 
 				.icon {
 					translate: if(
