@@ -25,15 +25,16 @@ namespace OtomadHelper.Test {
 		private void InitializeComponent() {
 			this.SuspendLayout();
 			// 
-			// TestForm
+			// AppDebugForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.ClientSize = new System.Drawing.Size(1262, 673);
+			this.ClientSize = new System.Drawing.Size(2019, 1077);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.KeyPreview = true;
-			this.Name = "TestForm";
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+			this.Name = "AppDebugForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Otomad Helper - Test Form";
 			this.ResumeLayout(false);
 
