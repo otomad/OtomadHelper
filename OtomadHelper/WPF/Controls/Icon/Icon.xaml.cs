@@ -23,7 +23,7 @@ public partial class Icon : Viewbox {
 			SetResourceReference(ForegroundProperty, "ForegroundBrush");
 	}
 
-	private static readonly SolidColorBrush defaultForeground = new(Colors.Black);
+	private static readonly SolidColorBrush defaultForeground = Brushes.Black;
 
 	partial void OnIconNameChanged(string? iconName) {
 		this.SetResourceReference(SourceProperty, "Icon:" + iconName);

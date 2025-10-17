@@ -239,14 +239,14 @@ public static partial class Extensions {
 		}
 	}
 
-	extension(object obj) {
+	extension(object) {
 		/// <summary>
 		/// Get the property from a object with the path string.
 		/// </summary>
 		/// <remarks>
 		/// <example>
 		/// <code>
-		/// foo.GetPath("bar.baz");
+		/// object.GetPath(foo, "bar.baz");
 		/// </code>
 		/// Equals to
 		/// <code>
@@ -254,7 +254,7 @@ public static partial class Extensions {
 		/// </code>
 		/// </example>
 		/// </remarks>
-		public object GetPath(string path) {
+		public static object GetPath(object obj, string path) {
 			string[] array = path.Split('.');
 			foreach (string name in array)
 				obj = obj.GetType().GetProperty(name)!.GetValue(obj, null);

@@ -143,7 +143,7 @@ const GlobalStyle = createGlobalStyle<{
 		text-autospace: normal;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-		text-rendering: optimizeLegibility;
+		text-rendering: auto;
 		tab-size: 4;
 		background-color: var(--background-color);
 		touch-action: manipulation;

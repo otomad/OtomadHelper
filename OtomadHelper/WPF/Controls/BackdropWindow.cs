@@ -9,6 +9,8 @@ using System.Windows.Shell;
 
 using OtomadHelper.Models;
 
+using ContextMenu = System.Windows.Controls.ContextMenu;
+
 namespace OtomadHelper.WPF.Controls;
 
 /// <summary>
@@ -161,6 +163,22 @@ public partial class BackdropWindow : Window {
 	public static void EnableTextSelectionVisuals(bool enabled = true) =>
 		AppContext.SetSwitch("Switch.System.Windows.Controls.Text.UseAdornerForTextboxSelectionRendering", !enabled);
 
+	public static ContextMenu CreateContextMenu(out bool themedSuccessfully) {
+		try {
+			bool isDark = ShouldAppsUseDarkMode();
+			ContextMenu menu = new();
+			ContextMenuAcrylicBehavior.SetAutoIcon(menu, false);
+			AddResource(menu, "WPF/Themes/Generic.xaml");
+			AddResource(menu, "WPF/Themes/Controls.xaml");
+			AddResource(menu, $"WPF/Themes/{(isDark ? "Dark" : "Light")}Theme.xaml", true);
+			themedSuccessfully = true;
+			return menu;
+		} catch (Exception) {
+			themedSuccessfully = false;
+			return new();
+		}
+	}
+
 	#region Set backdrop type
 	/// <inheritdoc cref="FrameworkElement.Resources" />
 	/// <remarks>
@@ -186,11 +204,13 @@ public partial class BackdropWindow : Window {
 		AddResource($"WPF/Themes/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", true);
 	}
 
-	public void AddResource(string path, bool isNamedResourceDictionary = false) {
+	public static void AddResource(FrameworkElement element, string path, bool isNamedResourceDictionary = false) {
 		ResourceDictionary resource = isNamedResourceDictionary ? new NamedResourceDictionary() : new ResourceDictionary();
 		resource.Source = ProjectUri(path);
-		Resources.MergedDictionaries.Add(resource);
+		element.Resources.MergedDictionaries.Add(resource);
 	}
+
+	public void AddResource(string path, bool isNamedResourceDictionary = false) => AddResource(this, path, isNamedResourceDictionary);
 
 	protected void RefreshFrame() {
 		HwndSource mainWindowSrc = HwndSource.FromHwnd(Handle);

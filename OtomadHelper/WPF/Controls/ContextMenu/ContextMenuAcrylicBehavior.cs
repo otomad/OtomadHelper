@@ -45,7 +45,8 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 				Orientation? orientation = contextMenu.PlacementTarget is ScrollBar scrollBar ? scrollBar.Orientation : null;
 				foreach (object? anyItem in contextMenu.Items)
 					if (anyItem is MenuItem item)
-						item.Icon = GetKnownIcon(item.Command, orientation);
+						if (GetKnownIcon(item.Command, orientation) is Icon newIcon)
+								item.Icon = newIcon;
 			}
 		}
 	}
@@ -83,6 +84,7 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 		}
 	}
 	protected internal static Icon? GetKnownIcon(ICommand command, Orientation? orientation = null) {
+		if (command is null) return null;
 		orientation ??= Orientation.Vertical;
 		if (command == ScrollBar.ScrollHereCommand)
 			return orientation == Orientation.Horizontal ? horizontalScrollHereIcon : verticalScrollHereIcon;

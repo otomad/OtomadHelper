@@ -20,7 +20,7 @@ public partial class EventToCommandBehavior : Behavior<FrameworkElement> {
 			object? args = CommandParameter;
 
 			if (args is null && !string.IsNullOrWhiteSpace(EventArgsParameterPath))
-				args = e.GetPath(EventArgsParameterPath!);
+				args = object.GetPath(e, EventArgsParameterPath!);
 
 			if (args is null && EventArgsConverter is not null)
 				args = EventArgsConverter.Convert(e, typeof(object), EventArgsConverterParameter, CultureInfo.CurrentCulture);

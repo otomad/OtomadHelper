@@ -29,4 +29,6 @@ public class IconTemplate {
 				icon.Path.Add(Geometry.Parse(child.GetAttributeCaseInsensitive("d")!));
 		return icon;
 	}
+
+	public Icon ToIcon() => new() { Source = this };
 }

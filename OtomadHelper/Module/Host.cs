@@ -12,7 +12,6 @@ using OtomadHelper.Helpers.WebView2BetterBridge;
 using OtomadHelper.Models;
 using OtomadHelper.Services;
 
-using ScriptPortal.MediaSoftware.Skins;
 using ScriptPortal.Vegas;
 
 using BackdropWindow = OtomadHelper.WPF.Controls.BackdropWindow;
@@ -42,12 +41,13 @@ public sealed partial class Host : UserControl {
 		SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
 		SystemCursorConfig.CursorChanged += (_, _) => PostSystemConfigToTheWeb();
 
-		BgTrackingChanged += Host_BgTrackingChanged;
+		BackColor = SkinColors.Current.Background;
+		ForeColor = SkinColors.Current.Foreground;
+		SplashOverflowMenuButton.ForeColor = SkinColors.Current.Foreground;
+		SplashOverflowMenuButton.FlatAppearance.BorderColor = SkinColors.Current.Background;
+		SplashOverflowMenuButton.FlatAppearance.MouseOverBackColor = SkinColors.Current.ButtonNormal;
+		SplashOverflowMenuButton.FlatAppearance.MouseDownBackColor = SkinColors.Current.ButtonPressed;
 
-#if VEGAS_ENV
-		BackColor = Skins.Colors.ButtonFace;
-		ForeColor = Skins.Colors.ButtonText;
-#endif
 		InitLoadingAnimation();
 		CoreWebView2_LoadEnvironment();
 	}
@@ -333,8 +333,53 @@ public sealed partial class Host : UserControl {
 	}
 
 	private void PostSystemConfigToTheWeb() => PostWebMessage(GetRefreshedSystemConfig());
-	private void Host_BgTrackingChanged(object sender, bool e) {
 
+	private void SplashOverflowMenuButton_Click(object sender, EventArgs e) {
+		(double dpiX, double dpiY) = this.Dpi;
+		Screen screen = Screen.FromControl(SplashOverflowMenuButton);
+		Point location = SplashOverflowMenuButton.PointToScreen(new(0, 0));
+		System.Windows.Controls.ContextMenu menu = BackdropWindow.CreateContextMenu(out bool themedSuccessfully);
+		menu.Placement = System.Windows.Controls.Primitives.PlacementMode.AbsolutePoint;
+		AddMenuItem("Otomad Helper " + OtomadHelperVersionTag, disabled: true);
+		menu.Items.Add(new System.Windows.Controls.Separator());
+		AddMenuItem("Open GitHub repository", link: "https://github.com/otomad/OtomadHelper");
+		AddMenuItem("Get latest version", link: "https://github.com/otomad/OtomadHelper/releases/latest");
+		AddMenuItem("Feedback", link: "https://github.com/otomad/OtomadHelper/issues");
+		AddMenuItem("Reset user configuration", icon: "Icon:Delete", action: ResetAll);
+		menu.IsOpen = true;
+		menu.HorizontalOffset = (location.X + SplashOverflowMenuButton.Width) / dpiX;
+		if (menu.HorizontalOffset <= screen.WorkingArea.Width / dpiX) menu.HorizontalOffset -= menu.ActualWidth;
+		menu.VerticalOffset = (location.Y + SplashOverflowMenuButton.Height) / dpiY;
+		if (menu.VerticalOffset + menu.ActualHeight > screen.WorkingArea.Height / dpiY) menu.VerticalOffset -= menu.ActualHeight + SplashOverflowMenuButton.Height / dpiY;
+
+		WPF.Controls.Icon? GetIcon(string name) => themedSuccessfully ? (menu.FindResource(name) as WPF.Controls.IconTemplate)?.ToIcon() : null;
+
+		void AddMenuItem(string header, string icon = "", string link = "", bool disabled = false, Action? action = null) {
+			System.Windows.Controls.MenuItem menuItem = new() {
+				Header = header,
+				Icon = !string.IsNullOrEmpty(icon) ? GetIcon(icon) : null,
+				IsEnabled = !disabled,
+			};
+			if (action is not null)
+				menuItem.Click += (sender, e) => action();
+			else if (!string.IsNullOrEmpty(link))
+				menuItem.Click += (sender, e) => OpenLink(link);
+			menu.Items.Add(menuItem);
+		}
+	}
+
+	private async void ResetAll() {
+		//if (MessageBox.Show("确定要重置所有用户配置吗？操作后不可撤销！", t.Keybindings.Commands.Reset, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK) return; // TODO: I18n.
+		if (await WPF.Controls.ContentDialog.ShowDialog<bool?>(t.Keybindings.Commands.Reset, "确定要重置所有用户配置吗？操作后不可撤销！", new WPF.Controls.ContentDialogButtonItem[] {
+			new(t.ContentDialog.Button.Ok, true),
+			new(t.ContentDialog.Button.Cancel, false),
+		}) != true) return;
+		await Browser.CoreWebView2.Profile.ClearBrowsingDataAsync();
+#if VEGAS_ENV
+		Dockable.Module.RestartDockView();
+#else
+		ParentForm?.Close();
+#endif
 	}
 
 #if VEGAS_ENV
@@ -348,9 +393,7 @@ public sealed partial class Host : UserControl {
 		PostWebMessage(new VegasCommandEvent { @event = e.Type });
 		switch (e.Type) {
 			case VegasCommandType.Reset:
-				if (MessageBox.Show("确定要重置所有设置吗？操作后不可撤销！", t.Keybindings.Commands.Reset, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK) return; // TODO: I18n.
-				await Browser.CoreWebView2.Profile.ClearBrowsingDataAsync();
-				Dockable.Module.RestartDockView();
+				ResetAll();
 				break;
 			default:
 				break;
