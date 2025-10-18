@@ -82,7 +82,10 @@ const StyledComboBox = styled(StyledButton)(() => css`
 				border: none;
 				border-radius: 7px;
 				outline: 1px solid ${c("stroke-color-surface-stroke-flyout")};
-				box-shadow: 0 8px 16px ${c("shadows-flyout")};
+				box-shadow: if(
+					${ifColorScheme.contrast} or ${ifColorScheme.reduceTransparency}: none;
+					else: 0 8px 16px ${c("shadows-flyout")};
+				);
 				opacity: 0;
 				backdrop-filter: blur(60px);
 				transition: if(
@@ -98,6 +101,10 @@ const StyledComboBox = styled(StyledButton)(() => css`
 						opacity: 0;
 					}
 				}
+			}
+
+			&:open .chevron {
+				rotate: 0.5turn;
 			}
 
 			option {

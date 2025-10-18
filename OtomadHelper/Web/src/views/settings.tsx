@@ -368,7 +368,7 @@ export default function Settings() {
 			<SettingsCard title={t({ context: "long" }).titles.internal} details={t.descriptions.settings.internal} type="button" icon="registry" onClick={() => pushPage("internal")} />
 			<SettingsCardToggleSwitch title={t.settings.preference.autoSwitchSourceFrom} details={t.descriptions.settings.preference.autoSwitchSourceFrom} icon="arrow_swap" on={autoSwitchSourceFrom} />
 			<SettingsCardToggleSwitch title={t.settings.preference.autoCollapsePrveClasses} details={t.descriptions.settings.preference.autoCollapsePrveClasses} icon="chevron_down_up" on={autoCollapsePrveClasses} />
-			<SettingsCardToggleSwitch title={t.settings.preference.previewWithSource} details={t.descriptions.settings.preference.previewWithSource} icon="placeholder" on={previewWithSource} />
+			<SettingsCardToggleSwitch title={t.settings.preference.previewWithSource} details={t.descriptions.settings.preference.previewWithSource} icon="video_person" on={previewWithSource} />
 
 			<Subheader>{t.subheaders.config}</Subheader>
 			<Expander title={t.settings.config.userConfig} icon="settings_multiple" details={t.descriptions.settings.config.userConfig}>

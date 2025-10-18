@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -15,4 +16,12 @@ public class IconNameToImageSourceConverter : ValueConverter<string, ImageSource
 			iconImage = Properties.Resources.Info;
 		return iconImage.ToImageSource();
 	}
+}
+
+public class IconAutoFilledConverter : IMultiValueConverter {
+	public object Convert(object[] brushes, Type targetType, object parameter, CultureInfo culture) {
+		return brushes.FirstOrDefault(brush => brush != DependencyProperty.UnsetValue && brush != Icon.defaultForeground && brush is Brush) ?? DependencyProperty.UnsetValue;
+	}
+
+	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
 }

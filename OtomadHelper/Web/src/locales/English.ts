@@ -172,7 +172,7 @@ export default {
 		subheaders: {
 			moreOptions: "More options",
 			advanced: "Advanced",
-			config: "Configuration",
+			config: "Configurations",
 			parameters: "Parameters",
 			seeAlso: "See also",
 		},
@@ -867,7 +867,7 @@ export default {
 				fontSize: "Font size",
 			},
 			preference: {
-				_: "Preference",
+				_: "Preferences",
 				autoSwitchSourceFrom: "Auto switch source from",
 				autoCollapsePrveClasses: "Auto collapse $t(titles.prve) classes",
 				previewWithSource: "Preview with selected source",

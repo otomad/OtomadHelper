@@ -17,30 +17,23 @@ public partial class Icon : Viewbox {
 		InitializeComponent();
 	}
 
-	private void Icon_Loaded(object sender, RoutedEventArgs e) {
-		_ = Source;
-		if (Foreground == defaultForeground)
-			SetResourceReference(ForegroundProperty, "ForegroundBrush");
-	}
-
-	private static readonly SolidColorBrush defaultForeground = Brushes.Black;
+	internal static readonly SolidColorBrush defaultForeground = Brushes.Transparent;
 
 	partial void OnIconNameChanged(string? iconName) {
 		this.SetResourceReference(SourceProperty, "Icon:" + iconName);
 	}
 
-	private static string[]? validIconNames;
 	public static string[] ValidIconNames {
 		get {
-			if (validIconNames is null) {
+			if (field is null) {
 				using BamlAssemblyResource baml = new();
 				ResourceDictionary xaml = (ResourceDictionary)baml.GetXaml("WPF/Themes/Icons");
-				validIconNames = xaml.Keys.Cast<string>()
+				field = xaml.Keys.Cast<string>()
 					.Where(key => key.StartsWith("Icon:", StringComparison.InvariantCultureIgnoreCase))
 					.Select(key => key.Replace(new Regex(@"^Icon:", RegexOptions.IgnoreCase), ""))
 					.ToArray();
 			}
-			return validIconNames;
+			return field;
 		}
 	}
 	public static bool IsValidIconName(string iconName) =>

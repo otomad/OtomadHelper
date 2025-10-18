@@ -334,40 +334,51 @@ public sealed partial class Host : UserControl {
 
 	private void PostSystemConfigToTheWeb() => PostWebMessage(GetRefreshedSystemConfig());
 
+	private System.Windows.Controls.ContextMenu SplashOverflowMenu {
+		get {
+			if (field is null) {
+				field = BackdropWindow.CreateContextMenu(out bool themedSuccessfully);
+				field.Placement = System.Windows.Controls.Primitives.PlacementMode.AbsolutePoint;
+				AddMenuItem("Otomad Helper " + OtomadHelperVersionTag, icon: field.FindResource("Icon:OtomadHelper"), disabled: true);
+				AddMenuItem("VEGAS Pro " + VegasProVersionTag, icon: "VegasPro", disabled: true);
+				field.Items.Add(new System.Windows.Controls.Separator());
+				AddMenuItem(t.SplashOverflowMenu.RepositoryLink, icon: "GitHub", link: "https://github.com/otomad/OtomadHelper");
+				AddMenuItem(t.SplashOverflowMenu.GetLatestVersion, icon: "ArrowDownload", link: "https://github.com/otomad/OtomadHelper/releases/latest");
+				AddMenuItem(t.SplashOverflowMenu.Troubleshooting, icon: "WrenchScrewdriver");
+				AddMenuItem(t.SplashOverflowMenu.Feedback, icon: "TextEdit", link: "https://github.com/otomad/OtomadHelper/issues");
+				AddMenuItem(t.SplashOverflowMenu.Reset, icon: "ArrowReset", action: ResetAll);
+				field.Opened += (_, _) => SplashOverflowMenuButton.BackColor = SkinColors.Current.ButtonNormal;
+				field.Closed += (_, _) => SplashOverflowMenuButton.BackColor = Color.Transparent;
+
+				WPF.Controls.Icon? GetIcon(string name) => themedSuccessfully ? (field.FindResource(name) as WPF.Controls.IconTemplate)?.ToIcon() : null;
+
+				void AddMenuItem(string header, object? icon = null, string link = "", bool disabled = false, Action? action = null) {
+					System.Windows.Controls.MenuItem menuItem = new() {
+						Header = header,
+						Icon = icon is null ? null : icon is string iconName ? GetIcon("Icon:" + iconName) : icon,
+						IsEnabled = !disabled,
+					};
+					if (action is not null)
+						menuItem.Click += (_, _) => action();
+					else if (!string.IsNullOrEmpty(link))
+						menuItem.Click += (_, _) => OpenLink(link);
+					field.Items.Add(menuItem);
+				}
+			}
+			return field;
+		}
+	}
+
 	private void SplashOverflowMenuButton_Click(object sender, EventArgs e) {
 		(double dpiX, double dpiY) = this.Dpi;
 		Screen screen = Screen.FromControl(SplashOverflowMenuButton);
 		Point location = SplashOverflowMenuButton.PointToScreen(new(0, 0));
-		System.Windows.Controls.ContextMenu menu = BackdropWindow.CreateContextMenu(out bool themedSuccessfully);
-		menu.Placement = System.Windows.Controls.Primitives.PlacementMode.AbsolutePoint;
-		AddMenuItem("Otomad Helper " + OtomadHelperVersionTag, disabled: true);
-		AddMenuItem("VEGAS Pro " + VegasProVersionTag, disabled: true);
-		menu.Items.Add(new System.Windows.Controls.Separator());
-		AddMenuItem(t.SplashOverflowMenu.RepositoryLink, link: "https://github.com/otomad/OtomadHelper");
-		AddMenuItem(t.SplashOverflowMenu.GetLatestVersion, link: "https://github.com/otomad/OtomadHelper/releases/latest");
-		AddMenuItem(t.SplashOverflowMenu.Troubleshooting);
-		AddMenuItem(t.SplashOverflowMenu.Feedback, link: "https://github.com/otomad/OtomadHelper/issues");
-		AddMenuItem(t.SplashOverflowMenu.Reset, icon: "Icon:Delete", action: ResetAll);
+		System.Windows.Controls.ContextMenu menu = SplashOverflowMenu;
 		menu.IsOpen = true;
 		menu.HorizontalOffset = (location.X + SplashOverflowMenuButton.Width) / dpiX;
 		if (menu.HorizontalOffset <= screen.WorkingArea.Width / dpiX) menu.HorizontalOffset -= menu.ActualWidth;
 		menu.VerticalOffset = (location.Y + SplashOverflowMenuButton.Height) / dpiY;
 		if (menu.VerticalOffset + menu.ActualHeight > screen.WorkingArea.Height / dpiY) menu.VerticalOffset -= menu.ActualHeight + SplashOverflowMenuButton.Height / dpiY;
-
-		WPF.Controls.Icon? GetIcon(string name) => themedSuccessfully ? (menu.FindResource(name) as WPF.Controls.IconTemplate)?.ToIcon() : null;
-
-		void AddMenuItem(string header, string icon = "", string link = "", bool disabled = false, Action? action = null) {
-			System.Windows.Controls.MenuItem menuItem = new() {
-				Header = header,
-				Icon = !string.IsNullOrEmpty(icon) ? GetIcon(icon) : null,
-				IsEnabled = !disabled,
-			};
-			if (action is not null)
-				menuItem.Click += (_, _) => action();
-			else if (!string.IsNullOrEmpty(link))
-				menuItem.Click += (_, _) => OpenLink(link);
-			menu.Items.Add(menuItem);
-		}
 	}
 
 	private async void ResetAll() {

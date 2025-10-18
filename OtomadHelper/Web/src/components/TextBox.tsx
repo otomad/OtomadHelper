@@ -15,7 +15,10 @@ const StyledSpinner = styled.div`
 		background-color: ${c("background-fill-color-acrylic-background-default")};
 		border: 1px solid ${c("stroke-color-surface-stroke-flyout")};
 		border-radius: 8px;
-		box-shadow: 0 8px 16px ${c("shadows-flyout")};
+		box-shadow: if(
+			${ifColorScheme.contrast} or ${ifColorScheme.reduceTransparency}: none;
+			else: 0 8px 16px ${c("shadows-flyout")};
+		);
 		backdrop-filter: blur(60px);
 		cursor: default;
 

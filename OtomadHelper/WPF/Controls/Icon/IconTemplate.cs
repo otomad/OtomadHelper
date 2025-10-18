@@ -11,6 +11,8 @@ public class IconTemplate {
 
 	public double Size { get; set; } = 16;
 
+	public Brush Fill { get; set; } = Icon.defaultForeground;
+
 	/// <remarks>
 	/// This is a simple implement, only available for known used SVG.
 	/// For more complex SVG, you may need to use a more powerful library.
