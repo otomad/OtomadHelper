@@ -234,10 +234,31 @@
 		<value>生成を開始</value>
 	</data>
 	<data name="Keybindings.Commands.Reset" xml:space="preserve">
-		<value>すべての設定をリセット</value>
+		<value>すべてのユーザー設定をリセット</value>
 	</data>
 	<data name="Descriptions.ColorPicker.EyeDropper" xml:space="preserve">
 		<value>画面から色を選択</value>
+	</data>
+	<data name="ResetConfig.Title" xml:space="preserve">
+		<value>すべてのユーザー設定をリセットしてもよろしいですか？</value>
+	</data>
+	<data name="ResetConfig.Content" xml:space="preserve">
+		<value>元に戻すことはできません。すべてのユーザー設定データが失われます。解決できない問題が発生しない限り、これを行う必要はありません。</value>
+	</data>
+	<data name="SplashOverflowMenu.RepositoryLink" xml:space="preserve">
+		<value>Open GitHub repository</value>
+	</data>
+	<data name="SplashOverflowMenu.GetLatestVersion" xml:space="preserve">
+		<value>最新バージョンを取得する</value>
+	</data>
+	<data name="SplashOverflowMenu.Troubleshooting" xml:space="preserve">
+		<value>トラブルシューティング</value>
+	</data>
+	<data name="SplashOverflowMenu.Feedback" xml:space="preserve">
+		<value>フィードバック</value>
+	</data>
+	<data name="SplashOverflowMenu.Reset" xml:space="preserve">
+		<value>すべてのユーザー設定をリセット</value>
 	</data>
 	<data name="Shared.Plugins.PanCrop" xml:space="preserve">
 		<value>パン/トリミング</value>

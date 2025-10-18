@@ -234,10 +234,31 @@
 		<value>开始生成</value>
 	</data>
 	<data name="Keybindings.Commands.Reset" xml:space="preserve">
-		<value>重置所有设置</value>
+		<value>重置所有用户配置</value>
 	</data>
 	<data name="Descriptions.ColorPicker.EyeDropper" xml:space="preserve">
 		<value>从屏幕上拾取颜色</value>
+	</data>
+	<data name="ResetConfig.Title" xml:space="preserve">
+		<value>确定要重置所有用户配置吗？</value>
+	</data>
+	<data name="ResetConfig.Content" xml:space="preserve">
+		<value>重置后所有的用户配置数据都会丢失，且操作后不可撤销！除非你遇到了某些不可名状的问题，否则无需执行此操作。</value>
+	</data>
+	<data name="SplashOverflowMenu.RepositoryLink" xml:space="preserve">
+		<value>打开Github仓库</value>
+	</data>
+	<data name="SplashOverflowMenu.GetLatestVersion" xml:space="preserve">
+		<value>获取最新版本</value>
+	</data>
+	<data name="SplashOverflowMenu.Troubleshooting" xml:space="preserve">
+		<value>疑难解答</value>
+	</data>
+	<data name="SplashOverflowMenu.Feedback" xml:space="preserve">
+		<value>问题反馈</value>
+	</data>
+	<data name="SplashOverflowMenu.Reset" xml:space="preserve">
+		<value>重置所有用户配置</value>
 	</data>
 	<data name="Shared.Plugins.PanCrop" xml:space="preserve">
 		<value>平移/裁切</value>

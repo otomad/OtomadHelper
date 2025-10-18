@@ -234,10 +234,31 @@ Location:</value>
 		<value>Start Generating</value>
 	</data>
 	<data name="Keybindings.Commands.Reset" xml:space="preserve">
-		<value>Reset All Settings</value>
+		<value>Reset All User Configurations</value>
 	</data>
 	<data name="Descriptions.ColorPicker.EyeDropper" xml:space="preserve">
 		<value>Pick a color from the screen</value>
+	</data>
+	<data name="ResetConfig.Title" xml:space="preserve">
+		<value>Are you sure you want to reset all the user configurations?</value>
+	</data>
+	<data name="ResetConfig.Content" xml:space="preserve">
+		<value>It cannot be undone; all your user configuration data will be lost! You don’t need to do this unless you encounter unsolvable problems.</value>
+	</data>
+	<data name="SplashOverflowMenu.RepositoryLink" xml:space="preserve">
+		<value>Open GitHub repository</value>
+	</data>
+	<data name="SplashOverflowMenu.GetLatestVersion" xml:space="preserve">
+		<value>Get latest version</value>
+	</data>
+	<data name="SplashOverflowMenu.Troubleshooting" xml:space="preserve">
+		<value>Troubleshooting</value>
+	</data>
+	<data name="SplashOverflowMenu.Feedback" xml:space="preserve">
+		<value>Feedback</value>
+	</data>
+	<data name="SplashOverflowMenu.Reset" xml:space="preserve">
+		<value>Reset all user configurations</value>
 	</data>
 	<data name="Shared.Plugins.PanCrop" xml:space="preserve">
 		<value>Pan/Crop</value>

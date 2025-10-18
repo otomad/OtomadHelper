@@ -197,7 +197,6 @@ export default {
 				backgroundImage: "确定要删除该背景图像吗？",
 			},
 			enableImproveTranslation: "确定要进入语境翻译工具来改进翻译吗？",
-			resetConfig: "确定要重置用户配置吗？\n重置后所有的用户配置数据都将丢失。除非你遇到了某些无法解决的问题，否则无需执行此操作。",
 		},
 		curve: {
 			_: "插值曲线",
@@ -416,6 +415,19 @@ export default {
 			},
 			preset: {
 				add: "添加到自定义预设",
+				normal: "正常",
+				enter: "进入",
+				enterStaff: "进入（五线谱可视化）",
+				fadeOut: "淡出",
+				flashlight: "闪光",
+				horizontalMovement: "水平移动",
+				verticalMovement: "垂直移动",
+				ccwRotate: "逆时针旋转",
+				cwRotate: "顺时针旋转",
+				colorful: "炫彩",
+				oversaturation: "过饱和",
+				highContrast: "高对比",
+				lumaFade: "晖度渐变",
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "从另一套参数方案复制至此",
@@ -423,7 +435,6 @@ export default {
 			},
 		},
 		track: {
-			layout: "布局",
 			grid: {
 				array: "阵列",
 				square: "平方",
@@ -539,6 +550,7 @@ export default {
 				motion: "清除轨道运动",
 				effect: "清除轨道效果",
 			},
+			layout: "布局",
 		},
 		sonar: {
 			separateDrums: "分离不同鼓声",
@@ -831,6 +843,7 @@ export default {
 				_: "偏好",
 				autoSwitchSourceFrom: "自动切换素材来源",
 				autoCollapsePrveClasses: "自动折叠$t(titles.prve)类",
+				previewWithSource: "以所选素材预览",
 			},
 			config: {
 				hideUsageTips: "隐藏使用小贴士",
@@ -984,14 +997,14 @@ export default {
 				transformMethod: "指定要应用变换关键帧的目标属性的优先级次序",
 				articulations: {
 					glissando: {
-						_: "在演奏弯音或滑音时产生效果。",
+						_: "在演奏弯音、滑音或颤音时产生一定的效果。",
 						swirlAmount: "指定漩涡扭动幅度的大小",
 					},
 					appoggiatura: {
-						_: "在演奏倚音时产生效果。\n当有连续一到两个十六分音符或更短的音符时，它们将被视为倚音。",
+						_: "在演奏倚音时产生一定的效果。\n当有连续一到两个十六分音符或更短时值的音符时，它们将被视为倚音。",
 					},
 					arpeggio: {
-						_: "在演奏琶音时产生效果。\n当有连续三个及以上十六分音符或更短的音符时，它们将被视为琶音。",
+						_: "在演奏琶音、涟音、波音或震音时产生一定的效果。\n当有连续三个及以上十六分音符或更短时值的音符时，它们将被视为琶音。",
 						negative: "典型地使用颜色反转来表现琶音",
 					},
 				},
@@ -1215,6 +1228,7 @@ export default {
 				preference: {
 					autoSwitchSourceFrom: "根据最后所选内容自动更改素材来源",
 					autoCollapsePrveClasses: "展开一组$t(titles.prve)类时自动折叠其它效果类",
+					previewWithSource: "使用所选素材来预览特效。如果经常遇到画面单调的素材从而导致影响预览，可尝试禁用该选项以恢复默认示例图像。",
 				},
 				config: {
 					userConfig: {
@@ -1318,10 +1332,14 @@ export default {
 				timeUnremapping: "时间解除重映射、时间取消重映射、时间不重映射、时间重映射",
 				articulations: {
 					_: "技法、技术、技巧",
-					glissando: "弯音、颤音",
+					glissando: "弯音、颤音、振音",
 					appoggiatura: "装饰音",
+					arpeggio: "涟音、波音、震音、颤音",
 				},
 				tuning: {
+					tuningMethod: {
+						oscillator: "手动振荡器、手工振荡器、震荡器、人工震荡器、手动震荡器、手工震荡器、振荡、震荡",
+					},
 					alternativeForExceedTheRange: "超出范围替代方法、如果超出音域、如果超出范围、超出音域",
 					resample: "重采样、重新采样、锁定伸缩与音调、锁定拉伸与音调、锁定伸缩与音高、锁定拉伸与音高、锁定伸缩与变调、锁定拉伸与变调、锁定以拉伸、锁定音调、锁定音高",
 				},
@@ -1423,13 +1441,24 @@ export default {
 				enableYtp: "启用YTP功能",
 				disableYtp: "禁用YTP功能",
 				startGenerating: "开始生成",
-				reset: "重置所有设置",
+				reset: "重置所有用户配置",
 			},
 		},
 		descriptions: {
 			colorPicker: {
 				eyeDropper: "从屏幕上拾取颜色",
 			},
+		},
+		resetConfig: {
+			title: "确定要重置所有用户配置吗？",
+			content: "重置后所有的用户配置数据都会丢失，且操作后不可撤销！除非你遇到了某些不可名状的问题，否则无需执行此操作。",
+		},
+		splashOverflowMenu: {
+			repositoryLink: "打开Github仓库",
+			getLatestVersion: "获取最新版本",
+			troubleshooting: "疑难解答",
+			feedback: "问题反馈",
+			reset: "重置所有用户配置",
 		},
 	},
 	shared: {

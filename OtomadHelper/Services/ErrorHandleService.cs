@@ -64,6 +64,24 @@ public static class ErrorHandleService {
 		Vegas?
 #endif
 		vegas { get; internal set; } = null!;
+
+	public static string VegasProVersionTag =>
+#if VEGAS_ENV
+		vegas.Version;
+#else
+		"Version 22.0 (Build 194)";
+#endif
+
+	public static Version VegasProVersion {
+		get {
+#if VEGAS_ENV
+			vegas.GetVersionInfo(out uint major, out uint minor, out uint build);
+			return new((int)major, (int)minor, (int)build);
+#else
+			return new();
+#endif
+		}
+	}
 }
 
 /// <summary>

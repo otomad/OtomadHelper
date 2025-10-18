@@ -197,7 +197,6 @@ export default {
 				backgroundImage: "この背景画像を削除してもよろしいですか？",
 			},
 			enableImproveTranslation: "翻訳を改善するためにIn-Context ローカライズツールを入力してもよろしいですか？",
-			resetConfig: "ユーザー設定をリセットしてもよろしいですか？\nすべてのユーザー設定データが失われます。 解決できない問題に遭遇しない限り、これを行う必要はありません。",
 		},
 		curve: {
 			_: "補間曲線",
@@ -416,6 +415,19 @@ export default {
 			},
 			preset: {
 				add: "カスタムプリセットに追加",
+				normal: "標準",
+				enter: "Enter",
+				enterStaff: "Enter (Staff Visualizer)",
+				fadeOut: "フェードアウト",
+				flashlight: "フラッシュライト",
+				horizontalMovement: "水平移動",
+				verticalMovement: "垂直移動",
+				ccwRotate: "反時計回りの回転",
+				cwRotate: "時計回りの回転",
+				colorful: "カラフルな",
+				oversaturation: "過彩度",
+				highContrast: "ハイコントラスト",
+				lumaFade: "Luma Fade",
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "別のパラメータスキームからここにコピー",
@@ -830,6 +842,7 @@ export default {
 				_: "設定",
 				autoSwitchSourceFrom: "ソースの自動切り替え",
 				autoCollapsePrveClasses: "$t(titles.prve) クラスを自動的に折りたたみます。",
+				previewWithSource: "選択したソースでプレビュー",
 			},
 			config: {
 				hideUsageTips: "使用ヒントを非表示",
@@ -983,14 +996,14 @@ export default {
 				transformMethod: "変換キーフレームを適用するためのターゲットプロパティの優先順位を指定します",
 				articulations: {
 					glissando: {
-						_: "ピッチベンド、スライド、またはglissandiを再生するときにエフェクトを生成します。",
+						_: "ピッチ曲げ、スライド、グリッサンディ、またはビブラティを演奏するときに特定の効果を生成します。",
 						swirlAmount: "旋回ツイスト振幅の大きさを指定します",
 					},
 					appoggiatura: {
-						_: "appoggiaturasを再生するときに効果を生成します。\n連続して1〜2個の音符がある場合、それらはappoggiaturasとみなされます。",
+						_: "appoggiaturasを再生するときに特定の効果を生成します。\n連続して1〜2個の音符がある場合、それらはappoggiaturasとみなされます。",
 					},
 					arpeggio: {
-						_: "\n連続して3つ以上の音符または短い音符がある場合、彼らはアルペジオとみなされます。",
+						_: "arpeggiosを再生するときに特定の効果を生成します, pralltrillers, mordents, trills, or tremolos.\n連続して音符が3つ以上あるいは短い場合は、アルペジオとみなされます。",
 						negative: "通常、アルペジオを表すために負の値を使用します",
 					},
 				},
@@ -1212,12 +1225,13 @@ export default {
 				preference: {
 					autoSwitchSourceFrom: "最後に選択した内容に基づいてソースを自動的に変更します",
 					autoCollapsePrveClasses: "クラスを展開するときに、他の拡張された $t(titles.prve) クラスを自動的に折りたたみます。",
+					previewWithSource: "選択したソースを使用してエフェクトをプレビューします。 プレビューに影響を与える単調なソースが頻繁に表示される場合は、デフォルトのサンプルイメージでプレビューするために無効にしてみてください。",
 				},
 				config: {
 					userConfig: {
 						_: "ユーザー設定データのバックアップ、復元、消去を行います",
 						backupAndRestore: "すぐに必要に応じてユーザー設定データをエクスポートまたはインポート",
-						reset: "ユーザー設定をリセットすると、不可解な問題が解決し、すべての設定データも消去されます。",
+						reset: "ユーザー設定をリセットすると、不可解な問題が解決する可能性があります。これにより、すべての設定データも消去されます。",
 					},
 					clipsFolder: {
 						_: "Datamosh、Pixel Scalingなどによって生成されたクリップを保存するフォルダを選択します",
@@ -1315,11 +1329,14 @@ export default {
 				prerender: "プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング、プレレンダリング",
 				articulations: {
 					_: "技、技、技、技、技法、技法、技法、技法など。",
-					glissando: "Glissandi、Glissandoes、Glissandoes、Portamenti、Portamenti、Gliss、Gliss、スライド、スライド、スライド、スライド、スライド、ピッチ曲げ、ピッチ曲げ、ピッチホイール、ピッチホイール、ベンダー、ベンダーなど",
+					glissando: "Glissandi, Glissandoes, Glissandoes, Portamenti, Portamenti, Gliss, Glisses, Slide, Slide, Glide, 滑空、ピッチベンド、ピッチベンド、ピッチホイール、ピッチホイール、ベンダー、ベンダー、ビブラート、ビブラート、バイブレート、振動",
 					appoggiatura: "Appoggiatura, Apppoggiature, Accatura, Accaturas, Acciacature, Appoggiare, Grace note, Grace note",
-					arpeggio: "Arp, Arps, Arpeggios, Arpeggi, Arpeggiare",
+					arpeggio: "Arp, Arps, Arpeggios, Arpeggi, Arpeggiare, Pralltriller, Pralltrillers, Mordent, Mordents, Trill, Trillo, Trills, Tremolo, Tremolos, Tremolando",
 				},
 				tuning: {
+					tuningMethod: {
+						oscillator: "",
+					},
 					alternativeForExceedTheRange: "範囲を超える代替方法, 範囲を超えるための代替方法",
 					resample: "ストレッチとピッチをロック、ストレッチをロック、ピッチ変更ロック、ピッチをロックする",
 				},
@@ -1421,13 +1438,24 @@ export default {
 				enableYtp: "YTP機能を有効にする",
 				disableYtp: "YTP機能を無効にする",
 				startGenerating: "生成を開始",
-				reset: "すべての設定をリセット",
+				reset: "すべてのユーザー設定をリセット",
 			},
 		},
 		descriptions: {
 			colorPicker: {
 				eyeDropper: "画面から色を選択",
 			},
+		},
+		resetConfig: {
+			title: "すべてのユーザー設定をリセットしてもよろしいですか？",
+			content: "元に戻すことはできません。すべてのユーザー設定データが失われます。解決できない問題が発生しない限り、これを行う必要はありません。",
+		},
+		splashOverflowMenu: {
+			repositoryLink: "Open GitHub repository",
+			getLatestVersion: "最新バージョンを取得する",
+			troubleshooting: "トラブルシューティング",
+			feedback: "フィードバック",
+			reset: "すべてのユーザー設定をリセット",
 		},
 	},
 	shared: {

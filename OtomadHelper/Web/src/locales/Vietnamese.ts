@@ -364,6 +364,15 @@ export default {
 			},
 			preset: {
 				add: "Thêm vào preset tùy chỉnh",
+				normal: "Bình thường",
+				fadeOut: "Mờ dần",
+				flashlight: "Nhấp nhoáng (Flashlight)",
+				horizontalMovement: "Di chuyển theo chiều ngang",
+				verticalMovement: "Di chuyển theo chiều dọc",
+				ccwRotate: "Xoay ngược chiều kim đồng hồ",
+				cwRotate: "Xoay theo chiều kim đồng hồ",
+				oversaturation: "Quá bão hòa",
+				highContrast: "Độ tương phản cao",
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "Sao chép từ một sơ đồ tham số khác ở đây",
@@ -806,14 +815,9 @@ export default {
 				prerender: {},
 				transition: {},
 				articulations: {
-					glissando: {
-						_: "Tạo ra hiệu ứng khi phát các kỹ thuật uốn cao độ, trượt hoặc glissandi.",
-					},
-					appoggiatura: {
-						_: "Tạo ra hiệu ứng khi chơi appoggiatura.\nKhi có một đến hai nốt móc đơn hoặc ngắn hơn liên tiếp, chúng được coi là nốt appoggiatura.",
-					},
+					glissando: {},
+					appoggiatura: {},
 					arpeggio: {
-						_: "Tạo ra hiệu ứng khi chơi appoggiatura.\nKhi có ba hoặc nhiều hơn ba nốt móc đơn hoặc ngắn hơn liên tiếp, chúng được coi là arpeggio.",
 						negative: "Thường sử dụng âm để biểu diễn arpeggio",
 					},
 				},
@@ -1041,7 +1045,9 @@ export default {
 			stream: {
 				createGroups: "Tạo nhóm",
 				articulations: {},
-				tuning: {},
+				tuning: {
+					tuningMethod: {},
+				},
 			},
 			track: {},
 		},
@@ -1142,6 +1148,11 @@ export default {
 			colorPicker: {
 				eyeDropper: "Bốc một màu trên màn hình",
 			},
+		},
+		resetConfig: {},
+		splashOverflowMenu: {
+			troubleshooting: "Xử lý sự cố",
+			feedback: "Góp ý",
 		},
 	},
 	shared: {

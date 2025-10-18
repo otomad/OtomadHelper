@@ -233,6 +233,12 @@ Vị trí:</value>
 	<data name="Descriptions.ColorPicker.EyeDropper" xml:space="preserve">
 		<value>Bốc một màu trên màn hình</value>
 	</data>
+	<data name="SplashOverflowMenu.Troubleshooting" xml:space="preserve">
+		<value>Xử lý sự cố</value>
+	</data>
+	<data name="SplashOverflowMenu.Feedback" xml:space="preserve">
+		<value>Góp ý</value>
+	</data>
 	<data name="Shared.Plugins.PanCrop" xml:space="preserve">
 		<value>Chuyển hướng/Cắt xén</value>
 	</data>

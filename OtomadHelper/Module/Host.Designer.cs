@@ -68,6 +68,7 @@ namespace OtomadHelper.Module {
 			this.SplashOverflowMenuButton.BackColor = System.Drawing.Color.Transparent;
 			this.SplashOverflowMenuButton.FlatAppearance.BorderSize = 0;
 			this.SplashOverflowMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.SplashOverflowMenuButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.SplashOverflowMenuButton.Location = new System.Drawing.Point(902, 10);
 			this.SplashOverflowMenuButton.Margin = new System.Windows.Forms.Padding(10);
 			this.SplashOverflowMenuButton.Name = "SplashOverflowMenuButton";
@@ -95,7 +96,7 @@ namespace OtomadHelper.Module {
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.Controls.Add(this.SplashContainer);
 			this.Controls.Add(this.Browser);
-			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Margin = new System.Windows.Forms.Padding(5);
 			this.Name = "Host";
 			this.Size = new System.Drawing.Size(960, 480);

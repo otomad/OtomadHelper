@@ -198,7 +198,6 @@ export default {
 				backgroundImage: "crwdns3078:0crwdne3078:0",
 			},
 			enableImproveTranslation: "crwdns3994:0crwdne3994:0",
-			resetConfig: "crwdns4424:0crwdne4424:0",
 		},
 		curve: {
 			_: "crwdns3678:0crwdne3678:0",
@@ -417,6 +416,19 @@ export default {
 			},
 			preset: {
 				add: "crwdns2566:0crwdne2566:0",
+				normal: "crwdns5220:0crwdne5220:0",
+				enter: "crwdns5222:0crwdne5222:0",
+				enterStaff: "crwdns5224:0crwdne5224:0",
+				fadeOut: "crwdns5226:0crwdne5226:0",
+				flashlight: "crwdns5228:0crwdne5228:0",
+				horizontalMovement: "crwdns5230:0crwdne5230:0",
+				verticalMovement: "crwdns5232:0crwdne5232:0",
+				ccwRotate: "crwdns5234:0crwdne5234:0",
+				cwRotate: "crwdns5236:0crwdne5236:0",
+				colorful: "crwdns5238:0crwdne5238:0",
+				oversaturation: "crwdns5240:0crwdne5240:0",
+				highContrast: "crwdns5242:0crwdne5242:0",
+				lumaFade: "crwdns5244:0crwdne5244:0",
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "crwdns2426:0crwdne2426:0",
@@ -832,6 +844,7 @@ export default {
 				_: "crwdns3192:0crwdne3192:0",
 				autoSwitchSourceFrom: "crwdns3194:0crwdne3194:0",
 				autoCollapsePrveClasses: "crwdns3658:0$t(titles.prve)crwdne3658:0",
+				previewWithSource: "crwdns5246:0crwdne5246:0",
 			},
 			config: {
 				hideUsageTips: "crwdns2410:0crwdne2410:0",
@@ -985,14 +998,14 @@ export default {
 				transformMethod: "crwdns4316:0crwdne4316:0",
 				articulations: {
 					glissando: {
-						_: "crwdns4318:0crwdne4318:0",
+						_: "crwdns5248:0crwdne5248:0",
 						swirlAmount: "crwdns4320:0crwdne4320:0",
 					},
 					appoggiatura: {
-						_: "crwdns4322:0crwdne4322:0",
+						_: "crwdns5282:0crwdne5282:0",
 					},
 					arpeggio: {
-						_: "crwdns4324:0crwdne4324:0",
+						_: "crwdns5284:0crwdne5284:0",
 						negative: "crwdns4326:0crwdne4326:0",
 					},
 				},
@@ -1216,12 +1229,13 @@ export default {
 				preference: {
 					autoSwitchSourceFrom: "crwdns3668:0crwdne3668:0",
 					autoCollapsePrveClasses: "crwdns3670:0$t(titles.prve)crwdne3670:0",
+					previewWithSource: "crwdns5254:0crwdne5254:0",
 				},
 				config: {
 					userConfig: {
 						_: "crwdns4548:0crwdne4548:0",
 						backupAndRestore: "crwdns4550:0crwdne4550:0",
-						reset: "crwdns4552:0crwdne4552:0",
+						reset: "crwdns5256:0crwdne5256:0",
 					},
 					clipsFolder: {
 						_: "crwdns4554:0crwdne4554:0",
@@ -1322,11 +1336,14 @@ export default {
 				prerender: "crwdns5196:0crwdne5196:0",
 				articulations: {
 					_: "crwdns5198:0crwdne5198:0",
-					glissando: "crwdns5200:0crwdne5200:0",
-					appoggiatura: "crwdns5202:0crwdne5202:0",
-					arpeggio: "crwdns5204:0crwdne5204:0",
+					glissando: "crwdns5258:0crwdne5258:0",
+					appoggiatura: "crwdns5286:0crwdne5286:0",
+					arpeggio: "crwdns5288:0crwdne5288:0",
 				},
 				tuning: {
+					tuningMethod: {
+						oscillator: "crwdns5264:0crwdne5264:0",
+					},
 					alternativeForExceedTheRange: "crwdns5206:0crwdne5206:0",
 					resample: "crwdns5208:0crwdne5208:0",
 				},
@@ -1428,13 +1445,24 @@ export default {
 				enableYtp: "crwdns3136:0crwdne3136:0",
 				disableYtp: "crwdns3138:0crwdne3138:0",
 				startGenerating: "crwdns3140:0crwdne3140:0",
-				reset: "crwdns4392:0crwdne4392:0",
+				reset: "crwdns5266:0crwdne5266:0",
 			},
 		},
 		descriptions: {
 			colorPicker: {
 				eyeDropper: "crwdns3444:0crwdne3444:0",
 			},
+		},
+		resetConfig: {
+			title: "crwdns5268:0crwdne5268:0",
+			content: "crwdns5270:0crwdne5270:0",
+		},
+		splashOverflowMenu: {
+			repositoryLink: "crwdns5272:0crwdne5272:0",
+			getLatestVersion: "crwdns5274:0crwdne5274:0",
+			troubleshooting: "crwdns5276:0crwdne5276:0",
+			feedback: "crwdns5278:0crwdne5278:0",
+			reset: "crwdns5280:0crwdne5280:0",
 		},
 	},
 	shared: {
