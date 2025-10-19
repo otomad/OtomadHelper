@@ -36,8 +36,7 @@ public static class Misc {
 	/// <exception cref="ArgumentException">Throw if <typeparamref name="TEnum" /> is not an enumerated type.</exception>
 	public static TEnum[] EnumerateEnum<TEnum>() where TEnum : Enum {
 		Type type = typeof(TEnum);
-		if (!typeof(TEnum).IsEnum)
-			throw new ArgumentException($"{type} must be an enumerated type");
+		if (!type.IsEnum) throw new ArgumentException($"{type} must be an enumerated type");
 		return (TEnum[])Enum.GetValues(type);
 	}
 

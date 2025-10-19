@@ -29,6 +29,7 @@ global using Microsoft.Win32;
 
 global using OtomadHelper.Helpers;
 global using OtomadHelper.WPF.Common;
+global using OtomadHelper.WPF.Controls.KnownIcons;
 
 global using PanguSpacing;
 

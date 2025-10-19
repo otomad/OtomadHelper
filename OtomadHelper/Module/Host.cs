@@ -302,10 +302,10 @@ public sealed partial class Host : UserControl {
 
 	private async void CoreWebView2_ScriptDialogOpening(object sender, CoreWebView2ScriptDialogOpeningEventArgs e) {
 		if (e.Kind == CoreWebView2ScriptDialogKind.Prompt) return;
-		string iconName = e.Kind switch {
-			CoreWebView2ScriptDialogKind.Confirm => "Question",
-			CoreWebView2ScriptDialogKind.Beforeunload => "Warning",
-			_ => "Info",
+		KnownIcon icon = e.Kind switch {
+			CoreWebView2ScriptDialogKind.Confirm => KnownIcon.Question,
+			CoreWebView2ScriptDialogKind.Beforeunload => KnownIcon.Warning,
+			_ => KnownIcon.Info,
 		};
 		WPF.Controls.ContentDialogButtonItem<bool>
 			okBtn = new(t.ContentDialog.Button.Ok, true, true),
@@ -314,7 +314,7 @@ public sealed partial class Host : UserControl {
 			[okBtn] :
 			[okBtn, cancelBtn];
 		CoreWebView2Deferral deferral = e.GetDeferral();
-		bool? dialogResult = await WPF.Controls.ContentDialog.ShowDialog<bool?>(e.Message, "", buttons, iconName);
+		bool? dialogResult = await WPF.Controls.ContentDialog.ShowDialog<bool?>(e.Message, "", buttons, icon);
 		if (dialogResult == true) e.Accept();
 		deferral.Complete();
 	}
@@ -390,7 +390,7 @@ public sealed partial class Host : UserControl {
 					new(t.ContentDialog.Button.Ok, true),
 					new(t.ContentDialog.Button.Cancel, false, true),
 				],
-				"Warning"
+				KnownIcon.Warning
 			) == true;
 		} catch {
 			sure = MessageBox.Show(

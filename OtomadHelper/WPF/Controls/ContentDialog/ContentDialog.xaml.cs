@@ -47,21 +47,15 @@ public partial class ContentDialog : BackdropWindow {
 		return (TDialogResult?)await dialog.ShowDialogAsync();
 	}
 
-	//public static async Task<TDialogResult?> ShowDialog<TDialogResult>(
-	//	string title,
-	//	string body,
-	//	IEnumerable<ContentDialogButtonItem> buttons,
-	//	string iconName = ""
-	//) {
-	//	ValidateDialogResultType<TDialogResult>();
-	//	ContentDialog dialog = new();
-	//	ContentDialogViewModel viewModel = dialog.DataContext;
-	//	viewModel.Title = title;
-	//	viewModel.Body = body;
-	//	viewModel.IconName = iconName;
-	//	viewModel.Buttons.AddRange(buttons);
-	//	return (TDialogResult?)await dialog.ShowDialogAsync();
-	//}
+	public static async Task<TDialogResult?> ShowDialog<TDialogResult>(
+		string title,
+		string body,
+		IEnumerable<ContentDialogButtonItem> buttons,
+		KnownIcon icon /*= KnownIcon.Info*/
+	) {
+		string iconName = Enum.GetName<KnownIcon>(icon);
+		return await ShowDialog<TDialogResult>(title, body, buttons, iconName);
+	}
 
 	internal static string errorFooter = "";
 	public static void ShowError(

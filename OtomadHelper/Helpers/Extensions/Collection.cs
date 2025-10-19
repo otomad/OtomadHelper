@@ -389,4 +389,18 @@ public static partial class Extensions {
 		/// <returns>The string representation in hex of the elements in the array.</returns>
 		public string ToHexString() => BitConverter.ToString(bytes).Replace("-", "");
 	}
+
+	extension(Enum) {
+		/// <inheritdoc cref="Enum.GetName(Type, object)" />
+		public static string GetName<TEnum>(TEnum value) where TEnum : struct, Enum =>
+			Enum.GetName(typeof(TEnum), value);
+
+		/// <inheritdoc cref="Enum.GetNames(Type)" />
+		public static string[] GetNames<TEnum>() where TEnum : struct, Enum =>
+			Enum.GetNames(typeof(TEnum));
+
+		/// <inheritdoc cref="Enum.GetValues(Type)" />
+		public static TEnum[] GetValues<TEnum>() where TEnum : struct, Enum =>
+			(TEnum[])Enum.GetValues(typeof(TEnum));
+	}
 }
