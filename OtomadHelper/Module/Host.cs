@@ -48,7 +48,7 @@ public sealed partial class Host : UserControl {
 		SplashOverflowMenuButton.MouseDownBackColor = SkinColors.Current.ButtonPressed;
 
 		InitLoadingAnimation();
-		//CoreWebView2_LoadEnvironment();
+		CoreWebView2_LoadEnvironment();
 	}
 
 	private async void CoreWebView2_LoadEnvironment() {
