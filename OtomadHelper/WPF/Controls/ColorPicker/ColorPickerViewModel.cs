@@ -28,9 +28,9 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			foreach (ColourSpace model in KnownModels) {
 				ThreeD triplet = ToTriplet(model);
 				ThreeDRange inputRange = GetInputRange(model), outputRange = GetOutputRange(model);
-				Values[new(model, 0)] = MathEx.ClampMap(triplet.X, outputRange.X.Min, outputRange.X.Max, inputRange.X.Min, inputRange.X.Max);
-				Values[new(model, 1)] = MathEx.ClampMap(triplet.Y, outputRange.Y.Min, outputRange.Y.Max, inputRange.Y.Min, inputRange.Y.Max);
-				Values[new(model, 2)] = MathEx.ClampMap(triplet.Z, outputRange.Z.Min, outputRange.Z.Max, inputRange.Z.Min, inputRange.Z.Max);
+				Values[new(model, 0)] = Math.ClampMap(triplet.X, outputRange.X.Min, outputRange.X.Max, inputRange.X.Min, inputRange.X.Max);
+				Values[new(model, 1)] = Math.ClampMap(triplet.Y, outputRange.Y.Min, outputRange.Y.Max, inputRange.Y.Min, inputRange.Y.Max);
+				Values[new(model, 2)] = Math.ClampMap(triplet.Z, outputRange.Z.Min, outputRange.Z.Max, inputRange.Z.Min, inputRange.Z.Max);
 			}
 			OnPropertyChanged(nameof(Values));
 			Alpha = color.Alpha.A255;
@@ -117,7 +117,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 				if (double.TryParse(Text, out double value)) {
 					double[] triplet = ToTriplet(model).ToArray<double>();
 					Range inputRange = GetInputRange(model).Get<Range>(axis), outputRange = GetOutputRange(model).Get<Range>(axis);
-					triplet[axis] = MathEx.Map(value, inputRange.Min, inputRange.Max, outputRange.Min, outputRange.Max);
+					triplet[axis] = Math.Map(value, inputRange.Min, inputRange.Max, outputRange.Min, outputRange.Max);
 					Color = new(model, triplet[0], triplet[1], triplet[2], alpha);
 				}
 			}
@@ -183,16 +183,16 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 						ThreeD triplet = tuple.ToValueTuple();
 						switch (ModelAxis.Axis) {
 							case 0:
-								triplet.Y = MathEx.Map(col, 0, width - 1, range.Y.Min, range.Y.Max);
-								triplet.Z = MathEx.Map(row, 0, height - 1, range.Z.Max, range.Z.Min);
+								triplet.Y = Math.Map(col, 0, width - 1, range.Y.Min, range.Y.Max);
+								triplet.Z = Math.Map(row, 0, height - 1, range.Z.Max, range.Z.Min);
 								break;
 							case 1:
-								triplet.X = MathEx.Map(col, 0, width - 1, range.X.Min, range.X.Max);
-								triplet.Z = MathEx.Map(row, 0, height - 1, range.Z.Max, range.Z.Min);
+								triplet.X = Math.Map(col, 0, width - 1, range.X.Min, range.X.Max);
+								triplet.Z = Math.Map(row, 0, height - 1, range.Z.Max, range.Z.Min);
 								break;
 							case 2:
-								triplet.X = MathEx.Map(col, 0, width - 1, range.X.Min, range.X.Max);
-								triplet.Y = MathEx.Map(row, 0, height - 1, range.Y.Max, range.Y.Min);
+								triplet.X = Math.Map(col, 0, width - 1, range.X.Min, range.X.Max);
+								triplet.Y = Math.Map(row, 0, height - 1, range.Y.Max, range.Y.Min);
 								break;
 							default:
 								continue;
@@ -220,13 +220,13 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 					ThreeD triplet = tuple.ToValueTuple();
 					switch (ModelAxis.Axis) {
 						case 0:
-							triplet.X = MathEx.Map(row, 0, height - 1, range.X.Max, range.X.Min);
+							triplet.X = Math.Map(row, 0, height - 1, range.X.Max, range.X.Min);
 							break;
 						case 1:
-							triplet.Y = MathEx.Map(row, 0, height - 1, range.Y.Max, range.Y.Min);
+							triplet.Y = Math.Map(row, 0, height - 1, range.Y.Max, range.Y.Min);
 							break;
 						case 2:
-							triplet.Z = MathEx.Map(row, 0, height - 1, range.Z.Max, range.Z.Min);
+							triplet.Z = Math.Map(row, 0, height - 1, range.Z.Max, range.Z.Min);
 							break;
 						default:
 							continue;

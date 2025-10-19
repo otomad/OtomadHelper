@@ -34,7 +34,7 @@ public partial class ComboBoxViewModel<T> : ObservableObject<ComboBoxFlyout> {
 	private void ArrowMove(FocusMoveDirection direction) {
 		if (Ids.Count == 0) return;
 		Selected = direction switch {
-			FocusMoveDirection.Previous or FocusMoveDirection.Next => Ids[MathEx.FloorMod(SelectedIndex + direction.ToDelta(), Ids.Count)],
+			FocusMoveDirection.Previous or FocusMoveDirection.Next => Ids[Math.FloorMod(SelectedIndex + direction.ToDelta(), Ids.Count)],
 			FocusMoveDirection.First => Ids.First(),
 			FocusMoveDirection.Last => Ids.Last(),
 			_ => Selected,

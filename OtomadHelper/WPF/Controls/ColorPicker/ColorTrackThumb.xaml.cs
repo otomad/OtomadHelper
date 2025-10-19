@@ -82,17 +82,17 @@ public partial class ColorTrackThumb : Thumb {
 		XY result = default;
 		if (Canvas is null) return result;
 		isOnChanging = true;
-		x = MathEx.Clamp(x, 0, Canvas.ActualWidth);
-		y = MathEx.Clamp(y, 0, Canvas.ActualHeight);
+		x = Math.Clamp(x, 0, Canvas.ActualWidth);
+		y = Math.Clamp(y, 0, Canvas.ActualHeight);
 		(Range X, Range Y) range = CheckReverse();
 		if (initial || (DragAxis & ColorTrackThumbDragAxis.X) != 0) {
 			Canvas.SetLeft(this, x - ActualWidth / 2);
-			result.X = MathEx.Map(x, 0, Canvas.ActualWidth, range.X.Min, range.X.Max);
+			result.X = Math.Map(x, 0, Canvas.ActualWidth, range.X.Min, range.X.Max);
 			if (CanSetX) X = RoundIfNeed(result.X);
 		}
 		if (initial || (DragAxis & ColorTrackThumbDragAxis.Y) != 0) {
 			Canvas.SetTop(this, y - ActualHeight / 2);
-			result.Y = MathEx.Map(y, 0, Canvas.ActualHeight, range.Y.Min, range.Y.Max);
+			result.Y = Math.Map(y, 0, Canvas.ActualHeight, range.Y.Min, range.Y.Max);
 			if (CanSetY) Y = RoundIfNeed(result.Y);
 		}
 		isOnChanging = false;
@@ -123,8 +123,8 @@ public partial class ColorTrackThumb : Thumb {
 		if (Canvas is null || isOnChanging) return;
 		(Range X, Range Y) range = CheckReverse();
 		SetPosition(
-			MathEx.Map(X, range.X.Min, range.X.Max, 0, Canvas.ActualWidth),
-			MathEx.Map(Y, range.Y.Min, range.Y.Max, 0, Canvas.ActualHeight),
+			Math.Map(X, range.X.Min, range.X.Max, 0, Canvas.ActualWidth),
+			Math.Map(Y, range.Y.Min, range.Y.Max, 0, Canvas.ActualHeight),
 			initial
 		);
 	}

@@ -44,9 +44,8 @@ public sealed partial class Host : UserControl {
 		BackColor = SkinColors.Current.Background;
 		ForeColor = SkinColors.Current.Foreground;
 		SplashOverflowMenuButton.ForeColor = SkinColors.Current.Foreground;
-		SplashOverflowMenuButton.FlatAppearance.BorderColor = SkinColors.Current.Background;
-		SplashOverflowMenuButton.FlatAppearance.MouseOverBackColor = SkinColors.Current.ButtonNormal;
-		SplashOverflowMenuButton.FlatAppearance.MouseDownBackColor = SkinColors.Current.ButtonPressed;
+		SplashOverflowMenuButton.MouseOverBackColor = SkinColors.Current.ButtonNormal;
+		SplashOverflowMenuButton.MouseDownBackColor = SkinColors.Current.ButtonPressed;
 
 		InitLoadingAnimation();
 		//CoreWebView2_LoadEnvironment();

@@ -59,7 +59,7 @@ public partial class PitchPickerFlyout : BaseFlyout {
 			maxIndex = Math.Max(noteNameIndex, prevNoteNameIndex) + ReservedForCenteringItemCount;
 		string[] displayNoteNames = new string[maxIndex - minIndex + 1];
 		for (int i = minIndex, j = 0; i <= maxIndex; i++, j++)
-			displayNoteNames[j] = noteNames[MathEx.FloorMod(i, noteNamesCount)];
+			displayNoteNames[j] = noteNames[Math.FloorMod(i, noteNamesCount)];
 		DisplayNoteNames = displayNoteNames;
 		noteNameIndex -= minIndex; prevNoteNameIndex -= minIndex;
 		double toTop = GetItemTopFromIndex(noteNameIndex);

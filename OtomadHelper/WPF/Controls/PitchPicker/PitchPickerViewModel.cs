@@ -56,7 +56,7 @@ public partial class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> 
 	[RelayCommand]
 	private void NoteNameSpin(FocusMoveDirection direction) {
 		if (ToDelta(direction) is { } delta)
-			NoteName = NoteNames[MathEx.FloorMod(NoteNames.IndexOf(NoteName) + delta, NoteNames.Length)];
+			NoteName = NoteNames[Math.FloorMod(NoteNames.IndexOf(NoteName) + delta, NoteNames.Length)];
 		else if (direction is FocusMoveDirection.First)
 			NoteName = NoteNames.First();
 		else if (direction is FocusMoveDirection.Last)
@@ -66,7 +66,7 @@ public partial class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> 
 	[RelayCommand]
 	private void OctaveSpin(FocusMoveDirection direction) {
 		if (ToDelta(direction) is { } delta)
-			Octave = MathEx.Clamp(Octaves.IndexOf(Octave) + delta, 0, Octaves.Length);
+			Octave = Math.Clamp(Octaves.IndexOf(Octave) + delta, 0, Octaves.Length);
 		else if (direction is FocusMoveDirection.First)
 			Octave = Octaves.First();
 		else if (direction is FocusMoveDirection.Last)

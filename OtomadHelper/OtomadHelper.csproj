@@ -108,6 +108,7 @@
 		<Page Include="WPF\**\*.xaml" />
 		<Compile Include="GlobalUsings.cs" />
 		<Compile Include="Initialize.cs" />
+		<Compile Include="WinForm\**\*.cs" />
 		<None Include="..\.editorconfig">
 			<Link>.editorconfig</Link>
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
