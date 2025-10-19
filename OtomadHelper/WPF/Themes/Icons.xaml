@@ -92,7 +92,7 @@
 		</c:IconTemplate.Path>
 	</c:IconTemplate>
 
-	<Image x:Key="Icon:OtomadHelper">
+	<Image x:Key="Icon:OtomadHelper_24">
 		<Image.Source>
 			<DrawingImage>
 				<DrawingImage.Drawing>

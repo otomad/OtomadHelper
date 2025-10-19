@@ -34,16 +34,24 @@ public abstract class MultiValueConverter<TSource, TTarget, TParameter> : IMulti
 		throw new NotImplementedException();
 
 	object IMultiValueConverter.Convert(object[] values, Type targetType, object parameter, CultureInfo culture) {
-		if (values.Any(value => value == DependencyProperty.UnsetValue)) return DependencyProperty.UnsetValue;
+		// Check if `DependencyProperty.UnsetValue`.
+		int unsetValueCount = 0;
+		for (int i = 0; i < values.Length; i++)
+			if (values[i] == DependencyProperty.UnsetValue) {
+				values[i] = null!;
+				unsetValueCount++;
+			}
+		if (unsetValueCount == values.Length) return DependencyProperty.UnsetValue;
+
 		TParameter param = ToCollectionType<TParameter>(parameter);
 		TSource source = ToCollectionType<TSource>(values);
-		return Convert(source, targetType, param, culture)!;
+		return Convert(source, targetType, param, culture) ?? DependencyProperty.UnsetValue;
 	}
 
 	object[] IMultiValueConverter.ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) {
 		TParameter param = ToCollectionType<TParameter>(parameter);
 		TSource sources = ConvertBack((TTarget)value, targetTypes, param, culture);
-		return ToCollectionType<object[]>(sources!);
+		return ToCollectionType<object[]>(sources ?? DependencyProperty.UnsetValue);
 	}
 
 	public static T ToCollectionType<T>(object source, bool throwIfNotCollection = false) {
@@ -63,7 +71,7 @@ public abstract class MultiValueConverter<TSource, TTarget, TParameter> : IMulti
 				foreach (object item in sources)
 					list.Add(item);
 				return (T)list;
-			} else // Lazy to implement Dictionary and HashSet
+			} else // Lazy to implement Dictionary and HashSet.
 				goto UnknownType;
 		}
 	UnknownType:

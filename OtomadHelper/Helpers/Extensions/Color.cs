@@ -83,7 +83,7 @@ public static partial class Extensions {
 			(byte)(value >> 8 * 2)
 		);
 
-		/// <inheritdoc cref="MediaColorFromAbgr(uint, bool)" />
+		/// <inheritdoc cref="FromAbgr(uint, bool)" />
 		/// <remarks>
 		/// Due to the <see cref="RegistryKey.GetValue(string)" /> method converting a <see langword="DWORD" /> value to an <see cref="int" /> type,
 		/// this is usually not what we want. This overload method forces the conversion of <see cref="int" /> to <see cref="uint" /> for ease of use.
@@ -113,7 +113,7 @@ public static partial class Extensions {
 		/// Convert a HEX color value (#RRGGBB[AA]) or HTML entity color to a <see cref="DrawingColor" />.
 		/// </summary>
 		/// <exception cref="Exception">The input <paramref name="hex" /> is invalid or cannot be recognized by C#.</exception>
-		public static DrawingColor FromHex(string hex) { // TODO: name conflict.
+		public static DrawingColor FromHex(string hex) {
 			if (hex.StartsWith("#")) {
 				if (hex.Length == 9) hex = "#" + hex.Substring(7, 2) + hex.Substring(1, 6);
 				else if (hex.Length == 5) hex = "#" + hex[4].Repeat(2) + hex[1].Repeat(2) + hex[2].Repeat(2) + hex[3].Repeat(2);

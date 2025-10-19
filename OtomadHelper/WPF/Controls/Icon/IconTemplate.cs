@@ -33,4 +33,6 @@ public class IconTemplate {
 	}
 
 	public Icon ToIcon() => new() { Source = this };
+
+	public static implicit operator Icon(IconTemplate? iconTemplate) => new() { Source = iconTemplate };
 }

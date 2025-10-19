@@ -78,7 +78,8 @@
 		<Reference Include="WindowsBase" />
 	</ItemGroup>
 	<ItemGroup>
-		<Resource Include="Resources\*" />
+		<!--<Resource Include="Resources\**" />-->
+		<None Include="Resources\**" />
 		<None Include="app.config" />
 		<None Include="FodyWeavers.xsd" />
 		<None Include="FodyWeavers.xml" />
@@ -107,7 +108,6 @@
 		<Page Include="WPF\**\*.xaml" />
 		<Compile Include="GlobalUsings.cs" />
 		<Compile Include="Initialize.cs" />
-		<Folder Include="Resources\" />
 		<None Include="..\.editorconfig">
 			<Link>.editorconfig</Link>
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -163,6 +163,8 @@
 		<EmbeddedResource Remove="Properties\Module\*.resx" />
 		<EmbeddedResource Remove="Assets\**\*.cs" />
 		<EmbeddedResource Remove="Assets\ToolbarIcons\**" />
+		<!--<Resource Remove="Resources\SplashScreen.png" />
+		<SplashScreen Include="Resources\SplashScreen.png" />-->
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="Properties\Settings.settings">
@@ -183,7 +185,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.43">
+		<PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.44">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -195,11 +197,11 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>-->
 		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3405.78" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="PanguSpacing" Version="1.1.6" />
-		<PackageReference Include="System.Text.Json" Version="9.0.8" />
-		<PackageReference Include="Wacton.Unicolour" Version="6.2.0" />
+		<PackageReference Include="System.Text.Json" Version="9.0.10" />
+		<PackageReference Include="Wacton.Unicolour" Version="6.3.0" />
 	</ItemGroup>
 </Project>

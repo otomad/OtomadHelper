@@ -339,7 +339,7 @@ public sealed partial class Host : UserControl {
 			if (field is null) {
 				field = BackdropWindow.CreateContextMenu(out bool themedSuccessfully);
 				field.Placement = System.Windows.Controls.Primitives.PlacementMode.AbsolutePoint;
-				AddMenuItem("Otomad Helper " + OtomadHelperVersionTag, icon: field.FindResource("Icon:OtomadHelper"), disabled: true);
+				AddMenuItem("Otomad Helper " + OtomadHelperVersionTag, icon: field.FindResource("Icon:OtomadHelper_24"), disabled: true);
 				AddMenuItem("VEGAS Pro " + VegasProVersionTag, icon: "VegasPro", disabled: true);
 				field.Items.Add(new System.Windows.Controls.Separator());
 				AddMenuItem(t.SplashOverflowMenu.RepositoryLink, icon: "GitHub", link: "https://github.com/otomad/OtomadHelper");
@@ -350,7 +350,7 @@ public sealed partial class Host : UserControl {
 				field.Opened += (_, _) => SplashOverflowMenuButton.BackColor = SkinColors.Current.ButtonNormal;
 				field.Closed += (_, _) => SplashOverflowMenuButton.BackColor = Color.Transparent;
 
-				WPF.Controls.Icon? GetIcon(string name) => themedSuccessfully ? (field.FindResource(name) as WPF.Controls.IconTemplate)?.ToIcon() : null;
+				WPF.Controls.Icon? GetIcon(string name) => themedSuccessfully ? field.FindResource(name) as WPF.Controls.IconTemplate : null;
 
 				void AddMenuItem(string header, object? icon = null, string link = "", bool disabled = false, Action? action = null) {
 					System.Windows.Controls.MenuItem menuItem = new() {
