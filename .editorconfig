@@ -12,6 +12,9 @@ insert_final_newline = true
 indent_style = space
 indent_size = 2
 
+[*.tt]
+insert_final_newline = false
+
 [*.cs]
 charset = utf-8
 indent_style = tab
@@ -264,3 +267,6 @@ dotnet_style_qualification_for_event = false:suggestion
 dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion
+
+# CS9107: 参数捕获到封闭类型状态，其值也传递给基构造函数。该值也可能由基类捕获。
+dotnet_diagnostic.CS9107.severity = silent

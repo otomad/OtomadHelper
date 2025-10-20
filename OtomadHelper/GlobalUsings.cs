@@ -35,7 +35,7 @@ global using PanguSpacing;
 
 global using static OtomadHelper.Helpers.Debugger;
 global using static OtomadHelper.Helpers.Extensions;
-global using static OtomadHelper.Helpers.I18n;
+global using static OtomadHelper.Helpers.Localize;
 global using static OtomadHelper.Helpers.Misc;
 global using static OtomadHelper.Interop.PInvoke;
 global using static OtomadHelper.Services.ErrorHandleService;

@@ -26,8 +26,8 @@ public class EntryPoint {
 
 	private async Task ShowWrongOpeningMethodError() {
 		string? result = await WPF.Controls.ContentDialog.ShowDialog<string>(
-			(string)t.WrongOpeningMethod.Script.Title,
-			(string)t.WrongOpeningMethod.Script.Content + "\n" + CorrectExtensionPath,
+			t.WrongOpeningMethod.Script.Title,
+			t.WrongOpeningMethod.Script.Content + "\n" + CorrectExtensionPath,
 			[
 				new(t.ContentDialog.Button.Ok, "ok"),
 				new(t.ContentDialog.Button.Locate, "locate"),

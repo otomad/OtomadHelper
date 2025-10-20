@@ -84,6 +84,10 @@
 		<None Include="FodyWeavers.xsd" />
 		<None Include="FodyWeavers.xml" />
 		<None Include="ILRepack.targets" />
+		<None Include="Helpers\LocalizeGen.tt">
+			<Generator>TextTemplatingFileGenerator</Generator>
+			<LastGenOutput>LocalizeGen.cs</LastGenOutput>
+		</None>
 		<None Include="Properties\Settings.settings" />
 		<None Include="Settings.XamlStyler" />
 		<None Include="Test\app.manifest" />
@@ -98,6 +102,8 @@
 		<EmbeddedResource Include="Properties\**\*.resx" />
 		<Compile Include="Bridges\**" />
 		<Compile Include="Helpers\**" />
+		<Compile Remove="**\*.tt" />
+		<Compile Remove="**\*.txt" />
 		<Compile Include="Interop\**" />
 		<Compile Include="Models\**" />
 		<Compile Include="Module\**\*.cs" />
@@ -124,6 +130,16 @@
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>ToolbarIcons.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Helpers\LocalizeGen.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>LocalizeGen.tt</DependentUpon>
+		</Compile>
+		<Compile Update="Helpers\LocalizeGen.txt">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>LocalizeGen.tt</DependentUpon>
 		</Compile>
 		<Compile Update="Module\Host.cs">
 			<SubType>UserControl</SubType>
@@ -152,6 +168,15 @@
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>ToolbarIcons.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+		<Content Include="Helpers\LocalizeGen.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>LocalizeGen.tt</DependentUpon>
+		</Content>
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Web\**" />
@@ -166,12 +191,6 @@
 		<EmbeddedResource Remove="Assets\ToolbarIcons\**" />
 		<!--<Resource Remove="Resources\SplashScreen.png" />
 		<SplashScreen Include="Resources\SplashScreen.png" />-->
-	</ItemGroup>
-	<ItemGroup>
-		<None Update="Properties\Settings.settings">
-			<Generator>SettingsSingleFileGenerator</Generator>
-			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
-		</None>
 	</ItemGroup>
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
 		<Exec Command="powershell -ExecutionPolicy Bypass -File $(SolutionDir)versioning.ps1" />
@@ -204,5 +223,8 @@
 		<PackageReference Include="PanguSpacing" Version="1.1.6" />
 		<PackageReference Include="System.Text.Json" Version="9.0.10" />
 		<PackageReference Include="Wacton.Unicolour" Version="6.3.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
 	</ItemGroup>
 </Project>

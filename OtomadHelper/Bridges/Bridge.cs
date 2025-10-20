@@ -14,7 +14,7 @@ public class Bridge {
 	/// </summary>
 	/// <param name="culture">A <see cref="string"/> representing the culture to be set.<br />
 	/// The culture should be in the format "xx-XX" where xx is the language code and XX is the country/region code.</param>
-	public void SetCulture(string culture) => I18n.SetCulture = culture;
+	public void SetCulture(string culture) => Localize.SetCulture = culture;
 
 	/// <summary>
 	/// Set whether the page is focused or not.

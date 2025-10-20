@@ -5,7 +5,9 @@ using CultureInfoMatcher;
 
 namespace OtomadHelper.Helpers;
 
-public class I18n : DynamicObject {
+#pragma warning disable IDE1006 // 命名样式
+
+public class Localize : DynamicObject {
 	public static readonly CultureInfo SystemCulture = Thread.CurrentThread.CurrentCulture;
 	public static CultureInfo Culture { get; private set; } = SystemCulture;
 	private static readonly CultureInfo DefaultCulture = new("en-US");
@@ -57,10 +59,15 @@ public class I18n : DynamicObject {
 		if (result is null) {
 			foreach (DictionaryEntry entry in DefaultCultureRes)
 				if (entry.Key.ToString().StartsWith(chainedKey + '.'))
-				return new I18n(newParents) { EnablePangu = EnablePangu };
+				return new Localize(newParents) { EnablePangu = EnablePangu };
 			return $"<{chainedKey}>";
 		}
 		return EnablePangu ? Pangu.Spacing(result) : result;
+	}
+
+	public string TranslateToString(string key) {
+		object translated = Translate(key);
+		return (translated as string)!;
 	}
 
 	public override bool TryGetMember(GetMemberBinder binder, out object result) {
@@ -83,13 +90,21 @@ public class I18n : DynamicObject {
 		return true;
 	}
 
-	public static readonly dynamic t = new I18n();
-	public static readonly dynamic t_disablePangu = new I18n() { EnablePangu = false };
+	private static readonly Localize _t = new();
+	private static readonly Localize _t_disablePangu = new() { EnablePangu = false };
+	//public static dynamic t => _t;
+	//public static dynamic t_disablePangu => _t_disablePangu;
+	public static readonly LocalizeGen.Root t = new(_t);
+	public static readonly LocalizeGen.Root t_disablePangu = new(_t_disablePangu);
 
 	private IEnumerable<string> Parents { get; set; } = [];
 
-	private I18n() { }
-	private I18n(IEnumerable<string> parents) => Parents = parents;
+	private Localize() { }
+	private Localize(IEnumerable<string> parents) => Parents = parents;
 
 	public bool EnablePangu { get; set; } = true;
+}
+
+public abstract class LocalizeNested(Localize localize) {
+	protected string GetString(string key) => localize.TranslateToString(key);
 }
