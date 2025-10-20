@@ -3,6 +3,5 @@ using System.Windows.Markup;
 namespace OtomadHelper.WPF.Common;
 
 public class TransExtension(string key) : MarkupExtension {
-	public override object ProvideValue(IServiceProvider serviceProvider) =>
-		((Localize)t).Translate(key);
+	public override object ProvideValue(IServiceProvider serviceProvider) => t[key];
 }

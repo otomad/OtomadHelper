@@ -41,11 +41,11 @@ public partial class ColorPicker : UserControl {
 		viewModel.Color = color;
 		if (ColorPickerModelAxis.Valid(initialModelAxis)) viewModel.ModelAxis = initialModelAxis;
 		bool dialogResult = await ContentDialog.ShowDialog<bool?>(
-			title: (string)t.ColorPicker.Title,
+			title: t.ColorPicker.Title,
 			content: panel,
-			buttons: [
-				new ContentDialogButtonItem<bool>(t.ContentDialog.Button.Ok, true, true),
-				new ContentDialogButtonItem<bool>(t.ContentDialog.Button.Cancel, false),
+			buttons: (ContentDialogButtonItem<bool>[])[
+				new(t.ContentDialog.Button.Ok, true, true),
+				new(t.ContentDialog.Button.Cancel, false),
 			],
 			iconName: "Color",
 			singletonId: "Color Picker"

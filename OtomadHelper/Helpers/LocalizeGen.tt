@@ -42,17 +42,11 @@ namespace OtomadHelper.Helpers.LocalizeGen;
 		string className = (string)subclass.Key;
 		OrderedDictionary properties = (OrderedDictionary)subclass.Value;
 #>
-public class <#= className #>(Localize localize) : LocalizeNested(localize) {
+public class <#= className #>(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 <#
 	foreach (DictionaryEntry property in properties) {
 		string propertyName = (string)property.Key;
-		if (propertyName == "0") {
-			if (property.Value is string ancestor) {
-#>
-	public string this[int index] => base.GetString($"<#= ancestor #>.{index}");
-<#
-			}
-		} else if (property.Value is string key) {
+		if (property.Value is string key) {
 			Write(GetXmlDocumentation(strings, key, "\t/// "));
 #>
 	public string <#= propertyName #> => base.GetString("<#= key #>");
@@ -61,7 +55,7 @@ public class <#= className #>(Localize localize) : LocalizeNested(localize) {
 			string subclassName = GetKeyByValue(subclasses, subclassToFind) as string;
 			if (subclassName is not null)
 #>
-	public <#= subclassName #> <#= propertyName #> { get { if (field is null) field = new(localize); return field; } }
+	public <#= subclassName #> <#= propertyName #> { get { if (field is null) field = new(localize, "<#= subclassName.Replace("_", ".") #>"); return field; } }
 <#
 		}
 	}
@@ -87,9 +81,6 @@ public class <#= className #>(Localize localize) : LocalizeNested(localize) {
 		int i = 0;
 		foreach (string layer in splitted) {
 			if (new Regex(@"^\d").IsMatch(layer)) {
-				if (int.TryParse(layer, out _) && i == splitted.Length - 1 && !parent.Contains("0")) {
-					parent["0"] = string.Join(".", splitted.Take(i));
-				}
 				break;
 			} else if (i == splitted.Length - 1) {
 				parent[layer] = key;

@@ -7,7 +7,7 @@ namespace OtomadHelper.WPF.Common;
 public static class Commands {
 	public static readonly RoutedUICommand ClearAll = new(
 		name: "ClearAll",
-		text: t.TextBox.Menu.ClearAll as string, // TODO: Possible to dynamic change i18n?
+		text: t.TextBox.Menu.ClearAll, // TODO: Possible to dynamic change i18n?
 		inputGestures: [new KeyGesture(Key.None, ModifierKeys.None, "Ctrl+A, Del")],
 		ownerType: typeof(Commands)
 	);

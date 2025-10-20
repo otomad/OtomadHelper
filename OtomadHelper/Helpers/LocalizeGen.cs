@@ -28,39 +28,39 @@
 namespace OtomadHelper.Helpers.LocalizeGen;
 
 
-public class Root(Localize localize) : LocalizeNested(localize) {
+public class Root(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 
-	public Host Host { get { if (field is null) field = new(localize); return field; } }
+	public Host Host { get { if (field is null) field = new(localize, "Host"); return field; } }
 
-	public ContentDialog ContentDialog { get { if (field is null) field = new(localize); return field; } }
+	public ContentDialog ContentDialog { get { if (field is null) field = new(localize, "ContentDialog"); return field; } }
 
-	public WrongOpeningMethod WrongOpeningMethod { get { if (field is null) field = new(localize); return field; } }
+	public WrongOpeningMethod WrongOpeningMethod { get { if (field is null) field = new(localize, "WrongOpeningMethod"); return field; } }
 
-	public TextBox TextBox { get { if (field is null) field = new(localize); return field; } }
+	public TextBox TextBox { get { if (field is null) field = new(localize, "TextBox"); return field; } }
 
-	public ColorPicker ColorPicker { get { if (field is null) field = new(localize); return field; } }
+	public ColorPicker ColorPicker { get { if (field is null) field = new(localize, "ColorPicker"); return field; } }
 
-	public Flyout Flyout { get { if (field is null) field = new(localize); return field; } }
+	public Flyout Flyout { get { if (field is null) field = new(localize, "Flyout"); return field; } }
 
-	public Keybindings Keybindings { get { if (field is null) field = new(localize); return field; } }
+	public Keybindings Keybindings { get { if (field is null) field = new(localize, "Keybindings"); return field; } }
 
-	public Descriptions Descriptions { get { if (field is null) field = new(localize); return field; } }
+	public Descriptions Descriptions { get { if (field is null) field = new(localize, "Descriptions"); return field; } }
 
-	public ResetConfig ResetConfig { get { if (field is null) field = new(localize); return field; } }
+	public ResetConfig ResetConfig { get { if (field is null) field = new(localize, "ResetConfig"); return field; } }
 
-	public SplashOverflowMenu SplashOverflowMenu { get { if (field is null) field = new(localize); return field; } }
+	public SplashOverflowMenu SplashOverflowMenu { get { if (field is null) field = new(localize, "SplashOverflowMenu"); return field; } }
 
-	public Shared Shared { get { if (field is null) field = new(localize); return field; } }
-
-}
-
-public class Host(Localize localize) : LocalizeNested(localize) {
-
-	public Host_ToolTip ToolTip { get { if (field is null) field = new(localize); return field; } }
+	public Shared Shared { get { if (field is null) field = new(localize, "Shared"); return field; } }
 
 }
 
-public class Host_ToolTip(Localize localize) : LocalizeNested(localize) {
+public class Host(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+
+	public Host_ToolTip ToolTip { get { if (field is null) field = new(localize, "Host.ToolTip"); return field; } }
+
+}
+
+public class Host_ToolTip(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Import %1
 	/// </summary>
@@ -68,17 +68,17 @@ public class Host_ToolTip(Localize localize) : LocalizeNested(localize) {
 
 }
 
-public class ContentDialog(Localize localize) : LocalizeNested(localize) {
+public class ContentDialog(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 
-	public ContentDialog_Button Button { get { if (field is null) field = new(localize); return field; } }
+	public ContentDialog_Button Button { get { if (field is null) field = new(localize, "ContentDialog.Button"); return field; } }
 
-	public ContentDialog_Expander Expander { get { if (field is null) field = new(localize); return field; } }
+	public ContentDialog_Expander Expander { get { if (field is null) field = new(localize, "ContentDialog.Expander"); return field; } }
 
-	public ContentDialog_ShowError ShowError { get { if (field is null) field = new(localize); return field; } }
+	public ContentDialog_ShowError ShowError { get { if (field is null) field = new(localize, "ContentDialog.ShowError"); return field; } }
 
 }
 
-public class ContentDialog_Button(Localize localize) : LocalizeNested(localize) {
+public class ContentDialog_Button(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// <u>O</u>K
 	/// </summary>
@@ -102,7 +102,7 @@ public class ContentDialog_Button(Localize localize) : LocalizeNested(localize) 
 
 }
 
-public class ContentDialog_Expander(Localize localize) : LocalizeNested(localize) {
+public class ContentDialog_Expander(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Expand details
 	/// </summary>
@@ -114,7 +114,7 @@ public class ContentDialog_Expander(Localize localize) : LocalizeNested(localize
 
 }
 
-public class ContentDialog_ShowError(Localize localize) : LocalizeNested(localize) {
+public class ContentDialog_ShowError(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Error
 	/// </summary>
@@ -122,13 +122,13 @@ public class ContentDialog_ShowError(Localize localize) : LocalizeNested(localiz
 
 }
 
-public class WrongOpeningMethod(Localize localize) : LocalizeNested(localize) {
+public class WrongOpeningMethod(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 
-	public WrongOpeningMethod_Script Script { get { if (field is null) field = new(localize); return field; } }
+	public WrongOpeningMethod_Script Script { get { if (field is null) field = new(localize, "WrongOpeningMethod.Script"); return field; } }
 
 }
 
-public class WrongOpeningMethod_Script(Localize localize) : LocalizeNested(localize) {
+public class WrongOpeningMethod_Script(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Hey, you misplaced the extension!
 	/// </summary>
@@ -144,13 +144,13 @@ public class WrongOpeningMethod_Script(Localize localize) : LocalizeNested(local
 
 }
 
-public class TextBox(Localize localize) : LocalizeNested(localize) {
+public class TextBox(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 
-	public TextBox_Menu Menu { get { if (field is null) field = new(localize); return field; } }
+	public TextBox_Menu Menu { get { if (field is null) field = new(localize, "TextBox.Menu"); return field; } }
 
 }
 
-public class TextBox_Menu(Localize localize) : LocalizeNested(localize) {
+public class TextBox_Menu(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Clear All
 	/// </summary>
@@ -158,7 +158,7 @@ public class TextBox_Menu(Localize localize) : LocalizeNested(localize) {
 
 }
 
-public class ColorPicker(Localize localize) : LocalizeNested(localize) {
+public class ColorPicker(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Select a Color
 	/// </summary>
@@ -168,13 +168,13 @@ public class ColorPicker(Localize localize) : LocalizeNested(localize) {
 	/// </summary>
 	public string EyeDropper => base.GetString("ColorPicker.EyeDropper");
 
-	public ColorPicker_Axis Axis { get { if (field is null) field = new(localize); return field; } }
+	public ColorPicker_Axis Axis { get { if (field is null) field = new(localize, "ColorPicker.Axis"); return field; } }
 
-	public ColorPicker_AxisAbbrs AxisAbbrs { get { if (field is null) field = new(localize); return field; } }
+	public ColorPicker_AxisAbbrs AxisAbbrs { get { if (field is null) field = new(localize, "ColorPicker.AxisAbbrs"); return field; } }
 
 }
 
-public class ColorPicker_Axis(Localize localize) : LocalizeNested(localize) {
+public class ColorPicker_Axis(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Red
 	/// </summary>
@@ -254,7 +254,7 @@ public class ColorPicker_Axis(Localize localize) : LocalizeNested(localize) {
 
 }
 
-public class ColorPicker_AxisAbbrs(Localize localize) : LocalizeNested(localize) {
+public class ColorPicker_AxisAbbrs(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// R
 	/// </summary>
@@ -330,13 +330,13 @@ public class ColorPicker_AxisAbbrs(Localize localize) : LocalizeNested(localize)
 
 }
 
-public class Flyout(Localize localize) : LocalizeNested(localize) {
+public class Flyout(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 
-	public Flyout_ConfirmDelete ConfirmDelete { get { if (field is null) field = new(localize); return field; } }
+	public Flyout_ConfirmDelete ConfirmDelete { get { if (field is null) field = new(localize, "Flyout.ConfirmDelete"); return field; } }
 
 }
 
-public class Flyout_ConfirmDelete(Localize localize) : LocalizeNested(localize) {
+public class Flyout_ConfirmDelete(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Delete?
 	/// </summary>
@@ -344,13 +344,13 @@ public class Flyout_ConfirmDelete(Localize localize) : LocalizeNested(localize) 
 
 }
 
-public class Keybindings(Localize localize) : LocalizeNested(localize) {
+public class Keybindings(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 
-	public Keybindings_Commands Commands { get { if (field is null) field = new(localize); return field; } }
+	public Keybindings_Commands Commands { get { if (field is null) field = new(localize, "Keybindings.Commands"); return field; } }
 
 }
 
-public class Keybindings_Commands(Localize localize) : LocalizeNested(localize) {
+public class Keybindings_Commands(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Use Track Event as Source
 	/// </summary>
@@ -378,13 +378,13 @@ public class Keybindings_Commands(Localize localize) : LocalizeNested(localize) 
 
 }
 
-public class Descriptions(Localize localize) : LocalizeNested(localize) {
+public class Descriptions(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 
-	public Descriptions_ColorPicker ColorPicker { get { if (field is null) field = new(localize); return field; } }
+	public Descriptions_ColorPicker ColorPicker { get { if (field is null) field = new(localize, "Descriptions.ColorPicker"); return field; } }
 
 }
 
-public class Descriptions_ColorPicker(Localize localize) : LocalizeNested(localize) {
+public class Descriptions_ColorPicker(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Pick a color from the screen
 	/// </summary>
@@ -392,7 +392,7 @@ public class Descriptions_ColorPicker(Localize localize) : LocalizeNested(locali
 
 }
 
-public class ResetConfig(Localize localize) : LocalizeNested(localize) {
+public class ResetConfig(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Are you sure you want to reset all the user configurations?
 	/// </summary>
@@ -404,7 +404,7 @@ public class ResetConfig(Localize localize) : LocalizeNested(localize) {
 
 }
 
-public class SplashOverflowMenu(Localize localize) : LocalizeNested(localize) {
+public class SplashOverflowMenu(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Open GitHub repository
 	/// </summary>
@@ -428,15 +428,15 @@ public class SplashOverflowMenu(Localize localize) : LocalizeNested(localize) {
 
 }
 
-public class Shared(Localize localize) : LocalizeNested(localize) {
+public class Shared(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 
-	public Shared_Plugins Plugins { get { if (field is null) field = new(localize); return field; } }
+	public Shared_Plugins Plugins { get { if (field is null) field = new(localize, "Shared.Plugins"); return field; } }
 
-	public Shared_Midi Midi { get { if (field is null) field = new(localize); return field; } }
+	public Shared_Midi Midi { get { if (field is null) field = new(localize, "Shared.Midi"); return field; } }
 
 }
 
-public class Shared_Plugins(Localize localize) : LocalizeNested(localize) {
+public class Shared_Plugins(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Pan/Crop
 	/// </summary>
@@ -484,27 +484,23 @@ public class Shared_Plugins(Localize localize) : LocalizeNested(localize) {
 
 }
 
-public class Shared_Midi(Localize localize) : LocalizeNested(localize) {
+public class Shared_Midi(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Unknown
 	/// </summary>
 	public string Unknown => base.GetString("Shared.Midi.Unknown");
 
-	public Shared_Midi_Instruments Instruments { get { if (field is null) field = new(localize); return field; } }
+	public Shared_Midi_Instruments Instruments { get { if (field is null) field = new(localize, "Shared.Midi.Instruments"); return field; } }
 
-	public Shared_Midi_Percussions Percussions { get { if (field is null) field = new(localize); return field; } }
-
-}
-
-public class Shared_Midi_Instruments(Localize localize) : LocalizeNested(localize) {
-
-	public string this[int index] => base.GetString($"Shared.Midi.Instruments.{index}");
+	public Shared_Midi_Percussions Percussions { get { if (field is null) field = new(localize, "Shared.Midi.Percussions"); return field; } }
 
 }
 
-public class Shared_Midi_Percussions(Localize localize) : LocalizeNested(localize) {
+public class Shared_Midi_Instruments(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 
-	public string this[int index] => base.GetString($"Shared.Midi.Percussions.{index}");
+}
+
+public class Shared_Midi_Percussions(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 
 }
 

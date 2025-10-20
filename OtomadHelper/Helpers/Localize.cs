@@ -105,6 +105,10 @@ public class Localize : DynamicObject {
 	public bool EnablePangu { get; set; } = true;
 }
 
-public abstract class LocalizeNested(Localize localize) {
+public abstract class LocalizeNested(Localize localize, string ancestor = "") {
 	protected string GetString(string key) => localize.TranslateToString(key);
+
+	public virtual string this[string key] => localize.TranslateToString(ancestor + (string.IsNullOrEmpty(ancestor) ? string.Empty : ".") + key);
+
+	public virtual string this[int index] => this[index.ToString()];
 }
