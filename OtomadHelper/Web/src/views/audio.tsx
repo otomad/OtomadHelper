@@ -261,7 +261,7 @@ export default function Audio() {
 								nameField={({ id }) => t.stream.tuning.alternativeForExceedTheRange[id]}
 								detailsField={item => (
 									<TransInterpolation
-										i18nKey={t => t.descriptions.stream.tuning.alternativeForExceedTheRange[item.id]}
+										i18nKey={t.descriptions.stream.tuning.alternativeForExceedTheRange[item.id]}
 										formulaFor39={<MathFormulaFor39 />}
 										formulaFor24="±24"
 									/>
@@ -353,10 +353,8 @@ export default function Audio() {
 					<Setting meta={meta.mapping.progress} />
 
 					<Subheader meta={meta.parameters} />
-					<ExpanderRadio
-						title={t.preset}
-						details={t.descriptions.stream.preset}
-						icon="preset"
+					<Setting
+						meta={meta.preset}
 						items={buildInPresets}
 						value={currentPreset}
 						view="tile"
@@ -366,7 +364,7 @@ export default function Audio() {
 						<Expander.ChildWrapper $tilePadding="tile view">
 							<Button icon="add">{t.stream.preset.add}</Button>
 						</Expander.ChildWrapper>
-					</ExpanderRadio>
+					</Setting>
 					{activeParameterScheme.map((scheme, i) => (
 						<SettingsCard
 							title={scheme.name[0]}

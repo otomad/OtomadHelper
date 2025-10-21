@@ -43,12 +43,13 @@ export /* @internal */ const glissandoEffects = [
 /** @deprecated */
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
-const buildInPresets = ["normal", "enter", "enterStaff", "fadeOut", "flashlight", "horizontalMovement", "verticalMovement", "ccwRotate", "cwRotate", "colorful", "oversaturation", "highContrast", "lumaFade"];
+const buildInPresets = ["normal", "enter", "enterStaff", "exit", "fadeOut", "flashlight", "floatLeft", "floatRight", "floatUp", "floatDown", "ccwRotate", "cwRotate", "colorful", "oversaturation", "highContrast", "lumaFade"];
+const asteriskBuildInPresets = ["floatLeft", "floatRight", "floatUp", "floatDown", "ccwRotate", "cwRotate"];
 
 export default function Visual() {
 	const {
 		enabled, preferredTrack: preferredTrackIndex,
-		stretch, loop, staticVisual, truncate, legato, multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping,
+		stretch, loop, staticVisual, truncate, legato, multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping, presetPreviewIdeality,
 		mimicalResample, mimicalOscillator, transition, transitionAlignment, transitionDuration,
 		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioNegative, activeParameterScheme,
 	} = useSelectConfig(c => c.visual);
@@ -205,20 +206,31 @@ export default function Visual() {
 					<Setting meta={meta.mapping.progress} />
 
 					<Subheader meta={meta.parameters} />
-					<ExpanderRadio
-						title={t.preset}
-						details={t.descriptions.stream.preset}
-						icon="preset"
+					<Setting
+						meta={meta.preset}
 						items={buildInPresets}
 						value={currentPreset}
-						view="tile"
+						view="grid"
 						idField
 						nameField={t.stream.preset}
+						imageField={name => <PreviewParameterPreset key={name} thumbnail={exampleThumbnail} name={name} previewIdeality={presetPreviewIdeality[0]} />}
+						badgeField={name => asteriskBuildInPresets.includes(name) && [undefined, "asterisk"]}
 					>
+						<Setting
+							meta={meta.preset.previewIdealityReality}
+							on={presetPreviewIdeality}
+							title={(
+								<TransInterpolation
+									i18nKey={t.stream.preset.previewIdealityReality.template}
+									ideality={<OptionalBold bold={presetPreviewIdeality[0]}>{t.stream.preset.previewIdealityReality.ideality}</OptionalBold>}
+									reality={<OptionalBold bold={!presetPreviewIdeality[0]}>{t.stream.preset.previewIdealityReality.reality}</OptionalBold>}
+								/>
+							)}
+						/>
 						<Expander.ChildWrapper $tilePadding="tile view">
 							<Button icon="add">{t.stream.preset.add}</Button>
 						</Expander.ChildWrapper>
-					</ExpanderRadio>
+					</Setting>
 					<SortableView items={activeParameterScheme} nonFocusableForSortableItems>
 						{scheme => (
 							<SettingsCard
@@ -238,7 +250,6 @@ export default function Visual() {
 					</SortableView>
 					<div>
 						<Button icon="add">{t.new}</Button>
-						{/* <Button icon="copy_add">{t.stream.parameters.copyAttributesFromSelectedClip}</Button> */}
 					</div>
 				</EmptyMessage.YtpDisabled>
 			</EmptyMessage.Typical>

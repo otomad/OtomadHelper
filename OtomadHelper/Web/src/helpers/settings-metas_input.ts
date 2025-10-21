@@ -150,6 +150,7 @@ export const settingsMetasInput = {
 			},
 		},
 		parameters: subheader(t.subheaders.parameters),
+		preset: { icon: "preset", title: t.preset },
 	},
 	visual: {
 		preferredTrack: { icon: "preferred_track", title: t.source.preferredTrack },
@@ -217,6 +218,13 @@ export const settingsMetasInput = {
 			},
 		},
 		parameters: subheader(t.subheaders.parameters),
+		preset: {
+			icon: "preset",
+			title: t.preset,
+			items: {
+				previewIdealityReality: { icon: "eye_lines_asterisk" },
+			},
+		},
 	},
 	visual_prve: {
 		control: { icon: "prve_control_general" },

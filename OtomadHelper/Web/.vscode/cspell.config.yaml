@@ -368,6 +368,8 @@ ignoreWords:
   - evauation
   - notdeprecated
   - delthas
+  - freezeframe
+  - freezeframes
 flagWords:
   - colour -> color
   - canot -> cannot

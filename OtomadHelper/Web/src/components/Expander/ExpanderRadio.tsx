@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, hideCustom = true, before, transition, readOnly, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, hideCustom = true, before, transition, readOnly, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly TItem[];
 	/** The identifier of the currently selected value. */
@@ -36,6 +36,8 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	detailsField?: FieldType<TItem> | object | ((item: TItem) => ReactNode);
 	/** Other elements overlay the image field for the radio item. */
 	imageOverlayField?: FieldType<TItem> | ((item: TItem) => ReactNode);
+	/** The badge field for the radio item. You must get it by a callback which return a badge node. */
+	badgeField?: (item: TItem) => BadgeValue | BadgeArgs;
 	/** Use list/tile/grid view components instead of radio buttons. */
 	view?: ItemView | "radio";
 	/** Detailed description. */
@@ -140,6 +142,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 							icon={getItemField(item, "icon")}
 							details={getItemField(item, "details")}
 							imageOverlay={getItemField(item, "imageOverlay")}
+							badge={badgeField?.(item)}
 							onClick={(_1, _2, e) => onItemClick?.(item, e)}
 							onContextMenu={e => onItemContextMenu?.(item, e)}
 							{...typeof itemsViewItemAttrs === "function" ? itemsViewItemAttrs(item) : itemsViewItemAttrs}

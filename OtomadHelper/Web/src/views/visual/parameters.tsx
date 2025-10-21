@@ -3,7 +3,7 @@ export default function Parameters() {
 		<div className="container">
 			<Expander title={t.condition} details={t.descriptions.condition} icon="filter" />
 			<div>
-				<Button>{t.stream.parameters.copyFromAnotherParameterScheme}</Button>
+				<Button icon="copy_arrow_right">{t.stream.parameters.copyFromAnotherParameterScheme}</Button>
 			</div>
 			<Subheader>{t.subheaders.parameters}</Subheader>
 		</div>

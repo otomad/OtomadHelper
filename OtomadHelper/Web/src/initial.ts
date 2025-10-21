@@ -9,6 +9,7 @@ import "styles/fonts";
 import "styles/properties";
 import "utils/bridge";
 
+import { Enum } from "enum-plus";
 import { enableMapSet } from "immer";
 import { config as transitionGroupConfig } from "react-transition-group-fc";
 
@@ -107,5 +108,11 @@ import { config as transitionGroupConfig } from "react-transition-group-fc";
 
 	// #region Dispatch global transition exit event
 	transitionGroupConfig.onExit = node => window.dispatchEvent(createCustomEvent("transitionExitCapture", { detail: { target: node } }));
+	// #endregion
+
+	// #region Init enum plus localization method
+	Enum.localize = label => label.toString();
+	Enum.config.autoLabel = ({ item: { key, label }, labelPrefix }) => label ||
+		(typeof labelPrefix === "string" ? `${labelPrefix}.${key}` : isI18nItem(labelPrefix) ? labelPrefix[key] : undefined!);
 	// #endregion
 }

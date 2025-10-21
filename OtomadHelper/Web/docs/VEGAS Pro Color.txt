@@ -1,0 +1,285 @@
+VEGAS Pro 14:
+ButtonFace: 136, 136, 136
+ButtonText: 0, 0, 0
+ButtonShadow: 111, 111, 111
+ButtonHighlight: 171, 171, 171
+ControlLight: 122, 122, 122
+ControlLightLight: 171, 171, 171
+ControlDarkDark: 105, 105, 105
+ControlDark: 111, 111, 111
+GrayText: 88, 88, 88
+Highlight: 254, 181, 123
+HighlightText: 255, 255, 255
+MenuBackground: 136, 136, 136
+MenuText: 25, 25, 25
+WindowBackground: 153, 153, 153
+WindowText: 25, 25, 25
+Background: null
+IconOutline: null
+IconBase: null
+IconGray: null
+
+
+VEGAS Pro 18 Dark:
+ButtonFace: 45, 45, 45
+ButtonText: 220, 220, 220
+ButtonShadow: 18, 176, 255
+ButtonHighlight: 130, 130, 130
+ControlLight: 55, 55, 55
+ControlLightLight: 70, 70, 70
+ControlDarkDark: 35, 35, 35
+ControlDark: 45, 45, 45
+GrayText: 117, 117, 117
+Highlight: 25, 140, 254
+HighlightText: 255, 255, 255
+MenuBackground: 35, 35, 35
+MenuText: 220, 220, 220
+WindowBackground: 45, 45, 45
+WindowText: 220, 220, 220
+Background: 130, 130, 130
+IconOutline: null
+IconBase: null
+IconGray: null
+
+
+VEGAS Pro 18 Medium:
+ButtonFace: 94, 94, 94
+ButtonText: 220, 220, 220
+ButtonShadow: 18, 176, 255
+ButtonHighlight: 147, 147, 147
+ControlLight: 114, 114, 114
+ControlLightLight: 130, 130, 130
+ControlDarkDark: 85, 85, 85
+ControlDark: 94, 94, 94
+GrayText: 133, 133, 133
+Highlight: 25, 140, 254
+HighlightText: 255, 255, 255
+MenuBackground: 85, 85, 85
+MenuText: 220, 220, 220
+WindowBackground: 94, 94, 94
+WindowText: 220, 220, 220
+Background: 147, 147, 147
+IconOutline: null
+IconBase: null
+IconGray: null
+
+
+VEGAS Pro 18 Light:
+ButtonFace: 146, 146, 146
+ButtonText: 29, 29, 29
+ButtonShadow: 18, 176, 255
+ButtonHighlight: 192, 192, 192
+ControlLight: 154, 154, 154
+ControlLightLight: 167, 167, 167
+ControlDarkDark: 139, 139, 139
+ControlDark: 146, 146, 146
+GrayText: 97, 97, 97
+Highlight: 25, 140, 254
+HighlightText: 255, 255, 255
+MenuBackground: 139, 139, 139
+MenuText: 29, 29, 29
+WindowBackground: 146, 146, 146
+WindowText: 29, 29, 29
+Background: 192, 192, 192
+IconOutline: null
+IconBase: null
+IconGray: null
+
+
+VEGAS Pro 18 White:
+ButtonFace: 210, 210, 210
+ButtonText: 35, 35, 35
+ButtonShadow: 18, 176, 255
+ButtonHighlight: 160, 160, 160
+ControlLight: 226, 226, 226
+ControlLightLight: 242, 242, 242
+ControlDarkDark: 197, 197, 197
+ControlDark: 210, 210, 210
+GrayText: 144, 144, 144
+Highlight: 25, 140, 254
+HighlightText: 255, 255, 255
+MenuBackground: 197, 197, 197
+MenuText: 35, 35, 35
+WindowBackground: 210, 210, 210
+WindowText: 35, 35, 35
+Background: 160, 160, 160
+IconOutline: null
+IconBase: null
+IconGray: null
+
+
+VEGAS Pro 22 Dark:
+ButtonFace: 34, 34, 34
+ButtonText: 220, 220, 220
+ButtonShadow: 42, 42, 42
+ButtonHighlight: 85, 85, 85
+ControlLight: 51, 51, 51
+ControlLightLight: 68, 68, 68
+ControlDarkDark: 17, 17, 17
+ControlDark: 34, 34, 34
+GrayText: 102, 102, 102
+Highlight: 25, 140, 254
+HighlightText: 220, 220, 220
+MenuBackground: 17, 17, 17
+MenuText: 220, 220, 220
+WindowBackground: 34, 34, 34
+WindowText: 220, 220, 220
+Background: 85, 85, 85
+IconOutline: 34, 34, 34
+IconBase: 204, 204, 204
+IconGray: 102, 102, 102
+
+
+VEGAS Pro 22 Medium:
+ButtonFace: 68, 68, 68
+ButtonText: 255, 255, 255
+ButtonShadow: 76, 76, 76
+ButtonHighlight: 119, 119, 119
+ControlLight: 85, 85, 85
+ControlLightLight: 102, 102, 102
+ControlDarkDark: 51, 51, 51
+ControlDark: 68, 68, 68
+GrayText: 153, 153, 153
+Highlight: 25, 140, 254
+HighlightText: 220, 220, 220
+MenuBackground: 51, 51, 51
+MenuText: 255, 255, 255
+WindowBackground: 68, 68, 68
+WindowText: 255, 255, 255
+Background: 119, 119, 119
+IconOutline: 34, 34, 34
+IconBase: 204, 204, 204
+IconGray: 102, 102, 102
+
+
+VEGAS Pro 22 Light:
+ButtonFace: 187, 187, 187
+ButtonText: 17, 17, 17
+ButtonShadow: 96, 96, 96
+ButtonHighlight: 119, 119, 119
+ControlLight: 153, 153, 153
+ControlLightLight: 136, 136, 136
+ControlDarkDark: 170, 170, 170
+ControlDark: 187, 187, 187
+GrayText: 102, 102, 102
+Highlight: 25, 140, 254
+HighlightText: 220, 220, 220
+MenuBackground: 170, 170, 170
+MenuText: 17, 17, 17
+WindowBackground: 187, 187, 187
+WindowText: 17, 17, 17
+Background: 119, 119, 119
+IconOutline: 238, 238, 238
+IconBase: 51, 51, 51
+IconGray: 170, 170, 170
+
+
+VEGAS Pro 22 White:
+ButtonFace: 238, 238, 238
+ButtonText: 51, 51, 51
+ButtonShadow: 160, 160, 160
+ButtonHighlight: 170, 170, 170
+ControlLight: 204, 204, 204
+ControlLightLight: 187, 187, 187
+ControlDarkDark: 221, 221, 221
+ControlDark: 238, 238, 238
+GrayText: 153, 153, 153
+Highlight: 25, 140, 254
+HighlightText: 220, 220, 220
+MenuBackground: 221, 221, 221
+MenuText: 51, 51, 51
+WindowBackground: 238, 238, 238
+WindowText: 51, 51, 51
+Background: 170, 170, 170
+IconOutline: 238, 238, 238
+IconBase: 51, 51, 51
+IconGray: 170, 170, 170
+
+
+VEGAS Pro 23 Dark:
+ButtonFace: 40, 40, 40
+ButtonText: 240, 240, 240
+ButtonShadow: 40, 40, 40
+ButtonHighlight: 80, 80, 80
+ControlLight: 60, 60, 60
+ControlLightLight: 80, 80, 80
+ControlDarkDark: 20, 20, 20
+ControlDark: 40, 40, 40
+GrayText: 120, 120, 120
+Highlight: 60, 140, 220
+HighlightText: 240, 240, 240
+MenuBackground: 20, 20, 20
+MenuText: 240, 240, 240
+WindowBackground: 40, 40, 40
+WindowText: 240, 240, 240
+Background: 80, 80, 80
+IconOutline: 20, 20, 20
+IconBase: 240, 240, 240
+IconGray: 120, 120, 120
+
+
+VEGAS Pro 23 Medium:
+ButtonFace: 80, 80, 80
+ButtonText: 240, 240, 240
+ButtonShadow: 80, 80, 80
+ButtonHighlight: 120, 120, 120
+ControlLight: 100, 100, 100
+ControlLightLight: 120, 120, 120
+ControlDarkDark: 60, 60, 60
+ControlDark: 80, 80, 80
+GrayText: 160, 160, 160
+Highlight: 60, 140, 220
+HighlightText: 240, 240, 240
+MenuBackground: 60, 60, 60
+MenuText: 240, 240, 240
+WindowBackground: 80, 80, 80
+WindowText: 240, 240, 240
+Background: 120, 120, 120
+IconOutline: 20, 20, 20
+IconBase: 240, 240, 240
+IconGray: 120, 120, 120
+
+
+VEGAS Pro 23 Light:
+ButtonFace: 160, 160, 160
+ButtonText: 20, 20, 20
+ButtonShadow: 160, 160, 160
+ButtonHighlight: 200, 200, 200
+ControlLight: 180, 180, 180
+ControlLightLight: 200, 200, 200
+ControlDarkDark: 140, 140, 140
+ControlDark: 160, 160, 160
+GrayText: 60, 60, 60
+Highlight: 60, 140, 220
+HighlightText: 240, 240, 240
+MenuBackground: 140, 140, 140
+MenuText: 20, 20, 20
+WindowBackground: 160, 160, 160
+WindowText: 20, 20, 20
+Background: 200, 200, 200
+IconOutline: 20, 20, 20
+IconBase: 240, 240, 240
+IconGray: 120, 120, 120
+
+
+VEGAS Pro 23 White:
+ButtonFace: 200, 200, 200
+ButtonText: 20, 20, 20
+ButtonShadow: 200, 200, 200
+ButtonHighlight: 240, 240, 240
+ControlLight: 220, 220, 220
+ControlLightLight: 240, 240, 240
+ControlDarkDark: 180, 180, 180
+ControlDark: 200, 200, 200
+GrayText: 100, 100, 100
+Highlight: 60, 140, 220
+HighlightText: 240, 240, 240
+MenuBackground: 180, 180, 180
+MenuText: 20, 20, 20
+WindowBackground: 200, 200, 200
+WindowText: 20, 20, 20
+Background: 240, 240, 240
+IconOutline: 20, 20, 20
+IconBase: 240, 240, 240
+IconGray: 120, 120, 120
+

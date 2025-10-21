@@ -427,13 +427,22 @@ export default {
 			},
 			preset: {
 				add: "Add to custom presets",
+				previewIdealityReality: {
+					_: "Preview ideality/reality",
+					template: "Preview {{ideality}}/{{reality}}", // Preview ideality/reality
+					ideality: "ideality",
+					reality: "reality",
+				},
 				normal: "Normal",
 				enter: "Enter",
 				enterStaff: "Enter (Staff Visualizer)",
+				exit: "Exit",
 				fadeOut: "Fade Out",
 				flashlight: "Flashlight",
-				horizontalMovement: "Horizontal Movement",
-				verticalMovement: "Vertical Movement",
+				floatLeft: "Float Left",
+				floatRight: "Float Right",
+				floatUp: "Float Up",
+				floatDown: "Float Down",
 				ccwRotate: "Counterclockwise Rotation",
 				cwRotate: "Clockwise Rotation",
 				colorful: "Colorful",
@@ -443,7 +452,6 @@ export default {
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "Copy from another parameter scheme here",
-				copyAttributesFromSelectedClip: "Copy attributes from selected clip",
 			},
 		},
 		track: {
@@ -1085,7 +1093,8 @@ export default {
 					_: "Maps the properties of notes to the specified item",
 				},
 				preset: {
-					_: "Uses or saves predefined parameter schemes for your convenience",
+					_: "Use or save predefined parameter schemes for your convenience",
+					previewIdealityReality: "Some presets marked with an asterisk have a better flavor under specific visual effects and will preview ideally after being enabled. However, the final presentation is subject to the reality preview, as this only changes the preview.",
 				},
 			},
 			track: {

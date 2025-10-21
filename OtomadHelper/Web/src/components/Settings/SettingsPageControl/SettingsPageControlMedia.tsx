@@ -44,9 +44,9 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 		object-fit: cover;
 		opacity: 0.3;
 		filter: if(
-			${ifColorScheme.reduceTransparency} and ${ifColorScheme.contrast}: url("#posterize");
+			${ifColorScheme.reduceTransparency} and ${ifColorScheme.contrast}: url("#posterize-grayed");
 			${ifColorScheme.reduceTransparency}: none;
-			${ifColorScheme.contrast}: blur(30px) url("#posterize");
+			${ifColorScheme.contrast}: blur(30px) url("#posterize-grayed");
 			else: blur(30px);
 		);
 		pointer-events: none;
@@ -103,7 +103,7 @@ export default function SettingsPageControlMedia({ stream, fileName, enabled, th
 
 function SvgFilters() {
 	return (
-		<DefineSvgFilter id="posterize">
+		<DefineSvgFilter id="posterize-grayed">
 			<feComponentTransfer>
 				<feFuncR type="discrete" tableValues="0.25 0.4 0.5 0.75 1" />
 				<feFuncG type="discrete" tableValues="0.25 0.4 0.5 0.75 1" />

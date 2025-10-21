@@ -1,16 +1,15 @@
-import type { LocaleWithDefaultValue } from "locales/types";
+import type { I18nArgsFunction } from "locales/types";
 
 const tagStart = String.fromCodePoint(0xe0000), tagCancel = String.fromCodePoint(0xe007f);
 
 export default function TransInterpolation<TInterpolations>({ i18nKey, children: _children, ..._interpolations }: WithOtherProperties<{
-	i18nKey(trans: LocaleWithDefaultValue): string;
+	i18nKey: I18nArgsFunction | string;
 	children?: never;
 }, ReactNode, TInterpolations>) {
 	const interpolations = _interpolations as Record<string, ReactNode>;
 	const keys = Object.keys(interpolations);
 	const internalInterpolations = keys.mapObject((key, index) => [key, encodeKeyToTag(index)] as const);
-	const withInterpolations = t(internalInterpolations);
-	const translatedString = i18nKey(withInterpolations).toString();
+	const translatedString = (i18nKey as I18nArgsFunction)(internalInterpolations).toString();
 	const lines = translatedString.split("\n");
 	const split = lines
 		.map((line, lineIndex) => line

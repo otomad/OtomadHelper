@@ -319,7 +319,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 	/** Is the orientation of the icon changed based on the writing direction? */
 	dirBasedIcon?: DirBasedIcon;
 	/** Show badge on the item. */
-	badge?: BadgeValue;
+	badge?: BadgeValue | BadgeArgs;
 	/** Custom tooltip. */
 	tooltip?: TooltipProps | string;
 	/** @private View mode: list, tile, grid. */
@@ -336,7 +336,10 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 		setSelected = selected[1] as never;
 		selected = selected[0] ? "checked" : "unchecked";
 	}
-	if (typeof tooltip === "string" || isI18nItem(tooltip)) tooltip = { title: String(tooltip), placement: "block" };
+	if (typeof tooltip === "string" || isI18nItem(tooltip))
+		tooltip = { title: String(tooltip), placement: "block" };
+	if (badge !== undefined && !Array.isArray(badge))
+		badge = [badge, "neutual", false];
 
 	const ariaId = useId();
 	const textPart = (children || details) && (
@@ -389,7 +392,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 										{imageOverlay}
 										{checkbox}
 									</div>
-									{badge !== undefined && <Badge status="neutual" transitionOnAppear={false}>{badge}</Badge>}
+									{badge && !badge[2] && <Badge status={badge[1]} transitionOnAppear={false}>{badge[0]}</Badge>}
 									<div className="selection" />
 								</>
 							) : (

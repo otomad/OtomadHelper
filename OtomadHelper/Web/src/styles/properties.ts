@@ -97,3 +97,13 @@ CSS.registerProperty({
 	inherits: false,
 	initialValue: "calc(infinity * 1px)",
 });
+
+/**
+ * The extracted brightness axis value when applying threshold or posterize filter.
+ */
+CSS.registerProperty({
+	name: "--threshold-change-brightness",
+	syntax: "<number> | <percentage>",
+	inherits: true,
+	initialValue: "1",
+});

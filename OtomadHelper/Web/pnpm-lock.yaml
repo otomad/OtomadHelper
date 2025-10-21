@@ -86,8 +86,8 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3
       enum-plus:
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^3.1.0
+        version: 3.1.0
       fullwidth-quotes:
         specifier: ^1.0.1
         version: 1.0.1
@@ -2578,8 +2578,8 @@ packages:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
     engines: {node: '>=0.12'}
 
-  enum-plus@3.0.1:
-    resolution: {integrity: sha512-x6VjtKiMztmDXNQvy84PxZ0JViAanzBq7LigXlnLiyhfjwowJytdn/7BLuGj3fEaNEbJVj1HVZ6aZklPWSJyUg==}
+  enum-plus@3.1.0:
+    resolution: {integrity: sha512-FNmhqgUPdtWzhO2EJtINDC5khZYyl6wFxBaRpZNK9PSKgyHT+qDt8woLijC2EM3jtQtJYExnbrc5MdVB5Y9ATA==}
     engines: {node: '>=7.10.1'}
 
   env-paths@2.2.1:
@@ -8054,7 +8054,7 @@ snapshots:
 
   entities@4.5.0: {}
 
-  enum-plus@3.0.1: {}
+  enum-plus@3.1.0: {}
 
   env-paths@2.2.1: {}
 

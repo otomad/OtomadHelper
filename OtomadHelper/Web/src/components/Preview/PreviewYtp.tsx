@@ -23,15 +23,15 @@ const StyledPreviewYtp = styled.div<{
 		return {
 			changeHue: css`
 				img {
-					filter: hue-rotate(180deg);
+					filter: hue-rotate(0.5turn);
 				}
 			`,
 			rotateHue: css`
 				img {
-					filter: hue-rotate(0deg);
+					filter: hue-rotate(0turn);
 					animation: ${keyframes`
-						from { filter: hue-rotate(0deg); }
-						to { filter: hue-rotate(360deg); }
+						from { filter: hue-rotate(0turn); }
+						to { filter: hue-rotate(1turn); }
 					`} ${getDuration(4)} linear infinite;
 				}
 			`,

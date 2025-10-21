@@ -199,6 +199,7 @@ namespace Config {
 			arpeggio: false,
 			arpeggioNegative: true,
 			currentPreset: "enter",
+			presetPreviewIdeality: true,
 			activeParameterScheme: [
 				{
 					id: "ZW50ZXI=",
