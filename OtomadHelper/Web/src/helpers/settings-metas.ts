@@ -119,6 +119,7 @@ type Nesting<TObject> = {
 const metas: SettingMeta[] = [];
 const settingsMetasOutput: AnyObject = {};
 function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = false) {
+	if (!item) return undefined!;
 	const { items: itemsInput, ...meta } = item;
 	const items: AnyObject = {};
 	if (!lodash.isEmpty(itemsInput))

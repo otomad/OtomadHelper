@@ -41,7 +41,7 @@ export /* @internal */ const tuningClassicModes = forMap(19, i => "a" + String(i
 /** @deprecated */
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
-const buildInPresets = ["normal", "fadeOut"];
+const builtInPresets = ["normal", "fadeOut"];
 
 // #region Styles
 const PrelistenActions = styled(StackPanel)`
@@ -353,15 +353,16 @@ export default function Audio() {
 					<Setting meta={meta.mapping.progress} />
 
 					<Subheader meta={meta.parameters} />
-					<Setting
-						meta={meta.preset}
-						items={buildInPresets}
-						value={currentPreset}
-						view="tile"
-						idField
-						nameField={t.stream.preset}
-					>
-						<Expander.ChildWrapper $tilePadding="tile view">
+					<Setting meta={meta.preset} checkInfo={t.stream.preset.builtInPresets[currentPreset[0]]}>
+						<Setting meta={meta.preset.builtInPresets} asSubtitle noDivider="after" />
+						<ItemsView view="tile" current={currentPreset}>
+							{builtInPresets.map(name => <ItemsView.Item id={name} key={name}>{t.stream.preset.builtInPresets[name]}</ItemsView.Item>)}
+						</ItemsView>
+						<Setting meta={meta.preset.customPresets} asSubtitle noDivider="after" />
+						<div>
+							<EmptyMessage.Mini>{t.descriptions.stream.preset.empty}</EmptyMessage.Mini>
+						</div>
+						<Expander.ChildWrapper $tilePadding="standard button to item">
 							<Button icon="add">{t.stream.preset.add}</Button>
 						</Expander.ChildWrapper>
 					</Setting>

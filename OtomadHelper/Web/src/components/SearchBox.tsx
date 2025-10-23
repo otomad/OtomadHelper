@@ -34,16 +34,6 @@ const StyledDataList = styled.div`
 		scale: 0.98;
 		opacity: 0;
 	}
-
-	&:empty::after {
-		${styles.effects.text.body};
-		content: attr(data-empty);
-		display: block;
-		margin-block: 0.5lh;
-		color: ${c("fill-color-text-tertiary")};
-		font-style: italic;
-		text-align: center;
-	}
 `;
 
 declare global {
@@ -136,8 +126,9 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 					placeholder={placeholder}
 					aria-label={t.aria.searchBox}
 					customFlyout={value?.trim() && (
-						<StyledDataList ref={datalistEl} tabIndex={-1} data-empty={t.noMatchingResults} onMouseDown={e => e.preventDefault()}>
+						<StyledDataList ref={datalistEl} tabIndex={-1} onMouseDown={e => e.preventDefault()}>
 							{searchResults}
+							<EmptyMessage.Mini>{t.noMatchingResults}</EmptyMessage.Mini>
 						</StyledDataList>
 					)}
 					onKeyDown={handleKeyDown}

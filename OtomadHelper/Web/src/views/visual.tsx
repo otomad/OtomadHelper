@@ -43,8 +43,8 @@ export /* @internal */ const glissandoEffects = [
 /** @deprecated */
 const tracks = [t.source.preferredTrack.newTrack, "1: Lead"];
 
-const buildInPresets = ["normal", "enter", "enterStaff", "exit", "fadeOut", "flashlight", "floatLeft", "floatRight", "floatUp", "floatDown", "ccwRotate", "cwRotate", "colorful", "oversaturation", "highContrast", "lumaFade"];
-const asteriskBuildInPresets = ["floatLeft", "floatRight", "floatUp", "floatDown", "ccwRotate", "cwRotate"];
+const builtInPresets = ["normal", "enter", "enterStaff", "exit", "fadeOut", "flashlight", "floatLeft", "floatRight", "floatUp", "floatDown", "ccwRotate", "cwRotate", "colorful", "oversaturation", "highContrast", "lumaFade"];
+const asteriskBuiltInPresets = ["floatLeft", "floatRight", "floatUp", "floatDown", "ccwRotate", "cwRotate"];
 
 export default function Visual() {
 	const {
@@ -206,28 +206,26 @@ export default function Visual() {
 					<Setting meta={meta.mapping.progress} />
 
 					<Subheader meta={meta.parameters} />
-					<Setting
-						meta={meta.preset}
-						items={buildInPresets}
-						value={currentPreset}
-						view="grid"
-						idField
-						nameField={t.stream.preset}
-						imageField={name => <PreviewParameterPreset key={name} thumbnail={exampleThumbnail} name={name} previewIdeality={presetPreviewIdeality[0]} />}
-						badgeField={name => asteriskBuildInPresets.includes(name) && [undefined, "asterisk"]}
-					>
-						<Setting
-							meta={meta.preset.previewIdealityReality}
-							on={presetPreviewIdeality}
-							title={(
-								<TransInterpolation
-									i18nKey={t.stream.preset.previewIdealityReality.template}
-									ideality={<OptionalBold bold={presetPreviewIdeality[0]}>{t.stream.preset.previewIdealityReality.ideality}</OptionalBold>}
-									reality={<OptionalBold bold={!presetPreviewIdeality[0]}>{t.stream.preset.previewIdealityReality.reality}</OptionalBold>}
-								/>
-							)}
-						/>
-						<Expander.ChildWrapper $tilePadding="tile view">
+					<Setting meta={meta.preset} checkInfo={t.stream.preset.builtInPresets[currentPreset[0]]}>
+						<Setting meta={meta.preset.builtInPresets} asSubtitle noDivider="after" />
+						<ItemsView view="grid" current={currentPreset}>
+							{builtInPresets.map(name => (
+								<ItemsView.Item
+									id={name}
+									key={name}
+									image={<PreviewParameterPreset key={name} thumbnail={exampleThumbnail} name={name} previewIdeality={presetPreviewIdeality[0]} />}
+									badge={asteriskBuiltInPresets.includes(name) && [undefined, "asterisk"]}
+								>
+									{t.stream.preset.builtInPresets[name]}
+								</ItemsView.Item>
+							))}
+						</ItemsView>
+						<Setting meta={meta.preset.previewIdeality} on={presetPreviewIdeality} />
+						<Setting meta={meta.preset.customPresets} asSubtitle noDivider="after" />
+						<div>
+							<EmptyMessage.Mini>{t.descriptions.stream.preset.empty}</EmptyMessage.Mini>
+						</div>
+						<Expander.ChildWrapper $tilePadding="standard button to item">
 							<Button icon="add">{t.stream.preset.add}</Button>
 						</Expander.ChildWrapper>
 					</Setting>

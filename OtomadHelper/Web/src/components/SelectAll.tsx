@@ -13,6 +13,10 @@ const StyledSelectAll = styled.div`
 			}
 		}
 	}
+
+	.expander-child-items & .checkbox-label {
+		padding-inline: 52px 40px;
+	}
 `;
 
 export default function SelectAll<T>({ value, all, icon, title, meta, details }: FCP<{

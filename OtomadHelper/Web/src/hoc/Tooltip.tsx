@@ -190,7 +190,7 @@ export default function Tooltip({ title: _title, placement, offset, timeout = 50
 
 	useEventListener(dom, "mouseenter", handleHover, undefined, [childEl, title, placement, offset, timeout, disabled, children]);
 	useEventListener(dom, "mouseleave", handleUnhover, undefined, [childEl]);
-	useEventListener(dom, "click", handleUnhover, undefined, [childEl]);
+	useEventListener(dom, "mousedown", handleUnhover, undefined, [childEl]);
 	useEventListener(window, "keydown", handleUnhover, { capture: true }, [childEl]);
 
 	return (

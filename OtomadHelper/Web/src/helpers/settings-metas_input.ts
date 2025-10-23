@@ -150,7 +150,7 @@ export const settingsMetasInput = {
 			},
 		},
 		parameters: subheader(t.subheaders.parameters),
-		preset: { icon: "preset", title: t.preset },
+		preset: preset("audio"),
 	},
 	visual: {
 		preferredTrack: { icon: "preferred_track", title: t.source.preferredTrack },
@@ -218,13 +218,7 @@ export const settingsMetasInput = {
 			},
 		},
 		parameters: subheader(t.subheaders.parameters),
-		preset: {
-			icon: "preset",
-			title: t.preset,
-			items: {
-				previewIdealityReality: { icon: "eye_lines_asterisk" },
-			},
-		},
+		preset: preset("visual"),
 	},
 	visual_prve: {
 		control: { icon: "prve_control_general" },
@@ -293,5 +287,16 @@ function subheader<const IMeta extends ISettingMeta>(meta: string | IMeta = {} a
 		...typeof meta === "string" || meta instanceof PathObject ? {
 			title: meta as string,
 		} : meta,
+	} as const satisfies ISettingMeta;
+}
+function preset(stream: StreamKind) {
+	return {
+		icon: "preset",
+		title: t.preset,
+		items: {
+			builtInPresets: { title: t.stream.preset.builtIn },
+			customPresets: { title: t.stream.preset.custom },
+			previewIdeality: stream === "visual" ? { icon: "eye_lines_asterisk" } : undefined!,
+		},
 	} as const satisfies ISettingMeta;
 }

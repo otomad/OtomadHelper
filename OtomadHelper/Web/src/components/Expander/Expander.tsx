@@ -115,7 +115,7 @@ const ExpanderChildWrapper = styled.div<{
 	/** Remove the top split line and top padding from the expand child. */
 	$noDivider?: boolean;
 	/** Override padding inline with presets. */
-	$tilePadding?: "tile view" | "button to item";
+	$tilePadding?: "tile view" | "subtle button to item" | "standard button to item";
 	/** A style that suitable for when expander contains only a single component and even without title, icon and details? */
 	$single?: boolean;
 }>`
@@ -136,9 +136,11 @@ const ExpanderChildWrapper = styled.div<{
 	`)}
 
 	${({ $tilePadding }) => $tilePadding === "tile view" ? css`
-		padding-inline: 39px;
-	` : $tilePadding === "button to item" ? css`
+		padding-inline: 32px;
+	` : $tilePadding === "subtle button to item" ? css`
 		padding-inline: 40px;
+	` : $tilePadding === "standard button to item" ? css`
+		padding-inline: 51px;
 	` : undefined}
 `;
 

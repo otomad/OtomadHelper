@@ -137,7 +137,7 @@ const StyledExpanderItem = styled.div<{
 	/** As sub title style? */
 	$asSubtitle?: boolean;
 	/** Remove the top split line and top padding from the expand child. */
-	$noDivider?: boolean;
+	$noDivider?: "before" | "after";
 	/** Do not wrap the action children to the second line if the text is too long? */
 	$nowrap?: boolean;
 }>`
@@ -169,17 +169,26 @@ const StyledExpanderItem = styled.div<{
 	`)}
 
 	${ifProp("$asSubtitle", css`
-		padding-block-end: 0;
+		min-block-size: unset;
+		padding-block: ${expanderItemPadding[0] * 1.5}px ${expanderItemPadding[0] * 0.5}px;
+
+		.expander-child-items .select-all > &:has(+ .checkbox-label) {
+			padding-block: ${expanderItemPadding[0] * 2}px ${expanderItemPadding[0] * 0.5}px;
+		}
 
 		.text .title {
 			${styles.effects.text.bodyStrong};
 		}
 	`)}
 
-	${ifProp("$noDivider", css`
-		padding-block: 0;
-		border-block-start-width: 0 !important;
-	`)}
+	${({ $noDivider }) =>
+		$noDivider === "before" ? css`
+			border-block-start-width: 0 !important;
+		` : $noDivider === "after" ? css`
+			& + * {
+				border-block-start-width: 0 !important;
+			}
+		` : undefined}
 `;
 
 export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, nonFocusable, asSubtitle, noDivider, ariaHiddenForText, anchor, children, disabled = false, wrapActionsWhenNarrow, ...htmlAttrs }: FCP<{
@@ -196,7 +205,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	/** As sub title style? */
 	asSubtitle?: boolean;
 	/** Remove the top split line and top padding from the expand child. */
-	noDivider?: boolean;
+	noDivider?: "before" | "after" | true;
 	/** Remove text from aria tree? */
 	ariaHiddenForText?: boolean;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
@@ -211,6 +220,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	wrapActionsWhenNarrow?: boolean;
 }, "div">) {
 	disabled = useContext(InteractionStateContext).disabled || disabled;
+	if (noDivider === true) noDivider = "before";
 	return (
 		<StyledExpanderItem
 			$clickable={clickable}

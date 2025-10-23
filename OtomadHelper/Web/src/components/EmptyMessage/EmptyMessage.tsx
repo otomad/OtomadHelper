@@ -1,3 +1,4 @@
+import EmptyMessageMini from "./EmptyMessageMini";
 import EmptyMessageTypical from "./EmptyMessageTypical";
 import EmptyMessageYtpDisabled from "./EmptyMessageYtpDisabled";
 
@@ -95,3 +96,4 @@ export default function EmptyMessage({ icon, title, details, iconOff = false, sp
 
 EmptyMessage.Typical = EmptyMessageTypical;
 EmptyMessage.YtpDisabled = EmptyMessageYtpDisabled;
+EmptyMessage.Mini = EmptyMessageMini;

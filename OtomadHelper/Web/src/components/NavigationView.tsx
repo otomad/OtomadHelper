@@ -58,15 +58,21 @@ const StyledTopLeftButtons = styled.div`
 		inset-block-start: ${navButtonSize.height}px;
 		inset-inline-start: 0;
 	}
+
+	&.disable-tooltip * {
+		anchor-name: none !important;
+	}
 `;
 
-function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNavButton }: FCP<{
+function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, disableTooltip = false, onBack, onNavButton }: FCP<{
 	/** Is it a shadow? */
 	shadow?: boolean;
 	/** Navigation panel display mode. */
 	paneDisplayMode: PaneDisplayMode;
 	/** Can go back? */
 	canBack?: boolean;
+	/** Temporarily disable tooltips of buttons because the pane display mode of navigation view is changing. */
+	disableTooltip?: boolean;
 	/** Back button click event. */
 	onBack?(): void;
 	/** Global navigation button click event. */
@@ -82,7 +88,7 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, onBack, onNav
 	}, undefined, null);
 
 	return (
-		<StyledTopLeftButtons className={{ shadow, vertical }}>
+		<StyledTopLeftButtons className={{ shadow, vertical, disableTooltip }}>
 			{!shadow && (
 				<>
 					<Tooltip placement={tooltipPlacement} title={<TooltipTitleWithShortcut title={t.back} shortcut={["Alt", "←"]} />}>
@@ -710,6 +716,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 	const pageContentEl = useDomRef<"div">();
+	const paneDisplayModeChanging = useChanging(paneDisplayMode);
 
 	function scrollToTopOrPrevious() {
 		onEnter?.();
@@ -765,7 +772,13 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 
 	return (
 		<StyledNavigationView $transitionName={transitionName} {...htmlAttrs}>
-			<TopLeftButtons paneDisplayMode={paneDisplayMode} onNavButton={onNavButtonClick} onBack={onBack} canBack={canBack} />
+			<TopLeftButtons
+				paneDisplayMode={paneDisplayMode}
+				onNavButton={onNavButtonClick}
+				onBack={onBack}
+				canBack={canBack}
+				disableTooltip={paneDisplayModeChanging}
+			/>
 			{forMap(2, i => {
 				const isFlyout = !!i;
 				return (

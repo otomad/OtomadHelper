@@ -21,7 +21,7 @@ export default function ExpanderStreamPrerender({ stream }: {
 			detailsField={t({ context: stream }).descriptions.stream.prerender}
 		>
 			{isAudio && <Setting meta={metas.audio.prerender.acidTag} on={prerenderAcidTag} lock={prerenderAudio[0] === "media" ? null : false} />}
-			<Expander.ChildWrapper $tilePadding={isAudio ? "button to item" : "tile view"}>
+			<Expander.ChildWrapper $tilePadding={isAudio ? "subtle button to item" : "tile view"}>
 				<Button hyperlink onClick={() => changePage(["settings"])}>{t.stream.prerender.specifyClipsFolder}</Button>
 			</Expander.ChildWrapper>
 		</Setting>

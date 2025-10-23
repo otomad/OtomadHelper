@@ -228,15 +228,17 @@ export /* @internal */ const StyledButton = styled.button<{
 	}
 `;
 
-export default function Button({ children, icon, animatedIcon, subtle, hyperlink, accent, dirBasedIcon, repeat, extruded, minWidthUnbounded, ariaHiddenForChildren, href, blank = true, meta, className, disabled, onRelease, onClick, ref, ...htmlAttrs }: FCP<{
+export default function Button({ children, icon, animatedIcon, subtle = false, hyperlink, accent, dirBasedIcon, repeat, extruded, minWidthUnbounded, ariaHiddenForChildren, href, blank = true, meta, className, disabled, onRelease, onClick, ref, ...htmlAttrs }: FCP<{
 	/** Button icon. */
 	icon?: DeclaredIcons;
 	/** Button animated icon. */
 	animatedIcon?: DeclaredLotties;
 	/**
-	 * Use background-less button?
+	 * Use the subtle background-less button?
 	 * - `true`: Besides background-less, when the button has only an icon and no text, the icon size will be increased additionally.
 	 * - `"small-icon"`: Disable the additional effects of `true`.
+	 * - `false`: Standard button.
+	 * @default false
 	 */
 	subtle?: boolean | "small-icon";
 	/** Use hyperlink button? */

@@ -74,3 +74,40 @@ export function useInterval(callback: () => void, delay: number) {
 		}
 	}, [delay]);
 }
+
+/**
+ * Hook that returns a boolean flag which is true briefly after the provided `state` value changes.
+ *
+ * The flag is set to `true` immediately when `state` changes and will automatically switch back to `false` after the
+ * specified `duration` (in milliseconds). A pending timeout is cleared whenever `state` changes again or when the
+ * component using the hook unmounts, ensuring only the latest timeout controls the flag.
+ *
+ * Notes:
+ * - The hook treats changes to `state` according to React's dependency array semantics (referential equality). If
+ * `state` is an object that is mutated in-place without changing its reference, the hook will not detect the change.
+ * - The default `duration` is 250 ms.
+ *
+ * @param state - The value to watch for changes. Any change (per React's dependency comparison) will trigger the
+ * "changing" flag.
+ * @param duration - Optional duration in milliseconds to keep the "changing" flag true after a change.
+ * Defaults to 250 ms.
+ * @returns A boolean which is `true` immediately after `state` changes and becomes `false` after the specified
+ * `duration`.
+ *
+ * @example
+ * // Show an animation indicator for 300ms whenever `value` changes.
+ * const isChanging = useChanging(value, 300);
+ */
+export function useChanging(state: unknown, duration: number = 250) {
+	const [changing, setChanging] = useState(false);
+	const timeoutId = useRef<Timeout>(undefined);
+
+	useUpdateEffect(() => {
+		clearTimeout(timeoutId.current);
+		setChanging(true);
+		timeoutId.current = setTimeout(() => setChanging(false), duration);
+		return () => clearTimeout(timeoutId.current);
+	}, [state]);
+
+	return changing;
+}

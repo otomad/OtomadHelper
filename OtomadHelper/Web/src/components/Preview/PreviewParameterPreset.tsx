@@ -8,6 +8,7 @@ function floatIn(from: "up" | "down" | "left" | "right", previewIdeality: boolea
 		const value = translate;
 		return placement === "left" ? `${value}%` : placement === "right" ? `${-value}%` : placement === "top" ? `0 ${value}%` : `0 ${-value}%`;
 	};
+	const ease = eases.easeInOutSmooth;
 	return css`
 		img {
 			translate: ${getTranslate(fromOrigin)};
@@ -16,12 +17,12 @@ function floatIn(from: "up" | "down" | "left" | "right", previewIdeality: boolea
 				from { translate: ${getTranslate(fromOrigin)}; }
 				to { translate: ${getTranslate(toOrigin)}; }
 			`};
-			animation-timing-function: ${eases.easeInOutSmooth};
 			${!previewIdeality ? css`
 				animation: ${keyframes`
 					from { translate: ${getTranslate(fromOrigin)}; }
 					to { translate: ${getTranslate(toOrigin)}; }
 				`};
+				animation-timing-function: ${ease};
 			` : css`
 				--frames: 2;
 				${from.in("left", "right") ? css`
@@ -31,20 +32,22 @@ function floatIn(from: "up" | "down" | "left" | "right", previewIdeality: boolea
 							50% { translate: ${getTranslate(toOrigin)}; }
 						`},
 						${keyframes`
-							0%, 50% { scale: ${ZOOM}; }
-							50.001%, 100% { scale: ${-ZOOM} ${ZOOM}; }
+							0% { scale: ${ZOOM}; }
+							50% { scale: ${-ZOOM} ${ZOOM}; }
 						`};
 				` : css`
 					animation:
 						${keyframes`
-							0%, 50.001% { translate: ${getTranslate(fromOrigin)}; }
-							50%, 100% { translate: ${getTranslate(toOrigin)}; }
+							from { translate: ${getTranslate(fromOrigin)}; }
+							to { translate: ${getTranslate(toOrigin)}; }
 						`},
 						${keyframes`
-							0%, 50% { scale: ${ZOOM}; }
-							50.001%, 100% { scale: ${-ZOOM} ${ZOOM}; }
+							0% { scale: ${ZOOM}; }
+							50% { scale: ${-ZOOM} ${ZOOM}; }
 						`};
+					animation-duration: ${MILLISECONDS_PER_FRAME}ms, ${2 * MILLISECONDS_PER_FRAME}ms !important;
 				`}
+				animation-timing-function: ${ease}, step-end;
 			`}
 		}
 	`;
@@ -94,7 +97,6 @@ const StyledPreviewParameterPreset = styled.div<{
 		position: absolute;
 		object-fit: cover;
 		animation-duration: calc(var(--frames) * ${MILLISECONDS_PER_FRAME}ms);
-		animation-iteration-count: infinite;
 	}
 
 	@layer base {
@@ -103,12 +105,14 @@ const StyledPreviewParameterPreset = styled.div<{
 		img {
 			${styles.mixins.square("100%")};
 			animation-timing-function: ${eases.easeOutMax};
+			animation-iteration-count: infinite !important;
+		}
+
+		.items-view-item:not(:hover, :focus-visible) & img {
+			animation: none !important;
 		}
 	}
 
-	.items-view-item:not(:hover, :focus-visible) & img {
-		animation: none;
-	}
 
 	@layer components {
 		${({ $name, $previewIdeality = false }) => {

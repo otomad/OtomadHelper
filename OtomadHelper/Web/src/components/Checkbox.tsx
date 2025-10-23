@@ -40,8 +40,9 @@ const StyledCheckboxLabel = styled.label<{
 		${styles.mixins.square("18px")};
 		${styles.mixins.gridCenter()};
 		background-color: ${c("fill-color-control-alt-secondary")};
+		background-clip: padding-box;
+		border: 1px solid ${c("stroke-color-control-strong-stroke-default")};
 		border-radius: 3px;
-		outline: 1px solid ${c("stroke-color-control-strong-stroke-default")};
 
 		.icon {
 			color: ${c("fill-color-text-on-accent-primary")};
@@ -66,11 +67,11 @@ const StyledCheckboxLabel = styled.label<{
 	input${checkedOrIndet} ~ .base:has(.icon),
 	.base.disable-checkmark-transition${iconExiting} {
 		background-color: ${c("accent-color")} !important;
-		outline-color: ${c("accent-color")} !important;
+		border-color: ${c("accent-color")} !important;
 	}
 
 	.base${iconExiting} {
-		transition: ${fallbackTransitions}, background-color ${eases.easeInSmooth} 250ms, outline-color ${eases.easeInSmooth} 250ms, var(--fallback-transitions-for-contrast-scheme);
+		transition: ${fallbackTransitions}, background-color ${eases.easeInSmooth} 250ms, border-color ${eases.easeInSmooth} 250ms, var(--fallback-transitions-for-contrast-scheme);
 	}
 
 	&:hover,
@@ -88,7 +89,7 @@ const StyledCheckboxLabel = styled.label<{
 	.items-view-item${pressed} & {
 		input${unchecked} ~ .base {
 			background-color: ${c("fill-color-control-alt-quarternary")};
-			outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
+			border-color: ${c("stroke-color-control-strong-stroke-disabled")};
 		}
 	}
 
@@ -105,7 +106,7 @@ const StyledCheckboxLabel = styled.label<{
 	input${unchecked}[disabled] ~ {
 		.base {
 			background-color: ${c("fill-color-control-alt-disabled")};
-			outline-color: ${c("stroke-color-control-strong-stroke-disabled")};
+			border-color: ${c("stroke-color-control-strong-stroke-disabled")};
 		}
 
 		.text {
@@ -115,7 +116,7 @@ const StyledCheckboxLabel = styled.label<{
 
 	input${checkedOrIndet}[disabled] ~ .base {
 		background-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
-		outline-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
+		border-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
 	}
 
 	.items-view-item${pressed} & {
