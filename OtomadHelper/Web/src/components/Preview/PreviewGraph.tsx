@@ -1,4 +1,4 @@
-const graphs = (name: string) => import.meta.glob<GetReactElementFromTag<"svg">>("/src/assets/svg/graphs/*.svg", { import: "default", eager: true, query: "?react" })[`/src/assets/svg/graphs/${name}.svg`];
+const graphs = (name: string) => import.meta.glob<GetReactElementFromTag<"svg">>("./*.svg", { base: "/src/assets/svg/graphs", import: "default", eager: true, query: "?react" })[`./${name}.svg`];
 
 const CONTAINER_PADDING = 8;
 

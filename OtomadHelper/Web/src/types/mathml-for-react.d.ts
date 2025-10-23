@@ -1,3 +1,5 @@
+// DELETE: Delete it after the PR is merged: https://github.com/DefinitelyTyped/DefinitelyTyped/pull/71187/files
+
 export { };
 
 declare module "react/jsx-runtime" {

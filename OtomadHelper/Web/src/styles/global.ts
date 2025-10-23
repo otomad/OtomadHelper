@@ -299,7 +299,7 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	// User requested to reduce dynamic effects
-	@container style(--color-scheme-reduce-motion: true) { // ${important(2)}:not(.force-motion, .force-motion *)
+	@container style(--color-scheme-reduce-motion: true) { // \${important(2)}:not(.force-motion, .force-motion *)
 		*,
 		::before,
 		::after {

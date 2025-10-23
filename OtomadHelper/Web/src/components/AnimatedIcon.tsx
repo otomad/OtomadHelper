@@ -170,7 +170,7 @@ interface LottieInternalActions extends Pick<LottieActions, "goToAndPlay" | "goT
 	setIsPlaying: SetState<boolean>;
 }
 
-const iconsImport = import.meta.glob<AnyObject>("/src/assets/lotties/**/*.json", { import: "default", eager: true, query: "?lottie" });
+const iconsImport = import.meta.glob<AnyObject>("./**/*.json", { base: "/src/assets/lotties", import: "default", eager: true, query: "?lottie" });
 
 export default function AnimatedIcon({
 	loop = false,
@@ -237,7 +237,7 @@ export default function AnimatedIcon({
 		if (typeof name !== "string")
 			return name;
 		try {
-			const rawIcon = iconsImport[`/src/assets/lotties/${name}.json`];
+			const rawIcon = iconsImport[`./${name}.json`];
 			return rawIcon;
 		} catch (cause) {
 			if (!showFallbackIcon)
@@ -268,6 +268,7 @@ export default function AnimatedIcon({
 
 	/**
 	 * Control status information.
+	 * @param state - Animated icon state (tuple or object form).
 	 */
 	function handleStateChange(state: AnimatedIconState) {
 		const anim = animationItem.current;

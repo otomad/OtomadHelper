@@ -87,10 +87,6 @@ const xmlSerializer = new XMLSerializer();
  * @returns Get raw SVG content from sprite icons.
  */
 function getRawSvg(name: DeclaredIcons) {
-	// Old method, it will accidentally build a large number of svg module chunks.
-	// const iconsImport = import.meta.glob<string>("/src/assets/icons/**/*.svg", { import: "default", query: "?raw" });
-	// return iconsImport[`/src/assets/icons/${name}.svg`]?.();
-
 	const symbolId = getIconSymbolId(name);
 	const symbol = document.querySelector<SVGSymbolElement>(symbolId);
 	if (!symbol) return null;

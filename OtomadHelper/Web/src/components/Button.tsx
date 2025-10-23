@@ -29,10 +29,6 @@ export /* @internal */ const StyledButton = styled.button<{
 	$dirBasedIcon?: DirBasedIcon;
 }>`
 	${styles.mixins.flexCenter()};
-	/* --border-outline-color: ${c("stroke-color-control-stroke-default")};
-	--border-highlight-color: ${c("stroke-color-control-stroke-secondary-on-default")};
-	--border-accent-color: transparent;
-	--border-highlight-y-offset: 0; */
 	position: relative;
 	display: inline-flex;
 	min-block-size: 32px;
@@ -41,10 +37,6 @@ export /* @internal */ const StyledButton = styled.button<{
 	background-clip: padding-box;
 	border: 1px solid ${c("stroke-color-control-stroke-default")};
 	border-radius: 4px;
-	/* box-shadow:
-		0 var(--border-highlight-y-offset) 0 0 var(--border-highlight-color),
-		0 0 0 1px var(--border-outline-color),
-		0 0 0 1px var(--border-accent-color) !important; */
 
 	&:hover {
 		background-color: ${c("fill-color-control-secondary")};
@@ -127,9 +119,6 @@ export /* @internal */ const StyledButton = styled.button<{
 		}
 	` : css`
 		--fill-color: ${c($fillColorName)};
-		/* --border-outline-color: ${c("stroke-color-control-stroke-on-accent-default")};
-		--border-highlight-color: ${c("stroke-color-control-stroke-on-accent-secondary")};
-		--border-accent-color: ${c($fillColorName)}; */
 		background-color: ${c($fillColorName)};
 		background-clip: border-box;
 		border-color: ${c("stroke-color-control-stroke-on-accent-default")};

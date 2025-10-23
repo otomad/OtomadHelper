@@ -73,7 +73,8 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 	 * Show chevron or switch as the expanding control.
 	 *
 	 * The difference is that, when user search something inside the sub-expander, if the type is switch, it will not
-	 * auto turn on the toggle switch; if the type is chevron, it will auto set it to expanded.
+	 * auto turn on the toggle switch, and the children are also disabled; if the type is chevron, it will auto set it
+	 * to expanded, and the children are still enabled.
 	 *
 	 * @default "chevron"
 	 */
@@ -132,7 +133,9 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 			<CssTransition in={expanded || requestExpanded} unmountOnExit transitionEndProperty={["height", "block-size"]} requestAnimationFrame>
 				<div className="expander-child">
 					<div className={["expander-child-items", { noIndention }]}>
-						{children}
+						<InteractionStateContext value={{ disabled: type === "switch" && !expanded ? true : undefined }}>
+							{children}
+						</InteractionStateContext>
 					</div>
 				</div>
 			</CssTransition>

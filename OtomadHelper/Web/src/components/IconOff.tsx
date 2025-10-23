@@ -80,12 +80,14 @@ export default function IconOff({ name: _name }: FCP<{
 	);
 }
 
-const corrections = Object.keys(import.meta.glob("/src/assets/icons/off_slash_alt/**/*", { eager: true }))
-	.map(path => path.match(new RegExp("/src/assets/icons/off_slash_alt/(.*).svg"))?.[1]).toCompacted();
+const corrections = Object.keys(import.meta.glob("./**/*", { base: "/src/assets/icons/off_slash_alt", eager: true }))
+	.map(path => path.match(new RegExp("\\./(.*).svg"))?.[1]).toCompacted();
 
 /**
  * Some icons will become strange while the off slash shown,
  * so correcting these special icons.
+ * @param name - The icon name that to be redirected.
+ * @returns Off slash alt icon name.
  */
 function redirectIcon(name: string): DeclaredIcons {
 	return (corrections.includes(name) ? `off_slash_alt/${name}` : name) as DeclaredIcons;

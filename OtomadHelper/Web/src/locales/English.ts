@@ -1235,7 +1235,8 @@ export default {
 				forceStretch: "The currently used $t(titles.prve, { 'count': {{count}} }) is in the Time Class, which will cause the stretch to be forcibly set to “$t(stream.stretch.flexingAndExtending, nowrapPerWord)” when in that effect, and not controlled by your settings",
 				forceStretch_other: "The currently used $t(titles.prve, { 'count': {{count}} }) include the Time Class effects, which will cause the stretch to be forcibly set to “$t(stream.stretch.flexingAndExtending, nowrapPerWord)” when in these effects, and not controlled by your settings",
 				stepAria: "Step {{step}} of {{frames}}",
-				customStepSequence: "Customize the step sequence",
+				customSteps: "Customize the step sequence",
+				randomSteps: "Randomized step sequence",
 			},
 			pixelScaling: {
 				caption: "Scaling using nearest neighbor hard edge amplification and interpolation algorithms",

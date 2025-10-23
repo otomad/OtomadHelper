@@ -1,4 +1,4 @@
-const pages = import.meta.glob<FC>("/src/views/**/*.tsx", { import: "default", eager: true });
+const pages = import.meta.glob<FC>("./**/*.tsx", { base: "/src/views", import: "default", eager: true });
 
 function EmptyPage() {
 	return <div className="container"><EmptyMessage icon="settings" title={t.underConstruction} spinAtBegin noSideEffect /></div>;
@@ -54,7 +54,7 @@ export default function ShellPage() {
 			throw error;
 		}
 	});
-	const Page = pages[`/src/views/${pagePath}.tsx`] ?? EmptyPage;
+	const Page = pages[`./${pagePath}.tsx`] ?? EmptyPage;
 	const uiScale1 = useUiScale1();
 	const zoom = uiScale1 === 1 ? undefined : uiScale1;
 	const { appName } = useAboutApp();

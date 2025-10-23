@@ -421,7 +421,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 								id={ItemsView.other}
 								className="initial-step-item"
 								withBorder
-								tooltip={t.descriptions.prve.customStepSequence}
+								tooltip={t.descriptions.prve.customSteps}
 								aria-label={t.custom}
 								onClick={() => {
 									const savedCustom = configStore.visual.prveCustomStepSequences[effect];
@@ -436,7 +436,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 								id={[NaN]}
 								className="initial-step-item"
 								withBorder
-								tooltip={t.descriptions.prve.customStepSequence}
+								tooltip={t.descriptions.prve.randomSteps}
 								aria-label={t.custom}
 							/>
 						)}
