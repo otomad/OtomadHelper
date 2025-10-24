@@ -3,13 +3,12 @@ import { StyledButton } from "./Button";
 const PADDING = 3;
 
 const StyledColorButton = styled(StyledButton)`
-	--border-highlight-y-offset: 0 !important;
 	position: relative;
 	min-inline-size: 40px;
 	aspect-ratio: 1 / 1;
 	margin: ${-PADDING}px !important;
 	padding: ${PADDING}px;
-	outline: 1px solid transparent;
+	border: 1px solid transparent;
 
 	&,
 	.fill {
@@ -54,6 +53,8 @@ const StyledColorButton = styled(StyledButton)`
 	}
 
 	&:hover {
+		border-color: ${c("stroke-color-control-stroke-secondary")};
+
 		.animated-icon {
 			opacity: 1;
 		}
@@ -64,8 +65,8 @@ const StyledColorButton = styled(StyledButton)`
 	}
 
 	&:active {
-		--border-outline-color: ${c("fill-color-subtle-tertiary")};
 		background-color: ${c("fill-color-subtle-secondary")};
+		border-color: ${c("stroke-color-control-stroke-tertiary")};
 
 		.animated-icon {
 			--state: pressed;
@@ -88,15 +89,15 @@ const StyledColorButton = styled(StyledButton)`
 	}
 
 	&[aria-checked="true"] {
-		outline-color: ${c("stroke-color-focus-stroke-outer")};
+		border-color: ${c("stroke-color-focus-stroke-outer")};
 
 		// Change selected focused outline color.
 		&[data-selected-outline-color="colored"] {
-			--stroke-color-focus-stroke-outer: lch(from ${c("color")} 50 c h);
+			border-color: lch(from ${c("color")} 50 c h);
 		}
 
 		&[data-selected-outline-color]:not([data-selected-outline-color="colored"]) {
-			--stroke-color-focus-stroke-outer: attr(data-selected-outline-color type(<color>));
+			border-color: attr(data-selected-outline-color type(<color>));
 		}
 	}
 
@@ -153,6 +154,7 @@ export function ColorButton({ color, icon, animatedIcon, selected = false, value
 			style={{ ...style, "--color": colorAlt ?? color }}
 			aria-checked={selected}
 			role={role}
+			type="button"
 			data-selected-outline-color={selectedOutlineColor}
 			onClick={handleClick}
 		>

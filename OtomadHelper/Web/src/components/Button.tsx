@@ -107,14 +107,16 @@ export /* @internal */ const StyledButton = styled.button<{
 	${({ $fillColorName, $subtleFillColorName }) => !$fillColorName ? css`
 		background-color: ${c("fill-color-control-default")};
 
-		&${notPressedOrDisabled} {
-			// Do not use CSS logical properties here, or will be ugly in vertical locales.
-			${ifColorScheme.at.light} {
-				border-bottom-color: ${c("stroke-color-control-stroke-secondary")};
-			}
+		@layer components {
+			&${notPressedOrDisabled} {
+				// Do not use CSS logical properties here, or will be ugly in vertical locales.
+				${ifColorScheme.at.light} {
+					border-bottom-color: ${c("stroke-color-control-stroke-secondary")};
+				}
 
-			${ifColorScheme.at.dark} {
-				border-top-color: ${c("stroke-color-control-stroke-secondary")};
+				${ifColorScheme.at.dark} {
+					border-top-color: ${c("stroke-color-control-stroke-secondary")};
+				}
 			}
 		}
 	` : css`
