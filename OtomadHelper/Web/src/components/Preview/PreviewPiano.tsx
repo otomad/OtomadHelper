@@ -16,6 +16,7 @@ const LENGTH = 128;
 const BLACK_KEY_WIDTH = 60;
 
 const Wrapper = styled(HorizontalScroll)`
+	flex-shrink: 0;
 	overflow-inline: auto;
 	border-radius: 6px;
 

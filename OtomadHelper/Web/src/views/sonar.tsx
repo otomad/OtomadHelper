@@ -5,6 +5,7 @@ export default function Sonar() {
 		enabled, separateDrums, differenceCompositeMode, shadow, shadowColor,
 	} = useSelectConfig(c => c.sonar);
 	const graphs = useSelectConfigArray(c => c.sonar.graphs);
+	const meta = metas.sonar;
 
 	return (
 		<div className="container">
@@ -13,12 +14,10 @@ export default function Sonar() {
 			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} details={t.descriptions.sonar.enabled} resetTransitionOnChanging />
 			<EmptyMessage.Typical icon="sonar" title="sonar" enabled={enabled}>
 				<EmptyMessage.YtpDisabled fully={t.titles.sonar}>
-					<SettingsCardToggleSwitch icon="arrow_split" title={t.sonar.separateDrums} details={t.descriptions.sonar.separateDrums} on={separateDrums} />
-					<SettingsCardToggleSwitch icon="invert_color" title={t.sonar.differenceCompositeMode} details={t.descriptions.sonar.differenceCompositeMode} on={differenceCompositeMode} />
-					<SettingsCardToggleSwitch
-						icon="shadow"
-						title={t.sonar.shadow}
-						details={t.descriptions.sonar.shadow}
+					<Setting meta={meta.separateDrums} on={separateDrums} />
+					<Setting meta={meta.differenceCompositeMode} on={differenceCompositeMode} />
+					<Setting
+						meta={meta.shadow}
 						on={shadow}
 						color={shadowColor[0]}
 						actions={<ColorPicker color={shadowColor} />}

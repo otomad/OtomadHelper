@@ -207,7 +207,7 @@ export default function Visual() {
 
 					<Subheader meta={meta.parameters} />
 					<Setting meta={meta.preset} checkInfo={t.stream.preset.builtInPresets[currentPreset[0]]}>
-						<Setting meta={meta.preset.builtInPresets} asSubtitle noDivider="after" />
+						<Setting meta={meta.preset.builtInPresets} asSubtitle="closerAfter" noDivider="after" />
 						<ItemsView view="grid" current={currentPreset}>
 							{builtInPresets.map(name => (
 								<ItemsView.Item

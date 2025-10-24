@@ -135,7 +135,7 @@ const StyledExpanderItem = styled.div<{
 	/** With clickable style? */
 	$clickable?: boolean;
 	/** As sub title style? */
-	$asSubtitle?: boolean;
+	$asSubtitle?: boolean | "closerAfter";
 	/** Remove the top split line and top padding from the expand child. */
 	$noDivider?: "before" | "after";
 	/** Do not wrap the action children to the second line if the text is too long? */
@@ -168,18 +168,16 @@ const StyledExpanderItem = styled.div<{
 		}
 	`)}
 
-	${ifProp("$asSubtitle", css`
-		min-block-size: unset;
-		padding-block: ${expanderItemPadding[0] * 1.5}px ${expanderItemPadding[0] * 0.5}px;
-
-		.expander-child-items .select-all > &:has(+ .checkbox-label) {
+	${({ $asSubtitle }) => $asSubtitle && css`
+		${$asSubtitle === "closerAfter" && css`
+			min-block-size: unset;
 			padding-block: ${expanderItemPadding[0] * 2}px ${expanderItemPadding[0] * 0.5}px;
-		}
+		`}
 
 		.text .title {
 			${styles.effects.text.bodyStrong};
 		}
-	`)}
+	`}
 
 	${({ $noDivider }) =>
 		$noDivider === "before" ? css`
@@ -203,7 +201,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	/** Apply tabIndex = -1? Only available when `clickable` is true. */
 	nonFocusable?: boolean;
 	/** As sub title style? */
-	asSubtitle?: boolean;
+	asSubtitle?: boolean | "closerAfter";
 	/** Remove the top split line and top padding from the expand child. */
 	noDivider?: "before" | "after" | true;
 	/** Remove text from aria tree? */

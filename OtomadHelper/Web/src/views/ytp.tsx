@@ -58,6 +58,7 @@ const StyledSideEffect = styled.div`
 
 export default function Ytp() {
 	const { enabled, clips, constraint } = useSelectConfig(c => c.ytp);
+	const meta = metas.ytp;
 	const [selectEffects, setSelectEffects] = useState<string[]>([]);
 	const selectEffectCount = selectEffects.length;
 
@@ -68,17 +69,13 @@ export default function Ytp() {
 
 			<EmptyMessage.Typical icon="ytp" title="ytp" enabled={enabled}>
 				<Subheader>{t.subheaders.parameters}</Subheader>
-				<Expander title={t.ytp.constrain} details={t.descriptions.ytp.constrain} icon="constraint">
+				<Setting meta={meta.constrain}>
 					<ExpanderChildTrim.RoughTime range={constraint} min={1} decimalPlaces={0} spinnerStep={100} />
-				</Expander>
-				<SettingsCard title={t.ytp.clips} details={t.descriptions.ytp.clips} icon="number">
-					<TextBox.Number value={clips} min={0} decimalPlaces={0} suffix={t.units.piece} />
-				</SettingsCard>
+				</Setting>
+				<Setting meta={meta.clips} actions={<TextBox.Number value={clips} min={0} decimalPlaces={0} suffix={t.units.piece} />} />
 				<Subheader>{t(2).titles.effect}</Subheader>
-				<Expander
-					title={t.ytp.effects}
-					details={t.descriptions.ytp.effects}
-					icon="sparkle"
+				<Setting
+					meta={meta.effects}
 					actions={(
 						<OverlapLayout $horizontalAlign="end" $verticalAlign="center">
 							{selectEffectCount === 1 && <span>{t.ytp.effects[selectEffects[0]]}</span>}
@@ -110,7 +107,7 @@ export default function Ytp() {
 							);
 						})}
 					</ItemsView>
-				</Expander>
+				</Setting>
 			</EmptyMessage.Typical>
 		</div>
 	);

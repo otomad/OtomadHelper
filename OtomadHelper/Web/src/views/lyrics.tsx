@@ -2,10 +2,11 @@ import tipsImage from "assets/images/tips/bathroom_mirror.avif";
 
 export /* @internal */ const musicalNotationSystems = ["scientific", "helmholtz", "solfege", "numbered", "gongche", "gongshang", "lyulyu", "midiNumber", "frequency"] as const;
 
-export default function Shupelunker() {
+export default function Lyrics() {
 	const { enabled, presetTemplate } = useSelectConfig(c => c.lyrics);
 	const { enabled: karaokeEnabled, futureFill: [futureFill, setFutureFill], pastFill: [pastFill, setPastFill] } = useSelectConfig(c => c.lyrics.karaoke);
 	const { enabled: notationEnabled, type } = useSelectConfig(c => c.lyrics.pitchNotation);
+	const meta = metas.lyrics;
 
 	mutexSwitches(karaokeEnabled, notationEnabled);
 
@@ -19,28 +20,26 @@ export default function Shupelunker() {
 			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
 			<EmptyMessage.Typical icon="lyrics" title="lyrics" enabled={enabled}>
 				<EmptyMessage.YtpDisabled fully={t.titles.lyrics}>
-					<SettingsCard title={t.lyrics.presetTemplate} details={t.descriptions.lyrics.presetTemplate} icon="subtitles">
-						<ComboBox current={presetTemplate} options={[]} ids={[]} />
-					</SettingsCard>
+					<Setting meta={meta.presetTemplate} actions={<ComboBox current={presetTemplate} options={[]} ids={[]} />} />
 
 					<Subheader>{t.lyrics.karaoke.toString()}</Subheader>
-					<SettingsCardToggleSwitch title={t.lyrics.enableMode({ mode: t.lyrics.karaoke })} details={t.descriptions.lyrics.karaoke} icon="mic_handheld" on={karaokeEnabled} />
+					<Setting meta={meta.karaoke} title={t.lyrics.enableMode({ mode: t.lyrics.karaoke })} on={karaokeEnabled} />
 					<Attrs disabled={!karaokeEnabled[0]}>
-						<SettingsCard icon="karaoke_future_fill" title={t.lyrics.karaoke.futureFill} details={t.descriptions.lyrics.karaoke.futureFill}>
-							<ColorPicker color={[futureFill, setFutureFill]} />
-						</SettingsCard>
-						<SettingsCard icon="karaoke_past_fill" title={t.lyrics.karaoke.pastFill} details={t.descriptions.lyrics.karaoke.pastFill}>
-							<ColorPicker color={[pastFill, setPastFill]} />
-						</SettingsCard>
+						<Setting
+							meta={meta.karaoke.futureFill}
+							actions={<ColorPicker color={[futureFill, setFutureFill]} />}
+						/>
+						<Setting
+							meta={meta.karaoke.pastFill}
+							actions={<ColorPicker color={[pastFill, setPastFill]} />}
+						/>
 					</Attrs>
 
 					<Subheader>{t.lyrics.pitchNotation}</Subheader>
-					<SettingsCardToggleSwitch title={t.lyrics.enableMode({ mode: t.lyrics.pitchNotation })} details={t.descriptions.lyrics.pitchNotation} icon="genre" on={notationEnabled} />
+					<Setting meta={meta.pitchNotation} title={t.lyrics.enableMode({ mode: t.lyrics.pitchNotation })} on={notationEnabled} />
 					<Attrs disabled={!notationEnabled[0]}>
-						<ExpanderRadio
-							title={t.lyrics.pitchNotation.system}
-							details={t.descriptions.lyrics.pitchNotation.system}
-							icon="genre_search"
+						<Setting
+							meta={meta.pitchNotation.system}
 							items={musicalNotationSystems}
 							value={type}
 							view="tile"

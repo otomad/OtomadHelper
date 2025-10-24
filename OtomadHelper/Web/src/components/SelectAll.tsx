@@ -38,7 +38,7 @@ export default function SelectAll<T>({ value, all, icon, title, meta, details }:
 
 	return (
 		<StyledSelectAll>
-			{title && <Expander.Item {...props} asSubtitle />}
+			{title && <Expander.Item {...props} asSubtitle="closerAfter" />}
 			<Checkbox
 				value={[selectAll, setSelectAll]}
 				dynamicFontWeight={[value[0]?.length ?? 0, all.length]}

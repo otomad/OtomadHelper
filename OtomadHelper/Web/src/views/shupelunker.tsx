@@ -8,6 +8,7 @@ const affixes = [
 export default function Shupelunker() {
 	const { enabled, affix, exclusiveTrack, offset } = useSelectConfig(c => c.shupelunker);
 	const { octaves, fillUp, fillDown, default: defaultAll } = useSelectConfig(c => c.shupelunker.unallocated);
+	const meta = metas.shupelunker;
 
 	return (
 		<div className="container">
@@ -16,10 +17,8 @@ export default function Shupelunker() {
 			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
 			<EmptyMessage.Typical icon="slice" title="shupelunker_full" enabled={enabled}>
 				<EmptyMessage.YtpDisabled fully={t.titles.shupelunker}>
-					<ExpanderRadio
-						title={t.shupelunker.affix}
-						details={t.descriptions.shupelunker.affix}
-						icon="affix"
+					<Setting
+						meta={meta.affix}
 						items={affixes}
 						value={affix}
 						view="tile"
@@ -27,18 +26,16 @@ export default function Shupelunker() {
 						nameField={t.shupelunker.affix}
 						iconField={item => <span lang="en">{item.symbol}</span>}
 					/>
-					<Expander title={t.shupelunker.unallocated} details={t.descriptions.shupelunker.unallocated} icon="unallocated">
-						<ToggleSwitch on={octaves} details={t.descriptions.shupelunker.unallocated.octaves} icon="unallocated_octaves">{t.shupelunker.unallocated.octaves}</ToggleSwitch>
-						<ToggleSwitch on={fillUp} details={t.descriptions.shupelunker.unallocated.fillUp} icon="unallocated_fill_up">{t.shupelunker.unallocated.fillUp}</ToggleSwitch>
-						<ToggleSwitch on={fillDown} details={t.descriptions.shupelunker.unallocated.fillDown} icon="unallocated_fill_down">{t.shupelunker.unallocated.fillDown}</ToggleSwitch>
-						<ToggleSwitch on={defaultAll} details={t.descriptions.shupelunker.unallocated.default} icon="unallocated_default">{t.shupelunker.unallocated.default}</ToggleSwitch>
-					</Expander>
-					<SettingsCardToggleSwitch on={exclusiveTrack} title={t.shupelunker.exclusiveTrack} details={t.descriptions.shupelunker.exclusiveTrack} icon="exclusive_track" />
-					<SettingsCard title={t.offset} details={t.descriptions.shupelunker.offset} icon="table_resize">
-						<TextBox.Number value={offset} decimalPlaces={0} suffix={t.units.semitone} positiveSign />
-					</SettingsCard>
+					<Setting meta={meta.unallocated}>
+						<Setting on={octaves} meta={meta.unallocated.octaves} />
+						<Setting on={fillUp} meta={meta.unallocated.fillUp} />
+						<Setting on={fillDown} meta={meta.unallocated.fillDown} />
+						<Setting on={defaultAll} meta={meta.unallocated.default} />
+					</Setting>
+					<Setting meta={meta.exclusiveTrack} on={exclusiveTrack} />
+					<Setting meta={meta.offset} actions={<TextBox.Number value={offset} decimalPlaces={0} suffix={t.units.semitone} positiveSign />} />
 
-					<Subheader>{t.shupelunker.keyMappingZones}</Subheader>
+					<Subheader meta={meta.keyMappingZones} />
 					<PreviewPiano />
 				</EmptyMessage.YtpDisabled>
 			</EmptyMessage.Typical>

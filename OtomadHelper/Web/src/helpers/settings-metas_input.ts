@@ -267,6 +267,47 @@ export const settingsMetasInput = {
 			},
 		},
 	},
+	sonar: {
+		separateDrums: { icon: "arrow_split" },
+		differenceCompositeMode: { icon: "invert_color" },
+		shadow: { icon: "shadow" },
+	},
+	lyrics: {
+		presetTemplate: { icon: "subtitles" },
+		karaoke: {
+			icon: "mic_handheld",
+			items: {
+				futureFill: { icon: "karaoke_future_fill" },
+				pastFill: { icon: "karaoke_past_fill" },
+			},
+		},
+		pitchNotation: {
+			icon: "genre",
+			items: {
+				system: { icon: "genre_search" },
+			},
+		},
+	},
+	shupelunker: {
+		affix: { icon: "affix" },
+		unallocated: {
+			icon: "unallocated",
+			items: {
+				octaves: { icon: "unallocated_octaves" },
+				fillUp: { icon: "unallocated_fill_up" },
+				fillDown: { icon: "unallocated_fill_down" },
+				default: { icon: "unallocated_default" },
+			},
+		},
+		exclusiveTrack: { icon: "exclusive_track" },
+		offset: { icon: "table_resize", title: t.offset },
+		keyMappingZones: subheader(),
+	},
+	ytp: {
+		constrain: { icon: "constraint" },
+		clips: { icon: "number" },
+		effects: { icon: "sparkle" },
+	},
 } as const satisfies Record<string, Record<string, ISettingMeta>>;
 
 function playbackRate() {
