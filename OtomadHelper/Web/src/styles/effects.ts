@@ -3,7 +3,7 @@ const opszs = {
 	text: 10.5,
 	display: 36,
 };
-const weights = {
+export const weights = {
 	thin: 100,
 	hairline: 100,
 	extralight: 200,

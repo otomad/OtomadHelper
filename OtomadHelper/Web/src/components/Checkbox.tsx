@@ -1,8 +1,8 @@
 import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemText } from "components/Expander/ExpanderItem";
+import { weights } from "styles/effects";
 
 const checkedOrIndet = ":is(:checked, :indeterminate)";
 const unchecked = ":not(:checked, :indeterminate)";
-const iconExiting = ":has(.icon.exit, .icon.enter-done)";
 const pressed = ":active:not(:has(:is(.actions, .button):active))";
 
 const StyledCheckboxLabel = styled.label<{
@@ -38,40 +38,46 @@ const StyledCheckboxLabel = styled.label<{
 
 	.base {
 		${styles.mixins.square("18px")};
-		${styles.mixins.gridCenter()};
+		position: relative;
 		background-color: ${c("fill-color-control-alt-secondary")};
 		background-clip: padding-box;
 		border: 1px solid ${c("stroke-color-control-strong-stroke-default")};
 		border-radius: 3px;
 
 		.icon {
+			position: absolute;
+			margin: calc((100% - 1em) / 2);
 			color: ${c("fill-color-text-on-accent-primary")};
 			font-size: 12px;
 			clip-path: inset(0);
+			transition-behavior: allow-discrete !important;
 
 			&,
 			* {
 				transition: all ${eases.easeOutMax} 250ms, color 0s, fill 0s;
 			}
 
-			${tgs(tgs.enter)} {
-				clip-path: inset(0 100% 0 0);
+			@starting-style {
+				&:not([data-prev="appear"] *) {
+					clip-path: inset(0 100% 0 0);
+				}
 			}
 
-			${tgs(tgs.exit)} {
+			&[hidden] {
 				clip-path: inset(0 0 0 100%);
 			}
 		}
+
+		&[data-prev="checked"] .icon[data-value="indeterminate"]:not([hidden]),
+		&[data-prev="indeterminate"] .icon[data-value="checked"]:not([hidden]) {
+			transition-delay: 250ms;
+		}
 	}
 
-	input${checkedOrIndet} ~ .base:has(.icon),
-	.base.disable-checkmark-transition${iconExiting} {
+	input${checkedOrIndet} ~ .base,
+	input${unchecked} ~ .base.changing {
 		background-color: ${c("accent-color")} !important;
 		border-color: ${c("accent-color")} !important;
-	}
-
-	.base${iconExiting} {
-		transition: ${fallbackTransitions}, background-color ${eases.easeInSmooth} 250ms, border-color ${eases.easeInSmooth} 250ms, var(--fallback-transitions-for-contrast-scheme);
 	}
 
 	&:hover,
@@ -94,8 +100,7 @@ const StyledCheckboxLabel = styled.label<{
 	}
 
 	&${pressed} input${checkedOrIndet} ~ .base,
-	.items-view-item${pressed} & input${checkedOrIndet} ~ .base,
-	&${pressed} .base${iconExiting} {
+	.items-view-item${pressed} & input${checkedOrIndet} ~ .base {
 		opacity: 0.8;
 
 		.icon {
@@ -148,6 +153,12 @@ interface SharedProps {
 	 * (for example, when executing the `startViewTransition` function in the View Transition API simultaneously).
 	 */
 	disableCheckmarkTransition?: boolean;
+	/**
+	 * When using checkbox for selecting all, you can provide the checked item count and all item count.\
+	 * Then the font weight of "Select all" text will changing dynamically.\
+	 * The result font weight is mapped to a value from normal through bold.
+	 */
+	dynamicFontWeight?: [checkedCount: number, allCount: number];
 }
 
 export default function Checkbox<T>(props: FCP<{
@@ -170,17 +181,24 @@ export default function Checkbox(props: FCP<{
 	/** State change event. */
 	onChange?(e: { checkState: CheckState; checked: boolean | null }): void;
 } & SharedProps, "label">): React.JSX.Element;
-export default function Checkbox<T>({ children, id, value: [value, setValue], disabled = false, onChange, details, plain = false, actions, icon, disableCheckmarkTransition, ref, ...htmlAttrs }: FCP<{
+export default function Checkbox<T>({ children, id, value: [value, setValue], disabled = false, onChange, details, plain = false, actions, icon, disableCheckmarkTransition, dynamicFontWeight, ref, ...htmlAttrs }: FCP<{
 	id?: T;
 	value: StateProperty<T[]> | StateProperty<boolean> | StateProperty<CheckState>;
 	onChange?: Function;
 } & SharedProps, "label">) {
+	"use no memo";
 	const labelEl = useDomRef<"label">();
 	const checkboxEl = useDomRef<"input">();
 	const singleMode = id === undefined, checkStateMode = typeof value === "string";
 	const checked = checkStateMode ? value === "checked" : singleMode ? !!value : (value as T[]).includes(id);
 	const indeterminate = value === "indeterminate";
+	const prevState = usePrevious({ checked, indeterminate });
+	const prev = prevState === undefined ? "appear" :
+		prevState.checked ? "checked" : prevState.indeterminate ? "indeterminate" : "unchecked";
+	const prevChanging = useChanging([checked, indeterminate]);
 	const ariaId = useId();
+	const fontWeight = !dynamicFontWeight || dynamicFontWeight[1] === 0 ? undefined :
+		map(dynamicFontWeight[0], 0, dynamicFontWeight[1], weights.normal, weights.bold);
 
 	useImperativeHandleRef(ref, labelEl);
 
@@ -216,11 +234,6 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	useChangeEffect(() => handleChange(checked, indeterminate), [indeterminate, checked]);
 	useEffect(() => { checkboxEl.current && (checkboxEl.current.indeterminate = indeterminate); }, [indeterminate, checkboxEl]);
 	useOnFormKeyDown(labelEl, { handleCheck });
-	const getCheckMarkName = useCallback(() => indeterminate ? "checkbox/dash" : checked ? "checkbox/accept" : "", [indeterminate, checked]);
-	const [checkMarkName, setCheckMarkName] = useState<ReturnType<typeof getCheckMarkName>>(getCheckMarkName()); // What the hell is TypeScript's problem?
-	useEffect(() => {
-		setCheckMarkName(getCheckMarkName());
-	}, [indeterminate, checked, getCheckMarkName]);
 
 	return (
 		<StyledCheckboxLabel
@@ -243,18 +256,15 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 				disabled={disabled}
 				ref={checkboxEl}
 			/>
-			<div className={["base", { disableCheckmarkTransition }]}>
-				<SwitchTransition>
-					<CssTransition key={checkMarkName} maxTimeout={500} disableTransition={disableCheckmarkTransition} requestAnimationFrame>
-						<Icon name={checkMarkName} />
-					</CssTransition>
-				</SwitchTransition>
+			<div className={["base", { changing: prevChanging && !disableCheckmarkTransition }]} data-prev={prev}>
+				<Icon name="checkbox/accept" data-value="checked" hidden={!checked} />
+				<Icon name="checkbox/dash" data-value="indeterminate" hidden={!indeterminate} />
 			</div>
 			{!plain && (
 				<>
 					{icon && <Icon name={icon} />}
 					<div className="text" aria-hidden>
-						<p className="title" id={`${ariaId}-title`}>{children}</p>
+						<p className="title" id={`${ariaId}-title`} style={{ fontWeight }}>{children}</p>
 						<p className="details" id={`${ariaId}-details`}>{details}</p>
 					</div>
 					<div className="actions">

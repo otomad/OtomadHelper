@@ -199,6 +199,14 @@ export default function Score() {
 			},
 		] as unknown as StatePropertyNonNull<CheckState> & { 2: () => void };
 	})();
+	const selectAllFontWeight = useMemo(() => {
+		if (!isMultiple || !Array.isArray(selectedTrack)) return undefined;
+		return tracks.reduce<TwoD>(([checked, all], _, trackIndex) => {
+			checked += selectTrackItems[trackIndex]?.size ?? 0;
+			all += getAllMultipleSelectTrackItemSet(trackIndex).size;
+			return [checked, all];
+		}, [0, 0]);
+	}, [isMultiple, selectedTrack, selectTrackItems, getAllMultipleSelectTrackItemSet]);
 
 	return (
 		<div className="container">
@@ -254,7 +262,7 @@ export default function Score() {
 						title={t.score.constrain[constrainNoteLengthType[0]]}
 						details={t.descriptions.score.constrain[constrainNoteLengthType[0]]}
 						icon={constrainNoteLengthTypes.find(i => i.id === constrainNoteLengthType[0])!.icon}
-						nowrap
+						wrapActionsWhenNarrow={false}
 					>
 						{constrainNoteLengthType[0] === "percentage" ?
 							<TextBox.Number value={constrainNoteLengthValues[constrainNoteLengthType[0]]} suffix={t.units.percent} min={0} max={100} decimalPlaces={2} /> :
@@ -262,7 +270,7 @@ export default function Score() {
 					</Expander.Item>
 				)}
 				{constrainNoteLengthType[0].in("percentage", "fixedDecrement") && (
-					<Expander.Item title={t.score.constrain.min} details={t.descriptions.score.constrain.min} icon="greater_or_equal" nowrap>
+					<Expander.Item title={t.score.constrain.min} details={t.descriptions.score.constrain.min} icon="greater_or_equal" wrapActionsWhenNarrow={false}>
 						<TimecodeBox value={constrainNoteLengthMin} />
 					</Expander.Item>
 				)}
@@ -287,9 +295,9 @@ export default function Score() {
 					<Subheader>{withObject(t(tracks.length).score, t => trackOrChannel[0] === "channel" ? t.channel : t.musicalTrack)}</Subheader>
 					<TrackToolbar>
 						<div className="left">
-							<CssTransition in={isMultiple} unmountOnExit>
+							<CssTransition in={isMultiple} timeout={250} unmountOnExit>
 								<div className="content">
-									<Checkbox value={selectAll}>{t.selectAll}</Checkbox>
+									<Checkbox value={selectAll} dynamicFontWeight={selectAllFontWeight}>{t.selectAll}</Checkbox>
 									<Button subtle icon="invert_selection" onClick={selectAll[2]}>{t.invertSelection}</Button>
 									<Badge>{(selectedTrack as number[]).length ?? 1}</Badge>
 								</div>
@@ -326,7 +334,7 @@ export default function Score() {
 										</>
 									)}
 									actions={(
-										<CssTransition in={isMultiple} unmountOnExit>
+										<CssTransition in={isMultiple} timeout={250} unmountOnExit>
 											<MultipleSelectTrackItemsContainer>
 												{Array.from(getAllMultipleSelectTrackItemSet(track), item => !track.isDrumKit && item === "sonar" ? undefined : (
 													<Tooltip key={item} placement="block" title={t.titles[item]}>

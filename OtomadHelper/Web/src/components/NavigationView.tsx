@@ -716,7 +716,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 	const pageContentEl = useDomRef<"div">();
-	const paneDisplayModeChanging = useChanging(paneDisplayMode);
+	const paneDisplayModeChanging = useChanging([paneDisplayMode]);
 
 	function scrollToTopOrPrevious() {
 		onEnter?.();

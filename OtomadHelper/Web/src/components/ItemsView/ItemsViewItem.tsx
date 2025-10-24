@@ -348,8 +348,8 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 			{details && <p className="details" id={`${ariaId}-details`}><Preserves>{details}</Preserves></p>}
 		</div>
 	);
-	const checkbox = (
-		<CssTransition in={multiple} unmountOnExit>
+	const checkbox = ( // NOTE: This transition will be laggy when React Developer Tools addon is enabled, this is normal.
+		<CssTransition in={multiple} unmountOnExit timeout={250}>
 			<Checkbox className="items-view-item-checkbox" value={[selected]} plain inert disableCheckmarkTransition={disableCheckmarkTransition} />
 		</CssTransition>
 	);

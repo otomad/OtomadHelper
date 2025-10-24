@@ -87,7 +87,7 @@ export function useInterval(callback: () => void, delay: number) {
  * `state` is an object that is mutated in-place without changing its reference, the hook will not detect the change.
  * - The default `duration` is 250 ms.
  *
- * @param state - The value to watch for changes. Any change (per React's dependency comparison) will trigger the
+ * @param states - The value to watch for changes. Any change (per React's dependency comparison) will trigger the
  * "changing" flag.
  * @param duration - Optional duration in milliseconds to keep the "changing" flag true after a change.
  * Defaults to 250 ms.
@@ -98,7 +98,7 @@ export function useInterval(callback: () => void, delay: number) {
  * // Show an animation indicator for 300ms whenever `value` changes.
  * const isChanging = useChanging(value, 300);
  */
-export function useChanging(state: unknown, duration: number = 250) {
+export function useChanging(states: unknown[], duration: number = 250) {
 	const [changing, setChanging] = useState(false);
 	const timeoutId = useRef<Timeout>(undefined);
 
@@ -107,7 +107,7 @@ export function useChanging(state: unknown, duration: number = 250) {
 		setChanging(true);
 		timeoutId.current = setTimeout(() => setChanging(false), duration);
 		return () => clearTimeout(timeoutId.current);
-	}, [state]);
+	}, states);
 
 	return changing;
 }

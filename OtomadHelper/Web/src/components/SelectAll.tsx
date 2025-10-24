@@ -31,7 +31,7 @@ export default function SelectAll<T>({ value, all, icon, title, meta, details }:
 	/** Inherit from a setting meta. */
 	meta?: SettingMetaInside;
 }, "div">) {
-	const selectAll = useSelectAll(value, all);
+	const { 0: selectAll, 1: setSelectAll, 2: invertSelection } = useSelectAll(value, all);
 	// eslint-disable-next-line no-var
 	var { title, details, icon, anchor } = Setting.useMeta(meta, arguments);
 	const props = { title, details, icon, anchor };
@@ -40,9 +40,10 @@ export default function SelectAll<T>({ value, all, icon, title, meta, details }:
 		<StyledSelectAll>
 			{title && <Expander.Item {...props} asSubtitle />}
 			<Checkbox
-				value={selectAll}
+				value={[selectAll, setSelectAll]}
+				dynamicFontWeight={[value[0]?.length ?? 0, all.length]}
 				actions={
-					<Button subtle icon="invert_selection" onClick={e => { stopEvent(e); selectAll[2](); }}>{t.invertSelection}</Button>
+					<Button subtle icon="invert_selection" onClick={e => { stopEvent(e); invertSelection(); }}>{t.invertSelection}</Button>
 				}
 			>
 				{t.selectAll}
