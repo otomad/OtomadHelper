@@ -112,7 +112,7 @@ import { config as transitionGroupConfig } from "react-transition-group-fc";
 
 	// #region Init enum plus localization method
 	Enum.localize = label => label.toString();
-	Enum.config.autoLabel = ({ item: { key, label }, labelPrefix }) => label ||
+	Enum.config.autoLabel = ({ item: { key, raw: { label } }, labelPrefix }) => label ||
 		(typeof labelPrefix === "string" ? `${labelPrefix}.${key}` : isI18nItem(labelPrefix) ? labelPrefix[key] : undefined!);
 	// #endregion
 }

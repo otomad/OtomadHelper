@@ -4,6 +4,13 @@ export /* @internal */ const startTimes = [
 	{ id: "cursor", name: t.source.startTime.cursor, icon: "text_cursor" },
 	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
+/* const SelectGeneratedClips = Enum({
+	audio: { icon: "volume" },
+	visual: { icon: "image" },
+	staff: { icon: "g_clef" },
+	sonar: { icon: "sonar" },
+	lyrics: { icon: "lyrics" },
+}, { labelPrefix: t.titles }); */
 export /* @internal */ const selectGeneratedClipsType = [
 	{ id: "audio", name: t.titles.audio, icon: "volume" },
 	{ id: "visual", name: t.titles.visual, icon: "image" },
