@@ -171,15 +171,28 @@ export function listFormat(list: string[], type?: Intl.ListFormatType, style?: I
 	return formatter.format(list);
 }
 
-/**
- * Get all language tags.
- * @returns All language tags.
- */
-export function useLanguageTags({ omitInContextLanguage = true }: {
+interface UseLanguageTagsOptions {
 	/** Omit in-context language? @default true */
 	omitInContextLanguage?: boolean;
-} = {}) {
+}
+
+/**
+ * A hook to get all language tags.
+ * @returns All language tags.
+ */
+export function useLanguageTags({ omitInContextLanguage = true }: UseLanguageTagsOptions = {}) {
 	const { i18n } = useTranslation();
+	const languages = Object.keys(i18n.options.resources ?? {});
+	if (omitInContextLanguage)
+		languages.removeItem(IN_CONTEXT_LANGUAGE_CODE);
+	return languages as AvailableLanguageTags[];
+}
+
+/**
+ * A util to get all language tags.
+ * @returns All language tags.
+ */
+export function getAllLanguageTags({ omitInContextLanguage = true }: UseLanguageTagsOptions = {}) {
 	const languages = Object.keys(i18n.options.resources ?? {});
 	if (omitInContextLanguage)
 		languages.removeItem(IN_CONTEXT_LANGUAGE_CODE);

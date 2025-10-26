@@ -80,7 +80,10 @@ const StyledColorButton = styled(StyledButton)`
 
 	&:not(:hover, :active) {
 		background: none;
-		box-shadow: none !important;
+
+		&:not(:focus-visible) {
+			box-shadow: none !important;
+		}
 	}
 
 	&[disabled] {
@@ -99,10 +102,6 @@ const StyledColorButton = styled(StyledButton)`
 		&[data-selected-outline-color]:not([data-selected-outline-color="colored"]) {
 			border-color: attr(data-selected-outline-color type(<color>));
 		}
-	}
-
-	&:focus {
-		z-index: 1; // Place the focused ring above the selected ring.
 	}
 `;
 

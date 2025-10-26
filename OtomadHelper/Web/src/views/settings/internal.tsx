@@ -41,13 +41,13 @@ const TextPluginPreviewImage = styled.img`
 export default function Internal() {
 	const [currentLanguage] = useLanguage();
 	const { language: [language, setLanguage], openglInterop, autosaveInterval, defaultTextPlugin, defaultTuningMethod, defaultClassicMode, defaultElasticMode, preserveClipboardOnClose, eventGroupSelection } = useSelectConfig(c => c.settings.internal);
+	const meta = metas.settings.internal;
 	return (
 		<div className="container">
 			<InfoBar status="warning" title={t.infoBar.warning}>{t.descriptions.settings.internal.info}</InfoBar>
 
-			<ExpanderRadio
-				title={t.settings.internal.language}
-				details={t.descriptions.settings.internal.language}
+			<Setting
+				meta={meta.language}
 				icon="globe"
 				items={vegasLanguages}
 				view="grid"
@@ -58,13 +58,14 @@ export default function Internal() {
 				imageField={({ tag: language }) => <PreviewLanguage language={language} showProgress={false} />}
 				itemsViewItemAttrs={{ withBorder: true }}
 			/>
-			<SettingsCard title={t.settings.internal.autosaveInterval} details={t.descriptions.settings.internal.autosaveInterval({ default: 5 })} icon="save_clock">
-				<TextBox.RoughTime value={autosaveInterval} />
-			</SettingsCard>
-			<ExpanderRadio
-				title={t.settings.internal.defaultTextPlugin}
-				details={t.descriptions.settings.internal.defaultTextPlugin}
-				icon="text_plugin"
+			<Setting
+				meta={meta.autosaveInterval}
+				details={t.descriptions.settings.internal.autosaveInterval({ default: 5 })}
+				icon="save_clock"
+				actions={<TextBox.RoughTime value={autosaveInterval} />}
+			/>
+			<Setting
+				meta={meta.defaultTextPlugin}
 				view="grid"
 				items={textPlugins}
 				value={defaultTextPlugin}
@@ -73,10 +74,8 @@ export default function Internal() {
 				checkInfoCondition={id => id && tf.shared.plugins[id] || t.custom} // Do not to refactor it to ternary operator.
 				imageField={({ image, id }) => <TextPluginPreviewImage src={image} alt={t.shared.plugins[id]} />}
 			/>
-			<ExpanderRadio
-				title={t.settings.internal.defaultTuningMethod}
-				details={t.descriptions.settings.internal.defaultTuningMethod}
-				icon="tuning"
+			<Setting
+				meta={meta.defaultTuningMethod}
 				view="tile"
 				idField="id"
 				iconField="icon"
@@ -86,20 +85,16 @@ export default function Internal() {
 				detailsField={({ id, originalName }) => t.stream.tuning.tuningMethod[id].toString() !== originalName && originalName}
 				checkInfoCondition={id => t.stream.tuning.tuningMethod[id!]}
 			/>
-			<ExpanderRadio
-				title={t.settings.internal.defaultElasticMode}
-				details={t.descriptions.settings.internal.defaultElasticMode}
-				icon="plus_minus"
+			<Setting
+				meta={meta.defaultElasticMode}
 				view="tile"
 				idField
 				value={defaultElasticMode}
 				items={tuningElasticModes}
 				nameField={t.stream.tuning.stretchAttributes.elastic}
 			/>
-			<ExpanderRadio
-				title={t.settings.internal.defaultClassicMode}
-				details={t.descriptions.settings.internal.defaultClassicMode}
-				icon="hourglass"
+			<Setting
+				meta={meta.defaultClassicMode}
 				view="tile"
 				idField
 				value={defaultClassicMode}
@@ -107,9 +102,9 @@ export default function Internal() {
 				nameField={id => <TuningClassicModeListItem id={id} />}
 				checkInfoCondition={id => id ? t.stream.tuning.stretchAttributes.classic[id] : ""}
 			/>
-			<SettingsCardToggleSwitch on={preserveClipboardOnClose} title={t.settings.internal.preserveClipboardOnClose} details={t.descriptions.settings.internal.preserveClipboardOnClose} icon="clipboard_checkmark" />
-			<SettingsCardToggleSwitch on={eventGroupSelection} title={t.settings.internal.eventGroupSelection} details={t.descriptions.settings.internal.eventGroupSelection} icon="group_link" />
-			<SettingsCardToggleSwitch on={openglInterop} title={t.settings.internal.openglInterop} details={t.descriptions.settings.internal.openglInterop} icon="opengl" />
+			<Setting on={preserveClipboardOnClose} meta={meta.preserveClipboardOnClose} />
+			<Setting on={eventGroupSelection} meta={meta.eventGroupSelection} />
+			<Setting on={openglInterop} meta={meta.openglInterop} />
 		</div>
 	);
 }

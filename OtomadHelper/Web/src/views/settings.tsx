@@ -63,6 +63,7 @@ export default function Settings() {
 	} = useSelectConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
 	const { pushPage } = useSnapshot(pageStore);
+	const meta = metas.settings;
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -86,9 +87,9 @@ export default function Settings() {
 	return (
 		<div className="container">
 			<SettingsAbout />
-			<ExpanderRadio
+			<Setting
+				meta={meta.language}
 				title={<>{t.settings.language}{t.settings.language.toString() !== "Language" && <span lang="en"> / Language</span>}</>}
-				icon="globe"
 				items={languages}
 				expanded={DEV_EXPANDED}
 				view="grid"
@@ -116,12 +117,11 @@ export default function Settings() {
 				>
 					{inContextLocalization[0] ? t.settings.language.translating : t.settings.language.improveTranslation}
 				</ToggleSwitch>
-			</ExpanderRadio>
+			</Setting>
 
-			<Subheader>{t.settings.appearance}</Subheader>
-			<Expander
-				title={t.settings.appearance.colorScheme}
-				icon="paint_brush"
+			<Subheader meta={meta.appearance} />
+			<Setting
+				meta={meta.appearance.colorScheme}
 				checkInfo={withObject(t.settings.appearance.colorScheme, t => actualContrast ? t.contrast : scheme === "dark" && amoledDark ? t.black : t[scheme])}
 				expanded={DEV_EXPANDED}
 			>
@@ -181,11 +181,11 @@ export default function Settings() {
 						</ItemsView>
 					</>
 				)}
-			</Expander>
-			<Expander title={t.settings.appearance.palette} icon="color" expanded={DEV_EXPANDED}>
+			</Setting>
+			<Setting meta={meta.appearance.palette} expanded={DEV_EXPANDED}>
 				{actualContrast ? <InfoBar status="warning">{t.descriptions.settings.appearance.invalid[systemContrast ? "systemContrastCannot" : "contrast"]({ option: t.settings.appearance.palette })}</InfoBar> : (
 					<>
-						<Expander.Item title={t.settings.appearance.palette.accent} icon="color_fill" asSubtitle />
+						<Setting meta={meta.appearance.palette.accent} asSubtitle />
 						<StyledColorPalette>
 							{autoColorPalettes.map(color => (
 								<TooltipBlock key={color} title={t.settings.appearance.palette[color]}>
@@ -220,7 +220,7 @@ export default function Settings() {
 						</StyledColorPalette>
 						{(actualContrast || actualAmoledDark) && <InfoBar status="warning">{t.descriptions.settings.appearance.invalid.blackScheme({ option: t.settings.appearance.palette.background })}</InfoBar>}
 						<Attrs style={{ opacity: actualContrast || actualAmoledDark ? 0.5 : undefined }}>
-							<Expander.Item title={t.settings.appearance.palette.background} icon="color_background" asSubtitle />
+							<Setting meta={meta.appearance.palette.background} asSubtitle />
 							<StyledColorPalette>
 								{autoColorPalettes.map(color => (
 									<TooltipBlock key={color} title={t.settings.appearance.palette[color]}>
@@ -254,10 +254,9 @@ export default function Settings() {
 						</Attrs>
 					</>
 				)}
-			</Expander>
-			<ExpanderRadio
-				title={t.settings.appearance.transparency}
-				icon="glass"
+			</Setting>
+			<Setting
+				meta={meta.appearance.transparency}
 				expanded={DEV_EXPANDED}
 				view="grid"
 				itemWidth="square"
@@ -271,9 +270,8 @@ export default function Settings() {
 					systemContrast && <InfoBar status="warning">{t.descriptions.settings.appearance.invalid.systemContrastMayNot({ option: t.settings.appearance.transparency })}</InfoBar>
 				}
 			/>
-			<Expander
-				title={t.settings.appearance.backgroundImage}
-				icon="wallpaper"
+			<Setting
+				meta={meta.appearance.backgroundImage}
 				expanded={DEV_EXPANDED}
 				checkInfo={backgroundImages.shown ? t.on : t.off}
 			>
@@ -341,10 +339,9 @@ export default function Settings() {
 						</Expander.Item>
 					</>
 				)}
-			</Expander>
-			<Expander
-				title={t.settings.appearance.fontSize}
-				icon="text_font_size"
+			</Setting>
+			<Setting
+				meta={meta.appearance.fontSize}
 				checkInfo={fontSize[0] + t.units.point}
 				expanded={DEV_EXPANDED}
 			>
@@ -362,30 +359,30 @@ export default function Settings() {
 						<p className="info"><Preserves soft>{t.descriptions.settings.appearance.fontSize.info({ current: fontSize[0], default: 14 })}</Preserves></p>
 					</SampleTextFontSize>
 				</Expander.ChildWrapper>
-			</Expander>
+			</Setting>
 
-			<Subheader>{t.settings.preference}</Subheader>
+			<Subheader meta={meta.preference} />
 			<SettingsCard title={t({ context: "long" }).titles.internal} details={t.descriptions.settings.internal} type="button" icon="registry" onClick={() => pushPage("internal")} />
-			<SettingsCardToggleSwitch title={t.settings.preference.autoSwitchSourceFrom} details={t.descriptions.settings.preference.autoSwitchSourceFrom} icon="arrow_swap" on={autoSwitchSourceFrom} />
-			<SettingsCardToggleSwitch title={t.settings.preference.autoCollapsePrveClasses} details={t.descriptions.settings.preference.autoCollapsePrveClasses} icon="chevron_down_up" on={autoCollapsePrveClasses} />
-			<SettingsCardToggleSwitch title={t.settings.preference.previewWithSource} details={t.descriptions.settings.preference.previewWithSource} icon="video_person" on={previewWithSource} />
+			<Setting meta={meta.preference.autoSwitchSourceFrom} on={autoSwitchSourceFrom} />
+			<Setting meta={meta.preference.autoCollapsePrveClasses} on={autoCollapsePrveClasses} />
+			<Setting meta={meta.preference.previewWithSource} on={previewWithSource} />
 
-			<Subheader>{t.subheaders.config}</Subheader>
-			<Expander title={t.settings.config.userConfig} icon="settings_multiple" details={t.descriptions.settings.config.userConfig}>
-				<Expander.Item title={t.settings.config.userConfig.backupAndRestore} icon="arrow_sync" details={t.descriptions.settings.config.userConfig.backupAndRestore}>
+			<Subheader meta={meta.config} />
+			<Setting meta={meta.config.userConfig}>
+				<Setting meta={meta.config.userConfig.backupAndRestore}>
 					<StackPanel>
 						<Button icon="arrow_download">{t.export}</Button>
 						<Button icon="arrow_upload">{t.import}</Button>
 					</StackPanel>
-				</Expander.Item>
-				<Expander.Item title={t.settings.config.userConfig.fileLocation} icon="folder" details="C:\">
+				</Setting>
+				<Setting meta={meta.config.userConfig.fileLocation} details="C:\">
 					<Button icon="location_target">{t.locate}</Button>
-				</Expander.Item>
-				<Expander.Item title={t.dangerZone} icon="warning" details={t.descriptions.settings.config.userConfig.reset}>
+				</Setting>
+				<Setting meta={meta.config.userConfig.dangerZone}>
 					<Button icon="arrow_reset" accent="critical">{t.reset}</Button>
-				</Expander.Item>
-			</Expander>
-			<Expander title={t.settings.config.clipsFolder} icon="folder_video_clip" details={t.descriptions.settings.config.clipsFolder}>
+				</Setting>
+			</Setting>
+			<Setting meta={meta.config.clipsFolder}>
 				<Expander.ChildWrapper $single>
 					<TextBox value={[]} style={{ inlineSize: "100%" }} />
 					<StackPanel style={{ marginBlockStart: "0.5lh" }}>
@@ -393,12 +390,12 @@ export default function Settings() {
 						<Button icon="location_target">{t.locate}</Button>
 					</StackPanel>
 				</Expander.ChildWrapper>
-			</Expander>
-			<SettingsCardToggleSwitch title={t.settings.config.hideUsageTips} icon="chat_help_off" on={hideUseTips} />
+			</Setting>
+			<Setting meta={meta.config.hideUsageTips} on={hideUseTips} />
 
-			<Subheader>{t.settings.dev}</Subheader>
-			<SettingsCardToggleSwitch title={t.settings.dev.devMode} icon="devtools" on={devMode} />
-			<SettingsCardToggleSwitch title={t.settings.dev.rtl} icon="text_paragraph_direction_left" on={rtl} />
+			<Subheader meta={meta.dev} />
+			<Setting meta={meta.dev.devMode} on={devMode} />
+			<Setting meta={meta.dev.rtl} on={rtl} />
 		</div>
 	);
 }

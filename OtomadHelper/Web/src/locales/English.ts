@@ -803,6 +803,7 @@ export default {
 		},
 		settings: {
 			about: {
+				_: "About",
 				checkForUpdates: "Check for updates",
 				repositoryLink: "Repository",
 				documentation: "Documentation",

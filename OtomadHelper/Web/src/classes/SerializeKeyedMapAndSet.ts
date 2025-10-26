@@ -1,5 +1,5 @@
-const keyNotFound = Symbol("serialize-keyed-map-and-set/key_not_found");
-const getKeyMethod = Symbol("serialize-keyed-map-and-set/get_key_method"); // Cannot use private field directly.
+const keyNotFound = Symbol("serialize-keyed-map-and-set.key_not_found");
+const getKeyMethod = Symbol("serialize-keyed-map-and-set.get_key_method"); // Cannot use private field directly.
 
 /**
  * A Map subclass that uses deep equality (via `lodash.isEqual`) for key comparison

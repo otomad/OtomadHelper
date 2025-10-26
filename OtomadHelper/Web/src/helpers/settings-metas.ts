@@ -3,7 +3,7 @@ import type { I18nArgsFunction } from "locales/types";
 import { redirectIcon } from "src/ShellPage";
 import type { Trans } from "utils/i18n";
 import { tf as $$t } from "utils/i18n";
-import { settingsMetasInput } from "./settings-metas_input";
+import { languageNode, settingsMetasInput } from "./settings-metas_input";
 const { t } = new PathObject<RedirectedTrans>();
 
 type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup" | "subheader";
@@ -25,6 +25,8 @@ export interface ISettingMeta {
 	aliases?: string[];
 	/** Click to jump at another link. */
 	link?: string;
+	/** Exclude it (and its descendants) from search results? */
+	unsearchable?: boolean;
 }
 
 export class SettingMeta implements ISettingMeta {
@@ -35,6 +37,7 @@ export class SettingMeta implements ISettingMeta {
 	items?: Record<string, ISettingMeta>;
 	aliases?: string[];
 	link?: string;
+	unsearchable?: boolean = false;
 
 	constructor(meta: ISettingMeta, path: string) {
 		Object.assign(this, meta);
@@ -49,6 +52,7 @@ export class SettingMeta implements ISettingMeta {
 	get translatedTitle() { return $t(this.title); }
 	get translatedDetails() { return $t(this.details); }
 	get translatedAliases() {
+		if (this.aliases?.includes(languageNode)) return [...languageInAllLanguages];
 		const _aliases = this.aliases?.map(alias => $t(alias, false)).toCompacted();
 		return _aliases?.join(", ").split(/,\s*/).map(alias => alias.trim()).filter(alias => alias !== this.translatedTitle).toCompacted() ?? [];
 	}
@@ -116,6 +120,7 @@ type Nesting<TObject> = {
 		}> : never;
 };
 
+const languageInAllLanguages = Object.freeze(getAllLanguageTags().map(lang => i18n.t("settings.language._", { lng: lang, fallbackLng: false })));
 const metas: SettingMeta[] = [];
 const settingsMetasOutput: AnyObject = {};
 function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = false) {
@@ -144,7 +149,7 @@ function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = fal
 		const context = contexts.filter(ctx => ctx !== "other").firstDefined(ctx => i18nExists(t => t.titles[subpage], ctx) && ctx && `_${ctx}` || undefined) ?? "";
 		if (!("title" in meta)) meta.title = t.titles[subpage + context].toString();
 		if (!("details" in meta)) meta.details = "descriptions." + dotJoined + ".caption";
-		meta.aliases.pushUniquely(...contexts.map(ctx => t.titles[`${subpage}_${ctx}`].toString()), t.aliases.titles[subpage].toString());
+		meta.aliases.pushUniquely(...contexts.map(ctx => t.titles[`${subpage}${ctx ? `_${ctx}` : ""}`].toString()), t.aliases.titles[subpage].toString());
 		if (!("icon" in meta)) meta.icon = redirectIcon(subpage);
 		meta.type ??= "link";
 		meta.link ??= _path;
@@ -213,10 +218,13 @@ function updateSettingsMetasSearchMap() {
 		settingMetaSearchResults.push({ normalized, prop, meta, keyword, index });
 	};
 	for (const meta of metas) {
-		let { title, details, aliases: _aliases } = meta;
+		let { title, details, aliases: _aliases, unsearchable } = meta;
+		if (unsearchable) continue;
 		if ((title = $t(title, false))) add(title, "title", meta);
 		if ((details = $t(details, false))) add(details, "details", meta);
-		if ((_aliases = _aliases?.map(alias => $t(alias, false)).toCompacted())) {
+		if (_aliases?.includes(languageNode))
+			languageInAllLanguages.forEach((lang, i) => add(lang, "alias", meta, i));
+		else if ((_aliases = _aliases?.map(alias => $t(alias, false)).toCompacted())) {
 			const aliases = _aliases?.join(", ").split(/[,，、]\s*/).map(alias => alias.trim()).filter(alias => alias !== title).toCompacted() ?? [];
 			for (const [i, alias] of aliases.entries())
 				add(alias, "alias", meta, i);
@@ -232,26 +240,29 @@ export function search(query?: string) {
 	const locale = i18n.language;
 	const matchWordBoundary = (keyword: string) => !!keyword.match(new RegExp("\\b" + RegExp.escape(query)));
 	const getSortScore = (keyword: string) => keyword.replace(query, "").replaceAll(query, "1").realLength;
+	const compareIfBestMatch = (a: string, b: string) => +(b === query) - +(a === query);
 
 	return settingMetaSearchResults
 		.filter(({ normalized }) => normalized.includes(query))
 		.sort(({ normalized: a, ...resultA }, { normalized: b, ...resultB }) => {
 			let score: number; const indexOfA = a.indexOf(query), indexOfB = b.indexOf(query);
-			// Firstly, check if there are matches at the beginning boundary of the word, because generally no one will enter it from the inside of the word.
+			// Firstly, check to see if any of them best match the query.
+			if ((score = compareIfBestMatch(a, b))) return score;
+			// Secondly, check if there are matches at the beginning boundary of the word, because generally no one will enter it from the inside of the word.
 			if ((score = -(+matchWordBoundary(a) - +matchWordBoundary(b)))) return score;
-			// Secondly, check if any keywords start with the query word.
+			// Thirdly, check if any keywords start with the query word.
 			if (!indexOfA !== !indexOfB) return !indexOfA ? -1 : 1;
-			// Thirdly, sort by title → alias → details.
+			// Fourthly, sort by title → alias → details.
 			if ((score = settingMetaSearchResultProperties.indexOf(resultA.prop) - settingMetaSearchResultProperties.indexOf(resultB.prop))) return score;
-			// Fourthly, if they are same meta, sort with their prop collection declaration order.
+			// Fifthly, if they are same meta, sort with their prop collection declaration order.
 			if (resultA.meta === resultB.meta && resultA.prop === resultB.prop && resultA.index !== undefined && resultB.index !== undefined) return resultA.index - resultB.index;
-			// Fifthly, check if there are any most matched shorter string.
+			// Sixthly, check if there are any most matched shorter string.
 			if ((score = getSortScore(a) - getSortScore(b))) return score;
-			// Sixthly, check the query word that are closer to the beginning.
+			// Seventhly, check the query word that are closer to the beginning.
 			if ((score = indexOfA - indexOfB)) return score;
-			// Seventhly, compare by alphabet.
+			// Eighthly, compare by alphabet.
 			if ((score = a.localeCompare(b, locale))) return score;
-			// Eighthly, compare their path length, prioritize short circuit.
+			// Ninthly, compare their path length, prioritize short circuit.
 			return resultA.meta.path.length - resultB.meta.path.length;
 		})
 		.toUnique(({ meta }) => meta);

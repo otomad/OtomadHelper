@@ -63,6 +63,7 @@ export default function SettingsAbout() {
 	const { version } = useAboutApp();
 	const [showTranslators, setShowTranslators] = useState(false);
 	const { pushPage } = useSnapshot(pageStore);
+	const meta = metas.settings;
 
 	return (
 		<>
@@ -88,21 +89,20 @@ export default function SettingsAbout() {
 				</div>
 				<Translators shown={[showTranslators, setShowTranslators]} />
 			</StyledSettingsAbout>
-			<Expander
-				title={t.settings.about.version}
-				icon="sync"
+			<Setting
+				meta={meta.version}
 				actions={(
 					<>
 						<p>v{version}</p>
-						<Button onClick={() => checkForUpdates(version)}>{t.settings.about.checkForUpdates}</Button>
+						<Button icon="sync" onClick={() => checkForUpdates(version)}>{t.settings.about.checkForUpdates}</Button>
 					</>
 				)}
 			>
 				<AboutInformation />
-			</Expander>
-			<Expander title={t.settings.about.help} icon="question_circle">
+			</Setting>
+			<Setting meta={meta.help}>
 				<HelpLinks />
-			</Expander>
+			</Setting>
 		</>
 	);
 }

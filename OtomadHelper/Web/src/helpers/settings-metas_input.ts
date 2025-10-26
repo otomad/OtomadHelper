@@ -1,4 +1,5 @@
 import type { ISettingMeta, RedirectedTrans } from "./settings-metas";
+export const languageNode = Symbol("settingsMetas.languageNode");
 const { t } = new PathObject<RedirectedTrans>();
 
 export const settingsMetasInput = {
@@ -308,8 +309,85 @@ export const settingsMetasInput = {
 		clips: { icon: "number" },
 		effects: { icon: "sparkle" },
 	},
+	settings: {
+		version: { title: t.settings.about.version, aliases: [t.settings.about] },
+		help: {
+			icon: "question_circle",
+			title: t.settings.about.help,
+			items: {
+				previousVersionDocumentation: { title: t.settings.about.previousVersionDocumentation },
+			},
+		},
+		language: {
+			icon: "globe",
+			aliases: [languageNode as never],
+			items: {
+				improveTranslation: { icon: "logo/crowdin" },
+			},
+		},
+		appearance: {
+			type: "subheader",
+			items: {
+				colorScheme: { icon: "paint_brush" },
+				palette: {
+					icon: "color",
+					items: {
+						accent: { icon: "color_fill" },
+						background: { icon: "color_background" },
+					},
+				},
+				transparency: { icon: "glass" },
+				backgroundImage: { icon: "wallpaper" },
+				fontSize: { icon: "text_font_size" },
+			},
+		},
+		preference: {
+			type: "subheader",
+			items: {
+				autoSwitchSourceFrom: { icon: "arrow_swap" },
+				autoCollapsePrveClasses: { icon: "chevron_down_up" },
+				previewWithSource: { icon: "video_person" },
+			},
+		},
+		config: {
+			type: "subheader",
+			title: t.subheaders.config,
+			items: {
+				hideUsageTips: { icon: "chat_help_off" },
+				userConfig: {
+					icon: "settings_multiple",
+					items: {
+						backupAndRestore: { icon: "arrow_sync" },
+						fileLocation: { icon: "folder" },
+						dangerZone: { icon: "warning", unsearchable: true },
+					},
+				},
+				clipsFolder: { icon: "folder_video_clip" },
+			},
+		},
+		dev: {
+			type: "subheader",
+			items: {
+				devMode: { icon: "devtools" },
+				rtl: { icon: "text_paragraph_direction_left" },
+			},
+		},
+	},
+	settings_license: {},
+	settings_internal: {
+		language: { icon: "globe" },
+		autosaveInterval: { icon: "save_clock" },
+		defaultTextPlugin: { icon: "text_plugin" },
+		defaultTuningMethod: { icon: "tuning" },
+		defaultElasticMode: { icon: "plus_minus" },
+		defaultClassicMode: { icon: "hourglass" },
+		preserveClipboardOnClose: { icon: "clipboard_checkmark" },
+		eventGroupSelection: { icon: "group_link" },
+		openglInterop: { icon: "opengl" },
+	},
 } as const satisfies Record<string, Record<string, ISettingMeta>>;
 
+// #region Reusable
 function playbackRate() {
 	return {
 		icon: "play_circle_hint_half",
@@ -341,3 +419,4 @@ function preset(stream: StreamKind) {
 		},
 	} as const satisfies ISettingMeta;
 }
+// #endregion

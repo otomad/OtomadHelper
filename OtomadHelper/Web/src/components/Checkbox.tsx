@@ -186,7 +186,6 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	value: StateProperty<T[]> | StateProperty<boolean> | StateProperty<CheckState>;
 	onChange?: Function;
 } & SharedProps, "label">) {
-	"use no memo";
 	const labelEl = useDomRef<"label">();
 	const checkboxEl = useDomRef<"input">();
 	const singleMode = id === undefined, checkStateMode = typeof value === "string";
