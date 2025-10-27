@@ -70,4 +70,11 @@ export default {
 		box-shadow: 0 4px 8px ${c("shadows-flyout")};
 		backdrop-filter: blur(10px);
 	`,
+	refreshedBackdropIfHasBackgroundImage: css`
+		body:has(.background-image) & {
+			background-color: transparent;
+			border-color: ${c("stroke-color-surface-stroke-flyout-navigation-panel")};
+			outline-color: ${c("stroke-color-surface-stroke-flyout-navigation-panel")};
+		}
+	`,
 };

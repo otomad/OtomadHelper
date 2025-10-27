@@ -18,6 +18,8 @@ const StyledCommandBar = styled.div`
 	border-radius: 6px;
 	backdrop-filter: blur(10px);
 
+	${styles.effects.refreshedBackdropIfHasBackgroundImage};
+
 	* {
 		white-space: nowrap;
 	}

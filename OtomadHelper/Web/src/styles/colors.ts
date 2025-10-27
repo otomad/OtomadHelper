@@ -128,14 +128,14 @@ export default colors;
 export const ifColorScheme = {
 	light: "style(--color-scheme: light)",
 	dark: "style(--color-scheme: dark)",
-	black: "style(--color-scheme-dark: true)",
+	black: "style(--color-scheme-black: true)",
 	contrast: "style(--color-scheme-contrast: true)",
 	reduceTransparency: "style(--color-scheme-reduce-transparency: true)",
 	reduceMotion: "style(--color-scheme-reduce-motion: true)",
 	at: {
 		light: "@container style(--color-scheme: light)",
 		dark: "@container style(--color-scheme: dark)",
-		black: "@container style(--color-scheme-dark: true)",
+		black: "@container style(--color-scheme-black: true)",
 		contrast: "@container style(--color-scheme-contrast: true)",
 		reduceTransparency: "@container style(--color-scheme-reduce-transparency: true)",
 		reduceMotion: "@container style(--color-scheme-reduce-motion: true)",

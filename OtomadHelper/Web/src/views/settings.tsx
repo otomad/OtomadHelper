@@ -1,3 +1,4 @@
+import { FitType as ImageFitType } from "components/BackgroundImage";
 import { BasicColorPalette, autoColorPalettes } from "helpers/basic-color-palette";
 import { useInContextLocalization } from "helpers/jipt-activator";
 import links from "helpers/links";
@@ -59,11 +60,13 @@ export default function Settings() {
 	const { black: actualAmoledDark, contrast: actualContrast } = useActualColorScheme();
 	const {
 		fontSize, hideUseTips, autoSwitchSourceFrom, autoCollapsePrveClasses, previewWithSource,
-		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur, systemBackdrop, accentColor, backgroundColor,
+		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur, backgroundImageFit, backgroundImagePosition,
+		systemBackdrop, accentColor, backgroundColor,
 	} = useSelectConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
 	const { pushPage } = useSnapshot(pageStore);
 	const meta = metas.settings;
+	const backgroundImagePositionDisabled = backgroundImageFit[0] === "stretch";
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -293,9 +296,10 @@ export default function Settings() {
 							className="background-image-item"
 							id={id}
 							key={id}
-							image={id === -1 ? <IconTile name="prohibited" size={48} /> : url}
+							image={id === -1 ? <IconTile name="prohibited" size={48} /> : <BackgroundImageImg src={url} autoAlt fit={backgroundImageFit[0]} position={backgroundImagePosition[0]} />}
 							selected={[backgroundImages.backgroundImage[0] === id, (v: boolean) => v && backgroundImages.backgroundImage[1](id)]}
 							selectionColor={color}
+							withBorder
 							onContextMenu={id === -1 ? undefined : createContextMenu([
 								{ label: t.menu.moveForward, enabled: displayIndex > 0, onClick: () => backgroundImages.reorder(id, displayIndex - 1) },
 								{ label: t.menu.moveBackward, enabled: displayIndex < backgroundImages.items.length - 2, onClick: () => backgroundImages.reorder(id, displayIndex + 1) },
@@ -336,6 +340,12 @@ export default function Settings() {
 								defaultValue={0}
 								displayValue={i => i + t.units.pixel}
 							/>
+						</Expander.Item>
+						<Expander.Item title={t.fit} icon="aspect_ratio">
+							<ComboBox current={backgroundImageFit} ids={ImageFitType.keys} options={ImageFitType.labels} icons={(ImageFitType.meta as AnyObject).icon} />
+						</Expander.Item>
+						<Expander.Item title={t.settings.appearance.backgroundImage.position} icon="location_target" disabled={backgroundImagePositionDisabled}>
+							<PositionControl value={backgroundImagePosition} disabled={backgroundImagePositionDisabled} />
 						</Expander.Item>
 					</>
 				)}

@@ -671,7 +671,7 @@ export default function Grid() {
 									))}
 								</ItemsView>
 							</CommandBar.Item>
-							<CommandBar.Item icon={fit[0] === "contain" ? "letterbox" : "aspect_ratio"} caption={t.track.grid.fit} details={t.descriptions.track.grid.fit} hovering onClick={() => fit[1](fit => fitTypes.nextItem(fit))}>
+							<CommandBar.Item icon={fit[0] === "contain" ? "letterbox" : "aspect_ratio"} caption={t.fit} details={t.descriptions.track.grid.fit} hovering onClick={() => fit[1](fit => fitTypes.nextItem(fit))}>
 								<ItemsView view="list" current={fit}>
 									{fitTypes.map(option => (
 										<ItemsView.Item
@@ -680,7 +680,7 @@ export default function Grid() {
 											icon={option === "contain" ? "letterbox" : "aspect_ratio"}
 											details={t.descriptions.track.grid.fit[option]}
 										>
-											{t.track.grid.fit[option]}
+											{t.fit[option]}
 										</ItemsView.Item>
 									))}
 								</ItemsView>

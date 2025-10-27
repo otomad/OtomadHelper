@@ -94,6 +94,8 @@ const StyledComboBox = styled(StyledButton)(() => css`
 				);
 				transition-behavior: allow-discrete;
 
+				${styles.effects.refreshedBackdropIfHasBackgroundImage};
+
 				&:popover-open {
 					opacity: 1;
 

@@ -136,7 +136,8 @@ const StyledNavigationView = styled.div<{
 		inline-size: 320px;
 		max-inline-size: calc(100dvw / var(--zoom, 1));
 		padding-block-end: 4px;
-		overflow: hidden;
+		overflow: clip; // DO NOT set it to hidden because it will auto scroll when search box focused.
+
 
 		@media (horizontal-viewport-segments >= 2) {
 			inline-size: calc((env(viewport-segment-left 1 0) - env(viewport-segment-left 0 0)) / var(--zoom, 1));
@@ -217,9 +218,7 @@ const StyledNavigationView = styled.div<{
 				block-size: calc(100% - ${UnsupportedBrowserInfoBar.height}px);
 			}
 
-			body:has(.background-image) & {
-				background-color: transparent;
-			}
+			${styles.effects.refreshedBackdropIfHasBackgroundImage};
 		}
 
 		search {

@@ -1,3 +1,4 @@
+import type { FitType as imageFitTypes } from "components/BackgroundImage";
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
 import { deepClone } from "valtio/utils";
 import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
@@ -7,7 +8,7 @@ import type { systemBackdrops } from "views/settings";
 import type { textPlugins } from "views/settings/internal";
 import type { barOrBeatUnitTypes, selectGeneratedClipsType, sequentialOrders, sourceFromEnums, startTimes, trackNames } from "views/source";
 import type { trackLegatoModes } from "views/track";
-import type { arrayTypes, directionTypes, fitTypes, parityTypes } from "views/track/grid";
+import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
 import type { glissandoEffects, legatos, prerenders, stretches, transformMethods, truncates } from "views/visual";
 
 namespace Config {
@@ -30,7 +31,7 @@ namespace Config {
 	export type TrackOrChannel = typeof trackAndChannel[number];
 	export type GridArrayType = typeof arrayTypes[number];
 	export type GridDirectionOrderType = typeof directionTypes[number];
-	export type GridFitType = typeof fitTypes[number];
+	export type GridFitType = typeof gridFitTypes[number];
 	export type GridParityType = typeof parityTypes[number];
 	export type TrackLegatoMode = typeof trackLegatoModes[number];
 	export type NormalizeTime = typeof normalizeTimes[number]["id"];
@@ -44,6 +45,7 @@ namespace Config {
 	export type TuningClassicMode = typeof tuningClassicModes[number];
 	export type TextPlugin = typeof textPlugins[number]["id"];
 	export type VisualGlissandoEffect = typeof glissandoEffects[number]["id"];
+	export type ImageFitType = typeof imageFitTypes.keyType;
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -325,6 +327,8 @@ namespace Config {
 			backgroundImageOpacity: 0.2,
 			backgroundImageTint: 0,
 			backgroundImageBlur: 0,
+			backgroundImageFit: "cover" satisfies ImageFitType as ImageFitType,
+			backgroundImagePosition: "center" satisfies Position as Position,
 			systemBackdrop: "acrylic" satisfies SystemBackdrop as SystemBackdrop,
 			accentColor: "wallpaper",
 			backgroundColor: "windows",

@@ -217,6 +217,16 @@ export default {
 			sharp: "Sharp",
 			hold: "Hold",
 		},
+		fit: {
+			_: "Fit",
+			cover: "Cover",
+			contain: "Contain",
+			original: "Original",
+			stretch: "Stretch",
+			scaleDown: "Scale down",
+			tile: "Tile",
+			tileContain: "Tile contain",
+		},
 		fileFormats: {
 			allFiles: "All Files",
 			txt: "Text Documents",
@@ -487,11 +497,6 @@ export default {
 					tbLr: "Vertical", // Writing from top to bottom, then from left to right.
 					rlTb: "Reverse horizontal", // Writing from right to left, then from top to bottom.
 					tbRl: "Reverse vertical", // Writing from top to bottom, then from right to left.
-				},
-				fit: {
-					_: "Fit",
-					cover: "Cover",
-					contain: "Contain",
 				},
 				mirrorEdges: "Mirror edges",
 				parity: {
@@ -841,6 +846,7 @@ export default {
 					opacity: "Opacity",
 					tint: "Tint",
 					blur: "Blurriness",
+					position: "Position",
 				},
 				colorScheme: {
 					_: "Color scheme",

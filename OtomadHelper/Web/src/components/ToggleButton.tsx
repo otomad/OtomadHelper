@@ -9,8 +9,10 @@ export default function ToggleButton({ checked: [checked, setChecked] = [false] 
 	 * When checked, the button has a background, the background is accent color, and the content is highlighted.
 	 * - `"intense-hyperlink"`: When unchecked, the button is background-less, the content is **accent color**;
 	 * When checked, the button has a background, the background is accent color, and the content is highlighted.
+	 * - `"obvious"`: Regardless of whether it is checked or not, the button has a background.
+	 * @default intense
 	 */
-	appearance?: "subtle" | "intense" | "intense-hyperlink";
+	appearance?: "subtle" | "intense" | "intense-hyperlink" | "obvious";
 	/** Occurs when check state changed. */
 	onToggled?(checked?: boolean): void;
 }>>) {
@@ -29,6 +31,8 @@ export default function ToggleButton({ checked: [checked, setChecked] = [false] 
 			{...appearance === "subtle" ? {
 				subtle,
 				accent: checked ? true : "neutral",
+			} : appearance === "obvious" ? {
+				accent: checked,
 			} : {
 				subtle: checked ? false : subtle,
 				accent: appearance === "intense" ? checked : true,
