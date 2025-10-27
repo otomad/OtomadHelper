@@ -582,7 +582,7 @@ function HoverToChangeImg({ staticSrc, animatedSrc }: FCP<{
 }>) {
 	const hover = useHoverWhenPreferringMotion();
 
-	return <img src={hover ? animatedSrc : staticSrc} alt="" />;
+	return <img src={hover ? animatedSrc : staticSrc} />;
 }
 
 function WebglFilter({ src, effect, step }: {

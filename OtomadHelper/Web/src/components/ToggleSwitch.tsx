@@ -222,7 +222,7 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	}
 `);
 
-export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, _reduceLag, anchor, children, onChange, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, children, onChange, ...htmlAttrs }: FCP<{
 	/** Is on? */
 	on: StateProperty<boolean>;
 	/** Disabled */
@@ -256,12 +256,6 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	selectInfo?: ReactNode;
 	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. */
 	selectValid?: boolean | number;
-	/**
-	 * HACK: Become less laggy.\
-	 * The current use case is that if there is a slider below the toggle switch, it can prevent the slider from getting stuck when sliding.\
-	 * But this will cause the content to become static.
-	 */
-	_reduceLag?: boolean;
 	/**
 	 * @deprecated
 	 * - For Expander Item title, please use children slot instead;
@@ -347,13 +341,6 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 		thumb.addEventListener("pointerup", pointerUp, { signal: aborter.signal });
 	}, [handleCheck, setIsPressing, reduceMotion]);
 
-	const textEl = useDomRef<"div">();
-	useEffect(() => {
-		// HACK: Mystery code. After the following code, it will become less laggy.
-		// The current use case is that if there is a slider below the toggle switch, it can prevent the slider from getting stuck when sliding.
-		if (_reduceLag && textEl.current?.parentNode) textEl.current.outerHTML = textEl.current.outerHTML;
-	}, [children, details, selectInfo, selectValid, _reduceLag, textEl]);
-
 	return (
 		<StyledToggleSwitchLabel
 			as={as as "button"}
@@ -372,7 +359,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 		>
 			{icon && <Icon name={icon} />}
 			{(children || details) && (
-				<div className="text" aria-hidden ref={textEl}>
+				<div className="text" aria-hidden>
 					{children && <p className="title" id={`${ariaId}-title`}>{children}</p>}
 					{details && <p className="details" id={`${ariaId}-details`}>{details}</p>}
 					<SettingsCard.SelectInfo valid={selectValid}>{selectInfo}</SettingsCard.SelectInfo>

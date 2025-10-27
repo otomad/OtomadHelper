@@ -88,7 +88,7 @@ export default css`
 			cursor: not-allowed;
 			pointer-events: none;
 			user-select: none;
-			interactivity: inert;
+			// DO NOT add \`interactivity: inert\` which will let screen reader to skip it.
 		}
 
 		// Inert style overrides.

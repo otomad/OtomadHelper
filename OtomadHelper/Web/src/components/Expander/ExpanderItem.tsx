@@ -189,7 +189,7 @@ const StyledExpanderItem = styled.div<{
 		` : undefined}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, nonFocusable, asSubtitle, noDivider, ariaHiddenForText, anchor, children, disabled = false, wrapActionsWhenNarrow, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, nonFocusable, asSubtitle, noDivider, ariaHiddenForText, anchor, children, disabled = false, wrapActionsWhenNarrow, selectInfo, selectValid = true, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -216,6 +216,10 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	 * @default undefined
 	 */
 	wrapActionsWhenNarrow?: boolean;
+	/** Specifies the display string of the selection of tracks or track events. */
+	selectInfo?: ReactNode;
+	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. */
+	selectValid?: boolean | number;
 }, "div">) {
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 	if (noDivider === true) noDivider = "before";
@@ -240,6 +244,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 							<div className="text" aria-hidden={ariaHiddenForText}>
 								<p className="title"><Preserves>{title}</Preserves></p>
 								<p className="details"><Preserves>{details}</Preserves></p>
+								<SettingsCard.SelectInfo valid={selectValid}>{selectInfo}</SettingsCard.SelectInfo>
 							</div>
 						</>
 					)}

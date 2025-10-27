@@ -38,7 +38,7 @@ export default function SettingsPageControlPreviewImage({ image, children }: FCP
 }>) {
 	return (
 		<StyledSettingsPageControlPreviewImage $customImage={typeof image !== "string"}>
-			{typeof image === "string" ? <Img src={image} /> : image}
+			{typeof image === "string" ? <Img src={image} alt={undefined} /> : image}
 			<div className="stroke" />
 			{children}
 		</StyledSettingsPageControlPreviewImage>

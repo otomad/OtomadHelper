@@ -5,7 +5,7 @@ import GlobalStyle from "styles/global";
 import ShellPage from "./ShellPage";
 
 export default function App() {
-	"use no memo";
+	"use no memo"; // TODO: Use standard react-i18next, the custom hook seems break aria-label.
 	const [ready, setReady] = useState(false);
 
 	useMountEffect(() => {
@@ -15,7 +15,6 @@ export default function App() {
 		changeColorScheme(undefined, undefined, undefined, "refresh");
 	});
 
-	const { i18n } = useTranslation();
 	const forceUpdate = useForceUpdate();
 	i18n.on("languageChanged", forceUpdate);
 

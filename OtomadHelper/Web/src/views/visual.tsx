@@ -223,7 +223,7 @@ export default function Visual() {
 						<Setting meta={meta.preset.previewIdeality} on={presetPreviewIdeality} />
 						<Setting meta={meta.preset.customPresets} asSubtitle noDivider="after" />
 						<div>
-							<EmptyMessage.Mini>{t.descriptions.stream.preset.empty}</EmptyMessage.Mini>
+							<EmptyMessage.Mini icon="preset">{t.descriptions.stream.preset.empty}</EmptyMessage.Mini>
 						</div>
 						<Expander.ChildWrapper $tilePadding="standard button to item">
 							<Button icon="add">{t.stream.preset.add}</Button>

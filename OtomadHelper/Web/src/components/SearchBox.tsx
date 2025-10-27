@@ -128,7 +128,7 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 					customFlyout={value?.trim() && (
 						<StyledDataList ref={datalistEl} tabIndex={-1} onMouseDown={e => e.preventDefault()}>
 							{searchResults}
-							<EmptyMessage.Mini>{t.noMatchingResults}</EmptyMessage.Mini>
+							<EmptyMessage.Mini icon="search">{t.noMatchingResults}</EmptyMessage.Mini>
 						</StyledDataList>
 					)}
 					onKeyDown={handleKeyDown}

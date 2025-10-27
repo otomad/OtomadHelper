@@ -1,6 +1,6 @@
 <svg id="svg_1753_3649" width="82" height="16" viewBox="0 0 177 35" fill="none" xmlns="http://www.w3.org/2000/svg">
 	<style>
-		@container style(--color-scheme: dark) {
+		@container style(--color-scheme: dark) or style(--color-scheme-contrast: true) {
 			#svg_1753_3649 path {
 				fill: currentColor;
 			}

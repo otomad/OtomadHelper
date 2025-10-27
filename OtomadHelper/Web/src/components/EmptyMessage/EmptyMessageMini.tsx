@@ -1,12 +1,16 @@
 const StyledEmptyMessageMini = styled.div`
 	${styles.effects.text.body};
 	${styles.mixins.flexCenter()};
-	gap: 1.5ex;
+	gap: 1ex;
 	margin-block: 0.5lh;
 	color: ${c("fill-color-text-tertiary")};
 
-	.icon {
+	> .icon {
 		${styles.effects.text.iconSmall};
+	}
+
+	> p {
+		margin-block-start: -1px;
 	}
 
 	&:not(:only-child) {
@@ -20,7 +24,7 @@ export /* @internal */ default function EmptyMessageMini({ children, icon = "pla
 	children: ReactNode;
 }, "div">) {
 	return (
-		<StyledEmptyMessageMini>
+		<StyledEmptyMessageMini {...htmlAttrs}>
 			<Icon name={icon} />
 			<p>{children}</p>
 		</StyledEmptyMessageMini>

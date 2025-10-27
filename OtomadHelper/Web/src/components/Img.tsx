@@ -33,6 +33,8 @@ function resetImageAttributes(image: HTMLImageElement, withAttrs: FCP<{}, "img">
 		draggable: false,
 		...withAttrs as object,
 	});
+	if ("alt" in withAttrs && withAttrs.alt === undefined)
+		image.removeAttribute("alt");
 }
 
 export default function Img({ src, duplicate, ref, ...htmlAttrs }: FCP<{

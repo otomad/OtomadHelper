@@ -18,6 +18,10 @@ const StyledSettingsAboutLogo = styled.div`
 	flex-direction: column;
 	direction: ltr;
 	text-align: center;
+	pointer-events: if(
+		${ifColorScheme.dark} or ${ifColorScheme.contrast}: none;
+		else: auto;
+	);
 	zoom: 1.325;
 
 	.row-1 {
@@ -33,13 +37,18 @@ const StyledSettingsAboutLogo = styled.div`
 
 	.icon-wrapper > * {
 		&.light {
-			display: --light-dark(block, none);
+			display: if(
+				${ifColorScheme.dark} or ${ifColorScheme.contrast}: none;
+				else: block;
+			);
 			cursor: pointer;
 		}
 
 		&.dark {
-			display: --light-dark(none, block);
-			pointer-events: none;
+			display: if(
+				${ifColorScheme.dark} or ${ifColorScheme.contrast}: block;
+				else: none;
+			);
 		}
 
 		&:active {
@@ -102,7 +111,7 @@ export /** @internal */ default function SettingsAboutLogo() {
 
 	return (
 		<StyledSettingsAboutLogoWrapper>
-			<StyledSettingsAboutLogo role="img" aria-hidden>
+			<StyledSettingsAboutLogo role="img" aria-label={t.aria.otomadHelperLogo.toString()}>
 				<div className="row-1">
 					<div className="icon-wrapper" data-icon-style={iconStyle} onClick={nextIconStyle}>
 						<Attrs className="light">

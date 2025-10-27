@@ -22,6 +22,8 @@ export function redirectIcon(name: string): DeclaredIcons & DeclaredLotties {
 		prve: "sparkle",
 		staff: "g_clef",
 		pixelScaling: "pixelate_zoom",
+		internal: "registry",
+		license: "certificate",
 	} as const satisfies Record<string, DeclaredIcons | DeclaredLotties>;
 	return (hasOwn(redirects, name) ? redirects[name] : name) as DeclaredIcons & DeclaredLotties;
 }

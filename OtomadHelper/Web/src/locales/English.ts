@@ -1283,7 +1283,7 @@ export default {
 					},
 				},
 				internal: {
-					_: "This includes some practical options that cannot be set in the VEGAS Pro preferences",
+					caption: "This includes some practical options that cannot easily be set in the VEGAS Pro preferences",
 					info: "This will modify the global preferences of VEGAS Pro, not only for the current project. Incorrect settings may cause VEGAS Pro to fail to start. Please use with caution.",
 					language: "Change VEGAS Pro language. Restart VEGAS Pro for the change to take effect.",
 					autosaveInterval: "Adjust the autosave time for projects. Defaults to {{default}} minutes.",
@@ -1338,6 +1338,7 @@ export default {
 			timesOperator: "Times",
 			reorderHandle: "Drag to reorder",
 			searchBox: "Search box",
+			otomadHelperLogo: "Otomad Helper Logo",
 		},
 		aliases: {
 			// cSpell:disable

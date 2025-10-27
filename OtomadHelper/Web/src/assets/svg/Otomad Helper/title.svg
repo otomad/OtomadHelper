@@ -1,6 +1,6 @@
 <svg id="svg_1753_3626" width="146" height="67" viewBox="0 0 317 146" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<style>
-		@container style(--color-scheme: dark) {
+		@container style(--color-scheme: dark) or style(--color-scheme-contrast: true) {
 			#svg_1753_3626 > .light-only {
 				display: none;
 			}

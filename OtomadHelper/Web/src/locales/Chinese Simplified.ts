@@ -1296,6 +1296,7 @@ export default {
 			timesOperator: "乘以",
 			reorderHandle: "拖拽以排序",
 			searchBox: "搜索框",
+			otomadHelperLogo: "Otomad Helper 标志",
 		},
 		aliases: {
 			titles: {

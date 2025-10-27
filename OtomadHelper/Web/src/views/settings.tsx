@@ -362,25 +362,24 @@ export default function Settings() {
 			</Setting>
 
 			<Subheader meta={meta.preference} />
-			<SettingsCard title={t({ context: "long" }).titles.internal} details={t.descriptions.settings.internal} type="button" icon="registry" onClick={() => pushPage("internal")} />
+			<Setting meta={meta.internal} onClick={() => pushPage("internal")} />
 			<Setting meta={meta.preference.autoSwitchSourceFrom} on={autoSwitchSourceFrom} />
 			<Setting meta={meta.preference.autoCollapsePrveClasses} on={autoCollapsePrveClasses} />
 			<Setting meta={meta.preference.previewWithSource} on={previewWithSource} />
 
 			<Subheader meta={meta.config} />
 			<Setting meta={meta.config.userConfig}>
-				<Setting meta={meta.config.userConfig.backupAndRestore}>
-					<StackPanel>
-						<Button icon="arrow_download">{t.export}</Button>
-						<Button icon="arrow_upload">{t.import}</Button>
-					</StackPanel>
-				</Setting>
-				<Setting meta={meta.config.userConfig.fileLocation} details="C:\">
-					<Button icon="location_target">{t.locate}</Button>
-				</Setting>
-				<Setting meta={meta.config.userConfig.dangerZone}>
-					<Button icon="arrow_reset" accent="critical">{t.reset}</Button>
-				</Setting>
+				<Setting
+					meta={meta.config.userConfig.backupAndRestore}
+					actions={(
+						<StackPanel>
+							<Button icon="arrow_download">{t.export}</Button>
+							<Button icon="arrow_upload">{t.import}</Button>
+						</StackPanel>
+					)}
+				/>
+				<Setting meta={meta.config.userConfig.fileLocation} selectInfo="C:\" actions={<Button icon="location_target">{t.locate}</Button>} />
+				<Setting meta={meta.config.userConfig.dangerZone} actions={<Button icon="arrow_reset" accent="critical">{t.reset}</Button>} />
 			</Setting>
 			<Setting meta={meta.config.clipsFolder}>
 				<Expander.ChildWrapper $single>

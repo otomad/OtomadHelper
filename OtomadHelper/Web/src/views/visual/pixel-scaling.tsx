@@ -28,7 +28,7 @@ export default function PixelScaling() {
 					alwaysShowCheckInfo
 					expanded
 				>
-					<ToggleSwitch on={[isManuallyAutoScaleFactor || autoScaleFactor, setAutoScaleFactor]} disabled={isManuallyAutoScaleFactor} _reduceLag>{t.auto}</ToggleSwitch>
+					<ToggleSwitch on={[isManuallyAutoScaleFactor || autoScaleFactor, setAutoScaleFactor]} disabled={isManuallyAutoScaleFactor}>{t.auto}</ToggleSwitch>
 					<Expander.ChildWrapper $single>
 						<Slider value={[autoScaleFactor ? 0 : scaleFactor, setScaleFactor]} step={1} displayValue onDisplayValueChanged={setDisplayScaleFactor} />
 					</Expander.ChildWrapper>
