@@ -180,7 +180,7 @@ export const settingsMetasInput = {
 					title: t.stream.tuning.tuningMethod.oscillator_full,
 					details: t.descriptions.stream.tuning.mimical.oscillator,
 					aliases: [t.stream.tuning.tuningMethod.oscillator],
-					icon: "waveforms/triangle",
+					icon: "waveforms/sawtooth",
 				},
 			},
 		},

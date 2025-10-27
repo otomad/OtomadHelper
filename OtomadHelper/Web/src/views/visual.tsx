@@ -61,8 +61,8 @@ export default function Visual() {
 	const meta = metas.visual;
 	const topPriorityTransformMethod = transformMethod[0][0];
 
-	useEffect(() => { mimicalResample[0] === "true" && mimicalOscillator[0] === "true" && mimicalOscillator[1]("auto"); }, [mimicalResample[0]]);
-	useEffect(() => { mimicalResample[0] === "true" && mimicalOscillator[0] === "true" && mimicalResample[1]("auto"); }, [mimicalOscillator[0]]);
+	useEffect(() => { mimicalResample[0] && mimicalOscillator[0] && mimicalOscillator[1](null); }, [mimicalResample[0]]);
+	useEffect(() => { mimicalResample[0] && mimicalOscillator[0] && mimicalResample[1](null); }, [mimicalOscillator[0]]);
 
 	const { pushPage } = useSnapshot(pageStore);
 
@@ -93,8 +93,8 @@ export default function Visual() {
 				<ExpanderStreamPlaybackRate stream="visual" />
 				<Setting
 					meta={meta.loop}
-					selectInfo={loop[0] === "auto" && t.descriptions.stream.loop.unset}
-					actions={<ThreeStageSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />}
+					selectInfo={loop[0] === null && t.descriptions.stream.loop.unset}
+					actions={<TriStateSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />}
 				/>
 				<ExpanderStreamPrerender stream="visual" />
 				<EmptyMessage.YtpDisabled>
@@ -137,8 +137,8 @@ export default function Visual() {
 					<Setting meta={meta.timeUnremapping} on={timeUnremapping} />
 					<Setting meta={meta.mimical}>
 						<InfoBar status="info">{t.descriptions.stream.tuning.mimical.auto}</InfoBar>
-						<Setting meta={meta.mimical.resample} actions={<ThreeStageSwitch current={mimicalResample} />} />
-						<Setting meta={meta.mimical.oscillator} actions={<ThreeStageSwitch current={mimicalOscillator} />} />
+						<Setting meta={meta.mimical.resample} actions={<TriStateSwitch current={mimicalResample} indetText={t.auto} indetIcon="auto" />} />
+						<Setting meta={meta.mimical.oscillator} actions={<TriStateSwitch current={mimicalOscillator} indetText={t.auto} indetIcon="auto" />} />
 					</Setting>
 					<Setting meta={meta.transition} on={transition}>
 						<Setting

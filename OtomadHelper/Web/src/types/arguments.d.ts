@@ -59,8 +59,8 @@ declare global {
 		[property in keyof TState]: StatePropertyNonNull<TState[property]>;
 	};
 
-	/** Three stage switch type. */
-	type TrueFalseAuto = "true" | "false" | "auto";
+	/** Tri-state switch type. */
+	type TriState = true | false | null;
 
 	/** The type of oscillator to use. Must be one of the following: "sinusoid", "square", "sawtooth", "triangle". */
 	type OscillatorCommonType = "sinusoid" | "triangle" | "square" | "sawtooth";

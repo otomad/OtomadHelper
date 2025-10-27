@@ -1084,7 +1084,7 @@ export default {
 					},
 					mimical: {
 						_: "Applies techniques inspired by audio tuning methods to visual processing",
-						auto: "Setting these properties to Auto means they will only be enabled when the corresponding property in the Audio configuration is enabled.",
+						auto: "Setting these properties to Auto means they will only be enabled when the corresponding properties in the Audio configuration are also enabled.",
 						resample: "Mimics the resampling behavior in the Visual, causing the stretch to flex as the pitch increases",
 						oscillator: "Mimics the Manual Oscillator behavior in the Visual to produce rapidly repetitive visuals",
 					},

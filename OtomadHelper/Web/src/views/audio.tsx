@@ -8,7 +8,7 @@ export /* @internal */ const tuningMethods = [
 	{ id: "pitchShift", icon: "plugin" },
 	{ id: "elastic", icon: "plus_minus" },
 	{ id: "classic", icon: "hourglass" },
-	{ id: "oscillator", icon: "waveforms/triangle" },
+	{ id: "oscillator", icon: "waveforms/sawtooth" },
 ] as const;
 
 export /* @internal */ const exactTuningMethods = [
@@ -149,8 +149,8 @@ export default function Audio() {
 				/>
 				<Setting
 					meta={meta.loop}
-					selectInfo={loop[0] === "auto" && t.descriptions.stream.loop.unset}
-					actions={<ThreeStageSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />}
+					selectInfo={loop[0] === null && t.descriptions.stream.loop.unset}
+					actions={<TriStateSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />}
 				/>
 				<ExpanderStreamPrerender stream="audio" />
 				<EmptyMessage.YtpDisabled>
