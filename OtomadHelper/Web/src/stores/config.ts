@@ -167,6 +167,7 @@ namespace Config {
 			transition: false,
 			transitionAlignment: 0,
 			transitionDuration: EMPTY_TIMECODE,
+			transitionCrossfadeCurve: ["smooth", "smooth"] as [CurveType, CurveType],
 			prerender: "instant" satisfies PrerenderAs as PrerenderAs,
 			transformMethod: ["panCrop", "pictureInPicture", "transformOfx"] as TransformMethod[],
 			prve: {

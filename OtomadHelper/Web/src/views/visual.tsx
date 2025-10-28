@@ -50,7 +50,7 @@ export default function Visual() {
 	const {
 		enabled, preferredTrack: preferredTrackIndex,
 		stretch, loop, staticVisual, truncate, legato, multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping, presetPreviewIdeality,
-		mimicalResample, mimicalOscillator, transition, transitionAlignment, transitionDuration,
+		mimicalResample, mimicalOscillator, transition, transitionAlignment, transitionDuration, transitionCrossfadeCurve,
 		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioNegative, activeParameterScheme,
 	} = useSelectConfig(c => c.visual);
 	// const activeParameterScheme = useSelectConfigArray(c => c.visual.activeParameterScheme);
@@ -159,6 +159,7 @@ export default function Visual() {
 							)}
 						/>
 						<Setting meta={meta.transition.duration} actions={<TimecodeBox value={transitionDuration} />} />
+						<Expander.Item.CrossfadeCurve curve={transitionCrossfadeCurve} />
 						<InfoBar status="info">{t.descriptions.stream.transition.crossfadeInfo}</InfoBar>
 					</Setting>
 					<Setting meta={meta.transformMethod} checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.shared.plugins[topPriorityTransformMethod] })}>

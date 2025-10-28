@@ -18,17 +18,20 @@ const StyledComboBox = styled(StyledButton)(() => css`
 
 	.content {
 		${styles.mixins.square("100%")};
+		gap: 0;
 
 		&,
 		.text {
 			display: flex;
-			gap: 8px;
 			align-items: center;
 		}
 
 		.text {
 			${styles.effects.text.body};
+			gap: 8px;
 			width: 100%;
+			contain: inline-size;
+			overflow-inline: clip;
 		}
 	}
 

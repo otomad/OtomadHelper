@@ -1,4 +1,4 @@
-import ExpanderItemCurve from "components/Business/ExpanderItemCurve";
+import ExpanderItemCurve, { ExpanderItemCrossfadeCurve } from "components/Business/ExpanderItemCurve";
 
 export /* @internal */ const styledExpanderItemBase = css`
 	container: setting-card-base;
@@ -256,3 +256,4 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 }
 
 ExpanderItem.Curve = ExpanderItemCurve;
+ExpanderItem.CrossfadeCurve = ExpanderItemCrossfadeCurve;
