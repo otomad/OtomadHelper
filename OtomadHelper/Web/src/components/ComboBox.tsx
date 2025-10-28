@@ -51,8 +51,6 @@ const StyledComboBox = styled(StyledButton)(() => css`
 	}
 
 	select& {
-		margin-inline: 1px;
-
 		option {
 			background-color: ${c("background-color")};
 		}

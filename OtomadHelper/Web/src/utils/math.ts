@@ -63,6 +63,20 @@ export function map(x: number, min: number, max: number, a: number, b: number) {
 }
 
 /**
+ * This function combine {@link clamp} and {@link map} into one.
+ *
+ * @param x - The value within the old range to be mapped.
+ * @param min - The minimum value of the old range.
+ * @param max - The maximum value of the old range.
+ * @param a - The minimum value of the new range.
+ * @param b - The maximum value of the new range.
+ * @returns The clamp-mapped value within the new range.
+ */
+export function clampMap(x: number, min: number, max: number, a: number, b: number) {
+	return map(clamp(x, min, max), min, max, a, b);
+}
+
+/**
  * ### Inaccurate Thermometer
  *
  * Maps a value from one range to another, with a linear relationship between the old and new ranges and

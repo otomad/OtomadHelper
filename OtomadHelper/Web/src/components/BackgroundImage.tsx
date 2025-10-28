@@ -69,15 +69,15 @@ const StyledBackgroundImageImg = styled.img`
 	}
 `;
 
-export function BackgroundImageImg({ src, autoAlt = false, fit = "cover", position = "center", children: _children, style, ...htmlAttrs }: FCP<{
+export function BackgroundImageImg({ src, autoAlt = false, fit = "cover", position: [x, y] = [50, 50], children: _children, style, ...htmlAttrs }: FCP<{
 	/** Image source href. */
 	src: string;
 	/** Allow screen reader to auto fetch image a11y description online? @default false */
 	autoAlt?: boolean;
 	/** Fit type. */
 	fit?: Config.ImageFitType;
-	/** Image position. */
-	position?: Position;
+	/** Image position (percent of x and y). */
+	position?: TwoD;
 	children?: never;
 }, "img">) {
 	const isTile = fit.includes("tile");
@@ -91,7 +91,7 @@ export function BackgroundImageImg({ src, autoAlt = false, fit = "cover", positi
 				...style as AnyObject,
 				backgroundImage: isTile ? `url("${src}")` : undefined,
 				objectFit: !isTile ? cssFit : undefined,
-				"--position": position,
+				"--position": `${x}% ${y}%`,
 			}}
 			{...htmlAttrs}
 		/>

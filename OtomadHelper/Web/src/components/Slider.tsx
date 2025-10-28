@@ -1,9 +1,48 @@
 import { inSettingsCardTrailing } from "./TextBox";
 
 const THUMB_SIZE = 20;
+export /* @internal */ const sliderThumbSize = THUMB_SIZE;
 const TRACK_THICKNESS = 4;
 const valueCalc = "calc(var(--value) * (100% - var(--thumb-size)))";
 const thumbSizeHalf = "calc(var(--thumb-size) / 2)";
+
+export /* @internal */ const SliderThumb = styled.div`
+	${styles.mixins.square(`var(--thumb-size, ${THUMB_SIZE}px)`)};
+	${styles.mixins.circle()};
+	${styles.mixins.flexCenter()};
+	position: absolute;
+	background-color: ${c("fill-color-control-solid-default")};
+	box-shadow:
+		0 0 0 1px ${c("stroke-color-control-stroke-default")},
+		0 1px 0 ${c("stroke-color-control-stroke-default")};
+	transition: ${fallbackTransitions}, ${styles.effects.focusRingTransitions}, inset 0s !important;
+	forced-color-adjust: none;
+
+	&::after {
+		content: "";
+		${styles.mixins.square("100%")};
+		${styles.mixins.circle()};
+		display: block;
+		background-color: ${c("accent-color")};
+		scale: ${12 / 20};
+		transition: ${fallbackTransitions}, scale ${eases.easeOutBackSmooth} 250ms !important;
+	}
+
+	&:hover::after,
+	&.hover::after {
+		scale: ${14 / 20};
+	}
+
+	.track:active ~ &::after,
+	&:active::after,
+	&.pressed::after {
+		scale: ${10 / 20} !important;
+	}
+
+	[disabled] &::after {
+		background-color: ${c("fill-color-accent-disabled")};
+	}
+`;
 
 const StyledSlider = styled.div`
 	--value: 0;
@@ -54,39 +93,9 @@ const StyledSlider = styled.div`
 		transition: background-color ${eases.easeOutMax} 250ms;
 	}
 
-	.thumb {
-		${styles.mixins.square("var(--thumb-size)")};
-		${styles.mixins.circle()};
-		${styles.mixins.flexCenter()};
-		position: absolute;
+	${SliderThumb} {
 		inset-block-start: calc(var(--track-thickness) / 2);
 		inset-inline-start: ${valueCalc};
-		background-color: ${c("fill-color-control-solid-default")};
-		box-shadow:
-			0 0 0 1px ${c("stroke-color-control-stroke-default")},
-			0 1px 0 ${c("stroke-color-control-stroke-default")};
-		transition: ${fallbackTransitions}, ${styles.effects.focusRingTransitions}, inset-inline-start 0s !important;
-		forced-color-adjust: none;
-
-		&::after {
-			content: "";
-			${styles.mixins.square("100%")};
-			${styles.mixins.circle()};
-			display: block;
-			background-color: ${c("accent-color")};
-			scale: ${12 / 20};
-			transition: ${fallbackTransitions}, scale ${eases.easeOutBackSmooth} 250ms !important;
-		}
-
-		&:hover::after {
-			scale: ${14 / 20};
-		}
-	}
-
-	.track:active ~ .thumb::after,
-	.thumb:active::after,
-	.thumb.pressed::after {
-		scale: ${10 / 20} !important;
 	}
 
 	&[disabled] {
@@ -94,8 +103,7 @@ const StyledSlider = styled.div`
 			background-color: ${c("fill-color-control-strong-disabled")};
 		}
 
-		.passed,
-		.thumb::after {
+		.passed {
 			background-color: ${c("fill-color-accent-disabled")};
 		}
 	}
@@ -219,24 +227,22 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 		const { left, width } = track.getBoundingClientRect();
 		const x = triggerByTrack ? thumbSize / 2 : e.clientX - left - thumb.offsetLeft * getUiScale1();
 		const aborter = new AbortController();
-		const pointerMove = lodash.debounce((e: PointerEvent) => {
+		thumb.setPointerCapture(e.pointerId);
+		thumb.addEventListener("pointermove", lodash.debounce((e: PointerEvent) => {
 			const position = clamp(e.clientX - left - x, 0, width - thumbSize);
 			let value = clampValue(map(position, 0, width - thumbSize, min, max));
 			if (isRtl()) value = max - value + min;
 			setValue(value);
 			onChanging?.(value);
-		});
-		const pointerUp = () => {
+		}), { signal: aborter.signal });
+		thumb.addEventListener("pointerup", () => {
 			aborter.abort();
 			thumb.releasePointerCapture(e.pointerId);
 			onChange?.(value!);
 			nextAnimationTick().then(() => {
 				setPressed(false);
 			});
-		};
-		thumb.setPointerCapture(e.pointerId);
-		thumb.addEventListener("pointermove", pointerMove, { signal: aborter.signal });
-		thumb.addEventListener("pointerup", pointerUp, { signal: aborter.signal });
+		}, { signal: aborter.signal });
 	}
 
 	const onTrackDown: PointerEventHandler = e => {
@@ -301,7 +307,7 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 			>
 				<div className="track" onPointerDown={onTrackDown} />
 				<div className="passed" />
-				<div className={["thumb", { pressed }]} onPointerDown={onThumbDown} />{/* onDoubleClick={resetToDefault} */ /* Easy to touch by mistake */}
+				<SliderThumb className={["thumb", { pressed }]} onPointerDown={onThumbDown} />{/* onDoubleClick={resetToDefault} */ /* Easy to touch by mistake */}
 			</StyledSlider>
 		</StyledSliderWrapper>
 	);

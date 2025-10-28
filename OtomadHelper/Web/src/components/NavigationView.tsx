@@ -225,7 +225,7 @@ const StyledNavigationView = styled.div<{
 			transition: ${fallbackTransitions}, margin-inline 0s;
 
 			&:not(.collapsed) {
-				margin-block: 4px 3px;
+				margin-block: 3px 4px;
 				margin-inline: 9px;
 
 				.text-box .leading-icon {
@@ -711,7 +711,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	const pagePath = currentNav!.join("/");
 	const responsive = usePaneDisplayMode();
 	const [flyoutDisplayMode, setFlyoutDisplayMode] = useState<PaneDisplayMode>("minimal");
-	const [isExpandedInExpandedMode, setIsExpandedInExpandedMode] = useState(true);
+	const [isExpandedInExpandedMode, setIsExpandedInExpandedMode] = useSelectConfig(c => c.settings).isExpandedInExpandedMode;
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 	const pageContentEl = useDomRef<"div">();
