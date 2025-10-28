@@ -3,7 +3,8 @@ import { SliderThumb, sliderThumbSize } from "./Slider";
 const BUTTON_SIZE = 32;
 const KEY_PERCENT = [0, 50, 100] as const;
 const childrenStates = ["hover", "pressed"] as const;
-const thumbMovementOffset = BUTTON_SIZE * 3 - 8 - sliderThumbSize;
+const thumbMoveOffset = BUTTON_SIZE * 3 - 8 - sliderThumbSize;
+const POINTER_MOVE_THRESHOLD = 5;
 
 const StyledPositionControl = styled.div`
 	${styles.mixins.square(BUTTON_SIZE * 3 + "px")}
@@ -21,8 +22,8 @@ const StyledPositionControl = styled.div`
 	}
 
 	${SliderThumb} {
-		top: calc(2px + var(--y) / 100 * ${thumbMovementOffset}px);
-		left: calc(2px + var(--x) / 100 * ${thumbMovementOffset}px);
+		top: calc(2px + var(--y) / 100 * ${thumbMoveOffset}px);
+		left: calc(2px + var(--x) / 100 * ${thumbMoveOffset}px);
 		margin: 1px;
 	}
 
@@ -133,10 +134,12 @@ export default function PositionControl({ value: [value, setValue], disabled, de
 		setChildrenState(hoveredElements, "pressed");
 		const aborter = new AbortController();
 		target.setPointerCapture(e.pointerId);
+		const eDown = e;
 		let lastPointerMoveEvent: PointerEvent;
 		const pointerMove = lodash.debounce((e?: PointerEvent, shiftKey?: boolean) => {
 			if (e) lastPointerMoveEvent = e;
 			e ??= lastPointerMoveEvent;
+			if (lastPointerAction.current === "down" && Math.hypot(e.pageX - eDown.pageX, e.pageY - eDown.pageY) <= POINTER_MOVE_THRESHOLD) return;
 			lastPointerAction.current = "down move";
 			setChildrenState([thumb], "pressed");
 			setValue?.(withShiftKey([
