@@ -131,11 +131,6 @@ export default function Audio() {
 				<Setting meta={meta.createGroups} on={createGroups} />
 				<ExpanderStreamPlaybackRate stream="audio" />
 				{/* When using segmented control, excessive explanation of its functions may occupy a large amount of interface space and potentially affect the user experience. */}
-				{/* <SettingsCard title={t.stream.normalize} details={t.descriptions.stream.normalize} icon="normalize" selectInfo={normalize[0] !== "false" && t.descriptions.stream.normalize[normalize[0]]}>
-					<Segmented current={normalize}>
-						{normalizeTimes.map(({ id, icon }) => <Segmented.Item id={id} key={id} icon={icon}>{id === "false" ? t.off : t.stream.normalize[id]}</Segmented.Item>)}
-					</Segmented>
-				</SettingsCard> */}
 				<Setting
 					meta={meta.normalize}
 					items={normalizeTimes}

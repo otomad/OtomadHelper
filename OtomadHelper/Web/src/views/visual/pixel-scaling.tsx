@@ -19,7 +19,7 @@ export default function PixelScaling() {
 	return (
 		<div className="container">
 			<SettingsPageControl image={tipsImage} cursor={cursor} learnMoreLink="">{t.descriptions.pixelScaling}</SettingsPageControl>
-			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
+			<SettingsCardToggleSwitch title={t.enabled} icon="lightbulb" on={enabled} resetTransitionOnChanging />
 
 			<EmptyMessage.Typical icon="pixelate_zoom" title="pixelScaling" enabled={enabled}>
 				<Setting

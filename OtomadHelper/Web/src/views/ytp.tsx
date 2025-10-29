@@ -65,7 +65,7 @@ export default function Ytp() {
 	return (
 		<div className="container">
 			<SettingsPageControl image={tipsImage} cursor={cursor} learnMoreLink="">{t.descriptions.ytp.slogan}<br />{t.descriptions.ytp}</SettingsPageControl>
-			<SettingsCardToggleSwitch title={t.enabled} selectInfo={t(1).selectInfo.source} icon="enabled" on={enabled} resetTransitionOnChanging />
+			<SettingsCardToggleSwitch title={t.enabled} selectInfo={t(1).selectInfo.source} icon="lightbulb" on={enabled} resetTransitionOnChanging />
 
 			<EmptyMessage.Typical icon="ytp" title="ytp" enabled={enabled}>
 				<Subheader>{t.subheaders.parameters}</Subheader>

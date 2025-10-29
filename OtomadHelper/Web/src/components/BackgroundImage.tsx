@@ -47,11 +47,11 @@ export default function BackgroundImage() {
 export /* @internal */ const FitType = Enum({
 	cover: { value: "cover", icon: "aspect_ratio" },
 	contain: { value: "contain", icon: "letterbox" },
-	original: { value: "none" },
-	stretch: { value: "fill" },
-	scaleDown: { value: "scale-down" },
-	tile: { value: "tile" },
-	tileContain: { value: "tile contain" },
+	original: { value: "none", icon: "ratio_one_to_one" },
+	stretch: { value: "fill", icon: "fit_fill" },
+	scaleDown: { value: "scale-down", icon: "fit_scale_down" },
+	tile: { value: "tile", icon: "fit_tile" },
+	tileContain: { value: "tile contain", icon: "fit_tile_contain" },
 }, { labelPrefix: t.fit });
 
 const StyledBackgroundImageImg = styled.img`

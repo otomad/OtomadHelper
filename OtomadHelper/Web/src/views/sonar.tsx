@@ -11,7 +11,7 @@ export default function Sonar() {
 		<div className="container">
 			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.sonar}</SettingsPageControl>
 
-			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} details={t.descriptions.sonar.enabled} resetTransitionOnChanging />
+			<SettingsCardToggleSwitch title={t.enabled} icon="lightbulb" on={enabled} details={t.descriptions.sonar.enabled} resetTransitionOnChanging />
 			<EmptyMessage.Typical icon="sonar" title="sonar" enabled={enabled}>
 				<EmptyMessage.YtpDisabled fully={t.titles.sonar}>
 					<Setting meta={meta.separateDrums} on={separateDrums} />

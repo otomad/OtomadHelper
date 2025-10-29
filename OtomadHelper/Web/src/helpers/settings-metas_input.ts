@@ -18,7 +18,7 @@ export const settingsMetasInput = {
 			},
 		},
 		preferredTrack: {
-			icon: "preferred_track",
+			icon: "layer_checkmark",
 			items: {
 				index: {
 					icon: "layer_number",
@@ -75,16 +75,16 @@ export const settingsMetasInput = {
 		trim: { icon: "aspect_ratio", title: t.source.trim },
 		encoding: { icon: "globe" },
 		tempo: { icon: "speed" },
-		timeSignature: { icon: "health" },
+		timeSignature: { icon: "heart_pulse" },
 		constrain: { icon: "constraint" },
 		parser: { icon: "engine" },
 		trackOrChannel: { icon: "midi" },
 	},
 	audio: {
-		preferredTrack: { icon: "preferred_track", title: t.source.preferredTrack },
+		preferredTrack: { icon: "layer_checkmark", title: t.source.preferredTrack },
 		createGroups: { icon: "group" },
 		playbackRate: playbackRate(),
-		normalize: { icon: "normalize" },
+		normalize: { icon: "spatial_volume" },
 		loop: { icon: "arrow_repeat_all" },
 		prerender: {
 			icon: "movie",
@@ -94,8 +94,8 @@ export const settingsMetasInput = {
 		},
 		stretch: { icon: "arrow_bidirectional_left_right" },
 		truncate: { icon: "arrow_import_prohibited" },
-		legato: { icon: "legato" },
-		multitrackForChords: { icon: "chords" },
+		legato: { icon: "arrow_between_right" },
+		multitrackForChords: { icon: "chord_c_major" },
 		stack: { icon: "database_stack" },
 		timeUnremapping: { icon: "timer_off" },
 		autoPan: { icon: "stereo" },
@@ -154,7 +154,7 @@ export const settingsMetasInput = {
 		preset: preset("audio"),
 	},
 	visual: {
-		preferredTrack: { icon: "preferred_track", title: t.source.preferredTrack },
+		preferredTrack: { icon: "layer_checkmark", title: t.source.preferredTrack },
 		createGroups: { icon: "group" },
 		playbackRate: playbackRate(),
 		loop: { icon: "arrow_repeat_all" },
@@ -162,8 +162,8 @@ export const settingsMetasInput = {
 		stretch: { icon: "arrow_bidirectional_left_right" },
 		truncate: { icon: "arrow_import_prohibited" },
 		staticVisual: { icon: "image_snow" },
-		legato: { icon: "legato" },
-		multitrackForChords: { icon: "chords" },
+		legato: { icon: "arrow_between_right" },
+		multitrackForChords: { icon: "chord_c_major" },
 		stack: { icon: "database_stack" },
 		timeUnremapping: { icon: "timer_off" },
 		mimical: {
@@ -251,7 +251,7 @@ export const settingsMetasInput = {
 		layout: subheader({ icon: "layout_row_two_split_bottom" }),
 		legato: {
 			aliases: [t.aliases.stream.legato],
-			icon: "legato",
+			icon: "arrow_between_right",
 			items: {
 				forClips: { icon: "track_event" },
 				includeGroup: { icon: "group" },

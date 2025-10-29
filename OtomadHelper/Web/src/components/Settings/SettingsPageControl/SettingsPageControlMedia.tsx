@@ -89,7 +89,7 @@ export default function SettingsPageControlMedia({ stream, fileName, enabled, th
 				<div className="bottom">
 					<ToggleSwitch on={enabled} hideLabel resetTransitionOnChanging>
 						<StackPanel>
-							<Icon name="enabled" />
+							<Icon name="lightbulb" />
 							{t.enabled}
 						</StackPanel>
 					</ToggleSwitch>

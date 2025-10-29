@@ -14,7 +14,7 @@ export default function Shupelunker() {
 		<div className="container">
 			<SettingsPageControl image={tipsImage} learnMoreLink="">{t.descriptions.shupelunker}</SettingsPageControl>
 
-			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
+			<SettingsCardToggleSwitch title={t.enabled} icon="lightbulb" on={enabled} resetTransitionOnChanging />
 			<EmptyMessage.Typical icon="slice" title="shupelunker_full" enabled={enabled}>
 				<EmptyMessage.YtpDisabled fully={t.titles.shupelunker}>
 					<Setting

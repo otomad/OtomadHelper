@@ -13,7 +13,7 @@ export default function Home() {
 	return (
 		<div className="container">
 			<InfoBar status="accent" title="Info">This page is for testing components currently. The quick brown fox jumps over a lazy dog.</InfoBar>
-			<SettingsCardToggleSwitch title="Shown" icon="enabled" on={[shown, setShown]} />
+			<SettingsCardToggleSwitch title="Shown" icon="lightbulb" on={[shown, setShown]} />
 			<TextBox value={[text, setText]} fullWidth />
 			<TextBox.Number value={[number, setNumber]} suffix="px" required pattern={/\d+/} fullWidth />
 

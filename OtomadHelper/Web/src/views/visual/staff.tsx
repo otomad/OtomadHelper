@@ -9,7 +9,7 @@ export default function Staff() {
 	return (
 		<div className="container">
 			<SettingsPageControl image={tipsImage} cursor={cursor} learnMoreLink="">{t.descriptions.staff}</SettingsPageControl>
-			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
+			<SettingsCardToggleSwitch title={t.enabled} icon="lightbulb" on={enabled} resetTransitionOnChanging />
 
 			<EmptyMessage.Typical icon="g_clef" title="staff" enabled={enabled}>
 				TODO

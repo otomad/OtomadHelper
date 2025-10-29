@@ -17,7 +17,7 @@ export default function Lyrics() {
 		<div className="container">
 			<SettingsPageControl image={tipsImage} imageOverlay={previewKaraoke} learnMoreLink="">{t.descriptions.lyrics}</SettingsPageControl>
 
-			<SettingsCardToggleSwitch title={t.enabled} icon="enabled" on={enabled} resetTransitionOnChanging />
+			<SettingsCardToggleSwitch title={t.enabled} icon="lightbulb" on={enabled} resetTransitionOnChanging />
 			<EmptyMessage.Typical icon="lyrics" title="lyrics" enabled={enabled}>
 				<EmptyMessage.YtpDisabled fully={t.titles.lyrics}>
 					<Setting meta={meta.presetTemplate} actions={<ComboBox current={presetTemplate} options={[]} ids={[]} />} />
