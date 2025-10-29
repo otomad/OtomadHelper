@@ -159,7 +159,7 @@ export default function Visual() {
 							)}
 						/>
 						<Setting meta={meta.transition.duration} actions={<TimecodeBox value={transitionDuration} />} />
-						<Expander.Item.CrossfadeCurve curve={transitionCrossfadeCurve} />
+						<Expander.Item.CrossfadeCurve curve={transitionCrossfadeCurve} subset="exceptHold" />
 						<InfoBar status="info">{t.descriptions.stream.transition.crossfadeInfo}</InfoBar>
 					</Setting>
 					<Setting meta={meta.transformMethod} checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.shared.plugins[topPriorityTransformMethod] })}>

@@ -40,15 +40,15 @@ declare global {
 	/**
 	 * A tuple representing a two-dimensional point.
 	 */
-	type TwoD = [number, number];
+	type TwoD = [x: number, y: number];
 	/**
 	 * A triple representing a three-dimensional point.
 	 */
-	type ThreeD = [number, number, number];
+	type ThreeD = [x: number, y: number, z: number];
 	/**
 	 * A quadruple representing a four-dimensional point.
 	 */
-	type FourD = [number, number, number, number];
+	type FourD = [x: number, y: number, z: number, w: number];
 	/**
 	 * A specified type or an parameterless function returns the specified type.
 	 * @template T - The specified type or an parameterless function returns the specified type.

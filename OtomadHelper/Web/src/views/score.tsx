@@ -92,7 +92,6 @@ const TrackToolbar = styled.div`
 const MultipleSelectTrackItemsContainer = styled.div`
 	display: flex;
 	place-self: stretch;
-	margin-inline-start: auto;
 	transition: ${fallbackTransitions} !important;
 
 	button {
@@ -107,6 +106,11 @@ const MultipleSelectTrackItemsContainer = styled.div`
 		&:dir(rtl) {
 			translate: -34px;
 		}
+	}
+
+	+ button {
+		inline-size: 32px;
+		margin-inline-start: -8px;
 	}
 `;
 // #endregion
@@ -295,7 +299,7 @@ export default function Score() {
 					<Subheader>{withObject(t(tracks.length).score, t => trackOrChannel[0] === "channel" ? t.channel : t.musicalTrack)}</Subheader>
 					<TrackToolbar>
 						<div className="left">
-							<CssTransition in={isMultiple} timeout={250} unmountOnExit>
+							<CssTransition in={isMultiple} timeout={250} hiddenOnExit requestAnimationFrame>
 								<div className="content">
 									<Checkbox value={selectAll} dynamicFontWeight={selectAllFontWeight}>{t.selectAll}</Checkbox>
 									<Button subtle icon="invert_selection" onClick={selectAll[2]}>{t.invertSelection}</Button>
@@ -308,7 +312,7 @@ export default function Score() {
 							<Segmented.Item id="multiple" icon="multiselect">{t.selectionMode.multiple}</Segmented.Item>
 						</Segmented>
 					</TrackToolbar>
-					<ItemsView view="list" multiple={isMultiple} current={[selectedTrack, setSelectedTrack]} indeterminatenesses={indeterminatenesses}>
+					<ItemsView view="list" multiple={isMultiple} multipleChangeable current={[selectedTrack, setSelectedTrack]} indeterminatenesses={indeterminatenesses}>
 						{tracks.map((track, index) => {
 							let beginNote = new Pitch(track.beginNote).spn;
 							if (track.isDrumKit) beginNote = tf.shared.midi.percussions[track.beginNote] ?? `${tf.shared.midi.unknown} (${beginNote})`;
@@ -334,20 +338,23 @@ export default function Score() {
 										</>
 									)}
 									actions={(
-										<CssTransition in={isMultiple} timeout={250} unmountOnExit>
-											<MultipleSelectTrackItemsContainer>
-												{Array.from(getAllMultipleSelectTrackItemSet(track), item => !track.isDrumKit && item === "sonar" ? undefined : (
-													<Tooltip key={item} placement="block" title={t.titles[item]}>
-														<ToggleButton
-															icon={redirectIcon(item)}
-															appearance="subtle"
-															checked={[selectTrackItems[index]?.has(item)]}
-															onClick={() => handleTrackItemsClick(index, item)}
-														/>
-													</Tooltip>
-												))}
-											</MultipleSelectTrackItemsContainer>
-										</CssTransition>
+										<>
+											<CssTransition in={isMultiple} timeout={250} hiddenOnExit requestAnimationFrame>
+												<MultipleSelectTrackItemsContainer>
+													{Array.from(getAllMultipleSelectTrackItemSet(track), item => !track.isDrumKit && item === "sonar" ? undefined : (
+														<Tooltip key={item} placement="block" title={t.titles[item]}>
+															<ToggleButton
+																icon={redirectIcon(item)}
+																appearance="subtle"
+																checked={[selectTrackItems[index]?.has(item)]}
+																onClick={() => handleTrackItemsClick(index, item)}
+															/>
+														</Tooltip>
+													))}
+												</MultipleSelectTrackItemsContainer>
+											</CssTransition>
+											<Button icon="play" minWidthUnbounded />
+										</>
 									)}
 								>
 									<SubgridLayout name="score-track-name">

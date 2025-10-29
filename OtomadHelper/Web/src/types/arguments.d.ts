@@ -50,6 +50,11 @@ declare global {
 	type CurveType = "linear" | "fast" | "slow" | "smooth" | "sharp" | "hold";
 
 	/**
+	 * The two curves used for creating crossfades.
+	 */
+	type CrossfadeCurveType = [multiplicandCurve: CurveType, reciprocalCurve: CurveType];
+
+	/**
 	 * A string that represents the priority (e.g. `"important"`) if one exists.
 	 * If none exists, returns the empty string.
 	 */

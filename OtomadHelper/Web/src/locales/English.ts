@@ -209,7 +209,8 @@ export default {
 			enableImproveTranslation: "Are you sure you want to enter the In-Context Localization Tool to improve translation?",
 		},
 		curve: {
-			_: "Interpolation curve",
+			interpolation: "Interpolation curve",
+			crossfade: "Crossfade curves",
 			linear: "Linear",
 			fast: "Fast",
 			slow: "Slow",
@@ -917,7 +918,10 @@ export default {
 		descriptions: {
 			unsupportedBrowser: "We are sorry, but we do not support your outdated {{browser}} browser. Please update it!",
 			condition: "Specify when to apply this configuration",
-			curve: "Specify the interpolation curve of the keyframe type",
+			curve: {
+				interpolation: "Specify the interpolation curve of the keyframe type",
+				crossfade: "Specify the two crossfade curves of the fade type",
+			},
 			source: {
 				trim: "Adjusts the in or out point time of the specified source",
 				startTime: "Specify when to start generating from the project",

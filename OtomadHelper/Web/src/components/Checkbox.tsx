@@ -39,6 +39,7 @@ const StyledCheckboxLabel = styled.label<{
 	.base {
 		${styles.mixins.square("18px")};
 		position: relative;
+		flex-shrink: 0;
 		background-color: ${c("fill-color-control-alt-secondary")};
 		background-clip: padding-box;
 		border: 1px solid ${c("stroke-color-control-strong-stroke-default")};

@@ -1,18 +1,39 @@
-const curves = ["linear", "fast", "slow", "smooth", "sharp", "hold"] as const;
+const curves = {
+	all: ["linear", "fast", "slow", "smooth", "sharp", "hold"],
+	holdLinearOnly: ["hold", "linear"],
+	exceptHold: ["linear", "fast", "slow", "smooth", "sharp"],
+} as const;
 
-function CurveComboBox({ curve }: FCP<{
+interface Props {
+	/** Curve type. */
 	curve: StateProperty<CurveType>;
-}>) {
-	return <ComboBox ids={curves} options={curves.map(curve => t.curve[curve])} icons={curves.map(curve => `curves/${curve}` as const)} current={curve} />;
+	/**
+	 * Constrain the available curve types.
+	 * - "all": linear, fast, slow, smooth, sharp, hold;
+	 * - "holdLinearOnly": hold, linear;
+	 * - "exceptHold": linear, fast, slow, smooth, sharp.
+	 * @default "all"
+	 */
+	subset?: keyof typeof curves;
+	children?: never;
 }
 
-export /* @internal */ default function ExpanderItemCurve({ curve }: FCP<{
-	curve: StateProperty<CurveType>;
-	children?: never;
-}, "div">) {
+function CurveComboBox({ curve, subset = "all" }: Props) {
+	const subsetCurves = curves[subset];
 	return (
-		<Expander.Item title={t.curve} details={t.descriptions.curve} icon="curve">
-			<CurveComboBox curve={curve} />
+		<ComboBox
+			ids={subsetCurves}
+			options={subsetCurves.map(curve => t.curve[curve])}
+			icons={subsetCurves.map(curve => `curves/${curve}` as const)}
+			current={curve}
+		/>
+	);
+}
+
+export /* @internal */ default function ExpanderItemCurve({ curve, subset }: Props) {
+	return (
+		<Expander.Item title={t.curve.interpolation} details={t.descriptions.curve.interpolation} icon="curve">
+			<CurveComboBox curve={curve} subset={subset} />
 		</Expander.Item>
 	);
 }
@@ -28,6 +49,7 @@ const StyledCrossfadeCurveAction = styled.div`
 
 	.synthetic-icon {
 		display: grid;
+		margin-inline-end: 8px;
 
 		.icon {
 			grid-area: 1 / 1;
@@ -39,22 +61,22 @@ const StyledCrossfadeCurveAction = styled.div`
 	}
 `;
 
-export /* @internal */ function ExpanderItemCrossfadeCurve({ curve: [[inCurve, outCurve], setCurve] }: FCP<{
-	curve: StatePropertyNonNull<[CurveType, CurveType]>;
-	children?: never;
-}, "div">) {
-	const setInCurve = (inCurve: CurveType) => setCurve(([, outCurve]) => [inCurve, outCurve]);
-	const setOutCurve = (outCurve: CurveType) => setCurve(([inCurve]) => [inCurve, outCurve]);
+export /* @internal */ function ExpanderItemCrossfadeCurve({ curve: [[multiplicandCurve, reciprocalCurve], setCurve], subset }: Override<Props, {
+	/** Two curve types for creating crossfades. */
+	curve: StatePropertyNonNull<CrossfadeCurveType>;
+}>) {
+	const setMultiplicandCurve = (multiplicandCurve: CurveType) => setCurve(([, reciprocalCurve]) => [multiplicandCurve, reciprocalCurve]);
+	const setReciprocalCurve = (reciprocalCurve: CurveType) => setCurve(([multiplicandCurve]) => [multiplicandCurve, reciprocalCurve]);
 
-	return ( // TODO: Update title and details text.
-		<Expander.Item title={t.curve} details={t.descriptions.curve} icon="curve" wrapActionsWhenNarrow>
+	return (
+		<Expander.Item title={t.curve.crossfade} details={t.descriptions.curve.crossfade} icon="curve" wrapActionsWhenNarrow>
 			<StyledCrossfadeCurveAction>
 				<div className="synthetic-icon">
-					<Icon name={`curves/${inCurve}`} />
-					<Icon name={`curves/${outCurve}`} />
+					<Icon name={`curves/${multiplicandCurve}`} />
+					<Icon name={`curves/${reciprocalCurve}`} />
 				</div>
-				<CurveComboBox curve={[inCurve, setInCurve]} />
-				<CurveComboBox curve={[outCurve, setOutCurve]} />
+				<CurveComboBox curve={[multiplicandCurve, setMultiplicandCurve]} subset={subset} />
+				<CurveComboBox curve={[reciprocalCurve, setReciprocalCurve]} subset={subset} />
 			</StyledCrossfadeCurveAction>
 		</Expander.Item>
 	);

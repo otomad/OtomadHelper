@@ -65,7 +65,7 @@ export /* @internal */ const StyledItemsView = styled.div`
 export default function ItemsView<
 	T,
 	TMultiple extends boolean = false,
->({ view, current: _current, itemWidth, multiple = false as TMultiple, indeterminatenesses = [], children, className, role, transition, style, inlineAlignment, autoFill, readOnly, emptyState, "aria-label": ariaLabel, selectAll, onItemCountChange, onItemEmptyChange, ...htmlAttrs }: FCP<{
+>({ view, current: _current, itemWidth, multiple = false as TMultiple, multipleChangeable = false, indeterminatenesses = [], children, className, role, transition, style, inlineAlignment, autoFill, readOnly, emptyState, "aria-label": ariaLabel, selectAll, onItemCountChange, onItemEmptyChange, ...htmlAttrs }: FCP<{
 	/** View mode: list, tile, grid. */
 	view: ItemView;
 	/**
@@ -84,6 +84,8 @@ export default function ItemsView<
 	itemWidth?: number | "square";
 	/** Multiple selection mode? */
 	multiple?: TMultiple;
+	/** Can `multiple` prop be dynamically changed? Set it to false for better performance, and set it to true to present a better animation. @default false */
+	multipleChangeable?: boolean;
 	/** Specifies which items are set to an indeterminate state. */
 	indeterminatenesses?: T[];
 	/**
@@ -146,6 +148,7 @@ export default function ItemsView<
 		const item = React.cloneElement(child, {
 			_view: view,
 			_multiple: multiple,
+			_multipleChangeable: multipleChangeable,
 			..._current !== null && {
 				selected: !isSelected(id) ? "unchecked" : indeterminatenesses.includesDeep(id) ? "indeterminate" : "checked",
 				onClick: (...e: Parameters<OnItemsViewItemClickEventHandler<unknown>>) => { handleClick(id); onParentClick?.(...e); },

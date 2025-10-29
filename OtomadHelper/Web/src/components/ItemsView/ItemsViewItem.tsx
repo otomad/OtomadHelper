@@ -32,6 +32,8 @@ interface StyledItemsViewItemProps {
 	$dirBasedIcon?: DirBasedIcon;
 }
 
+const ItemsViewItemTextPart = styled.div({});
+
 const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<StyledItemsViewItemProps>`
 	${styles.mixins.forwardFocusRing()};
 	--selection-color: ${({ $selectionColor }) => $selectionColor || c("accent-color")};
@@ -203,7 +205,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 			scale: 1 0;
 		}
 
-		&:has(.checkbox-label) > .base::before {
+		&:has(.checkbox-label:not(.exit-done)) > .base::before {
 			display: none;
 		}
 
@@ -229,9 +231,16 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 				border-radius: 4px;
 			}
 		}
+
+		${$view === "list" && css`
+			${ItemsViewItemTextPart} {
+				flex: 1;
+				contain: inline-size;
+			}
+		`}
 	`}
 
-	.text > * {
+	${ItemsViewItemTextPart} > * {
 		${styles.effects.text.body};
 
 		&:empty {
@@ -244,7 +253,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 		}
 	}
 
-	&.selected .text .title {
+	&.selected ${ItemsViewItemTextPart} .title {
 		${styles.effects.text.bodyStrong};
 	}
 
@@ -284,7 +293,7 @@ const ItemsViewItemStateContext = createContext<{
 
 export type OnItemsViewItemClickEventHandler<T> = (id: T, selected: CheckState, e: React.MouseEvent<HTMLElement>) => void;
 
-export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected = "unchecked", details, actions, withBorder = false, topAlignIcon, baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, _view: view = undefined!, _multiple: multiple, children, className, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected = "unchecked", details, actions, withBorder = false, topAlignIcon, baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable, children, className, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */
@@ -326,6 +335,8 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 	_view?: ItemView;
 	/** @private Multiple selection mode? */
 	_multiple?: boolean;
+	/** @private Can `multiple` prop be dynamically changed? Set it to false for better performance, and set it to true to present a better animation. */
+	_multipleChangeable?: boolean;
 	/** Occurs when the selection changed. */
 	onSelectedChange?(id: T, selected: CheckState): void;
 	/** Occurs when user click it. */
@@ -343,16 +354,15 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 
 	const ariaId = useId();
 	const textPart = (children || details) && (
-		<div className="text" aria-hidden>
+		<ItemsViewItemTextPart aria-hidden>
 			{children && <p className="title" id={`${ariaId}-title`}>{children}</p>}
 			{details && <p className="details" id={`${ariaId}-details`}><Preserves>{details}</Preserves></p>}
-		</div>
+		</ItemsViewItemTextPart>
 	);
-	const checkbox = ( // NOTE: This transition will be laggy when React Developer Tools addon is enabled, this is normal.
-		<CssTransition in={multiple} unmountOnExit timeout={250}>
-			<Checkbox className="items-view-item-checkbox" value={[selected]} plain inert disableCheckmarkTransition={disableCheckmarkTransition} />
-		</CssTransition>
-	);
+	const checkboxContent = <Checkbox className="items-view-item-checkbox" value={[selected]} plain inert disableCheckmarkTransition={disableCheckmarkTransition} />;
+	const checkbox = multipleChangeable ?
+		<CssTransition in={multiple} timeout={250} requestAnimationFrame>{checkboxContent}</CssTransition> :
+		multiple && checkboxContent;
 	const iconOrElement = typeof icon === "string" ? <Icon name={icon} /> : icon;
 	const el = useDomRef<"button">();
 
