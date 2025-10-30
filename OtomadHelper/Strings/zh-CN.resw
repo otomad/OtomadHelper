@@ -261,7 +261,7 @@
 		<value>重置所有用户配置</value>
 	</data>
 	<data name="Shared.Plugins.PanCrop" xml:space="preserve">
-		<value>平移/裁切</value>
+		<value>平移 / 裁切</value>
 	</data>
 	<data name="Shared.Plugins.PictureInPicture" xml:space="preserve">
 		<value>画中画</value>

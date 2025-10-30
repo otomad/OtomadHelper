@@ -32,11 +32,15 @@ export /* @internal */ const StyledButton = styled.button<{
 	position: relative;
 	display: inline-flex;
 	min-block-size: 32px;
-	padding-block: 4px 6px;
+	padding-block: 5px;
 	padding-inline: ${inlinePadding}px;
 	background-clip: padding-box;
 	border: 1px solid ${c("stroke-color-control-stroke-default")};
 	border-radius: 4px;
+
+	> .content > .text {
+		margin-block-start: -1px;
+	}
 
 	&:hover {
 		background-color: ${c("fill-color-control-secondary")};
@@ -304,7 +308,7 @@ export default function Button({ children, icon, animatedIcon, subtle = false, h
 			<StackPanel className="content" $nowrap>
 				{icon && <Icon name={icon} />}
 				{animatedIcon && <AnimatedIcon name={animatedIcon} />}
-				<span aria-hidden={ariaHiddenForChildren || undefined}>{children}</span>
+				<span className="text" aria-hidden={ariaHiddenForChildren || undefined}>{children}</span>
 			</StackPanel>
 		</StyledButton>
 	);

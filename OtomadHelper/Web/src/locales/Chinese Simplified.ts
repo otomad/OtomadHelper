@@ -199,13 +199,24 @@ export default {
 			enableImproveTranslation: "确定要进入语境翻译工具来改进翻译吗？",
 		},
 		curve: {
-			_: "插值曲线",
+			interpolation: "插值曲线",
+			crossfade: "交叉淡化曲线",
 			linear: "线性",
 			fast: "快速",
 			slow: "慢速",
 			smooth: "平滑",
 			sharp: "急剧",
 			hold: "保留",
+		},
+		fit: {
+			_: "取景",
+			cover: "裁切",
+			contain: "遮幅",
+			original: "原始",
+			stretch: "拉伸",
+			scaleDown: "缩减",
+			tile: "平铺",
+			tileContain: "平铺遮幅",
 		},
 		fileFormats: {
 			allFiles: "所有文件",
@@ -239,7 +250,7 @@ export default {
 				percentage: "百分比",
 				fixedDecrement: "固定减量",
 			},
-			trackOrChannel: "音轨/通道",
+			trackOrChannel: "音轨 / 通道",
 			noteCount: "音符数",
 			beginNote: "起音",
 			pan: {
@@ -375,8 +386,8 @@ export default {
 					_: "超出音域替代方法",
 					multiple: "多次使用音效插件",
 					plugin: "切换到移调音效插件",
-					octave: "高/低八度",
-					octaveExp: "高/低八度（实验性）",
+					octave: "高 / 低八度",
+					octaveExp: "高 / 低八度（实验性）",
 					wrap: "停靠在边缘",
 					silent: "不发声",
 				},
@@ -415,23 +426,30 @@ export default {
 			},
 			preset: {
 				add: "添加到自定义预设",
-				normal: "正常",
-				enter: "进入",
-				enterStaff: "进入（五线谱可视化）",
-				fadeOut: "淡出",
-				flashlight: "闪光",
-				horizontalMovement: "水平移动",
-				verticalMovement: "垂直移动",
-				ccwRotate: "逆时针旋转",
-				cwRotate: "顺时针旋转",
-				colorful: "炫彩",
-				oversaturation: "过饱和",
-				highContrast: "高对比",
-				lumaFade: "晖度渐变",
+				previewIdeality: "理想化预览",
+				builtIn: "自带预设",
+				custom: "自定义预设",
+				builtInPresets: {
+					normal: "正常",
+					enter: "进入",
+					enterStaff: "进入（五线谱可视化）",
+					exit: "退出",
+					fadeOut: "淡出",
+					flashlight: "闪光",
+					floatLeft: "左浮",
+					floatRight: "右浮",
+					floatUp: "上浮",
+					floatDown: "下浮",
+					ccwRotate: "逆时针旋转",
+					cwRotate: "顺时针旋转",
+					colorful: "炫彩",
+					oversaturation: "过饱和",
+					highContrast: "高对比度",
+					lumaFade: "晖度渐变",
+				},
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "从另一套参数方案复制至此",
-				copyAttributesFromSelectedClip: "复制所选剪辑的属性",
 			},
 		},
 		track: {
@@ -458,11 +476,6 @@ export default {
 					tbLr: "纵向",
 					rlTb: "翻转横向",
 					tbRl: "翻转纵向",
-				},
-				fit: {
-					_: "取景",
-					cover: "裁切",
-					contain: "遮幅",
 				},
 				mirrorEdges: "镜像边缘",
 				parity: {
@@ -770,6 +783,7 @@ export default {
 		},
 		settings: {
 			about: {
+				_: "关于",
 				checkForUpdates: "检查更新",
 				repositoryLink: "仓库地址",
 				documentation: "说明文档",
@@ -806,6 +820,7 @@ export default {
 					opacity: "不透明度",
 					tint: "着色",
 					blur: "模糊强度",
+					position: "位置",
 				},
 				colorScheme: {
 					_: "配色方案",
@@ -857,7 +872,7 @@ export default {
 				},
 			},
 			internal: {
-				language: "VEGAS Pro语言",
+				language: "VEGAS Pro 语言",
 				autosaveInterval: "自动保存时间间隔",
 				defaultTextPlugin: "默认文本媒体生成器插件",
 				defaultTuningMethod: "新音频剪辑的默认调音方法",
@@ -876,7 +891,10 @@ export default {
 		descriptions: {
 			unsupportedBrowser: "很抱歉，我们不支持你过时的{{browser}}浏览器，请更新！",
 			condition: "指定当满足何条件时才会应用该配置",
-			curve: "指定关键帧类型中的插值曲线",
+			curve: {
+				interpolation: "指定关键帧类型中的插值曲线",
+				crossfade: "指定淡化类型中的两条交叉曲线",
+			},
 			source: {
 				trim: "调整指定素材的入点或出点时间",
 				startTime: "指定何时从项目开始生成",
@@ -1059,6 +1077,8 @@ export default {
 				},
 				preset: {
 					_: "使用或保存预定义的参数方案以方便使用",
+					previewIdeality: "部分标有星号的预设在特定的视觉效果下拥有更佳的风味，启用后将理想地预览。\n但是不论如何，最终呈现的效果均以现实地预览为准，毕竟这只会改变预览样式。",
+					empty: "暂无预设，点击按钮新增",
 				},
 			},
 			track: {
@@ -1194,7 +1214,8 @@ export default {
 					differentSyllables: "对不同音节的连续事件分别控制（人力模式）",
 				},
 				stepAria: "第{{step}}步，共{{frames}}步",
-				customStepSequence: "自定义步序列",
+				customSteps: "自定义步序列",
+				randomSteps: "随机化步序列",
 				forceStretch: "正在使用的$t(titles.prve, { 'count': {{count}} })中包含时间类的效果，这会导致在这些效果下拉伸将被强制设定为“$t(stream.stretch.flexingAndExtending)”，而不受你的设置控制",
 			},
 			pixelScaling: {
@@ -1241,7 +1262,7 @@ export default {
 					},
 				},
 				internal: {
-					_: "此处收录部分无法在VEGAS Pro首选项中设置的实用选项",
+					caption: "此处收录部分无法在VEGAS Pro首选项中轻易设置的实用选项",
 					info: "这将会修改VEGAS Pro的全局偏好，而不仅仅是针对当前项目。错误的设置可能导致VEGAS Pro无法启动，请谨慎操作。",
 					language: "更改VEGAS Pro的语言，重启VEGAS Pro以使更改生效",
 					autosaveInterval: "调整项目的自动保存时间，默认为{{default}}分钟",
@@ -1296,11 +1317,11 @@ export default {
 			timesOperator: "乘以",
 			reorderHandle: "拖拽以排序",
 			searchBox: "搜索框",
-			otomadHelperLogo: "Otomad Helper 标志",
+			otomadHelperLogo: "音MAD助手标志",
 		},
 		aliases: {
 			titles: {
-				source: "媒体, 采样",
+				source: "媒体, 音源, 采样",
 				score: "乐谱、铺面、MIDI、曲目、选曲、课题曲",
 				audio: "音声",
 				visual: "视频、映像、PV",
@@ -1464,7 +1485,7 @@ export default {
 	},
 	shared: {
 		plugins: {
-			panCrop: "平移/裁切",
+			panCrop: "平移 / 裁切",
 			pictureInPicture: "画中画",
 			transformOfx: "变换效果插件",
 			swirl: "漩涡",

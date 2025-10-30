@@ -168,7 +168,7 @@ export default {
 		subheaders: {
 			moreOptions: "crwdns1730:0crwdne1730:0",
 			advanced: "crwdns1732:0crwdne1732:0",
-			config: "crwdns1734:0crwdne1734:0",
+			config: "crwdns5290:0crwdne5290:0",
 			parameters: "crwdns1736:0crwdne1736:0",
 			seeAlso: "crwdns2626:0crwdne2626:0",
 		},
@@ -200,13 +200,24 @@ export default {
 			enableImproveTranslation: "crwdns3994:0crwdne3994:0",
 		},
 		curve: {
-			_: "crwdns3678:0crwdne3678:0",
+			interpolation: "crwdns5292:0crwdne5292:0",
+			crossfade: "crwdns5294:0crwdne5294:0",
 			linear: "crwdns3680:0crwdne3680:0",
 			fast: "crwdns3682:0crwdne3682:0",
 			slow: "crwdns3684:0crwdne3684:0",
 			smooth: "crwdns3686:0crwdne3686:0",
 			sharp: "crwdns3688:0crwdne3688:0",
 			hold: "crwdns3690:0crwdne3690:0",
+		},
+		fit: {
+			_: "crwdns5296:0crwdne5296:0",
+			cover: "crwdns5298:0crwdne5298:0",
+			contain: "crwdns5300:0crwdne5300:0",
+			original: "crwdns5302:0crwdne5302:0",
+			stretch: "crwdns5304:0crwdne5304:0",
+			scaleDown: "crwdns5306:0crwdne5306:0",
+			tile: "crwdns5308:0crwdne5308:0",
+			tileContain: "crwdns5310:0crwdne5310:0",
 		},
 		fileFormats: {
 			allFiles: "crwdns2790:0crwdne2790:0",
@@ -416,23 +427,30 @@ export default {
 			},
 			preset: {
 				add: "crwdns2566:0crwdne2566:0",
-				normal: "crwdns5220:0crwdne5220:0",
-				enter: "crwdns5222:0crwdne5222:0",
-				enterStaff: "crwdns5224:0crwdne5224:0",
-				fadeOut: "crwdns5226:0crwdne5226:0",
-				flashlight: "crwdns5228:0crwdne5228:0",
-				horizontalMovement: "crwdns5230:0crwdne5230:0",
-				verticalMovement: "crwdns5232:0crwdne5232:0",
-				ccwRotate: "crwdns5234:0crwdne5234:0",
-				cwRotate: "crwdns5236:0crwdne5236:0",
-				colorful: "crwdns5238:0crwdne5238:0",
-				oversaturation: "crwdns5240:0crwdne5240:0",
-				highContrast: "crwdns5242:0crwdne5242:0",
-				lumaFade: "crwdns5244:0crwdne5244:0",
+				previewIdeality: "crwdns5312:0crwdne5312:0",
+				builtIn: "crwdns5314:0crwdne5314:0",
+				custom: "crwdns5316:0crwdne5316:0",
+				builtInPresets: {
+					normal: "crwdns5318:0crwdne5318:0",
+					enter: "crwdns5320:0crwdne5320:0",
+					enterStaff: "crwdns5322:0crwdne5322:0",
+					exit: "crwdns5324:0crwdne5324:0",
+					fadeOut: "crwdns5326:0crwdne5326:0",
+					flashlight: "crwdns5328:0crwdne5328:0",
+					floatLeft: "crwdns5330:0crwdne5330:0",
+					floatRight: "crwdns5332:0crwdne5332:0",
+					floatUp: "crwdns5334:0crwdne5334:0",
+					floatDown: "crwdns5336:0crwdne5336:0",
+					ccwRotate: "crwdns5338:0crwdne5338:0",
+					cwRotate: "crwdns5340:0crwdne5340:0",
+					colorful: "crwdns5342:0crwdne5342:0",
+					oversaturation: "crwdns5344:0crwdne5344:0",
+					highContrast: "crwdns5346:0crwdne5346:0",
+					lumaFade: "crwdns5348:0crwdne5348:0",
+				},
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "crwdns2426:0crwdne2426:0",
-				copyAttributesFromSelectedClip: "crwdns2776:0crwdne2776:0",
 			},
 		},
 		track: {
@@ -459,11 +477,6 @@ export default {
 					tbLr: "crwdns4082:0crwdne4082:0",
 					rlTb: "crwdns4084:0crwdne4084:0",
 					tbRl: "crwdns4086:0crwdne4086:0",
-				},
-				fit: {
-					_: "crwdns3268:0crwdne3268:0",
-					cover: "crwdns3270:0crwdne3270:0",
-					contain: "crwdns3272:0crwdne3272:0",
 				},
 				mirrorEdges: "crwdns4204:0crwdne4204:0",
 				parity: {
@@ -771,6 +784,7 @@ export default {
 		},
 		settings: {
 			about: {
+				_: "crwdns5350:0crwdne5350:0",
 				checkForUpdates: "crwdns1966:0crwdne1966:0",
 				repositoryLink: "crwdns3050:0crwdne3050:0",
 				documentation: "crwdns1970:0crwdne1970:0",
@@ -807,6 +821,7 @@ export default {
 					opacity: "crwdns3022:0crwdne3022:0",
 					tint: "crwdns3024:0crwdne3024:0",
 					blur: "crwdns3574:0crwdne3574:0",
+					position: "crwdns5352:0crwdne5352:0",
 				},
 				colorScheme: {
 					_: "crwdns1996:0crwdne1996:0",
@@ -841,7 +856,7 @@ export default {
 				fontSize: "crwdns4484:0crwdne4484:0",
 			},
 			preference: {
-				_: "crwdns3192:0crwdne3192:0",
+				_: "crwdns5354:0crwdne5354:0",
 				autoSwitchSourceFrom: "crwdns3194:0crwdne3194:0",
 				autoCollapsePrveClasses: "crwdns3658:0$t(titles.prve)crwdne3658:0",
 				previewWithSource: "crwdns5246:0crwdne5246:0",
@@ -877,7 +892,10 @@ export default {
 		descriptions: {
 			unsupportedBrowser: "crwdns4374:0{{browser}}crwdne4374:0",
 			condition: "crwdns4278:0crwdne4278:0",
-			curve: "crwdns4280:0crwdne4280:0",
+			curve: {
+				interpolation: "crwdns5356:0crwdne5356:0",
+				crossfade: "crwdns5358:0crwdne5358:0",
+			},
 			source: {
 				trim: "crwdns2930:0crwdne2930:0",
 				startTime: "crwdns4282:0crwdne4282:0",
@@ -1050,7 +1068,7 @@ export default {
 					},
 					mimical: {
 						_: "crwdns5144:0crwdne5144:0",
-						auto: "crwdns5146:0crwdne5146:0",
+						auto: "crwdns5360:0crwdne5360:0",
 						resample: "crwdns5148:0crwdne5148:0",
 						oscillator: "crwdns5150:0crwdne5150:0",
 					},
@@ -1059,7 +1077,9 @@ export default {
 					_: "crwdns2236:0crwdne2236:0",
 				},
 				preset: {
-					_: "crwdns2916:0crwdne2916:0",
+					_: "crwdns5362:0crwdne5362:0",
+					previewIdeality: "crwdns5364:0crwdne5364:0",
+					empty: "crwdns5366:0crwdne5366:0",
 				},
 			},
 			track: {
@@ -1195,7 +1215,8 @@ export default {
 					differentSyllables: "crwdns2920:0crwdne2920:0",
 				},
 				stepAria: "crwdns4116:0{{step}}crwdnd4116:0{{frames}}crwdne4116:0",
-				customStepSequence: "crwdns4348:0crwdne4348:0",
+				customSteps: "crwdns5368:0crwdne5368:0",
+				randomSteps: "crwdns5370:0crwdne5370:0",
 				forceStretch: "crwdns3674:5$t(titles.prve, { 'count': {{count}} })crwdnd3674:5$t(stream.stretch.flexingAndExtending, nowrapPerWord)crwdne3674:5",
 			},
 			pixelScaling: {
@@ -1242,7 +1263,7 @@ export default {
 					},
 				},
 				internal: {
-					_: "crwdns4556:0crwdne4556:0",
+					caption: "crwdns5372:0crwdne5372:0",
 					info: "crwdns4558:0crwdne4558:0",
 					language: "crwdns4560:0crwdne4560:0",
 					autosaveInterval: "crwdns4562:0{{default}}crwdne4562:0",
@@ -1297,6 +1318,7 @@ export default {
 			timesOperator: "crwdns4150:0crwdne4150:0",
 			reorderHandle: "crwdns4152:0crwdne4152:0",
 			searchBox: "crwdns4610:0crwdne4610:0",
+			otomadHelperLogo: "crwdns5374:0crwdne5374:0",
 		},
 		aliases: {
 			titles: {

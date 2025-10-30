@@ -145,7 +145,6 @@ export default {
 		subheaders: {
 			moreOptions: "Tùy chọn khác",
 			advanced: "Nâng cao",
-			config: "Thiết Lập",
 			parameters: "Thông số",
 			seeAlso: "Xem thêm",
 		},
@@ -170,13 +169,19 @@ export default {
 			enableImproveTranslation: "Có chắc muốn mở Công cụ Dịch thông minh để cải thiện bản dịch này?",
 		},
 		curve: {
-			_: "Đường cong nội suy",
+			interpolation: "Đường cong nội suy",
 			linear: "Tuyến tính",
 			fast: "Nhanh",
 			slow: "Chậm",
 			smooth: "Mượt",
 			sharp: "Sắc nét",
 			hold: "Giữ",
+		},
+		fit: {
+			_: "Vừa",
+			cover: "Trải ra",
+			contain: "Chứa",
+			stretch: "Kéo dãn",
 		},
 		fileFormats: {
 			allFiles: "Tất cả các tệp",
@@ -364,19 +369,18 @@ export default {
 			},
 			preset: {
 				add: "Thêm vào preset tùy chỉnh",
-				normal: "Bình thường",
-				fadeOut: "Mờ dần",
-				flashlight: "Nhấp nhoáng (Flashlight)",
-				horizontalMovement: "Di chuyển theo chiều ngang",
-				verticalMovement: "Di chuyển theo chiều dọc",
-				ccwRotate: "Xoay ngược chiều kim đồng hồ",
-				cwRotate: "Xoay theo chiều kim đồng hồ",
-				oversaturation: "Quá bão hòa",
-				highContrast: "Độ tương phản cao",
+				builtInPresets: {
+					normal: "Bình thường",
+					fadeOut: "Mờ dần",
+					flashlight: "Nhấp nhoáng (Flashlight)",
+					ccwRotate: "Xoay ngược chiều kim đồng hồ",
+					cwRotate: "Xoay theo chiều kim đồng hồ",
+					oversaturation: "Quá bão hòa",
+					highContrast: "Độ tương phản cao",
+				},
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "Sao chép từ một sơ đồ tham số khác ở đây",
-				copyAttributesFromSelectedClip: "Sao chép thuộc tính từ clip đã chọn",
 			},
 		},
 		track: {
@@ -389,11 +393,6 @@ export default {
 				numberOfSelectedTracks: "Số các track đã chọn",
 				fastFill: "Lấp đầy nhanh",
 				direction: {},
-				fit: {
-					_: "Vừa",
-					cover: "Trải ra",
-					contain: "Chứa",
-				},
 				mirrorEdges: "Cạnh phản chiếu",
 				parity: {
 					unflipped: "Chưa lật",
@@ -660,6 +659,7 @@ export default {
 		},
 		settings: {
 			about: {
+				_: "Thông tin",
 				checkForUpdates: "Kiểm tra bản cập nhật",
 				repositoryLink: "Kho lưu trữ",
 				documentation: "Tài liệu",
@@ -715,7 +715,6 @@ export default {
 				},
 			},
 			preference: {
-				_: "Tuỳ chỉnh",
 				autoSwitchSourceFrom: "Tự động chuyển nguồn nguyên liệu từ",
 				autoCollapsePrveClasses: "Tự động thu gọn các tùy chọn $t(titles.prve, lowercase)",
 			},
@@ -732,6 +731,7 @@ export default {
 			},
 		},
 		descriptions: {
+			curve: {},
 			source: {
 				trim: "Điều chỉnh thời gian điểm vào hoặc ra của nguồn nguyên liệu được chỉ định",
 				preferredTrack: {
@@ -858,9 +858,7 @@ export default {
 				mapping: {
 					_: "Gán các thuộc tính của nốt vào mục đã chỉ định",
 				},
-				preset: {
-					_: "Sử dụng hoặc lưu các lược đồ tham số được xác định trước để thuận tiện cho bạn",
-				},
+				preset: {},
 			},
 			track: {
 				_: "Trong quá trình sáng tạo YTPMV, thiết kế bố cục và thành phần là những liên kết cốt lõi của logic hình ảnh. Mục tiêu chính của nó là tích hợp sâu sắc đa nguồn với nhịp điệu âm nhạc thông qua comp động, không chỉ tạo ra sự nhầm lẫn và tác động mà còn duy trì khả năng đọc của hình ảnh. Biết cách tạo bố cục hình ảnh tốt cho YTPMV sẽ khiến nó thú vị hơn bạn nghĩ.\nLà cốt lõi của hình ảnh, nguồn tương ứng với sample giai điệu cần được phóng to, phủ lên trên hoặc được tô màu có độ tương phản cao để tăng cường cảm giác tồn tại. Sau đó, sử dụng quản lý phân cấp động để phân biệt giữa các phần tử chính và phụ. Ví dụ, nguồn nền có thể giảm độ trong suốt để tránh sự ảnh hưởng. Bạn có thể thử sắp xếp phi tuyến tính, phá vỡ bố cục lưới truyền thống và sử dụng xếp chồng ngẫu nhiên, chồng chéo dịch chuyển hoặc các kỹ thuật khác để mô phỏng sự căng thẳng về mặt thị giác của “quá tải thông tin”. Thiết lập thứ tự ẩn bằng cách lặp lại một số yếu tố nhất định và tạo cảm giác bất ngờ bằng cách thêm các đột biến cục bộ. Ví dụ, lặp lại hình đại diện làm điểm neo trực quan, nhưng phủ các hiệu ứng khác nhau mỗi lần xuất hiện.",
@@ -1032,10 +1030,7 @@ export default {
 			checkboxGroup: "Nhóm hộp kiểm",
 		},
 		aliases: {
-			titles: {
-				ytp: "cái",
-				mosh: "cái",
-			},
+			titles: {},
 			source: {
 				trackName: "Tên track",
 			},

@@ -156,7 +156,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 			display: flex;
 			flex-wrap: nowrap;
 			gap: 16px;
-			align-items: center;
+			align-items: start;
 			block-size: 100%;
 			min-block-size: 48px;
 			padding-block: 12px;
@@ -215,7 +215,6 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 			${styles.mixins.flexCenter()};
 
 			&.top-align-icon {
-				align-self: start;
 				margin-top: 5px;
 			}
 		}

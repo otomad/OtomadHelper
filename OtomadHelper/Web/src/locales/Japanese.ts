@@ -167,7 +167,7 @@ export default {
 		subheaders: {
 			moreOptions: "その他のオプション",
 			advanced: "高度な設定",
-			config: "設定",
+			config: "構成",
 			parameters: "パラメータ",
 			seeAlso: "関連項目",
 		},
@@ -199,13 +199,24 @@ export default {
 			enableImproveTranslation: "翻訳を改善するためにIn-Context ローカライズツールを入力してもよろしいですか？",
 		},
 		curve: {
-			_: "補間曲線",
+			interpolation: "補間曲線",
+			crossfade: "クロスフェード曲線",
 			linear: "Linear",
 			fast: "速い",
 			slow: "遅い",
 			smooth: "スムース",
 			sharp: "シャープ。",
 			hold: "保留",
+		},
+		fit: {
+			_: "合わせる",
+			cover: "カバー",
+			contain: "含まれている",
+			original: "オリジナル",
+			stretch: "ストレッチ",
+			scaleDown: "スケールダウン",
+			tile: "タイル",
+			tileContain: "タイルに含まれている",
 		},
 		fileFormats: {
 			allFiles: "すべてのファイル",
@@ -415,23 +426,30 @@ export default {
 			},
 			preset: {
 				add: "カスタムプリセットに追加",
-				normal: "標準",
-				enter: "Enter",
-				enterStaff: "Enter (Staff Visualizer)",
-				fadeOut: "フェードアウト",
-				flashlight: "フラッシュライト",
-				horizontalMovement: "水平移動",
-				verticalMovement: "垂直移動",
-				ccwRotate: "反時計回りの回転",
-				cwRotate: "時計回りの回転",
-				colorful: "カラフルな",
-				oversaturation: "過彩度",
-				highContrast: "ハイコントラスト",
-				lumaFade: "Luma Fade",
+				previewIdeality: "理想をプレビュー",
+				builtIn: "内蔵プリセット<unk>",
+				custom: "カスタムプリセット",
+				builtInPresets: {
+					normal: "標準",
+					enter: "Enter",
+					enterStaff: "Enter (Staff Visualizer)",
+					exit: "終了",
+					fadeOut: "フェードアウト",
+					flashlight: "フラッシュライト",
+					floatLeft: "左にフロート表示",
+					floatRight: "右に表示",
+					floatUp: "Float Up",
+					floatDown: "Float Down",
+					ccwRotate: "反時計回りの回転",
+					cwRotate: "時計回りの回転",
+					colorful: "カラフルな",
+					oversaturation: "過彩度",
+					highContrast: "ハイコントラスト",
+					lumaFade: "Luma Fade",
+				},
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "別のパラメータスキームからここにコピー",
-				copyAttributesFromSelectedClip: "選択したクリップから属性をコピー",
 			},
 		},
 		track: {
@@ -458,11 +476,6 @@ export default {
 					tbLr: "垂直方向",
 					rlTb: "水平方向に反転",
 					tbRl: "垂直方向に反転",
-				},
-				fit: {
-					_: "合わせる",
-					cover: "カバー",
-					contain: "含まれている",
 				},
 				mirrorEdges: "鏡像エッジ",
 				parity: {
@@ -769,6 +782,7 @@ export default {
 		},
 		settings: {
 			about: {
+				_: "About",
 				checkForUpdates: "アップデートを確認",
 				repositoryLink: "リポジトリ",
 				documentation: "ドキュメント",
@@ -805,6 +819,7 @@ export default {
 					opacity: "透明度",
 					tint: "色合い",
 					blur: "ぼやけ",
+					position: "位置",
 				},
 				colorScheme: {
 					_: "配色設定",
@@ -875,7 +890,10 @@ export default {
 		descriptions: {
 			unsupportedBrowser: "申し訳ありませんが、古い {{browser}} ブラウザはサポートされていません。アップデートしてください！",
 			condition: "この設定を適用するタイミングを指定します",
-			curve: "キーフレームタイプの補間曲線を指定します。",
+			curve: {
+				interpolation: "キーフレームタイプの補間曲線を指定します。",
+				crossfade: "フェードタイプの 2 つのクロスフェード曲線を指定します。",
+			},
 			source: {
 				trim: "指定したソースのインポイントまたはアウトポイントタイムを調整します。",
 				startTime: "プロジェクトから生成を開始するタイミングを指定します",
@@ -1048,7 +1066,7 @@ export default {
 					},
 					mimical: {
 						_: "オーディオのチューニング方法に触発されたテクニックを視覚処理に適用します。",
-						auto: "これらのプロパティを Auto に設定すると、オーディオ構成内の対応するプロパティが有効になっている場合にのみ有効になります。",
+						auto: "これらのプロパティを Auto に設定すると、オーディオ構成内の対応するプロパティも有効になっている場合にのみ有効になります。",
 						resample: "Visualのリサンプリング動作をミミックスし、ストレッチがピッチの増加に伴って曲がるようにします",
 						oscillator: "ビジュアル内のマニュアルオシレーターの動作をミミックスすることで、素早く繰り返しビジュアルを作成できます。",
 					},
@@ -1058,6 +1076,7 @@ export default {
 				},
 				preset: {
 					_: "便宜のためにあらかじめ定義されたパラメータスキームを使用または保存します",
+					empty: "プリセットがありません。ボタンをクリックして追加してください",
 				},
 			},
 			track: {
@@ -1191,7 +1210,8 @@ export default {
 					differentSyllables: "文混合モードでは、異なる音節の連続したイベントのコントロールを分離します。",
 				},
 				stepAria: "{{step}} のステップ {{frames}}",
-				customStepSequence: "ステップシーケンスをカスタマイズ",
+				customSteps: "ステップシーケンスをカスタマイズ",
+				randomSteps: "ランダム化されたステップシーケンス",
 				forceStretch: "使用中の$t(titles.prve, { 'count': {{count}} })にはタイムクラスの効果が含まれています。これにより、これらの効果の下でストレッチが設定制御されずに「$t(stream.stretch.flexingAndExtending, nowrapPerWord)」に強制的に設定されます。",
 			},
 			pixelScaling: {
@@ -1238,7 +1258,7 @@ export default {
 					},
 				},
 				internal: {
-					_: "これはVEGAS Proの設定では設定できない実用的なオプションが含まれています",
+					caption: "これには、VEGAS Proの環境設定では簡単に設定できない実用的なオプションが含まれています",
 					info: "これは、現在のプロジェクトだけでなく、VEGAS Proのグローバル設定を変更します。 正しくない設定はVEGAS Proの起動に失敗する可能性があります。注意して使用してください。",
 					language: "VEGAS Proの言語を変更します。変更を有効にするにはVEGAS Proを再起動します。",
 					autosaveInterval: "プロジェクトの自動保存時間を調整します。デフォルトは {{default}} 分です。",
@@ -1293,6 +1313,7 @@ export default {
 			timesOperator: "回数",
 			reorderHandle: "ドラッグして並べ替え",
 			searchBox: "検索ボックス",
+			otomadHelperLogo: "Omad Helper ロゴ",
 		},
 		aliases: {
 			titles: {

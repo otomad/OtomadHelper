@@ -1104,7 +1104,7 @@ export default {
 				},
 				preset: {
 					_: "Use or save predefined parameter schemes for your convenience",
-					previewIdeality: "Some presets marked with an asterisk have a better flavor under specific visual effects and will preview ideally after being enabled. However, the final presentation is subject to the reality preview, as this only changes the preview.",
+					previewIdeality: "Some presets marked with an asterisk have a better flavor under specific visual effects and will preview ideally after being enabled.\nHowever, the final presentation is subject to the reality preview, as this only changes the preview.",
 					empty: "No presets, click the button to add",
 				},
 			},

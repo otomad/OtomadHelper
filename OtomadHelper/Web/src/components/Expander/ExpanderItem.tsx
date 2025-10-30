@@ -91,6 +91,10 @@ export /* @internal */ const styledExpanderItemContent = css`
 			);
 			pointer-events: none;
 
+			&:is([disabled], [disabled] *) {
+				--state: disabled;
+			}
+
 			.icon {
 				font-size: 16px;
 			}
