@@ -2,7 +2,7 @@ export default [
 	// special
 	"property-name",
 	"content",
-	"composes",
+	"composes", // CSS Module
 	"all",
 	"container",
 	"container-name",

@@ -17,7 +17,7 @@ import { config as transitionGroupConfig } from "react-transition-group-fc";
  * Run before the web DOM is loading.
  */
 { // Initial
-	const isFocusOnInputField = (e: Event) => isInPath(e.target, 'input[type="text"], textarea, [contenteditable="true"]');
+	const isFocusOnInputField = (e: Event) => isInPath(e.target, 'input[type="text"], textarea, [contenteditable]:not([contenteditable="false"])');
 
 	// #region Prevent context menu triggers by right click
 	window.addEventListener("contextmenu", e => {

@@ -18,8 +18,24 @@ export default css`
 		}
 
 		input,
-		textarea {
+		textarea,
+		[contenteditable]:not([contenteditable="false"]) {
 			field-sizing: content;
+
+			@supports (caret-animation: manual) {
+				caret-animation: if(
+					media(prefers-reduced-motion: no-preference): manual;
+					else: auto;
+				);
+
+				&:focus {
+					animation: ${keyframes`
+						to {
+							caret-color: transparent;
+						}
+					`} 500ms infinite ${eases.easeInOutMax} alternate;
+				}
+			}
 		}
 
 		figure {

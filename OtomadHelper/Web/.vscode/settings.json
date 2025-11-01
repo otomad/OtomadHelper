@@ -27,4 +27,5 @@
 	"typescript.preferences.useAliasesForRenames": false,
 	"todo-tree.tree.showBadges": true,
 	"todo-tree.tree.disableCompactFolders": true,
+	"material-icon-theme.activeIconPack": "react_redux",
 }

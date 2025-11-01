@@ -224,7 +224,7 @@ export default {
 			contain: "Contain",
 			original: "Original",
 			stretch: "Stretch",
-			scaleDown: "Scale down",
+			scaleDown: "Scale down contain",
 			tile: "Tile",
 			tileContain: "Tile contain",
 		},

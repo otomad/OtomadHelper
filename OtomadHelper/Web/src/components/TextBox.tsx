@@ -218,21 +218,6 @@ export /* @internal */ const StyledTextBox = styled.div<{
 			box-shadow: none;
 		}
 
-		@supports (caret-animation: manual) {
-			caret-animation: if(
-				media(prefers-reduced-motion: no-preference): manual;
-				else: auto;
-			);
-
-			&:focus {
-				animation: ${keyframes`
-					to {
-						caret-color: transparent;
-					}
-				`} 500ms infinite ${eases.easeInOutMax} alternate;
-			}
-		}
-
 		&::placeholder {
 			color: ${c("fill-color-text-secondary")};
 		}

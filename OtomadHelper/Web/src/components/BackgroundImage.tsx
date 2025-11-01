@@ -1,5 +1,5 @@
 const StyledBackgroundImage = styled.div`
-	${styles.mixins.fullscreen()};
+	position: fixed;
 	inset: 0;
 	z-index: -1;
 	pointer-events: none;
@@ -69,7 +69,7 @@ const StyledBackgroundImageImg = styled.img`
 	}
 `;
 
-export function BackgroundImageImg({ src, autoAlt = false, fit = "cover", position: [x, y] = [50, 50], children: _children, style, ...htmlAttrs }: FCP<{
+export function BackgroundImageImg({ src, autoAlt = false, fit = "cover", position: [x, y] = [50, 50], children: _children, style, alt, ...htmlAttrs }: FCP<{
 	/** Image source href. */
 	src: string;
 	/** Allow screen reader to auto fetch image a11y description online? @default false */
@@ -84,7 +84,7 @@ export function BackgroundImageImg({ src, autoAlt = false, fit = "cover", positi
 	const cssFit = FitType[fit] as CSSProperties["objectFit"];
 	return (
 		<StyledBackgroundImageImg
-			alt={autoAlt ? undefined : ""}
+			alt={alt || (autoAlt ? undefined : "")}
 			src={src}
 			className={cssFit}
 			style={{

@@ -139,7 +139,7 @@ export default function PositionControl({ value: [value, setValue], disabled, de
 		const pointerMove = lodash.debounce((e?: PointerEvent, shiftKey?: boolean) => {
 			if (e) lastPointerMoveEvent = e;
 			e ??= lastPointerMoveEvent;
-			if (lastPointerAction.current === "down" && Math.hypot(e.pageX - eDown.pageX, e.pageY - eDown.pageY) <= POINTER_MOVE_THRESHOLD) return;
+			if (lastPointerAction.current === "down" && Math.hypot(e.pageX - eDown.pageX, e.pageY - eDown.pageY) <= POINTER_MOVE_THRESHOLD || !lastPointerAction.current.includes("down")) return;
 			lastPointerAction.current = "down move";
 			setChildrenState([thumb], "pressed");
 			setValue?.(withShiftKey([
