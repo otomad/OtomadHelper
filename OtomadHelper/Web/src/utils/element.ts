@@ -361,8 +361,8 @@ export function getLayoutNeighbor(el: Element | null, neighbor: "left" | "right"
 	const rtl = isRtl();
 	const { display, flexDirection } = getComputedStyle(parent);
 	if (display !== "grid") {
-		let left = siblings[index - 1] ?? null, top = left;
-		let right = siblings[index + 1] ?? null, bottom = right;
+		let left = siblings.circularAt(index - 1) ?? null, top = left;
+		let right = siblings.circularAt(index + 1) ?? null, bottom = right;
 		if (display === "flex")
 			if (flexDirection === "row-reverse") [left, right] = [right, left];
 			else if (flexDirection === "column-reverse") [top, bottom] = [bottom, top];

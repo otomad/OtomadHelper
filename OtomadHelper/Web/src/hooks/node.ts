@@ -75,7 +75,7 @@ export function useOnFormKeyDown(element: RefObject<HTMLElement | null>, { handl
 			}
 			const index = target?.indexIn(parent) ?? -1;
 			if (index === -1 || !parent || !target) return;
-			const items = [...parent.children].filter(element => element.matches(itemSelector) && !element.hasAttribute("disabled"));
+			const items = [...parent.children].filter(element => (itemSelector === "*" || element.matches(itemSelector)) && !element.hasAttribute("disabled"));
 			const immediate = parent.children[index] as HTMLElement;
 			const indexInItems = items.indexOf(immediate);
 			if (indexInItems === -1) return;

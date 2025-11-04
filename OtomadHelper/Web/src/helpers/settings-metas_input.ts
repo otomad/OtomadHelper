@@ -196,13 +196,18 @@ export const settingsMetasInput = {
 		articulations: {
 			type: "subheader",
 			items: {
-				glissando: { icon: "slide_note" },
+				glissando: {
+					icon: "slide_note",
+					items: {
+						amplitude: { icon: "chevron_up_down" },
+					},
+				},
 				appoggiatura: { icon: "appoggiatura" },
 				arpeggio: {
 					icon: "score",
 					items: {
 						negative: { icon: "invert_color", title: t.prve.effects.negative },
-						applyCustomPreset: { icon: "preset", title: t.stream.articulations.applyCustomPreset },
+						// applyCustomPreset: { icon: "preset", title: t.stream.articulations.applyCustomPreset },
 					},
 				},
 			},

@@ -342,7 +342,7 @@ export default {
 				glissando: {
 					_: "Glissando",
 					pingpong: "Ping-Pong",
-					swirlAmount: "Swirl amount",
+					amplitude: "Amplitude",
 				},
 				appoggiatura: {
 					_: "Appoggiatura",
@@ -1043,7 +1043,7 @@ export default {
 				articulations: {
 					glissando: {
 						_: "Produces a certain effect when playing pitch bends, slides, glissandi, or vibrati.",
-						swirlAmount: "Specify the amount of the swirl twist amplitude",
+						amplitude: "Specify the amplitude amount of the {{effect, lowercase}} effect",
 					},
 					appoggiatura: {
 						_: "Produces a certain effect when playing appoggiaturas.\nWhen there are one to two sixteenth notes or shorter consecutively, they are considered as appoggiaturas.",

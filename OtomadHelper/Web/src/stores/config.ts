@@ -197,7 +197,7 @@ namespace Config {
 			},
 			glissando: false,
 			glissandoEffect: "swirl" satisfies VisualGlissandoEffect as VisualGlissandoEffect,
-			glissandoAmount: 12,
+			glissandoAmplitude: 12,
 			appoggiatura: false,
 			arpeggio: false,
 			arpeggioNegative: true,
