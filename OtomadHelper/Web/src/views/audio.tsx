@@ -195,7 +195,7 @@ export default function Audio() {
 						items={tuningMethods}
 						value={tuningMethod}
 						view="tile"
-						itemsViewItemAttrs={{ topAlignIcon: true }}
+						itemsViewItemAttrs={{ alignItems: "start" }}
 						idField="id"
 						iconField="icon"
 						nameField={({ id }) => id === "unset" ? t.unset : t.stream.tuning.tuningMethod[id]}

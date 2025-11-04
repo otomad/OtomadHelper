@@ -30,6 +30,8 @@ interface StyledItemsViewItemProps {
 	$selectionColor?: string;
 	/** Is the orientation of the icon changed based on the writing direction? */
 	$dirBasedIcon?: DirBasedIcon;
+	/** `list`, `tile` - Align items (usually vertical alignment). */
+	$alignItems?: "start" | "center";
 }
 
 const ItemsViewItemTextPart = styled.div({});
@@ -45,7 +47,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 
 	${styledDirBasedIcon}
 
-	${({ $view, $withBorder }) => $view === "grid" ? css`
+	${({ $view, $withBorder, $alignItems }) => $view === "grid" ? css`
 		display: flex;
 		flex-direction: column;
 		block-size: 100%;
@@ -84,7 +86,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 		.text-part {
 			display: flex;
 			gap: 10px;
-			align-items: start;
+			align-items: ${$alignItems};
 			margin: 5px 0;
 			text-align: start;
 		}
@@ -156,7 +158,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 			display: flex;
 			flex-wrap: nowrap;
 			gap: 16px;
-			align-items: start;
+			align-items: ${$alignItems};
 			block-size: 100%;
 			min-block-size: 48px;
 			padding-block: 12px;
@@ -213,10 +215,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 
 		.image-wrapper {
 			${styles.mixins.flexCenter()};
-
-			&.top-align-icon {
-				margin-top: 5px;
-			}
+			${$alignItems === "start" && css`margin-block-start: 5px;`}
 		}
 
 		.flyout & {
@@ -292,7 +291,7 @@ const ItemsViewItemStateContext = createContext<{
 
 export type OnItemsViewItemClickEventHandler<T> = (id: T, selected: CheckState, e: React.MouseEvent<HTMLElement>) => void;
 
-export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected = "unchecked", details, actions, withBorder = false, topAlignIcon, baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable, children, className, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable, children, className, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */
@@ -307,8 +306,8 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 	actions?: ReactNode;
 	/** Add additional borders to the normal state of the image wrapper? */
 	withBorder?: boolean;
-	/** `list`, `tile` - Top alignment the icon? */
-	topAlignIcon?: boolean;
+	/** `list`, `tile` - Align items (usually vertical alignment). */
+	alignItems?: "start" | "center";
 	/** Additional attributes for the base element of the items view item. */
 	baseAttrs?: Partial<FCP<{}, "div">> & Record<string, Any>;
 	/**
@@ -384,6 +383,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 						$withBorder={withBorder}
 						$selectionColor={selectionColor}
 						$dirBasedIcon={dirBasedIcon}
+						$alignItems={alignItems}
 						className={[className, view, { selected: selected !== "unchecked" }]}
 						tabIndex={0}
 						role={multiple ? "checkbox" : "radio"}
@@ -408,7 +408,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 								<>
 									{checkbox}
 									{(image || icon) && (
-										<div className={["image-wrapper", { topAlignIcon }]}>
+										<div className="image-wrapper">
 											{typeof image === "string" ? <img src={image} alt="" /> : iconOrElement}
 										</div>
 									)}

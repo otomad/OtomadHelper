@@ -71,12 +71,12 @@ const StyledSegmented = styled.div<{
 			background-color: ${c("fill-color-subtle-secondary")};
 		}
 
-		&:active > .base::before {
+		&:hover:active > .base::before {
 			background-color: ${c("fill-color-subtle-tertiary")};
 			scale: ${SEGMENTED_ITEM_PRESSED_SCALE};
 		}
 
-		&:active > .base > * {
+		&:hover:active > .base > * {
 			opacity: ${c("pressed-text-opacity")};
 		}
 

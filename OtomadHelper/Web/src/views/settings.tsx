@@ -67,6 +67,7 @@ export default function Settings() {
 	const { pushPage } = useSnapshot(pageStore);
 	const meta = metas.settings;
 	const backgroundImagePositionDisabled = backgroundImageFit[0] === "stretch";
+	const backgroundColorInvalid = actualContrast || actualAmoledDark;
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -221,8 +222,8 @@ export default function Settings() {
 								/>
 							</TooltipBlock>
 						</StyledColorPalette>
-						{(actualContrast || actualAmoledDark) && <InfoBar status="warning">{t.descriptions.settings.appearance.invalid.blackScheme({ option: t.settings.appearance.palette.background })}</InfoBar>}
-						<Attrs style={{ opacity: actualContrast || actualAmoledDark ? 0.5 : undefined }}>
+						{backgroundColorInvalid && <InfoBar status="warning">{t.descriptions.settings.appearance.invalid.blackScheme({ option: t.settings.appearance.palette.background })}</InfoBar>}
+						<Attrs style={{ opacity: backgroundColorInvalid ? 0.5 : undefined }}>
 							<Setting meta={meta.appearance.palette.background} asSubtitle />
 							<StyledColorPalette>
 								{autoColorPalettes.map(color => (
@@ -235,13 +236,13 @@ export default function Settings() {
 											colorAlt={isAutoColor(color) ? `var(--background-color-${color})` : undefined}
 											hidden={color === "wallpaper" && !backgroundImages.currentDominantColor}
 											selected={color === "windows" && backgroundColor[0] === "wallpaper" && !backgroundImages.currentDominantColor}
-											autoStartViewTransition
+											autoStartViewTransition={!backgroundColorInvalid}
 										/>
 									</TooltipBlock>
 								))}
 								{BasicColorPalette.items.map(({ value: color, key: name }) => (
 									<TooltipBlock key={color} title={t.settings.appearance.palette[name]}>
-										<ColorButton key={color} color={color} value={backgroundColor} autoStartViewTransition />
+										<ColorButton key={color} color={color} value={backgroundColor} autoStartViewTransition={!backgroundColorInvalid} />
 									</TooltipBlock>
 								))}
 								<TooltipBlock title={t.custom}>
