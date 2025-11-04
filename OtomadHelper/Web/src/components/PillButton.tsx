@@ -69,7 +69,7 @@ const StyledPillButton = styled.button.attrs({
 	}
 `;
 
-export /* @internal */ default function PillButton({ icon, id, selected, badge, autoScrollIntoView = true, children, className, onClick, ...htmlAttrs }: FCP<{
+export /* @internal */ default function PillButton({ icon, id, selected, badge, autoScrollIntoView = true, focusByArrowKey = false, children, className, onClick, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons;
 	/** Identifier. */
@@ -80,6 +80,8 @@ export /* @internal */ default function PillButton({ icon, id, selected, badge, 
 	badge?: Readable;
 	/** Auto scroll into view while selected? @default true */
 	autoScrollIntoView?: boolean;
+	/** Allows to use arrow keys to change focus and selection? */
+	focusByArrowKey?: boolean;
 }, "button">) {
 	const ariaId = useId();
 	const pillEl = useDomRef<"button">();
@@ -90,12 +92,14 @@ export /* @internal */ default function PillButton({ icon, id, selected, badge, 
 	};
 	useEffect(() => scrollIntoView(), [selected]);
 	useKeyboardFocus(pillEl, () => scrollIntoView(true));
+	useOnFormKeyDown(pillEl, { handleCheck: () => onClick?.(null!), changeWhenMoveFocus: true, item: "*", disabled: !focusByArrowKey });
 
 	return (
 		<StyledPillButton
 			ref={pillEl}
 			className={[className, { selected }]}
 			role="radio"
+			tabIndex={!focusByArrowKey ? undefined : selected ? 0 : -1}
 			aria-checked={selected}
 			aria-labelledby={`${ariaId}-title`}
 			onClick={e => { onClick?.(e); scrollIntoView(true); }}

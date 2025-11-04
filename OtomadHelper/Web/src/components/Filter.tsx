@@ -34,6 +34,7 @@ export default function Filter<T extends PropertyKey>({ current: [current, setCu
 					if (!isReactInstance(child, PillButton)) return child;
 					const id = child.props.id as T;
 					return React.cloneElement(child, {
+						focusByArrowKey: true,
 						selected: current === id,
 						onClick: () => setCurrent?.(id),
 					});
