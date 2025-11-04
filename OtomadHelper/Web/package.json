@@ -92,7 +92,7 @@
 		"@types/react": "^19.0.1",
 		"@types/react-dom": "^19.0.1",
 		"@vitejs/plugin-react": "^4.7.0",
-		"babel-plugin-react-compiler": "19.1.0-rc.2",
+		"babel-plugin-react-compiler": "1.0.0",
 		"babel-plugin-styled-components": "^2.1.4",
 		"babel-plugin-transform-jsx-classnames": "^1.2.2",
 		"click-to-react-component": "^1.1.2",
