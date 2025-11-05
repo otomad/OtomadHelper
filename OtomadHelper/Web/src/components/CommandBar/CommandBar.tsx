@@ -98,7 +98,7 @@ export default function CommandBar({ position, autoCollapse, addGaps, children, 
 	addGaps?: boolean;
 }, "div">) {
 	const [commandBarEl, setCommandBarEl] = useDomRefs<"div">();
-	const anchorName = useUniqueId("--command-bar");
+	const anchorName = "--command-bar" + useId();
 	const childFactory: TransitionGroupChildFactory = child => child.type === "hr" ? <hr key={child.key} /> : child;
 	const overflowed = useIsCommandBarOverflowed(commandBarEl.current[1]);
 

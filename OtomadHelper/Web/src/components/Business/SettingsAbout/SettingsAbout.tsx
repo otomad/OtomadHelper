@@ -278,7 +278,7 @@ export function listFormatTranslators(targetLanguage: string, displayLanguage: s
 
 function HelpLinks() {
 	const currentLanguage = useCurrentLanguage();
-	const tAbout = t.settings.about;
+	const tAbout = tAlias.settings.about;
 	const helpsV4: Record<Intl.UnicodeBCP47LocaleIdentifier, { name: string; link: string; version?: string }[]> = {
 		zh: [
 			{ name: tAbout.documentation, version: "0.1", link: links.helpV4.chinese.documentation_chaosinism_v0_1 },

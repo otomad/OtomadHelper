@@ -236,7 +236,7 @@ export default function Visual() {
 						{scheme => (
 							<SettingsCard
 								title={scheme.name[0]}
-								details={listFormat(scheme.parameters[0], "conjunction", "narrow")}
+								details={listFormat(scheme.parameters[0])}
 								type="button"
 								icon
 								dragHandle

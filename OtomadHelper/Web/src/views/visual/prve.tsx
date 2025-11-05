@@ -237,7 +237,7 @@ export default function Prve() {
 						>
 							{klass === "time" && <InfoBar status="info" title={getWhirlInfo()} />}
 							{klass.in("ec", "swing", "blur") && (() => {
-								const tAmounts = t.prve.amounts;
+								const tAmounts = tAlias.prve.amounts;
 								const option =
 									/* eslint-disable @stylistic/indent */
 									klass === "swing" ? $a(tAmounts.pendulum, "angle", pendulum, defaultPrveAmounts.pendulum, -360, 360, 0, t.units.degree) :
@@ -522,10 +522,11 @@ export function getStepChangeHueStep(effectId: string) {
 }
 
 function getEffectName(effectId: string) {
+	const tEffects = tAlias.prve.effects;
 	const stepChangeHueStep = getStepChangeHueStep(effectId);
 	if (stepChangeHueStep !== null)
-		return t.prve.effects[STEP_CHANGE_HUE]({ count: stepChangeHueStep });
-	return t.prve.effects[effectId];
+		return tEffects[STEP_CHANGE_HUE]({ count: stepChangeHueStep });
+	return tEffects[effectId];
 }
 
 export function usePrveInfo() {

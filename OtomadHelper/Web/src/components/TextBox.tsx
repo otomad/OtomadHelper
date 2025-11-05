@@ -461,7 +461,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	/** @deprecated Please use `readOnly` instead. */
 	"aria-readonly"?: never;
 }, "div">) {
-	const inputIdDef = useUniqueId("input");
+	const inputIdDef = "input" + useId();
 	const inputId = id || inputIdDef;
 	const inputEl = useDomRef<"input">();
 	const wrapperEl = useDomRef<"div">();

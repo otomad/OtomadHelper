@@ -1,7 +1,7 @@
 import type babelCore from "@babel/core";
 type Node = babelCore.types.Node;
 
-const tRoots = ["t", "tf"] as const;
+const tRoots = ["t", "tf", "tAlias"] as const;
 
 interface Options {
 	excludePaths: string[];
@@ -11,17 +11,22 @@ export default function (babel: typeof babelCore): babelCore.PluginObj {
 	const { types: t } = babel;
 
 	let options: Options = undefined!;
+	const tAliases = new Map<string, Set<string>>();
 
 	/**
 	 * Recursively check if the root of the member expression is `t` related.
 	 * @param node - The node that to be checked.
+	 * @param filename - Script code file name.
 	 * @returns It is matched the expected root.
 	 */
-	function isTRelated(node: Node) {
-		if (t.isIdentifier(node))
-			return tRoots.includes(node.name) ? node.name as typeof tRoots[number] : false;
-		if (t.isMemberExpression(node)) return isTRelated(node.object);
-		if (t.isCallExpression(node) && t.isIdentifier(node.callee)) return isTRelated(node.callee);
+	function isTRelated(node: Node, filename?: string) {
+		if (t.isIdentifier(node)) {
+			if (tRoots.includes(node.name)) return node.name as typeof tRoots[number];
+			if (filename && tAliases.get(filename)?.has(node.name)) return "t";
+			return false;
+		}
+		if (t.isMemberExpression(node)) return isTRelated(node.object, filename);
+		if (t.isCallExpression(node) && t.isIdentifier(node.callee)) return isTRelated(node.callee, filename);
 		return false;
 	}
 
@@ -82,8 +87,18 @@ export default function (babel: typeof babelCore): babelCore.PluginObj {
 				// #endregion
 
 				// Recursively check if the root of the member expression is `t` related.
-				const tCallInfo = isTRelated(node);
+				const tCallInfo = isTRelated(node, filename);
 				if (!tCallInfo) return;
+
+				// Assign to an alias of a path of t.
+				if (tCallInfo === "tAlias") {
+					if (!(filename && t.isVariableDeclarator(parent) && t.isIdentifier(parent.id))) return;
+					let aliases: Set<string>;
+					if (!tAliases.has(filename)) tAliases.set(filename, aliases = new Set());
+					else aliases = tAliases.get(filename)!;
+					aliases.add(parent.id.name);
+					return;
+				}
 
 				// All conditions met: wrap member expressions into parameterless function calls.
 				const callExpr = t.optionalCallExpression(node, [], tCallInfo !== "t");

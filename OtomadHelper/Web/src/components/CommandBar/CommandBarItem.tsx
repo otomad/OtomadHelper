@@ -30,7 +30,7 @@ export /* @internal */ function CommandBarItem({ icon, caption, altCaption, deta
 	const { anchorName: commandBarAnchorName, position, tooNarrow } = useContext(CommandBarAnchorContext);
 	const { disabled: commandBarDisabled } = useContext(InteractionStateContext);
 	if (!caption) iconOnly = true;
-	const anchorName = useUniqueId("--command-bar-item");
+	const anchorName = "--command-bar-item" + useId();
 	const [flyoutShown, setFlyoutShown] = useState(false);
 	const hideTimeout = useRef<Timeout>(undefined), showTimeout = useRef<Timeout>(undefined);
 	const showFlyout = () => { clearTimeout(hideTimeout.current); if (children) { emit("app:hideOtherFlyouts", anchorName); setFlyoutShown(true); } };

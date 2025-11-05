@@ -134,6 +134,7 @@ const targetFunction = (options?: number | bigint | TOptions) => {
 export const t = getProxy(targetFunction) as Trans;
 export const tf = getProxy(targetFunction, true) as Trans;
 export const useT = () => { const { t } = useTranslation(); return getProxy(targetFunction, false, t) as Trans; };
+export const tAlias = t;
 export /* @internal */ type Trans = LocaleDictionary & typeof targetFunction;
 
 declare global {
@@ -166,13 +167,15 @@ export function swapArrowLeftRightIfRtl<T extends string>(code: T) {
 /**
  * Returns a string with a language-specific representation of the list.
  * @param list - An iterable object, such as an Array.
- * @param type - The format of output message.
- * @param style - The length of the internationalized message.
+ * @param lang - Specific the language or automatically obtain.
+ * @param type - The format of output message. Defaults to "conjunction".
+ * @param style - The length of the internationalized message. Defaults to "narrow".
  * @returns A language-specific formatted string representing the elements of the list.
  */
-export function listFormat(list: string[], type?: Intl.ListFormatType, style?: Intl.ListFormatStyle) {
-	const formatter = new Intl.ListFormat(i18n.language, { type, style });
-	return formatter.format(list);
+export function listFormat(list: (string | false | undefined | null)[], lang?: Intl.UnicodeBCP47LocaleIdentifier, type: Intl.ListFormatType = "conjunction", style: Intl.ListFormatStyle = "narrow") {
+	lang ||= i18n.language;
+	const formatter = new Intl.ListFormat(lang, { type, style });
+	return formatter.format(list.toCompacted());
 }
 
 interface UseLanguageTagsOptions {

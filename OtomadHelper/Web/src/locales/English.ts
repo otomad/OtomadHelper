@@ -1029,7 +1029,7 @@ export default {
 				multitrackForChords: "Creates multiple tracks for chords",
 				createGroups: "Creates groups for video and audio clips represented by one note",
 				autoPan: "Pans the audio using envelope automation",
-				stack: "Stacks the clips as tightly as possible on one track, rather than placing the results on separate tracks according to the score track",
+				stack: "Stacks the clips as tightly as possible on one track, rather than placing the results on separate tracks according to the score track (multitrack only)",
 				timeUnremapping: "The clip will not reset its in point time when note on occurs, but will continue to play, useful if you only want to apply the effects to the source",
 				preferredTrack: "Allows you to specify an existing track to generate (except multitrack)",
 				prerender: {

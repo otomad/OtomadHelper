@@ -139,7 +139,7 @@ export default function Tooltip({ title: _title, placement, offset, timeout = 50
 	const [shown, setShown] = useState(false);
 	const [childEl, setChildEl] = useDomRefState<"div">(); // Use state instead of ref to make sure change it to rerender.
 	const shownTimeout = useRef<Timeout>(undefined);
-	const newAnchorName = useUniqueId(DEFAULT_TOOLTIP_ANCHOR_PREFIX);
+	const newAnchorName = DEFAULT_TOOLTIP_ANCHOR_PREFIX + useId();
 	const anchorName = useRef(newAnchorName);
 	const { isInPage } = useContext(MainPageContext);
 

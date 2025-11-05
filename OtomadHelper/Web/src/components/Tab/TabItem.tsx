@@ -168,7 +168,7 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 	_vertical?: boolean;
 }, GenericElement>) {
 	const tabItemEl = useDomRef<"button">();
-	const anchorName = useUniqueId("--tab-item-focus-ring");
+	const anchorName = "--tab-item-focus-ring" + useId();
 	const scrollIntoView = (force = false) => {
 		if ((selected || force) && autoScrollIntoView)
 			scrollIntoViewAlt(tabItemEl, !vertical);

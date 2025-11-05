@@ -365,7 +365,7 @@ export default function Audio() {
 					{activeParameterScheme.map((scheme, i) => (
 						<SettingsCard
 							title={scheme.name[0]}
-							details={listFormat(scheme.parameters[0], "conjunction", "narrow")}
+							details={listFormat(scheme.parameters[0])}
 							type="button"
 							key={i}
 							icon
