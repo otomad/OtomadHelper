@@ -251,6 +251,12 @@ export default {
 				project: "Project tempo",
 			},
 			timeSignature: "Time signature",
+			autoChangeProjectProperties: {
+				_: "Auto change project ruler properties",
+				beatsPerMinute: "Beats per minute",
+				beatsPerMeasure: "Beats per measure",
+				noteThatGetsOneBeat: "Note that gets one beat",
+			},
 			constrain: {
 				_: "Constrain note length",
 				none: "Unconstrained",
@@ -922,14 +928,14 @@ export default {
 				interpolation: "Specify the interpolation curve of the keyframe type",
 				crossfade: "Specify the two crossfade curves of the fade type",
 			},
+			versionRequest: {
+				min: "Note: This feature requires VEGAS Pro {{min}} or higher. The current version is {{current}}.",
+			},
 			source: {
 				trim: "Adjusts the in or out point time of the specified source",
 				startTime: "Specify when to start generating from the project",
 				preferredTrack: {
 					fillingInstructions: "If 0, then generated above all tracks;\nIf positive, then generated below the nth track;\nIf negative, then generated below the nth-to-last track.\nIf any preferred track is specified in Audio or Visual, that will override this option.",
-					belowAdjustmentTracks: {
-						versionRequest: "Note: This feature requires VEGAS Pro ≥ 19. The current version is {{version}}.",
-					},
 				},
 				trackGroup: {
 					_: "Groups tracks by score track",
@@ -971,6 +977,7 @@ export default {
 				trim: "Intercepts the generation time range of the score",
 				encoding: "Specify the text encoding to use when reading the file",
 				tempo: "Specify the beats per minute",
+				autoChangeProjectProperties: "Automatically change measures & beat in the project ruler properties if they don’t match the score",
 				constrain: {
 					_: "Controls the output length of notes from the score",
 					none: "Preserves each note length as it is",

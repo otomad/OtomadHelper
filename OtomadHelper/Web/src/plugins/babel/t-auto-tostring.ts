@@ -34,6 +34,15 @@ export default function (babel: typeof babelCore): babelCore.PluginObj {
 		return t.isCallExpression(node) || t.isOptionalCallExpression(node);
 	}
 
+	/**
+	 * Check if the node is a member expression (`foo.bar`) or an optional member expression (`foo?.bar`).
+	 * @param node - The node that to be checked.
+	 * @returns The node is a member expression or an optional member expression.
+	 */
+	function isMemberOrOptionalMember(node: Node) {
+		return t.isMemberExpression(node) || t.isOptionalMemberExpression(node);
+	}
+
 	return {
 		name: "babel-plugin-t-auto-tostring",
 		visitor: {
@@ -59,12 +68,16 @@ export default function (babel: typeof babelCore): babelCore.PluginObj {
 				if (t.isAssignmentExpression(parent) && parent.left === node) return;
 
 				// #region Special
-				// Exclude: withObject(t.foo, t => t.bar)
-				if (isCallOrOptionalCall(parent) && t.isIdentifier(parent.callee) && parent.callee.name === "withObject") return;
 				// Exclude: <ExpanderRadio xxxField={t.foo} />, <TransInterpolation i18nKey={t.foo} />
 				if (t.isJSXExpressionContainer(parent) && t.isJSXAttribute(parentPath.parent) && t.isJSXIdentifier(parentPath.parent.name)) {
 					const propName = parentPath.parent.name.name;
 					if (propName.endsWith("Field") || propName === "i18nKey") return;
+				}
+				// withObject(t.foo, t => t.bar) --> withObject(t.foo, t => t.bar).toString()
+				if (isCallOrOptionalCall(parent) && t.isIdentifier(parent.callee) && parent.callee.name === "withObject") {
+					if (isMemberOrOptionalMember(parentPath.parent)) return;
+					const callExpr = t.callExpression(t.memberExpression(parent, t.identifier("toString")), []);
+					parentPath.replaceWith(callExpr);
 				}
 				// #endregion
 

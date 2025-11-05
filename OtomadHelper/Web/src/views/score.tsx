@@ -118,12 +118,13 @@ const MultipleSelectTrackItemsContainer = styled.div`
 export default function Score() {
 	const {
 		format, encoding, trimStart, trimEnd, tempoUsing, customTempo,
-		timeSignature: [timeSignature], trackOrChannel,
+		timeSignature: [timeSignature], trackOrChannel, autoChangeProjectTempo, autoChangeProjectTimeSignature,
 		selectedTrack: [selectedTrack, setSelectedTrack], multipleSelectTrackItems: [selectTrackItems, _setSelectTrackItems],
 	} = useSelectConfig(c => c.score);
 	const { type: constrainNoteLengthType, min: constrainNoteLengthMin, ...constrainNoteLengthValues } = useSelectConfig(c => c.score.constrainNoteLength);
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
 	const meta = metas.score;
+	const autoChangeProjectCheckInfo = listFormat([autoChangeProjectTempo[0] && t.score.tempo, autoChangeProjectTimeSignature[0] && t.score.timeSignature]) || t.off;
 
 	const setSelectTrackItems = (recipe: (draft: typeof selectTrackItems) => void) => _setSelectTrackItems(produce(recipe));
 
@@ -251,6 +252,10 @@ export default function Score() {
 				</CustomItem>
 			</Setting>
 			<Setting meta={meta.timeSignature} actions={timeSignature} />
+			<Setting meta={meta.autoChangeProjectProperties} checkInfo={autoChangeProjectCheckInfo}>
+				<Checkbox value={autoChangeProjectTempo} details={t.score.autoChangeProjectProperties.beatsPerMinute}>{t.score.tempo}</Checkbox>
+				<Checkbox value={autoChangeProjectTimeSignature} details={listFormat([t.score.autoChangeProjectProperties.beatsPerMeasure, t.score.autoChangeProjectProperties.noteThatGetsOneBeat])}>{t.score.timeSignature}</Checkbox>
+			</Setting>
 			<Setting
 				meta={meta.constrain}
 				items={constrainNoteLengthTypes}

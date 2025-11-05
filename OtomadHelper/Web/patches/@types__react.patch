@@ -1,12 +1,12 @@
 diff --git a/index.d.ts b/index.d.ts
-index 00b03984285762c090b58e76437a49cdd38ebae8..c17dcaa4162746fac0fc13b5a7b9eca36f4b29cc 100644
+index 00b03984285762c090b58e76437a49cdd38ebae8..b7dfcaf23ec574e75e5cd586155b96e98555e96a 100644
 --- a/index.d.ts
 +++ b/index.d.ts
 @@ -5,6 +5,7 @@
  /// <reference path="global.d.ts" />
  
  import * as CSS from "csstype";
-+import { ClassArray } from "clsx";
++import { ClassValue } from "clsx";
  
  type NativeAnimationEvent = AnimationEvent;
  type NativeClipboardEvent = ClipboardEvent;
@@ -120,7 +120,7 @@ index 00b03984285762c090b58e76437a49cdd38ebae8..c17dcaa4162746fac0fc13b5a7b9eca3
          autoCapitalize?: "off" | "none" | "on" | "sentences" | "words" | "characters" | undefined | (string & {});
          autoFocus?: boolean | undefined;
 -        className?: string | undefined;
-+        className?: string | ClassArray | undefined;
++        className?: string | ClassValue | undefined;
          contentEditable?: Booleanish | "inherit" | "plaintext-only" | undefined;
          contextMenu?: string | undefined;
          dir?: string | undefined;
@@ -129,7 +129,7 @@ index 00b03984285762c090b58e76437a49cdd38ebae8..c17dcaa4162746fac0fc13b5a7b9eca3
          // Attributes which also defined in HTMLAttributes
          // See comment in SVGDOMPropertyConfig.js
 -        className?: string | undefined;
-+        className?: string | ClassArray | undefined;
++        className?: string | ClassValue | undefined;
          color?: string | undefined;
          height?: number | string | undefined;
          id?: string | undefined;

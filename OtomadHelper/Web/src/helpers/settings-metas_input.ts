@@ -76,6 +76,7 @@ export const settingsMetasInput = {
 		encoding: { icon: "globe" },
 		tempo: { icon: "speed" },
 		timeSignature: { icon: "heart_pulse" },
+		autoChangeProjectProperties: { icon: "ruler_wrench" },
 		constrain: { icon: "constraint" },
 		parser: { icon: "engine" },
 		trackOrChannel: { icon: "midi" },

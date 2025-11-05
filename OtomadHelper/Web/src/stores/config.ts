@@ -95,6 +95,8 @@ namespace Config {
 			tempoUsing: "variableScore" satisfies TempoUsing as TempoUsing,
 			customTempo: 120,
 			timeSignature: "4/4",
+			autoChangeProjectTempo: true,
+			autoChangeProjectTimeSignature: true,
 			constrainNoteLength: {
 				type: "none" satisfies ConstrainNoteLengthType as ConstrainNoteLengthType,
 				max: EMPTY_TIMECODE,

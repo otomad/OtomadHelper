@@ -114,4 +114,9 @@ import dedent from "dedent";
 // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
 export const canToString = (test: Object | undefined | null): test is string => !!test && !test.toString().match(/^\[object .*\]$/);
 
+export function listFormat(items: (string | false | undefined | null)[], lang?: Intl.UnicodeBCP47LocaleIdentifier) {
+	lang ||= i18n.language;
+	return new Intl.ListFormat(lang, { style: "narrow", type: "conjunction" }).format(items.toCompacted());
+}
+
 export { default as replacerWithGroups } from "helpers/replacerWithGroups";

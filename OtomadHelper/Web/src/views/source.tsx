@@ -123,7 +123,7 @@ export default function Source() {
 				<Setting
 					meta={meta.preferredTrack.belowAdjustmentTracks}
 					on={belowAdjustmentTracks}
-					selectInfo={isUnderVegas16 && t.descriptions.source.preferredTrack.belowAdjustmentTracks.versionRequest({ version: 16 })}
+					selectInfo={isUnderVegas16 && t.descriptions.versionRequest.min({ current: 16, min: 19 })}
 					lock={isUnderVegas16 ? false : null}
 				/>
 			</Setting>
