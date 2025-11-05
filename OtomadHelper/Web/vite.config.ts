@@ -20,6 +20,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import autoImportConfig from "./auto-import.config";
 import { author, displayName, github, homepage, project, version } from "./package.json";
 import minifySvgMatrix from "./src/plugins/babel/minify-svg-matrix";
+import tAutoTostring from "./src/plugins/babel/t-auto-tostring";
 import fragmentFiltersVirtualFile from "./src/plugins/vite/fragment-filters";
 import globalized from "./src/plugins/vite/globalized";
 import midiKeyframes from "./src/plugins/vite/midi";
@@ -51,6 +52,13 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 			react({
 				babel: {
 					plugins: [
+						[
+							tAutoTostring,
+							{
+								roots: ["t", "tf"],
+								excludePaths: ["settings-metas"],
+							},
+						],
 						...ENABLE_COMPILER ? [["babel-plugin-react-compiler", { target: "19" }]] : [],
 						[
 							"babel-plugin-styled-components",

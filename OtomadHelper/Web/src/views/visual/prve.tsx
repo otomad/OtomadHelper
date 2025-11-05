@@ -522,11 +522,10 @@ export function getStepChangeHueStep(effectId: string) {
 }
 
 function getEffectName(effectId: string) {
-	const { effects } = t.prve;
 	const stepChangeHueStep = getStepChangeHueStep(effectId);
 	if (stepChangeHueStep !== null)
-		return effects[STEP_CHANGE_HUE]({ count: stepChangeHueStep });
-	return effects[effectId];
+		return t.prve.effects[STEP_CHANGE_HUE]({ count: stepChangeHueStep });
+	return t.prve.effects[effectId];
 }
 
 export function usePrveInfo() {

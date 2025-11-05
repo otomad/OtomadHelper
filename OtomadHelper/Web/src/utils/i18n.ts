@@ -17,7 +17,8 @@ export function isI18nItem(newChild: Any): newChild is Record<string, string> {
 const wellknownSymbols = Reflect.ownKeys(Symbol).map(key => Symbol[key as never]).filter(value => typeof value === "symbol");
 const DEFAULT_NAMESPACE = "javascript";
 
-const getProxy = (target: object, fallbackMode: boolean = false) => {
+const getProxy = (target: object, fallbackMode: boolean = false, tInHook?: typeof i18n.t) => {
+	const $t = tInHook ?? i18n.t;
 	const getParentsPrefix = (...prefixes: string[]) => prefixes.length > 0 ? prefixes.join(".") : "";
 	const getDeclarationInfo = (...keys: string[]) => {
 		const hasNamespace = !!i18n.options.ns?.includes(keys[0]);
@@ -74,7 +75,7 @@ const getProxy = (target: object, fallbackMode: boolean = false) => {
 					...target?.format ? wrapIfNotArray(target.format) : [],
 					...options?.format ? wrapIfNotArray(options.format) : [],
 				];
-				let result = i18n.t(key, { ...target, ...options }) as string;
+				let result = $t(key, { ...target, ...options }) as string;
 				if (formatters.length > 0) {
 					const sep: string = options?.interpolation?.formatSeparator ?? target?.interpolation?.formatSeparator ?? ",";
 					result = i18n.format(result, formatters.join(sep), options?.lng);
@@ -130,6 +131,7 @@ const targetFunction = (options?: number | bigint | TOptions) => {
 /** Get localize string objects. */
 export const t = getProxy(targetFunction) as Trans;
 export const tf = getProxy(targetFunction, true) as Trans;
+export const useT = () => { const { t } = useTranslation(); return getProxy(targetFunction, false, t) as Trans; };
 export /* @internal */ type Trans = LocaleDictionary & typeof targetFunction;
 
 declare global {
@@ -313,6 +315,7 @@ export function getLocaleName(targetLocale: string | Intl.Locale, displayLocale:
 export function i18nExists(getKey: ((t: Trans) => Any) | string, context?: string, enableFallbackLang = true) {
 	const t = new PathObject() as Trans;
 	let path = typeof getKey === "string" ? getKey : getKey(t) + "";
+	path = path.replaceEnd("()");
 	if (context) path += `_${context}`;
 	const fallbackLng = enableFallbackLang ? undefined : false;
 	const notCategoryExists = i18n.exists(path, { fallbackLng, returnObjects: false });

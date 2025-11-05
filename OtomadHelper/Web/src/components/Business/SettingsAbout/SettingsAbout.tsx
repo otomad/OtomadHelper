@@ -51,7 +51,7 @@ const StyledSettingsAbout = styled.div`
 `;
 
 export default function SettingsAbout() {
-	"use no memo";
+	const t = useT();
 	const currentLanguage = useCurrentLanguage();
 	const [hasTranslator, formattedTranslator] = listFormatTranslators(currentLanguage, currentLanguage);
 	const collaborators = new Map<string, string>([

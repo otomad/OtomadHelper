@@ -1,3 +1,5 @@
+import type { Trans } from "utils/i18n";
+
 const pages = import.meta.glob<FC>("./**/*.tsx", { base: "/src/views", import: "default", eager: true });
 
 function EmptyPage() {
@@ -31,12 +33,12 @@ export function redirectIcon(name: string): DeclaredIcons & DeclaredLotties {
 const isCompleteAvailable = (page: string[]) => !["management", "mosh", "tools", "settings"].includes(page[0]);
 const isAutoLayoutTracks = (page: string[]) => page.length >= 2 && page[0] === "track";
 
-const getTitle = (viewName: string, context: "long" | "full" | "short", plural?: number) => {
+const getTitle = ($t: Trans, viewName: string, context: "long" | "full" | "short", plural?: number) => {
 	const _context = context === "short" ? undefined : context;
 	const t = (context?: string) => {
 		const key = new VariableName(viewName).camel;
 		if (!i18nExists(t => t.titles[key], context)) return;
-		return i18n.t(`titles.${key}`, { count: plural, context });
+		return $t({ count: plural, context }).titles[key];
 	};
 	const contexts = ["long", "full", undefined] as const;
 	const ctx = contexts.slice(contexts.indexOfDefault(_context) ?? 2).firstDefined(context => t(context)) ?? t();
@@ -44,11 +46,12 @@ const getTitle = (viewName: string, context: "long" | "full" | "short", plural?:
 };
 
 export default function ShellPage() {
+	const t = useT();
 	const { page, changePage, pagePath, transition, canBack, back, reset, setPageContentId, poppedScroll, commandBarDisabled, pageChangeResolver } = useSnapshot(pageStore);
 	const pageTitles = page.map((crumb, i, { length }) => {
 		try {
 			return {
-				name: getTitle(crumb, "full"),
+				name: getTitle(t, crumb, "full"),
 				link: i === length - 1 ? undefined : page.slice(0, i + 1),
 			};
 		} catch (error) {
@@ -63,7 +66,7 @@ export default function ShellPage() {
 	const { enabled: enablePixelScaling } = useSnapshot(configStore.visual.pixelScaling);
 	const documentTitle = (() => {
 		const lastPage = page.last();
-		return (lastPage ? getTitle(lastPage, "long") + " - " : "") + appName;
+		return (lastPage ? getTitle(t, lastPage, "long") + " - " : "") + appName;
 	})();
 	const pageContentId = useId();
 	setPageContentId(pageContentId);
@@ -82,10 +85,10 @@ export default function ShellPage() {
 		<NavigationView
 			currentNav={[page, changePage]}
 			navItems={[
-				...navItems.map(item => ({ text: getTitle(item, "short"), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item), badge: getBadge(item) })),
+				...navItems.map(item => ({ text: getTitle(t, item, "short"), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item), badge: getBadge(item) })),
 				{ type: "hr" },
-				...navToolItems.map(item => ({ text: getTitle(item, "short", 2), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item) })),
-				...bottomNavItems.map(item => ({ text: getTitle(item, "short", 2), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item), bottom: true })),
+				...navToolItems.map(item => ({ text: getTitle(t, item, "short", 2), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item) })),
+				...bottomNavItems.map(item => ({ text: getTitle(t, item, "short", 2), id: item, icon: redirectIcon(item), animatedIcon: redirectIcon(item), bottom: true })),
 			]}
 			titles={pageTitles}
 			transitionName={transition}

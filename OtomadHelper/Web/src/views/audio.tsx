@@ -229,7 +229,8 @@ export default function Audio() {
 								...tuningMethod[0] === "elastic" ? {
 									value: stretchAttributeElastic,
 									items: tuningElasticModes,
-									nameField: t.stream.tuning.stretchAttributes.elastic,
+									nameField: (id: string) => t.stream.tuning.stretchAttributes.elastic[id],
+									checkInfoCondition: (id: string) => t.stream.tuning.stretchAttributes.elastic[id],
 									details: t({ context: "elastic" }).descriptions.stream.tuning.stretchAttributes,
 								} : tuningMethod[0].in("classic", "pitchShift") ? {
 									value: tuningMethod[0] === "pitchShift" ? stretchAttributePitchShift : stretchAttributeClassic,

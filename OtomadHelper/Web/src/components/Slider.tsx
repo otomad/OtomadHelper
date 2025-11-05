@@ -176,7 +176,6 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 	/** Occurs when you want to get the display value. */
 	onDisplayValueChanged?(value: Readable | undefined): void;
 }>) {
-	"use no memo";
 	const errorInfo = `The value range should be between [${min} ~ ${max}], with the current value being ${value}.`;
 	if (value === undefined || Number.isNaN(value))
 		throw new ReferenceError("value undefined");

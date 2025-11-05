@@ -814,7 +814,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 							<div>
 								<TransitionGroup>
 									<CssTransition key={pageTitleKey.join()}>
-										<h1 className="title" role="navigation" aria-label={i18n.t("aria.breadcrumb")}>
+										<h1 className="title" role="navigation" aria-label={t.aria.breadcrumb}>
 											<TransitionGroup>
 												{titles.flatMap((title, i, { length }) => {
 													const last = i === length - 1;

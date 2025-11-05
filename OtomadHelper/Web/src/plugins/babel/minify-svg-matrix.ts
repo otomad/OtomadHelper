@@ -1,6 +1,6 @@
 import type babelCore from "@babel/core";
 
-const matrixAttrs = {
+export const matrixAttrs = {
 	feColorMatrix: ["values"],
 	feConvolveMatrix: ["kernelMatrix"],
 	feFuncR: ["tableValues"],
@@ -9,13 +9,13 @@ const matrixAttrs = {
 	feFuncA: ["tableValues"],
 };
 
-function minifyMatrixValue(value: string) {
+export function minifyMatrixValue(value: string) {
 	value = value.trim().replaceAll(/\s+/g, " ");
 	value = value.split(" ").map(n => n.replace(/^0+/, "").replace(/\.0*$/, "") || "0").join(" ");
 	return value;
 }
 
-export default (_babel: typeof babelCore): babelCore.PluginObj | undefined => {
+export default function (_babel: typeof babelCore): babelCore.PluginObj | undefined {
 	const dev = process.env.NODE_ENV === "development";
 
 	return {
@@ -39,4 +39,4 @@ export default (_babel: typeof babelCore): babelCore.PluginObj | undefined => {
 			},
 		},
 	};
-};
+}

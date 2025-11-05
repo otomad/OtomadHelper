@@ -85,7 +85,6 @@ export default function Badge({ children, status = "info", colorOverride, hidden
 	/** @internal */
 	_requestAnimationFrame?: boolean;
 }, "div">) {
-	"use no memo";
 	if (children === false) hidden = true;
 	colorOverride ??= status;
 	const iconName = `badge/${status.in("neutual", "accent") ? "info" : status}` as const;
