@@ -6,6 +6,7 @@ const StyledSettingsPageControl = styled.div<{
 	/** The file path of the Easter egg mouse cursor. */
 	$cursor?: CursorType;
 }>`
+	container: settings-page-control / inline-size;
 	display: flex;
 	gap: 0.5em ${IMAGE_MARGIN}px;
 	${({ $cursor }) => $cursor && css`
@@ -17,6 +18,7 @@ const StyledSettingsPageControl = styled.div<{
 
 		:where(img) {
 			width: ${PREVIEW_IMAGE_HEIGHT / 9 * 16}px;
+			max-width: 50cqw;
 			height: ${PREVIEW_IMAGE_HEIGHT}px;
 		}
 	}

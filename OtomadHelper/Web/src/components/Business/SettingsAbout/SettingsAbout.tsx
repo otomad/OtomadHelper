@@ -154,6 +154,7 @@ function Translators({ shown: [shown, setShown] }: FCP<{
 }>) {
 	const currentLanguage = useCurrentLanguage();
 	const languages = useLanguageTags();
+	const t = useT();
 
 	const availableLanguageNames = {
 		original: languages.mapObject(lang => [lang, t({ lng: lang }).metadata.name.toString()]),
