@@ -55,7 +55,6 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 						[
 							tAutoTostring,
 							{
-								roots: ["t", "tf"],
 								excludePaths: ["settings-metas"],
 							},
 						],

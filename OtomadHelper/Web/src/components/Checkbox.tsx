@@ -3,6 +3,7 @@ import { weights } from "styles/effects";
 
 const checkedOrIndet = ":is(:checked, :indeterminate)";
 const unchecked = ":not(:checked, :indeterminate)";
+const hover = ":hover:not(:has(:is(.actions, .button):hover))";
 const pressed = ":active:not(:has(:is(.actions, .button):active))";
 
 const StyledCheckboxLabel = styled.label<{
@@ -81,8 +82,8 @@ const StyledCheckboxLabel = styled.label<{
 		border-color: ${c("accent-color")} !important;
 	}
 
-	&:hover,
-	.items-view-item:hover & {
+	&${hover},
+	.items-view-item${hover} & {
 		input${unchecked} ~ .base {
 			background-color: ${c("fill-color-control-alt-tertiary")};
 		}
