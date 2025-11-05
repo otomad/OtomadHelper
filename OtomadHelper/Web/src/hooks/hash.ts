@@ -20,7 +20,7 @@ export function useUniqueId(prefix = "uniqueid", suffix = "", connector = "-") {
 	const reactId = useId();
 	// Expect `reactId` to be ":r1:", ":r2:", ":r3:", etc. if react won't update.
 	return useMemo(() => {
-		const index = reactId.match(/:r(.+):/)![1];
+		const index = reactId.match(/_r_(.+)_/)![1];
 		(prefix = prefix.trim()) && (prefix += connector);
 		(suffix = suffix.trim()) && (suffix = connector + suffix);
 		return prefix + index + suffix;

@@ -42,7 +42,7 @@ const getTitle = ($t: Trans, viewName: string, context: "long" | "full" | "short
 	};
 	const contexts = ["long", "full", undefined] as const;
 	const ctx = contexts.slice(contexts.indexOfDefault(_context) ?? 2).firstDefined(context => t(context)) ?? t();
-	return ctx;
+	return String(ctx);
 };
 
 export default function ShellPage() {

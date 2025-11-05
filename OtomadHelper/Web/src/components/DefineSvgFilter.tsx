@@ -1,3 +1,5 @@
+import { ref } from "valtio";
+
 const filters = proxyMap<string, [FCP<{}, "filter">, ReactNode]>();
 
 function SvgFilterPortal() {
@@ -20,7 +22,7 @@ export default function DefineSvgFilter({ id, children, ...svgAttrs }: FCP<{
 }, "filter">): undefined {
 	useEffect(() => {
 		if (children == null) return;
-		filters.set(id, [svgAttrs, children]);
+		filters.set(id, [ref(svgAttrs), (ref as Function)(children)]); // CAUTION: In React 19.2.0, you have to wrap the children with valtio ref.
 	}, [children, id, svgAttrs]);
 }
 

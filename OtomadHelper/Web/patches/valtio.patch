@@ -1,16 +1,16 @@
 diff --git a/esm/vanilla/utils.mjs b/esm/vanilla/utils.mjs
-index ee732e47abf25d102e6b37fb80f0e0eb600fe0ee..8fee8de694c492789615ccaa4f81d21ccbcbafd6 100644
+index 9839d4e5130922655cae09a8f1a4a30959b562a2..b8a544d873a8a6e6640025f778d1efafd358d6e6 100644
 --- a/esm/vanilla/utils.mjs
 +++ b/esm/vanilla/utils.mjs
-@@ -274,6 +274,7 @@ function proxyMap(entries) {
+@@ -290,6 +290,7 @@ function proxyMap(entries) {
+     [Symbol.iterator]() {
+       return this.entries();
+     },
++    __proto__: Map.prototype,
      get [Symbol.toStringTag]() {
        return "Map";
      },
-+    __proto__: Map.prototype,
-     toJSON() {
-       return new Map(this.entries());
-     }
-@@ -399,6 +400,7 @@ function proxySet(initialValues) {
+@@ -463,6 +464,7 @@ function proxySet(initialValues) {
          yield [value, value];
        }
      },
@@ -19,10 +19,10 @@ index ee732e47abf25d102e6b37fb80f0e0eb600fe0ee..8fee8de694c492789615ccaa4f81d21c
        return new Set(this.values());
      },
 diff --git a/vanilla/utils.js b/vanilla/utils.js
-index 544b8018040cdc997bbef00b1b883eb3223b00bd..c6ab45fc60c8b41575eb848f11e2283c56068072 100644
+index 49236b2d81a1a23b84217e556706604eb29cc30f..4e670655786c0ab4dd4aae50025c269e9a8194fb 100644
 --- a/vanilla/utils.js
 +++ b/vanilla/utils.js
-@@ -276,6 +276,7 @@ function proxyMap(entries) {
+@@ -295,6 +295,7 @@ function proxyMap(entries) {
      get [Symbol.toStringTag]() {
        return "Map";
      },
@@ -30,7 +30,7 @@ index 544b8018040cdc997bbef00b1b883eb3223b00bd..c6ab45fc60c8b41575eb848f11e2283c
      toJSON() {
        return new Map(this.entries());
      }
-@@ -401,6 +402,7 @@ function proxySet(initialValues) {
+@@ -465,6 +466,7 @@ function proxySet(initialValues) {
          yield [value, value];
        }
      },

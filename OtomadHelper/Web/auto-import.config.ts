@@ -24,7 +24,7 @@ export default [
 			"createGlobalStyle",
 			"isStyledComponent",
 		],
-		"classnames": [
+		"clsx": [
 			["default", "classNames"],
 		],
 		"react-transition-group-fc": [
@@ -53,9 +53,6 @@ export default [
 		],
 		"use-immer": [
 			"useImmer",
-		],
-		"react-flip-move": [
-			["default", "FlipMove"],
 		],
 		"lodash": [ // unplugin-auto-import cannot tree-shaking for lodash-es, causing nearly half of the build time to pack lodash-es.
 			["*", "_"],

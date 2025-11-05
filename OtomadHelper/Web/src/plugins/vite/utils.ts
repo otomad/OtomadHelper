@@ -24,7 +24,7 @@ export function compileTypeScript(source: string, target: keyof typeof ts.Script
 
 /**
  * Minify JavaScript source code.
- * @param source - Source code.
+ * @param code - Source code.
  * @returns Minified code.
  */
 export async function minifyJavaScript(code: string) {

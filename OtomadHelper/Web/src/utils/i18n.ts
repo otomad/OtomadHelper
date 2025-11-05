@@ -106,6 +106,8 @@ const getProxy = (target: object, fallbackMode: boolean = false, tInHook?: typeo
 					get(target, currentName): unknown {
 						if (toPrimitives.includes(currentName))
 							return () => translate(keys);
+						if (currentName === "displayName")
+							return translate(keys);
 						if (currentName === Symbol.toStringTag)
 							return "String";
 						if (typeof currentName === "string")

@@ -1,16 +1,16 @@
 diff --git a/index.d.ts b/index.d.ts
-index fe8999a0aa2a3664f83a96c9b9a56d47cd6e53d9..9c8fb057549473876b127e220d9b5d90baf3e0a4 100644
+index 00b03984285762c090b58e76437a49cdd38ebae8..c17dcaa4162746fac0fc13b5a7b9eca36f4b29cc 100644
 --- a/index.d.ts
 +++ b/index.d.ts
 @@ -5,6 +5,7 @@
  /// <reference path="global.d.ts" />
  
  import * as CSS from "csstype";
-+import { Argument as ClassArray } from "classnames";
++import { ClassArray } from "clsx";
  
  type NativeAnimationEvent = AnimationEvent;
  type NativeClipboardEvent = ClipboardEvent;
-@@ -384,7 +385,7 @@ declare namespace React {
+@@ -385,7 +386,7 @@ declare namespace React {
      }
  
      interface ReactPortal extends ReactElement {
@@ -19,7 +19,7 @@ index fe8999a0aa2a3664f83a96c9b9a56d47cd6e53d9..9c8fb057549473876b127e220d9b5d90
      }
  
      /**
-@@ -1966,19 +1967,19 @@ declare namespace React {
+@@ -2011,19 +2012,19 @@ declare namespace React {
       */
      interface SyntheticEvent<T = Element, E = Event> extends BaseSyntheticEvent<E, EventTarget & T, EventTarget> {}
  
@@ -43,7 +43,7 @@ index fe8999a0aa2a3664f83a96c9b9a56d47cd6e53d9..9c8fb057549473876b127e220d9b5d90
          pointerId: number;
          pressure: number;
          tangentialPressure: number;
-@@ -1991,7 +1992,7 @@ declare namespace React {
+@@ -2036,7 +2037,7 @@ declare namespace React {
          isPrimary: boolean;
      }
  
@@ -52,7 +52,7 @@ index fe8999a0aa2a3664f83a96c9b9a56d47cd6e53d9..9c8fb057549473876b127e220d9b5d90
          relatedTarget: (EventTarget & RelatedTarget) | null;
          target: EventTarget & Target;
      }
-@@ -2023,7 +2024,7 @@ declare namespace React {
+@@ -2072,7 +2073,7 @@ declare namespace React {
          | "Symbol"
          | "SymbolLock";
  
@@ -61,7 +61,7 @@ index fe8999a0aa2a3664f83a96c9b9a56d47cd6e53d9..9c8fb057549473876b127e220d9b5d90
          altKey: boolean;
          /** @deprecated */
          charCode: number;
-@@ -2048,7 +2049,7 @@ declare namespace React {
+@@ -2097,7 +2098,7 @@ declare namespace React {
          which: number;
      }
  
@@ -70,7 +70,7 @@ index fe8999a0aa2a3664f83a96c9b9a56d47cd6e53d9..9c8fb057549473876b127e220d9b5d90
          altKey: boolean;
          button: number;
          buttons: number;
-@@ -2070,7 +2071,7 @@ declare namespace React {
+@@ -2119,7 +2120,7 @@ declare namespace React {
          shiftKey: boolean;
      }
  
@@ -79,7 +79,7 @@ index fe8999a0aa2a3664f83a96c9b9a56d47cd6e53d9..9c8fb057549473876b127e220d9b5d90
          altKey: boolean;
          changedTouches: TouchList;
          ctrlKey: boolean;
-@@ -2084,30 +2085,30 @@ declare namespace React {
+@@ -2133,30 +2134,30 @@ declare namespace React {
          touches: TouchList;
      }
  
@@ -115,7 +115,7 @@ index fe8999a0aa2a3664f83a96c9b9a56d47cd6e53d9..9c8fb057549473876b127e220d9b5d90
          elapsedTime: number;
          propertyName: string;
          pseudoElement: string;
-@@ -2682,7 +2683,7 @@ declare namespace React {
+@@ -2732,7 +2733,7 @@ declare namespace React {
          accessKey?: string | undefined;
          autoCapitalize?: "off" | "none" | "on" | "sentences" | "words" | "characters" | undefined | (string & {});
          autoFocus?: boolean | undefined;
@@ -124,7 +124,7 @@ index fe8999a0aa2a3664f83a96c9b9a56d47cd6e53d9..9c8fb057549473876b127e220d9b5d90
          contentEditable?: Booleanish | "inherit" | "plaintext-only" | undefined;
          contextMenu?: string | undefined;
          dir?: string | undefined;
-@@ -3450,7 +3451,7 @@ declare namespace React {
+@@ -3530,7 +3531,7 @@ declare namespace React {
  
          // Attributes which also defined in HTMLAttributes
          // See comment in SVGDOMPropertyConfig.js
@@ -133,7 +133,7 @@ index fe8999a0aa2a3664f83a96c9b9a56d47cd6e53d9..9c8fb057549473876b127e220d9b5d90
          color?: string | undefined;
          height?: number | string | undefined;
          id?: string | undefined;
-@@ -3932,7 +3933,7 @@ declare namespace React {
+@@ -4026,7 +4027,7 @@ declare namespace React {
      // https://github.com/nikeee/2048-typescript/blob/master/2048/js/touch.d.ts
      // ----------------------------------------------------------------------
  

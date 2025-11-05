@@ -1,0 +1,62 @@
+diff --git a/cjs/react-dom-client.development.js b/cjs/react-dom-client.development.js
+index d005d8b99c428f58cdf62f50027fb855443f98ba..b3219f064fed7134c7e4e61ffabe75d99b9f1dd6 100644
+--- a/cjs/react-dom-client.development.js
++++ b/cjs/react-dom-client.development.js
+@@ -1466,7 +1466,13 @@
+     }
+     function setValueForAttribute(node, name, value) {
+       if (isAttributeNameSafe(name))
+-        if (null === value) node.removeAttribute(name);
++        if (name.startsWith("data-") && typeof value === "boolean") {
++          if (!value) {
++            node.removeAttribute(name);
++          } else {
++            node.setAttribute(name, "");
++          }
++        } else if (null === value) node.removeAttribute(name);
+         else {
+           switch (typeof value) {
+             case "undefined":
+@@ -2564,6 +2570,7 @@
+       return null;
+     }
+     function validateDOMNesting(childTag, ancestorInfo) {
++      return; // Stop reporting the fucking errors, I insist on writing the invalid html.
+       ancestorInfo = ancestorInfo || emptyAncestorInfoDev;
+       var parentInfo = ancestorInfo.current;
+       ancestorInfo = (parentInfo = isTagValidWithParent(
+@@ -22202,6 +22209,7 @@
+       return "head" === type;
+     }
+     function removeChild(parentInstance, child) {
++      if (child?.parentNode === parentInstance)
+       parentInstance.removeChild(child);
+     }
+     function removeChildFromContainer(container, child) {
+diff --git a/cjs/react-dom-client.production.js b/cjs/react-dom-client.production.js
+index 8e717888d7deebe53477923465165bd96f0be940..889aa83de4cc738c6cbeee48dbf23a9228dc522c 100644
+--- a/cjs/react-dom-client.production.js
++++ b/cjs/react-dom-client.production.js
+@@ -949,7 +949,13 @@ function isAttributeNameSafe(attributeName) {
+ }
+ function setValueForAttribute(node, name, value) {
+   if (isAttributeNameSafe(name))
+-    if (null === value) node.removeAttribute(name);
++    if (name.startsWith("data-") && typeof value === "boolean") {
++      if (!value) {
++        node.removeAttribute(name);
++      } else {
++        node.setAttribute(name, "");
++      }
++    } else if (null === value) node.removeAttribute(name);
+     else {
+       switch (typeof value) {
+         case "undefined":
+@@ -9228,6 +9234,7 @@ function commitDeletionEffectsOnFiber(
+           }
+         else
+           try {
++            if (deletedFiber.stateNode?.parentNode === hostParent)
+             hostParent.removeChild(deletedFiber.stateNode);
+           } catch (error) {
+             captureCommitPhaseError(

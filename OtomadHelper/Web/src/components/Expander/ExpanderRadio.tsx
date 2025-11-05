@@ -84,7 +84,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 			imageOverlay: imageOverlayField,
 		}[fieldName];
 		return !field ? undefined :
-			isI18nItem(field) ? field[getItemField(item, "id")] :
+			isI18nItem(field) ? String(field[getItemField(item, "id")]) :
 			typeof field === "string" ? (item as AnyObject)[field] :
 			typeof field === "function" ? field(item) :
 			item;
@@ -96,7 +96,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 		typeof checkInfoCondition === "string" ? checkInfoCondition :
 		checkInfoCondition === true ? typeof idField === "string" && typeof nameField === "string" ?
 			items.find(item => item[idField] === value)?.[nameField] :
-			idField && isI18nItem(nameField) ? nameField[value as string] : value :
+			idField && isI18nItem(nameField) ? String(nameField[value as string]) : value :
 		typeof checkInfoCondition === "function" ? checkInfoCondition(value, items) :
 		items.find(item => item[checkInfoCondition.id] === value)?.[checkInfoCondition.name]);
 	const details = typeof _details === "function" ? _details(value, items) : _details;
