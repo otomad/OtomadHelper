@@ -136,7 +136,7 @@ export default function Visual() {
 					<Setting meta={meta.stack} on={stack} />
 					<Setting meta={meta.timeUnremapping} on={timeUnremapping} />
 					<Setting meta={meta.mimical}>
-						<InfoBar status="info">{t.descriptions.stream.tuning.mimical.auto}</InfoBar>
+						<InfoBar>{t.descriptions.stream.tuning.mimical.auto}</InfoBar>
 						<Setting meta={meta.mimical.resample} actions={<TriStateSwitch current={mimicalResample} indetText={t.auto} indetIcon="auto" />} />
 						<Setting meta={meta.mimical.oscillator} actions={<TriStateSwitch current={mimicalOscillator} indetText={t.auto} indetIcon="auto" />} />
 					</Setting>
@@ -160,7 +160,7 @@ export default function Visual() {
 						/>
 						<Setting meta={meta.transition.duration} actions={<TimecodeBox value={transitionDuration} />} />
 						<Expander.Item.CrossfadeCurve curve={transitionCrossfadeCurve} subset="exceptHold" />
-						<InfoBar status="info">{t.descriptions.stream.transition.crossfadeInfo}</InfoBar>
+						<InfoBar>{t.descriptions.stream.transition.crossfadeInfo}</InfoBar>
 					</Setting>
 					<Setting meta={meta.transformMethod} checkInfo={topPriorityTransformMethod && t.topPriority({ item: t.shared.plugins[topPriorityTransformMethod] })}>
 						<SortableView items={transformMethod} fullyDraggable overlayEmits={{ onDrop: onSortableOverlayDrop }}>

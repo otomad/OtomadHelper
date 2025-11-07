@@ -51,7 +51,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	/** Radio button group name, optional. */
 	radioGroup?: string;
 	/** Additional attributes for the items view item. */
-	itemsViewItemAttrs?: Partial<PropsOf<typeof ItemsView.Item>> | ((item: TItem) => Partial<PropsOf<typeof ItemsView.Item>>);
+	itemsViewItemAttrs?: Partial<PropsOf<typeof ItemsView.Item>> | false | ((item: TItem) => (Partial<PropsOf<typeof ItemsView.Item>> | undefined | false));
 	/** Additional attributes for the items view. */
 	itemsViewAttrs?: Partial<PropsOf<typeof ItemsView>>;
 	/**

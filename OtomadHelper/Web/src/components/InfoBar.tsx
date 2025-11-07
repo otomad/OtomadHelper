@@ -89,14 +89,16 @@ const StyledInfoBar = styled.div<{
 	}
 `;
 
-export default function InfoBar({ status, title, children, button, className, ...htmlAttrs }: FCP<{
+export default function InfoBar({ status = "info", title, children, button, className, ...htmlAttrs }: FCP<{
 	/** The state of the badge, that is, the color and the icon. */
-	status?: Status;
+	status?: Status | [icon: Status, color: Status];
 	/** Title. */
 	title?: string;
 	/** Trailing button(s). */
 	button?: ReactNode;
 }, "div">) {
+	if (!Array.isArray(status)) status = [status, status];
+	const [icon, color] = status;
 	const [multiline, setMultiline] = useState(false);
 	const infoBarEl = useDomRef<"div">();
 
@@ -118,8 +120,8 @@ export default function InfoBar({ status, title, children, button, className, ..
 	});
 
 	return (
-		<StyledInfoBar ref={infoBarEl} role="alert" $status={status ?? "info"} className={[className, { multiline }]} {...htmlAttrs}>
-			{status && <Badge status={status} />}
+		<StyledInfoBar ref={infoBarEl} role="alert" $status={color} className={[className, { multiline }]} {...htmlAttrs}>
+			<Badge status={icon} colorOverride={color !== icon ? color : undefined} />
 			<div className="text-part">
 				{title && <div className="title">{title}</div>}
 				{(children || button) && <div className="text">{children}</div>}

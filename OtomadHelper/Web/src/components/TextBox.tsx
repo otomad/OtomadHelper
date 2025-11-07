@@ -304,6 +304,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	&:has(input:invalid) {
 		.stripes .focus-stripe {
 			background-color: ${c("fill-color-system-critical")};
+			scale: 1;
 		}
 
 		.suffix {

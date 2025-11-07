@@ -150,6 +150,12 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 				0 0 0 2px ${c("selection-color", 80)} inset,
 				0 0 0 3px ${c("fill-color-control-solid-default")} inset;
 		}
+
+		&.critically-highlight .selection {
+			box-shadow:
+				0 0 0 2px ${c("fill-color-system-critical")} inset,
+				0 0 0 3px ${c("fill-color-control-solid-default")} inset !important;
+		}
 	` : css`
 		padding: 2px 4px;
 
@@ -291,7 +297,7 @@ const ItemsViewItemStateContext = createContext<{
 
 export type OnItemsViewItemClickEventHandler<T> = (id: T, selected: CheckState, e: React.MouseEvent<HTMLElement>) => void;
 
-export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable, children, className, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, criticallyHighlight, _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable, children, className, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */
@@ -329,6 +335,8 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 	badge?: BadgeValue | BadgeArgs;
 	/** Custom tooltip. */
 	tooltip?: TooltipProps | string;
+	/** Show a red color border? */
+	criticallyHighlight?: boolean;
 	/** @private View mode: list, tile, grid. */
 	_view?: ItemView;
 	/** @private Multiple selection mode? */
@@ -384,7 +392,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 						$selectionColor={selectionColor}
 						$dirBasedIcon={dirBasedIcon}
 						$alignItems={alignItems}
-						className={[className, view, { selected: selected !== "unchecked" }]}
+						className={[className, view, { selected: selected !== "unchecked", criticallyHighlight }]}
 						tabIndex={0}
 						role={multiple ? "checkbox" : "radio"}
 						aria-checked={checkStateToAriaChecked(selected)}

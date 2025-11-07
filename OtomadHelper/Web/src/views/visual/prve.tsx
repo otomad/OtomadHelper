@@ -66,11 +66,13 @@ export default function Prve() {
 	const effectLength = effects[0].length;
 	const shouldHideSelectionBadge = effectLength <= 0 || effectLength === 1 && (effects[0][0].fx === DEFAULT_EFFECT || !isMultiple[0]);
 	const rotationStep = useStateSelector(rotation, angle => angle === 0 ? 0 : 360 / angle, step => step === 0 ? 0 : Math.round(360 / step));
-	const setCurrentEffectRotation = (mode: CustomEffectRotationMode) => {
+
+	function setCurrentEffectRotation(mode: CustomEffectRotationMode) {
 		selectPrve("rotation")[1]!(mode === "normal" ? "normal" : "rotate");
 		rotateCustomSequence[1](mode === "rotateCustomSequence");
-	};
-	const selectPrve = (klass: PrveClassType): StateProperty<PrveEffectType> => {
+	}
+
+	function selectPrve(klass: PrveClassType): StateProperty<PrveEffectType> {
 		const classEffects = PrveClass.findClassEffects(klass);
 		const flipEffects = PrveClass.findClassEffects("flip");
 		return useStateSelector(
@@ -96,7 +98,8 @@ export default function Prve() {
 				return addInitialStepToEffects(effects);
 			},
 		);
-	};
+	}
+
 	const useInitialStep = (klass: string, currentEffect: string) => useStateSelector(
 		effects,
 		effects => {
@@ -119,6 +122,15 @@ export default function Prve() {
 			return draft.length <= 1 ? draft : draft.filter(({ fx }) => fx !== DEFAULT_EFFECT);
 		},
 	);
+
+	const criticallyHighlightWhirlTimeoutId = useRef<Timeout>(undefined);
+	const [criticallyHighlightWhirlInfoBarStatus, setCriticallyHighlightWhirlInfoBarStatus] = useState(false);
+	async function criticallyHighlightWhirl() {
+		clearTimeout(criticallyHighlightWhirlTimeoutId.current);
+		setCriticallyHighlightWhirlInfoBarStatus(true);
+		await delay(500, { ref: criticallyHighlightWhirlTimeoutId });
+		setCriticallyHighlightWhirlInfoBarStatus(false);
+	}
 
 	return (
 		<div className="container">
@@ -234,8 +246,10 @@ export default function Prve() {
 							imageField={effect => <PreviewPrve key={effect} thumbnail={exampleThumbnail} effect={effect} frames={findEffectFrames(effect)} />}
 							checkInfoCondition={effect => !effect || effect === DEFAULT_EFFECT ? "" : getEffectName(effect)}
 							alwaysShowCheckInfo
+							onItemClick={effect => effect === "whirl" && criticallyHighlightWhirl()}
+							itemsViewItemAttrs={effect => effect === "whirl" && { criticallyHighlight: criticallyHighlightWhirlInfoBarStatus }}
 						>
-							{klass === "time" && <InfoBar status="info" title={getWhirlInfo()} />}
+							{klass === "time" && <InfoBar status={!criticallyHighlightWhirlInfoBarStatus ? "info" : ["info", "error"]} title={getWhirlInfo()} />}
 							{klass.in("ec", "swing", "blur") && (() => {
 								const tAmounts = tAlias.prve.amounts;
 								const option =
