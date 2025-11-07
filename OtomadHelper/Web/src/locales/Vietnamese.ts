@@ -541,6 +541,7 @@ export default {
 				loud: "Ồn",
 				sporadicUpsizeFocusMotion: "Chuyển động tập trung tăng kích thước lẻ tẻ",
 			},
+			legend: {},
 		},
 		mosh: {
 			datamosh: "Datamosh",

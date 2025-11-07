@@ -658,6 +658,12 @@ export default {
 				loud: "crwdns3510:0crwdne3510:0",
 				sporadicUpsizeFocusMotion: "crwdns3512:0crwdne3512:0",
 			},
+			legend: {
+				_: "crwdns5404:0crwdne5404:0",
+				visual: "crwdns5406:0crwdne5406:0",
+				audio: "crwdns5408:0crwdne5408:0",
+				probably: "crwdns5410:0crwdne5410:0",
+			},
 		},
 		mosh: {
 			datamosh: "crwdns2184:0crwdne2184:0",

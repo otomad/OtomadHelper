@@ -657,6 +657,12 @@ export default {
 				loud: "喧嚣",
 				sporadicUpsizeFocusMotion: "零落的放大聚焦运动",
 			},
+			legend: {
+				_: "图例",
+				visual: "画面效果",
+				audio: "音频效果",
+				probably: "概率性触发",
+			},
 		},
 		mosh: {
 			datamosh: "数据抹失",
