@@ -215,7 +215,7 @@ export default {
 			contain: "crwdns5300:0crwdne5300:0",
 			original: "crwdns5302:0crwdne5302:0",
 			stretch: "crwdns5304:0crwdne5304:0",
-			scaleDown: "crwdns5306:0crwdne5306:0",
+			scaleDown: "crwdns5376:0crwdne5376:0",
 			tile: "crwdns5308:0crwdne5308:0",
 			tileContain: "crwdns5310:0crwdne5310:0",
 		},
@@ -242,6 +242,12 @@ export default {
 				project: "crwdns3160:0crwdne3160:0",
 			},
 			timeSignature: "crwdns1766:0crwdne1766:0",
+			autoChangeProjectProperties: {
+				_: "crwdns5378:0crwdne5378:0",
+				beatsPerMinute: "crwdns5380:0crwdne5380:0",
+				beatsPerMeasure: "crwdns5382:0crwdne5382:0",
+				noteThatGetsOneBeat: "crwdns5384:0crwdne5384:0",
+			},
 			constrain: {
 				_: "crwdns1768:0crwdne1768:0",
 				none: "crwdns1770:0crwdne1770:0",
@@ -331,7 +337,7 @@ export default {
 				glissando: {
 					_: "crwdns4184:0crwdne4184:0",
 					pingpong: "crwdns4192:0crwdne4192:0",
-					swirlAmount: "crwdns4194:0crwdne4194:0",
+					amplitude: "crwdns5386:0crwdne5386:0",
 				},
 				appoggiatura: {
 					_: "crwdns4196:0crwdne4196:0",
@@ -793,6 +799,7 @@ export default {
 				changelog: "crwdns4276:0crwdne4276:0",
 				roadmap: "crwdns5090:0crwdne5090:0",
 				version: "crwdns1972:0crwdne1972:0",
+				credits: "crwdns5388:0crwdne5388:0",
 				author: "crwdns1974:0crwdne1974:0",
 				__author__: "crwdns2974:0crwdne2974:0",
 				originalAuthor: "crwdns1978:0crwdne1978:0",
@@ -805,7 +812,6 @@ export default {
 				releaseNotes: "crwdns5098:0crwdne5098:0",
 				documentationForFeature: "crwdns5100:0{{feature}}crwdne5100:0",
 				previousVersionDocumentation: "crwdns5104:0crwdne5104:0",
-				exploreVisualEffects: "crwdns5106:0crwdne5106:0",
 				tutorialVideoForFeature: "crwdns5108:0{{feature}}crwdne5108:0",
 				documentationInLanguage: "crwdns5102:5{{language, capitalize}}crwdne5102:5",
 			},
@@ -896,14 +902,14 @@ export default {
 				interpolation: "crwdns5356:0crwdne5356:0",
 				crossfade: "crwdns5358:0crwdne5358:0",
 			},
+			versionRequest: {
+				min: "crwdns5390:0{{min}}crwdnd5390:0{{current}}crwdne5390:0",
+			},
 			source: {
 				trim: "crwdns2930:0crwdne2930:0",
 				startTime: "crwdns4282:0crwdne4282:0",
 				preferredTrack: {
 					fillingInstructions: "crwdns3108:0crwdne3108:0",
-					belowAdjustmentTracks: {
-						versionRequest: "crwdns2448:0{{version}}crwdne2448:0",
-					},
 				},
 				trackGroup: {
 					_: "crwdns3110:0crwdne3110:0",
@@ -945,6 +951,7 @@ export default {
 				trim: "crwdns2378:0crwdne2378:0",
 				encoding: "crwdns4294:0crwdne4294:0",
 				tempo: "crwdns4296:0crwdne4296:0",
+				autoChangeProjectProperties: "crwdns5392:0crwdne5392:0",
 				constrain: {
 					_: "crwdns4376:0crwdne4376:0",
 					none: "crwdns4378:0crwdne4378:0",
@@ -996,7 +1003,7 @@ export default {
 				multitrackForChords: "crwdns2468:0crwdne2468:0",
 				createGroups: "crwdns2042:0crwdne2042:0",
 				autoPan: "crwdns2046:0crwdne2046:0",
-				stack: "crwdns3310:0crwdne3310:0",
+				stack: "crwdns5394:0crwdne5394:0",
 				timeUnremapping: "crwdns3920:0crwdne3920:0",
 				preferredTrack: "crwdns5126:0crwdne5126:0",
 				prerender: {
@@ -1017,7 +1024,7 @@ export default {
 				articulations: {
 					glissando: {
 						_: "crwdns5248:0crwdne5248:0",
-						swirlAmount: "crwdns4320:0crwdne4320:0",
+						amplitude: "crwdns5396:0{{effect, lowercase}}crwdne5396:0",
 					},
 					appoggiatura: {
 						_: "crwdns5282:0crwdne5282:0",
@@ -1268,9 +1275,9 @@ export default {
 					language: "crwdns4560:0crwdne4560:0",
 					autosaveInterval: "crwdns4562:0{{default}}crwdne4562:0",
 					defaultTextPlugin: "crwdns4564:0$t(shared:plugins.titlesAndText)crwdne4564:0",
-					defaultTuningMethod: "crwdns4566:0$t(stream.tuning.tuningMethod.elastic)crwdne4566:0",
-					defaultElasticMode: "crwdns4568:0$t(stream.tuning.stretchAttributes.elastic.efficient)crwdne4568:0",
-					defaultClassicMode: "crwdns4570:0$t(stream.tuning.stretchAttributes.classic.a03)crwdne4570:0",
+					defaultTuningMethod: "crwdns5398:0$t(stream.tuning.tuningMethod.elastic)crwdne5398:0",
+					defaultElasticMode: "crwdns5400:0$t(stream.tuning.stretchAttributes.elastic.efficient)crwdne5400:0",
+					defaultClassicMode: "crwdns5402:0$t(stream.tuning.stretchAttributes.classic.a03)crwdne5402:0",
 					preserveClipboardOnClose: "crwdns4572:0crwdne4572:0",
 					eventGroupSelection: "crwdns4574:0crwdne4574:0",
 					openglInterop: "crwdns4576:0crwdne4576:0",

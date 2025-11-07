@@ -4,7 +4,7 @@ import tipsImage from "assets/images/tips/datamoshing.avif";
 export default function Mosh() {
 	const tipsEl = useDomRef<"div">();
 	useAniCursor(tipsEl, glitchCursor);
-	const { changePage } = useSnapshot(pageStore);
+	const { goto } = useSnapshot(pageStore);
 
 	return (
 		<div className="container">
@@ -81,7 +81,7 @@ export default function Mosh() {
 
 			<Subheader>{t.subheaders.seeAlso}</Subheader>
 			<div>
-				<Button hyperlink onClick={() => changePage(["settings"])}>{t.mosh.specifyClipsFolder}</Button>
+				<Button hyperlink onClick={() => goto(metas.settings.config.clipsFolder)}>{t.mosh.specifyClipsFolder}</Button>
 			</div>
 		</div>
 	);

@@ -206,6 +206,7 @@ export default {
 				project: "Nhịp độ dự án",
 			},
 			timeSignature: "Số chỉ nhịp",
+			autoChangeProjectProperties: {},
 			constrain: {
 				_: "Hạn chế độ dài nốt",
 				none: "Không hạn chế",
@@ -277,7 +278,6 @@ export default {
 				glissando: {
 					_: "Glisssando",
 					pingpong: "Ping-Pong",
-					swirlAmount: "Số lượng xoáy",
 				},
 				appoggiatura: {
 					_: "Appoggiatura",
@@ -477,7 +477,7 @@ export default {
 				scientific: "Ký hiệu cao độ khoa học\nKý hiệu cao độ khoa học là một phương pháp chỉ định cao độ âm nhạc bằng cách kết hợp tên nốt nhạc (với dấu hóa nếu cần) và một số xác định quãng tám của cao độ.",
 				helmholtz: "Ký hiệu cao độ Helmholtz\nKý hiệu cao độ Helmholtz là một hệ thống để đặt tên cho các nốt nhạc của thang âm bán cung phương Tây để biểu thị từng nốt riêng lẻ của thang âm.",
 				solfege: "Âm tiết Solfège\nSolfège là một phương pháp ghi nhớ được sử dụng trong việc dạy các kỹ năng nghe, cao độ và đọc nhạc của âm nhạc phương Tây.",
-				numbered: "Ký hiệu âm nhạc đánh số\nKý hiệu âm nhạc đánh số (không nên nhầm lẫn với ký hiệu số nguyên ) là một hệ thống ký hiệu mật mã được sử dụng ở Trung Quốc đại lục, Đài Loan, Hồng Kông và ở một mức độ nào đó ở Nhật Bản, Indonesia (theo một định dạng hơi khác gọi là “không angka”), Malaysia, Úc, Ireland, Vương quốc Anh, Hoa Kỳ và Canada nói tiếng Anh.",
+				numbered: "Ký hiệu âm nhạc đánh số\nKý hiệu âm nhạc đánh số (không nên nhầm lẫn với ký hiệu số nguyên) là một hệ thống ký hiệu mật mã được sử dụng ở Trung Quốc đại lục, Đài Loan, Hồng Kông và ở một mức độ nào đó ở Nhật Bản, Indonesia (theo một định dạng hơi khác gọi là “không angka”), Malaysia, Úc, Ireland, Vương quốc Anh, Hoa Kỳ và Canada nói tiếng Anh.",
 				gongche: "Ký hiệu *Gōngchě*\nĐây là một trong những phương pháp ký hiệu âm nhạc truyền thống của Trung Quốc. Ký hiệu gongche chỉ ra tên khóa ở phía trước bản nhạc để xác định cao độ thực tế của từng nốt nhạc và sử dụng các ký hiệu nhịp để chỉ ra giá trị cường độ và thời gian của nốt nhạc.",
 				gongshang: "Ký hiệu *Gōngshāng* ",
 				lyulyu: "Ký hiệu *Lǜlǚ*",
@@ -732,13 +732,11 @@ export default {
 		},
 		descriptions: {
 			curve: {},
+			versionRequest: {},
 			source: {
 				trim: "Điều chỉnh thời gian điểm vào hoặc ra của nguồn nguyên liệu được chỉ định",
 				preferredTrack: {
 					fillingInstructions: "Nếu giá trị là 0 thì tạo ra trên tất cả các track;\nNếu dương, thì được tạo ra bên dưới track thứ n;\nNếu âm, thì được tạo bên dưới track thứ n tính từ cuối.\nNếu bất kỳ track ưa thích nào được chỉ định là Âm thanh hoặc Hình ảnh, thì tùy chọn này sẽ bị ghi đè.",
-					belowAdjustmentTracks: {
-						versionRequest: "Lưu ý: Tính năng này yêu cầu VEGAS Pro ≥ 19. Phiên bản hiện tại là {{version}}.",
-					},
 				},
 				trackGroup: {
 					_: "Nhóm các track bằng track score",
@@ -809,7 +807,6 @@ export default {
 				multitrackForChords: "Tạo đa track cho hợp âm",
 				createGroups: "Tạo nhóm cho các clip video và âm thanh được biểu diễn bằng một nốt nhạc",
 				autoPan: "Chuyển hướng âm thanh bằng cách sử dụng envelope automation",
-				stack: "Xếp chồng các clip chặt chẽ nhất có thể trên một track, thay vì đặt kết quả trên các track riêng biệt theo track bản nhạc",
 				timeUnremapping: "Đoạn clip sẽ không thiết lập lại điểm vào của nó khi nốt nhạc xuất hiện, nhưng sẽ tiếp tục phát, hữu ích nếu bạn chỉ muốn áp dụng hiệu ứng cho nguồn",
 				preferredTrack: "Cho phép bạn chỉ định một track hiện có để tạo (trừ đa track)",
 				prerender: {},

@@ -31,7 +31,7 @@ interface PageState {
 	useSetCommandBarDisabled(): SetStateNarrow<boolean>;
 	pageChangeResolver?: PromiseWithResolvers<void>;
 	lastGotoPath?: TransientValue<string>;
-	goto(path?: string): void;
+	goto(path?: string | { meta: { path: string } }): void;
 }
 
 const NAME = "page";
@@ -178,6 +178,7 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 		lastGotoPath: undefined,
 		async goto(path) {
 			if (!path) return;
+			if (typeof path === "object") path = path.meta.path;
 			const [page] = path.split(":");
 			const changed = setPageInternal(page.split("/"));
 			if (!path.includes(":")) return;

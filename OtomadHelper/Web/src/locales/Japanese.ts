@@ -214,7 +214,7 @@ export default {
 			contain: "含まれている",
 			original: "オリジナル",
 			stretch: "ストレッチ",
-			scaleDown: "スケールダウン",
+			scaleDown: "スケールダウンに含まれるもの",
 			tile: "タイル",
 			tileContain: "タイルに含まれている",
 		},
@@ -241,6 +241,12 @@ export default {
 				project: "プロジェクトのテンポ（テンポ）",
 			},
 			timeSignature: "拍子記号",
+			autoChangeProjectProperties: {
+				_: "プロジェクトルーラーのプロパティを自動的に変更",
+				beatsPerMinute: "ビート/分",
+				beatsPerMeasure: "小節あたりのビート数",
+				noteThatGetsOneBeat: "1拍を取得することに注意してください",
+			},
 			constrain: {
 				_: "音符の長さを拘束する",
 				none: "拘束なし",
@@ -330,7 +336,7 @@ export default {
 				glissando: {
 					_: "グリッサンド",
 					pingpong: "ピンポン",
-					swirlAmount: "渦巻きの量",
+					amplitude: "",
 				},
 				appoggiatura: {
 					_: "Appoggiatura",
@@ -791,9 +797,10 @@ export default {
 				changelog: "更新履歴",
 				roadmap: "ロードマップ",
 				version: "バージョン",
-				author: "作成者",
+				credits: "クレジット",
+				author: "開発者",
 				__author__: "蘭澈 祈",
-				originalAuthor: "オリジナルの著者",
+				originalAuthor: "元開発者",
 				__originalAuthor__: "Chaosinism",
 				translator: "翻訳",
 				translators: "翻訳",
@@ -803,7 +810,6 @@ export default {
 				releaseNotes: "リリースノート",
 				documentationForFeature: "{{feature}} のドキュメント",
 				previousVersionDocumentation: "ドキュメントの以前のバージョン",
-				exploreVisualEffects: "視覚効果を探索する",
 				tutorialVideoForFeature: "{{feature}} のチュートリアルビデオ",
 				documentationInLanguage: "{{language, capitalize}} ドキュメント",
 			},
@@ -894,14 +900,14 @@ export default {
 				interpolation: "キーフレームタイプの補間曲線を指定します。",
 				crossfade: "フェードタイプの 2 つのクロスフェード曲線を指定します。",
 			},
+			versionRequest: {
+				min: "注意: この機能はVEGAS Pro {{min}} 以上が必要です。現在のバージョンは {{current}} です。",
+			},
 			source: {
 				trim: "指定したソースのインポイントまたはアウトポイントタイムを調整します。",
 				startTime: "プロジェクトから生成を開始するタイミングを指定します",
 				preferredTrack: {
 					fillingInstructions: "0の場合は、すべてのトラックの上に生成されます。\n正であれば、n番目のレールの下に生成されます。\n負の場合は、最後からn番目のレールの下で生成されます。\nオーディオまたはビデオで優先曲を指定すると、このオプションは上書きされます。",
-					belowAdjustmentTracks: {
-						versionRequest: "注意: この機能はVEGAS Pro 19以上が必要です。現在のバージョンは {{version}}です。",
-					},
 				},
 				trackGroup: {
 					_: "スコアトラックごとのグループトラック",
@@ -943,6 +949,7 @@ export default {
 				trim: "スコアの生成時間範囲をインターセプトします",
 				encoding: "ファイルの読み込み時に使用するテキストエンコーディングを指定します",
 				tempo: "1分あたりのビートを指定します",
+				autoChangeProjectProperties: "スコアが一致しない場合、プロジェクト ルーラーのプロパティで自動的に小節と拍を変更します",
 				constrain: {
 					_: "スコアからのノートの出力長さを制御します",
 					none: "音符の長さをそのまま保持します",
@@ -994,7 +1001,7 @@ export default {
 				multitrackForChords: "コード用に複数のトラックを作成",
 				createGroups: "ビデオクリップとオーディオクリップのグループを1つのノートで表します。",
 				autoPan: "エンベロープオートメーションを使用してオーディオをパンする",
-				stack: "楽譜に応じて結果を別々のトラックに配置するのではなく、1つのトラックで可能な限り緊密にクリップをスタックします。",
+				stack: "スコアトラックに応じて結果を個別のトラックに配置するのではなく、1 つのトラックで可能な限りしっかりとクリップをスタックします(マルチトラックのみ)。",
 				timeUnremapping: "ノートオンが発生したとき、クリップはポイントインポイント時間をリセットしません。 効果をソースに適用するだけでも役に立ちます",
 				preferredTrack: "生成する既存のトラックを指定できます(マルチトラックを除く)",
 				prerender: {
@@ -1015,7 +1022,7 @@ export default {
 				articulations: {
 					glissando: {
 						_: "ピッチ曲げ、スライド、グリッサンディ、またはビブラティを演奏するときに特定の効果を生成します。",
-						swirlAmount: "旋回ツイスト振幅の大きさを指定します",
+						amplitude: "{{effect, lowercase}} 効果の振幅の量を指定します",
 					},
 					appoggiatura: {
 						_: "appoggiaturasを再生するときに特定の効果を生成します。\n連続して1〜2個の音符がある場合、それらはappoggiaturasとみなされます。",
@@ -1263,9 +1270,9 @@ export default {
 					language: "VEGAS Proの言語を変更します。変更を有効にするにはVEGAS Proを再起動します。",
 					autosaveInterval: "プロジェクトの自動保存時間を調整します。デフォルトは {{default}} 分です。",
 					defaultTextPlugin: "タイムラインペインのコンテキストメニューの「テキストメディアの挿入」オプションのデフォルトのテキストメディアジェネレータプラグインを変更します。 デフォルトは \"$t(shared:plugins.titlesAndText)\"です。",
-					defaultTuningMethod: "新規オーディオクリップのデフォルトのチューニング方法を変更します。デフォルトは $t(stream.tuning.tuningMethod.elastic) です。",
-					defaultElasticMode: "新規オーディオクリップのElasticメソッドのデフォルトのストレッチ属性を変更します。デフォルトは$t(stream.tuning.stretchAttributes.elastic.efficient)です。",
-					defaultClassicMode: "新規オーディオクリップのClassicメソッドのデフォルトのストレッチ属性を変更します。デフォルトは$t(stream.tuning.stretchAttributes.classic.a03)です。",
+					defaultTuningMethod: "新規オーディオクリップのデフォルトのチューニング方法を変更します。デフォルトは$t(stream.tuning.tuningMethod.elastic)です。",
+					defaultElasticMode: "新規オーディオクリップのElasticチューニングメソッドのデフォルトのストレッチ属性を変更します。デフォルトは\"$t(stream.tuning.stretchAttributes.elastic.efficient)\"です。",
+					defaultClassicMode: "新規オーディオクリップのクラシックチューニングメソッドのデフォルトのストレッチ属性を変更します。デフォルトは$t(stream.tuning.stretchAttributes.classic.a03)です。",
 					preserveClipboardOnClose: "同じVEGAS Proインスタンスで異なるプロジェクトを連続的に開くことで、プロジェクト間のコピーと貼り付けが可能になります。",
 					eventGroupSelection: "トラック間でオーディオクリップをドラッグする際に、グループ内のビデオクリップが自動的に移動するようにします。 元のトラックに残る代わりに",
 					openglInterop: "NVIDIA Studio グラフィックスカードの特定のバージョンでプレビューウィンドウが効果を更新しない問題を解決しました。",
@@ -1321,6 +1328,7 @@ export default {
 				audio: "サウンド",
 				visual: "ビデオ",
 				track: "レイヤー、レイヤー",
+				shupelunker: "韃靼戦法, スペランカー, 松岡修造, 松岡 修造",
 				ytp: "つ",
 				mosh: "つ",
 				prve: "動画リズムビジュアルエフェクトのプロモーションビデオリズムビジュアルエフェクト、PVリズムビジュアルエフェクト、PVリズムビジュアルエフェクト、動画リズムビジュアルエフェクトのプロモーションビデオリズムビジュアルエフェクトのプロモーション。 Promotion Video Rhythmic Visual Effects, PV Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effects, PRVE",

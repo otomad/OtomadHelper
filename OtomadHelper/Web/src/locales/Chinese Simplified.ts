@@ -214,7 +214,7 @@ export default {
 			contain: "遮幅",
 			original: "原始",
 			stretch: "拉伸",
-			scaleDown: "缩减",
+			scaleDown: "缩小遮幅",
 			tile: "平铺",
 			tileContain: "平铺遮幅",
 		},
@@ -241,6 +241,12 @@ export default {
 				project: "项目速度",
 			},
 			timeSignature: "拍号",
+			autoChangeProjectProperties: {
+				_: "自动更改项目标尺属性",
+				beatsPerMinute: "每分钟节拍数",
+				beatsPerMeasure: "每小节节拍数",
+				noteThatGetsOneBeat: "获得一个节拍的音符",
+			},
 			constrain: {
 				_: "限制音符长度",
 				none: "不限制",
@@ -330,7 +336,7 @@ export default {
 				glissando: {
 					_: "滑音",
 					pingpong: "来回",
-					swirlAmount: "漩涡大小",
+					amplitude: "幅度",
 				},
 				appoggiatura: {
 					_: "倚音",
@@ -792,6 +798,7 @@ export default {
 				changelog: "更新日志",
 				roadmap: "路线图",
 				version: "版本",
+				credits: "开放源代码许可",
 				author: "作者",
 				__author__: "兰澈祈",
 				originalAuthor: "原作者",
@@ -804,7 +811,6 @@ export default {
 				releaseNotes: "更新日志",
 				documentationForFeature: "{{feature}}说明文档",
 				previousVersionDocumentation: "旧版本的说明文档",
-				exploreVisualEffects: "探索视觉效果",
 				tutorialVideoForFeature: "{{feature}}教程视频",
 				documentationInLanguage: "{{language, capitalize}}说明文档",
 			},
@@ -895,14 +901,14 @@ export default {
 				interpolation: "指定关键帧类型中的插值曲线",
 				crossfade: "指定淡化类型中的两条交叉曲线",
 			},
+			versionRequest: {
+				min: "注意：此功能要求至少为VEGAS Pro {{min}}。当前版本为 {{current}}。",
+			},
 			source: {
 				trim: "调整指定素材的入点或出点时间",
 				startTime: "指定何时从项目开始生成",
 				preferredTrack: {
 					fillingInstructions: "若为0，则生成在所有轨道的上方；\n若为正，则生成在第几条轨道的下方；\n若为负，则生成在倒数第几条轨道的下方。\n如果在音频或画面中指定了任何首选轨道，它将会覆盖此选项。",
-					belowAdjustmentTracks: {
-						versionRequest: "注意：此功能要求至少为VEGAS Pro 19。当前版本为 {{version}}。",
-					},
 				},
 				trackGroup: {
 					_: "依照乐曲音轨为轨道分组",
@@ -944,6 +950,7 @@ export default {
 				trim: "截取乐曲生成的时间范围",
 				encoding: "指定在读取文件时要使用的文本编码",
 				tempo: "指定每分钟多少拍",
+				autoChangeProjectProperties: "自动更改项目标尺中的小节和拍子属性，只要它们与乐曲不匹配",
 				constrain: {
 					_: "控制乐曲中的音符输出长度",
 					none: "保持各音符原始长度",
@@ -995,12 +1002,12 @@ export default {
 				multitrackForChords: "为和弦创建多条轨道",
 				createGroups: "将一个音符所表示的视频与音频剪辑创建分组",
 				autoPan: "自动化控制音频的声像包络",
-				stack: "将剪辑尽可能紧密地堆积在一条轨道上，而不根据乐曲的音轨分轨放置",
+				stack: "将剪辑尽可能紧密地堆积在一条轨道上，而不根据乐曲的音轨分轨放置（仅限多轨）",
 				timeUnremapping: "音符开时将不会重置剪辑的入点时间，而是继续播放，适用于如仅对素材应用效果",
 				preferredTrack: "允许你指定一条现有轨道来生成（多轨除外）",
 				prerender: {
 					_: "生成前对素材应用太多的效果可能会导致生成时卡死，为此你可能需要预渲染素材来深度应用效果",
-					instant: "不预渲染，这将复制效果到生成的每段剪辑上",
+					instant: "不预渲染，这将复制已有效果到生成的每段剪辑上",
 					media: "渲染为单独媒体文件",
 					media_audio: "渲染为单独媒体文件，稍后可以标注ACID音高标记",
 					timeline: "渲染为嵌套时间轴（单独VEGAS Pro项目文件）",
@@ -1016,7 +1023,7 @@ export default {
 				articulations: {
 					glissando: {
 						_: "在演奏弯音、滑音或颤音时产生一定的效果。",
-						swirlAmount: "指定漩涡扭动幅度的大小",
+						amplitude: "指定{{effect}}效果的幅度大小",
 					},
 					appoggiatura: {
 						_: "在演奏倚音时产生一定的效果。\n当有连续一到两个十六分音符或更短时值的音符时，它们将被视为倚音。",
@@ -1164,7 +1171,7 @@ export default {
 				offset: "整体偏移音调所对应的剪辑",
 			},
 			ytp: {
-				_: "YouTube Poop(YTP)使用各种效果来创作以解构、拼贴和荒诞主义为核心的视频。YTP支持多素材。\nYTP是数字时代的新达达主义艺术实践。通过剪辑、重复、变速、倒放等技术，将素材重新组合成无逻辑的“视频混搭”，刻意模仿低画质、低技术审美的风格，以此戏谑主流视频文化的严肃性与规范性。例如将人物动作循环播放、叠加意义断裂的台词，或插入突兀的音效，制造出既荒诞又具有黑色幽默的视听效果。\nYTP反叛传统叙事逻辑，挑战观众对“意义”的固有认知。通过数字剪辑技术解构主流媒体内容，将文化符号转化为无意义的“电子垃圾”。其作品常以“混乱即美学”为原则，如无限循环的鬼畜片段或扭曲的角色对话，形成独特的后现代艺术语言。YTP的创作门槛较低，但其艺术价值在于对媒介本质的反思⸺通过技术缺陷凸显数字媒介的脆弱性。YTP虽为网络迷因，实为一场持续的数字艺术实验，重新定义了娱乐与批判的边界。",
+				_: "YouTube Poop (YTP) 使用各种效果来创作以解构、拼贴和荒诞主义为核心的视频。YTP支持多素材。\nYTP是数字时代的新达达主义艺术实践。通过剪辑、重复、变速、倒放等技术，将素材重新组合成无逻辑的“视频混搭”，刻意模仿低画质、低技术审美的风格，以此戏谑主流视频文化的严肃性与规范性。例如将人物动作循环播放、叠加意义断裂的台词，或插入突兀的音效，制造出既荒诞又具有黑色幽默的视听效果。\nYTP反叛传统叙事逻辑，挑战观众对“意义”的固有认知。通过数字剪辑技术解构主流媒体内容，将文化符号转化为无意义的“电子垃圾”。其作品常以“混乱即美学”为原则，如无限循环的鬼畜片段或扭曲的角色对话，形成独特的后现代艺术语言。YTP的创作门槛较低，但其艺术价值在于对媒介本质的反思⸺通过技术缺陷凸显数字媒介的脆弱性。YTP虽为网络迷因，实为一场持续的数字艺术实验，重新定义了娱乐与批判的边界。",
 				slogan: "YouTube Poop⸺烟起之处，灼不可触。因YouTube实为秽薮。",
 				constrain: "控制要生成的剪辑的长度",
 				clips: "设定要生成的剪辑的数目",
@@ -1266,10 +1273,10 @@ export default {
 					info: "这将会修改VEGAS Pro的全局偏好，而不仅仅是针对当前项目。错误的设置可能导致VEGAS Pro无法启动，请谨慎操作。",
 					language: "更改VEGAS Pro的语言，重启VEGAS Pro以使更改生效",
 					autosaveInterval: "调整项目的自动保存时间，默认为{{default}}分钟",
-					defaultTextPlugin: "更改轨道窗格的右键菜单中“插入文本媒体”选项的默认媒体生成器插件，默认为“$t(shared:plugins.titlesAndText)”",
-					defaultTuningMethod: "更改新音频剪辑的默认调音方法，默认为$t(stream.tuning.tuningMethod.elastic)",
-					defaultElasticMode: "更改新音频剪辑中弹性方法的默认拉伸属性，默认为“$t(stream.tuning.stretchAttributes.elastic.efficient)”",
-					defaultClassicMode: "更改新音频剪辑中古典方法的默认拉伸属性，默认为“$t(stream.tuning.stretchAttributes.classic.a03)”",
+					defaultTextPlugin: "更改时间线窗格的右键菜单中“插入文本媒体”选项的默认文本媒体生成器插件，默认为“$t(shared:plugins.titlesAndText)”",
+					defaultTuningMethod: "更改新音频剪辑的默认调音方法，默认为“$t(stream.tuning.tuningMethod.elastic)”",
+					defaultElasticMode: "更改新音频剪辑中弹性调音方法的默认拉伸属性，默认为“$t(stream.tuning.stretchAttributes.elastic.efficient)”",
+					defaultClassicMode: "更改新音频剪辑中古典调音方法的默认拉伸属性，默认为“$t(stream.tuning.stretchAttributes.classic.a03)”",
 					preserveClipboardOnClose: "允许在同一个VEGAS Pro实例中通过先后打开不同的项目来跨项目复制粘贴",
 					eventGroupSelection: "允许在拖动音频剪辑跨轨道时，组内视频剪辑会自动跟随移动，而不是保持在原轨道上，反之亦然",
 					openglInterop: "解决在特定版本的英伟达工作室显卡下预览窗口不刷新特效的问题",

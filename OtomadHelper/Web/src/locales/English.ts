@@ -1034,7 +1034,7 @@ export default {
 				preferredTrack: "Allows you to specify an existing track to generate (except multitrack)",
 				prerender: {
 					_: "Applying too many effects to the sources before generation may cause it to get stuck during generation, and for this you may need to prerender the sources to apply the effects deeply",
-					instant: "Does not perform prerendering, that will copy the effects onto every generated clip",
+					instant: "Does not perform prerendering, that will copy the existing effects onto every generated clip",
 					media: "Renders as a single media file",
 					media_audio: "Renders as a single media file, and later annotate ACID pitch tag",
 					timeline: "Renders as a nested timeline (single VEGAS Pro project file)",

@@ -95,6 +95,8 @@ export default function (babel: typeof babelCore): PluginObj {
 							const callExpr = t.callExpression(t.memberExpression(parent, t.identifier("toString")), []);
 							parentPath.replaceWith(callExpr);
 						}
+						// Exclude: { labelPrefix: t.foo }
+						if (t.isObjectProperty(parent) && !parent.computed && t.isIdentifier(parent.key) && parent.key.name === "labelPrefix") return;
 						// #endregion
 
 						// Recursively check if the root of the member expression is `t` related.
