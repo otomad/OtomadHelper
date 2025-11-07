@@ -107,3 +107,13 @@ CSS.registerProperty({
 	inherits: true,
 	initialValue: "1",
 });
+
+/**
+ * Defines a placeholder property that lasts the longest time to detect the start and end of the transition.
+ */
+CSS.registerProperty({
+	name: "--placeholder-transition-longest-property",
+	syntax: "<percentage>",
+	inherits: false,
+	initialValue: "100%",
+});

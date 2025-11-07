@@ -80,6 +80,7 @@ export default function Source() {
 			</Card>
 
 			<Setting meta={meta.trim}>
+				{/* TODO: 当 trimStart 小于或等于 trimEnd 时，checkInfo 显示“关”，否则显示“开”。 */}
 				<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
 			</Setting>
 			<Setting

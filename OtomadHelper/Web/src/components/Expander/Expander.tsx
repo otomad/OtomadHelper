@@ -5,8 +5,9 @@ import ExpanderItem from "./ExpanderItem";
 import SubExpander from "./SubExpander";
 
 export const TRAILING_EXEMPTION = "trailing-exemption";
+const TRANSLATE_TRANSITION_DURATION = 350, TRANSLATE_TRANSITION_DELAY = 75;
 
-const ExpanderParent = styled(SettingsCard)<{ // BUG: After auto resize, when scrolling page, some content will not display immediately.
+const ExpanderParent = styled(SettingsCard)<{ // FIXME: After auto resize, when scrolling page, some content will not display immediately.
 	/** Expanded? */
 	$expanded?: boolean;
 	/** Make expander child items disabled. */
@@ -20,6 +21,11 @@ const ExpanderParent = styled(SettingsCard)<{ // BUG: After auto resize, when sc
 
 		&.enter-active {
 			transition: ${fallbackTransitions}, translate ${eases.easeOutElastic} 1250ms;
+		}
+
+		&.exit-active {
+			transition: ${fallbackTransitions}, opacity ${eases.easeOutSmooth} 250ms;
+			transition-delay: ${TRANSLATE_TRANSITION_DELAY}ms;
 		}
 	}
 
@@ -56,7 +62,12 @@ const ExpanderParent = styled(SettingsCard)<{ // BUG: After auto resize, when sc
 `;
 
 const ExpanderChildItems = styled.div`
-	border-radius: inherit;
+	background-color: ${c("background-fill-color-card-background-secondary")};
+	background-clip: padding-box;
+	border: 1px solid ${c("stroke-color-card-stroke-default")};
+	border-block-start-width: 0;
+	border-end-start-radius: 3px;
+	border-end-end-radius: 3px;
 
 	@layer layout {
 		> * {
@@ -77,13 +88,8 @@ const ExpanderChildItems = styled.div`
 `;
 
 const ExpanderChild = styled.div`
+	--placeholder-transition-longest-property: 100%;
 	inline-size: 100%;
-	background-color: ${c("background-fill-color-card-background-secondary")};
-	background-clip: padding-box;
-	border: 1px solid ${c("stroke-color-card-stroke-default")};
-	border-block-start-width: 0;
-	border-end-start-radius: 3px;
-	border-end-end-radius: 3px;
 
 	&:not(.enter-done) {
 		overflow: clip;
@@ -94,6 +100,7 @@ const ExpanderChild = styled.div`
 	}
 
 	${tgs()} {
+		--placeholder-transition-longest-property: 0%;
 		block-size: 0;
 		border-block-end-width: 0;
 
@@ -105,9 +112,16 @@ const ExpanderChild = styled.div`
 	&,
 	.expander-child,
 	.expander-child-items { // Also apply styles to sub-expander.
-		transition-property: block-size, translate;
-		transition-duration: 350ms;
-		transition-timing-function: ${eases.easeInOutMaterialEmphasized};
+		--transition-options: ${eases.easeInOutMaterialEmphasized} ${TRANSLATE_TRANSITION_DURATION}ms;
+		transition:
+			block-size var(--transition-options),
+			translate var(--transition-options),
+			--placeholder-transition-longest-property ${TRANSLATE_TRANSITION_DURATION + TRANSLATE_TRANSITION_DELAY}ms;
+	}
+
+	&.enter-active .expander-child-items,
+	&.exit-active {
+		transition-delay: ${TRANSLATE_TRANSITION_DELAY}ms;
 	}
 `;
 
@@ -195,7 +209,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				{checkInfo != null && (
 					<CssTransition
 						in={!internalExpanded || alwaysShowCheckInfo}
-						timeout={350} // Explicitly specified for better performance.
+						timeout={TRANSLATE_TRANSITION_DURATION + TRANSLATE_TRANSITION_DELAY} // Explicitly specified for better performance.
 						hiddenOnExit
 						requestAnimationFrame
 					>
@@ -203,7 +217,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 					</CssTransition>
 				)}
 			</ExpanderParent>
-			<CssTransition in={internalExpanded} unmountOnExit transitionEndProperty={["height", "block-size"]} requestAnimationFrame>
+			<CssTransition in={internalExpanded} unmountOnExit transitionEndProperty={["--placeholder-transition-longest-property"]} requestAnimationFrame>
 				<ExpanderChild
 					disabled={disabled || childrenDisabled}
 					className={{ clipChildren }}

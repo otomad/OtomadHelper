@@ -18,6 +18,10 @@ const StyledDynamicAccentColor = createGlobalStyle<{
 		--background-color-windows: light-dark(${colors["background-color"].slice(0, 2).join(",")});
 		--background-color-vegas: light-dark(#eee, #222);
 		--background-color-wallpaper: var(--image-dominant-color, var(--background-color-windows));
+
+		@support (background-color: -moz-win-accentcolor) {
+			--accent-color-windows: -moz-win-accentcolor;
+		}
 	`,
 	$palette?.colorization && css`
 		--colorization: ${$palette.colorization};

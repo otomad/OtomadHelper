@@ -371,6 +371,7 @@ ignoreWords:
   - delthas
   - freezeframe
   - freezeframes
+  - accentcolor
 flagWords:
   - colour -> color
   - canot -> cannot
