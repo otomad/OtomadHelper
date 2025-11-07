@@ -375,7 +375,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 	const frames = prveClass?.findEffectFrames(effect) ?? 1;
 	const stepSequenceInputEl = useDomRef<"input">();
 	const isDefault = effect === DEFAULT_EFFECT;
-	const tc = t({ context: isCustomInitialStepClass ? "angle" : undefined });
+	const tc = tAlias({ context: isCustomInitialStepClass ? "angle" : undefined });
 
 	const [customStepSequence, setCustomStepSequence] = useState(initialStep.join(","));
 	const isEditingStepSequence = useCallback(() => document.activeElement === stepSequenceInputEl.current, [stepSequenceInputEl]);

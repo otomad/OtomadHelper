@@ -8,7 +8,7 @@ export /* @internal */ default function ExpanderGroup({ autoCollapse = true, chi
 	return (
 		<>
 			{React.Children.map(children, (child, index) => {
-				if (!isReactInstance(child, Expander) && !isReactInstance(child, ExpanderRadio)) return child;
+				if (![Expander, ExpanderRadio, Setting].some(component => isReactInstance(child, component))) return child;
 				asserts<ReactElementOf<typeof Expander>>(child);
 				if (!autoCollapse) return React.cloneElement(child);
 				const { expanded, onToggle } = child.props;

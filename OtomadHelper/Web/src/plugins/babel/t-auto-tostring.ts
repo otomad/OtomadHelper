@@ -1,5 +1,5 @@
-import type babelCore from "@babel/core";
-type Node = babelCore.types.Node;
+import type { PluginObj, default as babelCore } from "@babel/core";
+import type { Identifier, Node } from "@babel/types";
 
 const tRoots = ["t", "tf", "tAlias"] as const;
 
@@ -7,11 +7,17 @@ interface Options {
 	excludePaths: string[];
 }
 
-export default function (babel: typeof babelCore): babelCore.PluginObj {
+export default function (babel: typeof babelCore): PluginObj {
 	const { types: t } = babel;
 
 	let options: Options = undefined!;
 	const tAliases = new Map<string, Set<string>>();
+
+	function AddToTAliases(filename: string, id: Identifier | string) {
+		let aliases = tAliases.get(filename);
+		if (!aliases) tAliases.set(filename, aliases = new Set());
+		aliases.add(typeof id === "string" ? id : id.name);
+	}
 
 	/**
 	 * Recursively check if the root of the member expression is `t` related.
@@ -51,58 +57,72 @@ export default function (babel: typeof babelCore): babelCore.PluginObj {
 	return {
 		name: "babel-plugin-t-auto-tostring",
 		visitor: {
-			// Handle `MemberExpression` (e.g. `t.foo` / `t[bar]` / `t.foo.bar`).
-			MemberExpression(path, state) {
-				const { node, parent, parentPath } = path, { filename } = state;
+			// Prioritize running this plugin by visiting the top-level Program node.
+			Program(programPath, state) {
+				const { filename } = state;
 				if (!options) {
 					options = state.opts as Options;
 					options.excludePaths ??= [];
 				}
 				if (filename && options.excludePaths.some(path => filename.includes(path))) return;
 
-				// Ensure that it is the final node of the member expression chain
-				// (the parent node is not MemberExpression).
-				if (t.isMemberExpression(parent) && parent.property !== node) return;
+				programPath.traverse({
+					// Handle `MemberExpression` (e.g. `t.foo` / `t[bar]` / `t.foo.bar`).
+					MemberExpression(path) {
+						const { node, parent, parentPath } = path;
 
-				// Exclude cases where function calls already exist
-				// (the parent node is `CallExpression` and the current node is `callee`).
-				if (isCallOrOptionalCall(parent) && parent.callee === node) return;
+						// Ensure that it is the final node of the member expression chain
+						// (the parent node is not MemberExpression).
+						if (t.isMemberExpression(parent) && parent.property !== node) return;
 
-				// Exclude left-hand side of assignment statement
-				// (should not add `()` on `t.foo = 123`).
-				if (t.isAssignmentExpression(parent) && parent.left === node) return;
+						// Exclude cases where function calls already exist
+						// (the parent node is `CallExpression` and the current node is `callee`).
+						if (isCallOrOptionalCall(parent) && parent.callee === node) return;
 
-				// #region Special
-				// Exclude: <ExpanderRadio xxxField={t.foo} />, <TransInterpolation i18nKey={t.foo} />
-				if (t.isJSXExpressionContainer(parent) && t.isJSXAttribute(parentPath.parent) && t.isJSXIdentifier(parentPath.parent.name)) {
-					const propName = parentPath.parent.name.name;
-					if (propName.endsWith("Field") || propName === "i18nKey") return;
-				}
-				// withObject(t.foo, t => t.bar) --> withObject(t.foo, t => t.bar).toString()
-				if (isCallOrOptionalCall(parent) && t.isIdentifier(parent.callee) && parent.callee.name === "withObject") {
-					if (isMemberOrOptionalMember(parentPath.parent)) return;
-					const callExpr = t.callExpression(t.memberExpression(parent, t.identifier("toString")), []);
-					parentPath.replaceWith(callExpr);
-				}
-				// #endregion
+						// Exclude left-hand side of assignment statement
+						// (should not add `()` on `t.foo = 123`).
+						if (t.isAssignmentExpression(parent) && parent.left === node) return;
 
-				// Recursively check if the root of the member expression is `t` related.
-				const tCallInfo = isTRelated(node, filename);
-				if (!tCallInfo) return;
+						// #region Special
+						// Exclude: <ExpanderRadio xxxField={t.foo} />, <TransInterpolation i18nKey={t.foo} />
+						if (t.isJSXExpressionContainer(parent) && t.isJSXAttribute(parentPath.parent) && t.isJSXIdentifier(parentPath.parent.name)) {
+							const propName = parentPath.parent.name.name;
+							if (propName.endsWith("Field") || propName === "i18nKey") return;
+						}
+						// withObject(t.foo, t => t.bar) --> withObject(t.foo, t => t.bar).toString()
+						if (isCallOrOptionalCall(parent) && t.isIdentifier(parent.callee) && parent.callee.name === "withObject") {
+							if (isMemberOrOptionalMember(parentPath.parent)) return;
+							const callExpr = t.callExpression(t.memberExpression(parent, t.identifier("toString")), []);
+							parentPath.replaceWith(callExpr);
+						}
+						// #endregion
 
-				// Assign to an alias of a path of t.
-				if (tCallInfo === "tAlias") {
-					if (!(filename && t.isVariableDeclarator(parent) && t.isIdentifier(parent.id))) return;
-					let aliases: Set<string>;
-					if (!tAliases.has(filename)) tAliases.set(filename, aliases = new Set());
-					else aliases = tAliases.get(filename)!;
-					aliases.add(parent.id.name);
-					return;
-				}
+						// Recursively check if the root of the member expression is `t` related.
+						const tCallInfo = isTRelated(node, filename);
+						if (!tCallInfo) return;
 
-				// All conditions met: wrap member expressions into parameterless function calls.
-				const callExpr = t.optionalCallExpression(node, [], tCallInfo !== "t");
-				path.replaceWith(callExpr);
+						// Assign to an alias of a path of t (e.g. `const tEffects = tAlias.prve.effects;`).
+						if (tCallInfo === "tAlias") {
+							if (filename && t.isVariableDeclarator(parent) && t.isIdentifier(parent.id))
+								AddToTAliases(filename, parent.id);
+							return;
+						}
+
+						// All conditions met: wrap member expressions into parameterless function calls.
+						const callExpr = t.optionalCallExpression(node, [], tCallInfo !== "t");
+						path.replaceWith(callExpr);
+					},
+
+					CallExpression(path) {
+						const { node, parent } = path;
+
+						// Assign to an alias of a path of t (e.g. `const tFull = tAlias({ context: "full" });`).
+						if (filename &&
+							t.isIdentifier(node.callee) && node.callee.name === "tAlias" &&
+							t.isVariableDeclarator(parent) && t.isIdentifier(parent.id))
+							AddToTAliases(filename, parent.id);
+					},
+				});
 			},
 		},
 	};
