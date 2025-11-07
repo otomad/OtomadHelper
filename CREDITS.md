@@ -12,7 +12,7 @@ Copyright © 2021, Rantetsu Inori - Licensed under GPLv3
 >
 > You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-[Chinese Version (Layman)](LICENSE.zh-CN.md)
+<!-- [Chinese Version (Layman)](LICENSE.zh-CN.md) -->
 
 This project references the following open source code:\
 We would like to thank their authors and contributors for their contributions to the open source cause!

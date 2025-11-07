@@ -9,6 +9,7 @@ const Links = {
 		repository: "https://github.com/otomad/OtomadHelper",
 		changelog: "https://github.com/otomad/OtomadHelper/releases",
 		issues: "https://github.com/otomad/OtomadHelper/issues",
+		credits: "https://github.com/otomad/OtomadHelper/blob/webview/CREDITS.md",
 	},
 	helpV4: {
 		chinese: {

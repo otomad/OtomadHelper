@@ -58,7 +58,6 @@ export default function SettingsAbout() {
 		[t.settings.about.author, t.settings.about.__author__],
 		[t.settings.about.originalAuthor, t.settings.about.__originalAuthor__],
 		[t.settings.about.translator, hasTranslator ? formattedTranslator : ""],
-		[t.titles.license, "GPL-3.0"],
 	]);
 	const { version } = useAboutApp();
 	const [showTranslators, setShowTranslators] = useState(false);
@@ -84,7 +83,6 @@ export default function SettingsAbout() {
 					<Link href={links.otomadHelper.changelog}>{t.settings.about.changelog}</Link>
 					<Link href={links.otomadHelper.issues}>{t.settings.about.feedback}</Link>
 					<Link onClick={() => pushPage("license")}>{t.titles.license}</Link>
-					<Link onClick={() => setShowTranslators(true)} aria-haspopup="dialog">{t.settings.about.translators}</Link>
 					<Link href={links.crowdin.contributeTranslation[currentLanguage]}>{t.settings.about.translation}</Link>
 				</div>
 				<Translators shown={[showTranslators, setShowTranslators]} />
@@ -99,6 +97,11 @@ export default function SettingsAbout() {
 				)}
 			>
 				<AboutInformation />
+				<Expander.ChildWrapper $tilePadding="subtle button to item">
+					<Button hyperlink href={links.gpl3}>{t({ context: "full" }).titles.license}</Button>
+					<Button hyperlink href={links.otomadHelper.credits}>{t.settings.about.credits}</Button>
+					<Button hyperlink onClick={() => setShowTranslators(true)} aria-haspopup="dialog">{t.settings.about.translators}</Button>
+				</Expander.ChildWrapper>
 			</Setting>
 			<Setting meta={meta.help}>
 				<HelpLinks />
@@ -296,7 +299,6 @@ function HelpLinks() {
 			{ name: tAbout.tutorialVideoForFeature({ feature: t.mosh.datamosh }), version: "1.4.0", link: links.helpV4.english.tutorialVideo_datamosh_delthas_v1_4_0 },
 			{ name: tAbout.tutorialVideo, version: "4.16.4.0", link: links.helpV4.english.tutorialVideo_greenBean_v4_16_4_0 },
 			{ name: tAbout.tutorialVideo, version: "4.16.4.0", link: links.helpV4.english.tutorialVideo_cassidy_v4_16_4_0 },
-			{ name: tAbout.exploreVisualEffects, version: "4.23.11.0", link: links.helpV4.english.exploreVisualEffects_v4_23_11_0 },
 			{ name: tAbout.tutorialVideo, version: "4.26.14.0", link: links.helpV4.english.tutorialVideo_v4_26_14_0 },
 		],
 		vi: [

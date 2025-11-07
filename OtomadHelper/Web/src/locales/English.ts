@@ -824,6 +824,7 @@ export default {
 				changelog: "Changelog",
 				roadmap: "Roadmap",
 				version: "Version",
+				credits: "Credits",
 				author: "Author",
 				__author__: "Rantetsu Inori",
 				originalAuthor: "Original author",
@@ -838,7 +839,6 @@ export default {
 				documentationInLanguage: "{{language, capitalize}} documentation", // E.g. English documentations.
 				documentationInLanguage_other: "{{language, capitalize}} documentations",
 				previousVersionDocumentation: "Previous version of the documentations",
-				exploreVisualEffects: "Explore visual effects",
 				tutorialVideoForFeature: "Tutorial video for {{feature}}", // E.g. Tutorial video for Staff Visualizer.
 			},
 			language: {
