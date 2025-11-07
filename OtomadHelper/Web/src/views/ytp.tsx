@@ -56,6 +56,22 @@ const StyledSideEffect = styled.div`
 	}
 `;
 
+const StyledYtpIconLegend = styled.ul`
+	li {
+		${styles.effects.text.caption};
+		color: ${c("fill-color-text-secondary")};
+
+		.icon {
+			margin-inline-end: 6px;
+			font-size: 16px;
+		}
+
+		span {
+			vertical-align: -1px;
+		}
+	}
+`;
+
 export default function Ytp() {
 	const { enabled, clips, constraint } = useSelectConfig(c => c.ytp);
 	const meta = metas.ytp;
@@ -107,6 +123,13 @@ export default function Ytp() {
 							);
 						})}
 					</ItemsView>
+					<InfoBar status="asterisk" title={t.ytp.legend}>
+						<StyledYtpIconLegend>
+							<li><Icon name="image" /><span>{t.ytp.legend.visual}</span></li>
+							<li><Icon name="volume" /><span>{t.ytp.legend.audio}</span></li>
+							<li><Icon name="dice" /><span>{t.ytp.legend.probably}</span></li>
+						</StyledYtpIconLegend>
+					</InfoBar>
 				</Setting>
 			</EmptyMessage.Typical>
 		</div>

@@ -675,6 +675,12 @@ export default {
 				loud: "Loud",
 				sporadicUpsizeFocusMotion: "Sporadic Upsize Focus Motion",
 			},
+			legend: {
+				_: "Legend",
+				visual: "Visual effect",
+				audio: "Audio effect",
+				probably: "Probabilistic triggering",
+			},
 		},
 		mosh: {
 			datamosh: "Datamosh",
