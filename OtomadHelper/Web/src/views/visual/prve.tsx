@@ -349,8 +349,7 @@ const StepSequence = styled.div`
 		padding-inline-end: 0 !important;
 
 		.text-box {
-			/* position: absolute; */
-			inline-size: calc(100% - 7px * 2);
+			inline-size: stretch;
 			max-inline-size: unset;
 			margin-inline: 7px;
 		}

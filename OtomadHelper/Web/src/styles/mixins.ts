@@ -44,18 +44,12 @@ export default {
 	/**
 	 * Center an element with **unknown size** that positioning out of flow (absolute or fixed).
 	 * @param position - Specify the `position` property of the element. Must be `absolute` or `fixed`.
-	 * @param useTranslate - Use `translate` instead of `transform`. Defaults to `true`, or provide more possibilities of custom transformation if `false`.
 	 */
-	absoluteCenter: (position: OutOfFlowPositions = "absolute", useTranslate: boolean = true) => css`
+	absoluteCenter: (position: OutOfFlowPositions = "absolute") => css`
 		position: ${position};
 		top: 50%;
 		left: 50%;
-
-		${useTranslate ? css`
-			translate: -50% -50%;
-		` : css`
-			transform: translate(-50%, -50%);
-		`}
+		place-self: anchor-center;
 	`,
 	/**
 	 * Center an element with **known size** that positioning out of flow (absolute or fixed).

@@ -11,11 +11,10 @@ const StyledPreviewColorScheme = styled.div.attrs({
 	&,
 	.container {
 		${styles.mixins.square("100%")};
-		--padding: 1px;
 		position: relative;
 		display: flex;
 		gap: 12px;
-		padding: var(--padding);
+		padding: 1px;
 		overflow: clip;
 		background-color: ${c("background-color")};
 		border-radius: 6px;
@@ -23,7 +22,7 @@ const StyledPreviewColorScheme = styled.div.attrs({
 	}
 
 	.container:nth-child(2) {
-		${styles.mixins.square("calc(100% - var(--padding) * 2)")};
+		${styles.mixins.square("stretch")};
 		position: absolute;
 		clip-path: polygon(33.333% 100%, 100% 100%, 100% 0%, 66.667% 0%);
 	}
@@ -41,7 +40,7 @@ const StyledPreviewColorScheme = styled.div.attrs({
 	}
 
 	.circular > * {
-		${styles.mixins.absoluteCenter(undefined, false)};
+		${styles.mixins.absoluteCenter(undefined)};
 
 		${forMap(TAB_ITEM_COUNT, i => css`
 			&:nth-child(${i + 1}) {

@@ -119,7 +119,7 @@ export default {
 		save: "Save",
 		auto: "Auto",
 		back: "Back",
-		navigation: "Navigation",
+		navigation: "Toggle Navigation",
 		selectAll: "Select all",
 		invertSelection: "Invert selection",
 		variableBeginWith: "Variable from {{first, lowercase}}", // For example, if the panning of a score gradually changes from the left channel to the right channel, it will be displayed as “Variable from left”.

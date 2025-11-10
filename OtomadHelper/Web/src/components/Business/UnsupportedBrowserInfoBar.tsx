@@ -13,6 +13,7 @@ const StyledUnsupportedBrowserInfoBar = styled(InfoBar).attrs({
 export default function UnsupportedBrowserInfoBar() {
 	const browserName = useMemo(() => getBrowserName(), []);
 	const isBrowserSupported = useMemo(() => doesBrowserSupportACertainFeature(), []);
+	const t = useT();
 
 	return !isBrowserSupported && <StyledUnsupportedBrowserInfoBar title={t.descriptions.unsupportedBrowser({ browser: browserName })} />;
 }

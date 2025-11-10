@@ -76,7 +76,7 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	}
 
 	.flyout & {
-		inline-size: calc(100% - 4px * 2);
+		inline-size: stretch;
 		margin-inline: 4px;
 		padding-block: 8px;
 		padding-inline: 13px 12px;

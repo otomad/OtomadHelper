@@ -8,8 +8,6 @@ const StyledTabItem = styled.button`
 
 	.tab-bar.vertical & {
 		gap: 16px;
-		inline-size: -webkit-fill-available;
-		inline-size: -moz-available;
 		inline-size: stretch;
 		padding-block: 9px 11px;
 		padding-inline: 16px 12px;

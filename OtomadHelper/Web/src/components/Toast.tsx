@@ -15,8 +15,8 @@ const StyledToast = styled.div<{
 	overflow: clip;
 	background-color: ${c("background-fill-color-card-background-secondary")};
 	border: 1px solid ${c("stroke-color-card-stroke-default")};
-	border-radius: 4px;
 	border-inline-start-width: 0;
+	border-radius: 4px;
 	box-shadow: 0 8px 16px ${c("shadows-flyout")};
 	backdrop-filter: blur(10px);
 	animation:
@@ -50,8 +50,8 @@ const StyledToast = styled.div<{
 		padding: 13px 16px;
 		border: inherit;
 		border-width: 0;
-		border-radius: 4px;
 		border-inline-start-width: 1px;
+		border-radius: 4px;
 
 		p {
 			white-space: nowrap;
