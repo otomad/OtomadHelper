@@ -47,7 +47,7 @@ declare global {
 		type GridUnitType = "auto" | "pixel" | "star";
 	}
 
-	type VegasCommandType = "useTrackEventAsSource" | "useProjectMediaAsSource" | "enableYtp" | "startGenerating";
+	type VegasCommandType = "useTrackEventAsSource" | "useProjectMediaAsSource" | "enableYtp" | "disableYtp" | "startGenerating" | "reset";
 
 	var initialSystemConfig: WebMessageEvents.SystemConfig;
 }

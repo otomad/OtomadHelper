@@ -39,7 +39,6 @@ useListen.on("host:contextMenuItemClickEventArgs", ({ menuUuid, menuItemUuid }) 
 });
 
 useListen.on("host:vegasCommandEvent", ({ event }) => {
-	let key: string = event;
-	if (event === "enableYtp" && !configStore.ytp.enabled) key = "disableYtp";
-	emit("app:toast", i18n.t(`csharp:keybindings.commands.${key}`));
+	if (event === "enableYtp" && !configStore.ytp.enabled) event = "disableYtp";
+	emit("app:toast", i18n.t(`csharp:keybindings.commands.${event}`));
 });
