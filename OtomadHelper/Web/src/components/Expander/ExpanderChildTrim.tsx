@@ -1,6 +1,6 @@
-const RangeDash = styled.div.attrs({
+const RangeDash = styled.div.attrs(() => ({
 	children: t.rangeDash,
-})`
+}))`
 	${styles.effects.text.body};
 	margin-block-end: 1.5px;
 	font-feature-settings: "case" on;

@@ -384,6 +384,7 @@ const StyledNavigationView = styled.div<{
 			contain: layout;
 			overflow-block: auto;
 			overflow-inline: hidden;
+			overflow-anchor: none;
 			overscroll-behavior: contain;
 
 			&:has(> .enter, > .exit),

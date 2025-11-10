@@ -58,8 +58,7 @@ const StyledSettingsCard = styled(StyledCard)<{
 				background-color: ${c("background-fill-color-expander-sticky-background-default")};
 
 				> .leading > .text > .details {
-					/* -webkit-line-clamp: 2; */
-					// Unfortunately it will be glitchy after enable it.
+					-webkit-line-clamp: 2;
 				}
 			}
 

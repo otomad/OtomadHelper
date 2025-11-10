@@ -1,6 +1,7 @@
 import type _DndKitCore from "@dnd-kit/core";
 import type CSSType from "csstype";
 import type _Immer from "immer";
+import type English from "locales/English";
 import type _LottieWeb from "lottie-web";
 import type React from "react";
 import type _ReactTransitionGroup from "react-transition-group-fc";
@@ -30,6 +31,15 @@ declare module "styled-components" {
 
 declare module "valtio" {
 	function useSnapshot<T extends object>(p: T): T;
+}
+
+declare module "i18next" {
+	interface CustomTypeOptions {
+		defaultNS: "javascript";
+		resources: typeof English;
+		allowObjectInHTMLChildren: false;
+		strictKeyChecks: true;
+	}
 }
 
 declare const genericElement: unique symbol;
