@@ -137,6 +137,10 @@ const StyledSegmented = styled.div<{
 			}
 		}
 
+		${ifColorScheme.at.contrast} {
+			backdrop-filter: invert(1) !important;
+		}
+
 		&::after {
 			${styles.mixins.oval()};
 			content: "";

@@ -155,6 +155,21 @@ const StyledComboBox = styled(StyledButton)(() => css`
 					--focus-ring-length-outer: 2px;
 					--focus-ring-length-inner: 0;
 				}
+
+				${ifColorScheme.at.contrast} {
+					&:is(:hover, :active, :checked)${important()} {
+						background-color: ${cc("Highlight")};
+
+						&,
+						* {
+							color: ${cc("HighlightText")};
+						}
+
+						&::before {
+							background-color: ${cc("HighlightText")};
+						}
+					}
+				}
 			}
 		}
 	}

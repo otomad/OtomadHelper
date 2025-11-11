@@ -46,6 +46,26 @@ const StyledSearchResult = styled.button`
 		}
 	}
 
+	${ifColorScheme.at.contrast} {
+		&:is(:hover, :active, .selected)${important()} {
+			background-color: ${cc("Highlight")};
+
+			&,
+			* {
+				color: ${cc("HighlightText")};
+			}
+
+			&::before {
+				background-color: ${cc("HighlightText")};
+			}
+
+			mark {
+				color: ${cc("Highlight")};
+				background-color: ${cc("HighlightText")};
+			}
+		}
+	}
+
 	.text {
 		display: flex;
 		flex-direction: column;

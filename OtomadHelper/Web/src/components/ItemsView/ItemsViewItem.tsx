@@ -213,6 +213,21 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 			scale: 1 0;
 		}
 
+		${ifColorScheme.at.contrast} {
+			&:is(:hover, ${isPressed}, .selected) > .base {
+				background-color: ${cc("Highlight")};
+
+				&,
+				* {
+					color: ${cc("HighlightText")};
+				}
+
+				&::before {
+					background-color: ${cc("HighlightText")};
+				}
+			}
+		}
+
 		&:has(.checkbox-label:not(.exit-done)) > .base::before {
 			display: none;
 		}

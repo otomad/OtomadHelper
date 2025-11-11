@@ -135,6 +135,16 @@ const StyledTextBoxActionButton = styled.button.attrs({
 			color: ${c("fill-color-text-tertiary")};
 		}
 	}
+
+	${ifColorScheme.at.contrast} {
+		&:is(:hover, :active) {
+			background-color: ${cc("Highlight")};
+
+			.icon {
+				color: ${cc("HighlightText")};
+			}
+		}
+	}
 `;
 
 function TextBoxActionButton({ icon, tooltip, nonFocusable = false, ...htmlAttrs }: FCP<{

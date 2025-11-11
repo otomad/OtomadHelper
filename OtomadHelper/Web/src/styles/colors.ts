@@ -1,4 +1,5 @@
 /* eslint-disable @stylistic/quote-props */
+/* eslint-disable @stylistic/operator-linebreak */
 
 export const fillColorAccentOpacity = {
 	secondary: 90,
@@ -27,7 +28,7 @@ const colors = {
 	"fill-color-control-quarternary": ["rgba(243, 243, 243, 0.76)", "rgba(255, 255, 255, 0.06)", "ButtonFace"],
 	"fill-color-control-input-active": ["rgb(255, 255, 255)", "rgba(30, 30, 30, 0.7)", "ButtonFace"],
 	"fill-color-control-disabled": ["rgba(249, 249, 249, 0.3)", "rgba(255, 255, 255, 0.04)", "ButtonFace"],
-	"fill-color-control-strong-default": ["rgba(0, 0, 0, 0.45)", "rgba(255, 255, 255, 0.54)", "InactiveBorder"],
+	"fill-color-control-strong-default": ["rgba(0, 0, 0, 0.45)", "rgba(255, 255, 255, 0.54)", "ButtonBorder"],
 	"fill-color-control-strong-disabled": ["rgba(0, 0, 0, 0.32)", "rgba(255, 255, 255, 0.25)", "ButtonFace"],
 	"fill-color-subtle-transparent": ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0)"],
 	"fill-color-subtle-secondary": ["rgba(0, 0, 0, 0.04)", "rgba(255, 255, 255, 0.06)", "ButtonFace"],
@@ -45,45 +46,45 @@ const colors = {
 	"fill-color-accent-secondary": [$c("accent-color", fillColorAccentOpacity.secondary), $c("accent-color", fillColorAccentOpacity.secondary), "Highlight"],
 	"fill-color-accent-tertiary": [$c("accent-color", fillColorAccentOpacity.tertiary), $c("accent-color", fillColorAccentOpacity.tertiary), "Highlight"],
 	"fill-color-accent-disabled": ["rgba(0, 0, 0, 0.22)", "rgba(255, 255, 255, 0.16)", "GrayText"],
-	"fill-color-system-critical": ["rgb(196, 43, 28)", "rgb(255, 153, 164)", "InfoText"],
-	"fill-color-system-success": ["rgb(15, 123, 15)", "rgb(108, 203, 95)", "InfoText"],
-	"fill-color-system-attention": ["rgb(0, 95, 183)", "rgb(96, 205, 255)", "InfoText"],
-	"fill-color-system-caution": ["rgb(157, 93, 0)", "rgb(252, 225, 0)", "InfoText"],
-	"fill-color-system-target": ["rgb(109, 32, 100)", "rgb(237, 187, 231)", "InfoText"],
-	"fill-color-system-critical-background": ["rgb(253, 231, 233)", "rgb(68, 39, 38)", "InfoBackground"],
-	"fill-color-system-success-background": ["rgb(223, 246, 221)", "rgb(57, 61, 27)", "InfoBackground"],
-	"fill-color-system-attention-background": ["rgba(246, 246, 246, 0.5)", "rgba(255, 255, 255, 0.03)", "InfoBackground"],
-	"fill-color-system-caution-background": ["rgb(255, 244, 206)", "rgb(67, 53, 25)", "InfoBackground"],
-	"fill-color-system-target-background": ["rgb(253, 245, 252)", "rgb(58, 17, 54)", "InfoBackground"],
+	"fill-color-system-critical": ["rgb(196, 43, 28)", "rgb(255, 153, 164)", "CanvasText"],
+	"fill-color-system-success": ["rgb(15, 123, 15)", "rgb(108, 203, 95)", "CanvasText"],
+	"fill-color-system-attention": ["rgb(0, 95, 183)", "rgb(96, 205, 255)", "CanvasText"],
+	"fill-color-system-caution": ["rgb(157, 93, 0)", "rgb(252, 225, 0)", "CanvasText"],
+	"fill-color-system-target": ["rgb(109, 32, 100)", "rgb(237, 187, 231)", "CanvasText"],
+	"fill-color-system-critical-background": ["rgb(253, 231, 233)", "rgb(68, 39, 38)", "Canvas"],
+	"fill-color-system-success-background": ["rgb(223, 246, 221)", "rgb(57, 61, 27)", "Canvas"],
+	"fill-color-system-attention-background": ["rgba(246, 246, 246, 0.5)", "rgba(255, 255, 255, 0.03)", "Canvas"],
+	"fill-color-system-caution-background": ["rgb(255, 244, 206)", "rgb(67, 53, 25)", "Canvas"],
+	"fill-color-system-target-background": ["rgb(253, 245, 252)", "rgb(58, 17, 54)", "Canvas"],
 	"fill-color-system-neutral": ["rgba(0, 0, 0, 0.45)", "rgba(255, 255, 255, 0.54)", "ButtonFace"],
 	"fill-color-system-neutral-background": ["rgba(0, 0, 0, 0.02)", "rgba(255, 255, 255, 0.03)", "ButtonText"],
 	"fill-color-system-solid-neutral": ["rgb(138, 138, 138)", "rgb(157, 157, 157)", "ButtonFace"],
-	"fill-color-system-solid-attention-background": ["rgb(247, 247, 247)", "rgb(46, 46, 46)", "InfoBackground"],
-	"fill-color-system-solid-neutral-background": ["rgb(243, 243, 243)", "rgb(46, 46, 46)", "InfoBackground"],
+	"fill-color-system-solid-attention-background": ["rgb(247, 247, 247)", "rgb(46, 46, 46)", "Canvas"],
+	"fill-color-system-solid-neutral-background": ["rgb(243, 243, 243)", "rgb(46, 46, 46)", "Canvas"],
 	"fill-color-control-icon-tile-secondary": ["rgba(184, 184, 184, 0.2)", "rgba(71, 71, 71, 0.2)", "ButtonFace"],
 	"fill-color-control-on-image-default": ["rgba(255, 255, 255, 0.79)", "rgba(28, 28, 28, 0.7)", "HighlightText"],
 	"fill-color-control-on-image-secondary": ["rgb(243, 243, 243)", "rgb(26, 26, 26)", "HighlightText"],
 	"fill-color-control-on-image-tertiary": ["rgb(235, 235, 235)", "rgb(19, 19, 19)", "HighlightText"],
 	"fill-color-control-on-image-disabled": ["rgba(255, 255, 255, 0)", "rgba(30, 30, 30, 0)", "GrayText"],
-	"stroke-color-control-stroke-default": ["rgba(0, 0, 0, 0.06)", "rgba(255, 255, 255, 0.07)", "ActiveBorder"],
-	"stroke-color-control-stroke-secondary": ["rgba(0, 0, 0, 0.16)", "rgba(255, 255, 255, 0.09)", "ActiveBorder"],
-	"stroke-color-control-stroke-tertiary": ["rgba(0, 0, 0, 0.13)", "rgba(255, 255, 255, 0.03)", "ActiveBorder"],
-	"stroke-color-control-stroke-disabled": ["rgba(0, 0, 0, 0.03)", "rgba(255, 255, 255, 0.03)", "ActiveBorder"],
-	"stroke-color-control-stroke-on-accent-default": ["rgba(255, 255, 255, 0.08)", "rgba(255, 255, 255, 0.08)", "ActiveBorder"],
-	"stroke-color-control-stroke-on-accent-secondary": ["rgba(0, 0, 0, 0.4)", "rgba(0, 0, 0, 0.14)", "ActiveBorder"],
-	"stroke-color-control-stroke-on-accent-tertiary": ["rgba(0, 0, 0, 0.22)", "rgba(0, 0, 0, 0.22)", "ActiveBorder"],
-	"stroke-color-control-stroke-on-accent-disabled": ["rgba(0, 0, 0, 0.06)", "rgba(0, 0, 0, 0.2)", "ActiveBorder"],
-	"stroke-color-control-stroke-for-strong-fill-when-on-image": ["rgba(255, 255, 255, 0.35)", "rgba(0, 0, 0, 0.42)", "ActiveBorder"],
-	"stroke-color-control-strong-stroke-default": ["rgba(0, 0, 0, 0.61)", "rgba(255, 255, 255, 0.6)", "ActiveBorder"],
-	"stroke-color-control-strong-stroke-disabled": ["rgba(0, 0, 0, 0.22)", "rgba(255, 255, 255, 0.16)", "ActiveBorder"],
-	"stroke-color-card-stroke-default": ["rgba(0, 0, 0, 0.06)", "rgba(0, 0, 0, 0.1)", "ActiveBorder"],
-	"stroke-color-card-stroke-default-solid": ["rgb(235, 235, 235)", "rgb(28, 28, 28)", "ActiveBorder"],
-	"stroke-color-divider-stroke-default": ["rgba(0, 0, 0, 0.08)", "rgba(255, 255, 255, 0.08)", "ActiveBorder"],
-	"stroke-color-surface-stroke-default": ["rgba(117, 117, 117, 0.4)", "rgba(117, 117, 117, 0.4)", "ActiveBorder"],
-	"stroke-color-surface-stroke-flyout": ["rgba(0, 0, 0, 0.06)", "rgba(0, 0, 0, 0.2)", "ActiveBorder"],
-	"stroke-color-surface-stroke-flyout-navigation-panel": ["rgba(0, 0, 0, 0.06)", "rgba(0, 0, 0, 0.06)", "ActiveBorder"],
-	"stroke-color-focus-stroke-outer": ["rgba(0, 0, 0, 0.9)", "rgb(255, 255, 255)", "ActiveBorder"],
-	"stroke-color-focus-stroke-inner": ["rgb(255, 255, 255)", "rgba(0, 0, 0, 0.7)", "ActiveBorder"],
+	"stroke-color-control-stroke-default": ["rgba(0, 0, 0, 0.06)", "rgba(255, 255, 255, 0.07)", "ButtonBorder"],
+	"stroke-color-control-stroke-secondary": ["rgba(0, 0, 0, 0.16)", "rgba(255, 255, 255, 0.09)", "ButtonBorder"],
+	"stroke-color-control-stroke-tertiary": ["rgba(0, 0, 0, 0.13)", "rgba(255, 255, 255, 0.03)", "ButtonBorder"],
+	"stroke-color-control-stroke-disabled": ["rgba(0, 0, 0, 0.03)", "rgba(255, 255, 255, 0.03)", "ButtonBorder"],
+	"stroke-color-control-stroke-on-accent-default": ["rgba(255, 255, 255, 0.08)", "rgba(255, 255, 255, 0.08)", "ButtonBorder"],
+	"stroke-color-control-stroke-on-accent-secondary": ["rgba(0, 0, 0, 0.4)", "rgba(0, 0, 0, 0.14)", "ButtonBorder"],
+	"stroke-color-control-stroke-on-accent-tertiary": ["rgba(0, 0, 0, 0.22)", "rgba(0, 0, 0, 0.22)", "ButtonBorder"],
+	"stroke-color-control-stroke-on-accent-disabled": ["rgba(0, 0, 0, 0.06)", "rgba(0, 0, 0, 0.2)", "ButtonBorder"],
+	"stroke-color-control-stroke-for-strong-fill-when-on-image": ["rgba(255, 255, 255, 0.35)", "rgba(0, 0, 0, 0.42)", "ButtonBorder"],
+	"stroke-color-control-strong-stroke-default": ["rgba(0, 0, 0, 0.61)", "rgba(255, 255, 255, 0.6)", "ButtonBorder"],
+	"stroke-color-control-strong-stroke-disabled": ["rgba(0, 0, 0, 0.22)", "rgba(255, 255, 255, 0.16)", "ButtonBorder"],
+	"stroke-color-card-stroke-default": ["rgba(0, 0, 0, 0.06)", "rgba(0, 0, 0, 0.1)", "ButtonBorder"],
+	"stroke-color-card-stroke-default-solid": ["rgb(235, 235, 235)", "rgb(28, 28, 28)", "ButtonBorder"],
+	"stroke-color-divider-stroke-default": ["rgba(0, 0, 0, 0.08)", "rgba(255, 255, 255, 0.08)", "ButtonBorder"],
+	"stroke-color-surface-stroke-default": ["rgba(117, 117, 117, 0.4)", "rgba(117, 117, 117, 0.4)", "ButtonBorder"],
+	"stroke-color-surface-stroke-flyout": ["rgba(0, 0, 0, 0.06)", "rgba(0, 0, 0, 0.2)", "ButtonBorder"],
+	"stroke-color-surface-stroke-flyout-navigation-panel": ["rgba(0, 0, 0, 0.06)", "rgba(0, 0, 0, 0.06)", "ButtonBorder"],
+	"stroke-color-focus-stroke-outer": ["rgba(0, 0, 0, 0.9)", "rgb(255, 255, 255)", "ButtonBorder"],
+	"stroke-color-focus-stroke-inner": ["rgb(255, 255, 255)", "rgba(0, 0, 0, 0.7)", "ButtonBorder"],
 	"background-fill-color-card-background-default": ["rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.05)", "ButtonFace"],
 	"background-fill-color-card-background-secondary": ["rgba(246, 246, 246, 0.5)", "rgba(255, 255, 255, 0.03)", "ButtonFace"],
 	"background-fill-color-card-background-tertiary": ["rgb(255, 255, 255)", "rgba(255, 255, 255, 0.07)", "ButtonFace"],
@@ -195,8 +196,9 @@ export function globalColors() {
 	return css.join("");
 }
 
-export type SystemColors =
-	"ActiveText" | "ButtonFace" | "ButtonText" | "Canvas" | "CanvasText" | "Field" | "FieldText" | "GrayText" | "Highlight" | "HighlightText" | "LinkText" | "VisitedText" | // Standard
-	"AccentColor" | "AccentColorText" | "Mark" | "MarkText" | "ButtonBorder" | // Experimental
-	"ActiveBorder" | "ActiveCaption" | "AppWorkspace" | "Background" | "ButtonHighlight" | "ButtonShadow" | "CaptionText" | "InactiveBorder" | "InactiveCaption" | "InactiveCaptionText" | "InfoBackground" | "InfoText" | "Menu" | "MenuText" | "Scrollbar" | "ThreeDDarkShadow" | "ThreeDFace" | "ThreeDHighlight" | "ThreeDLightShadow" | "ThreeDShadow" | "Window" | "WindowFrame" | "WindowText" | // Deprecated
-	"transparent";
+export type SystemColors = (
+	| "ActiveText" | "ButtonBorder" | "ButtonFace" | "ButtonText" | "Canvas" | "CanvasText" | "Field" | "FieldText" | "GrayText" | "Highlight" | "HighlightText" | "LinkText" | "VisitedText" // Standard
+	// | "AccentColor" | "AccentColorText" | "Mark" | "MarkText" // Experimental
+	// | "ActiveBorder" | "ActiveCaption" | "AppWorkspace" | "Background" | "ButtonHighlight" | "ButtonShadow" | "CaptionText" | "InactiveBorder" | "InactiveCaption" | "InactiveCaptionText" | "InfoBackground" | "InfoText" | "Menu" | "MenuText" | "Scrollbar" | "ThreeDDarkShadow" | "ThreeDFace" | "ThreeDHighlight" | "ThreeDLightShadow" | "ThreeDShadow" | "Window" | "WindowFrame" | "WindowText" // Deprecated
+	| "transparent"
+);
