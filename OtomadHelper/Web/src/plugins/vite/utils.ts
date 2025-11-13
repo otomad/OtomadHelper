@@ -96,6 +96,7 @@ export async function minifyHtml(source: string) {
 		removeStyleLinkTypeAttributes: true,
 		removeEmptyAttributes: true,
 		useShortDoctype: true,
+		processConditionalComments: true,
 		minifyCSS,
 		minifyJS: true,
 		minifyURLs: true,
