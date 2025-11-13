@@ -162,6 +162,7 @@ export default {
 		clearAll: "Clear all",
 		search: "Search",
 		noMatchingResults: "No matching results",
+		unsupportedBrowserClickToUpdate: "Click to update",
 		infoBar: {
 			warning: "Warning",
 		},

@@ -34,6 +34,7 @@ export /* @internal */ const StyledButton = styled.button<{
 	min-block-size: 32px;
 	padding-block: 5px;
 	padding-inline: ${inlinePadding}px;
+	color: ${c("foreground-color")};
 	background-clip: padding-box;
 	border: 1px solid ${c("stroke-color-control-stroke-default")};
 	border-radius: 4px;
@@ -62,7 +63,6 @@ export /* @internal */ const StyledButton = styled.button<{
 		background-color: ${c("fill-color-control-disabled")};
 
 		> .content {
-			color: ${c("foreground-color")};
 			opacity: ${c("disabled-text-opacity")};
 		}
 	}

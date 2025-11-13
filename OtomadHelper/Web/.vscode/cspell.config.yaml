@@ -24,6 +24,7 @@ words:
   - autofit
   - automator
   - autospace
+  - avant
   - backdoors
   - backface
   - baml
@@ -126,6 +127,7 @@ words:
   - jipt
   - jsdoc
   - jsdocs
+  - kai
   - kanban
   - kbd
   - kebabcase
@@ -153,11 +155,14 @@ words:
   - magix
   - mathml
   - maximizable
+  - maxthon
+  - meizu
   - metas
   - mht
   - mhtml
   - miscz
   - misplacements
+  - miui
   - mograph
   - mographs
   - moz
@@ -180,6 +185,7 @@ words:
   - oklch
   - ol
   - opengl
+  - oppo
   - opsz
   - opszs
   - otf
@@ -217,6 +223,7 @@ words:
   - puyo
   - pv
   - pxify
+  - qihu
   - qrcode
   - quarternary
   - resw
@@ -242,6 +249,7 @@ words:
   - singthesizer
   - singthesizers
   - sln
+  - sogou
   - solfège
   - solfèges
   - solfeggios
@@ -262,8 +270,10 @@ words:
   - svh
   - svs
   - svw
+  - symbian
   - tabbar
   - taiko
+  - taobao
   - timecode
   - timecodes
   - timeflow
@@ -308,6 +318,9 @@ words:
   - wai
   - webgl
   - webp
+  - weibo
+  - weixin
+  - weiyun
   - winform
   - wj
   - Woolard
@@ -442,3 +455,4 @@ flagWords:
   - useable -> usable
   - reuseable -> reusable
   - unuseable -> unusable
+  - forcely -> forcibly

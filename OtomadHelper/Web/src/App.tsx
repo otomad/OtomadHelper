@@ -10,7 +10,7 @@ export default function App() {
 
 	useMountEffect(() => {
 		delay(100).then(() => setReady(true));
-		const removedInitialStyles: (keyof CSSPropertiesHyphen)[] = ["background-color", "color-scheme"];
+		const removedInitialStyles: (keyof CSSPropertiesHyphen)[] = ["background-color", "color", "color-scheme"];
 		removedInitialStyles.forEach(property => document.documentElement.style.removeProperty(property));
 		changeColorScheme(undefined, undefined, undefined, "refresh");
 	});

@@ -16,11 +16,14 @@ declare module "react" {
 }
 
 declare module "react/jsx-runtime" {
+	import type React from "react";
+
 	namespace JSX {
 		interface IntrinsicElements {
 			tt: IntrinsicElements["pre"];
 			xmp: IntrinsicElements["pre"];
 			selectedcontent: IntrinsicElements["section"];
+			marquee: React.DetailedHTMLProps<React.HTMLAttributes<HTMLMarqueeElement>, HTMLMarqueeElement>;
 		}
 	}
 }
@@ -71,7 +74,7 @@ declare global {
 	/**
 	 * Similar to HTMLElement, but the `ref` prop can accept anything.\
 	 * Useful if you want to pass the type to multiple different elements.
-	 * @version React 19.0
+	 * @version 19.0.0-React
 	 * @example
 	 * ```tsx
 	 * export function MyComponent({ ...htmlAttrs }: FCP<{}, GenericElement>) {

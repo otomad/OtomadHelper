@@ -1,4 +1,4 @@
-import { doesBrowserSupportACertainFeature, getBrowserName } from "helpers/browserslist";
+import { doesBrowserSupportACertainFeature, useBrowserName } from "helpers/browserslist";
 
 const HEIGHT = 48;
 
@@ -10,12 +10,17 @@ const StyledUnsupportedBrowserInfoBar = styled(InfoBar).attrs({
 	border-radius: revert;
 `;
 
+const isBrowserSupported = doesBrowserSupportACertainFeature();
 export default function UnsupportedBrowserInfoBar() {
-	const browserName = useMemo(() => getBrowserName(), []);
-	const isBrowserSupported = useMemo(() => doesBrowserSupportACertainFeature(), []);
 	const t = useT();
-
-	return !isBrowserSupported && <StyledUnsupportedBrowserInfoBar title={t.descriptions.unsupportedBrowser({ browser: browserName })} />;
+	const [browserName, updateLink] = useBrowserName();
+	return !isBrowserSupported && (
+		<StyledUnsupportedBrowserInfoBar
+			title={<MarqueeIfOverflow>{t.descriptions.unsupportedBrowser({ browser: browserName })}</MarqueeIfOverflow>}
+			length="short"
+			button={updateLink && <Button href={updateLink}>{t.unsupportedBrowserClickToUpdate}</Button>}
+		/>
+	);
 }
 
 UnsupportedBrowserInfoBar.height = HEIGHT;

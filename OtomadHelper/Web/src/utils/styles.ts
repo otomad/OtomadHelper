@@ -363,3 +363,24 @@ export function transformFlowDirection(from: FlowDirection, to?: FlowDirection) 
 		"rotate(-90deg)", // 111: Rotate -90°
 	][op];
 }
+
+export function useElementSize(el: RefObject<Element | undefined | null>, type: "borderBoxInlineSize" | "borderBoxBlockSize" | "contentBoxInlineSize" | "contentBoxBlockSize" | Exclude<keyof DOMRect, "toJSON">) {
+	const [size, setSize] = useState(0);
+
+	useEffect(() => {
+		if (!el.current) return;
+		const observer = new ResizeObserver(([e]) => {
+			setSize(
+				type === "borderBoxInlineSize" ? e.borderBoxSize[0].inlineSize :
+				type === "borderBoxBlockSize" ? e.borderBoxSize[0].blockSize :
+				type === "contentBoxInlineSize" ? e.contentBoxSize[0].inlineSize :
+				type === "contentBoxBlockSize" ? e.contentBoxSize[0].blockSize :
+				e.contentRect[type],
+			);
+		});
+		observer.observe(el.current);
+		return () => observer.disconnect();
+	}, [type]);
+
+	return size;
+}

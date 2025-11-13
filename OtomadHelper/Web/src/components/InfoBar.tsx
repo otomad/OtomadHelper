@@ -89,22 +89,41 @@ const StyledInfoBar = styled.div<{
 	}
 `;
 
-export default function InfoBar({ status = "info", title, children, button, className, ...htmlAttrs }: FCP<{
+export default function InfoBar({ status = "info", title, children, button, length, className, ...htmlAttrs }: FCP<{
 	/** The state of the badge, that is, the color and the icon. */
 	status?: Status | [icon: Status, color: Status];
 	/** Title. */
-	title?: string;
+	title?: ReactNode;
 	/** Trailing button(s). */
 	button?: ReactNode;
+	/**
+	 * If the InfoBar content, excluding custom content, is unable to fit on a single horizontal line they will be
+	 * laid out vertically. The Title, Message, and ActionButton — if present — will each appear on separate lines.
+	 *
+	 * By default, it will detect it automatically.\
+	 * However, you can still forcibly set the layout.
+	 *
+	 * - `"short"`: The content will on a single horizontal line.
+	 * - `"long"`: The content will be laid out vertically.
+	 * - `undefined`: Auto detects the content length.
+	 *
+	 * @default undefined
+	 */
+	length?: "short" | "long";
 }, "div">) {
 	if (!Array.isArray(status)) status = [status, status];
 	const [icon, color] = status;
-	const [multiline, setMultiline] = useState(false);
+	const [multiline, setMultiline] = useState(length === "long");
 	const infoBarEl = useDomRef<"div">();
 
-	useMountEffect(() => {
+	useEffect(() => {
 		if (!infoBarEl.current) return;
+		if (length !== undefined) {
+			setMultiline(length === "long");
+			return;
+		}
 		const observer = new ResizeObserver(([{ target }]) => {
+			if (length !== undefined) return;
 			setMultiline(multiline => {
 				const getMultiline = () => target.scrollWidth > target.clientWidth;
 				if (!multiline) return getMultiline();
@@ -117,14 +136,14 @@ export default function InfoBar({ status = "info", title, children, button, clas
 		});
 		observer.observe(infoBarEl.current);
 		return () => observer.disconnect();
-	});
+	}, [length]);
 
 	return (
 		<StyledInfoBar ref={infoBarEl} role="alert" $status={color} className={[className, { multiline }]} {...htmlAttrs}>
 			<Badge status={icon} colorOverride={color !== icon ? color : undefined} />
 			<div className="text-part">
 				{title && <div className="title">{title}</div>}
-				{(children || button) && <div className="text">{children}</div>}
+				{(children || button) && !title && <div className="text">{children}</div>}
 				{button && <div className="buttons">{button}</div>}
 			</div>
 		</StyledInfoBar>
