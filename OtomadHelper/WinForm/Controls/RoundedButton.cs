@@ -40,7 +40,7 @@ public partial class RoundedButton : Button {
 	protected override bool ShowFocusCues => false;
 
 	private GraphicsPath GetFigurePath(RectangleF rect, float radius) {
-		radius = Math.Min(radius, rect.Width / 2, rect.Height / 2);
+		radius = Enumerable.Min([radius, rect.Width / 2, rect.Height / 2]);
 		GraphicsPath path = new();
 		path.StartFigure();
 		path.AddArc(rect.X, rect.Y, radius, radius, 180, 90);

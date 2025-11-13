@@ -31,7 +31,7 @@
 		<RepositoryType>git</RepositoryType>
 		<PublishSingleFile>true</PublishSingleFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<Platforms>AnyCPU;x64</Platforms>
+		<Platforms>AnyCPU;x64;x86</Platforms>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>

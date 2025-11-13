@@ -125,10 +125,10 @@ public static class MathEx {
 		public static TOutput ClampMap<TOutput>(double x, double min, double max, TOutput a, TOutput b) where TOutput : IComparable<TOutput> =>
 			Clamp((dynamic)Map(x, min, max, a, b), a, b);
 
-		/// <inheritdoc cref="Enumerable.Max{TSource}(IEnumerable{TSource})" />
-		public static T Max<T>(params T[] values) where T : IComparable<T> => Enumerable.Max(values);
+		///// <inheritdoc cref="Enumerable.Max{TSource}(IEnumerable{TSource})" />
+		//public static T Max<T>(params T?[] values) where T : IComparable<T> => Enumerable.Max(values);
 
-		/// <inheritdoc cref="Enumerable.Min{TSource}(IEnumerable{TSource})" />
-		public static T Min<T>(params T[] values) where T : IComparable<T> => Enumerable.Min(values);
+		///// <inheritdoc cref="Enumerable.Min{TSource}(IEnumerable{TSource})" />
+		//public static T Min<T>(params T?[] values) where T : IComparable<T> => Enumerable.Min(values);
 	}
 }
