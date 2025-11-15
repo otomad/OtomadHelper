@@ -3,13 +3,15 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 	stream: StreamKind;
 }, "div">) {
 	const { sync, audioRate, visualRate, audioBased, visualBased } = useSelectConfig(c => c.playbackRate);
-	const value = stream === "audio" ? audioRate : visualRate;
+	const isAudio = stream === "audio";
+	const value = isAudio ? audioRate : visualRate;
 	const meta = metas[stream];
+	const playBackwards = useStateSelector(value, rate => rate < 0, (backward, rate) => (backward ? -1 : 1) * Math.abs(rate));
 
 	useEffect(() => {
 		if (!sync[0]) return;
 		// NOTE: Do not put two of this component with both audio and visual stream kind in a same page, or they will fight.
-		if (stream === "audio") {
+		if (isAudio) {
 			visualRate[1](audioRate[0]);
 			visualBased[1](audioBased[0]);
 		} else {
@@ -26,7 +28,7 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 				<>
 					<TextBox.Number
 						value={value}
-						min={0}
+						min={-16}
 						max={16}
 						decimalPlaces={3}
 					/>
@@ -36,8 +38,9 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 				</>
 			)}
 		>
-			<Setting meta={meta.playbackRate.based} on={stream === "audio" ? audioBased : visualBased} />
-			<Setting meta={meta.playbackRate.sync} on={sync} details={t.descriptions.stream.playbackRate[!sync[0] ? "sync" : "outSync"]({ stream: stream !== "audio" ? t.titles.audio : t.titles.visual })} />
+			<Setting meta={meta.playbackRate.playBackwards} on={playBackwards} />
+			<Setting meta={meta.playbackRate.based} on={isAudio ? audioBased : visualBased} />
+			<Setting meta={meta.playbackRate.sync} on={sync} details={t.descriptions.stream.playbackRate[!sync[0] ? "sync" : "outSync"]({ stream: !isAudio ? t.titles.audio : t.titles.visual })} />
 		</Setting>
 	);
 }

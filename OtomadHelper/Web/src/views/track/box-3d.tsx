@@ -121,7 +121,7 @@ const StyledCube = styled.div`
 `;
 
 export default function Box3d() {
-	pageStore.useOnSave(() => configStore.track.box3d.enabled = true);
+	useSetLayoutEnabledOnSave("box3d", true);
 	const { deleteTracks, useLongerSide } = useSelectConfig(c => c.track.box3d);
 	const [selectedFace, setSelectedFace] = useState<typeof faces[number]>();
 

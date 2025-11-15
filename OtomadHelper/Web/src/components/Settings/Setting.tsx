@@ -30,7 +30,7 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 	const _requestExpanded = expanded ? TransientValue.computed(lastGotoPath, () => true) : undefined;
 	const { place } = useContext(Expander.Context);
 	const isExpanderChild = place === "children";
-	const { changePage } = useSnapshot(pageStore);
+	const { goto } = useSnapshot(pageStore);
 
 	if (type === "subheader")
 		throw new TypeError("The Setting component doesn't support subheader type", { cause: meta });
@@ -57,7 +57,7 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 		if (type === "button")
 			return <SettingsCard type="button" {..._props as Any}>{actions}</SettingsCard>;
 		else if (link || type === "link")
-			return <SettingsCard type="button" onClick={() => link && changePage([link])} {..._props as Any}>{actions}</SettingsCard>;
+			return <SettingsCard type="button" onClick={() => link && goto(link)} actionIcon="open" {..._props as Any}>{actions}</SettingsCard>;
 		else
 			return <SettingsCard {..._props as Any}>{actions}</SettingsCard>;
 	}

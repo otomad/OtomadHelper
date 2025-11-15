@@ -94,7 +94,8 @@ export const settingsMetasInput = {
 			},
 		},
 		stretch: { icon: "arrow_bidirectional_left_right" },
-		truncate: { icon: "arrow_import_prohibited" },
+		truncate: { icon: "arrow_import_right_prohibited" },
+		lengthenBackwards: { icon: "arrow_import_left" },
 		legato: { icon: "arrow_between_right" },
 		multitrackForChords: { icon: "chord_c_major" },
 		stack: { icon: "database_stack" },
@@ -161,7 +162,8 @@ export const settingsMetasInput = {
 		loop: { icon: "arrow_repeat_all" },
 		prerender: { icon: "movie" },
 		stretch: { icon: "arrow_bidirectional_left_right" },
-		truncate: { icon: "arrow_import_prohibited" },
+		truncate: { icon: "arrow_import_right_prohibited" },
+		lengthenBackwards: { icon: "arrow_import_left" },
 		staticVisual: { icon: "image_snow" },
 		legato: { icon: "arrow_between_right" },
 		multitrackForChords: { icon: "chord_c_major" },
@@ -193,7 +195,7 @@ export const settingsMetasInput = {
 			},
 		},
 		transformMethod: { icon: "zoom_fit" },
-		effects: subheader(t(2).titles.effect),
+		effects: subheader({ icon: "sparkle", title: t(2).titles.effect }),
 		articulations: {
 			type: "subheader",
 			items: {
@@ -299,7 +301,7 @@ export const settingsMetasInput = {
 	shupelunker: {
 		affix: { icon: "affix" },
 		unallocated: {
-			icon: "unallocated",
+			icon: "table_columns_question_mark",
 			items: {
 				octaves: { icon: "unallocated_octaves" },
 				fillUp: { icon: "unallocated_fill_up" },
@@ -307,9 +309,10 @@ export const settingsMetasInput = {
 				default: { icon: "unallocated_default" },
 			},
 		},
-		exclusiveTrack: { icon: "exclusive_track" },
+		exclusiveTrack: { icon: "layer_lock" },
+		idleEffect: { icon: "coffee", link: "visual:truncate" },
 		offset: { icon: "table_resize", title: t.offset },
-		keyMappingZones: subheader(),
+		keyMappingZones: subheader({ icon: "table_columns" }),
 	},
 	ytp: {
 		constrain: { icon: "constraint" },
@@ -404,6 +407,7 @@ function playbackRate() {
 	return {
 		icon: "play_circle_hint_half",
 		items: {
+			playBackwards: { icon: "play_backward", title: t.playBackwards },
 			based: { icon: "relative" },
 			sync: {
 				icon: "sync",

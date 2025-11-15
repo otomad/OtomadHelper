@@ -120,6 +120,7 @@ export default function Visual() {
 						nameField={t.stream.truncate}
 						detailsField={t.descriptions.stream.truncate}
 					/>
+					<Setting meta={meta.lengthenBackwards} />
 					<Setting meta={meta.staticVisual} on={staticVisual} />
 					<Setting
 						meta={meta.legato}

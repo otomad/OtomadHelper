@@ -33,6 +33,7 @@ export default function Shupelunker() {
 						<Setting on={defaultAll} meta={meta.unallocated.default} />
 					</Setting>
 					<Setting meta={meta.exclusiveTrack} on={exclusiveTrack} />
+					<Setting meta={meta.idleEffect} />
 					<Setting meta={meta.offset} actions={<TextBox.Number value={offset} decimalPlaces={0} suffix={t.units.semitone} positiveSign />} />
 
 					<Subheader meta={meta.keyMappingZones} />

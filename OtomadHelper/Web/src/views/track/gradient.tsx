@@ -16,7 +16,7 @@ export default function Gradient() {
 	const {
 		enabled: enableGridIntegration, columns, autoColumns, direction, parity, parity2,
 	} = useSelectConfig(c => c.track.gradient.gridIntegration);
-	pageStore.useOnSave(() => configStore.track.gradient.enabled = true);
+	useSetLayoutEnabledOnSave("gradient", true);
 	const order = useMemo(() => descending ? "descending" : "ascending", [descending]);
 	const [showGridIntegration, setShowGridIntegration] = useState(false);
 	const verticalDirection = direction[0].startsWith("tb");

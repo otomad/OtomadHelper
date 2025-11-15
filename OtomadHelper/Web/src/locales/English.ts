@@ -39,6 +39,7 @@ export default {
 			parameters: "Parameters",
 			grid: "Grid",
 			grid_full: "Grid Layout",
+			concentric: "Concentric Layout",
 			box3d: "3D Box Layout",
 			gradient: "Gradient Tracks",
 			internal: "Global Internal",
@@ -163,6 +164,9 @@ export default {
 		search: "Search",
 		noMatchingResults: "No matching results",
 		unsupportedBrowserClickToUpdate: "Click to update",
+		play: "Play",
+		pause: "Pause",
+		playBackwards: "Play backwards",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -312,6 +316,10 @@ export default {
 				splitThenFreeze: "Split then freeze",
 				freezeToGray: "Freeze to gray",
 				freezeToPreset: "Freeze to preset",
+			},
+			lengthenBackwards: {
+				_: "Lengthen backwards",
+				// TODO: 不引入、当前速度引入、原速引入；效果预设；引子长度：最长一小节、自定义时间码、直到开头；多轨时仅限首个发声的音轨。
 			},
 			legato: {
 				_: "Legato",
@@ -634,6 +642,7 @@ export default {
 				default: "Default full coverage",
 			},
 			exclusiveTrack: "Exclusive track",
+			idleEffect: "Idle effect",
 			keyMappingZones: "Key mapping zones",
 		},
 		ytp: {
@@ -1034,6 +1043,9 @@ export default {
 					freezeToGray: "If the note is longer than the clip, splits from the clip’s out point, then freezes the latter’s in point, and next applies a Black and White effect to the latter",
 					freezeToPreset: "If the note is longer than the clip, splits from the clip’s out point, then freezes the latter’s in point, and next applies a custom preset to the latter",
 				},
+				lengthenBackwards: {
+					_: "Plays the part before the first note as an introduction to the prologue",
+				},
 				legato: "Fills in the gaps between notes",
 				truncateAndLegatoConflictInAudio: "Truncating and Legato are conflicting in Audio, you cannot enable them simultaneously!",
 				multitrackForChords: "Creates multiple tracks for chords",
@@ -1207,6 +1219,7 @@ export default {
 					default: "Uses the first clip without any affixes to cover all remaining vacancies, this has the lowest priority",
 				},
 				exclusiveTrack: "Ensure that each clip of the source remains in the same position, but if there are too many clips, they will take up too much space",
+				idleEffect: "Overlays an effect when the source is inactive",
 				offset: "Offsets the clips corresponding to the keys as a whole",
 			},
 			ytp: {

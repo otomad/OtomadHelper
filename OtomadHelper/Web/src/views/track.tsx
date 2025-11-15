@@ -51,6 +51,14 @@ export default function Track() {
 				<DeactivateButton activated={layoutEnabled.grid} />
 			</SettingsCard>
 			<SettingsCard
+				title={t({ context: "full" }).titles.concentric}
+				type="button"
+				icon="concentric"
+				onClick={() => pushPage("concentric")}
+			>
+				<DeactivateButton activated={layoutEnabled.concentric} />
+			</SettingsCard>
+			<SettingsCard
 				title={t({ context: "full" }).titles.box3d}
 				type="button"
 				icon="cube"
@@ -118,6 +126,7 @@ export default function Track() {
 function useLayoutEnabled() {
 	const enabled = {
 		grid: useSelectConfig(c => c.track.grid).enabled,
+		concentric: useSelectConfig(c => c.track.concentric).enabled,
 		box3d: useSelectConfig(c => c.track.box3d).enabled,
 		gradient: useSelectConfig(c => c.track.gradient).enabled,
 	};
@@ -125,4 +134,20 @@ function useLayoutEnabled() {
 	const count = states.filter(state => state[0]).length;
 	const deactivateAll = () => states.forEach(state => state[1](false));
 	return [enabled, count, deactivateAll] as const;
+}
+
+type AutoLayoutTrackType = keyof ReturnType<typeof useLayoutEnabled>[0];
+
+function setLayoutEnabled(layout: AutoLayoutTrackType, enabled: boolean) {
+	const layouts = configStore.track;
+	const mutexLayouts = ["grid", "concentric", "box3d"] as const satisfies readonly AutoLayoutTrackType[];
+	layouts[layout].enabled = enabled;
+	if (mutexLayouts.includes(layout) && enabled)
+		for (const mutexLayout of mutexLayouts)
+			if (mutexLayout !== layout)
+				layouts[mutexLayout].enabled = false;
+}
+
+export function useSetLayoutEnabledOnSave(layout: AutoLayoutTrackType, enabled: boolean) {
+	pageStore.useOnSave(() => setLayoutEnabled(layout, enabled));
 }

@@ -520,7 +520,7 @@ export default function Grid() {
 	operationRecordFilterBadgeCounts.all = sum(...Object.values(operationRecordFilterBadgeCounts));
 	const [flipHRandomTimestamp, setFlipHRandomTimestamp] = useState(0), [flipVRandomTimestamp, setFlipVRandomTimestamp] = useState(0);
 
-	pageStore.useOnSave(() => configStore.track.grid.enabled = true);
+	useSetLayoutEnabledOnSave("grid", true);
 	const setPageCommandBarDisabled = pageStore.useSetCommandBarDisabled();
 	useEffect(() => { setPageCommandBarDisabled(!!flyoutEditor); }, [flyoutEditor]);
 

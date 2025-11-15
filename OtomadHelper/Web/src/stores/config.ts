@@ -244,8 +244,11 @@ namespace Config {
 				rowHeights: [] as WebMessageEvents.GridColumnWidthRowHeightItem[],
 				blanks: [] as WebMessageEvents.GridSpanItem[],
 			},
+			concentric: {
+				enabled: false,
+			},
 			box3d: {
-				enabled: true,
+				enabled: false,
 				deleteTracks: false,
 				useLongerSide: false,
 			},

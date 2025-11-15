@@ -177,6 +177,7 @@ export const pageStore: PageState = createPersistStore("page", (() => {
 		pageChangeResolver: undefined,
 		lastGotoPath: undefined,
 		async goto(path) {
+			console.log("​ ​ path​", path);
 			if (!path) return;
 			if (typeof path === "object") path = path.meta.path;
 			const [page] = path.split(":");

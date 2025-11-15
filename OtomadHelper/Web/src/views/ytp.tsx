@@ -110,7 +110,7 @@ export default function Ytp() {
 									details={sideEffects.map(({ stream, name, likely }) => (
 										<StyledSideEffect key={name}>
 											<Icon name={stream === "audio" ? "volume" : stream === "video" ? "image" : ""} />
-											{likely && <Icon name="dice" />}
+											{likely && <Icon name="dice_5_pips" />}
 											<span>{tf.ytp.sideEffects[name] ?? tf.ytp.effects[name]}</span>
 										</StyledSideEffect>
 									))}
@@ -127,7 +127,7 @@ export default function Ytp() {
 						<StyledYtpIconLegend>
 							<li><Icon name="image" /><span>{t.ytp.legend.visual}</span></li>
 							<li><Icon name="volume" /><span>{t.ytp.legend.audio}</span></li>
-							<li><Icon name="dice" /><span>{t.ytp.legend.probably}</span></li>
+							<li><Icon name="dice_5_pips" /><span>{t.ytp.legend.probably}</span></li>
 						</StyledYtpIconLegend>
 					</InfoBar>
 				</Setting>

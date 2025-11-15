@@ -212,7 +212,7 @@ export function useStateSelector<TOld, TNew>(
 	return [
 		getter(stateProperty[0]!),
 		setStateInterceptor(stateProperty[1]!, setter, undefined, processPrevStateInSetterWithGetter ? getter as never : undefined),
-	] as StateProperty<TNew>;
+	] as StatePropertyNonNull<TNew>;
 }
 
 /**

@@ -1,3 +1,5 @@
+import "utils/array";
+
 const ICON_INITIAL_SIZE = 16;
 const STROKE_DASHARRAY = 15 * Math.SQRT2;
 

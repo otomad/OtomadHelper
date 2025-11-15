@@ -171,6 +171,7 @@ export default function Audio() {
 					>
 						<TruncateAndLegatoConflictInfoBar />
 					</Setting>
+					<Setting meta={meta.lengthenBackwards} />
 					<Setting
 						meta={meta.legato}
 						items={legatos}

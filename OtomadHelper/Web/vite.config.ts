@@ -87,6 +87,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 					"./src/hoc",
 					"./src/classes",
 					"./src/locales/.auto-import",
+					"./src/views/.auto-import",
 				],
 				dts: "./src/types/auto-imports.d.ts",
 				defaultExportByFilename: false,

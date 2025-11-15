@@ -358,7 +358,9 @@ export default function Score() {
 													))}
 												</MultipleSelectTrackItemsContainer>
 											</CssTransition>
-											<Button icon="play" minWidthUnbounded />
+											<Tooltip placement="block" title={t.play}>
+												<Button icon="play" minWidthUnbounded />
+											</Tooltip>
 										</>
 									)}
 								>

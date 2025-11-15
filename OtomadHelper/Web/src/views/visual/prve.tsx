@@ -210,7 +210,7 @@ export default function Prve() {
 									onChanging={value => setCurrentEffectRotation(value !== 0 ? "rotate" : "normal")}
 								/>
 							</Expander.Item>
-							<Expander.Item title={t({ context: "angle" }).prve.initialStep} icon="replay">
+							<Expander.Item title={t({ context: "angle" }).prve.initialStep} icon="arrow_step_in">
 								{(() => {
 									const invalidValue = rotationStep[0] === undefined || Math.abs(rotationStep[0]) < 2;
 									return (
@@ -280,7 +280,7 @@ export default function Prve() {
 									</Expander.Item>
 								);
 							})()}
-							{klass === "random" && <ToggleSwitch icon="document_border_replay" on={randomClassAlwaysInitialAtNormal}>{t.prve.amounts.alwaysInitialAtNormal}</ToggleSwitch>}
+							{klass === "random" && <ToggleSwitch icon="document_border_arrow_step_in" on={randomClassAlwaysInitialAtNormal}>{t.prve.amounts.alwaysInitialAtNormal}</ToggleSwitch>}
 							<InitialStep klass={klass} effect={currentEffect} initialStep={useInitialStep(klass, currentEffect)} strikeoutInitialStep={klass === RANDOM_CLASS_EFFECTS && randomClassAlwaysInitialAtNormal[0]} />
 						</Setting>
 					);
@@ -407,7 +407,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 			{!isCustomInitialStepClass && (
 				<StyledInitialStep
 					title={<Strikethrough strikeout={strikeoutInitialStep}>{tc.prve.initialStep}</Strikethrough>}
-					icon="replay"
+					icon="arrow_step_in"
 					role="region"
 					className="force-motion"
 					ariaHiddenForText
@@ -461,7 +461,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 				</StyledInitialStep>
 			)}
 			{(initialStep.length > 0 || isCustomInitialStepClass) && !areRandomSteps && (
-				<Expander.Item title={tc.prve.stepSequence} icon="flow" wrapActionsWhenNarrow>
+				<Expander.Item title={tc.prve.stepSequence} icon="arrow_step_over" wrapActionsWhenNarrow>
 					<StepSequence>
 						{initialStep.map((frame, i) => (
 							<div key={i} className="step-sequence-item" data-frame={frame}>

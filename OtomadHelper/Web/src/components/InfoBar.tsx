@@ -143,7 +143,7 @@ export default function InfoBar({ status = "info", title, children, button, leng
 			<Badge status={icon} colorOverride={color !== icon ? color : undefined} />
 			<div className="text-part">
 				{title && <div className="title">{title}</div>}
-				{(children || button) && !title && <div className="text">{children}</div>}
+				{children || button && !title && <div className="text">{children}</div>}
 				{button && <div className="buttons">{button}</div>}
 			</div>
 		</StyledInfoBar>
