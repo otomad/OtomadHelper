@@ -12,14 +12,18 @@ const StyledMarqueeIfOverflow = styled.div`
 		inline-size: stretch;
 	}
 
-	p,
-	.marquee {
+	* {
 		display: inline-block;
 		white-space: nowrap;
 	}
 
+	.fading-gradient,
 	.marquee {
 		position: absolute;
+	}
+
+	.fading-gradient {
+		inset: 0;
 	}
 
 	.marquee p:nth-child(1) {
@@ -29,6 +33,10 @@ const StyledMarqueeIfOverflow = styled.div`
 	@container marquee-if-overflow not scroll-state(scrollable: none) {
 		> p {
 			visibility: hidden;
+		}
+
+		.fading-gradient {
+			${styles.mixins.overflowGradient("x", "1em", true)};
 		}
 
 		.marquee {
@@ -62,9 +70,11 @@ export default function MarqueeIfOverflow({ children, ...htmlAttrs }: FCP<{}, "d
 
 	return (
 		<StyledMarqueeIfOverflow inert {...htmlAttrs}>
-			<div className="marquee" style={{ "--width": width }}>
-				<p>{children}</p>
-				<p>{children}</p>
+			<div className="fading-gradient">
+				<div className="marquee" style={{ "--width": width }}>
+					<p>{children}</p>
+					<p>{children}</p>
+				</div>
 			</div>
 			<p ref={plainEl}>{children}</p>
 		</StyledMarqueeIfOverflow>

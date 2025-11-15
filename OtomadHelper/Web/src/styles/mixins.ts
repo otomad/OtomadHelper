@@ -196,7 +196,13 @@ export default {
 		(...properties: (keyof CSSPropertiesHyphen)[]): RuleSet;
 		(...args: [...properties: (keyof CSSPropertiesHyphen)[], important: boolean]): RuleSet;
 	},
-	overflowGradient: (axis: "x" | "y", scrollMaskThickness: string) => css`
+	/**
+	 * Fading out text on overflow if the text is bigger than allowed.
+	 * @param axis - Overflow x (horizontally) or y (vertically).
+	 * @param scrollMaskThickness - Specify the fading gradient width or height.
+	 * @param staticEffect - Always show the fading gradient, instead of auto detecting.
+	 */
+	overflowGradient: (axis: "x" | "y", scrollMaskThickness: "1em" | "1.25lh" | string & {}, staticEffect: boolean = false) => css`
 		--scroll-mask-thickness: ${scrollMaskThickness};
 		mask: linear-gradient(
 			to ${axis === "x" ? "right" : "bottom"},
@@ -204,17 +210,23 @@ export default {
 			black var(--scroll-mask-thickness) calc(100% - var(--scroll-mask-thickness)),
 			rgb(0 0 0 / var(--scroll-end-mask-transparency)) 100%
 		);
-		animation:
-			${overflowGradientScrollStartMaskTransparencyChangeKeyframes} 1s linear forwards,
-			${overflowGradientScrollEndMaskTransparencyChangeKeyframes} 1s linear backwards;
-		animation-timeline: scroll(self ${axis});
-		animation-range: 0 1em, calc(100% - 1em) 100%;
-		overflow-${axis}: auto;
-		overscroll-behavior-${axis}: auto;
 
-		${ifColorScheme.at.reduceTransparency} {
-			mask: none;
-			animation: none;
-		}
+		${staticEffect ? css`
+			--scroll-start-mask-transparency: 0;
+			--scroll-end-mask-transparency: 0;
+		` : css`
+			animation:
+				${overflowGradientScrollStartMaskTransparencyChangeKeyframes} 1s linear forwards,
+				${overflowGradientScrollEndMaskTransparencyChangeKeyframes} 1s linear backwards;
+			animation-timeline: scroll(self ${axis});
+			animation-range: 0 1em, calc(100% - 1em) 100%;
+			overflow-${axis}: auto;
+			overscroll-behavior-${axis}: auto;
+
+			${ifColorScheme.at.reduceTransparency} {
+				mask: none;
+				animation: none;
+			}
+		`}
 	`,
 };

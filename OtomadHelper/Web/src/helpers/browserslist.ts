@@ -1,3 +1,7 @@
+/**
+ * Check if the browser supports some certain features, if any of them are not supported, then treat the browser is too old.
+ * @returns Does the browser support certain features?
+ */
 export function doesBrowserSupportACertainFeature() {
 	return [
 		"interpolate-size: allow-keywords",
@@ -8,6 +12,11 @@ export function doesBrowserSupportACertainFeature() {
 
 type BrowserNameAndUpdateLink = [browserName?: string, updateLink?: string];
 
+/**
+ * Get the browser name and the latest version update link (if given). Or get undefined if it doesn't know which is the browser.
+ * @param language - Display language.
+ * @returns The browser name and the latest version update link (if given).
+ */
 export function getBrowserName(language: Intl.Locale | Intl.UnicodeBCP47LocaleIdentifier = "en"): BrowserNameAndUpdateLink {
 	language = getValidLocale(language) ?? new Intl.Locale("en");
 	const userAgent = navigator.userAgent.toLowerCase();
@@ -61,6 +70,10 @@ export function getBrowserName(language: Intl.Locale | Intl.UnicodeBCP47LocaleId
 	return !Array.isArray(result) ? [result, undefined] : result;
 }
 
+/**
+ * A hook to get the browser name and the latest version update link (if given).
+ * @returns The browser name and the latest version update link (if given).
+ */
 export function useBrowserName() {
 	const [language] = useLanguage();
 	const browserName = useMemo(() => getBrowserName(language), [language]);
