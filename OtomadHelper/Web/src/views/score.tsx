@@ -11,7 +11,7 @@ export /* @internal */ const constrainNoteLengthTypes = [
 	{ id: "max", icon: "less_or_equal" },
 	{ id: "fixed", icon: "equal" },
 	{ id: "percentage", icon: "percent" },
-	{ id: "fixedDecrement", icon: "line_horizontal" },
+	{ id: "fixedDecrement", icon: "subtract" },
 ] as const;
 export /* @internal */ const multipleSelectTrackItems = Object.freeze(["audio", "visual", "sonar", "lyrics"] as const);
 const allMultipleSelectTrackItemSet = new Set(multipleSelectTrackItems);

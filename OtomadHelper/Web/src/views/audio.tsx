@@ -4,16 +4,16 @@ const truncatesInAudio = truncates.filter(item => item.availableInAudio);
 
 export /* @internal */ const tuningMethods = [
 	{ id: "none", icon: "prohibited" },
-	{ id: "unset", icon: "line_horizontal" },
+	{ id: "unset", icon: "subtract" },
 	{ id: "pitchShift", icon: "plugin" },
-	{ id: "elastic", icon: "plus_minus" },
+	{ id: "elastic", icon: "add_subtract" },
 	{ id: "classic", icon: "hourglass" },
 	{ id: "oscillator", icon: "waveforms/sawtooth" },
 ] as const;
 
 export /* @internal */ const exactTuningMethods = [
 	{ id: "none", icon: "prohibited", originalName: undefined },
-	{ id: "elastic", icon: "plus_minus", originalName: "Élastique" },
+	{ id: "elastic", icon: "add_subtract", originalName: "Élastique" },
 	{ id: "classic", icon: "hourglass", originalName: "Classic" },
 	{ id: "acid", icon: "logo/acid", originalName: "ACID" },
 ] as const;
@@ -145,7 +145,7 @@ export default function Audio() {
 				<Setting
 					meta={meta.loop}
 					selectInfo={loop[0] === null && t.descriptions.stream.loop.unset}
-					actions={<TriStateSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />}
+					actions={<TriStateSwitch current={loop} indetText={t.unset} indetIcon="subtract" />}
 				/>
 				<ExpanderStreamPrerender stream="audio" />
 				<EmptyMessage.YtpDisabled>

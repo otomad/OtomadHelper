@@ -8,6 +8,7 @@ const defaultPrveAmounts = {
 	rotation: -90,
 	initialAngle: 0,
 	rotateCustomSequence: false,
+	randomClassAlwaysInitialAtNormal: true,
 };
 
 export default Object.freeze(defaultPrveAmounts);

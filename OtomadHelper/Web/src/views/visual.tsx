@@ -94,7 +94,7 @@ export default function Visual() {
 				<Setting
 					meta={meta.loop}
 					selectInfo={loop[0] === null && t.descriptions.stream.loop.unset}
-					actions={<TriStateSwitch current={loop} indetText={t.unset} indetIcon="line_horizontal" />}
+					actions={<TriStateSwitch current={loop} indetText={t.unset} indetIcon="subtract" />}
 				/>
 				<ExpanderStreamPrerender stream="visual" />
 				<EmptyMessage.YtpDisabled>

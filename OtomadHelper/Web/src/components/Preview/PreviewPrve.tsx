@@ -2,7 +2,7 @@ import prvePingpongImage from "assets/images/effects/prve_pingpong.gif";
 import prveWhirlImage from "assets/images/effects/prve_whirl.webp";
 import { freezeframes } from "helpers/freezeframe";
 import { type WebGLFilter, initWebgl2 } from "hooks/webgl/render";
-import { getStepChangeHueStep } from "views/visual/prve";
+import { STEP_CHANGE_HUE, getIfIndexedEffect } from "views/visual/prve";
 const prvePingpongStaticImage = freezeframes["effects/prve_pingpong.gif"];
 const prveWhirlStaticImage = freezeframes["effects/prve_whirl.webp"];
 
@@ -62,7 +62,7 @@ const StyledPreviewPrve = styled.div<{
 
 		${({ $effect, $static }) => {
 			if ($static) return;
-			const stepChangeHueStep = getStepChangeHueStep($effect);
+			const stepChangeHueStep = getIfIndexedEffect(STEP_CHANGE_HUE, $effect);
 			if (stepChangeHueStep !== null)
 				return css`
 					img {

@@ -10,7 +10,7 @@ const controlModes = ["general", "samePitch", "differentSyllables"] as const;
 const getControlModeIcon = (mode: string) => `prve_control_${new VariableName(mode).snake}` as DeclaredIcons;
 const prveEffect = (fx: string, initial: number[] = []) => ({ fx, initial });
 const DEFAULT_EFFECT = "normal";
-const STEP_CHANGE_HUE = "stepChangeHue";
+export const STEP_CHANGE_HUE = "stepChangeHue", RANDOM_CLASS_EFFECTS = "random";
 const getWhirlInfo = () => withObject(t.prve.effects, fx => `${fx.whirl} = ${fx.pingpong} + ${fx.hFlip}`);
 
 /** With frames step. */
@@ -34,6 +34,7 @@ class PrveClass {
 		new PrveClass("swing", $s(2, "pendulum")),
 		new PrveClass("blur", $s(1, "gaussianBlur", "radialBlur")),
 		new PrveClass("wipe", [...$s(2, "wipeRight"), ...$s(1, "wipeRight1", "splitVOut")]),
+		new PrveClass("random", $s(1, `${RANDOM_CLASS_EFFECTS}1`)),
 	];
 
 	public readonly class: PrveClassType;
@@ -60,7 +61,7 @@ export default function Prve() {
 	const isGeneralCurrent = useMemo(() => controlMode === "general", [controlMode]);
 	const { autoCollapsePrveClasses } = useSnapshot(configStore.settings);
 	const { control, isMultiple, effects } = useSelectConfig(c => c.visual.prve[controlMode]);
-	const { compression, slant, puyo, pendulum, gaussianBlur, radialBlur, rotation, initialAngle, rotateCustomSequence } = useSelectConfig(c => c.visual.prve[controlMode].amounts);
+	const { compression, slant, puyo, pendulum, gaussianBlur, radialBlur, rotation, initialAngle, rotateCustomSequence, randomClassAlwaysInitialAtNormal } = useSelectConfig(c => c.visual.prve[controlMode].amounts);
 	const meta = metas.visual.prve;
 	const selectionMode = useSelectionMode(isMultiple);
 	const effectLength = effects[0].length;
@@ -279,7 +280,8 @@ export default function Prve() {
 									</Expander.Item>
 								);
 							})()}
-							<InitialStep klass={klass} effect={currentEffect} initialStep={useInitialStep(klass, currentEffect)} />
+							{klass === "random" && <ToggleSwitch icon="document_border_replay" on={randomClassAlwaysInitialAtNormal}>{t.prve.amounts.alwaysInitialAtNormal}</ToggleSwitch>}
+							<InitialStep klass={klass} effect={currentEffect} initialStep={useInitialStep(klass, currentEffect)} strikeoutInitialStep={klass === RANDOM_CLASS_EFFECTS && randomClassAlwaysInitialAtNormal[0]} />
 						</Setting>
 					);
 				})}
@@ -370,24 +372,26 @@ const RandomStepsIcon = () => <StyledColoredIcon><Icon name="colored/question_sq
 const customInitialStepClasses = ["rotation"] as const;
 function getStepSequence(frames: number, initialStep: number) { return forMap(frames, i => floorMod(i, frames) + 1, initialStep); }
 function getAngleSequence(angle: number, initialAngle: number) { return angle === 0 ? [initialAngle] : forMap(Math.floor(360 / Math.abs(angle)), i => initialAngle + angle * i); }
-function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep] = NEVER_MIND, onCurrentEffectRotationModeChange }: FCP<{
+function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep] = NEVER_MIND, strikeoutInitialStep = false, onCurrentEffectRotationModeChange }: FCP<{
 	/** Current PRVE class. */
 	klass: string;
 	/** Current PRVE effect in this class. */
 	effect: string;
 	/** The initial step of the PRVE effect. */
 	initialStep?: StateProperty<number[]>;
+	/** Add strikethrough to the initial step text? */
+	strikeoutInitialStep?: boolean;
 	children?: undefined;
 	/** Occurs when current effect rotation mode changed. (Rotation PRVE class effects only.) */
 	onCurrentEffectRotationModeChange?(mode: CustomEffectRotationMode): void;
 }>) {
 	initialStep ??= [];
-	const isRandom = initialStep.includes(NaN);
+	const areRandomSteps = initialStep.includes(NaN);
 	const isCustomInitialStepClass = customInitialStepClasses.includes(klass);
 	const prveClass = PrveClass.findClass(klass);
 	const frames = prveClass?.findEffectFrames(effect) ?? 1;
 	const stepSequenceInputEl = useDomRef<"input">();
-	const isDefault = effect === DEFAULT_EFFECT;
+	const isDefault = effect === DEFAULT_EFFECT, isRandomClass = klass === RANDOM_CLASS_EFFECTS;
 	const tc = tAlias({ context: isCustomInitialStepClass ? "angle" : undefined });
 
 	const [customStepSequence, setCustomStepSequence] = useState(initialStep.join(","));
@@ -402,7 +406,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 		<Expander.AequilateTextItems>
 			{!isCustomInitialStepClass && (
 				<StyledInitialStep
-					title={tc.prve.initialStep}
+					title={<Strikethrough strikeout={strikeoutInitialStep}>{tc.prve.initialStep}</Strikethrough>}
 					icon="replay"
 					role="region"
 					className="force-motion"
@@ -443,7 +447,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 								}}
 							/>
 						)}
-						{!isDefault && (
+						{!isDefault && !isRandomClass && (
 							<ItemsView.Item
 								image={<RandomStepsIcon />}
 								id={[NaN]}
@@ -456,7 +460,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 					</ItemsView>
 				</StyledInitialStep>
 			)}
-			{(initialStep.length > 0 || isCustomInitialStepClass) && !isRandom && (
+			{(initialStep.length > 0 || isCustomInitialStepClass) && !areRandomSteps && (
 				<Expander.Item title={tc.prve.stepSequence} icon="flow" wrapActionsWhenNarrow>
 					<StepSequence>
 						{initialStep.map((frame, i) => (
@@ -528,17 +532,18 @@ function StepSequenceInput({ value: [value, setValue], disabled, effect, ref, on
 	);
 }
 
-export function getStepChangeHueStep(effectId: string) {
-	if (effectId?.startsWith(STEP_CHANGE_HUE))
+export function getIfIndexedEffect(effectType: typeof STEP_CHANGE_HUE | typeof RANDOM_CLASS_EFFECTS, effectId: string) {
+	if (effectId?.startsWith(effectType))
 		return +effectId.match(/\d+$/)![0];
 	return null;
 }
 
 function getEffectName(effectId: string) {
 	const tEffects = tAlias.prve.effects;
-	const stepChangeHueStep = getStepChangeHueStep(effectId);
-	if (stepChangeHueStep !== null)
-		return tEffects[STEP_CHANGE_HUE]({ count: stepChangeHueStep });
+	for (const indexedEffectType of [STEP_CHANGE_HUE, RANDOM_CLASS_EFFECTS] as const) {
+		const index = getIfIndexedEffect(indexedEffectType, effectId);
+		if (index !== null) return tEffects[indexedEffectType]({ count: index });
+	}
 	return tEffects[effectId];
 }
 
