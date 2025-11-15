@@ -1,5 +1,3 @@
-#pragma warning disable CS8600
-
 namespace OtomadHelper.Helpers;
 
 public static class MathEx {

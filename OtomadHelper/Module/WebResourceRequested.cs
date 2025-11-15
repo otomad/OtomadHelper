@@ -1,9 +1,10 @@
-using System.IO;
 using System.Windows.Media;
 using System.Xml;
 
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
+
+using static OtomadHelper.Helpers.ContentType;
 
 namespace OtomadHelper.Module;
 
@@ -91,34 +92,6 @@ internal class ManagedStream(Stream s) : Stream {
 			}
 		};
 	}
-
-	public static string GetContentType(string extension) => extension switch {
-		"html" => "text/html",
-		"js" => "text/javascript",
-		"css" => "text/css",
-		"appcache" => "text/cache-manifest",
-		"jpg" => "image/jpeg",
-		"png" => "image/png",
-		"gif" => "image/gif",
-		"svg" => "image/svg+xml",
-		"webp" => "image/webp",
-		"apng" => "image/apng",
-		"ico" => "image/vnd.microsoft.icon",
-		"cur" => "image/x-win-bitmap",
-		"bmp" => "image/bmp",
-		"woff" => "font/woff",
-		"woff2" => "font/woff2",
-		"ttf" => "font/ttf",
-		"json" => "application/json",
-		"xml" => "application/xml",
-		"manifest" => "application/manifest+json",
-		"ani" => "application/x-navi-animation",
-		"lottie" => "application/zip+dotlottie",
-		"frag" => "x-shader/x-fragment",
-		"vert" => "x-shader/x-vertex",
-		"glsl" => "x-shader/x-glsl",
-		_ => "application/octet-stream",
-	};
 
 	private static string GetHeader(string extension) {
 		const int AGE = 1200;
