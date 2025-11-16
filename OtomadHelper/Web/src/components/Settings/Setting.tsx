@@ -57,7 +57,7 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 		if (type === "button")
 			return <SettingsCard type="button" {..._props as Any}>{actions}</SettingsCard>;
 		else if (link || type === "link")
-			return <SettingsCard type="button" onClick={() => link && goto(link)} actionIcon="open" {..._props as Any}>{actions}</SettingsCard>;
+			return <SettingsCard type="button" onClick={() => link && goto(link)} {..._props as Any}>{actions}</SettingsCard>;
 		else
 			return <SettingsCard {..._props as Any}>{actions}</SettingsCard>;
 	}

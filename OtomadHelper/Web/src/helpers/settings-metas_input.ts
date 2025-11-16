@@ -202,7 +202,7 @@ export const settingsMetasInput = {
 				glissando: {
 					icon: "slide_note",
 					items: {
-						amplitude: { icon: "chevron_up_down" },
+						amplitude: { icon: "chevron_up_down", title: t.amplitude },
 					},
 				},
 				appoggiatura: { icon: "appoggiatura" },

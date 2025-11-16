@@ -98,7 +98,7 @@ const StyledSlider = styled.div`
 		inset-inline-start: ${valueCalc};
 	}
 
-	&[disabled] {
+	&:is([disabled], [disabled] *) {
 		.track::after {
 			background-color: ${c("fill-color-control-strong-disabled")};
 		}

@@ -22,7 +22,7 @@ export /* @internal */ const truncates = [
 	{ id: "freezeEndFrames", icon: "freeze_end_frames", availableInAudio: false },
 	{ id: "trimEndFrames", icon: "trim_end_frames", availableInAudio: true },
 	{ id: "splitThenFreeze", icon: "split_then_freeze", availableInAudio: false },
-	{ id: "freezeToGray", icon: "freeze_to_gray", availableInAudio: false },
+	// { id: "freezeToGray", icon: "freeze_to_gray", availableInAudio: false },
 	// { id: "freezeToPreset", icon: "freeze_to_preset", availableInAudio: false },
 ] as const;
 export /* @internal */ const transformMethods = [
@@ -49,9 +49,11 @@ const asteriskBuiltInPresets = ["floatLeft", "floatRight", "floatUp", "floatDown
 export default function Visual() {
 	const {
 		enabled, preferredTrack: preferredTrackIndex,
-		stretch, loop, staticVisual, truncate, legato, multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping, presetPreviewIdeality,
+		stretch, loop, staticVisual, truncate, truncateIdleEffect, truncateIdleAmount,
+		legato, multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping, presetPreviewIdeality,
 		mimicalResample, mimicalOscillator, transition, transitionAlignment, transitionDuration, transitionCrossfadeCurve,
-		glissando, glissandoEffect, glissandoAmplitude, appoggiatura, arpeggio, arpeggioNegative, activeParameterScheme,
+		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioIdleEffect, arpeggioIdleAmount,
+		activeParameterScheme,
 	} = useSelectConfig(c => c.visual);
 	// const activeParameterScheme = useSelectConfigArray(c => c.visual.activeParameterScheme);
 	const { enabled: enablePixelScaling } = useSelectConfig(c => c.visual.pixelScaling);
@@ -119,7 +121,14 @@ export default function Visual() {
 						iconField="icon"
 						nameField={t.stream.truncate}
 						detailsField={t.descriptions.stream.truncate}
-					/>
+					>
+						<IdleEffectSettings
+							value={truncateIdleEffect}
+							amount={truncateIdleAmount}
+							disabled={truncate[0] !== "splitThenFreeze"}
+							pinToTop="monochrome"
+						/>
+					</Setting>
 					<Setting meta={meta.lengthenBackwards} />
 					<Setting meta={meta.staticVisual} on={staticVisual} />
 					<Setting
@@ -192,14 +201,18 @@ export default function Visual() {
 						</Expander.Item>
 						<Setting
 							meta={meta.articulations.glissando.amplitude}
-							details={t.descriptions.stream.articulations.glissando.amplitude({ effect: glissandoEffects.find(({ id }) => id === glissandoEffect[0])?.name })}
-							actions={<TextBox.Number value={glissandoAmplitude} min={-24} max={24} suffix={t.units.semitone} positiveSign />}
+							details={t.descriptions.amplitude({ effect: glissandoEffects.find(({ id }) => id === glissandoEffect[0])?.name })}
+							actions={<TextBox.Number value={glissandoAmount} min={-24} max={24} suffix={t.units.semitone} positiveSign />}
 						/>
 					</Setting>
 					<Setting meta={meta.articulations.appoggiatura} on={appoggiatura} />
 					<Setting meta={meta.articulations.arpeggio} on={arpeggio}>
-						<Setting meta={meta.articulations.arpeggio.negative} on={arpeggioNegative} />
-						{/* <Setting meta={meta.articulations.arpeggio.applyCustomPreset} actions={<Button>{t.unselected}</Button>} /> */}
+						<IdleEffectSettings
+							value={arpeggioIdleEffect}
+							amount={arpeggioIdleAmount}
+							pinToTop="negative"
+							showNone={false}
+						/>
 					</Setting>
 
 					<Subheader meta={meta.mapping} />

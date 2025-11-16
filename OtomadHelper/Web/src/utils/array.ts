@@ -206,13 +206,6 @@
 		return this.findIndex((element, index) => index >= fromIndex && lodash.isEqual(element, searchElement));
 	};
 
-	Array.prototype.moveItemIndex = function (oldIndex, newIndex) {
-		if (oldIndex < 0) oldIndex = this.length + oldIndex;
-		if (newIndex < 0) newIndex = this.length + newIndex;
-		this.splice(newIndex, 0, this.splice(oldIndex, 1)[0]);
-		return this;
-	};
-
 	Array.prototype.circularAt = function (index) {
 		return this.length === 0 ? undefined : this[floorMod(index, this.length)];
 	};
@@ -273,6 +266,12 @@
 
 	Array.prototype.toMoved = function (fromStart, fromEnd, toIndex) {
 		return this.slice().move(fromStart, fromEnd, toIndex);
+	};
+
+	Array.prototype.moveItem = function (fromItem, toIndex = 0) {
+		const fromIndex = this.indexOf(fromItem);
+		if (fromIndex === -1) return this;
+		return this.move(fromIndex, undefined, toIndex);
 	};
 
 	makePrototypeKeysNonEnumerable(Array);

@@ -167,6 +167,9 @@ export default {
 		play: "Play",
 		pause: "Pause",
 		playBackwards: "Play backwards",
+		amplitude: "Amplitude",
+		none: "None",
+		fade: "Fade",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -357,7 +360,6 @@ export default {
 				glissando: {
 					_: "Glissando",
 					pingpong: "Ping-Pong",
-					amplitude: "Amplitude",
 				},
 				appoggiatura: {
 					_: "Appoggiatura",
@@ -943,6 +945,7 @@ export default {
 		descriptions: {
 			unsupportedBrowser: "We are sorry, but we do not support your outdated {{browser}} browser. Please update it!",
 			condition: "Specify when to apply this configuration",
+			amplitude: "Specify the amplitude amount of the {{effect, lowercase}} effect",
 			curve: {
 				interpolation: "Specify the interpolation curve of the keyframe type",
 				crossfade: "Specify the two crossfade curves of the fade type",
@@ -1072,7 +1075,6 @@ export default {
 				articulations: {
 					glissando: {
 						_: "Produces a certain effect when playing pitch bends, slides, glissandi, or vibrati.",
-						amplitude: "Specify the amplitude amount of the {{effect, lowercase}} effect",
 					},
 					appoggiatura: {
 						_: "Produces a certain effect when playing appoggiaturas.\nWhen there are one to two sixteenth notes or shorter consecutively, they are considered as appoggiaturas.",

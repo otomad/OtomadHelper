@@ -205,7 +205,7 @@ export default function Settings() {
 									/>
 								</TooltipBlock>
 							))}
-							{BasicColorPalette.items.map(({ value: color, key: name }) => (
+							{BasicColorPalette.map(({ value: color, key: name }) => (
 								<TooltipBlock key={color} title={t.settings.appearance.palette[name]}>
 									<ColorButton color={color} value={accentColor} autoStartViewTransition selectedOutlineColor="colored" />
 								</TooltipBlock>

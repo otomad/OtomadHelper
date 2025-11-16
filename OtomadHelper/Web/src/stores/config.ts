@@ -1,4 +1,5 @@
 import type { FitType as imageFitTypes } from "components/BackgroundImage";
+import type { IdleEffect as idleEffects } from "components/Business/IdleEffectSettings";
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
 import { deepClone } from "valtio/utils";
 import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
@@ -46,6 +47,7 @@ namespace Config {
 	export type TextPlugin = typeof textPlugins[number]["id"];
 	export type VisualGlissandoEffect = typeof glissandoEffects[number]["id"];
 	export type ImageFitType = typeof imageFitTypes.keyType;
+	export type IdleEffect = typeof idleEffects.keyType;
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -160,6 +162,8 @@ namespace Config {
 			loop: false as TriState,
 			staticVisual: false,
 			truncate: "lengthenable" satisfies Truncate as Truncate,
+			truncateIdleEffect: "none" satisfies IdleEffect as IdleEffect,
+			truncateIdleAmount: 100,
 			legato: "upToOneBeat" satisfies Legato as Legato,
 			multitrackForChords: false,
 			stack: false,
@@ -199,10 +203,11 @@ namespace Config {
 			},
 			glissando: false,
 			glissandoEffect: "swirl" satisfies VisualGlissandoEffect as VisualGlissandoEffect,
-			glissandoAmplitude: 12,
+			glissandoAmount: 12,
 			appoggiatura: false,
 			arpeggio: false,
-			arpeggioNegative: true,
+			arpeggioIdleEffect: "negative" satisfies IdleEffect as IdleEffect,
+			arpeggioIdleAmount: 100,
 			currentPreset: "enter",
 			presetPreviewIdeality: true,
 			activeParameterScheme: [

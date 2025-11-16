@@ -537,18 +537,6 @@ declare interface Array<T> {
 	indexOfDeep(searchElement: T, fromIndex?: number): number;
 
 	/**
-	 * Moves an item in an array from one index to another.
-	 *
-	 * Modifies the original array by removing the item at `oldIndex` and inserting it at `newIndex`.
-	 * Supports negative indices, which count from the end of the array.
-	 *
-	 * @param oldIndex - The index of the item to move. Negative values indicate an offset from the end.
-	 * @param newIndex - The index to move the item to. Negative values indicate an offset from the end.
-	 * @returns The modified array with the item moved.
-	 */
-	moveItemIndex(oldIndex: number, newIndex: number): this;
-
-	/**
 	 * Get array elements by circular index.
 	 * @param index - The index value (supports positive and negative numbers and out-of-bounds loops).
 	 * @returns The array element corresponding to the index.
@@ -681,6 +669,20 @@ declare interface Array<T> {
 	 * ```
 	 */
 	toMoved(fromStart: number, fromEnd?: number, toIndex?: number): T[];
+
+	/**
+	 * Move the item within the array to `toIndex`. This will modify the original array.
+	 *
+	 * @param fromItem - Find the first item that equal to it and to move.
+	 * @param toIndex - Target index to move. Defaults to `0`.
+	 * @returns The original array with items moved.
+	 *
+	 * @example
+	 * ```javascript
+	 * [0, 1, 2, 3, 4, 5, 6, 7, 8].move(6, 2); // [0, 1, 6, 2, 3, 4, 5, 7, 8]
+	 * ```
+	 */
+	moveItem(fromItem: T, toIndex?: number): T[];
 }
 
 declare interface ReadonlyArray<T> extends Pick<Array<T>,
