@@ -6,6 +6,8 @@ const unchecked = ":not(:checked, :indeterminate)";
 const hover = ":hover:not(:has(:is(.actions, .button):hover))";
 const pressed = ":active:not(:has(:is(.actions, .button):active))";
 
+const Input = styled.input({});
+
 const StyledCheckboxLabel = styled.label<{
 	/** Include just the checkbox itself, without the text label? */
 	$plain?: boolean;
@@ -14,11 +16,12 @@ const StyledCheckboxLabel = styled.label<{
 	gap: 8px;
 	align-items: center;
 
-	input {
+	${Input} {
 		display: none;
 	}
 
 	.text {
+		${styles.effects.text.body};
 		padding-bottom: 1px;
 	}
 
@@ -76,33 +79,33 @@ const StyledCheckboxLabel = styled.label<{
 		}
 	}
 
-	input${checkedOrIndet} ~ .base,
-	input${unchecked} ~ .base.changing {
+	${Input}${checkedOrIndet} ~ .base,
+	${Input}${unchecked} ~ .base.changing {
 		background-color: ${c("accent-color")} !important;
 		border-color: ${c("accent-color")} !important;
 	}
 
 	&${hover},
 	.items-view-item${hover} & {
-		input${unchecked} ~ .base {
+		${Input}${unchecked} ~ .base {
 			background-color: ${c("fill-color-control-alt-tertiary")};
 		}
 
-		input${checkedOrIndet} ~ .base {
+		${Input}${checkedOrIndet} ~ .base {
 			opacity: 0.9;
 		}
 	}
 
 	&${pressed},
 	.items-view-item${pressed} & {
-		input${unchecked} ~ .base {
+		${Input}${unchecked} ~ .base {
 			background-color: ${c("fill-color-control-alt-quarternary")};
 			border-color: ${c("stroke-color-control-strong-stroke-disabled")};
 		}
 	}
 
-	&${pressed} input${checkedOrIndet} ~ .base,
-	.items-view-item${pressed} & input${checkedOrIndet} ~ .base {
+	&${pressed} ${Input}${checkedOrIndet} ~ .base,
+	.items-view-item${pressed} & ${Input}${checkedOrIndet} ~ .base {
 		opacity: 0.8;
 
 		.icon {
@@ -110,20 +113,25 @@ const StyledCheckboxLabel = styled.label<{
 		}
 	}
 
-	input${unchecked}[disabled] ~ {
-		.base {
-			background-color: ${c("fill-color-control-alt-disabled")};
-			border-color: ${c("stroke-color-control-strong-stroke-disabled")};
-		}
+	${Input}${unchecked}[disabled] ~ .base {
+		background-color: ${c("fill-color-control-alt-disabled")};
+		border-color: ${c("stroke-color-control-strong-stroke-disabled")};
+	}
 
+	${Input}${checkedOrIndet}[disabled] ~ .base {
+		background-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
+		border-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
+	}
+
+	${Input}[disabled] ~ {
+		.base + .icon,
 		.text {
 			opacity: ${c("disabled-text-opacity")};
 		}
 	}
 
-	input${checkedOrIndet}[disabled] ~ .base {
-		background-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
-		border-color: ${c("stroke-color-control-strong-stroke-disabled")} !important;
+	${Input}${checkedOrIndet} ~ .text > .title {
+		${styles.effects.text.bodyStrong};
 	}
 
 	.items-view-item${pressed} & {
@@ -188,8 +196,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 	value: StateProperty<T[]> | StateProperty<boolean> | StateProperty<CheckState>;
 	onChange?: Function;
 } & SharedProps, "label">) {
-	const labelEl = useDomRef<"label">();
-	const checkboxEl = useDomRef<"input">();
+	const labelEl = useDomRef<"label">(), checkboxEl = useDomRef<"input">(), actionsEl = useDomRef<"div">();
 	const singleMode = id === undefined, checkStateMode = typeof value === "string";
 	const checked = checkStateMode ? value === "checked" : singleMode ? !!value : (value as T[]).includes(id);
 	const indeterminate = value === "indeterminate";
@@ -248,9 +255,10 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 			aria-checked={indeterminate ? "mixed" : checked}
 			aria-labelledby={`${ariaId}-title`}
 			aria-describedby={`${ariaId}-details`}
+			onClick={e => { if (isInPath(e, actionsEl)) e.preventDefault(); }}
 			{...htmlAttrs}
 		>
-			<input
+			<Input
 				type="checkbox"
 				checked={checked}
 				onChange={e => handleCheck(e.target.checked)}
@@ -268,7 +276,7 @@ export default function Checkbox<T>({ children, id, value: [value, setValue], di
 						<p className="title" id={`${ariaId}-title`} style={{ fontWeight }}>{children}</p>
 						<p className="details" id={`${ariaId}-details`}>{details}</p>
 					</div>
-					<div className="actions">
+					<div className="actions" ref={actionsEl}>
 						{actions}
 					</div>
 				</>

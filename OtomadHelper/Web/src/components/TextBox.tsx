@@ -165,7 +165,7 @@ function TextBoxActionButton({ icon, tooltip, nonFocusable = false, ...htmlAttrs
 	);
 }
 
-export /* @internal */ const inSettingsCardTrailing = ":where(.settings-card > .base, .expander-item) > .trailing";
+export /* @internal */ const inSettingsCardTrailing = ":where(.settings-card > .base, .expander-item, .checkbox-label) > :is(.trailing, .actions)";
 
 export /* @internal */ const inputInSettingsCardStyle = css`
 	${inSettingsCardTrailing} > .stack-panel > :where(&),
@@ -350,7 +350,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 		}
 	}
 
-	&:has(input:disabled) {
+	&:is(:has(input:disabled), [disabled] *) {
 		color: ${c("fill-color-text-disabled")};
 		background-color: ${c("fill-color-control-disabled")};
 		cursor: not-allowed;

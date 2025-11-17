@@ -27,7 +27,7 @@ export /* @internal */ const styledExpanderItemText = css`
 			${styles.mixins.hideIfEmpty()};
 		}
 
-		.title {
+		.title:where(:not(:is(.radio-button-label, .checkbox-label) *)) {
 			${styles.effects.text.body};
 		}
 

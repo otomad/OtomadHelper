@@ -1,5 +1,5 @@
-import type { FitType as imageFitTypes } from "components/BackgroundImage";
-import type { IdleEffect as idleEffects } from "components/Business/IdleEffectSettings";
+import type { ImageFitTypes } from "components/BackgroundImage";
+import type { IdleEffects } from "components/Business/IdleEffectSettings";
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
 import { deepClone } from "valtio/utils";
 import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
@@ -46,8 +46,9 @@ namespace Config {
 	export type TuningClassicMode = typeof tuningClassicModes[number];
 	export type TextPlugin = typeof textPlugins[number]["id"];
 	export type VisualGlissandoEffect = typeof glissandoEffects[number]["id"];
-	export type ImageFitType = typeof imageFitTypes.keyType;
-	export type IdleEffect = typeof idleEffects.keyType;
+	export type ImageFitType = typeof ImageFitTypes.keyType;
+	export type IdleEffect = typeof IdleEffects.keyType;
+	export type IdleEffectValue = Record<IdleEffect, { enabled: boolean; amount?: number }>;
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -55,6 +56,11 @@ namespace Config {
 		effects: [{ fx: "normal", initial: [0] }],
 		amounts: defaultPrveAmounts,
 	};
+	const defaultIdleEffectSettings = (enabled?: IdleEffect): IdleEffectValue => ({
+		fade: { enabled: enabled === "fade", amount: 50 },
+		monochrome: { enabled: enabled === "monochrome", amount: 100 },
+		negative: { enabled: enabled === "negative" },
+	});
 
 	export const configStore = createStore({
 		source: {
@@ -162,8 +168,7 @@ namespace Config {
 			loop: false as TriState,
 			staticVisual: false,
 			truncate: "lengthenable" satisfies Truncate as Truncate,
-			truncateIdleEffect: "none" satisfies IdleEffect as IdleEffect,
-			truncateIdleAmount: 100,
+			truncateIdleEffect: defaultIdleEffectSettings("monochrome"),
 			legato: "upToOneBeat" satisfies Legato as Legato,
 			multitrackForChords: false,
 			stack: false,
@@ -206,8 +211,7 @@ namespace Config {
 			glissandoAmount: 12,
 			appoggiatura: false,
 			arpeggio: false,
-			arpeggioIdleEffect: "negative" satisfies IdleEffect as IdleEffect,
-			arpeggioIdleAmount: 100,
+			arpeggioIdleEffect: defaultIdleEffectSettings("negative"),
 			currentPreset: "enter",
 			presetPreviewIdeality: true,
 			activeParameterScheme: [

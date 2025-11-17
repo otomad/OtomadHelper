@@ -18,12 +18,11 @@ export /* @internal */ const legatos = [
 	{ id: "unlimited", icon: "infinity", image: legatoUnlimitedImage },
 ] as const;
 export /* @internal */ const truncates = [
-	{ id: "lengthenable", icon: "lengthenable", availableInAudio: true },
-	{ id: "freezeEndFrames", icon: "freeze_end_frames", availableInAudio: false },
-	{ id: "trimEndFrames", icon: "trim_end_frames", availableInAudio: true },
-	{ id: "splitThenFreeze", icon: "split_then_freeze", availableInAudio: false },
-	// { id: "freezeToGray", icon: "freeze_to_gray", availableInAudio: false },
-	// { id: "freezeToPreset", icon: "freeze_to_preset", availableInAudio: false },
+	{ id: "lengthenable", icon: "lengthenable", availableInAudio: true, idleEffectApplicable: false },
+	{ id: "freezeEndFrames", icon: "freeze_end_frames", availableInAudio: false, idleEffectApplicable: false },
+	{ id: "trimEndFrames", icon: "trim_end_frames", availableInAudio: true, idleEffectApplicable: false },
+	{ id: "splitThenFreeze", icon: "split_then_freeze", availableInAudio: false, idleEffectApplicable: true },
+	{ id: "splitThenResume", icon: "split_then_resume", availableInAudio: false, idleEffectApplicable: true },
 ] as const;
 export /* @internal */ const transformMethods = [
 	"panCrop", "pictureInPicture", "transformOfx",
@@ -49,11 +48,10 @@ const asteriskBuiltInPresets = ["floatLeft", "floatRight", "floatUp", "floatDown
 export default function Visual() {
 	const {
 		enabled, preferredTrack: preferredTrackIndex,
-		stretch, loop, staticVisual, truncate, truncateIdleEffect, truncateIdleAmount,
+		stretch, loop, staticVisual, truncate, truncateIdleEffect,
 		legato, multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping, presetPreviewIdeality,
 		mimicalResample, mimicalOscillator, transition, transitionAlignment, transitionDuration, transitionCrossfadeCurve,
-		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioIdleEffect, arpeggioIdleAmount,
-		activeParameterScheme,
+		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioIdleEffect, activeParameterScheme,
 	} = useSelectConfig(c => c.visual);
 	// const activeParameterScheme = useSelectConfigArray(c => c.visual.activeParameterScheme);
 	const { enabled: enablePixelScaling } = useSelectConfig(c => c.visual.pixelScaling);
@@ -124,12 +122,14 @@ export default function Visual() {
 					>
 						<IdleEffectSettings
 							value={truncateIdleEffect}
-							amount={truncateIdleAmount}
-							disabled={truncate[0] !== "splitThenFreeze"}
+							disabled={!truncates.find(({ id }) => id === truncate[0])?.idleEffectApplicable}
 							pinToTop="monochrome"
+							details={t.descriptions.stream.truncate.idleEffect}
 						/>
 					</Setting>
-					<Setting meta={meta.lengthenBackwards} />
+					<Setting
+						meta={meta.lengthenBackwards}
+					/>
 					<Setting meta={meta.staticVisual} on={staticVisual} />
 					<Setting
 						meta={meta.legato}
@@ -209,9 +209,8 @@ export default function Visual() {
 					<Setting meta={meta.articulations.arpeggio} on={arpeggio}>
 						<IdleEffectSettings
 							value={arpeggioIdleEffect}
-							amount={arpeggioIdleAmount}
 							pinToTop="negative"
-							showNone={false}
+							details={t.descriptions.stream.articulations.arpeggio.idleEffect}
 						/>
 					</Setting>
 

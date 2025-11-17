@@ -164,29 +164,41 @@ export const hasKey = <T extends object>(obj: T, key: keyof Any): key is keyof T
 
 /**
  * Intercept the `setter` method in `useState`.
- * @template T - The type to set in the `setter`.
+ * @template TOld - The type to set in the `setter`.
+ * @template TNew - `interceptor` and `getter` type.
  * @param setter - The `setter` method in `useState`.
  * @param interceptor - Interceptor.
  * @param subscribe - Do something after the value set.
  * @param getter - INTERNAL pass getter from `useStateSelector` hook.
+ * @param immer - Use immer?
  * @returns The generated new `setter` method.
  */
-export function setStateInterceptor<T>(
-	setter: SetState<T>,
-	interceptor?: (userInput: Any, prevState: T) => T,
-	subscribe?: (curState: T, prevState: T, userInput: Any) => void,
-	getter?: (original: T) => T,
+export function setStateInterceptor<TOld, TNew>(
+	setter: SetState<TOld>,
+	interceptor?: (userInput: TNew, prevState: TOld) => TOld,
+	subscribe?: (curState: TOld, prevState: TOld, userInput: TNew) => void,
+	getter?: (original: TOld) => TNew,
+	immer: boolean = false,
 ) {
-	return (userInput: React.SetStateAction<T>) => {
-		type PrevStateSetter = (value: (prevState: T) => void) => void;
-		(setter as PrevStateSetter)(prevState => {
-			if (getter) prevState = getter(prevState);
-			const userInputValue = userInput instanceof Function ? userInput(prevState) : userInput;
-			const curState = interceptor ? interceptor(userInputValue, prevState) : userInputValue;
-			curState !== prevState && subscribe?.(curState, prevState, userInputValue);
-			return curState;
+	return (userInput: React.SetStateAction<TNew>) => {
+		type PrevStateSetter = (value: (prevState: TOld) => void) => void;
+		const getCurState = (prevState: TOld, userInputValue: TNew): TOld => interceptor ? interceptor(userInputValue, prevState) : userInputValue as unknown as TOld;
+		(setter as PrevStateSetter)(prevOldState => {
+			// if (immer) debugger;
+			const prevNewState = getter ? getter(prevOldState) : prevOldState as unknown as TNew;
+			const userInputValue: TNew = userInput instanceof Function ? userInput(prevNewState) : userInput;
+			const curOldState = immer ? produce(prevOldState, draft => void getCurState(draft as TOld, userInputValue)) : getCurState(prevOldState, userInputValue);
+			if (curOldState !== prevOldState) subscribe?.(curOldState, prevOldState, userInputValue);
+			return curOldState;
 		});
 	};
+}
+
+interface UseStateSelectorOptions {
+	/** In the new setter, it will use the new getter to preprocess the previous state. */
+	processPrevStateInSetterWithGetter?: boolean;
+	/** Use immer? */
+	immer?: boolean;
 }
 
 /**
@@ -196,22 +208,43 @@ export function setStateInterceptor<T>(
  * @param stateProperty - The old `useState`.
  * @param getter - The mapped new `getter`.
  * @param setter - The mapped new `setter`.
+ * @param options - Options.
+ * @returns The new `useState`.
+ */
+export function useStateSelector<TOld, TNew>(
+	stateProperty: StateProperty<TOld>,
+	getter: (original: TOld) => TNew,
+	setter: (userInput: TNew, prevState: TOld) => void,
+	options?: UseStateSelectorOptions & { immer: true },
+): StatePropertyNonNull<TNew>;
+/**
+ * Map the old `useState` to a new `StateProperty`, such as its child property.
+ * @template TOld - The old `StateProperty` type.
+ * @template TNew - The new `StateProperty` type.
+ * @param stateProperty - The old `useState`.
+ * @param getter - The mapped new `getter`.
+ * @param setter - The mapped new `setter`.
+ * @param options - Options.
  * @returns The new `useState`.
  */
 export function useStateSelector<TOld, TNew>(
 	stateProperty: StateProperty<TOld>,
 	getter: (original: TOld) => TNew,
 	setter: (userInput: TNew, prevState: TOld) => TOld,
+	options?: UseStateSelectorOptions,
+): StatePropertyNonNull<TNew>;
+export function useStateSelector<TOld, TNew>(
+	stateProperty: StateProperty<TOld>,
+	getter: (original: TOld) => TNew,
+	setter: (userInput: TNew, prevState: TOld) => TOld,
 	{
 		processPrevStateInSetterWithGetter = false,
-	}: {
-		/** In the new setter, it will use the new getter to preprocess the previous state. */
-		processPrevStateInSetterWithGetter?: boolean;
-	} = {},
+		immer = false,
+	}: UseStateSelectorOptions = {},
 ) {
 	return [
 		getter(stateProperty[0]!),
-		setStateInterceptor(stateProperty[1]!, setter, undefined, processPrevStateInSetterWithGetter ? getter as never : undefined),
+		setStateInterceptor(stateProperty[1]!, setter, undefined, processPrevStateInSetterWithGetter || immer ? getter : undefined, immer),
 	] as StatePropertyNonNull<TNew>;
 }
 
@@ -551,7 +584,7 @@ export function mutexSwitches(...switches: (StateProperty<boolean> | StateProper
 		originalSetStates.push(originalSetState);
 	}
 	for (const [i, originalSetState] of originalSetStates.entries()) {
-		const setState = setStateInterceptor(originalSetState, value => {
+		const setState = setStateInterceptor(originalSetState, (value: boolean) => {
 			if (value)
 				for (const otherSetState of originalSetStates)
 					if (otherSetState !== originalSetState)

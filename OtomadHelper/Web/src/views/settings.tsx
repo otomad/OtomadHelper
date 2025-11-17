@@ -1,4 +1,4 @@
-import { FitType as ImageFitType } from "components/BackgroundImage";
+import { ImageFitTypes as ImageFitType } from "components/BackgroundImage";
 import { BasicColorPalette, autoColorPalettes } from "helpers/basic-color-palette";
 import { useInContextLocalization } from "helpers/jipt-activator";
 import links from "helpers/links";

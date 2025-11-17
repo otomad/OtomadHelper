@@ -44,7 +44,7 @@ export default function BackgroundImage() {
 	);
 }
 
-export /* @internal */ const FitType = Enum({
+export /* @internal */ const ImageFitTypes = Enum({
 	cover: { value: "cover", icon: "aspect_ratio" },
 	contain: { value: "contain", icon: "letterbox" },
 	original: { value: "none", icon: "ratio_one_to_one" },
@@ -81,7 +81,7 @@ export function BackgroundImageImg({ src, autoAlt = false, fit = "cover", positi
 	children?: never;
 }, "img">) {
 	const isTile = fit.includes("tile");
-	const cssFit = FitType[fit] as CSSProperties["objectFit"];
+	const cssFit = ImageFitTypes[fit] as CSSProperties["objectFit"];
 	return (
 		<StyledBackgroundImageImg
 			alt={alt || (autoAlt ? undefined : "")}

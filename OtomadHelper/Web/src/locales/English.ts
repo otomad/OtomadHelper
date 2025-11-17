@@ -122,6 +122,7 @@ export default {
 		back: "Back",
 		navigation: "Toggle Navigation",
 		selectAll: "Select all",
+		selectNone: "Select none",
 		invertSelection: "Invert selection",
 		variableBeginWith: "Variable from {{first, lowercase}}", // For example, if the panning of a score gradually changes from the left channel to the right channel, it will be displayed as “Variable from left”.
 		reset: "Reset",
@@ -168,7 +169,6 @@ export default {
 		pause: "Pause",
 		playBackwards: "Play backwards",
 		amplitude: "Amplitude",
-		none: "None",
 		fade: "Fade",
 		infoBar: {
 			warning: "Warning",
@@ -317,8 +317,7 @@ export default {
 				freezeEndFrames: "Freeze end frames",
 				trimEndFrames: "Trim end frames",
 				splitThenFreeze: "Split then freeze",
-				freezeToGray: "Freeze to gray",
-				freezeToPreset: "Freeze to preset",
+				splitThenResume: "Split then resume",
 			},
 			lengthenBackwards: {
 				_: "Lengthen backwards",
@@ -1043,8 +1042,8 @@ export default {
 					freezeEndFrames: "If the note is longer than the clip, freezes the frame from the clip’s out point",
 					trimEndFrames: "If the note is longer than the clip, trims frames after the clip’s out point",
 					splitThenFreeze: "If the note is longer than the clip, splits from the clip’s out point, and then freezes the latter’s in point",
-					freezeToGray: "If the note is longer than the clip, splits from the clip’s out point, then freezes the latter’s in point, and next applies a Black and White effect to the latter",
-					freezeToPreset: "If the note is longer than the clip, splits from the clip’s out point, then freezes the latter’s in point, and next applies a custom preset to the latter",
+					splitThenResume: "If the note is longer than the clip, splits from the clip’s out point, but does not freeze the latter’s in point, and continue to play instead",
+					idleEffect: "Applies an effect to the latter of the split clip",
 				},
 				lengthenBackwards: {
 					_: "Plays the part before the first note as an introduction to the prologue",
@@ -1081,7 +1080,7 @@ export default {
 					},
 					arpeggio: {
 						_: "Produces a certain effect when playing arpeggios, pralltrillers, mordents, trills, or tremolos.\nWhen there are three or more sixteenth notes or shorter consecutively, they are considered as arpeggios.",
-						negative: "Typically uses negative to represent arpeggios",
+						idleEffect: "Typically uses an effect to represent arpeggios",
 					},
 				},
 				tuning: {
