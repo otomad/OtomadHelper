@@ -125,10 +125,11 @@ export default function Visual() {
 							disabled={!truncates.find(({ id }) => id === truncate[0])?.idleEffectApplicable}
 							pinToTop="monochrome"
 							details={t.descriptions.stream.truncate.idleEffect}
+							disabledInfo={t.descriptions.stream.truncate.idleEffectUnavailable({ modes: truncates.filter(({ idleEffectApplicable }) => idleEffectApplicable).map(({ id }) => t.stream.truncate[id]) })}
 						/>
 					</Setting>
 					<Setting
-						meta={meta.lengthenBackwards}
+						meta={meta.prologue}
 					/>
 					<Setting meta={meta.staticVisual} on={staticVisual} />
 					<Setting

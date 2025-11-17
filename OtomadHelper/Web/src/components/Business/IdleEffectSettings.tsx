@@ -4,7 +4,7 @@ export const IdleEffects = Enum({
 	negative: { icon: "invert_color", label: t.ytp.effects.negative, quantifiable: false, defaultValue: 100 },
 });
 
-export default function IdleEffectSetting({ value: values, pinToTop, disabled, details }: {
+export default function IdleEffectSetting({ value: values, pinToTop, disabled, details, disabledInfo }: {
 	/** Each effects value, includes enabled and amount. */
 	value: StateProperty<Config.IdleEffectValue>;
 	/** Pin a specific effect to the first of all. */
@@ -13,6 +13,8 @@ export default function IdleEffectSetting({ value: values, pinToTop, disabled, d
 	disabled?: boolean;
 	/** Detailed description. */
 	details?: string;
+	/** If provided and also disabled, it will replace the details. */
+	disabledInfo?: string;
 }) {
 	const pinnedIdleEffects = useMemo(() => {
 		const effects = IdleEffects.array;
@@ -34,7 +36,17 @@ export default function IdleEffectSetting({ value: values, pinToTop, disabled, d
 
 	return (
 		<Attrs disabled={disabled}>
-			<Expander.Item icon="sparkle" title={t.titles.effect} details={details} asSubtitle>
+			<Expander.Item
+				icon="sparkle"
+				title={t.titles.effect}
+				asSubtitle
+				{...disabled && disabledInfo ? {
+					selectInfo: disabledInfo,
+					selectValid: false,
+				} : {
+					details,
+				}}
+			>
 				<Button icon="select_none" disabled={disabled} onClick={selectNone}>{t.selectNone}</Button>
 			</Expander.Item>
 			{pinnedIdleEffects.map(({ key, icon, label, quantifiable, defaultValue }) => {

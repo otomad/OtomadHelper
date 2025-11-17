@@ -149,8 +149,11 @@ const StyledExpanderItem = styled.div<{
 	padding-inline-start: ${expanderItemWithIconPaddingInlineStart}px;
 	${styledExpanderItemContent};
 
-	&[disabled] > .leading > :is(.text, .icon) {
-		opacity: var(--disabled-text-opacity);
+	&[disabled] > .leading {
+		> .icon,
+		> .text > :not(.select-info) {
+			opacity: var(--disabled-text-opacity);
+		}
 	}
 
 	${ifProp("$clickable", css`
@@ -222,7 +225,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	wrapActionsWhenNarrow?: boolean;
 	/** Specifies the display string of the selection of tracks or track events. */
 	selectInfo?: ReactNode;
-	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. */
+	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. @default true */
 	selectValid?: boolean | number;
 }, "div">) {
 	disabled = useContext(InteractionStateContext).disabled || disabled;

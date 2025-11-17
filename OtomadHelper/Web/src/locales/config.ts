@@ -3,7 +3,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import type { AvailableLanguageTags } from "./all";
 import allLanguages from "./all";
-import formatInterpolation from "./utils/interpolations";
+import initFormatters from "./utils/formatters";
 import { fullwidthQuotesProcessor } from "./utils/processors";
 
 i18n
@@ -23,7 +23,6 @@ i18n
 		fallbackLng: "en",
 		interpolation: {
 			escapeValue: false,
-			format: formatInterpolation,
 		},
 		postProcess: [
 			fullwidthQuotesProcessor.name,
@@ -33,6 +32,8 @@ i18n
 			// htmlTag: document.documentElement,
 		},
 	});
+
+initFormatters();
 
 document.documentElement.lang = i18n.language;
 document.dir = i18n.dir();

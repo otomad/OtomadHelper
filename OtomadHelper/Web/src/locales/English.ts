@@ -9,6 +9,7 @@ export default {
 		semicolon: "; ", // The semicolon character in this language.\nIf a space needs to be added after the semicolon, it should be included.
 		enumerationComma: ", ", // The symbol used to separate items in a list, which is a comma in English, 在中文中为顿号, 日本語では中点です.\nIf a space needs to be added after the symbol, it should be included.\nFor example: apple, orange, pear.
 		rangeDash: " – ", // The symbol used to represent a range of numerical values, which is an en dash in English, 在中文中为波浪号, 日本語では波線です.\nIf spaces need to be added at both ends of the symbol, they should be included.\nFor example: page 1 – 4.
+		quotes: " “\n” ", // The symbols used to quotes the reference. Use line breaks to separate the left and the right parts.\nIf spaces need to be added at both sides of two symbols, they should be included.
 		titles: {
 			home: "Home",
 			source: "Source", // Aka Material.
@@ -319,8 +320,10 @@ export default {
 				splitThenFreeze: "Split then freeze",
 				splitThenResume: "Split then resume",
 			},
-			lengthenBackwards: {
-				_: "Lengthen backwards",
+			prologue: {
+				_: "Prologue",
+				straightforward: "Straightforward",
+
 				// TODO: 不引入、当前速度引入、原速引入；效果预设；引子长度：最长一小节、自定义时间码、直到开头；多轨时仅限首个发声的音轨。
 			},
 			legato: {
@@ -1044,8 +1047,9 @@ export default {
 					splitThenFreeze: "If the note is longer than the clip, splits from the clip’s out point, and then freezes the latter’s in point",
 					splitThenResume: "If the note is longer than the clip, splits from the clip’s out point, but does not freeze the latter’s in point, and continue to play instead",
 					idleEffect: "Applies an effect to the latter of the split clip",
+					idleEffectUnavailable: "The effect is applicable only to {{modes, quote, and, lowercase}}",
 				},
-				lengthenBackwards: {
+				prologue: {
 					_: "Plays the part before the first note as an introduction to the prologue",
 				},
 				legato: "Fills in the gaps between notes",
@@ -1408,7 +1412,10 @@ export default {
 				constrain: "Restrict note length, Portato, Staccato, Staccatissimo", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
 			stream: {
-				playbackRate: "Playback speed", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				playbackRate: {
+					_: "Playback speed", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+					playBackwards: "Reverse, Reversed",
+				},
 				staticVisual: "Freeze first frame, Freeze start frame", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				truncate: "Unlengthen, Unlengthening, No lengthening, No looping, No extending, No extension, Freeze last frame, Freeze end frame", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				legato: "Fill gaps, Eliminate gaps, Remove gaps, Portato, Staccato, Staccatissimo", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
