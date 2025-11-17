@@ -1,3 +1,6 @@
+import type { EnumInit, EnumItemClass, EnumKey, EnumValue, IEnum, ValueTypeFromSingleInit } from "enum-plus";
+import type { EnumExtension } from "enum-plus/extension";
+
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
 export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, hideCustom = true, before, transition, readOnly, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
@@ -156,3 +159,24 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 		</Expander>
 	);
 }
+
+function ExpanderRadioEnum<
+	T extends EnumInit<K, V>,
+	K extends EnumKey<T> = EnumKey<T>,
+	V extends EnumValue = ValueTypeFromSingleInit<T[K], K>,
+>({ items, ...otherProps }: Override<PropsOf<typeof ExpanderRadio>, {
+	items: IEnum<T[K], K, V>;
+}>) {
+	return (
+		<ExpanderRadio
+			items={items.array}
+			nameField="label"
+			iconField="icon"
+			checkInfoCondition={(key, item) => item.find(field => field.key === key)?.label}
+			{...otherProps}
+			idField="key"
+		/>
+	);
+}
+
+ExpanderRadio.Enum = ExpanderRadioEnum;

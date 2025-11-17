@@ -1,14 +1,14 @@
-export const IdleEffects = Enum({
+export const VisualIdleEffects = Enum({
 	fade: { icon: "fade", label: t.fade, quantifiable: true, defaultValue: 50 },
 	monochrome: { icon: "grayscale", label: t.ytp.effects.monochrome, quantifiable: true, defaultValue: 100 },
 	negative: { icon: "invert_color", label: t.ytp.effects.negative, quantifiable: false, defaultValue: 100 },
 });
 
-export default function IdleEffectSetting({ value: values, pinToTop, disabled, details, disabledInfo }: {
+export default function VisualIdleEffectSetting({ value: values, pinToTop, disabled, details, disabledInfo }: {
 	/** Each effects value, includes enabled and amount. */
-	value: StateProperty<Config.IdleEffectValue>;
+	value: StateProperty<Config.VisualIdleEffectValue>;
 	/** Pin a specific effect to the first of all. */
-	pinToTop?: Config.IdleEffect;
+	pinToTop?: Config.VisualIdleEffect;
 	/** Disabled? */
 	disabled?: boolean;
 	/** Detailed description. */
@@ -17,7 +17,7 @@ export default function IdleEffectSetting({ value: values, pinToTop, disabled, d
 	disabledInfo?: string;
 }) {
 	const pinnedIdleEffects = useMemo(() => {
-		const effects = IdleEffects.array;
+		const effects = VisualIdleEffects.array;
 		if (pinToTop !== undefined) {
 			const fromIndex = effects.findIndex(({ key }) => key === pinToTop);
 			if (fromIndex !== -1)
@@ -27,7 +27,7 @@ export default function IdleEffectSetting({ value: values, pinToTop, disabled, d
 	}, [pinToTop]);
 
 	function selectNone() {
-		(values[1] as SetStateNarrow<Config.IdleEffectValue>)?.(produce(draft => {
+		(values[1] as SetStateNarrow<Config.VisualIdleEffectValue>)?.(produce(draft => {
 			for (const effect in draft)
 				if (hasOwn(draft, effect))
 					draft[effect].enabled = false;

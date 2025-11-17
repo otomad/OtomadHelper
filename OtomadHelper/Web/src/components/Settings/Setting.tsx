@@ -42,7 +42,10 @@ export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof
 			return <ToggleSwitch {..._props as Any}>{title}</ToggleSwitch>;
 		}
 	else if ("items" in props || type === "radiogroup")
-		return <ExpanderRadio {...props as Any} _requestExpanded={_requestExpanded} />;
+		if (props.items instanceof Enum)
+			return <ExpanderRadio.Enum {...props as Any} _requestExpanded={_requestExpanded} />;
+		else
+			return <ExpanderRadio {...props as Any} _requestExpanded={_requestExpanded} />;
 	else if (isExpanderChild)
 		if ("children" in props)
 			return <Expander.Sub {...props as Any} _requestExpanded={_requestExpanded} />;

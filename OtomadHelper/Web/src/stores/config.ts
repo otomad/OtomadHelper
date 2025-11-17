@@ -1,5 +1,6 @@
 import type { ImageFitTypes } from "components/BackgroundImage";
-import type { IdleEffects } from "components/Business/IdleEffectSettings";
+import type { PrologueDurationUsings, PrologueForms } from "components/Business/ExpanderStreamPrologue";
+import type { VisualIdleEffects } from "components/Business/VisualIdleEffectSettings";
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
 import { deepClone } from "valtio/utils";
 import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
@@ -11,6 +12,7 @@ import type { barOrBeatUnitTypes, selectGeneratedClipsType, sequentialOrders, so
 import type { trackLegatoModes } from "views/track";
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
 import type { glissandoEffects, legatos, prerenders, stretches, transformMethods, truncates } from "views/visual";
+import ConfigNS = Config;
 
 namespace Config {
 	export type StartTime = typeof startTimes[number]["id"];
@@ -47,8 +49,10 @@ namespace Config {
 	export type TextPlugin = typeof textPlugins[number]["id"];
 	export type VisualGlissandoEffect = typeof glissandoEffects[number]["id"];
 	export type ImageFitType = typeof ImageFitTypes.keyType;
-	export type IdleEffect = typeof IdleEffects.keyType;
-	export type IdleEffectValue = Record<IdleEffect, { enabled: boolean; amount?: number }>;
+	export type VisualIdleEffect = typeof VisualIdleEffects.keyType;
+	export type VisualIdleEffectValue = Record<VisualIdleEffect, { enabled: boolean; amount?: number }>;
+	export type PrologueForm = typeof PrologueForms.keyType;
+	export type PrologueDurationUsing = typeof PrologueDurationUsings.keyType;
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -56,7 +60,7 @@ namespace Config {
 		effects: [{ fx: "normal", initial: [0] }],
 		amounts: defaultPrveAmounts,
 	};
-	const defaultIdleEffectSettings = (enabled?: IdleEffect): IdleEffectValue => ({
+	const defaultIdleEffectSettings = (enabled?: VisualIdleEffect): VisualIdleEffectValue => ({
 		fade: { enabled: enabled === "fade", amount: 50 },
 		monochrome: { enabled: enabled === "monochrome", amount: 100 },
 		negative: { enabled: enabled === "negative" },
@@ -230,6 +234,13 @@ namespace Config {
 			],
 		},
 		createGroups: true,
+		prologue: {
+			form: "straightforward" satisfies PrologueForm as PrologueForm,
+			durationUsing: "untilTheStart" satisfies PrologueDurationUsing as PrologueDurationUsing,
+			customDuration: EMPTY_TIMECODE,
+			once: true,
+			repeat: 0,
+		},
 		playbackRate: {
 			sync: true,
 			audioRate: 1,
@@ -375,7 +386,6 @@ export const useSelectConfig = <T extends object>(path: (state: typeof configSto
 export const useSelectConfigArray = <T extends object>(path: (state: typeof configStore) => T[]) => useStoreStateArray(path(configStore));
 if (import.meta.env.DEV) globals.config = configStore;
 
-import ConfigNS = Config;
 declare global {
 	export import Config = ConfigNS;
 }

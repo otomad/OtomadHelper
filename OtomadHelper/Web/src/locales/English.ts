@@ -203,7 +203,9 @@ export default {
 			beat: "beat", // Unit: Beat. In music and music theory, the beat is the basic unit of time, the pulse (regularly repeating event), of the mensural level.
 			beat_other: "beats",
 			densityIndependentPixel: "dp", // Unit: Density independent pixel.
-			times: "×", // E.g., speed 1×, 1.5×, 2×.
+			times: "time", // E.g., One time (once), two times (twice), three times.
+			times_other: "times",
+			times_sign: "×", // E.g., speed 1×, 1.5×, 2×.
 			cent: "cent", // Unit: Cent. The cent is a logarithmic unit of measure used for musical intervals. Twelve-tone equal temperament divides the octave into 12 semitones of 100 cents each.
 			cent_other: "cents",
 			fraction: "fr", // Unit: Fraction.
@@ -323,8 +325,12 @@ export default {
 			prologue: {
 				_: "Prologue",
 				straightforward: "Straightforward",
-
-				// TODO: 不引入、当前速度引入、原速引入；效果预设；引子长度：最长一小节、自定义时间码、直到开头；多轨时仅限首个发声的音轨。
+				introduceOriginally: "Introduce originally",
+				introduceEffectively: "Introduce effectively",
+				duration: "Introduction duration",
+				untilTheStart: "Until the start",
+				once: "In multitrack, only the first sounding track will have an intro",
+				repeat: "Repeat the source part one or more times",
 			},
 			legato: {
 				_: "Legato",
@@ -1050,7 +1056,14 @@ export default {
 					idleEffectUnavailable: "The effect is applicable only to {{modes, quote, and, lowercase}}",
 				},
 				prologue: {
-					_: "Plays the part before the first note as an introduction to the prologue",
+					_: "Plays the introductory section by lengthening the first clip in reverse",
+					straightforward: "No prologue, straight to the primary footage",
+					introduceOriginally: "Uses the original source without any additional effects for the introduction",
+					introduceEffectively: "Uses the source with same effects (such as stretch and pitch) as the first clip for the introduction",
+					upToOneBar: "The introduction will last up to one measure",
+					untilTheStart: "The introduction will lengthen to the start time of the generation, unless it exceeds the start of the source itself",
+					once: "When disabled, all of the first clips of each track will have an introduction",
+					repeat: "Useful to show the original source before YTPMVing",
 				},
 				legato: "Fills in the gaps between notes",
 				truncateAndLegatoConflictInAudio: "Truncating and Legato are conflicting in Audio, you cannot enable them simultaneously!",

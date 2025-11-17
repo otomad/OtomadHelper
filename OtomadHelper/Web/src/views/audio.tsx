@@ -171,7 +171,7 @@ export default function Audio() {
 					>
 						<TruncateAndLegatoConflictInfoBar />
 					</Setting>
-					<Setting meta={meta.prologue} />
+					<ExpanderStreamPrologue stream="audio" />
 					<Setting
 						meta={meta.legato}
 						items={legatos}

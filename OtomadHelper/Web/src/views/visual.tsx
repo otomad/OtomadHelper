@@ -120,7 +120,7 @@ export default function Visual() {
 						nameField={t.stream.truncate}
 						detailsField={t.descriptions.stream.truncate}
 					>
-						<IdleEffectSettings
+						<VisualIdleEffectSettings
 							value={truncateIdleEffect}
 							disabled={!truncates.find(({ id }) => id === truncate[0])?.idleEffectApplicable}
 							pinToTop="monochrome"
@@ -128,9 +128,7 @@ export default function Visual() {
 							disabledInfo={t.descriptions.stream.truncate.idleEffectUnavailable({ modes: truncates.filter(({ idleEffectApplicable }) => idleEffectApplicable).map(({ id }) => t.stream.truncate[id]) })}
 						/>
 					</Setting>
-					<Setting
-						meta={meta.prologue}
-					/>
+					<ExpanderStreamPrologue stream="visual" />
 					<Setting meta={meta.staticVisual} on={staticVisual} />
 					<Setting
 						meta={meta.legato}
@@ -208,7 +206,7 @@ export default function Visual() {
 					</Setting>
 					<Setting meta={meta.articulations.appoggiatura} on={appoggiatura} />
 					<Setting meta={meta.articulations.arpeggio} on={arpeggio}>
-						<IdleEffectSettings
+						<VisualIdleEffectSettings
 							value={arpeggioIdleEffect}
 							pinToTop="negative"
 							details={t.descriptions.stream.articulations.arpeggio.idleEffect}

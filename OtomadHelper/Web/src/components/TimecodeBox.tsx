@@ -113,11 +113,13 @@ const StyledTimecodeBox = styled.div`
 	}
 `;
 
-export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, disabled, ...htmlAttrs }: FCP<{
+export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, onChanging, disabled, ...htmlAttrs }: FCP<{
 	/** The current time code or time span. */
 	value: StateProperty<string>;
 	/** Occurs when the component is focused or changed. */
 	onFocus?: PartialArgsFunc<BaseEventHandler>;
+	/** Value changing event. Occurs any time the value changes. */
+	onChanging?(): void;
 }, "div">) {
 	const timecodeBoxEl = useDomRef<"div">();
 	const lastActiveItemLastIndex = useRef<number>(undefined);
@@ -204,6 +206,8 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, d
 			return supposedTimecode;
 		});
 	}, [timecode, setTimecode, onFocus]);
+
+	useEffect(() => void onChanging?.(), [timecode]);
 
 	return (
 		<StyledTimecodeBox ref={timecodeBoxEl} onMouseDown={handleTimecodeBoxMouseDown} disabled={disabled} {...htmlAttrs}>

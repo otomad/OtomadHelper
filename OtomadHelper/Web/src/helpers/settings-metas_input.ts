@@ -95,7 +95,7 @@ export const settingsMetasInput = {
 		},
 		stretch: { icon: "arrow_bidirectional_left_right" },
 		truncate: { icon: "arrow_import_right_prohibited" },
-		prologue: { icon: "arrow_import_left" },
+		prologue: prologue("audio"),
 		legato: { icon: "arrow_between_right" },
 		multitrackForChords: { icon: "chord_c_major" },
 		stack: { icon: "database_stack" },
@@ -163,7 +163,7 @@ export const settingsMetasInput = {
 		prerender: { icon: "movie" },
 		stretch: { icon: "arrow_bidirectional_left_right" },
 		truncate: { icon: "arrow_import_right_prohibited" },
-		prologue: { icon: "arrow_import_left" },
+		prologue: prologue("visual"),
 		staticVisual: { icon: "image_snow" },
 		legato: { icon: "arrow_between_right" },
 		multitrackForChords: { icon: "chord_c_major" },
@@ -432,6 +432,16 @@ function preset(stream: StreamKind) {
 			builtInPresets: { title: t.stream.preset.builtIn },
 			customPresets: { title: t.stream.preset.custom },
 			previewIdeality: stream === "visual" ? { icon: "eye_lines_asterisk" } : undefined!,
+		},
+	} as const satisfies ISettingMeta;
+}
+function prologue(stream: StreamKind) {
+	return {
+		icon: "arrow_import_left",
+		items: {
+			duration: { icon: "timer" },
+			once: { icon: "placeholder" },
+			repeat: { icon: "placeholder" },
 		},
 	} as const satisfies ISettingMeta;
 }
