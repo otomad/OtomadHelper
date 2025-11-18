@@ -182,13 +182,21 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 }>>) {
 	const settingsCardProps = { icon, title, details, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor, wrapActionsWhenNarrow };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
-	const handleClick = useOnNestedButtonClick(() => !childrenDisabled ? setInternalExpanded(expanded => !expanded) : onClickWhenChildrenDisabled?.());
+	const handleClick = useOnNestedButtonClick(e => !childrenDisabled ? setInternalExpanded(expanded => { if (expanded) handleStickyCollapse(e); return !expanded; }) : onClickWhenChildrenDisabled?.());
 	useUpdateEffect(() => setInternalExpanded(expanded), [expanded]);
 	useEffect(() => onToggle?.(internalExpanded), [internalExpanded]);
 	useEffect(() => { if (disabled || childrenDisabled) setInternalExpanded(false); }, [disabled, childrenDisabled]);
 	useTransientValue(_requestExpanded, expanded => { expanded && setInternalExpanded(true); }); // Set to true only, do not set to false.
 	const ariaId = useRef<string>(null);
 	const withAriaId = (suffix: string) => !ariaId.current ? undefined : ariaId.current + suffix;
+
+	// When the header is sticky and user want to collapse the expander, it will go out of viewport.
+	function handleStickyCollapse(e: React.MouseEvent) {
+		const expanderParent = (e.target as HTMLElement).closest(".expander-parent") as HTMLButtonElement, expander = expanderParent?.parentElement;
+		if (!expanderParent || !expander) return;
+		if (expanderParent.offsetTop > expander.offsetTop)
+			expander.scrollIntoView({ block: "start" });
+	}
 
 	return (
 		<div className="expander">
