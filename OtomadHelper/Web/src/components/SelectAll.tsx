@@ -1,3 +1,5 @@
+export /* @internal */ const SELECT_ALL_PADDING_INLINE = [52, 40] as const;
+
 const StyledSelectAll = styled.div`
 	&:not(.expander-child-items *) {
 		padding: 7px 12px;
@@ -15,7 +17,7 @@ const StyledSelectAll = styled.div`
 	}
 
 	.expander-child-items & .checkbox-label {
-		padding-inline: 52px 40px;
+		padding-inline: ${SELECT_ALL_PADDING_INLINE[0]}px ${SELECT_ALL_PADDING_INLINE[1]}px;
 	}
 `;
 

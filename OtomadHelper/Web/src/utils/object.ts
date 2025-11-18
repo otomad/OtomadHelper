@@ -147,7 +147,7 @@ export function forMap<T>(length: number, callback: (index: number, length: numb
  * @param callback - `map` callback.
  * @returns An array of objects repeated a specified number of times.
  */
-export function forMapFromTo<T>(start: number, end: number, step: number, callback: (index: number) => T) {
+export function forMapFromTo<T = number>(start: number, end: number, step: number = 1, callback: (index: number) => T = i => i as T) {
 	const result: T[] = [];
 	for (let i = start; i <= end; i += step)
 		result.push(callback(i));

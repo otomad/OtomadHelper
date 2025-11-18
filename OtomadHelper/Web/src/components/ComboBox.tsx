@@ -19,6 +19,7 @@ const StyledComboBox = styled(StyledButton)(() => css`
 	.content {
 		${styles.mixins.square("100%")};
 		gap: 0;
+		opacity: 1 !important;
 
 		&,
 		.text {
@@ -205,6 +206,7 @@ export default function ComboBox<T extends string | number>({ ids = [], options 
 	const currentOption = options[ids.indexOf(current!)] ?? `<${current}>`;
 	const currentIcon = icons[ids.indexOf(current!)];
 	disabled = useContext(InteractionStateContext).disabled || disabled;
+	const numberAsKey = typeof ids[0] === "number";
 
 	useEffect(() => {
 		if (!hasIcons) setIconSvgs(undefined);
@@ -241,7 +243,11 @@ export default function ComboBox<T extends string | number>({ ids = [], options 
 				role="combobox"
 				disabled={disabled}
 				value={current}
-				onChange={e => setCurrent?.(e.currentTarget.value as T)}
+				onChange={e => {
+					let value = e.currentTarget.value as T;
+					if (numberAsKey) value = +value as T;
+					setCurrent?.(value);
+				}}
 				{...htmlAttrs}
 			>
 				<button type="button" className="content">

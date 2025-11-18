@@ -112,7 +112,7 @@ import { config as transitionGroupConfig } from "react-transition-group-fc";
 	// #endregion
 
 	// #region Init enum plus localization method
-	Enum.localize = label => label?.toString();
+	Enum.localize = (label: unknown) => typeof label === "function" ? label() : label?.toString();
 	Enum.config.autoLabel = ({ item: { key, raw: { label } }, labelPrefix }) => label ||
 		(typeof labelPrefix === "string" ? `${labelPrefix}.${key}` : isI18nItem(labelPrefix) ? labelPrefix[key] : undefined!);
 	Enum.install(mapPlugin);

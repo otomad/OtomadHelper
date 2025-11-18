@@ -104,7 +104,7 @@ const StyledSettingsAboutLogoWrapper = styled.div`
 	animation: none;
 `;
 
-export /** @internal */ default function SettingsAboutLogo() {
+export /* @internal */ default function SettingsAboutLogo() {
 	const iconStyles = ["fluent", "aero", "liquid glass"] as const;
 	const [iconStyle, setIconStyle] = useState<ValueOf<typeof iconStyles>>("fluent");
 	const nextIconStyle = () => setIconStyle(iconStyle => iconStyles.nextItem(iconStyle));

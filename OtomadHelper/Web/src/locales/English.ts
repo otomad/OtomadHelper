@@ -170,7 +170,6 @@ export default {
 		pause: "Pause",
 		playBackwards: "Play backwards",
 		amplitude: "Amplitude",
-		fade: "Fade",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -330,7 +329,11 @@ export default {
 				duration: "Introduction duration",
 				untilTheStart: "Until the start",
 				once: "In multitrack, only the first sounding track will have an intro",
-				repeat: "Repeat the source part one or more times",
+				emphasisTimes: "Emphasizes the source part one or more times",
+				emphasisDuration: {
+					_: "Emphasis duration",
+					source: "Source length",
+				},
 			},
 			legato: {
 				_: "Legato",
@@ -375,6 +378,12 @@ export default {
 				arpeggio: {
 					_: "Arpeggio",
 				},
+			},
+			idleEffect: {
+				_: "Idle effect",
+				fade: "Fade",
+				monochrome: "Monochrome",
+				negative: "Negative",
 			},
 			tuning: {
 				_: "Tuning",
@@ -652,7 +661,6 @@ export default {
 				default: "Default full coverage",
 			},
 			exclusiveTrack: "Exclusive track",
-			idleEffect: "Idle effect",
 			keyMappingZones: "Key mapping zones",
 		},
 		ytp: {
@@ -1063,7 +1071,8 @@ export default {
 					upToOneBar: "The introduction will last up to one measure",
 					untilTheStart: "The introduction will lengthen to the start time of the generation, unless it exceeds the start of the source itself",
 					once: "When disabled, all of the first clips of each track will have an introduction",
-					repeat: "Useful to show the original source before YTPMVing",
+					emphasisTimes: "Useful to show the original source before YTPMVing",
+					emphasisDuration: "Constrains the duration of the emphasized source part to match the beat",
 				},
 				legato: "Fills in the gaps between notes",
 				truncateAndLegatoConflictInAudio: "Truncating and Legato are conflicting in Audio, you cannot enable them simultaneously!",

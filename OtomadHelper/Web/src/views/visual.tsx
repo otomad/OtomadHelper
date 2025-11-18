@@ -120,7 +120,7 @@ export default function Visual() {
 						nameField={t.stream.truncate}
 						detailsField={t.descriptions.stream.truncate}
 					>
-						<VisualIdleEffectSettings
+						<IdleEffectSettings
 							value={truncateIdleEffect}
 							disabled={!truncates.find(({ id }) => id === truncate[0])?.idleEffectApplicable}
 							pinToTop="monochrome"
@@ -206,11 +206,7 @@ export default function Visual() {
 					</Setting>
 					<Setting meta={meta.articulations.appoggiatura} on={appoggiatura} />
 					<Setting meta={meta.articulations.arpeggio} on={arpeggio}>
-						<VisualIdleEffectSettings
-							value={arpeggioIdleEffect}
-							pinToTop="negative"
-							details={t.descriptions.stream.articulations.arpeggio.idleEffect}
-						/>
+						<IdleEffectSettings value={arpeggioIdleEffect} pinToTop="negative" />
 					</Setting>
 
 					<Subheader meta={meta.mapping} />

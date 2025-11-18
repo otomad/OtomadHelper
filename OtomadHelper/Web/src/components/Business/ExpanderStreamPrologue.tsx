@@ -1,20 +1,31 @@
 export /* @internal */ const PrologueForms = Enum({
-	straightforward: {},
-	introduceOriginally: {},
-	introduceEffectively: {},
+	straightforward: { icon: "flash_play" },
+	introduceOriginally: { icon: undefined },
+	introduceEffectively: { icon: undefined },
 }, { labelPrefix: t.stream.prologue });
 
 export /* @internal */ const PrologueDurationUsings = Enum({
-	upToOneBar: { label: t.stream.legato.upToOneBar },
-	untilTheStart: { label: t.stream.prologue.untilTheStart },
-	custom: { label: t.custom },
+	upToOneBar: { label: t.stream.legato.upToOneBar, icon: "music_bar" },
+	untilTheStart: { label: t.stream.prologue.untilTheStart, icon: "start_point" },
+	custom: { label: t.custom, icon: "edit" },
 });
+
+const $s = (string: () => string) => string as unknown as string;
+export /* @internal */ const PrologueEmphasisDurations = Enum({
+	source: { label: t.stream.prologue.emphasisDuration.source, icon: "video_clip_inbox" },
+	oneBeat: { label: $s(() => `1 ${t(1).units.beat}`), icon: "quarter_note" },
+	twoBeat: { label: $s(() => `2 ${t(2).units.beat}`), icon: "half_note" },
+	oneBar: { label: $s(() => `1 ${t(2).units.bar}`), icon: "music_bar" },
+	twoBar: { label: $s(() => `2 ${t(2).units.bar}`), icon: "music_bar_2" },
+});
+
+const emphasisTimesOptions = forMapFromTo(0, 3);
 
 export default function ExpanderStreamPrologue({ stream }: {
 	/** Audio or visual? */
 	stream: StreamKind;
 }) {
-	const { form, durationUsing, customDuration, once, repeat } = useSelectConfig(c => c.prologue);
+	const { form, durationUsing, customDuration, once, visualIdleEffect, audioIdleEffect, emphasisTimes, emphasisDuration } = useSelectConfig(c => c.prologue);
 	const isAudio = stream === "audio";
 	const meta = metas[stream].prologue;
 
@@ -24,18 +35,32 @@ export default function ExpanderStreamPrologue({ stream }: {
 			items={PrologueForms}
 			value={form}
 			view="tile"
+			detailsField={({ key }) => t.descriptions.stream.prologue[key]}
 		>
 			<Setting meta={meta.duration} asSubtitle="closerAfter" noDivider="after" />
 			<ItemsView view="tile" current={durationUsing}>
-				{PrologueDurationUsings.map(({ key, label }) => key !== "custom" && <ItemsView.Item key={key} id={key}>{label}</ItemsView.Item>)}
+				{PrologueDurationUsings.map(({ key, label, icon }) => key !== "custom" &&
+					<ItemsView.Item key={key} id={key} icon={icon} details={t.descriptions.stream.prologue[key]}>{label}</ItemsView.Item>)}
 			</ItemsView>
 			<CustomItem current={durationUsing}>
 				{setToCustom => <TimecodeBox value={customDuration} onChanging={setToCustom} />}
 			</CustomItem>
+			<IdleEffectSettings value={isAudio ? audioIdleEffect : visualIdleEffect} pinToTop="fade" stream={stream} />
 			<Setting meta={meta.once} on={once} />
 			<Setting
-				meta={meta.repeat}
-				actions={<TextBox.Number value={repeat} min={0} max={3} decimalPlaces={0} suffix={t(repeat[0]).units.times} />}
+				meta={meta.emphasisTimes}
+				actions={(
+					<ComboBox
+						current={emphasisTimes}
+						ids={emphasisTimesOptions}
+						options={emphasisTimesOptions.map(times => times === 0 ? t.off : `${times} ${t(times).units.times}`)}
+					/>
+				)}
+			/>
+			<Setting
+				meta={meta.emphasisDuration}
+				disabled={emphasisTimes[0] === 0}
+				actions={<ComboBox current={emphasisDuration} ids={PrologueEmphasisDurations.keys} options={PrologueEmphasisDurations.labels} icons={PrologueEmphasisDurations.map(({ icon }) => icon)} />}
 			/>
 		</Setting>
 	);

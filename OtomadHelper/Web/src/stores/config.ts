@@ -1,6 +1,6 @@
 import type { ImageFitTypes } from "components/BackgroundImage";
-import type { PrologueDurationUsings, PrologueForms } from "components/Business/ExpanderStreamPrologue";
-import type { VisualIdleEffects } from "components/Business/VisualIdleEffectSettings";
+import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "components/Business/ExpanderStreamPrologue";
+import type { VisualIdleEffects } from "components/Business/IdleEffectSettings";
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
 import { deepClone } from "valtio/utils";
 import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
@@ -50,9 +50,11 @@ namespace Config {
 	export type VisualGlissandoEffect = typeof glissandoEffects[number]["id"];
 	export type ImageFitType = typeof ImageFitTypes.keyType;
 	export type VisualIdleEffect = typeof VisualIdleEffects.keyType;
-	export type VisualIdleEffectValue = Record<VisualIdleEffect, { enabled: boolean; amount?: number }>;
+	export type VisualIdleEffectValue = Record<VisualIdleEffect, { enabled: boolean; amount: number }>;
+	export type AudioIdleEffectValue = Pick<VisualIdleEffectValue, "fade">;
 	export type PrologueForm = typeof PrologueForms.keyType;
 	export type PrologueDurationUsing = typeof PrologueDurationUsings.keyType;
+	export type PrologueEmphasisDuration = typeof PrologueEmphasisDurations.keyType;
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -60,10 +62,10 @@ namespace Config {
 		effects: [{ fx: "normal", initial: [0] }],
 		amounts: defaultPrveAmounts,
 	};
-	const defaultIdleEffectSettings = (enabled?: VisualIdleEffect): VisualIdleEffectValue => ({
+	const defaultVisualIdleEffectSettings = (enabled?: VisualIdleEffect): VisualIdleEffectValue => ({
 		fade: { enabled: enabled === "fade", amount: 50 },
 		monochrome: { enabled: enabled === "monochrome", amount: 100 },
-		negative: { enabled: enabled === "negative" },
+		negative: { enabled: enabled === "negative", amount: 0 },
 	});
 
 	export const configStore = createStore({
@@ -172,7 +174,7 @@ namespace Config {
 			loop: false as TriState,
 			staticVisual: false,
 			truncate: "lengthenable" satisfies Truncate as Truncate,
-			truncateIdleEffect: defaultIdleEffectSettings("monochrome"),
+			truncateIdleEffect: defaultVisualIdleEffectSettings("monochrome"),
 			legato: "upToOneBeat" satisfies Legato as Legato,
 			multitrackForChords: false,
 			stack: false,
@@ -215,7 +217,7 @@ namespace Config {
 			glissandoAmount: 12,
 			appoggiatura: false,
 			arpeggio: false,
-			arpeggioIdleEffect: defaultIdleEffectSettings("negative"),
+			arpeggioIdleEffect: defaultVisualIdleEffectSettings("negative"),
 			currentPreset: "enter",
 			presetPreviewIdeality: true,
 			activeParameterScheme: [
@@ -238,8 +240,11 @@ namespace Config {
 			form: "straightforward" satisfies PrologueForm as PrologueForm,
 			durationUsing: "untilTheStart" satisfies PrologueDurationUsing as PrologueDurationUsing,
 			customDuration: EMPTY_TIMECODE,
+			visualIdleEffect: defaultVisualIdleEffectSettings("fade"),
+			audioIdleEffect: { fade: { enabled: false, amount: 50 } } as AudioIdleEffectValue,
 			once: true,
-			repeat: 0,
+			emphasisTimes: 0,
+			emphasisDuration: "source" satisfies PrologueEmphasisDuration as PrologueEmphasisDuration,
 		},
 		playbackRate: {
 			sync: true,

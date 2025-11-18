@@ -8,4 +8,4 @@ const ExpanderContext = createContext<{
 	place: undefined,
 });
 
-export /** @internal */ default ExpanderContext;
+export /* @internal */ default ExpanderContext;

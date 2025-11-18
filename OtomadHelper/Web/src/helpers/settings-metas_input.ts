@@ -435,13 +435,14 @@ function preset(stream: StreamKind) {
 		},
 	} as const satisfies ISettingMeta;
 }
-function prologue(stream: StreamKind) {
+function prologue(_stream: StreamKind) {
 	return {
 		icon: "arrow_import_left",
 		items: {
 			duration: { icon: "timer" },
-			once: { icon: "placeholder" },
-			repeat: { icon: "placeholder" },
+			once: { icon: "checkmark_1" },
+			emphasisTimes: { icon: "star_emphasis" },
+			emphasisDuration: { icon: "star_emphasis_timer" },
 		},
 	} as const satisfies ISettingMeta;
 }
