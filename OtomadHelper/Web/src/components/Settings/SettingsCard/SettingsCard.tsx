@@ -233,12 +233,25 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	const ariaId = useId();
 	useImperativeHandle(ariaIdRef, () => ariaId, [ariaId]);
 	tabIndex ??= type.in("container", "container-but-button") ? -1 : 0;
+	const lastWrapped = useRef<boolean>(undefined);
 
 	const handleFocus: FocusEventHandler<HTMLDivElement> = e => {
 		onFocus?.(e);
 		if (~tabIndex || e.target !== e.currentTarget) return;
 		findFirstFocusableElement(e.target)?.focus();
 	};
+
+	function skipTextTransition(el: HTMLElement) {
+		const leading = el.closest(".leading");
+		if (!leading) {
+			lastWrapped.current = undefined;
+			return true;
+		}
+		const curWrapped = !leading.classList.contains("contents");
+		const result = lastWrapped.current !== undefined && lastWrapped.current !== curWrapped;
+		lastWrapped.current = curWrapped;
+		return result;
+	}
 
 	return (
 		<ClickOnSameElement onClick={onClick as never}>
@@ -284,7 +297,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 									</>
 								)}
 								{typeof icon === "object" ? icon : <Icon name={icon} />}
-								<Transitions.DynamicAutoSize specified="height">
+								<Transitions.DynamicAutoSize specified="height" skipTransition={skipTextTransition}>
 									<div className="text">
 										<p className="title" id={`${ariaId}-title`} aria-hidden><Preserves>{title}</Preserves></p>
 										<p className="details" id={`${ariaId}-details`} aria-hidden><Preserves>{details}</Preserves></p>

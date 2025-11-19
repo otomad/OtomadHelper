@@ -1,10 +1,11 @@
 const DURATION = 350;
 
-export default function DynamicAutoSize({ specified, children }: FCP<{
+export default function DynamicAutoSize({ specified, skipTransition, children }: FCP<{
 	/** Explicitly specify which direction needs to be animated. Defaults to height animation. */
 	specified?: "width" | "height" | "both";
 	/** Temporarily lock the content size? */
 	// lockSize?: boolean;
+	skipTransition?(el: HTMLElement): boolean;
 }, "section">) {
 	const el = useDomRef<"section">();
 	const reduceMotion = useMediaQuery.reduceMotion();
@@ -16,6 +17,10 @@ export default function DynamicAutoSize({ specified, children }: FCP<{
 	useEffect(() => {
 		if (!el.current || reduceMotion) return;
 		const observer = new ResizeObserver(([{ contentRect: { width, height } }]) => {
+			if (el.current && skipTransition?.(el.current)) {
+				removeExistAnimations(el.current);
+				return;
+			}
 			width = Math.round(width); height = Math.round(height);
 			const { width: prevWidth, height: prevHeight } = size.current;
 			const enableWidth = specified?.in("width", "both"), enableHeight = specified?.in("height", "both");
@@ -25,12 +30,14 @@ export default function DynamicAutoSize({ specified, children }: FCP<{
 				prevHeight !== height && enableHeight && validateSize(prevHeight) && validateSize(height))) {
 				animating.current = true;
 				removeExistAnimations(el.current);
+				// nextAnimationTick().then(() => {
 				el.current.animate({
 					...enableWidth && { width: pxify(prevWidth, width) },
 					...enableHeight && { height: pxify(prevHeight, height) },
 				}, { duration: DURATION, easing: eases.easeOutMax }).finished.then(() => {
 					animating.current = false;
 				});
+				// });
 			}
 		});
 		observer.observe(el.current);
