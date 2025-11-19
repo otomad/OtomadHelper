@@ -6,18 +6,20 @@ export /* @internal */ const PrologueForms = Enum({
 
 export /* @internal */ const PrologueDurationUsings = Enum({
 	upToOneBar: { label: t.stream.legato.upToOneBar, icon: "music_bar" },
+	sourceLength: { label: t.stream.prologue.emphasisDuration.sourceLength, icon: "video_clip_inbox" },
 	untilTheStart: { label: t.stream.prologue.untilTheStart, icon: "start_point" },
 	custom: { label: t.custom, icon: "edit" },
 });
 
 const $s = (string: () => string) => string as unknown as string;
 export /* @internal */ const PrologueEmphasisDurations = Enum({
-	source: { label: t.stream.prologue.emphasisDuration.source, icon: "video_clip_inbox" },
+	sourceLength: { label: t.stream.prologue.emphasisDuration.sourceLength, icon: "video_clip_inbox" },
 	oneBeat: { label: $s(() => `1 ${t(1).units.beat}`), icon: "quarter_note" },
 	twoBeat: { label: $s(() => `2 ${t(2).units.beat}`), icon: "half_note" },
 	oneBar: { label: $s(() => `1 ${t(2).units.bar}`), icon: "music_bar" },
 	twoBar: { label: $s(() => `2 ${t(2).units.bar}`), icon: "music_bar_2" },
 });
+console.log(PrologueEmphasisDurations);
 
 const emphasisTimesOptions = forMapFromTo(0, 3);
 

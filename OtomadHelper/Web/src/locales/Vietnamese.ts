@@ -11,6 +11,7 @@ export default {
 		semicolon: "; ",
 		enumerationComma: ", ",
 		rangeDash: " – ",
+		quotes: " “\n” ",
 		titles: {
 			home: "Trang chủ",
 			source: "Nguồn",
@@ -109,8 +110,8 @@ export default {
 		save: "Lưu",
 		auto: "Tự động",
 		back: "Trở lại",
-		navigation: "Điều hướng",
 		selectAll: "Chọn tất cả",
+		selectNone: "Không chọn",
 		invertSelection: "Đảo lựa chọn",
 		variableBeginWith: "Chuyển sang {{first, lowercase}}",
 		reset: "Đặt lại",
@@ -157,7 +158,7 @@ export default {
 			semitone: "st",
 			degree: "°",
 			densityIndependentPixel: "dp",
-			times: "×",
+			times_sign: "×",
 			bar: "ô nhịp",
 			beat: "nhịp",
 			cent: "cent",
@@ -253,8 +254,9 @@ export default {
 				freezeEndFrames: "Đóng băng khung hình cuối",
 				trimEndFrames: "Cắt khung hình cuối",
 				splitThenFreeze: "Chia đôi rồi đóng băng",
-				freezeToGray: "Đóng băng thành màu xám",
-				freezeToPreset: "Đóng băng và thêm preset",
+			},
+			prologue: {
+				emphasisDuration: {},
 			},
 			legato: {
 				_: "Legato",
@@ -285,6 +287,10 @@ export default {
 				arpeggio: {
 					_: "Arpeggio",
 				},
+			},
+			idleEffect: {
+				monochrome: "Đơn sắc",
+				negative: "Âm bản",
 			},
 			tuning: {
 				_: "Tuning",
@@ -641,10 +647,7 @@ export default {
 				pendulum: "Con lắc",
 				gaussianBlur: "Mờ kiểu Gaussian",
 				radialBlur: "Mờ xuyên tâm",
-				wipeRight: "Xoá sang bên phải",
-				wipeRight1: "1 bước xoá sang bên phải",
 				splitVOut: "Tách dọc",
-				stepChangeHue: "{{count}} Bước Màu Khác Nhau",
 			},
 			amounts: {
 				compression: "Giảm tỉ lệ",
@@ -800,9 +803,8 @@ export default {
 					freezeEndFrames: "Nếu nốt nhạc dài hơn clip, đóng băng khung hình từ điểm ra của clip",
 					trimEndFrames: "Nếu nốt nhạc dài hơn clip, cắt bớt các khung hình sau điểm ra của clip",
 					splitThenFreeze: "Nếu nốt nhạc dài hơn clip, tách ra khỏi điểm ra của clip, sau đó đóng băng điểm vào của clip",
-					freezeToGray: "Nếu nốt nhạc dài hơn clip, tách ra khỏi điểm ra của clip, sau đó đóng băng điểm vào của clip, và sau đó áp dụng hiệu ứng Đen Trắng cho clip đó",
-					freezeToPreset: "Nếu nốt nhạc dài hơn clip, tách ra khỏi điểm ra của clip, sau đó đóng băng điểm vào của clip, và sau đó áp dụng preset tùy chỉnh cho clip đó",
 				},
+				prologue: {},
 				legato: "Lấp vào khoảng trống giữa các nốt nhạc",
 				truncateAndLegatoConflictInAudio: "Tính năng Truncating và Legato xung đột với nhau trong tab Âm thanh, bạn không thể bật chúng cùng lúc!",
 				multitrackForChords: "Tạo đa track cho hợp âm",
@@ -815,9 +817,7 @@ export default {
 				articulations: {
 					glissando: {},
 					appoggiatura: {},
-					arpeggio: {
-						negative: "Thường sử dụng âm để biểu diễn arpeggio",
-					},
+					arpeggio: {},
 				},
 				tuning: {
 					tuningMethod: {
@@ -1036,6 +1036,7 @@ export default {
 				timeSignature: "Beat",
 			},
 			stream: {
+				playbackRate: {},
 				createGroups: "Tạo nhóm",
 				articulations: {},
 				tuning: {

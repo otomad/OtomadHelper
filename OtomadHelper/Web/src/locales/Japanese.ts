@@ -10,6 +10,7 @@ export default {
 		semicolon: "；",
 		enumerationComma: "・",
 		rangeDash: "〜",
+		quotes: "「\n」",
 		titles: {
 			home: "ホーム",
 			source: "素材",
@@ -32,6 +33,7 @@ export default {
 			parameters: "パラメータ",
 			grid: "グリッド",
 			grid_full: "グリッドレイアウト",
+			concentric: "同軸レイアウト",
 			box3d: "3D ボックスレイアウト",
 			gradient: "グラデーショントラック",
 			internal: "グローバル内部",
@@ -116,8 +118,9 @@ export default {
 		save: "保存",
 		auto: "自動",
 		back: "戻る",
-		navigation: "ナビ",
+		navigation: "ナビゲーションの切り替え",
 		selectAll: "すべて選択",
+		selectNone: "選択なし",
 		invertSelection: "選択を反転",
 		variableBeginWith: "{{first, lowercase}} からの変数",
 		reset: "リセット",
@@ -157,6 +160,11 @@ export default {
 		clearAll: "すべてクリア",
 		search: "検索",
 		noMatchingResults: "一致する結果はありません",
+		unsupportedBrowserClickToUpdate: "クリックして更新",
+		play: "再生",
+		pause: "一時停止",
+		playBackwards: "逆方向に再生",
+		amplitude: "",
 		infoBar: {
 			warning: "警告",
 		},
@@ -183,12 +191,13 @@ export default {
 			semitone: "st",
 			degree: "°",
 			densityIndependentPixel: "dp",
-			times: "×",
+			times_sign: "×",
 			fraction: "fr",
 			point: "pt",
 			pixel_full: "Pixels",
 			bar: "バー",
 			beat: "ビーツ",
+			times: "回",
 			cent: "セント",
 			fraction_full: "分数",
 		},
@@ -297,8 +306,21 @@ export default {
 				freezeEndFrames: "終了フレームを固定",
 				trimEndFrames: "終了フレームをトリムする",
 				splitThenFreeze: "分割して凍結する",
-				freezeToGray: "グレーに固定",
-				freezeToPreset: "プリセットに固定",
+				splitThenResume: "分割して再開する",
+			},
+			prologue: {
+				_: "序文",
+				straightforward: "Straightforward",
+				introduceOriginally: "本来の紹介",
+				introduceEffectively: "効果的に導入する",
+				duration: "紹介期間",
+				untilTheStart: "開始まで",
+				once: "マルチトラックでは、最初のサウンドトラックのみがイントロになります",
+				emphasisTimes: "ソース部品を1回以上強調する",
+				emphasisDuration: {
+					_: "強調表示時間",
+					sourceLength: "ソースの長さ",
+				},
 			},
 			legato: {
 				_: "Legato",
@@ -336,7 +358,6 @@ export default {
 				glissando: {
 					_: "グリッサンド",
 					pingpong: "ピンポン",
-					amplitude: "",
 				},
 				appoggiatura: {
 					_: "Appoggiatura",
@@ -344,6 +365,12 @@ export default {
 				arpeggio: {
 					_: "Arpeggio",
 				},
+			},
+			idleEffect: {
+				_: "アイドル効果",
+				fade: "フェード",
+				monochrome: "モノクローム",
+				negative: "負の値",
 			},
 			tuning: {
 				_: "チューニング",
@@ -731,6 +758,7 @@ export default {
 				swing: "スウィングクラス",
 				blur: "ぼかしクラス",
 				wipe: "クラスの消去",
+				random: "ランダムクラス",
 			},
 			effects: {
 				normal: "標準",
@@ -775,10 +803,11 @@ export default {
 				pendulum: "振り子を再生",
 				gaussianBlur: "ガウスぼかし（ぼかし）",
 				radialBlur: "放射状ぼかし（ぼかし）",
-				wipeRight: "右端で消去",
-				wipeRight1: "右側の1ステップワイプ",
+				wipeRight: "右に消去",
+				wipeRight1: "1ステップで右に消去",
 				splitVOut: "垂直方向に分割",
-				stepChangeHue: "{{count}} 歩数の色の違い",
+				random: "ランダム効果 {{count}}",
+				stepChangeHue: "{{count}} ステップの色の違い",
 			},
 			amounts: {
 				compression: "縮小スケール",
@@ -786,6 +815,7 @@ export default {
 				pendulum: "スイング角度",
 				rotationAngle: "回転角度",
 				rotationStep: "月経周期ごとのステップ",
+				alwaysInitialAtNormal: "最初のステップとして常にNormalを使用する",
 			},
 		},
 		pixelScaling: {
@@ -902,6 +932,7 @@ export default {
 		descriptions: {
 			unsupportedBrowser: "申し訳ありませんが、古い {{browser}} ブラウザはサポートされていません。アップデートしてください！",
 			condition: "この設定を適用するタイミングを指定します",
+			amplitude: "{{effect, lowercase}} 効果の振幅の量を指定します",
 			curve: {
 				interpolation: "キーフレームタイプの補間曲線を指定します。",
 				crossfade: "フェードタイプの 2 つのクロスフェード曲線を指定します。",
@@ -999,8 +1030,21 @@ export default {
 					freezeEndFrames: "ノートがクリップより長い場合、フレームをクリップのアウトポイントからフリーズします。",
 					trimEndFrames: "ノートがクリップよりも長い場合は、クリップのアウトポイントの後にフレームをトリムします",
 					splitThenFreeze: "ノートがクリップより長い場合、クリップのアウトポイントから分割され、後者のポイントがフリーズします",
-					freezeToGray: "ノートがクリップより長い場合は、クリップのアウトポイントから分割されます。 後者をポイントで凍らせ、次に黒と白のエフェクトを適用する",
-					freezeToPreset: "ノートがクリップより長い場合は、クリップのアウトポイントから分割されます。 次に、後者のポイントを凍結し、次にカスタムプリセットを適用します。",
+					splitThenResume: "ノートがクリップより長い場合は、クリップのアウトポイントから分割されます。 しかし、後者のポイントを凍らせず、代わりに再生し続けます",
+					idleEffect: "分割クリップの後者にエフェクトを適用します。",
+					idleEffectUnavailable: "この効果は {{modes, quote, and, lowercase}} にのみ適用できます",
+				},
+				prologue: {
+					_: "最初のクリップを逆に長くして入門セクションを再生します。",
+					straightforward: "プロローグなし、直接メインの映像に",
+					introduceOriginally: "元のソースを使用します。追加の効果はありません。",
+					introduceEffectively: "導入時の最初のクリップと同じ効果(ストレッチやピッチなど)を持つソースを使用します",
+					sourceLength: "導入は音源と同じ長さになります。ビートに合わない場合でも。",
+					upToOneBar: "導入は1小節まで持続します",
+					untilTheStart: "導入は、ソース自体の開始を超えない限り、世代の開始時刻まで長くなります。",
+					once: "無効にすると、各トラックの最初のクリップすべてが紹介されます",
+					emphasisTimes: "YTPMVingの前に元のソースを表示するのに便利です",
+					emphasisDuration: "強調されたソース部分がビートに合うように時間を制限します",
 				},
 				legato: "ノート間のギャップを埋めます",
 				truncateAndLegatoConflictInAudio: "トランケートとレガートがオーディオで競合しています。同時に有効にすることはできません！",
@@ -1027,14 +1071,13 @@ export default {
 				articulations: {
 					glissando: {
 						_: "ピッチ曲げ、スライド、グリッサンディ、またはビブラティを演奏するときに特定の効果を生成します。",
-						amplitude: "{{effect, lowercase}} 効果の振幅の量を指定します",
 					},
 					appoggiatura: {
 						_: "appoggiaturasを再生するときに特定の効果を生成します。\n連続して1〜2個の音符がある場合、それらはappoggiaturasとみなされます。",
 					},
 					arpeggio: {
 						_: "arpeggiosを再生するときに特定の効果を生成します, pralltrillers, mordents, trills, or tremolos.\n連続して音符が3つ以上あるいは短い場合は、アルペジオとみなされます。",
-						negative: "通常、アルペジオを表すために負の値を使用します",
+						idleEffect: "通常、アルペジオを表すために効果を使用します",
 					},
 				},
 				tuning: {
@@ -1169,6 +1212,7 @@ export default {
 					default: "すべての残りの空きをカバーするために、任意のアフィックスのない最初のクリップを使用します。これは最も優先度が低いです",
 				},
 				exclusiveTrack: "ソースの各クリップが同じ位置にあることを確認します。 でもクリップが多すぎると",
+				idleEffect: "ソースが非アクティブな場合のエフェクトをオーバーレイします",
 				offset: "キーに対応するクリップを全体としてオフセットします",
 			},
 			ytp: {
@@ -1351,9 +1395,13 @@ export default {
 				constrain: "ノート長の制限、Portato、Staccatissimo",
 			},
 			stream: {
-				playbackRate: "再生速度",
+				playbackRate: {
+					_: "再生速度",
+					playBackwards: "逆、逆にする",
+				},
 				staticVisual: "最初のフレームを固定、開始フレームを固定",
 				truncate: "Unlength, Unlengthening, No lengthing, No looping, No extending, No extension, Freeze last frame, Freeze end frame",
+				prologue: "紹介, 紹介, 入門, 前文, Lengthen backwards, Reverse length, Reverse lengthen, Reverse lengthen",
 				legato: "ギャップを埋める、ギャップを排除する、ギャップを削除する、Portato、Staccatsimo",
 				multitrackForChords: "コードの複数トラック、コードのマルチトラック、コードのマルチトラック、コードのマルチトラック、コードのマルチトラック",
 				createGroups: "グループを作成",

@@ -1,4 +1,4 @@
-import type { EnumInit, EnumItemClass, EnumKey, EnumValue, IEnum, ValueTypeFromSingleInit } from "enum-plus";
+import type { AnyEnum, EnumInit, EnumItemClass, EnumKey, EnumValue, IEnum, ValueTypeFromSingleInit } from "enum-plus";
 import type { EnumExtension } from "enum-plus/extension";
 
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
@@ -160,19 +160,15 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	);
 }
 
-function ExpanderRadioEnum<
-	T extends EnumInit<K, V>,
-	K extends EnumKey<T> = EnumKey<T>,
-	V extends EnumValue = ValueTypeFromSingleInit<T[K], K>,
->({ items, ...otherProps }: Override<PropsOf<typeof ExpanderRadio>, {
-	items: IEnum<T[K], K, V>;
+function ExpanderRadioEnum<T extends AnyEnum>({ items, ...otherProps }: Override<PropsOf<typeof ExpanderRadio>, {
+	items: T;
 }>) {
 	return (
 		<ExpanderRadio
 			items={items.array}
 			nameField="label"
 			iconField="icon"
-			checkInfoCondition={(key, item) => item.find(field => field.key === key)?.label}
+			checkInfoCondition={(key, item: Any[]) => item.find(field => field.key === key)?.label}
 			{...otherProps}
 			idField="key"
 		/>

@@ -11,6 +11,7 @@ export default {
 		semicolon: "crwdns1636:0crwdne1636:0",
 		enumerationComma: "crwdns3650:0crwdne3650:0",
 		rangeDash: "crwdns3396:0crwdne3396:0",
+		quotes: "crwdns5412:0crwdne5412:0",
 		titles: {
 			home: "crwdns1638:0crwdne1638:0",
 			source: "crwdns1640:0crwdne1640:0",
@@ -33,6 +34,7 @@ export default {
 			parameters: "crwdns2618:0crwdne2618:0",
 			grid: "crwdns4154:0crwdne4154:0",
 			grid_full: "crwdns4156:0crwdne4156:0",
+			concentric: "crwdns5414:0crwdne5414:0",
 			box3d: "crwdns3234:0crwdne3234:0",
 			gradient: "crwdns3236:0crwdne3236:0",
 			internal: "crwdns4394:0crwdne4394:0",
@@ -117,8 +119,9 @@ export default {
 		save: "crwdns1722:0crwdne1722:0",
 		auto: "crwdns1724:0crwdne1724:0",
 		back: "crwdns1726:0crwdne1726:0",
-		navigation: "crwdns1728:0crwdne1728:0",
+		navigation: "crwdns5416:0crwdne5416:0",
 		selectAll: "crwdns2204:0crwdne2204:0",
+		selectNone: "crwdns5418:0crwdne5418:0",
 		invertSelection: "crwdns2206:0crwdne2206:0",
 		variableBeginWith: "crwdns2418:0{{first, lowercase}}crwdne2418:0",
 		reset: "crwdns2400:0crwdne2400:0",
@@ -158,6 +161,11 @@ export default {
 		clearAll: "crwdns4604:0crwdne4604:0",
 		search: "crwdns4606:0crwdne4606:0",
 		noMatchingResults: "crwdns4612:0crwdne4612:0",
+		unsupportedBrowserClickToUpdate: "crwdns5420:0crwdne5420:0",
+		play: "crwdns5422:0crwdne5422:0",
+		pause: "crwdns5424:0crwdne5424:0",
+		playBackwards: "crwdns5426:0crwdne5426:0",
+		amplitude: "crwdns5428:0crwdne5428:0",
 		infoBar: {
 			warning: "crwdns2170:0crwdne2170:0",
 		},
@@ -184,12 +192,13 @@ export default {
 			semitone: "crwdns3602:0crwdne3602:0",
 			degree: "crwdns3604:0crwdne3604:0",
 			densityIndependentPixel: "crwdns3610:0crwdne3610:0",
-			times: "crwdns3612:0crwdne3612:0",
+			times_sign: "crwdns5432:0crwdne5432:0",
 			fraction: "crwdns4134:0crwdne4134:0",
 			point: "crwdns4422:0crwdne4422:0",
 			pixel_full: "crwdns4132:5crwdne4132:5",
 			bar: "crwdns3606:5crwdne3606:5",
 			beat: "crwdns3608:5crwdne3608:5",
+			times: "crwdns5430:5crwdne5430:5",
 			cent: "crwdns3614:5crwdne3614:5",
 			fraction_full: "crwdns4136:5crwdne4136:5",
 		},
@@ -298,8 +307,21 @@ export default {
 				freezeEndFrames: "crwdns3702:0crwdne3702:0",
 				trimEndFrames: "crwdns3704:0crwdne3704:0",
 				splitThenFreeze: "crwdns3706:0crwdne3706:0",
-				freezeToGray: "crwdns3708:0crwdne3708:0",
-				freezeToPreset: "crwdns3710:0crwdne3710:0",
+				splitThenResume: "crwdns5434:0crwdne5434:0",
+			},
+			prologue: {
+				_: "crwdns5436:0crwdne5436:0",
+				straightforward: "crwdns5438:0crwdne5438:0",
+				introduceOriginally: "crwdns5440:0crwdne5440:0",
+				introduceEffectively: "crwdns5442:0crwdne5442:0",
+				duration: "crwdns5444:0crwdne5444:0",
+				untilTheStart: "crwdns5446:0crwdne5446:0",
+				once: "crwdns5448:0crwdne5448:0",
+				emphasisTimes: "crwdns5450:0crwdne5450:0",
+				emphasisDuration: {
+					_: "crwdns5452:0crwdne5452:0",
+					sourceLength: "crwdns5512:0crwdne5512:0",
+				},
 			},
 			legato: {
 				_: "crwdns1796:0crwdne1796:0",
@@ -337,7 +359,6 @@ export default {
 				glissando: {
 					_: "crwdns4184:0crwdne4184:0",
 					pingpong: "crwdns4192:0crwdne4192:0",
-					amplitude: "crwdns5386:0crwdne5386:0",
 				},
 				appoggiatura: {
 					_: "crwdns4196:0crwdne4196:0",
@@ -345,6 +366,12 @@ export default {
 				arpeggio: {
 					_: "crwdns4198:0crwdne4198:0",
 				},
+			},
+			idleEffect: {
+				_: "crwdns5456:0crwdne5456:0",
+				fade: "crwdns5458:0crwdne5458:0",
+				monochrome: "crwdns5460:0crwdne5460:0",
+				negative: "crwdns5462:0crwdne5462:0",
 			},
 			tuning: {
 				_: "crwdns1822:0crwdne1822:0",
@@ -733,6 +760,7 @@ export default {
 				swing: "crwdns1956:0crwdne1956:0",
 				blur: "crwdns1958:0crwdne1958:0",
 				wipe: "crwdns1960:0crwdne1960:0",
+				random: "crwdns5464:0crwdne5464:0",
 			},
 			effects: {
 				normal: "crwdns2820:0crwdne2820:0",
@@ -777,10 +805,11 @@ export default {
 				pendulum: "crwdns2886:0crwdne2886:0",
 				gaussianBlur: "crwdns2888:0crwdne2888:0",
 				radialBlur: "crwdns2890:0crwdne2890:0",
-				wipeRight: "crwdns2892:0crwdne2892:0",
-				wipeRight1: "crwdns2992:0crwdne2992:0",
+				wipeRight: "crwdns5468:0crwdne5468:0",
+				wipeRight1: "crwdns5470:0crwdne5470:0",
 				splitVOut: "crwdns2894:0crwdne2894:0",
-				stepChangeHue: "crwdns3514:5{{count}}crwdne3514:5",
+				random: "crwdns5472:0{{count}}crwdne5472:0",
+				stepChangeHue: "crwdns5466:5{{count}}crwdne5466:5",
 			},
 			amounts: {
 				compression: "crwdns3564:0crwdne3564:0",
@@ -788,6 +817,7 @@ export default {
 				pendulum: "crwdns3568:0crwdne3568:0",
 				rotationAngle: "crwdns3570:0crwdne3570:0",
 				rotationStep: "crwdns3572:0crwdne3572:0",
+				alwaysInitialAtNormal: "crwdns5474:0crwdne5474:0",
 			},
 		},
 		pixelScaling: {
@@ -904,6 +934,7 @@ export default {
 		descriptions: {
 			unsupportedBrowser: "crwdns4374:0{{browser}}crwdne4374:0",
 			condition: "crwdns4278:0crwdne4278:0",
+			amplitude: "crwdns5476:0{{effect, lowercase}}crwdne5476:0",
 			curve: {
 				interpolation: "crwdns5356:0crwdne5356:0",
 				crossfade: "crwdns5358:0crwdne5358:0",
@@ -1001,8 +1032,21 @@ export default {
 					freezeEndFrames: "crwdns3806:0crwdne3806:0",
 					trimEndFrames: "crwdns3808:0crwdne3808:0",
 					splitThenFreeze: "crwdns3810:0crwdne3810:0",
-					freezeToGray: "crwdns3812:0crwdne3812:0",
-					freezeToPreset: "crwdns3814:0crwdne3814:0",
+					splitThenResume: "crwdns5478:0crwdne5478:0",
+					idleEffect: "crwdns5480:0crwdne5480:0",
+					idleEffectUnavailable: "crwdns5482:0{{modes, quote, and, lowercase}}crwdne5482:0",
+				},
+				prologue: {
+					_: "crwdns5484:0crwdne5484:0",
+					straightforward: "crwdns5486:0crwdne5486:0",
+					introduceOriginally: "crwdns5488:0crwdne5488:0",
+					introduceEffectively: "crwdns5490:0crwdne5490:0",
+					sourceLength: "crwdns5514:0crwdne5514:0",
+					upToOneBar: "crwdns5492:0crwdne5492:0",
+					untilTheStart: "crwdns5494:0crwdne5494:0",
+					once: "crwdns5496:0crwdne5496:0",
+					emphasisTimes: "crwdns5498:0crwdne5498:0",
+					emphasisDuration: "crwdns5500:0crwdne5500:0",
 				},
 				legato: "crwdns3766:0crwdne3766:0",
 				truncateAndLegatoConflictInAudio: "crwdns3872:0crwdne3872:0",
@@ -1030,14 +1074,13 @@ export default {
 				articulations: {
 					glissando: {
 						_: "crwdns5248:0crwdne5248:0",
-						amplitude: "crwdns5396:0{{effect, lowercase}}crwdne5396:0",
 					},
 					appoggiatura: {
 						_: "crwdns5282:0crwdne5282:0",
 					},
 					arpeggio: {
 						_: "crwdns5284:0crwdne5284:0",
-						negative: "crwdns4326:0crwdne4326:0",
+						idleEffect: "crwdns5502:0crwdne5502:0",
 					},
 				},
 				tuning: {
@@ -1175,6 +1218,7 @@ export default {
 					default: "crwdns2940:0crwdne2940:0",
 				},
 				exclusiveTrack: "crwdns2978:0crwdne2978:0",
+				idleEffect: "crwdns5504:0crwdne5504:0",
 				offset: "crwdns2982:0crwdne2982:0",
 			},
 			ytp: {
@@ -1359,9 +1403,13 @@ export default {
 				constrain: "crwdns5176:0crwdne5176:0",
 			},
 			stream: {
-				playbackRate: "crwdns5178:0crwdne5178:0",
+				playbackRate: {
+					_: "crwdns5506:0crwdne5506:0",
+					playBackwards: "crwdns5508:0crwdne5508:0",
+				},
 				staticVisual: "crwdns5180:0crwdne5180:0",
 				truncate: "crwdns5182:0crwdne5182:0",
+				prologue: "crwdns5510:0crwdne5510:0",
 				legato: "crwdns5184:0crwdne5184:0",
 				multitrackForChords: "crwdns5186:0crwdne5186:0",
 				createGroups: "crwdns5188:0crwdne5188:0",

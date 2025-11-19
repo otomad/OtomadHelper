@@ -10,6 +10,7 @@ export default {
 		semicolon: "；",
 		enumerationComma: "、",
 		rangeDash: " ~ ",
+		quotes: "“︁\n”︁",
 		titles: {
 			home: "主页",
 			source: "素材",
@@ -32,6 +33,7 @@ export default {
 			parameters: "参数",
 			grid: "网格",
 			grid_full: "网格布局",
+			concentric: "同心布局",
 			box3d: "三维方盒布局",
 			gradient: "渐变轨道",
 			internal: "全局内部",
@@ -116,8 +118,9 @@ export default {
 		save: "保存",
 		auto: "自动",
 		back: "返回",
-		navigation: "导航",
+		navigation: "切换导航",
 		selectAll: "全选",
+		selectNone: "全不选",
 		invertSelection: "反选",
 		variableBeginWith: "{{first, capitalize}}起始的可变值",
 		reset: "重置",
@@ -143,7 +146,7 @@ export default {
 		unset: "不变",
 		increase: "增加",
 		decrease: "减少",
-		duration: "持续时间",
+		duration: "时长",
 		preview: "预览",
 		width: "宽度",
 		height: "高度",
@@ -157,6 +160,11 @@ export default {
 		clearAll: "清空",
 		search: "搜索",
 		noMatchingResults: "无匹配结果",
+		unsupportedBrowserClickToUpdate: "点击更新",
+		play: "播放",
+		pause: "暂停",
+		playBackwards: "倒放",
+		amplitude: "幅度",
 		infoBar: {
 			warning: "警告",
 		},
@@ -183,12 +191,13 @@ export default {
 			semitone: "半音",
 			degree: "°",
 			densityIndependentPixel: "逻辑像素",
-			times: "×",
+			times_sign: "×",
 			fraction: "等分",
 			point: "点",
 			pixel_full: "像素",
 			bar: "小节",
 			beat: "拍",
+			times: "遍",
 			cent: "音分",
 			fraction_full: "等分",
 		},
@@ -297,8 +306,21 @@ export default {
 				freezeEndFrames: "冻结尾帧",
 				trimEndFrames: "截断尾帧",
 				splitThenFreeze: "分割后冻结",
-				freezeToGray: "冻结至黑白",
-				freezeToPreset: "冻结至预设",
+				splitThenResume: "分割后续播",
+			},
+			prologue: {
+				_: "引子",
+				straightforward: "开门见山",
+				introduceOriginally: "原汁原味",
+				introduceEffectively: "细批薄抹",
+				duration: "引子时长",
+				untilTheStart: "直到开始",
+				once: "多轨模式下仅限发声的首条音轨会有引子",
+				emphasisTimes: "强调一遍或多遍素材部分",
+				emphasisDuration: {
+					_: "强调时长",
+					sourceLength: "素材长度",
+				},
 			},
 			legato: {
 				_: "填补间隙",
@@ -336,7 +358,6 @@ export default {
 				glissando: {
 					_: "滑音",
 					pingpong: "来回",
-					amplitude: "幅度",
 				},
 				appoggiatura: {
 					_: "倚音",
@@ -344,6 +365,12 @@ export default {
 				arpeggio: {
 					_: "琶音",
 				},
+			},
+			idleEffect: {
+				_: "闲置效果",
+				fade: "淡化",
+				monochrome: "黑白",
+				negative: "反色",
 			},
 			tuning: {
 				_: "调音",
@@ -461,7 +488,7 @@ export default {
 		track: {
 			grid: {
 				array: "阵列",
-				square: "平方",
+				square: "方阵",
 				fixedColumns: "固定列数",
 				fixedRows: "固定行数",
 				column_full: "网格列数",
@@ -556,7 +583,7 @@ export default {
 				stackingAllAfter: "堆积剪辑\n也应用于后续所有剪辑",
 				limitStretch: "拉伸剪辑\n限制在拉伸极限范围之内",
 				stretch: "拉伸剪辑\n超出拉伸极限范围之后再延长剪辑",
-				lengthen: "延长剪辑\n改变剪辑持续时间",
+				lengthen: "延长剪辑\n改变剪辑时长",
 				increaseSpacing: "增加间隙\n应用于当前轨道",
 				increaseSpacingAllTracks: "增加间隙\n应用于所有轨道",
 				increaseSpacingSetting: "增加间隙",
@@ -732,6 +759,7 @@ export default {
 				swing: "摇摆类",
 				blur: "模糊类",
 				wipe: "擦除类",
+				random: "随机类",
 			},
 			effects: {
 				normal: "正常",
@@ -777,8 +805,9 @@ export default {
 				gaussianBlur: "高斯模糊",
 				radialBlur: "径向模糊",
 				wipeRight: "向右擦除",
-				wipeRight1: "1 步向右擦除",
+				wipeRight1: "1步向右擦除",
 				splitVOut: "垂直分割",
+				random: "随机效果{{count}}",
 				stepChangeHue: "{{count}}步色差",
 			},
 			amounts: {
@@ -787,6 +816,7 @@ export default {
 				pendulum: "摆动角度",
 				rotationAngle: "旋转角度",
 				rotationStep: "每圈步数",
+				alwaysInitialAtNormal: "始终以正常作为初始步",
 			},
 		},
 		pixelScaling: {
@@ -903,6 +933,7 @@ export default {
 		descriptions: {
 			unsupportedBrowser: "很抱歉，我们不支持你过时的{{browser}}浏览器，请更新！",
 			condition: "指定当满足何条件时才会应用该配置",
+			amplitude: "指定{{effect}}效果的幅度大小",
 			curve: {
 				interpolation: "指定关键帧类型中的插值曲线",
 				crossfade: "指定淡化类型中的两条交叉曲线",
@@ -972,11 +1003,11 @@ export default {
 			},
 			stream: {
 				stretch: {
-					_: "拉伸剪辑而不是改变剪辑的持续时间",
-					noStretching: "不允许拉伸，仅更改持续时间",
+					_: "拉伸剪辑而不是改变剪辑的时长",
+					noStretching: "不允许拉伸，仅更改时长",
 					flexingAndExtending: "无论音符是否比剪辑更长或更短都会拉伸",
-					extendingOnly: "仅当音符比剪辑更长时才拉伸，反之则缩短持续时间",
-					flexingOnly: "仅当音符比剪辑更短时才拉伸，反之则延长持续时间",
+					extendingOnly: "仅当音符比剪辑更长时才拉伸，反之则缩短时长",
+					flexingOnly: "仅当音符比剪辑更短时才拉伸，反之则延长时长",
 				},
 				loop: {
 					_: "当剪辑延长到源媒体的末尾后，将会重头开始播放",
@@ -990,18 +1021,31 @@ export default {
 				},
 				normalize: {
 					_: "适用于音频太安静的素材",
-					once: "仅在第一次时规范化，后续剪辑均采用第一次规范化后的增益。它更快且可确保所有同一剪辑的增益一致。但如果改变持续时间则有可能导致其它剪辑不适合该增益。（推荐）",
-					always: "每一次都规范化，以确保任何持续时间的剪辑都有更合适的增益。但是它更慢，而且可能会导致所有同一剪辑的增益不一致。",
+					once: "仅在第一次时规范化，后续剪辑均采用第一次规范化后的增益。它更快且可确保所有同一剪辑的增益一致。但如果改变时长则有可能导致其它剪辑不适合该增益。（推荐）",
+					always: "每一次都规范化，以确保任何时长的剪辑都有更合适的增益。但是它更慢，而且可能会导致所有同一剪辑的增益不一致。",
 				},
 				staticVisual: "在剪辑入点处冻结帧",
 				truncate: {
 					_: "尝试在剪辑的出点处冻结，以避免在某些音符过长时，意外播放到超出修剪时间的部分",
-					lengthenable: "当音符比剪辑更长时，延长持续时间",
+					lengthenable: "当音符比剪辑更长时，延长时长",
 					freezeEndFrames: "当音符比剪辑更长时，从剪辑的出点处开始冻结帧",
 					trimEndFrames: "当音符比剪辑更长时，修剪掉剪辑出点处之后的帧",
 					splitThenFreeze: "当音符比剪辑更长时，从剪辑的出点处分割，然后将后者从入点处冻结",
-					freezeToGray: "当音符比剪辑更长时，从剪辑的出点处分割，然后将后者从入点处冻结，紧接着为后者应用黑白效果",
-					freezeToPreset: "当音符比剪辑更长时，从剪辑的出点处分割，然后将后者从入点处冻结，紧接着为后者应用自定义预设",
+					splitThenResume: "当音符比剪辑更长时，从剪辑的出点处分割，但不冻结后者的入点，而是继续播放",
+					idleEffect: "对分割剪辑的后者应用效果",
+					idleEffectUnavailable: "效果仅可用于{{modes, quote, and}}",
+				},
+				prologue: {
+					_: "通过逆向延长第一段剪辑来播放引子部分",
+					straightforward: "没有前摇，直接进入正片",
+					introduceOriginally: "以不添加任何额外效果的原始素材作为引子",
+					introduceEffectively: "使用与第一段剪辑相同效果（如变速和变调）的素材作为引子",
+					sourceLength: "引子将与素材长度相等，即便它可能不踩点",
+					upToOneBar: "引子将持续一小节",
+					untilTheStart: "引子将一直延长到生成开始处，除非它超过了素材开头本身",
+					once: "禁用后，每条音轨的首段剪辑都会有引子",
+					emphasisTimes: "适用于在音MAD之前先展示一遍原始素材",
+					emphasisDuration: "通过约束要强调的素材部分的时长从而能够踩点",
 				},
 				legato: "填补音符与音符之间的间隙",
 				truncateAndLegatoConflictInAudio: "截断和填补间隙在音频里互相冲突，不能同时开启！",
@@ -1022,21 +1066,20 @@ export default {
 				transition: {
 					_: "交叠生成的序列剪辑以添加转场过渡",
 					alignment: "设置过渡的起点偏移",
-					duration: "设置过渡的持续时间",
+					duration: "设置过渡的时长",
 					crossfadeInfo: "默认插入交叉淡化过渡，你可以稍后自行替换为其它转场。",
 				},
 				transformMethod: "指定要应用变换关键帧的目标属性的优先级次序",
 				articulations: {
 					glissando: {
 						_: "在演奏弯音、滑音或颤音时产生一定的效果。",
-						amplitude: "指定{{effect}}效果的幅度大小",
 					},
 					appoggiatura: {
 						_: "在演奏倚音时产生一定的效果。\n当有连续一到两个十六分音符或更短时值的音符时，它们将被视为倚音。",
 					},
 					arpeggio: {
 						_: "在演奏琶音、涟音、波音或震音时产生一定的效果。\n当有连续三个及以上十六分音符或更短时值的音符时，它们将被视为琶音。",
-						negative: "典型地使用颜色反转来表现琶音",
+						idleEffect: "典型地使用一种效果来表现琶音",
 					},
 				},
 				tuning: {
@@ -1174,6 +1217,7 @@ export default {
 					default: "使用第一段不包含任何词缀的剪辑来覆盖剩余所有空缺的区域，这具有最低的优先级",
 				},
 				exclusiveTrack: "确保素材中各剪辑均保持同一位置，但是如果剪辑过多时会占用太多的空间",
+				idleEffect: "当素材未处于活跃状态时叠加效果",
 				offset: "整体偏移音调所对应的剪辑",
 			},
 			ytp: {
@@ -1334,7 +1378,7 @@ export default {
 		},
 		aliases: {
 			titles: {
-				source: "媒体, 音源, 采样",
+				source: "媒体、音源、采样",
 				score: "乐谱、铺面、MIDI、曲目、选曲、课题曲",
 				audio: "音声",
 				visual: "视频、映像、PV",
@@ -1345,20 +1389,24 @@ export default {
 				mosh: "资料狂舞、幻术故障、数据狂舞、狂舞",
 				prve: "PV节奏视觉效果、映像节奏视觉效果、PRVE",
 				staff: "钢琴谱、五线谱视觉化",
-				pixelScaling: "MisczTools, Miscz Tools",
+				pixelScaling: "MisczTools、Miscz Tools",
 			},
 			source: {
-				secretBox: "素材盲箱, 抽卡, 扭蛋",
+				secretBox: "素材盲箱、抽卡、扭蛋",
 			},
 			score: {
 				tempo: "BPM",
-				timeSignature: "节拍, 节奏, 拍子",
+				timeSignature: "节拍、节奏、拍子",
 				constrain: "断奏、断连奏、半连奏、半断奏、半跳音、次断音、断奏音、特断音",
 			},
 			stream: {
-				playbackRate: "播放速度",
+				playbackRate: {
+					_: "播放速度",
+					playBackwards: "反转、反向、逆向、倒转、倒播",
+				},
 				staticVisual: "冻结首帧、冻结初帧、定格首帧、定格初帧",
 				truncate: "禁止延长、禁止加长、不延长、不加长、不要延长、不要加长、冻结尾帧、冻结末帧、定格尾帧、定格末帧",
+				prologue: "前摇、导言、序言、引言、前言、绪论、开端、先兆、导引、起因、序幕、序章、卷首语、先导片、开场白、前情提要、题外部分、逆向延长、逆向延伸",
 				legato: "消除间隙、削除间隙、填补空隙、消除空隙、削除空隙、填补间距、消除间距、削除间距、连奏、断奏、断连奏、半连奏、半断奏、半跳音、次断音、断奏音、特断音",
 				multitrackForChords: "和弦、多轨、多轨道、多音轨",
 				createGroups: "创建分组",

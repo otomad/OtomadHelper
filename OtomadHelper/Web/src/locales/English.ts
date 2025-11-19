@@ -204,7 +204,7 @@ export default {
 			densityIndependentPixel: "dp", // Unit: Density independent pixel.
 			times: "time", // E.g., One time (once), two times (twice), three times.
 			times_other: "times",
-			times_sign: "×", // E.g., speed 1×, 1.5×, 2×.
+			times_sign: "×", // E.g., Speed 1×, 1.5×, 2×.
 			cent: "cent", // Unit: Cent. The cent is a logarithmic unit of measure used for musical intervals. Twelve-tone equal temperament divides the octave into 12 semitones of 100 cents each.
 			cent_other: "cents",
 			fraction: "fr", // Unit: Fraction.
@@ -332,7 +332,7 @@ export default {
 				emphasisTimes: "Emphasizes the source part one or more times",
 				emphasisDuration: {
 					_: "Emphasis duration",
-					source: "Source length",
+					sourceLength: "Source length",
 				},
 			},
 			legato: {
@@ -1060,14 +1060,15 @@ export default {
 					trimEndFrames: "If the note is longer than the clip, trims frames after the clip’s out point",
 					splitThenFreeze: "If the note is longer than the clip, splits from the clip’s out point, and then freezes the latter’s in point",
 					splitThenResume: "If the note is longer than the clip, splits from the clip’s out point, but does not freeze the latter’s in point, and continue to play instead",
-					idleEffect: "Applies an effect to the latter of the split clip",
-					idleEffectUnavailable: "The effect is applicable only to {{modes, quote, and, lowercase}}",
+					idleEffect: "Applies an effect to the latter of the split clips",
+					idleEffectUnavailable: "The effect is applicable only to {{modes, quote, and, lowercase}}", // Please DO NOT translate the interpolation `{{modes, quote, and, lowercase}}`!
 				},
 				prologue: {
 					_: "Plays the introductory section by lengthening the first clip in reverse",
 					straightforward: "No prologue, straight to the primary footage",
 					introduceOriginally: "Uses the original source without any additional effects for the introduction",
 					introduceEffectively: "Uses the source with same effects (such as stretch and pitch) as the first clip for the introduction",
+					sourceLength: "The introduction will be the same length as the source, even if it does not match the beat",
 					upToOneBar: "The introduction will last up to one measure",
 					untilTheStart: "The introduction will lengthen to the start time of the generation, unless it exceeds the start of the source itself",
 					once: "When disabled, all of the first clips of each track will have an introduction",
@@ -1440,6 +1441,7 @@ export default {
 				},
 				staticVisual: "Freeze first frame, Freeze start frame", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				truncate: "Unlengthen, Unlengthening, No lengthening, No looping, No extending, No extension, Freeze last frame, Freeze end frame", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				prologue: "Introduce, Introduction, Introductory, Preamble, Lengthen backwards, Reverse lengthen, Reverse lengthening", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				legato: "Fill gaps, Eliminate gaps, Remove gaps, Portato, Staccato, Staccatissimo", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				multitrackForChords: "Multiple track for chords, Multi-track for chords, Chords, Multiple tracks for chords, Multi-tracks for chords, Multitracks for chords", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				createGroups: "Create groups", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
