@@ -60,12 +60,12 @@ internal class ManagedStream(Stream s) : Stream {
 			NameValueCollection query = HttpUtility.ParseQueryString(uri.Query);
 			string file = uri.AbsolutePath[1..];
 			file = Uri.UnescapeDataString(file);
-			string[] fileSlug = file.Split('/');
-			string? virtualPath = fileSlug.FirstOrDefault();
+			string[] fileSlugs = file.Split('/');
+			string? virtualPath = fileSlugs.FirstOrDefault();
 			string assetsFilePath = "Web.dist." + file.Replace("/", ".");
 			try {
 				if (virtualPath != null) {
-					string path = string.Join("/", fileSlug.Skip(1));
+					string path = string.Join("/", fileSlugs.Skip(1));
 					switch (virtualPath) {
 						case "thumbnail":
 							Handler_Thumbnail(webView, args, path, false);
