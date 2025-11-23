@@ -1,5 +1,5 @@
 import type { ImageFitTypes } from "components/BackgroundImage";
-import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "components/Business/ExpanderStreamPrologue";
+import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "components/Business/Expander/ExpanderStream/ExpanderStreamPrologue";
 import type { VisualIdleEffects } from "components/Business/IdleEffectSettings";
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
 import { deepClone } from "valtio/utils";
@@ -244,7 +244,7 @@ namespace Config {
 			audioIdleEffect: { fade: { enabled: false, amount: 50 } } as AudioIdleEffectValue,
 			once: true,
 			emphasisTimes: 0,
-			emphasisDuration: "source" satisfies PrologueEmphasisDuration as PrologueEmphasisDuration,
+			emphasisDuration: "sourceLength" satisfies PrologueEmphasisDuration as PrologueEmphasisDuration,
 		},
 		playbackRate: {
 			sync: true,
