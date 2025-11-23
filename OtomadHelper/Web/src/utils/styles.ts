@@ -364,6 +364,39 @@ export function transformFlowDirection(from: FlowDirection, to?: FlowDirection) 
 	][op];
 }
 
+/**
+ * React hook that returns a numeric measurement for a DOM element using ResizeObserver.
+ *
+ * Observes the provided element and updates a numeric value whenever ResizeObserver reports
+ * a change. The returned value is initialized to 0 and will update on the first observation.
+ *
+ * @param el - A RefObject pointing to the DOM element to observe (may be null or undefined).
+ * @param type - Which measurement to return. Accepted values:
+ * - `"width" | "height"`: Reads from `ResizeObserverEntry.contentRect.width/height`;
+ * - `"top" | "left" | "right" | "bottom" | "x" | "y"`: Reads the corresponding property from `contentRect`;
+ * - `"borderBoxInlineSize"`: Reads `borderBoxSize[0].inlineSize` from the entry;
+ * - `"borderBoxBlockSize"`: Reads `borderBoxSize[0].blockSize` from the entry;
+ * - `"contentBoxInlineSize"`: Reads `contentBoxSize[0].inlineSize` from the entry;
+ * - `"contentBoxBlockSize"`: Reads `contentBoxSize[0].blockSize` from the entry.
+ *
+ * @returns The current numeric measurement (pixels or logical units as reported by the browser).
+ *
+ * @remarks
+ * - Internally registers a ResizeObserver on `el.current` and updates the returned state
+ * whenever the observer callback fires.
+ * - The observer is disconnected in the effect cleanup to avoid leaks.
+ * - The hook initializes the returned size to 0 until the observer reports a value.
+ * - Note: the effect that attaches the observer is tied to the `type` parameter. If the
+ * ref object or its current element changes without changing `type`, the observer may
+ * not be re-attached to the new element. Ensure `type` is updated or remount the hook
+ * if you need to observe a different element reference.
+ *
+ * @example
+ * ```typescript
+ * const ref = useRef<HTMLElement | null>(null);
+ * const width = useElementSize(ref, "width");
+ * ```
+ */
 export function useElementSize(el: RefObject<Element | undefined | null>, type: "borderBoxInlineSize" | "borderBoxBlockSize" | "contentBoxInlineSize" | "contentBoxBlockSize" | Exclude<keyof DOMRect, "toJSON">) {
 	const [size, setSize] = useState(0);
 

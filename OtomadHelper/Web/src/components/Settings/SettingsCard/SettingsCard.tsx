@@ -359,15 +359,12 @@ function SettingsCardBase({ threshold = SETTINGS_CARD_TRAILING_MAX_WIDTH, leadin
 }, "div">) {
 	const [wrapped, setWrapped] = useState(wrap ?? false);
 	const trailingEl = useDomRef<"div">();
+	const inlineSize = useElementSize(trailingEl, "borderBoxInlineSize");
 
-	useMountEffect(() => {
+	useEffect(() => {
 		if (!trailingEl.current || wrap !== undefined) return;
-		const observer = new ResizeObserver(([{ borderBoxSize: [{ inlineSize }] }]) => {
-			setWrapped(inlineSize > threshold);
-		});
-		observer.observe(trailingEl.current);
-		return () => observer.disconnect();
-	});
+		setWrapped(inlineSize > threshold);
+	}, [inlineSize]);
 
 	return (
 		<>
