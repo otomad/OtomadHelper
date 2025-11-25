@@ -986,7 +986,7 @@ export default {
 			},
 			score: {
 				trim: "crwdns2378:0crwdne2378:0",
-				encoding: "crwdns4294:0crwdne4294:0",
+				encoding: "crwdns5516:0crwdne5516:0",
 				tempo: "crwdns4296:0crwdne4296:0",
 				autoChangeProjectProperties: "crwdns5392:0crwdne5392:0",
 				constrain: {

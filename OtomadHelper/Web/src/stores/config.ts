@@ -1,11 +1,12 @@
 import type { ImageFitTypes } from "components/BackgroundImage";
 import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "components/Business/Expander/ExpanderStream/ExpanderStreamPrologue";
 import type { VisualIdleEffects } from "components/Business/IdleEffectSettings";
+import type { Encodings } from "components/Preview/PreviewEncoding";
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
 import { deepClone } from "valtio/utils";
 import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
 import type { musicalNotationSystems } from "views/lyrics";
-import type { constrainNoteLengthTypes, encodings, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
+import type { constrainNoteLengthTypes, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
 import type { systemBackdrops } from "views/settings";
 import type { textPlugins } from "views/settings/internal";
 import type { barOrBeatUnitTypes, selectGeneratedClipsType, sequentialOrders, sourceFromEnums, startTimes, trackNames } from "views/source";
@@ -18,7 +19,7 @@ namespace Config {
 	export type StartTime = typeof startTimes[number]["id"];
 	export type TempoUsing = typeof tempoUsings[number]["id"];
 	export type ConstrainNoteLengthType = typeof constrainNoteLengthTypes[number]["id"];
-	export type Encoding = typeof encodings[number];
+	export type Encoding = typeof Encodings.keyType;
 	export type Stretch = typeof stretches[number]["id"];
 	export type Legato = typeof legatos[number]["id"];
 	export type Truncate = typeof truncates[number]["id"];

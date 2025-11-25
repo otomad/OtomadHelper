@@ -12,7 +12,7 @@ const StyledRadioButtonLabel = styled.label<{
 		display: none;
 	}
 
-	.text {
+	> .text {
 		${styles.effects.text.body};
 		padding-bottom: 1px;
 	}
@@ -110,7 +110,7 @@ const StyledRadioButtonLabel = styled.label<{
 	${styles.mixins.forwardFocusRing()};
 `);
 
-export default function RadioButton<T>({ children, id, value: [value, setValue], disabled, onChange, details, radioGroup, plain, icon, readOnly, ...htmlAttrs }: FCP<{
+export default function RadioButton<T>({ children, id, value: [value, setValue], disabled = false, onChange, details, radioGroup, plain = false, icon, readOnly, diySlot = false, ...htmlAttrs }: FCP<{
 	/** Identifier. */
 	id: T;
 	/** The selected value in the current radio button group. */
@@ -129,10 +129,16 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 	icon?: DeclaredIcons;
 	/** Make items cannot be selected? */
 	readOnly?: boolean;
+	/** Allow custom DIY the slot part instead of the default text structure? */
+	diySlot?: boolean;
+	/** Provide children directly or reference the aria ID of the radio button. */
+	children?: ReactNode | ((ariaId: string) => ReactNode);
 }, "label">) {
 	const labelEl = useDomRef<"label">();
 	const checked = value === id;
 	const ariaId = useId();
+	if (typeof children === "function") children = children(ariaId);
+
 	const handleCheck = (checked: boolean = true) => {
 		if (checked) {
 			setValue?.(id);
@@ -169,10 +175,12 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 				<div className="bullet" />
 			</div>
 			{icon && <Icon name={icon} />}
-			<div className="text" aria-hidden>
-				<p className="title" id={`${ariaId}-title`}>{children}</p>
-				<p className="details" id={`${ariaId}-details`}>{details}</p>
-			</div>
+			{diySlot ? children : (
+				<div className="text" aria-hidden>
+					<p className="title" id={`${ariaId}-title`}>{children}</p>
+					<p className="details" id={`${ariaId}-details`}>{details}</p>
+				</div>
+			)}
 		</StyledRadioButtonLabel>
 	);
 }

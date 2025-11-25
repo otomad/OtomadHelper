@@ -15,7 +15,6 @@ export /* @internal */ const constrainNoteLengthTypes = [
 ] as const;
 export /* @internal */ const multipleSelectTrackItems = Object.freeze(["audio", "visual", "sonar", "lyrics"] as const);
 const allMultipleSelectTrackItemSet = new Set(multipleSelectTrackItems);
-export /* @internal */ const encodings = ["ANSI", "UTF-8", "Shift_JIS", "GBK", "Big5", "KS_C_5601-1987", "Windows-1252", "Macintosh"] as const;
 export /* @internal */ const trackAndChannel = ["track", "channel"] as const;
 /** @deprecated Test only! */
 const tracks = [
@@ -232,10 +231,10 @@ export default function Score() {
 			</Setting>
 			<Setting
 				meta={meta.encoding}
-				items={encodings}
+				items={Encodings}
 				value={encoding}
-				idField
-				nameField={value => value === "ANSI" ? t.systemDefault : value}
+				radioButtonAttrs={{ diySlot: true }}
+				nameField={({ key }) => ariaId => <PreviewEncoding encoding={key} ariaId={ariaId} />}
 				checkInfoCondition={value => value === "ANSI" ? t.systemDefault : value}
 			/>
 			<Setting

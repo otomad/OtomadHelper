@@ -1013,7 +1013,7 @@ export default {
 			},
 			score: {
 				trim: "Intercepts the generation time range of the score",
-				encoding: "Specify the text encoding to use when reading the file",
+				encoding: "Specify the text encoding to use when reading the file. You should not change this setting unless garbled.",
 				tempo: "Specify the beats per minute",
 				autoChangeProjectProperties: "Automatically change measures & beat in the project ruler properties if they don’t match the score",
 				constrain: {

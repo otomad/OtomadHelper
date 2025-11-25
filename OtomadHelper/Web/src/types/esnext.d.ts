@@ -72,6 +72,14 @@ declare global {
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp/escape) */
 		escape(string: string): string;
 	}
+
+	interface Uint8ArrayConstructor {
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array/fromBase64) */
+		fromBase64(string: string): Uint8Array<ArrayBuffer>;
+
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array/fromHex) */
+		fromHex(string: string): Uint8Array<ArrayBuffer>;
+	}
 }
 // #endregion
 

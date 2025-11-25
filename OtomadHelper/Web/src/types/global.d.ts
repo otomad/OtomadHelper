@@ -1,3 +1,4 @@
+import type { IEnum } from "enum-plus";
 import type { ContextMenuOutput } from "utils/context-menu";
 import type * as Vite from "vite";
 
@@ -75,6 +76,10 @@ declare global {
 	 * Vite plugin resolved config.
 	 */
 	type VitePluginConfig = Vite.ResolvedConfig;
+	/**
+	 * Any enum-plus collection class instance. (fixed)
+	 */
+	type AnyEnum = IEnum<any, any, any>;
 
 	/**
 	 * Returns the global environment, used to define global variables.

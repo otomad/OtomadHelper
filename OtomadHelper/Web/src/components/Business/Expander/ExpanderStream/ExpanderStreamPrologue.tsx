@@ -11,13 +11,12 @@ export /* @internal */ const PrologueDurationUsings = Enum({
 	custom: { label: t.custom, icon: "edit" },
 });
 
-const $s = (string: () => string) => string as unknown as string;
 export /* @internal */ const PrologueEmphasisDurations = Enum({
 	sourceLength: { label: t.stream.prologue.emphasisDuration.sourceLength, icon: "video_clip_inbox" },
-	oneBeat: { label: $s(() => `1 ${t(1).units.beat}`), icon: "quarter_note" },
-	twoBeat: { label: $s(() => `2 ${t(2).units.beat}`), icon: "half_note" },
-	oneBar: { label: $s(() => `1 ${t(2).units.bar}`), icon: "music_bar" },
-	twoBar: { label: $s(() => `2 ${t(2).units.bar}`), icon: "music_bar_2" },
+	oneBeat: { label: () => `1 ${t(1).units.beat}`, icon: "quarter_note" },
+	twoBeat: { label: () => `2 ${t(2).units.beat}`, icon: "half_note" },
+	oneBar: { label: () => `1 ${t(2).units.bar}`, icon: "music_bar" },
+	twoBar: { label: () => `2 ${t(2).units.bar}`, icon: "music_bar_2" },
 });
 console.log(PrologueEmphasisDurations);
 

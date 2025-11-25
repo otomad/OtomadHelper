@@ -91,6 +91,7 @@ words:
   - ele
   - endregion
   - esbuild
+  - euc
   - evaluable
   - extralight
   - fi
@@ -107,10 +108,12 @@ words:
   - gpt
   - gra
   - grayscale
+  - grek
   - gridlines
   - güiro
   - haha
   - halfwidth
+  - hebr
   - highp
   - hmr
   - hotspot
@@ -125,6 +128,8 @@ words:
   - immer
   - indet
   - jipt
+  - jis
+  - jpan
   - jsdoc
   - jsdocs
   - kai
@@ -133,6 +138,7 @@ words:
   - kebabcase
   - keyframes
   - klass
+  - kore
   - labelledby
   - laggier
   - laggy

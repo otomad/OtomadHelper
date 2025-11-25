@@ -220,6 +220,10 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 			}
 		}
 	}
+
+	> .text > * {
+		white-space: pre-line;
+	}
 `);
 
 export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, children, onChange, ...htmlAttrs }: FCP<{

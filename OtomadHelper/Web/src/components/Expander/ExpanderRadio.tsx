@@ -1,9 +1,6 @@
-import type { AnyEnum, EnumInit, EnumItemClass, EnumKey, EnumValue, IEnum, ValueTypeFromSingleInit } from "enum-plus";
-import type { EnumExtension } from "enum-plus/extension";
-
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, hideCustom = true, before, transition, readOnly, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, radioButtonAttrs, hideCustom = true, before, transition, readOnly, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly TItem[];
 	/** The identifier of the currently selected value. */
@@ -30,7 +27,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	 * - If it is true, it means that the selected item is a string, and the name can be used directly.
 	 * - If it is an i18n item object, it will get the value of the object from the value as the key.
 	 */
-	nameField?: FieldType<TItem> | object | ((item: TItem) => ReactNode);
+	nameField?: FieldType<TItem> | object | ((item: TItem) => ReactNode) | ((item: TItem) => (ariaId: string) => ReactNode);
 	/** The icon field for the radio item. */
 	iconField?: FieldType<TItem> | ((item: TItem) => ReactNode) | DeclaredIcons | ReactNode;
 	/** The image field for the radio item. */
@@ -57,6 +54,8 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	itemsViewItemAttrs?: Partial<PropsOf<typeof ItemsView.Item>> | false | ((item: TItem) => (Partial<PropsOf<typeof ItemsView.Item>> | undefined | false));
 	/** Additional attributes for the items view. */
 	itemsViewAttrs?: Partial<PropsOf<typeof ItemsView>>;
+	/** Additional attributes for the radio button. */
+	radioButtonAttrs?: Partial<Omit<PropsOf<typeof RadioButton>, "value">> | false | ((item: TItem) => (Partial<Omit<PropsOf<typeof RadioButton>, "value">> | undefined | false));
 	/**
 	 * Remove the "custom" option from the options so that you can customize the "custom" form control.
 	 *
@@ -124,6 +123,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 					readOnly={readOnly}
 					onClick={e => onItemClick?.(item, e)}
 					onContextMenu={e => onItemContextMenu?.(item, e)}
+					{...typeof radioButtonAttrs === "function" ? radioButtonAttrs(item) : radioButtonAttrs}
 				>
 					{getItemField(item, "name")}
 				</RadioButton>
@@ -160,17 +160,19 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	);
 }
 
-function ExpanderRadioEnum<T extends AnyEnum>({ items, ...otherProps }: Override<PropsOf<typeof ExpanderRadio>, {
+function ExpanderRadioEnum<T extends AnyEnum>({ items, ...otherProps }: Override<PropsOf<typeof ExpanderRadio<T["array"][0], T["keyType"]>>, {
 	items: T;
+	value: Readonly<StateProperty<T["keyType"]>>;
+	idField?: never;
 }>) {
 	return (
 		<ExpanderRadio
 			items={items.array}
+			idField="key"
 			nameField="label"
 			iconField="icon"
-			checkInfoCondition={(key, item: Any[]) => item.find(field => field.key === key)?.label}
+			checkInfoCondition={key => items.all[key]?.label}
 			{...otherProps}
-			idField="key"
 		/>
 	);
 }

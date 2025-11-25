@@ -12,6 +12,7 @@ interface Props {
 type InheritFrom<T> = Props & PartialWith<T extends Function ? PropsOf<T> : T, keyof SettingMeta>;
 
 export default function Setting(props: InheritFrom<typeof SettingsCardToggleSwitch>): React.JSX.Element;
+export default function Setting<T extends AnyEnum>(props: InheritFrom<typeof ExpanderRadio.Enum<T>>): React.JSX.Element;
 export default function Setting<TItem, TKey extends PropertyKey>(props: InheritFrom<typeof ExpanderRadio<TItem, TKey>>): React.JSX.Element;
 export default function Setting(props: InheritFrom<Omit<PropsOf<typeof SettingsCard>, "children"> & { actions: PropsOf<typeof SettingsCard>["children"] }>): React.JSX.Element;
 export default function Setting(props: InheritFrom<typeof Expander>): React.JSX.Element;
