@@ -158,7 +158,7 @@ const ExpanderChildWrapper = styled.div<{
 	` : undefined}
 `;
 
-export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, clipChildren, childrenDisabled, childRole, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor, wrapActionsWhenNarrow, _requestExpanded, onClickWhenChildrenDisabled, onToggle, ref }: FCP<Override<PropsOf<typeof SettingsCard>, {
+export default function Expander({ icon, title, details, actions, expanded = false, children, checkInfo, alwaysShowCheckInfo, clipChildren, childrenDisabled, childRole, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor, wrapActionsWhenNarrow, _requestExpanded, _isInExpanderGroupAndAutoCollapse, onClickWhenChildrenDisabled, onToggle, ref }: FCP<Override<PropsOf<typeof SettingsCard>, {
 	/** The other action control area on the right side of the component. */
 	actions?: ReactNode;
 	/** Expanded initially? */
@@ -175,6 +175,8 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	childRole?: AriaRole;
 	/** @private Request to expanded because user search something inside the expander. */
 	_requestExpanded?: TransientValue<boolean>;
+	/** @private Is it put in an expander group and the expander group is auto collapsed? */
+	_isInExpanderGroupAndAutoCollapse?: true;
 	/** Occurs when the expander parent has been clicked where the child items disabled. */
 	onClickWhenChildrenDisabled?(): void;
 	/** Occurs when the expander expanded or collapsed. */
@@ -182,7 +184,10 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 }>>) {
 	const settingsCardProps = { icon, title, details, selectInfo, selectValid, disabled, className, role, trailingGap, dirBasedIcon, anchor, wrapActionsWhenNarrow };
 	const [internalExpanded, setInternalExpanded] = useState(expanded);
-	const handleClick = useOnNestedButtonClick(e => !childrenDisabled ? setInternalExpanded(expanded => { if (expanded) handleStickyCollapse(e); return !expanded; }) : onClickWhenChildrenDisabled?.());
+	const handleClick = useOnNestedButtonClick(e => !childrenDisabled ? setInternalExpanded(expanded => {
+		if (expanded || _isInExpanderGroupAndAutoCollapse) handleStickyCollapse(e, _isInExpanderGroupAndAutoCollapse && !expanded);
+		return !expanded;
+	}) : onClickWhenChildrenDisabled?.());
 	useUpdateEffect(() => setInternalExpanded(expanded), [expanded]);
 	useEffect(() => onToggle?.(internalExpanded), [internalExpanded]);
 	useEffect(() => { if (disabled || childrenDisabled) setInternalExpanded(false); }, [disabled, childrenDisabled]);
@@ -191,11 +196,14 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	const withAriaId = (suffix: string) => !ariaId.current ? undefined : ariaId.current + suffix;
 
 	// When the header is sticky and user want to collapse the expander, it will go out of viewport.
-	function handleStickyCollapse(e: React.MouseEvent) {
+	function handleStickyCollapse(e: React.MouseEvent, combo = false) {
 		const expanderParent = (e.target as HTMLElement).closest(".expander-parent") as HTMLButtonElement, expander = expanderParent?.parentElement;
 		if (!expanderParent || !expander) return;
-		if (expanderParent.offsetTop > expander.offsetTop)
-			expander.scrollIntoView({ block: "start" });
+		console.log(expanderParent.offsetTop, expander.offsetTop);
+		setIntervalWithTimes(() => {
+			if (expanderParent.offsetTop > expander.offsetTop)
+				expander.scrollIntoView({ block: "start", behavior: combo ? "instant" : "auto" });
+		}, 10, combo ? TRANSLATE_TRANSITION_DURATION / 10 : 1);
 	}
 
 	return (

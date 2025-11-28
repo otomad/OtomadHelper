@@ -225,7 +225,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	/** @private Compatible with Expander. */
 	_requestExpanded?: never;
 	/** @private Is called by Expander? */
-	_isExpander?: boolean;
+	_isExpander?: true;
 }, "div">) {
 	actionIcon ??= type === "button" ? "chevron_right" :
 		type === "expander" ? "chevron_down" : undefined;

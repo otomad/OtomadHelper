@@ -111,3 +111,48 @@ export function useChanging(states: unknown[], duration: number = 250) {
 
 	return changing;
 }
+
+/**
+ * Schedule a callback to run a limited number of times using setInterval.
+ *
+ * @remarks
+ * The provided `callback` will be called with a zero-based execution index representing the invocation's
+ * position (the value passed to the callback is the current execution count before it is incremented).
+ * If `immediate` is true, the callback is invoked once synchronously before scheduling the interval.
+ * If `repeatTimes` is finite, the interval is automatically cleared once the total number of executions
+ * reaches `repeatTimes`.
+ *
+ * @param callback - Function invoked on each execution with the current zero‑based execution index for that call.
+ * @param delay - Interval delay in milliseconds between invocations. Optional; passed directly to `setInterval`.
+ * @param repeatTimes - Total number of times the callback should be executed. Defaults to `Infinity` (no limit).
+ * @param immediate - If true (default), invoke the callback immediately once before scheduling subsequent executions.
+ * @returns The identifier returned by `setInterval`, or `0` if no interval was scheduled because the repeat limit
+ * had already been reached.
+ *
+ * @example
+ * ```javascript
+ * // Call immediately, then every 1s, for a total of 5 executions:
+ * const id = setIntervalWithTimes(count => console.log(count), 1000, 5, true);
+ *
+ * // Start after the first tick (no immediate call), run 3 times:
+ * setIntervalWithTimes(count => doWork(count), 500, 3, false);
+ * ```
+ */
+export function setIntervalWithTimes(callback: (executedCount: number) => void, delay?: number, repeatTimes: number = Infinity, immediate: boolean = true) {
+	let executedCount = 0;
+
+	if (immediate)
+		callback(executedCount++);
+
+	// If `executedCount` is 1, and `immediate` is true, then do not run the `setInterval` function.
+	if (executedCount >= repeatTimes) return 0;
+
+	const intervalId = setInterval(() => {
+		callback(executedCount++);
+
+		if (executedCount >= repeatTimes)
+			clearInterval(intervalId);
+	}, delay);
+
+	return intervalId;
+}

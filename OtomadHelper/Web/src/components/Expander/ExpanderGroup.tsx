@@ -15,6 +15,7 @@ export /* @internal */ default function ExpanderGroup({ autoCollapse = true, chi
 				if (autoCollapse && currentIndex === INITIAL_CURRENT_INDEX && expanded)
 					setCurrentIndex(index);
 				return React.cloneElement(child, {
+					_isInExpanderGroupAndAutoCollapse: autoCollapse,
 					expanded: currentIndex === index,
 					onToggle(expanded) {
 						onToggle?.(expanded);

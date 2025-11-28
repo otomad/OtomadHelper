@@ -61,7 +61,7 @@ export default function ExpanderStreamPrologue({ stream }: {
 			<Setting
 				meta={meta.emphasisDuration}
 				disabled={emphasisTimes[0] === 0}
-				actions={<ComboBox current={emphasisDuration} ids={PrologueEmphasisDurations.keys} options={PrologueEmphasisDurations.labels} icons={PrologueEmphasisDurations.map(({ icon }) => icon)} />}
+				actions={<ComboBox current={emphasisDuration} ids={PrologueEmphasisDurations.keys} options={PrologueEmphasisDurations.labels} icons={PrologueEmphasisDurations.meta.icon} />}
 			/>
 		</Setting>
 	);
