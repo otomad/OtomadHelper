@@ -98,6 +98,7 @@ export default {
 		},
 		on: "Bật",
 		off: "Tắt",
+		parenOff: " (Tắt)",
 		custom: "Tùy chỉnh",
 		enabled: "Đã bật",
 		enable: "Kích hoạt",
@@ -1158,6 +1159,7 @@ export default {
 			wave: "Sóng",
 			tvSimulator_short: "TV",
 		},
+		exceptions: {},
 		midi: {
 			instruments: {},
 			percussions: {},

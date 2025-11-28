@@ -293,6 +293,22 @@
 	<data name="Shared.Plugins.CreditRoll" xml:space="preserve">
 		<value>致谢字幕</value>
 	</data>
+	<data name="Shared.Exceptions.ErrorHeader" xml:space="preserve">
+		<value>错误：</value>
+	</data>
+	<data name="Shared.Exceptions.PlaybackRateCannotBeZero" xml:space="preserve">
+		<value>播放速率不能设为0。
+
+如果想要实现静态画面效果，请开启静态画面设置。</value>
+	</data>
+	<data name="Shared.Exceptions.PrveStepSequenceSyntaxInvalid" xml:space="preserve">
+		<value>步序列参数的语法无效。
+
+请输入以逗号分隔的各初始步的序号作为序列，其中0表示“正常”。</value>
+	</data>
+	<data name="Shared.Exceptions.PrveStepSequenceOutOfRange" xml:space="preserve">
+		<value>在步序列参数中，存在至少一个序号超出了步总数或为负数。</value>
+	</data>
 	<data name="Shared.Midi.Unknown" xml:space="preserve">
 		<value>未知</value>
 	</data>

@@ -293,6 +293,22 @@ Location:</value>
 	<data name="Shared.Plugins.CreditRoll" xml:space="preserve">
 		<value>Credit Roll</value>
 	</data>
+	<data name="Shared.Exceptions.ErrorHeader" xml:space="preserve">
+		<value>Error: </value>
+	</data>
+	<data name="Shared.Exceptions.PlaybackRateCannotBeZero" xml:space="preserve">
+		<value>The playback rate cannot be set to 0.
+
+If you want to achieve a static visual, please enable the “Static visual” setting.</value>
+	</data>
+	<data name="Shared.Exceptions.PrveStepSequenceSyntaxInvalid" xml:space="preserve">
+		<value>The step sequence parameter syntax is invalid.
+
+Please enter the indexes of each initial step separated by commas as the sequence, where 0 represents the “Normal”.</value>
+	</data>
+	<data name="Shared.Exceptions.PrveStepSequenceOutOfRange" xml:space="preserve">
+		<value>In the step sequence parameter, at least an index value exceeds the total number of steps or is negative.</value>
+	</data>
 	<data name="Shared.Midi.Unknown" xml:space="preserve">
 		<value>Unknown</value>
 	</data>

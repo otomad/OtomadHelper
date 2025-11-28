@@ -293,6 +293,22 @@
 	<data name="Shared.Plugins.CreditRoll" xml:space="preserve">
 		<value>クレジットロール</value>
 	</data>
+	<data name="Shared.Exceptions.ErrorHeader" xml:space="preserve">
+		<value>エラー: </value>
+	</data>
+	<data name="Shared.Exceptions.PlaybackRateCannotBeZero" xml:space="preserve">
+		<value>再生速度を0に設定できません。
+
+静的ビジュアルを達成する場合は、「静的視覚」設定を有効にしてください。</value>
+	</data>
+	<data name="Shared.Exceptions.PrveStepSequenceSyntaxInvalid" xml:space="preserve">
+		<value>ステップシーケンスパラメータの構文が無効です。
+
+シーケンスとしてカンマで区切られた各最初のステップのインデックスを入力してください。ここで0は「ノーマル」を表します。</value>
+	</data>
+	<data name="Shared.Exceptions.PrveStepSequenceOutOfRange" xml:space="preserve">
+		<value>ステップシーケンスパラメータでは、少なくともインデックス値がステップの合計数を超えるか、負の値です。</value>
+	</data>
 	<data name="Shared.Midi.Unknown" xml:space="preserve">
 		<value>不明</value>
 	</data>

@@ -106,6 +106,7 @@ export default {
 		},
 		on: "オン",
 		off: "オフ",
+		parenOff: "（オフ）",
 		custom: "カスタム",
 		enabled: "有効",
 		enable: "有効にする",
@@ -336,7 +337,7 @@ export default {
 			timeUnremapping: "永続的なタイムフロー",
 			prerender: {
 				_: "Prerender",
-				instant: "インスタント（オフ）",
+				instant: "インスタント",
 				media: "レンダリングされたメディア",
 				timeline: "ネストされたタイムラインとして",
 				specifyClipsFolder: "レンダリングされたクリップフォルダを指定します",
@@ -1378,8 +1379,6 @@ export default {
 				visual: "ビデオ",
 				track: "レイヤー、レイヤー",
 				shupelunker: "韃靼戦法, スペランカー, 松岡修造, 松岡 修造",
-				ytp: "つ",
-				mosh: "つ",
 				prve: "動画リズムビジュアルエフェクトのプロモーションビデオリズムビジュアルエフェクト、PVリズムビジュアルエフェクト、PVリズムビジュアルエフェクト、動画リズムビジュアルエフェクトのプロモーションビデオリズムビジュアルエフェクトのプロモーション。 Promotion Video Rhythmic Visual Effects, PV Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effects, PRVE",
 				staff: "ミュージカルスタッフ、ピアノスタッフのシート ファッション",
 				pixelScaling: "MisczTools, Miscz Tools",
@@ -1553,6 +1552,12 @@ export default {
 			legacyText: "(レガシー) テキスト",
 			protypeTitler: "ProType Titler",
 			creditRoll: "クレジットロール",
+		},
+		exceptions: {
+			errorHeader: "エラー: ",
+			playbackRateCannotBeZero: "再生速度を0に設定できません。\n\n静的ビジュアルを達成する場合は、「静的視覚」設定を有効にしてください。",
+			prveStepSequenceSyntaxInvalid: "ステップシーケンスパラメータの構文が無効です。\n\nシーケンスとしてカンマで区切られた各最初のステップのインデックスを入力してください。ここで0は「ノーマル」を表します。",
+			prveStepSequenceOutOfRange: "ステップシーケンスパラメータでは、少なくともインデックス値がステップの合計数を超えるか、負の値です。",
 		},
 		midi: {
 			unknown: "不明",

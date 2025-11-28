@@ -106,6 +106,7 @@ export default {
 		},
 		on: "开",
 		off: "关",
+		parenOff: "（关）",
 		custom: "自定义",
 		enabled: "启用",
 		enable: "启用",
@@ -336,7 +337,7 @@ export default {
 			timeUnremapping: "持续时间流",
 			prerender: {
 				_: "预渲染",
-				instant: "即时（关）",
+				instant: "即时",
 				media: "作渲染的媒体",
 				timeline: "作嵌套时间轴",
 				specifyClipsFolder: "指定渲染片段文件夹",
@@ -1557,6 +1558,12 @@ export default {
 			legacyText: "（自带）文字",
 			protypeTitler: "PTT字幕",
 			creditRoll: "致谢字幕",
+		},
+		exceptions: {
+			errorHeader: "错误：",
+			playbackRateCannotBeZero: "播放速率不能设为0。\n\n如果想要实现静态画面效果，请开启静态画面设置。",
+			prveStepSequenceSyntaxInvalid: "步序列参数的语法无效。\n\n请输入以逗号分隔的各初始步的序号作为序列，其中0表示“正常”。",
+			prveStepSequenceOutOfRange: "在步序列参数中，存在至少一个序号超出了步总数或为负数。",
 		},
 		midi: {
 			unknown: "未知",

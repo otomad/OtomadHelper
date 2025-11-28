@@ -107,6 +107,7 @@ export default {
 		},
 		on: "crwdns1698:0crwdne1698:0",
 		off: "crwdns1700:0crwdne1700:0",
+		parenOff: "crwdns5518:0crwdne5518:0",
 		custom: "crwdns1702:0crwdne1702:0",
 		enabled: "crwdns1704:0crwdne1704:0",
 		enable: "crwdns1706:0crwdne1706:0",
@@ -337,7 +338,7 @@ export default {
 			timeUnremapping: "crwdns3918:0crwdne3918:0",
 			prerender: {
 				_: "crwdns5070:0crwdne5070:0",
-				instant: "crwdns5072:0crwdne5072:0",
+				instant: "crwdns5520:0crwdne5520:0",
 				media: "crwdns5074:0crwdne5074:0",
 				timeline: "crwdns5076:0crwdne5076:0",
 				specifyClipsFolder: "crwdns5078:0crwdne5078:0",
@@ -1561,6 +1562,12 @@ export default {
 			legacyText: "crwdns4594:0crwdne4594:0",
 			protypeTitler: "crwdns4596:0crwdne4596:0",
 			creditRoll: "crwdns4598:0crwdne4598:0",
+		},
+		exceptions: {
+			errorHeader: "crwdns5522:0crwdne5522:0",
+			playbackRateCannotBeZero: "crwdns5524:0crwdne5524:0",
+			prveStepSequenceSyntaxInvalid: "crwdns5526:0crwdne5526:0",
+			prveStepSequenceOutOfRange: "crwdns5528:0crwdne5528:0",
 		},
 		midi: {
 			unknown: "crwdns4628:0crwdne4628:0",
