@@ -171,7 +171,7 @@ function ExpanderRadioEnum<T extends AnyEnum>({ items, ...otherProps }: Override
 			idField="key"
 			nameField="label"
 			iconField="icon"
-			checkInfoCondition={key => items.all[key]?.label}
+			checkInfoCondition={key => items.all[key!]?.label}
 			{...otherProps}
 		/>
 	);

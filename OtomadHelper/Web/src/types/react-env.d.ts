@@ -1,5 +1,6 @@
 import type _DndKitCore from "@dnd-kit/core";
 import type CSSType from "csstype";
+import type _EnumPlus from "enum-plus";
 import type _Immer from "immer";
 import type English from "locales/English";
 import type _LottieWeb from "lottie-web";
@@ -7,7 +8,7 @@ import type React from "react";
 import type _ReactTransitionGroup from "react-transition-group-fc";
 import type * as ReactTransitionGroup from "react-transition-group-fc";
 import type _StyledComponents from "styled-components";
-import type { StoreApi, UseBoundStore } from "zustand";
+// import type { StoreApi, UseBoundStore } from "zustand";
 
 declare module "react" {
 	interface HTMLAttributes {
@@ -152,11 +153,11 @@ declare global {
 	 */
 	export type GetReactElementFromTag<TTagName extends keyof ElementTagNameMap> = FC<{}, TTagName>;
 
-	/**
-	 * Get the parameter types for Zustand store state.
-	 * @template TStore - Zustand store object。
-	 */
-	export type ZustandState<TStore> = NonNull<TStore extends UseBoundStore<StoreApi<infer T>> ? T : never>;
+	// /**
+	//  * Get the parameter types for Zustand store state.
+	//  * @template TStore - Zustand store object。
+	//  */
+	// export type ZustandState<TStore> = NonNull<TStore extends UseBoundStore<StoreApi<infer T>> ? T : never>;
 
 	interface BaseEvent<T = Element> extends SyntheticEvent<T>, Event { }
 	export type BaseEventHandler<T = Element> = EventHandler<BaseEvent<T>>;
@@ -180,4 +181,5 @@ declare global {
 	export type { AnimationEventHandler, CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, FocusEventHandler, FormEventHandler, KeyboardEventHandler, MouseEventHandler, PointerEventHandler, PropsWithChildren, ReactElement, ReactNode, Ref as MiscRef, RefObject, SyntheticEvent, UIEventHandler, WheelEventHandler, default as React } from "react";
 	export type { CSSTransition as CssTransition, SwitchTransition, TransitionGroup } from "react-transition-group-fc"; // CSSTransition has the same name as a native class.
 	export type { RuleSet, WebTarget } from "styled-components";
+	export type { AnyEnum } from "enum-plus";
 }

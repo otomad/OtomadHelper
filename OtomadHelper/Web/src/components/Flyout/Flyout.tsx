@@ -7,13 +7,13 @@ const PADDING = "4px";
 const StyledFlyout = styled.div`
 	${styles.effects.flyout};
 	position: absolute;
+	position-try-fallbacks: flip-block, flip-inline;
 	z-index: 2;
 	/* justify-self: anchor-center; */
 	max-width: 100dvw;
 	max-height: calc(100cqh - anchor-size(var(--constrain) height) - var(--offset)); // See: https://stackoverflow.com/a/79692163/19553213
 	overflow-block: auto;
 	transition: ${fallbackTransitions}, inset 0s;
-	position-try-fallbacks: flip-block, flip-inline;
 
 	@layer layout {
 		display: block;
@@ -36,13 +36,13 @@ const StyledFlyout = styled.div`
 	}
 
 	&.top {
-		margin-bottom: var(--offset);
 		position-area: top;
+		margin-bottom: var(--offset);
 	}
 
 	&.bottom {
-		margin-top: var(--offset);
 		position-area: bottom;
+		margin-top: var(--offset);
 	}
 
 	.descriptions {
