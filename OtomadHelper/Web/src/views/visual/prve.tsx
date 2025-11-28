@@ -482,6 +482,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 						value={[customStepSequence, setCustomStepSequence]}
 						disabled={isDefault}
 						effect={effect}
+						frames={isCustomInitialStepClass ? undefined : frames}
 						onValidChange={setInitialStep}
 						onInputChange={() => onCurrentEffectRotationModeChange?.("rotateCustomSequence")}
 					/>
@@ -492,10 +493,11 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 }
 
 const stepSequencePattern = /^-?\d+(,-?\d+)*$/;
-function StepSequenceInput({ value: [value, setValue], disabled, effect, ref, onValidChange, onInputChange }: {
+function StepSequenceInput({ value: [value, setValue], disabled, effect, frames, ref, onValidChange, onInputChange }: {
 	value: StatePropertyNonNull<string>;
 	disabled?: boolean;
 	effect: string;
+	frames?: number;
 	ref?: DomRef<"input">;
 	onValidChange?: SetState<number[]>;
 	onInputChange?(): void;
@@ -518,6 +520,13 @@ function StepSequenceInput({ value: [value, setValue], disabled, effect, ref, on
 		}
 	};
 
+	function onValidate(value: string, el: HTMLInputElement) {
+		if (el.validity.patternMismatch && !el.validity.valueMissing) return t.shared.exceptions.prveStepSequenceSyntaxInvalid;
+		const sequence = value.split(",").map(index => +index);
+		if (sequence.some(index => !Number.isFinite(index))) return t.shared.exceptions.prveStepSequenceSyntaxInvalid;
+		if (frames !== undefined && sequence.some(index => index < 0 || index > frames)) return t.shared.exceptions.prveStepSequenceOutOfRange;
+	}
+
 	return (
 		<TextBox
 			inputRef={ref}
@@ -528,6 +537,7 @@ function StepSequenceInput({ value: [value, setValue], disabled, effect, ref, on
 			disabled={disabled}
 			onChanging={onChanging}
 			mouseDownTriggerOnChanging={false}
+			onValidate={onValidate}
 		/>
 	);
 }

@@ -76,6 +76,10 @@ declare global {
 	 * Vite plugin resolved config.
 	 */
 	type VitePluginConfig = Vite.ResolvedConfig;
+	/**
+	 * Any enum-plus collection class instance. (fixed)
+	 */
+	type AnyEnum = IEnum<any, any>;
 
 	/**
 	 * Returns the global environment, used to define global variables.

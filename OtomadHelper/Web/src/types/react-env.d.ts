@@ -1,6 +1,6 @@
 import type _DndKitCore from "@dnd-kit/core";
 import type CSSType from "csstype";
-import type _EnumPlus from "enum-plus";
+// import type _EnumPlus from "enum-plus";
 import type _Immer from "immer";
 import type English from "locales/English";
 import type _LottieWeb from "lottie-web";
@@ -181,5 +181,5 @@ declare global {
 	export type { AnimationEventHandler, CSSProperties, ChangeEventHandler, DependencyList, DragEventHandler, EventHandler, FocusEventHandler, FormEventHandler, KeyboardEventHandler, MouseEventHandler, PointerEventHandler, PropsWithChildren, ReactElement, ReactNode, Ref as MiscRef, RefObject, SyntheticEvent, UIEventHandler, WheelEventHandler, default as React } from "react";
 	export type { CSSTransition as CssTransition, SwitchTransition, TransitionGroup } from "react-transition-group-fc"; // CSSTransition has the same name as a native class.
 	export type { RuleSet, WebTarget } from "styled-components";
-	export type { AnyEnum } from "enum-plus";
+	// export type { AnyEnum } from "enum-plus";
 }

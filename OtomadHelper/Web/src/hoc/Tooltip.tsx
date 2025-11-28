@@ -24,6 +24,7 @@ const StyledTooltip = styled.div`
 			else: 50dvw;
 		);
 		padding: 6px 8px;
+		white-space-collapse: preserve-breaks;
 		text-wrap: wrap; // Disable pretty text-wrap, because if line breaks, there are too many blank at the right.
 		// stylelint-disable-next-line property-no-deprecated
 		word-wrap: break-word;

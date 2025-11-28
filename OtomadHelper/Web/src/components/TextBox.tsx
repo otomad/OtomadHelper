@@ -418,7 +418,9 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	}
 `;
 
-export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, showClearAll, icon, type = "text", "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, onFocusChange, ref, inputRef, ...htmlAttrs }: FCP<{
+type HTMLInputFormEvent = Parameters<FormEventHandler<HTMLInputElement>>[0];
+
+export default function TextBox({ value: [value, _setValue], placeholder, disabled, readOnly, id, prefix, suffix, _spinner: spinner, _showPositiveSign: showPositiveSign, customFlyout, pattern, required, mouseDownTriggerOnChanging = true, fullWidth = false, showClearAll, icon, type = "text", "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, "aria-description": ariaDescription, onChange, onChanging, onInput, onKeyDown, onFocusChange, onValidate, ref, inputRef, ...htmlAttrs }: FCP<{
 	/** The value of the input box. */
 	value: StateProperty<string>;
 	/** Content placeholder. */
@@ -462,11 +464,12 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 	/** Text changing event. Occurs any time the text changes. */
 	onChanging?: FormEventHandler<HTMLInputElement>;
 	/** Text keyboard input event. */
-	onInput?(newText: string, el: HTMLInputElement, ...event: Parameters<FormEventHandler<HTMLInputElement>>): boolean | string | void;
+	onInput?(newText: string, el: HTMLInputElement, event: HTMLInputFormEvent): boolean | string | void;
 	/** Keyboard press event. */
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 	/** Occurs when the input box focused or blurred. */
 	onFocusChange?(focused: boolean, e: React.FocusEvent<HTMLInputElement>): void;
+	onValidate?(value: string, el: HTMLInputElement): string | undefined;
 	/** @deprecated Please use `disabled` instead. */
 	"aria-disabled"?: never;
 	/** @deprecated Please use `readOnly` instead. */
@@ -512,6 +515,13 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 			stopEvent(e);
 		}
 	}, [onKeyDown, inputEl, handleChange]);
+
+	useEffect(() => {
+		const el = inputEl.current;
+		if (!el) return;
+		const customValidity = onValidate?.(el.value, el);
+		el.setCustomValidity(customValidity ?? "");
+	}, [onValidate, value]);
 
 	return (
 		<StyledTextBox

@@ -18,7 +18,6 @@ export /* @internal */ const PrologueEmphasisDurations = Enum({
 	oneBar: { label: () => `1 ${t(2).units.bar}`, icon: "music_bar" },
 	twoBar: { label: () => `2 ${t(2).units.bar}`, icon: "music_bar_2" },
 });
-console.log(PrologueEmphasisDurations);
 
 const emphasisTimesOptions = forMapFromTo(0, 3);
 

@@ -1594,6 +1594,12 @@ export default {
 			protypeTitler: "ProType Titler",
 			creditRoll: "Credit Roll",
 		},
+		exceptions: {
+			errorHeader: "Error: ", // Note that there is a space after the colon if required.
+			playbackRateCannotBeZero: "The playback rate cannot be set to 0.\n\nIf you want to achieve a static visual, please enable the “Static visual” setting.",
+			prveStepSequenceSyntaxInvalid: "The step sequence parameter syntax is invalid.\n\nPlease enter the indexes of each initial step separated by commas as the sequence, where 0 represents the “Normal”.",
+			prveStepSequenceOutOfRange: "In the step sequence parameter, at least an index value exceeds the total number of steps or is negative.",
+		},
 		midi: {
 			unknown: "Unknown",
 			instruments: {

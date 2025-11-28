@@ -28,9 +28,10 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 				<>
 					<TextBox.Number
 						value={value}
-						min={-16}
-						max={16}
+						min={-4}
+						max={4}
 						decimalPlaces={3}
+						onValidate={value => value === "0" ? t.shared.exceptions.playbackRateCannotBeZero : undefined}
 					/>
 					<Tooltip title={t.reset} placement="block">
 						<Button icon="arrow_reset" subtle minWidthUnbounded onClick={() => value[1](1)} />

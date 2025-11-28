@@ -199,7 +199,6 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	function handleStickyCollapse(e: React.MouseEvent, combo = false) {
 		const expanderParent = (e.target as HTMLElement).closest(".expander-parent") as HTMLButtonElement, expander = expanderParent?.parentElement;
 		if (!expanderParent || !expander) return;
-		console.log(expanderParent.offsetTop, expander.offsetTop);
 		setIntervalWithTimes(() => {
 			if (expanderParent.offsetTop > expander.offsetTop)
 				expander.scrollIntoView({ block: "start", behavior: combo ? "instant" : "auto" });
