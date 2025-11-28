@@ -154,6 +154,7 @@ export default function Audio() {
 						items={stretches}
 						value={stretch}
 						view="tile"
+						parenOff
 						idField="id"
 						iconField="icon"
 						nameField={t.stream.stretch}
@@ -164,6 +165,7 @@ export default function Audio() {
 						items={truncatesInAudio}
 						value={truncate}
 						view="tile"
+						parenOff
 						idField="id"
 						iconField="icon"
 						nameField={t.stream.truncate}
@@ -177,6 +179,7 @@ export default function Audio() {
 						items={legatos}
 						value={legato}
 						view="grid"
+						parenOff
 						idField="id"
 						nameField={t.stream.legato}
 						iconField="icon"

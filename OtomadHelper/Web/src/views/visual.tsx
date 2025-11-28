@@ -102,6 +102,7 @@ export default function Visual() {
 						meta={meta.stretch}
 						selectInfo={isForceStretch && t(prveCount).descriptions.prve.forceStretch}
 						selectValid={false}
+						parenOff
 						items={stretches}
 						value={stretch}
 						view="tile"
@@ -115,6 +116,7 @@ export default function Visual() {
 						items={truncates}
 						value={truncate}
 						view="tile"
+						parenOff
 						idField="id"
 						iconField="icon"
 						nameField={t.stream.truncate}
@@ -135,6 +137,7 @@ export default function Visual() {
 						items={legatos}
 						value={legato}
 						view="grid"
+						parenOff
 						idField="id"
 						nameField={t.stream.legato}
 						iconField="icon"

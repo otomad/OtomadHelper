@@ -109,6 +109,7 @@ export default {
 		},
 		on: "On", // The label next to a toggle switch.
 		off: "Off", // The label next to a toggle switch.
+		parenOff: " (Off)", // Note that there is a space before the left parenthesis if required. It represents the off option in a combo box or radio button setting.
 		custom: "Custom",
 		enabled: "Enabled", // Adjective.
 		enable: "Enable", // Verb.
@@ -349,7 +350,7 @@ export default {
 			timeUnremapping: "Time unremapping", // Time un-remap-(p)ing is the antonym of time remapping.\nIf it is difficult‌ to translate, you can substitute‌ it with “Persistent timeflow”.
 			prerender: {
 				_: "Prerender",
-				instant: "Instant (Off)",
+				instant: "Instant",
 				media: "As rendered media",
 				timeline: "As nested timeline",
 				specifyClipsFolder: "Specify rendered clips folder",

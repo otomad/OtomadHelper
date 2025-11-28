@@ -15,6 +15,7 @@ export default function ExpanderStreamPrerender({ stream }: {
 			items={prerenders}
 			value={isAudio ? prerenderAudio : prerenderVisual}
 			view="tile"
+			parenOff
 			idField="id"
 			iconField="icon"
 			nameField={t.stream.prerender}
