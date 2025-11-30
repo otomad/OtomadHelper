@@ -308,6 +308,8 @@ export default {
 				trimEndFrames: "截断尾帧",
 				splitThenFreeze: "分割后冻结",
 				splitThenResume: "分割后续播",
+				pingpong: "来回剪辑",
+				loop: "循环剪辑",
 			},
 			prologue: {
 				_: "引子",
@@ -1033,6 +1035,8 @@ export default {
 					trimEndFrames: "当音符比剪辑更长时，修剪掉剪辑出点处之后的帧",
 					splitThenFreeze: "当音符比剪辑更长时，从剪辑的出点处分割，然后将后者从入点处冻结",
 					splitThenResume: "当音符比剪辑更长时，从剪辑的出点处分割，但不冻结后者的入点，而是继续播放",
+					pingpong: "当音符比剪辑更长时，来回播放剪辑的有效时长",
+					loop: "当音符比剪辑更长时，循环播放剪辑的有效时长",
 					idleEffect: "对分割剪辑的后者应用效果",
 					idleEffectUnavailable: "效果仅可用于{{modes, quote, and}}",
 				},
@@ -1041,9 +1045,9 @@ export default {
 					straightforward: "没有前摇，直接进入正片",
 					introduceOriginally: "以不添加任何额外效果的原始素材作为引子",
 					introduceEffectively: "使用与第一段剪辑相同效果（如变速和变调）的素材作为引子",
-					sourceLength: "引子将与素材长度相等，即便它可能不踩点",
+					sourceLength: "引子将与素材等长，即便它可能不踩点",
 					upToOneBar: "引子将持续一小节",
-					untilTheStart: "引子将一直延长到生成开始处，除非它超过了素材开头本身",
+					untilTheStart: "引子将一直延长到生成开始处，除非它超过了源媒体开头本身",
 					once: "禁用后，每条音轨的首段剪辑都会有引子",
 					emphasisTimes: "适用于在音MAD之前先展示一遍原始素材",
 					emphasisDuration: "通过约束要强调的素材部分的时长从而能够踩点",
@@ -1311,7 +1315,7 @@ export default {
 				},
 				config: {
 					userConfig: {
-						_: "备份、恢复或清除用户配置设置数据",
+						_: "备份、还原或清除用户配置设置数据",
 						backupAndRestore: "导出或导入用户配置设置数据以便不时之需",
 						reset: "重置用户配置可能会解决某些不可名状的问题，你也会丢失你的所有配置数据",
 					},

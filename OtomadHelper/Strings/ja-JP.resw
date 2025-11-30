@@ -294,7 +294,7 @@
 		<value>クレジットロール</value>
 	</data>
 	<data name="Shared.Exceptions.ErrorHeader" xml:space="preserve">
-		<value>エラー: </value>
+		<value>エラー：</value>
 	</data>
 	<data name="Shared.Exceptions.PlaybackRateCannotBeZero" xml:space="preserve">
 		<value>再生速度を0に設定できません。
