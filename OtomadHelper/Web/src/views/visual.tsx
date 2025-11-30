@@ -23,6 +23,8 @@ export /* @internal */ const truncates = [
 	{ id: "trimEndFrames", icon: "trim_end_frames", availableInAudio: true, idleEffectApplicable: false },
 	{ id: "splitThenFreeze", icon: "split_then_freeze", availableInAudio: false, idleEffectApplicable: true },
 	{ id: "splitThenResume", icon: "split_then_resume", availableInAudio: false, idleEffectApplicable: true },
+	{ id: "pingpong", icon: "pingpong_back", availableInAudio: false, idleEffectApplicable: false },
+	{ id: "loop", icon: "loop_back", availableInAudio: false, idleEffectApplicable: false },
 ] as const;
 export /* @internal */ const transformMethods = [
 	"panCrop", "pictureInPicture", "transformOfx",

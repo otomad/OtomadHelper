@@ -10,9 +10,6 @@ export const Encodings = Enum({
 	"UTF-16BE": { value: 1201, charset: undefined, aliases: ["BigEndianUnicode"] },
 	"UTF-16LE": { value: 1200, charset: undefined, aliases: ["Unicode"] },
 	"KOI8-R": { value: 20866, charset: "Cyrl", aliases: [] },
-	"ISO-8859-2": { value: 28592, charset: "Latn", aliases: [] },
-	"ISO-8859-7": { value: 28597, charset: "Grek", aliases: [] },
-	"ISO-8859-8": { value: 28598, charset: "Hebr", aliases: [] },
 	"Windows-874": { value: 874, charset: "Thai", aliases: [] },
 	"Windows-1250": { value: 1250, charset: "Latn", aliases: [] },
 	"Windows-1251": { value: 1251, charset: "Cyrl", aliases: [] },
@@ -21,6 +18,9 @@ export const Encodings = Enum({
 	"Windows-1256": { value: 1256, charset: "Arab", aliases: [] },
 	"Windows-1257": { value: 1257, charset: "Latn", aliases: [] },
 	"Windows-1258": { value: 1258, charset: "vi", aliases: [] },
+	"ISO-8859-2": { value: 28592, charset: "Latn", aliases: [] },
+	"ISO-8859-7": { value: 28597, charset: "Grek", aliases: [] },
+	"ISO-8859-8": { value: 28598, charset: "Hebr", aliases: [] },
 });
 
 const StyledPreviewEncoding = styled.div`
@@ -57,14 +57,13 @@ const StyledPreviewEncoding = styled.div`
 	}
 `;
 
-export default function PreviewEncoding({ encoding, ariaId }: FCP<{
+export default function PreviewEncoding({ encoding }: FCP<{
 	/** Text encoding. */
 	encoding: Config.Encoding;
-	/** Aria ID of the radio button. */
-	ariaId: string;
 	children?: never;
 }, "div">) {
 	const [language] = useLanguage();
+	const { ariaId } = useContext(RadioButton.Context);
 	const encodingInfo = Encodings.all[encoding];
 	const charset = useMemo(() => {
 		const charsetCode = encodingInfo.charset;

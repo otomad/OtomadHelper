@@ -234,7 +234,7 @@ export default function Score() {
 				items={Encodings}
 				value={encoding}
 				radioButtonAttrs={{ diySlot: true }}
-				nameField={({ key }) => ariaId => <PreviewEncoding encoding={key} ariaId={ariaId} />}
+				nameField={({ key }) => <PreviewEncoding encoding={key} />}
 				checkInfoCondition={value => value === "ANSI" ? t.systemDefault : value}
 			/>
 			<Setting

@@ -110,6 +110,13 @@ const StyledRadioButtonLabel = styled.label<{
 	${styles.mixins.forwardFocusRing()};
 `);
 
+const RadioButtonContext = createContext<{
+	/** Aria ID of the radio button. */
+	ariaId?: string;
+}>({
+	ariaId: undefined,
+});
+
 export default function RadioButton<T>({ children, id, value: [value, setValue], disabled = false, onChange, details, radioGroup, plain = false, icon, readOnly, diySlot = false, ...htmlAttrs }: FCP<{
 	/** Identifier. */
 	id: T;
@@ -175,12 +182,16 @@ export default function RadioButton<T>({ children, id, value: [value, setValue],
 				<div className="bullet" />
 			</div>
 			{icon && <Icon name={icon} />}
-			{diySlot ? children : (
-				<div className="text" aria-hidden>
-					<p className="title" id={`${ariaId}-title`}>{children}</p>
-					<p className="details" id={`${ariaId}-details`}>{details}</p>
-				</div>
-			)}
+			<RadioButtonContext value={{ ariaId }}>
+				{diySlot ? children : (
+					<div className="text" aria-hidden>
+						<p className="title" id={`${ariaId}-title`}>{children}</p>
+						<p className="details" id={`${ariaId}-details`}>{details}</p>
+					</div>
+				)}
+			</RadioButtonContext>
 		</StyledRadioButtonLabel>
 	);
 }
+
+RadioButton.Context = RadioButtonContext;

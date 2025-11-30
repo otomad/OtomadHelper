@@ -344,7 +344,7 @@ export default [
 			"react/jsx-key": "error",
 			"react/jsx-fragments": ["error", "syntax"],
 			"react/no-unknown-property": "off", // 正在使用 TypeScript，不需要你瞎操心。（指不支持 MathML 属性）
-			"react/display-name": "off",
+			"react/display-name": "warn",
 			"@stylistic/jsx-closing-bracket-location": ["error", "tag-aligned"],
 			"@stylistic/jsx-closing-tag-location": "error",
 			"@stylistic/jsx-curly-spacing": ["error", { "when": "never", "children": true }],

@@ -27,7 +27,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	 * - If it is true, it means that the selected item is a string, and the name can be used directly.
 	 * - If it is an i18n item object, it will get the value of the object from the value as the key.
 	 */
-	nameField?: FieldType<TItem> | object | ((item: TItem) => ReactNode) | ((item: TItem) => (ariaId: string) => ReactNode);
+	nameField?: FieldType<TItem> | object | ((item: TItem) => ReactNode);
 	/** The icon field for the radio item. */
 	iconField?: FieldType<TItem> | ((item: TItem) => ReactNode) | DeclaredIcons | ReactNode;
 	/** The image field for the radio item. */

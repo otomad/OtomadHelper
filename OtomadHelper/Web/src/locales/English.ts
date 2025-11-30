@@ -321,6 +321,8 @@ export default {
 				trimEndFrames: "Trim end frames",
 				splitThenFreeze: "Split then freeze",
 				splitThenResume: "Split then resume",
+				pingpong: "Ping-pong back",
+				loop: "Loop back",
 			},
 			prologue: {
 				_: "Prologue",
@@ -1061,6 +1063,8 @@ export default {
 					trimEndFrames: "If the note is longer than the clip, trims frames after the clip’s out point",
 					splitThenFreeze: "If the note is longer than the clip, splits from the clip’s out point, and then freezes the latter’s in point",
 					splitThenResume: "If the note is longer than the clip, splits from the clip’s out point, but does not freeze the latter’s in point, and continue to play instead",
+					pingpong: "If the note is longer than the clip, ping-pongs back to play the available duration of the clip",
+					loop: "If the note is longer than the clip, loops back to play the available duration of the clip",
 					idleEffect: "Applies an effect to the latter of the split clips",
 					idleEffectUnavailable: "The effect is applicable only to {{modes, quote, and, lowercase}}", // Please DO NOT translate the interpolation `{{modes, quote, and, lowercase}}`!
 				},
@@ -1071,7 +1075,7 @@ export default {
 					introduceEffectively: "Uses the source with same effects (such as stretch and pitch) as the first clip for the introduction",
 					sourceLength: "The introduction will be the same length as the source, even if it does not match the beat",
 					upToOneBar: "The introduction will last up to one measure",
-					untilTheStart: "The introduction will lengthen to the start time of the generation, unless it exceeds the start of the source itself",
+					untilTheStart: "The introduction will lengthen to the start time of the generation, unless it exceeds the start of the source media itself",
 					once: "When disabled, all of the first clips of each track will have an introduction",
 					emphasisTimes: "Useful to show the original source before YTPMVing",
 					emphasisDuration: "Constrains the duration of the emphasized source part to match the beat",

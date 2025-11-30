@@ -356,7 +356,7 @@ export const settingsMetasInput = {
 			items: {
 				autoSwitchSourceFrom: { icon: "arrow_swap" },
 				autoCollapsePrveClasses: { icon: "chevron_down_up" },
-				previewWithSource: { icon: "video_person" },
+				previewWithSource: { icon: "eye_checkmark" },
 			},
 		},
 		config: {
