@@ -16,6 +16,12 @@ export /* @internal */ const constrainNoteLengthTypes = [
 export /* @internal */ const multipleSelectTrackItems = Object.freeze(["audio", "visual", "sonar", "lyrics"] as const);
 const allMultipleSelectTrackItemSet = new Set(multipleSelectTrackItems);
 export /* @internal */ const trackAndChannel = ["track", "channel"] as const;
+export /* @internal */ const ScorePeriodicityPresets = Enum({
+	off: { label: t.off, icon: "dismiss" },
+	odd: { label: t.odd, icon: "parity/odd_columns" },
+	even: { label: t.even, icon: "parity/even_columns" },
+	custom: { label: t.custom, icon: "edit" },
+});
 /** @deprecated Test only! */
 const tracks = [
 	{ channel: 1, name: "Lead", noteCount: 100, beginNote: 60, pan: "leftVariable", isDrumKit: false, inst: 82 },
@@ -116,7 +122,7 @@ const MultipleSelectTrackItemsContainer = styled.div`
 
 export default function Score() {
 	const {
-		format, encoding, trimStart, trimEnd, tempoUsing, customTempo,
+		format, encoding, trimEnabled, trimStart, trimEnd, periodicityEnabled, pitchRangeEnabled, pitchRange, tempoUsing, customTempo,
 		timeSignature: [timeSignature], trackOrChannel, autoChangeProjectTempo, autoChangeProjectTimeSignature,
 		selectedTrack: [selectedTrack, setSelectedTrack], multipleSelectTrackItems: [selectTrackItems, _setSelectTrackItems],
 	} = useSelectConfig(c => c.score);
@@ -226,8 +232,22 @@ export default function Score() {
 				</TabBar>
 			</Card>
 
-			<Setting meta={meta.trim}>
-				<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
+			<Setting meta={meta.filter}>
+				<Setting meta={meta.filter.trim} expanded={trimEnabled} type="switch">
+					<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
+				</Setting>
+				<Setting
+					meta={meta.filter.periodicity}
+					actions={(
+						<Segmented current={periodicityEnabled}>
+							{ScorePeriodicityPresets.array.map(({ key, label, icon }) =>
+								<Segmented.Item id={key} key={key} icon={icon}>{label}</Segmented.Item>)}
+						</Segmented>
+					)}
+				/>
+				<Setting meta={meta.filter.pitchRange} expanded={pitchRangeEnabled} type="switch" actions={pitchRangeEnabled[0] && pitchRange[0].join(t.rangeDash)}>
+					<PianoPicker pitch={pitchRange} />
+				</Setting>
 			</Setting>
 			<Setting
 				meta={meta.encoding}

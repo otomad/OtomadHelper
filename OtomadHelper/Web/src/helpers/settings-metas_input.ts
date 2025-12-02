@@ -72,7 +72,15 @@ export const settingsMetasInput = {
 	},
 	score: {
 		from: { icon: "instrument" },
-		trim: { icon: "aspect_ratio", title: t.source.trim },
+		filter: {
+			icon: "filter",
+			title: t.filter,
+			items: {
+				trim: { icon: "aspect_ratio", title: t.source.trim },
+				periodicity: { icon: "placeholder" },
+				pitchRange: { icon: "table_columns" },
+			},
+		},
 		encoding: { icon: "globe" },
 		tempo: { icon: "speed" },
 		timeSignature: { icon: "heart_pulse" },

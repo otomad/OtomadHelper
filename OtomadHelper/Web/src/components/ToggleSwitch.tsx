@@ -22,6 +22,7 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	}
 
 	.right {
+		${styles.effects.text.body};
 		display: flex;
 		gap: ${TOGGLE_SWITCH_LABEL_GAP}px; // When use \`inherit\` will produce new issues.
 		align-items: center;
@@ -226,7 +227,7 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	}
 `);
 
-export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, children, onChange, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, actions, children, onChange, ...htmlAttrs }: FCP<{
 	/** Is on? */
 	on: StateProperty<boolean>;
 	/** Disabled */
@@ -268,6 +269,8 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	title?: never;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
+	/** The other action control area on the right side of the component. */
+	actions?: ReactNode;
 	/** Occurs while toggling. */
 	onChange?(on: boolean): void;
 }, "button">) {
@@ -370,6 +373,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 				</div>
 			)}
 			<div className="right">
+				{actions}
 				{!hideLabel && (
 					<output className="text label" aria-hidden>
 						{!inContextLocalization && !reduceMotion ? (

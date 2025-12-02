@@ -80,6 +80,10 @@ declare global {
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array/fromHex) */
 		fromHex(string: string): Uint8Array<ArrayBuffer>;
 	}
+
+	interface ScrollIntoViewOptions {
+		container?: "all" | "nearest";
+	}
 }
 // #endregion
 

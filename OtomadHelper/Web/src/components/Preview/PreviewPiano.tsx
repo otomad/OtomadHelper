@@ -32,6 +32,11 @@ const Wrapper = styled(HorizontalScroll)`
 	&:hover {
 		will-change: scroll-position;
 	}
+
+	.sub-expander & {
+		padding: 0 !important;
+		border-radius: 0;
+	}
 `;
 
 const StyledPreviewPiano = styled.div`
@@ -41,16 +46,46 @@ const StyledPreviewPiano = styled.div`
 	height: 150px;
 `;
 
-export default function PreviewPiano({ ...htmlAttrs }: FCP<{}, "div">) {
-	const [activeKey, setActiveKey] = useState("");
+export default function PreviewPiano({ activeKeys: _activeKeys, sourceKeys = [], fallbackKeys = [], showKeyLabels = [], onClick: _onClick, onMouseDown, ...htmlAttrs }: FCP<{
+	/** Active keys. */
+	activeKeys?: string[];
+	/** Source keys. */
+	sourceKeys?: string[];
+	/** Fallback-default keys. */
+	fallbackKeys?: string[];
+	/** Provide keys that will force to show the pitch note name if `showCOnly` is true. */
+	showKeyLabels?: string[];
+	/** Occurs when the key is clicked. */
+	onClick?(spn: string): void;
+	/** Occurs when the key is pressed, or mouse entered while pressing. */
+	onMouseDown?(spn: string): void;
+}, "div">) {
+	// Demo mode, if provide no props.
+	const [internalActiveKeys, setInternalActiveKeys] = useState<string[]>([]);
+	const demoMode = !_activeKeys && !_onClick && !onMouseDown;
+	const activeKeys = !demoMode ? _activeKeys : internalActiveKeys;
+	const onClick: typeof _onClick = !demoMode ? _onClick : spn => setInternalActiveKeys([spn]);
 
 	return (
 		<Wrapper>
 			<StyledPreviewPiano {...htmlAttrs}>
 				{forMap(LENGTH, i => {
 					if (intervalPattern[(i + 1) % 12] === "0") return;
-					const isBlackNext = intervalPattern[i % 12] === "0" && i < LENGTH - 2;
-					return <PianoKey key={i} isBlackNext={isBlackNext} midiNote={i} showCOnly activeKey={[activeKey, setActiveKey]} />;
+					const isBlackNext = intervalPattern[i % 12] === "0" && i < LENGTH - 1;
+					return (
+						<PianoKey
+							key={i}
+							isBlackNext={isBlackNext}
+							midiNote={i}
+							showCOnly
+							activeKeys={activeKeys}
+							sourceKeys={sourceKeys}
+							fallbackKeys={fallbackKeys}
+							showKeyLabels={showKeyLabels}
+							onClick={onClick}
+							onMouseDown={onMouseDown}
+						/>
+					);
 				})}
 			</StyledPreviewPiano>
 		</Wrapper>
@@ -73,7 +108,7 @@ const StyledPianoKey = styled.div`
 		display: flex;
 		justify-content: center;
 		align-items: end;
-		contain: strict;
+		/* contain: strict; */
 		color: ${c("foreground-color")};
 		/* font-variant-numeric: tabular-nums; */
 		background-color: color-mix(in srgb, var(--fill), var(--highlight) var(--level-highlight));
@@ -83,10 +118,11 @@ const StyledPianoKey = styled.div`
 		&:hover {
 			background-color: color-mix(in srgb, color-mix(in hsl, var(--fill), var(--mixed-hover) var(--level-hover, 10%)), var(--highlight) var(--level-highlight));
 		}
+	}
 
-		&:active {
-			background-color: color-mix(in srgb, color-mix(in hsl, var(--fill), var(--mixed-active, var(--mixed-hover)) var(--level-active, 20%)), var(--highlight) var(--level-highlight));
-		}
+	&:not(.has-mouse-down) button:active,
+	button:hover:active {
+		background-color: color-mix(in srgb, color-mix(in hsl, var(--fill), var(--mixed-active, var(--mixed-hover)) var(--level-active, 20%)), var(--highlight) var(--level-highlight));
 	}
 
 	.white {
@@ -144,44 +180,88 @@ const StyledPianoKey = styled.div`
 		--level-highlight: 15%;
 	}
 
-	.default:not(.source, .active) {
+	.fallback:not(.source, .active) {
 		--highlight: ${c("fill-color-system-caution")};
 		--level-highlight: 15%;
 	}
+
+	&:not(.has-mouse-down) .is-not-c:not(:hover, :active),
+	.is-not-c:not(:hover, :hover:active) {
+		color: transparent;
+		content-visibility: hidden;
+		transition-behavior: allow-discrete;
+	}
 `;
 
-function PianoKey({ isBlackNext, midiNote, showCOnly, activeKey: [activeKey, setActiveKey] = NEVER_MIND }: {
+function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKeys = [], fallbackKeys = [], showKeyLabels = [], onClick, onMouseDown }: {
 	/** Is the next key a black key? */
 	isBlackNext: boolean;
 	/** MIDI note number. */
 	midiNote?: number;
 	/** Show note name with C only? */
 	showCOnly?: boolean;
-	/** Active key. */
-	activeKey?: StateProperty<string>;
+	/** Active keys. */
+	activeKeys?: string[];
+	/** Source keys. */
+	sourceKeys?: string[];
+	/** Fallback-default keys. */
+	fallbackKeys?: string[];
+	/** Provide keys that will force to show the pitch note name if `showCOnly` is true. */
+	showKeyLabels?: string[];
+	/** Occurs when the key is clicked. */
+	onClick?(spn: string): void;
+	/** Occurs when the key is pressed, or mouse entered while pressing. */
+	onMouseDown?(spn: string): void;
 }) {
-	let whiteSpn = "", blackSpn = "", whiteSpnShown = "", blackSpnShown = "";
+	let whiteSpn = "", blackSpn = "";
 	if (midiNote !== undefined) {
-		whiteSpn = whiteSpnShown = midiNoteToSPN(midiNote - (isBlackNext ? 1 : 0));
-		blackSpn = blackSpnShown = midiNoteToSPN(midiNote);
+		whiteSpn = midiNoteToSPN(midiNote - (isBlackNext ? 1 : 0));
+		blackSpn = midiNoteToSPN(midiNote);
 	}
-	if (showCOnly) {
-		if (!isNoteNameC(whiteSpn)) whiteSpnShown = "";
-		if (!isNoteNameC(blackSpn)) blackSpnShown = "";
-	}
-
-	// FOR TEST ONLY!
-	const hasSource = whiteSpn.endsWith("5");
-	const hasDefault = whiteSpn.endsWith("3");
+	const isLastWhiteKey = midiNote === 126;
 
 	return (
-		<StyledPianoKey>
-			<button type="button" className={["white", { active: activeKey === whiteSpn, source: hasSource, default: hasDefault }]} onClick={() => setActiveKey?.(whiteSpn)}>{whiteSpnShown}</button>
-			{isBlackNext && <button type="button" className={["black", { active: activeKey === blackSpn, source: hasSource, default: hasDefault }]} onClick={() => setActiveKey?.(blackSpn)}>{blackSpnShown}</button>}
+		<StyledPianoKey className={{ hasMouseDown: !!onMouseDown }}>
+			<button
+				type="button"
+				className={["white", {
+					active: activeKeys.includes(whiteSpn),
+					source: sourceKeys.includes(whiteSpn),
+					fallback: fallbackKeys.includes(whiteSpn),
+					isNotC: showCOnly && !isNoteNameC(whiteSpn) && !showKeyLabels.includes(whiteSpn),
+				}]}
+				onClick={() => onClick?.(whiteSpn)}
+				onMouseDown={leftDownModifier(() => onMouseDown?.(whiteSpn))}
+				onMouseEnter={leftDownModifier(() => onMouseDown?.(whiteSpn))}
+			>
+				{whiteSpn}
+			</button>
+			{isBlackNext && !isLastWhiteKey && (
+				<button
+					type="button"
+					className={["black", {
+						active: activeKeys.includes(blackSpn),
+						source: sourceKeys.includes(blackSpn),
+						fallback: fallbackKeys.includes(blackSpn),
+						isNotC: showCOnly && !isNoteNameC(blackSpn) && !showKeyLabels.includes(blackSpn),
+					}]}
+					onClick={() => onClick?.(blackSpn)}
+					onMouseDown={leftDownModifier(() => onMouseDown?.(blackSpn))}
+					onMouseEnter={leftDownModifier(() => onMouseDown?.(blackSpn))}
+				>
+					{blackSpn}
+				</button>
+			)}
 		</StyledPianoKey>
 	);
 }
 
 function isNoteNameC(noteName: string) {
-	return noteName.startsWith("C") && !noteName.startsWith("C#");
+	return noteName.match(/^C(?!#)/i);
+}
+
+function leftDownModifier(handler: MouseEventHandler<HTMLButtonElement>): MouseEventHandler<HTMLButtonElement> {
+	return e => {
+		if (e.buttons === 1) handler(e);
+	};
 }

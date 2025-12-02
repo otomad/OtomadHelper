@@ -58,7 +58,7 @@ const StyledSubExpander = styled.div`
 	}
 `;
 
-export /* @internal */ default function SubExpander({ icon, title, details, disabled, expanded = false, _requestExpanded, type = "chevron", noIndention, anchor, actions: _actions, children, onChange: _onChange, ...htmlAttrs }: FCP<{
+export /* @internal */ default function SubExpander({ icon, title, details, disabled, expanded = false, _requestExpanded, type = "chevron", noIndention, anchor, actions, children, onChange: _onChange, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons;
 	/** Title. */
@@ -83,7 +83,7 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 	noIndention?: boolean;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
-	/** The other action control area on the right side of the component. @warn Useless, not working now. */
+	/** The other action control area on the right side of the component. */
 	actions?: ReactNode;
 }, GenericElement>) {
 	let setExpanded: SetStateNarrow<boolean>;
@@ -108,6 +108,7 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 						details={details}
 						disabled={disabled}
 						anchor={anchor}
+						actions={actions}
 						{...htmlAttrs}
 					>
 						{title}
@@ -124,6 +125,7 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 						onClick={() => setExpanded(expanded => !expanded)}
 						{...htmlAttrs}
 					>
+						{actions}
 						<div className={["action-icon", TRAILING_EXEMPTION, "expander-chevron"]} data-type={type}>
 							<Icon name="chevron_down" />
 						</div>
