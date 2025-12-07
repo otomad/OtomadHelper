@@ -20,16 +20,48 @@ export /* @internal */ const selectGeneratedClipsType = [
 ] as const;
 const allSelectGeneratedClips = Object.freeze(selectGeneratedClipsType.map(item => item.id));
 const getAllSelectGeneratedClips = () => allSelectGeneratedClips.slice();
-export /* @internal */ const trackNames = [
-	{ id: "track", name: t.source.trackName.track, additional: t.source.trackName.voicebank, icon: "layer" },
-	{ id: "trackIndex", name: t.source.trackName.trackIndex, icon: "layer_number" },
-	{ id: "instrument", name: t.source.trackName.instrument, additional: t.source.trackName.voicebank, icon: "instrument" },
-	{ id: "channel", name: t.source.trackName.channel, icon: "midi" },
-	{ id: "clip", name: t.source.trackName.clip, icon: "track_event" },
-	{ id: "media", name: t.source.trackName.media, icon: "media" },
-	{ id: "score", name: t.source.trackName.score, icon: "document_score" },
-	{ id: "unnamed", name: t.source.trackName.unnamed, icon: "prohibited" },
-] as const;
+export /* @internal */ namespace Namings {
+	const baseTrackNames = [
+		{ id: "clip", name: t.source.naming.clip, icon: "track_event" },
+		{ id: "media", name: t.source.naming.media, icon: "media" },
+		{ id: "unnamed", name: t.source.naming.unnamed, icon: "prohibited" },
+	] as const;
+	const scoredTrackNames = [
+		{ id: "score", name: t.source.naming.score, icon: "document_score" },
+		...baseTrackNames,
+	] as const;
+	const baseClipNames = [
+		{ id: "unset", name: t.unset, icon: "subtract" },
+	] as const;
+	export const otomadTrackNames = [
+		{ id: "track", name: t.source.naming.track, icon: "layer" },
+		{ id: "trackIndex", name: t.source.naming.trackIndex, icon: "layer_number" },
+		{ id: "instrument", name: t.source.naming.instrument, icon: "instrument" },
+		{ id: "channel", name: t.source.naming.channel, icon: "midi" },
+		...scoredTrackNames,
+	] as const;
+	export const vocaloidTrackNames = [
+		{ id: "voicebank", name: t.source.naming.voicebank, icon: "speech" },
+		{ id: "voicebankIndex", name: t.source.naming.voicebankIndex, icon: "placeholder" },
+		{ id: "project", name: t.source.naming.project, icon: "placeholder" },
+		...scoredTrackNames,
+	] as const;
+	export const ytpTrackNames = baseTrackNames;
+	export const otomadClipNames = [
+		...otomadTrackNames,
+		...baseClipNames,
+	] as const;
+	export const vocaloidClipNames = [
+		{ id: "lyric", name: t.source.naming.lyric, icon: "placeholder" },
+		...vocaloidTrackNames,
+		...baseClipNames,
+	] as const;
+	export const ytpClipNames = [
+		{ id: "effect", name: t.source.naming.effect, icon: "sparkle" },
+		...baseTrackNames,
+		...baseClipNames,
+	] as const;
+}
 export /* @internal */ const sequentialOrders = [
 	{ id: "sequential", icon: "arrow_right_double" },
 	{ id: "reversed", icon: "arrow_left_double" },
@@ -38,6 +70,12 @@ export /* @internal */ const sequentialOrders = [
 
 export /* @internal */ const barOrBeatUnitTypes = ["bar", "beat"] as const;
 
+const NamingSetting = styled(Setting)`
+	& + .expander-child .combo-box {
+		min-inline-size: 250px;
+	}
+`;
+
 /** @deprecated */
 const isUnderVegas16 = true;
 
@@ -45,7 +83,8 @@ export default function Source() {
 	const {
 		sourceFrom, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
-		trackGroup, collapseTrackGroup, trackName, secretBox, consonant, matchCut, matchCutOrder, matchCutLoop, matchCutSecretBox, linearMap, linearMapDescending,
+		trackGroup, collapseTrackGroup, otomadTrackName, vocaloidTrackName, ytpTrackName, otomadClipName, vocaloidClipName, ytpClipName,
+		secretBox, consonant, matchCut, matchCutOrder, matchCutLoop, matchCutSecretBox, linearMap, linearMapDescending,
 		secretBoxLimitToSelected, secretBoxForTrack, secretBoxForMarker, secretBoxForBarOrBeat, secretBoxForBarOrBeatPeriod, secretBoxForBarOrBeatPreparation,
 	} = useSelectConfig(c => c.source);
 	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = useSelectConfig(c => c.source.afterCompletion);
@@ -131,16 +170,28 @@ export default function Source() {
 			<Setting meta={meta.trackGroup} on={trackGroup}>
 				<Setting meta={meta.trackGroup.collapse} on={collapseTrackGroup} />
 			</Setting>
-			<Setting
-				meta={meta.trackName}
-				items={trackNames}
-				value={trackName}
-				view="tile"
-				idField="id"
-				nameField={t.source.trackName}
-				iconField="icon"
-				detailsField="additional"
-			/>
+			<NamingSetting meta={meta.naming}>
+				<Setting meta={meta.naming.trackName} asSubtitle />
+				<Expander.Item title={t.mode.otomad} selectInfo={t.mode.current}>
+					<ComboBox current={otomadTrackName} ids={Namings.otomadTrackNames.map(({ id }) => id)} options={Namings.otomadTrackNames.map(({ name }) => name)} icons={Namings.otomadTrackNames.map(({ icon }) => icon)} />
+				</Expander.Item>
+				<Expander.Item title={t.mode.vocaloid}>
+					<ComboBox current={vocaloidTrackName} ids={Namings.vocaloidTrackNames.map(({ id }) => id)} options={Namings.vocaloidTrackNames.map(({ name }) => name)} icons={Namings.vocaloidTrackNames.map(({ icon }) => icon)} />
+				</Expander.Item>
+				<Expander.Item title={t.mode.ytp}>
+					<ComboBox current={ytpTrackName} ids={Namings.ytpTrackNames.map(({ id }) => id)} options={Namings.ytpTrackNames.map(({ name }) => name)} icons={Namings.ytpTrackNames.map(({ icon }) => icon)} />
+				</Expander.Item>
+				<Setting meta={meta.naming.clipName} asSubtitle />
+				<Expander.Item title={t.mode.otomad} selectInfo={t.mode.current}>
+					<ComboBox current={otomadClipName} ids={Namings.otomadClipNames.map(({ id }) => id)} options={Namings.otomadClipNames.map(({ name }) => name)} icons={Namings.otomadClipNames.map(({ icon }) => icon)} />
+				</Expander.Item>
+				<Expander.Item title={t.mode.vocaloid}>
+					<ComboBox current={vocaloidClipName} ids={Namings.vocaloidClipNames.map(({ id }) => id)} options={Namings.vocaloidClipNames.map(({ name }) => name)} icons={Namings.vocaloidClipNames.map(({ icon }) => icon)} />
+				</Expander.Item>
+				<Expander.Item title={t.mode.ytp}>
+					<ComboBox current={ytpClipName} ids={Namings.ytpClipNames.map(({ id }) => id)} options={Namings.ytpClipNames.map(({ name }) => name)} icons={Namings.ytpClipNames.map(({ icon }) => icon)} />
+				</Expander.Item>
+			</NamingSetting>
 
 			<Subheader meta={meta.multisource} />
 			{ytpEnabled && <InfoBar status="warning" title={t.descriptions.source.multisource.ytpEnabled} button={<EmptyMessage.YtpDisabled.Buttons />} />}

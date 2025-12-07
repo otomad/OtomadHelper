@@ -9,7 +9,7 @@ import type { musicalNotationSystems } from "views/lyrics";
 import type { constrainNoteLengthTypes, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
 import type { systemBackdrops } from "views/settings";
 import type { textPlugins } from "views/settings/internal";
-import type { barOrBeatUnitTypes, selectGeneratedClipsType, sequentialOrders, sourceFromEnums, startTimes, trackNames } from "views/source";
+import type { Namings, barOrBeatUnitTypes, selectGeneratedClipsType, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
 import type { trackLegatoModes } from "views/track";
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
 import type { glissandoEffects, legatos, prerenders, stretches, transformMethods, truncates } from "views/visual";
@@ -29,7 +29,6 @@ namespace Config {
 	export type MultipleSelectTrackItem = typeof multipleSelectTrackItems[number];
 	export type SelectGeneratedClips = typeof selectGeneratedClipsType[number]["id"];
 	export type BeepEngine = typeof beepEngines[number];
-	export type TrackNameType = typeof trackNames[number]["id"];
 	export type BarOrBeatUnit = typeof barOrBeatUnitTypes[number];
 	export type SourceFrom = typeof sourceFromEnums[number];
 	export type TrackOrChannel = typeof trackAndChannel[number];
@@ -56,6 +55,12 @@ namespace Config {
 	export type PrologueForm = typeof PrologueForms.keyType;
 	export type PrologueDurationUsing = typeof PrologueDurationUsings.keyType;
 	export type PrologueEmphasisDuration = typeof PrologueEmphasisDurations.keyType;
+	export type OtomadTrackNameType = typeof Namings.otomadTrackNames[number]["id"];
+	export type VocaloidTrackNameType = typeof Namings.vocaloidTrackNames[number]["id"];
+	export type YtpTrackNameType = typeof Namings.ytpTrackNames[number]["id"];
+	export type OtomadClipNameType = typeof Namings.otomadClipNames[number]["id"];
+	export type VocaloidClipNameType = typeof Namings.vocaloidClipNames[number]["id"];
+	export type YtpClipNameType = typeof Namings.ytpClipNames[number]["id"];
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -86,7 +91,12 @@ namespace Config {
 			belowAdjustmentTracks: true,
 			trackGroup: true,
 			collapseTrackGroup: true,
-			trackName: "track" satisfies TrackNameType as TrackNameType,
+			otomadTrackName: "track" satisfies OtomadTrackNameType as OtomadTrackNameType,
+			vocaloidTrackName: "voicebank" satisfies VocaloidTrackNameType as VocaloidTrackNameType,
+			ytpTrackName: "unnamed" satisfies YtpTrackNameType as YtpTrackNameType,
+			otomadClipName: "unset" satisfies OtomadClipNameType as OtomadClipNameType,
+			vocaloidClipName: "lyric" satisfies VocaloidClipNameType as VocaloidClipNameType,
+			ytpClipName: "effect" satisfies YtpClipNameType as YtpClipNameType,
 			secretBox: false,
 			secretBoxLimitToSelected: false,
 			secretBoxForTrack: false,

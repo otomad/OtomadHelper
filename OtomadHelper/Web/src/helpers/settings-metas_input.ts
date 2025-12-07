@@ -33,7 +33,13 @@ export const settingsMetasInput = {
 				collapse: { icon: "chevron_down_up" },
 			},
 		},
-		trackName: { icon: "rename" },
+		naming: {
+			icon: "rename",
+			items: {
+				trackName: { icon: "placeholder" },
+				clipName: { icon: "placeholder" },
+			},
+		},
 		multisource: subheader(),
 		secretBox: {
 			icon: "question_square",
