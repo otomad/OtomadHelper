@@ -73,8 +73,11 @@ declare global {
 	/** The values that badge can be accepted. */
 	type BadgeValue = string | number | boolean | undefined;
 
-	/** Badge value and status. */
+	/** Badge optional value and status. */
 	type BadgeArgs = [badge?: BadgeValue, status?: Status, hidden?: boolean];
+
+	/** Badge required value and status. */
+	type BadgeRequiredArgs = [status: Status, badge?: BadgeValue];
 
 	/**
 	 * A type which includes the numeric value and its unit enum type.

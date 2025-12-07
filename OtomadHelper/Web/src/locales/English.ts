@@ -1068,6 +1068,7 @@ export default {
 				loop: {
 					_: "When the clip is lengthened to the end of the source media, playback starts over",
 					unset: "Preserves the original loop setting of the clip unchanged or the default value",
+					loopMedia: "This setting is used for setting looping media. If you want to set looping clips, please go to the Truncate setting.",
 				},
 				playbackRate: {
 					_: "Changes the playback rate of the clip",

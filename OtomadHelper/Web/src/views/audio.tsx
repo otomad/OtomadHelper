@@ -389,6 +389,8 @@ export default function Audio() {
 }
 
 function TruncateAndLegatoConflictInfoBar() {
+	const { hideUseTips } = useSnapshot(configStore.settings);
+	if (hideUseTips) return;
 	return <InfoBar status="accent" title={t.descriptions.stream.truncateAndLegatoConflictInAudio} />;
 }
 

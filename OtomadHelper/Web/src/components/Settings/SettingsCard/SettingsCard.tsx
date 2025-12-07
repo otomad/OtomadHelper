@@ -188,9 +188,9 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	/** Detailed description. */
 	details?: ReactNode;
 	/** Specifies the display string of the selection of tracks or track events. */
-	selectInfo?: ReactNode;
+	selectInfo?: ReactNode | ReactNode[];
 	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. */
-	selectValid?: boolean | number;
+	selectValid?: (boolean | number) | (boolean | number | BadgeRequiredArgs)[];
 	/** Trailing Action icon. Use an empty string or Boolean type to indicate disabling. */
 	actionIcon?: DeclaredIcons | "" | boolean;
 	/**
@@ -301,7 +301,8 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 									<div className="text">
 										<p className="title" id={`${ariaId}-title`} aria-hidden><Preserves>{title}</Preserves></p>
 										<p className="details" id={`${ariaId}-details`} aria-hidden><Preserves>{details}</Preserves></p>
-										<SettingsCardSelectInfo valid={selectValid}>{selectInfo}</SettingsCardSelectInfo>
+										{selectInfo && wrapIfNotArray(selectInfo).map((info, i) =>
+											<SettingsCardSelectInfo key={i} valid={Array.isArray(selectValid) ? selectValid[i] : selectValid}>{info}</SettingsCardSelectInfo>)}
 									</div>
 								</Transitions.DynamicAutoSize>
 							</>
