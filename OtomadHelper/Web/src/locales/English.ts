@@ -1023,7 +1023,10 @@ export default {
 			},
 			score: {
 				filter: {
-					trim: "Intercepts the generation time range of the score",
+					_: "Specify to only generate a portion of the score",
+					trim: "Trims the generation time range of the score",
+					periodicity: "Filters generated notes with a periodic or parity-based selection approach at regular intervals in the sequence",
+					pitchRange: "Generates only notes within the specified range of the musical scale",
 				},
 				encoding: "Specify the text encoding to use when reading the file. You should not change this setting unless garbled.",
 				tempo: "Specify the beats per minute",
