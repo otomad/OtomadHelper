@@ -36,8 +36,8 @@ export const settingsMetasInput = {
 		naming: {
 			icon: "rename",
 			items: {
-				trackName: { icon: "placeholder" },
-				clipName: { icon: "placeholder" },
+				trackName: { icon: "layer_rename" },
+				clipName: { icon: "track_event_rename" },
 			},
 		},
 		multisource: subheader(),
@@ -83,8 +83,8 @@ export const settingsMetasInput = {
 			title: t.filter,
 			items: {
 				trim: { icon: "aspect_ratio", title: t.source.trim },
-				periodicity: { icon: "placeholder" },
-				pitchRange: { icon: "table_columns" },
+				periodicity: { icon: "skip_forward_interval" },
+				pitchRange: { icon: "music_note_arrow_bidirectional" },
 			},
 		},
 		encoding: { icon: "globe" },
@@ -128,7 +128,7 @@ export const settingsMetasInput = {
 				stretchAttributes: { icon: "tuning_wrench", details: undefined },
 				alternativeForExceedTheRange: { icon: "tuning_warning" },
 				resample: { icon: "link_multiple" },
-				preserveFormant: { icon: "speech" },
+				preserveFormant: { icon: "person_voice" },
 				basePitch: {
 					icon: "music_note",
 					items: {

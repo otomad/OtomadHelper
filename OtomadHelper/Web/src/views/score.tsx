@@ -11,7 +11,7 @@ export /* @internal */ const constrainNoteLengthTypes = [
 	{ id: "max", icon: "less_or_equal" },
 	{ id: "fixed", icon: "equal" },
 	{ id: "percentage", icon: "percent" },
-	{ id: "fixedDecrement", icon: "subtract" },
+	{ id: "fixedDecrement", icon: "subtract_delta" },
 ] as const;
 export /* @internal */ const multipleSelectTrackItems = Object.freeze(["audio", "visual", "sonar", "lyrics"] as const);
 const allMultipleSelectTrackItemSet = new Set(multipleSelectTrackItems);
@@ -272,6 +272,7 @@ export default function Score() {
 				nameField={t.score.constrain}
 				detailsField={t.descriptions.score.constrain}
 				iconField="icon"
+				parenOff
 			>
 				{constrainNoteLengthType[0] !== "none" && (
 					<Expander.Item

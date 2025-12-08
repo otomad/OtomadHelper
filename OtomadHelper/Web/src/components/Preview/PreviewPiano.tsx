@@ -33,7 +33,7 @@ const Wrapper = styled(HorizontalScroll)`
 		will-change: scroll-position;
 	}
 
-	.sub-expander & {
+	.expander-child-items & {
 		padding: 0 !important;
 		border-radius: 0;
 	}
