@@ -50,6 +50,10 @@ const GlobalStyle = createGlobalStyle<{
 				hanging-punctuation: none;
 			}
 
+			&:is(:lang(th), :lang(lo), :lang(km), :lang(my)) {
+				text-align: justify;
+			}
+
 			&:is(:not(:lang(zh), :lang(ja), :lang(ko))) {
 				text-align: start;
 				hanging-punctuation: first allow-end last;
