@@ -75,10 +75,24 @@ declare global {
 
 	interface Uint8ArrayConstructor {
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array/fromBase64) */
-		fromBase64(string: string): Uint8Array<ArrayBuffer>;
+		fromBase64(string: string, options?: {
+			alphabet?: "base64" | "base64url";
+			lastChunkHandling?: "loose" | "strict" | "stop-before-partial";
+		}): Uint8Array<ArrayBuffer>;
 
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array/fromHex) */
 		fromHex(string: string): Uint8Array<ArrayBuffer>;
+	}
+
+	interface Uint8Array {
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array/toBase64) */
+		toBase64(options?: {
+			alphabet?: "base64" | "base64url";
+			omitPadding?: boolean;
+		}): string;
+
+		/** [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array/toHex) */
+		toHex(): string;
 	}
 
 	interface ScrollIntoViewOptions {

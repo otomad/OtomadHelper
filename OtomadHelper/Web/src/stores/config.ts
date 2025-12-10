@@ -118,6 +118,8 @@ namespace Config {
 			trimStart: EMPTY_TIMECODE,
 			trimEnd: EMPTY_TIMECODE,
 			periodicityEnabled: false,
+			periodicityInterval: 2,
+			periodicityBits: "gA-6",
 			pitchRangeEnabled: false,
 			pitchRange: ["C0", "F#10"] as [string, string],
 			encoding: "ANSI" satisfies Encoding as Encoding,

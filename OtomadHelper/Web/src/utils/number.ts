@@ -33,37 +33,41 @@
 }
 
 /**
+ * Validates whether a value is a valid number.
+ * @param value - The value to validate. Can be of any type.
+ * @returns `true` if the value is a valid finite number, non-empty string that represents a number, or a BigInt; otherwise `false`.
+ * value | returns
+ * --- | :--:
+ * `-123.45e-56` | true
+ * `"1.0e-8"` | true
+ * `256n` | true
+ * `"0xDeadBeef"` | true
+ * `""` | false
+ * `NaN` | false
+ * `Infinity` | false
+ */
+export function isValidNumber(value: unknown) {
+	// eslint-disable-next-line no-restricted-globals
+	return value !== "" && ["number", "string"].includes(typeof value) && isFinite(value as number) || typeof value === "bigint";
+}
+
+/**
  * Normalize the number. Reject stupid scientific notation.
  * @param num - Number.
- * @returns Normalized number.
+ * @returns Normalized number, or `"NaN"` if the number is invalid.
+ * @see https://stackoverflow.com/a/61281355/19553213
+ * @note `-0` will be converted to `"0"`.
  */
 export function normalizeNumber(num: WithWrapperType<number | bigint | string>) {
-	let s = String(num);
-	if (s.includes("Infinity") || s === "NaN") return s;
-	const regexp = (num: string) => num.trim().toLowerCase()
-		.replaceAll("+", "")
-		.replaceAll(/(?<=e|-|^)0*|(?<=\.[^e]*)0*(?=e|$)/g, "")
-		.replace(/(?<=-|^)\./, "0.")
-		.replaceAll(/\.(?=e|$)/g, "");
-	s = regexp(s);
-	if (s.includes("e")) {
-		let [base, exp_str] = s.split("e");
-		const exp = +exp_str;
-		const move = (float: string, direct: number) => {
-			float += "";
-			let dot = float.indexOf(".");
-			if (dot === -1) dot = float.length;
-			dot = direct > 0 ? dot + 1 : dot - 1;
-			float = float.replace(".", "");
-			if (dot === float.length) void 0;
-			else if (dot > float.length) float += "0";
-			else if (dot === 0) float = "0." + float;
-			else float = float.slice(0, dot) + "." + float.slice(dot);
-			return float;
-		};
-		for (let i = 0; i < Math.abs(exp); i++) base = move(base, exp);
-		s = regexp(base);
-	}
-	if (s === "-" || s === "") s = "0";
-	return s;
+	num = num.valueOf();
+	return (() => {
+		if (typeof num === "string")
+			if (num.match(/^(NaN|[+-]?Infinity)$/)) return num;
+			else if (num.match(/^0[box]/i)) try { num = BigInt(num); } catch { }
+		if (!isValidNumber(num)) return "NaN";
+		return ("" + num).replace(/([+-]?)(\d*)\.?(\d*)e([+-]?\d+)/i,
+			(_, sign, int, frac, exp) => exp < 0 ?
+				sign + "0." + Array(1 - exp - int.length).join("0") + int + frac :
+				sign + int + frac + Array(exp - frac.length + 1).join("0"));
+	})().replace(/^\+/, "");
 }

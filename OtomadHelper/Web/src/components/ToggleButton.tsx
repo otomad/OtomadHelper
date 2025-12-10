@@ -26,6 +26,7 @@ export default function ToggleButton({ checked: [checked, setChecked] = [false] 
 					onToggled?.(!checked);
 					return !checked;
 				});
+				if (!setChecked) onToggled?.(!checked);
 				onClick?.(e);
 			}}
 			{...appearance === "subtle" ? {

@@ -1113,8 +1113,8 @@ function useGridTemplateCss(columnWidths: WebMessageEvents.GridColumnWidthRowHei
 		type === "auto" ? t.auto : value === 1 && type === "star" ? ASTERISK : value + (type === "star" ? ASTERISK : type === "pixel" ? "px" : "");
 	const toCssString = (items: string[]) => items.every(item => item === "1fr") ? undefined : items.join(" ");
 	return useMemo(() => {
-		const gridTemplateColumns = new Array<string>(columns).fill("1fr"), gridTemplateRows = new Array<string>(rows).fill("1fr");
-		const rulerColumns = new Array<string>(columns).fill(ASTERISK), rulerRows = new Array<string>(rows).fill(ASTERISK);
+		const gridTemplateColumns = Array<string>(columns).fill("1fr"), gridTemplateRows = Array<string>(rows).fill("1fr");
+		const rulerColumns = Array<string>(columns).fill(ASTERISK), rulerRows = Array<string>(rows).fill(ASTERISK);
 		for (const { index, value, type } of columnWidths)
 			if (index in gridTemplateColumns) {
 				gridTemplateColumns[index] = getValue(value, type, "width");

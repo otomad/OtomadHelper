@@ -9,8 +9,7 @@ function pathObjectTarget(path: string) {
 }
 
 function stringifyIfRequired(value: string | number | undefined) {
-	// eslint-disable-next-line no-restricted-globals
-	return value === undefined ? "" : isFinite(value as number) && value !== "" ? String(value) : JSON.stringify(value);
+	return value === undefined ? "" : isValidNumber(value) ? String(value) : JSON.stringify(value);
 }
 
 function pathObjectProxy(path: string): ReturnType<typeof pathObjectTarget> {

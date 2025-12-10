@@ -1,6 +1,6 @@
 import { fillColorAccentOpacity } from "styles/colors";
 
-const isPressed = ":is(:active, [data-pressed]):not(:has(button:active))", notPressedOrDisabled = ":not(:active, [data-pressed], [disabled])";
+const isPressed = ":is(:active, [data-pressed]):not(:has(button:active))", notPressedOrDisabled = ":not(:active, [data-pressed], [disabled], [aria-readonly])";
 const inlinePadding = 11;
 
 export const styledDirBasedIcon = ($dirBasedIcon?: DirBasedIcon | { $dirBasedIcon?: DirBasedIcon }) => {
@@ -59,7 +59,7 @@ export /* @internal */ const StyledButton = styled.button<{
 		}
 	}
 
-	&[disabled] {
+	&:is([disabled], [aria-readonly]) {
 		background-color: ${c("fill-color-control-disabled")};
 
 		> .content {
@@ -150,7 +150,7 @@ export /* @internal */ const StyledButton = styled.button<{
 			background-color: ${c("fill-color", fillColorAccentOpacity.tertiary)};
 		}
 
-		&[disabled] {
+		&:is([disabled], [aria-readonly]) {
 			background-color: ${c("fill-color-accent-disabled")};
 			border-color: transparent !important;
 
@@ -234,7 +234,7 @@ export /* @internal */ const StyledButton = styled.button<{
 	}
 `;
 
-export default function Button({ children, icon, animatedIcon, subtle = false, hyperlink, accent, dirBasedIcon, repeat, extruded, minWidthUnbounded, ariaHiddenForChildren, href, blank = true, meta, className, disabled, onRelease, onClick, ref, ...htmlAttrs }: FCP<{
+export default function Button({ children, icon, animatedIcon, subtle = false, hyperlink, accent, dirBasedIcon, repeat, extruded, minWidthUnbounded, ariaHiddenForChildren, href, blank = true, meta, readOnly = false, className, disabled = false, onRelease, onClick, ref, ...htmlAttrs }: FCP<{
 	/** Button icon. */
 	icon?: DeclaredIcons;
 	/** Button animated icon. */
@@ -267,6 +267,8 @@ export default function Button({ children, icon, animatedIcon, subtle = false, h
 	blank?: boolean;
 	/** Auto fill props from a setting meta. */
 	meta?: PropsOf<typeof Setting>["meta"];
+	/** Read only? */
+	readOnly?: boolean;
 	/** Mouse release button event. Only works with `RepeatButton`. */
 	onRelease?: BaseEventHandler;
 }, "button">) {
@@ -285,7 +287,8 @@ export default function Button({ children, icon, animatedIcon, subtle = false, h
 			href={href}
 			target={href && blank ? "_blank" : undefined}
 			disabled={disabled}
-			aria-disabled={disabled}
+			aria-disabled={disabled || undefined}
+			aria-readonly={readOnly || undefined}
 			className={[
 				className,
 				{

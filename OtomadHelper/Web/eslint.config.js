@@ -268,6 +268,8 @@ export default [
 				"caughtErrorsIgnorePattern": "^_",
 			}],
 			"no-unused-private-class-members": "warn",
+			"no-object-constructor": "error",
+			"no-array-constructor": "error",
 			"@typescript-eslint/no-inferrable-types": ["error", { "ignoreParameters": true, "ignoreProperties": true }],
 			"@typescript-eslint/no-non-null-assertion": "off",
 			"@typescript-eslint/triple-slash-reference": "off",
@@ -456,6 +458,9 @@ export default [
 			}, {
 				name: "print",
 				message: "Please use window.print instead.",
+			}, {
+				name: "length",
+				message: "Please use window.length instead.",
 			}],
 			"no-restricted-syntax": ["error", {
 				selector: ":not(ForOfStatement, ForInStatement) > VariableDeclaration[kind = 'let'] > VariableDeclarator[init = null]:not([id.typeAnnotation])",
