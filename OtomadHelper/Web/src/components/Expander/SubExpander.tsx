@@ -133,7 +133,7 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 				)
 			}
 			<CssTransition in={expanded || requestExpanded} unmountOnExit transitionEndProperty={["height", "block-size"]} requestAnimationFrame>
-				<div className="expander-child">
+				<div className="expander-child" aria-label={canToString(title) ? title : undefined}>
 					<div className={["expander-child-items", { noIndention }]}>
 						<InteractionStateContext value={{ disabled: type === "switch" && !expanded ? true : undefined }}>
 							{children}

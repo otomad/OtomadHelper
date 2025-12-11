@@ -347,7 +347,7 @@ const StyledLeading = styled.div`
 	}
 `;
 
-function SettingsCardBase({ threshold = SETTINGS_CARD_TRAILING_MAX_WIDTH, leading, trailing, wrap }: FCP<{
+function SettingsCardBase({ threshold = SETTINGS_CARD_TRAILING_MAX_WIDTH, leading, trailing, wrap, ref: forwardedRef }: FCP<{
 	/** Specified the min width threshold, if the trailing part is wider then it, the settings card base will be wrapped. Unit: px. */
 	threshold?: number;
 	/** Leading part. */
@@ -356,11 +356,14 @@ function SettingsCardBase({ threshold = SETTINGS_CARD_TRAILING_MAX_WIDTH, leadin
 	trailing?: ReactNode;
 	/** Should it force wrapping or force not wrapping? Defaults to auto-detect. */
 	wrap?: boolean;
+	/** Get the ref of leading and trailing element. */
+	ref?: RefObject<{ leading: HTMLDivElement | null; trailing: HTMLDivElement | null }>;
 	children?: never;
 }, "div">) {
 	const [wrapped, setWrapped] = useState(wrap ?? false);
-	const trailingEl = useDomRef<"div">();
+	const leadingEl = useDomRef<"div">(), trailingEl = useDomRef<"div">();
 	const inlineSize = useElementSize(trailingEl, "borderBoxInlineSize");
+	useImperativeHandle(forwardedRef, () => ({ leading: leadingEl.current, trailing: trailingEl.current }));
 
 	useEffect(() => {
 		if (!trailingEl.current || wrap !== undefined) return;
@@ -369,7 +372,7 @@ function SettingsCardBase({ threshold = SETTINGS_CARD_TRAILING_MAX_WIDTH, leadin
 
 	return (
 		<>
-			<StyledLeading className={!wrapped && "contents"}>{leading}</StyledLeading>
+			<StyledLeading ref={leadingEl} className={!wrapped && "contents"}>{leading}</StyledLeading>
 			{trailing && <div ref={trailingEl} className="trailing">{trailing}</div>}
 		</>
 	);

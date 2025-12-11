@@ -410,7 +410,6 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 					icon="arrow_step_in"
 					role="region"
 					className="force-motion"
-					ariaHiddenForText
 					wrapActionsWhenNarrow
 				>
 					<ItemsView<number[]> className="initial-step-items" view="grid" current={[initialStep, setInitialStep]} itemWidth={100} aria-label={t.prve.initialStep}>

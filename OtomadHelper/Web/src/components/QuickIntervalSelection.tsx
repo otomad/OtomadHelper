@@ -45,6 +45,10 @@ const StyledPreviewQuickIntervalSelection = styled(HorizontalScroll)`
 		cursor: pointer;
 	}
 
+	> button {
+		z-index: 1;
+	}
+
 	.repetitive-shadow {
 		anchor-name: var(--anchor-name);
 		inline-size: ${paddingX}px;
@@ -54,7 +58,6 @@ const StyledPreviewQuickIntervalSelection = styled(HorizontalScroll)`
 		position: absolute;
 		position-anchor: var(--anchor-name);
 		inset-inline-start: anchor(start);
-		z-index: -1;
 		opacity: 0.35;
 		cursor: not-allowed;
 

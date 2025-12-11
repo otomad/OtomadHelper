@@ -196,7 +196,7 @@ const StyledExpanderItem = styled.div<{
 		` : undefined}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, nonFocusable, asSubtitle, noDivider, ariaHiddenForText, anchor, children, disabled = false, wrapActionsWhenNarrow, selectInfo, selectValid = true, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, nonFocusable, asSubtitle, noDivider, anchor, children, disabled = false, wrapActionsWhenNarrow, selectInfo, selectValid = true, onClick, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -212,7 +212,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	/** Remove the top split line and top padding from the expand child. */
 	noDivider?: "before" | "after" | true;
 	/** Remove text from aria tree? */
-	ariaHiddenForText?: boolean;
+	// ariaHiddenForText?: boolean;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
 	/**
@@ -228,8 +228,18 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. @default true */
 	selectValid?: boolean | number;
 }, "div">) {
+	const ariaId = useId();
+	const cardBaseEls: PropsOf<typeof SettingsCard.Base>["ref"] = useRef({ leading: null, trailing: null });
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 	if (noDivider === true) noDivider = "before";
+
+	const handleClick: MouseEventHandler<HTMLDivElement> = e => {
+		onClick?.(e);
+		const expanderItemEl = e.currentTarget;
+		if (!clickable && (e.target === expanderItemEl || isInPath(e, cardBaseEls.current.leading)) && cardBaseEls.current.trailing)
+			findFirstFocusableElement(cardBaseEls.current.trailing)?.focus();
+	};
+
 	return (
 		<StyledExpanderItem
 			$clickable={clickable}
@@ -240,17 +250,21 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 			aria-disabled={disabled || undefined}
 			data-anchor={anchor}
 			as={clickable && !nonFocusable ? "button" as never : undefined}
+			aria-labelledby={`${ariaId}-title`}
+			aria-describedby={`${ariaId}-details`}
+			onClick={handleClick}
 			{...htmlAttrs}
 		>
 			<InteractionStateContext value={{ disabled }}>
 				<SettingsCard.Base
+					ref={cardBaseEls}
 					wrap={wrapActionsWhenNarrow}
 					leading={(
 						<>
 							{icon ? typeof icon === "string" ? <Icon name={icon} /> : icon : <Icon shadow />}
-							<div className="text" aria-hidden={ariaHiddenForText}>
-								<p className="title"><Preserves>{title}</Preserves></p>
-								<p className="details"><Preserves>{details}</Preserves></p>
+							<div className="text" aria-hidden>
+								<p className="title" id={`${ariaId}-title`}><Preserves>{title}</Preserves></p>
+								<p className="details" id={`${ariaId}-details`}><Preserves>{details}</Preserves></p>
 								<SettingsCard.SelectInfo valid={selectValid}>{selectInfo}</SettingsCard.SelectInfo>
 							</div>
 						</>

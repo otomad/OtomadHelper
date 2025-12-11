@@ -1450,6 +1450,11 @@ export default {
 			reorderHandle: "Drag to reorder",
 			searchBox: "Search box",
 			otomadHelperLogo: "Otomad Helper Logo",
+			previewPiano: {
+				pianoKeyboard: "Piano keyboard",
+				spn: "Key {{noteName}} {{octave}}",
+				spn_sharp: "Key {{noteName}} sharp {{octave}}",
+			},
 		},
 		aliases: {
 			// cSpell:disable

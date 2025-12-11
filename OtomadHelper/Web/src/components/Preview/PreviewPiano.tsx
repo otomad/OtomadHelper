@@ -68,7 +68,7 @@ export default function PreviewPiano({ activeKeys: _activeKeys, sourceKeys = [],
 
 	return (
 		<Wrapper>
-			<StyledPreviewPiano {...htmlAttrs}>
+			<StyledPreviewPiano role="application" aria-label={t.aria.previewPiano.pianoKeyboard} {...htmlAttrs}>
 				{forMap(LENGTH, i => {
 					if (intervalPattern[(i + 1) % 12] === "0") return;
 					const isBlackNext = intervalPattern[i % 12] === "0" && i < LENGTH - 1;
@@ -219,6 +219,9 @@ function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKey
 		blackSpn = midiNoteToSPN(midiNote);
 	}
 	const isLastWhiteKey = midiNote === 126;
+	const whitePitch = new Pitch(whiteSpn);
+	const getAriaLabel = (sharp = false) =>
+		t.aria.previewPiano.spn({ context: sharp ? "sharp" : "natural", noteName: whitePitch.noteName, octave: whitePitch.octave });
 
 	return (
 		<StyledPianoKey className={{ hasMouseDown: !!onMouseDown }}>
@@ -230,6 +233,7 @@ function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKey
 					fallback: fallbackKeys.includes(whiteSpn),
 					isNotC: showCOnly && !isNoteNameC(whiteSpn) && !showKeyLabels.includes(whiteSpn),
 				}]}
+				aria-label={getAriaLabel()}
 				onClick={() => onClick?.(whiteSpn)}
 				onMouseDown={leftDownModifier(() => onMouseDown?.(whiteSpn))}
 				onMouseEnter={leftDownModifier(() => onMouseDown?.(whiteSpn))}
@@ -245,6 +249,7 @@ function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKey
 						fallback: fallbackKeys.includes(blackSpn),
 						isNotC: showCOnly && !isNoteNameC(blackSpn) && !showKeyLabels.includes(blackSpn),
 					}]}
+					aria-label={getAriaLabel(true)}
 					onClick={() => onClick?.(blackSpn)}
 					onMouseDown={leftDownModifier(() => onMouseDown?.(blackSpn))}
 					onMouseEnter={leftDownModifier(() => onMouseDown?.(blackSpn))}

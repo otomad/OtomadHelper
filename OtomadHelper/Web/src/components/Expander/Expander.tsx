@@ -236,7 +236,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				<ExpanderChild
 					disabled={disabled || childrenDisabled}
 					className={{ clipChildren }}
-					role={childRole || "region"}
+					role={childRole || undefined}
 					id={withAriaId("-child")}
 					aria-labelledby={withAriaId("-title")}
 				>
