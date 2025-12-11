@@ -2,6 +2,7 @@ import type { ImageFitTypes } from "components/BackgroundImage";
 import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "components/Business/Expander/ExpanderStream/ExpanderStreamPrologue";
 import type { VisualIdleEffects } from "components/Business/IdleEffectSettings";
 import type { Encodings } from "components/Preview/PreviewEncoding";
+import type { QuickIntervalSelectionPresets } from "components/QuickIntervalSelection";
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
 import { deepClone } from "valtio/utils";
 import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
@@ -61,6 +62,7 @@ namespace Config {
 	export type OtomadClipNameType = typeof Namings.otomadClipNames[number]["id"];
 	export type VocaloidClipNameType = typeof Namings.vocaloidClipNames[number]["id"];
 	export type YtpClipNameType = typeof Namings.ytpClipNames[number]["id"];
+	export type QuickIntervalSelectionPreset = typeof QuickIntervalSelectionPresets.keyType;
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -73,6 +75,7 @@ namespace Config {
 		monochrome: { enabled: enabled === "monochrome", amount: 100 },
 		negative: { enabled: enabled === "negative", amount: 0 },
 	});
+	const defaultQuickIntervalSelectionBits = bitArrayToBase64([1, 0, 1, 0]);
 
 	export const configStore = createStore({
 		source: {
@@ -118,8 +121,9 @@ namespace Config {
 			trimStart: EMPTY_TIMECODE,
 			trimEnd: EMPTY_TIMECODE,
 			periodicityEnabled: false,
-			periodicityInterval: 2,
-			periodicityBits: "gA-6",
+			periodicityPreset: "odd" satisfies QuickIntervalSelectionPreset as QuickIntervalSelectionPreset,
+			periodicityInterval: 4,
+			periodicityBits: defaultQuickIntervalSelectionBits,
 			pitchRangeEnabled: false,
 			pitchRange: ["C0", "F#10"] as [string, string],
 			encoding: "ANSI" satisfies Encoding as Encoding,

@@ -20,6 +20,8 @@ export default function ToggleButton({ checked: [checked, setChecked] = [false] 
 	return (
 		<Button
 			style={{ paddingBlock: 0 }}
+			role="checkbox"
+			aria-checked={checked}
 			{...htmlAttrs}
 			onClick={e => {
 				(setChecked as SetStateNarrow<boolean>)?.(checked => {

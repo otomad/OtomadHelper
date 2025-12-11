@@ -1,3 +1,4 @@
+import SegmentedEnum from "./SegmentedEnum";
 import SegmentedItem from "./SegmentedItem";
 
 const THUMB_BORDER_WIDTH = 1;
@@ -260,3 +261,4 @@ const SegmentedSelectionModeContainer = styled.div`
 
 Segmented.Item = SegmentedItem;
 Segmented.SelectionModeContainer = SegmentedSelectionModeContainer;
+Segmented.Enum = SegmentedEnum;

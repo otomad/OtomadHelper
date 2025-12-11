@@ -80,6 +80,11 @@ declare global {
 	 * Any enum-plus collection class instance. (fixed)
 	 */
 	type AnyEnum = IEnum<any, any>;
+	/**
+	 * Narrow enum-plus meta field types when initialize a enum.
+	 * @template T - The meta field types that to be narrowed.
+	 */
+	type EnumInit<T> = Record<string, { [x: string]: any } & T>;
 
 	/**
 	 * Returns the global environment, used to define global variables.

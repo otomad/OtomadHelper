@@ -46,6 +46,16 @@ declare module "i18next" {
 	}
 }
 
+declare module "enum-plus/types" {
+	interface StandardEnumItemInit {
+		icon?: DeclaredIcons;
+	}
+
+	interface MetaOnlyEnumItemInit {
+		icon?: DeclaredIcons;
+	}
+}
+
 declare const genericElement: unique symbol;
 
 declare global {

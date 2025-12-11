@@ -747,7 +747,13 @@ export default {
 		},
 		tools: {
 			flow: "Flow",
-			selector: "Selector",
+			selector: {
+				_: "Selector",
+				quickIntervalSelection: {
+					_: "Quick Interval Selection",
+					interval: "Interval",
+				},
+			},
 			replacer: "Replacer",
 			propertizer: "Propertizer",
 			subtitles: "Subtitles",
@@ -1306,7 +1312,13 @@ export default {
 			tools: {
 				_: "These QoL features make creating YTPMVs a little less painful to work with or setup. They do not require adjustments to any of the previous parameters.",
 				flow: "Creates stunning animations using Beziér Curves",
-				selector: "Finds and selects all clips that match the specified criteria",
+				selector: {
+					_: "Finds and selects all clips that match the specified criteria",
+					quickIntervalSelection: {
+						preset: "Quickly set to a commonly used value",
+						interval: "Takes a specified sample size into a set to serve as the cycle interval",
+					},
+				},
 				replacer: "Replaces the selected clips with the specified new clips",
 				propertizer: "Sets properties (e.g., normalize, stretch) for all selected clips in batches",
 				subtitles: "Presets the “$t(shared:plugins.titlesAndText)” preset, then add multiple lines of text here",

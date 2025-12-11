@@ -117,7 +117,7 @@ const MultipleSelectTrackItemsContainer = styled.div`
 export default function Score() {
 	const {
 		format, encoding, tempoUsing, customTempo,
-		trimEnabled, trimStart, trimEnd, periodicityEnabled, periodicityInterval, periodicityBits, pitchRangeEnabled, pitchRange,
+		trimEnabled, trimStart, trimEnd, periodicityEnabled, periodicityPreset, periodicityInterval, periodicityBits, pitchRangeEnabled, pitchRange,
 		timeSignature: [timeSignature], trackOrChannel, autoChangeProjectTempo, autoChangeProjectTimeSignature,
 		selectedTrack: [selectedTrack, setSelectedTrack], multipleSelectTrackItems: [selectTrackItems, _setSelectTrackItems],
 	} = useSelectConfig(c => c.score);
@@ -232,7 +232,7 @@ export default function Score() {
 					<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
 				</Setting>
 				<Setting meta={meta.filter.periodicity} expanded={periodicityEnabled} type="switch">
-					<QuickIntervalSelection interval={periodicityInterval} bits={periodicityBits} />
+					<QuickIntervalSelection interval={periodicityInterval} bits={periodicityBits} preset={periodicityPreset} />
 				</Setting>
 				<Setting meta={meta.filter.pitchRange} expanded={pitchRangeEnabled} type="switch" actions={pitchRangeEnabled[0] && pitchRange[0].join(t.rangeDash)}>
 					<PianoPicker pitch={pitchRange} />

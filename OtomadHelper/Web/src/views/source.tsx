@@ -41,7 +41,7 @@ export /* @internal */ namespace Namings {
 		...scoredTrackNames,
 	] as const;
 	export const vocaloidTrackNames = [
-		{ id: "voicebank", name: t.source.naming.voicebank, icon: "person_voice" },
+		{ id: "voicebank", name: t.source.naming.voicebank, icon: "person_mic" },
 		{ id: "voicebankIndex", name: t.source.naming.voicebankIndex, icon: "person_number" },
 		{ id: "project", name: t.source.naming.project, icon: "ust" },
 		...scoredTrackNames,
