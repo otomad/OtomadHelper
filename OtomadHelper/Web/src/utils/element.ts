@@ -322,8 +322,9 @@ export function findFirstFocusableElement(container: MaybeRef<Element | null>) {
 		"a[href]",
 		"button",
 		"textarea",
-		'input:not([type="hidden"])',
+		"input",
 		"select",
+		"datalist",
 		"[tabindex]",
 	];
 	const nonFocusableSelectors = [
@@ -331,7 +332,8 @@ export function findFirstFocusableElement(container: MaybeRef<Element | null>) {
 		"[hidden]",
 		"[inert]",
 		'[tabindex="-1"]',
-		"[aria-disabled]",
+		'[aria-disabled="true"]',
+		'input[type="hidden"]',
 	];
 	return container?.querySelector<HTMLElement>(`:is(${focusableSelectors.join(",")}):not(${nonFocusableSelectors.join(",")})`) ?? null;
 }

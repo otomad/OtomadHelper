@@ -336,6 +336,7 @@ export default function Audio() {
 										min={0}
 										max={1}
 										step={0.01}
+										keyStep={0.01}
 										defaultValue={1}
 										displayValue={value => (value * 100 | 0) + t.units.percent}
 									/>
