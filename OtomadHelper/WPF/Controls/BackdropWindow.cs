@@ -47,7 +47,7 @@ public partial class BackdropWindow : Window {
 		CommandBindings.AddRange(Commands.CommandBindings);
 		AddResource("WPF/Themes/Generic.xaml");
 		AddResource("WPF/Themes/Controls.xaml");
-		Background = Brushes.Transparent;
+		if (Background == DEFAULT_BACKGROUND) base.Background = Background;
 		Loaded += Window_Loaded;
 		//Closing += Window_Closing;
 		IsVisibleChanged += (_, e) => {
@@ -178,6 +178,9 @@ public partial class BackdropWindow : Window {
 			return new();
 		}
 	}
+
+	private static readonly Brush DEFAULT_BACKGROUND = Brushes.Transparent;
+	public new Brush Background { get; set { field = value; base.Background = value; } } = DEFAULT_BACKGROUND;
 
 	#region Set backdrop type
 	/// <inheritdoc cref="FrameworkElement.Resources" />
@@ -332,7 +335,9 @@ public partial class BackdropWindow : Window {
 		//Color borderColor = isDarkTheme ? Color.FromRgb(20, 20, 20) : Color.FromRgb(219, 219, 219);
 		//SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, borderColor.ToAbgr(false));
 		Color solidBackgroundColor = isDarkTheme ? Color.FromRgb(32, 32, 32) : Color.FromRgb(243, 243, 243);
-		Background = SystemBackdropType == SystemBackdropType.None || !SupportSystemBackdropType ? new SolidColorBrush(solidBackgroundColor) : Brushes.Transparent;
+		if (Background == DEFAULT_BACKGROUND)
+			base.Background = (SystemBackdropType == SystemBackdropType.None || !SupportSystemBackdropType) && TitleBarType != TitleBarType.Borderless ?
+				new SolidColorBrush(solidBackgroundColor) : Brushes.Transparent;
 	}
 
 	partial void OnCustomAccentColorChanged() => RefreshAccentColor();

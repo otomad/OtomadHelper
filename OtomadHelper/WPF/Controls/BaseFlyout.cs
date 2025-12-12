@@ -17,7 +17,11 @@ public partial class BaseFlyout : BackdropWindow {
 		TitleBarType = TitleBarType.WindowChromeNoTitleBar;
 		WindowStartupLocation = WindowStartupLocation.Manual;
 		Topmost = true;
-		Deactivated += (_, _) => this.Vanish();
+		Deactivated += (_, _) => {
+			//s = GetActiveWindowTitle();
+			if (CloseWhenDeactived)
+				this.Vanish();
+		};
 		Closing += BaseFlyout_Closing;
 	}
 
@@ -28,6 +32,7 @@ public partial class BaseFlyout : BackdropWindow {
 		MoveIntoScreen();
 	}
 
+	public bool CloseWhenDeactived { get; set; } = true;
 	private Storyboard LoadedStoryboard { get; } = new();
 	private void BeginLoadedStoryboard(object? sender, RoutedEventArgs? e) => LoadedStoryboard.Begin(this);
 	public Duration BaseAnimationDuration => (Duration)Resources["BaseAnimationDuration"];

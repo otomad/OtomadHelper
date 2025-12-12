@@ -685,4 +685,18 @@ public static class PInvoke {
 	/// </summary>
 	[DllImport("user32.dll")]
 	public static extern bool IsIconic(IntPtr hWnd);
+
+	//[DllImport("user32.dll")]
+	//private static extern IntPtr GetForegroundWindow();
+
+	[DllImport("user32.dll")]
+	private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
+	public static string? GetActiveWindowTitle() {
+		const int nChars = 256;
+		StringBuilder Buff = new(nChars);
+		IntPtr handle = GetActiveWindow();
+
+		return GetWindowText(handle, Buff, nChars) > 0 ? Buff.ToString() : null;
+	}
 }

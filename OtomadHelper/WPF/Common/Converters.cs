@@ -85,6 +85,12 @@ public class DoubleToCornerRadiusConverter : ValueConverter<double, CornerRadius
 	}
 }
 
+[ValueConversion(typeof(FrameworkElement), typeof(Rect))]
+public class ElementActualSizeToRectConverter : ValueConverter<FrameworkElement, Rect> {
+	public override Rect Convert(FrameworkElement element, Type targetType, object parameter, CultureInfo culture) =>
+		new(0, 0, element.ActualWidth, element.ActualHeight);
+}
+
 public class ActualSizeToRectConverter : MultiValueConverter<Tuple<double, double>, Rect> {
 	public override Rect Convert(Tuple<double, double> values, Type targetType, object parameter, CultureInfo culture) {
 		(double actualWidth, double actualHeight) = values;

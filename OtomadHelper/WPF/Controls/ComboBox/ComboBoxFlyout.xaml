@@ -13,6 +13,7 @@
 	MaxWidth="{x:Static SystemParameters.MaximizedPrimaryScreenWidth}"
 	MaxHeight="{x:Static SystemParameters.MaximizedPrimaryScreenHeight}"
 	Loaded="Window_Loaded"
+	Closing="Window_Closing"
 	SizeToContent="Width"
 	Height="0"
 	Focusable="True"
@@ -65,6 +66,7 @@
 			<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 			<m:BooleanOrConverter x:Key="BoolOr" />
 			<m:CollectionHasItemsConverter x:Key="HasItems" />
+			<m:ElementActualSizeToRectConverter x:Key="SizeToRect" />
 			<c:ComboBoxIdToIsCheckedConverter x:Key="IdToChecked" />
 			<c:ComboBoxIdToOptionConverter x:Key="IdToOption" />
 			<c:ComboBoxIdToIconConverter x:Key="IdToIcon" />
@@ -229,7 +231,7 @@
 			<Style x:Key="ItemsControlWrapper" TargetType="ItemsControl">
 				<Setter Property="Padding" Value="{Binding Source={StaticResource Padding}, Converter={StaticResource DoubleToThick}, Mode=OneWay}" />
 				<Setter Property="Focusable" Value="False" />
-				<!--<Setter Property="Visibility" Value="{Binding IsContent, ElementName=View, Converter={StaticResource BoolToHiddenVis}, Mode=OneWay}" />
+				<Setter Property="Visibility" Value="{Binding IsContent, ElementName=View, Converter={StaticResource BoolToHiddenVis}, Mode=OneWay}" />
 				<Style.Triggers>
 					<DataTrigger Binding="{Binding IsContent, ElementName=View}" Value="True">
 						<Setter Property="OpacityMask">
@@ -263,7 +265,7 @@
 							</Setter.Value>
 						</Setter>
 					</DataTrigger>
-				</Style.Triggers>-->
+				</Style.Triggers>
 			</Style>
 		</ResourceDictionary>
 	</c:BaseFlyout.Resources>
