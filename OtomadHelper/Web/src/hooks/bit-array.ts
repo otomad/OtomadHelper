@@ -29,7 +29,7 @@ export function bitArrayToBase64(bitArray: Uint8Array | Uint8ClampedArray | numb
 	if (typeof bitArray === "string") bitArray = Uint8Array.from(bitArray, char => +(char !== "0"));
 	const byteArray = new Uint8Array(Math.ceil(bitArray.length / 8));
 	bitArray.forEach((bit, index) => {
-		if (bit) byteArray[index >> 3] |= 1 << 0b111 - (index & 0b111);
+		if (bit) byteArray[index >> 3] |= 1 << 7 - (index & 7);
 	});
 	const paddingBits = padMod(bitArray.length, 8);
 	return `${byteArray.toBase64({ omitPadding: true })}-${paddingBits}`;
@@ -41,7 +41,7 @@ export function base64ToBitArray(base64: string) {
 	const byteArray = Uint8Array.fromBase64(data);
 	const bitArray = new Uint8Array(byteArray.length * 8 - paddingBits);
 	for (const index of bitArray.keys())
-		bitArray[index] = +!!(byteArray[index >> 3] & 1 << 0b111 - (index & 0b111));
+		bitArray[index] = +!!(byteArray[index >> 3] & 1 << 7 - (index & 7));
 	return bitArray;
 }
 
