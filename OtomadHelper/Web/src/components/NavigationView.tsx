@@ -225,7 +225,7 @@ const StyledNavigationView = styled.div<{
 			transition: ${fallbackTransitions}, margin-inline 0s;
 
 			&:not(.collapsed) {
-				margin-block: 3px 4px;
+				margin-block: 4px 3px;
 				margin-inline: 9px;
 
 				.text-box .leading-icon {

@@ -234,8 +234,8 @@ export default function Score() {
 				<Setting meta={meta.filter.periodicity} expanded={periodicityEnabled} type="switch">
 					<QuickIntervalSelection interval={periodicityInterval} bits={periodicityBits} preset={periodicityPreset} />
 				</Setting>
-				<Setting meta={meta.filter.pitchRange} expanded={pitchRangeEnabled} type="switch" actions={pitchRangeEnabled[0] && pitchRange[0].join(t.rangeDash)}>
-					<PianoPicker pitch={pitchRange} />
+				<Setting meta={meta.filter.pitchRange} expanded={pitchRangeEnabled} type="switch">
+					<PianoPicker pitch={pitchRange} showOutput showReset />
 				</Setting>
 			</Setting>
 			<Setting

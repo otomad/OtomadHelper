@@ -35,6 +35,7 @@ const Wrapper = styled(HorizontalScroll)`
 
 	.expander-child-items & {
 		padding: 0 !important;
+		border-block-start: none !important;
 		border-radius: 0;
 	}
 `;

@@ -282,7 +282,7 @@ export default function Audio() {
 							/>
 						</Attrs>
 						<Setting meta={meta.tuning.basePitch} actions={<PitchPicker spn={basePitch} />}>
-							<PianoPicker pitch={basePitch} />
+							<PianoPicker pitch={basePitch} showReset />
 							<Setting
 								meta={meta.tuning.basePitch.cent}
 								actions={(

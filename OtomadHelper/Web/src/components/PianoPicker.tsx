@@ -1,16 +1,67 @@
-type SPNRange = [start: string, end: string];
+const StyledPianoPickerOutput = styled.div`
+	position: relative;
+	min-block-size: ${24 + expanderItemPadding[0] * 2}px;
+	padding-block: ${expanderItemPadding[0]}px;
+	padding-inline: 0 !important;
 
-export default function PianoPicker({ pitch }: {
+	output {
+		${styles.effects.text.bodyLarge};
+		display: block;
+		font-feature-settings: "case" on;
+		font-variant-numeric: tabular-nums;
+		text-align: center;
+
+		&.range {
+			display: grid;
+			grid-template-columns: 1fr auto 1fr;
+			gap: 5.5px;
+
+			span:first-of-type {
+				text-align: end;
+			}
+
+			span:last-of-type {
+				text-align: start;
+			}
+		}
+	}
+
+	button {
+		position: absolute;
+		inset-block: ${expanderItemPadding[0]}px;
+		inset-inline-end: ${expanderItemPadding[1]}px;
+		margin-block: auto;
+	}
+`;
+
+type SPNRange = [start: string, end: string];
+const DEFAULT_PITCH = "C5", DEFAULT_PITCH_RANGE = Object.freeze(["C0", "F#10"] as const);
+
+interface Props {
+	/**
+	 * Show the pitch or pitch range output result?
+	 * Show output if the value is `true`, or if the value is `undefined` and `showReset` is `true`; otherwise hide output.
+	 */
+	showOutput?: boolean;
+	/**
+	 * Show the result button?
+	 * Show reset if the value is `true`, or if the value is `undefined` and `showOutput` is `true`; otherwise hide reset.
+	 */
+	showReset?: boolean;
+}
+
+export default function PianoPicker(props: {
 	/** A SPN. */
 	pitch: StatePropertyNonNull<string>;
-}): React.JSX.Element;
-export default function PianoPicker({ pitch }: {
+} & Props): React.JSX.Element;
+export default function PianoPicker(props: {
 	/** A range of SPNs. */
 	pitch: StatePropertyNonNull<SPNRange>;
-}): React.JSX.Element;
-export default function PianoPicker({ pitch: [pitch, setPitch] }: { pitch: StatePropertyNonNull<string> | StatePropertyNonNull<SPNRange> }) {
+} & Props): React.JSX.Element;
+export default function PianoPicker({ pitch: [pitch, setPitch], showOutput: _showOutput, showReset: _showReset }: { pitch: StatePropertyNonNull<string> | StatePropertyNonNull<SPNRange> } & Props) {
 	const previewPianoEl = useDomRef<"div">();
 	const rangeMode = typeof pitch !== "string";
+	const showOutput = _showOutput || _showOutput === undefined && _showReset, showReset = _showReset || _showReset === undefined && _showOutput;
 
 	const activeKeys = useMemo(() =>
 		typeof pitch === "string" ? [pitch] :
@@ -27,6 +78,11 @@ export default function PianoPicker({ pitch: [pitch, setPitch] }: { pitch: State
 		});
 	}
 
+	function reset() {
+		(setPitch as SetStateNarrow<string | SPNRange>)(pitch =>
+			typeof pitch === "string" ? DEFAULT_PITCH : [...DEFAULT_PITCH_RANGE]);
+	}
+
 	useMountEffect(() => {
 		const activeKeys = previewPianoEl.current?.querySelectorAll(".active, .source");
 		if (!activeKeys?.length) return;
@@ -38,13 +94,29 @@ export default function PianoPicker({ pitch: [pitch, setPitch] }: { pitch: State
 	});
 
 	return (
-		<PreviewPiano
-			sourceKeys={rangeMode ? activeKeys : undefined}
-			activeKeys={!rangeMode ? activeKeys : undefined}
-			showKeyLabels={wrapIfNotArray(pitch)}
-			onMouseDown={onMouseDown}
-			ref={previewPianoEl}
-		/>
+		<>
+			{(showOutput || showReset) && (
+				<StyledPianoPickerOutput>
+					{showOutput && (!rangeMode ?
+						<output>{pitch}</output> : (
+							<output className="range">
+								<span>{pitch[0]}</span>
+								<span>{t.rangeDash}</span>
+								<span>{pitch[1]}</span>
+							</output>
+						)
+					)}
+					{showReset && <Button icon="arrow_reset" accent="critical" subtle extruded onClick={reset}>{t.reset}</Button>}
+				</StyledPianoPickerOutput>
+			)}
+			<PreviewPiano
+				sourceKeys={rangeMode ? activeKeys : undefined}
+				activeKeys={!rangeMode ? activeKeys : undefined}
+				showKeyLabels={wrapIfNotArray(pitch)}
+				onMouseDown={onMouseDown}
+				ref={previewPianoEl}
+			/>
+		</>
 	);
 }
 
