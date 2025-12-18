@@ -1,1 +1,0 @@
-(function(){"use strict";let t=null;const e=()=>{t?.();const n=`(resolution: ${window.devicePixelRatio}dppx)`,i=window.matchMedia(n);i.addEventListener("change",e),t=()=>i.removeEventListener("change",e),document.documentElement.style.setProperty("--dpi",String(window.devicePixelRatio))};e()})();
