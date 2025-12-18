@@ -151,7 +151,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 		build: {
 			target: "ESNext",
 			assetsInlineLimit: 200,
-			rolldownOptions: {
+			rollupOptions: {
 				output: {
 					entryFileNames: "[name].js",
 					chunkFileNames: "chunks/[name].js",
@@ -165,7 +165,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				},
 			},
 			chunkSizeWarningLimit: 500_000, // 500MB
-			minify: ENABLE_MINIFY && !NO_BUNDLE && "oxc", // "esbuild", // "terser", // When enable terser, smaller but slower.
+			minify: ENABLE_MINIFY && !NO_BUNDLE && "esbuild", // "oxc" // "terser", // When enable terser, smaller but slower.
 			terserOptions: {
 				keep_classnames: true,
 			},
@@ -179,7 +179,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 		},
 		assetsInclude: [
 			"**/*.ani",
-			"**/*.mid", // Rolldown vite require this or crush at build, might be a bug.
+			// "**/*.mid", // Rolldown vite require this or crush at build, might be a bug.
 		],
 		define: {
 			// SC_DISABLE_SPEEDY: false, // Enable to speed up styled component, but make debugging more difficult.

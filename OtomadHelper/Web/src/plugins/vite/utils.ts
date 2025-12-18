@@ -101,7 +101,7 @@ export async function minifyHtml(source: string) {
 		useShortDoctype: true,
 		processConditionalComments: true,
 		minifyCSS,
-		minifyJS: true,
+		minifyJS: code => oxcMinify.minifySync("index.js", code).code,
 		minifyURLs: true,
 	});
 }
