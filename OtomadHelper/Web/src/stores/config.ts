@@ -14,7 +14,6 @@ import type { Namings, barOrBeatUnitTypes, selectGeneratedClipsType, sequentialO
 import type { trackLegatoModes } from "views/track";
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
 import type { glissandoEffects, legatos, prerenders, stretches, transformMethods, truncates } from "views/visual";
-import ConfigNS = Config;
 
 namespace Config {
 	export type StartTime = typeof startTimes[number]["id"];
@@ -408,6 +407,7 @@ namespace Config {
 	});
 }
 
+import ConfigNS = Config;
 export const configStore = Config.configStore;
 export const useSelectConfig = <T extends object>(path: (state: typeof configStore) => T) => useStoreState(path(configStore));
 export const useSelectConfigArray = <T extends object>(path: (state: typeof configStore) => T[]) => useStoreStateArray(path(configStore));

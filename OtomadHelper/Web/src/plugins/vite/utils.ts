@@ -1,8 +1,9 @@
 import crypto from "crypto";
-import esbuild from "esbuild";
+// import esbuild from "esbuild";
 import htmlMinifierTerser from "html-minifier-terser";
 import type { TransformAttributeOptions, TransformOptions } from "lightningcss";
 import { transform as transformCSS, transformStyleAttribute } from "lightningcss";
+import * as oxcMinify from "oxc-minify";
 // import * as terser from "terser";
 import ts from "typescript";
 // import * as vite from "vite";
@@ -30,10 +31,12 @@ export function compileTypeScript(source: string, target: keyof typeof ts.Script
 export async function minifyJavaScript(code: string) {
 	// return (await terser.minify(code, { keep_classnames: true })).code!;
 
-	return (await esbuild.transform(code, {
+	/* return (await esbuild.transform(code, {
 		minify: true,
 		charset: "utf8",
-	})).code;
+	})).code; */
+
+	return (await oxcMinify.minify("index.js", code)).code;
 }
 
 /**
