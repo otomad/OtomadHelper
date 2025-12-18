@@ -18,13 +18,14 @@ export /* @internal */ const legatos = [
 	{ id: "unlimited", icon: "infinity", image: legatoUnlimitedImage },
 ] as const;
 export /* @internal */ const truncates = [
-	{ id: "lengthenable", icon: "lengthenable", availableInAudio: true, idleEffectApplicable: false },
-	{ id: "freezeEndFrames", icon: "freeze_end_frames", availableInAudio: false, idleEffectApplicable: false },
-	{ id: "trimEndFrames", icon: "trim_end_frames", availableInAudio: true, idleEffectApplicable: false },
-	{ id: "splitThenFreeze", icon: "split_then_freeze", availableInAudio: false, idleEffectApplicable: true },
-	{ id: "splitThenResume", icon: "split_then_resume", availableInAudio: false, idleEffectApplicable: true },
-	{ id: "pingpong", icon: "pingpong_back", availableInAudio: false, idleEffectApplicable: false },
-	{ id: "loop", icon: "loop_back", availableInAudio: false, idleEffectApplicable: false },
+	{ id: "lengthenable", icon: "lengthenable", availableInAudio: true, idleEffectApplicable: false, loopRegionApplicable: false },
+	{ id: "freezeEndFrames", icon: "freeze_end_frames", availableInAudio: false, idleEffectApplicable: false, loopRegionApplicable: false },
+	{ id: "trimEndFrames", icon: "trim_end_frames", availableInAudio: true, idleEffectApplicable: false, loopRegionApplicable: false },
+	{ id: "splitThenFreeze", icon: "split_then_freeze", availableInAudio: false, idleEffectApplicable: true, loopRegionApplicable: false },
+	{ id: "splitThenResume", icon: "split_then_resume", availableInAudio: false, idleEffectApplicable: true, loopRegionApplicable: false },
+	{ id: "pingpongWithoutSplit", icon: "pingpong_without_split", availableInAudio: false, idleEffectApplicable: false, loopRegionApplicable: true },
+	{ id: "pingpongWithSplit", icon: "pingpong_with_split", availableInAudio: false, idleEffectApplicable: true, loopRegionApplicable: true },
+	{ id: "loopWithSplit", icon: "loop_with_split", availableInAudio: false, idleEffectApplicable: true, loopRegionApplicable: true },
 ] as const;
 export /* @internal */ const transformMethods = [
 	"panCrop", "pictureInPicture", "transformOfx",
@@ -50,7 +51,7 @@ const asteriskBuiltInPresets = ["floatLeft", "floatRight", "floatUp", "floatDown
 export default function Visual() {
 	const {
 		enabled, preferredTrack: preferredTrackIndex,
-		stretch, loop, staticVisual, truncate, truncateIdleEffect,
+		stretch, loop, staticVisual, truncate, truncateIdleEffect, truncateLoopRegion,
 		legato, multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping, presetPreviewIdeality,
 		mimicalResample, mimicalOscillator, transition, transitionAlignment, transitionDuration, transitionCrossfadeCurve,
 		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioIdleEffect, activeParameterScheme,
@@ -63,6 +64,8 @@ export default function Visual() {
 	const { hideUseTips } = useSnapshot(configStore.settings);
 	const meta = metas.visual;
 	const topPriorityTransformMethod = transformMethod[0][0];
+	const truncateIdleEffectDisabled = !truncates.find(({ id }) => id === truncate[0])?.idleEffectApplicable,
+		truncateLoopRegionDisabled = !truncates.find(({ id }) => id === truncate[0])?.loopRegionApplicable;
 
 	useEffect(() => { mimicalResample[0] && mimicalOscillator[0] && mimicalOscillator[1](null); }, [mimicalResample[0]]);
 	useEffect(() => { mimicalResample[0] && mimicalOscillator[0] && mimicalResample[1](null); }, [mimicalOscillator[0]]);
@@ -129,12 +132,28 @@ export default function Visual() {
 						nameField={t.stream.truncate}
 						detailsField={t.descriptions.stream.truncate}
 					>
+						<Setting
+							meta={meta.truncate.loopRegion}
+							actions={<TextBox.Number value={truncateLoopRegion} min={0} max={100} decimalPlaces={2} suffix={t.units.percent} />}
+							{...truncateLoopRegionDisabled && {
+								disabled: true,
+								selectValid: false,
+								selectInfo: t.descriptions.stream.truncate.inapplicable({
+									target: t.stream.truncate.loopRegion,
+									modes: truncates.filter(item => item.loopRegionApplicable).map(({ id }) => t.stream.truncate[id]),
+								}),
+								details: null,
+							}}
+						/>
 						<IdleEffectSettings
 							value={truncateIdleEffect}
-							disabled={!truncates.find(({ id }) => id === truncate[0])?.idleEffectApplicable}
+							disabled={truncateIdleEffectDisabled}
 							pinToTop="monochrome"
 							details={t.descriptions.stream.truncate.idleEffect}
-							disabledInfo={t.descriptions.stream.truncate.idleEffectUnavailable({ modes: truncates.filter(({ idleEffectApplicable }) => idleEffectApplicable).map(({ id }) => t.stream.truncate[id]) })}
+							disabledInfo={t.descriptions.stream.truncate.inapplicable({
+								target: t.stream.idleEffect,
+								modes: truncates.filter(item => item.idleEffectApplicable).map(({ id }) => t.stream.truncate[id]),
+							})}
 						/>
 					</Setting>
 					<ExpanderStreamPrologue stream="visual" />

@@ -341,8 +341,10 @@ export default {
 				trimEndFrames: "Trim end frames",
 				splitThenFreeze: "Split then freeze",
 				splitThenResume: "Split then resume",
-				pingpong: "Ping-pong back",
-				loop: "Loop back",
+				pingpongWithoutSplit: "Ping-pong without split",
+				pingpongWithSplit: "Ping-pong with split",
+				loopWithSplit: "Loop with split",
+				loopRegion: "Proportion of loop region",
 			},
 			prologue: {
 				_: "Prologue",
@@ -1095,10 +1097,12 @@ export default {
 					trimEndFrames: "If the note is longer than the clip, trims frames after the clip’s out point",
 					splitThenFreeze: "If the note is longer than the clip, splits from the clip’s out point, and then freezes the latter’s in point",
 					splitThenResume: "If the note is longer than the clip, splits from the clip’s out point, but does not freeze the latter’s in point, and continue to play instead",
-					pingpong: "If the note is longer than the clip, ping-pongs back to play the available duration of the clip",
-					loop: "If the note is longer than the clip, loops back to play the available duration of the clip",
+					pingpongWithoutSplit: "If the note is longer than the clip‌, it performs ‌ping-pong playback‌ on the loop region of the clip, keeping the clip intact on reversal",
+					pingpongWithSplit: "If the note is longer than the clip‌, it performs ‌ping-pong playback‌ on the loop region of the clip, splitting the clip each time it reverses",
+					loopWithSplit: "‌If the note is longer than the clip‌, it performs ‌loop playback‌ on the loop region of the clip, splitting the clip on each pass",
 					idleEffect: "Applies an effect to the latter of the split clips",
-					idleEffectUnavailable: "The effect is applicable only to {{modes, quote, and, lowercase}}", // Please DO NOT translate the interpolation `{{modes, quote, and, lowercase}}`!
+					loopRegion: "Specify the proportion of the ping-ponged or looped playback duration throughout the entire clip, ending at the out point of the clip",
+					inapplicable: "The {{target, lowercase}} is applicable only to {{modes, quote, and, lowercase}}", // Please DO NOT translate the interpolations `{{target, lowercase}}` and `{{modes, quote, and, lowercase}}`!
 				},
 				prologue: {
 					_: "Plays the introductory section by lengthening the first clip in reverse",

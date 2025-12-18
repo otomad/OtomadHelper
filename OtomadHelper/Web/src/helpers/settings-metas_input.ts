@@ -176,7 +176,12 @@ export const settingsMetasInput = {
 		loop: { icon: "arrow_repeat_all" },
 		prerender: { icon: "movie" },
 		stretch: { icon: "arrow_bidirectional_left_right" },
-		truncate: { icon: "arrow_import_right_prohibited" },
+		truncate: {
+			icon: "arrow_import_right_prohibited",
+			items: {
+				loopRegion: { icon: "proportion_of_region" },
+			},
+		},
 		prologue: prologue("visual"),
 		staticVisual: { icon: "image_snow" },
 		legato: { icon: "arrow_between_right" },

@@ -196,6 +196,7 @@ namespace Config {
 			staticVisual: false,
 			truncate: "lengthenable" satisfies Truncate as Truncate,
 			truncateIdleEffect: defaultVisualIdleEffectSettings("monochrome"),
+			truncateLoopRegion: 50,
 			legato: "upToOneBeat" satisfies Legato as Legato,
 			multitrackForChords: false,
 			stack: false,
