@@ -329,7 +329,7 @@ export const settingsMetasInput = {
 			},
 		},
 		exclusiveTrack: { icon: "layer_lock" },
-		idleEffect: { icon: "coffee", link: "visual:truncate" },
+		idleEffect: { icon: "coffee", title: t.stream.idleEffect, link: "visual:truncate" },
 		offset: { icon: "table_resize", title: t.offset },
 		keyMappingZones: subheader({ icon: "table_columns" }),
 	},

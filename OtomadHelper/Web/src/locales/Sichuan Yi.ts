@@ -46,6 +46,12 @@ export default {
 			effect: "crwdns2954:5crwdne2954:5",
 			prve: "crwdns1670:5crwdne1670:5",
 		},
+		mode: {
+			otomad: "crwdns5540:0crwdne5540:0",
+			vocaloid: "crwdns5542:0crwdne5542:0",
+			ytp: "crwdns5544:0crwdne5544:0",
+			current: "crwdns5546:0crwdne5546:0",
+		},
 		source: {
 			from: "crwdns3945:0crwdne3945:0",
 			trackEvent: "crwdns1676:0crwdne1676:0",
@@ -77,17 +83,23 @@ export default {
 				_: "crwdns3082:0crwdne3082:0",
 				collapse: "crwdns3084:0crwdne3084:0",
 			},
-			trackName: {
-				_: "crwdns3088:0crwdne3088:0",
-				track: "crwdns3948:0crwdne3948:0",
-				trackIndex: "crwdns3950:0crwdne3950:0",
-				instrument: "crwdns3952:0crwdne3952:0",
-				channel: "crwdns3954:0crwdne3954:0",
-				clip: "crwdns3098:0crwdne3098:0",
-				media: "crwdns3100:0crwdne3100:0",
-				score: "crwdns3102:0crwdne3102:0",
-				unnamed: "crwdns3104:0crwdne3104:0",
-				voicebank: "crwdns3956:0crwdne3956:0",
+			naming: {
+				_: "crwdns5548:0crwdne5548:0",
+				trackName: "crwdns5550:0crwdne5550:0",
+				clipName: "crwdns5552:0crwdne5552:0",
+				track: "crwdns5554:0crwdne5554:0",
+				trackIndex: "crwdns5556:0crwdne5556:0",
+				instrument: "crwdns5558:0crwdne5558:0",
+				channel: "crwdns5560:0crwdne5560:0",
+				voicebank: "crwdns5562:0crwdne5562:0",
+				voicebankIndex: "crwdns5564:0crwdne5564:0",
+				project: "crwdns5566:0crwdne5566:0",
+				score: "crwdns5568:0crwdne5568:0",
+				clip: "crwdns5570:0crwdne5570:0",
+				media: "crwdns5572:0crwdne5572:0",
+				unnamed: "crwdns5574:0crwdne5574:0",
+				lyric: "crwdns5576:0crwdne5576:0",
+				effect: "crwdns5578:0crwdne5578:0",
 			},
 			multisource: "crwdns4160:0crwdne4160:0",
 			secretBox: {
@@ -167,6 +179,9 @@ export default {
 		pause: "crwdns5424:0crwdne5424:0",
 		playBackwards: "crwdns5426:0crwdne5426:0",
 		amplitude: "crwdns5428:0crwdne5428:0",
+		filter: "crwdns5580:0crwdne5580:0",
+		odd: "crwdns5582:0crwdne5582:0",
+		even: "crwdns5584:0crwdne5584:0",
 		infoBar: {
 			warning: "crwdns2170:0crwdne2170:0",
 		},
@@ -233,17 +248,21 @@ export default {
 			allFiles: "crwdns2790:0crwdne2790:0",
 			txt: "crwdns2792:0crwdne2792:0",
 			midi: "crwdns2794:0crwdne2794:0",
-			singthesis: "crwdns3958:0crwdne3958:0",
+			singthesis: "crwdns5586:0crwdne5586:0",
 			ust: "crwdns2798:0crwdne2798:0",
 			vsq: "crwdns2800:0crwdne2800:0",
 		},
 		score: {
 			from: "crwdns3947:0crwdne3947:0",
 			midi: "crwdns1740:0crwdne1740:0",
-			singthesis: "crwdns3960:0crwdne3960:0",
+			singthesis: "crwdns5588:0crwdne5588:0",
 			refOtherTracks: "crwdns1750:0crwdne1750:0",
 			tts: "crwdns1752:0crwdne1752:0",
 			pureNotes: "crwdns1754:0crwdne1754:0",
+			filter: {
+				periodicity: "crwdns5590:0crwdne5590:0",
+				pitchRange: "crwdns5592:0crwdne5592:0",
+			},
 			encoding: "crwdns1756:0crwdne1756:0",
 			tempo: {
 				_: "crwdns3154:0crwdne3154:0",
@@ -309,8 +328,10 @@ export default {
 				trimEndFrames: "crwdns3704:0crwdne3704:0",
 				splitThenFreeze: "crwdns3706:0crwdne3706:0",
 				splitThenResume: "crwdns5434:0crwdne5434:0",
-				pingpong: "crwdns5530:0crwdne5530:0",
-				loop: "crwdns5532:0crwdne5532:0",
+				pingpongWithoutSplit: "crwdns5594:0crwdne5594:0",
+				pingpongWithSplit: "crwdns5596:0crwdne5596:0",
+				loopWithSplit: "crwdns5598:0crwdne5598:0",
+				loopRegion: "crwdns5600:0crwdne5600:0",
 			},
 			prologue: {
 				_: "crwdns5436:0crwdne5436:0",
@@ -709,7 +730,13 @@ export default {
 		},
 		tools: {
 			flow: "crwdns1912:0crwdne1912:0",
-			selector: "crwdns3974:0crwdne3974:0",
+			selector: {
+				_: "crwdns5602:0crwdne5602:0",
+				quickIntervalSelection: {
+					_: "crwdns5604:0crwdne5604:0",
+					interval: "crwdns5606:0crwdne5606:0",
+				},
+			},
 			replacer: "crwdns3976:0crwdne3976:0",
 			propertizer: "crwdns3978:0crwdne3978:0",
 			subtitles: "crwdns1904:0crwdne1904:0",
@@ -954,8 +981,8 @@ export default {
 				trackGroup: {
 					_: "crwdns3110:0crwdne3110:0",
 				},
-				trackName: {
-					_: "crwdns4512:0crwdne4512:0",
+				naming: {
+					_: "crwdns5608:0crwdne5608:0",
 				},
 				multisource: {
 					ytpEnabled: "crwdns4286:0crwdne4286:0",
@@ -988,7 +1015,12 @@ export default {
 				},
 			},
 			score: {
-				trim: "crwdns2378:0crwdne2378:0",
+				filter: {
+					_: "crwdns5610:0crwdne5610:0",
+					trim: "crwdns5612:0crwdne5612:0",
+					periodicity: "crwdns5614:0crwdne5614:0",
+					pitchRange: "crwdns5616:0crwdne5616:0",
+				},
 				encoding: "crwdns5516:0crwdne5516:0",
 				tempo: "crwdns4296:0crwdne4296:0",
 				autoChangeProjectProperties: "crwdns5392:0crwdne5392:0",
@@ -1016,6 +1048,7 @@ export default {
 				loop: {
 					_: "crwdns3660:0crwdne3660:0",
 					unset: "crwdns3744:0crwdne3744:0",
+					loopMedia: "crwdns5618:0crwdne5618:0",
 				},
 				playbackRate: {
 					_: "crwdns3632:0crwdne3632:0",
@@ -1036,10 +1069,12 @@ export default {
 					trimEndFrames: "crwdns3808:0crwdne3808:0",
 					splitThenFreeze: "crwdns3810:0crwdne3810:0",
 					splitThenResume: "crwdns5478:0crwdne5478:0",
-					pingpong: "crwdns5534:0crwdne5534:0",
-					loop: "crwdns5536:0crwdne5536:0",
+					pingpongWithoutSplit: "crwdns5620:0crwdne5620:0",
+					pingpongWithSplit: "crwdns5622:0crwdne5622:0",
+					loopWithSplit: "crwdns5624:0crwdne5624:0",
 					idleEffect: "crwdns5480:0crwdne5480:0",
-					idleEffectUnavailable: "crwdns5482:0{{modes, quote, and, lowercase}}crwdne5482:0",
+					loopRegion: "crwdns5626:0crwdne5626:0",
+					inapplicable: "crwdns5628:0{{target, lowercase}}crwdnd5628:0{{modes, quote, and, lowercase}}crwdne5628:0",
 				},
 				prologue: {
 					_: "crwdns5484:0crwdne5484:0",
@@ -1193,7 +1228,7 @@ export default {
 				descending: "crwdns3330:0crwdne3330:0",
 			},
 			sonar: {
-				_: "crwdns3876:0crwdne3876:0",
+				_: "crwdns5630:0crwdne5630:0",
 				enabled: "crwdns2614:0crwdne2614:0",
 				separateDrums: "crwdns2594:0crwdne2594:0",
 				differenceCompositeMode: "crwdns2596:0crwdne2596:0",
@@ -1213,7 +1248,7 @@ export default {
 				},
 			},
 			shupelunker: {
-				_: "crwdns3880:0crwdne3880:0",
+				_: "crwdns5632:0crwdne5632:0",
 				affix: "crwdns2980:0crwdne2980:0",
 				unallocated: {
 					_: "crwdns4342:0crwdne4342:0",
@@ -1250,7 +1285,13 @@ export default {
 			tools: {
 				_: "crwdns2520:0crwdne2520:0",
 				flow: "crwdns2122:0crwdne2122:0",
-				selector: "crwdns3984:0crwdne3984:0",
+				selector: {
+					_: "crwdns5634:0crwdne5634:0",
+					quickIntervalSelection: {
+						preset: "crwdns5636:0crwdne5636:0",
+						interval: "crwdns5638:0crwdne5638:0",
+					},
+				},
 				replacer: "crwdns3986:0crwdne3986:0",
 				propertizer: "crwdns3988:0crwdne3988:0",
 				subtitles: "crwdns4538:0$t(shared:plugins.titlesAndText)crwdne4538:0",
@@ -1286,7 +1327,7 @@ export default {
 				_: "crwdns3888:0crwdne3888:0",
 			},
 			settings: {
-				about: "crwdns2542:0crwdne2542:0",
+				about: "crwdns5640:0crwdne5640:0",
 				translation: "crwdns3058:0crwdne3058:0",
 				language: {
 					enableInContextLocalization: "crwdns4006:0crwdne4006:0",
@@ -1381,6 +1422,11 @@ export default {
 			reorderHandle: "crwdns4152:0crwdne4152:0",
 			searchBox: "crwdns4610:0crwdne4610:0",
 			otomadHelperLogo: "crwdns5374:0crwdne5374:0",
+			previewPiano: {
+				pianoKeyboard: "crwdns5642:0crwdne5642:0",
+				spn: "crwdns5644:0{{noteName}}crwdnd5644:0{{octave}}crwdne5644:0",
+				spn_sharp: "crwdns5646:0{{noteName}}crwdnd5646:0{{octave}}crwdne5646:0",
+			},
 		},
 		aliases: {
 			titles: {
@@ -1399,7 +1445,10 @@ export default {
 			},
 			source: {
 				trackGroup: "crwdns4616:0crwdne4616:0",
-				trackName: "crwdns4618:0crwdne4618:0",
+				naming: {
+					trackName: "crwdns5648:0crwdne5648:0",
+					clipName: "crwdns5650:0crwdne5650:0",
+				},
 				secretBox: "crwdns4620:0crwdne4620:0",
 			},
 			score: {

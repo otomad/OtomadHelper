@@ -41,6 +41,7 @@ export default {
 			effect: "Hiệu ứng",
 			prve: "Hiệu ứng nhịp điệu hình ảnh PV",
 		},
+		mode: {},
 		source: {
 			from: "Nguồn từ",
 			trackEvent: "Track event",
@@ -71,17 +72,15 @@ export default {
 				_: "Nhóm các track",
 				collapse: "Thu gọn các nhóm track theo mặc định",
 			},
-			trackName: {
-				_: "Đặt tên cho các track",
+			naming: {
 				track: "Tên track MIDI",
 				trackIndex: "Chỉ số track MIDI",
 				instrument: "Tên nhạc cụ MIDI",
 				channel: "Số MIDI channel",
+				score: "Tên tệp bản nhạc\n",
 				clip: "Tên clip nguồn",
 				media: "Tên phương tiện nguồn",
-				score: "Tên tệp bản nhạc\n",
 				unnamed: "Không tên",
-				voicebank: "Hoặc tên máy hát (vocal synth)",
 			},
 			secretBox: {
 				_: "Hộp bí mật",
@@ -196,10 +195,10 @@ export default {
 		score: {
 			from: "Bản nhạc từ",
 			midi: "MIDI",
-			singthesis: "Dự án vocal synth",
 			refOtherTracks: "Tham chiếu các track khác",
 			tts: "Văn bản thành giọng nói",
 			pureNotes: "Nốt nhạc thuần túy",
+			filter: {},
 			encoding: "Mã hóa",
 			tempo: {
 				_: "Nhịp độ",
@@ -564,7 +563,10 @@ export default {
 		},
 		tools: {
 			flow: "Flow",
-			selector: "Chọn",
+			selector: {
+				_: "Chọn",
+				quickIntervalSelection: {},
+			},
 			replacer: "Thay thế",
 			propertizer: "Thuộc tính",
 			subtitles: "Phụ đề",
@@ -746,7 +748,7 @@ export default {
 				trackGroup: {
 					_: "Nhóm các track bằng track score",
 				},
-				trackName: {},
+				naming: {},
 				multisource: {},
 				secretBox: {
 					_: "Ngẫu nhiên hóa với điểm vào của nguồn.\nĐiều này có thể dẫn đến việc các clip nguồn được chọn ngẫu nhiên có các cao độ cơ bản khác nhau, khiến nó chỉ hữu ích khi tạo video hài hước nhằm mục đích giải trí và hiếm khi được sử dụng để tạo video chất lượng cao.",
@@ -767,7 +769,7 @@ export default {
 				linearMap: {},
 			},
 			score: {
-				trim: "Chặn phạm vi thời gian tạo ra của bản nhạc",
+				filter: {},
 				constrain: {
 					_: "Kiểm soát độ dài đầu ra của các nốt nhạc từ bản nhạc",
 				},
@@ -895,7 +897,6 @@ export default {
 				descending: "Xếp ngược lại thứ tự các đối tượng trên track",
 			},
 			sonar: {
-				_: "Sonar (tính năng tạo đồ họa chuyển động) là một công cụ tự động tạo Mograph dựa trên nhịp điệu âm nhạc, sử dụng các hình dạng của hiệu ứng “Cookie Cutter”. Các tín hiệu kích hoạt của nhiều nhạc cụ gõ khác nhau được liên kết với các thành phần đồ họa được cài đặt sẵn thông qua bản nhạc (đặc biệt là dữ liệu của channel 10, nơi có bộ trống). Các đồ họa này thay đổi theo nhịp điệu để tạo ra hiệu ứng “nhịp đập trực quan” theo nhịp điệu. Ví dụ, tiếng trống tạo ra một hình vuông lớn, tiếng trống nhỏ tạo ra một hình thoi xoay và tiếng trống lớn kích hoạt một vòng tròn khuếch tán, tạo thành trải nghiệm nhập vai về “hình ảnh âm thanh”.\nĐồ họa chuyển động (Mograph) là một hình thức nghệ thuật kết hợp thiết kế đồ họa và hoạt hình để truyền tải thông tin hoặc cảm xúc thông qua chuyển động của đồ họa, văn bản và các yếu tố khác. Trong quá trình tạo ra Otomad, Mograph thường được sử dụng để thay thế cho việc chỉnh sửa nguồn truyền thống và đồ họa trừu tượng được sử dụng để tạo ra một biểu đạt nhịp điệu hoàn toàn trực quan. Ví dụ, hình ảnh có thể được lấp đầy bằng các hình dạng hình học dày đặc trong phần cao trào của âm nhạc, trong khi cảm giác thở được tạo ra bằng cách biến dạng chậm các mẫu chất lỏng trong các đoạn văn nhẹ nhàng. Những sáng tạo như vậy thường được đặt tên là *Đồ họa* hoặc *Hình dạng* để nhấn mạnh khái niệm cốt lõi là “chơi nhạc bằng hình ảnh”.",
 				enabled: "Tạo các hiệu ứng sonar nếu các track đang hoạt động trong bản nhạc có bao gồm bộ gõ",
 				separateDrums: "Đặt mỗi âm thanh bộ gõ vào một track",
 				differenceCompositeMode: "Làm cho các track có các chế độ phối trộn khác nhau, tạo ra hiệu ứng hình ảnh rối bóng",
@@ -911,7 +912,6 @@ export default {
 				},
 			},
 			shupelunker: {
-				_: "Phương thức Shupelunker là phương thức tạo sinh YTPMV/OtoMAD xoay quanh lý thuyết về biến âm cao độ truyền thống. Đại khái: sử dụng trực tiếp cao độ nguyên bản của tư liệu gốc sao cho trùng khớp với bài nhạc thông qua việc chỉnh sửa kỹ lưỡng. Cần phải chiết lấy đoạn từ tư liệu gốc sao cho trùng khớp hẳn với độ dài đích và sắp xếp theo đúng điệu nhạc để tạo ra hiệu ứng âm thanh tương tự như việc dùng LaunchPad. Vì cao độ của tư liệu không đổi, nên nó phải rất ăn khớp với điệu nhạc, do đó cần thiết phải lưu trữ nhiều tư liệu hơn. Tính chất của phương thức này: nhờ vào việc tinh chỉnh phân mảng và chuyển đổi nhanh, không những giữ lại được tính chất gốc của tư liệu âm thanh mà còn tạo ra cảm giác “hồi hộp” như hợp xướng ca, vô cùng phù hợp cho những bài nhạc bao hàm nhiều nhịp điệu và biến thiên nhiều.\nĐối lại, sử dụng phương thức Tartar nếu như cao độ của tư liệu gốc không ứng với giai điệu. Phương thức này cũng không làm sửa đổi cao đọ, và việc làm khớp sẽ thông qua sự điều tiết giai điệu cực độ. Ví dụ: phân mảng clip tư liệu, kéo dãn hoặc tua ngược, ép buộc tư liệu gốc phải hòa hợp với bài nhạc. Cảm hứng từ tính chất của dòng nhạc DnB, phương thức tạo ra một hiệu ứng “cơ học” cả về hình ảnh và âm thanh thông qua tinh chỉnh phân mảng tần suất cao. Mặc dù sản phẩm sau tạo sinh nghe vô nghĩa, nhưng phương thức này có thể tạo ra một giai điệu đặc biệt qua việc sắp xếp chính xác.",
 				affix: "Cần phải đặt tên để xác định cao độ cơ bản của các clip. Hãy chỉ định việc thông tin về cao độ nên được gán thành tiền hay hậu tố trong tên clip",
 				unallocated: {
 					octaves: "Lấp đấy bằng các clip có quãng tám tiệm cận nhất. Ưu tiên cao nhất, và hữu dụng với các tư liệu có giọng hát căn đúng theo các nốt",
@@ -942,7 +942,10 @@ export default {
 			tools: {
 				_: "Các tiện ích này giúp việc chế tạo video YTPMV dễ dàng hơn. Không đòi hỏi phải chỉnh sửa bất cứ một thiết đặt nào từ trước đó.",
 				flow: "Tạo những hoạt cảnh ấn tượng bằng Beziér Curves",
-				selector: "Tìm và chọn tất cả các clip hội đủ tiêu chí xác định",
+				selector: {
+					_: "Tìm và chọn tất cả các clip hội đủ tiêu chí xác định",
+					quickIntervalSelection: {},
+				},
 				replacer: "Thay thế các clip đã chọn bằng một clip mới",
 				propertizer: "Thiết đặt thuộc tính (co dãn, chuẩn hoá…) cho tất cả các clip trong bộ",
 				effector: "Áp dụng các hiệu ứng lên các clip đã chọn",
@@ -972,7 +975,6 @@ export default {
 				_: "Co dãn Điểm ảnh là kỹ nghệ co dãn cho đồ họa pixel hoặc các ảnh số cần sự sắc nét. Mục đích là nhằm giải quyết tình trạng mờ điểm ảnh do thuật toán co dãn chèn song phương cài sẵn trên VEGAS bằng cách phối trộn các màu tại các điểm ảnh lân cận, xóa bỏ đường biên màu rõ ràng, là tính chất của đồ họa pixel. Tính năng này tỷ lệ theo thuật toán chèn gần nhất: Trực tiếp sao chép giá trị màu của điểm ảnh gần nhất, đảm bảo là ảnh đã co dãn bảo đảm được đường biên rõ nét, tránh bị mờ ảnh.\nTính năng này đặc biệt hữu ích với tư liệu game cổ, hoặc giao diện có độ phân giải thấp, hoặc các phân cảnh cần cải thiện điểm ảnh. Ví dụ: khi thu phóng một hoạt họa nhân vật game 8-bit, có thể ngăn đường biên màu của nhân vật bị “mềm”, đảm bảo rằng mỗi điểm ảnh khi thu phóng đều giữ nguyên trạng. Lưu ý: để tính năng hoạt động cần phải thiết đặt môi trường FFmpeg hoặc cài gói mở rộng Datamosh.\nTính năng này chiếu theo độ phân giải của dự án để tạo ra một tệp có kích thước tương đối xấp xỉ bằng thuật toán chèn lân cận, tên tệp đi kèm hậu tố “_Scaled”. Tính năng hỗ trợ bất cứ định dạng hình ảnh/video nào, cũng như các tệp hình ảnh trình tự, khi nhập vào VEGAS.",
 			},
 			settings: {
-				about: "Otomad Helper là tiện ích mở rộng YTPMV/YTP dành cho VEGAS Pro cho phép VEGAS chấp nhận các bản nhạc như tệp trình tự MIDI làm đầu vào và tự động tạo các track YTPMV.",
 				translation: "Bạn muốn tham gia quá trình dịch thuật, có thể thoải mái gia nhập.",
 				language: {
 					enableInContextLocalization: "Chế độ dịch đã được bật, vui lòng chuyển đổi ngôn ngữ đích trong hộp thoại Crowdin.",
@@ -1027,11 +1029,12 @@ export default {
 			breadcrumb: "Đường dẫn",
 			commandBar: "Thanh lệnh",
 			checkboxGroup: "Nhóm hộp kiểm",
+			previewPiano: {},
 		},
 		aliases: {
 			titles: {},
 			source: {
-				trackName: "Tên track",
+				naming: {},
 			},
 			score: {
 				timeSignature: "Beat",

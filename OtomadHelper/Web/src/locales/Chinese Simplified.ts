@@ -45,6 +45,12 @@ export default {
 			effect: "效果",
 			prve: "画面节奏视觉效果",
 		},
+		mode: {
+			otomad: "音MAD / YTPMV 模式",
+			vocaloid: "人力VOCALOID / 鬼畜调教 模式",
+			ytp: "YTP 模式",
+			current: "当前模式",
+		},
 		source: {
 			from: "素材来源",
 			trackEvent: "轨道剪辑",
@@ -76,17 +82,23 @@ export default {
 				_: "轨道组",
 				collapse: "默认情况下折叠轨道组",
 			},
-			trackName: {
-				_: "轨道名",
+			naming: {
+				_: "命名",
+				trackName: "轨道和轨道组名",
+				clipName: "剪辑名",
 				track: "MIDI音轨名",
 				trackIndex: "MIDI音轨序号",
 				instrument: "MIDI乐器名",
 				channel: "MIDI通道编号",
+				voicebank: "虚拟歌姬名",
+				voicebankIndex: "虚拟歌姬序号",
+				project: "虚拟歌姬项目名",
+				score: "乐曲文件名",
 				clip: "素材剪辑名",
 				media: "素材媒体名",
-				score: "乐曲文件名",
 				unnamed: "未命名",
-				voicebank: "或虚拟歌姬名",
+				lyric: "歌词音节",
+				effect: "效果名",
 			},
 			multisource: "特殊多素材作用",
 			secretBox: {
@@ -166,6 +178,9 @@ export default {
 		pause: "暂停",
 		playBackwards: "倒放",
 		amplitude: "幅度",
+		filter: "筛选",
+		odd: "奇数",
+		even: "偶数",
 		infoBar: {
 			warning: "警告",
 		},
@@ -243,6 +258,10 @@ export default {
 			refOtherTracks: "引用其它轨道",
 			tts: "文字转语音",
 			pureNotes: "纯音符",
+			filter: {
+				periodicity: "周期性",
+				pitchRange: "音域",
+			},
 			encoding: "编码",
 			tempo: {
 				_: "速度",
@@ -308,8 +327,10 @@ export default {
 				trimEndFrames: "截断尾帧",
 				splitThenFreeze: "分割后冻结",
 				splitThenResume: "分割后续播",
-				pingpong: "来回剪辑",
-				loop: "循环剪辑",
+				pingpongWithoutSplit: "来回不分割",
+				pingpongWithSplit: "来回且分割",
+				loopWithSplit: "循环且分割",
+				loopRegion: "循环区域占比",
 			},
 			prologue: {
 				_: "引子",
@@ -708,7 +729,13 @@ export default {
 		},
 		tools: {
 			flow: "运动曲线",
-			selector: "选择查找",
+			selector: {
+				_: "选择查找",
+				quickIntervalSelection: {
+					_: "快速间隔选择",
+					interval: "间隔",
+				},
+			},
 			replacer: "替换素材",
 			propertizer: "属性速配",
 			subtitles: "批量字幕",
@@ -953,8 +980,8 @@ export default {
 				trackGroup: {
 					_: "依照乐曲音轨为轨道分组",
 				},
-				trackName: {
-					_: "为生成的轨道和轨道组命名",
+				naming: {
+					_: "为生成的轨道、轨道组和剪辑命名",
 				},
 				multisource: {
 					ytpEnabled: "YTP功能启用时不可配置这些功能。",
@@ -987,7 +1014,12 @@ export default {
 				},
 			},
 			score: {
-				trim: "截取乐曲生成的时间范围",
+				filter: {
+					_: "指定只生成乐曲的一部分",
+					trim: "截取乐曲生成的时间范围",
+					periodicity: "以一定的间隔，周期性或奇偶性地筛选生成的音符",
+					pitchRange: "仅生成指定音域范围内的音符",
+				},
 				encoding: "指定在读取文件时所用的文本编码。除非出现乱码，否则不应更改此设置。",
 				tempo: "指定每分钟多少拍",
 				autoChangeProjectProperties: "自动更改项目标尺中的小节和拍子属性，只要它们与乐曲不匹配",
@@ -1015,6 +1047,7 @@ export default {
 				loop: {
 					_: "当剪辑延长到源媒体的末尾后，将会重头开始播放",
 					unset: "保持剪辑原始循环设置不变或保持默认值",
+					loopMedia: "此设置用于设置循环媒体。如果你想设置循环剪辑，请转到截断设置。",
 				},
 				playbackRate: {
 					_: "更改剪辑的播放速率",
@@ -1035,10 +1068,12 @@ export default {
 					trimEndFrames: "当音符比剪辑更长时，修剪掉剪辑出点处之后的帧",
 					splitThenFreeze: "当音符比剪辑更长时，从剪辑的出点处分割，然后将后者从入点处冻结",
 					splitThenResume: "当音符比剪辑更长时，从剪辑的出点处分割，但不冻结后者的入点，而是继续播放",
-					pingpong: "当音符比剪辑更长时，来回播放剪辑的有效时长",
-					loop: "当音符比剪辑更长时，循环播放剪辑的有效时长",
+					pingpongWithoutSplit: "当音符比剪辑更长时，来回播放循环区域，但在折返时保持剪辑不分割",
+					pingpongWithSplit: "当音符比剪辑更长时，来回播放循环区域，且每次折返时都会分割剪辑",
+					loopWithSplit: "当音符比剪辑更长时，循环播放循环区域，且每次循环时都会分割剪辑",
 					idleEffect: "对分割剪辑的后者应用效果",
-					idleEffectUnavailable: "效果仅可用于{{modes, quote, and}}",
+					loopRegion: "指定从剪辑出点处截止，要循环的时长在整段剪辑时长的占比",
+					inapplicable: "{{target}}仅可用于{{modes, quote, and}}",
 				},
 				prologue: {
 					_: "通过逆向延长第一段剪辑来播放引子部分",
@@ -1077,7 +1112,7 @@ export default {
 				transformMethod: "指定要应用变换关键帧的目标属性的优先级次序",
 				articulations: {
 					glissando: {
-						_: "在演奏弯音、滑音或颤音时产生一定的效果。",
+						_: "在演奏弯音、滑音、颤音或揉音时产生一定的效果。",
 					},
 					appoggiatura: {
 						_: "在演奏倚音时产生一定的效果。\n当有连续一到两个十六分音符或更短时值的音符时，它们将被视为倚音。",
@@ -1249,7 +1284,13 @@ export default {
 			tools: {
 				_: "这些效率工具可略微简化音MAD的创作流程及相关设置，且无需对原先参数进行任何调整。",
 				flow: "使用贝塞尔曲线创建令人惊叹的动画",
-				selector: "查找并选中符合指定条件的所有剪辑",
+				selector: {
+					_: "查找并选中符合指定条件的所有剪辑",
+					quickIntervalSelection: {
+						preset: "快捷设置为常用值",
+						interval: "抽取指定的样本数目为一组作为循环间隔",
+					},
+				},
 				replacer: "替换所选剪辑至指定的新剪辑",
 				propertizer: "批量为所有选中剪辑设置属性（如规范化、拉伸）",
 				subtitles: "预先设定好“$t(shared:plugins.titlesAndText)”的预设，然后在此处添加多行文本",
@@ -1285,7 +1326,7 @@ export default {
 				_: "像素硬边缘放大功能是一种专为像素艺术或需保留锐利边缘的画面设计的无损放大技术。其目的是解决VEGAS自带的双线性插值缩放算法导致的像素模糊问题，这类算法会通过混合相邻像素颜色生成渐变过渡，破坏像素画的清晰边界。而该功能通过最近邻插值算法实现放大，直接复制最近像素的颜色值，确保放大后的图像边缘保持“硬切”效果，以避免模糊。\n该功能尤其适用于复古游戏素材、低分辨率界面或需要强化像素风格的设计场景。例如放大八位游戏角色动画时，可避免角色轮廓因平滑处理而“软化”，确保每块像素在放大后仍清晰可辨。值得注意的是，你需要提前配置FFmpeg环境或安装数据抹失扩展包以启用核心处理功能。\n该功能根据项目分辨率，通过最近邻插值算法生成适配尺寸的新文件，文件名以“_Scaled”后缀标识。此过程支持任意图像/视频格式，同时也支持以常规方式导入进VEGAS的图像序列文件。",
 			},
 			settings: {
-				about: "音MAD助手是VEGAS Pro的音MAD扩展程序，旨在使VEGAS能够接受如MIDI序列文件等乐谱作为输入并自动生成音MAD的轨道。",
+				about: "音MAD助手是VEGAS Pro的音MAD/YTPMV/YTP扩展程序，旨在使VEGAS能够接受如MIDI序列文件等乐谱作为输入并自动生成音MAD的轨道。",
 				translation: "如果你想要参与翻译，欢迎你的加入。",
 				language: {
 					enableInContextLocalization: "翻译模式已启用，请在Crowdin对话框中切换目标语言。",
@@ -1380,6 +1421,11 @@ export default {
 			reorderHandle: "拖拽以排序",
 			searchBox: "搜索框",
 			otomadHelperLogo: "音MAD助手标志",
+			previewPiano: {
+				pianoKeyboard: "钢琴键盘",
+				spn: "{{noteName}} {{octave}} 键",
+				spn_sharp: "升 {{noteName}} {{octave}} 键",
+			},
 		},
 		aliases: {
 			titles: {
@@ -1397,6 +1443,10 @@ export default {
 				pixelScaling: "MisczTools、Miscz Tools",
 			},
 			source: {
+				naming: {
+					trackName: "轨道名、轨道组名",
+					clipName: "片段名、轨道事件名",
+				},
 				secretBox: "素材盲箱、抽卡、扭蛋",
 			},
 			score: {
@@ -1420,7 +1470,7 @@ export default {
 				timeUnremapping: "时间解除重映射、时间取消重映射、时间不重映射、时间重映射",
 				articulations: {
 					_: "技法、技术、技巧",
-					glissando: "弯音、颤音、振音",
+					glissando: "弯音、颤音、振音、揉音",
 					appoggiatura: "装饰音",
 					arpeggio: "涟音、波音、震音、颤音",
 				},

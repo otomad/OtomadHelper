@@ -78,7 +78,7 @@
 		"@commitlint/config-conventional": "latest",
 		"@commitlint/cz-commitlint": "latest",
 		"@commitlint/types": "latest",
-		"@crowdin/crowdin-api-client": "^1.41.0",
+		"@crowdin/crowdin-api-client": "^1.51.1",
 		"@styled/typescript-styled-plugin": "^1.0.1",
 		"@stylistic/eslint-plugin": "^5.1.0",
 		"@stylistic/stylelint-plugin": "^3.1.3",
