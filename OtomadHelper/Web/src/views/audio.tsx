@@ -47,9 +47,11 @@ const builtInPresets = ["normal", "fadeOut"];
 const PrelistenActions = styled(StackPanel)`
 	position: relative;
 	display: flex;
+	flex-wrap: nowrap;
 	align-items: stretch;
 
 	* {
+		white-space: nowrap;
 		transition-behavior: allow-discrete;
 	}
 

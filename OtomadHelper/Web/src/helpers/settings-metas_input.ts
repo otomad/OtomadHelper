@@ -179,7 +179,7 @@ export const settingsMetasInput = {
 		truncate: {
 			icon: "arrow_import_right_prohibited",
 			items: {
-				loopRegion: { icon: "proportion_of_region" },
+				loopRegion: { icon: "data_pie" },
 			},
 		},
 		prologue: prologue("visual"),

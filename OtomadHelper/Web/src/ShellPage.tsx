@@ -1,5 +1,3 @@
-import type { Trans } from "utils/i18n";
-
 const pages = import.meta.glob<FC>("./**/*.tsx", { base: "/src/views", import: "default", eager: true });
 
 function EmptyPage() {
@@ -24,7 +22,7 @@ export function redirectIcon(name: string): DeclaredIcons & DeclaredLotties {
 		prve: "sparkle",
 		staff: "g_clef",
 		pixelScaling: "pixelate_zoom",
-		internal: "registry",
+		internal: "puzzle_cube_piece",
 		license: "certificate",
 	} as const satisfies Record<string, DeclaredIcons | DeclaredLotties>;
 	return (hasOwn(redirects, name) ? redirects[name] : name) as DeclaredIcons & DeclaredLotties;
