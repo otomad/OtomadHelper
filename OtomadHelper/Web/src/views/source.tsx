@@ -86,9 +86,9 @@ export default function Source() {
 		trackGroup, collapseTrackGroup, otomadTrackName, vocaloidTrackName, ytpTrackName, otomadClipName, vocaloidClipName, ytpClipName,
 		secretBox, consonant, matchCut, matchCutOrder, matchCutLoop, matchCutSecretBox, linearMap, linearMapDescending,
 		secretBoxLimitToSelected, secretBoxForTrack, secretBoxForMarker, secretBoxForBarOrBeat, secretBoxForBarOrBeatPeriod, secretBoxForBarOrBeatPreparation,
-	} = useSelectConfig(c => c.source);
-	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = useSelectConfig(c => c.source.afterCompletion);
-	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
+	} = selectConfig(c => c.source);
+	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = selectConfig(c => c.source.afterCompletion);
+	const { enabled: [ytpEnabled] } = selectConfig(c => c.ytp);
 	const meta = metas.source;
 	/** @deprecated */ const manualEnabled = false;
 

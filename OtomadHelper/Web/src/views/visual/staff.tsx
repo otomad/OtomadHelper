@@ -4,7 +4,7 @@ import tipsImage from "assets/images/tips/classical_music_mashup.avif";
 export default function Staff() {
 	const {
 		enabled,
-	} = useSelectConfig(c => c.visual.staff);
+	} = selectConfig(c => c.visual.staff);
 
 	return (
 		<div className="container">

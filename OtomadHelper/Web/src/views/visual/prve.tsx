@@ -60,8 +60,8 @@ export default function Prve() {
 	const [controlMode, setControlMode] = useState<typeof controlModes[number]>("general");
 	const isGeneralCurrent = useMemo(() => controlMode === "general", [controlMode]);
 	const { autoCollapsePrveClasses } = useSnapshot(configStore.settings);
-	const { control, isMultiple, effects } = useSelectConfig(c => c.visual.prve[controlMode]);
-	const { compression, slant, puyo, pendulum, gaussianBlur, radialBlur, rotation, initialAngle, rotateCustomSequence, randomClassAlwaysInitialAtNormal } = useSelectConfig(c => c.visual.prve[controlMode].amounts);
+	const { control, isMultiple, effects } = selectConfig(c => c.visual.prve[controlMode]);
+	const { compression, slant, puyo, pendulum, gaussianBlur, radialBlur, rotation, initialAngle, rotateCustomSequence, randomClassAlwaysInitialAtNormal } = selectConfig(c => c.visual.prve[controlMode].amounts);
 	const meta = metas.visual.prve;
 	const selectionMode = useSelectionMode(isMultiple);
 	const effectLength = effects[0].length;

@@ -7,7 +7,7 @@ export default function PixelScaling() {
 		scaleFactor: [scaleFactor, _setScaleFactor],
 		autoScaleFactor: [autoScaleFactor, setAutoScaleFactor],
 		replaceSource: [replaceSource, setReplaceSource],
-	} = useSelectConfig(c => c.visual.pixelScaling);
+	} = selectConfig(c => c.visual.pixelScaling);
 	const meta = metas.visual.pixelScaling;
 
 	const [displayScaleFactor, setDisplayScaleFactor] = useState<Readable | undefined>(scaleFactor);

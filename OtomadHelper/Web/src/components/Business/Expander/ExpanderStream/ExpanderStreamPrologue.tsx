@@ -25,7 +25,7 @@ export default function ExpanderStreamPrologue({ stream }: {
 	/** Audio or visual? */
 	stream: StreamKind;
 }) {
-	const { form, durationUsing, customDuration, once, visualIdleEffect, audioIdleEffect, emphasisTimes, emphasisDuration } = useSelectConfig(c => c.prologue);
+	const { form, durationUsing, customDuration, once, visualIdleEffect, audioIdleEffect, emphasisTimes, emphasisDuration } = selectConfig(c => c.prologue);
 	const isAudio = stream === "audio";
 	const meta = metas[stream].prologue;
 

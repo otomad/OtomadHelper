@@ -2,7 +2,7 @@ export default function ExpanderStreamPlaybackRate({ stream }: FCP<{
 	/** Audio or visual? */
 	stream: StreamKind;
 }, "div">) {
-	const { sync, audioRate, visualRate, audioBased, visualBased } = useSelectConfig(c => c.playbackRate);
+	const { sync, audioRate, visualRate, audioBased, visualBased } = selectConfig(c => c.playbackRate);
 	const isAudio = stream === "audio";
 	const value = isAudio ? audioRate : visualRate;
 	const meta = metas[stream];

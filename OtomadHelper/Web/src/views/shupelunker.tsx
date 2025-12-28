@@ -6,8 +6,8 @@ const affixes = [
 ];
 
 export default function Shupelunker() {
-	const { enabled, affix, exclusiveTrack, offset } = useSelectConfig(c => c.shupelunker);
-	const { octaves, fillUp, fillDown, default: defaultAll } = useSelectConfig(c => c.shupelunker.unallocated);
+	const { enabled, affix, exclusiveTrack, offset } = selectConfig(c => c.shupelunker);
+	const { octaves, fillUp, fillDown, default: defaultAll } = selectConfig(c => c.shupelunker.unallocated);
 	const meta = metas.shupelunker;
 
 	return (

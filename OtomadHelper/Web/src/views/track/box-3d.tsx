@@ -122,7 +122,7 @@ const StyledCube = styled.div`
 
 export default function Box3d() {
 	useSetLayoutEnabledOnSave("box3d", true);
-	const { deleteTracks, useLongerSide } = useSelectConfig(c => c.track.box3d);
+	const { deleteTracks, useLongerSide } = selectConfig(c => c.track.box3d);
 	const [selectedFace, setSelectedFace] = useState<typeof faces[number]>();
 
 	// #region Drag Behavior

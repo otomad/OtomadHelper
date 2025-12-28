@@ -55,11 +55,11 @@ export default function Visual() {
 		legato, multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping, presetPreviewIdeality,
 		mimicalResample, mimicalOscillator, transition, transitionAlignment, transitionDuration, transitionCrossfadeCurve,
 		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioIdleEffect, activeParameterScheme,
-	} = useSelectConfig(c => c.visual);
-	// const activeParameterScheme = useSelectConfigArray(c => c.visual.activeParameterScheme);
-	const { enabled: enablePixelScaling } = useSelectConfig(c => c.visual.pixelScaling);
-	const { enabled: enableStaffVisualizer } = useSelectConfig(c => c.visual.staff);
-	const { createGroups } = useSelectConfig(c => c);
+	} = selectConfig(c => c.visual);
+	// const activeParameterScheme = selectConfigArray(c => c.visual.activeParameterScheme);
+	const { enabled: enablePixelScaling } = selectConfig(c => c.visual.pixelScaling);
+	const { enabled: enableStaffVisualizer } = selectConfig(c => c.visual.staff);
+	const { createGroups } = selectConfig(c => c);
 	const { prveCheckInfo, isForceStretch, prveCount } = usePrveInfo();
 	const { hideUseTips } = useSnapshot(configStore.settings);
 	const meta = metas.visual;

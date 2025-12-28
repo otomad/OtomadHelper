@@ -3,8 +3,8 @@ import tipsImage from "assets/images/tips/shapes.avif";
 export default function Sonar() {
 	const {
 		enabled, separateDrums, differenceCompositeMode, shadow, shadowColor,
-	} = useSelectConfig(c => c.sonar);
-	const graphs = useSelectConfigArray(c => c.sonar.graphs);
+	} = selectConfig(c => c.sonar);
+	const graphs = selectConfigArray(c => c.sonar.graphs);
 	const meta = metas.sonar;
 
 	return (

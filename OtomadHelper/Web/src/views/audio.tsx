@@ -92,10 +92,10 @@ export default function Audio() {
 		tuningMethod, tuningMethodAcid, tuningMethodScaleless,
 		stretchAttributeElastic, stretchAttributeClassic, stretchAttributePitchShift, alternativeForExceedTheRange, resample, preserveFormant, currentPreset,
 		basePitch, basePitchBased, cent, glissando,
-	} = useSelectConfig(c => c.audio);
-	const { engine, waveform, duration: beepDuration, volume: beepVolume, adjustAudioToBasePitch } = useSelectConfig(c => c.audio.prelistenAttributes);
-	const { createGroups } = useSelectConfig(c => c);
-	const activeParameterScheme = useSelectConfigArray(c => c.audio.activeParameterScheme);
+	} = selectConfig(c => c.audio);
+	const { engine, waveform, duration: beepDuration, volume: beepVolume, adjustAudioToBasePitch } = selectConfig(c => c.audio.prelistenAttributes);
+	const { createGroups } = selectConfig(c => c);
+	const activeParameterScheme = selectConfigArray(c => c.audio.activeParameterScheme);
 	const meta = metas.audio;
 	const [stopPrelistening, setStopPrelistening] = useState<() => void>();
 	const tuningMethodScalelessUnlocked = tuningMethod[0].in("unset", "elastic", "classic"), tuningMethodScalelessEnabled = tuningMethodScaleless[0] && tuningMethodScalelessUnlocked;

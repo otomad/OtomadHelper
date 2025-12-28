@@ -712,7 +712,7 @@ export default function NavigationView({ currentNav: [currentNav, setCurrentNav]
 	const pagePath = currentNav!.join("/");
 	const responsive = usePaneDisplayMode();
 	const [flyoutDisplayMode, setFlyoutDisplayMode] = useState<PaneDisplayMode>("minimal");
-	const [isExpandedInExpandedMode, setIsExpandedInExpandedMode] = useSelectConfig(c => c.settings).isExpandedInExpandedMode;
+	const [isExpandedInExpandedMode, setIsExpandedInExpandedMode] = selectConfig(c => c.settings).isExpandedInExpandedMode;
 	const paneDisplayMode: PaneDisplayMode = responsive === "expanded" ?
 		isExpandedInExpandedMode ? "expanded" : "compact" : responsive;
 	const pageContentEl = useDomRef<"div">();
