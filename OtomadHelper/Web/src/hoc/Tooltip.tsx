@@ -265,8 +265,8 @@ function TooltipContent({ image, title, children, ...htmlAttrs }: FCP<{
 export type TooltipProps = PropsOf<typeof Tooltip>;
 
 function TooltipWith<TKey extends keyof TooltipProps>(withProps: Partial<Record<TKey, TooltipProps[TKey]>>) {
-	const PartialTooltip = (props: PartialWith<TooltipProps, TKey>) => <Tooltip {...withProps} {...props as TooltipProps} />;
-	return PartialTooltip;
+	const CurriedTooltip = Curry(Tooltip, withProps);
+	return CurriedTooltip;
 }
 
 function TooltipWrap(component: ReactElement | React.ExoticComponent, tooltipProps: Partial<TooltipProps>) {
