@@ -35,7 +35,8 @@ const StyledPianoPickerOutput = styled.div`
 `;
 
 type SPNRange = [start: string, end: string];
-const DEFAULT_PITCH = "C5", DEFAULT_PITCH_RANGE = Object.freeze(["C0", "F#10"] as const);
+const DEFAULT_PITCH = "C5";
+export const DEFAULT_PITCH_RANGE = Object.freeze(["C0", "F#10"] as const);
 
 interface Props {
 	/**

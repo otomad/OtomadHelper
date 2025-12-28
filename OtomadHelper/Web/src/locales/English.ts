@@ -122,6 +122,7 @@ export default {
 		on: "On", // The label next to a toggle switch.
 		off: "Off", // The label next to a toggle switch.
 		parenOff: " (Off)", // Note that there is a space before the left parenthesis if required. It represents the off option in a combo box or radio button setting.
+		onActuallyOff: "On (Actually Off)", // The label next to a toggle switch.
 		custom: "Custom",
 		enabled: "Enabled", // Adjective.
 		enable: "Enable", // Verb.

@@ -58,7 +58,7 @@ const StyledSubExpander = styled.div`
 	}
 `;
 
-export /* @internal */ default function SubExpander({ icon, title, details, disabled, expanded = false, _requestExpanded, type = "chevron", noIndention, anchor, actions, children, onChange: _onChange, ...htmlAttrs }: FCP<{
+export /* @internal */ default function SubExpander({ icon, title, details, disabled, expanded = false, _requestExpanded, type = "chevron", noIndention, anchor, actions, actuallyOn, children, onChange: _onChange, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons;
 	/** Title. */
@@ -85,6 +85,18 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 	anchor?: string;
 	/** The other action control area on the right side of the component. */
 	actions?: ReactNode;
+	/**
+	 * If when the toggle switch is on but useless, please pass this prop with `false`, and the label will show "On (Actually Off)".
+	 *
+	 * If you do not need this feature, please pass `undefined` for better performance.
+	 *
+	 * Note that this prop either toggles between `true` and `false` or is always `undefined`, never toggles between `true` and `undefined`.
+	 *
+	 * Available for switch type only.
+	 *
+	 * @default undefined
+	 */
+	actuallyOn?: boolean;
 }, GenericElement>) {
 	let setExpanded: SetStateNarrow<boolean>;
 	const internalExpanded = useState(typeof expanded === "boolean" ? expanded : expanded[0]);
@@ -109,6 +121,7 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 						disabled={disabled}
 						anchor={anchor}
 						actions={actions}
+						actuallyOn={actuallyOn}
 						{...htmlAttrs}
 					>
 						{title}

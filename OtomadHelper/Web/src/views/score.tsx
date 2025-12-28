@@ -1,3 +1,4 @@
+import { DEFAULT_PITCH_RANGE } from "components/PianoPicker";
 import { redirectIcon } from "../ShellPage";
 
 export /* @internal */ const tempoUsings = [
@@ -126,6 +127,11 @@ export default function Score() {
 	const meta = metas.score;
 	const autoChangeProjectCheckInfo = listFormat([autoChangeProjectTempo[0] && t.score.tempo, autoChangeProjectTimeSignature[0] && t.score.timeSignature]) || t.off;
 
+	const trimActuallyEnabled = useMemo(() => trimStart[0] !== trimEnd[0], [trimStart[0], trimEnd[0]]);
+	const periodicityActuallyEnabled = useMemo(() => !(periodicityPreset[0] === "custom" && base64ToBitArray(periodicityBits[0]).slice(0, periodicityInterval[0]).every(Boolean)), [periodicityPreset[0], periodicityBits[0]]);
+	const pitchRangeActuallyEnabled = useMemo(() => !lodash.isEqual(pitchRange[0], DEFAULT_PITCH_RANGE), [pitchRange[0]]);
+	const filterActuallyEnabled = useMemo(() => trimEnabled[0] && trimActuallyEnabled || periodicityEnabled[0] && periodicityActuallyEnabled || pitchRangeEnabled[0] && pitchRangeActuallyEnabled, [trimEnabled[0], periodicityEnabled[0], pitchRangeEnabled[0], trimActuallyEnabled, periodicityActuallyEnabled, pitchRangeActuallyEnabled]);
+
 	const setSelectTrackItems = (recipe: (draft: typeof selectTrackItems) => void) => _setSelectTrackItems(produce(recipe));
 
 	const getAllMultipleSelectTrackItemSet = (index: number | typeof tracks[number]) => {
@@ -227,14 +233,14 @@ export default function Score() {
 				</TabBar>
 			</Card>
 
-			<Setting meta={meta.filter}>
-				<Setting meta={meta.filter.trim} expanded={trimEnabled} type="switch">
+			<Setting meta={meta.filter} checkInfo={filterActuallyEnabled ? t.on : t.off} alwaysShowCheckInfo>
+				<Setting meta={meta.filter.trim} expanded={trimEnabled} type="switch" actuallyOn={trimActuallyEnabled}>
 					<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
 				</Setting>
-				<Setting meta={meta.filter.periodicity} expanded={periodicityEnabled} type="switch">
+				<Setting meta={meta.filter.periodicity} expanded={periodicityEnabled} type="switch" actuallyOn={periodicityActuallyEnabled}>
 					<QuickIntervalSelection interval={periodicityInterval} bits={periodicityBits} preset={periodicityPreset} />
 				</Setting>
-				<Setting meta={meta.filter.pitchRange} expanded={pitchRangeEnabled} type="switch">
+				<Setting meta={meta.filter.pitchRange} expanded={pitchRangeEnabled} type="switch" actuallyOn={pitchRangeActuallyEnabled}>
 					<PianoPicker pitch={pitchRange} showOutput showReset />
 				</Setting>
 			</Setting>

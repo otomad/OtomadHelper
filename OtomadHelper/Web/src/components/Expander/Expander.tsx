@@ -163,8 +163,12 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	actions?: ReactNode;
 	/** Expanded initially? */
 	expanded?: boolean;
-	/** The text that displays the selected status of a radio button or checkbox in the expander, which is only displayed when the expander is closed. */
-	checkInfo?: ReactNode;
+	/**
+	 * The text that displays the selected status of a radio button or checkbox in the expander, which is only displayed when the expander is closed.
+	 *
+	 * Note: Do not pass boolean value!
+	 */
+	checkInfo?: Exclude<ReactNode, boolean>;
 	/** Regardless of whether the expander is on or off, the selected display text is always displayed. */
 	alwaysShowCheckInfo?: boolean;
 	/** Make sure expander children won't exceed the area. */

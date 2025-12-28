@@ -1,4 +1,4 @@
-export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, children, actionIcon, resetTransitionOnChanging, className, color, actions, lock, title, onClick, onChange, ...settingsCardProps }: FCP<Override<PropsOf<typeof SettingsCard>, {
+export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, children, actionIcon, resetTransitionOnChanging, className, color, actions, lock, actuallyOn, title, onClick, onChange, ...settingsCardProps }: FCP<Override<PropsOf<typeof SettingsCard>, {
 	/** Is on? */
 	on: StateProperty<boolean>;
 	/** Disabled? */
@@ -20,6 +20,16 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 	 * Useful when you need to disable user input without affecting configuration saving.
 	 */
 	lock?: boolean | null;
+	/**
+	 * If when the toggle switch is on but useless, please pass this prop with `false`, and the label will show "On (Actually Off)".
+	 *
+	 * If you do not need this feature, please pass `undefined` for better performance.
+	 *
+	 * Note that this prop either toggles between `true` and `false` or is always `undefined`, never toggles between `true` and `undefined`.
+	 *
+	 * @default undefined
+	 */
+	actuallyOn?: boolean;
 	/** Occurs while toggling. */
 	onChange?(on: boolean): void;
 }>>) {
@@ -41,6 +51,7 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 						color={color}
 						on={[on, setOn]}
 						lock={lock}
+						actuallyOn={actuallyOn}
 						isPressing={[isToggleSwitchPressing, setIsToggleSwitchPressing]}
 						tabIndex={isExpander ? undefined : -1}
 						disabled={disabled}

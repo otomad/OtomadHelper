@@ -45,6 +45,21 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 				overflow-block: clip;
 				white-space: nowrap;
 			}
+
+			div.on {
+				block-size: 1lh;
+				overflow-block: clip;
+
+				.label-container${important(2)} {
+					&.actually-off {
+						--progress: 0;
+					}
+
+					&:not(.actually-off) {
+						--progress: 1;
+					}
+				}
+			}
 		}
 	}
 
@@ -227,7 +242,7 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	}
 `);
 
-export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, actions, children, onChange, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, actions, actuallyOn, children, onChange, ...htmlAttrs }: FCP<{
 	/** Is on? */
 	on: StateProperty<boolean>;
 	/** Disabled */
@@ -271,6 +286,16 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	anchor?: string;
 	/** The other action control area on the right side of the component. */
 	actions?: ReactNode;
+	/**
+	 * If when the toggle switch is on but useless, please pass this prop with `false`, and the label will show "On (Actually Off)".
+	 *
+	 * If you do not need this feature, please pass `undefined` for better performance.
+	 *
+	 * Note that this prop either toggles between `true` and `false` or is always `undefined`, never toggles between `true` and `undefined`.
+	 *
+	 * @default undefined
+	 */
+	actuallyOn?: boolean;
 	/** Occurs while toggling. */
 	onChange?(on: boolean): void;
 }, "button">) {
@@ -290,6 +315,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	if (isContrast) color = undefined;
 	const [inContextLocalization] = useInContextLocalization();
 	const reduceMotion = useMediaQuery.reduceMotion();
+	const actuallyOff = actuallyOn === false;
 
 	const { resetTransition } = useSnapshot(pageStore);
 	useUpdateEffect(() => {
@@ -379,9 +405,17 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 						{!inContextLocalization && !reduceMotion ? (
 							<div className="label-container" style={{ "--progress": labelTranslate }}>
 								<span className="off">{t.off}</span>
-								<span className="on">{t.on}</span>
+								{actuallyOn === undefined ? <span className="on">{t.on}</span> : (
+									<div className="on">
+										<div className={["label-container", { actuallyOff }]}>
+											<span className="off">{t.onActuallyOff}</span>
+											<span className="on">{t.on}</span>
+										</div>
+									</div>
+								)}
 							</div>
-						) : on ? t.on : t.off}
+						) :
+							on ? actuallyOff ? t.onActuallyOff : t.on : t.off}
 					</output>
 				)}
 				<div className={["base", "toggle-switch-base", { pressing: isPressing }]}>
