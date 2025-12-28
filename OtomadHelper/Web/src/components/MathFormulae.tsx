@@ -1,6 +1,6 @@
 export function MathFormulaFor39() {
 	return (
-		<math>
+		<math aria-label={t.aria.formulaFor39}>
 			<mrow>
 				<mo>±</mo>
 				<mfrac>
