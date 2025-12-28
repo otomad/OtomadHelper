@@ -17,7 +17,7 @@
  * @returns Attrs.
  */
 export default function Attrs({ compactUndefined = true, children, ...attrs }: FCP<{
-	/** If true, omit properties with undefined values; If false, properties with undefined values will also be passed to child components. */
+	/** If true, omit properties with undefined values; If false, properties with undefined values will also be passed to child components. @default true */
 	compactUndefined?: boolean;
 }, "section"> & Record<string, Any>) {
 	if (compactUndefined) Object.compactUndefined(attrs);

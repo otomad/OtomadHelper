@@ -10,9 +10,13 @@ const StyledSettingsAbout = styled.div`
 		align-self: center;
 		inline-size: 80%;
 		color: ${c("fill-color-text-secondary")};
-		text-align: center;
+		text-align-last: center;
 		text-wrap: pretty;
 		hyphens: manual;
+
+		&:not(:lang(zh), :lang(ja), :lang(ko), :lang(th), :lang(lo), :lang(km), :lang(my)) {
+			text-align: center;
+		}
 	}
 
 	.collaborators,
@@ -98,9 +102,11 @@ export default function SettingsAbout() {
 			>
 				<AboutInformation />
 				<Expander.ChildWrapper $tilePadding="subtle button to item">
-					<Button hyperlink href={links.gpl3}>{t({ context: "full" }).titles.license}</Button>
-					<Button hyperlink href={links.otomadHelper.credits}>{t.settings.about.credits}</Button>
-					<Button hyperlink onClick={() => setShowTranslators(true)} aria-haspopup="dialog">{t.settings.about.translators}</Button>
+					<Attrs hyperlink minWidthUnbounded>
+						<Button href={links.gpl3}>{t({ context: "full" }).titles.license}</Button>
+						<Button href={links.otomadHelper.credits}>{t.settings.about.credits}</Button>
+						<Button onClick={() => setShowTranslators(true)} aria-haspopup="dialog">{t.settings.about.translators}</Button>
+					</Attrs>
 				</Expander.ChildWrapper>
 			</Setting>
 			<Setting meta={meta.help}>
