@@ -202,7 +202,7 @@ namespace Config {
 			stack: false,
 			timeUnremapping: false,
 			mimicalResample: null as TriState,
-			mimicalOscillator: null as TriState,
+			mimicalOscillator: true,
 			transition: false,
 			transitionAlignment: 0,
 			transitionDuration: EMPTY_TIMECODE,

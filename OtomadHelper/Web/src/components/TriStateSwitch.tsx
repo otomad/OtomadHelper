@@ -15,6 +15,7 @@ export default function TriStateSwitch({ current, indetText, indetIcon }: FCP<{
 	indetIcon: DeclaredIcons;
 }, "div">) {
 	const segmentedCurrent = useStateSelector(current, toTriStateKey, key => triStateMap[key]);
+
 	return (
 		<Segmented current={segmentedCurrent}>
 			{triStates.map(option => {
@@ -29,6 +30,21 @@ export default function TriStateSwitch({ current, indetText, indetIcon }: FCP<{
 					</Segmented.Item>
 				);
 			})}
+		</Segmented>
+	);
+}
+
+// Business component
+export function OffAndAutoSwitch({ current }: {
+	/** Current selected state. True stands for auto, and false stands for off. */
+	current: StateProperty<boolean>;
+}) {
+	const segmentedCurrent = useStateSelector(current, toTriStateKey, key => triStateMap[key]);
+
+	return (
+		<Segmented current={segmentedCurrent}>
+			<Segmented.Item id="false" key="false" icon={icons.false}>{t.off}</Segmented.Item>
+			<Segmented.Item id="true" key="true" icon="auto">{t.auto}</Segmented.Item>
 		</Segmented>
 	);
 }

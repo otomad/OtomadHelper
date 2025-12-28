@@ -67,9 +67,6 @@ export default function Visual() {
 	const truncateIdleEffectDisabled = !truncates.find(({ id }) => id === truncate[0])?.idleEffectApplicable,
 		truncateLoopRegionDisabled = !truncates.find(({ id }) => id === truncate[0])?.loopRegionApplicable;
 
-	useEffect(() => { mimicalResample[0] && mimicalOscillator[0] && mimicalOscillator[1](null); }, [mimicalResample[0]]);
-	useEffect(() => { mimicalResample[0] && mimicalOscillator[0] && mimicalResample[1](null); }, [mimicalOscillator[0]]);
-
 	const { pushPage } = useSnapshot(pageStore);
 
 	const onSortableOverlayDrop = useCallback<DropAnimationSideEffects>(({ dragOverlay: { node: dragOverlay } }) => {
@@ -176,7 +173,7 @@ export default function Visual() {
 					<Setting meta={meta.mimical}>
 						<InfoBar>{t.descriptions.stream.tuning.mimical.auto}</InfoBar>
 						<Setting meta={meta.mimical.resample} actions={<TriStateSwitch current={mimicalResample} indetText={t.auto} indetIcon="auto" />} />
-						<Setting meta={meta.mimical.oscillator} actions={<TriStateSwitch current={mimicalOscillator} indetText={t.auto} indetIcon="auto" />} />
+						<Setting meta={meta.mimical.oscillator} actions={<OffAndAutoSwitch current={mimicalOscillator} />} />
 					</Setting>
 					<Setting meta={meta.transition} on={transition}>
 						<Setting
