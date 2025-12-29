@@ -40,7 +40,7 @@ export default function PitchPicker({ spn: [spn, setSpn], ...htmlAttrs }: FCP<{
 	};
 
 	return (
-		<StyledPitchPicker onClick={showPitchPicker} {...htmlAttrs}>
+		<StyledPitchPicker role="combobox" onClick={showPitchPicker} {...htmlAttrs}>
 			<div className="content">
 				<div>{pitch.noteName}</div>
 				<div>{pitch.octave}</div>

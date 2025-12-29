@@ -253,6 +253,10 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 			aria-labelledby={`${ariaId}-title`}
 			aria-describedby={`${ariaId}-details`}
 			onClick={handleClick}
+			{...asSubtitle && {
+				role: "heading",
+				"aria-level": 5,
+			}}
 			{...htmlAttrs}
 		>
 			<InteractionStateContext value={{ disabled }}>

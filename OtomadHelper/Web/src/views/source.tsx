@@ -121,6 +121,7 @@ export default function Source() {
 			<Setting meta={meta.trim} checkInfo={trimStart[0] !== trimEnd[0] ? t.on : t.off} alwaysShowCheckInfo>
 				{/* TODO: 当 trimStart 小于或等于 trimEnd 时，checkInfo 显示“关”，否则显示“开”。 */}
 				<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
+				<TrimIgnoredInfoBar />
 			</Setting>
 			<Setting
 				meta={meta.startTime}
@@ -242,4 +243,10 @@ export default function Source() {
 			<DragToImport>{t.titles.source}</DragToImport>
 		</div>
 	);
+}
+
+export /* @internal */ function TrimIgnoredInfoBar() {
+	const { hideUseTips } = useSnapshot(configStore.settings);
+	if (hideUseTips) return;
+	return <InfoBar status="accent" title={t.descriptions.trimIgnored} />;
 }

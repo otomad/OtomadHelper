@@ -235,6 +235,11 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 				border-color: ${c("highlight-color")};
 			}
 		}
+
+		&.actually-off .base {
+			background-color: ${c("fill-color-system-caution")} !important;
+			border-color: ${c("fill-color-system-caution")};
+		}
 	}
 
 	> .text > * {
@@ -377,7 +382,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	return (
 		<StyledToggleSwitchLabel
 			as={as as "button"}
-			className={{ selected: on, pressed, colored: !!color }}
+			className={{ selected: on, pressed, colored: !!color, actuallyOff }}
 			disabled={disabled}
 			aria-disabled={disabled || undefined}
 			onClick={e => handleCheck(!on, e)}

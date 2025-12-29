@@ -407,6 +407,7 @@ export default {
 			},
 			idleEffect: {
 				_: "Idle effect",
+				__other: "Idle effects",
 				fade: "Fade",
 				monochrome: "Monochrome",
 				negative: "Negative",
@@ -994,6 +995,7 @@ export default {
 			unsupportedBrowser: "We are sorry, but we do not support your outdated {{browser}} browser. Please update it!",
 			condition: "Specify when to apply this configuration",
 			amplitude: "Specify the amplitude amount of the {{effect, lowercase}} effect",
+			trimIgnored: "If the end time is less than or equal to the start time, trimming will not be performed.",
 			curve: {
 				interpolation: "Specify the interpolation curve of the keyframe type",
 				crossfade: "Specify the two crossfade curves of the fade type",
@@ -1461,6 +1463,11 @@ export default {
 				spn_sharp: "Key {{noteName}} sharp {{octave}}",
 			},
 			formulaFor39: "plus or minus twelve divided by log base ten of two, which is approximately equal to plus or minus thirty-nine point eight six three one three seven", // ± 12 / lg 2 (≈ ±39.863137)
+			trimTimecode: {
+				trimStart: "Start time",
+				trimEnd: "End time",
+			},
+			fromTo: "From {{from}} to {{to}}",
 		},
 		aliases: {
 			// cSpell:disable

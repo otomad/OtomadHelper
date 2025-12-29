@@ -152,4 +152,29 @@ export default class Pitch {
 	get frequency() {
 		return 440 * 2 ** ((this.#noteNumber - Pitch.#middleA4) / 12);
 	}
+
+	/**
+	 * Gets the note name without the sharp or flat sign.
+	 */
+	get noteNameWhiteKey() {
+		return this.noteName[0];
+	}
+
+	/**
+	 * Check if the pitch is on the black key of the piano (i.e. with the sharp sign)?
+	 */
+	get isSharp() {
+		return this.noteName.length !== 1;
+	}
+
+	/**
+	 * Gets how the pitch read in the current language.
+	 */
+	get ariaLabel() {
+		return t.aria.previewPiano.spn({
+			context: this.isSharp ? "sharp" : "natural",
+			noteName: this.noteNameWhiteKey,
+			octave: this.octave,
+		});
+	}
 }

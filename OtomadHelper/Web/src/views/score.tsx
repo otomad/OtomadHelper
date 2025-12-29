@@ -1,5 +1,6 @@
 import { DEFAULT_PITCH_RANGE } from "components/PianoPicker";
 import { redirectIcon } from "../ShellPage";
+import { TrimIgnoredInfoBar } from "./source";
 
 export /* @internal */ const tempoUsings = [
 	{ id: "variableScore", name: t.score.tempo.variableScore, icon: "score_variable" },
@@ -236,6 +237,7 @@ export default function Score() {
 			<Setting meta={meta.filter} checkInfo={filterActuallyEnabled ? t.on : t.off} alwaysShowCheckInfo>
 				<Setting meta={meta.filter.trim} expanded={trimEnabled} type="switch" actuallyOn={trimActuallyEnabled}>
 					<ExpanderChildTrim.Timecode start={trimStart} end={trimEnd} />
+					<TrimIgnoredInfoBar />
 				</Setting>
 				<Setting meta={meta.filter.periodicity} expanded={periodicityEnabled} type="switch" actuallyOn={periodicityActuallyEnabled}>
 					<QuickIntervalSelection interval={periodicityInterval} bits={periodicityBits} preset={periodicityPreset} />

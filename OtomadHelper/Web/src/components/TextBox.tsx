@@ -86,6 +86,7 @@ function Spinner({ disabled, step = 1, positionAnchor, shown = false, onSpin, on
 					disabled={disabled}
 					repeat
 					tabIndex={-1}
+					role="spinbutton"
 					aria-label={t.increase}
 					onClick={() => spinWithValue(1)}
 					onRelease={onRelease}
@@ -96,6 +97,7 @@ function Spinner({ disabled, step = 1, positionAnchor, shown = false, onSpin, on
 					disabled={disabled}
 					repeat
 					tabIndex={-1}
+					role="spinbutton"
 					aria-label={t.decrease}
 					onClick={() => spinWithValue(-1)}
 					onRelease={onRelease}

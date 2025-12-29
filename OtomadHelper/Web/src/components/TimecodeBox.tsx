@@ -210,7 +210,7 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 	useChangeEffect(() => void onChanging?.(), [timecode]);
 
 	return (
-		<StyledTimecodeBox ref={timecodeBoxEl} onMouseDown={handleTimecodeBoxMouseDown} disabled={disabled} {...htmlAttrs}>
+		<StyledTimecodeBox ref={timecodeBoxEl} role="region" onMouseDown={handleTimecodeBoxMouseDown} disabled={disabled} {...htmlAttrs}>
 			<StyledTextBox>
 				<div className="stripes">
 					<div className="focus-stripe" />
@@ -226,6 +226,7 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 							className="up"
 							repeat
 							tabIndex={-1}
+							role="spinbutton"
 							aria-label={t.increase}
 							onClick={() => handleSpinnerClick(lastIndex, 1)}
 						/>
@@ -246,6 +247,7 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 							className="down"
 							repeat
 							tabIndex={-1}
+							role="spinbutton"
 							aria-label={t.decrease}
 							onClick={() => handleSpinnerClick(lastIndex, -1)}
 						/>

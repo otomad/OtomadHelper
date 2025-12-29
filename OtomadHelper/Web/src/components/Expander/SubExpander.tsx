@@ -36,7 +36,7 @@ const StyledSubExpander = styled.div`
 			display: none;
 		}
 
-		> .expander-child-items:not(.no-indention) > * {
+		> .expander-child-items:not(.no-indention) > :not(.no-indention, .info-bar) {
 			padding-inline-start: ${expanderItemPadding[1]}px;
 		}
 

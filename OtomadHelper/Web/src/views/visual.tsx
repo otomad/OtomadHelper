@@ -66,6 +66,7 @@ export default function Visual() {
 	const topPriorityTransformMethod = transformMethod[0][0];
 	const truncateIdleEffectDisabled = !truncates.find(({ id }) => id === truncate[0])?.idleEffectApplicable,
 		truncateLoopRegionDisabled = !truncates.find(({ id }) => id === truncate[0])?.loopRegionApplicable;
+	const arpeggioIdleEffectActualOn = Object.values(arpeggioIdleEffect[0]).some(({ enabled }) => enabled);
 
 	const { pushPage } = useSnapshot(pageStore);
 
@@ -231,7 +232,7 @@ export default function Visual() {
 						/>
 					</Setting>
 					<Setting meta={meta.articulations.appoggiatura} on={appoggiatura} />
-					<Setting meta={meta.articulations.arpeggio} on={arpeggio}>
+					<Setting meta={meta.articulations.arpeggio} on={arpeggio} actuallyOn={arpeggioIdleEffectActualOn}>
 						<IdleEffectSettings value={arpeggioIdleEffect} pinToTop="negative" />
 					</Setting>
 

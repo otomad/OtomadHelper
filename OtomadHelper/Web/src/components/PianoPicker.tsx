@@ -99,8 +99,9 @@ export default function PianoPicker({ pitch: [pitch, setPitch], showOutput: _sho
 			{(showOutput || showReset) && (
 				<StyledPianoPickerOutput>
 					{showOutput && (!rangeMode ?
-						<output>{pitch}</output> : (
-							<output className="range">
+						// CAUTION: `role="img"` may be misleading, but it will solve the problem. The screen reader will skip this element if remove the role.
+						<output role="img" aria-label={new Pitch(pitch).ariaLabel}>{pitch}</output> : (
+							<output className="range" role="img" aria-label={t.aria.fromTo({ from: new Pitch(pitch[0]).ariaLabel, to: new Pitch(pitch[1]).ariaLabel })}>
 								<span>{pitch[0]}</span>
 								<span>{t.rangeDash}</span>
 								<span>{pitch[1]}</span>
