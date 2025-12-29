@@ -1,4 +1,5 @@
 import type { ImageFitTypes } from "components/BackgroundImage";
+import type { LegatoDurations, LegatoModes } from "components/Business/Expander/ExpanderLegato";
 import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "components/Business/Expander/ExpanderStream/ExpanderStreamPrologue";
 import type { VisualIdleEffects } from "components/Business/IdleEffectSettings";
 import type { Encodings } from "components/Preview/PreviewEncoding";
@@ -11,18 +12,16 @@ import type { constrainNoteLengthTypes, multipleSelectTrackItems, tempoUsings, t
 import type { systemBackdrops } from "views/settings";
 import type { textPlugins } from "views/settings/internal";
 import type { Namings, barOrBeatUnitTypes, selectGeneratedClipsType, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
-import type { trackLegatoModes } from "views/track";
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
-import type { glissandoEffects, legatos, prerenders, stretches, transformMethods, truncates } from "views/visual";
+import type { glissandoEffects, prerenders, stretches, transformMethods, truncates } from "views/visual";
 import ConfigNS = Config;
-
 namespace Config {
 	export type StartTime = typeof startTimes[number]["id"];
 	export type TempoUsing = typeof tempoUsings[number]["id"];
 	export type ConstrainNoteLengthType = typeof constrainNoteLengthTypes[number]["id"];
 	export type Encoding = typeof Encodings.keyType;
 	export type Stretch = typeof stretches[number]["id"];
-	export type Legato = typeof legatos[number]["id"];
+	export type LegatoDuration = typeof LegatoDurations.keyType;
 	export type Truncate = typeof truncates[number]["id"];
 	export type TransformMethod = typeof transformMethods[number];
 	export type PitchNotation = typeof musicalNotationSystems[number];
@@ -37,7 +36,7 @@ namespace Config {
 	export type GridDirectionOrderType = typeof directionTypes[number];
 	export type GridFitType = typeof gridFitTypes[number];
 	export type GridParityType = typeof parityTypes[number];
-	export type TrackLegatoMode = typeof trackLegatoModes[number];
+	export type LegatoMode = typeof LegatoModes.keyType;
 	export type NormalizeTime = typeof normalizeTimes[number]["id"];
 	export type SystemBackdrop = typeof systemBackdrops[number]["name"];
 	export type PrveCustomStepSequences = Partial<Record<string, number[]>>;
@@ -151,7 +150,9 @@ namespace Config {
 			loop: false as TriState,
 			normalize: "once" satisfies NormalizeTime as NormalizeTime,
 			truncate: "lengthenable" satisfies Truncate as Truncate,
-			legato: "portato" satisfies Legato as Legato,
+			legatoDuration: "portato" satisfies LegatoDuration as LegatoDuration,
+			legatoToMaxGap: false,
+			legatoMode: "lengthen" satisfies LegatoMode,
 			multitrackForChords: false,
 			stack: false,
 			timeUnremapping: false,
@@ -197,7 +198,9 @@ namespace Config {
 			truncate: "lengthenable" satisfies Truncate as Truncate,
 			truncateIdleEffect: defaultVisualIdleEffectSettings("monochrome"),
 			truncateLoopRegion: 50,
-			legato: "upToOneBeat" satisfies Legato as Legato,
+			legatoDuration: "upToOneBeat" satisfies LegatoDuration as LegatoDuration,
+			legatoToMaxGap: false,
+			legatoMode: "lengthen" satisfies LegatoMode,
 			multitrackForChords: false,
 			stack: false,
 			timeUnremapping: false,
@@ -317,7 +320,9 @@ namespace Config {
 				},
 			},
 			legato: {
-				mode: "stacking" satisfies TrackLegatoMode as TrackLegatoMode,
+				legatoDuration: "unlimited" satisfies LegatoDuration as LegatoDuration,
+				legatoToMaxGap: false,
+				legatoMode: "stacking" satisfies LegatoMode,
 				increaseSpacing: EMPTY_TIMECODE,
 				forClips: false,
 				includeGroup: false,

@@ -2,9 +2,6 @@
 import Waveform1 from "assets/svg/waveform_dong.svg?react";
 // cspell:disable-next-line
 import Waveform2 from "assets/svg/waveform_shuo.svg?react";
-import type { trackLegatoModes } from "views/track";
-
-type TrackLegatoMode = typeof trackLegatoModes[number];
 
 const StylePreviewTrackEvent = styled.div`
 	--r: 2;
@@ -43,7 +40,7 @@ function PreviewTrackEvent({ subsequent }: {
 
 const StyledPreviewTrackLegato = styled.div<{
 	/** Track legato mode. */
-	$mode: TrackLegatoMode;
+	$mode: Config.LegatoMode;
 }>`
 	--rows: 3;
 	--columns: 10;
@@ -127,11 +124,11 @@ const StyledPreviewTrackLegato = styled.div<{
 					}
 					&:nth-of-type(5) {
 						--c1: 11;
-						--c2: 5;
+						--c2: 6;
 					}
 					&:nth-of-type(6) {
 						--c1: 15;
-						--c2: 6;
+						--c2: 8;
 					}
 				`;
 				case "stackingAllTracks": return css`
@@ -233,13 +230,13 @@ const StyledPreviewTrackLegato = styled.div<{
 
 export default function PreviewTrackLegato({ mode, ...htmlAttrs }: FCP<{
 	/** Track legato mode. */
-	mode: TrackLegatoMode;
+	mode: Config.LegatoMode;
 }, "div">) {
 	const eventCount = ({
 		stackingAllAfter: 6,
 		stackingAllTracks: 6,
 		increaseSpacingAllTracks: 6,
-	} as Record<TrackLegatoMode, number>)[mode] ?? 4;
+	} as Record<Config.LegatoMode, number>)[mode] ?? 4;
 
 	return (
 		<StyledPreviewTrackLegato $mode={mode} {...htmlAttrs}>

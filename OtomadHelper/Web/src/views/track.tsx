@@ -1,7 +1,5 @@
 import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 
-export /* @internal */ const trackLegatoModes = ["stacking", "stackingAllAfter", "stackingAllTracks", "limitStretch", "stretch", "lengthen", "increaseSpacing", "increaseSpacingAllTracks"] as const;
-
 const StyledDeactivateButton = styled(Button).attrs({
 	icon: "arrow_reset",
 	accent: true,
@@ -30,12 +28,7 @@ const DeactivateButton = ({ activated: [activated, setActivated] }: { activated:
 export default function Track() {
 	const { pushPage } = useSnapshot(pageStore);
 	const [layoutEnabled, layoutEnabledCount, deactivateAll] = useLayoutEnabled();
-	const { mode: legatoMode, increaseSpacing, forClips: legatoForClips, includeGroup: legatoIncludeGroup, backwards: legatoBackwards } = selectConfig(c => c.track.legato);
 	const meta = metas.track;
-
-	useEffect(() => {
-		if (!legatoForClips[0] && legatoMode[0] === "stackingAllAfter") legatoMode[1]("stacking");
-	}, [legatoMode, legatoForClips]);
 
 	return (
 		<div className="container">
@@ -81,38 +74,7 @@ export default function Track() {
 			</div>
 
 			<Subheader>{t.stream.legato}</Subheader>
-			<Setting meta={meta.legato}>
-				<ItemsView view="grid" current={legatoMode} itemWidth={320} key={String(legatoForClips[0])}>
-					{/* When `legatoForClips` change, re-render the entire component to avoid the animation of the newly added item being out of sync with other items. */}
-					{trackLegatoModes.map(mode => {
-						if (mode === "stackingAllAfter" && !legatoForClips[0]) return;
-						const displayMode = mode === "stacking" && legatoForClips[0] ? "stackingSelected" : mode;
-						const multiline = t.track.legato[displayMode].split("\n");
-						return (
-							<ItemsView.Item
-								id={mode}
-								key={mode}
-								details={multiline[1]}
-								image={<PreviewTrackLegato mode={mode} />}
-								withBorder
-							>
-								{multiline[0]}
-							</ItemsView.Item>
-						);
-					})}
-				</ItemsView>
-				<Setting meta={meta.legato.forClips} on={legatoForClips} />
-				<Setting meta={meta.legato.includeGroup} on={legatoIncludeGroup} />
-				<Setting meta={meta.legato.backwards} on={legatoBackwards} />
-				<Setting
-					meta={meta.legato.increaseSpacing}
-					disabled={!legatoMode[0].in("increaseSpacing", "increaseSpacingAllTracks")}
-					actions={<TimecodeBox value={increaseSpacing} />}
-				/>
-				<Expander.ChildWrapper>
-					<Button icon="checkmark">{t.apply}</Button>
-				</Expander.ChildWrapper>
-			</Setting>
+			<ExpanderLegato stream="track" />
 
 			<Subheader meta={meta.clear} />
 			<div>

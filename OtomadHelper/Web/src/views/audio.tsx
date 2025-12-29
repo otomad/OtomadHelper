@@ -1,5 +1,5 @@
 import exampleThumbnail from "assets/images/ヨハネの氷.avif";
-import { legatos, stretches, truncates } from "./visual";
+import { stretches, truncates } from "./visual";
 const truncatesInAudio = truncates.filter(item => item.availableInAudio);
 
 export /* @internal */ const tuningMethods = [
@@ -88,7 +88,7 @@ const TuningMethodEvaluation = styled.ul`
 export default function Audio() {
 	const {
 		enabled, preferredTrack: preferredTrackIndex,
-		stretch, loop, normalize, truncate, legato, multitrackForChords, stack, timeUnremapping, autoPan, autoPanCurve,
+		stretch, loop, normalize, truncate, multitrackForChords, stack, timeUnremapping, autoPan, autoPanCurve,
 		tuningMethod, tuningMethodAcid, tuningMethodScaleless,
 		stretchAttributeElastic, stretchAttributeClassic, stretchAttributePitchShift, alternativeForExceedTheRange, resample, preserveFormant, currentPreset,
 		basePitch, basePitchBased, cent, glissando,
@@ -176,20 +176,9 @@ export default function Audio() {
 						<TruncateAndLegatoConflictInfoBar />
 					</Setting>
 					<ExpanderStreamPrologue stream="audio" />
-					<Setting
-						meta={meta.legato}
-						items={legatos}
-						value={legato}
-						view="grid"
-						parenOff
-						idField="id"
-						nameField={t.stream.legato}
-						iconField="icon"
-						imageField="image"
-						itemWidth={566 / 196 * GRID_VIEW_ITEM_HEIGHT}
-					>
+					<ExpanderLegato stream="audio">
 						<TruncateAndLegatoConflictInfoBar />
-					</Setting>
+					</ExpanderLegato>
 					<Setting meta={meta.multitrackForChords} on={multitrackForChords} />
 					<Setting meta={meta.stack} on={stack} />
 					<Setting meta={meta.timeUnremapping} on={timeUnremapping} />
@@ -397,5 +386,5 @@ function TruncateAndLegatoConflictInfoBar() {
 	return <InfoBar status="accent" title={t.descriptions.stream.truncateAndLegatoConflictInAudio} />;
 }
 
-subscribeStoreKey(configStore.audio, "truncate", value => value !== "lengthenable" && (configStore.audio.legato = "portato"));
-subscribeStoreKey(configStore.audio, "legato", value => value !== "portato" && (configStore.audio.truncate = "lengthenable"));
+subscribeStoreKey(configStore.audio, "truncate", value => value !== "lengthenable" && (configStore.audio.legatoDuration = "portato"));
+subscribeStoreKey(configStore.audio, "legatoDuration", value => value !== "portato" && (configStore.audio.truncate = "lengthenable"));

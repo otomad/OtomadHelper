@@ -59,7 +59,7 @@ export /* @internal */ const StyledButton = styled.button<{
 		}
 	}
 
-	&:is([disabled], [aria-readonly]) {
+	&:is([disabled], [disabled] *, [aria-readonly]) {
 		background-color: ${c("fill-color-control-disabled")};
 
 		> .content {
@@ -150,7 +150,7 @@ export /* @internal */ const StyledButton = styled.button<{
 			background-color: ${c("fill-color", fillColorAccentOpacity.tertiary)};
 		}
 
-		&:is([disabled], [aria-readonly]) {
+		&:is([disabled], [disabled] *, [aria-readonly]) {
 			background-color: ${c("fill-color-accent-disabled")};
 			border-color: transparent !important;
 

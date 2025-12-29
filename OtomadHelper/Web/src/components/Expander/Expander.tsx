@@ -168,7 +168,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	 *
 	 * Note: Do not pass boolean value!
 	 */
-	checkInfo?: Exclude<ReactNode, boolean>;
+	checkInfo?: Exclude<ReactNode, true>;
 	/** Regardless of whether the expander is on or off, the selected display text is always displayed. */
 	alwaysShowCheckInfo?: boolean;
 	/** Make sure expander children won't exceed the area. */

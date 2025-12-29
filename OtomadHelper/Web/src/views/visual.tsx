@@ -1,7 +1,3 @@
-import legatoPortatoImage from "assets/images/tutorials/legato_config/legato_portato.png";
-import legatoUnlimitedImage from "assets/images/tutorials/legato_config/legato_unlimited.png";
-import legatoUpTo1BarImage from "assets/images/tutorials/legato_config/legato_up_to_1bar.png";
-import legatoUpTo1BeatImage from "assets/images/tutorials/legato_config/legato_up_to_1beat.png";
 import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 import { usePrveInfo } from "./visual/prve";
 
@@ -10,12 +6,6 @@ export /* @internal */ const stretches = [
 	{ id: "flexingAndExtending", icon: "arrow_fit_both" },
 	{ id: "extendingOnly", icon: "arrow_fit" },
 	{ id: "flexingOnly", icon: "arrow_fit_in" },
-] as const;
-export /* @internal */ const legatos = [
-	{ id: "portato", icon: "prohibited", image: legatoPortatoImage },
-	{ id: "upToOneBeat", icon: "quarter_note", image: legatoUpTo1BeatImage },
-	{ id: "upToOneBar", icon: "music_bar", image: legatoUpTo1BarImage },
-	{ id: "unlimited", icon: "infinity", image: legatoUnlimitedImage },
 ] as const;
 export /* @internal */ const truncates = [
 	{ id: "lengthenable", icon: "lengthenable", availableInAudio: true, idleEffectApplicable: false, loopRegionApplicable: false },
@@ -52,7 +42,7 @@ export default function Visual() {
 	const {
 		enabled, preferredTrack: preferredTrackIndex,
 		stretch, loop, staticVisual, truncate, truncateIdleEffect, truncateLoopRegion,
-		legato, multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping, presetPreviewIdeality,
+		multitrackForChords, transformMethod, currentPreset, stack, timeUnremapping, presetPreviewIdeality,
 		mimicalResample, mimicalOscillator, transition, transitionAlignment, transitionDuration, transitionCrossfadeCurve,
 		glissando, glissandoEffect, glissandoAmount, appoggiatura, arpeggio, arpeggioIdleEffect, activeParameterScheme,
 	} = selectConfig(c => c.visual);
@@ -156,18 +146,7 @@ export default function Visual() {
 					</Setting>
 					<ExpanderStreamPrologue stream="visual" />
 					<Setting meta={meta.staticVisual} on={staticVisual} />
-					<Setting
-						meta={meta.legato}
-						items={legatos}
-						value={legato}
-						view="grid"
-						parenOff
-						idField="id"
-						nameField={t.stream.legato}
-						iconField="icon"
-						imageField="image"
-						itemWidth={566 / 196 * GRID_VIEW_ITEM_HEIGHT}
-					/>
+					<ExpanderLegato stream="visual" />
 					<Setting meta={meta.multitrackForChords} on={multitrackForChords} />
 					<Setting meta={meta.stack} on={stack} />
 					<Setting meta={meta.timeUnremapping} on={timeUnremapping} />

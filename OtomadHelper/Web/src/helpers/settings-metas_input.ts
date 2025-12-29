@@ -110,7 +110,7 @@ export const settingsMetasInput = {
 		stretch: { icon: "arrow_bidirectional_left_right" },
 		truncate: { icon: "arrow_import_right_prohibited" },
 		prologue: prologue("audio"),
-		legato: { icon: "arrow_between_right" },
+		legato: legato("audio"),
 		multitrackForChords: { icon: "chord_c_major" },
 		stack: { icon: "database_stack" },
 		timeUnremapping: { icon: "timer_off" },
@@ -184,7 +184,7 @@ export const settingsMetasInput = {
 		},
 		prologue: prologue("visual"),
 		staticVisual: { icon: "image_snow" },
-		legato: { icon: "arrow_between_right" },
+		legato: legato("visual"),
 		multitrackForChords: { icon: "chord_c_major" },
 		stack: { icon: "database_stack" },
 		timeUnremapping: { icon: "timer_off" },
@@ -277,16 +277,7 @@ export const settingsMetasInput = {
 	},
 	track: {
 		layout: subheader({ icon: "layout_row_two_split_bottom" }),
-		legato: {
-			aliases: [t.aliases.stream.legato],
-			icon: "arrow_between_right",
-			items: {
-				forClips: { icon: "track_event" },
-				includeGroup: { icon: "group" },
-				backwards: { icon: "arrow_reply" },
-				increaseSpacing: { icon: "increase_spacing", title: t.track.legato.increaseSpacingSetting },
-			},
-		},
+		legato: legato("track"),
 		clear: {
 			type: "subheader",
 			icon: "eraser",
@@ -462,6 +453,23 @@ function prologue(_stream: StreamKind) {
 			once: { icon: "checkmark_1" },
 			emphasisTimes: { icon: "star_emphasis" },
 			emphasisDuration: { icon: "star_emphasis_timer" },
+		},
+	} as const satisfies ISettingMeta;
+}
+function legato(stream: StreamKind | "track") {
+	return {
+		aliases: [t.aliases.stream.legato],
+		icon: "arrow_between_right",
+		items: {
+			duration: { icon: "timer", title: t.stream.legato.duration },
+			toMaxGap: { icon: "placeholder", title: t.stream.legato.toMaxGap, details: t.descriptions.stream.legato.toMaxGap },
+			mode: { icon: "placeholder", title: t.track.legato.mode },
+			...stream === "track" ? {
+				forClips: { icon: "track_event" },
+				includeGroup: { icon: "group" },
+				backwards: { icon: "arrow_reply" },
+				increaseSpacing: { icon: "increase_spacing", title: t.track.legato.increaseSpacingSetting },
+			} : undefined!,
 		},
 	} as const satisfies ISettingMeta;
 }
