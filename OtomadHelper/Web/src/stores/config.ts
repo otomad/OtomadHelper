@@ -414,8 +414,8 @@ namespace Config {
 }
 
 export const configStore = Config.configStore;
-export const selectConfig = <T extends object>(path: (state: typeof configStore) => T) => { "use memo"; return useStoreState(path(configStore)); };
-export const selectConfigArray = <T extends object>(path: (state: typeof configStore) => T[]) => { "use memo"; return useStoreStateArray(path(configStore)); };
+export const useSelectConfig = <T extends object>(path: (state: typeof configStore) => T) => useStoreState(path(configStore));
+export const useSelectConfigArray = <T extends object>(path: (state: typeof configStore) => T[]) => useStoreStateArray(path(configStore));
 if (import.meta.env.DEV) globals.config = configStore;
 
 declare global {

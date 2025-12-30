@@ -87,10 +87,10 @@ export default function Track() {
 
 function useLayoutEnabled() {
 	const enabled = {
-		grid: selectConfig(c => c.track.grid).enabled,
-		concentric: selectConfig(c => c.track.concentric).enabled,
-		box3d: selectConfig(c => c.track.box3d).enabled,
-		gradient: selectConfig(c => c.track.gradient).enabled,
+		grid: useSelectConfig(c => c.track.grid).enabled,
+		concentric: useSelectConfig(c => c.track.concentric).enabled,
+		box3d: useSelectConfig(c => c.track.box3d).enabled,
+		gradient: useSelectConfig(c => c.track.gradient).enabled,
 	};
 	const states = Object.values(enabled);
 	const count = states.filter(state => state[0]).length;

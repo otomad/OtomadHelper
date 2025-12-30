@@ -5,8 +5,8 @@ export default function ExpanderStreamPrerender({ stream }: {
 	stream: StreamKind;
 }) {
 	const { goto } = useSnapshot(pageStore);
-	const { prerender: prerenderVisual } = selectConfig(c => c.visual);
-	const { prerender: prerenderAudio, prerenderAcidTag } = selectConfig(c => c.audio);
+	const { prerender: prerenderVisual } = useSelectConfig(c => c.visual);
+	const { prerender: prerenderAudio, prerenderAcidTag } = useSelectConfig(c => c.audio);
 	const isAudio = stream === "audio";
 
 	return (

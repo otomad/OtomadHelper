@@ -3,9 +3,9 @@ import tipsImage from "assets/images/tips/bathroom_mirror.avif";
 export /* @internal */ const musicalNotationSystems = ["scientific", "helmholtz", "solfege", "numbered", "gongche", "gongshang", "lyulyu", "midiNumber", "frequency"] as const;
 
 export default function Lyrics() {
-	const { enabled, presetTemplate } = selectConfig(c => c.lyrics);
-	const { enabled: karaokeEnabled, futureFill: [futureFill, setFutureFill], pastFill: [pastFill, setPastFill] } = selectConfig(c => c.lyrics.karaoke);
-	const { enabled: notationEnabled, type } = selectConfig(c => c.lyrics.pitchNotation);
+	const { enabled, presetTemplate } = useSelectConfig(c => c.lyrics);
+	const { enabled: karaokeEnabled, futureFill: [futureFill, setFutureFill], pastFill: [pastFill, setPastFill] } = useSelectConfig(c => c.lyrics.karaoke);
+	const { enabled: notationEnabled, type } = useSelectConfig(c => c.lyrics.pitchNotation);
 	const meta = metas.lyrics;
 
 	mutexSwitches(karaokeEnabled, notationEnabled);

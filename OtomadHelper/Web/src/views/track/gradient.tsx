@@ -12,10 +12,10 @@ export default function Gradient() {
 	const {
 		effect, descending: [descending, setDescending],
 		viewOverlay, viewSquare, viewMirrorEdges, viewSize,
-	} = selectConfig(c => c.track.gradient);
+	} = useSelectConfig(c => c.track.gradient);
 	const {
 		enabled: enableGridIntegration, columns, autoColumns, direction, parity, parity2,
-	} = selectConfig(c => c.track.gradient.gridIntegration);
+	} = useSelectConfig(c => c.track.gradient.gridIntegration);
 	useSetLayoutEnabledOnSave("gradient", true);
 	const order = useMemo(() => descending ? "descending" : "ascending", [descending]);
 	const [showGridIntegration, setShowGridIntegration] = useState(false);

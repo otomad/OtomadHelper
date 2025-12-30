@@ -385,7 +385,7 @@ const Multiply = styled.label.attrs({
 // #endregion
 
 export default function Grid() {
-	const { columns: [columns, _setColumns], array, direction, fit, mirrorEdgesHFlip, mirrorEdgesVFlip, descending: [descending, setDescending], padding, spans: [spans, setSpans], columnWidths: [columnWidths, setColumnWidths], rowHeights: [rowHeights, setRowHeights], blanks: [blanks, setBlanks] } = selectConfig(c => c.track.grid);
+	const { columns: [columns, _setColumns], array, direction, fit, mirrorEdgesHFlip, mirrorEdgesVFlip, descending: [descending, setDescending], padding, spans: [spans, setSpans], columnWidths: [columnWidths, setColumnWidths], rowHeights: [rowHeights, setRowHeights], blanks: [blanks, setBlanks] } = useSelectConfig(c => c.track.grid);
 	const setColumns = setStateInterceptor(_setColumns, (input: number) => clamp(input, 1, MAX_COL_ROW));
 	// These properties were originally planned to put into the config, but now it is abandoned.
 	// Originally, the user could customize the number of columns and rows independently, but I found that it is hard to implement technically.

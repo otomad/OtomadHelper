@@ -122,9 +122,9 @@ export default function Score() {
 		trimEnabled, trimStart, trimEnd, periodicityEnabled, periodicityPreset, periodicityInterval, periodicityBits, pitchRangeEnabled, pitchRange,
 		timeSignature: [timeSignature], trackOrChannel, autoChangeProjectTempo, autoChangeProjectTimeSignature,
 		selectedTrack: [selectedTrack, setSelectedTrack], multipleSelectTrackItems: [selectTrackItems, _setSelectTrackItems],
-	} = selectConfig(c => c.score);
-	const { type: constrainNoteLengthType, min: constrainNoteLengthMin, ...constrainNoteLengthValues } = selectConfig(c => c.score.constrainNoteLength);
-	const { enabled: [ytpEnabled] } = selectConfig(c => c.ytp);
+	} = useSelectConfig(c => c.score);
+	const { type: constrainNoteLengthType, min: constrainNoteLengthMin, ...constrainNoteLengthValues } = useSelectConfig(c => c.score.constrainNoteLength);
+	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
 	const meta = metas.score;
 	const autoChangeProjectCheckInfo = listFormat([autoChangeProjectTempo[0] && t.score.tempo, autoChangeProjectTimeSignature[0] && t.score.timeSignature]) || t.off;
 

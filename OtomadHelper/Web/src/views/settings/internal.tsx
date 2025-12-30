@@ -40,7 +40,7 @@ const TextPluginPreviewImage = styled.img`
 
 export default function Internal() {
 	const [currentLanguage] = useLanguage();
-	const { language: [language, setLanguage], openglInterop, autosaveInterval, defaultTextPlugin, defaultTuningMethod, defaultClassicMode, defaultElasticMode, preserveClipboardOnClose, eventGroupSelection } = selectConfig(c => c.settings.internal);
+	const { language: [language, setLanguage], openglInterop, autosaveInterval, defaultTextPlugin, defaultTuningMethod, defaultClassicMode, defaultElasticMode, preserveClipboardOnClose, eventGroupSelection } = useSelectConfig(c => c.settings.internal);
 	const meta = metas.settings.internal;
 	return (
 		<div className="container">

@@ -25,7 +25,7 @@ export default function ExpanderLegato({ stream, children }: FCP<{
 	stream: StreamKind | "track";
 }>) {
 	const isTrack = stream === "track";
-	const { legatoDuration, legatoToMaxGap, legatoMode } = selectConfig(c => isTrack ? c.track.legato : c[stream]);
+	const { legatoDuration, legatoToMaxGap, legatoMode } = useSelectConfig(c => isTrack ? c.track.legato : c[stream]);
 	const meta = metas[stream].legato;
 	const currentLegatoDuration = LegatoDurations.all[legatoDuration[0]];
 
@@ -75,7 +75,7 @@ export default function ExpanderLegato({ stream, children }: FCP<{
 }
 
 function TrackLegato() {
-	const { legatoMode, increaseSpacing, forClips: legatoForClips, includeGroup: legatoIncludeGroup, backwards: legatoBackwards } = selectConfig(c => c.track.legato);
+	const { legatoMode, increaseSpacing, forClips: legatoForClips, includeGroup: legatoIncludeGroup, backwards: legatoBackwards } = useSelectConfig(c => c.track.legato);
 	const meta = metas.track;
 
 	useEffect(() => {

@@ -62,7 +62,7 @@ export default function Settings() {
 		fontSize, hideUseTips, autoSwitchSourceFrom, autoCollapsePrveClasses, previewWithSource,
 		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur, backgroundImageFit, backgroundImagePosition,
 		systemBackdrop, accentColor, backgroundColor,
-	} = selectConfig(c => c.settings);
+	} = useSelectConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
 	const { pushPage } = useSnapshot(pageStore);
 	const meta = metas.settings;

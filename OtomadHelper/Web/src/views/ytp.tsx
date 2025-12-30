@@ -73,7 +73,7 @@ const StyledYtpIconLegend = styled.ul`
 `;
 
 export default function Ytp() {
-	const { enabled, clips, constraint } = selectConfig(c => c.ytp);
+	const { enabled, clips, constraint } = useSelectConfig(c => c.ytp);
 	const meta = metas.ytp;
 	const [selectEffects, setSelectEffects] = useState<string[]>([]);
 	const selectEffectCount = selectEffects.length;
