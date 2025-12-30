@@ -137,7 +137,7 @@ export default function Visual() {
 							value={truncateIdleEffect}
 							disabled={truncateIdleEffectDisabled}
 							pinToTop="monochrome"
-							details={t.descriptions.stream.truncate.idleEffect}
+							details={plural => t(plural).descriptions.stream.truncate.idleEffect}
 							disabledInfo={t.descriptions.stream.truncate.inapplicable({
 								target: t.stream.idleEffect,
 								modes: truncates.filter(item => item.idleEffectApplicable).map(({ id }) => t.stream.truncate[id]),

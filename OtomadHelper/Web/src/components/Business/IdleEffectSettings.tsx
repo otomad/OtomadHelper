@@ -1,10 +1,16 @@
 import { SELECT_ALL_PADDING_INLINE } from "components/SelectAll";
 
-export const VisualIdleEffects = Enum({
-	fade: { icon: "fade", iconForAudio: "speaker_arrow_bidirectional", quantifiable: true, defaultValue: 50 },
-	monochrome: { icon: "grayscale", iconForAudio: undefined, quantifiable: true, defaultValue: 100 },
-	negative: { icon: "invert_color", iconForAudio: undefined, quantifiable: false, defaultValue: 100 },
+export /* @internal */ const VisualIdleEffects = Enum({
+	fade: { icon: "fade", iconForAudio: "speaker_arrow_bidirectional", amountType: "quantifiable", defaultValue: 50 },
+	monochrome: { icon: "grayscale", iconForAudio: undefined, amountType: "quantifiable", defaultValue: 100 },
+	negative: { icon: "invert_color", iconForAudio: undefined, amountType: "negative", defaultValue: 100 },
 }, { labelPrefix: t.stream.idleEffect });
+
+export /* @internal */ const NegativeTypes = Enum({
+	hueInvert: 1,
+	luminInvert: 2,
+	colorInvert: 3,
+}, { labelPrefix: t.prve.effects });
 
 export default function IdleEffectSettings({ value: [value, setValue], pinToTop, disabled, details, disabledInfo, stream = "visual" }: {
 	/** Each effects value, includes enabled and amount. */
@@ -13,15 +19,15 @@ export default function IdleEffectSettings({ value: [value, setValue], pinToTop,
 	pinToTop?: Config.VisualIdleEffect;
 	/** Disabled? */
 	disabled?: boolean;
-	/** Detailed description. */
-	details?: string;
+	/** Detailed description. It can also be get the selected effect count. */
+	details?: string | ((selectedEffectCount: number) => string);
 	/** If provided and also disabled, it will replace the details. */
 	disabledInfo?: string;
 	/** Audio or visual? */
 	stream?: StreamKind;
 }) {
 	const isAudio = stream === "audio";
-	const values = [value, setValue] as StateProperty<Config.VisualIdleEffectValue>;
+	const values = [value, setValue] as StatePropertyNonNull<Config.VisualIdleEffectValue>;
 
 	const pinnedIdleEffects = useMemo(() => {
 		if (isAudio) return [VisualIdleEffects.all.fade];
@@ -56,7 +62,7 @@ export default function IdleEffectSettings({ value: [value, setValue], pinToTop,
 					selectInfo: disabledInfo,
 					selectValid: false,
 				} : {
-					details,
+					details: typeof details === "function" ? details(effectTitlePlural) : details,
 				}}
 			>
 				<Button
@@ -68,25 +74,30 @@ export default function IdleEffectSettings({ value: [value, setValue], pinToTop,
 					{t.selectNone}
 				</Button>
 			</Expander.Item>
-			{pinnedIdleEffects.map(({ key, icon, iconForAudio, label, quantifiable, defaultValue }) => {
+			{pinnedIdleEffects.map(({ key, icon, iconForAudio, label, amountType, defaultValue }) => {
 				const enabled = useStateSelector(
 					values,
 					values => values[key].enabled,
 					(enabled, values) => values[key].enabled = enabled,
 					{ immer: true },
 				);
-				const amount = useStateSelector(
+				const amountOrNegativeType = useStateSelector(
 					values,
 					values => values[key].amount,
 					(amount, values) => values[key].amount = amount,
 					{ immer: true },
 				);
+				const amount = amountOrNegativeType as StatePropertyNonNull<number>, negativeType = amountOrNegativeType as StatePropertyNonNull<typeof NegativeTypes.keyType>;
 				return (
 					<Checkbox
 						key={key}
 						value={enabled}
 						icon={isAudio && iconForAudio || icon}
-						actions={quantifiable && <SliderWithBox value={amount} suffix={t.units.percent} defaultValue={defaultValue} decimalPlaces={0} />}
+						actions={
+							amountType === "quantifiable" ? <SliderWithBox disabled={disabled} value={amount} suffix={t.units.percent} defaultValue={defaultValue} decimalPlaces={0} /> :
+							amountType === "negative" ? <ComboBox disabled={disabled} current={negativeType} ids={NegativeTypes.keys} options={NegativeTypes.labels} /> :
+							undefined
+						}
 					>
 						{label}
 					</Checkbox>

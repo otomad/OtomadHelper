@@ -1,7 +1,7 @@
 import type { ImageFitTypes } from "components/BackgroundImage";
 import type { LegatoDurations, LegatoModes } from "components/Business/Expander/ExpanderLegato";
 import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "components/Business/Expander/ExpanderStream/ExpanderStreamPrologue";
-import type { VisualIdleEffects } from "components/Business/IdleEffectSettings";
+import type { NegativeTypes, VisualIdleEffects } from "components/Business/IdleEffectSettings";
 import type { Encodings } from "components/Preview/PreviewEncoding";
 import type { QuickIntervalSelectionPresets } from "components/QuickIntervalSelection";
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
@@ -50,7 +50,7 @@ namespace Config {
 	export type VisualGlissandoEffect = typeof glissandoEffects[number]["id"];
 	export type ImageFitType = typeof ImageFitTypes.keyType;
 	export type VisualIdleEffect = typeof VisualIdleEffects.keyType;
-	export type VisualIdleEffectValue = Record<VisualIdleEffect, { enabled: boolean; amount: number }>;
+	export type VisualIdleEffectValue = ReturnType<typeof defaultVisualIdleEffectSettings>;
 	export type AudioIdleEffectValue = Pick<VisualIdleEffectValue, "fade">;
 	export type PrologueForm = typeof PrologueForms.keyType;
 	export type PrologueDurationUsing = typeof PrologueDurationUsings.keyType;
@@ -62,6 +62,7 @@ namespace Config {
 	export type VocaloidClipNameType = typeof Namings.vocaloidClipNames[number]["id"];
 	export type YtpClipNameType = typeof Namings.ytpClipNames[number]["id"];
 	export type QuickIntervalSelectionPreset = typeof QuickIntervalSelectionPresets.keyType;
+	export type NegativeType = typeof NegativeTypes.keyType;
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -69,10 +70,10 @@ namespace Config {
 		effects: [{ fx: "normal", initial: [0] }],
 		amounts: defaultPrveAmounts,
 	};
-	const defaultVisualIdleEffectSettings = (enabled?: VisualIdleEffect): VisualIdleEffectValue => ({
+	const defaultVisualIdleEffectSettings = (enabled?: VisualIdleEffect) => ({
 		fade: { enabled: enabled === "fade", amount: 50 },
 		monochrome: { enabled: enabled === "monochrome", amount: 100 },
-		negative: { enabled: enabled === "negative", amount: 0 },
+		negative: { enabled: enabled === "negative", amount: "colorInvert" satisfies NegativeType as NegativeType },
 	});
 	const defaultQuickIntervalSelectionBits = bitArrayToBase64([1, 0, 1, 0]);
 

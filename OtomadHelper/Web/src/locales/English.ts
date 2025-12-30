@@ -843,6 +843,7 @@ export default {
 				ccwMirror: "Counterclockwise Mirror",
 				cwMirror: "Clockwise Mirror",
 				negative: "Negative",
+				colorInvert: "Color Invert",
 				luminInvert: "Luminance Invert",
 				negativeFade: "Negative Crossfade",
 				negativeLuma: "Negative Luma Fade",
@@ -1109,6 +1110,7 @@ export default {
 					pingpongWithSplit: "If the note is longer than the clip‌, it performs ‌ping-pong playback‌ on the loop region of the clip, splitting the clip each time it reverses",
 					loopWithSplit: "‌If the note is longer than the clip‌, it performs ‌loop playback‌ on the loop region of the clip, splitting the clip on each pass",
 					idleEffect: "Applies an effect to the latter of the split clips",
+					idleEffect_other: "Applies effects to the latter of the split clips",
 					loopRegion: "Specify the proportion of the ping-ponged or looped playback duration throughout the entire clip, ending at the out point of the clip",
 					inapplicable: "The {{target, lowercase}} is applicable only to {{modes, quote, and, lowercase}}", // Please DO NOT translate the interpolations `{{target, lowercase}}` and `{{modes, quote, and, lowercase}}`!
 				},

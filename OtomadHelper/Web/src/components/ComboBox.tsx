@@ -193,6 +193,7 @@ export default function ComboBox<T extends string | number>(props: FCP<{
 	icons?: readonly DeclaredIcons[];
 	/** The selected option of the combo box. */
 	current: StateProperty<T>;
+	value?: never;
 }, "select">): React.JSX.Element;
 export default function ComboBox(props: FCP<{}, "select">): React.JSX.Element;
 export default function ComboBox<T extends string | number>({ ids = [], options = [], icons = [], current: [current, setCurrent] = NEVER_MIND, disabled, ...htmlAttrs }: FCP<{
