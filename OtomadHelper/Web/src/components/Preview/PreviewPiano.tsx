@@ -47,7 +47,9 @@ const StyledPreviewPiano = styled.div`
 	height: 150px;
 `;
 
-export default function PreviewPiano({ activeKeys: _activeKeys, sourceKeys = [], fallbackKeys = [], showKeyLabels = [], onClick: _onClick, onMouseDown, ...htmlAttrs }: FCP<{
+const PIANO_INSTRUCTIONS_ID = "piano-instructions";
+
+export default function PreviewPiano({ activeKeys: _activeKeys, sourceKeys = [], fallbackKeys = [], showKeyLabels = [], onClick: _onClick, onMouseDown, onSpaceEnterKeyDown, onSpaceEnterKeyUp, ...htmlAttrs }: FCP<{
 	/** Active keys. */
 	activeKeys?: string[];
 	/** Source keys. */
@@ -56,10 +58,14 @@ export default function PreviewPiano({ activeKeys: _activeKeys, sourceKeys = [],
 	fallbackKeys?: string[];
 	/** Provide keys that will force to show the pitch note name if `showCOnly` is true. */
 	showKeyLabels?: string[];
-	/** Occurs when the key is clicked. */
+	/** Occurs when the piano key is clicked. */
 	onClick?(spn: string): void;
-	/** Occurs when the key is pressed, or mouse entered while pressing. */
+	/** Occurs when the piano key is pressed, or mouse entered while pressing. */
 	onMouseDown?(spn: string): void;
+	/** Occurs when the piano key is focused and the keyboard key Space or Enter is pressed. */
+	onSpaceEnterKeyDown?(spn: string): void;
+	/** Occurs when the piano key is focused and the keyboard key Space or Enter is released. */
+	onSpaceEnterKeyUp?(spn: string): void;
 }, "div">) {
 	// Demo mode, if provide no props.
 	const [internalActiveKeys, setInternalActiveKeys] = useState<string[]>([]);
@@ -70,6 +76,7 @@ export default function PreviewPiano({ activeKeys: _activeKeys, sourceKeys = [],
 	return (
 		<Wrapper>
 			<StyledPreviewPiano role="application" aria-label={t.aria.previewPiano.pianoKeyboard} {...htmlAttrs}>
+				<SrOnly id={PIANO_INSTRUCTIONS_ID}>{t.aria.previewPiano.instructions}</SrOnly>
 				{forMap(LENGTH, i => {
 					if (intervalPattern[(i + 1) % 12] === "0") return;
 					const isBlackNext = intervalPattern[i % 12] === "0" && i < LENGTH - 1;
@@ -83,8 +90,11 @@ export default function PreviewPiano({ activeKeys: _activeKeys, sourceKeys = [],
 							sourceKeys={sourceKeys}
 							fallbackKeys={fallbackKeys}
 							showKeyLabels={showKeyLabels}
+							aria-describedby={PIANO_INSTRUCTIONS_ID}
 							onClick={onClick}
 							onMouseDown={onMouseDown}
+							onSpaceEnterKeyDown={onSpaceEnterKeyDown}
+							onSpaceEnterKeyUp={onSpaceEnterKeyUp}
 						/>
 					);
 				})}
@@ -194,7 +204,7 @@ const StyledPianoKey = styled.div`
 	}
 `;
 
-function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKeys = [], fallbackKeys = [], showKeyLabels = [], onClick, onMouseDown }: {
+function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKeys = [], fallbackKeys = [], showKeyLabels = [], "aria-describedby": ariaDescribedby, onClick, onMouseDown, onSpaceEnterKeyDown, onSpaceEnterKeyUp }: {
 	/** Is the next key a black key? */
 	isBlackNext: boolean;
 	/** MIDI note number. */
@@ -209,10 +219,16 @@ function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKey
 	fallbackKeys?: string[];
 	/** Provide keys that will force to show the pitch note name if `showCOnly` is true. */
 	showKeyLabels?: string[];
+	/** Identifies the element (or elements) that describes the object. */
+	"aria-describedby"?: string;
 	/** Occurs when the key is clicked. */
 	onClick?(spn: string): void;
 	/** Occurs when the key is pressed, or mouse entered while pressing. */
 	onMouseDown?(spn: string): void;
+	/** Occurs when the piano key is focused and the keyboard key Space or Enter is pressed. */
+	onSpaceEnterKeyDown?(spn: string): void;
+	/** Occurs when the piano key is focused and the keyboard key Space or Enter is released. */
+	onSpaceEnterKeyUp?(spn: string): void;
 }) {
 	let whiteSpn = "", blackSpn = "";
 	if (midiNote !== undefined) {
@@ -235,9 +251,13 @@ function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKey
 					isNotC: showCOnly && !isNoteNameC(whiteSpn) && !showKeyLabels.includes(whiteSpn),
 				}]}
 				aria-label={getAriaLabel()}
+				aria-pressed={activeKeys.includes(whiteSpn) || sourceKeys.includes(whiteSpn)}
+				aria-describedby={ariaDescribedby}
 				onClick={() => onClick?.(whiteSpn)}
 				onMouseDown={leftDownModifier(() => onMouseDown?.(whiteSpn))}
 				onMouseEnter={leftDownModifier(() => onMouseDown?.(whiteSpn))}
+				onKeyDown={nonRepeatedSpaceEnterKeyModifier(() => onSpaceEnterKeyDown?.(whiteSpn))}
+				onKeyUp={nonRepeatedSpaceEnterKeyModifier(() => onSpaceEnterKeyUp?.(whiteSpn))}
 			>
 				{whiteSpn}
 			</button>
@@ -251,9 +271,13 @@ function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKey
 						isNotC: showCOnly && !isNoteNameC(blackSpn) && !showKeyLabels.includes(blackSpn),
 					}]}
 					aria-label={getAriaLabel(true)}
+					aria-pressed={activeKeys.includes(blackSpn) || sourceKeys.includes(blackSpn)}
+					aria-describedby={ariaDescribedby}
 					onClick={() => onClick?.(blackSpn)}
 					onMouseDown={leftDownModifier(() => onMouseDown?.(blackSpn))}
 					onMouseEnter={leftDownModifier(() => onMouseDown?.(blackSpn))}
+					onKeyDown={nonRepeatedSpaceEnterKeyModifier(() => onSpaceEnterKeyDown?.(blackSpn))}
+					onKeyUp={nonRepeatedSpaceEnterKeyModifier(() => onSpaceEnterKeyUp?.(blackSpn))}
 				>
 					{blackSpn}
 				</button>
@@ -269,5 +293,12 @@ function isNoteNameC(noteName: string) {
 function leftDownModifier(handler: MouseEventHandler<HTMLButtonElement>): MouseEventHandler<HTMLButtonElement> {
 	return e => {
 		if (e.buttons === 1) handler(e);
+	};
+}
+
+function nonRepeatedSpaceEnterKeyModifier(handler: KeyboardEventHandler<HTMLButtonElement>): KeyboardEventHandler<HTMLButtonElement> {
+	return e => {
+		if (e.repeat) return;
+		if (["Space", "Enter", "NumpadEnter"].includes(e.code)) handler(e);
 	};
 }

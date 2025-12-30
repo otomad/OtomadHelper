@@ -40,8 +40,15 @@ export default function PitchPicker({ spn: [spn, setSpn], ...htmlAttrs }: FCP<{
 	};
 
 	return (
-		<StyledPitchPicker role="combobox" onClick={showPitchPicker} {...htmlAttrs}>
-			<div className="content">
+		<StyledPitchPicker
+			role="combobox"
+			aria-label={pitch.ariaLabel}
+			aria-haspopup="listbox"
+			aria-expanded={false}
+			onClick={showPitchPicker}
+			{...htmlAttrs}
+		>
+			<div className="content" aria-hidden>
 				<div>{pitch.noteName}</div>
 				<div>{pitch.octave}</div>
 			</div>

@@ -1471,6 +1471,7 @@ export default {
 				pianoKeyboard: "Piano keyboard",
 				spn: "Key {{noteName}} {{octave}}",
 				spn_sharp: "Key {{noteName}} sharp {{octave}}",
+				instructions: "This is a simulated piano keyboard. You can click on the piano keys to select the pitch(es).\nThe selected keys will have visual feedback.",
 			},
 			formulaFor39: "plus or minus twelve divided by log base ten of two, which is approximately equal to plus or minus thirty-nine point eight six three one three seven", // ± 12 / lg 2 (≈ ±39.863137)
 			trimTimecode: {

@@ -1,5 +1,6 @@
 const RangeDash = styled.div.attrs(() => ({
 	children: t.rangeDash,
+	"aria-hidden": true,
 }))`
 	${styles.effects.text.body};
 	margin-block-end: 1.5px;

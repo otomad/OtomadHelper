@@ -125,6 +125,7 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 	const lastActiveItemLastIndex = useRef<number>(undefined);
 	const tokens = useMemo(() => getTimecodeTokens(timecode), [timecode]);
 	disabled = useContext(InteractionStateContext).disabled || disabled;
+	const ariaId = useId();
 
 	const focusValue = useDebounceCallback((itemLastIndex?: number) =>
 		setTimeout(() => timecodeBoxEl.current?.querySelector<HTMLElement>(
@@ -210,7 +211,7 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 	useChangeEffect(() => void onChanging?.(), [timecode]);
 
 	return (
-		<StyledTimecodeBox ref={timecodeBoxEl} role="region" onMouseDown={handleTimecodeBoxMouseDown} disabled={disabled} {...htmlAttrs}>
+		<StyledTimecodeBox ref={timecodeBoxEl} role="group" onMouseDown={handleTimecodeBoxMouseDown} disabled={disabled} {...htmlAttrs}>
 			<StyledTextBox>
 				<div className="stripes">
 					<div className="focus-stripe" />
@@ -218,7 +219,8 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 			</StyledTextBox>
 			{tokens.map(({ value, token }, index) => {
 				const lastIndex = -(tokens.length - index);
-				return token === "mark" ? <div className="mark" key={lastIndex}>{optimizeMarks(value)}</div> : (
+				const ariaControlId = `${ariaId}-${index}`;
+				return token === "mark" ? <div className="mark" key={lastIndex} aria-hidden>{optimizeMarks(value)}</div> : (
 					<Fragment key={lastIndex}>
 						<Button
 							subtle
@@ -226,13 +228,15 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 							className="up"
 							repeat
 							tabIndex={-1}
-							role="spinbutton"
 							aria-label={t.increase}
+							aria-controls={ariaControlId}
 							onClick={() => handleSpinnerClick(lastIndex, 1)}
 						/>
 						<TimecodeItemValue
 							disabled={disabled}
 							lastIndex={lastIndex}
+							id={ariaControlId}
+							role="spinbutton"
 							onWheel={handleValueWheel}
 							onKeyDown={handleValueKeyDown}
 							onChange={handleItemChange}
@@ -247,8 +251,8 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 							className="down"
 							repeat
 							tabIndex={-1}
-							role="spinbutton"
 							aria-label={t.decrease}
+							aria-controls={ariaControlId}
 							onClick={() => handleSpinnerClick(lastIndex, -1)}
 						/>
 					</Fragment>
@@ -319,6 +323,9 @@ function TimecodeItemValue({ lastIndex, disabled, children, onChange, onFinishIn
 					className="value"
 					data-last-index={lastIndex}
 					tabIndex={disabled ? -1 : 0}
+					aria-valuenow={displayUserInput as never as number}
+					aria-valuetext={displayUserInput}
+					aria-disabled={disabled}
 					onBlur={handleBlur}
 					onKeyDown={handleKeyDown}
 					{...htmlAttrs}

@@ -116,6 +116,7 @@ export default function PianoPicker({ pitch: [pitch, setPitch], showOutput: _sho
 				activeKeys={!rangeMode ? activeKeys : undefined}
 				showKeyLabels={wrapIfNotArray(pitch)}
 				onMouseDown={onMouseDown}
+				onSpaceEnterKeyDown={onMouseDown}
 				ref={previewPianoEl}
 			/>
 		</>
