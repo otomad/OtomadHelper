@@ -462,7 +462,7 @@ function legato(stream: StreamKind | "track") {
 		icon: "arrow_between_right",
 		items: {
 			duration: { icon: "timer", title: t.stream.legato.duration },
-			toMaxGap: { icon: "placeholder", title: t.stream.legato.toMaxGap, details: t.descriptions.stream.legato.toMaxGap },
+			atLeast: { icon: "placeholder", title: t.stream.legato.atLeast, details: t.descriptions.stream.legato.atLeast },
 			mode: { icon: "placeholder", title: t.track.legato.mode },
 			...stream === "track" ? {
 				forClips: { icon: "track_event" },

@@ -25,7 +25,7 @@ export default function ExpanderLegato({ stream, children }: FCP<{
 	stream: StreamKind | "track";
 }>) {
 	const isTrack = stream === "track";
-	const { legatoDuration, legatoToMaxGap, legatoMode } = useSelectConfig(c => isTrack ? c.track.legato : c[stream]);
+	const { legatoDuration, legatoAtLeast, legatoMode } = useSelectConfig(c => isTrack ? c.track.legato : c[stream]);
 	const meta = metas[stream].legato;
 	const currentLegatoDuration = LegatoDurations.all[legatoDuration[0]];
 
@@ -49,7 +49,7 @@ export default function ExpanderLegato({ stream, children }: FCP<{
 					);
 				})}
 			</ItemsView>
-			<Setting meta={meta.toMaxGap} on={legatoToMaxGap} title={t({ context: legatoDuration[0] }).stream.legato.toMaxGap} disabled={!currentLegatoDuration.limited} />
+			<Setting meta={meta.atLeast} on={legatoAtLeast} title={t({ context: legatoDuration[0] }).stream.legato.atLeast} disabled={!currentLegatoDuration.limited} />
 			<Setting meta={meta.mode} asSubtitle="closerAfter" noDivider="after" />
 			{isTrack ? <TrackLegato /> : (
 				<ItemsView view="grid" current={legatoMode} itemWidth={320}>
