@@ -90,7 +90,6 @@ export default function PreviewPiano({ activeKeys: _activeKeys, sourceKeys = [],
 							sourceKeys={sourceKeys}
 							fallbackKeys={fallbackKeys}
 							showKeyLabels={showKeyLabels}
-							aria-describedby={PIANO_INSTRUCTIONS_ID}
 							onClick={onClick}
 							onMouseDown={onMouseDown}
 							onSpaceEnterKeyDown={onSpaceEnterKeyDown}
