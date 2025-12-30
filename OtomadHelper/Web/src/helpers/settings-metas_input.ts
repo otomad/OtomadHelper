@@ -462,8 +462,8 @@ function legato(stream: StreamKind | "track") {
 		icon: "arrow_between_right",
 		items: {
 			duration: { icon: "timer", title: t.stream.legato.duration },
-			atLeast: { icon: "placeholder", title: t.stream.legato.atLeast, details: t.descriptions.stream.legato.atLeast },
-			mode: { icon: "placeholder", title: t.track.legato.mode },
+			atLeast: { icon: "add", title: t.stream.legato.atLeast, details: t.descriptions.stream.legato.atLeast },
+			mode: { icon: "radio_button", title: t.track.legato.mode },
 			...stream === "track" ? {
 				forClips: { icon: "track_event" },
 				includeGroup: { icon: "group" },

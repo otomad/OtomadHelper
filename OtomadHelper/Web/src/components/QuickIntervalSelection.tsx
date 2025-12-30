@@ -150,7 +150,7 @@ export default function QuickIntervalSelection({ interval, bits: bitsBase64, pre
 				</Expander.Item>
 			)}
 			<PreviewQuickIntervalSelection interval={isCustom ? interval[0] : currentPreset.interval} bits={isCustom ? bits : [currentPreset.bits]} isPreset={!isCustom} />
-			<Expander.Item title={t.tools.selector.quickIntervalSelection.interval} details={t.descriptions.tools.selector.quickIntervalSelection.interval} icon="sample_size">
+			<Expander.Item title={t.tools.selector.quickIntervalSelection.interval} details={t.descriptions.tools.selector.quickIntervalSelection.interval} icon="table_simple_include">
 				<TextBox.Number min={1} max={100} decimalPlaces={0} value={isCustom ? interval : [currentPreset.interval]} />
 			</Expander.Item>
 		</>
