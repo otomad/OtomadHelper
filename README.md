@@ -26,7 +26,7 @@
 > #### VOLUNTEER CONTRIBUTIONS WELCOME
 >
 > Calling all developers who use Otomad Helper: V8 is currently in development and needs your help. If you have the
-> time and skills, consider contributing code or development support to help bring Otomad Helper V8 to completion.
+> time and skills, please contact me to help bring Otomad Helper V8 to completion.
 >
 > [**Preview the next major version of Otomad Helper >**](README.next.md)
 
