@@ -1,5 +1,8 @@
-import prvePingpong from "assets/images/effects/prve_pingpong.gif";
+/* eslint-disable import/order */
+import prvePingpong from "assets/images/effects/prve_pingpong.webp";
 import prveWhirl from "assets/images/effects/prve_whirl.webp";
+import prveSharpRewind from "assets/images/effects/prve_sharp_rewind.webp";
+/* eslint-enable import/order */
 
 export const freezeframes = {} as Record<string, string>;
 
@@ -9,6 +12,7 @@ const images = {
 	// ...import.meta.glob<string>("/src/assets/images/**/*.webp", { import: "default", eager: true }),
 	"effects/prve_pingpong.gif": prvePingpong,
 	"effects/prve_whirl.webp": prveWhirl,
+	"effects/prve_sharp_rewind.webp": prveSharpRewind,
 };
 const canvas = document.createElement("canvas");
 const context = canvas.getContext("2d")!;

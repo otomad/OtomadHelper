@@ -1,10 +1,14 @@
-import prvePingpongImage from "assets/images/effects/prve_pingpong.gif";
+/* eslint-disable import/order */
+import prvePingpongImage from "assets/images/effects/prve_pingpong.webp";
 import prveWhirlImage from "assets/images/effects/prve_whirl.webp";
+import prveSharpRewindImage from "assets/images/effects/prve_sharp_rewind.webp";
+/* eslint-enable import/order */
 import { freezeframes } from "helpers/freezeframe";
 import { type WebGLFilter, initWebgl2 } from "hooks/webgl/render";
 import { STEP_CHANGE_HUE, getIfIndexedEffect } from "views/visual/prve";
 const prvePingpongStaticImage = freezeframes["effects/prve_pingpong.gif"];
 const prveWhirlStaticImage = freezeframes["effects/prve_whirl.webp"];
+const prveSharpRewindStaticImage = freezeframes["effects/prve_sharp_rewind.webp"];
 
 export /* @internal */ const MILLISECONDS_PER_FRAME = 375;
 
@@ -538,6 +542,7 @@ export default function PreviewPrve({ thumbnail, effect, frames, step, isDegree,
 	const animatedImage = {
 		pingpong: Tuple(prvePingpongImage, prvePingpongStaticImage),
 		whirl: Tuple(prveWhirlImage, prveWhirlStaticImage),
+		sharpRewind: Tuple(prveSharpRewindImage, prveSharpRewindStaticImage),
 	}[effect];
 
 	const isStatic = step !== undefined && (step <= 0 || frames !== undefined && step > frames || isDegree);
