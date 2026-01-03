@@ -9,6 +9,22 @@
 [English](README.md) | [简体中文](README_zh-CN.md) | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md) | **Bahasa Indo**
 </div>
 
+> [!IMPORTANT]
+>
+> #### INI BUKAN SKRIP ITU SENDIRI, INI ADALAH FILE SUMBER
+>
+> Jika Anda ingin mengunduh Otomad Helper, silakan klik tombol di bawah ini.
+>
+> [![Download](https://img.shields.io/badge/-Dapatkan%20link%20download%20sekarang!-8250df?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+)](https://github.com/otomad/OtomadHelper/releases/latest)
+
+> [!NOTE]
+>
+> #### KONTRIBUSI SUKARELAWAN SELAMAT DATANG
+>
+> Panggilan untuk pengembang yang menggunakan Otomad Helper: Versi baru saat ini sedang dikembangkan dan membutuhkan bantuan Anda. Jika Anda memiliki waktu dan keterampilan, silakan hubungi saya untuk bekerja sama untuk menyelesaikan versi baru Otomad Helper.
+>
+> [**Preview versi utama berikutnya dari Otomad Helper >**](https://github.com/otomad/OtomadHelper/blob/webview/README.next.md)
+
 **Otomad Helper** untuk **Vegas**, yang dirancang untuk menerima file MIDI sebagai input, dan secara otomatis membuat trek YTPMV/Otomad.
 
 Skrip ini dibikin oleh orang keren, yaitu si [@Chaosinism](https://github.com/Chaosinism)'s open source code dan menggunakan NAudio library.

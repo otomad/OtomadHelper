@@ -9,6 +9,22 @@
 [English](README.md) | [简体中文](README_zh-CN.md) | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | **Tiếng Việt** | [Bahasa Indo](README_id-ID.md)
 </div>
 
+> [!IMPORTANT]
+>
+> #### ĐÂY KHÔNG PHẢI LÀ BẢN THÂN KỊCH BẢN, ĐÂY LÀ CÁC TỆP NGUỒN
+>
+> Nếu bạn đang tìm kiếm để tải về Otomad Helper, vui lòng nhấp vào nút dưới đây.
+>
+> [![Download](https://img.shields.io/badge/-Tải%20ngay%20phiên%20bản%20mới%20nhất!-8250df?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+)](https://github.com/otomad/OtomadHelper/releases/latest)
+
+> [!NOTE]
+>
+> #### TÌNH NGUYỆN VIÊN ĐÓNG GÓP
+>
+> Kêu gọi các nhà phát triển sử dụng Otomad Helper: Phiên bản mới hiện đang được phát triển và cần sự giúp đỡ của bạn. Nếu bạn có thời gian và kỹ thuật, vui lòng liên hệ với tôi để cộng tác trong phiên bản mới của Otomad Helper.
+>
+> [**Xem trước phiên bản chính tiếp theo của Otomad Helper >**](https://github.com/otomad/OtomadHelper/blob/webview/README.next.md)
+
 **Otomad Helper** dành cho **Vegas**, được thiết kế để cho phép Vegas chấp nhận các file MIDI làm đầu vào và tự động tạo các track YTPMV/Otomad.
 
 Script được phát triển lại dựa theo mã nguồn mở của tác giả [@Chaosinism](https://github.com/Chaosinism) và sử dụng thư viện NAudio.

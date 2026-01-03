@@ -9,6 +9,22 @@
 [English](README.md) | **简体中文** | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md) | [Bahasa Indo](README_id-ID.md)
 </div>
 
+> [!IMPORTANT]
+>
+> #### 这不是脚本本体，这是源代码
+>
+> 如果你想要下载 Otomad Helper，请点击下面的按钮。
+>
+> [![Download](https://img.shields.io/badge/-点击下载最新版！-8250df?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+)](https://github.com/otomad/OtomadHelper/releases/latest)
+
+> [!NOTE]
+>
+> #### 请求帮助
+>
+> 新版本目前正在开发中，需要您的帮助。如果你有时间和技术，请联系我协作完成 Otomad Helper 新版本。
+>
+> [**预览 Otomad Helper 的下一个大版本 >**](https://github.com/otomad/OtomadHelper/blob/webview/README.next.md)
+
 **音 MAD 助手**，旨在使 Vegas 接受 MIDI 序列文件作为输入，自动生成音 MAD / YTPMV 的轨道。
 
 本脚本基于原作者 [@Chaosinism](https://github.com/Chaosinism) 的开源代码二次开发，此外使用了 NAudio 库。

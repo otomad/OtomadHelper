@@ -9,6 +9,22 @@
 [English](README.md) | [<span lang="zh-CN">简体中文</span>](README_zh-CN.md) | [繁體中文](README_zh-TW.md) | **日本語** | [Tiếng Việt](README_vi-VN.md) | [Bahasa Indo](README_id-ID.md)
 </div>
 
+> [!IMPORTANT]
+>
+> #### これはスクリプト自体ではなく、これらはソースファイルです。
+>
+> Otomad Helper をダウンロードしたい場合は、下のボタンをクリックしてください。
+>
+> [![Download](https://img.shields.io/badge/-ここをクリックして最新版をダウンロード！-8250df?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+)](https://github.com/otomad/OtomadHelper/releases/latest)
+
+> [!NOTE]
+>
+> #### ボランティアの貢献へようこそ
+>
+> Otomad Helper を使用する開発者に呼びかけます：新しいバージョンは現在開発中で、あなたの助けが必要です。時間と技術があれば、Otomad Helper の新バージョンの完成に協力してください。
+>
+> [**Otomad Helper の次の主要バージョンをプレビューする >**](https://github.com/otomad/OtomadHelper/blob/webview/README.next.md)
+
 **音MADヘルパー Vegas** とは、Vegas に MIDI シーケンスファイルを読み込まさせて、音MAD / YTPMV トラックを自動的に生成するのスクリプトです。
 
 このスクリプトは、元開発者 [@Chaosinism](https://github.com/Chaosinism) さんのオープンソースコードに基づいて二次開発されたものであり、NAudio ライブラリを使用しています。

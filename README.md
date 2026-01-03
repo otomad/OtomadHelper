@@ -17,6 +17,23 @@
 **English** | [简体中文](README_zh-CN.md) | [繁體中文](README_zh-TW.md) | [日本語](README_ja-JP.md) | [Tiếng Việt](README_vi-VN.md) | [Bahasa Indo](README_id-ID.md)
 </div>
 
+> [!IMPORTANT]
+>
+> #### THIS IS NOT THE SCRIPT ITSELF, THESE ARE THE SOURCE FILES
+>
+> If you are looking to download Otomad Helper, please click the button below.
+>
+> [![Download](https://img.shields.io/badge/-Get%20the%20download%20link%20now!-8250df?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+)](https://github.com/otomad/OtomadHelper/releases/latest)
+
+> [!NOTE]
+>
+> #### VOLUNTEER CONTRIBUTIONS WELCOME
+>
+> Calling all developers who use Otomad Helper: The next version is currently in development and needs your help. If you have the
+> time and skills, please contact me to help bring the next version of Otomad Helper to completion.
+>
+> [**Preview the next major version of Otomad Helper >**](https://github.com/otomad/OtomadHelper/blob/webview/README.next.md)
+
 **Otomad Helper** for **Vegas**, designed to allow Vegas to accept MIDI files as input, and automatically generate YTPMV/Otomad tracks.
 
 The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
