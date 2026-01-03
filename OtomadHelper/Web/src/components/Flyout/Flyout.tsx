@@ -144,8 +144,6 @@ export default function Flyout({ anchorName, position, shown: [shown, setShown] 
 	useEventListener(window, "keydown", e => e.code === "Escape" && close());
 	useEventListener(window, "pointerdown", e => autoInert && !isInPath(e, flyoutEl) && close(), { capture: true }, [autoInert]);
 
-	// useRootInert(autoInert && shown, ".flyout"); // TODO: inert is disabled currently. Keep track `interactivity: auto / inert;`.
-
 	const [delayedShown, setDelayedShown] = useState(shown);
 	const hideTimeout = useRef<Timeout>(undefined);
 	useEffect(() => {
@@ -187,6 +185,7 @@ export default function Flyout({ anchorName, position, shown: [shown, setShown] 
 						"--offset": styles.toValue(offset),
 						"--constrain": _commandBarAnchorName,
 					}}
+					data-inert-escape={autoInert && shown}
 					{...htmlAttrs}
 				>
 					{children}

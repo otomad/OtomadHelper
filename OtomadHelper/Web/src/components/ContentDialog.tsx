@@ -116,8 +116,6 @@ export default function ContentDialog({ shown: [shown, setShown], title, static:
 
 	useEventListener(window, "keydown", e => e.code === "Escape" && closeWhenNonStatic());
 
-	useRootInert(shown, ".content-dialog");
-
 	return (
 		<Portal>
 			<CssTransition in={shown} unmountOnExit appear>
@@ -130,6 +128,7 @@ export default function ContentDialog({ shown: [shown, setShown], title, static:
 							style={{ ...style, "--width": styles.toValue(width) }}
 							className={[className, { peek }]}
 							onClick={e => e.stopPropagation()}
+							data-inert-escape
 							{...htmlAttrs}
 						>
 							<Content>

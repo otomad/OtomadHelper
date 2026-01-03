@@ -302,6 +302,25 @@ const GlobalStyle = createGlobalStyle<{
 		${focusTestStyle};
 	}
 
+	// Inert escape
+	html:has([data-inert-escape]) {
+		*,
+		::before,
+		::after {
+			interactivity: inert;
+		}
+
+		:has([data-inert-escape]),
+		[data-inert-escape],
+		[data-inert-escape] * {
+			&,
+			&::before,
+			&::after {
+				interactivity: auto;
+			}
+		}
+	}
+
 	// User requested to reduce dynamic effects
 	@container style(--color-scheme-reduce-motion: true) { // \${important(2)}:not(.force-motion, .force-motion *)
 		*,

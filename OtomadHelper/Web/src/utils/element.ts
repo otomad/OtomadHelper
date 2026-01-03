@@ -297,21 +297,6 @@ export function setRootInert(inert: boolean) {
 }
 
 /**
- * Hook: Makes the browser "ignore" user input events for the element?
- * @param inert - Inert?
- * @param popover - If specified, the root will keep inert when the specified popover more than one.
- * Useful when opening multiple popovers, close sub-popover will unexpectedly cancel inert even if the parent popovers aren't closed.
- */
-export function useRootInert(inert: boolean | null | undefined, popover?: string) {
-	useEffect(() => {
-		if (inert)
-			setRootInert(true);
-		else if (!popover || document.querySelectorAll(`#popovers ${popover}`).length <= 1)
-			setRootInert(false);
-	}, [inert, popover]);
-}
-
-/**
  * Retrieves the first focusable element in the container.
  * @param container - The container element to search within.
  * @returns The first focusable element, or null if none is found.
