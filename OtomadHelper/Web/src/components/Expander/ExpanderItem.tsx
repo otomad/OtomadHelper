@@ -146,6 +146,7 @@ const StyledExpanderItem = styled.div<{
 	$nowrap?: boolean;
 }>`
 	${styledExpanderItemBase};
+	container-type: inline-size;
 	padding-inline-start: ${expanderItemWithIconPaddingInlineStart}px;
 	${styledExpanderItemContent};
 

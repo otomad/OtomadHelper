@@ -126,9 +126,11 @@ const StyledSliderWrapper = styled.div`
 	gap: 8px;
 	align-items: center;
 	align-self: stretch;
+	max-inline-size: 100cqi;
 
 	output {
 		${styles.effects.text.body};
+		flex-shrink: 0;
 		color: ${c("fill-color-text-secondary")};
 		font-variant-numeric: tabular-nums;
 	}
