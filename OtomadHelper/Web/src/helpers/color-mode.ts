@@ -31,7 +31,7 @@ export const useActualColorScheme = () => useAtomValue(actualColorScheme);
 export function changeColorScheme(scheme?: ColorScheme, amoledDark?: boolean, contrast?: boolean, mode: ChangeColorSchemeMode = "manual") {
 	const systemScheme = lightModePreference.matches ? "light" : "dark";
 	scheme = scheme === "auto" || !scheme ? systemScheme : scheme;
-	contrast ??= highContrastPreference.matches;
+	contrast ||= highContrastPreference.matches; // NOT `??=` !!!
 	const { dataset } = document.documentElement;
 	const updateThemeSettings = async () => {
 		const black = scheme === "dark" && !!amoledDark;

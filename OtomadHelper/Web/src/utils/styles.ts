@@ -30,7 +30,9 @@ export function c(cssVarName: string & {} | "white" | "black" | ColorNames, alph
 				"#" + (cssVarName === "white" ? "f" : "0").repeat(6) + Math.round(alpha / 100 * 255).toString(16).padStart(2, "0") :
 				`rgb(${cssVarName === "white" ? "255 255 255" : "0 0 0"} / ${alpha})`;
 	return alpha === undefined ? `var(--${cssVarName})` :
-		`--t(var(--${cssVarName}), ${typeof alpha === "number" ? alpha + "%" : alpha})`;
+		`rgb(from var(--${cssVarName}) r g b / calc(alpha * ${typeof alpha === "number" ? alpha + "%" : alpha}))`;
+	// `--t(var(--${cssVarName}), ${typeof alpha === "number" ? alpha + "%" : alpha})`;
+	// WARN: Bug in Chromium. See: https://issues.chromium.org/issues/473120371
 }
 
 /**

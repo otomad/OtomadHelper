@@ -318,11 +318,13 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	// System requested high contrast theme.
-	@container style(--color-scheme-contrast: true) { // :not(.focus-highlight-ring)
-		*,
-		::before,
-		::after {
-			backdrop-filter: none !important;
+	@container style(--color-scheme-contrast: true) {
+		:not(.focus-highlight-ring) {
+			&,
+			&::before,
+			&::after {
+				backdrop-filter: none !important;
+			}
 		}
 	}
 
