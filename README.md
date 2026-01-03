@@ -21,6 +21,15 @@
 >
 > [![Download](https://img.shields.io/badge/-Get%20the%20download%20link%20now!-8250df?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEuMiAwYS44LjggMCAwIDAtLjguOHYxMS40TDcuMjYgOS40NGEuODAzLjgwMyAwIDAgMC0xLjEzLjA3NGwtMS4wNSAxLjJhLjguOCAwIDAgMCAuMDczIDEuMTNsNi4zMyA1LjU0YS43OTUuNzk1IDAgMCAwIDEuMDUgMGw2LjMyLTUuNTRhLjguOCAwIDAgMCAuMDc0LTEuMTNsLTEuMDUtMS4yYS44MDQuODA0IDAgMCAwLTEuMTMtLjA3NGwtMy4xNCAyLjc2Vi44YS44LjggMCAwIDAtLjgtLjh6bS04IDIwLjhhLjguOCAwIDAgMC0uOC44djEuNmEuOC44IDAgMCAwIC44LjhoMTcuNmEuOC44IDAgMCAwIC44LS44di0xLjZhLjguOCAwIDAgMC0uOC0uOHoiIGZpbGw9IndoaXRlIi8+PC9zdmc+)](https://github.com/otomad/OtomadHelper/releases/latest)
 
+> [!NOTE]
+>
+> #### VOLUNTEER CONTRIBUTIONS WELCOME
+>
+> Calling all developers who use Otomad Helper: V8 is currently in development and needs your help. If you have the
+> time and skills, consider contributing code or development support to help bring Otomad Helper V8 to completion.
+>
+> [**Preview the next major version of Otomad Helper >**](README.next.md)
+
 **Otomad Helper** for **Vegas**, designed to allow Vegas to accept MIDI files as input, and automatically generate YTPMV/Otomad tracks.
 
 The script is redeveloped based on the original author [@Chaosinism](https://github.com/Chaosinism)'s open source code and uses the NAudio library.
@@ -36,8 +45,6 @@ The related features of YTP refer to [YTP+](https://github.com/YTP-Plus).
 Camera Shake feature refer to [VegasShakeScript](https://github.com/tmarplatt/VegasScripts).
 
 **Sister Projects:** [om midi for After Effects](https://github.com/otomad/om_midi).
-
-[**Preview the next major version of Otomad Helper >**](README.next.md)
 
 ### Translators
 * Vietnamese translation provided by [@Cyahega](https://github.com/Cyahega).
