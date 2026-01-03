@@ -39,8 +39,12 @@ export /* @internal */ const StyledButton = styled.button<{
 	border: 1px solid ${c("stroke-color-control-stroke-default")};
 	border-radius: 4px;
 
-	> .content > .text {
-		margin-block-start: -1px;
+	> .content {
+		text-align: center;
+
+		> .text {
+			margin-block-start: -1px;
+		}
 	}
 
 	&:hover {

@@ -51,7 +51,7 @@ const StyledContentDialog = styled.div`
 		${styles.mixins.hideIfEmpty()};
 		display: flex;
 		gap: 8px;
-		align-items: center;
+		align-items: stretch;
 		width: 100%;
 		padding: 24px;
 		background-color: ${c("background-fill-color-solid-background-base")};
