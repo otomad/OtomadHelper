@@ -54,7 +54,7 @@ export default function IdleEffectSettings({ value: [value, setValue], pinToTop,
 	return (
 		<Attrs disabled={disabled}>
 			<Expander.Item
-				icon="sparkle"
+				icon="coffee_sparkle"
 				title={t(effectTitlePlural).stream.idleEffect}
 				style={{ paddingInlineEnd: SELECT_ALL_PADDING_INLINE[1] }}
 				asSubtitle
