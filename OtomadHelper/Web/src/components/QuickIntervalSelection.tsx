@@ -3,9 +3,9 @@ const ELEMENT_SIZE = 50, ELEMENT_GAP = 5;
 const paddingX = expanderItemPadding[1] - ELEMENT_GAP;
 
 export /* @internal */ const QuickIntervalSelectionPresets = Enum({
-	odd: { bits: new Uint8Array([1, 0]), interval: 2, label: () => t.odd, icon: "parity/odd_columns" },
-	even: { bits: new Uint8Array([0, 1]), interval: 2, label: () => t.even, icon: "parity/even_columns" },
-	custom: { bits: undefined, interval: undefined, label: () => t.custom, icon: "edit" },
+	odd: { bits: new Uint8Array([1, 0]), interval: 2, label: t.odd, icon: "parity/odd_columns" },
+	even: { bits: new Uint8Array([0, 1]), interval: 2, label: t.even, icon: "parity/even_columns" },
+	custom: { bits: undefined, interval: undefined, label: t.custom, icon: "edit" },
 });
 
 const StyledPreviewQuickIntervalSelection = styled(HorizontalScroll)`

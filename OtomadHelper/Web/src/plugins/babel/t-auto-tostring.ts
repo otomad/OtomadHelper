@@ -97,7 +97,7 @@ export default function (babel: typeof babelCore): PluginObj {
 						}
 						// Exclude: { labelPrefix: t.foo }
 						if (t.isObjectProperty(parent) && !parent.computed && t.isIdentifier(parent.key) && parent.key.name === "labelPrefix") return;
-						// Exclude: Enum({ foo: { label: () => t.foo } }) // Note that do not use `Enum({ foo: { label: t.foo } })` !!!
+						// Exclude: Enum({ foo: { label: () => t.foo } }), Enum({ foo: { label: t.foo } })`
 						if (t.isObjectProperty(parent) && !parent.computed && t.isIdentifier(parent.key) && parent.key.name === "label")
 							for (let ancestorPath = parentPath.parentPath; ancestorPath !== null; ancestorPath = ancestorPath.parentPath) {
 								const ancestor = ancestorPath.node;

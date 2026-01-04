@@ -1,3 +1,4 @@
+import { EnumItemClass } from "enum-plus/enum-item";
 import { IN_CONTEXT_LANGUAGE_CODE } from "helpers/jipt-activator";
 import type { TOptions as _TOptions } from "i18next";
 import type { AvailableLanguageTags } from "locales/all";
@@ -84,7 +85,7 @@ const getProxy = (target: object, fallbackMode: boolean = false, tInHook?: typeo
 				// NOTE: If directly return a string, when user switches language, some local variables which store the i18n items will not update the language.
 			};
 			const getWithArgsFunction = (...prefixes: string[]) => {
-				const func = (options: TOptions) => translate(prefixes, options);
+				const func = (options: TOptions) => translate(prefixes, options instanceof EnumItemClass ? undefined : options);
 				func[I18N_ITEM_SYMBOL] = true;
 				return func;
 			};
