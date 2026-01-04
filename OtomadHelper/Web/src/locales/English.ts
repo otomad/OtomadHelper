@@ -129,6 +129,7 @@ export default {
 		learnMore: "Learn more",
 		condition: "Condition",
 		underConstruction: "Under construction…",
+		default: "Default",
 		systemDefault: "System default",
 		complete: "Complete",
 		dragToImport: "Drag and drop to import as {{item, lowercase}}",
@@ -1059,7 +1060,7 @@ export default {
 					periodicity: "Filters generated notes with a periodic or parity-based selection approach at regular intervals in the sequence",
 					pitchRange: "Generates only notes within the specified range of the musical scale",
 				},
-				encoding: "Specify the text encoding to use when reading the file. You should not change this setting unless garbled.",
+				encoding: "Select the correct text encoding used when reading files to prevent garbled metadata, such as track names and lyrics",
 				tempo: "Specify the beats per minute",
 				autoChangeProjectProperties: "Automatically change measures & beat in the project ruler properties if they don’t match the score",
 				constrain: {
@@ -1483,6 +1484,18 @@ export default {
 				trimEnd: "End time",
 			},
 			fromTo: "From {{from}} to {{to}}",
+		},
+		charsets: {
+			unicode: "Unicode",
+			utf16Be: "Unicode (Big-Endian)",
+			utf16Le: "Unicode (Little-Endian)",
+			hans: "Simplified Chinese",
+			hant: "Traditional Chinese",
+			westernEuropean: "Western European",
+			centralEuropean: "Central European",
+			tr: "Turkish",
+			bat: "Baltic",
+			vi: "Vietnamese",
 		},
 		aliases: {
 			// cSpell:disable

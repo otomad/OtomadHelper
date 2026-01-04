@@ -116,6 +116,8 @@ const MultipleSelectTrackItemsContainer = styled.div`
 `;
 // #endregion
 
+const selectedEncodingTagAtom = atom<EncodingTagGroup>("all");
+
 export default function Score() {
 	const {
 		format, encoding, tempoUsing, customTempo,
@@ -127,6 +129,7 @@ export default function Score() {
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
 	const meta = metas.score;
 	const autoChangeProjectCheckInfo = listFormat([autoChangeProjectTempo[0] && t.score.tempo, autoChangeProjectTimeSignature[0] && t.score.timeSignature]) || t.off;
+	const selectedEncodingTag = useAtom(selectedEncodingTagAtom);
 
 	const trimActuallyEnabled = useMemo(() => trimStart[0] !== trimEnd[0], [trimStart[0], trimEnd[0]]);
 	const periodicityActuallyEnabled = useMemo(() => !(periodicityPreset[0] === "custom" && base64ToBitArray(periodicityBits[0]).slice(0, periodicityInterval[0]).every(Boolean)), [periodicityPreset[0], periodicityBits[0]]);
@@ -250,9 +253,12 @@ export default function Score() {
 				meta={meta.encoding}
 				items={Encodings}
 				value={encoding}
-				radioButtonAttrs={{ diySlot: true }}
-				nameField={({ key }) => <PreviewEncoding encoding={key} />}
+				view="grid"
+				imageField={({ key }) => <PreviewEncoding encoding={key} />}
+				itemsViewItemAttrs={{ withBorder: true }}
 				checkInfoCondition={value => value === "ANSI" ? t.systemDefault : value}
+				filter={({ tags }) => selectedEncodingTag[0] === "all" || tags.includes(selectedEncodingTag[0])}
+				before={<EncodingFilter current={selectedEncodingTag} />}
 			/>
 			<Setting
 				meta={meta.tempo}

@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, radioButtonAttrs, hideCustom = true, before, transition, readOnly, parenOff, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, radioButtonAttrs, hideCustom = true, before, transition, readOnly, parenOff, filter, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly TItem[];
 	/** The identifier of the currently selected value. */
@@ -77,6 +77,8 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	 * - `string`: The specific key or ID of the option represents the off.
 	 */
 	parenOff?: boolean | string;
+	/** Filter the items that to be shown. */
+	filter?: (item: TItem, index: number) => boolean;
 	/** Occurs when the item left clicked. */
 	onItemClick?(item: TItem, event: React.MouseEvent<HTMLElement>): void;
 	/** Occurs when the item right clicked. */
@@ -98,8 +100,9 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 			item;
 	};
 	const items = _items as AnyObject[];
-	const filteredItems = useMemo(() => hideCustom === false ? items : items.filter(item =>
-		getItemField(item, "id") !== (typeof hideCustom === "string" ? hideCustom : "custom")), [_items, getItemField, hideCustom, items]);
+	const filteredItems = useMemo(() => hideCustom === false && !filter ? items : items.filter((item, index) =>
+		getItemField(item, "id") !== (typeof hideCustom === "string" ? hideCustom : "custom") && (filter?.(item, index) ?? true)),
+	[_items, getItemField, hideCustom, items]);
 	const checkInfo = staticCheckInfo || (!checkInfoCondition ? undefined :
 		typeof checkInfoCondition === "string" ? checkInfoCondition :
 		checkInfoCondition === true ? typeof idField === "string" && typeof nameField === "string" ?

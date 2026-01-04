@@ -1,6 +1,7 @@
 import links from "helpers/links";
 
 const TEXT_MARGIN = [10, 8] as const;
+export /* @internal */ { TEXT_MARGIN as PREVIEW_LANGUAGE_TEXT_MARGIN };
 
 const StyledPreviewLanguage = styled.div`
 	position: relative;
@@ -13,7 +14,8 @@ const StyledPreviewLanguage = styled.div`
 
 	.text {
 		${styles.effects.text.subtitle};
-		margin: ${TEXT_MARGIN[1]}px ${TEXT_MARGIN[0]}px;
+		margin-block: ${TEXT_MARGIN[1]}px;
+		margin-inline: ${TEXT_MARGIN[0]}px;
 		text-align: start;
 
 		.items-view-item.selected & {

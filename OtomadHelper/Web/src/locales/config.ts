@@ -1,3 +1,4 @@
+import { IN_CONTEXT_LANGUAGE_CODE } from "helpers/jipt-activator_constants";
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
@@ -35,7 +36,12 @@ i18n
 
 initFormatters();
 
-document.documentElement.lang = i18n.language;
+// <q> element will provide wrong quotes in zh-TW, however zh-Hant works fine. So we need the maximize form of language code.
+const htmlLang = {
+	get value() { const lng = document.documentElement.lang; return lng === IN_CONTEXT_LANGUAGE_CODE ? lng : new Intl.Locale(lng).maximize().baseName; },
+	set value(lng) { document.documentElement.lang = lng === IN_CONTEXT_LANGUAGE_CODE ? lng : new Intl.Locale(lng).maximize().baseName; },
+};
+htmlLang.value = i18n.language;
 document.dir = i18n.dir();
 
 function useLanguageGetter() {
@@ -48,7 +54,7 @@ export function useLanguage() {
 	const language = useLanguageGetter();
 
 	function changeLanguage(lng: AvailableLanguageTags) {
-		if (i18n.language === lng && document.documentElement.lang === lng)
+		if (i18n.language === lng && htmlLang.value === lng)
 			return;
 		bridges.bridge.setCulture(i18n.t("metadata.culture", { lng }));
 		const TRANSITION_DURATION = 500;
@@ -56,7 +62,7 @@ export function useLanguage() {
 		startColorViewTransition(async () => {
 			await i18n.changeLanguage(lng);
 			const dir = i18n.dir();
-			document.documentElement.lang = lng;
+			htmlLang.value = lng;
 			document.dir = dir;
 			devStore.rtl = dir === "rtl";
 		}, [

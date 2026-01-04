@@ -9,23 +9,27 @@ export /* @internal */ const backgroundColors: Record<Status, ColorNames> = {
 	error: "fill-color-system-critical",
 };
 
-const StyledBadge = styled.div<{
-	/** The state of the badge, that is, the color. */
-	$status: Status;
-	/** Hidden? */
-	$hidden?: boolean;
-}>`
+const StyledBadge = styled.div`
 	${styles.mixins.oval()};
 	${styles.mixins.flexCenter()};
 	${styles.effects.text.caption};
 	--size: 16px;
+	--status: info;
 	display: inline-flex;
 	flex-shrink: 0;
 	block-size: var(--size);
 	min-inline-size: var(--size);
 	padding: 0 3px;
+	color: if(
+		style(--status: neutual): ${c("foreground-color")};
+		else: ${c("fill-color-text-on-accent-primary")};
+	);
 	text-align: center;
-	background-color: ${c("fill-color-system-solid-neutral-background")};
+	background-color: if(
+		/* stylelint-disable-next-line custom-property-no-missing-var-function */
+		${Object.entries(backgroundColors).map(([status, colorName]) => `style(--status: ${status}): ${c(colorName)};`)}
+		else: ${c("fill-color-system-solid-neutral-background")}
+	);
 	scale: 1;
 	transition: ${fallbackTransitions}, scale ${eases.easeOutBackSmooth} 250ms;
 	forced-color-adjust: none;
@@ -41,11 +45,6 @@ const StyledBadge = styled.div<{
 	${tgs()} {
 		scale: 0;
 	}
-
-	${({ $status }) => css`
-		color: ${c($status === "neutual" ? "foreground-color" : "fill-color-text-on-accent-primary")};
-		background-color: ${c(backgroundColors[$status])};
-	`}
 
 	span {
 		position: relative;
@@ -99,9 +98,8 @@ export default function Badge({ children, status = "info", colorOverride, hidden
 		>
 			<StyledBadge
 				ref={ref}
-				$status={colorOverride}
 				className={[{ iconOnly: children === undefined, beacon }, className]}
-				style={{ "--size": styles.toValue(size) }}
+				style={{ "--size": styles.toValue(size), "--status": colorOverride }}
 				{...htmlAttrs}
 			>
 				{!beacon && (children != null ? <span className="text">{children}</span> : <Icon name={iconName} />)}
