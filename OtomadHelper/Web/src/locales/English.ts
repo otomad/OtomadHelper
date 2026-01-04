@@ -641,6 +641,7 @@ export default {
 				forClips: "For selected clips only",
 				includeGroup: "Include the clips within a group",
 				backwards: "Backwards",
+				stretchKeyframes: "Time-stretch keyframes",
 			},
 			clear: {
 				_: "Clear",
@@ -1263,6 +1264,9 @@ export default {
 					forClips: "Applies legato to selected clips only instead of the entire track",
 					includeGroup: "Also applies to the grouped clips",
 					backwards: "Applies legato backwards",
+					stretchKeyframes: "As the duration increases, the keyframes within each clip will be redistributed along the new duration",
+					stretchKeyframes_off: "Regardless of how the duration changes, the time interval between each keyframe remains the same",
+					stretchKeyframes_auto: "Time-stretch keyframes are enabled when you select “Stretching clips” and disabled when you select “Lengthening clips”",
 				},
 				deactivate: "Reset the status of this layout to deactivate it",
 				view: "Changes the preview only, without affecting the results",

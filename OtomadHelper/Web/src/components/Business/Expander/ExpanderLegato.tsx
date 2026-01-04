@@ -25,9 +25,20 @@ export default function ExpanderLegato({ stream, children }: FCP<{
 	stream: StreamKind | "track";
 }>) {
 	const isTrack = stream === "track";
-	const { legatoDuration, legatoAtLeast, legatoMode } = useSelectConfig(c => isTrack ? c.track.legato : c[stream]);
+	const { legatoDuration, legatoAtLeast, legatoMode, legatoStretchKeyframes } = useSelectConfig(c => isTrack ? c.track.legato : c[stream]);
 	const meta = metas[stream].legato;
 	const currentLegatoDuration = LegatoDurations.all[legatoDuration[0]];
+	const timeStretchKeyframesDetailsContext = legatoStretchKeyframes[0] ? "on" : legatoStretchKeyframes[0] === null ? "auto" : "off";
+
+	const timeStretchKeyframes = (
+		<Setting
+			meta={meta.stretchKeyframes}
+			actions={<TriStateSwitch current={legatoStretchKeyframes} indetText={t.auto} indetIcon="auto" />}
+			wrapActionsWhenNarrow
+			details={undefined}
+			selectInfo={t({ context: timeStretchKeyframesDetailsContext }).descriptions.track.legato.stretchKeyframes}
+		/>
+	);
 
 	return (
 		<Setting meta={meta} checkInfo={!isTrack && currentLegatoDuration.label}>
@@ -51,30 +62,33 @@ export default function ExpanderLegato({ stream, children }: FCP<{
 			</ItemsView>
 			<Setting meta={meta.atLeast} on={legatoAtLeast} title={t({ context: legatoDuration[0] }).stream.legato.atLeast} disabled={!currentLegatoDuration.limited} />
 			<Setting meta={meta.mode} asSubtitle="closerAfter" noDivider="after" />
-			{isTrack ? <TrackLegato /> : (
-				<ItemsView view="grid" current={legatoMode} itemWidth={320}>
-					{LegatoModes.array.filter(({ noteApplicable }) => noteApplicable).map(({ key: mode, label }) => {
-						const multiline = label.split("\n");
-						return (
-							<ItemsView.Item
-								id={mode}
-								key={mode}
-								details={multiline[1]}
-								image={<PreviewTrackLegato mode={mode} />}
-								withBorder
-							>
-								{multiline[0]}
-							</ItemsView.Item>
-						);
-					})}
-				</ItemsView>
+			{isTrack ? <TrackLegato>{timeStretchKeyframes}</TrackLegato> : (
+				<>
+					<ItemsView view="grid" current={legatoMode} itemWidth={320}>
+						{LegatoModes.array.filter(({ noteApplicable }) => noteApplicable).map(({ key: mode, label }) => {
+							const multiline = label.split("\n");
+							return (
+								<ItemsView.Item
+									id={mode}
+									key={mode}
+									details={multiline[1]}
+									image={<PreviewTrackLegato mode={mode} />}
+									withBorder
+								>
+									{multiline[0]}
+								</ItemsView.Item>
+							);
+						})}
+					</ItemsView>
+					{timeStretchKeyframes}
+				</>
 			)}
 			{children}
 		</Setting>
 	);
 }
 
-function TrackLegato() {
+function TrackLegato({ children }: FCP) {
 	const { legatoMode, increaseSpacing, forClips: legatoForClips, includeGroup: legatoIncludeGroup, backwards: legatoBackwards } = useSelectConfig(c => c.track.legato);
 	const meta = metas.track;
 
@@ -106,6 +120,7 @@ function TrackLegato() {
 			<Setting meta={meta.legato.forClips} on={legatoForClips} />
 			<Setting meta={meta.legato.includeGroup} on={legatoIncludeGroup} />
 			<Setting meta={meta.legato.backwards} on={legatoBackwards} />
+			{children}
 			<Setting
 				meta={meta.legato.increaseSpacing}
 				disabled={!legatoMode[0].in("increaseSpacing", "increaseSpacingAllTracks")}
