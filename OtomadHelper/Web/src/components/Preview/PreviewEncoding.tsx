@@ -131,7 +131,7 @@ function 锟斤拷(encoding: string) {
 
 const StyledEncodingFilterExpanderChildWrapper = styled(Expander.ChildWrapper)`
 	& + * {
-		border-block-start: none;
+		border-block-start: none !important;
 	}
 
 	@media (width < 641px) {

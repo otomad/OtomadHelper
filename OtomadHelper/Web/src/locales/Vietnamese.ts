@@ -195,6 +195,7 @@ export default {
 		score: {
 			from: "Bản nhạc từ",
 			midi: "MIDI",
+			singthesis: "Dự án vocal synth",
 			refOtherTracks: "Tham chiếu các track khác",
 			tts: "Văn bản thành giọng nói",
 			pureNotes: "Nốt nhạc thuần túy",
@@ -808,7 +809,9 @@ export default {
 					splitThenFreeze: "Nếu nốt nhạc dài hơn clip, tách ra khỏi điểm ra của clip, sau đó đóng băng điểm vào của clip",
 				},
 				prologue: {},
-				legato: "Lấp vào khoảng trống giữa các nốt nhạc",
+				legato: {
+					_: "Lấp vào khoảng trống giữa các nốt nhạc",
+				},
 				truncateAndLegatoConflictInAudio: "Tính năng Truncating và Legato xung đột với nhau trong tab Âm thanh, bạn không thể bật chúng cùng lúc!",
 				multitrackForChords: "Tạo đa track cho hợp âm",
 				createGroups: "Tạo nhóm cho các clip video và âm thanh được biểu diễn bằng một nốt nhạc",
@@ -1030,6 +1033,13 @@ export default {
 			commandBar: "Thanh lệnh",
 			checkboxGroup: "Nhóm hộp kiểm",
 			previewPiano: {},
+			trimTimecode: {
+				trimStart: "Thời gian bắt đầu",
+			},
+		},
+		charsets: {
+			hans: "Tiếng Trung - giản thể",
+			vi: "Tiếng Việt",
 		},
 		aliases: {
 			titles: {},

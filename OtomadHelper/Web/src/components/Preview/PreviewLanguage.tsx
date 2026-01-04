@@ -17,10 +17,10 @@ const StyledPreviewLanguage = styled.div`
 		margin-block: ${TEXT_MARGIN[1]}px;
 		margin-inline: ${TEXT_MARGIN[0]}px;
 		text-align: start;
+	}
 
-		.items-view-item.selected & {
-			color: ${c("accent-color")};
-		}
+	.items-view-item.selected & :is(.text, .shading-icon) {
+		color: ${c("accent-color")};
 	}
 
 	.items-view-item.grid:has(&) {
