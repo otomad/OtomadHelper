@@ -66,6 +66,15 @@ const StyledPreviewLanguage = styled.div`
 			font-size: 16px;
 		}
 	}
+
+	.shading-icon {
+		position: absolute;
+		inset-block-start: -8px;
+		inset-inline-start: -8px;
+		z-index: -1;
+		font-size: 64px;
+		opacity: 0.3;
+	}
 `;
 
 const approvalProgresses = atomWithStorageAndImmer("translationProgress", new Map<string, number>());
@@ -99,6 +108,7 @@ export default function PreviewLanguage({ language, showProgress = true }: FCP<{
 
 	return (
 		<StyledPreviewLanguage lang={language}>
+			<Icon className="shading-icon" name="globe_40" />
 			<div className="text">{languageName}</div>
 			{showProgress && (
 				<>
