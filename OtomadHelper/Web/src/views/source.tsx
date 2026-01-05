@@ -82,7 +82,7 @@ const isUnderVegas16 = true;
 export default function Source() {
 	const {
 		sourceFrom, trimStart, trimEnd, startTime, customStartTime,
-		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
+		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack], unsetBorrowedTrackName,
 		trackGroup, collapseTrackGroup, otomadTrackName, vocaloidTrackName, ytpTrackName, otomadClipName, vocaloidClipName, ytpClipName,
 		secretBox, consonant, matchCut, matchCutOrder, matchCutLoop, matchCutSecretBox, linearMap, linearMapDescending,
 		secretBoxLimitToSelected, secretBoxForTrack, secretBoxForMarker, secretBoxForBarOrBeat, secretBoxForBarOrBeatPeriod, secretBoxForBarOrBeatPreparation,
@@ -183,6 +183,7 @@ export default function Source() {
 				<Expander.Item title={t.mode.whichMode({ mode: t.mode.ytp })} selectInfo={mode === "ytp" && t.mode.current}>
 					<ComboBox current={ytpTrackName} ids={Namings.ytpTrackNames.map(({ id }) => id)} options={Namings.ytpTrackNames.map(({ name }) => name)} icons={Namings.ytpTrackNames.map(({ icon }) => icon)} />
 				</Expander.Item>
+				<Setting meta={meta.naming.unsetBorrowedTrackName} on={unsetBorrowedTrackName} />
 				<Setting meta={meta.naming.clipName} asSubtitle />
 				<Expander.Item title={t.mode.whichMode({ mode: t.mode.otomad })} selectInfo={mode === "otomad" && t.mode.current}>
 					<ComboBox current={otomadClipName} ids={Namings.otomadClipNames.map(({ id }) => id)} options={Namings.otomadClipNames.map(({ name }) => name)} icons={Namings.otomadClipNames.map(({ icon }) => icon)} />

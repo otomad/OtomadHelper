@@ -94,6 +94,7 @@ namespace Config {
 			belowAdjustmentTracks: true,
 			trackGroup: true,
 			collapseTrackGroup: true,
+			unsetBorrowedTrackName: false,
 			otomadTrackName: "track" satisfies OtomadTrackNameType as OtomadTrackNameType,
 			vocaloidTrackName: "voicebank" satisfies VocaloidTrackNameType as VocaloidTrackNameType,
 			ytpTrackName: "unnamed" satisfies YtpTrackNameType as YtpTrackNameType,

@@ -237,5 +237,11 @@ export default css`
 		:target {
 			scroll-margin: 3rlh;
 		}
+
+		// I don't know why Chromium user agent stylesheet use \`text-autospace: no-autospace !important;\` for the <select>.
+		select,
+		select * {
+			text-autospace: normal !important;
+		}
 	}
 `;

@@ -92,6 +92,7 @@ export default {
 				_: "Naming",
 				trackName: "Name for tracks and track groups",
 				clipName: "Name for clips",
+				unsetBorrowedTrackName: "Unset the name of the borrowed, existing track",
 				track: "MIDI track name",
 				trackIndex: "MIDI track index",
 				instrument: "MIDI instrument name",
@@ -1029,6 +1030,7 @@ export default {
 				},
 				naming: {
 					_: "Specify the name for the generated tracks, track groups, and clips",
+					unsetBorrowedTrackName: "Newly created tracks will not be affected",
 				},
 				multisource: {
 					ytpEnabled: "YTP feature is enabled and these features are currently unconfigurable.",
