@@ -14,7 +14,7 @@ const StyledBadge = styled.div`
 	${styles.mixins.flexCenter()};
 	${styles.effects.text.caption};
 	--size: 16px;
-	--status: info;
+	--status: attr(data-status type(<custom-ident>), info);
 	display: inline-flex;
 	flex-shrink: 0;
 	block-size: var(--size);
@@ -99,7 +99,8 @@ export default function Badge({ children, status = "info", colorOverride, hidden
 			<StyledBadge
 				ref={ref}
 				className={[{ iconOnly: children === undefined, beacon }, className]}
-				style={{ "--size": styles.toValue(size), "--status": colorOverride }}
+				style={{ "--size": styles.toValue(size) }}
+				data-status={colorOverride}
 				{...htmlAttrs}
 			>
 				{!beacon && (children != null ? <span className="text">{children}</span> : <Icon name={iconName} />)}

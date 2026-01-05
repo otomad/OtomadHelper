@@ -73,7 +73,7 @@ const StyledPreviewEncoding = styled.div`
 		margin-block-start: 4px;
 
 		.items-view-item.selected & {
-			--status: accent !important;
+			--status: accent;
 		}
 	}
 
