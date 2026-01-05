@@ -1471,7 +1471,6 @@ export default {
 			timesOperator: "Times",
 			reorderHandle: "Drag to reorder",
 			searchBox: "Search box",
-			otomadHelperLogo: "Otomad Helper Logo",
 			previewPiano: {
 				pianoKeyboard: "Piano keyboard",
 				spn: "Key {{noteName}} {{octave}}",
@@ -1484,6 +1483,7 @@ export default {
 				trimEnd: "End time",
 			},
 			fromTo: "From {{from}} to {{to}}",
+			filter: "Filter",
 		},
 		charsets: {
 			unicode: "Unicode",

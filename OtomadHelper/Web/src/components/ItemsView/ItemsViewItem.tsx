@@ -312,7 +312,7 @@ const ItemsViewItemStateContext = createContext<{
 
 export type OnItemsViewItemClickEventHandler<T> = (id: T, selected: CheckState, e: React.MouseEvent<HTMLElement>) => void;
 
-export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, criticallyHighlight, _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable, children, className, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, criticallyHighlight, _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable, children, className, "aria-label": ariaLabel, "aria-description": ariaDescription, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */
@@ -411,8 +411,10 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 						tabIndex={0}
 						role={multiple ? "checkbox" : "radio"}
 						aria-checked={checkStateToAriaChecked(selected)}
-						aria-labelledby={`${ariaId}-title`}
-						aria-describedby={`${ariaId}-details`}
+						aria-labelledby={ariaLabel !== undefined ? undefined : `${ariaId}-title`}
+						aria-describedby={ariaDescription !== undefined ? undefined : `${ariaId}-details`}
+						aria-label={ariaLabel}
+						aria-description={ariaDescription}
 						onClick={e => { onClick?.(id, selected, e); setSelected?.(selected => !selected); }}
 						{...htmlAttrs}
 					>

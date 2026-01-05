@@ -27,7 +27,7 @@ export default function Filter<T extends PropertyKey>({ current: [current, setCu
 	current: StateProperty<T>;
 }, "div">) {
 	return (
-		<StyledFilter role="radiogroup" {...htmlAttrs}>
+		<StyledFilter role="radiogroup" aria-label={t.aria.filter} {...htmlAttrs}>
 			<Flipper arrow="left" />
 			<div className="pills">
 				{React.Children.map(children, child => {

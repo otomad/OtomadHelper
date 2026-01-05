@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, radioButtonAttrs, hideCustom = true, before, transition, readOnly, parenOff, filter, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, ariaLabelField, ariaDescriptionField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, radioButtonAttrs, hideCustom = true, before, transition, readOnly, parenOff, filter, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly TItem[];
 	/** The identifier of the currently selected value. */
@@ -38,6 +38,10 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	imageOverlayField?: FieldType<TItem> | ((item: TItem) => ReactNode);
 	/** The badge field for the radio item. You must get it by a callback which return a badge node. */
 	badgeField?: (item: TItem) => BadgeValue | BadgeArgs;
+	/** Override the `aria-label` field for the radio item, the `nameField` value will be used if omitted this prop. */
+	ariaLabelField?: Exclude<FieldType<TItem>, true>;
+	/** Override the `aria-description` field for the radio item, the `detailsField` value will be used if omitted this prop. */
+	ariaDescriptionField?: Exclude<FieldType<TItem>, true>;
 	/** Use list/tile/grid view components instead of radio buttons. */
 	view?: ItemView | "radio";
 	/** Detailed description. */
@@ -84,7 +88,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	/** Occurs when the item right clicked. */
 	onItemContextMenu?(item: TItem, event: React.MouseEvent<HTMLElement>): void;
 }>>) {
-	const getItemField = (item: TItem, fieldName: "id" | "name" | "icon" | "image" | "details" | "imageOverlay"): Any => {
+	const getItemField = (item: TItem, fieldName: "id" | "name" | "icon" | "image" | "details" | "imageOverlay" | "ariaLabel" | "ariaDescription"): Any => {
 		const field = {
 			name: nameField,
 			id: idField,
@@ -92,6 +96,8 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 			image: imageField,
 			details: detailsField,
 			imageOverlay: imageOverlayField,
+			ariaLabel: ariaLabelField,
+			ariaDescription: ariaDescriptionField,
 		}[fieldName];
 		return !field ? undefined :
 			isI18nItem(field) ? String(field[getItemField(item, "id")]) :
@@ -157,6 +163,8 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 							details={getItemField(item, "details")}
 							imageOverlay={getItemField(item, "imageOverlay")}
 							badge={badgeField?.(item)}
+							aria-label={getItemField(item, "ariaLabel")}
+							aria-description={getItemField(item, "ariaDescription")}
 							onClick={(_1, _2, e) => onItemClick?.(item, e)}
 							onContextMenu={e => onItemContextMenu?.(item, e)}
 							{...typeof itemsViewItemAttrs === "function" ? itemsViewItemAttrs(item) : itemsViewItemAttrs}

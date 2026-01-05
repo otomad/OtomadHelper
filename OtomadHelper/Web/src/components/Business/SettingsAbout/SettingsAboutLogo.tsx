@@ -104,6 +104,8 @@ const StyledSettingsAboutLogoWrapper = styled.div`
 	animation: none;
 `;
 
+const OTOMAD_HELPER_LOGO = "Otomad Helper Logo"; // Abandoning localization.
+
 export /* @internal */ default function SettingsAboutLogo() {
 	const iconStyles = ["fluent", "aero", "liquid glass"] as const;
 	const [iconStyle, setIconStyle] = useState<ValueOf<typeof iconStyles>>("fluent");
@@ -111,7 +113,7 @@ export /* @internal */ default function SettingsAboutLogo() {
 
 	return (
 		<StyledSettingsAboutLogoWrapper>
-			<StyledSettingsAboutLogo role="img" aria-label={t.aria.otomadHelperLogo.toString()}>
+			<StyledSettingsAboutLogo role="img" aria-label={OTOMAD_HELPER_LOGO}>
 				<div className="row-1">
 					<div className="icon-wrapper" data-icon-style={iconStyle} onClick={nextIconStyle}>
 						<Attrs className="light">

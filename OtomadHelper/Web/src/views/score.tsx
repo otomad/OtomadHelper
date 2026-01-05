@@ -255,6 +255,8 @@ export default function Score() {
 				value={encoding}
 				view="grid"
 				imageField={({ key }) => <PreviewEncoding encoding={key} />}
+				ariaLabelField={({ key }) => key}
+				ariaDescriptionField={({ label }) => label}
 				itemsViewItemAttrs={{ withBorder: true }}
 				checkInfoCondition={value => value === "ANSI" ? t.systemDefault : value}
 				filter={({ tags }) => selectedEncodingTag[0] === "all" || tags.includes(selectedEncodingTag[0])}

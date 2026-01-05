@@ -106,6 +106,8 @@ export default function Settings() {
 					const [hasTranslator, formattedTranslator] = listFormatTranslators(language, currentLanguage);
 					return hasTranslator ? formattedTranslator : undefined;
 				}}
+				ariaLabelField={language => t({ lng: language }).metadata.name}
+				ariaDescriptionField={language => currentLanguage === language ? "" : getLocaleName(language, currentLanguage)}
 				itemsViewItemAttrs={{ withBorder: true }}
 				itemsViewAttrs={{ style: { paddingBlockEnd: 0 } }}
 				readOnly={inContextLocalization[0]}
