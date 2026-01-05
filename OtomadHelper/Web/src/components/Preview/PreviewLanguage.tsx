@@ -57,12 +57,19 @@ const StyledPreviewLanguage = styled.div`
 	}
 
 	.approval-progress {
+		--progress: attr(data-progress %);
 		position: absolute;
 		inset-block-start: ${TEXT_MARGIN[1]}px;
 		inset-inline-end: ${TEXT_MARGIN[0]}px;
 		display: flex;
 		gap: 4px;
 		align-items: center;
+		color: if(
+			style(--progress < 20%): ${c("fill-color-system-critical")};
+			style(--progress < 50%): ${c("fill-color-system-caution")};
+			style(--progress >= 100%): ${c("fill-color-system-success")};
+			else: ${c("foreground-color")};
+		);
 
 		.icon {
 			font-size: 16px;
@@ -106,19 +113,18 @@ export default function PreviewLanguage({ language, showProgress = true }: FCP<{
 		getLocaleName(language, language)).toTitleCase();
 	const [progresses] = useAtom(approvalProgresses);
 	const progress = progresses.get(language) ?? -1;
-	const showProgressPercentage = progress >= 0 && progress < 100;
 
 	return (
 		<StyledPreviewLanguage lang={language}>
-			<Icon className="shading-icon" name="globe_40" />
+			<Icon className="shading-icon" name="globe_40px" />
 			<div className="text">{languageName}</div>
 			{showProgress && (
 				<>
 					<progress value={progress} max={100} aria-hidden />
-					{showProgressPercentage && (
-						<div className="approval-progress">
+					{progress >= 0 && (
+						<div className="approval-progress" data-progress={progress}>
 							<Icon name="logo/crowdin" />
-							<span>{progress}%</span>
+							{progress < 100 ? <span>{progress}%</span> : <Icon name="checkmark_bold" />}
 						</div>
 					)}
 				</>
