@@ -1,7 +1,7 @@
 // cspell:disable-next-line
 import Waveform1 from "assets/svg/waveform_dong.svg?react";
 // cspell:disable-next-line
-import Waveform2 from "assets/svg/waveform_shuo.svg?react";
+import Waveform2 from "assets/svg/waveform_ssr.svg?react";
 
 const StylePreviewTrackEvent = styled.div`
 	--r: 2;

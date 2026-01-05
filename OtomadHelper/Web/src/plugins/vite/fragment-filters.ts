@@ -91,9 +91,9 @@ export default (): VitePlugin => {
 
 		async load(id) {
 			if (id === resolvedVirtualModuleId) {
-				const mainPath = "src/assets/glsl/main.frag";
+				const mainPath = "src/shaders/main.frag";
 				let main = await readFile(resolve(root, mainPath), "utf-8");
-				const _fragments = await getFragments("src/assets/glsl");
+				const _fragments = await getFragments("src/shaders");
 				const [fragments, defaults] = processFragments(_fragments);
 				const fragNames = [...fragments.keys()];
 
@@ -116,7 +116,7 @@ export default (): VitePlugin => {
 
 		handleHotUpdate({ server, file }) {
 			file = file.replace(root, "");
-			if (file.startsWith("/src/assets/glsl")) {
+			if (file.startsWith("/src/shaders")) {
 				const virtualModule = server.moduleGraph.getModuleById(resolvedVirtualModuleId)!;
 				server.moduleGraph.invalidateModule(virtualModule);
 				server.hot.send({ type: "full-reload" });

@@ -1,4 +1,4 @@
-import vertexShaderSource from "assets/glsl/main.vert";
+import vertexShaderSource from "shaders/main.vert";
 import fragmentShaderSource, { defaults, fragNames } from "virtual:fragment-filters";
 import * as webglUtils from "./utils";
 
