@@ -124,6 +124,8 @@ words:
   - hsv
   - hta
   - hwb
+  - hyperflip
+  - hyperflips
   - idb
   - img
   - immer
@@ -138,6 +140,7 @@ words:
   - kbd
   - kebabcase
   - keyframes
+  - kichiku
   - klass
   - kore
   - labelledby
@@ -272,6 +275,8 @@ words:
   - subgrids
   - subheaders
   - subpages
+  - subpartition
+  - subpartitions
   - subtags
   - surdo
   - svgr

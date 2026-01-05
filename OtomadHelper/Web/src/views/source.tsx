@@ -90,6 +90,7 @@ export default function Source() {
 	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = useSelectConfig(c => c.source.afterCompletion);
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
 	const meta = metas.source;
+	const [mode] = useKichikuMode();
 	/** @deprecated */ const manualEnabled = false;
 
 	mutexSwitches(removeSourceClips, selectSourceClips);
@@ -173,23 +174,23 @@ export default function Source() {
 			</Setting>
 			<NamingSetting meta={meta.naming}>
 				<Setting meta={meta.naming.trackName} asSubtitle />
-				<Expander.Item title={t.mode.otomad} selectInfo={t.mode.current}>
+				<Expander.Item title={t.mode.whichMode({ mode: t.mode.otomad })} selectInfo={mode === "otomad" && t.mode.current}>
 					<ComboBox current={otomadTrackName} ids={Namings.otomadTrackNames.map(({ id }) => id)} options={Namings.otomadTrackNames.map(({ name }) => name)} icons={Namings.otomadTrackNames.map(({ icon }) => icon)} />
 				</Expander.Item>
-				<Expander.Item title={t.mode.vocaloid}>
+				<Expander.Item title={t.mode.whichMode({ mode: t.mode.vocaloid })} selectInfo={mode === "vocaloid" && t.mode.current}>
 					<ComboBox current={vocaloidTrackName} ids={Namings.vocaloidTrackNames.map(({ id }) => id)} options={Namings.vocaloidTrackNames.map(({ name }) => name)} icons={Namings.vocaloidTrackNames.map(({ icon }) => icon)} />
 				</Expander.Item>
-				<Expander.Item title={t.mode.ytp}>
+				<Expander.Item title={t.mode.whichMode({ mode: t.mode.ytp })} selectInfo={mode === "ytp" && t.mode.current}>
 					<ComboBox current={ytpTrackName} ids={Namings.ytpTrackNames.map(({ id }) => id)} options={Namings.ytpTrackNames.map(({ name }) => name)} icons={Namings.ytpTrackNames.map(({ icon }) => icon)} />
 				</Expander.Item>
 				<Setting meta={meta.naming.clipName} asSubtitle />
-				<Expander.Item title={t.mode.otomad} selectInfo={t.mode.current}>
+				<Expander.Item title={t.mode.whichMode({ mode: t.mode.otomad })} selectInfo={mode === "otomad" && t.mode.current}>
 					<ComboBox current={otomadClipName} ids={Namings.otomadClipNames.map(({ id }) => id)} options={Namings.otomadClipNames.map(({ name }) => name)} icons={Namings.otomadClipNames.map(({ icon }) => icon)} />
 				</Expander.Item>
-				<Expander.Item title={t.mode.vocaloid}>
+				<Expander.Item title={t.mode.whichMode({ mode: t.mode.vocaloid })} selectInfo={mode === "vocaloid" && t.mode.current}>
 					<ComboBox current={vocaloidClipName} ids={Namings.vocaloidClipNames.map(({ id }) => id)} options={Namings.vocaloidClipNames.map(({ name }) => name)} icons={Namings.vocaloidClipNames.map(({ icon }) => icon)} />
 				</Expander.Item>
-				<Expander.Item title={t.mode.ytp}>
+				<Expander.Item title={t.mode.whichMode({ mode: t.mode.ytp })} selectInfo={mode === "ytp" && t.mode.current}>
 					<ComboBox current={ytpClipName} ids={Namings.ytpClipNames.map(({ id }) => id)} options={Namings.ytpClipNames.map(({ name }) => name)} icons={Namings.ytpClipNames.map(({ icon }) => icon)} />
 				</Expander.Item>
 			</NamingSetting>

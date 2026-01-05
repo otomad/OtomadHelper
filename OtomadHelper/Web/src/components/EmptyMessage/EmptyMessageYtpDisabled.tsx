@@ -14,7 +14,7 @@ export /* @internal */ default function EmptyMessageYtpDisabled({ fully: feature
 	/** If YTP enabled, the whole feature is unavailable, pass the feature name to this parameter. */
 	fully?: string;
 }>) {
-	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
+	const { enabled: ytpEnabled } = useSnapshot(configStore.ytp);
 
 	if (!ytpEnabled) return children;
 	return (

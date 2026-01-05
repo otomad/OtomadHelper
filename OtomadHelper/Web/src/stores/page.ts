@@ -37,7 +37,7 @@ interface PageState {
 const NAME = "page";
 
 export const pageStore: PageState = createPersistStore("page", (() => {
-	const page = ["source"];
+	const page = ["wizard"];
 	const scrolls: PageScrollList = [];
 
 	function changePage(pages: string[]): void;

@@ -5,7 +5,7 @@ import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 type Stream = "audio" | "video" | "n/a";
 const $s = (mainStream: Stream, ...sideEffects: [stream: Stream, name: string, likely?: boolean][]) =>
 	({ stream: mainStream, sideEffects: sideEffects.map(([stream, name, likely]) => ({ stream, name, likely: !!likely })) });
-const effects: Record<string, ReturnType<typeof $s>> = {
+const effects = {
 	chorus: $s("audio"),
 	delay: $s("audio"),
 	changePitch: $s("audio"),
@@ -31,8 +31,9 @@ const effects: Record<string, ReturnType<typeof $s>> = {
 	emboss: $s("video"),
 	bump: $s("video"),
 	edge: $s("video"),
-};
-const effectNames = Object.keys(effects);
+} satisfies Record<string, ReturnType<typeof $s>>;
+const effectNames = Object.keys(effects) as YtpEffectName[];
+export type YtpEffectName = keyof typeof effects;
 
 const StyledSideEffect = styled.div`
 	display: flex;

@@ -146,6 +146,9 @@ declare global {
 	/** Rough time unit which can be switched by combobox. */
 	type RoughTimeUnit = "millisecond" | "second" | "minute" | "hour";
 
+	/** All available Kichiku (鬼畜) subpartitions. Can be otoMAD (音MAD), VOCALOID (人力), YTP. */
+	type KichikuMode = "otomad" | "vocaloid" | "ytp";
+
 	// Add custom events
 	interface GlobalEventHandlersEventMap {
 		transitionExitCapture: CustomEvent<{

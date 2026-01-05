@@ -65,6 +65,10 @@ const StyledInfoBar = styled.div<{
 		}
 	}
 
+	&:not(.multiline) .text-part {
+		white-space: nowrap;
+	}
+
 	&.multiline .text-part {
 		flex-direction: column;
 
@@ -90,7 +94,7 @@ const StyledInfoBar = styled.div<{
 `;
 
 export default function InfoBar({ status = "info", title, children, button, length, className, ...htmlAttrs }: FCP<{
-	/** The state of the badge, that is, the color and the icon. */
+	/** The state of the badge, that is, the color and the icon. @default "info" */
 	status?: Status | [icon: Status, color: Status];
 	/** Title. */
 	title?: ReactNode;

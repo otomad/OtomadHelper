@@ -18,7 +18,7 @@ const StyledPreviewKaraoke = styled.div`
 	}
 
 	&.future {
-		clip-path: inset(0 0 0 0);
+		clip-path: inset(0);
 
 		> p {
 			color: white;
@@ -55,15 +55,45 @@ const StyledPreviewKaraoke = styled.div`
 			clip-path: inset(0 50% 0 0);
 		}
 	}
+
+	&.demo-mode {
+		&.future,
+		&.past:dir(rtl) {
+			clip-path: none !important;
+		}
+
+		&.past,
+		&.future:dir(rtl) {
+			animation: ${keyframes`
+				0% {
+					clip-path: inset(0 100% 0 0);
+					opacity: 1;
+				}
+
+				97% {
+					clip-path: inset(0);
+					opacity: 1;
+				}
+
+				100% {
+					clip-path: inset(0);
+					opacity: 0;
+					animation-timing-function: ${eases.easeInOutMax};
+				}
+			`} 2s linear infinite;
+		}
+	}
 `;
 
-export default function PreviewKaraoke({ reset, futureFill, pastFill }: FCP<{
+export default function PreviewKaraoke({ reset, futureFill, pastFill, demoMode }: FCP<{
 	/** Reset the karaoke lyrics progress? */
 	reset?: boolean;
 	/** Future text fill color. */
 	futureFill?: string;
 	/** Past text fill color. */
 	pastFill?: string;
+	/** Demo mode, run the animation infinitely? */
+	demoMode?: boolean;
 }>) {
 	const [textEls, setTextEl] = useDomRefs<"p">();
 
@@ -82,6 +112,7 @@ export default function PreviewKaraoke({ reset, futureFill, pastFill }: FCP<{
 			className={[tense, {
 				reset,
 				custom: tense === "future" && futureFill || tense === "past" && pastFill,
+				demoMode,
 			}]}
 		>
 			<p

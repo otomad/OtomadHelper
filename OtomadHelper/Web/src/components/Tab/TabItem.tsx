@@ -191,7 +191,7 @@ export /* @internal */ default function TabItem({ icon, animatedIcon, children, 
 				{(icon || animatedIcon) && (
 					<div className="badge-wrapper">
 						{icon && !animatedIcon && <Icon name={icon} />}
-						{animatedIcon && <AnimatedIcon name={animatedIcon} />}
+						{animatedIcon && <AnimatedIcon name={animatedIcon} showFallbackIcon />}
 						<BadgeItem hidden={!(vertical && collapsed)} badge={badge} />
 					</div>
 				)}

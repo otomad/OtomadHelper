@@ -5,7 +5,7 @@ function EmptyPage() {
 }
 
 const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "lyrics", "shupelunker", "ytp"] as const;
-const navToolItems = ["management", "mosh", "tools"] as const;
+const navToolItems = ["management", "mosh", "tools", "wizard"] as const;
 const bottomNavItems = ["settings"] as const;
 
 export function redirectIcon(name: string): DeclaredIcons & DeclaredLotties {
@@ -18,6 +18,7 @@ export function redirectIcon(name: string): DeclaredIcons & DeclaredLotties {
 		shupelunker: "slice",
 		tools: "apps",
 		management: "library",
+		wizard: "contract_up_right",
 		// Subpages
 		prve: "sparkle",
 		staff: "g_clef",
@@ -50,7 +51,7 @@ export default function ShellPage() {
 	const pageTitles = page.map((crumb, i, { length }) => {
 		try {
 			return {
-				name: getTitle(crumb, "full"),
+				name: crumb === "wizard" ? APP_NAME : getTitle(crumb, "full"),
 				link: i === length - 1 ? undefined : page.slice(0, i + 1),
 			};
 		} catch (error) {

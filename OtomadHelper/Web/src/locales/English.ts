@@ -47,11 +47,14 @@ export default {
 			internal_long: "VEGAS Pro Global Internal Preferences",
 			license: "License",
 			license_full: "License (GPL-3.0)",
+			wizard: "Wizard",
 		},
 		mode: {
-			otomad: "YTPMV / otoMAD mode",
-			vocaloid: "Sentence Mixing / Manual VOCALOID mode",
-			ytp: "YTP mode",
+			_: "Mode",
+			otomad: "YTPMV / otoMAD",
+			vocaloid: "Sentence Mixing / Manual VOCALOID",
+			ytp: "YTP",
+			whichMode: "{{mode}} mode", // E.g. YTPMV mode. Please DO NOT translate the interpolations `{{mode}}` which inside the braces.
 			current: "Current mode",
 		},
 		source: {
@@ -528,6 +531,10 @@ export default {
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "Copy from another parameter scheme here",
+			},
+			enabled: {
+				audio: "Generate audio",
+				visual: "Generate visual",
 			},
 		},
 		track: {
@@ -1167,6 +1174,7 @@ export default {
 					},
 				},
 				tuning: {
+					_: "When disabled, the original pitch will remain untuned",
 					tuningMethod: {
 						_: "Uses a different tuning algorithm",
 						none: "No pitch effect",
@@ -1371,6 +1379,7 @@ export default {
 				stepAria: "Step {{step}} of {{frames}}",
 				customSteps: "Customize the step sequence",
 				randomSteps: "Randomized step sequence",
+				hFlip: "Hyperflips the visual horizontally automatically by the rhythm",
 			},
 			pixelScaling: {
 				caption: "Scaling using nearest neighbor hard edge amplification and interpolation algorithms",
@@ -1450,6 +1459,11 @@ export default {
 			operationRecord: {
 				title: "No operation record",
 				details: "You can switch the Array mode to {{fixed}} and make more detailed adjustments to each cell",
+			},
+			wizardMode: {
+				title: "This is a Wizard mode for first-time users to easily get started",
+				details: "But this extension is far more than that. If you want to experience all the powerful features, please switch to the Standard mode.",
+				gotoStandard: "Switch to Standard mode",
 			},
 		},
 		menu: {

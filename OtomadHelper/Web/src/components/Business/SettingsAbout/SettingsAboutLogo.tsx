@@ -104,7 +104,7 @@ const StyledSettingsAboutLogoWrapper = styled.div`
 	animation: none;
 `;
 
-const OTOMAD_HELPER_LOGO = "Otomad Helper Logo"; // Abandoning localization.
+const OTOMAD_HELPER_LOGO = `${APP_NAME} Logo`; // Abandoning localization.
 
 export /* @internal */ default function SettingsAboutLogo() {
 	const iconStyles = ["fluent", "aero", "liquid glass"] as const;

@@ -256,7 +256,7 @@ export default function AnimatedIcon({
 			return;
 	}
 
-	const clipped = useMemo(() => !!animationData.metadata?.customProps?.clipped, [name]);
+	const clipped = useMemo(() => !!animationData?.metadata?.customProps?.clipped, [name]);
 
 	/**
 	 * Click icon interaction event.
