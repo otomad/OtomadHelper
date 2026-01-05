@@ -42,14 +42,9 @@ export function dataToFile(dataUrl: string, fileName: string): File;
  * @returns File or Blob.
  */
 export function dataToFile(dataUrl: string, fileName?: string) {
-	const mimeAndBytes = dataUrl.split(",") as [string, string];
+	const mimeAndBytes = dataUrl.splitOnce(",");
 	const mime = mimeAndBytes[0].match(/:(.*?);/)![1];
-	const byteString = atob(mimeAndBytes[1]);
-	let n = byteString.length;
-	const bytes = new Uint8Array(n);
-	while (n--)
-		// eslint-disable-next-line unicorn/prefer-code-point
-		bytes[n] = byteString.charCodeAt(n);
+	const bytes = Uint8Array.fromBase64(mimeAndBytes[1]);
 	return fileName != null ?
 		new File([bytes], fileName, { type: mime }) :
 		new Blob([bytes], { type: mime }) as File;
@@ -62,7 +57,7 @@ export function dataToFile(dataUrl: string, fileName?: string) {
  */
 export async function openFile(options?: {
 	/** A string specifying the types of files to accept, e.g., ".jpg,.png,image/*". */
-	accept?: string;
+	types?: FilePickerAcceptType[];
 	/** A boolean indicating whether to allow multiple file selection. */
 	multiple?: false;
 }): Promise<File | null>;
@@ -73,21 +68,35 @@ export async function openFile(options?: {
  */
 export async function openFile(options?: {
 	/** A string specifying the types of files to accept, e.g., ".jpg,.png,image/*". */
-	accept?: string;
+	types?: FilePickerAcceptType[];
 	/** A boolean indicating whether to allow multiple file selection. */
 	multiple: true;
 }): Promise<File[]>;
-export async function openFile({ accept = "", multiple = false } = {}): Promise<File | File[] | null> {
-	// `showOpenFilePicker` is better, but it's not supported in all browsers and **TypeScript** yet.
-	const input = document.createElement("input");
-	input.type = "file";
-	input.accept = accept;
-	input.multiple = multiple;
-	await new Promise<void>(resolve => {
-		input.onchange = () => resolve();
-		input.click();
-	});
-	const files = await Array.fromAsync(input.files ?? [], async file => file instanceof FileSystemFileHandle ? await file.getFile() : file);
+export async function openFile({ types, multiple = false }: { types?: FilePickerAcceptType[]; multiple?: boolean } = {}): Promise<File | File[] | null> {
+	let fileHandles: Iterable<File | FileSystemFileHandle>;
+
+	// eslint-disable-next-line no-constant-condition
+	if (window.showOpenFilePicker && false) // `showOpenFilePicker()` requires manually provide the description of each types, how input element can auto deal with it. So I dislike `showOpenFilePicker()` function.
+		fileHandles = await window.showOpenFilePicker({ multiple, types });
+	else {
+		const input = document.createElement("input");
+		input.type = "file";
+		if (types) {
+			const accepts = types.flatMap(type => {
+				const { accept } = type;
+				if (!accept) return;
+				return Object.keys(accept).concat(Object.values(accept).flat());
+			}).toCompacted();
+			input.accept = accepts.join(",");
+		}
+		input.multiple = multiple;
+		fileHandles = await new Promise<FileList | null>(resolve => {
+			input.onchange = () => resolve(input.files);
+			input.click();
+		}) ?? [];
+	}
+
+	const files = await Array.fromAsync(fileHandles, async file => file instanceof FileSystemFileHandle ? await file.getFile() : file);
 	if (multiple) return files;
 	else return files[0] ?? null;
 }

@@ -69,8 +69,8 @@ declare interface Number {
 	 * Get the number of decimals in a number.
 	 * @example
 	 * ```typescript
-	 * console.log((3.1415926).toFixedNumber(2)); // Output: 7
-	 * console.log((3).toFixedNumber(2)); // Output: 0
+	 * console.log((3.1415926).countDecimals(2)); // Output: 7
+	 * console.log((3).countDecimals(2)); // Output: 0
 	 * ```
 	 */
 	countDecimals(): number;

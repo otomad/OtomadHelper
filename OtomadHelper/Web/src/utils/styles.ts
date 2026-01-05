@@ -52,7 +52,7 @@ export const cc = (systemColor: SystemColors) => systemColor;
  * // before
  * .your-selector${important(5)} { }
  * // after
- * .your-selector:not[#\#]:not[#\#]:not[#\#]:not[#\#]:not[#\#] { }
+ * .your-selector:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) { }
  * ```
  */
 export function important(priority: number = 1) {

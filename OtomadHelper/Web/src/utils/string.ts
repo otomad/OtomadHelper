@@ -103,6 +103,11 @@ import dedent from "dedent";
 		return Array.from(new Intl.Segmenter("en", { granularity: "grapheme" }).segment(this.valueOf()), ({ segment }) => segment);
 	});
 
+	String.prototype.splitOnce = function (sep) {
+		const separatorIndex = this.indexOf(sep);
+		return separatorIndex === -1 ? [this.valueOf()] as never : [this.slice(0, separatorIndex), this.slice(separatorIndex + 1)];
+	};
+
 	makePrototypeKeysNonEnumerable(String);
 }
 

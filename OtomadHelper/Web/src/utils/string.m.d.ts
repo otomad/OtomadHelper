@@ -355,4 +355,18 @@ declare interface String {
 	 * combining diacritical marks.
 	 */
 	readonly graphemes: string[];
+
+	/**
+	 * Splits a string into two parts at the first occurrence of a separator.
+	 * @param sep - The separator to split on.
+	 * @returns A tuple containing the part before the separator and optionally the part after it.
+	 * If the separator is not found, returns a tuple with only the original string.
+	 * @example
+	 * ```javascript
+	 * splitOnce("hello:world", ":"); // ["hello", "world"]
+	 * splitOnce("hello", ":"); // ["hello"]
+	 * splitOnce("hello:world:again", ":"); // ["hello", "world:again"]
+	 * ```
+	 */
+	splitOnce(sep: string): [before: string, after: string];
 }

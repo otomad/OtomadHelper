@@ -3,8 +3,9 @@ const DURATION = 350;
 export default function DynamicAutoSize({ specified, skipTransition, children }: FCP<{
 	/** Explicitly specify which direction needs to be animated. Defaults to height animation. */
 	specified?: "width" | "height" | "both";
-	/** Temporarily lock the content size? */
+	// /** Temporarily lock the content size? */
 	// lockSize?: boolean;
+	/** Selectively skip transitions based on element predicates. */
 	skipTransition?(el: HTMLElement): boolean;
 }, "section">) {
 	const el = useDomRef<"section">();
