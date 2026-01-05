@@ -16,6 +16,5 @@ watch(get => {
 	b.lyrics = [c.lyrics.enabled, ytpWarn];
 	b.shupelunker = [c.shupelunker.enabled, ytpWarn];
 	b.ytp = [c.ytp.enabled];
-	const layoutEnabledCount = [c.track.grid.enabled, c.track.box3d.enabled, c.track.gradient.enabled].toCompacted().length;
-	b.track = [layoutEnabledCount, "accent", layoutEnabledCount === 0];
+	b.track = [c.track.grid.enabled || c.track.concentric.enabled || c.track.box3d.enabled || c.track.gradient.enabled];
 });
