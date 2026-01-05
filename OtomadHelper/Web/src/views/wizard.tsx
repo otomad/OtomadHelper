@@ -1,4 +1,5 @@
 import exampleThumbnail from "assets/images/ヨハネの氷.avif";
+import Score from "./score";
 
 export default function Wizard() {
 	const mode = useKichikuMode();
@@ -46,6 +47,10 @@ export default function Wizard() {
 			<Subheader>{t.titles.visual}</Subheader>
 			<SettingsCardToggleSwitch on={visualEnabled} title={t.stream.enabled.visual} icon="lightbulb" />
 			<SettingsCardToggleSwitch disabled={ytpEnabled || !visualEnabled[0]} on={hFlipEnabled} title={t.prve.effects.hFlip} details={t.descriptions.prve.hFlip} icon="flip_h" />
+
+			<Activity visible={!ytpEnabled}>
+				<Score _trackSelectorOnly />
+			</Activity>
 
 			<InfoBar
 				title={t.empty.wizardMode.title}

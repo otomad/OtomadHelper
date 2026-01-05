@@ -11,7 +11,6 @@ export default [
 			"Fragment",
 			"useOptimistic",
 			"useEffectEvent",
-			"Activity",
 		],
 		"react-dom/client": [
 			["*", "ReactDOM"],

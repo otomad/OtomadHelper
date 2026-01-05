@@ -118,7 +118,10 @@ const MultipleSelectTrackItemsContainer = styled.div`
 
 const selectedEncodingTagAtom = atom<EncodingTagGroup>("all");
 
-export default function Score() {
+export default function Score({ _trackSelectorOnly = false }: {
+	/** @private Show track selector only? */
+	_trackSelectorOnly?: boolean;
+}) {
 	const {
 		format, encoding, tempoUsing, customTempo,
 		trimEnabled, trimStart, trimEnd, periodicityEnabled, periodicityPreset, periodicityInterval, periodicityBits, pitchRangeEnabled, pitchRange,
@@ -223,6 +226,85 @@ export default function Score() {
 		}, [0, 0]);
 	}, [isMultiple, selectedTrack, selectTrackItems, getAllMultipleSelectTrackItemSet]);
 
+	const trackSelector = tracks.length > 0 && (
+		<>
+			<Subheader>{withObject(t(tracks.length).score, t => trackOrChannel[0] === "channel" ? t.channel : t.musicalTrack)}</Subheader>
+			<TrackToolbar>
+				<div className="left">
+					<CssTransition in={isMultiple} timeout={250} hiddenOnExit requestAnimationFrame>
+						<div className="content">
+							<Checkbox value={selectAll} dynamicFontWeight={selectAllFontWeight}>{t.selectAll}</Checkbox>
+							<Button subtle icon="invert_selection" onClick={selectAll[2]}>{t.invertSelection}</Button>
+							<Badge>{(selectedTrack as number[]).length ?? 1}</Badge>
+						</div>
+					</CssTransition>
+				</div>
+				<Segmented current={selectionMode}>
+					<Segmented.Item id="single" icon="single_select">{t.selectionMode.single}</Segmented.Item>
+					<Segmented.Item id="multiple" icon="multiselect">{t.selectionMode.multiple}</Segmented.Item>
+				</Segmented>
+			</TrackToolbar>
+			<ItemsView view="list" multiple={isMultiple} multipleChangeable current={[selectedTrack, setSelectedTrack]} indeterminatenesses={indeterminatenesses}>
+				{tracks.map((track, index) => {
+					let beginNote = new Pitch(track.beginNote).spn;
+					if (track.isDrumKit) beginNote = tf.shared.midi.percussions[track.beginNote] ?? `${tf.shared.midi.unknown} (${beginNote})`;
+					const inst = tf.shared.midi.instruments[track.inst] ?? tf.shared.midi.unknown;
+					// 	{ channel: 1, name: "Lead", noteCount: 100, beginNote: "C5", pan: t.variableBeginWith({ first: t.score.pan.left }), isDrumKit: false, inst: "Sawtooth" },
+					const pan = !track.pan.endsWith("Variable") ? t.score.pan[track.pan] : t.variableBeginWith({ first: t.score.pan[track.pan.replaceEnd("Variable")] });
+					return (
+						<ItemsView.Item
+							key={index}
+							id={index}
+							onClick={handleTrackClick}
+							details={(
+								<>
+									<SubgridLayout className="row" name="score-track-note-details">
+										<p><Icon name="music_note" />{t.score.noteCount}{t.colon}{track.noteCount}</p>
+										<p><Icon name="start_point" />{t.score.beginNote}{t.colon}{beginNote}</p>
+										<p><Icon name="stereo" />{t.score.pan}{t.colon}{pan}</p>
+									</SubgridLayout>
+									<SubgridLayout className="row" name="score-track-note-details">
+										{track.isDrumKit && <p><Icon name="drum" />{t.score.drumKit}</p>}
+										<p className="span-to-end"><Icon name="instrument" />{t.score.instrument}{t.colon}{inst}</p>
+									</SubgridLayout>
+								</>
+							)}
+							actions={(
+								<>
+									{!_trackSelectorOnly && (
+										<CssTransition in={isMultiple} timeout={250} hiddenOnExit requestAnimationFrame>
+											<MultipleSelectTrackItemsContainer>
+												{Array.from(getAllMultipleSelectTrackItemSet(track), item => !track.isDrumKit && item === "sonar" ? undefined : (
+													<Tooltip key={item} placement="block" title={t.titles[item]}>
+														<ToggleButton
+															icon={redirectIcon(item)}
+															appearance="subtle"
+															checked={[selectTrackItems[index]?.has(item)]}
+															onClick={() => handleTrackItemsClick(index, item)}
+														/>
+													</Tooltip>
+												))}
+											</MultipleSelectTrackItemsContainer>
+										</CssTransition>
+									)}
+									<Tooltip placement="block" title={t.play}>
+										<Button icon="play" minWidthUnbounded />
+									</Tooltip>
+								</>
+							)}
+						>
+							<SubgridLayout name="score-track-name">
+								{track.channel != null && <div className="badge-wrapper"><Badge transitionOnAppear={false}>{track.channel}</Badge></div>}
+								<span>{track.name}</span>
+							</SubgridLayout>
+						</ItemsView.Item>
+					);
+				})}
+			</ItemsView>
+		</>
+	);
+	if (_trackSelectorOnly) return trackSelector;
+
 	return (
 		<div className="container">
 			{ytpEnabled && <InfoBar status="warning" title={t.descriptions.score.ytpEnabled} button={<EmptyMessage.YtpDisabled.Buttons />} />}
@@ -324,81 +406,7 @@ export default function Score() {
 				)}
 			/>
 
-			{tracks.length > 0 && (
-				<>
-					<Subheader>{withObject(t(tracks.length).score, t => trackOrChannel[0] === "channel" ? t.channel : t.musicalTrack)}</Subheader>
-					<TrackToolbar>
-						<div className="left">
-							<CssTransition in={isMultiple} timeout={250} hiddenOnExit requestAnimationFrame>
-								<div className="content">
-									<Checkbox value={selectAll} dynamicFontWeight={selectAllFontWeight}>{t.selectAll}</Checkbox>
-									<Button subtle icon="invert_selection" onClick={selectAll[2]}>{t.invertSelection}</Button>
-									<Badge>{(selectedTrack as number[]).length ?? 1}</Badge>
-								</div>
-							</CssTransition>
-						</div>
-						<Segmented current={selectionMode}>
-							<Segmented.Item id="single" icon="single_select">{t.selectionMode.single}</Segmented.Item>
-							<Segmented.Item id="multiple" icon="multiselect">{t.selectionMode.multiple}</Segmented.Item>
-						</Segmented>
-					</TrackToolbar>
-					<ItemsView view="list" multiple={isMultiple} multipleChangeable current={[selectedTrack, setSelectedTrack]} indeterminatenesses={indeterminatenesses}>
-						{tracks.map((track, index) => {
-							let beginNote = new Pitch(track.beginNote).spn;
-							if (track.isDrumKit) beginNote = tf.shared.midi.percussions[track.beginNote] ?? `${tf.shared.midi.unknown} (${beginNote})`;
-							const inst = tf.shared.midi.instruments[track.inst] ?? tf.shared.midi.unknown;
-							// 	{ channel: 1, name: "Lead", noteCount: 100, beginNote: "C5", pan: t.variableBeginWith({ first: t.score.pan.left }), isDrumKit: false, inst: "Sawtooth" },
-							const pan = !track.pan.endsWith("Variable") ? t.score.pan[track.pan] : t.variableBeginWith({ first: t.score.pan[track.pan.replaceEnd("Variable")] });
-							return (
-								<ItemsView.Item
-									key={index}
-									id={index}
-									onClick={handleTrackClick}
-									details={(
-										<>
-											<SubgridLayout className="row" name="score-track-note-details">
-												<p><Icon name="music_note" />{t.score.noteCount}{t.colon}{track.noteCount}</p>
-												<p><Icon name="start_point" />{t.score.beginNote}{t.colon}{beginNote}</p>
-												<p><Icon name="stereo" />{t.score.pan}{t.colon}{pan}</p>
-											</SubgridLayout>
-											<SubgridLayout className="row" name="score-track-note-details">
-												{track.isDrumKit && <p><Icon name="drum" />{t.score.drumKit}</p>}
-												<p className="span-to-end"><Icon name="instrument" />{t.score.instrument}{t.colon}{inst}</p>
-											</SubgridLayout>
-										</>
-									)}
-									actions={(
-										<>
-											<CssTransition in={isMultiple} timeout={250} hiddenOnExit requestAnimationFrame>
-												<MultipleSelectTrackItemsContainer>
-													{Array.from(getAllMultipleSelectTrackItemSet(track), item => !track.isDrumKit && item === "sonar" ? undefined : (
-														<Tooltip key={item} placement="block" title={t.titles[item]}>
-															<ToggleButton
-																icon={redirectIcon(item)}
-																appearance="subtle"
-																checked={[selectTrackItems[index]?.has(item)]}
-																onClick={() => handleTrackItemsClick(index, item)}
-															/>
-														</Tooltip>
-													))}
-												</MultipleSelectTrackItemsContainer>
-											</CssTransition>
-											<Tooltip placement="block" title={t.play}>
-												<Button icon="play" minWidthUnbounded />
-											</Tooltip>
-										</>
-									)}
-								>
-									<SubgridLayout name="score-track-name">
-										{track.channel != null && <div className="badge-wrapper"><Badge transitionOnAppear={false}>{track.channel}</Badge></div>}
-										<span>{track.name}</span>
-									</SubgridLayout>
-								</ItemsView.Item>
-							);
-						})}
-					</ItemsView>
-				</>
-			)}
+			{trackSelector}
 
 			<DragToImport>{t.titles.score}</DragToImport>
 		</div>
