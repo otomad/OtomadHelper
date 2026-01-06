@@ -783,7 +783,7 @@ export default {
 			clawer: "Clawer",
 			services: "Services",
 			variableTempo: "Variable Tempo",
-			ultraPaste: "Ultra Paste",
+			ultraPaste: "Ultra Paste!",
 		},
 		selectInfo: {
 			source: "{{count}} media source has been selected",
