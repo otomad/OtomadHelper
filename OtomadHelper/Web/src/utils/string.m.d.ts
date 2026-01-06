@@ -358,15 +358,32 @@ declare interface String {
 
 	/**
 	 * Splits a string into two parts at the first occurrence of a separator.
+	 * @remarks In theory, the performance will be higher than the `split()` method.
 	 * @param sep - The separator to split on.
-	 * @returns A tuple containing the part before the separator and optionally the part after it.
+	 * @returns A tuple containing the part before the first occurrence of the separator and optionally the part after it.
 	 * If the separator is not found, returns a tuple with only the original string.
 	 * @example
 	 * ```javascript
+	 * splitOnce("hello:world:again", ":"); // ["hello", "world:again"]
 	 * splitOnce("hello:world", ":"); // ["hello", "world"]
 	 * splitOnce("hello", ":"); // ["hello"]
-	 * splitOnce("hello:world:again", ":"); // ["hello", "world:again"]
+	 * splitOnce("data:image/jpeg;base64,/9j/4AAQ", ","); // ["data:image/jpeg;base64", "/9j/4AAQ"]
 	 * ```
 	 */
 	splitOnce(sep: string): [before: string, after: string];
+
+	/**
+	 * Splits a string into two parts at the last occurrence of a separator.
+	 * @remarks In theory, the performance will be higher than the `split()` method.
+	 * @param sep - The separator to split on.
+	 * @returns A tuple containing the part before the last occurrence of the separator and optionally the part after it.
+	 * If the separator is not found, returns a tuple with only the original string.
+	 * @example
+	 * ```javascript
+	 * splitLastOnce("hello:world:again", ":"); // ["hello:world", "again"]
+	 * splitLastOnce("hello:world", ":"); // ["hello", "world"]
+	 * splitLastOnce("hello", ":"); // ["hello"]
+	 * ```
+	 */
+	splitLastOnce(sep: string): [before: string, after: string];
 }

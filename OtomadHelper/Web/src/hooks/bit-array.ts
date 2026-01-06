@@ -36,7 +36,7 @@ export function bitArrayToBase64(bitArray: Uint8Array | Uint8ClampedArray | numb
 }
 
 export function base64ToBitArray(base64: string) {
-	const [data, paddingBits_string] = base64.split("-");
+	const [data, paddingBits_string] = base64.splitLastOnce("-");
 	const paddingBits = +(paddingBits_string ?? 0);
 	const byteArray = Uint8Array.fromBase64(data);
 	const bitArray = new Uint8Array(byteArray.length * 8 - paddingBits);

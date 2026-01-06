@@ -108,6 +108,11 @@ import dedent from "dedent";
 		return separatorIndex === -1 ? [this.valueOf()] as never : [this.slice(0, separatorIndex), this.slice(separatorIndex + 1)];
 	};
 
+	String.prototype.splitLastOnce = function (sep) {
+		const separatorIndex = this.lastIndexOf(sep);
+		return separatorIndex === -1 ? [this.valueOf()] as never : [this.slice(0, separatorIndex), this.slice(separatorIndex + 1)];
+	};
+
 	makePrototypeKeysNonEnumerable(String);
 }
 
