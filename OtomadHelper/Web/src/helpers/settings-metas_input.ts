@@ -464,7 +464,7 @@ function legato(stream: StreamKind | "track") {
 		items: {
 			duration: { icon: "timer", title: t.stream.legato.duration },
 			atLeast: { icon: "add", title: t.stream.legato.atLeast, details: t.descriptions.stream.legato.atLeast },
-			mode: { icon: "radio_button", title: t.track.legato.mode },
+			mode: { icon: "wrench", title: t.track.legato.mode },
 			stretchKeyframes: { icon: "time_stretch_keyframes", title: t.track.legato.stretchKeyframes },
 			...stream === "track" ? {
 				forClips: { icon: "track_event" },
