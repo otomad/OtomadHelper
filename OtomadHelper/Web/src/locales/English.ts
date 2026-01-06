@@ -108,8 +108,8 @@ export default {
 				effect: "Effect name",
 			},
 			multisource: "Special multisource",
-			secretBox: {
-				_: "Secret box",
+			luckyDip: {
+				_: "Lucky dip",
 				limitToSelected: "Limited to selected sources",
 				track: "For each track or channel",
 				marker: "Switch once per marker",
@@ -1035,7 +1035,7 @@ export default {
 				multisource: {
 					ytpEnabled: "YTP feature is enabled and these features are currently unconfigurable.",
 				},
-				secretBox: {
+				luckyDip: {
 					_: "Randomizes in points for the source.\nThis can result in randomly selected source clips having different base pitches, making it useful only for creating funny videos for entertainment purposes, and barely used for creating high-caliber videos.",
 					limitToSelected: "Randomly switches among the selected multiple sources instead of using completely random in points",
 					track: "Whether track or channel depends on the Score",
@@ -1055,7 +1055,7 @@ export default {
 					_: "Select multiple sources that will be applied in turn by auto beat sync / match cut",
 					order: "Specify the application sequential order of sources",
 					loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
-					secretBox: "No need to select multiple sources, just select one long source. Then it will randomly select the in point of each clips.",
+					luckyDip: "No need to select multiple sources, just select one long source. Then it will randomly select the in point of each clips.",
 				},
 				linearMap: {
 					_: "Select multiple sources that will be mapped to available tracks in order (excess sources or tracks will be omitted)",
@@ -1535,7 +1535,7 @@ export default {
 					trackName: "Track name, Track group name, Name for tracks, Name for track groups", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 					clipName: "Clip name, Track event name, Name for track events", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				},
-				secretBox: "Blind box, Gacha", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				luckyDip: "Secret box, Mystery box, Blind box, Gacha, Gashapon, Gachapon, Grab bag, Surprise me", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
 			score: {
 				tempo: "Speed, BPM", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.

@@ -101,7 +101,7 @@ export default {
 				effect: "效果名",
 			},
 			multisource: "特殊多素材作用",
-			secretBox: {
+			luckyDip: {
 				_: "素材盲盒",
 				limitToSelected: "限制在所选素材",
 				track: "为每条音轨或通道",
@@ -996,7 +996,7 @@ export default {
 				multisource: {
 					ytpEnabled: "YTP功能启用时不可配置这些功能。",
 				},
-				secretBox: {
+				luckyDip: {
 					_: "随机化素材入点。\n这可能会导致随机挑取的素材片段具有不同的原始音高，因此只能用来做成搞笑视频供娱乐，几乎不能做成高品质视频。",
 					limitToSelected: "仅在所选的多素材之间随机切换，而不是使用完全随机的入点",
 					track: "究竟是音轨还是通道取决于乐曲配置",
@@ -1016,7 +1016,7 @@ export default {
 					_: "点选多项素材，将通过自动踩点依次轮流应用这些素材",
 					order: "指定素材的应用次序",
 					loop: "禁用后，所需音符数超出所选素材数时会立即终止生成。请重新填充足够的素材或启用循环。",
-					secretBox: "无需挑选多项素材，只需点选一段长素材，它将自动随机挑取片段的入点",
+					luckyDip: "无需挑选多项素材，只需点选一段长素材，它将自动随机挑取片段的入点",
 				},
 				linearMap: {
 					_: "点选多项素材，它们将依次映射到可用音轨（多余的素材或音轨会被剔除）",
@@ -1482,7 +1482,7 @@ export default {
 					trackName: "轨道名、轨道组名",
 					clipName: "片段名、轨道事件名",
 				},
-				secretBox: "素材盲箱、抽卡、扭蛋",
+				luckyDip: "素材盲箱、抽卡、扭蛋",
 			},
 			score: {
 				tempo: "BPM",

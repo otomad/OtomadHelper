@@ -39,7 +39,7 @@ export default {
 			},
 			trackGroup: {},
 			naming: {},
-			secretBox: {
+			luckyDip: {
 				barOrBeat: {},
 			},
 		},
@@ -369,7 +369,7 @@ export default {
 				trackGroup: {},
 				naming: {},
 				multisource: {},
-				secretBox: {
+				luckyDip: {
 					barOrBeat: {},
 				},
 				consonant: {},

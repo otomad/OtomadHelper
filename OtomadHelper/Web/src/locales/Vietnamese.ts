@@ -82,7 +82,7 @@ export default {
 				media: "Tên phương tiện nguồn",
 				unnamed: "Không tên",
 			},
-			secretBox: {
+			luckyDip: {
 				_: "Hộp bí mật",
 				limitToSelected: "Nguồn đã chọn bị giới hạn",
 				track: "Với mỗi track hoặc channel",
@@ -751,7 +751,7 @@ export default {
 				},
 				naming: {},
 				multisource: {},
-				secretBox: {
+				luckyDip: {
 					_: "Ngẫu nhiên hóa với điểm vào của nguồn.\nĐiều này có thể dẫn đến việc các clip nguồn được chọn ngẫu nhiên có các cao độ cơ bản khác nhau, khiến nó chỉ hữu ích khi tạo video hài hước nhằm mục đích giải trí và hiếm khi được sử dụng để tạo video chất lượng cao.",
 					limitToSelected: "Chuyển đổi ngẫu nhiên giữa nhiều nguồn đã chọn thay vì sử dụng hoàn toàn ngẫu nhiên điểm vào",
 					track: "Cho dù track hay channel phụ thuộc vào Bản nhạc",

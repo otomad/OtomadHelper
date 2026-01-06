@@ -42,7 +42,7 @@ export const settingsMetasInput = {
 			},
 		},
 		multisource: subheader(),
-		secretBox: {
+		luckyDip: {
 			icon: "question_square",
 			items: {
 				limitToSelected: { icon: "video_clip_multiple_checkmark" },
@@ -63,9 +63,9 @@ export const settingsMetasInput = {
 			items: {
 				order: { icon: "arrow_sort_horizontal", title: t.order },
 				loop: { icon: "arrow_repeat_all", title: t.stream.loop },
-				secretBox: {
-					title: t.source.secretBox,
-					aliases: [t.aliases.source.secretBox],
+				luckyDip: {
+					title: t.source.luckyDip,
+					aliases: [t.aliases.source.luckyDip],
 					icon: "question_square",
 				},
 			},

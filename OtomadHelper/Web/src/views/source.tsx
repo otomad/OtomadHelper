@@ -84,8 +84,8 @@ export default function Source() {
 		sourceFrom, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack], unsetBorrowedTrackName,
 		trackGroup, collapseTrackGroup, otomadTrackName, vocaloidTrackName, ytpTrackName, otomadClipName, vocaloidClipName, ytpClipName,
-		secretBox, consonant, matchCut, matchCutOrder, matchCutLoop, matchCutSecretBox, linearMap, linearMapDescending,
-		secretBoxLimitToSelected, secretBoxForTrack, secretBoxForMarker, secretBoxForBarOrBeat, secretBoxForBarOrBeatPeriod, secretBoxForBarOrBeatPreparation,
+		luckyDip, consonant, matchCut, matchCutOrder, matchCutLoop, matchCutLuckyDip, linearMap, linearMapDescending,
+		luckyDipLimitToSelected, luckyDipForTrack, luckyDipForMarker, luckyDipForBarOrBeat, luckyDipForBarOrBeatPeriod, luckyDipForBarOrBeatPreparation,
 	} = useSelectConfig(c => c.source);
 	const { removeSourceClips, removeSourceClipsWithTracks, selectSourceClips, selectGeneratedClips: _selectGeneratedClips } = useSelectConfig(c => c.source.afterCompletion);
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
@@ -95,7 +95,7 @@ export default function Source() {
 
 	mutexSwitches(removeSourceClips, selectSourceClips);
 	mutexSwitches(removeSourceClipsWithTracks, selectSourceClips);
-	mutexSwitches(secretBox, consonant, matchCut, linearMap);
+	mutexSwitches(luckyDip, consonant, matchCut, linearMap);
 	useEffect(() => { removeSourceClipsWithTracks[0] && removeSourceClips[1](true); }, [removeSourceClipsWithTracks[0]]);
 	useEffect(() => { !removeSourceClips[0] && removeSourceClipsWithTracks[1](false); }, [removeSourceClips[0]]);
 
@@ -199,21 +199,21 @@ export default function Source() {
 			<Subheader meta={meta.multisource} />
 			{ytpEnabled && <InfoBar status="warning" title={t.descriptions.source.multisource.ytpEnabled} button={<EmptyMessage.YtpDisabled.Buttons />} />}
 			<Attrs disabled={ytpEnabled ? true : undefined}>
-				<Setting meta={meta.secretBox} selectInfo={ytpEnabled && t.descriptions.source.secretBox.ytpEnabled} on={secretBox}>
-					<Setting meta={meta.secretBox.limitToSelected} on={secretBoxLimitToSelected} />
-					<Setting meta={meta.secretBox.track} on={secretBoxForTrack} />
-					<Setting meta={meta.secretBox.marker} on={secretBoxForMarker} />
-					<Setting meta={meta.secretBox.barOrBeat} expanded={secretBoxForBarOrBeat} type="switch">
+				<Setting meta={meta.luckyDip} selectInfo={ytpEnabled && t.descriptions.source.luckyDip.ytpEnabled} on={luckyDip}>
+					<Setting meta={meta.luckyDip.limitToSelected} on={luckyDipLimitToSelected} />
+					<Setting meta={meta.luckyDip.track} on={luckyDipForTrack} />
+					<Setting meta={meta.luckyDip.marker} on={luckyDipForMarker} />
+					<Setting meta={meta.luckyDip.barOrBeat} expanded={luckyDipForBarOrBeat} type="switch">
 						<Setting
-							meta={meta.secretBox.barOrBeat.period}
+							meta={meta.luckyDip.barOrBeat.period}
 							actions={(
-								<TextBox.NumberUnit value={secretBoxForBarOrBeatPeriod} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={1} />
+								<TextBox.NumberUnit value={luckyDipForBarOrBeatPeriod} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={1} />
 							)}
 						/>
 						<Setting
-							meta={meta.secretBox.barOrBeat.preparation}
+							meta={meta.luckyDip.barOrBeat.preparation}
 							actions={(
-								<TextBox.NumberUnit value={secretBoxForBarOrBeatPreparation} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={0} />
+								<TextBox.NumberUnit value={luckyDipForBarOrBeatPreparation} units={barOrBeatUnitTypes} unitNames={(unit, count) => t(count).units[unit]} decimalPlaces={0} min={0} />
 							)}
 						/>
 					</Setting>
@@ -235,7 +235,7 @@ export default function Source() {
 						)}
 					/>
 					<Setting meta={meta.matchCut.loop} on={matchCutLoop} />
-					<Setting meta={meta.matchCut.secretBox} on={matchCutSecretBox} />
+					<Setting meta={meta.matchCut.luckyDip} on={matchCutLuckyDip} />
 				</Setting>
 				<Setting meta={meta.linearMap} on={linearMap}>
 					<Setting meta={meta.linearMap.descending} on={linearMapDescending} />

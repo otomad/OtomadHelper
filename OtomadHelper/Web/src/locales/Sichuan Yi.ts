@@ -102,7 +102,7 @@ export default {
 				effect: "crwdns5578:0crwdne5578:0",
 			},
 			multisource: "crwdns4160:0crwdne4160:0",
-			secretBox: {
+			luckyDip: {
 				_: "crwdns2956:0crwdne2956:0",
 				limitToSelected: "crwdns3968:0crwdne3968:0",
 				track: "crwdns2958:0crwdne2958:0",
@@ -997,7 +997,7 @@ export default {
 				multisource: {
 					ytpEnabled: "crwdns4286:0crwdne4286:0",
 				},
-				secretBox: {
+				luckyDip: {
 					_: "crwdns3196:0crwdne3196:0",
 					limitToSelected: "crwdns3970:0crwdne3970:0",
 					track: "crwdns3030:0crwdne3030:0",
@@ -1017,7 +1017,7 @@ export default {
 					_: "crwdns4608:0crwdne4608:0",
 					order: "crwdns4516:0crwdne4516:0",
 					loop: "crwdns4518:0crwdne4518:0",
-					secretBox: "crwdns4520:0crwdne4520:0",
+					luckyDip: "crwdns4520:0crwdne4520:0",
 				},
 				linearMap: {
 					_: "crwdns4290:0crwdne4290:0",
@@ -1484,7 +1484,7 @@ export default {
 					trackName: "crwdns5648:0crwdne5648:0",
 					clipName: "crwdns5650:0crwdne5650:0",
 				},
-				secretBox: "crwdns4620:0crwdne4620:0",
+				luckyDip: "crwdns4620:0crwdne4620:0",
 			},
 			score: {
 				tempo: "crwdns4622:0crwdne4622:0",
