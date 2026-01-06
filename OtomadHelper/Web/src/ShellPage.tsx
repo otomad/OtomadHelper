@@ -5,7 +5,7 @@ function EmptyPage() {
 }
 
 const navItems = ["home", "source", "score", "audio", "visual", "track", "sonar", "lyrics", "shupelunker", "ytp"] as const;
-const navToolItems = ["management", "mosh", "tools", "wizard"] as const;
+const navToolItems = ["tools", "mosh", "management", "wizard"] as const;
 const bottomNavItems = ["settings"] as const;
 
 export function redirectIcon(name: string): DeclaredIcons & DeclaredLotties {
