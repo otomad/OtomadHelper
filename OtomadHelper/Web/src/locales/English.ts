@@ -108,6 +108,8 @@ export default {
 				effect: "Effect name",
 			},
 			multisource: "Special multisource",
+			linearMap: "Linear map output",
+			matchCut: "Beat sync / Match cut",
 			luckyDip: {
 				_: "Lucky dip",
 				limitToSelected: "Limited to selected sources",
@@ -120,8 +122,6 @@ export default {
 				},
 			},
 			consonant: "Consonant time",
-			matchCut: "Beat sync / Match cut",
-			linearMap: "Linear map output",
 		},
 		on: "On", // The label next to a toggle switch.
 		off: "Off", // The label next to a toggle switch.
@@ -1035,6 +1035,16 @@ export default {
 				multisource: {
 					ytpEnabled: "YTP feature is enabled and these features are currently unconfigurable.",
 				},
+				linearMap: {
+					_: "Select multiple sources that will be mapped to available tracks in order (excess sources or tracks will be omitted)",
+					descending: "Reverses the order of the tracks to map (note that it is not the order of the selected sources)",
+				},
+				matchCut: {
+					_: "Select multiple sources that will be applied in turn by auto beat sync / match cut",
+					order: "Specify the application sequential order of sources",
+					loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
+					luckyDip: "No need to select multiple sources, just select one long source. Then it will randomly select the in point of each clips.",
+				},
 				luckyDip: {
 					_: "Randomizes in points for the source.\nThis can result in randomly selected source clips having different base pitches, making it useful only for creating funny videos for entertainment purposes, and barely used for creating high-caliber videos.",
 					limitToSelected: "Randomly switches among the selected multiple sources instead of using completely random in points",
@@ -1050,16 +1060,6 @@ export default {
 				consonant: {
 					_: "To prevent consonants from being stretched or delayed, you can separate the consonant and vowel parts of the same audio or video source so that special optimization can be applied to the consonant part of the source.\nIf at least two audio or video clips are selected, the first clip is considered the initial consonant part, the second clip is considered the vowel part, and the third segment (if any) is considered the final consonant part.",
 					manualEnabled: "In Sentence Mixing mode, this feature is enabled automatically.",
-				},
-				matchCut: {
-					_: "Select multiple sources that will be applied in turn by auto beat sync / match cut",
-					order: "Specify the application sequential order of sources",
-					loop: "When disabled, the generation will be stopped immediately when the number of notes required exceeds the number of selected sources. Either refill enough sources or enable Loop.",
-					luckyDip: "No need to select multiple sources, just select one long source. Then it will randomly select the in point of each clips.",
-				},
-				linearMap: {
-					_: "Select multiple sources that will be mapped to available tracks in order (excess sources or tracks will be omitted)",
-					descending: "Reverses the order of the tracks to map (note that it is not the order of the selected sources)",
 				},
 			},
 			score: {

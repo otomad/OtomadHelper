@@ -42,6 +42,24 @@ export const settingsMetasInput = {
 			},
 		},
 		multisource: subheader(),
+		linearMap: {
+			icon: "launchpad",
+			items: {
+				descending: { icon: "descending", title: t.descending },
+			},
+		},
+		matchCut: {
+			icon: "flag_auto_beat",
+			items: {
+				order: { icon: "arrow_sort_horizontal", title: t.order },
+				loop: { icon: "arrow_repeat_all", title: t.stream.loop },
+				luckyDip: {
+					title: t.source.luckyDip,
+					aliases: [t.aliases.source.luckyDip],
+					icon: "question_square",
+				},
+			},
+		},
 		luckyDip: {
 			icon: "question_square",
 			items: {
@@ -58,24 +76,6 @@ export const settingsMetasInput = {
 			},
 		},
 		consonant: { icon: "consonant" },
-		matchCut: {
-			icon: "flag_auto_beat",
-			items: {
-				order: { icon: "arrow_sort_horizontal", title: t.order },
-				loop: { icon: "arrow_repeat_all", title: t.stream.loop },
-				luckyDip: {
-					title: t.source.luckyDip,
-					aliases: [t.aliases.source.luckyDip],
-					icon: "question_square",
-				},
-			},
-		},
-		linearMap: {
-			icon: "launchpad",
-			items: {
-				descending: { icon: "descending", title: t.descending },
-			},
-		},
 	},
 	score: {
 		from: { icon: "instrument" },

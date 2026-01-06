@@ -199,6 +199,21 @@ export default function Source() {
 			<Subheader meta={meta.multisource} />
 			{ytpEnabled && <InfoBar status="warning" title={t.descriptions.source.multisource.ytpEnabled} button={<EmptyMessage.YtpDisabled.Buttons />} />}
 			<Attrs disabled={ytpEnabled ? true : undefined}>
+				<Setting meta={meta.linearMap} on={linearMap}>
+					<Setting meta={meta.linearMap.descending} on={linearMapDescending} />
+				</Setting>
+				<Setting meta={meta.matchCut} on={matchCut}>
+					<Setting
+						meta={meta.matchCut.order}
+						actions={(
+							<Segmented current={matchCutOrder}>
+								{sequentialOrders.map(({ id, icon }) => <Segmented.Item id={id} key={id} icon={icon}>{t[id]}</Segmented.Item>)}
+							</Segmented>
+						)}
+					/>
+					<Setting meta={meta.matchCut.loop} on={matchCutLoop} />
+					<Setting meta={meta.matchCut.luckyDip} on={matchCutLuckyDip} />
+				</Setting>
 				<Setting meta={meta.luckyDip} selectInfo={ytpEnabled && t.descriptions.source.luckyDip.ytpEnabled} on={luckyDip}>
 					<Setting meta={meta.luckyDip.limitToSelected} on={luckyDipLimitToSelected} />
 					<Setting meta={meta.luckyDip.track} on={luckyDipForTrack} />
@@ -225,21 +240,6 @@ export default function Source() {
 					selectInfo={manualEnabled ? t.descriptions.source.consonant.manualEnabled : undefined}
 					selectValid={manualEnabled}
 				/>
-				<Setting meta={meta.matchCut} on={matchCut}>
-					<Setting
-						meta={meta.matchCut.order}
-						actions={(
-							<Segmented current={matchCutOrder}>
-								{sequentialOrders.map(({ id, icon }) => <Segmented.Item id={id} key={id} icon={icon}>{t[id]}</Segmented.Item>)}
-							</Segmented>
-						)}
-					/>
-					<Setting meta={meta.matchCut.loop} on={matchCutLoop} />
-					<Setting meta={meta.matchCut.luckyDip} on={matchCutLuckyDip} />
-				</Setting>
-				<Setting meta={meta.linearMap} on={linearMap}>
-					<Setting meta={meta.linearMap.descending} on={linearMapDescending} />
-				</Setting>
 			</Attrs>
 
 			<DragToImport>{t.titles.source}</DragToImport>
