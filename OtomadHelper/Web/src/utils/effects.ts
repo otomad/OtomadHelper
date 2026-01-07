@@ -12,9 +12,11 @@ function createFocusRing(el: Element | null, { borderRadius, portal = "main.page
 	const popovers = document.querySelector(portal) ?? document.getElementById("popovers") ?? document.body;
 	if (!el || !popovers) return;
 	const ring = document.createElement("div");
+	ring.dataset.focusRing = "";
 	ring.style.position = "fixed";
 	ring.style.pointerEvents = "none";
 	ring.style.transition = "none";
+	ring.style.zIndex = "calc(infinity)";
 	const computedStyle = getComputedStyle(el);
 	if (borderRadius === undefined) borderRadius = computedStyle.getPropertyValue("--focus-border-radius") || computedStyle.borderRadius;
 	if (borderRadius && borderRadius !== "0px") ring.style.borderRadius = borderRadius;

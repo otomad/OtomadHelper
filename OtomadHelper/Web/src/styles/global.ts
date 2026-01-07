@@ -338,7 +338,7 @@ const GlobalStyle = createGlobalStyle<{
 
 	// System requested high contrast theme.
 	@container style(--color-scheme-contrast: true) {
-		:not(.focus-highlight-ring) {
+		:not([data-focus-ring]) {
 			&,
 			&::before,
 			&::after {

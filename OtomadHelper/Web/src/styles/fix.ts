@@ -36,7 +36,7 @@ export default css`
 	}
 	// #endregion
 
-	main.page.exit .focus-highlight-ring {
+	main.page.exit [data-focus-ring] {
 		display: none;
 	}
 `;
