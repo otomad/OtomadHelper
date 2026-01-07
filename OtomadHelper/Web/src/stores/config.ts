@@ -11,7 +11,7 @@ import type { musicalNotationSystems } from "views/lyrics";
 import type { constrainNoteLengthTypes, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
 import type { systemBackdrops } from "views/settings";
 import type { textPlugins } from "views/settings/internal";
-import type { Namings, barOrBeatUnitTypes, selectGeneratedClipsType, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
+import type { Namings, SelectGeneratedClips, TrackGroupBy, barOrBeatUnitTypes, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
 import type { glissandoEffects, prerenders, stretches, transformMethods, truncates } from "views/visual";
 import ConfigNS = Config;
@@ -27,7 +27,7 @@ namespace Config {
 	export type PitchNotation = typeof musicalNotationSystems[number];
 	export type Timecode = string;
 	export type MultipleSelectTrackItem = typeof multipleSelectTrackItems[number];
-	export type SelectGeneratedClips = typeof selectGeneratedClipsType[number]["id"];
+	export type SelectGeneratedClips = typeof SelectGeneratedClips.keyType;
 	export type BeepEngine = typeof beepEngines[number];
 	export type BarOrBeatUnit = typeof barOrBeatUnitTypes[number];
 	export type SourceFrom = typeof sourceFromEnums[number];
@@ -61,8 +61,10 @@ namespace Config {
 	export type OtomadClipNameType = typeof Namings.otomadClipNames[number]["id"];
 	export type VocaloidClipNameType = typeof Namings.vocaloidClipNames[number]["id"];
 	export type YtpClipNameType = typeof Namings.ytpClipNames[number]["id"];
+	export type ScoredTrackNameType = typeof Namings.scoredTrackNames[number]["id"];
 	export type QuickIntervalSelectionPreset = typeof QuickIntervalSelectionPresets.keyType;
 	export type NegativeType = typeof NegativeTypes.keyType;
+	export type TrackGroupBy = typeof TrackGroupBy.keyType;
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -92,7 +94,7 @@ namespace Config {
 			},
 			preferredTrack: 0,
 			belowAdjustmentTracks: true,
-			trackGroup: true,
+			trackGroup: "byScoreTrack" satisfies TrackGroupBy as TrackGroupBy,
 			collapseTrackGroup: true,
 			unsetBorrowedTrackName: false,
 			otomadTrackName: "track" satisfies OtomadTrackNameType as OtomadTrackNameType,
@@ -101,6 +103,7 @@ namespace Config {
 			otomadClipName: "unset" satisfies OtomadClipNameType as OtomadClipNameType,
 			vocaloidClipName: "lyric" satisfies VocaloidClipNameType as VocaloidClipNameType,
 			ytpClipName: "effect" satisfies YtpClipNameType as YtpClipNameType,
+			groupByTaskSessionName: "score" satisfies ScoredTrackNameType as ScoredTrackNameType,
 			linearMap: false,
 			linearMapDescending: false,
 			matchCut: false,

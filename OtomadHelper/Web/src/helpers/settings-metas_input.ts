@@ -38,6 +38,7 @@ export const settingsMetasInput = {
 			items: {
 				trackName: { icon: "layer_rename" },
 				unsetBorrowedTrackName: { icon: "rename_off" },
+				groupByTaskSessionName: { icon: "group_rename" },
 				clipName: { icon: "track_event_rename" },
 			},
 		},

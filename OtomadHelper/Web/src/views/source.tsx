@@ -4,29 +4,25 @@ export /* @internal */ const startTimes = [
 	{ id: "cursor", name: t.source.startTime.cursor, icon: "text_cursor" },
 	{ id: "custom", name: t.custom, icon: "edit" },
 ] as const;
-/* const SelectGeneratedClips = Enum({
+export /* @internal */ const SelectGeneratedClips = Enum({
 	audio: { icon: "volume" },
 	visual: { icon: "image" },
 	staff: { icon: "g_clef" },
 	sonar: { icon: "sonar" },
 	lyrics: { icon: "lyrics" },
-}, { labelPrefix: t.titles }); */
-export /* @internal */ const selectGeneratedClipsType = [
-	{ id: "audio", name: t.titles.audio, icon: "volume" },
-	{ id: "visual", name: t.titles.visual, icon: "image" },
-	{ id: "staff", name: t.titles.staff, icon: "g_clef" },
-	{ id: "sonar", name: t.titles.sonar, icon: "sonar" },
-	{ id: "lyrics", name: t.titles.lyrics, icon: "lyrics" },
-] as const;
-const allSelectGeneratedClips = Object.freeze(selectGeneratedClipsType.map(item => item.id));
-const getAllSelectGeneratedClips = () => allSelectGeneratedClips.slice();
+}, { labelPrefix: t.titles });
+export /* @internal */ const TrackGroupBy = Enum({
+	ungrouped: { icon: "prohibited" },
+	byScoreTrack: { icon: "layer" },
+	byTaskSession: { icon: "chat_checkmark" },
+}, { labelPrefix: t.source.trackGroup });
 export /* @internal */ namespace Namings {
 	const baseTrackNames = [
 		{ id: "clip", name: t.source.naming.clip, icon: "track_event" },
 		{ id: "media", name: t.source.naming.media, icon: "media" },
 		{ id: "unnamed", name: t.source.naming.unnamed, icon: "prohibited" },
 	] as const;
-	const scoredTrackNames = [
+	export const scoredTrackNames = [
 		{ id: "score", name: t.source.naming.score, icon: "document_score" },
 		...baseTrackNames,
 	] as const;
@@ -83,7 +79,7 @@ export default function Source() {
 	const {
 		sourceFrom, trimStart, trimEnd, startTime, customStartTime,
 		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack], unsetBorrowedTrackName,
-		trackGroup, collapseTrackGroup, otomadTrackName, vocaloidTrackName, ytpTrackName, otomadClipName, vocaloidClipName, ytpClipName,
+		trackGroup, collapseTrackGroup, otomadTrackName, vocaloidTrackName, ytpTrackName, otomadClipName, vocaloidClipName, ytpClipName, groupByTaskSessionName,
 		luckyDip, consonant, matchCut, matchCutOrder, matchCutLoop, matchCutLuckyDip, linearMap, linearMapDescending,
 		luckyDipLimitToSelected, luckyDipForTrack, luckyDipForMarker, luckyDipForBarOrBeat, luckyDipForBarOrBeatPeriod, luckyDipForBarOrBeatPreparation,
 	} = useSelectConfig(c => c.source);
@@ -101,8 +97,8 @@ export default function Source() {
 
 	const selectGeneratedClips = useStateSelector(
 		_selectGeneratedClips,
-		items => typeof items === "boolean" ? getAllSelectGeneratedClips() : items === undefined ? [] : items,
-		items => new Set(items).equals(new Set(allSelectGeneratedClips)) ? true : items,
+		items => typeof items === "boolean" ? SelectGeneratedClips.keys : items === undefined ? [] : items,
+		items => new Set(items).equals(new Set(SelectGeneratedClips.keys)) ? true : items,
 		{ processPrevStateInSetterWithGetter: true },
 	);
 
@@ -144,8 +140,8 @@ export default function Source() {
 				<Setting meta={meta.afterCompletion.removeSourceClipsWithTracks} on={removeSourceClipsWithTracks} lock={lockRemoveOrSelectSourceClips} />
 				<Setting meta={meta.afterCompletion.selectSourceClips} on={selectSourceClips} lock={lockRemoveOrSelectSourceClips} />
 				<ItemsView view="tile" multiple current={selectGeneratedClips} selectAll={{ meta: meta.afterCompletion.selectGeneratedClips, icon: undefined }}>
-					{selectGeneratedClipsType.map(({ id, name, icon }) =>
-						<ItemsView.Item id={id} key={id} icon={icon}>{name}</ItemsView.Item>)}
+					{SelectGeneratedClips.map(({ key, label, icon }) =>
+						<ItemsView.Item id={key} key={key} icon={icon}>{label}</ItemsView.Item>)}
 				</ItemsView>
 			</Setting>
 
@@ -169,7 +165,13 @@ export default function Source() {
 					lock={isUnderVegas16 ? false : null}
 				/>
 			</Setting>
-			<Setting meta={meta.trackGroup} on={trackGroup}>
+			<Setting
+				meta={meta.trackGroup}
+				items={TrackGroupBy}
+				value={trackGroup}
+				view="tile"
+				parenOff
+			>
 				<Setting meta={meta.trackGroup.collapse} on={collapseTrackGroup} />
 			</Setting>
 			<NamingSetting meta={meta.naming}>
@@ -184,6 +186,11 @@ export default function Source() {
 					<ComboBox current={ytpTrackName} ids={Namings.ytpTrackNames.map(({ id }) => id)} options={Namings.ytpTrackNames.map(({ name }) => name)} icons={Namings.ytpTrackNames.map(({ icon }) => icon)} />
 				</Expander.Item>
 				<Setting meta={meta.naming.unsetBorrowedTrackName} on={unsetBorrowedTrackName} />
+				<Setting
+					meta={meta.naming.groupByTaskSessionName}
+					selectInfo={trackGroup[0] === "byTaskSession" && t.current}
+					actions={<ComboBox current={groupByTaskSessionName} ids={Namings.scoredTrackNames.map(({ id }) => id)} options={Namings.scoredTrackNames.map(({ name }) => name)} icons={Namings.scoredTrackNames.map(({ icon }) => icon)} />}
+				/>
 				<Setting meta={meta.naming.clipName} asSubtitle />
 				<Expander.Item title={t.mode.whichMode({ mode: t.mode.otomad })} selectInfo={mode === "otomad" && t.mode.current}>
 					<ComboBox current={otomadClipName} ids={Namings.otomadClipNames.map(({ id }) => id)} options={Namings.otomadClipNames.map(({ name }) => name)} icons={Namings.otomadClipNames.map(({ icon }) => icon)} />

@@ -86,13 +86,17 @@ export default {
 			},
 			trackGroup: {
 				_: "Grouping tracks",
+				ungrouped: "Ungrouped",
+				byScoreTrack: "Group by score track",
+				byTaskSession: "Group by task session",
 				collapse: "Collapse track groups by default",
 			},
 			naming: {
 				_: "Naming",
 				trackName: "Name for tracks and track groups",
 				clipName: "Name for clips",
-				unsetBorrowedTrackName: "Unset the name of the borrowed, existing track",
+				unsetBorrowedTrackName: "Unset the name of the borrowed existing track",
+				groupByTaskSessionName: "Name for track groups when grouped by task session and with multitrack",
 				track: "MIDI track name",
 				trackIndex: "MIDI track index",
 				instrument: "MIDI instrument name",
@@ -107,7 +111,7 @@ export default {
 				lyric: "Lyric syllable",
 				effect: "Effect name",
 			},
-			multisource: "Special multisource",
+			multisource: "Super multisource",
 			linearMap: "Linear map output",
 			matchCut: "Beat sync / Match cut",
 			luckyDip: {
@@ -192,6 +196,7 @@ export default {
 		filter: "Filter",
 		odd: "Odd",
 		even: "Even",
+		current: "Current",
 		infoBar: {
 			warning: "Warning",
 		},
