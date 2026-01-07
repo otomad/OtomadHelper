@@ -12,13 +12,14 @@ interface Props {
 type InheritFrom<T> = Props & PartialWith<T extends Function ? PropsOf<T> : T, keyof SettingMeta>;
 
 export default function Setting(props: InheritFrom<typeof SettingsCardToggleSwitch>): React.JSX.Element;
+export default function Setting(props: InheritFrom<typeof ToggleSwitch>): React.JSX.Element;
 export default function Setting<T extends AnyEnum>(props: InheritFrom<typeof ExpanderRadio.Enum<T>>): React.JSX.Element;
 export default function Setting<TItem, TKey extends PropertyKey>(props: InheritFrom<typeof ExpanderRadio<TItem, TKey>>): React.JSX.Element;
 export default function Setting(props: InheritFrom<Omit<PropsOf<typeof SettingsCard>, "children"> & { actions: PropsOf<typeof SettingsCard>["children"] }>): React.JSX.Element;
-export default function Setting(props: InheritFrom<typeof Expander>): React.JSX.Element;
 export default function Setting(props: InheritFrom<typeof Expander.Item>): React.JSX.Element;
+export default function Setting(props: InheritFrom<typeof Expander>): React.JSX.Element;
 export default function Setting(props: InheritFrom<typeof Expander.Sub>): React.JSX.Element;
-export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof SettingsCard | typeof SettingsCardToggleSwitch | typeof Expander | typeof ExpanderRadio | typeof Expander.Item | typeof Expander.Sub>) {
+export default function Setting({ meta: { meta }, ...props }: InheritFrom<typeof SettingsCard | typeof SettingsCardToggleSwitch | typeof Expander | typeof ExpanderRadio | typeof Expander.Item | typeof Expander.Sub | typeof ToggleSwitch>) {
 	const { lastGotoPath } = useSnapshot(pageStore);
 	const { path, cssPath, link, type } = meta;
 	// Act backstop unless explicit passing undefined.

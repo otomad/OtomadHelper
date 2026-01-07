@@ -196,8 +196,7 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 	useEffect(() => onToggle?.(internalExpanded), [internalExpanded]);
 	useEffect(() => { if (disabled || childrenDisabled) setInternalExpanded(false); }, [disabled, childrenDisabled]);
 	useTransientValue(_requestExpanded, expanded => { expanded && setInternalExpanded(true); }); // Set to true only, do not set to false.
-	const ariaId = useRef<string>(null);
-	const withAriaId = (suffix: string) => !ariaId.current ? undefined : ariaId.current + suffix;
+	const [, setAriaId, withAriaId] = useAriaIdRefState();
 
 	// When the header is sticky and user want to collapse the expander, it will go out of viewport.
 	function handleStickyCollapse(e: React.MouseEvent, combo = false) {
@@ -216,8 +215,8 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 				ref={ref}
 				type={childrenDisabled ? onClickWhenChildrenDisabled ? "button" : "container-but-button" : "expander"}
 				actionIcon="chevron_down"
-				ariaIdRef={ariaId}
-				aria-controls={withAriaId("-child")}
+				ariaIdRef={setAriaId}
+				aria-controls={withAriaId("children")}
 				aria-expanded={internalExpanded}
 				$expanded={internalExpanded}
 				$childrenDisabled={childrenDisabled}
@@ -241,8 +240,8 @@ export default function Expander({ icon, title, details, actions, expanded = fal
 					disabled={disabled || childrenDisabled}
 					className={{ clipChildren }}
 					role={childRole || undefined}
-					id={withAriaId("-child")}
-					aria-labelledby={withAriaId("-title")}
+					id={withAriaId("children")}
+					aria-labelledby={withAriaId("title")}
 				>
 					<ExpanderChildItems>
 						<ExpanderContext value={{ place: "children" }}>

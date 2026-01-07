@@ -15,11 +15,11 @@ const StyledSubExpander = styled.div`
 	> .expander-item {
 		padding-inline-end: 15px;
 
-		&:hover .action-icon {
+		&:hover:not(:has(.trailing > :not(.expander-chevron):hover)) .action-icon {
 			--state: hover;
 		}
 
-		&:active .action-icon {
+		&:active:not(:has(.trailing > :not(.expander-chevron):active)) .action-icon {
 			--state: active;
 		}
 
@@ -36,7 +36,8 @@ const StyledSubExpander = styled.div`
 			display: none;
 		}
 
-		> .expander-child-items:not(.no-indention) > :not(.no-indention, .info-bar) {
+		> .expander-child-items:not(.no-indentation) > :not(.no-indentation, .info-bar),
+		> .expander-child-items > .do-indentation {
 			padding-inline-start: ${expanderItemPadding[1]}px;
 		}
 
@@ -58,7 +59,7 @@ const StyledSubExpander = styled.div`
 	}
 `;
 
-export /* @internal */ default function SubExpander({ icon, title, details, disabled, expanded = false, _requestExpanded, type = "chevron", noIndention, anchor, actions, actuallyOn, children, onChange: _onChange, ...htmlAttrs }: FCP<{
+export /* @internal */ default function SubExpander({ icon, title, details, disabled, expanded = false, _requestExpanded, type = "chevron", noIndentation, anchor, actions, actuallyOn, asSubtitle, selectInfo, children, onChange: _onChange, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons;
 	/** Title. */
@@ -79,8 +80,8 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 	 * @default "chevron"
 	 */
 	type?: "chevron" | "switch";
-	/** Should not it auto add indention at the start of child items? */
-	noIndention?: boolean;
+	/** Should not it auto-add indentation at the start of child items? */
+	noIndentation?: boolean;
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
 	/** The other action control area on the right side of the component. */
@@ -97,7 +98,12 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 	 * @default undefined
 	 */
 	actuallyOn?: boolean;
+	/** As sub title style? (`"chevron"` type only.) */
+	asSubtitle?: PropsOf<typeof Expander.Item>["asSubtitle"];
+	/** Specifies the display string of the selection of tracks or track events. */
+	selectInfo?: ReactNode;
 }, GenericElement>) {
+	const [, setAriaId, withAriaId] = useAriaIdRefState();
 	let setExpanded: SetStateNarrow<boolean>;
 	const internalExpanded = useState(typeof expanded === "boolean" ? expanded : expanded[0]);
 	[expanded, setExpanded] = typeof expanded === "boolean" ? internalExpanded : expanded;
@@ -122,32 +128,43 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 						anchor={anchor}
 						actions={actions}
 						actuallyOn={actuallyOn}
+						ariaIdRef={setAriaId}
+						aria-controls={withAriaId("children")}
+						selectInfo={selectInfo}
 						{...htmlAttrs}
 					>
 						{title}
 					</ToggleSwitch>
 				) : (
-					<Expander.Item
-						title={title}
-						icon={icon}
-						details={details}
-						disabled={disabled}
-						anchor={anchor}
-						clickable
-						className={{ expanded }}
+					<ClickOnSameElement
 						onClick={() => setExpanded(expanded => !expanded)}
-						{...htmlAttrs}
 					>
-						{actions}
-						<div className={["action-icon", TRAILING_EXEMPTION, "expander-chevron"]} data-type={type}>
-							<Icon name="chevron_down" />
-						</div>
-					</Expander.Item>
+						<Expander.Item
+							title={title}
+							icon={icon}
+							details={details}
+							disabled={disabled}
+							anchor={anchor}
+							clickable
+							asSubtitle={asSubtitle}
+							ariaIdRef={setAriaId}
+							aria-expanded={expanded}
+							aria-controls={withAriaId("children")}
+							className={{ expanded }}
+							selectInfo={selectInfo}
+							{...htmlAttrs}
+						>
+							{actions}
+							<div className={["action-icon", TRAILING_EXEMPTION, "expander-chevron"]} data-type={type}>
+								<Icon name="chevron_down" />
+							</div>
+						</Expander.Item>
+					</ClickOnSameElement>
 				)
 			}
 			<CssTransition in={expanded || requestExpanded} unmountOnExit transitionEndProperty={["height", "block-size"]} requestAnimationFrame>
-				<div className="expander-child" aria-label={canToString(title) ? title : undefined}>
-					<div className={["expander-child-items", { noIndention }]}>
+				<div className="expander-child" id={withAriaId("children")} aria-labelledby={withAriaId("title")}>
+					<div className={["expander-child-items", { noIndentation }]}>
 						<InteractionStateContext value={{ disabled: type === "switch" && !expanded ? true : undefined }}>
 							{children}
 						</InteractionStateContext>
@@ -157,3 +174,9 @@ export /* @internal */ default function SubExpander({ icon, title, details, disa
 		</StyledSubExpander>
 	);
 }
+
+export function parseNoIndentationProp(noIndentation?: boolean) {
+	return noIndentation ? "no-indentation" : noIndentation === false ? "do-indentation" : undefined;
+}
+
+SubExpander.parseIndentationProp = parseNoIndentationProp;

@@ -320,7 +320,7 @@ function HelpLinks() {
 
 	return (
 		<>
-			<Expander.Sub title={<b>{tAbout.previousVersionDocumentation + " (v4.x)"}</b>} noIndention>
+			<Expander.Sub title={<b>{tAbout.previousVersionDocumentation + " (v4.x)"}</b>} noIndentation>
 				{Object.entries(helpsV4).map(([language, links]) => (
 					<Fragment key={language}>
 						<Expander.Item title={tAbout.documentationInLanguage({ language: getLocaleName(language, currentLanguage), count: links.length })} noDivider />

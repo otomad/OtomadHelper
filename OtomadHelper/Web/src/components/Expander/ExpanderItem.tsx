@@ -166,7 +166,9 @@ const StyledExpanderItem = styled.div<{
 		:not(.sortable-item) > &:active,
 		.sortable-item:not(.dragging) > &:active,
 		.sortable-overlay:not(.dropping) &${important()} {
-			background-color: ${c("fill-color-subtle-tertiary")};
+			&:not(:has(.trailing > :not(.expander-chevron):active)) {
+				background-color: ${c("fill-color-subtle-tertiary")};
+			}
 		}
 
 		.sortable-item:last-child > &,
@@ -197,7 +199,7 @@ const StyledExpanderItem = styled.div<{
 		` : undefined}
 `;
 
-export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, nonFocusable, asSubtitle, noDivider, anchor, children, disabled = false, wrapActionsWhenNarrow, selectInfo, selectValid = true, onClick, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ExpanderItem({ icon, title, details, clickable, nonFocusable, asSubtitle, noDivider, anchor, children, disabled = false, wrapActionsWhenNarrow, selectInfo, selectValid = true, noIndentation, ariaIdRef, className, onClick, ...htmlAttrs }: FCP<{
 	/** Icon. */
 	icon?: DeclaredIcons | ReactElement;
 	/** Title. */
@@ -228,8 +230,19 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 	selectInfo?: ReactNode;
 	/** Specifies whether the selection is valid if it's boolean, or the number of selection is not 0 if it's number. @default true */
 	selectValid?: boolean | number;
+	/**
+	 * Should not it auto-add indentation at the start while it is in a sub-expander?
+	 * - `true`: It should NOT auto-add indentation.
+	 * - `false`: It should AUTO-ADD indentation forcibly.
+	 * - `undefined`: Keep default behavior, inherit the setting in the same name prop of the sub-expander.
+	 * @default undefined
+	 */
+	noIndentation?: boolean;
+	/** Pass aria ID to the parent component. */
+	ariaIdRef?: AriaIdRef;
 }, "div">) {
 	const ariaId = useId();
+	useImperativeHandleAriaId(ariaIdRef, ariaId);
 	const cardBaseEls: PropsOf<typeof SettingsCard.Base>["ref"] = useRef({ leading: null, trailing: null });
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 	if (noDivider === true) noDivider = "before";
@@ -251,6 +264,7 @@ export /* @internal */ default function ExpanderItem({ icon, title, details, cli
 			aria-disabled={disabled || undefined}
 			data-anchor={anchor}
 			as={clickable && !nonFocusable ? "button" as never : undefined}
+			className={[className, parseNoIndentationProp(noIndentation)]}
 			aria-labelledby={`${ariaId}-title`}
 			aria-describedby={`${ariaId}-details`}
 			onClick={handleClick}

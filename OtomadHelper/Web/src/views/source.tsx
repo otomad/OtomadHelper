@@ -78,8 +78,10 @@ const isUnderVegas16 = true;
 export default function Source() {
 	const {
 		sourceFrom, trimStart, trimEnd, startTime, customStartTime,
-		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack], unsetBorrowedTrackName,
-		trackGroup, collapseTrackGroup, otomadTrackName, vocaloidTrackName, ytpTrackName, otomadClipName, vocaloidClipName, ytpClipName, groupByTaskSessionName,
+		belowAdjustmentTracks, preferredTrack: [preferredTrack, setPreferredTrack],
+		trackGroup, collapseTrackGroup, reuseSameNameTrackGroup,
+		otomadTrackName, vocaloidTrackName, ytpTrackName, otomadClipName, vocaloidClipName, ytpClipName,
+		groupByTaskSessionName, groupByTaskSessionNameTreatSingleAsMultitrack, unsetBorrowedTrackName,
 		luckyDip, consonant, matchCut, matchCutOrder, matchCutLoop, matchCutLuckyDip, linearMap, linearMapDescending,
 		luckyDipLimitToSelected, luckyDipForTrack, luckyDipForMarker, luckyDipForBarOrBeat, luckyDipForBarOrBeatPeriod, luckyDipForBarOrBeatPreparation,
 	} = useSelectConfig(c => c.source);
@@ -87,6 +89,7 @@ export default function Source() {
 	const { enabled: [ytpEnabled] } = useSelectConfig(c => c.ytp);
 	const meta = metas.source;
 	const [mode] = useKichikuMode();
+	const namingSubExpanderExpanded = useStateList(true, true, true);
 	/** @deprecated */ const manualEnabled = false;
 
 	mutexSwitches(removeSourceClips, selectSourceClips);
@@ -173,34 +176,50 @@ export default function Source() {
 				parenOff
 			>
 				<Setting meta={meta.trackGroup.collapse} on={collapseTrackGroup} />
+				<Setting meta={meta.trackGroup.reuseSameName} on={reuseSameNameTrackGroup} />
 			</Setting>
 			<NamingSetting meta={meta.naming}>
-				<Setting meta={meta.naming.trackName} asSubtitle />
-				<Expander.Item title={t.mode.whichMode({ mode: t.mode.otomad })} selectInfo={mode === "otomad" && t.mode.current}>
-					<ComboBox current={otomadTrackName} ids={Namings.otomadTrackNames.map(({ id }) => id)} options={Namings.otomadTrackNames.map(({ name }) => name)} icons={Namings.otomadTrackNames.map(({ icon }) => icon)} />
-				</Expander.Item>
-				<Expander.Item title={t.mode.whichMode({ mode: t.mode.vocaloid })} selectInfo={mode === "vocaloid" && t.mode.current}>
-					<ComboBox current={vocaloidTrackName} ids={Namings.vocaloidTrackNames.map(({ id }) => id)} options={Namings.vocaloidTrackNames.map(({ name }) => name)} icons={Namings.vocaloidTrackNames.map(({ icon }) => icon)} />
-				</Expander.Item>
-				<Expander.Item title={t.mode.whichMode({ mode: t.mode.ytp })} selectInfo={mode === "ytp" && t.mode.current}>
-					<ComboBox current={ytpTrackName} ids={Namings.ytpTrackNames.map(({ id }) => id)} options={Namings.ytpTrackNames.map(({ name }) => name)} icons={Namings.ytpTrackNames.map(({ icon }) => icon)} />
-				</Expander.Item>
-				<Setting meta={meta.naming.unsetBorrowedTrackName} on={unsetBorrowedTrackName} />
+				<Setting meta={meta.naming.trackName} asSubtitle expanded={namingSubExpanderExpanded[0]} noIndentation>
+					<Expander.Item title={t.mode.whichMode({ mode: t.mode.otomad })} selectInfo={mode === "otomad" && t.mode.current}>
+						<ComboBox current={otomadTrackName} ids={Namings.otomadTrackNames.map(({ id }) => id)} options={Namings.otomadTrackNames.map(({ name }) => name)} icons={Namings.otomadTrackNames.map(({ icon }) => icon)} />
+					</Expander.Item>
+					<Expander.Item title={t.mode.whichMode({ mode: t.mode.vocaloid })} selectInfo={mode === "vocaloid" && t.mode.current}>
+						<ComboBox current={vocaloidTrackName} ids={Namings.vocaloidTrackNames.map(({ id }) => id)} options={Namings.vocaloidTrackNames.map(({ name }) => name)} icons={Namings.vocaloidTrackNames.map(({ icon }) => icon)} />
+					</Expander.Item>
+					<Expander.Item title={t.mode.whichMode({ mode: t.mode.ytp })} selectInfo={mode === "ytp" && t.mode.current}>
+						<ComboBox current={ytpTrackName} ids={Namings.ytpTrackNames.map(({ id }) => id)} options={Namings.ytpTrackNames.map(({ name }) => name)} icons={Namings.ytpTrackNames.map(({ icon }) => icon)} />
+					</Expander.Item>
+					<Setting meta={meta.naming.unsetBorrowedTrackName} on={unsetBorrowedTrackName} noIndentation={false} />
+				</Setting>
 				<Setting
 					meta={meta.naming.groupByTaskSessionName}
 					selectInfo={trackGroup[0] === "byTaskSession" && t.current}
 					actions={<ComboBox current={groupByTaskSessionName} ids={Namings.scoredTrackNames.map(({ id }) => id)} options={Namings.scoredTrackNames.map(({ name }) => name)} icons={Namings.scoredTrackNames.map(({ icon }) => icon)} />}
-				/>
-				<Setting meta={meta.naming.clipName} asSubtitle />
-				<Expander.Item title={t.mode.whichMode({ mode: t.mode.otomad })} selectInfo={mode === "otomad" && t.mode.current}>
-					<ComboBox current={otomadClipName} ids={Namings.otomadClipNames.map(({ id }) => id)} options={Namings.otomadClipNames.map(({ name }) => name)} icons={Namings.otomadClipNames.map(({ icon }) => icon)} />
-				</Expander.Item>
-				<Expander.Item title={t.mode.whichMode({ mode: t.mode.vocaloid })} selectInfo={mode === "vocaloid" && t.mode.current}>
-					<ComboBox current={vocaloidClipName} ids={Namings.vocaloidClipNames.map(({ id }) => id)} options={Namings.vocaloidClipNames.map(({ name }) => name)} icons={Namings.vocaloidClipNames.map(({ icon }) => icon)} />
-				</Expander.Item>
-				<Expander.Item title={t.mode.whichMode({ mode: t.mode.ytp })} selectInfo={mode === "ytp" && t.mode.current}>
-					<ComboBox current={ytpClipName} ids={Namings.ytpClipNames.map(({ id }) => id)} options={Namings.ytpClipNames.map(({ name }) => name)} icons={Namings.ytpClipNames.map(({ icon }) => icon)} />
-				</Expander.Item>
+					expanded={namingSubExpanderExpanded[1]}
+				>
+					<Setting
+						meta={meta.naming.groupByTaskSessionNameTreatSingleAsMultitrack}
+						on={groupByTaskSessionNameTreatSingleAsMultitrack}
+						selectInfo={t.descriptions.source.naming.groupByTaskSessionNameTreatSingleAsMultitrack({
+							name: groupByTaskSessionNameTreatSingleAsMultitrack[0] ? Namings.scoredTrackNames.find(({ id }) => id === groupByTaskSessionName[0])?.name :
+							mode === "vocaloid" ? Namings.vocaloidTrackNames.find(({ id }) => id === vocaloidTrackName[0])?.name :
+							mode === "ytp" ? Namings.ytpTrackNames.find(({ id }) => id === ytpTrackName[0])?.name :
+							Namings.otomadTrackNames.find(({ id }) => id === otomadTrackName[0])?.name,
+						})}
+						selectValid
+					/>
+				</Setting>
+				<Setting meta={meta.naming.clipName} asSubtitle expanded={namingSubExpanderExpanded[2]} noIndentation>
+					<Expander.Item title={t.mode.whichMode({ mode: t.mode.otomad })} selectInfo={mode === "otomad" && t.mode.current}>
+						<ComboBox current={otomadClipName} ids={Namings.otomadClipNames.map(({ id }) => id)} options={Namings.otomadClipNames.map(({ name }) => name)} icons={Namings.otomadClipNames.map(({ icon }) => icon)} />
+					</Expander.Item>
+					<Expander.Item title={t.mode.whichMode({ mode: t.mode.vocaloid })} selectInfo={mode === "vocaloid" && t.mode.current}>
+						<ComboBox current={vocaloidClipName} ids={Namings.vocaloidClipNames.map(({ id }) => id)} options={Namings.vocaloidClipNames.map(({ name }) => name)} icons={Namings.vocaloidClipNames.map(({ icon }) => icon)} />
+					</Expander.Item>
+					<Expander.Item title={t.mode.whichMode({ mode: t.mode.ytp })} selectInfo={mode === "ytp" && t.mode.current}>
+						<ComboBox current={ytpClipName} ids={Namings.ytpClipNames.map(({ id }) => id)} options={Namings.ytpClipNames.map(({ name }) => name)} icons={Namings.ytpClipNames.map(({ icon }) => icon)} />
+					</Expander.Item>
+				</Setting>
 			</NamingSetting>
 
 			<Subheader meta={meta.multisource} />

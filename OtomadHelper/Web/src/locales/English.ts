@@ -90,6 +90,7 @@ export default {
 				byScoreTrack: "Group by score track",
 				byTaskSession: "Group by task session",
 				collapse: "Collapse track groups by default",
+				reuseSameName: "Reuse groups that have the same nonempty name",
 			},
 			naming: {
 				_: "Naming",
@@ -97,6 +98,7 @@ export default {
 				clipName: "Name for clips",
 				unsetBorrowedTrackName: "Unset the name of the borrowed existing track",
 				groupByTaskSessionName: "Name for track groups when grouped by task session and with multitrack",
+				groupByTaskSessionNameTreatSingleAsMultitrack: "Process single track as multitrack",
 				track: "MIDI track name",
 				trackIndex: "MIDI track index",
 				instrument: "MIDI instrument name",
@@ -1032,10 +1034,12 @@ export default {
 				},
 				trackGroup: {
 					_: "Groups tracks by score track",
+					reuseSameName: "If a group with the same nonempty name already exists, reuse it instead of creating a new one",
 				},
 				naming: {
 					_: "Specify the name for the generated tracks, track groups, and clips",
 					unsetBorrowedTrackName: "Newly created tracks will not be affected",
+					groupByTaskSessionNameTreatSingleAsMultitrack: "Track groups will use {{name, lowercase}} when grouped by task session and with single track",
 				},
 				multisource: {
 					ytpEnabled: "YTP feature is enabled and these features are currently unconfigurable.",

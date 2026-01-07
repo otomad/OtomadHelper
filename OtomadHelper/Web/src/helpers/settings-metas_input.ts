@@ -31,6 +31,7 @@ export const settingsMetasInput = {
 			icon: "group",
 			items: {
 				collapse: { icon: "chevron_down_up" },
+				reuseSameName: { icon: "overwrite" },
 			},
 		},
 		naming: {
@@ -39,6 +40,7 @@ export const settingsMetasInput = {
 				trackName: { icon: "layer_rename" },
 				unsetBorrowedTrackName: { icon: "rename_off" },
 				groupByTaskSessionName: { icon: "group_rename" },
+				groupByTaskSessionNameTreatSingleAsMultitrack: { details: undefined },
 				clipName: { icon: "track_event_rename" },
 			},
 		},

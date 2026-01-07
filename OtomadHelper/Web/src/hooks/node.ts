@@ -1,3 +1,5 @@
+import type { useAriaIdRefState } from "utils/object";
+
 /**
  * A custom hook that returns a function that triggers a re-render of the component.
  *
@@ -12,12 +14,24 @@ export function useForceUpdate() {
 /**
  * Forward the ref from a local ref.
  * @template T - The value type that wrapped by the ref.
- * @param forwardedRef - Forwarded ref argument from the `forwardRef` function.
+ * @param forwardedRef - Forwarded ref argument from `ref` prop (Or `forwardedRef` prop from the `forwardRef` function in React 18 and lower versions).
  * @param localRef - Local `useDomRef` variable.
  */
 export function useImperativeHandleRef<T>(forwardedRef: React.ForwardedRef<T> | undefined, localRef: RefObject<T | null | undefined>) {
 	useImperativeHandle(forwardedRef, () => localRef.current!);
 }
+
+/**
+ * Forward the aria ID ref from a aria ID which get by `useID`.
+ * @see {@link useAriaIdRefState}
+ * @template T - The value type that wrapped by the ref.
+ * @param forwardedAriaIdRef - Forwarded aria ID ref argument.
+ * @param ariaId - Local aria ID which get by `useID` hook.
+ */
+export function useImperativeHandleAriaId(forwardedAriaIdRef: AriaIdRef | undefined, ariaId: string) {
+	useImperativeHandle(forwardedAriaIdRef, () => ariaId, [ariaId]);
+}
+export type AriaIdRef = React.Ref<string | undefined | null>;
 
 /**
  * If user click a button that inside another button, do not trigger outside button event.

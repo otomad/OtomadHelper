@@ -262,6 +262,7 @@ export default [
 			"jsdoc/require-yields-description": "warn",
 			"jsdoc/require-next-description": "warn",
 			"jsdoc/escape-inline-tags": "off",
+			"jsdoc/no-undefined-types": "warn",
 			"@typescript-eslint/no-unused-vars": ["warn", { // 非要使用未使用变量，前面加下划线。
 				"argsIgnorePattern": "^_",
 				"varsIgnorePattern": "^_",

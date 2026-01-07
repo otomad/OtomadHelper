@@ -25,3 +25,11 @@ export function useDelayState<T>(initialState?: T) {
 
 	return [state, setState];
 }
+
+type StatePropertyTuple<Tuple extends [...Any[]]> = {
+	[Index in keyof Tuple]: StatePropertyNonNull<Tuple[Index]>;
+} & { length: Tuple["length"] };
+
+export function useStateList<T extends Any[]>(...initialValues: T) {
+	return Array.from({ length: initialValues.length }, (_, i) => useState(initialValues[i])) as StatePropertyTuple<T>;
+}

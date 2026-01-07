@@ -298,6 +298,14 @@ export function toValue<T>(ref: MaybeRef<T>): T {
 	return isRefObject(ref) ? ref.current : ref;
 }
 
+function useRefState<T>(initialValue: T) {
+	const [state, setState] = useState<T>(initialValue);
+	return [state, (state: T) => {
+		setState(state);
+		// return () => setState(null); // It seems that unmount effect is useless.
+	}] as const;
+}
+
 /**
  * Creates a reference to an HTML DOM element without initializing it to null.
  *
@@ -347,12 +355,7 @@ export function useDomRef<TElement extends keyof ElementTagNameMap | Element>(in
  * ```
  */
 export function useDomRefState<TElement extends keyof ElementTagNameMap | Element>(initialValue: TagNameToElement<TElement> | null = null) {
-	type El = typeof initialValue;
-	const [el, setEl] = useState<TagNameToElement<TElement> | null>(initialValue);
-	return [el, (el: El) => {
-		setEl(el);
-		// return () => setEl(null); // It seems that unmount effect is useless.
-	}] as const;
+	return useRefState(initialValue);
 }
 
 /**
@@ -366,7 +369,7 @@ export function useDomRefState<TElement extends keyof ElementTagNameMap | Elemen
  * @returns An array of references to an HTML DOM element.
  *
  * @example
- * ```typescriptreact
+ * ```tsx
  * const [refs, setRef] = useDomRefs<"p">();
  *
  * return array.map((item, index) => <p key={item} ref={setRef(index)}>{item}</p>);
@@ -377,6 +380,27 @@ export function useDomRefs<TElement extends keyof ElementTagNameMap | Element>()
 	const refs: RefObject<TElementOrNull[]> = useRef([]);
 	const setRef = (index: number) => (el: TElementOrNull) => { refs.current[index] = el; };
 	return [refs, setRef] as const;
+}
+
+/**
+ * Creates a ref object that can get aria ID of a child element.
+ * @returns A reference to a aria ID string.
+ *
+ * @example
+ * ```tsx
+ * // Parent component
+ * const [ariaId, setAriaId, withAriaId] = useAriaIdRefState();
+ * return <ChildComponent ariaIdRef={setAriaId} />
+ *
+ * // Child component
+ * const ariaId = useId();
+ * useImperativeHandleAriaId(ariaIdRef, ariaId);
+ * ```
+ */
+export function useAriaIdRefState() {
+	const [ariaId, setAriaId] = useRefState<string | undefined>(undefined);
+	const withAriaId = (suffix: string) => ariaId && `${ariaId}-${suffix}`;
+	return [ariaId, setAriaId, withAriaId] as const;
 }
 
 /**

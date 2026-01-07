@@ -221,7 +221,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 	/** Specify a search anchor landmark. Must be CSS escaped. */
 	anchor?: string;
 	/** Pass settings card aria ID to the parent component. */
-	ariaIdRef?: RefObject<string | undefined | null>;
+	ariaIdRef?: AriaIdRef;
 	/** @private Compatible with Expander. */
 	_requestExpanded?: never;
 	/** @private Is called by Expander? */
@@ -231,7 +231,7 @@ export default function SettingsCard({ icon = "placeholder", title, details, sel
 		type === "expander" ? "chevron_down" : undefined;
 	const dragHandleContext = useContext(SortableView.Item.Context);
 	const ariaId = useId();
-	useImperativeHandle(ariaIdRef, () => ariaId, [ariaId]);
+	useImperativeHandleAriaId(ariaIdRef, ariaId);
 	tabIndex ??= type.in("container", "container-but-button") ? -1 : 0;
 	const lastWrapped = useRef<boolean>(undefined);
 

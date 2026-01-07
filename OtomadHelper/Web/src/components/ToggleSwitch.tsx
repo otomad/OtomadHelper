@@ -247,7 +247,7 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	}
 `);
 
-export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, actions, actuallyOn, children, onChange, ...htmlAttrs }: FCP<{
+export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = false, isPressing: [isPressing, setIsPressing] = NEVER_MIND, hideLabel, as, details, resetTransitionOnChanging = false, color, lock, icon, selectInfo, selectValid = false, anchor, actions, actuallyOn, noIndentation, ariaIdRef, className, children, onChange, ...htmlAttrs }: FCP<{
 	/** Is on? */
 	on: StateProperty<boolean>;
 	/** Disabled */
@@ -301,6 +301,16 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	 * @default undefined
 	 */
 	actuallyOn?: boolean;
+	/**
+	 * Should not it auto-add indentation at the start while it is in a sub-expander?
+	 * - `true`: It should NOT auto-add indentation.
+	 * - `false`: It should AUTO-ADD indentation forcibly.
+	 * - `undefined`: Keep default behavior, inherit the setting in the same name prop of the sub-expander.
+	 * @default undefined
+	 */
+	noIndentation?: boolean;
+	/** Pass aria ID to the parent component. */
+	ariaIdRef?: AriaIdRef;
 	/** Occurs while toggling. */
 	onChange?(on: boolean): void;
 }, "button">) {
@@ -311,6 +321,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	const [labelTranslate, setLabelTranslate] = useState<number>();
 	const [pressed, setPressed] = useState(false);
 	const ariaId = useId();
+	useImperativeHandleAriaId(ariaIdRef, ariaId);
 	// CAUTION: Parameter changes using styled-components directly will affect performance.
 	const thumbStyle = useMemo(() => thumbLeft === undefined ? undefined : {
 		insetInlineStart: thumbLeft + "px",
@@ -382,7 +393,7 @@ export default function ToggleSwitch({ on: [_on, setOn], disabled: _disabled = f
 	return (
 		<StyledToggleSwitchLabel
 			as={as as "button"}
-			className={{ selected: on, pressed, colored: !!color, actuallyOff }}
+			className={[className, parseNoIndentationProp(noIndentation), { selected: on, pressed, colored: !!color, actuallyOff }]}
 			disabled={disabled}
 			aria-disabled={disabled || undefined}
 			onClick={e => handleCheck(!on, e)}
