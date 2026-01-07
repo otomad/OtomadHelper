@@ -11,7 +11,7 @@
 
 > [!IMPORTANT]
 >
-> #### ĐÂY KHÔNG PHẢI LÀ BẢN THÂN KỊCH BẢN, ĐÂY LÀ CÁC TỆP NGUỒN
+> #### ĐÂY KHÔNG PHẢI LÀ BẢN THÂN SCRIPT, ĐÂY LÀ CÁC TỆP NGUỒN
 >
 > Nếu bạn đang tìm kiếm để tải về Otomad Helper, vui lòng nhấp vào nút dưới đây.
 >
