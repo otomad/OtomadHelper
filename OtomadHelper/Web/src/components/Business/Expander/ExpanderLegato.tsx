@@ -55,7 +55,7 @@ export default function ExpanderLegato({ stream, children }: FCP<{
 							image={image}
 						>
 							{label}
-							{isOff && t.parenOff}
+							{isOff && <IeOff />}
 						</ItemsView.Item>
 					);
 				})}

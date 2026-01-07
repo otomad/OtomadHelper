@@ -35,7 +35,7 @@ export default function ExpanderStreamPrologue({ stream }: {
 			items={PrologueForms}
 			value={form}
 			view="tile"
-			parenOff
+			ieOff
 			detailsField={({ key }) => t.descriptions.stream.prologue[key]}
 		>
 			<Setting meta={meta.duration} asSubtitle="closerAfter" noDivider="after" />

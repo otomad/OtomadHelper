@@ -118,7 +118,7 @@ export default {
 		},
 		on: "オン",
 		off: "オフ",
-		parenOff: "（オフ）",
+		ieOff: "（オフ）",
 		onActuallyOff: "オン (実際はオフ)",
 		custom: "カスタム",
 		enabled: "有効",

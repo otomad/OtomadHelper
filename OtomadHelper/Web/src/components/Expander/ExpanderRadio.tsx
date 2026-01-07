@@ -1,6 +1,6 @@
 type FieldType<T> = string | ((item: T) => string | undefined) | true;
 
-export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, ariaLabelField, ariaDescriptionField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, radioButtonAttrs, hideCustom = true, before, transition, readOnly, parenOff, filter, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
+export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: _items, value: [value, setValue], checkInfoCondition = true, idField, nameField, iconField, imageField, detailsField, imageOverlayField, badgeField, ariaLabelField, ariaDescriptionField, view = "radio", details: _details, itemWidth, radioGroup, itemsViewItemAttrs, itemsViewAttrs, radioButtonAttrs, hideCustom = true, before, transition, readOnly, ieOff, filter, title, checkInfo: staticCheckInfo, children, onItemClick, onItemContextMenu, ...settingsCardProps }: FCP<Override<PropsOf<typeof Expander>, {
 	/** List of options. */
 	items: readonly TItem[];
 	/** The identifier of the currently selected value. */
@@ -80,7 +80,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 	 * - `true`: The first option represents the off.
 	 * - `string`: The specific key or ID of the option represents the off.
 	 */
-	parenOff?: boolean | string;
+	ieOff?: boolean | string;
 	/** Filter the items that to be shown. */
 	filter?: (item: TItem, index: number) => boolean;
 	/** Occurs when the item left clicked. */
@@ -117,7 +117,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 		typeof checkInfoCondition === "function" ? checkInfoCondition(value, items) :
 		items.find(item => item[checkInfoCondition.id] === value)?.[checkInfoCondition.name]);
 	const details = typeof _details === "function" ? _details(value, items) : _details;
-	const getParenOff = (item: AnyObject, index: number) => parenOff && (parenOff === true ? index === 0 : getItemField(item, "id") === parenOff) ? t.parenOff : undefined;
+	const getIeOff = (item: AnyObject, index: number) => ieOff && (ieOff === true ? index === 0 : getItemField(item, "id") === ieOff) ? <IeOff /> : undefined;
 
 	return (
 		<Expander
@@ -142,7 +142,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 					{...typeof radioButtonAttrs === "function" ? radioButtonAttrs(item) : radioButtonAttrs}
 				>
 					{getItemField(item, "name")}
-					{getParenOff(item, index)}
+					{getIeOff(item, index)}
 				</RadioButton>
 			)) : (
 				<ItemsView
@@ -170,7 +170,7 @@ export default function ExpanderRadio<TItem, TKey extends PropertyKey>({ items: 
 							{...typeof itemsViewItemAttrs === "function" ? itemsViewItemAttrs(item) : itemsViewItemAttrs}
 						>
 							{getItemField(item, "name")}
-							{getParenOff(item, index)}
+							{getIeOff(item, index)}
 						</ItemsView.Item>
 					))}
 				</ItemsView>

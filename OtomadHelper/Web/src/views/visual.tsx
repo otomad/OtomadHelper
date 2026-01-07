@@ -100,7 +100,7 @@ export default function Visual() {
 						meta={meta.stretch}
 						selectInfo={isForceStretch && t(prveCount).descriptions.prve.forceStretch}
 						selectValid={false}
-						parenOff
+						ieOff
 						items={stretches}
 						value={stretch}
 						view="tile"
@@ -114,7 +114,7 @@ export default function Visual() {
 						items={truncates}
 						value={truncate}
 						view="tile"
-						parenOff
+						ieOff
 						idField="id"
 						iconField="icon"
 						nameField={t.stream.truncate}

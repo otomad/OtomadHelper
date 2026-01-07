@@ -119,7 +119,7 @@ export default {
 		},
 		on: "crwdns1698:0crwdne1698:0",
 		off: "crwdns1700:0crwdne1700:0",
-		parenOff: "crwdns5518:0crwdne5518:0",
+		ieOff: "crwdns5518:0crwdne5518:0",
 		onActuallyOff: "crwdns5652:0crwdne5652:0",
 		custom: "crwdns1702:0crwdne1702:0",
 		enabled: "crwdns1704:0crwdne1704:0",

@@ -371,7 +371,7 @@ export default function Score({ _trackSelectorOnly = false }: {
 				nameField={t.score.constrain}
 				detailsField={t.descriptions.score.constrain}
 				iconField="icon"
-				parenOff
+				ieOff
 			>
 				{constrainNoteLengthType[0] !== "none" && (
 					<Expander.Item

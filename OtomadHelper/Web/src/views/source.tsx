@@ -173,7 +173,7 @@ export default function Source() {
 				items={TrackGroupBy}
 				value={trackGroup}
 				view="tile"
-				parenOff
+				ieOff
 			>
 				<Setting meta={meta.trackGroup.collapse} on={collapseTrackGroup} />
 				<Setting meta={meta.trackGroup.reuseSameName} on={reuseSameNameTrackGroup} />

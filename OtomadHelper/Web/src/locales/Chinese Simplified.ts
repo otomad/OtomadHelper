@@ -118,7 +118,7 @@ export default {
 		},
 		on: "开",
 		off: "关",
-		parenOff: "（关）",
+		ieOff: "（关）",
 		onActuallyOff: "开（实际关）",
 		custom: "自定义",
 		enabled: "启用",

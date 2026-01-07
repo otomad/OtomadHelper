@@ -97,7 +97,7 @@ export default {
 		},
 		on: "Bật",
 		off: "Tắt",
-		parenOff: " (Tắt)",
+		ieOff: " (Tắt)",
 		custom: "Tùy chỉnh",
 		enabled: "Đã bật",
 		enable: "Kích hoạt",
