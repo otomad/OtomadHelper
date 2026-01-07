@@ -294,6 +294,7 @@ namespace Config {
 				array: "square" satisfies GridArrayType as GridArrayType,
 				direction: "lr-tb" satisfies GridDirectionOrderType as GridDirectionOrderType,
 				fit: "cover" satisfies GridFitType as GridFitType,
+				dynamicDetection: false,
 				mirrorEdgesHFlip: "unflipped" satisfies GridParityType as GridParityType,
 				mirrorEdgesVFlip: "unflipped" satisfies GridParityType as GridParityType,
 				descending: false,

@@ -4,7 +4,7 @@ import ApprovalsAppIcon from "assets/svg/approvals_app.svg?react";
 
 export /* @internal */ const arrayTypes = ["square", "fixed"] as const;
 export /* @internal */ const directionTypes = ["lr-tb", "tb-lr", "rl-tb", "tb-rl"] as const;
-export /* @internal */ const fitTypes = ["cover", "contain"] as const;
+export /* @internal */ const fitTypes = ["cover", "contain", "overlay"] as const;
 export /* @internal */ const parityTypes = ["unflipped", "even_columns", "odd_columns", "even_rows", "odd_rows", "even_checker", "odd_checker", "even_dots", "odd_dots", "even_gridlines", "odd_gridlines", "all_flipped", "random"] as const;
 const parityTypes_rowsFirst = parityTypes.toMoved(3, 5, 1);
 type GridParityType = typeof parityTypes[number];
@@ -385,7 +385,7 @@ const Multiply = styled.label.attrs({
 // #endregion
 
 export default function Grid() {
-	const { columns: [columns, _setColumns], array, direction, fit, mirrorEdgesHFlip, mirrorEdgesVFlip, descending: [descending, setDescending], padding, spans: [spans, setSpans], columnWidths: [columnWidths, setColumnWidths], rowHeights: [rowHeights, setRowHeights], blanks: [blanks, setBlanks] } = useSelectConfig(c => c.track.grid);
+	const { columns: [columns, _setColumns], array, direction, fit, dynamicDetection, mirrorEdgesHFlip, mirrorEdgesVFlip, descending: [descending, setDescending], padding, spans: [spans, setSpans], columnWidths: [columnWidths, setColumnWidths], rowHeights: [rowHeights, setRowHeights], blanks: [blanks, setBlanks] } = useSelectConfig(c => c.track.grid);
 	const setColumns = setStateInterceptor(_setColumns, (input: number) => clamp(input, 1, MAX_COL_ROW));
 	// These properties were originally planned to put into the config, but now it is abandoned.
 	// Originally, the user could customize the number of columns and rows independently, but I found that it is hard to implement technically.
@@ -671,23 +671,26 @@ export default function Grid() {
 									))}
 								</ItemsView>
 							</CommandBar.Item>
-							<CommandBar.Item icon={fit[0] === "contain" ? "letterbox" : "aspect_ratio"} caption={t.fit} details={t.descriptions.track.grid.fit} hovering onClick={() => fit[1](fit => fitTypes.nextItem(fit))}>
+							<CommandBar.Item icon={fit[0] === "contain" ? "letterbox" : fit[0] === "overlay" ? "photo_filter" : "aspect_ratio"} caption={t.fit} details={t.descriptions.track.grid.fit} hovering onClick={() => fit[1](fit => fitTypes.nextItem(fit))}>
 								<ItemsView view="list" current={fit}>
-									{fitTypes.map(option => (
+									{...fitTypes.flatMap(option => [
+										option === "overlay" && <hr />,
 										<ItemsView.Item
 											id={option}
 											key={option}
-											icon={option === "contain" ? "letterbox" : "aspect_ratio"}
+											icon={option === "contain" ? "letterbox" : option === "overlay" ? "photo_filter" : "aspect_ratio"}
 											details={t.descriptions.track.grid.fit[option]}
 										>
 											{t.fit[option]}
-										</ItemsView.Item>
-									))}
+										</ItemsView.Item>,
+									])}
 								</ItemsView>
 							</CommandBar.Item>
+							<CommandBar.Item icon="radar" caption={t.track.grid.dynamicDetection} altCaption={t({ context: "short" }).track.grid.dynamicDetection} on={dynamicDetection} />
 							<CommandBar.Item icon={order} caption={t[order]} details={t.descriptions.track.descending} onClick={() => setDescending(desc => !desc)} />
 							<hr />
-							{...(["h", "v"] as const).map(d => {
+							<CommandBar.Item icon="highlight" caption={t({ context: "full" }).titles.gradient_full} altCaption={t.titles.gradient} />
+							{/* {...(["h", "v"] as const).map(d => {
 								const flipKey = `${d}Flip`, isH = d === "h";
 								return (
 									<CommandBar.Item
@@ -712,7 +715,7 @@ export default function Grid() {
 										</ItemsView>
 									</CommandBar.Item>
 								);
-							})}
+							})} */}
 						</CommandBar>
 					</CommandBar.Group>
 					<Button icon="arrow_reset" accent="critical" className="reset-btn" hidden={!flyoutEditor} onClick={resetFlyoutEditor}>{t.reset}</Button>
@@ -972,7 +975,7 @@ export default function Grid() {
 							details={t.empty.operationRecord.details({ fixed: fixedColumnsOrFixedRows })}
 						/>
 					)}
-					selectAll
+					selectAll={{ style: { paddingInline: "8px", paddingBlockEnd: "0" } }}
 					onItemEmptyChange={setIsCurrentOperationRecordFilterItemEmpty}
 				>
 					{[

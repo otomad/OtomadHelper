@@ -269,6 +269,11 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 		&.details {
 			${styles.effects.text.caption};
 			color: ${c("fill-color-text-secondary")};
+
+			small {
+				display: block;
+				line-height: normal;
+			}
 		}
 	}
 

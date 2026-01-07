@@ -42,7 +42,8 @@ export default {
 			grid_full: "Grid Layout",
 			concentric: "Concentric Layout",
 			box3d: "3D Box Layout",
-			gradient: "Gradient Tracks",
+			gradient: "Mirror/Gradient",
+			gradient_full: "Mirror/Gradient Tracks",
 			internal: "Global Internal",
 			internal_long: "VEGAS Pro Global Internal Preferences",
 			license: "License",
@@ -267,6 +268,7 @@ export default {
 			scaleDown: "Scale down contain",
 			tile: "Tile",
 			tileContain: "Tile contain",
+			overlay: "Overlay",
 		},
 		fileFormats: {
 			allFiles: "All Files",
@@ -311,7 +313,7 @@ export default {
 				percentage: "Percentage",
 				fixedDecrement: "Fixed decrement",
 			},
-			trackOrChannel: "Track / Channel",
+			trackOrChannel: "Track/Channel",
 			musicalTrack: "Track",
 			musicalTrack_other: "Tracks",
 			channel: "Channel",
@@ -476,9 +478,9 @@ export default {
 					_: "If exceeds the range",
 					multiple: "Multiple use of Audio Effect Plugins",
 					plugin: "Switch to Pitch Shift Audio Effect Plugin",
-					octave: "Higher / lower octaves",
-					octaveExp: "Higher / lower octaves (Experimental)",
-					wrap: "Wrap to top / bottom",
+					octave: "Higher/Lower octaves",
+					octaveExp: "Higher/Lower octaves (Experimental)",
+					wrap: "Wrap to top/bottom",
 					silent: "Silent",
 				},
 				resample: "Resample",
@@ -567,7 +569,7 @@ export default {
 				fastFill: "Fast fill",
 				columnWidth: "Column width",
 				rowHeight: "Row height",
-				span: "Span", // Column / row span.
+				span: "Span", // Column/Row span.
 				columnSpan: "Column span",
 				rowSpan: "Row span",
 				insertBlank: "Insert blank",
@@ -601,7 +603,9 @@ export default {
 				paritySpare: "Parity pattern *(spare {{number}})*",
 				padding: "Padding",
 				operationRecord: "Operation records",
-				operationRecord_short: "Operations", // This is a shorter name of “Operation records”, if that name is short enough in your language, just copy and paste the same translation as that string.
+				operationRecord_short: "Operations", // This is a shorter name of “Operation records,” if that name is short enough in your language, just copy and paste the same translation as that string.
+				dynamicDetection: "Dynamic detection",
+				dynamicDetection_short: "Detection", // This is a shorter name of “Dynamic detection,” if that name is short enough in your language, just copy and paste the same translation as that string.
 			},
 			box3d: {
 				deleteTracks: "Delete original tracks",
@@ -630,9 +634,6 @@ export default {
 					altLuminInvert: "Alternately Luminance Invert",
 					altHueInvert: "Alternately Hue Invert",
 					rotInvert: "Rotatively Invert",
-				},
-				view: {
-					overlay: "Overlay",
 				},
 				gridIntegration: {
 					_: "Grid layout integration",
@@ -1255,8 +1256,9 @@ export default {
 					},
 					fit: {
 						_: "Resizes clips to maintain aspect ratio while fitting within the track box",
-						cover: "Crops off both sides to fill the entire track box so there are no gaps, but it will make both sides disappear from view\n(aka “Pan and Scan” in Video Framing and “Fill” in Windows Background Settings)",
-						contain: "Adds mattes of blank space around to fit the entire clip into the track box so you can see it all, but the gaps become too conspicuous when the aspect ratio differences are significant\n(aka “Letterboxing” or “Pillarboxing” in Video Framing and “Fit” in Windows Background Settings)",
+						cover: "Crops off both sides to fill the entire track box so there are no gaps, but it will make both sides disappear from view.",
+						contain: "Adds mattes of blank space around to fit the entire clip into the track box so you can see it all, but the gaps become too conspicuous when the aspect ratio differences are significant.",
+						overlay: "The track boxes will not be scaled or panned, but only trimmed and mirrored/gradient. This presents a hollowed-out and masked effect.",
 					},
 					mirrorEdges: {
 						hFlip: "Mirrors the tracks by flipping the columns in a parity pattern",
@@ -1295,7 +1297,7 @@ export default {
 			},
 			sonar: {
 				_: "Sonar (Motion Graphics generation feature) is a tool that automatically generates Mographs based on the music rhythm, using the shapes of “Cookie Cutter” effect. The trigger signals of various percussion instruments are linked to preset graphic elements via the score (especially the data of channel 10, where the drum kit is located). These graphics change with the rhythm to create the rhythm-driven “visual beat” effect. For example, the kick generates an enlarged square, the snare drives a rotating diamond, and the crash triggers a diffuse circle, forming an immersive experience of “sound visualization”.\nMotion Graphics (Mograph) is an art form that combines graphic design and animation to convey information or emotion through the motion of graphics, text, and other elements. In the creation of otoMAD, Mographs are often used to replace traditional source editing, and abstract graphics are used to create a purely visual rhythmic expression. For example, the visuals may be filled with dense geometric shapes during the climax of the music, while a sense of breathing is created by slowly deforming fluid patterns during the soothing paragraphs. Such creations are often titled *Graphics* or *Shapes* to emphasize the core concept of “playing music with visuals”.",
-				// The name of this effect, “Sonar”, was coined by Motosai.
+				// The name of this effect, “Sonar,” was coined by Motosai.
 				enabled: "Enables sonar effects if the active tracks in the score contain drum kits",
 				separateDrums: "Places each drum on its own track",
 				differenceCompositeMode: "Makes the tracks created with difference blend, this will present a shadow puppet style",
@@ -1315,7 +1317,7 @@ export default {
 				},
 			},
 			shupelunker: {
-				_: "Shupelunker Tactics is a kind of YTPMV/otoMAD creation technique that subverts the traditional tuning logic. The core is to directly use the base pitch of the audio source to achieve harmony with the melody of the music through precise editing. When creating, it is necessary to select the pieces from the source that fully match the target scale and arrange them in melodic order to form a performance effect similar to LaunchPad. Since the whole process is unpitched, the base pitch of the source must be highly consistent with the melody of the music, so a wider breadth of source libraries is required. Its characteristic is that through fragmented editing and high-speed switching, it not only retains the real texture of the base pitch of the source, but also creates a sense of galloping like incantation chanting, which is especially suitable for songs with compact rhythms and rich scale changes.\nIn contrast, if the pitch of the source clip does not match the melody, “Tartar Tactics” will be generated. It is also unpitched, and synchronization is achieved through extreme rhythmic control, such as articulating clips in portato, stretching or reversing clips, and forcing the source rhythm to match the original song. Inspired by the breakbeat logic of Drum ’n’ Bass, it creates a mechanical impulse like audio-visual impact through high-frequency fragmented editing. Although the content of the production is “meaningless incantation”, it can produce a unique sense of rhythm through the precise arrangement of the rhythm.",
+				_: "Shupelunker Tactics is a kind of YTPMV/otoMAD creation technique that subverts the traditional tuning logic. The core is to directly use the base pitch of the audio source to achieve harmony with the melody of the music through precise editing. When creating, it is necessary to select the pieces from the source that fully match the target scale and arrange them in melodic order to form a performance effect similar to LaunchPad. Since the whole process is unpitched, the base pitch of the source must be highly consistent with the melody of the music, so a wider breadth of source libraries is required. Its characteristic is that through fragmented editing and high-speed switching, it not only retains the real texture of the base pitch of the source, but also creates a sense of galloping like incantation chanting, which is especially suitable for songs with compact rhythms and rich scale changes.\nIn contrast, if the pitch of the source clip does not match the melody, “Tartar Tactics” will be generated. It is also unpitched, and synchronization is achieved through extreme rhythmic control, such as articulating clips in portato, stretching or reversing clips, and forcing the source rhythm to match the original song. Inspired by the breakbeat logic of Drum ’n’ Bass, it creates a mechanical impulse like audio-visual impact through high-frequency fragmented editing. Although the content of the production is “meaningless incantation,” it can produce a unique sense of rhythm through the precise arrangement of the rhythm.",
 				// The name of this tactic originated in otoMAD, whose first creation using this tactic had the title of being a parody of Shu (Shuzo Matsuoka) netaed with Spelunker (game), hence the name. This method was also used in early YTPMV, but it never had an official name or method title, it is more like a meme to use this method in a similar way that most YTPMV from the late 2000s to mid 2010s would use.
 				affix: "The base pitches of the clips need to be detected by naming them, please specify whether the pitch info should be a prefix or suffix to the clip name",
 				unallocated: {
@@ -1330,7 +1332,7 @@ export default {
 				offset: "Offsets the clips corresponding to the keys as a whole",
 			},
 			ytp: {
-				_: "YouTube Poop (YTP) uses various effects to create videos with deconstruction, collage and absurdism at its core. YTP supports multisource.\nYTP is a Neo-Dada art practice in the digital era. Through editing, repetition, speed change, inversion and other technologies, the sources are reassembled into an illogical “video remix”, deliberately imitating the low-quality, low-technology aesthetic style to tease the seriousness and standardization of mainstream video culture. For example, the actions of the characters are played circularly, the lines with broken meanings are superimposed, or the abrupt sound effects are inserted to create an audio-visual effect that is both absurd and humorous.\nYTP rebelled against traditional narrative logic and challenged the audience’s inherent perception of “meaning”. Deconstructing the content of mainstream media through digital editing technology, and transforming cultural symbols into meaningless “electronic garbage”. Their works often follow the principle of “chaos is aesthetics”, such as an endless cycle of absurd clips or distorted role dialogues, forming a unique postmodern art language. YTP’s creative threshold is low, but its artistic value lies in reflecting on the essence of media — highlighting the vulnerability of digital media due to technical defects. Although YTP is an Internet meme, it is actually a continuous digital art experiment that redefines the boundary between entertainment and criticism.",
+				_: "YouTube Poop (YTP) uses various effects to create videos with deconstruction, collage and absurdism at its core. YTP supports multisource.\nYTP is a Neo-Dada art practice in the digital era. Through editing, repetition, speed change, inversion and other technologies, the sources are reassembled into an illogical “video remix,” deliberately imitating the low-quality, low-technology aesthetic style to tease the seriousness and standardization of mainstream video culture. For example, the actions of the characters are played circularly, the lines with broken meanings are superimposed, or the abrupt sound effects are inserted to create an audio-visual effect that is both absurd and humorous.\nYTP rebelled against traditional narrative logic and challenged the audience’s inherent perception of “meaning”. Deconstructing the content of mainstream media through digital editing technology, and transforming cultural symbols into meaningless “electronic garbage”. Their works often follow the principle of “chaos is aesthetics,” such as an endless cycle of absurd clips or distorted role dialogues, forming a unique postmodern art language. YTP’s creative threshold is low, but its artistic value lies in reflecting on the essence of media — highlighting the vulnerability of digital media due to technical defects. Although YTP is an Internet meme, it is actually a continuous digital art experiment that redefines the boundary between entertainment and criticism.",
 				slogan: "YouTube Poop — Where there’s smoke, they pinch back. Because YouTube is where the poop is.",
 				constrain: "Controls the length of the clips to be generated",
 				clips: "Set the number of the clips to generate",
@@ -1503,7 +1505,7 @@ export default {
 				spn_sharp: "Key {{noteName}} sharp {{octave}}",
 				instructions: "This is a simulated piano keyboard. You can click on the piano keys to select the pitch(es).\nThe selected keys will have visual feedback.",
 			},
-			formulaFor39: "plus or minus twelve divided by log base ten of two, which is approximately equal to plus or minus thirty-nine point eight six three one three seven", // ± 12 / lg 2 (≈ ±39.863137)
+			formulaFor39: "plus or minus twelve divided by log base ten of two, which is approximately equal to plus or minus thirty-nine point eight six three one three seven", // ±12/lg2 (≈±39.863137)
 			trimTimecode: {
 				trimStart: "Start time",
 				trimEnd: "End time",
@@ -1637,12 +1639,12 @@ export default {
 				cyan: "Cyan",
 				magenta: "Magenta",
 				yellow: "Yellow",
-				key: "Key / Black",
+				key: "Key/Black",
 				luminance: "Luminance",
 				aAxisInLab: "a-Axis (−Green ↔ +Red)",
 				bAxisInLab: "b-Axis (−Blue ↔ +Yellow)",
 				chroma: "Chroma",
-				alpha: "Alpha / Opacity",
+				alpha: "Alpha/Opacity",
 				hex: "Hexadecimal",
 			},
 			axisAbbrs: {

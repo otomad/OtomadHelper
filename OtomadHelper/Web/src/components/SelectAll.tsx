@@ -21,7 +21,7 @@ const StyledSelectAll = styled.div`
 	}
 `;
 
-export default function SelectAll<T>({ value, all, icon, title, meta, details }: FCP<{
+export default function SelectAll<T>({ value, all, icon, title, meta, details, ...htmlAttrs }: FCP<{
 	value: StateProperty<T[]>;
 	all: T[];
 	/** Icon. Use an empty string or Boolean type to indicate disabling. */
@@ -39,7 +39,7 @@ export default function SelectAll<T>({ value, all, icon, title, meta, details }:
 	const props = { title, details, icon, anchor };
 
 	return (
-		<StyledSelectAll>
+		<StyledSelectAll {...htmlAttrs}>
 			{title && <Expander.Item {...props} asSubtitle="closerAfter" />}
 			<Checkbox
 				value={[selectAll, setSelectAll]}

@@ -30,7 +30,7 @@ export default function Gradient() {
 					<CommandBar.Item icon="grid" altCaption={t.titles.grid} caption={t.track.gradient.gridIntegration} details={t.descriptions.track.gradient.gridIntegration} onClick={() => setShowGridIntegration(true)} />
 					<hr />
 					<CommandBar.Item iconOnly icon="extra_large_icons" caption={t.view} details={t.descriptions.track.view}>
-						<ToggleSwitch on={viewOverlay} icon="photo_filter">{t.track.gradient.view.overlay}</ToggleSwitch>
+						<ToggleSwitch on={viewOverlay} icon="photo_filter">{t.fit.overlay}</ToggleSwitch>
 						<ToggleSwitch on={viewSquare} icon="grid">{t.track.grid.square}</ToggleSwitch>
 						<ToggleSwitch on={viewMirrorEdges} icon="image_reflection" lock={viewOverlay[0] ? false : null}>{t.track.grid.mirrorEdges}</ToggleSwitch>
 						<Flyout.Item icon="resize" title={t.size} />
