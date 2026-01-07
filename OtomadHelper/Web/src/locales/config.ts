@@ -5,7 +5,7 @@ import { initReactI18next } from "react-i18next";
 import type { AvailableLanguageTags } from "./all";
 import allLanguages from "./all";
 import initFormatters from "./utils/formatters";
-import { fullwidthQuotesProcessor } from "./utils/processors";
+import { addWbrAfterSlashProcessor, fullwidthQuotesProcessor } from "./utils/processors";
 
 i18n
 	// Detect the language user used currently
@@ -15,6 +15,8 @@ i18n
 	.use(initReactI18next)
 	// Add fullwidth quotation marks Unicode Standardized Variation Sequence (SVS)
 	.use(fullwidthQuotesProcessor)
+	// Add zero width space after the forward slashes, to allow line break after the slash.
+	.use(addWbrAfterSlashProcessor)
 	// Initial i18next
 	// Docs: https://www.i18next.com/overview/configuration-options
 	.init({
@@ -27,6 +29,7 @@ i18n
 		},
 		postProcess: [
 			fullwidthQuotesProcessor.name,
+			addWbrAfterSlashProcessor.name,
 		],
 		resources: allLanguages,
 		detection: {

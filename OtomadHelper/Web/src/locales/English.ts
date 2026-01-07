@@ -1268,6 +1268,7 @@ export default {
 					previewAria: "The {{trackIndex, ordinal}} track is located in column {{columnIndex}}, row {{rowIndex}} of a {{columnCount}}-column by {{rowCount}}-row grid.",
 					previewAria_span: "The {{trackIndex, ordinal}} track is spanning {{columnSpan}} $t(track.grid.column, { 'count': {{columnSpan}} }, lowercase) and {{rowSpan}} $t(track.grid.row, { 'count': {{rowSpan}} }, lowercase), located in column {{columnIndex}}, row {{rowIndex}} of a {{columnCount}}-column by {{rowCount}}-row grid.",
 					squareCannotUseTheseFeatures: "To use the following features, switch the Array mode to {{fixed}}",
+					dynamicDetection: "Dynamically detect the existence of clips in the active tracks, and automatically change the number of track boxes. Only one-time processing, without real-time tracking of changes.",
 				},
 				box3d: {
 					deleteTracks: "Due to technical limitations, the selected tracks cannot be moved directly. Currently, it can only create new tracks and migrate the clips automatically, but not track motions, effects, or anything else. You will have to migrate them yourself later. You can decide if you want to delete the original tracks. Newly added tracks are not affected.",

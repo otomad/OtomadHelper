@@ -6,3 +6,9 @@ export const fullwidthQuotesProcessor: PostProcessorModule = {
 	name: "fullwidth-quotes",
 	process: (value: string) => enableSvsQuotes(value),
 };
+
+export const addWbrAfterSlashProcessor: PostProcessorModule = {
+	type: "postProcessor",
+	name: "add-wbr-after-slash",
+	process: (value: string) => value.replaceAll(/\/+/g, "$&\u200b"),
+};
