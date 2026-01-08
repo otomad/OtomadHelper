@@ -45,10 +45,15 @@ export /* @internal */ const matchParity = (parity: GridParityType, column: numb
 
 // #region Style
 const PreviewGridContainer = styled.div`
+	--badge-float: left;
 	${styles.mixins.square("100%")};
 	${styles.mixins.gridCenter()};
 	container: preview-grid-container / size;
 	margin-block-start: ${RULER_THICKNESS - GAP}px;
+
+	&:dir(rtl) {
+		--badge-float: right;
+	}
 `;
 
 const PreviewGrid = styled.div`
@@ -80,6 +85,32 @@ const PreviewGrid = styled.div`
 
 	.padding-wrapper {
 		padding: var(--padding, 0);
+
+		&::after {
+			${styles.mixins.oval()};
+			${styles.effects.text.caption};
+			--size: 16px;
+			--margin: 4px;
+			content: attr(data-index);
+			position: relative;
+			bottom: calc(var(--margin) + var(--size));
+			left: var(--margin);
+			display: inline-block;
+			float: var(--badge-float);
+			block-size: var(--size);
+			min-inline-size: var(--size);
+			padding: 0 3px;
+			font-size: 10px;
+			text-align: center;
+			background-color: ${c("fill-color-system-solid-neutral-background", 75)};
+			scale: inherit;
+			pointer-events: none;
+
+			@container style(--badge-float: right) {
+				right: var(--margin);
+				left: unset;
+			}
+		}
 	}
 
 	[role="img"] {
@@ -131,25 +162,6 @@ const PreviewGrid = styled.div`
 					box-shadow: 0 0
 				}
 			`} duration timing-function delay iteration-count direction fill-mode;
-		}
-
-		&::after {
-			${styles.mixins.oval()};
-			${styles.effects.text.caption};
-			--size: 16px;
-			--margin: 4px;
-			content: attr(data-index);
-			position: absolute;
-			bottom: var(--margin);
-			left: var(--margin);
-			display: inline-block;
-			block-size: var(--size);
-			min-inline-size: var(--size);
-			padding: 0 3px;
-			font-size: 10px;
-			text-align: center;
-			background-color: ${c("fill-color-system-solid-neutral-background", 75)};
-			scale: inherit;
 		}
 	}
 
@@ -755,6 +767,7 @@ export default function Grid() {
 									className="padding-wrapper"
 									key={`${colStart},${rowStart}`}
 									style={{ gridArea: [rowStart, colStart, rowEnd + 1, colEnd + 1].join(" / ") }}
+									data-index={trackIndex}
 								>
 									<div
 										className={[{
@@ -776,7 +789,6 @@ export default function Grid() {
 											columnSpan: colSpan,
 											rowSpan,
 										})}
-										data-index={trackIndex}
 										data-column-start={colStart}
 										data-column-end={colEnd}
 										data-row-start={rowStart}
