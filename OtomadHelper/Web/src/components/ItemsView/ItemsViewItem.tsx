@@ -400,7 +400,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 
 	useEffect(() => onSelectedChange?.(id, selected), [selected, id, onSelectedChange]);
 
-	useOnFormKeyDown(el);
+	useOnFormKeyDown(el, { item: ".items-view-item" });
 
 	return (
 		<ItemsViewItemStateContext value={{ hover }}>
