@@ -169,7 +169,7 @@ export const settingsMetasInput = {
 				progress: { icon: "progress_bar" },
 			},
 		},
-		parameters: subheader(t.subheaders.parameters),
+		parameters: subheader(t.titles.parameters),
 		preset: preset("audio"),
 	},
 	visual: {
@@ -248,7 +248,7 @@ export const settingsMetasInput = {
 				progress: { icon: "progress_bar" },
 			},
 		},
-		parameters: subheader(t.subheaders.parameters),
+		parameters: subheader(t.titles.parameters),
 		preset: preset("visual"),
 	},
 	visual_prve: {

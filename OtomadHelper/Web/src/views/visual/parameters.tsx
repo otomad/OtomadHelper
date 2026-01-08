@@ -5,7 +5,7 @@ export default function Parameters() {
 			<div>
 				<Button icon="copy_arrow_right">{t.stream.parameters.copyFromAnotherParameterScheme}</Button>
 			</div>
-			<Subheader>{t.subheaders.parameters}</Subheader>
+			<Subheader>{t.titles.parameters}</Subheader>
 		</div>
 	);
 }

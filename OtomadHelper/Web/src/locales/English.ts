@@ -214,7 +214,6 @@ export default {
 			moreOptions: "More options",
 			advanced: "Advanced",
 			config: "Configurations",
-			parameters: "Parameters",
 			seeAlso: "See also",
 		},
 		units: {
@@ -544,6 +543,11 @@ export default {
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "Copy from another parameter scheme here",
+				hue: "Hue",
+				saturation: "Saturation",
+				contrast: "Contrast",
+				threshold: "Threshold",
+				brightness: "Brightness",
 			},
 			enabled: {
 				audio: "Generate audio",

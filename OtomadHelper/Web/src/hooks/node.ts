@@ -31,7 +31,7 @@ export function useImperativeHandleRef<T>(forwardedRef: React.ForwardedRef<T> | 
 export function useImperativeHandleAriaId(forwardedAriaIdRef: AriaIdRef | undefined, ariaId: string) {
 	useImperativeHandle(forwardedAriaIdRef, () => ariaId, [ariaId]);
 }
-export type AriaIdRef = React.Ref<string | undefined | null>;
+export type AriaIdRef = MiscRef<string | undefined | null>;
 
 /**
  * If user click a button that inside another button, do not trigger outside button event.

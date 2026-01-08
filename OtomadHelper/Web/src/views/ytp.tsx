@@ -85,7 +85,7 @@ export default function Ytp() {
 			<SettingsCardToggleSwitch title={t.enabled} selectInfo={t(1).selectInfo.source} icon="lightbulb" on={enabled} resetTransitionOnChanging />
 
 			<EmptyMessage.Typical icon="ytp" title="ytp" enabled={enabled}>
-				<Subheader>{t.subheaders.parameters}</Subheader>
+				<Subheader>{t.titles.parameters}</Subheader>
 				<Setting meta={meta.constrain}>
 					<ExpanderChildTrim.RoughTime range={constraint} min={1} decimalPlaces={0} spinnerStep={100} />
 				</Setting>

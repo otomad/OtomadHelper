@@ -11,10 +11,10 @@ export default function HorizontalScroll<TContainer extends AsTarget>({ enabled 
 	children?: ReactNode;
 	ref?: MiscRef<Any>;
 }, "section">) {
-	const Container = (container ?? as) as GetReactElementFromTag<"div">;
+	const Container = (container ?? as) as GetReactElementFromTag<"section">;
 	if (Container === Fragment) htmlAttrs = {};
 
-	const el = useDomRef<"div">();
+	const el = useDomRef<"section">();
 	useImperativeHandleRef(ref, el);
 
 	const scrollTarget = useRef(0);

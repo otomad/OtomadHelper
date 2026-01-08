@@ -64,7 +64,7 @@ export function cloneRef(children: ReactNode, nodeRef: MiscRef<Element | null>, 
 	return h(
 		Fragment,
 		null,
-		React.Children.map(children, (child: ReactNode) => {
+		flattenReactChildren(children).map((child: ReactNode) => {
 			if (!isValidElement<RefAttributes>(child)) return child;
 			const existedRef = child.props.ref;
 			const ref = mergeRefs(nodeRef, existedRef);

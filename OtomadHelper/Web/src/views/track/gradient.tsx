@@ -9,6 +9,10 @@ const parityTypes = _parityTypes.toMoved(-2, undefined, 1);
 const DEFAULT_ITEM_WIDTH = 325;
 
 export default function Gradient() {
+	return <MirrorGradientTrackFlyoutEditor />;
+}
+
+function Gradient_legacy() {
 	const {
 		effect, descending: [descending, setDescending],
 		viewOverlay, viewSquare, viewMirrorEdges, viewSize,
@@ -61,7 +65,7 @@ export default function Gradient() {
 							<TextBox.Number value={columns} min={1} max={100} />
 						</SettingsCard>
 						<SettingsCardToggleSwitch on={autoColumns} icon="checkmark" title={t.track.gradient.gridIntegration.autoLineLength} details={t.descriptions.track.gradient.gridIntegration.autoLineLength} />
-						<Subheader>{t.subheaders.parameters}</Subheader>
+						<Subheader>{t.titles.parameters}</Subheader>
 						<ExpanderRadio
 							title={t.track.grid.direction}
 							items={directionTypes}
