@@ -1,3 +1,5 @@
+import { snapshot as valtioSnapshot } from "valtio";
+
 /**
  * Creates a persistent *Valtio* store using the provided name and initial object.
  * The store is persisted in the browser's local storage.
@@ -81,4 +83,8 @@ export function isStatePropertyPremium<T>(stateProperty?: StateProperty<T> | nul
 
 export function useStoreStateArray<T extends object>(array: T[]): StatePropertiedObject<T>[] {
 	return array.map(item => useStoreState(item));
+}
+
+export function snapshot<T extends object>(store: T): T {
+	return structuredClone(valtioSnapshot(store)) as T;
 }

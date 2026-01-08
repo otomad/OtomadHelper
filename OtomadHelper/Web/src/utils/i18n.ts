@@ -67,7 +67,6 @@ const getProxy = (target: object, fallbackMode: boolean = false, tInHook?: typeo
 			const getMissingKey = (key: string) => {
 				if (fallbackMode) return undefined;
 				const displayValue = `<${key}>`;
-				debugger;
 				console.error("Missing translation key: " + key);
 				return displayValue;
 			};

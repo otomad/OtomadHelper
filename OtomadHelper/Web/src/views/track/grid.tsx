@@ -17,7 +17,7 @@ const PREVIEW_GRID_BORDER_RADIUS = 8;
 const /** @deprecated */ count = 26, /** @deprecated */ projectWidth = 1920, /** @deprecated */ projectHeight = 1080;
 
 const getGridUnitTypeName = (unit: WebMessageEvents.GridUnitType, count: number) => {
-	const tc = t({ context: "full", count });
+	const tc = tAlias({ context: "full", count });
 	return unit === "auto" ? tc.auto : unit === "pixel" ? tc.units.pixel : tc.units.fraction;
 };
 
@@ -326,11 +326,15 @@ const StyledContainerPreview = styled.div`
 		anchor-name: ${COMMAND_BAR_WRAPPER_ANCHOR_NAME};
 		position: relative;
 
-		.reset-btn {
+		.flyout-editor-buttons {
 			position: absolute;
 			inset-block-start: 4px;
 			inset-inline-end: 0;
 			z-index: 2;
+			display: flex;
+			gap: 8px;
+			justify-content: end;
+			align-items: stretch;
 			transition-behavior: allow-discrete;
 
 			&[hidden] {
@@ -445,7 +449,7 @@ export default function Grid() {
 	// The row count which is automatically calculated from the customized column count, and vice versa.
 	const autoRows = finalCrossLineIndex, autoColumns = finalCrossLineIndex;
 	// Show custom cell editor flyout (e.g. span, column width...).
-	const [flyoutEditor, setFlyoutEditor] = useState<"span" | "width" | "height" | "blank">(), previousFlyoutEditor = useDeferredValue(flyoutEditor), _flyoutEditor = flyoutEditor || previousFlyoutEditor;
+	const [flyoutEditor, _setFlyoutEditor] = useState<"span" | "width" | "height" | "blank">(), previousFlyoutEditor = useDeferredValue(flyoutEditor), _flyoutEditor = flyoutEditor || previousFlyoutEditor;
 	// **(For span and blank operation only.)** Set highlight cell index, other cells will become translucent.
 	const [highLightCellIndex, setHighLightCellIndex] = useState(-1);
 	// The cell that being set in the custom cell editor flyout.
@@ -554,15 +558,28 @@ export default function Grid() {
 	const operationRecordFilterBadgeCounts = { span: spans.length, columnWidth: columnWidths.length, rowHeight: rowHeights.length, blank: blanks.length } as Record<typeof operationRecordFilter, number>;
 	operationRecordFilterBadgeCounts.all = sum(...Object.values(operationRecordFilterBadgeCounts));
 	const [flipHRandomTimestamp, setFlipHRandomTimestamp] = useState(0), [flipVRandomTimestamp, setFlipVRandomTimestamp] = useState(0);
+	const configSnapshot = useRef<typeof configStore.track.grid>(undefined),
+		updateConfigSnapshot = () => configSnapshot.current = snapshot(configStore.track.grid),
+		rollbackConfigSnapshot = () => configSnapshot.current && (configStore.track.grid = configSnapshot.current);
 
 	useSetLayoutEnabledOnSave("grid", true);
 	const setPageCommandBarDisabled = pageStore.useSetCommandBarDisabled();
 	useEffect(() => { setPageCommandBarDisabled(!!flyoutEditor); }, [flyoutEditor]);
 
-	const closeFlyoutEditor = () => setFlyoutEditor(undefined);
+	const setFlyoutEditor: typeof _setFlyoutEditor = value => { updateConfigSnapshot(); _setFlyoutEditor(value); };
+	const closeFlyoutEditor = (save = true) => {
+		if (!save) rollbackConfigSnapshot();
+		configSnapshot.current = undefined;
+		_setFlyoutEditor(undefined);
+	};
 	useEventListener(window, "keydown", e => flyoutEditor && e.code === "Escape" && closeFlyoutEditor(), undefined, [flyoutEditor]);
 	useEventListener(window, "blur", () => closeFlyoutEditor(), undefined, [flyoutEditor]);
 	const resetRecords = () => { setSpans([]); setColumnWidths([]); setRowHeights([]); setBlanks([]); };
+	const closeOperationRecordDialog = (save = true) => {
+		if (!save) rollbackConfigSnapshot();
+		configSnapshot.current = undefined;
+		setShowOperationRecordDialog(false);
+	};
 
 	function deleteSelection() {
 		for (const selected of operationRecordSelection)
@@ -662,7 +679,17 @@ export default function Grid() {
 				<div className="command-bar-wrapper">
 					<CommandBar.Group>
 						<CommandBar position="right" autoCollapse>
-							<CommandBar.Item icon="approvals_app" onClick={() => { cleanUpInvalidOperationItems(); setShowOperationRecordDialog(true); }} caption={t.track.grid.operationRecord} altCaption={t({ context: "short" }).track.grid.operationRecord} aria-haspopup="dialog" />
+							<CommandBar.Item
+								icon="approvals_app"
+								onClick={() => {
+									cleanUpInvalidOperationItems();
+									updateConfigSnapshot();
+									setShowOperationRecordDialog(true);
+								}}
+								caption={t.track.grid.operationRecord}
+								altCaption={t({ context: "short" }).track.grid.operationRecord}
+								aria-haspopup="dialog"
+							/>
 							<hr />
 							<CommandBar.Item
 								icon={square ? "grid" : "grid_kanban_vertical"}
@@ -753,7 +780,11 @@ export default function Grid() {
 							})} */}
 						</CommandBar>
 					</CommandBar.Group>
-					<Button icon="arrow_reset" accent="critical" className="reset-btn" hidden={!flyoutEditor} onClick={resetFlyoutEditor}>{t.reset}</Button>
+					<div className="flyout-editor-buttons" hidden={!flyoutEditor}>
+						<Button icon="checkmark" onClick={() => closeFlyoutEditor(true)}>{t.ok}</Button>
+						<Button icon="dismiss" onClick={() => closeFlyoutEditor(false)}>{t.cancel}</Button>
+						<Button icon="arrow_reset" accent="critical" onClick={resetFlyoutEditor}>{t.resetToDefault}</Button>
+					</div>
 				</div>
 
 				<PreviewGridContainer>
@@ -986,13 +1017,15 @@ export default function Grid() {
 			</Portal>
 
 			<ContentDialog
-				shown={[showOperationRecordDialog, setShowOperationRecordDialog]}
+				shown={[showOperationRecordDialog, () => closeOperationRecordDialog()]}
 				title={t.track.grid.operationRecord}
-				buttons={close => (
+				width={600}
+				buttons={(
 					<>
 						<Button onClick={resetRecords} disabled={isCurrentOperationRecordFilterItemEmpty}>{operationRecordFilter === "all" ? t.reset : t.resetThisPage}</Button>
 						<Button onClick={deleteSelection} disabled={!isCurrentOperationRecordFilterItemAnySelected}>{t.deleteSelection}</Button>
-						<Button autoFocus accent onClick={close}>{t.close}</Button>
+						<Button autoFocus accent onClick={() => closeOperationRecordDialog(true)}>{t.ok}</Button>
+						<Button onClick={() => closeOperationRecordDialog(false)}>{t.cancel}</Button>
 					</>
 				)}
 			>

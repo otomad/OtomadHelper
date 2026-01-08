@@ -155,6 +155,7 @@ export default {
 		variableBeginWith: "Variable from {{first, lowercase}}", // For example, if the panning of a score gradually changes from the left channel to the right channel, it will be displayed as “Variable from left”.
 		reset: "Reset",
 		resetThisPage: "Reset this page",
+		resetToDefault: "Reset to default",
 		preset: "Preset",
 		preset_other: "Presets",
 		new: "New", // Verb. Create new.
@@ -164,6 +165,7 @@ export default {
 		topPriority: "{{item}} first", // Used for sorting forms, if the order of its content is watch, phone, flashlight, it will display as “watch first”.
 		browse: "Browse", // Browse files or folders.
 		ok: "OK",
+		cancel: "Cancel",
 		close: "Close",
 		order: "Order",
 		ascending: "Ascending",

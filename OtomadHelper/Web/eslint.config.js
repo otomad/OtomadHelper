@@ -454,6 +454,9 @@ export default [
 				name: "open",
 				message: "Please use window.open instead.",
 			}, {
+				name: "close",
+				message: "Please use window.close instead.",
+			}, {
 				name: "matchMedia",
 				message: "Please use window.matchMedia instead.",
 			}, {
