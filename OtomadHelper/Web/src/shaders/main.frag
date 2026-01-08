@@ -23,6 +23,12 @@ out vec4 outColor;
 // Declare the frag() function which would be implemented.
 vec4 frag();
 
+// Utils
+
+float map(float x, float min, float max, float a, float b) {
+	return (b - a) * (x - min) / (max - min) + a;
+}
+
 $fragments
 
 vec4 selectFrag(int index) {

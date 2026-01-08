@@ -46,9 +46,25 @@ export default function MirrorGradientTrackFlyoutEditor() {
 			<HorizontalScroll as={Fragment}>
 				<ItemsView view="grid" current={null}>
 					<Subheader vertical>{t.track.gradient.groups.alternately}</Subheader>
-					{AlternatelyEffects.map(({ key, label }) => <ItemsView.Item id={key} key={key} image={<PreviewPrve thumbnail={exampleThumbnail} effect={key === "monochrome" ? "chromatic" : key} inert />}>{label}</ItemsView.Item>)}
+					{AlternatelyEffects.map(({ key, label }) => (
+						<ItemsView.Item
+							id={key}
+							key={key}
+							image={<PreviewPrve thumbnail={exampleThumbnail} effect={key === "monochrome" ? "chromatic" : key} />}
+						>
+							{label}
+						</ItemsView.Item>
+					))}
 					<Subheader vertical>{t.track.gradient.groups.gradually}</Subheader>
-					{GraduallyEffects.map(({ key, label }) => <ItemsView.Item id={key} key={key}>{label}</ItemsView.Item>)}
+					{GraduallyEffects.map(({ key, label }) => (
+						<ItemsView.Item
+							id={key}
+							key={key}
+							image={<PreviewGraduallyGradient thumbnail={exampleThumbnail} effect={key} />}
+						>
+							{label}
+						</ItemsView.Item>
+					))}
 				</ItemsView>
 			</HorizontalScroll>
 		</StyledMirrorGradientTrackFlyoutEditor>
