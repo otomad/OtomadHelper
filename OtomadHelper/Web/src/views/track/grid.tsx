@@ -60,10 +60,13 @@ const PreviewGrid = styled.div`
 	${styles.effects.flyout};
 	--project-width: 1920;
 	--project-height: 1080;
+	container: preview-grid / size;
+	position: relative;
 	display: grid;
 	align-self: center;
 	width: min(100cqw, calc(100cqh / var(--project-height) * var(--project-width)));
 	height: min(100cqh, calc(100cqw / var(--project-width) * var(--project-height)));
+	overflow: clip;
 	border-radius: ${PREVIEW_GRID_BORDER_RADIUS}px;
 	backdrop-filter: none;
 	transition: ${fallbackTransitions}, --grid-template-count ${eases.easeOutMax} 250ms;
@@ -84,6 +87,7 @@ const PreviewGrid = styled.div`
 	}
 
 	.padding-wrapper {
+		anchor-name: var(--anchor-name);
 		padding: var(--padding, 0);
 
 		&::after {
@@ -92,11 +96,11 @@ const PreviewGrid = styled.div`
 			--size: 16px;
 			--margin: 4px;
 			content: attr(data-index);
-			position: relative;
-			bottom: calc(var(--margin) + var(--size));
-			left: var(--margin);
+			position: absolute;
+			position-anchor: var(--anchor-name);
+			bottom: calc(anchor(bottom) + var(--margin) + var(--padding));
+			left: calc(anchor(left) + var(--margin) + var(--padding));
 			display: inline-block;
-			float: var(--badge-float);
 			block-size: var(--size);
 			min-inline-size: var(--size);
 			padding: 0 3px;
@@ -105,15 +109,16 @@ const PreviewGrid = styled.div`
 			background-color: ${c("fill-color-system-solid-neutral-background", 75)};
 			scale: inherit;
 			pointer-events: none;
+			transition: ${fallbackTransitions}, inset 0s;
 
 			@container style(--badge-float: right) {
-				right: var(--margin);
+				right: calc(anchor(right) + var(--margin) + var(--padding));
 				left: unset;
 			}
 		}
 	}
 
-	[role="img"] {
+	.track-box-img {
 		${styles.mixins.square("100%")};
 		position: relative;
 		align-content: end;
@@ -126,6 +131,7 @@ const PreviewGrid = styled.div`
 		background-position: center;
 		background-size: var(--fit);
 		cursor: ${contextMenuCur};
+		transition: ${fallbackTransitions}, width 0s, height 0s;
 
 		&.h-flip {
 			scale: -1 1;
@@ -165,12 +171,29 @@ const PreviewGrid = styled.div`
 		}
 	}
 
-	&:has([role="img"]:hover) [role="img"]:not(:hover) {
+	&:has(.track-box-img:hover) .track-box-img:not(:hover) {
 		opacity: 0.75;
 	}
 
-	&:has([role="img"].highlight) [role="img"]:not(.highlight) {
+	&:has(.track-box-img.highlight) .track-box-img:not(.highlight) {
 		opacity: 0.5;
+	}
+
+	@container style(--fit: overlay) {
+		.padding-wrapper {
+			overflow: clip;
+			clip-path: inset(0);
+		}
+
+		.track-box-img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100cqw;
+			height: 100cqh;
+			object-fit: contain;
+			background-size: contain;
+		}
 	}
 `;
 
@@ -766,11 +789,14 @@ export default function Grid() {
 								<div
 									className="padding-wrapper"
 									key={`${colStart},${rowStart}`}
-									style={{ gridArea: [rowStart, colStart, rowEnd + 1, colEnd + 1].join(" / ") }}
+									style={{
+										gridArea: [rowStart, colStart, rowEnd + 1, colEnd + 1].join(" / "),
+										"--anchor-name": `--${id}-padding-wrapper-${colStart}-${rowStart}`,
+									}}
 									data-index={trackIndex}
 								>
 									<div
-										className={[{
+										className={["track-box-img", {
 											hFlip: matchParity(mirrorEdgesHFlip[0], colStart, rowStart, `${flipHRandomTimestamp.toString(36)},h`),
 											vFlip: matchParity(mirrorEdgesVFlip[0], colStart, rowStart, `${flipVRandomTimestamp.toString(36)},v`),
 											highlight:
@@ -793,7 +819,7 @@ export default function Grid() {
 										data-column-end={colEnd}
 										data-row-start={rowStart}
 										data-row-end={rowEnd}
-										onMouseDown={e => e.button === 2 && focusDiffusion(e, corners)}
+										onMouseDown={e => e.button === 2 && focusDiffusion(e.currentTarget.parentElement, corners)}
 										onContextMenu={createContextMenu(([
 											...square ? [
 												{ label: t.descriptions.track.grid.squareCannotUseTheseFeatures({ fixed: fixedColumnsOrFixedRows }) },
