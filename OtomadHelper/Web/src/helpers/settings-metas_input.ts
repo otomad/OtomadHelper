@@ -1,6 +1,5 @@
-import type { ISettingMeta, RedirectedTrans } from "./settings-metas";
+import type { ISettingMeta } from "./settings-metas";
 export const languageNode = Symbol("settingsMetas.languageNode");
-const { t } = new PathObject<RedirectedTrans>();
 
 export const settingsMetasInput = {
 	source: {
@@ -433,7 +432,7 @@ function playbackRate() {
 function subheader<const IMeta extends ISettingMeta>(meta: string | IMeta = {} as IMeta) {
 	return {
 		type: "subheader",
-		...typeof meta === "string" || meta instanceof PathObject ? {
+		...typeof meta === "string" || isI18nItem(meta) ? {
 			title: meta as string,
 		} : meta,
 	} as const satisfies ISettingMeta;

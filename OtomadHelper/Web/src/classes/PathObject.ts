@@ -1,3 +1,5 @@
+// DELETE: Useless now.
+
 const isPathObject = Symbol("path-object.is_path_object");
 const variableNameRe = /^[a-z_$][\w$]*$/;
 
@@ -49,6 +51,7 @@ function pathObjectProxy(path: string): ReturnType<typeof pathObjectTarget> {
 	});
 }
 
+/** @deprecated */
 const PathObject = (class PathObject {
 	constructor() {
 		return new Proxy(this, {

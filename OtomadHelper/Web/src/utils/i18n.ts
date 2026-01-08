@@ -5,13 +5,14 @@ import type { AvailableLanguageTags } from "locales/all";
 import i18n from "locales/config";
 import type { LocaleWithDefaultValue } from "locales/types";
 const I18N_ITEM_SYMBOL = Symbol.for("react-i18next.i18n_item");
+const I18N_ITEM_GET_KEY_SYMBOL = Symbol.for("react-i18next.i18n_item.get_key");
 const toPrimitives = [Symbol.toPrimitive, "toString", "toJSON", "valueOf"];
 interface AdditionalOptions {
 	format: string | string[];
 }
 type TOptions = _TOptions & Partial<AdditionalOptions>;
 
-export function isI18nItem(newChild: Any): newChild is Record<string, string> {
+export function isI18nItem(newChild: Any): newChild is Record<string | symbol, string> {
 	return !!newChild?.[I18N_ITEM_SYMBOL];
 }
 
@@ -66,6 +67,7 @@ const getProxy = (target: object, fallbackMode: boolean = false, tInHook?: typeo
 			const getMissingKey = (key: string) => {
 				if (fallbackMode) return undefined;
 				const displayValue = `<${key}>`;
+				debugger;
 				console.error("Missing translation key: " + key);
 				return displayValue;
 			};
@@ -115,6 +117,7 @@ const getProxy = (target: object, fallbackMode: boolean = false, tInHook?: typeo
 							return getWithArgsProxy(...parents, currentName);
 						if (typeof currentName === "symbol")
 							if (currentName === I18N_ITEM_SYMBOL) return target[currentName];
+							else if (currentName === I18N_ITEM_GET_KEY_SYMBOL) return info.key;
 							else return translate(keys)![currentName as SymbolConstructor["iterator"]];
 					},
 					...sharedProxyHandler(keys),
@@ -308,7 +311,7 @@ export function getLocaleName(targetLocale: string | Intl.Locale, displayLocale:
 
 /**
  * Uses the same resolve functionality as the `t` function and returns true if a key and context exists.
- * @param getKey - Get the key.
+ * @param i18nItem - An i18n item.
  * @param context - Provide the context if required.
  * @param enableFallbackLang - When set it to `false`, if the specific key exists but haven't translated in current language,
  * the function will also return `false`.
@@ -318,9 +321,8 @@ export function getLocaleName(targetLocale: string | Intl.Locale, displayLocale:
  * i18nExists(t.my.key, "context"); // -> true if exists, false if not.
  * ```
  */
-export function i18nExists(getKey: ((t: Trans) => Any) | string, context?: string, enableFallbackLang = true) {
-	const t = new PathObject() as Trans;
-	let path = typeof getKey === "string" ? getKey : getKey(t) + "";
+export function i18nExists(i18nItem: string, context?: string, enableFallbackLang = true) {
+	let path = getI18nKey(i18nItem);
 	path = path.replaceEnd("()");
 	if (context) path += `_${context}`;
 	const fallbackLng = enableFallbackLang ? undefined : false;
@@ -328,4 +330,17 @@ export function i18nExists(getKey: ((t: Trans) => Any) | string, context?: strin
 	if (notCategoryExists) return true;
 	if (notCategoryExists === i18n.exists(path, { fallbackLng, returnObjects: true })) return false;
 	return i18n.exists(path + "._", { fallbackLng, returnObjects: false });
+}
+
+/**
+ * Get i18n key from an i18n item.
+ * @param i18nItem - An i18n item.
+ * @returns The i18n key.
+ * @example
+ * ```javascript
+ * getI18nKey(t.my.key); // "my.key"
+ * ```
+ */
+export function getI18nKey(i18nItem: string) {
+	return isI18nItem(i18nItem) ? i18nItem[I18N_ITEM_GET_KEY_SYMBOL] : i18nItem;
 }

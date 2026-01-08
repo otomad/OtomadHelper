@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-wrapper-object-types */
+import type SettingsCard from "components/Settings/SettingsCard/SettingsCard";
 import type { I18nArgsFunction } from "locales/types";
 import { redirectIcon } from "src/ShellPage";
 import type { Trans } from "utils/i18n";
 import { tf as $$t } from "utils/i18n";
 import { languageNode, settingsMetasInput } from "./settings-metas_input";
-const { t } = new PathObject<RedirectedTrans>();
 
 type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup" | "subheader";
 
@@ -123,6 +122,7 @@ type Nesting<TObject> = {
 const languageInAllLanguages = Object.freeze(getAllLanguageTags().map(lang => i18n.t("settings.language._", { lng: lang, fallbackLng: false })));
 const metas: SettingMeta[] = [];
 const settingsMetasOutput: AnyObject = {};
+const pathToI18nItem = (path: string) => path.split(".").reduce<Any>((parent, key) => parent?.[key], tf) as string;
 function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = false) {
 	if (!item) return undefined!;
 	const { items: itemsInput, ...meta } = item;
@@ -139,25 +139,21 @@ function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = fal
 		}
 	meta.aliases = [...meta.aliases ?? []];
 	if (!isPageMeta) {
-		if (!("title" in meta)) meta.title = dotJoined;
-		if (!("details" in meta)) meta.details = "descriptions." + dotJoined;
-		meta.aliases.pushUniquely("aliases." + dotJoined);
+		if (!("title" in meta)) meta.title = pathToI18nItem(dotJoined);
+		if (!("details" in meta)) meta.details = pathToI18nItem("descriptions." + dotJoined);
+		meta.aliases.pushUniquely(pathToI18nItem("aliases." + dotJoined));
 		if (!("icon" in meta) && meta.type === "subheader") meta.icon = "subheader";
 	} else {
 		const subpage = _path.split("/").at(-1)!;
 		const contexts = ["long", "full", "other", undefined];
-		const context = contexts.filter(ctx => ctx !== "other").firstDefined(ctx => i18nExists(t => t.titles[subpage], ctx) && ctx && `_${ctx}` || undefined) ?? "";
-		if (!("title" in meta)) meta.title = t.titles[subpage + context].toString();
-		if (!("details" in meta)) meta.details = "descriptions." + dotJoined + ".caption";
-		meta.aliases.pushUniquely(...contexts.map(ctx => t.titles[`${subpage}${ctx ? `_${ctx}` : ""}`].toString()), t.aliases.titles[subpage].toString());
+		const context = contexts.filter(ctx => ctx !== "other").firstDefined(ctx => i18nExists(t.titles[subpage], ctx) && ctx && `_${ctx}` || undefined) ?? "";
+		if (!("title" in meta)) meta.title = t.titles[subpage + context];
+		if (!("details" in meta)) meta.details = pathToI18nItem("descriptions." + dotJoined + ".caption");
+		meta.aliases.pushUniquely(...contexts.map(ctx => tf.titles[`${subpage}${ctx ? `_${ctx}` : ""}`]), tf.aliases.titles[subpage]);
 		if (!("icon" in meta)) meta.icon = redirectIcon(subpage);
 		meta.type ??= "link";
 		meta.link ??= _path;
 	}
-	if (meta.title as Object instanceof PathObject) meta.title = meta.title?.toString();
-	if (meta.details as Object instanceof PathObject) meta.details = meta.details?.toString();
-	for (let i = 0; i < meta.aliases.length; i++)
-		if (meta.aliases[i] as Object instanceof PathObject) meta.aliases[i] = meta.aliases[i]?.toString();
 	const _meta = new SettingMeta(meta, _path);
 	metas.push(_meta);
 	return { meta: _meta, ...items };
@@ -186,16 +182,9 @@ function accessPath(root: AnyObject, path: string, overwrite: unknown) {
 
 function $t(key: string | undefined, enableFallbackLang: boolean = true) {
 	if (!key) return;
-	const keys = key.split(".");
-	let plural: number | undefined;
-	if (keys[0]?.match(/^t(?=[.(]|$)/)) {
-		const func = keys.shift()!;
-		key = keys.join(".");
-		const plural_string = func.match(/^t\((\d+)\)$/)?.[1];
-		if (plural_string) plural = +plural_string;
-	}
+	if (typeof (key as Any) === "string") throw new TypeError(`Unexpectedly got string key: ${key}`);
 	if (!i18nExists(key, undefined, enableFallbackLang)) return;
-	return keys.reduce<AnyObject>((root, key) => root[key], $$t(plural))?.toString();
+	return key.toString();
 }
 
 const settingMetaSearchResultProperties = ["title", "alias", "details"] as const;

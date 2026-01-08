@@ -104,6 +104,9 @@ export default function (babel: typeof babelCore): PluginObj {
 								if (t.isCallExpression(ancestor) && t.isIdentifier(ancestor.callee) && ancestor.callee.name === "Enum")
 									return;
 							}
+						// Exclude: i18nExists(t.foo, ctx), getI18nKey, isI18nItem
+						const i18nItemUtils = ["i18nExists", "getI18nKey", "isI18nItem"];
+						if (t.isCallExpression(parent) && t.isIdentifier(parent.callee) && i18nItemUtils.includes(parent.callee.name)) return;
 						// #endregion
 
 						// Recursively check if the root of the member expression is `t` related.
