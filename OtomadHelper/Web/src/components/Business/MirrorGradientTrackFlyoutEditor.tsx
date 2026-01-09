@@ -21,6 +21,7 @@ const GraduallyEffects = Enum({
 
 const StyledMirrorGradientTrackFlyoutEditor = styled.div`
 	.items-view {
+		${styles.mixins.overflowGradient("x", "1.25em")};
 		display: flex;
 		justify-content: start;
 		overflow-inline: auto;
@@ -42,31 +43,34 @@ const StyledMirrorGradientTrackFlyoutEditor = styled.div`
 
 export default function MirrorGradientTrackFlyoutEditor() {
 	return (
-		<StyledMirrorGradientTrackFlyoutEditor>
-			<HorizontalScroll as={Fragment}>
-				<ItemsView view="grid" current={null}>
-					<Subheader vertical>{t.track.gradient.groups.alternately}</Subheader>
-					{AlternatelyEffects.map(({ key, label }) => (
-						<ItemsView.Item
-							id={key}
-							key={key}
-							image={<PreviewPrve thumbnail={exampleThumbnail} effect={key === "monochrome" ? "chromatic" : key} />}
-						>
-							{label}
-						</ItemsView.Item>
-					))}
-					<Subheader vertical>{t.track.gradient.groups.gradually}</Subheader>
-					{GraduallyEffects.map(({ key, label }) => (
-						<ItemsView.Item
-							id={key}
-							key={key}
-							image={<PreviewGraduallyGradient thumbnail={exampleThumbnail} effect={key} />}
-						>
-							{label}
-						</ItemsView.Item>
-					))}
-				</ItemsView>
-			</HorizontalScroll>
-		</StyledMirrorGradientTrackFlyoutEditor>
+		<>
+			<Breadcrumb large={false} titles={[{ name: "Effect" }, { name: "Target" }]} />
+			<StyledMirrorGradientTrackFlyoutEditor>
+				<HorizontalScroll as={Fragment}>
+					<ItemsView view="grid" current={null}>
+						<Subheader vertical>{t.track.gradient.groups.alternately}</Subheader>
+						{AlternatelyEffects.map(({ key, label }) => (
+							<ItemsView.Item
+								id={key}
+								key={key}
+								image={<PreviewPrve thumbnail={exampleThumbnail} effect={key === "monochrome" ? "chromatic" : key} />}
+							>
+								{label}
+							</ItemsView.Item>
+						))}
+						<Subheader vertical>{t.track.gradient.groups.gradually}</Subheader>
+						{GraduallyEffects.map(({ key, label }) => (
+							<ItemsView.Item
+								id={key}
+								key={key}
+								image={<PreviewGraduallyGradient thumbnail={exampleThumbnail} effect={key} />}
+							>
+								{label}
+							</ItemsView.Item>
+						))}
+					</ItemsView>
+				</HorizontalScroll>
+			</StyledMirrorGradientTrackFlyoutEditor>
+		</>
 	);
 }

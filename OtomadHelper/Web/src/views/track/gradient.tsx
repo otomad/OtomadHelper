@@ -9,7 +9,11 @@ const parityTypes = _parityTypes.toMoved(-2, undefined, 1);
 const DEFAULT_ITEM_WIDTH = 325;
 
 export default function Gradient() {
-	return <MirrorGradientTrackFlyoutEditor />;
+	return (
+		<div className="container">
+			<MirrorGradientTrackFlyoutEditor />
+		</div>
+	);
 }
 
 function Gradient_legacy() {
