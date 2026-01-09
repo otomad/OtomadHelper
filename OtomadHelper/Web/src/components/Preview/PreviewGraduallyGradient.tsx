@@ -46,6 +46,8 @@ export default function PreviewGraduallyGradient({ thumbnail, effect }: FCP<{
 
 	const alterImage = {
 		hue: webglFilters?.gradientHue,
+		contrast: webglFilters?.gradientContrast,
+		threshold: webglFilters?.gradientThreshold,
 	}[effect];
 
 	return (

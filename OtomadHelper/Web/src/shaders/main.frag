@@ -29,6 +29,19 @@ float map(float x, float min, float max, float a, float b) {
 	return (b - a) * (x - min) / (max - min) + a;
 }
 
+/**
+ * Crop the square area in the center of the image and overlay the filter in a linear gradient from left to right
+ * according to the pixels in each column. Get column progress value (0 ~ 1).
+ */
+float getSquareGradientColumn() {
+	float column = floor(textureCoordinate.x * resolution.x);
+	if (resolution.x > resolution.y) {
+		float offcut = (resolution.x - resolution.y) / 2.0;
+		column = map(column, offcut, offcut + resolution.y, 0.0, resolution.x);
+	}
+	return column / resolution.x;
+}
+
 $fragments
 
 vec4 selectFrag(int index) {

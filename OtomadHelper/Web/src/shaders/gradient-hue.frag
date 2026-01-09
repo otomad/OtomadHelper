@@ -8,12 +8,8 @@ vec3 hueShift(vec3 color, float hueDeg) {
 vec4 frag() {
 	vec4 color = texture(image, textureCoordinate);
 
-	float column = floor(textureCoordinate.x * resolution.x);
-	if (resolution.x > resolution.y) {
-		float offcut = (resolution.x - resolution.y) / 2.0;
-		column = map(column, offcut, offcut + resolution.y, 0.0, resolution.x);
-	}
-	float rotation = column / resolution.x * 360.0;
+	float column = getSquareGradientColumn();
+	float rotation = column * 360.0;
 
 	vec3 rotatedColor = hueShift(color.rgb, rotation);
 
