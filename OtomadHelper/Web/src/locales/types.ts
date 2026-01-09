@@ -1,6 +1,7 @@
 import type { TOptions } from "i18next";
 import type English from "./English";
 
+type $<TString extends string> = TString & ((options: TOptions) => TString); // Use `$` to make the intellisense type docs minifier.
 export type I18nArgsFunction<TResult extends string = string> = {
 	(options: TOptions & Interpolations<TResult>): TResult;
 };
@@ -18,7 +19,7 @@ type Interpolations<TString extends string, TParents = {}> =
 			Interpolations<Next, TParents & Inter<Interpolation>> :
 		TParents;
 
-type IncludesInterpolation<TString extends string> = TString extends `${string}{{${string}` ? TString & I18nArgsFunction<TString> : TString;
+type IncludesInterpolation<TString extends string> = TString extends `${string}{{${string}` ? TString & I18nArgsFunction<TString> : $<TString>;
 type NestLocaleWithDefaultValue<TLocale> = {
 	[key in keyof TLocale]:
 		TLocale[key] extends string ? IncludesInterpolation<TLocale[key]> :
