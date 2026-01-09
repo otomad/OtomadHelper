@@ -117,3 +117,13 @@ CSS.registerProperty({
 	inherits: false,
 	initialValue: "100%",
 });
+
+/**
+ * Enable mirror effect.
+ */
+CSS.registerProperty({
+	name: "--mirror-on",
+	syntax: "<integer>",
+	inherits: false,
+	initialValue: "0",
+});

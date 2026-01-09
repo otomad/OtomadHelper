@@ -3,7 +3,7 @@ import ytpChangeSpeedImage from "assets/images/effects/ytp_change_speed.avif";
 import ytpChorusImage from "assets/images/effects/ytp_chorus.avif";
 import ytpDelayImage from "assets/images/effects/ytp_delay.avif";
 import ytpReverseImage from "assets/images/effects/ytp_reverse.avif";
-import { MILLISECONDS_PER_FRAME } from "./PreviewPrve";
+import { MILLISECONDS_PER_FRAME, styledMirror } from "./PreviewPrve";
 
 const getDuration = (frames: number) => frames * MILLISECONDS_PER_FRAME + "ms";
 
@@ -72,9 +72,13 @@ const StyledPreviewYtp = styled.div<{
 				}
 			`,
 			mirror: css`
-				img:nth-child(2) {
-					scale: -1 1;
-					clip-path: inset(0 50% 0 0);
+				img {
+					--mirror-on: 0;
+					${styledMirror.h};
+					animation: ${keyframes`
+						0%, 100% { --mirror-on: 0; }
+						50% { --mirror-on: 1; }
+					`};
 				}
 			`,
 			highContrast: css`
@@ -227,10 +231,6 @@ export default function PreviewYtp({ thumbnail, name }: FCP<{
 	/** Effect name. */
 	name: string;
 }>) {
-	const imageCount = {
-		mirror: 2,
-	}[name] ?? 1;
-
 	// const canvasFilters = useCanvasFilters(thumbnail);
 	const webglFilters = useWebglFilters(thumbnail);
 
@@ -253,8 +253,7 @@ export default function PreviewYtp({ thumbnail, name }: FCP<{
 
 	return (
 		<StyledPreviewYtp $name={name}>
-			{forMap(imageCount, i =>
-				<img key={i} alt="" data-name={name} src={alterImage || thumbnail} />)}
+			<img alt="" data-name={name} src={alterImage || thumbnail} />
 			<SvgFilters />
 		</StyledPreviewYtp>
 	);

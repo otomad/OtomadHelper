@@ -12,6 +12,25 @@ const prveSharpRewindStaticImage = freezeframes["effects/prve_sharp_rewind.webp"
 
 export /* @internal */ const MILLISECONDS_PER_FRAME = 375;
 
+export /* @internal */ const styledMirror = {
+	h: css`
+		right: if(style(--mirror-on: 0): auto; else: 0;);
+		left: if(style(--mirror-on: 0): 0; else: auto;);
+		width: 50%;
+		object-position: if(style(--mirror-on: 0): right; else: left;);
+		object-view-box: if(style(--mirror-on: 0): inset(0 50% 0 0); else: inset(0 0 0 50%););
+		-webkit-box-reflect: if(style(--mirror-on: 0): right; else: left;);
+	`,
+	v: css`
+		top: if(style(--mirror-on: 0): 0; else: auto;);
+		bottom: if(style(--mirror-on: 0): auto; else: 0;);
+		height: 50%;
+		object-position: if(style(--mirror-on: 0): bottom; else: top;);
+		object-view-box: if(style(--mirror-on: 0): inset(0 0 50% 0); else: inset(50% 0 0 0););
+		-webkit-box-reflect: if(style(--mirror-on: 0): below; else: above;);
+	`,
+};
+
 const StyledPreviewPrve = styled.div<{
 	/** Effect identifier. */
 	$effect: string;
@@ -35,6 +54,17 @@ const StyledPreviewPrve = styled.div<{
 	canvas {
 		${styles.mixins.square("100%")};
 		object-fit: cover;
+	}
+
+	.mirror-wrapper {
+		align-self: start;
+		width: 100%;
+		height: 50%;
+		-webkit-box-reflect: below;
+	}
+
+	&:has(.mirror-wrapper) { // HACK: The image will be unexpectedly cropped out unless enable hardware 3d.
+		${styles.mixins.enableHardware3d()};
 	}
 
 	@layer base {
@@ -167,79 +197,53 @@ const StyledPreviewPrve = styled.div<{
 				`,
 				hMirror: css`
 					--adjust-order: 1;
-					img:nth-child(2) {
-						scale: -1 1;
-						clip-path: inset(0 50% 0 0);
+					img {
+						--mirror-on: 0;
+						${styledMirror.h};
 						animation: ${keyframes`
-							0%, 100% { clip-path: inset(0 50% 0 0); scale: -1 1; }
-							50% { clip-path: inset(0 0 0 50%); }
+							0%, 100% { --mirror-on: 0; }
+							50% { --mirror-on: 1; }
 						`};
 					}
 				`,
 				vMirror: css`
 					--adjust-order: 1;
-					img:nth-child(2) {
-						scale: 1 -1;
-						clip-path: inset(0 0 50% 0);
+					img {
+						--mirror-on: 0;
+						${styledMirror.v};
 						animation: ${keyframes`
-							0%, 100% { clip-path: inset(0 0 50% 0); scale: 1 -1; }
-							50% { clip-path: inset(50% 0 0 0); }
+							0%, 100% { --mirror-on: 0; }
+							50% { --mirror-on: 1; }
 						`};
 					}
 				`,
 				ccwMirror: css`
-					img:nth-child(2) {
-						scale: -1 1;
-						clip-path: inset(0 50% 0 0);
+					img {
+						--mirror-on: 0;
+						${styledMirror.h};
+						translate: 0 -50%;
+						clip-path: inset(50% -200% 0);
 						animation: ${keyframes`
-							0%, 75%, 100% { clip-path: inset(0 50% 0 0); }
-							25%, 50% { clip-path: inset(0 0 0 50%); }
-						`};
-					}
-					img:nth-child(3) {
-						scale: 1 -1;
-						clip-path: inset(50% 0 0 0);
-						animation: ${keyframes`
-							0%, 25%, 100% { clip-path: inset(50% 0 0 0); }
-							50%, 75% { clip-path: inset(0 0 50% 0); }
-						`};
-					}
-					img:nth-child(4) {
-						scale: -1;
-						clip-path: inset(50% 50% 0 0);
-						animation: ${keyframes`
-							0%, 100% { clip-path: inset(50% 50% 0 0); }
-							25% { clip-path: inset(50% 0 0 50%); }
-							50% { clip-path: inset(0 0 50% 50%); }
-							75% { clip-path: inset(0 50% 50% 0); }
+							0%, 75%, 100% { --mirror-on: 0; }
+							25%, 50% { --mirror-on: 1; }
+						`}, ${keyframes`
+							50%, 75% { clip-path: inset(0 -200% 50%); translate: 0; }
+							0%, 25%, 100% { clip-path: inset(50% -200% 0); translate: 0 -50%; }
 						`};
 					}
 				`,
 				cwMirror: css`
-					img:nth-child(2) {
-						scale: -1 1;
-						clip-path: inset(0 0 0 50%);
+					--adjust-order: 1;
+					img {
+						--mirror-on: 1;
+						${styledMirror.h};
+						clip-path: inset(0 -200% 50%);
 						animation: ${keyframes`
-							0%, 25%, 100% { clip-path: inset(0 0 0 50%); }
-							50%, 75% { clip-path: inset(0 50% 0 0); }
-						`};
-					}
-					img:nth-child(3) {
-						scale: 1 -1;
-						clip-path: inset(0 0 50% 0);
-						animation: ${keyframes`
-							0%, 75%, 100% { clip-path: inset(0 0 50% 0); }
-							25%, 50% { clip-path: inset(50% 0 0 0); }
-						`};
-					}
-					img:nth-child(4) {
-						scale: -1;
-						clip-path: inset(0 0 50% 50%);
-						animation: ${keyframes`
-							0%, 100% { clip-path: inset(0 0 50% 50%); }
-							25% { clip-path: inset(50% 0 0 50%); }
-							50% { clip-path: inset(50% 50% 0 0); }
-							75% { clip-path: inset(0 50% 50% 0); }
+							50%, 75% { --mirror-on: 0; }
+							0%, 25%, 100% { --mirror-on: 1; }
+						`}, ${keyframes`
+							0%, 75%, 100% { clip-path: inset(0 -200% 50%); translate: 0; }
+							25%, 50% { clip-path: inset(50% -200% 0); translate: 0 -50%; }
 						`};
 					}
 				`,
@@ -524,14 +528,9 @@ export default function PreviewPrve({ thumbnail, effect, frames, step, isDegree,
 	/** Use degree angle instead of step. */
 	isDegree?: boolean;
 }, "div">) {
-	const imageCount = {
-		hMirror: 2,
-		vMirror: 2,
-		ccwMirror: 4,
-		cwMirror: 4,
-		radialBlur: 2,
-		negativeFade: 2,
-	}[effect] ?? 1;
+	const requireMirrorWrapperFilters = ["ccwMirror", "cwMirror"];
+	const doubleImagesFilters = ["negativeFade"];
+	const webglFilters = ["negativeLuma", "radialBlur"];
 
 	// const canvasFilters = useCanvasFilters(thumbnail);
 	// const webglFilters = useWebglFilters(thumbnail);
@@ -541,8 +540,6 @@ export default function PreviewPrve({ thumbnail, effect, frames, step, isDegree,
 		radialBlur: webglFilters?.radialBlur,
 	}[effect]; */
 
-	const webglFilters = ["negativeLuma", "radialBlur"];
-
 	const animatedImage = {
 		pingpong: Tuple(prvePingpongImage, prvePingpongStaticImage),
 		whirl: Tuple(prveWhirlImage, prveWhirlStaticImage),
@@ -550,6 +547,7 @@ export default function PreviewPrve({ thumbnail, effect, frames, step, isDegree,
 	}[effect];
 
 	const isStatic = step !== undefined && (step <= 0 || frames !== undefined && step > frames || isDegree);
+	const ImgBase = ({ ...htmlAttrs }: FCP<{}, "img">) => <img src={thumbnail} alt="" {...htmlAttrs} />;
 
 	return (
 		<StyledPreviewPrve
@@ -558,13 +556,14 @@ export default function PreviewPrve({ thumbnail, effect, frames, step, isDegree,
 			$static={isStatic}
 			{...htmlAttrs}
 		>
-			{step === 0 ? <img src={thumbnail} alt="" /> :
-			isDegree ? <img src={thumbnail} alt="" style={{ rotate: (step ?? 0) + "deg" }} /> :
+			{step === 0 ? <ImgBase /> :
+			isDegree ? <ImgBase style={{ rotate: (step ?? 0) + "deg" }} /> :
 			isStatic ? <Icon name="colored/question_circle" /> :
 			webglFilters.includes(effect) ? /* isStepSequence ? undefined : */ <WebglFilter src={thumbnail} effect={effect} step={step} /> :
-			forMap(imageCount, i => animatedImage !== undefined ?
-				<HoverToChangeImg key={i} animatedSrc={animatedImage[0]} staticSrc={animatedImage[1]} /> :
-				<img key={i} src={thumbnail} alt="" />)}
+			animatedImage !== undefined ? <HoverToChangeImg animatedSrc={animatedImage[0]} staticSrc={animatedImage[1]} /> :
+			requireMirrorWrapperFilters.includes(effect) ? <div className="mirror-wrapper"><ImgBase /></div> :
+			doubleImagesFilters.includes(effect) ? <><ImgBase /><ImgBase /></> :
+			<ImgBase />}
 		</StyledPreviewPrve>
 	);
 }
