@@ -36,7 +36,7 @@ export default function ExpanderLegato({ stream, children }: FCP<{
 			actions={<TriStateSwitch current={legatoStretchKeyframes} indetText={t.auto} indetIcon="auto" />}
 			wrapActionsWhenNarrow
 			details={undefined}
-			selectInfo={t({ context: timeStretchKeyframesDetailsContext }).descriptions.track.legato.stretchKeyframes}
+			selectInfo={t.descriptions.track.legato.stretchKeyframes({ context: timeStretchKeyframesDetailsContext })}
 		/>
 	);
 
@@ -60,7 +60,7 @@ export default function ExpanderLegato({ stream, children }: FCP<{
 					);
 				})}
 			</ItemsView>
-			<Setting meta={meta.atLeast} on={legatoAtLeast} title={t({ context: legatoDuration[0] }).stream.legato.atLeast} disabled={!currentLegatoDuration.limited} />
+			<Setting meta={meta.atLeast} on={legatoAtLeast} title={t.stream.legato.atLeast({ context: legatoDuration[0] })} disabled={!currentLegatoDuration.limited} />
 			<Setting meta={meta.mode} asSubtitle="closerAfter" noDivider="after" />
 			{isTrack ? <TrackLegato>{timeStretchKeyframes}</TrackLegato> : (
 				<>

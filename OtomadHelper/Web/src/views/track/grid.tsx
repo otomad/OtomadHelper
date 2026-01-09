@@ -687,7 +687,7 @@ export default function Grid() {
 									setShowOperationRecordDialog(true);
 								}}
 								caption={t.track.grid.operationRecord}
-								altCaption={t({ context: "short" }).track.grid.operationRecord}
+								altCaption={t.track.grid.operationRecord({ context: "short" })}
 								aria-haspopup="dialog"
 							/>
 							<hr />
@@ -748,10 +748,10 @@ export default function Grid() {
 									])}
 								</ItemsView>
 							</CommandBar.Item>
-							<CommandBar.Item icon="radar" caption={t.track.grid.dynamicDetection} altCaption={t({ context: "short" }).track.grid.dynamicDetection} details={t.descriptions.track.grid.dynamicDetection} on={dynamicDetection} />
+							<CommandBar.Item icon="radar" caption={t.track.grid.dynamicDetection} altCaption={t.track.grid.dynamicDetection({ context: "short" })} details={t.descriptions.track.grid.dynamicDetection} on={dynamicDetection} />
 							<CommandBar.Item icon={order} caption={t[order]} details={t.descriptions.track.descending} onClick={() => setDescending(desc => !desc)} />
 							<hr />
-							<CommandBar.Item icon="highlight" caption={t({ context: "full" }).titles.gradient_full} altCaption={t.titles.gradient} details={t.descriptions.track.gradient} />
+							<CommandBar.Item icon="highlight" caption={t.titles.gradient({ context: "full" })} altCaption={t.titles.gradient} details={t.descriptions.track.gradient} />
 							{/* {...(["h", "v"] as const).map(d => {
 								const flipKey = `${d}Flip`, isH = d === "h";
 								return (

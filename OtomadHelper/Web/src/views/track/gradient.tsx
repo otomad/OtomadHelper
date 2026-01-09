@@ -65,7 +65,7 @@ export default function Gradient() {
 // 				<div className="container">
 // 					<SettingsCardToggleSwitch on={enableGridIntegration} icon="lightbulb" title={t.enabled} details={t.descriptions.track.gradient.gridIntegration.enabled} onChange={viewSquare[1]} />
 // 					<EmptyMessage.Typical icon="grid" name={t.track.gradient.gridIntegration} enabled={enableGridIntegration}>
-// 						<SettingsCard icon={verticalDirection ? "rows" : "columns"} title={t({ context: "full" }).track.grid[verticalDirection ? "row" : "column"]}>
+// 						<SettingsCard icon={verticalDirection ? "rows" : "columns"} title={t.track.grid[verticalDirection({ context: "full" }) ? "row" : "column"]}>
 // 							<TextBox.Number value={columns} min={1} max={100} />
 // 						</SettingsCard>
 // 						<SettingsCardToggleSwitch on={autoColumns} icon="checkmark" title={t.track.gradient.gridIntegration.autoLineLength} details={t.descriptions.track.gradient.gridIntegration.autoLineLength} />

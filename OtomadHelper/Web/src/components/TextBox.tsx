@@ -812,7 +812,7 @@ export const roughTimeUnits = Object.freeze(Object.assign(
 			return Array.prototype.filter.call(this, unit => units.includes(unit)).toReversed();
 		},
 		names(this: typeof roughTimeUnits, count: number, _units: readonly RoughTimeUnit[]) {
-			return (unit: RoughTimeUnit) => t({ count }).units[unit];
+			return (unit: RoughTimeUnit) => t.units[unit]({ count });
 		},
 	},
 ));

@@ -41,7 +41,7 @@ export default function ShellPage() {
 		const $t = (context?: string) => {
 			const key = new VariableName(viewName).camel;
 			if (!i18nExists(t.titles[key], context)) return;
-			return t({ count: plural, context }).titles[key];
+			return t.titles[key]({ count: plural, context });
 		};
 		const contexts = ["long", "full", undefined] as const;
 		const ctx = contexts.slice(contexts.indexOfDefault(_context) ?? 2).firstDefined(context => $t(context)) ?? t();

@@ -109,7 +109,7 @@ export default function PreviewLanguage({ language, showProgress = true }: FCP<{
 }>) {
 	const allLanguages = useLanguageTags();
 	const languageName = (allLanguages.includes(language) ?
-		t({ lng: language }).metadata.name :
+		t.metadata.name({ lng: language }) :
 		getLocaleName(language, language)).toTitleCase();
 	const [progresses] = useAtom(approvalProgresses);
 	const progress = progresses.get(language) ?? -1;

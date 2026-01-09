@@ -103,7 +103,7 @@ export default function SettingsAbout() {
 				<AboutInformation />
 				<Expander.ChildWrapper $tilePadding="subtle button to item">
 					<Attrs hyperlink minWidthUnbounded>
-						<Button href={links.gpl3}>{t({ context: "full" }).titles.license}</Button>
+						<Button href={links.gpl3}>{t.titles.license({ context: "full" })}</Button>
 						<Button href={links.otomadHelper.credits}>{t.settings.about.credits}</Button>
 						<Button onClick={() => setShowTranslators(true)} aria-haspopup="dialog">{t.settings.about.translators}</Button>
 					</Attrs>
@@ -166,7 +166,7 @@ function Translators({ shown: [shown, setShown] }: FCP<{
 	const t = useT();
 
 	const availableLanguageNames = {
-		original: languages.mapObject(lang => [lang, t({ lng: lang }).metadata.name.toString()]),
+		original: languages.mapObject(lang => [lang, t.metadata.name({ lng: lang })]),
 		english: languages.mapObject(lang => [lang, getLocaleName(lang, "en")]),
 		current: languages.mapObject(lang => [lang, getLocaleName(lang, currentLanguage)]),
 	};
@@ -281,7 +281,7 @@ function listFormatTranslators_static(translators: string[] | string, lang: stri
 }
 
 export function listFormatTranslators(targetLanguage: string, displayLanguage: string): [hasTranslator: boolean, formattedTranslator: string] {
-	const translators = t({ lng: targetLanguage }).metadata.__translator__, hasTranslator = translators.length > 0;
+	const translators = t.metadata.__translator__({ lng: targetLanguage }), hasTranslator = translators.length > 0;
 	const formattedTranslator = hasTranslator ? listFormatTranslators_static(translators, displayLanguage) : "—";
 	return [hasTranslator, formattedTranslator];
 }
@@ -294,7 +294,7 @@ function HelpLinks() {
 			{ name: tAbout.documentation, version: "0.1", link: links.helpV4.chinese.documentation_chaosinism_v0_1 },
 			{ name: tAbout.troubleshooting, version: "0.1", link: links.helpV4.chinese.troubleshooting_chaosinism_v0_1 },
 			{ name: tAbout.tutorialVideo, version: "0.1", link: links.helpV4.chinese.tutorialVideo_chaosinism_v0_1 },
-			{ name: tAbout.documentationForFeature({ feature: t({ context: "full" }).titles.staff }), version: "0.1", link: links.helpV4.chinese.documentation_staffVisualizer_chaosinism_v0_1 },
+			{ name: tAbout.documentationForFeature({ feature: t.titles.staff({ context: "full" }) }), version: "0.1", link: links.helpV4.chinese.documentation_staffVisualizer_chaosinism_v0_1 },
 			{ name: tAbout.releaseNotes, version: "4.9.25.0", link: links.helpV4.chinese.releaseNotes_v4_9_25_0 },
 			{ name: tAbout.releaseNotes, version: "4.10.17.0", link: links.helpV4.chinese.releaseNotes_v4_10_17_0 },
 			{ name: tAbout.tutorialVideo, version: "4.26.14.0", link: links.helpV4.chinese.tutorialVideo_v4_26_14_0 },

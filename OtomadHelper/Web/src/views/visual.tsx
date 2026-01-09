@@ -28,7 +28,7 @@ export /* @internal */ const prerenders = [
 export /* @internal */ const glissandoEffects = [
 	{ id: "swirl", name: t.shared.plugins.swirl },
 	{ id: "wave", name: t.shared.plugins.wave },
-	{ id: "tv", name: t({ context: "short" }).shared.plugins.tvSimulator },
+	{ id: "tv", name: t.shared.plugins.tvSimulator({ context: "short" }) },
 	{ id: "pingpong", name: t.stream.articulations.glissando.pingpong },
 ] as const;
 

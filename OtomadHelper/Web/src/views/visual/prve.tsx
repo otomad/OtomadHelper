@@ -150,7 +150,7 @@ export default function Prve() {
 				disabled={isGeneralCurrent}
 				meta={meta.control}
 				icon={getControlModeIcon(controlMode)}
-				title={t({ context: "full" }).prve.control[controlMode]}
+				title={t.prve.control[controlMode]({ context: "full" })}
 				details={t.descriptions.prve.control[controlMode]}
 			/>
 			<Subheader meta={meta.classes}>
@@ -210,7 +210,7 @@ export default function Prve() {
 									onChanging={value => setCurrentEffectRotation(value !== 0 ? "rotate" : "normal")}
 								/>
 							</Expander.Item>
-							<Expander.Item title={t({ context: "angle" }).prve.initialStep} icon="arrow_step_in">
+							<Expander.Item title={t.prve.initialStep({ context: "angle" })} icon="arrow_step_in">
 								{(() => {
 									const invalidValue = rotationStep[0] === undefined || Math.abs(rotationStep[0]) < 2;
 									return (
