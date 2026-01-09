@@ -5,9 +5,9 @@ import ApprovalsAppIcon from "assets/svg/approvals_app.svg?react";
 export /* @internal */ const arrayTypes = ["square", "fixed"] as const;
 export /* @internal */ const directionTypes = ["lr-tb", "tb-lr", "rl-tb", "tb-rl"] as const;
 export /* @internal */ const fitTypes = ["cover", "contain", "overlay"] as const;
-export /* @internal */ const parityTypes = ["unflipped", "even_columns", "odd_columns", "even_rows", "odd_rows", "even_checker", "odd_checker", "even_dots", "odd_dots", "even_gridlines", "odd_gridlines", "all_flipped", "random"] as const;
-const parityTypes_rowsFirst = parityTypes.toMoved(3, 5, 1);
-type GridParityType = typeof parityTypes[number];
+// export /* @internal */ const parityTypes = ["unflipped", "even_columns", "odd_columns", "even_rows", "odd_rows", "even_checker", "odd_checker", "even_dots", "odd_dots", "even_gridlines", "odd_gridlines", "all_flipped", "random"] as const;
+// const parityTypes_rowsFirst = parityTypes.toMoved(3, 5, 1);
+// type GridParityType = typeof parityTypes[number];
 const MAX_COL_ROW = 100;
 const GAP = 6;
 const RULER_THICKNESS = 16;
@@ -25,23 +25,23 @@ export /* @internal */ const getParityText = (parity: GridParityType) => t.track
 export /* @internal */ const getParityIcon = (parity: GridParityType): DeclaredIcons =>
 	parity === "unflipped" ? "dismiss_square" : parity === "all_flipped" ? "checkmark_square" : parity === "random" ? "question_square" : `parity/${parity}`;
 
-export /* @internal */ const matchParity = (parity: GridParityType, column: number, row: number, randomSeed?: string): boolean => {
-	if (parity === "random") return (randomSeed === undefined ? Math.random() : seedRandom(`${randomSeed},${column},${row}`)()) >= 0.5;
-	return {
-		unflipped: false,
-		all_flipped: true,
-		even_columns: !(column % 2),
-		odd_columns: !!(column % 2),
-		even_rows: !(row % 2),
-		odd_rows: !!(row % 2),
-		even_checker: !!((column + row) % 2),
-		odd_checker: !((column + row) % 2),
-		even_dots: !(column % 2) && !(row % 2),
-		odd_dots: !!(column % 2) && !!(row % 2),
-		even_gridlines: !!(column % 2) || !!(row % 2),
-		odd_gridlines: !(column % 2) || !(row % 2),
-	}[parity];
-};
+// export /* @internal */ const matchParity = (parity: GridParityType, column: number, row: number, randomSeed?: string): boolean => {
+// 	if (parity === "random") return (randomSeed === undefined ? Math.random() : seedRandom(`${randomSeed},${column},${row}`)()) >= 0.5;
+// 	return {
+// 		unflipped: false,
+// 		all_flipped: true,
+// 		even_columns: !(column % 2),
+// 		odd_columns: !!(column % 2),
+// 		even_rows: !(row % 2),
+// 		odd_rows: !!(row % 2),
+// 		even_checker: !!((column + row) % 2),
+// 		odd_checker: !((column + row) % 2),
+// 		even_dots: !(column % 2) && !(row % 2),
+// 		odd_dots: !!(column % 2) && !!(row % 2),
+// 		even_gridlines: !!(column % 2) || !!(row % 2),
+// 		odd_gridlines: !(column % 2) || !(row % 2),
+// 	}[parity];
+// };
 
 // #region Style
 const PreviewGridContainer = styled.div`

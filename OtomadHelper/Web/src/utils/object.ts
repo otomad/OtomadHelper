@@ -811,3 +811,21 @@ export function deepFreeze<T extends AnyObject>(obj: T): DeepReadonly<T> {
 
 	return obj;
 }
+
+/**
+ * Creates an object with the specified keys, all assigned the same value.
+ * @template TKey - The type of the object keys (must be string, number, or symbol type).
+ * @template TValue - The type of the value to assign to all keys.
+ * @param args - A spread of keys followed by the value to assign to each key.
+ * @returns An object where each key from the input is mapped to the provided value.
+ * @example
+ * ```javascript
+ * const obj = keysWithSameValue("a", "b", "c", 0); // Result: { a: 0, b: 0, c: 0 }
+ * ```
+ */
+export function keysWithSameValue<const TKey extends PropertyKey, TValue>(...args: [...keys: TKey[], value: TValue]) {
+	const value = args.pop() as TValue, keys = args as TKey[];
+	return Object.fromEntries(keys.map(key => [key, value])) as {
+		[key in TKey]: TValue;
+	};
+}

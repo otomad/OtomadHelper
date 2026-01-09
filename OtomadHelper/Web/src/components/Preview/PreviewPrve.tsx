@@ -335,15 +335,19 @@ const StyledPreviewPrve = styled.div<{
 						`};
 					}
 				`,
-				chromatic: css`
-					img {
-						filter: grayscale(1);
-						animation: ${keyframes`
-							0%, 100% { filter: grayscale(1); }
-							50% { filter: none; }
-						`};
-					}
-				`,
+				...keysWithSameValue(
+					"chromatic",
+					"monochrome", // Compatible with `MirrorGradientTrackFlyoutEditor`.
+					css`
+						img {
+							filter: grayscale(1);
+							animation: ${keyframes`
+								0%, 100% { filter: grayscale(1); }
+								50% { filter: none; }
+							`};
+						}
+					`,
+				),
 				chromaticFade: css`
 					--adjust-order: 2;
 					img {
