@@ -392,7 +392,7 @@ export default function Settings() {
 					)}
 				/>
 				<Setting meta={meta.config.userConfig.fileLocation} selectInfo="C:\" actions={<Button icon="location_target">{t.locate}</Button>} />
-				<Setting meta={meta.config.userConfig.dangerZone} actions={<Button icon="arrow_reset" accent="critical">{t.reset}</Button>} />
+				<Setting meta={meta.config.userConfig.dangerZone} actions={<Button icon="arrow_reset" accent="critical" onClick={() => !window.isWebView && resetUserConfig_dev()}>{t.reset}</Button>} />
 			</Setting>
 			<Setting meta={meta.config.clipsFolder}>
 				<Expander.ChildWrapper $single>
@@ -410,4 +410,10 @@ export default function Settings() {
 			<Setting meta={meta.dev.rtl} on={rtl} />
 		</div>
 	);
+}
+
+function resetUserConfig_dev() {
+	if (!confirm("Are you sure you want to reset all the user configurations?")) return;
+	localStorage.clear();
+	location.reload();
 }

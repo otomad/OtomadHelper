@@ -54,7 +54,7 @@ const StyledBreadcrumb = styled.h1`
 		.exit-active {
 			transition-timing-function: ${eases.easeInMax};
 
-			&.bread-crumb-chevron-right {
+			&.breadcrumb-chevron-right {
 				transition-delay: 50ms;
 			}
 		}
@@ -75,7 +75,7 @@ const StyledBreadcrumb = styled.h1`
 
 export default function Breadcrumb({ titles, large = true, ...htmlAttrs }: FCP<{
 	/** Array of breadcrumb navigation titles. */
-	titles: { name: string; onClick?(): void }[];
+	titles: { name: ReactNode; onClick?(): void }[];
 	/** Show as large size header (which used in navigation view)? @default true */
 	large?: boolean;
 	children?: never;
@@ -93,7 +93,6 @@ export default function Breadcrumb({ titles, large = true, ...htmlAttrs }: FCP<{
 							type="button"
 							role="link"
 							aria-current={last && "page"}
-							value={title.name}
 							onClick={title.onClick}
 						>
 							{title.name}

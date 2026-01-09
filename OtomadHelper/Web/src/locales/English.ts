@@ -613,8 +613,8 @@ export default {
 				style: "Style",
 				pattern: "Pattern",
 				groups: {
-					gradually: "Gradually",
-					alternately: "Alternately",
+					parity: "Parity",
+					gradient: "Gradient",
 				},
 				parities: {
 					evenColumns: "Even columns",

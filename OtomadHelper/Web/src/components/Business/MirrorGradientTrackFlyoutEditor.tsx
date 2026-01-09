@@ -1,6 +1,6 @@
 import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 
-const AlternatelyStyles = Enum({
+const ParityStyles = Enum({
 	hFlip: { label: t.prve.effects.hFlip },
 	vFlip: { label: t.prve.effects.vFlip },
 	hMirror: { label: t.prve.effects.hMirror },
@@ -10,7 +10,7 @@ const AlternatelyStyles = Enum({
 	luminInvert: { label: t.prve.effects.luminInvert },
 });
 
-const GraduallyStyles = Enum({
+const GradientStyles = Enum({
 	hue: { label: t.stream.parameters.hue },
 	saturation: { label: t.stream.parameters.saturation },
 	contrast: { label: t.stream.parameters.contrast },
@@ -142,6 +142,7 @@ const StyledMirrorGradientTrackFlyoutEditor = styled.div`
 
 	.gradient-pattern {
 		display: flex;
+		justify-content: space-evenly;
 
 		hr {
 			all: unset;
@@ -151,13 +152,16 @@ const StyledMirrorGradientTrackFlyoutEditor = styled.div`
 
 		.parameters {
 			display: grid;
-			grid-template-columns: auto auto 1fr auto 1fr;
+			grid-template-columns: auto 1fr auto 1fr;
 			gap: 8px;
 			align-items: center;
+			margin-inline: 16px;
 			padding-block: 10px;
 
 			label {
-				align-content: center;
+				display: flex;
+				gap: inherit;
+				align-items: center;
 				white-space: nowrap;
 			}
 
@@ -169,6 +173,7 @@ const StyledMirrorGradientTrackFlyoutEditor = styled.div`
 `;
 
 export default function MirrorGradientTrackFlyoutEditor() {
+	const ariaId = useId();
 	const tc = tAlias.track.gradient;
 	const [currentPage, setCurrentPage] = useState<"style" | "pattern">("style");
 	const [currentPattern, setCurrentPattern] = useState<"parity" | "gradient">("parity");
@@ -195,8 +200,8 @@ export default function MirrorGradientTrackFlyoutEditor() {
 						<HorizontalScroll as={Fragment}>
 							{currentPage === "style" ? (
 								<ItemsView data-page="style" view="grid" current={null}>
-									<Subheader vertical>{t.track.gradient.groups.alternately}</Subheader>
-									{AlternatelyStyles.map(({ key, label }) => (
+									<Subheader vertical>{t.track.gradient.groups.parity}</Subheader>
+									{ParityStyles.map(({ key, label }) => (
 										<ItemsView.Item
 											id={key}
 											key={key}
@@ -206,8 +211,8 @@ export default function MirrorGradientTrackFlyoutEditor() {
 											<MarqueeIfOverflow>{label}</MarqueeIfOverflow>
 										</ItemsView.Item>
 									))}
-									<Subheader vertical>{t.track.gradient.groups.gradually}</Subheader>
-									{GraduallyStyles.map(({ key, label }) => (
+									<Subheader vertical>{t.track.gradient.groups.gradient}</Subheader>
+									{GradientStyles.map(({ key, label }) => (
 										<ItemsView.Item
 											id={key}
 											key={key}
@@ -247,23 +252,29 @@ export default function MirrorGradientTrackFlyoutEditor() {
 									</ItemsView>
 									<hr />
 									<div className="parameters">
-										<Icon name="stream_input" />
-										<label>{tc.parameters.input}</label>
-										<TextBox.Number value={[0]} min={-100} max={200} prefix={tc.parameters.startStop({ context: "short" })} />
-										<label>{t.rangeDash}</label>
-										<TextBox.Number value={[1]} min={-100} max={200} prefix={tc.parameters.endStop({ context: "short" })} />
+										<label htmlFor={`${ariaId}-input-start`}>
+											<Icon name="stream_input" />
+											{tc.parameters.input}
+										</label>
+										<TextBox.Number id={`${ariaId}-input-start`} value={[0]} min={-100} max={200} prefix={tc.parameters.startStop({ context: "short" })} />
+										<label htmlFor={`${ariaId}-input-end`}>{t.rangeDash}</label>
+										<TextBox.Number id={`${ariaId}-input-end`} value={[1]} min={-100} max={200} prefix={tc.parameters.endStop({ context: "short" })} />
 
-										<IconWithHighlightPoint name="linear_gradient" location="left" />
-										<label>{tc.parameters.startStop}</label>
-										<TextBox.Number value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
-										<label>,</label>
-										<TextBox.Number value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
+										<label htmlFor={`${ariaId}-start-col`}>
+											<IconWithHighlightPoint name="linear_gradient" location="left" />
+											{tc.parameters.startStop}
+										</label>
+										<TextBox.Number id={`${ariaId}-start-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
+										<label htmlFor={`${ariaId}-start-row`}>,</label>
+										<TextBox.Number id={`${ariaId}-start-row`} value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
 
-										<IconWithHighlightPoint name="linear_gradient" location="right" />
-										<label>{tc.parameters.endStop}</label>
-										<TextBox.Number value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
-										<label>,</label>
-										<TextBox.Number value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
+										<label htmlFor={`${ariaId}-end-col`}>
+											<IconWithHighlightPoint name="linear_gradient" location="right" />
+											{tc.parameters.endStop}
+										</label>
+										<TextBox.Number id={`${ariaId}-end-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
+										<label htmlFor={`${ariaId}-end-role`}>,</label>
+										<TextBox.Number id={`${ariaId}-end-role`} value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
 									</div>
 								</div>
 							) : undefined : undefined}
@@ -275,9 +286,9 @@ export default function MirrorGradientTrackFlyoutEditor() {
 	);
 }
 
-const HIGHLIGHT_POINT_SIZE = 4;
 const StyledIconWithHighlightPoint = styled.div`
 	${styles.mixins.square("1em")};
+	--size: 6px;
 	position: relative;
 
 	@layer props {
@@ -285,24 +296,24 @@ const StyledIconWithHighlightPoint = styled.div`
 	}
 
 	.icon {
-		vertical-align: unset;
+		display: flex;
 	}
 
 	.highlight-point {
-		${styles.mixins.square(`${HIGHLIGHT_POINT_SIZE}px`)};
+		${styles.mixins.square("var(--size)")};
 		position: absolute;
-		top: 50%;
-		left: 0%;
+		top: calc(50% - var(--size) / 2);
+		left: -1px;
 		background-color: ${c("accent-color")};
 		border-radius: 100%;
 
 		&.right {
-			right: 0%;
+			right: -1px;
 			left: unset;
 		}
 
 		&.center {
-			left: calc(50% - 2px);
+			left: calc(50% - var(--size) / 2);
 		}
 	}
 `;
