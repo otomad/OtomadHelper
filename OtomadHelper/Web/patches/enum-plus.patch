@@ -1,0 +1,15 @@
+diff --git a/lib/types.d.ts b/lib/types.d.ts
+index f7e43bab93bf0dcca3dbf9cd160a36dacac952e8..6858db2f41fcc0244a5deb0030a882d48b447dd2 100644
+--- a/lib/types.d.ts
++++ b/lib/types.d.ts
+@@ -28,8 +28,8 @@ export interface LabelOnlyEnumItemInit {
+     value?: never;
+ }
+ export interface MetaOnlyEnumItemInit {
+-    value?: never;
+-    label?: never;
++    value?: any;
++    label?: any;
+     [meta: string]: unknown;
+ }
+ export type CompactEnumItemInit = Record<string, never>;
