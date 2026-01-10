@@ -28,6 +28,7 @@ const StyledSubheader = styled.h4<{
 
 	${ifProp("$vertical", css`
 		writing-mode: vertical-lr;
+		text-orientation: sideways;
 
 		&:not(:lang(zh), :lang(ja), :lang(ko)) > span {
 			display: inline-block;

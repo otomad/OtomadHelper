@@ -150,8 +150,7 @@
 			"styled-components": "patches/styled-components.patch",
 			"postcss-styled-syntax": "patches/postcss-styled-syntax.patch",
 			"@types/react": "patches/@types__react.patch",
-			"react-dom": "patches/react-dom.patch",
-			"enum-plus": "patches/enum-plus.patch"
+			"react-dom": "patches/react-dom.patch"
 		},
 		"allowUnusedPatches": false
 	},

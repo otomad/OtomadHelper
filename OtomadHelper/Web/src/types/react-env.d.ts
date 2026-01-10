@@ -113,14 +113,14 @@ declare global {
 	 * Can be used to achieve bidirectional binding.
 	 * @template T - Property type.
 	 */
-	export type StateProperty<T> = [get?: T, set?: SetState<T>];
+	export type StateProperty<T> = readonly [get?: T, set?: SetState<T>];
 	// | (T extends unknown[] ? never : T)
 	/**
 	 * The return value of useState, which contains a tuple representing the current value and the function that sets that value.
 	 * Can be used to achieve bidirectional binding. But the property cannot be empty.
 	 * @template T - Property type.
 	 */
-	export type StatePropertyNonNull<T> = [get: T, set: SetStateNarrow<T>];
+	export type StatePropertyNonNull<T> = readonly [get: T, set: SetStateNarrow<T>];
 	/**
 	 * Add more functions to the StateProperty.
 	 * @template T - State property type.
