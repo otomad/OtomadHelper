@@ -89,13 +89,17 @@ const StyledPositionControl = styled.div`
 	}
 `;
 
-export default function PositionControl({ value: [value, setValue], disabled, defaultValue = [50, 50] }: FCP<{
+export default function PositionControl({ value, disabled, defaultValue = [50, 50], onChanging, onChanged }: FCP<{
 	/** Position. */
-	value: StatePropertyNonNull<TwoD>;
+	value: TwoD;
 	/** Disabled? */
 	disabled?: boolean;
 	/** Default value. Restore defaults when clicking the mouse middle button, right button, or touchscreen long press component. @default [50, 50] */
 	defaultValue?: TwoD;
+	/** Occurs when the thumb is being dragged. */
+	onChanging?(value: TwoD): void;
+	/** Occurs when the thumb is lifted after being dragged. */
+	onChanged?(value: TwoD): void;
 	children?: never;
 }>) {
 	const thumbEl = useDomRef<"div">(), buttonsEl = useDomRef<"div">();
@@ -136,21 +140,24 @@ export default function PositionControl({ value: [value, setValue], disabled, de
 		target.setPointerCapture(e.pointerId);
 		const eDown = e;
 		let lastPointerMoveEvent: PointerEvent;
+		let changingValue: TwoD | undefined;
 		const pointerMove = lodash.debounce((e?: PointerEvent, shiftKey?: boolean) => {
 			if (e) lastPointerMoveEvent = e;
 			e ??= lastPointerMoveEvent;
 			if (lastPointerAction.current === "down" && Math.hypot(e.pageX - eDown.pageX, e.pageY - eDown.pageY) <= POINTER_MOVE_THRESHOLD || !lastPointerAction.current.includes("down")) return;
 			lastPointerAction.current = "down move";
 			setChildrenState([thumb], "pressed");
-			setValue?.(withShiftKey([
+			changingValue = withShiftKey([
 				clampMap(e.offsetX, targetLeft, targetRight, 0, 100),
 				clampMap(e.offsetY, targetTop, targetBottom, 0, 100),
-			], value, shiftKey ?? e.shiftKey));
+			], value, shiftKey ?? e.shiftKey);
+			onChanging?.(changingValue);
 		});
 		target.addEventListener("pointermove", pointerMove, { signal: aborter.signal });
 		target.addEventListener("pointerup", () => {
 			aborter.abort();
 			target.releasePointerCapture(e.pointerId);
+			if (changingValue) onChanged?.(changingValue);
 		}, { signal: aborter.signal });
 		(["keydown", "keyup"] as const).forEach(type => window.addEventListener(type, e => {
 			if (e.key === "Shift") pointerMove(undefined, type === "keydown");
@@ -174,14 +181,14 @@ export default function PositionControl({ value: [value, setValue], disabled, de
 			onPointerLeave={handlePointerLeave}
 			onPointerUp={handlePointerUp}
 			onPointerDown={handlePointerDown}
-			onAuxClick={e => { e.preventDefault(); setValue(defaultValue); }}
+			onAuxClick={e => { e.preventDefault(); onChanged?.(defaultValue); }}
 			onContextMenu={stopEvent}
 			disabled={disabled}
 		>
 			<div ref={buttonsEl} className="buttons">
 				{KEY_PERCENT.map(y => KEY_PERCENT.map(x => {
 					const position = `${x}% ${y}%`;
-					return <button key={position} type="button" tabIndex={-1} onClick={() => setValue?.([x, y])} />;
+					return <button key={position} type="button" tabIndex={-1} onClick={() => onChanged?.([x, y])} />;
 				}))}
 			</div>
 			<SliderThumb ref={thumbEl} style={{ "--x": smoothValue[0], "--y": smoothValue[1] }} />

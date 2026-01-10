@@ -397,8 +397,6 @@ namespace Config {
 			backgroundImageOpacity: 0.2,
 			backgroundImageTint: 0,
 			backgroundImageBlur: 0,
-			backgroundImageFit: "cover" satisfies ImageFitType as ImageFitType,
-			backgroundImagePosition: [50, 50] as TwoD,
 			systemBackdrop: "acrylic" satisfies SystemBackdrop as SystemBackdrop,
 			accentColor: "wallpaper",
 			backgroundColor: "windows",

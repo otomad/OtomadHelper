@@ -4,7 +4,7 @@ import { startCircleViewTransition } from "helpers/color-mode";
 import { Vibrant, WorkerPipeline } from "node-vibrant/worker";
 import PipelineWorker from "node-vibrant/worker.worker?worker";
 
-const DATABASE_VERSION = 1;
+const DATABASE_VERSION = 2;
 Vibrant.use(new WorkerPipeline(PipelineWorker as never));
 
 interface BackgroundImageRow {
@@ -12,6 +12,8 @@ interface BackgroundImageRow {
 	filename: string;
 	displayIndex: number;
 	color: string;
+	fit: Config.ImageFitType;
+	position: TwoD;
 }
 
 export interface BackgroundImageRowWithMore extends BackgroundImageRow {
@@ -19,7 +21,16 @@ export interface BackgroundImageRowWithMore extends BackgroundImageRow {
 	key: number;
 }
 
-const DEFAULT_BACKGROUND_IMAGE_ROW: BackgroundImageRowWithMore = { imageData: null!, filename: "", url: "", key: -1, displayIndex: -1, color: "" };
+const DEFAULT_BACKGROUND_IMAGE_ROW: BackgroundImageRowWithMore = {
+	imageData: null!,
+	filename: "",
+	url: "",
+	key: -1,
+	displayIndex: -1,
+	color: "",
+	fit: "cover",
+	position: [50, 50],
+};
 
 const keyToUrl = proxyMap<number, string>();
 const itemsAtom = atom<BackgroundImageRowWithMore[]>([]);
@@ -28,17 +39,19 @@ export function useBackgroundImages() {
 	type Store = IndexedDBStore<BackgroundImageRow>;
 	const store = useRef<Store>(undefined);
 	const [items, setItems] = useAtom(itemsAtom);
-	const { backgroundImage } = useSnapshot(configStore.settings);
-	const setBackgroundImage: SetStateNarrow<typeof backgroundImage> = value => {
+	const { backgroundImage: currentImageKey } = useSnapshot(configStore.settings);
+	const setCurrentImageKey: SetStateNarrow<typeof currentImageKey> = value => {
 		const previous = configStore.settings.backgroundImage;
 		const current = typeof value === "function" ? value(previous) : value;
 		if (current !== previous)
 			startCircleViewTransition(current !== -1, () => configStore.settings.backgroundImage = current);
 	};
-	const currentItem = useMemo(() => items.find(item => item.key === backgroundImage), [items, backgroundImage]);
+	const currentItem = useMemo(() => items.find(item => item.key === currentImageKey), [items, currentImageKey]);
 	const currentImage = useMemo(() => currentItem?.url ?? "", [currentItem]);
 	const currentDominantColor = useMemo(() => currentItem?.color || undefined, [currentItem]);
-	const shown = useMemo(() => backgroundImage !== -1, [backgroundImage]);
+	const shown = useMemo(() => currentImageKey !== -1, [currentImageKey]);
+	const fit = useMemo(() => currentItem?.fit ?? DEFAULT_BACKGROUND_IMAGE_ROW.fit, [currentItem]);
+	const position = useMemo(() => currentItem?.position ?? DEFAULT_BACKGROUND_IMAGE_ROW.position, [currentItem]);
 
 	useAsyncMountEffect(async () => {
 		store.current = new IndexedDBStore<BackgroundImageRow>("ImagesDB", DATABASE_VERSION, "backgroundImages", {
@@ -46,6 +59,8 @@ export function useBackgroundImages() {
 			filename: null,
 			displayIndex: null,
 			color: null,
+			fit: null,
+			position: null,
 		});
 		await store.current.open();
 		await updateItems();
@@ -86,6 +101,8 @@ export function useBackgroundImages() {
 			filename: image.name,
 			displayIndex: length,
 			color,
+			fit: DEFAULT_BACKGROUND_IMAGE_ROW.fit,
+			position: DEFAULT_BACKGROUND_IMAGE_ROW.position,
 		});
 		await updateItems();
 	}
@@ -93,7 +110,7 @@ export function useBackgroundImages() {
 	async function delete_(key: number) {
 		if (!store.current || +key < 0) return;
 		const currentIndex = items.find(row => row.key === key)?.displayIndex ?? NaN;
-		setBackgroundImage(backgroundImage => backgroundImage === key ? -1 : backgroundImage);
+		setCurrentImageKey(backgroundImage => backgroundImage === key ? -1 : backgroundImage);
 		await nextAnimationTick();
 		URL.revokeObjectURL(keyToUrl.get(key) ?? "");
 		keyToUrl.delete(key);
@@ -120,6 +137,25 @@ export function useBackgroundImages() {
 		await updateItems();
 	}
 
+	async function setFit(value: typeof fit) {
+		if (!store.current || currentImageKey < 0) return;
+		setItems(produce(draft => {
+			const item = draft.find(item => item.key === currentImageKey);
+			if (item) item.fit = value;
+		}));
+		await store.current.set("fit", value, currentImageKey);
+	}
+
+	async function setPosition(value: typeof position, submit = false) {
+		if (!store.current || currentImageKey < 0) return;
+		setItems(produce(draft => {
+			const item = draft.find(item => item.key === currentImageKey);
+			if (item) item.position = value;
+		}));
+		if (!submit) return;
+		await store.current.set("position", value, currentImageKey);
+	}
+
 	return {
 		items,
 		update: updateItems,
@@ -127,10 +163,12 @@ export function useBackgroundImages() {
 		map: (...args: Parameters<Store["map"]>) => store.current?.map(...args),
 		delete: delete_,
 		reorder,
-		backgroundImage: [backgroundImage, setBackgroundImage] as const,
+		currentImageKey: [currentImageKey, setCurrentImageKey] as const,
 		currentImage,
 		currentDominantColor,
 		shown,
+		fit: [fit, setFit] as const,
+		position: [position, setPosition] as const,
 	};
 }
 

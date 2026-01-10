@@ -21,10 +21,9 @@ const StyledBackgroundImage = styled.div`
 `;
 
 export default function BackgroundImage() {
-	const { currentImage } = useBackgroundImages();
+	const { currentImage, fit: [fit], position: [position] } = useBackgroundImages();
 	const {
 		backgroundImageOpacity: opacity, backgroundImageTint: tint, backgroundImageBlur: blur,
-		backgroundImageFit: fit, backgroundImagePosition: position,
 	} = useSnapshot(configStore.settings);
 
 	if (!currentImage) return;

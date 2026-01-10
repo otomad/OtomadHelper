@@ -60,13 +60,13 @@ export default function Settings() {
 	const { black: actualAmoledDark, contrast: actualContrast } = useActualColorScheme();
 	const {
 		fontSize, hideUseTips, autoSwitchSourceFrom, autoCollapsePrveClasses, previewWithSource,
-		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur, backgroundImageFit, backgroundImagePosition,
+		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur,
 		systemBackdrop, accentColor, backgroundColor,
 	} = useSelectConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
 	const { pushPage } = useSnapshot(pageStore);
 	const meta = metas.settings;
-	const backgroundImagePositionDisabled = backgroundImageFit[0] === "stretch";
+	const backgroundImagePositionDisabled = backgroundImages.fit[0] === "stretch";
 	const backgroundColorInvalid = actualContrast || actualAmoledDark;
 
 	// Dev mode
@@ -294,13 +294,13 @@ export default function Settings() {
 					nonFocusableForSortableItems
 					disableKeyboardSensor
 				>
-					{(_1, _2, { id, url, displayIndex, color }) => (
+					{(_1, _2, { id, url, displayIndex, color, fit, position }) => (
 						<ItemsView.Item
 							className="background-image-item"
 							id={id}
 							key={id}
-							image={id === -1 ? <IconTile name="prohibited" size={48} /> : <BackgroundImageImg src={url} autoAlt fit={backgroundImageFit[0]} position={backgroundImagePosition[0]} />}
-							selected={[backgroundImages.backgroundImage[0] === id, (v: boolean) => v && backgroundImages.backgroundImage[1](id)]}
+							image={id === -1 ? <IconTile name="prohibited" size={48} /> : <BackgroundImageImg src={url} autoAlt fit={fit} position={position} />}
+							selected={[backgroundImages.currentImageKey[0] === id, (v: boolean) => v && backgroundImages.currentImageKey[1](id)]}
 							selectionColor={color}
 							withBorder
 							onContextMenu={id === -1 ? undefined : createContextMenu([
@@ -345,10 +345,10 @@ export default function Settings() {
 							/>
 						</Expander.Item>
 						<Expander.Item title={t.fit} icon="aspect_ratio">
-							<ComboBox current={backgroundImageFit} ids={ImageFitType.keys} options={ImageFitType.labels} icons={(ImageFitType.meta as AnyObject).icon} />
+							<ComboBox current={backgroundImages.fit} ids={ImageFitType.keys} options={ImageFitType.labels} icons={(ImageFitType.meta as AnyObject).icon} />
 						</Expander.Item>
 						<Expander.Item title={t.settings.appearance.backgroundImage.position} icon="location_target" disabled={backgroundImagePositionDisabled}>
-							<PositionControl value={backgroundImagePosition} disabled={backgroundImagePositionDisabled} />
+							<PositionControl value={backgroundImages.position[0]} disabled={backgroundImagePositionDisabled} onChanging={value => backgroundImages.position[1](value, false)} onChanged={value => backgroundImages.position[1](value, true)} />
 						</Expander.Item>
 					</>
 				)}
