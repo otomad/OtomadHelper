@@ -46,7 +46,7 @@ class PrveClass {
 		this.findEffectFrames = this.findEffectFrames.bind(this);
 	}
 
-	public static findClass(klass: PrveClassType | (string & {})) { return PrveClass.all.find(prveClass => prveClass.class === klass); }
+	public static findClass(klass: PrveClassType | (string & {})) { return PrveClass.allKeyed.find(prveClass => prveClass.class === klass); }
 	public get effectIds() { return this.effects.map(effect => effect.effect) ?? []; }
 	public static findClassEffects(klass: PrveClassType) { return PrveClass.findClass(klass)?.effectIds ?? []; }
 	public findEffectFrames(effect: PrveClassType | (string & {})) { return this.effects.find(_effect => _effect.effect === effect)?.frames ?? 1; }

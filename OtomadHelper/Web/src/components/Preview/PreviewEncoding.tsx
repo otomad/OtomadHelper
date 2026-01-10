@@ -102,7 +102,7 @@ export default function PreviewEncoding({ encoding }: FCP<{
 	encoding: Config.Encoding;
 	children?: never;
 }, "div">) {
-	const encodingInfo = Encodings.all[encoding];
+	const encodingInfo = Encodings.allKeyed[encoding];
 
 	return (
 		<StyledPreviewEncoding>

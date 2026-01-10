@@ -87,7 +87,7 @@ const StyledPreviewQuickIntervalSelection = styled(HorizontalScroll)`
 
 function PreviewQuickIntervalSelection({ interval, bits: [bits, setBits], isPreset = false }: {
 	interval: number;
-	bits: [get: Uint8Array<ArrayBuffer>, set?: SetStateNarrow<Uint8Array<ArrayBuffer>>];
+	bits: readonly [get: Uint8Array<ArrayBuffer>, set?: SetStateNarrow<Uint8Array<ArrayBuffer>>];
 	isPreset: boolean;
 }) {
 	const extendBitsLength = useEffectEvent(() => {
@@ -139,7 +139,7 @@ export default function QuickIntervalSelection({ interval, bits: bitsBase64, pre
 	preset?: StateProperty<Config.QuickIntervalSelectionPreset>;
 }) {
 	const bits = useBitArray(bitsBase64);
-	const currentPreset = QuickIntervalSelectionPresets.all[preset?.[0] ?? "custom"];
+	const currentPreset = QuickIntervalSelectionPresets.allKeyed[preset?.[0] ?? "custom"];
 	const isCustom = !currentPreset.bits || !currentPreset.interval;
 
 	return (

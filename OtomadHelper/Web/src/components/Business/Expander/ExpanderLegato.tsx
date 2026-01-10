@@ -27,7 +27,7 @@ export default function ExpanderLegato({ stream, children }: FCP<{
 	const isTrack = stream === "track";
 	const { legatoDuration, legatoAtLeast, legatoMode, legatoStretchKeyframes } = useSelectConfig(c => isTrack ? c.track.legato : c[stream]);
 	const meta = metas[stream].legato;
-	const currentLegatoDuration = LegatoDurations.all[legatoDuration[0]];
+	const currentLegatoDuration = LegatoDurations.allKeyed[legatoDuration[0]];
 	const timeStretchKeyframesDetailsContext = legatoStretchKeyframes[0] ? "on" : legatoStretchKeyframes[0] === null ? "auto" : "off";
 
 	const timeStretchKeyframes = (
