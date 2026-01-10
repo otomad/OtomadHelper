@@ -57,8 +57,8 @@ export function useLanguage() {
 	const language = useLanguageGetter();
 
 	function changeLanguage(lng: AvailableLanguageTags) {
-		if (i18n.language === lng && htmlLang.value === lng)
-			return;
+		const maximizedLang = new Intl.Locale(lng).maximize().baseName;
+		if (i18n.language === lng && htmlLang.value === maximizedLang) return;
 		bridges.bridge.setCulture(i18n.t("metadata.culture", { lng }));
 		const TRANSITION_DURATION = 500;
 		const HALFTONE_SIZE = 4 * Math.SQRT1_2;

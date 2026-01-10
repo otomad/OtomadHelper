@@ -49,7 +49,7 @@ const StyledMarqueeIfOverflow = styled.div`
 					translate: calc(-50% - var(--h-space) / 2);
 				}
 			`} 5s linear infinite;
-			animation-duration: calc(var(--width) * 10ms);
+			animation-duration: calc(var(--width) * (1s / var(--speed)));
 		}
 	}
 
@@ -64,14 +64,17 @@ const StyledMarqueeIfOverflow = styled.div`
  * Make marquee text only when it's overflowing.
  * @returns React JSX element.
  */
-export default function MarqueeIfOverflow({ children, ...htmlAttrs }: FCP<{}, "div">) {
+export default function MarqueeIfOverflow({ speed = 100, children, ...htmlAttrs }: FCP<{
+	/** Adjust animation speed. Unit: px/s. @default 100 */
+	speed?: number;
+}, "div">) {
 	const plainEl = useDomRef<"p">();
 	const width = useElementSize(plainEl, "borderBoxInlineSize");
 
 	return (
 		<StyledMarqueeIfOverflow inert {...htmlAttrs}>
-			<div className="fading-gradient">
-				<div className="marquee" style={{ "--width": width }}>
+			<div className="fading-gradient" aria-hidden>
+				<div className="marquee" style={{ "--width": width, "--speed": speed }}>
 					<p>{children}</p>
 					<p>{children}</p>
 				</div>

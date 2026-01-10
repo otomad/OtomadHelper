@@ -78,11 +78,11 @@ const StyledPreviewPrve = styled.div<{
 		}
 	}
 
-	.items-view-item:not(:hover, :focus-visible, .initial-step-item) & img {
+	.items-view-item:not(:hover, :focus-visible, .initial-step-item, .gradient-flyout-editor *) & img {
 		animation: none;
 	}
 
-	:is(.initial-step, .step-sequence-item) & img {
+	:is(.initial-step, .step-sequence-item, .gradient-flyout-editor) & img {
 		animation-play-state: paused;
 		animation-delay: calc((var(--i) + var(--adjust-order)) * -${MILLISECONDS_PER_FRAME}ms / var(--adjust-rate) + 1ms);
 	}
@@ -339,19 +339,15 @@ const StyledPreviewPrve = styled.div<{
 						`};
 					}
 				`,
-				...keysWithSameValue(
-					"chromatic",
-					"monochrome", // Compatible with `MirrorGradientTrackFlyoutEditor`.
-					css`
-						img {
-							filter: grayscale(1);
-							animation: ${keyframes`
-								0%, 100% { filter: grayscale(1); }
-								50% { filter: none; }
-							`};
-						}
-					`,
-				),
+				chromatic: css`
+					img {
+						filter: grayscale(1);
+						animation: ${keyframes`
+							0%, 100% { filter: grayscale(1); }
+							50% { filter: none; }
+						`};
+					}
+				`,
 				chromaticFade: css`
 					--adjust-order: 2;
 					img {
@@ -516,7 +512,7 @@ const StyledPreviewPrve = styled.div<{
 	}
 `;
 
-export default function PreviewPrve({ thumbnail, effect, frames, step, isDegree, ...htmlAttrs }: FCP<{
+export default function PreviewPrve({ thumbnail, effect, frames, step, iStep, isDegree, ...htmlAttrs }: FCP<{
 	/** Thumbnail. */
 	thumbnail: string;
 	/** Effect identifier. */
@@ -525,6 +521,8 @@ export default function PreviewPrve({ thumbnail, effect, frames, step, isDegree,
 	frames?: number;
 	/** The step for displaying initial step. */
 	step?: number;
+	/** `--i`. */
+	iStep?: number;
 	/** Use degree angle instead of step. */
 	isDegree?: boolean;
 }, "div">) {
@@ -549,11 +547,14 @@ export default function PreviewPrve({ thumbnail, effect, frames, step, isDegree,
 	const isStatic = step !== undefined && (step <= 0 || frames !== undefined && step > frames || isDegree);
 	const ImgBase = ({ ...htmlAttrs }: FCP<{}, "img">) => <img src={thumbnail} alt="" {...htmlAttrs} />;
 
+	iStep ??= step === undefined || frames === undefined ? undefined : (step + frames - 2) % frames; // Change the order from `0 1 2 3` to `3 0 1 2`.
+
 	return (
 		<StyledPreviewPrve
 			$effect={effect}
 			$frames={frames}
 			$static={isStatic}
+			style={{ "--i": iStep }}
 			{...htmlAttrs}
 		>
 			{step === 0 ? <ImgBase /> :

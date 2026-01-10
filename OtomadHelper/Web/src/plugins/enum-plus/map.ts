@@ -3,15 +3,15 @@ import type { EnumInit, EnumItemClass, EnumKey, EnumValue, PluginFunc, ValueType
 const mapPlugin: PluginFunc = (_options, Enum) => {
 	Enum.extends({
 		map(callbackFn: (raw: object, index: number) => unknown) {
-			return this.items.map(({ raw, ...others }, index) => callbackFn({ ...raw as object, ...others }, index));
+			return this.items.map(({ raw, ...others }, index) => callbackFn({ raw, ...raw as object, ...others }, index));
 		},
 		get allKeyed() {
 			// @ts-expect-error
-			return Object.fromEntries(this.items.map(({ raw, key, ...others }) => [key, { ...raw as object, key, ...others }]));
+			return Object.fromEntries(this.items.map(({ raw, key, ...others }) => [key, { raw, ...raw as object, key, ...others }]));
 		},
 		get array() {
 			// @ts-expect-error
-			return this.items.map(({ raw, ...others }) => ({ ...raw as object, ...others }));
+			return this.items.map(({ raw, ...others }) => ({ raw, ...raw as object, ...others }));
 		},
 		/*
 		 * CAUTION: Set a invalid useless setter to avoid conflict with same name of enum key.
@@ -35,7 +35,7 @@ declare module "enum-plus/extension" {
 		V extends EnumValue = ValueTypeFromSingleInit<T[K], K>,
 	> {
 		map<R>(callbackFn: (raw: EnumItemClass<T[K], K, V> & T[K], index: number) => R): R[];
-		readonly allKeyed: Record<K, EnumItemClass<T[K], K, V> & T[K]>;
+		readonly allKeyed: Record<K, EnumItemClass<T[K], K, V> & T[K]> & Record<string, Any>; // WARN: 修复 bug 后移除 `& Record<string, Any>`。见 https://github.com/shijistar/enum-plus/issues/42
 		readonly array: (EnumItemClass<T[K], K, V> & T[K])[];
 	}
 }

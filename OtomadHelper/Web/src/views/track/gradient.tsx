@@ -11,7 +11,7 @@ import { directionTypes, getParityIcon } from "./grid";
 export default function Gradient() {
 	return (
 		<div className="container">
-			<MirrorGradientTrackFlyoutEditor />
+			<GradientFlyoutEditor />
 		</div>
 	);
 }

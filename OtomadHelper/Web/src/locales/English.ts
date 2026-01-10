@@ -42,8 +42,8 @@ export default {
 			grid_full: "Grid Layout",
 			concentric: "Concentric Layout",
 			box3d: "3D Box Layout",
-			gradient: "Mirror/Gradient",
-			gradient_full: "Mirror/Gradient Tracks",
+			gradient: "Mirror/Gradientify",
+			gradient_full: "Mirror/Gradientify Tracks",
 			internal: "Global Internal",
 			internal_long: "VEGAS Pro Global Internal Preferences",
 			license: "License",
@@ -610,8 +610,6 @@ export default {
 				},
 			},
 			gradient: {
-				style: "Style",
-				pattern: "Pattern",
 				groups: {
 					parity: "Parity",
 					gradient: "Gradient",
@@ -874,7 +872,11 @@ export default {
 				rotateCustomSequence: "Rotate with Custom Angle Sequence",
 				zoomOutIn: "Zoom Out In",
 				hMirror: "Horizontal Mirror",
+				hMirror_left: "Horizontal Mirror (Left)",
+				hMirror_right: "Horizontal Mirror (Right)",
 				vMirror: "Vertical Mirror",
+				vMirror_top: "Vertical Mirror (Top)",
+				vMirror_bottom: "Vertical Mirror (Bottom)",
 				ccwMirror: "Counterclockwise Mirror",
 				cwMirror: "Clockwise Mirror",
 				negative: "Negative",
@@ -1274,7 +1276,7 @@ export default {
 						_: "Resizes clips to maintain aspect ratio while fitting within the track box",
 						cover: "Crops off both sides to fill the entire track box so there are no gaps, but it will make both sides disappear from view.",
 						contain: "Adds mattes of blank space around to fit the entire clip into the track box so you can see it all, but the gaps become too conspicuous when the aspect ratio differences are significant.",
-						overlay: "The track boxes will not be scaled or panned, but only trimmed and mirrored/gradient. This presents a hollowed-out and masked effect.",
+						overlay: "The track boxes will not be scaled or panned, but only trimmed and mirrored/gradientified. This presents a hollowed-out and masked style.",
 					},
 					mirrorEdges: {
 						hFlip: "Mirrors the tracks by flipping the columns in a parity pattern",
@@ -1292,6 +1294,8 @@ export default {
 				},
 				gradient: {
 					_: "Gives the video tracks a gradient color style, or mirrors the edges of the tracks by flipping a parity pattern in your layout",
+					mirrorPriorityInfo: "If multiple mirrors are applied to the same target simultaneously, the former mirror has a higher priority than the latter. For example, if both “$t(prve.effects.hMirror_left)” and “$t(prve.effects.hMirror_right)” are applied to a target together, only “$t(prve.effects.hMirror_left)” will be applied eventually.",
+					colorInvertInfo: "To achieve “$t(prve.effects.colorInvert)”, just apply “$t(prve.effects.hueInvert)” and “$t(prve.effects.luminInvert)” to the same target.",
 					gridIntegration: {
 						_: "Configure when applying in conjunction with grid layout",
 						autoLineLength: "When **enabled** and **grid layout** is also enabled, some parameters set in grid layout will automatically be used in the **generation mode**. This will not work in the **instant application mode**, you need to set the parameters manually.",

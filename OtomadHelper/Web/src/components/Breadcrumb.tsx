@@ -75,7 +75,7 @@ const StyledBreadcrumb = styled.h1`
 
 export default function Breadcrumb({ titles, large = true, ...htmlAttrs }: FCP<{
 	/** Array of breadcrumb navigation titles. */
-	titles: { name: ReactNode; onClick?(): void }[];
+	titles: ({ name: ReactNode; onClick?(): void } | undefined | null | false)[];
 	/** Show as large size header (which used in navigation view)? @default true */
 	large?: boolean;
 	children?: never;
@@ -83,7 +83,7 @@ export default function Breadcrumb({ titles, large = true, ...htmlAttrs }: FCP<{
 	return (
 		<StyledBreadcrumb as={large ? "h1" : "h4"} className="title" role="navigation" aria-label={t.aria.breadcrumb} {...htmlAttrs}>
 			<TransitionGroup>
-				{titles.flatMap((title, i, { length }) => {
+				{titles.toCompacted().flatMap((title, i, { length }) => {
 					const last = i === length - 1;
 					const crumb = (
 						<button
@@ -93,7 +93,7 @@ export default function Breadcrumb({ titles, large = true, ...htmlAttrs }: FCP<{
 							type="button"
 							role="link"
 							aria-current={last && "page"}
-							onClick={title.onClick}
+							onClick={last ? undefined : title.onClick}
 						>
 							{title.name}
 						</button>

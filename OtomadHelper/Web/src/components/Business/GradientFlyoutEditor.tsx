@@ -3,11 +3,13 @@ import exampleThumbnail from "assets/images/ヨハネの氷.avif";
 const ParityStyles = Enum({
 	hFlip: { label: t.prve.effects.hFlip },
 	vFlip: { label: t.prve.effects.vFlip },
-	hMirror: { label: t.prve.effects.hMirror },
-	vMirror: { label: t.prve.effects.vMirror },
-	monochrome: { label: t.ytp.effects.monochrome },
+	monochrome: { label: t.ytp.effects.monochrome, effect: "chromatic" },
 	hueInvert: { label: t.prve.effects.hueInvert },
 	luminInvert: { label: t.prve.effects.luminInvert },
+	hMirrorLeft: { label: t.prve.effects.hMirror_left, effect: "hMirror", step: 1 },
+	hMirrorRight: { label: t.prve.effects.hMirror_right, effect: "hMirror", step: 2 },
+	vMirrorTop: { label: t.prve.effects.vMirror_top, effect: "vMirror", step: 1 },
+	vMirrorBottom: { label: t.prve.effects.vMirror_bottom, effect: "vMirror", step: 2 },
 });
 
 const GradientStyles = Enum({
@@ -61,7 +63,7 @@ function matchParity(parity: GridParityType, column: number, row: number, random
 	}[parity];
 }
 
-const StyledMirrorGradientTrackFlyoutEditor = styled.div`
+const StyledGradientFlyoutEditor = styled.div`
 	.forward > &.exit-active,
 	.backward > &.exit-active {
 		transition-timing-function: ${eases.easeInOutSmooth};
@@ -96,7 +98,6 @@ const StyledMirrorGradientTrackFlyoutEditor = styled.div`
 		${styles.mixins.overflowGradient("x", "1.25em")};
 		display: flex;
 		justify-content: start;
-		overflow-inline: auto;
 
 		.items-view-item {
 			flex-shrink: 0;
@@ -104,18 +105,10 @@ const StyledMirrorGradientTrackFlyoutEditor = styled.div`
 
 			.base {
 				${styles.mixins.square("100px")};
-
-				.preview-prve img {
-					animation: none !important;
-				}
 			}
 
 			.items-view-item-text-part {
 				${styles.mixins.square("100%")};
-
-				.marquee {
-					animation-duration: 4s;
-				}
 			}
 		}
 	}
@@ -140,7 +133,7 @@ const StyledMirrorGradientTrackFlyoutEditor = styled.div`
 		}
 	}
 
-	.gradient-pattern {
+	.pattern {
 		display: flex;
 		justify-content: space-evenly;
 
@@ -170,20 +163,27 @@ const StyledMirrorGradientTrackFlyoutEditor = styled.div`
 			}
 		}
 	}
+
+	.asterisk.badge {
+		position: absolute;
+		inset-block-start: 3px;
+		inset-inline-end: 3px;
+	}
 `;
 
-export default function MirrorGradientTrackFlyoutEditor() {
+const MARQUEE_SPEED = 40;
+export default function GradientFlyoutEditor() {
 	const ariaId = useId();
 	const tc = tAlias.track.gradient;
 	const [currentPage, setCurrentPage] = useState<"style" | "pattern">("style");
 	const [currentPattern, setCurrentPattern] = useState<"parity" | "gradient">("parity");
 	const [currentStyle, setCurrentStyle] = useState("hFlip");
-	const titles = useMemo<PropsOf<typeof Breadcrumb>["titles"]>(() =>
-		currentPage === "style" ? [{ name: tc.style }] :
-		currentPage === "pattern" ? [{ name: tc.style, onClick() { setCurrentPage("style"); } }, { name: tc.pattern }] :
-		[{ name: tc.style, onClick() { setCurrentPage("style"); } }], [currentPage]);
+	const titles = useMemo<PropsOf<typeof Breadcrumb>["titles"]>(() => [
+		{ name: t.titles.gradient({ context: "short" }), onClick: () => setCurrentPage("style") },
+		currentPage === "pattern" && { name: ParityStyles.has(currentStyle) ? ParityStyles.allKeyed[currentStyle].label : GradientStyles.has(currentStyle) ? GradientStyles.allKeyed[currentStyle].label : "" },
+	], [currentPage]);
 	const prevTitles = usePrevious(titles);
-	const transitionName = useMemo(() => titles.length < (prevTitles?.length ?? NaN) ? "forward" : "backward", [titles, prevTitles]);
+	const transitionName = useMemo(() => titles.toCompacted().length < (prevTitles?.toCompacted().length ?? NaN) ? "forward" : "backward", [titles, prevTitles]);
 
 	function clickAStyle(pattern: typeof currentPattern, style: string) {
 		setCurrentPattern(pattern);
@@ -196,22 +196,34 @@ export default function MirrorGradientTrackFlyoutEditor() {
 			<Breadcrumb large={false} titles={titles} />
 			<SwitchTransition>
 				<CssTransition key={`${currentPage}/${currentPattern}`} moreCoherentWhenCombo timeout={125}>
-					<StyledMirrorGradientTrackFlyoutEditor>
+					<StyledGradientFlyoutEditor>
 						<HorizontalScroll as={Fragment}>
 							{currentPage === "style" ? (
-								<ItemsView data-page="style" view="grid" current={null}>
-									<Subheader vertical>{t.track.gradient.groups.parity}</Subheader>
-									{ParityStyles.map(({ key, label }) => (
+								<ItemsView data-page="style" className={nameof.kebab({ GradientFlyoutEditor })} view="grid" current={null}>
+									<Subheader vertical>{tc.groups.parity}</Subheader>
+									{ParityStyles.map(({ key, label, ...raw }) => (
 										<ItemsView.Item
 											id={key}
 											key={key}
-											image={<PreviewPrve thumbnail={exampleThumbnail} effect={key} />}
+											image={(
+												<PreviewPrve
+													thumbnail={exampleThumbnail}
+													effect={"effect" in raw ? raw.effect : key}
+													step={"step" in raw ? raw.step : 1}
+													frames={"step" in raw ? 2 : undefined}
+												/>
+											)}
+											imageOverlay={(() => {
+												const tooltip = key.includes("Mirror") ? t.descriptions.track.gradient.mirrorPriorityInfo :
+													key.includes("Invert") ? t.descriptions.track.gradient.colorInvertInfo : undefined;
+												return tooltip && <Tooltip placement="block" title={tooltip}><Badge className="asterisk" status="asterisk" /></Tooltip>;
+											})()}
 											onClick={() => clickAStyle("parity", key)}
 										>
-											<MarqueeIfOverflow>{label}</MarqueeIfOverflow>
+											<MarqueeIfOverflow speed={MARQUEE_SPEED}>{label}</MarqueeIfOverflow>
 										</ItemsView.Item>
 									))}
-									<Subheader vertical>{t.track.gradient.groups.gradient}</Subheader>
+									<Subheader vertical>{tc.groups.gradient}</Subheader>
 									{GradientStyles.map(({ key, label }) => (
 										<ItemsView.Item
 											id={key}
@@ -219,67 +231,73 @@ export default function MirrorGradientTrackFlyoutEditor() {
 											image={<PreviewGraduallyGradient thumbnail={exampleThumbnail} effect={key} />}
 											onClick={() => clickAStyle("gradient", key)}
 										>
-											<MarqueeIfOverflow>{label}</MarqueeIfOverflow>
+											<MarqueeIfOverflow speed={MARQUEE_SPEED}>{label}</MarqueeIfOverflow>
 										</ItemsView.Item>
 									))}
 								</ItemsView>
-							) : currentPage === "pattern" ? currentPattern === "parity" ? (
-								<ItemsView data-page="pattern" data-pattern="parity" view="tile" current={null}>
-									{ParityPatterns.map(({ key, label, icon }) => (
-										<ItemsView.Item
-											id={key}
-											key={key}
-											icon={icon}
-											// onClick={option === "random" ? () => (isH ? setFlipHRandomTimestamp : setFlipVRandomTimestamp)(Date.now()) : undefined}
-										>
-											{label}
-										</ItemsView.Item>
-									))}
-								</ItemsView>
-							) : currentPattern === "gradient" ? (
-								<div className="gradient-pattern">
-									<ItemsView data-page="pattern" data-pattern="gradient" view="tile" current={null}>
-										{GradientPatterns.map(({ key, label, icon }) => (
-											<ItemsView.Item
-												id={key}
-												key={key}
-												icon={icon}
-												// onClick={option === "random" ? () => (isH ? setFlipHRandomTimestamp : setFlipVRandomTimestamp)(Date.now()) : undefined}
-											>
-												{label}
-											</ItemsView.Item>
-										))}
-									</ItemsView>
-									<hr />
-									<div className="parameters">
-										<label htmlFor={`${ariaId}-input-start`}>
-											<Icon name="stream_input" />
-											{tc.parameters.input}
-										</label>
-										<TextBox.Number id={`${ariaId}-input-start`} value={[0]} min={-100} max={200} prefix={tc.parameters.startStop({ context: "short" })} />
-										<label htmlFor={`${ariaId}-input-end`}>{t.rangeDash}</label>
-										<TextBox.Number id={`${ariaId}-input-end`} value={[1]} min={-100} max={200} prefix={tc.parameters.endStop({ context: "short" })} />
+							) : currentPage === "pattern" ? (
+								<div className="pattern">
+									{currentPattern === "parity" ? (
+										<>
+											<ItemsView data-page="pattern" data-pattern="parity" view="tile" current={null}>
+												{ParityPatterns.map(({ key, label, icon }) => (
+													<ItemsView.Item
+														id={key}
+														key={key}
+														icon={icon}
+													// onClick={option === "random" ? () => (isH ? setFlipHRandomTimestamp : setFlipVRandomTimestamp)(Date.now()) : undefined}
+													>
+														{label}
+													</ItemsView.Item>
+												))}
+											</ItemsView>
+										</>
+									) : currentPattern === "gradient" ? (
+										<>
+											<ItemsView data-page="pattern" data-pattern="gradient" view="tile" current={null}>
+												{GradientPatterns.map(({ key, label, icon }) => (
+													<ItemsView.Item
+														id={key}
+														key={key}
+														icon={icon}
+														// onClick={option === "random" ? () => (isH ? setFlipHRandomTimestamp : setFlipVRandomTimestamp)(Date.now()) : undefined}
+													>
+														{label}
+													</ItemsView.Item>
+												))}
+											</ItemsView>
+											<hr />
+											<div className="parameters">
+												<label htmlFor={`${ariaId}-input-start`}>
+													<Icon name="stream_input" />
+													{tc.parameters.input}
+												</label>
+												<TextBox.Number id={`${ariaId}-input-start`} value={[0]} min={-100} max={200} prefix={tc.parameters.startStop({ context: "short" })} />
+												<label htmlFor={`${ariaId}-input-end`}>{t.rangeDash}</label>
+												<TextBox.Number id={`${ariaId}-input-end`} value={[1]} min={-100} max={200} prefix={tc.parameters.endStop({ context: "short" })} />
 
-										<label htmlFor={`${ariaId}-start-col`}>
-											<IconWithHighlightPoint name="linear_gradient" location="left" />
-											{tc.parameters.startStop}
-										</label>
-										<TextBox.Number id={`${ariaId}-start-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
-										<label htmlFor={`${ariaId}-start-row`}>,</label>
-										<TextBox.Number id={`${ariaId}-start-row`} value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
+												<label htmlFor={`${ariaId}-start-col`}>
+													<IconWithHighlightPoint name="linear_gradient" location="left" />
+													{tc.parameters.startStop}
+												</label>
+												<TextBox.Number id={`${ariaId}-start-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
+												<label htmlFor={`${ariaId}-start-row`}>,</label>
+												<TextBox.Number id={`${ariaId}-start-row`} value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
 
-										<label htmlFor={`${ariaId}-end-col`}>
-											<IconWithHighlightPoint name="linear_gradient" location="right" />
-											{tc.parameters.endStop}
-										</label>
-										<TextBox.Number id={`${ariaId}-end-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
-										<label htmlFor={`${ariaId}-end-role`}>,</label>
-										<TextBox.Number id={`${ariaId}-end-role`} value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
-									</div>
+												<label htmlFor={`${ariaId}-end-col`}>
+													<IconWithHighlightPoint name="linear_gradient" location="right" />
+													{tc.parameters.endStop}
+												</label>
+												<TextBox.Number id={`${ariaId}-end-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
+												<label htmlFor={`${ariaId}-end-role`}>,</label>
+												<TextBox.Number id={`${ariaId}-end-role`} value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
+											</div>
+										</>
+									) : undefined}
 								</div>
-							) : undefined : undefined}
+							) : undefined}
 						</HorizontalScroll>
-					</StyledMirrorGradientTrackFlyoutEditor>
+					</StyledGradientFlyoutEditor>
 				</CssTransition>
 			</SwitchTransition>
 		</Contents>

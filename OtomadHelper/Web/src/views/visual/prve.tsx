@@ -13,7 +13,12 @@ const DEFAULT_EFFECT = "normal";
 export const STEP_CHANGE_HUE = "stepChangeHue", RANDOM_CLASS_EFFECTS = "random";
 const getWhirlInfo = () => withObject(t.prve.effects, fx => `${fx.whirl} = ${fx.pingpong} + ${fx.hFlip}`);
 
-/** With frames step. */
+/**
+ * With frames step.
+ * @param frames - Frame step length.
+ * @param effectIds - All continuous effect IDs that with this frame step length.
+ * @returns `PrveClassEffect[]`.
+ */
 const $s = (frames: number, ...effectIds: PrveEffectType[]) => effectIds.map(effect => ({ effect, frames }));
 type PrveClassEffect = {
 	effect: PrveEffectType;
@@ -46,13 +51,25 @@ class PrveClass {
 		this.findEffectFrames = this.findEffectFrames.bind(this);
 	}
 
-	public static findClass(klass: PrveClassType | (string & {})) { return PrveClass.allKeyed.find(prveClass => prveClass.class === klass); }
+	public static findClass(klass: PrveClassType | (string & {})) { return PrveClass.all.find(prveClass => prveClass.class === klass); }
 	public get effectIds() { return this.effects.map(effect => effect.effect) ?? []; }
 	public static findClassEffects(klass: PrveClassType) { return PrveClass.findClass(klass)?.effectIds ?? []; }
 	public findEffectFrames(effect: PrveClassType | (string & {})) { return this.effects.find(_effect => _effect.effect === effect)?.frames ?? 1; }
 }
 
-/** Prve amounts option. */
+/**
+ * PRVE amount option.
+ * @param title - Amount option title.
+ * @param icon - Icon.
+ * @param state - State property of this amount option.
+ * @param def - Default value.
+ * @param min - Minimum value.
+ * @param max - Maximum value.
+ * @param decimalPlaces - The number of decimal places.
+ * @param suffix - Suffix (Unit).
+ * @param prefix - Prefix.
+ * @returns An object that contains the info of the amount option.
+ */
 const $a = (title: string, icon: DeclaredIcons, state: StateProperty<number>, def: number, min: number, max: number, decimalPlaces: number = 3, suffix?: string, prefix?: string) =>
 	({ title, icon, state, def, min, max, decimalPlaces, suffix, prefix });
 
@@ -414,13 +431,10 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 				>
 					<ItemsView<number[]> className="initial-step-items" view="grid" current={[initialStep, setInitialStep]} itemWidth={100} aria-label={t.prve.initialStep}>
 						{forMap(frames, j => {
-							const i = (j + frames - 1) % frames; // Change the order from `0 1 2 3` to `3 0 1 2`.
 							const value = isDefault ? [0] : getStepSequence(frames, j);
 							return (
 								<ItemsView.Item
-									image={(
-										<PreviewPrve thumbnail={exampleThumbnail} effect={effect} frames={frames} step={j + 1} style={{ "--i": i }} />
-									)}
+									image={<PreviewPrve thumbnail={exampleThumbnail} effect={effect} frames={frames} step={j + 1} />}
 									key={value.join()}
 									data-value={value}
 									data-index={j}
@@ -469,7 +483,7 @@ function InitialStep({ klass, effect, initialStep: [initialStep, setInitialStep]
 									effect={effect}
 									frames={frames}
 									step={frame}
-									style={{ "--i": floorMod(frame - 2, frames) }}
+									iStep={floorMod(frame - 2, frames)}
 									isDegree={isCustomInitialStepClass}
 								/>
 								<Badge status="neutual" transitionOnAppear={false}>{frame}{isCustomInitialStepClass ? t.units.degree : ""}</Badge>
