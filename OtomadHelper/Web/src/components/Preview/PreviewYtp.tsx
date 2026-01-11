@@ -125,6 +125,11 @@ const StyledPreviewYtp = styled.div<{
 					filter: url("#edge");
 				}
 			`,
+			sepia: css`
+				img {
+					filter: sepia(1);
+				}
+			`,
 		}[$name];
 	}}
 `;

@@ -32,8 +32,7 @@ export default {
 			settings: "Settings",
 			effect: "Effect",
 			effect_other: "Effects",
-			prve: "PV Rhythm Visual Effect", // “PV” stands for Promotion Video.
-			prve_other: "PV Rhythm Visual Effects",
+			prve: "PV Rhythm Dynamic Pulsing", // “PV” stands for Promotion Video.
 			staff: "Staff", // Musical staff.
 			staff_full: "Staff Visualizer",
 			pixelScaling: "Pixel Scaling",
@@ -42,8 +41,8 @@ export default {
 			grid_full: "Grid Layout",
 			concentric: "Concentric Layout",
 			box3d: "3D Box Layout",
-			gradient: "Mirror/Gradientify",
-			gradient_full: "Mirror/Gradientify Tracks",
+			gradient: "Mirror/Gradify",
+			gradient_full: "Mirror/Gradify Tracks",
 			internal: "Global Internal",
 			internal_long: "VEGAS Pro Global Internal Preferences",
 			license: "License",
@@ -593,9 +592,9 @@ export default {
 				},
 				padding: "Padding",
 				operationRecord: "Operation records",
-				operationRecord_short: "Operations", // This is a shorter name of “Operation records,” if that name is short enough in your language, just copy and paste the same translation as that string.
+				operationRecord_short: "Operations", // This is a shorter name of “Operation records”, if that name is short enough in your language, just copy and paste the same translation as that string.
 				dynamicDetection: "Dynamic detection",
-				dynamicDetection_short: "Detection", // This is a shorter name of “Dynamic detection,” if that name is short enough in your language, just copy and paste the same translation as that string.
+				dynamicDetection_short: "Detection", // This is a shorter name of “Dynamic detection”, if that name is short enough in your language, just copy and paste the same translation as that string.
 			},
 			box3d: {
 				deleteTracks: "Delete original tracks",
@@ -758,6 +757,7 @@ export default {
 				emboss: "Emboss",
 				bump: "Bump",
 				edge: "Find Edges",
+				sepia: "Sepia",
 			},
 			sideEffects: {
 				wave: "Wave",
@@ -1261,7 +1261,7 @@ export default {
 				},
 			},
 			track: {
-				_: "In YTPMV creation, layout and composition design are the core links of visual logic. Its main goal is to deeply integrate multisource with music rhythm through dynamic composition, which not only creates confusion and impact, but also maintains the readability of visuals. Knowing how to make a good visual layout for YTPMV will make it more interesting than you think.\nAs the core of the visual, the source corresponding to the melody sample needs to be enlarged, topped, or given a high-contrast color to enhance the sense of existence. Then use dynamic hierarchical management to distinguish between primary and secondary elements. For example, the background source can reduce transparency to avoid domination. You can try non-linear arrangement, break the traditional grid layout, and use random stacking, displacement overlapping, or other techniques to mimic the visual tension of “information overload”. Establish a hidden order by repeating certain elements, and create a sense of surprise by adding local mutations. For example, repeat the avatar as a visual anchor, but overlay different effects each time it appears.\nThe layout and composition design of YTPMV is essentially “controlled chaos” that endows the content with internal structure through basic design principles such as contrast and alignment. This design not only requires technology, but also relies on the intuitive grasp of cultural aesthetics in its creation, and ultimately realizes the unique experience of “order in disorder”.",
+				_: "In YTPMV creation, layout and composition design are the core links of visual logic. Its main goal is to deeply integrate multisource with music rhythm through dynamic composition, which not only creates confusion and impact, but also maintains the readability of visuals. Knowing how to make a good visual layout for YTPMV will make it more interesting than you think.\nAs the core of the visual, the source corresponding to the melody sample needs to be enlarged, topped, or given a high-contrast color to enhance the sense of existence. Then use dynamic hierarchical management to distinguish between primary and secondary elements. For example, the background source can reduce transparency to avoid domination. You can try non-linear arrangement, break the traditional grid layout, and use random stacking, displacement overlapping, or other techniques to mimic the visual tension of “information overload.” Establish a hidden order by repeating certain elements, and create a sense of surprise by adding local mutations. For example, repeat the avatar as a visual anchor, but overlay different effects each time it appears.\nThe layout and composition design of YTPMV is essentially “controlled chaos” that endows the content with internal structure through basic design principles such as contrast and alignment. This design not only requires technology, but also relies on the intuitive grasp of cultural aesthetics in its creation, and ultimately realizes the unique experience of “order in disorder.”",
 				grid: {
 					square: "Creates a standard grid layout such as 2×2, 3×3, etc. based on the number of tracks",
 					fixedColumns: "Customizes a fixed number of columns in the grid layout, and the rows will automatically adapt to the columns",
@@ -1276,7 +1276,7 @@ export default {
 						_: "Resizes clips to maintain aspect ratio while fitting within the track box",
 						cover: "Crops off both sides to fill the entire track box so there are no gaps, but it will make both sides disappear from view.",
 						contain: "Adds mattes of blank space around to fit the entire clip into the track box so you can see it all, but the gaps become too conspicuous when the aspect ratio differences are significant.",
-						overlay: "The track boxes will not be scaled or panned, but only trimmed and mirrored/gradientified. This presents a hollowed-out and masked style.",
+						overlay: "The track boxes will not be scaled or panned, but only trimmed and mirrored/Gradified. This presents a hollowed-out and masked style.",
 					},
 					mirrorEdges: {
 						hFlip: "Mirrors the tracks by flipping the columns in a parity pattern",
@@ -1295,7 +1295,7 @@ export default {
 				gradient: {
 					_: "Gives the video tracks a gradient color style, or mirrors the edges of the tracks by flipping a parity pattern in your layout",
 					mirrorPriorityInfo: "If multiple mirrors are applied to the same target simultaneously, the former mirror has a higher priority than the latter. For example, if both “$t(prve.effects.hMirror_left)” and “$t(prve.effects.hMirror_right)” are applied to a target together, only “$t(prve.effects.hMirror_left)” will be applied eventually.",
-					colorInvertInfo: "To achieve “$t(prve.effects.colorInvert)”, just apply “$t(prve.effects.hueInvert)” and “$t(prve.effects.luminInvert)” to the same target.",
+					colorInvertInfo: "To achieve “$t(prve.effects.colorInvert),” just apply “$t(prve.effects.hueInvert)” and “$t(prve.effects.luminInvert)” to the same target.",
 					gridIntegration: {
 						_: "Configure when applying in conjunction with grid layout",
 						autoLineLength: "When **enabled** and **grid layout** is also enabled, some parameters set in grid layout will automatically be used in the **generation mode**. This will not work in the **instant application mode**, you need to set the parameters manually.",
@@ -1317,8 +1317,8 @@ export default {
 				descending: "Reverses the order in which the tracks are applied",
 			},
 			sonar: {
-				_: "Sonar (Motion Graphics generation feature) is a tool that automatically generates Mographs based on the music rhythm, using the shapes of “Cookie Cutter” effect. The trigger signals of various percussion instruments are linked to preset graphic elements via the score (especially the data of channel 10, where the drum kit is located). These graphics change with the rhythm to create the rhythm-driven “visual beat” effect. For example, the kick generates an enlarged square, the snare drives a rotating diamond, and the crash triggers a diffuse circle, forming an immersive experience of “sound visualization”.\nMotion Graphics (Mograph) is an art form that combines graphic design and animation to convey information or emotion through the motion of graphics, text, and other elements. In the creation of otoMAD, Mographs are often used to replace traditional source editing, and abstract graphics are used to create a purely visual rhythmic expression. For example, the visuals may be filled with dense geometric shapes during the climax of the music, while a sense of breathing is created by slowly deforming fluid patterns during the soothing paragraphs. Such creations are often titled *Graphics* or *Shapes* to emphasize the core concept of “playing music with visuals”.",
-				// The name of this effect, “Sonar,” was coined by Motosai.
+				_: "Sonar (Motion Graphics generation feature) is a tool that automatically generates Mographs based on the music rhythm, using the shapes of “Cookie Cutter” effect. The trigger signals of various percussion instruments are linked to preset graphic elements via the score (especially the data of channel 10, where the drum kit is located). These graphics change with the rhythm to create the rhythm-driven “visual beat” effect. For example, the kick generates an enlarged square, the snare drives a rotating diamond, and the crash triggers a diffuse circle, forming an immersive experience of “sound visualization.”\nMotion Graphics (Mograph) is an art form that combines graphic design and animation to convey information or emotion through the motion of graphics, text, and other elements. In the creation of otoMAD, Mographs are often used to replace traditional source editing, and abstract graphics are used to create a purely visual rhythmic expression. For example, the visuals may be filled with dense geometric shapes during the climax of the music, while a sense of breathing is created by slowly deforming fluid patterns during the soothing paragraphs. Such creations are often titled *Graphics* or *Shapes* to emphasize the core concept of “playing music with visuals.”",
+				// The name of this effect, “Sonar”, was coined by Motosai.
 				enabled: "Enables sonar effects if the active tracks in the score contain drum kits",
 				separateDrums: "Places each drum on its own track",
 				differenceCompositeMode: "Makes the tracks created with difference blend, this will present a shadow puppet style",
@@ -1353,7 +1353,7 @@ export default {
 				offset: "Offsets the clips corresponding to the keys as a whole",
 			},
 			ytp: {
-				_: "YouTube Poop (YTP) uses various effects to create videos with deconstruction, collage and absurdism at its core. YTP supports multisource.\nYTP is a Neo-Dada art practice in the digital era. Through editing, repetition, speed change, inversion and other technologies, the sources are reassembled into an illogical “video remix,” deliberately imitating the low-quality, low-technology aesthetic style to tease the seriousness and standardization of mainstream video culture. For example, the actions of the characters are played circularly, the lines with broken meanings are superimposed, or the abrupt sound effects are inserted to create an audio-visual effect that is both absurd and humorous.\nYTP rebelled against traditional narrative logic and challenged the audience’s inherent perception of “meaning”. Deconstructing the content of mainstream media through digital editing technology, and transforming cultural symbols into meaningless “electronic garbage”. Their works often follow the principle of “chaos is aesthetics,” such as an endless cycle of absurd clips or distorted role dialogues, forming a unique postmodern art language. YTP’s creative threshold is low, but its artistic value lies in reflecting on the essence of media — highlighting the vulnerability of digital media due to technical defects. Although YTP is an Internet meme, it is actually a continuous digital art experiment that redefines the boundary between entertainment and criticism.",
+				_: "YouTube Poop (YTP) uses various effects to create videos with deconstruction, collage and absurdism at its core. YTP supports multisource.\nYTP is a Neo-Dada art practice in the digital era. Through editing, repetition, speed change, inversion and other technologies, the sources are reassembled into an illogical “video remix,” deliberately imitating the low-quality, low-technology aesthetic style to tease the seriousness and standardization of mainstream video culture. For example, the actions of the characters are played circularly, the lines with broken meanings are superimposed, or the abrupt sound effects are inserted to create an audio-visual effect that is both absurd and humorous.\nYTP rebelled against traditional narrative logic and challenged the audience’s inherent perception of “meaning.” Deconstructing the content of mainstream media through digital editing technology, and transforming cultural symbols into meaningless “electronic garbage.” Their works often follow the principle of “chaos is aesthetics,” such as an endless cycle of absurd clips or distorted role dialogues, forming a unique postmodern art language. YTP’s creative threshold is low, but its artistic value lies in reflecting on the essence of media — highlighting the vulnerability of digital media due to technical defects. Although YTP is an Internet meme, it is actually a continuous digital art experiment that redefines the boundary between entertainment and criticism.",
 				slogan: "YouTube Poop — Where there’s smoke, they pinch back. Because YouTube is where the poop is.",
 				constrain: "Controls the length of the clips to be generated",
 				clips: "Set the number of the clips to generate",
@@ -1400,17 +1400,17 @@ export default {
 			},
 			staff: {
 				caption: "Uses custom patterns as notes to draw visuals similar fashion to piano staff sheets",
-				_: "Staff Visualizer is a visual effect that transforms musical symbols into creative visual graphics. At its core, it replaces traditional notes with custom patterns (e.g., avatars, geometric shapes, etc.) and places them at the proper pitch of the staff based on the melody of the music, forming a dynamic visual with both artistry and functionality. This visual effect style is inspired by the combination of digital art and music, the creations of YouTuber Grant Woolard. His video is characterized by transforming musicians’ avatars into notes, dynamically arranging them on the staff, and playing classical music. It not only preserves the pitch logic of the score, but also gives it a personalized visual narrative.\nThis effect can be used for artistic creation and performance visual design, such as transforming the artist’s performance into a dynamic staff art projection, or creating interactive music animations for digital album covers. Its innovation lies in breaking the static limit of traditional music scores, reinterpreting the musical structure with visual language, and transforming abstract melodies into perceptible “visual melodies”.",
+				_: "Staff Visualizer is a visual effect that transforms musical symbols into creative visual graphics. At its core, it replaces traditional notes with custom patterns (e.g., avatars, geometric shapes, etc.) and places them at the proper pitch of the staff based on the melody of the music, forming a dynamic visual with both artistry and functionality. This visual effect style is inspired by the combination of digital art and music, the creations of YouTuber Grant Woolard. His video is characterized by transforming musicians’ avatars into notes, dynamically arranging them on the staff, and playing classical music. It not only preserves the pitch logic of the score, but also gives it a personalized visual narrative.\nThis effect can be used for artistic creation and performance visual design, such as transforming the artist’s performance into a dynamic staff art projection, or creating interactive music animations for digital album covers. Its innovation lies in breaking the static limit of traditional music scores, reinterpreting the musical structure with visual language, and transforming abstract melodies into perceptible “visual melodies.”",
 			},
 			prve: {
-				caption: "Makes your visuals more rhythmic",
+				caption: "Lets your visuals breathe with the beat",
 				control: {
 					general: "Normal condition controls for nonconsecutive events and consecutive events of different pitches and the same syllable in YTPMV or Sentence Mixing mode.\nIf other separate controls are off, they are also included in the case.",
 					samePitch: "Separate controls for consecutive events of the same pitch in YTPMV or Sentence Mixing mode.",
 					differentSyllables: "Separate controls for consecutive events of different syllables in Sentence Mixing mode.",
 				},
-				forceStretch: "The currently used $t(titles.prve, { 'count': {{count}} }) is in the Time Class, which will cause the stretch to be forcibly set to “$t(stream.stretch.flexingAndExtending, nowrapPerWord)” when in that effect, and not controlled by your settings",
-				forceStretch_other: "The currently used $t(titles.prve, { 'count': {{count}} }) include the Time Class effects, which will cause the stretch to be forcibly set to “$t(stream.stretch.flexingAndExtending, nowrapPerWord)” when in these effects, and not controlled by your settings",
+				forceStretch: "The currently used $t(titles.prve) visual effect is in the Time Class, which will cause the stretch to be forcibly set to “$t(stream.stretch.flexingAndExtending, nowrapPerWord)” when in that effect, and not controlled by your settings",
+				forceStretch_other: "The currently used $t(titles.prve) visual effects include the Time Class effects, which will cause the stretch to be forcibly set to “$t(stream.stretch.flexingAndExtending, nowrapPerWord)” when in these effects, and not controlled by your settings",
 				stepAria: "Step {{step}} of {{frames}}",
 				customSteps: "Customize the step sequence",
 				randomSteps: "Randomized step sequence",
@@ -1464,10 +1464,10 @@ export default {
 					info: "This will modify the global preferences of VEGAS Pro, not only for the current project. Incorrect settings may cause VEGAS Pro to fail to start. Please use with caution.",
 					language: "Change VEGAS Pro language. Restart VEGAS Pro for the change to take effect.",
 					autosaveInterval: "Adjust the autosave time for projects. Defaults to {{default}} minutes.",
-					defaultTextPlugin: "Change the default text media generator plugin for the “Insert Text Media” option in the context menu of the timeline pane. Defaults to “$t(shared:plugins.titlesAndText)”.",
-					defaultTuningMethod: "Change the default tuning method for new audio clips. Defaults to “$t(stream.tuning.tuningMethod.elastic)”.",
-					defaultElasticMode: "Change the default stretch attribute of the Elastic tuning method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.elastic.efficient)”.",
-					defaultClassicMode: "Change the default stretch attribute of the Classic tuning method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.classic.a03)”.",
+					defaultTextPlugin: "Change the default text media generator plugin for the “Insert Text Media” option in the context menu of the timeline pane. Defaults to “$t(shared:plugins.titlesAndText).”",
+					defaultTuningMethod: "Change the default tuning method for new audio clips. Defaults to “$t(stream.tuning.tuningMethod.elastic).”",
+					defaultElasticMode: "Change the default stretch attribute of the Elastic tuning method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.elastic.efficient).”",
+					defaultClassicMode: "Change the default stretch attribute of the Classic tuning method for new audio clips. Defaults to “$t(stream.tuning.stretchAttributes.classic.a03).”",
 					preserveClipboardOnClose: "Allows cross-project copy and paste by successively opening different projects in a same VEGAS Pro instance",
 					eventGroupSelection: "Allows video clips within the group to automatically follow the movement when dragging audio clips across tracks, instead of staying on the original track, and vice versa",
 					openglInterop: "Resolves the issue where the preview window does not refresh effects on specific versions of NVIDIA Studio graphics cards",
@@ -1738,7 +1738,7 @@ export default {
 		exceptions: {
 			errorHeader: "Error: ", // Note that there is a space after the colon if required.
 			playbackRateCannotBeZero: "The playback rate cannot be set to 0.\n\nIf you want to achieve a static visual, please enable the “Static visual” setting.",
-			prveStepSequenceSyntaxInvalid: "The step sequence parameter syntax is invalid.\n\nPlease enter the indexes of each initial step separated by commas as the sequence, where 0 represents the “Normal”.",
+			prveStepSequenceSyntaxInvalid: "The step sequence parameter syntax is invalid.\n\nPlease enter the indexes of each initial step separated by commas as the sequence, where 0 represents the “Normal.”",
 			prveStepSequenceOutOfRange: "In the step sequence parameter, at least an index value exceeds the total number of steps or is negative.",
 		},
 		midi: {

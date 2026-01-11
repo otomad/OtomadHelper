@@ -31,6 +31,7 @@ const effects = {
 	emboss: $s("video"),
 	bump: $s("video"),
 	edge: $s("video"),
+	sepia: $s("video"),
 } satisfies Record<string, ReturnType<typeof $s>>;
 const effectNames = Object.keys(effects) as YtpEffectName[];
 export type YtpEffectName = keyof typeof effects;

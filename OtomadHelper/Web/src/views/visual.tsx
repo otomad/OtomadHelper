@@ -108,6 +108,7 @@ export default function Visual() {
 						iconField="icon"
 						nameField={t.stream.stretch}
 						detailsField={t.descriptions.stream.stretch}
+						checkInfoCondition={id => <Strikethrough strikeout={isForceStretch && id !== "flexingAndExtending"}>{t.stream.stretch[id!]}</Strikethrough>}
 					/>
 					<Setting
 						meta={meta.truncate}
