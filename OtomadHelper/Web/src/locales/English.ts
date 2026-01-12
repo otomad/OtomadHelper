@@ -113,7 +113,7 @@ export default {
 				lyric: "Lyric syllable",
 				effect: "Effect name",
 			},
-			multisource: "Super multisource",
+			multisource: "Omni multisource",
 			linearMap: "Linear map output",
 			matchCut: "Beat sync / Match cut",
 			luckyDip: {
