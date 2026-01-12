@@ -77,7 +77,7 @@ namespace Config {
 		monochrome: { enabled: enabled === "monochrome", amount: 100 },
 		negative: { enabled: enabled === "negative", amount: "colorInvert" satisfies NegativeType as NegativeType },
 	});
-	const defaultQuickIntervalSelectionBits = bitArrayToBase64([1, 0, 1, 0]);
+	const defaultQuickIntervalSelectionBits = new BitArray([1, 0, 1, 0]).toBase64();
 
 	export const configStore = createStore({
 		source: {

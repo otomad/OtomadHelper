@@ -1,48 +1,53 @@
-class _BooleanArrayArgumentInternalWrapper {
-	constructor(public args: IArguments) { }
-}
-
 /**
- * A boolean array class that uses `Uint8ClampedArray` internally to store and provides TypedArray performance.
+ * A boolean array class that uses `Uint8Array` internally to store and provides TypedArray performance.
  *
  * Getting elements will return boolean type, and setting boolean values will automatically convert to 0 or 1.
+ *
+ * @template TSubclass - (Internal) Specify the subclass, which will used for the return type of the `map` and `toResized` methods.
  */
-class BooleanArray {
-	private readonly data!: Uint8ClampedArray;
+class BitArray<TSubclass = Any> {
+	private readonly data!: Uint8Array;
+	private readonly column: number = 0;
+	get is2d() { return this.column !== 0; }
+	get length() { return this.column === 0 ? this.data.length : Math.ceil(this.data.length / this.column); }
 
-	constructor(internal: _BooleanArrayArgumentInternalWrapper);
+	constructor(column: number, row: number);
+	constructor(length: number);
+	constructor(data: Uint8Array, column: number);
+	constructor(elements: ArrayLike<boolean | number | bigint> | ArrayLike<ArrayLike<boolean | number | bigint>>);
 	constructor() {
-		if (arguments[0] instanceof _BooleanArrayArgumentInternalWrapper)
-			this.data = new Uint8ClampedArray(...arguments[0].args as unknown as [number]);
-		else {
-			if (typeof arguments[0] === "string") arguments[0] = Array.from(arguments[0]);
-			const target = new BooleanArray(new _BooleanArrayArgumentInternalWrapper(arguments));
-			const hasIndex = (index: string | number | symbol): index is number =>
-				// eslint-disable-next-line no-restricted-globals
-				index in target.data && index !== "" && typeof index !== "symbol" && isFinite(index as number);
-			return new Proxy(target, {
-				get(target, prop) {
-					if (hasIndex(prop)) return target.data[prop] !== 0;
-					return target[prop as keyof BooleanArray];
-				},
-				set(target, prop, value) {
-					if (hasIndex(prop)) {
-						target.data[prop] = value ? 1 : 0;
-						return true;
-					}
-					return false;
-				},
-				has: (target, prop) => prop in target || hasIndex(prop),
-				ownKeys: target => Reflect.ownKeys(target.data),
-			});
-		}
+		const invalidArgumentsError = new TypeError(`Invalid BitArray arguments: ${Array.prototype.join.call(arguments, ", ")}`);
+		if (arguments.length === 2 && typeof arguments[0] === "number" && typeof arguments[1] === "number") {
+			this.data = new Uint8Array(arguments[0] * arguments[1]);
+			this.column = arguments[0];
+		} else if (arguments.length === 2 && arguments[0] instanceof Uint8Array && typeof arguments[1] === "number") {
+			this.data = arguments[0];
+			this.column = arguments[1];
+		} else if (arguments.length === 1 && typeof arguments[0] === "number")
+			this.data = new Uint8Array(arguments[0]);
+		else if (arguments.length === 1 && arguments[0] != null && 0 in arguments[0] && "length" in arguments[0]) {
+			const arrayLike = arguments[0];
+			if (typeof arrayLike[0] === "boolean" || typeof arrayLike[0] === "number" || typeof arrayLike[0] === "bigint")
+				this.data = new Uint8Array(arrayLike);
+			else if (arrayLike[0] != null && "length" in arrayLike[0]) {
+				this.column = arrayLike[0].length;
+				this.data = new Uint8Array(Array.prototype.flat.call(arrayLike) as ArrayLike<number>);
+			} else throw invalidArgumentsError;
+		} else throw invalidArgumentsError;
+		return BitArray.createProxy(this);
 	}
 
-	get length() { return this.data.length; }
+	get [Symbol.toStringTag]() { return "BitArray"; }
 
-	get [Symbol.toStringTag]() { return "BooleanArray"; }
+	toString() {
+		if (!this.is2d) return this.data.join("");
+		const result = Array(this.length);
+		for (let i = 0; i < this.length; i++)
+			result[i] = this.data.slice(i * this.column, (i + 1) * this.column).join("");
+		return result.join("\n");
+	}
 
-	toString() { return this.data.join(""); }
+	toJSON = this.toBase64;
 
 	/**
 	 * Changes all array elements from `start` to `end` index to a static `value` and returns the modified array
@@ -60,7 +65,8 @@ class BooleanArray {
 	 * @returns `boolean[]`.
 	 */
 	toArray() {
-		return Array.from(this.data, value => value !== 0);
+		if (!this.is2d) return Array.from(this.toString(), i => i !== "0");
+		return this.toString().split("\n").map(row => Array.from(row.toString(), i => i !== "0"));
 	}
 
 	*[Symbol.iterator]() {
@@ -68,166 +74,166 @@ class BooleanArray {
 			yield value !== 0;
 	}
 
-	forEach(callback: (value: boolean, index: number, array: BooleanArray) => void) {
-		this.data.forEach((value, index) => callback(value !== 0, index, this));
+	private get(column: number, row?: number) {
+		return this.data[(row ?? 0) * this.column + column] !== 0;
 	}
 
-	map(callback: (value: boolean, index: number, array: BooleanArray) => boolean) {
-		return this.data.map((value, index) => callback(value !== 0, index, this) ? 1 : 0);
+	private set(value: boolean | number | bigint, column: number, row?: number) {
+		return this.data[(row ?? 0) * this.column + column] = Number(value);
 	}
 
-	every(callback: (value: boolean, index: number, array: BooleanArray) => boolean) {
-		return this.data.every((value, index) => callback(value !== 0, index, this));
+	private hasIndex(column: number, row: number = 0) {
+		if (!Number.isInteger(column) || !Number.isInteger(row) || column < 0 || row < 0) return false;
+		return this.is2d ? column < this.column && row < this.length : column < this.data.length;
 	}
 
-	some(callback: (value: boolean, index: number, array: BooleanArray) => boolean) {
-		return this.data.some((value, index) => callback(value !== 0, index, this));
+	private static createProxy(bitArrayInstance: BitArray) {
+		return new Proxy(bitArrayInstance, {
+			get(target, prop) {
+				if (prop in target) return target[prop as keyof typeof target];
+				const row = propToIndex(prop);
+				if (target.hasIndex(row))
+					if (!target.is2d) return target.get(row);
+					else return new Proxy(target, {
+						get(target, prop) {
+							if (prop === "length") return target.column;
+							const column = propToIndex(prop);
+							if (target.hasIndex(column, row))
+								return target.get(column, row);
+						},
+						set(target, prop, value) {
+							const column = propToIndex(prop);
+							if (target.hasIndex(column, row)) {
+								target.set(value as number, column, row);
+								return true;
+							}
+							return false;
+						},
+						has: (target, prop) => prop in target || target.hasIndex(propToIndex(prop), row),
+						ownKeys: target => getOwnKeys(target.column),
+					});
+			},
+			set(target, prop, value) {
+				const row = propToIndex(prop);
+				if (!target.is2d && target.hasIndex(row)) {
+					target.set(value as number, row);
+					return true;
+				}
+				return false;
+			},
+			has: (target, prop) => prop in target || target.hasIndex(propToIndex(prop)),
+			ownKeys: target => getOwnKeys(target.length),
+		});
+	}
+
+	private getColRow(index: number): TwoD {
+		return this.is2d ? [index % this.column, Math.trunc(index / this.column)] : [index, 0];
+	}
+
+	forEach(callback: (value: boolean, column: number, row: number, array: BitArray) => void) {
+		this.data.forEach((value, index) => callback(value !== 0, ...this.getColRow(index), this));
+	}
+
+	map(callback: (value: boolean, column: number, row: number, array: BitArray) => boolean) {
+		const newData = this.data.map((value, index) => callback(value !== 0, ...this.getColRow(index), this) ? 1 : 0);
+		return new BitArray(newData, this.column) as IsAny<TSubclass> extends true ? BitArray : TSubclass;
+	}
+
+	every(callback: (value: boolean, column: number, row: number, array: BitArray) => boolean) {
+		return this.data.every((value, index) => callback(value !== 0, ...this.getColRow(index), this));
+	}
+
+	some(callback: (value: boolean, column: number, row: number, array: BitArray) => boolean) {
+		return this.data.some((value, index) => callback(value !== 0, ...this.getColRow(index), this));
+	}
+
+	toResized(newLength?: number, newColumn?: number) {
+		let { data, column } = this;
+		if (newLength !== undefined)
+			if (newLength > this.data.length) {
+				const newData = new Uint8Array(newLength);
+				newData.set(this.data);
+				data = newData;
+			} else if (newLength < this.data.length)
+				data = this.data.slice(0, newLength);
+		if (newColumn !== undefined)
+			column = newColumn;
+		return new BitArray(data === this.data ? data.slice() : data, column) as IsAny<TSubclass> extends true ? BitArray : TSubclass;
 	}
 
 	/**
 	 * Get the internal `Uint8ClampedArray` (for performance critical operations).
 	 * @returns `Uint8ClampedArray`.
 	 */
-	getRawData() {
-		return this.data;
+	getRawData() { return this.data; }
+
+	toBase64() {
+		const byteArray = new Uint8Array(Math.ceil(this.data.length / 8));
+		this.data.forEach((bit, index) => {
+			if (bit) byteArray[index >> 3] |= 1 << 7 - (index & 7);
+		});
+		const paddingBits = padMod(this.data.length, 8);
+		return [byteArray.toBase64({ omitPadding: true }), paddingBits, ...this.is2d ? this.column.toString(36) : []].join("-");
+	}
+
+	static fromBase64(base64: string) {
+		const [data, paddingBits_string, column_string] = base64.split("-");
+		const paddingBits = parseInt(paddingBits_string ?? 0, 10), column = parseInt(column_string ?? 0, 36);
+		const byteArray = Uint8Array.fromBase64(data);
+		const bitArray = new Uint8Array(byteArray.length * 8 - paddingBits);
+		for (const index of bitArray.keys())
+			bitArray[index] = +!!(byteArray[index >> 3] & 1 << 7 - (index & 7));
+		return new BitArray(bitArray, column);
 	}
 }
 
-export default BooleanArray as unknown as {
-	new(length: number): BooleanArray & { [index: number]: boolean };
-	new(array: ArrayLike<boolean> | Iterable<boolean> | ArrayLike<number> | Iterable<number>): BooleanArray & { [index: number]: boolean };
+function propToIndex(prop: PropertyKey) {
+	if (typeof prop === "symbol") return NaN;
+	const index = Number(prop);
+	return Number.isInteger(index) ? index : NaN;
+}
+
+function getOwnKeys(length: number) {
+	const keys = Array.from({ length }, (_, i) => String(i));
+	keys.push("length");
+	return keys;
+}
+
+/**
+ * Calculate the complement of `a` relative to `b` (i.e. the number that needs to be added to round to a multiple of `b`)
+ * @param a - Dividend.
+ * @param b - Divisor.
+ * @returns The difference between `a` and the nearest multiple of `b`. If it is already a multiple of `b`, return 0.
+ */
+const padMod = (a: number, b: number) => b - (a % b || b);
+
+type Bit1DArray = BitArray<Bit1DArray> & WritableArrayLike<boolean>;
+const Bit1DArray = BitArray as {
+	new(length: number): Bit1DArray;
+	new(array: ArrayLike<boolean> | Iterable<boolean> | ArrayLike<number> | Iterable<number>): Bit1DArray;
+} & typeof BitArray<Bit1DArray>;
+
+type Bit2DArray = BitArray<Bit2DArray> & ArrayLike<WritableArrayLike<boolean>>;
+const Bit2DArray = BitArray as {
+	new(column: number, row: number): Bit2DArray;
+	new(array: ArrayLike<boolean> | Iterable<boolean> | ArrayLike<number> | Iterable<number>): Bit2DArray;
+} & typeof BitArray<Bit2DArray>;
+
+export function useBitArray<TDimension extends 1 | 2 = 1>(base64: StatePropertyNonNull<string>): StatePropertyNonNull<TDimension extends 1 ? Bit1DArray : TDimension extends 2 ? Bit2DArray : never> {
+	return useStateSelector(
+		base64,
+		base64 => BitArray.fromBase64(base64),
+		bitArray => bitArray.toBase64(),
+		{ processPrevStateInSetterWithGetter: true },
+	) as never;
+}
+
+export default Bit1DArray;
+export { Bit1DArray as BitArray, Bit2DArray };
+
+type IfAny<T, Y, N> = 0 extends (1 & T) ? Y : N;
+type IsAny<T> = IfAny<T, true, false>;
+type WritableArrayLike<T> = {
+	readonly length: number;
+	[n: number]: T;
 };
-
-// /**
-//  * 一个布尔数组类，内部使用 Uint8ClampedArray 存储，提供 TypedArray 的性能
-//  * 读取元素会返回 boolean 类型，写入布尔值会自动转换为 0 或 1
-//  */
-// export class BooleanArray implements ArrayBuffer {
-// 	private readonly data: Uint8ClampedArray;
-
-// 	/**
-// 	 * 创建一个新的 BooleanArray
-// 	 * @param length - 数组长度
-// 	 */
-// 	constructor(length: number) {
-// 		this.data = new Uint8ClampedArray(length);
-// 	}
-
-// 	/**
-// 	 * 获取数组长度
-// 	 */
-// 	get length(): number {
-// 		return this.data.length;
-// 	}
-
-// 	/**
-// 	 * 获取指定索引处的布尔值
-// 	 * @param index - 数组索引
-// 	 * @returns boolean 值
-// 	 */
-// 	get(index: number): boolean {
-// 		return this.data[index] !== 0;
-// 	}
-
-// 	/**
-// 	 * 设置指定索引处的值
-// 	 * @param index - 数组索引
-// 	 * @param value - 要设置的布尔值
-// 	 */
-// 	set(index: number, value: boolean): void {
-// 		this.data[index] = value ? 1 : 0;
-// 	}
-
-// 	/**
-// 	 * 使用 Proxy 支持数组访问语法
-// 	 */
-// 	static create(length: number): BooleanArray & { [key: number]: boolean; } {
-// 		const arr = new BooleanArray(length);
-// 		return new Proxy(arr as any, {
-// 			get(target, prop) {
-// 				const index = Number(prop);
-// 				if (!Number.isNaN(index) && index >= 0 && index < target.length)
-// 					return target.get(index);
-// 				return target[prop as keyof BooleanArray];
-// 			},
-// 			set(target, prop, value) {
-// 				const index = Number(prop);
-// 				if (!Number.isNaN(index) && index >= 0 && index < target.length) {
-// 					target.set(index, Boolean(value));
-// 					return true;
-// 				}
-// 				return false;
-// 			},
-// 		});
-// 	}
-
-// 	/**
-// 	 * 填充数组元素
-// 	 * @param value - 要填充的布尔值
-// 	 * @param start - 起始索引
-// 	 * @param end - 结束索引
-// 	 */
-// 	fill(value: boolean, start?: number, end?: number): void {
-// 		this.data.fill(value ? 1 : 0, start, end);
-// 	}
-
-// 	/**
-// 	 * 将数组转换为布尔数组
-// 	 */
-// 	toArray(): boolean[] {
-// 		return Array.from(this.data, (v) => v !== 0);
-// 	}
-
-// 	/**
-// 	 * 迭代数组元素
-// 	 */
-// 	*[Symbol.iterator](): IterableIterator<boolean> {
-// 		for (let i = 0; i < this.data.length; i++)
-// 			yield this.data[i] !== 0;
-// 	}
-
-// 	/**
-// 	 * forEach 方法
-// 	 */
-// 	forEach(callback: (value: boolean, index: number, array: BooleanArray) => void): void {
-// 		for (let i = 0; i < this.data.length; i++)
-// 			callback(this.data[i] !== 0, i, this);
-// 	}
-
-// 	/**
-// 	 * map 方法
-// 	 */
-// 	map<T>(callback: (value: boolean, index: number, array: BooleanArray) => T): T[] {
-// 		const result: T[] = [];
-// 		for (let i = 0; i < this.data.length; i++)
-// 			result.push(callback(this.data[i] !== 0, i, this));
-// 		return result;
-// 	}
-
-// 	/**
-// 	 * every 方法
-// 	 */
-// 	every(callback: (value: boolean, index: number, array: BooleanArray) => boolean): boolean {
-// 		for (let i = 0; i < this.data.length; i++)
-// 			if (!callback(this.data[i] !== 0, i, this))
-// 				return false;
-// 		return true;
-// 	}
-
-// 	/**
-// 	 * some 方法
-// 	 */
-// 	some(callback: (value: boolean, index: number, array: BooleanArray) => boolean): boolean {
-// 		for (let i = 0; i < this.data.length; i++)
-// 			if (callback(this.data[i] !== 0, i, this))
-// 				return true;
-// 		return false;
-// 	}
-
-// 	/**
-// 	 * 获取内部的 Uint8ClampedArray（用于性能关键的操作）
-// 	 */
-// 	getRawData(): Uint8ClampedArray {
-// 		return this.data;
-// 	}
-// }

@@ -3,8 +3,8 @@ const ELEMENT_SIZE = 50, ELEMENT_GAP = 5;
 const paddingX = expanderItemPadding[1] - ELEMENT_GAP;
 
 export /* @internal */ const QuickIntervalSelectionPresets = Enum({
-	odd: { bits: new Uint8Array([1, 0]), interval: 2, label: t.odd, icon: "parity/odd_columns" },
-	even: { bits: new Uint8Array([0, 1]), interval: 2, label: t.even, icon: "parity/even_columns" },
+	odd: { bits: new BitArray([1, 0]), interval: 2, label: t.odd, icon: "parity/odd_columns" },
+	even: { bits: new BitArray([0, 1]), interval: 2, label: t.even, icon: "parity/even_columns" },
 	custom: { bits: undefined, interval: undefined, label: t.custom, icon: "edit" },
 });
 
@@ -87,16 +87,12 @@ const StyledPreviewQuickIntervalSelection = styled(HorizontalScroll)`
 
 function PreviewQuickIntervalSelection({ interval, bits: [bits, setBits], isPreset = false }: {
 	interval: number;
-	bits: readonly [get: Uint8Array<ArrayBuffer>, set?: SetStateNarrow<Uint8Array<ArrayBuffer>>];
+	bits: readonly [get: BitArray, set?: SetStateNarrow<BitArray>];
 	isPreset: boolean;
 }) {
 	const extendBitsLength = useEffectEvent(() => {
 		if (interval > bits.length)
-			setBits?.(oldBits => {
-				const newBits = new Uint8Array(interval);
-				newBits.set(oldBits);
-				return newBits;
-			});
+			setBits?.(oldBits => oldBits.toResized(interval));
 	});
 
 	useEffect(() => { extendBitsLength(); }, [interval]);
@@ -111,7 +107,7 @@ function PreviewQuickIntervalSelection({ interval, bits: [bits, setBits], isPres
 					key={i}
 					appearance="obvious"
 					checked={[!!bits[i]]}
-					onToggled={checked => setBits?.(bits => bits.slice(0, interval).with(i, +!!checked))}
+					onToggled={checked => setBits?.(bits => { const newBits = bits.toResized(interval); newBits[i] = !!checked; return newBits; })}
 					aria-label={t.descriptions.prve.stepAria({ step: i + 1, frames: interval })}
 				>
 					{i + 1}

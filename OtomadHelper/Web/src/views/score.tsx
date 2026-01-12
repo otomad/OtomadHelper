@@ -135,7 +135,7 @@ export default function Score({ _trackSelectorOnly = false }: {
 	const selectedEncodingTag = useAtom(selectedEncodingTagAtom);
 
 	const trimActuallyEnabled = useMemo(() => trimStart[0] !== trimEnd[0], [trimStart[0], trimEnd[0]]);
-	const periodicityActuallyEnabled = useMemo(() => !(periodicityPreset[0] === "custom" && base64ToBitArray(periodicityBits[0]).slice(0, periodicityInterval[0]).every(Boolean)), [periodicityPreset[0], periodicityBits[0]]);
+	const periodicityActuallyEnabled = useMemo(() => !(periodicityPreset[0] === "custom" && BitArray.fromBase64(periodicityBits[0]).toResized(periodicityInterval[0]).every(Boolean)), [periodicityPreset[0], periodicityBits[0]]);
 	const pitchRangeActuallyEnabled = useMemo(() => !lodash.isEqual(pitchRange[0], DEFAULT_PITCH_RANGE), [pitchRange[0]]);
 	const filterActuallyEnabled = useMemo(() => trimEnabled[0] && trimActuallyEnabled || periodicityEnabled[0] && periodicityActuallyEnabled || pitchRangeEnabled[0] && pitchRangeActuallyEnabled, [trimEnabled[0], periodicityEnabled[0], pitchRangeEnabled[0], trimActuallyEnabled, periodicityActuallyEnabled, pitchRangeActuallyEnabled]);
 
