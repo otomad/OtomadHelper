@@ -1,0 +1,20 @@
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+	<g clip-path="url(#paint0_diamond_2052_396_clip_path)">
+		<g transform="matrix(0.007 8.27816e-10 -8.27815e-10 0.007 8 8)" fill="url(#paint0_diamond_2052_396)" shape-rendering="crispEdges">
+			<rect width="1142.86" height="1142.86" />
+			<rect width="1142.86" height="1142.86" transform="scale(1 -1)" />
+			<rect width="1142.86" height="1142.86" transform="scale(-1 1)" />
+			<rect width="1142.86" height="1142.86" transform="scale(-1)" />
+		</g>
+	</g>
+	<path d="M4 1C2.3466 1 1 2.3466 1 4V12C1 13.6534 2.3466 15 4 15H12C13.6534 15 15 13.6534 15 12V4C15 2.3466 13.6534 1 12 1H4ZM4 2H12C13.1166 2 14 2.88335 14 4V12C14 13.1166 13.1166 14 12 14H4C2.8834 14 2 13.1166 2 12V4C2 2.8834 2.88335 2 4 2Z" />
+	<defs>
+		<clipPath id="paint0_diamond_2052_396_clip_path">
+			<rect x="1.5" y="1.5" width="13" height="13" rx="2.5" stroke-linecap="round" stroke-linejoin="round" />
+		</clipPath>
+		<linearGradient id="paint0_diamond_2052_396" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse">
+			<stop stop-color="currentColor" stop-opacity="0" />
+			<stop stop-color="currentColor" offset="1" />
+		</linearGradient>
+	</defs>
+</svg>

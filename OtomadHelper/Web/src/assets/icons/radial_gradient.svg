@@ -1,9 +1,9 @@
 <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-	<path d="m4 1.5h8c1.385 0 2.5 1.115 2.5 2.5v8c0 1.385-1.115 2.5-2.5 2.5h-8c-1.385 0-2.5-1.115-2.5-2.5v-8c0-1.385 1.115-2.5 2.5-2.5z" fill="url(#paint0_radial_2019_453)"/>
-	<path d="m4 1c-1.6534 0-3 1.3466-3 3v8c0 1.6534 1.3466 3 3 3h8c1.6534 0 3-1.3466 3-3v-8c0-1.6534-1.3466-3-3-3zm0 1h8c1.1166 0 2 0.88335 2 2v8c0 1.1166-0.88335 2-2 2h-8c-1.1166 0-2-0.88335-2-2v-8c0-1.1166 0.88335-2 2-2z" fill="#000"/>
+	<rect x="1.5" y="1.5" width="13" height="13" rx="2.5" fill="url(#paint0_radial_2019_453)" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+	<path d="m4 1c-1.6534 0-3 1.3466-3 3v8c0 1.6534 1.3466 3 3 3h8c1.6534 0 3-1.3466 3-3v-8c0-1.6534-1.3466-3-3-3zm0 1h8c1.1166 0 2 0.88335 2 2v8c0 1.1166-0.88335 2-2 2h-8c-1.1166 0-2-0.88335-2-2v-8c0-1.1166 0.88335-2 2-2z" />
 	<defs>
 		<radialGradient id="paint0_radial_2019_453" cx="0" cy="0" r="1" gradientTransform="translate(8 8) scale(6.5)" gradientUnits="userSpaceOnUse">
-			<stop stop-color="currentColor" stop-opacity="0" offset="0"/>
+			<stop stop-color="currentColor" stop-opacity="0" />
 			<stop stop-color="currentColor" offset="1"/>
 		</radialGradient>
 	</defs>

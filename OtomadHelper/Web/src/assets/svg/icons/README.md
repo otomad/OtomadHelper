@@ -1,0 +1,1 @@
+Some special SVG icons may be incorrectly optimized by [SVGO](https://svgo.dev/), or are not allowed to be used due to the [`<use>` restriction](https://stackoverflow.com/a/69385051/19553213). So those icons have to be put here alone.

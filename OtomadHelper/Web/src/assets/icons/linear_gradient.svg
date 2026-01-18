@@ -1,10 +1,10 @@
 <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-	<path d="m4 1.5h8c1.385 0 2.5 1.115 2.5 2.5v8c0 1.385-1.115 2.5-2.5 2.5h-8c-1.385 0-2.5-1.115-2.5-2.5v-8c0-1.385 1.115-2.5 2.5-2.5z" fill="url(#paint0_linear_2019_420)"/>
-	<path d="m4 1c-1.6534 0-3 1.3466-3 3v8c0 1.6534 1.3466 3 3 3h8c1.6534 0 3-1.3466 3-3v-8c0-1.6534-1.3466-3-3-3zm0 1h8c1.1166 0 2 0.88335 2 2v8c0 1.1166-0.88335 2-2 2h-8c-1.1166 0-2-0.88335-2-2v-8c0-1.1166 0.88335-2 2-2z"/>
+	<rect x="1" y="1" width="14" height="14" rx="3" fill="url(#paint0_linear_2019_420)" />
+	<path d="m4 1c-1.6534 0-3 1.3466-3 3v8c0 1.6534 1.3466 3 3 3h8c1.6534 0 3-1.3466 3-3v-8c0-1.6534-1.3466-3-3-3zm0 1h8c1.1166 0 2 0.88335 2 2v8c0 1.1166-0.88335 2-2 2h-8c-1.1166 0-2-0.88335-2-2v-8c0-1.1166 0.88335-2 2-2z" />
 	<defs>
 		<linearGradient id="paint0_linear_2019_420" x1="1" x2="15" y1="8" y2="8" gradientUnits="userSpaceOnUse">
-			<stop stop-color="currentColor" offset="0"/>
-			<stop stop-color="currentColor" stop-opacity="0" offset="1"/>
+			<stop stop-color="currentColor" />
+			<stop stop-color="currentColor" stop-opacity="0" offset="1" />
 		</linearGradient>
 	</defs>
 </svg>

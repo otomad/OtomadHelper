@@ -629,13 +629,18 @@ export default {
 					flow: "Flow gradient",
 					linear: "Linear gradient",
 					radial: "Radial gradient",
+					conic: "Conic gradient",
+					diamond: "Diamond gradient",
+					reflected: "Reflected gradient",
 				},
 				parameters: {
 					input: "Input",
-					startStop: "Start stop",
-					startStop_short: "Start",
-					endStop: "End stop",
-					endStop_short: "End",
+					output: "Output",
+					start: "Start", // Start point of linear gradient.
+					end: "End", // End point of linear gradient and reflected gradient.
+					center: "Center", // Center point of radial gradient, conic gradient, diamond gradient, and reflected gradient.
+					edge: "Edge", // Edge point of radial gradient and conic gradient.
+					corner: "Corner", // Corner point of diamond gradient.
 				},
 				// effects: {
 				// 	rainbow: "Rainbow Colors",

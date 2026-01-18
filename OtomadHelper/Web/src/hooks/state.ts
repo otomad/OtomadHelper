@@ -44,3 +44,12 @@ type StatePropertyTuple<Tuple extends [...Any[]]> = {
 export function useStateList<T extends Any[]>(...initialValues: T) {
 	return Array.from({ length: initialValues.length }, (_, i) => useState(initialValues[i])) as StatePropertyTuple<T>;
 }
+
+/**
+ * I don't know why the fucking `Array.isArray()` will not inverted (else branch) narrow the readonly array type.
+ * @param test - The variable to be tested.
+ * @returns I guess it might be a state property.
+ */
+export function isStateProperty(test: unknown): test is readonly Any[] {
+	return Array.isArray(test);
+}

@@ -317,7 +317,7 @@ const ItemsViewItemStateContext = createContext<{
 
 export type OnItemsViewItemClickEventHandler<T> = (id: T, selected: CheckState, e: React.MouseEvent<HTMLElement>) => void;
 
-export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, criticallyHighlight, _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable, children, className, "aria-label": ariaLabel, "aria-description": ariaDescription, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected: _selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, criticallyHighlight, _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable, children, className, "aria-label": ariaLabel, "aria-description": ariaDescription, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */
@@ -368,11 +368,12 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 	/** Occurs when user click it. */
 	onClick?: OnItemsViewItemClickEventHandler<T>;
 }, "button">) {
-	let setSelected: SetStateNarrow<boolean> | undefined;
-	if (Array.isArray(selected)) {
-		setSelected = selected[1] as never;
-		selected = selected[0] ? "checked" : "unchecked";
-	}
+	let selected: CheckState, setSelected: SetStateNarrow<boolean> | undefined;
+	if (isStateProperty(_selected)) {
+		setSelected = _selected[1] as never;
+		selected = _selected[0] ? "checked" : "unchecked";
+	} else
+		selected = _selected;
 	if (typeof tooltip === "string" || isI18nItem(tooltip))
 		tooltip = { title: String(tooltip), placement: "block" };
 	if (badge !== undefined && !Array.isArray(badge))

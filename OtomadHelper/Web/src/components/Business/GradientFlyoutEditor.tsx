@@ -1,4 +1,6 @@
 import exampleThumbnail from "assets/images/ヨハネの氷.avif";
+import ConicGradientIcon from "assets/svg/icons/conic_gradient.svg?react";
+import DiamondGradientIcon from "assets/svg/icons/diamond_gradient.svg?react";
 
 const ParityStyles = Enum({
 	hFlip: { label: t.prve.effects.hFlip },
@@ -43,6 +45,9 @@ const GradientPatterns = Enum({
 	flow: { icon: "flow_gradient" },
 	linear: { icon: "linear_gradient" },
 	radial: { icon: "radial_gradient" },
+	conic: { icon: ConicGradientIcon as never },
+	diamond: { icon: DiamondGradientIcon as never },
+	reflected: { icon: "reflected_gradient" },
 }, { labelPrefix: t.track.gradient.gradients });
 
 function matchParity(parity: GridParityType, column: number, row: number, randomSeed?: string): boolean {
@@ -259,7 +264,7 @@ export default function GradientFlyoutEditor() {
 													<ItemsView.Item
 														id={key}
 														key={key}
-														icon={icon}
+														icon={typeof icon === "function" ? <Icon svgr={icon} /> : icon}
 														// onClick={option === "random" ? () => (isH ? setFlipHRandomTimestamp : setFlipVRandomTimestamp)(Date.now()) : undefined}
 													>
 														{label}
@@ -272,13 +277,13 @@ export default function GradientFlyoutEditor() {
 													<Icon name="stream_input" />
 													{tc.parameters.input}
 												</label>
-												<TextBox.Number id={`${ariaId}-input-start`} value={[0]} min={-100} max={200} prefix={tc.parameters.startStop({ context: "short" })} />
+												<TextBox.Number id={`${ariaId}-input-start`} value={[0]} min={-100} max={200} prefix={tc.parameters.start} />
 												<label htmlFor={`${ariaId}-input-end`}>{t.rangeDash}</label>
-												<TextBox.Number id={`${ariaId}-input-end`} value={[1]} min={-100} max={200} prefix={tc.parameters.endStop({ context: "short" })} />
+												<TextBox.Number id={`${ariaId}-input-end`} value={[1]} min={-100} max={200} prefix={tc.parameters.end} />
 
 												<label htmlFor={`${ariaId}-start-col`}>
 													<IconWithHighlightPoint name="linear_gradient" location="left" />
-													{tc.parameters.startStop}
+													{tc.parameters.start}
 												</label>
 												<TextBox.Number id={`${ariaId}-start-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
 												<label htmlFor={`${ariaId}-start-row`}>,</label>
@@ -286,7 +291,7 @@ export default function GradientFlyoutEditor() {
 
 												<label htmlFor={`${ariaId}-end-col`}>
 													<IconWithHighlightPoint name="linear_gradient" location="right" />
-													{tc.parameters.endStop}
+													{tc.parameters.end}
 												</label>
 												<TextBox.Number id={`${ariaId}-end-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
 												<label htmlFor={`${ariaId}-end-role`}>,</label>
