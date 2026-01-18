@@ -95,12 +95,12 @@ const StyledGradientFlyoutEditor = styled.div`
 	}
 
 	> * {
+		${styles.mixins.overflowGradient("x", "1.25em")};
 		inline-size: 100% !important;
 		overflow-inline: auto;
 	}
 
 	.items-view[data-page="style"] {
-		${styles.mixins.overflowGradient("x", "1.25em")};
 		display: flex;
 		justify-content: start;
 
