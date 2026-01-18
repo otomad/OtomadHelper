@@ -150,7 +150,7 @@ const StyledGradientFlyoutEditor = styled.div`
 
 		.parameters {
 			display: grid;
-			grid-template-columns: auto 1fr auto 1fr;
+			grid-template-columns: auto 1fr auto 1fr auto;
 			gap: 8px;
 			align-items: center;
 			margin-inline: 16px;
@@ -169,6 +169,17 @@ const StyledGradientFlyoutEditor = styled.div`
 
 			.sign {
 				speak-as: literal-punctuation;
+			}
+
+			.exchange-rowspan-2 {
+				grid-row: span 2;
+				block-size: 100%;
+
+				.icon,
+				.icon svg {
+					width: 16px;
+					height: 58px;
+				}
 			}
 		}
 	}
@@ -284,6 +295,9 @@ export default function GradientFlyoutEditor() {
 												<TextBox.Number id={`${ariaId}-input-start`} value={[0]} min={-100} max={200} prefix={tc.parameters.start} />
 												<label className="sign" htmlFor={`${ariaId}-input-end`}>{t.rangeDash}</label>
 												<TextBox.Number id={`${ariaId}-input-end`} value={[1]} min={-100} max={200} prefix={tc.parameters.end} />
+												<Tooltip title={t.descriptions.track.gradient.exchange} placement="block">
+													<Button icon="arrow_bidirectional_left_right" minWidthUnbounded />
+												</Tooltip>
 
 												<label htmlFor={`${ariaId}-start-col`}>
 													<IconWithHighlightPoint name="linear_gradient" location="left" />
@@ -292,6 +306,9 @@ export default function GradientFlyoutEditor() {
 												<TextBox.Number id={`${ariaId}-start-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
 												<label className="sign" htmlFor={`${ariaId}-start-row`}>,</label>
 												<TextBox.Number id={`${ariaId}-start-row`} value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
+												<Tooltip title={t.descriptions.track.gradient.exchange} placement="block">
+													<Button className="exchange-rowspan-2" icon="arrow_bidirectional_left_right_rowspan_2" minWidthUnbounded />
+												</Tooltip>
 
 												<label htmlFor={`${ariaId}-end-col`}>
 													<IconWithHighlightPoint name="linear_gradient" location="right" />

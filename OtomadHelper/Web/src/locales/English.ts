@@ -1301,6 +1301,7 @@ export default {
 					_: "Gives the video tracks a gradient color style, or mirrors the edges of the tracks by flipping a parity pattern in your layout",
 					mirrorPriorityInfo: "If multiple mirrors are applied to the same target simultaneously, the former mirror has a higher priority than the latter. For example, if both “$t(prve.effects.hMirror_left)” and “$t(prve.effects.hMirror_right)” are applied to a target together, only “$t(prve.effects.hMirror_left)” will be applied eventually.",
 					colorInvertInfo: "To achieve “$t(prve.effects.colorInvert),” just apply “$t(prve.effects.hueInvert)” and “$t(prve.effects.luminInvert)” to the same target.",
+					exchange: "Exchange values",
 					gridIntegration: {
 						_: "Configure when applying in conjunction with grid layout",
 						autoLineLength: "When **enabled** and **grid layout** is also enabled, some parameters set in grid layout will automatically be used in the **generation mode**. This will not work in the **instant application mode**, you need to set the parameters manually.",
