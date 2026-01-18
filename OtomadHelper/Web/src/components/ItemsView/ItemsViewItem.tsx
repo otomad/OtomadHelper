@@ -369,7 +369,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 	onClick?: OnItemsViewItemClickEventHandler<T>;
 }, "button">) {
 	let selected: CheckState, setSelected: SetStateNarrow<boolean> | undefined;
-	if (isStateProperty(_selected)) {
+	if (isReadonlyArray(_selected)) {
 		setSelected = _selected[1] as never;
 		selected = _selected[0] ? "checked" : "unchecked";
 	} else

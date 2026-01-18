@@ -423,3 +423,12 @@ export const Tuple = <T extends Any[]>(...args: T): T => args;
 
 /** Aren't you teaching me what to do? */
 export const NEVER_MIND = [] as never;
+
+/**
+ * I don't know why the fucking `Array.isArray()` will not inverted (else branch) narrow the readonly array type.
+ * @param test - The variable to be tested.
+ * @returns I guess it might be a state property.
+ */
+export function isReadonlyArray(test: unknown): test is readonly Any[] {
+	return Array.isArray(test);
+}
