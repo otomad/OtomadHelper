@@ -166,6 +166,10 @@ const StyledGradientFlyoutEditor = styled.div`
 			.text-box {
 				inline-size: 150px;
 			}
+
+			.sign {
+				speak-as: literal-punctuation;
+			}
 		}
 	}
 
@@ -278,7 +282,7 @@ export default function GradientFlyoutEditor() {
 													{tc.parameters.input}
 												</label>
 												<TextBox.Number id={`${ariaId}-input-start`} value={[0]} min={-100} max={200} prefix={tc.parameters.start} />
-												<label htmlFor={`${ariaId}-input-end`}>{t.rangeDash}</label>
+												<label className="sign" htmlFor={`${ariaId}-input-end`}>{t.rangeDash}</label>
 												<TextBox.Number id={`${ariaId}-input-end`} value={[1]} min={-100} max={200} prefix={tc.parameters.end} />
 
 												<label htmlFor={`${ariaId}-start-col`}>
@@ -286,7 +290,7 @@ export default function GradientFlyoutEditor() {
 													{tc.parameters.start}
 												</label>
 												<TextBox.Number id={`${ariaId}-start-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
-												<label htmlFor={`${ariaId}-start-row`}>,</label>
+												<label className="sign" htmlFor={`${ariaId}-start-row`}>,</label>
 												<TextBox.Number id={`${ariaId}-start-row`} value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
 
 												<label htmlFor={`${ariaId}-end-col`}>
@@ -294,7 +298,7 @@ export default function GradientFlyoutEditor() {
 													{tc.parameters.end}
 												</label>
 												<TextBox.Number id={`${ariaId}-end-col`} value={[0]} min={-100} max={200} prefix={t.track.grid.column} />
-												<label htmlFor={`${ariaId}-end-role`}>,</label>
+												<label className="sign" htmlFor={`${ariaId}-end-role`}>,</label>
 												<TextBox.Number id={`${ariaId}-end-role`} value={[0]} min={-100} max={200} prefix={t.track.grid.row} />
 											</div>
 										</>

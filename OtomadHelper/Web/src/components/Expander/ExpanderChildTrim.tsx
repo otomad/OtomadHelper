@@ -5,6 +5,7 @@ const RangeDash = styled.div.attrs(() => ({
 	${styles.effects.text.body};
 	margin-block-end: 1.5px;
 	font-feature-settings: "case" on;
+	speak-as: literal-punctuation;
 	transition: ${fallbackTransitions}, margin 0s;
 `;
 
