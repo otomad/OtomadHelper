@@ -79,6 +79,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				imports: autoImportConfig,
 				dirs: [
 					"./src/components/**",
+					"./src/containers/**",
 					"./src/composables",
 					"./src/utils",
 					"./src/hooks",

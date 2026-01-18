@@ -1,5 +1,5 @@
 import links from "helpers/links";
-import SettingsAboutLogo from "./SettingsAboutLogo";
+import SettingsAboutLogo from "../components/Business/SettingsAboutLogo";
 
 const StyledSettingsAbout = styled.div`
 	${styles.effects.text.body};

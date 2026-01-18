@@ -1,9 +1,9 @@
 import type { ImageFitTypes } from "components/BackgroundImage";
-import type { LegatoDurations, LegatoModes } from "components/Business/Expander/ExpanderLegato";
-import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "components/Business/Expander/ExpanderStream/ExpanderStreamPrologue";
-import type { NegativeTypes, VisualIdleEffects } from "components/Business/IdleEffectSettings";
 import type { Encodings } from "components/Preview/PreviewEncoding";
 import type { QuickIntervalSelectionPresets } from "components/QuickIntervalSelection";
+import type { LegatoDurations, LegatoModes } from "containers/Expander/ExpanderLegato";
+import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "containers/Expander/ExpanderStream/ExpanderStreamPrologue";
+import type { NegativeTypes, VisualIdleEffects } from "containers/IdleEffectSettings";
 import defaultPrveAmounts from "helpers/defaultPrveAmounts";
 import { deepClone } from "valtio/utils";
 import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
@@ -75,7 +75,7 @@ namespace Config {
 	const defaultVisualIdleEffectSettings = (enabled?: VisualIdleEffect) => ({
 		fade: { enabled: enabled === "fade", amount: 50 },
 		monochrome: { enabled: enabled === "monochrome", amount: 100 },
-		negative: { enabled: enabled === "negative", amount: "colorInvert" satisfies NegativeType as NegativeType },
+		negative: { enabled: enabled === "negative", amount: "colorInvert" satisfies NegativeType },
 	});
 	const defaultQuickIntervalSelectionBits = new BitArray([1, 0, 1, 0]).toBase64();
 
@@ -157,7 +157,7 @@ namespace Config {
 			loop: false as TriState,
 			normalize: "once" satisfies NormalizeTime as NormalizeTime,
 			truncate: "lengthenable" satisfies Truncate as Truncate,
-			legatoDuration: "portato" satisfies LegatoDuration as LegatoDuration,
+			legatoDuration: "portato" satisfies LegatoDuration,
 			legatoAtLeast: false,
 			legatoMode: "lengthen" satisfies LegatoMode,
 			legatoStretchKeyframes: true as TriState,
@@ -206,7 +206,7 @@ namespace Config {
 			truncate: "lengthenable" satisfies Truncate as Truncate,
 			truncateIdleEffect: defaultVisualIdleEffectSettings("monochrome"),
 			truncateLoopRegion: 50,
-			legatoDuration: "upToOneBeat" satisfies LegatoDuration as LegatoDuration,
+			legatoDuration: "upToOneBeat" satisfies LegatoDuration,
 			legatoAtLeast: false,
 			legatoMode: "lengthen" satisfies LegatoMode,
 			legatoStretchKeyframes: true as TriState,
@@ -271,14 +271,14 @@ namespace Config {
 		},
 		createGroups: true,
 		prologue: {
-			form: "straightforward" satisfies PrologueForm as PrologueForm,
-			durationUsing: "untilTheStart" satisfies PrologueDurationUsing as PrologueDurationUsing,
+			form: "straightforward" satisfies PrologueForm,
+			durationUsing: "untilTheStart" satisfies PrologueDurationUsing,
 			customDuration: EMPTY_TIMECODE,
 			visualIdleEffect: defaultVisualIdleEffectSettings("fade"),
 			audioIdleEffect: { fade: { enabled: false, amount: 50 } } as AudioIdleEffectValue,
 			once: true,
 			emphasisTimes: 0,
-			emphasisDuration: "sourceLength" satisfies PrologueEmphasisDuration as PrologueEmphasisDuration,
+			emphasisDuration: "sourceLength" satisfies PrologueEmphasisDuration,
 		},
 		playbackRate: {
 			sync: true,
@@ -295,8 +295,8 @@ namespace Config {
 				direction: "lr-tb" satisfies GridDirectionOrderType as GridDirectionOrderType,
 				fit: "cover" satisfies GridFitType as GridFitType,
 				dynamicDetection: false,
-				mirrorEdgesHFlip: "unflipped" satisfies GridParityType as GridParityType,
-				mirrorEdgesVFlip: "unflipped" satisfies GridParityType as GridParityType,
+				mirrorEdgesHFlip: "unflipped" satisfies GridParityType,
+				mirrorEdgesVFlip: "unflipped" satisfies GridParityType,
 				descending: false,
 				padding: 0,
 				spans: [] as WebMessageEvents.GridSpanItem[],
@@ -325,12 +325,12 @@ namespace Config {
 					columns: 5,
 					autoColumns: true,
 					direction: "lr-tb" satisfies GridDirectionOrderType as GridDirectionOrderType,
-					parity: "even_checker" satisfies GridParityType as GridParityType,
-					parity2: "even_rows" satisfies GridParityType as GridParityType,
+					parity: "even_checker" satisfies GridParityType,
+					parity2: "even_rows" satisfies GridParityType,
 				},
 			},
 			legato: {
-				legatoDuration: "unlimited" satisfies LegatoDuration as LegatoDuration,
+				legatoDuration: "unlimited" satisfies LegatoDuration,
 				legatoAtLeast: false,
 				legatoMode: "stacking" satisfies LegatoMode,
 				legatoStretchKeyframes: true as TriState,

@@ -42,6 +42,7 @@
 			"classes/*": ["src/classes/*"],
 			"workers/*": ["src/workers/*"],
 			"shaders/*": ["src/shaders/*"],
+			"containers/*": ["src/containers/*"],
 			"web/*": ["./*"],
 		},
 		"plugins": [
