@@ -178,10 +178,9 @@ export function convertCamelStylePropertyToKebab(camel: string) {
  * ```
  *
  * @remarks
- * Why use this function? In fact, this theoretically equivalent CSS code cannot work properly on Chromium,
- * but it can work properly on Firefox. This is because Chromium is **very arrogant** and unwilling to write
- * `webkit` and `moz` together separated by commas. If you write them together, Chromium will not recognize
- * them. So you have to write theme separately.
+ * Why use this function? This is because Chromium/Webkit does not recognize the Mozilla prefix `-moz` pseudo classes,
+ * and vice versa. Listing them directly with a comma separation will cause the entire selector to be destroyed.
+ * Although there are forgiving selector lists that use `:is()` and `:where()`, they do not support pseudo elements.
  *
  * Equivalent code that can actually work
  * ```css

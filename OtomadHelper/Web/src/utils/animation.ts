@@ -413,17 +413,20 @@ function addStyle(css: string | Styled.RuleSet) {
  * ```
  */
 export function stopTransition({ includesViewTransitions = false }: {
-	/** Includes `view-transition-old` and `view-transition-new`? */
+	/** Includes `view-transition-old` and `view-transition-new`? @default false */
 	includesViewTransitions?: boolean;
 } = {}) {
 	return addStyle(css`
 		*,
 		::before,
-		::after,
-		// CAUTION: Chromium doesn't recognize that \`-moz\` selector, directly listing them without \`:is()\` will result in the entire selector being destroyed.
-		:is(::-webkit-progress-value, ::-moz-progress-bar) {
+		::after {
 			transition: none !important;
 		}
+
+		// CAUTION: Chromium doesn't recognize that \`-moz\` selector, directly listing them will result in the entire selector being destroyed.
+		${progressFinishedPart(css`
+			transition: none !important;
+		`)}
 
 		${includesViewTransitions ? css`
 			::view-transition-old(root),
