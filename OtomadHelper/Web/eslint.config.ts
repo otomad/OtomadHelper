@@ -1,22 +1,22 @@
 // env
 import globals from "globals";
+import { defineConfig } from "eslint/config";
 // extends
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import stylistic from "@stylistic/eslint-plugin";
 import importPlugin from "eslint-plugin-import";
-import reactRecommended from "eslint-plugin-react/configs/recommended.js";
+import reactPlugin from "eslint-plugin-react";
 import jsdoc from "eslint-plugin-jsdoc";
 // plugins
 import reactRefresh from "eslint-plugin-react-refresh";
 import unicorn from "eslint-plugin-unicorn";
 import reactHooks from "eslint-plugin-react-hooks";
 
-/** @type {import("eslint").Linter.Config[]} */
-export default [
+export default defineConfig(
 	eslint.configs.recommended,
 	...tseslint.configs.recommended,
-	reactRecommended,
+	reactPlugin.configs.flat.recommended,
 	importPlugin.flatConfigs.warnings,
 	jsdoc.configs["flat/recommended-typescript"],
 	// Stylistic 简单规则
@@ -511,4 +511,4 @@ export default [
 			"**/supportedBrowsers.[jt]s",
 		],
 	},
-];
+);

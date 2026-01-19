@@ -1,6 +1,6 @@
-import propertiesOrder from "./stylelint-properties-order.js";
+import type { Config } from "stylelint";
+import propertiesOrder from "./stylelint-properties-order.ts";
 
-/** @type {import("stylelint").Config} */
 export default {
 	defaultSeverity: "error",
 	extends: [
@@ -122,4 +122,4 @@ export default {
 		],
 		"order/properties-order": [propertiesOrder, { "unspecified": "bottom", "severity": "warning" }],
 	},
-};
+} satisfies Config;
