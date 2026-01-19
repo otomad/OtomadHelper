@@ -7,6 +7,8 @@ import allLanguages from "./all";
 import initFormatters from "./utils/formatters";
 import { addWbrAfterSlashProcessor, fullwidthQuotesProcessor } from "./utils/processors";
 
+const fallbackLng = "en";
+
 i18n
 	// Detect the language user used currently
 	// Docs: https://github.com/i18next/i18next-browser-languageDetector
@@ -23,7 +25,7 @@ i18n
 		debug: import.meta.env.DEV,
 		ns: ["javascript", "shared"],
 		defaultNS: "javascript",
-		fallbackLng: "en",
+		fallbackLng,
 		interpolation: {
 			escapeValue: false,
 		},
@@ -47,14 +49,27 @@ const htmlLang = {
 htmlLang.value = i18n.language;
 document.dir = i18n.dir();
 
-function useLanguageGetter() {
-	const [language, setLanguage] = useState(i18n.language);
-	i18n.on("languageChanged", language => setLanguage(language));
-	return language as AvailableLanguageTags;
+/**
+ * A hook to get the current language.
+ * @returns A hook to get the current language.
+ */
+function useCurrentLanguage() {
+	return useSyncExternalStore(
+		onStoreChange => {
+			i18n.on("languageChanged", onStoreChange);
+			return () => i18n.off("languageChanged", onStoreChange);
+		},
+		() => i18n.language,
+		() => fallbackLng,
+	) as AvailableLanguageTags;
 }
 
+/**
+ * A hook to get or set the current language.
+ * @returns A hook to get or set the current language.
+ */
 export function useLanguage() {
-	const language = useLanguageGetter();
+	const language = useCurrentLanguage();
 
 	function changeLanguage(lng: AvailableLanguageTags) {
 		const maximizedLang = new Intl.Locale(lng).maximize().baseName;

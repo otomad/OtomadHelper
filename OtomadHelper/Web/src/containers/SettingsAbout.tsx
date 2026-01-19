@@ -56,7 +56,7 @@ const StyledSettingsAbout = styled.div`
 
 export default function SettingsAbout() {
 	const t = useT();
-	const currentLanguage = useCurrentLanguage();
+	const [currentLanguage] = useLanguage();
 	const [hasTranslator, formattedTranslator] = listFormatTranslators(currentLanguage, currentLanguage);
 	const collaborators = new Map<string, string>([
 		[t.settings.about.author, t.settings.about.__author__],
@@ -161,7 +161,7 @@ function Translators({ shown: [shown, setShown] }: FCP<{
 	/** Show the content dialog? */
 	shown: StateProperty<boolean>;
 }>) {
-	const currentLanguage = useCurrentLanguage();
+	const [currentLanguage] = useLanguage();
 	const languages = useLanguageTags();
 	const t = useT();
 
@@ -287,7 +287,7 @@ export function listFormatTranslators(targetLanguage: string, displayLanguage: s
 }
 
 function HelpLinks() {
-	const currentLanguage = useCurrentLanguage();
+	const [currentLanguage] = useLanguage();
 	const tAbout = tAlias.settings.about;
 	const helpsV4: Record<Intl.UnicodeBCP47LocaleIdentifier, { name: string; link: string; version?: string }[]> = {
 		zh: [

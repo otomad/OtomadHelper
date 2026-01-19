@@ -21,18 +21,18 @@ interface UseMediaQueryOptions {
  * ```
  */
 export function useMediaQuery(query: string, { ssrInitial = false, noHook = false }: UseMediaQueryOptions = {}) {
-	const isSSR = typeof window === "undefined";
 	const getMedia = () => window.matchMedia(query);
-	const matches = () => getMedia().matches;
-	const initial = isSSR ? ssrInitial : matches();
-	if (noHook || !canUseHook()) return initial;
-	const [matched, setMatched] = useState(initial);
-	useMountEffect(() => {
-		const media = getMedia();
-		media.onchange = ({ matches }) => setMatched(matches);
-		return () => { media.onchange = null; };
-	});
-	return matched;
+	if (noHook || !canUseHook()) return getMedia().matches;
+
+	return useSyncExternalStore(
+		onStoreChange => {
+			const media = getMedia();
+			media.addEventListener("change", onStoreChange);
+			return () => media.removeEventListener("change", onStoreChange);
+		},
+		() => getMedia().matches,
+		() => ssrInitial, // SSR fallback
+	);
 }
 
 /* eslint-disable jsdoc/require-param */

@@ -210,23 +210,6 @@ export function getAllLanguageTags({ omitInContextLanguage = true }: UseLanguage
 }
 
 /**
- * Get reactive current language.
- * @returns Reactive current language.
- */
-export function useCurrentLanguage() {
-	const { i18n } = useTranslation();
-	const [language, setLanguage] = useState(i18n.language);
-
-	useMountEffect(() => {
-		const onLanguageChanged = (lang: string) => setLanguage(lang);
-		i18n.on("languageChanged", onLanguageChanged);
-		return () => i18n.off("languageChanged", onLanguageChanged);
-	});
-
-	return language as AvailableLanguageTags;
-}
-
-/**
  * Validates and normalizes a given locale identifier.
  *
  * This function checks if the input is a valid BCP 47 locale identifier or `Intl.Locale` object.
