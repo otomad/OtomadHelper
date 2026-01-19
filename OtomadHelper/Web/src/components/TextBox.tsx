@@ -224,6 +224,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 		padding: 6px 12px 7px;
 		color: ${c("foreground-color")};
 		caret-color: currentColor;
+		speak-as: literal-punctuation;
 		transition: ${fallbackTransitions}, padding-inline 0s;
 
 		&:focus {

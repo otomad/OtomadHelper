@@ -802,6 +802,7 @@ export default function Grid() {
 						className={[fixedRows ? "row" : "column", { square }]}
 						role="figure"
 						aria-label={t.preview}
+						aria-sort={order}
 						dir={rtlDirection ? "rtl" : "ltr"}
 					>
 						{forMap(count, i => {
