@@ -68,6 +68,8 @@ export default function Settings() {
 	const meta = metas.settings;
 	const backgroundImagePositionDisabled = backgroundImages.fit[0] === "stretch";
 	const backgroundColorInvalid = actualContrast || actualAmoledDark;
+	const contrastPaletteEvaluation = useContrastPaletteEvaluation();
+	const accentColorButtonSelectedOutlineColor = contrastPaletteEvaluation === "high" ? "colored" : undefined;
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -191,6 +193,11 @@ export default function Settings() {
 			<Setting meta={meta.appearance.palette} expanded={DEV_EXPANDED}>
 				{actualContrast ? <InfoBar status="warning">{t.descriptions.settings.appearance.invalid[systemContrast ? "systemContrastCannot" : "contrast"]({ option: t.settings.appearance.palette })}</InfoBar> : (
 					<>
+						<Activity visible={contrastPaletteEvaluation !== "high"}>
+							{contrastPaletteEvaluation === "low" ? <InfoBar status="warning">{t.descriptions.settings.appearance.contrastPaletteEvaluation.low}</InfoBar> :
+							contrastPaletteEvaluation === "very low" ? <InfoBar status="error">{t.descriptions.settings.appearance.contrastPaletteEvaluation.veryLow}</InfoBar> :
+							<InfoBar status="success" />}
+						</Activity>
 						<Setting meta={meta.appearance.palette.accent} asSubtitle />
 						<StyledColorPalette>
 							{autoColorPalettes.map(color => (
@@ -203,13 +210,13 @@ export default function Settings() {
 										hidden={color === "wallpaper" && !backgroundImages.currentDominantColor}
 										selected={color === "windows" && accentColor[0] === "wallpaper" && !backgroundImages.currentDominantColor}
 										autoStartViewTransition
-										selectedOutlineColor="colored"
+										selectedOutlineColor={accentColorButtonSelectedOutlineColor}
 									/>
 								</TooltipBlock>
 							))}
 							{BasicColorPalette.map(({ value: color, key: name }) => (
 								<TooltipBlock key={color} title={t.settings.appearance.palette[name]}>
-									<ColorButton color={color} value={accentColor} autoStartViewTransition selectedOutlineColor="colored" />
+									<ColorButton color={color} value={accentColor} autoStartViewTransition selectedOutlineColor={accentColorButtonSelectedOutlineColor} />
 								</TooltipBlock>
 							))}
 							<TooltipBlock title={t.custom}>
@@ -220,7 +227,7 @@ export default function Settings() {
 									showIconWhenHovering={false}
 									showSpectrumWhenUnselected
 									autoStartViewTransition
-									selectedOutlineColor="colored"
+									selectedOutlineColor={accentColorButtonSelectedOutlineColor}
 								/>
 							</TooltipBlock>
 						</StyledColorPalette>
@@ -254,6 +261,7 @@ export default function Settings() {
 										selected={isCustomColorSelected(backgroundColor[0])}
 										showIconWhenHovering={false}
 										showSpectrumWhenUnselected
+										autoStartViewTransition
 									/>
 								</TooltipBlock>
 							</StyledColorPalette>

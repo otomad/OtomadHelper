@@ -1449,6 +1449,10 @@ export default {
 						info: "The currently set UI standard text font size is **{{current}} pt**; \nthe default font size is {{default}} pt.",
 						sampleText: "The sound of ocean waves calms my soul.", // This is the sample text in Windows 11 notepad settings.
 					},
+					contrastPaletteEvaluation: {
+						low: "The current palette coordination looks like it might be hard to read, it is recommended to replace them with a set of colors with higher contrast.",
+						veryLow: "The current palette coordination is almost completely unrecognizable and eyesore, causes great damage to the eyes. Are you serious?",
+					},
 				},
 				preference: {
 					autoSwitchSourceFrom: "Changes the source from automatically based on the last selected content",

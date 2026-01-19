@@ -10,6 +10,7 @@ export type ApplicationEvents = {
 	"app:toast": [message: string, status?: Status];
 	"app:hideOtherFlyouts": [exceptId?: string];
 	"app:startColorPaletteViewTransition": [changeFunc: () => MaybePromise<void>];
+	"app:evaluateContrastPalette": [];
 };
 
 expectType<Record<string, unknown[]>>(undefined! as ApplicationEvents);

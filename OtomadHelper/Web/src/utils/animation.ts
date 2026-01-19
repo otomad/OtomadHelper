@@ -463,6 +463,8 @@ interface ColorViewTransitionAnimationFallbackDefaultOption extends ColorViewTra
 	 * @default ["instant"]
 	 */
 	types?: string | string[];
+	/** Auto evaluate contrast palette after changing the page? @default false */
+	evaluateContrastPalette?: boolean;
 }
 
 /**
@@ -473,7 +475,17 @@ interface ColorViewTransitionAnimationFallbackDefaultOption extends ColorViewTra
  * You can even set the cursor while transitioning.
  * @returns The destructor can be executed after the animation is completed.
  */
-export async function startColorViewTransition(changeFunc: () => MaybePromise<void | unknown>, animations: [keyframes: Keyframe[] | PropertyIndexedKeyframes, options?: ColorViewTransitionAnimationOption][], { cursor, staticStyle, types, ...defaultOptions }: ColorViewTransitionAnimationFallbackDefaultOption = {}) {
+export async function startColorViewTransition(changeFunc: () => MaybePromise<void | unknown>, animations: [keyframes: Keyframe[] | PropertyIndexedKeyframes, options?: ColorViewTransitionAnimationOption][], { cursor, staticStyle, types, evaluateContrastPalette = false, ...defaultOptions }: ColorViewTransitionAnimationFallbackDefaultOption = {}) {
+	if (evaluateContrastPalette) {
+		const _changeFunc = changeFunc;
+		changeFunc = async () => {
+			await _changeFunc();
+			await delay(0);
+			emit("app:evaluateContrastPalette");
+			await delay(0);
+		};
+	}
+
 	if (!document.startViewTransition || isReduceMotion()) {
 		await changeFunc();
 		return;

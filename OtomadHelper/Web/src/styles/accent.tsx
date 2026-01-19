@@ -59,7 +59,7 @@ export default function DynamicAccentColor() {
 	useListen("app:startColorPaletteViewTransition", async changeFunc => {
 		const restoreTransitions = stopTransition();
 		try {
-			await startColorViewTransition(changeFunc, [], { cursor: "wait", types: [] });
+			await startColorViewTransition(changeFunc, [], { cursor: "wait", types: [], evaluateContrastPalette: true });
 		} finally {
 			restoreTransitions();
 		}

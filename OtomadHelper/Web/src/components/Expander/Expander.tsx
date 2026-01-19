@@ -75,7 +75,12 @@ const ExpanderChildItems = styled.div`
 		}
 	}
 
-	> :not(:first-child) {
+	> :not(
+		:first-child,
+		.content + *,
+		[style*="display: none"] + *,
+		[style*="display:none"] + *
+	) {
 		border-block-start: 1px solid ${c("stroke-color-divider-stroke-default")};
 	}
 

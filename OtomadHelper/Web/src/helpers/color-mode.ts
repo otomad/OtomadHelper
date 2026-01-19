@@ -15,6 +15,8 @@ const actualColorScheme = atom({
 	contrast: false,
 });
 export const useActualColorScheme = () => useAtomValue(actualColorScheme);
+export const subscribeActualColorScheme = (listener: (newValue: ExtractAtomValue<typeof actualColorScheme>) => void) =>
+	jotaiStore.sub(actualColorScheme, () => listener(jotaiStore.get(actualColorScheme)));
 
 /**
  * Changes the color scheme of the website.
@@ -94,7 +96,7 @@ export function startCircleViewTransition(isSpread: boolean, changeFunc: () => M
 			}, {
 				pseudoElement: isSpread ? "::view-transition-new(root)" : "::view-transition-old(root)",
 			}],
-		], { cursor: "progress" }).then(() => {
+		], { cursor: "progress", evaluateContrastPalette: true }).then(() => {
 			resolve();
 		});
 	});

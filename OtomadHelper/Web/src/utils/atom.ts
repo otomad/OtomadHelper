@@ -1,4 +1,4 @@
-import { getDefaultStore } from "jotai";
+import { type ExtractAtomValue as ExtractJotaiAtomValue, getDefaultStore } from "jotai";
 import { atomWithStorage as _atomWithStorage } from "jotai/utils";
 import type { SyncStorage } from "jotai/vanilla/utils/atomWithStorage";
 import { withImmer } from "jotai-immer";
@@ -69,3 +69,5 @@ export const atomWithStorageAndImmer = <Value>(key: string, initialValue: Value,
 };
 
 export const jotaiStore = getDefaultStore();
+
+export type ExtractAtomValue<AtomType> = ExtractJotaiAtomValue<AtomType>;

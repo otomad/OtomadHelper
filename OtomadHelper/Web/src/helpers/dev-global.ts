@@ -39,4 +39,8 @@ if (import.meta.env.DEV) {
 	// #region Event bus
 	globals.emit = emit;
 	// #endregion
+
+	// #region Color.js
+	globals.Color = Color;
+	// #endregion
 }

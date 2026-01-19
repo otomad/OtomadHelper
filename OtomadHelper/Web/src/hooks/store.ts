@@ -54,7 +54,7 @@ export function useStoreState<TState extends object>(state: TState): StateProper
 				const newValue = typeof value === "function" ? value(state[property]) : value;
 				if (state[property] === newValue) return newValue; // If the value is same as the previous value, do not reassign it.
 				return state[property] = newValue;
-			}];
+			}] as StateProperty<unknown>;
 			Object.assign(stateProperty, {
 				subscribe: (callback: (value: unknown) => void) => subscribeStoreKey(state, property, callback),
 				useState() {

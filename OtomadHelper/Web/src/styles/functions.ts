@@ -16,7 +16,7 @@ export default css`
 	 * @remarks When \`contrast-color()\` available, this function will be deprecated.
 	 */
 	@function --contrast-color(--color <color>, --alpha type(<number> | <percentage>): 1) returns <color> {
-		result: oklch(from var(--color) calc(1 - round(to-zero, L / 0.623)) 0 0 / var(--alpha));
+		result: oklch(from var(--color) calc(1 - round(to-zero, L / 0.645)) 0 0 / var(--alpha));
 	}
 
 	/**
