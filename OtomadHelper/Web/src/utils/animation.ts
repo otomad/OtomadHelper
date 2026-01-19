@@ -420,12 +420,8 @@ export function stopTransition({ includesViewTransitions = false }: {
 		*,
 		::before,
 		::after,
-		::-webkit-progress-value {
-			transition: none !important;
-		}
-
-		// Chromium doesn't want to write webkit and moz together.
-		::-moz-progress-bar {
+		// CAUTION: Chromium doesn't recognize that \`-moz\` selector, directly listing them without \`:is()\` will result in the entire selector being destroyed.
+		:is(::-webkit-progress-value, ::-moz-progress-bar) {
 			transition: none !important;
 		}
 
