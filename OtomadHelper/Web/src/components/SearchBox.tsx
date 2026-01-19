@@ -95,7 +95,7 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 		handler: keyDownHandler,
 	}), [value, onSearch, onSearchResultSelect]);
 
-	useEffect(() => void setValue?.(""), [language]);
+	useEffect(() => { setValue?.(""); }, [language]);
 
 	useEventListener(window, "keydown", e => {
 		if (!enableShortcutKey || !(e.ctrlKey && e.code === "KeyF")) return;

@@ -285,7 +285,7 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 		else return _displayValue;
 	}, [_displayValue, steppedSmoothValue]);
 
-	useEffect(() => void onDisplayValueChanged?.(displayValue), [displayValue, onDisplayValueChanged]);
+	useEffect(() => { onDisplayValueChanged?.(displayValue); }, [displayValue, onDisplayValueChanged]);
 
 	return (
 		<StyledSliderWrapper onAuxClick={resetToDefault}>

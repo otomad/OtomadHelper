@@ -138,13 +138,13 @@ export function ColorButton({ color, icon, animatedIcon, selected = false, value
 
 	if (value !== undefined) selected ||= value === color;
 
-	const handleClick: MouseEventHandler<HTMLButtonElement> = async e => {
-		if (autoStartViewTransition && !selected) {
-			emit("app:startColorPaletteViewTransition");
-			await delay(0);
-		}
-		onClick?.(e);
-		if (color) setValue?.(color);
+	const handleClick: MouseEventHandler<HTMLButtonElement> = e => {
+		const action = () => {
+			onClick?.(e);
+			if (color) setValue?.(color);
+		};
+		if (autoStartViewTransition && !selected) emit("app:startColorPaletteViewTransition", action);
+		else action();
 	};
 
 	return (
@@ -184,19 +184,15 @@ export default function ColorPicker({ color: [color, setColor], computedColor, r
 	children?: never;
 }>>) {
 	const inputColorEl = useDomRef<"input">();
-	// const [_correctColor, setCorrectColor] = useState(color);
-	// const correctColor = toHex(computedColor ? _correctColor : color);
 	const correctColor = useMemo(() => {
 		return toHex(computedColor?.() ?? color);
 	}, [color, computedColor]);
 
-	const setColorDelayed = async (color: string) => {
+	const setColorDelayed = (color: string) => {
 		if (!setColor) return;
-		if (autoStartViewTransition) {
-			emit("app:startColorPaletteViewTransition");
-			await delay(0);
-		}
-		setColor(color);
+		const action = () => { setColor(color); };
+		if (autoStartViewTransition) emit("app:startColorPaletteViewTransition", action);
+		else action();
 	};
 
 	const handleClick: MouseEventHandler = async e => {

@@ -146,7 +146,7 @@ export default function Tooltip({ title: _title, placement, offset, timeout = 50
 
 	useImperativeHandle(ref, () => childEl!);
 
-	useEffect(() => {
+	useEffect(() => { // TODO: anchor-name 允许同时多个名称，因此可以更自由，不用这么麻烦。
 		if (!childEl) return;
 		if (childEl.style.anchorName) anchorName.current = childEl.style.anchorName;
 		else childEl.style.anchorName = newAnchorName;

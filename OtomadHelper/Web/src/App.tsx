@@ -16,7 +16,7 @@ export default function App() {
 	});
 
 	const [theme, setTheme] = useState(initialSystemConfig);
-	useListen("host:systemConfig", setTheme);
+	useListen("host:systemConfig", config => emit("app:startColorPaletteViewTransition", () => setTheme(config)));
 
 	return (
 		<ThemeProvider theme={theme}>

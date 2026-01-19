@@ -55,22 +55,15 @@ const StyledDynamicAccentColor = createGlobalStyle<{
 export default function DynamicAccentColor() {
 	const { accentColor, backgroundColor } = useSnapshot(configStore).settings;
 	const { currentDominantColor } = useBackgroundImages();
-	const resolveViewTransition = useRef<() => void>(undefined);
 
-	useListen("app:startColorPaletteViewTransition", async () => {
-		if (resolveViewTransition.current) return; // Avoid recursion, or transitions will break.
-		const { promise, resolve } = Promise.withResolvers<void>();
-		resolveViewTransition.current = resolve;
+	useListen("app:startColorPaletteViewTransition", async changeFunc => {
 		const restoreTransitions = stopTransition();
 		try {
-			await startColorViewTransition(() => promise, [], { cursor: "wait", types: [] });
+			await startColorViewTransition(changeFunc, [], { cursor: "wait", types: [] });
 		} finally {
 			restoreTransitions();
-			resolveViewTransition.current = undefined;
 		}
 	});
-
-	useEffect(() => resolveViewTransition.current?.());
 
 	return <StyledDynamicAccentColor $customize={{ accentColor, backgroundColor, currentDominantColor }} />;
 }

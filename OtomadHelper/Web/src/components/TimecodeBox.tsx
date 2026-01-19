@@ -208,7 +208,7 @@ export default function TimecodeBox({ value: [timecode, setTimecode], onFocus, o
 		});
 	}, [timecode, setTimecode, onFocus]);
 
-	useChangeEffect(() => void onChanging?.(), [timecode]);
+	useChangeEffect(() => { onChanging?.(); }, [timecode]);
 
 	return (
 		<StyledTimecodeBox ref={timecodeBoxEl} role="group" onMouseDown={handleTimecodeBoxMouseDown} disabled={disabled} {...htmlAttrs}>

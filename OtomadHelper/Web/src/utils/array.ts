@@ -307,7 +307,7 @@
 }
 
 { // Init map extensions
-	Map.prototype.emplace = async function (key, defaultValue) {
+	Map.prototype.emplace = async function (key, defaultValue) { // DELETE: getOrInsert will be released at Chrome 145.
 		if (!this.has(key)) {
 			const value = await defaultValue();
 			this.set(key, value);

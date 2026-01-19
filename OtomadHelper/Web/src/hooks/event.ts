@@ -14,7 +14,7 @@ export function useMountEffect(effect: EffectCallback) {
  * @param effect - The effect to run when the component unmounts.
  */
 export function useUnmountEffect(effect: EffectCallback | (() => Promise<void>)) {
-	useEffect(() => () => void effect(), []);
+	useEffect(() => () => { effect(); }, []);
 }
 
 /**

@@ -187,7 +187,7 @@ export function setStateInterceptor<TOld, TNew>(
 			// if (immer) debugger;
 			const prevNewState = getter ? getter(prevOldState) : prevOldState as unknown as TNew;
 			const userInputValue: TNew = userInput instanceof Function ? userInput(prevNewState) : userInput;
-			const curOldState = immer ? produce(prevOldState, draft => void getCurState(draft as TOld, userInputValue)) : getCurState(prevOldState, userInputValue);
+			const curOldState = immer ? produce(prevOldState, draft => { getCurState(draft as TOld, userInputValue); }) : getCurState(prevOldState, userInputValue);
 			if (curOldState !== prevOldState) subscribe?.(curOldState, prevOldState, userInputValue);
 			return curOldState;
 		});
@@ -616,7 +616,7 @@ export function mutexSwitches(...switches: (StateProperty<boolean> | StateProper
 			return value;
 		});
 		result[i] = setState;
-		const switch_ = switches[i];
+		const switch_ = switches[i] as Writable<typeof switches[number]>;
 		if (Array.isArray(switch_))
 			switch_[1] = setState;
 	}

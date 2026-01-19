@@ -9,7 +9,7 @@ export type ApplicationEvents = {
 	"dev:showContextMenu": [e: MouseEvent, menu: typeof window["contextMenu"] & {}];
 	"app:toast": [message: string, status?: Status];
 	"app:hideOtherFlyouts": [exceptId?: string];
-	"app:startColorPaletteViewTransition": [];
+	"app:startColorPaletteViewTransition": [changeFunc: () => MaybePromise<void>];
 };
 
 expectType<Record<string, unknown[]>>(undefined! as ApplicationEvents);
