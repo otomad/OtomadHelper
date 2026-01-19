@@ -25,7 +25,7 @@ export default css`
 			@supports (caret-animation: manual) {
 				caret-animation: if(
 					media(prefers-reduced-motion: no-preference): manual;
-					else: auto;
+						else: auto;
 				);
 
 				&:focus {
@@ -172,7 +172,11 @@ export default css`
 
 		// Allow shapes in SVG elements to exceed their boundaries.
 		svg,
-		svg * {
+		svg *,
+		// Chromium 144 and FireFox 137 (maybe) use the new SVG2 cascading behavior, so beside the <svg>, we should also add the <symbol>.
+		// See: https://issues.chromium.org/issues/476755407
+		symbol,
+		symbol * {
 			overflow: visible !important;
 		}
 
@@ -212,7 +216,11 @@ export default css`
 
 		// Do not change font in math.
 		math {
-			${styles.mixins.inherit("font-weight", "line-height", "word-spacing")};
+			${styles.mixins.inherit(
+				"font-weight",
+				"line-height",
+				"word-spacing",
+			)};
 		}
 
 		// Do not semi-transparent Combobox when disabled.
