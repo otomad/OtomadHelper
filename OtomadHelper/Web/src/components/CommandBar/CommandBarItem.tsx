@@ -40,7 +40,7 @@ export /* @internal */ function CommandBarItem({ icon, caption, altCaption, deta
 	const [isMouse, _setIsMouse] = useState(true);
 	const checkIsMouse = (e: PointerEvent) => { const result = e.pointerType === "mouse"; _setIsMouse(result); return result; };
 	let setOn: SetStateNarrow<boolean> | undefined;
-	if (Array.isArray(on)) { setOn = on[1]; on = on[0]; }
+	if (isReadonlyArray(on)) { setOn = on[1]; on = on[0]; }
 	const buttonEl = useDomRef<"button">();
 
 	if (toStringOrNaN(caption) === toStringOrNaN(altCaption)) altCaption = undefined;
@@ -59,6 +59,7 @@ export /* @internal */ function CommandBarItem({ icon, caption, altCaption, deta
 				icon={icon}
 				disabled={disabled || commandBarDisabled}
 				dirBasedIcon={dirBasedIcon}
+				role={on !== undefined ? "checkbox" : "button"}
 				aria-label={canToString(caption) ? caption : undefined}
 				aria-description={canToString(details) ? details : undefined}
 				aria-haspopup={ariaHasPopup ?? !!children}

@@ -238,6 +238,8 @@ export default function GradientFlyoutEditor() {
 													key.includes("Invert") ? t.descriptions.track.gradient.colorInvertInfo : undefined;
 												return tooltip && <Tooltip placement="block" title={tooltip}><Badge className="asterisk" status="asterisk" /></Tooltip>;
 											})()}
+											role="button"
+											aria-label={label}
 											onClick={() => clickAStyle("parity", key)}
 										>
 											<MarqueeIfOverflow speed={MARQUEE_SPEED}>{label}</MarqueeIfOverflow>
@@ -249,6 +251,8 @@ export default function GradientFlyoutEditor() {
 											id={key}
 											key={key}
 											image={<PreviewGraduallyGradient thumbnail={exampleThumbnail} effect={key} />}
+											role="button"
+											aria-label={label}
 											onClick={() => clickAStyle("gradient", key)}
 										>
 											<MarqueeIfOverflow speed={MARQUEE_SPEED}>{label}</MarqueeIfOverflow>
@@ -259,7 +263,7 @@ export default function GradientFlyoutEditor() {
 								<div className="pattern">
 									{currentPattern === "parity" ? (
 										<>
-											<ItemsView data-page="pattern" data-pattern="parity" view="tile" current={null}>
+											<ItemsView data-page="pattern" data-pattern="parity" view="tile" current={null} aria-label={tc.groups.parity}>
 												{ParityPatterns.map(({ key, label, icon }) => (
 													<ItemsView.Item
 														id={key}
@@ -274,7 +278,7 @@ export default function GradientFlyoutEditor() {
 										</>
 									) : currentPattern === "gradient" ? (
 										<>
-											<ItemsView data-page="pattern" data-pattern="gradient" view="tile" current={null}>
+											<ItemsView data-page="pattern" data-pattern="gradient" view="tile" current={null} aria-label={tc.groups.gradient}>
 												{GradientPatterns.map(({ key, label, icon }) => (
 													<ItemsView.Item
 														id={key}
@@ -287,7 +291,7 @@ export default function GradientFlyoutEditor() {
 												))}
 											</ItemsView>
 											<hr />
-											<div className="parameters">
+											<div role="group" className="parameters" aria-label={t.titles.parameters}>
 												<label htmlFor={`${ariaId}-input-start`}>
 													<Icon name="stream_input" />
 													{tc.parameters.input}

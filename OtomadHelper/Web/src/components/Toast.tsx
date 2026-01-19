@@ -159,7 +159,7 @@ export default function Toast() {
 
 	return (
 		<Portal>
-			<StyledToast $status={status} className={{ hidden: !shown }} style={{ "--progress": cooldown }} onPointerMove={() => setCooldown(100)}>
+			<StyledToast $status={status} role="alert" className={{ hidden: !shown }} style={{ "--progress": cooldown }} onPointerMove={() => setCooldown(100)}>
 				<div className="progress" />
 				<div className="base">
 					<Badge status={status} />

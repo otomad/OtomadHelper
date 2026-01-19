@@ -524,7 +524,7 @@ function NavigationViewLeftPanel({ paneDisplayMode, isFlyoutShown, customContent
 	));
 
 	return (
-		<aside className={["left", paneDisplayMode, { flyout, covered }]} aria-hidden={isHidden} aria-label={t("aria.navMenu")}>
+		<aside className={["left", paneDisplayMode, { flyout, covered }]} role="navigation" aria-hidden={isHidden} aria-label={t("aria.navMenu")}>
 			<TopLeftButtons shadow paneDisplayMode={isCompact ? "compact" : paneDisplayMode} />
 			<SearchBox
 				value={searchValue}

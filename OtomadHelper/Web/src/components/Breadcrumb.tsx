@@ -1,16 +1,16 @@
 const TITLE_LINE_HEIGHT = 40;
 
-const StyledBreadcrumb = styled.h1`
+const StyledBreadcrumb = styled.nav`
 	display: flex;
 	align-items: center;
 	transition: all ${eases.easeInOutMaterialEmphasized} 700ms;
 
-	h1& {
+	&[aria-level="1"] {
 		${styles.effects.text.title};
 		gap: 14px;
 	}
 
-	h4& {
+	&[aria-level="4"] {
 		${styles.effects.text.body};
 		gap: 4px;
 	}
@@ -81,7 +81,12 @@ export default function Breadcrumb({ titles, large = true, ...htmlAttrs }: FCP<{
 	children?: never;
 }, "h1">) {
 	return (
-		<StyledBreadcrumb as={large ? "h1" : "h4"} className="title" role="navigation" aria-label={t.aria.breadcrumb} {...htmlAttrs}>
+		<StyledBreadcrumb
+			className="title"
+			aria-label={t.aria.breadcrumb}
+			aria-level={large ? 1 : 4}
+			{...htmlAttrs}
+		>
 			<TransitionGroup>
 				{titles.toCompacted().flatMap((title, i, { length }) => {
 					const last = i === length - 1;
