@@ -33,6 +33,9 @@
     <Compile Update="WPF\Controls\ConfirmDeleteFlyout\ConfirmDeleteFlyout.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="WPF\Controls\ParityEditor\ParityEditor.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Strings\en-US.resw">

@@ -32,6 +32,8 @@ public partial class ColorPicker : UserControl {
 
 	public new ColorPickerViewModel DataContext => (ColorPickerViewModel)base.DataContext;
 
+	// TODO: Try to convert `ValueTuple<bool, string>` to `[bool ok, string color]`.
+	// CAUTION: Async method cannot use `out` parameter. So return a value tuple type instead.
 	public static async Task<ValueTuple<bool, string>> ShowDialog(string hex, ColorPickerModelAxis? initialModelAxis = null) {
 		bool startsWithHash = hex.StartsWith("#");
 		Unicolour? color = ColorPickerViewModel.FromHex(hex);
