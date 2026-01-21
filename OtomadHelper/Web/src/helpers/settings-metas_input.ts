@@ -30,7 +30,7 @@ export const settingsMetasInput = {
 			icon: "group",
 			items: {
 				collapse: { icon: "chevron_down_up" },
-				reuseSameName: { icon: "overwrite" },
+				reuseSameName: { icon: "group_sync" },
 			},
 		},
 		naming: {

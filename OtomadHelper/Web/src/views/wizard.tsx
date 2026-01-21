@@ -54,7 +54,7 @@ export default function Wizard() {
 
 			<InfoBar
 				title={t.empty.wizardMode.title}
-				button={<Button accent onClick={() => changePage(["source"])}>{t.empty.wizardMode.gotoStandard}</Button>}
+				button={<Button accent icon="contract_down_left" onClick={() => changePage(["source"])}>{t.empty.wizardMode.gotoStandard}</Button>}
 				length="long"
 			>
 				{t.empty.wizardMode.details}

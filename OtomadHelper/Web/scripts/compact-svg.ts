@@ -7,5 +7,11 @@ let svg = await readFile(svgPath, "utf-8");
 
 // It's just some simple processing. If it is complicated, it cannot be fully supported for the time being.
 
-svg = svg.replaceAll(/\sfill="[^"]*"/g, "").replaceAll(/\s*<\/?g.*>/g, "").replaceAll(/\s*<defs>.*<\/defs>/gs, "").replaceAll(/\t+/g, "\t");
+svg = svg
+	.replaceAll(/\sfill="[^"]*"/g, "")
+	.replaceAll(/\s*<\/?g.*>/g, "")
+	.replaceAll(/\s*<defs>.*<\/defs>/gs, "")
+	.replaceAll(/\t+/g, "\t")
+	.replaceAll(/(?<=svg)(\s+(width|height)="\d+")+/g, "");
+
 writeFile(svgPath, svg);
