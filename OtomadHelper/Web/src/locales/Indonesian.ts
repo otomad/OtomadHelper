@@ -274,7 +274,7 @@ export default {
 		},
 		tools: {
 			selector: {
-				quickIntervalSelection: {},
+				quickSelectInterval: {},
 			},
 		},
 		selectInfo: {},
@@ -431,7 +431,7 @@ export default {
 			mosh: {},
 			tools: {
 				selector: {
-					quickIntervalSelection: {},
+					quickSelectInterval: {},
 				},
 				converters: {},
 			},

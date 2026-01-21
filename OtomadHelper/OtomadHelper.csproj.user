@@ -33,7 +33,7 @@
     <Compile Update="WPF\Controls\ConfirmDeleteFlyout\ConfirmDeleteFlyout.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="WPF\Controls\ParityEditor\ParityEditor.xaml.cs">
+    <Compile Update="WPF\Controls\QuickSelectIntervalEditor\QuickSelectInterval1DEditor.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -441,7 +441,7 @@ export default function Grid() {
 	const order = useMemo(() => descending ? "descending" : "ascending", [descending]);
 	const id = "grid-view" + useId(), fieldAnchorName = `--${id}-field`;
 	// Show fast fill float toolbar while editing column or row count text box?
-	const [fastFillShown, setFastFillShown] = useState(false);
+	const [quickFillShown, setQuickFillShown] = useState(false);
 	const columnInputRef = useDomRef<"input">(), rowInputRef = useDomRef<"input">();
 	const fixedColumnsOrFixedRows = t.track.grid[horizontalDirection ? "fixedColumns" : "fixedRows"];
 	// Grid span helper.
@@ -884,8 +884,8 @@ export default function Grid() {
 								return (
 									<EventInjector
 										key={key}
-										onFocusIn={() => { if (!readonly) { setFastFillShown(true); ref.current?.focus(); } }}
-										onFocusOut={() => setFastFillShown(false)}
+										onFocusIn={() => { if (!readonly) { setQuickFillShown(true); ref.current?.focus(); } }}
+										onFocusOut={() => setQuickFillShown(false)}
 									>
 										<TextBox.Number
 											id={`${id}-${key}`}
@@ -993,16 +993,16 @@ export default function Grid() {
 				<Flyout
 					anchorName={fieldAnchorName}
 					position="top"
-					shown={[fastFillShown, setFastFillShown]}
+					shown={[quickFillShown, setQuickFillShown]}
 					autoPadding="xy"
 					portal={document.body}
 					offset={TOOLTIP_OFFSET}
 					autoFocus={false}
 					onMouseDown={e => e.preventDefault()}
 				>
-					<Flyout.Item icon="edit_lightning" title={t.track.grid.fastFill} style={{ paddingInlineStart: "12px" }} />
+					<Flyout.Item icon="edit_lightning" title={t.track.grid.quickFill} style={{ paddingInlineStart: "12px" }} />
 					<div className="items">
-						<FastFillOptions
+						<QuickFillOptions
 							value={fixedRows ? [rows, setRows] : [columns, setColumns]}
 							getInputRef={() => [columnInputRef, rowInputRef].find(el => el.current?.readOnly === false)}
 							options={[
@@ -1083,7 +1083,7 @@ export default function Grid() {
 	);
 }
 
-function FastFillOptions({ value: [currentValue, setCurrentValue], options, getInputRef }: {
+function QuickFillOptions({ value: [currentValue, setCurrentValue], options, getInputRef }: {
 	value: StatePropertyNonNull<number>;
 	options: { id: string; value: number; unselected?: boolean }[];
 	getInputRef(): MaybeRef<HTMLInputElement | undefined | null>;

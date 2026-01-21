@@ -325,7 +325,7 @@ export default function Score({ _trackSelectorOnly = false }: {
 					<TrimIgnoredInfoBar />
 				</Setting>
 				<Setting meta={meta.filter.periodicity} expanded={periodicityEnabled} type="switch" actuallyOn={periodicityActuallyEnabled}>
-					<QuickIntervalSelection interval={periodicityInterval} bits={periodicityBits} preset={periodicityPreset} />
+					<QuickSelectInterval interval={periodicityInterval} bits={periodicityBits} preset={periodicityPreset} />
 				</Setting>
 				<Setting meta={meta.filter.pitchRange} expanded={pitchRangeEnabled} type="switch" actuallyOn={pitchRangeActuallyEnabled}>
 					<PianoPicker pitch={pitchRange} showOutput showReset />

@@ -573,7 +573,7 @@ export default {
 				max: "Maximum",
 				transpose: "Transpose",
 				numberOfSelectedTracks: "Number of selected tracks",
-				fastFill: "Fast fill",
+				quickFill: "Quick fill",
 				columnWidth: "Column width",
 				rowHeight: "Row height",
 				span: "Span", // Column/Row span.
@@ -796,8 +796,8 @@ export default {
 			flow: "Flow",
 			selector: {
 				_: "Selector",
-				quickIntervalSelection: {
-					_: "Quick Interval Selection",
+				quickSelectInterval: {
+					_: "Quick Select Interval",
 					interval: "Interval",
 				},
 			},
@@ -1385,7 +1385,7 @@ export default {
 				flow: "Creates stunning animations using Beziér Curves",
 				selector: {
 					_: "Finds and selects all clips that match the specified criteria",
-					quickIntervalSelection: {
+					quickSelectInterval: {
 						preset: "Quickly set to a commonly used value",
 						interval: "Takes a specified sample size into a set to serve as the cycle interval",
 					},

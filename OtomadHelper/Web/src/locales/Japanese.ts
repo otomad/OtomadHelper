@@ -527,7 +527,7 @@ export default {
 				max: "最大値",
 				transpose: "入れ替え",
 				numberOfSelectedTracks: "選択したトラックの数",
-				fastFill: "Fast fill",
+				quickFill: "Fast fill",
 				columnWidth: "列の幅",
 				rowHeight: "行の高さ",
 				span: "Span",
@@ -739,7 +739,7 @@ export default {
 			flow: "フロー",
 			selector: {
 				_: "選択",
-				quickIntervalSelection: {
+				quickSelectInterval: {
 					_: "クイックインターバルの選択",
 					interval: "間隔",
 				},
@@ -1300,7 +1300,7 @@ export default {
 				flow: "ベジーの曲線を使用して素晴らしいアニメーションを作成します",
 				selector: {
 					_: "指定された条件に一致するすべてのクリップを検索して選択します",
-					quickIntervalSelection: {
+					quickSelectInterval: {
 						preset: "一般的に使用される値をすばやく設定します",
 						interval: "サイクル間隔として指定されたサンプルサイズをセットに取り込みます。",
 					},

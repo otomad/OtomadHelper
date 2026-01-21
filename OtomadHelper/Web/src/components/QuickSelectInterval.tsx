@@ -2,13 +2,13 @@ const MAX_VISIBLE_WIDTH = 998;
 const ELEMENT_SIZE = 50, ELEMENT_GAP = 5;
 const paddingX = expanderItemPadding[1] - ELEMENT_GAP;
 
-export /* @internal */ const QuickIntervalSelectionPresets = Enum({
+export /* @internal */ const QuickSelectIntervalPresets = Enum({
 	odd: { bits: new BitArray([1, 0]), interval: 2, label: t.odd, icon: "parity/odd_columns" },
 	even: { bits: new BitArray([0, 1]), interval: 2, label: t.even, icon: "parity/even_columns" },
 	custom: { bits: undefined, interval: undefined, label: t.custom, icon: "edit" },
 });
 
-const StyledPreviewQuickIntervalSelection = styled(HorizontalScroll)`
+const StyledPreviewQuickSelectInterval = styled(HorizontalScroll)`
 	inline-size: 100%;
 	padding-block: ${expanderItemPadding[0]}px;
 	padding-inline: 0 !important;
@@ -85,7 +85,7 @@ const StyledPreviewQuickIntervalSelection = styled(HorizontalScroll)`
 	}
 `;
 
-function PreviewQuickIntervalSelection({ interval, bits: [bits, setBits], isPreset = false }: {
+function PreviewQuickSelectInterval({ interval, bits: [bits, setBits], isPreset = false }: {
 	interval: number;
 	bits: readonly [get: BitArray, set?: SetStateNarrow<BitArray>];
 	isPreset: boolean;
@@ -101,7 +101,7 @@ function PreviewQuickIntervalSelection({ interval, bits: [bits, setBits], isPres
 	const id = useId();
 
 	return (
-		<StyledPreviewQuickIntervalSelection className={{ isPreset }} style={{ "--anchor-name": "--" + id }}>
+		<StyledPreviewQuickSelectInterval className={{ isPreset }} style={{ "--anchor-name": "--" + id }}>
 			{forMap(interval, i => (
 				<ToggleButton
 					key={i}
@@ -125,28 +125,28 @@ function PreviewQuickIntervalSelection({ interval, bits: [bits, setBits], isPres
 					</ToggleButton>
 				))}
 			</div>
-		</StyledPreviewQuickIntervalSelection>
+		</StyledPreviewQuickSelectInterval>
 	);
 }
 
-export default function QuickIntervalSelection({ interval, bits: bitsBase64, preset }: {
+export default function QuickSelectInterval({ interval, bits: bitsBase64, preset }: {
 	interval: StatePropertyNonNull<number>;
 	bits: StatePropertyNonNull<string>;
-	preset?: StateProperty<Config.QuickIntervalSelectionPreset>;
+	preset?: StateProperty<Config.QuickSelectIntervalPreset>;
 }) {
 	const bits = useBitArray(bitsBase64);
-	const currentPreset = QuickIntervalSelectionPresets.allKeyed[preset?.[0] ?? "custom"];
+	const currentPreset = QuickSelectIntervalPresets.allKeyed[preset?.[0] ?? "custom"];
 	const isCustom = !currentPreset.bits || !currentPreset.interval;
 
 	return (
 		<>
 			{preset && (
-				<Expander.Item title={t.preset} details={t.descriptions.tools.selector.quickIntervalSelection.preset} icon="preset">
-					<Segmented.Enum items={QuickIntervalSelectionPresets} current={preset} />
+				<Expander.Item title={t.preset} details={t.descriptions.tools.selector.quickSelectInterval.preset} icon="preset">
+					<Segmented.Enum items={QuickSelectIntervalPresets} current={preset} />
 				</Expander.Item>
 			)}
-			<PreviewQuickIntervalSelection interval={isCustom ? interval[0] : currentPreset.interval} bits={isCustom ? bits : [currentPreset.bits]} isPreset={!isCustom} />
-			<Expander.Item title={t.tools.selector.quickIntervalSelection.interval} details={t.descriptions.tools.selector.quickIntervalSelection.interval} icon="table_simple_include">
+			<PreviewQuickSelectInterval interval={isCustom ? interval[0] : currentPreset.interval} bits={isCustom ? bits : [currentPreset.bits]} isPreset={!isCustom} />
+			<Expander.Item title={t.tools.selector.quickSelectInterval.interval} details={t.descriptions.tools.selector.quickSelectInterval.interval} icon="table_simple_include">
 				<TextBox.Number min={1} max={100} decimalPlaces={0} value={isCustom ? interval : [currentPreset.interval]} />
 			</Expander.Item>
 		</>

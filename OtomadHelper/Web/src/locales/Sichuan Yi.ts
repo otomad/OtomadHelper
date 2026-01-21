@@ -528,7 +528,7 @@ export default {
 				max: "crwdns3380:0crwdne3380:0",
 				transpose: "crwdns3382:0crwdne3382:0",
 				numberOfSelectedTracks: "crwdns3384:0crwdne3384:0",
-				fastFill: "crwdns3386:0crwdne3386:0",
+				quickFill: "crwdns3386:0crwdne3386:0",
 				columnWidth: "crwdns4068:0crwdne4068:0",
 				rowHeight: "crwdns4070:0crwdne4070:0",
 				span: "crwdns4072:0crwdne4072:0",
@@ -740,7 +740,7 @@ export default {
 			flow: "crwdns1912:0crwdne1912:0",
 			selector: {
 				_: "crwdns5602:0crwdne5602:0",
-				quickIntervalSelection: {
+				quickSelectInterval: {
 					_: "crwdns5604:0crwdne5604:0",
 					interval: "crwdns5606:0crwdne5606:0",
 				},
@@ -1303,7 +1303,7 @@ export default {
 				flow: "crwdns2122:0crwdne2122:0",
 				selector: {
 					_: "crwdns5634:0crwdne5634:0",
-					quickIntervalSelection: {
+					quickSelectInterval: {
 						preset: "crwdns5636:0crwdne5636:0",
 						interval: "crwdns5638:0crwdne5638:0",
 					},

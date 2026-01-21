@@ -398,7 +398,7 @@ export default {
 				max: "Tối đa",
 				transpose: "Chuyển vị",
 				numberOfSelectedTracks: "Số các track đã chọn",
-				fastFill: "Lấp đầy nhanh",
+				quickFill: "Lấp đầy nhanh",
 				direction: {},
 				mirrorEdges: "Cạnh phản chiếu",
 				parity: {
@@ -566,7 +566,7 @@ export default {
 			flow: "Flow",
 			selector: {
 				_: "Chọn",
-				quickIntervalSelection: {},
+				quickSelectInterval: {},
 			},
 			replacer: "Thay thế",
 			propertizer: "Thuộc tính",
@@ -947,7 +947,7 @@ export default {
 				flow: "Tạo những hoạt cảnh ấn tượng bằng Beziér Curves",
 				selector: {
 					_: "Tìm và chọn tất cả các clip hội đủ tiêu chí xác định",
-					quickIntervalSelection: {},
+					quickSelectInterval: {},
 				},
 				replacer: "Thay thế các clip đã chọn bằng một clip mới",
 				propertizer: "Thiết đặt thuộc tính (co dãn, chuẩn hoá…) cho tất cả các clip trong bộ",

@@ -1,6 +1,6 @@
 import type { ImageFitTypes } from "components/BackgroundImage";
 import type { Encodings } from "components/Preview/PreviewEncoding";
-import type { QuickIntervalSelectionPresets } from "components/QuickIntervalSelection";
+import type { QuickSelectIntervalPresets } from "components/QuickSelectInterval";
 import type { LegatoDurations, LegatoModes } from "containers/Expander/ExpanderLegato";
 import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "containers/Expander/ExpanderStream/ExpanderStreamPrologue";
 import type { NegativeTypes, VisualIdleEffects } from "containers/IdleEffectSettings";
@@ -62,7 +62,7 @@ namespace Config {
 	export type VocaloidClipNameType = typeof Namings.vocaloidClipNames[number]["id"];
 	export type YtpClipNameType = typeof Namings.ytpClipNames[number]["id"];
 	export type ScoredTrackNameType = typeof Namings.scoredTrackNames[number]["id"];
-	export type QuickIntervalSelectionPreset = typeof QuickIntervalSelectionPresets.keyType;
+	export type QuickSelectIntervalPreset = typeof QuickSelectIntervalPresets.keyType;
 	export type NegativeType = typeof NegativeTypes.keyType;
 	export type TrackGroupBy = typeof TrackGroupBy.keyType;
 
@@ -77,7 +77,7 @@ namespace Config {
 		monochrome: { enabled: enabled === "monochrome", amount: 100 },
 		negative: { enabled: enabled === "negative", amount: "colorInvert" satisfies NegativeType },
 	});
-	const defaultQuickIntervalSelectionBits = new BitArray([1, 0, 1, 0]).toBase64();
+	const defaultQuickSelectIntervalBits = new BitArray([1, 0, 1, 0]).toBase64();
 
 	export const configStore = createStore({
 		source: {
@@ -127,9 +127,9 @@ namespace Config {
 			trimStart: EMPTY_TIMECODE,
 			trimEnd: EMPTY_TIMECODE,
 			periodicityEnabled: false,
-			periodicityPreset: "odd" satisfies QuickIntervalSelectionPreset as QuickIntervalSelectionPreset,
+			periodicityPreset: "odd" satisfies QuickSelectIntervalPreset as QuickSelectIntervalPreset,
 			periodicityInterval: 4,
-			periodicityBits: defaultQuickIntervalSelectionBits,
+			periodicityBits: defaultQuickSelectIntervalBits,
 			pitchRangeEnabled: false,
 			pitchRange: ["C0", "F#10"] as [string, string],
 			encoding: "ANSI" satisfies Encoding as Encoding,

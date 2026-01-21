@@ -527,7 +527,7 @@ export default {
 				max: "最大值",
 				transpose: "转置",
 				numberOfSelectedTracks: "所选轨道数",
-				fastFill: "快速填写",
+				quickFill: "快速填写",
 				columnWidth: "列宽",
 				rowHeight: "行高",
 				span: "跨列/行",
@@ -739,7 +739,7 @@ export default {
 			flow: "运动曲线",
 			selector: {
 				_: "选择查找",
-				quickIntervalSelection: {
+				quickSelectInterval: {
 					_: "快速间隔选择",
 					interval: "间隔",
 				},
@@ -1302,7 +1302,7 @@ export default {
 				flow: "使用贝塞尔曲线创建令人惊叹的动画",
 				selector: {
 					_: "查找并选中符合指定条件的所有剪辑",
-					quickIntervalSelection: {
+					quickSelectInterval: {
 						preset: "快捷设置为常用值",
 						interval: "抽取指定的样本数目为一组作为循环间隔",
 					},
