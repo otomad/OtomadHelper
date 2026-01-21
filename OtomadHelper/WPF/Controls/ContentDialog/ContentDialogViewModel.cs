@@ -13,15 +13,14 @@ public partial class ContentDialogViewModel : ObservableObject<ContentDialog> {
 	[ObservableProperty]
 	private UIElement? content;
 
-	private string iconName = "Info";
 	public string IconName {
-		get => iconName;
+		get => field;
 		set {
 			value = Icon.NormalizeIconName(value);
 			if (Icon.IsValidIconName(value))
-				SetProperty(ref iconName, value);
+				SetProperty(ref field, value);
 		}
-	}
+	} = "Info";
 
 	public ObservableCollection<ContentDialogButtonItem> Buttons { get; } = [];
 

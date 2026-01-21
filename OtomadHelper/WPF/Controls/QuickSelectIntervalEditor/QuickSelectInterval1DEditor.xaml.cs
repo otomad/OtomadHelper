@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Controls;
 
 namespace OtomadHelper.WPF.Controls;
@@ -12,10 +13,16 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 
 	public new QuickSelectInterval1DEditorViewModel DataContext => (QuickSelectInterval1DEditorViewModel)base.DataContext;
 
-	public static async Task<ValueTuple<bool, bool[]>> ShowDialog(bool[] bits) {
+	public static async Task<ValueTuple<bool, bool[], uint, string>> ShowDialog(bool[] bits, uint interval, string name = "") {
 		QuickSelectInterval1DEditor panel = new();
 		QuickSelectInterval1DEditorViewModel viewModel = panel.DataContext;
 		viewModel.Bits = bits;
+		bool dialogResult = await ShowDialog(panel);
+		if (!dialogResult) return (false, bits, interval, name);
+		return (true, viewModel.Bits, viewModel.Interval, viewModel.Name);
+	}
+
+	internal static async Task<bool> ShowDialog(FrameworkElement panel) {
 		bool dialogResult = await ContentDialog.ShowDialog<bool?>(
 			title: "Quick Select Interval Editor",
 			content: panel,
@@ -23,9 +30,9 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 				new(t.ContentDialog.Button.Ok, true, true),
 				new(t.ContentDialog.Button.Cancel, false),
 			],
+			icon: KnownIcon.None,
 			singletonId: "Quick Select Interval Editor"
 		) ?? false;
-		if (!dialogResult) return (false, bits);
-		return (true, (bool[])viewModel.Bits);
+		return dialogResult;
 	}
 }

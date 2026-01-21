@@ -35,7 +35,7 @@ public partial class ContentDialog : BackdropWindow {
 		string title,
 		string body,
 		IEnumerable<ContentDialogButtonItem> buttons,
-		string iconName = ""
+		string iconName = "None"
 	) {
 		ValidateDialogResultType<TDialogResult>();
 		ContentDialog dialog = new();
@@ -47,15 +47,14 @@ public partial class ContentDialog : BackdropWindow {
 		return (TDialogResult?)await dialog.ShowDialogAsync();
 	}
 
+	protected static string GetIconName(KnownIcon icon) => Enum.GetName<KnownIcon>(icon);
+
 	public static async Task<TDialogResult?> ShowDialog<TDialogResult>(
 		string title,
 		string body,
 		IEnumerable<ContentDialogButtonItem> buttons,
-		KnownIcon icon /*= KnownIcon.Info*/
-	) {
-		string iconName = Enum.GetName<KnownIcon>(icon);
-		return await ShowDialog<TDialogResult>(title, body, buttons, iconName);
-	}
+		KnownIcon icon /*= KnownIcon.Info */
+	) => await ShowDialog<TDialogResult>(title, body, buttons, GetIconName(icon));
 
 	internal static string errorFooter = "";
 	public static void ShowError(
@@ -82,7 +81,7 @@ public partial class ContentDialog : BackdropWindow {
 		string title,
 		FrameworkElement content,
 		IEnumerable<ContentDialogButtonItem> buttons,
-		string iconName = "",
+		KnownIcon icon = KnownIcon.None,
 		bool? topmost = null,
 		string? singletonId = null
 	) {
@@ -91,7 +90,7 @@ public partial class ContentDialog : BackdropWindow {
 		ContentDialogViewModel viewModel = dialog.DataContext;
 		viewModel.Title = title;
 		viewModel.Content = content;
-		viewModel.IconName = iconName;
+		viewModel.IconName = GetIconName(icon);
 		viewModel.Buttons.AddRange(buttons);
 		dialog.Width = content.Width;
 		dialog.SizeToContent = SizeToContent.WidthAndHeight;

@@ -402,5 +402,13 @@ public static partial class Extensions {
 		/// <inheritdoc cref="Enum.GetValues(Type)" />
 		public static TEnum[] GetValues<TEnum>() where TEnum : struct, Enum =>
 			(TEnum[])Enum.GetValues(typeof(TEnum));
+
+		/// <inheritdoc cref="Enum.IsDefined(Type, object)" />
+		public static bool IsDefined<TEnum>(string keyName) where TEnum : struct, Enum =>
+			Enum.IsDefined(typeof(TEnum), keyName);
+
+		/// <inheritdoc cref="Enum.IsDefined(Type, object)" />
+		public static bool IsDefined<TEnum>(int intValue) where TEnum : struct, Enum =>
+			Enum.IsDefined(typeof(TEnum), intValue);
 	}
 }

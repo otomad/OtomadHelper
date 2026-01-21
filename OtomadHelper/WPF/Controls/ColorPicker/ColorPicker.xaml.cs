@@ -49,7 +49,7 @@ public partial class ColorPicker : UserControl {
 				new(t.ContentDialog.Button.Ok, true, true),
 				new(t.ContentDialog.Button.Cancel, false),
 			],
-			iconName: "Color",
+			icon: KnownIcon.Color,
 			singletonId: "Color Picker"
 		) ?? false;
 		Unicolour newColor = viewModel.Color;

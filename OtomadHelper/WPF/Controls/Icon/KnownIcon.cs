@@ -6,4 +6,6 @@ public enum KnownIcon {
 	Warning,
 	Error,
 	Question,
+	Locale,
+	Color,
 }

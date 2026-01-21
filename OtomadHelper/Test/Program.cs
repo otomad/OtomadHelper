@@ -1,5 +1,4 @@
-#define TEST1
-using System.Resources;
+#define TEST6
 using System.Windows.Forms;
 
 using OtomadHelper.WPF.Controls;
@@ -46,6 +45,9 @@ internal static class Program {
 #endif
 #if TEST5
 		_ = ColorPicker.ShowDialog("f00", new(Wacton.Unicolour.ColourSpace.Hsb, 2)).Then(color => s = color);
+#endif
+#if TEST6
+		_ = QuickSelectInterval1DEditor.ShowDialog([true, false], 2);
 #endif
 	}
 }

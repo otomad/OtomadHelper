@@ -23,21 +23,7 @@ public partial class Icon : Viewbox {
 		this.SetResourceReference(SourceProperty, "Icon:" + iconName);
 	}
 
-	public static string[] ValidIconNames {
-		get {
-			if (field is null) {
-				using BamlAssemblyResource baml = new();
-				ResourceDictionary xaml = (ResourceDictionary)baml.GetXaml("WPF/Themes/Icons");
-				field = xaml.Keys.Cast<string>()
-					.Where(key => key.StartsWith("Icon:", StringComparison.InvariantCultureIgnoreCase))
-					.Select(key => key.Replace(new Regex(@"^Icon:", RegexOptions.IgnoreCase), ""))
-					.ToArray();
-			}
-			return field;
-		}
-	}
-	public static bool IsValidIconName(string iconName) =>
-		ValidIconNames.Contains(iconName, StringComparer.InvariantCultureIgnoreCase);
+	public static bool IsValidIconName(string iconName) => Enum.IsDefined<KnownIcon>(iconName);
 
 	public static string NormalizeIconName(string iconName) => new VariableName(iconName).Pascal;
 	public static string NormalizeIconName(object iconName) => NormalizeIconName(iconName.ToString());
