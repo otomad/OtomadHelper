@@ -171,7 +171,7 @@
 		<Canvas>
 			<c:Icon IconName="{Binding IconName}" Style="{StaticResource ShadingIcon}" />
 		</Canvas>
-		<StackPanel Orientation="Vertical">
+		<StackPanel>
 			<Border Style="{StaticResource ContentWrapper}">
 				<StackPanel Orientation="Vertical">
 					<TextBlock Style="{StaticResource Subtitle}" Text="{Binding Subtitle}" />
@@ -235,7 +235,8 @@
 						>
 						<ItemsControl.ItemsPanel>
 							<ItemsPanelTemplate>
-								<c:ContentDialogButtonPanel />
+								<!--<c:ContentDialogButtonPanel />  TODO: Spacing 不均匀-->
+								<UniformGrid Columns="{Binding Buttons.Count, FallbackValue=2}" m:Spacing.Horizontal="8" />
 							</ItemsPanelTemplate>
 						</ItemsControl.ItemsPanel>
 						<ItemsControl.ItemTemplate>

@@ -3,6 +3,8 @@ using System.Windows.Controls;
 
 namespace OtomadHelper.WPF.Controls;
 
+// DELETE
+
 [DependencyProperty<double>("Spacing", DefaultValue = 8d)]
 internal partial class ContentDialogButtonPanel : Grid {
 	public ContentDialogButtonPanel() : base() {

@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -16,10 +17,10 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 	public static async Task<ValueTuple<bool, bool[], uint, string>> ShowDialog(bool[] bits, uint interval, string name = "") {
 		QuickSelectInterval1DEditor panel = new();
 		QuickSelectInterval1DEditorViewModel viewModel = panel.DataContext;
-		viewModel.Bits = bits;
+		viewModel.Bits = new(bits);
 		bool dialogResult = await ShowDialog(panel);
 		if (!dialogResult) return (false, bits, interval, name);
-		return (true, viewModel.Bits, viewModel.Interval, viewModel.Name);
+		return (true, viewModel.Bits.ToArray(), viewModel.Interval, viewModel.Name);
 	}
 
 	internal static async Task<bool> ShowDialog(FrameworkElement panel) {
@@ -35,4 +36,7 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 		) ?? false;
 		return dialogResult;
 	}
+
+	public const double ToggleButtonSize = 36;
+	public const double ToggleButtonSpacing = 4;
 }

@@ -23,21 +23,127 @@
 				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Themes/Controls.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
+			<c:AddOneConverter x:Key="AddOne" />
+			<c:CountToViewportConverter x:Key="CountToViewport" />
+			<c:CountToVisualBrushWidthConverter x:Key="CountToWidth" />
+
 			<Style TargetType="TextBlock">
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
 				<Setter Property="VerticalAlignment" Value="Center" />
+				<Setter Property="m:InteractivityItems.Template">
+					<Setter.Value>
+						<m:InteractivityTemplate>
+							<m:InteractivityItems>
+								<m:InteractivityItems.Behaviors>
+									<m:ClickLabelToFocusTextBoxBehavior />
+								</m:InteractivityItems.Behaviors>
+							</m:InteractivityItems>
+						</m:InteractivityTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
+			<Style BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">
+				<Setter Property="Width" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
+				<Setter Property="Height" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
+				<Setter Property="Padding" Value="0" />
+			</Style>
+
+			<Style x:Key="HorizontalStackPanel" TargetType="StackPanel">
+				<Setter Property="Orientation" Value="Horizontal" />
+				<Setter Property="HorizontalAlignment" Value="Left" />
+				<Setter Property="VerticalAlignment" Value="Center" />
+				<Setter Property="m:Spacing.Horizontal" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSpacing}" />
+				<Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
 			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>
+	<Grid
+		Grid.Column="2"
+		m:GridDef.Column="Auto,10,*"
+		m:GridDef.Row="*,8,Auto,8,Auto"
+		>
+		<ScrollViewer
+			Grid.ColumnSpan="3"
+			HorizontalScrollBarVisibility="Visible"
+			VerticalScrollBarVisibility="Hidden"
+			>
+			<ItemsControl AlternationCount="{Binding Bits.Count, FallbackValue=100}">
+				<ItemsControl.Resources>
+					<CollectionViewSource x:Key="collectionViewSource" Source="{Binding Bits}" />
+				</ItemsControl.Resources>
+				<ItemsControl.ItemsSource>
+					<CompositeCollection>
+						<CollectionContainer Collection="{Binding Source={StaticResource collectionViewSource}}" />
+						<Rectangle
+							Margin="-2,0,0,0"
+							HorizontalAlignment="Stretch"
+							m:MarginSetter.Exclude="True"
+							>
+							<Rectangle.Width>
+								<MultiBinding Converter="{StaticResource CountToWidth}">
+									<Binding Path="Bits.Count" />
+									<Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=ScrollViewer, AncestorLevel=1}" Path="ActualWidth" />
+								</MultiBinding>
+							</Rectangle.Width>
+							<Rectangle.Fill>
+								<VisualBrush
+									Opacity="0.35"
+									Stretch="None"
+									TileMode="Tile"
+									Viewport="{Binding Bits.Count, Converter={StaticResource CountToViewport}}"
+									ViewportUnits="Absolute"
+									>
+									<VisualBrush.Visual>
+										<ItemsControl AlternationCount="{Binding Bits.Count, FallbackValue=100}" ItemsSource="{Binding Bits}">
+											<ItemsControl.ItemsPanel>
+												<ItemsPanelTemplate>
+													<StackPanel Style="{StaticResource HorizontalStackPanel}" />
+												</ItemsPanelTemplate>
+											</ItemsControl.ItemsPanel>
+											<ItemsControl.ItemTemplate>
+												<DataTemplate>
+													<ToggleButton Content="{Binding Path=(ItemsControl.AlternationIndex), Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource AddOne}}" IsChecked="{Binding Path=., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+												</DataTemplate>
+											</ItemsControl.ItemTemplate>
+										</ItemsControl>
+									</VisualBrush.Visual>
+								</VisualBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+					</CompositeCollection>
+				</ItemsControl.ItemsSource>
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Style="{StaticResource HorizontalStackPanel}" />
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<ToggleButton
+							Command="{Binding DataContext.ToggleBooleanCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+							CommandParameter="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}}"
+							Content="{Binding Path=(ItemsControl.AlternationIndex), Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource AddOne}}"
+							IsChecked="{Binding Path=., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+							/>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
 
-	<Grid Grid.Column="2" m:GridDef.Column="Auto,10,*" m:GridDef.Row="*,8,Auto,8,Auto">
-		<StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" />
+		<TextBlock Grid.Row="2" Grid.Column="0">周期</TextBlock>
+		<TextBox
+			Grid.Row="2"
+			Grid.Column="2"
+			Text="{Binding Interval}"
+			/>
 
-		<TextBlock Grid.Column="0" Grid.Row="2">周期</TextBlock>
-		<TextBox Grid.Column="2" Grid.Row="2" />
-
-		<TextBlock Grid.Column="0" Grid.Row="4">名称</TextBlock>
-		<TextBox Grid.Column="2" Grid.Row="4" />
+		<TextBlock Grid.Row="4" Grid.Column="0">名称</TextBlock>
+		<TextBox
+			Grid.Row="4"
+			Grid.Column="2"
+			Text="{Binding Name}"
+			/>
 	</Grid>
 </UserControl>

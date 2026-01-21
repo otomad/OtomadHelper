@@ -15,5 +15,6 @@
 		<m:SharedResourceDictionary ControlSource="ColorPicker/ColorTrackThumb" />
 		<m:SharedResourceDictionary ControlSource="ContentDialog/ShadingIcon" />
 		<m:SharedResourceDictionary ControlSource="ToolTip/ToolTip" />
+		<m:SharedResourceDictionary ControlSource="ToggleButton/ToggleButton" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
