@@ -143,22 +143,20 @@ export function decodeBitArray(bytes: Uint8Array, offset = 0) {
 	return bits.subarray(beginFlagIndex + 1);
 }
 
-const encodeAsciiString = (text: string) => new TextEncoder().encode(text);
-const decodeAsciiString = (bytes: Uint8Array) => new TextDecoder().decode(bytes);
+// const encodeAsciiString = (text: string) => new TextEncoder().encode(text);
+// const decodeAsciiString = (bytes: Uint8Array) => new TextDecoder().decode(bytes);
 
-// QSI magic string header. 0x01 means version 1.
-const QSI_MAGIC_STRING = "QSI\x01";
-const encodedQsiMagicString = encodeAsciiString(QSI_MAGIC_STRING);
+// QSI magic string header. 1 means version 1.
+const QSI_MAGIC_STRING = "QSI1:";
 
 export function encodeQsiProtocol(bits: Uint8Array, column: number = 0) {
-	return concatUint8Array(encodedQsiMagicString, encodeVarint(column), encodeBitArray(bits)).toBase64({ omitPadding: true });
+	return QSI_MAGIC_STRING + concatUint8Array(encodeVarint(column), encodeBitArray(bits)).toBase64({ omitPadding: true });
 }
 
 export function decodeQsiProtocol(base64: string): [bits: Uint8Array, column: number] {
-	let bytes = Uint8Array.fromBase64(base64);
-	if (decodeAsciiString(bytes.subarray(0, 4)) !== QSI_MAGIC_STRING)
+	if (!base64.startsWith(QSI_MAGIC_STRING))
 		throw new TypeError("The provided base64 string does not comply with QSI communication protocol: " + base64);
-	bytes = bytes.subarray(4);
+	let bytes = Uint8Array.fromBase64(base64.slice(QSI_MAGIC_STRING.length));
 	const [column, intByteLength] = decodeVarint(bytes);
 	if (intByteLength === Infinity)
 		throw new TypeError("The provided base64 string which varint of the column value is incomplete: " + base64);
