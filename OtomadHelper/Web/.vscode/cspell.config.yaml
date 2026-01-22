@@ -241,6 +241,7 @@ words:
   - pxify
   - qihu
   - qrcode
+  - qsi
   - quarternary
   - resw
   - resx
@@ -326,6 +327,7 @@ words:
   - utau
   - utf
   - valtio
+  - varint
   - vec
   - vibraslap
   - vibrati

@@ -532,7 +532,7 @@ export function isUndefinedNullNaN(object: unknown): object is undefined | null 
  *
  * @param constructor - The constructor function whose prototype keys should be made non-enumerable.
  */
-export function makePrototypeKeysNonEnumerable(constructor: AnyConstructor) {
+export function makePrototypeKeysNonEnumerable(constructor: AnyConstructor | { prototype: Any }) {
 	const protoKeys = Object.keys(constructor.prototype);
 	for (const protoKey of protoKeys)
 		Object.defineProperty(constructor.prototype, protoKey, {

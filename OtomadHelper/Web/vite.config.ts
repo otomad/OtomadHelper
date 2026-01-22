@@ -12,7 +12,6 @@ import turboConsole from "unplugin-turbo-console/vite";
 import { defineConfig } from "vite";
 import glsl from "vite-plugin-glsl";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
-import noBundlePlugin from "vite-plugin-no-bundle";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import svgr from "vite-plugin-svgr";
 import { qrcode } from "vite-plugin-qrcode";
@@ -31,9 +30,13 @@ import moment from "moment";
 import crowdinBadgeApiLink from "./src/helpers/links_crowdin-badge-api";
 
 const ENABLE_MINIFY = true;
-const NO_BUNDLE = false;
+const NO_BUNDLE = false; // vite-plugin-no-bundle is broken since Vite 6.
 const ENABLE_QRCODE = false;
 const ENABLE_COMPILER = true;
+
+// 查循环依赖步骤：
+// 第1步：使用 vite-plugin-no-bundle 插件实现构建但不打包；
+// 第2步：使用 madge 工具查询项目中所有的循环依赖。
 
 moment.updateLocale("en", {
 	longDateFormat: {
@@ -104,12 +107,15 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				include: "**/*.svg?react",
 			}),
 			tsconfigPaths(),
-			injectScript([
-				{ src: "./src/priors/init-system-config-fallback.ts", inline: true },
-				{ src: "./src/priors/init-background-color.ts", inline: true },
-				{ src: "./src/priors/dpi.ts", type: "iife" },
-				{ src: "./src/priors/error-601.ts", type: "iife", injectTo: "body-append" },
-			]),
+			injectScript({
+				scripts: [
+					{ src: "./src/priors/init-system-config-fallback.ts", inline: true },
+					{ src: "./src/priors/init-background-color.ts", inline: true },
+					{ src: "./src/priors/dpi.ts", type: "iife" },
+					{ src: "./src/priors/error-601.ts", type: "iife", injectTo: "body-append" },
+				],
+				minifyHtml: ENABLE_MINIFY && !NO_BUNDLE,
+			}),
 			glsl({
 				minify: PROD,
 			}),
@@ -144,7 +150,6 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 				},
 			}),
 			minifyLottieJson(),
-			NO_BUNDLE && noBundlePlugin(),
 			ENABLE_QRCODE && qrcode(),
 		],
 		base: "",
@@ -153,7 +158,9 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 			target: "ESNext",
 			assetsInlineLimit: 200,
 			rollupOptions: {
+				preserveEntrySignatures: NO_BUNDLE as never,
 				output: {
+					preserveModules: NO_BUNDLE,
 					entryFileNames: "[name].js",
 					chunkFileNames: "chunks/[name].js",
 					assetFileNames: "assets/[name].[hash].[ext]",
@@ -170,10 +177,6 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 			terserOptions: {
 				keep_classnames: true,
 			},
-			lib: NO_BUNDLE ? {
-				entry: "src/main.tsx",
-				name: "OtomadHelper",
-			} : undefined,
 		},
 		esbuild: {
 			keepNames: true, // When enabled, not only keep the class names, but also unexpectedly keep the function names.

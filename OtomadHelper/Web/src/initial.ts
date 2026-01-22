@@ -5,6 +5,7 @@ import "utils/string";
 
 import "helpers/color-mode";
 import "helpers/dev-global";
+import "helpers/host-messages_listen";
 import "styles/fonts";
 import "styles/properties";
 import "utils/bridge";

@@ -782,4 +782,33 @@ declare interface IteratorObject<T, TReturn, TNext> {
 	 * @param index - The zero-based index of the desired code unit. A negative index will count back from the last item.
 	 */
 	at(index: number): T;
+
+	/**
+	 * Returns an iterable of index, value pairs for every entry in the iterator object.
+	 */
+	entries(): Generator<[index: number, element: T]>;
+}
+
+declare interface Uint8Array {
+	/**
+	 * Resizes a Uint8Array to a specified length.
+	 * @param newLength - The desired length of the array.
+	 * @param returnNewInstanceIfLengthNotChanged - When the length hasn't changed, if true, returns a new instance
+	 * (via slice); if false, returns the original array. Defaults to true.
+	 * @returns A Uint8Array with the specified length. If expanding, a new array is created with the original data
+	 * copied with zero padded. If shrinking, a sliced array is returned. If unchanged, behavior depends on the
+	 * `returnNewInstanceIfLengthNotChanged` parameter.
+	 */
+	toResized(newLength: number, returnNewInstanceIfLengthNotChanged?: boolean): Uint8Array;
+
+	/**
+	 * Concatenates multiple Uint8Array buffers into a single Uint8Array.
+	 * @param arrays - Variable number of Uint8Array buffers to concatenate
+	 * @returns A new Uint8Array containing all input arrays concatenated in order
+	 * @example
+	 * const buffer1 = new Uint8Array([1, 2, 3]);
+	 * const buffer2 = new Uint8Array([4, 5, 6]);
+	 * const result = buffer1, concat(buffer2); // Uint8Array [1, 2, 3, 4, 5, 6]
+	 */
+	concat(...arrays: Uint8Array[]): Uint8Array;
 }

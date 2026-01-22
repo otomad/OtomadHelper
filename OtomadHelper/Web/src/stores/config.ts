@@ -15,6 +15,7 @@ import type { Namings, SelectGeneratedClips, TrackGroupBy, barOrBeatUnitTypes, s
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
 import type { glissandoEffects, prerenders, stretches, transformMethods, truncates } from "views/visual";
 import ConfigNS = Config;
+
 namespace Config {
 	export type StartTime = typeof startTimes[number]["id"];
 	export type TempoUsing = typeof tempoUsings[number]["id"];

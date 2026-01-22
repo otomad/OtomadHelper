@@ -5,7 +5,11 @@ import type { HtmlTagDescriptor } from "vite";
 import "../../utils/object";
 import { compileTypeScript, minifyHtml, minifyJavaScript, wrapIife } from "./utils";
 
-export default (scripts: (string | PriorScript)[]): VitePlugin => {
+export default ({ scripts, minifyHtml: minify = true }: {
+	scripts: (string | PriorScript)[];
+	/** Minify HTML when building? */
+	minifyHtml?: boolean;
+}): VitePlugin => {
 	let config: VitePluginConfig;
 	const resolve = (...paths: string[]) => resolve_(config.root, ...paths);
 	let isDev: boolean;
@@ -103,7 +107,7 @@ export default (scripts: (string | PriorScript)[]): VitePlugin => {
 				});
 
 				let newHtml = dom.serialize();
-				newHtml = await minifyHtml(newHtml);
+				if (minify) newHtml = await minifyHtml(newHtml);
 				return newHtml;
 			},
 		},

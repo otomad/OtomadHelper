@@ -344,6 +344,31 @@
 		}
 		return undefined;
 	};
+
+	Iterator.prototype.entries = function* () {
+		let i = 0;
+		for (const element of this)
+			yield [i++, element];
+	};
+}
+
+{
+	Uint8Array.prototype.toResized = function (newLength, returnNewInstanceIfLengthNotChanged = true) {
+		if (newLength > this.length) {
+			const newArray = new Uint8Array(newLength);
+			newArray.set(this);
+			return newArray;
+		} else if (newLength < this.length)
+			return this.slice(0, newLength);
+		else
+			return returnNewInstanceIfLengthNotChanged ? this.slice() : this;
+	};
+
+	Uint8Array.prototype.concat = function (...arrays) {
+		return concatUint8Array(this, ...arrays);
+	};
+
+	makePrototypeKeysNonEnumerable(Uint8Array);
 }
 
 /**
@@ -398,7 +423,7 @@ export async function asyncIterMap<TIn, TOut>(asyncIter: AsyncGenerator<TIn>, ca
  * @template TIterable - The type of elements in the iterables.
  * @template TIterator - The type of elements in the iterators.
  * @param iterators - A list of iterables to concatenate.
- * @yields {T | U} Elements from each iterable in the order they are provided.
+ * @yields {TIterable | TIterator} Elements from each iterable in the order they are provided.
  *
  * @example
  * ```typescript
@@ -409,9 +434,31 @@ export async function asyncIterMap<TIn, TOut>(asyncIter: AsyncGenerator<TIn>, ca
  * }
  * ```
  */
-export function* concatIter<TIterable, TIterator>(...iterators: (Iterable<TIterable> | Iterator<TIterator>)[]) {
+export const concatIter = function* <TIterable = never, TIterator = never>(...iterators: (Iterable<TIterable> | Iterator<TIterator>)[]) {
 	for (const it of iterators)
 		yield* it as Iterable<TIterable | TIterator>;
+};
+
+/**
+ * Concatenates multiple Uint8Array buffers into a single Uint8Array.
+ * @param arrays - Variable number of Uint8Array buffers to concatenate
+ * @returns A new Uint8Array containing all input arrays concatenated in order
+ * @example
+ * ```javascript
+ * const buffer1 = new Uint8Array([1, 2, 3]);
+ * const buffer2 = new Uint8Array([4, 5, 6]);
+ * const result = concatUint8Array(buffer1, buffer2); // Uint8Array [1, 2, 3, 4, 5, 6]
+ * ```
+ */
+export function concatUint8Array(...arrays: Uint8Array[]) {
+	const length = sum(...arrays.map(array => array.length));
+	const stream = new Uint8Array(length);
+	let offset = 0;
+	for (const array of arrays) {
+		stream.set(array, offset);
+		offset += array.length;
+	}
+	return stream;
 }
 
 /**

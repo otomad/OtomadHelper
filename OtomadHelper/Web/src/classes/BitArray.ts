@@ -1,3 +1,5 @@
+import { decodeQsiProtocol, encodeQsiProtocol } from "helpers/qsi-codec";
+
 /**
  * A boolean array class that uses `Uint8Array` internally to store and provides TypedArray performance.
  *
@@ -9,7 +11,8 @@ class BitArray<TSubclass = Any> {
 	private readonly data!: Uint8Array;
 	private readonly column: number = 0;
 	get is2d() { return this.column !== 0; }
-	get length() { return this.column === 0 ? this.data.length : Math.ceil(this.data.length / this.column); }
+	get is1d() { return this.column === 0; }
+	get length() { return this.is1d ? this.data.length : Math.ceil(this.data.length / this.column); }
 
 	constructor(column: number, row: number);
 	constructor(length: number);
@@ -40,7 +43,7 @@ class BitArray<TSubclass = Any> {
 	get [Symbol.toStringTag]() { return "BitArray"; }
 
 	toString() {
-		if (!this.is2d) return this.data.join("");
+		if (this.is1d) return this.data.join("");
 		const result = Array(this.length);
 		for (let i = 0; i < this.length; i++)
 			result[i] = this.data.slice(i * this.column, (i + 1) * this.column).join("");
@@ -65,7 +68,7 @@ class BitArray<TSubclass = Any> {
 	 * @returns `boolean[]`.
 	 */
 	toArray() {
-		if (!this.is2d) return Array.from(this.toString(), i => i !== "0");
+		if (this.is1d) return Array.from(this.toString(), i => i !== "0");
 		return this.toString().split("\n").map(row => Array.from(row.toString(), i => i !== "0"));
 	}
 
@@ -87,21 +90,26 @@ class BitArray<TSubclass = Any> {
 		return this.is2d ? column < this.column && row < this.length : column < this.data.length;
 	}
 
-	private static createProxy(bitArrayInstance: BitArray) {
+	private getRow(row: number) {
+		if (this.is1d) throw new TypeError("Not supported");
+		return new BitArray(this.data.subarray(row * this.column, (row + 1) * this.column), 0);
+	}
+
+	private static createProxy<T>(bitArrayInstance: BitArray<T>) {
 		return new Proxy(bitArrayInstance, {
 			get(target, prop) {
 				if (prop in target) return target[prop as keyof typeof target];
 				const row = propToIndex(prop);
 				if (target.hasIndex(row))
-					if (!target.is2d) return target.get(row);
-					else return new Proxy(target, {
-						get(target, prop) {
+					if (target.is1d) return target.get(row);
+					else return new Proxy(target.getRow(row), {
+						get(_target, prop) {
 							if (prop === "length") return target.column;
 							const column = propToIndex(prop);
 							if (target.hasIndex(column, row))
 								return target.get(column, row);
 						},
-						set(target, prop, value) {
+						set(_target, prop, value) {
 							const column = propToIndex(prop);
 							if (target.hasIndex(column, row)) {
 								target.set(value as number, column, row);
@@ -109,13 +117,13 @@ class BitArray<TSubclass = Any> {
 							}
 							return false;
 						},
-						has: (target, prop) => prop in target || target.hasIndex(propToIndex(prop), row),
-						ownKeys: target => getOwnKeys(target.column),
+						has: (_target, prop) => prop in target || target.hasIndex(propToIndex(prop), row),
+						ownKeys: _target => getOwnKeys(target.column),
 					});
 			},
 			set(target, prop, value) {
 				const row = propToIndex(prop);
-				if (!target.is2d && target.hasIndex(row)) {
+				if (target.is1d && target.hasIndex(row)) {
 					target.set(value as number, row);
 					return true;
 				}
@@ -150,12 +158,7 @@ class BitArray<TSubclass = Any> {
 	toResized(newLength?: number, newColumn?: number) {
 		let { data, column } = this;
 		if (newLength !== undefined)
-			if (newLength > this.data.length) {
-				const newData = new Uint8Array(newLength);
-				newData.set(this.data);
-				data = newData;
-			} else if (newLength < this.data.length)
-				data = this.data.slice(0, newLength);
+			data = this.data.toResized(newLength);
 		if (newColumn !== undefined)
 			column = newColumn;
 		return new BitArray(data === this.data ? data.slice() : data, column) as IsAny<TSubclass> extends true ? BitArray : TSubclass;
@@ -168,22 +171,12 @@ class BitArray<TSubclass = Any> {
 	getRawData() { return this.data; }
 
 	toBase64() {
-		const byteArray = new Uint8Array(Math.ceil(this.data.length / 8));
-		this.data.forEach((bit, index) => {
-			if (bit) byteArray[index >> 3] |= 1 << 7 - (index & 7);
-		});
-		const paddingBits = padMod(this.data.length, 8);
-		return [byteArray.toBase64({ omitPadding: true }), paddingBits, ...this.is2d ? this.column.toString(36) : []].join("-");
+		return encodeQsiProtocol(this.data, this.column);
 	}
 
 	static fromBase64(base64: string) {
-		const [data, paddingBits_string, column_string] = base64.split("-");
-		const paddingBits = parseInt(paddingBits_string ?? 0, 10), column = parseInt(column_string ?? 0, 36);
-		const byteArray = Uint8Array.fromBase64(data);
-		const bitArray = new Uint8Array(byteArray.length * 8 - paddingBits);
-		for (const index of bitArray.keys())
-			bitArray[index] = +!!(byteArray[index >> 3] & 1 << 7 - (index & 7));
-		return new BitArray(bitArray, column);
+		const [bits, column] = decodeQsiProtocol(base64);
+		return new BitArray(bits, column);
 	}
 }
 
@@ -198,14 +191,6 @@ function getOwnKeys(length: number) {
 	keys.push("length");
 	return keys;
 }
-
-/**
- * Calculate the complement of `a` relative to `b` (i.e. the number that needs to be added to round to a multiple of `b`)
- * @param a - Dividend.
- * @param b - Divisor.
- * @returns The difference between `a` and the nearest multiple of `b`. If it is already a multiple of `b`, return 0.
- */
-const padMod = (a: number, b: number) => b - (a % b || b);
 
 type Bit1DArray = BitArray<Bit1DArray> & WritableArrayLike<boolean>;
 const Bit1DArray = BitArray as {

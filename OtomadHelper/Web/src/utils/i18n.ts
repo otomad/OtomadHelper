@@ -1,5 +1,5 @@
 import { EnumItemClass } from "enum-plus/enum-item";
-import { IN_CONTEXT_LANGUAGE_CODE } from "helpers/jipt-activator";
+import { IN_CONTEXT_LANGUAGE_CODE } from "helpers/jipt-activator_constants";
 import type { TOptions as _TOptions } from "i18next";
 import type { AvailableLanguageTags } from "locales/all";
 import i18n from "locales/config";
