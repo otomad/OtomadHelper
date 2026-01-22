@@ -476,15 +476,13 @@ interface ColorViewTransitionAnimationFallbackDefaultOption extends ColorViewTra
  * @returns The destructor can be executed after the animation is completed.
  */
 export async function startColorViewTransition(changeFunc: () => MaybePromise<void | unknown>, animations: [keyframes: Keyframe[] | PropertyIndexedKeyframes, options?: ColorViewTransitionAnimationOption][], { cursor, staticStyle, types, evaluateContrastPalette = false, ...defaultOptions }: ColorViewTransitionAnimationFallbackDefaultOption = {}) {
-	if (evaluateContrastPalette) {
-		const _changeFunc = changeFunc;
-		changeFunc = async () => {
-			await _changeFunc();
+	if (evaluateContrastPalette)
+		changeFunc = (changeFunc => async () => {
+			await changeFunc();
 			await delay(0);
 			emit("app:evaluateContrastPalette");
 			await delay(0);
-		};
-	}
+		})(changeFunc);
 
 	if (!document.startViewTransition || isReduceMotion()) {
 		await changeFunc();
