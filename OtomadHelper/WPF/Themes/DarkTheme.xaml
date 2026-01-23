@@ -41,6 +41,7 @@
 	<SolidColorBrush x:Key="TextSecondary" Color="#C8FFFFFF" />
 	<SolidColorBrush x:Key="TextDisabled" Color="#5CFFFFFF" />
 	<SolidColorBrush x:Key="ControlStrong" Color="#8AFFFFFF" />
+	<SolidColorBrush x:Key="ControlStrongDisabled" Color="#3EFFFFFF" />
 	<SolidColorBrush x:Key="AcrylicBackground" Color="#CE2C2C2C" />
 	<SolidColorBrush x:Key="SurfaceStrokeFlyout" Color="#33000000" />
 	<SolidColorBrush x:Key="ControlDefault" Color="#0FFFFFFF" />

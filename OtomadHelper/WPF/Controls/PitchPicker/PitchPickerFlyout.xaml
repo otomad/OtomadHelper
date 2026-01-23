@@ -32,6 +32,7 @@
 			<m:RelativeToAbsoluteRectConverter x:Key="RelToAbsRect" />
 			<m:BackgroundToForegroundColorConverter x:Key="BgToFg" />
 			<m:MouseWheelEventArgsToFocusMoveDirectionConverter x:Key="WheelToDirection" />
+			<c:OctaveSpinnerToIsEnabledConverter x:Key="OctaveSpinToEnabled" />
 
 			<Thickness x:Key="ItemPadding">4,0</Thickness>
 			<s:Double x:Key="ItemHeight">40</s:Double>
@@ -205,6 +206,9 @@
 					<Trigger Property="IsMouseOver" Value="True">
 						<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
 					</Trigger>
+					<Trigger Property="IsEnabled" Value="False">
+						<Setter Property="Foreground" Value="{DynamicResource ControlStrongDisabled}" />
+					</Trigger>
 					<Trigger Property="IsPressed" Value="True">
 						<Trigger.EnterActions>
 							<BeginStoryboard>
@@ -326,11 +330,13 @@
 					Command="{Binding OctaveSpinCommand}"
 					CommandParameter="{StaticResource SpinUpDelta}"
 					Style="{StaticResource SpinnerButtonUp}"
+					IsEnabled="{Binding Octave, Converter={StaticResource OctaveSpinToEnabled}, ConverterParameter={StaticResource SpinUpDelta}}"
 					/>
 				<RepeatButton
 					Command="{Binding OctaveSpinCommand}"
 					CommandParameter="{StaticResource SpinDownDelta}"
 					Style="{StaticResource SpinnerButtonDown}"
+					IsEnabled="{Binding Octave, Converter={StaticResource OctaveSpinToEnabled}, ConverterParameter={StaticResource SpinDownDelta}}"
 					/>
 			</Canvas>
 		</Grid>

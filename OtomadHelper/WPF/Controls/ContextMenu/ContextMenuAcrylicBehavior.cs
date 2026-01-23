@@ -4,10 +4,12 @@ using System.Windows.Interop;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Controls.Primitives;
-using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace OtomadHelper.WPF.Controls;
 
+/// <summary>
+/// Attach acrylic material system backdrop (by Windows 10 Composition API) to <see cref="ContextMenu" /> and <see cref="ToolTip" />.
+/// </summary>
 [AttachedDependencyProperty<bool, ContextMenu>("FixCanExecute", DefaultValue = false)]
 [AttachedDependencyProperty<bool, ContextMenu>("AutoIcon", DefaultValue = true)]
 public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {

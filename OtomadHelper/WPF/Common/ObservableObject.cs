@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 
 using IView = System.Windows.FrameworkElement;
+using BaseObservableObject = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
 
 namespace OtomadHelper.WPF.Common;
 
@@ -15,10 +16,10 @@ public interface IViewAccessibleViewModel {
 /// <remarks>
 /// Add more options.
 /// </remarks>
-public class ObservableObject : CommunityToolkit.Mvvm.ComponentModel.ObservableObject {
-	/// <inheritdoc cref="CommunityToolkit.Mvvm.ComponentModel.ObservableObject.OnPropertyChanged(string?)"/>
+public class ObservableObject : BaseObservableObject {
+	/// <inheritdoc cref="BaseObservableObject.OnPropertyChanged(string?)"/>
 	public new void OnPropertyChanged([CallerMemberName] string? propertyName = null) => base.OnPropertyChanged(propertyName);
-	/// <inheritdoc cref="CommunityToolkit.Mvvm.ComponentModel.ObservableObject.OnPropertyChanging(string?)"/>
+	/// <inheritdoc cref="BaseObservableObject.OnPropertyChanging(string?)"/>
 	public new void OnPropertyChanging([CallerMemberName] string? propertyName = null) => base.OnPropertyChanged(propertyName);
 
 	public event PropertyChangedEventHandler? PropertyNoChanged;
@@ -40,7 +41,7 @@ public class ObservableObject : CommunityToolkit.Mvvm.ComponentModel.ObservableO
 	protected void OnPropertyChanging<T>(T newValue, T oldValue, [CallerMemberName] string? propertyName = null) =>
 		OnPropertyChanging(new PropertyChangingEventArgs<T>(propertyName, newValue, oldValue));
 
-	/// <inheritdoc cref="CommunityToolkit.Mvvm.ComponentModel.ObservableObject.SetProperty{T}(ref T, T, string?)"/>
+	/// <inheritdoc cref="BaseObservableObject.SetProperty{T}(ref T, T, string?)"/>
 	protected bool SetProperty<T>(ref T field, T value, bool condition = true, [CallerMemberName] string? propertyName = null) {
 		if (!condition) return false;
 		T oldValue = field;

@@ -1,8 +1,3 @@
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
-
-using Wacton.Unicolour;
-
 namespace OtomadHelper.WPF.Controls;
 
 public partial class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> {
@@ -13,7 +8,8 @@ public partial class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> 
 	public string NoteName {
 		get => noteName;
 		set {
-			value = value.ToUpperInvariant()
+			value = value
+				.ToUpperInvariant()
 				.Replace("♯", "#")
 				.Replace(new Regex(@"(?<=[A-G])[b♭]", RegexOptions.IgnoreCase), "b");
 			if (value.EndsWith("b"))
