@@ -209,7 +209,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Melanchall.DryWetMidi" Version="8.0.2" />
+		<PackageReference Include="Melanchall.DryWetMidi" Version="8.0.3" />
 		<!--<PackageReference Include="Costura.Fody" Version="5.7.0">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -217,12 +217,12 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>-->
 		<PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3595.46" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3650.58" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="PanguSpacing" Version="1.1.6" />
-		<PackageReference Include="System.Text.Json" Version="10.0.0" />
-		<PackageReference Include="Wacton.Unicolour" Version="6.3.0" />
+		<PackageReference Include="System.Text.Json" Version="10.0.2" />
+		<PackageReference Include="Wacton.Unicolour" Version="6.4.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
