@@ -16,5 +16,6 @@
 		<m:SharedResourceDictionary ControlSource="ContentDialog/ShadingIcon" />
 		<m:SharedResourceDictionary ControlSource="ToolTip/ToolTip" />
 		<m:SharedResourceDictionary ControlSource="ToggleButton/ToggleButton" />
+		<m:SharedResourceDictionary ControlSource="ScrollViewer/ScrollViewer" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
