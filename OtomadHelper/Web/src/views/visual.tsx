@@ -22,8 +22,8 @@ export /* @internal */ const transformMethods = [
 ] as const;
 export /* @internal */ const prerenders = [
 	{ id: "instant", icon: "flash" },
-	{ id: "media", icon: "media_forward" },
-	{ id: "timeline", icon: "timeline_forward" },
+	{ id: "media", icon: "media_up_right" },
+	{ id: "timeline", icon: "timeline_up_right" },
 ] as const;
 export /* @internal */ const glissandoEffects = [
 	{ id: "swirl", name: t.shared.plugins.swirl },
