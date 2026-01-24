@@ -132,7 +132,7 @@
 			<Style x:Key="ButtonsContainer" TargetType="Border">
 				<Setter Property="Padding" Value="24,20" />
 				<Setter Property="BorderBrush" Value="{DynamicResource CardStroke}" />
-				<Setter Property="BorderThickness" Value="0,2,0,0" />
+				<Setter Property="BorderThickness" Value="0,1,0,0" />
 				<Setter Property="Background" Value="{DynamicResource SurfaceOverlayBackground}" />
 				<Style.Triggers>
 					<DataTrigger Binding="{Binding Expandable}" Value="True">
@@ -235,7 +235,6 @@
 						>
 						<ItemsControl.ItemsPanel>
 							<ItemsPanelTemplate>
-								<!--<c:ContentDialogButtonPanel />  TODO: Spacing 不均匀-->
 								<UniformGrid Columns="{Binding Buttons.Count, FallbackValue=2}" m:Spacing.Horizontal="8" />
 							</ItemsPanelTemplate>
 						</ItemsControl.ItemsPanel>

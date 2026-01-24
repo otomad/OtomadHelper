@@ -56,7 +56,7 @@
 			<StackPanel Orientation="Vertical">
 				<TextBlock Style="{StaticResource Title}" Text="{m:Trans Flyout.ConfirmDelete.Title}" />
 				<TextBlock Style="{StaticResource ConfirmMessage}" d:Text="Are you sure you want to delete it?" Text="{Binding Message}" />
-				<UniformGrid>
+				<UniformGrid Columns="2" m:Spacing.Horizontal="8">
 					<c:Button
 						Command="{Binding SetDialogResultCommand}"
 						CommandParameter="{m:Bool True}"

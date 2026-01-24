@@ -7,7 +7,7 @@
 	>
 	<s:String x:Key="ResourceDictionaryName">ThemeColor</s:String>
 	<Color x:Key="ForegroundColor">White</Color>
-	<SolidColorBrush x:Key="ForegroundBrush" Color="{DynamicResource ForegroundColor}" />
+	<SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}" />
 	<SolidColorBrush x:Key="BackgroundBrush" Color="#FF202020" />
 	<SolidColorBrush x:Key="CardStroke" Color="#19000000" />
 	<SolidColorBrush x:Key="SurfaceOverlayBackground" Color="#0D000000" />
@@ -31,7 +31,7 @@
 		<GradientStop Offset="0.5" Color="#11FFFFFF" />
 	</LinearGradientBrush>
 	<Color x:Key="TextOnAccentForegroundColor">White</Color>
-	<SolidColorBrush x:Key="TextOnAccentForegroundBrush" Color="{DynamicResource TextOnAccentForegroundColor}" />
+	<SolidColorBrush x:Key="TextOnAccentForegroundBrush" Color="{StaticResource TextOnAccentForegroundColor}" />
 	<SolidColorBrush x:Key="TextOnAccent" Color="Black" />
 	<s:Double x:Key="AccentSecondaryOpacity">0.9</s:Double>
 	<s:Double x:Key="AccentTertiaryOpacity">0.8</s:Double>
