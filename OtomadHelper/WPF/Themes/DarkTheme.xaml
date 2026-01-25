@@ -39,6 +39,7 @@
 	<SolidColorBrush x:Key="SubtleTertiary" Color="#0AFFFFFF" />
 	<SolidColorBrush x:Key="DividerStroke" Color="#15FFFFFF" />
 	<SolidColorBrush x:Key="TextSecondary" Color="#C8FFFFFF" />
+	<SolidColorBrush x:Key="TextTertiary" Color="#8AFFFFFF" />
 	<SolidColorBrush x:Key="TextDisabled" Color="#5CFFFFFF" />
 	<SolidColorBrush x:Key="ControlStrong" Color="#8AFFFFFF" />
 	<SolidColorBrush x:Key="ControlStrongDisabled" Color="#3EFFFFFF" />

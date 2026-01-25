@@ -46,4 +46,9 @@
 	<s:Double x:Key="BodyFontSize">14</s:Double>
 	<s:Double x:Key="SubtitleFontSize">20</s:Double>
 	<!--#endregion-->
+
+	<!--#region Pan Theme Colors -->
+	<!-- Set background color to transparent may cause it cannot be clicked, so use a 1/255 alpha color to replace it. -->
+	<SolidColorBrush x:Key="PretendTransparent" Color="#01000000" />
+	<!--#endregion-->
 </ResourceDictionary>

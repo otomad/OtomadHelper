@@ -37,7 +37,7 @@ public class TextBoxSelectionBehavior : Behavior<Border> {
 			textBox.CaretIndex = 0;
 	}
 
-	private const int TEXT_BOX_INNER_PADDING_X = 4;
+	private const int TEXT_BOX_INNER_PADDING_X = 10;
 
 	/// <summary>
 	/// Test a object is a <see cref="TextBoxView" /> instance.

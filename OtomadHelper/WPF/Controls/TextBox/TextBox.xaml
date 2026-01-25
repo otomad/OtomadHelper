@@ -11,6 +11,7 @@
 	<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 	<c:TextBoxStripeSizeToRectConverter x:Key="StripeSizeToRect" />
 	<m:BackgroundToForegroundColorConverter x:Key="BgToFg" />
+	<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
 
 	<Style x:Key="TextBoxStripe" TargetType="Border">
 		<Setter Property="Height" Value="{StaticResource CornerRadiusLength}" />
@@ -71,6 +72,45 @@
 		</Style.Triggers>
 	</Style>
 
+	<Style x:Key="InlineSpinnerRepeatButton" TargetType="RepeatButton">
+		<Setter Property="SnapsToDevicePixels" Value="False" />
+		<Setter Property="OverridesDefaultStyle" Value="True" />
+		<Setter Property="Background" Value="{DynamicResource PretendTransparent}" />
+		<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+		<Setter Property="Width" Value="32" />
+		<Setter Property="Focusable" Value="False" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="RepeatButton">
+					<Border Padding="2" Background="{DynamicResource PretendTransparent}">
+						<Border
+							Padding="{TemplateBinding Padding}"
+							Background="{TemplateBinding Background}"
+							CornerRadius="4"
+							>
+							<ContentPresenter />
+						</Border>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
+				<Setter Property="Foreground" Value="{DynamicResource TextTertiary}" />
+			</Trigger>
+		</Style.Triggers>
+		<Style.Resources>
+			<Style TargetType="c:Icon">
+				<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RepeatButton}}" />
+				<Setter Property="Size" Value="12" />
+			</Style>
+		</Style.Resources>
+	</Style>
+
 	<Style x:Key="DefaultTextBoxStyle" TargetType="TextBox">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="OverridesDefaultStyle" Value="True" />
@@ -90,7 +130,7 @@
 				<ControlTemplate TargetType="TextBoxBase">
 					<Grid>
 						<Border
-							Padding="8,6,8,7"
+							Padding="0"
 							Background="{TemplateBinding Background}"
 							BorderBrush="{TemplateBinding BorderBrush}"
 							BorderThickness="{TemplateBinding BorderThickness}"
@@ -103,11 +143,15 @@
 								<ScrollViewer
 									x:Name="PART_ContentHost"
 									Grid.Column="0"
-									Margin="0"
-									Padding="-2,0"
+									Margin="8,6,8,7"
+									Padding="0"
 									/>
-								<RepeatButton Grid.Column="1">上</RepeatButton>
-								<RepeatButton Grid.Column="2">下</RepeatButton>
+								<RepeatButton Grid.Column="1" Command="m:Commands.Increase">
+									<c:Icon IconName="ChevronUp" />
+								</RepeatButton>
+								<RepeatButton Grid.Column="2" Command="m:Commands.Decrease">
+									<c:Icon IconName="ChevronDown" />
+								</RepeatButton>
 							</Grid>
 						</Border>
 						<Border Style="{StaticResource TextBoxStripe}" />
@@ -116,6 +160,11 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
+		<Style.Resources>
+			<Style BasedOn="{StaticResource InlineSpinnerRepeatButton}" TargetType="RepeatButton">
+				<Setter Property="Visibility" Value="{Binding Path=(c:NumericUpDown.ShowSpinner), RelativeSource={RelativeSource AncestorType=TextBox}, Converter={StaticResource BoolToVis}}" />
+			</Style>
+		</Style.Resources>
 		<Style.Triggers>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Background" Value="{DynamicResource ControlSecondary}" />

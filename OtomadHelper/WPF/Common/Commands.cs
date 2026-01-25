@@ -11,6 +11,18 @@ public static class Commands {
 		inputGestures: [new KeyGesture(Key.None, ModifierKeys.None, "Ctrl+A, Del")],
 		ownerType: typeof(Commands)
 	);
+	public static readonly RoutedUICommand Increase = new(
+		name: "Increase",
+		text: "Increase", // TODO: i18n
+		inputGestures: [new KeyGesture(Key.Up)],
+		ownerType: typeof(Commands)
+	);
+	public static readonly RoutedUICommand Decrease = new(
+		name: "Decrease",
+		text: "Decrease", // TODO: i18n
+		inputGestures: [new KeyGesture(Key.Up)],
+		ownerType: typeof(Commands)
+	);
 
 	internal static readonly CommandBinding[] CommandBindings = [
 		Create(ApplicationCommands.Delete, static (RoutedEventArgs e, ref bool canExecute) => {
@@ -22,6 +34,16 @@ public static class Commands {
 			if (e.OriginalSource is not TextBox textBox) return null;
 			canExecute = textBox.IsEditable && textBox.Text.Length > 0;
 			return () => textBox.Clear();
+		}),
+		Create(Increase, static (RoutedEventArgs e, ref bool canExecute) => {
+			if (e.OriginalSource is not TextBox textBox) return null;
+			canExecute = NumberTextBoxBehavior.GetNumberInputMode(textBox) != NumberTextBoxInputMode.Text;
+			return () => NumberTextBoxUpDownKeyBehavior.Spin(textBox, 1);
+		}),
+		Create(Decrease, static (RoutedEventArgs e, ref bool canExecute) => {
+			if (e.OriginalSource is not TextBox textBox) return null;
+			canExecute = NumberTextBoxBehavior.GetNumberInputMode(textBox) != NumberTextBoxInputMode.Text;
+			return () => NumberTextBoxUpDownKeyBehavior.Spin(textBox, -1);
 		}),
 	];
 

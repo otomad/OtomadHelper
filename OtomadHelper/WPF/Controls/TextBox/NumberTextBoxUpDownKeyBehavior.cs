@@ -19,18 +19,22 @@ public partial class NumberTextBoxUpDownKeyBehavior : Behavior<TextBox> {
 		AssociatedObject.PreviewKeyDown -= TextBox_KeyDown;
 	}
 
-	private double Step => GetStep(AssociatedObject);
-
 	private void TextBox_KeyDown(object sender, KeyEventArgs e) {
-		if (Step == 0) return;
-		if (NumberTextBoxBehavior.GetNumberInputMode(AssociatedObject) == NumberTextBoxInputMode.Text) return;
-		string text = AssociatedObject.Text;
-		if (!double.TryParse(string.IsNullOrEmpty(text) ? "0" : text, out double value)) return;
-		if (e.Key is Key.Up or Key.Down) {
-			value += (e.Key == Key.Up ? 1 : -1) * Step;
-			AssociatedObject.SetCurrentValue(TextBox.TextProperty, value.ToString());
-			AssociatedObject.CaretIndex = int.MaxValue;
-			e.Handled = true;
-		}
+		if (e.Key is Key.Up or Key.Down)
+			e.Handled = Spin(AssociatedObject, e.Key == Key.Up ? 1 : -1);
+	}
+
+	public static bool Spin(TextBox textBox, int direction) {
+		double step = GetStep(textBox);
+		if (step == 0) return false;
+		if (NumberTextBoxBehavior.GetNumberInputMode(textBox) == NumberTextBoxInputMode.Text) return false;
+		string text = textBox.Text;
+		if (!double.TryParse(string.IsNullOrEmpty(text) ? "0" : text, out double value)) return false;
+		if (direction == 0) return false;
+
+		value += direction * step;
+		textBox.SetCurrentValue(TextBox.TextProperty, value.ToString());
+		textBox.CaretIndex = int.MaxValue;
+		return true;
 	}
 }

@@ -131,7 +131,7 @@
 		</ScrollViewer>
 
 		<TextBlock Grid.Row="2" Grid.Column="0">周期</TextBlock>
-		<TextBox
+		<c:NumericUpDown
 			Grid.Row="2"
 			Grid.Column="2"
 			Text="{Binding Interval}"
