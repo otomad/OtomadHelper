@@ -32,7 +32,17 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 				new(t.ContentDialog.Button.Cancel, false),
 			],
 			icon: KnownIcon.None,
-			singletonId: "Quick Select Interval Editor"
+			topmost: false,
+			singletonId: "Quick Select Interval Editor",
+			customize: dialog => {
+				dialog.ResizeMode = ResizeMode.CanResize;
+				dialog.SizeToContent = SizeToContent.Manual;
+				dialog.Width = 800;
+				dialog.Height = 480;
+				dialog.MinWidth = 400;
+				dialog.MinHeight = 320;
+				dialog.MinimizeBox = false;
+			}
 		) ?? false;
 		return dialogResult;
 	}

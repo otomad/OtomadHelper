@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -19,12 +20,14 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<SystemBackdropType>("SystemBackdropType", DefaultValueExpression = "DEFAULT_SYSTEM_BACKDROP_TYPE")]
 [DependencyProperty<bool>("IsLightTheme", DefaultValue = true)]
 [DependencyProperty<Color?>("CustomAccentColor")]
-[DependencyProperty<Color>("WindowGlassColor", DefaultValueExpression = "WindowsDefaultGlassColor", IsReadOnly = true)]
-[DependencyProperty<Brush>("WindowGlassBrush", DefaultValueExpression = "WindowsDefaultGlassBrush", IsReadOnly = true)]
+[DependencyProperty<Color>("WindowGlassColor", DefaultValueExpression = nameof(WindowsDefaultGlassColor), IsReadOnly = true)]
+[DependencyProperty<Brush>("WindowGlassBrush", DefaultValueExpression = nameof(WindowsDefaultGlassBrush), IsReadOnly = true)]
 [DependencyProperty<TitleBarType>("TitleBarType", DefaultValueExpression = "TitleBarType.System")]
 [DependencyProperty<FontFamily>("MonoFont")]
 [DependencyProperty<FontFamily>("DefaultFont")]
 [DependencyProperty<bool>("IsNonClientActive")]
+[DependencyProperty<bool?>("MinimizeBox", OnChanged = nameof(UpdateMinimizeAndMaximizeButtonsVisibility))]
+[DependencyProperty<bool?>("MaximizeBox", OnChanged = nameof(UpdateMinimizeAndMaximizeButtonsVisibility))]
 [RoutedEvent("ThemeChange", RoutedEventStrategy.Bubble)]
 [RoutedEvent("AccentChange", RoutedEventStrategy.Bubble)]
 [RoutedEvent("Showing", RoutedEventStrategy.Bubble)]
@@ -182,6 +185,19 @@ public partial class BackdropWindow : Window {
 	private static readonly Brush DEFAULT_BACKGROUND = Brushes.Transparent;
 	public new Brush Background { get; set { field = value; base.Background = value; } } = DEFAULT_BACKGROUND;
 
+	public void UpdateMinimizeAndMaximizeButtonsVisibility() {
+		if (MinimizeBox is null && MaximizeBox is null) return;
+		long currentStyle = GetWindowLongPtr(Handle, WindowLongFlags.Style);
+		ToggleExtendedWindowStyle(WindowStyles.MinimizeBox, MinimizeBox);
+		ToggleExtendedWindowStyle(WindowStyles.MaximizeBox, MaximizeBox);
+		SetWindowLongPtr(Handle, WindowLongFlags.Style, currentStyle);
+
+		void ToggleExtendedWindowStyle(WindowStyles style, bool? enabled) {
+			if (enabled == true) currentStyle |= (long)style;
+			else if (enabled == false) currentStyle &= ~(long)style;
+		}
+	}
+
 	#region Set backdrop type
 	/// <inheritdoc cref="FrameworkElement.Resources" />
 	/// <remarks>
@@ -266,6 +282,7 @@ public partial class BackdropWindow : Window {
 
 	protected override void OnSourceInitialized(EventArgs e) {
 		base.OnSourceInitialized(e);
+		UpdateMinimizeAndMaximizeButtonsVisibility();
 
 		// Fix the issue of incorrect window size when use WindowChrome with SizeToContent.WidthAndHeight.
 		// See: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#720121120
@@ -376,11 +393,14 @@ public partial class BackdropWindow : Window {
 					CaptionHeight = 54, // Default: 20
 					CornerRadius = new(0),
 					GlassFrameThickness = new(-1),
-					ResizeBorderThickness = ResizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ?
-						new(0) : new(8, 0, 8, 8),
 					NonClientFrameEdges = NonClientFrameEdges.Right,
 					UseAeroCaptionButtons = true,
 				});
+				Binding resizeBorderThicknessBinding = new("ResizeMode") {
+					RelativeSource = new(RelativeSourceMode.FindAncestor, typeof(BackdropWindow), 1),
+					Converter = new WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter(),
+				};
+				this.SetBinding(WindowChrome.ResizeBorderThicknessProperty, resizeBorderThicknessBinding);
 				break;
 			case TitleBarType.WindowChromeNoTitleBar:
 				WindowChrome.SetWindowChrome(this, new() {
@@ -404,6 +424,12 @@ public partial class BackdropWindow : Window {
 		}
 
 		void RemoveWindowChrome() => WindowChrome.SetWindowChrome(this, null);
+	}
+
+	[ValueConversion(typeof(ResizeMode), typeof(Thickness))]
+	private class WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter : ValueConverter<ResizeMode, Thickness> {
+		public override Thickness Convert(ResizeMode resizeMode, Type targetType, object parameter, CultureInfo culture) =>
+			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? new(0) : new(8, 0, 8, 8);
 	}
 
 	protected override void OnKeyDown(KeyEventArgs e) {

@@ -173,13 +173,13 @@
 		<Canvas>
 			<c:Icon IconName="{Binding IconName}" Style="{StaticResource ShadingIcon}" />
 		</Canvas>
-		<StackPanel>
+		<Grid m:GridDef.Row="*,Auto">
 			<Border Style="{StaticResource ContentWrapper}">
-				<StackPanel Orientation="Vertical">
-					<TextBlock Style="{StaticResource Subtitle}" Text="{Binding Subtitle}" />
-					<TextBlock Style="{StaticResource Title}" Text="{Binding Title}" />
-					<TextBlock Style="{StaticResource Body}" Text="{Binding Body}" />
-					<Grid x:Name="BodyWrapper">
+				<Grid m:GridDef.Row="Auto,Auto,Auto,Auto,*,Auto">
+					<TextBlock Grid.Row="0" Style="{StaticResource Subtitle}" Text="{Binding Subtitle}" />
+					<TextBlock Grid.Row="1" Style="{StaticResource Title}" Text="{Binding Title}" />
+					<TextBlock Grid.Row="2" Style="{StaticResource Body}" Text="{Binding Body}" />
+					<Grid Grid.Row="3" x:Name="BodyWrapper">
 						<TextBox
 							x:Name="CopyableBody"
 							Style="{StaticResource CopyableBody}"
@@ -187,16 +187,16 @@
 							/>
 					</Grid>
 					<ContentControl
-						x:Name="ContentControl"
+						x:Name="ContentControl" Grid.Row="4"
 						Margin="{StaticResource BodyMargin}"
 						Content="{Binding Content}"
 						Focusable="False"
 						Visibility="{Binding Content, Converter={StaticResource ObjectToVis}}"
 						/>
-					<TextBlock Style="{StaticResource Footer}" Text="{Binding Footer}" />
-				</StackPanel>
+					<TextBlock Grid.Row="5" Style="{StaticResource Footer}" Text="{Binding Footer}" />
+				</Grid>
 			</Border>
-			<Border Style="{StaticResource ButtonsContainer}">
+			<Border Grid.Row="1" Style="{StaticResource ButtonsContainer}">
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition>
@@ -269,6 +269,6 @@
 					</ItemsControl>
 				</Grid>
 			</Border>
-		</StackPanel>
+		</Grid>
 	</Grid>
 </c:BackdropWindow>

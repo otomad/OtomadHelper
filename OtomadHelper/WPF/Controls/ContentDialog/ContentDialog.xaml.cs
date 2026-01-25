@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
+using ScriptPortal.Vegas;
+
 namespace OtomadHelper.WPF.Controls;
 
 /// <summary>
@@ -95,7 +97,8 @@ public partial class ContentDialog : BackdropWindow {
 		IEnumerable<ContentDialogButtonItem> buttons,
 		KnownIcon icon = KnownIcon.None,
 		bool? topmost = null,
-		string? singletonId = null
+		string? singletonId = null,
+		ShowDialogEventHandler? customize = null
 	) {
 		ValidateDialogResultType<TDialogResult>();
 		ContentDialog dialog = new();
@@ -117,10 +120,13 @@ public partial class ContentDialog : BackdropWindow {
 				singletons.Remove(singletonId!);
 			};
 		}
+		customize?.Invoke(dialog);
 		return (TDialogResult?)await dialog.ShowDialogAsync();
 	}
 
 	private static Dictionary<string, ContentDialog> singletons = [];
+
+	public delegate void ShowDialogEventHandler(ContentDialog contentDialog);
 
 	private static void ValidateDialogResultType<TDialogResult>() {
 		if (!typeof(TDialogResult).IsNullable) {

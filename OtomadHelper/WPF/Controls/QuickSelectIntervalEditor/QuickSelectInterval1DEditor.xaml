@@ -8,8 +8,6 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
-	Width="800"
-	Height="450"
 	mc:Ignorable="d"
 	>
 	<UserControl.DataContext>
