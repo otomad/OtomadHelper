@@ -54,7 +54,34 @@ public static partial class Extensions {
 		/// <exception cref="ArgumentNullException">
 		/// If either <paramref name="type"/> or <paramref name="baseType"/> is <see langword="null"/>.
 		/// </exception>
-		public bool Extends(Type baseType) => baseType.IsAssignableFrom(type);
+		public bool Extends(Type baseType) {
+			// BaseType<>, Interface<>
+			if (baseType.IsGenericTypeDefinition)
+				return baseType.IsInterface ?
+					// Type<T> implement Interface<>
+					type.GetInterfaces().Any(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == baseType) :
+					// Type<T> extends BaseType<>
+					baseType.IsAssignableFrom(type.GetGenericTypeDefinition());
+
+			// Type extends BaseType implement Interface
+			// Type<T> extends BaseType<T> implement Interface<T>
+			return baseType.IsAssignableFrom(type);
+		}
+
+		/// <summary>
+		/// Indicates whether the current <see cref="Type"/> instance represents a generic type definition.
+		/// </summary>
+		/// <value>
+		/// <see langword="true"/> if the <see cref="Type"/> is a generic type and its generic type definition
+		/// is equal to the type itself (for example, <c>typeof(List&lt;&gt;)</c>); otherwise, <see langword="false"/>.
+		/// </value>
+		/// <remarks>
+		/// A "generic type definition" refers to an open generic type that declares generic parameters
+		/// but does not specify concrete type arguments. This property returns <see langword="true"/>
+		/// for types like <c>Dictionary&lt;,&gt;</c> or <c>Nullable&lt;&gt;</c>, and <see langword="false"/>
+		/// for constructed generic types such as <c>List&lt;int&gt;</c> or non-generic types.
+		/// </remarks>
+		public bool IsGenericTypeDefinition => type.IsGenericType && type.GetGenericTypeDefinition() == type;
 
 		/// <summary>
 		/// Determines whether the given type can be assigned to <see langword="null"/>.

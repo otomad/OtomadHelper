@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 
+using BaseButton = System.Windows.Controls.Button;
+
 namespace OtomadHelper.WPF.Controls;
 
 public partial class ContentDialogViewModel : ObservableObject<ContentDialog> {
@@ -28,9 +30,14 @@ public partial class ContentDialogViewModel : ObservableObject<ContentDialog> {
 	private object? dialogResult = null;
 
 	[RelayCommand]
-	public void ClickButton(object dialogResult) {
+	public void ClickButtonToClose(object dialogResult) {
 		DialogResult = dialogResult;
 		View?.Close();
+	}
+
+	[RelayCommand]
+	public void CustomClickButton(CompositeCommandParameter param) {
+		s = param;
 	}
 
 	private bool expandable = false;

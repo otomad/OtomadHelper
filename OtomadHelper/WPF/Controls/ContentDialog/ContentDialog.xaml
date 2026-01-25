@@ -5,16 +5,17 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	Width="800"
 	ResizeMode="NoResize"
 	ShowInTaskbar="True"
+	Showing="View_Showing"
 	SizeToContent="Height"
 	TitleBarType="WindowChrome"
-	WindowStartupLocation="CenterScreen"
 	Topmost="True"
-	Showing="View_Showing"
+	WindowStartupLocation="CenterScreen"
 	mc:Ignorable="d"
 	>
 	<c:BackdropWindow.DataContext>
@@ -33,6 +34,7 @@
 			<m:BooleanInversionConverter x:Key="BoolInversion" />
 			<m:BooleanAndConverter x:Key="BoolAnd" />
 			<m:ObjectToVisibilityConverter x:Key="ObjectToVis" />
+			<m:NullableObjectToBooleanConverter x:Key="NullToBool" />
 
 			<Thickness x:Key="BodyMargin">0,12,0,0</Thickness>
 
@@ -235,19 +237,33 @@
 						>
 						<ItemsControl.ItemsPanel>
 							<ItemsPanelTemplate>
-								<UniformGrid Columns="{Binding Buttons.Count, FallbackValue=2}" m:Spacing.Horizontal="8" />
+								<UniformGrid m:Spacing.Horizontal="8" Columns="{Binding Buttons.Count, FallbackValue=2}" />
 							</ItemsPanelTemplate>
 						</ItemsControl.ItemsPanel>
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
 								<c:Button
 									x:Name="Button"
-									Command="{Binding ClickButtonCommand, ElementName=ViewModel}"
-									CommandParameter="{Binding DialogResult}"
 									Content="{Binding Text}"
 									DialogResult="{Binding DialogResult}"
 									IsDefault="{Binding IsDefault}"
-									/>
+									>
+									<c:Button.Style>
+										<Style BasedOn="{StaticResource {x:Type c:Button}}" TargetType="c:Button">
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding Click, Converter={StaticResource NullToBool}}" Value="False">
+													<Setter Property="Command" Value="{Binding ClickButtonToCloseCommand, ElementName=ViewModel}" />
+													<Setter Property="CommandParameter" Value="{Binding DialogResult}" />
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</c:Button.Style>
+									<i:Interaction.Triggers>
+										<i:EventTrigger EventName="Click">
+											<m:CompositeInvokeCommandAction Command="{Binding CustomClickButtonCommand, ElementName=ViewModel}" CommandParameter="{Binding Click}" />
+										</i:EventTrigger>
+									</i:Interaction.Triggers>
+								</c:Button>
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
 					</ItemsControl>

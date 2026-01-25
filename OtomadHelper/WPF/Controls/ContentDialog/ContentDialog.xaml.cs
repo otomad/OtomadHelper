@@ -69,6 +69,10 @@ public partial class ContentDialog : BackdropWindow {
 		viewModel.IconName = "Error";
 		viewModel.Buttons.AddRange([
 			// new("Report", "report"), // I'm worried that users encounter any bug, they immediately click to report it directly.
+			new("Copy _message", "copy", click: (sender, e) => {
+				var button = (ContentDialogButtonItem)sender;
+				button.Text = "Copied!";
+			}),
 			new(t.ContentDialog.Button.Close, "close"),
 		]);
 		viewModel.Expandable = true;
@@ -119,6 +123,18 @@ public partial class ContentDialog : BackdropWindow {
 
 	public static void ShowError(Exception exception) =>
 		ShowError(exception.Message, exception.StackTrace);
+
+	private void CopyErrorMessage(string message, string stackTrace) {
+		StringBuilder text = new();
+		text.AppendLine(message);
+		text.AppendLine(stackTrace);
+		if (!string.IsNullOrEmpty(errorFooter)) {
+			text.AppendLine('-'.Repeat(50));
+			text.AppendLine(errorFooter);
+		}
+		message.TrimEnd();
+		Clipboard.SetText(message);
+	}
 
 	internal void SetNonDefaultButtonAccent(Color color) {
 		for (int i = 0; i < ButtonsContainer.Items.Count; i++) {

@@ -306,3 +306,8 @@ public class CollectionHasItemsConverter : ValueConverter<IEnumerable, bool> {
 	public override bool Convert(IEnumerable collection, Type targetType, object parameter, CultureInfo culture) =>
 		collection.Count() != 0;
 }
+
+[ValueConversion(typeof(object), typeof(bool))]
+public class NullableObjectToBooleanConverter : ValueConverter<object, bool> {
+	public override bool Convert(object? value, Type targetType, object parameter, CultureInfo culture) => value is not null;
+}

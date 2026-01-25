@@ -25,6 +25,10 @@ public static partial class Extensions {
 		/// <summary>
 		/// Repeat the <paramref name="input" /> string <paramref name="count" /> times.
 		/// </summary>
+		/// <remarks>
+		/// If you are trying to just repeat a character, please consider to use <c>char.Repeat(count)</c> instead of
+		/// <c>string.Repeat(count)</c> for better performance.
+		/// </remarks>
 		/// <param name="input">The string to repeat.</param>
 		/// <param name="count">Repeat count.</param>
 		/// <returns>The repeated new string.</returns>
