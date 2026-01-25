@@ -176,10 +176,22 @@
 		<Grid m:GridDef.Row="*,Auto">
 			<Border Style="{StaticResource ContentWrapper}">
 				<Grid m:GridDef.Row="Auto,Auto,Auto,Auto,*,Auto">
-					<TextBlock Grid.Row="0" Style="{StaticResource Subtitle}" Text="{Binding Subtitle}" />
-					<TextBlock Grid.Row="1" Style="{StaticResource Title}" Text="{Binding Title}" />
-					<TextBlock Grid.Row="2" Style="{StaticResource Body}" Text="{Binding Body}" />
-					<Grid Grid.Row="3" x:Name="BodyWrapper">
+					<TextBlock
+						Grid.Row="0"
+						Style="{StaticResource Subtitle}"
+						Text="{Binding Subtitle}"
+						/>
+					<TextBlock
+						Grid.Row="1"
+						Style="{StaticResource Title}"
+						Text="{Binding Title}"
+						/>
+					<TextBlock
+						Grid.Row="2"
+						Style="{StaticResource Body}"
+						Text="{Binding Body}"
+						/>
+					<Grid x:Name="BodyWrapper" Grid.Row="3">
 						<TextBox
 							x:Name="CopyableBody"
 							Style="{StaticResource CopyableBody}"
@@ -187,13 +199,18 @@
 							/>
 					</Grid>
 					<ContentControl
-						x:Name="ContentControl" Grid.Row="4"
+						x:Name="ContentControl"
+						Grid.Row="4"
 						Margin="{StaticResource BodyMargin}"
 						Content="{Binding Content}"
 						Focusable="False"
 						Visibility="{Binding Content, Converter={StaticResource ObjectToVis}}"
 						/>
-					<TextBlock Grid.Row="5" Style="{StaticResource Footer}" Text="{Binding Footer}" />
+					<TextBlock
+						Grid.Row="5"
+						Style="{StaticResource Footer}"
+						Text="{Binding Footer}"
+						/>
 				</Grid>
 			</Border>
 			<Border Grid.Row="1" Style="{StaticResource ButtonsContainer}">

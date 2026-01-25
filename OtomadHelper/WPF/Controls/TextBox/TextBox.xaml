@@ -99,7 +99,16 @@
 							<i:Interaction.Behaviors>
 								<c:TextBoxSelectionBehavior />
 							</i:Interaction.Behaviors>
-							<ScrollViewer x:Name="PART_ContentHost" Margin="0" Padding="-2,0" />
+							<Grid m:GridDef.Column="*,Auto,Auto">
+								<ScrollViewer
+									x:Name="PART_ContentHost"
+									Grid.Column="0"
+									Margin="0"
+									Padding="-2,0"
+									/>
+								<RepeatButton Grid.Column="1">上</RepeatButton>
+								<RepeatButton Grid.Column="2">下</RepeatButton>
+							</Grid>
 						</Border>
 						<Border Style="{StaticResource TextBoxStripe}" />
 						<Border Style="{StaticResource TextBoxFocusStripe}" />

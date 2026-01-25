@@ -115,6 +115,7 @@ public static partial class Extensions {
 		/// <exception cref="Exception">The input <paramref name="hex" /> is invalid or cannot be recognized by C#.</exception>
 		public static DrawingColor FromHex(string hex) {
 			if (hex.StartsWith("#")) {
+				// Transform from #RRGGBBAA to #AARRGGBB.
 				if (hex.Length == 9) hex = "#" + hex.Substring(7, 2) + hex.Substring(1, 6);
 				else if (hex.Length == 5) hex = "#" + hex[4].Repeat(2) + hex[1].Repeat(2) + hex[2].Repeat(2) + hex[3].Repeat(2);
 			}
@@ -136,7 +137,7 @@ public static partial class Extensions {
 // C# 14 static methods in extension member with same name will conflict with the static methods in the same class.
 // So I have to declare them in a separate partial class to avoid the conflict.
 // see: https://github.com/dotnet/csharplang/discussions/9537
-public static partial class Extensions_Conflict_1 {
+public static partial class Extensions_Conflict_2 {
 	extension(MediaColor color) {
 		/// <summary>
 		/// Convert a HEX color value (#RRGGBB[AA]) or HTML entity color to a <see cref="MediaColor" />.
