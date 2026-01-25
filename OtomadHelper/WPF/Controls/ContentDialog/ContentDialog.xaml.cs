@@ -67,17 +67,25 @@ public partial class ContentDialog : BackdropWindow {
 		viewModel.Subtitle = t.ContentDialog.ShowError.Title;
 		viewModel.Body = stackTrace;
 		viewModel.IconName = "Error";
-		viewModel.Buttons.AddRange([
-			// new("Report", "report"), // I'm worried that users encounter any bug, they immediately click to report it directly.
-			new("Copy _message", "copy", click: (sender, e) => {
-				var button = (ContentDialogButtonItem)sender;
-				button.Text = "Copied!";
-			}),
-			new(t.ContentDialog.Button.Close, "close"),
-		]);
 		viewModel.Expandable = true;
 		viewModel.CanCopyBody = true;
 		viewModel.Footer = errorFooter;
+		Services.ITimer.WPF? timer = null;
+		viewModel.Buttons.AddRange([
+			// new("Report", "report"), // I'm worried that users encounter any bug, they immediately click to report it directly.
+			new("Copy _message", "copy", click: (sender, e) => { // TODO: i18n
+				if (sender is not Button button) return;
+				dialog.CopyErrorMessage(message, stackTrace);
+				button.Content = "Copied!"; // TODO: i18n
+				if (timer is not null) timer.Stop();
+				timer = new(() => {
+					timer = null;
+					button.Content = "Copy _message"; // TODO: i18n
+				}, 1000);
+				timer.SingleShot();
+			}),
+			new(t.ContentDialog.Button.Close, "close"),
+		]);
 		dialog.ShowDialogAsync();
 	}
 
@@ -126,14 +134,14 @@ public partial class ContentDialog : BackdropWindow {
 
 	private void CopyErrorMessage(string message, string stackTrace) {
 		StringBuilder text = new();
+		text.Append("Error: "); // TODO: i18n
 		text.AppendLine(message);
 		text.AppendLine(stackTrace);
 		if (!string.IsNullOrEmpty(errorFooter)) {
 			text.AppendLine('-'.Repeat(50));
 			text.AppendLine(errorFooter);
 		}
-		message.TrimEnd();
-		Clipboard.SetText(message);
+		Clipboard.SetText(text.ToString().TrimEnd());
 	}
 
 	internal void SetNonDefaultButtonAccent(Color color) {

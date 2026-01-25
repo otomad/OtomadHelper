@@ -1634,6 +1634,8 @@ export default {
 				close: "&Close", // Add “&” before a letter to indicate the access key.
 				learnMore: "&Learn more", // Add “&” before a letter to indicate the access key.
 				locate: "Loca&te", // Add “&” before a letter to indicate the access key.
+				copyMessage: "Copy &message", // Add “&” before a letter to indicate the access key.
+				copied: "Copied!",
 			},
 			expander: {
 				expandDetails: "Expand details",
@@ -1641,6 +1643,7 @@ export default {
 			},
 			showError: {
 				title: "Error",
+				withColon: "Error: ", // Note that if a space needs to be added after the colon, it should be included.
 			},
 		},
 		wrongOpeningMethod: {

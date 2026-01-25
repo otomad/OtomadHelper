@@ -36,8 +36,9 @@ public partial class ContentDialogViewModel : ObservableObject<ContentDialog> {
 	}
 
 	[RelayCommand]
-	public void CustomClickButton(CompositeCommandParameter param) {
-		s = param;
+	public void CustomClickButton(CompositeCommandParameter<RoutedEventHandler?, RoutedEventArgs?> param) {
+		(RoutedEventHandler? click, RoutedEventArgs? e) = param;
+		click?.Invoke(e?.OriginalSource, e);
 	}
 
 	private bool expandable = false;

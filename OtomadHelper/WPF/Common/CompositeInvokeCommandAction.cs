@@ -64,7 +64,7 @@ public sealed partial class CompositeInvokeCommandAction : TriggerAction<Depende
 				if (eventArgs is null && PassEventArgsToCommand)
 					eventArgs = parameter;
 
-				CompositeCommandParameter compositeCommandParameter = new(CommandParameter, eventArgs);
+				object compositeCommandParameter = CreateCompositeCommandParameter(command, CommandParameter, eventArgs);
 				if (command.CanExecute(compositeCommandParameter))
 					command.Execute(compositeCommandParameter);
 			}
@@ -102,15 +102,24 @@ public sealed partial class CompositeInvokeCommandAction : TriggerAction<Depende
 		return command;
 	}
 
-	//private CompositeCommandParameter CreateCompositeCommandParameter(ICommand command) {
-	//	if (command is CommunityToolkit.Mvvm.Input.RelayCommand<int>) { }
-	//}
+	private object CreateCompositeCommandParameter(ICommand command, object? parameter, object? eventArgs) {
+		Type commandType = command.GetType();
+		if (commandType.IsGenericTypeDefinition) goto NotSupportedParameterType;
+		if (commandType.IsGenericType && !commandType.IsGenericTypeDefinition && commandType.Extends(typeof(CommunityToolkit.Mvvm.Input.IRelayCommand<>))) {
+			Type commandParameterType = commandType.GetGenericArguments()[0];
+			if (!commandParameterType.Extends(typeof(CompositeCommandParameter<,>))) goto NotSupportedParameterType;
+			return Activator.CreateInstance(commandParameterType, parameter, eventArgs);
+		} else
+			return new CompositeCommandParameter<object?, object?>(parameter, eventArgs);
+	NotSupportedParameterType:
+		throw new ArgumentException("The provided command parameter type is not suppported");
+	}
 }
 
-public class CompositeCommandParameter(object? parameter, object? eventArgs) {
-	public dynamic Parameter { get; } = parameter!;
-	public dynamic EventArgs { get; } = eventArgs!;
-	public void Deconstruct(out object parameter, out object eventArgs) {
+public struct CompositeCommandParameter<TParameter, TEventArgs>(TParameter parameter, TEventArgs eventArgs) {
+	public TParameter Parameter { get; } = parameter;
+	public TEventArgs EventArgs { get; } = eventArgs;
+	public void Deconstruct(out TParameter parameter, out TEventArgs eventArgs) {
 		parameter = Parameter;
 		eventArgs = EventArgs;
 	}
