@@ -69,7 +69,7 @@ export function useOnFormKeyDown(element: RefObject<HTMLElement | null>, { handl
 	disableUpDown?: boolean;
 	disabled?: boolean;
 } = {}) {
-	const CUSTOM_CHANGE_EVENT = "customchange";
+	const CUSTOM_CHANGE_EVENT = "customChange";
 
 	useEventListener(element, "keydown", e => {
 		if (disabled) return;
@@ -97,7 +97,7 @@ export function useOnFormKeyDown(element: RefObject<HTMLElement | null>, { handl
 				getLayoutNeighbor(immediate, ({ ArrowLeft: "left", ArrowRight: "right", ArrowUp: "top", ArrowDown: "bottom" } as const)[code], items);
 			const focusEl = itemEl?.querySelectorWithSelf(focusSelector) as HTMLElement;
 			focusEl?.focus?.();
-			if (changeWhenMoveFocus) itemEl?.dispatchEvent(new CustomEvent(CUSTOM_CHANGE_EVENT));
+			if (changeWhenMoveFocus) itemEl?.dispatchEvent(createCustomEvent(CUSTOM_CHANGE_EVENT));
 		}
 	}, undefined, null);
 

@@ -148,11 +148,4 @@ declare global {
 
 	/** All available Kichiku (鬼畜) subpartitions. Can be otoMAD (音MAD), VOCALOID (人力), YTP. */
 	type KichikuMode = "otomad" | "vocaloid" | "ytp";
-
-	// Add custom events
-	interface GlobalEventHandlersEventMap {
-		transitionExitCapture: CustomEvent<{
-			target: HTMLElement;
-		}>;
-	}
 }

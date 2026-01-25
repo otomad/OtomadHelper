@@ -109,7 +109,7 @@ import { config as transitionGroupConfig } from "react-transition-group-fc";
 	// #endregion
 
 	// #region Dispatch global transition exit event
-	transitionGroupConfig.onExit = node => window.dispatchEvent(createCustomEvent("transitionExitCapture", { detail: { target: node } }));
+	transitionGroupConfig.onExit = node => TunnelingEvent.dispatch(node, "transitionExitCapture");
 	// #endregion
 
 	// #region Init enum plus localization method

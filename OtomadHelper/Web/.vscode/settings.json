@@ -30,4 +30,8 @@
 	"todo-tree.tree.showBadges": true,
 	"todo-tree.tree.disableCompactFolders": true,
 	"material-icon-theme.activeIconPack": "react_redux",
+	"stylelint.packageManager": "pnpm",
+	"stylelint.reportNeedlessDisables": true,
+	"stylelint.reportInvalidScopeDisables": true,
+	"stylelint.reportDescriptionlessDisables": true,
 }

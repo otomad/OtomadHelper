@@ -119,11 +119,9 @@ export async function makeFocusHighlightEffect(element: TargetType, options?: Ov
 	});
 	ring.classList.add(FOCUS_HIGHLIGHT_RING_CLASS);
 	const transitionExitAborter = new AbortController();
-	window.addEventListener("transitionExitCapture", e => {
-		if (e.detail.target.contains(el)) {
-			transitionExitAborter.abort();
-			cleanupFocusHighlightEffect();
-		}
+	TunnelingEvent.listen(el, "transitionExitCapture", () => {
+		transitionExitAborter.abort();
+		cleanupFocusHighlightEffect();
 	}, { signal: transitionExitAborter.signal });
 	const duration = 2000;
 	try {

@@ -317,7 +317,7 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 	enter.specified = exit.specified = specified;
 
 	// Here we use a custom event to prevent the native CSS transition animation from interfering with the operation when it ends.
-	const ANIMATE_SIZE_END_EVENT = "animatesizeend";
+	const ANIMATE_SIZE_END_EVENT = "animateSizeEnd";
 	const currentAnimationThread = useRef<symbol>(undefined);
 
 	const onEnter = async (el: HTMLElement) => {
@@ -327,7 +327,7 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 		currentAnimationThread.current = thisThread;
 		await animateSize(el, null, enter);
 		if (currentAnimationThread.current === thisThread)
-			el.dispatchEvent(new CustomEvent(ANIMATE_SIZE_END_EVENT));
+			el.dispatchEvent(createCustomEvent(ANIMATE_SIZE_END_EVENT));
 	};
 
 	const onExit = async (el: HTMLElement) => {
@@ -337,7 +337,7 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 		currentAnimationThread.current = thisThread;
 		await animateSize(el, null, exit);
 		if (currentAnimationThread.current === thisThread)
-			el.dispatchEvent(new CustomEvent(ANIMATE_SIZE_END_EVENT));
+			el.dispatchEvent(createCustomEvent(ANIMATE_SIZE_END_EVENT));
 		// el.hidden = true;
 	};
 
