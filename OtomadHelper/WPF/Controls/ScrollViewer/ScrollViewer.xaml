@@ -5,58 +5,19 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
+	<!-- Remove ScrollView bottom right corner square. -->
+	<SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+
 	<Style x:Key="DefaultScrollViewerStyle" TargetType="ScrollViewer">
-		<Setter Property="Template">
+		<Setter Property="m:InteractivityItems.Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="ScrollViewer">
-					<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-						<Grid
-							m:GridDef.Column="*,Auto"
-							m:GridDef.Row="*,Auto"
-							Background="{TemplateBinding Background}"
-							>
-							<ScrollContentPresenter
-								x:Name="ScrollContentPresenter"
-								Margin="{TemplateBinding Padding}"
-								ContentTemplate="{TemplateBinding ContentTemplate}"
-								Cursor="{TemplateBinding Cursor}"
-								/>
-							<Rectangle
-								Grid.Row="1"
-								Grid.Column="1"
-								Fill="Transparent"
-								/>
-							<ScrollBar
-								x:Name="VerticalScrollBar"
-								Grid.Row="0"
-								Grid.Column="1"
-								Width="18"
-								Margin="0,-1,-1,-1"
-								IsTabStop="False"
-								Maximum="{TemplateBinding ScrollableHeight}"
-								Minimum="0"
-								Orientation="Vertical"
-								ViewportSize="{TemplateBinding ViewportHeight}"
-								Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
-								Value="{TemplateBinding VerticalOffset}"
-								/>
-							<ScrollBar
-								x:Name="HorizontalScrollBar"
-								Grid.Row="1"
-								Grid.Column="0"
-								Height="18"
-								Margin="-1,0,-1,-1"
-								IsTabStop="False"
-								Maximum="{TemplateBinding ScrollableWidth}"
-								Minimum="0"
-								Orientation="Horizontal"
-								ViewportSize="{TemplateBinding ViewportWidth}"
-								Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
-								Value="{TemplateBinding HorizontalOffset}"
-								/>
-						</Grid>
-					</Border>
-				</ControlTemplate>
+				<m:InteractivityTemplate>
+					<m:InteractivityItems>
+						<m:InteractivityItems.Behaviors>
+							<c:ShiftWheelScrollsHorizontally />
+						</m:InteractivityItems.Behaviors>
+					</m:InteractivityItems>
+				</m:InteractivityTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>

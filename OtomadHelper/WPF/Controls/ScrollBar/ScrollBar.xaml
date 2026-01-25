@@ -89,6 +89,9 @@
 					<m:ReversedStoryboard />
 				</m:ReversedStoryboard.AutoReverseTriggerActions>
 			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="{DynamicResource ControlStrongDisabled}" />
+			</Trigger>
 		</Style.Triggers>
 	</Style>
 
