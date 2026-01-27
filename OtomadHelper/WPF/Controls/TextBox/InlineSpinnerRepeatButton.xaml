@@ -6,6 +6,8 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
+	<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
+
 	<Style x:Key="InlineSpinnerRepeatButtonIcon" TargetType="c:Icon">
 		<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RepeatButton}}" />
 		<Setter Property="Size" Value="16" />
@@ -24,6 +26,7 @@
 		<Setter Property="Width" Value="32" />
 		<Setter Property="Focusable" Value="False" />
 		<Setter Property="Padding" Value="2" />
+		<Setter Property="Visibility" Value="{Binding (c:NumericUpDown.ShowSpinner), RelativeSource={RelativeSource AncestorType=TextBox}, Converter={StaticResource BoolToVis}}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="RepeatButton">

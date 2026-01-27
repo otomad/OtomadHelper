@@ -15,7 +15,6 @@
 	<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
 	<c:TextBoxStripeSizeToRectConverter x:Key="StripeSizeToRect" />
 	<m:BackgroundToForegroundColorConverter x:Key="BgToFg" />
-	<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
 
 	<Style x:Key="TextBoxStripe" TargetType="Border">
 		<Setter Property="Height" Value="{StaticResource CornerRadiusLength}" />
@@ -137,11 +136,6 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<Style.Resources>
-			<Style BasedOn="{StaticResource InlineSpinnerRepeatButton}" TargetType="RepeatButton">
-				<Setter Property="Visibility" Value="{Binding (c:NumericUpDown.ShowSpinner), RelativeSource={RelativeSource AncestorType=TextBox}, Converter={StaticResource BoolToVis}}" />
-			</Style>
-		</Style.Resources>
 		<Style.Triggers>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Background" Value="{DynamicResource ControlSecondary}" />
