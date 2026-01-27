@@ -133,7 +133,7 @@
 			</Style>
 			<Style x:Key="ButtonsContainer" TargetType="Border">
 				<Setter Property="Padding" Value="24,20" />
-				<Setter Property="BorderBrush" Value="{DynamicResource CardStroke}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource CardStrokeOnSurfaceOverlay}" />
 				<Setter Property="BorderThickness" Value="0,1,0,0" />
 				<Setter Property="Background" Value="{DynamicResource SurfaceOverlayBackground}" />
 				<Style.Triggers>

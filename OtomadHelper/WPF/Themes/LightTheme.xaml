@@ -10,6 +10,7 @@
 	<SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}" />
 	<SolidColorBrush x:Key="BackgroundBrush" Color="#FFF3F3F3" />
 	<SolidColorBrush x:Key="CardStroke" Color="#0E000000" />
+	<SolidColorBrush x:Key="CardStrokeOnSurfaceOverlay" Color="#18000000" />
 	<SolidColorBrush x:Key="SurfaceOverlayBackground" Color="#0B000000" />
 	<SolidColorBrush x:Key="ControlBackground" Color="#B2FFFFFF" />
 	<SolidColorBrush x:Key="ControlBackgroundSecondary" Color="#7FF9F9F9" />
