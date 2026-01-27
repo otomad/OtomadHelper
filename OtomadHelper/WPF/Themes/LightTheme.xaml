@@ -56,4 +56,5 @@
 	<SolidColorBrush x:Key="ControlStrongStrokeDisabled" Color="#37000000" />
 	<SolidColorBrush x:Key="AccentDisabled" Color="#37000000" />
 	<SolidColorBrush x:Key="CheckerBoardAlt" Color="#FFD9D9D9" />
+	<SolidColorBrush x:Key="SystemCritical" Color="#FFC42B1C" />
 </m:NamedResourceDictionary>

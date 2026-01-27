@@ -135,6 +135,7 @@
 			Grid.Row="2"
 			Grid.Column="2"
 			Text="{Binding Interval}"
+			m:NumberTextBoxBehavior.Range="1,100"
 			/>
 
 		<TextBlock Grid.Row="4" Grid.Column="0">名称</TextBlock>

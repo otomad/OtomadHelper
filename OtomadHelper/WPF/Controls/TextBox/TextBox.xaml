@@ -79,15 +79,12 @@
 		<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
 		<Setter Property="Width" Value="32" />
 		<Setter Property="Focusable" Value="False" />
+		<Setter Property="Padding" Value="2" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="RepeatButton">
-					<Border Padding="2" Background="{DynamicResource PretendTransparent}">
-						<Border
-							Padding="{TemplateBinding Padding}"
-							Background="{TemplateBinding Background}"
-							CornerRadius="4"
-							>
+					<Border Padding="{TemplateBinding Padding}" Background="{DynamicResource PretendTransparent}">
+						<Border Background="{TemplateBinding Background}" CornerRadius="4">
 							<ContentPresenter />
 						</Border>
 					</Border>
@@ -101,6 +98,9 @@
 			<Trigger Property="IsPressed" Value="True">
 				<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
 				<Setter Property="Foreground" Value="{DynamicResource TextTertiary}" />
+			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
 			</Trigger>
 		</Style.Triggers>
 		<Style.Resources>
@@ -125,6 +125,7 @@
 		<!--<Setter Property="SelectionTextBrush" Value="{DynamicResource TextOnAccentForegroundBrush}" />-->
 		<Setter Property="SelectionTextBrush" Value="{Binding SelectionBrush, RelativeSource={RelativeSource Self}, Converter={StaticResource BgToFg}}" />
 		<Setter Property="ContextMenu" Value="{StaticResource TextBoxContextMenu}" />
+		<Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="TextBoxBase">
@@ -146,16 +147,27 @@
 									Margin="8,6,8,7"
 									Padding="0"
 									/>
-								<RepeatButton Grid.Column="1" Command="m:Commands.Increase">
+								<RepeatButton Grid.Column="1" Command="m:Commands.Increase" Padding="2,2,1,2">
 									<c:Icon IconName="ChevronUp" />
 								</RepeatButton>
-								<RepeatButton Grid.Column="2" Command="m:Commands.Decrease">
+								<RepeatButton Grid.Column="2" Command="m:Commands.Decrease" Padding="1,2,2,2">
 									<c:Icon IconName="ChevronDown" />
 								</RepeatButton>
 							</Grid>
 						</Border>
 						<Border Style="{StaticResource TextBoxStripe}" />
-						<Border Style="{StaticResource TextBoxFocusStripe}" />
+						<Border>
+							<Border.Style>
+								<Style BasedOn="{StaticResource TextBoxFocusStripe}" TargetType="Border">
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding Path=(Validation.HasError), RelativeSource={RelativeSource AncestorType=TextBox}}" Value="True">
+											<Setter Property="Background" Value="{DynamicResource SystemCritical}" />
+											<Setter Property="RenderTransform" Value="{x:Static Transform.Identity}" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</Border.Style>
+						</Border>
 					</Grid>
 				</ControlTemplate>
 			</Setter.Value>

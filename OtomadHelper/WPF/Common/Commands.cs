@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using OtomadHelper.WPF.Controls;
+
 namespace OtomadHelper.WPF.Common;
 
 public static class Commands {
@@ -36,12 +38,12 @@ public static class Commands {
 			return () => textBox.Clear();
 		}),
 		Create(Increase, static (RoutedEventArgs e, ref bool canExecute) => {
-			if (e.OriginalSource is not TextBox textBox) return null;
+			if (NumericUpDown.GetTextBoxFromSpinnerRepeatButton(e.OriginalSource) is not TextBox textBox) return null;
 			canExecute = NumberTextBoxBehavior.GetNumberInputMode(textBox) != NumberTextBoxInputMode.Text;
 			return () => NumberTextBoxUpDownKeyBehavior.Spin(textBox, 1);
 		}),
 		Create(Decrease, static (RoutedEventArgs e, ref bool canExecute) => {
-			if (e.OriginalSource is not TextBox textBox) return null;
+			if (NumericUpDown.GetTextBoxFromSpinnerRepeatButton(e.OriginalSource) is not TextBox textBox) return null;
 			canExecute = NumberTextBoxBehavior.GetNumberInputMode(textBox) != NumberTextBoxInputMode.Text;
 			return () => NumberTextBoxUpDownKeyBehavior.Spin(textBox, -1);
 		}),
