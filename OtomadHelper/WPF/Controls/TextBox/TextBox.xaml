@@ -6,6 +6,10 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
+	<m:CustomControlResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="./InlineSpinnerRepeatButton.xaml" />
+	</m:CustomControlResourceDictionary.MergedDictionaries>
+
 	<s:Double x:Key="CornerRadiusLength">4</s:Double>
 
 	<m:DoubleToCornerRadiusConverter x:Key="DoubleToRadius" />
@@ -72,45 +76,6 @@
 		</Style.Triggers>
 	</Style>
 
-	<Style x:Key="InlineSpinnerRepeatButton" TargetType="RepeatButton">
-		<Setter Property="SnapsToDevicePixels" Value="False" />
-		<Setter Property="OverridesDefaultStyle" Value="True" />
-		<Setter Property="Background" Value="{DynamicResource PretendTransparent}" />
-		<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
-		<Setter Property="Width" Value="32" />
-		<Setter Property="Focusable" Value="False" />
-		<Setter Property="Padding" Value="2" />
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="RepeatButton">
-					<Border Padding="{TemplateBinding Padding}" Background="{DynamicResource PretendTransparent}">
-						<Border Background="{TemplateBinding Background}" CornerRadius="4">
-							<ContentPresenter />
-						</Border>
-					</Border>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-		<Style.Triggers>
-			<Trigger Property="IsMouseOver" Value="True">
-				<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
-			</Trigger>
-			<Trigger Property="IsPressed" Value="True">
-				<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
-				<Setter Property="Foreground" Value="{DynamicResource TextTertiary}" />
-			</Trigger>
-			<Trigger Property="IsEnabled" Value="False">
-				<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
-			</Trigger>
-		</Style.Triggers>
-		<Style.Resources>
-			<Style TargetType="c:Icon">
-				<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RepeatButton}}" />
-				<Setter Property="Size" Value="12" />
-			</Style>
-		</Style.Resources>
-	</Style>
-
 	<Style x:Key="DefaultTextBoxStyle" TargetType="TextBox">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="OverridesDefaultStyle" Value="True" />
@@ -147,11 +112,11 @@
 									Margin="8,6,8,7"
 									Padding="0"
 									/>
-								<RepeatButton Grid.Column="1" Command="m:Commands.Increase" Padding="2,2,1,2">
-									<c:Icon IconName="ChevronUp" />
+								<RepeatButton Grid.Column="1" Command="m:Commands.Increase" Style="{StaticResource InlineIncreaseSpinnerRepeatButton}">
+									<c:Icon IconName="ChevronUp12" />
 								</RepeatButton>
-								<RepeatButton Grid.Column="2" Command="m:Commands.Decrease" Padding="1,2,2,2">
-									<c:Icon IconName="ChevronDown" />
+								<RepeatButton Grid.Column="2" Command="m:Commands.Decrease" Style="{StaticResource InlineDecreaseSpinnerRepeatButton}">
+									<c:Icon IconName="ChevronDown12" />
 								</RepeatButton>
 							</Grid>
 						</Border>
@@ -160,7 +125,7 @@
 							<Border.Style>
 								<Style BasedOn="{StaticResource TextBoxFocusStripe}" TargetType="Border">
 									<Style.Triggers>
-										<DataTrigger Binding="{Binding Path=(Validation.HasError), RelativeSource={RelativeSource AncestorType=TextBox}}" Value="True">
+										<DataTrigger Binding="{Binding (Validation.HasError), RelativeSource={RelativeSource AncestorType=TextBox}}" Value="True">
 											<Setter Property="Background" Value="{DynamicResource SystemCritical}" />
 											<Setter Property="RenderTransform" Value="{x:Static Transform.Identity}" />
 										</DataTrigger>
@@ -174,7 +139,7 @@
 		</Setter>
 		<Style.Resources>
 			<Style BasedOn="{StaticResource InlineSpinnerRepeatButton}" TargetType="RepeatButton">
-				<Setter Property="Visibility" Value="{Binding Path=(c:NumericUpDown.ShowSpinner), RelativeSource={RelativeSource AncestorType=TextBox}, Converter={StaticResource BoolToVis}}" />
+				<Setter Property="Visibility" Value="{Binding (c:NumericUpDown.ShowSpinner), RelativeSource={RelativeSource AncestorType=TextBox}, Converter={StaticResource BoolToVis}}" />
 			</Style>
 		</Style.Resources>
 		<Style.Triggers>

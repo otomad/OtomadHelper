@@ -20,7 +20,7 @@
 	</ContextMenu>
 
 	<Style x:Key="ScrollBarContextMenuItemCommandTarget" TargetType="MenuItem">
-		<Setter Property="CommandTarget" Value="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+		<Setter Property="CommandTarget" Value="{Binding PlacementTarget, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
 	</Style>
 
 	<ContextMenu x:Key="VerticalScrollBarContextMenu" x:Shared="true" c:ContextMenuAcrylicBehavior.AutoIcon="False">

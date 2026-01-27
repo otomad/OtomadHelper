@@ -40,12 +40,18 @@ public static class Commands {
 		Create(Increase, static (RoutedEventArgs e, ref bool canExecute) => {
 			if (NumericUpDown.GetTextBoxFromSpinnerRepeatButton(e.OriginalSource) is not TextBox textBox) return null;
 			canExecute = NumberTextBoxBehavior.GetNumberInputMode(textBox) != NumberTextBoxInputMode.Text;
-			return () => NumberTextBoxUpDownKeyBehavior.Spin(textBox, 1);
+			return () => {
+				textBox.Focus();
+				NumberTextBoxUpDownKeyBehavior.Spin(textBox, 1);
+			};
 		}),
 		Create(Decrease, static (RoutedEventArgs e, ref bool canExecute) => {
 			if (NumericUpDown.GetTextBoxFromSpinnerRepeatButton(e.OriginalSource) is not TextBox textBox) return null;
 			canExecute = NumberTextBoxBehavior.GetNumberInputMode(textBox) != NumberTextBoxInputMode.Text;
-			return () => NumberTextBoxUpDownKeyBehavior.Spin(textBox, -1);
+			return () => {
+				textBox.Focus();
+				NumberTextBoxUpDownKeyBehavior.Spin(textBox, -1);
+			};
 		}),
 	];
 
