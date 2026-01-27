@@ -700,73 +700,49 @@ public static class PInvoke {
 		return GetWindowText(handle, Buff, nChars) > 0 ? Buff.ToString() : null;
 	}
 
+	[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+	private static extern bool SystemParametersInfo(
+		uint uiAction,
+		uint uiParam,
+		out uint pvParam,
+		uint fWinIni
+	);
+
+	public enum MouseWheelScrollDirection {
+		Vertical,
+		Horizontal,
+	}
+
+	/// <summary>
+	/// <para>Gets the number of characters a window scrolls horizontally when the mouse wheel is tilted.</para>
+	/// <para>Or gets the number of lines a window scrolls vertically when the mouse wheel is rotated.</para>
+	/// </summary>
 	/// <remarks>
 	/// For vertical scroll we can also use <see cref="System.Windows.Forms.SystemInformation.MouseWheelScrollLines" />,
-	/// However for horizontal scroll it cannot help.
+	/// However for horizontal scroll it cannot help you.
 	/// </remarks>
-	public static class MouseScrollSettings {
-		// Constants for SystemParametersInfo
-		private const uint GetWheelScrollChars = 0x006C;
-		private const uint GetWheelScrollLines = 0x0068; // For vertical scroll lines
+	/// <param name="direction">Mouse wheel scrolls horizontally or vertically?</param>
+	/// <returns>
+	/// <para>The number of characters / lines to scroll.</para>
+	/// <para>Return -1 while <paramref name="direction" /> is vertical means the setting is window scrolls a page once the mouse wheel rotated.</para>
+	/// </returns>
+	public static int GetMouseWheelScrollSize(MouseWheelScrollDirection direction) {
+		const uint GetWheelScrollChars = 0x006C; // For horizontal scroll chars.
+		const uint GetWheelScrollLines = 0x0068; // For vertical scroll lines.
 
-		// Constants for the fWinIni parameter
-		private const uint UpdateIniFile = 0x01;
-		private const uint SendChange = 0x02;
+		uint scrollSize;
+		// Call the SystemParametersInfo function with SPI_GETWHEELSCROLLCHARS / SPI_GETWHEELSCROLLCHARS.
+		bool success = SystemParametersInfo(direction == MouseWheelScrollDirection.Horizontal ? GetWheelScrollChars : GetWheelScrollLines, 0, out scrollSize, 0);
 
-		[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-		private static extern bool SystemParametersInfo(
-			uint uiAction,
-			uint uiParam,
-			out uint pvParam,
-			uint fWinIni
-		);
-
-		/// <summary>
-		/// Gets the number of characters a window scrolls horizontally when the mouse wheel is tilted.
-		/// </summary>
-		/// <returns>The number of characters to scroll.</returns>
-		public static int GetHorizontalScrollChars() {
-			uint charsToScroll;
-			// Call the SystemParametersInfo function with SPI_GETWHEELSCROLLCHARS
-			bool success = SystemParametersInfo(
-				GetWheelScrollChars,
-				0,
-				out charsToScroll,
-				0
-			);
-
-			if (!success) {
-				// Handle error or use a default value (e.g., 1, as suggested by older docs for XP/2000)
-				// The function will return 0 on failure, so default might be fine.
-				Console.WriteLine("Failed to get horizontal scroll setting via SystemParametersInfo. Defaulting to 0.");
-				return 0;
-			}
-
-			return (int)charsToScroll;
+		if (!success) {
+			// Handle error or use a default value. ~~(e.g., 1, as suggested by older docs for XP/2000.)
+			// The function will return 0 on failure, so default might be fine.~~
+			// The SystemInformation.MouseWheelScrollLines property can be used as an alternative in System.Windows.Forms applications.
+			// Use 3 as the fallback value because it is the default setting of Windows.
+			Console.WriteLine("Failed to get scroll size setting via SystemParametersInfo. Defaulting to 3.");
+			return 3;
 		}
 
-		/// <summary>
-		/// Gets the number of lines a window scrolls vertically when the mouse wheel is rotated.
-		/// </summary>
-		/// <returns>The number of lines to scroll.</returns>
-		public static int GetVerticalScrollLines() {
-			uint linesToScroll;
-			// Call the SystemParametersInfo function with SPI_GETWHEELSCROLLLINES
-			bool success = SystemParametersInfo(
-				GetWheelScrollLines,
-				0,
-				out linesToScroll,
-				0
-			);
-
-			if (!success) {
-				// The SystemInformation.MouseWheelScrollLines property can be used as an alternative
-				// in System.Windows.Forms applications.
-				Console.WriteLine("Failed to get vertical scroll setting via SystemParametersInfo. Defaulting to 0.");
-				return 0;
-			}
-
-			return (int)linesToScroll;
-		}
+		return (int)scrollSize;
 	}
 }

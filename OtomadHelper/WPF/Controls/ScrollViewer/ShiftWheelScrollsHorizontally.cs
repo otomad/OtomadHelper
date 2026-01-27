@@ -21,8 +21,8 @@ public class ShiftWheelScrollsHorizontally : Behavior<ScrollViewer> {
 		if (Keyboard.Modifiers == ModifierKeys.Shift ||
 			AssociatedObject.ComputedHorizontalScrollBarVisibility == Visibility.Visible &&
 			AssociatedObject.ComputedVerticalScrollBarVisibility != Visibility.Visible) {
-			int hScrollLines = MouseScrollSettings.GetHorizontalScrollChars();
-			while (hScrollLines-- > 0)
+			int hScrollSize = GetMouseWheelScrollSize(MouseWheelScrollDirection.Horizontal);
+			while (hScrollSize-- > 0)
 				if (e.Delta < 0) AssociatedObject.LineRight();
 				else AssociatedObject.LineLeft();
 			e.Handled = true;
