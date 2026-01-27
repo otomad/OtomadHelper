@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using System.Drawing;
@@ -199,6 +198,18 @@ public static partial class Extensions {
 
 		/// <inheritdoc cref="BindingOperations.ClearAllBindings(DependencyObject)"/>
 		public void ClearBinding() => BindingOperations.ClearAllBindings(target);
+
+		/// <summary>
+		/// Get the index of the child in its parent.
+		/// </summary>
+		public int Index {
+			get {
+				if (target.Parent is not System.Windows.Controls.Panel parent) return -1;
+				System.Windows.Controls.UIElementCollection children = parent.Children;
+				int currentIndex = children.IndexOf(target);
+				return currentIndex;
+			}
+		}
 	}
 
 	extension(System.Windows.Controls.TextBox textBox) {

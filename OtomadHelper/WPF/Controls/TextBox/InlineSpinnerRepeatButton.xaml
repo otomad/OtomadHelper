@@ -21,7 +21,8 @@
 	<Style x:Key="InlineSpinnerRepeatButton" TargetType="RepeatButton">
 		<Setter Property="SnapsToDevicePixels" Value="False" />
 		<Setter Property="OverridesDefaultStyle" Value="True" />
-		<Setter Property="Background" Value="{DynamicResource PretendTransparent}" />
+		<Setter Property="IsHitTestVisible" Value="True" />
+		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
 		<Setter Property="Width" Value="32" />
 		<Setter Property="Focusable" Value="False" />
@@ -30,7 +31,11 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="RepeatButton">
-					<Border Padding="{TemplateBinding Padding}" Background="{DynamicResource PretendTransparent}">
+					<Border
+						Padding="{TemplateBinding Padding}"
+						Background="Transparent"
+						IsHitTestVisible="True"
+						>
 						<Border Background="{TemplateBinding Background}" CornerRadius="4">
 							<ContentPresenter />
 						</Border>

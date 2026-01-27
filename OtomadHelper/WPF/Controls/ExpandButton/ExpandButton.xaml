@@ -122,7 +122,7 @@
 					<StackPanel>
 						<Grid>
 							<Border Style="{StaticResource IconBorder}" />
-							<c:Icon Source="{StaticResource Icon:ExpanderChevronDown}" />
+							<c:Icon IconName="ExpanderChevronDown" />
 						</Grid>
 						<TextBlock Text="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}, Converter={StaticResource CheckedToText}}" />
 					</StackPanel>

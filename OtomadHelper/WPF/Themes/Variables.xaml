@@ -49,6 +49,9 @@
 
 	<!--#region Pan Theme Colors -->
 	<!-- Set background color to transparent may cause it cannot be clicked, so use a 1/255 alpha color to replace it. -->
-	<SolidColorBrush x:Key="PretendTransparent" Color="#01000000" />
+	<!--<SolidColorBrush x:Key="PretendTransparent" Color="#01000000" />-->
+	<!--Do not use it! Use the code below instead.-->
+	<!--<Setter Property="Background" Value="Transparent" />
+	<Setter Property="IsHitTestVisible" Value="True" />-->
 	<!--#endregion-->
 </ResourceDictionary>

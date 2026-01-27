@@ -29,6 +29,19 @@
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
 				<Setter Property="VerticalAlignment" Value="Center" />
+			</Style>
+
+			<Style TargetType="c:Icon">
+				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+				<Setter Property="Size" Value="20" />
+				<Setter Property="VerticalAlignment" Value="Center" />
+				<Setter Property="Margin" Value="0,0,7,0" />
+			</Style>
+
+			<Style x:Key="FormIconAndLabel" TargetType="StackPanel">
+				<Setter Property="Orientation" Value="Horizontal" />
+				<Setter Property="Background" Value="Transparent" />
+				<Setter Property="IsHitTestVisible" Value="True" />
 				<Setter Property="m:InteractivityItems.Template">
 					<Setter.Value>
 						<m:InteractivityTemplate>
@@ -82,7 +95,7 @@
 							<Rectangle.Width>
 								<MultiBinding Converter="{StaticResource CountToWidth}">
 									<Binding Path="Bits.Count" />
-									<Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=ScrollViewer, AncestorLevel=1}" Path="ActualWidth" />
+									<Binding Path="ActualWidth" RelativeSource="{RelativeSource FindAncestor, AncestorType=ScrollViewer, AncestorLevel=1}" />
 								</MultiBinding>
 							</Rectangle.Width>
 							<Rectangle.Fill>
@@ -130,15 +143,21 @@
 			</ItemsControl>
 		</ScrollViewer>
 
-		<TextBlock Grid.Row="2" Grid.Column="0">周期</TextBlock>
+		<StackPanel Grid.Row="2" Grid.Column="0" Style="{StaticResource FormIconAndLabel}">
+			<c:Icon IconName="TableSimpleInclude" />
+			<TextBlock>周期</TextBlock>
+		</StackPanel>
 		<c:NumericUpDown
 			Grid.Row="2"
 			Grid.Column="2"
-			Text="{Binding Interval}"
 			m:NumberTextBoxBehavior.Range="1,100"
+			Text="{Binding Interval}"
 			/>
 
-		<TextBlock Grid.Row="4" Grid.Column="0">名称</TextBlock>
+		<StackPanel Grid.Row="4" Grid.Column="0" Style="{StaticResource FormIconAndLabel}">
+			<c:Icon IconName="Rename" />
+			<TextBlock>名称</TextBlock>
+		</StackPanel>
 		<TextBox
 			Grid.Row="4"
 			Grid.Column="2"
