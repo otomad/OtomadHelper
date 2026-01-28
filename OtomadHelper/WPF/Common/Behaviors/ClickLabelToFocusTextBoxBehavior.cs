@@ -12,7 +12,7 @@ namespace OtomadHelper.WPF.Common;
 public partial class ClickLabelToFocusTextBoxBehavior : Behavior<FrameworkElement> {
 	protected override void OnAttached() {
 		AssociatedObject.PreviewMouseDown += TextBlock_MouseDown;
-		AssociatedObject.PreviewMouseUp += TextBlock_MouseUp;
+		AssociatedRadioButton?.PreviewMouseUp += TextBlock_MouseUp;
 
 		base.OnAttached();
 	}
@@ -21,16 +21,16 @@ public partial class ClickLabelToFocusTextBoxBehavior : Behavior<FrameworkElemen
 		base.OnDetaching();
 
 		AssociatedObject.PreviewMouseDown -= TextBlock_MouseDown;
-		AssociatedObject.PreviewMouseUp -= TextBlock_MouseUp;
+		AssociatedRadioButton?.PreviewMouseUp -= TextBlock_MouseUp;
 	}
 
 	private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e) => OnLabelPressed(true);
 	private void TextBlock_MouseUp(object sender, MouseButtonEventArgs e) => OnLabelPressed(false);
+	private RadioButton? AssociatedRadioButton => AssociatedObject as RadioButton;
 
 	private void OnLabelPressed(bool isMouseDown) {
 		TextBox? textBox = null;
-		RadioButton? radio = null;
-		if ((radio = AssociatedObject as RadioButton) is not null && (radio.IsChecked != true || isMouseDown)) return;
+		if (AssociatedRadioButton is not null && (AssociatedRadioButton.IsChecked != true || isMouseDown)) return;
 		if (Mode == ClickLabelToFocusTextBoxBehaviorModeType.GridVisual && AssociatedObject.Parent is Grid grid) {
 			(int column, int row) = grid.GetCellPosition(AssociatedObject);
 			if ((textBox = grid.FindChildrenByCellPosition(column + 1, row).FirstOrDefault() as TextBox) is null)
@@ -41,7 +41,7 @@ public partial class ClickLabelToFocusTextBoxBehavior : Behavior<FrameworkElemen
 			UIElement? nextSibling = (AssociatedObject.Parent as Panel)?.Children.Cast<UIElement>().ElementAtOrDefault(currentIndex + 1);
 			textBox = nextSibling as TextBox;
 		}
-		if (radio is not null && textBox is not null) {
+		if (AssociatedRadioButton is not null && textBox is not null) {
 			ITimer.WPF.Timeout(() => textBox?.Focus(), 0);
 		} else
 			textBox?.Focus();
