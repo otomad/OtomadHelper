@@ -346,6 +346,9 @@ public static class PInvoke {
 	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 	internal static extern bool DeleteMenu(IntPtr menu, uint uPosition, uint uFlags);
 
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	private static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem, uint uEnable);
+
 	/// <summary>
 	/// Removes the specified menu items from the system menu. Such as restore, move, resize, minimize, maximize, close.
 	/// </summary>
@@ -353,10 +356,9 @@ public static class PInvoke {
 	/// <param name="items">System window menu item.</param>
 	public static void DeleteSystemMenuItems(IntPtr hwnd, SystemMenuItemType items) {
 		IntPtr menu = GetSystemMenu(hwnd, false);
-		const uint MF_BYCOMMAND = 0x00000000;
 		foreach (KeyValuePair<SystemMenuItemType, uint> item in SystemMenuItemTag.Map)
 			if ((items & item.Key) != 0)
-				DeleteMenu(menu, item.Value, MF_BYCOMMAND);
+				DeleteMenu(menu, item.Value, (uint)EnableMenuItemType.ByCommand);
 	}
 
 	/// <summary>
@@ -368,7 +370,19 @@ public static class PInvoke {
 	public static void ReserveSystemMenuItems(IntPtr hwnd, SystemMenuItemType items) =>
 		DeleteSystemMenuItems(hwnd, ~items);
 
-	public static class SystemMenuItemTag {
+	/// <summary>
+	/// Disable or enable the specified menu items from the system menu. Such as restore, move, resize, minimize, maximize, close.
+	/// </summary>
+	/// <param name="hwnd">Handle of a window.</param>
+	/// <param name="items">System window menu item.</param>
+	public static void DisableOrEnableSystemMenuItems(IntPtr hwnd, SystemMenuItemType items, bool enabled) {
+		IntPtr menu = GetSystemMenu(hwnd, false);
+		foreach (KeyValuePair<SystemMenuItemType, uint> item in SystemMenuItemTag.Map)
+			if ((items & item.Key) != 0)
+				EnableMenuItem(menu, item.Value, (uint)(EnableMenuItemType.ByCommand | (enabled ? EnableMenuItemType.Enabled : EnableMenuItemType.Grayed)));
+	}
+
+	private static class SystemMenuItemTag {
 		public const uint RESTORE = 0xF120;
 		public const uint MOVE = 0xF010;
 		public const uint SIZE = 0xF000;
@@ -394,6 +408,36 @@ public static class PInvoke {
 		Minimize = 1 << 3,
 		Maximize = 1 << 4,
 		Close = 1 << 5,
+	}
+
+	/// <summary>
+	/// Controls the interpretation of the uIDEnableItem parameter and indicate whether the menu item is enabled, disabled, or grayed.
+	/// This parameter must be a combination of the following values.
+	/// </summary>
+	/// <remarks><see href="https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-enablemenuitem#parameters" /></remarks>
+	[Flags]
+	private enum EnableMenuItemType : uint {
+		/// <summary>
+		/// Indicates that uIDEnableItem gives the identifier of the menu item.
+		/// If neither the <see cref="ByCommand" /> nor <see cref="ByPosition" /> flag is specified, the <see cref="ByCommand" /> flag is the default flag.
+		/// </summary>
+		ByCommand = 0x00000000,
+		/// <summary>
+		/// Indicates that uIDEnableItem gives the zero-based relative position of the menu item.
+		/// </summary>
+		ByPosition = 0x00000400,
+		/// <summary>
+		/// Indicates that the menu item is disabled, but not grayed, so it cannot be selected.
+		/// </summary>
+		Disabled = 0x00000002,
+		/// <summary>
+		/// Indicates that the menu item is enabled and restored from a grayed state so that it can be selected.
+		/// </summary>
+		Enabled = 0x00000000,
+		/// <summary>
+		/// Indicates that the menu item is disabled and grayed so that it cannot be selected.
+		/// </summary>
+		Grayed = 0x00000001,
 	}
 
 	[StructLayout(LayoutKind.Sequential)]

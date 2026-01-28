@@ -310,6 +310,13 @@ public static partial class Extensions {
 			dictionary.First(pair => EqualityComparer<TValue>.Default.Equals(pair.Value, value)).Key;
 	}
 
+	extension<TKey, TValue>(KeyValuePair<TKey, TValue> pair) {
+		public void Deconstruct(out TKey key, out TValue value) {
+			key = pair.Key;
+			value = pair.Value;
+		}
+	}
+
 	extension(IEnumerable source) {
 		/// <inheritdoc cref="Enumerable.Count{TSource}(IEnumerable{TSource})" />
 		public int Count() {

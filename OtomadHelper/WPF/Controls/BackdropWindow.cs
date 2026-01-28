@@ -26,8 +26,9 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<FontFamily>("MonoFont")]
 [DependencyProperty<FontFamily>("DefaultFont")]
 [DependencyProperty<bool>("IsNonClientActive")]
-[DependencyProperty<bool?>("MinimizeBox", OnChanged = nameof(UpdateMinimizeAndMaximizeButtonsVisibility))]
-[DependencyProperty<bool?>("MaximizeBox", OnChanged = nameof(UpdateMinimizeAndMaximizeButtonsVisibility))]
+[DependencyProperty<bool?>("MinimizeBox", OnChanged = nameof(UpdateControlBoxesVisibility), PropertyXmlDocumentation = """<inheritdoc cref="System.Windows.Forms.Form.MinimizeBox" />""")]
+[DependencyProperty<bool?>("MaximizeBox", OnChanged = nameof(UpdateControlBoxesVisibility), PropertyXmlDocumentation = """<inheritdoc cref="System.Windows.Forms.Form.MaximizeBox" />""")]
+[DependencyProperty<bool?>("ControlBox", OnChanged = nameof(UpdateControlBoxesVisibility), PropertyXmlDocumentation = """<inheritdoc cref="System.Windows.Forms.Form.ControlBox" />""")]
 [RoutedEvent("ThemeChange", RoutedEventStrategy.Bubble)]
 [RoutedEvent("AccentChange", RoutedEventStrategy.Bubble)]
 [RoutedEvent("Showing", RoutedEventStrategy.Bubble)]
@@ -185,12 +186,16 @@ public partial class BackdropWindow : Window {
 	private static readonly Brush DEFAULT_BACKGROUND = Brushes.Transparent;
 	public new Brush Background { get; set { field = value; base.Background = value; } } = DEFAULT_BACKGROUND;
 
-	public void UpdateMinimizeAndMaximizeButtonsVisibility() {
-		if (MinimizeBox is null && MaximizeBox is null) return;
+	public void UpdateControlBoxesVisibility() {
+		if (MinimizeBox is null && MaximizeBox is null && ControlBox is null) return;
 		long currentStyle = GetWindowLongPtr(Handle, WindowLongFlags.Style);
 		ToggleExtendedWindowStyle(WindowStyles.MinimizeBox, MinimizeBox);
 		ToggleExtendedWindowStyle(WindowStyles.MaximizeBox, MaximizeBox);
+		ToggleExtendedWindowStyle(WindowStyles.SysMenu, ControlBox);
 		SetWindowLongPtr(Handle, WindowLongFlags.Style, currentStyle);
+
+		if (MinimizeBox is not null) DisableOrEnableSystemMenuItems(Handle, SystemMenuItemType.Minimize, MinimizeBox.Value);
+		if (MaximizeBox is not null) DisableOrEnableSystemMenuItems(Handle, SystemMenuItemType.Maximize, MaximizeBox.Value);
 
 		void ToggleExtendedWindowStyle(WindowStyles style, bool? enabled) {
 			if (enabled == true) currentStyle |= (long)style;
@@ -282,7 +287,7 @@ public partial class BackdropWindow : Window {
 
 	protected override void OnSourceInitialized(EventArgs e) {
 		base.OnSourceInitialized(e);
-		UpdateMinimizeAndMaximizeButtonsVisibility();
+		UpdateControlBoxesVisibility();
 
 		// Fix the issue of incorrect window size when use WindowChrome with SizeToContent.WidthAndHeight.
 		// See: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#720121120
