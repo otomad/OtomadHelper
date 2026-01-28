@@ -45,13 +45,13 @@
 		</Setter>
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 		<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
-		<Setter Property="Margin" Value="4" />
+		<Setter Property="Margin" Value="0" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="RadioButton">
 					<BulletDecorator Background="Transparent" DataContext="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}}">
 						<BulletDecorator.Bullet>
-							<Grid Width="{StaticResource RadioButtonBulletSize}" Height="{StaticResource RadioButtonBulletSize}">
+							<Grid Width="{StaticResource RadioButtonBulletSize}" Height="{StaticResource RadioButtonBulletSize}" Margin="4">
 								<Ellipse
 									x:Name="Border"
 									Fill="{DynamicResource ControlAltSecondary}"
@@ -70,7 +70,7 @@
 							</Grid>
 						</BulletDecorator.Bullet>
 						<ContentPresenter
-							Margin="8,0,0,0"
+							Margin="10,0,-4,0"
 							HorizontalAlignment="Left"
 							VerticalAlignment="Center"
 							RecognizesAccessKey="True"

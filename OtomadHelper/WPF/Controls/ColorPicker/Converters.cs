@@ -76,8 +76,13 @@ public class Alpha255ToAlpha100Converter : ValueConverter<int, int> {
 }
 
 [ValueConversion(typeof(string), typeof(string))]
-public class ColorAxisKeyToTranslationConverter : ValueConverter<string, string, bool> {
+public class ColorAxisI18nKeyToTranslationConverter : ValueConverter<string, string, bool> {
 	public override string Convert(string value, Type targetType, bool useLongName, CultureInfo culture) =>
-		useLongName ? t.ColorPicker.Axis[value] : t_disablePangu.ColorPicker.AxisAbbrs[value];
-	// NOTE: When use short name, it will disable pangu.
+		ColorPickerModelAxis.GetAxisDisplayName(value, useLongName);
+}
+
+[ValueConversion(typeof(ColorPickerModelAxis), typeof(string))]
+public class ColorPickerModelAxisToColorAxisI18nKeyConverter : ValueConverter<ColorPickerModelAxis, string> {
+	public override string Convert(ColorPickerModelAxis value, Type targetType, object parameter, CultureInfo culture) =>
+		value.GetAxisI18nKey();
 }

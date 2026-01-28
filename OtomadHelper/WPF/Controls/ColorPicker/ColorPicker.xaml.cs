@@ -36,7 +36,7 @@ public partial class ColorPicker : UserControl {
 	// CAUTION: Async method cannot use `out` parameter. So return a value tuple type instead.
 	public static async Task<ValueTuple<bool, string>> ShowDialog(string hex, ColorPickerModelAxis? initialModelAxis = null) {
 		bool startsWithHash = hex.StartsWith("#");
-		Unicolour? color = ColorPickerViewModel.FromHex(hex);
+		Unicolour? color = Unicolour.FromHex(hex);
 		if (color is null) return (false, hex);
 		ColorPicker panel = new();
 		ColorPickerViewModel viewModel = panel.DataContext;
@@ -64,12 +64,16 @@ public partial class ColorPicker : UserControl {
 		return null;
 	}
 
-	internal void SetAccentColor(Color? color = null) {
-		color ??= DataContext.Color.ToMediaColor();
-		if (ContentDialog is not null)
-			ContentDialog.CustomAccentColor = color;
+	internal Color? DialogAccentColor {
+		set {
+			Color? color = DataContext.Color.ToMediaColor();
+			ContentDialog?.CustomAccentColor = color;
+		}
 	}
 
-	private ContentDialog? contentDialog;
-	private ContentDialog ContentDialog => contentDialog ??= (Window.GetWindow(this) as ContentDialog)!;
+	internal string ColorSpaceDisplayName {
+		set => ContentDialog?.DataContext.Header = value;
+	}
+
+	private ContentDialog ContentDialog => field ??= (Window.GetWindow(this) as ContentDialog)!;
 }

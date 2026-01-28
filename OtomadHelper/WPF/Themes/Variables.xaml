@@ -38,7 +38,8 @@
 	<!--#region Font Families-->
 	<FontFamily x:Key="IconFont">Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol</FontFamily>
 	<!--<Setter Property="FontFamily" Value="pack://application:,,,/OtomadHelper;component/Resources/#Segoe Fluent Icons" />-->
-	<FontFamily x:Key="EnglishMonoFont">Cascadia Code, Cascadia Mono, JetBrains Mono, Fira Code, Fira Mono, Roboto Mono, Consolas</FontFamily>
+	<FontFamily x:Key="EnglishMonoFont">Cascadia Code, Cascadia Mono, JetBrains Mono, Fira Code, Fira Mono, Roboto Mono, Consolas</FontFamily><!-- English monospace font -->
+	<FontFamily x:Key="EnglishPropFont">Segoe UI</FontFamily><!-- English proportional font -->
 	<!--#endregion-->
 
 	<!--#region Font Sizes-->

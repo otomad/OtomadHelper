@@ -1,12 +1,10 @@
 using System.Windows;
-using System.Windows.Interop;
-using System.Windows.Threading;
-using System.Drawing;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Media;
 using System.Windows.Data;
-
-using Control = System.Windows.Forms.Control;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace OtomadHelper.Helpers;
 
@@ -39,28 +37,6 @@ public static partial class Extensions {
 		/// <param name="popup">A WPF <see cref="Popup"/>.</param>
 		/// <returns>The handle to the <see cref="Popup"/>.</returns>
 		public IntPtr Handle => (PresentationSource.FromVisual(popup.Child) as HwndSource)?.Handle ?? IntPtr.Zero;
-	}
-
-	private const double DPI_DIVISOR = 96d;
-
-	extension(Control form) {
-		/// <summary>
-		/// Get the DPI of the screen where the WinForm <see cref="Form"/> is located.
-		/// </summary>
-		/// <param name="form">A WinForm <see cref="Form"/>.</param>
-		/// <returns>The screen DPI in two dimension.</returns>
-		public (double DpiX, double DpiY) Dpi {
-			get {
-				Graphics graphics = form.CreateGraphics();
-				try {
-					return (graphics.DpiX / DPI_DIVISOR, graphics.DpiY / DPI_DIVISOR);
-				} catch (Exception) {
-					return (1, 1);
-				} finally {
-					graphics.Dispose();
-				}
-			}
-		}
 	}
 
 	extension(Visual window) {
@@ -124,31 +100,6 @@ public static partial class Extensions {
 		}
 	}
 
-	extension(Control? parent) {
-		/// <summary>
-		/// Find all children of a given type <see cref="Control"/>.
-		/// </summary>
-		/// <typeparam name="T">The type of the children to find.</typeparam>
-		/// <param name="parent">The <see cref="Control"/> to start the search from.</param>
-		/// <param name="includeParent">Also includes the parent control itself?</param>
-		/// <returns>A list of all children of type <typeparamref name="T"/> found.
-		/// If no such children are found, an empty list is returned.</returns>
-		public List<T> GetChildrenOfType<T>(bool includeParent = false) where T : Control {
-			List<T> children = [];
-			if (parent is null)
-				return children;
-			if (includeParent && parent is T expectedParent)
-				children.Add(expectedParent);
-			foreach (Control control in parent.Controls) {
-				if (control is T expectedControl)
-					children.Add(expectedControl);
-				if (control.HasChildren)
-					children.AddRange(control.GetChildrenOfType<T>());
-			}
-			return children;
-		}
-	}
-
 	extension(DependencyObject? child) {
 		/// <summary>
 		/// Find the parent of a given <see cref="DependencyObject" /> in the visual tree.
@@ -204,20 +155,47 @@ public static partial class Extensions {
 		/// </summary>
 		public int Index {
 			get {
-				if (target.Parent is not System.Windows.Controls.Panel parent) return -1;
-				System.Windows.Controls.UIElementCollection children = parent.Children;
+				if (target.Parent is not Panel parent) return -1;
+				UIElementCollection children = parent.Children;
 				int currentIndex = children.IndexOf(target);
 				return currentIndex;
 			}
 		}
 	}
 
-	extension(System.Windows.Controls.TextBox textBox) {
+	extension(TextBox textBox) {
 		/// <summary>
-		/// Check if a WPF <see cref="System.Windows.Controls.TextBox"/> is editable.
+		/// Check if a WPF <see cref="TextBox"/> is editable.
 		/// </summary>
-		/// <returns>The <see cref="System.Windows.Controls.TextBox"/> is editable?</returns>
+		/// <returns>The <see cref="TextBox"/> is editable?</returns>
 		public bool IsEditable =>
 			textBox is { IsEnabled: true, IsReadOnly: false, IsHitTestVisible: true };
+	}
+
+	extension(Grid grid) {
+		/// <summary>
+		/// Get column and row index simultaneously of <see cref="UIElement" /> in a <see cref="Grid" />.
+		/// </summary>
+		/// <param name="element">A <see cref="UIElement" /> that in a <see cref="Grid" />.</param>
+		/// <returns>A <see cref="ValueTuple{T1, T2}" /> that contains column and row.</returns>
+		public (int column, int row) GetCellPosition(UIElement element) => (Grid.GetColumn(element), Grid.GetRow(element));
+
+		/// <summary>
+		/// Find children in a <see cref="Grid" /> by column and row index.
+		/// </summary>
+		/// <param name="cell">Column and row.</param>
+		/// <returns>The children that found out, or <see langword="null" /> if not found.</returns>
+		public IEnumerable<UIElement> FindChildrenByCellPosition((int column, int row) cell) {
+			foreach (UIElement child in grid.Children)
+				if (grid.GetCellPosition(child) == cell)
+					yield return child;
+		}
+
+		/// <summary>
+		/// Find children in a <see cref="Grid" /> by column and row index.
+		/// </summary>
+		/// <param name="cell">Column and row.</param>
+		/// <returns>The children that found out, or <see langword="null" /> if not found.</returns>
+		public IEnumerable<UIElement> FindChildrenByCellPosition(int column, int row) => grid.FindChildrenByCellPosition((column, row));
 	}
 }

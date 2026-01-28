@@ -112,7 +112,7 @@ public static partial class Extensions {
 		/// <summary>
 		/// Convert a HEX color value (#RRGGBB[AA]) or HTML entity color to a <see cref="DrawingColor" />.
 		/// </summary>
-		/// <exception cref="Exception">The input <paramref name="hex" /> is invalid or cannot be recognized by C#.</exception>
+		/// <exception cref="Exception">The input <paramref name="hex" /> is invalid or the HTML entity color name cannot be recognized by C#.</exception>
 		public static DrawingColor FromHex(string hex) {
 			if (hex.StartsWith("#")) {
 				// Transform from #RRGGBBAA to #AARRGGBB.
@@ -132,6 +132,55 @@ public static partial class Extensions {
 			return MediaColor.FromArgb((byte)color.Alpha.A255, (byte)rgb.ConstrainedR, (byte)rgb.ConstrainedG, (byte)rgb.ConstrainedB);
 		}
 	}
+
+	extension(ColourSpace colorSpace) {
+		/// <summary>
+		/// Get the display name of the color space.
+		/// </summary>
+		public string DisplayName => (colorSpace switch {
+			ColourSpace.Rgb => "RGB (0–1)",
+			ColourSpace.Rgb255 => "RGB (0–255)",
+			ColourSpace.RgbLinear => "Linear RGB",
+			ColourSpace.Hsb => "HSB / HSV",
+			ColourSpace.Hsl => "HSL",
+			ColourSpace.Hwb => "HWB",
+			ColourSpace.Hsi => "HSI",
+			ColourSpace.Xyz => "CIEXYZ",
+			ColourSpace.Xyy => "CIExyY",
+			ColourSpace.Wxy => "WXY",
+			ColourSpace.Lab => "CIELAB",
+			ColourSpace.Lchab => "CIELCh_a_b",
+			ColourSpace.Luv => "CIELUV",
+			ColourSpace.Lchuv => "CIELCh_u_v",
+			ColourSpace.Hsluv => "HSLuv",
+			ColourSpace.Hpluv => "HPLuv",
+			ColourSpace.Ypbpr => "YPbPr",
+			ColourSpace.Ycbcr => "YCbCr / YUV (digital)",
+			ColourSpace.Ycgco => "YCgCo",
+			ColourSpace.Yuv => "YUV (PAL)",
+			ColourSpace.Yiq => "YIQ (NTSC)",
+			ColourSpace.Ydbdr => "YDbDr (SECAM)",
+			ColourSpace.Tsl => "TSL",
+			ColourSpace.Xyb => "XYB",
+			ColourSpace.Lms => "LMS",
+			ColourSpace.Ipt => "IPT",
+			ColourSpace.Ictcp => "IC_TC_P",
+			ColourSpace.Jzazbz => "J_za_zb_z",
+			ColourSpace.Jzczhz => "J_zC_zh_z",
+			ColourSpace.Oklab => "Oklab",
+			ColourSpace.Oklch => "Oklch",
+			ColourSpace.Okhsv => "Okhsv",
+			ColourSpace.Okhsl => "Okhsl",
+			ColourSpace.Okhwb => "Okhwb",
+			ColourSpace.Oklrab => "Okl_rab",
+			ColourSpace.Oklrch => "Okl_rch",
+			ColourSpace.Cam02 => "CIECAM02",
+			ColourSpace.Cam16 => "CAM16",
+			ColourSpace.Hct => "HCT",
+			ColourSpace.Munsell => "Munsell HVC",
+			_ => "",
+		}).Replace("_", "\U000e005f");
+	}
 }
 
 // C# 14 static methods in extension member with same name will conflict with the static methods in the same class.
@@ -142,8 +191,34 @@ public static partial class Extensions_Conflict_2 {
 		/// <summary>
 		/// Convert a HEX color value (#RRGGBB[AA]) or HTML entity color to a <see cref="MediaColor" />.
 		/// </summary>
-		/// <exception cref="Exception">The input <paramref name="hex" /> is invalid or cannot be recognized by C#.</exception>
+		/// <exception cref="Exception">The input <paramref name="hex" /> is invalid or the HTML entity color name cannot be recognized by C#.</exception>
 		public static MediaColor FromHex(string hex) =>
 			DrawingColor.FromHex(hex).ToMediaColor();
+	}
+}
+
+public static partial class Extensions_Conflict_3 {
+	extension(Unicolour color) {
+		/// <summary>
+		/// Convert a HEX color value (#RRGGBB[AA]) to a <see cref="Unicolour" />.
+		/// </summary>
+		/// <exception cref="Exception">The input <paramref name="hex" /> is invalid.</exception>
+		public static Unicolour? FromHex(string hex) {
+			hex = hex.TrimStart('#');
+			if (hex.Length is not (3 or 6 or 4 or 8)) return null;
+			if (hex.IsMatch(new(@"[^0-9A-F]", RegexOptions.IgnoreCase))) return null;
+
+			static string RepeatTwice(string source) {
+				StringBuilder sb = new();
+				foreach (char c in source) {
+					sb.Append(c);
+					sb.Append(c);
+				}
+				return sb.ToString();
+			}
+
+			if (hex.Length is 3 or 4) hex = RepeatTwice(hex);
+			return new(hex);
+		}
 	}
 }

@@ -55,4 +55,7 @@ public partial class ContentDialogViewModel : ObservableObject<ContentDialog> {
 
 	[ObservableProperty]
 	private string footer = "";
+
+	[ObservableProperty]
+	private string header = "";
 }

@@ -102,6 +102,23 @@
 					</DataTrigger>
 				</Style.Triggers>
 			</Style>
+			<Style
+				x:Key="Header"
+				BasedOn="{StaticResource {x:Type TextBlock}}"
+				TargetType="TextBlock"
+				>
+				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+				<Setter Property="FontFamily" Value="{Binding DefaultFont, ElementName=View}" />
+				<Setter Property="FontStyle" Value="Italic" />
+				<Setter Property="Margin" Value="0,0,2,0" />
+				<Setter Property="HorizontalAlignment" Value="Right" />
+				<Setter Property="VerticalAlignment" Value="Bottom" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding Header}" Value="">
+						<Setter Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
 			<Style x:Key="CopyableBody" TargetType="TextBox">
 				<Setter Property="TextWrapping" Value="Wrap" />
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
@@ -185,6 +202,11 @@
 						Grid.Row="1"
 						Style="{StaticResource Title}"
 						Text="{Binding Title}"
+						/>
+					<TextBlock
+						Grid.Row="1"
+						Style="{StaticResource Header}"
+						Text="{Binding Header}"
 						/>
 					<TextBlock
 						Grid.Row="2"

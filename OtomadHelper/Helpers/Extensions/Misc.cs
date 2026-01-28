@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Xml;
 
 using DataFormats = System.Windows.Forms.DataFormats;
@@ -351,5 +352,17 @@ public static partial class Extensions {
 			using StreamReader reader = new(stream, encoding);
 			return reader.ReadToEnd();
 		}
+	}
+
+	extension(FontFamily) {
+		/// <summary>
+		/// Creates a new FontFamily by joining the sources of the specified font families into a single, comma-separated
+		/// source string.
+		/// </summary>
+		/// <param name="fontFamilies">A parameter array of collections of FontFamily objects whose sources will be combined. Each collection can contain
+		/// one or more FontFamily instances.</param>
+		/// <returns>A FontFamily representing the combined sources of all specified font families, joined as a comma-separated list.</returns>
+		public static FontFamily Join(params IEnumerable<FontFamily> fontFamilies) =>
+			new(fontFamilies.Select(font => font.Source).Join(", "));
 	}
 }

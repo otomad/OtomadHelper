@@ -45,7 +45,8 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 				if (prevTriplet.Keys().All(i => i == axis ? true : prevTriplet[i] == triplet[i])) behavior &= ~UpdateSourcesBehavior.UpdateSecondary;
 			}
 			UpdateSources(behavior);
-			View?.SetAccentColor(Color.ToMediaColor());
+			View?.DialogAccentColor = Color.ToMediaColor();
+			UpdateColorSpaceDisplayName();
 			initialized = true;
 			isColorChanging = false;
 		}
@@ -55,7 +56,10 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	partial void OnModelAxisChanged(ColorPickerModelAxis value) {
 		UpdateSources();
 		UpdateThumbsBinding();
+		UpdateColorSpaceDisplayName();
 	}
+
+	private void UpdateColorSpaceDisplayName() => View?.ColorSpaceDisplayName = ModelAxis.DisplayName;
 
 	internal static ThreeD ToTriplet(Unicolour color, ColourSpace model) {
 		ColourRepresentation representation = model switch {
@@ -101,7 +105,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			if (ModelAxis.IsSpecial) {
 				string special = ModelAxis.Special;
 				if (special == "HEX") {
-					Unicolour? color = FromHex(Text);
+					Unicolour? color = Unicolour.FromHex(Text);
 					if (color is not null) {
 						Color = color;
 						Hex = Text;
@@ -287,23 +291,5 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			if (a % 0x11 == 0) results.Add(new([xr[0], xg[0], xb[0], xa[0]]));
 		}
 		return results;
-	}
-
-	public static Unicolour? FromHex(string hex) {
-		hex = hex.TrimStart('#');
-		if (hex.Length is not (3 or 6 or 4 or 8)) return null;
-		if (hex.IsMatch(new(@"[^0-9A-F]", RegexOptions.IgnoreCase))) return null;
-
-		static string RepeatTwice(string source) {
-			StringBuilder sb = new();
-			foreach (char c in source) {
-				sb.Append(c);
-				sb.Append(c);
-			}
-			return sb.ToString();
-		}
-
-		if (hex.Length is 3 or 4) hex = RepeatTwice(hex);
-		return new(hex);
 	}
 }

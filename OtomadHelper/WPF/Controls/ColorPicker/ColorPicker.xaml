@@ -33,8 +33,9 @@
 			<c:UnicolourToMediaColorConverter x:Key="UniToMediaColor" />
 			<c:TextBoxModelAxisToRangeConverter x:Key="ModelAxisToRange" />
 			<c:Alpha255ToAlpha100Converter x:Key="A255ToA100" />
-			<c:ColorAxisKeyToTranslationConverter x:Key="AxisKeyToTrans" />
+			<c:ColorAxisI18nKeyToTranslationConverter x:Key="AxisKeyToTrans" />
 			<m:BooleanNotConverter x:Key="BoolNot" />
+			<c:ColorPickerModelAxisToColorAxisI18nKeyConverter x:Key="ModelAxisToKey" />
 
 			<Style BasedOn="{StaticResource DefaultRadioButtonStyle}" TargetType="RadioButton">
 				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
@@ -43,9 +44,21 @@
 				<Setter Property="IsChecked" Value="{m:Binding ModelAxis, Converter={StaticResource ModelAxisToChecked}, ConverterParameter={Binding (c:ColorPicker.ModelAxis), RelativeSource={RelativeSource Self}}, Mode=OneWay}" />
 				<Setter Property="Command" Value="{Binding CheckModelAxisCommand}" />
 				<Setter Property="CommandParameter" Value="{Binding (c:ColorPicker.ModelAxis), RelativeSource={RelativeSource Self}}" />
+				<Setter Property="m:InteractivityItems.Template">
+					<Setter.Value>
+						<m:InteractivityTemplate>
+							<m:InteractivityItems>
+								<m:InteractivityItems.Behaviors>
+									<m:ClickLabelToFocusTextBoxBehavior Mode="GridVisual" />
+								</m:InteractivityItems.Behaviors>
+							</m:InteractivityItems>
+						</m:InteractivityTemplate>
+					</Setter.Value>
+				</Setter>
 			</Style>
 
 			<Style TargetType="Label">
+				<Setter Property="Tag" Value="{Binding (c:ColorPicker.ModelAxis), RelativeSource={RelativeSource AncestorType=RadioButton}, Converter={StaticResource ModelAxisToKey}}" />
 				<Setter Property="Content" Value="{Binding Tag, RelativeSource={RelativeSource Self}, Converter={StaticResource AxisKeyToTrans}, ConverterParameter={m:Bool False}}" />
 				<Setter Property="ToolTip" Value="{Binding Tag, RelativeSource={RelativeSource Self}, Converter={StaticResource AxisKeyToTrans}, ConverterParameter={m:Bool True}}" />
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
@@ -64,6 +77,17 @@
 			<Style x:Key="RadioLessLabel" BasedOn="{StaticResource Unit}" TargetType="TextBlock">
 				<Setter Property="HorizontalAlignment" Value="Right" />
 				<Setter Property="Margin" Value="0,0,4,0" />
+				<Setter Property="m:InteractivityItems.Template">
+					<Setter.Value>
+						<m:InteractivityTemplate>
+							<m:InteractivityItems>
+								<m:InteractivityItems.Behaviors>
+									<m:ClickLabelToFocusTextBoxBehavior Mode="GridVisual" />
+								</m:InteractivityItems.Behaviors>
+							</m:InteractivityItems>
+						</m:InteractivityTemplate>
+					</Setter.Value>
+				</Setter>
 			</Style>
 
 			<Style BasedOn="{StaticResource DefaultTextBoxStyle}" TargetType="TextBox">
@@ -181,24 +205,24 @@
 		</Grid>
 
 		<Grid x:Name="Form" Grid.Column="6" m:GridDef.Column="Auto,65,Auto,10,Auto,65,Auto,10,Auto,65,Auto" m:GridDef.Row="*,*,*,8,*,*,*,8,*,*">
-			<RadioButton c:ColorPicker.ModelAxis="HSL.0" Grid.Column="0" Grid.Row="0"><Label Tag="Hue" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="HSL.1" Grid.Column="0" Grid.Row="1"><Label Tag="Saturation" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="HSL.2" Grid.Column="0" Grid.Row="2"><Label Tag="Lightness" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="RGB.0" Grid.Column="0" Grid.Row="4"><Label Tag="Red" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="RGB.1" Grid.Column="0" Grid.Row="5"><Label Tag="Green" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="RGB.2" Grid.Column="0" Grid.Row="6"><Label Tag="Blue" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="HSB.0" Grid.Column="4" Grid.Row="0"><Label Tag="Hue" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="HSB.1" Grid.Column="4" Grid.Row="1"><Label Tag="Saturation" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="HSB.2" Grid.Column="4" Grid.Row="2"><Label Tag="Brightness" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="HWB.0" Grid.Column="4" Grid.Row="4"><Label Tag="Hue" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="HWB.1" Grid.Column="4" Grid.Row="5"><Label Tag="White" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="HWB.2" Grid.Column="4" Grid.Row="6"><Label Tag="Black" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="OKLAB.0" Grid.Column="8" Grid.Row="0"><Label Tag="Luminance" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="OKLAB.1" Grid.Column="8" Grid.Row="1"><Label Tag="AAxisInLab" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="OKLAB.2" Grid.Column="8" Grid.Row="2"><Label Tag="BAxisInLab" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="OKLCH.0" Grid.Column="8" Grid.Row="4"><Label Tag="Luminance" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="OKLCH.1" Grid.Column="8" Grid.Row="5"><Label Tag="Chroma" /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="OKLCH.2" Grid.Column="8" Grid.Row="6"><Label Tag="Hue" /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="HSL.0" Grid.Column="0" Grid.Row="0"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="HSL.1" Grid.Column="0" Grid.Row="1"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="HSL.2" Grid.Column="0" Grid.Row="2"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="RGB.0" Grid.Column="0" Grid.Row="4"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="RGB.1" Grid.Column="0" Grid.Row="5"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="RGB.2" Grid.Column="0" Grid.Row="6"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="HSB.0" Grid.Column="4" Grid.Row="0"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="HSB.1" Grid.Column="4" Grid.Row="1"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="HSB.2" Grid.Column="4" Grid.Row="2"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="HWB.0" Grid.Column="4" Grid.Row="4"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="HWB.1" Grid.Column="4" Grid.Row="5"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="HWB.2" Grid.Column="4" Grid.Row="6"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="OKLAB.0" Grid.Column="8" Grid.Row="0"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="OKLAB.1" Grid.Column="8" Grid.Row="1"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="OKLAB.2" Grid.Column="8" Grid.Row="2"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="OKLCH.0" Grid.Column="8" Grid.Row="4"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="OKLCH.1" Grid.Column="8" Grid.Row="5"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="OKLCH.2" Grid.Column="8" Grid.Row="6"><Label /></RadioButton>
 			<TextBlock Grid.Column="0" Grid.Row="8" Style="{StaticResource RadioLessLabel}"><Label Tag="Alpha" /></TextBlock>
 			<TextBlock Grid.Column="0" Grid.Row="9" Style="{StaticResource RadioLessLabel}"><Label Tag="Alpha" /></TextBlock>
 			<TextBlock Grid.Column="4" Grid.Row="8" Style="{StaticResource RadioLessLabel}" ToolTip="{m:Trans ColorPicker.Axis.Hex}">#</TextBlock>

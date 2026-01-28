@@ -64,6 +64,37 @@ public class ColorPickerModelAxis(ColourSpace model, int axis) {
 	}
 
 	public static bool Valid([NotNullWhen(true)] ColorPickerModelAxis? value) => value is not null && value.IsValid;
+
+	public string DisplayName => $"{Model.DisplayName} : {GetAxisDisplayName(true)}";
+
+	internal string GetAxisI18nKey() => this switch {
+		{ Model: ColourSpace.Hsl, Axis: 0 } => "Hue",
+		{ Model: ColourSpace.Hsl, Axis: 1 } => "Saturation",
+		{ Model: ColourSpace.Hsl, Axis: 2 } => "Lightness",
+		{ Model: ColourSpace.Rgb255, Axis: 0 } => "Red",
+		{ Model: ColourSpace.Rgb255, Axis: 1 } => "Green",
+		{ Model: ColourSpace.Rgb255, Axis: 2 } => "Blue",
+		{ Model: ColourSpace.Hsb, Axis: 0 } => "Hue",
+		{ Model: ColourSpace.Hsb, Axis: 1 } => "Saturation",
+		{ Model: ColourSpace.Hsb, Axis: 2 } => "Brightness",
+		{ Model: ColourSpace.Hwb, Axis: 0 } => "Hue",
+		{ Model: ColourSpace.Hwb, Axis: 1 } => "White",
+		{ Model: ColourSpace.Hwb, Axis: 2 } => "Black",
+		{ Model: ColourSpace.Oklab, Axis: 0 } => "Luminance",
+		{ Model: ColourSpace.Oklab, Axis: 1 } => "AAxisInLab",
+		{ Model: ColourSpace.Oklab, Axis: 2 } => "BAxisInLab",
+		{ Model: ColourSpace.Oklch, Axis: 0 } => "Luminance",
+		{ Model: ColourSpace.Oklch, Axis: 1 } => "Chroma",
+		{ Model: ColourSpace.Oklch, Axis: 2 } => "Hue",
+		_ => string.Empty,
+	};
+
+	internal static string GetAxisDisplayName(string axisI18nKey, bool useLongName) =>
+		useLongName ? t.ColorPicker.Axis[axisI18nKey] : t_disablePangu.ColorPicker.AxisAbbrs[axisI18nKey];
+		// NOTE: When use short name, it will disable pangu.
+
+	public string GetAxisDisplayName(bool useLongName) =>
+		GetAxisDisplayName(GetAxisI18nKey(), useLongName);
 }
 
 public class ColorPickerModelAxisConverter : TypeConverter<ColorPickerModelAxis> {
