@@ -54,7 +54,7 @@ public partial class ColorPicker : UserControl {
 		) ?? false;
 		Unicolour newColor = viewModel.Color;
 		if (!dialogResult) return (false, hex);
-		return (true, (startsWithHash ? "#" : "") + ColorPickerViewModel.ToHex(newColor)[0]);
+		return (true, (startsWithHash ? "#" : "") + ColorPickerViewModel.ToHexes(newColor)[0]);
 	}
 
 	public TElement? FindForm<TElement>(ColorPickerModelAxis modelAxis) where TElement : FrameworkElement {

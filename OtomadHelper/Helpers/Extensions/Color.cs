@@ -33,12 +33,8 @@ public static partial class Extensions {
 		/// <summary>
 		/// Converts a <see cref="MediaColor" /> to a HEX color value (#RRGGBB[AA]).
 		/// </summary>
-		public string ToHex() {
-			string hex = "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
-			if (color.A != 255)
-				hex += color.A.ToString("X2");
-			return hex;
-		}
+		public string ToHex() =>
+			$"#{color.R:X2}{color.G:X2}{color.B:X2}{(color.A != 255 ? color.A : ""):X2}";
 
 		/// <summary>
 		/// This function performs a quick calculation of the <i>perceived brightness</i> of a color,

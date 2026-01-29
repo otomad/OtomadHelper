@@ -107,7 +107,7 @@ public static partial class Extensions {
 		}
 
 		/// <summary>
-		/// Get the default value of a <see cref="Type" /> <b>variable</b> like <c><see langword="default"/>(Type)</c>.
+		/// Get the default value of a <see cref="Type" /> <b>variable</b> like <c><see langword="default" />(Type)</c>.
 		/// </summary>
 		public object GetDefault() =>
 			typeof(Extensions).GetMethod(nameof(GetDefaultGeneric), BindingFlags.NonPublic | BindingFlags.Static)!.MakeGenericMethod(type).Invoke(null, null);

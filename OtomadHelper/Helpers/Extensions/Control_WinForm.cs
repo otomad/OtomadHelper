@@ -33,21 +33,19 @@ public static partial class Extensions {
 		/// <typeparam name="T">The type of the children to find.</typeparam>
 		/// <param name="parent">The <see cref="Control"/> to start the search from.</param>
 		/// <param name="includeParent">Also includes the parent control itself?</param>
-		/// <returns>A list of all children of type <typeparamref name="T"/> found.
-		/// If no such children are found, an empty list is returned.</returns>
-		public List<T> GetChildrenOfType<T>(bool includeParent = false) where T : Control {
-			List<T> children = [];
-			if (parent is null)
-				return children;
+		/// <returns>A enumerable of all children of type <typeparamref name="T"/> found.
+		/// If no such children are found, an empty enumerable is returned.</returns>
+		public IEnumerable<T> GetChildrenOfType<T>(bool includeParent = false) where T : Control {
+			if (parent is null) yield break;
 			if (includeParent && parent is T expectedParent)
-				children.Add(expectedParent);
+				yield return expectedParent;
 			foreach (Control control in parent.Controls) {
 				if (control is T expectedControl)
-					children.Add(expectedControl);
+					yield return expectedControl;
 				if (control.HasChildren)
-					children.AddRange(control.GetChildrenOfType<T>());
+					foreach (T child in control.GetChildrenOfType<T>())
+						yield return child;
 			}
-			return children;
 		}
 	}
 }

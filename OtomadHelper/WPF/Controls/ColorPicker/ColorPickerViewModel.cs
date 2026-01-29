@@ -34,7 +34,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			}
 			OnPropertyChanged(nameof(Values));
 			Alpha = color.Alpha.A255;
-			IList<string> hexes = ToHex(color);
+			IList<string> hexes = ToHexes(color);
 			if (!hexes.Contains(Hex)) Hex = hexes[0];
 			UpdateSourcesBehavior behavior = UpdateSourcesBehavior.UpdateBoth;
 			if (prevColor is not null && initialized) {
@@ -139,7 +139,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		View.PointXy.YRange = range.Get<Range>(GetPointXyz(1));
 		View.PointZ.YRange = range.Get<Range>(GetPointXyz(2));
 		View.PointA.YRange = (0, 255);
-		const string BINDING_PATH = "(m:TextBoxLastNonEmptyValueBehavior.LastNonEmptyValue)";
+		const string BINDING_PATH = $"(m:{nameof(TextBoxLastNonEmptyValueBehavior)}.LastNonEmptyValue)";
 		BindingOperations.SetBinding(View.PointXy, ColorTrackThumb.XProperty, new Binding(BINDING_PATH) { Source = GetTextBox(0), Mode = BindingMode.OneWay });
 		BindingOperations.SetBinding(View.PointXy, ColorTrackThumb.YProperty, new Binding(BINDING_PATH) { Source = GetTextBox(1), Mode = BindingMode.OneWay });
 		BindingOperations.SetBinding(View.PointZ, ColorTrackThumb.YProperty, new Binding(BINDING_PATH) { Source = GetTextBox(2), Mode = BindingMode.OneWay });
@@ -278,17 +278,16 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	}
 	public int GetPointXyz(int xyzIndex) => GetPointXyz(xyzIndex, ModelAxis.Axis);
 
-	public static IList<string> ToHex(Unicolour color) {
+	public static IList<string> ToHexes(Unicolour color) {
 		// color.Hex missing alpha
-		byte r = (byte)color.Rgb.Byte255.ConstrainedR, g = (byte)color.Rgb.Byte255.ConstrainedG,
-			b = (byte)color.Rgb.Byte255.ConstrainedB, a = (byte)color.Alpha.A255;
-		string xr = r.ToString("X2"), xg = g.ToString("X2"), xb = b.ToString("X2"), xa = a.ToString("X2");
+		Rgb255 rgb255 = color.Rgb.Byte255;
+		byte r = (byte)rgb255.ConstrainedR, g = (byte)rgb255.ConstrainedG, b = (byte)rgb255.ConstrainedB, a = (byte)color.Alpha.A255;
 		List<string> results = new(4);
-		if (a == 255) results.Add(xr + xg + xb);
-		results.Add(xr + xg + xb + xa);
+		if (a == 255) results.Add($"#{r:X2}{g:X2}{b:X2}");
+		results.Add($"#{r:X2}{g:X2}{b:X2}{a:X2}");
 		if (r % 0x11 == 0 && g % 0x11 == 0 && b % 0x11 == 0) {
-			if (a == 255) results.Add(new([xr[0], xg[0], xb[0]]));
-			if (a % 0x11 == 0) results.Add(new([xr[0], xg[0], xb[0], xa[0]]));
+			if (a == 255) results.Add($"#{r >> 4:X}{g >> 4:X}{b >> 4:X}");
+			if (a % 0x11 == 0) results.Add($"#{r >> 4:X}{g >> 4:X}{b >> 4:X}{a >> 4:X}");
 		}
 		return results;
 	}

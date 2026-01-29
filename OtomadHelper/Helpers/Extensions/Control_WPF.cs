@@ -60,43 +60,22 @@ public static partial class Extensions {
 
 	extension(DependencyObject? parent) {
 		/// <summary>
-		/// Find a child of a given type in the visual tree of a <see cref="DependencyObject"/>.
-		/// </summary>
-		/// <typeparam name="T">The type of the child to find.</typeparam>
-		/// <param name="parent">The <see cref="DependencyObject"/> to start the search from.</param>
-		/// <returns>The first child of type <typeparamref name="T"/> found in the visual tree,
-		/// or <see langword="null"/> if no such child is found.</returns>
-		public T? GetChildOfType<T>() where T : DependencyObject {
-			if (parent is null)
-				return null;
-			for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++) {
-				DependencyObject? child = VisualTreeHelper.GetChild(parent, i);
-				T? result = (child as T) ?? GetChildOfType<T>(child);
-				if (result != null)
-					return result;
-			}
-			return null;
-		}
-
-		/// <summary>
 		/// Find all children of a given type in the visual tree of a <see cref="DependencyObject"/>.
 		/// </summary>
 		/// <typeparam name="T">The type of the children to find.</typeparam>
 		/// <param name="parent">The <see cref="DependencyObject"/> to start the search from.</param>
-		/// <returns>A list of all children of type <typeparamref name="T"/> found in the visual tree.
-		/// If no such children are found, an empty list is returned.</returns>
-		public List<T> GetChildrenOfType<T>() where T : DependencyObject {
-			List<T> children = [];
-			if (parent is null)
-				return children;
+		/// <returns>A enumerable of all children of type <typeparamref name="T"/> found in the visual tree.
+		/// If no such children are found, an empty enumerable is returned.</returns>
+		public IEnumerable<T> GetChildrenOfType<T>() where T : DependencyObject {
+			if (parent is null) yield break;
 			for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++) {
 				DependencyObject? child = VisualTreeHelper.GetChild(parent, i);
 				if (child is T typedChild)
-					children.Add(typedChild);
+					yield return typedChild;
 				if (VisualTreeHelper.GetChildrenCount(child) != 0)
-					children.AddRange(GetChildrenOfType<T>(child));
+					foreach (T grandchild in GetChildrenOfType<T>(child))
+						yield return grandchild;
 			}
-			return children;
 		}
 	}
 
