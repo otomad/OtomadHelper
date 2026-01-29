@@ -107,8 +107,9 @@
 				<Setter Property="Margin" Value="0,0,2,0" />
 				<Setter Property="HorizontalAlignment" Value="Right" />
 				<Setter Property="VerticalAlignment" Value="Bottom" />
+				<Setter Property="Focusable" Value="False" />
 				<Style.Triggers>
-					<DataTrigger Binding="{Binding Header}" Value="">
+					<DataTrigger Binding="{Binding Header}" Value="{x:Null}">
 						<Setter Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
 				</Style.Triggers>

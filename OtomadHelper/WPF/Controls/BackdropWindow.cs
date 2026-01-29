@@ -64,6 +64,9 @@ public partial class BackdropWindow : Window {
 		// Border color (useless when system border color set)
 		SetResourceReference(BorderBrushProperty, "CardStroke");
 		BorderThickness = new(1);
+
+		// Debug focused element
+		// Services.ITimer.WPF.Interval(() => s = System.Windows.Input.FocusManager.GetFocusedElement(this), 1000);
 	}
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {

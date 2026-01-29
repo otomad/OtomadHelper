@@ -8,6 +8,7 @@
 	>
 	<Style x:Key="DefaultToggleButtonStyle" TargetType="ToggleButton">
 		<Setter Property="OverridesDefaultStyle" Value="true" />
+		<Setter Property="Focusable" Value="False" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="ToggleButton">
@@ -23,7 +24,7 @@
 						IsDefault="{TemplateBinding IsChecked}"
 						IsEnabled="{TemplateBinding IsEnabled}"
 						Content="{TemplateBinding Content}"
-						ClipToBounds="True"
+						ClipToBounds="False"
 						Command="{TemplateBinding Command}"
 						CommandParameter="{TemplateBinding CommandParameter}"
 						>

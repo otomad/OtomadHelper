@@ -1,4 +1,4 @@
-#define TEST3
+#define TEST5
 using System.Windows.Forms;
 
 using OtomadHelper.WPF.Controls;

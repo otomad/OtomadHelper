@@ -79,8 +79,9 @@
 			Grid.ColumnSpan="3"
 			HorizontalScrollBarVisibility="Visible"
 			VerticalScrollBarVisibility="Hidden"
+			FlowDirection="LeftToRight"
 			>
-			<ItemsControl AlternationCount="{Binding Bits.Count, FallbackValue=100}">
+			<ItemsControl AlternationCount="{Binding Bits.Count, FallbackValue=100}" Focusable="False">
 				<ItemsControl.Resources>
 					<CollectionViewSource x:Key="collectionViewSource" Source="{Binding Bits}" />
 				</ItemsControl.Resources>
