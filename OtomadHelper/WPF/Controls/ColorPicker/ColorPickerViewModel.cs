@@ -46,7 +46,8 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 			}
 			UpdateSources(behavior);
 			View?.DialogAccentColor = Color.ToMediaColor();
-			UpdateColorSpaceDisplayName();
+			View?.ColorSpaceDisplayName = ModelAxis;
+			View?.ColorDisplayName = color;
 			initialized = true;
 			isColorChanging = false;
 		}
@@ -56,10 +57,8 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	partial void OnModelAxisChanged(ColorPickerModelAxis value) {
 		UpdateSources();
 		UpdateThumbsBinding();
-		UpdateColorSpaceDisplayName();
+		View?.ColorSpaceDisplayName = ModelAxis;
 	}
-
-	private void UpdateColorSpaceDisplayName() => View?.ColorSpaceDisplayName = ModelAxis.DisplayName;
 
 	internal static ThreeD ToTriplet(Unicolour color, ColourSpace model) {
 		ColourRepresentation representation = model switch {

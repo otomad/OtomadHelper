@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using OtomadHelper.Interop;
+
 using Wacton.Unicolour;
 
 namespace OtomadHelper.WPF.Controls;
@@ -28,6 +30,7 @@ public partial class ColorPicker : UserControl {
 		DataContext.InitialColor();
 		DataContext.UpdateThumbsBinding();
 		ContentDialog?.SetNonDefaultButtonAccent(DataContext.Color.ToMediaColor());
+		ContentDialog?.DataContext.Header = Header;
 	}
 
 	public new ColorPickerViewModel DataContext => (ColorPickerViewModel)base.DataContext;
@@ -71,9 +74,14 @@ public partial class ColorPicker : UserControl {
 		}
 	}
 
-	internal string ColorSpaceDisplayName {
-		set => ContentDialog?.DataContext.Header = value;
+	internal ColorPickerModelAxis ColorSpaceDisplayName {
+		set => Header.ModelAxis = value.DisplayName;
+	}
+
+	internal Unicolour ColorDisplayName {
+		set => Header.Color = ColorDisplayNameHelper.ToDisplayName(value.ToMediaColor());
 	}
 
 	private ContentDialog ContentDialog => field ??= (Window.GetWindow(this) as ContentDialog)!;
+	private ColorDisplayNameHeader Header { get; } = new();
 }

@@ -102,14 +102,8 @@
 					</DataTrigger>
 				</Style.Triggers>
 			</Style>
-			<Style
-				x:Key="Header"
-				BasedOn="{StaticResource {x:Type TextBlock}}"
-				TargetType="TextBlock"
-				>
-				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+			<Style x:Key="Header" TargetType="ContentControl">
 				<Setter Property="FontFamily" Value="{Binding DefaultFont, ElementName=View}" />
-				<Setter Property="FontStyle" Value="Italic" />
 				<Setter Property="Margin" Value="0,0,2,0" />
 				<Setter Property="HorizontalAlignment" Value="Right" />
 				<Setter Property="VerticalAlignment" Value="Bottom" />
@@ -203,10 +197,10 @@
 						Style="{StaticResource Title}"
 						Text="{Binding Title}"
 						/>
-					<TextBlock
+					<ContentControl
 						Grid.Row="1"
+						Content="{Binding Header}"
 						Style="{StaticResource Header}"
-						Text="{Binding Header}"
 						/>
 					<TextBlock
 						Grid.Row="2"

@@ -24,6 +24,9 @@
     <Compile Update="WinForm\Controls\RoundedButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="WPF\Controls\ColorPicker\ColorDisplayNameHeader.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="WPF\Controls\ColorPicker\ColorPicker.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
