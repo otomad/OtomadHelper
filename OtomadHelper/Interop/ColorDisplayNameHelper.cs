@@ -33,10 +33,10 @@ public static class ColorDisplayNameHelper {
 
 	private static void UpdateColorStrings(CultureInfo culture) {
 		ColorStrings = [];
-		string systemRoot = Environment.GetEnvironmentVariable("SystemRoot");
-		IntPtr handle = LoadLibrary($@"{systemRoot}\System32\{culture}\Windows.UI.Xaml.dll.mui");
+		string system32 = Environment.SystemDirectory;
+		IntPtr handle = LoadLibrary($@"{system32}\{culture}\Windows.UI.Xaml.dll.mui");
 		if (handle == IntPtr.Zero)
-			handle = LoadLibrary($@"{systemRoot}\System32\Windows.UI.Xaml.dll");
+			handle = LoadLibrary($@"{system32}\Windows.UI.Xaml.dll");
 		if (handle == IntPtr.Zero)
 			return; // Windows 7 or earlier.
 		StringBuilder buffer = new(1024);
