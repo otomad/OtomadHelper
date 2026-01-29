@@ -39,6 +39,7 @@ public partial class BackdropWindow : Window {
 	public BackdropWindow() : base() {
 		InitializeComponent();
 		helper = new(this);
+		//FlowDirection = FlowDirection.RightToLeft;
 	}
 
 	public IntPtr OwnerHandle {
@@ -405,7 +406,7 @@ public partial class BackdropWindow : Window {
 					RelativeSource = new(RelativeSourceMode.FindAncestor, typeof(BackdropWindow), 1),
 					Converter = new WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter(),
 				};
-				this.SetBinding(WindowChrome.ResizeBorderThicknessProperty, resizeBorderThicknessBinding);
+				BindingOperations.SetBinding(WindowChrome.GetWindowChrome(this), WindowChrome.ResizeBorderThicknessProperty, resizeBorderThicknessBinding);
 				break;
 			case TitleBarType.WindowChromeNoTitleBar:
 				WindowChrome.SetWindowChrome(this, new() {
@@ -432,7 +433,7 @@ public partial class BackdropWindow : Window {
 	}
 
 	[ValueConversion(typeof(ResizeMode), typeof(Thickness))]
-	private class WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter : ValueConverter<ResizeMode, Thickness> {
+	public class WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter : ValueConverter<ResizeMode, Thickness> {
 		public override Thickness Convert(ResizeMode resizeMode, Type targetType, object parameter, CultureInfo culture) =>
 			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? new(0) : new(8, 0, 8, 8);
 	}
