@@ -46,9 +46,8 @@ public class UnicolourToMediaColorConverter : ValueConverter<Unicolour, Color, d
 		color.ToUnicolour();
 }
 
-public class TrackThumbInnerBaseMultiplySizeConverter : MultiValueConverter<double[], double> {
-	public override double Convert(double[] values, Type targetType, object parameter, CultureInfo culture) =>
-		values.ToArray().Aggregate(1d, (a, b) => a * b);
+public class TrackThumbInnerBaseMultiplySizeConverter : ValueConverter<double, double, double> {
+	public override double Convert(double value, Type targetType, double parameter, CultureInfo culture) => value * parameter;
 }
 
 [ValueConversion(typeof(ColorPickerModelAxis), typeof(Range?))]
@@ -79,4 +78,10 @@ public class Alpha255ToAlpha100Converter : ValueConverter<int, int> {
 public class ColorPickerModelAxisToTranslationConverter : ValueConverter<ColorPickerModelAxis, string, bool> {
 	public override string Convert(ColorPickerModelAxis value, Type targetType, bool useLongName, CultureInfo culture) =>
 		ColorPickerModelAxis.GetAxisDisplayName(value.GetAxisI18nKey(), useLongName);
+}
+
+[ValueConversion(typeof(SolidColorBrush), typeof(bool))]
+public class IsNotSolidColorToBooleanConverter : ValueConverter<SolidColorBrush, bool> {
+	public override bool Convert(SolidColorBrush color, Type targetType, object parameter, CultureInfo culture) =>
+		color.Color.A != 255;
 }

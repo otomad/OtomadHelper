@@ -48,16 +48,18 @@
 							/>
 						<Ellipse
 							x:Name="InnerThumbBase"
+							Width="{Binding Width, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource MultiplySize}, ConverterParameter={m:Double 0.8}}"
 							Height="{Binding Width, RelativeSource={RelativeSource Self}}"
-							MinWidth="0.6"
-							Fill="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"
+							c:CheckerBoardBrush.Mix="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"
+							c:ColorTrackThumb.BaseScale="0.6"
+							Fill="{Binding (c:CheckerBoardBrush.Brush), RelativeSource={RelativeSource Self}}"
 							>
-							<Ellipse.Width>
-								<MultiBinding Converter="{StaticResource MultiplySize}">
-									<Binding Path="MinWidth" RelativeSource="{RelativeSource Self}" />
-									<Binding Path="Width" RelativeSource="{RelativeSource TemplatedParent}" />
-								</MultiBinding>
-							</Ellipse.Width>
+							<Ellipse.OpacityMask>
+								<RadialGradientBrush>
+									<GradientStop Offset="{Binding (c:ColorTrackThumb.BaseScale), RelativeSource={RelativeSource AncestorType=Ellipse}}" Color="#FF000000" />
+									<GradientStop Offset="{Binding (c:ColorTrackThumb.BaseScale), RelativeSource={RelativeSource AncestorType=Ellipse}}" Color="#00000000" />
+								</RadialGradientBrush>
+							</Ellipse.OpacityMask>
 						</Ellipse>
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="CommonStates">
@@ -80,7 +82,7 @@
 								</VisualStateGroup.Transitions>
 								<VisualState x:Name="Normal">
 									<Storyboard>
-										<DoubleAnimationUsingKeyFrames Storyboard.TargetName="InnerThumbBase" Storyboard.TargetProperty="MinWidth">
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetName="InnerThumbBase" Storyboard.TargetProperty="(c:ColorTrackThumb.BaseScale)">
 											<SplineDoubleKeyFrame KeyTime="0" Value="0.6" />
 											<!--  12 ÷ 20  -->
 										</DoubleAnimationUsingKeyFrames>
@@ -88,15 +90,15 @@
 								</VisualState>
 								<VisualState x:Name="MouseOver">
 									<Storyboard>
-										<DoubleAnimationUsingKeyFrames Storyboard.TargetName="InnerThumbBase" Storyboard.TargetProperty="MinWidth">
-											<SplineDoubleKeyFrame KeyTime="0" Value="0.7" />
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetName="InnerThumbBase" Storyboard.TargetProperty="(c:ColorTrackThumb.BaseScale)">
+											<SplineDoubleKeyFrame KeyTime="0" Value="0.75" />
 											<!--  14 ÷ 20  -->
 										</DoubleAnimationUsingKeyFrames>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Pressed">
 									<Storyboard>
-										<DoubleAnimationUsingKeyFrames Storyboard.TargetName="InnerThumbBase" Storyboard.TargetProperty="MinWidth">
+										<DoubleAnimationUsingKeyFrames Storyboard.TargetName="InnerThumbBase" Storyboard.TargetProperty="(c:ColorTrackThumb.BaseScale)">
 											<SplineDoubleKeyFrame KeyTime="0" Value="0.5" />
 											<!--  10 ÷ 20  -->
 										</DoubleAnimationUsingKeyFrames>

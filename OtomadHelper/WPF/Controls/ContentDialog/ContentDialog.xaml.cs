@@ -152,8 +152,9 @@ public partial class ContentDialog : BackdropWindow {
 		for (int i = 0; i < ButtonsContainer.Items.Count; i++) {
 			ContentPresenter presenter = (ContentPresenter)ButtonsContainer.ItemContainerGenerator.ContainerFromIndex(i);
 			Button? button = presenter.ContentTemplate.FindName("Button", presenter) as Button;
-			if (button is not null && !button.IsDefault)
-				button.Accent = color;
+			if (button is null) continue;
+			button.MixCheckerBoard = true;
+			if (!button.IsDefault) button.Accent = color;
 		}
 	}
 

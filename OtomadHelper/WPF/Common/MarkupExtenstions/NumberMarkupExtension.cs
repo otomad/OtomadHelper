@@ -59,7 +59,7 @@ public class IntExtension(int value) : MarkupExtension {
 /// </example>
 /// </remarks>
 [MarkupExtensionReturnType(typeof(double))]
-public class DoubleExtension(int value) : MarkupExtension {
+public class DoubleExtension(double value) : MarkupExtension {
 	[ConstructorArgument("value")]
 	public double Value { get; set; } = value;
 

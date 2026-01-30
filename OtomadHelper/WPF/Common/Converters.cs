@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
+using OtomadHelper.WPF.Controls;
+
 namespace OtomadHelper.WPF.Common;
 
 #region BooleanConverter
@@ -310,4 +312,10 @@ public class CollectionHasItemsConverter : ValueConverter<IEnumerable, bool> {
 [ValueConversion(typeof(object), typeof(bool))]
 public class NullableObjectToBooleanConverter : ValueConverter<object, bool> {
 	public override bool Convert(object? value, Type targetType, object parameter, CultureInfo culture) => value is not null;
+}
+
+[ValueConversion(typeof(double), typeof(Rect))]
+public class SizeToViewportConverter : ValueConverter<double, Rect> {
+	public override Rect Convert(double size, Type targetType, object parameter, CultureInfo culture) => new(0, 0, size, size);
+	public override double ConvertBack(Rect viewport, Type targetType, object parameter, CultureInfo culture) => viewport.Width;
 }

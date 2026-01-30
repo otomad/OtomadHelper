@@ -8,6 +8,7 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<object>("DialogResult", DefaultValue = "")]
 [DependencyProperty<Color?>("Accent")]
 [DependencyProperty<double>("BackgroundOpacity", DefaultValue = 1)]
+[DependencyProperty<bool>("MixCheckerBoard", DefaultValue = false)]
 public partial class Button : System.Windows.Controls.Button {
 
 }

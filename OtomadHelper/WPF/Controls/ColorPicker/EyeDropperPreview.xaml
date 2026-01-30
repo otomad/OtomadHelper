@@ -21,7 +21,7 @@
 	mc:Ignorable="d"
 	>
 	<Window.RenderTransform>
-		<ScaleTransform ScaleX="1" ScaleY="1" />
+		<ScaleTransform ScaleX="1" ScaleY="{Binding ScaleX, RelativeSource={RelativeSource Self}}" />
 	</Window.RenderTransform>
 
 	<Window.Resources>
@@ -45,13 +45,6 @@
 				<DoubleAnimation
 					EasingFunction="{StaticResource EaseOutExpo}"
 					Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-					From="1"
-					To="0.8"
-					Duration="{StaticResource BaseAnimationDuration}"
-					/>
-				<DoubleAnimation
-					EasingFunction="{StaticResource EaseOutExpo}"
-					Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
 					From="1"
 					To="0.8"
 					Duration="{StaticResource BaseAnimationDuration}"

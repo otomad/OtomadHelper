@@ -82,7 +82,9 @@
 		<None Include="Resources\**" />
 		<None Include="app.config" />
 		<None Include="FodyWeavers.xsd" />
-		<None Include="FodyWeavers.xml" />
+		<None Include="FodyWeavers.xml">
+			<DependentUpon>FodyWeavers.xsd</DependentUpon>
+		</None>
 		<None Include="ILRepack.targets" />
 		<None Include="Helpers\LocalizeGen.tt">
 			<Generator>TextTemplatingFileGenerator</Generator>
@@ -136,11 +138,6 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>LocalizeGen.tt</DependentUpon>
 		</Compile>
-		<Compile Update="Helpers\LocalizeGen.txt">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>LocalizeGen.tt</DependentUpon>
-		</Compile>
 		<Compile Update="Module\Host.cs">
 			<SubType>UserControl</SubType>
 		</Compile>
@@ -172,11 +169,6 @@
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>
-		<Content Include="Helpers\LocalizeGen.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>LocalizeGen.tt</DependentUpon>
-		</Content>
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Web\**" />

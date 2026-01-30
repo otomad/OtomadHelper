@@ -48,6 +48,8 @@
 	<s:Double x:Key="SubtitleFontSize">20</s:Double>
 	<!--#endregion-->
 
+	<RectangleGeometry x:Key="GeometryFill" Rect="0,0,100,100" />
+
 	<!--#region Pan Theme Colors -->
 	<!-- Set background color to transparent may cause it cannot be clicked, so use a 1/255 alpha color to replace it. -->
 	<!--<SolidColorBrush x:Key="PretendTransparent" Color="#01000000" />-->

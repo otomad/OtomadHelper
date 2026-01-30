@@ -4,6 +4,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -17,6 +18,7 @@ using XY = (double X, double Y);
 [DependencyProperty<bool>("ReverseX", DefaultValue = false)]
 [DependencyProperty<bool>("ReverseY", DefaultValue = false)]
 [DependencyProperty<bool>("Round", DefaultValue = false, Description = "Set the value to the nearest integer.")]
+[AttachedDependencyProperty<double, Ellipse>("BaseScale", DefaultValue = 1)]
 [RoutedEvent("Dragging", RoutedEventStrategy.Bubble)]
 public partial class ColorTrackThumb : Thumb {
 	protected Canvas? Canvas { get; private set; }

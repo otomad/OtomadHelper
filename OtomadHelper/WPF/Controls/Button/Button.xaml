@@ -5,27 +5,32 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
-	<m:BooleanTruthyConverter x:Key="BoolTruthy" />
-	<m:BackgroundToForegroundColorConverter x:Key="BgToFg" />
-	<m:ObjectToTypeNameConverter x:Key="TypeOf" />
-
-	<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
-
-	<Style x:Key="ButtonContentPresenter" TargetType="ContentPresenter">
-		<Setter Property="HorizontalAlignment" Value="Center" />
-		<Setter Property="VerticalAlignment" Value="Center" />
-		<Setter Property="RecognizesAccessKey" Value="True" />
-	</Style>
-
-	<Style x:Key="FixExternalTextBlockStyleAffectingAccessKeyStyle" TargetType="TextBlock">
-		<!--
-			If there is any style for TextBlock outside the Button, it will unexpectedly affect the style of AccessKey inside the Button,
-			and it needs to be cleaned up here.
-		-->
-		<Setter Property="Margin" Value="0" />
-	</Style>
-
 	<Style x:Key="DefaultButtonStyle" TargetType="c:Button">
+		<Style.Resources>
+			<m:BooleanTruthyConverter x:Key="BoolTruthy" />
+			<m:BackgroundToForegroundColorConverter x:Key="BgToFg" />
+			<m:ObjectToTypeNameConverter x:Key="TypeOf" />
+			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
+			<m:BooleanAndConverter x:Key="BoolAnd" />
+			<c:IsNotSolidColorToBooleanConverter x:Key="NotSolidColor" />
+
+			<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
+
+			<Style x:Key="ButtonContentPresenter" TargetType="ContentPresenter">
+				<Setter Property="HorizontalAlignment" Value="Center" />
+				<Setter Property="VerticalAlignment" Value="Center" />
+				<Setter Property="RecognizesAccessKey" Value="True" />
+			</Style>
+
+			<Style x:Key="FixExternalTextBlockStyleAffectingAccessKeyStyle" TargetType="TextBlock">
+				<!--
+					If there is any style for TextBlock outside the Button, it will unexpectedly affect the style of AccessKey inside the Button,
+					and it needs to be cleaned up here.
+				-->
+				<Setter Property="Margin" Value="0" />
+			</Style>
+		</Style.Resources>
+
 		<Setter Property="MinHeight" Value="32" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ControlElevation}" />
 		<Setter Property="Background" Value="{DynamicResource ControlBackground}" />
@@ -87,8 +92,21 @@
 				<Setter Property="Foreground" Value="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BgToFg}}" />
 				<Setter Property="Template">
 					<Setter.Value>
-						<ControlTemplate TargetType="Button">
+						<ControlTemplate TargetType="c:Button">
 							<Grid>
+								<Border
+									Padding="{TemplateBinding Padding}"
+									Background="{DynamicResource TranslucentCheckerBoard}"
+									CornerRadius="{StaticResource ButtonCornerRadius}"
+									Opacity="{TemplateBinding BackgroundOpacity}"
+									>
+									<Border.Visibility>
+										<MultiBinding Converter="{StaticResource BoolAnd}">
+											<Binding Path="MixCheckerBoard" RelativeSource="{RelativeSource TemplatedParent}" />
+											<Binding Path="Background" RelativeSource="{RelativeSource TemplatedParent}" Converter="{StaticResource NotSolidColor}" />
+										</MultiBinding>
+									</Border.Visibility>
+								</Border>
 								<Border
 									Padding="{TemplateBinding Padding}"
 									Background="{TemplateBinding Background}"
