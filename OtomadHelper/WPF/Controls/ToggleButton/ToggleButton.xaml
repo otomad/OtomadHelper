@@ -9,6 +9,7 @@
 	<Style x:Key="DefaultToggleButtonStyle" TargetType="ToggleButton">
 		<Setter Property="OverridesDefaultStyle" Value="true" />
 		<Setter Property="Focusable" Value="False" />
+		<Setter Property="AutomationProperties.Name" Value="{Binding Content}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="ToggleButton">

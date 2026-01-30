@@ -33,11 +33,11 @@
 			<c:UnicolourToMediaColorConverter x:Key="UniToMediaColor" />
 			<c:TextBoxModelAxisToRangeConverter x:Key="ModelAxisToRange" />
 			<c:Alpha255ToAlpha100Converter x:Key="A255ToA100" />
-			<c:ColorAxisI18nKeyToTranslationConverter x:Key="AxisKeyToTrans" />
 			<m:BooleanNotConverter x:Key="BoolNot" />
-			<c:ColorPickerModelAxisToColorAxisI18nKeyConverter x:Key="ModelAxisToKey" />
+			<c:ColorPickerModelAxisToTranslationConverter x:Key="ModelAxisToTrans" />
 
 			<Style BasedOn="{StaticResource DefaultRadioButtonStyle}" TargetType="RadioButton">
+				<Setter Property="AutomationProperties.Name" Value="{Binding (c:ColorPicker.ModelAxis), RelativeSource={RelativeSource Self}, Converter={StaticResource ModelAxisToTrans}, ConverterParameter={m:Bool True}}" />
 				<Setter Property="FontFamily" Value="{Binding MonoFont, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 				<Setter Property="VerticalAlignment" Value="Center" />
 				<Setter Property="HorizontalAlignment" Value="Left" />
@@ -58,9 +58,8 @@
 			</Style>
 
 			<Style TargetType="Label">
-				<Setter Property="Tag" Value="{Binding (c:ColorPicker.ModelAxis), RelativeSource={RelativeSource AncestorType=RadioButton}, Converter={StaticResource ModelAxisToKey}}" />
-				<Setter Property="Content" Value="{Binding Tag, RelativeSource={RelativeSource Self}, Converter={StaticResource AxisKeyToTrans}, ConverterParameter={m:Bool False}}" />
-				<Setter Property="ToolTip" Value="{Binding Tag, RelativeSource={RelativeSource Self}, Converter={StaticResource AxisKeyToTrans}, ConverterParameter={m:Bool True}}" />
+				<Setter Property="Content" Value="{Binding (c:ColorPicker.ModelAxis), RelativeSource={RelativeSource AncestorType=RadioButton}, Converter={StaticResource ModelAxisToTrans}, ConverterParameter={m:Bool False}}" />
+				<Setter Property="ToolTip" Value="{Binding (c:ColorPicker.ModelAxis), RelativeSource={RelativeSource AncestorType=RadioButton}, Converter={StaticResource ModelAxisToTrans}, ConverterParameter={m:Bool True}}" />
 				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
 				<Setter Property="Padding" Value="0" />
@@ -76,7 +75,7 @@
 
 			<Style x:Key="RadioLessLabel" BasedOn="{StaticResource Unit}" TargetType="TextBlock">
 				<Setter Property="HorizontalAlignment" Value="Right" />
-				<Setter Property="Margin" Value="0,0,4,0" />
+				<Setter Property="Padding" Value="4" />
 				<Setter Property="m:InteractivityItems.Template">
 					<Setter.Value>
 						<m:InteractivityTemplate>
@@ -88,6 +87,16 @@
 						</m:InteractivityTemplate>
 					</Setter.Value>
 				</Setter>
+				<Style.Resources>
+					<Style BasedOn="{StaticResource {x:Type Label}}" TargetType="Label">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="Alpha">
+								<Setter Property="Content" Value="{m:Trans ColorPicker.AxisAbbrs.Alpha, Pangu=False}" />
+								<Setter Property="ToolTip" Value="{m:Trans ColorPicker.Axis.Alpha}" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Style.Resources>
 			</Style>
 
 			<Style BasedOn="{StaticResource DefaultTextBoxStyle}" TargetType="TextBox">
@@ -96,6 +105,7 @@
 				<Setter Property="HorizontalAlignment" Value="Stretch" />
 				<Setter Property="Margin" Value="5,2" />
 				<Setter Property="TextAlignment" Value="Right" />
+				<Setter Property="AutomationProperties.Name" Value="{Binding (c:ColorPicker.ModelAxis), RelativeSource={RelativeSource Self}, Converter={StaticResource ModelAxisToTrans}, ConverterParameter={m:Bool True}}" />
 				<Setter Property="m:NumberTextBoxBehavior.NumberInputMode" Value="Integer" />
 				<Setter Property="m:NumberTextBoxBehavior.Range" Value="{Binding (c:ColorPicker.ModelAxis), RelativeSource={RelativeSource Self}, Converter={StaticResource ModelAxisToRange}, Mode=OneTime}" />
 				<Setter Property="m:InteractivityItems.Template">

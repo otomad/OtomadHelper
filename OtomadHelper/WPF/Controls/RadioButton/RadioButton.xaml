@@ -26,7 +26,7 @@
 									<Rectangle
 										Width="26"
 										Height="26"
-										Margin="-3"
+										Margin="1"
 										RadiusX="13"
 										RadiusY="13"
 										Stroke="{DynamicResource ForegroundBrush}"

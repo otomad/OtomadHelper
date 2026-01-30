@@ -75,14 +75,8 @@ public class Alpha255ToAlpha100Converter : ValueConverter<int, int> {
 		(int)Math.Round((double)value / 255 * 100);
 }
 
-[ValueConversion(typeof(string), typeof(string))]
-public class ColorAxisI18nKeyToTranslationConverter : ValueConverter<string, string, bool> {
-	public override string Convert(string value, Type targetType, bool useLongName, CultureInfo culture) =>
-		ColorPickerModelAxis.GetAxisDisplayName(value, useLongName);
-}
-
 [ValueConversion(typeof(ColorPickerModelAxis), typeof(string))]
-public class ColorPickerModelAxisToColorAxisI18nKeyConverter : ValueConverter<ColorPickerModelAxis, string> {
-	public override string Convert(ColorPickerModelAxis value, Type targetType, object parameter, CultureInfo culture) =>
-		value.GetAxisI18nKey();
+public class ColorPickerModelAxisToTranslationConverter : ValueConverter<ColorPickerModelAxis, string, bool> {
+	public override string Convert(ColorPickerModelAxis value, Type targetType, bool useLongName, CultureInfo culture) =>
+		ColorPickerModelAxis.GetAxisDisplayName(value.GetAxisI18nKey(), useLongName);
 }
