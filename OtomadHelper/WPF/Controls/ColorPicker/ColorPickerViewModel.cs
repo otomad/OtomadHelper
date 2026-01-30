@@ -87,6 +87,10 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	private void GetColorFromScreen(Color color) =>
 		Color = color.ToUnicolour();
 
+	[RelayCommand]
+	private void InvertColor() =>
+		Color = new Unicolour(ColourSpace.Rgb, 1 - Color.Rgb.R, 1 - Color.Rgb.G, 1 - Color.Rgb.B, Color.Alpha.A);
+
 	[ObservableProperty]
 	private Dictionary<ColorPickerModelAxis, double> values = [];
 	[ObservableProperty]
@@ -282,11 +286,11 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		Rgb255 rgb255 = color.Rgb.Byte255;
 		byte r = (byte)rgb255.ConstrainedR, g = (byte)rgb255.ConstrainedG, b = (byte)rgb255.ConstrainedB, a = (byte)color.Alpha.A255;
 		List<string> results = new(4);
-		if (a == 255) results.Add($"#{r:X2}{g:X2}{b:X2}");
-		results.Add($"#{r:X2}{g:X2}{b:X2}{a:X2}");
+		if (a == 255) results.Add($"{r:X2}{g:X2}{b:X2}");
+		results.Add($"{r:X2}{g:X2}{b:X2}{a:X2}");
 		if (r % 0x11 == 0 && g % 0x11 == 0 && b % 0x11 == 0) {
-			if (a == 255) results.Add($"#{r >> 4:X}{g >> 4:X}{b >> 4:X}");
-			if (a % 0x11 == 0) results.Add($"#{r >> 4:X}{g >> 4:X}{b >> 4:X}{a >> 4:X}");
+			if (a == 255) results.Add($"{r >> 4:X}{g >> 4:X}{b >> 4:X}");
+			if (a % 0x11 == 0) results.Add($"{r >> 4:X}{g >> 4:X}{b >> 4:X}{a >> 4:X}");
 		}
 		return results;
 	}

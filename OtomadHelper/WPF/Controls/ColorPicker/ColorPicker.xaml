@@ -160,6 +160,30 @@
 					</Setter.Value>
 				</Setter>
 			</Style>
+
+			<Style x:Key="ActionButtonsGrid" TargetType="UniformGrid">
+				<Setter Property="Columns" Value="2" />
+				<Setter Property="Margin" Value="5,2,5,0" />
+				<Setter Property="m:Spacing.Horizontal" Value="6" />
+				<Style.Resources>
+					<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="c:Button">
+						<Setter Property="Padding" Value="2" />
+						<Style.Resources>
+							<Style TargetType="StackPanel">
+								<Setter Property="Orientation" Value="Horizontal" />
+								<Setter Property="m:Spacing.Horizontal" Value="10" />
+							</Style>
+						</Style.Resources>
+					</Style>
+				</Style.Resources>
+			</Style>
+
+			<Style x:Key="TrackBorder" TargetType="Rectangle">
+				<Setter Property="Stroke" Value="{DynamicResource ControlStroke}" />
+				<Setter Property="StrokeThickness" Value="1" />
+				<Setter Property="RadiusX" Value="5" />
+				<Setter Property="RadiusY" Value="5" />
+			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>
 
@@ -171,6 +195,7 @@
 				Source="{Binding PrimarySource, Mode=OneTime}"
 				m:CornerRadiusClip.CornerRadius="{StaticResource TrackCornerRadius}"
 				/>
+			<Rectangle Style="{StaticResource TrackBorder}" />
 			<Canvas>
 				<c:ColorTrackThumb x:Name="PointXy" ReverseY="True" />
 			</Canvas>
@@ -182,6 +207,7 @@
 				Source="{Binding SecondarySource, Mode=OneTime}"
 				m:CornerRadiusClip.CornerRadius="{StaticResource TrackCornerRadius}"
 				/>
+			<Rectangle Style="{StaticResource TrackBorder}" />
 			<Canvas>
 				<c:ColorTrackThumb
 					x:Name="PointZ"
@@ -204,6 +230,7 @@
 					</LinearGradientBrush>
 				</Rectangle.Fill>
 			</Rectangle>
+			<Rectangle Style="{StaticResource TrackBorder}" />
 			<Canvas>
 				<c:ColorTrackThumb
 					x:Name="PointA"
@@ -255,8 +282,9 @@
 			<TextBox c:ColorPicker.ModelAxis="OKLCH.0" Grid.Column="9" Grid.Row="4" />
 			<TextBox c:ColorPicker.ModelAxis="OKLCH.1" Grid.Column="9" Grid.Row="5" />
 			<TextBox c:ColorPicker.ModelAxis="OKLCH.2" Grid.Column="9" Grid.Row="6" />
-			<TextBox c:ColorPicker.ModelAxis="A255" Grid.Column="1" Grid.Row="8" m:NumberTextBoxBehavior.Range="0,255" Text="{Binding Alpha, Mode=OneWay}" />
-			<TextBox c:ColorPicker.ModelAxis="A100" Grid.Column="1" Grid.Row="9" m:NumberTextBoxBehavior.Range="0,100" Text="{Binding Alpha, Mode=OneWay, Converter={StaticResource A255ToA100}}" />
+			<TextBox c:ColorPicker.ModelAxis="A255" Grid.Column="1" Grid.Row="8" m:NumberTextBoxBehavior.Range="0,255" AutomationProperties.Name="不透明度" AutomationProperties.HelpText="值域0至255" Text="{Binding Alpha, Mode=OneWay}" />
+			<TextBox c:ColorPicker.ModelAxis="A100" Grid.Column="1" Grid.Row="9" m:NumberTextBoxBehavior.Range="0,100" AutomationProperties.Name="不透明度" AutomationProperties.HelpText="值域0至100" Text="{Binding Alpha, Mode=OneWay, Converter={StaticResource A255ToA100}}" />
+			<!--TODO: I18n-->
 			<TextBox
 				c:ColorPicker.ModelAxis="HEX"
 				Grid.Column="5"
@@ -266,31 +294,37 @@
 				m:NumberTextBoxUpDownKeyBehavior.Step="0"
 				m:NumberTextBoxBehavior.MaxLength="8"
 				m:NumberTextBoxBehavior.NumberInputMode="Hex"
+				AutomationProperties.Name="十六进制"
 				Text="{Binding Hex, Mode=OneWay}"
 				/>
 
-			<c:Button
-				Grid.Column="6"
+			<UniformGrid
+				Grid.Column="5"
 				Grid.Row="9"
-				Grid.ColumnSpan="4"
-				Margin="0,2,5,0"
-				Padding="2"
-				ToolTip="{m:Trans Descriptions.ColorPicker.EyeDropper}"
-				Focusable="False"
+				Grid.ColumnSpan="5"
+				Style="{StaticResource ActionButtonsGrid}"
 				>
-				<StackPanel Orientation="Horizontal">
-					<c:Icon IconName="EyeDropper" Margin="0,0,10,0" />
-					<TextBlock Text="{m:Trans ColorPicker.EyeDropper}" />
-				</StackPanel>
-				<i:Interaction.Behaviors>
-					<c:EyeDropperBehavior />
-				</i:Interaction.Behaviors>
-				<i:Interaction.Triggers>
-					<m:RoutedEventTrigger RoutedEvent="{x:Static c:EyeDropperBehavior.GetColorEvent}">
-						<i:InvokeCommandAction Command="{Binding GetColorFromScreenCommand}" EventArgsParameterPath="Color" />
-					</m:RoutedEventTrigger>
-				</i:Interaction.Triggers>
-			</c:Button>
+				<c:Button ToolTip="反转当前颜色" Command="{Binding InvertColorCommand}" AutomationProperties.LabeledBy="{Binding ElementName=InvertColorBtnLbl}">
+					<StackPanel>
+						<c:Icon IconName="InvertColor" />
+						<TextBlock x:Name="InvertColorBtnLbl" Text="反色" /><!--TODO: I18n-->
+					</StackPanel>
+				</c:Button>
+				<c:Button ToolTip="{m:Trans Descriptions.ColorPicker.EyeDropper}" Focusable="False">
+					<StackPanel>
+						<c:Icon IconName="EyeDropper" />
+						<TextBlock Text="{m:Trans ColorPicker.EyeDropper}" />
+					</StackPanel>
+					<i:Interaction.Behaviors>
+						<c:EyeDropperBehavior />
+					</i:Interaction.Behaviors>
+					<i:Interaction.Triggers>
+						<m:RoutedEventTrigger RoutedEvent="{x:Static c:EyeDropperBehavior.GetColorEvent}">
+							<i:InvokeCommandAction Command="{Binding GetColorFromScreenCommand}" EventArgsParameterPath="Color" />
+						</m:RoutedEventTrigger>
+					</i:Interaction.Triggers>
+				</c:Button>
+			</UniformGrid>
 
 			<TextBlock Grid.Column="2" Grid.Row="0" Style="{StaticResource Unit}">°</TextBlock>
 			<TextBlock Grid.Column="2" Grid.Row="1" Style="{StaticResource Unit}">%</TextBlock>

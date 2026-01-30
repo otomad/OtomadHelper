@@ -146,7 +146,7 @@
 
 		<StackPanel Grid.Row="2" Grid.Column="0" Style="{StaticResource FormIconAndLabel}">
 			<c:Icon IconName="TableSimpleInclude" />
-			<TextBlock x:Name="IntervalLbl">周期</TextBlock>
+			<TextBlock x:Name="IntervalLbl">周期</TextBlock><!--TODO: I18n-->
 		</StackPanel>
 		<c:NumericUpDown
 			Grid.Row="2"
