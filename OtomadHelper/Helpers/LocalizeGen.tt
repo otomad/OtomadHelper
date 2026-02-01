@@ -48,7 +48,7 @@ public class <#= className #>(Localize localize, string ancestor = "") : Localiz
 	foreach (DictionaryEntry property in properties) {
 		string propertyName = (string)property.Key;
 		if (property.Value is string key) {
-			Write(GetXmlDocumentation(strings, key, "\t/// "));
+			WriteLine(GetXmlDocumentation(strings, key, "\t/// "));
 #>
 	public string <#= propertyName #> => base.GetString("<#= key #>");
 <#
@@ -65,10 +65,6 @@ public class <#= className #>(Localize localize, string ancestor = "") : Localiz
 <# } #>
 
 <#+
-	public void WriteLf(string text) {
-		Write(text + "\n");
-	}
-
 	public static object GetKeyByValue(OrderedDictionary dictionary, object valueToFind) {
 		foreach (DictionaryEntry entry in dictionary)
 			if (object.Equals(entry.Value, valueToFind))
@@ -103,6 +99,6 @@ public class <#= className #>(Localize localize, string ancestor = "") : Localiz
 		translated = new Regex(@"\r\n|\n|\r").Replace(translated, "<br />\n");
 		translated = new Regex(@"&([A-Za-z0-9])").Replace(translated, "<u>$1</u>");
 		string lines = string.Join("\n", $"<summary>\n{translated}\n</summary>".Split('\n').Select(line => indent + line));
-		return lines;
+		return lines.Replace("\n", "\r\n");
 	}
 #>

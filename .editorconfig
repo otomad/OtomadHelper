@@ -13,6 +13,7 @@ indent_style = space
 indent_size = 2
 
 [*.tt]
+end_of_line = crlf
 insert_final_newline = false
 
 [*.cs]

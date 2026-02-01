@@ -26,10 +26,9 @@ public static partial class Extensions {
 	}
 
 	private static readonly HashSet<Type> NumericTypes = [
-		typeof(int), typeof(double), typeof(decimal),
-		typeof(long), typeof(short), typeof(sbyte),
-		typeof(byte), typeof(ulong), typeof(ushort),
-		typeof(uint), typeof(float),
+		typeof(sbyte), typeof(byte), typeof(short), typeof(ushort),
+		typeof(int), typeof(uint), typeof(long), typeof(ulong),
+		typeof(float), typeof(double), typeof(decimal),
 	];
 	private static T GetDefaultGeneric<T>() => default!;
 
