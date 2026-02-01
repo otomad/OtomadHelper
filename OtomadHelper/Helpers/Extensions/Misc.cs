@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -362,7 +363,29 @@ public static partial class Extensions {
 		/// <param name="fontFamilies">A parameter array of collections of FontFamily objects whose sources will be combined. Each collection can contain
 		/// one or more FontFamily instances.</param>
 		/// <returns>A FontFamily representing the combined sources of all specified font families, joined as a comma-separated list.</returns>
-		public static FontFamily Join(params IEnumerable<FontFamily> fontFamilies) =>
-			new(fontFamilies.Select(font => font.Source).Join(", "));
+		public static FontFamily Join(params IEnumerable<FontFamily?> fontFamilies) =>
+			new(fontFamilies.NonNull().Select(font => font.Source).Join(", "));
+	}
+
+	extension(CultureInfo culture) {
+		/// <summary>
+		/// Get the default UI font of Windows in the specific culture info, but not fully covered.
+		/// </summary>
+		/// <returns>The default UI font in the specific culture info.</returns>
+		public FontFamily? GetDefaultUIFont() {
+			while (!(culture is null || culture == CultureInfo.InvariantCulture)) {
+				string? font = culture.Name switch {
+					"zh-CN" or "zh-Hans" or "zh-CHS" or "zh" => "Microsoft YaHei UI",
+					"zh-TW" or "zh-HK" or "zh-MO" or "zh-Hant" or "zh-CHT" => "Microsoft JhengHei UI",
+					"ja-JP" or "ja" => "Yu Gothic UI",
+					"ko-KR" or "ko-KP" or "ko" => "Malgun Gothic",
+					"en-US" or "en-GB" or "en-UK" => "Segoe UI",
+					_ => null,
+				};
+				if (font is not null) return new(font);
+				culture = culture.Parent;
+			}
+			return null;
+		}
 	}
 }

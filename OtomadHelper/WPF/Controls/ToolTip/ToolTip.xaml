@@ -12,7 +12,6 @@
 		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="BorderBrush" Value="{DynamicResource SurfaceStrokeFlyout}" />
 		<Setter Property="BorderThickness" Value="1" />
-		<Setter Property="FontFamily" Value="{Binding DefaultFont, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="ToolTip">

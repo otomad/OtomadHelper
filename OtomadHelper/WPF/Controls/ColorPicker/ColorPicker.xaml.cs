@@ -27,6 +27,7 @@ public partial class ColorPicker : UserControl {
 
 	private void OnLoaded(object sender, RoutedEventArgs e) {
 		DataContext.View = this;
+		DataContext.OriginalColor = DataContext.Color;
 		DataContext.InitialColor();
 		DataContext.UpdateThumbsBinding();
 		ContentDialog?.SetNonDefaultButtonAccent(DataContext.Color.ToMediaColor());

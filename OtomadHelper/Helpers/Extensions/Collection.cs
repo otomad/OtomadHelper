@@ -24,6 +24,14 @@ public static partial class Extensions {
 		public IEnumerable<int> Keys() => Enumerable.Range(0, collection.Count());
 	}
 
+	extension<T>(IEnumerable<T?> collection) {
+		/// <summary>
+		/// Remove all null from a nullable collection, and return a new <typeparamref name="T" /> collection which have no null in it.
+		/// </summary>
+		/// <returns>A new <typeparamref name="T" /> collection which have no null in it.</returns>
+		public IEnumerable<T> NonNull() => collection.OfType<T>();
+	}
+
 	extension<TValue>(Dictionary<string, TValue> dict) {
 		/// <summary>
 		/// Get the value associated with the specified string key, ignoring its case.

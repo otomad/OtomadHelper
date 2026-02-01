@@ -19,9 +19,7 @@ public partial class Icon : Viewbox {
 
 	internal static readonly SolidColorBrush defaultForeground = Brushes.Transparent;
 
-	partial void OnIconNameChanged(string? iconName) {
-		this.SetResourceReference(SourceProperty, "Icon:" + iconName);
-	}
+	partial void OnIconNameChanged(string? iconName) => SetResourceReference(SourceProperty, "Icon:" + iconName);
 
 	public static bool IsValidIconName(string iconName) => Enum.IsDefined<KnownIcon>(iconName);
 

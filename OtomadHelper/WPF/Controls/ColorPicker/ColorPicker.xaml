@@ -162,18 +162,12 @@
 			</Style>
 
 			<Style x:Key="ActionButtonsGrid" TargetType="UniformGrid">
-				<Setter Property="Columns" Value="2" />
+				<Setter Property="Columns" Value="3" />
 				<Setter Property="Margin" Value="5,2,5,0" />
 				<Setter Property="m:Spacing.Horizontal" Value="6" />
 				<Style.Resources>
 					<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="c:Button">
 						<Setter Property="Padding" Value="2" />
-						<Style.Resources>
-							<Style TargetType="StackPanel">
-								<Setter Property="Orientation" Value="Horizontal" />
-								<Setter Property="m:Spacing.Horizontal" Value="10" />
-							</Style>
-						</Style.Resources>
 					</Style>
 				</Style.Resources>
 			</Style>
@@ -299,22 +293,31 @@
 				/>
 
 			<UniformGrid
-				Grid.Column="5"
+				Grid.Column="4"
 				Grid.Row="9"
-				Grid.ColumnSpan="5"
+				Grid.ColumnSpan="6"
 				Style="{StaticResource ActionButtonsGrid}"
 				>
-				<c:Button ToolTip="反转当前颜色" Command="{Binding InvertColorCommand}" AutomationProperties.LabeledBy="{Binding ElementName=InvertColorBtnLbl}">
-					<StackPanel>
-						<c:Icon IconName="InvertColor" />
-						<TextBlock x:Name="InvertColorBtnLbl" Text="反色" /><!--TODO: I18n-->
-					</StackPanel>
+				<c:Button
+					ToolTip="还原为设置前的颜色"
+					Command="{Binding RestoreOriginalColorCommand}"
+					IconName="ArrowReset"
+					>
+					还原<!--TODO: I18n-->
 				</c:Button>
-				<c:Button ToolTip="{m:Trans Descriptions.ColorPicker.EyeDropper}" Focusable="False">
-					<StackPanel>
-						<c:Icon IconName="EyeDropper" />
-						<TextBlock Text="{m:Trans ColorPicker.EyeDropper}" />
-					</StackPanel>
+				<c:Button
+					ToolTip="反转当前颜色"
+					Command="{Binding InvertColorCommand}"
+					IconName="InvertColor"
+					>
+					反色<!--TODO: I18n-->
+				</c:Button>
+				<c:Button
+					ToolTip="{m:Trans Descriptions.ColorPicker.EyeDropper}"
+					Focusable="False"
+					IconName="EyeDropper"
+					Content="{m:Trans ColorPicker.EyeDropper}"
+					>
 					<i:Interaction.Behaviors>
 						<c:EyeDropperBehavior />
 					</i:Interaction.Behaviors>

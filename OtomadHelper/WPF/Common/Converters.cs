@@ -180,11 +180,11 @@ public class RectToDrawingBrushConverter : ValueConverter<Rect?, DrawingBrush> {
 		DrawingBrush brush = new();
 		DrawingGroup group = new();
 		group.Children.Add(new GeometryDrawing {
-			Brush = new SolidColorBrush(Colors.Transparent),
+			Brush = Brushes.Transparent,
 			Geometry = new RectangleGeometry(new(0, 0, 1, 1)),
 		});
 		group.Children.Add(new GeometryDrawing {
-			Brush = new SolidColorBrush(Colors.Black),
+			Brush = Brushes.Black,
 			Geometry = new RectangleGeometry(rect!.Value),
 		});
 		brush.Drawing = group;

@@ -33,5 +33,4 @@
 	"stylelint.packageManager": "pnpm",
 	"stylelint.reportNeedlessDisables": true,
 	"stylelint.reportInvalidScopeDisables": true,
-	"stylelint.reportDescriptionlessDisables": true,
 }

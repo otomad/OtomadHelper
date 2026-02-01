@@ -29,6 +29,21 @@
 				-->
 				<Setter Property="Margin" Value="0" />
 			</Style>
+
+			<Style x:Key="ButtonIconTextContainer" TargetType="StackPanel">
+				<Setter Property="Orientation" Value="Horizontal" />
+				<Style.Resources>
+					<Style TargetType="c:Icon">
+						<Setter Property="Margin" Value="0,0,8,0" />
+						<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding IconName, RelativeSource={RelativeSource AncestorType=c:Button}}" Value="">
+								<Setter Property="Visibility" Value="Collapsed" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Style.Resources>
+			</Style>
 		</Style.Resources>
 
 		<Setter Property="MinHeight" Value="32" />
@@ -36,13 +51,14 @@
 		<Setter Property="Background" Value="{DynamicResource ControlBackground}" />
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 		<Setter Property="BackgroundOpacity" Value="1" />
+		<Setter Property="FontFamily" Value="{Binding DefaultFont, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 		<Setter Property="FontSize" Value="14" />
 		<Setter Property="FocusVisualStyle" Value="{DynamicResource OuterFocusVisualStyle}" />
 		<Setter Property="Padding" Value="8" />
 		<Setter Property="VerticalContentAlignment" Value="Center" />
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="Button">
+				<ControlTemplate TargetType="c:Button">
 					<Border
 						Padding="{TemplateBinding Padding}"
 						Background="{TemplateBinding Background}"
@@ -56,7 +72,10 @@
 									<DataTemplate.Resources>
 										<Style TargetType="TextBlock" BasedOn="{StaticResource FixExternalTextBlockStyleAffectingAccessKeyStyle}" />
 									</DataTemplate.Resources>
-									<c:ButtonContentTemplate Text="{Binding}" />
+									<StackPanel Style="{StaticResource ButtonIconTextContainer}">
+										<c:Icon IconName="{Binding IconName, RelativeSource={RelativeSource AncestorType=c:Button}}" />
+										<c:ButtonContentTemplate Text="{Binding}" />
+									</StackPanel>
 								</DataTemplate>
 							</ContentPresenter.ContentTemplate>
 						</ContentPresenter>
@@ -118,7 +137,10 @@
 												<DataTemplate.Resources>
 													<Style TargetType="TextBlock" BasedOn="{StaticResource FixExternalTextBlockStyleAffectingAccessKeyStyle}" />
 												</DataTemplate.Resources>
-												<c:ButtonContentTemplate Text="{Binding}" />
+												<StackPanel Style="{StaticResource ButtonIconTextContainer}">
+													<c:Icon IconName="{Binding IconName, RelativeSource={RelativeSource AncestorType=c:Button}}" />
+													<c:ButtonContentTemplate Text="{Binding}" />
+												</StackPanel>
 											</DataTemplate>
 										</ContentPresenter.ContentTemplate>
 									</ContentPresenter>

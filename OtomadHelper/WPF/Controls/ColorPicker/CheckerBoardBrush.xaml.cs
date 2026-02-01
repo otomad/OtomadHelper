@@ -6,7 +6,7 @@ namespace OtomadHelper.WPF.Controls;
 [AttachedDependencyProperty<SolidColorBrush, FrameworkElement>("Mix", DefaultValueExpression = nameof(TransparentBrush))]
 [AttachedDependencyProperty<Brush, FrameworkElement>("Brush", DefaultValueExpression = nameof(TransparentBrush))]
 public partial class CheckerBoardBrush {
-	private static readonly SolidColorBrush TransparentBrush = new(Colors.Transparent);
+	private static readonly SolidColorBrush TransparentBrush = Brushes.Transparent;
 	private static readonly RectangleGeometry GeometryFill = new(new(0, 0, 100, 100));
 
 	static partial void OnMixChanged(FrameworkElement target, SolidColorBrush? mix) {

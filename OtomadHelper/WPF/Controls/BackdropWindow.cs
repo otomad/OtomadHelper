@@ -456,9 +456,13 @@ public partial class BackdropWindow : Window {
 
 	#region Default fonts
 	private void OnCultureChanged(CultureInfo culture) {
-		FontFamily defaultI10nFont = FontFamily, englishMonoFont = (FontFamily)Resources["EnglishMonoFont"], englishPropFont = (FontFamily)Resources["EnglishPropFont"];
-		DefaultFont = FontFamily.Join([englishPropFont, defaultI10nFont]);
-		MonoFont = FontFamily.Join([englishMonoFont, defaultI10nFont]);
+		FontFamily defaultI10nFont = new Control().FontFamily,
+			englishMonoFont = (FontFamily)Resources["EnglishMonoFont"],
+			englishPropFont = (FontFamily)Resources["EnglishPropFont"];
+		FontFamily? defaultGuessedFont = culture.GetDefaultUIFont();
+		DefaultFont = FontFamily.Join([englishPropFont, defaultGuessedFont, defaultI10nFont]);
+		MonoFont = FontFamily.Join([englishMonoFont, defaultGuessedFont, defaultI10nFont]);
+		FontFamily = DefaultFont;
 	}
 	#endregion
 }

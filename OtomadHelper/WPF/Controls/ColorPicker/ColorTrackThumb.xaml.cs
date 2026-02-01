@@ -30,7 +30,7 @@ public partial class ColorTrackThumb : Thumb {
 			if (Canvas is not null) {
 				OnChange(true);
 
-				if (Canvas.Background is null) Canvas.Background = new SolidColorBrush(Colors.Transparent);
+				if (Canvas.Background is null) Canvas.Background = Brushes.Transparent;
 				Canvas.PreviewMouseDown += Canvas_MouseDown;
 				Canvas.PreviewMouseMove += Canvas_MouseMove;
 				Canvas.PreviewMouseUp += Canvas_MouseUp;

@@ -14,7 +14,12 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	private ColorPickerModelAxis modelAxis = new(ColourSpace.Hsl, 2);
 
 	[ObservableProperty]
-	private Unicolour color = new(ColourSpace.Rgb255, 0, 0, 0);
+	private Unicolour color = DefaultColor;
+
+	// NOTE: Not an observable property.
+	public Unicolour OriginalColor { get; internal set; } = DefaultColor;
+
+	private static readonly Unicolour DefaultColor = new(ColourSpace.Rgb255, 0, 0, 0);
 
 	private static readonly ColourSpace[] KnownModels =
 		[ColourSpace.Hsl, ColourSpace.Rgb255, ColourSpace.Hsb, ColourSpace.Hwb, ColourSpace.Oklab, ColourSpace.Oklch];
@@ -91,6 +96,9 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	private void InvertColor() =>
 		Color = new Unicolour(ColourSpace.Rgb, 1 - Color.Rgb.R, 1 - Color.Rgb.G, 1 - Color.Rgb.B, Color.Alpha.A);
 
+	[RelayCommand]
+	private void RestoreOriginalColor() => Color = OriginalColor;
+
 	[ObservableProperty]
 	private Dictionary<ColorPickerModelAxis, double> values = [];
 	[ObservableProperty]
@@ -159,7 +167,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 		y?.SetCurrentValue(TextBox.TextProperty, Math.Round(e.Y).ToString());
 	}
 
-	private const int SOURCE_RESOLUTION = 32;
+	private const int SOURCE_RESOLUTION = 128;
 
 	[ObservableProperty]
 	private WriteableBitmap primarySource = new(SOURCE_RESOLUTION, SOURCE_RESOLUTION, 96, 96, PixelFormats.Rgb24, null);
