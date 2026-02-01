@@ -38,7 +38,7 @@ internal readonly struct Range(Index start, Index end) : IEquatable<Range> {
 	public bool Equals(Range other) => other.Start.Equals(Start) && other.End.Equals(End);
 
 	/// <summary>Returns the hash code for this instance.</summary>
-	public override int GetHashCode() => Start.GetHashCode() * 31 + End.GetHashCode();
+	public override int GetHashCode() => HashCode.Combine(Start, End);
 
 	/// <summary>Converts the value of the current Range object to its equivalent string representation.</summary>
 	public override string ToString() => Start + ".." + End;

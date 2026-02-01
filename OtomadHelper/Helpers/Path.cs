@@ -232,10 +232,11 @@ public class Path :
 	public override bool Equals(object obj) => ReferenceEquals(this, obj) || obj is not null && obj is Path path && this == path;
 
 	public override int GetHashCode() {
-		int hash = Protocol.GetHashCode();
+		HashCode hashCode = new();
+		hashCode.Add(Protocol);
 		foreach (string dir in this)
-			hash ^= dir.GetHashCode();
-		return hash;
+			hashCode.Add(dir);
+		return hashCode.ToHashCode();
 	}
 
 	public static implicit operator string(Path path) => path.ToString();

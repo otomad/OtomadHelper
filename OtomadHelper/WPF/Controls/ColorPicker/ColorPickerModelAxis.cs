@@ -19,7 +19,7 @@ public class ColorPickerModelAxis(ColourSpace model, int axis) {
 		item1.Model == item2.Model && item1.Axis == item2.Axis;
 	public static bool operator !=(ColorPickerModelAxis? item1, ColorPickerModelAxis? item2) => !(item1 == item2);
 	public override bool Equals(object? obj) => obj is ColorPickerModelAxis item && this == item;
-	public override int GetHashCode() => Model.GetHashCode() ^ Axis.GetHashCode();
+	public override int GetHashCode() => HashCode.Combine(Model, Axis);
 
 	internal static readonly Dictionary<string, ColourSpace> NameModelMap = new() {
 		["RGB"] = ColourSpace.Rgb255,
