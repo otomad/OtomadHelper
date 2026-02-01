@@ -432,6 +432,8 @@ public class Shared(Localize localize, string ancestor = "") : LocalizeNested(lo
 
 	public Shared_Plugins Plugins { get { if (field is null) field = new(localize, "Shared.Plugins"); return field; } }
 
+	public Shared_Exceptions Exceptions { get { if (field is null) field = new(localize, "Shared.Exceptions"); return field; } }
+
 	public Shared_Midi Midi { get { if (field is null) field = new(localize, "Shared.Midi"); return field; } }
 
 }
@@ -481,6 +483,30 @@ public class Shared_Plugins(Localize localize, string ancestor = "") : LocalizeN
 	/// Credit Roll
 	/// </summary>
 	public string CreditRoll => base.GetString("Shared.Plugins.CreditRoll");
+
+}
+
+public class Shared_Exceptions(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+	/// <summary>
+	/// Error: 
+	/// </summary>
+	public string ErrorHeader => base.GetString("Shared.Exceptions.ErrorHeader");
+	/// <summary>
+	/// The playback rate cannot be set to 0.<br />
+	/// <br />
+	/// If you want to achieve a static visual, please enable the ¡°Static visual¡± setting.
+	/// </summary>
+	public string PlaybackRateCannotBeZero => base.GetString("Shared.Exceptions.PlaybackRateCannotBeZero");
+	/// <summary>
+	/// The step sequence parameter syntax is invalid.<br />
+	/// <br />
+	/// Please enter the indexes of each initial step separated by commas as the sequence, where 0 represents the ¡°Normal¡±.
+	/// </summary>
+	public string PrveStepSequenceSyntaxInvalid => base.GetString("Shared.Exceptions.PrveStepSequenceSyntaxInvalid");
+	/// <summary>
+	/// In the step sequence parameter, at least an index value exceeds the total number of steps or is negative.
+	/// </summary>
+	public string PrveStepSequenceOutOfRange => base.GetString("Shared.Exceptions.PrveStepSequenceOutOfRange");
 
 }
 

@@ -24,6 +24,7 @@
 //------------------------------------------------------------------------------
 
 <#
+	string t4Name = Path.GetFileNameWithoutExtension(Host.TemplateFile);
 	string projectDir = Host.ResolveAssemblyReference("$(ProjectDir)");
 	string reswFilePath = Path.Combine(projectDir, @"Strings\en-US.resw");
 	XDocument reswFileDoc = XDocument.Load(reswFilePath);
@@ -35,7 +36,7 @@
 		AddKeyToDictionary(reswRoot, subclasses, name);
 #>
 
-namespace OtomadHelper.Helpers.LocalizeGen;
+namespace OtomadHelper.Helpers.<#= t4Name #>;
 
 <#
 	foreach (DictionaryEntry subclass in subclasses) {

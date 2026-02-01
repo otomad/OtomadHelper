@@ -11,7 +11,7 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<double>("Size", DefaultValue = 16d)]
 [DependencyProperty<Brush>("Foreground", DefaultValueExpression = "defaultForeground")]
 [DependencyProperty<IconTemplate>("Source")]
-[DependencyProperty<string>("IconName")]
+[DependencyProperty<DeclaredIcon>("IconName")]
 public partial class Icon : Viewbox {
 	public Icon() {
 		InitializeComponent();
@@ -19,9 +19,18 @@ public partial class Icon : Viewbox {
 
 	internal static readonly SolidColorBrush defaultForeground = Brushes.Transparent;
 
-	partial void OnIconNameChanged(string? iconName) => SetResourceReference(SourceProperty, "Icon:" + iconName);
+	partial void OnIconNameChanged(DeclaredIcon icon) {
+		if (Enum.GetName(icon) is not string iconName) return;
+		const string iconNamePrefix = "Icon:";
+		if (iconName.StartsWith(iconNamePrefix))
+			throw new ArgumentException($"""
+				Do not manually add "Icon:" prefix before the icon name, it will automatically add it!
+				Unexpected icon name: {iconName}
+				""");
+		SetResourceReference(SourceProperty, "Icon:" + iconName);
+	}
 
-	public static bool IsValidIconName(string iconName) => Enum.IsDefined<KnownIcon>(iconName);
+	public static bool IsKnownIcon(string iconName) => Enum.IsDefined<KnownIcon>(iconName);
 
 	public static string NormalizeIconName(string iconName) => new VariableName(iconName).Pascal;
 	public static string NormalizeIconName(object iconName) => NormalizeIconName(iconName.ToString());

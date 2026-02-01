@@ -126,6 +126,10 @@
 			<PackagePath>\</PackagePath>
 		</None>
 		<None Include="Test\test.cs" />
+		<None Include="WPF\Controls\Icon\DeclaredIcon.tt">
+			<LastGenOutput>DeclaredIcon.cs</LastGenOutput>
+			<Generator>TextTemplatingFileGenerator</Generator>
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Assets\ToolbarIcons.Designer.cs">
@@ -150,6 +154,11 @@
 			<DesignTimeSharedInput>True</DesignTimeSharedInput>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+		<Compile Update="WPF\Controls\Icon\DeclaredIcon.cs">
+			<DependentUpon>DeclaredIcon.tt</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
 		</Compile>
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>

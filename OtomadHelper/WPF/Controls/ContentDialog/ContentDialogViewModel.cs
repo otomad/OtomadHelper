@@ -19,7 +19,7 @@ public partial class ContentDialogViewModel : ObservableObject<ContentDialog> {
 		get => field;
 		set {
 			value = Icon.NormalizeIconName(value);
-			if (Icon.IsValidIconName(value))
+			if (Icon.IsKnownIcon(value))
 				SetProperty(ref field, value);
 		}
 	} = "Info";
