@@ -112,8 +112,8 @@ public static partial class Extensions {
 		public static DrawingColor FromHex(string hex) {
 			if (hex.StartsWith("#")) {
 				// Transform from #RRGGBBAA to #AARRGGBB.
-				if (hex.Length == 9) hex = "#" + hex.Substring(7, 2) + hex.Substring(1, 6);
-				else if (hex.Length == 5) hex = "#" + hex[4].Repeat(2) + hex[1].Repeat(2) + hex[2].Repeat(2) + hex[3].Repeat(2);
+				if (hex.Length == 9) hex = $"#{hex[7..9]}{hex[1..7]}";
+				else if (hex.Length == 5) hex = $"#{hex[4].Repeat(2)}{hex[1].Repeat(2)}{hex[2].Repeat(2)}{hex[3].Repeat(2)}";
 			}
 			return System.Drawing.ColorTranslator.FromHtml(hex);
 		}

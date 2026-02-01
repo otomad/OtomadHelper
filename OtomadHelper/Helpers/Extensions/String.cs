@@ -44,6 +44,14 @@ public static partial class Extensions {
 			MemoryStream stream = new(bytes);
 			return stream;
 		}
+
+		/// <inheritdoc cref="string.TrimStart(char[])" />
+		public string TrimStart(string prefix, StringComparison comparisonType = StringComparison.InvariantCulture) =>
+			input.StartsWith(prefix, comparisonType) ? input[prefix.Length..] : input;
+
+		/// <inheritdoc cref="string.TrimEnd(char[])" />
+		public string TrimEnd(string suffix, StringComparison comparisonType = StringComparison.InvariantCulture) =>
+			input.EndsWith(suffix, comparisonType) ? input[0..^suffix.Length] : input;
 	}
 
 	extension(IEnumerable<string> values) {

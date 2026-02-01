@@ -68,14 +68,28 @@ public static partial class Extensions {
 		/// If no such children are found, an empty enumerable is returned.</returns>
 		public IEnumerable<T> GetChildrenOfType<T>() where T : DependencyObject {
 			if (parent is null) yield break;
-			for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++) {
-				DependencyObject? child = VisualTreeHelper.GetChild(parent, i);
+			foreach (DependencyObject child in parent.Children) {
 				if (child is T typedChild)
 					yield return typedChild;
-				if (VisualTreeHelper.GetChildrenCount(child) != 0)
+				if (parent.Children.Count != 0)
 					foreach (T grandchild in GetChildrenOfType<T>(child))
 						yield return grandchild;
 			}
+		}
+	}
+
+	extension(DependencyObject parent) {
+		/// <inheritdoc cref="VisualTreeHelper.GetChild(DependencyObject, int)" />
+		public VisualTreeChildren Children => new(parent);
+	}
+
+	public class VisualTreeChildren(DependencyObject parent) : IReadOnlyList<DependencyObject> {
+		public int Count => VisualTreeHelper.GetChildrenCount(parent);
+		public DependencyObject this[int index] => VisualTreeHelper.GetChild(parent, index);
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		public IEnumerator<DependencyObject> GetEnumerator() {
+			for (int i = 0; i < Count; i++)
+				yield return this[i];
 		}
 	}
 

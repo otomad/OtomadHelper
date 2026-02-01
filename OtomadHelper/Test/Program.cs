@@ -16,7 +16,7 @@ internal static class Program {
 		Application.SetCompatibleTextRenderingDefault(false);
 		Prior.Initialize();
 		//AppContext.SetSwitch("Switch.System.Windows.Controls.Text.UseAdornerForTextboxSelectionRendering", false);
-		SetCulture = "en-US";
+		//SetCulture = "en-US";
 #if TEST0
 		Application.Run(new AppDebugForm());
 #endif

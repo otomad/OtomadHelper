@@ -12,7 +12,7 @@ namespace OtomadHelper.WPF.Controls;
 /// <summary>
 /// ColorPicker.xaml 的交互逻辑
 /// </summary>
-[AttachedDependencyProperty<ColorPickerModelAxis>("ModelAxis", DefaultValueExpression = "null")]
+[AttachedDependencyProperty<ColorPickerModelAxis>("ModelAxis", DefaultValueExpression = "null!")]
 public partial class ColorPicker : UserControl {
 	[MethodImpl(MethodImplOptions.NoOptimization)]
 	static ColorPicker() {

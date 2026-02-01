@@ -1,6 +1,6 @@
 namespace OtomadHelper.Helpers;
 
-public static class MathEx {
+public static partial class Extensions {
 	/// <summary>
 	/// Calculates the floor modulus of two numbers.
 	/// </summary>

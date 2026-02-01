@@ -7,7 +7,7 @@ namespace OtomadHelper.Helpers;
 
 #pragma warning disable IDE1006 // 命名样式
 
-public class Localize : DynamicObject {
+public class Localize /*: DynamicObject*/ {
 	public static readonly CultureInfo SystemCulture = Thread.CurrentThread.CurrentCulture;
 	public static CultureInfo Culture { get; private set; } = SystemCulture;
 	private static readonly CultureInfo DefaultCulture = new("en-US");
@@ -70,7 +70,7 @@ public class Localize : DynamicObject {
 		return (translated as string)!;
 	}
 
-	public override bool TryGetMember(GetMemberBinder binder, out object result) {
+	/*public override bool TryGetMember(GetMemberBinder binder, out object result) {
 		result = Translate(binder.Name);
 		//return result is not null;
 		return true;
@@ -88,7 +88,7 @@ public class Localize : DynamicObject {
 		}
 		result = Translate(name);
 		return true;
-	}
+	}*/
 
 	private static readonly Localize _t = new();
 	private static readonly Localize _t_disablePangu = new() { EnablePangu = false };
