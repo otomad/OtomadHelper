@@ -8,10 +8,10 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
-	MinWidth="760"
+	MinWidth="750"
 	Loaded="OnLoaded"
-	d:DesignWidth="760"
-	d:DesignHeight="450"
+	d:DesignWidth="750"
+	d:DesignHeight="300"
 	mc:Ignorable="d"
 	>
 	<UserControl.DataContext>
@@ -168,6 +168,7 @@
 				<Style.Resources>
 					<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="c:Button">
 						<Setter Property="Padding" Value="2" />
+						<Setter Property="ShowIconOnly" Value="True" />
 					</Style>
 				</Style.Resources>
 			</Style>
@@ -292,28 +293,42 @@
 				Text="{Binding Hex, Mode=OneWay}"
 				/>
 
+			<TextBlock Grid.Column="2" Grid.Row="0" Style="{StaticResource Unit}">°</TextBlock>
+			<TextBlock Grid.Column="2" Grid.Row="1" Style="{StaticResource Unit}">%</TextBlock>
+			<TextBlock Grid.Column="2" Grid.Row="2" Style="{StaticResource Unit}">%</TextBlock>
+			<TextBlock Grid.Column="6" Grid.Row="0" Style="{StaticResource Unit}">°</TextBlock>
+			<TextBlock Grid.Column="6" Grid.Row="1" Style="{StaticResource Unit}">%</TextBlock>
+			<TextBlock Grid.Column="6" Grid.Row="2" Style="{StaticResource Unit}">%</TextBlock>
+			<TextBlock Grid.Column="6" Grid.Row="4" Style="{StaticResource Unit}">°</TextBlock>
+			<TextBlock Grid.Column="6" Grid.Row="5" Style="{StaticResource Unit}">%</TextBlock>
+			<TextBlock Grid.Column="6" Grid.Row="6" Style="{StaticResource Unit}">%</TextBlock>
+			<TextBlock Grid.Column="10" Grid.Row="0" Style="{StaticResource Unit}">%</TextBlock>
+			<TextBlock Grid.Column="10" Grid.Row="4" Style="{StaticResource Unit}">%</TextBlock>
+			<TextBlock Grid.Column="10" Grid.Row="6" Style="{StaticResource Unit}">°</TextBlock>
+			<TextBlock Grid.Column="2" Grid.Row="9" Style="{StaticResource Unit}">%</TextBlock>
+
 			<UniformGrid
-				Grid.Column="4"
+				Grid.Column="5"
 				Grid.Row="9"
-				Grid.ColumnSpan="6"
+				Grid.ColumnSpan="5"
 				Style="{StaticResource ActionButtonsGrid}"
 				>
 				<c:Button
-					ToolTip="还原为设置前的颜色"
+					AutomationProperties.HelpText="还原为设置前的颜色"
 					Command="{Binding RestoreOriginalColorCommand}"
 					IconName="ArrowReset"
 					>
 					还原<!--TODO: I18n-->
 				</c:Button>
 				<c:Button
-					ToolTip="反转当前颜色"
+					AutomationProperties.HelpText="反转当前颜色"
 					Command="{Binding InvertColorCommand}"
 					IconName="InvertColor"
 					>
 					反色<!--TODO: I18n-->
 				</c:Button>
 				<c:Button
-					ToolTip="{m:Trans Descriptions.ColorPicker.EyeDropper}"
+					AutomationProperties.HelpText="{m:Trans Descriptions.ColorPicker.EyeDropper}"
 					Focusable="False"
 					IconName="EyeDropper"
 					Content="{m:Trans ColorPicker.EyeDropper}"
@@ -328,20 +343,6 @@
 					</i:Interaction.Triggers>
 				</c:Button>
 			</UniformGrid>
-
-			<TextBlock Grid.Column="2" Grid.Row="0" Style="{StaticResource Unit}">°</TextBlock>
-			<TextBlock Grid.Column="2" Grid.Row="1" Style="{StaticResource Unit}">%</TextBlock>
-			<TextBlock Grid.Column="2" Grid.Row="2" Style="{StaticResource Unit}">%</TextBlock>
-			<TextBlock Grid.Column="6" Grid.Row="0" Style="{StaticResource Unit}">°</TextBlock>
-			<TextBlock Grid.Column="6" Grid.Row="1" Style="{StaticResource Unit}">%</TextBlock>
-			<TextBlock Grid.Column="6" Grid.Row="2" Style="{StaticResource Unit}">%</TextBlock>
-			<TextBlock Grid.Column="6" Grid.Row="4" Style="{StaticResource Unit}">°</TextBlock>
-			<TextBlock Grid.Column="6" Grid.Row="5" Style="{StaticResource Unit}">%</TextBlock>
-			<TextBlock Grid.Column="6" Grid.Row="6" Style="{StaticResource Unit}">%</TextBlock>
-			<TextBlock Grid.Column="10" Grid.Row="0" Style="{StaticResource Unit}">%</TextBlock>
-			<TextBlock Grid.Column="10" Grid.Row="4" Style="{StaticResource Unit}">%</TextBlock>
-			<TextBlock Grid.Column="10" Grid.Row="6" Style="{StaticResource Unit}">°</TextBlock>
-			<TextBlock Grid.Column="2" Grid.Row="9" Style="{StaticResource Unit}">%</TextBlock>
 		</Grid>
 	</Grid>
 </UserControl>

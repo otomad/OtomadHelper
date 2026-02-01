@@ -217,6 +217,12 @@ public class AccessKeyAmpersandToUnderscoreConverter : ValueConverter<string, st
 		(value ?? "").Replace('_', '&');
 }
 
+[ValueConversion(typeof(string), typeof(string))]
+public class AccessKeyAmpersandToNothingConverter : ValueConverter<string, string> {
+	public override string Convert(string value, Type targetType, object parameter, CultureInfo culture) =>
+		(value ?? "").Replace(new Regex(@"\(&.\)"), "").Replace("&", "");
+}
+
 public class OvalCornerRadiusConverter : MultiValueConverter<double[], CornerRadius> {
 	private static double IfNaN(double value, double replacement) =>
 		value is double.NaN or double.PositiveInfinity or double.NegativeInfinity ? replacement : value;

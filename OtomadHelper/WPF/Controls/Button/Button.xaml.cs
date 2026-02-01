@@ -10,6 +10,7 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<double>("BackgroundOpacity", DefaultValue = 1)]
 [DependencyProperty<bool>("MixCheckerBoard", DefaultValue = false)]
 [DependencyProperty<string>("IconName", DefaultValue = "")]
+[DependencyProperty<bool>("ShowIconOnly", DefaultValue = false)]
 public partial class Button : System.Windows.Controls.Button {
 
 }

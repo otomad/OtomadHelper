@@ -13,6 +13,7 @@
 			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
 			<m:BooleanAndConverter x:Key="BoolAnd" />
 			<c:IsNotSolidColorToBooleanConverter x:Key="NotSolidColor" />
+			<m:AccessKeyAmpersandToNothingConverter x:Key="RemoveAmp" />
 
 			<CornerRadius x:Key="ButtonCornerRadius">4</CornerRadius>
 
@@ -40,6 +41,16 @@
 							<DataTrigger Binding="{Binding IconName, RelativeSource={RelativeSource AncestorType=c:Button}}" Value="">
 								<Setter Property="Visibility" Value="Collapsed" />
 							</DataTrigger>
+							<DataTrigger Binding="{Binding ShowIconOnly, RelativeSource={RelativeSource AncestorType=c:Button}}" Value="True">
+								<Setter Property="Margin" Value="0" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+					<Style TargetType="c:ButtonContentTemplate">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding ShowIconOnly, RelativeSource={RelativeSource AncestorType=c:Button}}" Value="True">
+								<Setter Property="Visibility" Value="Collapsed" />
+							</DataTrigger>
 						</Style.Triggers>
 					</Style>
 				</Style.Resources>
@@ -56,6 +67,7 @@
 		<Setter Property="FocusVisualStyle" Value="{DynamicResource OuterFocusVisualStyle}" />
 		<Setter Property="Padding" Value="8" />
 		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="AutomationProperties.Name" Value="{Binding Content, RelativeSource={RelativeSource Self}, Converter={StaticResource RemoveAmp}}" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="c:Button">
@@ -168,6 +180,18 @@
 					</Setter.Value>
 				</Setter>
 			</MultiDataTrigger>
+			<Trigger Property="ShowIconOnly" Value="True">
+				<Setter Property="ToolTip">
+					<Setter.Value>
+						<ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
+							<StackPanel>
+								<c:ButtonContentTemplate Text="{Binding Content, FallbackValue=''}" FontWeight="Bold" Margin="0,0,0,2" />
+								<ContentControl Content="{Binding (AutomationProperties.HelpText), FallbackValue=''}" />
+							</StackPanel>
+						</ToolTip>
+					</Setter.Value>
+				</Setter>
+			</Trigger>
 		</Style.Triggers>
 	</Style>
 
