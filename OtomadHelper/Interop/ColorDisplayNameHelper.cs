@@ -63,7 +63,7 @@ public static class ColorDisplayNameHelper {
 
 	private static (double h, double s, double l) ToHsl(Color color) {
 		double r = color.R / 255d, g = color.G / 255d, b = color.B / 255d;
-		double max = Enumerable.Max([r, g, b]), min = Enumerable.Min([r, g, b]);
+		double max = Math.Max(r, g, b), min = Math.Min(r, g, b);
 
 		double h = 0, s = 0, l = (max + min) / 2, delta = max - min;
 

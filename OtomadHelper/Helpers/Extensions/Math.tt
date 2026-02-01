@@ -29,20 +29,160 @@ namespace OtomadHelper.Helpers;
 public static partial class MathEx {
 	extension(Math) {
 <#
-	foreach (string xType in numericTypes)
-		foreach (string yType in numericTypes) {
-			if (arithmeticLessNumericTypes.Contains(xType) || arithmeticLessNumericTypes.Contains(yType)) continue;
-			string modType = GetModTypeName(xType, yType);
-			if (string.IsNullOrEmpty(modType)) continue;
+		bool first;
+		first = true;
+		foreach (string type in numericTypes) {
+			if (arithmeticLessNumericTypes.Contains(type)) continue;
+			if (first) {
 #>
-		public static <#= modType #> FloorMod(<#= xType #> x, <#= yType #> y) {
-			<#= modType #> result = x % y;
+		/// <summary>
+		/// Calculates the floor modulus of two numbers.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This function computes the modulus operation where the result has the same sign as the divisor.
+		/// It's particularly useful for handling negative numbers in modular arithmetic, making it more suitable for
+		/// practical use.
+		/// </para>
+		/// <para>
+		/// For example. When a random angle is given, but in reality, only taking the remainder obtained by dividing
+		/// it by 360° is the true angle we need, we don't care about how many turns we have made. However, when the
+		/// dividend is negative, using the `%` operator directly can cause some changes. We hope that the result got
+		/// in this way is also a positive number that is more in line with practical use.
+		/// </para>
+		/// </remarks>
+		/// <param name="x">The dividend (the number to be divided).</param>
+		/// <param name="y">The divisor (the number to divide by).</param>
+		/// <returns>
+		/// The floor modulus of x and y. The result will have the same sign as y, and its absolute value will
+		/// be less than the absolute value of y.
+		/// </returns>
+<#
+			} else {
+#>
+		/// <inheritdoc cref="FloorMod(int, int)" />
+<#
+			}
+#>
+		public static <#= type #> FloorMod(<#= type #> x, <#= type #> y) {
+			<#= type #> result = x % y;
 			if (result != 0 && x < 0 != y < 0)
 				result += y;
 			return result;
 		}
 <#
+			first = false;
 		}
+		first = true;
+		foreach (string type in numericTypes) {
+			if (first) {
+#>
+		/// <summary>
+		/// Returns <paramref name="value"/> clamped to the inclusive range of <paramref name="min"/> and <paramref name="max"/>.
+		/// </summary>
+		/// <typeparam name="T">Number type.</typeparam>
+		/// <param name="value">The value to be clamped.</param>
+		/// <param name="min">The lower bound of the result.</param>
+		/// <param name="max">The upper bound of the result.</param>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.</item>
+		/// <item><paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.</item>
+		/// <item><paramref name="max"/> if <paramref name="max"/> &lt; <paramref name="value"/>.</item>
+		/// </list>
+		/// </returns>
+<#
+			} else {
+#>
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+<#
+			}
+#>
+		public static <#= type #> Clamp(<#= type #> value, <#= type #> min, <#= type #> max) =>
+			value < min ? min : value > max ? max : value;
+<#
+			first = false;
+		}
+		first = true;
+		foreach (string outType in numericTypes) {
+			string inType = outType == "decimal" ? "decimal" : "double";
+			if (first) {
+#>
+		/// <summary>
+		/// <para><b>Inaccurate Thermometer</b></para>
+		///
+		/// <para>
+		/// Maps a value from one range to another, with a linear relationship between the old and new ranges and
+		/// not necessarily a proportional relationship, such as the relationship between Celsius and Fahrenheit,
+		/// and return the corresponding new value.
+		/// </para>
+		///
+		/// <para>
+		/// This function takes a value <c><paramref name="x"/></c> within a range <c>[<paramref name="min"/>, <paramref name="max"/>]</c>
+		/// and maps it to a new range <c>[<paramref name="a"/>, <paramref name="b"/>]</c>.
+		/// The mapping is done linearly, meaning that the ratio of the new range to the old range is preserved.
+		/// </para>
+		///
+		/// <para>
+		/// For example, changing a color value from 0 to 255 to a value from 0 to 100.
+		/// </para>
+		/// </summary>
+		/// <param name="x">The value within the old range to be mapped.</param>
+		/// <param name="min">The minimum value of the old range.</param>
+		/// <param name="max">The maximum value of the old range.</param>
+		/// <param name="a">The minimum value of the new range.</param>
+		/// <param name="b">The maximum value of the new range.</param>
+		/// <returns>The mapped value within the new range.</returns>
+<#
+			} else {
+#>
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+<#
+			}
+#>
+		public static <#= outType #> Map(<#= inType #> x, <#= inType #> min, <#= inType #> max, <#= outType #> a, <#= outType #> b) =>
+			(<#= outType #>)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+<#
+			first = false;
+		}
+		first = true;
+		foreach (string outType in numericTypes) {
+			string inType = outType == "decimal" ? "decimal" : "double";
+			if (first) {
+#>
+		/// <summary>
+		/// This function combine <see cref="Clamp(<#= outType #>, <#= outType #>, <#= outType #>)" /> and <see cref="Map(<#= inType #>, <#= inType #>, <#= inType #>, <#= outType #>, <#= outType #>)" /> into one.
+		/// </summary>
+		/// <param name="x">The value within the old range to be mapped.</param>
+		/// <param name="min">The minimum value of the old range.</param>
+		/// <param name="max">The maximum value of the old range.</param>
+		/// <param name="a">The minimum value of the new range.</param>
+		/// <param name="b">The maximum value of the new range.</param>
+		/// <returns>The clamp-mapped value within the new range.</returns>
+<#
+			} else {
+#>
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+<#
+			}
+#>
+		public static <#= outType #> ClampMap(<#= inType #> x, <#= inType #> min, <#= inType #> max, <#= outType #> a, <#= outType #> b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+<#
+			first = false;
+		}
+		foreach (string type in numericTypes)
+			for (int length = 3; length <= 8; length++) {
+#>
+		/// <inheritdoc cref="Math.Max(<#= type #>, <#= type #>)" />
+		public static <#= type #> Max(<#= From(length, i => $"{type} val{i}, ", i => $"{type} val{i}") #>) =>
+			<#= From(length, i => $"Math.Max(val{i}, ", i => $"val{i}") + new String(')', length - 1) #>;
+		/// <inheritdoc cref="Math.Min(<#= type #>, <#= type #>)" />
+		public static <#= type #> Min(<#= From(length, i => $"{type} val{i}, ", i => $"{type} val{i}") #>) =>
+			<#= From(length, i => $"Math.Min(val{i}, ", i => $"val{i}") + new String(')', length - 1) #>;
+<#
+			}
 #>
 	}
 }
@@ -53,26 +193,16 @@ public static partial class MathEx {
 		"float", "double", "decimal",
 	];
 
-	public static readonly Type[] numericTypeObjects = [
-		typeof(sbyte), typeof(byte), typeof(short), typeof(ushort),
-		typeof(int), typeof(uint), typeof(long), typeof(ulong),
-		typeof(float), typeof(double), typeof(decimal),
-	];
-
+	// byte + byte = int, etc. ?! They are useless, remove them.
 	public static readonly string[] arithmeticLessNumericTypes = [
 		"sbyte", "byte", "short", "ushort",
 	];
 
-	public static string GetModTypeName(string leftTypeName, string rightTypeName) {
-		Type leftType = numericTypeObjects[Array.IndexOf(numericTypes, leftTypeName)],
-			rightType = numericTypeObjects[Array.IndexOf(numericTypes, rightTypeName)];
-		dynamic leftValue = Convert.ChangeType(1, leftType);
-		dynamic rightValue = Convert.ChangeType(1, rightType);
-		try {
-			dynamic result = leftValue % rightValue;
-			return numericTypes[Array.IndexOf(numericTypeObjects, result.GetType())];
-		} catch {
-			return null;
-		}
+	public static string From(int length, Func<int, string> selector, Func<int, string> lastSelector) {
+		StringBuilder sb = new();
+		for (int i = 1; i <= length; i++)
+			if (i != length) sb.Append(selector(i));
+			else sb.Append(lastSelector(i));
+		return sb.ToString();
 	}
 #>

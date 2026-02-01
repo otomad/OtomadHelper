@@ -86,8 +86,8 @@
 			<DependentUpon>FodyWeavers.xsd</DependentUpon>
 		</None>
 		<None Include="Helpers\Extensions\Math.tt">
-		  <LastGenOutput>Math.cs</LastGenOutput>
-		  <Generator>TextTemplatingFileGenerator</Generator>
+			<LastGenOutput>Math.cs</LastGenOutput>
+			<Generator>TextTemplatingFileGenerator</Generator>
 		</None>
 		<None Include="ILRepack.targets" />
 		<None Include="Helpers\LocalizeGen.tt">
@@ -142,9 +142,9 @@
 			<DependentUpon>ToolbarIcons.resx</DependentUpon>
 		</Compile>
 		<Compile Update="Helpers\Extensions\Math.cs">
-		  <DesignTime>True</DesignTime>
-		  <AutoGen>True</AutoGen>
-		  <DependentUpon>Math.tt</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Math.tt</DependentUpon>
 		</Compile>
 		<Compile Update="Helpers\LocalizeGen.cs">
 			<DesignTime>True</DesignTime>

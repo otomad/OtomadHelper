@@ -12,251 +12,626 @@ namespace OtomadHelper.Helpers;
 
 public static partial class MathEx {
 	extension(Math) {
+		/// <summary>
+		/// Calculates the floor modulus of two numbers.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// This function computes the modulus operation where the result has the same sign as the divisor.
+		/// It's particularly useful for handling negative numbers in modular arithmetic, making it more suitable for
+		/// practical use.
+		/// </para>
+		/// <para>
+		/// For example. When a random angle is given, but in reality, only taking the remainder obtained by dividing
+		/// it by 360¡ã is the true angle we need, we don't care about how many turns we have made. However, when the
+		/// dividend is negative, using the `%` operator directly can cause some changes. We hope that the result got
+		/// in this way is also a positive number that is more in line with practical use.
+		/// </para>
+		/// </remarks>
+		/// <param name="x">The dividend (the number to be divided).</param>
+		/// <param name="y">The divisor (the number to divide by).</param>
+		/// <returns>
+		/// The floor modulus of x and y. The result will have the same sign as y, and its absolute value will
+		/// be less than the absolute value of y.
+		/// </returns>
 		public static int FloorMod(int x, int y) {
 			int result = x % y;
 			if (result != 0 && x < 0 != y < 0)
 				result += y;
 			return result;
 		}
-		public static long FloorMod(int x, uint y) {
-			long result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static long FloorMod(int x, long y) {
-			long result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static float FloorMod(int x, float y) {
-			float result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static double FloorMod(int x, double y) {
-			double result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static decimal FloorMod(int x, decimal y) {
-			decimal result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static long FloorMod(uint x, int y) {
-			long result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
+		/// <inheritdoc cref="FloorMod(int, int)" />
 		public static uint FloorMod(uint x, uint y) {
 			uint result = x % y;
 			if (result != 0 && x < 0 != y < 0)
 				result += y;
 			return result;
 		}
-		public static long FloorMod(uint x, long y) {
-			long result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static ulong FloorMod(uint x, ulong y) {
-			ulong result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static float FloorMod(uint x, float y) {
-			float result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static double FloorMod(uint x, double y) {
-			double result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static decimal FloorMod(uint x, decimal y) {
-			decimal result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static long FloorMod(long x, int y) {
-			long result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static long FloorMod(long x, uint y) {
-			long result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
+		/// <inheritdoc cref="FloorMod(int, int)" />
 		public static long FloorMod(long x, long y) {
 			long result = x % y;
 			if (result != 0 && x < 0 != y < 0)
 				result += y;
 			return result;
 		}
-		public static float FloorMod(long x, float y) {
-			float result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static double FloorMod(long x, double y) {
-			double result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static decimal FloorMod(long x, decimal y) {
-			decimal result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static ulong FloorMod(ulong x, uint y) {
-			ulong result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
+		/// <inheritdoc cref="FloorMod(int, int)" />
 		public static ulong FloorMod(ulong x, ulong y) {
 			ulong result = x % y;
 			if (result != 0 && x < 0 != y < 0)
 				result += y;
 			return result;
 		}
-		public static float FloorMod(ulong x, float y) {
-			float result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static double FloorMod(ulong x, double y) {
-			double result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static decimal FloorMod(ulong x, decimal y) {
-			decimal result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static float FloorMod(float x, int y) {
-			float result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static float FloorMod(float x, uint y) {
-			float result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static float FloorMod(float x, long y) {
-			float result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static float FloorMod(float x, ulong y) {
-			float result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
+		/// <inheritdoc cref="FloorMod(int, int)" />
 		public static float FloorMod(float x, float y) {
 			float result = x % y;
 			if (result != 0 && x < 0 != y < 0)
 				result += y;
 			return result;
 		}
-		public static double FloorMod(float x, double y) {
-			double result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static double FloorMod(double x, int y) {
-			double result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static double FloorMod(double x, uint y) {
-			double result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static double FloorMod(double x, long y) {
-			double result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static double FloorMod(double x, ulong y) {
-			double result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static double FloorMod(double x, float y) {
-			double result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
+		/// <inheritdoc cref="FloorMod(int, int)" />
 		public static double FloorMod(double x, double y) {
 			double result = x % y;
 			if (result != 0 && x < 0 != y < 0)
 				result += y;
 			return result;
 		}
-		public static decimal FloorMod(decimal x, int y) {
-			decimal result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static decimal FloorMod(decimal x, uint y) {
-			decimal result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static decimal FloorMod(decimal x, long y) {
-			decimal result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
-		public static decimal FloorMod(decimal x, ulong y) {
-			decimal result = x % y;
-			if (result != 0 && x < 0 != y < 0)
-				result += y;
-			return result;
-		}
+		/// <inheritdoc cref="FloorMod(int, int)" />
 		public static decimal FloorMod(decimal x, decimal y) {
 			decimal result = x % y;
 			if (result != 0 && x < 0 != y < 0)
 				result += y;
 			return result;
 		}
+		/// <summary>
+		/// Returns <paramref name="value"/> clamped to the inclusive range of <paramref name="min"/> and <paramref name="max"/>.
+		/// </summary>
+		/// <typeparam name="T">Number type.</typeparam>
+		/// <param name="value">The value to be clamped.</param>
+		/// <param name="min">The lower bound of the result.</param>
+		/// <param name="max">The upper bound of the result.</param>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><paramref name="value"/> if <paramref name="min"/> ¡Ü <paramref name="value"/> ¡Ü <paramref name="max"/>.</item>
+		/// <item><paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.</item>
+		/// <item><paramref name="max"/> if <paramref name="max"/> &lt; <paramref name="value"/>.</item>
+		/// </list>
+		/// </returns>
+		public static sbyte Clamp(sbyte value, sbyte min, sbyte max) =>
+			value < min ? min : value > max ? max : value;
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+		public static byte Clamp(byte value, byte min, byte max) =>
+			value < min ? min : value > max ? max : value;
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+		public static short Clamp(short value, short min, short max) =>
+			value < min ? min : value > max ? max : value;
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+		public static ushort Clamp(ushort value, ushort min, ushort max) =>
+			value < min ? min : value > max ? max : value;
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+		public static int Clamp(int value, int min, int max) =>
+			value < min ? min : value > max ? max : value;
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+		public static uint Clamp(uint value, uint min, uint max) =>
+			value < min ? min : value > max ? max : value;
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+		public static long Clamp(long value, long min, long max) =>
+			value < min ? min : value > max ? max : value;
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+		public static ulong Clamp(ulong value, ulong min, ulong max) =>
+			value < min ? min : value > max ? max : value;
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+		public static float Clamp(float value, float min, float max) =>
+			value < min ? min : value > max ? max : value;
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+		public static double Clamp(double value, double min, double max) =>
+			value < min ? min : value > max ? max : value;
+		/// <inheritdoc cref="Clamp(sbyte, sbyte, sbyte)" />
+		public static decimal Clamp(decimal value, decimal min, decimal max) =>
+			value < min ? min : value > max ? max : value;
+		/// <summary>
+		/// <para><b>Inaccurate Thermometer</b></para>
+		///
+		/// <para>
+		/// Maps a value from one range to another, with a linear relationship between the old and new ranges and
+		/// not necessarily a proportional relationship, such as the relationship between Celsius and Fahrenheit,
+		/// and return the corresponding new value.
+		/// </para>
+		///
+		/// <para>
+		/// This function takes a value <c><paramref name="x"/></c> within a range <c>[<paramref name="min"/>, <paramref name="max"/>]</c>
+		/// and maps it to a new range <c>[<paramref name="a"/>, <paramref name="b"/>]</c>.
+		/// The mapping is done linearly, meaning that the ratio of the new range to the old range is preserved.
+		/// </para>
+		///
+		/// <para>
+		/// For example, changing a color value from 0 to 255 to a value from 0 to 100.
+		/// </para>
+		/// </summary>
+		/// <param name="x">The value within the old range to be mapped.</param>
+		/// <param name="min">The minimum value of the old range.</param>
+		/// <param name="max">The maximum value of the old range.</param>
+		/// <param name="a">The minimum value of the new range.</param>
+		/// <param name="b">The maximum value of the new range.</param>
+		/// <returns>The mapped value within the new range.</returns>
+		public static sbyte Map(double x, double min, double max, sbyte a, sbyte b) =>
+			(sbyte)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+		public static byte Map(double x, double min, double max, byte a, byte b) =>
+			(byte)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+		public static short Map(double x, double min, double max, short a, short b) =>
+			(short)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+		public static ushort Map(double x, double min, double max, ushort a, ushort b) =>
+			(ushort)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+		public static int Map(double x, double min, double max, int a, int b) =>
+			(int)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+		public static uint Map(double x, double min, double max, uint a, uint b) =>
+			(uint)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+		public static long Map(double x, double min, double max, long a, long b) =>
+			(long)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+		public static ulong Map(double x, double min, double max, ulong a, ulong b) =>
+			(ulong)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+		public static float Map(double x, double min, double max, float a, float b) =>
+			(float)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+		public static double Map(double x, double min, double max, double a, double b) =>
+			(double)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <inheritdoc cref="Map(double, double, double, sbyte, sbyte)" />
+		public static decimal Map(decimal x, decimal min, decimal max, decimal a, decimal b) =>
+			(decimal)(min == a && max == b ? x :
+			(b - a) * (x - min) / (max - min) + a);
+		/// <summary>
+		/// This function combine <see cref="Clamp(sbyte, sbyte, sbyte)" /> and <see cref="Map(double, double, double, sbyte, sbyte)" /> into one.
+		/// </summary>
+		/// <param name="x">The value within the old range to be mapped.</param>
+		/// <param name="min">The minimum value of the old range.</param>
+		/// <param name="max">The maximum value of the old range.</param>
+		/// <param name="a">The minimum value of the new range.</param>
+		/// <param name="b">The maximum value of the new range.</param>
+		/// <returns>The clamp-mapped value within the new range.</returns>
+		public static sbyte ClampMap(double x, double min, double max, sbyte a, sbyte b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+		public static byte ClampMap(double x, double min, double max, byte a, byte b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+		public static short ClampMap(double x, double min, double max, short a, short b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+		public static ushort ClampMap(double x, double min, double max, ushort a, ushort b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+		public static int ClampMap(double x, double min, double max, int a, int b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+		public static uint ClampMap(double x, double min, double max, uint a, uint b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+		public static long ClampMap(double x, double min, double max, long a, long b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+		public static ulong ClampMap(double x, double min, double max, ulong a, ulong b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+		public static float ClampMap(double x, double min, double max, float a, float b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+		public static double ClampMap(double x, double min, double max, double a, double b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="ClampMap(double, double, double, sbyte, sbyte)" />
+		public static decimal ClampMap(decimal x, decimal min, decimal max, decimal a, decimal b) =>
+			Clamp(Map(x, min, max, a, b), a, b);
+		/// <inheritdoc cref="Math.Max(sbyte, sbyte)" />
+		public static sbyte Max(sbyte val1, sbyte val2, sbyte val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(sbyte, sbyte)" />
+		public static sbyte Min(sbyte val1, sbyte val2, sbyte val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(sbyte, sbyte)" />
+		public static sbyte Max(sbyte val1, sbyte val2, sbyte val3, sbyte val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(sbyte, sbyte)" />
+		public static sbyte Min(sbyte val1, sbyte val2, sbyte val3, sbyte val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(sbyte, sbyte)" />
+		public static sbyte Max(sbyte val1, sbyte val2, sbyte val3, sbyte val4, sbyte val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(sbyte, sbyte)" />
+		public static sbyte Min(sbyte val1, sbyte val2, sbyte val3, sbyte val4, sbyte val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(sbyte, sbyte)" />
+		public static sbyte Max(sbyte val1, sbyte val2, sbyte val3, sbyte val4, sbyte val5, sbyte val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(sbyte, sbyte)" />
+		public static sbyte Min(sbyte val1, sbyte val2, sbyte val3, sbyte val4, sbyte val5, sbyte val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(sbyte, sbyte)" />
+		public static sbyte Max(sbyte val1, sbyte val2, sbyte val3, sbyte val4, sbyte val5, sbyte val6, sbyte val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(sbyte, sbyte)" />
+		public static sbyte Min(sbyte val1, sbyte val2, sbyte val3, sbyte val4, sbyte val5, sbyte val6, sbyte val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(sbyte, sbyte)" />
+		public static sbyte Max(sbyte val1, sbyte val2, sbyte val3, sbyte val4, sbyte val5, sbyte val6, sbyte val7, sbyte val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(sbyte, sbyte)" />
+		public static sbyte Min(sbyte val1, sbyte val2, sbyte val3, sbyte val4, sbyte val5, sbyte val6, sbyte val7, sbyte val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
+		/// <inheritdoc cref="Math.Max(byte, byte)" />
+		public static byte Max(byte val1, byte val2, byte val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(byte, byte)" />
+		public static byte Min(byte val1, byte val2, byte val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(byte, byte)" />
+		public static byte Max(byte val1, byte val2, byte val3, byte val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(byte, byte)" />
+		public static byte Min(byte val1, byte val2, byte val3, byte val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(byte, byte)" />
+		public static byte Max(byte val1, byte val2, byte val3, byte val4, byte val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(byte, byte)" />
+		public static byte Min(byte val1, byte val2, byte val3, byte val4, byte val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(byte, byte)" />
+		public static byte Max(byte val1, byte val2, byte val3, byte val4, byte val5, byte val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(byte, byte)" />
+		public static byte Min(byte val1, byte val2, byte val3, byte val4, byte val5, byte val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(byte, byte)" />
+		public static byte Max(byte val1, byte val2, byte val3, byte val4, byte val5, byte val6, byte val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(byte, byte)" />
+		public static byte Min(byte val1, byte val2, byte val3, byte val4, byte val5, byte val6, byte val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(byte, byte)" />
+		public static byte Max(byte val1, byte val2, byte val3, byte val4, byte val5, byte val6, byte val7, byte val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(byte, byte)" />
+		public static byte Min(byte val1, byte val2, byte val3, byte val4, byte val5, byte val6, byte val7, byte val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
+		/// <inheritdoc cref="Math.Max(short, short)" />
+		public static short Max(short val1, short val2, short val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(short, short)" />
+		public static short Min(short val1, short val2, short val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(short, short)" />
+		public static short Max(short val1, short val2, short val3, short val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(short, short)" />
+		public static short Min(short val1, short val2, short val3, short val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(short, short)" />
+		public static short Max(short val1, short val2, short val3, short val4, short val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(short, short)" />
+		public static short Min(short val1, short val2, short val3, short val4, short val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(short, short)" />
+		public static short Max(short val1, short val2, short val3, short val4, short val5, short val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(short, short)" />
+		public static short Min(short val1, short val2, short val3, short val4, short val5, short val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(short, short)" />
+		public static short Max(short val1, short val2, short val3, short val4, short val5, short val6, short val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(short, short)" />
+		public static short Min(short val1, short val2, short val3, short val4, short val5, short val6, short val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(short, short)" />
+		public static short Max(short val1, short val2, short val3, short val4, short val5, short val6, short val7, short val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(short, short)" />
+		public static short Min(short val1, short val2, short val3, short val4, short val5, short val6, short val7, short val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
+		/// <inheritdoc cref="Math.Max(ushort, ushort)" />
+		public static ushort Max(ushort val1, ushort val2, ushort val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(ushort, ushort)" />
+		public static ushort Min(ushort val1, ushort val2, ushort val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(ushort, ushort)" />
+		public static ushort Max(ushort val1, ushort val2, ushort val3, ushort val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(ushort, ushort)" />
+		public static ushort Min(ushort val1, ushort val2, ushort val3, ushort val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(ushort, ushort)" />
+		public static ushort Max(ushort val1, ushort val2, ushort val3, ushort val4, ushort val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(ushort, ushort)" />
+		public static ushort Min(ushort val1, ushort val2, ushort val3, ushort val4, ushort val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(ushort, ushort)" />
+		public static ushort Max(ushort val1, ushort val2, ushort val3, ushort val4, ushort val5, ushort val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(ushort, ushort)" />
+		public static ushort Min(ushort val1, ushort val2, ushort val3, ushort val4, ushort val5, ushort val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(ushort, ushort)" />
+		public static ushort Max(ushort val1, ushort val2, ushort val3, ushort val4, ushort val5, ushort val6, ushort val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(ushort, ushort)" />
+		public static ushort Min(ushort val1, ushort val2, ushort val3, ushort val4, ushort val5, ushort val6, ushort val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(ushort, ushort)" />
+		public static ushort Max(ushort val1, ushort val2, ushort val3, ushort val4, ushort val5, ushort val6, ushort val7, ushort val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(ushort, ushort)" />
+		public static ushort Min(ushort val1, ushort val2, ushort val3, ushort val4, ushort val5, ushort val6, ushort val7, ushort val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
+		/// <inheritdoc cref="Math.Max(int, int)" />
+		public static int Max(int val1, int val2, int val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(int, int)" />
+		public static int Min(int val1, int val2, int val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(int, int)" />
+		public static int Max(int val1, int val2, int val3, int val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(int, int)" />
+		public static int Min(int val1, int val2, int val3, int val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(int, int)" />
+		public static int Max(int val1, int val2, int val3, int val4, int val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(int, int)" />
+		public static int Min(int val1, int val2, int val3, int val4, int val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(int, int)" />
+		public static int Max(int val1, int val2, int val3, int val4, int val5, int val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(int, int)" />
+		public static int Min(int val1, int val2, int val3, int val4, int val5, int val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(int, int)" />
+		public static int Max(int val1, int val2, int val3, int val4, int val5, int val6, int val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(int, int)" />
+		public static int Min(int val1, int val2, int val3, int val4, int val5, int val6, int val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(int, int)" />
+		public static int Max(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(int, int)" />
+		public static int Min(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
+		/// <inheritdoc cref="Math.Max(uint, uint)" />
+		public static uint Max(uint val1, uint val2, uint val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(uint, uint)" />
+		public static uint Min(uint val1, uint val2, uint val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(uint, uint)" />
+		public static uint Max(uint val1, uint val2, uint val3, uint val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(uint, uint)" />
+		public static uint Min(uint val1, uint val2, uint val3, uint val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(uint, uint)" />
+		public static uint Max(uint val1, uint val2, uint val3, uint val4, uint val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(uint, uint)" />
+		public static uint Min(uint val1, uint val2, uint val3, uint val4, uint val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(uint, uint)" />
+		public static uint Max(uint val1, uint val2, uint val3, uint val4, uint val5, uint val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(uint, uint)" />
+		public static uint Min(uint val1, uint val2, uint val3, uint val4, uint val5, uint val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(uint, uint)" />
+		public static uint Max(uint val1, uint val2, uint val3, uint val4, uint val5, uint val6, uint val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(uint, uint)" />
+		public static uint Min(uint val1, uint val2, uint val3, uint val4, uint val5, uint val6, uint val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(uint, uint)" />
+		public static uint Max(uint val1, uint val2, uint val3, uint val4, uint val5, uint val6, uint val7, uint val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(uint, uint)" />
+		public static uint Min(uint val1, uint val2, uint val3, uint val4, uint val5, uint val6, uint val7, uint val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
+		/// <inheritdoc cref="Math.Max(long, long)" />
+		public static long Max(long val1, long val2, long val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(long, long)" />
+		public static long Min(long val1, long val2, long val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(long, long)" />
+		public static long Max(long val1, long val2, long val3, long val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(long, long)" />
+		public static long Min(long val1, long val2, long val3, long val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(long, long)" />
+		public static long Max(long val1, long val2, long val3, long val4, long val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(long, long)" />
+		public static long Min(long val1, long val2, long val3, long val4, long val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(long, long)" />
+		public static long Max(long val1, long val2, long val3, long val4, long val5, long val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(long, long)" />
+		public static long Min(long val1, long val2, long val3, long val4, long val5, long val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(long, long)" />
+		public static long Max(long val1, long val2, long val3, long val4, long val5, long val6, long val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(long, long)" />
+		public static long Min(long val1, long val2, long val3, long val4, long val5, long val6, long val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(long, long)" />
+		public static long Max(long val1, long val2, long val3, long val4, long val5, long val6, long val7, long val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(long, long)" />
+		public static long Min(long val1, long val2, long val3, long val4, long val5, long val6, long val7, long val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
+		/// <inheritdoc cref="Math.Max(ulong, ulong)" />
+		public static ulong Max(ulong val1, ulong val2, ulong val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(ulong, ulong)" />
+		public static ulong Min(ulong val1, ulong val2, ulong val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(ulong, ulong)" />
+		public static ulong Max(ulong val1, ulong val2, ulong val3, ulong val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(ulong, ulong)" />
+		public static ulong Min(ulong val1, ulong val2, ulong val3, ulong val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(ulong, ulong)" />
+		public static ulong Max(ulong val1, ulong val2, ulong val3, ulong val4, ulong val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(ulong, ulong)" />
+		public static ulong Min(ulong val1, ulong val2, ulong val3, ulong val4, ulong val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(ulong, ulong)" />
+		public static ulong Max(ulong val1, ulong val2, ulong val3, ulong val4, ulong val5, ulong val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(ulong, ulong)" />
+		public static ulong Min(ulong val1, ulong val2, ulong val3, ulong val4, ulong val5, ulong val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(ulong, ulong)" />
+		public static ulong Max(ulong val1, ulong val2, ulong val3, ulong val4, ulong val5, ulong val6, ulong val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(ulong, ulong)" />
+		public static ulong Min(ulong val1, ulong val2, ulong val3, ulong val4, ulong val5, ulong val6, ulong val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(ulong, ulong)" />
+		public static ulong Max(ulong val1, ulong val2, ulong val3, ulong val4, ulong val5, ulong val6, ulong val7, ulong val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(ulong, ulong)" />
+		public static ulong Min(ulong val1, ulong val2, ulong val3, ulong val4, ulong val5, ulong val6, ulong val7, ulong val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
+		/// <inheritdoc cref="Math.Max(float, float)" />
+		public static float Max(float val1, float val2, float val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(float, float)" />
+		public static float Min(float val1, float val2, float val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(float, float)" />
+		public static float Max(float val1, float val2, float val3, float val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(float, float)" />
+		public static float Min(float val1, float val2, float val3, float val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(float, float)" />
+		public static float Max(float val1, float val2, float val3, float val4, float val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(float, float)" />
+		public static float Min(float val1, float val2, float val3, float val4, float val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(float, float)" />
+		public static float Max(float val1, float val2, float val3, float val4, float val5, float val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(float, float)" />
+		public static float Min(float val1, float val2, float val3, float val4, float val5, float val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(float, float)" />
+		public static float Max(float val1, float val2, float val3, float val4, float val5, float val6, float val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(float, float)" />
+		public static float Min(float val1, float val2, float val3, float val4, float val5, float val6, float val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(float, float)" />
+		public static float Max(float val1, float val2, float val3, float val4, float val5, float val6, float val7, float val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(float, float)" />
+		public static float Min(float val1, float val2, float val3, float val4, float val5, float val6, float val7, float val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
+		/// <inheritdoc cref="Math.Max(double, double)" />
+		public static double Max(double val1, double val2, double val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(double, double)" />
+		public static double Min(double val1, double val2, double val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(double, double)" />
+		public static double Max(double val1, double val2, double val3, double val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(double, double)" />
+		public static double Min(double val1, double val2, double val3, double val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(double, double)" />
+		public static double Max(double val1, double val2, double val3, double val4, double val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(double, double)" />
+		public static double Min(double val1, double val2, double val3, double val4, double val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(double, double)" />
+		public static double Max(double val1, double val2, double val3, double val4, double val5, double val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(double, double)" />
+		public static double Min(double val1, double val2, double val3, double val4, double val5, double val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(double, double)" />
+		public static double Max(double val1, double val2, double val3, double val4, double val5, double val6, double val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(double, double)" />
+		public static double Min(double val1, double val2, double val3, double val4, double val5, double val6, double val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(double, double)" />
+		public static double Max(double val1, double val2, double val3, double val4, double val5, double val6, double val7, double val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(double, double)" />
+		public static double Min(double val1, double val2, double val3, double val4, double val5, double val6, double val7, double val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
+		/// <inheritdoc cref="Math.Max(decimal, decimal)" />
+		public static decimal Max(decimal val1, decimal val2, decimal val3) =>
+			Math.Max(val1, Math.Max(val2, val3));
+		/// <inheritdoc cref="Math.Min(decimal, decimal)" />
+		public static decimal Min(decimal val1, decimal val2, decimal val3) =>
+			Math.Min(val1, Math.Min(val2, val3));
+		/// <inheritdoc cref="Math.Max(decimal, decimal)" />
+		public static decimal Max(decimal val1, decimal val2, decimal val3, decimal val4) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, val4)));
+		/// <inheritdoc cref="Math.Min(decimal, decimal)" />
+		public static decimal Min(decimal val1, decimal val2, decimal val3, decimal val4) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, val4)));
+		/// <inheritdoc cref="Math.Max(decimal, decimal)" />
+		public static decimal Max(decimal val1, decimal val2, decimal val3, decimal val4, decimal val5) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, val5))));
+		/// <inheritdoc cref="Math.Min(decimal, decimal)" />
+		public static decimal Min(decimal val1, decimal val2, decimal val3, decimal val4, decimal val5) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, val5))));
+		/// <inheritdoc cref="Math.Max(decimal, decimal)" />
+		public static decimal Max(decimal val1, decimal val2, decimal val3, decimal val4, decimal val5, decimal val6) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, val6)))));
+		/// <inheritdoc cref="Math.Min(decimal, decimal)" />
+		public static decimal Min(decimal val1, decimal val2, decimal val3, decimal val4, decimal val5, decimal val6) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, val6)))));
+		/// <inheritdoc cref="Math.Max(decimal, decimal)" />
+		public static decimal Max(decimal val1, decimal val2, decimal val3, decimal val4, decimal val5, decimal val6, decimal val7) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, val7))))));
+		/// <inheritdoc cref="Math.Min(decimal, decimal)" />
+		public static decimal Min(decimal val1, decimal val2, decimal val3, decimal val4, decimal val5, decimal val6, decimal val7) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, val7))))));
+		/// <inheritdoc cref="Math.Max(decimal, decimal)" />
+		public static decimal Max(decimal val1, decimal val2, decimal val3, decimal val4, decimal val5, decimal val6, decimal val7, decimal val8) =>
+			Math.Max(val1, Math.Max(val2, Math.Max(val3, Math.Max(val4, Math.Max(val5, Math.Max(val6, Math.Max(val7, val8)))))));
+		/// <inheritdoc cref="Math.Min(decimal, decimal)" />
+		public static decimal Min(decimal val1, decimal val2, decimal val3, decimal val4, decimal val5, decimal val6, decimal val7, decimal val8) =>
+			Math.Min(val1, Math.Min(val2, Math.Min(val3, Math.Min(val4, Math.Min(val5, Math.Min(val6, Math.Min(val7, val8)))))));
 	}
 }
