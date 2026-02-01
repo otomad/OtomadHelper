@@ -99,22 +99,24 @@ public static partial class Extensions {
 		/// </summary>
 		/// <param name="child">The <see cref="DependencyObject" /> to find the parent of.</param>
 		/// <returns>The parent of the given <see cref="DependencyObject" />, or <see langword="null"/> if no parent is found.</returns>
-		public DependencyObject? GetParent() {
-			switch (child) {
-				case null:
-					return null;
-				case ContentElement contentElement: {
-					DependencyObject parent = ContentOperations.GetParent(contentElement);
-					return parent ?? (contentElement is FrameworkContentElement fce ? fce.Parent : null);
+		public DependencyObject? Parent {
+			get {
+				switch (child) {
+					case null:
+						return null;
+					case ContentElement contentElement: {
+						DependencyObject parent = ContentOperations.GetParent(contentElement);
+						return parent ?? (contentElement is FrameworkContentElement fce ? fce.Parent : null);
+					}
+					case FrameworkElement frameworkElement: {
+						DependencyObject parent = frameworkElement.Parent;
+						if (parent is { })
+							return parent;
+						goto default;
+					}
+					default:
+						return VisualTreeHelper.GetParent(child);
 				}
-				case FrameworkElement frameworkElement: {
-					DependencyObject parent = frameworkElement.Parent;
-					if (parent is { })
-						return parent;
-					goto default;
-				}
-				default:
-					return VisualTreeHelper.GetParent(child);
 			}
 		}
 	}
@@ -130,7 +132,7 @@ public static partial class Extensions {
 		public TElement? GetParent<TElement>() where TElement : DependencyObject {
 			DependencyObject? parent;
 			do
-				parent = child.GetParent();
+				parent = child.Parent;
 			while (parent is not (TElement or null));
 			return parent as TElement;
 		}

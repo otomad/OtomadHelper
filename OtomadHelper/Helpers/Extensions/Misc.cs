@@ -357,13 +357,13 @@ public static partial class Extensions {
 
 	extension(FontFamily) {
 		/// <summary>
-		/// Creates a new FontFamily by joining the sources of the specified font families into a single, comma-separated
+		/// Creates a new FontFamily by concatenating the sources of the specified font families into a single, comma-separated
 		/// source string.
 		/// </summary>
 		/// <param name="fontFamilies">A parameter array of collections of FontFamily objects whose sources will be combined. Each collection can contain
 		/// one or more FontFamily instances.</param>
 		/// <returns>A FontFamily representing the combined sources of all specified font families, joined as a comma-separated list.</returns>
-		public static FontFamily Join(params IEnumerable<FontFamily?> fontFamilies) =>
+		public static FontFamily Concat(params IEnumerable<FontFamily?> fontFamilies) =>
 			new(fontFamilies.NonNull().Select(font => font.Source).Join(", "));
 	}
 
@@ -382,7 +382,7 @@ public static partial class Extensions {
 					"en-US" or "en-GB" or "en-UK" => "Segoe UI",
 					_ => null,
 				};
-				if (font is not null) return new(font);
+				if (font is { }) return new(font);
 				culture = culture.Parent;
 			}
 			return null;

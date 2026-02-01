@@ -159,7 +159,7 @@ public sealed partial class Clipper : Decorator {
 
 	partial void OnConstraintChanged() => OnClippingInvalidated(this);
 	private static void OnClippingInvalidated(UIElement element) {
-		if (VisualTreeHelper.GetParent(element) is Clipper translator)
+		if (element.Parent is Clipper translator)
 			translator.InvalidateMeasure();
 	}
 

@@ -269,8 +269,12 @@ public static partial class Extensions {
 		/// Convert a <see cref="Tuple" /> or <see cref="ValueTuple" /> to <see cref="List{T}" />.
 		/// </summary>
 		/// <param name="tuple"><see cref="Tuple" /> or <see cref="ValueTuple" />.</param>
-		public List<T> ToList<T>() =>
-			tuple.ToArray<T>().ToList();
+		public List<T> ToList<T>() {
+			List<T> list = new(tuple.Length);
+			for (int i = 0; i < tuple.Length; i++)
+				list[i] = (T)tuple[i];
+			return list;
+		}
 
 		/// <summary>
 		/// Get <see cref="Tuple" /> or <see cref="ValueTuple" /> item value by its index.
@@ -278,6 +282,22 @@ public static partial class Extensions {
 		/// <param name="tuple"><see cref="Tuple" /> or <see cref="ValueTuple" />.</param>
 		/// <param name="index">The index of the item.</param>
 		public T Get<T>(int index) => (T)tuple[index];
+
+		/// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
+		public IEnumerator GetEnumerator() {
+			for (int i = 0; i < tuple.Length; i++)
+				yield return tuple[i];
+		}
+
+		/// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
+		public IEnumerator<T> GetEnumerator<T>() {
+			for (int i = 0; i < tuple.Length; i++)
+				yield return (T)tuple[i];
+		}
+
+		/// <inheritdoc cref="Enumerable.Select" />
+		public ITuple Select<TSource, TResult>(Func<TSource, TResult> selector) =>
+			tuple.ToArray<TSource>().Select(selector).Cast<object>().ToTuple();
 	}
 
 	extension<T>(IEnumerable<T> source) {

@@ -131,7 +131,7 @@ public class EventBindingExtension : MarkupExtension {
 	internal static ObservableObject? FindViewModel(FrameworkElement? target) {
 		if (target is null) return null;
 		if (target.DataContext is ObservableObject vm) return vm;
-		FrameworkElement? parent = target.GetParent() as FrameworkElement;
+		FrameworkElement? parent = target.Parent as FrameworkElement;
 		return FindViewModel(parent);
 	}
 
@@ -142,7 +142,7 @@ public class EventBindingExtension : MarkupExtension {
 
 		foreach (string propertyName in path) {
 			if (propertyName == "Parent" && currentType.Extends(typeof(DependencyObject))) {
-				target = ((DependencyObject)target).GetParent()!;
+				target = ((DependencyObject)target).Parent!;
 				currentType = target.GetType();
 				continue;
 			}
