@@ -40,7 +40,7 @@ export default function ClickOnSameElement({ bubbling = true, children, onClick,
 	useEventListener(document, "pointerup", onPointerUp, undefined, null);
 
 	return (
-		<EventInjector ref={target} onPointerDown={onPointerDown} onKeyUp={e => e.code.in("Space", "Enter") && onPointerUp(e as never)}>
+		<EventInjector ref={target} onPointerDown={onPointerDown} onKeyUp={mod.space.enter(e => onPointerUp(e as never))}>
 			{children}
 		</EventInjector>
 	);

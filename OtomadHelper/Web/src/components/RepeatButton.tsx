@@ -42,7 +42,7 @@ export default function RepeatButton({ children, onClick, onRelease, ...htmlAttr
 			onPointerUp={handleRelease}
 			onKeyDown={handleKeyDown}
 			onKeyUp={handleKeyUp}
-			onContextMenu={e => e.preventDefault()}
+			onContextMenu={mod.prevent()}
 			data-pressed={pressed}
 			{...htmlAttrs}
 		>

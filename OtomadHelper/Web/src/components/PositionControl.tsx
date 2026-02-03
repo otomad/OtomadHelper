@@ -181,7 +181,7 @@ export default function PositionControl({ value, disabled, defaultValue = [50, 5
 			onPointerLeave={handlePointerLeave}
 			onPointerUp={handlePointerUp}
 			onPointerDown={handlePointerDown}
-			onAuxClick={e => { e.preventDefault(); onChanged?.(defaultValue); }}
+			onAuxClick={mod.prevent(() => onChanged?.(defaultValue))}
 			onContextMenu={stopEvent}
 			disabled={disabled}
 		>

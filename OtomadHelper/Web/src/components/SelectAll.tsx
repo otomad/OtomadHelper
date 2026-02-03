@@ -45,7 +45,7 @@ export default function SelectAll<T>({ value, all, icon, title, meta, details, .
 				value={[selectAll, setSelectAll]}
 				dynamicFontWeight={[value[0]?.length ?? 0, all.length]}
 				actions={
-					<Button subtle icon="invert_selection" onClick={e => { stopEvent(e); invertSelection(); }}>{t.invertSelection}</Button>
+					<Button subtle icon="invert_selection" onClick={mod.handled(e => invertSelection())}>{t.invertSelection}</Button>
 				}
 			>
 				{t.selectAll}

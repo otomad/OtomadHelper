@@ -114,7 +114,7 @@ export default function ContentDialog({ shown: [shown, setShown], title, static:
 	const closeWhenNonStatic = () => { !isStatic && close(); };
 	if (autoTitleCase) title &&= title.toTitleCase();
 
-	useEventListener(window, "keydown", e => e.code === "Escape" && closeWhenNonStatic());
+	useEventListener(window, "keydown", mod.esc(() => closeWhenNonStatic()));
 
 	return (
 		<Portal>
@@ -127,7 +127,7 @@ export default function ContentDialog({ shown: [shown, setShown], title, static:
 							aria-modal
 							style={{ ...style, "--width": styles.toValue(width) }}
 							className={[className, { peek }]}
-							onClick={e => e.stopPropagation()}
+							onClick={mod.stop()}
 							data-inert-escape
 							{...htmlAttrs}
 						>

@@ -130,6 +130,9 @@ importers:
       react-i18next:
         specifier: ^16.2.4
         version: 16.2.4(i18next@25.6.0(typescript@5.9.3))(react-dom@19.2.0(patch_hash=5fe66b4e1bb66b34fc67fa699c1228546051068a99435c4763e688550384ac96)(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+      react-modifiers:
+        specifier: file:D:/react-modifiers
+        version: file:../../../../../../react-modifiers
       react-transition-group-fc:
         specifier: ^4.6.2
         version: 4.6.2(react-dom@19.2.0(patch_hash=5fe66b4e1bb66b34fc67fa699c1228546051068a99435c4763e688550384ac96)(react@19.2.0))(react@19.2.0)
@@ -4818,6 +4821,9 @@ packages:
 
   react-merge-refs@1.1.0:
     resolution: {integrity: sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==}
+
+  react-modifiers@file:../../../../../../react-modifiers:
+    resolution: {directory: ../../../../../../react-modifiers, type: directory}
 
   react-refresh@0.17.0:
     resolution: {integrity: sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==}
@@ -10996,6 +11002,8 @@ snapshots:
   react-is@16.13.1: {}
 
   react-merge-refs@1.1.0: {}
+
+  react-modifiers@file:../../../../../../react-modifiers: {}
 
   react-refresh@0.17.0: {}
 

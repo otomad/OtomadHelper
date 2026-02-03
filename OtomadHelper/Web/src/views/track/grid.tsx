@@ -851,7 +851,7 @@ export default function Grid() {
 										data-column-end={colEnd}
 										data-row-start={rowStart}
 										data-row-end={rowEnd}
-										onMouseDown={e => e.button === 2 && focusDiffusion(e.currentTarget.parentElement, corners)}
+										onMouseDown={mod.right.rightMiddle.leftRightMiddle(e => focusDiffusion(e.currentTarget.parentElement, corners))}
 										onContextMenu={createContextMenu(([
 											...square ? [
 												{ label: t.descriptions.track.grid.squareCannotUseTheseFeatures({ fixed: fixedColumnsOrFixedRows }) },
@@ -927,7 +927,7 @@ export default function Grid() {
 					</Determinant>
 
 					<Attrs hidden={!flyoutEditor}>
-						<Mask onMouseDown={e => { stopEvent(e); closeFlyoutEditor(); }} />
+						<Mask onMouseDown={mod.handled(e => closeFlyoutEditor())} />
 						<FlyoutEditor>
 							{_flyoutEditor === "span" ? (
 								<div className="span">
@@ -998,7 +998,7 @@ export default function Grid() {
 					portal={document.body}
 					offset={TOOLTIP_OFFSET}
 					autoFocus={false}
-					onMouseDown={e => e.preventDefault()}
+					onMouseDown={mod.prevent()}
 				>
 					<Flyout.Item icon="edit_lightning" title={t.track.grid.quickFill} style={{ paddingInlineStart: "12px" }} />
 					<div className="items">

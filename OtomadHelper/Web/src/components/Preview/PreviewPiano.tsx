@@ -253,10 +253,10 @@ function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKey
 				aria-pressed={activeKeys.includes(whiteSpn) || sourceKeys.includes(whiteSpn)}
 				aria-describedby={ariaDescribedby}
 				onClick={() => onClick?.(whiteSpn)}
-				onMouseDown={leftDownModifier(() => onMouseDown?.(whiteSpn))}
-				onMouseEnter={leftDownModifier(() => onMouseDown?.(whiteSpn))}
-				onKeyDown={nonRepeatedSpaceEnterKeyModifier(() => onSpaceEnterKeyDown?.(whiteSpn))}
-				onKeyUp={nonRepeatedSpaceEnterKeyModifier(() => onSpaceEnterKeyUp?.(whiteSpn))}
+				onMouseDown={mod.left(() => onMouseDown?.(whiteSpn))}
+				onMouseEnter={mod.left(() => onMouseDown?.(whiteSpn))}
+				onKeyDown={mod.noRepeat.space.enter(() => onSpaceEnterKeyDown?.(whiteSpn))}
+				onKeyUp={mod.noRepeat.space.enter(() => onSpaceEnterKeyUp?.(whiteSpn))}
 			>
 				{whiteSpn}
 			</button>
@@ -273,10 +273,10 @@ function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKey
 					aria-pressed={activeKeys.includes(blackSpn) || sourceKeys.includes(blackSpn)}
 					aria-describedby={ariaDescribedby}
 					onClick={() => onClick?.(blackSpn)}
-					onMouseDown={leftDownModifier(() => onMouseDown?.(blackSpn))}
-					onMouseEnter={leftDownModifier(() => onMouseDown?.(blackSpn))}
-					onKeyDown={nonRepeatedSpaceEnterKeyModifier(() => onSpaceEnterKeyDown?.(blackSpn))}
-					onKeyUp={nonRepeatedSpaceEnterKeyModifier(() => onSpaceEnterKeyUp?.(blackSpn))}
+					onMouseDown={mod.left(() => onMouseDown?.(blackSpn))}
+					onMouseEnter={mod.left(() => onMouseDown?.(blackSpn))}
+					onKeyDown={mod.noRepeat.space.enter(() => onSpaceEnterKeyDown?.(blackSpn))}
+					onKeyUp={mod.noRepeat.space.enter(() => onSpaceEnterKeyUp?.(blackSpn))}
 				>
 					{blackSpn}
 				</button>
@@ -287,17 +287,4 @@ function PianoKey({ isBlackNext, midiNote, showCOnly, activeKeys = [], sourceKey
 
 function isNoteNameC(noteName: string) {
 	return noteName.match(/^C(?!#)/i);
-}
-
-function leftDownModifier(handler: MouseEventHandler<HTMLButtonElement>): MouseEventHandler<HTMLButtonElement> {
-	return e => {
-		if (e.buttons === 1) handler(e);
-	};
-}
-
-function nonRepeatedSpaceEnterKeyModifier(handler: KeyboardEventHandler<HTMLButtonElement>): KeyboardEventHandler<HTMLButtonElement> {
-	return e => {
-		if (e.repeat) return;
-		if (["Space", "Enter", "NumpadEnter"].includes(e.code)) handler(e);
-	};
 }

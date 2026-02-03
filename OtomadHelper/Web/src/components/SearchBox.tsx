@@ -128,7 +128,7 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 					placeholder={placeholder}
 					aria-label={t.aria.searchBox}
 					customFlyout={value?.trim() && (
-						<StyledDataList ref={datalistEl} tabIndex={-1} onMouseDown={e => e.preventDefault()}>
+						<StyledDataList ref={datalistEl} tabIndex={-1} onMouseDown={mod.prevent()}>
 							{searchResults}
 							<EmptyMessage.Mini icon="search">{t.noMatchingResults}</EmptyMessage.Mini>
 						</StyledDataList>

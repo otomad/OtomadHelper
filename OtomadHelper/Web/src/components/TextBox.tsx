@@ -78,7 +78,7 @@ function Spinner({ disabled, step = 1, positionAnchor, shown = false, onSpin, on
 	}
 
 	return (
-		<StyledSpinner hidden={hidden} aria-hidden={hidden} style={{ positionAnchor }} onMouseDown={e => e.preventDefault()}>
+		<StyledSpinner hidden={hidden} aria-hidden={hidden} style={{ positionAnchor }} onMouseDown={mod.prevent()}>
 			<div className="base">
 				<Button
 					subtle
@@ -533,7 +533,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 			aria-disabled={disabled || undefined}
 			$fullWidth={fullWidth}
 			$anchorName={`--${inputId}-text-box`}
-			onClick={e => e.stopPropagation()}
+			onClick={mod.stop()}
 			{...htmlAttrs}
 		>
 			<div className="wrapper">
