@@ -446,4 +446,22 @@ public static partial class Extensions {
 		public static bool IsDefined<TEnum>(int intValue) where TEnum : struct, Enum =>
 			Enum.IsDefined(typeof(TEnum), intValue);
 	}
+
+	extension<T>(T[] array) {
+		/// <inheritdoc cref="Array.Resize" />
+		/// <param name="fillWith">Fill with the items in the new added length.</param>
+		public T[] Resize(int newSize, T? fillWith = default(T)) {
+			int oldLength = array.Length;
+			Array.Resize(ref array, newSize);
+			if (newSize > oldLength && !EqualityComparer<object?>.Default.Equals(fillWith, default(T)))
+				for (int i = oldLength; i < newSize; i++)
+					array[i] = fillWith!;
+			return array;
+		}
+	}
+
+	extension(Array) {
+		/// <inheritdoc cref="Enumerable.Repeat" />
+		public static T[] Fill<T>(T element, int count) => Enumerable.Repeat(element, count).ToArray();
+	}
 }
