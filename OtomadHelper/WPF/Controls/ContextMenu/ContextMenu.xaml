@@ -16,6 +16,7 @@
 		<!--<Setter Property="IsHitTestVisible" Value="True" />--><!--I don't know why it doesn't work?-->
 		<Setter Property="BorderBrush" Value="{DynamicResource SurfaceStrokeFlyout}" />
 		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=Window}}" />
 		<Setter Property="TextBlock.TextAlignment" Value="Left" />
 		<Setter Property="Template">
 			<Setter.Value>

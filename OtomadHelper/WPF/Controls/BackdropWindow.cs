@@ -17,7 +17,7 @@ namespace OtomadHelper.WPF.Controls;
 /// <summary>
 /// BackdropWindow.xaml 的交互逻辑
 /// </summary>
-[DependencyProperty<SystemBackdropType>("SystemBackdropType", DefaultValueExpression = "DEFAULT_SYSTEM_BACKDROP_TYPE")]
+[DependencyProperty<SystemBackdropType>("SystemBackdropType", DefaultValueExpression = nameof(DefaultSystemBackdropType))]
 [DependencyProperty<bool>("IsLightTheme", DefaultValue = true)]
 [DependencyProperty<Color?>("CustomAccentColor")]
 [DependencyProperty<Color>("WindowGlassColor", DefaultValueExpression = nameof(WindowsDefaultGlassColor), IsReadOnly = true)]
@@ -36,10 +36,12 @@ public partial class BackdropWindow : Window {
 	protected readonly WindowInteropHelper helper;
 	protected IntPtr Handle => helper.Handle;
 
+	private bool IsRtl => false;
+
 	public BackdropWindow() : base() {
 		InitializeComponent();
 		helper = new(this);
-		//FlowDirection = FlowDirection.RightToLeft;
+		if (IsRtl) FlowDirection = FlowDirection.RightToLeft;
 	}
 
 	public IntPtr OwnerHandle {
@@ -52,7 +54,7 @@ public partial class BackdropWindow : Window {
 		CommandBindings.AddRange(Commands.CommandBindings);
 		AddResource("WPF/Themes/Generic.xaml");
 		AddResource("WPF/Themes/Controls.xaml");
-		if (Background == DEFAULT_BACKGROUND) base.Background = Background;
+		if (Background == DefaultBackground) base.Background = Background;
 		Loaded += Window_Loaded;
 		//Closing += Window_Closing;
 		IsVisibleChanged += (_, e) => {
@@ -187,8 +189,8 @@ public partial class BackdropWindow : Window {
 		}
 	}
 
-	private static readonly Brush DEFAULT_BACKGROUND = Brushes.Transparent;
-	public new Brush Background { get; set { field = value; base.Background = value; } } = DEFAULT_BACKGROUND;
+	private static readonly Brush DefaultBackground = Brushes.Transparent;
+	public new Brush Background { get; set { field = value; base.Background = value; } } = DefaultBackground;
 
 	public void UpdateControlBoxesVisibility() {
 		if (MinimizeBox is null && MaximizeBox is null && ControlBox is null) return;
@@ -360,10 +362,12 @@ public partial class BackdropWindow : Window {
 		SetCurrentThemeResource(isDarkTheme);
 		//Color borderColor = isDarkTheme ? Color.FromRgb(20, 20, 20) : Color.FromRgb(219, 219, 219);
 		//SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, borderColor.ToAbgr(false));
-		Color solidBackgroundColor = isDarkTheme ? Color.FromRgb(32, 32, 32) : Color.FromRgb(243, 243, 243);
-		if (Background == DEFAULT_BACKGROUND)
-			base.Background = (SystemBackdropType == SystemBackdropType.None || !SupportSystemBackdropType) && TitleBarType != TitleBarType.Borderless ?
-				new SolidColorBrush(solidBackgroundColor) : Brushes.Transparent;
+
+		// TODO: Change background color will cover the three window buttons.
+		//Color solidBackgroundColor = isDarkTheme ? Color.FromRgb(32, 32, 32) : Color.FromRgb(243, 243, 243);
+		//if (Background == DefaultBackground)
+		//	base.Background = (SystemBackdropType == SystemBackdropType.None || !SupportSystemBackdropType) && TitleBarType != TitleBarType.Borderless ?
+		//		new SolidColorBrush(solidBackgroundColor) : Brushes.Transparent;
 	}
 
 	partial void OnCustomAccentColorChanged() => RefreshAccentColor();
@@ -376,7 +380,7 @@ public partial class BackdropWindow : Window {
 		}
 	}
 
-	private const SystemBackdropType DEFAULT_SYSTEM_BACKDROP_TYPE = SystemBackdropType.TransientWindow;
+	private const SystemBackdropType DefaultSystemBackdropType = SystemBackdropType.TransientWindow;
 
 	protected void SetSystemBackdropType(SystemBackdropType systemBackdropType) {
 		SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (uint)systemBackdropType);
@@ -402,14 +406,19 @@ public partial class BackdropWindow : Window {
 					CaptionHeight = 54, // Default: 20
 					CornerRadius = new(0),
 					GlassFrameThickness = new(-1),
-					NonClientFrameEdges = NonClientFrameEdges.Right,
 					UseAeroCaptionButtons = true,
 				});
+				RelativeSource backdropWindowRelativeSource = new(RelativeSourceMode.FindAncestor, typeof(BackdropWindow), 1);
 				Binding resizeBorderThicknessBinding = new("ResizeMode") {
-					RelativeSource = new(RelativeSourceMode.FindAncestor, typeof(BackdropWindow), 1),
+					RelativeSource = backdropWindowRelativeSource,
 					Converter = new WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter(),
 				};
 				BindingOperations.SetBinding(WindowChrome.GetWindowChrome(this), WindowChrome.ResizeBorderThicknessProperty, resizeBorderThicknessBinding);
+				Binding nonClientFrameEdgesBinding = new("ResizeMode") {
+					RelativeSource = backdropWindowRelativeSource,
+					Converter = new WindowChromeTitleBarTypeResizeModeToNonClientFrameEdgesConverter(),
+				};
+				BindingOperations.SetBinding(WindowChrome.GetWindowChrome(this), WindowChrome.NonClientFrameEdgesProperty, nonClientFrameEdgesBinding);
 				break;
 			case TitleBarType.WindowChromeNoTitleBar:
 				WindowChrome.SetWindowChrome(this, new() {
@@ -439,6 +448,13 @@ public partial class BackdropWindow : Window {
 	public class WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter : ValueConverter<ResizeMode, Thickness> {
 		public override Thickness Convert(ResizeMode resizeMode, Type targetType, object parameter, CultureInfo culture) =>
 			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? new(0) : new(8, 0, 8, 8);
+	}
+
+	[ValueConversion(typeof(ResizeMode), typeof(NonClientFrameEdges))]
+	public class WindowChromeTitleBarTypeResizeModeToNonClientFrameEdgesConverter : ValueConverter<ResizeMode, NonClientFrameEdges> {
+		// Decided by whenever ILRepark is enabled.
+		public override NonClientFrameEdges Convert(ResizeMode resizeMode, Type targetType, object parameter, CultureInfo culture) =>
+			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize? NonClientFrameEdges.None : NonClientFrameEdges.Right;
 	}
 
 	protected override void OnKeyDown(KeyEventArgs e) {

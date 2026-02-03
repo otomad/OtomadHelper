@@ -19,9 +19,20 @@
 			<Setter Property="FontSize" Value="{DynamicResource CaptionFontSize}" />
 			<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 		</Style>
+		<Style x:Key="ModelAxisTextBlock" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+			<Setter Property="FontStyle" Value="Italic" />
+		</Style>
+		<Style x:Key="ColorTextBlock" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+			<Setter Property="FontWeight" Value="Bold" />
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding Color}" Value="">
+					<Setter Property="Visibility" Value="Collapsed" />
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
 	</UserControl.Resources>
 	<StackPanel DataContext="{Binding ElementName=View}">
-		<TextBlock FontStyle="Italic" Text="{Binding ModelAxis}" />
-		<TextBlock FontWeight="Bold" Text="{Binding Color}" />
+		<TextBlock Style="{StaticResource ModelAxisTextBlock}" Text="{Binding ModelAxis}" />
+		<TextBlock Style="{StaticResource ColorTextBlock}" Text="{Binding Color}" />
 	</StackPanel>
 </UserControl>

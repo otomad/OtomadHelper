@@ -282,7 +282,7 @@ public static class PInvoke {
 		HResult error = DwmGetWindowAttribute(IntPtr.Zero, DwmWindowAttribute.SystemBackdropType, out _, Marshal.SizeOf<uint>());
 		return error != HResult.InvalidArg;
 	}
-	public static readonly bool SupportSystemBackdropType = CheckSupportSystemBackdropType();
+	public static readonly bool SupportSystemBackdropType = false; // CheckSupportSystemBackdropType();
 
 	/// <param name="hwnd">Window handle.</param>
 	public static void AddExtendedWindowStyles(IntPtr hwnd, params ExtendedWindowStyles[] styles) {
