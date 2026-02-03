@@ -233,14 +233,6 @@ export default css`
 			display: none;
 		}
 
-		// Highlight mark style
-		mark {
-			color: ${c("fill-color-text-on-accent-selected-text")};
-			background-color: ${c("fill-color-system-target")};
-			border-radius: 4px;
-			box-decoration-break: clone;
-		}
-
 		// No headbutting
 		:target {
 			scroll-margin: 3rlh;

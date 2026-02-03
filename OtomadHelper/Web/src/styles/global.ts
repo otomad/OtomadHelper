@@ -7,6 +7,12 @@ import focusTestStyle from "./focus-test";
 import functions from "./functions";
 import reset from "./reset";
 
+const selectionTextStyle = css`
+	color: ${c("fill-color-text-on-accent-selected-text")};
+	border-radius: 4px;
+	box-decoration-break: clone;
+`;
+
 const GlobalStyle = createGlobalStyle<{
 	/** Has the page loaded completely? */
 	$ready?: boolean;
@@ -235,13 +241,34 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	::selection {
-		color: ${c("fill-color-text-on-accent-selected-text")};
+		${selectionTextStyle};
 		background-color: ${c("accent-color")};
 	}
 
+	// URL text fragments
 	::target-text {
-		color: ${c("fill-color-text-on-accent-selected-text")};
+		${selectionTextStyle};
 		background-color: ${c("fill-color-system-target")};
+	}
+
+	// Find-in-page text (Ctrl+F)
+	::search-text {
+		${selectionTextStyle};
+		background-color: ${c("fill-color-system-caution")};
+
+		&:current {
+			background-color: ${c("fill-color-system-search-current")};
+		}
+	}
+
+	// Highlight mark style
+	mark {
+		${selectionTextStyle};
+		background-color: ${c("fill-color-system-caution")};
+
+		.selected & {
+			background-color: ${c("fill-color-system-search-current")};
+		}
 	}
 
 	// Get rid of nested disabled with multiple translucent.
