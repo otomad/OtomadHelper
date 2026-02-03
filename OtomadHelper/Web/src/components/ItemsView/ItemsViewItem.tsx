@@ -218,7 +218,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 				background-color: ${cc("Highlight")};
 
 				&,
-				* {
+				:not(button.button, button.button *) {
 					color: ${cc("HighlightText")};
 				}
 

@@ -257,7 +257,11 @@ const GlobalStyle = createGlobalStyle<{
 		background-color: ${c("fill-color-system-caution")};
 
 		&:current {
-			background-color: ${c("fill-color-system-search-current")};
+			background-color: ${c("fill-color-system-search-current-primary")};
+
+			${ifColorScheme.at.contrast} {
+				color: ${cc("Highlight")};
+			}
 		}
 	}
 
@@ -267,7 +271,7 @@ const GlobalStyle = createGlobalStyle<{
 		background-color: ${c("fill-color-system-caution")};
 
 		.selected & {
-			background-color: ${c("fill-color-system-search-current")};
+			background-color: ${c("fill-color-system-search-current-primary")};
 		}
 	}
 

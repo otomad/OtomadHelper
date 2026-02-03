@@ -51,6 +51,7 @@ const colors = {
 	"fill-color-system-attention": ["rgb(0, 95, 183)", "rgb(96, 205, 255)", "CanvasText"],
 	"fill-color-system-caution": ["rgb(157, 93, 0)", "rgb(252, 225, 0)", "CanvasText"],
 	"fill-color-system-search-current": ["rgb(136, 41, 7)", "rgb(253, 200, 180)", "CanvasText"],
+	"fill-color-system-search-current-primary": ["rgb(247, 99, 12)", "rgb(247, 99, 12)", "CanvasText"],
 	"fill-color-system-target": ["rgb(109, 32, 100)", "rgb(237, 187, 231)", "CanvasText"],
 	"fill-color-system-critical-background": ["rgb(253, 231, 233)", "rgb(68, 39, 38)", "Canvas"],
 	"fill-color-system-success-background": ["rgb(223, 246, 221)", "rgb(57, 61, 27)", "Canvas"],
