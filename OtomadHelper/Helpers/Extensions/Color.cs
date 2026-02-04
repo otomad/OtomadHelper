@@ -85,6 +85,30 @@ public static partial class Extensions {
 		/// this is usually not what we want. This overload method forces the conversion of <see cref="int" /> to <see cref="uint" /> for ease of use.
 		/// </remarks>
 		public static MediaColor FromAbgr(int value, bool includeAlpha = true) => FromAbgr(unchecked((uint)value), includeAlpha);
+
+		/// <summary>
+		/// Converts a 32-bit ARGB value to a <see cref="MediaColor"/> object.
+		/// </summary>
+		/// <param name="value">The 32-bit ARGB value representing the color.</param>
+		/// <param name="includeAlpha">
+		/// Indicates whether the alpha channel should be included.
+		/// If <c>true</c>, the alpha channel is extracted from the ARGB value;
+		/// otherwise, the alpha channel is set to 255 (fully opaque).
+		/// </param>
+		/// <returns>A <see cref="MediaColor"/> object representing the color.</returns>
+		public static MediaColor FromArgb(uint value, bool includeAlpha = true) => MediaColor.FromArgb(
+			(byte)(includeAlpha ? (value >> 8 * 3) : 0xff),
+			(byte)(value >> 8 * 2),
+			(byte)(value >> 8 * 1),
+			(byte)(value >> 8 * 0)
+		);
+
+		/// <inheritdoc cref="FromArgb(uint, bool)" />
+		/// <remarks>
+		/// Due to the <see cref="RegistryKey.GetValue(string)" /> method converting a <see langword="DWORD" /> value to an <see cref="int" /> type,
+		/// this is usually not what we want. This overload method forces the conversion of <see cref="int" /> to <see cref="uint" /> for ease of use.
+		/// </remarks>
+		public static MediaColor FromArgb(int value, bool includeAlpha = true) => FromArgb(unchecked((uint)value), includeAlpha);
 	}
 
 	extension(DrawingColor color) {

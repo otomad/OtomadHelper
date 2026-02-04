@@ -269,13 +269,17 @@ public partial class BackdropWindow : Window {
 
 	protected internal static bool GetWindowsAccentPalette(AccentPalette palette) {
 		using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\DWM")) {
-			if (key?.GetValue("AccentColor") is int value)
+			// CAUTION: It is confusing that "AccentColor" is ABGR, however "ColorizationColor" is ARGB.
+			if (key?.GetValue("AccentColor") is int value) // Windows 8 ~ 10
 				palette.Colorization = Color.FromAbgr(value);
-			else return false; // Version lower than Windows Vista.
+			else if (key?.GetValue("ColorizationColor") is int value2) // Windows Vista ~ 7
+				palette.Colorization = Color.FromArgb(value2);
+			else // Versions lower than Windows Vista.
+				return false;
 		}
 
 		using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent")) {
-			if (key?.GetValue("AccentPalette") is byte[] value) {
+			if (key?.GetValue("AccentPalette") is byte[] value) { // Windows 10 ~ 11
 				palette.DarkAccentColor = Color.FromRgb(value[4], value[5], value[6]);
 				palette.LightAccentColor = Color.FromRgb(value[16], value[17], value[18]);
 			} else
