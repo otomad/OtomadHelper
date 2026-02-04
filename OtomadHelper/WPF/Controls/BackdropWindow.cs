@@ -314,6 +314,8 @@ public partial class BackdropWindow : Window {
 		const int SettingChange = 0x001A;
 		const int DwmColorizationColorChanged = 0x0320;
 		const int NCActivate = 0x0086;
+		const int DwmCompositionChanged= 0x31E;
+		const int ThemeChanged = 0x31A;
 
 		switch (msg) {
 			case SettingChange:
@@ -331,6 +333,11 @@ public partial class BackdropWindow : Window {
 				// reference: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#29282701
 				IsNonClientActive = wParam == trueValue;
 				break;
+			case DwmCompositionChanged:
+			case ThemeChanged:
+				// Respond to DWM being enabled/disabled or system theme being changed
+				OnTitleBarTypeChanged(TitleBarType);
+				goto case DwmColorizationColorChanged;
 			default:
 				break;
 		}
@@ -404,11 +411,13 @@ public partial class BackdropWindow : Window {
 
 	#region Extends content into title bar
 	partial void OnTitleBarTypeChanged(TitleBarType value) {
+		if (!SystemParameters.IsGlassEnabled) value = TitleBarType.System;
+		if (Background == DefaultBackground) base.Background = SystemParameters.IsGlassEnabled ? DefaultBackground : Brushes.White;
 		switch (value) {
 			case TitleBarType.WindowChrome:
 				WindowChrome.SetWindowChrome(this, new() {
 					CaptionHeight = 54, // Default: 20
-					CornerRadius = new(0),
+					CornerRadius = new(4),
 					GlassFrameThickness = new(-1),
 					UseAeroCaptionButtons = true,
 				});
@@ -427,7 +436,7 @@ public partial class BackdropWindow : Window {
 			case TitleBarType.WindowChromeNoTitleBar:
 				WindowChrome.SetWindowChrome(this, new() {
 					CaptionHeight = 0,
-					CornerRadius = new(0),
+					CornerRadius = new(4),
 					GlassFrameThickness = new(-1),
 					ResizeBorderThickness = new(0),
 				});
@@ -458,7 +467,7 @@ public partial class BackdropWindow : Window {
 	public class WindowChromeTitleBarTypeResizeModeToNonClientFrameEdgesConverter : ValueConverter<ResizeMode, NonClientFrameEdges> {
 		// Decided by whenever ILRepark is enabled.
 		public override NonClientFrameEdges Convert(ResizeMode resizeMode, Type targetType, object parameter, CultureInfo culture) =>
-			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize? NonClientFrameEdges.None : NonClientFrameEdges.Right;
+			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? NonClientFrameEdges.None : NonClientFrameEdges.Right | NonClientFrameEdges.Left | NonClientFrameEdges.Bottom;
 	}
 
 	protected override void OnKeyDown(KeyEventArgs e) {

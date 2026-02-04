@@ -4,6 +4,7 @@ using System.Windows.Interop;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -57,14 +58,17 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 		IntPtr? handle = (PresentationSource.FromVisual(element) as HwndSource)?.Handle;
 		if (handle is not IntPtr Handle) return;
 
-		bool isDarkTheme = BackdropWindow.ShouldAppsUseDarkMode();
-		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0);
-		SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round));
-		EnableAcrylicBlurBehind(Handle, isDarkTheme ? 0x663a3a3au : 0x69fcfcfcu);
-		SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
+		if (WindowsVersion.Current >= WindowsNT.Windows10_1803) {
+			bool isDarkTheme = BackdropWindow.ShouldAppsUseDarkMode();
+			SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0);
+			SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round));
+			EnableAcrylicBlurBehind(Handle, isDarkTheme ? 0x663a3a3au : 0x69fcfcfcu);
+			SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
+		} else
+			(element as Control)?.Background = SystemColors.MenuBarBrush;
 	}
 
-	private static Dictionary<ICommand, Icon> knownIcons = [];
+	private static readonly Dictionary<ICommand, Icon> knownIcons = [];
 	private static Icon? verticalScrollHereIcon;
 	private static Icon? horizontalScrollHereIcon;
 	private static void InitKnownIcons(FrameworkElement window) {
