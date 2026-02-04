@@ -59,13 +59,17 @@
 				<Setter Property="Width" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
 				<Setter Property="Height" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
 				<Setter Property="Padding" Value="0" />
+				<Setter Property="Margin">
+					<Setter.Value>
+						<Thickness Right="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSpacing}" />
+					</Setter.Value>
+				</Setter>
 			</Style>
 
 			<Style x:Key="HorizontalStackPanel" TargetType="StackPanel">
 				<Setter Property="Orientation" Value="Horizontal" />
 				<Setter Property="HorizontalAlignment" Value="Left" />
 				<Setter Property="VerticalAlignment" Value="Center" />
-				<Setter Property="m:Spacing.Horizontal" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSpacing}" />
 				<Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
 			</Style>
 		</ResourceDictionary>
@@ -91,7 +95,7 @@
 						<Rectangle
 							Margin="-2,0,0,0"
 							HorizontalAlignment="Stretch"
-							m:Spacing.Exclude="True"
+							Cursor="No"
 							>
 							<Rectangle.Width>
 								<MultiBinding Converter="{StaticResource CountToWidth}">
@@ -153,7 +157,7 @@
 			Grid.Column="2"
 			m:NumberTextBoxBehavior.Range="1,100"
 			AutomationProperties.LabeledBy="{Binding ElementName=IntervalLbl}"
-			Text="{Binding Interval}"
+			Text="{Binding Bits.Count, UpdateSourceTrigger=PropertyChanged}"
 			/>
 
 		<StackPanel Grid.Row="4" Grid.Column="0" Style="{StaticResource FormIconAndLabel}">

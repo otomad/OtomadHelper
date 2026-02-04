@@ -6,7 +6,10 @@ public class ObservableQuickSelectIntervalCollection<T> : ICollection<T>, IList<
 	private T[] data;
 
 	public ObservableQuickSelectIntervalCollection() => data = new T[1];
-	public ObservableQuickSelectIntervalCollection(IEnumerable<T> initial) => data = initial as T[] ?? initial.ToArray();
+	public ObservableQuickSelectIntervalCollection(IEnumerable<T> initial) {
+		data = initial as T[] ?? initial.ToArray();
+		Count = initial.Count();
+	}
 
 	private static NotImplementedException AddOrRemoveElementException => new("Directly adding and removing elements is not allowed");
 	void ICollection<T>.Add(T item) => throw AddOrRemoveElementException;
@@ -17,8 +20,8 @@ public class ObservableQuickSelectIntervalCollection<T> : ICollection<T>, IList<
 	protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e) => CollectionChanged?.Invoke(this, e);
 	protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 	protected void OnCountChanged() => OnPropertyChanged(new(nameof(Count)));
-	protected void OnCollectionAdded(IList<T> changedItems, int startingIndex) => OnCollectionChanged(new(NotifyCollectionChangedAction.Add, changedItems, startingIndex));
-	protected void OnCollectionRemoved(IList<T> changedItems, int startingIndex) => OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, changedItems, startingIndex));
+	protected void OnCollectionAdded(IList<T> changedItems, int startingIndex) => OnCollectionChanged(new(NotifyCollectionChangedAction.Add, (IList)changedItems, startingIndex));
+	protected void OnCollectionRemoved(IList<T> changedItems, int startingIndex) => OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, (IList)changedItems, startingIndex));
 	protected void OnCollectionAdded(T changedItem, int index) => OnCollectionChanged(new(NotifyCollectionChangedAction.Add, changedItem, index));
 	protected void OnCollectionRemoved(T changedItem, int index) => OnCollectionChanged(new(NotifyCollectionChangedAction.Remove, changedItem, index));
 	protected void OnCollectionReplaced(T newItem, T oldItem, int index) => OnCollectionChanged(new(NotifyCollectionChangedAction.Replace, newItem, oldItem, index));
@@ -57,6 +60,8 @@ public class ObservableQuickSelectIntervalCollection<T> : ICollection<T>, IList<
 			if (index < 0 || index >= Count) throw new IndexOutOfRangeException();
 			T originalItem = this[index];
 			data[index] = value;
+			if (Count != data.Length)
+				data = data.Resize(Count);
 			OnCollectionReplaced(value, originalItem, index);
 		}
 	}

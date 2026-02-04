@@ -21,7 +21,6 @@
 						Height="{TemplateBinding Height}"
 						MinHeight="{TemplateBinding MinHeight}"
 						Padding="{TemplateBinding Padding}"
-						Margin="{TemplateBinding Margin}"
 						IsDefault="{TemplateBinding IsChecked}"
 						IsEnabled="{TemplateBinding IsEnabled}"
 						Content="{TemplateBinding Content}"
