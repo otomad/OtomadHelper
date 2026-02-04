@@ -68,12 +68,10 @@ export function encodeVarint(int: number | bigint) {
  * const [value, length] = decodeVarint(bytes);
  * // value = 624485, length = 3
  */
-export function decodeVarint<TLiteral extends "number" | "bigint" = "number", TType = TLiteral extends "bigint" ? bigint : number>(bytes: Uint8Array, type = "number" as TLiteral, offset: number = 0): [int: TType, byteLength: number] {
-	if (offset) bytes = bytes.subarray(offset);
+export function decodeVarint<TLiteral extends "number" | "bigint" = "number", TType = TLiteral extends "bigint" ? bigint : number>(bytes: Uint8Array, type = "number" as TLiteral): [int: TType, byteLength: number] {
 	// Get the correct value that matches the return type.
 	const getNum = (bigint: bigint) => (type === "bigint" ? bigint : Number(bigint)) as TType;
 	let value = 0n;
-	// Let the iterator drop the offset.
 	for (const [i, byte] of bytes.entries()) {
 		value |= (BigInt(byte) & 0b0111_1111n) << BigInt(i) * 7n;
 		if (!(byte & 0b1000_0000)) return [getNum(value), i + 1];
@@ -98,8 +96,8 @@ export function decodeVarint<TLiteral extends "number" | "bigint" = "number", TT
 /**
  * Encodes a bit array into a byte array.
  *
- * @param bits - A Uint8Array containing only values of 0 and 1 to be encoded
- * @returns A Uint8Array containing the encoded bytes
+ * @param bits - A Uint8Array containing only values of 0 and 1 to be encoded.
+ * @returns A Uint8Array containing the encoded bytes.
  *
  * @example
  * ```typescript
@@ -134,8 +132,7 @@ export function encodeBitArray(bits: Uint8Array) {
  * @param offset - The offset to start reading from. Defaults to 0.
  * @returns A Uint8Array where each element represents a single bit (0 or 1), starting from the first 1 bit found.
  */
-export function decodeBitArray(bytes: Uint8Array, offset = 0) {
-	if (offset) bytes = bytes.subarray(offset);
+export function decodeBitArray(bytes: Uint8Array) {
 	const bits = new Uint8Array(bytes.length * 8);
 	for (const index of bits.keys())
 		bits[index] = +!!(bytes[index >> 3] & 1 << 7 - (index & 7));
@@ -146,7 +143,7 @@ export function decodeBitArray(bytes: Uint8Array, offset = 0) {
 // const encodeAsciiString = (text: string) => new TextEncoder().encode(text);
 // const decodeAsciiString = (bytes: Uint8Array) => new TextDecoder().decode(bytes);
 
-// QSI magic string header. 1 means version 1.
+/** QSI magic string header. 1 means version 1. */
 const QSI_MAGIC_STRING = "QSI1:";
 
 export function encodeQsiProtocol(bits: Uint8Array, column: number = 0) {
