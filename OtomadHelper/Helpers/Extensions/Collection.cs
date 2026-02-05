@@ -345,9 +345,9 @@ public static partial class Extensions {
 		}
 	}
 
-	extension(IEnumerable source) {
+	extension(Enumerable) {
 		/// <inheritdoc cref="Enumerable.Count{TSource}(IEnumerable{TSource})" />
-		public int Count() {
+		public static int Count(IEnumerable source) {
 			int count = 0;
 			foreach (object? _ in source)
 				count++;
@@ -463,5 +463,25 @@ public static partial class Extensions {
 	extension(Array) {
 		/// <inheritdoc cref="Enumerable.Repeat" />
 		public static T[] Fill<T>(T element, int count) => Enumerable.Repeat(element, count).ToArray();
+	}
+
+	extension(Convert) {
+		/// <inheritdoc cref="Convert.FromBase64String(string)" />
+		/// <remarks>Also omitting the useless padding "=" characters.</remarks>
+		public static byte[] FromBase64StringOmitPadding(string base64) {
+			return Convert.FromBase64String(Padding(base64));
+
+			static string Padding(string base64) {
+				int pad = base64.Length % 4;
+				if (pad == 0) return base64;
+				else if (pad == 3) pad = 1;
+				return base64 + "=".Repeat(pad);
+			}
+		}
+
+		/// <inheritdoc cref="Convert.ToBase64String(byte[])" />
+		/// <remarks>Also omitting the useless padding "=" characters.</remarks>
+		public static string ToBase64StringOmitPadding(byte[] bytes) =>
+			Convert.ToBase64String(bytes).TrimEnd('=');
 	}
 }

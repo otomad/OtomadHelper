@@ -161,3 +161,5 @@ export function decodeQsiProtocol(base64: string): [bits: Uint8Array, column: nu
 	const bits = decodeBitArray(bytes);
 	return [bits, column];
 }
+
+globals.encodeQsiProtocol = encodeQsiProtocol;

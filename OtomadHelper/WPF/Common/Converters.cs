@@ -312,7 +312,7 @@ public class SolidColorBrushConverter : IValueConverter {
 [ValueConversion(typeof(IEnumerable), typeof(bool))]
 public class CollectionHasItemsConverter : ValueConverter<IEnumerable, bool> {
 	public override bool Convert(IEnumerable collection, Type targetType, object parameter, CultureInfo culture) =>
-		collection.Count() != 0;
+		Enumerable.Count(collection) != 0;
 }
 
 [ValueConversion(typeof(object), typeof(bool))]

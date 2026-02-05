@@ -60,9 +60,9 @@ public partial class Spacing {
 			if (columns == 0 && rows == 0)
 				columns = rows = (int)Math.Ceiling(Math.Sqrt(childCount));
 			else if (rows == 0)
-				rows = (int)Math.Ceiling((double)childCount / columns);
+				rows = Math.CeilDiv(childCount, columns);
 			else if (columns == 0)
-				columns = (int)Math.Ceiling((double)childCount / rows);
+				columns = Math.CeilDiv(childCount, rows);
 			return (columns, rows);
 		}
 

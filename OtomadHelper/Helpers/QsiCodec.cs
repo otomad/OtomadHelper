@@ -37,7 +37,7 @@ public static class QsiCodec {
 		int value = 0;
 		foreach ((byte @byte, int i) in bytes.WithIndex()) {
 			value |= (@byte & 0b0111_1111) << i * 7;
-			if ((@byte & 0b1000_0000) != 0) {
+			if ((@byte & 0b1000_0000) == 0) {
 				byteLength = i;
 				return value;
 			}
@@ -60,9 +60,9 @@ public static class QsiCodec {
 	/// <item>Groups the bits into sets of 8 to form bytes.</item>
 	/// </list>
 	/// </remarks>
-	public static byte[] EncodeBitArray(bool[] bits) {
-		int byteLength = (int)Math.Ceiling((bits.Length + 1) / 8d);
-		bool[] padBits = new bool[byteLength * 8 - bits.Length];
+	public static byte[] EncodeBitArray(ICollection<bool> bits) {
+		int byteLength = Math.CeilDiv(bits.Count + 1, 8);
+		bool[] padBits = new bool[byteLength * 8 - bits.Count];
 		padBits[padBits.Length - 1] = true;
 
 		byte[] bytes = new byte[byteLength];
@@ -91,18 +91,33 @@ public static class QsiCodec {
 	/// </summary>
 	public const string QSI_MAGIC_STRING = "QSI1:";
 
-	public static string EncodeQsiProtocol(bool[] bits, int column = 0) =>
-		QSI_MAGIC_STRING + Convert.ToBase64String(EncodeVarint(column).Concat(EncodeBitArray(bits)).ToArray());
+	public static string EncodeQsiProtocol(ICollection<bool> bits, int column = 0) =>
+		QSI_MAGIC_STRING + Convert.ToBase64StringOmitPadding(EncodeVarint(column).Concat(EncodeBitArray(bits)).ToArray());
+
+	public static string EncodeQsiProtocol(ICollection<ICollection<bool>> bits) =>
+		EncodeQsiProtocol(bits.SelectMany(row => row).ToArray(), bits.First().Count());
 
 	public static (bool[] bits, int column) DecodeQsiProtocol(string base64) {
 		if (!base64.StartsWith(QSI_MAGIC_STRING))
 			throw new ArgumentException("The provided base64 string does not comply with QSI communication protocol: " + base64);
-		byte[] bytes = Convert.FromBase64String(base64[QSI_MAGIC_STRING.Length..]);
+		byte[] bytes = Convert.FromBase64StringOmitPadding(base64[QSI_MAGIC_STRING.Length..]);
 		int column = DecodeVarint(bytes, out int intByteLength);
 		if (intByteLength == int.MaxValue)
 			throw new ArgumentException("The provided base64 string which varint of the column value is incomplete: " + base64);
 		bytes = bytes[intByteLength..];
 		bool[] bits = DecodeBitArray(bytes);
 		return (bits, column);
+	}
+
+	public static bool[] DecodeQsiProtocol1D(string base64) => DecodeQsiProtocol(base64).bits;
+
+	public static bool[,] DecodeQsiProtocol2D(string base64) {
+		(bool[] bits, int column) = DecodeQsiProtocol(base64);
+		bool[,] result = new bool[Math.CeilDiv(bits.Length, column), column];
+		for (int i = 0; i < bits.Length; i++) {
+			int r = i / column, c = i % column;
+			result[r, c] = bits[i];
+		}
+		return result;
 	}
 }

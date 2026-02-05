@@ -47,7 +47,8 @@ internal static class Program {
 		_ = ColorPicker.ShowDialog("f00", new(Wacton.Unicolour.ColourSpace.Hsb, 2)).Then(color => s = color);
 #endif
 #if TEST6
-		_ = QuickSelectInterval1DEditor.ShowDialog([true, false, true, false], 4).Then(r => s = (r.Item2.Select(i => i.ToString()).Join(","), QsiCodec.EncodeQsiProtocol(r.Item2)));
+		_ = QuickSelectInterval1DEditor.ShowDialog([true, false, true, false]).Then(r => s = (r.bits.Select(i => i.ToString()).Join(","), QsiCodec.EncodeQsiProtocol(r.bits)));
+		_ = QuickSelectInterval1DEditor.ShowDialog("QSI1:ABo").Then(r => s = r.base64);
 #endif
 	}
 }

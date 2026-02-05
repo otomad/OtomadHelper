@@ -83,7 +83,29 @@ public static partial class MathEx {
 			return result;
 		}
 		/// <summary>
-		/// Returns <paramref name="value"/> clamped to the inclusive range of <paramref name="min"/> and <paramref name="max"/>.
+		/// Returns integer division of <paramref name="x" /> by <paramref name="y" /> and rounds the result towards positive infinity.
+		/// </summary>
+		/// <remarks>
+		/// This method performs similar to <c>(<see cref="int" />)<see cref="Math.Ceiling(double)" />((<see cref="double" />)<paramref name="x" /> / <paramref name="y" />)</c>,
+		/// but higher performance.<br />
+		/// By executing <c>(<paramref name="x" /> + <paramref name="y" /> - 1) / <paramref name="y" /></c>.
+		/// </remarks>
+		/// <param name="x">The dividend (the number to be divided).</param>
+		/// <param name="y">The divisor (the number to divide by).</param>
+		/// <returns><c><see cref="Math.Ceiling(double)" />(<paramref name="x" /> / <paramref name="y" />)</c></returns>
+		public static int CeilDiv(int x, int y) =>
+			(x + y - 1) / y;
+		/// <inheritdoc cref="CeilDiv(int, int)" />
+		public static uint CeilDiv(uint x, uint y) =>
+			(x + y - 1) / y;
+		/// <inheritdoc cref="CeilDiv(int, int)" />
+		public static long CeilDiv(long x, long y) =>
+			(x + y - 1) / y;
+		/// <inheritdoc cref="CeilDiv(int, int)" />
+		public static ulong CeilDiv(ulong x, ulong y) =>
+			(x + y - 1) / y;
+		/// <summary>
+		/// Returns <paramref name="value" /> clamped to the inclusive range of <paramref name="min" /> and <paramref name="max" />.
 		/// </summary>
 		/// <typeparam name="T">Number type.</typeparam>
 		/// <param name="value">The value to be clamped.</param>
@@ -91,9 +113,9 @@ public static partial class MathEx {
 		/// <param name="max">The upper bound of the result.</param>
 		/// <returns>
 		/// <list type="bullet">
-		/// <item><paramref name="value"/> if <paramref name="min"/> ¡Ü <paramref name="value"/> ¡Ü <paramref name="max"/>.</item>
-		/// <item><paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.</item>
-		/// <item><paramref name="max"/> if <paramref name="max"/> &lt; <paramref name="value"/>.</item>
+		/// <item><paramref name="value" /> if <paramref name="min" /> ¡Ü <paramref name="value" /> ¡Ü <paramref name="max" />.</item>
+		/// <item><paramref name="min" /> if <paramref name="value" /> &lt; <paramref name="min" />.</item>
+		/// <item><paramref name="max" /> if <paramref name="max" /> &lt; <paramref name="value" />.</item>
 		/// </list>
 		/// </returns>
 		public static sbyte Clamp(sbyte value, sbyte min, sbyte max) =>
@@ -138,8 +160,8 @@ public static partial class MathEx {
 		/// </para>
 		///
 		/// <para>
-		/// This function takes a value <c><paramref name="x"/></c> within a range <c>[<paramref name="min"/>, <paramref name="max"/>]</c>
-		/// and maps it to a new range <c>[<paramref name="a"/>, <paramref name="b"/>]</c>.
+		/// This function takes a value <c><paramref name="x" /></c> within a range <c>[<paramref name="min" />, <paramref name="max" />]</c>
+		/// and maps it to a new range <c>[<paramref name="a" />, <paramref name="b" />]</c>.
 		/// The mapping is done linearly, meaning that the ratio of the new range to the old range is preserved.
 		/// </para>
 		///

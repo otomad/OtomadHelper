@@ -14,14 +14,25 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 
 	public new QuickSelectInterval1DEditorViewModel DataContext => (QuickSelectInterval1DEditorViewModel)base.DataContext;
 
-	public static async Task<ValueTuple<bool, bool[], int, string>> ShowDialog(bool[] bits, int interval, string name = "") {
+	public static async Task<(bool ok, bool[] bits, int interval, string name)> ShowDialog(bool[] bits, string name = "") {
 		QuickSelectInterval1DEditor panel = new();
 		QuickSelectInterval1DEditorViewModel viewModel = panel.DataContext;
 		viewModel.Bits = new(bits);
 		bool dialogResult = await ShowDialog(panel);
-		if (!dialogResult) return (false, bits, interval, name);
+		if (!dialogResult) return (false, bits, bits.Length, name);
 		return (true, viewModel.Bits.ToArray(), viewModel.Bits.Count, viewModel.Name);
 	}
+
+	public static async Task<(bool ok, string base64, string name)> ShowDialog(string base64, string name = "") {
+		QuickSelectInterval1DEditor panel = new();
+		QuickSelectInterval1DEditorViewModel viewModel = panel.DataContext;
+		viewModel.Bits = ObservableQuickSelectIntervalCollection<bool>.FromBase64(base64);
+		bool dialogResult = await ShowDialog(panel);
+		if (!dialogResult) return (false, base64, name);
+		return (true, viewModel.Bits.ToBase64(), viewModel.Name);
+	}
+
+	internal const string SingletonId = "Quick Select Interval Editor";
 
 	internal static async Task<bool> ShowDialog(FrameworkElement panel) {
 		bool dialogResult = await ContentDialog.ShowDialog<bool?>(
@@ -33,7 +44,7 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 			],
 			icon: KnownIcon.None,
 			topmost: false,
-			singletonId: "Quick Select Interval Editor",
+			singletonId: SingletonId,
 			customize: dialog => {
 				dialog.ResizeMode = ResizeMode.CanResize;
 				dialog.SizeToContent = SizeToContent.Manual;

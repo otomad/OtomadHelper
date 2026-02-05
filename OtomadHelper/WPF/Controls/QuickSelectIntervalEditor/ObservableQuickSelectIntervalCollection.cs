@@ -5,7 +5,11 @@ public class ObservableQuickSelectIntervalCollection<T> : ICollection<T>, IList<
 	public event PropertyChangedEventHandler? PropertyChanged = null;
 	private T[] data;
 
-	public ObservableQuickSelectIntervalCollection() => data = new T[1];
+	public ObservableQuickSelectIntervalCollection(int count = 1) {
+		count = Math.Max(1, count);
+		data = new T[count];
+		Count = count;
+	}
 	public ObservableQuickSelectIntervalCollection(IEnumerable<T> initial) {
 		data = initial as T[] ?? initial.ToArray();
 		Count = initial.Count();
@@ -71,5 +75,34 @@ public class ObservableQuickSelectIntervalCollection<T> : ICollection<T>, IList<
 		//if (firstItem is Array)
 		//	return Array.Fill()
 		return default(T)!;
+	}
+}
+
+public static class ObservableQuickSelectIntervalCollection1DExtensions {
+	extension(ObservableQuickSelectIntervalCollection<bool> values) {
+		public string ToBase64() => QsiCodec.EncodeQsiProtocol(values, 0);
+
+		public static ObservableQuickSelectIntervalCollection<bool> FromBase64(string base64) => new(QsiCodec.DecodeQsiProtocol1D(base64));
+	}
+}
+
+public static class ObservableQuickSelectIntervalCollection2DExtensions {
+	extension(ObservableQuickSelectIntervalCollection<ObservableQuickSelectIntervalCollection<bool>> values) {
+		public string ToBase64() => QsiCodec.EncodeQsiProtocol((ICollection<ICollection<bool>>)values.Cast<ICollection<bool>>());
+
+		public static ObservableQuickSelectIntervalCollection<ObservableQuickSelectIntervalCollection<bool>> FromBase64(string base64) =>
+			From(QsiCodec.DecodeQsiProtocol2D(base64));
+
+		public static ObservableQuickSelectIntervalCollection<ObservableQuickSelectIntervalCollection<bool>> From(bool[,] array) {
+			int rows = array.GetLength(0), columns = array.GetLength(1);
+			ObservableQuickSelectIntervalCollection<bool>[] result = new ObservableQuickSelectIntervalCollection<bool>[rows];
+			for (int i = 0; i < rows; i++) {
+				bool[] row = new bool[columns];
+				for (int j = 0; j < columns; j++)
+					row[j] = array[i, j];
+				result[i] = new(row);
+			}
+			return new(result);
+		}
 	}
 }
