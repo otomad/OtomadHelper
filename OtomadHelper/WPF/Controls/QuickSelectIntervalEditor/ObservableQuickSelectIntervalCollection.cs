@@ -1,6 +1,6 @@
 namespace OtomadHelper.WPF.Controls;
 
-public class ObservableQuickSelectIntervalCollection<T> : ICollection<T>, IList<T>, INotifyCollectionChanged, INotifyPropertyChanged {
+public class ObservableQuickSelectIntervalCollection<T> : ICollection<T>, IList<T>, ICloneable, INotifyCollectionChanged, INotifyPropertyChanged {
 	public event NotifyCollectionChangedEventHandler? CollectionChanged = null;
 	public event PropertyChangedEventHandler? PropertyChanged = null;
 	private T[] data;
@@ -57,6 +57,8 @@ public class ObservableQuickSelectIntervalCollection<T> : ICollection<T>, IList<
 	public int IndexOf(T item) { int index = Array.IndexOf(data, item); return index >= Count ? -1 : index; }
 	public bool Contains(T item) => IndexOf(item) != -1;
 	public void CopyTo(T[] array, int arrayIndex) => data[0..Count].CopyTo(array, arrayIndex);
+	object ICloneable.Clone() => Clone();
+	public ObservableQuickSelectIntervalCollection<T> Clone() => new(this.Select(item => item is ICloneable cloneable ? (T)cloneable.Clone() : item));
 
 	public T this[int index] {
 		get => index < 0 || index >= Count ? throw new IndexOutOfRangeException() : data[index];

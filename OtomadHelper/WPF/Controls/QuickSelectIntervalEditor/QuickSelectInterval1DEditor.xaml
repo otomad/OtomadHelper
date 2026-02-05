@@ -17,73 +17,21 @@
 	<UserControl.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Themes/Generic.xaml" />
-				<ResourceDictionary Source="pack://application:,,,/OtomadHelper;component/WPF/Themes/Controls.xaml" />
+				<ResourceDictionary Source="./QuickSelectIntervalEditor.xaml" />
+				<!--  TODO: May cause crush in VEGAS environment, not checked.  -->
 			</ResourceDictionary.MergedDictionaries>
-
-			<c:AddOneConverter x:Key="AddOne" />
-			<c:CountToViewportConverter x:Key="CountToViewport" />
-			<c:CountToVisualBrushWidthConverter x:Key="CountToWidth" />
-
-			<Style TargetType="TextBlock">
-				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-				<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
-				<Setter Property="VerticalAlignment" Value="Center" />
-			</Style>
-
-			<Style TargetType="c:Icon">
-				<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-				<Setter Property="Size" Value="20" />
-				<Setter Property="VerticalAlignment" Value="Center" />
-				<Setter Property="Margin" Value="0,0,7,0" />
-			</Style>
-
-			<Style x:Key="FormIconAndLabel" TargetType="StackPanel">
-				<Setter Property="Orientation" Value="Horizontal" />
-				<Setter Property="Background" Value="Transparent" />
-				<Setter Property="IsHitTestVisible" Value="True" />
-				<Setter Property="m:InteractivityItems.Template">
-					<Setter.Value>
-						<m:InteractivityTemplate>
-							<m:InteractivityItems>
-								<m:InteractivityItems.Behaviors>
-									<m:ClickLabelToFocusTextBoxBehavior />
-								</m:InteractivityItems.Behaviors>
-							</m:InteractivityItems>
-						</m:InteractivityTemplate>
-					</Setter.Value>
-				</Setter>
-			</Style>
-
-			<Style BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">
-				<Setter Property="Width" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
-				<Setter Property="Height" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
-				<Setter Property="Padding" Value="0" />
-				<Setter Property="Margin">
-					<Setter.Value>
-						<Thickness Right="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSpacing}" />
-					</Setter.Value>
-				</Setter>
-			</Style>
-
-			<Style x:Key="HorizontalStackPanel" TargetType="StackPanel">
-				<Setter Property="Orientation" Value="Horizontal" />
-				<Setter Property="HorizontalAlignment" Value="Left" />
-				<Setter Property="VerticalAlignment" Value="Center" />
-				<Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
-			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>
 	<Grid
 		Grid.Column="2"
 		m:GridDef.Column="Auto,10,*"
-		m:GridDef.Row="*,8,Auto,8,Auto"
+		m:GridDef.Row="*,8,Auto,8,Auto,8,Auto"
 		>
 		<ScrollViewer
 			Grid.ColumnSpan="3"
+			FlowDirection="LeftToRight"
 			HorizontalScrollBarVisibility="Visible"
 			VerticalScrollBarVisibility="Hidden"
-			FlowDirection="LeftToRight"
 			>
 			<ItemsControl AlternationCount="{Binding Bits.Count, FallbackValue=100}" Focusable="False">
 				<ItemsControl.Resources>
@@ -148,24 +96,56 @@
 			</ItemsControl>
 		</ScrollViewer>
 
-		<StackPanel Grid.Row="2" Grid.Column="0" Style="{StaticResource FormIconAndLabel}">
+		<UniformGrid Grid.Row="2" Style="{StaticResource ActionButtonsGrid}">
+			<c:Button
+				ToolTip="还原为设置前的选区"
+				Command="{Binding RestoreOriginalCommand}"
+				IconName="ArrowReset"
+				>
+				还原 <!--  TODO: I18n  -->
+			</c:Button>
+			<c:Button
+				ToolTip="反转当前选区"
+				Command="{Binding InvertSelectionCommand}"
+				IconName="InvertColor"
+				>
+				反选 <!--  TODO: I18n  -->
+			</c:Button>
+			<c:Button
+				Content="{m:Trans TextBox.Menu.ClearAll}"
+				ToolTip="取消选中所有项目"
+				Command="{Binding ClearAllCommand}"
+				IconName="ClearAll"
+				/>
+		</UniformGrid>
+
+		<StackPanel
+			Grid.Row="4"
+			Grid.Column="0"
+			Style="{StaticResource FormIconAndLabel}"
+			>
 			<c:Icon IconName="TableSimpleInclude" />
-			<TextBlock x:Name="IntervalLbl">周期</TextBlock><!--TODO: I18n-->
+			<TextBlock x:Name="IntervalLbl">周期</TextBlock>
+			<!--  TODO: I18n  -->
 		</StackPanel>
 		<c:NumericUpDown
-			Grid.Row="2"
+			Grid.Row="4"
 			Grid.Column="2"
 			m:NumberTextBoxBehavior.Range="1,100"
 			AutomationProperties.LabeledBy="{Binding ElementName=IntervalLbl}"
 			Text="{Binding Bits.Count, UpdateSourceTrigger=PropertyChanged}"
 			/>
 
-		<StackPanel Grid.Row="4" Grid.Column="0" Style="{StaticResource FormIconAndLabel}">
+		<StackPanel
+			Grid.Row="6"
+			Grid.Column="0"
+			Style="{StaticResource FormIconAndLabel}"
+			>
 			<c:Icon IconName="Rename" />
 			<TextBlock x:Name="RenameLbl">名称</TextBlock>
 		</StackPanel>
 		<TextBox
-			Grid.Row="4"
+			Grid.Row="6"
 			Grid.Column="2"
 			AutomationProperties.LabeledBy="{Binding ElementName=RenameLbl}"
 			Text="{Binding Name}"

@@ -51,7 +51,7 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 				dialog.Width = 800;
 				dialog.Height = 480;
 				dialog.MinWidth = 400;
-				dialog.MinHeight = 320;
+				dialog.MinHeight = 350;
 				dialog.MinimizeBox = false;
 			}
 		) ?? false;

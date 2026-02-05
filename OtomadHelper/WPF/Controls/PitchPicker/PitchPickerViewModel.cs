@@ -4,9 +4,8 @@ public partial class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> 
 	public static string[] NoteNames { get; } = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 	public static int[] Octaves { get; } = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-	private string noteName = "C";
 	public string NoteName {
-		get => noteName;
+		get => field;
 		set {
 			value = value
 				.ToUpperInvariant()
@@ -21,15 +20,17 @@ public partial class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> 
 					"Bb" => "A#",
 					_ => value,
 				};
-			SetProperty(ref noteName, value, NoteNames.Contains(value));
+			SetProperty(ref field, value, NoteNames.Contains(value));
 		}
-	}
+	} = "C";
 
-	private int octave = 5;
 	public int Octave {
-		get => octave;
-		set => SetProperty(ref octave, value, Octaves.Contains(value));
-	}
+		get => field;
+		set {
+			SetProperty(ref field, value, Octaves.Contains(value));
+			OctaveSpinCommand.NotifyCanExecuteChanged();
+		}
+	} = 5;
 
 	internal string originalPitch = "C5";
 	public string Pitch {
@@ -59,7 +60,7 @@ public partial class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> 
 			NoteName = NoteNames.Last();
 	}
 
-	[RelayCommand]
+	[RelayCommand(CanExecute = nameof(CanExecuteOctaveSpin))]
 	private void OctaveSpin(FocusMoveDirection direction) {
 		if (ToDelta(direction) is { } delta)
 			Octave = Math.Clamp(Octaves.IndexOf(Octave) + delta, 0, Octaves.Length);
@@ -67,6 +68,15 @@ public partial class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> 
 			Octave = Octaves.First();
 		else if (direction is FocusMoveDirection.Last)
 			Octave = Octaves.Last();
+	}
+
+	private bool CanExecuteOctaveSpin(FocusMoveDirection direction) {
+		int index = Octaves.IndexOf(Octave);
+		return direction switch {
+			< 0 => index != 0,
+			> 0 => index != Octaves.Length - 1,
+			_ => false,
+		};
 	}
 
 	private static int? ToDelta(FocusMoveDirection direction) => direction switch {
