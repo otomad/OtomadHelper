@@ -80,7 +80,7 @@ public static class QsiCodec {
 	/// <returns>A bool array, starting from the first true item found.</returns>
 	public static bool[] DecodeBitArray(byte[] bytes) {
 		bool[] bits = new bool[bytes.Length * 8];
-		for (int index = 0; index < bits.Length; index++)
+		foreach (int index in bits.Indexes())
 			bits[index] = (bytes[index >> 3] & 1 << 7 - (index & 7)) != 0;
 		int beginFlagIndex = bits.IndexOf(true);
 		return bits[(beginFlagIndex + 1)..];

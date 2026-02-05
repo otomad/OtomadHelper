@@ -21,7 +21,7 @@ public static partial class Extensions {
 		/// For example, if the length of the <paramref name="collection" /> is <see langword="4" />,
 		/// this will return <c>IEnumerable&lt;int&gt; { 0, 1, 2, 3 }</c>.
 		/// </remarks>
-		public IEnumerable<int> Keys() => Enumerable.Range(0, collection.Count());
+		public IEnumerable<int> Indexes() => Enumerable.Range(0, collection.Count());
 	}
 
 	extension<T>(IEnumerable<T?> collection) {

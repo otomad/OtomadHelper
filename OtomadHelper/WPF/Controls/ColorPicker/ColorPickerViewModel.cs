@@ -47,7 +47,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 				int z = GetPointXyz(2);
 				double[] prevTriplet = ToTriplet(prevColor, model).ToArray<double>(), triplet = ToTriplet(color, model).ToArray<double>();
 				if (prevTriplet[axis] == triplet[axis]) behavior &= ~UpdateSourcesBehavior.UpdatePrimary;
-				if (prevTriplet.Keys().All(i => i == axis ? true : prevTriplet[i] == triplet[i])) behavior &= ~UpdateSourcesBehavior.UpdateSecondary;
+				if (prevTriplet.Indexes().All(i => i == axis ? true : prevTriplet[i] == triplet[i])) behavior &= ~UpdateSourcesBehavior.UpdateSecondary;
 			}
 			UpdateSources(behavior);
 			View?.DialogAccentColor = Color.ToMediaColor();
