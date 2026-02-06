@@ -169,6 +169,9 @@
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 		</Compile>
+		<Compile Update="WPF\Controls\QuickSelectIntervalEditor\QuickSelectInterval2DEditor.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>

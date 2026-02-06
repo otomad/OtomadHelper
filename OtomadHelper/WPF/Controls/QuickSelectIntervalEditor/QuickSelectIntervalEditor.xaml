@@ -70,4 +70,10 @@
 		<Setter Property="Grid.ColumnSpan" Value="3" />
 		<Setter Property="m:Spacing.Horizontal" Value="6" />
 	</Style>
+
+	<Style x:Key="RightTileShadow" TargetType="Rectangle">
+		<Setter Property="Margin" Value="-2,0,0,0" />
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="Cursor" Value="No" />
+	</Style>
 </ResourceDictionary>
