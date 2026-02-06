@@ -1,5 +1,3 @@
-using System.Collections.ObjectModel;
-
 namespace OtomadHelper.WPF.Controls;
 
 public partial class QuickSelectInterval1DEditorViewModel : ObservableObject<QuickSelectInterval1DEditor> {
@@ -30,7 +28,7 @@ public partial class QuickSelectInterval1DEditorViewModel : ObservableObject<Qui
 	}
 
 	[RelayCommand]
-	private void ClearAll() {
+	private void SelectNone() {
 		for (int i = 0; i < Bits.Count; i++)
 			Bits[i] = false;
 	}

@@ -34,6 +34,7 @@
 	<Color x:Key="TextOnAccentForegroundColor">White</Color>
 	<SolidColorBrush x:Key="TextOnAccentForegroundBrush" Color="{StaticResource TextOnAccentForegroundColor}" />
 	<SolidColorBrush x:Key="TextOnAccent" Color="White" />
+	<SolidColorBrush x:Key="TextOnAccentDisabled" Color="White" />
 	<s:Double x:Key="AccentSecondaryOpacity">0.9</s:Double>
 	<s:Double x:Key="AccentTertiaryOpacity">0.8</s:Double>
 	<SolidColorBrush x:Key="SubtleSecondary" Color="#09000000" />

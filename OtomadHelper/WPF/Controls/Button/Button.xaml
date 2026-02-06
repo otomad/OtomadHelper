@@ -113,6 +113,11 @@
 			<Trigger Property="IsDefault" Value="True">
 				<Setter Property="Accent" Value="{Binding WindowGlassColor, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />
 			</Trigger>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
+				<Setter Property="Background" Value="{DynamicResource ControlDisabled}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource ControlStroke}" />
+			</Trigger>
 			<DataTrigger Binding="{Binding Accent, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolTruthy}}" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevation}" />
 				<Setter Property="Background">
@@ -180,6 +185,16 @@
 					</Setter.Value>
 				</Setter>
 			</MultiDataTrigger>
+			<MultiTrigger>
+				<MultiTrigger.Conditions>
+					<Condition Property="IsEnabled" Value="False" />
+					<Condition Property="IsDefault" Value="True" />
+				</MultiTrigger.Conditions>
+				<Setter Property="Foreground" Value="{DynamicResource TextOnAccentDisabled}" />
+				<Setter Property="Background" Value="{DynamicResource AccentDisabled}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource AccentDisabled}" />
+				<Setter Property="BorderThickness" Value="0" />
+			</MultiTrigger>
 			<Trigger Property="ShowIconOnly" Value="True">
 				<Setter Property="ToolTip">
 					<Setter.Value>

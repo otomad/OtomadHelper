@@ -114,7 +114,7 @@
 			<c:Button
 				Content="{m:Trans TextBox.Menu.ClearAll}"
 				ToolTip="取消选中所有项目"
-				Command="{Binding ClearAllCommand}"
+				Command="{Binding SelectNoneCommand}"
 				IconName="ClearAll"
 				/>
 		</UniformGrid>
