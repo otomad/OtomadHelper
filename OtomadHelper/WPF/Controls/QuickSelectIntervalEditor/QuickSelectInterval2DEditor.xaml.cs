@@ -55,7 +55,4 @@ public partial class QuickSelectInterval2DEditor : UserControl {
 		) ?? false;
 		return dialogResult;
 	}
-
-	public const double ToggleButtonSize = QuickSelectInterval1DEditor.ToggleButtonSize;
-	public const double ToggleButtonSpacing = QuickSelectInterval1DEditor.ToggleButtonSpacing;
 }

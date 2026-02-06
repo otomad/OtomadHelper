@@ -15,7 +15,10 @@ public partial class QuickSelectInterval2DEditorViewModel : ObservableObject<Qui
 	}
 
 	[RelayCommand]
-	private void ToggleBoolean((int row, int column) cell) => Bits[cell.row, cell.column] = !Bits[cell.row, cell.column];
+	private void ToggleBoolean(object[] cell) {
+		(int row, int column) = cell.ToTuple<ValueTuple<int, int>>();
+		Bits[row, column] = !Bits[row, column];
+	}
 
 	[RelayCommand(CanExecute = nameof(CanRestoreOriginal))]
 	private void RestoreOriginal() { if (OriginalBits is not null) Bits = OriginalBits.Clone(); }

@@ -175,7 +175,13 @@ public static partial class Extensions {
 	/// </code>
 	/// </example>
 	/// </remarks>
-	public static async Task<TTarget> Then<TSource, TTarget>(this Task<TSource> task, Func<TSource, TTarget> then) => then(await task);
+	public static async Task<TTarget> Then<TSource, TTarget>(this Task<TSource> task, Func<TSource, TTarget> then) {
+		try {
+			return then(await task);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 	/// <inheritdoc cref="Then{TSource, TTarget}(Task{TSource}, Func{TSource, TTarget})"/>
 	public static async Task Then<TSource>(this Task<TSource> task, Action<TSource> then) => then(await task);
 	/// <inheritdoc cref="Then{TSource, TTarget}(Task{TSource}, Func{TSource, TTarget})"/>

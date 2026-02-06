@@ -11,7 +11,7 @@
 		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 		<Setter Property="BorderThickness" Value="0" />
-		<Setter Property="FontSize" Value="14" />
+		<Setter Property="FontSize" Value="{DynamicResource BodyFontSize}" />
 		<Setter Property="Padding" Value="0" />
 		<Setter Property="Margin" Value="-3,0,0,0" />
 		<Setter Property="FocusVisualStyle" Value="{DynamicResource OuterFocusVisualStyle}" />

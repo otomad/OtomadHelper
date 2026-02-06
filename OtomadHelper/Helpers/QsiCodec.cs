@@ -96,6 +96,8 @@ public static class QsiCodec {
 
 	public static string EncodeQsiProtocol(ICollection<ICollection<bool>> bits) =>
 		EncodeQsiProtocol(bits.SelectMany(row => row).ToArray(), bits.First().Count());
+	public static string EncodeQsiProtocol(bool[,] bits) =>
+		EncodeQsiProtocol(bits.Cast<bool>().ToArray(), bits.GetLength(1));
 
 	public static (bool[] bits, int column) DecodeQsiProtocol(string base64) {
 		if (!base64.StartsWith(QSI_MAGIC_STRING))

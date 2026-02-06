@@ -58,7 +58,8 @@ public class ObservableQuickSelectIntervalCollection<T> : ICollection<T>, IList<
 	public bool Contains(T item) => IndexOf(item) != -1;
 	public void CopyTo(T[] array, int arrayIndex) => data[0..Count].CopyTo(array, arrayIndex);
 	object ICloneable.Clone() => Clone();
-	public virtual ObservableQuickSelectIntervalCollection<T> Clone() => new(this.Select(item => item is ICloneable cloneable ? (T)cloneable.Clone() : item));
+	public virtual ObservableQuickSelectIntervalCollection<T> Clone() => new(this.Select(CloneSelector));
+	protected static U CloneSelector<U>(U item) => item is ICloneable cloneable ? (U)cloneable.Clone() : item;
 
 	protected virtual bool IsIndexOutOfRange(int index) => index < 0 || index >= Count;
 	public T this[int index] {
@@ -95,6 +96,11 @@ public class ObservableQuickSelectInterval2DCollection<T> : ObservableQuickSelec
 		}
 		data = result;
 		Count = rows;
+	}
+
+	public ObservableQuickSelectInterval2DCollection(IEnumerable<IEnumerable<T>> values) {
+		data = values.Select(value => new ObservableQuickSelectIntervalCollection<T>(value)).ToArray();
+		Count = values.Count();
 	}
 
 	protected void OnRowsChanged() => OnPropertyChanged(new(nameof(Rows)));
@@ -144,7 +150,7 @@ public class ObservableQuickSelectInterval2DCollection<T> : ObservableQuickSelec
 		}
 	}
 
-	public new ObservableQuickSelectInterval2DCollection<T> Clone() => (ObservableQuickSelectInterval2DCollection<T>)base.Clone();
+	public virtual new ObservableQuickSelectInterval2DCollection<T> Clone() => new(this.Select(ObservableQuickSelectIntervalCollection<T>.CloneSelector));
 }
 
 public static class ObservableQuickSelectInterval1DCollectionExtensions {

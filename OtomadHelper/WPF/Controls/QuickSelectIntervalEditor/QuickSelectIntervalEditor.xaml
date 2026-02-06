@@ -65,6 +65,21 @@
 		<Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
 	</Style>
 
+	<Style x:Key="VerticalStackPanel" TargetType="StackPanel">
+		<Setter Property="Orientation" Value="Vertical" />
+		<Setter Property="HorizontalAlignment" Value="Left" />
+		<Setter Property="VerticalAlignment" Value="Top" />
+		<Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
+	</Style>
+
+	<Style x:Key="HorizontalStackPanelInsideVertical" BasedOn="{StaticResource HorizontalStackPanel}" TargetType="StackPanel">
+		<Setter Property="Margin">
+			<Setter.Value>
+				<Thickness Bottom="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSpacing}" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+
 	<Style x:Key="ActionButtonsGrid" TargetType="UniformGrid">
 		<Setter Property="Columns" Value="3" />
 		<Setter Property="Grid.ColumnSpan" Value="3" />
@@ -75,5 +90,13 @@
 		<Setter Property="Margin" Value="-2,0,0,0" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="Cursor" Value="No" />
+	</Style>
+
+	<Style x:Key="RowLabel" TargetType="TextBlock">
+		<Setter Property="FontSize" Value="{DynamicResource BodyFontSize}" />
+		<Setter Property="TextAlignment" Value="Right" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="Width" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
+		<Setter Property="Padding" Value="0,0,8,0" />
 	</Style>
 </ResourceDictionary>

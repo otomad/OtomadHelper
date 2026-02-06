@@ -1,4 +1,4 @@
-#define TEST6
+#define TEST7
 using System.Windows.Forms;
 
 using OtomadHelper.WPF.Controls;
@@ -49,6 +49,10 @@ internal static class Program {
 #if TEST6
 		_ = QuickSelectInterval1DEditor.ShowDialog([true, false, true, false]).Then(r => s = (r.bits.Select(i => i.ToString()).Join(","), QsiCodec.EncodeQsiProtocol(r.bits)));
 		//_ = QuickSelectInterval1DEditor.ShowDialog("QSI1:ABo").Then(r => s = r.base64);
+#endif
+#if TEST7
+		_ = QuickSelectInterval2DEditor.ShowDialog(new bool[,] { { true, false, true}, { false, true, false }, { true, false, true } })
+			.Then(r => s = (r.bits.Cast<bool>().Select(i => i.ToString()).Join(","), QsiCodec.EncodeQsiProtocol(r.bits)));
 #endif
 	}
 }

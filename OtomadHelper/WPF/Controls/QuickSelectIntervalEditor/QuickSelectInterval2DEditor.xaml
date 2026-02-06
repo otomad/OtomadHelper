@@ -25,16 +25,20 @@
 	<Grid
 		Grid.Column="2"
 		m:GridDef.Column="Auto,10,*"
-		m:GridDef.Row="*,8,Auto,8,Auto,8,Auto"
+		m:GridDef.Row="*,8,Auto,8,Auto,8,Auto,8,Auto"
 		>
 		<ScrollViewer
 			Grid.ColumnSpan="3"
 			FlowDirection="LeftToRight"
 			HorizontalScrollBarVisibility="Visible"
-			VerticalScrollBarVisibility="Hidden"
+			VerticalScrollBarVisibility="Visible"
 			>
-			<ItemsControl AlternationCount="{Binding Bits.Count, FallbackValue=100}" Focusable="False">
-				<ItemsControl.Resources>
+			<ItemsControl
+				AlternationCount="{Binding Bits.Rows, FallbackValue=100}"
+				Focusable="False"
+				ItemsSource="{Binding Bits}"
+				>
+				<!--<ItemsControl.Resources>
 					<CollectionViewSource x:Key="collectionViewSource" Source="{Binding Bits}" />
 				</ItemsControl.Resources>
 				<ItemsControl.ItemsSource>
@@ -73,20 +77,53 @@
 							</Rectangle.Fill>
 						</Rectangle>
 					</CompositeCollection>
-				</ItemsControl.ItemsSource>
+				</ItemsControl.ItemsSource>-->
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
-						<StackPanel Style="{StaticResource HorizontalStackPanel}" />
+						<StackPanel Style="{StaticResource VerticalStackPanel}" />
 					</ItemsPanelTemplate>
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<ToggleButton
-							Command="{Binding DataContext.ToggleBooleanCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-							CommandParameter="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}}"
-							Content="{Binding (ItemsControl.AlternationIndex), Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource AddOne}}"
-							IsChecked="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-							/>
+						<ItemsControl
+							AlternationCount="{Binding ., FallbackValue=100}"
+							Focusable="False"
+							Tag="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource AddOne}}"
+							>
+							<ItemsControl.Resources>
+								<CollectionViewSource x:Key="collectionViewSource" Source="{Binding}" />
+							</ItemsControl.Resources>
+							<ItemsControl.ItemsSource>
+								<CompositeCollection>
+									<TextBlock Style="{StaticResource RowLabel}" Text="{Binding Tag, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
+									<CollectionContainer Collection="{Binding Source={StaticResource collectionViewSource}}" />
+								</CompositeCollection>
+							</ItemsControl.ItemsSource>
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<StackPanel Style="{StaticResource HorizontalStackPanelInsideVertical}" />
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<ToggleButton Command="{Binding DataContext.ToggleBooleanCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" IsChecked="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+										<ToggleButton.CommandParameter>
+											<m:CommandParameters>
+												<Binding Path="Tag" RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
+												<Binding Path="(ItemsControl.AlternationIndex)" RelativeSource="{RelativeSource Mode=TemplatedParent}" />
+											</m:CommandParameters>
+										</ToggleButton.CommandParameter>
+									</ToggleButton>
+									<!--
+										Command="{Binding DataContext.ToggleBooleanCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+										CommandParameter="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}}"
+										Content="{Binding Tag, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+										Content="{Binding (ItemsControl.AlternationIndex), Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource AddOne}}"
+										IsChecked="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									-->
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
@@ -94,24 +131,26 @@
 
 		<UniformGrid Grid.Row="2" Style="{StaticResource ActionButtonsGrid}">
 			<c:Button
-				ToolTip="还原为设置前的选区"
 				Command="{Binding RestoreOriginalCommand}"
 				IconName="ArrowReset"
+				ToolTip="还原为设置前的选区"
 				>
-				还原 <!--  TODO: I18n  -->
+				还原
+				<!--  TODO: I18n  -->
 			</c:Button>
 			<c:Button
-				ToolTip="反转当前选区"
 				Command="{Binding InvertSelectionCommand}"
 				IconName="InvertColor"
+				ToolTip="反转当前选区"
 				>
-				反选 <!--  TODO: I18n  -->
+				反选
+				<!--  TODO: I18n  -->
 			</c:Button>
 			<c:Button
-				Content="{m:Trans TextBox.Menu.ClearAll}"
-				ToolTip="取消选中所有项目"
 				Command="{Binding SelectNoneCommand}"
+				Content="{m:Trans TextBox.Menu.ClearAll}"
 				IconName="ClearAll"
+				ToolTip="取消选中所有项目"
 				/>
 		</UniformGrid>
 
@@ -137,11 +176,28 @@
 			Grid.Column="0"
 			Style="{StaticResource FormIconAndLabel}"
 			>
+			<c:Icon IconName="TableSimpleInclude" />
+			<TextBlock x:Name="RowsLbl">行数</TextBlock>
+			<!--  TODO: I18n  -->
+		</StackPanel>
+		<c:NumericUpDown
+			Grid.Row="6"
+			Grid.Column="2"
+			m:NumberTextBoxBehavior.Range="1,100"
+			AutomationProperties.LabeledBy="{Binding ElementName=RowsLbl}"
+			Text="{Binding Bits.Rows, UpdateSourceTrigger=PropertyChanged}"
+			/>
+
+		<StackPanel
+			Grid.Row="8"
+			Grid.Column="0"
+			Style="{StaticResource FormIconAndLabel}"
+			>
 			<c:Icon IconName="Rename" />
 			<TextBlock x:Name="RenameLbl">名称</TextBlock>
 		</StackPanel>
 		<TextBox
-			Grid.Row="6"
+			Grid.Row="8"
 			Grid.Column="2"
 			AutomationProperties.LabeledBy="{Binding ElementName=RenameLbl}"
 			Text="{Binding Name}"

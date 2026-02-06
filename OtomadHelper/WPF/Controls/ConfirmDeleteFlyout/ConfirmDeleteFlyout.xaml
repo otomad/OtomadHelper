@@ -24,7 +24,7 @@
 		<Style x:Key="ConfirmMessage" TargetType="TextBlock">
 			<!-- Must specify a x:Key, otherwise even the AccessKey inside the Button will still be unexpectedly affected by this TextBlock style. -->
 			<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-			<Setter Property="FontSize" Value="14" />
+			<Setter Property="FontSize" Value="{DynamicResource BodyFontSize}" />
 			<Setter Property="Margin" Value="0,0,0,12" />
 		</Style>
 
