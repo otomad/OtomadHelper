@@ -15,8 +15,9 @@ public partial class QuickSelectInterval2DEditorViewModel : ObservableObject<Qui
 	}
 
 	[RelayCommand]
-	private void ToggleBoolean(object[] cell) {
-		(int row, int column) = cell.ToTuple<ValueTuple<int, int>>();
+	private void ToggleBoolean((int row, int column)? cell) { // CAUTION: Cannot remove the `?` mark after the value tuple.
+		if (cell is null) return;
+		(int row, int column) = cell.Value;
 		Bits[row, column] = !Bits[row, column];
 	}
 

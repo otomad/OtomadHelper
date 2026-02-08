@@ -24,3 +24,8 @@ public class CountToVisualBrushWidthConverter : MultiValueConverter<Tuple<int, d
 		return Math.Max(0, actualWidth - CountToViewportConverter.GetToggleButtonsWidth(count) /*+ QuickSelectInterval1DEditor.ToggleButtonSpacing / 2*/);
 	}
 }
+
+public class AlternationIndexToRowCellConverter : MultiValueConverter<int[], (int row, int cell)> {
+	public override (int row, int cell) Convert(int[] value, Type targetType, object parameter, CultureInfo culture) =>
+		(value[0] - 1, value[1] - 1);
+}

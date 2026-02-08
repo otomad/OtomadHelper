@@ -20,6 +20,7 @@
 				<ResourceDictionary Source="./QuickSelectIntervalEditor.xaml" />
 				<!--  TODO: May cause crush in VEGAS environment, not checked.  -->
 			</ResourceDictionary.MergedDictionaries>
+			<c:AlternationIndexToRowCellConverter x:Key="IndexToRowCell" />
 		</ResourceDictionary>
 	</UserControl.Resources>
 	<Grid
@@ -86,7 +87,7 @@
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<ItemsControl
-							AlternationCount="{Binding ., FallbackValue=100}"
+							AlternationCount="{Binding Count, FallbackValue=100, Converter={StaticResource AddOne}}"
 							Focusable="False"
 							Tag="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource AddOne}}"
 							>
@@ -106,12 +107,12 @@
 							</ItemsControl.ItemsPanel>
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>
-									<ToggleButton Command="{Binding DataContext.ToggleBooleanCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" IsChecked="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+									<ToggleButton Command="{Binding DataContext.ToggleBooleanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" IsChecked="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 										<ToggleButton.CommandParameter>
-											<m:CommandParameters>
+											<MultiBinding Converter="{StaticResource IndexToRowCell}">
 												<Binding Path="Tag" RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
 												<Binding Path="(ItemsControl.AlternationIndex)" RelativeSource="{RelativeSource Mode=TemplatedParent}" />
-											</m:CommandParameters>
+											</MultiBinding>
 										</ToggleButton.CommandParameter>
 									</ToggleButton>
 									<!--

@@ -98,5 +98,6 @@
 		<Setter Property="VerticalAlignment" Value="Center" />
 		<Setter Property="Width" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
 		<Setter Property="Padding" Value="0,0,8,0" />
+		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 	</Style>
 </ResourceDictionary>
