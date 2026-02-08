@@ -20,6 +20,7 @@
 	<c:AlternationIndexToRowCellConverter x:Key="IndexToRowCell" />
 	<c:CountToCollectionConverter x:Key="CountToCollection" />
 	<m:ScrollViewerScrollBarVisibilityToScrollBarThicknessMarginConverter x:Key="ScrollViewerVisToMargin" />
+	<c:ContentWidthToIsWideConverter x:Key="WidthToWide" />
 
 	<x:Static x:Key="ToggleButtonSize" Member="c:QuickSelectInterval1DEditor.ToggleButtonSize" />
 	<x:Static x:Key="ToggleButtonSpacing" Member="c:QuickSelectInterval1DEditor.ToggleButtonSpacing" />
@@ -192,5 +193,20 @@
 				</MultiBinding>
 			</Setter.Value>
 		</Setter>
+	</Style>
+
+	<Style TargetType="c:QuickSelectInterval2DEditor">
+		<Setter Property="IsWide" Value="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource WidthToWide}}" />
+	</Style>
+
+	<Style x:Key="Multiply" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+		<Setter Property="Text" Value="×" />
+		<Setter Property="FontSize" Value="{StaticResource SubtitleFontSize}" />
+		<Setter Property="Margin" Value="0,-4,0,0" />
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding IsWide, ElementName=View}" Value="False">
+				<Setter Property="Visibility" Value="Collapsed" />
+			</DataTrigger>
+		</Style.Triggers>
 	</Style>
 </ResourceDictionary>

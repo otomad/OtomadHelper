@@ -1,5 +1,6 @@
 <UserControl
 	x:Class="OtomadHelper.WPF.Controls.QuickSelectInterval2DEditor"
+	x:Name="View"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
@@ -20,12 +21,23 @@
 				<ResourceDictionary Source="./QuickSelectIntervalEditor.xaml" />
 				<!--  TODO: May cause crush in VEGAS environment, not checked.  -->
 			</ResourceDictionary.MergedDictionaries>
+
+			<Style x:Key="FormGrid" TargetType="Grid">
+				<Setter Property="m:GridDef.Column" Value="Auto,10,*" />
+				<Setter Property="m:GridDef.Row" Value="*,8,Auto,8,Auto,8,Auto,8,Auto" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding IsWide, ElementName=View}" Value="True">
+						<Setter Property="m:GridDef.Column" Value="Auto,10,*,10,Auto,10,Auto,10,*" />
+						<Setter Property="m:GridDef.Row" Value="*,8,Auto,8,Auto,8,Auto" />
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>
 
-	<Grid m:GridDef.Column="Auto,10,*" m:GridDef.Row="*,8,Auto,8,Auto,8,Auto,8,Auto">
+	<Grid Style="{StaticResource FormGrid}">
 		<Grid
-			Grid.ColumnSpan="3"
+			Grid.ColumnSpan="9"
 			m:GridDef.Column="Auto,*"
 			m:GridDef.Row="Auto,*"
 			>
@@ -260,7 +272,7 @@
 			</ScrollViewer>
 		</Grid>
 
-		<UniformGrid Grid.Row="2" Style="{StaticResource ActionButtonsGrid}">
+		<UniformGrid Grid.Row="2" Grid.ColumnSpan="9" Style="{StaticResource ActionButtonsGrid}">
 			<c:Button
 				Command="{Binding RestoreOriginalCommand}"
 				IconName="ArrowReset"
@@ -302,22 +314,43 @@
 			Text="{Binding Bits.Columns, UpdateSourceTrigger=PropertyChanged}"
 			/>
 
-		<StackPanel
-			Grid.Row="6"
-			Grid.Column="0"
-			Style="{StaticResource FormIconAndLabel}"
-			>
+		<TextBlock Grid.Row="4" Grid.Column="4" Style="{StaticResource Multiply}" />
+
+		<StackPanel>
+			<StackPanel.Style>
+				<Style BasedOn="{StaticResource FormIconAndLabel}" TargetType="StackPanel">
+					<Setter Property="Grid.Row" Value="6" />
+					<Setter Property="Grid.Column" Value="0" />
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding IsWide, ElementName=View}" Value="True">
+							<Setter Property="Grid.Row" Value="4" />
+							<Setter Property="Grid.Column" Value="6" />
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</StackPanel.Style>
 			<c:Icon IconName="OddRows" />
 			<TextBlock x:Name="RowsLbl">行数</TextBlock>
 			<!--  TODO: I18n  -->
 		</StackPanel>
 		<c:NumericUpDown
-			Grid.Row="6"
-			Grid.Column="2"
 			m:NumberTextBoxBehavior.Range="1,100"
 			AutomationProperties.LabeledBy="{Binding ElementName=RowsLbl}"
 			Text="{Binding Bits.Rows, UpdateSourceTrigger=PropertyChanged}"
-			/>
+			>
+			<c:NumericUpDown.Style>
+				<Style BasedOn="{StaticResource DefaultTextBoxStyle}" TargetType="c:NumericUpDown">
+					<Setter Property="Grid.Row" Value="6" />
+					<Setter Property="Grid.Column" Value="2" />
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding IsWide, ElementName=View}" Value="True">
+							<Setter Property="Grid.Row" Value="4" />
+							<Setter Property="Grid.Column" Value="8" />
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</c:NumericUpDown.Style>
+		</c:NumericUpDown>
 
 		<StackPanel
 			Grid.Row="8"
@@ -330,6 +363,7 @@
 		<TextBox
 			Grid.Row="8"
 			Grid.Column="2"
+			Grid.ColumnSpan="9"
 			AutomationProperties.LabeledBy="{Binding ElementName=RenameLbl}"
 			Text="{Binding Name}"
 			/>

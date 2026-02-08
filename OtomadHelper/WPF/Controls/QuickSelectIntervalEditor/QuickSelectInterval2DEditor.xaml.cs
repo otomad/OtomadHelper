@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -7,6 +6,7 @@ namespace OtomadHelper.WPF.Controls;
 /// <summary>
 /// ParityEditor.xaml 的交互逻辑
 /// </summary>
+[DependencyProperty<bool>("IsWide")]
 public partial class QuickSelectInterval2DEditor : UserControl {
 	public QuickSelectInterval2DEditor() {
 		InitializeComponent();
@@ -46,4 +46,6 @@ public partial class QuickSelectInterval2DEditor : UserControl {
 		) ?? false;
 		return dialogResult;
 	}
+
+	internal const double WideThreshold = 500;
 }

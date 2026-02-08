@@ -44,3 +44,8 @@ public class CountToCollectionConverter : ValueConverter<int, int[]> {
 	public override int[] Convert(int count, Type targetType, object parameter, CultureInfo culture) =>
 		Enumerable.Range(1, count).ToArray();
 }
+
+[ValueConversion(typeof(double), typeof(bool))]
+public class ContentWidthToIsWideConverter : ValueConverter<double, bool> {
+	public override bool Convert(double width, Type targetType, object parameter, CultureInfo culture) => width >= QuickSelectInterval2DEditor.WideThreshold;
+}
