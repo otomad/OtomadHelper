@@ -59,7 +59,7 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 		dialog.Width = 800;
 		dialog.Height = 510;
 		dialog.MinWidth = 400;
-		dialog.MinHeight = 389;
+		dialog.MinHeight = 398.5;
 	}
 
 	static partial void OnTileShadowViewportChanged(VisualBrush brush, Rect viewport) {
