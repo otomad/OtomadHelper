@@ -22,11 +22,8 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</UserControl.Resources>
-	<Grid
-		Grid.Column="2"
-		m:GridDef.Column="Auto,10,*"
-		m:GridDef.Row="*,8,Auto,8,Auto,8,Auto"
-		>
+
+	<Grid m:GridDef.Column="Auto,10,*" m:GridDef.Row="*,8,Auto,8,Auto,8,Auto">
 		<ScrollViewer
 			Grid.ColumnSpan="3"
 			HorizontalScrollBarVisibility="Auto"

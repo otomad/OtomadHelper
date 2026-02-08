@@ -70,6 +70,7 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 		brush.ViewportUnits = BrushMappingMode.Absolute;
 		brush.AlignmentX = AlignmentX.Left;
 		brush.AlignmentY = AlignmentY.Top;
+
 	}
 
 	public const double ToggleButtonSize = 36;

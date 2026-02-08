@@ -22,126 +22,49 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</UserControl.Resources>
-	<Grid
-		Grid.Column="2"
-		m:GridDef.Column="Auto,10,*"
-		m:GridDef.Row="*,8,Auto,8,Auto,8,Auto,8,Auto"
-		>
-		<ScrollViewer
+
+	<Grid m:GridDef.Column="Auto,10,*" m:GridDef.Row="*,8,Auto,8,Auto,8,Auto,8,Auto">
+		<Grid
 			Grid.ColumnSpan="3"
-			HorizontalScrollBarVisibility="Auto"
-			VerticalScrollBarVisibility="Auto"
+			m:GridDef.Column="Auto,*"
+			m:GridDef.Row="Auto,*"
 			>
-			<ItemsControl AlternationCount="{Binding Bits.Rows, FallbackValue=100}">
+			<ItemsControl Grid.Row="0" Grid.Column="1">
 				<ItemsControl.Resources>
-					<CollectionViewSource x:Key="RowsViewSource" Source="{Binding Bits}" />
+					<CollectionViewSource x:Key="ColumnLabelsViewSource" Source="{Binding Bits.Columns, Converter={StaticResource CountToCollection}}" />
 				</ItemsControl.Resources>
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
-						<StackPanel Style="{StaticResource VerticalStackPanel}" />
+						<StackPanel Style="{StaticResource ColumnLabels}" />
 					</ItemsPanelTemplate>
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<ItemsControl AlternationCount="{Binding Count, FallbackValue=100, Converter={StaticResource AddOne}}" Tag="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource AddOne}}">
-							<ItemsControl.Resources>
-								<CollectionViewSource x:Key="ColumnsViewSource" Source="{Binding}" />
-							</ItemsControl.Resources>
-							<ItemsControl.ItemsPanel>
-								<ItemsPanelTemplate>
-									<StackPanel Style="{StaticResource HorizontalStackPanelInsideVertical}" />
-								</ItemsPanelTemplate>
-							</ItemsControl.ItemsPanel>
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<ToggleButton Command="{Binding DataContext.ToggleBooleanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" IsChecked="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-										<ToggleButton.CommandParameter>
-											<MultiBinding Converter="{StaticResource IndexToRowCell}">
-												<Binding Path="Tag" RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
-												<Binding
-													Converter="{StaticResource AddOne}"
-													Path="(ItemsControl.AlternationIndex)"
-													RelativeSource="{RelativeSource Mode=TemplatedParent}"
-													/>
-											</MultiBinding>
-										</ToggleButton.CommandParameter>
-									</ToggleButton>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-							<ItemsControl.ItemsSource>
-								<CompositeCollection>
-									<!--<TextBlock Style="{StaticResource RowLabel}" Text="{Binding Tag, RelativeSource={RelativeSource AncestorType=ItemsControl}}" />-->
-									<CollectionContainer Collection="{Binding Source={StaticResource ColumnsViewSource}}" />
-									<Rectangle Style="{StaticResource RightTileShadow}">
-										<Rectangle.Width>
-											<MultiBinding Converter="{StaticResource CountToSize}">
-												<Binding Path="Count" />
-												<Binding Path="ViewportWidth" RelativeSource="{RelativeSource FindAncestor, AncestorType=ScrollViewer}" />
-											</MultiBinding>
-										</Rectangle.Width>
-										<Rectangle.Fill>
-											<VisualBrush c:QuickSelectInterval1DEditor.TileShadowViewport="{Binding Count, Converter={StaticResource CountToXViewport}}">
-												<VisualBrush.Visual>
-													<ItemsControl ItemsSource="{Binding}">
-														<ItemsControl.ItemsPanel>
-															<ItemsPanelTemplate>
-																<StackPanel Style="{StaticResource HorizontalStackPanelInsideVertical}" />
-															</ItemsPanelTemplate>
-														</ItemsControl.ItemsPanel>
-														<ItemsControl.ItemTemplate>
-															<DataTemplate>
-																<ToggleButton IsChecked="{Binding .}" />
-															</DataTemplate>
-														</ItemsControl.ItemTemplate>
-													</ItemsControl>
-												</VisualBrush.Visual>
-											</VisualBrush>
-										</Rectangle.Fill>
-									</Rectangle>
-								</CompositeCollection>
-							</ItemsControl.ItemsSource>
-						</ItemsControl>
+						<TextBlock Style="{StaticResource ColumnLabel}" Text="{Binding}" />
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 				<ItemsControl.ItemsSource>
 					<CompositeCollection>
-						<CollectionContainer Collection="{Binding Source={StaticResource RowsViewSource}}" />
-						<Rectangle Style="{StaticResource BottomTileShadow}">
-							<Rectangle.Height>
+						<CollectionContainer Collection="{Binding Source={StaticResource ColumnLabelsViewSource}}" />
+						<Rectangle Style="{StaticResource RightTileShadow}" Cursor="{x:Null}">
+							<Rectangle.Width>
 								<MultiBinding Converter="{StaticResource CountToSize}">
-									<Binding Path="Bits.Count" />
-									<Binding Path="ViewportHeight" RelativeSource="{RelativeSource FindAncestor, AncestorType=ScrollViewer}" />
+									<Binding Path="Bits.Columns" />
+									<Binding ElementName="ScrollViewer" Path="ViewportWidth" />
 								</MultiBinding>
-							</Rectangle.Height>
+							</Rectangle.Width>
 							<Rectangle.Fill>
-								<VisualBrush>
-									<c:QuickSelectInterval1DEditor.TileShadowViewport>
-										<MultiBinding Converter="{StaticResource CountToYViewport}">
-											<Binding Path="Bits.Columns" />
-											<Binding Path="Bits.Rows" />
-										</MultiBinding>
-									</c:QuickSelectInterval1DEditor.TileShadowViewport>
+								<VisualBrush c:QuickSelectInterval1DEditor.TileShadowViewport="{Binding Bits.Columns, Converter={StaticResource CountToXViewport}}" >
 									<VisualBrush.Visual>
-										<ItemsControl ItemsSource="{Binding Bits}">
+										<ItemsControl ItemsSource="{Binding Bits.Columns, Converter={StaticResource CountToCollection}}">
 											<ItemsControl.ItemsPanel>
 												<ItemsPanelTemplate>
-													<StackPanel Style="{StaticResource VerticalStackPanel}" />
+													<StackPanel Style="{StaticResource ColumnLabels}" />
 												</ItemsPanelTemplate>
 											</ItemsControl.ItemsPanel>
 											<ItemsControl.ItemTemplate>
 												<DataTemplate>
-													<ItemsControl ItemsSource="{Binding}">
-														<ItemsControl.ItemsPanel>
-															<ItemsPanelTemplate>
-																<StackPanel Style="{StaticResource HorizontalStackPanelInsideVertical}" />
-															</ItemsPanelTemplate>
-														</ItemsControl.ItemsPanel>
-														<ItemsControl.ItemTemplate>
-															<DataTemplate>
-																<ToggleButton IsChecked="{Binding .}" />
-															</DataTemplate>
-														</ItemsControl.ItemTemplate>
-													</ItemsControl>
+													<TextBlock Style="{StaticResource ColumnLabel}" Text="{Binding}" />
 												</DataTemplate>
 											</ItemsControl.ItemTemplate>
 										</ItemsControl>
@@ -152,7 +75,186 @@
 					</CompositeCollection>
 				</ItemsControl.ItemsSource>
 			</ItemsControl>
-		</ScrollViewer>
+
+			<ItemsControl Grid.Row="1" Grid.Column="0">
+				<ItemsControl.Resources>
+					<CollectionViewSource x:Key="RowLabelsViewSource" Source="{Binding Bits.Rows, Converter={StaticResource CountToCollection}}" />
+				</ItemsControl.Resources>
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Style="{StaticResource RowLabels}" />
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Border Style="{StaticResource RowLabel}">
+							<TextBlock Text="{Binding}" />
+						</Border>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+				<ItemsControl.ItemsSource>
+					<CompositeCollection>
+						<CollectionContainer Collection="{Binding Source={StaticResource RowLabelsViewSource}}" />
+						<Rectangle Style="{StaticResource BottomTileShadow}" Cursor="{x:Null}">
+							<Rectangle.Height>
+								<MultiBinding Converter="{StaticResource CountToSize}">
+									<Binding Path="Bits.Rows" />
+									<Binding ElementName="ScrollViewer" Path="ViewportHeight" />
+								</MultiBinding>
+							</Rectangle.Height>
+							<Rectangle.Fill>
+								<VisualBrush c:QuickSelectInterval1DEditor.TileShadowViewport="{Binding Bits.Rows, Converter={StaticResource CountToXViewport}, ConverterParameter={m:Bool True}}" >
+									<VisualBrush.Visual>
+										<ItemsControl ItemsSource="{Binding Bits.Rows, Converter={StaticResource CountToCollection}}">
+											<ItemsControl.ItemsPanel>
+												<ItemsPanelTemplate>
+													<StackPanel Style="{StaticResource RowLabels}" />
+												</ItemsPanelTemplate>
+											</ItemsControl.ItemsPanel>
+											<ItemsControl.ItemTemplate>
+												<DataTemplate>
+													<Border Style="{StaticResource RowLabel}">
+														<TextBlock Text="{Binding}" />
+													</Border>
+												</DataTemplate>
+											</ItemsControl.ItemTemplate>
+										</ItemsControl>
+									</VisualBrush.Visual>
+								</VisualBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+					</CompositeCollection>
+				</ItemsControl.ItemsSource>
+			</ItemsControl>
+
+			<ScrollViewer
+				x:Name="ScrollViewer"
+				Grid.Row="1"
+				Grid.Column="1"
+				HorizontalScrollBarVisibility="Auto"
+				VerticalScrollBarVisibility="Auto"
+				>
+				<ItemsControl AlternationCount="{Binding Bits.Rows, FallbackValue=100}">
+					<ItemsControl.Resources>
+						<CollectionViewSource x:Key="RowsViewSource" Source="{Binding Bits}" />
+					</ItemsControl.Resources>
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel Style="{StaticResource VerticalStackPanel}" />
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<ItemsControl AlternationCount="{Binding Count, FallbackValue=100, Converter={StaticResource AddOne}}" Tag="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource AddOne}}">
+								<ItemsControl.Resources>
+									<CollectionViewSource x:Key="ColumnsViewSource" Source="{Binding}" />
+								</ItemsControl.Resources>
+								<ItemsControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<StackPanel Style="{StaticResource HorizontalStackPanelInsideVertical}" />
+									</ItemsPanelTemplate>
+								</ItemsControl.ItemsPanel>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<ToggleButton Command="{Binding DataContext.ToggleBooleanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" IsChecked="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+											<ToggleButton.CommandParameter>
+												<MultiBinding Converter="{StaticResource IndexToRowCell}">
+													<Binding Path="Tag" RelativeSource="{RelativeSource AncestorType=ItemsControl}" />
+													<Binding
+														Converter="{StaticResource AddOne}"
+														Path="(ItemsControl.AlternationIndex)"
+														RelativeSource="{RelativeSource Mode=TemplatedParent}"
+														/>
+												</MultiBinding>
+											</ToggleButton.CommandParameter>
+										</ToggleButton>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+								<ItemsControl.ItemsSource>
+									<CompositeCollection>
+										<CollectionContainer Collection="{Binding Source={StaticResource ColumnsViewSource}}" />
+										<Rectangle Style="{StaticResource RightTileShadow}">
+											<Rectangle.Width>
+												<MultiBinding Converter="{StaticResource CountToSize}">
+													<Binding Path="Count" />
+													<Binding ElementName="ScrollViewer" Path="ViewportWidth" />
+												</MultiBinding>
+											</Rectangle.Width>
+											<Rectangle.Fill>
+												<VisualBrush c:QuickSelectInterval1DEditor.TileShadowViewport="{Binding Count, Converter={StaticResource CountToXViewport}}">
+													<VisualBrush.Visual>
+														<ItemsControl ItemsSource="{Binding}">
+															<ItemsControl.ItemsPanel>
+																<ItemsPanelTemplate>
+																	<StackPanel Style="{StaticResource HorizontalStackPanelInsideVertical}" />
+																</ItemsPanelTemplate>
+															</ItemsControl.ItemsPanel>
+															<ItemsControl.ItemTemplate>
+																<DataTemplate>
+																	<ToggleButton IsChecked="{Binding .}" />
+																</DataTemplate>
+															</ItemsControl.ItemTemplate>
+														</ItemsControl>
+													</VisualBrush.Visual>
+												</VisualBrush>
+											</Rectangle.Fill>
+										</Rectangle>
+									</CompositeCollection>
+								</ItemsControl.ItemsSource>
+							</ItemsControl>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+					<ItemsControl.ItemsSource>
+						<CompositeCollection>
+							<CollectionContainer Collection="{Binding Source={StaticResource RowsViewSource}}" />
+							<Rectangle Style="{StaticResource BottomTileShadow}">
+								<Rectangle.Height>
+									<MultiBinding Converter="{StaticResource CountToSize}">
+										<Binding Path="Bits.Count" />
+										<Binding ElementName="ScrollViewer" Path="ViewportHeight" />
+									</MultiBinding>
+								</Rectangle.Height>
+								<Rectangle.Fill>
+									<VisualBrush>
+										<c:QuickSelectInterval1DEditor.TileShadowViewport>
+											<MultiBinding Converter="{StaticResource CountToYViewport}">
+												<Binding Path="Bits.Columns" />
+												<Binding Path="Bits.Rows" />
+											</MultiBinding>
+										</c:QuickSelectInterval1DEditor.TileShadowViewport>
+										<VisualBrush.Visual>
+											<ItemsControl ItemsSource="{Binding Bits}">
+												<ItemsControl.ItemsPanel>
+													<ItemsPanelTemplate>
+														<StackPanel Style="{StaticResource VerticalStackPanel}" />
+													</ItemsPanelTemplate>
+												</ItemsControl.ItemsPanel>
+												<ItemsControl.ItemTemplate>
+													<DataTemplate>
+														<ItemsControl ItemsSource="{Binding}">
+															<ItemsControl.ItemsPanel>
+																<ItemsPanelTemplate>
+																	<StackPanel Style="{StaticResource HorizontalStackPanelInsideVertical}" />
+																</ItemsPanelTemplate>
+															</ItemsControl.ItemsPanel>
+															<ItemsControl.ItemTemplate>
+																<DataTemplate>
+																	<ToggleButton IsChecked="{Binding .}" />
+																</DataTemplate>
+															</ItemsControl.ItemTemplate>
+														</ItemsControl>
+													</DataTemplate>
+												</ItemsControl.ItemTemplate>
+											</ItemsControl>
+										</VisualBrush.Visual>
+									</VisualBrush>
+								</Rectangle.Fill>
+							</Rectangle>
+						</CompositeCollection>
+					</ItemsControl.ItemsSource>
+				</ItemsControl>
+			</ScrollViewer>
+		</Grid>
 
 		<UniformGrid Grid.Row="2" Style="{StaticResource ActionButtonsGrid}">
 			<c:Button

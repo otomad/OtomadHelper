@@ -467,7 +467,7 @@ public static partial class Extensions {
 		/// <param name="GetElement">A function to get the element.</param>
 		/// <param name="startingIndex">The first index passed to the <paramref name="GetElement" /> function. Defaults to 0.</param>
 		public static T[] Fill<T>(Func<int, T> GetElement, int count, int startingIndex = 0) =>
-			new T[count].Select((_, index) => GetElement(index + startingIndex)).ToArray();
+			Enumerable.Range(startingIndex, count).Select(index => GetElement(index)).ToArray();
 
 		/// <inheritdoc cref="Enumerable.Repeat" />
 		public static T[] Fill<T>(T element, int count) => Enumerable.Repeat(element, count).ToArray();

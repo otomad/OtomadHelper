@@ -14,10 +14,14 @@
 	</ResourceDictionary.MergedDictionaries>
 
 	<c:AddOneConverter x:Key="AddOne" />
-	<c:CountToXViewportConverter x:Key="CountToXViewport" />
-	<c:CountToYViewportConverter x:Key="CountToYViewport" />
+	<c:CountToInlineViewportConverter x:Key="CountToXViewport" />
+	<c:CountToBlockViewportConverter x:Key="CountToYViewport" />
 	<c:CountToVisualBrushSizeConverter x:Key="CountToSize" />
 	<c:AlternationIndexToRowCellConverter x:Key="IndexToRowCell" />
+	<c:CountToCollectionConverter x:Key="CountToCollection" />
+
+	<x:Static x:Key="ToggleButtonSize" Member="c:QuickSelectInterval1DEditor.ToggleButtonSize" />
+	<x:Static x:Key="ToggleButtonSpacing" Member="c:QuickSelectInterval1DEditor.ToggleButtonSpacing" />
 
 	<Style TargetType="TextBlock">
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
@@ -50,12 +54,12 @@
 	</Style>
 
 	<Style BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">
-		<Setter Property="Width" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
-		<Setter Property="Height" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
+		<Setter Property="Width" Value="{StaticResource ToggleButtonSize}" />
+		<Setter Property="Height" Value="{StaticResource ToggleButtonSize}" />
 		<Setter Property="Padding" Value="0" />
 		<Setter Property="Margin">
 			<Setter.Value>
-				<Thickness Right="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSpacing}" />
+				<Thickness Right="{StaticResource ToggleButtonSpacing}" />
 			</Setter.Value>
 		</Setter>
 	</Style>
@@ -77,7 +81,7 @@
 	<Style x:Key="HorizontalStackPanelInsideVertical" BasedOn="{StaticResource HorizontalStackPanel}" TargetType="StackPanel">
 		<Setter Property="Margin">
 			<Setter.Value>
-				<Thickness Bottom="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSpacing}" />
+				<Thickness Bottom="{StaticResource ToggleButtonSpacing}" />
 			</Setter.Value>
 		</Setter>
 	</Style>
@@ -106,21 +110,51 @@
 		<Setter Property="Cursor" Value="No" />
 	</Style>
 
-	<Style x:Key="RowLabel" TargetType="TextBlock">
+	<Style x:Key="ColumnLabel" TargetType="TextBlock">
 		<Setter Property="FontSize" Value="{DynamicResource BodyFontSize}" />
-		<Setter Property="TextAlignment" Value="Right" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
 		<Setter Property="VerticalAlignment" Value="Center" />
-		<Setter Property="Width" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
-		<Setter Property="Padding" Value="0,0,8,0" />
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+		<Setter Property="TextAlignment" Value="Center" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="Width" Value="{StaticResource ToggleButtonSize}" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Margin">
+			<Setter.Value>
+				<Thickness Right="{StaticResource ToggleButtonSpacing}" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="RowLabel" TargetType="Border">
+		<Setter Property="Height" Value="{StaticResource ToggleButtonSize}" />
+		<Setter Property="BorderBrush" Value="{x:Null}" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Margin">
+			<Setter.Value>
+				<Thickness Bottom="{StaticResource ToggleButtonSpacing}" />
+			</Setter.Value>
+		</Setter>
+		<Style.Resources>
+			<Style BasedOn="{StaticResource ColumnLabel}" TargetType="TextBlock">
+				<Setter Property="TextAlignment" Value="Right" />
+				<Setter Property="Width" Value="Auto" />
+				<Setter Property="Margin" Value="0" />
+			</Style>
+		</Style.Resources>
 	</Style>
 
 	<Style BasedOn="{StaticResource DefaultScrollViewerStyle}" TargetType="ScrollViewer">
 		<Setter Property="FlowDirection" Value="LeftToRight" />
-		<Style.Resources>
-			<Style TargetType="ItemsControl">
-				<Setter Property="Focusable" Value="False" />
-			</Style>
-		</Style.Resources>
+	</Style>
+
+	<Style TargetType="ItemsControl">
+		<Setter Property="Focusable" Value="False" />
+	</Style>
+
+	<Style x:Key="ColumnLabels" BasedOn="{StaticResource HorizontalStackPanelInsideVertical}" TargetType="StackPanel" />
+
+	<Style x:Key="RowLabels" BasedOn="{StaticResource VerticalStackPanel}" TargetType="StackPanel">
+		<Setter Property="Margin" Value="0,0,8,0" />
 	</Style>
 </ResourceDictionary>
