@@ -103,7 +103,7 @@
 			<c:Button
 				ToolTip="反转当前选区"
 				Command="{Binding InvertSelectionCommand}"
-				IconName="InvertColor"
+				IconName="InvertSelection"
 				>
 				反选 <!--  TODO: I18n  -->
 			</c:Button>
@@ -111,7 +111,7 @@
 				Content="{m:Trans TextBox.Menu.ClearAll}"
 				ToolTip="取消选中所有项目"
 				Command="{Binding SelectNoneCommand}"
-				IconName="ClearAll"
+				IconName="SelectNone"
 				/>
 		</UniformGrid>
 

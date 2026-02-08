@@ -136,6 +136,12 @@
   <data name="Question" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\005 - Question.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SkipForwardInterval" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\008 - Skip Forward Interval.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TableSimpleInclude" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\009 - Table Simple Include.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\003 - Warning.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

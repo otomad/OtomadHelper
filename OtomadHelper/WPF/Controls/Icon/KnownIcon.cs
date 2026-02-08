@@ -8,4 +8,6 @@ public enum KnownIcon {
 	Question,
 	Locale,
 	Color,
+	SkipForwardInterval,
+	TableSimpleInclude,
 }

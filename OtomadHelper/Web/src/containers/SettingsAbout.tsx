@@ -96,7 +96,7 @@ export default function SettingsAbout() {
 				actions={(
 					<>
 						<p>v{version}</p>
-						<Button icon="sync" onClick={() => checkForUpdates(version)}>{t.settings.about.checkForUpdates}</Button>
+						<Button icon="arrow_sync" onClick={() => checkForUpdates(version)}>{t.settings.about.checkForUpdates}</Button>
 					</>
 				)}
 			>

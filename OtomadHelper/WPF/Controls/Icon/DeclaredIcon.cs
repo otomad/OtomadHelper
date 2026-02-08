@@ -54,7 +54,12 @@ public enum DeclaredIcon {
 	ArrowReset,
 	ChevronUp12,
 	ChevronDown12,
+	SkipForwardInterval,
 	TableSimpleInclude,
 	Rename,
 	InvertColor,
+	OddColumns,
+	OddRows,
+	SelectNone,
+	InvertSelection,
 }

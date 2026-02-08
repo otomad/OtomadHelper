@@ -115,13 +115,6 @@
 											</MultiBinding>
 										</ToggleButton.CommandParameter>
 									</ToggleButton>
-									<!--
-										Command="{Binding DataContext.ToggleBooleanCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-										CommandParameter="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}}"
-										Content="{Binding Tag, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-										Content="{Binding (ItemsControl.AlternationIndex), Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource AddOne}}"
-										IsChecked="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-									-->
 								</DataTemplate>
 							</ItemsControl.ItemTemplate>
 						</ItemsControl>
@@ -141,7 +134,7 @@
 			</c:Button>
 			<c:Button
 				Command="{Binding InvertSelectionCommand}"
-				IconName="InvertColor"
+				IconName="InvertSelection"
 				ToolTip="反转当前选区"
 				>
 				反选
@@ -150,7 +143,7 @@
 			<c:Button
 				Command="{Binding SelectNoneCommand}"
 				Content="{m:Trans TextBox.Menu.ClearAll}"
-				IconName="ClearAll"
+				IconName="SelectNone"
 				ToolTip="取消选中所有项目"
 				/>
 		</UniformGrid>
@@ -160,7 +153,7 @@
 			Grid.Column="0"
 			Style="{StaticResource FormIconAndLabel}"
 			>
-			<c:Icon IconName="TableSimpleInclude" />
+			<c:Icon IconName="OddColumns" />
 			<TextBlock x:Name="ColumnsLbl">列数</TextBlock>
 			<!--  TODO: I18n  -->
 		</StackPanel>
@@ -177,7 +170,7 @@
 			Grid.Column="0"
 			Style="{StaticResource FormIconAndLabel}"
 			>
-			<c:Icon IconName="TableSimpleInclude" />
+			<c:Icon IconName="OddRows" />
 			<TextBlock x:Name="RowsLbl">行数</TextBlock>
 			<!--  TODO: I18n  -->
 		</StackPanel>

@@ -84,6 +84,12 @@
 		<Setter Property="Columns" Value="3" />
 		<Setter Property="Grid.ColumnSpan" Value="3" />
 		<Setter Property="m:Spacing.Horizontal" Value="6" />
+		<Setter Property="HorizontalAlignment" Value="Center" />
+		<Style.Resources>
+			<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="c:Button">
+				<Setter Property="MinWidth" Value="100" />
+			</Style>
+		</Style.Resources>
 	</Style>
 
 	<Style x:Key="RightTileShadow" TargetType="Rectangle">

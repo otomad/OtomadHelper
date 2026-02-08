@@ -423,7 +423,7 @@ function playbackRate() {
 			playBackwards: { icon: "play_backward", title: t.playBackwards },
 			based: { icon: "relative" },
 			sync: {
-				icon: "sync",
+				icon: "arrow_sync",
 				details: undefined,
 			},
 		},

@@ -42,16 +42,16 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 				new(t.ContentDialog.Button.Ok, true, true),
 				new(t.ContentDialog.Button.Cancel, false),
 			],
-			icon: KnownIcon.None,
+			icon: KnownIcon.SkipForwardInterval,
 			topmost: false,
 			singletonId: SingletonId,
 			customize: dialog => {
 				dialog.ResizeMode = ResizeMode.CanResize;
 				dialog.SizeToContent = SizeToContent.Manual;
-				dialog.Width = 800;
-				dialog.Height = 480;
-				dialog.MinWidth = 400;
-				dialog.MinHeight = 350;
+				dialog.Width = DialogWidth;
+				dialog.Height = DialogHeight;
+				dialog.MinWidth = DialogMinWidth;
+				dialog.MinHeight = DialogMinHeight;
 				dialog.MinimizeBox = false;
 			}
 		) ?? false;
@@ -60,4 +60,9 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 
 	public const double ToggleButtonSize = 36;
 	public const double ToggleButtonSpacing = 4;
+
+	internal const double DialogWidth = 800;
+	internal const double DialogHeight = 510;
+	internal const double DialogMinWidth = 400;
+	internal const double DialogMinHeight = 389;
 }
