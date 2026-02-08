@@ -29,7 +29,8 @@
 			m:GridDef.Column="Auto,*"
 			m:GridDef.Row="Auto,*"
 			>
-			<ItemsControl Grid.Row="0" Grid.Column="1">
+			<ScrollViewer Grid.Row="0" Grid.Column="1" Style="{StaticResource ColumnLabelsScrollViewer}">
+			<ItemsControl>
 				<ItemsControl.Resources>
 					<CollectionViewSource x:Key="ColumnLabelsViewSource" Source="{Binding Bits.Columns, Converter={StaticResource CountToCollection}}" />
 				</ItemsControl.Resources>
@@ -75,8 +76,10 @@
 					</CompositeCollection>
 				</ItemsControl.ItemsSource>
 			</ItemsControl>
+			</ScrollViewer>
 
-			<ItemsControl Grid.Row="1" Grid.Column="0">
+			<ScrollViewer Grid.Row="1" Grid.Column="0" Style="{StaticResource RowLabelsScrollViewer}">
+			<ItemsControl>
 				<ItemsControl.Resources>
 					<CollectionViewSource x:Key="RowLabelsViewSource" Source="{Binding Bits.Rows, Converter={StaticResource CountToCollection}}" />
 				</ItemsControl.Resources>
@@ -126,6 +129,7 @@
 					</CompositeCollection>
 				</ItemsControl.ItemsSource>
 			</ItemsControl>
+			</ScrollViewer>
 
 			<ScrollViewer
 				x:Name="ScrollViewer"

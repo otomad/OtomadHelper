@@ -19,6 +19,7 @@
 	<c:CountToVisualBrushSizeConverter x:Key="CountToSize" />
 	<c:AlternationIndexToRowCellConverter x:Key="IndexToRowCell" />
 	<c:CountToCollectionConverter x:Key="CountToCollection" />
+	<m:ScrollViewerScrollBarVisibilityToScrollBarThicknessMarginConverter x:Key="ScrollViewerVisToMargin" />
 
 	<x:Static x:Key="ToggleButtonSize" Member="c:QuickSelectInterval1DEditor.ToggleButtonSize" />
 	<x:Static x:Key="ToggleButtonSpacing" Member="c:QuickSelectInterval1DEditor.ToggleButtonSpacing" />
@@ -138,6 +139,7 @@
 		<Style.Resources>
 			<Style BasedOn="{StaticResource ColumnLabel}" TargetType="TextBlock">
 				<Setter Property="TextAlignment" Value="Right" />
+				<Setter Property="HorizontalAlignment" Value="Right" />
 				<Setter Property="Width" Value="Auto" />
 				<Setter Property="Margin" Value="0" />
 			</Style>
@@ -156,5 +158,39 @@
 
 	<Style x:Key="RowLabels" BasedOn="{StaticResource VerticalStackPanel}" TargetType="StackPanel">
 		<Setter Property="Margin" Value="0,0,8,0" />
+		<Setter Property="LayoutTransform">
+			<Setter.Value>
+				<TranslateTransform Y="-50" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="LabelsScrollViewer" BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ScrollViewer">
+		<Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
+		<Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
+	</Style>
+
+	<Style x:Key="ColumnLabelsScrollViewer" BasedOn="{StaticResource LabelsScrollViewer}" TargetType="ScrollViewer">
+		<Setter Property="m:ScrollViewerSyncScroll.Horizontal" Value="{Binding ElementName=ScrollViewer}" />
+		<Setter Property="Margin">
+			<Setter.Value>
+				<MultiBinding Converter="{StaticResource ScrollViewerVisToMargin}">
+					<Binding ElementName="ScrollViewer" />
+					<Binding Path="ComputedVerticalScrollBarVisibility" ElementName="ScrollViewer" />
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style x:Key="RowLabelsScrollViewer" BasedOn="{StaticResource LabelsScrollViewer}" TargetType="ScrollViewer">
+		<Setter Property="m:ScrollViewerSyncScroll.Vertical" Value="{Binding ElementName=ScrollViewer}" />
+		<Setter Property="Margin">
+			<Setter.Value>
+				<MultiBinding Converter="{StaticResource ScrollViewerVisToMargin}" ConverterParameter="{m:Bool True}">
+					<Binding ElementName="ScrollViewer" />
+					<Binding Path="ComputedHorizontalScrollBarVisibility" ElementName="ScrollViewer" />
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
 	</Style>
 </ResourceDictionary>
