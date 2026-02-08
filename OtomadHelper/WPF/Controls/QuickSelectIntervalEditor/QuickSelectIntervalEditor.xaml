@@ -14,8 +14,10 @@
 	</ResourceDictionary.MergedDictionaries>
 
 	<c:AddOneConverter x:Key="AddOne" />
-	<c:CountToViewportConverter x:Key="CountToViewport" />
-	<c:CountToVisualBrushWidthConverter x:Key="CountToWidth" />
+	<c:CountToXViewportConverter x:Key="CountToXViewport" />
+	<c:CountToYViewportConverter x:Key="CountToYViewport" />
+	<c:CountToVisualBrushSizeConverter x:Key="CountToSize" />
+	<c:AlternationIndexToRowCellConverter x:Key="IndexToRowCell" />
 
 	<Style TargetType="TextBlock">
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
@@ -93,8 +95,14 @@
 	</Style>
 
 	<Style x:Key="RightTileShadow" TargetType="Rectangle">
-		<Setter Property="Margin" Value="-2,0,0,0" />
+		<Setter Property="Margin" Value="0,0,0,-4" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="Cursor" Value="No" />
+	</Style>
+
+	<Style x:Key="BottomTileShadow" TargetType="Rectangle">
+		<Setter Property="Margin" Value="0" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
 		<Setter Property="Cursor" Value="No" />
 	</Style>
 
@@ -105,5 +113,14 @@
 		<Setter Property="Width" Value="{x:Static c:QuickSelectInterval1DEditor.ToggleButtonSize}" />
 		<Setter Property="Padding" Value="0,0,8,0" />
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+	</Style>
+
+	<Style BasedOn="{StaticResource DefaultScrollViewerStyle}" TargetType="ScrollViewer">
+		<Setter Property="FlowDirection" Value="LeftToRight" />
+		<Style.Resources>
+			<Style TargetType="ItemsControl">
+				<Setter Property="Focusable" Value="False" />
+			</Style>
+		</Style.Resources>
 	</Style>
 </ResourceDictionary>

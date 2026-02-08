@@ -122,7 +122,7 @@ public partial class ContentDialog : BackdropWindow {
 		return (TDialogResult?)await dialog.ShowDialogAsync();
 	}
 
-	private static Dictionary<string, ContentDialog> singletons = [];
+	private static readonly Dictionary<string, ContentDialog> singletons = [];
 
 	public delegate void ShowDialogEventHandler(ContentDialog contentDialog);
 

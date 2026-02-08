@@ -55,6 +55,8 @@ public abstract class MultiValueConverter<TSource, TTarget, TParameter> : IMulti
 	}
 
 	public static T ToCollectionType<T>(object source, bool throwIfNotCollection = false) {
+		if (source is null)
+			return default(T)!;
 		if (source is not object[] sources)
 			goto UnknownType;
 		if (typeof(T).Extends(typeof(ITuple)))

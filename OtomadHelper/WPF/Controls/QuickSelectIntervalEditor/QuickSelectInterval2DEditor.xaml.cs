@@ -41,17 +41,8 @@ public partial class QuickSelectInterval2DEditor : UserControl {
 				new(t.ContentDialog.Button.Cancel, false),
 			],
 			icon: KnownIcon.TableSimpleInclude,
-			topmost: false,
 			singletonId: QuickSelectInterval1DEditor.SingletonId,
-			customize: dialog => {
-				dialog.ResizeMode = ResizeMode.CanResize;
-				dialog.SizeToContent = SizeToContent.Manual;
-				dialog.Width = QuickSelectInterval1DEditor.DialogWidth;
-				dialog.Height = QuickSelectInterval1DEditor.DialogHeight;
-				dialog.MinWidth = QuickSelectInterval1DEditor.DialogMinWidth;
-				dialog.MinHeight = QuickSelectInterval1DEditor.DialogMinHeight;
-				dialog.MinimizeBox = false;
-			}
+			customize: QuickSelectInterval1DEditor.CustomizeDialog
 		) ?? false;
 		return dialogResult;
 	}

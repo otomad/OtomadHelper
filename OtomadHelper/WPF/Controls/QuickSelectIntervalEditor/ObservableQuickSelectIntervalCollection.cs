@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace OtomadHelper.WPF.Controls;
 
 public class ObservableQuickSelectIntervalCollection<T> : ICollection<T>, IList<T>, ICloneable, INotifyCollectionChanged, INotifyPropertyChanged {

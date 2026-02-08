@@ -11,21 +11,28 @@ public class AddOneConverter : ValueConverter<int, int> {
 }
 
 [ValueConversion(typeof(int), typeof(Rect))]
-public class CountToViewportConverter : ValueConverter<int, Rect> {
+public class CountToXViewportConverter : ValueConverter<int, Rect> {
 	public override Rect Convert(int count, Type targetType, object parameter, CultureInfo culture) =>
-		new(0, 0, GetToggleButtonsWidth(count), QuickSelectInterval1DEditor.ToggleButtonSize);
+		new(0, 0, GetToggleButtonsSize(count), QuickSelectInterval1DEditor.ToggleButtonSize + QuickSelectInterval1DEditor.ToggleButtonSpacing * 2);
 
-	internal static double GetToggleButtonsWidth(int count) => (QuickSelectInterval1DEditor.ToggleButtonSize + QuickSelectInterval1DEditor.ToggleButtonSpacing) * count;
+	internal static double GetToggleButtonsSize(int count) => (QuickSelectInterval1DEditor.ToggleButtonSize + QuickSelectInterval1DEditor.ToggleButtonSpacing) * count;
 }
 
-public class CountToVisualBrushWidthConverter : MultiValueConverter<Tuple<int, double>, double> {
+public class CountToVisualBrushSizeConverter : MultiValueConverter<Tuple<int, double>, double> {
 	public override double Convert(Tuple<int, double> value, Type targetType, object parameter, CultureInfo culture) {
-		(int count, double actualWidth) = value;
-		return Math.Max(0, actualWidth - CountToViewportConverter.GetToggleButtonsWidth(count) /*+ QuickSelectInterval1DEditor.ToggleButtonSpacing / 2*/);
+		(int count, double viewportSize) = value;
+		return Math.Max(0, viewportSize - CountToXViewportConverter.GetToggleButtonsSize(count));
 	}
 }
 
 public class AlternationIndexToRowCellConverter : MultiValueConverter<int[], (int row, int cell)> {
 	public override (int row, int cell) Convert(int[] value, Type targetType, object parameter, CultureInfo culture) =>
 		(value[0] - 1, value[1] - 1);
+}
+
+public class CountToYViewportConverter : MultiValueConverter<Tuple<int, int>, Rect> {
+	public override Rect Convert(Tuple<int, int> size, Type targetType, object parameter, CultureInfo culture) {
+		(int columns, int rows) = size;
+		return new(0, 0, CountToXViewportConverter.GetToggleButtonsSize(columns), CountToXViewportConverter.GetToggleButtonsSize(rows));
+	}
 }

@@ -1,12 +1,14 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace OtomadHelper.WPF.Controls;
 
 /// <summary>
 /// ParityEditor.xaml 的交互逻辑
 /// </summary>
+[AttachedDependencyProperty<Rect, VisualBrush>("TileShadowViewport")]
 public partial class QuickSelectInterval1DEditor : UserControl {
 	public QuickSelectInterval1DEditor() {
 		InitializeComponent();
@@ -43,26 +45,33 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 				new(t.ContentDialog.Button.Cancel, false),
 			],
 			icon: KnownIcon.SkipForwardInterval,
-			topmost: false,
 			singletonId: SingletonId,
-			customize: dialog => {
-				dialog.ResizeMode = ResizeMode.CanResize;
-				dialog.SizeToContent = SizeToContent.Manual;
-				dialog.Width = DialogWidth;
-				dialog.Height = DialogHeight;
-				dialog.MinWidth = DialogMinWidth;
-				dialog.MinHeight = DialogMinHeight;
-				dialog.MinimizeBox = false;
-			}
+			customize: CustomizeDialog
 		) ?? false;
 		return dialogResult;
 	}
 
+	internal static void CustomizeDialog(ContentDialog dialog) {
+		dialog.Topmost = false;
+		dialog.ResizeMode = ResizeMode.CanResize;
+		dialog.SizeToContent = SizeToContent.Manual;
+		dialog.MinimizeBox = false;
+		dialog.Width = 800;
+		dialog.Height = 510;
+		dialog.MinWidth = 400;
+		dialog.MinHeight = 389;
+	}
+
+	static partial void OnTileShadowViewportChanged(VisualBrush brush, Rect viewport) {
+		brush.Opacity = 0.35;
+		brush.Stretch = Stretch.None;
+		brush.TileMode = TileMode.Tile;
+		brush.Viewport = viewport;
+		brush.ViewportUnits = BrushMappingMode.Absolute;
+		brush.AlignmentX = AlignmentX.Left;
+		brush.AlignmentY = AlignmentY.Top;
+	}
+
 	public const double ToggleButtonSize = 36;
 	public const double ToggleButtonSpacing = 4;
-
-	internal const double DialogWidth = 800;
-	internal const double DialogHeight = 510;
-	internal const double DialogMinWidth = 400;
-	internal const double DialogMinHeight = 389;
 }
