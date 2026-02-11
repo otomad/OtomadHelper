@@ -444,7 +444,7 @@ public partial class BackdropWindow : Window {
 			case TitleBarType.WindowChrome:
 				WindowChrome.SetWindowChrome(this, new() {
 					CaptionHeight = 54, // Default: 20
-					CornerRadius = new(4),
+					CornerRadius = new(6),
 					GlassFrameThickness = new(-1),
 					UseAeroCaptionButtons = true,
 				});
@@ -463,7 +463,7 @@ public partial class BackdropWindow : Window {
 			case TitleBarType.WindowChromeNoTitleBar:
 				WindowChrome.SetWindowChrome(this, new() {
 					CaptionHeight = 0,
-					CornerRadius = new(4),
+					CornerRadius = new(6),
 					GlassFrameThickness = new(-1),
 					ResizeBorderThickness = new(0),
 				});
