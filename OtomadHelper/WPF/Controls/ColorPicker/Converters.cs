@@ -82,6 +82,6 @@ public class ColorPickerModelAxisToTranslationConverter : ValueConverter<ColorPi
 
 [ValueConversion(typeof(SolidColorBrush), typeof(bool))]
 public class IsNotSolidColorToBooleanConverter : ValueConverter<SolidColorBrush, bool> {
-	public override bool Convert(SolidColorBrush color, Type targetType, object parameter, CultureInfo culture) =>
-		color.Color.A != 255;
+	public override bool Convert(SolidColorBrush? color, Type targetType, object parameter, CultureInfo culture) =>
+		color is null ? false : color.Color.A != 255;
 }

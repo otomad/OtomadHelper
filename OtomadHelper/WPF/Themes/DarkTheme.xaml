@@ -1,6 +1,7 @@
 <m:NamedResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	Name="ThemeColor"
@@ -8,7 +9,7 @@
 	<s:String x:Key="ResourceDictionaryName">ThemeColor</s:String>
 	<Color x:Key="ForegroundColor">White</Color>
 	<SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}" />
-	<SolidColorBrush x:Key="BackgroundBrush" Color="#FF202020" />
+	<SolidColorBrush x:Key="BackgroundBrush" Color="{x:Static c:BackdropWindow.SolidDarkThemeBackgroundBrush}" />
 	<SolidColorBrush x:Key="CardStroke" Color="#19000000" />
 	<SolidColorBrush x:Key="CardStrokeOnSurfaceOverlay" Color="#40000000" />
 	<SolidColorBrush x:Key="SurfaceOverlayBackground" Color="#2D000000" />

@@ -40,107 +40,116 @@
 			Grid.ColumnSpan="9"
 			m:GridDef.Column="Auto,*"
 			m:GridDef.Row="Auto,*"
+			FlowDirection="LeftToRight"
 			>
-			<ScrollViewer Grid.Row="0" Grid.Column="1" Style="{StaticResource ColumnLabelsScrollViewer}">
-			<ItemsControl>
-				<ItemsControl.Resources>
-					<CollectionViewSource x:Key="ColumnLabelsViewSource" Source="{Binding Bits.Columns, Converter={StaticResource CountToCollection}}" />
-				</ItemsControl.Resources>
-				<ItemsControl.ItemsPanel>
-					<ItemsPanelTemplate>
-						<StackPanel Style="{StaticResource ColumnLabels}" />
-					</ItemsPanelTemplate>
-				</ItemsControl.ItemsPanel>
-				<ItemsControl.ItemTemplate>
-					<DataTemplate>
-						<TextBlock Style="{StaticResource ColumnLabel}" Text="{Binding}" />
-					</DataTemplate>
-				</ItemsControl.ItemTemplate>
-				<ItemsControl.ItemsSource>
-					<CompositeCollection>
-						<CollectionContainer Collection="{Binding Source={StaticResource ColumnLabelsViewSource}}" />
-						<Rectangle Style="{StaticResource RightTileShadow}" Cursor="{x:Null}">
-							<Rectangle.Width>
-								<MultiBinding Converter="{StaticResource CountToSize}">
-									<Binding Path="Bits.Columns" />
-									<Binding ElementName="ScrollViewer" Path="ViewportWidth" />
-								</MultiBinding>
-							</Rectangle.Width>
-							<Rectangle.Fill>
-								<VisualBrush c:QuickSelectInterval1DEditor.TileShadowViewport="{Binding Bits.Columns, Converter={StaticResource CountToXViewport}}" >
-									<VisualBrush.Visual>
-										<ItemsControl ItemsSource="{Binding Bits.Columns, Converter={StaticResource CountToCollection}}">
-											<ItemsControl.ItemsPanel>
-												<ItemsPanelTemplate>
-													<StackPanel Style="{StaticResource ColumnLabels}" />
-												</ItemsPanelTemplate>
-											</ItemsControl.ItemsPanel>
-											<ItemsControl.ItemTemplate>
-												<DataTemplate>
-													<TextBlock Style="{StaticResource ColumnLabel}" Text="{Binding}" />
-												</DataTemplate>
-											</ItemsControl.ItemTemplate>
-										</ItemsControl>
-									</VisualBrush.Visual>
-								</VisualBrush>
-							</Rectangle.Fill>
-						</Rectangle>
-					</CompositeCollection>
-				</ItemsControl.ItemsSource>
-			</ItemsControl>
+			<ScrollViewer
+				Grid.Row="0"
+				Grid.Column="1"
+				Style="{StaticResource ColumnLabelsScrollViewer}"
+				>
+				<ItemsControl>
+					<ItemsControl.Resources>
+						<CollectionViewSource x:Key="ColumnLabelsViewSource" Source="{Binding Bits.Columns, Converter={StaticResource CountToCollection}}" />
+					</ItemsControl.Resources>
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel Style="{StaticResource ColumnLabels}" />
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Style="{StaticResource ColumnLabel}" Text="{Binding}" />
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+					<ItemsControl.ItemsSource>
+						<CompositeCollection>
+							<CollectionContainer Collection="{Binding Source={StaticResource ColumnLabelsViewSource}}" />
+							<Rectangle Cursor="{x:Null}" Style="{StaticResource RightTileShadow}">
+								<Rectangle.Width>
+									<MultiBinding Converter="{StaticResource CountToSize}">
+										<Binding Path="Bits.Columns" />
+										<Binding ElementName="ScrollViewer" Path="ViewportWidth" />
+									</MultiBinding>
+								</Rectangle.Width>
+								<Rectangle.Fill>
+									<VisualBrush c:QuickSelectInterval1DEditor.TileShadowViewport="{Binding Bits.Columns, Converter={StaticResource CountToXViewport}}">
+										<VisualBrush.Visual>
+											<ItemsControl ItemsSource="{Binding Bits.Columns, Converter={StaticResource CountToCollection}}">
+												<ItemsControl.ItemsPanel>
+													<ItemsPanelTemplate>
+														<StackPanel Style="{StaticResource ColumnLabels}" />
+													</ItemsPanelTemplate>
+												</ItemsControl.ItemsPanel>
+												<ItemsControl.ItemTemplate>
+													<DataTemplate>
+														<TextBlock Style="{StaticResource ColumnLabel}" Text="{Binding}" />
+													</DataTemplate>
+												</ItemsControl.ItemTemplate>
+											</ItemsControl>
+										</VisualBrush.Visual>
+									</VisualBrush>
+								</Rectangle.Fill>
+							</Rectangle>
+						</CompositeCollection>
+					</ItemsControl.ItemsSource>
+				</ItemsControl>
 			</ScrollViewer>
 
-			<ScrollViewer Grid.Row="1" Grid.Column="0" Style="{StaticResource RowLabelsScrollViewer}">
-			<ItemsControl>
-				<ItemsControl.Resources>
-					<CollectionViewSource x:Key="RowLabelsViewSource" Source="{Binding Bits.Rows, Converter={StaticResource CountToCollection}}" />
-				</ItemsControl.Resources>
-				<ItemsControl.ItemsPanel>
-					<ItemsPanelTemplate>
-						<StackPanel Style="{StaticResource RowLabels}" />
-					</ItemsPanelTemplate>
-				</ItemsControl.ItemsPanel>
-				<ItemsControl.ItemTemplate>
-					<DataTemplate>
-						<Border Style="{StaticResource RowLabel}">
-							<TextBlock Text="{Binding}" />
-						</Border>
-					</DataTemplate>
-				</ItemsControl.ItemTemplate>
-				<ItemsControl.ItemsSource>
-					<CompositeCollection>
-						<CollectionContainer Collection="{Binding Source={StaticResource RowLabelsViewSource}}" />
-						<Rectangle Style="{StaticResource BottomTileShadow}" Cursor="{x:Null}">
-							<Rectangle.Height>
-								<MultiBinding Converter="{StaticResource CountToSize}">
-									<Binding Path="Bits.Rows" />
-									<Binding ElementName="ScrollViewer" Path="ViewportHeight" />
-								</MultiBinding>
-							</Rectangle.Height>
-							<Rectangle.Fill>
-								<VisualBrush c:QuickSelectInterval1DEditor.TileShadowViewport="{Binding Bits.Rows, Converter={StaticResource CountToXViewport}, ConverterParameter={m:Bool True}}" >
-									<VisualBrush.Visual>
-										<ItemsControl ItemsSource="{Binding Bits.Rows, Converter={StaticResource CountToCollection}}">
-											<ItemsControl.ItemsPanel>
-												<ItemsPanelTemplate>
-													<StackPanel Style="{StaticResource RowLabels}" />
-												</ItemsPanelTemplate>
-											</ItemsControl.ItemsPanel>
-											<ItemsControl.ItemTemplate>
-												<DataTemplate>
-													<Border Style="{StaticResource RowLabel}">
-														<TextBlock Text="{Binding}" />
-													</Border>
-												</DataTemplate>
-											</ItemsControl.ItemTemplate>
-										</ItemsControl>
-									</VisualBrush.Visual>
-								</VisualBrush>
-							</Rectangle.Fill>
-						</Rectangle>
-					</CompositeCollection>
-				</ItemsControl.ItemsSource>
-			</ItemsControl>
+			<ScrollViewer
+				Grid.Row="1"
+				Grid.Column="0"
+				Style="{StaticResource RowLabelsScrollViewer}"
+				>
+				<ItemsControl>
+					<ItemsControl.Resources>
+						<CollectionViewSource x:Key="RowLabelsViewSource" Source="{Binding Bits.Rows, Converter={StaticResource CountToCollection}}" />
+					</ItemsControl.Resources>
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel Style="{StaticResource RowLabels}" />
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Border Style="{StaticResource RowLabel}">
+								<TextBlock Text="{Binding}" />
+							</Border>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+					<ItemsControl.ItemsSource>
+						<CompositeCollection>
+							<CollectionContainer Collection="{Binding Source={StaticResource RowLabelsViewSource}}" />
+							<Rectangle Cursor="{x:Null}" Style="{StaticResource BottomTileShadow}">
+								<Rectangle.Height>
+									<MultiBinding Converter="{StaticResource CountToSize}">
+										<Binding Path="Bits.Rows" />
+										<Binding ElementName="ScrollViewer" Path="ViewportHeight" />
+									</MultiBinding>
+								</Rectangle.Height>
+								<Rectangle.Fill>
+									<VisualBrush c:QuickSelectInterval1DEditor.TileShadowViewport="{Binding Bits.Rows, Converter={StaticResource CountToXViewport}, ConverterParameter={m:Bool True}}">
+										<VisualBrush.Visual>
+											<ItemsControl ItemsSource="{Binding Bits.Rows, Converter={StaticResource CountToCollection}}">
+												<ItemsControl.ItemsPanel>
+													<ItemsPanelTemplate>
+														<StackPanel Style="{StaticResource RowLabels}" />
+													</ItemsPanelTemplate>
+												</ItemsControl.ItemsPanel>
+												<ItemsControl.ItemTemplate>
+													<DataTemplate>
+														<Border Style="{StaticResource RowLabel}">
+															<TextBlock Text="{Binding}" />
+														</Border>
+													</DataTemplate>
+												</ItemsControl.ItemTemplate>
+											</ItemsControl>
+										</VisualBrush.Visual>
+									</VisualBrush>
+								</Rectangle.Fill>
+							</Rectangle>
+						</CompositeCollection>
+					</ItemsControl.ItemsSource>
+				</ItemsControl>
 			</ScrollViewer>
 
 			<ScrollViewer
@@ -272,7 +281,11 @@
 			</ScrollViewer>
 		</Grid>
 
-		<UniformGrid Grid.Row="2" Grid.ColumnSpan="9" Style="{StaticResource ActionButtonsGrid}">
+		<UniformGrid
+			Grid.Row="2"
+			Grid.ColumnSpan="9"
+			Style="{StaticResource ActionButtonsGrid}"
+			>
 			<c:Button
 				Command="{Binding RestoreOriginalCommand}"
 				IconName="ArrowReset"
@@ -314,7 +327,11 @@
 			Text="{Binding Bits.Columns, UpdateSourceTrigger=PropertyChanged}"
 			/>
 
-		<TextBlock Grid.Row="4" Grid.Column="4" Style="{StaticResource Multiply}" />
+		<TextBlock
+			Grid.Row="4"
+			Grid.Column="4"
+			Style="{StaticResource Multiply}"
+			/>
 
 		<StackPanel>
 			<StackPanel.Style>

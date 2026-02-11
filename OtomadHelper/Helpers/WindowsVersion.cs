@@ -3,10 +3,16 @@ namespace OtomadHelper.Helpers;
 /// <summary>
 /// A helper class to get current used Windows NT OS version.
 /// </summary>
+/// <remarks>
+/// It is recommended to use API detection instead of version detection.
+/// </remarks>
 public static class WindowsVersion {
 	/// <summary>
 	/// Get current used Windows NT OS version.
 	/// </summary>
+	/// <remarks>
+	/// It is recommended to use API detection instead of version detection.
+	/// </remarks>
 	public static WindowsNT Current { get; } = Get(Environment.OSVersion.Version);
 
 	/// <summary>
@@ -18,7 +24,8 @@ public static class WindowsVersion {
 		{ Major: 10, Minor: 0, Build: >= 26100 } => WindowsNT.Windows11_24H2,
 		{ Major: 10, Minor: 0, Build: >= 22631 } => WindowsNT.Windows11_23H2,
 		{ Major: 10, Minor: 0, Build: >= 22621 } => WindowsNT.Windows11_22H2,
-		{ Major: 10, Minor: 0, Build: >= 21996 } => WindowsNT.Windows11, // 10.0.21996 is the first Windows 11 version, not 10.0.22000 (RTM)!
+		{ Major: 10, Minor: 0, Build: >= 22000 } => WindowsNT.Windows11,
+		{ Major: 10, Minor: 0, Build: >= 21996 } => WindowsNT.Windows11_Dev, // 10.0.21996 is the first Windows 11 version, not 10.0.22000 (RTM)!
 		{ Major: 10, Minor: 0, Build: >= 19045 } => WindowsNT.Windows10_22H2, // Windows 10 version is from 10.0.10240 (RTM) through 10.0.19045 (22H2).
 		{ Major: 10, Minor: 0, Build: >= 19044 } => WindowsNT.Windows10_21H2,
 		{ Major: 10, Minor: 0, Build: >= 19043 } => WindowsNT.Windows10_21H1,
@@ -33,7 +40,7 @@ public static class WindowsVersion {
 		{ Major: 10, Minor: 0, Build: >= 14393 } => WindowsNT.Windows10_1607,
 		{ Major: 10, Minor: 0, Build: >= 10586 } => WindowsNT.Windows10_1511,
 		{ Major: 10, Minor: 0 } => WindowsNT.Windows10,
-		{ Major: 6, Minor: 4 } => WindowsNT.Windows10, // 6.4 is Windows 10 too.
+		{ Major: 6, Minor: 4 } => WindowsNT.Windows10_TP, // 6.4 is Windows 10 Technical Preview.
 		{ Major: 6, Minor: 3 } => WindowsNT.Windows8_1,
 		{ Major: 6, Minor: 2 } => WindowsNT.Windows8,
 		{ Major: 6, Minor: 1, Build: 7601 } => WindowsNT.Windows7_SP1,
@@ -56,41 +63,46 @@ public static class WindowsVersion {
 /// <summary>
 /// Windows NT Consumer Versions.
 /// </summary>
-public enum WindowsNT : ushort {
-	Unknown,
-	WindowsNT3_1,
-	WindowsNT3_5,
-	WindowsNT3_51,
-	WindowsNT4,
-	Windows2000,
-	WindowsXP,
-	WindowsXP_x64,
-	WindowsVista,
-	WindowsVista_SP1,
-	WindowsVista_SP2,
-	WindowsVista_SP2_Update,
-	Windows7,
-	Windows7_SP1,
-	Windows8,
-	Windows8_1,
-	Windows10,
-	Windows10_1511,
-	Windows10_1607,
-	Windows10_1703,
-	Windows10_1709,
-	Windows10_1803,
-	Windows10_1809,
-	Windows10_1903,
-	Windows10_1909,
-	Windows10_2004,
-	Windows10_20H2,
-	Windows10_21H1,
-	Windows10_21H2,
-	Windows10_22H2,
-	Windows11,
-	Windows11_22H2,
-	Windows11_23H2,
-	Windows11_24H2,
-	Windows11_25H2,
+/// <remarks>
+/// The value is the build number.
+/// </remarks>
+public enum WindowsNT {
+	Unknown = 0,
+	WindowsNT3_1 = 528,
+	WindowsNT3_5 = 807,
+	WindowsNT3_51 = 1057,
+	WindowsNT4 = 1381,
+	Windows2000 = 2195,
+	WindowsXP = 2600,
+	WindowsXP_x64 = 3790,
+	WindowsVista = 6000,
+	WindowsVista_SP1 = 6001,
+	WindowsVista_SP2 = 6002,
+	WindowsVista_SP2_Update = 6003,
+	Windows7 = 7600,
+	Windows7_SP1 = 7601,
+	Windows8 = 9200,
+	Windows8_1 = 9600,
+	Windows10_TP = 9841,
+	Windows10 = 10240,
+	Windows10_1511 = 10586,
+	Windows10_1607 = 14393,
+	Windows10_1703 = 15063,
+	Windows10_1709 = 16299,
+	Windows10_1803 = 17134,
+	Windows10_1809 = 17763,
+	Windows10_1903 = 18362,
+	Windows10_1909 = 18363,
+	Windows10_2004 = 19041,
+	Windows10_20H2 = 19042,
+	Windows10_21H1 = 19043,
+	Windows10_21H2 = 19044,
+	Windows10_22H2 = 19045,
+	Windows11_Dev = 21996,
+	Windows11 = 22000,
+	Windows11_22H2 = 22621,
+	Windows11_23H2 = 22631,
+	Windows11_24H2 = 26100,
+	Windows11_25H2 = 26200,
 	Next = 65535,
 }

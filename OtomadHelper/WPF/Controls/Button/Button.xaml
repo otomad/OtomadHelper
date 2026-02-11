@@ -57,8 +57,11 @@
 			</Style>
 		</Style.Resources>
 
+		<Setter Property="SnapsToDevicePixels" Value="True" />
+		<Setter Property="OverridesDefaultStyle" Value="True" />
 		<Setter Property="MinHeight" Value="32" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ControlElevation}" />
+		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Background" Value="{DynamicResource ControlBackground}" />
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 		<Setter Property="BackgroundOpacity" Value="1" />

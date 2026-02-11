@@ -147,10 +147,6 @@
 		</Style.Resources>
 	</Style>
 
-	<Style BasedOn="{StaticResource DefaultScrollViewerStyle}" TargetType="ScrollViewer">
-		<Setter Property="FlowDirection" Value="LeftToRight" />
-	</Style>
-
 	<Style TargetType="ItemsControl">
 		<Setter Property="Focusable" Value="False" />
 	</Style>
@@ -166,7 +162,7 @@
 		</Setter>
 	</Style>
 
-	<Style x:Key="LabelsScrollViewer" BasedOn="{StaticResource {x:Type ScrollViewer}}" TargetType="ScrollViewer">
+	<Style x:Key="LabelsScrollViewer" BasedOn="{StaticResource DefaultScrollViewerStyle}" TargetType="ScrollViewer">
 		<Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
 		<Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
 	</Style>

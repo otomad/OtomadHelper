@@ -32,7 +32,7 @@ export default {
 			settings: "Settings",
 			effect: "Effect",
 			effect_other: "Effects",
-			prve: "PV Rhythm Dynamic Pulsing", // “PV” stands for Promotion Video.
+			prve: "PV Rhythm & Cadence Dynamic Pulsing", // “PV” stands for Promotion Video.
 			staff: "Staff", // Musical staff.
 			staff_full: "Staff Visualizer",
 			pixelScaling: "Pixel Scaling",
@@ -113,7 +113,7 @@ export default {
 				lyric: "Lyric syllable",
 				effect: "Effect name",
 			},
-			multisource: "Omni multisource",
+			multisource: "Multisource comb",
 			linearMap: "Linear map output",
 			matchCut: "Beat sync / Match cut",
 			luckyDip: {
@@ -1568,7 +1568,7 @@ export default {
 				shupelunker: "Tartar Tactics", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				ytp: "", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				mosh: "", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
-				prve: "Promotion Video Rhythm Dynamic Pulsing, PV Rhythmic Dynamic Pulsing, Promotion Video Rhythmic Dynamic Pulsing, PV Rhythmical Dynamic Pulsing, Promotion Video Rhythmical Dynamic Pulsing, PV Rhythm Visual Effect, Promotion Video Rhythm Visual Effect, Promotion Video Rhythm Visual Effects, PV Rhythmic Visual Effect, PV Rhythmic Visual Effects, Promotion Video Rhythmic Visual Effect, Promotion Video Rhythmic Visual Effects, PV Rhythmical Visual Effect, PV Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effect, Promotion Video Rhythmical Visual Effects, PRDP, PRDPVE, PRVE", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				prve: "Promotion Video Rhythm Dynamic Pulsing, PV Rhythmic Dynamic Pulsing, Promotion Video Rhythmic Dynamic Pulsing, PV Rhythmical Dynamic Pulsing, Promotion Video Rhythmical Dynamic Pulsing, PV Rhythm Visual Effect, Promotion Video Rhythm Visual Effect, Promotion Video Rhythm Visual Effects, PV Rhythmic Visual Effect, PV Rhythmic Visual Effects, Promotion Video Rhythmic Visual Effect, Promotion Video Rhythmic Visual Effects, PV Rhythmical Visual Effect, PV Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effect, Promotion Video Rhythmical Visual Effects", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				staff: "Musical Staff, Piano Staff Sheets Fashion", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				pixelScaling: "MisczTools, Miscz Tools", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},

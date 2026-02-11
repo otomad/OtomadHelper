@@ -243,21 +243,21 @@ public static class PInvoke {
 	};
 
 	[DllImport("dwmapi.dll")]
-	public static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref Margins pMarInset);
+	public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref Margins pMarInset);
 
 	[DllImport("dwmapi.dll")]
-	public static extern HResult DwmGetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, out uint pvAttribute, int cbAttribute);
+	public static extern HResult DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, out uint pvAttribute, int cbAttribute);
 
 	[DllImport("dwmapi.dll")]
-	public static extern HResult DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, ref uint pvAttribute, int cbAttribute);
+	public static extern HResult DwmSetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref uint pvAttribute, int cbAttribute);
 
 	[DllImport("user32.dll")]
-	public static extern long GetWindowLongPtr(IntPtr hwnd, WindowLongFlags nIndex);
+	public static extern long GetWindowLongPtr(IntPtr hWnd, WindowLongFlags nIndex);
 
 	[DllImport("user32.dll", SetLastError = true)]
-	public static extern IntPtr SetWindowLongPtr(IntPtr hwnd, WindowLongFlags nIndex, IntPtr dwNewLong);
+	public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, WindowLongFlags nIndex, IntPtr dwNewLong);
 	[DllImport("user32.dll", SetLastError = true)]
-	public static extern IntPtr SetWindowLongPtr(IntPtr hwnd, WindowLongFlags nIndex, long dwNewLong);
+	public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, WindowLongFlags nIndex, long dwNewLong);
 	[DllImport("user32.dll")]
 	public static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 	[DllImport("user32.dll")]
@@ -267,16 +267,16 @@ public static class PInvoke {
 	public static extern IntPtr GetActiveWindow();
 
 	[DllImport("user32.dll")]
-	public static extern IntPtr SetActiveWindow(IntPtr hwnd);
+	public static extern IntPtr SetActiveWindow(IntPtr hWnd);
 
 	[DllImport("user32.dll")]
-	public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+	public static extern bool SetLayeredWindowAttributes(IntPtr hWnd, uint crKey, byte bAlpha, uint dwFlags);
 
-	public static int ExtendFrame(IntPtr hwnd, Margins margins) =>
-		DwmExtendFrameIntoClientArea(hwnd, ref margins);
+	public static int ExtendFrame(IntPtr hWnd, Margins margins) =>
+		DwmExtendFrameIntoClientArea(hWnd, ref margins);
 
-	public static HResult SetWindowAttribute(IntPtr hwnd, DwmWindowAttribute attribute, uint parameter) =>
-		DwmSetWindowAttribute(hwnd, attribute, ref parameter, Marshal.SizeOf<uint>());
+	public static HResult SetWindowAttribute(IntPtr hWnd, DwmWindowAttribute attribute, uint parameter) =>
+		DwmSetWindowAttribute(hWnd, attribute, ref parameter, Marshal.SizeOf<uint>());
 
 	private static bool CheckSupportSystemBackdropType() {
 		HResult error = DwmGetWindowAttribute(IntPtr.Zero, DwmWindowAttribute.SystemBackdropType, out _, Marshal.SizeOf<uint>());
@@ -284,47 +284,47 @@ public static class PInvoke {
 	}
 	public static readonly bool SupportSystemBackdropType = false; // CheckSupportSystemBackdropType();
 
-	/// <param name="hwnd">Window handle.</param>
-	public static void AddExtendedWindowStyles(IntPtr hwnd, params ExtendedWindowStyles[] styles) {
-		long exStyle = GetWindowLongPtr(hwnd, WindowLongFlags.ExStyle);
+	/// <param name="hWnd">Window handle.</param>
+	public static void AddExtendedWindowStyles(IntPtr hWnd, params ExtendedWindowStyles[] styles) {
+		long exStyle = GetWindowLongPtr(hWnd, WindowLongFlags.ExStyle);
 		foreach (ExtendedWindowStyles style in styles)
 			exStyle |= (long)style;
-		SetWindowLongPtr(hwnd, WindowLongFlags.ExStyle, exStyle);
+		SetWindowLongPtr(hWnd, WindowLongFlags.ExStyle, exStyle);
 	}
 
 	[DllImport("Ole32.dll")]
-	public static extern int RevokeDragDrop(IntPtr hwnd);
+	public static extern int RevokeDragDrop(IntPtr hWnd);
 
 	[DllImport("Ole32.dll")]
-	public static extern int RegisterDragDrop(IntPtr hwnd, IOleDropTarget pDropTarget);
+	public static extern int RegisterDragDrop(IntPtr hWnd, IOleDropTarget pDropTarget);
 
 	[DllImport("User32.dll")]
 	public static extern bool EnumChildWindows(IntPtr hWndParent, EnumChildCallback lpEnumFunc, IntPtr lParam);
 
 	[DllImport("User32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-	public static extern int GetClassName(IntPtr hwnd, StringBuilder lpClassname, int nMaxCount);
+	public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassname, int nMaxCount);
 
-	public delegate bool EnumChildCallback(IntPtr hwnd, IntPtr lParam);
+	public delegate bool EnumChildCallback(IntPtr hWnd, IntPtr lParam);
 
-	private static bool EnumWindow(IntPtr hwnd, IntPtr lParam) {
+	private static bool EnumWindow(IntPtr hWnd, IntPtr lParam) {
 		GCHandle gcChildhandlesList = GCHandle.FromIntPtr(lParam);
 		if (gcChildhandlesList == null || gcChildhandlesList.Target == null) return false;
 		StringBuilder buf = new(128);
-		GetClassName(hwnd, buf, 128);
+		GetClassName(hWnd, buf, 128);
 		if (buf.ToString() == Chrome_WidgetWin) {
 			List<IntPtr>? childHandles = gcChildhandlesList.Target as List<IntPtr>;
-			childHandles?.Add(hwnd);
+			childHandles?.Add(hWnd);
 		}
 		return true;
 	}
 
-	private static IntPtr GetChildHandle(IntPtr hwnd) {
+	private static IntPtr GetChildHandle(IntPtr hWnd) {
 		List<IntPtr> childHandles = [];
 		GCHandle gcChildhandlesList = GCHandle.Alloc(childHandles);
 		IntPtr pointerChildHandlesList = GCHandle.ToIntPtr(gcChildhandlesList);
 		try {
 			EnumChildCallback childProc = new(EnumWindow);
-			EnumChildWindows(hwnd, childProc, pointerChildHandlesList);
+			EnumChildWindows(hWnd, childProc, pointerChildHandlesList);
 		} finally {
 			gcChildhandlesList.Free();
 		}
@@ -341,7 +341,7 @@ public static class PInvoke {
 	private const string Chrome_WidgetWin = "Chrome_RenderWidgetHostHWND";
 
 	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-	internal static extern IntPtr GetSystemMenu(IntPtr hwnd, bool bRevert);
+	internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
 
 	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 	internal static extern bool DeleteMenu(IntPtr menu, uint uPosition, uint uFlags);
@@ -352,10 +352,10 @@ public static class PInvoke {
 	/// <summary>
 	/// Removes the specified menu items from the system menu. Such as restore, move, resize, minimize, maximize, close.
 	/// </summary>
-	/// <param name="hwnd">Handle of a window.</param>
+	/// <param name="hWnd">Handle of a window.</param>
 	/// <param name="items">System window menu item.</param>
-	public static void DeleteSystemMenuItems(IntPtr hwnd, SystemMenuItemType items) {
-		IntPtr menu = GetSystemMenu(hwnd, false);
+	public static void DeleteSystemMenuItems(IntPtr hWnd, SystemMenuItemType items) {
+		IntPtr menu = GetSystemMenu(hWnd, false);
 		foreach (KeyValuePair<SystemMenuItemType, uint> item in SystemMenuItemTag.Map)
 			if ((items & item.Key) != 0)
 				DeleteMenu(menu, item.Value, (uint)EnableMenuItemType.ByCommand);
@@ -365,18 +365,18 @@ public static class PInvoke {
 	/// Preserves the specified menu items from the system menu. That is the opposite of the
 	/// <see cref="DeleteSystemMenuItems(IntPtr, SystemMenuItemType)"/> method.
 	/// </summary>
-	/// <param name="hwnd">Handle of a window.</param>
+	/// <param name="hWnd">Handle of a window.</param>
 	/// <param name="items">System window menu item.</param>
-	public static void ReserveSystemMenuItems(IntPtr hwnd, SystemMenuItemType items) =>
-		DeleteSystemMenuItems(hwnd, ~items);
+	public static void ReserveSystemMenuItems(IntPtr hWnd, SystemMenuItemType items) =>
+		DeleteSystemMenuItems(hWnd, ~items);
 
 	/// <summary>
 	/// Disable or enable the specified menu items from the system menu. Such as restore, move, resize, minimize, maximize, close.
 	/// </summary>
-	/// <param name="hwnd">Handle of a window.</param>
+	/// <param name="hWnd">Handle of a window.</param>
 	/// <param name="items">System window menu item.</param>
-	public static void DisableOrEnableSystemMenuItems(IntPtr hwnd, SystemMenuItemType items, bool enabled) {
-		IntPtr menu = GetSystemMenu(hwnd, false);
+	public static void DisableOrEnableSystemMenuItems(IntPtr hWnd, SystemMenuItemType items, bool enabled) {
+		IntPtr menu = GetSystemMenu(hWnd, false);
 		foreach (KeyValuePair<SystemMenuItemType, uint> item in SystemMenuItemTag.Map)
 			if ((items & item.Key) != 0)
 				EnableMenuItem(menu, item.Value, (uint)(EnableMenuItemType.ByCommand | (enabled ? EnableMenuItemType.Enabled : EnableMenuItemType.Grayed)));
@@ -455,23 +455,50 @@ public static class PInvoke {
 		EnableAcrylicBlurBehind = 4,
 		InvalidState = 5,
 	}
+	/// <summary>
+	/// Describes a key/value pair that specifies a window composition attribute and its value. This structure is used with the <see cref="GetWindowCompositionAttribute" />
+	/// and <see cref="SetWindowCompositionAttribute" /> functions.
+	/// </summary>
+	/// <remarks>
+	/// <a href="https://learn.microsoft.com/en-us/windows/win32/dwm/windowcompositionattribdata">WINDOWCOMPOSITIONATTRIBDATA structure</a>
+	/// </remarks>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct WindowCompositionAttributeData {
+		/// <summary>
+		/// A flag describing which value to get or set, specified as a value of the <see cref="WindowCompositionAttribute" /> enumeration.
+		/// This parameter specifies which attribute to get or set, and the <see cref="Data" /> member points to an object containing the attribute value.
+		/// </summary>
 		public WindowCompositionAttribute Attribute;
+		/// <summary>
+		/// When used with the <see cref="GetWindowCompositionAttribute" /> function, this member contains a pointer to a variable that will hold
+		/// the value of the requested attribute when the function returns. When used with the <see cref="SetWindowCompositionAttribute" /> function,
+		/// it points an object containing the attribute value to set. The type of the value set depends on the value of the Attrib member.
+		/// For information about what type of value you should pass a pointer to in the pvData member, see <see cref="WindowCompositionAttribute" />.
+		/// </summary>
 		public IntPtr Data;
+		/// <summary>
+		/// The size of the object pointed to by the <see cref="Data" /> member, in bytes.
+		/// </summary>
 		public int SizeOfData;
 	}
+	/// <summary>
+	/// Specifies options used by the <see cref="WindowCompositionAttributeData" /> structure.
+	/// </summary>
+	/// <remarks>
+	///	<para>Windows undocumented API enumeration.</para>
+	///	<para><a href="https://learn.microsoft.com/windows/win32/dwm/windowcompositionattrib">WINDOWCOMPOSITIONATTRIB enumeration (incomplete API document)</a></para>
+	/// </remarks>
 	public enum WindowCompositionAttribute {
-		Undefine,
-		NCRenderingEnable,
-		NCRenderingPolic,
-		TransitionsForceDisable,
-		AllowNCPain,
-		CaptionButtonBound,
-		NonClientRtlLayou,
-		ForceIconicRepresentatio,
-		ExtendedFrameBound,
-		HasIconicBitma,
+		Undefined,
+		NCRenderingEnabled,
+		NCRenderingPolicy,
+		TransitionsForceDisabled,
+		AllowNCPaint,
+		CaptionButtonBounds,
+		NonClientRtlLayout,
+		ForceIconicRepresentation,
+		ExtendedFrameBounds,
+		HasIconicBitmap,
 		ThemeAttributes,
 		NCRenderingExiled,
 		NCAdornmentInfo,
@@ -486,10 +513,27 @@ public static class PInvoke {
 		EverUncloaked,
 		VisualOwner,
 		Last,
+		/// <summary>
+		/// Prevents a window from being captured by the Desktop Duplication API. The <c>pvData</c> member of the <see cref="WindowCompositionAttributeData" /> structure
+		/// points to a value of type <see cref="bool" />. If the value is <see langword="true" />, the window is not captured. Otherwise, the window exhibits normal behavior.
+		/// </summary>
+		ExcludedFromDDA,
 	}
 	[DllImport("user32.dll")]
-	public static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
-	public static void EnableAcrylicBlurBehind(IntPtr hwnd, uint gradientColor = 0) {
+	public static extern bool GetWindowCompositionAttribute(IntPtr hWnd, ref WindowCompositionAttributeData pAttrData);
+	[DllImport("user32.dll")]
+	public static extern bool SetWindowCompositionAttribute(IntPtr hWnd, ref WindowCompositionAttributeData pAttrData);
+	/// <summary>
+	/// Using composition API to enable acrylic backdrop for a window, instead of <see cref="SystemBackdropType.TransientWindow" /> which takes no effect when the window
+	/// is inactive.
+	/// </summary>
+	/// <remarks>
+	/// Available since Windows 10 1803.
+	/// </remarks>
+	/// <param name="hWnd">Handle of the window.</param>
+	/// <param name="gradientColor">The tint color of the acrylic.</param>
+	/// <returns>The current system supports to enable the acrylic backdrop using composition API?</returns>
+	public static bool EnableAcrylicBlurBehind(IntPtr hWnd, uint gradientColor = 0) {
 		AccentPolicy accent = new() {
 			AccentState = AccentState.EnableAcrylicBlurBehind,
 			AccentFlags = 0,
@@ -504,8 +548,9 @@ public static class PInvoke {
 			Data = accentPtr,
 			SizeOfData = accentStructSize,
 		};
-		SetWindowCompositionAttribute(hwnd, ref data);
+		bool ok = SetWindowCompositionAttribute(hWnd, ref data);
 		Marshal.FreeHGlobal(accentPtr);
+		return ok;
 	}
 
 	public enum PreferredAppMode {
@@ -530,7 +575,7 @@ public static class PInvoke {
 	// https://blog.getpaint.net/2017/08/12/win32-how-to-get-the-refresh-rate-for-a-window/
 	// https://github.com/rickbrew/RefreshRateWpf/blob/master/RefreshRateWpfApp/MainWindow.xaml.cs
 	[DllImport("user32.dll", SetLastError = false)]
-	private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
+	private static extern IntPtr MonitorFromWindow(IntPtr hWnd, uint dwFlags);
 
 	[StructLayout(LayoutKind.Sequential)]
 	private struct Rect {
@@ -612,11 +657,11 @@ public static class PInvoke {
 			$"{Width} × {Height} @ {Frequency}Hz";
 	}
 
-	public static MonitorInfo? GetMonitorInfo(IntPtr hwnd) {
+	public static MonitorInfo? GetMonitorInfo(IntPtr hWnd) {
 		const uint MONITOR_DEFAULTTONEAREST = 2;
 		const uint ENUM_CURRENT_SETTINGS = ~0u;
 
-		IntPtr hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+		IntPtr hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
 		if (hMonitor == IntPtr.Zero) return null;
 
 		MonitorInfoExW monitorInfo = new() { cbSize = (uint)Marshal.SizeOf<MonitorInfoExW>() };
@@ -695,7 +740,7 @@ public static class PInvoke {
 	}
 
 	[DllImport("User32.dll", CharSet = CharSet.Auto)]
-	public static extern bool RegisterShellHookWindow(IntPtr hwnd);
+	public static extern bool RegisterShellHookWindow(IntPtr hWnd);
 	[DllImport("User32.dll", CharSet = CharSet.Auto)]
 	public static extern uint RegisterWindowMessage(string Message);
 	[DllImport("User32.dll", CharSet = CharSet.Auto)]

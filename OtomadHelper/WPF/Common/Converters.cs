@@ -270,12 +270,12 @@ internal class MultiValueToArrayConverter : IMultiValueConverter {
 [ValueConversion(typeof(SolidColorBrush), typeof(SolidColorBrush))]
 public class BackgroundToForegroundColorConverter : IValueConverter {
 	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-		Color color = value switch {
+		Color backgroundColor = value switch {
 			Color c => c,
 			SolidColorBrush b => b.Color,
-			_ => throw new ArgumentException($"Unknown source value {value}"),
+			_ => Colors.White, // throw new ArgumentException($"Unknown source value {value}"),
 		};
-		Wacton.Unicolour.Unicolour unicolour = color.ToUnicolour();
+		Wacton.Unicolour.Unicolour unicolour = backgroundColor.ToUnicolour();
 		bool tooWhite = unicolour.Oklch.L >= 0.65;
 		Color foregroundColor = tooWhite ? Colors.Black : Colors.White;
 		return targetType.Extends(typeof(Color)) ? foregroundColor : targetType.Extends(typeof(Brush)) ? new SolidColorBrush(foregroundColor) :

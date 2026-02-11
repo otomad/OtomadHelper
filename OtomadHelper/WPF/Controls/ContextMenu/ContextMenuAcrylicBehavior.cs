@@ -1,10 +1,12 @@
-using Microsoft.Xaml.Behaviors;
 using System.Windows;
-using System.Windows.Interop;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
+
+using Microsoft.Xaml.Behaviors;
 
 namespace OtomadHelper.WPF.Controls;
 
@@ -58,14 +60,32 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 		IntPtr? handle = (PresentationSource.FromVisual(element) as HwndSource)?.Handle;
 		if (handle is not IntPtr Handle) return;
 
-		if (WindowsVersion.Current >= WindowsNT.Windows10_1803) {
-			bool isDarkTheme = BackdropWindow.ShouldAppsUseDarkMode();
-			SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0);
+		bool isDarkTheme = BackdropWindow.ShouldAppsUseDarkMode();
+		bool supportAcrylic = EnableAcrylicBlurBehind(Handle, !isDarkTheme ? 0x69fcfcfcu : 0x663a3a3au);
+		if (supportAcrylic) { // Windows 10 1803 and above
+			SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0u);
 			SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round));
-			EnableAcrylicBlurBehind(Handle, isDarkTheme ? 0x663a3a3au : 0x69fcfcfcu);
 			SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
-		} else
-			(element as Control)?.Background = SystemColors.MenuBarBrush;
+		} else {
+			SolidColorBrush background = (
+				isDarkTheme ? BackdropWindow.SolidDarkThemeBackgroundBrush : // SystemColors doesn't support system dark theme colors.
+				element switch {
+					ContextMenu => SystemColors.MenuBarBrush,
+					ToolTip => SystemColors.InfoBrush,
+					_ => SystemColors.MenuBarBrush,
+				}
+			).Clone();
+			background.Opacity = 0.75;
+			(element as Control)?.Background = background;
+			const double shadowDepth = 2;
+			element.Margin = new(shadowDepth);
+			element.Effect = new DropShadowEffect() {
+				ShadowDepth = shadowDepth,
+				Color = Colors.Black,
+				BlurRadius = shadowDepth,
+				Opacity = 0.3,
+			};
+		}
 	}
 
 	private static readonly Dictionary<ICommand, Icon> knownIcons = [];

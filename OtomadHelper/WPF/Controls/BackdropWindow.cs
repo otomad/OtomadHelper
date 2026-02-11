@@ -8,6 +8,8 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
 
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+
 using OtomadHelper.Models;
 
 using ContextMenu = System.Windows.Controls.ContextMenu;
@@ -29,8 +31,6 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<bool?>("MinimizeBox", OnChanged = nameof(UpdateControlBoxesVisibility), PropertyXmlDocumentation = """<inheritdoc cref="System.Windows.Forms.Form.MinimizeBox" />""")]
 [DependencyProperty<bool?>("MaximizeBox", OnChanged = nameof(UpdateControlBoxesVisibility), PropertyXmlDocumentation = """<inheritdoc cref="System.Windows.Forms.Form.MaximizeBox" />""")]
 [DependencyProperty<bool?>("ControlBox", OnChanged = nameof(UpdateControlBoxesVisibility), PropertyXmlDocumentation = """<inheritdoc cref="System.Windows.Forms.Form.ControlBox" />""")]
-[RoutedEvent("ThemeChange", RoutedEventStrategy.Bubble)]
-[RoutedEvent("AccentChange", RoutedEventStrategy.Bubble)]
 [RoutedEvent("Showing", RoutedEventStrategy.Bubble)]
 public partial class BackdropWindow : Window {
 	protected readonly WindowInteropHelper helper;
@@ -56,7 +56,7 @@ public partial class BackdropWindow : Window {
 		AddResource("WPF/Themes/Controls.xaml");
 		if (Background == DefaultBackground) base.Background = Background;
 		Loaded += Window_Loaded;
-		//Closing += Window_Closing;
+		Closed += Window_Closed;
 		IsVisibleChanged += (_, e) => {
 			if ((bool)e.NewValue) RaiseEvent(new RoutedEventArgs(ShowingEvent));
 		};
@@ -65,7 +65,8 @@ public partial class BackdropWindow : Window {
 
 		// Border color (useless when system border color set)
 		SetResourceReference(BorderBrushProperty, "CardStroke");
-		BorderThickness = new(1);
+		// Looks weird in Windows Basic and Classic themes, so set the border thickness to 0.
+		BorderThickness = new(0);
 
 		// Debug focused element
 		// Services.ITimer.WPF.Interval(() => s = System.Windows.Input.FocusManager.GetFocusedElement(this), 1000);
@@ -86,11 +87,13 @@ public partial class BackdropWindow : Window {
 		// reference: https://www.cnblogs.com/code1992/p/11699416.html
 		/*if (RegisterShellHookWindow(Handle))
 			WM_ShellHook = RegisterWindowMessage("SHELLHOOK");*/
+		SystemEvents.UserPreferenceChanged += OnSystemThemeChanged;
 	}
 
-	/*private void Window_Closing(object sender, CancelEventArgs e) {
-		DeregisterShellHookWindow(Handle);
-	}*/
+	private void Window_Closed(object sender, EventArgs e) {
+		//DeregisterShellHookWindow(Handle);
+		SystemEvents.UserPreferenceChanged -= OnSystemThemeChanged;
+	}
 
 	private void BindViewToViewModel() {
 		if (DataContext is IViewAccessibleViewModel viewModel)
@@ -268,6 +271,12 @@ public partial class BackdropWindow : Window {
 	}
 
 	protected internal static bool GetWindowsAccentPalette(AccentPalette palette) {
+		if (WindowsVersion.Current < WindowsNT.Windows10 && IsGlassEnabled) {
+			// In Windows 7, change color in control panel directly without saving will not update the settings in the registry, so it looks like the color is delayed.
+			palette.LightAccentColor = palette.DarkAccentColor = palette.Colorization = SystemParameters.WindowGlassColor;
+			return true;
+		}
+
 		using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\DWM")) {
 			// CAUTION: It is confusing that "AccentColor" is ABGR, however "ColorizationColor" is ARGB.
 			if (key?.GetValue("AccentColor") is int value) // Windows 8 ~ 10
@@ -310,34 +319,34 @@ public partial class BackdropWindow : Window {
 	}
 
 	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
-	protected IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
-		const int SettingChange = 0x001A;
-		const int DwmColorizationColorChanged = 0x0320;
+	protected IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
+		//const int SettingChange = 0x001A;
+		//const int DwmColorizationColorChanged = 0x0320;
 		const int NCActivate = 0x0086;
-		const int DwmCompositionChanged= 0x31E;
-		const int ThemeChanged = 0x31A;
+		//const int DwmCompositionChanged = 0x31E;
+		//const int ThemeChanged = 0x31A;
 
 		switch (msg) {
-			case SettingChange:
-				if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
-					RefreshDarkMode();
-					RaiseEvent(new(ThemeChangeEvent, this));
-					goto case DwmColorizationColorChanged;
-				}
-				break;
-			case DwmColorizationColorChanged:
-				RefreshAccentColor();
-				RaiseEvent(new(AccentChangeEvent, this));
-				break;
+			//case SettingChange:
+			//	if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
+			//		RefreshDarkMode();
+			//		RaiseEvent(new(ThemeChangeEvent, this));
+			//		goto case DwmColorizationColorChanged;
+			//	}
+			//	break;
+			//case DwmColorizationColorChanged:
+			//	RefreshAccentColor();
+			//	RaiseEvent(new(AccentChangeEvent, this));
+			//	break;
 			case NCActivate:
 				// reference: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#29282701
 				IsNonClientActive = wParam == trueValue;
 				break;
-			case DwmCompositionChanged:
-			case ThemeChanged:
-				// Respond to DWM being enabled/disabled or system theme being changed
-				OnTitleBarTypeChanged(TitleBarType);
-				goto case DwmColorizationColorChanged;
+			//case DwmCompositionChanged:
+			//case ThemeChanged:
+			//	// Respond to DWM being enabled/disabled or system theme being changed
+			//	OnTitleBarTypeChanged(TitleBarType);
+			//	goto case DwmColorizationColorChanged;
 			default:
 				break;
 		}
@@ -364,22 +373,40 @@ public partial class BackdropWindow : Window {
 		IsNonClientActive = false;
 	}
 
+	internal static bool IsGlassEnabled => SystemParameters.IsGlassEnabled;
+	protected void OnSystemThemeChanged(object sender, UserPreferenceChangedEventArgs e) {
+		if (e.Category is not (UserPreferenceCategory.Color or UserPreferenceCategory.General or UserPreferenceCategory.Window or UserPreferenceCategory.VisualStyle)) return;
+		if (WindowsVersion.Current < WindowsNT.Windows8) // Since Windows 8, the DWM will not be turned off.
+			OnTitleBarTypeChanged(TitleBarType);
+		RefreshDarkMode();
+		RefreshAccentColor();
+	}
+
 	protected void RefreshDarkMode() {
 		bool isDarkTheme = ShouldAppsUseDarkMode();
 		IsLightTheme = !isDarkTheme;
-		uint flag = isDarkTheme ? 1u : 0;
+		uint flag = isDarkTheme ? 1u : 0u;
 		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, flag);
 		EnableDarkSystemMenu(isDarkTheme);
 		SetCurrentThemeResource(isDarkTheme);
 		//Color borderColor = isDarkTheme ? Color.FromRgb(20, 20, 20) : Color.FromRgb(219, 219, 219);
 		//SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, borderColor.ToAbgr(false));
 
+		SetSolidBackgroundColorAsNeeded();
 		// TODO: Change background color will cover the three window buttons.
 		//Color solidBackgroundColor = isDarkTheme ? Color.FromRgb(32, 32, 32) : Color.FromRgb(243, 243, 243);
 		//if (Background == DefaultBackground)
 		//	base.Background = (SystemBackdropType == SystemBackdropType.None || !SupportSystemBackdropType) && TitleBarType != TitleBarType.Borderless ?
 		//		new SolidColorBrush(solidBackgroundColor) : Brushes.Transparent;
 	}
+
+	protected void SetSolidBackgroundColorAsNeeded() {
+		SolidColorBrush solidBackgroundBrush = IsLightTheme ? SolidLightThemeBackgroundBrush : SolidDarkThemeBackgroundBrush;
+		if (Background == DefaultBackground)
+			base.Background = TitleBarType == TitleBarType.System || !IsGlassEnabled ? solidBackgroundBrush : DefaultBackground;
+	}
+	public static readonly SolidColorBrush SolidLightThemeBackgroundBrush = new(Color.FromRgb(243, 243, 243));
+	public static readonly SolidColorBrush SolidDarkThemeBackgroundBrush = new(Color.FromRgb(32, 32, 32));
 
 	partial void OnCustomAccentColorChanged() => RefreshAccentColor();
 	protected void RefreshAccentColor() {
@@ -411,8 +438,8 @@ public partial class BackdropWindow : Window {
 
 	#region Extends content into title bar
 	partial void OnTitleBarTypeChanged(TitleBarType value) {
-		if (!SystemParameters.IsGlassEnabled) value = TitleBarType.System;
-		if (Background == DefaultBackground) base.Background = SystemParameters.IsGlassEnabled ? DefaultBackground : Brushes.White;
+		if (!IsGlassEnabled) value = TitleBarType.System;
+		SetSolidBackgroundColorAsNeeded();
 		switch (value) {
 			case TitleBarType.WindowChrome:
 				WindowChrome.SetWindowChrome(this, new() {
@@ -467,7 +494,9 @@ public partial class BackdropWindow : Window {
 	public class WindowChromeTitleBarTypeResizeModeToNonClientFrameEdgesConverter : ValueConverter<ResizeMode, NonClientFrameEdges> {
 		// Decided by whenever ILRepark is enabled.
 		public override NonClientFrameEdges Convert(ResizeMode resizeMode, Type targetType, object parameter, CultureInfo culture) =>
-			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? NonClientFrameEdges.None : NonClientFrameEdges.Right | NonClientFrameEdges.Left | NonClientFrameEdges.Bottom;
+			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? NonClientFrameEdges.None :
+				WindowsVersion.Current < WindowsNT.Windows10 ? NonClientFrameEdges.None :
+				NonClientFrameEdges.Right | NonClientFrameEdges.Left | NonClientFrameEdges.Bottom;
 	}
 
 	protected override void OnKeyDown(KeyEventArgs e) {

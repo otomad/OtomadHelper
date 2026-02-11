@@ -86,7 +86,7 @@ public partial class ComboBoxFlyout : BaseFlyout {
 		base.OnSourceInitialized(e);
 		if (IsContent) {
 			HwndSource? source = PresentationSource.FromVisual(this) as HwndSource;
-			source?.AddHook((IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) => {
+			source?.AddHook((IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) => {
 				if (msg == 0x0021) {
 					handled = true;
 					return new IntPtr(0x0003);

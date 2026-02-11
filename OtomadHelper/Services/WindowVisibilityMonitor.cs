@@ -16,7 +16,7 @@ public class WindowVisibilityMonitor : IDisposable {
 	private static extern bool UnhookWinEvent(IntPtr hWinEventHook);
 
 	private delegate void WinEventDelegate(
-		IntPtr hWinEventHook, uint eventType, IntPtr hwnd,
+		IntPtr hWinEventHook, uint eventType, IntPtr hWnd,
 		int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 
 	private const uint WINEVENT_OUTOFCONTEXT = 0;
@@ -29,8 +29,8 @@ public class WindowVisibilityMonitor : IDisposable {
 	private readonly WinEventDelegate eventDelegate;
 	public event EventHandler<bool>? VisibilityChanged;
 
-	public WindowVisibilityMonitor(IntPtr hwnd) {
-		targetHwnd = hwnd;
+	public WindowVisibilityMonitor(IntPtr hWnd) {
+		targetHwnd = hWnd;
 		eventDelegate = WinEventCallback;
 	}
 
@@ -47,10 +47,10 @@ public class WindowVisibilityMonitor : IDisposable {
 	}
 
 	private void WinEventCallback(
-		IntPtr hWinEventHook, uint eventType, IntPtr hwnd,
+		IntPtr hWinEventHook, uint eventType, IntPtr hWnd,
 		int idObject, int idChild, uint dwEventThread, uint dwmsEventTime) {
 		// Filter non window events or non target window events
-		if (idObject != 0 || idChild != 0 || hwnd != targetHwnd)
+		if (idObject != 0 || idChild != 0 || hWnd != targetHwnd)
 			return;
 
 		// Check if the event type is related to visibility or minimization

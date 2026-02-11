@@ -26,6 +26,7 @@
 	<Grid m:GridDef.Column="Auto,10,*" m:GridDef.Row="*,8,Auto,8,Auto,8,Auto">
 		<ScrollViewer
 			Grid.ColumnSpan="3"
+			FlowDirection="LeftToRight"
 			HorizontalScrollBarVisibility="Auto"
 			VerticalScrollBarVisibility="Hidden"
 			>

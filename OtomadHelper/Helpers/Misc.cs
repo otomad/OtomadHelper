@@ -15,7 +15,7 @@ public static class Misc {
 	/// </remarks>
 	/// <param name="link">Internet website link.</param>
 	public static void OpenLink(string link) {
-		link = "\"" + link.Replace("\"", "\"\"") + "\""; // Escape the double quotes
+		link = $"\"{link.Replace("\"", "\"\"")}\""; // Escape the double quotes
 		Process.Start("explorer.exe", link);
 	}
 
