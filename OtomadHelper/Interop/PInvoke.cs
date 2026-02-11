@@ -447,12 +447,37 @@ public static class PInvoke {
 		public uint GradientColor;
 		public int AnimationId;
 	}
+	/// <summary>
+	/// Set transparent backdrop by composition API, using <see cref="SetWindowCompositionAttribute" /> (Windows undocument API).
+	/// </summary>
+	/// <remarks>
+	/// <para>Windows 10~11 only. For Windows 7, all values will have the same effect.</para>
+	/// <para><a href="https://blog.walterlv.com/post/set-window-composition-attribute.html">Introduction</a></para>
+	/// </remarks>
 	public enum AccentState {
+		/// <summary>
+		/// Black background, plain white border.
+		/// </summary>
 		Disabled = 0,
+		/// <summary>
+		/// Gradient color background, dark border in inactive window.
+		/// </summary>
 		EnableGradient = 1,
+		/// <summary>
+		/// Theme color background, dark border in inactive window.
+		/// </summary>
 		EnableTransparentGradient = 2,
+		/// <summary>
+		/// Blur effect background, gray border in inactive window.
+		/// </summary>
 		EnableBlurBehind = 3,
+		/// <summary>
+		/// Acrylic effect that overlay with gradient color background.
+		/// </summary>
 		EnableAcrylicBlurBehind = 4,
+		/// <summary>
+		/// Same as <see cref="Disabled"/>.
+		/// </summary>
 		InvalidState = 5,
 	}
 	/// <summary>
