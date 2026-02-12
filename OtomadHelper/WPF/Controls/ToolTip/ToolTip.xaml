@@ -12,6 +12,7 @@
 		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="BorderBrush" Value="{DynamicResource SurfaceStrokeFlyout}" />
 		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="c:ContextMenuAcrylicBehavior.CornerRadius" Value="4" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="ToolTip">
@@ -27,7 +28,7 @@
 					</Border>
 					<ControlTemplate.Triggers>
 						<Trigger Property="HasDropShadow" Value="true">
-							<Setter TargetName="Border" Property="CornerRadius" Value="4" />
+							<Setter TargetName="Border" Property="CornerRadius" Value="{Binding (c:ContextMenuAcrylicBehavior.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}" />
 							<Setter TargetName="Border" Property="SnapsToDevicePixels" Value="true" />
 						</Trigger>
 					</ControlTemplate.Triggers>

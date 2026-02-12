@@ -18,6 +18,7 @@
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=Window}}" />
 		<Setter Property="TextBlock.TextAlignment" Value="Left" />
+		<Setter Property="c:ContextMenuAcrylicBehavior.CornerRadius" Value="8" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="ContextMenu">
@@ -27,7 +28,7 @@
 						Background="{TemplateBinding Background}"
 						BorderBrush="{TemplateBinding BorderBrush}"
 						BorderThickness="{TemplateBinding BorderThickness}"
-						CornerRadius="8"
+						CornerRadius="{TemplateBinding c:ContextMenuAcrylicBehavior.CornerRadius}"
 						>
 						<StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
 					</Border>

@@ -80,8 +80,8 @@ public partial class PitchPickerViewModel : ObservableObject<PitchPickerFlyout> 
 	}
 
 	private static int? ToDelta(FocusMoveDirection direction) => direction switch {
-		FocusMoveDirection.Previous or FocusMoveDirection.Next => direction.ToDelta(),
-		FocusMoveDirection.PageBackward or FocusMoveDirection.PageForward => direction.ToDelta() * ((PitchPickerFlyout.DisplayItemCount - 1) / 2),
+		FocusMoveDirection.Previous or FocusMoveDirection.Next => direction.Delta,
+		FocusMoveDirection.PageBackward or FocusMoveDirection.PageForward => direction.Delta * ((PitchPickerFlyout.DisplayItemCount - 1) / 2),
 		_ => null,
 	};
 

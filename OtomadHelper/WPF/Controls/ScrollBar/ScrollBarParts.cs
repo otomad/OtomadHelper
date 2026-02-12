@@ -15,10 +15,12 @@ public partial class ScrollBarLineButton : RepeatButton {
 		// Set is enabled property binding.
 		MultiBinding binding = new();
 		RelativeSource scrollBarRelativeSource = new(RelativeSourceMode.FindAncestor, typeof(ScrollBar), 1);
-		binding.AddBinding(new Binding(nameof(ArrowPoint)) { RelativeSource = new(RelativeSourceMode.Self) });
-		binding.AddBinding(new Binding(nameof(ScrollBar.Value)) { RelativeSource = scrollBarRelativeSource });
-		binding.AddBinding(new Binding(nameof(ScrollBar.Minimum)) { RelativeSource = scrollBarRelativeSource });
-		binding.AddBinding(new Binding(nameof(ScrollBar.Maximum)) { RelativeSource = scrollBarRelativeSource });
+		binding.AddBinding([
+			new(nameof(ArrowPoint)) { RelativeSource = new(RelativeSourceMode.Self) },
+			new(nameof(ScrollBar.Value)) { RelativeSource = scrollBarRelativeSource },
+			new(nameof(ScrollBar.Minimum)) { RelativeSource = scrollBarRelativeSource },
+			new(nameof(ScrollBar.Maximum)) { RelativeSource = scrollBarRelativeSource },
+		]);
 		binding.Converter = new ScrollBarValueToEnabledConverter();
 		SetBinding(IsEnabledProperty, binding);
 	}

@@ -331,3 +331,6 @@ dotnet_diagnostic.ide1006.severity = warning
 
 # CS9107: 参数捕获到封闭类型状态，其值也传递给基构造函数。该值也可能由基类捕获。
 dotnet_diagnostic.CS9107.severity = silent
+
+# CS8620: 由于引用类型的可为 null 性差异，实参不能用于形参。
+dotnet_diagnostic.CS8620.severity = silent

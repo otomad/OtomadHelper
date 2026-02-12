@@ -9,7 +9,7 @@
 	<s:String x:Key="ResourceDictionaryName">ThemeColor</s:String>
 	<Color x:Key="ForegroundColor">#E4000000</Color>
 	<SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}" />
-	<SolidColorBrush x:Key="BackgroundBrush" Color="{x:Static c:BackdropWindow.SolidLightThemeBackgroundBrush}" />
+	<x:Static x:Key="BackgroundBrush" Member="c:BackdropWindow.SolidLightThemeBackgroundBrush" />
 	<SolidColorBrush x:Key="CardStroke" Color="#0E000000" />
 	<SolidColorBrush x:Key="CardStrokeOnSurfaceOverlay" Color="#18000000" />
 	<SolidColorBrush x:Key="SurfaceOverlayBackground" Color="#0B000000" />

@@ -126,7 +126,7 @@ public partial class PitchPickerFlyout : BaseFlyout {
 		);
 
 	private void Window_PreviewKeyDown(object sender, KeyEventArgs e) {
-		if (FocusMoveDirectionExtension.FromKey(e.Key) is FocusMoveDirection direction && e.Key is not Key.Left and not Key.Right) {
+		if (FocusMoveDirection.FromKey(e.Key) is FocusMoveDirection direction && e.Key is not Key.Left and not Key.Right) {
 			ColumnType? column = GetActiveColumn();
 			if (column == ColumnType.NoteName) DataContext.NoteNameSpinCommand.Execute(direction);
 			else if (column == ColumnType.Octave) DataContext.OctaveSpinCommand.Execute(direction);

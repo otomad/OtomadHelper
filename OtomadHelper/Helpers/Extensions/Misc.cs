@@ -227,6 +227,9 @@ public static partial class Extensions {
 	}
 
 	extension(MultiBinding multiBinding) {
+		/// <inheritdoc cref="AddBinding(MultiBinding, IEnumerable{BindingBase?}?)" />
+		public int AddBinding(params IEnumerable<Binding> bindings) => multiBinding.AddBinding(bindings.Cast<BindingBase>());
+
 		/// <summary>
 		/// We've known that <see cref="MultiBinding.Bindings"/> supports <see cref="Binding"/> only,
 		/// not supports <see cref="MultiBinding"/> and <see cref="PriorityBinding"/>. So we support them.
@@ -235,26 +238,26 @@ public static partial class Extensions {
 		/// <param name="bindingBase">The binding bases which will be added.</param>
 		/// <returns>How many bindings were added.</returns>
 		/// <exception cref="ArgumentException">The <see cref="BindingBase"/> type is not supported.</exception>
-		public int AddBinding(BindingBase? bindingBase) {
+		public int AddBinding(params IEnumerable<BindingBase?>? bindingBases) {
 			int added = 0;
-			switch (bindingBase) {
-				case null:
-					break;
-				case Binding binding:
-					multiBinding.Bindings.Add(binding);
-					added += 1;
-					break;
-				case MultiBinding binding:
-					foreach (BindingBase bind in binding.Bindings)
-						added += multiBinding.AddBinding(bind);
-					break;
-				case PriorityBinding binding:
-					foreach (BindingBase bind in binding.Bindings)
-						added += multiBinding.AddBinding(bind);
-					break;
-				default:
-					throw new NotSupportedException($"The binding type `{bindingBase.GetType().Name}` is not implemented and supported yet");
-			}
+			if (bindingBases is { })
+				foreach (BindingBase? bindingBase in bindingBases)
+					switch (bindingBase) {
+						case null:
+							break;
+						case Binding binding:
+							multiBinding.Bindings.Add(binding);
+							added += 1;
+							break;
+						case MultiBinding binding:
+							added += multiBinding.AddBinding(binding.Bindings);
+							break;
+						case PriorityBinding binding:
+							added += multiBinding.AddBinding(binding.Bindings);
+							break;
+						default:
+							throw new NotSupportedException($"The binding type `{bindingBase.GetType().Name}` is not implemented and supported yet");
+					}
 			return added;
 		}
 	}

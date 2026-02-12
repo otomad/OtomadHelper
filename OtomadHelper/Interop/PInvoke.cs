@@ -282,7 +282,7 @@ public static class PInvoke {
 		HResult error = DwmGetWindowAttribute(IntPtr.Zero, DwmWindowAttribute.SystemBackdropType, out _, Marshal.SizeOf<uint>());
 		return error != HResult.InvalidArg;
 	}
-	public static readonly bool SupportSystemBackdropType = false; // CheckSupportSystemBackdropType();
+	public static readonly bool SupportSystemBackdropType = CheckSupportSystemBackdropType();
 
 	/// <param name="hWnd">Window handle.</param>
 	public static void AddExtendedWindowStyles(IntPtr hWnd, params ExtendedWindowStyles[] styles) {
@@ -309,9 +309,9 @@ public static class PInvoke {
 	private static bool EnumWindow(IntPtr hWnd, IntPtr lParam) {
 		GCHandle gcChildhandlesList = GCHandle.FromIntPtr(lParam);
 		if (gcChildhandlesList == null || gcChildhandlesList.Target == null) return false;
-		StringBuilder buf = new(128);
-		GetClassName(hWnd, buf, 128);
-		if (buf.ToString() == Chrome_WidgetWin) {
+		StringBuilder buffer = new(128);
+		GetClassName(hWnd, buffer, 128);
+		if (buffer.ToString() == Chrome_WidgetWin) {
 			List<IntPtr>? childHandles = gcChildhandlesList.Target as List<IntPtr>;
 			childHandles?.Add(hWnd);
 		}
@@ -443,7 +443,8 @@ public static class PInvoke {
 	[StructLayout(LayoutKind.Sequential)]
 	public struct AccentPolicy {
 		public AccentState AccentState;
-		public int AccentFlags;
+		public AccentFlags AccentFlags;
+		/// <remarks>0xAABBGGRR</remarks>
 		public uint GradientColor;
 		public int AnimationId;
 	}
@@ -478,7 +479,44 @@ public static class PInvoke {
 		/// <summary>
 		/// Same as <see cref="Disabled"/>.
 		/// </summary>
-		InvalidState = 5,
+		EnableHostBackdrop = 5,
+		/// <summary>
+		/// Same as <see cref="Disabled"/>.
+		/// </summary>
+		InvalidState = 6,
+	}
+	[Flags]
+	public enum AccentFlags {
+		None = 0,
+		/// <summary>
+		/// Enable this flag will cause the window size extending to the screen size.
+		/// </summary>
+		ExtendSize = 0x4,
+		/// <summary>
+		/// Enable the left border of the window.
+		/// </summary>
+		/// <remarks>
+		/// Can be seen when <see cref="System.Windows.Window.WindowStyle" /> is <see cref="System.Windows.WindowStyle.None" />.
+		/// </remarks>
+		LeftBorder = 0x20,
+		/// <summary>
+		/// Enable the top border of the window.
+		/// </summary>
+		/// <inheritdoc cref="LeftBorder" />
+		TopBorder = 0x40,
+		/// <summary>
+		/// Enable the right border of the window.
+		/// </summary>
+		/// <inheritdoc cref="LeftBorder" />
+		RightBorder = 0x80,
+		/// <summary>
+		/// Enable the bottom border of the window.
+		/// </summary>
+		BottomBorder = 0x100,
+		/// <summary>
+		/// Merges them, enable all borders of the window.
+		/// </summary>
+		AllBorder = LeftBorder | TopBorder | RightBorder | BottomBorder,
 	}
 	/// <summary>
 	/// Describes a key/value pair that specifies a window composition attribute and its value. This structure is used with the <see cref="GetWindowCompositionAttribute" />
@@ -553,15 +591,20 @@ public static class PInvoke {
 	/// is inactive.
 	/// </summary>
 	/// <remarks>
-	/// Available since Windows 10 1803.
+	/// Acrylic effect available since Windows 10 1803. However the API available since Windows 7.
 	/// </remarks>
 	/// <param name="hWnd">Handle of the window.</param>
 	/// <param name="gradientColor">The tint color of the acrylic.</param>
 	/// <returns>The current system supports to enable the acrylic backdrop using composition API?</returns>
 	public static bool EnableAcrylicBlurBehind(IntPtr hWnd, uint gradientColor = 0) {
 		AccentPolicy accent = new() {
-			AccentState = AccentState.EnableAcrylicBlurBehind,
-			AccentFlags = 0,
+			AccentState = WindowsVersion.Current switch {
+				>= WindowsNT.Windows10_1803 => AccentState.EnableAcrylicBlurBehind,
+				>= WindowsNT.Windows10 => AccentState.EnableBlurBehind,
+				>= WindowsNT.Windows8 => AccentState.EnableTransparentGradient,
+				_ => AccentState.EnableAcrylicBlurBehind,
+			},
+			AccentFlags = AccentFlags.None,
 			AnimationId = 0,
 			GradientColor = gradientColor,
 		};

@@ -14,17 +14,20 @@ public enum FocusMoveDirection {
 }
 
 public static class FocusMoveDirectionExtension {
-	public static int ToDelta(this FocusMoveDirection direction) => Math.Sign((int)direction);
+	extension(FocusMoveDirection direction) {
+		public int Delta => Math.Sign((int)direction);
 
-	public static FocusMoveDirection? FromKey(Key key) => key switch {
-		Key.Up or Key.Left => FocusMoveDirection.Previous,
-		Key.Down or Key.Right => FocusMoveDirection.Next,
-		Key.PageUp => FocusMoveDirection.PageBackward,
-		Key.PageDown => FocusMoveDirection.PageForward,
-		Key.Home => FocusMoveDirection.First,
-		Key.End => FocusMoveDirection.Last,
-		_ => null,
-	};
+		public static FocusMoveDirection? FromKey(Key key) => key switch {
+			Key.Up or Key.Left => FocusMoveDirection.Previous,
+			Key.Down or Key.Right => FocusMoveDirection.Next,
+			Key.PageUp => FocusMoveDirection.PageBackward,
+			Key.PageDown => FocusMoveDirection.PageForward,
+			Key.Home => FocusMoveDirection.First,
+			Key.End => FocusMoveDirection.Last,
+			_ => null,
+		};
+	}
+
 }
 
 [ValueConversion(typeof(MouseWheelEventArgs), typeof(FocusMoveDirection))]

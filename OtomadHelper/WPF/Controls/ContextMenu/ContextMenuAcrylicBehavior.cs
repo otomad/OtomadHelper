@@ -15,6 +15,7 @@ namespace OtomadHelper.WPF.Controls;
 /// </summary>
 [AttachedDependencyProperty<bool, ContextMenu>("FixCanExecute", DefaultValue = false)]
 [AttachedDependencyProperty<bool, ContextMenu>("AutoIcon", DefaultValue = true)]
+[AttachedDependencyProperty<CornerRadius>("CornerRadius")]
 public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 	protected override void OnAttached() {
 		AssociatedObject.IsVisibleChanged += ContextMenu_IsVisibleChanged;
@@ -61,11 +62,12 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 		if (handle is not IntPtr Handle) return;
 
 		bool isDarkTheme = BackdropWindow.ShouldAppsUseDarkMode();
-		bool supportAcrylic = EnableAcrylicBlurBehind(Handle, !isDarkTheme ? 0x69fcfcfcu : 0x663a3a3au);
-		if (supportAcrylic) { // Windows 10 1803 and above
+		bool supportComposition = EnableAcrylicBlurBehind(Handle, !isDarkTheme ? 0x69fcfcfcu : 0x663a3a3au);
+		if (supportComposition) {
 			SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0u);
-			SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round));
 			SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
+			if (SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round)) == HResult.InvalidArg)
+				SetCornerRadius(element, new(0));
 		} else {
 			SolidColorBrush background = (
 				isDarkTheme ? BackdropWindow.SolidDarkThemeBackgroundBrush : // SystemColors doesn't support system dark theme colors.

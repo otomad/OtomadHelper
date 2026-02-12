@@ -4,7 +4,7 @@ using System.Windows.Media;
 namespace OtomadHelper.WPF.Controls;
 
 [AttachedDependencyProperty<SolidColorBrush, FrameworkElement>("Mix", DefaultValueExpression = nameof(TransparentBrush))]
-[AttachedDependencyProperty<Brush, FrameworkElement>("Brush", DefaultValueExpression = nameof(TransparentBrush))]
+[AttachedDependencyProperty<Brush, FrameworkElement>("Brush", DefaultValueExpression = nameof(TransparentBrush), IsReadOnly = true)]
 public partial class CheckerBoardBrush {
 	private static readonly SolidColorBrush TransparentBrush = Brushes.Transparent;
 	private static readonly RectangleGeometry GeometryFill = new(new(0, 0, 100, 100));

@@ -87,12 +87,14 @@ public partial class BackdropWindow : Window {
 		// reference: https://www.cnblogs.com/code1992/p/11699416.html
 		/*if (RegisterShellHookWindow(Handle))
 			WM_ShellHook = RegisterWindowMessage("SHELLHOOK");*/
-		SystemEvents.UserPreferenceChanged += OnSystemThemeChanged;
+		if (WindowsVersion.Current < WindowsNT.Windows8)
+			SystemEvents.UserPreferenceChanged += OnSystemThemeChanged;
 	}
 
 	private void Window_Closed(object sender, EventArgs e) {
 		//DeregisterShellHookWindow(Handle);
-		SystemEvents.UserPreferenceChanged -= OnSystemThemeChanged;
+		if (WindowsVersion.Current < WindowsNT.Windows8)
+			SystemEvents.UserPreferenceChanged -= OnSystemThemeChanged;
 	}
 
 	private void BindViewToViewModel() {
@@ -279,9 +281,9 @@ public partial class BackdropWindow : Window {
 
 		using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\DWM")) {
 			// CAUTION: It is confusing that "AccentColor" is ABGR, however "ColorizationColor" is ARGB.
-			if (key?.GetValue("AccentColor") is int value) // Windows 8 ~ 10
+			if (key?.GetValue("AccentColor") is int value) // Windows 10 ~ 11
 				palette.Colorization = Color.FromAbgr(value);
-			else if (key?.GetValue("ColorizationColor") is int value2) // Windows Vista ~ 7
+			else if (key?.GetValue("ColorizationColor") is int value2) // Windows Vista ~ 8.1
 				palette.Colorization = Color.FromArgb(value2);
 			else // Versions lower than Windows Vista.
 				return false;
@@ -320,11 +322,13 @@ public partial class BackdropWindow : Window {
 
 	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
 	protected IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
-		//const int SettingChange = 0x001A;
-		//const int DwmColorizationColorChanged = 0x0320;
+#pragma warning disable CS0219 // 变量已被赋值，但从未使用过它的值
+		const int SettingChange = 0x001A;
+		const int DwmColorizationColorChanged = 0x0320;
 		const int NCActivate = 0x0086;
-		//const int DwmCompositionChanged = 0x31E;
-		//const int ThemeChanged = 0x31A;
+		const int DwmCompositionChanged = 0x31E;
+		const int ThemeChanged = 0x31A;
+#pragma warning restore CS0219 // 变量已被赋值，但从未使用过它的值
 
 		switch (msg) {
 			//case SettingChange:
@@ -338,6 +342,10 @@ public partial class BackdropWindow : Window {
 			//	RefreshAccentColor();
 			//	RaiseEvent(new(AccentChangeEvent, this));
 			//	break;
+			case SettingChange:
+			case DwmColorizationColorChanged:
+				OnSystemThemeChanged(null, new(UserPreferenceCategory.General));
+				break;
 			case NCActivate:
 				// reference: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#29282701
 				IsNonClientActive = wParam == trueValue;
@@ -374,8 +382,8 @@ public partial class BackdropWindow : Window {
 	}
 
 	internal static bool IsGlassEnabled => SystemParameters.IsGlassEnabled;
-	protected void OnSystemThemeChanged(object sender, UserPreferenceChangedEventArgs e) {
-		if (e.Category is not (UserPreferenceCategory.Color or UserPreferenceCategory.General or UserPreferenceCategory.Window or UserPreferenceCategory.VisualStyle)) return;
+	protected void OnSystemThemeChanged(object? sender, UserPreferenceChangedEventArgs e) {
+		//if (e.Category is not (UserPreferenceCategory.Color or UserPreferenceCategory.General or UserPreferenceCategory.Window or UserPreferenceCategory.VisualStyle)) return;
 		if (WindowsVersion.Current < WindowsNT.Windows8) // Since Windows 8, the DWM will not be turned off.
 			OnTitleBarTypeChanged(TitleBarType);
 		RefreshDarkMode();
@@ -454,10 +462,11 @@ public partial class BackdropWindow : Window {
 					Converter = new WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter(),
 				};
 				BindingOperations.SetBinding(WindowChrome.GetWindowChrome(this), WindowChrome.ResizeBorderThicknessProperty, resizeBorderThicknessBinding);
-				Binding nonClientFrameEdgesBinding = new("ResizeMode") {
-					RelativeSource = backdropWindowRelativeSource,
-					Converter = new WindowChromeTitleBarTypeResizeModeToNonClientFrameEdgesConverter(),
-				};
+				MultiBinding nonClientFrameEdgesBinding = new() { Converter = new WindowChromeTitleBarTypeResizeModeAndFlowDirectionToNonClientFrameEdgesConverter() };
+				nonClientFrameEdgesBinding.AddBinding([
+					new("ResizeMode") { RelativeSource = backdropWindowRelativeSource },
+					new("FlowDirection") { RelativeSource = backdropWindowRelativeSource },
+				]);
 				BindingOperations.SetBinding(WindowChrome.GetWindowChrome(this), WindowChrome.NonClientFrameEdgesProperty, nonClientFrameEdgesBinding);
 				break;
 			case TitleBarType.WindowChromeNoTitleBar:
@@ -491,12 +500,15 @@ public partial class BackdropWindow : Window {
 	}
 
 	[ValueConversion(typeof(ResizeMode), typeof(NonClientFrameEdges))]
-	public class WindowChromeTitleBarTypeResizeModeToNonClientFrameEdgesConverter : ValueConverter<ResizeMode, NonClientFrameEdges> {
+	public class WindowChromeTitleBarTypeResizeModeAndFlowDirectionToNonClientFrameEdgesConverter : MultiValueConverter<ValueTuple<ResizeMode, FlowDirection>, NonClientFrameEdges> {
 		// Decided by whenever ILRepark is enabled.
-		public override NonClientFrameEdges Convert(ResizeMode resizeMode, Type targetType, object parameter, CultureInfo culture) =>
-			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? NonClientFrameEdges.None :
+		public override NonClientFrameEdges Convert(ValueTuple<ResizeMode, FlowDirection> value, Type targetType, object parameter, CultureInfo culture) {
+			(ResizeMode resizeMode, FlowDirection flowDirection) = value;
+			return resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? NonClientFrameEdges.None :
 				WindowsVersion.Current < WindowsNT.Windows10 ? NonClientFrameEdges.None :
+				flowDirection == FlowDirection.LeftToRight ? NonClientFrameEdges.Right :
 				NonClientFrameEdges.Right | NonClientFrameEdges.Left | NonClientFrameEdges.Bottom;
+		}
 	}
 
 	protected override void OnKeyDown(KeyEventArgs e) {
