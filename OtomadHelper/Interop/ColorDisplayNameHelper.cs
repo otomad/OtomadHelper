@@ -24,7 +24,8 @@ public static class ColorDisplayNameHelper {
 
 	private static Dictionary<KnownColors, string> ColorStrings { get; set; } = [];
 
-	public static bool IsAvailable => ColorStrings.Count > 0;
+	public static bool IsAvailable => ColorStrings.Count > 0 &&
+		WindowsVersion.Current >= WindowsNT.Windows10; // Although Windows 8.x has "Windows.UI.Xaml.dll.mui" file, it doesn't include color display name strings.
 
 	private static void UpdateColorStrings(CultureInfo culture) {
 		ColorStrings = [];
@@ -33,7 +34,7 @@ public static class ColorDisplayNameHelper {
 		if (handle == IntPtr.Zero)
 			handle = LoadLibrary($@"{system32}\Windows.UI.Xaml.dll");
 		if (handle == IntPtr.Zero)
-			return; // Windows 7 or earlier.
+			return; // Windows 7 and earlier.
 		StringBuilder buffer = new(1024);
 		foreach (KnownColors resourceId in Enum.GetValues<KnownColors>()) {
 			int length = LoadString(handle, (uint)resourceId, buffer, buffer.Capacity);
@@ -43,6 +44,7 @@ public static class ColorDisplayNameHelper {
 	}
 
 	public static string ToDisplayName(Color color) {
+		//return Windows.UI.ColorHelper.ToDisplayName(Windows.UI.Color.FromArgb(color.A, color.R, color.G, color.B));
 		if (!IsAvailable) return string.Empty;
 		uint id = GetColorNameResourceId(color);
 		return ColorStrings[(KnownColors)id];

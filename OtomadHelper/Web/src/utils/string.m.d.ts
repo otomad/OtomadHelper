@@ -168,7 +168,7 @@ declare interface String {
 	/**
 	 * Capitalizes the first character of a string.
 	 *
-	 * @param keepCase - If true, maintains the case of characters after the first one. If false, converts them to lowercase. Default is false.
+	 * @param keepCase - If true, maintains the case of characters after the first one. If false, converts them to lowercase. Defaults to false.
 	 * @returns A new string with the first character capitalized and the rest either maintained or converted to lowercase based on the `keepCase` parameter.
 	 *
 	 * @example
@@ -262,7 +262,7 @@ declare interface String {
 
 	/**
 	 * Return a centered string of length width.
-	 * Padding is done using the specified fill character (default is a space).
+	 * Padding is done using the specified fill character (defaults to a space).
 	 *
 	 * @remarks
 	 * Pads a string on both sides with a specified fill string until it reaches the desired maximum length.

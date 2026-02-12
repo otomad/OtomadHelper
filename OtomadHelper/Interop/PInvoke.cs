@@ -602,7 +602,7 @@ public static class PInvoke {
 				>= WindowsNT.Windows10_1803 => AccentState.EnableAcrylicBlurBehind,
 				>= WindowsNT.Windows10 => AccentState.EnableBlurBehind,
 				>= WindowsNT.Windows8 => AccentState.EnableTransparentGradient,
-				_ => AccentState.EnableAcrylicBlurBehind,
+				_ => AccentState.InvalidState,
 			},
 			AccentFlags = AccentFlags.None,
 			AnimationId = 0,

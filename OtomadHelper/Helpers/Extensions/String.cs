@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace OtomadHelper.Helpers;
 
 public static partial class Extensions {
@@ -52,6 +54,46 @@ public static partial class Extensions {
 		/// <inheritdoc cref="string.TrimEnd(char[])" />
 		public string TrimEnd(string suffix, StringComparison comparisonType = StringComparison.InvariantCulture) =>
 			input.EndsWith(suffix, comparisonType) ? input[0..^suffix.Length] : input;
+
+		/// <summary>
+		/// If <paramref name="value" /> is <see langword="null" /> or empty string (<c>""</c>), return <see langword="null" />; otherwise, return <paramref name="value" />.
+		/// </summary>
+		/// <remarks>
+		/// <example>
+		/// <code>
+		/// string.DefaultIfEmpty(maybeEmptyString) ?? "default string"
+		/// </code>
+		/// </example>
+		/// </remarks>
+		/// <param name="value">The string to test.</param>
+		public static string? DefaultIfEmpty(string? value) =>
+			string.IsNullOrEmpty(value) ? null : value;
+
+		/// <summary>
+		/// If <paramref name="value" /> is <see langword="null" /> or empty string (<c>""</c>), return <paramref name="def" />; otherwise, return <paramref name="value" />.
+		/// </summary>
+		/// <remarks>
+		/// <example>
+		/// <code>
+		/// string.DefaultIfEmpty(maybeEmptyString, "default string")
+		/// </code>
+		/// </example>
+		/// </remarks>
+		/// <param name="def">Fallback default string.</param>
+		/// <inheritdoc cref="DefaultIfEmpty(string?)" />
+		public static string DefaultIfEmpty(string? value, string def) =>
+			string.IsNullOrEmpty(value) ? def : value!;
+
+		/// <summary>
+		/// Capitalizes the first character of a string.
+		/// </summary>
+		/// <param name="keepCase">If <see langword="true" />, maintains the case of characters after the first one.
+		/// If <see langword="false" />, converts them to lowercase. Defaults to <see langword="false" />.</param>
+		/// <returns>A new string with the first character capitalized and the rest either maintained or converted to lowercase based on the <paramref name="keepCase"/> parameter.</returns>
+		public string ToCapitalized(bool keepCase = false) {
+			string decapitated = input[1..];
+			return input[0].ToUpper() + (keepCase ? decapitated : decapitated.ToLower());
+		}
 	}
 
 	extension(IEnumerable<string> values) {
@@ -73,5 +115,23 @@ public static partial class Extensions {
 		/// <returns>The repeated new string.</returns>
 		public string Repeat(int count) =>
 			new(input, count);
+
+		/// <inheritdoc cref="char.ToUpper(char)" />
+		public char ToUpper() => char.ToUpper(input);
+
+		/// <inheritdoc cref="char.ToUpper(char, CultureInfo)" />
+		public char ToUpper(CultureInfo culture) => char.ToUpper(input, culture);
+
+		/// <inheritdoc cref="char.ToUpperInvariant(char)" />
+		public char ToUpperInvariant() => char.ToUpperInvariant(input);
+
+		/// <inheritdoc cref="char.ToLower(char)" />
+		public char ToLower() => char.ToLower(input);
+
+		/// <inheritdoc cref="char.ToLower(char, CultureInfo)" />
+		public char ToLower(CultureInfo culture) => char.ToLower(input, culture);
+
+		/// <inheritdoc cref="char.ToLowerInvariant(char)" />
+		public char ToLowerInvariant() => char.ToLowerInvariant(input);
 	}
 }

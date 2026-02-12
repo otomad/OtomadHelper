@@ -79,7 +79,7 @@ public partial class ColorPicker : UserControl {
 	}
 
 	internal Unicolour ColorDisplayName {
-		set => Header.Color = ColorDisplayNameHelper.ToDisplayName(value.ToMediaColor());
+		set => Header.Color = string.DefaultIfEmpty(ColorDisplayNameHelper.ToDisplayName(value.ToMediaColor()), value.Description.ToCapitalized());
 	}
 
 	private ContentDialog ContentDialog => field ??= (Window.GetWindow(this) as ContentDialog)!;
