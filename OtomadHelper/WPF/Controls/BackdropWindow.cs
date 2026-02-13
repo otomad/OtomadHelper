@@ -256,10 +256,14 @@ public partial class BackdropWindow : Window {
 		ExtendFrame(mainWindowSrc.Handle, margins);
 	}
 
+	private static bool DoesSystemSupportDarkMode { get; set; } = true;
+
 	//[DllImport("UXTheme.dll", SetLastError = true, EntryPoint = "#132")] // Not available after Windows 1903.
 	protected internal static bool ShouldAppsUseDarkMode() {
+		if (!DoesSystemSupportDarkMode) return false;
 		using RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
 		object? value = key?.GetValue("AppsUseLightTheme");
+		DoesSystemSupportDarkMode = value is not null;
 		return value is 0;
 	}
 
@@ -323,12 +327,14 @@ public partial class BackdropWindow : Window {
 	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
 	protected IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
 #pragma warning disable CS0219 // 变量已被赋值，但从未使用过它的值
+#pragma warning disable IDE0059 // 不需要赋值
 		const int SettingChange = 0x001A;
 		const int DwmColorizationColorChanged = 0x0320;
 		const int NCActivate = 0x0086;
 		const int DwmCompositionChanged = 0x31E;
 		const int ThemeChanged = 0x31A;
 #pragma warning restore CS0219 // 变量已被赋值，但从未使用过它的值
+#pragma warning restore IDE0059 // 不需要赋值
 
 		switch (msg) {
 			//case SettingChange:
@@ -391,6 +397,7 @@ public partial class BackdropWindow : Window {
 	}
 
 	protected void RefreshDarkMode() {
+		if (!DoesSystemSupportDarkMode) return;
 		bool isDarkTheme = ShouldAppsUseDarkMode();
 		IsLightTheme = !isDarkTheme;
 		uint flag = isDarkTheme ? 1u : 0u;
@@ -401,11 +408,6 @@ public partial class BackdropWindow : Window {
 		//SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, borderColor.ToAbgr(false));
 
 		SetSolidBackgroundColorAsNeeded();
-		// TODO: Change background color will cover the three window buttons.
-		//Color solidBackgroundColor = isDarkTheme ? Color.FromRgb(32, 32, 32) : Color.FromRgb(243, 243, 243);
-		//if (Background == DefaultBackground)
-		//	base.Background = (SystemBackdropType == SystemBackdropType.None || !SupportSystemBackdropType) && TitleBarType != TitleBarType.Borderless ?
-		//		new SolidColorBrush(solidBackgroundColor) : Brushes.Transparent;
 	}
 
 	protected void SetSolidBackgroundColorAsNeeded() {

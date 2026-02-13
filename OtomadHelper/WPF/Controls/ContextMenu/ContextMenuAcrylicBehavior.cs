@@ -52,7 +52,7 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 				foreach (object? anyItem in contextMenu.Items)
 					if (anyItem is MenuItem item)
 						if (GetKnownIcon(item.Command, orientation) is Icon newIcon)
-								item.Icon = newIcon;
+							item.Icon = newIcon;
 			}
 		}
 	}

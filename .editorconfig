@@ -16,6 +16,13 @@ indent_size = 2
 end_of_line = crlf
 insert_final_newline = false
 
+# Set the language version to the latest for the .cs file of the project
+[*.csproj]
+dotnet_language_version = latest
+
+[*.csx]
+dotnet_language_version = latest
+
 [*.cs]
 charset = utf-8
 indent_style = tab
@@ -24,14 +31,6 @@ tab_width = 4
 end_of_line = lf
 trim_trailing_whitespace = true
 insert_final_newline = true
-dotnet_language_version = latest
-[*.csproj]
-
-# Set the language version to the latest for the .cs file of the project
-[*.csproj]
-dotnet_language_version = latest
-
-[*.csx]
 dotnet_language_version = latest
 
 #### .NET 代码操作 ####
@@ -296,9 +295,6 @@ dotnet_diagnostic.ide0028.severity = error
 # IDE0300: 简化集合初始化
 dotnet_diagnostic.ide0300.severity = error
 
-# Default severity for analyzer diagnostics with category 'Style'
-dotnet_analyzer_diagnostic.category-style.severity = none
-
 # IDE0005: Using 指令是不需要的。
 dotnet_diagnostic.ide0005.severity = silent
 
@@ -309,25 +305,16 @@ dotnet_diagnostic.ide0058.severity = silent
 dotnet_diagnostic.ide0046.severity = suggestion
 
 # IDE0251: 将成员设为“readonly”
-dotnet_diagnostic.ide0251.severity = silent
+dotnet_diagnostic.ide0251.severity = suggestion
 
 # IDE0044: 添加只读修饰符
 dotnet_diagnostic.ide0044.severity = suggestion
-
-# IDE0022: 使用方法的程序块主体
-dotnet_diagnostic.ide0022.severity = none
-
-# IDE0024: 使用块主体来表示运算符
-dotnet_diagnostic.ide0024.severity = none
 
 # IDE0055: 修正格式
 dotnet_diagnostic.ide0055.severity = silent
 
 # IDE0072: 添加缺失的事例
 dotnet_diagnostic.ide0072.severity = suggestion
-
-# IDE0021: 使用构造函数的块主体
-dotnet_diagnostic.ide0021.severity = none
 
 # IDE0045: 转换为条件表达式
 dotnet_diagnostic.ide0045.severity = suggestion
@@ -340,6 +327,3 @@ dotnet_diagnostic.ide1006.severity = warning
 
 # CS9107: 参数捕获到封闭类型状态，其值也传递给基构造函数。该值也可能由基类捕获。
 dotnet_diagnostic.CS9107.severity = silent
-
-# CS8620: 由于引用类型的可为 null 性差异，实参不能用于形参。
-dotnet_diagnostic.CS8620.severity = silent
