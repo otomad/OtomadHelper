@@ -107,7 +107,13 @@ export default function DragToImport({ children }: FCP<{
 	return (
 		<Portal>
 			<CssTransition in={shown} unmountOnExit>
-				<StyledDragToImport className={{ drop }} onMouseDown={() => setShown(false)} onMouseUp={() => setShown(false)}>
+				<StyledDragToImport
+					role="alertdialog"
+					aria-modal
+					className={{ drop }}
+					onMouseDown={() => setShown(false)}
+					onMouseUp={() => setShown(false)}
+				>
 					<div className="box">
 						<EmptyMessage icon="touch_pointer" title={<LetterByLetter>{title}</LetterByLetter>} noSideEffect />
 					</div>

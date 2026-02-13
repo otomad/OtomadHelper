@@ -3,7 +3,7 @@ const InlineBlock = styled.span`
 	white-space: pre-wrap; // Do not remove the spaces.
 `;
 
-export default function LetterByLetter({ as: As = "p", children = "", granularity = "grapheme", className, ...htmlAttrs }: FCP<{
+export default function LetterByLetter({ as: As = "p", children = "", granularity = "grapheme", className, role = "img", "aria-label": ariaLabel = children, ...htmlAttrs }: FCP<{
 	/** Specify the wrapper type. */
 	as?: AsTarget;
 	/** The children must be string. */
@@ -20,7 +20,7 @@ export default function LetterByLetter({ as: As = "p", children = "", granularit
 	}, [children, granularity, language]);
 
 	return (
-		<As className={[className, nameof.kebab({ LetterByLetter })]} {...htmlAttrs as object}>
+		<As className={[className, nameof.kebab({ LetterByLetter })]} role={role} aria-label={ariaLabel} {...htmlAttrs as object}>
 			{characters}
 		</As>
 	);
