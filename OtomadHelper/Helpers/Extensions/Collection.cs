@@ -5,7 +5,7 @@ namespace OtomadHelper.Helpers;
 public static partial class Extensions {
 	extension<T>(IEnumerable<T> collection) {
 		/// <summary>
-		/// When using <c>foreach</c> to traverse an <see cref="IEnumerable"/> object,
+		/// When using <c>foreach</c> to iterate an <see cref="IEnumerable"/> object,
 		/// it is allowed to provide an additional index value of the current item for use.
 		/// </summary>
 		/// <typeparam name="T">The item type of the <see cref="IEnumerable"/> object.</typeparam>

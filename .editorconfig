@@ -24,6 +24,15 @@ tab_width = 4
 end_of_line = lf
 trim_trailing_whitespace = true
 insert_final_newline = true
+dotnet_language_version = latest
+[*.csproj]
+
+# Set the language version to the latest for the .cs file of the project
+[*.csproj]
+dotnet_language_version = latest
+
+[*.csx]
+dotnet_language_version = latest
 
 #### .NET 代码操作 ####
 
@@ -108,7 +117,7 @@ csharp_style_expression_bodied_constructors = true:suggestion
 csharp_style_expression_bodied_indexers = true:error
 csharp_style_expression_bodied_lambdas = true:error
 csharp_style_expression_bodied_local_functions = true:error
-csharp_style_expression_bodied_methods = true:error
+csharp_style_expression_bodied_methods = true:suggestion
 csharp_style_expression_bodied_operators = true:error
 csharp_style_expression_bodied_properties = true:error
 

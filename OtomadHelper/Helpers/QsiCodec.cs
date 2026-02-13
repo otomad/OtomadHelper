@@ -42,7 +42,7 @@ public static class QsiCodec {
 				return value;
 			}
 		}
-		// Even if traverses to the last byte, the highest bit is still not 1. Returns the byte length with Infinity.
+		// Even if iterates to the last byte, the highest bit is still not 1. Returns the byte length with Infinity.
 		byteLength = int.MaxValue;
 		return value;
 	}

@@ -76,7 +76,7 @@ export function decodeVarint<TLiteral extends "number" | "bigint" = "number", TT
 		value |= (BigInt(byte) & 0b0111_1111n) << BigInt(i) * 7n;
 		if (!(byte & 0b1000_0000)) return [getNum(value), i + 1];
 	}
-	// Even if traverses to the last byte, the highest bit is still not 1. Returns the byte length with Infinity.
+	// Even if iterates to the last byte, the highest bit is still not 1. Returns the byte length with Infinity.
 	return [getNum(value), Infinity];
 }
 

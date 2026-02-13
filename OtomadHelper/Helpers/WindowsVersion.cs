@@ -18,7 +18,22 @@ public static class WindowsVersion {
 	/// <summary>
 	/// Get a specific Windows NT OS version.
 	/// </summary>
-	public static WindowsNT Get(Version version) => version switch {
+	public static WindowsNT Get(Version version) {
+		int build = version.Build;
+		// Return directly if the current build is a exactly known build that declared in the enum.
+		if (Enum.IsDefined(typeof(WindowsNT), build)) return (WindowsNT)build;
+		// Iterate all known build from small to large in the enum, and find a build that is slightly smaller than it but does not greater than it.
+		WindowsNT[] OSes = Enum.GetValues<WindowsNT>();
+		WindowsNT current = (WindowsNT)build;
+		for (int i = 1; i < OSes.Length; i++) {
+			WindowsNT previous = OSes[i - 1], next = OSes[i];
+			if (previous <= current && next > current) return previous;
+		}
+		return build <= 0 ? WindowsNT.Unknown : WindowsNT.Next;
+	}
+
+	#region Old implement
+	/*public static WindowsNT Get(Version version) => version switch {
 		{ Major: >= 10, Minor: > 0 } => WindowsNT.Next, // Future versions of Windows.
 		{ Major: 10, Minor: 0, Build: >= 26200 } => WindowsNT.Windows11_25H2,
 		{ Major: 10, Minor: 0, Build: >= 26100 } => WindowsNT.Windows11_24H2,
@@ -57,7 +72,8 @@ public static class WindowsVersion {
 		{ Major: 3, Minor: 5 } => WindowsNT.WindowsNT3_5,
 		{ Major: 3, Minor: 1 } => WindowsNT.WindowsNT3_1,
 		_ => WindowsNT.Unknown,
-	};
+	};*/
+	#endregion
 }
 
 /// <summary>
@@ -83,7 +99,7 @@ public enum WindowsNT {
 	Windows7_SP1 = 7601,
 	Windows8 = 9200,
 	Windows8_1 = 9600,
-	Windows10_TP = 9841,
+	Windows10_TP = 9841, // Windows 10 Technical Preview
 	Windows10 = 10240,
 	Windows10_1511 = 10586,
 	Windows10_1607 = 14393,
@@ -98,11 +114,11 @@ public enum WindowsNT {
 	Windows10_21H1 = 19043,
 	Windows10_21H2 = 19044,
 	Windows10_22H2 = 19045,
-	Windows11_Dev = 21996,
+	Windows11_Dev = 21996, // 10.0.21996 is the first Windows 11 version, not 10.0.22000 (RTM)!
 	Windows11 = 22000,
 	Windows11_22H2 = 22621,
 	Windows11_23H2 = 22631,
 	Windows11_24H2 = 26100,
 	Windows11_25H2 = 26200,
-	Next = 65535,
+	Next = 65535, // Future versions of Windows.
 }
