@@ -36,6 +36,7 @@ public static class PInvoke {
 		/// For Windows 11, this corresponds to Desktop Acrylic, also known as Background Acrylic, in its brightest variant.
 		/// The material effect might change with future Windows releases. For more info about Desktop Acrylic, see
 		/// <a href="https://learn.microsoft.com/windows/apps/design/style/acrylic">Acrylic</a>.
+		/// <para>Redirect to <see cref="AccentState.EnableAcrylicBlurBehind" /> in Windows 10.</para>
 		/// </remarks>
 		TransientWindow,
 		/// <summary>MicaAlt</summary>
@@ -45,6 +46,12 @@ public static class PInvoke {
 		/// For more info about Mica Alt, see <a href="https://learn.microsoft.com/windows/apps/design/style/mica#app-layering-with-mica-alt">Layering with Mica Alt</a>.
 		/// </remarks>
 		TabbedWindow,
+		/// <summary>Blur</summary>
+		/// <remarks>
+		/// Simulates blur effects of the Start Menu and Action Center in earlier versions of Windows 10. Acrylic was not proposed at that time.
+		/// <para>Redirect to <see cref="AccentState.EnableBlurBehind" /> in Windows 10.</para>
+		/// </remarks>
+		EarlyTransientWindow = -3,
 	}
 
 	/// <summary>
@@ -282,7 +289,25 @@ public static class PInvoke {
 		HResult error = DwmGetWindowAttribute(IntPtr.Zero, DwmWindowAttribute.SystemBackdropType, out _, Marshal.SizeOf<uint>());
 		return error != HResult.InvalidArg;
 	}
-	public static readonly bool SupportSystemBackdropType = CheckSupportSystemBackdropType();
+
+	public static SupportSystemBackdropTypeLevel SupportSystemBackdropType { get; } =
+		CheckSupportSystemBackdropType() ? SupportSystemBackdropTypeLevel.AcrylicMicaMicaAlt : // Windows 11 22H2 Build 22621
+		WindowsVersion.Current switch {
+			>= WindowsNT.Windows10_1803 => SupportSystemBackdropTypeLevel.AcrylicBlur,
+			>= WindowsNT.Windows10 => SupportSystemBackdropTypeLevel.Blur,
+			>= WindowsNT.Windows8 => SupportSystemBackdropTypeLevel.Colorization,
+			>= WindowsNT.WindowsVista => SupportSystemBackdropTypeLevel.Aero,
+			_ => SupportSystemBackdropTypeLevel.None,
+		};
+
+	public enum SupportSystemBackdropTypeLevel {
+		None,
+		Aero,
+		Colorization,
+		Blur,
+		AcrylicBlur,
+		AcrylicMicaMicaAlt,
+	}
 
 	/// <param name="hWnd">Window handle.</param>
 	public static void AddExtendedWindowStyles(IntPtr hWnd, params ExtendedWindowStyles[] styles) {
@@ -596,14 +621,9 @@ public static class PInvoke {
 	/// <param name="hWnd">Handle of the window.</param>
 	/// <param name="gradientColor">The tint color of the acrylic.</param>
 	/// <returns>The current system supports to enable the acrylic backdrop using composition API?</returns>
-	public static bool EnableAcrylicBlurBehind(IntPtr hWnd, uint gradientColor = 0) {
+	public static bool EnableAcrylicBlurBehind(IntPtr hWnd, uint gradientColor = 0, AccentState backdrop = AccentState.EnableAcrylicBlurBehind) {
 		AccentPolicy accent = new() {
-			AccentState = WindowsVersion.Current switch {
-				>= WindowsNT.Windows10_1803 => AccentState.EnableAcrylicBlurBehind,
-				>= WindowsNT.Windows10 => AccentState.EnableBlurBehind,
-				>= WindowsNT.Windows8 => AccentState.EnableTransparentGradient,
-				_ => AccentState.InvalidState,
-			},
+			AccentState = backdrop,
 			AccentFlags = AccentFlags.None,
 			AnimationId = 0,
 			GradientColor = gradientColor,
@@ -887,9 +907,8 @@ public static class PInvoke {
 		const uint GetWheelScrollChars = 0x006C; // For horizontal scroll chars.
 		const uint GetWheelScrollLines = 0x0068; // For vertical scroll lines.
 
-		uint scrollSize;
 		// Call the SystemParametersInfo function with SPI_GETWHEELSCROLLCHARS / SPI_GETWHEELSCROLLCHARS.
-		bool success = SystemParametersInfo(direction == MouseWheelScrollDirection.Horizontal ? GetWheelScrollChars : GetWheelScrollLines, 0, out scrollSize, 0);
+		bool success = SystemParametersInfo(direction == MouseWheelScrollDirection.Horizontal ? GetWheelScrollChars : GetWheelScrollLines, 0, out uint scrollSize, 0);
 
 		if (!success) {
 			// Handle error or use a default value. ~~(e.g., 1, as suggested by older docs for XP/2000.)

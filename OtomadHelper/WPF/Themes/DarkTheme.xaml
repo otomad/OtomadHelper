@@ -9,7 +9,7 @@
 	<s:String x:Key="ResourceDictionaryName">ThemeColor</s:String>
 	<Color x:Key="ForegroundColor">White</Color>
 	<SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}" />
-	<x:Static x:Key="BackgroundBrush" Member="c:BackdropWindow.SolidDarkThemeBackgroundBrush" />
+	<x:Static x:Key="BackgroundBrush" Member="c:BackdropWindow.DarkThemeBackgroundBrush" />
 	<SolidColorBrush x:Key="CardStroke" Color="#19000000" />
 	<SolidColorBrush x:Key="CardStrokeOnSurfaceOverlay" Color="#40000000" />
 	<SolidColorBrush x:Key="SurfaceOverlayBackground" Color="#2D000000" />
@@ -46,7 +46,7 @@
 	<SolidColorBrush x:Key="TextDisabled" Color="#5CFFFFFF" />
 	<SolidColorBrush x:Key="ControlStrong" Color="#8AFFFFFF" />
 	<SolidColorBrush x:Key="ControlStrongDisabled" Color="#3EFFFFFF" />
-	<SolidColorBrush x:Key="AcrylicBackground" Color="#CE2C2C2C" />
+	<x:Static x:Key="AcrylicBackground" Member="c:BackdropWindow.DarkThemeAcrylicBackgroundBrush" />
 	<SolidColorBrush x:Key="SurfaceStrokeFlyout" Color="#33000000" />
 	<SolidColorBrush x:Key="ControlDefault" Color="#0FFFFFFF" />
 	<SolidColorBrush x:Key="ControlSecondary" Color="#15FFFFFF" />

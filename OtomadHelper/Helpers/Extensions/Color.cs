@@ -25,6 +25,17 @@ public static partial class Extensions {
 			(uint)color.R << 8 * 0;
 
 		/// <summary>
+		/// Converts a <see cref="MediaColor"/> to a 32-bit ARGB value.
+		/// </summary>
+		/// <param name="includeAlpha">Should include the alpha channel value of the color or use 0?</param>
+		/// <returns>A 32-bit ARGB value representing the color.</returns>
+		public uint ToArgb(bool includeAlpha = true) =>
+			(!includeAlpha ? 0 :(uint)color.A << 8 * 3) |
+			(uint)color.R << 8 * 2 |
+			(uint)color.G << 8 * 1 |
+			(uint)color.B << 8 * 0;
+
+		/// <summary>
 		/// Converts a <see cref="MediaColor" /> to a <see cref="Unicolour" />.
 		/// </summary>
 		public Unicolour ToUnicolour() =>

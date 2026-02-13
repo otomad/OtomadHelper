@@ -256,14 +256,10 @@ public partial class BackdropWindow : Window {
 		ExtendFrame(mainWindowSrc.Handle, margins);
 	}
 
-	private static bool DoesSystemSupportDarkMode { get; set; } = true;
-
 	//[DllImport("UXTheme.dll", SetLastError = true, EntryPoint = "#132")] // Not available after Windows 1903.
 	protected internal static bool ShouldAppsUseDarkMode() {
-		if (!DoesSystemSupportDarkMode) return false;
 		using RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
 		object? value = key?.GetValue("AppsUseLightTheme");
-		DoesSystemSupportDarkMode = value is not null;
 		return value is 0;
 	}
 
@@ -397,7 +393,6 @@ public partial class BackdropWindow : Window {
 	}
 
 	protected void RefreshDarkMode() {
-		if (!DoesSystemSupportDarkMode) return;
 		bool isDarkTheme = ShouldAppsUseDarkMode();
 		IsLightTheme = !isDarkTheme;
 		uint flag = isDarkTheme ? 1u : 0u;
@@ -411,12 +406,14 @@ public partial class BackdropWindow : Window {
 	}
 
 	protected void SetSolidBackgroundColorAsNeeded() {
-		SolidColorBrush solidBackgroundBrush = IsLightTheme ? SolidLightThemeBackgroundBrush : SolidDarkThemeBackgroundBrush;
+		SolidColorBrush solidBackgroundBrush = IsLightTheme ? LightThemeBackgroundBrush : DarkThemeBackgroundBrush;
 		if (Background == DefaultBackground)
 			base.Background = TitleBarType == TitleBarType.System || !IsGlassEnabled ? solidBackgroundBrush : DefaultBackground;
 	}
-	public static readonly SolidColorBrush SolidLightThemeBackgroundBrush = new(Color.FromRgb(243, 243, 243));
-	public static readonly SolidColorBrush SolidDarkThemeBackgroundBrush = new(Color.FromRgb(32, 32, 32));
+	public static readonly SolidColorBrush LightThemeBackgroundBrush = new(Color.FromArgb(0xFFF3F3F3u));
+	public static readonly SolidColorBrush DarkThemeBackgroundBrush = new(Color.FromArgb(0xFF202020u));
+	public static readonly SolidColorBrush LightThemeAcrylicBackgroundBrush = new(Color.FromArgb(0xB2FCFCFCu));
+	public static readonly SolidColorBrush DarkThemeAcrylicBackgroundBrush = new(Color.FromArgb(0xCE2C2C2Cu));
 
 	partial void OnCustomAccentColorChanged() => RefreshAccentColor();
 	protected void RefreshAccentColor() {
@@ -431,7 +428,16 @@ public partial class BackdropWindow : Window {
 	private const SystemBackdropType DefaultSystemBackdropType = SystemBackdropType.TransientWindow;
 
 	protected void SetSystemBackdropType(SystemBackdropType systemBackdropType) {
-		SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (uint)systemBackdropType);
+		if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.AcrylicMicaMicaAlt)
+			SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (uint)systemBackdropType);
+		else if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.Blur && systemBackdropType is SystemBackdropType.TransientWindow or SystemBackdropType.EarlyTransientWindow)
+			SetAcrylicByComposition(Handle, this, systemBackdropType == SystemBackdropType.EarlyTransientWindow ? AccentState.EnableBlurBehind : AccentState.EnableAcrylicBlurBehind);
+	}
+
+	public static bool SetAcrylicByComposition(IntPtr hWnd, Control? control, AccentState backdrop) {
+		if (!EnableAcrylicBlurBehind(hWnd, (!ShouldAppsUseDarkMode() ? LightThemeAcrylicBackgroundBrush : DarkThemeAcrylicBackgroundBrush).Color.ToArgb(), backdrop)) return false;
+		if (control is Window window) WindowChrome.GetWindowChrome(window)?.GlassFrameThickness = new(0);
+		return true;
 	}
 
 	partial void OnSystemBackdropTypeChanged(SystemBackdropType newValue) {
@@ -507,7 +513,7 @@ public partial class BackdropWindow : Window {
 		public override NonClientFrameEdges Convert(ValueTuple<ResizeMode, FlowDirection> value, Type targetType, object parameter, CultureInfo culture) {
 			(ResizeMode resizeMode, FlowDirection flowDirection) = value;
 			return resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? NonClientFrameEdges.None :
-				WindowsVersion.Current < WindowsNT.Windows10 ? NonClientFrameEdges.None :
+				WindowsVersion.Current < WindowsNT.Windows10_TP ? NonClientFrameEdges.None :
 				flowDirection == FlowDirection.LeftToRight ? NonClientFrameEdges.Right :
 				NonClientFrameEdges.Right | NonClientFrameEdges.Left | NonClientFrameEdges.Bottom;
 		}
