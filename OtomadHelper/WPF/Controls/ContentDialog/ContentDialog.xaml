@@ -35,6 +35,7 @@
 			<m:BooleanAndConverter x:Key="BoolAnd" />
 			<m:ObjectToVisibilityConverter x:Key="ObjectToVis" />
 			<m:NullableObjectToBooleanConverter x:Key="NullToBool" />
+			<c:WindowActualSizeToWindowCaptionButtonsRectConverter x:Key="SizeToCaptionRect" />
 
 			<Thickness x:Key="BodyMargin">0,12,0,0</Thickness>
 
@@ -180,6 +181,33 @@
 	<c:BackdropWindow.Icon>
 		<Binding Converter="{StaticResource IconNameToImageSource}" Path="IconName" />
 	</c:BackdropWindow.Icon>
+	<c:BackdropWindow.OpacityMask>
+		<DrawingBrush>
+			<DrawingBrush.Drawing>
+				<DrawingGroup>
+					<GeometryDrawing Brush="White">
+						<GeometryDrawing.Geometry>
+							<CombinedGeometry GeometryCombineMode="Exclude">
+								<CombinedGeometry.Geometry1>
+									<RectangleGeometry Rect="0,0,100,100"/>
+								</CombinedGeometry.Geometry1>
+								<CombinedGeometry.Geometry2>
+									<RectangleGeometry>
+										<RectangleGeometry.Rect>
+											<MultiBinding Converter="{StaticResource SizeToCaptionRect}">
+												<Binding Path="ActualWidth" ElementName="View" />
+												<Binding Path="ActualHeight" ElementName="View" />
+											</MultiBinding>
+										</RectangleGeometry.Rect>
+									</RectangleGeometry>
+								</CombinedGeometry.Geometry2>
+							</CombinedGeometry>
+						</GeometryDrawing.Geometry>
+					</GeometryDrawing>
+				</DrawingGroup>
+			</DrawingBrush.Drawing>
+		</DrawingBrush>
+	</c:BackdropWindow.OpacityMask>
 
 	<Grid>
 		<Canvas>
