@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Interop;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -58,7 +59,7 @@ public static partial class Extensions {
 		}
 	}
 
-	extension(DependencyObject? parent) {
+	extension(DependencyObject? me) {
 		/// <summary>
 		/// Find all children of a given type in the visual tree of a <see cref="DependencyObject"/>.
 		/// </summary>
@@ -67,33 +68,16 @@ public static partial class Extensions {
 		/// <returns>A enumerable of all children of type <typeparamref name="T"/> found in the visual tree.
 		/// If no such children are found, an empty enumerable is returned.</returns>
 		public IEnumerable<T> GetChildrenOfType<T>() where T : DependencyObject {
-			if (parent is null) yield break;
-			foreach (DependencyObject child in parent.Children) {
+			if (me is null) yield break;
+			foreach (DependencyObject child in me.VisualChildren) {
 				if (child is T typedChild)
 					yield return typedChild;
-				if (parent.Children.Count != 0)
+				if (me.VisualChildren.Count != 0)
 					foreach (T grandchild in GetChildrenOfType<T>(child))
 						yield return grandchild;
 			}
 		}
-	}
 
-	extension(DependencyObject parent) {
-		/// <inheritdoc cref="VisualTreeHelper.GetChild(DependencyObject, int)" />
-		public VisualTreeChildren Children => new(parent);
-	}
-
-	public class VisualTreeChildren(DependencyObject parent) : IReadOnlyList<DependencyObject> {
-		public int Count => VisualTreeHelper.GetChildrenCount(parent);
-		public DependencyObject this[int index] => VisualTreeHelper.GetChild(parent, index);
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-		public IEnumerator<DependencyObject> GetEnumerator() {
-			for (int i = 0; i < Count; i++)
-				yield return this[i];
-		}
-	}
-
-	extension(DependencyObject? child) {
 		/// <summary>
 		/// Find the parent of a given <see cref="DependencyObject" /> in the visual tree.
 		/// </summary>
@@ -101,7 +85,7 @@ public static partial class Extensions {
 		/// <returns>The parent of the given <see cref="DependencyObject" />, or <see langword="null"/> if no parent is found.</returns>
 		public DependencyObject? Parent {
 			get {
-				switch (child) {
+				switch (me) {
 					case null:
 						return null;
 					case ContentElement contentElement: {
@@ -115,13 +99,19 @@ public static partial class Extensions {
 						goto default;
 					}
 					default:
-						return VisualTreeHelper.GetParent(child);
+						return VisualTreeHelper.GetParent(me);
 				}
 			}
 		}
 	}
 
-	extension(DependencyObject child) {
+	extension(DependencyObject me) {
+		/// <inheritdoc cref="VisualTreeHelper.GetChild(DependencyObject, int)" />
+		public VisualTreeChildren VisualChildren => new(me);
+
+		/// <inheritdoc cref="LogicalTreeHelper.GetChildren(DependencyObject)" />
+		public IEnumerable<DependencyObject> LogicalChildren => LogicalTreeHelper.GetChildren(me).Cast<DependencyObject>();
+
 		/// <summary>
 		/// Find the parent of a given <typeparamref name="TElement" /> in the visual tree.
 		/// </summary>
@@ -132,9 +122,27 @@ public static partial class Extensions {
 		public TElement? GetParent<TElement>() where TElement : DependencyObject {
 			DependencyObject? parent;
 			do
-				parent = child.Parent;
+				parent = me.Parent;
 			while (parent is not (TElement or null));
 			return parent as TElement;
+		}
+
+		public string? GetDynamicResourceKey(DependencyProperty property) {
+			object value = me.ReadLocalValue(property);
+			if (value?.GetType().Name != "ResourceReferenceExpression") return null;
+			ResourceReferenceExpressionConverter converter = new();
+			DynamicResourceExtension? dynamicResource = converter.ConvertTo(value, typeof(MarkupExtension)) as DynamicResourceExtension;
+			return dynamicResource?.ResourceKey as string;
+		}
+	}
+
+	public class VisualTreeChildren(DependencyObject parent) : IReadOnlyList<DependencyObject> {
+		public int Count => VisualTreeHelper.GetChildrenCount(parent);
+		public DependencyObject this[int index] => VisualTreeHelper.GetChild(parent, index);
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		public IEnumerator<DependencyObject> GetEnumerator() {
+			for (int i = 0; i < Count; i++)
+				yield return this[i];
 		}
 	}
 

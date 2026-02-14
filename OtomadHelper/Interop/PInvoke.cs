@@ -51,7 +51,7 @@ public static class PInvoke {
 		/// Simulates blur effects of the Start Menu and Action Center in earlier versions of Windows 10. Acrylic was not proposed at that time.
 		/// <para>Redirect to <see cref="AccentState.EnableBlurBehind" /> in Windows 10.</para>
 		/// </remarks>
-		EarlyTransientWindow = -3,
+		//EarlyTransientWindow = -3,
 	}
 
 	/// <summary>
@@ -302,11 +302,11 @@ public static class PInvoke {
 
 	public enum SupportSystemBackdropTypeLevel {
 		None,
-		Aero,
-		Colorization,
-		Blur,
-		AcrylicBlur,
-		AcrylicMicaMicaAlt,
+		Aero, // Windows Vista
+		Colorization, // Windows 8
+		Blur, // Windows 10 RTM
+		AcrylicBlur, // Windows 10 1803
+		AcrylicMicaMicaAlt, // Windows 11 22H2
 	}
 
 	/// <param name="hWnd">Window handle.</param>

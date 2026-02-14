@@ -407,13 +407,14 @@ public partial class BackdropWindow : Window {
 
 	protected void SetSolidBackgroundColorAsNeeded() {
 		SolidColorBrush solidBackgroundBrush = IsLightTheme ? LightThemeBackgroundBrush : DarkThemeBackgroundBrush;
-		if (Background == DefaultBackground)
+		if (Background == DefaultBackground && this.GetDynamicResourceKey(BackgroundProperty) != AcrylicBackgroundBrushKeyName)
 			base.Background = TitleBarType == TitleBarType.System || !IsGlassEnabled ? solidBackgroundBrush : DefaultBackground;
 	}
 	public static readonly SolidColorBrush LightThemeBackgroundBrush = new(Color.FromArgb(0xFFF3F3F3u));
 	public static readonly SolidColorBrush DarkThemeBackgroundBrush = new(Color.FromArgb(0xFF202020u));
 	public static readonly SolidColorBrush LightThemeAcrylicBackgroundBrush = new(Color.FromArgb(0xB2FCFCFCu));
 	public static readonly SolidColorBrush DarkThemeAcrylicBackgroundBrush = new(Color.FromArgb(0xCE2C2C2Cu));
+	private const string AcrylicBackgroundBrushKeyName = "AcrylicBackground";
 
 	partial void OnCustomAccentColorChanged() => RefreshAccentColor();
 	protected void RefreshAccentColor() {
@@ -430,13 +431,17 @@ public partial class BackdropWindow : Window {
 	protected void SetSystemBackdropType(SystemBackdropType systemBackdropType) {
 		if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.AcrylicMicaMicaAlt)
 			SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (uint)systemBackdropType);
-		else if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.Blur && systemBackdropType is SystemBackdropType.TransientWindow or SystemBackdropType.EarlyTransientWindow)
-			SetAcrylicByComposition(Handle, this, systemBackdropType == SystemBackdropType.EarlyTransientWindow ? AccentState.EnableBlurBehind : AccentState.EnableAcrylicBlurBehind);
+		else if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.Blur && systemBackdropType is not SystemBackdropType.None)
+			SetAcrylicByComposition(Handle, this, AccentState.EnableBlurBehind);
+			// AccentState.EnableAcrylicBlurBehind is stuck when moving window in Windows 10 ~ Windows 11 RTM (exclude from 22H2), so use the early blur effect instead of acrylic.
 	}
 
 	public static bool SetAcrylicByComposition(IntPtr hWnd, Control? control, AccentState backdrop) {
-		if (!EnableAcrylicBlurBehind(hWnd, (!ShouldAppsUseDarkMode() ? LightThemeAcrylicBackgroundBrush : DarkThemeAcrylicBackgroundBrush).Color.ToArgb(), backdrop)) return false;
-		if (control is Window window) WindowChrome.GetWindowChrome(window)?.GlassFrameThickness = new(0);
+		bool isLight = !ShouldAppsUseDarkMode();
+		if (!EnableAcrylicBlurBehind(hWnd, (isLight ? LightThemeAcrylicBackgroundBrush : DarkThemeAcrylicBackgroundBrush).Color.ToArgb(), backdrop)) return false;
+		if (backdrop == AccentState.EnableBlurBehind && control is { })
+			if (!(control is BackdropWindow window && window.Background != DefaultBackground))
+				control.SetResourceReference(BackgroundProperty, AcrylicBackgroundBrushKeyName);
 		return true;
 	}
 
