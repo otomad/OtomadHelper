@@ -60,4 +60,8 @@
 	<SolidColorBrush x:Key="AccentDisabled" Color="#37000000" />
 	<SolidColorBrush x:Key="CheckerBoardAlt" Color="#FFD9D9D9" />
 	<SolidColorBrush x:Key="SystemCritical" Color="#FFC42B1C" />
+	<SolidColorBrush x:Key="CaptionCloseText" Color="White" />
+	<SolidColorBrush x:Key="CaptionCloseTextSecondary" Color="#B2FFFFFF" />
+	<SolidColorBrush x:Key="CaptionCloseFill" Color="#FFC42B1C" />
+	<SolidColorBrush x:Key="CaptionCloseFillSecondary" Color="#E5C42B1C" />
 </m:NamedResourceDictionary>

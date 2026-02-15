@@ -17,6 +17,7 @@
 	Topmost="True"
 	WindowStartupLocation="CenterScreen"
 	mc:Ignorable="d"
+	Style="{DynamicResource UniversalWindowStyle}"
 	>
 	<c:BackdropWindow.DataContext>
 		<c:ContentDialogViewModel x:Name="ViewModel" />
@@ -24,6 +25,10 @@
 
 	<c:BackdropWindow.Resources>
 		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="../UniversalWindowStyle.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
 			<c:IconNameToImageSourceConverter x:Key="IconNameToImageSource" />
 			<m:BooleanToVisibilityConverter x:Key="BoolToVis" />
 			<m:BooleanToVisibilityConverter
@@ -55,7 +60,7 @@
 					<DataTrigger Binding="{Binding Subtitle}" Value="">
 						<Setter Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
-					<DataTrigger Binding="{Binding IsNonClientActive, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="False">
+					<DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="False">
 						<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
 					</DataTrigger>
 				</Style.Triggers>
@@ -68,7 +73,7 @@
 				<Setter Property="FontSize" Value="{StaticResource SubtitleFontSize}" />
 				<Setter Property="FontWeight" Value="SemiBold" />
 				<Style.Triggers>
-					<DataTrigger Binding="{Binding IsNonClientActive, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="False">
+					<DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="False">
 						<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
 					</DataTrigger>
 				</Style.Triggers>
@@ -181,33 +186,6 @@
 	<c:BackdropWindow.Icon>
 		<Binding Converter="{StaticResource IconNameToImageSource}" Path="IconName" />
 	</c:BackdropWindow.Icon>
-	<c:BackdropWindow.OpacityMask>
-		<DrawingBrush>
-			<DrawingBrush.Drawing>
-				<DrawingGroup>
-					<GeometryDrawing Brush="White">
-						<GeometryDrawing.Geometry>
-							<CombinedGeometry GeometryCombineMode="Exclude">
-								<CombinedGeometry.Geometry1>
-									<RectangleGeometry Rect="0,0,100,100"/>
-								</CombinedGeometry.Geometry1>
-								<CombinedGeometry.Geometry2>
-									<RectangleGeometry>
-										<RectangleGeometry.Rect>
-											<MultiBinding Converter="{StaticResource SizeToCaptionRect}">
-												<Binding Path="ActualWidth" ElementName="View" />
-												<Binding Path="ActualHeight" ElementName="View" />
-											</MultiBinding>
-										</RectangleGeometry.Rect>
-									</RectangleGeometry>
-								</CombinedGeometry.Geometry2>
-							</CombinedGeometry>
-						</GeometryDrawing.Geometry>
-					</GeometryDrawing>
-				</DrawingGroup>
-			</DrawingBrush.Drawing>
-		</DrawingBrush>
-	</c:BackdropWindow.OpacityMask>
 
 	<Grid>
 		<Canvas>

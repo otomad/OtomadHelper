@@ -75,7 +75,7 @@ public partial class ContentDialog : BackdropWindow {
 				if (sender is not Button button) return;
 				dialog.CopyErrorMessage(message, stackTrace);
 				button.Content = "Copied!"; // TODO: i18n
-				if (timer is not null) timer.Stop();
+				timer?.Stop();
 				timer = new(() => {
 					timer = null;
 					button.Content = "Copy _message"; // TODO: i18n
@@ -109,12 +109,10 @@ public partial class ContentDialog : BackdropWindow {
 		if (!string.IsNullOrEmpty(singletonId)) {
 			if (singletons.TryGetValue(singletonId!, out ContentDialog openedDialog)) {
 				//openedDialog.Vanish();
-				return default(TDialogResult);
+				return default;
 			}
 			singletons.Add(singletonId!, dialog);
-			dialog.Closed += (_, _) => {
-				singletons.Remove(singletonId!);
-			};
+			dialog.Closed += (_, _) => singletons.Remove(singletonId!);
 		}
 		customize?.Invoke(dialog);
 		return (TDialogResult?)await dialog.ShowDialogAsync();
@@ -149,8 +147,7 @@ public partial class ContentDialog : BackdropWindow {
 	internal void SetNonDefaultButtonAccent(Color color) {
 		for (int i = 0; i < ButtonsContainer.Items.Count; i++) {
 			ContentPresenter presenter = (ContentPresenter)ButtonsContainer.ItemContainerGenerator.ContainerFromIndex(i);
-			Button? button = presenter.ContentTemplate.FindName("Button", presenter) as Button;
-			if (button is null) continue;
+			if (presenter.ContentTemplate.FindName("Button", presenter) is not Button button) continue;
 			button.MixCheckerBoard = true;
 			if (!button.IsDefault) button.Accent = color;
 		}

@@ -8,8 +8,6 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
 
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
-
 using OtomadHelper.Models;
 
 using ContextMenu = System.Windows.Controls.ContextMenu;
@@ -27,10 +25,11 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<TitleBarType>("TitleBarType", DefaultValueExpression = "TitleBarType.System")]
 [DependencyProperty<FontFamily>("MonoFont")]
 [DependencyProperty<FontFamily>("DefaultFont")]
-[DependencyProperty<bool>("IsNonClientActive")]
+//[DependencyProperty<bool>("IsNonClientActive")]
 [DependencyProperty<bool?>("MinimizeBox", OnChanged = nameof(UpdateControlBoxesVisibility), PropertyXmlDocumentation = """<inheritdoc cref="System.Windows.Forms.Form.MinimizeBox" />""")]
 [DependencyProperty<bool?>("MaximizeBox", OnChanged = nameof(UpdateControlBoxesVisibility), PropertyXmlDocumentation = """<inheritdoc cref="System.Windows.Forms.Form.MaximizeBox" />""")]
 [DependencyProperty<bool?>("ControlBox", OnChanged = nameof(UpdateControlBoxesVisibility), PropertyXmlDocumentation = """<inheritdoc cref="System.Windows.Forms.Form.ControlBox" />""")]
+[DependencyProperty<bool>("UseUniversalControlBox", DefaultValue = false)]
 [RoutedEvent("Showing", RoutedEventStrategy.Bubble)]
 public partial class BackdropWindow : Window {
 	protected readonly WindowInteropHelper helper;
@@ -73,6 +72,7 @@ public partial class BackdropWindow : Window {
 	}
 
 	private void Window_Loaded(object sender, RoutedEventArgs e) {
+		FixNonClientFrameEdgesMargin();
 		if (ResizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize)
 			ReserveSystemMenuItems(Handle, SystemMenuItemType.Move | SystemMenuItemType.Close);
 		BindViewToViewModel();
@@ -311,7 +311,7 @@ public partial class BackdropWindow : Window {
 
 		// Fix the issue of incorrect window size when use WindowChrome with SizeToContent.WidthAndHeight.
 		// See: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#720121120
-		if (SizeToContent == SizeToContent.WidthAndHeight && WindowChrome.GetWindowChrome(this) is not null)
+		if (SizeToContent == SizeToContent.WidthAndHeight && Chrome is not null)
 			InvalidateMeasure();
 
 		// Detect when the theme changed
@@ -347,10 +347,10 @@ public partial class BackdropWindow : Window {
 			case DwmColorizationColorChanged:
 				OnSystemThemeChanged(null, new(UserPreferenceCategory.General));
 				break;
-			case NCActivate:
-				// reference: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#29282701
-				IsNonClientActive = wParam == trueValue;
-				break;
+			//case NCActivate:
+			//	// reference: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#29282701
+			//	IsNonClientActive = wParam == trueValue;
+			//	break;
 			//case DwmCompositionChanged:
 			//case ThemeChanged:
 			//	// Respond to DWM being enabled/disabled or system theme being changed
@@ -372,15 +372,15 @@ public partial class BackdropWindow : Window {
 	private static readonly IntPtr trueValue = new(1);
 	//private uint WM_ShellHook;
 
-	protected override void OnActivated(EventArgs e) {
-		base.OnActivated(e);
-		IsNonClientActive = true;
-	}
+	//protected override void OnActivated(EventArgs e) {
+	//	base.OnActivated(e);
+	//	IsNonClientActive = true;
+	//}
 
-	protected override void OnDeactivated(EventArgs e) {
-		base.OnDeactivated(e);
-		IsNonClientActive = false;
-	}
+	//protected override void OnDeactivated(EventArgs e) {
+	//	base.OnDeactivated(e);
+	//	IsNonClientActive = false;
+	//}
 
 	internal static bool IsGlassEnabled => SystemParameters.IsGlassEnabled;
 	protected void OnSystemThemeChanged(object? sender, UserPreferenceChangedEventArgs e) {
@@ -406,7 +406,7 @@ public partial class BackdropWindow : Window {
 
 	protected void SetSolidBackgroundColorAsNeeded() {
 		if (Background == DefaultBackground || this.GetDynamicResourceKey(BackgroundProperty) == BackgroundBrushKeyName)
-			if (TitleBarType == TitleBarType.System || !IsGlassEnabled)
+			if (TitleBarType == TitleBarType.System || !IsGlassEnabled || SystemBackdropType == SystemBackdropType.None)
 				SetResourceReference(BackgroundProperty, BackgroundBrushKeyName);
 			else
 				Background = DefaultBackground;
@@ -428,14 +428,14 @@ public partial class BackdropWindow : Window {
 		}
 	}
 
-	private const SystemBackdropType DefaultSystemBackdropType = SystemBackdropType.TransientWindow;
+	private const SystemBackdropType DefaultSystemBackdropType = SystemBackdropType.None;
 
 	protected void SetSystemBackdropType(SystemBackdropType systemBackdropType) {
 		if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.AcrylicMicaMicaAlt)
 			SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (uint)systemBackdropType);
 		else if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.Blur && systemBackdropType is not SystemBackdropType.None) {
 			SetAcrylicByComposition(Handle, this, AccentState.EnableBlurBehind);
-			// AccentState.EnableAcrylicBlurBehind is stuck when moving window in Windows 10 ~ Windows 11 RTM (exclude from 22H2), so use the early blur effect instead of acrylic.
+			// AccentState.EnableAcrylicBlurBehind is stuck when moving window in Windows 10 ~ Windows 11 21H2, so use the early blur effect instead of acrylic.
 			//WindowChrome.GetWindowChrome(this).GlassFrameThickness = new(0, 30, 0, 0);
 		}
 	}
@@ -462,6 +462,11 @@ public partial class BackdropWindow : Window {
 	#endregion
 
 	#region Extends content into title bar
+	/// <inheritdoc cref="WindowChrome.GetWindowChrome" />
+	public WindowChrome? Chrome => WindowChrome.GetWindowChrome(this);
+
+	private static readonly RelativeSource backdropWindowRelativeSource = new(RelativeSourceMode.FindAncestor, typeof(BackdropWindow), 1);
+
 	partial void OnTitleBarTypeChanged(TitleBarType value) {
 		if (!IsGlassEnabled) value = TitleBarType.System;
 		SetSolidBackgroundColorAsNeeded();
@@ -473,18 +478,37 @@ public partial class BackdropWindow : Window {
 					GlassFrameThickness = new(-1),
 					UseAeroCaptionButtons = true,
 				});
-				RelativeSource backdropWindowRelativeSource = new(RelativeSourceMode.FindAncestor, typeof(BackdropWindow), 1);
-				Binding resizeBorderThicknessBinding = new("ResizeMode") {
+				#region WindowChrome.ResizeBorderThickness
+				Binding resizeBorderThicknessBinding = new(nameof(ResizeMode)) {
 					RelativeSource = backdropWindowRelativeSource,
 					Converter = new WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter(),
 				};
-				BindingOperations.SetBinding(WindowChrome.GetWindowChrome(this), WindowChrome.ResizeBorderThicknessProperty, resizeBorderThicknessBinding);
-				MultiBinding nonClientFrameEdgesBinding = new() { Converter = new WindowChromeTitleBarTypeResizeModeAndFlowDirectionToNonClientFrameEdgesConverter() };
-				nonClientFrameEdgesBinding.AddBinding([
-					new("ResizeMode") { RelativeSource = backdropWindowRelativeSource },
-					new("FlowDirection") { RelativeSource = backdropWindowRelativeSource },
-				]);
-				BindingOperations.SetBinding(WindowChrome.GetWindowChrome(this), WindowChrome.NonClientFrameEdgesProperty, nonClientFrameEdgesBinding);
+				BindingOperations.SetBinding(Chrome, WindowChrome.ResizeBorderThicknessProperty, resizeBorderThicknessBinding);
+				#endregion
+				#region WindowChrome.NonClientFrameEdges
+				MultiBinding nonClientFrameEdgesBinding = new() { Converter = new WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateToNonClientFrameEdgesConverter() };
+				nonClientFrameEdgesBinding.AddBinding(
+					new(nameof(ResizeMode)) { RelativeSource = backdropWindowRelativeSource },
+					new(nameof(FlowDirection)) { RelativeSource = backdropWindowRelativeSource },
+					new(nameof(WindowState)) { RelativeSource = backdropWindowRelativeSource }
+				);
+				BindingOperations.SetBinding(Chrome, WindowChrome.NonClientFrameEdgesProperty, nonClientFrameEdgesBinding);
+				#endregion
+				#region WindowChrome.GlassFrameThickness
+				Binding glassFrameThicknessBinding = new(nameof(UseUniversalControlBox)) {
+					RelativeSource = backdropWindowRelativeSource,
+					Converter = new UseUniversalControlBoxToWindowChromeGlassFrameThicknessConverter(),
+				};
+				BindingOperations.SetBinding(Chrome, WindowChrome.GlassFrameThicknessProperty, glassFrameThicknessBinding);
+				#endregion
+				#region BackdropWindow.UseUniversalControlBox
+				Binding useUniversalControlBoxBinding = new(nameof(SystemBackdropType)) {
+					RelativeSource = new(RelativeSourceMode.Self),
+					Converter = new SystemBackdropTypeToUseUniversalControlBoxConverter(),
+					ConverterParameter = WindowsVersion.Current is >= WindowsNT.Windows10 and <= WindowsNT.Windows11, // From Windows 10 RTM to Windows 11 21H2 (before Windows 11 22H2).
+				};
+				SetBinding(UseUniversalControlBoxProperty, useUniversalControlBoxBinding);
+				#endregion
 				break;
 			case TitleBarType.WindowChromeNoTitleBar:
 				WindowChrome.SetWindowChrome(this, new() {
@@ -507,26 +531,78 @@ public partial class BackdropWindow : Window {
 				break;
 		}
 
-		void RemoveWindowChrome() => WindowChrome.SetWindowChrome(this, null);
+		void RemoveWindowChrome() {
+			WindowChrome.SetWindowChrome(this, null);
+			UseUniversalControlBox = false;
+		}
 	}
 
+	private static void FixNonClientFrameEdgesMargin(Border templateRootBorder) {
+		templateRootBorder.Margin = new(0);
+		//I don't know why does WindowChrome set a bad margin (0, 0, -6.5, 0).
+		MultiBinding marginBinding = new() { Converter = new WindowChromeNonClientFrameEdgesMarginAndMaximizedWindowStateToTemplateRootBorderMarginConverter() };
+		marginBinding.AddBinding(
+			new("Chrome.NonClientFrameEdges") { RelativeSource = backdropWindowRelativeSource },
+			new("WindowState") { RelativeSource = backdropWindowRelativeSource }
+		);
+		templateRootBorder.SetBinding(MarginProperty, marginBinding);
+	}
+
+	private void FixNonClientFrameEdgesMargin() {
+		if (VisualChildrenCount > 0 && GetVisualChild(0) is Border templateRootBorder) {
+			FixNonClientFrameEdgesMargin(templateRootBorder);
+			templateRootBorder.LayoutUpdated += (_, _) => {
+				if (templateRootBorder.GetBindingExpression(MarginProperty) is null)
+					FixNonClientFrameEdgesMargin(templateRootBorder);
+			};
+			templateRootBorder.Unloaded += (_, _) => FixNonClientFrameEdgesMargin();
+		}
+	}
+
+	#region Converters
 	[ValueConversion(typeof(ResizeMode), typeof(Thickness))]
-	public class WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter : ValueConverter<ResizeMode, Thickness> {
+	private class WindowChromeTitleBarTypeResizeModeToResizeBorderThicknessConverter : ValueConverter<ResizeMode, Thickness> {
 		public override Thickness Convert(ResizeMode resizeMode, Type targetType, object parameter, CultureInfo culture) =>
 			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? new(0) : new(8, 0, 8, 8);
 	}
 
-	[ValueConversion(typeof(ResizeMode), typeof(NonClientFrameEdges))]
-	public class WindowChromeTitleBarTypeResizeModeAndFlowDirectionToNonClientFrameEdgesConverter : MultiValueConverter<ValueTuple<ResizeMode, FlowDirection>, NonClientFrameEdges> {
+	private class WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateToNonClientFrameEdgesConverter : MultiValueConverter<(ResizeMode, FlowDirection, WindowState), NonClientFrameEdges> {
 		// Decided by whenever ILRepark is enabled.
-		public override NonClientFrameEdges Convert(ValueTuple<ResizeMode, FlowDirection> value, Type targetType, object parameter, CultureInfo culture) {
-			(ResizeMode resizeMode, FlowDirection flowDirection) = value;
+		public override NonClientFrameEdges Convert((ResizeMode, FlowDirection, WindowState) value, Type targetType, object parameter, CultureInfo culture) {
+			(ResizeMode resizeMode, FlowDirection flowDirection, WindowState windowState) = value;
 			return resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? NonClientFrameEdges.None :
+				windowState == WindowState.Maximized ? NonClientFrameEdges.None :
 				WindowsVersion.Current < WindowsNT.Windows10_TP ? NonClientFrameEdges.None :
 				flowDirection == FlowDirection.LeftToRight ? NonClientFrameEdges.Right :
 				NonClientFrameEdges.Right | NonClientFrameEdges.Left | NonClientFrameEdges.Bottom;
 		}
 	}
+
+	private class WindowChromeNonClientFrameEdgesMarginAndMaximizedWindowStateToTemplateRootBorderMarginConverter : MultiValueConverter<(NonClientFrameEdges, WindowState), Thickness> {
+		public override Thickness Convert((NonClientFrameEdges, WindowState) value, Type targetType, object parameter, CultureInfo culture) {
+			(NonClientFrameEdges ncEdge, WindowState state) = value;
+			const double BASE_MARGIN = -6.5;
+			return state != WindowState.Maximized ? new(0) : new(
+				(ncEdge & NonClientFrameEdges.Left) != 0 ? BASE_MARGIN : 0,
+				(ncEdge & NonClientFrameEdges.Top) != 0 ? BASE_MARGIN : 0,
+				(ncEdge & NonClientFrameEdges.Right) != 0 ? BASE_MARGIN : 0,
+				(ncEdge & NonClientFrameEdges.Bottom) != 0 ? BASE_MARGIN : 0
+			);
+		}
+	}
+
+	[ValueConversion(typeof(bool), typeof(Thickness))]
+	private class UseUniversalControlBoxToWindowChromeGlassFrameThicknessConverter : ValueConverter<bool, Thickness> {
+		public override Thickness Convert(bool use, Type targetType, object parameter, CultureInfo culture) =>
+			!use ? new(-1) : new(0, 1, 0, 0);
+	}
+
+	[ValueConversion(typeof(SystemBackdropType), typeof(bool))]
+	private class SystemBackdropTypeToUseUniversalControlBoxConverter : ValueConverter<SystemBackdropType, bool, bool> {
+		public override bool Convert(SystemBackdropType backdrop, Type targetType, bool forceUse, CultureInfo culture) =>
+			forceUse || backdrop == SystemBackdropType.None;
+	}
+	#endregion
 
 	protected override void OnKeyDown(KeyEventArgs e) {
 		if (TitleBarType == TitleBarType.WindowChromeNoTitleBar) {
