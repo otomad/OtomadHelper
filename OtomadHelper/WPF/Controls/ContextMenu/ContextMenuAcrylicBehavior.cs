@@ -67,7 +67,7 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 			>= WindowsNT.Windows10_1803 => AccentState.EnableAcrylicBlurBehind,
 			>= WindowsNT.Windows10 => AccentState.EnableBlurBehind,
 			>= WindowsNT.Windows8 => AccentState.EnableTransparentGradient,
-			_ => AccentState.InvalidState,
+			_ => AccentState.EnableHostBackdrop,
 		});
 		if (supportComposition) {
 			SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0u);

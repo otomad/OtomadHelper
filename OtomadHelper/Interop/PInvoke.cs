@@ -46,11 +46,11 @@ public static class PInvoke {
 		/// For more info about Mica Alt, see <a href="https://learn.microsoft.com/windows/apps/design/style/mica#app-layering-with-mica-alt">Layering with Mica Alt</a>.
 		/// </remarks>
 		TabbedWindow,
-		/// <summary>Blur</summary>
-		/// <remarks>
-		/// Simulates blur effects of the Start Menu and Action Center in earlier versions of Windows 10. Acrylic was not proposed at that time.
-		/// <para>Redirect to <see cref="AccentState.EnableBlurBehind" /> in Windows 10.</para>
-		/// </remarks>
+		///// <summary>Blur</summary>
+		///// <remarks>
+		///// Simulates blur effects of the Start Menu and Action Center in earlier versions of Windows 10. Acrylic was not proposed at that time.
+		///// <para>Redirect to <see cref="AccentState.EnableBlurBehind" /> in Windows 10.</para>
+		///// </remarks>
 		//EarlyTransientWindow = -3,
 	}
 
@@ -482,33 +482,57 @@ public static class PInvoke {
 	/// </remarks>
 	public enum AccentState {
 		/// <summary>
+		/// No effect.
+		/// </summary>
+		/// <remarks>
 		/// Black background, plain white border.
-		/// </summary>
-		Disabled = 0,
+		/// </remarks>
+		Disabled,
 		/// <summary>
+		/// Solid color gradient.
+		/// </summary>
+		/// <remarks>
 		/// Gradient color background, dark border in inactive window.
-		/// </summary>
-		EnableGradient = 1,
+		/// </remarks>
+		EnableGradient,
 		/// <summary>
+		/// Transparent gradient.
+		/// </summary>
+		/// <remarks>
 		/// Theme color background, dark border in inactive window.
-		/// </summary>
-		EnableTransparentGradient = 2,
+		/// </remarks>
+		EnableTransparentGradient,
 		/// <summary>
+		/// Older style blur (Windows 7-like).
+		/// <para>Simulates blur effects of the Start Menu and Action Center in earlier versions of Windows 10. Acrylic was not proposed at that time.</para>
+		/// </summary>
+		/// <remarks>
 		/// Blur effect background, gray border in inactive window.
-		/// </summary>
-		EnableBlurBehind = 3,
+		/// </remarks>
+		EnableBlurBehind,
 		/// <summary>
+		/// Fluent Acrylic.
+		/// </summary>
+		/// <remarks>
 		/// Acrylic effect that overlay with gradient color background.
-		/// </summary>
-		EnableAcrylicBlurBehind = 4,
+		/// </remarks>
+		EnableAcrylicBlurBehind,
 		/// <summary>
-		/// Same as <see cref="Disabled"/>.
+		/// Uses system backdrop.
+		/// <para>Old name: InvalidState</para>
 		/// </summary>
-		EnableHostBackdrop = 5,
+		/// <remarks>
+		/// Same as <see cref="Disabled"/>.
+		/// </remarks>
+		EnableHostBackdrop,
 		/// <summary>
-		/// Same as <see cref="Disabled"/>.
+		/// Blur with region support.
 		/// </summary>
-		InvalidState = 6,
+		EnableBlurBehindWithBlurRegion,
+		/// <summary>
+		/// Acrylic but darker.
+		/// </summary>
+		EnableAcrylicBlurBehindBlack,
 	}
 	[Flags]
 	public enum AccentFlags {
