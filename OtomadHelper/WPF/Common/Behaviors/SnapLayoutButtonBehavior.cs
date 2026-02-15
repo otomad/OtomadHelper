@@ -5,6 +5,8 @@ using System.Windows.Interop;
 
 using Microsoft.Xaml.Behaviors;
 
+using BackdropWindow = OtomadHelper.WPF.Controls.BackdropWindow;
+
 namespace OtomadHelper.WPF.Common;
 
 public class SnapLayoutButtonBehavior : Behavior<Button> {
@@ -15,17 +17,22 @@ public class SnapLayoutButtonBehavior : Behavior<Button> {
 	private const int HTMAXBUTTON = 9;
 
 	private HwndSource? hwndSource;
+	private Window? window;
 
 	/// <summary>
 	/// This needs to be called in this.Loaded event.
 	/// </summary>
 	protected override void OnAttached() {
 		base.OnAttached();
-		Window? window = Window.GetWindow(AssociatedObject);
-		if (WindowsVersion.Current < WindowsNT.Windows11_Dev || window is null) return;
+		window = Window.GetWindow(AssociatedObject);
+		// This feature is only available on Windows 11+
+		if (WindowsVersion.Current < WindowsNT.Windows11_Dev || window is null) return; // Windows 11 Original release (21H2)
 
-		hwndSource = PresentationSource.FromVisual(AssociatedObject) as HwndSource;
+		hwndSource = PresentationSource.FromVisual(window) as HwndSource;
 		hwndSource?.AddHook(HwndSourceHook);
+
+		if (window is BackdropWindow backdropWindow)
+			backdropWindow.AddNCHitTestHook(NCHitTestHook);
 	}
 
 	protected override void OnDetaching() {
@@ -41,43 +48,49 @@ public class SnapLayoutButtonBehavior : Behavior<Button> {
 		int mouseY = (short)((lparam.ToInt32() >> 16) & 0xFFFF);
 
 		// Get button's actual dimensions and position
+		if (!button.IsVisible) return false;
 		Point buttonPosition = button.PointToScreen(new(0, 0));
 
 		(double dpiX, double dpiY) = AssociatedObject.Dpi;
 
 		// Check if mouse coordinates are within the button bounds using a single return statement
-		return
-			mouseX >= buttonPosition.X && mouseX <= buttonPosition.X + button.ActualWidth * dpiX &&
+		return (button.FlowDirection == FlowDirection.LeftToRight ?
+			mouseX >= buttonPosition.X && mouseX <= buttonPosition.X + button.ActualWidth * dpiX :
+			mouseX >= buttonPosition.X - button.ActualWidth * dpiX && mouseX <= buttonPosition.X) &&
 			mouseY >= buttonPosition.Y && mouseY <= buttonPosition.Y + button.ActualHeight * dpiY;
 	}
 
-	private IntPtr HwndSourceHook(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled) {
+	private IntPtr NCHitTestHook(IntPtr lParam, ref bool handled) {
+		if (IsCursorOnButton(lParam, AssociatedObject)) {
+			SetButtonState(AssociatedObject, isMouseOver: true);
+			handled = true;
+			return new IntPtr(HTMAXBUTTON);
+		} else
+			SetButtonState(AssociatedObject, isMouseOver: false, isPressed: false);
+		return IntPtr.Zero;
+	}
+
+	private IntPtr HwndSourceHook(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
 		// https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/apply-snap-layout-menu
 		// https://github.com/dotnet/wpf/issues/4825
 		switch (msg) {
 			case WM_NCHITTEST:
-				if (IsCursorOnButton(lparam, AssociatedObject)) {
-					SetButtonState(AssociatedObject, isMouseOver: true);
-					handled = true;
-					return new IntPtr(HTMAXBUTTON);
-				} else
-					SetButtonState(AssociatedObject, isMouseOver: false, isPressed: false);
-				break;
+				return NCHitTestHook(lParam, ref handled);
 
 			case WM_NCLBUTTONDOWN:
-				if (IsCursorOnButton(lparam, AssociatedObject)) {
+				if (IsCursorOnButton(lParam, AssociatedObject)) {
 					SetButtonState(AssociatedObject, isPressed: true);
 					handled = true;
 				}
 				break;
 
 			case WM_NCLBUTTONUP:
-				if (IsCursorOnButton(lparam, AssociatedObject)) {
+				if (IsCursorOnButton(lParam, AssociatedObject)) {
 					GetButtonState(AssociatedObject, out _, out bool? wasPressed);
 					SetButtonState(AssociatedObject, isPressed: false);
 					handled = true;
 					if (wasPressed == true) // Fire click
-						AssociatedObject.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+						AssociatedObject.RaiseEvent(new(Button.ClickEvent));
 				}
 				break;
 			default:

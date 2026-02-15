@@ -171,9 +171,9 @@
 															/>
 													</i:EventTrigger>
 												</i:Interaction.Triggers>
-												<!--<i:Interaction.Behaviors>
+												<i:Interaction.Behaviors>
 													<m:SnapLayoutButtonBehavior />
-												</i:Interaction.Behaviors>-->
+												</i:Interaction.Behaviors>
 											</Button>
 											<Button x:Name="MaximizeButton" Content="&#xE922;">
 												<i:Interaction.Triggers>

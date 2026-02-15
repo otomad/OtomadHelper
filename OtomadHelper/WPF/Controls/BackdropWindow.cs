@@ -328,10 +328,18 @@ public partial class BackdropWindow : Window {
 		const int NCActivate = 0x0086;
 		const int DwmCompositionChanged = 0x31E;
 		const int ThemeChanged = 0x31A;
+		const int NCHitTest = 0x0084;
 #pragma warning restore CS0219 // 变量已被赋值，但从未使用过它的值
 #pragma warning restore IDE0059 // 不需要赋值
 
 		switch (msg) {
+			// https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-nchittest
+			// NCHitTest must be listened at first, or it will be ignored in other HwndSource.AddHook.
+			case NCHitTest:
+				foreach (NCHitTestHookHandler Hook in NCHitTestHooks)
+					if (Hook(lParam, ref handled) is IntPtr hitResult && hitResult != IntPtr.Zero)
+						return hitResult;
+				break;
 			//case SettingChange:
 			//	if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
 			//		RefreshDarkMode();
@@ -382,10 +390,15 @@ public partial class BackdropWindow : Window {
 	//	IsNonClientActive = false;
 	//}
 
+	public delegate IntPtr NCHitTestHookHandler(IntPtr lParam, ref bool handled);
+	private readonly List<NCHitTestHookHandler> NCHitTestHooks = [];
+	public void AddNCHitTestHook(NCHitTestHookHandler hook) => NCHitTestHooks.Add(hook);
+	public void RemoveNCHitTestHook(NCHitTestHookHandler hook) => NCHitTestHooks.Remove(hook);
+
 	internal static bool IsGlassEnabled => SystemParameters.IsGlassEnabled;
 	protected void OnSystemThemeChanged(object? sender, UserPreferenceChangedEventArgs e) {
 		//if (e.Category is not (UserPreferenceCategory.Color or UserPreferenceCategory.General or UserPreferenceCategory.Window or UserPreferenceCategory.VisualStyle)) return;
-		if (WindowsVersion.Current < WindowsNT.Windows8) // Since Windows 8, the DWM will not be turned off.
+		if (WindowsVersion.Current < WindowsNT.Windows8) // Since Windows 8, the DWM cannot be turned off.
 			OnTitleBarTypeChanged(TitleBarType);
 		RefreshDarkMode();
 		RefreshAccentColor();
@@ -428,7 +441,7 @@ public partial class BackdropWindow : Window {
 		}
 	}
 
-	private const SystemBackdropType DefaultSystemBackdropType = SystemBackdropType.None;
+	private const SystemBackdropType DefaultSystemBackdropType = SystemBackdropType.TransientWindow;
 
 	protected void SetSystemBackdropType(SystemBackdropType systemBackdropType) {
 		if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.AcrylicMicaMicaAlt)
@@ -495,19 +508,24 @@ public partial class BackdropWindow : Window {
 				BindingOperations.SetBinding(Chrome, WindowChrome.NonClientFrameEdgesProperty, nonClientFrameEdgesBinding);
 				#endregion
 				#region WindowChrome.GlassFrameThickness
-				Binding glassFrameThicknessBinding = new(nameof(UseUniversalControlBox)) {
-					RelativeSource = backdropWindowRelativeSource,
-					Converter = new UseUniversalControlBoxToWindowChromeGlassFrameThicknessConverter(),
-				};
-				BindingOperations.SetBinding(Chrome, WindowChrome.GlassFrameThicknessProperty, glassFrameThicknessBinding);
+				if (WindowsVersion.Current is >= WindowsNT.Windows10 and < WindowsNT.Windows11_Dev) { // Windows 10 only.
+					Binding glassFrameThicknessBinding = new(nameof(UseUniversalControlBox)) {
+						RelativeSource = backdropWindowRelativeSource,
+						Converter = new UseUniversalControlBoxToWindowChromeGlassFrameThicknessConverter(),
+					};
+					BindingOperations.SetBinding(Chrome, WindowChrome.GlassFrameThicknessProperty, glassFrameThicknessBinding);
+				}
 				#endregion
 				#region BackdropWindow.UseUniversalControlBox
-				Binding useUniversalControlBoxBinding = new(nameof(SystemBackdropType)) {
-					RelativeSource = new(RelativeSourceMode.Self),
-					Converter = new SystemBackdropTypeToUseUniversalControlBoxConverter(),
-					ConverterParameter = WindowsVersion.Current is >= WindowsNT.Windows10 and <= WindowsNT.Windows11, // From Windows 10 RTM to Windows 11 21H2 (before Windows 11 22H2).
-				};
-				SetBinding(UseUniversalControlBoxProperty, useUniversalControlBoxBinding);
+				if (WindowsVersion.Current is >= WindowsNT.Windows10 and <= WindowsNT.Windows11) // From Windows 10 RTM to Windows 11 21H2 (before Windows 11 22H2).
+					UseUniversalControlBox = true;
+				else {
+					Binding useUniversalControlBoxBinding = new(nameof(SystemBackdropType)) {
+						RelativeSource = new(RelativeSourceMode.Self),
+						Converter = new SystemBackdropTypeToUseUniversalControlBoxConverter(),
+					};
+					SetBinding(UseUniversalControlBoxProperty, useUniversalControlBoxBinding);
+				}
 				#endregion
 				break;
 			case TitleBarType.WindowChromeNoTitleBar:
@@ -598,9 +616,8 @@ public partial class BackdropWindow : Window {
 	}
 
 	[ValueConversion(typeof(SystemBackdropType), typeof(bool))]
-	private class SystemBackdropTypeToUseUniversalControlBoxConverter : ValueConverter<SystemBackdropType, bool, bool> {
-		public override bool Convert(SystemBackdropType backdrop, Type targetType, bool forceUse, CultureInfo culture) =>
-			forceUse || backdrop == SystemBackdropType.None;
+	private class SystemBackdropTypeToUseUniversalControlBoxConverter : ValueConverter<SystemBackdropType, bool> {
+		public override bool Convert(SystemBackdropType backdrop, Type targetType, object parameter, CultureInfo culture) => backdrop == SystemBackdropType.None;
 	}
 	#endregion
 
