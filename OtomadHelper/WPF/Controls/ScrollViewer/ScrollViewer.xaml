@@ -9,6 +9,7 @@
 	<SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
 
 	<Style x:Key="DefaultScrollViewerStyle" TargetType="ScrollViewer">
+		<Setter Property="FocusVisualStyle" Value="{DynamicResource OuterFocusVisualStyle}" />
 		<Setter Property="m:InteractivityItems.Template">
 			<Setter.Value>
 				<m:InteractivityTemplate>

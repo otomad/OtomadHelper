@@ -9,9 +9,7 @@ namespace OtomadHelper.WPF.Controls;
 /// ContentDialog.xaml 的交互逻辑
 /// </summary>
 public partial class ContentDialog : BackdropWindow {
-	public ContentDialog() {
-		InitializeComponent();
-	}
+	public ContentDialog() : base() => InitializeComponent();
 
 	public new ContentDialogViewModel DataContext => (ContentDialogViewModel)base.DataContext;
 

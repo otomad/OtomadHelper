@@ -50,11 +50,11 @@ public partial class BackdropWindow : Window {
 	}
 
 	private void InitializeComponent() {
+		Background = DefaultBackground;
 		RefreshCulture();
 		CommandBindings.AddRange(Commands.CommandBindings);
 		AddResource("WPF/Themes/Generic.xaml");
 		AddResource("WPF/Themes/Controls.xaml");
-		if (Background == DefaultBackground) base.Background = Background;
 		Loaded += Window_Loaded;
 		Closed += Window_Closed;
 		IsVisibleChanged += (_, e) => {
@@ -195,7 +195,6 @@ public partial class BackdropWindow : Window {
 	}
 
 	private static readonly Brush DefaultBackground = Brushes.Transparent;
-	public new Brush Background { get; set { field = value; base.Background = value; } } = DefaultBackground;
 
 	public void UpdateControlBoxesVisibility() {
 		if (MinimizeBox is null && MaximizeBox is null && ControlBox is null) return;
@@ -406,14 +405,17 @@ public partial class BackdropWindow : Window {
 	}
 
 	protected void SetSolidBackgroundColorAsNeeded() {
-		SolidColorBrush solidBackgroundBrush = IsLightTheme ? LightThemeBackgroundBrush : DarkThemeBackgroundBrush;
-		if (Background == DefaultBackground && this.GetDynamicResourceKey(BackgroundProperty) != AcrylicBackgroundBrushKeyName)
-			base.Background = TitleBarType == TitleBarType.System || !IsGlassEnabled ? solidBackgroundBrush : DefaultBackground;
+		if (Background == DefaultBackground || this.GetDynamicResourceKey(BackgroundProperty) == BackgroundBrushKeyName)
+			if (TitleBarType == TitleBarType.System || !IsGlassEnabled)
+				SetResourceReference(BackgroundProperty, BackgroundBrushKeyName);
+			else
+				Background = DefaultBackground;
 	}
 	public static readonly SolidColorBrush LightThemeBackgroundBrush = new(Color.FromArgb(0xFFF3F3F3u));
 	public static readonly SolidColorBrush DarkThemeBackgroundBrush = new(Color.FromArgb(0xFF202020u));
 	public static readonly SolidColorBrush LightThemeAcrylicBackgroundBrush = new(Color.FromArgb(0xB2FCFCFCu));
 	public static readonly SolidColorBrush DarkThemeAcrylicBackgroundBrush = new(Color.FromArgb(0xCE2C2C2Cu));
+	private const string BackgroundBrushKeyName = "BackgroundBrush";
 	private const string AcrylicBackgroundBrushKeyName = "AcrylicBackground";
 
 	partial void OnCustomAccentColorChanged() => RefreshAccentColor();

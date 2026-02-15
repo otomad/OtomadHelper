@@ -52,7 +52,6 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 	}
 
 	internal static void CustomizeDialog(ContentDialog dialog) {
-		dialog.Topmost = false;
 		dialog.ResizeMode = ResizeMode.CanResize;
 		dialog.SizeToContent = SizeToContent.Manual;
 		dialog.MinimizeBox = false;
