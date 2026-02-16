@@ -71,14 +71,14 @@ public partial class ContentDialog : BackdropWindow {
 		Services.ITimer.WPF? timer = null;
 		viewModel.Buttons.AddRange([
 			// new("Report", "report"), // I'm worried that users encounter any bug, they immediately click to report it directly.
-			new("Copy _message", "copy", click: (sender, e) => { // TODO: i18n
+			new(t.ContentDialog.Button.CopyMessage, "copy", click: (sender, e) => {
 				if (sender is not Button button) return;
 				dialog.CopyErrorMessage(message, stackTrace);
-				button.Content = "Copied!"; // TODO: i18n
+				button.Content = t.ContentDialog.Button.Copied;
 				timer?.Stop();
 				timer = new(() => {
 					timer = null;
-					button.Content = "Copy _message"; // TODO: i18n
+					button.Content = t.ContentDialog.Button.CopyMessage;
 				}, 1000);
 				timer.SingleShot();
 			}),
@@ -134,7 +134,7 @@ public partial class ContentDialog : BackdropWindow {
 
 	private void CopyErrorMessage(string message, string stackTrace) {
 		StringBuilder text = new();
-		text.Append("Error: "); // TODO: i18n
+		text.Append(t.Shared.Exceptions.ErrorHeader);
 		text.AppendLine(message);
 		text.AppendLine(stackTrace);
 		if (!string.IsNullOrEmpty(errorFooter)) {

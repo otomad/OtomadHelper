@@ -48,6 +48,26 @@ export default {
 			license: "License",
 			license_full: "License (GPL-3.0)",
 			wizard: "Wizard",
+			ultraPaste: "UltraPaste",
+			ultraPaste_full: "Ultra Paste!",
+			datamosh: "Datamosh",
+			datamix: "Datamix",
+			layer: "Layer",
+			render: "Render",
+			scramble: "Scramble",
+			automator: "Automator",
+			stutter: "Stutter",
+			shake: "Shake",
+			flow: "Flow",
+			selector: "Selector",
+			replacer: "Replacer",
+			propertizer: "Propertizer",
+			subtitles: "Subtitles",
+			effector: "Effector",
+			fader: "Fader",
+			exportScore: "Export Score",
+			clawer: "Clawer",
+			variableTempo: "Variable Tempo",
 		},
 		mode: {
 			_: "Mode",
@@ -82,7 +102,7 @@ export default {
 				ordinal: "Below the {{count, ordinal}} track",
 				belowAdjustmentTracks: "If one or more adjustment tracks are below this track, select the next track that none of them",
 				newTrack: "New track",
-				quicklySelect: "Quickly select the current track",
+				quickSelect: "Quickly select the current track",
 			},
 			trackGroup: {
 				_: "Grouping tracks",
@@ -96,7 +116,7 @@ export default {
 				_: "Naming",
 				trackName: "Name for tracks and track groups",
 				clipName: "Name for clips",
-				unsetBorrowedTrackName: "Unset the name of the borrowed existing track",
+				unsetBorrowedTrackName: "Do not rename the borrowed existing track",
 				groupByTaskSessionName: "Name for track groups when grouped by task session and with multitrack",
 				groupByTaskSessionNameTreatSingleAsMultitrack: "Process single track as multitrack",
 				track: "MIDI track name",
@@ -482,7 +502,7 @@ export default {
 					plugin: "Switch to Pitch Shift Audio Effect Plugin",
 					octave: "Higher/Lower octaves",
 					octaveExp: "Higher/Lower octaves (Experimental)",
-					wrap: "Wrap to top/bottom",
+					dock: "Dock at top/bottom",
 					silent: "Silent",
 				},
 				resample: "Resample",
@@ -781,37 +801,18 @@ export default {
 			},
 		},
 		mosh: {
-			datamosh: "Datamosh",
-			datamix: "Datamix",
-			layer: "Layer",
-			render: "Render",
-			scramble: "Scramble",
-			automator: "Automator",
-			stutter: "Stutter",
-			shake: "Shake",
 			specifyClipsFolder: "Specify Datamosh clips folder",
 			install: "Download Datamosh Extension Pack",
 		},
 		tools: {
-			flow: "Flow",
 			selector: {
-				_: "Selector",
 				quickSelectInterval: {
 					_: "Quick Select Interval",
 					interval: "Interval",
 				},
 			},
-			replacer: "Replacer",
-			propertizer: "Propertizer",
-			subtitles: "Subtitles",
-			effector: "Effector",
-			fader: "Fader",
-			exportScore: "Export Score",
 			converters: "Converters",
-			clawer: "Clawer",
 			services: "Services",
-			variableTempo: "Variable Tempo",
-			ultraPaste: "Ultra Paste!",
 		},
 		selectInfo: {
 			source: "{{count}} media source has been selected",
@@ -1063,7 +1064,7 @@ export default {
 				},
 				naming: {
 					_: "Specify the name for the generated tracks, track groups, and clips",
-					unsetBorrowedTrackName: "Newly created tracks will not be affected",
+					unsetBorrowedTrackName: "The borrowed existing track is determined by the “Preferred track” setting. Newly created tracks will not be affected.",
 					groupByTaskSessionNameTreatSingleAsMultitrack: "Track groups will use {{name, lowercase}} when grouped by task session and with single track",
 				},
 				multisource: {
@@ -1235,7 +1236,7 @@ export default {
 						plugin: "Reaches any pitch by using the Pitch Shift Audio Effect Plugin repeatedly",
 						octave: "At least avoid dissonant intervals by raising or lowering the octave scale to the range of {{formulaFor24}}",
 						octaveExp: "VEGAS actually supports a range of {{formulaFor39}} internally, use with caution as it may cause VEGAS to crash",
-						wrap: "Returns to the highest or lowest key within the range of {{formulaFor24}}",
+						dock: "Docks at the highest or lowest key within the range of {{formulaFor24}}",
 						silent: "Mutes those notes",
 					},
 					resample: "Adjusts stretch to change pitch in sync, causing the stretch to flex as the pitch increases, mimicking old-school audio devices",
@@ -1281,7 +1282,7 @@ export default {
 						_: "Resizes clips to maintain aspect ratio while fitting within the track box",
 						cover: "Crops off both sides to fill the entire track box so there are no gaps, but it will make both sides disappear from view.",
 						contain: "Adds mattes of blank space around to fit the entire clip into the track box so you can see it all, but the gaps become too conspicuous when the aspect ratio differences are significant.",
-						overlay: "The track boxes will not be scaled or panned, but only trimmed and mirrored/Gradified. This presents a hollowed-out and masked style.",
+						overlay: "The track boxes will not be scaled or panned, but only trimmed and mirrored or gradified. This presents a hollowed-out and masked style.",
 					},
 					mirrorEdges: {
 						hFlip: "Mirrors the tracks by flipping the columns in a parity pattern",
@@ -1568,7 +1569,7 @@ export default {
 				shupelunker: "Tartar Tactics", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				ytp: "", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				mosh: "", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
-				prve: "Promotion Video Rhythm Dynamic Pulsing, PV Rhythmic Dynamic Pulsing, Promotion Video Rhythmic Dynamic Pulsing, PV Rhythmical Dynamic Pulsing, Promotion Video Rhythmical Dynamic Pulsing, PV Rhythm Visual Effect, Promotion Video Rhythm Visual Effect, Promotion Video Rhythm Visual Effects, PV Rhythmic Visual Effect, PV Rhythmic Visual Effects, Promotion Video Rhythmic Visual Effect, Promotion Video Rhythmic Visual Effects, PV Rhythmical Visual Effect, PV Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effect, Promotion Video Rhythmical Visual Effects", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
+				prve: "Promotion Video Rhythm & Cadence Dynamic Pulsing, PV Rhythm Cadence Dynamic Pulsing, Promotion Video Rhythm Cadence Dynamic Pulsing, PV Rhythm and Cadence Dynamic Pulsing, Promotion Video Rhythm and Cadence Dynamic Pulsing, PV Rhythm Dynamic Pulsing, Promotion Video Rhythm Dynamic Pulsing, PV Rhythmic Dynamic Pulsing, Promotion Video Rhythmic Dynamic Pulsing, PV Rhythmical Dynamic Pulsing, Promotion Video Rhythmical Dynamic Pulsing, PV Rhythm Visual Effect, Promotion Video Rhythm Visual Effect, Promotion Video Rhythm Visual Effects, PV Rhythmic Visual Effect, PV Rhythmic Visual Effects, Promotion Video Rhythmic Visual Effect, Promotion Video Rhythmic Visual Effects, PV Rhythmical Visual Effect, PV Rhythmical Visual Effects, Promotion Video Rhythmical Visual Effect, Promotion Video Rhythmical Visual Effects", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				staff: "Musical Staff, Piano Staff Sheets Fashion", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 				pixelScaling: "MisczTools, Miscz Tools", // This string specifies comma-separated aliases for the property, like former names, synonyms, common variants. Search will match the original property when any alias is found. Leave empty if no aliases are needed.
 			},
@@ -1627,6 +1628,12 @@ export default {
 				importToHere: "Import %1",
 			},
 		},
+		window: {
+			minimize: "Minimize",
+			maximize: "Maximize",
+			restore: "Restore",
+			close: "Close",
+		},
 		contentDialog: {
 			button: {
 				ok: "&OK", // Add “&” before a letter to indicate the access key.
@@ -1636,6 +1643,7 @@ export default {
 				locate: "Loca&te", // Add “&” before a letter to indicate the access key.
 				copyMessage: "Copy &message", // Add “&” before a letter to indicate the access key.
 				copied: "Copied!",
+				revert: "Revert",
 			},
 			expander: {
 				expandDetails: "Expand details",
@@ -1656,10 +1664,15 @@ export default {
 			menu: {
 				clearAll: "Clear All",
 			},
+			numericUpDown: {
+				increase: "Increase",
+				decrease: "Decrease",
+			},
 		},
 		colorPicker: {
 			title: "Select a Color",
 			eyeDropper: "Eye dropper",
+			invert: "Invert",
 			axis: {
 				red: "Red",
 				green: "Green",
@@ -1701,6 +1714,20 @@ export default {
 				chroma: "C",
 				alpha: "Α",
 			},
+			aria: {
+				hex: "Hexadecimal",
+				aAxisInLab: "a-Axis",
+				bAxisInLab: "b-Axis",
+			},
+		},
+		quickSelectIntervalEditor: {
+			clear: "Clear",
+			invert: "Invert",
+			rename: "Rename",
+			interval: "Interval",
+			columns: "Columns",
+			rows: "Rows",
+			defaultTitle: "Quick Select Interval Editor",
 		},
 		flyout: {
 			confirmDelete: {
@@ -1720,6 +1747,29 @@ export default {
 		descriptions: {
 			colorPicker: {
 				eyeDropper: "Pick a color from the screen",
+				invert: "Inverts the current color",
+				revert: "Reverts to the color before setting",
+				aria: {
+					alpha255: "Value range 0 to 255",
+					alpha100: "Value range 0 to 100",
+					aAxisInLab: "Negative number indicates green, positive number indicates red",
+					bAxisInLab: "Negative number indicates blue, positive number indicates yellow",
+				},
+			},
+			quickSelectIntervalEditor: {
+				clear: "Unselects all items",
+				invert: "Inverts the current selection",
+				revert: "Reverts to the selection before setting",
+				aria: {
+					oneD: {
+						name: "Item {0}",
+						helpText: "Of {0}",
+					},
+					twoD: {
+						name: "Column {0}, row {1}",
+						helpText: "Of a {0}-column by {1}-row grid",
+					},
+				},
 			},
 		},
 		resetConfig: {

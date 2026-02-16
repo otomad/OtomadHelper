@@ -61,6 +61,18 @@
 	<data name="Host.ToolTip.ImportToHere" xml:space="preserve">
 		<value>インポート %1</value>
 	</data>
+	<data name="Window.Minimize" xml:space="preserve">
+		<value>Minimize</value>
+	</data>
+	<data name="Window.Maximize" xml:space="preserve">
+		<value>Maximize</value>
+	</data>
+	<data name="Window.Restore" xml:space="preserve">
+		<value>復元</value>
+	</data>
+	<data name="Window.Close" xml:space="preserve">
+		<value>閉じる</value>
+	</data>
 	<data name="ContentDialog.Button.Ok" xml:space="preserve">
 		<value>&amp;OK</value>
 	</data>
@@ -76,6 +88,15 @@
 	<data name="ContentDialog.Button.Locate" xml:space="preserve">
 		<value>Loca&amp;te</value>
 	</data>
+	<data name="ContentDialog.Button.CopyMessage" xml:space="preserve">
+		<value>メッセージをコピー(&amp;M)</value>
+	</data>
+	<data name="ContentDialog.Button.Copied" xml:space="preserve">
+		<value>コピーしました！</value>
+	</data>
+	<data name="ContentDialog.Button.Revert" xml:space="preserve">
+		<value>復元</value>
+	</data>
 	<data name="ContentDialog.Expander.ExpandDetails" xml:space="preserve">
 		<value>詳細を展開</value>
 	</data>
@@ -84,6 +105,9 @@
 	</data>
 	<data name="ContentDialog.ShowError.Title" xml:space="preserve">
 		<value>エラー</value>
+	</data>
+	<data name="ContentDialog.ShowError.WithColon" xml:space="preserve">
+		<value>エラー：</value>
 	</data>
 	<data name="WrongOpeningMethod.Script.Title" xml:space="preserve">
 		<value>拡張機能を外しました！</value>
@@ -98,11 +122,20 @@
 	<data name="TextBox.Menu.ClearAll" xml:space="preserve">
 		<value>すべてクリア</value>
 	</data>
+	<data name="TextBox.NumericUpDown.Increase" xml:space="preserve">
+		<value>増加</value>
+	</data>
+	<data name="TextBox.NumericUpDown.Decrease" xml:space="preserve">
+		<value>減らす</value>
+	</data>
 	<data name="ColorPicker.Title" xml:space="preserve">
 		<value>色を選択</value>
 	</data>
 	<data name="ColorPicker.EyeDropper" xml:space="preserve">
 		<value>スポイト</value>
+	</data>
+	<data name="ColorPicker.Invert" xml:space="preserve">
+		<value>Invert</value>
 	</data>
 	<data name="ColorPicker.Axis.Red" xml:space="preserve">
 		<value>赤</value>
@@ -141,7 +174,7 @@
 		<value>黄色</value>
 	</data>
 	<data name="ColorPicker.Axis.Key" xml:space="preserve">
-		<value>キー / ブラック</value>
+		<value>キー/ブラック</value>
 	</data>
 	<data name="ColorPicker.Axis.Luminance" xml:space="preserve">
 		<value />
@@ -215,6 +248,36 @@
 	<data name="ColorPicker.AxisAbbrs.Alpha" xml:space="preserve">
 		<value>Α</value>
 	</data>
+	<data name="ColorPicker.Aria.Hex" xml:space="preserve">
+		<value>16進法</value>
+	</data>
+	<data name="ColorPicker.Aria.AAxisInLab" xml:space="preserve">
+		<value>a軸</value>
+	</data>
+	<data name="ColorPicker.Aria.BAxisInLab" xml:space="preserve">
+		<value>b-軸</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Clear" xml:space="preserve">
+		<value>クリア</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Invert" xml:space="preserve">
+		<value>Invert</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Rename" xml:space="preserve">
+		<value>名前</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Interval" xml:space="preserve">
+		<value>間隔</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Columns" xml:space="preserve">
+		<value>列</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Rows" xml:space="preserve">
+		<value>行</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.DefaultTitle" xml:space="preserve">
+		<value>インターバルエディターをクイック選択</value>
+	</data>
 	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
 		<value>削除？</value>
 	</data>
@@ -238,6 +301,45 @@
 	</data>
 	<data name="Descriptions.ColorPicker.EyeDropper" xml:space="preserve">
 		<value>画面から色を選択</value>
+	</data>
+	<data name="Descriptions.ColorPicker.Invert" xml:space="preserve">
+		<value>現在の色を反転</value>
+	</data>
+	<data name="Descriptions.ColorPicker.Revert" xml:space="preserve">
+		<value>設定する前に色に戻します</value>
+	</data>
+	<data name="Descriptions.ColorPicker.Aria.Alpha255" xml:space="preserve">
+		<value>値の範囲 0 から 255</value>
+	</data>
+	<data name="Descriptions.ColorPicker.Aria.Alpha100" xml:space="preserve">
+		<value>値の範囲 0 から 100</value>
+	</data>
+	<data name="Descriptions.ColorPicker.Aria.AAxisInLab" xml:space="preserve">
+		<value>負の数は緑を示し、正の数は赤を示す。</value>
+	</data>
+	<data name="Descriptions.ColorPicker.Aria.BAxisInLab" xml:space="preserve">
+		<value>負の数は青、正の数は黄色を示します</value>
+	</data>
+	<data name="Descriptions.QuickSelectIntervalEditor.Clear" xml:space="preserve">
+		<value>すべてのアイテムの選択を解除</value>
+	</data>
+	<data name="Descriptions.QuickSelectIntervalEditor.Invert" xml:space="preserve">
+		<value>選択範囲を反転します。</value>
+	</data>
+	<data name="Descriptions.QuickSelectIntervalEditor.Revert" xml:space="preserve">
+		<value>設定する前に選択範囲に戻します</value>
+	</data>
+	<data name="Descriptions.QuickSelectIntervalEditor.Aria.OneD.Name" xml:space="preserve">
+		<value>アイテム {0}</value>
+	</data>
+	<data name="Descriptions.QuickSelectIntervalEditor.Aria.OneD.HelpText" xml:space="preserve">
+		<value>{0}</value>
+	</data>
+	<data name="Descriptions.QuickSelectIntervalEditor.Aria.TwoD.Name" xml:space="preserve">
+		<value>列 {0}, 行 {1}</value>
+	</data>
+	<data name="Descriptions.QuickSelectIntervalEditor.Aria.TwoD.HelpText" xml:space="preserve">
+		<value>{0}-column by {1}-row grid</value>
 	</data>
 	<data name="ResetConfig.Title" xml:space="preserve">
 		<value>すべてのユーザー設定をリセットしてもよろしいですか？</value>
@@ -304,7 +406,7 @@
 	<data name="Shared.Exceptions.PrveStepSequenceSyntaxInvalid" xml:space="preserve">
 		<value>ステップシーケンスパラメータの構文が無効です。
 
-シーケンスとしてカンマで区切られた各最初のステップのインデックスを入力してください。ここで0は「ノーマル」を表します。</value>
+シーケンスとしてカンマで区切られた各最初のステップのインデックスを入力してください。ここで0は「正常」を表します。</value>
 	</data>
 	<data name="Shared.Exceptions.PrveStepSequenceOutOfRange" xml:space="preserve">
 		<value>ステップシーケンスパラメータでは、少なくともインデックス値がステップの合計数を超えるか、負の値です。</value>

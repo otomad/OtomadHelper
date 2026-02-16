@@ -22,7 +22,7 @@ export /* @internal */ const exceeds = [
 	{ id: "plugin", icon: "plugin_multiple" },
 	{ id: "octave", icon: "octave" },
 	{ id: "octaveExp", icon: "octave_beaker" },
-	{ id: "wrap", icon: "abs_leq" },
+	{ id: "dock", icon: "abs_leq" },
 	{ id: "silent", icon: "speaker_mute" },
 ] as const;
 
@@ -126,7 +126,7 @@ export default function Audio() {
 					actions={(
 						<StackPanel>
 							<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
-							<QuicklySelectCurrentTrack />
+							<QuickSelectCurrentTrack />
 						</StackPanel>
 					)}
 				/>

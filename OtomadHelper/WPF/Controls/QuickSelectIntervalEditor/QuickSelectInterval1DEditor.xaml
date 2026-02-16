@@ -11,7 +11,7 @@
 	mc:Ignorable="d"
 	>
 	<UserControl.DataContext>
-		<c:QuickSelectInterval1DEditorViewModel />
+		<c:QuickSelectInterval1DEditorViewModel x:Name="ViewModel" />
 	</UserControl.DataContext>
 
 	<UserControl.Resources>
@@ -42,9 +42,11 @@
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<ToggleButton
+							AutomationProperties.HelpText="{Binding Bits.Count, ElementName=ViewModel, Converter={StaticResource IndexToAria}, ConverterParameter={x:Static m:AutomationPropertiesProperty.HelpText}}"
+							AutomationProperties.Name="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource IndexToAria}, ConverterParameter={x:Static m:AutomationPropertiesProperty.Name}}"
 							Command="{Binding DataContext.ToggleBooleanCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-							CommandParameter="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}}"
-							Content="{Binding (ItemsControl.AlternationIndex), Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource AddOne}}"
+							CommandParameter="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}"
+							Content="{Binding (ItemsControl.AlternationIndex), Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource AddOne}}"
 							IsChecked="{Binding .}"
 							/>
 					</DataTemplate>
@@ -85,26 +87,22 @@
 
 		<UniformGrid Grid.Row="2" Style="{StaticResource ActionButtonsGrid}">
 			<c:Button
-				Command="{Binding RestoreOriginalCommand}"
+				Command="{Binding RevertOriginalCommand}"
+				Content="{m:Trans ContentDialog.Button.Revert}"
 				IconName="ArrowReset"
-				ToolTip="还原为设置前的选区"
-				>
-				还原
-				<!--  TODO: I18n  -->
-			</c:Button>
+				ToolTip="{m:Trans Descriptions.QuickSelectIntervalEditor.Revert}"
+				/>
 			<c:Button
 				Command="{Binding InvertSelectionCommand}"
+				Content="{m:Trans QuickSelectIntervalEditor.Invert}"
 				IconName="InvertSelection"
-				ToolTip="反转当前选区"
-				>
-				反选
-				<!--  TODO: I18n  -->
-			</c:Button>
+				ToolTip="{m:Trans Descriptions.QuickSelectIntervalEditor.Invert}"
+				/>
 			<c:Button
 				Command="{Binding SelectNoneCommand}"
-				Content="{m:Trans TextBox.Menu.ClearAll}"
+				Content="{m:Trans QuickSelectIntervalEditor.Clear}"
 				IconName="SelectNone"
-				ToolTip="取消选中所有项目"
+				ToolTip="{m:Trans Descriptions.QuickSelectIntervalEditor.Clear}"
 				/>
 		</UniformGrid>
 
@@ -114,8 +112,7 @@
 			Style="{StaticResource FormIconAndLabel}"
 			>
 			<c:Icon IconName="TableSimpleInclude" />
-			<TextBlock x:Name="IntervalLbl">周期</TextBlock>
-			<!--  TODO: I18n  -->
+			<TextBlock x:Name="IntervalLbl" Text="{m:Trans QuickSelectIntervalEditor.Interval}" />
 		</StackPanel>
 		<c:NumericUpDown
 			Grid.Row="4"
@@ -131,7 +128,7 @@
 			Style="{StaticResource FormIconAndLabel}"
 			>
 			<c:Icon IconName="Rename" />
-			<TextBlock x:Name="RenameLbl">命名</TextBlock>
+			<TextBlock x:Name="RenameLbl" Text="{m:Trans QuickSelectIntervalEditor.Rename}" />
 		</StackPanel>
 		<TextBox
 			Grid.Row="6"

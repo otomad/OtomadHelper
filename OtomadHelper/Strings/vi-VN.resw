@@ -95,11 +95,20 @@ Vị trí:</value>
 	<data name="TextBox.Menu.ClearAll" xml:space="preserve">
 		<value>Xóa tất cả</value>
 	</data>
+	<data name="TextBox.NumericUpDown.Increase" xml:space="preserve">
+		<value>Tăng</value>
+	</data>
+	<data name="TextBox.NumericUpDown.Decrease" xml:space="preserve">
+		<value>Giảm</value>
+	</data>
 	<data name="ColorPicker.Title" xml:space="preserve">
 		<value>Chọn một màu</value>
 	</data>
 	<data name="ColorPicker.EyeDropper" xml:space="preserve">
 		<value>Bốc màu</value>
+	</data>
+	<data name="ColorPicker.Invert" xml:space="preserve">
+		<value>Đảo ngược màu</value>
 	</data>
 	<data name="ColorPicker.Axis.Red" xml:space="preserve">
 		<value>Đỏ</value>
@@ -137,9 +146,6 @@ Vị trí:</value>
 	<data name="ColorPicker.Axis.Yellow" xml:space="preserve">
 		<value>Vàng</value>
 	</data>
-	<data name="ColorPicker.Axis.Key" xml:space="preserve">
-		<value>Lược màu / Đen</value>
-	</data>
 	<data name="ColorPicker.Axis.Luminance" xml:space="preserve">
 		<value>Độ sáng</value>
 	</data>
@@ -151,9 +157,6 @@ Vị trí:</value>
 	</data>
 	<data name="ColorPicker.Axis.Chroma" xml:space="preserve">
 		<value>Sắc độ</value>
-	</data>
-	<data name="ColorPicker.Axis.Alpha" xml:space="preserve">
-		<value>Lớp chính / Độ mờ</value>
 	</data>
 	<data name="ColorPicker.Axis.Hex" xml:space="preserve">
 		<value>Thập lục phân</value>
@@ -211,6 +214,24 @@ Vị trí:</value>
 	</data>
 	<data name="ColorPicker.AxisAbbrs.Alpha" xml:space="preserve">
 		<value>A</value>
+	</data>
+	<data name="ColorPicker.Aria.Hex" xml:space="preserve">
+		<value>Thập lục phân</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Clear" xml:space="preserve">
+		<value>Xóa</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Invert" xml:space="preserve">
+		<value>Đảo ngược màu</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Rename" xml:space="preserve">
+		<value>Tên</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Columns" xml:space="preserve">
+		<value>Cột</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Rows" xml:space="preserve">
+		<value>Hàng</value>
 	</data>
 	<data name="Flyout.ConfirmDelete.Title" xml:space="preserve">
 		<value>Xoá?</value>

@@ -6,6 +6,9 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
+	<!--
+		This add a custom title bar buttons for some missing features in Windows 10 ~ Windows 11 21H2 only.
+	-->
 	<Style x:Key="UniversalWindowStyle" TargetType="c:BackdropWindow">
 		<Style.Triggers>
 			<Trigger Property="UseUniversalControlBox" Value="True">
@@ -42,6 +45,9 @@
 												<Setter Property="BorderThickness" Value="0" />
 												<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 												<Setter Property="Background" Value="Transparent" />
+												<Setter Property="Focusable" Value="False" />
+												<Setter Property="AutomationProperties.Name" Value="{Binding ToolTip, RelativeSource={RelativeSource Self}}" />
+												<Setter Property="AutomationProperties.HelpText" Value=" " />
 												<Setter Property="Stylus.IsPressAndHoldEnabled" Value="False" />
 												<Setter Property="Stylus.IsFlicksEnabled" Value="False" />
 												<Setter Property="Stylus.IsTapFeedbackEnabled" Value="False" />
@@ -150,7 +156,11 @@
 											HorizontalAlignment="Right"
 											Orientation="Horizontal"
 											>
-											<Button x:Name="MinimizeButton" Content="&#xE921;">
+											<Button
+												x:Name="MinimizeButton"
+												Content="&#xE921;"
+												ToolTip="{m:Trans Window.Minimize}"
+												>
 												<i:Interaction.Triggers>
 													<i:EventTrigger EventName="Click">
 														<i:ChangePropertyAction
@@ -161,7 +171,11 @@
 													</i:EventTrigger>
 												</i:Interaction.Triggers>
 											</Button>
-											<Button x:Name="RestoreButton" Content="&#xE923;">
+											<Button
+												x:Name="RestoreButton"
+												Content="&#xE923;"
+												ToolTip="{m:Trans Window.Restore}"
+												>
 												<i:Interaction.Triggers>
 													<i:EventTrigger EventName="Click">
 														<i:ChangePropertyAction
@@ -175,7 +189,11 @@
 													<m:SnapLayoutButtonBehavior />
 												</i:Interaction.Behaviors>
 											</Button>
-											<Button x:Name="MaximizeButton" Content="&#xE922;">
+											<Button
+												x:Name="MaximizeButton"
+												Content="&#xE922;"
+												ToolTip="{m:Trans Window.Maximize}"
+												>
 												<i:Interaction.Triggers>
 													<i:EventTrigger EventName="Click">
 														<i:ChangePropertyAction
@@ -193,6 +211,7 @@
 												x:Name="CloseButton"
 												Content="&#xE8BB;"
 												Style="{DynamicResource Style.Button.Close}"
+												ToolTip="{m:Trans Window.Close}"
 												>
 												<i:Interaction.Triggers>
 													<i:EventTrigger EventName="Click">

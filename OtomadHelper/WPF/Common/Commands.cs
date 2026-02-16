@@ -15,13 +15,13 @@ public static class Commands {
 	);
 	public static readonly RoutedUICommand Increase = new(
 		name: "Increase",
-		text: "Increase", // TODO: i18n
+		text: t.TextBox.NumericUpDown.Increase,
 		inputGestures: [new KeyGesture(Key.Up)],
 		ownerType: typeof(Commands)
 	);
 	public static readonly RoutedUICommand Decrease = new(
 		name: "Decrease",
-		text: "Decrease", // TODO: i18n
+		text: t.TextBox.NumericUpDown.Decrease,
 		inputGestures: [new KeyGesture(Key.Up)],
 		ownerType: typeof(Commands)
 	);

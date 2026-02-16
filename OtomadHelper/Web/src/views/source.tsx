@@ -157,7 +157,7 @@ export default function Source() {
 					actions={(
 						<StackPanel>
 							<TextBox.Number value={[preferredTrack, setPreferredTrack]} decimalPlaces={0} />
-							<QuicklySelectCurrentTrack />
+							<QuickSelectCurrentTrack />
 						</StackPanel>
 					)}
 				/>

@@ -27,6 +27,8 @@
 						ClipToBounds="False"
 						Command="{TemplateBinding Command}"
 						CommandParameter="{TemplateBinding CommandParameter}"
+						AutomationProperties.Name="{TemplateBinding AutomationProperties.Name}"
+						AutomationProperties.HelpText="{TemplateBinding AutomationProperties.HelpText}"
 						>
 						<i:Interaction.Triggers>
 							<i:EventTrigger EventName="Click">

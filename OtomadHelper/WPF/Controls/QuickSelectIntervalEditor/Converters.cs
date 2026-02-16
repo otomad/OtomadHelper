@@ -27,8 +27,8 @@ public class CountToVisualBrushSizeConverter : MultiValueConverter<Tuple<int, do
 	}
 }
 
-public class AlternationIndexToRowCellConverter : MultiValueConverter<int[], (int row, int cell)> {
-	public override (int row, int cell) Convert(int[] value, Type targetType, object parameter, CultureInfo culture) =>
+public class AlternationIndexToRowColumnConverter : MultiValueConverter<int[], (int row, int column)> {
+	public override (int row, int column) Convert(int[] value, Type targetType, object parameter, CultureInfo culture) =>
 		(value[0] - 1, value[1] - 1);
 }
 
@@ -49,3 +49,25 @@ public class CountToCollectionConverter : ValueConverter<int, int[]> {
 public class ContentWidthToIsWideConverter : ValueConverter<double, bool> {
 	public override bool Convert(double width, Type targetType, object parameter, CultureInfo culture) => width >= QuickSelectInterval2DEditor.WideThreshold;
 }
+
+#pragma warning disable IDE0008 // 使用显式类型
+[ValueConversion(typeof(int), typeof(string))]
+public class QuickSelectInterval1DIndexToAutomationPropertiesConverter : ValueConverter<int, string, AutomationPropertiesProperty> {
+	public override string Convert(int index, Type targetType, AutomationPropertiesProperty property, CultureInfo culture) {
+		var tA = t.Descriptions.QuickSelectIntervalEditor.Aria.OneD;
+		bool isHelpText = property == AutomationPropertiesProperty.HelpText;
+		if (!isHelpText) index++;
+		return string.Format(isHelpText ? tA.HelpText : tA.Name, index);
+	}
+}
+
+[ValueConversion(typeof((int row, int column)), typeof(string))]
+public class QuickSelectInterval2DRowColumnToAutomationPropertiesConverter : MultiValueConverter<(int row, int column), string, AutomationPropertiesProperty> {
+	public override string Convert((int row, int column) location, Type targetType, AutomationPropertiesProperty property, CultureInfo culture) {
+		(int row, int column) = location;
+		var tA = t.Descriptions.QuickSelectIntervalEditor.Aria.TwoD;
+		bool isHelpText = property == AutomationPropertiesProperty.HelpText;
+		return string.Format(isHelpText ? tA.HelpText : tA.Name, column, row);
+	}
+}
+#pragma warning restore IDE0008 // 使用显式类型

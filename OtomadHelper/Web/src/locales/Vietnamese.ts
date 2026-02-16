@@ -34,14 +34,31 @@ export default {
 			parameters: "Thông số",
 			grid_full: "Grid Layout",
 			box3d: "Bố cục hộp 3D",
-			gradient: "Track đa sắc",
 			license: "Giấy phép",
+			datamosh: "Datamosh",
+			datamix: "Datamix",
+			layer: "Layer",
+			render: "Render",
+			scramble: "Scramble",
+			automator: "Automator",
+			stutter: "Stutter",
+			shake: "Rung Lắc",
+			flow: "Flow",
+			selector: "Chọn",
+			replacer: "Thay thế",
+			propertizer: "Thuộc tính",
+			subtitles: "Phụ đề",
+			effector: "Hiệu ứng",
+			fader: "Phai nhạt",
+			exportScore: "Xuất score",
+			clawer: "Gắp",
 			track: "Các track",
 			mosh: "Mosh",
 			effect: "Hiệu ứng",
-			prve: "Hiệu ứng nhịp điệu hình ảnh PV",
 		},
-		mode: {},
+		mode: {
+			ytp: "YTP",
+		},
 		source: {
 			from: "Nguồn từ",
 			trackEvent: "Track event",
@@ -66,7 +83,7 @@ export default {
 				ordinal: "Bên dưới track {{count, ordinal}}",
 				belowAdjustmentTracks: "Nếu một hoặc nhiều track điều chỉnh nằm bên dưới track này, hãy chọn track tiếp theo mà không có track nào trong số chúng",
 				newTrack: "Track mới",
-				quicklySelect: "Nhanh chóng chọn track hiện tại",
+				quickSelect: "Nhanh chóng chọn track hiện tại",
 			},
 			trackGroup: {
 				_: "Nhóm các track",
@@ -83,7 +100,6 @@ export default {
 				unnamed: "Không tên",
 			},
 			luckyDip: {
-				_: "Hộp bí mật",
 				limitToSelected: "Nguồn đã chọn bị giới hạn",
 				track: "Với mỗi track hoặc channel",
 				marker: "Chuyển đổi một lần cho mỗi điểm đánh dấu",
@@ -134,6 +150,7 @@ export default {
 		decrease: "Giảm",
 		duration: "Thời lượng",
 		preview: "Xem trước",
+		none: "Không có",
 		export: "Xuất",
 		import: "Nhập",
 		infoBar: {
@@ -146,7 +163,6 @@ export default {
 		subheaders: {
 			moreOptions: "Tùy chọn khác",
 			advanced: "Nâng cao",
-			parameters: "Thông số",
 			seeAlso: "Xem thêm",
 		},
 		units: {
@@ -183,6 +199,7 @@ export default {
 			cover: "Trải ra",
 			contain: "Chứa",
 			stretch: "Kéo dãn",
+			overlay: "Lớp phủ",
 		},
 		fileFormats: {
 			allFiles: "Tất cả các tệp",
@@ -215,7 +232,6 @@ export default {
 				max: "Độ dài tối đa",
 				fixed: "Độ dài cố định",
 			},
-			trackOrChannel: "Track / Channel",
 			noteCount: "Số nốt",
 			beginNote: "Nốt bắt đầu",
 			pan: {
@@ -337,9 +353,6 @@ export default {
 					_: "Nếu vượt quá phạm vi",
 					multiple: "Sử dụng nhiều Plugin hiệu ứng âm thanh",
 					plugin: "Chuyển sang plugin hiệu ứng âm thanh Pitch Shift",
-					octave: "Quãng tám cao hơn / thấp hơn",
-					octaveExp: "Quãng tám cao hơn / thấp hơn (Thử nghiệm)",
-					wrap: "Bọc lên trên / dưới",
 					silent: "Im lặng",
 				},
 				resample: "Resample",
@@ -388,7 +401,12 @@ export default {
 			},
 			parameters: {
 				copyFromAnotherParameterScheme: "Sao chép từ một sơ đồ tham số khác ở đây",
+				hue: "Tông màu",
+				saturation: "Độ bão hòa",
+				threshold: "Threshold",
+				brightness: "Độ sáng",
 			},
+			enabled: {},
 		},
 		track: {
 			grid: {
@@ -398,16 +416,7 @@ export default {
 				max: "Tối đa",
 				transpose: "Chuyển vị",
 				numberOfSelectedTracks: "Số các track đã chọn",
-				quickFill: "Lấp đầy nhanh",
 				direction: {},
-				mirrorEdges: "Cạnh phản chiếu",
-				parity: {
-					unflipped: "Chưa lật",
-					evenColumns: "Cột chẵn",
-					oddColumns: "Cột lẻ",
-					evenRows: "Hàng chẵn",
-					oddRows: "Hàng lẻ",
-				},
 				padding: "Đệm",
 				column: "Cột",
 				row: "Hàng",
@@ -426,17 +435,16 @@ export default {
 			},
 			gradient: {
 				groups: {},
-				effects: {
-					rainbow: "Màu cầu vồng",
-					graSaturated: "Dần dần bão hòa",
-					graContrasted: "Tương phản dần dần",
-					threshold: "Biến đổi ngưỡng",
-					altChromatic: "Đa sắc khác",
+				parities: {
+					evenColumns: "Cột chẵn",
+					oddColumns: "Cột lẻ",
+					evenRows: "Hàng chẵn",
+					oddRows: "Hàng lẻ",
 				},
-				view: {
-					overlay: "Lớp phủ",
+				gradients: {},
+				parameters: {
+					center: "Giữa",
 				},
-				gridIntegration: {},
 			},
 			applyToSelectedTracks: "Áp dùng vào các track đã chọn",
 			deactivate: "Vô hiệu hoá",
@@ -551,31 +559,14 @@ export default {
 			legend: {},
 		},
 		mosh: {
-			datamosh: "Datamosh",
-			datamix: "Datamix",
-			layer: "Layer",
-			render: "Render",
-			scramble: "Scramble",
-			automator: "Automator",
-			stutter: "Stutter",
-			shake: "Rung Lắc",
 			specifyClipsFolder: "Chỉ định thư mục clip Datamosh",
 			install: "Tải xuống gói tiện ích mở rộng Datamosh",
 		},
 		tools: {
-			flow: "Flow",
 			selector: {
-				_: "Chọn",
 				quickSelectInterval: {},
 			},
-			replacer: "Thay thế",
-			propertizer: "Thuộc tính",
-			subtitles: "Phụ đề",
-			effector: "Hiệu ứng",
-			fader: "Phai nhạt",
-			exportScore: "Xuất score",
 			converters: "Bộ chuyển đổi",
-			clawer: "Gắp",
 		},
 		selectInfo: {
 			trackEventOnlyOne: "Bạn phải chọn MỘT và chỉ MỘT track event, không hơn và không kém",
@@ -751,6 +742,8 @@ export default {
 				},
 				naming: {},
 				multisource: {},
+				linearMap: {},
+				matchCut: {},
 				luckyDip: {
 					_: "Ngẫu nhiên hóa với điểm vào của nguồn.\nĐiều này có thể dẫn đến việc các clip nguồn được chọn ngẫu nhiên có các cao độ cơ bản khác nhau, khiến nó chỉ hữu ích khi tạo video hài hước nhằm mục đích giải trí và hiếm khi được sử dụng để tạo video chất lượng cao.",
 					limitToSelected: "Chuyển đổi ngẫu nhiên giữa nhiều nguồn đã chọn thay vì sử dụng hoàn toàn ngẫu nhiên điểm vào",
@@ -766,8 +759,6 @@ export default {
 					_: "Để tránh phụ âm bị kéo dãn hoặc chậm trễ, bạn có thể tách phần phụ âm và nguyên âm của cùng một nguồn âm thanh hoặc video để có thể áp dụng tối ưu hóa đặc biệt cho phần phụ âm của nguồn đó.\nNếu chọn ít nhất hai đoạn âm thanh hoặc video, đoạn đầu tiên được coi là phần phụ âm đầu, đoạn thứ hai được coi là phần nguyên âm và đoạn thứ ba (nếu có) được coi là phần phụ âm cuối.",
 					manualEnabled: "Ở chế độ Sentence Mixing, tính năng này được bật tự động.",
 				},
-				matchCut: {},
-				linearMap: {},
 			},
 			score: {
 				filter: {},
@@ -845,7 +836,6 @@ export default {
 						plugin: "Đạt đến bất kỳ cao độ nào bằng cách sử dụng Plugin hiệu ứng âm thanh Pitch Shift nhiều lần",
 						octave: "Ít nhất hãy tránh các khoảng cách không hài hòa bằng cách tăng hoặc giảm thang âm quãng tám xuống phạm vi {{formulaFor24}}",
 						octaveExp: "VEGAS thực sự hỗ trợ phạm vi {{formulaFor39}} nội bộ, hãy sử dụng thận trọng vì nó có thể khiến VEGAS bị sập",
-						wrap: "Trở về phím cao nhất hoặc thấp nhất trong phạm vi {{formulaFor24}}",
 						silent: "Tắt tiếng những nốt đó",
 					},
 					preserveFormant: "Duy trì đặc điểm tông giọng trong khi tuning",
@@ -865,14 +855,11 @@ export default {
 				preset: {},
 			},
 			track: {
-				_: "Trong quá trình sáng tạo YTPMV, thiết kế bố cục và thành phần là những liên kết cốt lõi của logic hình ảnh. Mục tiêu chính của nó là tích hợp sâu sắc đa nguồn với nhịp điệu âm nhạc thông qua comp động, không chỉ tạo ra sự nhầm lẫn và tác động mà còn duy trì khả năng đọc của hình ảnh. Biết cách tạo bố cục hình ảnh tốt cho YTPMV sẽ khiến nó thú vị hơn bạn nghĩ.\nLà cốt lõi của hình ảnh, nguồn tương ứng với sample giai điệu cần được phóng to, phủ lên trên hoặc được tô màu có độ tương phản cao để tăng cường cảm giác tồn tại. Sau đó, sử dụng quản lý phân cấp động để phân biệt giữa các phần tử chính và phụ. Ví dụ, nguồn nền có thể giảm độ trong suốt để tránh sự ảnh hưởng. Bạn có thể thử sắp xếp phi tuyến tính, phá vỡ bố cục lưới truyền thống và sử dụng xếp chồng ngẫu nhiên, chồng chéo dịch chuyển hoặc các kỹ thuật khác để mô phỏng sự căng thẳng về mặt thị giác của “quá tải thông tin”. Thiết lập thứ tự ẩn bằng cách lặp lại một số yếu tố nhất định và tạo cảm giác bất ngờ bằng cách thêm các đột biến cục bộ. Ví dụ, lặp lại hình đại diện làm điểm neo trực quan, nhưng phủ các hiệu ứng khác nhau mỗi lần xuất hiện.",
 				grid: {
 					square: "Tạo bố cục lưới chuẩn như 2×2, 3×3, v.v. dựa trên số lượng track",
 					direction: {},
 					fit: {
 						_: "Thay đổi kích thước clip để duy trì tỷ lệ khung hình trong khi vừa với track hộp",
-						cover: "Cắt bỏ cả hai bên để lấp đầy toàn bộ track hộp để không có khoảng trống, nhưng nó sẽ làm cho cả hai bên biến mất khỏi tầm nhìn\n(còn được gọi là “Pan and Scan” trong Video Framing và “Fill” trong Windows Background Setting)",
-						contain: "Thêm các khoảng trống xung quanh để nhét toàn bộ clip vào track hộp để bạn có thể nhìn thấy toàn bộ, nhưng các khoảng trống trở nên quá rõ ràng khi tỷ lệ khung hình có sự khác biệt đáng kể\n(còn được gọi là “Letterboxing” hoặc “Pillarboxing” trong Video Framing và “Fit” trong Windows Background Setting)",
 					},
 					mirrorEdges: {
 						hFlip: "Phản chiếu các track bằng cách lật các cột theo một mẫu ngang bằng",
@@ -885,7 +872,6 @@ export default {
 					useLongerSide: "Sử dụng cạnh dài thay vì cạnh ngắn làm chiều dài cạnh của khối lập phương nếu nguồn là hình chữ nhật, giúp khối lập phương tự nhiên hơn",
 				},
 				gradient: {
-					_: "Cung cấp cho các track video hiệu ứng màu gradient trong bố cục của bạn",
 					gridIntegration: {},
 				},
 				legato: {
@@ -926,7 +912,6 @@ export default {
 				offset: "Làm lệch các clip để tương ứng với nốt trưởng",
 			},
 			ytp: {
-				_: "Youtube Poop (YTP) là thể loại sử dụng nhiều hiệu ứng chỉnh sửa để tạo ra những video hợp tuyển, trào phúng, đả phá, sử dụng nhiều nguồn video khác nhau.\nYTP có thể được coi như trường phái Tân-Dada của thời đại số. Tư liệu video thông qua chỉnh sửa, trùng lặp, biến thiên về tốc độ, tua ngược, v..v. mà trở thành một tạo phẩm hết sức “phi lý”, dụ ý: nhại lại phong thái chỉnh sửa nghiệp dư, thiếu kỹ thuật để châm biếm phong thái nghiêm túc, tiêu chuẩn hóa của văn hóa video phổ thông. Ví dụ: hành động của các nhân vật liên tục tuần hoàn lại, lời thoại trong video bị cắt xén tạo ra những lời thoại khác, hoặc bất chợt có những SFX chèn vào, tạo ra cảm giác nghe-nhìn đầy phi lý và hài hước.\nYTP là hình thái phản nghịch lại văn phong biểu đạt truyền thống và thách thức những quan niệm cố hữu của người xem về thế nào mới là có “ý nghĩa”. Văn hóa phổ thông, đại chúng qua kỹ thuật chỉnh sửa, như được tháo dỡ ra thành những “rác thải điện tử”. Những tác phẩm YTP tuân theo một tôn chỉ: cuồng loạn là nghệ thuật. Những đoạn video phi lý được lặp lại tuần hoàn, lời thoại được cắt xén… tạo ra một hình thức nghệ thuật hậu-hiện đại độc đáo. Mặc dù khả năng sáng tạo của YTP thấp, giá trị về nghệ thuật của YTP nằm ở chỗ nó phản ánh được bản chất của truyền thông - đặc biệt, nhấn mạnh và làm nổi bật sự dễ bị xói mòn kỹ thuật của truyền thông số hóa. Mặc dù có thể coi như một meme, nhưng YTP thực chất là một loại hình nghệ thuật thể nghiệm tái định nghĩa lại lằn ranh giữa giải trí và chỉ trích.",
 				constrain: "Thiết đặt độ dài của clip",
 			},
 			mosh: {
@@ -962,16 +947,13 @@ export default {
 			},
 			staff: {
 				caption: "Sử dụng các mẫu tùy chỉnh như các nốt nhạc để vẽ hình ảnh theo cách tương tự như các bản khuông nhạc piano",
-				_: "Tái hiện khuông nhạc là một hiệu ứng hình ảnh biến đổi các ký hiệu âm nhạc thành đồ họa trực quan sáng tạo. Về bản chất, nó thay thế các nốt nhạc truyền thống bằng các mẫu tùy chỉnh (ví dụ: hình đại diện, hình dạng hình học, v.v.) và đặt chúng ở cao độ thích hợp của khuông nhạc dựa trên giai điệu của bản nhạc, tạo thành hình ảnh động với cả tính nghệ thuật và chức năng. Phong cách hiệu ứng hình ảnh này lấy cảm hứng từ sự kết hợp giữa nghệ thuật kỹ thuật số và âm nhạc, sáng tạo của YouTuber Grant Woolard. Video của anh ấy được đặc trưng bởi việc biến đổi hình đại diện của nhạc sĩ thành các nốt nhạc, sắp xếp chúng một cách năng động trên khuông nhạc và phát nhạc cổ điển. Nó không chỉ giữ nguyên logic cao độ của bản nhạc mà còn mang đến cho nó một câu chuyện trực quan được cá nhân hóa.\nHiệu ứng này có thể được sử dụng cho việc sáng tạo nghệ thuật và thiết kế hình ảnh biểu diễn, chẳng hạn như biến màn biểu diễn của nghệ sĩ thành một hình chiếu nghệ thuật động của khuông nhạc hoặc tạo hoạt ảnh âm nhạc tương tác cho bìa album kỹ thuật số. Sự đổi mới của nó nằm ở việc phá vỡ giới hạn tĩnh của các bản nhạc truyền thống, diễn giải lại cấu trúc âm nhạc bằng ngôn ngữ hình ảnh và biến giai điệu trừu tượng thành “giai điệu hình ảnh” dễ nhận biết.",
 			},
 			prve: {
-				caption: "Làm cho hình ảnh của bạn có nhịp điệu hơn",
 				control: {
 					general: "Điều tiết thông thường cho các sự kiện (event trong VEGAS) không liên tục và liên tục, có cao độ khác nhau và cùng một tiếng (âm tiết) trong chế độ YTPMV hoặc Sentence Mixing.\nTrường hợp các chế độ điều tiết khác đang tắt cũng sẽ được tính vào trường hợp này.",
 					samePitch: "Điều tiết riêng biệt cho các event liên tục cùng cao độ trong chế độ YTPMV hoặc Sentence Mixing.",
 					differentSyllables: "Điều tiết riêng biệt cho các event liên tục khác tiếng (âm tiết) trong chế độ Sentence Mixing.",
 				},
-				forceStretch: "$t(titles.prve, { 'count': {{count}} }) hiện dùng nằm trong tùy chọn Thời gian, do vậy giá trị co giãn sẽ bị buộc thành $t(stream.stretch.flexingAndExtending, nowrapPerWord) khi các hiệu ứng này được áp dụng lên, không thể chỉnh sửa khác được",
 			},
 			pixelScaling: {
 				caption: "Mở rộng tỉ lệ bằng cách sử dụng các thuật toán khuếch đại và nội suy cạnh cứng lân cận gần nhất",
@@ -990,6 +972,7 @@ export default {
 					},
 					invalid: {},
 					fontSize: {},
+					contrastPaletteEvaluation: {},
 				},
 				preference: {
 					autoSwitchSourceFrom: "Thay đổi nguồn tự động dựa trên nội dung được chọn cuối cùng",
@@ -1020,6 +1003,7 @@ export default {
 				gotoYtp: "Đi đến YTP",
 			},
 			operationRecord: {},
+			wizardMode: {},
 		},
 		menu: {
 			delete: "&Xoá",
@@ -1067,6 +1051,7 @@ export default {
 				importToHere: "Nhập %1",
 			},
 		},
+		window: {},
 		contentDialog: {
 			button: {
 				ok: "&OK",
@@ -1092,10 +1077,15 @@ export default {
 			menu: {
 				clearAll: "Xóa tất cả",
 			},
+			numericUpDown: {
+				increase: "Tăng",
+				decrease: "Giảm",
+			},
 		},
 		colorPicker: {
 			title: "Chọn một màu",
 			eyeDropper: "Bốc màu",
+			invert: "Đảo ngược màu",
 			axis: {
 				red: "Đỏ",
 				green: "Xanh lục",
@@ -1109,12 +1099,10 @@ export default {
 				cyan: "Lục lam",
 				magenta: "Đỏ tím",
 				yellow: "Vàng",
-				key: "Lược màu / Đen",
 				luminance: "Độ sáng",
 				aAxisInLab: "Trục a (−Lục ↔ +Đỏ)",
 				bAxisInLab: "Trục b (−Lam ↔ +Vàng)",
 				chroma: "Sắc độ",
-				alpha: "Lớp chính / Độ mờ",
 				hex: "Thập lục phân",
 			},
 			axisAbbrs: {
@@ -1137,6 +1125,16 @@ export default {
 				chroma: "C",
 				alpha: "A",
 			},
+			aria: {
+				hex: "Thập lục phân",
+			},
+		},
+		quickSelectIntervalEditor: {
+			clear: "Xóa",
+			invert: "Đảo ngược màu",
+			rename: "Tên",
+			columns: "Cột",
+			rows: "Hàng",
 		},
 		flyout: {
 			confirmDelete: {
@@ -1155,6 +1153,13 @@ export default {
 		descriptions: {
 			colorPicker: {
 				eyeDropper: "Bốc một màu trên màn hình",
+				aria: {},
+			},
+			quickSelectIntervalEditor: {
+				aria: {
+					oneD: {},
+					twoD: {},
+				},
 			},
 		},
 		resetConfig: {},

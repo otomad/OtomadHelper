@@ -17,10 +17,12 @@
 	<c:CountToInlineViewportConverter x:Key="CountToXViewport" />
 	<c:CountToBlockViewportConverter x:Key="CountToYViewport" />
 	<c:CountToVisualBrushSizeConverter x:Key="CountToSize" />
-	<c:AlternationIndexToRowCellConverter x:Key="IndexToRowCell" />
+	<c:AlternationIndexToRowColumnConverter x:Key="IndexToRowColumn" />
 	<c:CountToCollectionConverter x:Key="CountToCollection" />
 	<m:ScrollViewerScrollBarVisibilityToScrollBarThicknessMarginConverter x:Key="ScrollViewerVisToMargin" />
 	<c:ContentWidthToIsWideConverter x:Key="WidthToWide" />
+	<c:QuickSelectInterval1DIndexToAutomationPropertiesConverter x:Key="IndexToAria" />
+	<c:QuickSelectInterval2DRowColumnToAutomationPropertiesConverter x:Key="RowColToAria" />
 
 	<x:Static x:Key="ToggleButtonSize" Member="c:QuickSelectInterval1DEditor.ToggleButtonSize" />
 	<x:Static x:Key="ToggleButtonSpacing" Member="c:QuickSelectInterval1DEditor.ToggleButtonSpacing" />

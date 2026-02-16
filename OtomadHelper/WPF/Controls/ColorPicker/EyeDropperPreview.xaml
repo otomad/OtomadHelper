@@ -17,6 +17,7 @@
 	Topmost="True"
 	WindowStyle="None"
 	Focusable="False"
+	SnapsToDevicePixels="False"
 	Loaded="Window_Loaded"
 	mc:Ignorable="d"
 	>

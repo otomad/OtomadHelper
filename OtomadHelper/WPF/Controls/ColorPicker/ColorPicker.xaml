@@ -250,8 +250,8 @@
 			<RadioButton c:ColorPicker.ModelAxis="HWB.1" Grid.Column="4" Grid.Row="5"><Label /></RadioButton>
 			<RadioButton c:ColorPicker.ModelAxis="HWB.2" Grid.Column="4" Grid.Row="6"><Label /></RadioButton>
 			<RadioButton c:ColorPicker.ModelAxis="OKLAB.0" Grid.Column="8" Grid.Row="0"><Label /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="OKLAB.1" Grid.Column="8" Grid.Row="1"><Label /></RadioButton>
-			<RadioButton c:ColorPicker.ModelAxis="OKLAB.2" Grid.Column="8" Grid.Row="2"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="OKLAB.1" Grid.Column="8" Grid.Row="1" AutomationProperties.Name="{m:Trans ColorPicker.Aria.AAxisInLab}" AutomationProperties.HelpText="{m:Trans Descriptions.ColorPicker.Aria.AAxisInLab}"><Label /></RadioButton>
+			<RadioButton c:ColorPicker.ModelAxis="OKLAB.2" Grid.Column="8" Grid.Row="2" AutomationProperties.Name="{m:Trans ColorPicker.Aria.BAxisInLab}" AutomationProperties.HelpText="{m:Trans Descriptions.ColorPicker.Aria.BAxisInLab}"><Label /></RadioButton>
 			<RadioButton c:ColorPicker.ModelAxis="OKLCH.0" Grid.Column="8" Grid.Row="4"><Label /></RadioButton>
 			<RadioButton c:ColorPicker.ModelAxis="OKLCH.1" Grid.Column="8" Grid.Row="5"><Label /></RadioButton>
 			<RadioButton c:ColorPicker.ModelAxis="OKLCH.2" Grid.Column="8" Grid.Row="6"><Label /></RadioButton>
@@ -272,14 +272,13 @@
 			<TextBox c:ColorPicker.ModelAxis="HWB.1" Grid.Column="5" Grid.Row="5" />
 			<TextBox c:ColorPicker.ModelAxis="HWB.2" Grid.Column="5" Grid.Row="6" />
 			<TextBox c:ColorPicker.ModelAxis="OKLAB.0" Grid.Column="9" Grid.Row="0" />
-			<TextBox c:ColorPicker.ModelAxis="OKLAB.1" Grid.Column="9" Grid.Row="1" m:NumberTextBoxBehavior.NumberInputMode="SignedInteger" />
-			<TextBox c:ColorPicker.ModelAxis="OKLAB.2" Grid.Column="9" Grid.Row="2" m:NumberTextBoxBehavior.NumberInputMode="SignedInteger" />
+			<TextBox c:ColorPicker.ModelAxis="OKLAB.1" Grid.Column="9" Grid.Row="1" m:NumberTextBoxBehavior.NumberInputMode="SignedInteger" AutomationProperties.Name="{m:Trans ColorPicker.Aria.AAxisInLab}" AutomationProperties.HelpText="{m:Trans Descriptions.ColorPicker.Aria.AAxisInLab}" />
+			<TextBox c:ColorPicker.ModelAxis="OKLAB.2" Grid.Column="9" Grid.Row="2" m:NumberTextBoxBehavior.NumberInputMode="SignedInteger" AutomationProperties.Name="{m:Trans ColorPicker.Aria.BAxisInLab}" AutomationProperties.HelpText="{m:Trans Descriptions.ColorPicker.Aria.BAxisInLab}" />
 			<TextBox c:ColorPicker.ModelAxis="OKLCH.0" Grid.Column="9" Grid.Row="4" />
 			<TextBox c:ColorPicker.ModelAxis="OKLCH.1" Grid.Column="9" Grid.Row="5" />
 			<TextBox c:ColorPicker.ModelAxis="OKLCH.2" Grid.Column="9" Grid.Row="6" />
-			<TextBox c:ColorPicker.ModelAxis="A255" Grid.Column="1" Grid.Row="8" m:NumberTextBoxBehavior.Range="0,255" AutomationProperties.Name="不透明度" AutomationProperties.HelpText="值域0至255" Text="{Binding Alpha, Mode=OneWay}" />
-			<TextBox c:ColorPicker.ModelAxis="A100" Grid.Column="1" Grid.Row="9" m:NumberTextBoxBehavior.Range="0,100" AutomationProperties.Name="不透明度" AutomationProperties.HelpText="值域0至100" Text="{Binding Alpha, Mode=OneWay, Converter={StaticResource A255ToA100}}" />
-			<!--TODO: I18n-->
+			<TextBox c:ColorPicker.ModelAxis="A255" Grid.Column="1" Grid.Row="8" m:NumberTextBoxBehavior.Range="0,255" AutomationProperties.Name="{m:Trans ColorPicker.Axis.Alpha}" AutomationProperties.HelpText="{m:Trans Descriptions.ColorPicker.Aria.Alpha255}" Text="{Binding Alpha, Mode=OneWay}" />
+			<TextBox c:ColorPicker.ModelAxis="A100" Grid.Column="1" Grid.Row="9" m:NumberTextBoxBehavior.Range="0,100" AutomationProperties.Name="{m:Trans ColorPicker.Axis.Alpha}" AutomationProperties.HelpText="{m:Trans Descriptions.ColorPicker.Aria.Alpha100}" Text="{Binding Alpha, Mode=OneWay, Converter={StaticResource A255ToA100}}" />
 			<TextBox
 				c:ColorPicker.ModelAxis="HEX"
 				Grid.Column="5"
@@ -289,7 +288,7 @@
 				m:NumberTextBoxUpDownKeyBehavior.Step="0"
 				m:NumberTextBoxBehavior.MaxLength="8"
 				m:NumberTextBoxBehavior.NumberInputMode="Hex"
-				AutomationProperties.Name="十六进制"
+				AutomationProperties.Name="{m:Trans ColorPicker.Aria.Hex}"
 				Text="{Binding Hex, Mode=OneWay}"
 				/>
 
@@ -314,19 +313,17 @@
 				Style="{StaticResource ActionButtonsGrid}"
 				>
 				<c:Button
-					AutomationProperties.HelpText="还原为设置前的颜色"
-					Command="{Binding RestoreOriginalColorCommand}"
+					AutomationProperties.HelpText="{m:Trans Descriptions.ColorPicker.Revert}"
+					Command="{Binding RevertOriginalColorCommand}"
 					IconName="ArrowReset"
-					>
-					还原<!--TODO: I18n-->
-				</c:Button>
+					Content="{m:Trans ContentDialog.Button.Revert}"
+					/>
 				<c:Button
-					AutomationProperties.HelpText="反转当前颜色"
+					AutomationProperties.HelpText="{m:Trans Descriptions.ColorPicker.Invert}"
 					Command="{Binding InvertColorCommand}"
 					IconName="InvertColor"
-					>
-					反色<!--TODO: I18n-->
-				</c:Button>
+					Content="{m:Trans ColorPicker.Invert}"
+					/>
 				<c:Button
 					AutomationProperties.HelpText="{m:Trans Descriptions.ColorPicker.EyeDropper}"
 					Focusable="False"

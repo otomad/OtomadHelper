@@ -34,7 +34,7 @@ public partial class QuickSelectInterval2DEditor : UserControl {
 
 	internal static async Task<bool> ShowDialog(FrameworkElement panel) {
 		bool dialogResult = await ContentDialog.ShowDialog<bool?>(
-			title: "Quick Select Interval 2D Editor",
+			title: QuickSelectInterval1DEditor.DefaultTitle,
 			content: panel,
 			buttons: (ContentDialogButtonItem<bool>[])[
 				new(t.ContentDialog.Button.Ok, true, true),

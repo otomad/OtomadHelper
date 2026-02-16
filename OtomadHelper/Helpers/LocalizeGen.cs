@@ -13,10 +13,12 @@ namespace OtomadHelper.Helpers.LocalizeGen;
 
 public class Root(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	public Host Host { get { if (field is null) field = new(localize, "Host"); return field; } }
+	public Window Window { get { if (field is null) field = new(localize, "Window"); return field; } }
 	public ContentDialog ContentDialog { get { if (field is null) field = new(localize, "ContentDialog"); return field; } }
 	public WrongOpeningMethod WrongOpeningMethod { get { if (field is null) field = new(localize, "WrongOpeningMethod"); return field; } }
 	public TextBox TextBox { get { if (field is null) field = new(localize, "TextBox"); return field; } }
 	public ColorPicker ColorPicker { get { if (field is null) field = new(localize, "ColorPicker"); return field; } }
+	public QuickSelectIntervalEditor QuickSelectIntervalEditor { get { if (field is null) field = new(localize, "QuickSelectIntervalEditor"); return field; } }
 	public Flyout Flyout { get { if (field is null) field = new(localize, "Flyout"); return field; } }
 	public Keybindings Keybindings { get { if (field is null) field = new(localize, "Keybindings"); return field; } }
 	public Descriptions Descriptions { get { if (field is null) field = new(localize, "Descriptions"); return field; } }
@@ -32,6 +34,24 @@ public class Host_ToolTip(Localize localize, string ancestor = "") : LocalizeNes
 	/// Import %1
 	/// </summary>
 	public string ImportToHere => base.GetString("Host.ToolTip.ImportToHere");
+}
+public class Window(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+	/// <summary>
+	/// Minimize
+	/// </summary>
+	public string Minimize => base.GetString("Window.Minimize");
+	/// <summary>
+	/// Maximize
+	/// </summary>
+	public string Maximize => base.GetString("Window.Maximize");
+	/// <summary>
+	/// Restore
+	/// </summary>
+	public string Restore => base.GetString("Window.Restore");
+	/// <summary>
+	/// Close
+	/// </summary>
+	public string Close => base.GetString("Window.Close");
 }
 public class ContentDialog(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	public ContentDialog_Button Button { get { if (field is null) field = new(localize, "ContentDialog.Button"); return field; } }
@@ -59,6 +79,18 @@ public class ContentDialog_Button(Localize localize, string ancestor = "") : Loc
 	/// Loca<u>t</u>e
 	/// </summary>
 	public string Locate => base.GetString("ContentDialog.Button.Locate");
+	/// <summary>
+	/// Copy <u>m</u>essage
+	/// </summary>
+	public string CopyMessage => base.GetString("ContentDialog.Button.CopyMessage");
+	/// <summary>
+	/// Copied!
+	/// </summary>
+	public string Copied => base.GetString("ContentDialog.Button.Copied");
+	/// <summary>
+	/// Revert
+	/// </summary>
+	public string Revert => base.GetString("ContentDialog.Button.Revert");
 }
 public class ContentDialog_Expander(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
@@ -75,6 +107,10 @@ public class ContentDialog_ShowError(Localize localize, string ancestor = "") : 
 	/// Error
 	/// </summary>
 	public string Title => base.GetString("ContentDialog.ShowError.Title");
+	/// <summary>
+	/// Error: 
+	/// </summary>
+	public string WithColon => base.GetString("ContentDialog.ShowError.WithColon");
 }
 public class WrongOpeningMethod(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	public WrongOpeningMethod_Script Script { get { if (field is null) field = new(localize, "WrongOpeningMethod.Script"); return field; } }
@@ -95,12 +131,23 @@ public class WrongOpeningMethod_Script(Localize localize, string ancestor = "") 
 }
 public class TextBox(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	public TextBox_Menu Menu { get { if (field is null) field = new(localize, "TextBox.Menu"); return field; } }
+	public TextBox_NumericUpDown NumericUpDown { get { if (field is null) field = new(localize, "TextBox.NumericUpDown"); return field; } }
 }
 public class TextBox_Menu(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Clear All
 	/// </summary>
 	public string ClearAll => base.GetString("TextBox.Menu.ClearAll");
+}
+public class TextBox_NumericUpDown(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+	/// <summary>
+	/// Increase
+	/// </summary>
+	public string Increase => base.GetString("TextBox.NumericUpDown.Increase");
+	/// <summary>
+	/// Decrease
+	/// </summary>
+	public string Decrease => base.GetString("TextBox.NumericUpDown.Decrease");
 }
 public class ColorPicker(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
@@ -111,8 +158,13 @@ public class ColorPicker(Localize localize, string ancestor = "") : LocalizeNest
 	/// Eye dropper
 	/// </summary>
 	public string EyeDropper => base.GetString("ColorPicker.EyeDropper");
+	/// <summary>
+	/// Invert
+	/// </summary>
+	public string Invert => base.GetString("ColorPicker.Invert");
 	public ColorPicker_Axis Axis { get { if (field is null) field = new(localize, "ColorPicker.Axis"); return field; } }
 	public ColorPicker_AxisAbbrs AxisAbbrs { get { if (field is null) field = new(localize, "ColorPicker.AxisAbbrs"); return field; } }
+	public ColorPicker_Aria Aria { get { if (field is null) field = new(localize, "ColorPicker.Aria"); return field; } }
 }
 public class ColorPicker_Axis(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
@@ -164,7 +216,7 @@ public class ColorPicker_Axis(Localize localize, string ancestor = "") : Localiz
 	/// </summary>
 	public string Yellow => base.GetString("ColorPicker.Axis.Yellow");
 	/// <summary>
-	/// Key / Black
+	/// Key/Black
 	/// </summary>
 	public string Key => base.GetString("ColorPicker.Axis.Key");
 	/// <summary>
@@ -184,7 +236,7 @@ public class ColorPicker_Axis(Localize localize, string ancestor = "") : Localiz
 	/// </summary>
 	public string Chroma => base.GetString("ColorPicker.Axis.Chroma");
 	/// <summary>
-	/// Alpha / Opacity
+	/// Alpha/Opacity
 	/// </summary>
 	public string Alpha => base.GetString("ColorPicker.Axis.Alpha");
 	/// <summary>
@@ -266,6 +318,50 @@ public class ColorPicker_AxisAbbrs(Localize localize, string ancestor = "") : Lo
 	/// </summary>
 	public string Alpha => base.GetString("ColorPicker.AxisAbbrs.Alpha");
 }
+public class ColorPicker_Aria(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+	/// <summary>
+	/// Hexadecimal
+	/// </summary>
+	public string Hex => base.GetString("ColorPicker.Aria.Hex");
+	/// <summary>
+	/// a-Axis
+	/// </summary>
+	public string AAxisInLab => base.GetString("ColorPicker.Aria.AAxisInLab");
+	/// <summary>
+	/// b-Axis
+	/// </summary>
+	public string BAxisInLab => base.GetString("ColorPicker.Aria.BAxisInLab");
+}
+public class QuickSelectIntervalEditor(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+	/// <summary>
+	/// Clear
+	/// </summary>
+	public string Clear => base.GetString("QuickSelectIntervalEditor.Clear");
+	/// <summary>
+	/// Invert
+	/// </summary>
+	public string Invert => base.GetString("QuickSelectIntervalEditor.Invert");
+	/// <summary>
+	/// Rename
+	/// </summary>
+	public string Rename => base.GetString("QuickSelectIntervalEditor.Rename");
+	/// <summary>
+	/// Interval
+	/// </summary>
+	public string Interval => base.GetString("QuickSelectIntervalEditor.Interval");
+	/// <summary>
+	/// Columns
+	/// </summary>
+	public string Columns => base.GetString("QuickSelectIntervalEditor.Columns");
+	/// <summary>
+	/// Rows
+	/// </summary>
+	public string Rows => base.GetString("QuickSelectIntervalEditor.Rows");
+	/// <summary>
+	/// Quick Select Interval Editor
+	/// </summary>
+	public string DefaultTitle => base.GetString("QuickSelectIntervalEditor.DefaultTitle");
+}
 public class Flyout(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	public Flyout_ConfirmDelete ConfirmDelete { get { if (field is null) field = new(localize, "Flyout.ConfirmDelete"); return field; } }
 }
@@ -306,12 +402,79 @@ public class Keybindings_Commands(Localize localize, string ancestor = "") : Loc
 }
 public class Descriptions(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	public Descriptions_ColorPicker ColorPicker { get { if (field is null) field = new(localize, "Descriptions.ColorPicker"); return field; } }
+	public Descriptions_QuickSelectIntervalEditor QuickSelectIntervalEditor { get { if (field is null) field = new(localize, "Descriptions.QuickSelectIntervalEditor"); return field; } }
 }
 public class Descriptions_ColorPicker(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
 	/// Pick a color from the screen
 	/// </summary>
 	public string EyeDropper => base.GetString("Descriptions.ColorPicker.EyeDropper");
+	/// <summary>
+	/// Inverts the current color
+	/// </summary>
+	public string Invert => base.GetString("Descriptions.ColorPicker.Invert");
+	/// <summary>
+	/// Reverts to the color before setting
+	/// </summary>
+	public string Revert => base.GetString("Descriptions.ColorPicker.Revert");
+	public Descriptions_ColorPicker_Aria Aria { get { if (field is null) field = new(localize, "Descriptions.ColorPicker.Aria"); return field; } }
+}
+public class Descriptions_ColorPicker_Aria(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+	/// <summary>
+	/// Value range 0 to 255
+	/// </summary>
+	public string Alpha255 => base.GetString("Descriptions.ColorPicker.Aria.Alpha255");
+	/// <summary>
+	/// Value range 0 to 100
+	/// </summary>
+	public string Alpha100 => base.GetString("Descriptions.ColorPicker.Aria.Alpha100");
+	/// <summary>
+	/// Negative number indicates green, positive number indicates red
+	/// </summary>
+	public string AAxisInLab => base.GetString("Descriptions.ColorPicker.Aria.AAxisInLab");
+	/// <summary>
+	/// Negative number indicates blue, positive number indicates yellow
+	/// </summary>
+	public string BAxisInLab => base.GetString("Descriptions.ColorPicker.Aria.BAxisInLab");
+}
+public class Descriptions_QuickSelectIntervalEditor(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+	/// <summary>
+	/// Unselects all items
+	/// </summary>
+	public string Clear => base.GetString("Descriptions.QuickSelectIntervalEditor.Clear");
+	/// <summary>
+	/// Inverts the current selection
+	/// </summary>
+	public string Invert => base.GetString("Descriptions.QuickSelectIntervalEditor.Invert");
+	/// <summary>
+	/// Reverts to the selection before setting
+	/// </summary>
+	public string Revert => base.GetString("Descriptions.QuickSelectIntervalEditor.Revert");
+	public Descriptions_QuickSelectIntervalEditor_Aria Aria { get { if (field is null) field = new(localize, "Descriptions.QuickSelectIntervalEditor.Aria"); return field; } }
+}
+public class Descriptions_QuickSelectIntervalEditor_Aria(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+	public Descriptions_QuickSelectIntervalEditor_Aria_OneD OneD { get { if (field is null) field = new(localize, "Descriptions.QuickSelectIntervalEditor.Aria.OneD"); return field; } }
+	public Descriptions_QuickSelectIntervalEditor_Aria_TwoD TwoD { get { if (field is null) field = new(localize, "Descriptions.QuickSelectIntervalEditor.Aria.TwoD"); return field; } }
+}
+public class Descriptions_QuickSelectIntervalEditor_Aria_OneD(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+	/// <summary>
+	/// Item {0}
+	/// </summary>
+	public string Name => base.GetString("Descriptions.QuickSelectIntervalEditor.Aria.OneD.Name");
+	/// <summary>
+	/// Of {0}
+	/// </summary>
+	public string HelpText => base.GetString("Descriptions.QuickSelectIntervalEditor.Aria.OneD.HelpText");
+}
+public class Descriptions_QuickSelectIntervalEditor_Aria_TwoD(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
+	/// <summary>
+	/// Column {0}, row {1}
+	/// </summary>
+	public string Name => base.GetString("Descriptions.QuickSelectIntervalEditor.Aria.TwoD.Name");
+	/// <summary>
+	/// Of a {0}-column by {1}-row grid
+	/// </summary>
+	public string HelpText => base.GetString("Descriptions.QuickSelectIntervalEditor.Aria.TwoD.HelpText");
 }
 public class ResetConfig(Localize localize, string ancestor = "") : LocalizeNested(localize, ancestor) {
 	/// <summary>
@@ -410,7 +573,7 @@ public class Shared_Exceptions(Localize localize, string ancestor = "") : Locali
 	/// <summary>
 	/// The step sequence parameter syntax is invalid.<br />
 	/// <br />
-	/// Please enter the indexes of each initial step separated by commas as the sequence, where 0 represents the ¡°Normal¡±.
+	/// Please enter the indexes of each initial step separated by commas as the sequence, where 0 represents the ¡°Normal.¡±
 	/// </summary>
 	public string PrveStepSequenceSyntaxInvalid => base.GetString("Shared.Exceptions.PrveStepSequenceSyntaxInvalid");
 	/// <summary>

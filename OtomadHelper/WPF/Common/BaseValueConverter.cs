@@ -56,12 +56,12 @@ public abstract class MultiValueConverter<TSource, TTarget, TParameter> : IMulti
 
 	public static T ToCollectionType<T>(object source, bool throwIfNotCollection = false) {
 		if (source is null)
-			return default(T)!;
+			return default!;
 		if (source is not object[] sources)
 			goto UnknownType;
 		if (typeof(T).Extends(typeof(ITuple)))
 			return (T)sources.ToTuple(typeof(T));
-		if (typeof(T).TryGetIEnumerableType(out Type enumerable, out Type itemType)) {
+		if (typeof(T).TryGetIEnumerableType(out _, out Type itemType)) {
 			int length = sources.Length;
 			if (typeof(T).Extends(typeof(Array))) {
 				IList array = Array.CreateInstance(itemType, length);

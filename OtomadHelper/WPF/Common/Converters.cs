@@ -325,3 +325,13 @@ public class SizeToViewportConverter : ValueConverter<double, Rect> {
 	public override Rect Convert(double size, Type targetType, object parameter, CultureInfo culture) => new(0, 0, size, size);
 	public override double ConvertBack(Rect viewport, Type targetType, object parameter, CultureInfo culture) => viewport.Width;
 }
+
+/// <summary>
+/// Specify convert to which property of <see cref="System.Windows.Automation.AutomationProperties" /> by converter parameter.
+/// </summary>
+public enum AutomationPropertiesProperty {
+	/// <inheritdoc cref="System.Windows.Automation.AutomationProperties.SetName" />
+	Name,
+	/// <inheritdoc cref="System.Windows.Automation.AutomationProperties.SetHelpText" />
+	HelpText,
+}

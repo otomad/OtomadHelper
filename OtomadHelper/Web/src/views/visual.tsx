@@ -79,7 +79,7 @@ export default function Visual() {
 					actions={(
 						<StackPanel>
 							<ComboBox current={preferredTrackIndex} ids={[...tracks.keys()]} options={tracks} />
-							<QuicklySelectCurrentTrack />
+							<QuickSelectCurrentTrack />
 						</StackPanel>
 					)}
 				/>

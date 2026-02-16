@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -34,11 +33,12 @@ public partial class QuickSelectInterval1DEditor : UserControl {
 		return (true, viewModel.Bits.ToBase64(), viewModel.Name);
 	}
 
+	internal static string DefaultTitle => t.QuickSelectIntervalEditor.DefaultTitle;
 	internal const string SingletonId = "Quick Select Interval Editor";
 
 	internal static async Task<bool> ShowDialog(FrameworkElement panel) {
 		bool dialogResult = await ContentDialog.ShowDialog<bool?>(
-			title: "Quick Select Interval Editor",
+			title: DefaultTitle,
 			content: panel,
 			buttons: (ContentDialogButtonItem<bool>[])[
 				new(t.ContentDialog.Button.Ok, true, true),

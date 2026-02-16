@@ -19,7 +19,7 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 
 	// NOTE: Not an observable property.
 	public Unicolour? OriginalColor { get; private set; }
-	partial void OnColorChanged(Unicolour color) { if (OriginalColor is null) { OriginalColor = color; RestoreOriginalColorCommand.NotifyCanExecuteChanged(); } }
+	partial void OnColorChanged(Unicolour color) { if (OriginalColor is null) { OriginalColor = color; RevertOriginalColorCommand.NotifyCanExecuteChanged(); } }
 
 	private static readonly ColourSpace[] KnownModels =
 		[ColourSpace.Hsl, ColourSpace.Rgb255, ColourSpace.Hsb, ColourSpace.Hwb, ColourSpace.Oklab, ColourSpace.Oklch];
@@ -96,9 +96,9 @@ public partial class ColorPickerViewModel : ObservableObject<ColorPicker> {
 	private void InvertColor() =>
 		Color = new Unicolour(ColourSpace.Rgb, 1 - Color.Rgb.R, 1 - Color.Rgb.G, 1 - Color.Rgb.B, Color.Alpha.A);
 
-	[RelayCommand(CanExecute = nameof(CanRestoreOriginalColor))]
-	private void RestoreOriginalColor() { if (OriginalColor is not null) Color = OriginalColor; }
-	private bool CanRestoreOriginalColor() => OriginalColor is not null;
+	[RelayCommand(CanExecute = nameof(CanRevertOriginalColor))]
+	private void RevertOriginalColor() { if (OriginalColor is not null) Color = OriginalColor; }
+	private bool CanRevertOriginalColor() => OriginalColor is not null;
 
 	[ObservableProperty]
 	private Dictionary<ColorPickerModelAxis, double> values = [];

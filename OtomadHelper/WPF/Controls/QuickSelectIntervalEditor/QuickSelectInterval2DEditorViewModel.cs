@@ -10,7 +10,7 @@ public partial class QuickSelectInterval2DEditorViewModel : ObservableObject<Qui
 	partial void OnBitsChanged(ObservableQuickSelectInterval2DCollection<bool> bits) {
 		if (OriginalBits is null) {
 			OriginalBits = bits.Clone();
-			RestoreOriginalCommand.NotifyCanExecuteChanged();
+			RevertOriginalCommand.NotifyCanExecuteChanged();
 		}
 	}
 
@@ -21,9 +21,9 @@ public partial class QuickSelectInterval2DEditorViewModel : ObservableObject<Qui
 		Bits[row, column] = !Bits[row, column];
 	}
 
-	[RelayCommand(CanExecute = nameof(CanRestoreOriginal))]
-	private void RestoreOriginal() { if (OriginalBits is not null) Bits = OriginalBits.Clone(); }
-	private bool CanRestoreOriginal() => OriginalBits is not null;
+	[RelayCommand(CanExecute = nameof(CanRevertOriginal))]
+	private void RevertOriginal() { if (OriginalBits is not null) Bits = OriginalBits.Clone(); }
+	private bool CanRevertOriginal() => OriginalBits is not null;
 
 	[RelayCommand]
 	private void InvertSelection() {

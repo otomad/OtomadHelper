@@ -22,10 +22,19 @@ export default {
 			parameters: "Parameter",
 			grid_full: "Tata Letak Kisi",
 			box3d: "Tata Letak Kotak 3D",
-			gradient: "Trek Gradien",
+			datamosh: "Datamosh",
+			datamix: "Datamix",
+			layer: "Layar",
+			render: "Render",
+			scramble: "Scramble",
+			automator: "Automator",
+			stutter: "Stutter",
+			shake: "Goyang",
 			effect: "Efek",
 		},
-		mode: {},
+		mode: {
+			ytp: "YTP",
+		},
 		source: {
 			startTime: {
 				projectStart: "Proyek dimulai",
@@ -57,13 +66,12 @@ export default {
 		disabled: "Matikan",
 		duration: "Durasi",
 		preview: "Preview",
+		none: "Tidak ada",
 		export: "Ekspor",
 		import: "Impor",
 		infoBar: {},
 		selectionMode: {},
-		subheaders: {
-			parameters: "Parameter",
-		},
+		subheaders: {},
 		units: {},
 		confirm: {
 			delete: {},
@@ -181,19 +189,15 @@ export default {
 					highContrast: "Kontras tinggi",
 				},
 			},
-			parameters: {},
+			parameters: {
+				threshold: "Ambang",
+			},
+			enabled: {},
 		},
 		track: {
 			grid: {
 				square: "Persegi",
 				direction: {},
-				mirrorEdges: "Tepi cermin",
-				parity: {
-					evenColumns: "Kolom genap",
-					oddColumns: "Kolom ganjil",
-					evenRows: "Garis genap",
-					oddRows: "Garis ganjil",
-				},
 				padding: "lapisan",
 				column: "Kolom",
 				row: "Baris",
@@ -212,14 +216,14 @@ export default {
 			},
 			gradient: {
 				groups: {},
-				effects: {
-					rainbow: "Warna pelangi",
-					graSaturated: "Saturasi secara bertahap",
-					graContrasted: "Kontras secara bertahap",
-					altChromatic: "Ganti kroma",
+				parities: {
+					evenColumns: "Kolom genap",
+					oddColumns: "Kolom ganjil",
+					evenRows: "Garis genap",
+					oddRows: "Garis ganjil",
 				},
-				view: {},
-				gridIntegration: {},
+				gradients: {},
+				parameters: {},
 			},
 			legato: {
 				_: "Legato",
@@ -262,16 +266,7 @@ export default {
 			},
 			legend: {},
 		},
-		mosh: {
-			datamosh: "Datamosh",
-			datamix: "Datamix",
-			layer: "Layar",
-			render: "Render",
-			scramble: "Scramble",
-			automator: "Automator",
-			stutter: "Stutter",
-			shake: "Goyang",
-		},
+		mosh: {},
 		tools: {
 			selector: {
 				quickSelectInterval: {},
@@ -342,7 +337,9 @@ export default {
 				tutorialVideo: "Video tutorial",
 				releaseNotes: "Catatan rilis",
 			},
-			language: {},
+			language: {
+				_: "Bahasa",
+			},
 			appearance: {
 				backgroundImage: {
 					opacity: "Opacity",
@@ -369,12 +366,12 @@ export default {
 				trackGroup: {},
 				naming: {},
 				multisource: {},
+				linearMap: {},
+				matchCut: {},
 				luckyDip: {
 					barOrBeat: {},
 				},
 				consonant: {},
-				matchCut: {},
-				linearMap: {},
 			},
 			score: {
 				filter: {},
@@ -446,6 +443,7 @@ export default {
 					colorScheme: {},
 					invalid: {},
 					fontSize: {},
+					contrastPaletteEvaluation: {},
 				},
 				preference: {},
 				config: {
@@ -462,6 +460,7 @@ export default {
 				fully: {},
 			},
 			operationRecord: {},
+			wizardMode: {},
 		},
 		menu: {
 			grid: {},
@@ -495,6 +494,7 @@ export default {
 		host: {
 			toolTip: {},
 		},
+		window: {},
 		contentDialog: {
 			button: {
 				ok: "&OKE",
@@ -511,8 +511,10 @@ export default {
 		},
 		textBox: {
 			menu: {},
+			numericUpDown: {},
 		},
 		colorPicker: {
+			invert: "Invert",
 			axis: {},
 			axisAbbrs: {
 				red: "R",
@@ -523,6 +525,13 @@ export default {
 				luminance: "L",
 				chroma: "C",
 			},
+			aria: {},
+		},
+		quickSelectIntervalEditor: {
+			invert: "Invert",
+			rename: "Nama",
+			columns: "Kolom",
+			rows: "Baris",
 		},
 		flyout: {
 			confirmDelete: {},
@@ -531,7 +540,15 @@ export default {
 			commands: {},
 		},
 		descriptions: {
-			colorPicker: {},
+			colorPicker: {
+				aria: {},
+			},
+			quickSelectIntervalEditor: {
+				aria: {
+					oneD: {},
+					twoD: {},
+				},
+			},
 		},
 		resetConfig: {},
 		splashOverflowMenu: {

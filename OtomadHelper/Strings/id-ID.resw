@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="ContentDialog.Button.Ok" xml:space="preserve">
+		<value>&amp;OKE</value>
+	</data>
+	<data name="ContentDialog.Button.Cancel" xml:space="preserve">
+		<value>&amp;Batal</value>
+	</data>
+	<data name="ContentDialog.Button.Close" xml:space="preserve">
+		<value>&amp;Tutup</value>
+	</data>
+	<data name="ContentDialog.ShowError.Title" xml:space="preserve">
+		<value>Error</value>
+	</data>
+	<data name="ColorPicker.Invert" xml:space="preserve">
+		<value>Invert</value>
+	</data>
+	<data name="ColorPicker.AxisAbbrs.Red" xml:space="preserve">
+		<value>R</value>
+	</data>
+	<data name="ColorPicker.AxisAbbrs.Saturation" xml:space="preserve">
+		<value>S</value>
+	</data>
+	<data name="ColorPicker.AxisAbbrs.Lightness" xml:space="preserve">
+		<value>L</value>
+	</data>
+	<data name="ColorPicker.AxisAbbrs.Cyan" xml:space="preserve">
+		<value>C</value>
+	</data>
+	<data name="ColorPicker.AxisAbbrs.Magenta" xml:space="preserve">
+		<value>M</value>
+	</data>
+	<data name="ColorPicker.AxisAbbrs.Luminance" xml:space="preserve">
+		<value>L</value>
+	</data>
+	<data name="ColorPicker.AxisAbbrs.Chroma" xml:space="preserve">
+		<value>C</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Invert" xml:space="preserve">
+		<value>Invert</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Rename" xml:space="preserve">
+		<value>Nama</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Columns" xml:space="preserve">
+		<value>Kolom</value>
+	</data>
+	<data name="QuickSelectIntervalEditor.Rows" xml:space="preserve">
+		<value>Baris</value>
+	</data>
+	<data name="SplashOverflowMenu.Troubleshooting" xml:space="preserve">
+		<value>Penyelesaian masalah</value>
+	</data>
+	<data name="Shared.Plugins.PictureInPicture" xml:space="preserve">
+		<value>Picture in Picture</value>
+	</data>
+	<data name="Shared.Plugins.Swirl" xml:space="preserve">
+		<value>Swirl(Putar)</value>
+	</data>
+	<data name="Shared.Plugins.Wave" xml:space="preserve">
+		<value>Gelombang</value>
+	</data>
+</root>
