@@ -9,15 +9,6 @@ public static class ColorDisplayNameHelper {
 		CultureChanged += UpdateColorStrings;
 	}
 
-	[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-	private static extern nint LoadLibrary(string lpFileName);
-
-	[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-	private static extern int LoadString(nint hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
-
-	[DllImport("kernel32.dll", SetLastError = true)]
-	private static extern bool FreeLibrary(nint hModule);
-
 	private enum KnownColors : uint {
 		White = 5114, LightGray, Gray, DarkGray, Black, Coral, Rose, LightOrange, Tan, LightYellow, LightGreen, Lime, Aqua, SkyBlue, LightTurquoise, PaleBlue, LightBlue, IceBlue, Periwinkle, Lavender, Pink, Red, Orange, Brown, Gold, Yellow, OliveGreen, Green, BrightGreen, Teal, Turquoise, Blue, BlueGray, Indigo, Purple, DarkRed, DarkYellow, DarkGreen, DarkTeal, DarkBlue, DarkPurple, Plum,
 	}
@@ -30,17 +21,12 @@ public static class ColorDisplayNameHelper {
 	private static void UpdateColorStrings(CultureInfo culture) {
 		ColorStrings = [];
 		string system32 = Environment.SystemDirectory;
-		nint handle = LoadLibrary($@"{system32}\{culture}\Windows.UI.Xaml.dll.mui");
-		if (handle == 0)
-			handle = LoadLibrary($@"{system32}\Windows.UI.Xaml.dll");
-		if (handle == 0)
-			return; // Windows 7 and earlier.
-		StringBuilder buffer = new(1024);
-		foreach (KnownColors resourceId in Enum.GetValues<KnownColors>()) {
-			int length = LoadString(handle, (uint)resourceId, buffer, buffer.Capacity);
-			ColorStrings[resourceId] = buffer.ToString(0, length);
-		}
-		FreeLibrary(handle);
+		using LibraryResourceStringLoader? dll =
+			LibraryResourceStringLoader.Load($@"{system32}\{culture}\Windows.UI.Xaml.dll.mui") ??
+			LibraryResourceStringLoader.Load($@"{system32}\Windows.UI.Xaml.dll");
+		if (dll is null) return; // Windows 7 and earlier.
+		foreach (KnownColors resourceId in Enum.GetValues<KnownColors>())
+			ColorStrings[resourceId] = dll.GetString((uint)resourceId);
 	}
 
 	public static string ToDisplayName(Color color) {
