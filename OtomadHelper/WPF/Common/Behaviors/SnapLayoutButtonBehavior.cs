@@ -42,10 +42,10 @@ public class SnapLayoutButtonBehavior : Behavior<Button> {
 		hwndSource = null;
 	}
 
-	private bool IsCursorOnButton(IntPtr lparam, FrameworkElement button) {
+	private bool IsCursorOnButton(nint lparam, FrameworkElement button) {
 		// Extract mouse coordinates from lparam
-		int mouseX = (short)(lparam.ToInt32() & 0xFFFF);
-		int mouseY = (short)((lparam.ToInt32() >> 16) & 0xFFFF);
+		int mouseX = (short)(lparam & 0xFFFF);
+		int mouseY = (short)((lparam >> 16) & 0xFFFF);
 
 		// Get button's actual dimensions and position
 		if (!button.IsVisible) return false;
@@ -60,17 +60,17 @@ public class SnapLayoutButtonBehavior : Behavior<Button> {
 			mouseY >= buttonPosition.Y && mouseY <= buttonPosition.Y + button.ActualHeight * dpiY;
 	}
 
-	private IntPtr NCHitTestHook(IntPtr lParam, ref bool handled) {
+	private nint NCHitTestHook(nint lParam, ref bool handled) {
 		if (IsCursorOnButton(lParam, AssociatedObject)) {
 			SetButtonState(AssociatedObject, isMouseOver: true);
 			handled = true;
-			return new IntPtr(HTMAXBUTTON);
+			return HTMAXBUTTON;
 		} else
 			SetButtonState(AssociatedObject, isMouseOver: false, isPressed: false);
-		return IntPtr.Zero;
+		return 0;
 	}
 
-	private IntPtr HwndSourceHook(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
+	private nint HwndSourceHook(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled) {
 		// https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/apply-snap-layout-menu
 		// https://github.com/dotnet/wpf/issues/4825
 		switch (msg) {
@@ -97,7 +97,7 @@ public class SnapLayoutButtonBehavior : Behavior<Button> {
 				break;
 		}
 
-		return IntPtr.Zero;
+		return 0;
 	}
 
 	#region Helpers

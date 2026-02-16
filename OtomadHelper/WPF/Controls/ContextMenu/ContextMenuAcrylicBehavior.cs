@@ -58,8 +58,8 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 	}
 
 	internal static void InitializeComponent(FrameworkElement element, bool roundSmaller = false) {
-		IntPtr? handle = (PresentationSource.FromVisual(element) as HwndSource)?.Handle;
-		if (handle is not IntPtr Handle) return;
+		nint? handle = (PresentationSource.FromVisual(element) as HwndSource)?.Handle;
+		if (handle is not nint Handle) return;
 		Control? control = element as Control;
 
 		bool isDarkTheme = BackdropWindow.ShouldAppsUseDarkMode();

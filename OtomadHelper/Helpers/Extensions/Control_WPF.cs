@@ -16,7 +16,7 @@ public static partial class Extensions {
 		/// </summary>
 		/// <param name="window">A WPF <see cref="Window"/>.</param>
 		/// <returns>The handle to the <see cref="Window"/>.</returns>
-		public IntPtr Handle => new WindowInteropHelper(window).Handle;
+		public nint Handle => new WindowInteropHelper(window).Handle;
 
 		/// <summary>
 		/// Force close window.
@@ -37,7 +37,7 @@ public static partial class Extensions {
 		/// </summary>
 		/// <param name="popup">A WPF <see cref="Popup"/>.</param>
 		/// <returns>The handle to the <see cref="Popup"/>.</returns>
-		public IntPtr Handle => (PresentationSource.FromVisual(popup.Child) as HwndSource)?.Handle ?? IntPtr.Zero;
+		public nint Handle => (PresentationSource.FromVisual(popup.Child) as HwndSource)?.Handle ?? (nint)0;
 	}
 
 	extension(Visual window) {

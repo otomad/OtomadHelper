@@ -41,7 +41,7 @@ public partial class ComboBoxFlyout : BaseFlyout {
 				combo.DataContext.Ids.Add(id!);
 			combo.DataContext.Options.AddRange(options);
 			if (icons is not null)
-				combo.DataContext.Icons.AddRange(icons.Select(svg => IconTemplate.FromSvg(svg)));
+				combo.DataContext.Icons.AddRange(icons.Select(IconTemplate.FromSvg));
 			combo.SetTargetRect(targetRect);
 		}
 		//comboBoxContent.Deactivated += (_, _) => {
@@ -86,12 +86,12 @@ public partial class ComboBoxFlyout : BaseFlyout {
 		base.OnSourceInitialized(e);
 		if (IsContent) {
 			HwndSource? source = PresentationSource.FromVisual(this) as HwndSource;
-			source?.AddHook((IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) => {
+			source?.AddHook((nint hWnd, int msg, nint wParam, nint lParam, ref bool handled) => {
 				if (msg == 0x0021) {
 					handled = true;
-					return new IntPtr(0x0003);
+					return (nint)0x0003;
 				} else
-					return IntPtr.Zero;
+					return (nint)0;
 			});
 		}
 	}
@@ -132,7 +132,7 @@ public partial class ComboBoxFlyout : BaseFlyout {
 			//CloseWhenDeactived = true;
 			Deactivated += (_, _) => {
 				s = (IsContent ? "content" : "base") + " deactivated";
-				//IntPtr activeWindow = GetActiveWindow();
+				//nint activeWindow = GetActiveWindow();
 				//s = !IsContent ? (activeWindow, Handle, Related?.Handle, IsActive, Related?.IsActive) : (activeWindow, Related?.Handle, Handle, Related?.IsActive, IsActive);
 				//if (Related is not null && Handle != activeWindow && Related.Handle != activeWindow)
 				//	this.Vanish();

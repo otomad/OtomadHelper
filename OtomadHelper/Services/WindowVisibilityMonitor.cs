@@ -4,19 +4,19 @@ namespace OtomadHelper.Services;
 /// Monitor <c>IsWindowVisible</c> and <c>IsIconic</c> Win32 function return value changes.
 /// </summary>
 public class WindowVisibilityMonitor : IDisposable {
-	private readonly IntPtr targetHwnd;
-	private IntPtr hEventHook = IntPtr.Zero;
+	private readonly nint targetHwnd;
+	private nint hEventHook = 0;
 
 	[DllImport("user32.dll")]
-	private static extern IntPtr SetWinEventHook(
-		uint eventMin, uint eventMax, IntPtr hmodWinEventProc,
+	private static extern nint SetWinEventHook(
+		uint eventMin, uint eventMax, nint hmodWinEventProc,
 		WinEventDelegate lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
 
 	[DllImport("user32.dll")]
-	private static extern bool UnhookWinEvent(IntPtr hWinEventHook);
+	private static extern bool UnhookWinEvent(nint hWinEventHook);
 
 	private delegate void WinEventDelegate(
-		IntPtr hWinEventHook, uint eventType, IntPtr hWnd,
+		nint hWinEventHook, uint eventType, nint hWnd,
 		int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 
 	private const uint WINEVENT_OUTOFCONTEXT = 0;
@@ -29,7 +29,7 @@ public class WindowVisibilityMonitor : IDisposable {
 	private readonly WinEventDelegate eventDelegate;
 	public event EventHandler<bool>? VisibilityChanged;
 
-	public WindowVisibilityMonitor(IntPtr hWnd) {
+	public WindowVisibilityMonitor(nint hWnd) {
 		targetHwnd = hWnd;
 		eventDelegate = WinEventCallback;
 	}
@@ -38,7 +38,7 @@ public class WindowVisibilityMonitor : IDisposable {
 		hEventHook = SetWinEventHook(
 			Math.Min(EVENT_OBJECT_SHOW, EVENT_SYSTEM_MINIMIZESTART), // Minimum event listened
 			Math.Max(EVENT_OBJECT_STATECHANGE, EVENT_SYSTEM_MINIMIZEEND), // Maximum event listened
-			IntPtr.Zero, // Global hook
+			0, // Global hook
 			eventDelegate, // Callback function
 			0, // All processes
 			0, // All threads
@@ -47,7 +47,7 @@ public class WindowVisibilityMonitor : IDisposable {
 	}
 
 	private void WinEventCallback(
-		IntPtr hWinEventHook, uint eventType, IntPtr hWnd,
+		nint hWinEventHook, uint eventType, nint hWnd,
 		int idObject, int idChild, uint dwEventThread, uint dwmsEventTime) {
 		// Filter non window events or non target window events
 		if (idObject != 0 || idChild != 0 || hWnd != targetHwnd)
@@ -71,9 +71,9 @@ public class WindowVisibilityMonitor : IDisposable {
 	}
 
 	public void StopMonitoring() {
-		if (hEventHook != IntPtr.Zero) {
+		if (hEventHook != 0) {
 			UnhookWinEvent(hEventHook);
-			hEventHook = IntPtr.Zero;
+			hEventHook = 0;
 		}
 	}
 

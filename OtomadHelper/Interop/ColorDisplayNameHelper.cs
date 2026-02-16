@@ -10,13 +10,13 @@ public static class ColorDisplayNameHelper {
 	}
 
 	[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-	private static extern IntPtr LoadLibrary(string lpFileName);
+	private static extern nint LoadLibrary(string lpFileName);
 
 	[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-	private static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
+	private static extern int LoadString(nint hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
 
 	[DllImport("kernel32.dll", SetLastError = true)]
-	private static extern bool FreeLibrary(IntPtr hModule);
+	private static extern bool FreeLibrary(nint hModule);
 
 	private enum KnownColors : uint {
 		White = 5114, LightGray, Gray, DarkGray, Black, Coral, Rose, LightOrange, Tan, LightYellow, LightGreen, Lime, Aqua, SkyBlue, LightTurquoise, PaleBlue, LightBlue, IceBlue, Periwinkle, Lavender, Pink, Red, Orange, Brown, Gold, Yellow, OliveGreen, Green, BrightGreen, Teal, Turquoise, Blue, BlueGray, Indigo, Purple, DarkRed, DarkYellow, DarkGreen, DarkTeal, DarkBlue, DarkPurple, Plum,
@@ -30,10 +30,10 @@ public static class ColorDisplayNameHelper {
 	private static void UpdateColorStrings(CultureInfo culture) {
 		ColorStrings = [];
 		string system32 = Environment.SystemDirectory;
-		IntPtr handle = LoadLibrary($@"{system32}\{culture}\Windows.UI.Xaml.dll.mui");
-		if (handle == IntPtr.Zero)
+		nint handle = LoadLibrary($@"{system32}\{culture}\Windows.UI.Xaml.dll.mui");
+		if (handle == 0)
 			handle = LoadLibrary($@"{system32}\Windows.UI.Xaml.dll");
-		if (handle == IntPtr.Zero)
+		if (handle == 0)
 			return; // Windows 7 and earlier.
 		StringBuilder buffer = new(1024);
 		foreach (KnownColors resourceId in Enum.GetValues<KnownColors>()) {

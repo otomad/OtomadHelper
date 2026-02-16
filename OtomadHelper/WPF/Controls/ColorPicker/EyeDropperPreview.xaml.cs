@@ -11,7 +11,7 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<Color>("PointColor", DefaultValueExpression = "System.Windows.Media.Colors.White")]
 public partial class EyeDropperPreview : Window {
 	protected readonly WindowInteropHelper helper;
-	protected internal IntPtr Handle => helper.Handle;
+	protected internal nint Handle => helper.Handle;
 
 	public EyeDropperPreview() {
 		InitializeComponent();

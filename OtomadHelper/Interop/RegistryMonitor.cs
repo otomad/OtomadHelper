@@ -36,25 +36,25 @@ namespace OtomadHelper.Interop;
 public class RegistryMonitor : IDisposable {
 	#region P/Invoke
 	[DllImport("advapi32.dll", SetLastError = true)]
-	private static extern int RegOpenKeyEx(IntPtr hKey, string subKey, uint options, int samDesired, out IntPtr phkResult);
+	private static extern int RegOpenKeyEx(nint hKey, string subKey, uint options, int samDesired, out nint phkResult);
 
 	[DllImport("advapi32.dll", SetLastError = true)]
-	private static extern int RegNotifyChangeKeyValue(IntPtr hKey, bool bWatchSubtree, RegChangeNotifyFilters dwNotifyFilter, IntPtr hEvent, bool fAsynchronous);
+	private static extern int RegNotifyChangeKeyValue(nint hKey, bool bWatchSubtree, RegChangeNotifyFilters dwNotifyFilter, nint hEvent, bool fAsynchronous);
 
 	[DllImport("advapi32.dll", SetLastError = true)]
-	private static extern int RegCloseKey(IntPtr hKey);
+	private static extern int RegCloseKey(nint hKey);
 
 	private const int KEY_QUERY_VALUE = 0x0001;
 	private const int KEY_NOTIFY = 0x0010;
 	private const int STANDARD_RIGHTS_READ = 0x00020000;
 
-	private static readonly IntPtr HKEY_CLASSES_ROOT = new(unchecked((int)0x80000000));
-	private static readonly IntPtr HKEY_CURRENT_USER = new(unchecked((int)0x80000001));
-	private static readonly IntPtr HKEY_LOCAL_MACHINE = new(unchecked((int)0x80000002));
-	private static readonly IntPtr HKEY_USERS = new(unchecked((int)0x80000003));
-	private static readonly IntPtr HKEY_PERFORMANCE_DATA = new(unchecked((int)0x80000004));
-	private static readonly IntPtr HKEY_CURRENT_CONFIG = new(unchecked((int)0x80000005));
-	private static readonly IntPtr HKEY_DYN_DATA = new(unchecked((int)0x80000006));
+	private static readonly nint HKEY_CLASSES_ROOT = unchecked((int)0x80000000);
+	private static readonly nint HKEY_CURRENT_USER = unchecked((int)0x80000001);
+	private static readonly nint HKEY_LOCAL_MACHINE = unchecked((int)0x80000002);
+	private static readonly nint HKEY_USERS = unchecked((int)0x80000003);
+	private static readonly nint HKEY_PERFORMANCE_DATA = unchecked((int)0x80000004);
+	private static readonly nint HKEY_CURRENT_CONFIG = unchecked((int)0x80000005);
+	private static readonly nint HKEY_DYN_DATA = unchecked((int)0x80000006);
 
 	/// <summary>
 	/// Filter for notifications reported by <see cref="RegistryMonitor"/>.
@@ -123,14 +123,12 @@ public class RegistryMonitor : IDisposable {
 	#endregion
 
 	#region Private member variables
-	private IntPtr _registryHive;
+	private nint _registryHive;
 	private string _registrySubName = null!;
 	private readonly object _threadLock = new();
 	private Thread? _thread;
 	private bool _disposed = false;
 	private readonly ManualResetEvent _eventTerminate = new(false);
-
-	private RegChangeNotifyFilters _regFilter = RegChangeNotifyFilters.Key | RegChangeNotifyFilters.Attribute | RegChangeNotifyFilters.Value | RegChangeNotifyFilters.Security;
 	#endregion
 
 	/// <summary>
@@ -170,16 +168,16 @@ public class RegistryMonitor : IDisposable {
 	/// Gets or sets the <see cref="RegChangeNotifyFilter">RegChangeNotifyFilter</see>.
 	/// </summary>
 	public RegChangeNotifyFilters RegChangeNotifyFilter {
-		get => _regFilter;
+		get;
 		set {
 			lock (_threadLock) {
 				if (IsMonitoring)
 					throw new InvalidOperationException("Monitoring thread is already running");
 
-				_regFilter = value;
+				field = value;
 			}
 		}
-	}
+	} = RegChangeNotifyFilters.Key | RegChangeNotifyFilters.Attribute | RegChangeNotifyFilters.Value | RegChangeNotifyFilters.Security;
 
 	#region Initialization
 	private void InitRegistryKey(RegistryHive hive, string name) {
@@ -199,7 +197,7 @@ public class RegistryMonitor : IDisposable {
 	private void InitRegistryKey(string name) {
 		string[] nameParts = name.Split('\\');
 
-		_registryHive = IntPtr.Zero;
+		_registryHive = 0;
 		_registryHive = nameParts[0] switch {
 			"HKEY_CLASSES_ROOT" or "HKCR" => HKEY_CLASSES_ROOT,
 			"HKEY_CURRENT_USER" or "HKCU" => HKEY_CURRENT_USER,
@@ -209,7 +207,7 @@ public class RegistryMonitor : IDisposable {
 			_ => throw new ArgumentException($"The registry hive '{nameParts[0]}' is not supported", nameof(name))
 		};
 
-		_registrySubName = String.Join("\\", nameParts, 1, nameParts.Length - 1);
+		_registrySubName = string.Join("\\", nameParts, 1, nameParts.Length - 1);
 	}
 	#endregion
 
@@ -229,8 +227,9 @@ public class RegistryMonitor : IDisposable {
 		lock (_threadLock) {
 			if (!IsMonitoring) {
 				_eventTerminate.Reset();
-				_thread = new Thread(new ThreadStart(MonitorThread));
-				_thread.IsBackground = true;
+				_thread = new(new ThreadStart(MonitorThread)) {
+					IsBackground = true
+				};
 				_thread.Start();
 			}
 		}
@@ -262,8 +261,7 @@ public class RegistryMonitor : IDisposable {
 	}
 
 	private void ThreadLoop() {
-		IntPtr registryKey;
-		int result = RegOpenKeyEx(_registryHive, _registrySubName, 0, STANDARD_RIGHTS_READ | KEY_QUERY_VALUE | KEY_NOTIFY, out registryKey);
+		int result = RegOpenKeyEx(_registryHive, _registrySubName, 0, STANDARD_RIGHTS_READ | KEY_QUERY_VALUE | KEY_NOTIFY, out nint registryKey);
 		if (result != 0)
 			throw new Win32Exception(result);
 
@@ -272,7 +270,7 @@ public class RegistryMonitor : IDisposable {
 			WaitHandle[] waitHandles = [_eventNotify, _eventTerminate];
 			while (!_eventTerminate.WaitOne(0, true)) {
 				// Replace the obsolete `_eventNotify.Handle` property with `_eventNotify.SafeWaitHandle`.
-				result = RegNotifyChangeKeyValue(registryKey, true, _regFilter, _eventNotify.SafeWaitHandle.DangerousGetHandle(), true);
+				result = RegNotifyChangeKeyValue(registryKey, true, RegChangeNotifyFilter, _eventNotify.SafeWaitHandle.DangerousGetHandle(), true);
 				if (result != 0)
 					throw new Win32Exception(result);
 
@@ -280,7 +278,7 @@ public class RegistryMonitor : IDisposable {
 					OnRegChanged();
 			}
 		} finally {
-			if (registryKey != IntPtr.Zero)
+			if (registryKey != 0)
 				RegCloseKey(registryKey);
 		}
 	}

@@ -33,7 +33,7 @@ namespace OtomadHelper.WPF.Controls;
 [RoutedEvent("Showing", RoutedEventStrategy.Bubble)]
 public partial class BackdropWindow : Window {
 	protected readonly WindowInteropHelper helper;
-	protected IntPtr Handle => helper.Handle;
+	protected nint Handle => helper.Handle;
 
 	private bool IsRtl => false;
 
@@ -43,7 +43,7 @@ public partial class BackdropWindow : Window {
 		if (IsRtl) FlowDirection = FlowDirection.RightToLeft;
 	}
 
-	public IntPtr OwnerHandle {
+	public nint OwnerHandle {
 		get => helper.Owner;
 		set => helper.Owner = value;
 	}
@@ -320,7 +320,7 @@ public partial class BackdropWindow : Window {
 	}
 
 	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
-	protected IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) {
+	protected nint WndProc(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled) {
 #pragma warning disable CS0219 // 变量已被赋值，但从未使用过它的值
 #pragma warning disable IDE0059 // 不需要赋值
 		const int SettingChange = 0x001A;
@@ -337,11 +337,11 @@ public partial class BackdropWindow : Window {
 			// NCHitTest must be listened at first, or it will be ignored in other HwndSource.AddHook.
 			case NCHitTest:
 				foreach (NCHitTestHookHandler Hook in NCHitTestHooks)
-					if (Hook(lParam, ref handled) is IntPtr hitResult && hitResult != IntPtr.Zero)
+					if (Hook(lParam, ref handled) is nint hitResult && hitResult != 0)
 						return hitResult;
 				break;
 			//case SettingChange:
-			//	if (wParam == IntPtr.Zero && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
+			//	if (wParam == 0 && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
 			//		RefreshDarkMode();
 			//		RaiseEvent(new(ThemeChangeEvent, this));
 			//		goto case DwmColorizationColorChanged;
@@ -375,9 +375,9 @@ public partial class BackdropWindow : Window {
 				default:
 					break;
 			}*/
-		return IntPtr.Zero;
+		return 0;
 	}
-	private static readonly IntPtr trueValue = new(1);
+	private static readonly nint trueValue = 1;
 	//private uint WM_ShellHook;
 
 	//protected override void OnActivated(EventArgs e) {
@@ -390,7 +390,7 @@ public partial class BackdropWindow : Window {
 	//	IsNonClientActive = false;
 	//}
 
-	public delegate IntPtr NCHitTestHookHandler(IntPtr lParam, ref bool handled);
+	public delegate nint NCHitTestHookHandler(nint lParam, ref bool handled);
 	private readonly List<NCHitTestHookHandler> NCHitTestHooks = [];
 	public void AddNCHitTestHook(NCHitTestHookHandler hook) => NCHitTestHooks.Add(hook);
 	public void RemoveNCHitTestHook(NCHitTestHookHandler hook) => NCHitTestHooks.Remove(hook);
@@ -453,7 +453,7 @@ public partial class BackdropWindow : Window {
 		}
 	}
 
-	public static bool SetAcrylicByComposition(IntPtr hWnd, Control? control, AccentState backdrop) {
+	public static bool SetAcrylicByComposition(nint hWnd, Control? control, AccentState backdrop) {
 		bool isLight = !ShouldAppsUseDarkMode();
 		if (!EnableAcrylicBlurBehind(hWnd, (isLight ? LightThemeAcrylicBackgroundBrush : DarkThemeAcrylicBackgroundBrush).Color.ToAbgr(), backdrop)) return false;
 		if (backdrop == AccentState.EnableBlurBehind && control is { })
