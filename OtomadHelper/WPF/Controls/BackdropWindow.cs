@@ -390,10 +390,10 @@ public partial class BackdropWindow : Window {
 	//	IsNonClientActive = false;
 	//}
 
-	public delegate nint NCHitTestHookHandler(nint lParam, ref bool handled);
+	internal delegate nint NCHitTestHookHandler(nint lParam, ref bool handled);
 	private readonly List<NCHitTestHookHandler> NCHitTestHooks = [];
-	public void AddNCHitTestHook(NCHitTestHookHandler hook) => NCHitTestHooks.Add(hook);
-	public void RemoveNCHitTestHook(NCHitTestHookHandler hook) => NCHitTestHooks.Remove(hook);
+	internal void AddNCHitTestHook(NCHitTestHookHandler hook) => NCHitTestHooks.Add(hook);
+	internal void RemoveNCHitTestHook(NCHitTestHookHandler hook) => NCHitTestHooks.Remove(hook);
 
 	internal static bool IsGlassEnabled => SystemParameters.IsGlassEnabled;
 	protected void OnSystemThemeChanged(object? sender, UserPreferenceChangedEventArgs e) {

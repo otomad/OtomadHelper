@@ -40,6 +40,9 @@ public class SnapLayoutButtonBehavior : Behavior<Button> {
 
 		hwndSource?.RemoveHook(HwndSourceHook);
 		hwndSource = null;
+
+		if (window is BackdropWindow backdropWindow)
+			backdropWindow.RemoveNCHitTestHook(NCHitTestHook);
 	}
 
 	private bool IsCursorOnButton(nint lparam, FrameworkElement button) {
