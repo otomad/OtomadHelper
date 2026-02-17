@@ -9,12 +9,14 @@ namespace OtomadHelper.WPF.Controls;
 /// EyeDropperPreview.xaml 的交互逻辑
 /// </summary>
 [DependencyProperty<Color>("PointColor", DefaultValueExpression = "System.Windows.Media.Colors.White")]
+[DependencyProperty<bool>("IsHighContrast", DefaultValue = false)]
 public partial class EyeDropperPreview : Window {
 	protected readonly WindowInteropHelper helper;
 	protected internal nint Handle => helper.Handle;
 
 	public EyeDropperPreview() {
 		InitializeComponent();
+		SetResourceReference(IsHighContrastProperty, SystemParameters.HighContrastKey);
 		helper = new(this);
 	}
 

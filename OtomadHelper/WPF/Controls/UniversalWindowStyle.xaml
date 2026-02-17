@@ -102,9 +102,6 @@
 														<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 														<Setter Property="Background" Value="{DynamicResource SubtleTertiary}" />
 													</MultiTrigger>
-													<Trigger Property="IsEnabled" Value="False">
-														<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
-													</Trigger>
 													<MultiDataTrigger>
 														<MultiDataTrigger.Conditions>
 															<Condition Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="False" />
@@ -112,6 +109,19 @@
 														</MultiDataTrigger.Conditions>
 														<Setter Property="Opacity" Value="0.6" />
 													</MultiDataTrigger>
+													<DataTrigger Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True">
+														<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+													</DataTrigger>
+													<MultiDataTrigger>
+														<MultiDataTrigger.Conditions>
+															<Condition Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True" />
+															<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
+														</MultiDataTrigger.Conditions>
+														<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+													</MultiDataTrigger>
+													<Trigger Property="IsEnabled" Value="False">
+														<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
+													</Trigger>
 												</Style.Triggers>
 											</Style>
 											<Style
@@ -263,6 +273,12 @@
 								</Trigger>
 								<Trigger Property="ResizeMode" Value="CanMinimize">
 									<Setter TargetName="MaximizeButton" Property="IsEnabled" Value="False" />
+								</Trigger>
+								<Trigger Property="IsHighContrast" Value="True">
+									<Setter TargetName="MinimizeButton" Property="Content" Value="&#xEF2D;" />
+									<Setter TargetName="RestoreButton" Property="Content" Value="&#xEF2F;" />
+									<Setter TargetName="MaximizeButton" Property="Content" Value="&#xEF2E;" />
+									<Setter TargetName="CloseButton" Property="Content" Value="&#xEF2C;" />
 								</Trigger>
 							</ControlTemplate.Triggers>
 						</ControlTemplate>

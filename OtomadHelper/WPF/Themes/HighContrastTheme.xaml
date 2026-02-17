@@ -1,0 +1,67 @@
+<m:NamedResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
+	Name="ThemeColor"
+	>
+	<s:String x:Key="ResourceDictionaryName">ThemeColor</s:String>
+	<x:Static x:Key="ForegroundColor" Member="SystemColors.WindowTextColor" />
+	<x:Static x:Key="ForegroundBrush" Member="SystemColors.WindowTextBrush" />
+	<x:Static x:Key="BackgroundBrush" Member="SystemColors.WindowBrush" />
+	<x:Static x:Key="CardStroke" Member="SystemColors.ControlTextBrush" />
+	<x:Static x:Key="CardStrokeOnSurfaceOverlay" Member="SystemColors.ControlTextBrush" />
+	<x:Static x:Key="SurfaceOverlayBackground" Member="SystemColors.WindowBrush" />
+	<x:Static x:Key="ControlBackground" Member="SystemColors.ControlBrush" />
+	<x:Static x:Key="ControlBackgroundSecondary" Member="SystemColors.HighlightBrush" />
+	<x:Static x:Key="ControlBackgroundTertiary" Member="SystemColors.ControlBrush" />
+	<x:Static x:Key="ControlStroke" Member="SystemColors.ControlTextBrush" />
+	<x:Static x:Key="ControlStrokeOnAccent" Member="SystemColors.ControlTextBrush" />
+	<s:Double x:Key="ControlPressedOpacity">0.5</s:Double>
+	<s:Double x:Key="ControlPressedOpacityOnAccent">0.5</s:Double>
+	<LinearGradientBrush x:Key="ControlElevation" StartPoint="0.5,0" EndPoint="0.5,1">
+		<GradientStop Offset="0.9" Color="{x:Static SystemColors.ControlTextColor}" />
+		<GradientStop Offset="1" Color="{x:Static SystemColors.ControlTextColor}" />
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="AccentControlElevation" StartPoint="0.5,0" EndPoint="0.5,1">
+		<GradientStop Offset="0.9" Color="{x:Static SystemColors.ControlTextColor}" />
+		<GradientStop Offset="1" Color="{x:Static SystemColors.ControlTextColor}" />
+	</LinearGradientBrush>
+	<LinearGradientBrush x:Key="CircleElevation" StartPoint="0.5,0" EndPoint="0.5,1">
+		<GradientStop Offset="0.5" Color="{x:Static SystemColors.ControlTextColor}" />
+		<GradientStop Offset="0.95" Color="{x:Static SystemColors.ControlTextColor}" />
+	</LinearGradientBrush>
+	<x:Static x:Key="TextOnAccentForegroundColor" Member="SystemColors.HighlightTextBrush" />
+	<x:Static x:Key="TextOnAccentForegroundBrush" Member="SystemColors.HighlightTextBrush" />
+	<x:Static x:Key="TextOnAccent" Member="SystemColors.HighlightTextBrush" />
+	<x:Static x:Key="TextOnAccentDisabled" Member="SystemColors.GrayTextBrush" />
+	<s:Double x:Key="AccentSecondaryOpacity">0.9</s:Double>
+	<s:Double x:Key="AccentTertiaryOpacity">0.8</s:Double>
+	<x:Static x:Key="SubtleSecondary" Member="SystemColors.HighlightBrush" />
+	<x:Static x:Key="SubtleTertiary" Member="SystemColors.HighlightBrush" />
+	<x:Static x:Key="DividerStroke" Member="SystemColors.WindowTextBrush" />
+	<x:Static x:Key="TextSecondary" Member="SystemColors.WindowTextBrush" />
+	<x:Static x:Key="TextTertiary" Member="SystemColors.WindowTextBrush" />
+	<x:Static x:Key="TextDisabled" Member="SystemColors.GrayTextBrush" />
+	<x:Static x:Key="ControlStrong" Member="SystemColors.ControlTextBrush" />
+	<x:Static x:Key="ControlStrongDisabled" Member="SystemColors.GrayTextBrush" />
+	<SolidColorBrush x:Key="AcrylicBackground" Color="Transparent" />
+	<x:Static x:Key="SurfaceStrokeFlyout" Member="SystemColors.ControlTextBrush" />
+	<x:Static x:Key="ControlDefault" Member="SystemColors.ControlBrush" />
+	<x:Static x:Key="ControlSecondary" Member="SystemColors.ControlBrush" />
+	<SolidColorBrush x:Key="ControlInputActive" Color="Transparent" />
+	<x:Static x:Key="ControlDisabled" Member="SystemColors.ControlBrush" />
+	<x:Static x:Key="ControlAltSecondary" Member="SystemColors.ControlBrush" />
+	<x:Static x:Key="ControlAltTertiary" Member="SystemColors.ControlBrush" />
+	<x:Static x:Key="ControlAltQuarternary" Member="SystemColors.ControlBrush" />
+	<x:Static x:Key="ControlStrongStroke" Member="SystemColors.ControlTextBrush" />
+	<x:Static x:Key="ControlStrongStrokeDisabled" Member="SystemColors.GrayTextBrush" />
+	<x:Static x:Key="AccentDisabled" Member="SystemColors.GrayTextBrush" />
+	<x:Static x:Key="CheckerBoardAlt" Member="SystemColors.GrayTextBrush" />
+	<x:Static x:Key="SystemCritical" Member="SystemColors.HighlightBrush" />
+	<x:Static x:Key="CaptionCloseText" Member="SystemColors.WindowBrush" />
+	<x:Static x:Key="CaptionCloseTextSecondary" Member="SystemColors.WindowBrush" />
+	<x:Static x:Key="CaptionCloseFill" Member="SystemColors.HighlightBrush" />
+	<x:Static x:Key="CaptionCloseFillSecondary" Member="SystemColors.HighlightBrush" />
+</m:NamedResourceDictionary>

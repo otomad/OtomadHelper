@@ -8,6 +8,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
 
+using OtomadHelper.Interop;
 using OtomadHelper.Models;
 
 using ContextMenu = System.Windows.Controls.ContextMenu;
@@ -18,7 +19,9 @@ namespace OtomadHelper.WPF.Controls;
 /// BackdropWindow.xaml 的交互逻辑
 /// </summary>
 [DependencyProperty<SystemBackdropType>("SystemBackdropType", DefaultValueExpression = nameof(DefaultSystemBackdropType))]
-[DependencyProperty<bool>("IsLightTheme", DefaultValue = true)]
+[DependencyProperty<bool>("IsLightTheme", DefaultValue = true, IsReadOnly = true)]
+[DependencyProperty<bool>("IsHighContrast", DefaultValue = false)]
+[DependencyProperty<string>("CurrentThemeName", DefaultValue = "Aero", IsReadOnly = true)]
 [DependencyProperty<Color?>("CustomAccentColor")]
 [DependencyProperty<Color>("WindowGlassColor", DefaultValueExpression = nameof(WindowsDefaultGlassColor), IsReadOnly = true)]
 [DependencyProperty<Brush>("WindowGlassBrush", DefaultValueExpression = nameof(WindowsDefaultGlassBrush), IsReadOnly = true)]
@@ -52,8 +55,9 @@ public partial class BackdropWindow : Window {
 		Background = DefaultBackground;
 		RefreshCulture();
 		CommandBindings.AddRange(Commands.CommandBindings);
-		AddResource("WPF/Themes/Generic.xaml");
-		AddResource("WPF/Themes/Controls.xaml");
+		AddThemeResource(AddThemeResourceType.Common);
+		SetResourceReference(IsHighContrastProperty, SystemParameters.HighContrastKey);
+		UpdateCurrentThemeName();
 		Loaded += Window_Loaded;
 		Closed += Window_Closed;
 		IsVisibleChanged += (_, e) => {
@@ -88,7 +92,7 @@ public partial class BackdropWindow : Window {
 			WM_ShellHook = RegisterWindowMessage("SHELLHOOK");*/
 		if (WindowsVersion.Current < WindowsNT.Windows8) {
 			SystemEvents.UserPreferenceChanged += OnSystemThemeChanged;
-			SystemParameters.StaticPropertyChanged += OnSystemThemeChanged;
+			//SystemParameters.StaticPropertyChanged += OnSystemThemeChanged;
 		}
 	}
 
@@ -96,7 +100,7 @@ public partial class BackdropWindow : Window {
 		//DeregisterShellHookWindow(Handle);
 		if (WindowsVersion.Current < WindowsNT.Windows8) {
 			SystemEvents.UserPreferenceChanged -= OnSystemThemeChanged;
-			SystemParameters.StaticPropertyChanged -= OnSystemThemeChanged;
+			//SystemParameters.StaticPropertyChanged -= OnSystemThemeChanged;
 		}
 	}
 
@@ -186,9 +190,8 @@ public partial class BackdropWindow : Window {
 			bool isDark = ShouldAppsUseDarkMode();
 			ContextMenu menu = new();
 			ContextMenuAcrylicBehavior.SetAutoIcon(menu, false);
-			AddResource(menu, "WPF/Themes/Generic.xaml");
-			AddResource(menu, "WPF/Themes/Controls.xaml");
-			AddResource(menu, $"WPF/Themes/{(isDark ? "Dark" : "Light")}Theme.xaml", true);
+			AddThemeResource(menu, AddThemeResourceType.Common);
+			AddThemeResource(menu, isDark ? AddThemeResourceType.Dark : AddThemeResourceType.Light);
 			themedSuccessfully = true;
 			return menu;
 		} catch (Exception) {
@@ -233,12 +236,12 @@ public partial class BackdropWindow : Window {
 		}
 	}
 
-	protected void SetCurrentThemeResource(bool isDarkTheme) {
+	protected void SetCurrentThemeResource(AddThemeResourceType theme) {
 		foreach (ResourceDictionary resource in Resources.MergedDictionaries.ToList())
 			if (resource is NamedResourceDictionary named && named.Name == "ThemeColor")
 				Resources.MergedDictionaries.Remove(resource);
 
-		AddResource($"WPF/Themes/{(isDarkTheme ? "Dark" : "Light")}Theme.xaml", true);
+		AddThemeResource(theme);
 	}
 
 	public static void AddResource(FrameworkElement element, string path, bool isNamedResourceDictionary = false) {
@@ -248,6 +251,23 @@ public partial class BackdropWindow : Window {
 	}
 
 	public void AddResource(string path, bool isNamedResourceDictionary = false) => AddResource(this, path, isNamedResourceDictionary);
+
+	protected enum AddThemeResourceType {
+		Common,
+		Light,
+		Dark,
+		HighContrast,
+	}
+
+	protected static void AddThemeResource(FrameworkElement element, AddThemeResourceType theme) {
+		if (theme == AddThemeResourceType.Common) {
+			AddResource(element, "WPF/Themes/Generic.xaml");
+			AddResource(element, "WPF/Themes/Controls.xaml");
+		} else
+			AddResource(element, $"WPF/Themes/{theme}Theme.xaml", true);
+	}
+
+	protected void AddThemeResource(AddThemeResourceType theme) => AddThemeResource(this, theme);
 
 	protected void RefreshFrame() {
 		HwndSource mainWindowSrc = HwndSource.FromHwnd(Handle);
@@ -275,6 +295,11 @@ public partial class BackdropWindow : Window {
 	}
 
 	protected internal static bool GetWindowsAccentPalette(AccentPalette palette) {
+		if (SystemParameters.HighContrast) {
+			palette.LightAccentColor = palette.DarkAccentColor = palette.Colorization = SystemColors.HighlightColor;
+			return true;
+		}
+
 		if (WindowsVersion.Current < WindowsNT.Windows10 && IsGlassEnabled) {
 			// In Windows 7, change color in control panel directly without saving will not update the settings in the registry, so it looks like the color is delayed.
 			palette.LightAccentColor = palette.DarkAccentColor = palette.Colorization = SystemParameters.WindowGlassColor;
@@ -360,11 +385,13 @@ public partial class BackdropWindow : Window {
 			//	// reference: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#29282701
 			//	IsNonClientActive = wParam == trueValue;
 			//	break;
-			//case DwmCompositionChanged:
-			//case ThemeChanged:
-			//	// Respond to DWM being enabled/disabled or system theme being changed
-			//	OnTitleBarTypeChanged(TitleBarType);
-			//	goto case DwmColorizationColorChanged;
+			case DwmCompositionChanged:
+			case ThemeChanged:
+				UpdateCurrentThemeName();
+				// // Respond to DWM being enabled/disabled or system theme being changed
+				// OnTitleBarTypeChanged(TitleBarType);
+				// goto case DwmColorizationColorChanged;
+				break;
 			default:
 				break;
 		}
@@ -398,6 +425,8 @@ public partial class BackdropWindow : Window {
 		remove => NCHitTestHooks.Remove(value);
 	}
 
+	private void UpdateCurrentThemeName() => CurrentThemeName = ThemeInfo.Current.ThemeName;
+
 	internal static bool IsGlassEnabled => SystemParameters.IsGlassEnabled;
 	protected void OnSystemThemeChanged() {
 		//if (e.Category is not (UserPreferenceCategory.Color or UserPreferenceCategory.General or UserPreferenceCategory.Window or UserPreferenceCategory.VisualStyle)) return;
@@ -409,6 +438,12 @@ public partial class BackdropWindow : Window {
 
 	protected void OnSystemThemeChanged(object sender, UserPreferenceChangedEventArgs e) => OnSystemThemeChanged();
 	protected void OnSystemThemeChanged(object sender, PropertyChangedEventArgs e) => OnSystemThemeChanged();
+	partial void OnIsHighContrastChanged() {
+		bool isLoaded = helper is not null;
+		if (isLoaded) RefreshDarkMode();
+		if (isLoaded) SetSystemBackdropType(SystemBackdropType);
+		else Loaded += (_, _) => SetSystemBackdropType(SystemBackdropType);
+	}
 
 	protected void RefreshDarkMode() {
 		bool isDarkTheme = ShouldAppsUseDarkMode();
@@ -416,14 +451,14 @@ public partial class BackdropWindow : Window {
 		uint flag = isDarkTheme ? 1u : 0u;
 		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, flag);
 		EnableDarkSystemMenu(isDarkTheme);
-		SetCurrentThemeResource(isDarkTheme);
+		SetCurrentThemeResource(IsHighContrast ? AddThemeResourceType.HighContrast : isDarkTheme ? AddThemeResourceType.Dark : AddThemeResourceType.Light);
 
 		SetSolidBackgroundColorAsNeeded();
 	}
 
 	protected void SetSolidBackgroundColorAsNeeded() {
 		if (Background == DefaultBackground || this.GetDynamicResourceKey(BackgroundProperty) == BackgroundBrushKeyName)
-			if (TitleBarType == TitleBarType.System || !IsGlassEnabled || SystemBackdropType == SystemBackdropType.None)
+			if (TitleBarType == TitleBarType.System || !IsGlassEnabled || SystemBackdropType == SystemBackdropType.None || IsHighContrast)
 				SetResourceReference(BackgroundProperty, BackgroundBrushKeyName);
 			else
 				Background = DefaultBackground;
@@ -451,6 +486,7 @@ public partial class BackdropWindow : Window {
 	private const SystemBackdropType DefaultSystemBackdropType = SystemBackdropType.TransientWindow;
 
 	protected void SetSystemBackdropType(SystemBackdropType systemBackdropType) {
+		if (IsHighContrast) systemBackdropType = SystemBackdropType.None;
 		if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.AcrylicMicaMicaAlt)
 			SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (uint)systemBackdropType);
 		else if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.Blur && systemBackdropType is not SystemBackdropType.None) {
@@ -503,11 +539,12 @@ public partial class BackdropWindow : Window {
 				BindingOperations.SetBinding(Chrome, WindowChrome.ResizeBorderThicknessProperty, resizeBorderThicknessBinding);
 				#endregion
 				#region WindowChrome.NonClientFrameEdges
-				MultiBinding nonClientFrameEdgesBinding = new() { Converter = new WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateToNonClientFrameEdgesConverter() };
+				MultiBinding nonClientFrameEdgesBinding = new() { Converter = new WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateAndCurrentThemeNameToNonClientFrameEdgesConverter() };
 				nonClientFrameEdgesBinding.AddBinding(
 					new(nameof(ResizeMode)) { RelativeSource = backdropWindowRelativeSource },
 					new(nameof(FlowDirection)) { RelativeSource = backdropWindowRelativeSource },
-					new(nameof(WindowState)) { RelativeSource = backdropWindowRelativeSource }
+					new(nameof(WindowState)) { RelativeSource = backdropWindowRelativeSource },
+					new(nameof(CurrentThemeName)) { RelativeSource = backdropWindowRelativeSource }
 				);
 				BindingOperations.SetBinding(Chrome, WindowChrome.NonClientFrameEdgesProperty, nonClientFrameEdgesBinding);
 				#endregion
@@ -524,10 +561,11 @@ public partial class BackdropWindow : Window {
 				if (WindowsVersion.Current is >= WindowsNT.Windows10 and <= WindowsNT.Windows11) // From Windows 10 RTM to Windows 11 21H2 (before Windows 11 22H2).
 					UseUniversalControlBox = true;
 				else {
-					Binding useUniversalControlBoxBinding = new(nameof(SystemBackdropType)) {
-						RelativeSource = new(RelativeSourceMode.Self),
-						Converter = new SystemBackdropTypeToUseUniversalControlBoxConverter(),
-					};
+					MultiBinding useUniversalControlBoxBinding = new() { Converter = new SystemBackdropTypeOrIsHighContrastToUseUniversalControlBoxConverter() };
+					useUniversalControlBoxBinding.AddBinding(
+						new(nameof(SystemBackdropType)) { RelativeSource = new(RelativeSourceMode.Self) },
+						new(nameof(IsHighContrast)) { RelativeSource = new(RelativeSourceMode.Self) }
+					);
 					SetBinding(UseUniversalControlBoxProperty, useUniversalControlBoxBinding);
 				}
 				#endregion
@@ -588,13 +626,13 @@ public partial class BackdropWindow : Window {
 			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? new(0) : new(8, 0, 8, 8);
 	}
 
-	private class WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateToNonClientFrameEdgesConverter : MultiValueConverter<(ResizeMode, FlowDirection, WindowState), NonClientFrameEdges> {
+	private class WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateAndCurrentThemeNameToNonClientFrameEdgesConverter : MultiValueConverter<(ResizeMode, FlowDirection, WindowState, string), NonClientFrameEdges> {
 		// Decided by whenever ILRepark is enabled.
-		public override NonClientFrameEdges Convert((ResizeMode, FlowDirection, WindowState) value, Type targetType, object parameter, CultureInfo culture) {
-			(ResizeMode resizeMode, FlowDirection flowDirection, WindowState windowState) = value;
+		public override NonClientFrameEdges Convert((ResizeMode, FlowDirection, WindowState, string) value, Type targetType, object parameter, CultureInfo culture) {
+			(ResizeMode resizeMode, FlowDirection flowDirection, WindowState windowState, string themeName) = value;
 			return resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? NonClientFrameEdges.None :
 				windowState == WindowState.Maximized ? NonClientFrameEdges.None :
-				WindowsVersion.Current < WindowsNT.Windows10_TP ? NonClientFrameEdges.None :
+				WindowsVersion.Current < WindowsNT.Windows10_TP || themeName == "AeroLite" ? NonClientFrameEdges.None :
 				flowDirection == FlowDirection.LeftToRight ? NonClientFrameEdges.Right :
 				NonClientFrameEdges.Right | NonClientFrameEdges.Left | NonClientFrameEdges.Bottom;
 		}
@@ -620,8 +658,11 @@ public partial class BackdropWindow : Window {
 	}
 
 	[ValueConversion(typeof(SystemBackdropType), typeof(bool))]
-	private class SystemBackdropTypeToUseUniversalControlBoxConverter : ValueConverter<SystemBackdropType, bool> {
-		public override bool Convert(SystemBackdropType backdrop, Type targetType, object parameter, CultureInfo culture) => backdrop == SystemBackdropType.None;
+	private class SystemBackdropTypeOrIsHighContrastToUseUniversalControlBoxConverter : MultiValueConverter<(SystemBackdropType, bool), bool> {
+		public override bool Convert((SystemBackdropType, bool) value, Type targetType, object parameter, CultureInfo culture) {
+			(SystemBackdropType backdrop, bool highContrast) = value;
+			return backdrop == SystemBackdropType.None || highContrast;
+		}
 	}
 	#endregion
 

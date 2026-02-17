@@ -62,7 +62,8 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 		if (handle is not nint Handle || element is not Control control) return;
 
 		bool isDarkTheme = BackdropWindow.ShouldAppsUseDarkMode();
-		bool supportComposition = BackdropWindow.SetAcrylicByComposition(Handle, control, WindowsVersion.Current switch {
+		bool isHighContrast = SystemParameters.HighContrast;
+		bool supportComposition = BackdropWindow.SetAcrylicByComposition(Handle, control, isHighContrast ? AccentState.Disabled : WindowsVersion.Current switch {
 			>= WindowsNT.Windows10_1803 => AccentState.EnableAcrylicBlurBehind,
 			>= WindowsNT.Windows10 => AccentState.EnableBlurBehind,
 			>= WindowsNT.Windows8 => AccentState.EnableTransparentGradient,
@@ -73,16 +74,17 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 			SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
 			if (SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round)) == HResult.InvalidArg)
 				SetCornerRadius(control, new(0));
+			if (isHighContrast) control.Background = SystemColors.WindowBrush;
 		} else { // Windows 7 and below.
 			SolidColorBrush background = (
-				isDarkTheme ? BackdropWindow.DarkThemeBackgroundBrush : // SystemColors doesn't support system dark theme colors.
+				isDarkTheme && !isHighContrast ? BackdropWindow.DarkThemeBackgroundBrush : // SystemColors doesn't support system dark theme colors.
 				control switch {
 					ContextMenu => SystemColors.MenuBarBrush,
 					ToolTip => SystemColors.InfoBrush,
 					_ => SystemColors.MenuBarBrush,
 				}
 			).Clone();
-			background.Opacity = 0.75;
+			if (!isHighContrast) background.Opacity = 0.75;
 			control.Background = background;
 			const double shadowDepth = 2;
 			control.Margin = new(shadowDepth);

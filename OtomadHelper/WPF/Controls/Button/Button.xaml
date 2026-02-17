@@ -121,6 +121,18 @@
 				<Setter Property="Background" Value="{DynamicResource ControlDisabled}" />
 				<Setter Property="BorderBrush" Value="{DynamicResource ControlStroke}" />
 			</Trigger>
+			<DataTrigger Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True">
+				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+			</DataTrigger>
+			<MultiDataTrigger>
+				<MultiDataTrigger.Conditions>
+					<Condition Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True" />
+					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
+					<Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="False" />
+				</MultiDataTrigger.Conditions>
+				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+			</MultiDataTrigger>
 			<DataTrigger Binding="{Binding Accent, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolTruthy}}" Value="True">
 				<Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevation}" />
 				<Setter Property="Background">
@@ -198,6 +210,26 @@
 				<Setter Property="BorderBrush" Value="{DynamicResource AccentDisabled}" />
 				<Setter Property="BorderThickness" Value="0" />
 			</MultiTrigger>
+			<MultiDataTrigger>
+				<MultiDataTrigger.Conditions>
+					<Condition Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True" />
+					<Condition Binding="{Binding IsDefault, RelativeSource={RelativeSource Self}}" Value="True" />
+					<Condition Binding="{Binding Accent, RelativeSource={RelativeSource Self}}" Value="{x:Null}" />
+				</MultiDataTrigger.Conditions>
+				<Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+			</MultiDataTrigger>
+			<MultiDataTrigger>
+				<MultiDataTrigger.Conditions>
+					<Condition Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True" />
+					<Condition Binding="{Binding IsDefault, RelativeSource={RelativeSource Self}}" Value="True" />
+					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
+					<Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="False" />
+					<Condition Binding="{Binding Accent, RelativeSource={RelativeSource Self}}" Value="{x:Null}" />
+				</MultiDataTrigger.Conditions>
+				<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+			</MultiDataTrigger>
 			<Trigger Property="ShowIconOnly" Value="True">
 				<Setter Property="ToolTip">
 					<Setter.Value>

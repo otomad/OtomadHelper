@@ -45,6 +45,12 @@ public class Path :
 	}
 
 	/// <summary>
+	/// Construct a path class from a string builder (buffer).
+	/// </summary>
+	/// <param name="buffer">Path string buffer.</param>
+	public Path(StringBuilder buffer) : this(buffer.ToString()) { }
+
+	/// <summary>
 	/// Protocol string like: <c>http://</c>, <c>file:///</c>, etc.
 	/// </summary>
 	public string Protocol { get; set; } = "";
@@ -243,9 +249,15 @@ public class Path :
 
 	public static implicit operator Uri(Path path) => new(path.ToString());
 
-	public static implicit operator List<string>(Path path) => path.directories.ToList();
+	public static implicit operator List<string>(Path path) => [.. path.directories];
 
-	public static implicit operator string[](Path path) => path.directories.ToArray();
+	public static implicit operator string[](Path path) => [.. path.directories];
+
+	public static explicit operator Path(string path) => new(path);
+
+	public static explicit operator Path(StringBuilder buffer) => new(buffer);
+
+	public static explicit operator Path(Uri uri) => new(uri);
 	#endregion
 
 	#region Implementation

@@ -12,13 +12,13 @@
 	Height="150"
 	AllowsTransparency="True"
 	Background="Transparent"
+	Focusable="False"
+	Loaded="Window_Loaded"
 	RenderTransformOrigin="0.5,0.5"
 	ShowInTaskbar="False"
+	SnapsToDevicePixels="False"
 	Topmost="True"
 	WindowStyle="None"
-	Focusable="False"
-	SnapsToDevicePixels="False"
-	Loaded="Window_Loaded"
 	mc:Ignorable="d"
 	>
 	<Window.RenderTransform>
@@ -58,17 +58,31 @@
 					Duration="{StaticResource BaseAnimationDuration}"
 					/>
 			</Storyboard>
+
+			<Style x:Key="Container" TargetType="Grid">
+				<Setter Property="Effect">
+					<Setter.Value>
+						<DropShadowEffect
+							BlurRadius="10"
+							Opacity="0.5"
+							ShadowDepth="0"
+							/>
+					</Setter.Value>
+				</Setter>
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:EyeDropperPreview}}" Value="True">
+						<Setter Property="Effect" Value="{x:Null}" />
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
 		</ResourceDictionary>
 	</Window.Resources>
 
-	<Grid Width="100" Height="100">
-		<Grid.Effect>
-			<DropShadowEffect
-				BlurRadius="10"
-				Opacity="0.5"
-				ShadowDepth="0"
-				/>
-		</Grid.Effect>
+	<Grid
+		Width="100"
+		Height="100"
+		Style="{StaticResource Container}"
+		>
 		<Ellipse StrokeThickness="12">
 			<Ellipse.Stroke>
 				<SolidColorBrush Color="{Binding PointColor, RelativeSource={RelativeSource AncestorType=c:EyeDropperPreview}}" />

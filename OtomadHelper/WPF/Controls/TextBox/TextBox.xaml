@@ -83,6 +83,7 @@
 		<Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
 		<Setter Property="Background" Value="{DynamicResource ControlDefault}" />
 		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+		<Setter Property="CaretBrush" Value="{DynamicResource ForegroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource ControlStroke}" />
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="SelectionBrush" Value="{Binding WindowGlassBrush, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" />

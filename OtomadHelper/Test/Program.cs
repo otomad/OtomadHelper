@@ -51,7 +51,7 @@ internal static class Program {
 		//_ = QuickSelectInterval1DEditor.ShowDialog("QSI1:ABo").Then(r => s = r.base64);
 #endif
 #if TEST7
-		_ = QuickSelectInterval2DEditor.ShowDialog(new bool[,] { { true, false, true}, { false, true, false }, { true, false, true } })
+		_ = QuickSelectInterval2DEditor.ShowDialog(new bool[,] { { true, false, true }, { false, true, false }, { true, false, true } })
 			.Then(r => s = (r.bits.Cast<bool>().Select(i => i.ToString()).Join(","), QsiCodec.EncodeQsiProtocol(r.bits)));
 #endif
 	}
