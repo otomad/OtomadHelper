@@ -11,6 +11,7 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<bool>("MixCheckerBoard", DefaultValue = false)]
 [DependencyProperty<DeclaredIcon>("IconName")]
 [DependencyProperty<bool>("ShowIconOnly", DefaultValue = false)]
+[DependencyProperty<bool>("IsCustomAccent", DefaultValue = false)]
 public partial class Button : System.Windows.Controls.Button {
 
 }

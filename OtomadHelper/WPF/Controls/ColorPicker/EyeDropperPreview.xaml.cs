@@ -16,7 +16,7 @@ public partial class EyeDropperPreview : Window {
 
 	public EyeDropperPreview() {
 		InitializeComponent();
-		SetResourceReference(IsHighContrastProperty, SystemParameters.HighContrastKey);
+		BackdropWindow.BindHighContrastToProperty(this, IsHighContrastProperty);
 		helper = new(this);
 	}
 

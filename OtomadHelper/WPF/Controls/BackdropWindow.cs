@@ -21,7 +21,6 @@ namespace OtomadHelper.WPF.Controls;
 [DependencyProperty<SystemBackdropType>("SystemBackdropType", DefaultValueExpression = nameof(DefaultSystemBackdropType))]
 [DependencyProperty<bool>("IsLightTheme", DefaultValue = true, IsReadOnly = true)]
 [DependencyProperty<bool>("IsHighContrast", DefaultValue = false)]
-[DependencyProperty<string>("CurrentThemeName", DefaultValue = "Aero", IsReadOnly = true)]
 [DependencyProperty<Color?>("CustomAccentColor")]
 [DependencyProperty<Color>("WindowGlassColor", DefaultValueExpression = nameof(WindowsDefaultGlassColor), IsReadOnly = true)]
 [DependencyProperty<Brush>("WindowGlassBrush", DefaultValueExpression = nameof(WindowsDefaultGlassBrush), IsReadOnly = true)]
@@ -56,8 +55,7 @@ public partial class BackdropWindow : Window {
 		RefreshCulture();
 		CommandBindings.AddRange(Commands.CommandBindings);
 		AddThemeResource(AddThemeResourceType.Common);
-		SetResourceReference(IsHighContrastProperty, SystemParameters.HighContrastKey);
-		UpdateCurrentThemeName();
+		BindHighContrastToProperty(this, IsHighContrastProperty);
 		Loaded += Window_Loaded;
 		Closed += Window_Closed;
 		IsVisibleChanged += (_, e) => {
@@ -70,6 +68,14 @@ public partial class BackdropWindow : Window {
 		SetResourceReference(BorderBrushProperty, "CardStroke");
 		// Looks weird in Windows Basic and Classic themes, so set the border thickness to 0.
 		BorderThickness = new(0);
+		// In Windows 10 High Contrast themes, there is no border on windows, looks weird.
+		if (WindowsVersion.Current is >= WindowsNT.Windows10_TP and < WindowsNT.Windows11) {
+			Binding borderThicknessBinding = new(nameof(IsHighContrast)) {
+				RelativeSource = RelativeSource.Self,
+				Converter = new IsHighContrastToWindowBorderThicknessConverter(),
+			};
+			SetBinding(BorderThicknessProperty, borderThicknessBinding);
+		}
 
 		// Debug focused element
 		// Services.ITimer.WPF.Interval(() => s = System.Windows.Input.FocusManager.GetFocusedElement(this), 1000);
@@ -385,13 +391,13 @@ public partial class BackdropWindow : Window {
 			//	// reference: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#29282701
 			//	IsNonClientActive = wParam == trueValue;
 			//	break;
-			case DwmCompositionChanged:
-			case ThemeChanged:
-				UpdateCurrentThemeName();
-				// // Respond to DWM being enabled/disabled or system theme being changed
-				// OnTitleBarTypeChanged(TitleBarType);
-				// goto case DwmColorizationColorChanged;
-				break;
+			//case DwmCompositionChanged:
+			//case ThemeChanged:
+			//	UpdateCurrentThemeName();
+			//	// Respond to DWM being enabled/disabled or system theme being changed
+			//	OnTitleBarTypeChanged(TitleBarType);
+			//	goto case DwmColorizationColorChanged;
+			//	break;
 			default:
 				break;
 		}
@@ -425,8 +431,6 @@ public partial class BackdropWindow : Window {
 		remove => NCHitTestHooks.Remove(value);
 	}
 
-	private void UpdateCurrentThemeName() => CurrentThemeName = ThemeInfo.Current.ThemeName;
-
 	internal static bool IsGlassEnabled => SystemParameters.IsGlassEnabled;
 	protected void OnSystemThemeChanged() {
 		//if (e.Category is not (UserPreferenceCategory.Color or UserPreferenceCategory.General or UserPreferenceCategory.Window or UserPreferenceCategory.VisualStyle)) return;
@@ -441,8 +445,10 @@ public partial class BackdropWindow : Window {
 	partial void OnIsHighContrastChanged() {
 		bool isLoaded = helper is not null;
 		if (isLoaded) RefreshDarkMode();
-		if (isLoaded) SetSystemBackdropType(SystemBackdropType);
-		else Loaded += (_, _) => SetSystemBackdropType(SystemBackdropType);
+		if (isLoaded) Update();
+		else Loaded += (_, _) => Update();
+
+		void Update() => SetSystemBackdropType(SystemBackdropType);
 	}
 
 	protected void RefreshDarkMode() {
@@ -489,8 +495,8 @@ public partial class BackdropWindow : Window {
 		if (IsHighContrast) systemBackdropType = SystemBackdropType.None;
 		if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.AcrylicMicaMicaAlt)
 			SetWindowAttribute(Handle, DwmWindowAttribute.SystemBackdropType, (uint)systemBackdropType);
-		else if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.Blur && systemBackdropType is not SystemBackdropType.None) {
-			SetAcrylicByComposition(Handle, this, AccentState.EnableBlurBehind);
+		else if (SupportSystemBackdropType >= SupportSystemBackdropTypeLevel.Blur) {
+			SetAcrylicByComposition(Handle, this, systemBackdropType is SystemBackdropType.None ? AccentState.Disabled : AccentState.EnableBlurBehind);
 			// AccentState.EnableAcrylicBlurBehind is stuck when moving window in Windows 10 ~ Windows 11 21H2, so use the early blur effect instead of acrylic.
 			//WindowChrome.GetWindowChrome(this).GlassFrameThickness = new(0, 30, 0, 0);
 		}
@@ -511,6 +517,9 @@ public partial class BackdropWindow : Window {
 		OnWindowAttributeSetting();
 	}
 
+	internal static void BindHighContrastToProperty(FrameworkElement element, DependencyProperty isHighContrastProperty) =>
+		element.SetResourceReference(isHighContrastProperty, SystemParameters.HighContrastKey);
+
 	protected virtual void OnWindowAttributeSetting() { }
 	#endregion
 
@@ -521,7 +530,7 @@ public partial class BackdropWindow : Window {
 	private static readonly RelativeSource backdropWindowRelativeSource = new(RelativeSourceMode.FindAncestor, typeof(BackdropWindow), 1);
 
 	partial void OnTitleBarTypeChanged(TitleBarType value) {
-		if (!IsGlassEnabled) value = TitleBarType.System;
+		if (!IsGlassEnabled) value = TitleBarType.System; // Includes Windows 7 Basic, Classic, and Windows 7 ~ 8.1 High Contrast Themes.
 		SetSolidBackgroundColorAsNeeded();
 		switch (value) {
 			case TitleBarType.WindowChrome:
@@ -539,12 +548,12 @@ public partial class BackdropWindow : Window {
 				BindingOperations.SetBinding(Chrome, WindowChrome.ResizeBorderThicknessProperty, resizeBorderThicknessBinding);
 				#endregion
 				#region WindowChrome.NonClientFrameEdges
-				MultiBinding nonClientFrameEdgesBinding = new() { Converter = new WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateAndCurrentThemeNameToNonClientFrameEdgesConverter() };
+				MultiBinding nonClientFrameEdgesBinding = new() { Converter = new WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateAndIsHighContrastToNonClientFrameEdgesConverter() };
 				nonClientFrameEdgesBinding.AddBinding(
 					new(nameof(ResizeMode)) { RelativeSource = backdropWindowRelativeSource },
 					new(nameof(FlowDirection)) { RelativeSource = backdropWindowRelativeSource },
 					new(nameof(WindowState)) { RelativeSource = backdropWindowRelativeSource },
-					new(nameof(CurrentThemeName)) { RelativeSource = backdropWindowRelativeSource }
+					new(nameof(IsHighContrast)) { RelativeSource = backdropWindowRelativeSource }
 				);
 				BindingOperations.SetBinding(Chrome, WindowChrome.NonClientFrameEdgesProperty, nonClientFrameEdgesBinding);
 				#endregion
@@ -626,13 +635,13 @@ public partial class BackdropWindow : Window {
 			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? new(0) : new(8, 0, 8, 8);
 	}
 
-	private class WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateAndCurrentThemeNameToNonClientFrameEdgesConverter : MultiValueConverter<(ResizeMode, FlowDirection, WindowState, string), NonClientFrameEdges> {
+	private class WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateAndIsHighContrastToNonClientFrameEdgesConverter : MultiValueConverter<(ResizeMode, FlowDirection, WindowState, bool), NonClientFrameEdges> {
 		// Decided by whenever ILRepark is enabled.
-		public override NonClientFrameEdges Convert((ResizeMode, FlowDirection, WindowState, string) value, Type targetType, object parameter, CultureInfo culture) {
-			(ResizeMode resizeMode, FlowDirection flowDirection, WindowState windowState, string themeName) = value;
+		public override NonClientFrameEdges Convert((ResizeMode, FlowDirection, WindowState, bool) value, Type targetType, object parameter, CultureInfo culture) {
+			(ResizeMode resizeMode, FlowDirection flowDirection, WindowState windowState, bool isHighContrast) = value;
 			return resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? NonClientFrameEdges.None :
 				windowState == WindowState.Maximized ? NonClientFrameEdges.None :
-				WindowsVersion.Current < WindowsNT.Windows10_TP || themeName == "AeroLite" ? NonClientFrameEdges.None :
+				WindowsVersion.Current < WindowsNT.Windows10_TP || isHighContrast ? NonClientFrameEdges.None : // High contrast theme in Windows 10~11 is AeroLite.
 				flowDirection == FlowDirection.LeftToRight ? NonClientFrameEdges.Right :
 				NonClientFrameEdges.Right | NonClientFrameEdges.Left | NonClientFrameEdges.Bottom;
 		}
@@ -657,12 +666,17 @@ public partial class BackdropWindow : Window {
 			!use ? new(-1) : new(0, 1, 0, 0);
 	}
 
-	[ValueConversion(typeof(SystemBackdropType), typeof(bool))]
 	private class SystemBackdropTypeOrIsHighContrastToUseUniversalControlBoxConverter : MultiValueConverter<(SystemBackdropType, bool), bool> {
 		public override bool Convert((SystemBackdropType, bool) value, Type targetType, object parameter, CultureInfo culture) {
 			(SystemBackdropType backdrop, bool highContrast) = value;
 			return backdrop == SystemBackdropType.None || highContrast;
 		}
+	}
+
+	[ValueConversion(typeof(bool), typeof(Thickness))]
+	private class IsHighContrastToWindowBorderThicknessConverter : ValueConverter<bool, Thickness> {
+		public override Thickness Convert(bool highContrast, Type targetType, object parameter, CultureInfo culture) =>
+			highContrast ? new(1) : new(0);
 	}
 	#endregion
 

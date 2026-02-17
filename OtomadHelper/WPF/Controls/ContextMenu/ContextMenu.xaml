@@ -57,6 +57,9 @@
 					<DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=MenuItem}}" Value="False">
 						<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
 					</DataTrigger>
+					<DataTrigger Binding="{Binding (c:ContextMenuAcrylicBehavior.IsHighContrast), RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="True">
+						<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=MenuItem}}" />
+					</DataTrigger>
 				</Style.Triggers>
 			</Style>
 
@@ -127,7 +130,7 @@
 										>
 										<ContentPresenter.ContentTemplate>
 											<DataTemplate>
-												<TextBlock Style="{StaticResource ShortcutKey}" Text="{Binding}" />
+												<TextBlock x:Name="ShortcutKey" Style="{StaticResource ShortcutKey}" Text="{Binding}" />
 											</DataTemplate>
 										</ContentPresenter.ContentTemplate>
 									</ContentPresenter>
@@ -146,6 +149,13 @@
 					<Trigger Property="IsEnabled" Value="False">
 						<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
 					</Trigger>
+					<MultiDataTrigger>
+						<MultiDataTrigger.Conditions>
+							<Condition Binding="{Binding (c:ContextMenuAcrylicBehavior.IsHighContrast), RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="True" />
+							<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
+						</MultiDataTrigger.Conditions>
+						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+					</MultiDataTrigger>
 				</Style.Triggers>
 			</Style>
 		</Style.Resources>

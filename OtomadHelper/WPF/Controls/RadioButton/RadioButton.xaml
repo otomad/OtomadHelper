@@ -175,6 +175,9 @@
 						</VisualStateManager.VisualStateGroups>
 					</BulletDecorator>
 					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True">
+							<Setter TargetName="CheckMark" Property="Fill" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+						</DataTrigger>
 						<Trigger Property="IsMouseOver" Value="True">
 							<Setter TargetName="Border" Property="Fill" Value="{DynamicResource ControlAltTertiary}" />
 						</Trigger>

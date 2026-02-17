@@ -85,7 +85,7 @@
 							<ContentPresenter.ContentTemplate>
 								<DataTemplate>
 									<DataTemplate.Resources>
-										<Style TargetType="TextBlock" BasedOn="{StaticResource FixExternalTextBlockStyleAffectingAccessKeyStyle}" />
+										<Style BasedOn="{StaticResource FixExternalTextBlockStyleAffectingAccessKeyStyle}" TargetType="TextBlock" />
 									</DataTemplate.Resources>
 									<StackPanel Style="{StaticResource ButtonIconTextContainer}">
 										<c:Icon IconName="{Binding IconName, RelativeSource={RelativeSource AncestorType=c:Button}}" />
@@ -154,7 +154,11 @@
 									<Border.Visibility>
 										<MultiBinding Converter="{StaticResource BoolAnd}">
 											<Binding Path="MixCheckerBoard" RelativeSource="{RelativeSource TemplatedParent}" />
-											<Binding Path="Background" RelativeSource="{RelativeSource TemplatedParent}" Converter="{StaticResource NotSolidColor}" />
+											<Binding
+												Converter="{StaticResource NotSolidColor}"
+												Path="Background"
+												RelativeSource="{RelativeSource TemplatedParent}"
+												/>
 										</MultiBinding>
 									</Border.Visibility>
 								</Border>
@@ -167,7 +171,7 @@
 										<ContentPresenter.ContentTemplate>
 											<DataTemplate>
 												<DataTemplate.Resources>
-													<Style TargetType="TextBlock" BasedOn="{StaticResource FixExternalTextBlockStyleAffectingAccessKeyStyle}" />
+													<Style BasedOn="{StaticResource FixExternalTextBlockStyleAffectingAccessKeyStyle}" TargetType="TextBlock" />
 												</DataTemplate.Resources>
 												<StackPanel Style="{StaticResource ButtonIconTextContainer}">
 													<c:Icon IconName="{Binding IconName, RelativeSource={RelativeSource AncestorType=c:Button}}" />
@@ -214,7 +218,7 @@
 				<MultiDataTrigger.Conditions>
 					<Condition Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True" />
 					<Condition Binding="{Binding IsDefault, RelativeSource={RelativeSource Self}}" Value="True" />
-					<Condition Binding="{Binding Accent, RelativeSource={RelativeSource Self}}" Value="{x:Null}" />
+					<Condition Binding="{Binding IsCustomAccent, RelativeSource={RelativeSource Self}}" Value="False" />
 				</MultiDataTrigger.Conditions>
 				<Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
 				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
@@ -225,7 +229,7 @@
 					<Condition Binding="{Binding IsDefault, RelativeSource={RelativeSource Self}}" Value="True" />
 					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
 					<Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="False" />
-					<Condition Binding="{Binding Accent, RelativeSource={RelativeSource Self}}" Value="{x:Null}" />
+					<Condition Binding="{Binding IsCustomAccent, RelativeSource={RelativeSource Self}}" Value="False" />
 				</MultiDataTrigger.Conditions>
 				<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
 				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
@@ -233,10 +237,18 @@
 			<Trigger Property="ShowIconOnly" Value="True">
 				<Setter Property="ToolTip">
 					<Setter.Value>
-						<ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}">
+						<ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={RelativeSource Self}}" Style="{DynamicResource DefaultToolTipStyle}">
 							<StackPanel>
-								<c:ButtonContentTemplate Text="{Binding Content, FallbackValue=''}" FontWeight="Bold" Margin="0,0,0,2" />
-								<ContentControl Content="{Binding (AutomationProperties.HelpText), FallbackValue=''}" />
+								<c:ButtonContentTemplate
+									Margin="0,0,0,2"
+									FontWeight="Bold"
+									Text="{Binding Content, FallbackValue=''}"
+									/>
+								<ContentControl
+									Content="{Binding (AutomationProperties.HelpText), FallbackValue=''}"
+									FontWeight="Normal"
+									Foreground="{DynamicResource ForegroundBrush}"
+									/>
 							</StackPanel>
 						</ToolTip>
 					</Setter.Value>

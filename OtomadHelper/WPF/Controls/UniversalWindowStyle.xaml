@@ -15,7 +15,11 @@
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="c:BackdropWindow">
-							<Border Margin="0">
+							<Border
+								Margin="0"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								>
 								<Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
 									<Grid
 										x:Name="TitleBarPanel"

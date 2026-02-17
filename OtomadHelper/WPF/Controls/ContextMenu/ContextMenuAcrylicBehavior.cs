@@ -15,6 +15,7 @@ namespace OtomadHelper.WPF.Controls;
 /// </summary>
 [AttachedDependencyProperty<bool, ContextMenu>("FixCanExecute", DefaultValue = false)]
 [AttachedDependencyProperty<bool, ContextMenu>("AutoIcon", DefaultValue = true)]
+[AttachedDependencyProperty<bool, ContextMenu>("IsHighContrast", DefaultValue = false)]
 [AttachedDependencyProperty<CornerRadius>("CornerRadius")]
 public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 	protected override void OnAttached() {
@@ -63,6 +64,7 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 
 		bool isDarkTheme = BackdropWindow.ShouldAppsUseDarkMode();
 		bool isHighContrast = SystemParameters.HighContrast;
+		BackdropWindow.BindHighContrastToProperty(control, IsHighContrastProperty);
 		bool supportComposition = BackdropWindow.SetAcrylicByComposition(Handle, control, isHighContrast ? AccentState.Disabled : WindowsVersion.Current switch {
 			>= WindowsNT.Windows10_1803 => AccentState.EnableAcrylicBlurBehind,
 			>= WindowsNT.Windows10 => AccentState.EnableBlurBehind,
