@@ -59,8 +59,7 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 
 	internal static void InitializeComponent(FrameworkElement element, bool roundSmaller = false) {
 		nint? handle = (PresentationSource.FromVisual(element) as HwndSource)?.Handle;
-		if (handle is not nint Handle) return;
-		Control? control = element as Control;
+		if (handle is not nint Handle || element is not Control control) return;
 
 		bool isDarkTheme = BackdropWindow.ShouldAppsUseDarkMode();
 		bool supportComposition = BackdropWindow.SetAcrylicByComposition(Handle, control, WindowsVersion.Current switch {
@@ -73,21 +72,21 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 			SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0u);
 			SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
 			if (SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round)) == HResult.InvalidArg)
-				SetCornerRadius(element, new(0));
-		} else {
+				SetCornerRadius(control, new(0));
+		} else { // Windows 7 and below.
 			SolidColorBrush background = (
 				isDarkTheme ? BackdropWindow.DarkThemeBackgroundBrush : // SystemColors doesn't support system dark theme colors.
-				element switch {
+				control switch {
 					ContextMenu => SystemColors.MenuBarBrush,
 					ToolTip => SystemColors.InfoBrush,
 					_ => SystemColors.MenuBarBrush,
 				}
 			).Clone();
 			background.Opacity = 0.75;
-			control?.Background = background;
+			control.Background = background;
 			const double shadowDepth = 2;
-			element.Margin = new(shadowDepth);
-			element.Effect = new DropShadowEffect() {
+			control.Margin = new(shadowDepth);
+			control.Effect = new DropShadowEffect() {
 				ShadowDepth = shadowDepth,
 				Color = Colors.Black,
 				BlurRadius = shadowDepth,

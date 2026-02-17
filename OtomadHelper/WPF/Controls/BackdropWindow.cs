@@ -82,19 +82,22 @@ public partial class BackdropWindow : Window {
 		SetSystemBackdropType(SystemBackdropType);
 		if (TitleBarType == TitleBarType.WindowChromeNoTitleBar)
 			AddExtendedWindowStyles(Handle, ExtendedWindowStyles.ToolWindow);
-		//SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
 		OnWindowAttributeSetting();
 		// reference: https://www.cnblogs.com/code1992/p/11699416.html
 		/*if (RegisterShellHookWindow(Handle))
 			WM_ShellHook = RegisterWindowMessage("SHELLHOOK");*/
-		if (WindowsVersion.Current < WindowsNT.Windows8)
+		if (WindowsVersion.Current < WindowsNT.Windows8) {
 			SystemEvents.UserPreferenceChanged += OnSystemThemeChanged;
+			SystemParameters.StaticPropertyChanged += OnSystemThemeChanged;
+		}
 	}
 
 	private void Window_Closed(object sender, EventArgs e) {
 		//DeregisterShellHookWindow(Handle);
-		if (WindowsVersion.Current < WindowsNT.Windows8)
+		if (WindowsVersion.Current < WindowsNT.Windows8) {
 			SystemEvents.UserPreferenceChanged -= OnSystemThemeChanged;
+			SystemParameters.StaticPropertyChanged -= OnSystemThemeChanged;
+		}
 	}
 
 	private void BindViewToViewModel() {
@@ -322,7 +325,6 @@ public partial class BackdropWindow : Window {
 	/// <inheritdoc cref="System.Windows.Forms.Form.WndProc(ref System.Windows.Forms.Message)"/>
 	protected nint WndProc(nint hWnd, int msg, nint wParam, nint lParam, ref bool handled) {
 #pragma warning disable CS0219 // 变量已被赋值，但从未使用过它的值
-#pragma warning disable IDE0059 // 不需要赋值
 		const int SettingChange = 0x001A;
 		const int DwmColorizationColorChanged = 0x0320;
 		const int NCActivate = 0x0086;
@@ -330,7 +332,6 @@ public partial class BackdropWindow : Window {
 		const int ThemeChanged = 0x31A;
 		const int NCHitTest = 0x0084;
 #pragma warning restore CS0219 // 变量已被赋值，但从未使用过它的值
-#pragma warning restore IDE0059 // 不需要赋值
 
 		switch (msg) {
 			// https://learn.microsoft.com/zh-cn/windows/win32/inputdev/wm-nchittest
@@ -353,7 +354,7 @@ public partial class BackdropWindow : Window {
 			//	break;
 			case SettingChange:
 			case DwmColorizationColorChanged:
-				OnSystemThemeChanged(null, new(UserPreferenceCategory.General));
+				OnSystemThemeChanged();
 				break;
 			//case NCActivate:
 			//	// reference: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#29282701
@@ -392,17 +393,22 @@ public partial class BackdropWindow : Window {
 
 	internal delegate nint NCHitTestHookHandler(nint lParam, ref bool handled);
 	private readonly List<NCHitTestHookHandler> NCHitTestHooks = [];
-	internal void AddNCHitTestHook(NCHitTestHookHandler hook) => NCHitTestHooks.Add(hook);
-	internal void RemoveNCHitTestHook(NCHitTestHookHandler hook) => NCHitTestHooks.Remove(hook);
+	internal event NCHitTestHookHandler OnNCHitTest {
+		add => NCHitTestHooks.Add(value);
+		remove => NCHitTestHooks.Remove(value);
+	}
 
 	internal static bool IsGlassEnabled => SystemParameters.IsGlassEnabled;
-	protected void OnSystemThemeChanged(object? sender, UserPreferenceChangedEventArgs e) {
+	protected void OnSystemThemeChanged() {
 		//if (e.Category is not (UserPreferenceCategory.Color or UserPreferenceCategory.General or UserPreferenceCategory.Window or UserPreferenceCategory.VisualStyle)) return;
 		if (WindowsVersion.Current < WindowsNT.Windows8) // Since Windows 8, the DWM cannot be turned off.
 			OnTitleBarTypeChanged(TitleBarType);
 		RefreshDarkMode();
 		RefreshAccentColor();
 	}
+
+	protected void OnSystemThemeChanged(object sender, UserPreferenceChangedEventArgs e) => OnSystemThemeChanged();
+	protected void OnSystemThemeChanged(object sender, PropertyChangedEventArgs e) => OnSystemThemeChanged();
 
 	protected void RefreshDarkMode() {
 		bool isDarkTheme = ShouldAppsUseDarkMode();
@@ -411,8 +417,6 @@ public partial class BackdropWindow : Window {
 		SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, flag);
 		EnableDarkSystemMenu(isDarkTheme);
 		SetCurrentThemeResource(isDarkTheme);
-		//Color borderColor = isDarkTheme ? Color.FromRgb(20, 20, 20) : Color.FromRgb(219, 219, 219);
-		//SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, borderColor.ToAbgr(false));
 
 		SetSolidBackgroundColorAsNeeded();
 	}
@@ -430,6 +434,9 @@ public partial class BackdropWindow : Window {
 	public static readonly SolidColorBrush DarkThemeAcrylicBackgroundBrush = new(Color.FromArgb(0xCE2C2C2Cu));
 	private const string BackgroundBrushKeyName = "BackgroundBrush";
 	private const string AcrylicBackgroundBrushKeyName = "AcrylicBackground";
+
+	private static readonly Color WindowsDefaultGlassColor = Color.FromArgb(0xFF005FB8u);
+	private static Brush WindowsDefaultGlassBrush => new SolidColorBrush(WindowsDefaultGlassColor);
 
 	partial void OnCustomAccentColorChanged() => RefreshAccentColor();
 	protected void RefreshAccentColor() {
@@ -453,7 +460,7 @@ public partial class BackdropWindow : Window {
 		}
 	}
 
-	public static bool SetAcrylicByComposition(nint hWnd, Control? control, AccentState backdrop) {
+	public static bool SetAcrylicByComposition(nint hWnd, Control control, AccentState backdrop) {
 		bool isLight = !ShouldAppsUseDarkMode();
 		if (!EnableAcrylicBlurBehind(hWnd, (isLight ? LightThemeAcrylicBackgroundBrush : DarkThemeAcrylicBackgroundBrush).Color.ToAbgr(), backdrop)) return false;
 		if (backdrop == AccentState.EnableBlurBehind && control is { })
@@ -469,9 +476,6 @@ public partial class BackdropWindow : Window {
 	}
 
 	protected virtual void OnWindowAttributeSetting() { }
-
-	private static readonly Color WindowsDefaultGlassColor = Color.FromRgb(0, 95, 184);
-	private static Brush WindowsDefaultGlassBrush => new SolidColorBrush(WindowsDefaultGlassColor);
 	#endregion
 
 	#region Extends content into title bar

@@ -9,6 +9,15 @@ using BackdropWindow = OtomadHelper.WPF.Controls.BackdropWindow;
 
 namespace OtomadHelper.WPF.Common;
 
+/// <summary>
+/// Add Windows 11 snap layout menu to the maximize button.
+/// </summary>
+/// <remarks>
+/// <list type="bullet">
+/// <item><see href="https://github.com/Gh61/wpf-custom-window-snap/blob/main/MainWindow.MaximizeSnap.cs">GitHub Gist</see></item>
+/// <item><see href="https://stackoverflow.com/q/69797178/19553213">StackOverflow Question</see></item>
+/// </list>
+/// </remarks>
 public class SnapLayoutButtonBehavior : Behavior<Button> {
 	// WINAPI:
 	private const int WM_NCHITTEST = 0x0084; // InteropValues
@@ -32,7 +41,7 @@ public class SnapLayoutButtonBehavior : Behavior<Button> {
 		hwndSource?.AddHook(HwndSourceHook);
 
 		if (window is BackdropWindow backdropWindow)
-			backdropWindow.AddNCHitTestHook(NCHitTestHook);
+			backdropWindow.OnNCHitTest += NCHitTestHook;
 	}
 
 	protected override void OnDetaching() {
@@ -42,7 +51,7 @@ public class SnapLayoutButtonBehavior : Behavior<Button> {
 		hwndSource = null;
 
 		if (window is BackdropWindow backdropWindow)
-			backdropWindow.RemoveNCHitTestHook(NCHitTestHook);
+			backdropWindow.OnNCHitTest -= NCHitTestHook;
 	}
 
 	private bool IsCursorOnButton(nint lparam, FrameworkElement button) {

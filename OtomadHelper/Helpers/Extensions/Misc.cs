@@ -179,7 +179,9 @@ public static partial class Extensions {
 		try {
 			return then(await task);
 		} catch (Exception e) {
+#if DEBUG
 			writeTxt = e;
+#endif
 			throw e;
 		}
 	}

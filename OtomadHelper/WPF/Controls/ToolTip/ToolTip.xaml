@@ -10,6 +10,7 @@
 		<Setter Property="OverridesDefaultStyle" Value="true" />
 		<Setter Property="HasDropShadow" Value="True" />
 		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
 		<Setter Property="BorderBrush" Value="{DynamicResource SurfaceStrokeFlyout}" />
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="c:ContextMenuAcrylicBehavior.CornerRadius" Value="4" />
