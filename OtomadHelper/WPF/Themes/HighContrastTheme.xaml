@@ -40,7 +40,7 @@
 	<s:Double x:Key="AccentTertiaryOpacity">0.8</s:Double>
 	<x:Static x:Key="SubtleSecondary" Member="SystemColors.HighlightBrush" />
 	<x:Static x:Key="SubtleTertiary" Member="SystemColors.HighlightBrush" />
-	<x:Static x:Key="DividerStroke" Member="SystemColors.WindowTextBrush" />
+	<x:Static x:Key="DividerStroke" Member="SystemColors.ControlTextBrush" />
 	<x:Static x:Key="TextSecondary" Member="SystemColors.WindowTextBrush" />
 	<x:Static x:Key="TextTertiary" Member="SystemColors.WindowTextBrush" />
 	<x:Static x:Key="TextDisabled" Member="SystemColors.GrayTextBrush" />

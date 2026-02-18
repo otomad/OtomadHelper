@@ -44,6 +44,9 @@ public static partial class Extensions {
 		/// <summary>
 		/// Get the DPI of the screen where the WPF <see cref="Window"/> is located.
 		/// </summary>
+		/// <remarks>
+		/// Defaults to <c>(1, 1)</c> (Unit: dppx. Equivalents to 100% scale or 96dpi.)
+		/// </remarks>
 		/// <param name="window">A WPF <see cref="Window"/>.</param>
 		/// <returns>The screen DPI in two dimension.</returns>
 		[SuppressMessage("ReSharper", "PossibleNullReferenceException")]

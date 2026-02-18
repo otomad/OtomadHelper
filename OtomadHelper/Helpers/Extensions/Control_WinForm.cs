@@ -10,6 +10,9 @@ public static partial class Extensions {
 		/// <summary>
 		/// Get the DPI of the screen where the WinForm <see cref="Form"/> is located.
 		/// </summary>
+		/// <remarks>
+		/// Defaults to <c>(1, 1)</c> (Unit: dppx. Equivalents to 100% scale or 96dpi.)
+		/// </remarks>
 		/// <param name="form">A WinForm <see cref="Form"/>.</param>
 		/// <returns>The screen DPI in two dimension.</returns>
 		public (double DpiX, double DpiY) Dpi {

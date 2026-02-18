@@ -44,6 +44,9 @@
 			</Setter.Value>
 		</Setter>
 		<Style.Triggers>
+			<DataTrigger Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True">
+				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+			</DataTrigger>
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
 			</Trigger>
@@ -54,6 +57,13 @@
 			<Trigger Property="IsEnabled" Value="False">
 				<Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
 			</Trigger>
+			<MultiDataTrigger>
+				<MultiDataTrigger.Conditions>
+					<Condition Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True" />
+					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
+				</MultiDataTrigger.Conditions>
+				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+			</MultiDataTrigger>
 		</Style.Triggers>
 		<Style.Resources>
 			<Style BasedOn="{StaticResource InlineSpinnerRepeatButtonIcon}" TargetType="c:Icon" />

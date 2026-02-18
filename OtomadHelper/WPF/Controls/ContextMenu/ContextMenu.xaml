@@ -140,6 +140,9 @@
 					</Setter.Value>
 				</Setter>
 				<Style.Triggers>
+					<DataTrigger Binding="{Binding (c:ContextMenuAcrylicBehavior.IsHighContrast), RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="True">
+						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+					</DataTrigger>
 					<Trigger Property="IsMouseOver" Value="True">
 						<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
 					</Trigger>

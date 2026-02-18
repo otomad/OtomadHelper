@@ -945,4 +945,7 @@ public static class PInvoke {
 
 		return (int)scrollSize;
 	}
+
+	[DllImport("User32")]
+	public static extern unsafe bool InvalidateRect(nint hwnd, System.Windows.Int32Rect* lpRect, bool bErase);
 }

@@ -362,6 +362,7 @@ public partial class BackdropWindow : Window {
 		const int DwmCompositionChanged = 0x31E;
 		const int ThemeChanged = 0x31A;
 		const int NCHitTest = 0x0084;
+		const int NCPaint = 0x0085;
 #pragma warning restore CS0219 // 变量已被赋值，但从未使用过它的值
 
 		switch (msg) {
@@ -372,6 +373,7 @@ public partial class BackdropWindow : Window {
 					if (Hook(lParam, ref handled) is nint hitResult && hitResult != 0)
 						return hitResult;
 				break;
+
 			//case SettingChange:
 			//	if (wParam == 0 && Marshal.PtrToStringUni(lParam) == "ImmersiveColorSet") {
 			//		RefreshDarkMode();
@@ -379,18 +381,23 @@ public partial class BackdropWindow : Window {
 			//		goto case DwmColorizationColorChanged;
 			//	}
 			//	break;
+
 			//case DwmColorizationColorChanged:
 			//	RefreshAccentColor();
 			//	RaiseEvent(new(AccentChangeEvent, this));
 			//	break;
+
 			case SettingChange:
 			case DwmColorizationColorChanged:
 				OnSystemThemeChanged();
+				if (msg == SettingChange) goto case NCPaint;
 				break;
+
 			//case NCActivate:
 			//	// reference: https://www.cnblogs.com/dino623/p/problems_of_WindowChrome.html#29282701
 			//	IsNonClientActive = wParam == trueValue;
 			//	break;
+
 			//case DwmCompositionChanged:
 			//case ThemeChanged:
 			//	UpdateCurrentThemeName();
@@ -398,6 +405,17 @@ public partial class BackdropWindow : Window {
 			//	OnTitleBarTypeChanged(TitleBarType);
 			//	goto case DwmColorizationColorChanged;
 			//	break;
+
+			// Switch system accent color in Windows 10 ~ 11 will cause windowchrome to x-shift.
+			// reference: https://blog.lindexi.com/post/WPF-%E5%B7%B2%E7%9F%A5%E9%97%AE%E9%A2%98-%E4%BD%BF%E7%94%A8-WindowChrome-%E5%9C%A8%E5%88%87%E6%8D%A2%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%98%E8%89%B2%E6%97%B6%E5%AF%BC%E8%87%B4%E7%AA%97%E5%8F%A3%E7%95%8C%E9%9D%A2%E5%81%8F%E7%A7%BB.html
+			case NCPaint:
+				(double dpiX, double dpiY) = this.Dpi;
+				Int32Rect rect = new(0, 0, (int)Math.Ceiling(ActualWidth * dpiX), (int)Math.Ceiling(ActualHeight * dpiY));
+				unsafe {
+					InvalidateRect(Handle, &rect, true);
+				}
+				break;
+
 			default:
 				break;
 		}
@@ -431,7 +449,10 @@ public partial class BackdropWindow : Window {
 		remove => NCHitTestHooks.Remove(value);
 	}
 
-	internal static bool IsGlassEnabled => SystemParameters.IsGlassEnabled;
+	internal static bool IsGlassEnabled => WindowsVersion.Current is >= WindowsNT.Windows8 and <= WindowsNT.Windows10_TP ? !SystemParameters.HighContrast :
+		SystemParameters.IsGlassEnabled;
+	// Windows 8.x in high contrast theme will turn SystemParameters.IsGlassEnabled off, which is not we expected, so consider it separately.
+
 	protected void OnSystemThemeChanged() {
 		//if (e.Category is not (UserPreferenceCategory.Color or UserPreferenceCategory.General or UserPreferenceCategory.Window or UserPreferenceCategory.VisualStyle)) return;
 		if (WindowsVersion.Current < WindowsNT.Windows8) // Since Windows 8, the DWM cannot be turned off.
@@ -448,7 +469,10 @@ public partial class BackdropWindow : Window {
 		if (isLoaded) Update();
 		else Loaded += (_, _) => Update();
 
-		void Update() => SetSystemBackdropType(SystemBackdropType);
+		void Update() {
+			SetSystemBackdropType(SystemBackdropType);
+			if (WindowsVersion.Current is >= WindowsNT.Windows8 and <= WindowsNT.Windows10_TP) OnTitleBarTypeChanged(TitleBarType);
+		}
 	}
 
 	protected void RefreshDarkMode() {
@@ -548,17 +572,16 @@ public partial class BackdropWindow : Window {
 				BindingOperations.SetBinding(Chrome, WindowChrome.ResizeBorderThicknessProperty, resizeBorderThicknessBinding);
 				#endregion
 				#region WindowChrome.NonClientFrameEdges
-				MultiBinding nonClientFrameEdgesBinding = new() { Converter = new WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateAndIsHighContrastToNonClientFrameEdgesConverter() };
+				MultiBinding nonClientFrameEdgesBinding = new() { Converter = new WindowChromeTitleBarTypeResizeModeAndWindowStateAndIsHighContrastToNonClientFrameEdgesConverter() };
 				nonClientFrameEdgesBinding.AddBinding(
 					new(nameof(ResizeMode)) { RelativeSource = backdropWindowRelativeSource },
-					new(nameof(FlowDirection)) { RelativeSource = backdropWindowRelativeSource },
 					new(nameof(WindowState)) { RelativeSource = backdropWindowRelativeSource },
 					new(nameof(IsHighContrast)) { RelativeSource = backdropWindowRelativeSource }
 				);
 				BindingOperations.SetBinding(Chrome, WindowChrome.NonClientFrameEdgesProperty, nonClientFrameEdgesBinding);
 				#endregion
 				#region WindowChrome.GlassFrameThickness
-				if (WindowsVersion.Current is >= WindowsNT.Windows10 and < WindowsNT.Windows11_Dev) { // Windows 10 only.
+				if (WindowsVersion.Current is >= WindowsNT.Windows10 and <= WindowsNT.Windows11) { // Windows 10 only.
 					Binding glassFrameThicknessBinding = new(nameof(UseUniversalControlBox)) {
 						RelativeSource = backdropWindowRelativeSource,
 						Converter = new UseUniversalControlBoxToWindowChromeGlassFrameThicknessConverter(),
@@ -635,14 +658,14 @@ public partial class BackdropWindow : Window {
 			resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? new(0) : new(8, 0, 8, 8);
 	}
 
-	private class WindowChromeTitleBarTypeResizeModeAndFlowDirectionAndWindowStateAndIsHighContrastToNonClientFrameEdgesConverter : MultiValueConverter<(ResizeMode, FlowDirection, WindowState, bool), NonClientFrameEdges> {
+	private class WindowChromeTitleBarTypeResizeModeAndWindowStateAndIsHighContrastToNonClientFrameEdgesConverter : MultiValueConverter<(ResizeMode, WindowState, bool), NonClientFrameEdges> {
 		// Decided by whenever ILRepark is enabled.
-		public override NonClientFrameEdges Convert((ResizeMode, FlowDirection, WindowState, bool) value, Type targetType, object parameter, CultureInfo culture) {
-			(ResizeMode resizeMode, FlowDirection flowDirection, WindowState windowState, bool isHighContrast) = value;
+		public override NonClientFrameEdges Convert((ResizeMode, WindowState, bool) value, Type targetType, object parameter, CultureInfo culture) {
+			(ResizeMode resizeMode, WindowState windowState, bool isHighContrast) = value;
 			return resizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize ? NonClientFrameEdges.None :
 				windowState == WindowState.Maximized ? NonClientFrameEdges.None :
-				WindowsVersion.Current < WindowsNT.Windows10_TP || isHighContrast ? NonClientFrameEdges.None : // High contrast theme in Windows 10~11 is AeroLite.
-				flowDirection == FlowDirection.LeftToRight ? NonClientFrameEdges.Right :
+				WindowsVersion.Current < WindowsNT.Windows11_22H2 || isHighContrast ? NonClientFrameEdges.None : // High contrast theme in Windows 10~11 is AeroLite.
+				//flowDirection == FlowDirection.LeftToRight ? NonClientFrameEdges.Right :
 				NonClientFrameEdges.Right | NonClientFrameEdges.Left | NonClientFrameEdges.Bottom;
 		}
 	}
