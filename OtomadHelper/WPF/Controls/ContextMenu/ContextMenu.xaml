@@ -6,9 +6,13 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
+	<m:CustomControlResourceDictionary.MergedDictionaries>
+		<m:SharedResourceDictionary ControlSource="ContextMenu/DwmOffFallbackBorderStyle" />
+	</m:CustomControlResourceDictionary.MergedDictionaries>
+
 	<s:Double x:Key="ContextMenuItemMinWidth">180</s:Double>
 
-	<Style x:Key="DefaultContextMenuStyle" TargetType="ContextMenu">
+	<Style x:Key="DefaultContextMenuStyle" BasedOn="{StaticResource DwmOffFallbackBorderStyle}" TargetType="ContextMenu">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="OverridesDefaultStyle" Value="True" />
 		<Setter Property="Grid.IsSharedSizeScope" Value="true" />
@@ -165,4 +169,5 @@
 	</Style>
 
 	<Style BasedOn="{StaticResource DefaultContextMenuStyle}" TargetType="ContextMenu" />
+	<Style BasedOn="{StaticResource DefaultContextMenuStyle}" TargetType="c:StaysOpenContextMenu" />
 </m:CustomControlResourceDictionary>

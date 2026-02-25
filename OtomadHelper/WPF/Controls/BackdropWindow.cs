@@ -85,6 +85,7 @@ public partial class BackdropWindow : Window {
 		FixNonClientFrameEdgesMargin();
 		if (ResizeMode is ResizeMode.NoResize or ResizeMode.CanMinimize)
 			ReserveSystemMenuItems(Handle, SystemMenuItemType.Move | SystemMenuItemType.Close);
+		HideTitleBarCaptionAndIcon(Handle);
 		BindViewToViewModel();
 		RefreshFrame();
 		RefreshDarkMode();
@@ -528,11 +529,22 @@ public partial class BackdropWindow : Window {
 
 	public static bool SetAcrylicByComposition(nint hWnd, Control control, AccentState backdrop) {
 		bool isLight = !ShouldAppsUseDarkMode();
-		if (!EnableAcrylicBlurBehind(hWnd, (isLight ? LightThemeAcrylicBackgroundBrush : DarkThemeAcrylicBackgroundBrush).Color.ToAbgr(), backdrop)) return false;
-		if (backdrop == AccentState.EnableBlurBehind && control is { })
-			if (!(control is BackdropWindow window && window.Background != DefaultBackground))
-				control.SetResourceReference(BackgroundProperty, AcrylicBackgroundBrushKeyName);
+		if (EnableAcrylicBlurBehind(hWnd, (isLight ? LightThemeAcrylicBackgroundBrush : DarkThemeAcrylicBackgroundBrush).Color.ToAbgr(), backdrop)) {
+			// Windows 8 ~ Windows 11
+			if (backdrop == AccentState.EnableBlurBehind) AddSemiTransparentBackground();
+		} else if (EnableAeroBlurBehind(hWnd)) {
+			// Windows Vista ~ Windows 7
+			AddSemiTransparentBackground();
+		} else
+			// DWM off (Windows Basic Theme or Windows Classic Theme, Windows XP, etc.)
+			return false;
 		return true;
+
+		void AddSemiTransparentBackground() {
+			if (control is { })
+				if (!(control is BackdropWindow window && window.Background != DefaultBackground))
+					control.SetResourceReference(BackgroundProperty, AcrylicBackgroundBrushKeyName);
+		}
 	}
 
 	partial void OnSystemBackdropTypeChanged(SystemBackdropType newValue) {

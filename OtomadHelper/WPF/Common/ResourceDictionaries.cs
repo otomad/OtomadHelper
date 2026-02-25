@@ -43,11 +43,6 @@ public class SharedResourceDictionary : ResourceDictionary {
 	private static readonly bool isInDesignerMode;
 
 	/// <summary>
-	/// Local member of the source uri
-	/// </summary>
-	private Uri? sourceUri = null;
-
-	/// <summary>
 	/// Initializes static members of the <see cref="SharedResourceDictionary"/> class.
 	/// </summary>
 	static SharedResourceDictionary() {
@@ -61,9 +56,9 @@ public class SharedResourceDictionary : ResourceDictionary {
 
 	/// <inheritdoc cref="ResourceDictionary.Source"/>
 	public new Uri? Source {
-		get => sourceUri;
+		get;
 		set {
-			sourceUri = value;
+			field = value;
 			if (value == null) return;
 			// Always load the dictionary by default in designer mode.
 			if (!SharedDictionaries.ContainsKey(value) || isInDesignerMode) {
@@ -76,7 +71,7 @@ public class SharedResourceDictionary : ResourceDictionary {
 				MergedDictionaries.Add(SharedDictionaries[value]);
 			}
 		}
-	}
+	} = null;
 
 	/// <summary>
 	/// We don't required to write the whole long URI again.

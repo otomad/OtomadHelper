@@ -17,6 +17,8 @@ namespace OtomadHelper.WPF.Controls;
 [AttachedDependencyProperty<bool, ContextMenu>("AutoIcon", DefaultValue = true)]
 [AttachedDependencyProperty<bool, ContextMenu>("IsHighContrast", DefaultValue = false)]
 [AttachedDependencyProperty<CornerRadius>("CornerRadius")]
+[AttachedDependencyProperty<bool, Control>("IsGlassEnabled", DefaultValue = false, IsReadOnly = true)]
+[AttachedDependencyProperty<bool, Control>("IsCornerRadiusCustomizable", DefaultValue = false, IsReadOnly = true)]
 public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 	protected override void OnAttached() {
 		AssociatedObject.IsVisibleChanged += ContextMenu_IsVisibleChanged;
@@ -72,13 +74,14 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 			_ => AccentState.EnableHostBackdrop,
 		});
 		if (supportComposition) {
+			SetIsGlassEnabled(control, true);
 			SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0u);
 			SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
-			if (SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round)) == HResult.InvalidArg)
-				SetCornerRadius(control, new(0));
+			SetIsCornerRadiusCustomizable(control,
+				SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round)) != HResult.InvalidArg);
 			if (isHighContrast) control.Background = SystemColors.WindowBrush;
-		} else { // Windows 7 and below.
-			SolidColorBrush background = (
+		} else { // Windows Vista/7 Basic Theme or Classic Theme, Windows XP, etc.
+			control.Background = (
 				isDarkTheme && !isHighContrast ? BackdropWindow.DarkThemeBackgroundBrush : // SystemColors doesn't support system dark theme colors.
 				control switch {
 					ContextMenu => SystemColors.MenuBarBrush,
@@ -86,18 +89,12 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 					_ => SystemColors.MenuBarBrush,
 				}
 			).Clone();
-			if (!isHighContrast) background.Opacity = 0.75;
-			control.Background = background;
-			const double shadowDepth = 2;
-			control.Margin = new(shadowDepth);
-			control.Effect = new DropShadowEffect() {
-				ShadowDepth = shadowDepth,
-				Color = Colors.Black,
-				BlurRadius = shadowDepth,
-				Opacity = 0.3,
-			};
+			SetIsCornerRadiusCustomizable(control, true);
+			SetIsGlassEnabled(control, false);
 		}
 	}
+
+	private static readonly SolidColorBrush DefaultDwmOffFallbackBackground = SystemColors.MenuBarBrush;
 
 	private static readonly Dictionary<ICommand, Icon> knownIcons = [];
 	private static Icon? verticalScrollHereIcon;

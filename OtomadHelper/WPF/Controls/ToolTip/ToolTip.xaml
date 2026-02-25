@@ -6,7 +6,11 @@
 	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
-	<Style x:Key="DefaultToolTipStyle" TargetType="ToolTip">
+	<m:CustomControlResourceDictionary.MergedDictionaries>
+		<m:SharedResourceDictionary ControlSource="ContextMenu/DwmOffFallbackBorderStyle" />
+	</m:CustomControlResourceDictionary.MergedDictionaries>
+
+	<Style x:Key="DefaultToolTipStyle" BasedOn="{StaticResource DwmOffFallbackBorderStyle}" TargetType="ToolTip">
 		<Setter Property="OverridesDefaultStyle" Value="true" />
 		<Setter Property="HasDropShadow" Value="True" />
 		<Setter Property="Background" Value="Transparent" />

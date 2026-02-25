@@ -1,0 +1,32 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:c="clr-namespace:OtomadHelper.WPF.Controls"
+	xmlns:m="clr-namespace:OtomadHelper.WPF.Common"
+	xmlns:s="clr-namespace:System;assembly=mscorlib"
+	>
+	<Style x:Key="DwmOffFallbackBorderStyle" TargetType="Control">
+		<Style.Resources>
+			<m:DoubleToThicknessConverter x:Key="DoubleToThick" />
+			<s:Double x:Key="ShadowDepth">2</s:Double>
+		</Style.Resources>
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding (c:ContextMenuAcrylicBehavior.IsGlassEnabled), RelativeSource={RelativeSource Self}}" Value="False">
+				<Setter Property="Margin" Value="{Binding Source={StaticResource ShadowDepth}, Converter={StaticResource DoubleToThick}}" />
+				<Setter Property="Effect">
+					<Setter.Value>
+						<DropShadowEffect
+							BlurRadius="{StaticResource ShadowDepth}"
+							Opacity="0.3"
+							ShadowDepth="{StaticResource ShadowDepth}"
+							Color="Black"
+							/>
+					</Setter.Value>
+				</Setter>
+			</DataTrigger>
+			<DataTrigger Binding="{Binding (c:ContextMenuAcrylicBehavior.IsCornerRadiusCustomizable), RelativeSource={RelativeSource Self}}" Value="False">
+				<Setter Property="c:ContextMenuAcrylicBehavior.CornerRadius" Value="0" />
+			</DataTrigger>
+		</Style.Triggers>
+	</Style>
+</ResourceDictionary>

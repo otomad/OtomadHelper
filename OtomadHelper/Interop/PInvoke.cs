@@ -665,7 +665,70 @@ public static class PInvoke {
 		return ok;
 	}
 
-	public enum PreferredAppMode {
+	[DllImport("dwmapi.dll")]
+	private static extern HResult DwmEnableBlurBehindWindow(IntPtr hWnd, ref DwmBlurBehind pBlurBehind);
+
+	/// <summary>
+	/// Specifies Desktop Window Manager (DWM) blur-behind properties. Used by the <see cref="DwmEnableBlurBehindWindow" /> function.
+	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
+	private struct DwmBlurBehind {
+		/// <summary>
+		/// A bitwise combination of <a href="https://learn.microsoft.com/windows/desktop/dwm/dwm-bb-constants">DWM Blur Behind</a>
+		/// constant values that indicates which of the members of this structure have been set.
+		/// </summary>
+		public DwmBlurBehindFlags Flags;
+		/// <summary>
+		/// <see langword="true" /> to register the window handle to DWM blur behind; <see langword="false" /> to unregister the window handle from DWM blur behind.
+		/// </summary>
+		public bool Enable;
+		/// <summary>
+		/// The region within the client area where the blur behind will be applied. An <see cref="IntPtr.Zero" /> value will apply the blur behind the entire client area.
+		/// </summary>
+		public IntPtr RgnBlur;
+		/// <summary>
+		/// <see langword="true" /> if the window's colorization should transition to match the maximized windows; otherwise, <see langword="false" />.
+		/// </summary>
+		public bool TransitionOnMaximized;
+	}
+
+	/// <summary>
+	/// Flags used by the <see cref="DwmBlurBehind" /> structure to indicate which of its members contain valid information.
+	/// </summary>
+	[Flags]
+	private enum DwmBlurBehindFlags : uint {
+		/// <summary>
+		/// Indicates a value for <see cref="DwmBlurBehind.Enable" /> has been specified.
+		/// </summary>
+		Enable = 0x00000001,
+		/// <summary>
+		/// Indicates a value for <see cref="DwmBlurBehind.RgnBlur" /> has been specified.
+		/// </summary>
+		BlurRegion = 0x00000002,
+		/// <summary>
+		/// Indicates a value for <see cref="DwmBlurBehind.TransitionOnMaximized" /> has been specified.
+		/// </summary>
+		TransitionOnMaximized = 0x00000004,
+	}
+
+	/// <summary>
+	/// Enable Aero glass blur behind for a window.
+	/// </summary>
+	/// <remarks>
+	/// Available for Windows Vista and Windows 7 only. For Windows 8.x, it only has a colored background.
+	/// </remarks>
+	/// <param name="hWnd">Handle of the window.</param>
+	/// <returns>Enable blur behind successfully?</returns>
+	public static bool EnableAeroBlurBehind(nint hWnd) {
+		DwmBlurBehind blurBehindParameters = new() {
+			Flags = DwmBlurBehindFlags.Enable,
+			Enable = true,
+			RgnBlur = IntPtr.Zero,
+		};
+		return DwmEnableBlurBehindWindow(hWnd, ref blurBehindParameters) == HResult.OK;
+	}
+
+	private enum PreferredAppMode {
 		Default,
 		AllowDark,
 		ForceDark,
@@ -674,10 +737,10 @@ public static class PInvoke {
 	}
 
 	[DllImport("uxtheme.dll", EntryPoint = "#135", SetLastError = true, CharSet = CharSet.Unicode)]
-	public static extern int SetPreferredAppMode(PreferredAppMode preferredAppMode);
+	private static extern int SetPreferredAppMode(PreferredAppMode preferredAppMode);
 
 	[DllImport("uxtheme.dll", EntryPoint = "#136", SetLastError = true, CharSet = CharSet.Unicode)]
-	public static extern void FlushMenuThemes();
+	private static extern void FlushMenuThemes();
 
 	public static void EnableDarkSystemMenu(bool isDarkTheme) {
 		SetPreferredAppMode(isDarkTheme ? PreferredAppMode.ForceDark : PreferredAppMode.ForceLight);
@@ -946,6 +1009,80 @@ public static class PInvoke {
 		return (int)scrollSize;
 	}
 
-	[DllImport("User32")]
-	public static extern unsafe bool InvalidateRect(nint hwnd, System.Windows.Int32Rect* lpRect, bool bErase);
+	[DllImport("user32.dll")]
+	public static extern unsafe bool InvalidateRect(nint hWnd, System.Windows.Int32Rect* lpRect, bool bErase);
+
+	[DllImport("uxtheme.dll")]
+	private static extern HResult SetWindowThemeAttribute(IntPtr hWnd, WindowThemeAttributeType wType, ref WindowThemeAttributeOptions attributes, uint size);
+
+	/// <summary>
+	/// Specifies the type of visual style attribute to set on a window.
+	/// </summary>
+	private enum WindowThemeAttributeType : uint {
+		/// <summary>
+		/// Non-client area window attributes will be set.
+		/// </summary>
+		NonClient = 1,
+	}
+
+	/// <summary>
+	/// Defines options that are used to set window visual style attributes.
+	/// </summary>
+	private struct WindowThemeAttributeOptions {
+		/// <summary>
+		/// A combination of flags that modify window visual style attributes. Can be a combination of the <see cref="WindowThemeNonClientAttributes" /> constants.
+		/// </summary>
+		public WindowThemeNonClientAttributes Flags;
+		/// <summary>
+		/// A bitmask that describes how the values specified in <see cref="Flags" /> should be applied.
+		/// If the bit corresponding to a value in <see cref="Flags" /> is 0, that flag will be removed. If the bit is 1, the flag will be added.
+		/// </summary>
+		public WindowThemeNonClientAttributes Mask;
+	}
+
+	/// <summary>
+	/// Specifies flags that modify window visual style attributes. Use one, or a bitwise combination of the following values.
+	/// </summary>
+	[Flags]
+	private enum WindowThemeNonClientAttributes : uint {
+		/// <summary>
+		/// Prevents the window caption from being drawn.
+		/// </summary>
+		NoDrawCaption = 1,
+		/// <summary>
+		/// Prevents the system icon from being drawn.
+		/// </summary>
+		NoDrawIcon = 2,
+		/// <summary>
+		/// Prevents the system icon menu from appearing.
+		/// </summary>
+		NoSysMenu = 4,
+		/// <summary>
+		/// Prevents mirroring of the question mark, even in right-to-left (RTL) layout.
+		/// </summary>
+		NoMirrorHelp = 8,
+		/// <summary>
+		/// A mask that contains all the valid bits.
+		/// </summary>
+		ValidBits = NoDrawCaption | NoDrawIcon | NoSysMenu | NoMirrorHelp,
+	}
+
+	/// <summary>
+	/// Hide title bar caption and icon from a window, but keep caption and icon shown in the taskbar.
+	/// </summary>
+	/// <remarks>
+	/// In Windows Vista and Windows 7, it only works in Windows Aero theme and Windows Basic theme, it doesn't work in Windows Classic theme and High contrast theme.
+	/// </remarks>
+	/// <param name="hWnd">Handle of the window.</param>
+	/// <returns>
+	/// Does this function succeed?
+	/// <para><i>Returns <see langword="false" /> only if it is Windows Classic theme (includes high contrast theme) or Windows XP and before.</i></para>
+	/// </returns>
+	public static bool HideTitleBarCaptionAndIcon(IntPtr hWnd) {
+		WindowThemeAttributeOptions options = new() {
+			Flags = WindowThemeNonClientAttributes.NoDrawCaption | WindowThemeNonClientAttributes.NoDrawIcon | WindowThemeNonClientAttributes.NoSysMenu,
+			Mask = WindowThemeNonClientAttributes.ValidBits,
+		};
+		return SetWindowThemeAttribute(hWnd, WindowThemeAttributeType.NonClient, ref options, (uint)Marshal.SizeOf(typeof(WindowThemeAttributeOptions))) == HResult.OK;
+	}
 }
