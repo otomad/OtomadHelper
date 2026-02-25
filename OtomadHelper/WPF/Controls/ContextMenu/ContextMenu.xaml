@@ -39,17 +39,6 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<Setter Property="m:InteractivityItems.Template">
-			<Setter.Value>
-				<m:InteractivityTemplate>
-					<m:InteractivityItems>
-						<m:InteractivityItems.Behaviors>
-							<c:ContextMenuAcrylicBehavior />
-						</m:InteractivityItems.Behaviors>
-					</m:InteractivityItems>
-				</m:InteractivityTemplate>
-			</Setter.Value>
-		</Setter>
 
 		<Style.Resources>
 			<Style x:Key="ShortcutKey" TargetType="TextBlock">
@@ -64,6 +53,13 @@
 					<DataTrigger Binding="{Binding (c:ContextMenuAcrylicBehavior.IsHighContrast), RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="True">
 						<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=MenuItem}}" />
 					</DataTrigger>
+					<MultiDataTrigger>
+						<MultiDataTrigger.Conditions>
+							<Condition Binding="{Binding (c:ContextMenuAcrylicBehavior.IsGlassEnabled), RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="False" />
+							<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=MenuItem}}" Value="True" />
+						</MultiDataTrigger.Conditions>
+						<Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=MenuItem}}" />
+					</MultiDataTrigger>
 				</Style.Triggers>
 			</Style>
 
@@ -144,8 +140,8 @@
 					</Setter.Value>
 				</Setter>
 				<Style.Triggers>
-					<DataTrigger Binding="{Binding (c:ContextMenuAcrylicBehavior.IsHighContrast), RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="True">
-						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+					<DataTrigger Binding="{Binding (c:ContextMenuAcrylicBehavior.IsGlassEnabled), RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="False">
+						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" />
 					</DataTrigger>
 					<Trigger Property="IsMouseOver" Value="True">
 						<Setter Property="Background" Value="{DynamicResource SubtleSecondary}" />
@@ -158,9 +154,10 @@
 					</Trigger>
 					<MultiDataTrigger>
 						<MultiDataTrigger.Conditions>
-							<Condition Binding="{Binding (c:ContextMenuAcrylicBehavior.IsHighContrast), RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="True" />
+							<Condition Binding="{Binding (c:ContextMenuAcrylicBehavior.IsGlassEnabled), RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="False" />
 							<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
 						</MultiDataTrigger.Conditions>
+						<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" />
 						<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
 					</MultiDataTrigger>
 				</Style.Triggers>

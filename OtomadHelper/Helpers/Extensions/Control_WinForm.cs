@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace OtomadHelper.Helpers;
@@ -49,6 +50,38 @@ public static partial class Extensions {
 					foreach (T child in control.GetChildrenOfType<T>())
 						yield return child;
 			}
+		}
+	}
+
+	extension(GraphicsPath path) {
+		/// <summary>
+		/// Adds a rounded rectangle to this path.
+		/// </summary>
+		/// <param name="rect">The bounds of the rectangle to add.</param>
+		/// <param name="radius">The radius width and height used to round the corners of the rectangle.</param>
+		public void AddRoundedRectangle(Rectangle rect, int radius) {
+			int diameter = radius * 2;
+			Size size = new(diameter, diameter);
+			Rectangle arc = new(rect.Location, size);
+
+			if (radius == 0) path.AddRectangle(rect);
+
+			// Top left arc
+			path.AddArc(arc, 180, 90);
+
+			// Top right arc
+			arc.X = rect.Right - diameter;
+			path.AddArc(arc, 270, 90);
+
+			// Bottom right arc
+			arc.Y = rect.Bottom - diameter;
+			path.AddArc(arc, 0, 90);
+
+			// Bottom left arc
+			arc.X = rect.Left;
+			path.AddArc(arc, 90, 90);
+
+			path.CloseFigure();
 		}
 	}
 }

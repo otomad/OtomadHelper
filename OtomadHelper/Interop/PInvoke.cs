@@ -685,7 +685,7 @@ public static class PInvoke {
 		/// <summary>
 		/// The region within the client area where the blur behind will be applied. An <see cref="IntPtr.Zero" /> value will apply the blur behind the entire client area.
 		/// </summary>
-		public IntPtr RgnBlur;
+		public IntPtr HRgnBlur;
 		/// <summary>
 		/// <see langword="true" /> if the window's colorization should transition to match the maximized windows; otherwise, <see langword="false" />.
 		/// </summary>
@@ -702,7 +702,7 @@ public static class PInvoke {
 		/// </summary>
 		Enable = 0x00000001,
 		/// <summary>
-		/// Indicates a value for <see cref="DwmBlurBehind.RgnBlur" /> has been specified.
+		/// Indicates a value for <see cref="DwmBlurBehind.HRgnBlur" /> has been specified.
 		/// </summary>
 		BlurRegion = 0x00000002,
 		/// <summary>
@@ -718,15 +718,39 @@ public static class PInvoke {
 	/// Available for Windows Vista and Windows 7 only. For Windows 8.x, it only has a colored background.
 	/// </remarks>
 	/// <param name="hWnd">Handle of the window.</param>
+	/// <param name="width">Window width. Needs to be manually multiplied by DPI.</param>
+	/// <param name="height">Window height. Needs to be manually multiplied by DPI.</param>
+	/// <param name="radius">Window corner radius. Needs to be manually multiplied by DPI.</param>
 	/// <returns>Enable blur behind successfully?</returns>
-	public static bool EnableAeroBlurBehind(nint hWnd) {
-		DwmBlurBehind blurBehindParameters = new() {
-			Flags = DwmBlurBehindFlags.Enable,
-			Enable = true,
-			RgnBlur = IntPtr.Zero,
-		};
-		return DwmEnableBlurBehindWindow(hWnd, ref blurBehindParameters) == HResult.OK;
+	public static bool EnableAeroBlurBehind(nint hWnd, int width, int height, int radius) {
+		try {
+			DwmBlurBehind blurBehindParameters;
+			if (width == 0 || height == 0 || radius == 0)
+				blurBehindParameters = new() {
+					Flags = DwmBlurBehindFlags.Enable,
+					Enable = true,
+				};
+			else {
+				using System.Drawing.Drawing2D.GraphicsPath path = new();
+				path.AddRoundedRectangle(new(0, 0, width, height), radius);
+				using Region region = new(path);
+				using Graphics graphics = Graphics.FromHwnd(hWnd); // May raise System.OutOfMemoryException: Out of memory.
+				IntPtr hRgn = region.GetHrgn(graphics);
+				blurBehindParameters = new() {
+					Flags = DwmBlurBehindFlags.Enable | DwmBlurBehindFlags.BlurRegion | DwmBlurBehindFlags.TransitionOnMaximized,
+					Enable = true,
+					HRgnBlur = hRgn,
+					TransitionOnMaximized = true,
+				};
+			}
+			return DwmEnableBlurBehindWindow(hWnd, ref blurBehindParameters) == HResult.OK;
+		} catch {
+			return false;
+		}
 	}
+
+	/// <inheritdoc cref="EnableAeroBlurBehind(nint, int, int, int)" />
+	public static bool EnableAeroBlurBehind(nint hWnd, double width, double height, double radius) => EnableAeroBlurBehind(hWnd, (int)width, (int)height, (int)radius);
 
 	private enum PreferredAppMode {
 		Default,
@@ -1084,5 +1108,6 @@ public static class PInvoke {
 			Mask = WindowThemeNonClientAttributes.ValidBits,
 		};
 		return SetWindowThemeAttribute(hWnd, WindowThemeAttributeType.NonClient, ref options, (uint)Marshal.SizeOf(typeof(WindowThemeAttributeOptions))) == HResult.OK;
+		// FIXME: Not work in Windows 8/8.1 high contrast theme.
 	}
 }

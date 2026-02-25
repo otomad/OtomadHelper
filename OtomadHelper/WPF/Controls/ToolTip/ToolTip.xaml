@@ -41,17 +41,6 @@
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
-		<Setter Property="m:InteractivityItems.Template">
-			<Setter.Value>
-				<m:InteractivityTemplate>
-					<m:InteractivityItems>
-						<m:InteractivityItems.Behaviors>
-							<c:ContextMenuAcrylicBehavior />
-						</m:InteractivityItems.Behaviors>
-					</m:InteractivityItems>
-				</m:InteractivityTemplate>
-			</Setter.Value>
-		</Setter>
 	</Style>
 
 	<Style BasedOn="{StaticResource DefaultToolTipStyle}" TargetType="ToolTip" />

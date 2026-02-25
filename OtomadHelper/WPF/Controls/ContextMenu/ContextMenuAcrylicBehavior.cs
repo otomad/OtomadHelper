@@ -19,6 +19,7 @@ namespace OtomadHelper.WPF.Controls;
 [AttachedDependencyProperty<CornerRadius>("CornerRadius")]
 [AttachedDependencyProperty<bool, Control>("IsGlassEnabled", DefaultValue = false, IsReadOnly = true)]
 [AttachedDependencyProperty<bool, Control>("IsCornerRadiusCustomizable", DefaultValue = false, IsReadOnly = true)]
+[AttachedDependencyProperty<bool, Control>("IsSetAeroBlurBehindSizeChangedHookAdded", DefaultValue = false, IsReadOnly = true)]
 public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 	protected override void OnAttached() {
 		AssociatedObject.IsVisibleChanged += ContextMenu_IsVisibleChanged;
@@ -78,6 +79,7 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 			SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0u);
 			SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
 			SetIsCornerRadiusCustomizable(control,
+				WindowsVersion.Current is >= WindowsNT.WindowsVista and < WindowsNT.Windows8 ||
 				SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round)) != HResult.InvalidArg);
 			if (isHighContrast) control.Background = SystemColors.WindowBrush;
 		} else { // Windows Vista/7 Basic Theme or Classic Theme, Windows XP, etc.
@@ -93,8 +95,6 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 			SetIsGlassEnabled(control, false);
 		}
 	}
-
-	private static readonly SolidColorBrush DefaultDwmOffFallbackBackground = SystemColors.MenuBarBrush;
 
 	private static readonly Dictionary<ICommand, Icon> knownIcons = [];
 	private static Icon? verticalScrollHereIcon;

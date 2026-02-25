@@ -532,18 +532,45 @@ public partial class BackdropWindow : Window {
 		if (EnableAcrylicBlurBehind(hWnd, (isLight ? LightThemeAcrylicBackgroundBrush : DarkThemeAcrylicBackgroundBrush).Color.ToAbgr(), backdrop)) {
 			// Windows 8 ~ Windows 11
 			if (backdrop == AccentState.EnableBlurBehind) AddSemiTransparentBackground();
-		} else if (EnableAeroBlurBehind(hWnd)) {
-			// Windows Vista ~ Windows 7
-			AddSemiTransparentBackground();
-		} else
-			// DWM off (Windows Basic Theme or Windows Classic Theme, Windows XP, etc.)
-			return false;
+		} else {
+			(double dpi, _) = control.Dpi;
+			double width = control.ActualWidth * dpi, height = control.ActualHeight * dpi, cornerRadius = ContextMenuAcrylicBehavior.GetCornerRadius(control).TopLeft * dpi;
+			if (SetAeroBlurBehind()) {
+				// Windows Vista ~ Windows 7
+				AddSemiTransparentBackground();
+			} else
+				// DWM off (Windows Basic Theme or Windows Classic Theme, Windows XP, etc.)
+				return false;
+		}
 		return true;
 
 		void AddSemiTransparentBackground() {
 			if (control is { })
 				if (!(control is BackdropWindow window && window.Background != DefaultBackground))
 					control.SetResourceReference(BackgroundProperty, AcrylicBackgroundBrushKeyName);
+		}
+
+		static (double width, double height, double radius) GetWindowBounds(Control control) {
+			(double dpi, _) = control.Dpi;
+			double width = control.ActualWidth * dpi, height = control.ActualHeight * dpi, cornerRadius = ContextMenuAcrylicBehavior.GetCornerRadius(control).TopLeft * dpi;
+			return (width, height, cornerRadius);
+		}
+
+		void RecalculateWindowBounds(object sender, SizeChangedEventArgs e) {
+			(double width, double height, double radius) = GetWindowBounds(control);
+			if (!(width == 0 || height == 0))
+				EnableAeroBlurBehind(hWnd, width, height, radius);
+		}
+
+		bool SetAeroBlurBehind() {
+			(double width, double height, double radius) = GetWindowBounds(control);
+			if (EnableAeroBlurBehind(hWnd, width, height, radius)) {
+				if ((width == 0 || height == 0) && !ContextMenuAcrylicBehavior.GetIsSetAeroBlurBehindSizeChangedHookAdded(control)) {
+					control.SizeChanged += RecalculateWindowBounds;
+					ContextMenuAcrylicBehavior.SetIsSetAeroBlurBehindSizeChangedHookAdded(control, true);
+				}
+				return true;
+			} else return false;
 		}
 	}
 

@@ -28,5 +28,16 @@
 				<Setter Property="c:ContextMenuAcrylicBehavior.CornerRadius" Value="0" />
 			</DataTrigger>
 		</Style.Triggers>
+		<Setter Property="m:InteractivityItems.Template">
+			<Setter.Value>
+				<m:InteractivityTemplate>
+					<m:InteractivityItems>
+						<m:InteractivityItems.Behaviors>
+							<c:ContextMenuAcrylicBehavior />
+						</m:InteractivityItems.Behaviors>
+					</m:InteractivityItems>
+				</m:InteractivityTemplate>
+			</Setter.Value>
+		</Setter>
 	</Style>
 </ResourceDictionary>
