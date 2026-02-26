@@ -730,28 +730,13 @@ declare interface Map<K, V> {
 	 * @template V - The type of the values in the Map.
 	 *
 	 * @param key - The key of the value to retrieve or initialize.
-	 * @param defaultValue - Get the default value to use if the key does not exist in the Map.
+	 * @param asyncComputeFn - Get the default value to use if the key does not exist in the Map.
 	 * Note that the `defaultValue` is a function to get the value, not the value itself.
 	 * If the key exists, the function will not be called again.
 	 *
 	 * @returns The value associated with the specified key. If the key does not exist, the default value is returned.
 	 */
-	emplace(key: K, defaultValue: () => MaybeRef<V>): V;
-	/**
-	 * Retrieves the value associated with the specified key in the Map.
-	 * If the key does not exist in the Map, it will initialize the key with the provided default value and return it.
-	 *
-	 * @template K - The type of the keys in the Map.
-	 * @template V - The type of the values in the Map.
-	 *
-	 * @param key - The key of the value to retrieve or initialize.
-	 * @param defaultValue - Get the default value to use if the key does not exist in the Map.
-	 * Note that the `defaultValue` is a function to get the value, not the value itself.
-	 * If the key exists, the function will not be called again.
-	 *
-	 * @returns The value associated with the specified key. If the key does not exist, the default value is returned.
-	 */
-	emplace(key: K, defaultValue: () => Promise<MaybeRef<V>>): Promise<V>;
+	getOrInsertAsync(key: K, asyncComputeFn: (key: K) => Promise<V>): Promise<V>;
 
 	/**
 	 * Calls a defined callback function on each key value pair of a map, and returns an array that contains the results.

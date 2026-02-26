@@ -64,10 +64,6 @@ declare global {
 	 */
 	declare function cancelAnimationFrame(handle: number | undefined): void;
 
-	interface CSSStyleDeclaration {
-		[x: string]: string;
-	}
-
 	interface RegExpConstructor {
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp/escape) */
 		escape(string: string): string;
@@ -98,12 +94,21 @@ declare global {
 	interface ScrollIntoViewOptions {
 		container?: "all" | "nearest";
 	}
+
+	declare interface Map<K, V> {
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map/getOrInsert) */
+		getOrInsert(key: K, defaultValue: V): V;
+
+		/** [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/getOrInsertCompute) */
+		getOrInsertComputed(key: K, computeFn: (key: K) => V): V;
+	}
 }
 // #endregion
 
 // #region New CSS Properties
 declare global {
 	interface CSSStyleDeclaration {
+		interpolateSize: string;
 		[x: string]: string;
 	}
 }
@@ -144,29 +149,6 @@ declare global {
 		 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Selection)
 		 */
 		selection: Selection | null;
-	}
-}
-// #endregion
-
-// #region View Transitions API
-type ViewTransitionUpdateCallback = () => Promise<void | unknown> | void | unknown;
-declare global {
-	interface Document {
-		/**
-		 * The startViewTransition() method of the Document interface starts a new view transition and returns
-		 * a ViewTransition object to represent it.
-		 *
-		 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Document/startViewTransition)
-		 */
-		startViewTransition(updateCallback: ViewTransitionUpdateCallback): ViewTransition;
-		startViewTransition(options: {
-			update?: ViewTransitionUpdateCallback;
-			types?: string[];
-		}): ViewTransition;
-	}
-
-	interface CSSStyleDeclaration {
-		interpolateSize: string;
 	}
 }
 // #endregion

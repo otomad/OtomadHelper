@@ -307,13 +307,14 @@
 }
 
 { // Init map extensions
-	Map.prototype.emplace = async function (key, defaultValue) { // DELETE: getOrInsert will be released at Chrome 145.
-		if (!this.has(key)) {
-			const value = await defaultValue();
+	Map.prototype.getOrInsertAsync = async function (key, asyncComputeFn) {
+		if (this.has(key))
+			return this.get(key);
+		else {
+			const value = await asyncComputeFn(key);
 			this.set(key, value);
 			return value;
-		} else
-			return this.get(key);
+		}
 	};
 
 	Map.prototype.map = function (callbackfn) {

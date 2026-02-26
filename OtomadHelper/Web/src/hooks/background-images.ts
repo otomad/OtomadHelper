@@ -70,7 +70,7 @@ export function useBackgroundImages() {
 		if (!store.current?.isDatabaseOpen) return;
 		const items = await store.current.sortedMap("displayIndex", async (value, key) => {
 			key = +key;
-			const url: string = await keyToUrl.emplace(key, async () => await fileToBlob(value.imageData));
+			const url: string = await keyToUrl.getOrInsertAsync(key, async () => await fileToBlob(value.imageData));
 			return { ...value, url, key };
 		});
 		setItems([DEFAULT_BACKGROUND_IMAGE_ROW, ...items]);
