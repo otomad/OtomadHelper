@@ -6,6 +6,7 @@
 	xmlns:s="clr-namespace:System;assembly=mscorlib"
 	>
 	<m:OvalCornerRadiusConverter x:Key="Oval" />
+	<m:BooleanOrConverter x:Key="BoolOr" />
 	<s:Double x:Key="ScrollBarThickness">14</s:Double>
 	<s:Double x:Key="ScrollBarButtonPressedScale">0.8</s:Double>
 	<s:Double x:Key="ScrollBarTrackThickness">6</s:Double>
@@ -61,7 +62,7 @@
 			<Trigger Property="IsMouseOver" Value="True">
 				<Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
 			</Trigger>
-			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True">
+			<DataTrigger Binding="{Binding (c:ScrollBarAttached.IsMouseOverOrContextMenuOpened), RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True">
 				<Setter Property="Opacity" Value="1" />
 				<DataTrigger.EnterActions>
 					<BeginStoryboard Storyboard="{StaticResource FadeIn}" />
@@ -131,7 +132,7 @@
 			</DataTrigger>
 			<MultiDataTrigger>
 				<MultiDataTrigger.Conditions>
-					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True" />
+					<Condition Binding="{Binding (c:ScrollBarAttached.IsMouseOverOrContextMenuOpened), RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True" />
 					<Condition Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="Vertical" />
 				</MultiDataTrigger.Conditions>
 				<Setter Property="BaseWidth" Value="{StaticResource ScrollBarTrackThickness}" />
@@ -162,7 +163,7 @@
 			</MultiDataTrigger>
 			<MultiDataTrigger>
 				<MultiDataTrigger.Conditions>
-					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True" />
+					<Condition Binding="{Binding (c:ScrollBarAttached.IsMouseOverOrContextMenuOpened), RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True" />
 					<Condition Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="Horizontal" />
 				</MultiDataTrigger.Conditions>
 				<Setter Property="BaseHeight" Value="{StaticResource ScrollBarTrackThickness}" />
@@ -205,7 +206,7 @@
 		<Setter Property="m:OvalCornerRadius.Enabled" Value="True" />
 		<Setter Property="Opacity" Value="0" />
 		<Style.Triggers>
-			<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True">
+			<DataTrigger Binding="{Binding (c:ScrollBarAttached.IsMouseOverOrContextMenuOpened), RelativeSource={RelativeSource AncestorType=ScrollBar}}" Value="True">
 				<Setter Property="Opacity" Value="1" />
 				<DataTrigger.EnterActions>
 					<BeginStoryboard Storyboard="{StaticResource FadeIn}" />
@@ -286,6 +287,14 @@
 	<Style x:Key="DefaultScrollBarStyle" TargetType="ScrollBar">
 		<Setter Property="SnapsToDevicePixels" Value="True" />
 		<Setter Property="OverridesDefaultStyle" Value="true" />
+		<Setter Property="c:ScrollBarAttached.IsMouseOverOrContextMenuOpened">
+			<Setter.Value>
+				<MultiBinding Converter="{StaticResource BoolOr}">
+					<Binding Path="IsMouseOver" RelativeSource="{RelativeSource Self}" />
+					<Binding Path="ContextMenu.IsOpen" RelativeSource="{RelativeSource Self}" />
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
 		<Style.Triggers>
 			<Trigger Property="Orientation" Value="Horizontal">
 				<Setter Property="Width" Value="Auto" />

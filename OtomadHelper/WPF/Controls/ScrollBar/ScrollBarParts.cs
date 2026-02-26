@@ -45,3 +45,6 @@ public enum ScrollBarLineButtonArrowPoint {
 [DependencyProperty<double>("BaseHeight", TypeConverter = typeof(LengthConverter))]
 [DependencyProperty<Thickness>("BaseMargin")]
 public partial class ScrollBarThumb : Thumb { }
+
+[AttachedDependencyProperty<bool, ScrollBar>("IsMouseOverOrContextMenuOpened", DefaultValue = false)]
+public static partial class ScrollBarAttached { }
