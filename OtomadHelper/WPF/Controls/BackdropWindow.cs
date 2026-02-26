@@ -450,9 +450,7 @@ public partial class BackdropWindow : Window {
 		remove => NCHitTestHooks.Remove(value);
 	}
 
-	internal static bool IsGlassEnabled => WindowsVersion.Current is >= WindowsNT.Windows8 and <= WindowsNT.Windows10_TP ? !SystemParameters.HighContrast :
-		SystemParameters.IsGlassEnabled;
-	// Windows 8.x in high contrast theme will turn SystemParameters.IsGlassEnabled off, which is not we expected, so consider it separately.
+	internal static bool IsGlassEnabled => SystemParameters.IsGlassEnabled;
 
 	protected void OnSystemThemeChanged() {
 		//if (e.Category is not (UserPreferenceCategory.Color or UserPreferenceCategory.General or UserPreferenceCategory.Window or UserPreferenceCategory.VisualStyle)) return;
@@ -472,7 +470,6 @@ public partial class BackdropWindow : Window {
 
 		void Update() {
 			SetSystemBackdropType(SystemBackdropType);
-			if (WindowsVersion.Current is >= WindowsNT.Windows8 and <= WindowsNT.Windows10_TP) OnTitleBarTypeChanged(TitleBarType);
 		}
 	}
 
@@ -489,7 +486,7 @@ public partial class BackdropWindow : Window {
 
 	protected void SetSolidBackgroundColorAsNeeded() {
 		if (Background == DefaultBackground || this.GetDynamicResourceKey(BackgroundProperty) == BackgroundBrushKeyName)
-			if (TitleBarType == TitleBarType.System || !IsGlassEnabled || SystemBackdropType == SystemBackdropType.None || IsHighContrast)
+			if (TitleBarType == TitleBarType.System || !IsGlassEnabled || SystemBackdropType == SystemBackdropType.None || IsHighContrast && WindowsVersion.Current >= WindowsNT.Windows10)
 				SetResourceReference(BackgroundProperty, BackgroundBrushKeyName);
 			else
 				Background = DefaultBackground;
@@ -731,7 +728,7 @@ public partial class BackdropWindow : Window {
 	private class SystemBackdropTypeOrIsHighContrastToUseUniversalControlBoxConverter : MultiValueConverter<(SystemBackdropType, bool), bool> {
 		public override bool Convert((SystemBackdropType, bool) value, Type targetType, object parameter, CultureInfo culture) {
 			(SystemBackdropType backdrop, bool highContrast) = value;
-			return backdrop == SystemBackdropType.None || highContrast;
+			return backdrop == SystemBackdropType.None || highContrast && WindowsVersion.Current >= WindowsNT.Windows10;
 		}
 	}
 

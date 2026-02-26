@@ -210,6 +210,7 @@
 	</Target>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<!--<Exec Command="$(ProjectDir)\Properties\InsertIcons.exe $(TargetPath) $(ProjectDir)Icons" />-->
+		<!--<Exec Command="for /d %%a in ($(OutDir)\ILRepack-*) do rd /s /q %a" />-->
 	</Target>
 	<ItemGroup>
 		<COMReference Include="IWshRuntimeLibrary">

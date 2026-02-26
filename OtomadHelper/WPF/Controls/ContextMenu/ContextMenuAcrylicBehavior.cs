@@ -68,21 +68,33 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 		bool isDarkTheme = BackdropWindow.ShouldAppsUseDarkMode();
 		bool isHighContrast = SystemParameters.HighContrast;
 		BackdropWindow.BindHighContrastToProperty(control, IsHighContrastProperty);
-		bool supportComposition = BackdropWindow.SetAcrylicByComposition(Handle, control, isHighContrast ? AccentState.Disabled : WindowsVersion.Current switch {
+		AccentState backdrop = isHighContrast ? AccentState.Disabled : WindowsVersion.Current switch {
 			>= WindowsNT.Windows10_1803 => AccentState.EnableAcrylicBlurBehind,
 			>= WindowsNT.Windows10 => AccentState.EnableBlurBehind,
 			>= WindowsNT.Windows8 => AccentState.EnableTransparentGradient,
 			_ => AccentState.EnableHostBackdrop,
-		});
-		if (supportComposition) {
+		};
+		bool supportComposition = backdrop == AccentState.EnableTransparentGradient || BackdropWindow.SetAcrylicByComposition(Handle, control, backdrop);
+		if (supportComposition && !isHighContrast) {
 			SetIsGlassEnabled(control, true);
 			SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0u);
 			SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
 			SetIsCornerRadiusCustomizable(control,
 				WindowsVersion.Current is >= WindowsNT.WindowsVista and < WindowsNT.Windows8 ||
 				SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round)) != HResult.InvalidArg);
-			if (isHighContrast) control.Background = SystemColors.WindowBrush;
+			if (backdrop == AccentState.EnableTransparentGradient)
+				ApplySolidBackground();
 		} else { // Windows Vista/7 Basic Theme or Classic Theme, Windows XP, etc.
+			ApplySolidBackground();
+			SetIsCornerRadiusCustomizable(control, true);
+			SetIsGlassEnabled(control, false);
+		}
+		if (WindowsVersion.Current is >= WindowsNT.Windows8 and < WindowsNT.Windows11_Dev)
+			SetIsCornerRadiusCustomizable(control, false);
+		if (WindowsVersion.Current is >= WindowsNT.Windows8 and < WindowsNT.Windows10)
+			control.Effect = null;
+
+		void ApplySolidBackground() =>
 			control.Background = (
 				isDarkTheme && !isHighContrast ? BackdropWindow.DarkThemeBackgroundBrush : // SystemColors doesn't support system dark theme colors.
 				control switch {
@@ -91,9 +103,6 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 					_ => SystemColors.MenuBarBrush,
 				}
 			).Clone();
-			SetIsCornerRadiusCustomizable(control, true);
-			SetIsGlassEnabled(control, false);
-		}
 	}
 
 	private static readonly Dictionary<ICommand, Icon> knownIcons = [];

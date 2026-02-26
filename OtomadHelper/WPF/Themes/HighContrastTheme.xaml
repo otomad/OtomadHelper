@@ -10,9 +10,9 @@
 	<x:Static x:Key="ForegroundColor" Member="SystemColors.WindowTextColor" />
 	<x:Static x:Key="ForegroundBrush" Member="SystemColors.WindowTextBrush" />
 	<x:Static x:Key="BackgroundBrush" Member="SystemColors.WindowBrush" />
-	<x:Static x:Key="CardStroke" Member="SystemColors.ControlTextBrush" />
-	<x:Static x:Key="CardStrokeOnSurfaceOverlay" Member="SystemColors.ControlTextBrush" />
-	<x:Static x:Key="SurfaceOverlayBackground" Member="SystemColors.WindowBrush" />
+	<x:Static x:Key="CardStroke" Member="SystemColors.InactiveCaptionTextBrush" />
+	<x:Static x:Key="CardStrokeOnSurfaceOverlay" Member="SystemColors.InactiveCaptionTextBrush" />
+	<SolidColorBrush x:Key="SurfaceOverlayBackground" Color="Transparent" />
 	<x:Static x:Key="ControlBackground" Member="SystemColors.ControlBrush" />
 	<x:Static x:Key="ControlBackgroundSecondary" Member="SystemColors.HighlightBrush" />
 	<x:Static x:Key="ControlBackgroundTertiary" Member="SystemColors.ControlBrush" />

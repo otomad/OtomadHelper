@@ -62,7 +62,7 @@
 					<Condition Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True" />
 					<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
 				</MultiDataTrigger.Conditions>
-				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+				<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
 			</MultiDataTrigger>
 		</Style.Triggers>
 		<Style.Resources>

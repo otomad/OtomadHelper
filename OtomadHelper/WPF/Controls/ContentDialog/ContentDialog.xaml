@@ -158,6 +158,13 @@
 					<DataTrigger Binding="{Binding Expandable}" Value="True">
 						<Setter Property="Padding" Value="24,16" />
 					</DataTrigger>
+					<MultiDataTrigger>
+						<MultiDataTrigger.Conditions>
+							<Condition Binding="{Binding IsHighContrast, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True" />
+							<Condition Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=c:BackdropWindow}}" Value="True" />
+						</MultiDataTrigger.Conditions>
+						<Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" />
+					</MultiDataTrigger>
 				</Style.Triggers>
 			</Style>
 			<Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="c:Button">
