@@ -18,16 +18,16 @@ public partial class Icon : Viewbox {
 	}
 
 	internal static readonly SolidColorBrush defaultForeground = Brushes.Transparent;
+	internal const string IconNamePrefix = "Icon:";
 
 	partial void OnIconNameChanged(DeclaredIcon icon) {
 		if (Enum.GetName(icon) is not string iconName) return;
-		const string iconNamePrefix = "Icon:";
-		if (iconName.StartsWith(iconNamePrefix))
+		if (iconName.StartsWith(IconNamePrefix))
 			throw new ArgumentException($"""
-				Do not manually add "Icon:" prefix before the icon name, it will automatically add it!
+				Do not manually add "{IconNamePrefix}" prefix before the icon name, it will automatically add it!
 				Unexpected icon name: {iconName}
 				""");
-		SetResourceReference(SourceProperty, "Icon:" + iconName);
+		SetResourceReference(SourceProperty, IconNamePrefix + iconName);
 	}
 
 	public static bool IsKnownIcon(string iconName) => Enum.IsDefined<KnownIcon>(iconName);

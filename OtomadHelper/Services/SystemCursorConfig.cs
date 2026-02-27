@@ -21,14 +21,14 @@ public struct SystemCursorConfig {
 		using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Accessibility")) {
 			if (key?.GetValue("CursorType") is int type)
 				Type = (SystemCursorType)type;
-			if ((key?.GetValue("CursorColor") is int color) && (Type == SystemCursorType.ColoredSvg))
+			if (key?.GetValue("CursorColor") is int color && Type == SystemCursorType.ColoredSvg)
 				Color = Color.FromAbgr(color, false);
 			if (Type is SystemCursorType.BlackBmp or SystemCursorType.BlackSvg)
 				Color = Colors.Black;
 		}
 	}
 
-	public static void SetSystemConfig(SystemConfig config) {
+	public static void SetSystemConfig(SystemCursorConfigModel config) {
 		SystemCursorConfig cursorConfig = new();
 		config.CursorSize = cursorConfig.Size;
 		config.CursorFill = cursorConfig.Color;
@@ -36,8 +36,9 @@ public struct SystemCursorConfig {
 
 	public static event EventHandler? CursorChanged;
 	static SystemCursorConfig() {
-		RegistryMonitor monitor = new(RegistryHive.CurrentUser, @"Software\Microsoft\Accessibility");
-		monitor.RegChangeNotifyFilter = RegistryMonitor.RegChangeNotifyFilters.Value;
+		RegistryMonitor monitor = new(RegistryHive.CurrentUser, @"Software\Microsoft\Accessibility") {
+			RegChangeNotifyFilter = RegistryMonitor.RegChangeNotifyFilters.Value,
+		};
 		monitor.RegChanged += (sender, e) => CursorChanged?.Invoke(sender, e);
 		monitor.Start();
 	}

@@ -103,6 +103,7 @@ public sealed partial class Host : UserControl {
 		LoadingAnimationPicture.Stop();
 		SplashContainer.Visible = false;
 		Browser.Visible = true;
+		PostWebMessage(new SimpleWebMessageEvent("initializedFadeIn"));
 #if VEGAS_ENV
 		AddModuleKeybindings();
 #endif
@@ -193,9 +194,8 @@ public sealed partial class Host : UserControl {
 #else
 		true;
 #endif
-	private void NotifyBgTrackingChanged() {
+	private void NotifyBgTrackingChanged() =>
 		BgTrackingChanged?.Invoke(this, BgTracking); // TODO: Optional debounce.
-	}
 	public event EventHandler<bool>? BgTrackingChanged;
 
 	private async void CoreWebView2_ContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs e) {
@@ -327,9 +327,11 @@ public sealed partial class Host : UserControl {
 	}
 
 	private SystemConfig GetRefreshedSystemConfig() {
-		SystemConfig config = new();
-		BackdropWindow.GetWindowsAccentPalette(config);
-		SystemCursorConfig.SetSystemConfig(config);
+		SystemConfig config = new() {
+			PanelBackgroundColor = SkinColors.Current.Background.ToMediaColor(),
+		};
+		BackdropWindow.GetWindowsAccentPalette(config.AccentPalette);
+		SystemCursorConfig.SetSystemConfig(config.SystemCursorConfig);
 		return config;
 	}
 
@@ -356,7 +358,7 @@ public sealed partial class Host : UserControl {
 				void AddMenuItem(string header, object? icon = null, string link = "", bool disabled = false, Action? action = null) {
 					System.Windows.Controls.MenuItem menuItem = new() {
 						Header = header,
-						Icon = icon is null ? null : icon is string iconName ? GetIcon("Icon:" + iconName) : icon,
+						Icon = icon is null ? null : icon is string iconName ? GetIcon(WPF.Controls.Icon.IconNamePrefix + iconName) : icon,
 						IsEnabled = !disabled,
 					};
 					if (action is not null)

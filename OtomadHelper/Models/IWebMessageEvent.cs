@@ -13,9 +13,9 @@ public abstract class BaseWebMessageEvent {
 		if (node.GetValueKind() != JsonValueKind.Object)
 			node = new JsonObject { ["value"] = node };
 		JsonObject objectNode = node.AsObject();
-		objectNode[nameof(Type).ToLowerInvariant()] =
+		objectNode[nameof(type)] =
 			string.IsNullOrEmpty(overriddenTypeName) ? GetTypeName(obj) : overriddenTypeName;
-		objectNode[nameof(Timestamp).ToLowerInvariant()] = DateTime.Now;
+		objectNode[nameof(timestamp)] = DateTime.Now;
 		return objectNode;
 	}
 
@@ -24,4 +24,9 @@ public abstract class BaseWebMessageEvent {
 	protected readonly object? type;
 	[JsonIgnore]
 	protected readonly object? timestamp;
+}
+
+public sealed class SimpleWebMessageEvent(string typeName) {
+	public string Type => typeName;
+	public DateTime Timestamp { get; internal set; } = DateTime.Now;
 }

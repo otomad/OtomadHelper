@@ -36,6 +36,10 @@ public static class MessageSender {
 	public static void PostWebMessage<T>(T message) where T : BaseWebMessageEvent =>
 		PostWebMessageAsJson(SerializeWebMessageJson(message));
 
+	/// <inheritdoc cref="PostWebMessage{T}(T)" />
+	public static void PostWebMessage(SimpleWebMessageEvent message) =>
+		PostWebMessageAsJson(SerializeWebMessageJson(message));
+
 	private static void PostWebMessageFromJsonObject(JsonObject jsonObject) =>
 		PostWebMessageAsJson(jsonObject.ToJsonString(jsonOptions));
 
@@ -89,5 +93,8 @@ public static class MessageSender {
 
 	internal static string SerializeWebMessageJson<T>(T message) where T : BaseWebMessageEvent =>
 		// Note: Do not write as `internal static string SerializeWebMessageJson(BaseWebMessageEvent message)`, or the serialized string will ignore almost anything!
+		JsonSerializer.Serialize(message, jsonOptions);
+
+	internal static string SerializeWebMessageJson(SimpleWebMessageEvent message) =>
 		JsonSerializer.Serialize(message, jsonOptions);
 }

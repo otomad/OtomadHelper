@@ -83,5 +83,4 @@ public record SkinColors(Color Background, Color Foreground, Color ButtonNormal,
 #endif
 		}
 	}
-
 }
