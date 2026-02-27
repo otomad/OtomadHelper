@@ -26,17 +26,17 @@ namespace OtomadHelper.Module {
 			this.Browser = new Microsoft.Web.WebView2.WinForms.WebView2();
 			this.SplashContainer = new System.Windows.Forms.Panel();
 			this.SplashOverflowMenuButton = new OtomadHelper.WinForm.Controls.RoundedButton();
-			this.LoadingAnimationPicture = new APNGViewer.APNGBox();
+			this.LoadingAnimationPicture = new APNGLib.Viewer.WinForms.APNGBox();
 			((System.ComponentModel.ISupportInitialize)(this.Browser)).BeginInit();
 			this.SplashContainer.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.LoadingAnimationPicture)).BeginInit();
 			this.SuspendLayout();
-			//
+			// 
 			// Browser
-			//
+			// 
 			this.Browser.AllowExternalDrop = true;
-			this.Browser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+			this.Browser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.Browser.CreationProperties = null;
 			this.Browser.DefaultBackgroundColor = System.Drawing.Color.White;
@@ -48,11 +48,11 @@ namespace OtomadHelper.Module {
 			this.Browser.ZoomFactor = 1D;
 			this.Browser.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.Browser_CoreWebView2InitializationCompleted);
 			this.Browser.WebMessageReceived += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2WebMessageReceivedEventArgs>(this.Browser_WebMessageReceived);
-			//
+			// 
 			// SplashContainer
-			//
-			this.SplashContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+			// 
+			this.SplashContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.SplashContainer.Controls.Add(this.SplashOverflowMenuButton);
 			this.SplashContainer.Controls.Add(this.LoadingAnimationPicture);
@@ -61,9 +61,9 @@ namespace OtomadHelper.Module {
 			this.SplashContainer.Name = "SplashContainer";
 			this.SplashContainer.Size = new System.Drawing.Size(960, 480);
 			this.SplashContainer.TabIndex = 1;
-			//
+			// 
 			// SplashOverflowMenuButton
-			//
+			// 
 			this.SplashOverflowMenuButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.SplashOverflowMenuButton.BackColor = System.Drawing.Color.Transparent;
 			this.SplashOverflowMenuButton.BorderColor = System.Drawing.Color.Empty;
@@ -79,20 +79,21 @@ namespace OtomadHelper.Module {
 			this.SplashOverflowMenuButton.Text = "⋯";
 			this.SplashOverflowMenuButton.UseVisualStyleBackColor = false;
 			this.SplashOverflowMenuButton.Click += new System.EventHandler(this.SplashOverflowMenuButton_Click);
-			//
+			// 
 			// LoadingAnimationPicture
-			//
+			// 
 			this.LoadingAnimationPicture.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.LoadingAnimationPicture.APNGFile = null;
 			this.LoadingAnimationPicture.Image = null;
 			this.LoadingAnimationPicture.Location = new System.Drawing.Point(0, 0);
 			this.LoadingAnimationPicture.Name = "LoadingAnimationPicture";
+			this.LoadingAnimationPicture.Opacity = 1F;
 			this.LoadingAnimationPicture.Size = new System.Drawing.Size(960, 480);
 			this.LoadingAnimationPicture.TabIndex = 0;
 			this.LoadingAnimationPicture.TabStop = false;
-			//
+			// 
 			// Host
-			//
+			// 
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -115,7 +116,7 @@ namespace OtomadHelper.Module {
 
 		public Microsoft.Web.WebView2.WinForms.WebView2 Browser;
 		private System.Windows.Forms.Panel SplashContainer;
-		private APNGViewer.APNGBox LoadingAnimationPicture;
+		private APNGLib.Viewer.WinForms.APNGBox LoadingAnimationPicture;
 		private OtomadHelper.WinForm.Controls.RoundedButton SplashOverflowMenuButton;
 	}
 }

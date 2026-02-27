@@ -29,6 +29,7 @@ public sealed partial class Host : UserControl {
 		Dockable.Closed += Dockable_Closed;
 		Dockable.VisibleChanged += Dockable_VisibleChanged;
 #else
+	[SuppressMessage("Style", "IDE0060")]
 	public Host(object @null) {
 #endif
 		InitializeComponent();
@@ -96,7 +97,8 @@ public sealed partial class Host : UserControl {
 		Process.Start(e.Uri);
 	}
 
-	private void WebInitialized() {
+	private async void WebInitialized() {
+		await LoadingAnimationPicture.FadeOut(250);
 		LoadingAnimationPicture.Visible = false;
 		LoadingAnimationPicture.Stop();
 		SplashContainer.Visible = false;

@@ -37,6 +37,7 @@
 		<EnableDefaultPageItems>false</EnableDefaultPageItems>
 		<EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
 		<EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<OutputType>WinExe</OutputType>

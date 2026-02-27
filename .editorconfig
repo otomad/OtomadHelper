@@ -327,3 +327,6 @@ dotnet_diagnostic.ide1006.severity = warning
 
 # CS9107: 参数捕获到封闭类型状态，其值也传递给基构造函数。该值也可能由基类捕获。
 dotnet_diagnostic.CS9107.severity = silent
+
+# CS1591: 缺少对公共可见类型或成员的 XML 注释
+dotnet_diagnostic.CS1591.severity = silent
