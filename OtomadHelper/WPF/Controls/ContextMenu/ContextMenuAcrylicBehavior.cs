@@ -74,25 +74,26 @@ public partial class ContextMenuAcrylicBehavior : Behavior<FrameworkElement> {
 			>= WindowsNT.Windows8 => AccentState.EnableTransparentGradient,
 			_ => AccentState.EnableHostBackdrop,
 		};
-		bool supportComposition = backdrop == AccentState.EnableTransparentGradient || BackdropWindow.SetAcrylicByComposition(Handle, control, backdrop);
-		if (supportComposition && !isHighContrast) {
-			SetIsGlassEnabled(control, true);
-			SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0u);
-			SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe);
-			SetIsCornerRadiusCustomizable(control,
-				WindowsVersion.Current is >= WindowsNT.WindowsVista and < WindowsNT.Windows8 ||
-				SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round)) != HResult.InvalidArg);
-			if (backdrop == AccentState.EnableTransparentGradient)
-				ApplySolidBackground();
-		} else { // Windows Vista/7 Basic Theme or Classic Theme, Windows XP, etc.
+		if (backdrop == AccentState.EnableTransparentGradient) { // Windows 8/8.1.
 			ApplySolidBackground();
-			SetIsCornerRadiusCustomizable(control, true);
-			SetIsGlassEnabled(control, false);
-		}
-		if (WindowsVersion.Current is >= WindowsNT.Windows8 and < WindowsNT.Windows11_Dev)
-			SetIsCornerRadiusCustomizable(control, false);
-		if (WindowsVersion.Current is >= WindowsNT.Windows8 and < WindowsNT.Windows10)
 			control.Effect = null;
+		} else {
+			bool supportComposition = BackdropWindow.SetAcrylicByComposition(Handle, control, backdrop);
+			if (supportComposition && !isHighContrast) { // Windows Vista/7 Aero Theme, Windows 10/11.
+				SetIsGlassEnabled(control, true);
+				SetWindowAttribute(Handle, DwmWindowAttribute.UseImmersiveDarkMode, isDarkTheme ? 1u : 0u); // Windows 10/11.
+				SetWindowAttribute(Handle, DwmWindowAttribute.BorderColor, 0xfffffffe); // Windows 11.
+				SetIsCornerRadiusCustomizable(control,
+					WindowsVersion.Current is >= WindowsNT.WindowsVista and < WindowsNT.Windows8 || // Windows Vista/7.
+					SetWindowAttribute(Handle, DwmWindowAttribute.WindowCornerPreference, (uint)(roundSmaller ? WindowCornerPreference.RoundSmall : WindowCornerPreference.Round)) != HResult.InvalidArg); // Windows 11.
+			} else { // Windows Vista/7 Basic Theme or Classic Theme, Windows XP, etc.
+				ApplySolidBackground();
+				SetIsCornerRadiusCustomizable(control, true);
+				SetIsGlassEnabled(control, false);
+			}
+		}
+		if (WindowsVersion.Current is >= WindowsNT.Windows8 and < WindowsNT.Windows11_Dev) // Windows 8/8.1/10.
+			SetIsCornerRadiusCustomizable(control, false);
 
 		void ApplySolidBackground() =>
 			control.Background = (
