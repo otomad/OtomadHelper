@@ -11,6 +11,8 @@ const enabledFocusVisible = css`
 	}
 `;
 
+const OPTION_HEIGHT = 35;
+
 const StyledComboBox = styled(StyledButton)(() => css`
 	padding: 4px 11px;
 
@@ -65,6 +67,7 @@ const StyledComboBox = styled(StyledButton)(() => css`
 
 		@supports (appearance: base-select) {
 			${enabledFocusVisible};
+			--selected-index: attr(data-selected-index type(<integer>), 0);
 
 			&,
 			&::picker(select) {
@@ -76,8 +79,9 @@ const StyledComboBox = styled(StyledButton)(() => css`
 			}
 
 			&::picker(select) {
-				position-area: block-end;
-				position-try: most-block-size flip-block;
+				position: fixed;
+				inset-block-start: calc(anchor(start) - 3px - ${OPTION_HEIGHT}px * var(--selected-index));
+				inset-inline-start: calc(anchor(start) - 3px);
 				inline-size: calc(anchor-size(self-inline) + 7px);
 				padding: 2px;
 				background-color: ${c("background-fill-color-acrylic-background-command-bar")};
@@ -114,7 +118,11 @@ const StyledComboBox = styled(StyledButton)(() => css`
 			option {
 				${styles.effects.text.body};
 				position: relative;
-				padding: 6px 12px;
+				display: flex;
+				gap: 8px;
+				block-size: ${OPTION_HEIGHT}px;
+				padding-block: 6px 8px;
+				padding-inline: 11.5px;
 				background-color: transparent;
 				background-clip: padding-box;
 				border: 1.5px solid transparent;
@@ -204,8 +212,9 @@ export default function ComboBox<T extends string | number>({ ids = [], options 
 }, "select">) {
 	const [iconSvgs, setIconSvgs] = useState<string[]>();
 	const hasIcons = icons.length > 0;
-	const currentOption = options[ids.indexOf(current!)] ?? `<${current}>`;
-	const currentIcon = icons[ids.indexOf(current!)];
+	const currentIndex = ids.indexOf(current!);
+	const currentOption = options[currentIndex] ?? `<${current}>`;
+	const currentIcon = icons[currentIndex];
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 	const numberAsKey = typeof ids[0] === "number";
 
@@ -244,6 +253,7 @@ export default function ComboBox<T extends string | number>({ ids = [], options 
 				role="combobox"
 				disabled={disabled}
 				value={current}
+				data-selected-index={currentIndex}
 				onChange={e => {
 					let value = e.currentTarget.value as T;
 					if (numberAsKey) value = +value as T;
