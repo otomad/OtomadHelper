@@ -14,7 +14,7 @@ const enabledFocusVisible = css`
 const OPTION_HEIGHT = 35;
 
 const StyledComboBox = styled(StyledButton)(() => css`
-	padding: 4px 11px;
+	padding: 4px 9px;
 
 	${inputInSettingsCardStyle};
 
@@ -122,7 +122,7 @@ const StyledComboBox = styled(StyledButton)(() => css`
 				gap: 8px;
 				block-size: ${OPTION_HEIGHT}px;
 				padding-block: 6px 8px;
-				padding-inline: 11.5px;
+				padding-inline: 9.5px;
 				background-color: transparent;
 				background-clip: padding-box;
 				border: 1.5px solid transparent;
@@ -240,8 +240,10 @@ export default function ComboBox<T extends string | number>({ ids = [], options 
 				{...htmlAttrs as FCP<{}, "button">}
 			>
 				<div className="content">
-					{hasIcons && (currentIcon ? <Icon name={currentIcon} /> : <Icon shadow />)}
-					<div className="text">{currentOption}</div>
+					<div className="text">
+						{hasIcons && (currentIcon ? <Icon name={currentIcon} /> : <Icon shadow />)}
+						{currentOption}
+					</div>
 					<Icon name="chevron_down" className="chevron" />
 				</div>
 			</StyledComboBox>

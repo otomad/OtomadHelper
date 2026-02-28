@@ -121,13 +121,13 @@ import { config as transitionGroupConfig } from "react-transition-group-fc";
 
 	// #region Fade in animation
 	if (initialSystemConfig.panelBackgroundColor) {
-		const root = document.getElementById("root")!;
-		root.style.opacity = "0";
+		document.body.style.opacity = "0";
 		useListen.on("host:initializedFadeIn", async () => {
-			await root.animate({
+			await document.body.animate({
 				opacity: [0, 1],
 			}, { duration: 250, easing: "linear", fill: "forwards" }).finished;
-			root.style.opacity = "";
+			document.body.style.opacity = "";
+			document.documentElement.style.backgroundColor = "";
 		});
 	}
 	// #endregion
