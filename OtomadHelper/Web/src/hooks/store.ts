@@ -44,29 +44,26 @@ export function useStoreState<TState extends object>(state: TState): StateProper
 	return new Proxy(state as AnyObject, {
 		get(state, property) {
 			if (!(property in state)) return [];
-			let snapshot: Any;
-			try {
-				snapshot = useSnapshot(state)[property];
-			} catch { // Not in hook lifecycle.
-				snapshot = state[property];
-			}
-			const stateProperty = [snapshot, (value: unknown) => {
-				const newValue = typeof value === "function" ? value(state[property]) : value;
-				if (state[property] === newValue) return newValue; // If the value is same as the previous value, do not reassign it.
-				return state[property] = newValue;
-			}] as StateProperty<unknown>;
-			Object.assign(stateProperty, {
-				subscribe: (callback: (value: unknown) => void) => subscribeStoreKey(state, property, callback),
-				useState() {
-					const [getState, setStateOriginal] = useState(state[property]);
-					const setState = setStateInterceptor(setStateOriginal, undefined, value => state[property] = value);
-					useMountEffect(() => {
-						(stateProperty as StatePropertyPremium<unknown>).subscribe(value => setStateOriginal(value));
-					});
-					return [getState, setState];
-				},
-			});
-			return stateProperty;
+			const snapshot = useSnapshot(state)[property];
+			return useMemo(() => {
+				const stateProperty = [snapshot, (value: unknown) => {
+					const newValue = typeof value === "function" ? value(state[property]) : value;
+					if (state[property] === newValue) return newValue; // If the value is same as the previous value, do not reassign it.
+					return state[property] = newValue;
+				}] as StateProperty<unknown>;
+				Object.assign(stateProperty, {
+					subscribe: (callback: (value: unknown) => void) => subscribeStoreKey(state, property, callback),
+					useState() {
+						const [getState, setStateOriginal] = useState(state[property]);
+						const setState = setStateInterceptor(setStateOriginal, undefined, value => state[property] = value);
+						useMountEffect(() => {
+							(stateProperty as StatePropertyPremium<unknown>).subscribe(value => setStateOriginal(value));
+						});
+						return [getState, setState];
+					},
+				});
+				return stateProperty;
+			}, [snapshot]);
 		},
 	}) as never;
 }

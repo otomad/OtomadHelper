@@ -9,7 +9,7 @@ const StyledDynamicAccentColor = createGlobalStyle<{
 		backgroundColor: string;
 		currentDominantColor?: string;
 	};
-}>(({ theme: $palette, $customize: { accentColor, backgroundColor, currentDominantColor } }) => [
+}>(({ theme: { accentPalette: $palette }, $customize: { accentColor, backgroundColor, currentDominantColor } }) => [
 	css`
 		--colorization: #005fb8;
 		--accent-color-windows: light-dark(${colors["accent-color"].slice(0, 2).join(",")});

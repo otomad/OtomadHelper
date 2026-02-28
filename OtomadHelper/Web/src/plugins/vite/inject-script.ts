@@ -133,7 +133,7 @@ interface PriorScript {
 	 * - Others - Directly pass to the type attribute.
 	 */
 	type?: "script" | "module" | "iife" | (string & {});
-	/** Select where to insert the script. Defaults to "body-append". */
+	/** Select where to insert the script. Defaults to "head-append". */
 	injectTo?: "head-prepend" | "head-append" | "body-prepend" | "body-append";
 	/** Modify the source script content. */
 	modify?(html: string): string;

@@ -1,21 +1,23 @@
 export default function Tools() {
+	const tFull = tAlias({ context: "full" });
+
 	return (
 		<div className="container">
 			<SettingsPageControl style={{ marginBlockEnd: "4px" }}>{t.descriptions.tools}</SettingsPageControl>
 			<SettingsCard
-				title={t.tools.flow}
+				title={tFull.titles.flow}
 				details={t.descriptions.tools.flow}
 				type="button"
 				icon="curve"
 			/>
 			<SettingsCard
-				title={t.tools.selector}
+				title={tFull.titles.selector}
 				details={t.descriptions.tools.selector}
 				type="button"
 				icon="search"
 			/>
 			<SettingsCard
-				title={t.tools.replacer}
+				title={tFull.titles.replacer}
 				details={t.descriptions.tools.replacer}
 				type="button"
 				icon="replace"
@@ -23,7 +25,7 @@ export default function Tools() {
 				selectValid={0}
 			/>
 			<SettingsCard
-				title={t.tools.propertizer}
+				title={tFull.titles.propertizer}
 				details={t.descriptions.tools.propertizer}
 				type="button"
 				icon="wrench_multiple"
@@ -31,7 +33,7 @@ export default function Tools() {
 				selectValid={1}
 			/>
 			<SettingsCard
-				title={t.tools.subtitles}
+				title={tFull.titles.subtitles}
 				details={t.descriptions.tools.subtitles}
 				type="button"
 				icon="subtitles"
@@ -39,7 +41,7 @@ export default function Tools() {
 				selectValid={1}
 			/>
 			<SettingsCard
-				title={t.tools.effector}
+				title={tFull.titles.effector}
 				details={t.descriptions.tools.effector}
 				type="button"
 				icon="sparkle"
@@ -47,7 +49,7 @@ export default function Tools() {
 				selectValid={1}
 			/>
 			<SettingsCard
-				title={t.tools.fader}
+				title={tFull.titles.fader}
 				details={t.descriptions.tools.fader}
 				type="button"
 				icon="fade"
@@ -55,7 +57,7 @@ export default function Tools() {
 				selectValid={1}
 			/>
 			<SettingsCard
-				title={t.tools.exportScore}
+				title={tFull.titles.exportScore}
 				details={t.descriptions.tools.exportScore}
 				type="button"
 				icon="score_forward"
@@ -79,7 +81,7 @@ export default function Tools() {
 				selectValid={1}
 			/>
 			<SettingsCard
-				title={t.tools.clawer}
+				title={tFull.titles.clawer}
 				details={t.descriptions.tools.converters.clawer}
 				type="button"
 				icon="claw_machine"
@@ -89,13 +91,13 @@ export default function Tools() {
 
 			<Subheader>{t.tools.services}</Subheader>
 			<SettingsCard
-				title={t.tools.variableTempo}
+				title={tFull.titles.variableTempo}
 				details={t.descriptions.tools.variableTempo}
 				type="button"
 				icon="speed_play"
 			/>
 			<SettingsCard
-				title={t.tools.ultraPaste}
+				title={tFull.titles.ultraPaste}
 				details={t.descriptions.tools.ultraPaste}
 				type="button"
 				icon="clipboard_star"

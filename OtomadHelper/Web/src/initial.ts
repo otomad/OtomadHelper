@@ -118,4 +118,17 @@ import { config as transitionGroupConfig } from "react-transition-group-fc";
 		(typeof labelPrefix === "string" ? `${labelPrefix}.${key}` : isI18nItem(labelPrefix) ? labelPrefix[key] : undefined!);
 	Enum.install(mapPlugin);
 	// #endregion
+
+	// #region Fade in animation
+	if (initialSystemConfig.panelBackgroundColor) {
+		const root = document.getElementById("root")!;
+		root.style.opacity = "0";
+		useListen.on("host:initializedFadeIn", async () => {
+			await root.animate({
+				opacity: [0, 1],
+			}, { duration: 250, easing: "linear", fill: "forwards" }).finished;
+			root.style.opacity = "";
+		});
+	}
+	// #endregion
 }

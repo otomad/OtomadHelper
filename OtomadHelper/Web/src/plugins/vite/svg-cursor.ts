@@ -22,7 +22,7 @@ export const svgCursor = (): VitePlugin => {
 
 			return (
 				`import svg from "${filePath}";\n` +
-				`export default ({ theme: { cursorSize = ${CURSOR_BASE_SIZE}, cursorFill = "white" } }) =>\n` +
+				`export default ({ theme: { systemCursorConfig: { cursorSize = ${CURSOR_BASE_SIZE}, cursorFill = "white" } } }) =>\n` +
 				`\`url("\${svg}?cursor=&size=\${Math.min(cursorSize, ${CURSOR_MAX_SIZE})}&fill=\${encodeURIComponent(cursorFill)}") \${${hotspotX} / ${baseWidth} * Math.min(cursorSize, ${CURSOR_MAX_SIZE})} \${${hotspotY} / ${baseWidth} * Math.min(cursorSize, ${CURSOR_MAX_SIZE})}, ${fallback}\`;`
 			);
 		},

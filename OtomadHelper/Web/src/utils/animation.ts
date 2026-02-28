@@ -92,7 +92,7 @@ export async function resetAnimation(element: HTMLElement) {
 	element.style.animation = "none";
 	// element.offsetHeight; // Performing reflow is laggier than raf.
 	await nextAnimationTick();
-	element.style.animation = null!;
+	element.style.animation = "";
 }
 
 const isReduceMotion = () => useMediaQuery.reduceMotion({ noHook: true });
@@ -247,7 +247,7 @@ export async function* animateSizeGenerator(
 	const htmlElement = element as HTMLElement;
 	if (!noClipping) htmlElement.style.overflow = "clip";
 	const result = element.animate(keyframes, animationOptions);
-	if (!noClipping && !keepClippingAtEnd) result.addEventListener("finish", () => htmlElement.style.removeProperty("overflow"));
+	if (!noClipping && !keepClippingAtEnd) result.addEventListener("finish", () => htmlElement.style.overflow = "");
 	if (startChildTranslate || endChildTranslate || attachAnimations) {
 		const onlyChild = element.children[0]; // Take only one child element.
 		if (onlyChild && element instanceof HTMLElement && removeGlitchFrame) {

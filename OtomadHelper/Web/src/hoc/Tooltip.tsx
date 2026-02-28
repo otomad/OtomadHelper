@@ -151,7 +151,7 @@ export default function Tooltip({ title: _title, placement, offset, timeout = 50
 		if (childEl.style.anchorName) anchorName.current = childEl.style.anchorName;
 		else childEl.style.anchorName = newAnchorName;
 		return () => {
-			if (childEl.style.anchorName?.startsWith(DEFAULT_TOOLTIP_ANCHOR_PREFIX)) childEl.style.anchorName = null!;
+			if (childEl.style.anchorName?.startsWith(DEFAULT_TOOLTIP_ANCHOR_PREFIX)) childEl.style.anchorName = "";
 		};
 	}, [childEl]);
 

@@ -90,7 +90,7 @@ const cleanupFocusHighlightEffect = () => {
 	}
 	for (const el of document.getElementsByClassName(FOCUS_HIGHLIGHT_CLASS) as HTMLCollectionOf<HTMLElement>) {
 		el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
-		el.style.anchorName = null!;
+		el.style.anchorName = "";
 	}
 };
 window.addEventListener("mouseup", e => e.isTrusted && cleanupFocusHighlightEffect(), true);
@@ -146,7 +146,7 @@ export async function makeFocusHighlightEffect(element: TargetType, options?: Ov
 		ring.remove();
 		if (el.style.anchorName === anchorName) {
 			el.classList.remove(FOCUS_HIGHLIGHT_CLASS);
-			el.style.anchorName = null!;
+			el.style.anchorName = "";
 		}
 	}
 }

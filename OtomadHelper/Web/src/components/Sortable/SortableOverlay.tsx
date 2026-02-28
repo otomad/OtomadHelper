@@ -55,7 +55,7 @@ const dropAnimationConfig = (emits: SortableOverlayEmits): DropAnimation => asyn
 	await transformAnimation.finished;
 	transformAnimation.commitStyles();
 
-	active.node.style.opacity = null!;
+	active.node.style.opacity = "";
 	dragOverlay.node.hidden = true;
 	active.node.classList.remove("dragging");
 	emits.onDropped?.(e);

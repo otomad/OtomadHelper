@@ -81,11 +81,7 @@ export function SortableView<TItem extends BaseItem>({ items: itemsStateProperty
 
 	const [active, _setActive] = useState<Active | null>(null);
 	const setActive = setStateInterceptor(_setActive, undefined, active => forceCursor(active ? (verticalDragOnly ? nsResizeDraggingCur : moveDraggingCur)({ theme }) : null));
-	const activeItem = useMemo(() => {
-		const index = items.findIndex(item => getItemId(item) === active?.id);
-		if (index === -1) return null;
-		return [states[index], index, items[index]] as const;
-	}, [active, items]);
+	const activeIndex = useMemo(() => items.findIndex(item => getItemId(item) === active?.id), [active, items]);
 	const sensors = useSensors(
 		useSensor(PointerSensor, { activationConstraint: minDistance ? minimumDistanceActivationConstraint : undefined }),
 		disableKeyboardSensor ? undefined : useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
@@ -99,7 +95,7 @@ export function SortableView<TItem extends BaseItem>({ items: itemsStateProperty
 		}
 		setActive(null);
 	};
-	const getSortableItem = (expectedPin?: PinTo) => items.map((item, index) => {
+	const getSortableItems = (expectedPin?: PinTo) => items.map((item, index) => {
 		const id = getItemId(item), pin = getItemPin(item);
 		if (expectedPin !== pin) return;
 		return (
@@ -115,10 +111,11 @@ export function SortableView<TItem extends BaseItem>({ items: itemsStateProperty
 			</SortableItem>
 		);
 	});
+	const sortableItems = getSortableItems();
 
 	return (
 		<StyledSortableView className={view}>
-			{getSortableItem("top")}
+			{getSortableItems("top")}
 			<DndContext
 				sensors={sensors}
 				onDragStart={({ active }) => setActive(active)}
@@ -127,13 +124,15 @@ export function SortableView<TItem extends BaseItem>({ items: itemsStateProperty
 				modifiers={modifiers}
 			>
 				<SortableContext items={items} strategy={verticalDragOnly ? verticalListSortingStrategy : undefined}>
-					{getSortableItem()}
+					{sortableItems}
 				</SortableContext>
 				<SortableOverlay {...overlayEmits} modifiers={modifiers}>
-					{activeItem?.[2] && addDatasets(children(...activeItem), getItemId(activeItem[2]), activeItem[1], view)}
+					{sortableItems[activeIndex]}
+					{/* {addDatasets(children(states[activeIndex], activeIndex, items[activeIndex]), getItemId(items[activeIndex]), activeIndex, view)?.[activeIndex]} */}
+					{/* { activeItem?.[2] && addDatasets(children(...activeItem!), getItemId(activeItem![2]), activeItem![1], view)} */}
 				</SortableOverlay>
 			</DndContext>
-			{getSortableItem("bottom")}
+			{getSortableItems("bottom")}
 		</StyledSortableView>
 	);
 }

@@ -486,3 +486,7 @@ flagWords:
   - indention -> indentation
   - miragate -> migrate
   - migarate -> migrate
+  - blacklist -> blocklist
+  - whitelist -> allowlist
+  - blacklists -> blocklists
+  - whitelists -> allowlists

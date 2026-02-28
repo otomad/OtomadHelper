@@ -20,11 +20,16 @@ declare global {
 		}
 
 		export interface SystemConfig {
-			colorization?: string | null;
-			lightAccentColor?: string | null;
-			darkAccentColor?: string | null;
-			cursorSize: number;
-			cursorFill: string;
+			accentPalette?: {
+				colorization?: string | null;
+				lightAccentColor?: string | null;
+				darkAccentColor?: string | null;
+			};
+			systemCursorConfig: {
+				cursorSize: number;
+				cursorFill: string;
+			};
+			panelBackgroundColor?: string | null;
 		}
 
 		export interface VegasCommandEvent {

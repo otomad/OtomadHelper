@@ -6,6 +6,7 @@ export type ApplicationEvents = {
 	"host:contextMenuItemClickEventArgs": [WebMessageEvents.ContextMenuItemClickEventArgs];
 	"host:systemConfig": [WebMessageEvents.SystemConfig];
 	"host:vegasCommandEvent": [WebMessageEvents.VegasCommandEvent];
+	"host:initializedFadeIn": [never];
 	"dev:showContextMenu": [e: MouseEvent, menu: typeof window["contextMenu"] & {}];
 	"app:toast": [message: string, status?: Status];
 	"app:hideOtherFlyouts": [exceptId?: string];
