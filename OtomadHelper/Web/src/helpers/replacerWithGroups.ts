@@ -15,6 +15,7 @@ type GetNamedGroups<TGroupNames extends string | undefined> = Record<NonNull<TGr
  * it is very troublesome to obtain the named grouping parameter, and you also need to skip the damn index grouping
  * that is now meaningless from the parameters.
  *
+ * @template TGroupNames - Named grouping parameters string union.
  * @param replacer - New replacer callback. The arguments are:
  * ```typescript
  * [

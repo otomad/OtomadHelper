@@ -1,6 +1,11 @@
 namespace OtomadHelper.Helpers;
 
 public static class ContentType {
+	/// <summary>
+	/// Get content type or mime type from extension.
+	/// </summary>
+	/// <param name="extension">Extension without dot.</param>
+	/// <returns>Content type or mime type.</returns>
 	public static string GetContentType(string extension) => extension switch {
 		// Texts
 		"html" or "htm" => "text/html",

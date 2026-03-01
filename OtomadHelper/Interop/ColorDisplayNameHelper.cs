@@ -3,6 +3,9 @@ using System.Windows.Media;
 
 namespace OtomadHelper.Interop;
 
+/// <summary>
+/// A helper class to get the localized display name of a color by <c>Windows.UI.ColorHelper.ToDisplayName()</c>.
+/// </summary>
 public static class ColorDisplayNameHelper {
 	static ColorDisplayNameHelper() {
 		UpdateColorStrings(Culture);
@@ -15,6 +18,13 @@ public static class ColorDisplayNameHelper {
 
 	private static Dictionary<KnownColors, string> ColorStrings { get; set; } = [];
 
+	/// <summary>
+	/// Check if the function is available.
+	/// </summary>
+	/// <remarks>
+	/// If the "Windows.UI.Xaml.dll(.mui)" file is not existed, or it doesn't contain color display names (Windows 8.x),
+	/// or the system doesn't contain the mui file of current language / culture.
+	/// </remarks>
 	public static bool IsAvailable => ColorStrings.Count > 0 &&
 		WindowsVersion.Current >= WindowsNT.Windows10; // Although Windows 8.x has "Windows.UI.Xaml.dll.mui" file, it doesn't include color display name strings.
 
@@ -29,6 +39,15 @@ public static class ColorDisplayNameHelper {
 			ColorStrings[resourceId] = dll.GetString((uint)resourceId);
 	}
 
+
+	/// <summary>
+	/// Retrieves the display name of the specified color.
+	/// </summary>
+	/// <remarks>
+	/// The localized display name of color same as it in Microsoft Paint.
+	/// </remarks>
+	/// <param name="color">The color to get the name for.</param>
+	/// <returns>The localized display name of the color.</returns>
 	public static string ToDisplayName(Color color) {
 		//return Windows.UI.ColorHelper.ToDisplayName(Windows.UI.Color.FromArgb(color.A, color.R, color.G, color.B));
 		if (!IsAvailable) return string.Empty;

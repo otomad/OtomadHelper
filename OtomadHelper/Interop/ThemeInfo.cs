@@ -22,6 +22,9 @@ public class ThemeInfo {
 	public string ThemeSize { get; }
 	public string ThemeFileName { get; }
 
+	/// <summary>
+	/// Get information about current Windows theme.
+	/// </summary>
 	public static ThemeInfo Current {
 		get {
 			StringBuilder fileName = NewBuffer(), color = NewBuffer(), size = NewBuffer();
@@ -34,7 +37,7 @@ public class ThemeInfo {
 		}
 	}
 
-	[DllImport("uxtheme", CharSet = CharSet.Auto)]
+	[DllImport("uxtheme.dll", CharSet = CharSet.Auto)]
 	private static extern int GetCurrentThemeName(
 		StringBuilder pszThemeFileName,
 		int dwMaxNameChars,
