@@ -15,6 +15,7 @@ const StyledPositionControl = styled.div`
 	background-clip: padding-box;
 	border: 1px solid ${c("stroke-color-control-stroke-default")};
 	border-radius: 13px;
+	touch-action: none;
 
 	&[disabled] {
 		background-color: ${c("background-fill-color-card-background-secondary")};

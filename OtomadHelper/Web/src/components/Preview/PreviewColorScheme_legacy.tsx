@@ -40,7 +40,7 @@ const StyledPreviewColorScheme = styled.div.attrs({
 	}
 
 	.circular > * {
-		${styles.mixins.absoluteCenter(undefined)};
+		${styles.mixins.absoluteCenter()};
 
 		${forMap(TAB_ITEM_COUNT, i => css`
 			&:nth-child(${i + 1}) {

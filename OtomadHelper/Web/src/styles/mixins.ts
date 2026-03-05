@@ -42,24 +42,13 @@ export default {
 		place-items: center;
 	`,
 	/**
-	 * Center an element with **unknown size** that positioning out of flow (absolute or fixed).
+	 * Center an element that positioning out of flow (absolute or fixed).
 	 * @param position - Specify the `position` property of the element. Must be `absolute` or `fixed`.
 	 */
 	absoluteCenter: (position: OutOfFlowPositions = "absolute") => css`
 		position: ${position};
-		top: 50%;
-		left: 50%;
-		place-self: anchor-center;
-	`,
-	/**
-	 * Center an element with **known size** that positioning out of flow (absolute or fixed).
-	 * @note You have to specify the width and height while using the mixin.
-	 * @param position - Specify the `position` property of the element. Must be `absolute` or `fixed`.
-	 */
-	absoluteCenterSized: (position: OutOfFlowPositions = "absolute") => css`
-		position: ${position};
 		inset: 0;
-		margin: auto;
+		place-self: center;
 	`,
 	/**
 	 * Become a square.
