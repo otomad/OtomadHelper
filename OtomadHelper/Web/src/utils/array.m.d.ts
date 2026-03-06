@@ -416,7 +416,7 @@ declare interface Array<T> {
 	 * and you want it to happen in all of your code, you could merge in a custom declaration.
 	 * @see https://stackoverflow.com/a/56745484/19553213
 	 */
-	includes(searchElement: any, fromIndex?: number): boolean;
+	includes(searchElement: any, fromIndex?: number): searchElement is T;
 
 	/**
 	 * Returns the next item in the array relative to the current item, with optional offset and wrapping.
@@ -693,7 +693,7 @@ declare interface ReadonlyArray<T> extends Pick<Array<T>,
 	 * and you want it to happen in all of your code, you could merge in a custom declaration.
 	 * @see https://stackoverflow.com/a/56745484/19553213
 	 */
-	includes(searchElement: any, fromIndex?: number): boolean;
+	includes(searchElement: any, fromIndex?: number): searchElement is T;
 }
 
 declare interface Set<T> {

@@ -96,7 +96,7 @@ const StyledComboBox = styled(StyledButton)(() => css`
 				backdrop-filter: blur(60px);
 				transition: if(
 					${ifColorScheme.reduceMotion}: none;
-					else: ${fallbackTransitions}, width 0s, height 0s;
+					else: ${fallbackTransitions}, width 0s, height 0s, inset-block-start step-end 250ms;
 				);
 				transition-behavior: allow-discrete;
 
@@ -108,6 +108,10 @@ const StyledComboBox = styled(StyledButton)(() => css`
 					@starting-style {
 						opacity: 0;
 					}
+				}
+
+				&:not(:popover-open) {
+					--top-transition-timing-function: step-end;
 				}
 			}
 

@@ -55,7 +55,7 @@ export default function Img({ src, duplicate, ref, ...htmlAttrs }: FCP<{
 		if (!contents) return;
 		let image = images.get(source);
 		imageEl.current = image;
-		if ([...contents.childNodes].includes(image)) return;
+		if ([...contents.childNodes].includes(image as ChildNode)) return;
 		contents.childNodes.forEach(node => node.remove());
 		if (image.parentNode) image = image.cloneNode() as HTMLImageElement;
 		resetImageAttributes(image, htmlAttrs);

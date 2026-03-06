@@ -27,7 +27,7 @@ export default function (babel: typeof babelCore): PluginObj {
 	 */
 	function isTRelated(node: Node, filename?: string) {
 		if (t.isIdentifier(node)) {
-			if (tRoots.includes(node.name)) return node.name as typeof tRoots[number];
+			if (tRoots.includes(node.name)) return node.name;
 			if (filename && tAliases.get(filename)?.has(node.name)) return "t";
 			return false;
 		}

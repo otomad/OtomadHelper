@@ -851,7 +851,7 @@ export default function Grid() {
 										data-column-end={colEnd}
 										data-row-start={rowStart}
 										data-row-end={rowEnd}
-										onMouseDown={mod.right.rightMiddle.leftRightMiddle(e => focusDiffusion(e.currentTarget.parentElement, corners))}
+										onMouseDown={mod.right(e => focusDiffusion(e.currentTarget.parentElement, corners))}
 										onContextMenu={createContextMenu(([
 											...square ? [
 												{ label: t.descriptions.track.grid.squareCannotUseTheseFeatures({ fixed: fixedColumnsOrFixedRows }) },
@@ -927,7 +927,7 @@ export default function Grid() {
 					</Determinant>
 
 					<Attrs hidden={!flyoutEditor}>
-						<Mask onMouseDown={mod.handled(e => closeFlyoutEditor())} />
+						<Mask onMouseDown={mod.handled(() => closeFlyoutEditor())} />
 						<FlyoutEditor>
 							{_flyoutEditor === "span" ? (
 								<div className="span">
