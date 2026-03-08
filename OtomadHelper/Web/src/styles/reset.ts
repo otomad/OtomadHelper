@@ -19,13 +19,13 @@ export default css`
 
 		input,
 		textarea,
-		[contenteditable]:not([contenteditable="false"]) {
+		[contenteditable]:not([contenteditable="false" i]) {
 			field-sizing: content;
 
 			@supports (caret-animation: manual) {
 				caret-animation: if(
 					media(prefers-reduced-motion: no-preference): manual;
-						else: auto;
+					else: auto;
 				);
 
 				&:focus {
@@ -67,7 +67,7 @@ export default css`
 			border-collapse: collapse;
 		}
 
-		[role="region"][aria-labelledby][tabindex] {
+		[role="region" i][aria-labelledby][tabindex] {
 			overflow: auto;
 		}
 
@@ -123,8 +123,13 @@ export default css`
 		}
 
 		// Hidden style overrides for the ID selector.
-		[hidden] {
+		[hidden=""],
+		[hidden="hidden" i] {
 			display: none !important;
+		}
+
+		[hidden="until-found" i] {
+			content-visibility: hidden !important;
 		}
 
 		// Remove the unexpected margins in headings and paragraphs.
