@@ -17,12 +17,12 @@ const StyledTooltip = styled.div`
 
 	.base {
 		flex-shrink: 0;
-		block-size: max-content;
 		max-width: if(
 			media(width < 576px): 100dvw;
 			media(width < 768px): 75dvw;
 			else: 50dvw;
 		);
+		block-size: max-content;
 		padding: 6px 8px;
 		white-space-collapse: preserve-breaks;
 		text-wrap: wrap; // Disable pretty text-wrap, because if line breaks, there are too many blank at the right.
