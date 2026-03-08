@@ -402,6 +402,7 @@ namespace Config {
 			accentColor: "wallpaper",
 			backgroundColor: "windows",
 			fontSize: 14,
+			fontFamily: "",
 			hideUseTips: false,
 			autoSwitchSourceFrom: true,
 			autoCollapsePrveClasses: true,

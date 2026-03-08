@@ -1398,7 +1398,7 @@ export default {
 						blackScheme: "黑色配色方案已启用，此时{{option, lowercase}}选项不会生效。",
 					},
 					fontSize: {
-						info: "当前设定的界面标准文本字体大小为 **{{current}}点**；\n默认字体大小为{{default}}点。",
+						info: "当前设定的界面标准文本字体大小为**{{current}}点**；\n默认字体大小为{{default}}点。",
 						sampleText: "海浪的声音平静了我的心灵。",
 					},
 					contrastPaletteEvaluation: {

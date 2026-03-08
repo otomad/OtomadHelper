@@ -1005,6 +1005,8 @@ export default {
 					solid: "Solid",
 				},
 				fontSize: "Font size",
+				fontFamily: "Font",
+				defaultFontFamily: "Default font",
 			},
 			preference: {
 				_: "Preferences",

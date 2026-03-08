@@ -80,7 +80,8 @@ const StyledComboBox = styled(StyledButton)(() => css`
 
 			&::picker(select) {
 				position: fixed;
-				inset-block-start: calc(anchor(start) - 3px - ${OPTION_HEIGHT}px * var(--selected-index));
+				position-area: none;
+				inset-block-start: max(0dvh, calc(anchor(start) - 3px - ${OPTION_HEIGHT}px * var(--selected-index)));
 				inset-inline-start: calc(anchor(start) - 3px);
 				inline-size: calc(anchor-size(self-inline) + 7px);
 				padding: 2px;
@@ -205,14 +206,17 @@ export default function ComboBox<T extends string | number>(props: FCP<{
 	icons?: readonly DeclaredIcons[];
 	/** The selected option of the combo box. */
 	current: StateProperty<T>;
+	/** Additional attributes mapped by ID for option elements (base select appearance only). */
+	optionAttrs?: (id: T) => PropsOf<"option">;
 	value?: never;
 }, "select">): React.JSX.Element;
 export default function ComboBox(props: FCP<{}, "select">): React.JSX.Element;
-export default function ComboBox<T extends string | number>({ ids = [], options = [], icons = [], current: [current, setCurrent] = NEVER_MIND, disabled, ...htmlAttrs }: FCP<{
+export default function ComboBox<T extends string | number>({ ids = [], options = [], icons = [], current: [current, setCurrent] = NEVER_MIND, disabled, optionAttrs, ...htmlAttrs }: FCP<{
 	ids?: readonly T[];
 	options?: readonly Readable[];
 	icons?: readonly DeclaredIcons[];
 	current?: StateProperty<T>;
+	optionAttrs?: (id: T) => PropsOf<"option">;
 }, "select">) {
 	const [iconSvgs, setIconSvgs] = useState<string[]>();
 	const hasIcons = icons.length > 0;
@@ -272,7 +276,7 @@ export default function ComboBox<T extends string | number>({ ids = [], options 
 					<Icon name="chevron_down" className="chevron" />
 				</button>
 				{ids.map((id, i) => (
-					<option key={id} value={id}>
+					<option key={id} value={id} {...optionAttrs?.(id)}>
 						{hasIcons && (icons[i] ? <Icon name={icons[i]} /> : <Icon shadow />)}
 						{options[i]}
 					</option>

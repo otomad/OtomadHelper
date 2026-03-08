@@ -99,7 +99,7 @@ declare global {
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map/getOrInsert) */
 		getOrInsert(key: K, defaultValue: V): V;
 
-		/** [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/getOrInsertCompute) */
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map/getOrInsertComputed) */
 		getOrInsertComputed(key: K, computeFn: (key: K) => V): V;
 	}
 }
@@ -184,6 +184,28 @@ declare global {
 		 * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/scheduler)
 		 */
 		scheduler: Scheduler;
+	}
+}
+// #endregion
+
+// #region Local Font Access API
+declare global {
+	interface FontData {
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FontData/family) */
+		readonly family: string;
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FontData/fullName) */
+		readonly fullName: string;
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FontData/postscriptName) */
+		readonly postscriptName: string;
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FontData/style) */
+		readonly style: string;
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FontData/blob) */
+		blob(): Promise<Blob>;
+	}
+
+	declare interface Window {
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/queryLocalFonts) */
+		queryLocalFonts(): Promise<FontData[]>;
 	}
 }
 // #endregion

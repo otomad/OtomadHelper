@@ -362,6 +362,7 @@ export const settingsMetasInput = {
 				transparency: { icon: "glass" },
 				backgroundImage: { icon: "wallpaper" },
 				fontSize: { icon: "text_font_size" },
+				fontFamily: { icon: "text_font" },
 			},
 		},
 		preference: {

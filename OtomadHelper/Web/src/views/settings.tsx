@@ -59,7 +59,7 @@ export default function Settings() {
 	const { scheme: [scheme, setScheme], amoledDark: [amoledDark, setAmoledDark], contrast: [contrast, setContrast] } = useStoreState(colorModeStore);
 	const { black: actualAmoledDark, contrast: actualContrast } = useActualColorScheme();
 	const {
-		fontSize, hideUseTips, autoSwitchSourceFrom, autoCollapsePrveClasses, previewWithSource,
+		fontSize, fontFamily, hideUseTips, autoSwitchSourceFrom, autoCollapsePrveClasses, previewWithSource,
 		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur,
 		systemBackdrop, accentColor, backgroundColor,
 	} = useSelectConfig(c => c.settings);
@@ -384,6 +384,21 @@ export default function Settings() {
 						<p className="sample">{t.descriptions.settings.appearance.fontSize.sampleText}</p>
 						<p className="info"><Preserves soft>{t.descriptions.settings.appearance.fontSize.info({ current: fontSize[0], default: 14 })}</Preserves></p>
 					</SampleTextFontSize>
+				</Expander.ChildWrapper>
+			</Setting>
+			<Setting
+				meta={meta.appearance.fontFamily}
+				checkInfo={fontFamily[0]}
+				expanded={DEV_EXPANDED}
+			>
+				<Expander.ChildWrapper>
+					<FontPicker font={fontFamily} />
+				</Expander.ChildWrapper>
+				<Expander.ChildWrapper $noDivider>
+					<Button icon="arrow_reset" onClick={() => fontFamily[1]("")}>{t.resetToDefault}</Button>
+				</Expander.ChildWrapper>
+				<Expander.ChildWrapper $single>
+					<center>{t.descriptions.settings.appearance.fontSize.sampleText}</center>
 				</Expander.ChildWrapper>
 			</Setting>
 

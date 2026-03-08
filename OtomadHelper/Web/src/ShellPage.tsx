@@ -125,3 +125,5 @@ export default function ShellPage() {
 		</NavigationView>
 	);
 }
+
+subscribeStoreKey(configStore.settings, "fontFamily", fontFamily => document.documentElement.style.setProperty("--custom-font-family", fontFamily));

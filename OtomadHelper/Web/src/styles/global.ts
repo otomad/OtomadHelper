@@ -29,7 +29,7 @@ const GlobalStyle = createGlobalStyle<{
 		box-sizing: border-box;
 		scroll-behavior: smooth;
 		// Kick out the \`system-ui\`.
-		font-family: "Yozora Sans", Inter, "Segoe UI Variable", "Segoe UI", var(--cjk-font-family), "Microsoft YaHei UI", sans-serif;
+		font-family: var(--custom-font-family), "Yozora Sans", Inter, "Segoe UI Variable", "Segoe UI", var(--cjk-font-family), "Microsoft YaHei UI", sans-serif;
 		font-optical-sizing: auto;
 		hyphens: auto;
 		hyphenate-limit-chars: 10;
@@ -298,6 +298,7 @@ const GlobalStyle = createGlobalStyle<{
 		--fill-color-system-accent-background: rgb(from var(--accent-color) r g b / 15%);
 		--fallback-transitions: ${FALLBACK_TRANSITIONS};
 		--fallback-transitions-for-contrast-scheme: content 0s; // Placeholder for a invalid property.
+		--custom-font-family: --custom-font-family-placeholder;
 	}
 
 	// Color mode transition
