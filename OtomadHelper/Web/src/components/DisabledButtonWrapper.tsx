@@ -9,7 +9,7 @@ const StyledDisabledButtonWrapper = styled.div`
 		position: absolute;
 		inset-block-start: -2px;
 		inset-inline-end: -2px;
-		cursor: pointer;
+		cursor: help;
 	}
 `;
 

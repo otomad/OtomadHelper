@@ -188,6 +188,7 @@ const StyledGradientFlyoutEditor = styled.div`
 		position: absolute;
 		inset-block-start: 3px;
 		inset-inline-end: 3px;
+		cursor: help;
 	}
 `;
 
