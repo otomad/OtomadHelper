@@ -733,14 +733,14 @@ export default function Grid() {
 									))}
 								</ItemsView>
 							</CommandBar.Item>
-							<CommandBar.Item icon={fit[0] === "contain" ? "letterbox" : fit[0] === "overlay" ? "photo_filter" : "aspect_ratio"} caption={t.fit} details={t.descriptions.track.grid.fit} hovering onClick={() => fit[1](fit => fitTypes.nextItem(fit))}>
+							<CommandBar.Item icon={fit[0] === "contain" ? "letterbox" : fit[0] === "overlay" ? "shape_intersect_square" : "aspect_ratio"} caption={t.fit} details={t.descriptions.track.grid.fit} hovering onClick={() => fit[1](fit => fitTypes.nextItem(fit))}>
 								<ItemsView view="list" current={fit}>
 									{...fitTypes.flatMap(option => [
 										option === "overlay" && <hr />,
 										<ItemsView.Item
 											id={option}
 											key={option}
-											icon={option === "contain" ? "letterbox" : option === "overlay" ? "photo_filter" : "aspect_ratio"}
+											icon={option === "contain" ? "letterbox" : option === "overlay" ? "shape_intersect_square" : "aspect_ratio"}
 											details={t.descriptions.track.grid.fit[option]}
 										>
 											{t.fit[option]}

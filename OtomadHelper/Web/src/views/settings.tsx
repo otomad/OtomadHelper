@@ -106,7 +106,12 @@ export default function Settings() {
 				imageField={language => <PreviewLanguage language={language} />}
 				detailsField={language => {
 					const [hasTranslator, formattedTranslator] = listFormatTranslators(language, currentLanguage);
-					return hasTranslator ? formattedTranslator : undefined;
+					return hasTranslator && (
+						<StackPanel $gap={4}>
+							<Icon name="person_12px" size={12} />
+							<span>{formattedTranslator}</span>
+						</StackPanel>
+					);
 				}}
 				ariaLabelField={language => t.metadata.name({ lng: language })}
 				ariaDescriptionField={language => currentLanguage === language ? "" : getLocaleName(language, currentLanguage)}

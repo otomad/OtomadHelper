@@ -31,7 +31,7 @@ export function IconTile({ name, size }: FCP<{
 
 	return (
 		<StyledIconTile role="img" className="no-border">
-			<Icon name={iconName} style={{ fontSize: size + "px" }} filled />
+			<Icon name={iconName} size={size} filled />
 		</StyledIconTile>
 	);
 }

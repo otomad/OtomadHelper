@@ -27,15 +27,17 @@ const StyledIcon = styled.i<{
 export const getIconSymbolId = (name: string) => `#icon-${name.replaceAll("/", "-")}` as const;
 export const getIconAriaLabel = (name: string) => `Icon - ${name.replace(/^off_slash_alt\//, "").replaceAll("_", " ").replaceAll("/", ": ")}` as const;
 
-function IconWrapper({ filled, shadow, label, children, className, ...htmlAttrs }: FCP<{
+function IconWrapper({ filled, shadow, label, size, children, className, style, ...htmlAttrs }: FCP<{
 	filled?: boolean;
 	shadow?: boolean;
 	label?: string;
+	size?: number;
 }, "i">) {
 	return (
 		<StyledIcon
 			$filled={filled}
 			className={[{ shadow }, className]}
+			style={{ ...style, fontSize: styles.toValue(size) }}
 			{...htmlAttrs}
 			role="img"
 			aria-description={label}
@@ -51,6 +53,8 @@ export default function Icon(props: FCP<{
 	name: DeclaredIcons | "" | boolean;
 	/** Keep the color of the icon itself? */
 	filled?: boolean;
+	/** Specify the icon size. */
+	size?: number;
 	children?: never;
 }, "i">): React.JSX.Element;
 export default function Icon(props: FCP<{
@@ -58,14 +62,18 @@ export default function Icon(props: FCP<{
 	svgr: typeof import("*.svg?react").default;
 	/** Keep the color of the icon itself? */
 	filled?: boolean;
+	/** Specify the icon size. */
+	size?: number;
 	children?: never;
 }, "i">): React.JSX.Element;
 export default function Icon(props: FCP<{
 	/** Hold the place, but nothing shown? */
 	shadow: boolean;
+	/** Specify the icon size. */
+	size?: number;
 	children?: never;
 }, "i">): React.JSX.Element;
-export default function Icon({ name, svgr: SvgR, filled, shadow, ...htmlAttrs }: FCP<{
+export default function Icon({ name, svgr: SvgR, filled, shadow, size, ...htmlAttrs }: FCP<{
 	/**
 	 * Icon file name.
 	 * - If it is a boolean, it will be disguised as a (fake) icon element, but the content will be empty.
@@ -78,9 +86,11 @@ export default function Icon({ name, svgr: SvgR, filled, shadow, ...htmlAttrs }:
 	filled?: boolean;
 	/** Hold the place, but nothing shown? */
 	shadow?: boolean;
+	/** Specify the icon size. */
+	size?: number;
 }, "i">) {
-	if (shadow) return <IconWrapper shadow {...htmlAttrs} />;
-	if (SvgR) return <IconWrapper filled={filled} {...htmlAttrs}><SvgR /></IconWrapper>;
+	if (shadow) return <IconWrapper shadow size={size} {...htmlAttrs} />;
+	if (SvgR) return <IconWrapper filled={filled} size={size} {...htmlAttrs}><SvgR /></IconWrapper>;
 	if (typeof name === "boolean") return <i hidden {...htmlAttrs} />;
 	if (!name) return;
 
@@ -90,7 +100,7 @@ export default function Icon({ name, svgr: SvgR, filled, shadow, ...htmlAttrs }:
 	if (filled === undefined && name.startsWith("colored/")) filled = true;
 
 	return (
-		<IconWrapper filled={filled} label={ariaLabel} {...htmlAttrs}>
+		<IconWrapper filled={filled} label={ariaLabel} size={size} {...htmlAttrs}>
 			<svg aria-hidden>
 				<use href={symbolId} />
 			</svg>

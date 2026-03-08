@@ -1,9 +1,15 @@
 const StackPanel = styled.div<{
+	/** The flow direction. @default "horizontal" */
 	$direction?: "horizontal" | "vertical";
+	/** The gap between items. Unit: px. @default 8 */
 	$gap?: Numberish | [rowGap: Numberish, columnGap: Numberish];
+	/** The alignment of items. @default "normal" */
 	$align?: CSSProperties["justifyContent"];
+	/** If some items are wrapping to the second line, they will align to right (last). @default false */
 	$endAlignWhenWrap?: boolean;
+	/** Disable line wrap. @default false */
 	$nowrap?: boolean;
+	/** Sticky it to the top (block start). @default false */
 	$sticky?: boolean;
 }>`
 	display: flex;
@@ -26,7 +32,7 @@ const StackPanel = styled.div<{
 
 	${ifProp("$sticky", css`
 		position: sticky;
-		top: 0;
+		inset-block-start: 0;
 		z-index: 1;
 	`)}
 `;
