@@ -23,6 +23,8 @@ const GradientStyles = Enum({
 	opacity: { label: t.settings.appearance.backgroundImage.opacity },
 });
 
+type StyleType = typeof ParityStyles.keyType | typeof GradientStyles.keyType;
+
 const ParityPatterns = Enum({
 	none: { label: t.none, icon: "dismiss_square" },
 	all: { label: t.all, icon: "checkmark_square" },
@@ -198,15 +200,15 @@ export default function GradientFlyoutEditor() {
 	const tc = tAlias.track.gradient;
 	const [currentPage, setCurrentPage] = useState<"style" | "pattern">("style");
 	const [currentPattern, setCurrentPattern] = useState<"parity" | "gradient">("parity");
-	const [currentStyle, setCurrentStyle] = useState("hFlip");
+	const [currentStyle, setCurrentStyle] = useState<StyleType>("hFlip");
 	const titles = useMemo<PropsOf<typeof Breadcrumb>["titles"]>(() => [
 		{ name: t.titles.gradient({ context: "short" }), onClick: () => setCurrentPage("style") },
-		currentPage === "pattern" && { name: ParityStyles.has(currentStyle) ? ParityStyles.allKeyed[currentStyle].label : GradientStyles.has(currentStyle) ? GradientStyles.allKeyed[currentStyle].label : "" },
+		currentPage === "pattern" && { name: ParityStyles.has(currentStyle) ? ParityStyles.allKeys[currentStyle].label : GradientStyles.has(currentStyle) ? GradientStyles.allKeys[currentStyle].label : "" },
 	], [currentPage]);
 	const prevTitles = usePrevious(titles);
 	const transitionName = useMemo(() => titles.toCompacted().length < (prevTitles?.toCompacted().length ?? NaN) ? "forward" : "backward", [titles, prevTitles]);
 
-	function clickAStyle(pattern: typeof currentPattern, style: string) {
+	function clickAStyle(pattern: typeof currentPattern, style: StyleType) {
 		setCurrentPattern(pattern);
 		setCurrentStyle(style);
 		setCurrentPage("pattern");

@@ -83,8 +83,8 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3
       enum-plus:
-        specifier: ^3.1.6
-        version: 3.1.6(patch_hash=d6230efff6fc9386cb997731a664f9fd5f22f32d3df42d207efe117f863fb1d9)
+        specifier: ^3.1.8
+        version: 3.1.8(patch_hash=d6230efff6fc9386cb997731a664f9fd5f22f32d3df42d207efe117f863fb1d9)
       fullwidth-quotes:
         specifier: ^1.0.1
         version: 1.0.1
@@ -2752,8 +2752,8 @@ packages:
     resolution: {integrity: sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==}
     engines: {node: '>=0.12'}
 
-  enum-plus@3.1.6:
-    resolution: {integrity: sha512-9nHr0FqFpDYHlSFGyMOKVOCqm5TxqxZ00UWI3a+oHBkUc7bvD2O0ELfb22ijbfb/B2aTl4jKz0gXV9z3f3nJ5Q==}
+  enum-plus@3.1.8:
+    resolution: {integrity: sha512-g2V3Bxj38a9x3bkBHiufnHpNJ5/LtUnEChZ5TXQEcCoLvK9T815GJALryBhcL/c40lU+Msa6P+hF8z7D7VO9vQ==}
     engines: {node: '>=7.10.1'}
 
   env-paths@2.2.1:
@@ -8575,7 +8575,7 @@ snapshots:
 
   entities@7.0.1: {}
 
-  enum-plus@3.1.6(patch_hash=d6230efff6fc9386cb997731a664f9fd5f22f32d3df42d207efe117f863fb1d9): {}
+  enum-plus@3.1.8(patch_hash=d6230efff6fc9386cb997731a664f9fd5f22f32d3df42d207efe117f863fb1d9): {}
 
   env-paths@2.2.1: {}
 

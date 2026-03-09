@@ -1,35 +1,35 @@
 import { PREVIEW_LANGUAGE_TEXT_MARGIN as TEXT_MARGIN } from "./PreviewLanguage";
 
 export const Encodings = Enum({
-	ANSI: { value: 0, label: t.default, aliases: ["ANSI"], tags: [] },
-	"UTF-8": { value: 65001, label: "$unicode", aliases: [], tags: ["unicode"] },
-	Shift_JIS: { value: 932, label: "Jpan", aliases: [], tags: [] },
-	GBK: { value: 936, label: "$hans", aliases: ["GB18030", "GB2312"], tags: ["chinese"] },
-	Big5: { value: 950, label: "$hant", aliases: [], tags: ["chinese"] },
-	"EUC-KR": { value: 949, label: "Kore", aliases: ["KS X 1001", "KS_C_5601-1987"], tags: [] },
-	"Windows-1252": { value: 1252, label: "$westernEuropean", aliases: ["ISO-8859-1"], tags: ["windows", "latin"] },
-	Macintosh: { value: 10000, label: "$westernEuropean", aliases: ["Mac OS Roman"], tags: ["latin"] },
-	"UTF-16BE": { value: 1201, label: "$utf16Be", aliases: ["BigEndianUnicode"], tags: ["unicode"] },
-	"UTF-16LE": { value: 1200, label: "$utf16Le", aliases: ["Unicode"], tags: ["unicode"] },
-	"KOI8-R": { value: 20866, label: "Cyrl", aliases: [], tags: [] },
-	"Windows-874": { value: 874, label: "Thai", aliases: [], tags: ["windows"] },
-	"Windows-1250": { value: 1250, label: "$centralEuropean", aliases: [], tags: ["windows", "latin"] },
-	"Windows-1251": { value: 1251, label: "Cyrl", aliases: [], tags: ["windows"] },
-	"Windows-1253": { value: 1253, label: "Grek", aliases: [], tags: ["windows"] },
-	"Windows-1254": { value: 1254, label: "$tr", aliases: [], tags: ["windows", "latin"] },
-	"Windows-1255": { value: 1255, label: "Hebr", aliases: [], tags: ["windows"] },
-	"Windows-1256": { value: 1256, label: "Arab", aliases: [], tags: ["windows"] },
-	"Windows-1257": { value: 1257, label: "$bat", aliases: [], tags: ["windows", "latin"] },
-	"Windows-1258": { value: 1258, label: "$vi", aliases: [], tags: ["windows", "latin"] },
-	"ISO-8859-2": { value: 28592, label: "$centralEuropean", aliases: [], tags: ["iso", "latin"] },
-	"ISO-8859-7": { value: 28597, label: "Grek", aliases: [], tags: ["iso"] },
-	"ISO-8859-8": { value: 28598, label: "Hebr", aliases: [], tags: ["iso"] },
+	ANSI: { value: 0, label: t.default, lang: undefined, aliases: ["ANSI"], tags: [] },
+	"UTF-8": { value: 65001, label: "$unicode", lang: "en", aliases: [], tags: ["unicode"] },
+	Shift_JIS: { value: 932, label: "Jpan", lang: "ja", aliases: [], tags: ["han"] },
+	GBK: { value: 936, label: "$hans", lang: "zh-CN", aliases: ["GB18030", "GB2312"], tags: ["han"] },
+	Big5: { value: 950, label: "$hant", lang: "zh-TW", aliases: [], tags: ["han"] },
+	"EUC-KR": { value: 949, label: "Kore", lang: "ko", aliases: ["KS X 1001", "KS_C_5601-1987"], tags: ["han"] },
+	"Windows-1252": { value: 1252, label: "$westernEuropean", lang: "fr", aliases: ["ISO-8859-1"], tags: ["windows", "iso", "latin"] },
+	Macintosh: { value: 10000, label: "$westernEuropean", lang: "da", aliases: ["Mac OS Roman"], tags: ["latin"] },
+	"UTF-16BE": { value: 1201, label: "$utf16Be", lang: "ko", aliases: ["BigEndianUnicode"], tags: ["unicode"] },
+	"UTF-16LE": { value: 1200, label: "$utf16Le", lang: "ko", aliases: ["Unicode"], tags: ["unicode"] },
+	"KOI8-R": { value: 20866, label: "Cyrl", lang: "ru", aliases: [], tags: [] },
+	"Windows-874": { value: 874, label: "Thai", lang: "th", aliases: [], tags: ["windows"] },
+	"Windows-1250": { value: 1250, label: "$centralEuropean", lang: "pl", aliases: [], tags: ["windows", "latin"] },
+	"Windows-1251": { value: 1251, label: "Cyrl", lang: "ru", aliases: [], tags: ["windows"] },
+	"Windows-1253": { value: 1253, label: "Grek", lang: "el", aliases: [], tags: ["windows"] },
+	"Windows-1254": { value: 1254, label: "$tr", lang: "tr", aliases: [], tags: ["windows", "latin"] },
+	"Windows-1255": { value: 1255, label: "Hebr", lang: "he", aliases: [], tags: ["windows"] },
+	"Windows-1256": { value: 1256, label: "Arab", lang: "ar", aliases: [], tags: ["windows"] },
+	"Windows-1257": { value: 1257, label: "$bat", lang: "lt", aliases: [], tags: ["windows", "latin"] },
+	"Windows-1258": { value: 1258, label: "$vi", lang: "vi", aliases: [], tags: ["windows", "latin"] },
+	"ISO-8859-2": { value: 28592, label: "$centralEuropean", lang: "pl", aliases: [], tags: ["iso", "latin"] },
+	"ISO-8859-7": { value: 28597, label: "Grek", lang: "el", aliases: [], tags: ["iso"] },
+	"ISO-8859-8": { value: 28598, label: "Hebr", lang: "he", aliases: [], tags: ["iso"] },
 }, { localize: localizeCharset });
 
 export const EncodingTags = Enum({
 	all: { label: t.all },
 	unicode: { label: "$unicode" },
-	chinese: { label: "zh" },
+	han: { label: "Hani" },
 	latin: { label: "Latn" },
 	windows: { label: "@Windows" },
 	iso: { label: "@ISO" },
@@ -102,14 +102,15 @@ export default function PreviewEncoding({ encoding }: FCP<{
 	encoding: Config.Encoding;
 	children?: never;
 }, "div">) {
-	const encodingInfo = Encodings.allKeyed[encoding];
+	const encodingInfo = Encodings.allKeys[encoding];
+	const lang = encodingInfo.lang ? new Intl.Locale(encodingInfo.lang).maximize().baseName : undefined;
 
 	return (
 		<StyledPreviewEncoding>
 			<Badge transitionOnAppear={false}>{encodingInfo.value}</Badge>
 			<p className="text title">{encoding === "ANSI" ? t.systemDefault : encoding}</p>
 			{encodingInfo.aliases.map(alias => <p className="text alias" key={alias}>{alias}</p>)}
-			<p className="text garbled">{锟斤拷(encoding)}</p>
+			<p className="text garbled" lang={lang}>{锟斤拷(encoding)}</p>
 		</StyledPreviewEncoding>
 	);
 }

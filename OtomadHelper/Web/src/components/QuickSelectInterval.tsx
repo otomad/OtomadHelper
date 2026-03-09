@@ -135,7 +135,7 @@ export default function QuickSelectInterval({ interval, bits: bitsBase64, preset
 	preset?: StateProperty<Config.QuickSelectIntervalPreset>;
 }) {
 	const bits = useBitArray(bitsBase64);
-	const currentPreset = QuickSelectIntervalPresets.allKeyed[preset?.[0] ?? "custom"];
+	const currentPreset = QuickSelectIntervalPresets.allKeys[preset?.[0] ?? "custom"];
 	const isCustom = !currentPreset.bits || !currentPreset.interval;
 
 	return (

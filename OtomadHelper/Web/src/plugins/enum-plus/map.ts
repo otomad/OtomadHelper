@@ -5,7 +5,7 @@ const mapPlugin: PluginFunc = (_options, Enum) => {
 		map(callbackFn: (raw: object, index: number) => unknown) {
 			return this.items.map(({ raw, ...others }, index) => callbackFn({ raw, ...raw as object, ...others }, index));
 		},
-		get allKeyed() {
+		get allKeys() {
 			// @ts-expect-error
 			return Object.fromEntries(this.items.map(({ raw, key, ...others }) => [key, { raw, ...raw as object, key, ...others }]));
 		},
@@ -23,7 +23,7 @@ const mapPlugin: PluginFunc = (_options, Enum) => {
 		 *     at Enum (enum.ts:39:12)
 		 * ```
 		 */
-		set allKeyed(_) { },
+		set allKeys(_) { },
 		set array(_) { },
 	});
 };
@@ -35,7 +35,7 @@ declare module "enum-plus/extension" {
 		V extends EnumValue = ValueTypeFromSingleInit<T[K], K>,
 	> {
 		map<R>(callbackFn: (raw: EnumItemClass<T[K], K, V> & T[K], index: number) => R): R[];
-		readonly allKeyed: Record<K, EnumItemClass<T[K], K, V> & T[K]> & Record<string, Any>; // WARN: 修复 bug 后移除 `& Record<string, Any>`。见 https://github.com/shijistar/enum-plus/issues/42
+		readonly allKeys: Record<K, EnumItemClass<T[K], K, V> & T[K]>;
 		readonly array: (EnumItemClass<T[K], K, V> & T[K])[];
 	}
 }

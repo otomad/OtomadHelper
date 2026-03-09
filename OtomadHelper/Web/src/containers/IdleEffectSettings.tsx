@@ -30,7 +30,7 @@ export default function IdleEffectSettings({ value: [value, setValue], pinToTop,
 	const values = [value, setValue] as StatePropertyNonNull<Config.VisualIdleEffectValue>;
 
 	const pinnedIdleEffects = useMemo(() => {
-		if (isAudio) return [VisualIdleEffects.allKeyed.fade];
+		if (isAudio) return [VisualIdleEffects.allKeys.fade];
 		const effects = VisualIdleEffects.array;
 		if (pinToTop !== undefined) {
 			const fromIndex = effects.findIndex(({ key }) => key === pinToTop);
