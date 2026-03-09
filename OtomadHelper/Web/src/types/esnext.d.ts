@@ -199,6 +199,7 @@ declare global {
 		readonly postscriptName: string;
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FontData/style) */
 		readonly style: string;
+
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FontData/blob) */
 		blob(): Promise<Blob>;
 	}
@@ -207,6 +208,52 @@ declare global {
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Window/queryLocalFonts) */
 		queryLocalFonts(): Promise<FontData[]>;
 	}
+}
+// #endregion
+
+// #region User-Agent Client Hints API
+declare global {
+	declare interface NavigatorID {
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Navigator/userAgentData) */
+		readonly userAgentData: UserAgentData;
+	}
+
+	interface UserAgentDataBrand {
+		brand: string;
+		version: string;
+	}
+
+	interface UserAgentData {
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/NavigatorUAData/brands) */
+		readonly brands: UserAgentDataBrand[];
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/NavigatorUAData/mobile) */
+		readonly mobile: boolean;
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/NavigatorUAData/platform) */
+		readonly platform: string;
+
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/NavigatorUAData/toJSON) */
+		toJSON(): UserAgentData;
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/API/NavigatorUAData/getHighEntropyValues) */
+		getHighEntropyValues<T extends keyof UserAgentDataHighEntropyValues>(hints: T[]): Promise<Readonly<{
+			brands: UserAgentDataBrand[];
+			mobile: boolean;
+			platform: string;
+		} & OmitNevers<{
+			[hint in keyof UserAgentDataHighEntropyValues]: T extends hint ? UserAgentDataHighEntropyValues[hint] : never;
+		}>>>;
+	}
+}
+
+interface UserAgentDataHighEntropyValues {
+	architecture: string;
+	bitness: string;
+	formFactors: string[];
+	fullVersionList: UserAgentDataBrand[];
+	model: string;
+	platformVersion: string;
+	/** @deprecated */
+	uaFullVersion: string;
+	wow64: boolean;
 }
 // #endregion
 

@@ -154,7 +154,7 @@ export default defineConfig(
 			"@stylistic/template-curly-spacing": "error",
 			"no-undef": "off", // 这波 nuxt 的锅。
 			"@stylistic/multiline-ternary": "off",
-			"@stylistic/operator-linebreak": ["error", "after"],
+			"@stylistic/operator-linebreak": ["error", "after", { "overrides": { "|": "ignore" } }],
 			"@stylistic/no-trailing-spaces": ["error", { "skipBlankLines": true }],
 			"one-var": "off",
 			"@stylistic/arrow-parens": ["error", "as-needed"],
