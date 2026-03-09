@@ -68,6 +68,7 @@ const StyledComboBox = styled(StyledButton)(() => css`
 		@supports (appearance: base-select) {
 			${enabledFocusVisible};
 			--selected-index: attr(data-selected-index type(<integer>), 0);
+			--item-length: attr(data-item-length type(<integer>), 0);
 
 			&,
 			&::picker(select) {
@@ -81,8 +82,13 @@ const StyledComboBox = styled(StyledButton)(() => css`
 			&::picker(select) {
 				position: fixed;
 				position-area: none;
-				inset-block-start: max(0dvh, calc(anchor(start) - 3px - ${OPTION_HEIGHT}px * var(--selected-index)));
+				inset-block-start: clamp(
+					0dvh,
+					calc(anchor(start) - 3px - ${OPTION_HEIGHT}px * var(--selected-index)),
+					calc(100dvb - 3px - ${OPTION_HEIGHT}px * var(--item-length))
+				);
 				inset-inline-start: calc(anchor(start) - 3px);
+				max-block-size: 100dvb;
 				inline-size: calc(anchor-size(self-inline) + 7px);
 				padding: 2px;
 				background-color: ${c("background-fill-color-acrylic-background-command-bar")};
@@ -264,6 +270,7 @@ export default function ComboBox<T extends string | number>({ ids = [], options 
 				disabled={disabled}
 				value={current}
 				data-selected-index={currentIndex}
+				data-item-length={ids.length}
 				onChange={e => {
 					let value = e.currentTarget.value as T;
 					if (numberAsKey) value = +value as T;

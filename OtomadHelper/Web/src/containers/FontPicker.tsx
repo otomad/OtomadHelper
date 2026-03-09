@@ -25,7 +25,11 @@ interface LocalFontData {
 	readonly displayName: string;
 }
 
-const defaultFontFamily = (): LocalFontData => ({ family: "", displayName: t.settings.appearance.defaultFontFamily });
+const DEFAULT_FONT_FAMILY_NAME = "Inter";
+const defaultFontFamily = (): LocalFontData => ({
+	family: DEFAULT_FONT_FAMILY_NAME,
+	displayName: t.settings.appearance.defaultFontFamily,
+});
 
 const fontsAtom = atom([defaultFontFamily()]);
 
@@ -36,7 +40,7 @@ async function queryLocalFonts() {
 		if (!fontFamiliesMap.has(family))
 			fontFamiliesMap.set(family, {
 				family,
-				displayName: fullName.replaceEnd(" " + style).replaceEnd(style),
+				displayName: fullName.includes(family) ? family : fullName.replaceEnd(" " + style).replaceEnd(style),
 			});
 	return [defaultFontFamily(), ...fontFamiliesMap.values()];
 }

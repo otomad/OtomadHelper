@@ -32,6 +32,8 @@ export function redirectIcon(name: string): DeclaredIcons & DeclaredLotties {
 const isCompleteAvailable = (page: string[]) => !["management", "mosh", "tools", "settings"].includes(page[0]);
 const isAutoLayoutTracks = (page: string[]) => page.length >= 2 && page[0] === "track";
 
+const showFlavoredComplete = Math.random() >= 0.9;
+
 export default function ShellPage() {
 	const t = useT();
 	const { page, changePage, pagePath, transition, canBack, back, reset, setPageContentId, poppedScroll, commandBarDisabled, pageChangeResolver } = useSnapshot(pageStore);
@@ -66,7 +68,7 @@ export default function ShellPage() {
 	const { enabled: enablePixelScaling } = useSnapshot(configStore.visual.pixelScaling);
 	const documentTitle = (() => {
 		const lastPage = page.last();
-		return (lastPage ? getTitle(lastPage, "long") + " - " : "") + appName;
+		return (lastPage && lastPage !== "wizard" ? getTitle(lastPage, "long") + " - " : "") + appName;
 	})();
 	const pageContentId = useId();
 	setPageContentId(pageContentId);
@@ -106,7 +108,7 @@ export default function ShellPage() {
 							<CommandBar.Item
 								key="complete"
 								icon="checkmark"
-								caption={t.complete}
+								caption={t.complete({ context: showFlavoredComplete ? "flavored" : undefined })}
 								disabled={completeDisabled}
 								canBeDisabled
 								onClick={() => completeDisabled && alert("Cannot complete!")}

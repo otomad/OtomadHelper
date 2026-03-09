@@ -196,6 +196,7 @@ export default function Source() {
 					selectInfo={trackGroup[0] === "byTaskSession" && t.current}
 					actions={<ComboBox current={groupByTaskSessionName} ids={Namings.scoredTrackNames.map(({ id }) => id)} options={Namings.scoredTrackNames.map(({ name }) => name)} icons={Namings.scoredTrackNames.map(({ icon }) => icon)} />}
 					expanded={namingSubExpanderExpanded[1]}
+					asSubtitle
 				>
 					<Setting
 						meta={meta.naming.groupByTaskSessionNameTreatSingleAsMultitrack}

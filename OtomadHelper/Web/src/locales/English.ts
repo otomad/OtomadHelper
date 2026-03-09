@@ -163,6 +163,7 @@ export default {
 		default: "Default",
 		systemDefault: "System default",
 		complete: "Complete",
+		complete_flavored: "YTPMVing!",
 		dragToImport: "Drag and drop to import as {{item, lowercase}}",
 		save: "Save",
 		auto: "Auto",

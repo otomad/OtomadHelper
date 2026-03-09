@@ -302,7 +302,7 @@ function HelpLinks() {
 		en: [
 			{ name: tAbout.documentation, link: links.helpV4.english.documentation_evauation },
 			{ name: tAbout.tutorialVideoForFeature({ feature: t.titles.ytp }), link: links.helpV4.english.tutorialVideo_ytpPlus },
-			{ name: tAbout.tutorialVideoForFeature({ feature: t.mosh.datamosh }), version: "1.4.0", link: links.helpV4.english.tutorialVideo_datamosh_delthas_v1_4_0 },
+			{ name: tAbout.tutorialVideoForFeature({ feature: t.titles.datamosh }), version: "1.4.0", link: links.helpV4.english.tutorialVideo_datamosh_delthas_v1_4_0 },
 			{ name: tAbout.tutorialVideo, version: "4.16.4.0", link: links.helpV4.english.tutorialVideo_greenBean_v4_16_4_0 },
 			{ name: tAbout.tutorialVideo, version: "4.16.4.0", link: links.helpV4.english.tutorialVideo_cassidy_v4_16_4_0 },
 			{ name: tAbout.tutorialVideo, version: "4.26.14.0", link: links.helpV4.english.tutorialVideo_v4_26_14_0 },
@@ -320,7 +320,7 @@ function HelpLinks() {
 
 	return (
 		<>
-			<Expander.Sub title={<b>{tAbout.previousVersionDocumentation + " (v4.x)"}</b>} noIndentation>
+			<Expander.Sub title={<b>{tAbout.previousVersionDocumentation + ` (v0.1${t.rangeDash}4.x)`}</b>} noIndentation>
 				{Object.entries(helpsV4).map(([language, links]) => (
 					<Fragment key={language}>
 						<Expander.Item title={tAbout.documentationInLanguage({ language: getLocaleName(language, currentLanguage), count: links.length })} noDivider />
