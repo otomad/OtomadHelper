@@ -352,6 +352,8 @@ export default {
 			instrument: "Instrument",
 			drumKit: "Drum kit",
 			parser: "Parser engine",
+			toneSound: "Tone",
+			percussionSound: "Perc", // It is the abbreviated form of percussion.
 		},
 		stream: {
 			stretch: {
@@ -707,7 +709,7 @@ export default {
 			},
 		},
 		sonar: {
-			separateDrums: "Separate drums",
+			splitDrums: "Split drums",
 			differenceCompositeMode: "Difference composite mode",
 			shadow: "Shadow",
 			graphs: "Graphs",
@@ -1330,7 +1332,7 @@ export default {
 				_: "Sonar (Motion Graphics generation feature) is a tool that automatically generates Mographs based on the music rhythm, using the shapes of “Cookie Cutter” effect. The trigger signals of various percussion instruments are linked to preset graphic elements via the score (especially the data of channel 10, where the drum kit is located). These graphics change with the rhythm to create the rhythm-driven “visual beat” effect. For example, the kick generates an enlarged square, the snare drives a rotating diamond, and the crash triggers a diffuse circle, forming an immersive experience of “sound visualization.”\nMotion Graphics (Mograph) is an art form that combines graphic design and animation to convey information or emotion through the motion of graphics, text, and other elements. In the creation of otoMAD, Mographs are often used to replace traditional source editing, and abstract graphics are used to create a purely visual rhythmic expression. For example, the visuals may be filled with dense geometric shapes during the climax of the music, while a sense of breathing is created by slowly deforming fluid patterns during the soothing paragraphs. Such creations are often titled *Graphics* or *Shapes* to emphasize the core concept of “playing music with visuals.”",
 				// The name of this effect, “Sonar”, was coined by Motosai.
 				enabled: "Enables sonar effects if the active tracks in the score contain drum kits",
-				separateDrums: "Places each drum on its own track",
+				splitDrums: "Places each drum on its own track",
 				differenceCompositeMode: "Makes the tracks created with difference blend, this will present a shadow puppet style",
 				shadow: "Adds shadows to graphs",
 			},

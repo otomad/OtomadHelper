@@ -344,7 +344,7 @@ namespace Config {
 		},
 		sonar: {
 			enabled: false,
-			separateDrums: false,
+			splitDrums: false,
 			differenceCompositeMode: false,
 			shadow: false,
 			shadowColor: "#000000",
@@ -408,6 +408,7 @@ namespace Config {
 			autoSwitchSourceFrom: true,
 			autoCollapsePrveClasses: true,
 			previewWithSource: true,
+			pianoPickerShowPerc: false,
 			internal: {
 				language: "zh-CN",
 				autosaveInterval: [5, "minute"] as Unit<RoughTimeUnit>,

@@ -471,7 +471,7 @@ export default {
 			},
 		},
 		sonar: {
-			separateDrums: "Tách các trống",
+			splitDrums: "Tách các trống",
 			differenceCompositeMode: "Chế độ composite khác",
 			shadow: "Đổ bóng",
 			graphs: "Biểu đồ",
@@ -887,7 +887,7 @@ export default {
 			},
 			sonar: {
 				enabled: "Tạo các hiệu ứng sonar nếu các track đang hoạt động trong bản nhạc có bao gồm bộ gõ",
-				separateDrums: "Đặt mỗi âm thanh bộ gõ vào một track",
+				splitDrums: "Đặt mỗi âm thanh bộ gõ vào một track",
 				differenceCompositeMode: "Làm cho các track có các chế độ phối trộn khác nhau, tạo ra hiệu ứng hình ảnh rối bóng",
 				shadow: "Thêm bóng đổ vào đồ hình",
 			},

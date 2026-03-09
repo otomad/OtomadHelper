@@ -1,6 +1,7 @@
 const StyledPianoPickerOutput = styled.div`
 	position: relative;
-	min-block-size: ${24 + expanderItemPadding[0] * 2}px;
+	align-content: center;
+	min-block-size: 50px;
 	padding-block: ${expanderItemPadding[0]}px;
 	padding-inline: 0 !important;
 
@@ -26,11 +27,19 @@ const StyledPianoPickerOutput = styled.div`
 		}
 	}
 
-	button {
+	button,
+	.segmented {
 		position: absolute;
 		inset-block: ${expanderItemPadding[0]}px;
-		inset-inline-end: ${expanderItemPadding[1]}px;
 		margin-block: auto;
+	}
+
+	button {
+		inset-inline-end: ${expanderItemPadding[1]}px;
+	}
+
+	.segmented {
+		inset-inline-start: 4px;
 	}
 `;
 
@@ -63,6 +72,7 @@ export default function PianoPicker({ pitch: [pitch, setPitch], showOutput: _sho
 	const previewPianoEl = useDomRef<"div">();
 	const rangeMode = typeof pitch !== "string";
 	const showOutput = _showOutput || _showOutput === undefined && _showReset, showReset = _showReset || _showReset === undefined && _showOutput;
+	const { pianoPickerShowPerc: [showPerc, setShowPerc] } = useSelectConfig(c => c.settings);
 
 	const activeKeys = useMemo(() =>
 		typeof pitch === "string" ? [pitch] :
@@ -98,13 +108,22 @@ export default function PianoPicker({ pitch: [pitch, setPitch], showOutput: _sho
 		<>
 			{(showOutput || showReset) && (
 				<StyledPianoPickerOutput>
+					{showReset && (
+						<DualStateSwitch
+							current={[showPerc, setShowPerc]}
+							falseIcon="instrument"
+							falseText={t.score.toneSound}
+							trueIcon="drum"
+							trueText={t.score.percussionSound}
+						/>
+					)}
 					{showOutput && (!rangeMode ?
 						// CAUTION: `role="img"` may be misleading, but it will solve the problem. The screen reader will skip this element if remove the role.
-						<output role="img" aria-label={new Pitch(pitch).ariaLabel}>{pitch}</output> : (
-							<output className="range" role="img" aria-label={t.aria.fromTo({ from: new Pitch(pitch[0]).ariaLabel, to: new Pitch(pitch[1]).ariaLabel })}>
-								<span>{pitch[0]}</span>
+						<output role="img" aria-label={getPitchAria(pitch, showPerc)}>{pitchOrPerc(pitch, showPerc)}</output> : (
+							<output className="range" role="img" aria-label={t.aria.fromTo({ from: getPitchAria(pitch[0]), to: getPitchAria(pitch[1]) })}>
+								<span>{pitchOrPerc(pitch[0], showPerc)}</span>
 								<span>{t.rangeDash}</span>
-								<span>{pitch[1]}</span>
+								<span>{pitchOrPerc(pitch[1], showPerc)}</span>
 							</output>
 						)
 					)}
@@ -125,4 +144,21 @@ export default function PianoPicker({ pitch: [pitch, setPitch], showOutput: _sho
 
 function getNoteNumber(pitch: string) {
 	return new Pitch(pitch).noteNumber;
+}
+
+function getPercName(noteNumber: number) {
+	return i18nExists(tf.shared.midi.percussions[noteNumber]) ? t.shared.midi.percussions[noteNumber] : undefined;
+}
+
+function getPitchAria(pitch: string, isDrum: boolean = false) {
+	const pitchObject = new Pitch(pitch);
+	const { noteNumber } = pitchObject;
+	const percussion = getPercName(noteNumber);
+	return !isDrum || !percussion ? pitchObject.ariaLabel : percussion;
+}
+
+function pitchOrPerc(pitch: string, isDrum: boolean = false) {
+	const { noteNumber } = new Pitch(pitch);
+	const percussion = getPercName(noteNumber);
+	return !isDrum || !percussion ? pitch : percussion;
 }

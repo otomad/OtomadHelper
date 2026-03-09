@@ -2,7 +2,7 @@ import tipsImage from "assets/images/tips/shapes.avif";
 
 export default function Sonar() {
 	const {
-		enabled, separateDrums, differenceCompositeMode, shadow, shadowColor,
+		enabled, splitDrums, differenceCompositeMode, shadow, shadowColor,
 	} = useSelectConfig(c => c.sonar);
 	const graphs = useSelectConfigArray(c => c.sonar.graphs);
 	const meta = metas.sonar;
@@ -14,7 +14,7 @@ export default function Sonar() {
 			<SettingsCardToggleSwitch title={t.enabled} icon="lightbulb" on={enabled} details={t.descriptions.sonar.enabled} resetTransitionOnChanging />
 			<EmptyMessage.Typical icon="sonar" title="sonar" enabled={enabled}>
 				<EmptyMessage.YtpDisabled fully={t.titles.sonar}>
-					<Setting meta={meta.separateDrums} on={separateDrums} />
+					<Setting meta={meta.splitDrums} on={splitDrums} />
 					<Setting meta={meta.differenceCompositeMode} on={differenceCompositeMode} />
 					<Setting
 						meta={meta.shadow}

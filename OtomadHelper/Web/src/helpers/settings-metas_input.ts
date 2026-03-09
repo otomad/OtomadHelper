@@ -291,7 +291,7 @@ export const settingsMetasInput = {
 		},
 	},
 	sonar: {
-		separateDrums: { icon: "arrow_split" },
+		splitDrums: { icon: "arrow_split" },
 		differenceCompositeMode: { icon: "invert_color" },
 		shadow: { icon: "shadow" },
 	},

@@ -673,7 +673,7 @@ export default {
 			layout: "crwdns1856:5crwdne1856:5",
 		},
 		sonar: {
-			separateDrums: "crwdns2574:0crwdne2574:0",
+			splitDrums: "crwdns2574:0crwdne2574:0",
 			differenceCompositeMode: "crwdns2576:0crwdne2576:0",
 			shadow: "crwdns2578:0crwdne2578:0",
 			graphs: "crwdns2580:0crwdne2580:0",
@@ -1282,7 +1282,7 @@ export default {
 			sonar: {
 				_: "crwdns5956:0crwdne5956:0",
 				enabled: "crwdns2614:0crwdne2614:0",
-				separateDrums: "crwdns2594:0crwdne2594:0",
+				splitDrums: "crwdns2594:0crwdne2594:0",
 				differenceCompositeMode: "crwdns2596:0crwdne2596:0",
 				shadow: "crwdns2616:0crwdne2616:0",
 			},

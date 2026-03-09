@@ -48,3 +48,21 @@ export function OffAndAutoSwitch({ current }: {
 		</Segmented>
 	);
 }
+
+export function DualStateSwitch({ current, falseText, trueText, falseIcon, trueIcon }: {
+	/** Current selected state. True stands for auto, and false stands for off. */
+	current: StateProperty<boolean>;
+	falseText: string;
+	trueText: string;
+	falseIcon?: DeclaredIcons;
+	trueIcon?: DeclaredIcons;
+}) {
+	const segmentedCurrent = useStateSelector(current, toTriStateKey, key => triStateMap[key]);
+
+	return (
+		<Segmented current={segmentedCurrent}>
+			<Segmented.Item id="false" key="false" icon={falseIcon}>{falseText}</Segmented.Item>
+			<Segmented.Item id="true" key="true" icon={trueIcon}>{trueText}</Segmented.Item>
+		</Segmented>
+	);
+}

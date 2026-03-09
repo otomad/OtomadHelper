@@ -305,7 +305,6 @@ export function getLocaleName(targetLocale: string | Intl.Locale, displayLocale:
  */
 export function i18nExists(i18nItem: string, context?: string, enableFallbackLang = true) {
 	let path = getI18nKey(i18nItem);
-	path = path.replaceEnd("()");
 	if (context) path += `_${context}`;
 	const fallbackLng = enableFallbackLang ? undefined : false;
 	const notCategoryExists = i18n.exists(path, { fallbackLng, returnObjects: false });

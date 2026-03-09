@@ -231,7 +231,7 @@ export default {
 			clear: {},
 		},
 		sonar: {
-			separateDrums: "Drum terpisah",
+			splitDrums: "Drum terpisah",
 			differenceCompositeMode: "Perbedaan modus komposit",
 			shadow: "Bayangan",
 		},

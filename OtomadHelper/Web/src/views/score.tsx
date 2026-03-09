@@ -109,7 +109,7 @@ const MultipleSelectTrackItemsContainer = styled.div`
 		}
 	}
 
-	+ button {
+	~ button {
 		inline-size: 32px;
 		margin-inline-start: -8px;
 	}
@@ -286,6 +286,11 @@ export default function Score({ _trackSelectorOnly = false }: {
 												))}
 											</MultipleSelectTrackItemsContainer>
 										</CssTransition>
+									)}
+									{track.isDrumKit && (
+										<Tooltip placement="block" title={t.sonar.splitDrums}>
+											<Button icon="arrow_split" minWidthUnbounded />
+										</Tooltip>
 									)}
 									<Tooltip placement="block" title={t.play}>
 										<Button icon="play" minWidthUnbounded />
