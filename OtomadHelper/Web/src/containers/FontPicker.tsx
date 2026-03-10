@@ -40,7 +40,7 @@ async function queryLocalFonts() {
 		if (!fontFamiliesMap.has(family))
 			fontFamiliesMap.set(family, {
 				family,
-				displayName: fullName.includes(family) ? family : fullName.replaceEnd(" " + style).replaceEnd(style),
+				displayName: fullName.includes(family) ? family : fullName.replaceEnd(style).trim(),
 			});
 	return [defaultFontFamily(), ...fontFamiliesMap.values()];
 }

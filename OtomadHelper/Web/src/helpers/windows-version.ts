@@ -2,7 +2,7 @@
  * Get current used Windows NT OS version.
  * @returns Windows NT enum.
  */
-export async function getCurrentWindowsVersion() {
+async function getCurrentWindowsVersion() {
 	const ua = navigator.userAgent;
 
 	if (navigator.userAgentData?.platform !== "Windows") return WindowsNT.Unknown;
@@ -96,3 +96,8 @@ export const enum WindowsNT {
 	Windows11_25H2 = 26200,
 	Next = 65535,
 }
+
+/**
+ * A Windows NT enum indicates the current used Windows NT OS version.
+ */
+export const currentWindowsVersion = await getCurrentWindowsVersion();

@@ -1,6 +1,4 @@
 import noise from "assets/images/noise_asset.png";
-import type { systemBackdrops } from "views/settings";
-type SystemBackdrop = typeof systemBackdrops[number]["name"];
 const TRANSLATE = 7;
 
 const StyledPreviewBackdrop = styled.div`
@@ -16,9 +14,10 @@ const StyledPreviewBackdrop = styled.div`
 			// c("stroke-color-surface-stroke-default")
 			0 3px 6px ${c("black", 43.9)};
 		--opacity: 100%;
+		--colorization-background-image: linear-gradient(135deg, rgb(from ${c("accent-color")} r g b / var(--opacity)) 0%, rgb(from color-mix(in oklch, ${c("accent-color")} 100%, black 30%) r g b / var(--opacity)) 100%);
 		position: absolute;
 		overflow: clip;
-		background-image: linear-gradient(135deg, rgb(from ${c("accent-color")} r g b / var(--opacity)) 0%, rgb(from color-mix(in oklch, ${c("accent-color")} 100%, black 30%) r g b / var(--opacity)) 100%);
+		background-image: var(--colorization-background-image);
 		border-radius: 6px;
 		box-shadow: if(
 			${ifColorScheme.contrast}: none;
@@ -94,6 +93,23 @@ const StyledPreviewBackdrop = styled.div`
 					content: none;
 				}
 			}
+
+			&.aero,
+			&.blur {
+				--blur: 3px;
+				--opacity: 49.411765%;
+				--mix: 30%;
+
+				&.aero::before {
+					content: "";
+					background: linear-gradient(135deg, #fff5 70px, transparent 100px), linear-gradient(225deg, #fff5 70px, transparent 100px), linear-gradient(54deg, #0002 0 4%, #6661 6% 6%, #0002 8% 10%, #0002 15% 16%, #aaa1 17% 18%, #0002 23% 24%, #bbb2 25% 26%, #0002 31% 33%, #0002 34% 34.5%, #bbb2 36% 40%, #0002 41% 41.5%, #bbb2 44% 45%, #bbb2 46% 46.5%, #0002 48% 49%, #0002 50% 50.5%, #0002 56% 56.5%, #bbb2 57% 63%, #0002 67% 69%, #bbb2 70% 70%, #0002 73.5% 74%, #bbb2 74.5% 79%, #0002 80% 84%, #aaa2 85% 86%, #0002 87%, #bbb1 90%) 0 / 300% no-repeat fixed;
+					mix-blend-mode: multiply;
+				}
+			}
+
+			&.colorization {
+				background-image: var(--colorization-background-image);
+			}
 		}
 	}
 
@@ -104,7 +120,7 @@ const StyledPreviewBackdrop = styled.div`
 	}
 `;
 
-export default function PreviewBackdrop({ type }: { type: SystemBackdrop }) {
+export default function PreviewBackdrop({ type }: { type: Config.SystemBackdrop }) {
 	return (
 		<StyledPreviewBackdrop>
 			<div className="card back" />

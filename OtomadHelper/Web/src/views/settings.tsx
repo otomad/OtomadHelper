@@ -2,16 +2,24 @@ import { ImageFitTypes as ImageFitType } from "components/BackgroundImage";
 import { BasicColorPalette, autoColorPalettes } from "helpers/basic-color-palette";
 import { useInContextLocalization } from "helpers/jipt-activator";
 import links from "helpers/links";
+import { WindowsNT, currentWindowsVersion } from "helpers/windows-version";
 
 /** Expand the expanders in settings initially? (Do not set it to true in production!) */
 const DEV_EXPANDED = true;
 
-export /* @internal */ const systemBackdrops = [
-	{ name: "acrylic", enum: "TransientWindow" },
-	{ name: "mica", enum: "MainWindow" },
-	{ name: "micaAlt", enum: "TabbedWindow" },
-	{ name: "solid", enum: "None" },
-] as const;
+export /* @internal */ const SystemBackdrops = {
+	win11: { types: ["acrylic", "mica", "micaAlt", "solid"], minVer: WindowsNT.Windows11_22H2 },
+	win10: { types: ["blur", "acrylic", "solid"], minVer: WindowsNT.Windows10_1803 },
+	win10_rtm: { types: ["blur", "solid"], minVer: WindowsNT.Windows10 },
+	win8: { types: ["colorization"], minVer: WindowsNT.Windows8 },
+	win7: { types: ["aero"], minVer: WindowsNT.WindowsVista },
+} as const;
+const [availableSystemBackdrops, windowsOfSystemBackdrops] = (() => {
+	for (const [os, { types, minVer }] of entries(SystemBackdrops))
+		if (currentWindowsVersion >= minVer)
+			return [types, os];
+	return [[], "winxp" as const];
+})();
 
 const StyledColorPalette = styled(Expander.ChildWrapper).attrs({
 	role: "radiogroup",
@@ -61,7 +69,7 @@ export default function Settings() {
 	const {
 		fontSize, fontFamily, hideUseTips, autoSwitchSourceFrom, autoCollapsePrveClasses, previewWithSource,
 		backgroundImageOpacity, backgroundImageTint, backgroundImageBlur,
-		systemBackdrop, accentColor, backgroundColor,
+		systemBackdrop_win11, systemBackdrop_win10, accentColor, backgroundColor,
 	} = useSelectConfig(c => c.settings);
 	const backgroundImages = useBackgroundImages();
 	const { pushPage } = useSnapshot(pageStore);
@@ -274,21 +282,27 @@ export default function Settings() {
 					</>
 				)}
 			</Setting>
-			<Setting
-				meta={meta.appearance.transparency}
-				expanded={DEV_EXPANDED}
-				view="grid"
-				itemWidth="square"
-				items={systemBackdrops}
-				value={systemBackdrop}
-				idField="name"
-				nameField={t.settings.appearance.transparency}
-				imageField={({ name }) => <PreviewBackdrop type={name} />}
-				before={
-					reduceTransparency && <InfoBar status="warning">{t.descriptions.settings.appearance.invalid.reducedTransparency({ option: t.settings.appearance.transparency })}</InfoBar> ||
-					systemContrast && <InfoBar status="warning">{t.descriptions.settings.appearance.invalid.systemContrastMayNot({ option: t.settings.appearance.transparency })}</InfoBar>
-				}
-			/>
+			{availableSystemBackdrops.length > 0 && (
+				<Setting
+					meta={meta.appearance.transparency}
+					expanded={DEV_EXPANDED}
+					view="grid"
+					itemWidth="square"
+					items={availableSystemBackdrops as never}
+					value={(
+						windowsOfSystemBackdrops === "win11" ? systemBackdrop_win11 :
+						windowsOfSystemBackdrops.in("win10", "win10_rtm") ? systemBackdrop_win10 :
+						[availableSystemBackdrops[0]]
+					) as never}
+					idField
+					nameField={t.settings.appearance.transparency}
+					imageField={name => <PreviewBackdrop type={name} />}
+					before={
+						reduceTransparency && <InfoBar status="warning">{t.descriptions.settings.appearance.invalid.reducedTransparency({ option: t.settings.appearance.transparency })}</InfoBar> ||
+						systemContrast && <InfoBar status="warning">{t.descriptions.settings.appearance.invalid.systemContrastMayNot({ option: t.settings.appearance.transparency })}</InfoBar>
+					}
+				/>
+			)}
 			<Setting
 				meta={meta.appearance.backgroundImage}
 				expanded={DEV_EXPANDED}

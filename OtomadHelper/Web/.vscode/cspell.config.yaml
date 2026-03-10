@@ -251,6 +251,7 @@ words:
   - rlh
   - rolldown
   - rtl
+  - rtm
   - screencast
   - screencasts
   - segoe
@@ -332,6 +333,7 @@ words:
   - valtio
   - varint
   - vec
+  - ver
   - vibraslap
   - vibrati
   - vite
@@ -411,6 +413,7 @@ ignoreWords:
   - freezeframe
   - freezeframes
   - accentcolor
+  - winxp
 flagWords:
   - colour -> color
   - canot -> cannot

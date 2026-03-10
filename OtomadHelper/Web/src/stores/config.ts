@@ -10,7 +10,7 @@ import { deepClone } from "valtio/utils";
 import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
 import type { musicalNotationSystems } from "views/lyrics";
 import type { constrainNoteLengthTypes, multipleSelectTrackItems, tempoUsings, trackAndChannel } from "views/score";
-import type { systemBackdrops } from "views/settings";
+import type { SystemBackdrops } from "views/settings";
 import type { textPlugins } from "views/settings/internal";
 import type { Namings, SelectGeneratedClips, TrackGroupBy, barOrBeatUnitTypes, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
@@ -40,7 +40,9 @@ namespace Config {
 	export type GridParityType = typeof parityTypes[number];
 	export type LegatoMode = typeof LegatoModes.keyType;
 	export type NormalizeTime = typeof normalizeTimes[number]["id"];
-	export type SystemBackdrop = typeof systemBackdrops[number]["name"];
+	export type SystemBackdrop = typeof SystemBackdrops[keyof typeof SystemBackdrops]["types"][number];
+	export type SystemBackdrop_Win11 = typeof SystemBackdrops["win11"]["types"][number];
+	export type SystemBackdrop_Win10 = typeof SystemBackdrops["win10"]["types"][number];
 	export type PrveCustomStepSequences = Partial<Record<string, number[]>>;
 	export type PrerenderAs = typeof prerenders[number]["id"];
 	export type TuningMethod = typeof tuningMethods[number]["id"];
@@ -399,7 +401,8 @@ namespace Config {
 			backgroundImageOpacity: 0.2,
 			backgroundImageTint: 0,
 			backgroundImageBlur: 0,
-			systemBackdrop: "acrylic" satisfies SystemBackdrop as SystemBackdrop,
+			systemBackdrop_win11: "acrylic" satisfies SystemBackdrop_Win11 as SystemBackdrop_Win11,
+			systemBackdrop_win10: "blur" satisfies SystemBackdrop_Win10 as SystemBackdrop_Win10,
 			accentColor: "wallpaper",
 			backgroundColor: "windows",
 			fontSize: 14,
