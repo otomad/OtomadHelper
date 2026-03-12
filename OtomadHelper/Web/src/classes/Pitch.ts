@@ -177,4 +177,42 @@ export default class Pitch {
 			octave: this.octave,
 		});
 	}
+
+	/**
+	 * Calculates the offset in semitones from this pitch to a reference pitch.
+	 * A positive value indicates this pitch is higher than the reference pitch.
+	 * @param referencePitch - The reference pitch as a Pitch instance.
+	 * @returns The semitone offset.
+	 * @example
+	 * ```typescript
+	 * new Pitch("D5").offsetTo("C5"); // 2
+	 * ```
+	 */
+	offsetTo(referencePitch: Pitch): number;
+	/**
+	 * Calculates the offset in semitones from this pitch to a reference pitch.
+	 * A positive value indicates this pitch is higher than the reference pitch.
+	 * @param referenceSpn - The reference pitch as an SPN string (e.g., "C#4").
+	 * @returns The semitone offset.
+	 * @example
+	 * ```typescript
+	 * new Pitch("D5").offsetTo("C5"); // 2
+	 * ```
+	 */
+	offsetTo(referenceSpn: string): number;
+	/**
+	 * Calculates the offset in semitones from this pitch to a reference pitch.
+	 * A positive value indicates this pitch is higher than the reference pitch.
+	 * @param referenceNoteNumber - The reference pitch as a MIDI note number.
+	 * @returns The semitone offset.
+	 * @example
+	 * ```typescript
+	 * new Pitch("D5").offsetTo("C5"); // 2
+	 * ```
+	 */
+	offsetTo(referenceNoteNumber: number): number;
+	offsetTo(referencePitch: string | number | Pitch) {
+		if (!(referencePitch instanceof Pitch)) referencePitch = new Pitch(referencePitch as string);
+		return this.noteNumber - referencePitch.noteNumber;
+	}
 }

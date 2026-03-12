@@ -1,5 +1,5 @@
 diff --git a/dist/parser.js b/dist/parser.js
-index ada61582777805359a7da8daaa6d6f5b6b6d556a..1ec7bf969bf8d492cee36faffd745cd85a0323b7 100644
+index e36af64dbd3380f7c2ac46067755c75a18a0a242..9198402a571c91a8ffb6c47b5e2bcd7823d9a908 100644
 --- a/dist/parser.js
 +++ b/dist/parser.js
 @@ -128,7 +128,7 @@ var Parser = /*#__PURE__*/function () {

@@ -28,7 +28,7 @@ const StyledPianoPickerOutput = styled.div`
 	}
 
 	button,
-	.segmented {
+	.inst-type {
 		position: absolute;
 		inset-block: ${expanderItemPadding[0]}px;
 		margin-block: auto;
@@ -38,8 +38,20 @@ const StyledPianoPickerOutput = styled.div`
 		inset-inline-end: ${expanderItemPadding[1]}px;
 	}
 
-	.segmented {
+	.inst-type {
 		inset-inline-start: 4px;
+
+		&.perc {
+			@container page (width < 720px) {
+				--text-visibility: hidden;
+			}
+		}
+
+		&.tone {
+			@container page (width <= 360px) {
+				--text-visibility: hidden;
+			}
+		}
 	}
 `;
 
@@ -110,6 +122,7 @@ export default function PianoPicker({ pitch: [pitch, setPitch], showOutput: _sho
 				<StyledPianoPickerOutput>
 					{showReset && (
 						<DualStateSwitch
+							className={["inst-type", showPerc ? "perc" : "tone"]}
 							current={[showPerc, setShowPerc]}
 							falseIcon="instrument"
 							falseText={t.score.toneSound}

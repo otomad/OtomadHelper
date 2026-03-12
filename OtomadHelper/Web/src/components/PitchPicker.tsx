@@ -18,6 +18,7 @@ const StyledPitchPicker = styled(StyledButton)`
 			align-content: center;
 			width: 100%;
 			padding: 4px 11px;
+			font-variant-numeric: tabular-nums;
 			text-align: center;
 
 			&:not(:last-child) {
@@ -27,11 +28,14 @@ const StyledPitchPicker = styled(StyledButton)`
 	}
 `;
 
+const REFERENCE_PITCH = new Pitch("C5");
+
 export default function PitchPicker({ spn: [spn, setSpn], ...htmlAttrs }: FCP<{
 	/** Scientific pitch notation. */
 	spn: StateProperty<string>;
 }, "button">) {
 	const pitch = useMemo(() => new Pitch(spn!), [spn]);
+	const offset = pitch.offsetTo(REFERENCE_PITCH);
 
 	const showPitchPicker: MouseEventHandler<HTMLButtonElement> = async e => {
 		const rect = e.currentTarget.getBoundingClientRect();
@@ -51,7 +55,13 @@ export default function PitchPicker({ spn: [spn, setSpn], ...htmlAttrs }: FCP<{
 			<div className="content" aria-hidden>
 				<div>{pitch.noteName}</div>
 				<div>{pitch.octave}</div>
+				<div>{getPitchOffsetDisplayText(offset)}</div>
 			</div>
 		</StyledPitchPicker>
 	);
+}
+
+function getPitchOffsetDisplayText(offset: number) {
+	const sign = Math.sign(offset);
+	return (sign > 0 ? "+" : sign < 0 ? "−" : "±") + Math.abs(offset);
 }

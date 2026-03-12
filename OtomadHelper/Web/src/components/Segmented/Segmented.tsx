@@ -14,6 +14,10 @@ const StyledSegmented = styled.div<{
 	/** The selected item index. */
 	$selectedIndex?: number;
 }>`
+	@layer props {
+		--text-visibility: shown;
+	}
+
 	position: relative;
 	background-color: ${c("fill-color-control-alt-secondary")};
 	border: 1px solid ${c("stroke-color-control-stroke-default")};
@@ -29,6 +33,7 @@ const StyledSegmented = styled.div<{
 		grid-auto-columns: 1fr;
 		grid-auto-flow: column;
 		width: inherit;
+		height: 100%;
 
 		.item {
 			padding: ${ITEM_BASE_MARGIN_X_WIDTH}px;
@@ -49,7 +54,19 @@ const StyledSegmented = styled.div<{
 			p {
 				${styles.effects.text.body};
 				flex-shrink: 0;
+				inline-size: auto;
+				overflow-inline: hidden;
 				text-align: center;
+			}
+
+			@container style(--text-visibility: hidden) {
+				p {
+					inline-size: 0;
+				}
+				
+				.icon + p {
+					margin-inline-start: -10px;
+				}
 			}
 
 			.icon {
@@ -191,11 +208,12 @@ const StyledSegmented = styled.div<{
 	}
 `;
 
-export default function Segmented<T extends string = string>({ current: [current, setCurrent], disabled, children }: FCP<{
+export default function Segmented<T extends string = string>({ current: [current, setCurrent], disabled, className, children }: FCP<{
 	/** The identifier of the selected segmented item. */
 	current: StateProperty<T>;
 	/** Disabled? */
 	disabled?: boolean;
+	className?: ClassValue;
 }>) {
 	disabled = useContext(InteractionStateContext).disabled || disabled;
 	const items = React.Children.toArray(children).filter(child => isReactInstance(child, SegmentedItem)) as
@@ -232,6 +250,7 @@ export default function Segmented<T extends string = string>({ current: [current
 
 	return (
 		<StyledSegmented
+			className={className}
 			role="radiogroup"
 			disabled={disabled}
 			aria-disabled={disabled || undefined}
