@@ -1,5 +1,4 @@
 /* eslint-disable @stylistic/quote-props */
-/* eslint-disable @stylistic/operator-linebreak */
 
 export const fillColorAccentOpacity = {
 	secondary: 90,

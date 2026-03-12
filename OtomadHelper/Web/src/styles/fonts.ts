@@ -31,6 +31,8 @@ export const fonts = [
 	new FontFace("Yozora Sans", `url("${yozoraSans}") format("woff2")`, { weight: "250 900" }),
 ];
 
+export const DEFAULT_FONT_FAMILY_NAME = "Inter";
+
 { // Initialize fonts
 	for (const font of fonts) {
 		document.fonts.add(font);

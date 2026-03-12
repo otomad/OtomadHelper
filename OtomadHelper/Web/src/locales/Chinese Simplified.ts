@@ -961,6 +961,8 @@ export default {
 					solid: "纯色",
 				},
 				fontSize: "字体大小",
+				fontFamily: "字体",
+				defaultFontFamily: "默认字体",
 			},
 			preference: {
 				_: "偏好",

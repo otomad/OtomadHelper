@@ -3,6 +3,7 @@ export default function FontPicker({ font }: {
 	font: StatePropertyNonNull<string>;
 }) {
 	const [fonts, setFonts] = useAtom(fontsAtom);
+	const defaultFontFamilyDisplayName = useDefaultFontFamilyDisplayName();
 
 	async function updateLocalFonts() {
 		setFonts(await queryLocalFonts());
@@ -10,10 +11,11 @@ export default function FontPicker({ font }: {
 
 	return (
 		<ComboBox
+			forceBaseSelectAppearance
 			style={{ inlineSize: "100%" }}
 			current={font}
 			ids={fonts.map(font => font.family)}
-			options={fonts.map(font => font.displayName)}
+			options={fonts.map(font => font.displayName || defaultFontFamilyDisplayName)}
 			optionAttrs={fontFamily => ({ style: { fontFamily } })}
 			onClick={updateLocalFonts}
 		/>
@@ -25,11 +27,8 @@ interface LocalFontData {
 	readonly displayName: string;
 }
 
-const DEFAULT_FONT_FAMILY_NAME = "Inter";
-const defaultFontFamily = (): LocalFontData => ({
-	family: DEFAULT_FONT_FAMILY_NAME,
-	displayName: t.settings.appearance.defaultFontFamily,
-});
+const defaultFontFamily = (): LocalFontData => ({ family: "", displayName: "" });
+const useDefaultFontFamilyDisplayName = () => { const t = useT(); return t.settings.appearance.defaultFontFamily; };
 
 const fontsAtom = atom([defaultFontFamily()]);
 
@@ -43,4 +42,11 @@ async function queryLocalFonts() {
 				displayName: fullName.includes(family) ? family : fullName.replaceEnd(style).trim(),
 			});
 	return [defaultFontFamily(), ...fontFamiliesMap.values()];
+}
+
+export function useFontDisplayName(fontFamily: string) {
+	const defaultFontFamilyDisplayName = useDefaultFontFamilyDisplayName();
+	const [fonts] = useAtom(fontsAtom);
+	if (!fontFamily) return defaultFontFamilyDisplayName;
+	return (fonts.find(font => font.family === fontFamily)?.displayName ?? fontFamily) || defaultFontFamilyDisplayName;
 }

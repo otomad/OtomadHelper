@@ -203,7 +203,7 @@ const StyledComboBox = styled(StyledButton)(() => css`
 	}
 `);
 
-export default function ComboBox<T extends string | number>(props: FCP<{
+interface Props<T extends string | number> {
 	/** The identifiers for each option of the combo box. */
 	ids: readonly T[];
 	/** The display texts for each option of the combo box. */
@@ -214,16 +214,14 @@ export default function ComboBox<T extends string | number>(props: FCP<{
 	current: StateProperty<T>;
 	/** Additional attributes mapped by ID for option elements (base select appearance only). */
 	optionAttrs?: (id: T) => PropsOf<"option">;
+	/** Force to use CSS base-select appearance select combo box? */
+	forceBaseSelectAppearance?: boolean;
 	value?: never;
-}, "select">): React.JSX.Element;
-export default function ComboBox(props: FCP<{}, "select">): React.JSX.Element;
-export default function ComboBox<T extends string | number>({ ids = [], options = [], icons = [], current: [current, setCurrent] = NEVER_MIND, disabled, optionAttrs, ...htmlAttrs }: FCP<{
-	ids?: readonly T[];
-	options?: readonly Readable[];
-	icons?: readonly DeclaredIcons[];
-	current?: StateProperty<T>;
-	optionAttrs?: (id: T) => PropsOf<"option">;
-}, "select">) {
+}
+
+export default function ComboBox<T extends string | number>(props: FCP<Props<T>, "select">): React.JSX.Element;
+export default function ComboBox(props: FCP<{ value?: never }, "select">): React.JSX.Element;
+export default function ComboBox<T extends string | number>({ ids = [], options = [], icons = [], current: [current, setCurrent] = NEVER_MIND, disabled, optionAttrs, forceBaseSelectAppearance = false, ...htmlAttrs }: FCP<Partial<Props<T>>, "select">) {
 	const [iconSvgs, setIconSvgs] = useState<string[]>();
 	const hasIcons = icons.length > 0;
 	const currentIndex = ids.indexOf(current!);
@@ -243,7 +241,7 @@ export default function ComboBox<T extends string | number>({ ids = [], options 
 		setCurrent?.(result);
 	};
 
-	if (window.isWebView)
+	if (window.isWebView && !forceBaseSelectAppearance)
 		return (
 			<StyledComboBox
 				role="combobox"

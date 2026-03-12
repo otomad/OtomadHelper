@@ -14,7 +14,7 @@ export /* @internal */ const SystemBackdrops = {
 	win8: { types: ["colorization"], minVer: WindowsNT.Windows8 },
 	win7: { types: ["aero"], minVer: WindowsNT.WindowsVista },
 } as const;
-const [availableSystemBackdrops, windowsOfSystemBackdrops] = (() => {
+const [availableSystemBackdrops, windowsOfSystemBackdrops] = ((): [readonly Config.SystemBackdrop[], string] => {
 	for (const [os, { types, minVer }] of entries(SystemBackdrops))
 		if (currentWindowsVersion >= minVer)
 			return [types, os];
@@ -78,6 +78,7 @@ export default function Settings() {
 	const backgroundColorInvalid = actualContrast || actualAmoledDark;
 	const contrastPaletteEvaluation = useContrastPaletteEvaluation();
 	const accentColorButtonSelectedOutlineColor = contrastPaletteEvaluation === "high" ? "colored" : undefined;
+	const fontDisplayName = useFontDisplayName(fontFamily[0]);
 
 	// Dev mode
 	const { devMode, rtl } = useStoreState(devStore);
@@ -288,7 +289,7 @@ export default function Settings() {
 					expanded={DEV_EXPANDED}
 					view="grid"
 					itemWidth="square"
-					items={availableSystemBackdrops as never}
+					items={availableSystemBackdrops}
 					value={(
 						windowsOfSystemBackdrops === "win11" ? systemBackdrop_win11 :
 						windowsOfSystemBackdrops.in("win10", "win10_rtm") ? systemBackdrop_win10 :
@@ -402,7 +403,7 @@ export default function Settings() {
 			</Setting>
 			<Setting
 				meta={meta.appearance.fontFamily}
-				checkInfo={fontFamily[0]}
+				checkInfo={fontDisplayName}
 				expanded={DEV_EXPANDED}
 			>
 				<Expander.ChildWrapper>
