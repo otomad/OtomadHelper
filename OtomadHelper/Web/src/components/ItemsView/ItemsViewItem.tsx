@@ -65,8 +65,22 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 
 			.checkbox-label.items-view-item-checkbox {
 				position: absolute;
-				inset-block-start: 6px;
-				inset-inline-end: 6px;
+
+				&.top {
+					inset-block-start: 6px;
+				}
+
+				&.bottom {
+					inset-block-end: 6px;
+				}
+
+				&.left {
+					inset-inline-start: 6px;
+				}
+
+				&.right {
+					inset-inline-end: 6px;
+				}
 			}
 		}
 
@@ -317,7 +331,7 @@ const ItemsViewItemStateContext = createContext<{
 
 export type OnItemsViewItemClickEventHandler<T> = (id: T, selected: CheckState, e: React.MouseEvent<HTMLElement>) => void;
 
-export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected: _selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, criticallyHighlight, _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable, children, className, "aria-label": ariaLabel, "aria-description": ariaDescription, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
+export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, selected: _selected = "unchecked", details, actions, withBorder = false, alignItems = "center", baseAttrs, disableCheckmarkTransition, imageOverlay, selectionColor, dirBasedIcon, badge, tooltip, criticallyHighlight, checkmarkPosition = "top right", _view: view = undefined!, _multiple: multiple, _multipleChangeable: multipleChangeable = false, children, className, "aria-label": ariaLabel, "aria-description": ariaDescription, onSelectedChange, onClick, ...htmlAttrs }: FCP<{
 	/** Image. */
 	image?: string | ReactNode;
 	/** Icon. */
@@ -357,11 +371,13 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 	tooltip?: TooltipProps | string;
 	/** Show a red color border? */
 	criticallyHighlight?: boolean;
+	/** Change the checkmark position at the image, available only in grid view mode and multiple selection mode. @default "top right" */
+	checkmarkPosition?: "top left" | "top right" | "bottom left" | "bottom right";
 	/** @private View mode: list, tile, grid. */
 	_view?: ItemView;
 	/** @private Multiple selection mode? */
 	_multiple?: boolean;
-	/** @private Can `multiple` prop be dynamically changed? Set it to false for better performance, and set it to true to present a better animation. */
+	/** @private Can `multiple` prop be dynamically changed? Set it to false for better performance, and set it to true to present a better animation. @default false */
 	_multipleChangeable?: boolean;
 	/** Occurs when the selection changed. */
 	onSelectedChange?(id: T, selected: CheckState): void;
@@ -386,7 +402,7 @@ export /* @internal */ default function ItemsViewItem<T>({ image, icon, id, sele
 			{details && <p className="details" id={`${ariaId}-details`}><Preserves>{details}</Preserves></p>}
 		</ItemsViewItemTextPart>
 	);
-	const checkboxContent = <Checkbox className="items-view-item-checkbox" value={[selected]} plain inert disableCheckmarkTransition={disableCheckmarkTransition} />;
+	const checkboxContent = <Checkbox className={["items-view-item-checkbox", checkmarkPosition]} value={[selected]} plain inert disableCheckmarkTransition={disableCheckmarkTransition} />;
 	const checkbox = multipleChangeable ?
 		<CssTransition in={multiple} timeout={250} requestAnimationFrame>{checkboxContent}</CssTransition> :
 		multiple && checkboxContent;

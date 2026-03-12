@@ -528,7 +528,7 @@ export default function PreviewPrve({ thumbnail, effect, frames, step, iStep, is
 }, "div">) {
 	const requireMirrorWrapperFilters = ["ccwMirror", "cwMirror"];
 	const doubleImagesFilters = ["negativeFade"];
-	const webglFilters = ["negativeLuma", "radialBlur"];
+	const webglFilters = ["negativeLuma", "radialBlur", "twist"];
 
 	// const canvasFilters = useCanvasFilters(thumbnail);
 	// const webglFilters = useWebglFilters(thumbnail);
@@ -637,6 +637,11 @@ function WebglFilter({ src, effect, step }: {
 				setUniformName("progress");
 				setStaticUniformValue(-0.5);
 				setUniformKeyframes([[0, 1], [-1, 0]]);
+				break;
+			case "twist":
+				setUniformName("angle");
+				setStaticUniformValue(-5);
+				setUniformKeyframes([[-5, 5], [5, -5]]);
 				break;
 			default:
 				break;

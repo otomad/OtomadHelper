@@ -665,21 +665,7 @@ export default {
 					edge: "Edge", // Edge point of radial gradient and conic gradient.
 					corner: "Corner", // Corner point of diamond gradient.
 				},
-				// effects: {
-				// 	rainbow: "Rainbow Colors",
-				// 	graSaturated: "Gradually Saturated",
-				// 	graContrasted: "Gradually Contrasted",
-				// 	threshold: "Threshold Variation",
-				// 	altChromatic: "Alternately Chromatic",
-				// 	altNegative: "Alternately Negative",
-				// 	altLuminInvert: "Alternately Luminance Invert",
-				// 	altHueInvert: "Alternately Hue Invert",
-				// 	rotInvert: "Rotatively Invert",
-				// },
-				// gridIntegration: {
-				// 	_: "Grid layout integration",
-				// 	autoLineLength: "Set it automatically when generating",
-				// },
+				trippyColoring: "Trippy Coloring",
 			},
 			applyToSelectedTracks: "Apply to selected tracks",
 			deactivate: "Deactivate",
@@ -779,6 +765,8 @@ export default {
 				oversaturation: "Oversaturation",
 				emphasizeThrice: "Thrice to Emphasize",
 				twist: "Twist",
+				twist_ccw: "Twist (Counterclockwise)",
+				twist_cw: "Twist (Clockwise)",
 				pixelate: "Pixelate",
 				spectrum: "Spectrum",
 				thermal: "Thermal Vision",
@@ -1311,11 +1299,7 @@ export default {
 					mirrorPriorityInfo: "If multiple mirrors are applied to the same target simultaneously, the former mirror has a higher priority than the latter. For example, if both “$t(prve.effects.hMirror_left)” and “$t(prve.effects.hMirror_right)” are applied to a target together, only “$t(prve.effects.hMirror_left)” will be applied eventually.",
 					colorInvertInfo: "To achieve “$t(prve.effects.colorInvert),” just apply “$t(prve.effects.hueInvert)” and “$t(prve.effects.luminInvert)” to the same target.",
 					exchange: "Exchange values",
-					gridIntegration: {
-						_: "Configure when applying in conjunction with grid layout",
-						autoLineLength: "When **enabled** and **grid layout** is also enabled, some parameters set in grid layout will automatically be used in the **generation mode**. This will not work in the **instant application mode**, you need to set the parameters manually.",
-						enabled: "When enabled, the integration with grid layout will be optimized. When disabled, any layout will be ignored.",
-					},
+					trippyColoring: "Uses typical effects randomly from Sparta Remix series YTPMVs.",
 				},
 				legato: {
 					_: "Fills in the gaps between the track clips",

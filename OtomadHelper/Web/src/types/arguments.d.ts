@@ -12,7 +12,6 @@ declare global {
 	/** Positions from all sides. */
 	type Position =
 		/* eslint-disable @stylistic/no-multi-spaces */
-		/* eslint-disable @stylistic/operator-linebreak */
 		|    "top left"   |    "top center" |    "top right"
 		| "center left"   | "center center" | "center right"
 		| "bottom left"   | "bottom center" | "bottom right"
@@ -29,7 +28,6 @@ declare global {
 		| "center start"  | "center center" | "center end"
 		|    "end start"  |    "end center" |    "end end";
 		/* eslint-enable  @stylistic/no-multi-spaces */
-		/* eslint-enable  @stylistic/operator-linebreak */
 
 	type AnimatedIconState = AnimatedIconStateNS.Tuple | AnimatedIconStateNS.Object;
 

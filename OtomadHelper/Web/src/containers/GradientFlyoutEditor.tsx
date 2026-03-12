@@ -12,6 +12,8 @@ const ParityStyles = Enum({
 	hMirrorRight: { label: t.prve.effects.hMirror_right, effect: "hMirror", step: 2 },
 	vMirrorTop: { label: t.prve.effects.vMirror_top, effect: "vMirror", step: 1 },
 	vMirrorBottom: { label: t.prve.effects.vMirror_bottom, effect: "vMirror", step: 2 },
+	twistCw: { label: t.ytp.effects.twist_cw, effect: "twist", step: 1 },
+	twistCcw: { label: t.ytp.effects.twist_ccw, effect: "twist", step: 2 },
 });
 
 const GradientStyles = Enum({
@@ -70,6 +72,8 @@ function matchParity(parity: GridParityType, column: number, row: number, random
 	}[parity];
 }
 
+const TRIPPY_COLORING_ID = "trippy-coloring";
+
 const StyledGradientFlyoutEditor = styled.div`
 	.forward > &.exit-active,
 	.backward > &.exit-active {
@@ -110,7 +114,7 @@ const StyledGradientFlyoutEditor = styled.div`
 			flex-shrink: 0;
 			inline-size: 100px;
 
-			.base {
+			> .base {
 				${styles.mixins.square("100px")};
 			}
 
@@ -124,6 +128,7 @@ const StyledGradientFlyoutEditor = styled.div`
 		display: grid;
 		grid-auto-flow: column;
 		grid-template-rows: repeat(2, 1fr);
+		justify-content: start;
 		inline-size: min-content;
 		padding-block: 16px;
 
@@ -192,6 +197,21 @@ const StyledGradientFlyoutEditor = styled.div`
 		inset-inline-end: 3px;
 		cursor: help;
 	}
+
+	.custom-parity-btn {
+		inline-size: max-content;
+
+		.content {
+			flex-shrink: 0;
+			gap: 16px;
+			padding-block: 12px;
+			padding-inline: 8px;
+		}
+	}
+
+	.${TRIPPY_COLORING_ID} canvas {
+		filter: invert(1) hue-rotate(45deg) saturate(2);
+	}
 `;
 
 const MARQUEE_SPEED = 40;
@@ -223,6 +243,19 @@ export default function GradientFlyoutEditor() {
 						<HorizontalScroll as={Fragment}>
 							{currentPage === "style" ? (
 								<ItemsView data-page="style" className={nameof.kebab({ GradientFlyoutEditor })} view="grid" current={null}>
+									<ItemsView.Item
+										id={TRIPPY_COLORING_ID}
+										key={TRIPPY_COLORING_ID}
+										image={<PreviewPrve thumbnail={exampleThumbnail} effect="twist" step={1} frames={2} className={TRIPPY_COLORING_ID} />}
+										imageOverlay={<AsteriskHelp>{t.descriptions.track.gradient.trippyColoring}</AsteriskHelp>}
+										role="button"
+										_multiple
+										aria-label={t.track.gradient.trippyColoring}
+										checkmarkPosition="top left"
+										// onClick={() => clickAStyle("parity", key)}
+									>
+										<MarqueeIfOverflow speed={MARQUEE_SPEED}>{t.track.gradient.trippyColoring}</MarqueeIfOverflow>
+									</ItemsView.Item>
 									<Subheader vertical>{tc.groups.parity}</Subheader>
 									{ParityStyles.map(({ key, label, ...raw }) => (
 										<ItemsView.Item
@@ -237,9 +270,9 @@ export default function GradientFlyoutEditor() {
 												/>
 											)}
 											imageOverlay={(() => {
-												const tooltip = key.includes("Mirror") ? t.descriptions.track.gradient.mirrorPriorityInfo :
+												const tooltip = key.includes("Mirror") || key.includes("twist") ? t.descriptions.track.gradient.mirrorPriorityInfo :
 													key.includes("Invert") ? t.descriptions.track.gradient.colorInvertInfo : undefined;
-												return tooltip && <Tooltip placement="block" title={tooltip}><Badge className="asterisk" status="asterisk" /></Tooltip>;
+												return <AsteriskHelp>{tooltip}</AsteriskHelp>;
 											})()}
 											role="button"
 											aria-label={label}
@@ -266,7 +299,13 @@ export default function GradientFlyoutEditor() {
 								<div className="pattern">
 									{currentPattern === "parity" ? (
 										<>
-											<ItemsView data-page="pattern" data-pattern="parity" view="tile" current={null} aria-label={tc.groups.parity}>
+											<ItemsView
+												data-page="pattern"
+												data-pattern="parity"
+												view="tile"
+												current={null}
+												aria-label={tc.groups.parity}
+											>
 												{ParityPatterns.map(({ key, label, icon }) => (
 													<ItemsView.Item
 														id={key}
@@ -277,11 +316,18 @@ export default function GradientFlyoutEditor() {
 														{label}
 													</ItemsView.Item>
 												))}
+												<Button subtle icon="edit" className="custom-parity-btn">{t.custom}</Button>
 											</ItemsView>
 										</>
 									) : currentPattern === "gradient" ? (
 										<>
-											<ItemsView data-page="pattern" data-pattern="gradient" view="tile" current={null} aria-label={tc.groups.gradient}>
+											<ItemsView
+												data-page="pattern"
+												data-pattern="gradient"
+												view="tile"
+												current={null}
+												aria-label={tc.groups.gradient}
+											>
 												{GradientPatterns.map(({ key, label, icon }) => (
 													<ItemsView.Item
 														id={key}
@@ -336,6 +382,9 @@ export default function GradientFlyoutEditor() {
 		</Contents>
 	);
 }
+
+const AsteriskHelp = ({ children: tooltip }: { children?: string }) => tooltip ?
+	<Tooltip placement="block" title={tooltip}><Badge className="asterisk" status="asterisk" /></Tooltip> : undefined;
 
 const StyledIconWithHighlightPoint = styled.div`
 	${styles.mixins.square("1em")};

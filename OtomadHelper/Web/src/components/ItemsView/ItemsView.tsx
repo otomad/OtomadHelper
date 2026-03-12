@@ -145,9 +145,10 @@ export default function ItemsView<
 		const id = child.props.id as T;
 		const key = child.key;
 		const onParentClick = child.props.onClick;
+		const overriddenMultiple = child.props._multiple;
 		const item = React.cloneElement(child, {
 			_view: view,
-			_multiple: multiple,
+			_multiple: overriddenMultiple !== undefined ? overriddenMultiple : multiple,
 			_multipleChangeable: multipleChangeable,
 			..._current !== null && {
 				selected: !isSelected(id) ? "unchecked" : indeterminatenesses.includesDeep(id) ? "indeterminate" : "checked",
