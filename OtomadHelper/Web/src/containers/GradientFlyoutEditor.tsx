@@ -254,7 +254,7 @@ export default function GradientFlyoutEditor() {
 										checkmarkPosition="top left"
 										// onClick={() => clickAStyle("parity", key)}
 									>
-										<MarqueeIfOverflow speed={MARQUEE_SPEED}>{t.track.gradient.trippyColoring}</MarqueeIfOverflow>
+										<MarqueeIfOverflow speed={MARQUEE_SPEED}><Preserves>{t.track.gradient.trippyColoring}</Preserves></MarqueeIfOverflow>
 									</ItemsView.Item>
 									<Subheader vertical>{tc.groups.parity}</Subheader>
 									{ParityStyles.map(({ key, label, ...raw }) => (
