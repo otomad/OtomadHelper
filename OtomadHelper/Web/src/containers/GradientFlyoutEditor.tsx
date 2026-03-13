@@ -268,6 +268,7 @@ export default function GradientFlyoutEditor() {
 													step={"step" in raw ? raw.step : 1}
 													frames={"step" in raw ? 2 : undefined}
 												/>
+												/* TODO: 渲染canvas太贵了，每次进入页面要重新加载一次，略慢，要改成静态图片。 */
 											)}
 											imageOverlay={(() => {
 												const tooltip = key.includes("Mirror") || key.includes("twist") ? t.descriptions.track.gradient.mirrorPriorityInfo :

@@ -12,6 +12,7 @@ const StyledTooltip = styled.div`
 	border-radius: 4px;
 	outline: 1px solid ${c("stroke-color-surface-stroke-flyout")};
 	box-shadow: 0 4px 8px ${c("shadows-flyout")};
+	backdrop-filter: blur(60px);
 	transition: opacity ${eases.easeOutMax} 250ms, margin ${eases.easeOutMax} 250ms;
 	${!DEBUG_MODE && css`pointer-events: none;`};
 
@@ -30,7 +31,6 @@ const StyledTooltip = styled.div`
 		word-wrap: break-word;
 		overflow-wrap: break-word;
 		background-color: ${c("background-fill-color-acrylic-background-default")};
-		backdrop-filter: blur(60px);
 
 		&:has(.tooltip-content) {
 			padding: 0;
@@ -140,18 +140,20 @@ export default function Tooltip({ title: _title, placement, offset, timeout = 50
 	const [shown, setShown] = useState(false);
 	const [childEl, setChildEl] = useDomRefState<"div">(); // Use state instead of ref to make sure change it to rerender.
 	const shownTimeout = useRef<Timeout>(undefined);
-	const newAnchorName = DEFAULT_TOOLTIP_ANCHOR_PREFIX + useId();
-	const anchorName = useRef(newAnchorName);
+	const anchorName = DEFAULT_TOOLTIP_ANCHOR_PREFIX + useId();
 	const { isInPage } = useContext(MainPageContext);
 
 	useImperativeHandle(ref, () => childEl!);
 
-	useEffect(() => { // TODO: anchor-name 允许同时多个名称，因此可以更自由，不用这么麻烦。
+	useEffect(() => {
 		if (!childEl) return;
-		if (childEl.style.anchorName) anchorName.current = childEl.style.anchorName;
-		else childEl.style.anchorName = newAnchorName;
+		const anchorList = new AnchorNameList(childEl.style.anchorName);
+		anchorList.add(anchorName);
+		childEl.style.anchorName = anchorList.toString();
 		return () => {
-			if (childEl.style.anchorName?.startsWith(DEFAULT_TOOLTIP_ANCHOR_PREFIX)) childEl.style.anchorName = "";
+			const anchorList = new AnchorNameList(childEl.style.anchorName);
+			anchorList.remove(anchor => anchor.startsWith(DEFAULT_TOOLTIP_ANCHOR_PREFIX));
+			childEl.style.anchorName = anchorList.toString();
 		};
 	}, [childEl]);
 
@@ -164,7 +166,7 @@ export default function Tooltip({ title: _title, placement, offset, timeout = 50
 
 	useEffect(() => {
 		updateTitle();
-		if (dom && title && applyAriaLabel) {
+		if (dom && title && applyAriaLabel && dom.ariaHidden !== "true") {
 			if (canToString(title)) dom.ariaLabel ||= title.toString();
 			if (isReactInstance(title, TooltipContent)) {
 				if (canToString(title.props.title)) dom.ariaLabel ||= title.props.title.toString();
@@ -204,7 +206,7 @@ export default function Tooltip({ title: _title, placement, offset, timeout = 50
 							role="tooltip"
 							className={placement ?? "unknown"}
 							style={{
-								"--anchor": anchorName.current,
+								"--anchor": anchorName,
 								"--offset": offset !== undefined ? offset + "px" : undefined,
 								positionVisibility: isInPage ? "anchors-visible" : undefined,
 							}}
