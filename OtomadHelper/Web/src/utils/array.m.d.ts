@@ -771,7 +771,7 @@ declare interface IteratorObject<T, TReturn, TNext> {
 	/**
 	 * Returns an iterable of index, value pairs for every entry in the iterator object.
 	 */
-	entries(): Generator<[index: number, element: T]>;
+	entries(): IteratorObject<[index: number, element: T]>;
 }
 
 declare interface Uint8Array {

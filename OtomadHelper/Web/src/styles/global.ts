@@ -286,10 +286,11 @@ const GlobalStyle = createGlobalStyle<{
 	#large-viewport-size {
 		position: fixed;
 		top: 0;
-		left: 0;
+		left: -200lvw;
 		width: 100lvw;
 		height: 100lvh;
 		visibility: hidden;
+		content-visibility: hidden;
 	}
 
 	// Additional calculated colors

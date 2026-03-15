@@ -419,28 +419,6 @@ export async function asyncIterMap<TIn, TOut>(asyncIter: AsyncGenerator<TIn>, ca
 }
 
 /**
- * Concatenates multiple iterables or iterators into a single generator.
- *
- * @template TIterable - The type of elements in the iterables.
- * @template TIterator - The type of elements in the iterators.
- * @param iterators - A list of iterables to concatenate.
- * @yields {TIterable | TIterator} Elements from each iterable in the order they are provided.
- *
- * @example
- * ```typescript
- * const a = [1, 2];
- * const b = [3, 4];
- * for (const value of concatIter(a, b)) {
- *     console.log(value); // 1, 2, 3, 4
- * }
- * ```
- */
-export const concatIter = function* <TIterable = never, TIterator = never>(...iterators: (Iterable<TIterable> | Iterator<TIterator>)[]) {
-	for (const it of iterators)
-		yield* it as Iterable<TIterable | TIterator>;
-};
-
-/**
  * Concatenates multiple Uint8Array buffers into a single Uint8Array.
  * @param arrays - Variable number of Uint8Array buffers to concatenate
  * @returns A new Uint8Array containing all input arrays concatenated in order

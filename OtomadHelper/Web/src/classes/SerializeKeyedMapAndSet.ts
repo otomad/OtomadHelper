@@ -100,7 +100,7 @@ export class SerializeKeyedSet<T> extends Set<T> {
 	}
 
 	override union<U>(other: ReadonlySetLike<U>) {
-		return new SerializeKeyedSet(concatIter(this, other.keys()));
+		return new SerializeKeyedSet(Iterator.concat(this, other.keys()));
 	}
 
 	override intersection<U>(other: ReadonlySetLike<U>) {

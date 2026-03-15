@@ -28,9 +28,7 @@ declare global {
 	}
 
 	interface Object {
-		/**
-		 * [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive)
-		 */
+		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Symbol/toPrimitive) */
 		[Symbol.toPrimitive](hint: "number" | "string" | "default"): any;
 	}
 
@@ -101,6 +99,16 @@ declare global {
 
 		/** [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Map/getOrInsertComputed) */
 		getOrInsertComputed(key: K, computeFn: (key: K) => V): V;
+	}
+
+	declare interface IteratorConstructor {
+		/**
+		 * The `Iterator.concat()` static method creates a new `Iterator` object from a list of iterable objects.
+		 * The new iterator yields the values from each of the input iterables in sequence.
+		 *
+		 * [MDN Reference](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Iterator/concat)
+		 */
+		concat<TIterable = never, TIterator = never>(...iterators: (Iterable<TIterable> | Iterator<TIterator>)[]): IteratorObject<TIterable | TIterator>;
 	}
 }
 // #endregion

@@ -119,7 +119,7 @@ export function encodeBitArray(bits: Uint8Array) {
 	padBits[padBits.length - 1] = 1;
 
 	const bytes = new Uint8Array(byteLength);
-	const iterable = concatIter(padBits, bits);
+	const iterable = Iterator.concat(padBits, bits);
 	for (const [index, bit] of iterable.entries())
 		if (bit) bytes[index >> 3] |= 1 << 7 - (index & 7);
 
