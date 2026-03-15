@@ -58,10 +58,6 @@ const StyledTopLeftButtons = styled.div`
 		inset-block-start: ${navButtonSize.height}px;
 		inset-inline-start: 0;
 	}
-
-	&.disable-tooltip * {
-		anchor-name: none !important;
-	}
 `;
 
 function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, disableTooltip = false, onBack, onNavButton }: FCP<{
@@ -88,13 +84,13 @@ function TopLeftButtons({ shadow, paneDisplayMode, canBack = true, disableToolti
 	}, undefined, null);
 
 	return (
-		<StyledTopLeftButtons className={{ shadow, vertical, disableTooltip }}>
+		<StyledTopLeftButtons className={{ shadow, vertical }}>
 			{!shadow && (
 				<>
-					<Tooltip placement={tooltipPlacement} title={<TooltipTitleWithShortcut title={t.back} shortcut={["Alt", "←"]} />}>
+					<Tooltip placement={tooltipPlacement} title={<TooltipTitleWithShortcut title={t.back} shortcut={["Alt", "←"]} />} disabled={disableTooltip}>
 						<NavButton animatedIcon="back" disabled={!canBack} onClick={onBack} aria-label={t.back} dirBasedIcon />
 					</Tooltip>
-					<Tooltip placement={tooltipPlacement} title={<TooltipTitleWithShortcut title={t.navigation} shortcut={["Alt", "H"]} />}>
+					<Tooltip placement={tooltipPlacement} title={<TooltipTitleWithShortcut title={t.navigation} shortcut={["Alt", "H"]} />} disabled={disableTooltip}>
 						<NavButton animatedIcon="global_nav_button" onClick={onNavButton} aria-label={t.navigation} />
 						{/* Do not use `accessKey="H"`, it do repeat the keydown, which is not we wanted. */}
 					</Tooltip>

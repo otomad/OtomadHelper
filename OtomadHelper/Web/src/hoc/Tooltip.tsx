@@ -147,13 +147,13 @@ export default function Tooltip({ title: _title, placement, offset, timeout = 50
 
 	useEffect(() => {
 		if (!childEl) return;
-		const anchorList = new AnchorNameList(childEl.style.anchorName);
-		anchorList.add(anchorName);
-		childEl.style.anchorName = anchorList.toString();
+		{
+			using anchorNames = new ElementAnchorName(childEl);
+			anchorNames.add(anchorName);
+		}
 		return () => {
-			const anchorList = new AnchorNameList(childEl.style.anchorName);
-			anchorList.remove(anchor => anchor.startsWith(DEFAULT_TOOLTIP_ANCHOR_PREFIX));
-			childEl.style.anchorName = anchorList.toString();
+			using anchorNames = new ElementAnchorName(childEl);
+			anchorNames.remove(anchor => anchor.startsWith(DEFAULT_TOOLTIP_ANCHOR_PREFIX));
 		};
 	}, [childEl]);
 

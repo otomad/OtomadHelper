@@ -682,7 +682,7 @@ export function canUseHook() {
  * @note This function does not support type guarding in TypeScript, it is recommended to use it only in the JavaScript level.
  */
 // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
-export /* @internal */ function type(object: Object | undefined | null, lowerCase: boolean = false) {
+export function type(object: Object | undefined | null, lowerCase: boolean = false) {
 	const type = object != null ? object.constructor.name : Object.prototype.toString.call(object).slice(8, -1);
 	return lowerCase ? type.toLowerCase() : type;
 }

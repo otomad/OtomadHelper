@@ -104,3 +104,124 @@ export class AnchorNameList implements Iterable<string> {
 		return this.#anchors[Symbol.iterator]();
 	}
 }
+
+/**
+ * A DOM element-bound utility for managing CSS anchor-name property.
+ *
+ * Automatically applies all changes to the target HTMLElement's style.
+ *
+ * Internally delegates logic to {@link AnchorNameList} and updates `element.style.anchorName` on modification.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/anchor-name
+ */
+export class ElementAnchorName implements Iterable<string>, Disposable {
+	/** Target DOM element to manage anchor-name for. */
+	readonly #element: HTMLElement;
+	/** Internal anchor name list handler (reused core logic). */
+	#anchorList!: AnchorNameList;
+	/**
+	 * Where to retrieve `anchor-name` property value from.
+	 * - `false`: `element.style.anchorName`.
+	 * - `true`: `getComputedStyle(element).anchorName`.
+	 * @default false
+	 */
+	readonly #computed: boolean;
+
+	/**
+	 * Create an ElementAnchorName instance bound to a DOM element.\
+	 * Automatically parses the element's current anchor-name style value.
+	 * @param element - Target HTMLElement to manage anchor-name for.
+	 * @param computed - Where to retrieve `anchor-name` property value from. Defaults to `false`.
+	 * - `false`: `element.style.anchorName`.
+	 * - `true`: `getComputedStyle(element).anchorName`.
+	 * @throws {TypeError} If the provided element is not a valid HTMLElement.
+	 */
+	constructor(element: HTMLElement, computed: boolean = false) {
+		if (!(element instanceof HTMLElement))
+			throw new TypeError(`\`${nameof({ ElementAnchorName })}\` requires a valid \`HTMLElement\` instance, retrieves \`${type(element)}\``);
+
+		this.#element = element;
+		this.#computed = computed;
+		this.refresh();
+	}
+
+	/**
+	 * Get the number of registered anchor names for the element.
+	 * @returns Count of anchor names.
+	 */
+	get size(): number {
+		return this.#anchorList.size;
+	}
+
+	/**
+	 * Add one or more anchor names to the element (auto-escaped & deduplicated).
+	 * @param names - Anchor names to add.
+	 */
+	add(...names: string[]): void {
+		this.#anchorList.add(...names);
+	}
+
+	/**
+	 * Remove one or more anchor names from the element.
+	 *
+	 * Supports string names or predicate callback for bulk removal.
+	 * @param names - String names to remove or filter predicate function.
+	 */
+	remove(...names: (string | ((name: string) => boolean))[]): void {
+		this.#anchorList.remove(...names);
+	}
+
+	/**
+	 * Check if the element has a specific anchor name.
+	 * @param name - Anchor name to check.
+	 * @returns True if the anchor name exists.
+	 */
+	has(name: string): boolean {
+		return this.#anchorList.has(name);
+	}
+
+	/**
+	 * Toggle an anchor name on the element (add/remove).
+	 *
+	 * Supports force boolean to explicitly add/remove the name.
+	 * @param name - Anchor name to toggle
+	 * @param force - Optional: force add (true) or remove (false)
+	 * @returns True if the anchor exists after toggle
+	 */
+	toggle(name: string, force?: boolean): boolean {
+		return this.#anchorList.toggle(name, force);
+	}
+
+	/**
+	 * Convert the anchor name list to a valid CSS comma-separated string.
+	 * @returns Formatted anchor-name string
+	 */
+	toString(): string {
+		return this.#anchorList.toString();
+	}
+
+	/**
+	 * Support iteration over the element's anchor names (for...of loops).
+	 * @returns Iterator for escaped anchor names.
+	 */
+	[Symbol.iterator](): Iterator<string> {
+		return this.#anchorList[Symbol.iterator]();
+	}
+
+	/**
+	 * Private sync method: apply the element's anchor-name style property.
+	 */
+	[Symbol.dispose](): void {
+		this.#element.style.anchorName = this.toString();
+	}
+
+	/**
+	 * Refresh the internal state from the element's current anchor-name value.
+	 *
+	 * Useful if the element's anchor-name was modified outside this utility.
+	 */
+	refresh(): void {
+		const currentAnchorName = !this.#computed ? this.#element.style.anchorName : getComputedStyle(this.#element).anchorName;
+		this.#anchorList = new AnchorNameList(currentAnchorName);
+	}
+}
