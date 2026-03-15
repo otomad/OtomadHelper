@@ -155,6 +155,7 @@ words:
   - lch
   - lengthenable
   - lengthenings
+  - leq
   - letterboxed
   - letterboxing
   - lightningcss
@@ -187,6 +188,7 @@ words:
   - multitrack
   - multitracks
   - nameof
+  - neq
   - neta
   - netaed
   - neutual
@@ -497,3 +499,5 @@ flagWords:
   - whitelist -> allowlist
   - blacklists -> blocklists
   - whitelists -> allowlists
+  - lte -> leq
+  - gte -> geq

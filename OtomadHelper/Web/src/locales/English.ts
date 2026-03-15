@@ -225,6 +225,10 @@ export default {
 		even: "Even",
 		current: "Current",
 		random: "Random",
+		note: "Note", // Musical note.
+		note_other: "Notes",
+		clip: "Clip", // Track event.
+		clip_other: "Clips",
 		infoBar: {
 			warning: "Warning",
 		},
@@ -1099,6 +1103,7 @@ export default {
 					trim: "Trims the generation time range of the score",
 					periodicity: "Filters generated notes with a periodic or parity-based selection approach at regular intervals in the sequence",
 					pitchRange: "Generates only notes within the specified range of the musical scale",
+					duration: "Only notes that meet the duration of a specific value range can be generated",
 				},
 				encoding: "Select the correct text encoding used when reading files to prevent garbled metadata, such as track names and lyrics",
 				tempo: "Specify the beats per minute",
@@ -1535,19 +1540,32 @@ export default {
 				trimEnd: "End time",
 			},
 			fromTo: "From {{from}} to {{to}}",
-			filter: "Filter",
+			operators: {
+				keepDuration: "Retains durations within",
+				keepDuration_oneValue: "Retains {{target, lowercase}} with durations that is {{compare, lowercase}} {{value}} {{unit, lowercase}}", // Retains notes with durations that is greater than or equal to 2 seconds
+				keepDuration_twoValues: "Retains {{target, lowercase}} with durations that is {{compare1, lowercase}} {{value1}} {{unit1, lowercase}} {{logic, lowercase}} {{compare2, lowercase}} {{value2}} {{unit2, lowercase}}", // Retains notes with durations that is greater than or equal to 2 seconds and less than or equal to 6 seconds
+				allPassed: "All passed",
+				or: "Or",
+				and: "And",
+				lt: "less than",
+				gt: "greater than",
+				leq: "less than or equal to",
+				geq: "greater than or equal to",
+				eq: "equal to",
+				neq: "not equal to",
+			},
 		},
 		charsets: {
 			unicode: "Unicode",
 			utf16Be: "Unicode (Big-Endian)",
 			utf16Le: "Unicode (Little-Endian)",
-			hans: "Simplified Chinese",
-			hant: "Traditional Chinese",
-			westernEuropean: "Western European",
-			centralEuropean: "Central European",
-			tr: "Turkish",
-			bat: "Baltic",
-			vi: "Vietnamese",
+			hans: "Simplified Chinese", // Simplified Chinese character charset (简体字) writing system, not language (简体中文).
+			hant: "Traditional Chinese", // Traditional Chinese character charset (繁體字) writing system, not language (繁體中文).
+			westernEuropean: "Western European", // Western European character charset writing system.
+			centralEuropean: "Central European", // Central European character charset writing system.
+			tr: "Turkish", // Turkish character charset writing system, not Turkish language.
+			bat: "Baltic", // Baltic character charset writing system, not Baltic language.
+			vi: "Vietnamese", // Vietnamese character charset writing system, not Vietnamese language.
 		},
 		aliases: {
 			// cSpell:disable

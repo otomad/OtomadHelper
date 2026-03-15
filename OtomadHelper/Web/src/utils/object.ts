@@ -829,3 +829,18 @@ export function keysWithSameValue<const TKey extends PropertyKey, TValue>(...arg
 		[key in TKey]: TValue;
 	};
 }
+
+export function deconstructState<TState, TSelected = TState>(state: StateProperty<TState>, selector: (state: TState) => TSelected = state => state as unknown as TSelected) {
+	return new Proxy(state, {
+		get(target, property) {
+			return useStateSelector(
+				target,
+				state => (selector(state) as AnyObject)[property],
+				(value, state) => (selector(state) as AnyObject)[property] = value,
+				{ immer: true },
+			);
+		},
+	}) as {
+		[key in keyof TSelected]: StatePropertyNonNull<TSelected[key]>
+	};
+}

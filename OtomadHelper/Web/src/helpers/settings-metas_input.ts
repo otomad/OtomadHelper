@@ -88,6 +88,7 @@ export const settingsMetasInput = {
 				trim: { icon: "aspect_ratio", title: t.source.trim },
 				periodicity: { icon: "skip_forward_interval" },
 				pitchRange: { icon: "music_note_arrow_bidirectional" },
+				duration: { icon: "timer", title: t.duration },
 			},
 		},
 		encoding: { icon: "globe" },

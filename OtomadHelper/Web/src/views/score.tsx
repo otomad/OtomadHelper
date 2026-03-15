@@ -124,7 +124,8 @@ export default function Score({ _trackSelectorOnly = false }: {
 }) {
 	const {
 		format, encoding, tempoUsing, customTempo,
-		trimEnabled, trimStart, trimEnd, periodicityEnabled, periodicityPreset, periodicityInterval, periodicityBits, pitchRangeEnabled, pitchRange,
+		trimEnabled, trimStart, trimEnd, periodicityEnabled, periodicityPreset, periodicityInterval, periodicityBits,
+		pitchRangeEnabled, pitchRange, durationFilterEnabled, durationFilter,
 		timeSignature: [timeSignature], trackOrChannel, autoChangeProjectTempo, autoChangeProjectTimeSignature,
 		selectedTrack: [selectedTrack, setSelectedTrack], multipleSelectTrackItems: [selectTrackItems, _setSelectTrackItems],
 	} = useSelectConfig(c => c.score);
@@ -138,6 +139,7 @@ export default function Score({ _trackSelectorOnly = false }: {
 	const periodicityActuallyEnabled = useMemo(() => !(periodicityPreset[0] === "custom" && BitArray.fromBase64(periodicityBits[0]).toResized(periodicityInterval[0]).every(Boolean)), [periodicityPreset[0], periodicityBits[0]]);
 	const pitchRangeActuallyEnabled = useMemo(() => !lodash.isEqual(pitchRange[0], DEFAULT_PITCH_RANGE), [pitchRange[0]]);
 	const filterActuallyEnabled = useMemo(() => trimEnabled[0] && trimActuallyEnabled || periodicityEnabled[0] && periodicityActuallyEnabled || pitchRangeEnabled[0] && pitchRangeActuallyEnabled, [trimEnabled[0], periodicityEnabled[0], pitchRangeEnabled[0], trimActuallyEnabled, periodicityActuallyEnabled, pitchRangeActuallyEnabled]);
+	const durationFilterActuallyEnabled = useMemo(() => !DurationFilter.isAllPassed(durationFilter[0]), [durationFilter[0]]);
 
 	const setSelectTrackItems = (recipe: (draft: typeof selectTrackItems) => void) => _setSelectTrackItems(produce(recipe));
 
@@ -334,6 +336,9 @@ export default function Score({ _trackSelectorOnly = false }: {
 				</Setting>
 				<Setting meta={meta.filter.pitchRange} expanded={pitchRangeEnabled} type="switch" actuallyOn={pitchRangeActuallyEnabled}>
 					<PianoPicker pitch={pitchRange} showOutput showReset />
+				</Setting>
+				<Setting meta={meta.filter.duration} expanded={durationFilterEnabled} type="switch" actuallyOn={durationFilterActuallyEnabled}>
+					<DurationFilter filter={durationFilter} target="note" />
 				</Setting>
 			</Setting>
 			<Setting

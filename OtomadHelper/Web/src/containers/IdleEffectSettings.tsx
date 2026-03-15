@@ -75,18 +75,7 @@ export default function IdleEffectSettings({ value: [value, setValue], pinToTop,
 				</Button>
 			</Expander.Item>
 			{pinnedIdleEffects.map(({ key, icon, iconForAudio, label, amountType, defaultValue }) => {
-				const enabled = useStateSelector(
-					values,
-					values => values[key].enabled,
-					(enabled, values) => values[key].enabled = enabled,
-					{ immer: true },
-				);
-				const amountOrNegativeType = useStateSelector(
-					values,
-					values => values[key].amount,
-					(amount, values) => values[key].amount = amount,
-					{ immer: true },
-				);
+				const { enabled, amount: amountOrNegativeType } = deconstructState(values, values => values[key]);
 				const amount = amountOrNegativeType as StatePropertyNonNull<number>, negativeType = amountOrNegativeType as StatePropertyNonNull<typeof NegativeTypes.keyType>;
 				return (
 					<Checkbox

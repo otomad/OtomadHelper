@@ -583,7 +583,7 @@ export default function TextBox({ value: [value, _setValue], placeholder, disabl
 }
 
 type NumberLike = number | bigint;
-function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], disabled, readOnly, decimalPlaces, keepTrailing0, min, max, spinnerStep, keyBigStepMultiplier, positiveSign, inputRef, ...textBoxProps }: Override<OmitConventionalPrivates<PropsOf<typeof TextBox>>, {
+function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], disabled, readOnly, decimalPlaces, keepTrailing0, min, max, spinnerStep, keyBigStepMultiplier, positiveSign, required = true, inputRef, ...textBoxProps }: Override<OmitConventionalPrivates<PropsOf<typeof TextBox>>, {
 	/** The value of the number, which can be number or bigint type. */
 	value: readonly [get: TNumber, set?: SetStateNarrow<TNumber>];
 	/** The number of decimal places, leaving blank means no limit. */
@@ -614,7 +614,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 
 	const setValue = (value: TNumber | undefined | ((value: TNumber) => TNumber | undefined)) => _setValue?.(prevValue => {
 		if (typeof value === "function") value = value(prevValue);
-		if (value == null || typeof value === "number" && !Number.isFinite(value)) return prevValue;
+		if (value == null || typeof value === "number" && !Number.isFinite(value) && required) return prevValue;
 		return clamp(value, min!, max!);
 	});
 
@@ -633,7 +633,9 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 	}, [decimalPlaces, keepTrailing0, max, min]);
 
 	const parseText = useCallback((text: string) => {
-		if (intMode) {
+		if (!text && !required)
+			return NaN as TNumber;
+		else if (intMode) {
 			text = text.match(/-?\d+/)?.[0] ?? "";
 			return (bigIntMode ? BigInt(text) : Number(text)) as TNumber;
 		} else {
@@ -644,7 +646,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 
 	function handleInput(text: string) {
 		if (text === "")
-			return;
+			return required ? undefined : "";
 		else if (text.match(/[^\d.-]/) || text.indexOf("-", 1) >= 0 || text.count(".") >= 2)
 			return false;
 		const value = text.match(/-?\d*\.?\d*/)?.[0].replace(/(?<=^-?)0+(?=\d)/, "");
@@ -703,7 +705,8 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 		setValue(value => {
 			if (!(typeof value === "number" || typeof value === "bigint")) return undefined;
 			const spin = typeof value === "bigint" ? BigInt(spinValue) : spinValue;
-			const newValue = ((value as number) + (spin as number)) as TNumber;
+			const newValue = (typeof value === "number" && !Number.isFinite(value) ? 0 :
+				(value as number) + (spin as number)) as TNumber;
 			updateDisplayValue(newValue);
 			return newValue;
 		});
@@ -747,6 +750,8 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 			inputRef={inputEl}
 			_showPositiveSign={positiveSign && value > 0}
 			data-type="number"
+			required={required}
+			aria-required={required}
 			onChange={handleBlurChange}
 			onInput={handleInput}
 			onKeyDown={handleKeyDown}

@@ -2,6 +2,7 @@
 import type { ImageFitTypes } from "components/BackgroundImage";
 import type { Encodings } from "components/Preview/PreviewEncoding";
 import type { QuickSelectIntervalPresets } from "components/QuickSelectInterval";
+import type { durationFilterUnits } from "containers/DurationFilter";
 import type { LegatoDurations, LegatoModes } from "containers/Expander/ExpanderLegato";
 import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "containers/Expander/ExpanderStream/ExpanderStreamPrologue";
 import type { NegativeTypes, VisualIdleEffects } from "containers/IdleEffectSettings";
@@ -18,57 +19,60 @@ import type { glissandoEffects, prerenders, stretches, transformMethods, truncat
 import ConfigNS = Config;
 
 namespace Config {
-	export type StartTime = typeof startTimes[number]["id"];
-	export type TempoUsing = typeof tempoUsings[number]["id"];
-	export type ConstrainNoteLengthType = typeof constrainNoteLengthTypes[number]["id"];
-	export type Encoding = typeof Encodings.keyType;
-	export type Stretch = typeof stretches[number]["id"];
-	export type LegatoDuration = typeof LegatoDurations.keyType;
-	export type Truncate = typeof truncates[number]["id"];
-	export type TransformMethod = typeof transformMethods[number];
-	export type PitchNotation = typeof musicalNotationSystems[number];
-	export type Timecode = string;
-	export type MultipleSelectTrackItem = typeof multipleSelectTrackItems[number];
-	export type SelectGeneratedClips = typeof SelectGeneratedClips.keyType;
-	export type BeepEngine = typeof beepEngines[number];
-	export type BarOrBeatUnit = typeof barOrBeatUnitTypes[number];
-	export type SourceFrom = typeof sourceFromEnums[number];
-	export type TrackOrChannel = typeof trackAndChannel[number];
-	export type GridArrayType = typeof arrayTypes[number];
-	export type GridDirectionOrderType = typeof directionTypes[number];
-	export type GridFitType = typeof gridFitTypes[number];
-	export type GridParityType = typeof parityTypes[number];
-	export type LegatoMode = typeof LegatoModes.keyType;
-	export type NormalizeTime = typeof normalizeTimes[number]["id"];
-	export type SystemBackdrop = typeof SystemBackdrops[keyof typeof SystemBackdrops]["types"][number];
-	export type SystemBackdrop_Win11 = typeof SystemBackdrops["win11"]["types"][number];
-	export type SystemBackdrop_Win10 = typeof SystemBackdrops["win10"]["types"][number];
-	export type PrveCustomStepSequences = Partial<Record<string, number[]>>;
-	export type PrerenderAs = typeof prerenders[number]["id"];
-	export type TuningMethod = typeof tuningMethods[number]["id"];
-	export type ExactTuningMethod = typeof exactTuningMethods[number]["id"];
-	export type SequentialOrder = typeof sequentialOrders[number]["id"];
-	export type TuningElasticMode = typeof tuningElasticModes[number];
-	export type TuningClassicMode = typeof tuningClassicModes[number];
-	export type TextPlugin = typeof textPlugins[number]["id"];
-	export type VisualGlissandoEffect = typeof glissandoEffects[number]["id"];
-	export type ImageFitType = typeof ImageFitTypes.keyType;
-	export type VisualIdleEffect = typeof VisualIdleEffects.keyType;
-	export type VisualIdleEffectValue = ReturnType<typeof defaultVisualIdleEffectSettings>;
-	export type AudioIdleEffectValue = Pick<VisualIdleEffectValue, "fade">;
-	export type PrologueForm = typeof PrologueForms.keyType;
-	export type PrologueDurationUsing = typeof PrologueDurationUsings.keyType;
-	export type PrologueEmphasisDuration = typeof PrologueEmphasisDurations.keyType;
-	export type OtomadTrackNameType = typeof Namings.otomadTrackNames[number]["id"];
-	export type VocaloidTrackNameType = typeof Namings.vocaloidTrackNames[number]["id"];
-	export type YtpTrackNameType = typeof Namings.ytpTrackNames[number]["id"];
-	export type OtomadClipNameType = typeof Namings.otomadClipNames[number]["id"];
-	export type VocaloidClipNameType = typeof Namings.vocaloidClipNames[number]["id"];
-	export type YtpClipNameType = typeof Namings.ytpClipNames[number]["id"];
-	export type ScoredTrackNameType = typeof Namings.scoredTrackNames[number]["id"];
-	export type QuickSelectIntervalPreset = typeof QuickSelectIntervalPresets.keyType;
-	export type NegativeType = typeof NegativeTypes.keyType;
-	export type TrackGroupBy = typeof TrackGroupBy.keyType;
+	// WARN: https://github.com/unplugin/unplugin-auto-import/issues/591
+	export /* @warn */ type StartTime = typeof startTimes[number]["id"];
+	export /* @warn */ type TempoUsing = typeof tempoUsings[number]["id"];
+	export /* @warn */ type ConstrainNoteLengthType = typeof constrainNoteLengthTypes[number]["id"];
+	export /* @warn */ type Encoding = typeof Encodings.keyType;
+	export /* @warn */ type Stretch = typeof stretches[number]["id"];
+	export /* @warn */ type LegatoDuration = typeof LegatoDurations.keyType;
+	export /* @warn */ type Truncate = typeof truncates[number]["id"];
+	export /* @warn */ type TransformMethod = typeof transformMethods[number];
+	export /* @warn */ type PitchNotation = typeof musicalNotationSystems[number];
+	export /* @warn */ type Timecode = string;
+	export /* @warn */ type MultipleSelectTrackItem = typeof multipleSelectTrackItems[number];
+	export /* @warn */ type SelectGeneratedClips = typeof SelectGeneratedClips.keyType;
+	export /* @warn */ type BeepEngine = typeof beepEngines[number];
+	export /* @warn */ type BarOrBeatUnit = typeof barOrBeatUnitTypes[number];
+	export /* @warn */ type SourceFrom = typeof sourceFromEnums[number];
+	export /* @warn */ type TrackOrChannel = typeof trackAndChannel[number];
+	export /* @warn */ type GridArrayType = typeof arrayTypes[number];
+	export /* @warn */ type GridDirectionOrderType = typeof directionTypes[number];
+	export /* @warn */ type GridFitType = typeof gridFitTypes[number];
+	export /* @warn */ type GridParityType = typeof parityTypes[number];
+	export /* @warn */ type LegatoMode = typeof LegatoModes.keyType;
+	export /* @warn */ type NormalizeTime = typeof normalizeTimes[number]["id"];
+	export /* @warn */ type SystemBackdrop = typeof SystemBackdrops[keyof typeof SystemBackdrops]["types"][number];
+	export /* @warn */ type SystemBackdrop_Win11 = typeof SystemBackdrops["win11"]["types"][number];
+	export /* @warn */ type SystemBackdrop_Win10 = typeof SystemBackdrops["win10"]["types"][number];
+	export /* @warn */ type PrveCustomStepSequences = Partial<Record<string, number[]>>;
+	export /* @warn */ type PrerenderAs = typeof prerenders[number]["id"];
+	export /* @warn */ type TuningMethod = typeof tuningMethods[number]["id"];
+	export /* @warn */ type ExactTuningMethod = typeof exactTuningMethods[number]["id"];
+	export /* @warn */ type SequentialOrder = typeof sequentialOrders[number]["id"];
+	export /* @warn */ type TuningElasticMode = typeof tuningElasticModes[number];
+	export /* @warn */ type TuningClassicMode = typeof tuningClassicModes[number];
+	export /* @warn */ type TextPlugin = typeof textPlugins[number]["id"];
+	export /* @warn */ type VisualGlissandoEffect = typeof glissandoEffects[number]["id"];
+	export /* @warn */ type ImageFitType = typeof ImageFitTypes.keyType;
+	export /* @warn */ type VisualIdleEffect = typeof VisualIdleEffects.keyType;
+	export /* @warn */ type VisualIdleEffectValue = ReturnType<typeof defaultVisualIdleEffectSettings>;
+	export /* @warn */ type AudioIdleEffectValue = Pick<VisualIdleEffectValue, "fade">;
+	export /* @warn */ type PrologueForm = typeof PrologueForms.keyType;
+	export /* @warn */ type PrologueDurationUsing = typeof PrologueDurationUsings.keyType;
+	export /* @warn */ type PrologueEmphasisDuration = typeof PrologueEmphasisDurations.keyType;
+	export /* @warn */ type OtomadTrackNameType = typeof Namings.otomadTrackNames[number]["id"];
+	export /* @warn */ type VocaloidTrackNameType = typeof Namings.vocaloidTrackNames[number]["id"];
+	export /* @warn */ type YtpTrackNameType = typeof Namings.ytpTrackNames[number]["id"];
+	export /* @warn */ type OtomadClipNameType = typeof Namings.otomadClipNames[number]["id"];
+	export /* @warn */ type VocaloidClipNameType = typeof Namings.vocaloidClipNames[number]["id"];
+	export /* @warn */ type YtpClipNameType = typeof Namings.ytpClipNames[number]["id"];
+	export /* @warn */ type ScoredTrackNameType = typeof Namings.scoredTrackNames[number]["id"];
+	export /* @warn */ type QuickSelectIntervalPreset = typeof QuickSelectIntervalPresets.keyType;
+	export /* @warn */ type NegativeType = typeof NegativeTypes.keyType;
+	export /* @warn */ type TrackGroupBy = typeof TrackGroupBy.keyType;
+	export /* @warn */ type DurationFilterUnit = typeof durationFilterUnits[number];
+	export /* @warn */ type DurationFilter = typeof defaultDurationFilter;
 
 	const EMPTY_TIMECODE = "00:00:00.000" as Timecode;
 	const defaultPrve = {
@@ -82,6 +86,13 @@ namespace Config {
 		negative: { enabled: enabled === "negative", amount: "colorInvert" satisfies NegativeType },
 	});
 	const defaultQuickSelectIntervalBits = new BitArray([1, 0, 1, 0]).toBase64();
+	const defaultDurationFilter = {
+		min: NaN, // null as number | null,
+		max: NaN, // null as number | null,
+		minEqual: true,
+		maxEqual: true,
+		unit: "beat" satisfies DurationFilterUnit as DurationFilterUnit,
+	};
 
 	export const configStore = createStore({
 		source: {
@@ -136,6 +147,8 @@ namespace Config {
 			periodicityBits: defaultQuickSelectIntervalBits,
 			pitchRangeEnabled: false,
 			pitchRange: ["C0", "F#10"] as [string, string],
+			durationFilterEnabled: false,
+			durationFilter: defaultDurationFilter,
 			encoding: "ANSI" satisfies Encoding as Encoding,
 			tempoUsing: "variableScore" satisfies TempoUsing as TempoUsing,
 			customTempo: 120,

@@ -87,7 +87,7 @@ export default function Ytp() {
 
 			<EmptyMessage.Typical icon="ytp" title="ytp" enabled={enabled}>
 				<Subheader>{t.titles.parameters}</Subheader>
-				<Setting meta={meta.constrain}>
+				<Setting meta={meta.constrain} checkInfo={transRoughTimeRangeUnit(constraint[0])}>
 					<ExpanderChildTrim.RoughTime range={constraint} min={1} decimalPlaces={0} spinnerStep={100} />
 				</Setting>
 				<Setting meta={meta.clips} actions={<TextBox.Number value={clips} min={0} decimalPlaces={0} suffix={t.units.piece} />} />
@@ -137,3 +137,5 @@ export default function Ytp() {
 		</div>
 	);
 }
+
+const transRoughTimeRangeUnit = (range: RangeUnit<RoughTimeUnit>) => `${range[0]}${t.rangeDash}${range[1]}${t(2).units[range[2]]}`;
