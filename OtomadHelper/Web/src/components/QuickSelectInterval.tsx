@@ -73,7 +73,7 @@ const StyledPreviewQuickSelectInterval = styled(HorizontalScroll)`
 
 	&.is-preset {
 		&,
-		+ * {
+		~ * {
 			opacity: 0.5;
 			cursor: not-allowed;
 
@@ -135,8 +135,17 @@ export default function QuickSelectInterval({ interval, bits: bitsBase64, preset
 	preset?: StateProperty<Config.QuickSelectIntervalPreset>;
 }) {
 	const bits = useBitArray(bitsBase64);
+	const [, setBits] = bits;
 	const currentPreset = QuickSelectIntervalPresets.allKeys[preset?.[0] ?? "custom"];
 	const isCustom = !currentPreset.bits || !currentPreset.interval;
+
+	function invert() {
+		setBits(bits => bits.map(bit => !bit));
+	}
+
+	function clear() {
+		setBits(bits => new BitArray(bits.length));
+	}
 
 	return (
 		<>
@@ -146,6 +155,16 @@ export default function QuickSelectInterval({ interval, bits: bitsBase64, preset
 				</Expander.Item>
 			)}
 			<PreviewQuickSelectInterval interval={isCustom ? interval[0] : currentPreset.interval} bits={isCustom ? bits : [currentPreset.bits]} isPreset={!isCustom} />
+			<Expander.Item>
+				<StackPanel>
+					<Tooltip title={t.shared.descriptions.quickSelectIntervalEditor.invert} placement="block">
+						<Button icon="invert_selection" onClick={invert}>{t.shared.quickSelectIntervalEditor.invert}</Button>
+					</Tooltip>
+					<Tooltip title={t.shared.descriptions.quickSelectIntervalEditor.clear} placement="block">
+						<Button icon="select_none" onClick={clear}>{t.shared.quickSelectIntervalEditor.clear}</Button>
+					</Tooltip>
+				</StackPanel>
+			</Expander.Item>
 			<Expander.Item title={t.tools.selector.quickSelectInterval.interval} details={t.descriptions.tools.selector.quickSelectInterval.interval} icon="table_simple_include">
 				<TextBox.Number min={1} max={100} decimalPlaces={0} value={isCustom ? interval : [currentPreset.interval]} />
 			</Expander.Item>

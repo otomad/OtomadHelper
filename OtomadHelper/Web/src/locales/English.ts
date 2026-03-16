@@ -1555,6 +1555,7 @@ export default {
 				geq: "greater than or equal to",
 				eq: "equal to",
 				neq: "not equal to",
+				comparisonOperator: "Click to switch whether to include “or equal to” in the comparison operator.\nTip: Clear the value in the text box to indicate that the direction of the number axis has no limit.",
 			},
 		},
 		charsets: {
@@ -1733,8 +1734,6 @@ export default {
 			},
 		},
 		quickSelectIntervalEditor: {
-			clear: "Clear",
-			invert: "Invert",
 			rename: "Rename",
 			interval: "Interval",
 			columns: "Columns",
@@ -1769,8 +1768,6 @@ export default {
 				},
 			},
 			quickSelectIntervalEditor: {
-				clear: "Unselects all items",
-				invert: "Inverts the current selection",
 				revert: "Reverts to the selection before setting",
 				aria: {
 					oneD: {
@@ -1815,6 +1812,16 @@ export default {
 			playbackRateCannotBeZero: "The playback rate cannot be set to 0.\n\nIf you want to achieve a static visual, please enable the “Static visual” setting.",
 			prveStepSequenceSyntaxInvalid: "The step sequence parameter syntax is invalid.\n\nPlease enter the indexes of each initial step separated by commas as the sequence, where 0 represents the “Normal.”",
 			prveStepSequenceOutOfRange: "In the step sequence parameter, at least an index value exceeds the total number of steps or is negative.",
+		},
+		quickSelectIntervalEditor: {
+			clear: "Clear",
+			invert: "Invert",
+		},
+		descriptions: {
+			quickSelectIntervalEditor: {
+				clear: "Unselects all items",
+				invert: "Inverts the current selection",
+			},
 		},
 		midi: {
 			unknown: "Unknown",

@@ -80,6 +80,7 @@ export default function DurationFilter({ filter, target: _target }: {
 }) {
 	if (_target == null)
 		throw new RangeError("You have not provide the `target` property in `DurationFilter`");
+	const { hideUseTips } = useSnapshot(configStore.settings);
 	const { min: min_, max: max_, minEqual: minEqual_, maxEqual: maxEqual_, unit: _unit } = deconstructState(filter);
 	const min = min_[0], max = max_[0], minEqual = minEqual_[0], maxEqual = maxEqual_[0];
 	const hasMin = Number.isFinite(min), hasMax = Number.isFinite(max);
@@ -142,11 +143,15 @@ export default function DurationFilter({ filter, target: _target }: {
 							minEqual && maxEqual ? tO.and : tO.or
 						}
 					</p>
-					<Button className="compare" onClick={() => minEqual_[1](equal => !equal)}>{minEqual ? "≥" : ">"}</Button>
-					<TextBox.Number value={min_} decimalPlaces={3} min={0} required={false} />
+					<Tooltip title={tO.comparisonOperator} placement="block-start" disabled={hideUseTips}>
+						<Button className="compare" onClick={() => minEqual_[1](equal => !equal)}>{minEqual ? "≥" : ">"}</Button>
+					</Tooltip>
+					<TextBox.Number value={min_} decimalPlaces={3} min={0} required={false} placeholder="−∞" />
 					<ComboBox className="units" current={_unit} ids={durationFilterUnits} options={durationFilterUnits.map(unit => t(2).units[unit])} />
-					<Button className="compare" onClick={() => maxEqual_[1](equal => !equal)}>{maxEqual ? "≤" : "<"}</Button>
-					<TextBox.Number value={max_} decimalPlaces={3} min={0} required={false} />
+					<Tooltip title={tO.comparisonOperator} placement="block-end" disabled={hideUseTips}>
+						<Button className="compare" onClick={() => maxEqual_[1](equal => !equal)}>{maxEqual ? "≤" : "<"}</Button>
+					</Tooltip>
+					<TextBox.Number value={max_} decimalPlaces={3} min={0} required={false} placeholder="+∞" />
 				</StyledDurationFilter>
 				<Button icon="arrow_reset" accent="critical" subtle extruded onClick={reset}>{t.reset}</Button>
 			</StyledDurationFilterWrapper>
