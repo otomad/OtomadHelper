@@ -27,7 +27,7 @@ const StyledInfoBar = styled.div<{
 	`}
 
 	.title {
-		${styles.effects.text.bodyStrong};
+		${styles.text.bodyStrong};
 		${styles.mixins.hideIfEmpty()};
 	}
 

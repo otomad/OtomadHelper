@@ -28,11 +28,11 @@ export /* @internal */ const styledExpanderItemText = css`
 		}
 
 		.title:where(:not(:is(.radio-button-label, .checkbox-label) *)) {
-			${styles.effects.text.body};
+			${styles.text.body};
 		}
 
 		.details {
-			${styles.effects.text.caption};
+			${styles.text.caption};
 			display: -webkit-box;
 			-webkit-box-orient: vertical;
 			color: ${c("fill-color-text-secondary")};
@@ -185,7 +185,7 @@ const StyledExpanderItem = styled.div<{
 		`}
 
 		.text .title {
-			${styles.effects.text.bodyStrong};
+			${styles.text.bodyStrong};
 		}
 	`}
 

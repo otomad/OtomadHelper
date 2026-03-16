@@ -91,7 +91,7 @@ const StyledSearchResult = styled.button`
 	}
 
 	.subtitle {
-		${styles.effects.text.caption};
+		${styles.text.caption};
 		color: ${c("fill-color-text-secondary")};
 
 		&.details {
@@ -178,7 +178,7 @@ export default function HandleSearchResults({ query, onSelect, handler }: Search
 }
 
 const StyledSearchResultPath = styled.div`
-	${styles.effects.text.caption};
+	${styles.text.caption};
 	${styledDirBasedIcon(true)};
 	color: ${c("fill-color-text-secondary")};
 

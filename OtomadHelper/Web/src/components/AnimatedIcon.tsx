@@ -9,7 +9,7 @@ const StyledAnimatedIcon = styled.div<{
 		--selected: false;
 	}
 
-	${styles.effects.text.icon};
+	${styles.text.icon};
 	display: contents;
 
 	&,

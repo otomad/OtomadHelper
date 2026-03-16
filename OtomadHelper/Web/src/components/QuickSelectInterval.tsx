@@ -40,7 +40,7 @@ const StyledPreviewQuickSelectInterval = styled(HorizontalScroll)`
 
 	button {
 		${styles.mixins.square(`${ELEMENT_SIZE}px`)};
-		${styles.effects.text.bodyLarge};
+		${styles.text.bodyLarge};
 		min-inline-size: unset;
 		cursor: pointer;
 	}

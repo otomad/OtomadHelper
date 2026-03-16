@@ -3,7 +3,7 @@ const StyledDataList = styled.div`
 	position: fixed;
 	position-anchor: var(--text-box-anchor-name);
 	position-area: block-end;
-	z-index: 9;
+	z-index: ${styles.z.searchBoxDataList};
 	max-block-size: 100%;
 	inline-size: if(
 		${ifColorScheme.contrast}: calc(anchor-size(inline) - 2px);

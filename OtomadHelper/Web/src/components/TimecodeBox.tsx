@@ -68,7 +68,7 @@ const StyledTimecodeBox = styled.div`
 		padding-block-end: 4px;
 
 		.value {
-			${styles.effects.text.body};
+			${styles.text.body};
 			${styles.mixins.flexCenter()};
 			height: 100%;
 			padding-inline: 5px;
@@ -95,12 +95,12 @@ const StyledTimecodeBox = styled.div`
 
 	${StyledTextBox} {
 		position: absolute;
-		z-index: 0;
+		z-index: ${styles.z.base};
 		height: ${TEXTBOX_BASE_HEIGHT}px;
 		pointer-events: none;
 
 		~ * {
-			z-index: 1;
+			z-index: ${styles.z.base + 1};
 		}
 	}
 

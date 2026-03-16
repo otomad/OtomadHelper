@@ -7,7 +7,7 @@ const StyledCommandBar = styled.div`
 		--icon-only: false;
 	}
 
-	${styles.effects.text.body};
+	${styles.text.body};
 	position: relative;
 	display: flex;
 	align-items: center;

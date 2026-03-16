@@ -92,7 +92,7 @@ const PreviewGrid = styled.div`
 
 		&::after {
 			${styles.mixins.oval()};
-			${styles.effects.text.caption};
+			${styles.text.caption};
 			--size: 16px;
 			--margin: 4px;
 			content: attr(data-index);
@@ -222,7 +222,7 @@ const Determinant = styled.div`
 	}
 
 	label {
-		${styles.effects.text.body};
+		${styles.text.body};
 		align-content: center;
 	}
 
@@ -362,7 +362,7 @@ const Label = ({ id, htmlFor, ...htmlAttrs }: RequiredWith<FCP<{}, "label">, "id
 const Ruler = styled.div.attrs({
 	"aria-hidden": true,
 })`
-	${styles.effects.text.caption};
+	${styles.text.caption};
 	position: fixed;
 	position-anchor: --preview-grid;
 	display: grid;
@@ -1211,11 +1211,11 @@ const StyledOperationRecordItem = styled.div`
 	grid-template-columns: repeat(4, 1fr);
 
 	.key {
-		${styles.effects.text.caption};
+		${styles.text.caption};
 	}
 
 	.value {
-		${styles.effects.text.subtitle};
+		${styles.text.subtitle};
 	}
 
 	.items-view-item .text:has(&) {

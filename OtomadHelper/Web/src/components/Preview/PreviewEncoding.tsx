@@ -56,11 +56,11 @@ const StyledPreviewEncoding = styled.div`
 
 	.text:not(.badge *) {
 		&.title {
-			${styles.effects.text.subtitle};
+			${styles.text.subtitle};
 		}
 
 		&.alias {
-			${styles.effects.text.bodyStrong};
+			${styles.text.bodyStrong};
 		}
 
 		.items-view-item.selected & {
@@ -78,7 +78,7 @@ const StyledPreviewEncoding = styled.div`
 	}
 
 	.garbled {
-		${styles.effects.text.title};
+		${styles.text.title};
 		position: absolute;
 		inset-block-end: ${TEXT_MARGIN[1]}px;
 		inset-inline-end: ${TEXT_MARGIN[0]}px;

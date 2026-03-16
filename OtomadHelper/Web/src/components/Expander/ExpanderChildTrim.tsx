@@ -2,7 +2,7 @@ const RangeDash = styled.div.attrs(() => ({
 	children: t.rangeDash,
 	"aria-hidden": true,
 }))`
-	${styles.effects.text.body};
+	${styles.text.body};
 	margin-block-end: 1.5px;
 	font-feature-settings: "case" on;
 	speak-as: literal-punctuation;

@@ -6,12 +6,12 @@ const StyledBreadcrumb = styled.nav`
 	transition: all ${eases.easeInOutMaterialEmphasized} 700ms;
 
 	&[aria-level="1"] {
-		${styles.effects.text.title};
+		${styles.text.title};
 		gap: 14px;
 	}
 
 	&[aria-level="4"] {
-		${styles.effects.text.body};
+		${styles.text.body};
 		gap: 4px;
 	}
 

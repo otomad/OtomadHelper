@@ -129,7 +129,7 @@ const StyledSliderWrapper = styled.div`
 	max-inline-size: 100cqi;
 
 	output {
-		${styles.effects.text.body};
+		${styles.text.body};
 		flex-shrink: 0;
 		color: ${c("fill-color-text-secondary")};
 		font-variant-numeric: tabular-nums;

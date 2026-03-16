@@ -126,7 +126,7 @@ const GlobalStyle = createGlobalStyle<{
 	}
 
 	html {
-		${styles.effects.text.body};
+		${styles.text.body};
 		line-height: normal;
 		interpolate-size: allow-keywords;
 	}

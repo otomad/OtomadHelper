@@ -48,7 +48,7 @@ const ExpanderParent = styled(SettingsCard)<{ // FIXME: After auto resize, when 
 				${ifColorScheme.reduceTransparency} or ${ifColorScheme.contrast}: 0;
 				else: -1px;
 			);
-			z-index: 5;
+			z-index: ${styles.z.expanderBase};
 
 			> .base {
 				${sharpBottom};

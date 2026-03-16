@@ -52,7 +52,7 @@ const StyledSegmented = styled.div<{
 			}
 
 			p {
-				${styles.effects.text.body};
+				${styles.text.body};
 				flex-shrink: 0;
 				inline-size: auto;
 				overflow-inline: hidden;
@@ -63,7 +63,7 @@ const StyledSegmented = styled.div<{
 				p {
 					inline-size: 0;
 				}
-				
+
 				.icon + p {
 					margin-inline-start: -10px;
 				}

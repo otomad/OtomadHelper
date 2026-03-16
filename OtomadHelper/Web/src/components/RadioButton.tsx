@@ -13,7 +13,7 @@ const StyledRadioButtonLabel = styled.label<{
 	}
 
 	> .text {
-		${styles.effects.text.body};
+		${styles.text.body};
 		padding-bottom: 1px;
 	}
 
@@ -82,7 +82,7 @@ const StyledRadioButtonLabel = styled.label<{
 		}
 
 		.text {
-			${styles.effects.text.bodyStrong};
+			${styles.text.bodyStrong};
 		}
 	}
 

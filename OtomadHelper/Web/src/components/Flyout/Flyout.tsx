@@ -50,11 +50,11 @@ const StyledFlyout = styled.div`
 		padding-inline: 12px;
 
 		h6 {
-			${styles.effects.text.bodyStrong}
+			${styles.text.bodyStrong}
 		}
 
 		p {
-			${styles.effects.text.body}
+			${styles.text.body}
 		}
 
 		&:has(h6:empty):has(p:empty),

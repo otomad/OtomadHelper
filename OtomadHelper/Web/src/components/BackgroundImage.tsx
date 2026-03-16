@@ -1,7 +1,7 @@
 const StyledBackgroundImage = styled.div`
 	position: fixed;
 	inset: 0;
-	z-index: -1;
+	z-index: ${styles.z.backgroundImage};
 	pointer-events: none;
 	transition: ${fallbackTransitions}, scale ${eases.easeOutMax} 750ms !important;
 

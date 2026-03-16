@@ -16,22 +16,22 @@ const StyledLicense = styled.div`
 	}
 
 	h3 {
-		${styles.effects.text.titleLarge};
+		${styles.text.titleLarge};
 	}
 
 	h4 {
-		${styles.effects.text.title};
+		${styles.text.title};
 		margin-block-start: 0.5rlh;
 	}
 
 	h5 {
-		${styles.effects.text.subtitle};
+		${styles.text.subtitle};
 		margin-block-start: 0.25rlh;
 	}
 
 	p,
 	li {
-		${styles.effects.text.body};
+		${styles.text.body};
 	}
 
 	p {

@@ -1,6 +1,6 @@
 const StyledDragToImport = styled.div`
 	${styles.mixins.fullscreen()};
-	z-index: 80;
+	z-index: ${styles.z.dragToImport};
 	padding: 1rem;
 	background-color: ${c("background-fill-color-smoke-default")};
 	backdrop-filter: blur(4px);
@@ -18,7 +18,7 @@ const StyledDragToImport = styled.div`
 
 		.empty-message {
 			h2 {
-				${styles.effects.text.titleLarge};
+				${styles.text.titleLarge};
 			}
 
 			.icon {

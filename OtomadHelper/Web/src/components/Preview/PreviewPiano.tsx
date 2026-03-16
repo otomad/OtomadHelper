@@ -108,7 +108,7 @@ const strokes = colors["stroke-color-card-stroke-default"];
 const strokeDarkWhite = "rgba(0, 0, 0, 0.12)";
 
 const StyledPianoKey = styled.div`
-	${styles.effects.text.caption};
+	${styles.text.caption};
 	${styles.mixins.square("100%")};
 	position: relative;
 

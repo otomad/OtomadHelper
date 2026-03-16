@@ -41,7 +41,7 @@ const StyledEmptyMessage = styled.div`
 		}
 
 		> h2 {
-			${styles.effects.text.title};
+			${styles.text.title};
 
 			+ p {
 				margin-top: 5px;
@@ -49,7 +49,7 @@ const StyledEmptyMessage = styled.div`
 		}
 
 		> p {
-			${styles.effects.text.custom(14, 20, "regular", "small")};
+			${styles.text.custom(14, 20, "regular", "small")};
 			color: ${c("fill-color-text-tertiary")};
 		}
 	}

@@ -7,6 +7,8 @@ import eases from "styles/eases";
 import effects from "styles/effects";
 import { type AvailableLottieStatus, STATUS_PREFIX } from "styles/fake-animations";
 import mixins from "styles/mixins";
+import text from "styles/typographies";
+import zIndexes from "styles/z-indexes";
 
 export { ifColorScheme } from "styles/colors";
 
@@ -94,6 +96,12 @@ export const styles = {
 	 * ```
 	 */
 	toValue: toValue_css,
+	/**
+	 * Specify the **font size**, **weight**, **line height**, and **optical size axis** parameters of *Segoe UI Variable* font.
+	 */
+	text,
+	/** z-indexes. */
+	z: zIndexes,
 };
 
 export const getLottieStatusName = (status: AvailableLottieStatus) => `${STATUS_PREFIX}${status}`;

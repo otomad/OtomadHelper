@@ -6,7 +6,7 @@ const StyledPianoPickerOutput = styled.div`
 	padding-inline: 0 !important;
 
 	output {
-		${styles.effects.text.bodyLarge};
+		${styles.text.bodyLarge};
 		display: block;
 		font-feature-settings: "case" on;
 		font-variant-numeric: tabular-nums;

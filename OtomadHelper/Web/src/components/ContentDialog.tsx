@@ -30,11 +30,11 @@ const StyledContentDialog = styled.div`
 		}
 
 		${Title} {
-			${styles.effects.text.subtitle};
+			${styles.text.subtitle};
 		}
 
 		${Body} {
-			${styles.effects.text.body};
+			${styles.text.body};
 			container: content-dialog-body / inline-size;
 
 			> .container {
@@ -77,7 +77,7 @@ const Mask = styled.div`
 	${styles.mixins.gridCenter()};
 	position: absolute;
 	inset: 0;
-	z-index: 30;
+	z-index: ${styles.z.contentDialog};
 	background-color: ${c("background-fill-color-smoke-default")};
 	backdrop-filter: grayscale(0.75);
 	transition-timing-function: ${eases.easeOutMaterialStandard};

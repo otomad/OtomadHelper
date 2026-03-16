@@ -1,4 +1,4 @@
-import { weights } from "styles/effects";
+import { weights } from "styles/typographies";
 
 export default function Bold({ bold = true, style, ...htmlAttrs }: FCP<{
 	/**

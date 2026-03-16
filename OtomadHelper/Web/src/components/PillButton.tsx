@@ -2,7 +2,7 @@ const StyledPillButton = styled.button.attrs({
 	type: "button",
 })`
 	${styles.mixins.oval()};
-	${styles.effects.text.body};
+	${styles.text.body};
 	position: relative;
 	display: flex;
 	flex-shrink: 0;

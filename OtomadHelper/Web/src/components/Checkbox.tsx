@@ -1,5 +1,5 @@
 import { styledExpanderItemBase, styledExpanderItemContent, styledExpanderItemText } from "components/Expander/ExpanderItem";
-import { weights } from "styles/effects";
+import { weights } from "styles/typographies";
 
 const checkedOrIndet = ":is(:checked, :indeterminate)";
 const unchecked = ":not(:checked, :indeterminate)";
@@ -21,7 +21,7 @@ const StyledCheckboxLabel = styled.label<{
 	}
 
 	.text {
-		${styles.effects.text.body};
+		${styles.text.body};
 		padding-bottom: 1px;
 	}
 
@@ -131,7 +131,7 @@ const StyledCheckboxLabel = styled.label<{
 	}
 
 	${Input}${checkedOrIndet} ~ .text > .title {
-		${styles.effects.text.bodyStrong};
+		${styles.text.bodyStrong};
 	}
 
 	.items-view-item${pressed} & {

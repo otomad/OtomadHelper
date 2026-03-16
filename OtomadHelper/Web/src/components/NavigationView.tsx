@@ -30,7 +30,7 @@ const NavButton = styled(Button).attrs({
 
 const StyledTopLeftButtons = styled.div`
 	position: relative;
-	z-index: 10;
+	z-index: ${styles.z.navTopLeftButtonsShadow};
 	block-size: ${navButtonSize.height}px;
 	margin-block: 4px 1px;
 	margin-inline: 9px 5px;
@@ -46,7 +46,7 @@ const StyledTopLeftButtons = styled.div`
 
 	&:not(.shadow) {
 		position: fixed;
-		z-index: 11;
+		z-index: ${styles.z.navTopLeftButtons};
 	}
 
 	&:not(.vertical) ${NavButton}:nth-of-type(2) {
@@ -202,7 +202,7 @@ const StyledNavigationView = styled.div<{
 
 		&.flyout {
 			position: fixed;
-			z-index: 8;
+			z-index: ${styles.z.navFlyout};
 			background-color: ${c("background-fill-color-acrylic-background-default")};
 			border-radius: 0 8px 8px 0;
 			outline: 1px solid ${c("stroke-color-surface-stroke-flyout-navigation-panel")};

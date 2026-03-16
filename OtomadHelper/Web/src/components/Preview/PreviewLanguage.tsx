@@ -13,7 +13,7 @@ const StyledPreviewLanguage = styled.div`
 	border-radius: inherit;
 
 	.text {
-		${styles.effects.text.subtitle};
+		${styles.text.subtitle};
 		margin-block: ${TEXT_MARGIN[1]}px;
 		margin-inline: ${TEXT_MARGIN[0]}px;
 		text-align: start;

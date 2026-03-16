@@ -2,7 +2,7 @@
 const StyledSpinner = styled.div`
 	position: fixed;
 	position-area: center;
-	z-index: 10;
+	z-index: ${styles.z.textBoxSpinner};
 	transition-behavior: allow-discrete;
 
 	&,
@@ -218,7 +218,7 @@ export /* @internal */ const StyledTextBox = styled.div<{
 	`)}
 
 	input {
-		${styles.effects.text.body};
+		${styles.text.body};
 		z-index: 1;
 		inline-size: 100%;
 		padding: 6px 12px 7px;

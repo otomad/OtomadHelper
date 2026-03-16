@@ -60,7 +60,7 @@ const StyledSideEffect = styled.div`
 
 const StyledYtpIconLegend = styled.ul`
 	li {
-		${styles.effects.text.caption};
+		${styles.text.caption};
 		color: ${c("fill-color-text-secondary")};
 
 		.icon {

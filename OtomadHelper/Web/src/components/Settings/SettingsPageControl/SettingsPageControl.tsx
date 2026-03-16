@@ -24,7 +24,7 @@ const StyledSettingsPageControl = styled.div<{
 	}
 
 	> .paragraph-wrapper {
-		${styles.effects.text.caption};
+		${styles.text.caption};
 
 		> .scroll-wrapper {
 			${styles.mixins.overflowGradient("y", "1.25lh")};

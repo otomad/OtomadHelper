@@ -13,7 +13,7 @@ const StyledDurationFilter = styled(Expander.ChildWrapper)`
 	}
 
 	.logic-gate {
-		${styles.effects.text.bodyLarge};
+		${styles.text.bodyLarge};
 		min-inline-size: 3em;
 		margin-inline-end: 2px;
 		text-align: end;
@@ -33,14 +33,14 @@ const StyledDurationFilterPreview = styled(Expander.ChildWrapper)`
 		text-align: center;
 
 		&.caption {
-			${styles.effects.text.caption};
+			${styles.text.caption};
 		}
 
 		&.formula {
-			${styles.effects.text.body};
+			${styles.text.body};
 
 			math {
-				${styles.effects.text.bodyLarge};
+				${styles.text.bodyLarge};
 				margin-inline: 1ex;
 			}
 		}

@@ -2,11 +2,11 @@ import links from "helpers/links";
 import SettingsAboutLogo from "../components/Business/SettingsAboutLogo";
 
 const StyledSettingsAbout = styled.div`
-	${styles.effects.text.body};
+	${styles.text.body};
 	display: contents;
 
 	.about-info {
-		${styles.effects.text.caption};
+		${styles.text.caption};
 		align-self: center;
 		inline-size: 80%;
 		color: ${c("fill-color-text-secondary")};
@@ -33,17 +33,17 @@ const StyledSettingsAbout = styled.div`
 		column-rule-outset: -4px;
 
 		.role {
-			${styles.effects.text.caption};
+			${styles.text.caption};
 			color: ${c("fill-color-text-secondary")};
 		}
 
 		.name {
-			${styles.effects.text.body};
+			${styles.text.body};
 		}
 	}
 
 	.links {
-		${styles.effects.text.bodyStrong};
+		${styles.text.bodyStrong};
 		column-gap: 14px;
 		column-rule: 3px dotted ${c("accent-color", 40)};
 		column-rule-outset: -8px;
@@ -148,7 +148,7 @@ const StyledTranslatorsTable = styled(StyledTableBase)`
 	}
 
 	p.current {
-		${styles.effects.text.bodyStrong};
+		${styles.text.bodyStrong};
 		color: ${c("accent-color")};
 	}
 
@@ -228,11 +228,11 @@ const StyledAboutInformation = styled(ItemsView)`
 		}
 
 		.name {
-			${styles.effects.text.bodyStrong};
+			${styles.text.bodyStrong};
 		}
 
 		.version {
-			${styles.effects.text.bodyLarge};
+			${styles.text.bodyLarge};
 			margin-block-end: -0.25rem;
 			color: ${c("fill-color-text-secondary")};
 		}

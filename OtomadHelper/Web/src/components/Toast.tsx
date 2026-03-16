@@ -10,7 +10,7 @@ const StyledToast = styled.div<{
 	position: fixed;
 	inset-block-end: min(100px, 10dvh);
 	inset-inline-start: min(100px, 20dvw);
-	z-index: 90;
+	z-index: ${styles.z.toast};
 	block-size: ${HEIGHT}px;
 	overflow: clip;
 	background-color: ${c("background-fill-color-card-background-secondary")};

@@ -114,7 +114,7 @@ const StyledTabItem = styled.button`
 	}
 
 	&.selected {
-		${styles.effects.text.bodyStrong};
+		${styles.text.bodyStrong};
 	}
 
 	&::before,

@@ -12,7 +12,7 @@ export /* @internal */ const backgroundColors: Record<Status, ColorNames> = {
 const StyledBadge = styled.div`
 	${styles.mixins.oval()};
 	${styles.mixins.flexCenter()};
-	${styles.effects.text.caption};
+	${styles.text.caption};
 	--size: 16px;
 	--status: attr(data-status type(<custom-ident>), info);
 	display: inline-flex;

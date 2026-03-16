@@ -274,14 +274,14 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 	`}
 
 	${ItemsViewItemTextPart} > * {
-		${styles.effects.text.body};
+		${styles.text.body};
 
 		&:empty {
 			display: none;
 		}
 
 		&.details {
-			${styles.effects.text.caption};
+			${styles.text.caption};
 			color: ${c("fill-color-text-secondary")};
 
 			small {
@@ -292,7 +292,7 @@ const StyledItemsViewItem = styled.button<StyledItemsViewItemProps>(() => css<St
 	}
 
 	&.selected ${ItemsViewItemTextPart} .title {
-		${styles.effects.text.bodyStrong};
+		${styles.text.bodyStrong};
 	}
 
 	.checkbox-label {

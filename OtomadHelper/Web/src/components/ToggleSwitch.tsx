@@ -22,14 +22,14 @@ const StyledToggleSwitchLabel = styled.button(() => css`
 	}
 
 	.right {
-		${styles.effects.text.body};
+		${styles.text.body};
 		display: flex;
 		gap: ${TOGGLE_SWITCH_LABEL_GAP}px; // When use \`inherit\` will produce new issues.
 		align-items: center;
 		margin-inline-start: auto;
 
 		.text.label {
-			${styles.effects.text.body};
+			${styles.text.body};
 			block-size: 1lh;
 			inline-size: unset !important;
 			overflow: clip;

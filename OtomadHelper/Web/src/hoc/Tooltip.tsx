@@ -5,7 +5,7 @@ const StyledTooltip = styled.div`
 	--offset: 10px;
 	position: fixed;
 	position-anchor: var(--anchor);
-	z-index: 80;
+	z-index: ${styles.z.tooltip};
 	display: flex;
 	justify-self: anchor-center;
 	overflow: clip;
@@ -231,12 +231,12 @@ const StyledTooltipContent = styled.figure`
 	}
 
 	figcaption {
-		${styles.effects.text.body}
+		${styles.text.body}
 		padding-block: 8px;
 		padding-inline: 12px;
 
 		h6 {
-			${styles.effects.text.bodyStrong}
+			${styles.text.bodyStrong}
 		}
 	}
 

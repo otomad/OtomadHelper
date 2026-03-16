@@ -2,7 +2,7 @@
 
 const StyledContextMenu = styled.menu`
 	position: fixed;
-	z-index: 70;
+	z-index: ${styles.z.contextMenu};
 	margin: 0;
 	padding: 2px;
 	background-color: ${c("background-fill-color-acrylic-background-command-bar")};

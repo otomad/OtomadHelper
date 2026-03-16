@@ -1,5 +1,5 @@
 const StyledKbd = styled.div`
-	${styles.effects.text.caption};
+	${styles.text.caption};
 	display: inline-block;
 	margin-inline-start: 0.5em;
 	color: ${c("fill-color-text-tertiary")};

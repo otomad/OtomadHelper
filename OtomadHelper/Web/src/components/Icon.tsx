@@ -11,7 +11,7 @@ const StyledIcon = styled.i<{
 	vertical-align: middle;
 
 	:where(&) {
-		${styles.effects.text.icon};
+		${styles.text.icon};
 	}
 
 	svg {

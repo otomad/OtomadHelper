@@ -30,7 +30,7 @@ const StyledComboBox = styled(StyledButton)(() => css`
 		}
 
 		.text {
-			${styles.effects.text.body};
+			${styles.text.body};
 			gap: 8px;
 			width: 100%;
 			contain: inline-size;
@@ -127,7 +127,7 @@ const StyledComboBox = styled(StyledButton)(() => css`
 			}
 
 			option {
-				${styles.effects.text.body};
+				${styles.text.body};
 				position: relative;
 				display: flex;
 				gap: 8px;

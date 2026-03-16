@@ -12,7 +12,7 @@ const StyledSettingsPageControlMedia = styled(Card)<{
 
 
 		> .right {
-			z-index: 0; // If this is not set, it will be auto by default, and the child elements will have a strange phenomenon of abnormal rendering levels (may only exist in Chromium).
+			z-index: ${styles.z.base}; // If this is not set, it will be auto by default, and the child elements will have a strange phenomenon of abnormal rendering levels (may only exist in Chromium).
 			display: flex;
 			flex-direction: column;
 			width: 100%;

@@ -33,13 +33,13 @@ const StyledColorPalette = styled(Expander.ChildWrapper).attrs({
 `;
 
 const SampleTextFontSize = styled.div`
-	${styles.effects.text.body};
+	${styles.text.body};
 	margin-block-start: 1lh;
 	font-variant-numeric: tabular-nums;
 	text-align: center;
 
 	.info {
-		${styles.effects.text.caption};
+		${styles.text.caption};
 	}
 
 	* {
