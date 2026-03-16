@@ -2,7 +2,7 @@
 // import segoeUiVF from "assets/fonts/Segoe UI/SegoeUI-VF.ttf";
 import inter from "assets/fonts/Inter/Inter-VF.woff2";
 import interItalic from "assets/fonts/Inter/Inter-Italic-VF.woff2";
-import leteSansMath from "assets/fonts/Lete Sans Math/LeteSansMath.woff2";
+// import leteSansMath from "assets/fonts/Lete Sans Math/LeteSansMath.woff2";
 // import leteSansMathBold from "assets/fonts/Lete Sans Math/LeteSansMath-Bold.woff2";
 import openHuninn from "assets/fonts/Open Huninn/jf-openhuninn-2.0.woff2";
 import yozoraSans from "assets/fonts/Yozora Sans/YozoraSans-VF.woff2";
@@ -23,7 +23,7 @@ export const fonts = [
 	new FontFace("Inter", `url("${inter}") format("woff2")`, { weight: "100 900", style: "normal", sizeAdjust: "95%" }),
 	new FontFace("Inter", `url("${interItalic}") format("woff2")`, { weight: "100 900", style: "italic", sizeAdjust: "95%" }),
 
-	new FontFace("Lete Sans Math", `url("${leteSansMath}") format("woff2")`, { weight: "normal" }),
+	// new FontFace("Lete Sans Math", `url("${leteSansMath}") format("woff2")`, { weight: "normal" }),
 	// new FontFace("Lete Sans Math", `url("${leteSansMathBold}") format("woff2")`, { weight: "bold" }),
 
 	new FontFace("Open Huninn", `url("${openHuninn}") format("woff2")`),

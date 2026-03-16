@@ -27,4 +27,18 @@ export default {
 			outline-color: ${c("stroke-color-surface-stroke-flyout-navigation-panel")};
 		}
 	`,
+	/**
+	 * Align the text to the center.
+	 *
+	 * However, if the current language is Chinese, Japanese, Korean, Thai, Lao, Khmer, or Burmese,
+	 * then align the last line of text to the center and justify all other lines.
+	 */
+	textAlignCenterCjk: css`
+		text-align: center;
+		text-align-last: center;
+		
+		&:is(:lang(zh), :lang(ja), :lang(ko), :lang(th), :lang(lo), :lang(km), :lang(my)) {
+			text-align: justify;
+		}
+	`,
 };

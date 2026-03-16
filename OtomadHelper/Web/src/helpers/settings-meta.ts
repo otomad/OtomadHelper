@@ -182,7 +182,7 @@ function accessPath(root: AnyObject, path: string, overwrite: unknown) {
 
 function $t(key: string | undefined, enableFallbackLang: boolean = true) {
 	if (!key) return;
-	if (typeof (key as Any) === "string") throw new TypeError(`Unexpectedly got string key: ${key}`);
+	if (typeof (key as unknown) === "string") throw new TypeError(`Unexpectedly got string key: ${key}`);
 	if (!i18nExists(key, undefined, enableFallbackLang)) return;
 	return key.toString();
 }

@@ -6,7 +6,7 @@ import type { durationFilterUnits } from "containers/DurationFilter";
 import type { LegatoDurations, LegatoModes } from "containers/Expander/ExpanderLegato";
 import type { PrologueDurationUsings, PrologueEmphasisDurations, PrologueForms } from "containers/Expander/ExpanderStream/ExpanderStreamPrologue";
 import type { NegativeTypes, VisualIdleEffects } from "containers/IdleEffectSettings";
-import defaultPrveAmounts from "helpers/defaultPrveAmounts";
+import { defaultDurationFilter, defaultPrveAmounts } from "helpers/default-configs";
 import { deepClone } from "valtio/utils";
 import type { beepEngines, exactTuningMethods, normalizeTimes, tuningClassicModes, tuningElasticModes, tuningMethods } from "views/audio";
 import type { musicalNotationSystems } from "views/lyrics";
@@ -86,13 +86,6 @@ namespace Config {
 		negative: { enabled: enabled === "negative", amount: "colorInvert" satisfies NegativeType },
 	});
 	const defaultQuickSelectIntervalBits = new BitArray([1, 0, 1, 0]).toBase64();
-	const defaultDurationFilter = {
-		min: NaN, // null as number | null,
-		max: NaN, // null as number | null,
-		minEqual: true,
-		maxEqual: true,
-		unit: "beat" satisfies DurationFilterUnit as DurationFilterUnit,
-	};
 
 	export const configStore = createStore({
 		source: {

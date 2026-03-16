@@ -1,6 +1,8 @@
+import { defaultDurationFilter } from "helpers/default-configs";
+
 export /* @internal */ const durationFilterUnits = ["beat", "second"] as const;
 
-const StyledDurationFilter = styled(Expander.ChildWrapper)`
+const StyledDurationFilter = styled.div`
 	display: grid;
 	grid-template-columns: auto auto 200px auto;
 	gap: 8px;
@@ -28,9 +30,34 @@ const StyledDurationFilter = styled(Expander.ChildWrapper)`
 	}
 `;
 
+const StyledDurationFilterWrapper = styled(Expander.ChildWrapper)`
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	gap: 8px;
+	place-items: center end;
+
+	> :nth-child(1) {
+		grid-column: 2;
+	}
+
+	> :nth-child(2) {
+		grid-column: 3;
+	}
+
+	@container page (width < 684px) {
+		display: flex;
+		flex-direction: column;
+		justify-content: revert;
+
+		> :nth-child(2) {
+			align-self: end;
+		}
+	}
+`;
+
 const StyledDurationFilterPreview = styled(Expander.ChildWrapper)`
 	p {
-		text-align: center;
+		${styles.effects.textAlignCenterCjk};
 
 		&.caption {
 			${styles.text.caption};
@@ -58,7 +85,7 @@ export default function DurationFilter({ filter, target: _target }: {
 	const hasMin = Number.isFinite(min), hasMax = Number.isFinite(max);
 	const tO = tAlias.aria.operators;
 	const oneValue = !hasMin || !hasMax;
-	const unit = (plural: number) => t(plural).units[_unit[0]], target = t(2)[_target];
+	const unit = (plural: number) => t.units[_unit[0]]({ count: plural, context: "full" }), target = t(2)[_target];
 	const caption = useMemo(() => {
 		if (isAllPassed(filter[0]))
 			return tO.allPassed;
@@ -91,31 +118,38 @@ export default function DurationFilter({ filter, target: _target }: {
 			})());
 	}, [min, max, minEqual, maxEqual, _unit[0]]);
 
+	function reset() {
+		filter[1]({ ...defaultDurationFilter });
+	}
+
 	return (
 		<>
 			<StyledDurationFilterPreview>
 				<p className="formula" aria-hidden>
 					{tO.keepDuration}
 					<RangeFormula filter={filter[0]} />
-					{unit(2)}
+					{unit(2).toLocaleLowerCase()}
 				</p>
 				<p className="caption">{caption}</p>
 			</StyledDurationFilterPreview>
-			<StyledDurationFilter>
-				<p className="logic-gate">
-					{
-						oneValue ? "" :
-						min < max ? tO.and :
-						min > max ? tO.or :
-						minEqual && maxEqual ? tO.and : tO.or
-					}
-				</p>
-				<Button className="compare" onClick={() => minEqual_[1](equal => !equal)}>{minEqual ? "≥" : ">"}</Button>
-				<TextBox.Number value={min_} decimalPlaces={3} min={0} required={false} />
-				<ComboBox className="units" current={_unit} ids={durationFilterUnits} options={durationFilterUnits.map(unit => t(2).units[unit])} />
-				<Button className="compare" onClick={() => maxEqual_[1](equal => !equal)}>{maxEqual ? "≤" : "<"}</Button>
-				<TextBox.Number value={max_} decimalPlaces={3} min={0} required={false} />
-			</StyledDurationFilter>
+			<StyledDurationFilterWrapper>
+				<StyledDurationFilter>
+					<p className="logic-gate">
+						{
+							oneValue ? "" :
+							min < max ? tO.and :
+							min > max ? tO.or :
+							minEqual && maxEqual ? tO.and : tO.or
+						}
+					</p>
+					<Button className="compare" onClick={() => minEqual_[1](equal => !equal)}>{minEqual ? "≥" : ">"}</Button>
+					<TextBox.Number value={min_} decimalPlaces={3} min={0} required={false} />
+					<ComboBox className="units" current={_unit} ids={durationFilterUnits} options={durationFilterUnits.map(unit => t(2).units[unit])} />
+					<Button className="compare" onClick={() => maxEqual_[1](equal => !equal)}>{maxEqual ? "≤" : "<"}</Button>
+					<TextBox.Number value={max_} decimalPlaces={3} min={0} required={false} />
+				</StyledDurationFilter>
+				<Button icon="arrow_reset" accent="critical" subtle extruded onClick={reset}>{t.reset}</Button>
+			</StyledDurationFilterWrapper>
 		</>
 	);
 }
@@ -132,9 +166,9 @@ function RangeFormula({ filter }: { filter: Config.DurationFilter }) {
 	const { min, max, minEqual, maxEqual } = filter;
 	const hasMin = Number.isFinite(min), hasMax = Number.isFinite(max);
 
-	const nature = (() => {
+	const predicate = (() => {
 		if (isAllPassed(filter))
-			return undefined;
+			return <mo>⊤</mo>;
 		if (!hasMin || !hasMax)
 			return (
 				<>
@@ -175,32 +209,22 @@ function RangeFormula({ filter }: { filter: Config.DurationFilter }) {
 			);
 	})();
 
-	const xInR = (
-		<>
-			<mi>{ARGUMENT}</mi>
-			<mo>∈</mo>
-			<msub>
-				<mi>ℝ</mi>
-				<mrow>
-					<mo lspace="0em" rspace="0em">≥</mo>
-					<mn>0</mn>
-				</mrow>
-			</msub>
-		</>
-	);
-
 	return (
 		<math>
 			<mrow>
-				{!nature ? xInR : (
-					<>
-						<mo form="prefix" stretchy="false">{"{"}</mo>
-						{xInR}
-						<mo lspace="0.22em" rspace="0.22em" stretchy="false">|</mo>
-						{nature}
-						<mo form="postfix" stretchy="false">{"}"}</mo>
-					</>
-				)}
+				<mo form="prefix" stretchy="false">{"{"}</mo>
+				<mi>{ARGUMENT}</mi>
+				<mo>∈</mo>
+				<msub>
+					<mi>ℝ</mi>
+					<mrow>
+						<mo lspace="0em" rspace="0em">≥</mo>
+						<mn>0</mn>
+					</mrow>
+				</msub>
+				<mo lspace="0.22em" rspace="0.22em" stretchy="false">|</mo>
+				{predicate}
+				<mo form="postfix" stretchy="false">{"}"}</mo>
 			</mrow>
 		</math>
 	);

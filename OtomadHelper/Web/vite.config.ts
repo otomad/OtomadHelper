@@ -58,7 +58,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 						[
 							tAutoTostring,
 							{
-								excludePaths: ["settings-metas"],
+								excludePaths: ["settings-meta"],
 							},
 						],
 						...ENABLE_COMPILER ? [["babel-plugin-react-compiler", { target: "19" }]] : [],

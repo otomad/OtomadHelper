@@ -1,5 +1,5 @@
 import exampleThumbnail from "assets/images/ヨハネの氷.avif";
-import defaultPrveAmounts from "helpers/defaultPrveAmounts";
+import { defaultPrveAmounts } from "helpers/default-configs";
 import type { LocaleIdentifiers } from "locales/types";
 
 type PrveClassType = Exclude<keyof LocaleIdentifiers["javascript"]["prve"]["classes"], "_">;

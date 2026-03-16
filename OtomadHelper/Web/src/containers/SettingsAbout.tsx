@@ -7,16 +7,12 @@ const StyledSettingsAbout = styled.div`
 
 	.about-info {
 		${styles.text.caption};
+		${styles.effects.textAlignCenterCjk};
 		align-self: center;
 		inline-size: 80%;
 		color: ${c("fill-color-text-secondary")};
-		text-align-last: center;
 		text-wrap: pretty;
 		hyphens: manual;
-
-		&:not(:lang(zh), :lang(ja), :lang(ko), :lang(th), :lang(lo), :lang(km), :lang(my)) {
-			text-align: center;
-		}
 	}
 
 	.collaborators,
