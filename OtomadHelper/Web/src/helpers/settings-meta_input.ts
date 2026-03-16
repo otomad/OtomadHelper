@@ -1,7 +1,7 @@
-import type { ISettingMeta } from "./settings-metas";
-export const languageNode = Symbol("settingsMetas.languageNode");
+import type { ISettingMeta } from "./settings-meta";
+export const languageNode = Symbol("settingsMeta.languageNode");
 
-export const settingsMetasInput = {
+export const settingsMetaInput = {
 	source: {
 		from: { icon: "video_clip_multiple" },
 		trim: { icon: "aspect_ratio" },

@@ -3,7 +3,7 @@ import type { I18nArgsFunction } from "locales/types";
 import { redirectIcon } from "src/ShellPage";
 import type { Trans } from "utils/i18n";
 import { tf as $$t } from "utils/i18n";
-import { languageNode, settingsMetasInput } from "./settings-metas_input";
+import { languageNode, settingsMetaInput } from "./settings-meta_input";
 
 type SettingsCardFormType = "container" | "button" | "expander" | "switch" | "link" | "radiogroup" | "subheader";
 
@@ -60,7 +60,7 @@ export class SettingMeta implements ISettingMeta {
 		const path = this.path.replace(/(^|[:/])[^:/]*?$/, "");
 		const [_page = "", _anchor = ""] = path.split(":");
 		const pages = splitUnlessEmpty(_page, "/").map(subpage => $$t.titles[subpage]?.toString()).toCompacted();
-		let metaRoot = splitUnlessEmpty(_page, "/").reduce<AnyObject>((root, subpage) => root[subpage], settingsMetas);
+		let metaRoot = splitUnlessEmpty(_page, "/").reduce<AnyObject>((root, subpage) => root[subpage], settingsMeta);
 		const anchors = splitUnlessEmpty(_anchor, "/").map(anchor => { metaRoot = metaRoot?.[anchor]; return $t(metaRoot?.meta?.title); }).toCompacted();
 		return { pages, anchors };
 	}
@@ -121,7 +121,7 @@ type Nesting<TObject> = {
 
 const languageInAllLanguages = Object.freeze(getAllLanguageTags().map(lang => i18n.t("settings.language._", { lng: lang, fallbackLng: false })));
 const metas: SettingMeta[] = [];
-const settingsMetasOutput: AnyObject = {};
+const settingsMetaOutput: AnyObject = {};
 const pathToI18nItem = (path: string) => path.split(".").reduce<Any>((parent, key) => parent?.[key], tf) as string;
 function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = false) {
 	if (!item) return undefined!;
@@ -158,18 +158,18 @@ function convertItem(item: ISettingMeta, path: string, isPageMeta: boolean = fal
 	metas.push(_meta);
 	return { meta: _meta, ...items };
 }
-for (const [pageId, items] of Object.entries(settingsMetasInput as AnyObject)) {
-	settingsMetasOutput[pageId] = {};
-	settingsMetasOutput[pageId].meta = convertItem(items.meta ?? {}, pageId, true).meta;
+for (const [pageId, items] of Object.entries(settingsMetaInput as AnyObject)) {
+	settingsMetaOutput[pageId] = {};
+	settingsMetaOutput[pageId].meta = convertItem(items.meta ?? {}, pageId, true).meta;
 	for (const [itemId, item] of Object.entries(items))
-		settingsMetasOutput[pageId][itemId] = convertItem(item as ISettingMeta, `${pageId}.${itemId}`);
+		settingsMetaOutput[pageId][itemId] = convertItem(item as ISettingMeta, `${pageId}.${itemId}`);
 }
-for (const [pageId, items] of Object.entries(settingsMetasOutput))
+for (const [pageId, items] of Object.entries(settingsMetaOutput))
 	if (pageId.includes("_")) {
-		accessPath(settingsMetasOutput, pageId.replaceAll("_", "."), items);
-		delete settingsMetasOutput[pageId as never];
+		accessPath(settingsMetaOutput, pageId.replaceAll("_", "."), items);
+		delete settingsMetaOutput[pageId as never];
 	}
-export const settingsMetas = settingsMetasOutput as Nesting<ConvertPage<typeof settingsMetasInput>>;
+export const settingsMeta = settingsMetaOutput as Nesting<ConvertPage<typeof settingsMetaInput>>;
 
 function accessPath(root: AnyObject, path: string, overwrite: unknown) {
 	return path.split(".").reduce((parent, layer, i, { length }) => {
@@ -200,7 +200,7 @@ interface SettingMetaSearchResult {
 	index?: number;
 }
 let settingMetaSearchResults: SettingMetaSearchResult[] = [];
-function updateSettingsMetasSearchMap() {
+function updateSettingsMetaSearchMap() {
 	settingMetaSearchResults = [];
 	const add = (keyword: string, prop: SettingMetaSearchResultProperty, meta: SettingMeta, index?: number) => {
 		const normalized = keyword.toLowerCase().replaceAll(/[\r\n\u2008\p{VS}]/gu, "");
@@ -220,8 +220,8 @@ function updateSettingsMetasSearchMap() {
 		}
 	}
 }
-updateSettingsMetasSearchMap();
-i18n.on("languageChanged", updateSettingsMetasSearchMap);
+updateSettingsMetaSearchMap();
+i18n.on("languageChanged", updateSettingsMetaSearchMap);
 
 export function search(query?: string) {
 	if (!query?.trim()) return [];

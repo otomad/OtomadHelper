@@ -1,8 +1,8 @@
 // This component unite SettingsCard, SettingsCardToggleSwitch, Expander, ExpanderRadio, ExpanderItem, SubExpander into one.
 
-import type { SettingMeta } from "helpers/settings-metas";
-import { settingsMetas } from "helpers/settings-metas";
-export const metas = settingsMetas;
+import type { SettingMeta } from "helpers/settings-meta";
+import { settingsMeta } from "helpers/settings-meta";
+export const metas = settingsMeta;
 export type SettingMetaInside = { meta?: SettingMeta };
 
 interface Props {

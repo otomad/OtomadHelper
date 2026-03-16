@@ -1,5 +1,5 @@
 import { styledSimpleIndicator } from "components/ItemsView/ItemsViewItem";
-import { type SettingMeta, search } from "helpers/settings-metas";
+import { type SettingMeta, search } from "helpers/settings-meta";
 
 const MAX_LENGTH = 10;
 
