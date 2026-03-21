@@ -16,7 +16,6 @@ import type { textPlugins } from "views/settings/internal";
 import type { Namings, SelectGeneratedClips, TrackGroupBy, barOrBeatUnitTypes, sequentialOrders, sourceFromEnums, startTimes } from "views/source";
 import type { arrayTypes, directionTypes, fitTypes as gridFitTypes, parityTypes } from "views/track/grid";
 import type { glissandoEffects, prerenders, stretches, transformMethods, truncates } from "views/visual";
-import ConfigNS = Config;
 
 namespace Config {
 	// WARN: https://github.com/unplugin/unplugin-auto-import/issues/591
@@ -421,7 +420,7 @@ namespace Config {
 			internal: {
 				language: "zh-CN",
 				autosaveInterval: [5, "minute"] as Unit<RoughTimeUnit>,
-				defaultTextPlugin: "titlesAndText" satisfies TextPlugin as TextPlugin | (string & {}),
+				defaultTextPlugin: "titlesAndText" satisfies TextPlugin as TextPlugin | string & {},
 				defaultTuningMethod: "elastic" satisfies TuningMethod as TuningMethod,
 				defaultElasticMode: "efficient" satisfies TuningElasticMode as TuningElasticMode,
 				defaultClassicMode: "a03" satisfies TuningClassicMode as TuningClassicMode,
@@ -440,6 +439,7 @@ export const useSelectConfig = <T extends object>(path: (state: typeof configSto
 export const useSelectConfigArray = <T extends object>(path: (state: typeof configStore) => T[]) => useStoreStateArray(path(configStore));
 if (import.meta.env.DEV) globals.config = configStore;
 
+import ConfigNS = Config;
 declare global {
 	export import Config = ConfigNS;
 }

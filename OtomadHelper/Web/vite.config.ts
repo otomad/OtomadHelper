@@ -17,7 +17,7 @@ import svgr from "vite-plugin-svgr";
 import { qrcode } from "vite-plugin-qrcode";
 import tsconfigPaths from "vite-tsconfig-paths";
 import autoImportConfig from "./auto-import.config";
-import { author, displayName, github, homepage, project, version } from "./package.json";
+import { author, displayName, github, homepage, project, version } from "./package.json"/* with { type: "json" } */;
 import minifySvgMatrix from "./src/plugins/babel/minify-svg-matrix";
 import tAutoTostring from "./src/plugins/babel/t-auto-tostring";
 import fragmentFiltersVirtualFile from "./src/plugins/vite/fragment-filters";
@@ -37,6 +37,7 @@ const ENABLE_COMPILER = true;
 // 查循环依赖步骤：
 // 第1步：使用 vite-plugin-no-bundle 插件实现构建但不打包；
 // 第2步：使用 madge 工具查询项目中所有的循环依赖。
+// npx madge --circular dist/index.js > docs/circular_dependencies.log
 
 moment.updateLocale("en", {
 	longDateFormat: {
@@ -154,11 +155,14 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 		],
 		base: "",
 		publicDir: "src/public",
+		resolve: {
+			tsconfigPaths: true,
+		},
 		build: {
-			target: "ESNext",
+			target: "esnext",
 			assetsInlineLimit: 200,
-			rollupOptions: {
-				preserveEntrySignatures: NO_BUNDLE as never,
+			rolldownOptions: {
+				preserveEntrySignatures: NO_BUNDLE ? "strict" : false,
 				output: {
 					preserveModules: NO_BUNDLE,
 					entryFileNames: "[name].js",

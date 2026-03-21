@@ -6,7 +6,7 @@ import { transform as transformCSS, transformStyleAttribute } from "lightningcss
 import * as oxcMinify from "oxc-minify";
 // import * as terser from "terser";
 import ts from "typescript";
-// import * as vite from "vite";
+import * as vite from "vite";
 
 /**
  * Compile TypeScript source code to JavaScript code.
@@ -104,4 +104,12 @@ export async function minifyHtml(source: string) {
 		minifyJS: code => oxcMinify.minifySync("index.js", code).code,
 		minifyURLs: true,
 	});
+}
+
+/**
+ * Check if the current vite is rolldown vite (v8.0+).
+ * @returns Is the current vite a rolldown vite?
+ */
+export function isRolldownVite() {
+	return "rolldownVersion" in vite;
 }

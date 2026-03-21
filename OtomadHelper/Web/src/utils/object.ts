@@ -701,12 +701,14 @@ export function type(object: Object | undefined | null, lowerCase: boolean = fal
  * @returns A proxy of the original object that returns the fallback value for missing properties.
  */
 export function fallbackWith<const T extends Record<PropertyKey, Any>>(target: T, fallbackKey: keyof T): T & Record<PropertyKey, T[keyof T]> {
-	const errorMsgHeader = `Failed to execute "${fallbackWith.name}": `;
-	if (arguments.length !== fallbackWith.length) throw new TypeError(`${errorMsgHeader}${fallbackWith.length} argument required, but only ${arguments.length} present.`);
-	if (!isObject(target)) throw new TypeError(`${errorMsgHeader}parameter 1 is not of type "object".`);
-	if (Object.values(target).length === 0) throw new TypeError(`${errorMsgHeader}parameter 1 target object is empty.`);
-	if (!["string", "symbol", "number", "bigint"].includes(typeof fallbackKey)) throw new TypeError(`${errorMsgHeader}parameter 2 is not of type "string", "symbol", "number", or "bigint".`);
-	if (!(fallbackKey in target)) throw new RangeError(`${errorMsgHeader}The fallback key "${String(fallbackKey)}" is not in the target object, it is likely that you spelled it incorrectly.`);
+	if (import.meta.env.DEV) {
+		const errorMsgHeader = `Failed to execute "${fallbackWith.name}": `;
+		if (arguments.length !== fallbackWith.length) throw new TypeError(`${errorMsgHeader}${fallbackWith.length} argument required, but only ${arguments.length} present.`);
+		if (!isObject(target)) throw new TypeError(`${errorMsgHeader}parameter 1 is not of type "object".`);
+		if (Object.values(target).length === 0) throw new TypeError(`${errorMsgHeader}parameter 1 target object is empty.`);
+		if (!["string", "symbol", "number", "bigint"].includes(typeof fallbackKey)) throw new TypeError(`${errorMsgHeader}parameter 2 is not of type "string", "symbol", "number", or "bigint".`);
+		if (!(fallbackKey in target)) throw new RangeError(`${errorMsgHeader}The fallback key "${String(fallbackKey)}" is not in the target object, it is likely that you spelled it incorrectly.`);
+	}
 
 	return new Proxy(target, {
 		get(target, property) {
@@ -732,18 +734,20 @@ export function fallbackWith<const T extends Record<PropertyKey, Any>>(target: T
  * @returns A proxy object that provides locale-based property access with fallback logic.
  */
 export function fallbackWithLocale<const T extends Record<Intl.UnicodeBCP47LocaleIdentifier, Any>>(target: T, fallbackLocale: keyof T = "en"): T & Record<Intl.UnicodeBCP47LocaleIdentifier, T[keyof T]> {
-	const errorMsgHeader = `Failed to execute "${fallbackWithLocale.name}": `;
-	if (arguments.length !== fallbackWithLocale.length) throw new TypeError(`${errorMsgHeader}${fallbackWithLocale.length} argument required, but only ${arguments.length} present.`);
-	if (!isObject(target)) throw new TypeError(`${errorMsgHeader}parameter 1 is not of type "object".`);
-	if (Object.values(target).length === 0) throw new TypeError(`${errorMsgHeader}parameter 1 target object is empty.`);
-	if (typeof fallbackLocale !== "string") throw new TypeError(`${errorMsgHeader}parameter 2 is not of type "string".`);
-	if (!isValidLocale(fallbackLocale)) throw new RangeError(`${errorMsgHeader}The fallback locale "${String(fallbackLocale)}" is not a valid locale.`);
+	if (import.meta.env.DEV) {
+		const errorMsgHeader = `Failed to execute "${fallbackWithLocale.name}": `;
+		if (arguments.length !== fallbackWithLocale.length) throw new TypeError(`${errorMsgHeader}${fallbackWithLocale.length} argument required, but only ${arguments.length} present.`);
+		if (!isObject(target)) throw new TypeError(`${errorMsgHeader}parameter 1 is not of type "object".`);
+		if (Object.values(target).length === 0) throw new TypeError(`${errorMsgHeader}parameter 1 target object is empty.`);
+		if (typeof fallbackLocale !== "string") throw new TypeError(`${errorMsgHeader}parameter 2 is not of type "string".`);
+		if (!isValidLocale(fallbackLocale)) throw new RangeError(`${errorMsgHeader}The fallback locale "${String(fallbackLocale)}" is not a valid locale.`);
+	}
 
 	return new Proxy(target, {
 		get(target, locale) {
 			if (typeof locale === "symbol") return;
 			if (locale in target) return target[locale];
-			const bestMatchLocale = match([locale, fallbackLocale], Object.keys(target), undefined!) ?? Object.keys(target)[0];
+			const bestMatchLocale = match([locale, fallbackLocale as string], Object.keys(target), undefined!) ?? Object.keys(target)[0];
 			return target[bestMatchLocale];
 		},
 	});

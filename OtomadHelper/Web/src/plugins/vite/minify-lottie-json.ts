@@ -5,18 +5,20 @@
 
 import { readFile } from "fs/promises";
 import { noop } from "lodash-es";
-import { minifyJavaScript } from "./utils";
+import { isRolldownVite, minifyJavaScript } from "./utils";
 
 const lottieJsonExt = /\.json\?lottie$/i;
 const getPath = (id: string) => lottieJsonExt.test(id) ? id.replace(/\?.*/, "") : false;
 
 export default (): VitePlugin => {
 	let config: VitePluginConfig;
+	const rolldown = isRolldownVite();
+	const rolldownModuleExtra = rolldown ? "export default " : "";
 
 	return {
 		name: "vite-plugin-minify-lottie-json",
 		enforce: "pre",
-		apply: "build", // If use rolldown vite, comment this line.
+		apply: rolldown ? undefined : "build",
 
 		configResolved(resolvedConfig) {
 			config = resolvedConfig;
@@ -27,13 +29,13 @@ export default (): VitePlugin => {
 			if (!filePath) return;
 
 			const raw = await readFile(filePath, "utf-8");
-			if (config.command === "serve") return raw; // If use rolldown vite, add `"export default " +` after `return`.
+			if (config.command === "serve") return rolldownModuleExtra + raw;
 
 			const json = JSON.parse(raw);
 			const promises = walk(json);
 			await Promise.all(promises);
 
-			return JSON.stringify(json); // If use rolldown vite, add `"export default " +` after `return`.
+			return rolldownModuleExtra + JSON.stringify(json);
 		},
 	};
 };
