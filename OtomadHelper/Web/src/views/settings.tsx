@@ -393,7 +393,7 @@ export default function Settings() {
 						max={28}
 						defaultValue={14}
 						step={0.1}
-						staticSmoothInterval={0}
+						_disableSmooth
 					/>
 					<SampleTextFontSize>
 						<p className="sample">{t.descriptions.settings.appearance.fontSize.sampleText}</p>

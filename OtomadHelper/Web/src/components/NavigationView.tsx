@@ -331,7 +331,7 @@ const StyledNavigationView = styled.div<{
 					}
 				}
 
-				> .container {
+				> .container:not(.container-preview) {
 					position: relative;
 					margin-block-start: 2px;
 

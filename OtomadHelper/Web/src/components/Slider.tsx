@@ -136,7 +136,7 @@ const StyledSliderWrapper = styled.div`
 	}
 `;
 
-export default function Slider({ value: [value, _setValue], min = 0, max = 100, autoClampValue, defaultValue, step, keyStep = 1, keyBigStepMultiplier = 10, displayValueStep, smoothlyDisplayValue = true, disabled = false, displayValue: _displayValue = false, staticSmoothInterval: staticInterval, onChanging, onChange, onDisplayValueChanged }: FCP<{
+export default function Slider({ value: [value, _setValue], min = 0, max = 100, autoClampValue, defaultValue, step, keyStep = 1, keyBigStepMultiplier = 10, displayValueStep, smoothlyDisplayValue = true, disabled = false, displayValue: _displayValue = false, _disableSmooth: disableSmooth, onChanging, onChange, onDisplayValueChanged }: FCP<{
 	/** Current value. */
 	value: StateProperty<number>;
 	/** Slider minimum value. @default 0 */
@@ -165,12 +165,8 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 	disabled?: boolean;
 	/** Show the text indicates the value? Or get the display text from the value. */
 	displayValue?: boolean | ((value: number) => Readable) | Readable;
-	/**
-	 * Use a static smooth value speed interval instead of automatically detect by screen refresh rate,
-	 * useful when performing high-performance calculations.\
-	 * If set to 0, the smooth value will be disabled.
-	 */
-	staticSmoothInterval?: number;
+	/** @private Disable smooth value. */
+	_disableSmooth?: boolean;
 	/** Occurs when the slider is being dragged. */
 	onChanging?(value: number): void;
 	/** Occurs when the slider is lifted after being dragged. */
@@ -192,7 +188,7 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 
 	const restrict = useCallback((n: number | undefined, nanValue: number) => Number.isFinite(n) ? clamp(map(n!, min, max, 0, 1), 0, 1) : nanValue, [min, max]);
 	const sharpValue = useMemo(() => restrict(value, 0), [value, restrict]);
-	const smoothValue = staticInterval === 0 ? sharpValue : useSmoothValue(sharpValue, 0.5, { staticInterval });
+	const smoothValue = disableSmooth ? sharpValue : useSmoothValue(sharpValue, 0.5);
 	// Modify this parameter to adjust the smooth movement value of the slider.
 	const [pressed, setPressed] = useState(false);
 	const id = useId();
@@ -223,7 +219,7 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 		if (e.button) { e.preventDefault(); return; }
 		setPressed(true);
 		const thumb = (e.currentTarget as HTMLDivElement).parentElement!.querySelector(".thumb") as HTMLDivElement;
-		const thumbSize = thumb.offsetWidth;
+		const thumbSize = 20; // thumb.offsetWidth;
 		const track = thumb.parentElement!.querySelector(".track")!;
 		const { left, width } = track.getBoundingClientRect();
 		const x = triggerByTrack ? thumbSize / 2 : e.clientX - left - thumb.offsetLeft * getUiScale1();
@@ -249,8 +245,8 @@ export default function Slider({ value: [value, _setValue], min = 0, max = 100, 
 	const onTrackDown: PointerEventHandler = e => {
 		if (e.button) { e.preventDefault(); return; }
 		const track = e.currentTarget as HTMLDivElement;
-		const thumb = track.parentElement!.querySelector(".thumb") as HTMLDivElement;
-		const thumbSizeHalf = thumb.offsetWidth / 2;
+		// const thumb = track.parentElement!.querySelector(".thumb") as HTMLDivElement;
+		const thumbSizeHalf = 10; // thumb.offsetWidth / 2;
 		const { width } = track.getBoundingClientRect();
 		let value = clampValue(map(e.nativeEvent.offsetX, thumbSizeHalf, width - thumbSizeHalf, min, max));
 		if (isRtl()) value = max - value + min;

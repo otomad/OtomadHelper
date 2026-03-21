@@ -22,16 +22,18 @@ export default function HorizontalScroll<TContainer extends AsTarget>({ enabled 
 	const animationId = useRef<number>(undefined);
 	const isUpdating = () => animationId.current !== undefined;
 	const spring = 0.5;
+	const prevTimestamp = useRef<DOMHighResTimeStamp>(undefined);
 
 	const stopUpdating = useCallback(() => {
 		cancelAnimationFrame(animationId.current);
 		animationId.current = undefined;
 	}, []);
 
-	function update() {
+	function update(timestamp?: DOMHighResTimeStamp) {
 		stopUpdating();
 		if (!enabled) return;
-		scrollValue.current += (scrollTarget.current - scrollValue.current) * spring * getFrameInterval60();
+		const springByFps = getSpringByFps(timestamp, prevTimestamp, spring);
+		scrollValue.current += (scrollTarget.current - scrollValue.current) * springByFps;
 		animationId.current = requestAnimationFrame(update);
 		// eslint-disable-next-line curly
 		if (Math.abs(scrollValue.current - scrollTarget.current) <= 1e-2) {

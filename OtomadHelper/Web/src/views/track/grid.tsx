@@ -675,7 +675,7 @@ export default function Grid() {
 
 	return (
 		<>
-			<StyledContainerPreview>
+			<StyledContainerPreview className="container">
 				<div className="command-bar-wrapper">
 					<CommandBar.Group>
 						<CommandBar position="right" autoCollapse>
