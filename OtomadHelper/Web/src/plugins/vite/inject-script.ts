@@ -79,7 +79,7 @@ export default ({ scripts, minifyHtml: minify = true }: {
 
 					if (blocking) attrs.blocking = blocking.join(" ");
 					if (!inline) attrs.src = bundles.get(src);
-					attrs.type = type === "script" || type === "iife" ? undefined : type;
+					attrs.type = type === "classic" || type === "script" || type === "iife" ? undefined : type;
 
 					const result: Tag = { tag: "script", injectTo: injectTo!, attrs, children: inline ? source : undefined };
 					return result;
@@ -127,12 +127,12 @@ interface PriorScript {
 	/** Path to the script (js/ts/jsx/tsx). */
 	src: string;
 	/**
-	 * - `script` - Classic script.
-	 * - `module` - JavaScript module.
-	 * - `iife` - Wrap the script content with IIFE, and mark as "use strict".
+	 * - `"classic"` | `"script"` - Classic script.
+	 * - `"module"` - JavaScript module.
+	 * - `"iife"` - Wrap the script content with IIFE, and mark as "use strict".
 	 * - Others - Directly pass to the type attribute.
 	 */
-	type?: "script" | "module" | "iife" | (string & {});
+	type?: "classic" | "script" | "module" | "iife" | string & {};
 	/** Select where to insert the script. Defaults to "head-append". */
 	injectTo?: "head-prepend" | "head-append" | "body-prepend" | "body-append";
 	/** Modify the source script content. */

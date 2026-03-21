@@ -764,7 +764,7 @@ function NumberTextBox<TNumber extends NumberLike>({ value: [value, _setValue], 
 							<Icon name="scroll_up_down" />
 						</label>
 						{!readOnly && (
-							<Portal>
+							<Portal container="main.page">
 								<Spinner
 									onSpin={handlePressSpin}
 									onRelease={handleReleaseSpin}

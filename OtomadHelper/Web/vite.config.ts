@@ -155,9 +155,9 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 		],
 		base: "",
 		publicDir: "src/public",
-		resolve: {
-			tsconfigPaths: true,
-		},
+		// resolve: {
+		// 	tsconfigPaths: true,
+		// },
 		build: {
 			target: "esnext",
 			assetsInlineLimit: 200,
