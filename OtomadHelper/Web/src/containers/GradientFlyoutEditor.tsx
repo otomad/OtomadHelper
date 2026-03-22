@@ -198,15 +198,8 @@ const StyledGradientFlyoutEditor = styled.div`
 		cursor: help;
 	}
 
-	.custom-parity-btn {
-		inline-size: max-content;
-
-		.content {
-			flex-shrink: 0;
-			gap: 16px;
-			padding-block: 12px;
-			padding-inline: 8px;
-		}
+	.custom-parity-btn .base::before {
+		content: none;
 	}
 
 	.${TRIPPY_COLORING_ID} img {
@@ -260,7 +253,7 @@ export default function GradientFlyoutEditor() {
 										checkmarkPosition="top left"
 										// onClick={() => clickAStyle("parity", key)}
 									>
-										<MarqueeIfOverflow speed={MARQUEE_SPEED}><Preserves>{t.track.gradient.trippyColoring}</Preserves></MarqueeIfOverflow>
+										<MarqueeIfOverflow speed={MARQUEE_SPEED}>{t.track.gradient.trippyColoring}</MarqueeIfOverflow>
 									</ItemsView.Item>
 									<Subheader vertical>{tc.groups.parity}</Subheader>
 									{ParityStyles.map(({ key, label, ...raw }) => (
@@ -319,12 +312,12 @@ export default function GradientFlyoutEditor() {
 														id={key}
 														key={key}
 														icon={icon}
-													// onClick={option === "random" ? () => (isH ? setFlipHRandomTimestamp : setFlipVRandomTimestamp)(Date.now()) : undefined}
+														// onClick={option === "random" ? () => (isH ? setFlipHRandomTimestamp : setFlipVRandomTimestamp)(Date.now()) : undefined}
 													>
 														{label}
 													</ItemsView.Item>
 												))}
-												<Button subtle icon="edit" className="custom-parity-btn">{t.custom}</Button>
+												<ItemsView.Item id="custom" icon="edit" className="custom-parity-btn">{t.custom}</ItemsView.Item>
 											</ItemsView>
 										</>
 									) : currentPattern === "gradient" ? (

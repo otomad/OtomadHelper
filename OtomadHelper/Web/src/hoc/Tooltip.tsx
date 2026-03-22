@@ -212,7 +212,7 @@ export default function Tooltip({ title: _title, placement, offset, timeout = 50
 							}}
 						>
 							<div className="base">
-								{title}
+								<Preserves>{title}</Preserves>
 							</div>
 						</StyledTooltip>
 					</CssTransition>

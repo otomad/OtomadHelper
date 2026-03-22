@@ -123,7 +123,7 @@ const StyledBreadcrumbChevronRight = styled.div(() => css`
 		font-size: 16px;
 	}
 
-	h4${StyledBreadcrumb} & {
+	${StyledBreadcrumb}[aria-level="4"] & {
 		margin-block-start: 1px;
 
 		.icon {
