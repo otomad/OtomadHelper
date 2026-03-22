@@ -27,12 +27,10 @@ const StyledSubheader = styled.h4<{
 	}
 
 	${ifProp("$vertical", css`
-		writing-mode: vertical-lr;
-		text-orientation: sideways;
+		writing-mode: sideways-lr;
 
-		&:not(:lang(zh), :lang(ja), :lang(ko)) > span {
-			display: inline-block;
-			rotate: 0.5turn;
+		&:is(:lang(zh), :lang(ja), :lang(ko)) {
+			writing-mode: vertical-lr;
 		}
 	`)}
 `;
@@ -48,7 +46,7 @@ export default function Subheader({ meta, vertical, children, ...htmlAttrs }: FC
 	var { children, anchor } = Setting.useMeta(meta, arguments);
 	return (
 		<StyledSubheader data-anchor={anchor} $vertical={vertical} {...htmlAttrs}>
-			{vertical ? <span>{children}</span> : children}
+			{children}
 		</StyledSubheader>
 	);
 }
