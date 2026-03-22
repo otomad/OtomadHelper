@@ -700,10 +700,10 @@ export function type(object: Object | undefined | null, lowerCase: boolean = fal
  * @throws {RangeError} If the fallback key does not exist in the object.
  * @returns A proxy of the original object that returns the fallback value for missing properties.
  */
-export function fallbackWith<const T extends Record<PropertyKey, Any>>(target: T, fallbackKey: keyof T): T & Record<PropertyKey, T[keyof T]> {
+export function fallbackWithKey<const T extends Record<PropertyKey, Any>>(target: T, fallbackKey: keyof T): T & Record<PropertyKey, T[keyof T]> {
 	if (import.meta.env.DEV) {
-		const errorMsgHeader = `Failed to execute "${fallbackWith.name}": `;
-		if (arguments.length !== fallbackWith.length) throw new TypeError(`${errorMsgHeader}${fallbackWith.length} argument required, but only ${arguments.length} present.`);
+		const errorMsgHeader = `Failed to execute "${fallbackWithKey.name}": `;
+		if (arguments.length !== fallbackWithKey.length) throw new TypeError(`${errorMsgHeader}${fallbackWithKey.length} argument required, but only ${arguments.length} present.`);
 		if (!isObject(target)) throw new TypeError(`${errorMsgHeader}parameter 1 is not of type "object".`);
 		if (Object.values(target).length === 0) throw new TypeError(`${errorMsgHeader}parameter 1 target object is empty.`);
 		if (!["string", "symbol", "number", "bigint"].includes(typeof fallbackKey)) throw new TypeError(`${errorMsgHeader}parameter 2 is not of type "string", "symbol", "number", or "bigint".`);

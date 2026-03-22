@@ -3,7 +3,7 @@ import ytpChangeSpeedImage from "assets/images/effects/ytp_change_speed.avif";
 import ytpChorusImage from "assets/images/effects/ytp_chorus.avif";
 import ytpDelayImage from "assets/images/effects/ytp_delay.avif";
 import ytpReverseImage from "assets/images/effects/ytp_reverse.avif";
-import { MILLISECONDS_PER_FRAME, styledMirror } from "./PreviewPrve";
+import { MILLISECONDS_PER_FRAME, styledMirror, styledPreviewFilterBase } from "./PreviewPrve";
 
 const getDuration = (frames: number) => frames * MILLISECONDS_PER_FRAME + "ms";
 
@@ -11,13 +11,7 @@ const StyledPreviewYtp = styled.div<{
 	/** Effect name. */
 	$name: string;
 }>`
-	${styles.mixins.square("100%")};
-
-	img {
-		${styles.mixins.square("100%")};
-		position: absolute;
-		object-fit: cover;
-	}
+	${styledPreviewFilterBase};
 
 	${({ $name }) => {
 		return {

@@ -165,13 +165,14 @@ function setRectangle(gl: WebGL2RenderingContext, x: number, y: number, width: n
 }
 
 function convertGlslTypeToUniformType(type: string): UniformType {
-	return ({
-		int: "1i",
-		float: "1f",
-		vec2: "2f",
-		vec3: "3f",
-		vec4: "4f",
-	} satisfies Record<string, UniformType>)[type] ?? type as UniformType;
+	switch (type) {
+		case "int": return "1i";
+		case "float": return "1f";
+		case "vec2": return "2f";
+		case "vec3": return "3f";
+		case "vec4": return "4f";
+		default: return type as UniformType;
+	}
 }
 
 const filter = initWebgl2();

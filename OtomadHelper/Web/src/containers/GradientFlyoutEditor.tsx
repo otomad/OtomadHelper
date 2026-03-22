@@ -12,8 +12,8 @@ const ParityStyles = Enum({
 	hMirrorRight: { label: t.prve.effects.hMirror_right, effect: "hMirror", step: 2 },
 	vMirrorTop: { label: t.prve.effects.vMirror_top, effect: "vMirror", step: 1 },
 	vMirrorBottom: { label: t.prve.effects.vMirror_bottom, effect: "vMirror", step: 2 },
-	twistCw: { label: t.ytp.effects.twist_cw, effect: "twist", step: 1 },
-	twistCcw: { label: t.ytp.effects.twist_ccw, effect: "twist", step: 2 },
+	twistCw: { label: t.ytp.effects.twist_cw, effect: "twist" },
+	twistCcw: { label: t.ytp.effects.twist_ccw, effect: "twist_ccw" },
 });
 
 const GradientStyles = Enum({
@@ -209,7 +209,7 @@ const StyledGradientFlyoutEditor = styled.div`
 		}
 	}
 
-	.${TRIPPY_COLORING_ID} canvas {
+	.${TRIPPY_COLORING_ID} img {
 		filter: invert(1) hue-rotate(45deg) saturate(2);
 	}
 `;
@@ -227,26 +227,32 @@ export default function GradientFlyoutEditor() {
 	], [currentPage]);
 	const prevTitles = usePrevious(titles);
 	const transitionName = useMemo(() => titles.toCompacted().length < (prevTitles?.toCompacted().length ?? NaN) ? "forward" : "backward", [titles, prevTitles]);
+	const stylesEl = useDomRef<"div">(), currentStylesScrollLeft = useRef(0);
 
-	function clickAStyle(pattern: typeof currentPattern, style: StyleType) {
+	function clickOnStyle(pattern: typeof currentPattern, style: StyleType) {
+		if (stylesEl.current) currentStylesScrollLeft.current = stylesEl.current.scrollLeft;
 		setCurrentPattern(pattern);
 		setCurrentStyle(style);
 		setCurrentPage("pattern");
+	}
+
+	function onBackToStyles() {
+		if (stylesEl.current) stylesEl.current.scrollTo({ left: currentStylesScrollLeft.current, behavior: "instant" });
 	}
 
 	return (
 		<Contents className={transitionName}>
 			<Breadcrumb large={false} titles={titles} />
 			<SwitchTransition>
-				<CssTransition key={`${currentPage}/${currentPattern}`} moreCoherentWhenCombo timeout={125}>
+				<CssTransition key={`${currentPage}/${currentPattern}`} moreCoherentWhenCombo timeout={125} onEnter={onBackToStyles}>
 					<StyledGradientFlyoutEditor>
 						<HorizontalScroll as={Fragment}>
 							{currentPage === "style" ? (
-								<ItemsView data-page="style" className={nameof.kebab({ GradientFlyoutEditor })} view="grid" current={null}>
+								<ItemsView data-page="style" ref={stylesEl} className={nameof.kebab({ GradientFlyoutEditor })} view="grid" current={null}>
 									<ItemsView.Item
 										id={TRIPPY_COLORING_ID}
 										key={TRIPPY_COLORING_ID}
-										image={<PreviewPrve thumbnail={exampleThumbnail} effect="twist" step={1} frames={2} className={TRIPPY_COLORING_ID} />}
+										image={<PreviewTwistEffect thumbnail={exampleThumbnail} direction="cw" className={TRIPPY_COLORING_ID} />}
 										imageOverlay={<AsteriskHelp>{t.descriptions.track.gradient.trippyColoring}</AsteriskHelp>}
 										role="button"
 										_multiple
@@ -261,15 +267,16 @@ export default function GradientFlyoutEditor() {
 										<ItemsView.Item
 											id={key}
 											key={key}
-											image={(
-												<PreviewPrve
-													thumbnail={exampleThumbnail}
-													effect={"effect" in raw ? raw.effect : key}
-													step={"step" in raw ? raw.step : 1}
-													frames={"step" in raw ? 2 : undefined}
-												/>
-												/* TODO: 渲染canvas太贵了，每次进入页面要重新加载一次，略慢，要改成静态图片。 */
-											)}
+											image={(key.startsWith("twist") ?
+												<PreviewTwistEffect thumbnail={exampleThumbnail} direction={key === "twistCcw" ? "ccw" : "cw"} /> :
+												(
+													<PreviewPrve
+														thumbnail={exampleThumbnail}
+														effect={"effect" in raw ? raw.effect : key}
+														step={"step" in raw ? raw.step : 1}
+														frames={"step" in raw ? 2 : undefined}
+													/>
+												))}
 											imageOverlay={(() => {
 												const tooltip = key.includes("Mirror") || key.includes("twist") ? t.descriptions.track.gradient.mirrorPriorityInfo :
 													key.includes("Invert") ? t.descriptions.track.gradient.colorInvertInfo : undefined;
@@ -277,7 +284,7 @@ export default function GradientFlyoutEditor() {
 											})()}
 											role="button"
 											aria-label={label}
-											onClick={() => clickAStyle("parity", key)}
+											onClick={() => clickOnStyle("parity", key)}
 										>
 											<MarqueeIfOverflow speed={MARQUEE_SPEED}>{label}</MarqueeIfOverflow>
 										</ItemsView.Item>
@@ -290,7 +297,7 @@ export default function GradientFlyoutEditor() {
 											image={<PreviewGraduallyGradient thumbnail={exampleThumbnail} effect={key} />}
 											role="button"
 											aria-label={label}
-											onClick={() => clickAStyle("gradient", key)}
+											onClick={() => clickOnStyle("gradient", key)}
 										>
 											<MarqueeIfOverflow speed={MARQUEE_SPEED}>{label}</MarqueeIfOverflow>
 										</ItemsView.Item>

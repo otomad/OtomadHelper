@@ -1,4 +1,4 @@
-import { MILLISECONDS_PER_FRAME } from "./PreviewPrve";
+import { MILLISECONDS_PER_FRAME, styledPreviewFilterBase } from "./PreviewPrve";
 
 function floatIn(from: "up" | "down" | "left" | "right", previewIdeality: boolean) {
 	const fromOrigin = from === "up" ? "top" : from === "down" ? "bottom" : from;
@@ -91,11 +91,9 @@ const StyledPreviewParameterPreset = styled.div<{
 	/** Preview ideality instead of reality? */
 	$previewIdeality?: boolean;
 }>`
-	${styles.mixins.square("100%")};
+	${styledPreviewFilterBase};
 
 	img {
-		position: absolute;
-		object-fit: cover;
 		animation-duration: calc(var(--frames) * ${MILLISECONDS_PER_FRAME}ms);
 	}
 

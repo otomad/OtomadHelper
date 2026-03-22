@@ -1,15 +1,10 @@
+import { styledPreviewFilterBase } from "./PreviewPrve";
+
 const StyledPreviewGraduallyGradient = styled.div<{
 	/** Effect name. */
 	$effect: string;
 }>`
-	${styles.mixins.square("100%")};
-
-	img,
-	.overlay {
-		${styles.mixins.square("100%")};
-		position: absolute;
-		object-fit: cover;
-	}
+	${styledPreviewFilterBase};
 
 	${({ $effect }) => {
 		return {
@@ -36,15 +31,15 @@ const StyledPreviewGraduallyGradient = styled.div<{
 
 const showOverlayEffects = ["saturation", "brightness"] as const;
 
-export default function PreviewGraduallyGradient({ thumbnail, effect }: FCP<{
+export default function PreviewGraduallyGradient({ thumbnail, effect }: {
 	/** Thumbnail. */
 	thumbnail: string;
 	/** Effect name. */
 	effect: string;
-}>) {
+}) {
 	const webglFilters = useWebglFilters(thumbnail);
 
-	const alterImage = {
+	const image = {
 		hue: webglFilters?.gradientHue,
 		contrast: webglFilters?.gradientContrast,
 		threshold: webglFilters?.gradientThreshold,
@@ -52,8 +47,28 @@ export default function PreviewGraduallyGradient({ thumbnail, effect }: FCP<{
 
 	return (
 		<StyledPreviewGraduallyGradient $effect={effect}>
-			<img alt="" data-name={effect} src={alterImage || thumbnail} />
+			<img alt="" data-name={effect} src={image || thumbnail} />
 			{showOverlayEffects.includes(effect) && <div className="overlay" />}
 		</StyledPreviewGraduallyGradient>
+	);
+}
+
+const StyledPreviewTwistEffect = styled.div`
+	${styledPreviewFilterBase};
+`;
+
+export function PreviewTwistEffect({ thumbnail, direction, className }: {
+	/** Thumbnail. */
+	thumbnail: string;
+	/** Twist direction: Clockwise or Counterclockwise. */
+	direction: "cw" | "ccw";
+	className?: ClassValue;
+}) {
+	const webglFilters = useWebglFilters(thumbnail);
+	const image = direction === "ccw" ? webglFilters?.twist_ccw : webglFilters.twist;
+	return (
+		<StyledPreviewTwistEffect className={className}>
+			<img alt="" src={image || thumbnail} />
+		</StyledPreviewTwistEffect>
 	);
 }

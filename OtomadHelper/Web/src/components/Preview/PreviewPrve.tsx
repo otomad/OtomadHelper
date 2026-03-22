@@ -31,6 +31,20 @@ export /* @internal */ const styledMirror = {
 	`,
 };
 
+export const styledPreviewFilterBase = css`
+	${styles.mixins.square("100%")};
+
+	img,
+	.overlay {
+		position: absolute;
+		object-fit: cover;
+
+		@layer base {
+			${styles.mixins.square("100%")};
+		}
+	}
+`;
+
 const StyledPreviewPrve = styled.div<{
 	/** Effect identifier. */
 	$effect: string;
@@ -39,13 +53,11 @@ const StyledPreviewPrve = styled.div<{
 	/** Static normal visual? */
 	$static?: boolean;
 }>`
-	${styles.mixins.square("100%")};
+	${styledPreviewFilterBase};
 	${styles.mixins.gridCenter()};
 	container: preview-prve / size;
 
 	img {
-		position: absolute;
-		object-fit: cover;
 		animation-duration: calc(var(--frames) * ${MILLISECONDS_PER_FRAME}ms);
 		animation-timing-function: step-start;
 		animation-iteration-count: infinite;
@@ -72,10 +84,6 @@ const StyledPreviewPrve = styled.div<{
 		--i: 0;
 		--adjust-order: 0;
 		--adjust-rate: 1;
-
-		img {
-			${styles.mixins.square("100%")};
-		}
 	}
 
 	.items-view-item:not(:hover, :focus-visible, .initial-step-item, .gradient-flyout-editor *) & img {
