@@ -43,7 +43,7 @@ export default function SettingsCardToggleSwitch({ on: [on, setOn], disabled, ch
 			type="button"
 			disabled={disabled || lock != null}
 			actionIcon={actionIcon}
-			className={[className, nameof.kebab({ SettingsCardToggleSwitch }), { toggleSwitchHoverable: !isExpander || !on }]}
+			className={[className, nameof.kebab(SettingsCardToggleSwitch), { toggleSwitchHoverable: !isExpander || !on }]}
 			actions={(
 				<>
 					<ToggleSwitch

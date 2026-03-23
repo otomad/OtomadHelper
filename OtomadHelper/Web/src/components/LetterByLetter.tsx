@@ -20,7 +20,7 @@ export default function LetterByLetter({ as: As = "p", children = "", granularit
 	}, [children, granularity, language]);
 
 	return (
-		<As className={[className, nameof.kebab({ LetterByLetter })]} role={role} aria-label={ariaLabel} {...htmlAttrs as object}>
+		<As className={[className, nameof.kebab(LetterByLetter)]} role={role} aria-label={ariaLabel} {...htmlAttrs as object}>
 			{characters}
 		</As>
 	);

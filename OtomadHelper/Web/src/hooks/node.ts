@@ -84,7 +84,7 @@ export function useOnFormKeyDown(element: RefObject<HTMLElement | null>, { handl
 			const target = (e.currentTarget ?? e.target) as HTMLElement | null;
 			let parent = parentSelector ? target?.closest(parentSelector) : target?.parentElement;
 			if (parent?.matches(".sortable-item") && !parentSelector) { // Specialized: If is implicit parent selector and the direct parent element is sortable item, then select the sortable view element as the parent.
-				parent = parent.closest("." + nameof.kebab({ SortableView }));
+				parent = parent.closest("." + nameof.kebab(SortableView));
 				itemSelector = ".sortable-item";
 			}
 			const index = target?.indexIn(parent) ?? -1;

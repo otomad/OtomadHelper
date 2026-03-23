@@ -78,7 +78,7 @@ export default function SearchBox({ value: [value, setValue], collapsed, collaps
 }, "search">) {
 	const [language] = useLanguage();
 	const focusSearchBox = () =>
-		[...document.querySelectorAll<HTMLInputElement>(`.${nameof.kebab({ SearchBox })} input`)]
+		[...document.querySelectorAll<HTMLInputElement>(`.${nameof.kebab(SearchBox)} input`)]
 			.find(searchBox => searchBox.checkVisibility())?.focus();
 	const handleCollapsedButtonClick = async () => {
 		if (!onCollapsedButtonClick) return;

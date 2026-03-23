@@ -18,7 +18,7 @@ export default function TriStateSwitch({ current, indetText, indetIcon, classNam
 	const segmentedCurrent = useStateSelector(current, toTriStateKey, key => triStateMap[key]);
 
 	return (
-		<Segmented current={segmentedCurrent} className={[nameof.kebab({ TriStateSwitch }), className]}>
+		<Segmented current={segmentedCurrent} className={[nameof.kebab(TriStateSwitch), className]}>
 			{triStates.map(option => {
 				const key = toTriStateKey(option);
 				return (
@@ -62,7 +62,7 @@ export function DualStateSwitch({ current, falseText, trueText, falseIcon, trueI
 	const segmentedCurrent = useStateSelector(current, toTriStateKey, key => triStateMap[key]);
 
 	return (
-		<Segmented current={segmentedCurrent} className={[nameof.kebab({ DualStateSwitch }), className]}>
+		<Segmented current={segmentedCurrent} className={[nameof.kebab(DualStateSwitch), className]}>
 			<Segmented.Item id="false" key="false" icon={falseIcon}>{falseText}</Segmented.Item>
 			<Segmented.Item id="true" key="true" icon={trueIcon}>{trueText}</Segmented.Item>
 		</Segmented>

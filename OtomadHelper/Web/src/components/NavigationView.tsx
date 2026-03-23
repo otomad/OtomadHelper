@@ -4,7 +4,7 @@ const navButtonSize = { width: 44, height: 40, verticalWidth: 52 };
 const NAV_ITEMS_ASSUMED_COUNT = 20;
 const NAV_ITEMS_BOTTOM_ASSUMED_COUNT = 3;
 const TITLE_ANCHOR_NAME = "--navigation-view-title";
-const hasUnsupportedBrowserInfoBar = `body:has(.${nameof.kebab({ UnsupportedBrowserInfoBar })}) &`;
+const hasUnsupportedBrowserInfoBar = `body:has(.${nameof.kebab(UnsupportedBrowserInfoBar)}) &`;
 export const CONTAINER_CLASSNAMES = ".container, .container-preview";
 
 const TooltipTitleWithShortcut = ({ title, shortcut }: { title: string; shortcut: string[] }) =>

@@ -241,7 +241,7 @@ export default function GradientFlyoutEditor() {
 					<StyledGradientFlyoutEditor>
 						<HorizontalScroll as={Fragment}>
 							{currentPage === "style" ? (
-								<ItemsView data-page="style" ref={stylesEl} className={nameof.kebab({ GradientFlyoutEditor })} view="grid" current={null}>
+								<ItemsView data-page="style" ref={stylesEl} className={nameof.kebab(GradientFlyoutEditor)} view="grid" current={null}>
 									<ItemsView.Item
 										id={TRIPPY_COLORING_ID}
 										key={TRIPPY_COLORING_ID}

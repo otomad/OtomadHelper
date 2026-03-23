@@ -138,7 +138,7 @@ export class ElementAnchorName implements Iterable<string>, Disposable {
 	 */
 	constructor(element: HTMLElement, computed: boolean = false) {
 		if (!(element instanceof HTMLElement))
-			throw new TypeError(`\`${nameof({ ElementAnchorName })}\` requires a valid \`HTMLElement\` instance, retrieves \`${type(element)}\``);
+			throw new TypeError(`\`${nameof(ElementAnchorName)}\` requires a valid \`HTMLElement\` instance, retrieves \`${type(element)}\``);
 
 		this.#element = element;
 		this.#computed = computed;
