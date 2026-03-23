@@ -503,3 +503,4 @@ flagWords:
   - whitelists -> allowlists
   - lte -> leq
   - gte -> geq
+  - grammer -> grammar

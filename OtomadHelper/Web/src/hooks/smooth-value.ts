@@ -85,6 +85,6 @@ export function getSpringByFps(timestamp: DOMHighResTimeStamp | undefined, prevT
 		prevTimestamp.current = timestamp;
 	}
 	const springByFps = spring / (fps / 60);
-	if (springByFps <= 0 || springByFps > 1) return 0; // Avoid value flying when stuck.
+	if (springByFps <= 0 || springByFps > 1) return 0; // Avoid the value goes flying when stuck.
 	return springByFps;
 }
