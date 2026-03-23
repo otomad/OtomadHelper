@@ -163,7 +163,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
 		build: {
 			target: "esnext",
 			assetsInlineLimit: 200,
-			rolldownOptions: {
+			rollupOptions: {
 				preserveEntrySignatures: NO_BUNDLE ? "strict" : false,
 				output: {
 					preserveModules: NO_BUNDLE,
