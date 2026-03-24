@@ -348,7 +348,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			try {
 				_midi = new MIDI(filePath);
 			} catch (Exception e) {
-				if (!inSilence) ShowError(new Exceptions.NotAMidiFileException(), e);
+				if (!inSilence) {
+					if (e is FormatException && e.Message.Contains("Got an off without an on"))
+						ShowError(new Exceptions.MidiContainsVelocityZeroException(), e);
+					else
+						ShowError(new Exceptions.NotAMidiFileException(), e);
+				}
 				return false;
 			}
 			if (_midi.TrackInfos.Length == 0) {
@@ -1314,7 +1319,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					audioEvent.FadeIn.Curve = AConfigFadeinCurve;
 					audioEvent.FadeOut.Curve = AConfigFadeoutCurve;
 					tempEventGroup.Add(audioEvent);
-					if (AConfigVelocity) audioEvent.FadeIn.Gain = MapVelocityToGain(velocity, MediaType.Audio);
+					if (AConfigVelocity) audioEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Audio));
 
 					#region 应用变调
 					int pitchDelta = pitch - AConfigBasePitch;
@@ -1400,7 +1405,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					videoEvent.FadeOut.Length = VConfigSetFadeBy == SetFadeByType.TIMECODE ? VConfigFadeoutTimecode : Timecode.FromMilliseconds(videoEvent.Length.ToMilliseconds() * VConfigFadeout / 100);
 					videoEvent.FadeIn.Curve = VConfigFadeinCurve;
 					videoEvent.FadeOut.Curve = VConfigFadeoutCurve;
-					if (VConfigVelocity) videoEvent.FadeIn.Gain = MapVelocityToGain(velocity, MediaType.Video);
+					if (VConfigVelocity) videoEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Video));
 					// 视频平移/裁切调整
 					VideoMotionKeyframe key0 = videoEvent.VideoMotion.Keyframes[0];
 					VideoMotionKeyframe key1 = new VideoMotionKeyframe(Timecode.FromMilliseconds(duration));
@@ -3413,6 +3418,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return items.GroupBy(property).Select(x => x.First());
 		}
 
+		/// <summary>
+		/// 递归地寻找特定类型的子控件。
+		/// </summary>
+		/// <typeparam name="T">控件类型。</typeparam>
+		/// <param name="root">根控件元素节点。</param>
+		/// <returns>子控件迭代器。</returns>
 		public static IEnumerable<T> GetControlsOfType<T>(this Control root) where T : Control {
 			T t = root as T;
 			if (t != null) yield return t;
@@ -3421,6 +3432,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				foreach (Control c in root.Controls)
 					foreach (T i in GetControlsOfType<T>(c))
 						yield return i;
+		}
+
+		/// <summary>
+		/// 安全地设置渐变的增益，避免输入的值小于0或大于1导致程序报错。
+		/// </summary>
+		public static void SetGain(this Fade fade, float value) {
+			fade.Gain = EntryPoint.Clamp(value, 0, 1);
 		}
 	}
 
@@ -5768,6 +5786,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// 无法读取 MIDI 文件报错。
 			/// </summary>
 			public NotAMidiFileException() : base(Lang.str.not_a_midi_file_exception) { }
+		}
+
+		public class MidiContainsVelocityZeroException : Exception {
+			/// <summary>
+			/// MIDI 某个音符力度为 0 报错。
+			/// </summary>
+			public MidiContainsVelocityZeroException() : base(Lang.str.midi_contains_velocity_zero_exception) { }
 		}
 
 		public class NoSelectedMediaException : Exception {
@@ -16437,11 +16462,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				List<TrackEvent> selection = new List<TrackEvent>(track.Events.Where(trackEvent => trackEvent.Selected));
 				decimal gain = FromBox.Value;
 				if (selection.Count == 1) {
-					selection[0].FadeIn.Gain = ToBox.FloatValue / 100;
+					selection[0].FadeIn.SetGain(ToBox.FloatValue / 100);
 					return;
 				}
 				foreach (TrackEvent trackEvent in selection) {
-					trackEvent.FadeIn.Gain = (float)(gain / 100);
+					trackEvent.FadeIn.SetGain((float)(gain / 100));
 					gain += (ToBox.Value - FromBox.Value) / (selection.Count - 1);
 				}
 			}
@@ -32458,6 +32483,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			no_video_take_exception = "错误：无法读取视频媒体流。\n\n在设置界面，纯音频素材不要勾选“生成画面”。\n\n",
 			no_media_take_exception = "错误：无法读取媒体。\n\n您所选的文件格式不受 Vegas 支持，请检查该媒体文件是否损坏，或未安装对应的 Vegas 解码器。\n\n",
 			not_a_midi_file_exception = "错误：无法读取 MIDI 文件。\n\n解决方法：用宿主软件导入该 MIDI，然后重新输出一个新的 MIDI 文件。\n\n补充说明：MIDI 文件有多种格式，脚本不保证都能够正确读取。所幸主流宿主软件在\n默认设置下导出的 MIDI 文件一般是可以读取的。（目前测试过 FL Studio、LMMS \n与 Music Studio for iPad。）",
+			midi_contains_velocity_zero_exception = "错误：您的 MIDI 文件中包含力度值为 0 的音符。\n请检查是否还有其它音符的力度值为 0（即没有音量）。\n\n补充说明：NAudio.Midi 库不支持包含力度为 0 音符的 MIDI 文件，未来版本的 Otomad Helper 会通过更换解析引擎来解决此问题。",
 			no_selected_exception_ps = "补充说明：如果您想手动在文件夹中选择一个媒体素材，那么请点击其右边的“浏览”按钮，\n选择一个媒体素材。并确保左侧的下拉菜单中选中的是您所选文件所在的路径。",
 			no_selected_media_exception = "错误：没有在项目媒体窗口中选择任何媒体。\n\n请在项目媒体窗口中选择一个媒体，然后重新打开参数配置窗口，并在素材设置中选择“选中的媒体文件”。\n\n",
 			no_selected_clip_exception_short = "错误：没有在轨道中选择任何剪辑。",
@@ -33241,6 +33267,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "Error: Unable to read the video media stream.\n\nIn the settings user interface, do not check \"Enabled Video\" for pure audio media.\n\n",
 				no_media_take_exception = "Error: Unable to read the media.\n\nThe file format you selected is not supported by Vegas. Please check if the media file is damaged or the corresponding Vegas decoder is not installed.\n\n",
 				not_a_midi_file_exception = "Error: Unable to read MIDI file.\n\nSolution: Import the MIDI with the host software, and then re-output a new MIDI file.\n\nSupplementary note: There are multiple formats of MIDI files, and the script does not guarantee that all of them can be read correctly. Fortunately,\nMIDI files exported by mainstream host software under default settings are generally readable. (Currently tested FL Studio, LMMS \nand Music Studio for iPad.)",
+				midi_contains_velocity_zero_exception = "Error: Your MIDI file contains notes with a velocity of 0.\nCheck to make sure there isn't any notes that have a velocity value of 0 (aka notes that have no volume).\n\nSupplementary note: The NAudio.Midi library does not support MIDI files containing notes with a velocity of 0. The future version of Otomad Helper will resolve this issue by changing the parsing engine.",
 				no_selected_exception_ps = "Additional note: If you want to manually select a media in the folder, please click the \"Browse\" button on the right to\nselect a media. And make sure that the path of the file you selected is selected in the drop-down menu on the left.",
 				no_selected_media_exception = "Error: No media is selected in the project media window.\n\nPlease select a media in the project media window, then reopen the configuration dialog, and select \"selected media file\" in the source configuration.\n\n",
 				no_selected_clip_exception_short = "Error: No clips are selected in the track.",
@@ -34022,6 +34049,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "錯誤：無法讀取視訊媒體流。\n\n在設定介面，純音訊素材不要勾選「生成畫面」。\n\n",
 				no_media_take_exception = "錯誤：無法讀取媒體。\n\n您所選的檔案格式不受 Vegas 支援，請檢查該媒體檔案是否損壞，或未安裝對應的 Vegas 解碼器。\n\n",
 				not_a_midi_file_exception = "錯誤：無法讀取 MIDI 檔案。\n\n解決方法：用宿主軟體導入該 MIDI，然後重新輸出一個新的 MIDI 檔案。\n\n補充說明：MIDI 檔案有多種格式，腳本不保證都能够正確讀取。所幸主流宿主軟體在\n默認設定下匯出的 MIDI 檔案一般是可以讀取的。（現時測試過 FL Studio、LMMS\n與 Music Studio for iPad。）",
+				midi_contains_velocity_zero_exception = "錯誤：您的 MIDI 檔案中包含力度值為 0 的音符。\n請檢查是否還有其它音符的力度值為 0（即沒有音量）。\n\n補充說明：NAudio.Midi 庫不支援包含力度為 0 音符的 MIDI 檔案，未來版本的 Otomad Helper 會通過更換解析引擎來解決此問題。",
 				no_selected_exception_ps = "補充說明：如果您想手動在資料夾中選擇一個媒體素材，那麼請點擊其右邊的「瀏覽」按鈕，\n選擇一個媒體素材。並確保左側的下拉式功能表中選中的是您所選檔案所在的路徑。",
 				no_selected_media_exception = "錯誤：沒有在專案媒體視窗中選擇任何媒體。\n\n請在專案媒體視窗中選擇一個媒體，然後重新啟動參數設定視窗，並在素材設定中選擇「選中的媒體檔案」。\n\n",
 				no_selected_clip_exception_short = "錯誤：沒有在軌道中選擇任何剪輯。",
@@ -34804,6 +34832,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "エラー：ビデオメディアストリームを読み取ることができません。\n\n設定画面で、純粋なオーディオメディアの[有効なビデオ]をチェックしないでください。\n\n",
 				no_media_take_exception = "エラー：メディアを読み取ることができません。\n\n選択したファイル形式はVegasではサポートされていません。メディアファイルが破損していないか、対応するVegasデコーダーがインストールされていないか確認してください。\n\n",
 				not_a_midi_file_exception = "エラー：MIDIファイルを読み取ることができません。\n\n解決策：ホストソフトウェアでMIDIをインポートしてから、新しいMIDIファイルを再出力します。\n\n補足：MIDIファイルには複数の形式があり、スクリプトはそれらすべてが正しく読み取れることを保証するものではありません。幸い、\nデフォルト設定で主流のホストソフトウェアによってエクスポートされたMIDIファイルは一般的に読み取り可能です。（現在テスト済みのFL Studio、LMMS、\nおよびMusic Studio for iPadです。）",
+				midi_contains_velocity_zero_exception = "エラー：MIDIファイルには速度0の音符が含まれています。\n速度値が0の音符（音量のない音符）がないことを確認します。\n\n補足説明：NAudio.Midi ライブラリでは、速度0の音符を含むMidiファイルはサポートされていません。Otomad Helper の将来のバージョンは、解析エンジンを変更することで解決されます。",
 				no_selected_exception_ps = "追記：フォルダ内のメディアを手動で選択する場合は、右側の\n[参照]ボタンをクリックしてメディアを選択してください。また、左側のドロップダウンメニューで、選択したファイルのパスが選択されていることを確認してください。",
 				no_selected_media_exception = "エラー：プロジェクトメディアウィンドウでメディアが選択されていません。\n\nプロジェクトメディアウィンドウでメディアを選択してから、構成ダイアログを再度開き、素材設定で「選択したメディアファイル」を選択してください。\n\n",
 				no_selected_clip_exception_short = "エラー：トラックでクリップが選択されていません。",
@@ -35586,6 +35615,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "Ошибка: невозможно прочитать видеопоток.\n\nВ пользовательском интерфейсе настроек не устанавливайте флажок «Включенное видео» для чистого аудио.\n\n",
 				no_media_take_exception = "Ошибка: невозможно прочитать носитель.\n\nВыбранный формат файла не поддерживается Vegas. Пожалуйста, проверьте, не поврежден ли медиафайл или не установлен ли соответствующий декодер Vegas.\n\n",
 				not_a_midi_file_exception = "Ошибка: невозможно прочитать файл MIDI.\n\nРешение: импортируйте MIDI с помощью программного обеспечения хоста, а затем повторно выведите новый файл MIDI.\n\nДополнительное примечание: существует несколько форматов файлов MIDI, и сценарий не гарантирует, что все они могут быть правильно прочитаны. К счастью,\nфайлы MIDI, экспортированные основным программным обеспечением хоста с настройками по умолчанию, обычно читаются. (В настоящее время протестированы FL Studio, LMMS\nи Music Studio для iPad.)",
+				midi_contains_velocity_zero_exception = "Ошибка: ваш файл MIDI содержит ноты со скоростью 0.\nПроверьте, чтобы убедиться, что нет никаких нот, которые имеют значение скорости 0 (также известные как ноты, которые не имеют громкости).\n\nДополнительное примечание: Библиотека NAudio.Midi не поддерживает файлы MIDI, содержащие ноты со скоростью 0. Будущая версия Otomad Helper решит эту проблему, изменив двигатель анализа.",
 				no_selected_exception_ps = "Дополнительное примечание: если вы хотите вручную выбрать носитель в папке, нажмите кнопку «Обзор» справа, чтобы\nвыбрать носитель. И убедитесь, что путь к выбранному вами файлу выбран в раскрывающемся меню слева.",
 				no_selected_media_exception = "Ошибка: в окне мультимедиа проекта не выбран ни один носитель.\n\nВыберите носитель в окне мультимедиа проекта, затем снова откройте диалоговое окно конфигурации и выберите «выбранный файл мультимедиа» в настройках источника.\n\n",
 				no_selected_clip_exception_short = "Ошибка: на дорожке не выбраны клипы.",
@@ -36367,6 +36397,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "Lỗi: Không thể đọc phương tiện video stream.\n\nTrong giao diện cài đặt, không tích vào \"Bật Video\" để cho ra chỉ duy nhất phương tiện âm thanh.\n\n",
 				no_media_take_exception = "Lỗi: Không thể đọc phương tiện.\n\nĐịnh dạng file bạn đã chọn không được Vegas hỗ trợ. Vui lòng kiểm tra xem file phương tiện có bị hỏng hoặc bộ giải mã (decoder) Vegas tương ứng chưa được cài đặt hay không.\n\n",
 				not_a_midi_file_exception = "Lỗi: Không thể đọc file MIDI.\n\nGiải pháp: Nhập MIDI bằng phần mềm máy chủ, sau đó xuất lại file MIDI mới.\n\nLưu ý bổ sung: Có nhiều định dạng tệp MIDI và script không đảm bảo rằng tất cả chúng đều có thể được đọc chính xác. May thay,\nCác file MIDI được xuất bởi phần mềm máy chủ chính trong cài đặt mặc định thường có thể đọc được. (Hiện đã thử với FL Studio, LMMS \nvà Music Studio dành cho iPad.)",
+				midi_contains_velocity_zero_exception = "Lỗi: Tệp MIDI của bạn chứa ghi chú với tốc độ 0.\nKiểm tra để đảm bảo không có bất kỳ ghi chú nào có giá trị tốc độ 0 (còn gọi là ghi chú không có khối lượng).\n\nLưu ý bổ sung: Thư viện NAudio.Midi không hỗ trợ các tệp MIDI chứa ghi chú với tốc độ 0. Phiên bản tương lai của Otomad Helper sẽ giải quyết vấn đề này bằng cách thay đổi công cụ phân tích.",
 				no_selected_exception_ps = "Lưu ý thêm: Nếu bạn muốn chọn thủ công một phương tiện trong thư mục, vui lòng bấm vào nút \"Duyệt tìm\" ở bên phải để\nchọn một phương tiện. Và đảm bảo rằng đường dẫn của file bạn đã chọn được chọn trong menu ở dưới bên trái.",
 				no_selected_media_exception = "Lỗi: Không có phương tiện đã chọn trong project media window.\n\nVui lòng chọn một phương tiện trong project media window, sau đó mở lại hộp thoại thiết lập script, và chọn \"File phương tiện đã chọn\" trong thiết lập nguồn.\n\n",
 				no_selected_clip_exception_short = "Lỗi: Không có clip đã chọn trong track.",
@@ -37148,6 +37179,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				no_video_take_exception = "Error: Tidak dapat membaca streaming media video.\n\nDi antarmuka setelan, jangan centang \"Enabled Video\" untuk media Audio murni.\n\n",
 				no_media_take_exception = "Error: Tidak dapat membaca media.\n\nFormat file yang Anda pilih tidak didukung oleh Vegas. Silakan periksa apakah file media rusak atau dekoder Vegas yang sesuai tidak terpasang.\n\n",
 				not_a_midi_file_exception = "Error: Tidak dapat membaca file MIDI.\n\nSolusi: Impor MIDI dengan perangkat lunak host, lalu keluarkan kembali file MIDI baru.\n\nCatatan tambahan: Ada beberapa format file MIDI, dan skrip tidak menjamin hal itu semuanya dapat dibaca dengan benar. Untungnya,\nfile MIDI yang diekspor oleh software host mainstream dengan setelan default biasanya dapat dibaca. (FL Studio, LMMS \ndan Studio Musik untuk iPad yang saat ini diuji.)",
+				midi_contains_velocity_zero_exception = "Error: File MIDI Anda berisi catatan dengan kecepatan 0.\nPeriksa untuk memastikan tidak ada catatan yang memiliki nilai kecepatan 0 (atau catatan yang tidak memiliki volume).\n\nCatatan tambahan: Perpustakaan NAudio.Midi tidak mendukung file MIDI yang berisi catatan dengan kecepatan 0. Versi masa depan Otomad Helper akan menyelesaikan masalah ini dengan mengubah mesin parsing.",
 				no_selected_exception_ps = "Catatan tambahan: Jika ingin memilih media dalam folder secara manual, klik tombol \"Jelajahi\" di sebelah kanan untuk\nmemilih media. Dan pastikan jalur file yang Anda pilih dipilih di menu tarik-turun di sebelah kiri.",
 				no_selected_media_exception = "Error: Tidak ada media yang dipilih di jendela media proyek.\n\nSilakan pilih media di jendela media proyek, lalu buka kembali dialog konfigurasi, dan pilih \"file media yang dipilih\" di konfigurasi sumber.\n\n",
 				no_selected_clip_exception_short = "Error: Tidak ada klip yang dipilih di trek.",
