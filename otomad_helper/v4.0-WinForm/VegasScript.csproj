@@ -83,12 +83,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NAudio">
-      <HintPath>..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 17.0\Script Menu\DLL\NAudio.dll</HintPath>
+      <HintPath>..\..\..\..\..\Vegas Script Menu\DLL\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
-    <Reference Include="ScriptPortal.Vegas, Version=19.0.0.458, Culture=neutral, PublicKeyToken=3cda94b1926e6fbc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files\VEGAS\VEGAS Pro 20.0\ScriptPortal.Vegas.dll</HintPath>
+    <Reference Include="ScriptPortal.Vegas">
+      <HintPath>..\..\..\..\..\..\Program Files\VEGAS\VEGAS Pro 22.0\ScriptPortal.Vegas.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll</HintPath>

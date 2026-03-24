@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VegasScript", "VegasScript.csproj", "{396AB8FE-122A-4CE8-8426-28AB46006EA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VegasScript_InAppDirectory", "..\VegasScript_InAppDirectory\VegasScript_InAppDirectory.csproj", "{B2F0D451-6E12-4F83-9104-1CA74C7F93CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VegasScript_InAppDirectory", "D:\Documents\source\repos\VegasScript_InAppDirectory\VegasScript_InAppDirectory.csproj", "{B2F0D451-6E12-4F83-9104-1CA74C7F93CE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{660FF43C-4BE7-4C16-883C-9B72A5733D6B}"
 	ProjectSection(SolutionItems) = preProject

@@ -111,7 +111,7 @@
             0});
 			this.ToBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ToBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.ToBox.Location = new System.Drawing.Point(39, 137);
+			this.ToBox.Location = new System.Drawing.Point(34, 137);
 			this.ToBox.Margin = new System.Windows.Forms.Padding(5);
 			this.ToBox.Maximum = new decimal(new int[] {
             100,
@@ -126,7 +126,7 @@
 			this.ToBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.ToBox.Name = "ToBox";
 			this.ToBox.NumericUpDownWidth = 65;
-			this.ToBox.Size = new System.Drawing.Size(412, 31);
+			this.ToBox.Size = new System.Drawing.Size(417, 31);
 			this.ToBox.TabIndex = 4;
 			this.ToBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			this.ToBox.Value = new decimal(new int[] {
@@ -146,7 +146,7 @@
             0});
 			this.FromBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FromBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.FromBox.Location = new System.Drawing.Point(39, 96);
+			this.FromBox.Location = new System.Drawing.Point(34, 96);
 			this.FromBox.Margin = new System.Windows.Forms.Padding(5);
 			this.FromBox.Maximum = new decimal(new int[] {
             100,
@@ -161,7 +161,7 @@
 			this.FromBox.MinimumSize = new System.Drawing.Size(0, 31);
 			this.FromBox.Name = "FromBox";
 			this.FromBox.NumericUpDownWidth = 65;
-			this.FromBox.Size = new System.Drawing.Size(412, 31);
+			this.FromBox.Size = new System.Drawing.Size(417, 31);
 			this.FromBox.TabIndex = 3;
 			this.FromBox.Value = new decimal(new int[] {
             100,
@@ -178,7 +178,7 @@
 			this.ToLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.ToLbl.MinimumSize = new System.Drawing.Size(0, 41);
 			this.ToLbl.Name = "ToLbl";
-			this.ToLbl.Size = new System.Drawing.Size(24, 41);
+			this.ToLbl.Size = new System.Drawing.Size(19, 41);
 			this.ToLbl.TabIndex = 2;
 			this.ToLbl.Text = "至";
 			this.ToLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -191,7 +191,7 @@
 			this.FromLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.FromLbl.MinimumSize = new System.Drawing.Size(0, 41);
 			this.FromLbl.Name = "FromLbl";
-			this.FromLbl.Size = new System.Drawing.Size(24, 41);
+			this.FromLbl.Size = new System.Drawing.Size(19, 41);
 			this.FromLbl.TabIndex = 1;
 			this.FromLbl.Text = "从";
 			this.FromLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -216,8 +216,8 @@
 			// CustomFadeGainForm
 			// 
 			this.AcceptButton = this.OkBtn;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
 			this.ClientSize = new System.Drawing.Size(462, 231);
