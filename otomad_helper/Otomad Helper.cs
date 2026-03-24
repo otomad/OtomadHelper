@@ -29271,7 +29271,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 			#region 声呐配置
 			configIni.StartSection("Sonar");
-			SonarConfigCheck.UserChecked = configIni.Read("Enable", true);
+			SonarConfigCheck.UserChecked = configIni.Read("Enable", false);
 			SeparateDrumsCheck.Checked = configIni.Read("SeparateDrums", true);
 			DifferenceCompositeModeCheck.Checked = configIni.Read("DifferenceCompositeMode", false);
 			TrackShadowCheck.Checked = configIni.Read("Shadow", false);
