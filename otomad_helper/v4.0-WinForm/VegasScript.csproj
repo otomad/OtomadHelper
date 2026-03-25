@@ -363,5 +363,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\VegasScript_InAppDirectory\VegasScript_InAppDirectory.csproj">
+      <Project>{B2F0D451-6E12-4F83-9104-1CA74C7F93CE}</Project>
+      <Name>VegasScript_InAppDirectory</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

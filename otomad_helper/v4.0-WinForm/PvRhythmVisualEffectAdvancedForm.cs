@@ -92,7 +92,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Console.WriteLine("");
 		}
 
-		private const int LABEL_MIN_HEIGHT = 34;
+		private const int LABEL_MIN_HEIGHT = 54;
 
 		private void PvRhythmVisualEffectAdvancedForm_Resize(object sender, EventArgs e) {
 			foreach (Control control_i in EffectsTable.Controls)

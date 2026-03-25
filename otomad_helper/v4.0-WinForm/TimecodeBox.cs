@@ -6,7 +6,9 @@ using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+#if VEGAS_ENVIRONMENT
 using ScriptPortal.Vegas;
+#endif
 
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 
@@ -17,7 +19,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		#region | Fields |
 		private bool useTimecodeDeal = false;
 		private const string DEFAULT_TIME = "0:00.000";
+		#if VEGAS_ENVIRONMENT
 		private const RulerFormat format = RulerFormat.Time;
+		#endif
 		private Selection? lastSelection;
 		#endregion
 
@@ -28,7 +32,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			set {
 				TimecodeText.TimeUnit unit = TimecodeText.GetUnit(TextBox.SelectionStart, base.Text);
 				if (!useTimecodeDeal) base.Text = TimecodeText.DealLegal(value);
+				#if VEGAS_ENVIRONMENT
 				else Timecode = Timecode.FromPositionString(value, format);
+				#endif
 				Select(TimecodeText.GetPosition(unit, base.Text), 0);
 			}
 		}
@@ -47,7 +53,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			get { return Value; }
 			set {
 				if (!useTimecodeDeal) Value = (int)value;
+				#if VEGAS_ENVIRONMENT
 				else Timecode = Timecode.FromMilliseconds(value);
+				#endif
 			}
 		}
 
@@ -57,6 +65,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			set { Value = value; }
 		}
 
+		#if VEGAS_ENVIRONMENT
 		[Description("与控件关联的文本对应的时间码值。"), Category("Behavior"), Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public Timecode Timecode {
 			get {
@@ -66,6 +75,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				base.Text = value.ToPositionString();
 			}
 		}
+		#endif
 
 		[Description("是否使用 Vegas 时间码处理。"), Category("Behavior"), DefaultValue(false)]
 		public bool UseTimecodeDeal {

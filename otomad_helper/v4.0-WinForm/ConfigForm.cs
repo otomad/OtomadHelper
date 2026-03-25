@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using ScriptPortal.Vegas;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +19,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+#if VEGAS_ENVIRONMENT
+using ScriptPortal.Vegas;
+#endif
 
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 
@@ -40,6 +42,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			CheckForIllegalCrossThreadCalls = false;
 			SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
 			InitializeComponent();
+
 			#if VEGAS_ENVIRONMENT
 			parent = entryPoint;
 
@@ -59,7 +62,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ChooseSourceCombo_SelectedIndexChanged(null, null);
 			#endregion
 			#endif
-			
+
 			#region 菜单选项
 			saveConfigToolStripMenuItem.Click += (sender, e) => { SaveIni(); };
 			resetConfigToolStripMenuItem.Click += (sender, e) => {
@@ -289,7 +292,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				SetNumericValue(SelectWhichEachGroupBox, configIni.ReadInt("SelectWhichEachGroup", 1), 1);
 				configIni.EndSection();
 				#endregion
-			
+
 				#region 个性化配置
 				configIni.StartSection("Personalize");
 				Language = configIni.Read("Language", "");
@@ -379,7 +382,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("SelectWhichEachGroup", SelectWhichEachGroupBox.Value);
 			configIni.EndSection();
 			#endregion
-			
+
 			#region 个性化配置
 			configIni.StartSection("Personalize");
 			configIni.Write("Language", Language);
@@ -394,13 +397,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.DeleteKey("LastMidiChannel");
 			#endif
 		}
-		
+
 		private string GetSystemLanguage() {
 			string lang = System.Globalization.CultureInfo.InstalledUICulture.Name;
 			Language = lang;
 			return lang;
 		}
-		
+
 		private string Language {
 			get {
 				if (chineseToolStripMenuItem.Checked) return "zh";
@@ -566,7 +569,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void UserHelpLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
 			OpenLink(aboutHelpLink);
 		}
-		
+
 		public void OpenLink(string link) {
 			System.Diagnostics.Process.Start("explorer.exe", link);
 		}
@@ -1050,9 +1053,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void TimecodeText_Leave(object sender, EventArgs e) {
+			#if VEGAS_ENVIRONMENT
 			TextBox textBox = sender as TextBox;
 			Timecode timecode = Timecode.FromPositionString(textBox.Text);
 			textBox.Text = timecode.ToPositionString();
+			#endif
 		}
 
 		private void FadeSetAsRadio_CheckedChanged(object sender, EventArgs e) {
@@ -1203,48 +1208,72 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				/* 蓝色 */ new Pen(Color.FromArgb(50, 130, 246)),
 				/* 绿色 */ new Pen(Color.FromArgb(34, 177, 76)),
 			};
-			Pen penColor = button.Enabled ? pens[index] : Pens.Gray;
+			Pen penColor = button.Enabled ? pens[index] : new Pen(Color.Gray);
+			penColor.Width = Dpi;
 			const int RESET_ARC_OPEN_ANGLE = 60;
 			double resetArcOpenRadian = RESET_ARC_OPEN_ANGLE * Math.PI / 180 / 2;
 			int resetFinalPointX = (int)(XCenter - r.Width / 2 * Math.Cos(resetArcOpenRadian)),
 				resetFinalPointY = (int)(YCenter - r.Height / 2 * Math.Sin(resetArcOpenRadian)),
 				resetArrowLength = resetFinalPointY - r.Top;
-			List<Point[]> points = new List<Point[]> {
-				new Point[] {
-					new Point(resetFinalPointX, r.Top),
-					new Point(resetFinalPointX, resetFinalPointY),
-					new Point(resetFinalPointX + resetArrowLength, resetFinalPointY),
+			List<Point[][]> points = new List<Point[][]> {
+				new Point[][] {
+					new Point[] {
+						new Point(resetFinalPointX, r.Top),
+						new Point(resetFinalPointX, resetFinalPointY),
+						new Point(resetFinalPointX + resetArrowLength, resetFinalPointY),
+					},
 				},
-				new Point[] {
-					new Point(r.Left, r.Top),
-					new Point(r.Right, r.Bottom),
-					new Point(XCenter, YCenter),
-					new Point(r.Right, r.Top),
-					new Point(r.Left, r.Bottom),
+				new Point[][] {
+					new Point[] {
+						new Point(r.Left, r.Top),
+						new Point(r.Right, r.Bottom),
+					},
+					new Point[] {
+						new Point(r.Right, r.Top),
+						new Point(r.Left, r.Bottom),
+					},
 				},
-				new Point[] {
-					new Point(XCenter, r.Bottom),
-					new Point(XCenter, r.Top),
-					new Point(r.Left, YCenter),
-					new Point(XCenter, r.Top),
-					new Point(r.Right, YCenter),
+				new Point[][] {
+					new Point[] {
+						new Point(XCenter, r.Bottom),
+						new Point(XCenter, r.Top),
+					},
+					new Point[] {
+						new Point(XCenter, r.Top),
+						new Point(r.Left, YCenter),
+					},
+					new Point[] {
+						new Point(XCenter, r.Top),
+						new Point(r.Right, YCenter),
+					},
 				},
-				new Point[] {
-					new Point(XCenter, r.Top),
-					new Point(XCenter, r.Bottom),
-					new Point(r.Left, YCenter),
-					new Point(XCenter, r.Bottom),
-					new Point(r.Right, YCenter),
+				new Point[][] {
+					new Point[] {
+						new Point(XCenter, r.Top),
+						new Point(XCenter, r.Bottom),
+					},
+					new Point[] {
+						new Point(XCenter, r.Bottom),
+						new Point(r.Left, YCenter),
+					},
+					new Point[] {
+						new Point(XCenter, r.Bottom),
+						new Point(r.Right, YCenter),
+					},
 				},
-				new Point[] {
-					new Point(r.Left, YCenter),
-					new Point(r.Right, YCenter),
-					new Point(XCenter, YCenter),
-					new Point(XCenter, r.Top),
-					new Point(XCenter, r.Bottom),
+				new Point[][] {
+					new Point[] {
+						new Point(r.Left, YCenter),
+						new Point(r.Right, YCenter),
+					},
+					new Point[] {
+						new Point(XCenter, r.Top),
+						new Point(XCenter, r.Bottom),
+					},
 				},
 			};
-			e.Graphics.DrawLines(penColor, points[index]);
+			foreach (Point[] stroke in points[index])
+				e.Graphics.DrawLines(penColor, stroke);
 			if (button == SonarResetBtn)
 				e.Graphics.DrawArc(penColor, r, 180 + RESET_ARC_OPEN_ANGLE / 2, 360 - RESET_ARC_OPEN_ANGLE);
 		}
@@ -1292,6 +1321,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void RemoveSourceTrackEventsCheck_CheckedChanged(object sender, EventArgs e) {
 			Console.WriteLine(sender);
+		}
+
+		/// <summary>
+		/// Get the DPI of the screen where the WinForm <see cref="Form"/> is located.
+		/// </summary>
+		/// <remarks>
+		/// Defaults to <c>(1, 1)</c> (Unit: dppx. Equivalents to 100% scale or 96dpi.)
+		/// </remarks>
+		/// <param name="form">A WinForm <see cref="Form"/>.</param>
+		/// <returns>The screen DPI in two dimension.</returns>
+		public float Dpi {
+			get {
+				const float DPI_DIVISOR = 96f;
+				Graphics graphics = CreateGraphics();
+				try {
+					return graphics.DpiX / DPI_DIVISOR;
+				} catch (Exception) {
+					return 1;
+				} finally {
+					graphics.Dispose();
+				}
+			}
 		}
 	}
 }
