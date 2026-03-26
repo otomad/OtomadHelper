@@ -38,30 +38,30 @@
 			this.dock.BackColor = System.Drawing.SystemColors.Control;
 			this.dock.ColumnCount = 1;
 			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
 			this.dock.Controls.Add(this.OkBtn, 0, 0);
 			this.dock.Controls.Add(this.CancelBtn, 0, 1);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Right;
-			this.dock.Location = new System.Drawing.Point(594, 0);
-			this.dock.Margin = new System.Windows.Forms.Padding(5);
+			this.dock.Location = new System.Drawing.Point(1053, 0);
+			this.dock.Margin = new System.Windows.Forms.Padding(6);
 			this.dock.Name = "dock";
-			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.dock.Padding = new System.Windows.Forms.Padding(10);
 			this.dock.RowCount = 3;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(118, 503);
+			this.dock.Size = new System.Drawing.Size(186, 827);
 			this.dock.TabIndex = 9;
 			// 
 			// OkBtn
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(12, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.OkBtn.Location = new System.Drawing.Point(18, 18);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
 			this.OkBtn.Name = "OkBtn";
-			this.OkBtn.Size = new System.Drawing.Size(94, 32);
+			this.OkBtn.Size = new System.Drawing.Size(150, 51);
 			this.OkBtn.TabIndex = 1;
 			this.OkBtn.Text = "确定(&O)";
 			this.OkBtn.UseVisualStyleBackColor = true;
@@ -70,10 +70,10 @@
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(12, 50);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.CancelBtn.Location = new System.Drawing.Point(18, 85);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
 			this.CancelBtn.Name = "CancelBtn";
-			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
+			this.CancelBtn.Size = new System.Drawing.Size(150, 51);
 			this.CancelBtn.TabIndex = 2;
 			this.CancelBtn.Text = "取消(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
@@ -84,8 +84,9 @@
 			this.EffectsPanel.Controls.Add(this.EffectsTable);
 			this.EffectsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.EffectsPanel.Location = new System.Drawing.Point(0, 0);
+			this.EffectsPanel.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
 			this.EffectsPanel.Name = "EffectsPanel";
-			this.EffectsPanel.Size = new System.Drawing.Size(594, 503);
+			this.EffectsPanel.Size = new System.Drawing.Size(1053, 827);
 			this.EffectsPanel.TabIndex = 10;
 			// 
 			// EffectsTable
@@ -95,27 +96,28 @@
 			this.EffectsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.EffectsTable.Dock = System.Windows.Forms.DockStyle.Top;
 			this.EffectsTable.Location = new System.Drawing.Point(0, 0);
+			this.EffectsTable.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
 			this.EffectsTable.Name = "EffectsTable";
-			this.EffectsTable.Padding = new System.Windows.Forms.Padding(5);
+			this.EffectsTable.Padding = new System.Windows.Forms.Padding(10, 10, 10, 10);
 			this.EffectsTable.RowCount = 1;
 			this.EffectsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.EffectsTable.Size = new System.Drawing.Size(594, 10);
+			this.EffectsTable.Size = new System.Drawing.Size(1053, 20);
 			this.EffectsTable.TabIndex = 0;
 			// 
 			// PvRhythmVisualEffectAdvancedForm
 			// 
 			this.AcceptButton = this.OkBtn;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(712, 503);
+			this.ClientSize = new System.Drawing.Size(1239, 827);
 			this.Controls.Add(this.EffectsPanel);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(460, 460);
+			this.MinimumSize = new System.Drawing.Size(894, 849);
 			this.Name = "PvRhythmVisualEffectAdvancedForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

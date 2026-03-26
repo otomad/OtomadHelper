@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -64,5 +65,22 @@ public static class WindowUtils {
 		public uint AccentFlags;
 		public uint GradientColor;
 		public uint AnimationId;
+	}
+
+	/// <summary>
+	/// 递归地寻找特定类型的子控件。
+	/// </summary>
+	/// <typeparam name="T">控件类型。</typeparam>
+	/// <param name="root">根控件元素节点。</param>
+	/// <returns>子控件迭代器。</returns>
+	public static IEnumerable<T> GetChildrenOfType<T>(this Control root) where T : Control {
+		T t = root as T;
+		if (t != null)
+			yield return t;
+
+		if (root != null && root.HasChildren)
+			foreach (Control c in root.Controls)
+				foreach (T i in GetChildrenOfType<T>(c))
+					yield return i;
 	}
 }

@@ -38,6 +38,7 @@
 			// 
 			// dock
 			// 
+			this.dock.AutoSize = true;
 			this.dock.BackColor = System.Drawing.SystemColors.Control;
 			this.dock.ColumnCount = 3;
 			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -46,23 +47,23 @@
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 179);
-			this.dock.Margin = new System.Windows.Forms.Padding(4);
+			this.dock.Location = new System.Drawing.Point(0, 361);
+			this.dock.Margin = new System.Windows.Forms.Padding(6);
 			this.dock.Name = "dock";
-			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.dock.Padding = new System.Windows.Forms.Padding(13, 10, 13, 10);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(462, 52);
+			this.dock.Size = new System.Drawing.Size(800, 87);
 			this.dock.TabIndex = 16;
 			// 
 			// OkBtn
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(254, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.OkBtn.Location = new System.Drawing.Point(463, 18);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(8);
 			this.OkBtn.Name = "OkBtn";
-			this.OkBtn.Size = new System.Drawing.Size(94, 32);
+			this.OkBtn.Size = new System.Drawing.Size(150, 51);
 			this.OkBtn.TabIndex = 1;
 			this.OkBtn.Text = "确定(&O)";
 			this.OkBtn.UseVisualStyleBackColor = true;
@@ -72,10 +73,10 @@
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(356, 10);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.CancelBtn.Location = new System.Drawing.Point(629, 18);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(8);
 			this.CancelBtn.Name = "CancelBtn";
-			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
+			this.CancelBtn.Size = new System.Drawing.Size(150, 51);
 			this.CancelBtn.TabIndex = 2;
 			this.CancelBtn.Text = "取消(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
@@ -92,13 +93,14 @@
 			this.tableLayoutPanel1.Controls.Add(this.PreviewBtn, 0, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(6);
+			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(12);
 			this.tableLayoutPanel1.RowCount = 3;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(462, 179);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 361);
 			this.tableLayoutPanel1.TabIndex = 17;
 			// 
 			// ToBox
@@ -111,8 +113,8 @@
             0});
 			this.ToBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ToBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.ToBox.Location = new System.Drawing.Point(34, 137);
-			this.ToBox.Margin = new System.Windows.Forms.Padding(5);
+			this.ToBox.Location = new System.Drawing.Point(68, 277);
+			this.ToBox.Margin = new System.Windows.Forms.Padding(10);
 			this.ToBox.Maximum = new decimal(new int[] {
             100,
             0,
@@ -123,10 +125,10 @@
             0,
             0,
             0});
-			this.ToBox.MinimumSize = new System.Drawing.Size(0, 31);
+			this.ToBox.MinimumSize = new System.Drawing.Size(0, 62);
 			this.ToBox.Name = "ToBox";
 			this.ToBox.NumericUpDownWidth = 65;
-			this.ToBox.Size = new System.Drawing.Size(417, 31);
+			this.ToBox.Size = new System.Drawing.Size(710, 62);
 			this.ToBox.TabIndex = 4;
 			this.ToBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			this.ToBox.Value = new decimal(new int[] {
@@ -146,8 +148,8 @@
             0});
 			this.FromBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FromBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.FromBox.Location = new System.Drawing.Point(34, 96);
-			this.FromBox.Margin = new System.Windows.Forms.Padding(5);
+			this.FromBox.Location = new System.Drawing.Point(68, 195);
+			this.FromBox.Margin = new System.Windows.Forms.Padding(10);
 			this.FromBox.Maximum = new decimal(new int[] {
             100,
             0,
@@ -158,10 +160,10 @@
             0,
             0,
             0});
-			this.FromBox.MinimumSize = new System.Drawing.Size(0, 31);
+			this.FromBox.MinimumSize = new System.Drawing.Size(0, 62);
 			this.FromBox.Name = "FromBox";
 			this.FromBox.NumericUpDownWidth = 65;
-			this.FromBox.Size = new System.Drawing.Size(417, 31);
+			this.FromBox.Size = new System.Drawing.Size(710, 62);
 			this.FromBox.TabIndex = 3;
 			this.FromBox.Value = new decimal(new int[] {
             100,
@@ -174,11 +176,11 @@
 			// 
 			this.ToLbl.AutoSize = true;
 			this.ToLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ToLbl.Location = new System.Drawing.Point(8, 132);
-			this.ToLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-			this.ToLbl.MinimumSize = new System.Drawing.Size(0, 41);
+			this.ToLbl.Location = new System.Drawing.Point(16, 267);
+			this.ToLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.ToLbl.MinimumSize = new System.Drawing.Size(0, 82);
 			this.ToLbl.Name = "ToLbl";
-			this.ToLbl.Size = new System.Drawing.Size(19, 41);
+			this.ToLbl.Size = new System.Drawing.Size(38, 82);
 			this.ToLbl.TabIndex = 2;
 			this.ToLbl.Text = "至";
 			this.ToLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -187,11 +189,11 @@
 			// 
 			this.FromLbl.AutoSize = true;
 			this.FromLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FromLbl.Location = new System.Drawing.Point(8, 91);
-			this.FromLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-			this.FromLbl.MinimumSize = new System.Drawing.Size(0, 41);
+			this.FromLbl.Location = new System.Drawing.Point(16, 185);
+			this.FromLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.FromLbl.MinimumSize = new System.Drawing.Size(0, 82);
 			this.FromLbl.Name = "FromLbl";
-			this.FromLbl.Size = new System.Drawing.Size(19, 41);
+			this.FromLbl.Size = new System.Drawing.Size(38, 82);
 			this.FromLbl.TabIndex = 1;
 			this.FromLbl.Text = "从";
 			this.FromLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -205,10 +207,10 @@
 			this.PreviewBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(253)))));
 			this.PreviewBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(253)))));
 			this.PreviewBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.PreviewBtn.Location = new System.Drawing.Point(20, 20);
-			this.PreviewBtn.Margin = new System.Windows.Forms.Padding(14);
+			this.PreviewBtn.Location = new System.Drawing.Point(40, 40);
+			this.PreviewBtn.Margin = new System.Windows.Forms.Padding(28);
 			this.PreviewBtn.Name = "PreviewBtn";
-			this.PreviewBtn.Size = new System.Drawing.Size(422, 57);
+			this.PreviewBtn.Size = new System.Drawing.Size(720, 117);
 			this.PreviewBtn.TabIndex = 5;
 			this.PreviewBtn.UseVisualStyleBackColor = true;
 			this.PreviewBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.PreviewBtn_Paint);
@@ -216,17 +218,17 @@
 			// CustomFadeGainForm
 			// 
 			this.AcceptButton = this.OkBtn;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(462, 231);
+			this.ClientSize = new System.Drawing.Size(800, 448);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Location = new System.Drawing.Point(60, 60);
-			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "CustomFadeGainForm";
@@ -237,6 +239,7 @@
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 

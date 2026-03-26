@@ -41,6 +41,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.FillRadio = new System.Windows.Forms.RadioButton();
 			this.AdaptRadio = new System.Windows.Forms.RadioButton();
+			this.OverlayRadio = new System.Windows.Forms.RadioButton();
 			this.ReverseTracksCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
 			this.PaddingLbl = new System.Windows.Forms.Label();
@@ -74,23 +75,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 403);
-			this.dock.Margin = new System.Windows.Forms.Padding(5);
+			this.dock.Location = new System.Drawing.Point(0, 645);
+			this.dock.Margin = new System.Windows.Forms.Padding(8);
 			this.dock.Name = "dock";
-			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.dock.Padding = new System.Windows.Forms.Padding(13, 10, 13, 10);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(355, 52);
+			this.dock.Size = new System.Drawing.Size(568, 83);
 			this.dock.TabIndex = 7;
 			// 
 			// OkBtn
 			// 
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(147, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.OkBtn.Location = new System.Drawing.Point(237, 16);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(6);
 			this.OkBtn.Name = "OkBtn";
-			this.OkBtn.Size = new System.Drawing.Size(94, 32);
+			this.OkBtn.Size = new System.Drawing.Size(150, 51);
 			this.OkBtn.TabIndex = 1;
 			this.OkBtn.Text = "完成(&O)";
 			this.OkBtn.UseVisualStyleBackColor = true;
@@ -100,10 +101,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(249, 10);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.CancelBtn.Location = new System.Drawing.Point(399, 16);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(6);
 			this.CancelBtn.Name = "CancelBtn";
-			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
+			this.CancelBtn.Size = new System.Drawing.Size(150, 51);
 			this.CancelBtn.TabIndex = 2;
 			this.CancelBtn.Text = "取消(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
@@ -122,9 +123,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.Controls.Add(this.FlipGroup, 0, 3);
 			this.table.Dock = System.Windows.Forms.DockStyle.Top;
 			this.table.Location = new System.Drawing.Point(0, 0);
-			this.table.Margin = new System.Windows.Forms.Padding(4);
+			this.table.Margin = new System.Windows.Forms.Padding(6);
 			this.table.Name = "table";
-			this.table.Padding = new System.Windows.Forms.Padding(11);
+			this.table.Padding = new System.Windows.Forms.Padding(18);
 			this.table.RowCount = 6;
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -132,7 +133,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.table.Size = new System.Drawing.Size(355, 403);
+			this.table.Size = new System.Drawing.Size(568, 613);
 			this.table.TabIndex = 9;
 			// 
 			// SquareRadio
@@ -140,13 +141,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SquareRadio.AutoSize = true;
 			this.SquareRadio.Checked = true;
 			this.SquareRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SquareRadio.Location = new System.Drawing.Point(15, 15);
-			this.SquareRadio.Margin = new System.Windows.Forms.Padding(4);
+			this.SquareRadio.Location = new System.Drawing.Point(24, 24);
+			this.SquareRadio.Margin = new System.Windows.Forms.Padding(6);
 			this.SquareRadio.Name = "SquareRadio";
-			this.SquareRadio.Size = new System.Drawing.Size(325, 24);
+			this.SquareRadio.Size = new System.Drawing.Size(520, 36);
 			this.SquareRadio.TabIndex = 0;
 			this.SquareRadio.TabStop = true;
-			this.SquareRadio.Text = "平方";
+			this.SquareRadio.Text = "方阵";
 			this.SquareRadio.UseVisualStyleBackColor = true;
 			this.SquareRadio.CheckedChanged += new System.EventHandler(this.CustomRadio_CheckedChanged);
 			// 
@@ -154,10 +155,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.CustomRadio.AutoSize = true;
 			this.CustomRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CustomRadio.Location = new System.Drawing.Point(15, 47);
-			this.CustomRadio.Margin = new System.Windows.Forms.Padding(4);
+			this.CustomRadio.Location = new System.Drawing.Point(24, 72);
+			this.CustomRadio.Margin = new System.Windows.Forms.Padding(6);
 			this.CustomRadio.Name = "CustomRadio";
-			this.CustomRadio.Size = new System.Drawing.Size(325, 24);
+			this.CustomRadio.Size = new System.Drawing.Size(520, 36);
 			this.CustomRadio.TabIndex = 1;
 			this.CustomRadio.Text = "自定义";
 			this.CustomRadio.UseVisualStyleBackColor = true;
@@ -168,11 +169,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CustomGroup.AutoSize = true;
 			this.CustomGroup.Controls.Add(this.CustomTable);
 			this.CustomGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.CustomGroup.Location = new System.Drawing.Point(15, 75);
-			this.CustomGroup.Margin = new System.Windows.Forms.Padding(4, 0, 4, 4);
+			this.CustomGroup.Location = new System.Drawing.Point(24, 114);
+			this.CustomGroup.Margin = new System.Windows.Forms.Padding(6, 0, 6, 6);
 			this.CustomGroup.Name = "CustomGroup";
-			this.CustomGroup.Padding = new System.Windows.Forms.Padding(4);
-			this.CustomGroup.Size = new System.Drawing.Size(325, 138);
+			this.CustomGroup.Padding = new System.Windows.Forms.Padding(6);
+			this.CustomGroup.Size = new System.Drawing.Size(520, 206);
 			this.CustomGroup.TabIndex = 2;
 			this.CustomGroup.TabStop = false;
 			// 
@@ -192,23 +193,24 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CustomTable.Controls.Add(this.ColumnCountBox, 1, 0);
 			this.CustomTable.Controls.Add(this.flowLayoutPanel1, 0, 2);
 			this.CustomTable.Dock = System.Windows.Forms.DockStyle.Top;
-			this.CustomTable.Location = new System.Drawing.Point(4, 24);
-			this.CustomTable.Margin = new System.Windows.Forms.Padding(4);
+			this.CustomTable.Location = new System.Drawing.Point(6, 38);
+			this.CustomTable.Margin = new System.Windows.Forms.Padding(6);
 			this.CustomTable.Name = "CustomTable";
 			this.CustomTable.RowCount = 3;
 			this.CustomTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.CustomTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.CustomTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.CustomTable.Size = new System.Drawing.Size(317, 110);
+			this.CustomTable.Size = new System.Drawing.Size(508, 162);
 			this.CustomTable.TabIndex = 2;
 			// 
 			// MinColumnsLink
 			// 
 			this.MinColumnsLink.AutoSize = true;
 			this.MinColumnsLink.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MinColumnsLink.Location = new System.Drawing.Point(152, 0);
+			this.MinColumnsLink.Location = new System.Drawing.Point(241, 0);
+			this.MinColumnsLink.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.MinColumnsLink.Name = "MinColumnsLink";
-			this.MinColumnsLink.Size = new System.Drawing.Size(54, 35);
+			this.MinColumnsLink.Size = new System.Drawing.Size(86, 51);
 			this.MinColumnsLink.TabIndex = 5;
 			this.MinColumnsLink.TabStop = true;
 			this.MinColumnsLink.Text = "最小值";
@@ -219,9 +221,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.MaxColumnsLink.AutoSize = true;
 			this.MaxColumnsLink.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MaxColumnsLink.Location = new System.Drawing.Point(212, 0);
+			this.MaxColumnsLink.Location = new System.Drawing.Point(337, 0);
+			this.MaxColumnsLink.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.MaxColumnsLink.Name = "MaxColumnsLink";
-			this.MaxColumnsLink.Size = new System.Drawing.Size(102, 35);
+			this.MaxColumnsLink.Size = new System.Drawing.Size(166, 51);
 			this.MaxColumnsLink.TabIndex = 6;
 			this.MaxColumnsLink.TabStop = true;
 			this.MaxColumnsLink.Text = "最大值";
@@ -232,8 +235,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.RowCountBox.Dock = System.Windows.Forms.DockStyle.Left;
 			this.RowCountBox.Enabled = false;
-			this.RowCountBox.Location = new System.Drawing.Point(51, 39);
-			this.RowCountBox.Margin = new System.Windows.Forms.Padding(4);
+			this.RowCountBox.Location = new System.Drawing.Point(80, 57);
+			this.RowCountBox.Margin = new System.Windows.Forms.Padding(6);
 			this.RowCountBox.Minimum = new decimal(new int[] {
             1,
             0,
@@ -241,7 +244,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             0});
 			this.RowCountBox.Name = "RowCountBox";
 			this.RowCountBox.ReadOnly = true;
-			this.RowCountBox.Size = new System.Drawing.Size(94, 27);
+			this.RowCountBox.Size = new System.Drawing.Size(150, 39);
 			this.RowCountBox.TabIndex = 3;
 			this.RowCountBox.Value = new decimal(new int[] {
             1,
@@ -253,10 +256,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.RowCountLbl.AutoSize = true;
 			this.RowCountLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.RowCountLbl.Location = new System.Drawing.Point(4, 35);
-			this.RowCountLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.RowCountLbl.Location = new System.Drawing.Point(6, 51);
+			this.RowCountLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.RowCountLbl.Name = "RowCountLbl";
-			this.RowCountLbl.Size = new System.Drawing.Size(39, 35);
+			this.RowCountLbl.Size = new System.Drawing.Size(62, 51);
 			this.RowCountLbl.TabIndex = 1;
 			this.RowCountLbl.Text = "行数";
 			this.RowCountLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -265,10 +268,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.ColumnCountLbl.AutoSize = true;
 			this.ColumnCountLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ColumnCountLbl.Location = new System.Drawing.Point(4, 0);
-			this.ColumnCountLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.ColumnCountLbl.Location = new System.Drawing.Point(6, 0);
+			this.ColumnCountLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.ColumnCountLbl.Name = "ColumnCountLbl";
-			this.ColumnCountLbl.Size = new System.Drawing.Size(39, 35);
+			this.ColumnCountLbl.Size = new System.Drawing.Size(62, 51);
 			this.ColumnCountLbl.TabIndex = 0;
 			this.ColumnCountLbl.Text = "列数";
 			this.ColumnCountLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -276,15 +279,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// ColumnCountBox
 			// 
 			this.ColumnCountBox.Dock = System.Windows.Forms.DockStyle.Left;
-			this.ColumnCountBox.Location = new System.Drawing.Point(51, 4);
-			this.ColumnCountBox.Margin = new System.Windows.Forms.Padding(4);
+			this.ColumnCountBox.Location = new System.Drawing.Point(80, 6);
+			this.ColumnCountBox.Margin = new System.Windows.Forms.Padding(6);
 			this.ColumnCountBox.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
 			this.ColumnCountBox.Name = "ColumnCountBox";
-			this.ColumnCountBox.Size = new System.Drawing.Size(94, 27);
+			this.ColumnCountBox.Size = new System.Drawing.Size(150, 39);
 			this.ColumnCountBox.TabIndex = 2;
 			this.ColumnCountBox.Value = new decimal(new int[] {
             1,
@@ -299,11 +302,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CustomTable.SetColumnSpan(this.flowLayoutPanel1, 4);
 			this.flowLayoutPanel1.Controls.Add(this.FillRadio);
 			this.flowLayoutPanel1.Controls.Add(this.AdaptRadio);
+			this.flowLayoutPanel1.Controls.Add(this.OverlayRadio);
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel1.Location = new System.Drawing.Point(4, 74);
-			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(6, 108);
+			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(309, 32);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(496, 48);
 			this.flowLayoutPanel1.TabIndex = 4;
 			this.flowLayoutPanel1.WrapContents = false;
 			// 
@@ -311,34 +315,45 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.FillRadio.AutoSize = true;
 			this.FillRadio.Checked = true;
-			this.FillRadio.Location = new System.Drawing.Point(4, 4);
-			this.FillRadio.Margin = new System.Windows.Forms.Padding(4);
+			this.FillRadio.Location = new System.Drawing.Point(6, 6);
+			this.FillRadio.Margin = new System.Windows.Forms.Padding(6);
 			this.FillRadio.Name = "FillRadio";
-			this.FillRadio.Size = new System.Drawing.Size(60, 24);
+			this.FillRadio.Size = new System.Drawing.Size(93, 36);
 			this.FillRadio.TabIndex = 0;
 			this.FillRadio.TabStop = true;
-			this.FillRadio.Text = "填充";
+			this.FillRadio.Text = "裁切";
 			this.FillRadio.UseVisualStyleBackColor = true;
 			// 
 			// AdaptRadio
 			// 
 			this.AdaptRadio.AutoSize = true;
-			this.AdaptRadio.Location = new System.Drawing.Point(72, 4);
-			this.AdaptRadio.Margin = new System.Windows.Forms.Padding(4);
+			this.AdaptRadio.Location = new System.Drawing.Point(111, 6);
+			this.AdaptRadio.Margin = new System.Windows.Forms.Padding(6);
 			this.AdaptRadio.Name = "AdaptRadio";
-			this.AdaptRadio.Size = new System.Drawing.Size(60, 24);
+			this.AdaptRadio.Size = new System.Drawing.Size(93, 36);
 			this.AdaptRadio.TabIndex = 1;
-			this.AdaptRadio.Text = "适应";
+			this.AdaptRadio.Text = "遮幅";
 			this.AdaptRadio.UseVisualStyleBackColor = true;
+			// 
+			// OverlayRadio
+			// 
+			this.OverlayRadio.AutoSize = true;
+			this.OverlayRadio.Location = new System.Drawing.Point(216, 6);
+			this.OverlayRadio.Margin = new System.Windows.Forms.Padding(6);
+			this.OverlayRadio.Name = "OverlayRadio";
+			this.OverlayRadio.Size = new System.Drawing.Size(93, 36);
+			this.OverlayRadio.TabIndex = 2;
+			this.OverlayRadio.Text = "叠加";
+			this.OverlayRadio.UseVisualStyleBackColor = true;
 			// 
 			// ReverseTracksCheck
 			// 
 			this.ReverseTracksCheck.AutoSize = true;
 			this.ReverseTracksCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ReverseTracksCheck.Location = new System.Drawing.Point(15, 329);
-			this.ReverseTracksCheck.Margin = new System.Windows.Forms.Padding(4);
+			this.ReverseTracksCheck.Location = new System.Drawing.Point(24, 502);
+			this.ReverseTracksCheck.Margin = new System.Windows.Forms.Padding(6);
 			this.ReverseTracksCheck.Name = "ReverseTracksCheck";
-			this.ReverseTracksCheck.Size = new System.Drawing.Size(325, 24);
+			this.ReverseTracksCheck.Size = new System.Drawing.Size(520, 36);
 			this.ReverseTracksCheck.TabIndex = 4;
 			this.ReverseTracksCheck.Text = "降序排序";
 			this.ReverseTracksCheck.UseVisualStyleBackColor = true;
@@ -352,22 +367,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel4.Controls.Add(this.PaddingLbl, 0, 0);
 			this.tableLayoutPanel4.Controls.Add(this.PaddingBox, 1, 0);
 			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel4.Location = new System.Drawing.Point(11, 357);
+			this.tableLayoutPanel4.Location = new System.Drawing.Point(18, 544);
 			this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
 			this.tableLayoutPanel4.RowCount = 1;
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(333, 35);
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(532, 51);
 			this.tableLayoutPanel4.TabIndex = 5;
 			// 
 			// PaddingLbl
 			// 
 			this.PaddingLbl.AutoSize = true;
 			this.PaddingLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PaddingLbl.Location = new System.Drawing.Point(4, 0);
-			this.PaddingLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.PaddingLbl.Location = new System.Drawing.Point(6, 0);
+			this.PaddingLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
 			this.PaddingLbl.Name = "PaddingLbl";
-			this.PaddingLbl.Size = new System.Drawing.Size(39, 35);
+			this.PaddingLbl.Size = new System.Drawing.Size(62, 51);
 			this.PaddingLbl.TabIndex = 0;
 			this.PaddingLbl.Text = "边距";
 			this.PaddingLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -375,15 +390,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// PaddingBox
 			// 
 			this.PaddingBox.Dock = System.Windows.Forms.DockStyle.Left;
-			this.PaddingBox.Location = new System.Drawing.Point(51, 4);
-			this.PaddingBox.Margin = new System.Windows.Forms.Padding(4);
+			this.PaddingBox.Location = new System.Drawing.Point(80, 6);
+			this.PaddingBox.Margin = new System.Windows.Forms.Padding(6);
 			this.PaddingBox.Maximum = new decimal(new int[] {
             50,
             0,
             0,
             0});
 			this.PaddingBox.Name = "PaddingBox";
-			this.PaddingBox.Size = new System.Drawing.Size(94, 27);
+			this.PaddingBox.Size = new System.Drawing.Size(150, 39);
 			this.PaddingBox.TabIndex = 1;
 			// 
 			// FlipGroup
@@ -391,11 +406,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FlipGroup.AutoSize = true;
 			this.FlipGroup.Controls.Add(this.tableLayoutPanel1);
 			this.FlipGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FlipGroup.Location = new System.Drawing.Point(15, 221);
-			this.FlipGroup.Margin = new System.Windows.Forms.Padding(4);
+			this.FlipGroup.Location = new System.Drawing.Point(24, 332);
+			this.FlipGroup.Margin = new System.Windows.Forms.Padding(6);
 			this.FlipGroup.Name = "FlipGroup";
-			this.FlipGroup.Padding = new System.Windows.Forms.Padding(4);
-			this.FlipGroup.Size = new System.Drawing.Size(325, 100);
+			this.FlipGroup.Padding = new System.Windows.Forms.Padding(6);
+			this.FlipGroup.Size = new System.Drawing.Size(520, 158);
 			this.FlipGroup.TabIndex = 3;
 			this.FlipGroup.TabStop = false;
 			this.FlipGroup.Text = "镜像边缘";
@@ -411,13 +426,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.Controls.Add(this.HFlipLbl, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.HFlipCombo, 1, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 24);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 38);
+			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(5);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
+			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
 			this.tableLayoutPanel1.RowCount = 2;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(317, 72);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(508, 114);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
 			// VFlipCombo
@@ -429,21 +445,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "不翻转",
             "偶数行",
             "奇数行"});
-			this.VFlipCombo.Location = new System.Drawing.Point(80, 37);
-			this.VFlipCombo.MinimumSize = new System.Drawing.Size(150, 0);
+			this.VFlipCombo.Location = new System.Drawing.Point(127, 59);
+			this.VFlipCombo.Margin = new System.Windows.Forms.Padding(5);
+			this.VFlipCombo.MinimumSize = new System.Drawing.Size(238, 0);
 			this.VFlipCombo.Name = "VFlipCombo";
-			this.VFlipCombo.Size = new System.Drawing.Size(150, 28);
+			this.VFlipCombo.Size = new System.Drawing.Size(238, 40);
 			this.VFlipCombo.TabIndex = 4;
 			// 
 			// VFlipLbl
 			// 
 			this.VFlipLbl.AutoSize = true;
 			this.VFlipLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VFlipLbl.Location = new System.Drawing.Point(4, 34);
-			this.VFlipLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.VFlipLbl.MinimumSize = new System.Drawing.Size(0, 34);
+			this.VFlipLbl.Location = new System.Drawing.Point(6, 54);
+			this.VFlipLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+			this.VFlipLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.VFlipLbl.Name = "VFlipLbl";
-			this.VFlipLbl.Size = new System.Drawing.Size(69, 34);
+			this.VFlipLbl.Size = new System.Drawing.Size(110, 54);
 			this.VFlipLbl.TabIndex = 2;
 			this.VFlipLbl.Text = "垂直翻转";
 			this.VFlipLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -452,11 +469,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.HFlipLbl.AutoSize = true;
 			this.HFlipLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.HFlipLbl.Location = new System.Drawing.Point(4, 0);
-			this.HFlipLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.HFlipLbl.MinimumSize = new System.Drawing.Size(0, 34);
+			this.HFlipLbl.Location = new System.Drawing.Point(6, 0);
+			this.HFlipLbl.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+			this.HFlipLbl.MinimumSize = new System.Drawing.Size(0, 54);
 			this.HFlipLbl.Name = "HFlipLbl";
-			this.HFlipLbl.Size = new System.Drawing.Size(69, 34);
+			this.HFlipLbl.Size = new System.Drawing.Size(110, 54);
 			this.HFlipLbl.TabIndex = 1;
 			this.HFlipLbl.Text = "水平翻转";
 			this.HFlipLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -470,27 +487,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
             "不翻转",
             "偶数列",
             "奇数列"});
-			this.HFlipCombo.Location = new System.Drawing.Point(80, 3);
-			this.HFlipCombo.MinimumSize = new System.Drawing.Size(150, 0);
+			this.HFlipCombo.Location = new System.Drawing.Point(127, 5);
+			this.HFlipCombo.Margin = new System.Windows.Forms.Padding(5);
+			this.HFlipCombo.MinimumSize = new System.Drawing.Size(238, 0);
 			this.HFlipCombo.Name = "HFlipCombo";
-			this.HFlipCombo.Size = new System.Drawing.Size(150, 28);
+			this.HFlipCombo.Size = new System.Drawing.Size(238, 40);
 			this.HFlipCombo.TabIndex = 3;
 			// 
 			// AutoLayoutTracksGridForm
 			// 
 			this.AcceptButton = this.OkBtn;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.AutoSize = true;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(355, 455);
+			this.ClientSize = new System.Drawing.Size(568, 728);
 			this.Controls.Add(this.table);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Location = new System.Drawing.Point(60, 60);
-			this.Margin = new System.Windows.Forms.Padding(5);
+			this.Margin = new System.Windows.Forms.Padding(8);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AutoLayoutTracksGridForm";
@@ -548,5 +566,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private System.Windows.Forms.Label HFlipLbl;
 		private System.Windows.Forms.ComboBox VFlipCombo;
 		private System.Windows.Forms.ComboBox HFlipCombo;
+		private System.Windows.Forms.RadioButton OverlayRadio;
 	}
 }

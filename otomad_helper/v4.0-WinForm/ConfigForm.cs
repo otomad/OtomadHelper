@@ -838,12 +838,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				{ BatchSubtitleGenerationBtn, typeof(BatchSubtitleGenerationForm) },
 				{ FindClipsBtn, typeof(FindClipsForm) },
 				{ CustomFadeGainBtn, typeof(CustomFadeGainForm) },
+				{ ApplyVisualEffectBtn, typeof(ApplyVisualEffectForm) },
+				{ ExportMidiFileBtn, typeof(ExportMidiFileForm) },
+				{ QuickConfigPropertiesBtn, typeof(QuickConfigPropertiesForm) },
 			};
 			Type form;
 			map.TryGetValue(btn, out form);
 			if (form != null)
 				(Activator.CreateInstance(form) as Form).ShowDialog();
-			Close();
+			// Close();
 		}
 
 		private void GenerateAtCustomText_Leave(object sender, EventArgs e) {

@@ -141,6 +141,12 @@
       <DependentUpon>ExportMidiFileForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
+    <Compile Include="HorizontalDivider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HorizontalDivider.Designer.cs">
+      <DependentUpon>HorizontalDivider.cs</DependentUpon>
+    </Compile>
     <Compile Include="PvRhythmVisualEffectAdvancedForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -231,6 +237,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuickConfigPropertiesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QuickConfigPropertiesForm.Designer.cs">
+      <DependentUpon>QuickConfigPropertiesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RememberedCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -321,6 +333,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="QuickConfigPropertiesForm.resx">
+      <DependentUpon>QuickConfigPropertiesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReplaceClipsForm.resx">
       <DependentUpon>ReplaceClipsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -362,12 +377,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\VegasScript_InAppDirectory\VegasScript_InAppDirectory.csproj">
-      <Project>{B2F0D451-6E12-4F83-9104-1CA74C7F93CE}</Project>
-      <Name>VegasScript_InAppDirectory</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
