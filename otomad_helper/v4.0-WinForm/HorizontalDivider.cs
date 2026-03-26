@@ -25,25 +25,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private const int HEIGHT = 2;
 
 		#region 隐藏属性
-		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("该控件不支持此属性。"), DefaultValue("")]
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), DefaultValue("")]
 		public new string Text {
 			get { return base.Text; }
 			set { base.Text = value; }
 		}
 
-		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("该控件不支持此属性。"), DefaultValue(BorderStyle.Fixed3D)]
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), DefaultValue(BorderStyle.Fixed3D)]
 		public new BorderStyle BorderStyle {
 			get { return base.BorderStyle; }
 			set { base.BorderStyle = value; }
 		}
 
-		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("该控件不支持此属性。"), DefaultValue(false)]
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), DefaultValue(false)]
 		public new bool AutoSize {
 			get { return base.AutoSize; }
 			set { base.AutoSize = value; }
 		}
 
-		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), Obsolete("该控件不支持此属性。"), DefaultValue(HEIGHT)]
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), DefaultValue(HEIGHT)]
 		public new int Height {
 			get { return base.Height; }
 			set { base.Height = value; }

@@ -56,5 +56,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					break;
 			}
 		}
+
+		private void OkBtn_Click(object sender, EventArgs e) {
+			Close();
+		}
+
+		private void CancelBtn_Click(object sender, EventArgs e) {
+			Close();
+		}
 	}
 }

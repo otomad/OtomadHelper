@@ -685,7 +685,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			/// <param name="events">轨道事件数组。</param>
 			/// <param name="useEventGroup">如果为 true，则若在给定的轨道事件数组中不能同时找到音频事件和视频事件，
 			/// 将会尝试在已找到的类型的轨道事件的分组中寻找缺失的轨道事件。</param>
-			public EventSet(TrackEvent[] events, bool useEventGroup = true) {
+			public EventSet(IEnumerable<TrackEvent> events, bool useEventGroup = true) {
 				foreach (TrackEvent trackEvent in events) {
 					if (trackEvent != null && trackEvent.IsAudio() && audioEvent == null)
 						audioEvent = trackEvent as AudioEvent;
@@ -723,21 +723,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// 获取所有选中的轨道事件。
 		/// </summary>
 		/// <returns>选中的轨道事件数组。</returns>
-		public T[] GetSelectedEvents<T>() where T : TrackEvent {
-			List<T> selectedList = new List<T>();
+		private IEnumerable<T> GetSelectedEvents<T>() where T : TrackEvent {
 			foreach (Track track in vegas.Project.Tracks)
 				foreach (TrackEvent trackEvent in track.Events)
 					if (trackEvent.Selected && trackEvent is T)
-						selectedList.Add(trackEvent as T);
-			return selectedList.ToArray();
+						yield return trackEvent as T;
 		}
-		public VideoEvent[] GetSelectedVideoEvents() {
+		public IEnumerable<VideoEvent> GetSelectedVideoEvents() {
 			return GetSelectedEvents<VideoEvent>();
 		}
-		public AudioEvent[] GetSelectedAudioEvents() {
+		public IEnumerable<AudioEvent> GetSelectedAudioEvents() {
 			return GetSelectedEvents<AudioEvent>();
 		}
-		public TrackEvent[] GetSelectedEvents() {
+		public IEnumerable<TrackEvent> GetSelectedEvents() {
 			return GetSelectedEvents<TrackEvent>();
 		}
 
@@ -769,8 +767,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// 由于这一般是音频事件和视频事件才构成一个分组，所以不专门指定这是什么事件类型，直接通用轨道事件类型。
 		/// </summary>
 		/// <returns>选中的轨道事件及其轨道事件分组内的其它轨道事件。</returns>
-		public TrackEvent[] GetSelectedEventsWithinGroup() {
-			return GetEventsWithinGroup(GetSelectedEvents<TrackEvent>());
+		public IEnumerable<TrackEvent> GetSelectedEventsWithinGroup() {
+			return GetEventsWithinGroup(GetSelectedEvents());
 		}
 
 		/// <summary>
@@ -778,7 +776,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="trackEvents">指定的轨道事件数组。</param>
 		/// <returns>指定的轨道事件及其轨道事件分组内的其它轨道事件。</returns>
-		public TrackEvent[] GetEventsWithinGroup(IEnumerable<TrackEvent> trackEvents) {
+		public IReadOnlyCollection<TrackEvent> GetEventsWithinGroup(IEnumerable<TrackEvent> trackEvents) {
 			List<TrackEvent> selectedList = new List<TrackEvent>(trackEvents), // 副本，仅用于遍历。
 				resultList = new List<TrackEvent>(trackEvents);
 			foreach (TrackEvent trackEvent in selectedList) {
@@ -787,19 +785,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						if (!resultList.Contains(eventInGroup))
 							resultList.Add(eventInGroup);
 			}
-			return resultList.ToArray();
-		}
-
-		/// <summary>
-		/// 获取选中的第一个轨道剪辑。
-		/// </summary>
-		/// <returns>选中的第一个轨道剪辑。</returns>
-		public T GetSelectedFirstEvent<T>() where T : TrackEvent {
-			foreach (Track track in vegas.Project.Tracks)
-				foreach (TrackEvent trackEvent in track.Events)
-					if (trackEvent.Selected && trackEvent.ActiveTake != null && trackEvent.ActiveTake.Media != null && trackEvent is T)
-						return trackEvent as T;
-			return null;
+			return resultList.AsReadOnly();
 		}
 
 		/// <summary>
@@ -807,25 +793,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		/// <typeparam name="T">轨道种类</typeparam>
 		/// <returns>选中的轨道</returns>
-		public T[] GetSelectedTracks<T>() where T : Track {
-			List<T> selectedList = new List<T>();
+		private IEnumerable<T> GetSelectedTracks<T>() where T : Track {
 			foreach (Track track in vegas.Project.Tracks)
 				if (track.Selected && track is T)
-					selectedList.Add(track as T);
-			return selectedList.ToArray();
+					yield return track as T;
 		}
 
 		/// <summary>
 		/// 获取所有选中的视频轨道。
 		/// </summary>
 		/// <returns>选中的视频轨道</returns>
-		public VideoTrack[] GetSelectedVideoTracks() {
+		public IEnumerable<VideoTrack> GetSelectedVideoTracks() {
 			return GetSelectedTracks<VideoTrack>();
 		}
-		public AudioTrack[] GetSelectedAudioTracks() {
+		public IEnumerable<AudioTrack> GetSelectedAudioTracks() {
 			return GetSelectedTracks<AudioTrack>();
 		}
-		public Track[] GetSelectedTracks() {
+		public IEnumerable<Track> GetSelectedTracks() {
 			return GetSelectedTracks<Track>();
 		}
 
@@ -845,14 +829,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			public int audioCount;
 			public int videoCount;
 			public int count;
-			public CountEventsType(TrackEvent[] events) {
-				audioCount = 0;
-				videoCount = 0;
-				count = events.Length;
-				foreach (TrackEvent trackEvent in events) {
-					if (trackEvent.IsAudio()) audioCount++;
-					if (trackEvent.IsVideo()) videoCount++;
-				}
+			public CountEventsType(IEnumerable<TrackEvent> events) {
+				audioCount = events.Count(e => e.IsAudio());
+				videoCount = events.Count(e => e.IsVideo());
+				count = events.Count();
 			}
 		}
 
@@ -885,20 +865,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="excludeEmptyTake">不包含空片段的轨道事件。<br />
 		/// 如果为 <c>true</c>，则若一个轨道事件不包含任何片段和媒体，则不会将其添加到结果中。</param>
 		/// <returns>所有轨道剪辑。</returns>
-		public T[] GetAllEvents<T>(bool excludeEmptyTake = true) where T : TrackEvent {
-			List<T> events = new List<T>();
+		public IEnumerable<T> GetAllEvents<T>() where T : TrackEvent {
 			foreach (Track track in vegas.Project.Tracks)
 				foreach (TrackEvent trackEvent in track.Events)
 					if (trackEvent is T)
-						events.Add(trackEvent as T);
-			return events.ToArray();
+						yield return trackEvent as T;
 		}
 
 		/// <summary>
 		/// 获取所有轨道剪辑。
 		/// </summary>
 		/// <returns>所有轨道剪辑。</returns>
-		public TrackEvent[] GetAllEvents() {
+		public IEnumerable<TrackEvent> GetAllEvents() {
 			return GetAllEvents<TrackEvent>();
 		}
 
@@ -908,13 +886,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <typeparam name="T">轨道剪辑类型。</typeparam>
 		/// <param name="name">指定的活动片段名称。</param>
 		/// <returns>与指定名称相匹配的所有轨道剪辑。</returns>
-		public T[] GetEventsByTakeName<T>(string name) where T : TrackEvent {
-			List<T> events = new List<T>();
+		public IEnumerable<T> GetEventsByTakeName<T>(string name) where T : TrackEvent {
 			foreach (Track track in vegas.Project.Tracks)
 				foreach (TrackEvent trackEvent in track.Events)
 					if (trackEvent is T && trackEvent.ActiveTake != null && trackEvent.ActiveTake.Name == name)
-						events.Add(trackEvent as T);
-			return events.ToArray();
+						yield return trackEvent as T;
 		}
 
 		/// <summary>
@@ -922,7 +898,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="name">指定的活动片段名称。</param>
 		/// <returns>与指定名称相匹配的所有轨道剪辑。</returns>
-		public TrackEvent[] GetEventsByTakeName(string name) {
+		public IEnumerable<TrackEvent> GetEventsByTakeName(string name) {
 			return GetEventsByTakeName<TrackEvent>(name);
 		}
 
@@ -942,16 +918,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		/// <param name="originalEvents">原始轨道剪辑数组。</param>
 		/// <returns>追加分组内其它轨道剪辑的数组。</returns>
-		public TrackEvent[] AppendGroupedEvents(TrackEvent[] originalEvents) {
-			List<TrackEvent> events = new List<TrackEvent>();
-			foreach (TrackEvent trackEvent in originalEvents)
-				if (!events.Contains(trackEvent)) {
-					events.Add(trackEvent);
-					if (trackEvent.IsGrouped)
-						foreach (TrackEvent trackEventInGroup in trackEvent.Group)
-							if (!events.Contains(trackEventInGroup))
-								events.Add(trackEventInGroup);
-				}
+		public TrackEvent[] AppendGroupedEvents(IEnumerable<TrackEvent> originalEvents) {
+			HashSet<TrackEvent> events = new HashSet<TrackEvent>();
+			foreach (TrackEvent trackEvent in originalEvents) {
+				bool newAdded = events.Add(trackEvent);
+				if (newAdded && trackEvent.IsGrouped)
+					foreach (TrackEvent trackEventInGroup in trackEvent.Group)
+						events.Add(trackEventInGroup);
+			}
 			return events.ToArray();
 		}
 
@@ -2173,9 +2147,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					SE(new Exceptions.YtpInMediaGeneratorException());
 					return false;
 				};
-				TrackEvent[] _selected = GetSelectedEvents();
-				AudioEvent[] _selectedAudio = GetSelectedAudioEvents();
-				VideoEvent[] _selectedVideo = GetSelectedVideoEvents();
+				TrackEvent[] _selected = GetSelectedEvents().ToArray();
+				AudioEvent[] _selectedAudio = GetSelectedAudioEvents().ToArray();
+				VideoEvent[] _selectedVideo = GetSelectedVideoEvents().ToArray();
 				#endregion
 				#region 验证合法性
 				if (_selectedAudio.Length == 1 && _selectedVideo.Length == 1)
@@ -2289,8 +2263,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			bool withinGroup,
 			Timecode increaseSpacingTime = null,
 			bool reverseDirection = false,
-			Track[] tracks = null,
-			TrackEvent[] events = null
+			IEnumerable<Track> tracks = null,
+			IEnumerable<TrackEvent> events = null
 		) {
 			if ((type == TrackLegatoType.INCREASE_SPACING || type == TrackLegatoType.INCREASE_SPACING_ALL_TRACKS)
 				&& increaseSpacingTime == null) return;
@@ -2644,14 +2618,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		cleanUpRuins:
 			DeleteYtpSampleTracks(false);
 			return false;
-		}
-
-		public void NormalizeSelectedAudioEvents() {
-			AudioEvent[] events = GetSelectedAudioEvents();
-			foreach (AudioEvent audioEvent in events) {
-				audioEvent.RecalculateNorm();
-				audioEvent.Normalize = true;
-			}
 		}
 
 		private void Generate() {
@@ -3424,13 +3390,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <typeparam name="T">控件类型。</typeparam>
 		/// <param name="root">根控件元素节点。</param>
 		/// <returns>子控件迭代器。</returns>
-		public static IEnumerable<T> GetControlsOfType<T>(this Control root) where T : Control {
+		public static IEnumerable<T> GetChildrenOfType<T>(this Control root) where T : Control {
 			T t = root as T;
 			if (t != null) yield return t;
 
 			if (root != null && root.HasChildren)
 				foreach (Control c in root.Controls)
-					foreach (T i in GetControlsOfType<T>(c))
+					foreach (T i in GetChildrenOfType<T>(c))
 						yield return i;
 		}
 
@@ -3439,6 +3405,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		public static void SetGain(this Fade fade, float value) {
 			fade.Gain = EntryPoint.Clamp(value, 0, 1);
+		}
+
+		/// <summary>
+		/// 判断迭代器是否为空。
+		/// </summary>
+		/// <remarks>
+		/// 这比调用 <see cref="Enumerable.Count" /> 更快，因为后者会进行无用的迭代计数操作。
+		/// </remarks>
+		public static bool IsEmpty<T>(this IEnumerable<T> objects) {
+			return objects == null || !objects.Any();
 		}
 	}
 
@@ -3819,8 +3795,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		public readonly PrveValues fxes;
-		private int[] steps;
-		private int[] durations;
+		private readonly int[] steps;
+		private readonly int[] durations;
 		private int lastPitch = -1; // Double.NaN ???
 		private bool isPitchHold = false;
 		private bool isUsing = false;
@@ -5404,13 +5380,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// 视频参数预设类。
 	/// </summary>
 	public class VideoParamsPreset : IReadOnlyList<decimal> {
-		private SetFadeByType fadeBy;
-		public SetFadeByType FadeBy { get { return fadeBy; } }
+		public SetFadeByType FadeBy { get; private set; }
 		private VideoParamsPreset(SetFadeByType fadeBy = SetFadeByType.UNDEFINED) {
-			this.fadeBy = fadeBy;
+			FadeBy = fadeBy;
 		}
 
-		private List<decimal> _list = new List<decimal>();
+		private readonly List<decimal> _list = new List<decimal>();
 		public int Count { get { return _list.Count; } }
 		public decimal this[int index] { get { return _list[index]; } }
 		public IEnumerator<decimal> GetEnumerator() { return _list.GetEnumerator(); }
@@ -6252,7 +6227,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private readonly ConfigForm form;
 		private const int MAX_VALUE_LENGTH = 1024;
-		private string filePath = null;
+		private readonly string filePath = null;
 		public string FilePath { get { return filePath; } }
 		protected string currentSection = null;
 
@@ -7814,8 +7789,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			private CameraShakeForm.Config config;
 
 			public void Main(Vegas vegas, EntryPoint entryPoint) {
-				VideoEvent[] videoEvents = entryPoint.GetSelectedEvents<VideoEvent>();
-				if (videoEvents == null || videoEvents.Length == 0) {
+				IEnumerable<VideoEvent> videoEvents = entryPoint.GetSelectedVideoEvents();
+				if (videoEvents.IsEmpty()) {
 					EntryPoint.ShowError(new Exceptions.NoVideoEventSelectedException(), ShowErrorState.SILENCE);
 					return;
 				}
@@ -8917,7 +8892,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	}
 
 	public partial class ProgressForm : Form, IInterpret {
-		private AnimationResource Animation;
+		private readonly AnimationResource Animation;
 		private SafeModuleHandle _currentAnimationModuleHandle;
 		private IProgressDialog _dialog;
 		public bool isNativeStyle = true;
@@ -10113,12 +10088,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public partial class ReplaceClipsForm : Form, IInterpret, IConfigIniUser {
 		private readonly EntryPoint parent;
-		private readonly TrackEvent[] events;
+		private readonly IEnumerable<TrackEvent> events;
 		private Vegas vegas { get { return parent.vegas; } }
 		private ConfigIni configIni { get { return parent.configIni; } }
 		private List<ValidTrack> validTracks;
 		private int suggestTrack = 0;
-		private SeparationSpecifier separation;
+		private readonly SeparationSpecifier separation;
 		private bool requestClearAllReplacementTag = true;
 		public ReplaceClipsForm(EntryPoint entryPoint) {
 			InitializeComponent();
@@ -10166,7 +10141,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="replacerVideo">替换项的视频部分。</param>
 		/// <param name="reserveClipName">保留原剪辑名称。</param>
 		/// <param name="reserveClipOffset">保留原剪辑偏移量。</param>
-		public static void DoReplace(TrackEvent[] replaced, AudioEvent replacerAudio, VideoEvent replacerVideo, bool reserveClipName, bool reserveClipOffset) {
+		public static void DoReplace(IEnumerable<TrackEvent> replaced, AudioEvent replacerAudio, VideoEvent replacerVideo, bool reserveClipName, bool reserveClipOffset) {
 			foreach (TrackEvent trackEvent in replaced) {
 				if (trackEvent == replacerAudio || trackEvent == replacerVideo) continue;
 				Take expectTake;
@@ -10186,7 +10161,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		#region 同时指定部分
 		private class ValidTrack {
-			private ReplaceClipsForm form;
+			private readonly ReplaceClipsForm form;
 			public Track Track;
 			public List<TrackEvent> SelectedEvents = new List<TrackEvent>();
 			public int TrackIndex { get { return Track.Index; } }
@@ -10311,7 +10286,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (track.LastSelectedAudioEvent != null) track.LastSelectedAudioEvent.Selected = true;
 		}
 
-		private void SelectSpecifiedEvents(TrackEvent[] events) {
+		private void SelectSpecifiedEvents(IEnumerable<TrackEvent> events) {
 			SelectNone();
 			foreach (TrackEvent trackEvent in events)
 				if (trackEvent != null)
@@ -10333,8 +10308,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				vegas.Transport.ViewCursor(true);
 				OkBtn.Enabled = ReplacerCombo.Items.Count > 0;
 			} else if (IsSeparationTab) {
-				SetReplacedBtn.Text = string.Format(Lang.str.separation_set_replaced, events.Length);
-				SetReplacerBtn.Text = string.Format(Lang.str.separation_set_replacer, events.Length);
+				int eventsLength = events.Count();
+				SetReplacedBtn.Text = string.Format(Lang.str.separation_set_replaced, eventsLength);
+				SetReplacerBtn.Text = string.Format(Lang.str.separation_set_replacer, eventsLength);
 				if (ViewSelectOriginalRadio.Checked) SelectSpecifiedEvents(events);
 				else if (ViewSelectReplacedRadio.Checked) SelectSpecifiedEvents(separation.Replaced);
 				else if (ViewSelectReplacerRadio.Checked) SelectSpecifiedEvents(separation.Replacer);
@@ -10438,7 +10414,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			private const int INVALID_TAG = 0;
 			private const int REPLACED_TAG = 1;
 			private const int REPLACER_TAG = 2;
-			public TrackEvent[] Replaced {
+			public IEnumerable<TrackEvent> Replaced {
 				get {
 					return GetSpecifiedReplacement(REPLACED_TAG);
 				}
@@ -10467,17 +10443,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			public void SetReplacer(EntryPoint.EventSet value) {
 				Replacer = value;
 			}
-			public void SetReplacer(TrackEvent[] events) {
+			public void SetReplacer(IEnumerable<TrackEvent> events) {
 				Replacer = new EntryPoint.EventSet(events, UseTrackEventGroup);
 			}
-			private TrackEvent[] GetSpecifiedReplacement(int replacementTag) {
-				List<TrackEvent> replacements = new List<TrackEvent>();
+			private IEnumerable<TrackEvent> GetSpecifiedReplacement(int replacementTag) {
 				foreach (TrackEvent trackEvent in parent.GetAllEvents()) {
 					object replacement = trackEvent.CustomData.GetObject(REPLACEMENT_TAG_GUID);
 					if (replacement is int && (int)replacement == replacementTag)
-						replacements.Add(trackEvent);
+						yield return trackEvent;
 				}
-				return replacements.ToArray();
 			}
 			private void DeleteSpecifiedReplacement(int replacementTag) {
 				foreach (TrackEvent trackEvent in parent.GetAllEvents()) {
@@ -10499,7 +10473,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void UpdateSeparationReplacedInfo() {
-			TrackEvent[] replaceds = separation.Replaced;
+			IEnumerable<TrackEvent> replaceds = separation.Replaced;
 			EntryPoint.CountEventsType counts = new EntryPoint.CountEventsType(replaceds);
 			SeparationReplacedInfo.Text = string.Format(Lang.str.separation_replaced_info, counts.count, counts.audioCount, counts.videoCount);
 			IsSeparationReplacedOk = counts.count > 0;
@@ -10533,7 +10507,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void ExamineSetSelectEnable() {
 			// HashSet 不知道为啥反正就是用不了。
-			TrackEvent[] selected = UseTrackEventGroupCheck.Checked ? parent.AppendGroupedEvents(events) : events;
+			IEnumerable<TrackEvent> selected = UseTrackEventGroupCheck.Checked ? parent.AppendGroupedEvents(events) : events;
 			SetReplacedBtn.Enabled = !CompareList(new List<TrackEvent>(selected), new List<TrackEvent>(separation.Replaced));
 			EntryPoint.EventSet settedSet = separation.Replacer; // set 的过去式理应不变形但是那样无法体现功能。
 			EntryPoint.EventSet settingSet = new EntryPoint.EventSet(events, UseTrackEventGroupCheck.Checked);
@@ -10998,7 +10972,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 	public partial class SelectIntervalForm : Form, IInterpret {
 		private readonly EntryPoint parent;
-		private TrackEvent[] events;
+		private IEnumerable<TrackEvent> events;
 		private Vegas vegas { get { return parent.vegas; } }
 		internal const int MARGIN = 60;
 		public SelectIntervalForm(EntryPoint entryPoint) {
@@ -11033,7 +11007,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void SubmitSelectBtn_Click(object sender, EventArgs e) {
 			events = parent.GetSelectedEvents();
-			SelectInfo.Text = string.Format(Lang.str.select_events_count_info, events.Length);
+			SelectInfo.Text = string.Format(Lang.str.select_events_count_info, events.Count());
 		}
 
 		private void ResetBtn_Click(object sender, EventArgs e) {
@@ -11063,12 +11037,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		public void ResetSelect() {
-			var contains = new Func<TrackEvent[], TrackEvent, bool>((list, item) => {
+			Func<IEnumerable<TrackEvent>, TrackEvent, bool> contains = (list, item) => {
 				foreach (TrackEvent control in list)
 					if (control == item)
 						return true;
 				return false;
-			});
+			};
 			foreach (Track track in vegas.Project.Tracks)
 				foreach (TrackEvent trackEvent in track.Events)
 					trackEvent.Selected = contains(events, trackEvent);
@@ -12148,7 +12122,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Translate();
 			Height = table.Height + dock.Height + SelectIntervalForm.MARGIN;
 			CustomGroup.Enabled = false;
-			this.tracks = tracks ?? parent.GetSelectedVideoTracks();
+			this.tracks = tracks ?? parent.GetSelectedVideoTracks().ToArray();
 			if (Count == 0) {
 				EntryPoint.ShowError(new Exceptions.FailToSelectTracksException());
 				Close();
@@ -12782,8 +12756,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			toolTip.SetToolTip(UseVideoLongerSideCheck, str.use_video_longer_side_tooltip);
 			SideName = new string[] { str.front_surface, str.back_surface, str.left_surface, str.right_surface, str.top_surface, str.bottom_surface };
 			tracks = new List<VideoTrack> { null };
-			VideoTrack[] _ = parent.GetSelectedVideoTracks();
-			if (_.Length == 0) {
+			IEnumerable<VideoTrack> _ = parent.GetSelectedVideoTracks();
+			if (_.IsEmpty()) {
 				EntryPoint.ShowError(new Exceptions.FailToSelectTracksException());
 				Close();
 			}
@@ -13163,7 +13137,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			((Action)ReadIni).OnErrorBreak();
 			FormClosing += (sender, e) => SaveIni();
 			ReadFromInfo();
-			this.tracks = tracks ?? parent.GetSelectedVideoTracks();
+			this.tracks = tracks ?? parent.GetSelectedVideoTracks().ToArray();
 		}
 
 		private void CancelBtn_Click(object sender, EventArgs e) {
@@ -13649,7 +13623,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ClassicStretchAttributes classic = new ClassicStretchAttributes();
 			if (method == TimeStretchPitchShift.Elastique) elastique = (ElastiqueStretchAttributes)StretchAttrCombo.SelectedIndex;
 			if (method == TimeStretchPitchShift.Classic) classic = (ClassicStretchAttributes)StretchAttrCombo.SelectedIndex;
-			AudioEvent[] audioEvents = parent.GetSelectedAudioEvents();
+			IEnumerable<AudioEvent> audioEvents = parent.GetSelectedAudioEvents();
 			foreach (AudioEvent audioEvent in audioEvents) {
 				audioEvent.Method = method;
 				if (method == TimeStretchPitchShift.None) continue;
@@ -14519,7 +14493,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			Translate();
 			((Action)ReadIni).OnErrorBreak();
-			selectedFirstEvent = parent.GetSelectedFirstEvent<TrackEvent>();
+			selectedFirstEvent = parent.GetSelectedEvents().FirstOrDefault();
 			if (selectedFirstEvent == null) {
 				MatchSourceRadio.Enabled = MatchSourceAndOffsetRadio.Enabled = false;
 				MatchNameRadio.Checked = true;
@@ -14579,7 +14553,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				string eventName = trackEvent.ActiveTake.Name;
 				if (!eventName.ToLower().Contains(query) || eventNames.Contains(eventName)) continue;
 				eventNames.Add(eventName);
-				ListViewItem item = new ListViewItem(new string[] { eventName, parent.GetEventsByTakeName(eventName).Length.ToString() });
+				ListViewItem item = new ListViewItem(new string[] { eventName, parent.GetEventsByTakeName(eventName).Count().ToString() });
 				if (eventName == query) item.Selected = true;
 				ClipNameList.Items.Add(item);
 			}
@@ -14665,6 +14639,1164 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			MatchMethod_int = configIni.Read("MatchMethod", 2);
 			FilterTrackEvent_int = configIni.Read("FilterTrackEvent", 0);
 			configIni.EndSection();
+		}
+	}
+
+	partial class QuickConfigPropertiesForm {
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
+
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing) {
+			if (disposing && (components != null)) {
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		#region Windows Form Designer generated code
+
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent() {
+			this.dock = new System.Windows.Forms.TableLayoutPanel();
+			this.OkBtn = new System.Windows.Forms.Button();
+			this.CancelBtn = new System.Windows.Forms.Button();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.AudioGroup = new System.Windows.Forms.GroupBox();
+			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioMuteCheck = new System.Windows.Forms.CheckBox();
+			this.AudioLockCheck = new System.Windows.Forms.CheckBox();
+			this.AudioLoopCheck = new System.Windows.Forms.CheckBox();
+			this.AudioInvertPhaseCheck = new System.Windows.Forms.CheckBox();
+			this.horizontalDivider4 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.AudioNormalizeCheck = new System.Windows.Forms.CheckBox();
+			this.AudioRecalcNormGainPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioNoRecalcNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioRecalcNewNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioRecalcAllNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.horizontalDivider5 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioUnsetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioSetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioMultiplyRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioRateBox = new System.Windows.Forms.NumericUpDown();
+			this.horizontalDivider7 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioUnsetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioSetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioMultiplyGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioGainBox = new System.Windows.Forms.NumericUpDown();
+			this.VideoGroup = new System.Windows.Forms.GroupBox();
+			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.VideoMuteCheck = new System.Windows.Forms.CheckBox();
+			this.VideoLockCheck = new System.Windows.Forms.CheckBox();
+			this.VideoLoopCheck = new System.Windows.Forms.CheckBox();
+			this.VideoMaintainAspectRatioCheck = new System.Windows.Forms.CheckBox();
+			this.VideoReduceInterlaceCheck = new System.Windows.Forms.CheckBox();
+			this.horizontalDivider1 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.VideoResampleModeLbl = new System.Windows.Forms.Label();
+			this.VideoResampleModeCombo = new System.Windows.Forms.ComboBox();
+			this.horizontalDivider2 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+			this.VideoUnsetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoSetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoMultiplyRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoRateBox = new System.Windows.Forms.NumericUpDown();
+			this.horizontalDivider3 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.VideoUnderSampleRateCheck = new System.Windows.Forms.CheckBox();
+			this.VideoUnderSampleRateBox = new System.Windows.Forms.NumericUpDown();
+			this.horizontalDivider6 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+			this.VideoUnsetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoSetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoMultiplyGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoGainBox = new System.Windows.Forms.NumericUpDown();
+			this.dock.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
+			this.AudioGroup.SuspendLayout();
+			this.flowLayoutPanel2.SuspendLayout();
+			this.AudioRecalcNormGainPanel.SuspendLayout();
+			this.flowLayoutPanel4.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.AudioRateBox)).BeginInit();
+			this.flowLayoutPanel6.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.AudioGainBox)).BeginInit();
+			this.VideoGroup.SuspendLayout();
+			this.flowLayoutPanel1.SuspendLayout();
+			this.flowLayoutPanel3.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.VideoRateBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.VideoUnderSampleRateBox)).BeginInit();
+			this.flowLayoutPanel5.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.VideoGainBox)).BeginInit();
+			this.SuspendLayout();
+			//
+			// dock
+			//
+			this.dock.BackColor = System.Drawing.SystemColors.Control;
+			this.dock.ColumnCount = 3;
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.dock.Controls.Add(this.OkBtn, 1, 0);
+			this.dock.Controls.Add(this.CancelBtn, 2, 0);
+			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.dock.Location = new System.Drawing.Point(0, 872);
+			this.dock.Margin = new System.Windows.Forms.Padding(6);
+			this.dock.Name = "dock";
+			this.dock.Padding = new System.Windows.Forms.Padding(13, 10, 13, 10);
+			this.dock.RowCount = 1;
+			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.dock.Size = new System.Drawing.Size(756, 83);
+			this.dock.TabIndex = 9;
+			//
+			// OkBtn
+			//
+			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.OkBtn.Location = new System.Drawing.Point(425, 16);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(6);
+			this.OkBtn.Name = "OkBtn";
+			this.OkBtn.Size = new System.Drawing.Size(150, 51);
+			this.OkBtn.TabIndex = 1;
+			this.OkBtn.Text = "确定(&O)";
+			this.OkBtn.UseVisualStyleBackColor = true;
+			this.OkBtn.Click += new System.EventHandler(this.OkBtn_Click);
+			//
+			// CancelBtn
+			//
+			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.CancelBtn.Location = new System.Drawing.Point(587, 16);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(6);
+			this.CancelBtn.Name = "CancelBtn";
+			this.CancelBtn.Size = new System.Drawing.Size(150, 51);
+			this.CancelBtn.TabIndex = 2;
+			this.CancelBtn.Text = "取消(&C)";
+			this.CancelBtn.UseVisualStyleBackColor = true;
+			this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
+			//
+			// tableLayoutPanel1
+			//
+			this.tableLayoutPanel1.ColumnCount = 2;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.Controls.Add(this.AudioGroup, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.VideoGroup, 0, 0);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 1;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(756, 872);
+			this.tableLayoutPanel1.TabIndex = 11;
+			//
+			// AudioGroup
+			//
+			this.AudioGroup.Controls.Add(this.flowLayoutPanel2);
+			this.AudioGroup.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioGroup.Location = new System.Drawing.Point(384, 12);
+			this.AudioGroup.Margin = new System.Windows.Forms.Padding(6, 12, 12, 12);
+			this.AudioGroup.Name = "AudioGroup";
+			this.AudioGroup.Size = new System.Drawing.Size(360, 848);
+			this.AudioGroup.TabIndex = 12;
+			this.AudioGroup.TabStop = false;
+			this.AudioGroup.Text = "音频剪辑";
+			//
+			// flowLayoutPanel2
+			//
+			this.flowLayoutPanel2.Controls.Add(this.AudioMuteCheck);
+			this.flowLayoutPanel2.Controls.Add(this.AudioLockCheck);
+			this.flowLayoutPanel2.Controls.Add(this.AudioLoopCheck);
+			this.flowLayoutPanel2.Controls.Add(this.AudioInvertPhaseCheck);
+			this.flowLayoutPanel2.Controls.Add(this.horizontalDivider4);
+			this.flowLayoutPanel2.Controls.Add(this.AudioNormalizeCheck);
+			this.flowLayoutPanel2.Controls.Add(this.AudioRecalcNormGainPanel);
+			this.flowLayoutPanel2.Controls.Add(this.horizontalDivider5);
+			this.flowLayoutPanel2.Controls.Add(this.flowLayoutPanel4);
+			this.flowLayoutPanel2.Controls.Add(this.horizontalDivider7);
+			this.flowLayoutPanel2.Controls.Add(this.flowLayoutPanel6);
+			this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 35);
+			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+			this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
+			this.flowLayoutPanel2.Size = new System.Drawing.Size(354, 810);
+			this.flowLayoutPanel2.TabIndex = 1;
+			this.flowLayoutPanel2.WrapContents = false;
+			//
+			// AudioMuteCheck
+			//
+			this.AudioMuteCheck.AutoSize = true;
+			this.AudioMuteCheck.Checked = true;
+			this.AudioMuteCheck.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			this.AudioMuteCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioMuteCheck.Location = new System.Drawing.Point(6, 3);
+			this.AudioMuteCheck.Name = "AudioMuteCheck";
+			this.AudioMuteCheck.Size = new System.Drawing.Size(309, 36);
+			this.AudioMuteCheck.TabIndex = 3;
+			this.AudioMuteCheck.Text = "静音";
+			this.AudioMuteCheck.ThreeState = true;
+			this.AudioMuteCheck.UseVisualStyleBackColor = true;
+			//
+			// AudioLockCheck
+			//
+			this.AudioLockCheck.AutoSize = true;
+			this.AudioLockCheck.Checked = true;
+			this.AudioLockCheck.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			this.AudioLockCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioLockCheck.Location = new System.Drawing.Point(6, 45);
+			this.AudioLockCheck.Name = "AudioLockCheck";
+			this.AudioLockCheck.Size = new System.Drawing.Size(309, 36);
+			this.AudioLockCheck.TabIndex = 4;
+			this.AudioLockCheck.Text = "锁定";
+			this.AudioLockCheck.ThreeState = true;
+			this.AudioLockCheck.UseVisualStyleBackColor = true;
+			//
+			// AudioLoopCheck
+			//
+			this.AudioLoopCheck.AutoSize = true;
+			this.AudioLoopCheck.Checked = true;
+			this.AudioLoopCheck.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			this.AudioLoopCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioLoopCheck.Location = new System.Drawing.Point(6, 87);
+			this.AudioLoopCheck.Name = "AudioLoopCheck";
+			this.AudioLoopCheck.Size = new System.Drawing.Size(309, 36);
+			this.AudioLoopCheck.TabIndex = 5;
+			this.AudioLoopCheck.Text = "循环";
+			this.AudioLoopCheck.ThreeState = true;
+			this.AudioLoopCheck.UseVisualStyleBackColor = true;
+			//
+			// AudioInvertPhaseCheck
+			//
+			this.AudioInvertPhaseCheck.AutoSize = true;
+			this.AudioInvertPhaseCheck.Checked = true;
+			this.AudioInvertPhaseCheck.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			this.AudioInvertPhaseCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioInvertPhaseCheck.Location = new System.Drawing.Point(6, 129);
+			this.AudioInvertPhaseCheck.Name = "AudioInvertPhaseCheck";
+			this.AudioInvertPhaseCheck.Size = new System.Drawing.Size(309, 36);
+			this.AudioInvertPhaseCheck.TabIndex = 6;
+			this.AudioInvertPhaseCheck.Text = "反相";
+			this.AudioInvertPhaseCheck.ThreeState = true;
+			this.AudioInvertPhaseCheck.UseVisualStyleBackColor = true;
+			//
+			// horizontalDivider4
+			//
+			this.horizontalDivider4.AutoSize = true;
+			this.horizontalDivider4.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider4.Location = new System.Drawing.Point(3, 171);
+			this.horizontalDivider4.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider4.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider4.Name = "horizontalDivider4";
+			this.horizontalDivider4.Size = new System.Drawing.Size(315, 2);
+			this.horizontalDivider4.TabIndex = 29;
+			//
+			// AudioNormalizeCheck
+			//
+			this.AudioNormalizeCheck.AutoSize = true;
+			this.AudioNormalizeCheck.Checked = true;
+			this.AudioNormalizeCheck.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			this.AudioNormalizeCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioNormalizeCheck.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.AudioNormalizeCheck.Location = new System.Drawing.Point(6, 179);
+			this.AudioNormalizeCheck.Name = "AudioNormalizeCheck";
+			this.AudioNormalizeCheck.Size = new System.Drawing.Size(309, 36);
+			this.AudioNormalizeCheck.TabIndex = 30;
+			this.AudioNormalizeCheck.Text = "规范化音量";
+			this.AudioNormalizeCheck.ThreeState = true;
+			this.AudioNormalizeCheck.UseVisualStyleBackColor = true;
+			this.AudioNormalizeCheck.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// AudioRecalcNormGainPanel
+			//
+			this.AudioRecalcNormGainPanel.AutoSize = true;
+			this.AudioRecalcNormGainPanel.Controls.Add(this.AudioNoRecalcNormGainRadio);
+			this.AudioRecalcNormGainPanel.Controls.Add(this.AudioRecalcNewNormGainRadio);
+			this.AudioRecalcNormGainPanel.Controls.Add(this.AudioRecalcAllNormGainRadio);
+			this.AudioRecalcNormGainPanel.Dock = System.Windows.Forms.DockStyle.Top;
+			this.AudioRecalcNormGainPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.AudioRecalcNormGainPanel.Location = new System.Drawing.Point(3, 218);
+			this.AudioRecalcNormGainPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.AudioRecalcNormGainPanel.Name = "AudioRecalcNormGainPanel";
+			this.AudioRecalcNormGainPanel.Size = new System.Drawing.Size(315, 126);
+			this.AudioRecalcNormGainPanel.TabIndex = 31;
+			this.AudioRecalcNormGainPanel.WrapContents = false;
+			//
+			// AudioNoRecalcNormGainRadio
+			//
+			this.AudioNoRecalcNormGainRadio.AutoSize = true;
+			this.AudioNoRecalcNormGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioNoRecalcNormGainRadio.Group = "AudioNormalizeMode";
+			this.AudioNoRecalcNormGainRadio.Location = new System.Drawing.Point(3, 3);
+			this.AudioNoRecalcNormGainRadio.Name = "AudioNoRecalcNormGainRadio";
+			this.AudioNoRecalcNormGainRadio.Size = new System.Drawing.Size(309, 36);
+			this.AudioNoRecalcNormGainRadio.TabIndex = 18;
+			this.AudioNoRecalcNormGainRadio.Text = "不重新计算规范化增益";
+			this.AudioNoRecalcNormGainRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioRecalcNewNormGainRadio
+			//
+			this.AudioRecalcNewNormGainRadio.AutoSize = true;
+			this.AudioRecalcNewNormGainRadio.Checked = true;
+			this.AudioRecalcNewNormGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioRecalcNewNormGainRadio.Group = "AudioNormalizeMode";
+			this.AudioRecalcNewNormGainRadio.Location = new System.Drawing.Point(3, 45);
+			this.AudioRecalcNewNormGainRadio.Name = "AudioRecalcNewNormGainRadio";
+			this.AudioRecalcNewNormGainRadio.Size = new System.Drawing.Size(309, 36);
+			this.AudioRecalcNewNormGainRadio.TabIndex = 20;
+			this.AudioRecalcNewNormGainRadio.TabStop = true;
+			this.AudioRecalcNewNormGainRadio.Text = "仅重新计算新规范化增益";
+			this.AudioRecalcNewNormGainRadio.UseVisualStyleBackColor = true;
+			//
+			// AudioRecalcAllNormGainRadio
+			//
+			this.AudioRecalcAllNormGainRadio.AutoSize = true;
+			this.AudioRecalcAllNormGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioRecalcAllNormGainRadio.Group = "AudioNormalizeMode";
+			this.AudioRecalcAllNormGainRadio.Location = new System.Drawing.Point(3, 87);
+			this.AudioRecalcAllNormGainRadio.Name = "AudioRecalcAllNormGainRadio";
+			this.AudioRecalcAllNormGainRadio.Size = new System.Drawing.Size(309, 36);
+			this.AudioRecalcAllNormGainRadio.TabIndex = 19;
+			this.AudioRecalcAllNormGainRadio.Text = "重新计算所有规范化增益";
+			this.AudioRecalcAllNormGainRadio.UseVisualStyleBackColor = true;
+			//
+			// horizontalDivider5
+			//
+			this.horizontalDivider5.AutoSize = true;
+			this.horizontalDivider5.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider5.Location = new System.Drawing.Point(3, 347);
+			this.horizontalDivider5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider5.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider5.Name = "horizontalDivider5";
+			this.horizontalDivider5.Size = new System.Drawing.Size(315, 2);
+			this.horizontalDivider5.TabIndex = 27;
+			//
+			// flowLayoutPanel4
+			//
+			this.flowLayoutPanel4.AutoSize = true;
+			this.flowLayoutPanel4.Controls.Add(this.AudioUnsetRateRadio);
+			this.flowLayoutPanel4.Controls.Add(this.AudioSetRateRadio);
+			this.flowLayoutPanel4.Controls.Add(this.AudioMultiplyRateRadio);
+			this.flowLayoutPanel4.Controls.Add(this.AudioRateBox);
+			this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 352);
+			this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+			this.flowLayoutPanel4.Size = new System.Drawing.Size(315, 171);
+			this.flowLayoutPanel4.TabIndex = 33;
+			this.flowLayoutPanel4.WrapContents = false;
+			//
+			// AudioUnsetRateRadio
+			//
+			this.AudioUnsetRateRadio.AutoSize = true;
+			this.AudioUnsetRateRadio.Checked = true;
+			this.AudioUnsetRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioUnsetRateRadio.Group = "AudioPlaybackRateMode";
+			this.AudioUnsetRateRadio.Location = new System.Drawing.Point(3, 3);
+			this.AudioUnsetRateRadio.Name = "AudioUnsetRateRadio";
+			this.AudioUnsetRateRadio.Size = new System.Drawing.Size(213, 36);
+			this.AudioUnsetRateRadio.TabIndex = 25;
+			this.AudioUnsetRateRadio.TabStop = true;
+			this.AudioUnsetRateRadio.Text = "不设置播放速率";
+			this.AudioUnsetRateRadio.UseVisualStyleBackColor = true;
+			this.AudioUnsetRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// AudioSetRateRadio
+			//
+			this.AudioSetRateRadio.AutoSize = true;
+			this.AudioSetRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioSetRateRadio.Group = "AudioPlaybackRateMode";
+			this.AudioSetRateRadio.Location = new System.Drawing.Point(3, 45);
+			this.AudioSetRateRadio.Name = "AudioSetRateRadio";
+			this.AudioSetRateRadio.Size = new System.Drawing.Size(213, 36);
+			this.AudioSetRateRadio.TabIndex = 23;
+			this.AudioSetRateRadio.Text = "设置播放速率";
+			this.AudioSetRateRadio.UseVisualStyleBackColor = true;
+			this.AudioSetRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// AudioMultiplyRateRadio
+			//
+			this.AudioMultiplyRateRadio.AutoSize = true;
+			this.AudioMultiplyRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioMultiplyRateRadio.Group = "AudioPlaybackRateMode";
+			this.AudioMultiplyRateRadio.Location = new System.Drawing.Point(3, 87);
+			this.AudioMultiplyRateRadio.Name = "AudioMultiplyRateRadio";
+			this.AudioMultiplyRateRadio.Size = new System.Drawing.Size(213, 36);
+			this.AudioMultiplyRateRadio.TabIndex = 24;
+			this.AudioMultiplyRateRadio.Text = "乘以播放速率";
+			this.AudioMultiplyRateRadio.UseVisualStyleBackColor = true;
+			this.AudioMultiplyRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// AudioRateBox
+			//
+			this.AudioRateBox.DecimalPlaces = 3;
+			this.AudioRateBox.Increment = new decimal(new int[] {
+			1,
+			0,
+			0,
+			196608});
+			this.AudioRateBox.Location = new System.Drawing.Point(3, 129);
+			this.AudioRateBox.Maximum = new decimal(new int[] {
+			4,
+			0,
+			0,
+			0});
+			this.AudioRateBox.Minimum = new decimal(new int[] {
+			5,
+			0,
+			0,
+			131072});
+			this.AudioRateBox.Name = "AudioRateBox";
+			this.AudioRateBox.Size = new System.Drawing.Size(120, 39);
+			this.AudioRateBox.TabIndex = 22;
+			this.AudioRateBox.Value = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			//
+			// horizontalDivider7
+			//
+			this.horizontalDivider7.AutoSize = true;
+			this.horizontalDivider7.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider7.Location = new System.Drawing.Point(3, 526);
+			this.horizontalDivider7.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider7.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider7.Name = "horizontalDivider7";
+			this.horizontalDivider7.Size = new System.Drawing.Size(315, 2);
+			this.horizontalDivider7.TabIndex = 34;
+			//
+			// flowLayoutPanel6
+			//
+			this.flowLayoutPanel6.AutoSize = true;
+			this.flowLayoutPanel6.Controls.Add(this.AudioUnsetGainRadio);
+			this.flowLayoutPanel6.Controls.Add(this.AudioSetGainRadio);
+			this.flowLayoutPanel6.Controls.Add(this.AudioMultiplyGainRadio);
+			this.flowLayoutPanel6.Controls.Add(this.AudioGainBox);
+			this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel6.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 531);
+			this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel6.Name = "flowLayoutPanel6";
+			this.flowLayoutPanel6.Size = new System.Drawing.Size(315, 171);
+			this.flowLayoutPanel6.TabIndex = 35;
+			this.flowLayoutPanel6.WrapContents = false;
+			//
+			// AudioUnsetGainRadio
+			//
+			this.AudioUnsetGainRadio.AutoSize = true;
+			this.AudioUnsetGainRadio.Checked = true;
+			this.AudioUnsetGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioUnsetGainRadio.Group = "AudioGainMode";
+			this.AudioUnsetGainRadio.Location = new System.Drawing.Point(3, 3);
+			this.AudioUnsetGainRadio.Name = "AudioUnsetGainRadio";
+			this.AudioUnsetGainRadio.Size = new System.Drawing.Size(165, 36);
+			this.AudioUnsetGainRadio.TabIndex = 21;
+			this.AudioUnsetGainRadio.TabStop = true;
+			this.AudioUnsetGainRadio.Text = "不设置音量";
+			this.AudioUnsetGainRadio.UseVisualStyleBackColor = true;
+			this.AudioUnsetGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// AudioSetGainRadio
+			//
+			this.AudioSetGainRadio.AutoSize = true;
+			this.AudioSetGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioSetGainRadio.Group = "AudioGainMode";
+			this.AudioSetGainRadio.Location = new System.Drawing.Point(3, 45);
+			this.AudioSetGainRadio.Name = "AudioSetGainRadio";
+			this.AudioSetGainRadio.Size = new System.Drawing.Size(165, 36);
+			this.AudioSetGainRadio.TabIndex = 17;
+			this.AudioSetGainRadio.Text = "设置音量";
+			this.AudioSetGainRadio.UseVisualStyleBackColor = true;
+			this.AudioSetGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// AudioMultiplyGainRadio
+			//
+			this.AudioMultiplyGainRadio.AutoSize = true;
+			this.AudioMultiplyGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioMultiplyGainRadio.Group = "AudioGainMode";
+			this.AudioMultiplyGainRadio.Location = new System.Drawing.Point(3, 87);
+			this.AudioMultiplyGainRadio.Name = "AudioMultiplyGainRadio";
+			this.AudioMultiplyGainRadio.Size = new System.Drawing.Size(165, 36);
+			this.AudioMultiplyGainRadio.TabIndex = 18;
+			this.AudioMultiplyGainRadio.Text = "乘以音量";
+			this.AudioMultiplyGainRadio.UseVisualStyleBackColor = true;
+			this.AudioMultiplyGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			this.AudioMultiplyGainRadio.LocationChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// AudioGainBox
+			//
+			this.AudioGainBox.DecimalPlaces = 3;
+			this.AudioGainBox.Increment = new decimal(new int[] {
+			1,
+			0,
+			0,
+			196608});
+			this.AudioGainBox.Location = new System.Drawing.Point(3, 129);
+			this.AudioGainBox.Maximum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.AudioGainBox.Name = "AudioGainBox";
+			this.AudioGainBox.Size = new System.Drawing.Size(120, 39);
+			this.AudioGainBox.TabIndex = 16;
+			this.AudioGainBox.Value = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			//
+			// VideoGroup
+			//
+			this.VideoGroup.Controls.Add(this.flowLayoutPanel1);
+			this.VideoGroup.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoGroup.Location = new System.Drawing.Point(12, 12);
+			this.VideoGroup.Margin = new System.Windows.Forms.Padding(12, 12, 6, 12);
+			this.VideoGroup.Name = "VideoGroup";
+			this.VideoGroup.Size = new System.Drawing.Size(360, 848);
+			this.VideoGroup.TabIndex = 11;
+			this.VideoGroup.TabStop = false;
+			this.VideoGroup.Text = "视频剪辑";
+			//
+			// flowLayoutPanel1
+			//
+			this.flowLayoutPanel1.Controls.Add(this.VideoMuteCheck);
+			this.flowLayoutPanel1.Controls.Add(this.VideoLockCheck);
+			this.flowLayoutPanel1.Controls.Add(this.VideoLoopCheck);
+			this.flowLayoutPanel1.Controls.Add(this.VideoMaintainAspectRatioCheck);
+			this.flowLayoutPanel1.Controls.Add(this.VideoReduceInterlaceCheck);
+			this.flowLayoutPanel1.Controls.Add(this.horizontalDivider1);
+			this.flowLayoutPanel1.Controls.Add(this.VideoResampleModeLbl);
+			this.flowLayoutPanel1.Controls.Add(this.VideoResampleModeCombo);
+			this.flowLayoutPanel1.Controls.Add(this.horizontalDivider2);
+			this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel3);
+			this.flowLayoutPanel1.Controls.Add(this.horizontalDivider3);
+			this.flowLayoutPanel1.Controls.Add(this.VideoUnderSampleRateCheck);
+			this.flowLayoutPanel1.Controls.Add(this.VideoUnderSampleRateBox);
+			this.flowLayoutPanel1.Controls.Add(this.horizontalDivider6);
+			this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel5);
+			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 35);
+			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+			this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(354, 810);
+			this.flowLayoutPanel1.TabIndex = 0;
+			this.flowLayoutPanel1.WrapContents = false;
+			//
+			// VideoMuteCheck
+			//
+			this.VideoMuteCheck.AutoSize = true;
+			this.VideoMuteCheck.Checked = true;
+			this.VideoMuteCheck.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			this.VideoMuteCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoMuteCheck.Location = new System.Drawing.Point(6, 3);
+			this.VideoMuteCheck.Name = "VideoMuteCheck";
+			this.VideoMuteCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoMuteCheck.TabIndex = 0;
+			this.VideoMuteCheck.Text = "隐藏";
+			this.VideoMuteCheck.ThreeState = true;
+			this.VideoMuteCheck.UseVisualStyleBackColor = true;
+			//
+			// VideoLockCheck
+			//
+			this.VideoLockCheck.AutoSize = true;
+			this.VideoLockCheck.Checked = true;
+			this.VideoLockCheck.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			this.VideoLockCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoLockCheck.Location = new System.Drawing.Point(6, 45);
+			this.VideoLockCheck.Name = "VideoLockCheck";
+			this.VideoLockCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoLockCheck.TabIndex = 1;
+			this.VideoLockCheck.Text = "锁定";
+			this.VideoLockCheck.ThreeState = true;
+			this.VideoLockCheck.UseVisualStyleBackColor = true;
+			//
+			// VideoLoopCheck
+			//
+			this.VideoLoopCheck.AutoSize = true;
+			this.VideoLoopCheck.Checked = true;
+			this.VideoLoopCheck.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			this.VideoLoopCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoLoopCheck.Location = new System.Drawing.Point(6, 87);
+			this.VideoLoopCheck.Name = "VideoLoopCheck";
+			this.VideoLoopCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoLoopCheck.TabIndex = 2;
+			this.VideoLoopCheck.Text = "循环";
+			this.VideoLoopCheck.ThreeState = true;
+			this.VideoLoopCheck.UseVisualStyleBackColor = true;
+			//
+			// VideoMaintainAspectRatioCheck
+			//
+			this.VideoMaintainAspectRatioCheck.AutoSize = true;
+			this.VideoMaintainAspectRatioCheck.Checked = true;
+			this.VideoMaintainAspectRatioCheck.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			this.VideoMaintainAspectRatioCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoMaintainAspectRatioCheck.Location = new System.Drawing.Point(6, 129);
+			this.VideoMaintainAspectRatioCheck.Name = "VideoMaintainAspectRatioCheck";
+			this.VideoMaintainAspectRatioCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoMaintainAspectRatioCheck.TabIndex = 3;
+			this.VideoMaintainAspectRatioCheck.Text = "保持宽高比";
+			this.VideoMaintainAspectRatioCheck.ThreeState = true;
+			this.VideoMaintainAspectRatioCheck.UseVisualStyleBackColor = true;
+			//
+			// VideoReduceInterlaceCheck
+			//
+			this.VideoReduceInterlaceCheck.AutoSize = true;
+			this.VideoReduceInterlaceCheck.Checked = true;
+			this.VideoReduceInterlaceCheck.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			this.VideoReduceInterlaceCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoReduceInterlaceCheck.Location = new System.Drawing.Point(6, 171);
+			this.VideoReduceInterlaceCheck.Name = "VideoReduceInterlaceCheck";
+			this.VideoReduceInterlaceCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoReduceInterlaceCheck.TabIndex = 4;
+			this.VideoReduceInterlaceCheck.Text = "减少隔行扫描闪烁";
+			this.VideoReduceInterlaceCheck.ThreeState = true;
+			this.VideoReduceInterlaceCheck.UseVisualStyleBackColor = true;
+			//
+			// horizontalDivider1
+			//
+			this.horizontalDivider1.AutoSize = true;
+			this.horizontalDivider1.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider1.Location = new System.Drawing.Point(3, 213);
+			this.horizontalDivider1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider1.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider1.Name = "horizontalDivider1";
+			this.horizontalDivider1.Size = new System.Drawing.Size(326, 2);
+			this.horizontalDivider1.TabIndex = 23;
+			//
+			// VideoResampleModeLbl
+			//
+			this.VideoResampleModeLbl.AutoSize = true;
+			this.VideoResampleModeLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoResampleModeLbl.Location = new System.Drawing.Point(3, 218);
+			this.VideoResampleModeLbl.Margin = new System.Windows.Forms.Padding(0);
+			this.VideoResampleModeLbl.Name = "VideoResampleModeLbl";
+			this.VideoResampleModeLbl.Size = new System.Drawing.Size(326, 32);
+			this.VideoResampleModeLbl.TabIndex = 13;
+			this.VideoResampleModeLbl.Text = "重新采样模式";
+			this.VideoResampleModeLbl.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			//
+			// VideoResampleModeCombo
+			//
+			this.VideoResampleModeCombo.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoResampleModeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.VideoResampleModeCombo.FormattingEnabled = true;
+			this.VideoResampleModeCombo.Items.AddRange(new object[] {
+			"不设置",
+			"使用项目设置重新采样模式",
+			"智能重新采样（帧混合）",
+			"强制重新采样",
+			"禁用重新采样",
+			"光流法"});
+			this.VideoResampleModeCombo.Location = new System.Drawing.Point(6, 253);
+			this.VideoResampleModeCombo.MinimumSize = new System.Drawing.Size(320, 0);
+			this.VideoResampleModeCombo.Name = "VideoResampleModeCombo";
+			this.VideoResampleModeCombo.Size = new System.Drawing.Size(320, 40);
+			this.VideoResampleModeCombo.TabIndex = 14;
+			//
+			// horizontalDivider2
+			//
+			this.horizontalDivider2.AutoSize = true;
+			this.horizontalDivider2.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider2.Location = new System.Drawing.Point(3, 299);
+			this.horizontalDivider2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider2.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider2.Name = "horizontalDivider2";
+			this.horizontalDivider2.Size = new System.Drawing.Size(326, 2);
+			this.horizontalDivider2.TabIndex = 24;
+			//
+			// flowLayoutPanel3
+			//
+			this.flowLayoutPanel3.AutoSize = true;
+			this.flowLayoutPanel3.Controls.Add(this.VideoUnsetRateRadio);
+			this.flowLayoutPanel3.Controls.Add(this.VideoSetRateRadio);
+			this.flowLayoutPanel3.Controls.Add(this.VideoMultiplyRateRadio);
+			this.flowLayoutPanel3.Controls.Add(this.VideoRateBox);
+			this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 304);
+			this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+			this.flowLayoutPanel3.Size = new System.Drawing.Size(326, 171);
+			this.flowLayoutPanel3.TabIndex = 32;
+			this.flowLayoutPanel3.WrapContents = false;
+			//
+			// VideoUnsetRateRadio
+			//
+			this.VideoUnsetRateRadio.AutoSize = true;
+			this.VideoUnsetRateRadio.Checked = true;
+			this.VideoUnsetRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoUnsetRateRadio.Group = "VideoPlaybackRateMode";
+			this.VideoUnsetRateRadio.Location = new System.Drawing.Point(3, 3);
+			this.VideoUnsetRateRadio.Name = "VideoUnsetRateRadio";
+			this.VideoUnsetRateRadio.Size = new System.Drawing.Size(213, 36);
+			this.VideoUnsetRateRadio.TabIndex = 21;
+			this.VideoUnsetRateRadio.TabStop = true;
+			this.VideoUnsetRateRadio.Text = "不设置播放速率";
+			this.VideoUnsetRateRadio.UseVisualStyleBackColor = true;
+			this.VideoUnsetRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// VideoSetRateRadio
+			//
+			this.VideoSetRateRadio.AutoSize = true;
+			this.VideoSetRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoSetRateRadio.Group = "VideoPlaybackRateMode";
+			this.VideoSetRateRadio.Location = new System.Drawing.Point(3, 45);
+			this.VideoSetRateRadio.Name = "VideoSetRateRadio";
+			this.VideoSetRateRadio.Size = new System.Drawing.Size(213, 36);
+			this.VideoSetRateRadio.TabIndex = 17;
+			this.VideoSetRateRadio.Text = "设置播放速率";
+			this.VideoSetRateRadio.UseVisualStyleBackColor = true;
+			this.VideoSetRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// VideoMultiplyRateRadio
+			//
+			this.VideoMultiplyRateRadio.AutoSize = true;
+			this.VideoMultiplyRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoMultiplyRateRadio.Group = "VideoPlaybackRateMode";
+			this.VideoMultiplyRateRadio.Location = new System.Drawing.Point(3, 87);
+			this.VideoMultiplyRateRadio.Name = "VideoMultiplyRateRadio";
+			this.VideoMultiplyRateRadio.Size = new System.Drawing.Size(213, 36);
+			this.VideoMultiplyRateRadio.TabIndex = 18;
+			this.VideoMultiplyRateRadio.Text = "乘以播放速率";
+			this.VideoMultiplyRateRadio.UseVisualStyleBackColor = true;
+			this.VideoMultiplyRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// VideoRateBox
+			//
+			this.VideoRateBox.DecimalPlaces = 3;
+			this.VideoRateBox.Increment = new decimal(new int[] {
+			1,
+			0,
+			0,
+			196608});
+			this.VideoRateBox.Location = new System.Drawing.Point(3, 129);
+			this.VideoRateBox.Maximum = new decimal(new int[] {
+			4,
+			0,
+			0,
+			0});
+			this.VideoRateBox.Minimum = new decimal(new int[] {
+			5,
+			0,
+			0,
+			131072});
+			this.VideoRateBox.Name = "VideoRateBox";
+			this.VideoRateBox.Size = new System.Drawing.Size(120, 39);
+			this.VideoRateBox.TabIndex = 16;
+			this.VideoRateBox.Value = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			//
+			// horizontalDivider3
+			//
+			this.horizontalDivider3.AutoSize = true;
+			this.horizontalDivider3.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider3.Location = new System.Drawing.Point(3, 478);
+			this.horizontalDivider3.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider3.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider3.Name = "horizontalDivider3";
+			this.horizontalDivider3.Size = new System.Drawing.Size(326, 2);
+			this.horizontalDivider3.TabIndex = 25;
+			//
+			// VideoUnderSampleRateCheck
+			//
+			this.VideoUnderSampleRateCheck.AutoSize = true;
+			this.VideoUnderSampleRateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoUnderSampleRateCheck.Location = new System.Drawing.Point(6, 486);
+			this.VideoUnderSampleRateCheck.Name = "VideoUnderSampleRateCheck";
+			this.VideoUnderSampleRateCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoUnderSampleRateCheck.TabIndex = 22;
+			this.VideoUnderSampleRateCheck.Text = "设置欠采样率";
+			this.VideoUnderSampleRateCheck.UseVisualStyleBackColor = true;
+			this.VideoUnderSampleRateCheck.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// VideoUnderSampleRateBox
+			//
+			this.VideoUnderSampleRateBox.DecimalPlaces = 3;
+			this.VideoUnderSampleRateBox.Increment = new decimal(new int[] {
+			1,
+			0,
+			0,
+			196608});
+			this.VideoUnderSampleRateBox.Location = new System.Drawing.Point(6, 528);
+			this.VideoUnderSampleRateBox.Maximum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.VideoUnderSampleRateBox.Minimum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			65536});
+			this.VideoUnderSampleRateBox.Name = "VideoUnderSampleRateBox";
+			this.VideoUnderSampleRateBox.Size = new System.Drawing.Size(120, 39);
+			this.VideoUnderSampleRateBox.TabIndex = 20;
+			this.VideoUnderSampleRateBox.Value = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			//
+			// horizontalDivider6
+			//
+			this.horizontalDivider6.AutoSize = true;
+			this.horizontalDivider6.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider6.Location = new System.Drawing.Point(3, 573);
+			this.horizontalDivider6.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider6.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider6.Name = "horizontalDivider6";
+			this.horizontalDivider6.Size = new System.Drawing.Size(326, 2);
+			this.horizontalDivider6.TabIndex = 33;
+			//
+			// flowLayoutPanel5
+			//
+			this.flowLayoutPanel5.AutoSize = true;
+			this.flowLayoutPanel5.Controls.Add(this.VideoUnsetGainRadio);
+			this.flowLayoutPanel5.Controls.Add(this.VideoSetGainRadio);
+			this.flowLayoutPanel5.Controls.Add(this.VideoMultiplyGainRadio);
+			this.flowLayoutPanel5.Controls.Add(this.VideoGainBox);
+			this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 578);
+			this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+			this.flowLayoutPanel5.Size = new System.Drawing.Size(326, 171);
+			this.flowLayoutPanel5.TabIndex = 34;
+			this.flowLayoutPanel5.WrapContents = false;
+			//
+			// VideoUnsetGainRadio
+			//
+			this.VideoUnsetGainRadio.AutoSize = true;
+			this.VideoUnsetGainRadio.Checked = true;
+			this.VideoUnsetGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoUnsetGainRadio.Group = "VideoGainMode";
+			this.VideoUnsetGainRadio.Location = new System.Drawing.Point(3, 3);
+			this.VideoUnsetGainRadio.Name = "VideoUnsetGainRadio";
+			this.VideoUnsetGainRadio.Size = new System.Drawing.Size(213, 36);
+			this.VideoUnsetGainRadio.TabIndex = 21;
+			this.VideoUnsetGainRadio.TabStop = true;
+			this.VideoUnsetGainRadio.Text = "不设置不透明度";
+			this.VideoUnsetGainRadio.UseVisualStyleBackColor = true;
+			this.VideoUnsetGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// VideoSetGainRadio
+			//
+			this.VideoSetGainRadio.AutoSize = true;
+			this.VideoSetGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoSetGainRadio.Group = "VideoGainMode";
+			this.VideoSetGainRadio.Location = new System.Drawing.Point(3, 45);
+			this.VideoSetGainRadio.Name = "VideoSetGainRadio";
+			this.VideoSetGainRadio.Size = new System.Drawing.Size(213, 36);
+			this.VideoSetGainRadio.TabIndex = 17;
+			this.VideoSetGainRadio.Text = "设置不透明度";
+			this.VideoSetGainRadio.UseVisualStyleBackColor = true;
+			this.VideoSetGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// VideoMultiplyGainRadio
+			//
+			this.VideoMultiplyGainRadio.AutoSize = true;
+			this.VideoMultiplyGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoMultiplyGainRadio.Group = "VideoGainMode";
+			this.VideoMultiplyGainRadio.Location = new System.Drawing.Point(3, 87);
+			this.VideoMultiplyGainRadio.Name = "VideoMultiplyGainRadio";
+			this.VideoMultiplyGainRadio.Size = new System.Drawing.Size(213, 36);
+			this.VideoMultiplyGainRadio.TabIndex = 18;
+			this.VideoMultiplyGainRadio.Text = "乘以不透明度";
+			this.VideoMultiplyGainRadio.UseVisualStyleBackColor = true;
+			this.VideoMultiplyGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			//
+			// VideoGainBox
+			//
+			this.VideoGainBox.DecimalPlaces = 3;
+			this.VideoGainBox.Increment = new decimal(new int[] {
+			1,
+			0,
+			0,
+			196608});
+			this.VideoGainBox.Location = new System.Drawing.Point(3, 129);
+			this.VideoGainBox.Maximum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.VideoGainBox.Name = "VideoGainBox";
+			this.VideoGainBox.Size = new System.Drawing.Size(120, 39);
+			this.VideoGainBox.TabIndex = 16;
+			this.VideoGainBox.Value = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			//
+			// QuickConfigPropertiesForm
+			//
+			this.AcceptButton = this.OkBtn;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.BackColor = System.Drawing.SystemColors.Window;
+			this.CancelButton = this.CancelBtn;
+			this.ClientSize = new System.Drawing.Size(756, 955);
+			this.Controls.Add(this.tableLayoutPanel1);
+			this.Controls.Add(this.dock);
+			this.DoubleBuffered = true;
+			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.Location = new System.Drawing.Point(60, 60);
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(782, 978);
+			this.Name = "QuickConfigPropertiesForm";
+			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+			this.Text = "快速配置属性";
+			this.dock.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.AudioGroup.ResumeLayout(false);
+			this.flowLayoutPanel2.ResumeLayout(false);
+			this.flowLayoutPanel2.PerformLayout();
+			this.AudioRecalcNormGainPanel.ResumeLayout(false);
+			this.AudioRecalcNormGainPanel.PerformLayout();
+			this.flowLayoutPanel4.ResumeLayout(false);
+			this.flowLayoutPanel4.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.AudioRateBox)).EndInit();
+			this.flowLayoutPanel6.ResumeLayout(false);
+			this.flowLayoutPanel6.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.AudioGainBox)).EndInit();
+			this.VideoGroup.ResumeLayout(false);
+			this.flowLayoutPanel1.ResumeLayout(false);
+			this.flowLayoutPanel1.PerformLayout();
+			this.flowLayoutPanel3.ResumeLayout(false);
+			this.flowLayoutPanel3.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.VideoRateBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.VideoUnderSampleRateBox)).EndInit();
+			this.flowLayoutPanel5.ResumeLayout(false);
+			this.flowLayoutPanel5.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.VideoGainBox)).EndInit();
+			this.ResumeLayout(false);
+
+		}
+
+		#endregion
+
+		public System.Windows.Forms.TableLayoutPanel dock;
+		public System.Windows.Forms.Button OkBtn;
+		public System.Windows.Forms.Button CancelBtn;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.GroupBox AudioGroup;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+		private System.Windows.Forms.GroupBox VideoGroup;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+		private System.Windows.Forms.CheckBox VideoMuteCheck;
+		private System.Windows.Forms.CheckBox VideoLockCheck;
+		private System.Windows.Forms.CheckBox VideoLoopCheck;
+		private System.Windows.Forms.CheckBox VideoMaintainAspectRatioCheck;
+		private System.Windows.Forms.CheckBox VideoReduceInterlaceCheck;
+		public System.Windows.Forms.Label VideoResampleModeLbl;
+		private System.Windows.Forms.ComboBox VideoResampleModeCombo;
+		private System.Windows.Forms.NumericUpDown VideoRateBox;
+		private GroupedRadioButton VideoSetRateRadio;
+		private GroupedRadioButton VideoMultiplyRateRadio;
+		private System.Windows.Forms.NumericUpDown VideoUnderSampleRateBox;
+		private GroupedRadioButton VideoUnsetRateRadio;
+		private System.Windows.Forms.CheckBox VideoUnderSampleRateCheck;
+		private System.Windows.Forms.CheckBox AudioMuteCheck;
+		private System.Windows.Forms.CheckBox AudioLockCheck;
+		private System.Windows.Forms.CheckBox AudioLoopCheck;
+		private System.Windows.Forms.CheckBox AudioInvertPhaseCheck;
+		private GroupedRadioButton AudioNoRecalcNormGainRadio;
+		private GroupedRadioButton AudioRecalcNewNormGainRadio;
+		private GroupedRadioButton AudioRecalcAllNormGainRadio;
+		private GroupedRadioButton AudioUnsetRateRadio;
+		private GroupedRadioButton AudioSetRateRadio;
+		private GroupedRadioButton AudioMultiplyRateRadio;
+		private System.Windows.Forms.NumericUpDown AudioRateBox;
+		private HorizontalDivider horizontalDivider5;
+		private HorizontalDivider horizontalDivider1;
+		private HorizontalDivider horizontalDivider2;
+		private HorizontalDivider horizontalDivider3;
+		private HorizontalDivider horizontalDivider4;
+		private System.Windows.Forms.CheckBox AudioNormalizeCheck;
+		private System.Windows.Forms.FlowLayoutPanel AudioRecalcNormGainPanel;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+		private HorizontalDivider horizontalDivider7;
+		private HorizontalDivider horizontalDivider6;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
+		private GroupedRadioButton VideoUnsetGainRadio;
+		private GroupedRadioButton VideoSetGainRadio;
+		private GroupedRadioButton VideoMultiplyGainRadio;
+		private System.Windows.Forms.NumericUpDown VideoGainBox;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel6;
+		private GroupedRadioButton AudioUnsetGainRadio;
+		private GroupedRadioButton AudioSetGainRadio;
+		private GroupedRadioButton AudioMultiplyGainRadio;
+		private System.Windows.Forms.NumericUpDown AudioGainBox;
+	}
+
+	public partial class QuickConfigPropertiesForm : Form, IInterpret {
+		private readonly EntryPoint parent;
+		private Vegas vegas { get { return parent.vegas; } }
+		private readonly IEnumerable<VideoEvent> videoEvents;
+		private readonly IEnumerable<AudioEvent> audioEvents;
+		private readonly int videoCount, audioCount;
+
+		public QuickConfigPropertiesForm(EntryPoint entryPoint) {
+			InitializeComponent();
+			parent = entryPoint;
+			Icon = ConfigForm.icon;
+			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
+			RefreshDisabled(null, null);
+			foreach (CheckBox check in this.GetChildrenOfType<CheckBox>()) {
+				check.AutoCheck = false;
+				check.Click += ChangeThreeStateCheckBoxStateChangeOrder;
+			}
+			videoEvents = parent.GetSelectedVideoEvents();
+			audioEvents = parent.GetSelectedAudioEvents();
+			videoCount = videoEvents.Count();
+			audioCount = audioEvents.Count();
+			if (videoCount == 0) VideoGroup.Enabled = false;
+			if (audioCount == 0) AudioGroup.Enabled = false;
+			Translate();
+			VideoResampleModeCombo.SelectedIndex = 0;
+			bool supportsOpticalFlow = Enum.IsDefined(typeof(VideoResampleMode), VideoResampleMode_OpticalFlow);
+			if (!supportsOpticalFlow)
+				VideoResampleModeCombo.Items.RemoveAt(VideoResampleMode_OpticalFlow + SelectedIndexToEnumOffset);
+		}
+
+		private const int VideoResampleMode_OpticalFlow = 3; //= VideoResampleMode.OpticalFlow
+		private const int SelectedIndexToEnumOffset = 2;
+
+		private void RefreshDisabled(object sender, EventArgs e) {
+			VideoRateBox.Enabled = VideoSetRateRadio.Checked || VideoMultiplyRateRadio.Checked;
+			AudioRateBox.Enabled = AudioSetRateRadio.Checked || AudioMultiplyRateRadio.Checked;
+			VideoGainBox.Enabled = VideoSetGainRadio.Checked || VideoMultiplyGainRadio.Checked;
+			AudioGainBox.Enabled = AudioSetGainRadio.Checked || AudioMultiplyGainRadio.Checked;
+			VideoUnderSampleRateBox.Enabled = VideoUnderSampleRateCheck.Checked;
+			AudioRecalcNormGainPanel.Enabled = AudioNormalizeCheck.Checked;
+			if (VideoRateBox.Enabled) VideoRateBox.Maximum = VideoMultiplyRateRadio.Checked ? 16 : 4;
+			if (AudioRateBox.Enabled) AudioRateBox.Maximum = AudioMultiplyRateRadio.Checked ? 16 : 4;
+			if (VideoGainBox.Enabled) VideoGainBox.Maximum = VideoMultiplyGainRadio.Checked ? 100 : 1;
+			if (AudioGainBox.Enabled) AudioGainBox.Maximum = AudioMultiplyGainRadio.Checked ? 100 : 1;
+		}
+
+		private void ChangeThreeStateCheckBoxStateChangeOrder(object sender, EventArgs e) {
+			CheckBox check = sender as CheckBox;
+			if (check == null) return;
+			switch (check.CheckState) {
+				case CheckState.Unchecked:
+					check.CheckState = CheckState.Indeterminate;
+					break;
+				default:
+				case CheckState.Indeterminate:
+					check.CheckState = CheckState.Checked;
+					break;
+				case CheckState.Checked:
+					check.CheckState = CheckState.Unchecked;
+					break;
+			}
+		}
+
+		private void OkBtn_Click(object sender, EventArgs e) {
+			Apply();
+			vegas.UpdateUI();
+			Close();
+		}
+
+		private void CancelBtn_Click(object sender, EventArgs e) {
+			Close();
+		}
+
+		private static bool NotInd(CheckBox check) {
+			return check.CheckState != CheckState.Indeterminate;
+		}
+
+		private VideoResampleMode ResampleMode { get { return (VideoResampleMode)(VideoResampleModeCombo.SelectedIndex - SelectedIndexToEnumOffset); } }
+
+		private void Apply() {
+			Cursor = Cursors.WaitCursor;
+			foreach (VideoEvent e in videoEvents) {
+				if (NotInd(VideoMuteCheck)) e.Mute = VideoMuteCheck.Checked;
+				if (NotInd(VideoLockCheck)) e.Locked = VideoLockCheck.Checked;
+				if (NotInd(VideoLoopCheck)) e.Loop = VideoLoopCheck.Checked;
+				if (NotInd(VideoMaintainAspectRatioCheck)) e.MaintainAspectRatio = VideoMaintainAspectRatioCheck.Checked;
+				if (NotInd(VideoReduceInterlaceCheck)) e.ReduceInterlace = VideoReduceInterlaceCheck.Checked;
+				if (VideoResampleModeCombo.SelectedIndex >= 1) e.ResampleMode = ResampleMode;
+				if (VideoUnderSampleRateCheck.Checked) e.UnderSampleRate = EntryPoint.Clamp((double)VideoUnderSampleRateBox.Value, 0.1, 1);
+				if (VideoSetRateRadio.Checked || VideoMultiplyRateRadio.Checked) e.PlaybackRate = (VideoMultiplyRateRadio.Checked ? e.PlaybackRate : 1) * (double)VideoRateBox.Value;
+				if (VideoSetGainRadio.Checked || VideoMultiplyGainRadio.Checked) e.FadeIn.SetGain((VideoMultiplyGainRadio.Checked ? e.FadeIn.Gain : 1) * (float)VideoGainBox.Value);
+			}
+			foreach (AudioEvent e in audioEvents) {
+				if (NotInd(AudioMuteCheck)) e.Mute = AudioMuteCheck.Checked;
+				if (NotInd(AudioLockCheck)) e.Locked = AudioLockCheck.Checked;
+				if (NotInd(AudioLoopCheck)) e.Loop = AudioLoopCheck.Checked;
+				if (NotInd(AudioInvertPhaseCheck)) e.InvertPhase = AudioInvertPhaseCheck.Checked;
+				if (AudioSetRateRadio.Checked || AudioMultiplyRateRadio.Checked) e.PlaybackRate = (AudioMultiplyRateRadio.Checked ? e.PlaybackRate : 1) * (double)AudioRateBox.Value;
+				if (AudioSetGainRadio.Checked || AudioMultiplyGainRadio.Checked) e.FadeIn.SetGain((AudioMultiplyGainRadio.Checked ? e.FadeIn.Gain : 1) * (float)AudioGainBox.Value);
+				if (AudioNormalizeCheck.CheckState == CheckState.Unchecked) e.Normalize = false;
+				else if (AudioNormalizeCheck.CheckState == CheckState.Indeterminate && AudioRecalcAllNormGainRadio.Checked) e.RecalculateNorm();
+				else {
+					bool originalNormalize = e.Normalize;
+					e.Normalize = true;
+					if (AudioRecalcAllNormGainRadio.Checked || AudioRecalcNewNormGainRadio.Checked && !originalNormalize) e.RecalculateNorm();
+				}
+			}
+			Cursor = Cursors.Default;
+		}
+
+		public void Translate() {
+			Lang str = Lang.str;
+			Font = new Font(str.ui_font, 9F);
+			AudioNormalizeCheck.Font = new Font(str.ui_font, 9F, FontStyle.Bold);
+			Text = str.quick_normalize;
+			OkBtn.Text = str.ok;
+			CancelBtn.Text = str.cancel;
+			VideoGroup.Text = str.video_clips + " (" + videoCount + ")";
+			AudioGroup.Text = str.audio_clips + " (" + audioCount + ")";
+			VideoMuteCheck.Text = str.hide;
+			AudioMuteCheck.Text = str.mute;
+			VideoLockCheck.Text = AudioLockCheck.Text = str.@lock;
+			VideoLoopCheck.Text = AudioLoopCheck.Text = str.loop;
+			VideoMaintainAspectRatioCheck.Text = str.maintain_aspect_ratio;
+			VideoReduceInterlaceCheck.Text = str.reduce_interlace;
+			AudioInvertPhaseCheck.Text = str.invert_phase;
+			VideoResampleModeLbl.Text = str.resample_mode;
+			VideoResampleModeCombo.Items.Clear();
+			VideoResampleModeCombo.Items.AddRange(new string[] {
+				str.unset_resample_mode,
+				str.project_resample_mode,
+				str.smart_resample_mode,
+				str.force_resample_mode,
+				str.disable_resample_mode,
+				str.optical_flow
+			});
+			VideoUnderSampleRateCheck.Text = str.set_undersample_rate;
+			VideoUnsetRateRadio.Text = AudioUnsetRateRadio.Text = str.unset_playback_rate;
+			VideoSetRateRadio.Text = AudioSetRateRadio.Text = str.set_playback_rate;
+			VideoMultiplyRateRadio.Text = AudioMultiplyRateRadio.Text = str.multiply_playback_rate;
+			VideoUnsetGainRadio.Text = str.unset_opacity;
+			VideoSetGainRadio.Text = str.set_opacity;
+			VideoMultiplyGainRadio.Text = str.multiply_opacity;
+			AudioUnsetGainRadio.Text = str.unset_volume;
+			AudioSetGainRadio.Text = str.set_volume;
+			AudioMultiplyGainRadio.Text = str.multiply_volume;
+			AudioNormalizeCheck.Text = str.audio_normalize;
+			AudioNoRecalcNormGainRadio.Text = str.no_recalc_norm_gain;
+			AudioRecalcNewNormGainRadio.Text = str.recalc_new_norm_gain;
+			AudioRecalcAllNormGainRadio.Text = str.recalc_all_norm_gain;
 		}
 	}
 
@@ -15294,20 +16426,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public readonly MidiChannels channels;
 		public AutoLayoutTracksInfos(MidiChannels channels) {
 			this.channels = channels;
-			gradientTracks = new GradientTracksInfo(this);
-			grid = new GridInfo(this);
+			GradientTracks = new GradientTracksInfo(this);
+			Grid = new GridInfo(this);
 		}
 		public abstract class BaseAutoLayoutTracksInfo {
 			public bool enabled = false;
-			public MidiChannels Channels { get { return allInfos.channels; } }
-			private AutoLayoutTracksInfos allInfos;
-			public AutoLayoutTracksInfos AllInfos { get { return allInfos; } }
+			public MidiChannels Channels { get { return AllInfos.channels; } }
+			public AutoLayoutTracksInfos AllInfos { get; private set; }
 			public BaseAutoLayoutTracksInfo(AutoLayoutTracksInfos allInfos) {
-				this.allInfos = allInfos;
+				AllInfos = allInfos;
 			}
 			public BaseAutoLayoutTracksInfo Clone(AutoLayoutTracksInfos allInfos) {
 				BaseAutoLayoutTracksInfo clone = MemberwiseClone() as BaseAutoLayoutTracksInfo;
-				clone.allInfos = allInfos;
+				clone.AllInfos = allInfos;
 				return clone;
 			}
 		}
@@ -15328,15 +16459,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			public int horizontalFlip;
 			public int verticalFlip;
 		}
-		private GradientTracksInfo gradientTracks;
-		private GridInfo grid;
-		public GradientTracksInfo GradientTracks { get { return gradientTracks; } }
-		public GridInfo Grid { get { return grid; } }
+
+		public GradientTracksInfo GradientTracks { get; private set; }
+		public GridInfo Grid { get; private set; }
 
 		public static AutoLayoutTracksInfos CopyFrom(AutoLayoutTracksInfos existing, MidiChannels channels) {
 			AutoLayoutTracksInfos infos = new AutoLayoutTracksInfos(channels);
-			infos.gradientTracks = existing.gradientTracks.Clone(infos) as GradientTracksInfo;
-			infos.grid = existing.grid.Clone(infos) as GridInfo;
+			infos.GradientTracks = existing.GradientTracks.Clone(infos) as GradientTracksInfo;
+			infos.Grid = existing.Grid.Clone(infos) as GridInfo;
 			return infos;
 		}
 	}
@@ -15496,7 +16626,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	}
 
 	public partial class IncreaseSpacingDialog : Form, IInterpret, IConfigIniUser {
-		private ConfigForm configForm;
+		private readonly ConfigForm configForm;
 		private ConfigIni configIni { get { return configForm.configIni; } }
 		public IncreaseSpacingDialog(ConfigForm configForm) {
 			InitializeComponent();
@@ -15509,12 +16639,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			FormClosing += (sender, e) => SaveIni();
 		}
 
-		private Timecode spacing;
-		public Timecode Spacing { get { return spacing; } }
+		public Timecode Spacing { get; private set; }
 
 		private void IncreaseSpacingText_Leave(object sender, EventArgs e) {
-			spacing = Timecode.FromString(IncreaseSpacingText.Text);
-			IncreaseSpacingText.Text = spacing.ToString();
+			Spacing = Timecode.FromString(IncreaseSpacingText.Text);
+			IncreaseSpacingText.Text = Spacing.ToString();
 		}
 
 		public void Translate() {
@@ -15526,7 +16655,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		public void SaveIni() {
-			configIni.Write("IncreaseSpacing", spacing.ToString(), "TracksLegato");
+			configIni.Write("IncreaseSpacing", Spacing.ToString(), "TracksLegato");
 		}
 
 		private const string INIT_INCREASE_SPACING = "1.0"; // 初始化为 1.0 秒。直接写成“1”会识别为 1 毫秒。
@@ -17493,8 +18622,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private readonly EntryPoint parent;
 		private Vegas vegas { get { return parent.vegas; } }
 		private ConfigIni configIni { get { return parent.configIni; } }
-		private List<VirtualVegasTrackItem> vegasTracks = new List<VirtualVegasTrackItem>();
-		private Dictionary<uint, int> channelsMap = new Dictionary<uint, int>();
+		private readonly List<VirtualVegasTrackItem> vegasTracks = new List<VirtualVegasTrackItem>();
+		private readonly Dictionary<uint, int> channelsMap = new Dictionary<uint, int>();
 		private readonly Timecode cursor;
 		private readonly bool loopMode;
 
@@ -18454,11 +19583,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		class DummyForm : Form {
-			IntPtr _handle;
-			MessageBoxButtons _buttons;
-			string[] _buttonTitles = null;
+			private IntPtr _handle;
+			private readonly MessageBoxButtons _buttons;
+			private readonly string[] _buttonTitles = null;
 
-			bool _watchForActivate = false;
+			private bool _watchForActivate = false;
 
 			public bool WatchForActivate {
 				get { return _watchForActivate; }
@@ -18696,6 +19825,77 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			False,
 			True,
 		}
+	}
+
+	partial class HorizontalDivider {
+		/// <summary>
+		/// 必需的设计器变量。
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
+
+		/// <summary>
+		/// 清理所有正在使用的资源。
+		/// </summary>
+		/// <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+		protected override void Dispose(bool disposing) {
+			if (disposing && (components != null)) {
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		#region 组件设计器生成的代码
+
+		/// <summary>
+		/// 设计器支持所需的方法 - 不要修改
+		/// 使用代码编辑器修改此方法的内容。
+		/// </summary>
+		private void InitializeComponent() {
+			components = new System.ComponentModel.Container();
+		}
+
+		#endregion
+	}
+
+	public partial class HorizontalDivider : Label {
+		public HorizontalDivider() {
+			InitializeComponent();
+			base.Text = "";
+			base.BorderStyle = BorderStyle.Fixed3D;
+			base.AutoSize = false;
+			base.MaximumSize = new Size(int.MaxValue, HEIGHT);
+			base.Height = HEIGHT;
+			Margin = new Padding(0, 3, 0, 3);
+			Dock = DockStyle.Top;
+		}
+
+		private const int HEIGHT = 2;
+
+		#region 隐藏属性
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), DefaultValue("")]
+		public new string Text {
+			get { return base.Text; }
+			set { base.Text = value; }
+		}
+
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), DefaultValue(BorderStyle.Fixed3D)]
+		public new BorderStyle BorderStyle {
+			get { return base.BorderStyle; }
+			set { base.BorderStyle = value; }
+		}
+
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), DefaultValue(false)]
+		public new bool AutoSize {
+			get { return base.AutoSize; }
+			set { base.AutoSize = value; }
+		}
+
+		[Browsable(false), EditorBrowsable(EditorBrowsableState.Never), DebuggerBrowsable(DebuggerBrowsableState.Never), DefaultValue(HEIGHT)]
+		public new int Height {
+			get { return base.Height; }
+			set { base.Height = value; }
+		}
+		#endregion
 	}
 
 	public class SonarItem : ListViewItem {
@@ -18965,7 +20165,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private IntPtr hWndGreen = IntPtr.Zero;
 		private IntPtr hWndBlue = IntPtr.Zero;
 		private byte? alphaBackup = 255;
-		private System.Windows.Forms.Timer windowDragTimer = new System.Windows.Forms.Timer { Interval = 10 };
+		private readonly System.Windows.Forms.Timer windowDragTimer = new System.Windows.Forms.Timer { Interval = 10 };
 
 		public AlphaColorDialog() {
 			btnAlpha.Click += btnAlpha_Click;
@@ -19414,9 +20614,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		public event EventHandler AlphaChanged;
 
-		NumericUpDown nudAlpha = new NumericUpDown { AutoSize = true, Minimum = 0, Maximum = 255, DecimalPlaces = 0, Increment = 1, Value = 255, Anchor = AnchorStyles.Top };
-		TrackBar trackBar = new TrackBar2 { Minimum = 0, Maximum = 255, TickFrequency = 5, TickStyle = TickStyle.None, Orientation = Orientation.Horizontal, Value = 255, Anchor = AnchorStyles.Left | AnchorStyles.Right };
-		Color[] colors = new Color[] { Color.White, Color.Black, Color.Green, Color.Blue, Color.Red, Color.Yellow };
+		private readonly NumericUpDown nudAlpha = new NumericUpDown { AutoSize = true, Minimum = 0, Maximum = 255, DecimalPlaces = 0, Increment = 1, Value = 255, Anchor = AnchorStyles.Top };
+		private readonly TrackBar trackBar = new TrackBar2 { Minimum = 0, Maximum = 255, TickFrequency = 5, TickStyle = TickStyle.None, Orientation = Orientation.Horizontal, Value = 255, Anchor = AnchorStyles.Left | AnchorStyles.Right };
+		private Color[] colors = new Color[] { Color.White, Color.Black, Color.Green, Color.Blue, Color.Red, Color.Yellow };
 		public int Cols { get; set; }
 		public int SwatchSize { get; set; }
 
@@ -19753,22 +20953,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	}
 
 	public partial class AutomatorForm : Form, IInterpret {
-		private Datamosh.Automator.ParameterDataList parameters;
-		public Datamosh.Automator.ParameterDataList CheckedParams { get { return parameters; } }
+		public Datamosh.Automator.ParameterDataList CheckedParams { get; private set; }
 
 		public AutomatorForm(Datamosh.Automator.ParameterDataList parameters) {
 			InitializeComponent();
 			Icon = ImageBase64.GetIcon(ImageBase64.AutomatorIcon);
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 			Translate();
-			this.parameters = parameters;
+			CheckedParams = parameters;
 			InitItems();
 		}
 
 		private void InitItems() {
-			ParamsList.Items.AddRange(parameters.ToArray());
-			for (int i = 0; i < parameters.Count; i++)
-				ParamsList.SetItemChecked(i, parameters[i].defaultCheck);
+			ParamsList.Items.AddRange(CheckedParams.ToArray());
+			for (int i = 0; i < CheckedParams.Count; i++)
+				ParamsList.SetItemChecked(i, CheckedParams[i].defaultCheck);
 		}
 
 		public void Translate() {
@@ -27868,7 +29067,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// QuickNormalizeBtn
 			//
 			this.QuickNormalizeBtn.CommandLink = true;
-			this.QuickNormalizeBtn.CommandLinkNote = "将选中的多个音频轨道剪辑全部规范化音量。\r\n已选中 0 个音频轨道剪辑。";
+			this.QuickNormalizeBtn.CommandLinkNote = "将选中的多个音频轨道剪辑全部规范化音量。\r\n已选中 0 个轨道剪辑。";
 			this.QuickNormalizeBtn.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.QuickNormalizeBtn.Location = new System.Drawing.Point(5, 479);
 			this.QuickNormalizeBtn.Name = "QuickNormalizeBtn";
@@ -27876,7 +29075,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.QuickNormalizeBtn.TabIndex = 12;
 			this.QuickNormalizeBtn.Text = "快速规范音量";
 			this.QuickNormalizeBtn.UseVisualStyleBackColor = true;
-			this.QuickNormalizeBtn.Click += new System.EventHandler(this.QuickNormalizeBtn_Click);
+			this.QuickNormalizeBtn.Click += new System.EventHandler(this.ReadyToShowHelperDialog);
 			//
 			// ReplaceClipsBtn
 			//
@@ -28865,7 +30064,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.SIZE | SystemMenuItemType.CLOSE);
 
 			#region 修复数字旋钮在高分屏边距异常
-			foreach (NumericUpDown control in this.GetControlsOfType<NumericUpDown>())
+			foreach (NumericUpDown control in this.GetChildrenOfType<NumericUpDown>())
 				control.Margin = new Padding(3);
 			#endregion
 
@@ -29782,7 +30981,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AudioScratchLbl.Text = str.audio_stretch;
 			AudioLoopCheck.Text = str.audio_loop;
 			AudioNormalizeCheck.Text = str.audio_normalize;
-			AudioFreezeLastFrameCheck.Text = VideoFreezeLastFrameCheck.Text = str.freeze_last_frame;
+			AudioFreezeLastFrameCheck.Text = str.audio_freeze_last_frame;
+			VideoFreezeLastFrameCheck.Text = str.video_freeze_last_frame;
 			AudioLegatoLbl.Text = VideoLegatoLbl.Text = str.legato;
 			CreateEventGroupInAudioCheck.Text = CreateEventGroupInVideoCheck.Text = str.create_event_group;
 			AudioAutoPanCheck.Text = str.auto_pan;
@@ -30418,7 +31618,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			WarningInfoLabel.Visible = !isValidSource;
 			int selectSourceCountForYtp =
 				SourceConfigFrom == MediaSourceFrom.SELECTED_MEDIA ? parent.GetSelectedMedia().Length :
-				SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP ? parent.GetSelectedEvents().Length : 1;
+				SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP ? parent.GetSelectedEvents().Count() : 1;
 			YtpSelectInfo.Text = string.Format(Lang.str.select_source_count_info, selectSourceCountForYtp);
 			doNotChangePreferredTracksWhileSwitchSourceFrom = true;
 			RemoveSourceTrackEventsCheck.Status = SourceConfigFrom == MediaSourceFrom.SELECTED_CLIP && !parent.audioVideoEnabledTable.SelectNoEvents ? RememberedCheckBox.StatusType.Unlocked : RememberedCheckBox.StatusType.False;
@@ -30471,26 +31671,26 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Lang str = Lang.str;
 
 			#region 选中剪辑
-			int selectedClipsCount = parent.GetSelectedEvents().Length;
+			int selectedClipsCount = parent.GetSelectedEvents().Count();
 			string selectInfo = string.Format(str.select_events_count_info, selectedClipsCount);
 			QuickSelectIntervalBtn.CommandLinkNote = str.select_interval_configform_info + '\n' + selectInfo;
 			ReplaceClipsBtn.CommandLinkNote = str.replace_clips_configform_info + '\n' + selectInfo;
 			CustomFadeGainBtn.CommandLinkNote = str.custom_fade_gain_configform_info + '\n' + selectInfo;
 			ScrambleBtn.CommandLinkNote = str.scramble_configform_info + '\n' + selectInfo;
 			StutterBtn.CommandLinkNote = str.stutter_configform_info + '\n' + selectInfo;
+			QuickNormalizeBtn.CommandLinkNote = str.quick_normalize_configform_info + '\n' + selectInfo;
 			if (selectedClipsCount == 0)
 				ReplaceClipsBtn.Enabled = QuickSelectIntervalBtn.Enabled = CustomFadeGainBtn.Enabled =
-					ScrambleBtn.Enabled = StutterBtn.Enabled = false;
+					ScrambleBtn.Enabled = StutterBtn.Enabled = QuickNormalizeBtn.Enabled = false;
 			#endregion
 
 			#region 选中音频剪辑
-			int selectedAudioClipsCount = parent.GetSelectedAudioEvents().Length;
+			int selectedAudioClipsCount = parent.GetSelectedAudioEvents().Count();
 			string selectAudioInfo = string.Format(str.select_audioevents_count_info, selectedAudioClipsCount);
 			ChangeTuneMethodBtn.CommandLinkNote = str.change_tune_method_configform_info + '\n' + selectAudioInfo;
-			QuickNormalizeBtn.CommandLinkNote = str.quick_normalize_configform_info + '\n' + selectAudioInfo;
 			ConvertMusicBeatsBtn.CommandLinkNote = str.convert_music_beats_configform_info + '\n' + str.select_exactly_one_audio_event_configform_info;
 			if (selectedAudioClipsCount == 0)
-				ChangeTuneMethodBtn.Enabled = QuickNormalizeBtn.Enabled = false;
+				ChangeTuneMethodBtn.Enabled = false;
 			if (selectedAudioClipsCount != 1)
 				ConvertMusicBeatsBtn.Enabled = false;
 
@@ -30503,7 +31703,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#endregion
 
 			#region 选中视频剪辑
-			int selectedVideoClipsCount = parent.GetSelectedVideoEvents().Length;
+			int selectedVideoClipsCount = parent.GetSelectedVideoEvents().Count();
 			string selectVideoInfo = string.Format(str.select_videoevents_count_info, selectedVideoClipsCount);
 			ApplyVisualEffectBtn.CommandLinkNote = str.apply_visual_effect_configform_info + '\n' + selectVideoInfo;
 			AutomatorBtn.CommandLinkNote = str.automator_configform_info + '\n' + selectVideoInfo;
@@ -30516,12 +31716,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#endregion
 
 			#region 选中轨道
-			int selectedTracksCount = parent.GetSelectedTracks().Length;
+			int selectedTracksCount = parent.GetSelectedTracks().Count();
 			if (selectedTracksCount == 0) ClearTrackEffectBtn.Enabled = false;
 			#endregion
 
 			#region 选中视频轨道
-			int selectedVideoTracksCount = parent.GetSelectedVideoTracks().Length;
+			int selectedVideoTracksCount = parent.GetSelectedVideoTracks().Count();
 			AutoLayoutTracksSelectInfo.Text = string.Format(str.select_videotracks_count_info, selectedVideoTracksCount);
 			if (selectedVideoTracksCount == 0)
 				AutoLayoutTracksButtons.Enabled = ClearTrackMotionBtn.Enabled = false;
@@ -30563,6 +31763,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				{ ApplyVisualEffectBtn, typeof(ApplyVisualEffectForm) },
 				{ CustomFadeGainBtn, typeof(CustomFadeGainForm) },
 				{ ExportMidiFileBtn, typeof(ExportMidiFileForm) },
+				{ QuickNormalizeBtn, typeof(QuickConfigPropertiesForm) },
 			};
 			map.TryGetValue(btn, out RequestToShowHelperDialog);
 			Close();
@@ -30944,7 +32145,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Timecode increaseSpacingTime = null;
 			if (type == TrackLegatoType.STACKING_ALL_TRACKS || type == TrackLegatoType.INCREASE_SPACING_ALL_TRACKS) {
 				bool forEvents = effectToSelectedEventsToolStripMenuItem.Checked;
-				if (!forEvents && parent.GetSelectedTracks().Length > 1 ||
+				if (!forEvents && parent.GetSelectedTracks().Count() > 1 ||
 					forEvents && parent.IsSelectedEventsOnMultipleTracks())
 					if (MessageBox.Show(Lang.str.select_multiple_tracks_warning, Lang.str.track_legato_stacking_all_after,
 						MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
@@ -31051,7 +32252,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			OnDragLeave(sender, null);
 		}
 
-		private Label DragHereLbl = new Label {
+		private readonly Label DragHereLbl = new Label {
 			Text = "拖动到这里以导入",
 			TextAlign = System.Drawing.ContentAlignment.MiddleCenter,
 			Font = new Font("Microsoft Yahei UI", 20f, FontStyle.Bold),
@@ -31089,18 +32290,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			foreach (Control control in group.Controls) control.Show();
 			group.MinimumSize = new Size();
 			group.BackColor = Color.Transparent;
-		}
-
-		private void QuickNormalizeBtn_Click(object sender, EventArgs e) {
-			Cursor = Cursors.WaitCursor;
-			parent.NormalizeSelectedAudioEvents();
-			Cursor = Cursors.Default;
-			if (CloseAfterOpenHelperCheck.Checked) CancelBtn_Click(null, null);
-			else {
-				IsIrreversibleCancel = true;
-				vegas.UpdateUI();
-				MessageBox.Show(Lang.str.quick_normalize_complete, Lang.str.quick_normalize, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-			}
 		}
 
 		private void RememberOnceFormSizeToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -31288,11 +32477,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (isMousedown) return;
 			int count;
 			if (!effectToSelectedEventsToolStripMenuItem.Checked) {
-				count = parent.GetSelectedTracks().Length;
+				count = parent.GetSelectedTracks().Count();
 				trackLegatoSelectInfoToolStripMenuItem.Text = string.Format(Lang.str.select_tracks_count_info, count);
 			} else {
 				count = (!includeEventsInGroupToolStripMenuItem.Checked ? parent.GetSelectedEvents() :
-					parent.GetSelectedEventsWithinGroup()).Length;
+					parent.GetSelectedEventsWithinGroup()).Count();
 				trackLegatoSelectInfoToolStripMenuItem.Text = string.Format(Lang.str.select_events_count_info, count);
 			}
 			foreach (ToolStripMenuItem menuItem in new ToolStripMenuItem[] {
@@ -31528,54 +32717,78 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				/* 蓝色 */ new Pen(Color.FromArgb(50, 130, 246)),
 				/* 绿色 */ new Pen(Color.FromArgb(34, 177, 76)),
 			};
-			Pen penColor = button.Enabled ? pens[index] : Pens.Gray;
+			Pen penColor = button.Enabled ? pens[index] : new Pen(Color.Gray);
+			penColor.Width = Dpi;
 			const int RESET_ARC_OPEN_ANGLE = 60;
 			double resetArcOpenRadian = RESET_ARC_OPEN_ANGLE * Math.PI / 180 / 2;
 			int resetFinalPointX = (int)(XCenter - r.Width / 2 * Math.Cos(resetArcOpenRadian)),
 				resetFinalPointY = (int)(YCenter - r.Height / 2 * Math.Sin(resetArcOpenRadian)),
 				resetArrowLength = resetFinalPointY - r.Top;
-			List<Point[]> points = new List<Point[]> {
-				new Point[] {
-					new Point(resetFinalPointX, r.Top),
-					new Point(resetFinalPointX, resetFinalPointY),
-					new Point(resetFinalPointX + resetArrowLength, resetFinalPointY),
+			List<Point[][]> points = new List<Point[][]> {
+				new Point[][] {
+					new Point[] {
+						new Point(resetFinalPointX, r.Top),
+						new Point(resetFinalPointX, resetFinalPointY),
+						new Point(resetFinalPointX + resetArrowLength, resetFinalPointY),
+					},
 				},
-				new Point[] {
-					new Point(r.Left, r.Top),
-					new Point(r.Right, r.Bottom),
-					new Point(XCenter, YCenter),
-					new Point(r.Right, r.Top),
-					new Point(r.Left, r.Bottom),
+				new Point[][] {
+					new Point[] {
+						new Point(r.Left, r.Top),
+						new Point(r.Right, r.Bottom),
+					},
+					new Point[] {
+						new Point(r.Right, r.Top),
+						new Point(r.Left, r.Bottom),
+					},
 				},
-				new Point[] {
-					new Point(XCenter, r.Bottom),
-					new Point(XCenter, r.Top),
-					new Point(r.Left, YCenter),
-					new Point(XCenter, r.Top),
-					new Point(r.Right, YCenter),
+				new Point[][] {
+					new Point[] {
+						new Point(XCenter, r.Bottom),
+						new Point(XCenter, r.Top),
+					},
+					new Point[] {
+						new Point(XCenter, r.Top),
+						new Point(r.Left, YCenter),
+					},
+					new Point[] {
+						new Point(XCenter, r.Top),
+						new Point(r.Right, YCenter),
+					},
 				},
-				new Point[] {
-					new Point(XCenter, r.Top),
-					new Point(XCenter, r.Bottom),
-					new Point(r.Left, YCenter),
-					new Point(XCenter, r.Bottom),
-					new Point(r.Right, YCenter),
+				new Point[][] {
+					new Point[] {
+						new Point(XCenter, r.Top),
+						new Point(XCenter, r.Bottom),
+					},
+					new Point[] {
+						new Point(XCenter, r.Bottom),
+						new Point(r.Left, YCenter),
+					},
+					new Point[] {
+						new Point(XCenter, r.Bottom),
+						new Point(r.Right, YCenter),
+					},
 				},
-				new Point[] {
-					new Point(r.Left, YCenter),
-					new Point(r.Right, YCenter),
-					new Point(XCenter, YCenter),
-					new Point(XCenter, r.Top),
-					new Point(XCenter, r.Bottom),
+				new Point[][] {
+					new Point[] {
+						new Point(r.Left, YCenter),
+						new Point(r.Right, YCenter),
+					},
+					new Point[] {
+						new Point(XCenter, r.Top),
+						new Point(XCenter, r.Bottom),
+					},
 				},
 			};
-			e.Graphics.DrawLines(penColor, points[index]);
+			foreach (Point[] stroke in points[index])
+				e.Graphics.DrawLines(penColor, stroke);
 			if (button == SonarResetBtn)
 				e.Graphics.DrawArc(penColor, r, 180 + RESET_ARC_OPEN_ANGLE / 2, 360 - RESET_ARC_OPEN_ANGLE);
 		}
 
 		private void ConvertMusicBeatsBtn_Click(object sender, EventArgs e) {
-			AudioEvent[] audioEvents = parent.GetSelectedAudioEvents();
+			AudioEvent[] audioEvents = parent.GetSelectedAudioEvents().ToArray();
 			if (audioEvents.Length != 1) {
 				EntryPoint.ShowError(new Exceptions.ConvertMusicBeatsNotOneAudioEventException(audioEvents.Length), ShowErrorState.SILENCE);
 				return;
@@ -31767,6 +32980,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (eventSet.videoEvent != null)
 				SetPreferredTrackCombo(eventSet.videoEvent.Track as VideoTrack);
 		}
+
+		/// <summary>
+		/// Get the DPI of the screen where the WinForm <see cref="Form"/> is located.
+		/// </summary>
+		/// <remarks>
+		/// Defaults to <c>(1, 1)</c> (Unit: dppx. Equivalents to 100% scale or 96dpi.)
+		/// </remarks>
+		/// <param name="form">A WinForm <see cref="Form"/>.</param>
+		/// <returns>The screen DPI in two dimension.</returns>
+		public float Dpi {
+			get {
+				const float DPI_DIVISOR = 96f;
+				Graphics graphics = CreateGraphics();
+				try {
+					return graphics.DpiX / DPI_DIVISOR;
+				} catch (Exception) {
+					return 1;
+				} finally {
+					graphics.Dispose();
+				}
+			}
+		}
 	}
 
 	#region 翻译
@@ -31947,21 +33182,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			select_videoevents_count_info = "已选中 {0} 个视频轨道剪辑。",
 			select_source_count_info = "已选中 {0} 项媒体素材。",
 			select_tracks_count_info = "已选中 {0} 个轨道。",
-			square = "平方",
+			square = "方阵",
 			custom = "自定义",
 			row_count = "行数",
 			column_count = "列数",
-			fill = "填充",
-			adapt = "适应",
+			fill = "裁切",
+			adapt = "遮幅",
+			overlay = "叠加",
 			increase_padding = "边距",
 			min = "最小值",
 			max = "最大值",
 			mirror_edges = "镜像边缘",
 			disable_flip = "不翻转",
-			even_column = "偶数列",
-			odd_column = "奇数列",
-			even_row = "偶数行",
-			odd_row = "奇数行",
+			even_column = "偶列",
+			odd_column = "奇列",
+			even_row = "偶行",
+			odd_row = "奇行",
 			auto_layout_tracks = "自动布局轨道",
 			grid_layout = "网格布局",
 			box_3d_layout = "3D 方盒布局",
@@ -32143,19 +33379,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			midi_start_time = "起始秒数",
 			midi_end_time = "终止秒数",
 			bpm_setting = "设定 BPM 速度为",
-			midi_beat = "节拍　　",
+			midi_beat = "拍号　　",
 			midi_channel_setting = "使用 MIDI 轨道",
 			browse = "浏览...",
 			advanced = "高级...",
 			presets = "预设",
 			no_midi_selected = "<未选择 MIDI 文件>",
 			choose_midi_file = "选择 MIDI 文件",
-			midi_dynamic_midi_bpm = "动态 MIDI 速度",
+			midi_dynamic_midi_bpm = "可变 MIDI 速度",
 			midi_midi_bpm = "MIDI 速度",
 			midi_project_bpm = "项目速度",
 			midi_custom_bpm = "自定义",
-			dynamic_midi_bpm_info = "{0} 起始的动态速度",
-			dynamic_midi_beat_info = "{0} 起始的动态节拍",
+			dynamic_midi_bpm_info = "{0} 起始的可变速度",
+			dynamic_midi_beat_info = "{0} 起始的可变节拍",
 			colon = "：",
 			semicolon = "；",
 			source_settings = "素材属性",
@@ -32190,7 +33426,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			stop_preview = "停止预览",
 			lock_attr = "锁定属性",
 			preview_listen_attr = "预听属性",
-			preview_tune_audio = "使音频调整到主音高",
+			preview_tune_audio = "调整音频到主音高",
 			reserve_formant = "保持共振峰",
 			stretch_attr = "拉伸属性",
 			create_event_group = "创建分组",
@@ -32285,7 +33521,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			video_stretch = "拉伸视频",
 			video_loop = "循环画面",
 			freeze_first_frame = "静态画面",
-			freeze_last_frame = "禁止延长",
+			audio_freeze_last_frame = "截断音频",
+			video_freeze_last_frame = "截断画面",
 			legato = "填补间隙",
 			legato_staccato = "不填补",
 			legato_one_beat_longest = "最长一拍",
@@ -32592,7 +33829,37 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			insert_a_new_empty_track = "插入新的空轨道",
 			dispatch_instrument_to_channel = "为通道指派乐器",
 			export_loop_region_only = "仅导出循环区域",
-			failed_to_quick_config = "MIDI 文件路径已变更或未定义，无法执行快速生成操作，请直接打开配置界面手动配置。";
+			failed_to_quick_config = "MIDI 文件路径已变更或未定义，无法执行快速生成操作，请直接打开配置界面手动配置。",
+			video_clips = "视频剪辑",
+			audio_clips = "音频剪辑",
+			hide = "隐藏",
+			mute = "静音",
+			@lock = "锁定",
+			loop = "循环",
+			maintain_aspect_ratio = "保持宽高比",
+			reduce_interlace = "减少隔行扫描闪烁",
+			invert_phase = "反相",
+			resample_mode = "重新采样模式",
+			unset_resample_mode = "不设置",
+			project_resample_mode = "使用项目设置重新采样模式",
+			smart_resample_mode = "智能重新采样（帧混合）",
+			force_resample_mode = "强制重新采样",
+			disable_resample_mode = "禁用重新采样",
+			optical_flow = "光流法",
+			unset_playback_rate = "不设置播放速率",
+			set_playback_rate = "设置播放速率",
+			multiply_playback_rate = "乘以播放速率",
+			set_undersample_rate = "设置欠采样率",
+			unset_opacity = "不设置不透明度",
+			set_opacity = "设置不透明度",
+			multiply_opacity = "乘以不透明度",
+			unset_volume = "不设置音量",
+			set_volume = "设置音量",
+			multiply_volume = "乘以音量",
+			no_recalc_norm_gain = "不重新计算规范化增益",
+			recalc_new_norm_gain = "仅重新计算新规范化增益",
+			recalc_all_norm_gain = "重新计算所有规范化增益",
+			__eol__ = "";
 
 		static Lang() {
 			SChinese = new Lang();
@@ -32736,8 +34003,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				custom = "Custom",
 				row_count = "Rows",
 				column_count = "Columns",
-				fill = "Fill",
-				adapt = "Fit",
+				fill = "Cover",
+				adapt = "Contain",
+				overlay = "Overlay",
 				increase_padding = "Padding",
 				min = "MIN",
 				max = "MAX",
@@ -32862,7 +34130,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				pitch_shift_plugin = "Pitch Shift Audio Effect Plugin",
 				elastique_method = "Elastic Pitch Change",
 				classic_method = "Classic Pitch Change",
-				fool_tuning_method = "Tuning without Scale",
+				fool_tuning_method = "Scaleless Tuning",
 				sine_wave = "Sinusoid",
 				triangle_wave = "Triangle",
 				square_wave = "Square",
@@ -32927,19 +34195,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				midi_start_time = "Start seconds",
 				midi_end_time = "End seconds",
 				bpm_setting = "Set the BPM tempo to",
-				midi_beat = "Beat",
+				midi_beat = "Time signature",
 				midi_channel_setting = "Using MIDI track",
 				browse = "Browse...",
 				advanced = "Advanced...",
 				presets = "Presets",
 				no_midi_selected = "<No MIDI file selected>",
 				choose_midi_file = "Select MIDI file",
-				midi_dynamic_midi_bpm = "Dynamic MIDI tempo",
+				midi_dynamic_midi_bpm = "Variable MIDI tempo",
 				midi_midi_bpm = "MIDI tempo",
 				midi_project_bpm = "Project tempo",
 				midi_custom_bpm = "Custom",
-				dynamic_midi_bpm_info = "Dynamic tempo from {0}",
-				dynamic_midi_beat_info = "Dynamic beat from {0}",
+				dynamic_midi_bpm_info = "Variable tempo from {0}",
+				dynamic_midi_beat_info = "Variable time signature from {0}",
 				colon = ": ",
 				semicolon = "; ",
 				source_settings = "Source configuration",
@@ -33069,7 +34337,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				video_stretch = "Stretch",
 				video_loop = "Loop",
 				freeze_first_frame = "Static visual",
-				freeze_last_frame = "No lengthening",
+				audio_freeze_last_frame = "Truncate",
+				video_freeze_last_frame = "Truncate",
 				legato = "Legato",
 				legato_staccato = "Staccato",
 				legato_one_beat_longest = "1 beat longest",
@@ -33377,6 +34646,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				dispatch_instrument_to_channel = "Dispatch instrument to channel",
 				export_loop_region_only = "Export loop region only",
 				failed_to_quick_config = "The MIDI file path has been changed or not defined, and the quick generation operation cannot be performed. Please open the configuration UI directly for manual configuration.",
+				video_clips = "Video clips",
+				audio_clips = "Audio clips",
+				hide = "Hide",
+				mute = "Mute",
+				@lock = "Lock",
+				loop = "Loop",
+				maintain_aspect_ratio = "Maintain aspect ratio",
+				reduce_interlace = "Reduce interlace flicker",
+				invert_phase = "Invert phase",
+				resample_mode = "Resample mode",
+				unset_resample_mode = "Unset",
+				project_resample_mode = "Use project resample mode",
+				smart_resample_mode = "Smart resample (Frame blend)",
+				force_resample_mode = "Force resample",
+				disable_resample_mode = "Disable resample",
+				optical_flow = "Optical flow",
+				unset_playback_rate = "Unset playback rate",
+				set_playback_rate = "Set playback rate",
+				multiply_playback_rate = "Multiply playback rate",
+				set_undersample_rate = "Set undersample rate",
+				unset_opacity = "Unset opacity",
+				set_opacity = "Set opacity",
+				multiply_opacity = "Multiply opacity",
+				unset_volume = "Unset volume",
+				set_volume = "Set volume",
+				multiply_volume = "Multiply volume",
+				no_recalc_norm_gain = "Don't recalculate normalize gains",
+				recalc_new_norm_gain = "Recalculate new normalize gains only",
+				recalc_all_norm_gain = "Recalculate all normalize gains",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -33514,21 +34812,22 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				select_videoevents_count_info = "已选中 {0} 個視訊軌道剪輯。",
 				select_source_count_info = "已選中 {0} 項媒體素材。",
 				select_tracks_count_info = "已選中 {0} 個軌道。",
-				square = "平方",
+				square = "方陣",
 				custom = "自定義",
 				row_count = "行數",
 				column_count = "列數",
-				fill = "填充",
-				adapt = "適應",
+				fill = "裁切",
+				adapt = "遮幅",
+				overlay = "疊加",
 				increase_padding = "邊距",
 				min = "最小值",
 				max = "最大值",
 				mirror_edges = "鏡像邊緣",
 				disable_flip = "不翻轉",
-				even_column = "偶數列",
-				odd_column = "奇數列",
-				even_row = "偶數行",
-				odd_row = "奇數行",
+				even_column = "偶列",
+				odd_column = "奇列",
+				even_row = "偶行",
+				odd_row = "奇行",
 				auto_layout_tracks = "自動佈局軌道",
 				grid_layout = "網格佈局",
 				box_3d_layout = "3D 方盒佈局",
@@ -33709,19 +35008,19 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				midi_start_time = "起始秒數",
 				midi_end_time = "終止秒數",
 				bpm_setting = "設定 BPM 速度為",
-				midi_beat = "節拍",
+				midi_beat = "拍號",
 				midi_channel_setting = "使用 MIDI 軌道",
 				browse = "瀏覽...",
 				advanced = "高級...",
 				presets = "預設",
 				no_midi_selected = "<未選擇 MIDI 檔案>",
 				choose_midi_file = "選擇 MIDI 檔案",
-				midi_dynamic_midi_bpm = "動態 MIDI 速度",
+				midi_dynamic_midi_bpm = "可變 MIDI 速度",
 				midi_midi_bpm = "MIDI 速度",
 				midi_project_bpm = "專案速度",
 				midi_custom_bpm = "自定義",
-				dynamic_midi_bpm_info = "{0} 起始的動態速度",
-				dynamic_midi_beat_info = "{0} 起始的動態節拍",
+				dynamic_midi_bpm_info = "{0} 起始的可變速度",
+				dynamic_midi_beat_info = "{0} 起始的可變拍號",
 				colon = "：",
 				semicolon = "；",
 				source_settings = "素材設定",
@@ -33756,7 +35055,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				stop_preview = "停止預覽",
 				lock_attr = "鎖定內容",
 				preview_listen_attr = "預聽内容",
-				preview_tune_audio = "使音訊調整到主音高",
+				preview_tune_audio = "調整音訊到主音高",
 				reserve_formant = "保留共振峰",
 				stretch_attr = "拉伸內容",
 				create_event_group = "創建分組",
@@ -33850,8 +35149,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				vconfig = "生成畫面",
 				video_stretch = "拉伸視訊",
 				video_loop = "迴圈畫面",
-				freeze_first_frame = "靜態畫面",
-				freeze_last_frame = "禁止延長",
+				audio_freeze_last_frame = "截斷音訊",
+				video_freeze_last_frame = "截斷畫面",
 				legato = "填補間隙",
 				legato_staccato = "不填補",
 				legato_one_beat_longest = "最長一拍",
@@ -34159,6 +35458,36 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				dispatch_instrument_to_channel = "為通道指派樂器",
 				export_loop_region_only = "僅導出迴圈區域",
 				failed_to_quick_config = "MIDI 檔案路徑已變更或未定義，無法執行快速生成操作，請直接打開配置介面手動配置。",
+				video_clips = "視訊剪輯",
+				audio_clips = "音訊剪輯",
+				hide = "隱藏",
+				mute = "靜音",
+				@lock = "鎖定",
+				loop = "迴圈",
+				maintain_aspect_ratio = "保持寬高比",
+				reduce_interlace = "減少隔行掃描閃爍",
+				invert_phase = "反相",
+				resample_mode = "重新採樣模式",
+				unset_resample_mode = "不設置",
+				project_resample_mode = "使用專案設置重新採樣模式",
+				smart_resample_mode = "智能重新採樣（幀混合）",
+				force_resample_mode = "強制重新採樣",
+				disable_resample_mode = "禁用重新採樣",
+				optical_flow = "光流法",
+				unset_playback_rate = "不設置播放速率",
+				set_playback_rate = "設置播放速率",
+				multiply_playback_rate = "乘以播放速率",
+				set_undersample_rate = "設置欠取樣速率",
+				unset_opacity = "不設置不透明度",
+				set_opacity = "設置不透明度",
+				multiply_opacity = "乘以不透明度",
+				unset_volume = "不設置音量",
+				set_volume = "設置音量",
+				multiply_volume = "乘以音量",
+				no_recalc_norm_gain = "不重新計算規範化增益",
+				recalc_new_norm_gain = "僅重新計算新規範化增益",
+				recalc_all_norm_gain = "重新計算所有規範化增益",
+
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -34300,8 +35629,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				custom = "カスタム",
 				row_count = "行の数",
 				column_count = "列の数",
-				fill = "塗りつぶし",
-				adapt = "フィット",
+				fill = "横幅に合わせる",
+				adapt = "縦幅に合わせる",
+				overlay = "かぶせる",
 				increase_padding = "パディング",
 				min = "最小値",
 				max = "最大値",
@@ -34492,7 +35822,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				midi_start_time = "秒を開始",
 				midi_end_time = "秒を终了",
 				bpm_setting = "BPMテンポをに設定します",
-				midi_beat = "ビート",
+				midi_beat = "拍子記号",
 				midi_channel_setting = "MIDIトラックの使用",
 				browse = "参照...",
 				advanced = "詳細...",
@@ -34634,7 +35964,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				video_stretch = "ストレッチ",
 				video_loop = "ループ",
 				freeze_first_frame = "静止画像",
-				freeze_last_frame = "延長しない",
+				audio_freeze_last_frame = "トランケート",
+				video_freeze_last_frame = "トランケート",
 				legato = "レガート",
 				legato_staccato = "スタッカート",
 				legato_one_beat_longest = "最長1拍",
@@ -34942,6 +36273,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				dispatch_instrument_to_channel = "楽器をチャネルにスケジューリングする",
 				export_loop_region_only = "循環領域のみエクスポート",
 				failed_to_quick_config = "MIDIファイルのパスが変更されているか、定義されていないため、高速生成操作を実行できません。直接構成インタフェースを開いて手動で構成してください。",
+				video_clips = "Video clips",
+				audio_clips = "Audio clips",
+				hide = "Hide",
+				mute = "Mute",
+				@lock = "Lock",
+				loop = "Loop",
+				maintain_aspect_ratio = "Maintain aspect ratio",
+				reduce_interlace = "Reduce interlace flicker",
+				invert_phase = "Invert phase",
+				resample_mode = "Resample mode",
+				unset_resample_mode = "Unset",
+				project_resample_mode = "Use project resample mode",
+				smart_resample_mode = "Smart resample (Frame blend)",
+				force_resample_mode = "Force resample",
+				disable_resample_mode = "Disable resample",
+				optical_flow = "Optical flow",
+				unset_playback_rate = "Unset playback rate",
+				set_playback_rate = "Set playback rate",
+				multiply_playback_rate = "Multiply playback rate",
+				set_undersample_rate = "Set undersample rate",
+				unset_opacity = "Unset opacity",
+				set_opacity = "Set opacity",
+				multiply_opacity = "Multiply opacity",
+				unset_volume = "Unset volume",
+				set_volume = "Set volume",
+				multiply_volume = "Multiply volume",
+				no_recalc_norm_gain = "Don't recalculate normalize gains",
+				recalc_new_norm_gain = "Recalculate new normalize gains only",
+				recalc_all_norm_gain = "Recalculate all normalize gains",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -35083,8 +36443,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				custom = "Настроить",
 				row_count = "Ряды",
 				column_count = "Столбцы",
-				fill = "Заполнение",
-				adapt = "Адаптировать",
+				fill = "Покрытие",
+				adapt = "Содержит",
+				overlay = "Накладка",
 				increase_padding = "Прокладка",
 				min = "МИН",
 				max = "МАКС",
@@ -35417,7 +36778,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				video_stretch = "Потягиваться",
 				video_loop = "Петля",
 				freeze_first_frame = "Статический визуальный",
-				freeze_last_frame = "Без удлинения",
+				audio_freeze_last_frame = "Обрезать",
+				video_freeze_last_frame = "Обрезать",
 				legato = "Связанный",
 				legato_staccato = "Стаккато",
 				legato_one_beat_longest = "1 доля самый длинный",
@@ -35725,6 +37087,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				dispatch_instrument_to_channel = "Отправка инструмента на канал",
 				export_loop_region_only = "Экспортировать только область петли",
 				failed_to_quick_config = "Путь к файлу MIDI был изменен или не определен, и операция быстрого создания не может быть выполнена. Пожалуйста, откройте пользовательский интерфейс конфигурации непосредственно для ручной настройки.",
+				video_clips = "Video clips",
+				audio_clips = "Audio clips",
+				hide = "Hide",
+				mute = "Mute",
+				@lock = "Lock",
+				loop = "Loop",
+				maintain_aspect_ratio = "Maintain aspect ratio",
+				reduce_interlace = "Reduce interlace flicker",
+				invert_phase = "Invert phase",
+				resample_mode = "Resample mode",
+				unset_resample_mode = "Unset",
+				project_resample_mode = "Use project resample mode",
+				smart_resample_mode = "Smart resample (Frame blend)",
+				force_resample_mode = "Force resample",
+				disable_resample_mode = "Disable resample",
+				optical_flow = "Optical flow",
+				unset_playback_rate = "Unset playback rate",
+				set_playback_rate = "Set playback rate",
+				multiply_playback_rate = "Multiply playback rate",
+				set_undersample_rate = "Set undersample rate",
+				unset_opacity = "Unset opacity",
+				set_opacity = "Set opacity",
+				multiply_opacity = "Multiply opacity",
+				unset_volume = "Unset volume",
+				set_volume = "Set volume",
+				multiply_volume = "Multiply volume",
+				no_recalc_norm_gain = "Don't recalculate normalize gains",
+				recalc_new_norm_gain = "Recalculate new normalize gains only",
+				recalc_all_norm_gain = "Recalculate all normalize gains",
 			};
 			Vietnamese = new Lang {
 				__name__ = "Tiếng Việt",
@@ -35866,8 +37257,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				custom = "Tuỳ chỉnh",
 				row_count = "Hàng",
 				column_count = "Cột",
-				fill = "Đầy",
-				adapt = "Vừa",
+				fill = "Trải ra",
+				adapt = "Chứa",
+				overlay = "Lớp phủ",
 				increase_padding = "Đệm",
 				min = "TỐI THIỂU (MIN)",
 				max = "TỐI ĐA (MAX)",
@@ -36057,7 +37449,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				midi_start_time = "Giây bắt đầu",
 				midi_end_time = "Giây kết thúc",
 				bpm_setting = "Đặt BPM tempo thành",
-				midi_beat = "Beat",
+				midi_beat = "Số chỉ nhịp",
 				midi_channel_setting = "Dùng MIDI track",
 				browse = "Duyệt tìm...",
 				advanced = "Nâng cao...",
@@ -36199,7 +37591,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				video_stretch = "Kéo căng",
 				video_loop = "Lặp lại",
 				freeze_first_frame = "Hình ảnh tĩnh",
-				freeze_last_frame = "Không kéo dài",
+				audio_freeze_last_frame = "Cắt ngắn",
+				video_freeze_last_frame = "Cắt ngắn",
 				legato = "Legato",
 				legato_staccato = "Staccato",
 				legato_one_beat_longest = "1 beat dài nhất",
@@ -36507,6 +37900,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				dispatch_instrument_to_channel = "Gửi nhạc cụ tới channel",
 				export_loop_region_only = "Chỉ xuất phần lặp lại (loop)",
 				failed_to_quick_config = "Đường dẫn tệp MIDI đã bị thay đổi hoặc không được xác định và không thể thực hiện thao tác tạo nhanh. Vui lòng mở giao diện người dùng tùy chỉnh trực tiếp để tùy chỉnh thủ công.",
+				video_clips = "Video clips",
+				audio_clips = "Audio clips",
+				hide = "Hide",
+				mute = "Mute",
+				@lock = "Lock",
+				loop = "Loop",
+				maintain_aspect_ratio = "Maintain aspect ratio",
+				reduce_interlace = "Reduce interlace flicker",
+				invert_phase = "Invert phase",
+				resample_mode = "Resample mode",
+				unset_resample_mode = "Unset",
+				project_resample_mode = "Use project resample mode",
+				smart_resample_mode = "Smart resample (Frame blend)",
+				force_resample_mode = "Force resample",
+				disable_resample_mode = "Disable resample",
+				optical_flow = "Optical flow",
+				unset_playback_rate = "Unset playback rate",
+				set_playback_rate = "Set playback rate",
+				multiply_playback_rate = "Multiply playback rate",
+				set_undersample_rate = "Set undersample rate",
+				unset_opacity = "Unset opacity",
+				set_opacity = "Set opacity",
+				multiply_opacity = "Multiply opacity",
+				unset_volume = "Unset volume",
+				set_volume = "Set volume",
+				multiply_volume = "Multiply volume",
+				no_recalc_norm_gain = "Don't recalculate normalize gains",
+				recalc_new_norm_gain = "Recalculate new normalize gains only",
+				recalc_all_norm_gain = "Recalculate all normalize gains",
 			};
 			Indonesian = new Lang {
 				__name__ = "Bahasa Indonesia",
@@ -36648,9 +38070,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				custom = "Custom",
 				row_count = "Baris",
 				column_count = "Kolom",
-				fill = "Isi",
-				adapt = "Mencocokan",
-				increase_padding = "lapisan",
+				fill = "Menutupi",
+				adapt = "Berisi",
+				overlay = "Hamparan",
+				increase_padding = "Lapisan",
 				min = "MIN",
 				max = "MAX",
 				mirror_edges = "Tepi cermin",
@@ -36981,7 +38404,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				video_stretch = "Stretch",
 				video_loop = "Loop",
 				freeze_first_frame = "Visual statik",
-				freeze_last_frame = "Tidak ada perpanjangan",
+				audio_freeze_last_frame = "Pemotongan",
+				video_freeze_last_frame = "Pemotongan",
 				legato = "Legato",
 				legato_staccato = "Staccato",
 				legato_one_beat_longest = "1 ketukan terpanjang",
@@ -37289,6 +38713,35 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				dispatch_instrument_to_channel = "Kirim instrumen ke saluran",
 				export_loop_region_only = "Ekspor wilayah loop saja",
 				failed_to_quick_config = "Jalur file MIDI telah diubah atau tidak ditentukan, dan operasi pembuatan cepat tidak dapat dilakukan. Silakan buka UI konfigurasi secara langsung untuk konfigurasi manual.",
+				video_clips = "Video clips",
+				audio_clips = "Audio clips",
+				hide = "Hide",
+				mute = "Mute",
+				@lock = "Lock",
+				loop = "Loop",
+				maintain_aspect_ratio = "Maintain aspect ratio",
+				reduce_interlace = "Reduce interlace flicker",
+				invert_phase = "Invert phase",
+				resample_mode = "Resample mode",
+				unset_resample_mode = "Unset",
+				project_resample_mode = "Use project resample mode",
+				smart_resample_mode = "Smart resample (Frame blend)",
+				force_resample_mode = "Force resample",
+				disable_resample_mode = "Disable resample",
+				optical_flow = "Optical flow",
+				unset_playback_rate = "Unset playback rate",
+				set_playback_rate = "Set playback rate",
+				multiply_playback_rate = "Multiply playback rate",
+				set_undersample_rate = "Set undersample rate",
+				unset_opacity = "Unset opacity",
+				set_opacity = "Set opacity",
+				multiply_opacity = "Multiply opacity",
+				unset_volume = "Unset volume",
+				set_volume = "Set volume",
+				multiply_volume = "Multiply volume",
+				no_recalc_norm_gain = "Don't recalculate normalize gains",
+				recalc_new_norm_gain = "Recalculate new normalize gains only",
+				recalc_all_norm_gain = "Recalculate all normalize gains",
 			};
 		}
 	}

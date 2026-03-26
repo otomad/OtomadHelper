@@ -837,8 +837,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				{ ChangeTuneMethodBtn, typeof(ChangeTuneMethodForm) },
 				{ BatchSubtitleGenerationBtn, typeof(BatchSubtitleGenerationForm) },
 				{ FindClipsBtn, typeof(FindClipsForm) },
-				{ CustomFadeGainBtn, typeof(CustomFadeGainForm) },
 				{ ApplyVisualEffectBtn, typeof(ApplyVisualEffectForm) },
+				{ CustomFadeGainBtn, typeof(CustomFadeGainForm) },
 				{ ExportMidiFileBtn, typeof(ExportMidiFileForm) },
 				{ QuickConfigPropertiesBtn, typeof(QuickConfigPropertiesForm) },
 			};

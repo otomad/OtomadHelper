@@ -33,11 +33,23 @@
 			this.AudioLockCheck = new System.Windows.Forms.CheckBox();
 			this.AudioLoopCheck = new System.Windows.Forms.CheckBox();
 			this.AudioInvertPhaseCheck = new System.Windows.Forms.CheckBox();
+			this.horizontalDivider4 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
 			this.AudioNormalizeCheck = new System.Windows.Forms.CheckBox();
 			this.AudioRecalcNormGainPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioNoRecalcNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioRecalcNewNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioRecalcAllNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.horizontalDivider5 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
 			this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioUnsetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioSetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioMultiplyRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
 			this.AudioRateBox = new System.Windows.Forms.NumericUpDown();
+			this.horizontalDivider7 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
 			this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
+			this.AudioUnsetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioSetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.AudioMultiplyGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
 			this.AudioGainBox = new System.Windows.Forms.NumericUpDown();
 			this.VideoGroup = new System.Windows.Forms.GroupBox();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -46,36 +58,24 @@
 			this.VideoLoopCheck = new System.Windows.Forms.CheckBox();
 			this.VideoMaintainAspectRatioCheck = new System.Windows.Forms.CheckBox();
 			this.VideoReduceInterlaceCheck = new System.Windows.Forms.CheckBox();
+			this.horizontalDivider1 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
 			this.VideoResampleModeLbl = new System.Windows.Forms.Label();
 			this.VideoResampleModeCombo = new System.Windows.Forms.ComboBox();
-			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-			this.VideoRateBox = new System.Windows.Forms.NumericUpDown();
-			this.VideoUnderSampleRateCheck = new System.Windows.Forms.CheckBox();
-			this.VideoUnderSampleRateBox = new System.Windows.Forms.NumericUpDown();
-			this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
-			this.VideoGainBox = new System.Windows.Forms.NumericUpDown();
-			this.horizontalDivider4 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
-			this.AudioNoRecalcNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioRecalcNewNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioRecalcAllNormGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.horizontalDivider5 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
-			this.AudioUnsetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioSetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioMultiplyRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.horizontalDivider7 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
-			this.AudioUnsetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioSetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.AudioMultiplyGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
-			this.horizontalDivider1 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
 			this.horizontalDivider2 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			this.VideoUnsetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
 			this.VideoSetRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
 			this.VideoMultiplyRateRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoRateBox = new System.Windows.Forms.NumericUpDown();
 			this.horizontalDivider3 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.VideoUnderSampleRateCheck = new System.Windows.Forms.CheckBox();
+			this.VideoUnderSampleRateBox = new System.Windows.Forms.NumericUpDown();
 			this.horizontalDivider6 = new Otomad.VegasScript.OtomadHelper.V4.HorizontalDivider();
+			this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
 			this.VideoUnsetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
 			this.VideoSetGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
 			this.VideoMultiplyGainRadio = new Otomad.VegasScript.OtomadHelper.V4.GroupedRadioButton();
+			this.VideoGainBox = new System.Windows.Forms.NumericUpDown();
 			this.dock.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.AudioGroup.SuspendLayout();
@@ -104,7 +104,7 @@
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 824);
+			this.dock.Location = new System.Drawing.Point(0, 872);
 			this.dock.Margin = new System.Windows.Forms.Padding(6);
 			this.dock.Name = "dock";
 			this.dock.Padding = new System.Windows.Forms.Padding(13, 10, 13, 10);
@@ -124,6 +124,7 @@
 			this.OkBtn.TabIndex = 1;
 			this.OkBtn.Text = "确定(&O)";
 			this.OkBtn.UseVisualStyleBackColor = true;
+			this.OkBtn.Click += new System.EventHandler(this.OkBtn_Click);
 			// 
 			// CancelBtn
 			// 
@@ -136,6 +137,7 @@
 			this.CancelBtn.TabIndex = 2;
 			this.CancelBtn.Text = "取消(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
+			this.CancelBtn.Click += new System.EventHandler(this.CancelBtn_Click);
 			// 
 			// tableLayoutPanel1
 			// 
@@ -149,7 +151,7 @@
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(756, 824);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(756, 872);
 			this.tableLayoutPanel1.TabIndex = 11;
 			// 
 			// AudioGroup
@@ -159,7 +161,7 @@
 			this.AudioGroup.Location = new System.Drawing.Point(384, 12);
 			this.AudioGroup.Margin = new System.Windows.Forms.Padding(6, 12, 12, 12);
 			this.AudioGroup.Name = "AudioGroup";
-			this.AudioGroup.Size = new System.Drawing.Size(360, 800);
+			this.AudioGroup.Size = new System.Drawing.Size(360, 848);
 			this.AudioGroup.TabIndex = 12;
 			this.AudioGroup.TabStop = false;
 			this.AudioGroup.Text = "音频剪辑";
@@ -182,7 +184,7 @@
 			this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 35);
 			this.flowLayoutPanel2.Name = "flowLayoutPanel2";
 			this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-			this.flowLayoutPanel2.Size = new System.Drawing.Size(354, 762);
+			this.flowLayoutPanel2.Size = new System.Drawing.Size(354, 810);
 			this.flowLayoutPanel2.TabIndex = 1;
 			this.flowLayoutPanel2.WrapContents = false;
 			// 
@@ -242,6 +244,17 @@
 			this.AudioInvertPhaseCheck.ThreeState = true;
 			this.AudioInvertPhaseCheck.UseVisualStyleBackColor = true;
 			// 
+			// horizontalDivider4
+			// 
+			this.horizontalDivider4.AutoSize = true;
+			this.horizontalDivider4.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider4.Location = new System.Drawing.Point(3, 171);
+			this.horizontalDivider4.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider4.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider4.Name = "horizontalDivider4";
+			this.horizontalDivider4.Size = new System.Drawing.Size(315, 2);
+			this.horizontalDivider4.TabIndex = 29;
+			// 
 			// AudioNormalizeCheck
 			// 
 			this.AudioNormalizeCheck.AutoSize = true;
@@ -273,6 +286,55 @@
 			this.AudioRecalcNormGainPanel.TabIndex = 31;
 			this.AudioRecalcNormGainPanel.WrapContents = false;
 			// 
+			// AudioNoRecalcNormGainRadio
+			// 
+			this.AudioNoRecalcNormGainRadio.AutoSize = true;
+			this.AudioNoRecalcNormGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioNoRecalcNormGainRadio.Group = "AudioNormalizeMode";
+			this.AudioNoRecalcNormGainRadio.Location = new System.Drawing.Point(3, 3);
+			this.AudioNoRecalcNormGainRadio.Name = "AudioNoRecalcNormGainRadio";
+			this.AudioNoRecalcNormGainRadio.Size = new System.Drawing.Size(309, 36);
+			this.AudioNoRecalcNormGainRadio.TabIndex = 18;
+			this.AudioNoRecalcNormGainRadio.Text = "不重新计算规范化增益";
+			this.AudioNoRecalcNormGainRadio.UseVisualStyleBackColor = true;
+			// 
+			// AudioRecalcNewNormGainRadio
+			// 
+			this.AudioRecalcNewNormGainRadio.AutoSize = true;
+			this.AudioRecalcNewNormGainRadio.Checked = true;
+			this.AudioRecalcNewNormGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioRecalcNewNormGainRadio.Group = "AudioNormalizeMode";
+			this.AudioRecalcNewNormGainRadio.Location = new System.Drawing.Point(3, 45);
+			this.AudioRecalcNewNormGainRadio.Name = "AudioRecalcNewNormGainRadio";
+			this.AudioRecalcNewNormGainRadio.Size = new System.Drawing.Size(309, 36);
+			this.AudioRecalcNewNormGainRadio.TabIndex = 20;
+			this.AudioRecalcNewNormGainRadio.TabStop = true;
+			this.AudioRecalcNewNormGainRadio.Text = "仅重新计算新规范化增益";
+			this.AudioRecalcNewNormGainRadio.UseVisualStyleBackColor = true;
+			// 
+			// AudioRecalcAllNormGainRadio
+			// 
+			this.AudioRecalcAllNormGainRadio.AutoSize = true;
+			this.AudioRecalcAllNormGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioRecalcAllNormGainRadio.Group = "AudioNormalizeMode";
+			this.AudioRecalcAllNormGainRadio.Location = new System.Drawing.Point(3, 87);
+			this.AudioRecalcAllNormGainRadio.Name = "AudioRecalcAllNormGainRadio";
+			this.AudioRecalcAllNormGainRadio.Size = new System.Drawing.Size(309, 36);
+			this.AudioRecalcAllNormGainRadio.TabIndex = 19;
+			this.AudioRecalcAllNormGainRadio.Text = "重新计算所有规范化增益";
+			this.AudioRecalcAllNormGainRadio.UseVisualStyleBackColor = true;
+			// 
+			// horizontalDivider5
+			// 
+			this.horizontalDivider5.AutoSize = true;
+			this.horizontalDivider5.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider5.Location = new System.Drawing.Point(3, 347);
+			this.horizontalDivider5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider5.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider5.Name = "horizontalDivider5";
+			this.horizontalDivider5.Size = new System.Drawing.Size(315, 2);
+			this.horizontalDivider5.TabIndex = 27;
+			// 
 			// flowLayoutPanel4
 			// 
 			this.flowLayoutPanel4.AutoSize = true;
@@ -288,6 +350,47 @@
 			this.flowLayoutPanel4.Size = new System.Drawing.Size(315, 171);
 			this.flowLayoutPanel4.TabIndex = 33;
 			this.flowLayoutPanel4.WrapContents = false;
+			// 
+			// AudioUnsetRateRadio
+			// 
+			this.AudioUnsetRateRadio.AutoSize = true;
+			this.AudioUnsetRateRadio.Checked = true;
+			this.AudioUnsetRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioUnsetRateRadio.Group = "AudioPlaybackRateMode";
+			this.AudioUnsetRateRadio.Location = new System.Drawing.Point(3, 3);
+			this.AudioUnsetRateRadio.Name = "AudioUnsetRateRadio";
+			this.AudioUnsetRateRadio.Size = new System.Drawing.Size(213, 36);
+			this.AudioUnsetRateRadio.TabIndex = 25;
+			this.AudioUnsetRateRadio.TabStop = true;
+			this.AudioUnsetRateRadio.Text = "不设置播放速率";
+			this.AudioUnsetRateRadio.UseVisualStyleBackColor = true;
+			this.AudioUnsetRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			// 
+			// AudioSetRateRadio
+			// 
+			this.AudioSetRateRadio.AutoSize = true;
+			this.AudioSetRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioSetRateRadio.Group = "AudioPlaybackRateMode";
+			this.AudioSetRateRadio.Location = new System.Drawing.Point(3, 45);
+			this.AudioSetRateRadio.Name = "AudioSetRateRadio";
+			this.AudioSetRateRadio.Size = new System.Drawing.Size(213, 36);
+			this.AudioSetRateRadio.TabIndex = 23;
+			this.AudioSetRateRadio.Text = "设置播放速率";
+			this.AudioSetRateRadio.UseVisualStyleBackColor = true;
+			this.AudioSetRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			// 
+			// AudioMultiplyRateRadio
+			// 
+			this.AudioMultiplyRateRadio.AutoSize = true;
+			this.AudioMultiplyRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioMultiplyRateRadio.Group = "AudioPlaybackRateMode";
+			this.AudioMultiplyRateRadio.Location = new System.Drawing.Point(3, 87);
+			this.AudioMultiplyRateRadio.Name = "AudioMultiplyRateRadio";
+			this.AudioMultiplyRateRadio.Size = new System.Drawing.Size(213, 36);
+			this.AudioMultiplyRateRadio.TabIndex = 24;
+			this.AudioMultiplyRateRadio.Text = "乘以播放速率";
+			this.AudioMultiplyRateRadio.UseVisualStyleBackColor = true;
+			this.AudioMultiplyRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
 			// 
 			// AudioRateBox
 			// 
@@ -317,6 +420,17 @@
             0,
             0});
 			// 
+			// horizontalDivider7
+			// 
+			this.horizontalDivider7.AutoSize = true;
+			this.horizontalDivider7.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider7.Location = new System.Drawing.Point(3, 526);
+			this.horizontalDivider7.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider7.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider7.Name = "horizontalDivider7";
+			this.horizontalDivider7.Size = new System.Drawing.Size(315, 2);
+			this.horizontalDivider7.TabIndex = 34;
+			// 
 			// flowLayoutPanel6
 			// 
 			this.flowLayoutPanel6.AutoSize = true;
@@ -332,6 +446,48 @@
 			this.flowLayoutPanel6.Size = new System.Drawing.Size(315, 171);
 			this.flowLayoutPanel6.TabIndex = 35;
 			this.flowLayoutPanel6.WrapContents = false;
+			// 
+			// AudioUnsetGainRadio
+			// 
+			this.AudioUnsetGainRadio.AutoSize = true;
+			this.AudioUnsetGainRadio.Checked = true;
+			this.AudioUnsetGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioUnsetGainRadio.Group = "AudioGainMode";
+			this.AudioUnsetGainRadio.Location = new System.Drawing.Point(3, 3);
+			this.AudioUnsetGainRadio.Name = "AudioUnsetGainRadio";
+			this.AudioUnsetGainRadio.Size = new System.Drawing.Size(165, 36);
+			this.AudioUnsetGainRadio.TabIndex = 21;
+			this.AudioUnsetGainRadio.TabStop = true;
+			this.AudioUnsetGainRadio.Text = "不设置音量";
+			this.AudioUnsetGainRadio.UseVisualStyleBackColor = true;
+			this.AudioUnsetGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			// 
+			// AudioSetGainRadio
+			// 
+			this.AudioSetGainRadio.AutoSize = true;
+			this.AudioSetGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioSetGainRadio.Group = "AudioGainMode";
+			this.AudioSetGainRadio.Location = new System.Drawing.Point(3, 45);
+			this.AudioSetGainRadio.Name = "AudioSetGainRadio";
+			this.AudioSetGainRadio.Size = new System.Drawing.Size(165, 36);
+			this.AudioSetGainRadio.TabIndex = 17;
+			this.AudioSetGainRadio.Text = "设置音量";
+			this.AudioSetGainRadio.UseVisualStyleBackColor = true;
+			this.AudioSetGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			// 
+			// AudioMultiplyGainRadio
+			// 
+			this.AudioMultiplyGainRadio.AutoSize = true;
+			this.AudioMultiplyGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.AudioMultiplyGainRadio.Group = "AudioGainMode";
+			this.AudioMultiplyGainRadio.Location = new System.Drawing.Point(3, 87);
+			this.AudioMultiplyGainRadio.Name = "AudioMultiplyGainRadio";
+			this.AudioMultiplyGainRadio.Size = new System.Drawing.Size(165, 36);
+			this.AudioMultiplyGainRadio.TabIndex = 18;
+			this.AudioMultiplyGainRadio.Text = "乘以音量";
+			this.AudioMultiplyGainRadio.UseVisualStyleBackColor = true;
+			this.AudioMultiplyGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			this.AudioMultiplyGainRadio.LocationChanged += new System.EventHandler(this.RefreshDisabled);
 			// 
 			// AudioGainBox
 			// 
@@ -363,7 +519,7 @@
 			this.VideoGroup.Location = new System.Drawing.Point(12, 12);
 			this.VideoGroup.Margin = new System.Windows.Forms.Padding(12, 12, 6, 12);
 			this.VideoGroup.Name = "VideoGroup";
-			this.VideoGroup.Size = new System.Drawing.Size(360, 800);
+			this.VideoGroup.Size = new System.Drawing.Size(360, 848);
 			this.VideoGroup.TabIndex = 11;
 			this.VideoGroup.TabStop = false;
 			this.VideoGroup.Text = "视频剪辑";
@@ -391,7 +547,7 @@
 			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
 			this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(354, 762);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(354, 810);
 			this.flowLayoutPanel1.TabIndex = 0;
 			this.flowLayoutPanel1.WrapContents = false;
 			// 
@@ -465,6 +621,17 @@
 			this.VideoReduceInterlaceCheck.ThreeState = true;
 			this.VideoReduceInterlaceCheck.UseVisualStyleBackColor = true;
 			// 
+			// horizontalDivider1
+			// 
+			this.horizontalDivider1.AutoSize = true;
+			this.horizontalDivider1.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider1.Location = new System.Drawing.Point(3, 213);
+			this.horizontalDivider1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider1.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider1.Name = "horizontalDivider1";
+			this.horizontalDivider1.Size = new System.Drawing.Size(326, 2);
+			this.horizontalDivider1.TabIndex = 23;
+			// 
 			// VideoResampleModeLbl
 			// 
 			this.VideoResampleModeLbl.AutoSize = true;
@@ -495,6 +662,17 @@
 			this.VideoResampleModeCombo.Size = new System.Drawing.Size(320, 40);
 			this.VideoResampleModeCombo.TabIndex = 14;
 			// 
+			// horizontalDivider2
+			// 
+			this.horizontalDivider2.AutoSize = true;
+			this.horizontalDivider2.Dock = System.Windows.Forms.DockStyle.Top;
+			this.horizontalDivider2.Location = new System.Drawing.Point(3, 299);
+			this.horizontalDivider2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.horizontalDivider2.MaximumSize = new System.Drawing.Size(0, 2);
+			this.horizontalDivider2.Name = "horizontalDivider2";
+			this.horizontalDivider2.Size = new System.Drawing.Size(326, 2);
+			this.horizontalDivider2.TabIndex = 24;
+			// 
 			// flowLayoutPanel3
 			// 
 			this.flowLayoutPanel3.AutoSize = true;
@@ -510,289 +688,6 @@
 			this.flowLayoutPanel3.Size = new System.Drawing.Size(326, 171);
 			this.flowLayoutPanel3.TabIndex = 32;
 			this.flowLayoutPanel3.WrapContents = false;
-			// 
-			// VideoRateBox
-			// 
-			this.VideoRateBox.DecimalPlaces = 3;
-			this.VideoRateBox.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            196608});
-			this.VideoRateBox.Location = new System.Drawing.Point(3, 129);
-			this.VideoRateBox.Maximum = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-			this.VideoRateBox.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            131072});
-			this.VideoRateBox.Name = "VideoRateBox";
-			this.VideoRateBox.Size = new System.Drawing.Size(120, 39);
-			this.VideoRateBox.TabIndex = 16;
-			this.VideoRateBox.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			// 
-			// VideoUnderSampleRateCheck
-			// 
-			this.VideoUnderSampleRateCheck.AutoSize = true;
-			this.VideoUnderSampleRateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.VideoUnderSampleRateCheck.Location = new System.Drawing.Point(6, 486);
-			this.VideoUnderSampleRateCheck.Name = "VideoUnderSampleRateCheck";
-			this.VideoUnderSampleRateCheck.Size = new System.Drawing.Size(320, 36);
-			this.VideoUnderSampleRateCheck.TabIndex = 22;
-			this.VideoUnderSampleRateCheck.Text = "设置欠采样率";
-			this.VideoUnderSampleRateCheck.UseVisualStyleBackColor = true;
-			this.VideoUnderSampleRateCheck.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
-			// 
-			// VideoUnderSampleRateBox
-			// 
-			this.VideoUnderSampleRateBox.DecimalPlaces = 3;
-			this.VideoUnderSampleRateBox.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            196608});
-			this.VideoUnderSampleRateBox.Location = new System.Drawing.Point(6, 528);
-			this.VideoUnderSampleRateBox.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.VideoUnderSampleRateBox.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-			this.VideoUnderSampleRateBox.Name = "VideoUnderSampleRateBox";
-			this.VideoUnderSampleRateBox.Size = new System.Drawing.Size(120, 39);
-			this.VideoUnderSampleRateBox.TabIndex = 20;
-			this.VideoUnderSampleRateBox.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			// 
-			// flowLayoutPanel5
-			// 
-			this.flowLayoutPanel5.AutoSize = true;
-			this.flowLayoutPanel5.Controls.Add(this.VideoUnsetGainRadio);
-			this.flowLayoutPanel5.Controls.Add(this.VideoSetGainRadio);
-			this.flowLayoutPanel5.Controls.Add(this.VideoMultiplyGainRadio);
-			this.flowLayoutPanel5.Controls.Add(this.VideoGainBox);
-			this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 578);
-			this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
-			this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-			this.flowLayoutPanel5.Size = new System.Drawing.Size(326, 171);
-			this.flowLayoutPanel5.TabIndex = 34;
-			this.flowLayoutPanel5.WrapContents = false;
-			// 
-			// VideoGainBox
-			// 
-			this.VideoGainBox.DecimalPlaces = 3;
-			this.VideoGainBox.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            196608});
-			this.VideoGainBox.Location = new System.Drawing.Point(3, 129);
-			this.VideoGainBox.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.VideoGainBox.Name = "VideoGainBox";
-			this.VideoGainBox.Size = new System.Drawing.Size(120, 39);
-			this.VideoGainBox.TabIndex = 16;
-			this.VideoGainBox.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			// 
-			// horizontalDivider4
-			// 
-			this.horizontalDivider4.AutoSize = true;
-			this.horizontalDivider4.Dock = System.Windows.Forms.DockStyle.Top;
-			this.horizontalDivider4.Location = new System.Drawing.Point(3, 171);
-			this.horizontalDivider4.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.horizontalDivider4.MaximumSize = new System.Drawing.Size(0, 2);
-			this.horizontalDivider4.Name = "horizontalDivider4";
-			this.horizontalDivider4.Size = new System.Drawing.Size(0, 2);
-			this.horizontalDivider4.TabIndex = 29;
-			// 
-			// AudioNoRecalcNormGainRadio
-			// 
-			this.AudioNoRecalcNormGainRadio.AutoSize = true;
-			this.AudioNoRecalcNormGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioNoRecalcNormGainRadio.Group = "AudioNormalizeMode";
-			this.AudioNoRecalcNormGainRadio.Location = new System.Drawing.Point(3, 3);
-			this.AudioNoRecalcNormGainRadio.Name = "AudioNoRecalcNormGainRadio";
-			this.AudioNoRecalcNormGainRadio.Size = new System.Drawing.Size(309, 36);
-			this.AudioNoRecalcNormGainRadio.TabIndex = 18;
-			this.AudioNoRecalcNormGainRadio.Text = "不重新计算规范化增益";
-			this.AudioNoRecalcNormGainRadio.UseVisualStyleBackColor = true;
-			// 
-			// AudioRecalcNewNormGainRadio
-			// 
-			this.AudioRecalcNewNormGainRadio.AutoSize = true;
-			this.AudioRecalcNewNormGainRadio.Checked = true;
-			this.AudioRecalcNewNormGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioRecalcNewNormGainRadio.Group = "AudioNormalizeMode";
-			this.AudioRecalcNewNormGainRadio.Location = new System.Drawing.Point(3, 45);
-			this.AudioRecalcNewNormGainRadio.Name = "AudioRecalcNewNormGainRadio";
-			this.AudioRecalcNewNormGainRadio.Size = new System.Drawing.Size(309, 36);
-			this.AudioRecalcNewNormGainRadio.TabIndex = 20;
-			this.AudioRecalcNewNormGainRadio.TabStop = true;
-			this.AudioRecalcNewNormGainRadio.Text = "仅重新计算新规范化增益";
-			this.AudioRecalcNewNormGainRadio.UseVisualStyleBackColor = true;
-			// 
-			// AudioRecalcAllNormGainRadio
-			// 
-			this.AudioRecalcAllNormGainRadio.AutoSize = true;
-			this.AudioRecalcAllNormGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioRecalcAllNormGainRadio.Group = "AudioNormalizeMode";
-			this.AudioRecalcAllNormGainRadio.Location = new System.Drawing.Point(3, 87);
-			this.AudioRecalcAllNormGainRadio.Name = "AudioRecalcAllNormGainRadio";
-			this.AudioRecalcAllNormGainRadio.Size = new System.Drawing.Size(309, 36);
-			this.AudioRecalcAllNormGainRadio.TabIndex = 19;
-			this.AudioRecalcAllNormGainRadio.Text = "重新计算所有规范化增益";
-			this.AudioRecalcAllNormGainRadio.UseVisualStyleBackColor = true;
-			// 
-			// horizontalDivider5
-			// 
-			this.horizontalDivider5.AutoSize = true;
-			this.horizontalDivider5.Dock = System.Windows.Forms.DockStyle.Top;
-			this.horizontalDivider5.Location = new System.Drawing.Point(3, 347);
-			this.horizontalDivider5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.horizontalDivider5.MaximumSize = new System.Drawing.Size(0, 2);
-			this.horizontalDivider5.Name = "horizontalDivider5";
-			this.horizontalDivider5.Size = new System.Drawing.Size(0, 2);
-			this.horizontalDivider5.TabIndex = 27;
-			// 
-			// AudioUnsetRateRadio
-			// 
-			this.AudioUnsetRateRadio.AutoSize = true;
-			this.AudioUnsetRateRadio.Checked = true;
-			this.AudioUnsetRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioUnsetRateRadio.Group = "AudioPlaybackRateMode";
-			this.AudioUnsetRateRadio.Location = new System.Drawing.Point(3, 3);
-			this.AudioUnsetRateRadio.Name = "AudioUnsetRateRadio";
-			this.AudioUnsetRateRadio.Size = new System.Drawing.Size(213, 36);
-			this.AudioUnsetRateRadio.TabIndex = 25;
-			this.AudioUnsetRateRadio.TabStop = true;
-			this.AudioUnsetRateRadio.Text = "不设置播放速率";
-			this.AudioUnsetRateRadio.UseVisualStyleBackColor = true;
-			this.AudioUnsetRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
-			// 
-			// AudioSetRateRadio
-			// 
-			this.AudioSetRateRadio.AutoSize = true;
-			this.AudioSetRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioSetRateRadio.Group = "AudioPlaybackRateMode";
-			this.AudioSetRateRadio.Location = new System.Drawing.Point(3, 45);
-			this.AudioSetRateRadio.Name = "AudioSetRateRadio";
-			this.AudioSetRateRadio.Size = new System.Drawing.Size(213, 36);
-			this.AudioSetRateRadio.TabIndex = 23;
-			this.AudioSetRateRadio.Text = "设置播放速率";
-			this.AudioSetRateRadio.UseVisualStyleBackColor = true;
-			this.AudioSetRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
-			// 
-			// AudioMultiplyRateRadio
-			// 
-			this.AudioMultiplyRateRadio.AutoSize = true;
-			this.AudioMultiplyRateRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioMultiplyRateRadio.Group = "AudioPlaybackRateMode";
-			this.AudioMultiplyRateRadio.Location = new System.Drawing.Point(3, 87);
-			this.AudioMultiplyRateRadio.Name = "AudioMultiplyRateRadio";
-			this.AudioMultiplyRateRadio.Size = new System.Drawing.Size(213, 36);
-			this.AudioMultiplyRateRadio.TabIndex = 24;
-			this.AudioMultiplyRateRadio.Text = "乘以播放速率";
-			this.AudioMultiplyRateRadio.UseVisualStyleBackColor = true;
-			this.AudioMultiplyRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
-			// 
-			// horizontalDivider7
-			// 
-			this.horizontalDivider7.AutoSize = true;
-			this.horizontalDivider7.Dock = System.Windows.Forms.DockStyle.Top;
-			this.horizontalDivider7.Location = new System.Drawing.Point(3, 526);
-			this.horizontalDivider7.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.horizontalDivider7.MaximumSize = new System.Drawing.Size(0, 2);
-			this.horizontalDivider7.Name = "horizontalDivider7";
-			this.horizontalDivider7.Size = new System.Drawing.Size(0, 2);
-			this.horizontalDivider7.TabIndex = 34;
-			// 
-			// AudioUnsetGainRadio
-			// 
-			this.AudioUnsetGainRadio.AutoSize = true;
-			this.AudioUnsetGainRadio.Checked = true;
-			this.AudioUnsetGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioUnsetGainRadio.Group = "AudioGainMode";
-			this.AudioUnsetGainRadio.Location = new System.Drawing.Point(3, 3);
-			this.AudioUnsetGainRadio.Name = "AudioUnsetGainRadio";
-			this.AudioUnsetGainRadio.Size = new System.Drawing.Size(165, 36);
-			this.AudioUnsetGainRadio.TabIndex = 21;
-			this.AudioUnsetGainRadio.TabStop = true;
-			this.AudioUnsetGainRadio.Text = "不设置音量";
-			this.AudioUnsetGainRadio.UseVisualStyleBackColor = true;
-			this.AudioUnsetGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
-			// 
-			// AudioSetGainRadio
-			// 
-			this.AudioSetGainRadio.AutoSize = true;
-			this.AudioSetGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioSetGainRadio.Group = "AudioGainMode";
-			this.AudioSetGainRadio.Location = new System.Drawing.Point(3, 45);
-			this.AudioSetGainRadio.Name = "AudioSetGainRadio";
-			this.AudioSetGainRadio.Size = new System.Drawing.Size(165, 36);
-			this.AudioSetGainRadio.TabIndex = 17;
-			this.AudioSetGainRadio.Text = "设置音量";
-			this.AudioSetGainRadio.UseVisualStyleBackColor = true;
-			this.AudioSetGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
-			// 
-			// AudioMultiplyGainRadio
-			// 
-			this.AudioMultiplyGainRadio.AutoSize = true;
-			this.AudioMultiplyGainRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AudioMultiplyGainRadio.Group = "AudioGainMode";
-			this.AudioMultiplyGainRadio.Location = new System.Drawing.Point(3, 87);
-			this.AudioMultiplyGainRadio.Name = "AudioMultiplyGainRadio";
-			this.AudioMultiplyGainRadio.Size = new System.Drawing.Size(165, 36);
-			this.AudioMultiplyGainRadio.TabIndex = 18;
-			this.AudioMultiplyGainRadio.Text = "乘以音量";
-			this.AudioMultiplyGainRadio.UseVisualStyleBackColor = true;
-			this.AudioMultiplyGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
-			this.AudioMultiplyGainRadio.LocationChanged += new System.EventHandler(this.RefreshDisabled);
-			// 
-			// horizontalDivider1
-			// 
-			this.horizontalDivider1.AutoSize = true;
-			this.horizontalDivider1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.horizontalDivider1.Location = new System.Drawing.Point(3, 213);
-			this.horizontalDivider1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.horizontalDivider1.MaximumSize = new System.Drawing.Size(0, 2);
-			this.horizontalDivider1.Name = "horizontalDivider1";
-			this.horizontalDivider1.Size = new System.Drawing.Size(0, 2);
-			this.horizontalDivider1.TabIndex = 23;
-			// 
-			// horizontalDivider2
-			// 
-			this.horizontalDivider2.AutoSize = true;
-			this.horizontalDivider2.Dock = System.Windows.Forms.DockStyle.Top;
-			this.horizontalDivider2.Location = new System.Drawing.Point(3, 299);
-			this.horizontalDivider2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-			this.horizontalDivider2.MaximumSize = new System.Drawing.Size(0, 2);
-			this.horizontalDivider2.Name = "horizontalDivider2";
-			this.horizontalDivider2.Size = new System.Drawing.Size(0, 2);
-			this.horizontalDivider2.TabIndex = 24;
 			// 
 			// VideoUnsetRateRadio
 			// 
@@ -835,6 +730,34 @@
 			this.VideoMultiplyRateRadio.UseVisualStyleBackColor = true;
 			this.VideoMultiplyRateRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
 			// 
+			// VideoRateBox
+			// 
+			this.VideoRateBox.DecimalPlaces = 3;
+			this.VideoRateBox.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+			this.VideoRateBox.Location = new System.Drawing.Point(3, 129);
+			this.VideoRateBox.Maximum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+			this.VideoRateBox.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+			this.VideoRateBox.Name = "VideoRateBox";
+			this.VideoRateBox.Size = new System.Drawing.Size(120, 39);
+			this.VideoRateBox.TabIndex = 16;
+			this.VideoRateBox.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			// 
 			// horizontalDivider3
 			// 
 			this.horizontalDivider3.AutoSize = true;
@@ -843,8 +766,48 @@
 			this.horizontalDivider3.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.horizontalDivider3.MaximumSize = new System.Drawing.Size(0, 2);
 			this.horizontalDivider3.Name = "horizontalDivider3";
-			this.horizontalDivider3.Size = new System.Drawing.Size(0, 2);
+			this.horizontalDivider3.Size = new System.Drawing.Size(326, 2);
 			this.horizontalDivider3.TabIndex = 25;
+			// 
+			// VideoUnderSampleRateCheck
+			// 
+			this.VideoUnderSampleRateCheck.AutoSize = true;
+			this.VideoUnderSampleRateCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.VideoUnderSampleRateCheck.Location = new System.Drawing.Point(6, 486);
+			this.VideoUnderSampleRateCheck.Name = "VideoUnderSampleRateCheck";
+			this.VideoUnderSampleRateCheck.Size = new System.Drawing.Size(320, 36);
+			this.VideoUnderSampleRateCheck.TabIndex = 22;
+			this.VideoUnderSampleRateCheck.Text = "设置欠采样率";
+			this.VideoUnderSampleRateCheck.UseVisualStyleBackColor = true;
+			this.VideoUnderSampleRateCheck.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
+			// 
+			// VideoUnderSampleRateBox
+			// 
+			this.VideoUnderSampleRateBox.DecimalPlaces = 3;
+			this.VideoUnderSampleRateBox.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+			this.VideoUnderSampleRateBox.Location = new System.Drawing.Point(6, 528);
+			this.VideoUnderSampleRateBox.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.VideoUnderSampleRateBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+			this.VideoUnderSampleRateBox.Name = "VideoUnderSampleRateBox";
+			this.VideoUnderSampleRateBox.Size = new System.Drawing.Size(120, 39);
+			this.VideoUnderSampleRateBox.TabIndex = 20;
+			this.VideoUnderSampleRateBox.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
 			// 
 			// horizontalDivider6
 			// 
@@ -854,8 +817,24 @@
 			this.horizontalDivider6.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.horizontalDivider6.MaximumSize = new System.Drawing.Size(0, 2);
 			this.horizontalDivider6.Name = "horizontalDivider6";
-			this.horizontalDivider6.Size = new System.Drawing.Size(0, 2);
+			this.horizontalDivider6.Size = new System.Drawing.Size(326, 2);
 			this.horizontalDivider6.TabIndex = 33;
+			// 
+			// flowLayoutPanel5
+			// 
+			this.flowLayoutPanel5.AutoSize = true;
+			this.flowLayoutPanel5.Controls.Add(this.VideoUnsetGainRadio);
+			this.flowLayoutPanel5.Controls.Add(this.VideoSetGainRadio);
+			this.flowLayoutPanel5.Controls.Add(this.VideoMultiplyGainRadio);
+			this.flowLayoutPanel5.Controls.Add(this.VideoGainBox);
+			this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
+			this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 578);
+			this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+			this.flowLayoutPanel5.Size = new System.Drawing.Size(326, 171);
+			this.flowLayoutPanel5.TabIndex = 34;
+			this.flowLayoutPanel5.WrapContents = false;
 			// 
 			// VideoUnsetGainRadio
 			// 
@@ -898,6 +877,29 @@
 			this.VideoMultiplyGainRadio.UseVisualStyleBackColor = true;
 			this.VideoMultiplyGainRadio.CheckedChanged += new System.EventHandler(this.RefreshDisabled);
 			// 
+			// VideoGainBox
+			// 
+			this.VideoGainBox.DecimalPlaces = 3;
+			this.VideoGainBox.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
+			this.VideoGainBox.Location = new System.Drawing.Point(3, 129);
+			this.VideoGainBox.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.VideoGainBox.Name = "VideoGainBox";
+			this.VideoGainBox.Size = new System.Drawing.Size(120, 39);
+			this.VideoGainBox.TabIndex = 16;
+			this.VideoGainBox.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			// 
 			// QuickConfigPropertiesForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -905,7 +907,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(756, 907);
+			this.ClientSize = new System.Drawing.Size(756, 955);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.dock);
 			this.DoubleBuffered = true;
