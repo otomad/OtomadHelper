@@ -1,0 +1,5 @@
+/* Visual Studio Settings File */
+{
+  "languages.csharp.tabs.character": "tab",
+  "languages.csharp.tabs.indenting": "block"
+}

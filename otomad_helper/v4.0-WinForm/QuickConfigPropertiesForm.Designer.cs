@@ -1,4 +1,4 @@
-﻿namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 	partial class QuickConfigPropertiesForm {
 		/// <summary>
 		/// Required designer variable.
@@ -915,7 +915,7 @@
 			this.Location = new System.Drawing.Point(60, 60);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(782, 978);
+			this.MinimumSize = new System.Drawing.Size(782, 1026);
 			this.Name = "QuickConfigPropertiesForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

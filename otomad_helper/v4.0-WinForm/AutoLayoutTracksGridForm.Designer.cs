@@ -1,4 +1,4 @@
-﻿
+
 namespace Otomad.VegasScript.OtomadHelper.V4 {
 	partial class AutoLayoutTracksGridForm {
 		/// <summary>
@@ -28,9 +28,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OkBtn = new System.Windows.Forms.Button();
 			this.CancelBtn = new System.Windows.Forms.Button();
 			this.table = new System.Windows.Forms.TableLayoutPanel();
-			this.SquareRadio = new System.Windows.Forms.RadioButton();
-			this.CustomRadio = new System.Windows.Forms.RadioButton();
-			this.CustomGroup = new System.Windows.Forms.GroupBox();
 			this.CustomTable = new System.Windows.Forms.TableLayoutPanel();
 			this.MinColumnsLink = new System.Windows.Forms.LinkLabel();
 			this.MaxColumnsLink = new System.Windows.Forms.LinkLabel();
@@ -42,6 +39,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FillRadio = new System.Windows.Forms.RadioButton();
 			this.AdaptRadio = new System.Windows.Forms.RadioButton();
 			this.OverlayRadio = new System.Windows.Forms.RadioButton();
+			this.SquareRadio = new System.Windows.Forms.RadioButton();
+			this.CustomRadio = new System.Windows.Forms.RadioButton();
 			this.ReverseTracksCheck = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
 			this.PaddingLbl = new System.Windows.Forms.Label();
@@ -54,7 +53,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.HFlipCombo = new System.Windows.Forms.ComboBox();
 			this.dock.SuspendLayout();
 			this.table.SuspendLayout();
-			this.CustomGroup.SuspendLayout();
 			this.CustomTable.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.RowCountBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.ColumnCountBox)).BeginInit();
@@ -115,67 +113,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.table.AutoSize = true;
 			this.table.ColumnCount = 1;
 			this.table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.table.Controls.Add(this.CustomTable, 0, 2);
+			this.table.Controls.Add(this.flowLayoutPanel1, 0, 3);
 			this.table.Controls.Add(this.SquareRadio, 0, 0);
 			this.table.Controls.Add(this.CustomRadio, 0, 1);
-			this.table.Controls.Add(this.CustomGroup, 0, 2);
-			this.table.Controls.Add(this.ReverseTracksCheck, 0, 4);
-			this.table.Controls.Add(this.tableLayoutPanel4, 0, 5);
-			this.table.Controls.Add(this.FlipGroup, 0, 3);
+			this.table.Controls.Add(this.ReverseTracksCheck, 0, 5);
+			this.table.Controls.Add(this.tableLayoutPanel4, 0, 6);
+			this.table.Controls.Add(this.FlipGroup, 0, 4);
 			this.table.Dock = System.Windows.Forms.DockStyle.Top;
 			this.table.Location = new System.Drawing.Point(0, 0);
 			this.table.Margin = new System.Windows.Forms.Padding(6);
 			this.table.Name = "table";
 			this.table.Padding = new System.Windows.Forms.Padding(18);
-			this.table.RowCount = 6;
+			this.table.RowCount = 7;
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.table.Size = new System.Drawing.Size(568, 613);
+			this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.table.Size = new System.Drawing.Size(568, 575);
 			this.table.TabIndex = 9;
-			// 
-			// SquareRadio
-			// 
-			this.SquareRadio.AutoSize = true;
-			this.SquareRadio.Checked = true;
-			this.SquareRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SquareRadio.Location = new System.Drawing.Point(24, 24);
-			this.SquareRadio.Margin = new System.Windows.Forms.Padding(6);
-			this.SquareRadio.Name = "SquareRadio";
-			this.SquareRadio.Size = new System.Drawing.Size(520, 36);
-			this.SquareRadio.TabIndex = 0;
-			this.SquareRadio.TabStop = true;
-			this.SquareRadio.Text = "方阵";
-			this.SquareRadio.UseVisualStyleBackColor = true;
-			this.SquareRadio.CheckedChanged += new System.EventHandler(this.CustomRadio_CheckedChanged);
-			// 
-			// CustomRadio
-			// 
-			this.CustomRadio.AutoSize = true;
-			this.CustomRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CustomRadio.Location = new System.Drawing.Point(24, 72);
-			this.CustomRadio.Margin = new System.Windows.Forms.Padding(6);
-			this.CustomRadio.Name = "CustomRadio";
-			this.CustomRadio.Size = new System.Drawing.Size(520, 36);
-			this.CustomRadio.TabIndex = 1;
-			this.CustomRadio.Text = "自定义";
-			this.CustomRadio.UseVisualStyleBackColor = true;
-			this.CustomRadio.CheckedChanged += new System.EventHandler(this.CustomRadio_CheckedChanged);
-			// 
-			// CustomGroup
-			// 
-			this.CustomGroup.AutoSize = true;
-			this.CustomGroup.Controls.Add(this.CustomTable);
-			this.CustomGroup.Dock = System.Windows.Forms.DockStyle.Top;
-			this.CustomGroup.Location = new System.Drawing.Point(24, 114);
-			this.CustomGroup.Margin = new System.Windows.Forms.Padding(6, 0, 6, 6);
-			this.CustomGroup.Name = "CustomGroup";
-			this.CustomGroup.Padding = new System.Windows.Forms.Padding(6);
-			this.CustomGroup.Size = new System.Drawing.Size(520, 206);
-			this.CustomGroup.TabIndex = 2;
-			this.CustomGroup.TabStop = false;
 			// 
 			// CustomTable
 			// 
@@ -191,22 +150,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.CustomTable.Controls.Add(this.RowCountLbl, 0, 1);
 			this.CustomTable.Controls.Add(this.ColumnCountLbl, 0, 0);
 			this.CustomTable.Controls.Add(this.ColumnCountBox, 1, 0);
-			this.CustomTable.Controls.Add(this.flowLayoutPanel1, 0, 2);
 			this.CustomTable.Dock = System.Windows.Forms.DockStyle.Top;
-			this.CustomTable.Location = new System.Drawing.Point(6, 38);
+			this.CustomTable.Location = new System.Drawing.Point(24, 120);
 			this.CustomTable.Margin = new System.Windows.Forms.Padding(6);
 			this.CustomTable.Name = "CustomTable";
 			this.CustomTable.RowCount = 3;
 			this.CustomTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.CustomTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.CustomTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.CustomTable.Size = new System.Drawing.Size(508, 162);
-			this.CustomTable.TabIndex = 2;
+			this.CustomTable.Size = new System.Drawing.Size(520, 102);
+			this.CustomTable.TabIndex = 7;
 			// 
 			// MinColumnsLink
 			// 
 			this.MinColumnsLink.AutoSize = true;
-			this.MinColumnsLink.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MinColumnsLink.Dock = System.Windows.Forms.DockStyle.Left;
 			this.MinColumnsLink.Location = new System.Drawing.Point(241, 0);
 			this.MinColumnsLink.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.MinColumnsLink.Name = "MinColumnsLink";
@@ -220,11 +178,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// MaxColumnsLink
 			// 
 			this.MaxColumnsLink.AutoSize = true;
-			this.MaxColumnsLink.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.MaxColumnsLink.Dock = System.Windows.Forms.DockStyle.Left;
 			this.MaxColumnsLink.Location = new System.Drawing.Point(337, 0);
 			this.MaxColumnsLink.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
 			this.MaxColumnsLink.Name = "MaxColumnsLink";
-			this.MaxColumnsLink.Size = new System.Drawing.Size(166, 51);
+			this.MaxColumnsLink.Size = new System.Drawing.Size(86, 51);
 			this.MaxColumnsLink.TabIndex = 6;
 			this.MaxColumnsLink.TabStop = true;
 			this.MaxColumnsLink.Text = "最大值";
@@ -299,16 +257,16 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// flowLayoutPanel1
 			// 
 			this.flowLayoutPanel1.AutoSize = true;
-			this.CustomTable.SetColumnSpan(this.flowLayoutPanel1, 4);
+			this.table.SetColumnSpan(this.flowLayoutPanel1, 4);
 			this.flowLayoutPanel1.Controls.Add(this.FillRadio);
 			this.flowLayoutPanel1.Controls.Add(this.AdaptRadio);
 			this.flowLayoutPanel1.Controls.Add(this.OverlayRadio);
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.flowLayoutPanel1.Location = new System.Drawing.Point(6, 108);
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(24, 234);
 			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(496, 48);
-			this.flowLayoutPanel1.TabIndex = 4;
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(520, 48);
+			this.flowLayoutPanel1.TabIndex = 6;
 			this.flowLayoutPanel1.WrapContents = false;
 			// 
 			// FillRadio
@@ -346,11 +304,39 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.OverlayRadio.Text = "叠加";
 			this.OverlayRadio.UseVisualStyleBackColor = true;
 			// 
+			// SquareRadio
+			// 
+			this.SquareRadio.AutoSize = true;
+			this.SquareRadio.Checked = true;
+			this.SquareRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.SquareRadio.Location = new System.Drawing.Point(24, 24);
+			this.SquareRadio.Margin = new System.Windows.Forms.Padding(6);
+			this.SquareRadio.Name = "SquareRadio";
+			this.SquareRadio.Size = new System.Drawing.Size(520, 36);
+			this.SquareRadio.TabIndex = 0;
+			this.SquareRadio.TabStop = true;
+			this.SquareRadio.Text = "方阵";
+			this.SquareRadio.UseVisualStyleBackColor = true;
+			this.SquareRadio.CheckedChanged += new System.EventHandler(this.CustomRadio_CheckedChanged);
+			// 
+			// CustomRadio
+			// 
+			this.CustomRadio.AutoSize = true;
+			this.CustomRadio.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.CustomRadio.Location = new System.Drawing.Point(24, 72);
+			this.CustomRadio.Margin = new System.Windows.Forms.Padding(6);
+			this.CustomRadio.Name = "CustomRadio";
+			this.CustomRadio.Size = new System.Drawing.Size(520, 36);
+			this.CustomRadio.TabIndex = 1;
+			this.CustomRadio.Text = "自定义";
+			this.CustomRadio.UseVisualStyleBackColor = true;
+			this.CustomRadio.CheckedChanged += new System.EventHandler(this.CustomRadio_CheckedChanged);
+			// 
 			// ReverseTracksCheck
 			// 
 			this.ReverseTracksCheck.AutoSize = true;
 			this.ReverseTracksCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ReverseTracksCheck.Location = new System.Drawing.Point(24, 502);
+			this.ReverseTracksCheck.Location = new System.Drawing.Point(24, 464);
 			this.ReverseTracksCheck.Margin = new System.Windows.Forms.Padding(6);
 			this.ReverseTracksCheck.Name = "ReverseTracksCheck";
 			this.ReverseTracksCheck.Size = new System.Drawing.Size(520, 36);
@@ -367,7 +353,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel4.Controls.Add(this.PaddingLbl, 0, 0);
 			this.tableLayoutPanel4.Controls.Add(this.PaddingBox, 1, 0);
 			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel4.Location = new System.Drawing.Point(18, 544);
+			this.tableLayoutPanel4.Location = new System.Drawing.Point(18, 506);
 			this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
 			this.tableLayoutPanel4.RowCount = 1;
@@ -406,7 +392,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.FlipGroup.AutoSize = true;
 			this.FlipGroup.Controls.Add(this.tableLayoutPanel1);
 			this.FlipGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FlipGroup.Location = new System.Drawing.Point(24, 332);
+			this.FlipGroup.Location = new System.Drawing.Point(24, 294);
 			this.FlipGroup.Margin = new System.Windows.Forms.Padding(6);
 			this.FlipGroup.Name = "FlipGroup";
 			this.FlipGroup.Padding = new System.Windows.Forms.Padding(6);
@@ -518,8 +504,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.ResumeLayout(false);
 			this.table.ResumeLayout(false);
 			this.table.PerformLayout();
-			this.CustomGroup.ResumeLayout(false);
-			this.CustomGroup.PerformLayout();
 			this.CustomTable.ResumeLayout(false);
 			this.CustomTable.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.RowCountBox)).EndInit();
@@ -545,27 +529,26 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private System.Windows.Forms.TableLayoutPanel table;
 		private System.Windows.Forms.RadioButton SquareRadio;
 		private System.Windows.Forms.RadioButton CustomRadio;
-		private System.Windows.Forms.GroupBox CustomGroup;
-		private System.Windows.Forms.TableLayoutPanel CustomTable;
-		private System.Windows.Forms.Label RowCountLbl;
-		private System.Windows.Forms.Label ColumnCountLbl;
-		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-		private System.Windows.Forms.RadioButton FillRadio;
-		private System.Windows.Forms.RadioButton AdaptRadio;
 		private System.Windows.Forms.CheckBox ReverseTracksCheck;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
 		private System.Windows.Forms.Label PaddingLbl;
 		private System.Windows.Forms.NumericUpDown PaddingBox;
-		private System.Windows.Forms.LinkLabel MinColumnsLink;
-		private System.Windows.Forms.LinkLabel MaxColumnsLink;
-		private System.Windows.Forms.NumericUpDown RowCountBox;
-		private System.Windows.Forms.NumericUpDown ColumnCountBox;
 		private System.Windows.Forms.GroupBox FlipGroup;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.Label VFlipLbl;
 		private System.Windows.Forms.Label HFlipLbl;
 		private System.Windows.Forms.ComboBox VFlipCombo;
 		private System.Windows.Forms.ComboBox HFlipCombo;
+		private System.Windows.Forms.TableLayoutPanel CustomTable;
+		private System.Windows.Forms.LinkLabel MinColumnsLink;
+		private System.Windows.Forms.LinkLabel MaxColumnsLink;
+		private System.Windows.Forms.NumericUpDown RowCountBox;
+		private System.Windows.Forms.Label RowCountLbl;
+		private System.Windows.Forms.Label ColumnCountLbl;
+		private System.Windows.Forms.NumericUpDown ColumnCountBox;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+		private System.Windows.Forms.RadioButton FillRadio;
+		private System.Windows.Forms.RadioButton AdaptRadio;
 		private System.Windows.Forms.RadioButton OverlayRadio;
 	}
 }
