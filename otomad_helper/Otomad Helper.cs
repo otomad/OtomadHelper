@@ -1137,7 +1137,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			}
 			#endregion
 
-			#region 动态 BPM 处理
+			#region 可变 BPM 处理
 			DynamicBpmIntegrator integrator = null;
 			if (MidiUseDynamicMidiBpm) integrator = new DynamicBpmIntegrator(midi, MidiUseDynamicMidiBpmForm == 1);
 			#endregion
@@ -1403,7 +1403,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						if (Plugin.contrast != null) Plugin.ForVideoEvents.ContrastAndThresholdParam(videoEvent, VConfigStartContrast, VConfigEndContrast, VConfigStartThreshold, VConfigEndThreshold, VConfigStartContrastCurve, VConfigStartThresholdCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
 					}
 					// 单独对所有关键帧处理翻转
-					videoEvent.FlipAllKeyframe(anim.HorizontalFlip, anim.VerticalFlip);
+					videoEvent.FlipAllKeyframes(anim.HorizontalFlip, anim.VerticalFlip);
 					// 旋转属性单独调整，因为和上面“翻转所有关键帧”功能冲突了
 					key0.RotateBy(VConfigStartRotation + anim.RotationDeg);
 					if (requireTwoKey) key1.RotateBy(VConfigEndRotation + anim.RotationDeg);
@@ -1678,7 +1678,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		public bool ApplyPvRhythmVisualEffect(VideoEvent videoEvent, PvVisualEffect anim) {
 			if (anim.IsReverse) ReverseVideo(videoEvent);
-			videoEvent.FlipAllKeyframe(anim.HorizontalFlip, anim.VerticalFlip);
+			videoEvent.FlipAllKeyframes(anim.HorizontalFlip, anim.VerticalFlip);
 			foreach (VideoMotionKeyframe key in videoEvent.VideoMotion.Keyframes)
 				key.RotateBy(anim.RotationDeg);
 			return ApplyPvRhythmVisualEffectPartialMethod(videoEvent, anim);
@@ -2485,6 +2485,21 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return _value < _min ? min : _value > _max ? max : value;
 		}
 
+		private void SelectSpecificTracksOnly(params Track[] tracks) {
+			foreach (Track track in vegas.Project.Tracks)
+				track.Selected = tracks != null && tracks.Contains(track);
+		}
+
+		public TrackGroup GroupTracks(params Track[] tracks) {
+			SelectSpecificTracksOnly(tracks);
+			return vegas.Project.GroupSelectedTracks();
+		}
+
+		public void UngroupTracks(params Track[] tracks) {
+			SelectSpecificTracksOnly(tracks);
+			vegas.Project.UngroupSelectedTracks();
+		}
+
 		/// <summary>
 		/// 转换音乐节拍。
 		/// </summary>
@@ -2852,7 +2867,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="videoEvent">视频事件</param>
 		/// <param name="hFlip">水平翻转？</param>
 		/// <param name="vFlip">垂直翻转？</param>
-		public static void FlipAllKeyframe(this VideoEvent videoEvent, bool hFlip, bool vFlip) {
+		public static void FlipAllKeyframes(this VideoEvent videoEvent, bool hFlip, bool vFlip) {
 			foreach (VideoMotionKeyframe key in videoEvent.VideoMotion.Keyframes) {
 				bool isXFlip = key.TopLeft.X > key.TopRight.X, isYFlip = key.TopRight.Y > key.BottomRight.Y;
 				key.ScaleBy(new VideoMotionVertex(isXFlip == hFlip ? 1 : -1, isYFlip == vFlip ? 1 : -1));
@@ -3139,10 +3154,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="curEvent">轨道事件。</param>
 		/// <param name="includeSelf">是否包含该事件本身。</param>
 		/// <returns>之后的所有轨道事件。</returns>
-		public static List<TrackEvent> GetAllAfterEvents(this TrackEvent curEvent, bool includeSelf) {
+		public static IEnumerable<TrackEvent> GetAllAfterEvents(this TrackEvent curEvent, bool includeSelf) {
 			TrackEvents curTrack = curEvent.Track.Events;
 			int curIndex = curTrack.IndexOf(curEvent) + (includeSelf ? 0 : 1);
-			return new List<TrackEvent>(curTrack).GetRange(curIndex, curTrack.Count - curIndex);
+			for (int i = curIndex; i < curTrack.Count; i++)
+				yield return curTrack[i];
 		}
 		/// <summary>
 		/// 移除轨道事件。
@@ -3158,12 +3174,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="time">时间码。</param>
 		/// <param name="includeEventOnTime">是否包含刚好在指定是时间码之上的事件。</param>
 		/// <returns>某个时间码之后的所有轨道事件。</returns>
-		public static List<TrackEvent> GetAllAfterEvents(this Track track, Timecode time, bool includeEventOnTime = false) {
-			List<TrackEvent> allAfterEvents = new List<TrackEvent>();
+		public static IEnumerable<TrackEvent> GetAllAfterEvents(this Track track, Timecode time, bool includeEventOnTime = false) {
 			foreach (TrackEvent trackEvent in track.Events)
 				if (trackEvent.Start >= time || includeEventOnTime && trackEvent.End > time)
-					allAfterEvents.Add(trackEvent);
-			return allAfterEvents;
+					yield return trackEvent;
 		}
 		/// <summary>
 		/// 切断该轨道中指定时间码位置上的事件。
@@ -3184,15 +3198,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="start">开始时间。</param>
 		/// <param name="end">结束时间。</param>
 		/// <returns>在指定的时间范围内的所有轨道事件。</returns>
-		public static TrackEvent[] FindEventsIn(this Track track, Timecode start, Timecode end) {
-			if (end < start) return null;
-			List<TrackEvent> trackEvents = new List<TrackEvent>();
+		public static IEnumerable<TrackEvent> FindEventsIn(this Track track, Timecode start, Timecode end) {
+			if (end < start) yield break;
 			foreach (TrackEvent trackEvent in track.Events) {
 				if (trackEvent.Start >= start && trackEvent.End <= end)
-					trackEvents.Add(trackEvent);
+					yield return trackEvent;
 				else if (trackEvent.Start >= end) break;
 			}
-			return trackEvents.ToArray();
 		}
 		/// <summary>
 		/// 反向设置轨道事件长度。<br />
@@ -3416,6 +3428,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public static bool IsEmpty<T>(this IEnumerable<T> objects) {
 			return objects == null || !objects.Any();
 		}
+
+		/// <summary>
+		/// 判断指定轨道是否位于轨道组内。
+		/// </summary>
+		/// <param name="track">轨道。</param>
+		/// <returns>轨道位于轨道组内吗？</returns>
+		public static bool IsInGroup(Track track) {
+			return track.Project.GetTrackGroupOfTrack(track.Index) != null;
+		}
 	}
 
 	public static class SystemMenuItemTag {
@@ -3502,7 +3523,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// 设定为 MIDI 使用 BPM 配置的枚举。
 	/// </summary>
 	public enum MidiUseBpm {
-		/// <summary>动态 MIDI 速度。</summary>
+		/// <summary>可变 MIDI 速度。</summary>
 		DYNAMIC_MIDI,
 		/// <summary>MIDI 速度。</summary>
 		MIDI,
@@ -5139,7 +5160,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 									if (repeatClips != null) p.GroupTrackEvents(clip, repeatClips[i]);
 								}
 								bool hFlip = i % 2 == 0;
-								clip.FlipAllKeyframe(hFlip, false);
+								clip.FlipAllKeyframes(hFlip, false);
 							}
 						}
 					} break;
@@ -17053,30 +17074,30 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.BackColor = System.Drawing.SystemColors.Control;
 			this.dock.ColumnCount = 1;
 			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
 			this.dock.Controls.Add(this.OkBtn, 0, 0);
 			this.dock.Controls.Add(this.CancelBtn, 0, 1);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Right;
-			this.dock.Location = new System.Drawing.Point(594, 0);
-			this.dock.Margin = new System.Windows.Forms.Padding(5);
+			this.dock.Location = new System.Drawing.Point(1053, 0);
+			this.dock.Margin = new System.Windows.Forms.Padding(6);
 			this.dock.Name = "dock";
-			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.dock.Padding = new System.Windows.Forms.Padding(10);
 			this.dock.RowCount = 3;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(118, 503);
+			this.dock.Size = new System.Drawing.Size(186, 827);
 			this.dock.TabIndex = 9;
 			//
 			// OkBtn
 			//
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(12, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.OkBtn.Location = new System.Drawing.Point(18, 18);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
 			this.OkBtn.Name = "OkBtn";
-			this.OkBtn.Size = new System.Drawing.Size(94, 32);
+			this.OkBtn.Size = new System.Drawing.Size(150, 51);
 			this.OkBtn.TabIndex = 1;
 			this.OkBtn.Text = "确定(&O)";
 			this.OkBtn.UseVisualStyleBackColor = true;
@@ -17085,10 +17106,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(12, 50);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.CancelBtn.Location = new System.Drawing.Point(18, 85);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
 			this.CancelBtn.Name = "CancelBtn";
-			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
+			this.CancelBtn.Size = new System.Drawing.Size(150, 51);
 			this.CancelBtn.TabIndex = 2;
 			this.CancelBtn.Text = "取消(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
@@ -17099,8 +17120,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.EffectsPanel.Controls.Add(this.EffectsTable);
 			this.EffectsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.EffectsPanel.Location = new System.Drawing.Point(0, 0);
+			this.EffectsPanel.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
 			this.EffectsPanel.Name = "EffectsPanel";
-			this.EffectsPanel.Size = new System.Drawing.Size(594, 503);
+			this.EffectsPanel.Size = new System.Drawing.Size(1053, 827);
 			this.EffectsPanel.TabIndex = 10;
 			//
 			// EffectsTable
@@ -17110,27 +17132,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.EffectsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.EffectsTable.Dock = System.Windows.Forms.DockStyle.Top;
 			this.EffectsTable.Location = new System.Drawing.Point(0, 0);
+			this.EffectsTable.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
 			this.EffectsTable.Name = "EffectsTable";
-			this.EffectsTable.Padding = new System.Windows.Forms.Padding(5);
+			this.EffectsTable.Padding = new System.Windows.Forms.Padding(10, 10, 10, 10);
 			this.EffectsTable.RowCount = 1;
 			this.EffectsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.EffectsTable.Size = new System.Drawing.Size(594, 10);
+			this.EffectsTable.Size = new System.Drawing.Size(1053, 20);
 			this.EffectsTable.TabIndex = 0;
 			//
 			// PvRhythmVisualEffectAdvancedForm
 			//
 			this.AcceptButton = this.OkBtn;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(712, 503);
+			this.ClientSize = new System.Drawing.Size(1239, 827);
 			this.Controls.Add(this.EffectsPanel);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(460, 460);
+			this.MinimumSize = new System.Drawing.Size(894, 849);
 			this.Name = "PvRhythmVisualEffectAdvancedForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -33354,10 +33377,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			export_with_accesskey = "导出(&E)",
 			balloon_title = "填写说明",
 			midi_start_second_tooltip = "用于截取 MIDI 音乐的一部分。\n单位：秒。",
-			midi_end_second_tooltip = "此处填写需要读取 MIDI 文件的时间长度。\n注意如果填写的值过小，将截去多余时间部分的音符。\n如果此处填写的值比起始秒数小或相等，则始终表示持续到整个音乐时长末尾。\n单位：秒。",
+			midi_end_second_tooltip = "此处填写需要读取 MIDI 文件的时间长度。\n注意如果填写的值过小，将截去多余时间部分的音符。\n如果此处填写的值比起始时间小或相等，则始终表示持续到整个音乐时长末尾。\n单位：秒。",
 			midi_beat_conbo_tooltip = "目前仅用于五线谱的分页功能。\n暂时无法通过 MIDI 文件自动推测。",
 			source_start_time_tooltip = "此处填写媒体素材裁剪的开始时间。\n单位：秒。",
-			source_end_time_tooltip = "注意如果此处填写的数值比入点秒数小或相等，则始终表示持续到素材时间末尾。\n单位：秒。",
+			source_end_time_tooltip = "注意如果此处填写的数值比入点时间小或相等，则始终表示持续到素材时间末尾。\n单位：秒。",
 			no_tune = "不调音",
 			pitch_shift_plugin = "移调效果插件",
 			elastique_method = "弹性音调更改",
@@ -33424,8 +33447,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			ytp = "YTP",
 			helper = "工具",
 			midi_settings = "MIDI 属性",
-			midi_start_time = "起始秒数",
-			midi_end_time = "终止秒数",
+			midi_start_time = "起始时间",
+			midi_end_time = "终止时间",
 			bpm_setting = "设定 BPM 速度为",
 			midi_beat = "拍号　　",
 			midi_channel_setting = "使用 MIDI 轨道",
@@ -33452,8 +33475,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			choose_source_file = "选择媒体素材",
 			selected_media = "选中的媒体文件",
 			selected_clip = "选中的轨道素材",
-			source_start_time = "入点秒数",
-			source_end_time = "出点秒数",
+			source_start_time = "入点时间",
+			source_end_time = "出点时间",
 			parameters = "参数",
 			linear = "线性",
 			fast = "快速",
@@ -34170,10 +34193,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				export_with_accesskey = "&Export",
 				balloon_title = "Filling Instructions",
 				midi_start_second_tooltip = "Used to intercept part of MIDI music.\nUnit: seconds.",
-				midi_end_second_tooltip = "Fill in the length of time needed to read the MIDI file here.\nNote that if the value filled in is too small, the notes in the excess time will be cut off.\nIf the value entered here is less than or equal to the start seconds, it always means that it lasts to the end of the entire music duration.\nUnit: seconds.",
+				midi_end_second_tooltip = "Fill in the length of time needed to read the MIDI file here.\nNote that if the value filled in is too small, the notes in the excess time will be cut off.\nIf the value entered here is less than or equal to the start time, it always means that it lasts to the end of the entire music duration.\nUnit: seconds.",
 				midi_beat_conbo_tooltip = "Currently only used for the pagination function of staff.\nAutomatic speculation from MIDI files is temporarily unavailable.",
 				source_start_time_tooltip = "Fill in the start time of media material cutting here.\nUnit: seconds.",
-				source_end_time_tooltip = "Note that if the value entered here is less than or equal to the number of start seconds, it always means that it lasts until the end of the media time.\nUnit: seconds.",
+				source_end_time_tooltip = "Note that if the value entered here is less than or equal to the number of start time, it always means that it lasts until the end of the media time.\nUnit: seconds.",
 				no_tune = "No Tuning",
 				pitch_shift_plugin = "Pitch Shift Audio Effect Plugin",
 				elastique_method = "Elastic Pitch Change",
@@ -34240,8 +34263,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp = "YTP",
 				helper = "Tools",
 				midi_settings = "MIDI configuration",
-				midi_start_time = "Start seconds",
-				midi_end_time = "End seconds",
+				midi_start_time = "Start time",
+				midi_end_time = "End time",
 				bpm_setting = "Set the BPM tempo to",
 				midi_beat = "Time signature",
 				midi_channel_setting = "Using MIDI track",
@@ -34268,8 +34291,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				choose_source_file = "Select media source",
 				selected_media = "Selected media file",
 				selected_clip = "Selected track event",
-				source_start_time = "Start seconds",
-				source_end_time = "End seconds",
+				source_start_time = "Start time",
+				source_end_time = "End time",
 				parameters = "Parameters",
 				linear = "Linear",
 				fast = "Fast",
@@ -34983,10 +35006,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				export_with_accesskey = "導出(&E)",
 				balloon_title = "填寫說明",
 				midi_start_second_tooltip = "用於截取 MIDI 音樂的一部分。\n單位：秒。",
-				midi_end_second_tooltip = "此處填寫需要讀取 MIDI 檔案的時間長度。\n注意如果填寫的值過小，將截去多餘時間部分的音符。\n如果此處填寫的值比起始秒數小或相等，則始終表示持續到整個音樂時長末尾。\n單位：秒。",
+				midi_end_second_tooltip = "此處填寫需要讀取 MIDI 檔案的時間長度。\n注意如果填寫的值過小，將截去多餘時間部分的音符。\n如果此處填寫的值比起始時間小或相等，則始終表示持續到整個音樂時長末尾。\n單位：秒。",
 				midi_beat_conbo_tooltip = "現時僅用於五線譜的分頁功能。\n暫時無法通過 MIDI 檔案自動推測。",
 				source_start_time_tooltip = "此處填寫媒體素材裁剪的開始時間。\n單位：秒。",
-				source_end_time_tooltip = "注意如果此處填寫的數值比入點秒數小或相等，則始終表示持續到素材時間末尾。\n單位：秒。",
+				source_end_time_tooltip = "注意如果此處填寫的數值比入點時間小或相等，則始終表示持續到素材時間末尾。\n單位：秒。",
 				no_tune = "不調音",
 				pitch_shift_plugin = "移調效果插件",
 				elastique_method = "彈性音調更改",
@@ -35053,8 +35076,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp = "YTP",
 				helper = "工具",
 				midi_settings = "MIDI 設定",
-				midi_start_time = "起始秒數",
-				midi_end_time = "終止秒數",
+				midi_start_time = "起始時間",
+				midi_end_time = "終止時間",
 				bpm_setting = "設定 BPM 速度為",
 				midi_beat = "拍號",
 				midi_channel_setting = "使用 MIDI 軌道",
@@ -35081,8 +35104,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				choose_source_file = "選擇媒體素材",
 				selected_media = "選中的媒體檔案",
 				selected_clip = "選中的軌道素材",
-				source_start_time = "入點秒數",
-				source_end_time = "出點秒數",
+				source_start_time = "入點時間",
+				source_end_time = "出點時間",
 				parameters = "參數",
 				linear = "線性",
 				fast = "快速",
@@ -35797,10 +35820,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				export_with_accesskey = "エクスポート(&E)",
 				balloon_title = "記入手順",
 				midi_start_second_tooltip = "MIDI音楽の一部を傍受するために使用されます。\n単位：秒。",
-				midi_end_second_tooltip = "MIDIファイルの読み取りに必要な時間をここに入力します。\n入力した値が小さすぎると、超過時間の音符が途切れる場合がありますのでご注意ください。\nここに入力した値が開始秒以下の場合、それは常に音楽の全持続時間の終わりまで続くことを意味します。\n単位：秒。",
+				midi_end_second_tooltip = "MIDIファイルの読み取りに必要な時間をここに入力します。\n入力した値が小さすぎると、超過時間の音符が途切れる場合がありますのでご注意ください。\nここに入力した値が開始時間以下の場合、それは常に音楽の全持続時間の終わりまで続くことを意味します。\n単位：秒。",
 				midi_beat_conbo_tooltip = "現在、五線譜のページネーション機能にのみ使用されています。\nMIDIファイルからの自動推測は一時的に利用できません。",
 				source_start_time_tooltip = "メディア素材のカットの開始時間をここに入力します。\n単位：秒。",
-				source_end_time_tooltip = "ここに入力された値が開始秒数以下の場合、それは常にメディア時間の終わりまで続くことを意味することに注意してください。\n単位：秒。",
+				source_end_time_tooltip = "ここに入力された値が開始時間以下の場合、それは常にメディア時間の終わりまで続くことを意味することに注意してください。\n単位：秒。",
 				no_tune = "チューニングなし",
 				pitch_shift_plugin = "ピッチシフトオーディオエフェクトプラグイン",
 				elastique_method = "エラスティックなピッチ変化",
@@ -35867,8 +35890,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				ytp = "ヤタプ",
 				helper = "ツール",
 				midi_settings = "MIDIプロパティ",
-				midi_start_time = "秒を開始",
-				midi_end_time = "秒を终了",
+				midi_start_time = "時間を開始",
+				midi_end_time = "時間を终了",
 				bpm_setting = "BPMテンポをに設定します",
 				midi_beat = "拍子記号",
 				midi_channel_setting = "MIDIトラックの使用",
@@ -35895,8 +35918,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				choose_source_file = "メディアソースを選択",
 				selected_media = "選択したメディアファイル",
 				selected_clip = "選択されたトラッククリップ",
-				source_start_time = "秒を開始",
-				source_end_time = "秒を终了",
+				source_start_time = "時間を開始",
+				source_end_time = "時間を终了",
 				parameters = "パラメーター",
 				linear = "リニア",
 				fast = "高速",

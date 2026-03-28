@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1282,11 +1282,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void TrackShadowCheck_CheckedChanged(object sender, EventArgs e) {
-
+			Console.WriteLine(sender);
 		}
 
 		private void TrackShadowColorBtn_Click(object sender, EventArgs e) {
-
+			Console.WriteLine(sender);
 		}
 
 		private void ConvertMusicBeatsBtn_Click(object sender, EventArgs e) {
@@ -1346,6 +1346,38 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					graphics.Dispose();
 				}
 			}
+		}
+
+		private void MidiAutoLayoutTracksBox3dBtn_Click(object sender, EventArgs e) {
+			MessageBox.Show("Comming soon!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
+
+		private void MidiTrackSelectAllCheck_CheckedChanged(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
+
+		private void MidiTrackInvertSelectionButton_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
+
+		private void MidiTrackSelectionModeRadio_CheckedChanged(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
+
+		private void MidiTrackListView_SelectedIndexChanged(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
+
+		private void MidiAutoLayoutTracksGridBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
+
+		private void MidiGradientTracksBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
+
+		private void ResetAutoLayoutTracksBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender);
 		}
 	}
 }
