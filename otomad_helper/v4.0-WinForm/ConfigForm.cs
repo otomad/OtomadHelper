@@ -908,7 +908,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void ChooseMidiBtn_Click(object sender, EventArgs e) {
-			ChooseSourceCombo.SelectedIndex = 2;
+			ListViewItem item = new ListViewItem(new string[] {
+				"1", "1", "name", "instrument", "√", "20", "M", "C5"
+			});
+			MidiTrackListView.Items.Add(item);
 		}
 
 		private void LoadPresetsToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -1373,10 +1376,34 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		}
 
 		private void MidiGradientTracksBtn_Click(object sender, EventArgs e) {
-			Console.WriteLine(sender);
+
 		}
 
 		private void ResetAutoLayoutTracksBtn_Click(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
+
+		private void MidiTrackListView_ItemChecked(object sender, ItemCheckedEventArgs e) {
+			MidiTrackListView_SelectedIndexChanged(sender, e);
+		}
+
+		[DllImport("gdi32.dll")]
+		private static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
+
+		private void FixTabPageTransparentColor() {
+			//Color tabPageColor;
+			//using (Graphics g = SourceTab.CreateGraphics()) {
+			//	// 获取父控件左上角第一个像素的颜色
+			//	IntPtr hdc = g.GetHdc();
+			//	uint pixel = GetPixel(hdc, 1, 1);
+			//	g.ReleaseHdc(hdc);
+			//	tabPageColor = ColorTranslator.FromOle((int)pixel);
+			//}
+
+			//AudioTab.BackColor = VideoTab.BackColor = YtpTab.BackColor = YtpEffectsCheckList.BackColor = tabPageColor;
+		}
+
+		private void MultiSourceRadio_CheckedChanged(object sender, EventArgs e) {
 			Console.WriteLine(sender);
 		}
 	}

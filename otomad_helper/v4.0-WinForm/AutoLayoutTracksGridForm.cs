@@ -46,7 +46,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void CustomRadio_CheckedChanged(object sender, EventArgs e) {
 			bool isCustom = CustomRadio.Checked;
-			CustomGroup.Enabled = isCustom;
+			CustomTable.Enabled = isCustom;
 		}
 
 		private void MinColumnsLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
