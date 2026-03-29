@@ -1302,8 +1302,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						audioEvent.Length = Timecode.FromMilliseconds(audioLength);
 					try {
 						#if VER_GEQ_16
-							audioEvent.Method = AConfigMethod == AudioTuneMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique; // 这个操作没有在 Vegas 文档中写到。
-							audioEvent.PitchLock = false;
+						audioEvent.Method = AConfigMethod == AudioTuneMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique; // 这个操作没有在 Vegas 文档中写到。
+						audioEvent.PitchLock = false;
 						#endif
 					} catch (Exception e) {
 						if (AConfigMethod == AudioTuneMethod.ELASTIQUE || AConfigMethod == AudioTuneMethod.CLASSIC) {
@@ -1342,24 +1342,29 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						}
 					} else if (AConfigMethod == AudioTuneMethod.ELASTIQUE || AConfigMethod == AudioTuneMethod.CLASSIC) {
 						#if VER_GEQ_16
-							if (AConfigMethod == AudioTuneMethod.ELASTIQUE) {
-								audioEvent.ElastiqueAttribute = (ElastiqueStretchAttributes)AConfigElastiqueAttr;
-								if (AConfigElastiqueAttr == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = AConfigReserveFormant;
-							} else if (AConfigMethod == AudioTuneMethod.CLASSIC)
-								audioEvent.ClassicAttribute = (ClassicStretchAttributes)AConfigClassicAttr;
-							if (!AConfigLockStretchPitch) audioEvent.PitchSemis += pitchDelta;
-							else {
-								double origPitch = audioEvent.PitchSemis;
-								audioEvent.PitchLock = true;
-								audioEvent.AdjustPlaybackRate(Pitch2Stretch(origPitch + pitchDelta), true);
-								if (audioFreezeLastFrameCondition && duration > audioLength / audioEvent.PlaybackRate)
-									audioEvent.Length = Timecode.FromMilliseconds(audioLength / audioEvent.PlaybackRate);
-							}
+						if (AConfigMethod == AudioTuneMethod.ELASTIQUE) {
+							audioEvent.ElastiqueAttribute = (ElastiqueStretchAttributes)AConfigElastiqueAttr;
+							if (AConfigElastiqueAttr == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = AConfigReserveFormant;
+						} else if (AConfigMethod == AudioTuneMethod.CLASSIC)
+							audioEvent.ClassicAttribute = (ClassicStretchAttributes)AConfigClassicAttr;
+						if (!AConfigLockStretchPitch) {
+							double theoreticalPitch = audioEvent.PitchSemis + pitchDelta;
+							double minPitch = Math.Log(audioEvent.PlaybackRate * 0.25, 2) * 12,
+								maxPitch = Math.Log(audioEvent.PlaybackRate * 4, 2) * 12;
+							double withinRangePitch = OctaveDisplacementWithinRange(theoreticalPitch, minPitch, maxPitch);
+							audioEvent.PitchSemis = withinRangePitch;
+						} else {
+							double origPitch = audioEvent.PitchSemis;
+							audioEvent.PitchLock = true;
+							audioEvent.AdjustPlaybackRate(Pitch2Stretch(origPitch + pitchDelta), true);
+							if (audioFreezeLastFrameCondition && duration > audioLength / audioEvent.PlaybackRate)
+								audioEvent.Length = Timecode.FromMilliseconds(audioLength / audioEvent.PlaybackRate);
+						}
 						#endif
 					} else if (AConfigMethod == AudioTuneMethod.FOOL_TUNING) {
 						#if VER_GEQ_16
-							audioEvent.ElastiqueAttribute = ElastiqueStretchAttributes.Efficient;
-							audioEvent.PitchLock = true;
+						audioEvent.ElastiqueAttribute = ElastiqueStretchAttributes.Efficient;
+						audioEvent.PitchLock = true;
 						#endif
 					}
 					#endregion
@@ -1718,9 +1723,37 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="pitch">相对音高。</param>
 		/// <returns>拉伸值。</returns>
 		public static double Pitch2Stretch(double pitch) {
-			while (pitch > 24) pitch -= 12; // WARN: 临时解决未来版本的后门代码。
-			while (pitch < -24) pitch += 12; // WARN: 临时解决未来版本的后门代码。
+			pitch = OctaveDisplacementWithinRange(pitch, -24, 24); // WARN: 临时解决未来版本的后门代码。
 			return Math.Pow(2, pitch / 12.0);
+		}
+
+		/// <summary>
+		/// 将音高升降八度以落在适宜的音域内。
+		/// </summary>
+		/// <param name="pitch">理想情况下的音高。</param>
+		/// <param name="minPitch">最低音域。</param>
+		/// <param name="maxPitch">最高音域。</param>
+		/// <returns>平移到音域内之后的音高。</returns>
+		public static double OctaveDisplacementWithinRange(double pitch, double minPitch, double maxPitch) {
+			//while (pitch > maxPitch) pitch -= 12;
+			//while (pitch < minPitch) pitch += 12;
+			// 上面的代码清晰易懂，但使用 while 循环逐次 ±12，最坏情况 O(n)，性能极差。
+
+			const double OCTAVE = 12.0;
+
+			// 向下折叠：处理超出上限的情况
+			if (pitch > maxPitch) {
+				pitch -= Math.Floor((pitch - maxPitch) / OCTAVE) * OCTAVE;
+				if (pitch > maxPitch) pitch -= OCTAVE; // 防浮点误差
+			}
+
+			// 向上折叠：处理低于下限的情况
+			if (pitch < minPitch) {
+				pitch += Math.Floor((minPitch - pitch) / OCTAVE) * OCTAVE;
+				if (pitch < minPitch) pitch += OCTAVE; // 防浮点误差
+			}
+
+			return pitch;
 		}
 
 		/// <summary>
@@ -31334,6 +31367,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			SourceEndTimeText.DoubleValue = configIni.Read("SourceEndTime", 0d);
 			MidiStartSecondBox.DoubleValue = configIni.Read("MidiStartTime", 0d);
 			MidiEndSecondBox.DoubleValue = configIni.Read("MidiEndTime", 0d);
+			MidiAutoChangeProjectBpmCheck.Checked = configIni.Read("MidiAutoChangeProjectBpm", false);
+			MidiAutoChangeProjectBeatCheck.Checked = configIni.Read("MidiAutoChangeProjectBeat", false);
 			configIni.EndSection();
 			#endregion
 
@@ -31542,6 +31577,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("SourceEndTime", SourceEndTimeText.DoubleValue);
 			configIni.Write("MidiStartTime", MidiStartSecondBox.DoubleValue);
 			configIni.Write("MidiEndTime", MidiEndSecondBox.DoubleValue);
+			configIni.Write("MidiAutoChangeProjectBpm", MidiAutoChangeProjectBpmCheck.Checked);
+			configIni.Write("MidiAutoChangeProjectBeat", MidiAutoChangeProjectBeatCheck.Checked);
 			configIni.EndSection();
 			#endregion
 
@@ -33013,7 +33050,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				reasons.Add(isValidSource ? str.why_ok_btn_is_disabled_no_audio_and_video_enabled : str.why_ok_btn_is_disabled_no_media_take);
 			if (Tabs.SelectedTab != YtpTab) {
 				if (parent.midi == null) reasons.Add(str.why_ok_btn_is_disabled_no_midi_select);
-				if (MidiTrackListView.CheckedItems.Count == 0) reasons.Add(str.why_ok_btn_is_disabled_no_midi_select);
+				if (MidiTrackListView.CheckedItems.Count == 0) reasons.Add(str.why_ok_btn_is_disabled_no_midi_track_select);
 			}
 			string resultInfo = str.why_ok_btn_is_disabled_unknown_problem;
 			if (reasons.Count != 0) {
