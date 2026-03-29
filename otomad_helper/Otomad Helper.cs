@@ -32771,6 +32771,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			};
 			map.TryGetValue(btn, out RequestToShowHelperDialog);
 			Close();
+			ClearTrackMotionBtn.Enabled = true;
+			ClearTrackEffectBtn.Enabled = true;
 		}
 
 		public Type RequestToShowHelperDialog = null;
