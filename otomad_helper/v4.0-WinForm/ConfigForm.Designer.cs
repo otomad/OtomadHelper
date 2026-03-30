@@ -898,6 +898,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioAltMethodCombo.TabIndex = 12;
 			this.Balloon.SetToolTip(this.AudioAltMethodCombo, "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\r\n“弹性音调更改”表示使用“Élastique”拉伸方式改变音调，也就是键盘上" +
         " +、- 键直接改变音调，\r\n有音高范围限制。");
+			this.AudioAltMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioAltMethodCombo_SelectedIndexChanged);
 			// 
 			// SourceStartTimeText
 			// 
@@ -2101,9 +2102,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.flowLayoutPanel13.AutoSize = true;
 			this.flowLayoutPanel13.Controls.Add(this.MultiSourceOffRadio);
-			this.flowLayoutPanel13.Controls.Add(this.LinearMapRadio);
-			this.flowLayoutPanel13.Controls.Add(this.MatchCutRadio);
 			this.flowLayoutPanel13.Controls.Add(this.LuckyDipRadio);
+			this.flowLayoutPanel13.Controls.Add(this.MatchCutRadio);
+			this.flowLayoutPanel13.Controls.Add(this.LinearMapRadio);
 			this.flowLayoutPanel13.Controls.Add(this.ConsonantRadio);
 			this.flowLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel13.Location = new System.Drawing.Point(8, 40);
@@ -2131,7 +2132,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.LinearMapRadio.AutoSize = true;
 			this.LinearMapRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LinearMapRadio.Location = new System.Drawing.Point(85, 4);
+			this.LinearMapRadio.Location = new System.Drawing.Point(335, 4);
 			this.LinearMapRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.LinearMapRadio.Name = "LinearMapRadio";
 			this.LinearMapRadio.Size = new System.Drawing.Size(189, 36);
@@ -2143,7 +2144,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.MatchCutRadio.AutoSize = true;
 			this.MatchCutRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutRadio.Location = new System.Drawing.Point(282, 4);
+			this.MatchCutRadio.Location = new System.Drawing.Point(234, 4);
 			this.MatchCutRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.MatchCutRadio.Name = "MatchCutRadio";
 			this.MatchCutRadio.Size = new System.Drawing.Size(93, 36);
@@ -2155,7 +2156,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			// 
 			this.LuckyDipRadio.AutoSize = true;
 			this.LuckyDipRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipRadio.Location = new System.Drawing.Point(383, 4);
+			this.LuckyDipRadio.Location = new System.Drawing.Point(85, 4);
 			this.LuckyDipRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.LuckyDipRadio.Name = "LuckyDipRadio";
 			this.LuckyDipRadio.Size = new System.Drawing.Size(141, 36);
@@ -6698,7 +6699,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SonarTab.Margin = new System.Windows.Forms.Padding(4);
 			this.SonarTab.Name = "SonarTab";
 			this.SonarTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SonarTab.Size = new System.Drawing.Size(1052, 1000);
+			this.SonarTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SonarTab.TabIndex = 6;
 			this.SonarTab.Text = "声呐";
 			this.SonarTab.UseVisualStyleBackColor = true;
@@ -6720,7 +6721,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 984);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 986);
 			this.tableLayoutPanel11.TabIndex = 0;
 			// 
 			// SonarSwitchesFlow
@@ -6828,7 +6829,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SonarList.Margin = new System.Windows.Forms.Padding(4);
 			this.SonarList.Name = "SonarList";
 			this.SonarList.ShowItemToolTips = true;
-			this.SonarList.Size = new System.Drawing.Size(1028, 317);
+			this.SonarList.Size = new System.Drawing.Size(1028, 319);
 			this.SonarList.TabIndex = 1;
 			this.SonarList.UseCompatibleStateImageBehavior = false;
 			this.SonarList.View = System.Windows.Forms.View.Details;
@@ -6864,7 +6865,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SonarButtonsTable.Controls.Add(this.SonarDeleteBtn, 1, 0);
 			this.SonarButtonsTable.Controls.Add(this.SonarResetBtn, 0, 0);
 			this.SonarButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarButtonsTable.Location = new System.Drawing.Point(4, 384);
+			this.SonarButtonsTable.Location = new System.Drawing.Point(4, 386);
 			this.SonarButtonsTable.Margin = new System.Windows.Forms.Padding(4);
 			this.SonarButtonsTable.Name = "SonarButtonsTable";
 			this.SonarButtonsTable.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
@@ -6949,7 +6950,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SonarParamsGroup.AutoSize = true;
 			this.SonarParamsGroup.Controls.Add(this.SonarParamsPanel);
 			this.SonarParamsGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarParamsGroup.Location = new System.Drawing.Point(4, 460);
+			this.SonarParamsGroup.Location = new System.Drawing.Point(4, 462);
 			this.SonarParamsGroup.Margin = new System.Windows.Forms.Padding(4);
 			this.SonarParamsGroup.Name = "SonarParamsGroup";
 			this.SonarParamsGroup.Padding = new System.Windows.Forms.Padding(4);
@@ -7984,7 +7985,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.YtpTab.Margin = new System.Windows.Forms.Padding(4);
 			this.YtpTab.Name = "YtpTab";
 			this.YtpTab.Padding = new System.Windows.Forms.Padding(8);
-			this.YtpTab.Size = new System.Drawing.Size(1052, 1000);
+			this.YtpTab.Size = new System.Drawing.Size(1052, 1002);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
 			this.YtpTab.UseVisualStyleBackColor = true;
@@ -8197,7 +8198,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MoshTab.Margin = new System.Windows.Forms.Padding(4);
 			this.MoshTab.Name = "MoshTab";
 			this.MoshTab.Padding = new System.Windows.Forms.Padding(4);
-			this.MoshTab.Size = new System.Drawing.Size(1052, 1000);
+			this.MoshTab.Size = new System.Drawing.Size(1052, 1002);
 			this.MoshTab.TabIndex = 7;
 			this.MoshTab.Text = "抹失";
 			this.MoshTab.UseVisualStyleBackColor = true;

@@ -1410,5 +1410,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void AudioBasePitchCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			Console.WriteLine(sender);
 		}
+
+		private void AudioAltMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			Console.WriteLine(sender);
+		}
 	}
 }

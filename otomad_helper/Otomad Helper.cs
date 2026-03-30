@@ -161,11 +161,12 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/**<summary>渐入曲线</summary>*/ private CurveType AConfigFadeinCurve { get { return GetCurveType(configForm.AudioFadeInCurveCombo.SelectedIndex); } }
 		/**<summary>渐出曲线</summary>*/ private CurveType AConfigFadeoutCurve { get { return GetCurveType(configForm.AudioFadeOutCurveCombo.SelectedIndex); } }
 		/**<summary>原始音高</summary>*/ private int AConfigBasePitch { get { return configForm.BasePitch; } }
-		/**<summary>调音方法</summary>*/ private AudioTuneMethod AConfigMethod { get { return (AudioTuneMethod)configForm.AudioTuneMethodCombo.SelectedIndex; } }
+		/**<summary>调音方法</summary>*/ private AudioTuningMethod AConfigMethod { get { return (AudioTuningMethod)configForm.AudioTuneMethodCombo.SelectedIndex; } }
+		/**<summary>超出音域替代方法</summary>*/ private AudioAltTuningMethod AConfigAltMethod { get { return (AudioAltTuningMethod)configForm.AudioAltMethodCombo.SelectedIndex; } }
 		#if VER_GEQ_16
-		/**<summary>弹性属性</summary>*/ private ElastiqueStretchAttributes? AConfigElastiqueAttr { get { return AConfigMethod == AudioTuneMethod.ELASTIQUE ?
+		/**<summary>弹性属性</summary>*/ private ElastiqueStretchAttributes? AConfigElastiqueAttr { get { return AConfigMethod == AudioTuningMethod.ELASTIQUE ?
 			(ElastiqueStretchAttributes?)configForm.AudioStretchAttrCombo.SelectedIndex : null; } }
-		/**<summary>古典属性</summary>*/ private ClassicStretchAttributes? AConfigClassicAttr { get { return AConfigMethod == AudioTuneMethod.CLASSIC ?
+		/**<summary>古典属性</summary>*/ private ClassicStretchAttributes? AConfigClassicAttr { get { return AConfigMethod == AudioTuningMethod.CLASSIC ?
 			(ClassicStretchAttributes?)configForm.AudioStretchAttrCombo.SelectedIndex : null; } }
 		#endif
 		/**<summary>伸缩变调</summary>*/ private bool AConfigLockStretchPitch { get { return configForm.AudioLockStretchPitchCheck.Checked; } }
@@ -1041,14 +1042,17 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				if (midi.TimeSignatureTrack == null && SheetConfig) { ShowError(new Exceptions.GenerateStaffVisualizerWithoutTimeSignatureException()); return false; }
 			}
 			Plugin.Init(vegas);
-			if (AConfig && AConfigMethod == AudioTuneMethod.PITCH_SHIFT) requestShowProgress = true;
+			if (AConfig && AConfigMethod == AudioTuningMethod.PITCH_SHIFT) requestShowProgress = true;
 			long startMakingTime = DateTime.Now.Ticks; // 单位：100 纳秒
 			const long MUST_SHOW_PROGRESS_WAITING_TIME = 10000000L; // 1 秒
 			if (progressForm == null || progressForm.IsDisposed) { // 这里有一个特别蛇皮的 bug，就是如果手动打开一个不受 Vegas 支持的媒体文件，触发打不开媒体文件的报错。然后再打开一个 Vegas 支持的媒体文件，最后点击生成。这竟然会导致进度条对话框被销毁且不为 null 的奇葩问题，而且因果毫无任何关系。反正这样可以解决问题就行了。
 				progressForm = new ProgressForm(IsNativeProgressDialogStyle);
 				progressForm.Show();
 			}
-			if (AConfig && AConfigMethod == AudioTuneMethod.PITCH_SHIFT) if (!ExaminePitchShiftPresetsExist()) return false;
+			if (AConfig &&
+				(AConfigMethod == AudioTuningMethod.PITCH_SHIFT ||
+				(AConfigMethod == AudioTuningMethod.ELASTIQUE || AConfigMethod == AudioTuningMethod.CLASSIC) && AConfigAltMethod == AudioAltTuningMethod.PLUGIN
+			)) if (!ExaminePitchShiftPresetsExist()) return false;
 			if (YtpConfig) { GenerateYtp(); return true; }
 			#endregion
 			#region 自动改变项目速度和拍号
@@ -1302,11 +1306,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						audioEvent.Length = Timecode.FromMilliseconds(audioLength);
 					try {
 						#if VER_GEQ_16
-						audioEvent.Method = AConfigMethod == AudioTuneMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique; // 这个操作没有在 Vegas 文档中写到。
+						audioEvent.Method = AConfigMethod == AudioTuningMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique; // 这个操作没有在 Vegas 文档中写到。
 						audioEvent.PitchLock = false;
 						#endif
 					} catch (Exception e) {
-						if (AConfigMethod == AudioTuneMethod.ELASTIQUE || AConfigMethod == AudioTuneMethod.CLASSIC) {
+						if (AConfigMethod == AudioTuningMethod.ELASTIQUE || AConfigMethod == AudioTuningMethod.CLASSIC) {
 							ShowError(new Exceptions.NoTimeStretchPitchShiftException(), e); return false;
 						}
 					}
@@ -1326,11 +1330,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 					#region 应用变调
 					int pitchDelta = pitch - AConfigBasePitch;
-					if (AConfigMethod == AudioTuneMethod.PITCH_SHIFT) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
+					bool backToUsePlugin = false;
+				BackToUsePlugin:
+					if (AConfigMethod == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
 						if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
-						double _stretchRate = Pitch2Stretch(pitchDelta);
-						if (AConfigLockStretchPitch && audioFreezeLastFrameCondition && duration > audioLength / _stretchRate)
-							audioEvent.Length = Timecode.FromMilliseconds(audioLength / _stretchRate);
+						double stretchRate = Pitch2Stretch(pitchDelta);
+						if (AConfigLockStretchPitch && audioFreezeLastFrameCondition && duration > audioLength / stretchRate)
+							audioEvent.Length = Timecode.FromMilliseconds(audioLength / stretchRate);
 						int pitchDeltaTimes = pitchDelta > 0 ? 12 : -12;
 						while (pitchDeltaTimes * pitchDelta > 0) { // pitchDeltaTimes > 0 ? pitchDelta > 0 : pitchDelta < 0
 							Effect effect = audioEvent.Effects.AddEffect(Plugin.pitchShift);
@@ -1340,28 +1346,37 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 							} catch (Exception e) { ShowError(new Exceptions.NoPluginPresetsException(), e); return false; }
 							pitchDelta -= pitchDeltaTimes;
 						}
-					} else if (AConfigMethod == AudioTuneMethod.ELASTIQUE || AConfigMethod == AudioTuneMethod.CLASSIC) {
+					} else if (AConfigMethod == AudioTuningMethod.ELASTIQUE || AConfigMethod == AudioTuningMethod.CLASSIC) {
 						#if VER_GEQ_16
-						if (AConfigMethod == AudioTuneMethod.ELASTIQUE) {
+						if (AConfigMethod == AudioTuningMethod.ELASTIQUE) {
 							audioEvent.ElastiqueAttribute = (ElastiqueStretchAttributes)AConfigElastiqueAttr;
 							if (AConfigElastiqueAttr == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = AConfigReserveFormant;
-						} else if (AConfigMethod == AudioTuneMethod.CLASSIC)
+						} else if (AConfigMethod == AudioTuningMethod.CLASSIC)
 							audioEvent.ClassicAttribute = (ClassicStretchAttributes)AConfigClassicAttr;
+						double expectPitch = audioEvent.PitchSemis + pitchDelta;
+						double minStretch = AConfigAltMethod == AudioAltTuningMethod.OCTAVE_EXP ? AConfigLockStretchPitch ? PitchStretchConstants.MIN_STRETCH_EXP_RESAMPLE : PitchStretchConstants.MIN_STRETCH_EXP : PitchStretchConstants.MIN_STRETCH,
+							maxStretch = AConfigAltMethod == AudioAltTuningMethod.OCTAVE_EXP ? AConfigLockStretchPitch ? PitchStretchConstants.MAX_STRETCH_EXP_RESAMPLE : PitchStretchConstants.MAX_STRETCH_EXP : PitchStretchConstants.MAX_STRETCH;
 						if (!AConfigLockStretchPitch) {
-							double theoreticalPitch = audioEvent.PitchSemis + pitchDelta;
-							double minPitch = Math.Log(audioEvent.PlaybackRate * 0.25, 2) * 12,
-								maxPitch = Math.Log(audioEvent.PlaybackRate * 4, 2) * 12;
-							double withinRangePitch = OctaveDisplacementWithinRange(theoreticalPitch, minPitch, maxPitch);
-							audioEvent.PitchSemis = withinRangePitch;
+							double minPitch = Math.Log(audioEvent.PlaybackRate * minStretch, 2) * 12,
+								maxPitch = Math.Log(audioEvent.PlaybackRate * maxStretch, 2) * 12;
+							if (expectPitch >= minPitch && expectPitch <= maxPitch) audioEvent.PitchSemis = expectPitch;
+							else if (AConfigAltMethod == AudioAltTuningMethod.PLUGIN) { backToUsePlugin = true; goto BackToUsePlugin; }
+							else if (AConfigAltMethod == AudioAltTuningMethod.SILENT) audioEvent.Mute = true;
+							else if (AConfigAltMethod == AudioAltTuningMethod.DOCK) audioEvent.PitchSemis = Clamp(expectPitch, minPitch, maxPitch);
+							else audioEvent.PitchSemis = OctaveDisplacementWithinRange(expectPitch, minPitch, maxPitch);
 						} else {
-							double origPitch = audioEvent.PitchSemis;
+							double stretchRate = Pitch2Stretch(expectPitch);
 							audioEvent.PitchLock = true;
-							audioEvent.AdjustPlaybackRate(Pitch2Stretch(origPitch + pitchDelta), true);
+							if (stretchRate >= minStretch && stretchRate <= maxStretch) audioEvent.AdjustPlaybackRate(stretchRate, true);
+							else if (AConfigAltMethod == AudioAltTuningMethod.PLUGIN) { backToUsePlugin = true; goto BackToUsePlugin; }
+							else if (AConfigAltMethod == AudioAltTuningMethod.SILENT) audioEvent.Mute = true;
+							else if (AConfigAltMethod == AudioAltTuningMethod.DOCK) audioEvent.AdjustPlaybackRate(Clamp(stretchRate, minStretch, maxStretch), true);
+							else audioEvent.AdjustPlaybackRate(Pitch2Stretch(expectPitch, AConfigAltMethod == AudioAltTuningMethod.OCTAVE_EXP ? AutoOctaveDisplacementMode.EXP_RESAMPLE : AutoOctaveDisplacementMode.NORMAL), true);
 							if (audioFreezeLastFrameCondition && duration > audioLength / audioEvent.PlaybackRate)
 								audioEvent.Length = Timecode.FromMilliseconds(audioLength / audioEvent.PlaybackRate);
 						}
 						#endif
-					} else if (AConfigMethod == AudioTuneMethod.FOOL_TUNING) {
+					} else if (AConfigMethod == AudioTuningMethod.FOOL_TUNING) {
 						#if VER_GEQ_16
 						audioEvent.ElastiqueAttribute = ElastiqueStretchAttributes.Efficient;
 						audioEvent.PitchLock = true;
@@ -1717,13 +1732,47 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			return ApplyPvRhythmVisualEffectPartialMethod(videoEvent, anim);
 		}
 
+		private static class PitchStretchConstants {
+			public const double
+				MAX_STRETCH = 4,
+				MAX_STRETCH_EXP = 10,
+				MIN_STRETCH = 1 / MAX_STRETCH,
+				MIN_STRETCH_EXP = 1 / MAX_STRETCH_EXP,
+				MAX_PITCH = 24,
+				MIN_PITCH = -MAX_PITCH,
+				MAX_STRETCH_EXP_RESAMPLE = MAX_STRETCH,
+				MIN_STRETCH_EXP_RESAMPLE = 0.05,
+				MAX_PITCH_EXP_RESAMPLE = MAX_PITCH;
+			public static readonly double
+				MAX_PITCH_EXP = Stretch2Pitch(MAX_STRETCH_EXP),
+				MIN_PITCH_EXP = -MAX_PITCH_EXP,
+				MIN_PITCH_EXP_RESAMPLE = Stretch2Pitch(MIN_STRETCH_EXP_RESAMPLE);
+		}
+
 		/// <summary>
 		/// 相对音高到拉伸值的转换。
 		/// </summary>
 		/// <param name="pitch">相对音高。</param>
+		/// <param name="autoOctaveDisplacement">
+		/// 自动将音高移至 VEGAS 支持的范围内？
+		/// <list type="bullet">
+		/// <item><term><see cref="AutoOctaveDisplacementMode.NORMAL" /></term><description>±24</description></item>
+		/// <item><term><see cref="AutoOctaveDisplacementMode.EXP" /></term><description>±12/lg2 (≈±39.863137)</description></item>
+		/// <item><term><see cref="AutoOctaveDisplacementMode.EXP_RESAMPLE" /></term><description>-12/log_20(2)~+24 (≈-51.863137~+24)</description></item>
+		/// <item><term>其它</term><description>不启用（默认）</description></item>
+		/// </list>
+		/// </param>
 		/// <returns>拉伸值。</returns>
-		public static double Pitch2Stretch(double pitch) {
-			pitch = OctaveDisplacementWithinRange(pitch, -24, 24); // WARN: 临时解决未来版本的后门代码。
+		public static double Pitch2Stretch(double pitch, AutoOctaveDisplacementMode autoOctaveDisplacement = AutoOctaveDisplacementMode.DISABLED) {
+			if (autoOctaveDisplacement != AutoOctaveDisplacementMode.DISABLED) {
+				double min, max;
+				switch (autoOctaveDisplacement) {
+					case AutoOctaveDisplacementMode.NORMAL: default: min = PitchStretchConstants.MIN_PITCH; max = PitchStretchConstants.MAX_PITCH; break;
+					case AutoOctaveDisplacementMode.EXP: min = PitchStretchConstants.MIN_PITCH_EXP; max = PitchStretchConstants.MAX_PITCH_EXP; break;
+					case AutoOctaveDisplacementMode.EXP_RESAMPLE: min = PitchStretchConstants.MIN_PITCH_EXP_RESAMPLE; max = PitchStretchConstants.MAX_PITCH_EXP_RESAMPLE; break;
+				}
+				pitch = OctaveDisplacementWithinRange(pitch, min, max);
+			}
 			return Math.Pow(2, pitch / 12.0);
 		}
 
@@ -1739,7 +1788,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//while (pitch < minPitch) pitch += 12;
 			// 上面的代码清晰易懂，但使用 while 循环逐次 ±12，最坏情况 O(n)，性能极差。
 
-			const double OCTAVE = 12.0;
+			const double OCTAVE = 12d;
 
 			// 向下折叠：处理超出上限的情况
 			if (pitch > maxPitch) {
@@ -1777,7 +1826,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private bool requestRestartScript = false;
 
 		/// <summary>
-		/// 检查移调插件的预设是否存在。
+		/// 检查移调插件的预设是否存在，如果不存在则自动安装预设。
 		/// </summary>
 		/// <returns>处理是否成功。如果预设不存在并且脚本自己也无法自动生成预设，才会返回 false。</returns>
 		private bool ExaminePitchShiftPresetsExist() {
@@ -3596,7 +3645,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// </summary>
 	public enum MidiUseBpm {
 		/// <summary>可变 MIDI 速度。</summary>
-		DYNAMIC_MIDI,
+		VARIABLE_MIDI,
 		/// <summary>MIDI 速度。</summary>
 		MIDI,
 		/// <summary>项目速度。</summary>
@@ -3608,19 +3657,54 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// <summary>
 	/// 调音方式算法枚举。
 	/// </summary>
-	public enum AudioTuneMethod {
+	public enum AudioTuningMethod {
 		/// <summary>不调音。</summary>
-		NO_TUNE,
+		NO_TUNING,
 		/// <summary>移调效果插件。</summary>
 		PITCH_SHIFT,
 		/// <summary>弹性音调更改。</summary>
 		ELASTIQUE,
 		/// <summary>古典音调更改。</summary>
 		CLASSIC,
-		/// <summary>瞎调音。</summary>
+		/// <summary>无音阶调音。</summary>
 		FOOL_TUNING,
-		/// <summary>酸性风格调音。（包含在 API 中但任何地方均不引用，使用后会报错。）</summary>
+		/// <summary>人工振荡器。</summary>
+		OSCILLATOR,
+		/// <summary>ACID Pro 使用的调音。</summary>
 		ACID_STYLE = 20,
+	}
+
+	/// <summary>
+	/// 超出音域替代调音方式算法枚举。
+	/// </summary>
+	public enum AudioAltTuningMethod {
+		/// <summary>切换到移调音效插件。</summary>
+		PLUGIN,
+		/// <summary>高 / 低八度。</summary>
+		OCTAVE,
+		/// <summary>高 / 低八度（实验性）。</summary>
+		OCTAVE_EXP,
+		/// <summary>停靠在边缘。</summary>
+		DOCK,
+		/// <summary>不发声。</summary>
+		SILENT,
+	}
+
+	/// <summary>
+	/// 升降八度的行为。
+	/// </summary>
+	/// <remarks>
+	/// 我是没有料到 VEGAS 光音域还有这么多讲究。
+	/// </remarks>
+	public enum AutoOctaveDisplacementMode {
+		/// <summary>禁用。</summary>
+		DISABLED,
+		/// <summary>标准行为。</summary>
+		NORMAL,
+		/// <summary>非重采样音频下的实验性行为。</summary>
+		EXP,
+		/// <summary>重采样音频下的实验性行为。</summary>
+		EXP_RESAMPLE,
 	}
 
 	/// <summary>
@@ -3743,8 +3827,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 	/// 自动布局轨道 - 网格布局 轨道取景方式。
 	/// </summary>
 	public enum FitType {
+		/// <summary>裁切。</summary>
 		COVER,
+		/// <summary>遮幅。</summary>
 		CONTAIN,
+		/// <summary>叠加。</summary>
 		OVERLAY,
 	}
 
@@ -13794,26 +13881,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void OkBtn_Click(object sender, EventArgs e) {
 			Close();
 			#if VER_GEQ_16 // 不重要了，低于 16 的版本整个功能都不能用了，加上仅保证不会报错。
-			TimeStretchPitchShift method = GetMethod(MethodCombo.SelectedIndex);
+			AudioTuningMethod method = (AudioTuningMethod)MethodCombo.SelectedIndex;
 			bool isLockPitch = PitchLockCheck.Checked;
 			bool isLockFormant = FormantLockCheck.Checked;
 			ElastiqueStretchAttributes elastique = new ElastiqueStretchAttributes();
 			ClassicStretchAttributes classic = new ClassicStretchAttributes();
-			if (method == TimeStretchPitchShift.Elastique) elastique = (ElastiqueStretchAttributes)StretchAttrCombo.SelectedIndex;
-			if (method == TimeStretchPitchShift.Classic) classic = (ClassicStretchAttributes)StretchAttrCombo.SelectedIndex;
+			if (method == AudioTuningMethod.ELASTIQUE) elastique = (ElastiqueStretchAttributes)StretchAttrCombo.SelectedIndex;
+			if (method == AudioTuningMethod.CLASSIC) classic = (ClassicStretchAttributes)StretchAttrCombo.SelectedIndex;
 			IEnumerable<AudioEvent> audioEvents = parent.GetSelectedAudioEvents();
 			foreach (AudioEvent audioEvent in audioEvents) {
-				audioEvent.Method = method;
-				if (method == TimeStretchPitchShift.None) continue;
-					if (method == TimeStretchPitchShift.Elastique) audioEvent.ElastiqueAttribute = elastique;
-					if (method == TimeStretchPitchShift.Classic) audioEvent.ClassicAttribute = classic;
-					if (method == TimeStretchPitchShift.Elastique && elastique == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = isLockFormant;
+				if (method == AudioTuningMethod.NO_TUNING) continue;
+				if (method == AudioTuningMethod.ELASTIQUE) audioEvent.ElastiqueAttribute = elastique;
+				if (method == AudioTuningMethod.CLASSIC) audioEvent.ClassicAttribute = classic;
+				if (method == AudioTuningMethod.ELASTIQUE && elastique == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = isLockFormant;
 				if (audioEvent.PitchLock != isLockPitch) {
 					if (LockPitchInsteadOfRateCheck.Checked) {
 						if (isLockPitch) {
 							double originalPitch = audioEvent.PitchSemis;
 							audioEvent.PitchLock = isLockPitch;
-							audioEvent.AdjustPlaybackRate(EntryPoint.Pitch2Stretch(originalPitch), true);
+							audioEvent.AdjustPlaybackRate(EntryPoint.Pitch2Stretch(originalPitch, AutoOctaveDisplacementMode.NORMAL), true);
 						} else {
 							double originalRate = audioEvent.PlaybackRate;
 							audioEvent.PitchLock = isLockPitch;
@@ -13825,15 +13911,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			#endif
 		}
 
-		private TimeStretchPitchShift GetMethod(int selectedIndex) {
-			return selectedIndex == 1 ? TimeStretchPitchShift.Elastique :
-				selectedIndex == 2 ? TimeStretchPitchShift.Classic :
-				TimeStretchPitchShift.None;
-		}
-
 		private void MethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
 			#if VER_GEQ_16
-			TimeStretchPitchShift method = GetMethod(MethodCombo.SelectedIndex);
+			TimeStretchPitchShift method = (TimeStretchPitchShift)MethodCombo.SelectedIndex;
 			LockPitchInsteadOfRateCheck.Enabled = StretchAttrCombo.Enabled = PitchLockCheck.Enabled = method != TimeStretchPitchShift.None;
 			FormantLockCheck.Enabled = method == TimeStretchPitchShift.Elastique && StretchAttrCombo.SelectedIndex == 0;
 			if (method != lastMethod) {
@@ -13847,11 +13927,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 					StretchAttrCombo.SelectedIndex = 0;
 				}
 			}
-				if (method == TimeStretchPitchShift.Elastique) {
-					ElastiqueStretchAttributes attr = (ElastiqueStretchAttributes)StretchAttrCombo.SelectedIndex;
-					if (attr == ElastiqueStretchAttributes.Efficient || attr == ElastiqueStretchAttributes.Soloist_Speech) FormantLockCheck.Checked = false;
-					else if (attr == ElastiqueStretchAttributes.Soloist_Monophonic) FormantLockCheck.Checked = true;
-				}
+			if (method == TimeStretchPitchShift.Elastique) {
+				ElastiqueStretchAttributes attr = (ElastiqueStretchAttributes)StretchAttrCombo.SelectedIndex;
+				if (attr == ElastiqueStretchAttributes.Efficient || attr == ElastiqueStretchAttributes.Soloist_Speech) FormantLockCheck.Checked = false;
+				else if (attr == ElastiqueStretchAttributes.Soloist_Monophonic) FormantLockCheck.Checked = true;
+			}
 			if (PitchLockCheck.Checked) StretchAttrCombo.Enabled = FormantLockCheck.Enabled = false;
 			#endif
 		}
@@ -13860,7 +13940,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			get {
 				Lang str = Lang.str;
 				return new string[] {
-					str.elastique_pro, str.elastique_efficient, str.elastique_soloist_monophonic, str.elastique_soloist_speech
+					str.elastique_pro, str.elastique_efficient, str.elastique_soloist_monophonic, str.elastique_soloist_speech,
 				};
 			}
 		}
@@ -22001,6 +22081,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioAltMethodCombo.TabIndex = 12;
 			this.Balloon.SetToolTip(this.AudioAltMethodCombo, "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\r\n“弹性音调更改”表示使用“Élastique”拉伸方式改变音调，也就是键盘上" +
 		" +、- 键直接改变音调，\r\n有音高范围限制。");
+			this.AudioAltMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioAltMethodCombo_SelectedIndexChanged);
 			//
 			// SourceStartTimeText
 			//
@@ -23204,9 +23285,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.flowLayoutPanel13.AutoSize = true;
 			this.flowLayoutPanel13.Controls.Add(this.MultiSourceOffRadio);
-			this.flowLayoutPanel13.Controls.Add(this.LinearMapRadio);
-			this.flowLayoutPanel13.Controls.Add(this.MatchCutRadio);
 			this.flowLayoutPanel13.Controls.Add(this.LuckyDipRadio);
+			this.flowLayoutPanel13.Controls.Add(this.MatchCutRadio);
+			this.flowLayoutPanel13.Controls.Add(this.LinearMapRadio);
 			this.flowLayoutPanel13.Controls.Add(this.ConsonantRadio);
 			this.flowLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel13.Location = new System.Drawing.Point(8, 40);
@@ -23234,7 +23315,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.LinearMapRadio.AutoSize = true;
 			this.LinearMapRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LinearMapRadio.Location = new System.Drawing.Point(85, 4);
+			this.LinearMapRadio.Location = new System.Drawing.Point(335, 4);
 			this.LinearMapRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.LinearMapRadio.Name = "LinearMapRadio";
 			this.LinearMapRadio.Size = new System.Drawing.Size(189, 36);
@@ -23246,7 +23327,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.MatchCutRadio.AutoSize = true;
 			this.MatchCutRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.MatchCutRadio.Location = new System.Drawing.Point(282, 4);
+			this.MatchCutRadio.Location = new System.Drawing.Point(234, 4);
 			this.MatchCutRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.MatchCutRadio.Name = "MatchCutRadio";
 			this.MatchCutRadio.Size = new System.Drawing.Size(93, 36);
@@ -23258,7 +23339,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.LuckyDipRadio.AutoSize = true;
 			this.LuckyDipRadio.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LuckyDipRadio.Location = new System.Drawing.Point(383, 4);
+			this.LuckyDipRadio.Location = new System.Drawing.Point(85, 4);
 			this.LuckyDipRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.LuckyDipRadio.Name = "LuckyDipRadio";
 			this.LuckyDipRadio.Size = new System.Drawing.Size(141, 36);
@@ -27357,7 +27438,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SheetTab.Margin = new System.Windows.Forms.Padding(4);
 			this.SheetTab.Name = "SheetTab";
 			this.SheetTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SheetTab.Size = new System.Drawing.Size(1052, 1000);
+			this.SheetTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SheetTab.TabIndex = 3;
 			this.SheetTab.Text = "五线谱";
 			this.SheetTab.UseVisualStyleBackColor = true;
@@ -27801,7 +27882,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SonarTab.Margin = new System.Windows.Forms.Padding(4);
 			this.SonarTab.Name = "SonarTab";
 			this.SonarTab.Padding = new System.Windows.Forms.Padding(8);
-			this.SonarTab.Size = new System.Drawing.Size(1052, 1000);
+			this.SonarTab.Size = new System.Drawing.Size(1052, 1002);
 			this.SonarTab.TabIndex = 6;
 			this.SonarTab.Text = "声呐";
 			this.SonarTab.UseVisualStyleBackColor = true;
@@ -27823,7 +27904,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 984);
+			this.tableLayoutPanel11.Size = new System.Drawing.Size(1036, 986);
 			this.tableLayoutPanel11.TabIndex = 0;
 			//
 			// SonarSwitchesFlow
@@ -27931,7 +28012,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SonarList.Margin = new System.Windows.Forms.Padding(4);
 			this.SonarList.Name = "SonarList";
 			this.SonarList.ShowItemToolTips = true;
-			this.SonarList.Size = new System.Drawing.Size(1028, 317);
+			this.SonarList.Size = new System.Drawing.Size(1028, 319);
 			this.SonarList.TabIndex = 1;
 			this.SonarList.UseCompatibleStateImageBehavior = false;
 			this.SonarList.View = System.Windows.Forms.View.Details;
@@ -27967,7 +28048,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SonarButtonsTable.Controls.Add(this.SonarDeleteBtn, 1, 0);
 			this.SonarButtonsTable.Controls.Add(this.SonarResetBtn, 0, 0);
 			this.SonarButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarButtonsTable.Location = new System.Drawing.Point(4, 384);
+			this.SonarButtonsTable.Location = new System.Drawing.Point(4, 386);
 			this.SonarButtonsTable.Margin = new System.Windows.Forms.Padding(4);
 			this.SonarButtonsTable.Name = "SonarButtonsTable";
 			this.SonarButtonsTable.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
@@ -28052,7 +28133,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.SonarParamsGroup.AutoSize = true;
 			this.SonarParamsGroup.Controls.Add(this.SonarParamsPanel);
 			this.SonarParamsGroup.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.SonarParamsGroup.Location = new System.Drawing.Point(4, 460);
+			this.SonarParamsGroup.Location = new System.Drawing.Point(4, 462);
 			this.SonarParamsGroup.Margin = new System.Windows.Forms.Padding(4);
 			this.SonarParamsGroup.Name = "SonarParamsGroup";
 			this.SonarParamsGroup.Padding = new System.Windows.Forms.Padding(4);
@@ -29087,7 +29168,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.YtpTab.Margin = new System.Windows.Forms.Padding(4);
 			this.YtpTab.Name = "YtpTab";
 			this.YtpTab.Padding = new System.Windows.Forms.Padding(8);
-			this.YtpTab.Size = new System.Drawing.Size(1052, 1000);
+			this.YtpTab.Size = new System.Drawing.Size(1052, 1002);
 			this.YtpTab.TabIndex = 5;
 			this.YtpTab.Text = "YTP";
 			this.YtpTab.UseVisualStyleBackColor = true;
@@ -29300,7 +29381,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.MoshTab.Margin = new System.Windows.Forms.Padding(4);
 			this.MoshTab.Name = "MoshTab";
 			this.MoshTab.Padding = new System.Windows.Forms.Padding(4);
-			this.MoshTab.Size = new System.Drawing.Size(1052, 1000);
+			this.MoshTab.Size = new System.Drawing.Size(1052, 1002);
 			this.MoshTab.TabIndex = 7;
 			this.MoshTab.Text = "抹失";
 			this.MoshTab.UseVisualStyleBackColor = true;
@@ -31267,6 +31348,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AudioFadeInCurveCombo.SetIndex(configIni.Read("FadeInCurve", 1), 1);
 			AudioFadeOutCurveCombo.SetIndex(configIni.Read("FadeOutCurve", 2), 2);
 			SetBasePitchCombo(configIni.Read("BasePitch", "C5"));
+			AltMethod = configIni.Read("AltTuneMethod", 1);
 			AudioTuneMethodCombo.SetIndex(configIni.Read("TuneMethod", 2), 2);
 			AudioStretchAttrCombo.SetIndex(configIni.Read("StretchAttr", 1), 1);
 			AudioLockStretchPitchCheck.Checked = configIni.Read("LockStretchPitch", false);
@@ -31491,6 +31573,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			configIni.Write("FadeInCurve", AudioFadeInCurveCombo.SelectedIndex);
 			configIni.Write("FadeOutCurve", AudioFadeOutCurveCombo.SelectedIndex);
 			configIni.Write("BasePitch", AudioMainKeyCombo.SelectedItem.ToString() + AudioMainOctaveCombo.SelectedItem.ToString());
+			configIni.Write("AltTuneMethod", AltMethod);
 			configIni.Write("TuneMethod", AudioTuneMethodCombo.SelectedIndex);
 			configIni.Write("StretchAttr", AudioStretchAttrCombo.SelectedIndex);
 			configIni.Write("LockStretchPitch", AudioLockStretchPitchCheck.Checked);
@@ -31811,6 +31894,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Balloon.SetToolTip(StaffRelativeValueCheck, str.sheet_relative_tooltip);
 			Balloon.SetToolTip(StaffLineThicknessBox, str.sheet_line_thickness_tooltip);
 			Balloon.SetToolTip(AudioTuneMethodCombo, str.tune_method_tooltip);
+			Balloon.SetToolTip(AudioAltMethodCombo, string.Format(str.alt_tuning_method_tooltip, "±24", "±12/lg2 (≈±39.863137)", "-12/log_20(2)~+24 (≈-51.863137~+24)"));
+			Balloon.SetToolTip(AudioLockStretchPitchCheck, str.audio_lock_stretch_pitch_tooltip);
+			Balloon.SetToolTip(PreviewBeepDurationBox, str.preview_beep_duration_tooltip);
+			Balloon.SetToolTip(PreviewTuneAudioCheck, str.preview_tune_audio_tooltip);
 			StaffRelativeValueCheck.Text = str.sheet_relative;
 			AudioTuneMethodCombo.Items[0] = str.no_tune;
 			AudioTuneMethodCombo.Items[1] = str.pitch_shift_plugin;
@@ -31818,6 +31905,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			AudioTuneMethodCombo.Items[2] = str.elastique_method;
 			AudioTuneMethodCombo.Items[3] = str.classic_method;
 			AudioTuneMethodCombo.Items[4] = str.fool_tuning_method;
+			AudioTuneMethodCombo.Items[5] = str.oscillator;
 			#endif
 			PreviewBeepWaveFormCombo.Items[0] = str.sine_wave;
 			PreviewBeepWaveFormCombo.Items[1] = str.triangle_wave;
@@ -31830,9 +31918,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Balloon.SetToolTip(MidiEndSecondBox, str.midi_end_second_tooltip);
 			Balloon.SetToolTip(SourceStartTimeText, str.source_start_time_tooltip);
 			Balloon.SetToolTip(SourceEndTimeText, str.source_end_time_tooltip);
-			Balloon.SetToolTip(AudioLockStretchPitchCheck, str.audio_lock_stretch_pitch_tooltip);
-			Balloon.SetToolTip(PreviewBeepDurationBox, str.preview_beep_duration_tooltip);
-			Balloon.SetToolTip(PreviewTuneAudioCheck, str.preview_tune_audio_tooltip);
 			Balloon.SetToolTip(StaffLegacyMethodCheck, str.sheet_legacy_method_tooltip);
 			AudioLockStretchPitchCheck.Text = str.audio_lock_stretch_pitch;
 			fileMenuItem.Text = str.file;
@@ -32346,24 +32431,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			bool isAConfigOn = AudioConfigCheck.Checked;
 			if (AudioParamsGroup.Enabled != isAConfigOn)
 				SetEnabled(AudioTab, isAConfigOn, new Control[] { AudioConfigCheck });
-			AudioTuneMethod method = (AudioTuneMethod)AudioTuneMethodCombo.SelectedIndex;
+			AudioTuningMethod method = (AudioTuningMethod)AudioTuneMethodCombo.SelectedIndex;
 			AudioLockStretchPitchCheck.Enabled = AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled
 				= PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled = AudioScratchCombo.Enabled
-				= isAConfigOn && method != AudioTuneMethod.NO_TUNE && method != AudioTuneMethod.FOOL_TUNING;
-			if (method == AudioTuneMethod.FOOL_TUNING) {
+				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING && method != AudioTuningMethod.OSCILLATOR;
+			if (method == AudioTuningMethod.FOOL_TUNING) {
 				AudioLockStretchPitchCheck.Enabled = AudioScratchCombo.Enabled = false;
 				AudioLockStretchPitchCheck.Checked = true;
 				AudioScratchCombo.SelectedIndex = 1;
 			}
-			bool isPitchChangeMethod = method == AudioTuneMethod.ELASTIQUE || method == AudioTuneMethod.CLASSIC;
+			bool isPitchChangeMethod = method == AudioTuningMethod.ELASTIQUE || method == AudioTuningMethod.CLASSIC;
 			AudioStretchAttrCombo.Enabled = isPitchChangeMethod;
 			AudioReserveFormantCheck.Enabled = false;
 			if (isPitchChangeMethod && AudioLockStretchPitchCheck.Checked) {
 				AudioScratchCombo.Enabled = false;
 				AudioScratchCombo.SelectedIndex = 0;
 			}
+			AudioAltMethodCombo.Enabled = AudioAltMethodCombo.Items.Count >= 2;
 			#if VER_GEQ_16
-			if (method == AudioTuneMethod.ELASTIQUE) {
+			if (method == AudioTuningMethod.ELASTIQUE) {
 				ElastiqueStretchAttributes attr = (ElastiqueStretchAttributes)AudioStretchAttrCombo.SelectedIndex;
 				if (attr == ElastiqueStretchAttributes.Pro) AudioReserveFormantCheck.Enabled = true;
 				else if (attr == ElastiqueStretchAttributes.Soloist_Monophonic) AudioReserveFormantCheck.Checked = true;
@@ -32431,6 +32517,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			{
 				AudioStretchAttrCombo.Enabled = false;
 				AudioStretchAttrCombo.SelectedIndex = -1;
+				AudioAltMethodCombo.Enabled = false;
+				AudioAltMethodCombo.SelectedIndex = -1;
 				AudioReserveFormantCheck.Enabled = AudioReserveFormantCheck.Checked = false;
 				PreviewTuneAudioCheck.Enabled = PreviewTuneAudioCheck.Checked = false;
 				int INVALID_METHOD_LESS_THAN_16 = 2;
@@ -32957,13 +33045,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 
 		private void ApplyTuningToAudioEvent(AudioEvent @event) {
 			#if VER_GEQ_16 // Vegas 版本号 15 及以下无法调整。
-			AudioTuneMethod method = (AudioTuneMethod)AudioTuneMethodCombo.SelectedIndex;
-			if (method == AudioTuneMethod.NO_TUNE) return;
-			@event.Method = method == AudioTuneMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique;
-			if (method == AudioTuneMethod.ELASTIQUE) {
+			AudioTuningMethod method = (AudioTuningMethod)AudioTuneMethodCombo.SelectedIndex;
+			if (method == AudioTuningMethod.NO_TUNING) return;
+			@event.Method = method == AudioTuningMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique;
+			if (method == AudioTuningMethod.ELASTIQUE) {
 				ElastiqueStretchAttributes elastiqueAttr = @event.ElastiqueAttribute = (ElastiqueStretchAttributes)AudioStretchAttrCombo.SelectedIndex;
 				if (elastiqueAttr == ElastiqueStretchAttributes.Pro) @event.FormantLock = AudioReserveFormantCheck.Checked;
-			} else if (method == AudioTuneMethod.CLASSIC)
+			} else if (method == AudioTuningMethod.CLASSIC)
 				@event.ClassicAttribute = (ClassicStretchAttributes)AudioStretchAttrCombo.SelectedIndex;
 			try {
 				@event.PitchLock = @event.PitchLock;
@@ -32975,7 +33063,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			else {
 				double origPitch = @event.PitchSemis;
 				@event.PitchLock = true;
-				double rate = EntryPoint.Pitch2Stretch(origPitch + pitchDelta);
+				double rate = EntryPoint.Pitch2Stretch(origPitch + pitchDelta, AutoOctaveDisplacementMode.NORMAL);
 				@event.AdjustPlaybackRate(rate, true);
 				@event.Length = @event.Length.Multiply(1 / rate);
 			}
@@ -33027,19 +33115,49 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			MidiConfigTablePanel.RowStyles[MidiConfigTablePanel.GetRow(MidiBpmFlowPanel)] = new RowStyle(SizeType.Absolute, MidiBpmFlowPanel.Height);
 		}
 
-		private AudioTuneMethod previousAudioTuneMethod = new AudioTuneMethod();
+		private AudioTuningMethod previousAudioTuneMethod = new AudioTuningMethod();
 		private void AudioTuneMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
-			ComboBox attrs = AudioStretchAttrCombo;
-			AudioTuneMethod method = (AudioTuneMethod)AudioTuneMethodCombo.SelectedIndex;
+			#if VER_GEQ_16 // Vegas 版本号 15 及以下无法调整。
+			ComboBox attrs = AudioStretchAttrCombo, alts = AudioAltMethodCombo;
+			AudioTuningMethod method = (AudioTuningMethod)AudioTuneMethodCombo.SelectedIndex;
 			if (method == previousAudioTuneMethod) return;
 			else previousAudioTuneMethod = method;
 			attrs.Items.Clear();
-			if (method == AudioTuneMethod.ELASTIQUE) {
+			if (method == AudioTuningMethod.ELASTIQUE) {
 				attrs.Items.AddRange(ChangeTuneMethodForm.ElastiqueAttrArray);
 				attrs.SelectedIndex = 1;
-			} else if (method == AudioTuneMethod.CLASSIC) {
+			} else if (method == AudioTuningMethod.CLASSIC) {
 				attrs.Items.AddRange(ChangeTuneMethodForm.ClassicAttrArray);
 				attrs.SelectedIndex = 2;
+			}
+			AudioAltMethodCombo_InternalChanging = true;
+			alts.Items.Clear();
+			alts.Items.AddRange(AltMethodArray);
+			bool isElasticOrClassic = alts.Items.Count >= 2, isPitchShift = alts.Items.Count == 1;
+			alts.Enabled = isElasticOrClassic;
+			if (isElasticOrClassic) alts.SetIndex(AltMethod, 1);
+			else if (isPitchShift) alts.SelectedIndex = 0;
+			AudioAltMethodCombo_InternalChanging = false;
+			#endif
+		}
+
+		private bool AudioAltMethodCombo_InternalChanging = false;
+		private void AudioAltMethodCombo_SelectedIndexChanged(object sender, EventArgs e) {
+			if (AudioAltMethodCombo_InternalChanging) return;
+			AltMethod = AudioAltMethodCombo.SelectedIndex;
+		}
+
+		private int AltMethod { get; set; }
+		public string[] AltMethodArray {
+			get {
+				Lang str = Lang.str;
+				AudioTuningMethod method = (AudioTuningMethod)AudioTuneMethodCombo.SelectedIndex;
+				if (method == AudioTuningMethod.PITCH_SHIFT) return new string[] { str.alt_multiple };
+				else if (method == AudioTuningMethod.ELASTIQUE || method == AudioTuningMethod.CLASSIC)
+					return new string[] {
+						str.alt_plugin, str.alt_octave, str.alt_octaveExp, str.alt_dock, str.alt_silent,
+					};
+				else return new string[0];
 			}
 		}
 
@@ -33098,7 +33216,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			get {
 				return MidiMidiBpmCheck.Checked ? MidiUseBpm.MIDI :
 					MidiProjectBpmCheck.Checked ? MidiUseBpm.PROJECT :
-					MidiCustomBpmCheck.Checked ? MidiUseBpm.CUSTOM : MidiUseBpm.DYNAMIC_MIDI;
+					MidiCustomBpmCheck.Checked ? MidiUseBpm.CUSTOM : MidiUseBpm.VARIABLE_MIDI;
 			}
 			set {
 				MidiMidiBpmCheck.Related.Selected = value == MidiUseBpm.MIDI ? MidiMidiBpmCheck :
@@ -34416,8 +34534,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			triangle_wave = "三角波",
 			square_wave = "方波",
 			sawtooth_wave = "锯齿波",
-			tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”拉伸方式改变音调，也就是键盘上 +、- 键直接改变音调，\n有音高范围限制。",
-			audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。如果使用的是“弹性音调\n更改”方法，那么将会禁用拉伸音频功能。",
+			tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用 Vegas Video 2.0 至 Vegas Pro 8.0 中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”表示通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+			audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
+			alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 			preview_beep_duration_tooltip = "预听标准音高所持续的时间。\n单位：毫秒。",
 			preview_tune_audio_tooltip = "勾选后，预听音频时会将音频素材调整到主音高中央 C。\n否则，预听标准音高将会播放原始音高处所设定的音高。",
 			sheet_position_tooltip = "五线谱中间第三根线到屏幕中心的距离，上正下负。\n单位：像素。",
@@ -34967,6 +35086,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
 			failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 			generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
+			oscillator = "人工振荡器",
+			alt_multiple = "多次使用音效插件",
+			alt_plugin = "切换到移调音效插件",
+			alt_octave = "高 / 低八度",
+			alt_octaveExp = "高 / 低八度（实验性）",
+			alt_dock = "停靠在边缘",
+			alt_silent = "不发声",
 			__eol__ = "";
 
 		static Lang() {
@@ -35243,8 +35369,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "Triangle",
 				square_wave = "Square",
 				sawtooth_wave = "Sawtooth",
-				tune_method_tooltip = "\"Pitch Shift Audio Effect Plugin\" means to use the \"Pitch Shift\" effect plugin in \"Audio FX\" to change the pitch, and the presets needs to be configured.\n\"Elastic Pitch Change\" means to use the \"Élastique\" stretching method to change the pitch, that is, the + and-keys on the keyboard directly change the pitch, and the pitch range is limited.",
-				audio_lock_stretch_pitch_tooltip = "Use resampling to change pitch as speed changes. Stretch audio will be disabled if the \"Elastic Pitch Change\" method is used.",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
+				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "The duration of pre-listening to the base pitch.\nUnit: milliseconds.",
 				preview_tune_audio_tooltip = "If checked, the audio source will be tuned to the tonic central C when pre-listening the audio.\nOtherwise, the tone which set by the base pitch will be produced when pre-listening the base pitch.",
 				sheet_position_tooltip = "The distance from the third line in the middle of the staff to the center of the screen. Up plus down minus.\nUnit: pixel.",
@@ -35794,6 +35921,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "Error: Failed to automatically change the numerator of time signature!\n\nVEGAS only supports numerators within the range of {0}, and the currently set numerator of time signature is {1}.",
 				failed_to_auto_change_project_beat_denominator_exception = "Error: Failed to automatically change the denominator of time signature!\n\nVEGAS only supports denominators within the range of {0}, and the currently set denominator of time signature is {1}.",
 				generate_staff_visualizer_without_time_signature_exception = "Error: Generation of Staff Visualizer failed due to missing time signature information.\n\nThe current MIDI file can generate YTPMV/otoMAD, but cannot generate Staff Visualizer.\nThis is because the MIDI file does not contain any time signature information. Please try to edit the MIDI file to allocate any time signature, or try another MIDI file.",
+				oscillator = "人工振荡器",
+				alt_multiple = "多次使用音效插件",
+				alt_plugin = "切换到移调音效插件",
+				alt_octave = "高 / 低八度",
+				alt_octaveExp = "高 / 低八度（实验性）",
+				alt_dock = "停靠在边缘",
+				alt_silent = "不发声",
 			};
 			TChinese = new Lang {
 				__name__ = "繁體中文",
@@ -36067,8 +36201,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "三角波",
 				square_wave = "方波",
 				sawtooth_wave = "鋸齒波",
-				tune_method_tooltip = "「移調效果插件」表示使用「音訊FX」中的「移調」效果插件改變音調，需要配置預設。\n「彈性音調更改」表示使用“Élastique”拉伸管道改變音調，也就是鍵盤上 +、- 鍵直接改變音調，\n有音高範圍限制。",
-				audio_lock_stretch_pitch_tooltip = "採用重採樣管道，隨著速度變化而改變音高。如果使用的是「彈性音調\n更改」方法，那麼將會禁用拉伸音訊功能。",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
+				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "預聽標準音高所持續的時間。\n單位：毫秒。",
 				preview_tune_audio_tooltip = "勾選後，預聽音訊時會將音訊素材調整到主音高中央 C。\n否則，預聽標準音高將會播放原始音高處所設定的音高。",
 				sheet_position_tooltip = "五線譜中間第三根線到荧幕中心的距離，上正下負。\n單位：點數。",
@@ -36617,6 +36752,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "錯誤：自動更改專案拍號分子失敗！\n\nVEGAS 僅支援分子在 {0} 範圍內的拍號，當前設定拍號的分子為 {1}。",
 				failed_to_auto_change_project_beat_denominator_exception = "錯誤：自動更改專案拍號分母失敗！\n\nVEGAS 僅支援分母在 {0} 範圍內的拍號，當前設定拍號的分母為 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "錯誤：因缺失拍號資訊導致生成五線譜視覺化失敗。\n\n當前 MIDI 檔案可以生成音 MAD / YTPMV，但不能生成五線譜視覺化。\n這是因為該 MIDI 檔案中未包含任何拍號資訊。請嘗試編輯該 MIDI 檔案以分配拍號資訊，或更換其它 MIDI 檔案。",
+				oscillator = "人工振荡器",
+				alt_multiple = "多次使用音效插件",
+				alt_plugin = "切换到移调音效插件",
+				alt_octave = "高 / 低八度",
+				alt_octaveExp = "高 / 低八度（实验性）",
+				alt_dock = "停靠在边缘",
+				alt_silent = "不发声",
 			};
 			Japanese = new Lang {
 				__name__ = "日本語",
@@ -36891,8 +37033,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "三角波",
 				square_wave = "方形波",
 				sawtooth_wave = "鋸歯状波",
-				tune_method_tooltip = "「ピッチシフトオーディオエフェクトプラグイン」とは、「オーディオFX」の「ピッチシフト」エフェクトプラグインを使用してピッチを変更することを意味し、プリセットを設定する必要があります。\n「エラスティックピッチチェンジ」とは、「エラスティック」ストレッチ方式でピッチを変更することを意味します。つまり、キーボードの+キーと-キーで直接ピッチを変更し、ピッチ範囲を制限します。",
-				audio_lock_stretch_pitch_tooltip = "速度の変化に応じてピッチを変更するためにリサンプリング方式を採用していることを意味します。「エラスティックピッチチェンジ」を使用している場合、\nストレッチオーディオオプションは無効になります。",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
+				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "ベースピッチにプレビューの持続時間。\n単位：ミリ秒。",
 				preview_tune_audio_tooltip = "チェックを付けると、オーディオの予聴時に、オーディオ素材を主音の高い中央Cに調整します。\n標準音の高さを予聴すると、元の音の高さに設定された音の高さが再生されます。",
 				sheet_position_tooltip = "五線譜中央の第三線から画面中央までの距離。アッププラスダウンマイナス。\n単位：ピクセル。",
@@ -37442,6 +37585,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
 				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
+				oscillator = "人工振荡器",
+				alt_multiple = "多次使用音效插件",
+				alt_plugin = "切换到移调音效插件",
+				alt_octave = "高 / 低八度",
+				alt_octaveExp = "高 / 低八度（实验性）",
+				alt_dock = "停靠在边缘",
+				alt_silent = "不发声",
 			};
 			Russian = new Lang {
 				__name__ = "Русский",
@@ -37716,8 +37866,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "треугольная",
 				square_wave = "прямоугольная",
 				sawtooth_wave = "пилообразная",
-				tune_method_tooltip = "«Подключаемый модуль звукового эффекта« Pitch Shift »» означает использование подключаемого модуля эффекта «Pitch Shift» в «Audio FX» для изменения высоты звука, а предустановки должны быть настроены.\n«Эластичное изменение высоты звука» означает использование метода растяжения «Élastique» для изменения высоты звука, то есть клавиши + и -на клавиатуре напрямую изменяют высоту звука, а диапазон высоты звука ограничен.",
-				audio_lock_stretch_pitch_tooltip = "Что используется метод повторной выборки для изменения высоты звука при изменении скорости. Если вы используете «Эластичное изменение высоты тона»,\nопция растягивания звука будет отключена.",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
+				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "время ожидания стандартного фонетического сигнала.\nв миллисекундах.",
 				preview_tune_audio_tooltip = "после включения, при предварительном прослушивании аудио материал будет скорректирован на основной звук средней школы с.\nВ противном случае стандартная высота звука будет воспроизвести заданную высота звука.",
 				sheet_position_tooltip = "Расстояние от третьей строки посередине нотоносца до центра экрана. Вверх плюс вниз минус.\nЕдиница: пиксель.",
@@ -38267,6 +38418,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
 				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
+				oscillator = "人工振荡器",
+				alt_multiple = "多次使用音效插件",
+				alt_plugin = "切换到移调音效插件",
+				alt_octave = "高 / 低八度",
+				alt_octaveExp = "高 / 低八度（实验性）",
+				alt_dock = "停靠在边缘",
+				alt_silent = "不发声",
 			};
 			Vietnamese = new Lang {
 				__name__ = "Tiếng Việt",
@@ -38540,8 +38698,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "Triangle",
 				square_wave = "Square",
 				sawtooth_wave = "Sawtooth",
-				tune_method_tooltip = "\"Plugin hiệu ứng Pitch Shift Audio\" nghĩa là dùng plugin hiệu ứng \"Pitch Shift\" trong \"Audio FX\" để thay đổi cao độ, và các preset cần được cấu hình.\n\"Elastic Pitch Change\" nghĩa là dùng phương pháp kéo dài \"Élastique\" để thay đổi cao độ, đó là nút + và - trên bàn phím thay đổi cao độ ngay lập tức, và khoảng cao độ bị giới hạn.",
-				audio_lock_stretch_pitch_tooltip = "Sử dụng resampling để thay đổi cao độ như thay đổi tốc độ. Đoạn audio kéo căng sẽ bị vô hiệu hoá nếu phương pháp \"Elastic Pitch Change\" được sử dụng.",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
+				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "Thời lượng nghe trước cao độ cơ bản.\nĐơn vị: milli giây.",
 				preview_tune_audio_tooltip = "Nếu được chọn, audio nguồn sẽ được điều chỉnh thành tonic center C khi nghe trước âm thanh.\nNếu không, tone được đặt bởi cao độ cơ bản sẽ được tạo ra khi nghe trước cao độ cơ bản.",
 				sheet_position_tooltip = "Khoảng cách từ vạch thứ ba ở giữa khung đến tâm màn hình. Lên là cộng, xuống là trừ.\nĐơn vị: pixel.",
@@ -39091,6 +39250,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
 				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
+				oscillator = "人工振荡器",
+				alt_multiple = "多次使用音效插件",
+				alt_plugin = "切换到移调音效插件",
+				alt_octave = "高 / 低八度",
+				alt_octaveExp = "高 / 低八度（实验性）",
+				alt_dock = "停靠在边缘",
+				alt_silent = "不发声",
 			};
 			Indonesian = new Lang {
 				__name__ = "Bahasa Indonesia",
@@ -39364,8 +39530,9 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "Triangle",
 				square_wave = "Square",
 				sawtooth_wave = "Sawtooth",
-				tune_method_tooltip = "\"Efek audio pitch shift\" ingin menggunakan plugin efek \"pitch shift\" di \"Audio FX\" untuk mengubah nada, dan prasetel perlu dikonfigurasi.\n\"Perubahan Nada Elastis\" artinya menggunakan \"Élastique\" metode peregangan untuk mengubah nada, yaitu tombol + dan-pada keyboard langsung mengubah nada, dan rentang nada terbatas.",
-				audio_lock_stretch_pitch_tooltip = "Gunakan resampling untuk mengubah pitch saat kecepatan berubah. Peregangan audio akan dinonaktifkan jika metode \"Elastic Pitch Change\" digunakan.",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
+				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "Durasi pra-mendengarkan nada dasar.\nUnit: milidetik.",
 				preview_tune_audio_tooltip = "Jika dicentang, sumber audio akan disetel ke nada dasar tonik C saat mendengarkan audio terlebih dahulu.\nJika tidak, nada yang diatur oleh nada dasar akan dihasilkan saat mendengarkan nada dasar terlebih dahulu.",
 				sheet_position_tooltip = "Jarak dari baris ketiga di tengah tongkat ke tengah layar. Naik plus turun dikurangi.\nSatuan: piksel.",
@@ -39915,6 +40082,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
 				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
+				oscillator = "人工振荡器",
+				alt_multiple = "多次使用音效插件",
+				alt_plugin = "切换到移调音效插件",
+				alt_octave = "高 / 低八度",
+				alt_octaveExp = "高 / 低八度（实验性）",
+				alt_dock = "停靠在边缘",
+				alt_silent = "不发声",
 			};
 		}
 	}
