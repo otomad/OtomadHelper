@@ -120,6 +120,24 @@
   <metadata name="Balloon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="AudioTuneMethodCombo.ToolTip" xml:space="preserve">
+    <value>“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。
+“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。
+“古典音调更改”表示使用 Vegas Video 2.0 至 Vegas Pro 8.0 中的算法改变音调，有音高范围限制。
+“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。
+“粒子振荡器”表示通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，
+利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。</value>
+  </data>
+  <data name="AudioAltMethodCombo.ToolTip" xml:space="preserve">
+    <value>使用另一种平替方法来处理超出音域范围之外的音符。
+“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。
+“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。
+“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。
+如果锁定伸缩与音调，则音域范围扩展到 {2}。
+请谨慎使用，有可能会导致 VEGAS 崩溃。
+“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。
+“不发声”表示将那些音符静音。</value>
+  </data>
   <metadata name="menu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>174, 17</value>
   </metadata>
