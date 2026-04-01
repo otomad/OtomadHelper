@@ -1,4 +1,4 @@
-﻿namespace Otomad.VegasScript.OtomadHelper.V4 {
+namespace Otomad.VegasScript.OtomadHelper.V4 {
 	partial class CustomFadeGainForm {
 		/// <summary>
 		/// Required designer variable.
@@ -32,6 +32,7 @@
 			this.ToLbl = new System.Windows.Forms.Label();
 			this.FromLbl = new System.Windows.Forms.Label();
 			this.PreviewBtn = new System.Windows.Forms.Button();
+			this.MultiplyGainCheck = new System.Windows.Forms.CheckBox();
 			this.dock.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
@@ -46,6 +47,7 @@
 			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
+			this.dock.Controls.Add(this.MultiplyGainCheck, 0, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.dock.Location = new System.Drawing.Point(0, 361);
 			this.dock.Margin = new System.Windows.Forms.Padding(6);
@@ -107,7 +109,7 @@
 			// 
 			this.ToBox.BackColor = System.Drawing.Color.Transparent;
 			this.ToBox.DefaultValue = new decimal(new int[] {
-            0,
+            100,
             0,
             0,
             0});
@@ -142,7 +144,7 @@
 			// 
 			this.FromBox.BackColor = System.Drawing.Color.Transparent;
 			this.FromBox.DefaultValue = new decimal(new int[] {
-            0,
+            100,
             0,
             0,
             0});
@@ -215,6 +217,17 @@
 			this.PreviewBtn.UseVisualStyleBackColor = true;
 			this.PreviewBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.PreviewBtn_Paint);
 			// 
+			// MultiplyGainCheck
+			// 
+			this.MultiplyGainCheck.AutoSize = true;
+			this.MultiplyGainCheck.Dock = System.Windows.Forms.DockStyle.Left;
+			this.MultiplyGainCheck.Location = new System.Drawing.Point(16, 13);
+			this.MultiplyGainCheck.Name = "MultiplyGainCheck";
+			this.MultiplyGainCheck.Size = new System.Drawing.Size(190, 61);
+			this.MultiplyGainCheck.TabIndex = 3;
+			this.MultiplyGainCheck.Text = "乘以当前增益";
+			this.MultiplyGainCheck.UseVisualStyleBackColor = true;
+			// 
 			// CustomFadeGainForm
 			// 
 			this.AcceptButton = this.OkBtn;
@@ -236,6 +249,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "自定渐入增益";
 			this.dock.ResumeLayout(false);
+			this.dock.PerformLayout();
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
@@ -254,5 +268,6 @@
 		public IntegerTrackWithBox ToBox;
 		public IntegerTrackWithBox FromBox;
 		private System.Windows.Forms.Button PreviewBtn;
+		private System.Windows.Forms.CheckBox MultiplyGainCheck;
 	}
 }

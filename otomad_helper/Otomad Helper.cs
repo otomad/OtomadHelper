@@ -1113,7 +1113,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				return false;
 			}
 			#endif
-			TempEventGroup tempEventGroup = new TempEventGroup(this); // 事件分组临时列表。
+
 			#endregion
 
 			#region 如果修改了素材的入点和出点的时间
@@ -1295,225 +1295,239 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 				#endregion
 
-				#region 生成音频事件
-				if (AConfig) {
-					AudioEvent audioEvent = trackHelper.AddEvent(audioEventSample, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(duration));
-					if (audioEvent == null) goto endAConfig;
-					audioEvent.Length = Timecode.FromMilliseconds(duration);
-					bool audioFreezeLastFrameCondition = AConfigFreezeLastFrame &&
-						(AConfigScratch == StretchType.NO_STRETCHING || AConfigScratch == StretchType.FLEXING_ONLY);
-					if (audioFreezeLastFrameCondition && duration > audioLength)
-						audioEvent.Length = Timecode.FromMilliseconds(audioLength);
-					try {
-						#if VER_GEQ_16
-						audioEvent.Method = AConfigMethod == AudioTuningMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique; // 这个操作没有在 Vegas 文档中写到。
-						audioEvent.PitchLock = false;
-						#endif
-					} catch (Exception e) {
-						if (AConfigMethod == AudioTuningMethod.ELASTIQUE || AConfigMethod == AudioTuningMethod.CLASSIC) {
-							ShowError(new Exceptions.NoTimeStretchPitchShiftException(), e); return false;
-						}
-					}
-					if (adjustTime) AdjustDeviation(audioEvent, sourceStartTime, sourceEndTime);
-					if (AConfigScratch == StretchType.FLEXING_AND_EXTENDING ||
-						AConfigScratch == StretchType.EXTENDING_ONLY && duration > audioLength ||
-						AConfigScratch == StretchType.FLEXING_ONLY && duration < audioLength)
-						audioEvent.AdjustPlaybackRate(audioLength / duration, true);
-					audioEvent.Loop = AConfigLoop;
-
-					audioEvent.FadeIn.Length = AConfigSetFadeBy == SetFadeByType.TIMECODE ? AConfigFadeinTimecode : Timecode.FromMilliseconds(audioEvent.Length.ToMilliseconds() * AConfigFadein / 100);
-					audioEvent.FadeOut.Length = AConfigSetFadeBy == SetFadeByType.TIMECODE ? AConfigFadeoutTimecode : Timecode.FromMilliseconds(audioEvent.Length.ToMilliseconds() * AConfigFadeout / 100);
-					audioEvent.FadeIn.Curve = AConfigFadeinCurve;
-					audioEvent.FadeOut.Curve = AConfigFadeoutCurve;
-					tempEventGroup.Add(audioEvent);
-					if (AConfigVelocity) audioEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Audio));
-
-					#region 应用变调
-					int pitchDelta = pitch - AConfigBasePitch;
-					bool backToUsePlugin = false;
-				BackToUsePlugin:
-					if (AConfigMethod == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
-						if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
-						double stretchRate = Pitch2Stretch(pitchDelta);
-						if (AConfigLockStretchPitch && audioFreezeLastFrameCondition && duration > audioLength / stretchRate)
-							audioEvent.Length = Timecode.FromMilliseconds(audioLength / stretchRate);
-						int pitchDeltaTimes = pitchDelta > 0 ? 12 : -12;
-						while (pitchDeltaTimes * pitchDelta > 0) { // pitchDeltaTimes > 0 ? pitchDelta > 0 : pitchDelta < 0
-							Effect effect = audioEvent.Effects.AddEffect(Plugin.pitchShift);
-							try {
-								effect.Preset = (Math.Abs(pitchDelta) <= 12 ? pitchDelta : pitchDeltaTimes).ToString()
-									+ (AConfigLockStretchPitch ? "~" : "");
-							} catch (Exception e) { ShowError(new Exceptions.NoPluginPresetsException(), e); return false; }
-							pitchDelta -= pitchDeltaTimes;
-						}
-					} else if (AConfigMethod == AudioTuningMethod.ELASTIQUE || AConfigMethod == AudioTuningMethod.CLASSIC) {
-						#if VER_GEQ_16
-						if (AConfigMethod == AudioTuningMethod.ELASTIQUE) {
-							audioEvent.ElastiqueAttribute = (ElastiqueStretchAttributes)AConfigElastiqueAttr;
-							if (AConfigElastiqueAttr == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = AConfigReserveFormant;
-						} else if (AConfigMethod == AudioTuningMethod.CLASSIC)
-							audioEvent.ClassicAttribute = (ClassicStretchAttributes)AConfigClassicAttr;
-						double expectPitch = audioEvent.PitchSemis + pitchDelta;
-						double minStretch = AConfigAltMethod == AudioAltTuningMethod.OCTAVE_EXP ? AConfigLockStretchPitch ? PitchStretchConstants.MIN_STRETCH_EXP_RESAMPLE : PitchStretchConstants.MIN_STRETCH_EXP : PitchStretchConstants.MIN_STRETCH,
-							maxStretch = AConfigAltMethod == AudioAltTuningMethod.OCTAVE_EXP ? AConfigLockStretchPitch ? PitchStretchConstants.MAX_STRETCH_EXP_RESAMPLE : PitchStretchConstants.MAX_STRETCH_EXP : PitchStretchConstants.MAX_STRETCH;
-						if (!AConfigLockStretchPitch) {
-							double minPitch = Math.Log(audioEvent.PlaybackRate * minStretch, 2) * 12,
-								maxPitch = Math.Log(audioEvent.PlaybackRate * maxStretch, 2) * 12;
-							if (expectPitch >= minPitch && expectPitch <= maxPitch) audioEvent.PitchSemis = expectPitch;
-							else if (AConfigAltMethod == AudioAltTuningMethod.PLUGIN) { backToUsePlugin = true; goto BackToUsePlugin; }
-							else if (AConfigAltMethod == AudioAltTuningMethod.SILENT) audioEvent.Mute = true;
-							else if (AConfigAltMethod == AudioAltTuningMethod.DOCK) audioEvent.PitchSemis = Clamp(expectPitch, minPitch, maxPitch);
-							else audioEvent.PitchSemis = OctaveDisplacementWithinRange(expectPitch, minPitch, maxPitch);
-						} else {
-							double stretchRate = Pitch2Stretch(expectPitch);
-							audioEvent.PitchLock = true;
-							if (stretchRate >= minStretch && stretchRate <= maxStretch) audioEvent.AdjustPlaybackRate(stretchRate, true);
-							else if (AConfigAltMethod == AudioAltTuningMethod.PLUGIN) { backToUsePlugin = true; goto BackToUsePlugin; }
-							else if (AConfigAltMethod == AudioAltTuningMethod.SILENT) audioEvent.Mute = true;
-							else if (AConfigAltMethod == AudioAltTuningMethod.DOCK) audioEvent.AdjustPlaybackRate(Clamp(stretchRate, minStretch, maxStretch), true);
-							else audioEvent.AdjustPlaybackRate(Pitch2Stretch(expectPitch, AConfigAltMethod == AudioAltTuningMethod.OCTAVE_EXP ? AutoOctaveDisplacementMode.EXP_RESAMPLE : AutoOctaveDisplacementMode.NORMAL), true);
-							if (audioFreezeLastFrameCondition && duration > audioLength / audioEvent.PlaybackRate)
-								audioEvent.Length = Timecode.FromMilliseconds(audioLength / audioEvent.PlaybackRate);
-						}
-						#endif
-					} else if (AConfigMethod == AudioTuningMethod.FOOL_TUNING) {
-						#if VER_GEQ_16
-						audioEvent.ElastiqueAttribute = ElastiqueStretchAttributes.Efficient;
-						audioEvent.PitchLock = true;
-						#endif
-					} else if (AConfigMethod == AudioTuningMethod.OSCILLATOR) {
-						double periodMs = Pitch2PeriodMs(pitchDelta);
-						Timecode end = audioEvent.End, floorEnd = end.FloorToMs();
-						AudioEvent prevAudioEvent = audioEvent;
-						while (true) {
-							prevAudioEvent.Length = Timecode.FromMilliseconds(periodMs);
-							if (prevAudioEvent.End.CeilToMs() >= floorEnd) {
-								prevAudioEvent.Length = end - prevAudioEvent.Start;
-								break;
+				using (TempEventGroup tempEventGroup = TempEventGroup.Create(this)) { // 事件分组临时列表。
+					#region 生成音频事件
+					if (AConfig) {
+						int indexInAudioTracks;
+						AudioEvent audioEvent = trackHelper.AddEvent(audioEventSample, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(duration), out indexInAudioTracks);
+						if (audioEvent == null) goto endAConfig;
+						audioEvent.Length = Timecode.FromMilliseconds(duration);
+						bool audioFreezeLastFrameCondition = AConfigFreezeLastFrame &&
+							(AConfigScratch == StretchType.NO_STRETCHING || AConfigScratch == StretchType.FLEXING_ONLY);
+						if (audioFreezeLastFrameCondition && duration > audioLength)
+							audioEvent.Length = Timecode.FromMilliseconds(audioLength);
+						try {
+							#if VER_GEQ_16
+							audioEvent.Method = AConfigMethod == AudioTuningMethod.CLASSIC ? TimeStretchPitchShift.Classic : TimeStretchPitchShift.Elastique; // 这个操作没有在 Vegas 文档中写到。
+							audioEvent.PitchLock = false;
+							#endif
+						} catch (Exception e) {
+							if (AConfigMethod == AudioTuningMethod.ELASTIQUE || AConfigMethod == AudioTuningMethod.CLASSIC) {
+								ShowError(new Exceptions.NoTimeStretchPitchShiftException(), e); return false;
 							}
-							prevAudioEvent = (AudioEvent)prevAudioEvent.Copy(prevAudioEvent.Track, prevAudioEvent.End);
 						}
+						if (adjustTime) AdjustDeviation(audioEvent, sourceStartTime, sourceEndTime);
+						if (AConfigScratch == StretchType.FLEXING_AND_EXTENDING ||
+							AConfigScratch == StretchType.EXTENDING_ONLY && duration > audioLength ||
+							AConfigScratch == StretchType.FLEXING_ONLY && duration < audioLength)
+							audioEvent.AdjustPlaybackRate(audioLength / duration, true);
+						audioEvent.Loop = AConfigLoop;
+
+						if (AConfigMethod != AudioTuningMethod.OSCILLATOR) {
+							audioEvent.FadeIn.Length = AConfigSetFadeBy == SetFadeByType.TIMECODE ? AConfigFadeinTimecode : Timecode.FromMilliseconds(audioEvent.Length.ToMilliseconds() * AConfigFadein / 100);
+							audioEvent.FadeOut.Length = AConfigSetFadeBy == SetFadeByType.TIMECODE ? AConfigFadeoutTimecode : Timecode.FromMilliseconds(audioEvent.Length.ToMilliseconds() * AConfigFadeout / 100);
+							audioEvent.FadeIn.Curve = AConfigFadeinCurve;
+							audioEvent.FadeOut.Curve = AConfigFadeoutCurve;
+						}
+						tempEventGroup.Add(audioEvent);
+						if (AConfigVelocity) audioEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Audio));
+
+						#region 应用变调
+						int pitchDelta = pitch - AConfigBasePitch;
+						bool backToUsePlugin = false;
+					BackToUsePlugin:
+						if (AConfigMethod == AudioTuningMethod.PITCH_SHIFT || backToUsePlugin) { // 注意：Vegas 版本号 15 及以下仅能使用移调插件调音。
+							if (Plugin.pitchShift == null) { ShowError(new Exceptions.NoPluginPitchShiftException()); return false; }
+							double stretchRate = Pitch2Stretch(pitchDelta);
+							if (AConfigLockStretchPitch && audioFreezeLastFrameCondition && duration > audioLength / stretchRate)
+								audioEvent.Length = Timecode.FromMilliseconds(audioLength / stretchRate);
+							int pitchDeltaTimes = pitchDelta > 0 ? 12 : -12;
+							while (pitchDeltaTimes * pitchDelta > 0) { // pitchDeltaTimes > 0 ? pitchDelta > 0 : pitchDelta < 0
+								Effect effect = audioEvent.Effects.AddEffect(Plugin.pitchShift);
+								try {
+									effect.Preset = (Math.Abs(pitchDelta) <= 12 ? pitchDelta : pitchDeltaTimes).ToString()
+										+ (AConfigLockStretchPitch ? "~" : "");
+								} catch (Exception e) { ShowError(new Exceptions.NoPluginPresetsException(), e); return false; }
+								pitchDelta -= pitchDeltaTimes;
+							}
+						} else if (AConfigMethod == AudioTuningMethod.ELASTIQUE || AConfigMethod == AudioTuningMethod.CLASSIC) {
+							#if VER_GEQ_16
+							if (AConfigMethod == AudioTuningMethod.ELASTIQUE) {
+								audioEvent.ElastiqueAttribute = (ElastiqueStretchAttributes)AConfigElastiqueAttr;
+								if (AConfigElastiqueAttr == ElastiqueStretchAttributes.Pro) audioEvent.FormantLock = AConfigReserveFormant;
+							} else if (AConfigMethod == AudioTuningMethod.CLASSIC)
+								audioEvent.ClassicAttribute = (ClassicStretchAttributes)AConfigClassicAttr;
+							double expectPitch = audioEvent.PitchSemis + pitchDelta;
+							double minStretch = AConfigAltMethod == AudioAltTuningMethod.OCTAVE_EXP ? AConfigLockStretchPitch ? PitchStretchConstants.MIN_STRETCH_EXP_RESAMPLE : PitchStretchConstants.MIN_STRETCH_EXP : PitchStretchConstants.MIN_STRETCH,
+								maxStretch = AConfigAltMethod == AudioAltTuningMethod.OCTAVE_EXP ? AConfigLockStretchPitch ? PitchStretchConstants.MAX_STRETCH_EXP_RESAMPLE : PitchStretchConstants.MAX_STRETCH_EXP : PitchStretchConstants.MAX_STRETCH;
+							if (!AConfigLockStretchPitch) {
+								double minPitch = Math.Log(audioEvent.PlaybackRate * minStretch, 2) * 12,
+									maxPitch = Math.Log(audioEvent.PlaybackRate * maxStretch, 2) * 12;
+								if (expectPitch >= minPitch && expectPitch <= maxPitch) audioEvent.PitchSemis = expectPitch;
+								else if (AConfigAltMethod == AudioAltTuningMethod.PLUGIN) { backToUsePlugin = true; goto BackToUsePlugin; }
+								else if (AConfigAltMethod == AudioAltTuningMethod.SILENT) audioEvent.Mute = true;
+								else if (AConfigAltMethod == AudioAltTuningMethod.DOCK) audioEvent.PitchSemis = Clamp(expectPitch, minPitch, maxPitch);
+								else audioEvent.PitchSemis = OctaveDisplacementWithinRange(expectPitch, minPitch, maxPitch);
+							} else {
+								double stretchRate = Pitch2Stretch(expectPitch);
+								audioEvent.PitchLock = true;
+								if (stretchRate >= minStretch && stretchRate <= maxStretch) audioEvent.AdjustPlaybackRate(stretchRate, true);
+								else if (AConfigAltMethod == AudioAltTuningMethod.PLUGIN) { backToUsePlugin = true; goto BackToUsePlugin; }
+								else if (AConfigAltMethod == AudioAltTuningMethod.SILENT) audioEvent.Mute = true;
+								else if (AConfigAltMethod == AudioAltTuningMethod.DOCK) audioEvent.AdjustPlaybackRate(Clamp(stretchRate, minStretch, maxStretch), true);
+								else audioEvent.AdjustPlaybackRate(Pitch2Stretch(expectPitch, AConfigAltMethod == AudioAltTuningMethod.OCTAVE_EXP ? AutoOctaveDisplacementMode.EXP_RESAMPLE : AutoOctaveDisplacementMode.NORMAL), true);
+								if (audioFreezeLastFrameCondition && duration > audioLength / audioEvent.PlaybackRate)
+									audioEvent.Length = Timecode.FromMilliseconds(audioLength / audioEvent.PlaybackRate);
+							}
+							#endif
+						} else if (AConfigMethod == AudioTuningMethod.FOOL_TUNING) {
+							#if VER_GEQ_16
+							audioEvent.ElastiqueAttribute = ElastiqueStretchAttributes.Efficient;
+							audioEvent.PitchLock = true;
+							#endif
+						} else if (AConfigMethod == AudioTuningMethod.OSCILLATOR) {
+							double periodMs = Pitch2PeriodMs(pitchDelta);
+							Timecode end = audioEvent.End, floorEnd = end.FloorToMs();
+							//if (indexInAudioTracks != 0) {
+							//	audioEvent.ActiveTake.Offset += Timecode.FromMilliseconds(indexInAudioTracks);
+							//}
+							AudioEvent prevAudioEvent = audioEvent;
+							List<AudioEvent> granulars = new List<AudioEvent>() { prevAudioEvent };
+							while (true) {
+								prevAudioEvent.Length = Timecode.FromMilliseconds(periodMs);
+								if (prevAudioEvent.End.CeilToMs() >= floorEnd) {
+									prevAudioEvent.Length = end - prevAudioEvent.Start;
+									break;
+								}
+								prevAudioEvent = (AudioEvent)prevAudioEvent.Copy(prevAudioEvent.Track, prevAudioEvent.End);
+								granulars.Add(prevAudioEvent);
+								tempEventGroup.Add(prevAudioEvent);
+							}
+							if (AConfigFadein != 0 || AConfigFadeout != 0)
+								CustomFadeGainForm.FadeGain(granulars, 100 - AConfigFadein, 100 - AConfigFadeout);
+						}
+						#endregion
 					}
+				endAConfig:;
+					#endregion
+
+					#region 生成视频事件
+					if (VConfig) {
+						VideoEvent videoEvent;
+						double videoEventDuration = SheetConfig ? staffVisualizedDuration : duration;
+						if (!IsFromSelectedClip) {
+							videoEvent = trackHelper.AddEvent<VideoEvent>(
+								Timecode.FromMilliseconds(generateBeginTime + startTime),
+								Timecode.FromMilliseconds(videoEventDuration)
+							);
+							if (videoEvent == null) goto endVConfig;
+							try {
+								videoEvent.AddTake(media.GetVideoStreamByIndex(0));
+							} catch (Exception) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
+						} else {
+							if (selectedEventSet.videoEvent == null) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
+							int _index;
+							videoEvent = trackHelper.AddEvent(selectedEventSet.videoEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(videoEventDuration), out _index);
+							if (videoEvent == null) goto endVConfig;
+						}
+						VideoTrack videoTrack = videoEvent.Track as VideoTrack;
+						PvVisualEffect anim;
+						if (!anims.TryGetValue(videoTrack, out anim))
+							anims.Add(videoTrack, anim = NewAnim());
+						bool pitchHold = anim.EqualsLastPitch(pitch);
+						if (adjustTime) AdjustDeviation(videoEvent, sourceStartTime, sourceEndTime);
+						if (VConfigScratch == StretchType.FLEXING_AND_EXTENDING ||
+							VConfigScratch == StretchType.EXTENDING_ONLY && duration > videoLength ||
+							VConfigScratch == StretchType.FLEXING_ONLY && duration < videoLength)
+							videoEvent.AdjustPlaybackRate(videoLength / duration, true);
+						if (anim.IsReverse) ReverseVideo(videoEvent); // 结论：先拉伸后反转
+						if (VConfigFreezeFirstFrame) FreezeFirstFrame(videoEvent);
+						if (VConfigFreezeLastFrame) FreezeLastFrame(videoEvent, videoLength);
+						if (SheetConfig)
+							if (SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, duration, true);
+						videoEvent.Loop = VConfigLoop;
+						tempEventGroup.Add(videoEvent);
+						// 淡入淡出
+						videoEvent.FadeIn.Length = VConfigSetFadeBy == SetFadeByType.TIMECODE ? VConfigFadeinTimecode : Timecode.FromMilliseconds(videoEvent.Length.ToMilliseconds() * VConfigFadein / 100);
+						videoEvent.FadeOut.Length = VConfigSetFadeBy == SetFadeByType.TIMECODE ? VConfigFadeoutTimecode : Timecode.FromMilliseconds(videoEvent.Length.ToMilliseconds() * VConfigFadeout / 100);
+						videoEvent.FadeIn.Curve = VConfigFadeinCurve;
+						videoEvent.FadeOut.Curve = VConfigFadeoutCurve;
+						if (VConfigVelocity) videoEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Video));
+						// 视频平移/裁切调整
+						VideoMotionKeyframe key0 = videoEvent.VideoMotion.Keyframes[0];
+						VideoMotionKeyframe key1 = new VideoMotionKeyframe(Timecode.FromMilliseconds(duration));
+						if (requireTwoKey) videoEvent.VideoMotion.Keyframes.Add(key1);
+						float width = key0.BottomRight.X;
+						float height = key0.BottomRight.Y;
+						float startRatio = VConfigStartSize / 100;
+						key0.ScaleBy(new VideoMotionVertex(startRatio, startRatio));
+						key0.MoveBy(new VideoMotionVertex(Math.Abs(1 - startRatio) * width / 2 * VConfigStartHTrans / 100, Math.Abs(1 - startRatio) * height / 2 * VConfigStartVTrans / 100));
+						key0.Type = VConfigStartSizeCurve;
+						if (requireTwoKey) {
+							float endRatio = VConfigEndSize / 100;
+							key1.ScaleBy(new VideoMotionVertex(endRatio, endRatio));
+							key1.MoveBy(new VideoMotionVertex(Math.Abs(1 - endRatio) * width / 2 * VConfigEndHTrans / 100, Math.Abs(1 - endRatio) * height / 2 * VConfigEndVTrans / 100));
+						}
+						// 色相、饱和度、对比度、对比度中心（阈值）
+						if (VConfigStartHue != 0 || VConfigEndHue != 0 || VConfigStartSaturation != 100 || VConfigEndSaturation != 100) {
+							if (Plugin.hslAdjust != null) Plugin.ForVideoEvents.HueAndSaturationParam(videoEvent, VConfigStartHue, VConfigEndHue, VConfigStartSaturation, VConfigEndSaturation, VConfigStartHueCurve, VConfigStartSaturationCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return false; }
+						}
+						if (VConfigStartContrast != 0 || VConfigEndContrast != 0 || VConfigStartThreshold != 50 || VConfigEndThreshold != 0) {
+							if (Plugin.contrast != null) Plugin.ForVideoEvents.ContrastAndThresholdParam(videoEvent, VConfigStartContrast, VConfigEndContrast, VConfigStartThreshold, VConfigEndThreshold, VConfigStartContrastCurve, VConfigStartThresholdCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
+						}
+						// 单独对所有关键帧处理翻转
+						videoEvent.FlipAllKeyframes(anim.HorizontalFlip, anim.VerticalFlip);
+						// 旋转属性单独调整，因为和上面“翻转所有关键帧”功能冲突了
+						key0.RotateBy(VConfigStartRotation + anim.RotationDeg);
+						if (requireTwoKey) key1.RotateBy(VConfigEndRotation + anim.RotationDeg);
+						// 发光效果
+						if (VConfigGlow != 0) if (Plugin.contrast != null) Plugin.ForVideoEvents.Glow(videoEvent, VConfigGlow, VConfigGlowCurve, VConfigGlowBright);
+						else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
+						// 动画效果生成
+						if (!ApplyPvRhythmVisualEffectPartialMethod(videoEvent, anim)) return false;
+						// 五线谱效果生成
+						if (SheetConfig) {
+							if (UseLegacySheetMethod) {
+								double sheetConfigGap = SheetConfigGap,
+									sheetConfigPosition = SheetConfigPosition,
+									sheetConfigPaddingLeft = SheetConfigPaddingLeft,
+									sheetConfigPaddingRight = SheetConfigPaddingRight;
+								if (SheetConfigRelative) {
+									sheetConfigGap *= projHeight / 1080.0;
+									sheetConfigPosition *= projHeight / 1080.0;
+									sheetConfigPaddingLeft *= projWidth / 1920.0;
+									sheetConfigPaddingRight *= projWidth / 1920.0;
+								}
+								double sheetConfigWidth = projWidth - sheetConfigPaddingLeft - sheetConfigPaddingRight;
+								TrackMotionKeyframe keyFrame = (videoEvent.Track as VideoTrack).TrackMotion.InsertMotionKeyframe(Timecode.FromMilliseconds(startTime));
+								keyFrame.Type = VideoKeyframeType.Hold;
+								keyFrame.Width = sheetConfigGap * 2 * projWidth / projHeight;
+								keyFrame.Height = sheetConfigGap * 2;
+								keyFrame.PositionX = -projWidth / 2 + sheetConfigPaddingLeft + sheetConfigWidth / barLength * (startTime - barStartTime);
+								int octave = _pitch / 12;
+								int line = StaffPitchMap[_pitch % 12];
+								keyFrame.PositionY = sheetConfigPosition - sheetConfigGap * 3 + (octave - 5) * sheetConfigGap * 3.5 + line * sheetConfigGap * 0.5 + SheetConfigCelf * 12;
+							} else {
+								double sheetConfigWidth = virtualWidth - SheetConfigPaddingLeft - SheetConfigPaddingRight;
+								if (Plugin.picInPic == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
+								Effect picInPic = videoEvent.Effects.AddEffect(Plugin.picInPic);
+								OFXDoubleParameter scale = picInPic.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter;
+								scale.Value = SheetConfigGap * 2.0 / virtualHeight;
+								OFXDoubleParameter scaleY = picInPic.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter; // Vegas 15 及以下版本不支持。
+								if (scaleY != null) scaleY.Value = scale.Value;
+								OFXDouble2DParameter location = picInPic.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter;
+								double positionX = -virtualWidth / 2 + SheetConfigPaddingLeft + sheetConfigWidth / barLength * (startTime - barStartTime);
+								int octave = _pitch / 12;
+								int line = StaffPitchMap[_pitch % 12];
+								double positionY = SheetConfigPosition - SheetConfigGap * 3 + (octave - 5) * SheetConfigGap * 3.5 + line * SheetConfigGap * 0.5 + SheetConfigCelf * 12;
+								location.Value = new OFXDouble2D { X = positionX / virtualWidth + 0.5, Y = positionY / virtualHeight + 0.5 };
+							}
+						}
+						anim.Next();
+					}
+				endVConfig:;
 					#endregion
 				}
-			endAConfig:;
-				#endregion
-
-				#region 生成视频事件
-				if (VConfig) {
-					VideoEvent videoEvent;
-					double videoEventDuration = SheetConfig ? staffVisualizedDuration : duration;
-					if (!IsFromSelectedClip) {
-						videoEvent = trackHelper.AddEvent<VideoEvent>(
-							Timecode.FromMilliseconds(generateBeginTime + startTime),
-							Timecode.FromMilliseconds(videoEventDuration)
-						);
-						if (videoEvent == null) goto endVConfig;
-						try {
-							videoEvent.AddTake(media.GetVideoStreamByIndex(0));
-						} catch (Exception) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
-					} else {
-						if (selectedEventSet.videoEvent == null) { ShowError(new Exceptions.NoVideoTakeException()); return false; }
-						videoEvent = trackHelper.AddEvent(selectedEventSet.videoEvent, Timecode.FromMilliseconds(generateBeginTime + startTime), Timecode.FromMilliseconds(videoEventDuration));
-						if (videoEvent == null) goto endVConfig;
-					}
-					VideoTrack videoTrack = videoEvent.Track as VideoTrack;
-					PvVisualEffect anim;
-					if (!anims.TryGetValue(videoTrack, out anim))
-						anims.Add(videoTrack, anim = NewAnim());
-					bool pitchHold = anim.EqualsLastPitch(pitch);
-					if (adjustTime) AdjustDeviation(videoEvent, sourceStartTime, sourceEndTime);
-					if (VConfigScratch == StretchType.FLEXING_AND_EXTENDING ||
-						VConfigScratch == StretchType.EXTENDING_ONLY && duration > videoLength ||
-						VConfigScratch == StretchType.FLEXING_ONLY && duration < videoLength)
-						videoEvent.AdjustPlaybackRate(videoLength / duration, true);
-					if (anim.IsReverse) ReverseVideo(videoEvent); // 结论：先拉伸后反转
-					if (VConfigFreezeFirstFrame) FreezeFirstFrame(videoEvent);
-					if (VConfigFreezeLastFrame) FreezeLastFrame(videoEvent, videoLength);
-					if (SheetConfig)
-						if (SheetConfigFreezeAtNoteOff) FreezeLastFrame(videoEvent, duration, true);
-					videoEvent.Loop = VConfigLoop;
-					tempEventGroup.Add(videoEvent);
-					// 淡入淡出
-					videoEvent.FadeIn.Length = VConfigSetFadeBy == SetFadeByType.TIMECODE ? VConfigFadeinTimecode : Timecode.FromMilliseconds(videoEvent.Length.ToMilliseconds() * VConfigFadein / 100);
-					videoEvent.FadeOut.Length = VConfigSetFadeBy == SetFadeByType.TIMECODE ? VConfigFadeoutTimecode : Timecode.FromMilliseconds(videoEvent.Length.ToMilliseconds() * VConfigFadeout / 100);
-					videoEvent.FadeIn.Curve = VConfigFadeinCurve;
-					videoEvent.FadeOut.Curve = VConfigFadeoutCurve;
-					if (VConfigVelocity) videoEvent.FadeIn.SetGain(MapVelocityToGain(velocity, MediaType.Video));
-					// 视频平移/裁切调整
-					VideoMotionKeyframe key0 = videoEvent.VideoMotion.Keyframes[0];
-					VideoMotionKeyframe key1 = new VideoMotionKeyframe(Timecode.FromMilliseconds(duration));
-					if (requireTwoKey) videoEvent.VideoMotion.Keyframes.Add(key1);
-					float width = key0.BottomRight.X;
-					float height = key0.BottomRight.Y;
-					float startRatio = VConfigStartSize / 100;
-					key0.ScaleBy(new VideoMotionVertex(startRatio, startRatio));
-					key0.MoveBy(new VideoMotionVertex(Math.Abs(1 - startRatio) * width / 2 * VConfigStartHTrans / 100, Math.Abs(1 - startRatio) * height / 2 * VConfigStartVTrans / 100));
-					key0.Type = VConfigStartSizeCurve;
-					if (requireTwoKey) {
-						float endRatio = VConfigEndSize / 100;
-						key1.ScaleBy(new VideoMotionVertex(endRatio, endRatio));
-						key1.MoveBy(new VideoMotionVertex(Math.Abs(1 - endRatio) * width / 2 * VConfigEndHTrans / 100, Math.Abs(1 - endRatio) * height / 2 * VConfigEndVTrans / 100));
-					}
-					// 色相、饱和度、对比度、对比度中心（阈值）
-					if (VConfigStartHue != 0 || VConfigEndHue != 0 || VConfigStartSaturation != 100 || VConfigEndSaturation != 100) {
-						if (Plugin.hslAdjust != null) Plugin.ForVideoEvents.HueAndSaturationParam(videoEvent, VConfigStartHue, VConfigEndHue, VConfigStartSaturation, VConfigEndSaturation, VConfigStartHueCurve, VConfigStartSaturationCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.hsl_adjust)); return false; }
-					}
-					if (VConfigStartContrast != 0 || VConfigEndContrast != 0 || VConfigStartThreshold != 50 || VConfigEndThreshold != 0) {
-						if (Plugin.contrast != null) Plugin.ForVideoEvents.ContrastAndThresholdParam(videoEvent, VConfigStartContrast, VConfigEndContrast, VConfigStartThreshold, VConfigEndThreshold, VConfigStartContrastCurve, VConfigStartThresholdCurve); else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
-					}
-					// 单独对所有关键帧处理翻转
-					videoEvent.FlipAllKeyframes(anim.HorizontalFlip, anim.VerticalFlip);
-					// 旋转属性单独调整，因为和上面“翻转所有关键帧”功能冲突了
-					key0.RotateBy(VConfigStartRotation + anim.RotationDeg);
-					if (requireTwoKey) key1.RotateBy(VConfigEndRotation + anim.RotationDeg);
-					// 发光效果
-					if (VConfigGlow != 0) if (Plugin.contrast != null) Plugin.ForVideoEvents.Glow(videoEvent, VConfigGlow, VConfigGlowCurve, VConfigGlowBright);
-					else { ShowError(new Exceptions.NoPluginNameException(Lang.str.brightness_and_contrast)); return false; }
-					// 动画效果生成
-					if (!ApplyPvRhythmVisualEffectPartialMethod(videoEvent, anim)) return false;
-					// 五线谱效果生成
-					if (SheetConfig) {
-						if (UseLegacySheetMethod) {
-							double sheetConfigGap = SheetConfigGap,
-								sheetConfigPosition = SheetConfigPosition,
-								sheetConfigPaddingLeft = SheetConfigPaddingLeft,
-								sheetConfigPaddingRight = SheetConfigPaddingRight;
-							if (SheetConfigRelative) {
-								sheetConfigGap *= projHeight / 1080.0;
-								sheetConfigPosition *= projHeight / 1080.0;
-								sheetConfigPaddingLeft *= projWidth / 1920.0;
-								sheetConfigPaddingRight *= projWidth / 1920.0;
-							}
-							double sheetConfigWidth = projWidth - sheetConfigPaddingLeft - sheetConfigPaddingRight;
-							TrackMotionKeyframe keyFrame = (videoEvent.Track as VideoTrack).TrackMotion.InsertMotionKeyframe(Timecode.FromMilliseconds(startTime));
-							keyFrame.Type = VideoKeyframeType.Hold;
-							keyFrame.Width = sheetConfigGap * 2 * projWidth / projHeight;
-							keyFrame.Height = sheetConfigGap * 2;
-							keyFrame.PositionX = -projWidth / 2 + sheetConfigPaddingLeft + sheetConfigWidth / barLength * (startTime - barStartTime);
-							int octave = _pitch / 12;
-							int line = StaffPitchMap[_pitch % 12];
-							keyFrame.PositionY = sheetConfigPosition - sheetConfigGap * 3 + (octave - 5) * sheetConfigGap * 3.5 + line * sheetConfigGap * 0.5 + SheetConfigCelf * 12;
-						} else {
-							double sheetConfigWidth = virtualWidth - SheetConfigPaddingLeft - SheetConfigPaddingRight;
-							if (Plugin.picInPic == null) { ShowError(new Exceptions.NoPluginNameException(Lang.str.pic_in_pic)); return false; }
-							Effect picInPic = videoEvent.Effects.AddEffect(Plugin.picInPic);
-							OFXDoubleParameter scale = picInPic.OFXEffect.FindParameterByName("Scale") as OFXDoubleParameter;
-							scale.Value = SheetConfigGap * 2.0 / virtualHeight;
-							OFXDoubleParameter scaleY = picInPic.OFXEffect.FindParameterByName("DistortionScaleY") as OFXDoubleParameter; // Vegas 15 及以下版本不支持。
-							if (scaleY != null) scaleY.Value = scale.Value;
-							OFXDouble2DParameter location = picInPic.OFXEffect.FindParameterByName("Location") as OFXDouble2DParameter;
-							double positionX = -virtualWidth / 2 + SheetConfigPaddingLeft + sheetConfigWidth / barLength * (startTime - barStartTime);
-							int octave = _pitch / 12;
-							int line = StaffPitchMap[_pitch % 12];
-							double positionY = SheetConfigPosition - SheetConfigGap * 3 + (octave - 5) * SheetConfigGap * 3.5 + line * SheetConfigGap * 0.5 + SheetConfigCelf * 12;
-							location.Value = new OFXDouble2D { X = positionX / virtualWidth + 0.5, Y = positionY / virtualHeight + 0.5 };
-						}
-					}
-					anim.Next();
-				}
-			endVConfig:;
-				#endregion
 			}
 
 			#region 自动轨道声像
@@ -1621,7 +1635,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		endGlissando:
 			#endregion
 			#endregion
-			tempEventGroup.Bundle();
 			if (MidiConfigTracks.Count == 1 && !progressForm.RequestAbort)
 				progressForm.ReportProgress(100);
 
@@ -2319,6 +2332,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="trackEvents">多个轨道剪辑</param>
 		/// <returns>轨道剪辑组</returns>
 		public TrackEventGroup GroupTrackEvents(params TrackEvent[] trackEvents) {
+			return GroupTrackEvents((IEnumerable<TrackEvent>)trackEvents);
+		}
+		/// <inheritdoc cref="GroupTrackEvents(TrackEvent[])" />
+		public TrackEventGroup GroupTrackEvents(IEnumerable<TrackEvent> trackEvents) {
 			TrackEventGroup group = new TrackEventGroup(vegas.Project);
 			vegas.Project.TrackEventGroups.Add(group);
 			foreach (TrackEvent trackEvent in trackEvents)
@@ -2329,34 +2346,40 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// 临时轨道事件分组。
 		/// </summary>
-		public class TempEventGroup {
+		public class TempEventGroup : IDisposable {
 			private Timecode startTime;
-			private List<TrackEvent> events = new List<TrackEvent>();
+			private readonly HashSet<TrackEvent> events = new HashSet<TrackEvent>();
 			private readonly EntryPoint parent;
 			private bool Enabled { get { return parent.ConfigCreateEventGroup && (parent.AConfig || parent.VConfig); } }
-			public TempEventGroup(EntryPoint parent) { this.parent = parent; }
+			private TempEventGroup(EntryPoint parent) {
+				this.parent = parent;
+			}
+			public static TempEventGroup Create(EntryPoint parent) {
+				TempEventGroup group = new TempEventGroup(parent);
+				return group.Enabled ? group : null;
+			}
 			/// <summary>
 			/// 将轨道事件添加到临时轨道事件分组的结尾处。
 			/// </summary>
 			/// <param name="trackEvent">轨道事件。</param>
 			public void Add(TrackEvent trackEvent) {
 				if (!Enabled) return;
-				if (trackEvent == null) { Bundle(); return; }
+				if (trackEvent == null) { Dispose(); return; }
 				if (startTime == null) startTime = trackEvent.Start;
-				if (startTime != trackEvent.Start) Bundle();
+				if (startTime != trackEvent.Start) Dispose();
 				events.Add(trackEvent);
 			}
 			/// <summary>
 			/// 捆绑轨道事件。
 			/// </summary>
 			/// <returns>轨道事件分组。</returns>
-			public TrackEventGroup Bundle() {
+			public TrackEventGroup Dispose() {
 				if (!Enabled) return null;
-				TrackEventGroup group = null;
-				if (events.Count > 1) group = parent.GroupTrackEvents(events.ToArray());
-				startTime = null;
-				events = new List<TrackEvent>();
+				TrackEventGroup group = events.Count > 1 ? parent.GroupTrackEvents(events) : null;
 				return group;
+			}
+			void IDisposable.Dispose() {
+				Dispose();
 			}
 		}
 
@@ -3573,8 +3596,15 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// 安全地设置渐变的增益，避免输入的值小于0或大于1导致程序报错。
 		/// </summary>
-		public static void SetGain(this Fade fade, float value) {
+		public static void SetGain(this Fade fade, float value, bool multiply) {
+			if (multiply) value *= fade.Gain;
 			fade.Gain = EntryPoint.Clamp(value, 0, 1);
+		}
+
+		/// <inheritdoc cref="SetGain(Fade, float, bool)" />
+		public static void SetGain(this Fade fade, double value, bool multiply) {
+			if (multiply) value *= fade.Gain;
+			fade.Gain = (float)EntryPoint.Clamp(value, 0, 1);
 		}
 
 		/// <summary>
@@ -3705,7 +3735,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		CLASSIC,
 		/// <summary>无音阶调音。</summary>
 		FOOL_TUNING,
-		/// <summary>人工振荡器。</summary>
+		/// <summary>粒子振荡器。</summary>
 		OSCILLATOR,
 		/// <summary>ACID Pro 使用的调音。</summary>
 		ACID_STYLE = 20,
@@ -11569,11 +11599,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="exceptTracks">指定排除在外的轨道。</param>
 		/// <param name="isSampleEvent">是否是示例轨道事件。</param>
 		/// <returns>返回添加的轨道事件。</returns>
-		public T AddEvent<T>(T trackEvent, Timecode start, Timecode length, IEnumerable<Track> exceptTracks = null, bool isSampleEvent = false) where T : TrackEvent {
+		public T AddEvent<T>(T trackEvent, Timecode start, Timecode length, out int indexInStreamTracks, IEnumerable<Track> exceptTracks = null, bool isSampleEvent = false) where T : TrackEvent {
+			indexInStreamTracks = -1;
 			if (trackEvent == null) return null;
 			Track track = FindASuitableTrack<T>(start, length, exceptTracks, isSampleEvent);
 			if (track == null) return null;
 			if (!isSampleEvent && !TrackVacateSpace<T>(track, start, length)) return null;
+			indexInStreamTracks = IsAudio<T>() ? audioTracks.IndexOf(track as AudioTrack) : videoTracks.IndexOf(track as VideoTrack);
 			T copiedEvent = trackEvent.Copy(track, start) as T;
 			if (copiedEvent.Name == EXAMPLE_EVENT_NAME) copiedEvent.Name = "";
 			copiedEvent.Length = length;
@@ -11623,7 +11655,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <param name="name">示例事件名称。</param>
 		/// <returns>示例轨道事件。</returns>
 		public T AddSampleEvent<T>(T trackEvent, Timecode start, string name = EXAMPLE_EVENT_NAME) where T : TrackEvent {
-			T sampleEvent = AddEvent(trackEvent, start, trackEvent.Length, null, true);
+			int _index;
+			T sampleEvent = AddEvent(trackEvent, start, trackEvent.Length, out _index, null, true);
 			if (sampleEvent == null) return null;
 			sampleEvent.Name = name;
 			return sampleEvent;
@@ -11632,25 +11665,26 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <summary>
 		/// 查找一个可以容下剪辑的轨道。
 		/// </summary>
-		/// <typeparam name="T">轨道事件类型。</typeparam>
+		/// <typeparam name="TEvent">轨道事件类型。</typeparam>
+		/// <typeparam name="TTrack">轨道类型。</typeparam>
 		/// <param name="trackEvent">准备好的示例轨道事件。</param>
 		/// <param name="start">开始时间。</param>
 		/// <param name="length">长度。</param>
 		/// <param name="exceptTracks">指定排除在外的轨道。</param>
 		/// <param name="isSampleEvent">是否是示例轨道事件。</param>
 		/// <returns>适合的轨道。</returns>
-		private Track FindASuitableTrack<T>(Timecode start, Timecode length, IEnumerable<Track> exceptTracks = null, bool isSampleEvent = false) where T : TrackEvent {
-			if (typeof(T) == typeof(AudioEvent) && NoAudio || typeof(T) == typeof(VideoEvent) && NoVideo) return null;
+		private Track FindASuitableTrack<TEvent>(Timecode start, Timecode length, IEnumerable<Track> exceptTracks = null, bool isSampleEvent = false) where TEvent : TrackEvent {
+			if (typeof(TEvent) == typeof(AudioEvent) && NoAudio || typeof(TEvent) == typeof(VideoEvent) && NoVideo) return null;
 			Track track = null;
-			IEnumerable<Track> tracks = IsAudio<T>() ? audioTracks.Cast<Track>() : videoTracks.Cast<Track>();
+			IEnumerable<Track> tracks = IsAudio<TEvent>() ? audioTracks.Cast<Track>() : videoTracks.Cast<Track>();
 			Timecode end = start + length;
-			if (!IsSingleTrack<T>()) {
+			if (!IsSingleTrack<TEvent>()) {
 				foreach (Track otherTrack in tracks) {
 					if (exceptTracks != null && exceptTracks.Contains(otherTrack)) continue;
 					TrackOtherInfo info = GetTrackOtherInfo(otherTrack);
 					if (length.ToMilliseconds() == 0) goto ok;
 					if (info.length > Round(start)) continue;
-					if (!IsAlwaysNewTrack<T>()) {
+					if (!IsAlwaysNewTrack<TEvent>()) {
 						List<TrackEvent> inEvents = FindEventsAlmostIn(otherTrack, start, end, EXAMPLE_EVENT_NAME, true);
 						if (inEvents.Count != 0) continue;
 					}
@@ -11661,7 +11695,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				}
 			} else track = tracks.FirstOrDefault();
 			if (track == null) {
-				track = IsAudio<T>() ? AddAudioTrackAfter() as Track : AddVideoTrackBefore() as Track;
+				track = IsAudio<TEvent>() ? AddAudioTrackAfter() as Track : AddVideoTrackBefore() as Track;
 				if (!isSampleEvent) GetTrackOtherInfo(track).Length = end;
 			}
 			return track;
@@ -11765,7 +11799,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		/// <typeparam name="T">要检测的轨道事件类型。</typeparam>
 		/// <returns>是否是音频轨道事件。</returns>
-		private bool IsAudio<T>() where T : TrackEvent {
+		private static bool IsAudio<T>() where T : TrackEvent {
 			return typeof(T) == typeof(AudioEvent);
 		}
 
@@ -17074,12 +17108,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.ToLbl = new System.Windows.Forms.Label();
 			this.FromLbl = new System.Windows.Forms.Label();
 			this.PreviewBtn = new System.Windows.Forms.Button();
+			this.MultiplyGainCheck = new System.Windows.Forms.CheckBox();
 			this.dock.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			//
 			// dock
 			//
+			this.dock.AutoSize = true;
 			this.dock.BackColor = System.Drawing.SystemColors.Control;
 			this.dock.ColumnCount = 3;
 			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -17087,24 +17123,25 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.dock.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.dock.Controls.Add(this.OkBtn, 1, 0);
 			this.dock.Controls.Add(this.CancelBtn, 2, 0);
+			this.dock.Controls.Add(this.MultiplyGainCheck, 0, 0);
 			this.dock.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.dock.Location = new System.Drawing.Point(0, 179);
-			this.dock.Margin = new System.Windows.Forms.Padding(4);
+			this.dock.Location = new System.Drawing.Point(0, 361);
+			this.dock.Margin = new System.Windows.Forms.Padding(6);
 			this.dock.Name = "dock";
-			this.dock.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.dock.Padding = new System.Windows.Forms.Padding(13, 10, 13, 10);
 			this.dock.RowCount = 1;
 			this.dock.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.dock.Size = new System.Drawing.Size(462, 52);
+			this.dock.Size = new System.Drawing.Size(800, 87);
 			this.dock.TabIndex = 16;
 			//
 			// OkBtn
 			//
 			this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.OkBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.OkBtn.Location = new System.Drawing.Point(254, 10);
-			this.OkBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.OkBtn.Location = new System.Drawing.Point(463, 18);
+			this.OkBtn.Margin = new System.Windows.Forms.Padding(8);
 			this.OkBtn.Name = "OkBtn";
-			this.OkBtn.Size = new System.Drawing.Size(94, 32);
+			this.OkBtn.Size = new System.Drawing.Size(150, 51);
 			this.OkBtn.TabIndex = 1;
 			this.OkBtn.Text = "确定(&O)";
 			this.OkBtn.UseVisualStyleBackColor = true;
@@ -17114,10 +17151,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.CancelBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.CancelBtn.Location = new System.Drawing.Point(356, 10);
-			this.CancelBtn.Margin = new System.Windows.Forms.Padding(4);
+			this.CancelBtn.Location = new System.Drawing.Point(629, 18);
+			this.CancelBtn.Margin = new System.Windows.Forms.Padding(8);
 			this.CancelBtn.Name = "CancelBtn";
-			this.CancelBtn.Size = new System.Drawing.Size(94, 32);
+			this.CancelBtn.Size = new System.Drawing.Size(150, 51);
 			this.CancelBtn.TabIndex = 2;
 			this.CancelBtn.Text = "取消(&C)";
 			this.CancelBtn.UseVisualStyleBackColor = true;
@@ -17134,27 +17171,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.tableLayoutPanel1.Controls.Add(this.PreviewBtn, 0, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(6);
+			this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(12);
 			this.tableLayoutPanel1.RowCount = 3;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(462, 179);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 361);
 			this.tableLayoutPanel1.TabIndex = 17;
 			//
 			// ToBox
 			//
 			this.ToBox.BackColor = System.Drawing.Color.Transparent;
 			this.ToBox.DefaultValue = new decimal(new int[] {
-			0,
+			100,
 			0,
 			0,
 			0});
 			this.ToBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ToBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.ToBox.Location = new System.Drawing.Point(34, 137);
-			this.ToBox.Margin = new System.Windows.Forms.Padding(5);
+			this.ToBox.Location = new System.Drawing.Point(68, 277);
+			this.ToBox.Margin = new System.Windows.Forms.Padding(10);
 			this.ToBox.Maximum = new decimal(new int[] {
 			100,
 			0,
@@ -17165,10 +17203,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			0,
 			0,
 			0});
-			this.ToBox.MinimumSize = new System.Drawing.Size(0, 31);
+			this.ToBox.MinimumSize = new System.Drawing.Size(0, 62);
 			this.ToBox.Name = "ToBox";
 			this.ToBox.NumericUpDownWidth = 65;
-			this.ToBox.Size = new System.Drawing.Size(417, 31);
+			this.ToBox.Size = new System.Drawing.Size(710, 62);
 			this.ToBox.TabIndex = 4;
 			this.ToBox.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
 			this.ToBox.Value = new decimal(new int[] {
@@ -17182,14 +17220,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.FromBox.BackColor = System.Drawing.Color.Transparent;
 			this.FromBox.DefaultValue = new decimal(new int[] {
-			0,
+			100,
 			0,
 			0,
 			0});
 			this.FromBox.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.FromBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
-			this.FromBox.Location = new System.Drawing.Point(34, 96);
-			this.FromBox.Margin = new System.Windows.Forms.Padding(5);
+			this.FromBox.Location = new System.Drawing.Point(68, 195);
+			this.FromBox.Margin = new System.Windows.Forms.Padding(10);
 			this.FromBox.Maximum = new decimal(new int[] {
 			100,
 			0,
@@ -17200,10 +17238,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			0,
 			0,
 			0});
-			this.FromBox.MinimumSize = new System.Drawing.Size(0, 31);
+			this.FromBox.MinimumSize = new System.Drawing.Size(0, 62);
 			this.FromBox.Name = "FromBox";
 			this.FromBox.NumericUpDownWidth = 65;
-			this.FromBox.Size = new System.Drawing.Size(417, 31);
+			this.FromBox.Size = new System.Drawing.Size(710, 62);
 			this.FromBox.TabIndex = 3;
 			this.FromBox.Value = new decimal(new int[] {
 			100,
@@ -17216,11 +17254,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.ToLbl.AutoSize = true;
 			this.ToLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ToLbl.Location = new System.Drawing.Point(8, 132);
-			this.ToLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-			this.ToLbl.MinimumSize = new System.Drawing.Size(0, 41);
+			this.ToLbl.Location = new System.Drawing.Point(16, 267);
+			this.ToLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.ToLbl.MinimumSize = new System.Drawing.Size(0, 82);
 			this.ToLbl.Name = "ToLbl";
-			this.ToLbl.Size = new System.Drawing.Size(19, 41);
+			this.ToLbl.Size = new System.Drawing.Size(38, 82);
 			this.ToLbl.TabIndex = 2;
 			this.ToLbl.Text = "至";
 			this.ToLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -17229,11 +17267,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			//
 			this.FromLbl.AutoSize = true;
 			this.FromLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.FromLbl.Location = new System.Drawing.Point(8, 91);
-			this.FromLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-			this.FromLbl.MinimumSize = new System.Drawing.Size(0, 41);
+			this.FromLbl.Location = new System.Drawing.Point(16, 185);
+			this.FromLbl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.FromLbl.MinimumSize = new System.Drawing.Size(0, 82);
 			this.FromLbl.Name = "FromLbl";
-			this.FromLbl.Size = new System.Drawing.Size(19, 41);
+			this.FromLbl.Size = new System.Drawing.Size(38, 82);
 			this.FromLbl.TabIndex = 1;
 			this.FromLbl.Text = "从";
 			this.FromLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -17247,28 +17285,39 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.PreviewBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(253)))));
 			this.PreviewBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(253)))), ((int)(((byte)(253)))), ((int)(((byte)(253)))));
 			this.PreviewBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.PreviewBtn.Location = new System.Drawing.Point(20, 20);
-			this.PreviewBtn.Margin = new System.Windows.Forms.Padding(14);
+			this.PreviewBtn.Location = new System.Drawing.Point(40, 40);
+			this.PreviewBtn.Margin = new System.Windows.Forms.Padding(28);
 			this.PreviewBtn.Name = "PreviewBtn";
-			this.PreviewBtn.Size = new System.Drawing.Size(422, 57);
+			this.PreviewBtn.Size = new System.Drawing.Size(720, 117);
 			this.PreviewBtn.TabIndex = 5;
 			this.PreviewBtn.UseVisualStyleBackColor = true;
 			this.PreviewBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.PreviewBtn_Paint);
 			//
+			// MultiplyGainCheck
+			//
+			this.MultiplyGainCheck.AutoSize = true;
+			this.MultiplyGainCheck.Dock = System.Windows.Forms.DockStyle.Left;
+			this.MultiplyGainCheck.Location = new System.Drawing.Point(16, 13);
+			this.MultiplyGainCheck.Name = "MultiplyGainCheck";
+			this.MultiplyGainCheck.Size = new System.Drawing.Size(190, 61);
+			this.MultiplyGainCheck.TabIndex = 3;
+			this.MultiplyGainCheck.Text = "乘以当前增益";
+			this.MultiplyGainCheck.UseVisualStyleBackColor = true;
+			//
 			// CustomFadeGainForm
 			//
 			this.AcceptButton = this.OkBtn;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.CancelBtn;
-			this.ClientSize = new System.Drawing.Size(462, 231);
+			this.ClientSize = new System.Drawing.Size(800, 448);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.dock);
 			this.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Location = new System.Drawing.Point(60, 60);
-			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "CustomFadeGainForm";
@@ -17276,9 +17325,11 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "自定渐入增益";
 			this.dock.ResumeLayout(false);
+			this.dock.PerformLayout();
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -17293,11 +17344,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		public IntegerTrackWithBox ToBox;
 		public IntegerTrackWithBox FromBox;
 		private System.Windows.Forms.Button PreviewBtn;
+		private System.Windows.Forms.CheckBox MultiplyGainCheck;
 	}
 
-	public partial class CustomFadeGainForm : Form, IInterpret {
+	public partial class CustomFadeGainForm : Form, IInterpret, IConfigIniUser {
 		private readonly EntryPoint parent;
 		private Vegas vegas { get { return parent.vegas; } }
+		private ConfigIni configIni { get { return parent.configIni; } }
 
 		public CustomFadeGainForm(EntryPoint parent) {
 			InitializeComponent();
@@ -17305,6 +17358,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			Icon = parent.configForm.Icon;
 			this.ReserveSystemMenuItems(SystemMenuItemType.MOVE | SystemMenuItemType.CLOSE);
 			Translate();
+			((Action)ReadIni).OnErrorBreak();
+			FormClosing += (sender, e) => SaveIni();
 		}
 
 		private void OkBtn_Click(object sender, EventArgs e) {
@@ -17331,17 +17386,28 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		private void Apply() {
 			foreach (Track track in vegas.Project.Tracks) {
 				List<TrackEvent> selection = new List<TrackEvent>(track.Events.Where(trackEvent => trackEvent.Selected));
-				decimal gain = FromBox.Value;
-				if (selection.Count == 1) {
-					selection[0].FadeIn.SetGain(ToBox.FloatValue / 100);
-					return;
-				}
-				foreach (TrackEvent trackEvent in selection) {
-					trackEvent.FadeIn.SetGain((float)(gain / 100));
-					gain += (ToBox.Value - FromBox.Value) / (selection.Count - 1);
-				}
+				FadeGain(selection, FromBox.DoubleValue, ToBox.DoubleValue);
 			}
 			vegas.UpdateUI();
+		}
+
+		/// <summary>
+		/// 将列表中的一系列轨道事件的增益从 <paramref name="from" /> 线性地滑到 <paramref name="to" />。
+		/// </summary>
+		/// <typeparam name="TEvent">轨道事件类型。</typeparam>
+		/// <param name="events">轨道事件们。</param>
+		/// <param name="from">起始增益。取值范围为 0 ~ 1。</param>
+		/// <param name="to">终止增益。取值范围为 0 ~ 1。</param>
+		public static void FadeGain<TEvent>(IList<TEvent> events, double from, double to) where TEvent: TrackEvent {
+			double gain = from;
+			if (events.Count == 1) {
+				events[0].FadeIn.SetGain(to);
+				return;
+			}
+			foreach (TrackEvent trackEvent in events) {
+				trackEvent.FadeIn.SetGain(gain);
+				gain += (to - from) / (events.Count - 1);
+			}
 		}
 
 		public void Translate() {
@@ -17352,6 +17418,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			FromLbl.Text = str.from;
 			ToLbl.Text = str.to;
 			Text = str.custom_fade_gain;
+			MultiplyGainCheck.Text = str.multiply_gain;
+		}
+
+		public void SaveIni() {
+			configIni.StartSection("CustomFadeGain");
+			configIni.Write("From", FromBox.Value);
+			configIni.Write("To", ToBox.Value);
+			configIni.Write("MultiplyGain", MultiplyGainCheck.Checked);
+			configIni.EndSection();
+		}
+
+		public void ReadIni() {
+			configIni.StartSection("CustomFadeGain");
+			FromBox.Value = configIni.Read("From", 100m);
+			ToBox.Value = configIni.Read("To", 100m);
+			MultiplyGainCheck.Checked = configIni.Read("MultiplyGain", false);
+			configIni.EndSection();
 		}
 	}
 
@@ -22034,7 +22117,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			"弹性音调更改",
 			"古典音调更改",
 			"无音阶调音",
-			"人工振荡器"});
+			"粒子振荡器"});
 			this.AudioTuneMethodCombo.Location = new System.Drawing.Point(122, 4);
 			this.AudioTuneMethodCombo.Margin = new System.Windows.Forms.Padding(4);
 			this.AudioTuneMethodCombo.Name = "AudioTuneMethodCombo";
@@ -32473,6 +32556,8 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING && method != AudioTuningMethod.OSCILLATOR;
 			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled
 				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING;
+			AudioFadeSetAsTimecodeRadio.Enabled = method != AudioTuningMethod.OSCILLATOR;
+			if (method == AudioTuningMethod.OSCILLATOR) AudioFadeSetAsPercentRadio.Checked = true;
 			if (method == AudioTuningMethod.FOOL_TUNING || method == AudioTuningMethod.OSCILLATOR) {
 				AudioLockStretchPitchCheck.Enabled = AudioScratchCombo.Enabled = false;
 				AudioLockStretchPitchCheck.Checked = method == AudioTuningMethod.FOOL_TUNING;
@@ -34572,7 +34657,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			triangle_wave = "三角波",
 			square_wave = "方波",
 			sawtooth_wave = "锯齿波",
-			tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用 Vegas Video 2.0 至 Vegas Pro 8.0 中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”表示通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+			tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用 Vegas Video 2.0 至 Vegas Pro 8.0 中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”表示通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
 			audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
 			alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 			preview_beep_duration_tooltip = "预听标准音高所持续的时间。\n单位：毫秒。",
@@ -35124,13 +35209,14 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
 			failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 			generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
-			oscillator = "人工振荡器",
+			oscillator = "粒子振荡器",
 			alt_multiple = "多次使用音效插件",
 			alt_plugin = "切换到移调音效插件",
 			alt_octave = "高 / 低八度",
 			alt_octaveExp = "高 / 低八度（实验性）",
 			alt_dock = "停靠在边缘",
 			alt_silent = "不发声",
+			multiply_gain = "乘以当前增益",
 			__eol__ = "";
 
 		static Lang() {
@@ -35407,7 +35493,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "Triangle",
 				square_wave = "Square",
 				sawtooth_wave = "Sawtooth",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
 				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
 				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "The duration of pre-listening to the base pitch.\nUnit: milliseconds.",
@@ -35959,7 +36045,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "Error: Failed to automatically change the numerator of time signature!\n\nVEGAS only supports numerators within the range of {0}, and the currently set numerator of time signature is {1}.",
 				failed_to_auto_change_project_beat_denominator_exception = "Error: Failed to automatically change the denominator of time signature!\n\nVEGAS only supports denominators within the range of {0}, and the currently set denominator of time signature is {1}.",
 				generate_staff_visualizer_without_time_signature_exception = "Error: Generation of Staff Visualizer failed due to missing time signature information.\n\nThe current MIDI file can generate YTPMV/otoMAD, but cannot generate Staff Visualizer.\nThis is because the MIDI file does not contain any time signature information. Please try to edit the MIDI file to allocate any time signature, or try another MIDI file.",
-				oscillator = "人工振荡器",
+				oscillator = "粒子振荡器",
 				alt_multiple = "多次使用音效插件",
 				alt_plugin = "切换到移调音效插件",
 				alt_octave = "高 / 低八度",
@@ -36239,7 +36325,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "三角波",
 				square_wave = "方波",
 				sawtooth_wave = "鋸齒波",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
 				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
 				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "預聽標準音高所持續的時間。\n單位：毫秒。",
@@ -36790,7 +36876,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "錯誤：自動更改專案拍號分子失敗！\n\nVEGAS 僅支援分子在 {0} 範圍內的拍號，當前設定拍號的分子為 {1}。",
 				failed_to_auto_change_project_beat_denominator_exception = "錯誤：自動更改專案拍號分母失敗！\n\nVEGAS 僅支援分母在 {0} 範圍內的拍號，當前設定拍號的分母為 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "錯誤：因缺失拍號資訊導致生成五線譜視覺化失敗。\n\n當前 MIDI 檔案可以生成音 MAD / YTPMV，但不能生成五線譜視覺化。\n這是因為該 MIDI 檔案中未包含任何拍號資訊。請嘗試編輯該 MIDI 檔案以分配拍號資訊，或更換其它 MIDI 檔案。",
-				oscillator = "人工振荡器",
+				oscillator = "粒子振荡器",
 				alt_multiple = "多次使用音效插件",
 				alt_plugin = "切换到移调音效插件",
 				alt_octave = "高 / 低八度",
@@ -37071,7 +37157,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "三角波",
 				square_wave = "方形波",
 				sawtooth_wave = "鋸歯状波",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
 				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
 				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "ベースピッチにプレビューの持続時間。\n単位：ミリ秒。",
@@ -37623,7 +37709,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
 				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
-				oscillator = "人工振荡器",
+				oscillator = "粒子振荡器",
 				alt_multiple = "多次使用音效插件",
 				alt_plugin = "切换到移调音效插件",
 				alt_octave = "高 / 低八度",
@@ -37904,7 +37990,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "треугольная",
 				square_wave = "прямоугольная",
 				sawtooth_wave = "пилообразная",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
 				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
 				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "время ожидания стандартного фонетического сигнала.\nв миллисекундах.",
@@ -38456,7 +38542,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
 				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
-				oscillator = "人工振荡器",
+				oscillator = "粒子振荡器",
 				alt_multiple = "多次使用音效插件",
 				alt_plugin = "切换到移调音效插件",
 				alt_octave = "高 / 低八度",
@@ -38736,7 +38822,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "Triangle",
 				square_wave = "Square",
 				sawtooth_wave = "Sawtooth",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
 				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
 				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "Thời lượng nghe trước cao độ cơ bản.\nĐơn vị: milli giây.",
@@ -39288,7 +39374,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
 				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
-				oscillator = "人工振荡器",
+				oscillator = "粒子振荡器",
 				alt_multiple = "多次使用音效插件",
 				alt_plugin = "切换到移调音效插件",
 				alt_octave = "高 / 低八度",
@@ -39568,7 +39654,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				triangle_wave = "Triangle",
 				square_wave = "Square",
 				sawtooth_wave = "Sawtooth",
-				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“人工振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
+				tune_method_tooltip = "“移调效果插件”表示使用“音频 FX”中的“移调”效果插件改变音调，需要配置预设。\n“弹性音调更改”表示使用“Élastique”算法改变音调，也就是键盘上 +、- 键直接改变音调，有音高范围限制。\n“古典音调更改”表示使用Vegas Video 2.0至Vegas Pro 8.0中的算法改变音调，有音高范围限制。\n“无音阶调音”表示锁定伸缩与音调，完全通过更改拉伸值来获取相应的音调，而不考虑音符的实际音高。\n“粒子振荡器”通过将短促的素材采样音效以特定周期高速重复播放，生成对应音高的脉冲序列，\n利用人耳对快速脉冲的感知融合效应形成连续音高来模拟特定音高。",
 				audio_lock_stretch_pitch_tooltip = "采用重采样方式，随着速度变化而改变音高。由于不进行拉伸音频，音质会更好。\n如果使用的是“弹性音调更改”或“古典音调更改”或方法，那么将会禁用拉伸音频功能。",
 				alt_tuning_method_tooltip = "使用另一种平替方法来处理超出音域范围之外的音符。\n“切换到移调音效插件”表示通过反复使用移调音频效果插件从而达到任意音高。\n“高 / 低八度”表示通过升高或降低八度到 {0} 的音域范围内来至少避免不协和音程。\n“高 / 低八度（实验性）”同上，但将音域范围扩展到 {1}。\n如果锁定伸缩与音调，则音域范围扩展到 {2}。\n请谨慎使用，有可能会导致 VEGAS 崩溃。\n“停靠在边缘”表示停靠在 {0} 音域范围内的最高或最低音调。\n“不发声”表示将那些音符静音。",
 				preview_beep_duration_tooltip = "Durasi pra-mendengarkan nada dasar.\nUnit: milidetik.",
@@ -40120,7 +40206,7 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 				failed_to_auto_change_project_beat_numerator_exception = "错误：自动更改项目拍号分子失败！\n\nVEGAS 仅支持分子在 {0} 范围内的拍号，当前设定拍号的分子为 {1}。",
 				failed_to_auto_change_project_beat_denominator_exception = "错误：自动更改项目拍号分母失败！\n\nVEGAS 仅支持分母在 {0} 范围内的拍号，当前设定拍号的分母为 {1}。",
 				generate_staff_visualizer_without_time_signature_exception = "错误：因缺失拍号信息导致生成五线谱可视化失败。\n\n当前 MIDI 文件可以生成音 MAD / YTPMV，但不能生成五线谱可视化。\n这是因为该 MIDI 文件中未包含任何拍号信息。请尝试编辑该 MIDI 文件以分配拍号信息，或更换其它 MIDI 文件。",
-				oscillator = "人工振荡器",
+				oscillator = "粒子振荡器",
 				alt_multiple = "多次使用音效插件",
 				alt_plugin = "切换到移调音效插件",
 				alt_octave = "高 / 低八度",
