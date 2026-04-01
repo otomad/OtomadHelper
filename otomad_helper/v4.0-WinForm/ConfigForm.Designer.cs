@@ -25,7 +25,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigForm));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.UserHelpLink = new System.Windows.Forms.LinkLabel();
 			this.AboutBtn = new System.Windows.Forms.Button();
@@ -826,7 +825,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioTuneMethodCombo.Name = "AudioTuneMethodCombo";
 			this.AudioTuneMethodCombo.Size = new System.Drawing.Size(864, 40);
 			this.AudioTuneMethodCombo.TabIndex = 2;
-			this.Balloon.SetToolTip(this.AudioTuneMethodCombo, resources.GetString("AudioTuneMethodCombo.ToolTip"));
 			this.AudioTuneMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioTuneMethodCombo_SelectedIndexChanged);
 			// 
 			// AudioLockStretchPitchCheck
@@ -897,7 +895,6 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			this.AudioAltMethodCombo.Name = "AudioAltMethodCombo";
 			this.AudioAltMethodCombo.Size = new System.Drawing.Size(864, 40);
 			this.AudioAltMethodCombo.TabIndex = 12;
-			this.Balloon.SetToolTip(this.AudioAltMethodCombo, resources.GetString("AudioAltMethodCombo.ToolTip"));
 			this.AudioAltMethodCombo.SelectedIndexChanged += new System.EventHandler(this.AudioAltMethodCombo_SelectedIndexChanged);
 			// 
 			// SourceStartTimeText
