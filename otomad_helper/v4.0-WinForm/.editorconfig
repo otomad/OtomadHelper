@@ -1,4 +1,4 @@
-﻿# editorconfig.org
+# editorconfig.org
 root = true
 
 [*]
@@ -37,7 +37,6 @@ dotnet_diagnostic.CS0168.severity = suggestion
 # IDE0059: 不需要赋值
 dotnet_diagnostic.IDE0059.severity = suggestion
 
-[*.cs]
 #### 命名样式 ####
 
 # 命名规则

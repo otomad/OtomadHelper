@@ -1381,6 +1381,18 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 						audioEvent.ElastiqueAttribute = ElastiqueStretchAttributes.Efficient;
 						audioEvent.PitchLock = true;
 						#endif
+					} else if (AConfigMethod == AudioTuningMethod.OSCILLATOR) {
+						double periodMs = Pitch2PeriodMs(pitchDelta);
+						Timecode end = audioEvent.End, floorEnd = end.FloorToMs();
+						AudioEvent prevAudioEvent = audioEvent;
+						while (true) {
+							prevAudioEvent.Length = Timecode.FromMilliseconds(periodMs);
+							if (prevAudioEvent.End.CeilToMs() >= floorEnd) {
+								prevAudioEvent.Length = end - prevAudioEvent.Start;
+								break;
+							}
+							prevAudioEvent = (AudioEvent)prevAudioEvent.Copy(prevAudioEvent.Track, prevAudioEvent.End);
+						}
 					}
 					#endregion
 				}
@@ -1791,16 +1803,10 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			const double OCTAVE = 12d;
 
 			// 向下折叠：处理超出上限的情况
-			if (pitch > maxPitch) {
-				pitch -= Math.Floor((pitch - maxPitch) / OCTAVE) * OCTAVE;
-				if (pitch > maxPitch) pitch -= OCTAVE; // 防浮点误差
-			}
-
+			if (pitch > maxPitch) pitch -= Math.Ceiling((pitch - maxPitch) / OCTAVE) * OCTAVE;
 			// 向上折叠：处理低于下限的情况
-			if (pitch < minPitch) {
-				pitch += Math.Floor((minPitch - pitch) / OCTAVE) * OCTAVE;
-				if (pitch < minPitch) pitch += OCTAVE; // 防浮点误差
-			}
+			if (pitch < minPitch) pitch += Math.Ceiling((minPitch - pitch) / OCTAVE) * OCTAVE;
+			// 注意：使用 Math.Ceiling 而不是 Math.Floor 可以防浮点误差。
 
 			return pitch;
 		}
@@ -1821,6 +1827,23 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 		/// <returns>半音值 ∈ [-12 ~ 12)。</returns>
 		public static double PitchBend2Key(int pitchBend) {
 			return (pitchBend - 8192) / 8192.0 * 12;
+		}
+
+		/// <summary>
+		/// 将相对音高转换为频率(Hz)值，再转换为周期(ms)值。
+		/// </summary>
+		/// <param name="pitchFromC4">距离 C4 的相对音高。</param>
+		/// <param name="a4">中央 A4 的频率值，默认为标准值 440Hz。</param>
+		/// <returns>该音高的峰谷周期毫秒值。</returns>
+		public static double Pitch2PeriodMs(double pitchFromC4, double a4 = 440) {
+			// 计算 C4 到 A4 的距离（A4 在 C4 之上 9 个半音）。
+			// 计算目标音高距离 A4 的相对半音数。
+			double pitchFromA4 = pitchFromC4 - 9;
+			// 根据 A4 频率计算目标音高的 Hz 值。
+			double hz = a4 * Math.Pow(2, pitchFromA4 / 12);
+			// 将 Hz 转换为 ms (周期 T = 1/f，再乘以 1000)。
+			double ms = 1 / hz * 1000;
+			return ms;
 		}
 
 		private bool requestRestartScript = false;
@@ -3001,6 +3024,20 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			long frame = timecode.FrameCount;
 			if (Timecode.FromFrames(frame) < timecode) timecode = Timecode.FromFrames(frame + 1);
 			return timecode;
+		}
+
+		/// <summary>
+		/// 返回一个新的时间码，其将时间码舍入回上一整毫秒。
+		/// </summary>
+		public static Timecode FloorToMs(this Timecode timecode) {
+			return Timecode.FromMilliseconds(Math.Floor(timecode.ToMilliseconds()));
+		}
+
+		/// <summary>
+		/// 返回一个新的时间码，其将时间码进入到下一整毫秒。
+		/// </summary>
+		public static Timecode CeilToMs(this Timecode timecode) {
+			return Timecode.FromMilliseconds(Math.Ceiling(timecode.ToMilliseconds()));
 		}
 
 		/// <summary>
@@ -32432,12 +32469,13 @@ namespace Otomad.VegasScript.OtomadHelper.V4 {
 			if (AudioParamsGroup.Enabled != isAConfigOn)
 				SetEnabled(AudioTab, isAConfigOn, new Control[] { AudioConfigCheck });
 			AudioTuningMethod method = (AudioTuningMethod)AudioTuneMethodCombo.SelectedIndex;
-			AudioLockStretchPitchCheck.Enabled = AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled
-				= PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled = AudioScratchCombo.Enabled
+			AudioLockStretchPitchCheck.Enabled = AudioScratchCombo.Enabled
 				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING && method != AudioTuningMethod.OSCILLATOR;
-			if (method == AudioTuningMethod.FOOL_TUNING) {
+			AudioMainKeyCombo.Enabled = AudioMainOctaveCombo.Enabled = PreviewBasePitchBtn.Enabled = AudioPreviewAttrLayoutPanel.Enabled
+				= isAConfigOn && method != AudioTuningMethod.NO_TUNING && method != AudioTuningMethod.FOOL_TUNING;
+			if (method == AudioTuningMethod.FOOL_TUNING || method == AudioTuningMethod.OSCILLATOR) {
 				AudioLockStretchPitchCheck.Enabled = AudioScratchCombo.Enabled = false;
-				AudioLockStretchPitchCheck.Checked = true;
+				AudioLockStretchPitchCheck.Checked = method == AudioTuningMethod.FOOL_TUNING;
 				AudioScratchCombo.SelectedIndex = 1;
 			}
 			bool isPitchChangeMethod = method == AudioTuningMethod.ELASTIQUE || method == AudioTuningMethod.CLASSIC;
